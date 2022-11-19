@@ -24,19 +24,19 @@ Author: Benwing
 14. Support references using <ref:...>. Syntax is the same as for IPA ref=. [DONE]
 15. In Portugal, unstressed o in hiatus should be /w/, and unstressed e in hiatus should be /j/. [DONE]
 16. Support - (hyphen) = left and right parts should be treated as distinct phonological words but written joined
-    together, and non-final primary stresses turn into secondary stresses. Word-initial and word-final behavior should
+	together, and non-final primary stresses turn into secondary stresses. Word-initial and word-final behavior should
 	happen, e.g. Brazil epenthesis of (j) before word-final /s/ followed a stressed vowel, Brazil raising of esC- and
 	Portugal rendering of o- as ò-. [DONE]
 17. Support : (colon), similar to hyphen but in non-final parts, final vowels aren't rendered as closed. [DONE]
 18. Support + (plus sign), similar to colon but non-final primary stresses aren't displayed and syllable-division
-    ignores the plus sign. [DONE]
+	ignores the plus sign. [DONE]
 19. In Brazil, word-initial enC-, emC- should display as (careful pronunciation) ẽ-, (natural pronunciation) ĩ-. [DONE]
 20. In Portugal, -sç- and -sc(e/i)- should show as (careful pronunciation) /ʃs/, (natural pronunciation) /ʃ/. Same for
-    -sz- ([[as]] [[zonas]]). [DONE] [FIXME: Verify this reduction in [[as]] [[zonas]].]
+	-sz- ([[as]] [[zonas]]). [DONE] [FIXME: Verify this reduction in [[as]] [[zonas]].]
 21. In Portugal, grave accent indicates unstressed open a/e/o and macron indicates unstressed closed a/e/o; both are
-    ignored in Brazil. [DONE]
+	ignored in Brazil. [DONE]
 22. In Portugal, iCi where the first i is before the stress should (maybe) show as iCi, (traditional pronunciation) ɨCi.
-    In iCiCi, both of the first two i's show as ɨ in the traditional pronunciation (FIXME: verify this). C should be
+	In iCiCi, both of the first two i's show as ɨ in the traditional pronunciation (FIXME: verify this). C should be
 	only a single consonant, hence not in [[piscina]] or [[distrito]] (FIXME: verify this). Does not apply if the first
 	i is stressed (e.g. [[mínimo]], [[tília]], [[pírico]], [[tísica]]) or if the stressed i is word-final ([[Mimi]],
 	[[Lili]], [[chichizinho]], [[piripiri]]), or in certain other words ([[felicíssimo]], [[filhinho]], [[estilista]],
@@ -46,9 +46,9 @@ Author: Benwing
 	between glides from original i and glides from e or y.
 23. In Portugal and Brazil, stressed o in hiatus should automatically be ô (voo, Samoa, Alagoas, perdoe, abençoe). [DONE]
 24. In Portugal, stressed closed ô in hiatus (whether written explicitly as e.g. vôo, Côa or generated automatically)
-    should show as e.g. /ˈbo.ɐ/, (regional) /ˈbo.wɐ/. [DONE] [FIXME: Verify syllable division in second.]
+	should show as e.g. /ˈbo.ɐ/, (regional) /ˈbo.wɐ/. [DONE] [FIXME: Verify syllable division in second.]
 25. Recognize -zinha like -zinho, -mente. Just use hyphen (-) to handle these. We don't recognize -zão, -zona, -zito,
-    -zita because of too many false positives; you can just write the hyphen explicitly before the suffix as needed.
+	-zita because of too many false positives; you can just write the hyphen explicitly before the suffix as needed.
 	Cf. among our current vocabulary we have 10 -zão augmentatives (animalzão, aviãozão, cipozão, cuzão, homenzão,
 	leãozão, paizão, pãozão, pezão, tatuzão), 2 -ão augmentatives after a word ending in -z (codornizão, felizão), and
 	7 non-augmentatives (alazão, coalizão, razão, rezão, sazão, sezão, vazão). Similarly for -zona: we have 5 -zona
@@ -59,17 +59,17 @@ Author: Benwing
 	pedzita, stolzita). [DONE]
 26. Final 'r' isn't optional before -zinho, -zinha, -mente. [DONE]
 27. Consider making secondary stress optional in cases like traduçãozinha where the stress is directly before the
-    primary stress.
+	primary stress.
 28. In Brazil, unstressed final-syllable /a/ should be reduced before -r, cf. [[açúcar]]. [DONE]
 29. Support + = pagename, and pagename= argument. [DONE]
 30. Deduplicate final pronunciations without distinct qualifiers. [DONE]
 31. Implement support for dot-under without accompanying quality diacritic. When attached to a/e/o, it defaults to acute
-    = open pronun, except in the following circumstances, where it defaults to circumflex: (1) in the diphthongs
+	= open pronun, except in the following circumstances, where it defaults to circumflex: (1) in the diphthongs
 	ei/eu/oi/ou; (2) in a nasal vowel. [DONE]
 32. Portugal final -e should show as optional (ɨ) unless there is a vowel-initial word following, in which case it
-    should not be displayed at all. [DONE]
+	should not be displayed at all. [DONE]
 33. Syllabification: "Improper" clusters of non-sibiliant-obstruent + obstruent (pt, bt, bd, dk, kt; ps, bs, bv, bʒ, tz,
-    dv, ks; ft), non-sibiliant-obstruent + nasal (pn, bn, tm, tn, dm, dn, gm, gn), nasal + nasal (mn) are syllabified in
+	dv, ks; ft), non-sibiliant-obstruent + nasal (pn, bn, tm, tn, dm, dn, gm, gn), nasal + nasal (mn) are syllabified in
 	Portugal as .pt, .bv, .mn, etc. Note ʃ.t, ʃ.p, ʃ.k, etc. But in Brazil, all of these divide between the consonants
 	(p.t, b.v, ʃ.t, s.p, etc.). Particular case: [[ab-rogação]] divides as a.brr in Portugal but ab.rr in Brazil. [DONE]
 34. -ão, -ãe, -õe should be recognized as nasal diphthongs with a circumflex added to force stress. [DONE]
@@ -80,14 +80,14 @@ Author: Benwing
 39. Portugal exC, êxC should be rendered like eiʃC (FIXME: Does this apply to "Central Portugal" as well?). exs- needs
 	handling like eiʃs-/(i)ʃs- not like eiss-. [DONE]
 40. Unstressed word-initial exC- should maybe have two pronunciations, one with eiʃC- and the other with (i)ʃC-.
-    (FIXME: Verify.)
+	(FIXME: Verify.)
 41. -sj- (e.g. [[transgénico]]) should reduce to a single /ʒ/. [DONE]
 42. [[transgredir]] should have /z/ (Brazil), /ʒ/ (Portugal) instead of /s/, /ʃ/. [DONE]
 43. Unstressed -ie- in hiatus should automatically be -iè- in Portugal or maybe -iè-/-ié-? [DONE] (FIXME: Verify.)
 44. Initial esC- in Brazil should be either isC- or esC-. [DONE]
 45. Initial sC- in Portugal and maybe Brazil should be /s/ not /ʃ/. [DONE]
 46. Deleted epenthetic /i/ should block conversion of syllable-final m/n into nasalization, cf. [[amnésia]] respelled
-    'ami^nési^a'. [DONE]
+	'ami^nési^a'. [DONE]
 47. Portugal 'o', 'os' should be unstressed with /u/, not have /ɔ/. [DONE]
 48. /s/ after nasal vowel before glide should not become voiced. [DONE]
 49. [[arrozinho]] (which uses the + component divider) should have the IPA stress mark before the 'z' not after. [DONE]
@@ -99,7 +99,7 @@ Author: Benwing
 55. ui^ should convert to 'ui' in Portugal = /wi/, but to 'u.i' or 'uy' in Brazil. [DONE]
 56. des^ should be 'des++' or 'dis++' (++ in both cases). [DONE]
 57. Word-boundary special handling (e.g. des^, x-, -x, etc.) should also respect component boundaries e.g. in
-    [[aerodeslizador]], [[criptoxantina]]. [DONE]
+	[[aerodeslizador]], [[criptoxantina]]. [DONE]
 58. Convert apostrophe to tie, and make tie transparent to syllabification. [DONE]
 59. 'x' in -nx- should default to /ʃ/ ([[enxame]], [[enxugar]]). [DONE]
 60. Final i^ should not be stressed. [DONE]
@@ -117,8 +117,13 @@ Author: Benwing
 72. Prefixes should change primary stress to secondary. [DONE]
 73. -ing should be like -im in Brazil but -ingh in Portugal. [DONE]
 74. Single 's' after colon should be /z/ not /s/, in keeping with normal spelling practices;
-    likewise for single 'r'. [NOT YET, FIRST NEED TO PUSH APPROPRIATE RESPELLING CHANGES]
+	likewise for single 'r'. [NOT YET, FIRST NEED TO PUSH APPROPRIATE RESPELLING CHANGES]
 75. Intertonic 'o' after stressed i/e/ɛ ([[período]], [[rubéola]]) in Brazil should be .u or w.
+76. Don't display phonetic IPA if identical to phonemic IPA. [DONE]
+77. Add South Brazil pronunciation. [DONE; FIXME: should all 'ẽ' (not just word-final) be rendered as [ẽj̃]? We have
+	several existing examples, e.g. /de.zẽ.ba.ˈla.do/|/de.zẽj̃.ba.ˈla.do/ for [[desembalado]], /ˌde.zẽj̃.has.ˈkɐ̃.so/
+	for [[desenrascanço]], /ẽj̃.baw.sa.ˈma(ɻ)/ for [[embalsamar]], [ẽj̃.pũˈj̃aɾ] for [[empunhar]],
+	/ẽ.ʁus.tiɾ/|[ẽj̃.ʁuʃˈ(t)͡ʃiɾ] for [[enrustir]].]
 ]=]
 
 local export = {}
@@ -303,19 +308,33 @@ local unstressed_pronunciation_substitution = {
 }
 
 -- Dialects and subdialects:
-export.all_styles = {"gbr", "rio", "sp", "gpt", "cpt", "spt"}
+export.all_styles = {"gbr", "rio", "sp", "sbr", "gpt", "cpt", "spt"}
 export.all_style_groups = {
 	all = export.all_styles,
-	br = {"gbr", "rio", "sp"},
+	br = {"gbr", "rio", "sp", "sbr"},
 	pt = {"gpt", "cpt", "spt"},
 }
 
+local style_to_style_group = {}
+for group, styles in pairs(all_style_groups) do
+	if group ~= "all" then
+		for _, style in ipairs(styles) do
+			style_to_style_group[style] = group
+		end
+	end
+end
+
 export.all_style_descs = {
-	gbr = "Brazil", -- "general" Brazil
-	rio = "Rio de Janeiro", -- Carioca accent
-	sp = "São Paulo", -- Paulistano accent
-	-- sbr = "Southern Brazil", -- (not added yet)
-	gpt = "Portugal", -- "general" Portugal
+	-- style groups
+	br = "[[w:Brazilian_Portuguese|Brazil]]",
+	pt = "[[w:European_Portuguese|Portugal]]",
+
+	-- styles
+	gbr = "[[w:Brazilian_Portuguese|Brazil]]", -- "general" Brazil
+	rio = "[[w:Carioca#Sociolect|Rio de Janeiro]]", -- Carioca accent
+	sp = "[[w:Paulistano_dialect|São Paulo]]", -- Paulistano accent
+	sbr = "Southern Brazil", -- (not added yet)
+	gpt = "[[w:European_Portuguese|Portugal]]", -- "general" Portugal
 	-- lisbon = "Lisbon", -- (not added yet)
 	cpt = "Central Portugal", -- Central Portugal outside of Lisbon
 	spt = "Southern Portugal"
@@ -778,10 +797,13 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- [[ano]], [[banho]].
 	text = rsub(text, "(" .. V .. ")(ˈ%.[mnɲMN])", "%1" .. CFLEX .. "%2")
 	if brazil then
-		-- Primary-stressed vowel + m/n across syllable boundary gets nasalized in Brazil, cf. [[cama]], [[ano]].
-		text = rsub(text, "(" .. V .. quality_c .. "*)(ˈ%.[mnMN])", "%1" .. TILDE .. "%2")
+		if style ~= "sbr" then -- Seems this happens less or not at all in South Brazil.
+			-- Primary-stressed vowel + m/n across syllable boundary gets nasalized in Brazil, cf. [[cama]], [[ano]].
+			text = rsub(text, "(" .. V .. quality_c .. "*)(ˈ%.[mnMN])", "%1" .. TILDE .. "%2")
+		end
 		-- All vowels before nh (always across syllable boundary) get circumflexed and nasalized in Brazil,
-		-- cf. [[ganhar]].
+		-- cf. [[ganhar]]. I *think* this also happens in South Brazil (see comment just above) based on the phonetic
+		-- representation [ẽj̃.pũˈj̃aɾ] given for [[empunhar]].
 		text = rsub(text, "(" .. V .. stress_c .. "*)(%.ɲ)", "%1" .. CFLEX .. "%2")
 		text = rsub(text, "(" .. V .. quality_c .. "*" .. stress_c .. "*)(%.ɲ)", "%1" .. TILDE .. "%2")
 		-- Convert initial unstressed em-/en- before consonant to special symbol /Ẽ/, which later on is converted
@@ -828,13 +850,15 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- Capital X has served its purpose, so replace it.
 	text = rsub(text, "X", "kç")
 	if brazil then
-		-- Final unstressed -e(s), -o(s) -> /i/ /u/ (including before -mente)
-		local brazil_final_vowel = {["E"] = "i", ["O"] = "u"}
-		text = rsub(text, "([EO])(s?#)", function(v, after) return brazil_final_vowel[v] .. after end)
-		-- Word-final unstressed -a(s) -> /ɐ/ (not before -mente)
-		text = rsub(text, "A(s?#[^@])", function(after) return "ɐ" .. after end)
-		-- Word-final unstressed -ar -> /ɐr/ (e.g. [[açúcar]])
-		text = rsub(text, "A(r#)", function(after) return "ɐ" .. after end)
+		if style ~= "sbr" then
+			-- Final unstressed -e(s), -o(s) -> /i/ /u/ (including before -mente)
+			local brazil_final_vowel = {["E"] = "i", ["O"] = "u"}
+			text = rsub(text, "([EO])(s?#)", function(v, after) return brazil_final_vowel[v] .. after end)
+			-- Word-final unstressed -a(s) -> /ɐ/ (not before -mente)
+			text = rsub(text, "A(s?#[^@])", function(after) return "ɐ" .. after end)
+			-- Word-final unstressed -ar -> /ɐr/ (e.g. [[açúcar]])
+			text = rsub(text, "A(r#)", function(after) return "ɐ" .. after end)
+		end
 		-- Initial unmarked unstressed non-nasal e- + -sC- -> /i/ or /e/ ([[estar]], [[esmeralda]]). To defeat this,
 		-- explicitly mark the <e> e.g. as <ệ> or <eh>. We reuse the special symbol /I/ for this purpose, which later
 		-- on is converted to /i/ or /e/.
@@ -975,12 +999,13 @@ local function one_term_ipa(text, style, phonetic, err)
 	end
 	-- Word-final r in Brazil in verbs (not [[pôr]]) is usually dropped. Use a spelling like 'marh' for [[mar]]
 	-- to prevent this. Make sure not to do this before -mente/-zinho ([[polegarzinha]], [[popularmente]]).
-	if style == "sp" then
-		text = rsub(text, "([aɛei]ˈ)r(#[^@])", "%1(ɾ)%2")
-	elseif brazil then
-		text = rsub(text, "([aɛei]ˈ)r(#[^@])", "%1(ʁ)%2")
-		-- Coda r outside of São Paulo is /ʁ/.
-		text = rsub(text, "r(" .. C .. "*[.#])", "ʁ%1")
+	if brazil then
+		text = rsub(text, "([aɛei]ˈ)r(#[^@])",
+			"%1(" .. (style == "sp" and "ɾ" or style == "sbr" and "ɻ" or "ʁ") .. ")%2")
+		if style ~= "sp" then
+			-- Coda r in Southern Brazil is [ɻ], otherwise outside of São Paulo is /ʁ/.
+			text = rsub(text, "r(" .. C .. "*[.#])", (style == "sbr" and "ɻ" or "ʁ") .. "%1")
+		end
 	end
 	-- All other r -> /ɾ/.
 	text = rsub(text, "r", "ɾ")
@@ -1073,8 +1098,9 @@ local function one_term_ipa(text, style, phonetic, err)
 
 	-- nh
 	if brazil and phonetic then
-		-- [[unha]] pronounced [ˈũ.j̃ɐ]; nasalization of previous vowel handled above.
-		-- But initial nh- e.g. [[nhaca]], [[nheengatu]], [[nhoque]] is [ɲ].
+		-- [[unha]] pronounced [ˈũ.j̃ɐ]; nasalization of previous vowel handled above. But initial nh- e.g. [[nhaca]],
+		-- [[nheengatu]], [[nhoque]] is [ɲ]. I *think* this also happens in South Brazil based on the phonetic
+		-- representation [ẽj̃.pũˈj̃aɾ] given for [[empunhar]].
 		text = rsub(text, "([^#])ɲ", "%1j" .. TILDE)
 	end
 
@@ -1258,9 +1284,14 @@ function export.IPA(text, style)
 		flatmap_and_sub_pre("o%^", "o", nil, "u", nil)
 		-- Handle ê*/ô*/é*/ó* = same as without asterisk.
 		flatmap_and_sub_pre("([eo][" .. AC .. CFLEX .. "])%*", "%1", nil)
-		-- Handle des^ at beginning of word or component = des++ or dis++, and des^^ = opposite order.
-		flatmap_and_sub_pre("(" .. word_or_component_sep_c .. ")des%^%^", "%1dis++", nil, "%1des++", nil)
-		flatmap_and_sub_pre("(" .. word_or_component_sep_c .. ")des%^", "%1des++", nil, "%1dis++", nil)
+		-- Handle des^ at beginning of word or component = des++ or dis++, and des^^ = opposite order. But apparently
+		-- not in South Brazil.
+		if style == "sbr" then
+			flatmap_and_sub_pre("(" .. word_or_component_sep_c .. ")des%^+", "%1des++", nil)
+		else
+			flatmap_and_sub_pre("(" .. word_or_component_sep_c .. ")des%^%^", "%1dis++", nil, "%1des++", nil)
+			flatmap_and_sub_pre("(" .. word_or_component_sep_c .. ")des%^", "%1des++", nil, "%1dis++", nil)
+		end
 		for _, variant in ipairs(variants) do
 			if rfind(variant.respelling, "[*%^]") then
 				err(("* or ^ remains after applying all known replacements involving these characters (result is '%s')")
@@ -1517,13 +1548,16 @@ function export.express_styles(inputs, args_style, pagename)
 		return available_styles
 	end
 
-	local function express_style(hidden_tag, tag, styles, indent)
+	local function express_style(styles, indent)
+		local hidden_tag, tag
 		indent = indent or 1
-		if hidden_tag == true then
-			hidden_tag = tag
-		end
 		if type(styles) == "string" then
 			styles = {styles}
+			tag = export.all_style_descs[style]
+			hidden_tag = export.all_style_descs[style_to_style_group[style]]
+		else
+			tag = false
+			hidden_tag = false
 		end
 		styles = all_available(styles)
 		if #styles == 0 then
@@ -1603,30 +1637,36 @@ function export.express_styles(inputs, args_style, pagename)
 	end
 	local gbr_sp_different = diff("gbr", "sp")
 	local gbr_rio_different = diff("gbr", "rio")
+	local gbr_sbr_different = diff("gbr", "sbr")
 	local gpt_cpt_different = diff("gpt", "cpt")
 	local gpt_spt_different = diff("gpt", "spt")
 	local gbr_gpt_different = diff("gbr", "gpt") -- general differences between BP and EP
 	
-	if not gbr_sp_different and not gbr_rio_different and not gpt_cpt_different and not gbr_gpt_different then
+	if not gbr_sp_different and not gbr_rio_different and gbr_sbr_different and
+		not gpt_cpt_different and not gpt_spt_different and
+		not gbr_gpt_different then
 		-- All the same
-		express_style(false, false, export.all_styles)
+		express_style(export.all_styles)
 	else
 		-- Within Brazil
-		express_style("[[w:Brazilian_Portuguese|Brazil]]", "[[w:Brazilian_Portuguese|Brazil]]", "gbr")
+		express_style("gbr")
 		if gbr_sp_different then
-			express_style("[[w:Brazilian_Portuguese|Brazil]]", "[[w:Paulistano_dialect|São Paulo]]", "sp", 2)
+			express_style("sp", 2)
 		end
 		if gbr_rio_different then
-			express_style("[[w:Brazilian_Portuguese|Brazil]]", "[[w:Carioca#Sociolect|Rio de Janeiro]]", "rio", 2)
+			express_style("rio", 2)
+		end
+		if gbr_sbr_different then
+			express_style("sbr", 2)
 		end
 		
 		-- Within Portugal
-		express_style("[[w:European_Portuguese|Portugal]]", "[[w:European_Portuguese|Portugal]]", "gpt")
+		express_style("gpt")
 		if gpt_cpt_different then
-			express_style("[[w:European_Portuguese|Portugal]]", "Central Portugal", "cpt", 2)
+			express_style("cpt", 2)
 		end
 		if gpt_spt_different then
-			express_style("[[w:European_Portuguese|Portugal]]", "Southern Portugal", "spt", 2)
+			express_style("spt", 2)
 		end
 	end
 	return expressed_styles
@@ -1795,6 +1835,11 @@ function export.show(frame)
 	local function format_style(tag, expressed_style, is_first)
 		local pronunciations = {}
 		local formatted_pronuns = {}
+
+		-- Loop through each pronunciation. For each one, add the phonemic and (if different) phonetic versions to
+		-- `pronunciations`, for formatting by [[Module:IPA]], and also create an approximation of the formatted
+		-- version so that we can compute the appropriate width of the HTML switcher div box that holds the different
+		-- per-dialect variants.
 		for i, pronun in ipairs(expressed_style.pronuns) do
 			table.insert(pronunciations, {
 				pron = "/" .. pronun.phonemic .. "/",
@@ -1808,18 +1853,26 @@ function export.show(frame)
 			if i > 1 then
 				formatted_phonemic = ", " .. formatted_phonemic
 			end
-			table.insert(formatted_pronuns, formatted_phonemic)
-			table.insert(pronunciations, {
-				pron = "[" .. pronun.phonetic .. "]",
-				refs = pronun.refs,
-				separator = " ",
-			})
-			local reftext = ""
-			if pronun.refs then
-				reftext = string.rep("[1]", #pronun.refs)
+
+			-- Check if phonetic and phonemic are the same. If so, we skip displaying the phonetic version; but in this
+			-- case, we need to attach any references to the phonemic version.
+			if pronun.phonetic == pronun.phonemic then
+				pronunciations[#pronunciations].refs = pronun.refs
+			else
+				table.insert(formatted_pronuns, formatted_phonemic)
+				table.insert(pronunciations, {
+					pron = "[" .. pronun.phonetic .. "]",
+					refs = pronun.refs,
+					separator = " ",
+				})
+				local reftext = ""
+				if pronun.refs then
+					reftext = string.rep("[1]", #pronun.refs)
+				end
+				table.insert(formatted_pronuns, " [" .. pronun.phonetic .. "]" .. reftext)
 			end
-			table.insert(formatted_pronuns, " [" .. pronun.phonetic .. "]" .. reftext)
 		end
+
 		-- Number of bullets: When indent = 1, we want the number of bullets given by `expressed_style.bullets`,
 		-- and when indent = 2, we want `expressed_style.bullets + 1`, hence we subtract 1.
 		local bullet = string.rep("*", expressed_style.bullets + expressed_style.indent - 1) .. " "
@@ -1849,6 +1902,8 @@ function export.show(frame)
 		end
 	end
 
+	-- Remove any HTML from the formatted text, since it doesn't contribute to the textual length, and return the
+	-- resulting length in characters.
 	local function textual_len(text)
 		text = rsub(text, "<.->", "")
 		return ulen(text)
