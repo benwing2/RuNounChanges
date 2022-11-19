@@ -9,9 +9,13 @@ local accented_vowel = "áéíóúýâêôÁÉÍÓÚÝÂÊÔ"
 local maybe_accented_vowel = "ãõÃÕ"
 local vowel = unaccented_vowel .. accented_vowel .. maybe_accented_vowel
 local V = "[" .. vowel .. "]"
+export.V = V
 local AV = "[" .. accented_vowel .. "]"
+export.AV = AV
 local NAV = "[^" .. accented_vowel .. "]"
+export.NAV = NAV
 local C = "[^" .. vowel .. ".]"
+export.C = C
 local remove_accent = {
 	["á"]="a", ["é"]="e", ["í"]="i", ["ó"]="o", ["ú"]="u", ["ý"]="y", ["â"]="a", ["ê"]="e", ["ô"]="o",
 	["Á"]="A", ["É"]="E", ["Í"]="I", ["Ó"]="O", ["Ú"]="U", ["Ý"]="Y", ["Â"]="A", ["Ê"]="E", ["Ô"]="O"
