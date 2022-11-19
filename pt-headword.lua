@@ -887,7 +887,7 @@ local function get_adjective_params(adjtype)
 	if adjtype == "sup" then
 		params["irreg"] = {type = "boolean"}
 	end
-	if adjtype == "pron" then
+	if adjtype == "pron" or adjtype == "contr" then
 		params["n"] = {list = true} --neuter form(s)
 		params["n_qual"] = {list = "n=_qual", allow_holes = true}
 	end
@@ -964,7 +964,7 @@ local function do_adverb(args, data, tracking_categories, pos, is_suffix)
 	-- If no comp, but a non-default sup given, then add the default adverbial comparative/superlative.
 	-- This is useful when an absolute superlative is given.
 	local saw_sup_plus = false
-	if not args.comp and args.sup then
+	if #args.comp == 0 and #args.sup > 0 then
 		for i, supval in ipairs(args.sup) do
 			if supval == "+" then
 				saw_sup_plus = true
@@ -978,7 +978,7 @@ local function do_adverb(args, data, tracking_categories, pos, is_suffix)
 
 	-- If comp=+, use default adverbial comparative 'mais ...', and set a default adverbial superlative if unspecified.
 	local saw_comp_plus = false
-	if args.comp then
+	if #args.comp > 0 then
 		for i, compval in ipairs(args.comp) do
 			if compval == "+" then
 				saw_comp_plus = true
@@ -986,11 +986,11 @@ local function do_adverb(args, data, tracking_categories, pos, is_suffix)
 			end
 		end
 	end
-	if saw_comp_plus and not args.sup then
+	if saw_comp_plus and #args.sup == 0 then
 		args.sup = {"+"}
 	end
 	-- If sup=+ (possibly from comp=+), use default adverbial superlative 'o mais ...'.
-	if args.sup then
+	if #args.sup > 0 then
 		for i, supval in ipairs(args.sup) do
 			if supval == "+" then
 				args.sup[i] = "[[o]] [[mais]] [[" .. lemma .. "]]"
