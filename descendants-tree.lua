@@ -6,10 +6,10 @@ local function track(page)
 end
 
 
-local function language_header_error(entry_name, language_name)
-	mw.log("No header for " .. language_name .. " was found in the entry [["
-			.. entry_name .. "]].")
-	track("language header not found")
+local function preview_error(what, entry_name, language_name, reason)
+	mw.log("Could not retrieve " .. what .. " for " .. language_name .. " in the entry [["
+			.. entry_name .. "]]: " .. reason .. ".")
+	track(what .. " error")
 end
 
 local function get_content_after_senseid(content, entry_name, lang, id)
@@ -56,9 +56,14 @@ function export.getAlternativeForms(lang, term, id)
 	local entry_name = require("Module:links").getLinkPage(term, lang)
 	local page = mw.title.new(entry_name)
 	local content = page:getContent()
+
+	local function alt_form_error(reason)
+		preview_error("alternative forms", entry_name, lang:getCanonicalName(), reason)
+	end
 	
 	if not content then
 		-- FIXME, should be an error
+		alt_form_error("nonexistent page")
 		track("alts-nonexistent-page")
 		return ""
 	end
@@ -67,8 +72,8 @@ function export.getAlternativeForms(lang, term, id)
 		"==[ \t]*" .. require("Module:string").pattern_escape(lang:getCanonicalName()) .. "[ \t]*==")
 	
 	if not index then
-		language_header_error(entry_name, lang:getCanonicalName())
 		-- FIXME, should be an error
+		alt_form_error("L2 header for language not found")
 		track("alts-lang-not-found")
 		return ""
 	end
@@ -80,11 +85,19 @@ function export.getAlternativeForms(lang, term, id)
 	
 	local _, next_lang = string.find(content, "\n==[^=\n]+==", index, false)
 	local _, index = string.find(content, "\n(====?=?)[ \t]*Alternative forms[ \t]*%1", index, false)
-	
+
+	if not index then
+		-- FIXME, should be an error
+		alt_form_error("'Alternative forms' section for language not found")
+		track("alts-section-not-found")
+		return ""
+	end
+
 	local langCodeRegex = require("Module:string").pattern_escape(lang:getCode())
 	index = string.find(content, "{{alte?r?|" .. langCodeRegex .. "|[^|}]+", index)
 	if (not index) or (next_lang and next_lang < index) then
 		-- FIXME, should be an error
+		alt_form_error("no 'alt' or 'alter' template in 'Alternative forms' section for language")
 		track("alts-alter-not-found")
 		return ""
 	end
@@ -93,79 +106,27 @@ function export.getAlternativeForms(lang, term, id)
 	
 	local alternative_forms_section = string.sub(content, index, next_section)
 	
-	local parameters_list
-	
-	-- This assumes that there are no nested templates in {{alter}}.
-	for alternative_form_template_parameters in string.gmatch(alternative_forms_section,
-		"{{alte?r?|" .. langCodeRegex .. "|(.-)}}") do
-		local double_pipe_pos = string.find(alternative_form_template_parameters, "||", 1, true)
-		local term_parameters = string.sub(alternative_form_template_parameters, 1,
-			double_pipe_pos and double_pipe_pos - 1)
-		
-		if term_parameters then
-			parameters_list = mw.text.split(term_parameters, "|")
-			break
+	local terms_list = {}
+
+	local altforms = require("Module:alternative forms")
+
+	for name, args, _, index in require("Module:templateparser").findTemplates(alternative_forms_section) do
+		if (name == "alt" or name == "alter") and args[1] == lang:getCode() then
+			saw_alter = true
+			local formatted_altforms = altforms.display_alternative_forms(args, entry_name, false)
+			table.insert(terms_list, formatted_altforms)
 		end
 	end
-	
-	if not parameters_list or #parameters_list == 0 then
+
+	if #terms_list == 0 then
 		-- FIXME, should be an error
-		track("alts-alter-no-params")
+		alt_form_error("no terms in 'alt' or 'alter' template in 'Alternative forms' section for language")
+		track("alts-no-terms-in-alter")
 		return ""
 	end
-	
-	local terms_list = {}
-	
-	local items = {
-		t = {},
-		id = {},
-		alt = {},
-		tr = {},
-		ts = {},
-		g = {}
-	}
-	
-	for _, parameter in ipairs(parameters_list) do
-		local parameterName, value = string.match(parameter, "^([^=]+)=(.+)$")
-		if parameterName and value then
-			local item_type, index = string.match(parameterName, "(%D+)(%d)")
-			if item_type and index and items[item_type] then
-				items[item_type][tonumber(index)] = value
-			elseif parameterName == "sc" then
-				items.sc = value
-			elseif items[parameterName] then
-				items[parameterName][1] = value
-			end
-		else
-			table.insert(terms_list, parameter)
-		end
-	end
-	
-	local i = 1
-	while true do
-		local term = terms_list[i]
-		local alt, tr, ts, g, t = items.alt[i], items.tr[i], items.ts[i], items.g[i], items.t[i]
-		if not (term or alt or tr or ts or g or t) then
-			break
-		end
-		local sc
-		if items.sc then
-			sc = require "Module:scripts".getByCode(items.sc)
-		end
-		terms_list[i] = require("Module:links").full_link({
-			term = term,
-			lang = lang,
-			sc = sc,
-			alt = alt,
-			tr = tr,
-			ts = ts,
-			genders = g,
-			gloss = t
-		}, nil, true)
-		i = i + 1
-	end
-	
-	return ", " .. table.concat(terms_list, ", ")
+
+	-- FIXME: Why do we return a leading comma like this? Why not have the caller add the comma?
+	return ", " .. table.concat(terms_list, "; ")
 end
 
 function export.getDescendants(lang, term, id, noerror)
@@ -173,9 +134,14 @@ function export.getDescendants(lang, term, id, noerror)
 	local page = mw.title.new(entry_name)
 	local content = page:getContent()
 	local namespace = mw.title.getCurrentTitle().nsText
-	
+
+	local function desc_error(reason)
+		preview_error("descendants", entry_name, lang:getCanonicalName(), reason)
+	end
+
 	if not content then
 		-- FIXME, should be an error
+		desc_error("nonexistent page")
 		track("desctree-nonexistent-page")
 		return ""
 	end
@@ -200,7 +166,7 @@ function export.getDescendants(lang, term, id, noerror)
 				.. "[ \t]*==", nil, false)
 	end
 	if not index then
-		language_header_error(entry_name, lang:getCanonicalName())
+		desc_error("L2 header for language not found")
 		-- FIXME, should be an error
 		track("desctree-lang-not-found")
 		return ""

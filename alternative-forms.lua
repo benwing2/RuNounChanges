@@ -101,11 +101,9 @@ local function get_valid_prefixes()
 	return valid_prefixes
 end
 
-function export.create(frame)
-	local title = mw.title.getCurrentTitle()
-	local NAMESPACE = title.nsText
-	local PAGENAME = title.text
-
+-- Main function for displaying alternative forms. Extracted out from the template-callable function so this can be
+-- called by other modules (in particular, [[Module:descendants tree]]).
+function export.display_alternative_forms(parent_args, pagename, include_dialect_tags)
 	local list_with_holes = { list = true, allow_holes = true }
 	local params = {
 		[1] = { required = true, default = "und" },
@@ -125,7 +123,7 @@ function export.create(frame)
 		end
 	end
 
-	local args = require("Module:parameters").process(frame:getParent().args, params)
+	local args = require("Module:parameters").process(parent_args, params)
 	local lang = m_languages.getByCode(args[1], 1)
 	local sc = args["sc"] and require("Module:scripts").getByCode(args["sc"], "sc") or nil
 
@@ -270,7 +268,7 @@ function export.create(frame)
 				end
 
 				-- If the to-be-linked term is the same as the pagename, display it unlinked.
-				if termobj.term.term and lang:makeEntryName(termobj.term.term) == PAGENAME then
+				if termobj.term.term and lang:makeEntryName(termobj.term.term) == pagename then
 					track("term is pagename")
 					termobj.term.alt = termobj.term.alt or termobj.term.term
 					termobj.term.term = nil
@@ -308,24 +306,32 @@ function export.create(frame)
 	end
 
 	-- Construct the final output.
-	local output = { table.concat(items) }
+	if include_dialect_tags then
+		-- If there are dialect or similar tags, construct them now and append to final output.
+		local dialects = export.make_dialects(rawDialects, lang)
+		if #dialects > 0 then
+			local dialect_label
+			if lang:hasTranslit() then
+				dialect_label = " &ndash; ''" .. table.concat(dialects, ", ") .. "''"
+			else
+				dialect_label = " (''" .. table.concat(dialects, ", ") .. "'')"
+			end
 
-	-- If there are dialect or similar tags, construct them now and append to final output.
-	local dialects = export.make_dialects(rawDialects, lang)
-	if #dialects > 0 then
-		local dialect_label
-		if lang:hasTranslit() then
-			dialect_label = " &ndash; ''" .. table.concat(dialects, ", ") .. "''"
-		else
-			dialect_label = " (''" .. table.concat(dialects, ", ") .. "'')"
+			-- Fixes the problem of '' being added to '' at the end of last dialect parameter
+			dialect_label = mw.ustring.gsub(dialect_label, "''''", "")
+			table.insert(items, dialect_label)
 		end
-
-		-- Fixes the problem of '' being added to '' at the end of last dialect parameter
-		dialect_label = mw.ustring.gsub(dialect_label, "''''", "")
-		table.insert(output, dialect_label)
 	end
 
-	return table.concat(output)
+	return table.concat(items)
+end
+
+-- Template-callable function for displaying alternative forms.
+function export.create(frame)
+	local parent_args = frame:getParent().args
+	local title = mw.title.getCurrentTitle()
+	local PAGENAME = title.text
+	return export.display_alternative_forms(parent_args, title, "include dialect tags")
 end
 
 function export.categorize(frame)
