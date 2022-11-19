@@ -120,12 +120,35 @@ Author: Benwing
 	likewise for single 'r'. [NOT YET, FIRST NEED TO PUSH APPROPRIATE RESPELLING CHANGES]
 75. Intertonic 'o' after stressed i/e/ɛ ([[período]], [[rubéola]]) in Brazil should be .u or w.
 76. Don't display phonetic IPA if identical to phonemic IPA. [DONE]
-77. Add South Brazil pronunciation. [DONE; FIXME: should all 'ẽ' (not just word-final) be rendered as [ẽj̃]? We have
-	several existing examples, e.g. /de.zẽ.ba.ˈla.do/|/de.zẽj̃.ba.ˈla.do/ for [[desembalado]], /ˌde.zẽj̃.has.ˈkɐ̃.so/
-	for [[desenrascanço]], /ẽj̃.baw.sa.ˈma(ɻ)/ for [[embalsamar]], [ẽj̃.pũˈj̃aɾ] for [[empunhar]],
-	/ẽ.ʁus.tiɾ/|[ẽj̃.ʁuʃˈ(t)͡ʃiɾ] for [[enrustir]].]
+77. Add "South Brazil" pronunciation. [DONE; SEE ISSUES BELOW]
+78. -êm should be like -ém in Brazil but -ẽiem in Portugal. [DONE]
 ]=]
 
+--[=[
+Issues concerning South Brazil pronunciation:
+
+1. Should all 'ẽ' (not just word-final) be rendered as [ẽj̃]? We have several existing examples, e.g.
+   /de.zẽ.ba.ˈla.do/|/de.zẽj̃.ba.ˈla.do/ for [[desembalado]], /ˌde.zẽj̃.has.ˈkɐ̃.so/ for [[desenrascanço]],
+   /ẽj̃.baw.sa.ˈma(ɻ)/ for [[embalsamar]], [ẽj̃.pũˈj̃aɾ] for [[empunhar]], /ẽ.ʁus.tiɾ/|[ẽj̃.ʁuʃˈ(t)͡ʃiɾ] for
+   [[enrustir]].
+2. Coda 'r': Mostly /ɻ/ but sometimes given as both /ɾ/ and /ɻ/ or occasionally /r/.
+3. Raising of unstressed 'e' and 'o', and 'des-': Mostly not present but sometimes yes, e.g. [[clarear]]
+   /kla.ɾe.ˈa(ɾ)/|/kla.ɾe.ˈa(ɻ)/|/kla.ɾi.ˈa(ɾ)/|/kla.ɾi.ˈa(ɻ)/|/kla.ˈɾja(ɾ)/|/kla.ˈɾja(ɻ)/, [[consentâneo]]
+   [kõ(w̃).senˈtə̃.ni̯u], [[cozido]] /ko.ˈzi.dʊ/|/ku.ˈzi.dʊ/, [[desbloquear]] /dez.blo.ke.ˈa(ɾ)/|/dez.blo.ˈkja(ɾ)/|/d͡ʒiz-/|/-(ɻ)/,
+   [[desferir]] /des.fe.ˈɾi(ɾ)/|/des.fe.ˈɾi(ɻ)/|/des.fi.ˈɾi(ɾ)/|/des.fi.ˈɾi(ɻ)/, [[desrespeitar]] /dez.hes.pej.ˈta(ɾ)/|/d͡ʒiz-/|/-(ɻ)/,
+   [[destruído]] /des.tɾu.ˈi.do/|/d͡ʒis.tɾu.ˈi.do/.
+4. Epenthetic 'i': Less common? E.g. [[dignidade]] given as just /ˌd͡ʒiɡ.ni.ˈda.de/, but [[digno]] as /ˈd͡ʒiɡ.no/|/ˈd͡ʒi.ɡi.no/.
+5. Secondary stress: Often given two syllables before the stress. I have left it out unless it seems stable and in a prefix, e.g.
+   [[eleitorado]] /e.ˌlej.to.ˈɾa.do/, [[eletrizante]] /e.ˌle.tɾi.ˈzɐ̃.te/, [[elevado]] /ˌe.le.ˈva.do/, [[elevador]] /e.ˌle.va.ˈdoɻ/,
+   [[engarrafamento]] /ˌẽ.ɡa.ˌha.fa.ˈmẽ.to/.
+6. Initial em-: Mostly given as /ẽ-/ or /ẽj̃-/, but sometimes /ĩ-/ as in [[emparedar]] /ĩ.pa.ɾe.ˈda(ɾ)/|/ĩ.pa.ɾe.ˈda(ɻ)/
+   or both as in [[encaixar]] /ẽ.kaj.ˈʃa(ɾ)/|/ĩ.kaj.ˈʃa(ɻ)/|/ẽ.kaj.ˈʃa(ɾ)/|/ĩ.kaj.ˈʃa(ɻ)/.
+7. -nh-: [[empunhar]] given as [ẽj̃.pũˈj̃aɾ], but is /j̃/ actually characteristic of this accent or is it /ɲ/?
+8. Other inconsistencies: e.g. [[enrustir]] /ẽ.ʁus.tiɾ/|[ẽj̃.ʁuʃˈ(t)͡ʃiɾ], with coda /ʃ/ and strong [ʁ] (usually [h]).
+   [[ab-rogar]] /ab.ʁoˈɡa(ɻ)/|/ab.hoˈɡa(ɻ)/|/ab.χoˈɡa(ɻ)/|/ab.ɦoˈɡa(ɻ)/ with all possible strong r's.
+9. Nasal vowels: Almost always as elsewhere, but occasionally e.g. [[entender]] /ĩn.tẽnˈde(r)/, [[a gente]] /a.ˈʒen.te/|/a.ˈʒẽ.te/.
+10. Nasal diphthongs: -ão sometimes claims to be /ɐ̃õ/, sometimes /ɐ̃w̃/. [[-ção]] listed both.
+]=]
 local export = {}
 
 local m_IPA = require("Module:IPA")
@@ -181,7 +204,7 @@ local PREFIX_MARKER = u(0xFFF3) -- marker indicating a prefix so we can convert 
 --   which can be only /ĩ/, and written ehn-/ehm- (or similar), which can be only /ẽ/.
 -- * I is used to represent epenthetic i in Brazilian variants (which should not affect stress assignment but is
 --   otherwise treated as a normal sound), and Ɨ represents deleted epenthetic i (which still palatalizes /t/ and /d/).
---   I is also used to represent Portugal (i) from initial esC-.
+--   I is also used to represent Brazil e or i from initial esC-, and Portugal (i) from initial esC-.
 -- * Ì is used to represent either i. in hiatus or /j/ in Brazil; likewise for Ù representing u. in hiatus or /w/.
 -- * Ɔ (capital version of ɔ) stands for a Portugal sound that can be pronounced either /o/ or /ɔ/ (depending on the
 --   speaker), before syllable-final /l/.
@@ -269,6 +292,9 @@ local unstressed_words = require("Module:table").listToSet({
 	"que", -- subordinating conjunctions
 	"e", -- coordinating conjunctions
 	"de", "do", "dos", "por", -- basic prepositions + combinations with articles; [[no]], [[nos]] above already
+	-- FIXME: Portugal pronun for pelos, pela, pelas given as if spelled pêlos, etc. with stress, but differently for pelo.
+	-- I am assuming the Portugal pronuns with stress are wrong.
+	"pelo", "pelos", "pela", "pelas" -- preposition + article combinations
 })
 
 -- Unstressed words with vowel reduction in Portugal only.
@@ -316,7 +342,7 @@ export.all_style_groups = {
 }
 
 local style_to_style_group = {}
-for group, styles in pairs(all_style_groups) do
+for group, styles in pairs(export.all_style_groups) do
 	if group ~= "all" then
 		for _, style in ipairs(styles) do
 			style_to_style_group[style] = group
@@ -786,6 +812,11 @@ local function one_term_ipa(text, style, phonetic, err)
 		text = rsub(text, "n#", "N#")
 		text = rsub(text, "([EO])(N#)", "%1" .. AC .. "%2")
 	end
+	if not brazil then
+		-- In Portugal, circumflex accent on final -em ([[vêm]], [[mantêm]], etc.) indicates a special double nasal diphthong
+		-- pronunciation.
+		text = rsub(text, "E" .. CFLEX .. "(ˈm#)", "E" .. CFLEX .. "ˈ" .. TILDE .. "y" .. TILDE .. ".E" .. CFLEX .. "%1")
+	end
 	-- Acute accent on final -em ([[além]], [[também]]) and final -ens ([[parabéns]]) does not indicate an open
 	-- pronunciation.
 	text = rsub(text, "E" .. AC .. "(ˈ[mn]s?#)", "E" .. CFLEX .. "%1")
@@ -802,10 +833,11 @@ local function one_term_ipa(text, style, phonetic, err)
 			text = rsub(text, "(" .. V .. quality_c .. "*)(ˈ%.[mnMN])", "%1" .. TILDE .. "%2")
 		end
 		-- All vowels before nh (always across syllable boundary) get circumflexed and nasalized in Brazil,
-		-- cf. [[ganhar]]. I *think* this also happens in South Brazil (see comment just above) based on the phonetic
-		-- representation [ẽj̃.pũˈj̃aɾ] given for [[empunhar]].
+		-- cf. [[ganhar]]. I *think* the circumflexing but not nasalizing happens in South Brazil.
 		text = rsub(text, "(" .. V .. stress_c .. "*)(%.ɲ)", "%1" .. CFLEX .. "%2")
-		text = rsub(text, "(" .. V .. quality_c .. "*" .. stress_c .. "*)(%.ɲ)", "%1" .. TILDE .. "%2")
+		if style ~= "sbr" then -- I *think* this doesn't apply to South Brazil; need to verify.
+			text = rsub(text, "(" .. V .. quality_c .. "*" .. stress_c .. "*)(%.ɲ)", "%1" .. TILDE .. "%2")
+		end
 		-- Convert initial unstressed em-/en- before consonant to special symbol /Ẽ/, which later on is converted
 		-- to /e/ (careful pronunciation) or /i/ (natural pronunciation).
 		text = rsub(text, "(#E" .. CFLEX .. TILDE ..")(%." .. C ..")", "#Ẽ" .. TILDE .. "%2")
@@ -861,9 +893,9 @@ local function one_term_ipa(text, style, phonetic, err)
 		end
 		-- Initial unmarked unstressed non-nasal e- + -sC- -> /i/ or /e/ ([[estar]], [[esmeralda]]). To defeat this,
 		-- explicitly mark the <e> e.g. as <ệ> or <eh>. We reuse the special symbol /I/ for this purpose, which later
-		-- on is converted to /i/ or /e/.
+		-- on is converted to /i/ or /e/. In South Brazil, however, the raised /i/ variant doesn't seem to exist.
 		if not rfind(text, "#Es.ç") then
-			text = rsub(text, "#E(s" .. C .. "*%.)", "#I%1")
+			text = rsub(text, "#E(s" .. C .. "*%.)", style == "sbr" and "#e%1" or "#I%1")
 		end
 		-- Remaining unstressed a, e, o without quality mark -> /a/ /e/ /o/.
 		local brazil_unstressed_vowel = {["A"] = "a", ["E"] = "e", ["O"] = "o"}
@@ -1029,20 +1061,13 @@ local function one_term_ipa(text, style, phonetic, err)
 		-- are two outputs, with /ẽC-/ marked as "careful pronunciation" and /ĩC-/ marked as "natural pronunciation".
 		-- (Benwing2)
 		-- text = rsub(text, "(a" .. accent_c .. "*)i(%.ʃ)", "%1(j)%2")
-	end
-	if style == "spt"  then
+	elseif style == "spt"  then
 		-- In South of Portugal, <ei>, <ou> monophthongizes to <e>, <o>
 		text = rsub(text, "(e" .. accent_c .. "*)i", "%1")
 		text = rsub(text, "(o" .. accent_c .. "*)u", "%1")
-	end
-	if style == "gpt" then
-		-- In general Portugal, lower e -> ɐ before i in <ei>.
-		text = rsub(text, "e(" .. accent_c .. "*i)", "ɐ%1")
-	end
-	
-	if style == "gpt" then
-		-- In general Portugal, lower ɛ -> ɐ before i in <ɛi>.
-		text = rsub(text, "ɛ(" .. accent_c .. "*i)", "ɐ%1")
+	elseif style == "gpt" then
+		-- In general Portugal, lower e/ɛ -> ɐ before i in <ei>/<ɛi>.
+		text = rsub(text, "[eɛ](" .. accent_c .. "*i)", "ɐ%1")
 		-- In general Portugal, lower e -> ɐ before j, including when nasalized.
 		text = rsub(text, "e(" .. accent_c .. "*%.?y)", "ɐ%1")
 		-- In general Portugal, lower e -> ɐ(j) before other palatals.
@@ -1097,10 +1122,10 @@ local function one_term_ipa(text, style, phonetic, err)
 		function(v1, v2) return v1 .. vowel_termination_to_glide[v2] end)
 
 	-- nh
-	if brazil and phonetic then
+	if brazil and phonetic and style ~= "sbr" then
 		-- [[unha]] pronounced [ˈũ.j̃ɐ]; nasalization of previous vowel handled above. But initial nh- e.g. [[nhaca]],
-		-- [[nheengatu]], [[nhoque]] is [ɲ]. I *think* this also happens in South Brazil based on the phonetic
-		-- representation [ẽj̃.pũˈj̃aɾ] given for [[empunhar]].
+		-- [[nheengatu]], [[nhoque]] is [ɲ]. I *think* this doesn't happen in South Brazil. We do have the phonetic
+		-- representation [ẽj̃.pũˈj̃aɾ] given for [[empunhar]], but this is the only such case and may be a mistake.
 		text = rsub(text, "([^#])ɲ", "%1j" .. TILDE)
 	end
 
@@ -1269,23 +1294,38 @@ function export.IPA(text, style)
 		flatmap_and_sub_pre("(" .. V .. ")i%^%^", "%1y", nil, "%1.i", nil)
 		flatmap_and_sub_pre("(" .. V .. ")i%^", "%1.i", nil, "%1y", nil)
 		-- Handle i^ and i^^ not before a vowel = optional epenthetic /i/.
-		flatmap_and_sub_pre("i%^%^(" .. NV_NOT_SPACING_CFLEX .. ")", "Ɨ%1", nil, "I%1", nil)
-		flatmap_and_sub_pre("i%^(" .. NV_NOT_SPACING_CFLEX .. ")", "I%1", nil, "Ɨ%1", nil)
+		if style == "sbr" then
+			-- Epenthetic /i/ seems less common in South Brazil. Make i^^ not epenthesize (but still palatalize /t/ and /d/),
+			-- and i^ epenthesize but not as the first option.
+			flatmap_and_sub_pre("i%^%^(" .. NV_NOT_SPACING_CFLEX .. ")", "Ɨ%1", nil)
+			flatmap_and_sub_pre("i%^(" .. NV_NOT_SPACING_CFLEX .. ")", "Ɨ%1", nil, "I%1", nil)
+		else
+			flatmap_and_sub_pre("i%^%^(" .. NV_NOT_SPACING_CFLEX .. ")", "Ɨ%1", nil, "I%1", nil)
+			flatmap_and_sub_pre("i%^(" .. NV_NOT_SPACING_CFLEX .. ")", "I%1", nil, "Ɨ%1", nil)
+		end
 		-- Handle i* = epenthetic /i/.
 		flatmap_and_sub_pre("i%*", "I", nil)
 		-- Handle u^ and u^^ = /u/ or /w/.
 		flatmap_and_sub_pre("u%^%^", "w", nil, "u.", nil)
 		flatmap_and_sub_pre("u%^", "u.", nil, "w", nil)
-		-- Handle e^ and e^^ = /e/ or /i/.
-		flatmap_and_sub_pre("e%^%^", "i", nil, "e", nil)
-		flatmap_and_sub_pre("e%^", "e", nil, "i", nil)
-		-- Handle o^ and o^^ = /o/ or /u/.
-		flatmap_and_sub_pre("o%^%^", "u", nil, "o", nil)
-		flatmap_and_sub_pre("o%^", "o", nil, "u", nil)
+		if style == "sbr" then
+			-- The raised variant apparently does not occur in South Brazil.
+			flatmap_and_sub_pre("([eo])%^+", "%1", nil)
+		else
+			-- Handle e^ and e^^ = /e/ or /i/; handle o^ and o^^ = /o/ or /u/.
+			-- Do e^ and o^ together so we get only two outputs, not four, if they cooccur.
+			-- Likewise for e^^ and o^^.
+			flatmap_and_sub_pre("([eo])%^%^",
+				function(eo) return eo == "e" and "i" or "u" end, nil,
+				"%1", nil)
+			flatmap_and_sub_pre("([eo])%^",
+				"%1", nil,
+				function(eo) return eo == "e" and "i" or "u" end, nil)
+		end
 		-- Handle ê*/ô*/é*/ó* = same as without asterisk.
 		flatmap_and_sub_pre("([eo][" .. AC .. CFLEX .. "])%*", "%1", nil)
 		-- Handle des^ at beginning of word or component = des++ or dis++, and des^^ = opposite order. But apparently
-		-- not in South Brazil.
+		-- not in South Brazil, where the raised variant doesn't occur.
 		if style == "sbr" then
 			flatmap_and_sub_pre("(" .. word_or_component_sep_c .. ")des%^+", "%1des++", nil)
 		else
@@ -1553,8 +1593,8 @@ function export.express_styles(inputs, args_style, pagename)
 		indent = indent or 1
 		if type(styles) == "string" then
 			styles = {styles}
-			tag = export.all_style_descs[style]
-			hidden_tag = export.all_style_descs[style_to_style_group[style]]
+			tag = export.all_style_descs[styles[1]]
+			hidden_tag = export.all_style_descs[style_to_style_group[styles[1]]]
 		else
 			tag = false
 			hidden_tag = false
@@ -1853,13 +1893,13 @@ function export.show(frame)
 			if i > 1 then
 				formatted_phonemic = ", " .. formatted_phonemic
 			end
+			table.insert(formatted_pronuns, formatted_phonemic)
 
 			-- Check if phonetic and phonemic are the same. If so, we skip displaying the phonetic version; but in this
 			-- case, we need to attach any references to the phonemic version.
 			if pronun.phonetic == pronun.phonemic then
 				pronunciations[#pronunciations].refs = pronun.refs
 			else
-				table.insert(formatted_pronuns, formatted_phonemic)
 				table.insert(pronunciations, {
 					pron = "[" .. pronun.phonetic .. "]",
 					refs = pronun.refs,
