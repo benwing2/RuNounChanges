@@ -122,6 +122,8 @@ Author: Benwing
 76. Don't display phonetic IPA if identical to phonemic IPA. [DONE]
 77. Add "South Brazil" pronunciation. [DONE; SEE ISSUES BELOW]
 78. -êm should be like -ém in Brazil but -ẽiem in Portugal. [DONE]
+79. -õem should be like -õe in Brazil but -õeem in Portugal. [DONE]
+80. -le in Portugal should split into two pronuns, one with vowel for -e, one without. [DONE]
 ]=]
 
 --[=[
@@ -209,6 +211,8 @@ local PREFIX_MARKER = u(0xFFF3) -- marker indicating a prefix so we can convert 
 -- * Ɔ (capital version of ɔ) stands for a Portugal sound that can be pronounced either /o/ or /ɔ/ (depending on the
 --   speaker), before syllable-final /l/.
 -- * Ú is used word-finally after i to represent either .u in hiatus or /w/ in Brazil.
+-- * L is used word-finally in Portugal to split words ending in -le into two pronuns due to the differing pronunciation
+--   of /l/ in the two cases (coda or not).
 local vowel = "aɐeɛiɨoɔuüAEẼIƗÌOƆÙÚ"
 local V = "[" .. vowel .. "]"
 local NV_NOT_SPACING_CFLEX = "[^" .. vowel .. "%^]"
@@ -505,7 +509,7 @@ local function one_term_ipa(text, style, phonetic, err)
 		end
 	end)
 	if rfind(text, "x") then
-		err("x must be respelled z, ch, sh, cs, ss or similar")
+		err("x must be respelled z, sh, cs, ss or similar")
 	end
 
 	-- combinations with h; needs to precede handling of c and s, and needs to precede syllabification so that
@@ -812,10 +816,15 @@ local function one_term_ipa(text, style, phonetic, err)
 		text = rsub(text, "n#", "N#")
 		text = rsub(text, "([EO])(N#)", "%1" .. AC .. "%2")
 	end
-	if not brazil then
+	if brazil then
+		-- In Brazil, [[põem]] is pronounced like 'põe'.
+		text = rsub(text, "(Oˈ" .. TILDE .. ")(Em#)", "%1E#")
+	else
 		-- In Portugal, circumflex accent on final -em ([[vêm]], [[mantêm]], etc.) indicates a special double nasal diphthong
 		-- pronunciation.
-		text = rsub(text, "E" .. CFLEX .. "(ˈm#)", "E" .. CFLEX .. "ˈ" .. TILDE .. "y" .. TILDE .. ".E" .. CFLEX .. "%1")
+		text = rsub(text, "E" .. CFLEX .. "ˈm#", "E" .. CFLEX .. "ˈ" .. TILDE .. "y" .. TILDE .. ".E" .. CFLEX .. "m#")
+		-- In Portugal, [[põem]] is pronounced like 'põeem'.
+		text = rsub(text, "(Oˈ" .. TILDE .. ")(Em#)", "%1E.%2")
 	end
 	-- Acute accent on final -em ([[além]], [[também]]) and final -ens ([[parabéns]]) does not indicate an open
 	-- pronunciation.
@@ -1133,6 +1142,8 @@ local function one_term_ipa(text, style, phonetic, err)
 		-- Suppress final -ɨ before a vowel, and make optional utterance-finally.
 		text = rsub(text, "ɨ#[ %-]#(" .. V .. ")", "‿%1")
 		text = rsub(text, "ɨ##", "(ɨ)##")
+		-- (ɨ) after l when suppressed should convert to coda ɫ, so split it later into two pronuns.
+		text = rsub(text, "l%(ɨ%)##", "L##")
 	end
 
 	text = rsub(text, "g", "ɡ") -- U+0261 LATIN SMALL LETTER SCRIPT G
@@ -1418,6 +1429,8 @@ function export.IPA(text, style)
 			flatmap_and_sub_post("ʒ(" .. wordsep_c .. "*)z",
 					"ʒ%1z", {"careful pronunciation"}, "%1ʒ", {"natural pronunciation"})
 			flatmap_and_sub_post("Ɔ", "o", nil, "ɔ", nil)
+			-- Split (ɨ) after l into two pronuns, one with ɨ and the other without it (with one fewer syllables and coda [ɫ]).
+			flatmap_and_sub_post("%.([^.# ]-)L#", ".%1lɨ#", nil, {"%1l#", "%1ɫ#"}, nil)
 		end
 		flatmap_and_sub_post("([ÌÙ])%.",
 			function(iu) return iu == "Ì" and "i." or "u." end, nil,
