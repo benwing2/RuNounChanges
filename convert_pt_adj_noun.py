@@ -239,6 +239,73 @@ def make_masculine(form, special=None):
 
   return formarr[0]
 
+def munge_form_for_ending(form, typ):
+  formarr = [form]
+  def check(fr, to):
+    newform = re.sub(fr, to, formarr[0])
+    if newform != formarr[0]:
+      formarr[0] = newform
+      return True
+    return False
+
+  (
+  check(u"ão$", "on") or
+  typ != "aug" and check("c[oa]$", "qu") or
+  typ != "aug" and check("g[oa]$", "gu") or
+  check("[oae]$", "") or
+  typ == "sup" and check("z$", "c") or
+  check(u"ável$", "abil") or
+  check(u"ível$", "ibil") or
+  check("eu$", "euz")
+  )
+
+  # Remove accent (-ês, -ário, -ático, etc.) when adding ending.
+  return re.sub("(" + AV + ")(.*?)$", lambda m: remove_accent.get(m.group(1), m.group(1)) + m.group(2), formarr[0])
+
+# Generate a default absolute superlative form.
+def make_absolute_superlative(form, special=None):
+  retval = romance_utils.handle_multiword(form, special, make_absolute_superlative, prepositions)
+  if retval:
+    assert len(retval) == 1
+    return retval[0]
+  if special:
+    return None
+
+  return munge_form_for_ending(form, "sup") + u"íssimo"
+
+# Generate a default adverbial absolute superlative form.
+def make_adverbial_absolute_superlative(form, special=None):
+  retval = romance_utils.handle_multiword(form, special, make_adverbial_absolute_superlative, prepositions)
+  if retval:
+    assert len(retval) == 1
+    return retval[0]
+  if special:
+    return None
+
+  return munge_form_for_ending(form, "sup") + "issimamente"
+
+# Generate a default diminutive form.
+def make_diminutive(form, special=None):
+  retval = romance_utils.handle_multiword(form, special, make_diminutive, prepositions)
+  if retval:
+    assert len(retval) == 1
+    return retval[0]
+  if special:
+    return None
+
+  return munge_form_for_ending(form, "dim") + "inho"
+
+# Generate a default augmentative form.
+def make_augmentative(form, special=None):
+  retval = romance_utils.handle_multiword(form, special, make_augmentative, prepositions)
+  if retval:
+    assert len(retval) == 1
+    return retval[0]
+  if special:
+    return None
+
+  return munge_form_for_ending(form, "aug") + u"ão"
+
 def process_text_on_page(index, pagetitle, text):
   global args
   def pagemsg(txt):
@@ -263,10 +330,17 @@ def process_text_on_page(index, pagetitle, text):
       return []
     return [retval]
 
+  adj_headword = None
+  adj_infl_templates_to_remove = []
+
   for t in parsed.filter_templates():
     tn = tname(t)
     def getp(param):
       return getparam(t, param)
+
+
+    ############# Convert old-style noun headwords
+
     if tn == "pt-noun" and (args.do_nouns or args.do_old_nouns and getp("old")):
       subnotes = []
       origt = unicode(t)
@@ -574,6 +648,130 @@ def process_text_on_page(index, pagetitle, text):
       else:
         pagemsg("No changes to %s" % unicode(t))
 
+
+    ############# Convert new-style noun headwords for hyphenated terms
+
+    if tn == "pt-noun" and args.do_new_hyphenated_nouns:
+      subnotes = []
+      origt = unicode(t)
+
+      head = getp("head")
+      lemma = blib.remove_links(head or pagetitle)
+      # Skip term if not hyphenated
+      if not re.search(".-.", lemma):
+        continue
+
+      genders = blib.fetch_param_chain(t, "g")
+
+      is_plural = any(g.endswith("-p") for g in genders)
+      new_pls = None
+
+      if not is_plural:
+        pls = blib.fetch_param_chain(t, "2", "pl")
+        new_pls = []
+        for pl in pls:
+          actual_special = None
+          for special in romance_utils.all_specials:
+            special_pl = make_plural(lemma, True, special)
+            if special_pl is None:
+              continue
+            if pl == special_pl:
+              pagemsg("Found special=%s with special_pl=%s" % (special, special_pl))
+              actual_special = special
+              break
+
+          if actual_special:
+            subnotes.append("replace plural '%s' with '+%s'" % (pl, actual_special))
+            new_pls.append("+" + actual_special)
+          else:
+            new_pls.append(pl)
+
+      def handle_mf(g, g_full, make_mf):
+        mfs = blib.fetch_param_chain(t, g)
+
+        if not is_plural:
+          mfpls = blib.fetch_param_chain(t, g + "pl")
+
+        new_mfs = None
+        new_mfpls = None
+        if mfs:
+          new_mfs = []
+          for mf in mfs:
+            actual_special = None
+            for special in romance_utils.all_specials:
+              special_mf = make_mf(lemma, special)
+              if special_mf is None:
+                continue
+              if mf == special_mf:
+                pagemsg("Found special=%s with special_mf=%s" % (special, special_mf))
+                actual_special = special
+                break
+            if actual_special:
+              subnotes.append("replace %s '%s' with '+%s'" % (g_full, mf, actual_special))
+              new_mfs.append("+" + actual_special)
+            else:
+              new_mfs.append(mf)
+
+          if new_mfs != mfs and len(new_mfs) == 1 and actual_special:
+              if is_plural:
+                pass
+              elif not mfpls:
+                pagemsg("WARNING: Explicit %s=%s matches special=%s but no %s plural, allowing" % (
+                  g, ",".join(new_mfs), actual_special, g_full))
+              elif len(mfpls) > 1:
+                pagemsg("WARNING: Explicit %s=%s matches special=%s and multiple %s plurals %s, allowing" % (
+                  g, ",".join(new_mfs), actual_special, g_full, ",".join(mfpls)))
+              else:
+                special_mfpl = make_plural(special_mf, True, actual_special)
+                if special_mfpl:
+                  if mfpls[0] == special_mfpl:
+                    pagemsg("Found %s=%s and special=%s, %spls=%s matches special_%spl" % (
+                      g, ",".join(new_mfs), actual_special, g, ",".join(mfpls), g))
+                  else:
+                    pagemsg("WARNING: for %s=%s and special=%s, %spls=%s doesn't match special_%spl=%s, allowing" % (
+                      g, ",".join(new_mfs), actual_special, g, ",".join(mfpls), g, special_mfpl))
+                    actual_special = None
+              if actual_special:
+                subnotes.append("replace explicit %s '%s' with special indicator '+%s' and remove explicit %s plural" %
+                    (g_full, ",".join(new_mfs), actual_special, g_full))
+                new_mfpls = []
+              else:
+                new_mfpls = mfpls
+
+        return new_mfs, new_mfpls if not is_plural else []
+
+      retval = handle_mf("f", "feminine", make_feminine)
+      if retval is None:
+        continue
+      fs, fpls = retval
+      retval = handle_mf("m", "masculine", make_masculine)
+      if retval is None:
+        continue
+      ms, mpls = retval
+
+      must_continue = False
+
+      if new_pls is not None:
+        blib.set_param_chain(t, new_pls, "2", "pl")
+      if fs is not None:
+        blib.set_param_chain(t, fs, "f")
+      if fpls is not None:
+        blib.set_param_chain(t, fpls, "fpl")
+      if ms is not None:
+        blib.set_param_chain(t, ms, "m")
+      if mpls is not None:
+        blib.set_param_chain(t, mpls, "mpl")
+
+      if origt != unicode(t):
+        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        notes.append("replace hyphenated {{pt-noun}} with special indicator(s)%s" %
+            (" (%s)" % ", ".join(subnotes) if subnotes else ""))
+      else:
+        pagemsg("No changes to %s" % unicode(t))
+
+
+    ############# Convert old-style adjective headwords
+
     if tn == "pt-adj" and args.do_adjs:
       origt = unicode(t)
       if args.add_old:
@@ -704,20 +902,112 @@ def process_text_on_page(index, pagetitle, text):
       else:
         pagemsg("No changes to %s" % unicode(t))
 
-  return unicode(parsed), notes
+
+    ############# Convert new-style adjective headwords with inflections
+
+    if args.do_new_adjs_with_inflections:
+      if tn == "pt-adj":
+        if adj_headword:
+          pagemsg("Saw adjective headword without intervening inflection; first=%s, second=%s" % (
+            unicode(adj_headword), unicode(t)))
+        adj_headword = t
+      if tn == "pt-adj-infl":
+        if not adj_headword:
+          pagemsg("WARNING: Saw adjective inflection template %s without previous adjective headword" %
+            unicode(t))
+          continue
+        orig_adj_headword = unicode(adj_headword)
+        head = getparam(adj_headword, "head")
+        headword_lemma = blib.remove_links(head or pagetitle)
+        infl_base = getp("1")
+        infl_type = getp("2")
+        infl_lemma = infl_base + (infl_type[:-1] if infl_type in ["co2", u"ático2"] else infl_type)
+        if infl_lemma != headword_lemma:
+          pagemsg("WARNING: Inflection lemma %s not same as headword lemma %s: adj_headword=%s, infl=%s" % (
+            infl_lemma, headword_lemma, unicode(adj_headword), unicode(t)))
+          continue
+        has_dim = getp("dim") and getp("dim") != "0"
+        has_aug = getp("aug") and getp("aug") != "0"
+        _, _, _, _, sups, augs, dims = get_old_inflections(infl_type)
+        if type(sups) is not list:
+          sups = [sups]
+        if type(dims) is not list:
+          dims = [dims]
+        if type(augs) is not list:
+          augs = [augs]
+
+        def add_ending(engtype, stems, ending, f_ending):
+          retvals = []
+          for stem in stems:
+            if type(stem) is tuple:
+              if stem[0] == "dim_a":
+                _, f_stem = stem
+                retval = infl_base + f_stem + f_ending
+              else:
+                assert stem[0] == "mf"
+                _, m_stem, f_stem = stem
+                retval = infl_base + m_stem + ending
+                pagemsg("WARNING: For %s, separate feminine %s" % (engtype, infl_base + f_stem + f_ending))
+            else:
+              retval = infl_base + stem + ending
+            retvals.append(retval)
+          return retvals
+
+        supvals = add_ending("superlative", sups, u"íssimo", u"íssima")
+        defsup = make_absolute_superlative(headword_lemma)
+        supvals = ["+abs" if sup == defsup else sup for sup in supvals]
+        notes.append("add superlative(s) '%s' to {{pt-adj}}" % ",".join(supvals))
+        blib.set_param_chain(adj_headword, supvals, "sup")
+        if adj_headword.has("hascomp"):
+          hascompval = getparam(adj_headword, "hascomp")
+          rmparam(adj_headword, "hascomp")
+          notes.append("remove unnecessary hascomp=%s from {{pt-adj}}" % hascompval)
+
+        if has_dim:
+          dimvals = add_ending("diminutive", dims, u"inho", "inha")
+          defdim = make_diminutive(headword_lemma)
+          dimvals = ["+" if dim == defdim else dim for dim in dimvals]
+          notes.append("add diminutive(s) '%s' to {{pt-adj}}" % ",".join(dimvals))
+          blib.set_param_chain(adj_headword, dimvals, "dim")
+
+        if has_aug:
+          augvals = add_ending("augmentative", augs, u"ão", "ona")
+          defaug = make_augmentative(headword_lemma)
+          augvals = ["+" if aug == defaug else aug for aug in augvals]
+          notes.append("add augmentative(s) '%s' to {{pt-adj}}" % ",".join(augvals))
+          blib.set_param_chain(adj_headword, augvals, "aug")
+
+        if orig_adj_headword != unicode(adj_headword):
+          pagemsg("Replaced %s with %s" % (orig_adj_headword, unicode(adj_headword)))
+        else:
+          pagemsg("No changes to %s" % unicode(adj_headword))
+        adj_infl_templates_to_remove.append(unicode(t))
+
+  text = unicode(parsed)
+  for template_to_remove in adj_infl_templates_to_remove:
+    text, changed = blib.replace_in_text(text,
+        "\n\n==+(Inflection|Declension|Conjugation)==+\n%s" % re.escape(template_to_remove), "", pagemsg, is_re=True)
+    if not changed:
+      pagemsg("WARNING: Can't remove adjective inflection template %s" % template_to_remove)
+    else:
+      notes.append("remove old adjective inflection template %s" % template_to_remove)
+
+  return text, notes
 
 parser = blib.create_argparser("Convert {{pt-noun}} or {{pt-adj}} templates to new syntax",
   include_pagefile=True, include_stdin=True)
 parser.add_argument("--do-nouns", action="store_true")
 parser.add_argument("--do-old-nouns", action="store_true",
     help="Only do nouns with old=1")
+parser.add_argument("--do-new-hyphenated-nouns", action="store_true")
+parser.add_argument("--do-new-adjs-with-inflections", action="store_true")
 parser.add_argument("--do-adjs", action="store_true")
 parser.add_argument("--add-old", action="store_true",
     help="Add old=1 to adjectives without old=1 or 1=/2=, or to nouns that will change")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.do_nouns:
+if args.do_nouns or args.do_old_nouns or args.do_new_hyphenated_nouns:
   default_refs=["Template:pt-noun"]
 else:
   default_refs=["Template:pt-adj"]
