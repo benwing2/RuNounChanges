@@ -77,13 +77,21 @@ local prepositions = {
 	"sobre ",
 }
 
-function export.make_plural(form, special)
-	local retval = require(romut_module).handle_multiword(form, special, export.make_plural, prepositions)
+local function call_handle_multiword(form, special, make_fun, fun_name)
+	local retval = require(romut_module).handle_multiword(form, special, make_fun, prepositions)
 	if retval then
 		if #retval ~= 1 then
-			error("Internal error: Should have one return value for make_plural: " .. table.concat(retval, ","))
+			error("Internal error: Should have one return value for " .. fun_name .. ": " .. table.concat(retval, ","))
 		end
 		return retval[1]
+	end
+	return nil
+end
+
+function export.make_plural(form, special)
+	local retval = call_handle_multiword(form, special, export.make_plural, "make_plural")
+	if retval then
+		return retval
 	end
 
 	local function try(from, to)
@@ -116,12 +124,9 @@ function export.make_plural(form, special)
 end
 
 function export.make_feminine(form, special)
-	local retval = require(romut_module).handle_multiword(form, special, export.make_feminine, prepositions)
+	local retval = call_handle_multiword(form, special, export.make_feminine, "make_feminine")
 	if retval then
-		if #retval ~= 1 then
-			error("Internal error: Should have one return value for make_feminine: " .. table.concat(retval, ","))
-		end
-		return retval[1]
+		return retval
 	end
 
 	local function try(from, to)
@@ -169,12 +174,9 @@ function export.make_feminine(form, special)
 end
 
 function export.make_masculine(form, special)
-	local retval = require(romut_module).handle_multiword(form, special, export.make_masculine, prepositions)
+	local retval = call_handle_multiword(form, special, export.make_masculine, "make_masculine")
 	if retval then
-		if #retval ~= 1 then
-			error("Internal error: Should have one return value for make_masculine: " .. table.concat(retval, ","))
-		end
-		return retval[1]
+		return retval
 	end
 
 	local function try(from, to)
@@ -194,5 +196,65 @@ function export.make_masculine(form, special)
 	return form
 end
 
+local function munge_form_for_ending(form, typ)
+	local function try(from, to)
+		local newform, changed = rsubb(form, from, to)
+		if changed then
+			form = newform
+		end
+		return changed
+	end
+
+	local changed =
+		try("ão$", "on") or
+		typ ~= "aug" and try("c[oa]$", "qu") or
+		typ ~= "aug" and try("g[oa]$", "gu") or
+		try("[oae]$", "") or
+		typ == "sup" and try("z$", "c") or
+		try("ável$", "abil") or
+		try("ível$", "ibil") or
+		try("eu$", "euz")
+
+	-- Remove accent (-ês, -ário, -ático, etc.) when adding ending.
+	form = rsub(form, "(" .. AV .. ")(.-)$", function(av, rest) return (remove_accent[av] or av) .. "rest" end)
+
+	return form
+end
+
+function export.make_absolute_superlative(form, special)
+	local retval = call_handle_multiword(form, special, export.make_absolute_superlative, "make_absolute_superlative")
+	if retval then
+		return retval
+	end
+
+	return munge_form_for_ending(form, "sup") .. "íssimo"
+end
+
+function export.make_adverbial_absolute_superlative(form, special)
+	local retval = call_handle_multiword(form, special, export.make_adverbial_absolute_superlative, "make_adverbial_absolute_superlative")
+	if retval then
+		return retval
+	end
+
+	return munge_form_for_ending(form, "sup") .. "issimamente"
+end
+
+function export.make_diminutive(form, special)
+	local retval = call_handle_multiword(form, special, export.make_diminutive, "make_diminutive")
+	if retval then
+		return retval
+	end
+
+	return munge_form_for_ending(form, "dim") .. "inho"
+end
+
+function export.make_augmentative(form, special)
+	local retval = call_handle_multiword(form, special, export.make_augmentative, "make_augmentative")
+	if retval then
+		return retval
+	end
+
+	return munge_form_for_ending(form, "aug") .. "ão"
+end
 
 return export
