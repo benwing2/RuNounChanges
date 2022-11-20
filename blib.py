@@ -313,7 +313,7 @@ def remove_param_chain(t, firstparam, parampref=None):
       return changed
 
 def set_param_chain(t, values, firstparam, parampref=None, before=None):
-  is_number = re.search("^[0-9]+$", firstparam)
+  is_number = re.search("^[0-9]+$", firstparam) and not parampref
   if parampref is None:
     parampref = "" if is_number else firstparam
   paramno = int(firstparam) - 1 if is_number else 0
@@ -321,10 +321,10 @@ def set_param_chain(t, values, firstparam, parampref=None, before=None):
     insert_before_param = find_first_param(t)
   else:
     insert_before_param = None
+  first = True
   for val in values:
     paramno += 1
-    next_param = firstparam if paramno == 1 and not is_number else "%s%s" % (
-        parampref, paramno)
+    next_param = firstparam if first else "%s%s" % (parampref, paramno)
     # When adding a param, if the param already exists, we want to just replace the param.
     # Otherwise, we want to add directly after the last-added param.
     if t.has(next_param):
@@ -332,9 +332,9 @@ def set_param_chain(t, values, firstparam, parampref=None, before=None):
     else:
       t.add(next_param, val, before=before or insert_before_param)
     insert_before_param = find_following_param(t, next_param)
+    first = False
   for i in xrange(paramno + 1, 30):
-    next_param = firstparam if i == 1 and not is_number else "%s%s" % (
-        parampref, i)
+    next_param = firstparam if first else "%s%s" % (parampref, i)
     rmparam(t, next_param)
 
 def sort_params(t):
@@ -2102,12 +2102,19 @@ def find_lang_section_from_text(pagetext, lang, pagemsg):
   return None
 
 def replace_in_text(text, curr, repl, pagemsg, count=-1, no_found_repl_check=False,
-    abort_if_warning=False):
-  found_curr = curr in text
-  if not found_curr:
-    pagemsg("WARNING: Unable to locate current text: %s" % curr)
-    return text, False
-  if not no_found_repl_check:
+    abort_if_warning=False, is_re=False):
+  if is_re:
+    m = re.search(curr, text, re.M)
+    if not m:
+      pagemsg("WARNING: Unable to locate regexp: %s" % curr)
+      return text, False
+    curr = m.group(0)
+  else:
+    found_curr = curr in text
+    if not found_curr:
+      pagemsg("WARNING: Unable to locate current text: %s" % curr)
+      return text, False
+  if not no_found_repl_check and repl:
     found_repl = repl in text
     if found_repl:
       pagemsg("WARNING: Already found replacement text: %s" % repl)
