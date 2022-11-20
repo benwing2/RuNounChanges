@@ -216,7 +216,7 @@ local function munge_form_for_ending(form, typ)
 		try("eu$", "euz")
 
 	-- Remove accent (-ês, -ário, -ático, etc.) when adding ending.
-	form = rsub(form, "(" .. AV .. ")(.-)$", function(av, rest) return (remove_accent[av] or av) .. "rest" end)
+	form = rsub(form, "(" .. AV .. ")(.-)$", function(av, rest) return (remove_accent[av] or av) .. rest end)
 
 	return form
 end
