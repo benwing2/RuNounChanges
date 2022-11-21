@@ -13,8 +13,7 @@ TERMINOLOGY:
 
 -- "slot" = A particular combination of tense/mood/person/number/etc.
 	 Example slot names for verbs are "pres_1s" (present indicative first-person singular), "pres_sub_2s" (present
-	 subjunctive second-person singular) "impf_sub_3p" (imperfect subjunctive third-person plural),
-	 "imp_1p_comb_lo" (imperative first-person plural combined with clitic [[lo]]).
+	 subjunctive second-person singular) "impf_sub_3p" (imperfect subjunctive third-person plural).
 	 Each slot is filled with zero or more forms.
 
 -- "form" = The conjugated Portuguese form representing the value of a given slot.
@@ -33,7 +32,7 @@ local m_string_utilities = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local iut = require("Module:inflection utilities")
-local com = require("Module:pt-common")
+local com = require("Module:User:Benwing2/pt-common")
 
 local force_cat = false -- set to true for debugging
 local check_for_red_links = false -- set to false for debugging
@@ -56,25 +55,31 @@ local C = com.C -- consonant regex class
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
 local CFLEX = u(0x0302) -- circumflex =  ̂
+local TEMPC1 = u(0xFFF1) -- temporary character used for consonant substitutions
 
 local short_pp_footnote = "[usually used with auxiliary verbs " .. link_term("ser") .. " and " .. link_term("estar") .. "]"
 local long_pp_footnote = "[usually used with auxiliary verbs " .. link_term("haver") .. " and " .. link_term("ter") .. "]"
 
-local vowel_alternants = m_table.listToSet({"i", "í", "u", "ú", "ei", "+"})
+local vowel_alternants = m_table.listToSet({"i-e", "i", "í", "u-o", "u", "ú", "ei", "+"})
 local vowel_alternant_to_desc = {
-	["ie"] = "e-ie",
-	["ie-i"] = "e-ie-i",
-	["ye"] = "e-ye",
-	["ye-i"] = "e-ye-i",
-	["ue"] = "o-ue",
-	["ue-u"] = "o-ue-u",
-	["hue"] = "o-hue",
-	["i"] = "e-i",
-	["í"] = "i-í",
-	["ú"] = "u-ú",
+	["i-e"] = "''i-e'' alternation in present singular",
+	["i"] = "''e'' becomes ''i'' when stressed",
+	["í"] = "''i'' becomes ''í'' when stressed",
+	["u-o"] = "''u-o'' alternation in present singular",
+	["u"] = "''o'' becomes ''u'' when stressed",
+	["ú"] = "''u'' becomes ''ú'' when stressed",
+	["ei"] = "''i'' becomes ''ei'' when stressed",
 }
 
-local raise_vowel = {["e"] = "i", ["o"] = "u"}
+local vowel_alternant_to_cat = {
+	["i-e"] = "i-e alternation in present singular",
+	["i"] = "e becoming i when stressed",
+	["í"] = "i becoming í when stressed",
+	["u-o"] = "u-o alternation in present singular",
+	["u"] = "o becoming u when stressed",
+	["ú"] = "u becoming ú when stressed",
+	["ei"] = "i becoming ei when stressed",
+}
 
 local all_persons_numbers = {
 	["1s"] = "1|s",
@@ -85,7 +90,7 @@ local all_persons_numbers = {
 	["3p"] = "3|p",
 }
 
-local person_number_list_basic = {"1s", "2s", "3s", "1p", "2p", "3p"}
+local person_number_list = {"1s", "2s", "3s", "1p", "2p", "3p"}
 local imp_person_number_list = {"2s", "3s", "1p", "2p", "3p"}
 local neg_imp_person_number_list = {"2s", "3s", "1p", "2p", "3p"}
 
@@ -94,19 +99,14 @@ person_number_to_reflexive_pronoun = {
 	["2s"] = "te",
 	["3s"] = "se",
 	["1p"] = "nos",
-	["2p"] = "os",
+	["2p"] = "vos",
 	["3p"] = "se",
 }
 
 
--- Initialize all the slots for which we generate forms. The particular slots may depend on whether we're generating
--- combined slots (`not alternant_multiword_spec.nocomb`, which is always false if we're dealing with a verb with an
--- attached clitic, such as [[hincarla]], or a reflexive or partly-reflexive verb, where a partly-reflexive verb is
--- a conjoined term made up of two or more verbs, where some but not all are reflexive). It may also depend on whether
--- we're being requested to generate some double-combined forms, such as [[llevándoselo]]; see the comment below for
--- `verb_slot_double_combined_rows`.
+-- Initialize all the slots for which we generate forms.
 local function add_slots(alternant_multiword_spec)
-	-- "Basic" slots: All slots that go into the regular table (not the combined-form table).
+	-- "Basic" slots: All slots that go into the regular table (not the reflexive form-of table).
 	alternant_multiword_spec.verb_slots_basic = {
 		{"infinitive", "inf"},
 		{"infinitive_linked", "inf"},
@@ -115,11 +115,11 @@ local function add_slots(alternant_multiword_spec)
 		{"pp_fs", "f|s|past|part"},
 		{"pp_mp", "m|p|past|part"},
 		{"pp_fp", "f|p|past|part"},
+		{"short_pp_ms", "short|m|s|past|part"},
+		{"short_pp_fs", "short|f|s|past|part"},
+		{"short_pp_mp", "short|m|p|past|part"},
+		{"short_pp_fp", "short|f|p|past|part"},
 	}
-
-	-- Slots that go into the combined-form table, along with double-combined slots (e.g. [[llevándoselo]]) that are
-	-- requested for use with {{pt-verb form of}}.
-	alternant_multiword_spec.verb_slots_combined = {}
 
 	-- Special slots used to handle non-reflexive parts of reflexive verbs in {{pt-verb form of}}.
 	-- For example, for a reflexive-only verb like [[jambarse]], we want to be able to use {{pt-verb form of}} on
@@ -152,23 +152,6 @@ local function add_slots(alternant_multiword_spec)
 		alternant_multiword_spec.verb_slots_reflexive_verb_form_of = {}
 	end
 
-	-- For generating combined forms, i.e. combinations of a basic form (specifically, infinitive, gerund or an
-	-- imperative form) with a clitic (or in some cases, two clitics). This is a list of lists of the form
-	-- {BASIC_SLOT, CLITICS} where BASIC_SLOT is the slot to add the clitic pronouns to (e.g. "gerund" or "imp_2s")
-	-- and CLITICS is a list of the clitic pronouns to add.
-	alternant_multiword_spec.verb_slot_combined_rows = {}
-
-	-- For generating double combined forms (e.g. [[llevándoselo]] or [[dámela]]). This is used by {{pt-verb form of}}
-	-- when it detects that it is being requested to find the inflection tags for a double-combined form. The number of
-	-- double-combined forms is relatively large, so to optimize this, [[Module:pt-inflections]] (which implements
-	-- {{pt-verb form of}}) detects which two clitics are involved, and we only generate double-combined forms
-	-- involving those two clitics; this is specified using `double_combined_forms_to_include`, passed into
-	-- do_generate_forms(). The value of this field is a list of lists of the form {SINGLE_COMB_SLOT, CLITICS} where
-	-- SINGLE_COMB_SLOT is the single-combined slot to add the object clitic pronouns to (e.g. "gerund_comb_se" or
-	-- "imp_2s_comb_me") and CLITICS is a list of the clitic pronouns to add. CLITICS will normally be a length-one
-	-- list whose value is one of {"lo", "la", "le", "los", "las", "les"}.
-	alternant_multiword_spec.verb_slot_double_combined_rows = {}
-
 	-- Add entries for a slot with person/number variants.
 	-- `verb_slots` is the table to add to.
 	-- `slot_prefix` is the prefix of the slot, typically specifying the tense/aspect.
@@ -184,8 +167,7 @@ local function add_slots(alternant_multiword_spec)
 	end
 
 	-- Add a personal slot (i.e. a slot with person/number variants) to `verb_slots_basic`.
-	local function add_basic_personal_slot(slot_prefix, tag_suffix, person_number_list, no_special_verb_form_of_slot,
-		need_variant_slot)
+	local function add_basic_personal_slot(slot_prefix, tag_suffix, person_number_list, no_special_verb_form_of_slot)
 		add_personal_slot(alternant_multiword_spec.verb_slots_basic, slot_prefix, tag_suffix, person_number_list)
 		-- Add special slots for handling non-reflexive parts of reflexive verbs in {{pt-verb form of}}.
 		-- See comment above in `need_special_verb_form_of_slots`.
@@ -195,94 +177,32 @@ local function add_slots(alternant_multiword_spec)
 				local basic_slot = slot_prefix .. "_" .. persnum
 				local accel = persnum_tag .. "|" .. tag_suffix
 				table.insert(alternant_multiword_spec.verb_slots_reflexive_verb_form_of, {basic_slot .. "_non_reflexive", "-"})
-				if need_variant_slot then
-					table.insert(alternant_multiword_spec.verb_slots_reflexive_verb_form_of, {basic_slot .. "_variant", "-"})
-				end
 			end
 		end
 	end
 
-	add_basic_personal_slot("pres", "pres|ind", person_number_list_voseo)
-	add_basic_personal_slot("impf", "impf|ind", person_number_list_basic)
-	add_basic_personal_slot("pret", "pret|ind", person_number_list_basic)
-	add_basic_personal_slot("fut", "fut|ind", person_number_list_basic)
-	add_basic_personal_slot("cond", "cond", person_number_list_basic)
-	add_basic_personal_slot("pres_sub", "pres|sub", person_number_list_voseo)
-	add_basic_personal_slot("impf_sub_ra", "impf|sub", person_number_list_basic)
-	add_basic_personal_slot("impf_sub_se", "impf|sub", person_number_list_basic)
-	add_basic_personal_slot("fut_sub", "fut|sub", person_number_list_basic)
-	-- Need variant slots because the imperative clitics are suffixed.
-	add_basic_personal_slot("imp", "imp", imp_person_number_list, nil, "need variant slot")
+	add_basic_personal_slot("pres", "pres|ind", person_number_list)
+	add_basic_personal_slot("impf", "impf|ind", person_number_list)
+	add_basic_personal_slot("pret", "pret|ind", person_number_list)
+	add_basic_personal_slot("plup", "plup|ind", person_number_list)
+	add_basic_personal_slot("fut", "fut|ind", person_number_list)
+	add_basic_personal_slot("cond", "cond", person_number_list)
+	add_basic_personal_slot("pres_sub", "pres|sub", person_number_list)
+	add_basic_personal_slot("impf_sub", "impf|sub", person_number_list)
+	add_basic_personal_slot("fut_sub", "fut|sub", person_number_list)
+	add_basic_personal_slot("imp", "imp", imp_person_number_list)
+	add_basic_personal_slot("pers_inf", "pers|inf", person_number_list)
 	-- Don't need special non-reflexive-part slots because the negative imperative is multiword, of which the
 	-- individual words are 'no' + subjunctive.
 	add_basic_personal_slot("neg_imp", "neg|imp", neg_imp_person_number_list, "no special verb form of")
 	-- Don't need special non-reflexive-part slots because we don't want [[jambando]] mapping to [[jambándome]]
 	-- (only [[jambándose]]) or [[jambar]] mapping to [[jambarme]] (only [[jambarse]]).
-	add_basic_personal_slot("infinitive", "inf", person_number_list_basic, "no special verb form of")
-	add_basic_personal_slot("gerund", "ger", person_number_list_basic, "no special verb form of")
-
-	local third_person_object_clitics = {"lo", "la", "le", "los", "las", "les"}
-
-	-- Add combined-form slots.
-	if not alternant_multiword_spec.nocomb then
-		-- Add a row of slots representing the combination of a basic slot with a clitic. `basic_slot` is the basic slot
-		-- descriptor, `tag_prefix` is a string describing the inflection tags of the basic slot, and `personal_clitics`
-		-- is a list of the personal clitics ("me", "te", "se", "nos" or "os") to add to the basic slot.
-		local function add_combined_slot_row(basic_slot, tag_prefix, personal_clitics)
-			-- First, add each individual combined slot to `verb_slots_combined`.
-			local clitics_with_object = m_table.append(personal_clitics, third_person_object_clitics)
-			for _, clitic in ipairs(clitics_with_object) do
-				local slot = basic_slot .. "_comb_" .. clitic
-				-- You have to pass this through full_link() to get a Portuguese-specific link
-				local accel = tag_prefix .. "|combined with [[" .. clitic .. "]]"
-				table.insert(alternant_multiword_spec.verb_slots_combined, {slot, accel})
-			end
-
-			-- Also, add the row to `verb_slot_combined_rows`.
-			table.insert(alternant_multiword_spec.verb_slot_combined_rows, {basic_slot, clitics_with_object})
-
-			-- Also do double-combined forms for a specific set of clitics, if requested. See the comment above
-			-- `verb_slot_double_combined_rows` above.
-			if alternant_multiword_spec.double_combined_forms_to_include then
-				for _, personal_clitic in ipairs(personal_clitics) do
-					for _, object_clitic in ipairs(third_person_object_clitics) do
-						for _, form_to_include in ipairs(alternant_multiword_spec.double_combined_forms_to_include) do
-							local to_include_personal_clitic, to_include_object_clitic = unpack(form_to_include)
-							if personal_clitic == to_include_personal_clitic and object_clitic == to_include_object_clitic then
-								local single_comb_slot = basic_slot .. "_comb_" .. personal_clitic
-								local slot = single_comb_slot .. "_" .. object_clitic
-								local accel = tag_prefix .. "|combined with [[" .. personal_clitic .. "]] and [[" ..
-									object_clitic .. "]]"
-								table.insert(alternant_multiword_spec.verb_slots_combined, {slot, accel})
-								table.insert(alternant_multiword_spec.verb_slot_double_combined_rows,
-									{single_comb_slot, {object_clitic}})
-								break
-							end
-						end
-					end
-				end
-			end
-		end
-
-		add_combined_slot_row("infinitive", "inf", {"me", "te", "se", "nos", "os"})
-		add_combined_slot_row("gerund", "gerund", {"me", "te", "se", "nos", "os"})
-
-		local function add_combined_imp_slot_row(persnum, personal_clitics)
-			add_combined_slot_row("imp_" .. persnum, all_persons_numbers[persnum] .. "|imp", personal_clitics)
-		end
-		add_combined_imp_slot_row("2s", {"me", "te", "nos"})
-		add_combined_imp_slot_row("3s", {"me", "se", "nos"})
-		add_combined_imp_slot_row("1p", {"te", "nos", "os"})
-		add_combined_imp_slot_row("2p", {"me", "nos", "os"})
-		add_combined_imp_slot_row("3p", {"me", "se", "nos"})
-	end
+	add_basic_personal_slot("infinitive", "inf", person_number_list, "no special verb form of")
+	add_basic_personal_slot("gerund", "ger", person_number_list, "no special verb form of")
 
 	-- Generate the list of all slots.
 	alternant_multiword_spec.all_verb_slots = {}
 	for _, slot_and_accel in ipairs(alternant_multiword_spec.verb_slots_basic) do
-		table.insert(alternant_multiword_spec.all_verb_slots, slot_and_accel)
-	end
-	for _, slot_and_accel in ipairs(alternant_multiword_spec.verb_slots_combined) do
 		table.insert(alternant_multiword_spec.all_verb_slots, slot_and_accel)
 	end
 	for _, slot_and_accel in ipairs(alternant_multiword_spec.verb_slots_reflexive_verb_form_of) do
@@ -293,12 +213,6 @@ local function add_slots(alternant_multiword_spec)
 	for _, slotaccel in ipairs(alternant_multiword_spec.verb_slots_basic) do
 		local slot, accel = unpack(slotaccel)
 		alternant_multiword_spec.verb_slots_basic_map[slot] = accel
-	end
-
-	alternant_multiword_spec.verb_slots_combined_map = {}
-	for _, slotaccel in ipairs(alternant_multiword_spec.verb_slots_combined) do
-		local slot, accel = unpack(slotaccel)
-		alternant_multiword_spec.verb_slots_combined_map[slot] = accel
 	end
 end
 
@@ -819,13 +733,39 @@ local irreg_conjugations = {
 		forms = {short_pp = "volto"},
 	},
 
+--[=[
+
+Vowel alternations:
+
+<i-e>: 'i' in pres1s and the whole present subjunctive; 'e' elsewhere when stressed. Generally 'e' otherwise when
+       unstressed. E.g. [[sentir]], [[conseguir]] (the latter additionally with 'gu-g' alternation).
+<u-o>: 'u' in pres1s and the whole present subjunctive; 'o' elsewhere when stressed. Either 'o' or 'u' otherwise when
+       unstressed. E.g. [[dormir]], [[subir]].
+<i>: 'i' whenever stressed (in the present singular and third plural) and throughout the whole present subjunctive.
+      Otherwise 'e'. E.g. [[progredir]], also [[premir]] per Priberam.
+<u>: 'u' whenever stressed (in the present singular and third plural) and throughout the whole present subjunctive.
+      Otherwise 'o'. E.g. [[polir]], [[extorquir]] (the latter also <u-o>).
+<í>: The last 'i' of the stem (excluding stem-final 'i') becomes 'í' when stressed. E.g.:
+     * [[proibir]] ('proíbo, proíbe(s), proíbem, proíba(s), proíbam')
+	 * [[faiscar]] ('faísco, faísca(s), faíscam, faísque(s), faísquem' also with 'c-qu' alternation)
+	 * [[homogeneizar]] ('homogeneízo', etc.)
+	 * [[mobiliar]] ('mobílio', etc.; note here the final -i is ignored when determining which vowel to stress)
+	 * [[tuitar]] ('tuíto', etc.)
+<ú>: The last 'u' of the stem (excluding stem-final 'u') becomes 'ú' when stressed. E.g.:
+     * [[reunir]] ('reúno, reúne(s), reúnem, reúna(s), reúnam')
+	 * [[esmiuçar]] ('esmiúço, esmiúça(s), esmiúça, esmiúce(s), esmiúcem' also with 'ç-c' alternation)
+     * [[reusar]] ('reúso, reúsa(s), reúsa, reúse(s), reúsem')
+     * [[saudar]] ('saúdo, saúda(s), saúda, saúde(s), saúdem')
+]=]
+
+
 	--------------------------------------------------------------------------------------------
 	--                                             -ir                                        --
 	--------------------------------------------------------------------------------------------
 
 	-- Verbs not needing entries here:
 	--
-	-- abolir: use <u-o> (claimed in old module to have no pres1 or pres sub, but Priberam disagrees)
+	-- abolir: use <u-o> (claimed in old module to have no pres1 or pres sub; Priberam agrees for Brazil, but says <u-o> for Portugal)
 	-- barrir: use <only3sp>
 	-- carpir, colorir/descolorir, demolir: use <no_pres1_and_sub>
 	-- delir, empedernir, espavorir, falir, florir, remir, renhir: use <no_pres_stressed>
@@ -1020,7 +960,7 @@ local irreg_conjugations = {
 			if verb:find("guir") then
 				return nil
 			else
-				return match_against_verbs("uir", {""})
+				return match_against_verbs("uir", {""})(verb)
 			end
 		end,
 		forms = {
@@ -1052,7 +992,7 @@ local irreg_conjugations = {
 			if verb == "pôr" then
 				return "", "pôr"
 			else
-				return match_against_verbs("por", {""})
+				return match_against_verbs("por", {""})(verb)
 			end
 		end,
 		forms = {
@@ -1091,7 +1031,7 @@ local reflexive_forms = {
 
 
 local function skip_slot(base, slot, allow_overrides)
-	if not allow_overrides and (base.basic_overrides[slot] or base.combined_overrides[slot] or
+	if not allow_overrides and (base.basic_overrides[slot] or
 		base.refl and base.basic_reflexive_only_overrides[slot]) then
 		-- Skip any slots for which there are overrides.
 		return true
@@ -1178,63 +1118,55 @@ end
 
 -- Apply vowel alternation to stem.
 local function apply_vowel_alternation(stem, alternation)
-	local ret, err
+	local pres1_and_sub, pres_stressed, err
 	-- Treat final -gu, -qu as a consonant, so the previous vowel can alternate (e.g. conseguir -> consigo).
 	-- This means a verb in -guar can't have a u-ú alternation but I don't think there are any verbs like that.
 	stem = rsub(stem, "([gq])u$", "%1" .. TEMPC1)
-	local before_last_vowel, last_vowel, after_last_vowel = rmatch(stem, "^(.*)(" .. V .. ")(.-)$")
-	if alternation == "ie" then
-		if last_vowel == "e" or last_vowel == "i" then
-			-- allow i for adquirir -> adquiero, inquirir -> inquiero, etc.
-			ret = before_last_vowel .. "ie" .. after_last_vowel
+	if alternation == "ei" then
+		local before_last_vowel = rmatch(stem, "^(.*)i$")
+		if not before_last_vowel then
+			err = "stem should end in -i"
 		else
-			err = "should have -e- or -i- as the last vowel"
-		end
-	elseif alternation == "ye" then
-		if last_vowel == "e" then
-			ret = before_last_vowel .. "ye" .. after_last_vowel
-		else
-			err = "should have -e- as the last vowel"
-		end
-	elseif alternation == "ue" then
-		if last_vowel == "o" or last_vowel == "u" then
-			-- allow u for jugar -> juego; correctly handle avergonzar -> avergüenzo
-			ret = (
-				last_vowel == "o" and before_last_vowel:find("g$") and before_last_vowel .. "üe" .. after_last_vowel or
-				before_last_vowel .. "ue" .. after_last_vowel
-			)
-		else
-			err = "should have -o- or -u- as the last vowel"
-		end
-	elseif alternation == "hue" then
-		if last_vowel == "o" then
-			ret = before_last_vowel .. "hue" .. after_last_vowel
-		else
-			err = "should have -o- as the last vowel"
-		end
-	elseif alternation == "i" then
-		if last_vowel == "e" then
-			ret = before_last_vowel .. "i" .. after_last_vowel
-		else
-			err = "should have -i- as the last vowel"
-		end
-	elseif alternation == "í" then
-		if last_vowel == "i" then
-			ret = before_last_vowel .. "í" .. after_last_vowel
-		else
-			err = "should have -i- as the last vowel"
-		end
-	elseif alternation == "ú" then
-		if last_vowel == "u" then
-			ret = before_last_vowel .. "ú" .. after_last_vowel
-		else
-			err = "should have -u- as the last vowel"
+			pres1_and_sub = before_last_vowel .. "ei"
+			pres_stressed = pres1_and_sub
 		end
 	else
-		error("Internal error: Unrecognized vowel alternation '" .. alternation .. "'")
+		local before_last_vowel, last_vowel, after_last_vowel = rmatch(stem, "^(.*)(" .. V .. ")(.-)$")
+		if alternation == "i-e" or alternation == "i" then
+			if last_vowel == "e" or last_vowel == "i" then
+				pres1_and_sub = before_last_vowel .. "i" .. after_last_vowel
+				pres_stressed = before_last_vowel .. (alternation == "i" and "i" or "e") .. after_last_vowel
+			else
+				err = "should have -e- or -i- as the last vowel"
+			end
+		elseif alternation == "u-o" or alternation == "u" then
+			if last_vowel == "o" or last_vowel == "u" then
+				pres1_and_sub = before_last_vowel .. "u" .. after_last_vowel
+				pres_stressed = before_last_vowel .. (alternation == "u" and "u" or "o") .. after_last_vowel
+			else
+				err = "should have -o- or -u- as the last vowel"
+			end
+		elseif alternation == "í" then
+			if last_vowel == "i" then
+				pres1_and_sub = before_last_vowel .. "í" .. after_last_vowel
+				pres_stressed = pres1_and_sub
+			else
+				err = "should have -i- as the last vowel"
+			end
+		elseif alternation == "ú" then
+			if last_vowel == "u" then
+				pres1_and_sub = before_last_vowel .. "ú" .. after_last_vowel
+				pres_stressed = pres1_and_sub
+			else
+				err = "should have -u- as the last vowel"
+			end
+		else
+			error("Internal error: Unrecognized vowel alternation '" .. alternation .. "'")
+		end
 	end
-	ret = ret and ret:gsub(TEMPC1, "u") or nil
-	return {ret = ret, err = err}
+	pres1_and_sub = pres1_and_sub and pres1_and_sub:gsub(TEMPC1, "u") or nil
+	pres_stressed = pres_stressed and pres_stressed:gsub(TEMPC1, "u") or nil
+	return {pres1_and_sub = pres1_and_sub, pres_stressed = pres_stressed, err = err}
 end
 
 
@@ -1245,6 +1177,23 @@ end
 local function combine_stem_ending(base, slot, stem, ending, is_combining_ending)
 	if not is_combining_ending then
 		return stem .. ending
+	end
+
+	-- If the ending begins with a double asterisk, this is a signal to conditionally delete the accent on the last letter
+	-- of the stem. "Conditionally" means we don't do it if the letter preceding the last letter is a vowel (e.g. in
+	-- [[sair]], with stem 'saí').
+	if ending:find("^%*%*") then
+		ending = rsub(ending, "^%*%*", "")
+		if not rfind(stem, V .. AV .. "$") then
+			stem = com.remove_final_accent(stem)
+		end
+	end
+
+	-- If the ending begins with an asterisk, this is a signal to delete the accent on the last letter of the stem.
+	-- E.g. fizé -> fizermos. Unlike for **, this removal is unconditional, so we get e.g. 'sairmos' not #'saírmos'.
+	if ending:find("^%*") then
+		ending = rsub(ending, "^%*", "")
+		stem = com.remove_final_accent(stem)
 	end
 
 	-- If the ending begins with an acute accent, this is a signal to move the accent onto the last vowel of the stem.
@@ -1369,7 +1318,7 @@ local function add_present_indic(base)
 	local s2, s3, p1, p2, p3
 	if base.conj == "ar" then
 		s2, s3, p1, p2, p3 = "as", "a", "amos", "ais", "am"
-	elseif base.conj == "er" then
+	elseif base.conj == "er" or base.conj == "or" then -- verbs in -por have the present overridden
 		s2, s3, p1, p2, p3 = "es", "e", "emos", "eis", "em"
 	elseif base.conj == "ir" then
 		s2, s3, p1, p2, p3 = "es", "e", "imos", "is", "em"
@@ -1390,7 +1339,7 @@ local function add_present_subj(base)
 	local function addit(slot, stems, ending)
 		add3(base, "pres_sub_" .. slot, base.prefix, stems, ending)
 	end
-	local s1, s2 s3, p1, p2, p3
+	local s1, s2, s3, p1, p2, p3
 	if base.conj == "ar" then
 		s1, s2, s3, p1, p2, p3 = "e", "es", "e", "emos", "eis", "em"
 	else
@@ -1413,7 +1362,7 @@ local function add_imper(base)
 	if base.conj == "ar" then
 		addit("2s", base.stems.pres_stressed, "a")
 		addit("2p", base.stems.pres_unstressed, "ai")
-	elseif base.conj == "er" then
+	elseif base.conj == "er" or base.conj == "or" then -- verbs in -por have the imperative overridden
 		addit("2s", base.stems.pres_stressed, "e")
 		addit("2p", base.stems.pres_unstressed, "ei")
 	elseif base.conj == "ir" then
@@ -1436,40 +1385,32 @@ local function add_finite_non_present(base)
 		-- An override needs to be supplied for the impf_1p and impf_2p due to the written accent on the stem.
 		add_tense("impf", stems.full_impf, "a", "as", "a", {}, {}, "am")
 	elseif base.conj == "ar" then
-		add_tense("impf", stems.impf, "ava", "avas", "ava", "ávamos", "aveis", "avam")
+		add_tense("impf", stems.impf, "ava", "avas", "ava", "ávamos", "áveis", "avam")
 	else
 		add_tense("impf", stems.impf, "ia", "ias", "ia", "íamos", "íeis", "iam")
 	end
 
+	-- * at the beginning of the ending means to remove a final accent from the preterite stem.
 	if stems.pret_conj == "irreg" then
-		-- FIXME
-		error("This needs more thinking")
-		-- add_tense("pret", stems.pret, "e", "iste", "o", "imos", "isteis", "ieron")
+		add_tense("pret", stems.pret, {}, "*ste", {}, "*mos", "*stes", "*ram")
 	elseif stems.pret_conj == "ar" then
-		add_tense("pret", stems.pret, "ei", "aste", "ou",
+		add_tense("pret", stems.pret_base, "ei", "aste", "ou",
 			{{form = "amos", footnotes = {"[Brazil]"}}, {form = "ámos", footnotes = {"[Portugal]"}}}, "astes", "aram")
 	elseif stems.pret_conj == "er" then
-		add_tense("pret", stems.pret, "ei", "este", "eu", "emos", "estes", "eram")
+		add_tense("pret", stems.pret_base, "ei", "este", "eu", "emos", "estes", "eram")
 	else
-		add_tense("pret", stems.pret, "i", "iste", "iu", "imos", "istes", "iram")
+		add_tense("pret", stems.pret_base, "i", "iste", "iu", "imos", "istes", "iram")
 	end
 
-	if stems.pret_conj == "ar" then
-		add_tense("plup", stems.plup, "ara", "aras", "ara", "áramos", "áreis", "aram")
-		add_tense("impf_sub", stems.impf_sub, "asse", "asses", "asse", "ássemos", "ásseis", "assem")
-		add_tense("fut_sub", stems.fut_sub, "ar", "ares", "ar", "armos", "ardes", "arem")
-	elseif stems.pret_conj == "er" then
-		add_tense("plup", stems.plup, "era", "eras", "era", "êramos", "êreis", "eram")
-		add_tense("impf_sub", stems.impf_sub, "esse", "esses", "esse", "êssemos", "êsseis", "êssem")
-		add_tense("fut_sub", stems.fut_sub, "er", "eres", "er", "ermos", "erdes", "erem")
-	else
-		add_tense("plup", stems.plup, "ira", "iras", "ira", "íramos", "íreis", "iram")
-		add_tense("impf_sub", stems.impf_sub, "isse", "isses", "isse", "íssemos", "ísseis", "issem")
-		add_tense("fut_sub", stems.fut_sub, "ir", "ires", "ir", "irmos", "irdes", "irem")
-	end
-
+	-- * at the beginning of the ending means to remove a final accent from the stem.
+	-- ** is similar but is "conditional" on a consonant preceding the final vowel.
+	add_tense("plup", stems.plup, "**ra", "**ras", "**ra", "ramos", "reis", "**ram")
+	add_tense("impf_sub", stems.impf_sub, "**sse", "**sses", "**sse", "ssemos", "sseis", "**ssem")
+	add_tense("fut_sub", stems.fut_sub, "*r", "**res", "*r", "*rmos", "*rdes", "**rem")
 	add_tense("fut", stems.fut, "ei", "ás", "á", "emos", "eis", "ão")
 	add_tense("cond", stems.cond, "ia", "ias", "ia", "íamos", "íeis", "iam")
+	-- FIXME: This isn't quite right in the case of sair, which should have personal infinitive 2s saíres and 3p saírem.
+	add_tense("pers_inf", base.non_prefixed_verb, "", "es", "", "mos", "des", "em")
 end
 
 
@@ -1479,12 +1420,13 @@ local function add_non_finite_forms(base)
 		add3(base, slot, base.prefix, stems, ending)
 	end
 	insert_form(base, "infinitive", {form = base.verb})
-	for _, persnum in ipairs(person_number_list_basic) do
+	for _, persnum in ipairs(person_number_list) do
 		insert_form(base, "infinitive_" .. persnum, {form = base.verb})
 	end
+	-- verbs in -por have the gerund overridden
 	local ger_ending = base.conj == "ar" and "ando" or base.conj == "er" and "endo" or "indo"
 	addit("gerund", stems.pres_unstressed, ger_ending)
-	for _, persnum in ipairs(person_number_list_basic) do
+	for _, persnum in ipairs(person_number_list) do
 		addit("gerund_" .. persnum, stems.pres_unstressed, ger_ending)
 	end
 	addit("pp_ms", stems.pp_ms, "")
@@ -1553,32 +1495,8 @@ local function add_forms_with_clitic(base, base_slot, clitics, store_cliticized_
 end
 
 
--- Generate the combinations of verb form (infinitive, gerund or various imperatives) + clitic pronoun.
-local function add_combined_forms(base)
-	for _, base_slot_and_clitics in ipairs(base.alternant_multiword_spec.verb_slot_combined_rows) do
-		local base_slot, clitics = unpack(base_slot_and_clitics)
-		add_forms_with_clitic(base, base_slot, clitics,
-			function(clitic, formobj, cliticized_form)
-				insert_form(base, base_slot .. "_comb_" .. clitic,
-					{form = cliticized_form, footnotes = formobj.footnotes})
-			end
-		)
-	end
-	for _, single_comb_slot_and_clitics in ipairs(base.alternant_multiword_spec.verb_slot_double_combined_rows) do
-		local single_comb_slot, clitics = unpack(single_comb_slot_and_clitics)
-		add_forms_with_clitic(base, single_comb_slot, clitics,
-			function(clitic, formobj, cliticized_form)
-				insert_form(base, single_comb_slot .. "_" .. clitic,
-					{form = cliticized_form, footnotes = formobj.footnotes})
-			end
-		)
-	end
-end
-
-
-local function process_slot_overrides(base, do_basic, reflexive_only)
-	local overrides = reflexive_only and base.basic_reflexive_only_overrides or
-		do_basic and base.basic_overrides or base.combined_overrides
+local function process_slot_overrides(base, reflexive_only)
+	local overrides = reflexive_only and base.basic_reflexive_only_overrides or base.basic_overrides
 	for slot, forms in pairs(overrides) do
 		add(base, slot, base.prefix, forms, false, "allow overrides")
 	end
@@ -1681,12 +1599,12 @@ local function generate_negative_imperatives(base)
 		local to = "neg_imp_" .. persnum
 		insert_forms(base, to, iut.map_forms(base.forms[from], function(form)
 			if base.alternant_multiword_spec.args.noautolinkverb then
-				return "no " .. form
+				return "não " .. form
 			elseif form:find("%[%[") then
 				-- already linked, e.g. when reflexive
-				return "[[no]] " .. form
+				return "[[não]] " .. form
 			else
-				return "[[no]] [[" .. form .. "]]"
+				return "[[não]] [[" .. form .. "]]"
 			end
 		end))
 	end
@@ -1711,36 +1629,22 @@ local function conjugate_verb(base)
 	add_imper(base)
 	add_finite_non_present(base)
 	add_non_finite_forms(base)
-	-- This should happen before add_combined_forms() so overrides of basic forms end up part of the combined forms.
-	process_slot_overrides(base, "do basic") -- do basic slot overrides
+	process_slot_overrides(base) -- do non-reflexive slot overrides
 	-- This should happen after process_slot_overrides() in case a derived slot is based on an override (as with the
 	-- imp_3s of [[dar]], [[estar]]).
 	copy_subjunctives_to_imperatives(base)
-	if not base.nocomb then
-		add_combined_forms(base)
-	end
 	-- We need to add joined reflexives, then joined and non-joined clitics, then non-joined reflexives, so we get
 	-- [[házmelo]] but [[no]] [[me]] [[lo]] [[haga]].
 	if base.refl then
 		-- This should happen after remove_monosyllabic_accents() so the * marking the preservation of monosyllabic
 		-- accents doesn't end up in the middle of a word.
 		add_reflexive_or_fixed_clitic_to_forms(base, "do reflexive", "do joined")
-		process_slot_overrides(base, "do basic", "do reflexive") -- do reflexive-only basic slot overrides
-	end
-	if base.clitic then
-		-- This should happen after reflexives are added.
-		add_reflexive_or_fixed_clitic_to_forms(base, false, "do joined")
-		add_reflexive_or_fixed_clitic_to_forms(base, false, false)
-	end
-	if base.refl then
+		process_slot_overrides(base, "do reflexive") -- do reflexive-only slot overrides
 		add_reflexive_or_fixed_clitic_to_forms(base, "do reflexive", false)
 	end
 	-- This should happen after add_reflexive_or_fixed_clitic_to_forms() so negative imperatives get the reflexive pronoun
 	-- and clitic in them.
 	generate_negative_imperatives(base)
-	if not base.nocomb then
-		process_slot_overrides(base, false) -- do combined slot overrides
-	end
 	-- This should happen before add_missing_links_to_forms() so that the comparison `form == base.lemma`
 	-- in handle_infinitive_linked() works correctly and compares unlinked forms to unlinked forms.
 	handle_infinitive_linked(base)
@@ -1889,46 +1793,23 @@ local function normalize_all_lemmas(alternant_multiword_spec, pagename)
 		base.user_specified_lemma = base.lemma
 
 		base.lemma = m_links.remove_links(base.lemma)
-		local refl_verb, clitic = rmatch(base.lemma, "^(.-)(l[aeo]s?)$")
-		if not refl_verb then
-			refl_verb, clitic = base.lemma, nil
-		end
-		local verb, refl = rmatch(refl_verb, "^(.-)(se)$")
+		local refl_verb = base.lemma
+		local verb, refl = rmatch(refl_verb, "^(.-)(%-se)$")
 		if not verb then
 			verb, refl = refl_verb, nil
 		end
 		base.user_specified_verb = verb
 		base.refl = refl
-		base.clitic = clitic
-
-		if base.refl and base.clitic then
-			-- We have to parse the verb suffix to see how to construct the base verb; e.g.
-			-- abrírsela -> abrir but oírsela -> oír. We parse the verb suffix again in all cases
-			-- in detect_indicator_spec(), after splitting off the prefix of irrregular verbs.
-			local actual_verb
-			local inf_stem, suffix = rmatch(base.user_specified_verb, "^(.*)([aáeéií]r)$")
-			if not inf_stem then
-				error("Unrecognized infinitive: " .. base.user_specified_verb)
-			end
-			if suffix == "ír" and inf_stem:find("[aeo]$") then
-				-- accent on suffix should remain
-				base.verb = base.user_specified_verb
-			else
-				base.verb = inf_stem .. com.remove_accent_from_syllable(suffix)
-			end
-		else
-			base.verb = base.user_specified_verb
-		end
+		base.verb = base.user_specified_verb
 
 		local linked_lemma
 		if alternant_multiword_spec.args.noautolinkverb or base.user_specified_lemma:find("%[%[") then
 			linked_lemma = base.user_specified_lemma
-		elseif base.refl or base.clitic then
-			-- Reconstruct the linked lemma with separate links around base verb, reflexive pronoun and clitic.
+		elseif base.refl then
+			-- Reconstruct the linked lemma with separate links around base verb and reflexive pronoun.
 			linked_lemma = base.user_specified_verb == base.verb and "[[" .. base.user_specified_verb .. "]]" or
 				"[[" .. base.verb .. "|" .. base.user_specified_verb .. "]]"
-			linked_lemma = linked_lemma .. (refl and "[[" .. refl .. "]]" or "") ..
-				(clitic and "[[" .. clitic .. "]]" or "")
+			linked_lemma = linked_lemma .. (refl and "[[" .. refl .. "]]" or "")
 		else
 			-- Add links to the lemma so the user doesn't specifically need to, since we preserve
 			-- links in multiword lemmas and include links in non-lemma forms rather than allowing
@@ -1946,29 +1827,45 @@ local function construct_stems(base)
 	stems.pres_stressed = stems.pres_stressed or
 		-- If no_pres_stressed given, pres_stressed stem should be empty so no forms are generated.
 		base.no_pres_stressed and {} or
-		base.vowel_alt or
+		base.vowel_alt_pres_stressed or
 		base.inf_stem
 	stems.pres1_and_sub = stems.pres1_and_sub or
 		-- If no_pres_stressed given, the entire subjunctive is missing.
 		base.no_pres_stressed and {} or
 		-- If no_pres1_and_sub given, pres1 and entire subjunctive are missing.
 		base.no_pres1_and_sub and {} or
+		base.vowel_alt_pres1_and_sub or
 		nil
 	stems.pres1 = stems.pres1 or stems.pres1_and_sub or stems.pres_stressed
 	stems.impf = stems.impf or base.inf_stem
-	stems.pret = stems.pret or base.inf_stem
+	stems.pret_base = stems.pret_base or base.inf_stem
+	stems.pret = stems.pret or iut.map_forms(iut.convert_to_general_list_form(stems.pret_base), function(form)
+		return form .. base.conj_vowel end)
 	stems.pret_conj = stems.pret_conj or base.conj
 	stems.fut = stems.fut or base.inf_stem .. base.conj
 	stems.cond = stems.cond or stems.fut
 	stems.pres_sub_stressed = stems.pres_sub_stressed or stems.pres1
 	stems.pres_sub_unstressed = stems.pres_sub_unstressed or stems.pres1_and_sub or stems.pres_unstressed
-	stems.impf_sub_ra = stems.impf_sub_ra or stems.pret
-	stems.impf_sub_se = stems.impf_sub_se or stems.pret
+	stems.plup = stems.plup or stems.pret
+	stems.impf_sub = stems.impf_sub or stems.pret
 	stems.fut_sub = stems.fut_sub or stems.pret
 	stems.pp = stems.pp or base.conj == "ar" and
-		combine_stem_ending(base, "pp_ms", base.inf_stem, "ad", "is combining ending") or
-		-- use combine_stem_ending esp. so we get reído, caído, etc.
-		combine_stem_ending(base, "pp_ms", base.inf_stem, "id", "is combining ending")
+		combine_stem_ending(base, "pp_ms", base.inf_stem, "ado", "is combining ending") or
+		-- use combine_stem_ending esp. so we get roído, caído, etc.
+		combine_stem_ending(base, "pp_ms", base.inf_stem, "ido", "is combining ending")
+	stems.pp_ms = stems.pp
+	local function masc_to_fem(form)
+		if rfind(form, "o$") then
+			return rsub(form, "o$", "a")
+		else
+			return form
+		end
+	end
+	stems.pp_fs = iut.map_forms(iut.convert_to_general_list_form(stems.pp_ms), masc_to_fem)
+	if stems.short_pp then
+		stems.short_pp_ms = stems.short_pp
+		stems.short_pp_fs = iut.map_forms(iut.convert_to_general_list_form(stems.short_pp_ms), masc_to_fem)
+	end
 end
 
 
@@ -1983,7 +1880,6 @@ local function detect_indicator_spec(base)
 
 	base.basic_overrides = {}
 	base.basic_reflexive_only_overrides = {}
-	base.combined_overrides = {}
 	for _, irreg_conj in ipairs(irreg_conjugations) do
 		if type(irreg_conj.match) == "function" then
 			base.prefix, base.non_prefixed_verb = irreg_conj.match(base.verb)
@@ -2006,9 +1902,6 @@ local function detect_indicator_spec(base)
 				elseif base.alternant_multiword_spec.verb_slots_basic_map[stem] then
 					-- an individual form override of a basic form
 					base.basic_overrides[stem] = forms
-				elseif base.alternant_multiword_spec.verb_slots_combined_map[stem] then
-					-- an individual form override of a combined form
-					base.combined_overrides[stem] = forms
 				else
 					base.stems[stem] = forms
 				end
@@ -2018,13 +1911,13 @@ local function detect_indicator_spec(base)
 	end
 	base.prefix = base.prefix or ""
 	base.non_prefixed_verb = base.non_prefixed_verb or base.verb
-	local inf_stem, suffix = rmatch(base.non_prefixed_verb, "^(.*)([aeií]r)$")
+	local inf_stem, suffix = rmatch(base.non_prefixed_verb, "^(.*)([aeioô]r)$")
 	if not inf_stem then
 		error("Unrecognized infinitive: " .. base.verb)
 	end
 	base.inf_stem = inf_stem
-	suffix = suffix == "ír" and "ir" or suffix
-	base.conj = suffix
+	base.conj = suffix == "ôr" and "or" or suffix
+	base.conj_vowel = suffix == "ar" and "á" or suffix == "ir" and "í" or "ê"
 	base.frontback = suffix == "ar" and "back" or "front"
 
 	if base.stems.vowel_alt then -- irregular verb with specified vowel alternation
@@ -2036,36 +1929,30 @@ local function detect_indicator_spec(base)
 
 	-- Convert vowel alternation indicators into stems.
 	if base.vowel_alt then
-		for _, altform in ipairs(base.vowel_alt) do
-			altform.alt = altform.form -- save original indicator
-			local alt = altform.alt
-			if base.conj == "ir" then
-				local raising = (
-					alt == "ie-i" or alt == "ye-i" or alt == "ue-u" or alt == "i" or alt == "í" or alt == "ú"
-				)
-				if base.stems.raising_conj == nil then
-					base.stems.raising_conj = raising
-				elseif base.stems.raising_conj ~= raising then
-					error("Can't currently support a mixture of raising (e.g. 'ie-i') and non-raising (e.g. 'ie') vowel alternations in -ir verbs")
-				end
-			end
-			if alt == "+" then
+		base.vowel_alt_pres1_and_sub = m_table.deepcopy(base.vowel_alt)
+		base.vowel_alt_pres_stressed = m_table.deepcopy(base.vowel_alt)
+
+		for _, altform in ipairs(base.vowel_alt_pres1_and_sub) do
+			if altform.form == "+" then
 				altform.form = base.inf_stem
 			else
-				local normalized_alt = alt
-				if alt == "ie-i" or alt == "ye-i" or alt == "ue-u" then
-					if base.conj ~= "ir" then
-						error("Vowel alternation '" .. alt .. "' only supported with -ir verbs")
-					end
-					-- ie-i is like i except for the vowel raising before i+V, similarly for ye-i, ue-u,
-					-- so convert appropriately.
-					normalized_alt = alt == "ie-i" and "ie" or alt == "ye-i" and "ye" or "ue"
-				end
-				local ret = com.apply_vowel_alternation(base.inf_stem, normalized_alt)
+				local ret = apply_vowel_alternation(base.inf_stem, altform.form)
 				if ret.err then
-					error("To use '" .. alt .. "', present stem '" .. base.inf_stem .. "' " .. ret.err)
+					error("To use '" .. altform.form .. "', present stem '" .. base.inf_stem .. "' " .. ret.err)
 				end
-				altform.form = ret.ret
+				altform.form = ret.pres1_and_sub
+			end
+		end
+
+		for _, altform in ipairs(base.vowel_alt_pres_stressed) do
+			if altform.form == "+" then
+				altform.form = base.inf_stem
+			else
+				local ret = apply_vowel_alternation(base.inf_stem, altform.form)
+				if ret.err then
+					error("To use '" .. altform.form .. "', present stem '" .. base.inf_stem .. "' " .. ret.err)
+				end
+				altform.form = ret.pres_stressed
 			end
 		end
 	end
@@ -2081,14 +1968,11 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 			end
 		end
 		base.alternant_multiword_spec = alternant_multiword_spec
-		-- If reflexive or fixed clitic, don't include combined forms.
-		alternant_multiword_spec.nocomb = alternant_multiword_spec.nocomb or base.clitic or base.refl
 	end)
 
 	add_slots(alternant_multiword_spec)
 
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		base.nocomb = alternant_multiword_spec.args.nocomb
 		detect_indicator_spec(base)
 		construct_stems(base)
 	end)
@@ -2170,21 +2054,11 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	else
 		local inf_stem = base.inf_stem:gsub("[gq]u$", "x")
 		for _, alt in ipairs(base.vowel_alt) do
-			if alt.alt == "+" then
+			if alt.form == "+" then
 				insert_ann("vowel_alt", "non-alternating")
 			else
-				local desc
-				if alt.alt == "ue" and rfind(inf_stem, "u" .. C .. "*$") then
-					desc = "u-ue alternation" -- jugar
-				elseif alt.alt == "ie" and rfind(inf_stem, "i" .. C .. "*$") then
-					desc = "i-ie alternation" -- adquirir
-				elseif alt.alt == "í" and rfind(inf_stem, "e" .. C .. "*$") then
-					desc = "e-í alternation" -- reír, freír, etc.
-				else
-					desc = vowel_alternant_to_desc[alt.alt] .. " alternation"
-				end
-				insert_ann("vowel_alt", desc)
-				insert_cat("verbs with " .. desc)
+				insert_ann("vowel_alt", vowel_alternant_to_desc[alt.form])
+				insert_cat("verbs with " .. vowel_alternant_to_cat[alt.form])
 			end
 		end
 	end
@@ -2192,34 +2066,24 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	local cons_alt = base.stems.cons_alt
 	if cons_alt == nil then
 		if base.conj == "ar" then
-			if base.inf_stem:find("z$") then
-				cons_alt = "c-z"
-			elseif base.inf_stem:find("ç$") then
+			if base.inf_stem:find("ç$") then
 				cons_alt = "c-ç"
 			elseif base.inf_stem:find("c$") then
 				cons_alt = "c-qu"
 			elseif base.inf_stem:find("g$") then
 				cons_alt = "g-gu"
-			elseif base.inf_stem:find("gu$") then
-				cons_alt = "gu-gü"
 			end
 		else
 			if base.no_pres_stressed or base.no_pres1_and_sub then
 				cons_alt = nil -- no c-zc alternation in balbucir or arrecir
-			elseif rfind(base.inf_stem, V .. "c$") then
-				cons_alt = "c-zc"
-			elseif base.inf_stem:find("sc$") then
-				cons_alt = "hard-soft"
 			elseif base.inf_stem:find("c$") then
-				cons_alt = "c-z"
+				cons_alt = "c-ç"
 			elseif base.inf_stem:find("qu$") then
 				cons_alt = "c-qu"
 			elseif base.inf_stem:find("g$") then
 				cons_alt = "g-j"
 			elseif base.inf_stem:find("gu$") then
 				cons_alt = "g-gu"
-			elseif base.inf_stem:find("gü$") then
-				cons_alt = "gu-gü"
 			end
 		end
 	end
@@ -2289,19 +2153,6 @@ local function show_forms(alternant_multiword_spec)
 	local function create_footnote_obj()
 		local obj = iut.create_footnote_obj()
 		iut.get_footnote_text({footnotes = {fut_sub_note}}, obj)
-		-- Compute whether the tú and voseo variants are different, for each voseo variant.
-		-- We use this later in make_table().
-		for _, slot in ipairs({"pres_2s", "pres_sub_2s", "imp_2s"}) do
-			alternant_multiword_spec["separate_" .. slot .. "v"] = false
-			iut.map_word_specs(alternant_multiword_spec, function(base)
-				if not m_table.deepEquals(base.forms[slot], base.forms[slot .. "v"]) then
-					alternant_multiword_spec["separate_" .. slot .. "v"] = true
-				end
-			end)
-		end
-		if alternant_multiword_spec.separate_pres_sub_2sv then
-			iut.get_footnote_text({footnotes = {pres_sub_voseo_note}}, obj)
-		end
 		return obj
 	end
 
@@ -2326,10 +2177,6 @@ local function show_forms(alternant_multiword_spec)
 	props.slot_list = alternant_multiword_spec.verb_slots_basic
 	iut.show_forms(alternant_multiword_spec.forms, props)
 	alternant_multiword_spec.footnote_basic = alternant_multiword_spec.forms.footnote
-	props.create_footnote_obj = nil
-	props.slot_list = alternant_multiword_spec.verb_slots_combined
-	iut.show_forms(alternant_multiword_spec.forms, props)
-	alternant_multiword_spec.footnote_combined = alternant_multiword_spec.forms.footnote
 end
 
 
@@ -2340,401 +2187,176 @@ local notes_template = [=[
 </div></div>
 ]=]
 
-local pres_2sv_template = '<sup><sup>tú</sup></sup><br />{pres_2sv}<sup><sup>vos</sup></sup>'
-local pres_sub_2sv_template = '<sup><sup>tú</sup></sup><br />{pres_sub_2sv}<sup><sup>vos<sup style="color:red">2</sup></sup></sup>'
-local imp_2sv_template = '<sup><sup>tú</sup></sup><br />{imp_2sv}<sup><sup>vos</sup></sup>'
-
 local basic_table = [=[
 {description}<div class="NavFrame">
 <div class="NavHead" align=center>&nbsp; &nbsp; Conjugation of {title} (See [[Appendix:Portuguese verbs]])</div>
-<div class="NavContent">
-{\op}| style="background:#F9F9F9;text-align:center;width:100%"
+<div class="NavContent" align="left">
+{\op}| class="inflection-table" style="background:#F6F6F6; text-align: left; border: 1px solid #999999;" cellpadding="3" cellspacing="0"
 |-
-! colspan="3" style="background:#e2e4c0" | <span title="infinitivo">infinitive</span>
-| colspan="5" | {infinitive}
+| style="border: 1px solid #999999;" colspan="7" | {verb_info}
 |-
-! colspan="3" style="background:#e2e4c0" | <span title="gerundio">gerund</span>
-| colspan="5" | {gerund}
+! style="border: 1px solid #999999; background:#B0B0B0" rowspan="2" |
+! style="border: 1px solid #999999; background:#D0D0D0" colspan="3" | Singular
+! style="border: 1px solid #999999; background:#D0D0D0" colspan="3" | Plural
 |-
-! rowspan="3" colspan="2" style="background:#e2e4c0" | <span title="participio (pasado)">past participle</span>
-| colspan="2" style="background:#e2e4c0" |
-! colspan="2" style="background:#e2e4c0" | <span title="masculino">masculine</span>
-! colspan="2" style="background:#e2e4c0" | <span title="femenino">feminine</span>
+! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | First-person<br />(<<eu>>)
+! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Second-person<br />(<<tu>>)
+! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Third-person<br />(<<ele>> / <<ela>> / <<você>>)
+! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | First-person<br />(<<nós>>)
+! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Second-person<br />(<<vós>>)
+! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Third-person<br />(<<eles>> / <<elas>> / <<vocês>>)
 |-
-! colspan="2" style="background:#e2e4c0" | singular
-| colspan="2" | {pp_ms}
-| colspan="2" | {pp_fs}
+! style="border: 1px solid #999999; background:#c498ff" colspan="7" | ''<span title="infinitivo">Infinitive</span>''
 |-
-! colspan="2" style="background:#e2e4c0" | plural
-| colspan="2" | {pp_mp}
-| colspan="2" | {pp_fp}
+! style="border: 1px solid #999999; background:#a478df" | '''<span title="infinitivo impessoal">Impersonal</span>'''
+| style="border: 1px solid #999999; vertical-align: top;" colspan="6" | {infinitive}
 |-
-! colspan="2" rowspan="2" style="background:#DEDEDE" |
-! colspan="3" style="background:#DEDEDE" | singular
-! colspan="3" style="background:#DEDEDE" | plural
+! style="border: 1px solid #999999; background:#a478df" | '''<span title="infinitivo pessoal">Personal</span>'''
+| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_1s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_3p}
 |-
-! style="background:#DEDEDE" | 1st person
-! style="background:#DEDEDE" | 2nd person
-! style="background:#DEDEDE" | 3rd person
-! style="background:#DEDEDE" | 1st person
-! style="background:#DEDEDE" | 2nd person
-! style="background:#DEDEDE" | 3rd person
-|-{reflexive_non_finite_clause}
-! rowspan="6" style="background:#c0cfe4" | <span title="indicativo">indicative</span>
-! style="background:#ECECEC;width:12.5%" |
-! style="background:#ECECEC;width:12.5%" | yo
-! style="background:#ECECEC;width:12.5%" | tú<br />vos
-! style="background:#ECECEC;width:12.5%" | él/ella/ello<br />usted
-! style="background:#ECECEC;width:12.5%" | nosotros<br />nosotras
-! style="background:#ECECEC;width:12.5%" | vosotros<br />vosotras
-! style="background:#ECECEC;width:12.5%" | ellos/ellas<br />ustedes
+! style="border: 1px solid #999999; background:#98ffc4" colspan="7" | ''<span title="gerúndio">Gerund</span>''
 |-
-! style="height:3em;background:#ECECEC" | <span title="presente de indicativo">present</span>
-| {pres_1s}
-| {pres_2s}{pres_2sv_text}
-| {pres_3s}
-| {pres_1p}
-| {pres_2p}
-| {pres_3p}
+| style="border: 1px solid #999999; background:#78dfa4" |
+| style="border: 1px solid #999999; vertical-align: top;" colspan="6" | {gerund}
+|-{pp_clause}
+! style="border: 1px solid #999999; background:#d0dff4" colspan="7" | ''<span title="indicativo">Indicative</span>''
 |-
-! style="height:3em;background:#ECECEC" | <span title="pretérito imperfecto (copréterito)">imperfect</span>
-| {impf_1s}
-| {impf_2s}
-| {impf_3s}
-| {impf_1p}
-| {impf_2p}
-| {impf_3p}
+! style="border: 1px solid #999999; background:#b0bfd4" | <span title="presente">Present</span>
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_1s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_3p}
 |-
-! style="height:3em;background:#ECECEC" | <span title="pretérito perfecto simple (pretérito indefinido)">preterite</span>
-| {pret_1s}
-| {pret_2s}
-| {pret_3s}
-| {pret_1p}
-| {pret_2p}
-| {pret_3p}
+! style="border: 1px solid #999999; background:#b0bfd4" | <span title="pretérito imperfeito">Imperfect</span>
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_1s}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_3p}
 |-
-! style="height:3em;background:#ECECEC" | <span title="futuro simple (futuro imperfecto)">future</span>
-| {fut_1s}
-| {fut_2s}
-| {fut_3s}
-| {fut_1p}
-| {fut_2p}
-| {fut_3p}
+! style="border: 1px solid #999999; background:#b0bfd4" | <span title="pretérito perfeito">Preterite</span>
+| style="border: 1px solid #999999; vertical-align: top;" | {pret_1s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pret_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pret_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pret_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {pret_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {pret_3p}
 |-
-! style="height:3em;background:#ECECEC" | <span title="condicional simple (pospretérito de modo indicativo)">conditional</span>
-| {cond_1s}
-| {cond_2s}
-| {cond_3s}
-| {cond_1p}
-| {cond_2p}
-| {cond_3p}
+! style="border: 1px solid #999999; background:#b0bfd4" | <span title="pretérito mais-que-perfeito simples">Pluperfect</span>
+| style="border: 1px solid #999999; vertical-align: top;" | {plup_1s}
+| style="border: 1px solid #999999; vertical-align: top;" | {plup_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {plup_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {plup_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {plup_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {plup_3p}
 |-
-! style="background:#DEDEDE;height:.75em" colspan="8" |
+! style="border: 1px solid #999999; background:#b0bfd4" | <span title="futuro do presente">Future</span>
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_1s}
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_3p}
 |-
-! rowspan="5" style="background:#c0e4c0" | <span title="subjuntivo">subjunctive</span>
-! style="background:#ECECEC" |
-! style="background:#ECECEC" | yo
-! style="background:#ECECEC" | tú<br />vos
-! style="background:#ECECEC" | él/ella/ello<br />usted
-! style="background:#ECECEC" | nosotros<br />nosotras
-! style="background:#ECECEC" | vosotros<br />vosotras
-! style="background:#ECECEC" | ellos/ellas<br />ustedes
+! style="border: 1px solid #999999; background:#ffffaa" colspan="7" | ''<span title="condicional / futuro do pretérito">Conditional</span>''
 |-
-! style="height:3em;background:#ECECEC" | <span title="presente de subjuntivo">present</span>
-| {pres_sub_1s}
-| {pres_sub_2s}{pres_sub_2sv_text}
-| {pres_sub_3s}
-| {pres_sub_1p}
-| {pres_sub_2p}
-| {pres_sub_3p}
+! style="border: 1px solid #999999; background:#ddddaa" |
+| style="border: 1px solid #999999; vertical-align: top;" | {cond_1s}
+| style="border: 1px solid #999999; vertical-align: top;" | {cond_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {cond_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {cond_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {cond_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {cond_3p}
 |-
-! style="height:3em;background:#ECECEC" | <span title="pretérito imperfecto de subjuntivo">imperfect</span><br />(ra)
-| {impf_sub_ra_1s}
-| {impf_sub_ra_2s}
-| {impf_sub_ra_3s}
-| {impf_sub_ra_1p}
-| {impf_sub_ra_2p}
-| {impf_sub_ra_3p}
+! style="border: 1px solid #999999; background:#d0f4d0" colspan="7" | ''<span title="conjuntivo (pt) / subjuntivo (br)">Subjunctive</span>''
 |-
-! style="height:3em;background:#ECECEC" | <span title="pretérito imperfecto de subjuntivo">imperfect</span><br />(se)
-| {impf_sub_se_1s}
-| {impf_sub_se_2s}
-| {impf_sub_se_3s}
-| {impf_sub_se_1p}
-| {impf_sub_se_2p}
-| {impf_sub_se_3p}
+! style="border: 1px solid #999999; background:#b0d4b0" | <span title=" presente do conjuntivo (pt) / subjuntivo (br)">Present</span>
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_1s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_3p}
 |-
-! style="height:3em;background:#ECECEC" | <span title="futuro simple de subjuntivo (futuro de subjuntivo)">future</span><sup style="color:red">1</sup>
-| {fut_sub_1s}
-| {fut_sub_2s}
-| {fut_sub_3s}
-| {fut_sub_1p}
-| {fut_sub_2p}
-| {fut_sub_3p}
+! style="border: 1px solid #999999; background:#b0d4b0" | <span title="pretérito imperfeito do conjuntivo (pt) / subjuntivo (br)">Imperfect</span>
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_1s}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_3p}
 |-
-! style="background:#DEDEDE;height:.75em" colspan="8" |
+! style="border: 1px solid #999999; background:#b0d4b0" | <span title="futuro do conjuntivo (pt) / subjuntivo (br)">Future</span>
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_1s}
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_3p}
 |-
-! rowspan="6" style="background:#e4d4c0" | <span title="imperativo">imperative</span>
-! style="background:#ECECEC" |
-! style="background:#ECECEC" | —
-! style="background:#ECECEC" | tú<br />vos
-! style="background:#ECECEC" | usted
-! style="background:#ECECEC" | nosotros<br />nosotras
-! style="background:#ECECEC" | vosotros<br />vosotras
-! style="background:#ECECEC" | ustedes
+! style="border: 1px solid #999999; background:#f4e4d0" colspan="7" | ''<span title="imperativo">Imperative</span>''
 |-
-! style="height:3em;background:#ECECEC" | <span title="imperativo afirmativo">affirmative</span>
-|
-| {imp_2s}{imp_2sv_text}
-| {imp_3s}
-| {imp_1p}
-| {imp_2p}
-| {imp_3p}
+! style="border: 1px solid #999999; background:#d4c4b0" | <span title="imperativo afirmativo">Affirmative</span>
+| style="border: 1px solid #999999; vertical-align: top;" |
+| style="border: 1px solid #999999; vertical-align: top;" | {imp_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {imp_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {imp_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {imp_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {imp_3p}
 |-
-! style="height:3em;background:#ECECEC" | <span title="imperativo negativo">negative</span>
-|
-| {neg_imp_2s}
-| {neg_imp_3s}
-| {neg_imp_1p}
-| {neg_imp_2p}
-| {neg_imp_3p}
+! style="border: 1px solid #999999; background:#d4c4b0" | <span title="imperativo negativo">Negative</span> (<<não>>)
+| style="border: 1px solid #999999; vertical-align: top;" |
+| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_3p}
 |{\cl}{notes_clause}</div></div>
 ]=]
 
-local reflexive_non_finite_template = [=[
+local double_pp_template = [=[
 
-! rowspan="3" style="background:#e2e4c0" | personal non-finite
-! style="background:#ECECEC;width:12.5%" |
-! style="background:#ECECEC;width:12.5%" | yo
-! style="background:#ECECEC;width:12.5%" | tú<br />vos
-! style="background:#ECECEC;width:12.5%" | él/ella/ello<br />usted
-! style="background:#ECECEC;width:12.5%" | nosotros<br />nosotras
-! style="background:#ECECEC;width:12.5%" | vosotros<br />vosotras
-! style="background:#ECECEC;width:12.5%" | ellos/ellas<br />ustedes
+! style="border: 1px solid #999999; background:#ffc498" colspan="7" | ''<span title="particípio irregular">Short past participle</span>''
 |-
-! style="height:3em;background:#ECECEC" | <span title="infinitivo">infinitive</span>
-| {infinitive_1s}
-| {infinitive_2s}
-| {infinitive_3s}
-| {infinitive_1p}
-| {infinitive_2p}
-| {infinitive_3p}
+! style="border: 1px solid #999999; background:#dfa478" | Masculine
+| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {short_pp_ms}
+| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {short_pp_mp}
 |-
-! style="height:3em;background:#ECECEC" | <span title="gerundio">gerund</span>
-| {gerund_1s}
-| {gerund_2s}
-| {gerund_3s}
-| {gerund_1p}
-| {gerund_2p}
-| {gerund_3p}
+! style="border: 1px solid #999999; background:#dfa478" | Feminine
+| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {short_pp_fs}
+| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {short_pp_fp}
 |-
-! style="background:#DEDEDE;height:.75em" colspan="8" |
+! style="border: 1px solid #999999; background:#ffc498" colspan="7" | ''<span title="particípio regular">Long past participle</span>''
+|-
+! style="border: 1px solid #999999; background:#dfa478" | Masculine
+| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_ms}
+| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_mp}
+|-
+! style="border: 1px solid #999999; background:#dfa478" | Feminine
+| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fs}
+| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fp}
 |-]=]
 
-local combined_form_combined_tu_vos_template = [=[
+local single_pp_template = [=[
 
-! style="background:#DEDEDE;height:.35em" colspan="8" |
+! style="border: 1px solid #999999; background:#ffc498" colspan="7" | ''<span title="particípio passado">Past participle</span>''
 |-
-! rowspan="3" style="background:#f2caa4" | with informal second-person singular ''tú/vos'' imperative {imp_2s}
+! style="border: 1px solid #999999; background:#dfa478" | Masculine
+| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_ms}
+| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_mp}
 |-
-! style="height:3em;background:#ECECEC" | dative
-| {imp_2s_comb_me}
-| {imp_2s_comb_te}
-| {imp_2s_comb_le}
-| {imp_2s_comb_nos}
-| ''not used''
-| {imp_2s_comb_les}
-|-
-! style="height:3em;background:#ECECEC" | accusative
-| {imp_2s_comb_me}
-| {imp_2s_comb_te}
-| {imp_2s_comb_lo}, {imp_2s_comb_la}
-| {imp_2s_comb_nos}
-| ''not used''
-| {imp_2s_comb_los}, {imp_2s_comb_las}
+! style="border: 1px solid #999999; background:#dfa478" | Feminine
+| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fs}
+| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fp}
 |-]=]
-
-local combined_form_separate_tu_vos_template = [=[
-
-! style="background:#DEDEDE;height:.35em" colspan="8" |
-|-
-! rowspan="3" style="background:#f2caa4" | with informal second-person singular ''tú'' imperative {imp_2s}
-|-
-! style="height:3em;background:#ECECEC" | dative
-| {imp_2s_comb_me}
-| {imp_2s_comb_te}
-| {imp_2s_comb_le}
-| {imp_2s_comb_nos}
-| ''not used''
-| {imp_2s_comb_les}
-|-
-! style="height:3em;background:#ECECEC" | accusative
-| {imp_2s_comb_me}
-| {imp_2s_comb_te}
-| {imp_2s_comb_lo}, {imp_2s_comb_la}
-| {imp_2s_comb_nos}
-| ''not used''
-| {imp_2s_comb_los}, {imp_2s_comb_las}
-|-
-! style="background:#DEDEDE;height:.35em" colspan="8" |
-|-
-! rowspan="3" style="background:#f2caa4" | with informal second-person singular ''vos'' imperative {imp_2sv}
-|-
-! style="height:3em;background:#ECECEC" | dative
-| {imp_2sv_comb_me}
-| {imp_2sv_comb_te}
-| {imp_2sv_comb_le}
-| {imp_2sv_comb_nos}
-| ''not used''
-| {imp_2sv_comb_les}
-|-
-! style="height:3em;background:#ECECEC" | accusative
-| {imp_2sv_comb_me}
-| {imp_2sv_comb_te}
-| {imp_2sv_comb_lo}, {imp_2sv_comb_la}
-| {imp_2sv_comb_nos}
-| ''not used''
-| {imp_2sv_comb_los}, {imp_2sv_comb_las}
-|-]=]
-
-local combined_form_table = [=[
-{description}<div class="NavFrame">
-<div class="NavHead" align=center>&nbsp; &nbsp; Selected combined forms of {title}</div>
-<div class="NavContent">
-These forms are generated automatically and may not actually be used. Pronoun usage varies by region.
-{\op}| class="inflection-table" style="background:#F9F9F9;text-align:center;width:100%"
-|-
-! colspan="2" rowspan="2" style="background:#DEDEDE" |
-! colspan="3" style="background:#DEDEDE" | singular
-! colspan="3" style="background:#DEDEDE" | plural
-|-
-! style="background:#DEDEDE" | 1st person
-! style="background:#DEDEDE" | 2nd person
-! style="background:#DEDEDE" | 3rd person
-! style="background:#DEDEDE" | 1st person
-! style="background:#DEDEDE" | 2nd person
-! style="background:#DEDEDE" | 3rd person
-|-
-! rowspan="3" style="background:#c0cfe4" | with infinitive {infinitive}
-|-
-! style="height:3em;background:#ECECEC" | dative
-| {infinitive_comb_me}
-| {infinitive_comb_te}
-| {infinitive_comb_le}, {infinitive_comb_se}
-| {infinitive_comb_nos}
-| {infinitive_comb_os}
-| {infinitive_comb_les}, {infinitive_comb_se}
-|-
-! style="height:3em;background:#ECECEC" | accusative
-| {infinitive_comb_me}
-| {infinitive_comb_te}
-| {infinitive_comb_lo}, {infinitive_comb_la}, {infinitive_comb_se}
-| {infinitive_comb_nos}
-| {infinitive_comb_os}
-| {infinitive_comb_los}, {infinitive_comb_las}, {infinitive_comb_se}
-|-
-! style="background:#DEDEDE;height:.35em" colspan="8" |
-|-
-! rowspan="3" style="background:#d0cfa4" | with gerund {gerund}
-|-
-! style="height:3em;background:#ECECEC" | dative
-| {gerund_comb_me}
-| {gerund_comb_te}
-| {gerund_comb_le}, {gerund_comb_se}
-| {gerund_comb_nos}
-| {gerund_comb_os}
-| {gerund_comb_les}, {gerund_comb_se}
-|-
-! style="height:3em;background:#ECECEC" | accusative
-| {gerund_comb_me}
-| {gerund_comb_te}
-| {gerund_comb_lo}, {gerund_comb_la}, {gerund_comb_se}
-| {gerund_comb_nos}
-| {gerund_comb_os}
-| {gerund_comb_los}, {gerund_comb_las}, {gerund_comb_se}
-|-{tu_vos_clause}
-! style="background:#DEDEDE;height:.35em" colspan="8" |
-|-
-! rowspan="3" style="background:#f2caa4" | with formal second-person singular imperative {imp_3s}
-|-
-! style="height:3em;background:#ECECEC" | dative
-| {imp_3s_comb_me}
-| ''not used''
-| {imp_3s_comb_le}, {imp_3s_comb_se}
-| {imp_3s_comb_nos}
-| ''not used''
-| {imp_3s_comb_les}
-|-
-! style="height:3em;background:#ECECEC" | accusative
-| {imp_3s_comb_me}
-| ''not used''
-| {imp_3s_comb_lo}, {imp_3s_comb_la}, {imp_3s_comb_se}
-| {imp_3s_comb_nos}
-| ''not used''
-| {imp_3s_comb_los}, {imp_3s_comb_las}
-|-
-! style="background:#DEDEDE;height:.35em" colspan="8" |
-|-
-! rowspan="3" style="background:#f2caa4" | with first-person plural imperative {imp_1p}
-|-
-! style="height:3em;background:#ECECEC" | dative
-| ''not used''
-| {imp_1p_comb_te}
-| {imp_1p_comb_le}
-| {imp_1p_comb_nos}
-| {imp_1p_comb_os}
-| {imp_1p_comb_les}
-|-
-! style="height:3em;background:#ECECEC" | accusative
-| ''not used''
-| {imp_1p_comb_te}
-| {imp_1p_comb_lo}, {imp_1p_comb_la}
-| {imp_1p_comb_nos}
-| {imp_1p_comb_os}
-| {imp_1p_comb_los}, {imp_1p_comb_las}
-|-
-! style="background:#DEDEDE;height:.35em" colspan="8" |
-|-
-! rowspan="3" style="background:#f2caa4" | with informal second-person plural imperative {imp_2p}
-|-
-! style="height:3em;background:#ECECEC" | dative
-| {imp_2p_comb_me}
-| ''not used''
-| {imp_2p_comb_le}
-| {imp_2p_comb_nos}
-| {imp_2p_comb_os}
-| {imp_2p_comb_les}
-|-
-! style="height:3em;background:#ECECEC" | accusative
-| {imp_2p_comb_me}
-| ''not used''
-| {imp_2p_comb_lo}, {imp_2p_comb_la}
-| {imp_2p_comb_nos}
-| {imp_2p_comb_os}
-| {imp_2p_comb_los}, {imp_2p_comb_las}
-|-
-! style="background:#DEDEDE;height:.35em" colspan="8" |
-|-
-! rowspan="3" style="background:#f2caa4" | with formal second-person plural imperative {imp_3p}
-|-
-! style="height:3em;background:#ECECEC" | dative
-| {imp_3p_comb_me}
-| ''not used''
-| {imp_3p_comb_le}
-| {imp_3p_comb_nos}
-| ''not used''
-| {imp_3p_comb_les}, {imp_3p_comb_se}
-|-
-! style="height:3em;background:#ECECEC" | accusative
-| {imp_3p_comb_me}
-| ''not used''
-| {imp_3p_comb_lo}, {imp_3p_comb_la}
-| {imp_3p_comb_nos}
-| ''not used''
-| {imp_3p_comb_los}, {imp_3p_comb_las}, {imp_3p_comb_se}
-|{\cl}{notes_clause}</div></div>
-]=]
-
 
 local function make_table(alternant_multiword_spec)
 	local forms = alternant_multiword_spec.forms
@@ -2744,33 +2366,15 @@ local function make_table(alternant_multiword_spec)
 		forms.title = forms.title .. " (" .. alternant_multiword_spec.annotation .. ")"
 	end
 	forms.description = ""
+	forms.verb_info = "FIXME"
 
-	-- Format the basic table.
+	-- Format the table.
 	forms.footnote = alternant_multiword_spec.footnote_basic
-	forms.reflexive_non_finite_clause = alternant_multiword_spec.refl and m_string_utilities.format(reflexive_non_finite_template, forms) or ""
 	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
-	-- The separate_* values are computed in show_forms().
-	forms.pres_2sv_text = alternant_multiword_spec.separate_pres_2sv and m_string_utilities.format(pres_2sv_template, forms) or ""
-	forms.pres_sub_2sv_text = alternant_multiword_spec.separate_pres_sub_2sv and m_string_utilities.format(pres_sub_2sv_template, forms) or ""
-	forms.imp_2sv_text = alternant_multiword_spec.separate_imp_2sv and m_string_utilities.format(imp_2sv_template, forms) or ""
-	local formatted_basic_table = m_string_utilities.format(basic_table, forms)
-
-	-- Format the combined table.
-	local formatted_combined_table
-	if alternant_multiword_spec.refl or alternant_multiword_spec.args.nocomb or alternant_multiword_spec.clitic then
-		formatted_combined_table = ""
-	else
-		forms.footnote = alternant_multiword_spec.footnote_combined
-		forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
-		-- separate_imp_2sv is computed in show_forms().
-		local tu_vos_template = alternant_multiword_spec.separate_imp_2sv and combined_form_separate_tu_vos_template or
-			combined_form_combined_tu_vos_template
-		forms.tu_vos_clause = m_string_utilities.format(tu_vos_template, forms)
-		formatted_combined_table = m_string_utilities.format(combined_form_table, forms)
-	end
-
-	-- Paste them together.
-	return formatted_basic_table .. formatted_combined_table
+	-- has_short_pp is computed in show_forms().
+	local pp_template = alternant_multiword_spec.has_short_pp and double_pp_template or single_pp_template
+	forms.pp_clause = m_string_utilities.format(pp_template, forms)
+	return m_string_utilities.format(basic_table, forms)
 end
 
 
@@ -2778,10 +2382,9 @@ end
 -- Return value is WORD_SPEC, an object where the conjugated forms are in `WORD_SPEC.forms`
 -- for each slot. If there are no values for a slot, the slot key will be missing. The value
 -- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
-function export.do_generate_forms(parent_args, from_headword, from_verb_form_of, double_combined_forms_to_include)
+function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 	local params = {
 		[1] = {required = from_verb_form_of},
-		["nocomb"] = {type = "boolean"},
 		["noautolinktext"] = {type = "boolean"},
 		["noautolinkverb"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing/documentation pages
@@ -2875,31 +2478,6 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of,
 	alternant_multiword_spec.from_headword = from_headword
 	alternant_multiword_spec.from_verb_form_of = from_verb_form_of
 	alternant_multiword_spec.verb_form_of_form = verb_form_of_form
-
-	-- Now determine if we need to generate any double-combined forms, and if so, which clitics are involved.
-	-- See the comment above the initialization of `verb_slot_double_combined_rows` above in add_slots().
-	if verb_form_of_form and rfind(verb_form_of_form, AV) then
-		-- All double-clitic forms have an explicit accent, so we check for this. In addition, all double-clitic forms
-		-- are of the form "(me|te|se|nos|os)(lo|la|le)s$". We have no alternations in Lua patterns, but we can exploit
-		-- the similarity of the clitics in question.
-		local single_comb_form, object_clitic = rmatch(verb_form_of_form, "^(.*)(l[aeo]s?)$")
-		if single_comb_form then
-			local personal_clitic = rmatch(single_comb_form, "^.*([mts]e)$")
-			if not personal_clitic then
-				personal_clitic = rmatch(single_comb_form, "^.-(n?os)$")
-			end
-			if personal_clitic then
-				if personal_clitic == "nos" then
-					-- "os" is a substring of "nos"; conceivably we could have a form ending in -n + os, and we don't
-					-- know whether to interpret as -n + os or - + nos.
-					alternant_multiword_spec.double_combined_forms_to_include =
-						{{"nos", object_clitic}, {"os", object_clitic}}
-				else
-					alternant_multiword_spec.double_combined_forms_to_include = {{personal_clitic, object_clitic}}
-				end
-			end
-		end
-	end
 
 	normalize_all_lemmas(alternant_multiword_spec, pagename)
 	detect_all_indicator_specs(alternant_multiword_spec)

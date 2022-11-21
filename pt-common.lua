@@ -1,8 +1,10 @@
 local export = {}
 
-local romut_module = "Module:romance utilities"
+local romut_module = "Module:User:Benwing2/romance utilities"
 
 local rsubn = mw.ustring.gsub
+local rfind = mw.ustring.find
+local rmatch = mw.ustring.match
 
 local unaccented_vowel = "aeiouàAEIOUÀ"
 local accented_vowel = "áéíóúýâêôÁÉÍÓÚÝÂÊÔ"
@@ -20,6 +22,7 @@ local remove_accent = {
 	["á"]="a", ["é"]="e", ["í"]="i", ["ó"]="o", ["ú"]="u", ["ý"]="y", ["â"]="a", ["ê"]="e", ["ô"]="o",
 	["Á"]="A", ["É"]="E", ["Í"]="I", ["Ó"]="O", ["Ú"]="U", ["Ý"]="Y", ["Â"]="A", ["Ê"]="E", ["Ô"]="O"
 }
+export.remove_accent = remove_accent
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -50,6 +53,10 @@ local function rsub_repeatedly(term, foo, bar)
 end
 
 export.rsub_repeatedly = rsub_repeatedly
+
+function export.remove_final_accent(stem)
+	return rsub(stem, "(" .. AV .. ")$", function(v) return remove_accent[v] or v end)
+end
 
 local prepositions = {
 	-- a + optional article
@@ -211,8 +218,9 @@ local function munge_form_for_ending(form, typ)
 		typ ~= "aug" and try("g[oa]$", "gu") or
 		try("[oae]$", "") or
 		typ == "sup" and try("z$", "c") or
-		try("ável$", "abil") or
-		try("ível$", "ibil") or
+		-- Adverb stems won't have the acute accent but we should handle them correctly regardless.
+		try("[áa]vel$", "abil") or
+		try("[íi]vel$", "ibil") or
 		try("eu$", "euz")
 
 	-- Remove accent (-ês, -ário, -ático, etc.) when adding ending.
@@ -255,6 +263,33 @@ function export.make_augmentative(form, special)
 	end
 
 	return munge_form_for_ending(form, "aug") .. "ão"
+end
+
+-- FIXME: Next two copied from [[Module:es-common]]. Move to a utilities module.
+
+-- Add links around words. If multiword_only, do it only in multiword forms.
+function export.add_links(form, multiword_only)
+	if form == "" or form == " " then
+		return form
+	end
+	if not form:find("%[%[") then
+		if rfind(form, "[%s%p]") then --optimization to avoid loading [[Module:headword]] on single-word forms
+			local m_headword = require("Module:headword")
+			if m_headword.head_is_multiword(form) then
+				form = m_headword.add_multiword_links(form)
+			end
+		end
+		if not multiword_only and not form:find("%[%[") then
+			form = "[[" .. form .. "]]"
+		end
+	end
+	return form
+end
+
+
+function export.strip_redundant_links(form)
+	-- Strip redundant brackets surrounding entire form.
+	return rmatch(form, "^%[%[([^%[%]]*)%]%]$") or form
 end
 
 return export
