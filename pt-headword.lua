@@ -6,7 +6,7 @@ local rsplit = mw.text.split
 
 local m_links = require("Module:links")
 local m_table = require("Module:table")
-local com = require("Module:pt-common")
+local com = require("Module:User:Benwing2/pt-common")
 local romut_module = "Module:romance utilities"
 local lang = require("Module:languages").getByCode("pt")
 local langname = lang:getCanonicalName()
@@ -48,6 +48,26 @@ local include_hyphen_prefixes = m_table.listToSet {
 	"super",
 	"vice",
 }
+
+-- Add links around words. If multiword_only, do it only in multiword forms.
+-- FIXME: Duplicates [[Module:es-headword]]; move to a utilities module.
+local function add_links(form, multiword_only)
+	if form == "" or form == " " then
+		return form
+	end
+	if not form:find("%[%[") then
+		if rfind(form, "[%s%p]") then --optimization to avoid loading [[Module:headword]] on single-word forms
+			local m_headword = require("Module:headword")
+			if m_headword.head_is_multiword(form) then
+				form = m_headword.add_multiword_links(form)
+			end
+		end
+		if not multiword_only and not form:find("%[%[") then
+			form = "[[" .. form .. "]]"
+		end
+	end
+	return form
+end
 
 local function track(page)
 	require("Module:debug/track")("pt-headword/" .. page)
@@ -101,7 +121,8 @@ function export.show(frame)
 
 	local pagename = args.pagename or mw.title.getCurrentTitle().text
 
-	local heads = args["head"]
+	local user_specified_heads = args.head
+	local heads = user_specified_heads
 	if args.nolinkhead then
 		if #heads == 0 then
 			heads = {pagename}
@@ -125,6 +146,7 @@ function export.show(frame)
 		pos_category = poscat,
 		categories = {},
 		heads = heads,
+		user_specified_heads = user_specified_heads,
 		genders = {},
 		inflections = {},
 		categories = {},
@@ -1088,5 +1110,186 @@ pos_functions["superlative adverbs"] = {
 		do_adverb(args, data, tracking_categories, "adverb", is_suffix)
 	end,
 }
+
+
+-----------------------------------------------------------------------------------------
+--                                         Verbs                                       --
+-----------------------------------------------------------------------------------------
+
+pos_functions["verbs"] = {
+	params = {
+		[1] = {},
+		["pres"] = {list = true}, --present
+		["pres_qual"] = {list = "pres=_qual", allow_holes = true},
+		["pret"] = {list = true}, --preterite
+		["pret_qual"] = {list = "pret=_qual", allow_holes = true},
+		["part"] = {list = true}, --participle
+		["part_qual"] = {list = "part=_qual", allow_holes = true},
+		["short_part"] = {list = true}, --short participle
+		["short_part_qual"] = {list = "short_part=_qual", allow_holes = true},
+		["pagename"] = {}, -- for testing
+		["noautolinktext"] = {type = "boolean"},
+		["noautolinkverb"] = {type = "boolean"},
+		["attn"] = {type = "boolean"},
+		["new"] = {type = "boolean"},
+	},
+	func = function(args, data, tracking_categories, frame)
+		local preses, prets, parts
+		local pagename = args.pagename or PAGENAME
+		local def_forms
+
+		if args.attn then
+			table.insert(tracking_categories, "Requests for attention concerning " .. langname)
+			return
+		end
+
+		if mw.title.getCurrentTitle().nsText == "Template" and PAGENAME == "pt-verb" and not args.pagename then
+			pagename = "carregar"
+		end
+
+		local parargs = frame:getParent().args
+		local alternant_multiword_spec = require("Module:User:Benwing2/pt-verb").do_generate_forms(parargs, "from headword")
+		for _, cat in ipairs(alternant_multiword_spec.categories) do
+			table.insert(data.categories, cat)
+		end
+
+		-- Use the "linked" form of the lemma as the head if no head= explicitly given.
+		if #data.user_specified_heads == 0 then
+			data.heads = {}
+			for _, head in ipairs(alternant_multiword_spec.forms.infinitive_linked) do
+				table.insert(data.heads, head.form)
+			end
+		end
+
+		local specforms = alternant_multiword_spec.forms
+		local function slot_exists(slot)
+			return specforms[slot] and #specforms[slot] > 0
+		end
+
+		local function do_finite(slot_tense, label_tense)
+			-- Use pres_3s if it exists and pres_1s doesn't exist (e.g. impersonal verbs); similarly for pres_3p (only3p verbs);
+			-- but fall back to pres_1s if neither pres_1s nor pres_3s nor pres_3p exist (e.g. [[empedernir]]).
+			local has_1s = slot_exists(slot_tense .. "_1s")
+			local has_3s = slot_exists(slot_tense .. "_3s")
+			local has_3p = slot_exists(slot_tense .. "_3p")
+			if has_1s or (not has_3s and not has_3p) then
+				return {
+					slot = slot_tense .. "_1s",
+					label = ("first-person singular %s"):format(label_tense),
+					accel = ("1|s|%s|ind"):format(slot_tense),
+				}
+			elseif has_3s then
+				return {
+					slot = slot_tense .. "_3s",
+					label = ("third-person singular %s"):format(label_tense),
+					accel = ("3|s|%s|ind"):format(slot_tense),
+				}
+			else
+				return {
+					slot = slot_tense .. "_3p",
+					label = ("third-person plural %s"):format(label_tense),
+					accel = ("3|p|%s|ind"):format(slot_tense),
+				}
+			end
+		end
+
+		preses = do_finite("pres", "present")
+		prets = do_finite("pret", "preterite")
+		parts = {
+			slot = "pp_ms",
+			label = "past participle",
+			accel = "m|s|past|part"
+		}
+		short_parts = {
+			slot = "short_pp_ms",
+			label = "short past participle",
+			accel = "short|m|s|past|part"
+		}
+
+		if #args.pres > 0 or #args.pret > 0 or #args.part > 0 or #args.short_part > 0 then
+			track("verb-old-multiarg")
+		end
+
+		local function strip_brackets(qualifiers)
+			if not qualifiers then
+				return nil
+			end
+			local stripped_qualifiers = {}
+			for _, qualifier in ipairs(qualifiers) do
+				local stripped_qualifier = qualifier:match("^%[(.*)%]$")
+				if not stripped_qualifier then
+					error("Internal error: Qualifier should be surrounded by brackets at this stage: " .. qualifier)
+				end
+				table.insert(stripped_qualifiers, stripped_qualifier)
+			end
+			return stripped_qualifiers
+		end
+
+		local function do_verb_form(args, qualifiers, slot_desc, skip_if_empty)
+			local forms
+			local to_insert
+
+			if #args == 0 then
+				forms = specforms[slot_desc.slot]
+				if not forms or #forms == 0 then
+					if skip_if_empty then
+						return
+					end
+					forms = {{form = "-"}}
+				end
+			elseif #args == 1 and args[1] == "-" then
+				forms = {{form = "-"}}
+			else
+				forms = {}
+				for i, arg in ipairs(args) do
+					local qual = qualifiers[i]
+					if qual then
+						-- FIXME: It's annoying we have to add brackets and strip them out later. The inflection
+						-- code adds all footnotes with brackets around them; we should change this.
+						qual = {"[" .. qual .. "]"}
+					end
+					local form = arg
+					if not args.noautolinkverb then
+						form = add_links(form)
+					end
+					table.insert(forms, {form = form, footnotes = qual})
+				end
+			end
+
+			if forms[1].form == "-" then
+				to_insert = {label = "no " .. slot_desc.label}
+			else
+				local into_table = {label = slot_desc.label}
+				local accel = {form = slot_desc.accel}
+				for _, form in ipairs(forms) do
+					local qualifiers = strip_brackets(form.footnotes)
+					-- Strip redundant brackets surrounding entire form. These may get generated e.g.
+					-- if we use the angle bracket notation with a single word.
+					local stripped_form = rmatch(form.form, "^%[%[([^%[%]]*)%]%]$") or form.form
+					-- Don't include accelerators if brackets remain in form, as the result will be wrong.
+					local this_accel = not stripped_form:find("%[%[") and accel or nil
+					table.insert(into_table, {term = stripped_form, qualifiers = qualifiers, accel = this_accel})
+				end
+				to_insert = into_table
+			end
+
+			table.insert(data.inflections, to_insert)
+		end
+
+		if alternant_multiword_spec.only3s then
+			table.insert(data.inflections, {label = glossary_link("impersonal")})
+		elseif alternant_multiword_spec.only3sp then
+			table.insert(data.inflections, {label = "third-person only"})
+		elseif alternant_multiword_spec.only3p then
+			table.insert(data.inflections, {label = "third-person plural only"})
+		end
+
+		do_verb_form(args.pres, args.pres_qual, preses)
+		do_verb_form(args.pret, args.pret_qual, prets)
+		do_verb_form(args.part, args.part_qual, parts)
+		do_verb_form(args.short_part, args.short_part_qual, short_parts, "skip if empty")
+	end
+}
+
 
 return export
