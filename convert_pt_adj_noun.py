@@ -254,8 +254,9 @@ def munge_form_for_ending(form, typ):
   typ != "aug" and check("g[oa]$", "gu") or
   check("[oae]$", "") or
   typ == "sup" and check("z$", "c") or
-  check(u"ável$", "abil") or
-  check(u"ível$", "ibil") or
+  # Adverb stems won't have the acute accent but we should handle them correctly regardless.
+  check(u"[áa]vel$", "abil") or
+  check(u"[íi]vel$", "ibil") or
   check("eu$", "euz")
   )
 
