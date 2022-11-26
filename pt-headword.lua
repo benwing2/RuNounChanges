@@ -966,7 +966,7 @@ local function get_adjective_params(adjtype)
 		["meta"] = {type = "boolean"}, -- metaphonic
 		["nometa"] = {type = "boolean"}, -- explicitly not metaphonic
 	}
-	if adjtype == "base" or adjtype == "part" or adjtype == "det" then
+	if adjtype == "base" or adjtype == "part" then
 		params["comp"] = {list = true} --comparative(s)
 		params["comp_qual"] = {list = "comp=_qual", allow_holes = true}
 		params["sup"] = {list = true} --superlative(s)
