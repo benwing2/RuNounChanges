@@ -450,6 +450,7 @@ local built_in_conjugations = {
 	-- -car (brincar, buscar, pecar, trancar, etc.): automatically handled in combine_stem_ending()
 	-- -çar (alcançar, começar, laçar): automatically handled in combine_stem_ending()
     -- -gar (apagar, cegar, esmagar, largar, navegar, resmungar, sugar, etc.): automatically handled in combine_stem_ending()
+	--
 	-- (3) Verbs with vowel alternations: need to specify the alternation explicitly unless it always happens, in
 	--     which case it's handled automatically through an entry below.
 	--
@@ -883,7 +884,8 @@ local built_in_conjugations = {
 	--
 	-- -cir alternations (aducir, ressarcir): automatically handled in combine_stem_ending()
 	-- -gir alternations (agir, dirigir, exigir): automatically handled in combine_stem_ending()
-	-- -guir alternations: automatically handled in combine_stem_ending()
+	-- -guir alternations (e.g. conseguir): automatically handled in combine_stem_ending()
+	-- -quir alternations (e.g. extorquir): automatically handled in combine_stem_ending()
 
 	{
 		-- verbs in -air (cair, sair, trair and derivatives: decair/descair/recair, sobres(s)air,
@@ -1056,8 +1058,8 @@ local built_in_conjugations = {
 		-- FIXME: old module lists short pp incluso for incluir that can't be verified, ask about this
 		-- FIXME: handle -uyr verbs?
 		match = function(verb)
-			-- Don't match -guir verbs (e.g. seguir, conseguir).
-			if verb:find("guir") then
+			-- Don't match -guir verbs (e.g. [[seguir]], [[conseguir]]) or -quir verbs (e.g. [[extorquir]])
+			if verb:find("guir") or verb:find("quir") then
 				return nil
 			else
 				return match_against_verbs("uir", {""})(verb)
@@ -1154,64 +1156,109 @@ local function skip_slot(base, slot, allow_overrides)
 end
 
 
--- Apply vowel alternation to stem.
-local function apply_vowel_alternation(stem, alternation, footnotes)
-	local pres1_and_sub, pres_stressed, err
-	-- Treat final -gu, -qu as a consonant, so the previous vowel can alternate (e.g. conseguir -> consigo).
-	-- This means a verb in -guar can't have a u-ú alternation but I don't think there are any verbs like that.
-	stem = rsub(stem, "([gq])u$", "%1" .. TEMPC1)
-	if alternation == "ei" then
-		local before_last_vowel = rmatch(stem, "^(.*)i$")
-		if not before_last_vowel then
-			err = "stem should end in -i"
-		else
-			pres1_and_sub = nil
-			pres_stressed = before_last_vowel .. "ei"
-		end
-	else
-		local before_last_vowel, last_vowel, after_last_vowel = rmatch(stem, "^(.*)(" .. V .. ")(.-[ui])$")
-		if not before_last_vowel then
-			before_last_vowel, last_vowel, after_last_vowel = rmatch(stem, "^(.*)(" .. V .. ")(.-)$")
-		end
-		if alternation == "i-e" or alternation == "i" then
-			if last_vowel == "e" or last_vowel == "i" then
-				pres1_and_sub = before_last_vowel .. "i" .. after_last_vowel
-				pres_stressed = before_last_vowel .. (alternation == "i" and "i" or "e") .. after_last_vowel
+-- Apply vowel alternations to stem.
+local function apply_vowel_alternations(stem, alternations)
+	local alternation_stems = {}
+	local saw_pres1_and_sub = false
+	local saw_pres_stressed = false
+
+	-- Process alternations other than +.
+	for _, altobj in ipairs(alternations) do
+		local alt = altobj.form
+		local pres1_and_sub, pres_stressed, err
+		-- Treat final -gu, -qu as a consonant, so the previous vowel can alternate (e.g. conseguir -> consigo).
+		-- This means a verb in -guar can't have a u-ú alternation but I don't think there are any verbs like that.
+		stem = rsub(stem, "([gq])u$", "%1" .. TEMPC1)
+		if alt == "+" then
+			-- do nothing yet
+		elseif alt == "ei" then
+			local before_last_vowel = rmatch(stem, "^(.*)i$")
+			if not before_last_vowel then
+				err = "stem should end in -i"
 			else
-				err = "should have -e- or -i- as the last vowel"
-			end
-		elseif alternation == "u-o" or alternation == "u" then
-			if last_vowel == "o" or last_vowel == "u" then
-				pres1_and_sub = before_last_vowel .. "u" .. after_last_vowel
-				pres_stressed = before_last_vowel .. (alternation == "u" and "u" or "o") .. after_last_vowel
-			else
-				err = "should have -o- or -u- as the last vowel"
-			end
-		elseif alternation == "í" then
-			if last_vowel == "i" then
 				pres1_and_sub = nil
-				pres_stressed = before_last_vowel .. "í" .. after_last_vowel
-			else
-				err = "should have -i- as the last vowel"
-			end
-		elseif alternation == "ú" then
-			if last_vowel == "u" then
-				pres1_and_sub = nil
-				pres_stressed = before_last_vowel .. "ú" .. after_last_vowel
-			else
-				err = "should have -u- as the last vowel"
+				pres_stressed = before_last_vowel .. "ei"
 			end
 		else
-			error("Internal error: Unrecognized vowel alternation '" .. alternation .. "'")
+			local before_last_vowel, last_vowel, after_last_vowel = rmatch(stem, "^(.*)(" .. V .. ")(.-[ui])$")
+			if not before_last_vowel then
+				before_last_vowel, last_vowel, after_last_vowel = rmatch(stem, "^(.*)(" .. V .. ")(.-)$")
+			end
+			if alt == "i-e" then
+				if last_vowel == "e" or last_vowel == "i" then
+					pres1_and_sub = before_last_vowel .. "i" .. after_last_vowel
+					if last_vowel == "i" then
+						pres_stressed = before_last_vowel .. "e" .. after_last_vowel
+					end
+				else
+					err = "should have -e- or -i- as the last vowel"
+				end
+			elseif alt == "i" then
+				if last_vowel == "e" then
+					pres1_and_sub = before_last_vowel .. "i" .. after_last_vowel
+					pres_stressed = pres1_and_sub
+				else
+					err = "should have -e- as the last vowel"
+				end
+			elseif alt == "u-o" then
+				if last_vowel == "o" or last_vowel == "u" then
+					pres1_and_sub = before_last_vowel .. "u" .. after_last_vowel
+					if last_vowel == "u" then
+						pres_stressed = before_last_vowel .. "o" .. after_last_vowel
+					end
+				else
+					err = "should have -o- or -u- as the last vowel"
+				end
+			elseif alt == "u" then
+				if last_vowel == "o" then
+					pres1_and_sub = before_last_vowel .. "u" .. after_last_vowel
+					pres_stressed = pres1_and_sub
+				else
+					err = "should have -o- as the last vowel"
+				end
+			elseif alt == "í" then
+				if last_vowel == "i" then
+					pres_stressed = before_last_vowel .. "í" .. after_last_vowel
+				else
+					err = "should have -i- as the last vowel"
+				end
+			elseif alt == "ú" then
+				if last_vowel == "u" then
+					pres_stressed = before_last_vowel .. "ú" .. after_last_vowel
+				else
+					err = "should have -u- as the last vowel"
+				end
+			else
+				error("Internal error: Unrecognized vowel alternation '" .. alt .. "'")
+			end
+		end
+		if pres1_and_sub then
+			pres1_and_sub = {form = pres1_and_sub:gsub(TEMPC1, "u"), footnotes = altobj.footnotes}
+			saw_pres1_and_sub = true
+		end
+		if pres_stressed then
+			pres_stressed = {form = pres_stressed:gsub(TEMPC1, "u"), footnotes = altobj.footnotes}
+			saw_pres_stressed = true
+		end
+		table.insert(alternation_stems, {
+			altobj = altobj,
+			pres1_and_sub = pres1_and_sub,
+			pres_stressed = pres_stressed,
+			err = err
+		})
+	end
+
+	-- Now do +. We check to see which stems are used by other alternations and specify those so any footnotes are
+	-- properly attached.
+	for _, alternation_stem in ipairs(alternation_stems) do
+		if alternation_stem.altobj.form == "+" then
+			local stemobj = {form = stem, footnotes = alternation_stem.altobj.footnotes}
+			alternation_stem.pres1_and_sub = saw_pres1_and_sub and stemobj or nil
+			alternation_stem.pres_stressed = saw_pres_stressed and stemobj or nil
 		end
 	end
-	pres1_and_sub = pres1_and_sub and pres1_and_sub:gsub(TEMPC1, "u") or nil
-	pres_stressed = pres_stressed and pres_stressed:gsub(TEMPC1, "u") or nil
-	return {
-		pres1_and_sub = pres1_and_sub and iut.combine_form_and_footnotes(pres1_and_sub, footnotes) or nil,
-		pres_stressed = pres_stressed and iut.combine_form_and_footnotes(pres_stressed, footnotes) or nil,
-		err = err
-	}
+
+	return alternation_stems
 end
 
 
@@ -1277,6 +1324,7 @@ local function combine_stem_ending(base, slot, prefix, stem, ending)
 		full_stem = full_stem:gsub("c$", "ç") -- conhecer -> conheço, vencer -> venço, descer -> desço
 		full_stem = full_stem:gsub("g$", "j") -- proteger -> protejo, fugir -> fujo
 		full_stem = full_stem:gsub("gu$", "g") -- distinguir -> distingo, conseguir -> consigo
+		full_stem = full_stem:gsub("qu$", "c") -- extorquir -> exturco
 		full_stem = full_stem:gsub("([gq])ü$", "%1u") -- argüir (superseded) -> arguo, delinqüir (superseded) -> delinquo
 	elseif base.frontback == "back" and is_front then
 		-- The following changes are all superseded so we don't do them:
@@ -1533,52 +1581,6 @@ local function copy_forms_to_imperatives(base)
 end
 
 
--- Add the appropriate clitic pronouns in `clitics` to the forms in `base_slot`. `store_cliticized_form` is a function
--- of three arguments (clitic, formobj, cliticized_form) and should store the cliticized form for the specified clitic
--- and form object.
-local function suffix_clitic_to_forms(base, base_slot, clitics, store_cliticized_form)
-	if not base.forms[base_slot] then
-		-- This can happen, e.g. in only3s/only3sp/only3p verbs.
-		return
-	end
-	for _, formobj in ipairs(base.forms[base_slot]) do
-		for _, clitic in ipairs(clitics) do
-			local cliticized_form
-			if formobj.form:find(TEMP_MESOCLITIC_INSERTION_POINT) then
-				-- mesoclisis in future and conditional
-				local infinitive, suffix = rmatch(formobj.form, "^(.*)" .. TEMP_MESOCLITIC_INSERTION_POINT .. "(.*)$")
-				if not infinitive then
-					error("Internal error: Can't find mesoclitic insertion point in slot '" .. base_slot .. "', form '" ..
-						formobj.form .. "'")
-				end
-				local full_form = infinitive .. suffix
-				if not infinitive:find("%[%[") then
-					infinitive = "[[" .. infinitive .. "]]"
-				end
-				cliticized_form = infinitive .. "-[[" .. clitic .. "]]-[[" .. full_form .. "|" .. suffix .. "]]"
-			else
-				local clitic_suffix = "-[[" .. clitic .. "]]"
-				local form_has_link = formobj.form:find("%[%[")
-				if base_slot:find("1p$") then
-					-- Final -s disappears: esbaldávamos + nos -> esbaldávamo-nos, etc.
-					cliticized_form = formobj.form:gsub("s$", "")
-					if not form_has_link then
-						cliticized_form = "[[" .. formobj.form .. "|" .. cliticized_form .. "]]"
-					end
-				else
-					cliticized_form = formobj.form
-					if not form_has_link then
-						cliticized_form = "[[" .. cliticized_form .. "]]"
-					end
-				end
-				cliticized_form = cliticized_form .. clitic_suffix
-			end
-			store_cliticized_form(clitic, formobj, cliticized_form)
-		end
-	end
-end
-
-
 local function process_slot_overrides(base, filter_slot, reflexive_only)
 	local overrides = reflexive_only and base.basic_reflexive_only_overrides or base.basic_overrides
 	for slot, forms in pairs(overrides) do
@@ -1600,6 +1602,55 @@ local function prefix_clitic_to_form(base, clitic, between, form)
 			return clitic_pref .. form
 		else
 			return clitic_pref .. "[[" .. form .. "]]"
+		end
+	end
+end
+
+
+-- Add the appropriate clitic pronouns in `clitics` to the forms in `base_slot`. `store_cliticized_form` is a function
+-- of three arguments (clitic, formobj, cliticized_form) and should store the cliticized form for the specified clitic
+-- and form object.
+local function suffix_clitic_to_forms(base, base_slot, clitics, store_cliticized_form)
+	if not base.forms[base_slot] then
+		-- This can happen, e.g. in only3s/only3sp/only3p verbs.
+		return
+	end
+	local autolink = not base.alternant_multiword_spec.args.noautolinkverb
+	for _, formobj in ipairs(base.forms[base_slot]) do
+		for _, clitic in ipairs(clitics) do
+			local cliticized_form
+			if formobj.form:find(TEMP_MESOCLITIC_INSERTION_POINT) then
+				-- mesoclisis in future and conditional
+				local infinitive, suffix = rmatch(formobj.form, "^(.*)" .. TEMP_MESOCLITIC_INSERTION_POINT .. "(.*)$")
+				if not infinitive then
+					error("Internal error: Can't find mesoclitic insertion point in slot '" .. base_slot .. "', form '" ..
+						formobj.form .. "'")
+				end
+				local full_form = infinitive .. suffix
+				if autolink and not infinitive:find("%[%[") then
+					infinitive = "[[" .. infinitive .. "]]"
+				end
+				cliticized_form =
+					autolink and infinitive .. "-[[" .. clitic .. "]]-[[" .. full_form .. "|" .. suffix .. "]]" or
+					infinitive .. "-" .. clitic .. "-" .. suffix
+			else
+				local clitic_suffix = autolink and "-[[" .. clitic .. "]]" or "-" .. clitic
+				local form_needs_link = autolink and not formobj.form:find("%[%[")
+				if base_slot:find("1p$") then
+					-- Final -s disappears: esbaldávamos + nos -> esbaldávamo-nos, etc.
+					cliticized_form = formobj.form:gsub("s$", "")
+					if form_needs_link then
+						cliticized_form = "[[" .. formobj.form .. "|" .. cliticized_form .. "]]"
+					end
+				else
+					cliticized_form = formobj.form
+					if form_needs_link then
+						cliticized_form = "[[" .. cliticized_form .. "]]"
+					end
+				end
+				cliticized_form = cliticized_form .. clitic_suffix
+			end
+			store_cliticized_form(clitic, formobj, cliticized_form)
 		end
 	end
 end
@@ -2073,22 +2124,13 @@ local function detect_indicator_spec(base)
 		base[indicator_flag] = base[indicator_flag] or base.stems[indicator_flag]
 	end
 
-	local vowel_alt = base.vowel_alt or {{form = "+"}}
-	base.vowel_alt_stems = {}
-
 	-- Convert vowel alternation indicators into stems.
-	for _, alt in ipairs(vowel_alt) do
-		if alt.form == "+" then
-			if alt.footnotes then
-				error("Can't attach footnotes to '+' vowel alternation (FIXME: If you need this, contact [[User:Benwing2]])")
-			end
-			table.insert(base.vowel_alt_stems, {})
-		else
-			local ret = apply_vowel_alternation(base.inf_stem, alt.form, alt.footnotes)
-			if ret.err then
-				error("To use '" .. alt.form .. "', present stem '" .. base.inf_stem .. "' " .. ret.err)
-			end
-			table.insert(base.vowel_alt_stems, ret)
+	local vowel_alt = base.vowel_alt or {{form = "+"}}
+	base.vowel_alt_stems = apply_vowel_alternations(base.inf_stem, vowel_alt)
+	for _, vowel_alt_stems in ipairs(base.vowel_alt_stems) do
+		if vowel_alt_stems.err then
+			error("To use '" .. vowel_alt_stems.altobj.form .. "', present stem '" .. base.prefix .. base.inf_stem .. "' " ..
+				vowel_alt_stems.err)
 		end
 	end
 end
