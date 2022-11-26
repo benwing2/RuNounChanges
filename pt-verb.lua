@@ -1536,7 +1536,7 @@ end
 -- Add the appropriate clitic pronouns in `clitics` to the forms in `base_slot`. `store_cliticized_form` is a function
 -- of three arguments (clitic, formobj, cliticized_form) and should store the cliticized form for the specified clitic
 -- and form object.
-local function add_forms_with_clitic(base, base_slot, clitics, store_cliticized_form)
+local function suffix_clitic_to_forms(base, base_slot, clitics, store_cliticized_form)
 	if not base.forms[base_slot] then
 		-- This can happen, e.g. in only3s/only3sp/only3p verbs.
 		return
@@ -1546,12 +1546,32 @@ local function add_forms_with_clitic(base, base_slot, clitics, store_cliticized_
 			local cliticized_form
 			if formobj.form:find(TEMP_MESOCLITIC_INSERTION_POINT) then
 				-- mesoclisis in future and conditional
-				cliticized_form = formobj.form:gsub(TEMP_MESOCLITIC_INSERTION_POINT, "-" .. clitic .. "-")
-			elseif base_slot:find("1p$") then
-				-- Final -s disappears: esbaldávamos + nos -> esbaldávamo-nos, etc.
-				cliticized_form = formobj.form:gsub("s$", "") .. "-" .. clitic
+				local infinitive, suffix = rmatch(formobj.form, "^(.*)" .. TEMP_MESOCLITIC_INSERTION_POINT .. "(.*)$")
+				if not infinitive then
+					error("Internal error: Can't find mesoclitic insertion point in slot '" .. base_slot .. "', form '" ..
+						formobj.form .. "'")
+				end
+				local full_form = infinitive .. suffix
+				if not infinitive:find("%[%[") then
+					infinitive = "[[" .. infinitive .. "]]"
+				end
+				cliticized_form = infinitive .. "-[[" .. clitic .. "]]-[[" .. full_form .. "|" .. suffix .. "]]"
 			else
-				cliticized_form = formobj.form .. "-" .. clitic
+				local clitic_suffix = "-[[" .. clitic .. "]]"
+				local form_has_link = formobj.form:find("%[%[")
+				if base_slot:find("1p$") then
+					-- Final -s disappears: esbaldávamos + nos -> esbaldávamo-nos, etc.
+					cliticized_form = formobj.form:gsub("s$", "")
+					if not form_has_link then
+						cliticized_form = "[[" .. formobj.form .. "|" .. cliticized_form .. "]]"
+					end
+				else
+					cliticized_form = formobj.form
+					if not form_has_link then
+						cliticized_form = "[[" .. cliticized_form .. "]]"
+					end
+				end
+				cliticized_form = cliticized_form .. clitic_suffix
 			end
 			store_cliticized_form(clitic, formobj, cliticized_form)
 		end
@@ -1571,7 +1591,7 @@ end
 
 -- Prefix `form` with `clitic`, adding fixed text `between` between them. Add links as appropriate unless the user
 -- requested no links. Check whether form already has brackets (as will be the case if the form has a fixed clitic).
-local function add_clitic_to_form(base, clitic, between, form)
+local function prefix_clitic_to_form(base, clitic, between, form)
 	if base.alternant_multiword_spec.args.noautolinkverb then
 		return clitic .. between .. form
 	else
@@ -1618,13 +1638,13 @@ local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joi
 					insert_forms(base, slot .. "_non_reflexive", mw.clone(base.forms[slot]))
 					if slot_has_suffixed_clitic then
 						insert_forms(base, slot .. "_variant", iut.map_forms(base.forms[slot], function(form)
-							add_clitic_to_form(base, clitic, " ... ", form)
+							prefix_clitic_to_form(base, clitic, " ... ", form)
 						end))
 					end
 				end
 				if slot_has_suffixed_clitic then
 					if do_joined then
-						add_forms_with_clitic(base, slot, {clitic},
+						suffix_clitic_to_forms(base, slot, {clitic},
 							function(clitic, formobj, cliticized_form)
 								formobj.form = cliticized_form
 							end
@@ -1633,7 +1653,7 @@ local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joi
 				elseif not do_joined then
 					-- Add clitic as separate word before all other forms.
 					for _, form in ipairs(base.forms[slot]) do
-						form.form = add_clitic_to_form(base, clitic, " ", form.form)
+						form.form = prefix_clitic_to_form(base, clitic, " ", form.form)
 					end
 				end
 			end
