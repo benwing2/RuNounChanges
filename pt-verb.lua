@@ -65,6 +65,12 @@ local var_code_c = "[" .. all_var_codes .. "]"
 local var_code_no_superseded_c = "[" .. var_codes_no_superseded .. "]"
 local not_var_code_c = "[^" .. all_var_codes .. "]"
 
+-- Export variant codes for use in [[Module:pt-inflections]].
+export.VAR_BR = VAR_BR
+export.VAR_PT = VAR_PT
+export.VAR_SUPERSEDED = VAR_SUPERSEDED
+export.VAR_NORMAL = VAR_NORMAL
+
 local short_pp_footnote = "[usually used with auxiliary verbs " .. link_term("ser") .. " and " .. link_term("estar") .. "]"
 local long_pp_footnote = "[usually used with auxiliary verbs " .. link_term("haver") .. " and " .. link_term("ter") .. "]"
 
@@ -239,7 +245,7 @@ local function add_slots(alternant_multiword_spec)
 	add_basic_personal_slot("imp", "imp", imp_person_number_list)
 	add_basic_personal_slot("pers_inf", "pers|inf", person_number_list)
 	-- Don't need special non-reflexive-part slots because the negative imperative is multiword, of which the
-	-- individual words are 'no' + subjunctive.
+	-- individual words are 'não' + subjunctive.
 	add_basic_personal_slot("neg_imp", "neg|imp", neg_imp_person_number_list, "no special verb form of")
 	-- Don't need special non-reflexive-part slots because we don't want [[jambando]] mapping to [[jambándome]]
 	-- (only [[jambándose]]) or [[jambar]] mapping to [[jambarme]] (only [[jambarse]]).
@@ -486,9 +492,9 @@ local built_in_conjugations = {
 			pres_sub_1s = "dê",
 			pres_sub_2s = "dês",
 			pres_sub_3s = "dê",
-			pres_sub_1p = {"dêmos", "demos"},
+			pres_sub_1p = {"demos", VAR_SUPERSEDED .. "dêmos"},
 			-- deis regular
-			pres_sub_3p = "deem",
+			pres_sub_3p = {"deem", VAR_SUPERSEDED .. "dêem"},
 			irreg = true,
 		}
 	},
@@ -723,12 +729,12 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- prazer, aprazer, desprazer
+		-- prazer, aprazer, comprazer, desprazer
 		match = "prazer",
 		forms = {
 			pres_3s = "praz",
 			pret = "prouvé", pret_1s = "prouve", pret_3s = "prouve", pret_conj = "irreg",
-			only3s = true,
+			only3s = function(base, prefix) return not prefix:find("com$") end,
 			irreg = true,
 		}
 	},
@@ -846,9 +852,9 @@ local built_in_conjugations = {
 		-- [[prover]] and [[desprover]] have regular preterite and past participle
 		match = "prover",
 		forms = {
-			pres_2s = "vês", pres_3s = "vê",
-			pres_2p = "vedes", pres_3p = {"veem", VAR_SUPERSEDED .. "vêem"},
-			pres1_and_sub = "vej",
+			pres_2s = "provês", pres_3s = "provê",
+			pres_2p = "provedes", pres_3p = {"proveem", VAR_SUPERSEDED .. "provêem"},
+			pres1_and_sub = "provej",
 			irreg = true,
 		}
 	},
@@ -885,6 +891,8 @@ local built_in_conjugations = {
 	--   primo/primes/prime, while Infopédia says primo/premes/preme; Priberam is probably more reliable)
 	-- extorquir/retorquir use <no_pres1_and_sub> for Brazil, <u-o,u> for Portugal
 	-- agredir/progredir/regredir/transgredir: use <i>
+	-- denegrir, prevenir: use <i>
+	-- eclodir: per Priberam: regular in Brazil, <u-o.only3sp> in Portugal (Infopédia says regular)
 	-- cerzir: per Priberam: use <i> for Brazil, use <i-e> for Portugal (Infopédia says <i-e,i>)
 	-- cergir: per Priberam: use <i-e> for Brazil, no conjugation given for Portugal (Infopédia says <i-e>)
 	-- proibir/coibir: use <í>
@@ -910,9 +918,14 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- abrir/desabrir/reabrir, cobrir/descobrir/encobrir/recobrir/redescobrir
-		match = "brir",
-		forms = {pp = "berto"}
+		-- abrir/desabrir/reabrir
+		match = "abrir",
+		forms = {pp = "aberto"}
+	},
+	{
+		-- cobrir/descobrir/encobrir/recobrir/redescobrir
+		match = "cobrir",
+		forms = {vowel_alt = "u-o", pp = "coberto"}
 	},
 	{
 		-- conduzir, produzir, reduzir, traduzir, etc.
@@ -926,10 +939,10 @@ local built_in_conjugations = {
 	{
 		-- pedir, desimpedir, despedir, espedir, expedir, impedir
 		-- medir
-		-- comedir (claimed in old module to have no pres stressed, but Priberam disagrees)
+		-- comedir (per Priberam, no_pres_stressed in Brazil)
 		match = match_against_verbs("edir", {"m", "p"}),
 		forms = {
-			pres1_and_sub = "eço",
+			pres1_and_sub = "eç",
 			irreg = true,
 		}
 	},
@@ -973,9 +986,9 @@ local built_in_conjugations = {
 		forms = {pres1_and_sub = {{form = "pil", footnotes = "[per Infopédia; Priberam says these forms are missing]"}}},
 	},
 	{
-		-- exprimir, imprimir but not comprimir/descomprimir, deprimir, oprimir/opprimir, reprimir, suprimir/supprimir
-		-- exprimir with short_pp expresso per Infopédia
-		match = match_against_verbs("primir", {"ex", "im"}),
+		-- exprimir, imprimir, comprimir (but not descomprimir per Priberam), deprimir, oprimir/opprimir (but not reprimir,
+		-- suprimir/supprimir per Priberam)
+		match = match_against_verbs("primir", {"^com", "ex", "im", "de", "^o", "op"}),
 		forms = {short_pp = "presso"}
 	},
 	{
@@ -1104,14 +1117,8 @@ local built_in_conjugations = {
 
 	{
 		-- pôr, antepor, apor, compor/decompor/descompor, contrapor, depor, dispor, expor, impor, interpor, justapor,
-		-- opor, pospor, propor, repor, sobrepor, supor/pressupor, transpor, others?
-		match = function(verb)
-			if verb == "pôr" then
-				return "", "pôr"
-			else
-				return match_against_verbs("por", {""})(verb)
-			end
-		end,
+		-- opor, pospor, propor, repor, sobrepor, supor/pressupor, transpor, superseded forms like [[decompôr]], others?
+		match = "p[oô]r",
 		forms = {
 			pres1_and_sub = "ponh",
 			pres_2s = "pões", pres_3s = "põe", pres_1p = "pomos", pres_2p = "pondes", pres_3p = "põem",
@@ -1401,16 +1408,18 @@ end
 local function construct_stems(base, vowel_alt)
 	local stems = {}
 	stems.pres_unstressed = base.stems.pres_unstressed or base.inf_stem
-	stems.pres_stressed = base.stems.pres_stressed or
+	stems.pres_stressed =
 		-- If no_pres_stressed given, pres_stressed stem should be empty so no forms are generated.
 		base.no_pres_stressed and {} or
+		base.stems.pres_stressed or
 		vowel_alt.pres_stressed or
 		base.inf_stem
-	stems.pres1_and_sub = base.stems.pres1_and_sub or
+	stems.pres1_and_sub =
 		-- If no_pres_stressed given, the entire subjunctive is missing.
 		base.no_pres_stressed and {} or
 		-- If no_pres1_and_sub given, pres1 and entire subjunctive are missing.
 		base.no_pres1_and_sub and {} or
+		base.stems.pres1_and_sub or
 		vowel_alt.pres1_and_sub or
 		nil
 	stems.pres1 = base.stems.pres1 or stems.pres1_and_sub or stems.pres_stressed
@@ -1697,8 +1706,9 @@ local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joi
 			else
 				local slot_has_suffixed_clitic = not slot:find("_sub")
 				-- Maybe generate non-reflexive parts and separated syntactic variants for use in {{pt-verb form of}}.
-				-- See comment in add_slots() above `need_special_verb_form_of_slots`.
-				if do_reflexive and base.alternant_multiword_spec.from_verb_form_of and
+				-- See comment in add_slots() above `need_special_verb_form_of_slots`. Check for do_joined so we only
+				-- run this code once.
+				if do_reflexive and do_joined and base.alternant_multiword_spec.from_verb_form_of and
 					-- Skip personal variants of infinitives and gerunds so we don't think [[jambando]] is a
 					-- non-reflexive equivalent of [[jambándome]].
 					not slot:find("infinitive_") and not slot:find("gerund_") then
@@ -1707,7 +1717,7 @@ local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joi
 					insert_forms(base, slot .. "_non_reflexive", mw.clone(base.forms[slot]))
 					if slot_has_suffixed_clitic then
 						insert_forms(base, slot .. "_variant", iut.map_forms(base.forms[slot], function(form)
-							prefix_clitic_to_form(base, clitic, " ... ", form)
+							return prefix_clitic_to_form(base, clitic, " ... ", form)
 						end))
 					end
 				end
@@ -2155,16 +2165,9 @@ end
 
 
 local function detect_all_indicator_specs(alternant_multiword_spec)
-	-- Propagate some settings up or down. Do these before calling detect_indicator_spec() because the latter may use them
-	-- (e.g. .refl).
+	-- Propagate some settings up; some are used internally, others by [[Module:pt-headword]].
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		-- User-specified indicator flags.
-		for prop, _ in pairs(indicator_flags) do
-			if base[prop] then
-				alternant_multiword_spec[prop] = true
-			end
-		end
-		-- Internal indicator flags.
+		-- Internal indicator flags. Do these before calling detect_indicator_spec() because add_slots() uses them.
 		for  _, prop in ipairs { "refl", "clitic" } do
 			if base[prop] then
 				alternant_multiword_spec[prop] = true
@@ -2178,6 +2181,13 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 	alternant_multiword_spec.vowel_alt = {}
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		detect_indicator_spec(base)
+		-- User-specified indicator flags. Do these after calling detect_indicator_spec() because the latter may set these
+		-- indicators for built-in verbs.
+		for prop, _ in pairs(indicator_flags) do
+			if base[prop] then
+				alternant_multiword_spec[prop] = true
+			end
+		end
 		-- Vowel alternants. Do these after calling detect_indicator_spec() because the latter sets base.vowel_alt for
 		-- built-in verbs.
 		if base.vowel_alt then
@@ -2729,7 +2739,7 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 
 	compute_categories_and_annotation(alternant_multiword_spec)
 	if args.json and not from_headword and not from_verb_form_of then
-		return require("Module:JSON").toJSON(alternant_multiword_spec)
+		return export.remove_variant_codes(require("Module:JSON").toJSON(alternant_multiword_spec.forms))
 	end
 	return alternant_multiword_spec
 end
@@ -2740,6 +2750,10 @@ end
 function export.show(frame)
 	local parent_args = frame:getParent().args
 	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	if type(alternant_multiword_spec) == "string" then
+		-- JSON return value
+		return alternant_multiword_spec
+	end
 	show_forms(alternant_multiword_spec)
 	return make_table(alternant_multiword_spec) ..
 		require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang, nil, nil, force_cat)
