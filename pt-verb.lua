@@ -854,27 +854,29 @@ local built_in_conjugations = {
 
 	-- Verbs not needing entries here:
 	--
-	-- abolir: use <u-o> (claimed in old module to have no pres1 or pres sub; Priberam agrees for Brazil, but says <u-o> for Portugal)
+	-- abolir: per Priberam: <no_pres1_and_sub> for Brazil, use <u-o> for Portugal
 	-- barrir: use <only3sp>
-	-- carpir, colorir/descolorir, demolir: use <no_pres1_and_sub>
-	-- delir, empedernir, espavorir, falir, florir, remir, renhir: use <no_pres_stressed>
-	-- empedernir: use <i-e> (claimed in old module to have no_pres_stressed, but Priberam disagrees)
-	-- transir: totally regular (claimed in old module to have no_pres_stressed, but Priberam disagrees)
-	-- aspergir, despir, flectir/deflectir/reflectir, mentir/desmentir,
+	-- carpir, colorir, demolir: use <no_pres1_and_sub>
+	-- descolorir: per Priberam: <no_pres_stressed> for Brazil, use <no_pres1_and_sub> for Portugal
+	-- delir, espavorir, falir, florir, remir, renhir: use <no_pres_stressed>
+	-- empedernir: per Priberam: <no_pres_stressed> for Brazil, use <i-e> for Portugal
+	-- transir: per Priberam: <no_pres_stressed> for Brazil, regular for Portugal
+	-- aspergir, despir, flectir/deflectir/genuflectir/genufletir/reflectir/refletir, mentir/desmentir,
 	--   sentir/assentir/consentir/dissentir/pressentir/ressentir, convergir/divergir, aderir/adherir,
-	--   ferir/auferir/conferir/deferir/desferir/diferir/differir/inferir/interferir/preferir/preferir/referir/transferir,
-	--   gerir/digerir/ingerir/sugerir, preterir, competir/repetir, servir, advertir/divertir,
-	--   vestir/investir/revestir/travestir,
-	--   seguir/conseguir/desconseguir/desseguir/perseguir/prosseguir: use <i-e>
-	-- inerir: use <i-e> (per Infopédia), use <only3sp> (per Priberam)
-	-- dormir, engolir, tossir, subir, acudir/sacudir, fugir, sumir/consumir: use <u-o>
-	-- polir/repolir (claimed in old module to have no pres stressed, but Priberam disagrees; Infopédia lists
-	--   repolir as completely regular and not like polir, but I think that's an error): use <u>
-	-- premir (claimed in old module to have no pres1 or sub, but Priberam and Infopédia disagree; Priberam says
-	--   primo/primes/prime, while Infopédia says primo/premes/preme; Priberam is probably more reliable): use <i>
-	-- extorquir/retorquir (claimed in old module to have no pres1 or sub, but Priberam disagrees): use <u-o,u>
+	--   ferir/auferir/conferir/deferir/desferir/diferir/differir/inferir/interferir/preferir/proferir/referir/transferir,
+	--   gerir/digerir/ingerir/sugerir, preterir, competir/repetir, servir, advertir/animadvertir/divertir,
+	--   vestir/investir/revestir/travestir, seguir/conseguir/desconseguir/desseguir/perseguir/prosseguir: use <i-e>
+	-- inerir: use <i-e> (per Infopédia, and per Priberam for Brazil), use <i-e.only3sp> (per Priberam for Portugal)
+	-- dormir, engolir, tossir, subir, acudir/sacudir, fugir, sumir/consumir (NOT assumir/presumir/resumir): use <u-o>
+	-- polir/repolir (claimed in old module to have no pres stressed, but Priberam disagrees for both Brazil and
+	--   Portugal; Infopédia lists repolir as completely regular and not like polir, but I think that's an error): use
+	--   <u>
+	-- premir: per Priberam: use <no_pres1_and_sub> for Brazil, <i> for Portugal (for Portugal, Priberam says
+	--   primo/primes/prime, while Infopédia says primo/premes/preme; Priberam is probably more reliable)
+	-- extorquir/retorquir use <no_pres1_and_sub> for Brazil, <u-o,u> for Portugal
 	-- agredir/progredir/regredir/transgredir: use <i>
-	-- cerzir/cergir: use <i-e,i> (per Infopédia; Priberam just says <i-e>)
+	-- cerzir: per Priberam: use <i> for Brazil, use <i-e> for Portugal (Infopédia says <i-e,i>)
+	-- cergir: per Priberam: use <i-e> for Brazil, no conjugation given for Portugal (Infopédia says <i-e>)
 	-- proibir/coibir: use <í>
 	-- reunir: use <ú>
 	-- parir/malparir: use <no_pres_stressed> (old module had pres_1s = {paro (1_defective), pairo (1_obsolete_alt)},
@@ -2139,7 +2141,14 @@ end
 local function detect_all_indicator_specs(alternant_multiword_spec)
 	-- Propagate some settings up or down.
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		for _, prop in ipairs { "refl", "clitic", "only3s", "only3sp", "only3p" } do
+		-- User-specified indicator flags.
+		for prop, _ in pairs(indicator_flags) do
+			if base[prop] then
+				alternant_multiword_spec[prop] = true
+			end
+		end
+		-- Internal indicator flags.
+		for  _, prop in ipairs { "refl", "clitic" } do
 			if base[prop] then
 				alternant_multiword_spec[prop] = true
 			end
