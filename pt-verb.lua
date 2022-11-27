@@ -31,8 +31,8 @@ local lang = require("Module:languages").getByCode("pt")
 local m_string_utilities = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
-local iut = require("Module:User:Benwing2/inflection utilities")
-local com = require("Module:User:Benwing2/pt-common")
+local iut = require("Module:inflection utilities")
+local com = require("Module:pt-common")
 
 local force_cat = false -- set to true for debugging
 local check_for_red_links = false -- set to false for debugging
@@ -60,7 +60,9 @@ local VAR_PT = u(0xFFF4) -- variant code for Portugal
 local VAR_SUPERSEDED = u(0xFFF5) -- variant code for superseded forms
 local VAR_NORMAL = u(0xFFF6) -- variant code for non-superseded forms
 local all_var_codes = VAR_BR .. VAR_PT .. VAR_SUPERSEDED .. VAR_NORMAL
+local var_codes_no_superseded = VAR_BR .. VAR_PT .. VAR_NORMAL
 local var_code_c = "[" .. all_var_codes .. "]"
+local var_code_no_superseded_c = "[" .. var_codes_no_superseded .. "]"
 local not_var_code_c = "[^" .. all_var_codes .. "]"
 
 local short_pp_footnote = "[usually used with auxiliary verbs " .. link_term("ser") .. " and " .. link_term("estar") .. "]"
@@ -139,6 +141,14 @@ local indicator_flags = m_table.listToSet {
 	"only3s", "only3sp", "only3p",
 	"pp_inv", "irreg",
 }
+
+-- Remove any variant codes e.g. VAR_BR, VAR_PT, VAR_SUPERSEDED. Needs to be called from [[Module:pt-headword]] on the
+-- output of do_generate_forms(). `keep_superseded` leaves VAR_SUPERSEDED; used in the `canonicalize` function of
+-- show_forms() because we then process and remove it in `generate_forms`. FIXME: Use metadata for this once it's
+-- supported in [[Module:inflection utilities]].
+function export.remove_variant_codes(form, keep_superseded)
+	return rsub(form, keep_superseded and var_code_no_superseded_c or var_code_c, "")
+end
 
 -- Initialize all the slots for which we generate forms.
 local function add_slots(alternant_multiword_spec)
@@ -2374,11 +2384,20 @@ local function show_forms(alternant_multiword_spec)
 		return accel_obj
 	end
 
+	-- Italicize superseded forms.
+	local function generate_link(slot, form, origentry, accel_obj)
+		if origentry:find(VAR_SUPERSEDED) then
+			origentry = rsub(origentry, VAR_SUPERSEDED, "")
+			return m_links.full_link({lang = lang, term = origentry, tr = "-", accel = accel_obj}, "term")
+		end
+	end
+
 	local props = {
 		lang = lang,
 		lemmas = lemmas,
 		transform_accel_obj = transform_accel_obj,
-		canonicalize = function(form) return rsub(form, var_code_c, "") end,
+		canonicalize = function(form) return export.remove_variant_codes(form, "keep superseded") end,
+		generate_link = generate_link,
 		slot_list = alternant_multiword_spec.verb_slots_basic,
 	}
 	iut.show_forms(alternant_multiword_spec.forms, props)
@@ -2671,10 +2690,14 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 		end
 	end
 
+	local function split_bracketed_runs_into_words(bracketed_runs)
+		return iut.split_alternating_runs(bracketed_runs, " ", "preserve splitchar")
+	end
+
 	local parse_props = {
 		parse_indicator_spec = parse_indicator_spec,
 		-- Split words only on spaces, not on hyphens, because that messes up reflexive verb parsing.
-		get_split_pattern = function(text) return " " end,
+		split_bracketed_runs_into_words = split_bracketed_runs_into_words,
 		allow_default_indicator = true,
 		allow_blank_lemma = true,
 	}
