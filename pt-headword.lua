@@ -6,7 +6,7 @@ local rsplit = mw.text.split
 
 local m_links = require("Module:links")
 local m_table = require("Module:table")
-local com = require("Module:User:Benwing2/pt-common")
+local com = require("Module:pt-common")
 local romut_module = "Module:romance utilities"
 local lang = require("Module:languages").getByCode("pt")
 local langname = lang:getCanonicalName()
@@ -48,26 +48,6 @@ local include_hyphen_prefixes = m_table.listToSet {
 	"super",
 	"vice",
 }
-
--- Add links around words. If multiword_only, do it only in multiword forms.
--- FIXME: Duplicates [[Module:es-headword]]; move to a utilities module.
-local function add_links(form, multiword_only)
-	if form == "" or form == " " then
-		return form
-	end
-	if not form:find("%[%[") then
-		if rfind(form, "[%s%p]") then --optimization to avoid loading [[Module:headword]] on single-word forms
-			local m_headword = require("Module:headword")
-			if m_headword.head_is_multiword(form) then
-				form = m_headword.add_multiword_links(form)
-			end
-		end
-		if not multiword_only and not form:find("%[%[") then
-			form = "[[" .. form .. "]]"
-		end
-	end
-	return form
-end
 
 local function track(page)
 	require("Module:debug/track")("pt-headword/" .. page)
@@ -1121,6 +1101,8 @@ pos_functions["verbs"] = {
 		[1] = {},
 		["pres"] = {list = true}, --present
 		["pres_qual"] = {list = "pres=_qual", allow_holes = true},
+		["pres3s"] = {list = true}, --third-singular present
+		["pres3s_qual"] = {list = "pres3s=_qual", allow_holes = true},
 		["pret"] = {list = true}, --preterite
 		["pret_qual"] = {list = "pret=_qual", allow_holes = true},
 		["part"] = {list = true}, --participle
@@ -1134,7 +1116,7 @@ pos_functions["verbs"] = {
 		["new"] = {type = "boolean"},
 	},
 	func = function(args, data, tracking_categories, frame)
-		local preses, prets, parts
+		local preses, preses_3s, prets, parts, short_parts
 		local pagename = args.pagename or PAGENAME
 		local def_forms
 
@@ -1176,37 +1158,37 @@ pos_functions["verbs"] = {
 				return {
 					slot = slot_tense .. "_1s",
 					label = ("first-person singular %s"):format(label_tense),
-					accel = ("1|s|%s|ind"):format(slot_tense),
-				}
+				}, true
 			elseif has_3s then
 				return {
 					slot = slot_tense .. "_3s",
 					label = ("third-person singular %s"):format(label_tense),
-					accel = ("3|s|%s|ind"):format(slot_tense),
-				}
+				}, false
 			else
 				return {
 					slot = slot_tense .. "_3p",
 					label = ("third-person plural %s"):format(label_tense),
-					accel = ("3|p|%s|ind"):format(slot_tense),
-				}
+				}, false
 			end
 		end
 
-		preses = do_finite("pres", "present")
+		local did_pres_1s
+		preses, did_pres_1s = do_finite("pres", "present")
+		preses_3s = {
+			slot = "pres_3s",
+			label = "third-person singular present",
+		}
 		prets = do_finite("pret", "preterite")
 		parts = {
 			slot = "pp_ms",
 			label = "past participle",
-			accel = "m|s|past|part"
 		}
 		short_parts = {
 			slot = "short_pp_ms",
 			label = "short past participle",
-			accel = "short|m|s|past|part"
 		}
 
-		if #args.pres > 0 or #args.pret > 0 or #args.part > 0 or #args.short_part > 0 then
+		if #args.pres > 0 or #args.pres3s > 0 or #args.pret > 0 or #args.part > 0 or #args.short_part > 0 then
 			track("verb-old-multiarg")
 		end
 
@@ -1250,7 +1232,7 @@ pos_functions["verbs"] = {
 					end
 					local form = arg
 					if not args.noautolinkverb then
-						form = add_links(form)
+						form = com.add_links(form)
 					end
 					table.insert(forms, {form = form, footnotes = qual})
 				end
@@ -1276,6 +1258,15 @@ pos_functions["verbs"] = {
 			table.insert(data.inflections, to_insert)
 		end
 
+		local skip_pres_if_empty
+		if alternant_multiword_spec.no_pres1_and_sub then
+			table.insert(data.inflections, {label = "no first-person singular present"})
+			table.insert(data.inflections, {label = "no present subjunctive"})
+		end
+		if alternant_multiword_spec.no_pres_stressed then
+			table.insert(data.inflections, {label = "no stressed present indicative or subjunctive"})
+			skip_pres_if_empty = true
+		end
 		if alternant_multiword_spec.only3s then
 			table.insert(data.inflections, {label = glossary_link("impersonal")})
 		elseif alternant_multiword_spec.only3sp then
@@ -1283,8 +1274,22 @@ pos_functions["verbs"] = {
 		elseif alternant_multiword_spec.only3p then
 			table.insert(data.inflections, {label = "third-person plural only"})
 		end
+		local has_vowel_alt
+		if alternant_multiword_spec.vowel_alt then
+			for _, vowel_alt in ipairs(alternant_multiword_spec.vowel_alt) do
+				if vowel_alt ~= "+" and vowel_alt ~= "í" and vowel_alt ~= "ú" then
+					has_vowel_alt = true
+					break
+				end
+			end
+		end
 
-		do_verb_form(args.pres, args.pres_qual, preses)
+		do_verb_form(args.pres, args.pres_qual, preses, skip_pres_if_empty)
+		-- We want to include both the pres_1s and pres_3s if there is a vowel alternation in the present singular. But we
+		-- don't want to redundantly include the pres_3s if we already included it.
+		if did_pres_1s and has_vowel_alt then
+			do_verb_form(args.pres3s, args.pres3s_qual, preses_3s, skip_pres_if_empty)
+		end
 		do_verb_form(args.pret, args.pret_qual, prets)
 		do_verb_form(args.part, args.part_qual, parts)
 		do_verb_form(args.short_part, args.short_part_qual, short_parts, "skip if empty")
