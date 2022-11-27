@@ -1266,17 +1266,24 @@ end
 
 -- Add the `stem` to the `ending` for the given `slot` and apply any phonetic modifications.
 -- WARNING: This function is written very carefully; changes to it can easily have unintended consequences.
-local function combine_stem_ending(base, slot, prefix, stem, ending)
+local function combine_stem_ending(base, slot, prefix, stem, ending, dont_include_prefix)
 	-- If the stem begins with an acute accent, this is a signal to move the accent onto the last vowel of the prefix.
 	-- Cf. míngua of minguar.
 	if stem:find("^" .. AC) then
 		stem = rsub(stem, "^" .. AC, "")
+		if dont_include_prefix then
+			error("Internal error: Can't handle acute accent at beginning of stem if dont_include_prefix is given")
+		end
 		prefix = rsub(prefix, "([aeiouyAEIOUY])([^aeiouyAEIOUY]*)$", "%1" .. AC .. "%2")
 	end
 
 	-- Use the full stem for checking for -gui ending and such, because 'stem' is just 'u' for [[arguir]],
 	-- [[delinquir]].
 	local full_stem = prefix .. stem
+	-- Include the prefix in the stem unless dont_include_prefix is given (used for the past participle stem).
+	if not dont_include_prefix then
+		stem = prefix .. stem
+	end
 
 	-- If the ending begins with a double asterisk, this is a signal to conditionally delete the accent on the last letter
 	-- of the stem. "Conditionally" means we don't do it if the last two letters would form a diphthong without the accent
@@ -1285,7 +1292,7 @@ local function combine_stem_ending(base, slot, prefix, stem, ending)
 	if ending:find("^%*%*") then
 		ending = rsub(ending, "^%*%*", "")
 		if rfind(full_stem, "[gq]uí$") or not rfind(full_stem, V .. "[íú]$") then
-			full_stem = com.remove_final_accent(full_stem)
+			stem = com.remove_final_accent(stem)
 		end
 	end
 
@@ -1293,7 +1300,7 @@ local function combine_stem_ending(base, slot, prefix, stem, ending)
 	-- E.g. fizé -> fizermos. Unlike for **, this removal is unconditional, so we get e.g. 'sairmos' not #'saírmos'.
 	if ending:find("^%*") then
 		ending = rsub(ending, "^%*", "")
-		full_stem = com.remove_final_accent(full_stem)
+		stem = com.remove_final_accent(stem)
 	end
 
 	-- If ending begins with i, it must get an accent after an unstressed vowel (in some but not all cases) to prevent
@@ -1312,8 +1319,7 @@ local function combine_stem_ending(base, slot, prefix, stem, ending)
 	-- *   impf: all forms (roí-)
 	-- *   pp: roído
 	if ending:find("^i") and full_stem:find("[aeiou]$") and not full_stem:find("[gq]u$") and ending ~= "ir" and
-		ending ~= "iu" and ending ~= "indo" and
-		not ending:find("^ir[md]") then
+		ending ~= "iu" and ending ~= "indo" and not ending:find("^ir[md]") then
 		ending = ending:gsub("^i", "í")
 	end
 
@@ -1323,22 +1329,22 @@ local function combine_stem_ending(base, slot, prefix, stem, ending)
 	-- as the stem.
 	local is_front = rfind(ending, "^[eiéí]")
 	if base.frontback == "front" and not is_front then
-		full_stem = full_stem:gsub("c$", "ç") -- conhecer -> conheço, vencer -> venço, descer -> desço
-		full_stem = full_stem:gsub("g$", "j") -- proteger -> protejo, fugir -> fujo
-		full_stem = full_stem:gsub("gu$", "g") -- distinguir -> distingo, conseguir -> consigo
-		full_stem = full_stem:gsub("qu$", "c") -- extorquir -> exturco
-		full_stem = full_stem:gsub("([gq])ü$", "%1u") -- argüir (superseded) -> arguo, delinqüir (superseded) -> delinquo
+		stem = stem:gsub("c$", "ç") -- conhecer -> conheço, vencer -> venço, descer -> desço
+		stem = stem:gsub("g$", "j") -- proteger -> protejo, fugir -> fujo
+		stem = stem:gsub("gu$", "g") -- distinguir -> distingo, conseguir -> consigo
+		stem = stem:gsub("qu$", "c") -- extorquir -> exturco
+		stem = stem:gsub("([gq])ü$", "%1u") -- argüir (superseded) -> arguo, delinqüir (superseded) -> delinquo
 	elseif base.frontback == "back" and is_front then
 		-- The following changes are all superseded so we don't do them:
 		-- averiguar -> averigüei, minguar -> mingüei; antiquar -> antiqüei, apropinquar -> apropinqüei
 		-- stem = stem:gsub("([gq])u$", "%1ü")
-		full_stem = full_stem:gsub("g$", "gu") -- cargar -> carguei, apagar -> apaguei
-		full_stem = full_stem:gsub("c$", "qu") -- marcar -> marquei
-		full_stem = full_stem:gsub("ç$", "c") -- começar -> comecei
+		stem = stem:gsub("g$", "gu") -- cargar -> carguei, apagar -> apaguei
+		stem = stem:gsub("c$", "qu") -- marcar -> marquei
+		stem = stem:gsub("ç$", "c") -- começar -> comecei
 		-- j does not go to g here; desejar -> deseje not #desege
 	end
 
-	return full_stem .. ending
+	return stem .. ending
 end
 
 
@@ -1414,9 +1420,9 @@ local function construct_stems(base, vowel_alt)
 	stems.fut_sub = base.stems.fut_sub or stems.pret
 	stems.pers_inf = base.stems.pers_inf or base.inf_stem .. base.conj_vowel
 	stems.pp = base.stems.pp or base.conj == "ar" and
-		combine_stem_ending(base, "pp_ms", "", base.inf_stem, "ado") or
+		combine_stem_ending(base, "pp_ms", base.prefix, base.inf_stem, "ado", "dont include prefix") or
 		-- use combine_stem_ending esp. so we get roído, caído, etc.
-		combine_stem_ending(base, "pp_ms", "", base.inf_stem, "ido")
+		combine_stem_ending(base, "pp_ms", base.prefix, base.inf_stem, "ido", "dont include prefix")
 	stems.pp_ms = stems.pp
 	local function masc_to_fem(form)
 		if rfind(form, "o$") then
@@ -2139,7 +2145,8 @@ end
 
 
 local function detect_all_indicator_specs(alternant_multiword_spec)
-	-- Propagate some settings up or down.
+	-- Propagate some settings up or down. Do these before calling detect_indicator_spec() because the latter may use them
+	-- (e.g. .refl).
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		-- User-specified indicator flags.
 		for prop, _ in pairs(indicator_flags) do
@@ -2158,8 +2165,16 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 
 	add_slots(alternant_multiword_spec)
 
+	alternant_multiword_spec.vowel_alt = {}
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		detect_indicator_spec(base)
+		-- Vowel alternants. Do these after calling detect_indicator_spec() because the latter sets base.vowel_alt for
+		-- built-in verbs.
+		if base.vowel_alt then
+			for _, altobj in ipairs(base.vowel_alt) do
+				m_table.insertIfNot(alternant_multiword_spec.vowel_alt, altobj.form)
+			end
+		end
 	end)
 end
 
