@@ -602,16 +602,22 @@ end
 
 
 local function parse_before_or_post_text(props, text, segments, lemma_is_last)
-	-- If the text begins with a hyphen, include the hyphen in the set of allowed characters
-	-- for an inflected segment. This way, e.g. conjugating "-ir" is treated as a regular
-	-- -ir verb rather than a hyphen + irregular [[ir]].
-	local is_suffix = rfind(text, "^%-")
 	-- Call parse_balanced_segment_run() to keep multiword links together.
 	local bracketed_runs = put.parse_balanced_segment_run(text, "[", "]")
-	-- Split on space or hyphen. Use preserve_splitchar so we know whether the separator was
+	-- Split normally on space or hyphen (but customizable). Use preserve_splitchar so we know whether the separator was
 	-- a space or hyphen.
-	local space_separated_groups = put.split_alternating_runs(bracketed_runs,
-		is_suffix and " " or "[ %-]", "preserve splitchar")
+	local space_separated_groups
+	if props.split_bracketed_runs_into_words then
+		space_separated_groups = props.split_bracketed_runs_into_words(bracketed_runs)
+	end
+	if not space_separated_groups then
+		-- If the text begins with a hyphen, include the hyphen in the set of allowed characters
+		-- for an inflected segment. This way, e.g. conjugating "-ir" is treated as a regular
+		-- -ir verb rather than a hyphen + irregular [[ir]].
+		local is_suffix = rfind(text, "^%-")
+		local split_pattern = is_suffix and " " or "[ %-]"
+		space_separated_groups = put.split_alternating_runs(bracketed_runs, split_pattern, "preserve splitchar")
+	end
 
 	local parsed_components = {}
 	local parsed_components_translit = {}
@@ -789,24 +795,40 @@ be inflected, and may have alternants indicated using double parens. Examples:
 
 `props` is an object specifying properties used during parsing, as follows:
 {
-  parse_indicator_spec = FUNCTION_TO_PARSE_AN_INDICATOR_SPEC (required; takes two arguments,
-                           a string surrounded by angle brackets and the lemma, and should
-                           return a word_spec object containing properties describing the
-                           indicators inside of the angle brackets),
-  lang = LANG_OBJECT (only needed if manual translit or respelling may be present using //),
-  transliterate_respelling = FUNCTION_TO_TRANSLITERATE_RESPELLING (only needed of respelling
-                               is allowed in place of manual translit after //; takes one
-							   argument, the respelling or translit, and should return the
-							   transliteration of any resplling but return any translit
-							   unchanged),
-  allow_default_indicator = BOOLEAN_OR_NIL (true if the indicator in angle brackets can
-                              be omitted and will be automatically added at the end of the
-							  multiword text (if no alternants) or at the end of each
-							  alternant (if alternants present),
-  allow_blank_lemma = BOOLEAN_OR_NIL (true if a blank lemma is allowed; in such a case, the
-                        calling function should substitute a default lemma, typically taken
-						from the pagename)
+  parse_indicator_spec = FUNCTION_TO_PARSE_AN_INDICATOR_SPEC (required),
+  lang = LANG_OBJECT,
+  transliterate_respelling = FUNCTION_TO_TRANSLITERATE_RESPELLING,
+  split_bracketed_runs_into_words = nil or FUNCTION_TO_SPLIT_BRACKETED_RUNS_INTO_WORDS,
+  allow_default_indicator = BOOLEAN_OR_NIL,
+  allow_blank_lemma = BOOLEAN_OR_NIL,
 }
+						
+`parse_indicator_spec` is a required function that takes two arguments, a string surrounded by angle brackets and the
+lemma, and should return a word_spec object containing properties describing the indicators inside of the angle
+brackets).
+
+`lang` is the language object for the language in question; only needed if manual translit or respelling may be present
+using //.
+
+`transliterate_respelling` is a function that is only needed if respelling is allowed in place of manual translit after
+//. It takes one argument, the respelling or translit, and should return the transliteration of any respelling but
+return any translit unchanged.
+
+`split_bracketed_runs_into_words` is an optional function to split the passed-in text into words. It is used, for
+example, to determine what text constitutes a word when followed by an angle-bracket spec, i.e. what the lemma to be
+inflected is vs. surrounding fixed text. It takes one argument, the result of splitting the original text on brackets,
+and should return alternating runs of words and split characters, or nil to apply the default algorithm. Specifically,
+the value passed in is the result of calling `parse_balanced_segment_run(text, "[", "]")` from
+[[Module:parse utilities]] on the original text, and the default version of this function calls
+`split_alternating_runs(bracketed_runs, pattern, "preserve splitchar")`, where `bracketed_runs` is the value passed in
+and `pattern` splits on either spaces or hyphens (unless the text begins with a hyphen, in which case splitting is only
+on spaces, so that suffixes can be inflected).
+
+`allow_default_indicator` should be true if the indicator in angle brackets can be omitted and should be automatically
+added at the end of the multiword text (if no alternants) or at the end of each alternant (if alternants present).
+
+`allow_blank_lemma` should be true of if a blank lemma is allowed; in such a case, the calling function should
+substitute a default lemma, typically taken from the pagename.
 
 The return value is a table of the form
 {
@@ -1215,6 +1237,14 @@ export.get_footnote_text().
 return nil for no change. The most common purpose of this function is to remove variant codes from the form. See the
 documentation for inflect_multiword_or_alternant_multiword_spec() for a description of variant codes and their purpose.
 
+`generate_link` is an optional function to generate the link text for a given form. It is passed four arguments (slot,
+for, origentry, accel_obj) where `slot` is the slot being processed, `form` is the specific form object to generate a
+link for, `origentry` is the actual text to convert into a link, and `accel_obj` is the accelerator object to include
+in the link. If nil is returned, the default algorithm will apply, which is to call
+`full_link{lang = lang, term = origentry, tr = "-", accel = accel_obj}` from [[Module:links]]. This can be used e.g. to
+customize the appearance of the link. Note that the link should not include any transliteration because it is handled
+specially (all transliterations are grouped together).
+
 `transform_link` is an optional function to transform a linked form prior to further processing. It is passed three
 arguments (slot, link, link_tr) and should return the transformed link (or if translit is active, it should return two
 values, the transformed link and corresponding translit). It can return nil for no change. `transform_link` is used,
@@ -1298,7 +1328,10 @@ function export.show_forms(forms, props)
 					if props.transform_accel_obj then
 						accel_obj = props.transform_accel_obj(slot, form, accel_obj)
 					end
-					link = m_links.full_link{lang = props.lang, term = origentry, tr = "-", accel = accel_obj}
+					if props.generate_link then
+						link = props.generate_link(slot, form, origentry, accel_obj)
+					end
+					link = link or m_links.full_link{lang = props.lang, term = origentry, tr = "-", accel = accel_obj}
 				end
 				local tr = props.include_translit and (form.translit or props.lang:transliterate(m_links.remove_links(orig_text))) or nil
 				local trentry
