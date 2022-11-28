@@ -145,7 +145,7 @@ person_number_to_reflexive_pronoun = {
 local indicator_flags = m_table.listToSet {
 	"no_pres_stressed", "no_pres1_and_sub",
 	"only3s", "only3sp", "only3p",
-	"pp_inv", "irreg",
+	"pp_inv", "irreg", "no_built_in", "e_ei_cat",
 }
 
 -- Remove any variant codes e.g. VAR_BR, VAR_PT, VAR_SUPERSEDED. Needs to be called from [[Module:pt-headword]] on the
@@ -174,22 +174,22 @@ local function add_slots(alternant_multiword_spec)
 	}
 
 	-- Special slots used to handle non-reflexive parts of reflexive verbs in {{pt-verb form of}}.
-	-- For example, for a reflexive-only verb like [[jambarse]], we want to be able to use {{pt-verb form of}} on
-	-- [[jambe]] (which should mention that it is a part of 'me jambe', first-person singular present subjunctive, and
-	-- 'se jambe', third-person singular present subjunctive) or on [[jambamos]] (which should mention that it is a
-	-- part of 'nos jambamos', first-person plural present indicative or preterite). Similarly, we want to use
-	-- {{pt-verb form of}} on [[jambando]] (which should mention that it is a part of 'se ... jambando', syntactic
-	-- variant of [[jambándose]], which is the gerund of [[jambarse]]). To do this, we need to be able to map
-	-- non-reflexive parts like [[jambe]], [[jambamos]], [[jambando]], etc. to their reflexive equivalent(s), to the
-	-- tag(s) of the equivalent(s), and, in the case of forms like [[jambando]], [[jambar]] and imperatives, to the
-	-- separated syntactic variant of the verb+clitic combination. We do this by creating slots for the non-reflexive
-	-- part equivalent of each basic reflexive slot, and for the separated syntactic-variant equivalent of each basic
-	-- reflexive slot that is formed of verb+clitic. We use slots in this way to deal with multiword lemmas. Note that
-	-- we run into difficulties mapping between reflexive verbs, non-reflexive part equivalents, and separated syntactic
-	-- variants if a slot contains more than one form. To handle this, if there are the same number of forms in two
-	-- slots we're trying to match up, we assume the forms match one-to-one; otherwise we don't match up the two slots
-	-- (which means {{pt-verb form of}} won't work in this case, but such a case is extremely rare and not worth
-	-- worrying about). Alternatives that handle this "properly" are significantly more complicated and require
+	-- For example, for a reflexive-only verb like [[esbaldar-se]], we want to be able to use {{pt-verb form of}} on
+	-- [[esbalde]] (which should mention that it is a part of 'me esbalde', first-person singular present subjunctive,
+	-- and 'se esbalde', third-person singular present subjunctive) or on [[esbaldamos]] (which should mention that it
+	-- is a part of 'esbaldamo-nos', first-person plural present indicative or preterite). Similarly, we want to use
+	-- {{pt-verb form of}} on [[esbaldando]] (which should mention that it is a part of 'se ... esbaldando', syntactic
+	-- variant of [[esbaldando-se]], which is the gerund of [[esbaldar-se]]). To do this, we need to be able to map
+	-- non-reflexive parts like [[esbalde]], [[esbaldamos]], [[esbaldando]], etc. to their reflexive equivalent(s), to
+	-- the tag(s) of the equivalent(s), and, in the case of forms like [[esbaldando]], [[esbaldar]] and imperatives, to
+	-- the separated syntactic variant of the verb+clitic combination. We do this by creating slots for the
+	-- non-reflexive part equivalent of each basic reflexive slot, and for the separated syntactic-variant equivalent
+	-- of each basic reflexive slot that is formed of verb+clitic. We use slots in this way to deal with multiword
+	-- lemmas. Note that we run into difficulties mapping between reflexive verbs, non-reflexive part equivalents, and
+	-- separated syntactic variants if a slot contains more than one form. To handle this, if there are the same number
+	-- of forms in two slots we're trying to match up, we assume the forms match one-to-one; otherwise we don't match up
+	-- the two slots (which means {{pt-verb form of}} won't work in this case, but such a case is extremely rare and not
+	-- worth worrying about). Alternatives that handle this "properly" are significantly more complicated and require
 	-- non-trivial modifications to [[Module:inflection utilities]].
 	local need_special_verb_form_of_slots = alternant_multiword_spec.from_verb_form_of and alternant_multiword_spec.refl
 
@@ -247,8 +247,8 @@ local function add_slots(alternant_multiword_spec)
 	-- Don't need special non-reflexive-part slots because the negative imperative is multiword, of which the
 	-- individual words are 'não' + subjunctive.
 	add_basic_personal_slot("neg_imp", "neg|imp", neg_imp_person_number_list, "no special verb form of")
-	-- Don't need special non-reflexive-part slots because we don't want [[jambando]] mapping to [[jambándome]]
-	-- (only [[jambándose]]) or [[jambar]] mapping to [[jambarme]] (only [[jambarse]]).
+	-- Don't need special non-reflexive-part slots because we don't want [[esbaldando]] mapping to [[esbaldando-me]]
+	-- (only [[esbaldando-se]]) or [[esbaldar]] mapping to [[esbaldar-me]] (only [[esbaldar-se]]).
 	add_basic_personal_slot("infinitive", "inf", person_number_list, "no special verb form of")
 	add_basic_personal_slot("gerund", "ger", person_number_list, "no special verb form of")
 
@@ -503,6 +503,7 @@ local built_in_conjugations = {
 		match = "ear",
 		forms = {
 			pres_stressed = "ei",
+			e_ei_cat = true,
 		}
 	},
 	{
@@ -523,10 +524,10 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- folegar, resfolegar, tresfolegar
-		match = "folegar",
+		-- It appears that only [[resfolegar]] has proparoxytone forms, not [[folegar]] or [[tresfolegar]].
+		match = "^resfolegar",
 		forms = {
-			pres_stressed = {"fóleg", "foleg"},
+			pres_stressed = {"resfóleg", "resfoleg"},
 			irreg = true,
 		}
 	},
@@ -704,7 +705,9 @@ local built_in_conjugations = {
 		-- doer, moer/remoer, roer/corroer, soer
 		match = "oer",
 		forms = {
-			pres_1s = {"oo", VAR_SUPERSEDED .. "ôo"}, pres_2s = "óis", pres_3s = "ói",
+			pres_1s = function(base, prefix)
+				return prefix ~= "s" and {"oo", VAR_SUPERSEDED .. "ôo"} or nil
+			end, pres_2s = "óis", pres_3s = "ói",
 			-- impf -ía etc., pret_1s -oí and pp -oído handled automatically in combine_stem_ending()
 			only3sp = function(base, prefix) return prefix == "d" end,
 			no_pres1_and_sub = function(base, prefix) return prefix == "s" end,
@@ -715,7 +718,8 @@ local built_in_conjugations = {
 		-- perder
 		match = "perder",
 		forms = {
-			pres1_and_sub = "perc",
+			-- use 'perqu' because we're in a front environment; if we use 'perc', we'll get '#perço'
+			pres1_and_sub = "perqu",
 			irreg = true,
 		}
 	},
@@ -734,7 +738,7 @@ local built_in_conjugations = {
 		forms = {
 			pres_3s = "praz",
 			pret = "prouvé", pret_1s = "prouve", pret_3s = "prouve", pret_conj = "irreg",
-			only3s = function(base, prefix) return not prefix:find("com$") end,
+			only3sp = function(base, prefix) return not prefix:find("com$") end,
 			irreg = true,
 		}
 	},
@@ -743,10 +747,10 @@ local built_in_conjugations = {
 		-- requerer; must precede querer
 		match = "requerer",
 		forms = {
-			-- old module claims alt pres_3s 'requere' and alt imp_2s 'requere'; not in Infopédia, which lists
-			-- alt imp_2s 'quere' for [[querer]]
-			pres_1s = "requero", pres_3s = "requer",
-			pres1_and_sub = "requeir", -- only for subjunctive as we override pres_1s
+			-- old module claims alt pres_3s 'requere'; not in Priberam, Infopédia or conjugacao.com.br
+			pres_3s = "requer",
+			pres1_and_sub = "requeir",
+			imp_2s = {{form = "requere", footnotes = {"[Brazil only]"}}, "requer"}, -- per Priberam
 			-- regular preterite, unlike [[querer]]
 			irreg = true,
 		}
@@ -755,11 +759,11 @@ local built_in_conjugations = {
 		-- querer, desquerer, malquerer
 		match = "querer",
 		forms = {
-			-- old module claims alt pres_3s 'quere'; not in Infopédia, which lists alt imp_2s 'quere'
+			-- old module claims alt pres_3s 'quere'; not in Priberam, Infopédia or conjugacao.com.br
 			pres_1s = "quero", pres_3s = "quer",
 			pres1_and_sub = "queir", -- only for subjunctive as we override pres_1s
 			pret = "quisé", pret_1s = "quis", pret_3s = "quis", pret_conj = "irreg",
-			imp_2s = {"quer", "quere"}, -- per Infopédia
+			imp_2s = {{form = "quere", footnotes = {"[Brazil only]"}}, {form = "quer", footnotes = {"[Brazil only]"}}}, -- per Priberam
 			irreg = true,
 		}
 	},
@@ -883,6 +887,8 @@ local built_in_conjugations = {
 	--   gerir/digerir/ingerir/sugerir, preterir, competir/repetir, servir, advertir/animadvertir/divertir,
 	--   vestir/investir/revestir/travestir, seguir/conseguir/desconseguir/desseguir/perseguir/prosseguir: use <i-e>
 	-- inerir: use <i-e> (per Infopédia, and per Priberam for Brazil), use <i-e.only3sp> (per Priberam for Portugal)
+	-- compelir/expelir/impelir/repelir: per Priberam: use <i-e> for Brazil, <no_pres1_and_sub> for Portugal (Infopédia
+	--   says <i-e>); NOTE: old module claims short_pp 'repulso' but none of Priberam, Infopédia and conjugacao.com.br agree
 	-- dormir, engolir, tossir, subir, acudir/sacudir, fugir, sumir/consumir (NOT assumir/presumir/resumir): use <u-o>
 	-- polir/repolir (claimed in old module to have no pres stressed, but Priberam disagrees for both Brazil and
 	--   Portugal; Infopédia lists repolir as completely regular and not like polir, but I think that's an error): use
@@ -928,11 +934,11 @@ local built_in_conjugations = {
 		forms = {vowel_alt = "u-o", pp = "coberto"}
 	},
 	{
-		-- conduzir, produzir, reduzir, traduzir, etc.
-		match = "duzir",
+		-- conduzir, produzir, reduzir, traduzir, etc.; luzir, reluzir, tremeluzir
+		match = "uzir",
 		forms = {
-			pres_3s = "duz",
-			imp_2s = {"duz", "duze"}, -- per Infopédia
+			pres_3s = "uz",
+			imp_2s = {"uz", "uze"}, -- per Infopédia
 			irreg = true,
 		}
 	},
@@ -954,7 +960,7 @@ local built_in_conjugations = {
 	{
 		-- inserir
 		match = "inserir",
-		forms = {vowel_alt = "i-e", short_pp = "inserto"},
+		forms = {vowel_alt = "i-e", short_pp = {form = "inserto", footnotes = {"[Portugal only]"}}},
 	},
 	{
 		-- ir
@@ -979,11 +985,6 @@ local built_in_conjugations = {
 			pres1_and_sub = {"ouç", "oiç"},
 			irreg = true,
 		}
-	},
-	{
-		-- old module says repelir specifically has short_pp = repulso but neither Infopédia nor Priberam agrees
-		match = "pelir",
-		forms = {pres1_and_sub = {{form = "pil", footnotes = "[per Infopédia; Priberam says these forms are missing]"}}},
 	},
 	{
 		-- exprimir, imprimir, comprimir (but not descomprimir per Priberam), deprimir, oprimir/opprimir (but not reprimir,
@@ -1067,10 +1068,21 @@ local built_in_conjugations = {
 		}
 	},
 	{
+		-- verbs in -cluir (concluir, excluir, incluir): like -uir but has short_pp concluso etc. in Brazil
+		match = "cluir",
+		forms = {
+			pres_2s = "cluis", pres_3s = "clui",
+			-- all occurrences of accented í in endings handled in combine_stem_ending()
+			short_pp = {form = "cluso", footnotes = {"[Brazil only]"}},
+			irreg = true,
+		}
+	},
+	{
 		-- puir, ruir: like -uir but defective in pres_1s, all pres sub
 		match = match_against_verbs("uir", {"^p", "^r"}),
 		forms = {
 			pres_2s = "uis", pres_3s = "ui",
+			-- all occurrences of accented í in endings handled in combine_stem_ending()
 			no_pres1_and_sub = true,
 			irreg = true,
 		}
@@ -1554,14 +1566,25 @@ local function add_non_finite_forms(base)
 	end
 
 	insert_form(base, "infinitive", {form = base.verb})
-	for _, persnum in ipairs(person_number_list) do
-		insert_form(base, "infinitive_" .. persnum, {form = base.verb})
+	-- Also insert "infinitive + reflexive pronoun" combinations if we're handling a reflexive verb. See comment below for
+	-- "gerund + reflexive pronoun" combinations.
+	if base.refl then
+		for _, persnum in ipairs(person_number_list) do
+			insert_form(base, "infinitive_" .. persnum, {form = base.verb})
+		end
 	end
 	-- verbs in -por have the gerund overridden
 	local ger_ending = base.conj == "ar" and "ando" or base.conj == "er" and "endo" or "indo"
 	addit("gerund", stems.pres_unstressed, ger_ending)
-	for _, persnum in ipairs(person_number_list) do
-		addit("gerund_" .. persnum, stems.pres_unstressed, ger_ending)
+	-- Also insert "gerund + reflexive pronoun" combinations if we're handling a reflexive verb. We insert exactly the same
+	-- form as for the bare gerund; later on in add_reflexive_or_fixed_clitic_to_forms(), we add the appropriate clitic
+	-- pronouns. It's important not to do this for non-reflexive verbs, because in that case, the clitic pronouns won't be
+	-- added, and {{pt-verb form of}} will wrongly consider all these combinations as possible inflections of the bare
+	-- gerund. Thanks to [[User:JeffDoozan]] for this bug fix.
+    if base.refl then
+		for _, persnum in ipairs(person_number_list) do
+			addit("gerund_" .. persnum, stems.pres_unstressed, ger_ending)
+		end
 	end
 	-- Skip the long/short past participle footnotes if called from {{pt-verb}} so they don't show in the headword.
 	local long_pp_footnotes =
@@ -1709,8 +1732,8 @@ local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joi
 				-- See comment in add_slots() above `need_special_verb_form_of_slots`. Check for do_joined so we only
 				-- run this code once.
 				if do_reflexive and do_joined and base.alternant_multiword_spec.from_verb_form_of and
-					-- Skip personal variants of infinitives and gerunds so we don't think [[jambando]] is a
-					-- non-reflexive equivalent of [[jambándome]].
+					-- Skip personal variants of infinitives and gerunds so we don't think [[esbaldando]] is a
+					-- non-reflexive equivalent of [[esbaldando-me]].
 					not slot:find("infinitive_") and not slot:find("gerund_") then
 					-- Clone the forms because we will be destructively modifying them just below, adding the reflexive
 					-- pronoun.
@@ -2086,35 +2109,37 @@ local function detect_indicator_spec(base)
 	base.stems = {}
 	base.basic_overrides = {}
 	base.basic_reflexive_only_overrides = {}
-	for _, built_in_conj in ipairs(built_in_conjugations) do
-		if type(built_in_conj.match) == "function" then
-			base.prefix, base.non_prefixed_verb = built_in_conj.match(base.verb)
-		elseif built_in_conj.match:find("^%^") and rsub(built_in_conj.match, "^%^", "") == base.verb then
-			-- begins with ^, for exact match, and matches
-			base.prefix, base.non_prefixed_verb = "", base.verb
-		else
-			base.prefix, base.non_prefixed_verb = rmatch(base.verb, "^(.*)(" .. built_in_conj.match .. ")$")
-		end
-		if base.prefix then
-			-- we found a built-in verb
-			for stem, forms in pairs(built_in_conj.forms) do
-				if type(forms) == "function" then
-					forms = forms(base, base.prefix)
-				end
-				if stem:find("^refl_") then
-					stem = stem:gsub("^refl_", "")
-					if not base.alternant_multiword_spec.verb_slots_basic_map[stem] then
-						error("Internal error: setting for 'refl_" .. stem .. "' does not refer to a basic verb slot")
-					end
-					base.basic_reflexive_only_overrides[stem] = forms
-				elseif base.alternant_multiword_spec.verb_slots_basic_map[stem] then
-					-- an individual form override of a basic form
-					base.basic_overrides[stem] = forms
-				else
-					base.stems[stem] = forms
-				end
+	if not base.no_built_in then
+		for _, built_in_conj in ipairs(built_in_conjugations) do
+			if type(built_in_conj.match) == "function" then
+				base.prefix, base.non_prefixed_verb = built_in_conj.match(base.verb)
+			elseif built_in_conj.match:find("^%^") and rsub(built_in_conj.match, "^%^", "") == base.verb then
+				-- begins with ^, for exact match, and matches
+				base.prefix, base.non_prefixed_verb = "", base.verb
+			else
+				base.prefix, base.non_prefixed_verb = rmatch(base.verb, "^(.*)(" .. built_in_conj.match .. ")$")
 			end
-			break
+			if base.prefix then
+				-- we found a built-in verb
+				for stem, forms in pairs(built_in_conj.forms) do
+					if type(forms) == "function" then
+						forms = forms(base, base.prefix)
+					end
+					if stem:find("^refl_") then
+						stem = stem:gsub("^refl_", "")
+						if not base.alternant_multiword_spec.verb_slots_basic_map[stem] then
+							error("Internal error: setting for 'refl_" .. stem .. "' does not refer to a basic verb slot")
+						end
+						base.basic_reflexive_only_overrides[stem] = forms
+					elseif base.alternant_multiword_spec.verb_slots_basic_map[stem] then
+						-- an individual form override of a basic form
+						base.basic_overrides[stem] = forms
+					else
+						base.stems[stem] = forms
+					end
+				end
+				break
+			end
 		end
 	end
 
@@ -2276,7 +2301,10 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		insert_cat("reflexive verbs")
 	end
 
-	if not base.vowel_alt then
+	if base.e_ei_cat then
+		insert_ann("vowel_alt", "''e'' becomes ''ei'' when stressed")
+		insert_cat("verbs with e becoming ei when stressed")
+	elseif not base.vowel_alt then
 		insert_ann("vowel_alt", "non-alternating")
 	else
 		for _, alt in ipairs(base.vowel_alt) do
@@ -2650,9 +2678,9 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 	local pagename = not from_verb_form_of and args.pagename or from_headword and args.head[1] or PAGENAME
 	local arg1 = args[1]
 	if not arg1 then
-		if (PAGENAME == "pt-conj" or PAGENAME == "pt-verb") and in_template_space() then
+		if (pagename == "pt-conj" or pagename == "pt-verb") and in_template_space() then
 			arg1 = "cergir<i-e,i>"
-		elseif PAGENAME == "pt-verb form of" and in_template_space() then
+		elseif pagename == "pt-verb form of" and in_template_space() then
 			arg1 = "amar"
 		else
 			arg1 = pagename
