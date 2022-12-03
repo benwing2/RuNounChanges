@@ -658,6 +658,7 @@ local built_in_conjugations = {
 			pres1_and_sub = "faç", pres_3s = "faz",
 			pret = "fizé", pret_conj = "irreg", pret_1s = "fiz", pret_3s = "fez", pp = "feito",
 			fut = "far",
+			imp_2s = {"faz", {form = "faze", footnotes = {"[Brazil only]"}}}, -- per Priberam
 			irreg = true,
 		}
 	},
@@ -2663,6 +2664,10 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 		params["short_part_qual"] = {list = "part=_qual", allow_holes = true}
 		params["attn"] = {type = "boolean"}
 		params["id"] = {}
+	end
+
+	if from_verb_form_of then
+		params["slots"] = {}
 	end
 
 	local args = require("Module:parameters").process(parent_args, params)
