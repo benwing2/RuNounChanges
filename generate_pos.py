@@ -94,6 +94,7 @@ known_labels = {
   "an": "animate",
   "inan": "inanimate",
   "refl": "reflexive",
+  "rel": "relational",
 }
 
 def parse_off_labels(defn):
