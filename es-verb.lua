@@ -1484,13 +1484,24 @@ local function add_non_finite_forms(base)
 		add3(base, slot, base.prefix, stems, ending)
 	end
 	insert_form(base, "infinitive", {form = base.verb})
-	for _, persnum in ipairs(person_number_list_basic) do
-		insert_form(base, "infinitive_" .. persnum, {form = base.verb})
+	-- Also insert "infinitive + reflexive pronoun" combinations if we're handling a reflexive verb. See comment below for
+	-- "gerund + reflexive pronoun" combinations.
+	if base.refl then
+		for _, persnum in ipairs(person_number_list_basic) do
+			insert_form(base, "infinitive_" .. persnum, {form = base.verb})
+		end
 	end
 	local ger_ending = base.conj == "ar" and "ando" or "iendo"
 	addit("gerund", stems.pres_unstressed, ger_ending)
-	for _, persnum in ipairs(person_number_list_basic) do
-		addit("gerund_" .. persnum, stems.pres_unstressed, ger_ending)
+	-- Also insert "gerund + reflexive pronoun" combinations if we're handling a reflexive verb. We insert exactly the same
+	-- form as for the bare gerund; later on in add_reflexive_or_fixed_clitic_to_forms(), we add the appropriate clitic
+	-- pronouns. It's important not to do this for non-reflexive verbs, because in that case, the clitic pronouns won't be
+	-- added, and {{es-verb form of}} will wrongly consider all these combinations as possible inflections of the bare
+	-- gerund. Thanks to [[User:JeffDoozan]] for this bug fix.
+    if base.refl then
+		for _, persnum in ipairs(person_number_list_basic) do
+			addit("gerund_" .. persnum, stems.pres_unstressed, ger_ending)
+		end
 	end
 	addit("pp_ms", stems.pp, "o")
 	addit("pp_fs", stems.pp, "a")
@@ -1660,8 +1671,9 @@ local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joi
 			else
 				local slot_has_suffixed_clitic = slot:find("infinitive") or slot:find("gerund") or slot:find("^imp_")
 				-- Maybe generate non-reflexive parts and separated syntactic variants for use in {{es-verb form of}}.
-				-- See comment in add_slots() above `need_special_verb_form_of_slots`.
-				if do_reflexive and base.alternant_multiword_spec.from_verb_form_of and
+				-- See comment in add_slots() above `need_special_verb_form_of_slots`. Check for do_joined so we only
+				-- run this code once.
+				if do_reflexive and do_joined and base.alternant_multiword_spec.from_verb_form_of and
 					-- Skip personal variants of infinitives and gerunds so we don't think [[jambando]] is a
 					-- non-reflexive equivalent of [[jambándome]].
 					not slot:find("infinitive_") and not slot:find("gerund_") then
@@ -1670,7 +1682,7 @@ local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joi
 					insert_forms(base, slot .. "_non_reflexive", mw.clone(base.forms[slot]))
 					if slot_has_suffixed_clitic then
 						insert_forms(base, slot .. "_variant", iut.map_forms(base.forms[slot], function(form)
-							add_clitic_to_form(base, clitic, " ... ", form)
+							return add_clitic_to_form(base, clitic, " ... ", form)
 						end))
 					end
 				end
@@ -2853,9 +2865,9 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of,
 	local pagename = not from_verb_form_of and args.pagename or from_headword and args.head[1] or PAGENAME
 	local arg1 = args[1]
 	if not arg1 then
-		if (PAGENAME == "es-conj" or PAGENAME == "es-verb") and in_template_space() then
+		if (pagename == "es-conj" or pagename == "es-verb") and in_template_space() then
 			arg1 = "licuar<+,ú>"
-		elseif PAGENAME == "es-verb form of" and in_template_space() then
+		elseif pagename == "es-verb form of" and in_template_space() then
 			arg1 = "amar"
 		else
 			arg1 = pagename
