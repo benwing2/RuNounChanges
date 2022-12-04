@@ -481,7 +481,7 @@ local built_in_conjugations = {
 
 	{
 		-- dar, desdar
-		match = match_against_verbs("dar", {"^", "des"}),
+		match = match_against_verbs("dar", {"^", "^des", "^re"}),
 		forms = {
 			pres_1s = "dou",
 			pres_2s = "dás",
@@ -1800,6 +1800,24 @@ local function generate_negative_imperatives(base)
 end
 
 
+-- Process specs given by the user using 'addnote[SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'.
+local function process_addnote_specs(base)
+	for _, spec in ipairs(base.addnote_specs) do
+		for _, slot_spec in ipairs(spec.slot_specs) do
+			slot_spec = "^" .. slot_spec .. "$"
+			for slot, forms in pairs(base.forms) do
+				if rfind(slot, slot_spec) then
+					-- To save on memory, side-effect the existing forms.
+					for _, form in ipairs(forms) do
+						form.footnotes = iut.combine_footnotes(form.footnotes, spec.footnotes)
+					end
+				end
+			end
+		end
+	end
+end
+
+
 local function add_missing_links_to_forms(base)
 	-- Any forms without links should get them now. Redundant ones will be stripped later.
 	for slot, forms in pairs(base.forms) do
@@ -1897,6 +1915,7 @@ local function conjugate_verb(base)
 	-- This should happen before add_missing_links_to_forms() so that the comparison `form == base.lemma`
 	-- in handle_infinitive_linked() works correctly and compares unlinked forms to unlinked forms.
 	handle_infinitive_linked(base)
+	process_addnote_specs(base)
 	if not base.alternant_multiword_spec.args.noautolinkverb then
 		add_missing_links_to_forms(base)
 	end
@@ -1911,6 +1930,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 		angle_bracket_spec = angle_bracket_spec,
 		user_basic_overrides = {},
 		user_stems = {},
+		addnote_specs = {},
 	}
 	local function parse_err(msg)
 		error(msg .. ": " .. angle_bracket_spec)
@@ -1937,7 +1957,29 @@ local function parse_indicator_spec(angle_bracket_spec)
 	local segments = iut.parse_balanced_segment_run(inside, "[", "]")
 	local dot_separated_groups = iut.split_alternating_runs(segments, "%.")
 	for i, dot_separated_group in ipairs(dot_separated_groups) do
-		if rfind(dot_separated_group[1], ":") then
+		local first_element = dot_separated_group[1]
+		if first_element == "addnote" then
+			local spec_and_footnotes = fetch_footnotes(dot_separated_group)
+			if #spec_and_footnotes < 2 then
+				parse_err("Spec with 'addnote' should be of the form 'addnote[SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'")
+			end
+			local slot_spec = table.remove(spec_and_footnotes, 1)
+			local slot_spec_inside = rmatch(slot_spec, "^%[(.*)%]$")
+			if not slot_spec_inside then
+				parse_err("Internal error: slot_spec " .. slot_spec .. " should be surrounded with brackets")
+			end
+			local slot_specs = rsplit(slot_spec_inside, ",")
+			-- FIXME: Here, [[Module:it-verb]] called strip_spaces(). Generally we don't do this. Should we?
+			table.insert(base.addnote_specs, {slot_specs = slot_specs, footnotes = spec_and_footnotes})
+		elseif indicator_flags[first_element] then
+			if #dot_separated_group > 1 then
+				parse_err("No footnotes allowed with '" .. first_element .. "' spec")
+			end
+			if base[first_element] then
+				parse_err("Spec '" .. first_element .. "' specified twice")
+			end
+			base[first_element] = true
+		elseif rfind(first_element, ":") then
 			local colon_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*:%s*")
 			local first_element = colon_separated_groups[1][1]
 			if #colon_separated_groups[1] > 1 then
@@ -1961,37 +2003,25 @@ local function parse_indicator_spec(angle_bracket_spec)
 			end
 		else
 			local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*,%s*")
-			local first_element = comma_separated_groups[1][1]
-			if vowel_alternants[first_element] then
-				for j = 1, #comma_separated_groups do
-					local alt = comma_separated_groups[j][1]
-					if not vowel_alternants[alt] then
+			for j = 1, #comma_separated_groups do
+				local alt = comma_separated_groups[j][1]
+				if not vowel_alternants[alt] then
+					if #comma_separated_groups == 1 then
+						parse_err("Unrecognized spec or vowel alternant '" .. alt .. "'")
+					else
 						parse_err("Unrecognized vowel alternant '" .. alt .. "'")
 					end
-					if base.vowel_alt then
-						for _, existing_alt in ipairs(base.vowel_alt) do
-							if existing_alt.form == alt then
-								parse_err("Vowel alternant '" .. alt .. "' specified twice")
-							end
+				end
+				if base.vowel_alt then
+					for _, existing_alt in ipairs(base.vowel_alt) do
+						if existing_alt.form == alt then
+							parse_err("Vowel alternant '" .. alt .. "' specified twice")
 						end
-					else
-						base.vowel_alt = {}
 					end
-					table.insert(base.vowel_alt, {form = alt, footnotes = fetch_footnotes(comma_separated_groups[j])})
+				else
+					base.vowel_alt = {}
 				end
-			elseif indicator_flags[first_element] then
-				if #comma_separated_groups > 1 then
-					parse_err("Multiple comma-separated elements not allowed with '" .. first_element .. "' spec")
-				end
-				if #comma_separated_groups[1] > 1 then
-					parse_err("No footnotes allowed with '" .. first_element .. "' spec")
-				end
-				if base[first_element] then
-					parse_err("Spec '" .. first_element .. "' specified twice")
-				end
-				base[first_element] = true
-			else
-				parse_err("Unrecognized spec '" .. comma_separated_groups[1][1] .. "'")
+				table.insert(base.vowel_alt, {form = alt, footnotes = fetch_footnotes(comma_separated_groups[j])})
 			end
 		end
 	end
@@ -2668,6 +2698,11 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 
 	if from_verb_form_of then
 		params["slots"] = {}
+		params["t"] = {}
+		params["gloss"] = {alias_of = "t"}
+		params["lit"] = {}
+		params["pos"] = {}
+		params["id"] = {}
 	end
 
 	local args = require("Module:parameters").process(parent_args, params)
