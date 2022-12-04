@@ -945,17 +945,18 @@ def process_line(line, pagename, etymnum, pronuns, pronuns_at_top):
   if defns == "--":
     maintext = ""
 
+  usagetext = "====Usage notes====\n%s\n\n" % "\n".join(usagelines) if usagelines else ""
+
   # If both adjective and participle header, or adverb and neuter-adjective inflection header,
-  # move related-terms text to level 3
+  # move related-terms text and usage notes text to level 3
   if maintext and (parttext or nadjftext or ppptext) and reltext:
     reltext = re.sub("^====Related terms====", "===Related terms===", reltext)
+    usagetext = re.sub("^====Usage notes====", "===Usage notes===", usagetext)
 
   # If any categories, put an extra newline after them so they end with two
   # newlines, as with other textual snippets
   if cattext:
     cattext += "\n"
-
-  usagetext = "===Usage notes===\n%s\n\n" % "\n".join(usagelines) if usagelines else ""
 
   headertext = """%s==%s==
 %s%s%s
