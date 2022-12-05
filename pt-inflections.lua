@@ -26,7 +26,7 @@ local function track(page)
 	return true
 end
 
-local function generate_one_inflection_of_type(tags, lemma, labels)
+local function generate_one_inflection_of_type(tags, lemma, labels, args)
 	-- If only one tag, extract out the "combined with ..." text and move into posttext=, which goes after the lemma.
 	local posttext
 	if #tags == 1 then
@@ -56,6 +56,10 @@ local function generate_one_inflection_of_type(tags, lemma, labels)
 	local terminfo = {
 		lang = lang,
 		term = lemma,
+		gloss = args.t,
+		pos = args.pos,
+		lit = args.lit,
+		id = args.id,
 	}
 
 	local label_text = labels ~= "" and mw.getCurrentFrame():preprocess("{{lb|pt|" .. labels .. "}} ") or ""
@@ -67,7 +71,7 @@ local function generate_one_inflection_of_type(tags, lemma, labels)
 	}
 end
 
-local function generate_inflection_of(tags_with_labels, lemma)
+local function generate_inflection_of(tags_with_labels, lemma, args)
 	-- Check if different tags have different labels. If so, need to separate tags by label.
 	local seen_labels
 	local multiple_labels
@@ -93,7 +97,7 @@ local function generate_inflection_of(tags_with_labels, lemma)
 		end
 		local retval = {}
 		for _, labels in ipairs(list_of_labels) do
-			table.insert(retval, generate_one_inflection_of_type(tags_by_labels[labels], lemma, labels))
+			table.insert(retval, generate_one_inflection_of_type(tags_by_labels[labels], lemma, labels, args))
 		end
 		return retval
 	end
@@ -103,7 +107,7 @@ local function generate_inflection_of(tags_with_labels, lemma)
 	for _, tag in ipairs(tags_with_labels) do
 		m_table.insertIfNot(tags, tag.tag)
 	end
-	return {generate_one_inflection_of_type(tags, lemma, table.concat(seen_labels, "|"))}
+	return {generate_one_inflection_of_type(tags, lemma, table.concat(seen_labels, "|"), args)}
 end
 
 local function extract_labels(formobj)
@@ -191,7 +195,7 @@ function export.verb_form_of(frame)
 		check_slot_restrictions_against_slots_seen()
 	end
 	if #tags > 0 then
-		local infls = generate_inflection_of(tags, lemma)
+		local infls = generate_inflection_of(tags, lemma, alternant_multiword_spec.args)
 		local parts = {}
 		for _, infl in ipairs(infls) do
 			table.insert(parts, infl.label .. infl.infl)
@@ -260,7 +264,7 @@ function export.verb_form_of(frame)
 				if refl_form_to_tags.form == lemma then
 					table.insert(parts, only_used_in)
 				else
-					local infls = generate_inflection_of(refl_form_to_tags.tags, lemma)
+					local infls = generate_inflection_of(refl_form_to_tags.tags, lemma, alternant_multiword_spec.args)
 					for _, infl in ipairs(infls) do
 						table.insert(parts, ("%s%s, %s"):format(infl.label, only_used_in, infl.infl))
 					end
