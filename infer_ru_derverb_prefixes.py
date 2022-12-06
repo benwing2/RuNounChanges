@@ -10,6 +10,7 @@ import rulib
 
 parser = argparse.ArgumentParser(description="Infer prefixes from derived verb tables without them.")
 parser.add_argument('files', nargs='+', help="Files containing directives.")
+parser.add_argument('--suffixes', help="Extra suffixes, of the format FILE=SUFFIX,SUFFIX,...;FILE=SUFFIX,SUFFIX,...")
 args = parser.parse_args()
 
 AC = u"\u0301"
@@ -44,31 +45,59 @@ def extract_prefix_and_suffixes(pfs, impfs, suffixes_no_stress):
     if this_prefix is not None:
       if prefix is not None:
         if this_prefix != prefix:
-          raise ValueError("Saw two different prefixes %s and %s for suffixes %s" %
-              (prefix, this_prefix, ",".join(suffixes_no_stress)))
+          if remove_stress(this_prefix) == prefix:
+            pass
+          elif this_prefix == remove_stress(prefix):
+            this_prefix = prefix
+          else:
+            raise ValueError("Saw two different prefixes %s and %s for suffixes %s" %
+                (prefix, this_prefix, ",".join(suffixes_no_stress)))
       prefix = this_prefix
   if prefix is None:
     raise UnrecognizedSuffix("Can't extract prefix from perfect(s) %s, imperfect(s) %s, possible suffixes %s" %
         (",".join(pfs), ",".join(impfs), ",".join(suffixes_no_stress)))
 
   def process_verb(verb, append_to):
+    new_prefix = prefix
     if verb.startswith(prefix):
       suffix = verb[len(prefix):]
     else:
       prefix_no_stress = remove_stress(prefix)
       if verb.startswith(prefix_no_stress):
         suffix = verb[len(prefix_no_stress):]
+      elif prefix.endswith(u"о") and verb.startswith(prefix[:-1]):
+        new_prefix = prefix[:-1]
+        suffix = verb[len(new_prefix):]
       else:
         raise ValueError("Can't extract prefix %s from verb %s for suffixes %s" %
           (prefix, verb, ",".join(suffixes_no_stress)))
     append_to.append(suffix)
+    return new_prefix
+
+  first = True
+
+  impf_suffixes = []
+  for verb in impfs:
+    new_prefix = process_verb(verb, impf_suffixes)
+    if new_prefix != prefix:
+      if first:
+        prefix = new_prefix
+      else:
+        raise ValueError("Can't extract prefix %s from verb %s for suffixes %s" %
+          (prefix, verb, ",".join(suffixes_no_stress)))
+    first = False
 
   pf_suffixes = []
   for verb in pfs:
-    process_verb(verb, pf_suffixes)
-  impf_suffixes = []
-  for verb in impfs:
-    process_verb(verb, impf_suffixes)
+    new_prefix = process_verb(verb, pf_suffixes)
+    if new_prefix != prefix:
+      if first:
+        prefix = new_prefix
+      else:
+        raise ValueError("Can't extract prefix %s from verb %s for suffixes %s" %
+          (prefix, verb, ",".join(suffixes_no_stress)))
+    first = False
+
   return prefix, pf_suffixes, impf_suffixes
 
 def convert_prefix_and_suffixes_to_full(prefix, pf_suffixes, impf_suffixes):
@@ -76,13 +105,30 @@ def convert_prefix_and_suffixes_to_full(prefix, pf_suffixes, impf_suffixes):
   impfs = [remove_stress(prefix) + impf_suffix for impf_suffix in impf_suffixes]
   return "%s %s" % (",".join(pfs) or "-", ",".join(impfs) or "-")
 
+def augment_suffix(suffix):
+  retval = []
+  retval.append(suffix)
+  if suffix.endswith(u"ть") or suffix.endswith(u"чь"):
+    retval.append(suffix + u"ся")
+  elif suffix.endswith(u"ти"):
+    retval.append(suffix + u"сь")
+  elif suffix.endswith(u"ся") or suffix.endswith(u"сь"):
+    retval.append(suffix[:-2])
+  return retval
+
+extra_suffixes_by_file = {}
+if args.suffixes:
+  for spec in args.suffixes.decode("utf-8").split(";"):
+    fn, suffixes = spec.split("=")
+    extra_suffixes_by_file[fn] = [augsuf for suffix in suffixes.split(",") for augsuf in augment_suffix(suffix)]
+
 for extfn in args.files:
   prefixes_by_suffixes = defaultdict(list)
   unstressed_suffix_to_suffix = {}
   unrecognized_lines = []
   fn = rulib.recompose(extfn.decode("utf-8"))
   msg("---------------- %s ------------------" % fn)
-  suffix_no_stress = re.sub(r"[0-9a-z]*\.der$", "", fn)
+  suffix_no_stress = re.sub("-.*$", "", re.sub(r"[0-9a-z]*\.der$", "", fn))
 
   for pass_ in [0, 1]:
     if pass_ == 1:
@@ -91,11 +137,11 @@ for extfn in args.files:
       for (pf_suffixes, impf_suffixes), prefixes in prefixes_by_suffixes.iteritems():
         if pf_suffixes:
           for pf_suffix in pf_suffixes.split(","):
-            extra_suffixes.add(pf_suffix)
+            extra_suffixes |= set(augment_suffix(remove_stress(pf_suffix)))
         if impf_suffixes:
           for impf_suffix in impf_suffixes.split(","):
-            extra_suffixes.add(impf_suffix)
-      extra_suffixes = list(extra_suffixes)
+            extra_suffixes |= set(augment_suffix(remove_stress(impf_suffix)))
+      extra_suffixes = list(extra_suffixes) + extra_suffixes_by_file.get(fn, [])
       items = list(blib.iter_items(unrecognized_lines))
     else:
       extra_suffixes = []
@@ -109,6 +155,7 @@ for extfn in args.files:
         new_format = True
         break
     if new_format:
+      msg("# File %s: Passing through unchanged" % fn)
       for lineno, line in items:
         msg(line)
       pass_ = 1
@@ -138,16 +185,19 @@ for extfn in args.files:
                   unstressed_pf_suffix in unstressed_suffix_to_suffix and
                   unstressed_suffix_to_suffix[unstressed_pf_suffix] != pf_suffix
                 ):
-                  raise ValueError("Unstressed perfective suffix %s maps to two different stressed suffixes %s and %s" %
+                  linemsg("Unstressed perfective suffix %s maps to two different stressed suffixes %s and %s" %
                     (unstressed_pf_suffix, unstressed_suffix_to_suffix[unstressed_pf_suffix], pf_suffix))
-                unstressed_suffix_to_suffix[unstressed_pf_suffix] = pf_suffix
+                  del unstressed_suffix_to_suffix[unstressed_pf_suffix]
+                else:
+                  unstressed_suffix_to_suffix[unstressed_pf_suffix] = pf_suffix
           except UnrecognizedSuffix as e:
             if pass_ == 1:
               raise e
             unrecognized_lines.append(line)
 
       except (ValueError, UnrecognizedSuffix) as e:
-        linemsg("WARNING: %s" % unicode(e))
+        linemsg("WARNING: %s: %s" % (unicode(e), line))
+        msg(line)
 
   # Combine unstressed suffixes with stressed equivalents to handle вы́-, повы́-, etc.
   keys_to_delete = []
