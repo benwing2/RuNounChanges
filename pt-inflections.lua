@@ -27,7 +27,10 @@ local function track(page)
 end
 
 local function generate_one_inflection_of_type(tags, lemma, labels, args)
+	local has_multiple_tag_sets = #tags > 1
+
 	-- If only one tag, extract out the "combined with ..." text and move into posttext=, which goes after the lemma.
+	-- FIXME: No support for clitic combinations currently for Portuguese, although maybe we should add it.
 	local posttext
 	if #tags == 1 then
 		local tag_set_without_posttext
@@ -63,10 +66,15 @@ local function generate_one_inflection_of_type(tags, lemma, labels, args)
 	}
 
 	local label_text = labels ~= "" and mw.getCurrentFrame():preprocess("{{lb|pt|" .. labels .. "}} ") or ""
+	if has_multiple_tag_sets then
+		tags = require("Module:accel").combine_tag_sets_into_multipart(tags)
+	end
 	local categories = m_form_of.fetch_lang_categories(lang, tags, terminfo, "verb")
+	local cat_text = #categories > 0 and require("Module:utilities").format_categories(categories, lang) or ""
 	return {
-		infl = m_form_of.tagged_inflections({ tags = tags, terminfo = terminfo, terminfo_face = "term", posttext = posttext }) ..
-			require("Module:utilities").format_categories(categories, lang),
+		infl = m_form_of.tagged_inflections({
+			tags = tags, terminfo = terminfo, terminfo_face = "term", posttext = posttext
+		}) .. cat_text,
 		label = label_text,
 	}
 end

@@ -27,7 +27,9 @@ local function track(page)
 end
 
 local function generate_inflection_of(tags, lemma)
-	-- If only one tag, extract out the "combined with ..." text and move into posttext=, which goes after the lemma.
+	local has_multiple_tag_sets = #tags > 1
+
+	-- If only one tag set, extract out the "combined with ..." text and move into posttext=, which goes after the lemma.
 	local posttext
 	if #tags == 1 then
 		local tag_set_without_posttext
@@ -61,9 +63,14 @@ local function generate_inflection_of(tags, lemma)
 		term = lemma,
 	}
 
+	if has_multiple_tag_sets then
+		tags = require("Module:accel").combine_tag_sets_into_multipart(tags)
+	end
 	local categories = m_form_of.fetch_lang_categories(lang, tags, terminfo, "verb")
-	return m_form_of.tagged_inflections({ tags = tags, terminfo = terminfo, terminfo_face = "term", posttext = posttext }) ..
-		require("Module:utilities").format_categories(categories, lang)
+	local cat_text = #categories > 0 and require("Module:utilities").format_categories(categories, lang) or ""
+	return m_form_of.tagged_inflections({
+		tags = tags, terminfo = terminfo, terminfo_face = "term", posttext = posttext
+	}) .. cat_text
 end
 
 function export.verb_form_of(frame)

@@ -131,6 +131,11 @@ person_number_to_reflexive_pronoun = {
 	["3p"] = "se",
 }
 
+local indicator_flags = m_table.listToSet {
+	"no_pres_stressed", "no_pres1_and_sub",
+	"only3s", "only3sp", "only3p",
+	"no_built_in",
+}
 
 -- Initialize all the slots for which we generate forms. The particular slots may depend on whether we're generating
 -- combined slots (`not alternant_multiword_spec.nocomb`, which is always false if we're dealing with a verb with an
@@ -333,6 +338,62 @@ local function add_slots(alternant_multiword_spec)
 	for _, slotaccel in ipairs(alternant_multiword_spec.verb_slots_combined) do
 		local slot, accel = unpack(slotaccel)
 		alternant_multiword_spec.verb_slots_combined_map[slot] = accel
+	end
+end
+
+
+local overridable_stems = {}
+
+local function allow_multiple_values(separated_groups, data)
+	local retvals = {}
+	for _, separated_group in ipairs(separated_groups) do
+		local footnotes = data.fetch_footnotes(separated_group)
+		local retval = {form = separated_group[1], footnotes = footnotes}
+		table.insert(retvals, retval)
+	end
+	return retvals
+end
+
+local function simple_choice(choices)
+	return function(separated_groups, data)
+		if #separated_groups > 1 then
+			data.parse_err("For spec '" .. data.prefix .. ":', only one value currently allowed")
+		end
+		if #separated_groups[1] > 1 then
+			data.parse_err("For spec '" .. data.prefix .. ":', no footnotes currently allowed")
+		end
+		local choice = separated_groups[1][1]
+		if not m_table.contains(choices, choice) then
+			data.parse_err("For spec '" .. data.prefix .. ":', saw value '" .. choice .. "' but expected one of '" ..
+				table.concat(choices, ",") .. "'")
+		end
+		return choice
+	end
+end
+
+for _, overridable_stem in ipairs {
+	"pres_unstressed",
+	"pres_stressed",
+	"pres1_and_sub",
+	-- Don't include pres1; use pres_1s if you need to override just that form
+	"impf",
+	"full_impf",
+	"pret",
+	{"pret_conj", simple_choice({"irreg", "ar", "er", "ir"}) },
+	"fut",
+	"cond",
+	"pres_sub_stressed",
+	"pres_sub_unstressed",
+	"impf_sub_ra",
+	"impf_sub_se",
+	"fut_sub",
+	"pp",
+} do
+	if type(overridable_stem) == "string" then
+		overridable_stems[overridable_stem] = allow_multiple_values
+	else
+		local stem, validator = unpack(overridable_stem)
+		overridable_stems[stem] = validator
 	end
 end
 
@@ -659,7 +720,7 @@ The following stems are recognized:
      otherwise infinitive stem + "id".
 ]=]
 
-local irreg_conjugations = {
+local built_in_conjugations = {
 	{
 		-- andar, desandar
 		-- we don't want to match e.g. mandar.
@@ -1741,6 +1802,24 @@ local function generate_negative_imperatives(base)
 end
 
 
+-- Process specs given by the user using 'addnote[SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'.
+local function process_addnote_specs(base)
+	for _, spec in ipairs(base.addnote_specs) do
+		for _, slot_spec in ipairs(spec.slot_specs) do
+			slot_spec = "^" .. slot_spec .. "$"
+			for slot, forms in pairs(base.forms) do
+				if rfind(slot, slot_spec) then
+					-- To save on memory, side-effect the existing forms.
+					for _, form in ipairs(forms) do
+						form.footnotes = iut.combine_footnotes(form.footnotes, spec.footnotes)
+					end
+				end
+			end
+		end
+	end
+end
+
+
 local function add_missing_links_to_forms(base)
 	-- Any forms without links should get them now. Redundant ones will be stripped later.
 	for slot, forms in pairs(base.forms) do
@@ -1796,6 +1875,7 @@ local function conjugate_verb(base)
 	-- This should happen before add_missing_links_to_forms() so that the comparison `form == base.lemma`
 	-- in handle_infinitive_linked() works correctly and compares unlinked forms to unlinked forms.
 	handle_infinitive_linked(base)
+	process_addnote_specs(base)
 	if not base.alternant_multiword_spec.args.noautolinkverb then
 		add_missing_links_to_forms(base)
 	end
@@ -1804,7 +1884,12 @@ end
 
 local function parse_indicator_spec(angle_bracket_spec)
 	-- Store the original angle bracket spec so we can reconstruct the overall conj spec with the lemma(s) in them.
-	local base = {angle_bracket_spec = angle_bracket_spec}
+	local base = {
+		angle_bracket_spec = angle_bracket_spec,
+		user_basic_overrides = {},
+		user_stems = {},
+		addnote_specs = {},
+	}
 	local function parse_err(msg)
 		error(msg .. ": " .. angle_bracket_spec)
 	end
@@ -1830,13 +1915,60 @@ local function parse_indicator_spec(angle_bracket_spec)
 	local segments = iut.parse_balanced_segment_run(inside, "[", "]")
 	local dot_separated_groups = iut.split_alternating_runs(segments, "%.")
 	for i, dot_separated_group in ipairs(dot_separated_groups) do
-		local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*,%s*")
-		local first_element = comma_separated_groups[1][1]
-		if vowel_alternants[first_element] then
+		local first_element = dot_separated_group[1]
+		if first_element == "addnote" then
+			local spec_and_footnotes = fetch_footnotes(dot_separated_group)
+			if #spec_and_footnotes < 2 then
+				parse_err("Spec with 'addnote' should be of the form 'addnote[SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'")
+			end
+			local slot_spec = table.remove(spec_and_footnotes, 1)
+			local slot_spec_inside = rmatch(slot_spec, "^%[(.*)%]$")
+			if not slot_spec_inside then
+				parse_err("Internal error: slot_spec " .. slot_spec .. " should be surrounded with brackets")
+			end
+			local slot_specs = rsplit(slot_spec_inside, ",")
+			-- FIXME: Here, [[Module:it-verb]] called strip_spaces(). Generally we don't do this. Should we?
+			table.insert(base.addnote_specs, {slot_specs = slot_specs, footnotes = spec_and_footnotes})
+		elseif indicator_flags[first_element] then
+			if #dot_separated_group > 1 then
+				parse_err("No footnotes allowed with '" .. first_element .. "' spec")
+			end
+			if base[first_element] then
+				parse_err("Spec '" .. first_element .. "' specified twice")
+			end
+			base[first_element] = true
+		elseif rfind(first_element, ":") then
+			local colon_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*:%s*")
+			local first_element = colon_separated_groups[1][1]
+			if #colon_separated_groups[1] > 1 then
+				parse_err("Can't attach footnotes directly to '" .. first_element .. "' spec; attach them to the " ..
+					"colon-separated values following the initial colon")
+			end
+			if overridable_stems[first_element] then
+				if base.user_stems[first_element] then
+					parse_err("Overridable stem '" .. first_element .. "' specified twice")
+				end
+				table.remove(colon_separated_groups, 1)
+				base.user_stems[first_element] = overridable_stems[first_element](colon_separated_groups,
+					{prefix = first_element, base = base, parse_err = parse_err, fetch_footnotes = fetch_footnotes})
+			else -- assume a basic override; we validate further later when the possible slots are available
+				if base.user_basic_overrides[first_element] then
+					parse_err("Basic override '" .. first_element .. "' specified twice")
+				end
+				table.remove(colon_separated_groups, 1)
+				base.user_basic_overrides[first_element] = allow_multiple_values(colon_separated_groups,
+					{prefix = first_element, base = base, parse_err = parse_err, fetch_footnotes = fetch_footnotes})
+			end
+		else
+			local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*,%s*")
 			for j = 1, #comma_separated_groups do
 				local alt = comma_separated_groups[j][1]
 				if not vowel_alternants[alt] then
-					parse_err("Unrecognized vowel alternant '" .. alt .. "'")
+					if #comma_separated_groups == 1 then
+						parse_err("Unrecognized spec or vowel alternant '" .. alt .. "'")
+					else
+						parse_err("Unrecognized vowel alternant '" .. alt .. "'")
+					end
 				end
 				if base.vowel_alt then
 					for _, existing_alt in ipairs(base.vowel_alt) do
@@ -1849,17 +1981,6 @@ local function parse_indicator_spec(angle_bracket_spec)
 				end
 				table.insert(base.vowel_alt, {form = alt, footnotes = fetch_footnotes(comma_separated_groups[j])})
 			end
-		elseif (first_element == "no_pres_stressed" or first_element == "no_pres1_and_sub" or
-				first_element == "only3s" or first_element == "only3sp" or first_element == "only3p") then
-			if #comma_separated_groups[1] > 1 then
-				parse_err("No footnotes allowed with '" .. first_element .. "' spec")
-			end
-			if base[first_element] then
-				parse_err("Spec '" .. first_element .. "' specified twice")
-			end
-			base[first_element] = true
-		else
-			parse_err("Unrecognized spec '" .. comma_separated_groups[1][1] .. "'")
 		end
 	end
 
@@ -2036,38 +2157,55 @@ local function detect_indicator_spec(base)
 	base.basic_overrides = {}
 	base.basic_reflexive_only_overrides = {}
 	base.combined_overrides = {}
-	for _, irreg_conj in ipairs(irreg_conjugations) do
-		if type(irreg_conj.match) == "function" then
-			base.prefix, base.non_prefixed_verb = irreg_conj.match(base.verb)
-		elseif irreg_conj.match:find("^%^") and rsub(irreg_conj.match, "^%^", "") == base.verb then
-			-- begins with ^, for exact match, and matches
-			base.prefix, base.non_prefixed_verb = "", base.verb
-		else
-			base.prefix, base.non_prefixed_verb = rmatch(base.verb, "^(.*)(" .. irreg_conj.match .. ")$")
-		end
-		if base.prefix then
-			-- we found an irregular verb
-			base.irreg_verb = true
-			for stem, forms in pairs(irreg_conj.forms) do
-				if stem:find("^refl_") then
-					stem = stem:gsub("^refl_", "")
-					if not base.alternant_multiword_spec.verb_slots_basic_map[stem] then
-						error("Internal error: setting for 'refl_" .. stem .. "' does not refer to a basic verb slot")
-					end
-					base.basic_reflexive_only_overrides[stem] = forms
-				elseif base.alternant_multiword_spec.verb_slots_basic_map[stem] then
-					-- an individual form override of a basic form
-					base.basic_overrides[stem] = forms
-				elseif base.alternant_multiword_spec.verb_slots_combined_map[stem] then
-					-- an individual form override of a combined form
-					base.combined_overrides[stem] = forms
-				else
-					base.stems[stem] = forms
-				end
+	if not base.no_built_in then
+		for _, built_in_conj in ipairs(built_in_conjugations) do
+			if type(built_in_conj.match) == "function" then
+				base.prefix, base.non_prefixed_verb = built_in_conj.match(base.verb)
+			elseif built_in_conj.match:find("^%^") and rsub(built_in_conj.match, "^%^", "") == base.verb then
+				-- begins with ^, for exact match, and matches
+				base.prefix, base.non_prefixed_verb = "", base.verb
+			else
+				base.prefix, base.non_prefixed_verb = rmatch(base.verb, "^(.*)(" .. built_in_conj.match .. ")$")
 			end
-			break
+			if base.prefix then
+				-- we found a built-in verb
+				base.irreg_verb = true
+				for stem, forms in pairs(built_in_conj.forms) do
+					if stem:find("^refl_") then
+						stem = stem:gsub("^refl_", "")
+						if not base.alternant_multiword_spec.verb_slots_basic_map[stem] then
+							error("Internal error: setting for 'refl_" .. stem .. "' does not refer to a basic verb slot")
+						end
+						base.basic_reflexive_only_overrides[stem] = forms
+					elseif base.alternant_multiword_spec.verb_slots_basic_map[stem] then
+						-- an individual form override of a basic form
+						base.basic_overrides[stem] = forms
+					elseif base.alternant_multiword_spec.verb_slots_combined_map[stem] then
+						-- an individual form override of a combined form
+						base.combined_overrides[stem] = forms
+					else
+						base.stems[stem] = forms
+					end
+				end
+				break
+			end
 		end
 	end
+
+	-- Override built-in-verb stems and overrides with user-specified ones.
+	for stem, values in pairs(base.user_stems) do
+		base.stems[stem] = values
+	end
+	for override, values in pairs(base.user_basic_overrides) do
+		if base.alternant_multiword_spec.verb_slots_basic_map[override] then
+			base.basic_overrides[override] = values
+		elseif base.alternant_multiword_spec.verb_slots_combined_map[override] then
+			base.combined_overrides[override] = values
+		else
+			error("Unrecognized override '" .. override .. "': " .. base.angle_bracket_spec)
+		end
+	end
+
 	base.prefix = base.prefix or ""
 	base.non_prefixed_verb = base.non_prefixed_verb or base.verb
 	local inf_stem, suffix = rmatch(base.non_prefixed_verb, "^(.*)([aeií]r)$")
@@ -2079,11 +2217,16 @@ local function detect_indicator_spec(base)
 	base.conj = suffix
 	base.frontback = suffix == "ar" and "back" or "front"
 
-	if base.stems.vowel_alt then -- irregular verb with specified vowel alternation
+	if base.stems.vowel_alt then -- built-in verb with specified vowel alternation
 		if base.vowel_alt then
-			error(base.verb .. " is a recognized irregular verb, and should not have vowel alternations specified with it")
+			error(base.verb .. " is a recognized built-in verb, and should not have vowel alternations specified with it")
 		end
 		base.vowel_alt = iut.convert_to_general_list_form(base.stems.vowel_alt)
+	end
+
+	-- Propagate built-in-verb indicator flags to `base` and combine with user-specified flags.
+	for indicator_flag, _ in pairs(indicator_flags) do
+		base[indicator_flag] = base[indicator_flag] or base.stems[indicator_flag]
 	end
 
 	-- Convert vowel alternation indicators into stems.
@@ -2125,9 +2268,10 @@ end
 
 
 local function detect_all_indicator_specs(alternant_multiword_spec)
-	-- Propagate some settings up or down.
+	-- Propagate some settings up; some are used internally, others by [[Module:es-headword]].
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		for _, prop in ipairs { "refl", "clitic", "only3s", "only3sp", "only3p" } do
+		-- Internal indicator flags. Do these before calling detect_indicator_spec() because add_slots() uses them.
+		for  _, prop in ipairs { "refl", "clitic" } do
 			if base[prop] then
 				alternant_multiword_spec[prop] = true
 			end
@@ -2142,6 +2286,13 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		base.nocomb = alternant_multiword_spec.args.nocomb
 		detect_indicator_spec(base)
+		-- User-specified indicator flags. Do these after calling detect_indicator_spec() because the latter may set these
+		-- indicators for built-in verbs.
+		for prop, _ in pairs(indicator_flags) do
+			if base[prop] then
+				alternant_multiword_spec[prop] = true
+			end
+		end
 		construct_stems(base)
 	end)
 end
