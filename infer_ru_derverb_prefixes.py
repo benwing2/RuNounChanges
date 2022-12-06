@@ -6,6 +6,7 @@ from collections import defaultdict
 
 from blib import msg
 import blib
+import rulib
 
 parser = argparse.ArgumentParser(description="Infer prefixes from derived verb tables without them.")
 parser.add_argument('files', nargs='+', help="Files containing directives.")
@@ -13,53 +14,53 @@ args = parser.parse_args()
 
 AC = u"\u0301"
 
-def remove_accents(term):
-  return term.replace(AC, "")
+def remove_stress(term):
+  return rulib.remove_accents(term)
 
 class UnrecognizedSuffix(Exception):
   pass
 
-def extract_prefix_and_suffix(term, suffixes_no_accents):
+def extract_prefix_and_suffix(term, suffixes_no_stress):
   num_acs = len([x for x in term if x == AC])
   if num_acs > 1:
     raise ValueError("Saw term with multiple accents: %s" % term)
-  for suffix_no_accents in suffixes_no_accents:
+  for suffix_no_stress in suffixes_no_stress:
     for refl_suffix in ["", u"ся", u"сь"]:
-      full_suffix = suffix_no_accents + refl_suffix
+      full_suffix = suffix_no_stress + refl_suffix
       suflen = len(full_suffix)
       if term.endswith(full_suffix):
         return term[0:-suflen], full_suffix
-      term_no_accents = remove_accents(term)
-      if term_no_accents.endswith(full_suffix):
+      term_no_stress = remove_stress(term)
+      if term_no_stress.endswith(full_suffix):
         return term[0:-(suflen + 1)], term[-(suflen + 1):]
   return None, None
 
-def extract_prefix_and_suffixes(pfs, impfs, suffixes_no_accents):
+def extract_prefix_and_suffixes(pfs, impfs, suffixes_no_stress):
   all_verbs = pfs + impfs
 
   prefix = None
   for verb in all_verbs:
-    this_prefix, this_suffix = extract_prefix_and_suffix(verb, suffixes_no_accents)
+    this_prefix, this_suffix = extract_prefix_and_suffix(verb, suffixes_no_stress)
     if this_prefix is not None:
       if prefix is not None:
         if this_prefix != prefix:
           raise ValueError("Saw two different prefixes %s and %s for suffixes %s" %
-              (prefix, this_prefix, ",".join(suffixes_no_accents)))
+              (prefix, this_prefix, ",".join(suffixes_no_stress)))
       prefix = this_prefix
   if prefix is None:
-    raise UnrecognizedSuffix("Can't extract prefix from perfect(s) %s, imperfect(s) %s" %
-        (",".join(pfs), ",".join(impfs)))
+    raise UnrecognizedSuffix("Can't extract prefix from perfect(s) %s, imperfect(s) %s, possible suffixes %s" %
+        (",".join(pfs), ",".join(impfs), ",".join(suffixes_no_stress)))
 
   def process_verb(verb, append_to):
     if verb.startswith(prefix):
       suffix = verb[len(prefix):]
     else:
-      prefix_no_accents = remove_accents(prefix)
-      if verb.startswith(prefix_no_accents):
-        suffix = verb[len(prefix_no_accents):]
+      prefix_no_stress = remove_stress(prefix)
+      if verb.startswith(prefix_no_stress):
+        suffix = verb[len(prefix_no_stress):]
       else:
         raise ValueError("Can't extract prefix %s from verb %s for suffixes %s" %
-          (prefix, verb, ",".join(suffixes_no_accents)))
+          (prefix, verb, ",".join(suffixes_no_stress)))
     append_to.append(suffix)
 
   pf_suffixes = []
@@ -71,15 +72,18 @@ def extract_prefix_and_suffixes(pfs, impfs, suffixes_no_accents):
   return prefix, pf_suffixes, impf_suffixes
 
 def convert_prefix_and_suffixes_to_full(prefix, pf_suffixes, impf_suffixes):
-  pfs = [prefix + (remove_accents(pf_suffix) if AC in prefix else pf_suffix) for pf_suffix in pf_suffixes]
-  impfs = [remove_accents(prefix) + impf_suffix for impf_suffix in impf_suffixes]
+  pfs = [prefix + (remove_stress(pf_suffix) if AC in prefix else pf_suffix) for pf_suffix in pf_suffixes]
+  impfs = [remove_stress(prefix) + impf_suffix for impf_suffix in impf_suffixes]
   return "%s %s" % (",".join(pfs) or "-", ",".join(impfs) or "-")
 
 for extfn in args.files:
   prefixes_by_suffixes = defaultdict(list)
-  unaccented_suffix_to_suffix = {}
+  unstressed_suffix_to_suffix = {}
   unrecognized_lines = []
-  fn = extfn.decode("utf-8")
+  fn = rulib.recompose(extfn.decode("utf-8"))
+  msg("---------------- %s ------------------" % fn)
+  suffix_no_stress = re.sub(r"[0-9a-z]*\.der$", "", fn)
+
   for pass_ in [0, 1]:
     if pass_ == 1:
       # We try to process lines with previously unrecognized suffixes using the suffixes seen so far.
@@ -92,12 +96,27 @@ for extfn in args.files:
           for impf_suffix in impf_suffixes.split(","):
             extra_suffixes.add(impf_suffix)
       extra_suffixes = list(extra_suffixes)
-      items = blib.iter_items(unrecognized_lines)
+      items = list(blib.iter_items(unrecognized_lines))
     else:
       extra_suffixes = []
-      items = blib.iter_items_from_file(extfn, None, None)
+      items = list(blib.iter_items_from_file(extfn, None, None))
+
+    items = [(lineno, rulib.recompose(line)) for lineno, line in items]
+    new_format = False
     for lineno, line in items:
-      suffix_no_accents = re.sub(r"\.der$", "", fn)
+      if line != "-" and (" " not in line or "! " in line or " !" in line):
+        # Already in "new" format, pass through unchanged
+        new_format = True
+        break
+    if new_format:
+      for lineno, line in items:
+        msg(line)
+      pass_ = 1
+      continue
+
+    for lineno, line in items:
+      if line == "-":
+        continue
       def linemsg(txt):
         msg("# File %s: Line %s: %s" % (fn, lineno, txt))
       try:
@@ -110,18 +129,18 @@ for extfn in args.files:
           impfs = [] if impfs == "-" else impfs.split(",")
           try:
             prefix, pf_suffixes, impf_suffixes = extract_prefix_and_suffixes(pfs, impfs,
-              [suffix_no_accents] + extra_suffixes)
+              [suffix_no_stress] + extra_suffixes)
             prefixes_by_suffixes[(",".join(pf_suffixes), ",".join(impf_suffixes))].append(prefix)
             for pf_suffix in pf_suffixes:
               if AC in pf_suffix:
-                unaccented_pf_suffix = remove_accents(pf_suffix)
+                unstressed_pf_suffix = remove_stress(pf_suffix)
                 if (
-                  unaccented_pf_suffix in unaccented_suffix_to_suffix and
-                  unaccented_suffix_to_suffix[unaccented_pf_suffix] != pf_suffix
+                  unstressed_pf_suffix in unstressed_suffix_to_suffix and
+                  unstressed_suffix_to_suffix[unstressed_pf_suffix] != pf_suffix
                 ):
-                  raise ValueError("Unaccented perfective suffix %s maps to two different accented suffixes %s and %s" %
-                    (unaccented_pf_suffix, unaccented_suffix_to_suffix[unaccented_pf_suffix], pf_suffix))
-                unaccented_suffix_to_suffix[unaccented_pf_suffix] = pf_suffix
+                  raise ValueError("Unstressed perfective suffix %s maps to two different stressed suffixes %s and %s" %
+                    (unstressed_pf_suffix, unstressed_suffix_to_suffix[unstressed_pf_suffix], pf_suffix))
+                unstressed_suffix_to_suffix[unstressed_pf_suffix] = pf_suffix
           except UnrecognizedSuffix as e:
             if pass_ == 1:
               raise e
@@ -130,12 +149,12 @@ for extfn in args.files:
       except (ValueError, UnrecognizedSuffix) as e:
         linemsg("WARNING: %s" % unicode(e))
 
-  # Combine unaccented suffixes with accented equivalents to handle вы́-, повы́-, etc.
+  # Combine unstressed suffixes with stressed equivalents to handle вы́-, повы́-, etc.
   keys_to_delete = []
   for (pf_suffixes, impf_suffixes), prefixes in prefixes_by_suffixes.iteritems():
     orig_pf_suffixes = pf_suffixes
     pf_suffixes = pf_suffixes.split(",")
-    pf_suffixes = [unaccented_suffix_to_suffix.get(pf_suffix, pf_suffix) for pf_suffix in pf_suffixes]
+    pf_suffixes = [unstressed_suffix_to_suffix.get(pf_suffix, pf_suffix) for pf_suffix in pf_suffixes]
     pf_suffixes = ",".join(pf_suffixes)
     if pf_suffixes != orig_pf_suffixes:
       key = (pf_suffixes, impf_suffixes)
