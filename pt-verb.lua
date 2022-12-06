@@ -2179,10 +2179,11 @@ local function detect_indicator_spec(base)
 		base.stems[stem] = values
 	end
 	for override, values in pairs(base.user_basic_overrides) do
-		if not base.alternant_multiword_spec.verb_slots_basic_map[override] then
+		if base.alternant_multiword_spec.verb_slots_basic_map[override] then
+			base.basic_overrides[override] = values
+		else
 			error("Unrecognized override '" .. override .. "': " .. base.angle_bracket_spec)
 		end
-		base.basic_overrides[override] = values
 	end
 
 	base.prefix = base.prefix or ""
@@ -2203,6 +2204,7 @@ local function detect_indicator_spec(base)
 		end
 		base.vowel_alt = iut.convert_to_general_list_form(base.stems.vowel_alt)
 	end
+
 	-- Propagate built-in-verb indicator flags to `base` and combine with user-specified flags.
 	for indicator_flag, _ in pairs(indicator_flags) do
 		base[indicator_flag] = base[indicator_flag] or base.stems[indicator_flag]
@@ -2234,6 +2236,7 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 
 	add_slots(alternant_multiword_spec)
 
+	-- used in [[Module:pt-headword]]
 	alternant_multiword_spec.vowel_alt = {}
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		detect_indicator_spec(base)
