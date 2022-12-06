@@ -7,10 +7,9 @@ from collections import defaultdict
 from blib import msg
 import blib
 
-parser = blib.create_argparser("Infer prefixes from derived verb tables without them.")
+parser = argparse.ArgumentParser(description="Infer prefixes from derived verb tables without them.")
 parser.add_argument('files', nargs='+', help="Files containing directives.")
 args = parser.parse_args()
-start, end = blib.parse_start_end(args.start, args.end)
 
 AC = u"\u0301"
 
@@ -82,6 +81,7 @@ unrecognized_lines = []
 
 for extfn in args.files:
   fn = extfn.decode("utf-8")
+  msg(fn)
   for pass_ in [0, 1]:
     if pass_ == 1:
       # We try to process lines with previously unrecognized suffixes using the suffixes seen so far.
@@ -97,7 +97,7 @@ for extfn in args.files:
       items = blib.iter_items(unrecognized_lines)
     else:
       extra_suffixes = []
-      items = blib.iter_items_from_file(extfn, start, end)
+      items = blib.iter_items_from_file(extfn, None, None)
     for lineno, line in items:
       suffix_no_accents = re.sub(r"\.der$", "", fn)
       def linemsg(txt):
@@ -129,7 +129,7 @@ for extfn in args.files:
               raise e
             unrecognized_lines.append(line)
 
-      except ValueError as e:
+      except (ValueError, UnrecognizedSuffix) as e:
         linemsg("WARNING: %s" % unicode(e))
 
   # Combine unaccented suffixes with accented equivalents to handle вы́-, повы́-, etc.
@@ -140,9 +140,11 @@ for extfn in args.files:
     pf_suffixes = [unaccented_suffix_to_suffix.get(pf_suffix, pf_suffix) for pf_suffix in pf_suffixes]
     pf_suffixes = ",".join(pf_suffixes)
     if pf_suffixes != orig_pf_suffixes:
-      # Python doesn't like it if you side-effect a dictionary you're iterating over
-      keys_to_delete.append((orig_pf_suffixes, impf_suffixes))
-      prefixes_by_suffixes[(pf_suffixes, impf_suffixes)] += prefixes
+      key = (pf_suffixes, impf_suffixes)
+      if key in prefixes_by_suffixes:
+        # Python doesn't like it if you side-effect a dictionary you're iterating over
+        keys_to_delete.append((orig_pf_suffixes, impf_suffixes))
+        prefixes_by_suffixes[key].extend(prefixes)
   for key_to_delete in keys_to_delete:
     del prefixes_by_suffixes[key_to_delete]
 
@@ -170,6 +172,7 @@ for extfn in args.files:
       suffix_key = (best_suffixes, non_empty_suffixes) if aspect == "impf" else (non_empty_suffixes, best_suffixes)
       for prefix in prefixes:
         prefix = prefix or "."
+        assert suffix_key in prefixes_by_suffixes, "Saw key %s not in prefixes_by_suffixes" % suffix_key
         prefixes_by_suffixes[suffix_key].append("! %s" % prefix if aspect == "impf" else "%s !" % prefix)
     keys_to_delete.append((
       "" if aspect == "impf" else non_empty_suffixes,
