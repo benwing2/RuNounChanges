@@ -75,13 +75,11 @@ def convert_prefix_and_suffixes_to_full(prefix, pf_suffixes, impf_suffixes):
   impfs = [remove_accents(prefix) + impf_suffix for impf_suffix in impf_suffixes]
   return "%s %s" % (",".join(pfs) or "-", ",".join(impfs) or "-")
 
-prefixes_by_suffixes = defaultdict(list)
-unaccented_suffix_to_suffix = {}
-unrecognized_lines = []
-
 for extfn in args.files:
+  prefixes_by_suffixes = defaultdict(list)
+  unaccented_suffix_to_suffix = {}
+  unrecognized_lines = []
   fn = extfn.decode("utf-8")
-  msg(fn)
   for pass_ in [0, 1]:
     if pass_ == 1:
       # We try to process lines with previously unrecognized suffixes using the suffixes seen so far.
@@ -159,6 +157,9 @@ for extfn in args.files:
       ):
         potential_full_suffixes.append((full_other_aspect_suffixes, len(full_prefixes)))
     if len(potential_full_suffixes) == 0:
+      if len(prefixes) > 1:
+        # leave as-is
+        return
       for prefix in prefixes:
         split_non_empty_suffixes = non_empty_suffixes.split(",")
         msg(convert_prefix_and_suffixes_to_full(prefix,
