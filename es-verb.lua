@@ -3124,6 +3124,10 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of,
 
 	compute_categories_and_annotation(alternant_multiword_spec)
 	if args.json and not from_headword and not from_verb_form_of then
+		-- There is a circular reference in `base.alternant_multiword_spec`, which points back to top level.
+		iut.map_word_specs(alternant_multiword_spec, function(base)
+			base.alternant_multiword_spec = nil
+		end)
 		return require("Module:JSON").toJSON(alternant_multiword_spec)
 	end
 	return alternant_multiword_spec
@@ -3135,6 +3139,10 @@ end
 function export.show(frame)
 	local parent_args = frame:getParent().args
 	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+    if type(alternant_multiword_spec) == "string" then
+		-- JSON return value
+	return alternant_multiword_spec
+	end
 	show_forms(alternant_multiword_spec)
 	return make_table(alternant_multiword_spec) ..
 		require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang, nil, nil, force_cat)
