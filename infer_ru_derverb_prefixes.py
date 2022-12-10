@@ -8,7 +8,7 @@ from blib import msg
 import blib
 import rulib
 
-FIXME: Brackets not handled correctly. E.g. for бросить.der, '[бро́сить] броса́ть' snares prefix поза even though the latter doesn't have brackets around anything.
+#FIXME: Brackets not handled correctly. E.g. for бросить.der, '[бро́сить] броса́ть' snares prefix поза even though the latter doesn't have brackets around anything.
 
 parser = argparse.ArgumentParser(description="Infer prefixes from derived verb tables without them.")
 parser.add_argument('files', nargs='+', help="Files containing directives.")
@@ -23,15 +23,34 @@ def remove_stress(term):
 class UnrecognizedSuffix(Exception):
   pass
 
-def remove_brackets(verbs, bracketed_verbs):
-  retval = []
-  for verb in verbs:
-    m = re.search(r"^\[(.*)\]$", verb)
-    if m:
-      verb = m.group(1)
-      bracketed_verbs.add(verb)
-    retval.append(verb)
-  return retval
+def remove_brackets(verb):
+  m = re.search(r"^\[(.*)\]$", verb)
+  if m:
+    return m.group(1), True
+  else:
+    return verb, False
+
+def rebracket(verb, brackets):
+  return "[%s]" % verb if brackets else verb
+
+def paste_verb(prefix, suffix):
+  if rulib.is_stressed(prefix):
+    verb = prefix + rulib.make_unstressed_ru(suffix)
+  else:
+    verb = prefix + suffix
+  return rulib.remove_monosyllabic_accents(verb)
+
+def combine_prefix(prefix, suffixes):
+  links = []
+  for suffix, brackets in suffixes:
+    links.append(rebracket(paste_verb(prefix, suffix), brackets))
+  return ",".join(links)
+
+def convert_prefix_and_suffixes_to_full(prefix, pf_suffixes, impf_suffixes):
+  prefix = "" if prefix == "." else prefix
+  pfs = combine_prefix(prefix, pf_suffixes)
+  impfs = combine_prefix(rulib.make_unstressed_ru(prefix), impf_suffixes)
+  return "%s/%s" % (pfs or "-", impfs or "-")
 
 def extract_prefix_and_suffix(term, suffixes_no_stress):
   num_acs = len([x for x in term if x == AC])
@@ -49,14 +68,10 @@ def extract_prefix_and_suffix(term, suffixes_no_stress):
   return None, None
 
 def extract_prefix_and_suffixes(pfs, impfs, suffixes_no_stress):
-  bracketed_verbs = set()
-  pfs = remove_brackets(pfs, bracketed_verbs)
-  impfs = remove_brackets(impfs, bracketed_verbs)
-
   all_verbs = pfs + impfs
 
   prefix = None
-  for verb in all_verbs:
+  for verb, bracketed in all_verbs:
     this_prefix, this_suffix = extract_prefix_and_suffix(verb, suffixes_no_stress)
     if this_prefix is not None:
       if prefix is not None:
@@ -71,9 +86,9 @@ def extract_prefix_and_suffixes(pfs, impfs, suffixes_no_stress):
       prefix = this_prefix
   if prefix is None:
     raise UnrecognizedSuffix("Can't extract prefix from perfect(s) %s, imperfect(s) %s, possible suffixes %s" %
-        (",".join(pfs), ",".join(impfs), ",".join(suffixes_no_stress)))
+        (join_verbs(pfs), join_verbs(impfs), ",".join(suffixes_no_stress)))
 
-  def process_verb(verb, append_to):
+  def process_verb(verb, bracketed, append_to):
     new_prefix = prefix
     if verb.startswith(prefix):
       suffix = verb[len(prefix):]
@@ -87,14 +102,14 @@ def extract_prefix_and_suffixes(pfs, impfs, suffixes_no_stress):
       else:
         raise ValueError("Can't extract prefix %s from verb %s (suffixes %s)" %
           (prefix, verb, ",".join(suffixes_no_stress)))
-    append_to.append(suffix)
+    append_to.append((suffix, bracketed))
     return new_prefix
 
   first = True
 
   impf_suffixes = []
-  for verb in impfs:
-    new_prefix = process_verb(verb, impf_suffixes)
+  for verb, bracketed in impfs:
+    new_prefix = process_verb(verb, bracketed, impf_suffixes)
     if new_prefix != prefix:
       if first:
         prefix = new_prefix
@@ -104,8 +119,8 @@ def extract_prefix_and_suffixes(pfs, impfs, suffixes_no_stress):
     first = False
 
   pf_suffixes = []
-  for verb in pfs:
-    new_prefix = process_verb(verb, pf_suffixes)
+  for verb, bracketed in pfs:
+    new_prefix = process_verb(verb, bracketed, pf_suffixes)
     if new_prefix != prefix:
       if first:
         prefix = new_prefix
@@ -114,13 +129,7 @@ def extract_prefix_and_suffixes(pfs, impfs, suffixes_no_stress):
           (prefix, verb, ",".join(suffixes_no_stress)))
     first = False
 
-  return prefix or ".", pf_suffixes, impf_suffixes, bracketed_verbs
-
-def convert_prefix_and_suffixes_to_full(prefix, pf_suffixes, impf_suffixes, bracketed_suffixes):
-  prefix = "" if prefix == "." else prefix
-  pfs = combine_prefix(prefix, pf_suffixes, bracketed_suffixes)
-  impfs = combine_prefix(rulib.make_unstressed_ru(prefix), impf_suffixes, bracketed_suffixes)
-  return "%s %s" % (pfs or "-", impfs or "-")
+  return prefix or ".", pf_suffixes, impf_suffixes
 
 def augment_suffix(suffix):
   suffix = remove_stress(suffix)
@@ -139,42 +148,46 @@ def augment_suffix(suffix):
   return retval
 
 def augment_suffixes(suffixes):
-  return [augsuf for suffix in suffixes for augsuf in augment_suffix(suffix)]
+  return [augsuf for suffix, brackets in suffixes for augsuf in augment_suffix(suffix)]
 
-def paste_verb(prefix, suffix):
-  if rulib.is_stressed(prefix):
-    verb = prefix + rulib.make_unstressed_ru(suffix)
-  else:
-    verb = prefix + suffix
-  return rulib.remove_monosyllabic_accents(verb)
+def split_verbs(verbs):
+  return [remove_brackets(verb) for verb in verbs.split(",")]
 
-def combine_prefix(prefix, suffixes, bracketed_suffixes):
-  links = []
-  for suffix in suffixes:
-    expanded = paste_verb(prefix, suffix)
-    if suffix in bracketed_suffixes:
-      expanded = "[%s]" % suffix
-    links.append(expanded)
-  return ",".join(links)
+def join_verbs(verbs):
+  return ",".join(rebracket(verb, brackets) for verb, brackets in verbs)
+
+def split_lines_into_groups(lines):
+  groups = []
+  group = []
+  for lineno, line in lines:
+    if line == "-":
+      if group:
+        groups.append(group)
+        group = []
+    else:
+      group.append((lineno, line))
+  if group:
+    groups.append(group)
+  return groups
 
 current_pf_suffixes = []
 current_impf_suffixes = []
 current_bracketed_suffixes = set()
 
 def expand_line(line, linemsg):
-  global current_pf_suffixes, current_impf_suffixes, current_bracketed_suffixes
+  global current_pf_suffixes, current_impf_suffixes
   if line.startswith("suffixes:"):
     return line
   elif re.search("^--+$", line):
     # FIXME
     return False
   elif line == "-":
-    return None
+    return line
   elif " " not in line:
     # A single prefix; combine with previous suffixes.
     return "%s %s" % (
-      combine_prefix(line, current_pf_suffixes, current_bracketed_suffixes),
-      combine_prefix(rulib.make_unstressed_ru(line), current_impf_suffixes, current_bracketed_suffixes)
+      combine_prefix(line, current_pf_suffixes) or "-",
+      combine_prefix(rulib.make_unstressed_ru(line), current_impf_suffixes) or "-"
     )
   elif "!" in line:
     # Something like "об !" or "+об !" or "! об" or "! +об". This indicates that one of the two is missing and the
@@ -183,9 +196,9 @@ def expand_line(line, linemsg):
     pf, impf = re.split(r"\s+", line)
     assert pf == "!" or impf == "!"
     if pf == "!":
-      return "- %s" % combine_prefix(rulib.make_unstressed_ru(impf), current_impf_suffixes, current_bracketed_suffixes)
+      return "- %s" % combine_prefix(rulib.make_unstressed_ru(impf), current_impf_suffixes)
     else:
-      return "%s -" % combine_prefix(pf, current_pf_suffixes, current_bracketed_suffixes)
+      return "%s -" % combine_prefix(pf, current_pf_suffixes)
   else:
     # Something like "обмени́ть,обменя́ть обме́нивать" or "+переменя́ться -".
     # We directly include the perfective and imperfective verb(s), where
@@ -193,45 +206,39 @@ def expand_line(line, linemsg):
     # include the aspect.
     pf, impf = re.split(r"\s+", line)
     if pf.startswith("-") and impf.startswith("-"):
-      current_bracketed_suffixes = set()
-      current_pf_suffixes = [] if pf == "-" else remove_brackets(
-        [re.sub("^-", "", x) for x in re.split(",", pf)], current_bracketed_suffixes
-      )
-      current_impf_suffixes = [] if impf == "-" else remove_brackets(
-        [re.sub("^-", "", x) for x in re.split(",", impf)], current_bracketed_suffixes
-      )
-      return [current_pf_suffixes, current_impf_suffixes, current_bracketed_suffixes]
+      current_pf_suffixes = [] if pf == "-" else [
+        (re.sub("^-", "", suffix), brackets) for suffix, brackets in split_verbs(pf)
+      ]
+      current_impf_suffixes = [] if impf == "-" else [
+        (re.sub("^-", "", suffix), brackets) for suffix, brackets in split_verbs(impf)
+      ]
+      return [current_pf_suffixes, current_impf_suffixes]
 
     def expand_item(item, suffixes, aspect):
       if item == "-":
         return item
       retval = []
-      maybe_prefs = item.split(",")
-      for ind, maybe_pref in enumerate(maybe_prefs):
+      maybe_prefs = split_verbs(item)
+      for ind, (maybe_pref, brackets) in enumerate(maybe_prefs):
         if not maybe_pref:
           continue
         if maybe_pref.endswith("-"):
           maybe_pref = maybe_pref[:-1]
           if aspect == "impf":
             maybe_pref = rulib.make_unstressed_ru(maybe_pref)
-          expanded = paste_verb(maybe_pref, suffixes[ind])
-          if suffixes[ind] in current_bracketed_suffixes:
-            expanded = "[%s]" % expanded
-          retval.append(expanded)
+          suffix, suffix_brackets = suffixes[ind]
+          retval.append(rebracket(paste_verb(maybe_pref, suffix), brackets or suffix_brackets))
         else:
-          retval.append(maybe_pref)
+          retval.append(rebracket(maybe_pref, brackets))
       return ",".join(retval)
 
     return "%s %s" % (expand_item(pf, current_pf_suffixes, "pf"), expand_item(impf, current_impf_suffixes, "impf"))
 
-for extfn in args.files:
+def do_line_group(group, fn):
   prefixes_by_suffixes = defaultdict(list)
-  bracketed_suffixes = {}
   ordering_of_seen_suffixes = []
   unstressed_suffix_to_suffix = {}
   unrecognized_lines = []
-  fn = rulib.recompose(extfn.decode("utf-8"))
-  msg("---------------- %s ------------------" % fn)
   suffix_no_stress = re.sub("-.*$", "", re.sub(r"[0-9a-z]*\.der$", "", fn))
   explicit_extra_suffixes = []
   unattached_lines = []
@@ -242,17 +249,17 @@ for extfn in args.files:
       extra_suffixes = set()
       for (pf_suffixes, impf_suffixes), prefixes in prefixes_by_suffixes.iteritems():
         if pf_suffixes:
-          for pf_suffix in pf_suffixes.split(","):
+          for pf_suffix, brackets in split_verbs(pf_suffixes):
             extra_suffixes |= set(augment_suffix(pf_suffix))
         if impf_suffixes:
-          for impf_suffix in impf_suffixes.split(","):
+          for impf_suffix, brackets in split_verbs(impf_suffixes):
             extra_suffixes |= set(augment_suffix(impf_suffix))
       # Put longer suffixes first.
       extra_suffixes = sorted(list(extra_suffixes) + explicit_extra_suffixes, key=lambda x:-len(x))
       items = list(blib.iter_items(unrecognized_lines))
     else:
       extra_suffixes = []
-      items = list(blib.iter_items_from_file(extfn, None, None))
+      items = group
 
     # Formerly we could precede a prefix with + to indicate that the perfective should be marked with its aspect (for
     # cases where the same verb occurred as both perfective and imperfective, as with derivatives of лететь/летать), or
@@ -271,7 +278,7 @@ for extfn in args.files:
       for lineno, line in items:
         newline = expand_line(line, lineno)
         if type(newline) is list:
-          this_pf_suffixes, this_impf_suffixes, this_bracketed_suffixes = newline
+          this_pf_suffixes, this_impf_suffixes = newline
           explicit_extra_suffixes.extend(augment_suffixes(this_pf_suffixes))
           explicit_extra_suffixes.extend(augment_suffixes(this_impf_suffixes))
         elif newline:
@@ -280,7 +287,7 @@ for extfn in args.files:
 
     for lineno, line in items:
       if line.startswith("suffixes:"):
-        explicit_extra_suffixes.extend(augment_suffixes(re.sub("^suffixes:", "", line).split(",")))
+        explicit_extra_suffixes.extend(augment_suffixes(split_verbs(re.sub("^suffixes:", "", line))))
         continue
       if line == "-":
         continue
@@ -292,20 +299,16 @@ for extfn in args.files:
           msg(line)
         else:
           pfs, impfs = re.split(r"\s+", line)
-          pfs = [] if pfs == "-" else pfs.split(",")
-          impfs = [] if impfs == "-" else impfs.split(",")
+          pfs = [] if pfs == "-" else split_verbs(pfs)
+          impfs = [] if impfs == "-" else split_verbs(impfs)
           try:
-            prefix, pf_suffixes, impf_suffixes, bracketed_verbs = extract_prefix_and_suffixes(pfs, impfs,
+            prefix, pf_suffixes, impf_suffixes = extract_prefix_and_suffixes(pfs, impfs,
               [suffix_no_stress] + extra_suffixes)
-            key = (",".join(pf_suffixes), ",".join(impf_suffixes))
+            key = (join_verbs(pf_suffixes), join_verbs(impf_suffixes))
             if key not in prefixes_by_suffixes:
               ordering_of_seen_suffixes.append(key)
-              bracketed_suffixes[key] = bracketed_verbs
-            elif bracketed_suffixes[key] != bracketed_verbs:
-              raise ValueError("For key (%s,%s), saw existing bracketed verbs %s different from new bracketed verbs %s" %
-                (key[0], key[1], ",".join(bracketed_suffixes[key]), ",".join(bracketed_verbs)))
             prefixes_by_suffixes[key].append(prefix)
-            for pf_suffix in pf_suffixes:
+            for pf_suffix, brackets in pf_suffixes:
               if AC in pf_suffix:
                 unstressed_pf_suffix = remove_stress(pf_suffix)
                 if (
@@ -330,9 +333,12 @@ for extfn in args.files:
   keys_to_delete = []
   for (pf_suffixes, impf_suffixes), prefixes in prefixes_by_suffixes.iteritems():
     orig_pf_suffixes = pf_suffixes
-    pf_suffixes = pf_suffixes.split(",")
-    pf_suffixes = [unstressed_suffix_to_suffix.get(pf_suffix, pf_suffix) for pf_suffix in pf_suffixes]
-    pf_suffixes = ",".join(pf_suffixes)
+    pf_suffixes = split_verbs(pf_suffixes)
+    pf_suffixes = [
+      (unstressed_suffix_to_suffix.get(pf_suffix, pf_suffix), brackets)
+      for pf_suffix, brackets in pf_suffixes
+    ]
+    pf_suffixes = join_verbs(pf_suffixes)
     if pf_suffixes != orig_pf_suffixes:
       key = (pf_suffixes, impf_suffixes)
       if key in prefixes_by_suffixes:
@@ -357,20 +363,20 @@ for extfn in args.files:
         # leave as-is
         return
       for prefix in prefixes:
-        split_non_empty_suffixes = non_empty_suffixes.split(",")
+        split_non_empty_suffixes = split_verbs(non_empty_suffixes)
         unattached_lines.append(convert_prefix_and_suffixes_to_full(prefix,
           [] if aspect == "impf" else split_non_empty_suffixes,
-          split_non_empty_suffixes if aspect == "impf" else [],
-          bracketed_suffixes
+          split_non_empty_suffixes if aspect == "impf" else []
         ))
     else:
       # If more than one possible set of suffixes, take the set with the smallest number of suffixes
       # and if more than one such, take the set with the largest number of prefixes.
-      best_suffixes = sorted(potential_full_suffixes, key=lambda x:(-len(x[0].split(",")), x[1]))[0][0]
+      best_suffixes = sorted(potential_full_suffixes,
+        key=lambda x: (-len(split_verbs(x[0])), x[1]))[0][0]
       suffix_key = (best_suffixes, non_empty_suffixes) if aspect == "impf" else (non_empty_suffixes, best_suffixes)
       for prefix in prefixes:
         assert suffix_key in prefixes_by_suffixes, "Saw key %s not in prefixes_by_suffixes" % suffix_key
-        prefixes_by_suffixes[suffix_key].append("! %s" % prefix if aspect == "impf" else "%s !" % prefix)
+        prefixes_by_suffixes[suffix_key].append("-/%s-" % prefix if aspect == "impf" else "%s-/-" % prefix)
     keys_to_delete.append((
       "" if aspect == "impf" else non_empty_suffixes,
       non_empty_suffixes if aspect == "impf" else ""
@@ -390,16 +396,16 @@ for extfn in args.files:
   # NOTE: Python 3 automatically preserves order in dictionaries.
   ordering_dict = dict((y, x) for x, y in enumerate(ordering_of_seen_suffixes))
   for (pf_suffixes, impf_suffixes), prefixes in sorted(prefixes_by_suffixes.iteritems(), key=lambda x: ordering_dict[x[0]]):
-    bracketed_verbs = bracketed_suffixes[(pf_suffixes, impf_suffixes)]
-    def bracket_suffixes(suffixes):
-      suffixes = suffixes.split(",")
-      suffixes = [
-        "[%s]" % suffix if suffix in bracketed_verbs else suffix
-        for suffix in suffixes
-      ]
-      return ",".join(suffixes)
-    pf_suffixes = bracket_suffixes(pf_suffixes)
-    impf_suffixes = bracket_suffixes(impf_suffixes)
-    msg("-%s -%s" % (pf_suffixes, impf_suffixes))
+    msg("*%s/%s" % (pf_suffixes, impf_suffixes))
     for prefix in prefixes:
       msg(prefix)
+
+for extfn in args.files:
+  items = list(blib.iter_items_from_file(extfn, None, None))
+  groups = split_lines_into_groups(items)
+  fn = rulib.recompose(extfn.decode("utf-8"))
+  msg("---------------- %s ------------------" % fn)
+  for groupno, group in enumerate(groups):
+    do_line_group(group, fn)
+    if groupno < len(groups) - 1:
+      msg("-")
