@@ -181,7 +181,7 @@ def generate_defn(defns, pos, lang):
         else:
           prefix = "{{lb|%s|%s}} " % (lang, "|".join(labels))
       if defn.startswith("altof:"):
-        defnline = "{{alternative form of|%s|%s}}" % (lang,
+        defnline = "{{alt form|%s|%s}}" % (lang,
             re.sub("^altof:", "", defn))
       elif defn.startswith("oui:"):
         oui = re.sub("^oui:", "", defn)
