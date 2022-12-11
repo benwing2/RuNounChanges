@@ -13,7 +13,7 @@
 	FIXME:
 	1. Brackets. [DONE]
 	2. Period as prefix value (needed?). [DONE]
-	3. Properly propagate all modifiers.
+	3. Properly propagate all modifiers. [DONE]
 	4. Consider adding default aspect to table if term occurs as both perfective and imperfective.
 ]=]
 
@@ -137,7 +137,7 @@ local function parse_aspect_pair(arg, arg_index, state, lang_module)
 			state.put = require("Module:parse utilities")
 		end
 
-		local segments = put.parse_balanced_segment_run(inside, "<", ">")
+		local segments = state.put.parse_balanced_segment_run(arg, "<", ">")
 		local slash_separated_groups =
 			state.put.split_alternating_runs_and_frob_raw_text(segments, "/", state.put.strip_spaces)
 		if #slash_separated_groups == 1 then
@@ -201,35 +201,75 @@ local function parse_aspect_pair(arg, arg_index, state, lang_module)
 
 		state.pf_suffixes = remove_bare_hyphens(pair.pfs)
 		state.impf_suffixes = remove_bare_hyphens(pair.impfs)
+		if #state.pf_suffixes == 0 and #state.impf_suffixes == 0 then
+			parse_err("Need at least one perfective or imperfective suffix")
+		end
 		return nil
 	end
 
 	if pair.prefix then
+		-- A single prefix; combine with all template suffixes.
 		if not state.pf_suffixes then
 			parse_err(
-				("Saw prefix '%s' with no preceding template suffixes (line beginning with *)"):format(pair.prefix)
+				("Saw prefix '%s' with no preceding template suffixes (line beginning with *)"):format(pair.prefix.term)
 			)
 		end
 		pair.prefix.term = rsub(pair.prefix.term, "%-$", "")
 		if pair.prefix.tr then
 			pair.prefix.tr = rsub(pair.prefix.tr, "%-$", "")
 		end
+
+		-- Error on prefix properties we don't know how to handle.
+		for _, prop in ipairs {"ts", "alt", "genders", "id", "pos", "lit"} do
+			if pair.prefix[prop] then
+				parse_error(
+					("Can't handle property '%s' in prefix '%s'"):format(prop, pair.prefix.term))
+			end
+		end
+
 		local function prefix_template_suffixes(prefix, terms, aspect)
 			local retval = {}
 			for _, term in ipairs(terms) do
 				term = m_table.shallowcopy(term)
+				for _, prop in ipairs {"ts", "alt"} do
+					if term[prop] then
+						parse_err(
+							("For aspect=%s, can't handle property '%s' in suffix '%s' when combining with prefix"):
+							format(aspect, prop, term.term))
+					end
+				end
 				term.term, term.tr = lang_module.paste_prefix_suffix(lang_module.lang, prefix.term, prefix.tr,
 					term.term, term.tr, aspect)
 				table.insert(retval, term)
 			end
 			return retval
 		end
-		if pair.prefix.genders then
-			parse_err("Gender modifier not allowed with single prefix")
-		end
 
+		-- Do the prefixing.
 		pair.pfs = prefix_template_suffixes(pair.prefix, state.pf_suffixes, "pf")
 		pair.impfs = prefix_template_suffixes(pair.prefix, state.impf_suffixes, "impf")
+
+		-- Now propagate t= (goes into 'gloss') and qq= to the last resulting term, and q= to the first resulting term.
+		local last_term
+		if #pair.impfs > 0 then
+			last_term = pair.impfs[#pair.impfs]
+		else
+			last_term = pair.pfs[#pair.pfs]
+		end
+		last_term.qq = combine_qualifiers(last_term.qq, pair.prefix.qq)
+		if last_term.gloss and pair.prefix.gloss then
+			parse_err(("Can't override gloss '%s' of term '%s' with gloss '%s' of prefix '%s'"):
+			format(last_term.gloss, last_imp.term, pair.prefix.gloss, prefix.term))
+		elseif pair.prefix.gloss then
+			last_term.gloss = prefix.gloss
+		end
+		local first_term
+		if #pair.pfs > 0 then
+			first_term = pair.pfs[1]
+		else
+			first_term = pair.impfs[1]
+		end
+		first_term.q = combine_qualifiers(first_term.q, pair.prefix.q)
 	else
 		local function handle_aspect_terms(terms, template_suffixes, aspect)
 			local retval = {}
@@ -244,13 +284,40 @@ local function parse_aspect_pair(arg, arg_index, state, lang_module)
 								format(aspect, i, term.term, numsuf == 1 and "is" or "are", numsuf,
 								numsuf == 1 and "" or "es"))
 						end
+
+						-- Fetch suffix; clone because we are modifying it destructively and may reuse it later for
+						-- another prefix.
 						local newterm = m_table.shallowcopy(template_suffixes[i])
+
+						-- Don't know how to combine ts= or alt= values.
+						for _, prop in ipairs {"ts", "alt"} do
+							if newterm[prop] or term[prop] then
+								parse_err(
+									("For aspect=%s, can't handle property '%s' in prefix '%s' or suffix '%s' when combining them"):
+									format(aspect, prop, term.term, newterm.term))
+							end
+						end
+
+						-- Combine term and translit, along with qualifiers and brackets.
 						newterm.term, newterm.tr =
 							lang_module.paste_prefix_suffix(lang_module.lang, rsub(term.term, "%-$", ""),
 								term.tr and rsub(term.tr, "%-$", "") or nil, newterm.term, newterm.tr, aspect)
 						newterm.q = combine_qualifiers(newterm.q, term.q)
 						newterm.qq = combine_qualifiers(newterm.qq, term.qq)
-						-- FIXME, deal with remaining modifiers in `term`
+						newterm.brackets = newterm.brackets or term.brackets
+
+						-- Remaining properties are copied from prefix to suffix if not already in suffix.
+						for _, prop in ipairs {"gloss", "genders", "id", "pos", "lit"} do
+							if newterm[prop] and term[prop] then
+								parse_err(
+									("For aspect=%s, can't handle property '%s' occurring along with both prefix '%s' and suffix '%s' when combining them"):
+									format(aspect, prop, term.term, newterm.term))
+							end
+							if term[prop] then
+								newterm[prop] = term[prop]
+							end
+						end
+
 						table.insert(retval, newterm)
 					else
 						table.insert(retval, term)
@@ -309,7 +376,6 @@ local function format_aspect_terms(lang, term_groups, include_default_aspect)
 				local term_parts = {}
 				for _, term in ipairs(terms) do
 					sort_key = sort_key or lang:makeSortKey(term.term)
-					error(sort_key)
 					local preq_text = term.q and require("Module:qualifier").format_qualifier(term.q) .. " " or ""
 					if not term.genders and include_default_aspect then
 						term.genders = {aspect}
