@@ -1,46 +1,39 @@
-# This table includes many uses of prefixed + to include the aspect,
-# because there are many cases where homophonous imperfective and perfective
-# verbs exist. The various cases:
-#
-# 1. "за +" means include both pf and impf, with the aspect on the impf.
-# 2. "+за" means include both pf and impf, with the aspect on the pf.
-# 3. "+за !" means include only pf, with the aspect on the pf.
-# 4. "! +за" (not found) means include only impf, with the aspect on the impf.
-[лете́ть] лета́ть
+[лете́ть]/лета́ть
 -
--лете́ть -лета́ть
-за +
-на +
-об +
+*лета́ть/-
+за
+из
+на
+от
+пере
+по
+про
+с
+*лета́ть/лётывать
+об
+*лета́ться/-
+на
+об
+от
+раз
+с
+*лете́ть/лета́ть
 в
-под
-пере +
 вз
-из +
-при
-до
-по !
-про +
-с +
-от +
-у
 вы́
--лета́ть -лётывать
-+за !
-+на !
-+об
-+пере !
-+из !
-по !
-+про !
-+с !
-+от !
--лете́ться -лета́ться
-раз +
-с +
--лета́ться -лётываться
-на !
-об !
-+раз !
-+с !
-от !
+до
+за
+из
+на
+об
+от
+пере
+по-/-
+под
+при
+про
+с
+у
+*лете́ться/лета́ться
+раз
+с
