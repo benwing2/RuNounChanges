@@ -22,15 +22,19 @@ def process_text_on_page(index, pagetitle, pagetext):
     if line == "(no equivalent)":
       output.append("-")
       return True
+    if line == "(various)":
+      pagemsg("WARNING: Saw '(various)', treating like '(no equivalent)': %s" % line)
+      output.append("-")
+      return True
     terms = re.split(", *", line)
     processed_terms = []
     for term in terms:
       if " " in term:
         words = term.split(" ")
-        if "{{l|" in words[0]:
+        if re.search(r"\{\{l(-self)?\|", words[0]):
           term = words[0]
           notes = " ".join(words[1:])
-        elif "{{l|" in words[-1]:
+        elif re.search(r"\{\{l(-self)?\|", words[-1]):
           term = words[-1]
           notes = " ".join(words[:-1])
         else:
@@ -49,7 +53,7 @@ def process_text_on_page(index, pagetitle, pagetext):
       if m:
         brackets = True
         term = m.group(1)
-      if not re.search(r"^\{\{l\|.*\}\}$", term):
+      if not re.search(r"^\{\{l(-self)?\|.*\}\}$", term):
         pagemsg("WARNING: Term isn't just {{l|...}}: %s" % term)
         return False
       wordts = list(blib.parse_text(term).filter_templates())
@@ -57,7 +61,7 @@ def process_text_on_page(index, pagetitle, pagetext):
         pagemsg("WARNING: Not exactly one template in term: %s" % term)
         return False
       wordt = wordts[0]
-      if tname(wordt) != "l":
+      if tname(wordt) not in ["l", "l-self"]:
         pagemsg("WARNING: Unrecognized template: %s" % term)
         return False
       for param in wordt.params:
