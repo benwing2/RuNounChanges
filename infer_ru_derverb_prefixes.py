@@ -13,12 +13,19 @@ parser.add_argument('files', nargs='*', help="Files containing directives.")
 parser.add_argument('--suffixes', help="Extra suffixes, of the format FILE=SUFFIX,SUFFIX,...;FILE=SUFFIX,SUFFIX,...")
 parser.add_argument('--direcfile', help="File containing input in find_regex format.")
 parser.add_argument('--sort', action='store_true', help="Sort template suffix groups.")
+parser.add_argument('--output-files', action='store_true', help="Output results to *.new files instead of to stdout.")
 args = parser.parse_args()
 
 AC = u"\u0301"
 
 def remove_stress(term):
   return rulib.remove_accents(term)
+
+def lineout(outfd, txt):
+  if outfd:
+    outfd.write(txt.encode("utf-8") + "\n")
+  else:
+    msg(txt)
 
 class InferError(Exception):
   pass
@@ -276,7 +283,9 @@ def expand_line(line, linemsg):
 
     return join_pf_impf(expand_item(pf, current_pf_suffixes, "pf"), expand_item(impf, current_impf_suffixes, "impf"))
 
-def do_line_group(group, fn, suffix_lines, extra_suffixes, pass_):
+def do_line_group(group, is_last_group, fn, outfd, suffix_lines, extra_suffixes, pass_):
+  def out(txt):
+    lineout(outfd, txt)
   suffix_no_stress = re.sub("^-", "", re.sub(r"[0-9a-z]*\.der$", "", fn))
   explicit_extra_suffixes = []
 
@@ -285,6 +294,14 @@ def do_line_group(group, fn, suffix_lines, extra_suffixes, pass_):
 
   # Put longer suffixes first.
   extra_suffixes = sorted(list(extra_suffixes) + explicit_extra_suffixes, key=lambda x:-len(x))
+  # Hack: If we have suffixes beginning with 'о' and corresponding suffixes without them, move the 'о' suffixes to the
+  # end. This happens e.g. with звать/зывать where the existence of подозвать/подзывать leads to озвать and озывать
+  # as suffixes.
+  extra_suffixes_with_o = []
+  for extra_suffix in extra_suffixes:
+    if extra_suffix.startswith(u"о") and extra_suffix[1:] in  extra_suffixes:
+      extra_suffixes_with_o.append(extra_suffix)
+  extra_suffixes = [x for x in extra_suffixes if x not in extra_suffixes_with_o] + extra_suffixes_with_o
 
   items = group
 
@@ -326,11 +343,11 @@ def do_line_group(group, fn, suffix_lines, extra_suffixes, pass_):
       if " " not in line:
         linemsg("WARNING: No space in line: %s" % line)
         if pass_ == 1:
-          msg(line)
+          out(line)
       elif "(" in line:
         linemsg("WARNING: Paren in line: %s" % line)
         if pass_ == 1:
-          msg(line)
+          out(line)
       else:
         pfs, impfs = split_pf_impf(line)
         pfs = [] if pfs == "-" else split_verbs(pfs)
@@ -363,7 +380,7 @@ def do_line_group(group, fn, suffix_lines, extra_suffixes, pass_):
     except InferError as e:
       if pass_ == 1:
         linemsg("WARNING: %s: %s" % (unicode(e), line))
-        msg(line.replace(" ", "/"))
+        unattached_lines.append(line.replace(" ", "/"))
 
   if pass_ == 0:
     # We try to process lines with previously unrecognized suffixes using the suffixes seen so far.
@@ -438,8 +455,10 @@ def do_line_group(group, fn, suffix_lines, extra_suffixes, pass_):
   for key_to_delete in keys_to_delete:
     del prefixes_by_suffixes[key_to_delete]
 
-  for unattached_line in unattached_lines:
-    msg(unattached_line)
+  def msg_and_check(line):
+    if is_last_group and len(line) >= 2 and "/" in line and line[0:2] == fn[0:2]:
+      linemsg("WARNING: Possible misplaced line needing to be moved to a leading group: %s" % line)
+    out(line)
   # Sort prefix/suffix sets by the order in which they were originally seen.
   # NOTE: Python 3 automatically preserves order in dictionaries.
   ordering_dict = dict((y, x) for x, y in enumerate(ordering_of_seen_suffixes))
@@ -449,29 +468,41 @@ def do_line_group(group, fn, suffix_lines, extra_suffixes, pass_):
   for (pf_suffixes, impf_suffixes), prefixes in sorted(prefixes_by_suffixes.iteritems(),
       key=sort_key_for_sorting if args.sort else lambda x: ordering_dict[x[0]]):
     if len(prefixes) == 1 and "." in prefixes[0]:
-      msg(convert_prefix_and_suffixes_to_full(prefixes[0], split_verbs(pf_suffixes), split_verbs(impf_suffixes)))
+      msg_and_check(convert_prefix_and_suffixes_to_full(prefixes[0], split_verbs(pf_suffixes), split_verbs(impf_suffixes)))
     else:
-      msg("*%s/%s" % (pf_suffixes or "-", impf_suffixes or "-"))
+      msg_and_check("*%s/%s" % (pf_suffixes or "-", impf_suffixes or "-"))
       for prefix in sorted(prefixes):
-        msg(prefix)
+        out(prefix)
+  for unattached_line in unattached_lines:
+    msg_and_check(unattached_line)
 
 def process_lines_from_file(index, lines, fn):
-  tables = split_lines_into_tables(lines)
-  msg("Page %s %s: --------- begin text -----------" % (index, re.sub(r"\.der$", "", fn)))
-  # do all tables
-  for tableno, table in enumerate(tables):
-    groups, suffix_lines = split_lines_into_groups(table)
-    # first extract the suffixes
-    all_groups = [x for group in groups for x in group]
-    extra_suffixes = do_line_group(all_groups, fn, suffix_lines, [], 0)
-    # now do the groups separately
-    for groupno, group in enumerate(groups):
-      do_line_group(group, fn, suffix_lines, extra_suffixes, 1)
-      if groupno < len(groups) - 1:
-        msg("-")
-    if tableno < len(tables) - 1:
-      msg("----")
-  msg("--------- end text -----------")
+
+  def do_process(outfd):
+    def out(txt):
+      lineout(outfd, txt)
+    tables = split_lines_into_tables(lines)
+    # do all tables
+    for tableno, table in enumerate(tables):
+      groups, suffix_lines = split_lines_into_groups(table)
+      # first extract the suffixes
+      all_groups = [x for group in groups for x in group]
+      extra_suffixes = do_line_group(all_groups, False, fn, None, suffix_lines, [], 0)
+      # now do the groups separately
+      for groupno, group in enumerate(groups):
+        do_line_group(group, groupno == len(groups) - 1, fn, outfd, suffix_lines, extra_suffixes, 1)
+        if groupno < len(groups) - 1:
+          out("-")
+      if tableno < len(tables) - 1:
+        out("----")
+
+  if args.output_files:
+    with open(fn + ".new", "w") as outfd:
+      do_process(outfd)
+  else:
+    msg("Page %s %s: --------- begin text -----------" % (index, re.sub(r"\.der$", "", fn)))
+    do_process(None)
+    msg("--------- end text -----------")
 
 def add_newline(generator):
   for line in generator:
