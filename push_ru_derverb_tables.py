@@ -5,6 +5,7 @@ import blib
 from blib import getparam, rmparam, msg, errmsg, errandmsg, site
 
 import pywikibot, re, sys, codecs, argparse
+import rulib
 
 def process_page(index, page, contents, verbose, comment):
   pagetitle = unicode(page.title())
@@ -129,31 +130,42 @@ def process_page(index, page, contents, verbose, comment):
   return retval
 
 if __name__ == "__main__":
-  parser = blib.create_argparser("Push new Russian derived-verb tables from infer_ru_derverb_prefixes.py")
-  parser.add_argument("--direcfile", help="File containing entries.", required=True)
+  parser = blib.create_argparser("Push new Russian derived-verb tables from infer_ru_derverb_prefixes.py",
+    suppress_start_end=True)
+  parser.add_argument('files', nargs='*', help="Files containing directives.")
+  parser.add_argument("--direcfile", help="File containing entries.")
   parser.add_argument("--comment", help="Comment to use.", required=True)
   parser.add_argument("--pagefile", help="File to restrict list of pages done.")
   args = parser.parse_args()
-  start, end = blib.parse_start_end(args.start, args.end)
 
   if args.pagefile:
     pages = set(blib.yield_items_from_file(args.pagefile))
   else:
     pages = set()
 
-  lines = codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8")
   arg_comment = args.comment.decode("utf-8")
 
-  index_pagename_text_comment = blib.yield_text_from_find_regex(lines, args.verbose)
-  for _, (index, pagename, text, comment) in blib.iter_items(index_pagename_text_comment, start, end,
-      get_name=lambda x:x[1], get_index=lambda x:x[0]):
-    if pages and pagename not in pages:
-      continue
-    if comment:
-      comment = "%s; %s" % (comment, arg_comment)
-    else:
-      comment = arg_comment
-    def do_process_page(page, index, parsed):
-      return process_page(index, page, text, args.verbose, comment)
-    blib.do_edit(pywikibot.Page(site, pagename), index, do_process_page,
-        save=args.save, verbose=args.verbose, diff=args.diff)
+  if args.direcfile:
+    lines = codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8")
+
+    index_pagename_text_comment = blib.yield_text_from_find_regex(lines, args.verbose)
+    for _, (index, pagename, text, comment) in blib.iter_items(index_pagename_text_comment,
+        get_name=lambda x:x[1], get_index=lambda x:x[0]):
+      if pages and pagename not in pages:
+        continue
+      if comment:
+        comment = "%s; %s" % (comment, arg_comment)
+      else:
+        comment = arg_comment
+      def do_process_page(page, index, parsed):
+        return process_page(index, page, text, args.verbose, comment)
+      blib.do_edit(pywikibot.Page(site, pagename), index, do_process_page,
+          save=args.save, verbose=args.verbose, diff=args.diff)
+  else:
+    for index, extfn in enumerate(args.files):
+      lines = list(blib.yield_items_from_file(extfn))
+      pagename = re.sub(r"\.der$", "", rulib.recompose(extfn.decode("utf-8")))
+      def do_process_page(page, index, parsed):
+        return process_page(index, page, "\n".join(lines), args.verbose, arg_comment)
+      blib.do_edit(pywikibot.Page(site, pagename), index + 1, do_process_page,
+          save=args.save, verbose=args.verbose, diff=args.diff)
