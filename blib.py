@@ -967,12 +967,13 @@ def group_notes(notes):
 starttime = time.time()
 
 def create_argparser(desc, include_pagefile=False, include_stdin=False,
-    no_beginning_line=False):
+    no_beginning_line=False, suppress_start_end=False):
   if not no_beginning_line:
     msg("Beginning at %s" % time.ctime(starttime))
   parser = argparse.ArgumentParser(description=desc)
-  parser.add_argument('start', help="Starting page index", nargs="?")
-  parser.add_argument('end', help="Ending page index", nargs="?")
+  if not suppress_start_end:
+    parser.add_argument('start', help="Starting page index", nargs="?")
+    parser.add_argument('end', help="Ending page index", nargs="?")
   parser.add_argument('-s', '--save', action="store_true", help="Save results")
   parser.add_argument('-v', '--verbose', action="store_true", help="More verbose output")
   parser.add_argument('-d', '--diff', action="store_true", help="Show diff of changes")
