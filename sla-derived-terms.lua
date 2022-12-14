@@ -69,6 +69,18 @@ local function combine_qualifiers(q1, q2)
 	end
 end
 
+local function get_aspects(args)
+	local first_aspect, second_aspect
+	if args.impf_first then
+		first_aspect = "impf"
+		second_aspect = "pf"
+	else
+		first_aspect = "pf"
+		second_aspect = "impf"
+	end
+	return first_aspect, second_aspect
+end
+
 local modifiers = {"q", "qq", "t", "gloss", "tr", "ts", "g", "id", "alt", "pos", "lit"}
 
 local function parse_aspect_pair(arg, arg_index, state, lang_module, args)
@@ -132,16 +144,6 @@ local function parse_aspect_pair(arg, arg_index, state, lang_module, args)
 		return obj
 	end
 
-	local function unpack_pf_impf(items)
-		local pfs, impfs
-		if args.impf_first then
-			impfs, pfs = unpack(items)
-		else
-			pfs, impfs = unpack(items)
-		end
-		return pfs, impfs
-	end
-
 	if arg:find("<") then -- and not arg:find("^[^<]*<[a-z]*[^a-z:]") then
 		if not state.put then
 			state.put = require("Module:parse utilities")
@@ -165,9 +167,9 @@ local function parse_aspect_pair(arg, arg_index, state, lang_module, args)
 				return retval
 			end
 
-			local pfs, impfs = unpack_pf_impf(slash_separated_groups)
-			pair.pfs = process_terms(pfs)
-			pair.impfs = process_terms(impfs)
+			local firsts, seconds = unpack(slash_separated_groups)
+			pair.firsts = process_terms(firsts)
+			pair.seconds = process_terms(seconds)
 		end
 	else
 		local split_on_slash = rsplit(arg, "%s*/%s*")
@@ -176,7 +178,6 @@ local function parse_aspect_pair(arg, arg_index, state, lang_module, args)
 		elseif #split_on_slash > 2 then
 			parse_err("Saw more than two slashes")
 		else
-			local pfs, impfs = unpack_pf_impf(split_on_slash)
 			local function process_terms(terms)
 				local retval = {}
 				terms = rsplit(terms, "%s*,%s*")
@@ -186,8 +187,9 @@ local function parse_aspect_pair(arg, arg_index, state, lang_module, args)
 				return retval
 			end
 
-			pair.pfs = process_terms(pfs)
-			pair.impfs = process_terms(impfs)
+			local firsts, seconds = unpack(split_on_slash)
+			pair.firsts = process_terms(firsts)
+			pair.seconds = process_terms(seconds)
 		end
 	end
 
@@ -209,17 +211,19 @@ local function parse_aspect_pair(arg, arg_index, state, lang_module, args)
 			return retval
 		end
 
-		state.pf_suffixes = remove_bare_hyphens(pair.pfs)
-		state.impf_suffixes = remove_bare_hyphens(pair.impfs)
-		if #state.pf_suffixes == 0 and #state.impf_suffixes == 0 then
+		state.first_suffixes = remove_bare_hyphens(pair.firsts)
+		state.second_suffixes = remove_bare_hyphens(pair.seconds)
+		if #state.first_suffixes == 0 and #state.second_suffixes == 0 then
 			parse_err("Need at least one perfective or imperfective suffix")
 		end
 		return nil
 	end
 
+	local first_aspect, second_aspect = get_aspects(args)
+
 	if pair.prefix then
 		-- A single prefix; combine with all template suffixes.
-		if not state.pf_suffixes then
+		if not state.first_suffixes then
 			parse_err(
 				("Saw prefix '%s' with no preceding template suffixes (line beginning with *)"):format(pair.prefix.term)
 			)
@@ -256,23 +260,15 @@ local function parse_aspect_pair(arg, arg_index, state, lang_module, args)
 		end
 
 		-- Do the prefixing.
-		pair.pfs = prefix_template_suffixes(pair.prefix, state.pf_suffixes, "pf")
-		pair.impfs = prefix_template_suffixes(pair.prefix, state.impf_suffixes, "impf")
+		pair.firsts = prefix_template_suffixes(pair.prefix, state.first_suffixes, first_aspect)
+		pair.seconds = prefix_template_suffixes(pair.prefix, state.second_suffixes, second_aspect)
 
 		-- Now propagate t= (goes into 'gloss') and qq= to the last resulting term, and q= to the first resulting term.
-		local earlier_aspect, later_aspect
-		if args.impf_first then
-			earlier_aspect = pair.impfs
-			later_aspect = pair.pfs
-		else
-			earlier_aspect = pair.pfs
-			later_aspect = pair.impfs
-		end
 		local last_term
-		if #later_aspect > 0 then
-			last_term = later_aspect[#later_aspect]
+		if #pair.seconds > 0 then
+			last_term = pair.seconds[#pair.seconds]
 		else
-			last_term = earlier_aspect[#earlier_aspect]
+			last_term = pair.firsts[#pair.firsts]
 		end
 		last_term.qq = combine_qualifiers(last_term.qq, pair.prefix.qq)
 		if last_term.gloss and pair.prefix.gloss then
@@ -282,10 +278,10 @@ local function parse_aspect_pair(arg, arg_index, state, lang_module, args)
 			last_term.gloss = prefix.gloss
 		end
 		local first_term
-		if #earlier_aspect > 0 then
-			first_term = earlier_aspect[1]
+		if #pair.firsts > 0 then
+			first_term = pair.firsts[1]
 		else
-			first_term = later_aspect[1]
+			first_term = pair.seconds[1]
 		end
 		first_term.q = combine_qualifiers(first_term.q, pair.prefix.q)
 	else
@@ -344,11 +340,11 @@ local function parse_aspect_pair(arg, arg_index, state, lang_module, args)
 			end
 			return retval
 		end
-		pair.pfs = handle_aspect_terms(pair.pfs, state.pf_suffixes, "pf")
-		pair.impfs = handle_aspect_terms(pair.impfs, state.impf_suffixes, "impf")
+		pair.firsts = handle_aspect_terms(pair.firsts, state.first_suffixes, first_aspect)
+		pair.seconds = handle_aspect_terms(pair.seconds, state.second_suffixes, second_aspect)
 	end
 
-	if #pair.pfs == 0 and #pair.impfs == 0 then
+	if #pair.firsts == 0 and #pair.seconds == 0 then
 		parse_err("Need at least one perfective or imperfective term")
 	end
 
@@ -390,12 +386,13 @@ local function format_aspect_terms(lang, args, term_groups, include_default_aspe
 		local group_formatted_items = {}
 		for _, items in ipairs(group) do
 			local sort_key = nil
+			local this_include_default_aspect = include_default_aspect
 			local function handle_aspect_terms(terms, aspect)
 				local term_parts = {}
 				for _, term in ipairs(terms) do
 					sort_key = sort_key or lang:makeSortKey(lang:makeEntryName(term.term))
 					local preq_text = term.q and require("Module:qualifier").format_qualifier(term.q) .. " " or ""
-					if not term.genders and include_default_aspect then
+					if not term.genders and this_include_default_aspect then
 						term.genders = {aspect}
 					end
 					term.lang = lang
@@ -408,18 +405,25 @@ local function format_aspect_terms(lang, args, term_groups, include_default_aspe
 				end
 				return table.concat(term_parts, ", ")
 			end
-			local pfs, impfs
-			-- Whether we process perfectives or imperfectives first determines the sort key.
-			if args.impf_first then
-				impfs = handle_aspect_terms(items.impfs, "impf")
-				pfs = handle_aspect_terms(items.pfs, "pf")
-			else
-				pfs = handle_aspect_terms(items.pfs, "pf")
-				impfs = handle_aspect_terms(items.impfs, "impf")
+			local first_aspect, second_aspect = get_aspects(args)
+			local switch_aspects
+			for _, term in ipairs(items.firsts) do
+				if term.genders and #term.genders == 1 and term.genders[1] == second_aspect then
+					switch_aspects = true
+					break
+				end
 			end
+			if switch_aspects then
+				this_include_default_aspect = true
+				local temp = first_aspect
+				first_aspect = second_aspect
+				second_aspect = temp
+			end
+			local firsts = handle_aspect_terms(items.firsts, first_aspect)
+			local seconds = handle_aspect_terms(items.seconds, second_aspect)
 			table.insert(group_formatted_items, {
-				pfs = pfs,
-				impfs = impfs,
+				firsts = firsts,
+				seconds = seconds,
 				sort_key = sort_key
 			})
 		end
@@ -433,14 +437,12 @@ end
 
 local function format_terms_as_list(lang, args, formatted_items)
 	for i, formatted_item in ipairs(formatted_items) do
-		if formatted_item.pfs == "" then
-			formatted_items[i] = formatted_item.impfs
-		elseif formatted_item.impfs == "" then
-			formatted_items[i] = formatted_item.pfs
-		elseif args.impf_first then
-			formatted_items[i] = formatted_item.impfs .. ", " .. formatted_item.pfs
+		if formatted_item.firsts == "" then
+			formatted_items[i] = formatted_item.seconds
+		elseif formatted_item.seconds == "" then
+			formatted_items[i] = formatted_item.firsts
 		else
-			formatted_items[i] = formatted_item.pfs .. ", " .. formatted_item.impfs
+			formatted_items[i] = formatted_item.firsts .. ", " .. formatted_item.seconds
 		end
 	end
 	return require("Module:columns").create_list {
@@ -456,24 +458,19 @@ end
 local function format_terms_as_table(lang, args, formatted_items)
 	local lines = {}
 	local first_aspect_header, second_aspect_header
-	local first_aspect_index, second_aspect_index
 	if args.impf_first then
 		first_aspect_header = "imperfective"
 		second_aspect_header = "perfective"
-		first_aspect_index = "impfs"
-		second_aspect_index = "pfs"
 	else
 		first_aspect_header = "perfective"
 		second_aspect_header = "imperfective"
-		first_aspect_index = "pfs"
-		second_aspect_index = "impfs"
 	end
 	table.insert(lines, '{| class="wikitable vsSwitcher" data-toggle-category="derived terms"\n! ' ..
 		first_aspect_header .. ' !! class="vsToggleElement" | ' .. second_aspect_header)
 
 	for i, formatted_item in ipairs(formatted_items) do
-		table.insert(lines, '|- class="vsHide"\n| ' .. formatted_item[first_aspect_index] .. " || " ..
-			formatted_item[second_aspect_index])
+		table.insert(lines, '|- class="vsHide"\n| ' .. formatted_item.firsts .. " || " ..
+			formatted_item.seconds)
 	end
 	table.insert(lines, "|}")
 	return table.concat(lines, "\n")
