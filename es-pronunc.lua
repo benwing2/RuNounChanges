@@ -789,21 +789,25 @@ local function format_all_styles(expressed_styles, format_style)
 end
 
 
+local function dodialect_pronun(args, ret, dialect)
+	ret.pronun[dialect] = {}
+	for i, term in ipairs(args.terms) do
+		local phonemic = export.IPA(term, dialect, false, true, args.debug)
+		local phonetic = export.IPA(term, dialect, true, true, args.debug)
+		ret.pronun[dialect][i] = {
+			phonemic = phonemic.text,
+			phonetic = phonetic.text,
+			differences = phonemic.differences,
+		}
+	end
+end
+
 local function generate_pronun(args)
-	local function dodialect(ret, dialect)
-		ret.pronun[dialect] = {}
-		for i, term in ipairs(args.terms) do
-			local phonemic = export.IPA(term, dialect, false, true, args.debug)
-			local phonetic = export.IPA(term, dialect, true, true, args.debug)
-			ret.pronun[dialect][i] = {
-				phonemic = phonemic.text,
-				phonetic = phonetic.text,
-				differences = phonemic.differences,
-			}
-		end
+	local function this_dodialect_pronun(ret, dialect)
+		dodialect_pronun(args, ret, dialect)
 	end
 
-	local ret = express_all_styles(args.style, dodialect)
+	local ret = express_all_styles(args.style, this_dodialect_pronun)
 
 	local function format_style(tag, expressed_style, is_first)
 		local pronunciations = {}
@@ -861,6 +865,10 @@ function export.show(frame)
 	return ret.text
 end
 
+
+local function hyph_object_from_syllabified_spelling(text)
+	return {hyph = rsplit(text, "%.")}
+end
 
 local function syllabify_from_spelling(text)
 	-- decompose everything but ñ and ü
@@ -945,8 +953,8 @@ local function syllabify_from_spelling(text)
 	text = text:gsub(TEMP_GU, "gu")
 	text = text:gsub(TEMP_GU_CAPS, "Gu")
 	text = mw.ustring.toNFC(text)
-	-- FIXME, what about qualifiers from tags?
-	return {hyph = rsplit(text, "%.")}
+	-- No qualifiers from dialect tags because we assume all dialects hyphenate the same way.
+	return hyph_object_from_syllabified_spelling(text)
 end
 
 
@@ -1093,7 +1101,7 @@ function export.show_pr(frame)
 				hyphs = {}
 				break
 			else
-				m_table.insertIfNot(hyphs, hyph)
+				m_table.insertIfNot(hyphs, hyph_object_from_syllabified_spelling(hyph))
 			end
 		end
 		overall_hyph = hyphs
@@ -1131,15 +1139,31 @@ function export.show_pr(frame)
 					hyphs = {}
 					break
 				else
-					m_table.insertIfNot(hyphs, hyph)
+					m_table.insertIfNot(hyphs, hyph_object_from_syllabified_spelling(hyph))
 				end
 			end
 		end
 		parsed.hyph = hyphs
 
 		-- Generate the rhymes.
-		local function dodialect(rhyme_ret, dialect)
+		local function dodialect_rhymes_from_pronun(rhyme_ret, dialect)
 			rhyme_ret.pronun[dialect] = {}
+			-- It's possible the pronunciation for a passed-in dialect was never generated. This happens e.g. with
+			-- {{es-pr|cebolla<style:seseo>}}. The initial call to generate_pronun() fails to generate a pronunciation
+			-- for the dialect 'distinction-yeismo' because the pronunciation of 'cebolla' differs between distincion
+			-- and seseo and so the seseo style restriction rules out generation of pronunciation for distincion
+			-- dialects (other than 'distincion-lleismo', which always gets generated so as to determine on which axes
+			-- the dialects differ). However, when generating the rhyme, it is based only on -olla, whose pronunciation
+			-- does not differ between distincion and seseo, but does differ between lleismo and yeismo, so it needs to
+			-- generate a yeismo-specific rhyme, and 'distincion-yeismo' is the representative dialect for yeismo in the
+			-- situation where distincion and seseo do not have distinct results (based on the following line in
+			-- express_all_styles()):
+			--   express_style(false, "most of Spain and Latin America", "distincion-yeismo", "distincion-seseo-yeismo")
+			-- In this case we need to generate the missing overall pronunciation ourselves since we need it to generate
+			-- the dialect-specific rhyme pronunciation.
+			if not parsed.pronun.pronun[dialect] then
+				dodialect_pronun(parsed, parsed.pronun, dialect)
+			end
 			for _, pronun in ipairs(parsed.pronun.pronun[dialect]) do
 				if all_words_have_vowels(pronun.phonemic) then
 					-- Count number of syllables by looking at syllable boundaries (including stress marks).
@@ -1188,7 +1212,7 @@ function export.show_pr(frame)
 			if overall_rhyme or saw_space then
 				parsed.rhyme = nil
 			else
-				parsed.rhyme = express_all_styles(parsed.style, dodialect)
+				parsed.rhyme = express_all_styles(parsed.style, dodialect_rhymes_from_pronun)
 			end
 		else
 			local function this_dodialect(rhyme_ret, dialect)
