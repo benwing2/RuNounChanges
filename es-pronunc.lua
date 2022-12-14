@@ -72,6 +72,14 @@ local function rsub_repeatedly(term, foo, bar)
 	end
 end
 
+local function split_on_comma(term)
+	if term:find(",%s") then
+		return require("Module:dialect tags").split_on_comma(term)
+	else
+		return rsplit(term, ",")
+	end
+end
+
 --[=[
 About styles, dialects and isoglosses:
 
@@ -530,14 +538,14 @@ end
 --    a field in this table named `differences`, but where other fields may vary depending on the type of pronunciation
 --    (e.g. phonemic/phonetic or rhyme). See below for the form of the PRONUN table for phonemic/phonetic pronunciation
 --    vs. rhyme and the form of the `differences` field.
--- 3. STYLE_GROUP is a table of the form {tag = "HIDDEN_TAG", styles = {INNER_SYLE, INNER_SYLE, ...}}. This describes
+-- 3. STYLE_GROUP is a table of the form {tag = "HIDDEN_TAG", styles = {INNER_STYLE, INNER_STYLE, ...}}. This describes
 --    a group of related styles (such as those for Latin America) that by default (the "hidden" form) are displayed as
 --    a single line, with an icon on the right to "open" the style group into the "shown" form, with multiple lines
 --    for each style in the group. The tag of the style group is the text displayed before the pronunciation in the
 --    default "hidden" form, such as "Spain" or "Latin America". It can have the special value of `false` to indicate
 --    that no tag text is to be displayed. Note that the pronunciation shown in the default "hidden" form is taken
 --    from the first style in the style group.
--- 4. INNER_SYLE is a table of the form {tag = "SHOWN_TAG", pronun = {PRONUN, PRONUN, ...}}. This describes a single
+-- 4. INNER_STYLE is a table of the form {tag = "SHOWN_TAG", pronun = {PRONUN, PRONUN, ...}}. This describes a single
 --    style (such as for the Andes Mountains in the case where the seseo+lleismo accent differs from all others), to
 --    be shown on a single line. `tag` is the text preceding the displayed pronunciation, or `false` if no tag text
 --    is to be displayed. PRONUN is a table as described above and describes a particular pronunciation.
@@ -593,7 +601,7 @@ local function express_all_styles(style_spec, dodialect)
 
 	local need_rioplat
 
-	-- Add a style object (see INNER_SYLE above) that represents a particular style to `ret.expressed_styles`.
+	-- Add a style object (see INNER_STYLE above) that represents a particular style to `ret.expressed_styles`.
 	-- `hidden_tag` is the tag text to be used when the style group containing the style is in the default "hidden"
 	-- state (e.g. "Spain", "Latin America" or false if there is only one style group and no tag text should be
 	-- shown), while `tag` is the tag text to be used when the individual style is shown (e.g. a description such as
@@ -678,10 +686,10 @@ local function express_all_styles(style_spec, dodialect)
 	-- differ. Then we take the union of these differences across the respellings.
 	dodialect(ret, "distincion-lleismo")
 	local differences = {}
-	for _, difftype in ipairs("distincion_different", "lleismo_different", "need_rioplat", "sheismo_different") do
+	for _, difftype in ipairs { "distincion_different", "lleismo_different", "need_rioplat", "sheismo_different" } do
 		for _, pronun in ipairs(ret.pronun["distincion-lleismo"]) do
 			if pronun.differences[difftype] then
-				pronun[difftype] = true
+				differences[difftype] = true
 			end
 		end
 	end
@@ -862,7 +870,7 @@ local function syllabify_from_spelling(text)
 		["N" .. TILDE] = "Ñ",
 		["u" .. DIA] = "ü",
 		["U" .. DIA] = "Ü",
-	}
+	})
 	local TEMP_I = u(0xFFF1)
 	local TEMP_U = u(0xFFF2)
 	local TEMP_Y_CONS = u(0xFFF3)
@@ -937,6 +945,8 @@ local function syllabify_from_spelling(text)
 	text = text:gsub(TEMP_GU, "gu")
 	text = text:gsub(TEMP_GU_CAPS, "Gu")
 	text = mw.ustring.toNFC(text)
+	-- FIXME, what about qualifiers from tags?
+	return {hyph = rsplit(text, "%.")}
 end
 
 
@@ -989,30 +999,31 @@ function export.show_pr(frame)
 		[1] = {list = true},
 		["rhyme"] = {},
 		["hyph"] = {},
+		["pagename"] = {},
 	}
 	local parargs = frame:getParent().args
 	local args = require("Module:parameters").process(parargs, params)
-	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
+	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
 
 	-- Parse the arguments.
 	local respellings = #args[1] > 0 and args[1] or {"+"}
 	local parsed_respellings = {}
-	local overall_rhyme = args.rhyme and rsplit(args.rhyme, "%s*,%s*") or nil
-	local overall_hyph = args.hyph and rsplit(args.hyph, "%s*,%s*") or nil
-	local iut
+	local overall_rhyme = args.rhyme and split_on_comma(args.rhyme) or nil
+	local overall_hyph = args.hyph and split_on_comma(args.hyph) or nil
+	local put
 	for i, respelling in ipairs(respellings) do
 		if respelling:find("<") then
 			local function parse_err(msg)
 				error(msg .. ": " .. i .. "= " .. respelling)
 			end
-			if not iut then
-				iut = require("Module:inflection utilities")
+			if not put then
+				put = require("Module:parse utilities")
 			end
-			local run = iut.parse_balanced_segment_run(respelling, "<", ">")
-			local terms = rsplit(run[1], "%s*,%s*")
+			local run = put.parse_balanced_segment_run(respelling, "<", ">")
+			local terms = split_on_comma(run[1])
 			for j, term in ipairs(terms) do
 				if term == "+" then
-					terms[j] = SUBPAGENAME
+					terms[j] = pagename
 				end
 			end
 			local parsed = {terms = terms, audio = {}, rhyme = {}, hyph = {}}
@@ -1043,7 +1054,7 @@ function export.show_pr(frame)
 						parsed[prefix] = arg
 					end
 				elseif prefix == "rhyme" or prefix == "hyph" then
-					local vals = rsplit(arg, "%s*,%s*")
+					local vals = split_on_comma(arg)
 					for _, val in ipairs(vals) do
 						table.insert(parsed[prefix], val)
 					end
@@ -1064,7 +1075,7 @@ function export.show_pr(frame)
 			table.insert(parsed_respellings, parsed)
 		else
 			table.insert(parsed_respellings, {
-				terms = rsplit(respelling, "%s*,%s*"),
+				terms = split_on_comma(respelling),
 				audio = {},
 				rhyme = {},
 				hyph = {},
@@ -1077,7 +1088,7 @@ function export.show_pr(frame)
 		local hyphs = {}
 		for _, hyph in ipairs(overall_hyph) do
 			if hyph == "+" then
-				m_table.insertIfNot(hyphs, syllabify_from_spelling(SUBPAGENAME))
+				m_table.insertIfNot(hyphs, syllabify_from_spelling(pagename))
 			elseif hyph == "-" then
 				hyphs = {}
 				break
@@ -1103,9 +1114,9 @@ function export.show_pr(frame)
 
 		local hyphs = {}
 		if #parsed.hyph == 0 then
-			if not overall_hyph and all_words_have_vowels(SUBPAGENAME) then
+			if not overall_hyph and all_words_have_vowels(pagename) then
 				for _, term in ipairs(parsed.terms) do
-					if term:gsub("%.", "") == SUBPAGENAME then
+					if term:gsub("%.", "") == pagename then
 						m_table.insertIfNot(hyphs, syllabify_from_spelling(term))
 					end
 				end
@@ -1130,7 +1141,7 @@ function export.show_pr(frame)
 		local function dodialect(rhyme_ret, dialect)
 			rhyme_ret.pronun[dialect] = {}
 			for _, pronun in ipairs(parsed.pronun.pronun[dialect]) do
-				if all_words_have_vowels(pronun) then
+				if all_words_have_vowels(pronun.phonemic) then
 					-- Count number of syllables by looking at syllable boundaries (including stress marks).
 					local num_syl = ulen(rsub(pronun.phonemic, "[^.ˌˈ]", "")) + 1
 					-- Get the rhyme by truncating everything up through the last stress mark + any following
@@ -1165,7 +1176,7 @@ function export.show_pr(frame)
 						end
 						table.insert(rhyme_ret.pronun[dialect], {
 							rhyme = rhyme,
-							num_syl = num_syl,
+							num_syl = {num_syl},
 							differences = rhyme_diffs,
 						})
 					end
@@ -1247,7 +1258,7 @@ function export.show_pr(frame)
 			return formatted, ulen(table.concat(formatted_for_len_parts))
 		end
 
-		return format_all_styles(rhyme_ret.expressed_styles, format_style)
+		return format_all_styles(rhyme_ret.expressed_styles, format_rhyme_style)
 	end
 
 	-- If all sets of pronunciations have the same hyphenations, display them only once at the bottom.
@@ -1256,15 +1267,15 @@ function export.show_pr(frame)
 	local all_hyph_sets_eq = true
 	for j, parsed in ipairs(parsed_respellings) do
 		if j == 1 then
-			first_hyphs = parsed.hyphs
-		elseif not m_table.deepEquals(first_hyphs, parsed.hyphs) then
+			first_hyphs = parsed.hyph
+		elseif not m_table.deepEquals(first_hyphs, parsed.hyph) then
 			all_hyph_sets_eq = false
 			break
 		end
 	end
 
 	local function format_hyphenation(hyphs, num_bullets)
-		local hyphtext = require("Module:hyphenation").format_hyphenation { lang = lang, hyphs = hyphs }
+		local hyphtext = require("Module:hyphenation").format_hyphenations { lang = lang, hyphs = hyphs }
 		return string.rep("*", num_bullets) .. " " .. hyphtext
 	end
 
@@ -1299,7 +1310,7 @@ function export.show_pr(frame)
 			table.insert(textparts, "\n")
 			table.insert(textparts, format_rhyme(parsed.rhyme, parsed.bullets + 1))
 		end
-		if not all_hyph_sets_eq and #parsed.hyphs > 0 then
+		if not all_hyph_sets_eq and #parsed.hyph > 0 then
 			table.insert(textparts, "\n")
 			table.insert(textparts, format_hyphenation(parsed.hyph, parsed.bullets + 1))
 		end
