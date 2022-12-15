@@ -80,6 +80,15 @@ local function split_on_comma(term)
 	end
 end
 
+local function substitute_plus(terms, pagename)
+	for j, term in ipairs(terms) do
+		if term == "+" then
+			terms[j] = pagename
+		end
+	end
+	return terms
+end
+
 --[=[
 About styles, dialects and isoglosses:
 
@@ -137,7 +146,7 @@ represented using {{es-pr}} as {{es-pr|blutuz<style:distincion>|blutud<style:ses
 
 -- ɟ and ĉ are used internally to represent [ʝ⁓ɟ͡ʝ] and [t͡ʃ]
 --
-function export.IPA(text, dialect, phonetic, include_syllable_markers, do_debug)
+function export.IPA(text, dialect, phonetic, do_debug)
 	local debug = {}
 
 	local distincion = dialect == "distincion-lleismo" or dialect == "distincion-yeismo"
@@ -354,7 +363,7 @@ function export.IPA(text, dialect, phonetic, include_syllable_markers, do_debug)
 		end
 
 		-- Reconstruct the word.
-		words[j] = table.concat(syllables, phonetic and "." or "")
+		words[j] = table.concat(syllables, ".")
 	end
 
 	text = table.concat(words, " ")
@@ -499,20 +508,16 @@ end
 --      (e.g. "distincion-yeismo" for distinción+yeísmo, as is common in Spain;
 --      see the comment above export.IPA() above for the full list);
 --   3. phonetic=1 specifies to generate the phonetic rather than phonemic pronunciation;
---   4. include-syllable-markers=1 specifies to include syllable markers in the phonemic output
---      (they are always included in the phonetic output);
---   5. debug=1 includes debug text in the output.
+--   4. debug=1 includes debug text in the output.
 function export.IPA_string(frame)
 	local iparams = {
 		[1] = {},
 		["style"] = {required = true},
 		["phonetic"] = {type = "boolean"},
-		["include-syllable-markers"] = {type = "boolean"},
 		["debug"] = {type = "boolean"},
 	}
 	local iargs = require("Module:parameters").process(frame.args, iparams)
-	local retval = export.IPA(iargs[1], iargs.style, iargs.phonetic,
-		iargs["include-syllable-markers"], iargs.debug)
+	local retval = export.IPA(iargs[1], iargs.style, iargs.phonetic, iargs.debug)
 	return retval.text .. (retval.debug and " ||| " .. retval.debug or "")
 end
 
@@ -785,15 +790,16 @@ local function format_all_styles(expressed_styles, format_style)
 		end
 	end
 
-	return table.concat(lines, "\n")
+	-- major hack to get bullets working on the next line
+	return table.concat(lines, "\n") .. "\n<span></span>"
 end
 
 
 local function dodialect_pronun(args, ret, dialect)
 	ret.pronun[dialect] = {}
 	for i, term in ipairs(args.terms) do
-		local phonemic = export.IPA(term, dialect, false, true, args.debug)
-		local phonetic = export.IPA(term, dialect, true, true, args.debug)
+		local phonemic = export.IPA(term, dialect, false, args.debug)
+		local phonetic = export.IPA(term, dialect, true, args.debug)
 		ret.pronun[dialect][i] = {
 			phonemic = phonemic.text,
 			phonetic = phonetic.text,
@@ -866,8 +872,12 @@ function export.show(frame)
 end
 
 
-local function hyph_object_from_syllabified_spelling(text)
-	return {hyph = rsplit(text, "%.")}
+local function split_syllabified_spelling(spelling)
+	return rsplit(spelling, "%.")
+end
+
+local function generate_hyph_obj(term)
+	return {syllabification = term, hyph = split_syllabified_spelling(term)}
 end
 
 local function syllabify_from_spelling(text)
@@ -954,7 +964,8 @@ local function syllabify_from_spelling(text)
 	text = text:gsub(TEMP_GU_CAPS, "Gu")
 	text = mw.ustring.toNFC(text)
 	-- No qualifiers from dialect tags because we assume all dialects hyphenate the same way.
-	return hyph_object_from_syllabified_spelling(text)
+	-- FIXME: There are region-specific ways of hyphenating -tl-. See above. We don't currently handle this properly.
+	return text
 end
 
 
@@ -1001,12 +1012,150 @@ local function dodialect_specified_rhymes(rhymes, hyphs, rhyme_ret, dialect)
 end
 
 
+local function parse_rhyme_hyph_homophone(arg, put, parse_err, generate_obj, param_mods)
+	local retval = {}
+
+	if arg:find("<") then
+		if not put then
+			put = require("Module:parse utilities")
+		end
+
+		local function get_valid_prefixes()
+			local valid_prefixes = {}
+			for param_mod, _ in pairs(param_mods) do
+				table.insert(valid_prefixes, param_mod)
+			end
+			table.insert(valid_prefixes, "q")
+			table.sort(valid_prefixes)
+			return valid_prefixes
+		end
+
+		local segments = put.parse_balanced_segment_run(arg, "<", ">")
+		local comma_separated_groups = put.split_alternating_runs_on_comma(segments)
+		for _, group in ipairs(comma_separated_groups) do
+			local obj = generate_obj(group[1])
+			for j = 2, #group - 1, 2 do
+				if group[j + 1] ~= "" then
+					parse_err("Extraneous text '" .. group[j + 1] .. "' after modifier")
+				end
+				local modtext = group[j]:match("^<(.*)>$")
+				if not modtext then
+					parse_err("Internal error: Modifier '" .. group[j] .. "' isn't surrounded by angle brackets")
+				end
+				local prefix, val = modtext:match("^([a-z]+):(.*)$")
+				if not prefix then
+					local valid_prefixes = get_valid_prefixes()
+					for i, valid_prefix in ipairs(valid_prefixes) do
+						valid_prefixes[i] = "'" .. valid_prefix .. ":'"
+					end
+					parse_err("Modifier " .. group[j] .. " lacks a prefix, should begin with one of " ..
+						m_table.serialCommaJoin(valid_prefixes))
+				end
+				if prefix == "q" then
+					if not obj.qualifiers then
+						obj.qualifiers = {}
+					end
+					table.insert(obj.qualifiers, val)
+				elseif param_mods[prefix] then
+					local key = param_mods[prefix].item_dest or prefix
+					if obj[key] then
+						parse_err("Modifier '" .. prefix .. "' specified more than once")
+					end
+					local convert = param_mods[prefix].convert
+					if convert then
+						obj[key] = convert(val)
+					else
+						obj[key] = val
+					end
+				else
+					local valid_prefixes = get_valid_prefixes()
+					for i, valid_prefix in ipairs(valid_prefixes) do
+						valid_prefixes[i] = "'" .. valid_prefix .. "'"
+					end
+					parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. group[j]
+						.. ", should be " .. m_table.serialCommaJoin(valid_prefixes))
+				end
+			end
+			table.insert(retval, obj)
+		end
+	else
+		for _, term in split_on_comma(arg) do
+			table.insert(retval, generate_obj(term))
+		end
+	end
+
+	return retval
+end
+
+
+local function parse_rhyme(arg, put, parse_err)
+	local function generate_obj(term)
+		return {rhyme = term}
+	end
+	local param_mods = {
+		s = {
+			item_dest = "num_syl",
+			convert = function(arg)
+				local nsyls = rsplit(arg, ",")
+				for i, nsyl in ipairs(nsyls) do
+					if not nsyl:find("^[0-9]+$") then
+						parse_err("Number of syllables '" .. nsyl .. "' should be numeric")
+					end
+					nsyls[i] = tonumber(nsyl)
+				end
+				return nsyls
+			end,
+		},
+	}
+
+	return parse_rhyme_hyph_homophone(arg, put, parse_err, generate_obj, param_mods)
+end
+
+
+local function parse_hyph(arg, put, parse_err)
+	-- None other than qualifiers
+	local param_mods = {}
+
+	return parse_rhyme_hyph_homophone(arg, put, parse_err, generate_hyph_obj, param_mods)
+end
+
+
+local function parse_homophone(arg, put, parse_err)
+	local function generate_obj(term)
+		return {term = term}
+	end
+	local param_mods = {
+		t = {
+			-- We need to store the <t:...> inline modifier into the "gloss" key of the parsed term,
+			-- because that is what [[Module:links]] (called from [[Module:homophones]]) expects.
+			item_dest = "gloss",
+		},
+		gloss = {},
+		pos = {},
+		alt = {},
+		lit = {},
+		id = {},
+		g = {
+			-- We need to store the <g:...> inline modifier into the "genders" key of the parsed term,
+			-- because that is what [[Module:links]] (called from [[Module:homophones]]) expects.
+			item_dest = "genders",
+			convert = function(arg)
+				return rsplit(arg, ",")
+			end,
+		},
+	}
+
+	return parse_rhyme_hyph_homophone(arg, put, parse_err, generate_obj, param_mods)
+end
+
+
 -- External entry point for {{es-pr}}.
 function export.show_pr(frame)
 	local params = {
 		[1] = {list = true},
 		["rhyme"] = {},
 		["hyph"] = {},
+		["hmp"] = {},
 		["pagename"] = {},
 	}
 	local parargs = frame:getParent().args
@@ -1016,8 +1165,14 @@ function export.show_pr(frame)
 	-- Parse the arguments.
 	local respellings = #args[1] > 0 and args[1] or {"+"}
 	local parsed_respellings = {}
-	local overall_rhyme = args.rhyme and split_on_comma(args.rhyme) or nil
-	local overall_hyph = args.hyph and split_on_comma(args.hyph) or nil
+	local function overall_parse_err(msg, arg, val)
+		error(msg .. ": " .. arg .. "= " .. val)
+	local overall_rhyme = args.rhyme and
+		parse_rhyme(args.rhyme, nil, function(msg) overall_parse_err(msg, "rhyme", args.rhyme) end) or nil
+	local overall_hyph = args.hyph and
+		parse_hyph(args.hyph, nil, function(msg) overall_parse_err(msg, "hyph", args.hyph) end) or nil
+	local overall_hmp = args.hmp and
+		parse_homophone(args.hmp, nil, function(msg) overall_parse_err(msg, "hmp", args.hmp) end) or nil
 	local put
 	for i, respelling in ipairs(respellings) do
 		if respelling:find("<") then
@@ -1028,12 +1183,7 @@ function export.show_pr(frame)
 				put = require("Module:parse utilities")
 			end
 			local run = put.parse_balanced_segment_run(respelling, "<", ">")
-			local terms = split_on_comma(run[1])
-			for j, term in ipairs(terms) do
-				if term == "+" then
-					terms[j] = pagename
-				end
-			end
+			local terms = substitute_plus(split_on_comma(run[1]), pagename)
 			local parsed = {terms = terms, audio = {}, rhyme = {}, hyph = {}}
 			for j = 2, #run - 1, 2 do
 				if run[j + 1] ~= "" then
@@ -1046,7 +1196,7 @@ function export.show_pr(frame)
 				local prefix, arg = modtext:match("^([a-z]+):(.*)$")
 				if not prefix then
 					parse_err("Modifier " .. run[j] .. " lacks a prefix, should begin with one of " ..
-						"'pre', 'post', 'ref', 'bullets', 'audio', 'rhyme', 'hyph' or 'style'")
+						"'pre', 'post', 'ref', 'bullets', 'audio', 'rhyme', 'hyph', 'hmp' or 'style'")
 				end
 				if prefix == "pre" or prefix == "post" or prefix == "ref" or prefix == "bullets"
 					or prefix == "style" then
@@ -1061,8 +1211,10 @@ function export.show_pr(frame)
 					else
 						parsed[prefix] = arg
 					end
-				elseif prefix == "rhyme" or prefix == "hyph" then
-					local vals = split_on_comma(arg)
+				elseif prefix == "rhyme" or prefix == "hyph" or prefix == "hmp" then
+					local parse_fun = prefix == "rhyme" and parse_rhyme or prefix == "hyph" and parse_hyph or
+						parse_homophone
+					local vals = parse_fun(arg, put, parse_err)
 					for _, val in ipairs(vals) do
 						table.insert(parsed[prefix], val)
 					end
@@ -1083,7 +1235,7 @@ function export.show_pr(frame)
 			table.insert(parsed_respellings, parsed)
 		else
 			table.insert(parsed_respellings, {
-				terms = split_on_comma(respelling),
+				terms = substitute_plus(split_on_comma(respelling), pagename),
 				audio = {},
 				rhyme = {},
 				hyph = {},
@@ -1095,16 +1247,14 @@ function export.show_pr(frame)
 	if overall_hyph then
 		local hyphs = {}
 		for _, hyph in ipairs(overall_hyph) do
-			if hyph == "+" then
-				m_table.insertIfNot(hyphs, syllabify_from_spelling(pagename))
-			elseif hyph == "-" then
-				hyphs = {}
+			if hyph.syllabification == "+" then
+				hyph.syllabification = syllabify_from_spelling(pagename)
+				hyph.hyph = split_syllabified_spelling(hyph.syllabification)
+			elseif hyph.syllabification == "-" then
+				overall_hyph = {}
 				break
-			else
-				m_table.insertIfNot(hyphs, hyph_object_from_syllabified_spelling(hyph))
 			end
 		end
-		overall_hyph = hyphs
 	end
 
 	-- Loop over individual respellings, processing each.
@@ -1120,30 +1270,28 @@ function export.show_pr(frame)
 
 		local this_no_rhyme = m_table.contains(parsed.rhyme, "-")
 
-		local hyphs = {}
 		if #parsed.hyph == 0 then
 			if not overall_hyph and all_words_have_vowels(pagename) then
 				for _, term in ipairs(parsed.terms) do
 					if term:gsub("%.", "") == pagename then
-						m_table.insertIfNot(hyphs, syllabify_from_spelling(term))
+						m_table.insertIfNot(hyphs, generate_hyph_obj(syllabify_from_spelling(term)))
 					end
 				end
 			end
 		else
 			for _, hyph in ipairs(parsed.hyph) do
-				if hyph == "+" then
+				if hyph.syllabification == "+" then
 					for _, term in ipairs(parsed.terms) do
+						hyph.syllabification = syllabify_from_spelling(term)
+						hyph.hyph = split_syllabified_spelling(hyph.syllabification)
 						m_table.insertIfNot(hyphs, syllabify_from_spelling(term))
 					end
-				elseif hyph == "-" then
-					hyphs = {}
+				elseif hyph.syllabification == "-" then
+					parsed.hyph = {}
 					break
-				else
-					m_table.insertIfNot(hyphs, hyph_object_from_syllabified_spelling(hyph))
 				end
 			end
 		end
-		parsed.hyph = hyphs
 
 		-- Generate the rhymes.
 		local function dodialect_rhymes_from_pronun(rhyme_ret, dialect)
@@ -1298,14 +1446,19 @@ function export.show_pr(frame)
 		end
 	end
 
-	local function format_hyphenation(hyphs, num_bullets)
+	local function format_hyphenations(hyphs, num_bullets)
 		local hyphtext = require("Module:hyphenation").format_hyphenations { lang = lang, hyphs = hyphs }
 		return string.rep("*", num_bullets) .. " " .. hyphtext
 	end
 
-	local function format_audio(audio, num_bullets)
+	local function format_homophones(hmps, num_bullets)
+		local hmptext = require("Module:homophones").format_homophones { lang = lang, homophones = hmps }
+		return string.rep("*", num_bullets) .. " " .. hmptext
+	end
+
+	local function format_audio(audios, num_bullets)
 		local ret = {}
-		for i, a in ipairs(audio) do
+		for i, audio in ipairs(audios) do
 			-- FIXME! There should be a module for this.
 			table.insert(ret, string.rep("*", num_bullets) .. " " .. frame:expandTemplate {
 				title = "audio", args = {"es", audio.file, audio.gloss }})
@@ -1336,7 +1489,7 @@ function export.show_pr(frame)
 		end
 		if not all_hyph_sets_eq and #parsed.hyph > 0 then
 			table.insert(textparts, "\n")
-			table.insert(textparts, format_hyphenation(parsed.hyph, parsed.bullets + 1))
+			table.insert(textparts, format_hyphenations(parsed.hyph, parsed.bullets + 1))
 		end
 	end
 	if all_rhyme_sets_eq and first_rhyme_ret then
@@ -1349,11 +1502,11 @@ function export.show_pr(frame)
 	end
 	if all_hyph_sets_eq and #first_hyphs > 0 then
 		table.insert(textparts, "\n")
-		table.insert(textparts, format_hyphenation(first_hyphs, min_num_bullets))
+		table.insert(textparts, format_hyphenations(first_hyphs, min_num_bullets))
 	end
 	if overall_hyph and #overall_hyph > 0 then
 		table.insert(textparts, "\n")
-		table.insert(textparts, format_hyphenation(overall_hyph, min_num_bullets))
+		table.insert(textparts, format_hyphenations(overall_hyph, min_num_bullets))
 	end
 
 	return table.concat(textparts)
