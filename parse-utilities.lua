@@ -3,6 +3,7 @@ local export = {}
 local m_string_utilities = require("Module:string utilities")
 
 local rsplit = mw.text.split
+local u = mw.ustring.char
 local rsubn = mw.ustring.gsub
 
 -- version of rsubn() that discards all but the first return value
@@ -247,6 +248,35 @@ function export.split_alternating_runs_and_frob_raw_text(run, splitchar, frob, p
 	local split_runs = export.split_alternating_runs(run, splitchar, preserve_splitchar)
 	export.frob_raw_text_alternating_runs(split_runs, frob, preserve_splitchar)
 	return split_runs
+end
+
+
+-- Split the non-modifier parts of an alternating run (after parse_balanced_segment_run() is called) on comma, but not
+-- on comma+whitespace.
+function export.split_alternating_runs_on_comma(run, tempcomma)
+	tempcomma = tempcomma or u(0xFFF0)
+
+	-- First replace comma with a temporary character in comma+whitespace sequences.
+	local need_tempcomma_undo = false
+	for i, seg in ipairs(run) do
+		if i % 2 == 1 then
+			if seg:find(",%s") then
+				run[i] = run[i]:gsub(",(%s)", tempcomma .. "%1")
+				need_tempcomma_undo = true
+			end
+		end
+	end
+
+	if need_tempcomma_undo then
+		function unescape_comma_whitespace(val)
+			-- Undo the replacement of comma with a temporary char.
+			val = val:gsub(tempcomma, ",") -- assign to temp to discard second retval
+			return val
+		end
+		return export.split_alternating_runs_and_frob_raw_text(run, ",", unescape_comma_whitespace)
+	else
+		return export.split_alternating_runs(run, ",")
+	end
 end
 
 
