@@ -5,7 +5,7 @@ Author: benwing2
 
 FIXME:
 
-1. Port latest changes to production module.
+1. Port latest changes to production module. [DONE]
 2. Finish work on rhymes and hyphenation. [DONE]
 3. Handle <hmp:...> for homophones. [DONE]
 4. Don't add comma before phonetic IPA. [DONE]
@@ -236,8 +236,19 @@ function export.IPA(text, dialect, phonetic)
 
 	--determining whether "y" is a consonant or a vowel
 	text = rsub(text, "y(" .. V .. ")", "ɟ%1") -- not the real sound
-	text = rsub(text, "uy#", "uY#") -- a temporary symbol; replaced with i below
+	-- word-final -ay/-ey/-oy/-uy is stressed whereas word-final -ai/-ei/-oi/-ui is not; in addition,
+	-- word-final -uy is /uj/ whereas word-final -ui is /wi/ (e.g. [[muy]] vs. [[fui]])
+	text = rsub(text, "([aeou])y#", "%1Y#") -- a temporary symbol; replaced with i below
 	text = rsub(text, "y", "i")
+
+	-- handle certain combinations; sh handling needs to go before x handling to avoid issues with [[exhausto]]
+	text = rsub(text, "ch", "ĉ") --not the real sound
+	-- We want to keep desh- ([[deshuesar]]) as-is. Converting to des- won't work because we want it syllabified as
+	-- 'des.we.saɾ' not #'de.swe.saɾ' (cf. [[desuelo]] /de.swe.lo/ from [[desolar]]).
+	text = rsub(text, "#desh", "!") --temporary symbol
+	text = rsub(text, "sh", "ʃ")
+	text = rsub(text, "!", "#desh") --restore
+	text = rsub(text, "#p([st])", "#%1") -- [[psicología]], [[pterodáctilo]]
 
 	--x
 	text = rsub(text, "#x", "#s") -- xenofobia, xilófono, etc.
@@ -259,25 +270,22 @@ function export.IPA(text, dialect, phonetic)
 	end
 
 	--alphabet-to-phoneme
-	text = rsub(text, "ch", "ĉ") --not the real sound
-	-- We want to keep desh- ([[deshuesar]]) as-is. Converting to des- won't work because we want it syllabified as
-	-- 'des.we.saɾ' not #'de.swe.saɾ' (cf. [[desuelo]] /de.swe.lo/ from [[desolar]]).
-	text = rsub(text, "#desh", "!") --temporary symbol
-	text = rsub(text, "sh", "ʃ")
-	text = rsub(text, "!", "#desh") --restore
-	text = rsub(text, "#p([st])", "#%1") -- [[psicología]], [[pterodáctilo]]
 	text = rsub(text, "[cgjñrvy]",
 		--["g"]="ɡ":  U+0067 LATIN SMALL LETTER G → U+0261 LATIN SMALL LETTER SCRIPT G
 		{["c"]="k", ["g"]="ɡ", ["j"]="x", ["ñ"]="ɲ", ["r"]="ɾ", ["v"]="b" })
 	text, initial_hi = rsubb(text, "#h?i(" .. V .. ")", rioplat and "#j%1" or "#ɟ%1")
 
+	-- handle double consonants that have a pronunciation different from their single equivalents
 	-- double l
 	text, lleismo_different = rsubb(text, "ll", lleismo and "ʎ" or "ɟ")
-
-	-- trill in #r, lr, nr, sr, rr
+	-- trill in #r, lr ([[alrededor]], [[malrotar]]), nr ([[enriquecer]], [[sonrisa]], etc.), sr ([[Israel]],
+	-- [[desregular]], etc.), zr ([[Azrael]], [[cruzrojista]]), rr
 	text = rsub(text, "ɾɾ", "r")
-	-- FIXME: does this also apply to /θr/ (e.g. [[Azrael]], [[cruzrojista]])?
-	text = rsub(text, "([#lnsz])ɾ", "%1r")
+	text = rsub(text, "([#lnszθ])ɾ", "%1r")
+	-- double n (ennoblecer...)
+	text = rsub(text, "nn", "N")
+	-- double b (subbase...)
+	text = rsub(text, "bb", "B")
 
 	-- reduce any remaining double consonants ([[Addis Abeba]], [[cappa]], [[descender]] in Latin America ...);
 	-- do this before handling of -nm- e.g. in [[inmigración]], which generates a double consonant, and do this
@@ -285,6 +293,10 @@ function export.IPA(text, dialect, phonetic)
 	text = rsub(text, "(" .. C .. ")%1", "%1")
 	-- also reduce sz (Latin American in [[fascinante]], etc.)
 	text = rsub(text, "sz", "s")
+
+	-- restore double n, b
+	text = rsub(text, "N", "nn")
+	text = rsub(text, "B", "bb")
 
 	-- voiceless stop to voiced before obstruent or nasal; but intercept -ts-, -tz-
 	local voice_stop = { ["p"] = "b", ["t"] = "d", ["k"] = "ɡ" }
@@ -294,6 +306,9 @@ function export.IPA(text, dialect, phonetic)
 	text = rsub(text, "!", "t")
 
 	text = rsub(text, "n([# .]*[bpm])", "m%1")
+
+	-- remove silent h before syllable division
+	text = rsub(text, "h", "")
 
 	--syllable division
 	local vowel_to_glide = { ["i"] = "j", ["u"] = "w" }
@@ -325,8 +340,8 @@ function export.IPA(text, dialect, phonetic)
 	text = rsub_repeatedly(text, "(u" .. accent_c .. "*)(h?u)", "%1.%2")
 
 	--diphthongs
-	text = rsub(text, "ih?([aeou])", "j%1")
-	text = rsub(text, "uh?([aeio])", "w%1")
+	text = rsub(text, "i([aeou])", "j%1")
+	text = rsub(text, "u([aeio])", "w%1")
 
 	local accent_to_stress_mark = { [AC] = "ˈ", [GR] = "ˌ", [CFLEX] = "" }
 
@@ -342,7 +357,7 @@ function export.IPA(text, dialect, phonetic)
 			end
 		else
 			-- Default stress rule. Words without vowels (e.g. IPA foot boundaries) don't get stress.
-			if #syllables > 1 and rfind(word, "[^aeiouns#]#") or #syllables == 1 and rfind(word, "[aeiou]") then
+			if #syllables > 1 and (rfind(word, "[^" .. vowel .. "ns#]#") or rfind(word, C .. "[ns]#")) or #syllables == 1 and rfind(word, V) then
 				syllables[#syllables] = "ˈ" .. syllables[#syllables]
 			elseif #syllables > 1 then
 				syllables[#syllables - 1] = "ˈ" .. syllables[#syllables - 1]
@@ -483,14 +498,13 @@ function export.IPA(text, dialect, phonetic)
 		end
 	end
 
-	-- remove silent "h" and convert fake symbols to real ones
+	-- convert fake symbols to real ones
 	local final_conversions =  {
-		["h"] = "",   -- silent "h"
 		["ħ"] = "h",  -- fake aspirated "h" to real "h"
 		["ĉ"] = "t͡ʃ", -- fake "ch" to real "ch"
 		["ɟ"] = phonetic and "ɟ͡ʝ" or "ʝ", -- fake "y" to real "y"
 	}
-	text = rsub(text, "[hħĉɟ]", final_conversions)
+	text = rsub(text, "[ħĉɟ]", final_conversions)
 
 	-- remove # symbols at word and text boundaries
 	text = rsub(text, "#", "")
