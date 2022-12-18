@@ -174,6 +174,112 @@ local function construct_default_differences(dialect)
 	return nil
 end
 
+-- Main syllable-division algorithm. Can be called either directly on spelling (when hyphenating) or after
+-- non-trivial processing of respelling in the direction of pronunciation (when generating pronunciation).
+local function syllabify_from_spelling_or_pronun(text, is_spelling)
+	local vowel_to_glide = is_spelling and { ["i"] = TEMP_I, ["u"] = TEMP_U } or { ["i"] = "j", ["u"] = "w" }
+	-- i and u between vowels -> consonant-like substitutions: [[paranoia]], [[baiano]], [[abreuense]], [[alauita]],
+	-- [[Malaui]], etc.; also with h, as in [[marihuana]], [[parihuela]], [[antihielo]], [[pelluhuano]], [[náhuatl]],
+	-- etc.
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*h?)([iu])(" .. V .. ")",
+		function (v1, iu, v2) return v1 .. vowel_to_glide[iu] .. v2 end
+	)
+    -- Divide before the last consonant (possibly followed by a glide). We then move the syllable division marker
+    -- leftwards over clusters that can form onsets.
+	-- Divide VCV as V.CV; but don't divide if C == h, e.g. [[prohibir]] should be prohi.bir.
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C_NOT_H .. W .. "?" .. V .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. V .. ")", "%1.%2")
+	-- Puerto Rico + most of Spain divide tl as t.l. Mexico and the Canary Islands have .tl. Unclear what other regions
+	-- do. Here we choose to go with .tl. See https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf
+	-- and https://www.spanishdict.com/guide/spanish-syllables-and-syllabification-rules.
+	-- NOTE: When run on pronun, we have already eliminated c and v, but not when run on spelling.
+	-- When run on pronun, don't include r, which at this point represents the trill.
+	local cluster_r = is_spelling and "rɾ" or "ɾ"
+	local cluster_resonant = "[l" .. cluster_r .. "]"
+	text = rsub(text, "([pbfvkctg])%.([l" .. cluster_r .. "])", ".%1%2")
+	text = text:gsub("d%.([" .. cluster_r .. "])", ".d%1")
+	-- Per https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf, tl at the end of a word
+	-- (as in nahuatl, Popocatepetl etc.) is divided .tl from the previous vowel.
+	if is_spelling then
+		text = text:gsub("([^. %-])tl$", "%1.tl")
+		text = text:gsub("([^. %-])(tl[ %-])", "%1.%2")
+	else
+		text = text:gsub("([^.#])tl#", "%1.tl")
+	end
+	-- Any aeo, or stressed iuüy, should be syllabically divided from a following aeo or stressed iuüy.
+	text = rsub_repeatedly(text, "([aeoAEO]" .. accent_c .. "*)(h?[aeo])", "%1.%2")
+	text = rsub_repeatedly(text, "([aeoAEO]" .. accent_c .. "*)(h?" .. V .. stress_c .. ")", "%1.%2")
+	text = rsub(text, "([iuüyIUÜY]" .. stress_c .. ")(h?[aeo])", "%1.%2")
+	text = rsub_repeatedly(text, "([iuüyIUÜY]" .. stress_c .. ")(h?" .. V .. stress_c .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "([iI]" .. accent_c .. "*)(h?i)", "%1.%2")
+	text = rsub_repeatedly(text, "([uU]" .. accent_c .. "*)(h?u)", "%1.%2")
+	return text
+end
+
+local function syllabify_from_spelling(text)
+	-- decompose everything but ñ and ü
+	text = mw.ustring.toNFD(text)
+	text = rsub(text, ".[" .. TILDE .. DIA .. "]", {
+		["n" .. TILDE] = "ñ",
+		["N" .. TILDE] = "Ñ",
+		["u" .. DIA] = "ü",
+		["U" .. DIA] = "Ü",
+	})
+	local TEMP_I = u(0xFFF1)
+	local TEMP_U = u(0xFFF2)
+	local TEMP_Y_CONS = u(0xFFF3)
+	local TEMP_CH = u(0xFFF4)
+	local TEMP_LL = u(0xFFF5)
+	local TEMP_RR = u(0xFFF6)
+	local TEMP_QU = u(0xFFF7)
+	local TEMP_QU_CAPS = u(0xFFF8)
+	local TEMP_GU = u(0xFFF9)
+	local TEMP_GU_CAPS = u(0xFFFA)
+	local TEMP_SH = u(0xFFFB)
+	local TEMP_DESH = u(0xFFFC)
+	local vowel = "aeiouüyAEIOUÜY"
+	local V = "[" .. vowel .. "]" -- vowel class
+	local separator = accent .. ipa_stress .. "# %-." .. SYLDIV
+	local C = "[^" .. vowel .. separator .. "]" -- consonant class including h
+	local C_NOT_H = "[^" .. vowel .. separator .. "h]" -- consonant class not including h
+	-- Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
+	text = text:gsub("%.", SYLDIV)
+	text = rsub(text, "y(" .. V .. ")", TEMP_Y_CONS .. "%1")
+	-- We don't want to break -sh- except in desh-, e.g. [[deshuesar]], [[deshonra]], [[deshecho]].
+	text = text:gsub("^([Dd])esh", "%1" .. TEMP_DESH)
+	text = text:gsub("([ %-][Dd])esh", "%1" .. TEMP_DESH)
+	text = text:gsub("sh", TEMP_SH)
+	text = text:gsub(TEMP_DESH, "esh")
+	text = text:gsub("ch", TEMP_CH)
+	text = text:gsub("ll", TEMP_LL)
+	text = text:gsub("rr", TEMP_RR)
+	-- qu mostly handled correctly automatically, but not in quietud
+	text = rsub(text, "qu(" .. V .. ")", TEMP_QU .. "%1")
+	text = rsub(text, "Qu(" .. V .. ")", TEMP_QU_CAPS .. "%1")
+	text = rsub(text, "gu(" .. V .. ")", TEMP_GU .. "%1")
+	text = rsub(text, "Gu(" .. V .. ")", TEMP_GU_CAPS .. "%1")
+
+	text = syllabify_from_spelling_or_pronun(text, "is spelling")
+
+	text = text:gsub(SYLDIV, ".")
+	text = text:gsub(TEMP_I, "i")
+	text = text:gsub(TEMP_U, "u")
+	text = text:gsub(TEMP_Y_CONS, "y")
+	text = text:gsub(TEMP_CH, "ch")
+	text = text:gsub(TEMP_SH, "sh")
+	text = text:gsub(TEMP_LL, "ll")
+	text = text:gsub(TEMP_RR, "rr")
+	text = text:gsub(TEMP_QU, "qu")
+	text = text:gsub(TEMP_QU_CAPS, "Qu")
+	text = text:gsub(TEMP_GU, "gu")
+	text = text:gsub(TEMP_GU_CAPS, "Gu")
+	text = mw.ustring.toNFC(text)
+	-- No qualifiers from dialect tags because we assume all dialects hyphenate the same way.
+	-- FIXME: There are region-specific ways of hyphenating -tl-. See above. We don't currently handle this properly.
+	return text
+end
+
+
 -- Generate the IPA of a given respelling, where a respelling is the representation of the pronunciation of a given
 -- Spanish term using Spanish spelling conventions (augmented in a few cases with extra conventions such as 'sh' for
 -- /ʃ/).
@@ -256,9 +362,9 @@ function export.IPA(text, dialect, phonetic)
 
 	--c, g, q
 	text = rsub(text, "c([ie])", (distincion and "θ" or "z") .. "%1") -- not the real LatAm sound
-	text = rsub(text, "gü([ie])", "ɡw%1")
-	text = rsub(text, "gu([ie])", "ɡ%1") -- special IPA g, not normal g
 	text = rsub(text, "g([ie])", "x%1") -- must happen after handling of x above
+	text = rsub(text, "gu([ie])", "g%1")
+	text = rsub(text, "gü([ie])", "gu%1")
 	-- following must happen before stress assignment; [[branding]] has initial stress like 'brandin'
 	text = rsub(text, "ng([^aeiouüwhlr])", "n%1") -- [[Bangkok]], [[ángstrom]], [[branding]]
 	text = rsub(text, "qu([ie])", "k%1")
@@ -271,8 +377,7 @@ function export.IPA(text, dialect, phonetic)
 
 	--alphabet-to-phoneme
 	text = rsub(text, "[cgjñrvy]",
-		--["g"]="ɡ":  U+0067 LATIN SMALL LETTER G → U+0261 LATIN SMALL LETTER SCRIPT G
-		{["c"]="k", ["g"]="ɡ", ["j"]="x", ["ñ"]="ɲ", ["r"]="ɾ", ["v"]="b" })
+		{["c"]="k", ["j"]="x", ["ñ"]="ɲ", ["r"]="ɾ", ["v"]="b" })
 	text, initial_hi = rsubb(text, "#h?i(" .. V .. ")", rioplat and "#j%1" or "#ɟ%1")
 
 	-- handle double consonants that have a pronunciation different from their single equivalents
@@ -299,7 +404,7 @@ function export.IPA(text, dialect, phonetic)
 	text = rsub(text, "B", "bb")
 
 	-- voiceless stop to voiced before obstruent or nasal; but intercept -ts-, -tz-
-	local voice_stop = { ["p"] = "b", ["t"] = "d", ["k"] = "ɡ" }
+	local voice_stop = { ["p"] = "b", ["t"] = "d", ["k"] = "g" }
 	text = rsub(text, "t(" .. separator_c .. "*[szθ])", "!%1") -- temporary symbol
 	text = rsub(text, "([ptk])(" .. separator_c .. "*" .. T .. ")",
 		function(stop, after) return voice_stop[stop] .. after end)
@@ -311,35 +416,9 @@ function export.IPA(text, dialect, phonetic)
 	text = rsub(text, "h", "")
 
 	--syllable division
-	local vowel_to_glide = { ["i"] = "j", ["u"] = "w" }
-	-- i and u between vowels -> consonant-like substitutions: [[paranoia]], [[baiano]], [[abreuense]], [[alauita]],
-	-- [[Malaui]], etc.; also with h, as in [[marihuana]], [[parihuela]], [[antihielo]], [[pelluhuano]], [[náhuatl]],
-	-- etc.
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*h?)([iu])(" .. V .. ")",
-		function (v1, iu, v2) return v1 .. vowel_to_glide[iu] .. v2 end
-	)
-	-- Divide VCV as V.CV; but don't divide if C == h, e.g. [[prohibir]] should be prohi.bir.
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C_NOT_H .. W .. "?" .. V .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
-	-- Puerto Rico + most of Spain divide tl as t.l. Mexico and the Canary Islands have .tl. Unclear what other regions
-	-- do. Here we choose to go with .tl. See https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf
-	-- and https://www.spanishdict.com/guide/spanish-syllables-and-syllabification-rules.
-	text = rsub(text, "([pbfktɡ])%.([lɾ])", ".%1%2")
-	text = text:gsub("d%.ɾ", ".dɾ")
-	-- Per https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf, tl at the end of a word
-	-- (as in nahuatl, Popocatepetl etc.) is divided .tl from the previous vowel.
-	text = text:gsub("([^.#])tl#", "%1.tl")
-	text = rsub_repeatedly(text, "(" .. C .. ")%.s(" .. C .. ")", "%1s.%2")
-	-- Any aeo, or stressed iu, should be syllabically divided from a following aeo or stressed iu.
-	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)(h?[aeo])", "%1.%2")
-	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)(h?" .. V .. stress_c .. ")", "%1.%2")
-	text = rsub(text, "([iu]" .. stress_c .. ")(h?[aeo])", "%1.%2")
-	text = rsub_repeatedly(text, "([iu]" .. stress_c .. ")(h?" .. V .. stress_c .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "(i" .. accent_c .. "*)(h?i)", "%1.%2")
-	text = rsub_repeatedly(text, "(u" .. accent_c .. "*)(h?u)", "%1.%2")
+	text = syllabify_from_spelling_or_pronun(text, false)
 
-	--diphthongs
+	--diphthongs; do not include Y here
 	text = rsub(text, "i([aeou])", "j%1")
 	text = rsub(text, "u([aeio])", "w%1")
 
@@ -425,7 +504,7 @@ function export.IPA(text, dialect, phonetic)
 	--phonetic transcription
 	if phonetic then
 		-- θ, s, f before voiced consonants
-		local voiced = "mnɲbdɟɡʎ"
+		local voiced = "mnɲbdɟgʎ"
 		local r = "ɾr"
 		local tovoiced = {
 			["θ"] = "θ̬",
@@ -440,9 +519,9 @@ function export.IPA(text, dialect, phonetic)
 
 		-- fricative vs. stop allophones; first convert stops to fricatives, then back to stops
 		-- after nasals and sometimes after l
-		local stop_to_fricative = {["b"] = "β", ["d"] = "ð", ["ɟ"] = "ʝ", ["ɡ"] = "ɣ"}
-		local fricative_to_stop = {["β"] = "b", ["ð"] = "d", ["ʝ"] = "ɟ", ["ɣ"] = "ɡ"}
-		text = rsub(text, "[bdɟɡ]", stop_to_fricative)
+		local stop_to_fricative = {["b"] = "β", ["d"] = "ð", ["ɟ"] = "ʝ", ["g"] = "ɣ"}
+		local fricative_to_stop = {["β"] = "b", ["ð"] = "d", ["ʝ"] = "ɟ", ["ɣ"] = "g"}
+		text = rsub(text, "[bdɟg]", stop_to_fricative)
 		text = rsub(text, "([mnɲ]" .. separator_c .. "*)([βɣ])",
 			function(nasal, fricative) return nasal .. fricative_to_stop[fricative] end
 		)
@@ -465,7 +544,7 @@ function export.IPA(text, dialect, phonetic)
 			["ʃ"] = alveolopalatal,
 			["ʒ"] = alveolopalatal,
 			["ɟ"] = palatal, ["ʎ"] = palatal,
-			["k"] = velar, ["x"] = velar, ["ɡ"] = velar,
+			["k"] = velar, ["x"] = velar, ["g"] = velar,
 		}
 		text = rsub(text, "n(" .. separator_c .. "*)(.)",
 			function(stress, following) return (nasal_assimilation[following] or "n") .. stress .. following end
@@ -503,8 +582,10 @@ function export.IPA(text, dialect, phonetic)
 		["ħ"] = "h",  -- fake aspirated "h" to real "h"
 		["ĉ"] = "t͡ʃ", -- fake "ch" to real "ch"
 		["ɟ"] = phonetic and "ɟ͡ʝ" or "ʝ", -- fake "y" to real "y"
+		-- do the following at the very end so we can use regular g throughout
+		["g"] = "ɡ", -- U+0067 LATIN SMALL LETTER G → U+0261 LATIN SMALL LETTER SCRIPT G
 	}
-	text = rsub(text, "[ħĉɟ]", final_conversions)
+	text = rsub(text, "[ħĉɟg]", final_conversions)
 
 	-- remove # symbols at word and text boundaries
 	text = rsub(text, "#", "")
@@ -1017,96 +1098,9 @@ local function split_syllabified_spelling(spelling)
 	return rsplit(spelling, "%.")
 end
 
+
 local function generate_hyph_obj(term)
 	return {syllabification = term, hyph = split_syllabified_spelling(term)}
-end
-
-local function syllabify_from_spelling(text)
-	-- decompose everything but ñ and ü
-	text = mw.ustring.toNFD(text)
-	text = rsub(text, ".[" .. TILDE .. DIA .. "]", {
-		["n" .. TILDE] = "ñ",
-		["N" .. TILDE] = "Ñ",
-		["u" .. DIA] = "ü",
-		["U" .. DIA] = "Ü",
-	})
-	local TEMP_I = u(0xFFF1)
-	local TEMP_U = u(0xFFF2)
-	local TEMP_Y_CONS = u(0xFFF3)
-	local TEMP_CH = u(0xFFF4)
-	local TEMP_LL = u(0xFFF5)
-	local TEMP_RR = u(0xFFF6)
-	local TEMP_QU = u(0xFFF7)
-	local TEMP_QU_CAPS = u(0xFFF8)
-	local TEMP_GU = u(0xFFF9)
-	local TEMP_GU_CAPS = u(0xFFFA)
-	local TEMP_SH = u(0xFFFB)
-	local TEMP_DESH = u(0xFFFC)
-	local vowel = "aeiouüyAEIOUÜY"
-	local V = "[" .. vowel .. "]" -- vowel class
-	local separator = accent .. ipa_stress .. "# %-." .. SYLDIV
-	local C = "[^" .. vowel .. separator .. "]" -- consonant class including h
-	local C_NOT_H = "[^" .. vowel .. separator .. "h]" -- consonant class not including h
-	-- Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
-	text = text:gsub("%.", SYLDIV)
-	text = rsub(text, "y(" .. V .. ")", TEMP_Y_CONS .. "%1")
-	-- We don't want to break -sh- except in desh-, e.g. [[deshuesar]], [[deshonra]], [[deshecho]].
-	text = text:gsub("^([Dd])esh", "%1" .. TEMP_DESH)
-	text = text:gsub("([ %-][Dd])esh", "%1" .. TEMP_DESH)
-	text = text:gsub("sh", TEMP_SH)
-	text = text:gsub(TEMP_DESH, "esh")
-	text = text:gsub("ch", TEMP_CH)
-	text = text:gsub("ll", TEMP_LL)
-	text = text:gsub("rr", TEMP_RR)
-	-- qu mostly handled correctly automatically, but not in quietud
-	text = rsub(text, "qu(" .. V .. ")", TEMP_QU .. "%1")
-	text = rsub(text, "Qu(" .. V .. ")", TEMP_QU_CAPS .. "%1")
-	text = rsub(text, "gu(" .. V .. ")", TEMP_GU .. "%1")
-	text = rsub(text, "Gu(" .. V .. ")", TEMP_GU_CAPS .. "%1")
-	local vowel_to_glide = { ["i"] = TEMP_I, ["u"] = TEMP_U }
-	-- i and u between vowels -> consonant-like substitutions: [[paranoia]], [[baiano]], [[abreuense]], [[alauita]],
-	-- [[Malaui]], etc.; also with h, as in [[marihuana]], [[parihuela]], [[antihielo]], [[pelluhuano]], [[náhuatl]],
-	-- etc.
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*h?)([iu])(" .. V .. ")",
-		function (v1, iu, v2) return v1 .. vowel_to_glide[iu] .. v2 end
-	)
-	-- Divide VCV as V.CV; but don't divide if C == h, e.g. [[prohibir]] should be prohi.bir.
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C_NOT_H .. V .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
-	-- Puerto Rico + most of Spain divide tl as t.l. Mexico and the Canary Islands have .tl. Unclear what other regions
-	-- do. Here we choose to go with .tl. See https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf
-	-- and https://www.spanishdict.com/guide/spanish-syllables-and-syllabification-rules.
-	text = rsub(text, "([pbfvkctg])%.([lr])", ".%1%2")
-	text = text:gsub("d%.r", ".dr")
-	-- Per https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf, tl at the end of a word
-	-- (as in nahuatl, Popocatepetl etc.) is divided .tl from the previous vowel.
-	text = text:gsub("([^. %-])tl$", "%1.tl")
-	text = text:gsub("([^. %-])(tl[ %-])", "%1.%2")
-	text = rsub_repeatedly(text, "(" .. C .. ")%.s(" .. C .. ")", "%1s.%2")
-	-- Any aeo, or stressed iuüy, should be syllabically divided from a following aeo or stressed iuüy.
-	text = rsub_repeatedly(text, "([aeoAEO]" .. accent_c .. "*)(h?[aeo])", "%1.%2")
-	text = rsub_repeatedly(text, "([aeoAEO]" .. accent_c .. "*)(h?" .. V .. stress_c .. ")", "%1.%2")
-	text = rsub(text, "([iuüyIUÜY]" .. stress_c .. ")(h?[aeo])", "%1.%2")
-	text = rsub_repeatedly(text, "([iuüyIUÜY]" .. stress_c .. ")(h?" .. V .. stress_c .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "([iI]" .. accent_c .. "*)(h?i)", "%1.%2")
-	text = rsub_repeatedly(text, "([uU]" .. accent_c .. "*)(h?u)", "%1.%2")
-	text = text:gsub(SYLDIV, ".")
-	text = text:gsub(TEMP_I, "i")
-	text = text:gsub(TEMP_U, "u")
-	text = text:gsub(TEMP_Y_CONS, "y")
-	text = text:gsub(TEMP_CH, "ch")
-	text = text:gsub(TEMP_SH, "sh")
-	text = text:gsub(TEMP_LL, "ll")
-	text = text:gsub(TEMP_RR, "rr")
-	text = text:gsub(TEMP_QU, "qu")
-	text = text:gsub(TEMP_QU_CAPS, "Qu")
-	text = text:gsub(TEMP_GU, "gu")
-	text = text:gsub(TEMP_GU_CAPS, "Gu")
-	text = mw.ustring.toNFC(text)
-	-- No qualifiers from dialect tags because we assume all dialects hyphenate the same way.
-	-- FIXME: There are region-specific ways of hyphenating -tl-. See above. We don't currently handle this properly.
-	return text
 end
 
 
