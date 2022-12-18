@@ -99,8 +99,8 @@ local TILDE = u(0x0303) -- tilde =  ̃
 local DIA = u(0x0308) -- diaeresis =  ̈
 
 local SYLDIV = u(0xFFF0) -- used to represent a user-specific syllable divider (.) so we won't change it
-local vowel = "aeiouüyAEIOUÜY" -- vowel; include y so we get single-word y correct
-local V = "[" .. vowel .. "]"
+local vowel = "aeiouüyAEIOUÜY" -- vowel; include y so we get single-word y correct and for syllabifying from spelling
+local V = "[" .. vowel .. "]" -- vowel class
 local W = "[jw]" -- glide
 local accent = AC .. GR .. CFLEX
 local accent_c = "[" .. accent .. "]"
@@ -108,10 +108,10 @@ local stress = AC .. GR
 local stress_c = "[" .. AC .. GR .. "]"
 local ipa_stress = "ˈˌ"
 local ipa_stress_c = "[" .. ipa_stress .. "]"
-local separator = accent .. ipa_stress .. "# ." .. SYLDIV
+local separator = accent .. ipa_stress .. "# %-." .. SYLDIV -- hyphen included for syllabifying from spelling
 local separator_c = "[" .. separator .. "]"
-local C = "[^" .. vowel .. separator .. "]" -- consonant
-local C_NOT_H = "[^" .. vowel .. separator .. "h]" -- consonant not including h
+local C = "[^" .. vowel .. separator .. "]" -- consonant class including h
+local C_NOT_H = "[^" .. vowel .. separator .. "h]" -- consonant class not including h
 local T = "[^" .. vowel .. "lrɾjw" .. separator .. "]" -- obstruent or nasal
 
 local unstressed_words = m_table.listToSet({
@@ -237,11 +237,6 @@ local function syllabify_from_spelling(text)
 	local TEMP_GU_CAPS = u(0xFFFA)
 	local TEMP_SH = u(0xFFFB)
 	local TEMP_DESH = u(0xFFFC)
-	local vowel = "aeiouüyAEIOUÜY"
-	local V = "[" .. vowel .. "]" -- vowel class
-	local separator = accent .. ipa_stress .. "# %-." .. SYLDIV
-	local C = "[^" .. vowel .. separator .. "]" -- consonant class including h
-	local C_NOT_H = "[^" .. vowel .. separator .. "h]" -- consonant class not including h
 	-- Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
 	text = text:gsub("%.", SYLDIV)
 	text = rsub(text, "y(" .. V .. ")", TEMP_Y_CONS .. "%1")
