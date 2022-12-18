@@ -9,8 +9,8 @@ FIXME:
 2. Finish work on rhymes and hyphenation. [DONE]
 3. Handle <hmp:...> for homophones. [DONE]
 4. Don't add comma before phonetic IPA. [DONE]
-5. Handle secondary stress, suffixes, etc. in syllabification.
-6. Need some changes to syllable splitting in consonant clusters. (e.g. 'cum‧min‧gto‧ni‧ta')
+5. Handle secondary stress, suffixes, etc. in syllabification. [DONE]
+6. Need some changes to syllable splitting in consonant clusters. (e.g. 'cum‧min‧gto‧ni‧ta') [DONE]
 7. Fix handling of references to correspond to Portuguese module. [DONE]
 8. Propagate qualifiers on individual pronun terms to rhymes and hyph.
 9. Support raw phonemic/phonetic pronunciations. [DONE]
@@ -89,6 +89,8 @@ local ulower = mw.ustring.lower
 local uupper = mw.ustring.upper
 local usub = mw.ustring.sub
 local ulen = mw.ustring.len
+local unfd = mw.ustring.toNFD
+local unfc = mw.ustring.toNFC
 
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
@@ -97,7 +99,7 @@ local TILDE = u(0x0303) -- tilde =  ̃
 local DIA = u(0x0308) -- diaeresis =  ̈
 
 local SYLDIV = u(0xFFF0) -- used to represent a user-specific syllable divider (.) so we won't change it
-local vowel = "aeiouy" -- vowel; include y so we get single-word y correct
+local vowel = "aeiouüyAEIOUÜY" -- vowel; include y so we get single-word y correct
 local V = "[" .. vowel .. "]"
 local W = "[jw]" -- glide
 local accent = AC .. GR .. CFLEX
@@ -147,6 +149,18 @@ local function rsub_repeatedly(term, foo, bar)
 	end
 end
 
+local function decompose(text)
+	-- decompose everything but ñ and ü
+	text = unfd(text)
+	text = rsub(text, ".[" .. TILDE .. DIA .. "]", {
+		["n" .. TILDE] = "ñ",
+		["N" .. TILDE] = "Ñ",
+		["u" .. DIA] = "ü",
+		["U" .. DIA] = "Ü",
+	})
+	return text
+end
+
 local function split_on_comma(term)
 	if term:find(",%s") then
 		return require("Module:dialect tags").split_on_comma(term)
@@ -177,13 +191,6 @@ end
 -- Main syllable-division algorithm. Can be called either directly on spelling (when hyphenating) or after
 -- non-trivial processing of respelling in the direction of pronunciation (when generating pronunciation).
 local function syllabify_from_spelling_or_pronun(text, is_spelling)
-	local vowel_to_glide = is_spelling and { ["i"] = TEMP_I, ["u"] = TEMP_U } or { ["i"] = "j", ["u"] = "w" }
-	-- i and u between vowels -> consonant-like substitutions: [[paranoia]], [[baiano]], [[abreuense]], [[alauita]],
-	-- [[Malaui]], etc.; also with h, as in [[marihuana]], [[parihuela]], [[antihielo]], [[pelluhuano]], [[náhuatl]],
-	-- etc.
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*h?)([iu])(" .. V .. ")",
-		function (v1, iu, v2) return v1 .. vowel_to_glide[iu] .. v2 end
-	)
     -- Divide before the last consonant (possibly followed by a glide). We then move the syllable division marker
     -- leftwards over clusters that can form onsets.
 	-- Divide VCV as V.CV; but don't divide if C == h, e.g. [[prohibir]] should be prohi.bir.
@@ -217,14 +224,7 @@ local function syllabify_from_spelling_or_pronun(text, is_spelling)
 end
 
 local function syllabify_from_spelling(text)
-	-- decompose everything but ñ and ü
-	text = mw.ustring.toNFD(text)
-	text = rsub(text, ".[" .. TILDE .. DIA .. "]", {
-		["n" .. TILDE] = "ñ",
-		["N" .. TILDE] = "Ñ",
-		["u" .. DIA] = "ü",
-		["U" .. DIA] = "Ü",
-	})
+	text = decompose(text)
 	local TEMP_I = u(0xFFF1)
 	local TEMP_U = u(0xFFF2)
 	local TEMP_Y_CONS = u(0xFFF3)
@@ -259,6 +259,14 @@ local function syllabify_from_spelling(text)
 	text = rsub(text, "gu(" .. V .. ")", TEMP_GU .. "%1")
 	text = rsub(text, "Gu(" .. V .. ")", TEMP_GU_CAPS .. "%1")
 
+	local vowel_to_glide = { ["i"] = TEMP_I, ["u"] = TEMP_U }
+	-- i and u between vowels -> consonant-like substitutions: [[paranoia]], [[baiano]], [[abreuense]], [[alauita]],
+	-- [[Malaui]], etc.; also with h, as in [[marihuana]], [[parihuela]], [[antihielo]], [[pelluhuano]], [[náhuatl]],
+	-- etc.
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*h?)([iu])(" .. V .. ")",
+		function (v1, iu, v2) return v1 .. vowel_to_glide[iu] .. v2 end
+	)
+
 	text = syllabify_from_spelling_or_pronun(text, "is spelling")
 
 	text = text:gsub(SYLDIV, ".")
@@ -273,7 +281,7 @@ local function syllabify_from_spelling(text)
 	text = text:gsub(TEMP_QU_CAPS, "Qu")
 	text = text:gsub(TEMP_GU, "gu")
 	text = text:gsub(TEMP_GU_CAPS, "Gu")
-	text = mw.ustring.toNFC(text)
+	text = unfc(text)
 	-- No qualifiers from dialect tags because we assume all dialects hyphenate the same way.
 	-- FIXME: There are region-specific ways of hyphenating -tl-. See above. We don't currently handle this properly.
 	return text
@@ -295,14 +303,11 @@ function export.IPA(text, dialect, phonetic)
 	local need_rioplat = false
 	local initial_hi = false
 	local sheismo_different = false
+	local TEMP_Y = u(0xFFF1)
 
 	text = ulower(text or mw.title.getCurrentTitle().text)
 	-- decompose everything but ñ and ü
-	text = mw.ustring.toNFD(text)
-	text = rsub(text, ".[" .. TILDE .. DIA .. "]", {
-		["n" .. TILDE] = "ñ",
-		["u" .. DIA] = "ü",
-	})
+	text = decompose(text)
 	-- convert commas and en/en dashes to IPA foot boundaries
 	text = rsub(text, "%s*[,–—]%s*", " | ")
 	-- question mark or exclamation point in the middle of a sentence -> IPA foot boundary
@@ -344,7 +349,7 @@ function export.IPA(text, dialect, phonetic)
 	text = rsub(text, "y(" .. V .. ")", "ɟ%1") -- not the real sound
 	-- word-final -ay/-ey/-oy/-uy is stressed whereas word-final -ai/-ei/-oi/-ui is not; in addition,
 	-- word-final -uy is /uj/ whereas word-final -ui is /wi/ (e.g. [[muy]] vs. [[fui]])
-	text = rsub(text, "([aeou])y#", "%1Y#") -- a temporary symbol; replaced with i below
+	text = rsub(text, "([aeou])y#", "%1" .. TEMP_Y .. "#") -- a temporary symbol; replaced with i below
 	text = rsub(text, "y", "i")
 
 	-- handle certain combinations; sh handling needs to go before x handling to avoid issues with [[exhausto]]
@@ -415,10 +420,19 @@ function export.IPA(text, dialect, phonetic)
 	-- remove silent h before syllable division
 	text = rsub(text, "h", "")
 
+	-- convert i/u between vowels to glide
+	local vowel_to_glide = { ["i"] = "j", ["u"] = "w" }
+	-- i and u between vowels -> consonant-like substitutions: [[paranoia]], [[baiano]], [[abreuense]], [[alauita]],
+	-- [[Malaui]], etc.; also with h, as in [[marihuana]], [[parihuela]], [[antihielo]], [[pelluhuano]], [[náhuatl]],
+	-- etc.
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*h?)([iu])(" .. V .. ")",
+		function (v1, iu, v2) return v1 .. vowel_to_glide[iu] .. v2 end
+	)
+
 	--syllable division
 	text = syllabify_from_spelling_or_pronun(text, false)
 
-	--diphthongs; do not include Y here
+	--diphthongs; do not include TEMP_Y here
 	text = rsub(text, "i([aeou])", "j%1")
 	text = rsub(text, "u([aeio])", "w%1")
 
@@ -483,7 +497,7 @@ function export.IPA(text, dialect, phonetic)
 
 	text = table.concat(words, " ")
 
-	text = rsub(text, "Y", "i") --final -uy
+	text = rsub(text, TEMP_Y, "i") --final -ay/-ey/-oy/-uy
 	text = rsub(text, "z", "s") --real sound of LatAm Z
 	-- suppress syllable mark before IPA stress indicator
 	text = rsub(text, "%.(" .. ipa_stress_c .. ")", "%1")
@@ -589,7 +603,7 @@ function export.IPA(text, dialect, phonetic)
 
 	-- remove # symbols at word and text boundaries
 	text = rsub(text, "#", "")
-	text = mw.ustring.toNFC(text)
+	text = unfc(text)
 
 	-- The values in `differences` are only accurate when the dialect is 'distincion-lleismo'
 	-- because we look for sounds like /θ/ and /ʎ/ that are only present in that dialect.
@@ -1099,6 +1113,42 @@ local function split_syllabified_spelling(spelling)
 end
 
 
+-- "Align" syllabification to original spelling by matching character-by-character, allowing for extra syllable and
+-- accent markers in the syllabification. If we encounter an extra syllable marker (.), we allow and keep it. If we
+-- encounter an extra accent marker in the syllabification, we drop it. In any other case, we return nil indicating
+-- the alignment failed.
+local function align_syllabification_to_spelling(syllab, spelling)
+	local result = {}
+	local syll_chars = rsplit(decompose(syllab), "")
+	local spelling_chars = rsplit(decompose(spelling), "")
+	local i = 1
+	local j = 1
+	while i <= #syll_chars or j <= #spelling_chars do
+		local ci = syll_chars[i]
+		local cj = spelling_chars[j]
+		if ci == cj then
+			table.insert(result, ci)
+			i = i + 1
+			j = j + 1
+		elseif ci == "." then
+			table.insert(result, ci)
+			i = i + 1
+		elseif ci == AC or ci == GR or ci == CFLEX then
+			-- skip character
+			i = i + 1
+		else
+			-- non-matching character
+			return nil
+		end
+	end
+	if i <= #syll_chars or j <= #spelling_chars then
+		-- left-over characters on one side or the other
+		return nil
+	end
+	return unfc(table.concat(result))
+end
+
+
 local function generate_hyph_obj(term)
 	return {syllabification = term, hyph = split_syllabified_spelling(term)}
 end
@@ -1106,9 +1156,10 @@ end
 
 local function all_words_have_vowels(term)
 	local words = rsplit(term, "[ %-]")
-	for _, word in ipairs(words) do
-		word = ulower(mw.ustring.toNFD(word))
-		if not rfind(word, V) then
+	for i, word in ipairs(words) do
+		word = ulower(decompose(word))
+		-- Allow empty word; this occurs with prefixes and suffixes.
+		if word ~= "" and not rfind(word, V) then
 			return false
 		end
 	end
@@ -1493,8 +1544,12 @@ function export.show_pr(frame)
 		if #parsed.hyph == 0 then
 			if not overall_hyph and all_words_have_vowels(pagename) then
 				for _, term in ipairs(parsed.terms) do
-					if not term.raw and term.term:gsub("%.", "") == pagename then
-						m_table.insertIfNot(parsed.hyph, generate_hyph_obj(syllabify_from_spelling(term.term)))
+					if not term.raw then
+						local syllabification = syllabify_from_spelling(term.term)
+						local aligned_syll = align_syllabification_to_spelling(syllabification, pagename)
+						if aligned_syll then
+							m_table.insertIfNot(parsed.hyph, generate_hyph_obj(aligned_syll))
+						end
 					end
 				end
 			end
