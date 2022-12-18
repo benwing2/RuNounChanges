@@ -11,6 +11,8 @@ FIXME:
 4. Handle <hmp:...> for homophones. (DONE)
 5. Raw pronunciations need to use raw:, esp. for [...] phonetic pronunciation. (DONE)
 6. Handle hyphenation of Uppsala, massmediale correctly. (DONE)
+7. Homophone may end up before rhyme/hyphenation when it should come after, e.g. in [[hanno]].
+8. Cases like [[Katmandu]] with respelling ''Katmandù'' should auto-hyphenate.
 ]=]
 
 local export = {}
@@ -408,7 +410,7 @@ local function canonicalize_and_auto_accent(text, pagename)
 				if not unstressed_words[rsub(word, "%*$", "")] and not rfind(word, "[" .. AC .. GR .. DOTOVER .. "]") then
 					vowel_count = ulen(rsub(word, NV, ""))
 					if vowel_count > 2 then
-						err("With more than two vowels and an unrecogized suffix, stress must be explicitly given")
+						err("With more than two vowels and an unrecognized suffix, stress must be explicitly given")
 					elseif not is_suffix or vowel_count == 2 then -- don't try to stress suffixes with only one vowel
 						local before, vow, after = rmatch(word, "^(.-)(" .. V .. ")(.*)$")
 						if before then
@@ -488,6 +490,7 @@ function export.to_phonemic(text, pagename)
 	text = "##" .. rsub(text, " ", "# #") .. "##"
 
 	-- Random consonant substitutions.
+	text = rsub(text, "%[w%]", "w") -- [w] means /w/ when the spelling is ⟨u⟩, esp. in ⟨ui⟩ sequences. This helps with hyphenation.
 	text = rsub(text, "%[x%]", TEMP_X) -- [x] means /x/
 	text = rsub(text, "#ex(" .. V .. ")", "eg[z]%1")
 	text = text:gsub("x", "ks"):gsub("ck", "k"):gsub("sh", "ʃ")
@@ -520,8 +523,11 @@ function export.to_phonemic(text, pagename)
 
 	-- Handle gl and gn.
 	text = rsub(text, "gn", "ɲ")
-	text = rsub(text, "gli(" .. V .. ")", "ʎ%1")
-	text = rsub(text, "gl(‿?i)", "ʎ%1")
+	-- The vast majority of words beginning with gli- have /ɡl/ not /ʎ/ so don't substitute here, although we special-case
+	-- [[gli]]. Use ʎ exlicitly to get it in [[glielo]] and such.
+	text = rsub(text, "#gli#", "ʎi")
+	text = rsub_repeatedly(text, "([^#])gli(" .. V .. ")", "%1ʎ%2")
+	text = rsub_repeatedly(text, "([^#])gl(‿?i)", "%1ʎ%2")
 
 	-- Handle other cases of c, g.
 	text = rsub(text, "([cg])([cg]?)(h?)(" .. charsep_c .. "*.)", function(first, double, h, after)
@@ -963,7 +969,12 @@ end
 local function get_num_syl_from_phonemic(phonemic)
 	-- Maybe we should just count vowels instead of the below code.
 	phonemic = rsub(phonemic, "|", " ") -- remove IPA foot boundaries
-	local words = rsplit(phonemic, "%s+")
+	local words
+	if not phonemic:find(" ") then
+		words = {phonemic}
+	else
+		words = m_strutil.capturing_split(phonemic, "( +)")
+	end
 	for i, word in ipairs(words) do
 		if (i % 2) == 1 then -- an actual word, not a separator
 			-- IPA stress marks are syllable divisions if between characters; otherwise just remove.
@@ -1185,7 +1196,8 @@ local function normalize_for_syllabification(respelling)
 	respelling = canon_spaces(respelling)
 	-- Convert respelling conventions back to the original spelling.
 	respelling = respelling:gsub("ddz", "zz"):gsub("tts", "zz"):gsub("dz", "z"):gsub("ts", "z")
-		:gsub("Dz", "Z"):gsub("Ts", "Z"):gsub("%[([sz])%]", "%1")
+		:gsub("Dz", "Z"):gsub("Ts", "Z"):gsub("%[([szh])%]", "%1"):gsub("%[w%]", "u")
+		:gsub("ʎi", "gli"):gsub("ʎ", "gli")
 	return respelling
 end
 
@@ -1357,14 +1369,14 @@ local function parse_homophone(arg, iut, parse_err)
 			end
 			local prefix, arg = modtext:match("^([a-z]+):(.*)$")
 			if not prefix then
-				parse_err("Modifier " .. group[j] .. " lacks a prefix, should begin with one of 'qual:', 't:' or 'alt:'")
+				parse_err("Modifier " .. group[j] .. " lacks a prefix, should begin with one of 'qual:', 't:', 'alt:' or 'pos:'")
 			end
 			if prefix == "qual" then
 				if not hmp_obj.qualifiers then
 					hmp_obj.qualifiers = {}
 				end
 				table.insert(hmp_obj.qualifiers, arg)
-			elseif prefix == "t" or prefix == "alt" then
+			elseif prefix == "t" or prefix == "alt" or prefix == "pos" then
 				local key = prefix == "t" and "gloss" or prefix
 				if hmp_obj[key] then
 					parse_err("Modifier '" .. prefix .. "' specified more than once")
@@ -1372,7 +1384,7 @@ local function parse_homophone(arg, iut, parse_err)
 				hmp_obj[key] = arg
 			else
 				parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. group[j]
-					.. ", should be 'qual', 't' or 'alt'")
+					.. ", should be 'qual', 't', 'alt' or 'pos'")
 			end
 		end
 		table.insert(retval, hmp_obj)
