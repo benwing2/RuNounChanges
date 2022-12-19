@@ -194,7 +194,8 @@ local function syllabify_from_spelling_or_pronun(text, is_spelling)
     -- Divide before the last consonant (possibly followed by a glide). We then move the syllable division marker
     -- leftwards over clusters that can form onsets.
 	-- Divide VCV as V.CV; but don't divide if C == h, e.g. [[prohibir]] should be prohi.bir.
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C_NOT_H .. W .. "?" .. V .. ")", "%1.%2")
+	local w_pattern = is_spelling and "" or W .. "?"
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C_NOT_H .. w_pattern .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. V .. ")", "%1.%2")
 	-- Puerto Rico + most of Spain divide tl as t.l. Mexico and the Canary Islands have .tl. Unclear what other regions
 	-- do. Here we choose to go with .tl. See https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf
@@ -1103,6 +1104,33 @@ function export.show(frame)
 end
 
 
+-- Return the number of syllables of a phonemic representation, which should have syllable dividers in it but no
+-- hyphens.
+local function get_num_syl_from_phonemic(phonemic)
+	-- Maybe we should just count vowels instead of the below code.
+	phonemic = rsub(phonemic, "|", " ") -- remove IPA foot boundaries
+	local words = rsplit(phonemic, " +")
+	for i, word in ipairs(words) do
+		-- IPA stress marks are syllable divisions if between characters; otherwise just remove.
+		word = rsub(word, "(.)[ˌˈ](.)", "%1.%2")
+		word = rsub(word, "[ˌˈ]", "")
+		words[i] = word
+	end
+	-- There should be a syllable boundary between words.
+	phonemic = table.concat(words, ".")
+	return ulen(rsub(phonemic, "[^.]", "")) + 1
+end
+
+
+-- Get the rhyme by truncating everything up through the last stress mark + any following consonants, and remove
+-- syllable boundary markers.
+local function convert_phonemic_to_rhyme(phonemic)
+	-- NOTE: This works because the phonemic vowels are just [aeiou] possibly with diacritics that are separate
+	-- Unicode chars. If we want to handle things like ɛ or ɔ we need to add them to `vowel`.
+	return rsub(rsub(phonemic, ".*[ˌˈ]", ""), "^[^" .. vowel .. "]*", ""):gsub("%.", ""):gsub("t͡ʃ", "tʃ")
+end
+
+
 local function split_syllabified_spelling(spelling)
 	return rsplit(spelling, "%.")
 end
@@ -1149,12 +1177,17 @@ local function generate_hyph_obj(term)
 end
 
 
+-- Word should already be decomposed.
+local function word_has_vowels(word)
+	return rfind(word, V)
+end
+
+
 local function all_words_have_vowels(term)
-	local words = rsplit(term, "[ %-]")
+	local words = rsplit(decompose(term), "[ %-]")
 	for i, word in ipairs(words) do
-		word = ulower(decompose(word))
 		-- Allow empty word; this occurs with prefixes and suffixes.
-		if word ~= "" and not rfind(word, V) then
+		if word ~= "" and not word_has_vowels(word) then
 			return false
 		end
 	end
@@ -1162,22 +1195,69 @@ local function all_words_have_vowels(term)
 end
 
 
-local function dodialect_specified_rhymes(rhymes, hyphs, rhyme_ret, dialect)
+local function should_generate_rhyme_from_respelling(term)
+	local words = rsplit(decompose(term), " +")
+	return #words == 1 and -- no if multiple words
+		not words[1]:find(".%-.") and -- no if word is composed of hyphenated parts (e.g. [[Austria-Hungría]])
+		not words[1]:find("%-$") and -- no if word is a prefix
+		not (words[1]:find("^%-") and words[1]:find(CFLEX)) and -- no if word is an unstressed suffix
+		word_has_vowels(words[1]) -- no if word has no vowels (e.g. a single letter)
+end
+
+
+local function should_generate_rhyme_from_ipa(ipa)
+	return not ipa:find("%s")
+end
+
+
+local function dodialect_specified_rhymes(rhymes, hyphs, parsed_respellings, rhyme_ret, dialect)
 	rhyme_ret.pronun[dialect] = {}
 	for _, rhyme in ipairs(rhymes) do
 		local num_syl = rhyme.num_syl
+		local no_num_syl = false
+
+		-- If user explicitly gave the rhyme but didn't explicitly specify the number of syllables, try to take it from
+		-- the hyphenation.
 		if not num_syl then
 			num_syl = {}
 			for _, hyph in ipairs(hyphs) do
-				if not hyph.syllabification:find("[%s%-]") then
+				if should_generate_rhyme_from_respelling(hyph.syllabification) then
 					local this_num_syl = 1 + ulen(rsub(hyph.syllabification, "[^.]", ""))
 					m_table.insertIfNot(num_syl, this_num_syl)
+				else
+					no_num_syl = true
+					break
 				end
 			end
-			if #num_syl == 0 then
+			if no_num_syl or #num_syl == 0 then
 				num_syl = nil
 			end
 		end
+
+		-- If that fails and term is single-word, try to take it from the phonemic.
+		if not no_num_syl and not num_syl then
+			for _, parsed in ipairs(parsed_respellings) do
+				for dialect, pronun in pairs(parsed.pronun.pronun[dialect]) do
+					-- Check that pronun.phonemic exists (it may not if raw phonetic-only pronun is given).
+					if pronun.phonemic then
+						if not should_generate_rhyme_from_ipa(pronun.phonemic) then
+							no_num_syl = true
+							break
+						end
+						-- Count number of syllables by looking at syllable boundaries (including stress marks).
+						local this_num_syl = get_num_syl_from_phonemic(pronun.phonemic)
+						m_table.insertIfNot(num_syl, this_num_syl)
+					end
+				end
+				if no_num_syl then
+					break
+				end
+			end
+			if no_num_syl or #num_syl == 0 then
+				num_syl = nil
+			end
+		end
+
 		table.insert(rhyme_ret.pronun[dialect], {
 			rhyme = rhyme.rhyme,
 			num_syl = num_syl,
@@ -1522,16 +1602,15 @@ function export.show_pr(frame)
 	-- Loop over individual respellings, processing each.
 	for _, parsed in ipairs(parsed_respellings) do
 		parsed.pronun = generate_pronun(parsed)
-		local saw_space = false
+		local no_auto_rhyme = false
 		for _, term in ipairs(parsed.terms) do
-			local respelling
 			if term.raw then
-				respelling = term.raw_phonemic or term.raw_phonetic
-			else
-				respelling = term.term
-			end
-			if respelling:find("[%s%-]") then
-				saw_space = true
+				if not should_generate_rhyme_from_ipa(term.raw_phonemic or term.raw_phonetic) then
+					no_auto_rhyme = true
+					break
+				end
+			elseif not should_generate_rhyme_from_respelling(term.term) then
+				no_auto_rhyme = true
 				break
 			end
 		end
@@ -1586,15 +1665,15 @@ function export.show_pr(frame)
 				dodialect_pronun(parsed, parsed.pronun, dialect)
 			end
 			for _, pronun in ipairs(parsed.pronun.pronun[dialect]) do
-				-- We should have already excluded multiword terms from rhyme generation (see `saw_space` below), so this just
-				-- checks for single words without vowels.
-				if all_words_have_vowels(pronun.phonemic) then
+				-- We should have already excluded multiword terms and terms without vowels from rhyme generation (see
+				-- `no_auto_rhyme` below). But make sure to check that pronun.phonemic exists (it may not if raw
+				-- phonetic-only pronun is given).
+				if pronun.phonemic then
 					-- Count number of syllables by looking at syllable boundaries (including stress marks).
-					local num_syl = ulen(rsub(pronun.phonemic, "[^.ˌˈ]", "")) + 1
+					local num_syl = get_num_syl_from_phonemic(pronun.phonemic)
 					-- Get the rhyme by truncating everything up through the last stress mark + any following
 					-- consonants, and remove syllable boundary markers.
-					local rhyme = rsub(rsub(pronun.phonemic, ".*[ˌˈ]", ""), "^[^" .. vowel .. "]*", "")
-						:gsub("%.", ""):gsub("t͡ʃ", "tʃ")
+					local rhyme = convert_phonemic_to_rhyme(pronun.phonemic)
 					local saw_already = false
 					for _, existing in ipairs(rhyme_ret.pronun[dialect]) do
 						if existing.rhyme == rhyme then
@@ -1632,7 +1711,7 @@ function export.show_pr(frame)
 		end
 
 		if #parsed.rhyme == 0 then
-			if overall_rhyme or saw_space then
+			if overall_rhyme or no_auto_rhyme then
 				parsed.rhyme = nil
 			else
 				parsed.rhyme = express_all_styles(parsed.style, dodialect_rhymes_from_pronun)
@@ -1649,7 +1728,7 @@ function export.show_pr(frame)
 				parsed.rhyme = nil
 			else
 				local function this_dodialect(rhyme_ret, dialect)
-					return dodialect_specified_rhymes(parsed.rhyme, parsed.hyph, rhyme_ret, dialect)
+					return dodialect_specified_rhymes(parsed.rhyme, parsed.hyph, {parsed}, rhyme_ret, dialect)
 				end
 				parsed.rhyme = express_all_styles(parsed.style, this_dodialect)
 			end
@@ -1679,7 +1758,7 @@ function export.show_pr(frame)
 				end
 			end
 			local function dodialect_overall_rhyme(rhyme_ret, dialect)
-				return dodialect_specified_rhymes(overall_rhyme, all_hyphs, rhyme_ret, dialect)
+				return dodialect_specified_rhymes(overall_rhyme, all_hyphs, parsed_respellings, rhyme_ret, dialect)
 			end
 			overall_rhyme = express_all_styles(parsed.style, dodialect_overall_rhyme)
 		end
