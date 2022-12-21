@@ -1,8 +1,18 @@
 --[=[
 This module implements the templates {{es-pr}} and {{es-IPA}}.
 
-Author: benwing2
+Author: Benwing2
+]=]
 
+local export = {}
+
+local m_IPA = require("Module:IPA")
+local m_table = require("Module:table")
+local put_module = "Module:parse utilities"
+
+local force_cat = false -- for testing
+
+--[=[
 FIXME:
 
 1. Port latest changes to production module. [DONE]
@@ -15,6 +25,13 @@ FIXME:
 8. Propagate qualifiers on individual pronun terms to rhymes and hyph.
 9. Support raw phonemic/phonetic pronunciations. [DONE]
 10. Support overall audio. [DONE]
+11. Keep th/ph/kh/gh/tz ([[Ertzaintza]]) together when syllabifying (but not bh due to [[subhumano]], [[subhistoria]], etc.
+    and not dh due to [[adherir]], [[autoadhesivo]] and many others). [DONE]
+12. Support <q:...> and <qq:...> on audio. [DONE]
+13. Support <a:...> and <aa:...> (using {{a|...}}, left and right) on terms, rhymes, hyphenation, homophones and
+    audio. [DONE]
+14. Support # instead of ; as separator between audio file and gloss and make sure it works if gloss has embedded # or
+    ;. [DONE]
 ]=]
 
 --[=[
@@ -72,12 +89,6 @@ in Spain/distinción (respelled "blutuz") but another in Latin America/seseo (re
 represented using {{es-pr}} as {{es-pr|blutuz<style:distincion>|blutud<style:seseo>}}.
 ]=]
 
-local export = {}
-
-local m_IPA = require("Module:User:Benwing2/IPA")
-local m_table = require("Module:table")
-local put_module = "Module:User:Benwing2/parse utilities"
-
 local lang = require("Module:languages").getByCode("es")
 
 local u = mw.ustring.char
@@ -101,17 +112,21 @@ local DIA = u(0x0308) -- diaeresis =  ̈
 local SYLDIV = u(0xFFF0) -- used to represent a user-specific syllable divider (.) so we won't change it
 local vowel = "aeiouüyAEIOUÜY" -- vowel; include y so we get single-word y correct and for syllabifying from spelling
 local V = "[" .. vowel .. "]" -- vowel class
-local W = "[jw]" -- glide
 local accent = AC .. GR .. CFLEX
 local accent_c = "[" .. accent .. "]"
 local stress = AC .. GR
 local stress_c = "[" .. AC .. GR .. "]"
 local ipa_stress = "ˈˌ"
 local ipa_stress_c = "[" .. ipa_stress .. "]"
-local separator = accent .. ipa_stress .. "# %-." .. SYLDIV -- hyphen included for syllabifying from spelling
+local sylsep = "%-." .. SYLDIV -- hyphen included for syllabifying from spelling
+local sylsep_c = "[" .. sylsep .. "]"
+local wordsep = "# "
+local separator_not_wordsep = accent .. ipa_stress .. sylsep
+local separator = separator_not_wordsep .. wordsep
 local separator_c = "[" .. separator .. "]"
 local C = "[^" .. vowel .. separator .. "]" -- consonant class including h
 local C_NOT_H = "[^" .. vowel .. separator .. "h]" -- consonant class not including h
+local C_OR_WORDSEP = "[^" .. vowel .. separator_not_wordsep .. "]" -- consonant class including h, or word separator
 local T = "[^" .. vowel .. "lrɾjw" .. separator .. "]" -- obstruent or nasal
 
 local unstressed_words = m_table.listToSet({
@@ -169,11 +184,19 @@ local function split_on_comma(term)
 	end
 end
 
--- Remove any HTML from the formatted text, since it doesn't contribute to the textual length, and return the
--- resulting length in characters.
-local function textual_len(text)
+-- Remove any HTML from the formatted text and resolve links, since the extra characters don't contribute to the
+-- displayed length.
+local function convert_to_raw_text(text)
 	text = rsub(text, "<.->", "")
-	return ulen(text)
+	if text:find("%[%[") then
+		text = require("Module:links").remove_links(text)
+	end
+	return text
+end
+
+-- Return the approximate displayed length in characters.
+local function textual_len(text)
+	return ulen(convert_to_raw_text(text))
 end
 
 local function construct_default_differences(dialect)
@@ -191,11 +214,10 @@ end
 -- Main syllable-division algorithm. Can be called either directly on spelling (when hyphenating) or after
 -- non-trivial processing of respelling in the direction of pronunciation (when generating pronunciation).
 local function syllabify_from_spelling_or_pronun(text, is_spelling)
-    -- Divide before the last consonant (possibly followed by a glide). We then move the syllable division marker
-    -- leftwards over clusters that can form onsets.
-	-- Divide VCV as V.CV; but don't divide if C == h, e.g. [[prohibir]] should be prohi.bir.
-	local w_pattern = is_spelling and "" or W .. "?"
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C_NOT_H .. w_pattern .. V .. ")", "%1.%2")
+    -- Part 1: Divide before the last consonant in a cluster of consonants between vowels (but don't divide a VhV
+	-- sequence; [[prohibir]] should be prohi.bir). Then move the syllable division marker leftwards over clusters that
+	-- can form onsets.
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C_NOT_H .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. V .. ")", "%1.%2")
 	-- Puerto Rico + most of Spain divide tl as t.l. Mexico and the Canary Islands have .tl. Unclear what other regions
 	-- do. Here we choose to go with .tl. See https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf
@@ -203,9 +225,18 @@ local function syllabify_from_spelling_or_pronun(text, is_spelling)
 	-- NOTE: When run on pronun, we have already eliminated c and v, but not when run on spelling.
 	-- When run on pronun, don't include r, which at this point represents the trill.
 	local cluster_r = is_spelling and "rɾ" or "ɾ"
-	local cluster_resonant = "[l" .. cluster_r .. "]"
+	-- Don't divide Cl or Cr where C is a stop or fricative, except for dl.
 	text = rsub(text, "([pbfvkctg])%.([l" .. cluster_r .. "])", ".%1%2")
 	text = text:gsub("d%.([" .. cluster_r .. "])", ".d%1")
+	-- Don't divide ch, sh, ph, th, kh or gh. Do allow bh to be divided ([[subhumano]], [[subhúmedo]], etc.), also dh
+	-- ([[adherir]], [[autoadhesivo]] and many others). Words where dh should not be divided ([[gandhismo]],
+	-- [[cadherina]], etc.) need manual syllabification.
+	text = rsub(text, "([csptkg])%.h", ".%1h")
+	-- Don't divide ll or rr.
+	text = rsub(text, "([lr])%.%1", ".%1%1")
+	-- Don't divide tz ([[Ertzaintza]], [[quetzal]], [[hertziano]] and other words of Basque, Nahuatl and German
+	-- origin).
+	text = rsub(text, "t%.z", ".tz")
 	-- Per https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf, tl at the end of a word
 	-- (as in nahuatl, Popocatepetl etc.) is divided .tl from the previous vowel.
 	if is_spelling then
@@ -214,41 +245,42 @@ local function syllabify_from_spelling_or_pronun(text, is_spelling)
 	else
 		text = text:gsub("([^.#])tl#", "%1.tl")
 	end
-	-- Any aeo, or stressed iuüy, should be syllabically divided from a following aeo or stressed iuüy.
+
+	-- Part 2: Divide hiatuses. Any aeo, or stressed iuüy, should be syllabically divided from a following aeo or
+	-- stressed iuüy. Also divide ii and uu sequences ([[antiincendios]], [[shiita]], [[vacuum]]). Note that words with
+	-- ii or uu next to a vowel (e.g. [[hawaiiano]]) will not make it to this point unchanged; the i or u adjacent to
+	-- a vowel (or the second one if both are adjacent to vowels) will get converted to a consonant symbol (temporarily
+	-- when syllabifying spelling).
 	text = rsub_repeatedly(text, "([aeoAEO]" .. accent_c .. "*)(h?[aeo])", "%1.%2")
 	text = rsub_repeatedly(text, "([aeoAEO]" .. accent_c .. "*)(h?" .. V .. stress_c .. ")", "%1.%2")
 	text = rsub(text, "([iuüyIUÜY]" .. stress_c .. ")(h?[aeo])", "%1.%2")
 	text = rsub_repeatedly(text, "([iuüyIUÜY]" .. stress_c .. ")(h?" .. V .. stress_c .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "([iI]" .. accent_c .. "*)(h?i)", "%1.%2")
 	text = rsub_repeatedly(text, "([uU]" .. accent_c .. "*)(h?u)", "%1.%2")
+
 	return text
 end
 
 local function syllabify_from_spelling(text)
 	text = decompose(text)
+	-- start at FFF1 because FFF0 is used for SYLDIV
+	-- Temporary replacements for characters we want treated as default consonants. The C and related consonant regexes
+	-- treat all unknown characters as consonants.
 	local TEMP_I = u(0xFFF1)
 	local TEMP_U = u(0xFFF2)
 	local TEMP_Y_CONS = u(0xFFF3)
-	local TEMP_CH = u(0xFFF4)
-	local TEMP_LL = u(0xFFF5)
-	local TEMP_RR = u(0xFFF6)
-	local TEMP_QU = u(0xFFF7)
-	local TEMP_QU_CAPS = u(0xFFF8)
-	local TEMP_GU = u(0xFFF9)
-	local TEMP_GU_CAPS = u(0xFFFA)
-	local TEMP_SH = u(0xFFFB)
-	local TEMP_DESH = u(0xFFFC)
+	local TEMP_QU = u(0xFFF4)
+	local TEMP_QU_CAPS = u(0xFFF5)
+	local TEMP_GU = u(0xFFF6)
+	local TEMP_GU_CAPS = u(0xFFF7)
+	local TEMP_H = u(0xFFF8)
 	-- Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
 	text = text:gsub("%.", SYLDIV)
 	text = rsub(text, "y(" .. V .. ")", TEMP_Y_CONS .. "%1")
-	-- We don't want to break -sh- except in desh-, e.g. [[deshuesar]], [[deshonra]], [[deshecho]].
-	text = text:gsub("^([Dd])esh", "%1" .. TEMP_DESH)
-	text = text:gsub("([ %-][Dd])esh", "%1" .. TEMP_DESH)
-	text = text:gsub("sh", TEMP_SH)
-	text = text:gsub(TEMP_DESH, "esh")
-	text = text:gsub("ch", TEMP_CH)
-	text = text:gsub("ll", TEMP_LL)
-	text = text:gsub("rr", TEMP_RR)
+	-- We don't want to break -sh- except in desh-, e.g. [[deshuesar]], [[deshonra]], [[deshecho]]. Normally, -sh- is
+	-- automatically preserved, so we replace the h with a temporary symbol to avoid this.
+	text = text:gsub("^([Dd]es)h", "%1" .. TEMP_H)
+	text = text:gsub("([ %-][Dd]es)h", "%1" .. TEMP_H)
 	-- qu mostly handled correctly automatically, but not in quietud
 	text = rsub(text, "qu(" .. V .. ")", TEMP_QU .. "%1")
 	text = rsub(text, "Qu(" .. V .. ")", TEMP_QU_CAPS .. "%1")
@@ -258,9 +290,11 @@ local function syllabify_from_spelling(text)
 	local vowel_to_glide = { ["i"] = TEMP_I, ["u"] = TEMP_U }
 	-- i and u between vowels -> consonant-like substitutions: [[paranoia]], [[baiano]], [[abreuense]], [[alauita]],
 	-- [[Malaui]], etc.; also with h, as in [[marihuana]], [[parihuela]], [[antihielo]], [[pelluhuano]], [[náhuatl]],
-	-- etc.
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*h?)([iu])(" .. V .. ")",
-		function (v1, iu, v2) return v1 .. vowel_to_glide[iu] .. v2 end
+	-- etc. When we do this we need to help the syllabification particularly of words with -hiV- and -huV- in them,
+	-- otherwise we get e.g. 'an.tih.ie.lo' because we converted the i following the h to a consonant. Add .* at the
+	-- beginning so we go right-to-left, in the case of [[hawaiiano]] -> ha.wai.iano.
+	text = rsub_repeatedly(text, "(.*" .. V .. accent_c .. "*)(h?)([iu])(" .. V .. ")",
+		function (v1, h, iu, v2) return v1 .. "." .. h .. vowel_to_glide[iu] .. v2 end
 	)
 
 	text = syllabify_from_spelling_or_pronun(text, "is spelling")
@@ -269,14 +303,11 @@ local function syllabify_from_spelling(text)
 	text = text:gsub(TEMP_I, "i")
 	text = text:gsub(TEMP_U, "u")
 	text = text:gsub(TEMP_Y_CONS, "y")
-	text = text:gsub(TEMP_CH, "ch")
-	text = text:gsub(TEMP_SH, "sh")
-	text = text:gsub(TEMP_LL, "ll")
-	text = text:gsub(TEMP_RR, "rr")
 	text = text:gsub(TEMP_QU, "qu")
 	text = text:gsub(TEMP_QU_CAPS, "Qu")
 	text = text:gsub(TEMP_GU, "gu")
 	text = text:gsub(TEMP_GU_CAPS, "Gu")
+	text = text:gsub(TEMP_H, "h")
 	text = unfc(text)
 	-- No qualifiers from dialect tags because we assume all dialects hyphenate the same way.
 	-- FIXME: There are region-specific ways of hyphenating -tl-. See above. We don't currently handle this properly.
@@ -299,7 +330,9 @@ function export.IPA(text, dialect, phonetic)
 	local need_rioplat = false
 	local initial_hi = false
 	local sheismo_different = false
+	-- start at FFF1 because FFF0 is used for SYLDIV
 	local TEMP_Y = u(0xFFF1)
+	local TEMP_W = u(0xFFF2)
 
 	text = ulower(text or mw.title.getCurrentTitle().text)
 	-- decompose everything but ñ and ü
@@ -376,10 +409,16 @@ function export.IPA(text, dialect, phonetic)
 		distincion_different = true
 	end
 
-	--alphabet-to-phoneme
-	text = rsub(text, "[cgjñrvy]",
-		{["c"]="k", ["j"]="x", ["ñ"]="ɲ", ["r"]="ɾ", ["v"]="b" })
-	text, initial_hi = rsubb(text, "#h?i(" .. V .. ")", rioplat and "#j%1" or "#ɟ%1")
+	-- map various consonants to their phoneme equivalent
+	text = rsub(text, "[cjñrv]", {["c"]="k", ["j"]="x", ["ñ"]="ɲ", ["r"]="ɾ", ["v"]="b" })
+
+	-- handle word- and syllable-initial hiV ([[hielo]], [[enhiesto]], [[deshielo]], ...)
+	local word_initial_hi, syl_initial_hi
+	text, word_initial_hi = rsubb(text, "#h?i(" .. V .. ")", rioplat and "#j%1" or "#ɟ%1")
+	text, syl_initial_hi = rsubb(text, "(" .. C .. sylsep_c .. "*)hi(" .. V .. ")", rioplat and "%1j%2" or "%1ɟ%2")
+	initial_hi = word_initial_hi or syl_initial_hi
+	-- handle word- and syllable-initial huV ([[huevo]], [[deshuesar]])
+	text = rsubb(text, "(" .. C_OR_WORDSEP .. sylsep_c .. "*)hu(" .. V .. ")", "%1" .. TEMP_W .. "%2")
 
 	-- handle double consonants that have a pronunciation different from their single equivalents
 	-- double l
@@ -388,9 +427,9 @@ function export.IPA(text, dialect, phonetic)
 	-- [[desregular]], etc.), zr ([[Azrael]], [[cruzrojista]]), rr
 	text = rsub(text, "ɾɾ", "r")
 	text = rsub(text, "([#lnszθ])ɾ", "%1r")
-	-- double n (ennoblecer...)
+	-- double n (e.g. [[[ennoblecer]])
 	text = rsub(text, "nn", "N")
-	-- double b (subbase...)
+	-- double b (e.g. [[subbase]])
 	text = rsub(text, "bb", "B")
 
 	-- reduce any remaining double consonants ([[Addis Abeba]], [[cappa]], [[descender]] in Latin America ...);
@@ -420,8 +459,8 @@ function export.IPA(text, dialect, phonetic)
 	local vowel_to_glide = { ["i"] = "j", ["u"] = "w" }
 	-- i and u between vowels -> consonant-like substitutions: [[paranoia]], [[baiano]], [[abreuense]], [[alauita]],
 	-- [[Malaui]], etc.; also with h, as in [[marihuana]], [[parihuela]], [[antihielo]], [[pelluhuano]], [[náhuatl]],
-	-- etc.
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*h?)([iu])(" .. V .. ")",
+	-- etc. Add .* at the beginning so we go right-to-left, in the case of [[hawaiiano]] -> ha.wai.iano.
+	text = rsub_repeatedly(text, "(.*" .. V .. accent_c .. "*h?)([iu])(" .. V .. ")",
 		function (v1, iu, v2) return v1 .. vowel_to_glide[iu] .. v2 end
 	)
 
@@ -514,7 +553,7 @@ function export.IPA(text, dialect, phonetic)
 	--phonetic transcription
 	if phonetic then
 		-- θ, s, f before voiced consonants
-		local voiced = "mnɲbdɟgʎ"
+		local voiced = "mnɲbdɟgʎ" .. TEMP_W
 		local r = "ɾr"
 		local tovoiced = {
 			["θ"] = "θ̬",
@@ -580,11 +619,6 @@ function export.IPA(text, dialect, phonetic)
 
 		-- voiced fricatives are actually approximants
 		text = rsub(text, "([βðɣ])", "%1̞")
-
-		if rioplat then
-			text = rsub(text, "s(" .. separator_c .. "*" .. C .. ")", "ħ%1") -- not the real symbol
-			text = rsub(text, "z(" .. separator_c .. "*" .. C .. ")", "ɦ%1")
-		end
 	end
 
 	-- convert fake symbols to real ones
@@ -594,8 +628,9 @@ function export.IPA(text, dialect, phonetic)
 		["ɟ"] = phonetic and "ɟ͡ʝ" or "ʝ", -- fake "y" to real "y"
 		-- do the following at the very end so we can use regular g throughout
 		["g"] = "ɡ", -- U+0067 LATIN SMALL LETTER G → U+0261 LATIN SMALL LETTER SCRIPT G
+		[TEMP_W] = "w̝", -- see https://en.wikipedia.org/wiki/Spanish_orthography for this
 	}
-	text = rsub(text, "[ħĉɟg]", final_conversions)
+	text = rsub(text, "[ħĉɟg" .. TEMP_W .. "]", final_conversions)
 
 	-- remove # symbols at word and text boundaries
 	text = rsub(text, "#", "")
@@ -954,6 +989,8 @@ local function dodialect_pronun(args, ret, dialect)
 			refs = refs,
 			q = term.q,
 			qq = term.qq,
+			a = term.a,
+			aa = term.aa,
 			differences = differences,
 		}
 	end
@@ -982,6 +1019,7 @@ local function generate_pronun(args)
 		-- in a way that requires the correct order, we need changes to the code below.
 		for j, pronun in ipairs(expressed_style.pronun) do
 			-- Add tag to left qualifiers if first one
+			-- FIXME: Consider using accent qualifier for the tag instead.
 			local qs = pronun.q
 			if j == 1 and tag then
 				if qs then
@@ -1019,7 +1057,9 @@ local function generate_pronun(args)
 
 			if qs then
 				pronunciations[first_pronun].q = qs
-				ins("(" .. table.concat(qs, ", ") .. ") ")
+			end
+			if pronun.a then
+				pronunciations[first_pronun].a = a
 			end
 			if j > 1 then
 				pronunciations[first_pronun].separator = ", "
@@ -1027,8 +1067,22 @@ local function generate_pronun(args)
 			end
 			if pronun.qq then
 				pronunciations[last_pronun].qq = pronun.qq
-				ins(" (" .. table.concat(pronun.qq, ", ") .. ")")
 			end
+			if pronun.aa then
+				pronunciations[last_pronun].aa = pronun.aa
+			end
+			if qs or pronun.a or pronun.qq or pronun.aa then
+				local data = {
+					q = qs,
+					a = pronun.a,
+					qq = pronun.qq,
+					aa = pronun.aa
+				}
+				-- Note: This inserts the actual formatted qualifier text, including HTML and such, but the later call
+				-- to textual_len() removes all HTML and reduces links.
+				ins(require("Module:pron qualifier").format_qualifiers(data, ""))
+			end
+
 			if pronun.refs then
 				pronunciations[last_pronun].refs = pronun.refs
 				-- Approximate the reference using a footnote notation. This will be slightly inaccurate if there are
@@ -1068,7 +1122,7 @@ local function parse_respelling(respelling, pagename, parse_err)
 		if not raw_phonemic then
 			raw_phonetic = raw_respelling:match("^%[(.*)%]$")
 		end
-		if not raw_phonetic then
+		if not raw_phonemic and not raw_phonetic then
 			parse_err(("Unable to parse raw respelling '%s', should be one of /.../, [...] or /.../ [...]")
 				:format(raw_respelling))
 		end
@@ -1206,7 +1260,7 @@ end
 
 
 local function should_generate_rhyme_from_ipa(ipa)
-	return not ipa:find("%s")
+	return not ipa:find("%s") and word_has_vowels(decompose(ipa))
 end
 
 
@@ -1268,7 +1322,7 @@ local function dodialect_specified_rhymes(rhymes, hyphs, parsed_respellings, rhy
 end
 
 
-local function parse_rhyme_hyph_homophone(arg, put, parse_err, generate_obj, param_mods)
+local function parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods, no_split_on_comma)
 	local retval = {}
 
 	if arg:find("<") then
@@ -1282,12 +1336,16 @@ local function parse_rhyme_hyph_homophone(arg, put, parse_err, generate_obj, par
 				table.insert(valid_prefixes, param_mod)
 			end
 			table.insert(valid_prefixes, "q")
+			table.insert(valid_prefixes, "qq")
+			table.insert(valid_prefixes, "a")
+			table.insert(valid_prefixes, "aa")
 			table.sort(valid_prefixes)
 			return valid_prefixes
 		end
 
 		local segments = put.parse_balanced_segment_run(arg, "<", ">")
-		local comma_separated_groups = put.split_alternating_runs_on_comma(segments)
+		local comma_separated_groups =
+			no_split_on_comma and {segments} or put.split_alternating_runs_on_comma(segments)
 		for _, group in ipairs(comma_separated_groups) do
 			local obj = generate_obj(group[1])
 			for j = 2, #group - 1, 2 do
@@ -1307,11 +1365,11 @@ local function parse_rhyme_hyph_homophone(arg, put, parse_err, generate_obj, par
 					parse_err("Modifier " .. group[j] .. " lacks a prefix, should begin with one of " ..
 						m_table.serialCommaJoin(valid_prefixes))
 				end
-				if prefix == "q" then
-					if not obj.qualifiers then
-						obj.qualifiers = {}
+				if prefix == "q" or prefix == "qq" or prefix == "a" or prefix == "aa" then
+					if not obj[prefix] then
+						obj[prefix] = {}
 					end
-					table.insert(obj.qualifiers, val)
+					table.insert(obj[prefix], val)
 				elseif param_mods[prefix] then
 					local key = param_mods[prefix].item_dest or prefix
 					if obj[key] then
@@ -1334,6 +1392,8 @@ local function parse_rhyme_hyph_homophone(arg, put, parse_err, generate_obj, par
 			end
 			table.insert(retval, obj)
 		end
+	elseif no_split_on_comma then
+		table.insert(retval, generate_obj(arg))
 	else
 		for _, term in ipairs(split_on_comma(arg)) do
 			table.insert(retval, generate_obj(term))
@@ -1364,7 +1424,7 @@ local function parse_rhyme(arg, put, parse_err)
 		},
 	}
 
-	return parse_rhyme_hyph_homophone(arg, put, parse_err, generate_obj, param_mods)
+	return parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods)
 end
 
 
@@ -1372,7 +1432,7 @@ local function parse_hyph(arg, put, parse_err)
 	-- None other than qualifiers
 	local param_mods = {}
 
-	return parse_rhyme_hyph_homophone(arg, put, parse_err, generate_hyph_obj, param_mods)
+	return parse_pron_modifier(arg, put, parse_err, generate_hyph_obj, param_mods)
 end
 
 
@@ -1401,17 +1461,32 @@ local function parse_homophone(arg, put, parse_err)
 		},
 	}
 
-	return parse_rhyme_hyph_homophone(arg, put, parse_err, generate_obj, param_mods)
+	return parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods)
 end
 
 
-local function parse_audio(arg)
-	local file, gloss = arg:match("^(.-)%s*;%s*(.*)$")
+local function generate_audio_obj(arg)
+	local file, gloss
+	if arg:find("#") then
+		file, gloss = arg:match("^(.-)%s*#%s*(.*)$")
+	else
+		file, gloss = arg:match("^(.-)%s*;%s*(.*)$")
+	end
 	if not file then
 		file = arg
 		gloss = "Audio"
 	end
 	return {file = file, gloss = gloss}
+end
+
+
+local function parse_audio(arg, put, parse_err)
+	-- None other than qualifiers
+	local param_mods = {}
+
+	-- Don't split on comma because some filenames have embedded commas not followed by a space
+	-- (typically followed by an underscore).
+	return parse_pron_modifier(arg, put, parse_err, generate_audio_obj, param_mods, "no split on comma")
 end
 
 
@@ -1445,7 +1520,11 @@ function export.show_pr(frame)
 	if args.audio then
 		overall_audio = {}
 		for _, audio in ipairs(args.audio) do
-			table.insert(overall_audio, parse_audio(audio))
+			local parsed_audio = parse_audio(audio, nil, function(msg) overall_parse_err(msg, "audio", audio))
+			if #parsed_audio > 1 then
+				error("Internal error: Saw more than one object returned from parse_audio")
+			end
+			table.insert(overall_audio, parsed_audio[1])
 		end
 	end
 	local put
@@ -1488,7 +1567,8 @@ function export.show_pr(frame)
 				},
 				audio = {
 					insert = true,
-					convert = parse_audio,
+					flatten = true,
+					convert = function(arg) return parse_audio(arg, put, parse_err) end,
 				},
 			}
 
@@ -1500,6 +1580,8 @@ function export.show_pr(frame)
 				table.insert(valid_prefixes, "ref")
 				table.insert(valid_prefixes, "q")
 				table.insert(valid_prefixes, "qq")
+				table.insert(valid_prefixes, "a")
+				table.insert(valid_prefixes, "aa")
 				table.sort(valid_prefixes)
 				return valid_prefixes
 			end
@@ -1526,7 +1608,7 @@ function export.show_pr(frame)
 						parse_err("Modifier " .. group[k] .. " lacks a prefix, should begin with one of " ..
 							m_table.serialCommaJoin(valid_prefixes))
 					end
-					if prefix == "ref" or prefix == "q" or prefix == "qq" then
+					if prefix == "ref" or prefix == "q" or prefix == "qq" or prefix == "a" or prefix == "aa" then
 						if not termobj[prefix] then
 							termobj[prefix] = {}
 						end
@@ -1630,14 +1712,8 @@ function export.show_pr(frame)
 		else
 			for _, hyph in ipairs(parsed.hyph) do
 				if hyph.syllabification == "+" then
-					for _, term in ipairs(parsed.terms) do
-						if term.raw then
-							error("Can't generate default hyphenation when raw respelling given (no actual respelling available to hyphenate); "
-								.. "consider specifying overall |hyph=+ to hyphenate the pagename")
-						end
-						hyph.syllabification = syllabify_from_spelling(term.term)
-						hyph.hyph = split_syllabified_spelling(hyph.syllabification)
-					end
+					hyph.syllabification = syllabify_from_spelling(pagename)
+					hyph.hyph = split_syllabified_spelling(hyph.syllabification)
 				elseif hyph.syllabification == "-" then
 					parsed.hyph = {}
 					break
@@ -1788,6 +1864,7 @@ function export.show_pr(frame)
 				lang = lang,
 				rhymes = rhymes,
 				qualifiers = tag and {tag} or nil,
+				force_cat = force_cat,
 			}
 			local bullet = string.rep("*", num_bullets) .. " "
 			local formatted = bullet .. require("Module:rhymes").format_rhymes(data)
@@ -1848,8 +1925,14 @@ function export.show_pr(frame)
 		local ret = {}
 		for i, audio in ipairs(audios) do
 			-- FIXME! There should be a module for this.
-			table.insert(ret, string.rep("*", num_bullets) .. " " .. frame:expandTemplate {
-				title = "audio", args = {"es", audio.file, audio.gloss }})
+			local text = frame:expandTemplate {
+				title = "audio", args = {"es", audio.file, audio.gloss }
+			}
+			if audio.q and audio.q[1] or audio.qq and audio.qq[1]
+				or audio.a and audio.a[1] or audio.aa and audio.aa[1] then
+				text = require("Module:pron qualifier").format_qualifiers(audio, text)
+			end
+			table.insert(ret, string.rep("*", num_bullets) .. " " .. text)
 		end
 		return table.concat(ret, "\n")
 	end
