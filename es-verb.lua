@@ -348,7 +348,7 @@ local function allow_multiple_values(separated_groups, data)
 	local retvals = {}
 	for _, separated_group in ipairs(separated_groups) do
 		local footnotes = data.fetch_footnotes(separated_group)
-		local retval = {form = separated_group[1], footnotes = footnotes}
+		local retval = {form = separated_group[1], footnotes = footnotes, suppress_prefix = true}
 		table.insert(retvals, retval)
 	end
 	return retvals
@@ -1379,8 +1379,33 @@ local function add(base, slot, stems, endings, is_combining_ending, allow_overri
 end
 
 
-local function add3(base, slot, prefix, stems, endings, allow_overrides)
-	if prefix == "" then
+local function add3(base, slot, stems, endings, allow_overrides)
+	local no_prefix = base.prefix == ""
+	local mixed_prefix
+	if not no_prefix then
+		-- Check whether any or all stems have `suppress_prefix`.
+		local any_suppress_prefix = false
+		local any_not_suppress_prefix = false
+		if type(stems) == "table" then
+			if stems.suppress_prefix then
+				-- A single form object.
+				any_suppress_prefix = true
+			else
+				for _, stem in ipairs(stems) do
+					if type(stem) == "table" and stem.suppress_prefix then
+						any_suppress_prefix = true
+					else
+						any_not_suppress_prefix = true
+					end
+				end
+			end
+		else
+			any_not_suppress_prefix = true
+		end
+
+
+
+	if base.prefix == "" then
 		return add(base, slot, stems, endings, "is combining ending", allow_overrides)
 	end
 
@@ -1398,7 +1423,7 @@ local function add3(base, slot, prefix, stems, endings, allow_overrides)
 	-- flag, which needs to be different when adding prefix to stems vs. stems to ending.
 	-- Otherwise we get e.g. #reímpreso instead of reimpreso.
 	local tempdest = {}
-	iut.add_forms(tempdest, slot, prefix, stems, do_combine_stem_ending)
+	iut.add_forms(tempdest, slot, base.prefix, stems, do_combine_stem_ending)
 	is_combining_ending = true
 	iut.add_forms(base.forms, slot, tempdest[slot], endings, do_combine_stem_ending)
 end
@@ -1420,7 +1445,7 @@ end
 
 local function add_single_stem_tense(base, slot_pref, stems, s1, s2, s3, p1, p2, p3)
 	local function addit(slot, ending)
-		add3(base, slot_pref .. "_" .. slot, base.prefix, stems, ending)
+		add3(base, slot_pref .. "_" .. slot, stems, ending)
 	end
 	addit("1s", s1)
 	addit("2s", s2)
@@ -1434,7 +1459,7 @@ end
 
 local function add_present_indic(base)
 	local function addit(slot, stems, ending)
-		add3(base, "pres_" .. slot, base.prefix, stems, ending)
+		add3(base, "pres_" .. slot, stems, ending)
 	end
 	local s2, s2v, s3, p1, p2, p3
 	if base.conj == "ar" then
@@ -1459,7 +1484,7 @@ end
 
 local function add_present_subj(base)
 	local function addit(slot, stems, ending)
-		add3(base, "pres_sub_" .. slot, base.prefix, stems, ending)
+		add3(base, "pres_sub_" .. slot, stems, ending)
 	end
 	local s1, s2, s2v, s3, p1, p2, p3, voseo_stem
 	if base.conj == "ar" then
@@ -1480,7 +1505,7 @@ end
 
 local function add_imper(base)
 	local function addit(slot, stems, ending)
-		add3(base, "imp_" .. slot, base.prefix, stems, ending)
+		add3(base, "imp_" .. slot, stems, ending)
 	end
 	if base.conj == "ar" then
 		addit("2s", base.stems.pres_stressed, "a")
@@ -1542,7 +1567,7 @@ end
 local function add_non_finite_forms(base)
 	local stems = base.stems
 	local function addit(slot, stems, ending)
-		add3(base, slot, base.prefix, stems, ending)
+		add3(base, slot, stems, ending)
 	end
 	insert_form(base, "infinitive", {form = base.verb})
 	-- Also insert "infinitive + reflexive pronoun" combinations if we're handling a reflexive verb. See comment below for
@@ -1688,7 +1713,7 @@ local function process_slot_overrides(base, do_basic, reflexive_only)
 	local overrides = reflexive_only and base.basic_reflexive_only_overrides or
 		do_basic and base.basic_overrides or base.combined_overrides
 	for slot, forms in pairs(overrides) do
-		add(base, slot, base.prefix, forms, false, "allow overrides")
+		add(base, slot, forms, false, "allow overrides")
 	end
 end
 
