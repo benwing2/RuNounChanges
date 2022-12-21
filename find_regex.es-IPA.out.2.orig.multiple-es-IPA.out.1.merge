@@ -3,11 +3,11 @@ Page 25 pie: Found match for regex: [
 Page 25 pie: -------- begin text --------
 [[File:Grown_man's_feet_2.jpg|thumb|Los '''pies''' de un hombre.]]
 
-===Pronunciation===
-{{es-pr}}
-
 ===Etymology 1===
 From {{inh|es|osp|pie}}, from {{inh|es|la|pedem}}, accusative singular of {{m|la|pēs}}, from {{der|es|ine-pro|*pṓds}}.
+
+====Pronunciation====
+{{es-pr}}
 
 ====Noun====
 {{es-noun|m}}
@@ -139,13 +139,7 @@ Page 53 de: Found match for regex: =
 Page 53 de: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|pre={{q|after a pause, 'l', 'm', 'n' and 'ñ'}}}}
-* {{q|elsewhere}} {{IPA-lite|es|/de/|[ð̞e̞]}}
-* {{audio|es|Es-am-lat-de.ogg|Audio (Latin America)}}
-* {{audio|es|Letter d es es.flac|Audio (Spain)}}
-* {{homophones|es|dé}}
-{{es-IPA}}
-* {{rhymes-lite|es|e|s=1}}
+{{es-pr|+<q:after a pause, 'l', 'm', 'n' and 'ñ'>|raw:/de/ [ð̞e̞]<q:elsewhere>|audio=Es-am-lat-de.ogg;Audio (Latin America)|audio2=Letter d es es.flac;Audio (Spain)|hmp=dé}}
 
 ===Etymology 1===
 
@@ -224,10 +218,7 @@ Page 55 en: -------- begin text --------
 From {{inh-lite|es|osp|en}}, from {{inh-lite|es|la|in}}, from {{inh|es|itc-pro|*en}}, from {{inh|es|ine-pro|*h₁én||in}}. Cognate with {{cog-lite|ang|in}} and {{cog-lite|en|in}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|em|post={{qualifier|before b, v, p}}}}
-* {{audio|es|LL-Q1321 (spa)-Rodelar-en.wav|Audio}}
-* {{rhymes-lite|es|en|s=1}}
+{{es-pr|+<audio:LL-Q1321 (spa)-Rodelar-en.wav>|em<qq:before b, v, p><rhyme:->}}
 
 ===Preposition===
 {{head-lite|es|prepositions|langname=Spanish}}
@@ -321,10 +312,7 @@ Compare {{cog|ca|os}}, {{cog|fr|os}}, {{cog|ia|osso}}, {{cog|it|osso}}, {{cog|pt
 Political sense comes from comparing a dog looking for and defending a bone and a politician searching for a position.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|bueso|pre={{a|dialectal}}}}
-{{es-IPA|güeso|pre={{a|dialectal}}}}
-* {{audio|es|LL-Q1321 (spa)-Rodelar-hueso.wav|Audio}}
+{{es-pr|+<audio:LL-Q1321 (spa)-Rodelar-hueso.wav>|bueso<q:dialectal>,güeso}}
 
 ===Noun===
 {{es-noun|m}}
@@ -370,7 +358,7 @@ Page 220 beige: -------- begin text --------
 {{ubor|es|fr|beige}}
 
 ===Pronunciation===
-{{es-pr|beish,beis}}
+{{es-pr|beish|beis}}
 
 ===Adjective===
 {{es-adj|inv=1}}
@@ -398,7 +386,7 @@ Page 242 wiki: -------- begin text --------
 Borrowed from {{bor|es|en|wiki}}.
 
 ===Pronunciation===
-{{es-pr|+,ɡwiki}}
+{{es-pr|+,gwiki}}
 
 ===Noun===
 {{es-noun|mf}}
@@ -415,8 +403,7 @@ Page 267 iceberg: -------- begin text --------
 From {{bor|es|en|iceberg}}, from {{der|es|nl|ijsberg|lit=ice mountain}}.
 
 ===Pronunciation===
-{{es-IPA|iceber(g)}}
-{{es-IPA|áisberg|pre={{a|Latin America|also}}}}
+{{es-pr|iceber,+|áisberg<q:Latin America, also>}}
 
 ===Noun===
 {{es-noun|m}}
@@ -439,11 +426,7 @@ Page 305 abuela: -------- begin text --------
 Feminine of {{m|es|abuelo}}. From {{inh|es|VL.|*aviola}} (see for cognates), from {{inh|es|la|avia}}.
 
 ===Pronunciation===
-{{es-IPA}}
-* {{audio|es|LL-Q1321 (spa)-AdrianAbdulBaha-abuela.wav|Audio (Colombia)}}
-{{es-IPA|ahuela|pre={{q|dialectal}}}}
-{{es-IPA|agüela|pre={{q|dialectal}}}}
-* {{rhymes|es|ela}}
+{{es-pr|+<audio:LL-Q1321 (spa)-AdrianAbdulBaha-abuela.wav;Audio (Colombia)>|ahuela<q:dialectal>,agüela}}
 
 ===Noun===
 {{es-noun|f|m=+}}
@@ -490,10 +473,7 @@ Page 306 abuelo: -------- begin text --------
 {{unk|es|title=Origin uncertain}}. Possibly from {{inh|es|la|*aviolus}} (see for cognates), from Classical {{der|es|la|avus}} (from {{der|es|ine-pro|*h₂éwh₂os||grandfather}}) + {{m|la|-olus}}.<ref>{{R:es:BDELC}}</ref>
 
 ===Pronunciation===
-{{es-IPA}}
-* {{audio|es|LL-Q1321 (spa)-AdrianAbdulBaha-abuelo.wav|Audio (Colombia)}}
-{{es-IPA|ahuelo|pre={{q|dialectal}}}}
-{{es-IPA|agüelo|pre={{q|dialectal}}}}
+{{es-pr|+<audio:LL-Q1321 (spa)-AdrianAbdulBaha-abuelo.wav;Audio (Colombia)>|ahuelo<q:dialectal>,agüelo}}
 
 ===Noun===
 {{es-noun|m|f=+}}
@@ -540,11 +520,7 @@ Page 347 pizza: -------- begin text --------
 {{unadapted borrowing|es|it|pizza}}.
 
 ===Pronunciation===
-* {{audio|es|LL-Q1321 (spa)-AdrianAbdulBaha-pizza.wav|Audio (Colombia)}}
-{{es-IPA|pit.sa}}
-{{es-IPA|pikh.sa}}
-''Or even:''
-{{es-IPA|piza}}
+{{es-pr|pith.sa|pikh.sa|piza<q:or even:>|rhyme=-|audio=LL-Q1321 (spa)-AdrianAbdulBaha-pizza.wav<a:Colombia>}}
 
 ===Noun===
 {{es-noun|f}}
@@ -591,12 +567,7 @@ Page 379 huevo: -------- begin text --------
 From {{inh|es|osp|hueuo}}, from {{inh|es|la|ōvum}}, from {{inh|es|itc-pro|*ōwom}}, from {{inh|es|ine-pro|*h₂ōwyóm}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|güevo|pre={{a|dialectal}}}}
-{{es-IPA|vuevo|pre={{a|dialectal}}}}
-* {{audio|es|LL-Q1321 (spa)-Rodelar-huevo.wav|Audio}}
-* {{rhymes|es|ebo}}
-* {{hyph|es|hue|vo}}
+{{es-pr|+<audio:LL-Q1321 (spa)-Rodelar-huevo.wav>|güevo<q:dialectal>,vuevo}}
 
 ===Noun===
 {{es-noun|m}}
@@ -683,7 +654,7 @@ From {{bor|es|roa-oca|relotge}} (1362) (Modern {{cog|ca|rellotge}}), from the ol
 Cognate with {{cog|roa-opt|relojo}}, {{cog|pt|relógio}}, {{cog|fr|horloge}}, {{cog|it|orologio}} and {{cog|ro|orologiu}}.
 
 ===Pronunciation===
-{{es-pr|+<audio:LL-Q1321 (spa)-AdrianAbdulBaha-reloj.wav;Audio (Colombia)>}}
+{{es-pr|+<audio:LL-Q1321 (spa)-AdrianAbdulBaha-reloj.wav#Audio (Colombia)>}}
 
 ===Noun===
 {{es-noun|m}}
@@ -796,7 +767,7 @@ Page 491 snow: Found match for regex: =
 Page 491 snow: -------- begin text --------
 
 ===Pronunciation===
-{{es-pr|esnó,esnóu}}
+{{es-pr|esnó|esnóu}}
 
 ===Noun===
 {{es-noun|m|-}}
@@ -814,10 +785,7 @@ Page 507 b: Found match for regex: =
 Page 507 b: -------- begin text --------
 
 ===Pronunciation===
-* {{qualifier|phoneme}} {{IPA|es|/b/|[β̞]}}
-{{es-IPA|be|pre={{qualifier|letter name}}}}
-{{es-IPA|be larga|pre={{qualifier|common in some countries}}|post=({{m|es|be larga}})|bullets=2}}
-** {{audio|es|letter b es es.flac|Audio (Spain)}}
+{{es-pr|raw:/b/ [β̞]<q:phoneme>|be<q:letter name><audio:letter b es es.flac;Audio (Spain)>|be larga<bullets:2><q:common in some countries><post:({{m|es|be larga}})>}}
 
 ===Letter===
 {{es-letter|upper=B|lower=b}}
@@ -836,12 +804,7 @@ Page 509 c: Found match for regex: =
 Page 509 c: -------- begin text --------
 
 ===Pronunciation===
-{{q|phoneme}}
-{{es-IPA|k}}
-{{es-IPA|z}}
-{{q|letter name}}
-{{es-IPA|cé}}
-* {{audio|es|letter c es es.flac|Audio (Spain)}}
+{{es-pr|k<q:phoneme>,z|cé<q:letter name><audio:letter c es es.flac<a:Spain>}}
 
 ===Letter===
 {{es-letter|lower=c|upper=C}}
@@ -855,10 +818,7 @@ Page 520 r: Found match for regex: =
 Page 520 r: -------- begin text --------
 
 ===Pronunciation===
-* {{qualifier|phoneme}} {{IPA|es|/ɾ/|/r/}}
-{{es-IPA|erre|pre={{qualifier|letter name}}}}
-** {{audio|es|letter r es es.flac|Audio (Spain)}}
-{{es-IPA|ere}}
+{{es-pr|raw:/ɾ/<q:phoneme>,raw:/r/|erre<q:letter name><audio:letter r es es.flac;Audio (Spain)>}}
 
 ===Letter===
 {{head|es|letter|lower case||upper case|R}}
@@ -878,15 +838,16 @@ Page 524 v: Found match for regex: =
 Page 524 v: -------- begin text --------
 
 ===Pronunciation===
-* {{sense|phoneme}} {{IPA|es|/b/}}
-* {{sense|letter name}}
-{{es-IPA|ve|pre={{qualifier|traditional}}|bullets=2}} (spelled {{m|es|ve}})
-{{es-IPA|uve|pre={{qualifier|common in most countries}}}} (spelled {{m|es|uve}}) {{audio|es|Letter v es es.flac|Audio (Spain)|bullets=2}}
-** {{qualifier|common in some countries}}:
-{{es-IPA|ve corta|post=({{m|es|ve corta}});|bullets=3}}
-{{es-IPA|ve baja|post=({{m|es|ve baja}});|bullets=3}}
-{{es-IPA|ve pequeña|post=({{m|es|ve pequeña}}); or|bullets=3}}
-{{es-IPA|ve chica|post=({{m|es|ve chica}})|bullets=3}}
+{{es-pr
+|raw:/b/<q:phoneme>
+|ve<q:letter name><qq:traditional, spelled {{m|es|ve}}>,uve<qq:common in most countries, spelled {{m|es|uve}}><audio:Letter v es es.flac;Audio (Spain)>
+}}
+* {{q|common in some countries}}{{es-pr
+|ve corta<qq:spelled {{m|es|ve corta}}><bullets:2>
+|ve baja<qq:spelled {{m|es|ve baja}}><bullets:2>
+|ve pequeña<qq:spelled {{m|es|ve pequeña}}><bullets:2>
+|ve chica<qq:spelled {{m|es|ve chica}}><bullets:2>
+}}
 
 ===Letter===
 {{head|es|letter|lower case||upper case|V}}
@@ -906,10 +867,11 @@ Page 525 w: Found match for regex: =
 Page 525 w: -------- begin text --------
 
 ===Pronunciation===
-* {{qualifier|phoneme}} {{IPA|es|/w/|/ɡw/|/β/}}
-{{es-IPA|uve doble|pre={{qualifier|letter name}}}}
-{{es-IPA|dóble vè|pre={{qualifier|letter name}}}}
-** {{audio|es|letter w es es.flac|Audio (Spain)}}
+{{es-pr
+|raw:/w/<q:phoneme>,raw:/gw/,raw:/β/
+|uve doble<q:letter name>
+|dóble vè<q:letter name><audio:letter w es es.flac;Audio (Spain)>
+}}
 
 ===Letter===
 {{head|es|letter|lower case||upper case|W}}
@@ -926,8 +888,7 @@ Page 543 gourmet: -------- begin text --------
 {{ubor|es|fr|gourmet}}.
 
 ===Pronunciation===
-{{es-IPA|gurmet}}
-{{es-IPA|gurmé}}
+{{es-pr|gurmet|gurmé}}
 
 ===Adjective===
 {{es-adj}}
@@ -952,9 +913,7 @@ Page 563 hardware: -------- begin text --------
 {{unadapted borrowing|es|en|hardware}}.
 
 ===Pronunciation===
-{{es-IPA|járduer}}
-{{es-IPA|járruer}}
-{{es-IPA|járgüer}}
+{{es-pr|járduer|járruer|járgüer|rhyme=-}}
 
 ===Noun===
 {{es-noun|m}}
@@ -977,8 +936,7 @@ Page 569 hey: -------- begin text --------
 Borrowed from {{bor|es|en|hey}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|jei|pre=(Imitating English)}}
+{{es-pr|+|jei<q:imitating English>}}
 
 ===Interjection===
 {{head|es|interjection|head=¡hey!}}
@@ -1001,8 +959,7 @@ Page 608 theta: -------- begin text --------
 From {{bor|es|grc|θῆτα}}.
 
 ===Pronunciation===
-{{es-IPA|teta}}
-{{es-IPA|tita}}
+{{es-pr|teta|tita}}
 
 ===Noun===
 {{es-noun|f}}
@@ -1020,8 +977,7 @@ Page 609 iota: -------- begin text --------
 From {{bor|es|grc|ἰῶτα}}.
 
 ===Pronunciation===
-{{es-IPA|i.ota}}
-{{es-IPA}}
+{{es-pr|i.ota,+}}
 
 ===Noun===
 {{es-noun|f}}
@@ -1040,8 +996,7 @@ Page 773 spam: -------- begin text --------
 {{ubor|es|en|spam}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|espam}}
+{{es-pr|+,espam}}
 
 ===Noun===
 {{es-noun|m}}
@@ -1068,8 +1023,7 @@ Page 777 judo: -------- begin text --------
 See {{l|es|yudo}}.
 
 ===Pronunciation===
-{{es-IPA|post=(recommended by RAE for this spelling)}}
-{{es-IPA|yudo|post=(more common)}}
+{{es-pr|+<qq:recommended by RAE for this spelling>|yudo<qq:more common>}}
 
 ===Noun===
 {{es-noun|m|-}}
@@ -1098,8 +1052,7 @@ Page 799 wasabi: -------- begin text --------
 Borrowed from {{bor|es|ja|山葵|tr=wasabi}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|guasabi}}
+{{es-pr|+,guasabi}}
 
 ===Noun===
 {{es-noun|m|-}}
@@ -1115,8 +1068,7 @@ Page 858 ska: -------- begin text --------
 {{ubor|es|en|ska}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|escá}}
+{{es-pr|+,escá}}
 
 ===Noun===
 {{es-noun|m}}
@@ -1133,8 +1085,7 @@ Page 897 smog: Found match for regex: =
 Page 897 smog: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|esmog}}
-{{es-IPA}}
+{{es-pr|esmog,+}}
 
 ===Noun===
 {{es-noun|m}}
@@ -1145,8 +1096,7 @@ Page 912 speaker: Found match for regex: =
 Page 912 speaker: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|spíker}}
-{{es-IPA|espíker}}
+{{es-pr|spíker,espíker}}
 
 ===Noun===
 {{es-noun|mf|speakers|pl2=speaker}}
@@ -1157,8 +1107,7 @@ Page 1024 Tucson: Found match for regex: =
 Page 1024 Tucson: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|Tucsón}}
-{{es-IPA}}
+{{es-pr|Tucsón|+}}
 
 ===Proper noun===
 {{es-proper noun}}
@@ -1180,8 +1129,7 @@ Page 1030 snack: -------- begin text --------
 {{ubor|es|en|-}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|esnac}}
+{{es-pr|+,esnac}}
 
 ===Noun===
 {{es-noun|m}}
@@ -1201,8 +1149,7 @@ Page 1036 sketch: -------- begin text --------
 {{ubor|es|en|sketch}}.
 
 ===Pronunciation===
-{{es-IPA|squech}}
-{{es-IPA|esquech}}
+{{es-pr|squech,esquech}}
 
 ===Noun===
 {{es-noun|m|sketches}}
@@ -1239,8 +1186,7 @@ Page 1056 step: -------- begin text --------
 {{ubor|es|en|step}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|estep}}
+{{es-pr|+,estep}}
 
 ===Noun===
 {{es-noun|m|-}}
@@ -1257,8 +1203,7 @@ Page 1111 lord: -------- begin text --------
 Borrowed from {{bor|es|en|lord}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|lor}}
+{{es-pr|+|lor}}
 
 ===Noun===
 {{es-noun|m|lores}}
@@ -1285,9 +1230,7 @@ Page 1129 paparazzi: -------- begin text --------
 {{ubor|es|it|-}}, plural of {{m|it|paparazzo}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|paparachi|pre={{a|everywhere, alternatively}}}}
-* {{hyphenation|es|pa|pa|raz|zi}}
+{{es-pr|+|paparachi<q:everywhere, alternatively>}}
 
 ===Noun===
 {{es-noun|m}}
@@ -1304,7 +1247,7 @@ Page 1283 Kentucky: Found match for regex: =
 Page 1283 Kentucky: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|quentaqui}}{{es-IPA|quentoqui}}
+{{es-pr|quentaqui|quentoqui}}
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -1324,8 +1267,7 @@ Page 1292 web: -------- begin text --------
 Borrowed from {{bor|es|en|web}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|güeb}}
+{{es-pr|+,güeb}}
 
 ===Noun===
 {{es-noun|f|~}}
@@ -1357,7 +1299,7 @@ Page 1321 Texas: -------- begin text --------
 From Hasinai {{der|es|cad|táyshaʔ||friend, ally}}, used to refer to the [[Caddo]] nation.
 
 ===Pronunciation===
-{{es-pr|Tejas}}
+{{es-pr|Tejas|+<qq:proscribed but common in South America>}}
 
 ===Proper noun===
 {{es-proper noun|f}}
@@ -1456,11 +1398,11 @@ Page 1416 mnemotécnica: -------- begin text --------
 Page 1481 guagua: Found match for regex: =
 Page 1481 guagua: -------- begin text --------
 
+===Pronunciation===
+{{es-pr}}
+
 ===Etymology 1===
 Onomatopoetic of the sound made by the wheel suspension of the bus. (The public transport buses in the Canary Islands were not very modern in the early years.) The {{w|Royal Spanish Academy}} considers this etymology debated.
-
-====Pronunciation====
-{{es-pr}}
 
 ====Noun====
 {{es-noun|f}}
@@ -1476,9 +1418,6 @@ Onomatopoetic of the sound made by the wheel suspension of the bus. (The public 
 
 ===Etymology 2===
 Borrowed from {{bor|es|qu|wawa||infant, child}}.
-
-====Pronunciation====
-{{es-pr}}
 
 ====Noun====
 {{es-noun|f}}
@@ -1500,8 +1439,7 @@ Page 1513 foyer: -------- begin text --------
 Borrowed from {{bor|es|en|foyer}} or {{bor|es|fr|foyer}}.
 
 ===Pronunciation===
-{{es-IPA|fuahié}}
-{{es-IPA}}
+{{es-pr|fuahié|+}}
 
 ===Noun===
 {{es-noun|m|foyers|pl2=foyer}}
@@ -1527,8 +1465,8 @@ Borrowed from {{bor|es|ja|下駄|tr=geta}}.
 From {{der|es|la|Geta|}}, from {{der|es|grc|Γέτης}}.
 
 ====Pronunciation====
-{{es-IPA}}
-* Homophones: {{l|es|jeta}}
+{{es-pr}}
+* {{homophones|es|jeta}}
 
 ====Noun====
 {{es-noun|mf}}
@@ -1547,10 +1485,7 @@ Page 1552 ion: -------- begin text --------
 * {{alter|es|ión}}
 
 ===Pronunciation===
-{{es-IPA}}
-*: {{rhymes|es|on|s=1}}
-{{es-IPA|i.ón}}
-*: {{rhymes|es|on|s=2}}
+{{es-pr|+,i.ón}}
 
 ===Noun===
 {{es-noun|m}}
@@ -1570,8 +1505,7 @@ Page 1616 spyware: -------- begin text --------
 {{ubor|es|en|spyware}}.
 
 ===Pronunciation===
-{{es-IPA|spáihuer}}
-{{es-IPA|espáihuer}}
+{{es-pr|spáihuer,espáihuer}}
 
 ===Noun===
 {{es-noun|m}}
@@ -1589,8 +1523,7 @@ Page 1641 imam: -------- begin text --------
 From {{der|es|ar|إِمَام||leader}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|imán}}
+{{es-pr|+|imán}}
 
 ===Noun===
 {{es-noun|m|imames}}
@@ -1614,8 +1547,7 @@ Page 1704 haiku: -------- begin text --------
 Borrowed from {{bor|es|en|haiku}}, from {{der|es|ja|俳句|tr=はいく, haiku}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|jaiku}}
+{{es-pr|+|jaiku}}
 
 ===Noun===
 {{es-noun|m}}
@@ -1629,8 +1561,7 @@ Page 1803 squat: Found match for regex: =
 Page 1803 squat: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|scuat}}
-{{es-IPA|escuat}}
+{{es-pr|scuat,escuat}}
 
 ===Noun===
 {{es-noun|m}}
@@ -1644,8 +1575,7 @@ Page 1856 shampoo: -------- begin text --------
 {{ubor|es|en|shampoo}}.
 
 ===Pronunciation===
-{{es-IPA|shampú}}
-{{es-IPA|champú}}
+{{es-pr|shampú,champú}}
 
 ===Noun===
 {{es-noun|m}}
@@ -1663,8 +1593,7 @@ Page 1857 surf: -------- begin text --------
 From {{bor|es|en|surf}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|sorf}}
+{{es-pr|+|sorf}}
 
 ===Noun===
 {{es-noun|m|-}}
@@ -1694,9 +1623,7 @@ Page 1896 shiitake: -------- begin text --------
 Borrowed from {{bor|es|ja|椎茸|tr=しいたけ, shītake}}, from {{m|ja|椎|tr=しい, shī||shii tree}} + {{m|ja|茸|tr=たけ, take||mushroom}}.
 
 ===Pronunciation===
-{{es-IPA|shitake}}
-{{es-IPA|sitake}}
-* {{rhymes|es|ake}}
+{{es-pr|shitake,sitake}}
 
 ===Noun===
 {{es-noun|m}}
@@ -1713,8 +1640,7 @@ Page 1932 stream: -------- begin text --------
 {{ubor|es|en|-}}.
 
 ===Pronunciation===
-{{es-IPA|estrim}}
-{{es-IPA|estrín}}
+{{es-pr|estrim|estrín}}
 
 ===Noun===
 {{es-noun|m}}
@@ -1735,10 +1661,7 @@ Page 1962 psoriasis: -------- begin text --------
 From {{bor|es|grc|ψωρίασις}}, from {{m|grc|ψώρα||itch}} + {{m|grc|-σις||action, process}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA}}
-* {{rhymes|es|asis|s=3}}
-* {{hyph|es|pso|ria|sis}}
+{{es-pr}}
 
 ===Noun===
 {{es-noun|f}}
@@ -1763,8 +1686,7 @@ Page 1995 svastika: -------- begin text --------
 Borrowed from {{bor|es|sa|स्वस्तिक}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|esvastica}}
+{{es-pr|+,esvastica}}
 
 ===Noun===
 {{es-noun|f}}
@@ -1781,8 +1703,7 @@ Page 2014 Tennessee: -------- begin text --------
 * {{alt|es|Tenesí}}
 
 ===Pronunciation===
-{{es-IPA|ténesi}}
-{{es-IPA|tenesí}}
+{{es-pr|ténesi|tenesí}}
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -1801,9 +1722,7 @@ Page 2015 Washington: Found match for regex: =
 Page 2015 Washington: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|Wáshington}}
-{{es-IPA|Wásington}}
-{{es-IPA|Wáshiŋton|pre={{a|also}}}}
+{{es-pr|Wáshington|Wásington|Wáshiŋton<q:also>|rhyme=-}}
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -1823,11 +1742,11 @@ Page 2015 Washington: -------- begin text --------
 Page 2084 cinema: Found match for regex: =
 Page 2084 cinema: -------- begin text --------
 
+===Pronunciation===
+{{es-pr}}
+
 ===Etymology 1===
 Reduction of {{m|es|cinematógrafo}}.
-
-====Pronunciation====
-{{es-pr}}
 
 ====Noun====
 {{es-noun|m}}
@@ -1848,9 +1767,6 @@ Reduction of {{m|es|cinematógrafo}}.
 
 ===Etymology 2===
 Reduction of {{m|es|cinemática}}.
-
-====Pronunciation====
-{{es-pr}}
 
 ====Noun====
 {{es-noun|f}}
@@ -1876,8 +1792,7 @@ Page 2128 Chicago: -------- begin text --------
 {{wikipedia|lang=es}}
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|shicago|pre={{a|less common, imitating English pronunciation}}}}
+{{es-pr|+|Shicago<q:less common, imitating English pronunciation>}}
 
 ===Proper noun===
 {{es-proper noun}}
@@ -1891,8 +1806,7 @@ Page 2145 tv: Found match for regex: =
 Page 2145 tv: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|tevé}}
-{{es-IPA|teúve}}
+{{es-pr|tevé|teúve}}
 
 ===Noun===
 {{es-noun|f|-}}
@@ -1907,7 +1821,7 @@ Page 2155 rating: Found match for regex: =
 Page 2155 rating: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|reiting}}{{es-IPA}}
+{{es-pr|reiting|+}}
 
 ===Noun===
 {{es-noun|m}}
@@ -1931,8 +1845,7 @@ Page 2219 spoiler: -------- begin text --------
 {{ubor|es|en|spoiler}}.
 
 ===Pronunciation===
-{{es-IPA|spóiler}}
-{{es-IPA|espóiler}}
+{{es-pr|spóiler,espóiler}}
 
 ===Noun===
 {{es-noun|m|spoilers|pl2=spoiler}}
@@ -1954,8 +1867,7 @@ Page 2221 walkman: -------- begin text --------
 {{ubor|es|en|walkman}}.
 
 ===Pronunciation===
-{{es-IPA|wákman}}
-{{es-IPA|wálkman}}
+{{es-pr|wákman,wálkman|rhyme=-}}
 
 ===Noun===
 {{es-noun|m|walkman}}
@@ -1975,8 +1887,7 @@ Page 2329 debut: -------- begin text --------
 From {{bor|es|fr|début||debut}}.
 
 ===Pronunciation===
-{{es-IPA|debú}}
-{{es-IPA|pre={{a|spelling pronunciation}}}}
+{{es-pr|debú|+<q:spelling pronunciation>}}
 
 ===Noun===
 {{es-noun|m}}
@@ -2013,8 +1924,7 @@ Page 2396 Miami: Found match for regex: =
 Page 2396 Miami: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|Mihami}}
-{{es-IPA|Ma.iami}}
+{{es-pr|Mihami|Ma.iami}}
 
 ===Proper noun===
 {{es-proper noun|f}}
@@ -2029,10 +1939,7 @@ Page 2544 xenón: -------- begin text --------
 From {{der|es|grc|ξένος||strange}} {{suffix|es||ón}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|ksenón}}
-* {{audio|es|LL-Q1321 (spa)-Millars-xenón.wav|Audio}}
-* {{rhymes|es|on|s=2}}
+{{es-pr|+|ksenón|audio=LL-Q1321 (spa)-Millars-xenón.wav}}
 
 ===Noun===
 {{es-noun|m|-}}
@@ -2055,8 +1962,7 @@ Page 2547 wafle: -------- begin text --------
 Borrowed from {{bor|es|en|waffle}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|vafle}}
+{{es-pr|+,vafle}}
 
 ===Noun===
 {{es-noun|m}}
@@ -2077,10 +1983,7 @@ Page 2626 sexto: -------- begin text --------
 {{lbor|es|la|sextus}}, along with several other ordinal numerals ({{m|es|segundo}}, {{m|es|quinto}}, {{m|es|séptimo}}), a tendency shared with many other Romance languages. Compare the inherited feminine doublet, {{doublet|es|siesta|notext=1}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|sesto}}
-* {{audio|es|LL-Q1321 (spa)-AdrianAbdulBaha-sexto.wav|Audio (Colombia)}}
-* {{hyphenation|es|sex|to}}
+{{es-pr|+|sesto|audio=LL-Q1321 (spa)-AdrianAbdulBaha-sexto.wav<a:Colombia>}}
 
 ===Adjective===
 {{es-adj}}
@@ -2115,9 +2018,7 @@ Page 3078 tungsteno: -------- begin text --------
 Borrowed from {{bor|es|en|tungsten}}.
 
 ===Pronunciation===
-{{es-IPA|tunsteno}}
-{{es-IPA|tungsteno}}
-* {{audio|es|LL-Q1321 (spa)-Millars-tungsteno.wav|Audio}}
+{{es-pr|tunsteno,+<audio:LL-Q1321 (spa)-Millars-tungsteno.wav>}}
 
 ===Noun===
 {{es-noun|m|-}}
@@ -2134,8 +2035,11 @@ Page 3232 W: Found match for regex: =
 Page 3232 W: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|uve doble}}
-{{es-IPA|dóble vè}}
+{{es-pr
+|raw:/w/<q:phoneme>,raw:/gw/,raw:/β/
+|uve doble<q:letter name>
+|dóble vè<q:letter name><audio:letter w es es.flac;Audio (Spain)>
+}}
 
 ===Letter===
 {{head|es|letter|upper case||lower case|w}}
@@ -2156,9 +2060,7 @@ Page 3372 construir: -------- begin text --------
 Borrowed from {{bor|es|la|cōnstruere}}, present active infinitive of {{m|la|cōnstruō}}.
 
 ===Pronunciation===
-{{es-IPA|constru.ir}}
-{{es-IPA}}
-* {{hyph|es|cons|truir}}
+{{es-pr|+,constru.ir}}
 
 ===Verb===
 {{es-verb}}
@@ -2195,8 +2097,7 @@ Page 3382 islam: -------- begin text --------
 From {{der|es|ar|اسلام|إِسْلَام|submission}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|islán}}
+{{es-pr|+|islán}}
 
 ===Noun===
 {{es-noun|m|-}}
@@ -2233,8 +2134,7 @@ Page 3437 Halloween: -------- begin text --------
 {{unadapted borrowing|es|en|Halloween}}.
 
 ===Pronunciation===
-{{es-IPA|jalowín}}
-{{es-IPA|jálowin}}
+{{es-pr|jalowín|jálowin}}
 
 ===Noun===
 {{es-noun|m|Halloweens}}
@@ -2249,10 +2149,7 @@ Page 3469 destruir: -------- begin text --------
 Borrowed from {{bor|es|la|destruo|dēstruō, dēstruere}}<ref>{{R:es:DCECH}}</ref>.
 
 ===Pronunciation===
-{{es-IPA|destru.ir}}
-{{es-IPA}}
-* {{hyph|es|des|truir}}
-* {{audio|es|LL-Q1321 (spa)-AdrianAbdulBaha-destruir.wav|Audio (Colombia)}}
+{{es-pr|+,destru.ir|audio=LL-Q1321 (spa)-AdrianAbdulBaha-destruir.wav;Audio (Colombia)}}
 
 ===Verb===
 {{es-verb}}
@@ -2286,8 +2183,7 @@ Page 3473 xhosa: Found match for regex: =
 Page 3473 xhosa: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|josa}}
+{{es-pr|+,josa}}
 
 ===Adjective===
 {{es-adj}}
@@ -2309,8 +2205,7 @@ Page 3502 héroe: -------- begin text --------
 From {{bor|es|la|hērōs}} (genitive singular {{m|la|hērōis}}), from {{der|es|grc|ἥρως}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|herue|pre={{a|colloquial}}}}
+{{es-pr|+|herue<q:colloquial><rhyme:->}}
 
 ===Noun===
 {{es-noun|m|f=heroína}}
@@ -2348,7 +2243,7 @@ Page 3575 ballet: -------- begin text --------
 {{unadapted borrowing|es|fr|ballet}}.
 
 ===Pronunciation===
-{{es-pr|balé}}
+{{es-pr|balé|balet}}
 
 ===Noun===
 {{es-noun|m|~}}
@@ -2373,8 +2268,7 @@ Page 3745 bluegrass: -------- begin text --------
 {{unadapted borrowing|es|en|bluegrass}}.
 
 ===Pronunciation===
-{{es-IPA|blugras}}
-{{es-IPA|blugrás}}
+{{es-pr|blugras|blugrás}}
 
 ===Noun===
 {{es-noun|m|-}}
@@ -2391,8 +2285,7 @@ Page 3796 brainstorming: -------- begin text --------
 {{unadapted borrowing|es|en|brainstorming}}.
 
 ===Pronunciation===
-{{es-IPA|breinstórmin}}
-{{es-IPA|breinestórmin}}
+{{es-pr|breinstórmin,breinestórmin}}
 
 ===Noun===
 {{es-noun|f}}
@@ -2421,10 +2314,7 @@ Page 3968 área: -------- begin text --------
 Borrowed from {{bor|es|la|area}}. Compare the inherited doublet {{doublet|es|notext=1|era|t1=threshing floor}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|aria|pre={{a|colloquial}}}}
-* {{hyph|es|á|re|a}}
-* {{audio|es|Es-am-lat-área.ogg|Audio (Latin America)}}
+{{es-pr|+|aria<q:colloquial><rhyme:->|audio=Es-am-lat-área.ogg;Audio (Latin America)}}
 
 ===Noun===
 {{es-noun|f}}
@@ -2502,8 +2392,7 @@ Page 4167 istmo: -------- begin text --------
 From {{bor|es|la|isthmus}}, from {{der|es|grc|ἰσθμός||neck}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|ismo}}
+{{es-pr|+|ismo}}
 
 ===Noun===
 {{es-noun|m}}
@@ -2524,9 +2413,7 @@ Page 4211 almohada: -------- begin text --------
 From {{der|es|xaa|اَلْمُخَدَّة|tr=al-muḵádda}}, from {{der|es|ar|مخدة|اَلْمِخَدَّة}}. Compare {{cog|pt|almofada}}.
 
 ===Pronunciation===
-{{es-IPA}}
-* {{audio|es|LL-Q1321 (spa)-AdrianAbdulBaha-almohada.wav|Audio (Colombia)}}
-{{es-IPA|almuada|pre={{a|colloquial}}}}
+{{es-pr|+<audio:LL-Q1321 (spa)-AdrianAbdulBaha-almohada.wav<a:Colombia>>|almuada<q:colloquial>}}
 
 ===Noun===
 {{es-noun|f}}
@@ -2553,10 +2440,11 @@ Page 4922 x: Found match for regex: =
 Page 4922 x: -------- begin text --------
 
 ===Pronunciation===
-* {{qualifier|phoneme}} {{IPA|es|/ks/|/s/|/x/}}
-{{es-IPA|equis|pre={{qualifier|letter name}}}}
-** {{audio|es|letter x es es.flac|Audio (Spain)}}
-{{es-IPA|e|pre={{qualifier|gender-neutral}}}}
+{{es-pr
+|raw:/ks/<q:phoneme>,raw:/s/,raw:/x/
+|equis<q:letter name><audio:letter x es es.flac<a:Spain>>
+|e<q:gender-neutral>
+}}
 
 ===Letter===
 {{head|es|letter|lower case||upper case|X}}
@@ -2584,8 +2472,7 @@ Page 4974 stevia: -------- begin text --------
 * {{alter|es|estevia}}
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|estevia}}
+{{es-pr|+,estevia}}
 
 ===Noun===
 {{es-noun|f}}
@@ -2642,7 +2529,7 @@ Page 5285 dolar: -------- begin text --------
 ===Etymology 2===
 
 ====Pronunciation====
-{{es-pr|dólar}}
+{{es-pr|dólar|rhyme=-}}
 
 ====Noun====
 {{es-noun|m}}
@@ -2660,8 +2547,7 @@ Page 5769 Luanda: -------- begin text --------
 {{wikipedia|lang=es}}
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|lu.anda}}
+{{es-pr|+,Lu.anda}}
 
 ===Proper noun===
 {{es-proper noun}}
@@ -2676,8 +2562,7 @@ Page 5783 urushiol: -------- begin text --------
 From {{der|es|ja|漆|tr=うるし, urushi|t=lacquer tree}}, and the chemical suffix {{af|es|-ol}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|urusiol}}
+{{es-pr|+,urusiol}}
 
 ===Noun===
 {{es-noun|m}}
@@ -2688,8 +2573,7 @@ Page 6290 startup: Found match for regex: =
 Page 6290 startup: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|stártap}}
-{{es-IPA|estártap}}
+{{es-pr|stártap,estártap}}
 
 ===Noun===
 {{es-noun|f}}
@@ -2700,8 +2584,7 @@ Page 6492 spamming: Found match for regex: =
 Page 6492 spamming: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|spamin}}
-{{es-IPA|espamin}}
+{{es-pr|spamin,espamin}}
 
 ===Noun===
 {{es-noun|m|-}}
@@ -2715,8 +2598,7 @@ Page 6494 chilo: -------- begin text --------
 Borrowed from {{bor|es|en|chill}}. Influenced by {{m|es|chido}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|shilo|pre={{a|Norteño Western Spanish}}|post=(Chihuahua, Sonora, Sinaloa, Baja California, New Mexico and sometimes in Arizona)}}
+{{es-pr|+|shilo<a:Norteño Western Spanish><qq:Chihuahua, Sonora, Sinaloa, Baja California, New Mexico and sometimes in Arizona>}}
 
 ===Adjective===
 {{es-adj}}
@@ -2730,8 +2612,7 @@ Page 6562 cliente: -------- begin text --------
 From {{bor|es|la|cliēns}} (genitive singular {{m|la|clientis}}), based on {{m|la|clueō||to be called, to be named, to be esteemed}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|cli.ente}}
+{{es-pr|+,cli.ente}}
 
 ===Noun===
 {{es-noun|m|f=cliente|f2=clienta}}
@@ -2758,8 +2639,7 @@ Page 6601 Doha: -------- begin text --------
 {{wikipedia|lang=es}}
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|doja}}
+{{es-pr|+|Doja}}
 
 ===Proper noun===
 {{es-proper noun}}
@@ -2856,7 +2736,7 @@ Page 14116 shogi: Found match for regex: =
 Page 14116 shogi: -------- begin text --------
 
 ===Pronunciation===
-{{es-pr|sogui<a:Spain><a:Latin America>|shogui<a:Latin America>}}
+{{es-pr|sogui<style:distincion>|sogui,shogui<style:seseo>}}
 
 ===Noun===
 {{es-noun|m|-}}
@@ -2937,8 +2817,7 @@ Page 14243 guiar: -------- begin text --------
 Probably from {{der|es|pro|guidar}}, from {{der|es|frk|*wītan|t=to show the way, lead}}, from {{der|es|gem-pro|*wītaną|t=to see, know; go, depart}}, possibly through a {{der|es|ML.|-}} intermediate. Compare {{cog|pt|guiar}}, {{cog|fr|guider}} ({{cog|fro|guier}}), {{cog|pro|guidar}}, {{cog|it|guidare}}, {{cog|en|guide}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|gui.ar}}
+{{es-pr|+,gui.ar}}
 
 ===Verb===
 {{es-verb|<í>}}
@@ -2976,9 +2855,7 @@ Page 14365 champú: -------- begin text --------
 Early 20th century, from {{bor|es|en|shampoo}}, ultimately from {{der|es|hi|चाँपना||to press, knead}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|shampú}}
-* {{rhymes|es|u|s=2}}
+{{es-pr|+,shampú}}
 
 ===Noun===
 {{es-noun|m}}
@@ -2998,8 +2875,7 @@ Page 14485 smartphone: -------- begin text --------
 {{ubor|es|en|smartphone}}.
 
 ===Pronunciation===
-{{es-IPA|smart.fón}}
-{{es-IPA|esmart.fón}}
+{{es-pr|smartfón,esmartfón}}
 
 ===Noun===
 {{es-noun|m|+|pl2=smartphone}}
@@ -3019,9 +2895,7 @@ Page 14683 geco: -------- begin text --------
 Borrowed from {{bor|es|en|gecko}}, from {{der|es|ms|gekok}}.
 
 ===Pronunciation===
-{{es-IPA}}{{es-IPA|gueco}}
-
-* {{hyphenation|es|ge|co}}
+{{es-pr|+,gueco}}
 
 ===Noun===
 {{es-noun|m}}
@@ -3038,10 +2912,7 @@ Page 14959 fluido: -------- begin text --------
 From {{der|es|la|fluĭdus}}.
 
 ===Pronunciation===
-{{es-IPA}}
-* {{audio|es|LL-Q1321 (spa)-AdrianAbdulBaha-fluido.wav|Audio (Colombia)}}
-{{es-IPA|flu.ído}}
-* {{rhymes|es|ido}}
+{{es-pr|+,flu.ído|audio=LL-Q1321 (spa)-AdrianAbdulBaha-fluido.wav<a:Colombia>}}
 
 ===Adjective===
 {{es-adj}}
@@ -3080,9 +2951,7 @@ Page 14968 hámster: -------- begin text --------
 From {{bor|es|en|hamster}}, from {{der|es|de|Hamster}}, from {{der|es|goh|hamastra}}, {{m|goh|hamustro||field mouse}}, probably from {{der|es|orv|хомѣсторъ}}, {{m|orv|хомѣстаръ}}. See {{cog|en|hamster}} for more.
 
 ===Pronunciation===
-{{es-IPA|jámster}}
-{{es-IPA}}
-* {{audio|es|LL-Q1321 (spa)-AdrianAbdulBaha-hámster.wav|Audio (Colombia)}}
+{{es-pr|jámster,+<audio:LL-Q1321 (spa)-AdrianAbdulBaha-hámster.wav<a:Colombia>>}}
 
 ===Noun===
 {{es-noun|m|+|pl2=hámsters}}
@@ -3133,8 +3002,7 @@ Page 15266 güey: -------- begin text --------
 Nonstandard pronunciation-spelling variant of {{m|es|buey|lit=ox}} (see that entry for more); this form thus represents a deshifting of {{IPAchar|/bw/}} back to {{IPAchar|/ɡw/}}. Compare nonstandard {{m|es|güeno}} from {{m|es|bueno||good}}, {{m|es|agüelo}} from {{m|es|abuelo||grandfather}}, {{m|es|güelvo}} from {{m|es|vuelvo||to return}}, where {{IPAchar|/bwe/}} becomes {{IPAchar|/ɡwe/}}. A similar phenomenon occurs in the dialectal pronunciation of {{m+|lt|buvai}} as {{IPAchar|/ɡwuei/}}.
 
 ===Pronunciation===
-{{es-IPA}} ''(spelling pronunciation)''
-{{es-IPA|huey}} ''(colloquial pronunciation)''
+{{es-pr|+<q:spelling pronunciation>|huey<q:colloquial pronunciation>}}
 
 ===Noun===
 {{es-noun|mf}}
@@ -3160,8 +3028,7 @@ Page 15482 sándwich: -------- begin text --------
 From {{bor|es|en|sandwich}}.
 
 ===Pronunciation===
-{{es-IPA|sángüich}}
-{{es-IPA|pre={{a|Latin America}}}}
+{{es-pr|sángüich|+<a:Mexico>|rhyme=-}}
 
 ===Noun===
 {{es-noun|m}}
@@ -3196,10 +3063,7 @@ Page 15693 guion: -------- begin text --------
 From {{suffix|es|guía|ón}}.
 
 ===Pronunciation===
-{{es-IPA}}
-*: {{rhymes|es|on|s=1}}
-{{es-IPA|gui.ón}}
-*: {{rhymes|es|on|s=2}}
+{{es-pr|+,gui.ón}}
 
 ===Noun===
 {{es-noun|m}}
@@ -3226,8 +3090,7 @@ Page 15721 playlist: Found match for regex: =
 Page 15721 playlist: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|pleilist|pre={{a|imitating English}}}}
+{{es-pr|+|pleilist<q:imitating English>}}
 
 ===Noun===
 {{es-noun|f}}
@@ -3244,10 +3107,7 @@ Page 15890 gnomo: -------- begin text --------
 From {{bor|es|NL.|gnomus}}, coined by [[w:Paracelsus|Paracelsus]] as a synonym for {{m|la|pygmaeus|t=pygmy}}.
 
 ===Pronunciation===
-{{es-IPA|nomo}}
-{{es-IPA|gnomo}}
-{{es-IPA|ñomo}}
-* {{rhymes|es|omo|s=2}}
+{{es-pr|nomo,gnomo,ñomo}}
 
 ===Noun===
 {{es-noun|m}}
@@ -3267,8 +3127,7 @@ Page 16438 muón: Found match for regex: =
 Page 16438 muón: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|mu.ón}}
-{{es-IPA}}
+{{es-pr|mu.ón,+}}
 
 ===Noun===
 {{es-noun|m}}
@@ -3291,11 +3150,10 @@ Page 16735 palimpsesto: -------- begin text --------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{der|es|la|palimpsēstus}}, from {{der|es|grc|παλίμψηστος|t=scraped again}}.
+From {{bor|es|la|palimpsēstus}}, from {{der|es|grc|παλίμψηστος|t=scraped again}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|palimsesto}}
+{{es-pr|+,palimsesto}}
 
 ===Noun===
 {{es-noun|m}}
@@ -3309,7 +3167,7 @@ Page 17244 OTAN: Found match for regex: =
 Page 17244 OTAN: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA}}{{es-IPA|otán}}
+{{es-pr|+|otán}}
 
 ===Proper noun===
 {{head|es|proper noun|g=f}}
@@ -3325,9 +3183,7 @@ Page 17793 Michoacán: -------- begin text --------
 Borrowed from {{bor|es|nci|Michhuahcan|michhuahcān|t=place of fish; fishers}}, from {{m|nci|michhuah|t=one who has fish}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|michuacán|pre={{q|colloquial}}}}
-* {{rhymes|es|an}}
+{{es-pr|+|michuacán<q:colloquial>}}
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -3348,8 +3204,7 @@ Page 17804 Quintana Roo: -------- begin text --------
 Named after [[w:Andrés Quintana Roo|Andrés Quintana Roo]], from the Mexican War of Independence.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|Quintana Ro}}
+{{es-pr}}
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -3374,10 +3229,7 @@ Page 17808 Tlaxcala: -------- begin text --------
 From {{bor|es|nci|Tlaxcallān}}, from {{m|nci|tlaxcalli||tortilla}} + {{m|nci|-tlān}}.
 
 ===Pronunciation===
-{{es-IPA|Tlascala}}
-{{es-IPA}}
-{{es-IPA|Tlajcala}}
-{{es-IPA|Tlashcala}}
+{{es-pr|Tlascala|+|Tlajcala|Tlashcala}}
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -3397,8 +3249,7 @@ Page 18886 gay: -------- begin text --------
 Borrowed from {{bor|es|en|gay}}.
 
 ===Pronunciation===
-{{es-IPA|guey}}
-{{es-IPA}}
+{{es-pr|guey|+}}
 
 ===Adjective===
 {{es-adj|pl=gays|pl2=gais}}
@@ -3433,8 +3284,7 @@ Page 18952 ftalato: Found match for regex: =
 Page 18952 ftalato: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|eftalato}}
+{{es-pr|+,eftalato}}
 
 ===Noun===
 {{es-noun|m}}
@@ -3448,8 +3298,7 @@ Page 18953 ftálico: Found match for regex: =
 Page 18953 ftálico: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|eftálico}}
+{{es-pr|+,eftálico}}
 
 ===Adjective===
 {{es-adj}}
@@ -3463,8 +3312,7 @@ Page 19049 stalinismo: Found match for regex: =
 Page 19049 stalinismo: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|estalinismo}}
+{{es-pr|+,estalinismo}}
 
 ===Noun===
 {{es-noun|m}}
@@ -3478,9 +3326,7 @@ Page 19799 Joaquín: Found match for regex: =
 Page 19799 Joaquín: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|Juaquín|pre={{a|colloquial variant}}|bullets=2}}
-* {{hyphenation|es|Jo|a|quín}}
+{{es-pr|+|Juaquín<q:colloquial>}}
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -3504,8 +3350,7 @@ Page 23291 alcohólico: -------- begin text --------
 From {{suffix|es|alcohol|ico}}.
 
 ===Pronunciation===
-{{es-IPA|alcoólico}}
-{{es-IPA|alcólico}}
+{{es-pr|+,alcólico}}
 
 ===Adjective===
 {{es-adj}}
@@ -3537,8 +3382,7 @@ Page 24232 swingman: Found match for regex: =
 Page 24232 swingman: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|suinman}}
-{{es-IPA|suinmen}}
+{{es-pr|suinman|suinmen|rhyme=-}}
 
 ===Noun===
 {{es-noun|m|swingmans|pl2=swingman}}
@@ -3555,8 +3399,7 @@ Page 24315 xilema: -------- begin text --------
 From {{m|es|xilo-}}, from {{der|es|grc|ξυλο-}} + {{m|es|-ema}}, from {{m|grc|-μα}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|ksilema}}
+{{es-pr|+,ksilema}}
 
 ===Noun===
 {{es-noun|m}}
@@ -3577,8 +3420,7 @@ Page 24319 spinner: Found match for regex: =
 Page 24319 spinner: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|spíner}}
-{{es-IPA|espíner}}
+{{es-pr|spíner,espíner}}
 
 ===Noun===
 {{es-noun|m|spinners|pl2=spinner}}
@@ -3593,6 +3435,9 @@ Page 25360 freudiano: -------- begin text --------
 
 ===Etymology===
 {{af|es||alt1=Freud|-iano}}
+
+===Pronunciation===
+{{es-pr|froidiano,+}}
 
 ===Adjective===
 {{es-adj}}
@@ -3609,8 +3454,7 @@ Page 25366 freudiana: Found match for regex: =
 Page 25366 freudiana: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|froidiana}}
-{{es-IPA}}
+{{es-pr|froidiana,+}}
 
 ===Adjective===
 {{head|es|adjective form}}
@@ -3622,14 +3466,13 @@ Page 25400 emoji: -------- begin text --------
 {{wikipedia|lang=es}}
 
 ===Alternative forms===
-* [[emoyi]]
+* {{alt|es|emoyi}}
 
 ===Etymology===
 Borrowed from {{bor|es|ja|絵文字|tr=[[えもじ]], emoji}}, from {{m|ja|絵|tr=[[え]], e||picture}} + {{m|ja|文字|tr=[[もじ]], moji||character}}.
 
 ===Pronunciation===
-{{es-IPA|pre={{a|Spain}}}}
-{{es-IPA|emoyi|pre={{a|Latin America}}}}
+{{es-pr|+<style:distincion>|emoyi<style:seseo>}}
 
 ===Noun===
 {{es-noun|m}}
@@ -3651,8 +3494,7 @@ Page 26626 YouTube: -------- begin text --------
 Borrowed from {{bor|es|en|YouTube}}.
 
 ===Pronunciation===
-{{es-IPA|yutúb|pre={{a|Castilian}}}}
-{{es-IPA|yutúf|pre={{a|Castilian}}}}
+{{es-pr|yutúb,yutúf<style:distinción>}}
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -3676,8 +3518,7 @@ Page 26722 Marrakech: -------- begin text --------
 From {{bor|es|ar|مَرَّاكُش}}, from {{der|es|ber-pro||Murt n Akush|Land of God}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|Marrakesh}}
+{{es-pr|+|Marrakesh}}
 
 ===Proper noun===
 {{es-proper noun|m|g2=f}}
@@ -3696,9 +3537,7 @@ Page 27008 mexiquense: -------- begin text --------
 From (''{{m|es|Estado de México|Estado de}}'') {{suffix|es|Estado de México|alt1=México|ense}}.
 
 ===Pronunciation===
-{{es-IPA|mejiquense}}
-{{es-IPA}}
-* {{audio|es|LL-Q1321 (spa)-Millars-mexiquense.wav|Audio (Spain)}}
+{{es-pr|mejiquense,+|audio=LL-Q1321 (spa)-Millars-mexiquense.wav;Audio (Spain)}}
 
 ===Adjective===
 {{es-adj}}
@@ -3725,9 +3564,7 @@ Page 27009 michoacano: -------- begin text --------
 A shortened form of {{suffix|es|Michoacán|ano}}; or from ''Michoacán'' {{suffix|es||o}}.
 
 ===Pronunciation===
-{{es-IPA|michoacano}}
-{{es-IPA|michuacano|pre={{a|colloquial}}}}
-* {{rhymes|es|ano|s=5}}
+{{es-pr|michoacano|michuacano<q:colloquial>}}
 
 ===Adjective===
 {{es-adj}}
@@ -3746,8 +3583,7 @@ Page 27066 tlaxcalteca: -------- begin text --------
 From {{bor|es|nci|tlaxcaltēcatl|t=inhabitant of Tlaxcala}}.
 
 ===Pronunciation===
-{{es-IPA|tlascalteca}}
-{{es-IPA}}
+{{es-pr|tlascalteca,+}}
 
 ===Adjective===
 {{es-adj}}
@@ -3771,8 +3607,7 @@ Page 27426 iónico: Found match for regex: =
 Page 27426 iónico: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|i.ónico}}
-{{es-IPA}}
+{{es-pr|i.ónico,+}}
 
 ===Adjective===
 {{es-adj}}
@@ -3789,8 +3624,7 @@ Page 27427 iónica: Found match for regex: =
 Page 27427 iónica: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|i.ónica}}
-{{es-IPA|yónica}}
+{{es-pr|i.ónica,+}}
 
 ===Adjective===
 {{head|es|adjective form}}
@@ -3801,8 +3635,7 @@ Page 27428 iónicos: Found match for regex: =
 Page 27428 iónicos: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|i.ónicos}}
-{{es-IPA|yónicos}}
+{{es-pr|i.ónicos,+}}
 
 ===Adjective===
 {{head|es|adjective form}}
@@ -3813,8 +3646,7 @@ Page 27429 iónicas: Found match for regex: =
 Page 27429 iónicas: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|i.ónicas}}
-{{es-IPA|yónicas}}
+{{es-pr|i.ónicas,+}}
 
 ===Adjective===
 {{head|es|adjective form}}
@@ -3825,8 +3657,7 @@ Page 27463 tauón: Found match for regex: =
 Page 27463 tauón: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|tau.ón}}
-{{es-IPA}}
+{{es-pr|tau.ón,+}}
 
 ===Noun===
 {{es-noun|m}}
@@ -3853,9 +3684,7 @@ Page 29096 bluetooth: -------- begin text --------
 {{unadapted borrowing|es|en|Bluetooth}}, calqued from {{der|es|non|Blátǫnn}}.
 
 ===Pronunciation===
-{{es-IPA|blutuz|pre={{a|Spain}}|style=distincion}}
-{{es-IPA|blutud|pre={{a|Latin America}}|style=seseo}}
-* {{rhymes|es|ud|uθ}}
+{{es-pr|blutuz<style:distincion>|blutud<style:seseo>}}
 
 ===Noun===
 {{es-noun|m|-}}
@@ -3866,8 +3695,7 @@ Page 31537 paparazi: Found match for regex: =
 Page 31537 paparazi: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|paparachi|pre={{a|everywhere, alternatively}}}}
+{{es-pr|+|paparachi<q:everywhere, alternatively>}}
 
 ===Noun===
 {{es-noun|m}}
@@ -3886,8 +3714,7 @@ Page 31833 huaso: -------- begin text --------
 {{unk|es}}. Possibly from {{bor|es|qu|wakcha}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|guaso}}
+{{es-pr|+,guaso}}
 
 ===Adjective===
 {{es-adj}}
@@ -3922,8 +3749,7 @@ Page 31876 snackbar: Found match for regex: =
 Page 31876 snackbar: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|snacbar}}
-{{es-IPA|esnacbar}}
+{{es-pr|snacbar,esnacbar}}
 
 ===Noun===
 {{es-noun|m|snackbars|pl2=snackbar}}
@@ -3934,8 +3760,7 @@ Page 32627 Zúrich: Found match for regex: =
 Page 32627 Zúrich: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|Zúric}}
-{{es-IPA|pre={{q|spelling pronunciation}}}}
+{{es-pr|Zúric|+<q:spelling pronunciation>}}
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -3964,8 +3789,7 @@ Page 34564 Vuelta a España: -------- begin text --------
 Literally, "Tour of Spain".
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|Vuelta España}}
+{{es-pr}}
 
 ===Proper noun===
 {{es-proper noun|f|head=la [[vuelta|Vuelta]] [[a]] [[España]]}}
@@ -3991,9 +3815,7 @@ Page 34772 xoloitzcuintle: -------- begin text --------
 From {{bor|es|nci|xoloitzcuintli||Mexican hairless}}.
 
 ===Pronunciation===
-{{es-IPA|sholoitzcuintle|pre={{a|careful pronunciation}}}}
-{{es-IPA|choloscuincle|pre={{a|fully Hispanized}}}}
-* {{audio|es|es-mx-xoloitzcuintle.ogg|Audio (Mexico)}}
+{{es-pr|sholoitzcuintle<q:careful pronunciation><audio:es-mx-xoloitzcuintle.ogg;Audio (Mexico)>|choloscuincle<q:fully Hispanized><rhyme:->}}
 
 ===Noun===
 {{es-noun|m}}
@@ -4023,9 +3845,6 @@ From {{m|es|pasto||grass}}.
 
 ===Etymology 2===
 From {{m|es|pasta||money (colloquial)}}. By analogy with {{m|es|dineral}}, because {{m|es|pasta}} is a colloquial synonym for {{m|es|dinero}}.
-
-====Pronunciation====
-{{es-pr}}
 
 ====Noun====
 {{es-noun|m}}
@@ -4063,8 +3882,7 @@ Page 35837 haraquiri: -------- begin text --------
 Borrowed from {{bor|es|ja|腹切り}} ({{m|ja|はらきり||tr=harakiri}}), from {{m|ja|腹}} ({{m|ja|はら|tr=hara||belly}}) + {{m|ja|切る}} ({{m|ja|きる|tr=kiru||cut}}).
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|jaraquiri}}
+{{es-pr|+,jaraquiri}}
 
 ===Noun===
 {{es-noun|m|-}}
@@ -4081,8 +3899,7 @@ Page 36150 Xóchitl: -------- begin text --------
 From {{bor|es|nci|xōchitl||flower}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|shóchitl}}
+{{es-pr|+,Shóchitl}}
 
 ===Proper noun===
 {{es-proper noun|f}}
@@ -4099,8 +3916,7 @@ Page 36151 Coatzacoalcos: -------- begin text --------
 From {{der|es|nci|cōātl||snake}} + {{m|nci|tzacualli||enclosure, something covered}} + {{m|nci|-co||a locative suffix}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|cuatsacualcos}}
+{{es-pr|+|Cuatsacualcos<q:colloquial>}}
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -4120,8 +3936,7 @@ Page 36647 Xochimilco: -------- begin text --------
 From {{der|es|nci|xōchimīlli||flower field}}, from {{m|nci|xōchitl||flower}} + {{m|nci|mīlli||cultivated field}}, + the locative suffix {{m|nci|-co}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|shochimilco}}
+{{es-pr|+,shochimilco}}
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -4138,8 +3953,7 @@ Page 36661 haikú: Found match for regex: =
 Page 36661 haikú: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|jaikú}}
+{{es-pr|+,jaikú}}
 
 ===Noun===
 {{es-noun|m}}
@@ -4157,9 +3971,7 @@ Page 36788 yihad: -------- begin text --------
 From {{bor|es|ar|جِهَاد||struggle, effort}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|yijad}}
-* {{rhymes|es|ad|s=2}}
+{{es-pr|+|yijad}}
 
 ===Noun===
 {{es-noun|f|-}}
@@ -4183,8 +3995,7 @@ Page 36789 yihadismo: -------- begin text --------
 From {{suffix|es|yihad|ismo}}, a {{cal|es|en|jihadism|nocap=1}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|yijadismo}}
+{{es-pr|+|yijadismo}}
 
 ===Noun===
 {{es-noun|m|-}}
@@ -4210,8 +4021,7 @@ Page 37033 yuppy: -------- begin text --------
 {{ubor|es|en|yuppie}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|yapi}}
+{{es-pr|+|yapi}}
 
 ===Noun===
 {{es-noun|m}}
@@ -4232,8 +4042,7 @@ Page 37123 vía crucis: -------- begin text --------
 From {{bor|es|la|[[via]] [[crux|crucis]]|lit=way of the cross}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|via crucis}}
+{{es-pr|+|via crucis}}
 
 ===Noun===
 {{es-noun|m}}
@@ -4255,13 +4064,12 @@ Page 37182 tzompantli: -------- begin text --------
 Borrowed from {{bor|es|nci|tzompantli}}.
 
 ===Pronunciation===
-{{es-IPA|sompantli}}
-{{es-IPA}}
+{{es-pr|sompantli,+}}
 
 ===Noun===
 {{es-noun|m}}
 
-# [[#English|tzompantli]] ; {{alternative spelling of|es|zompantli}}
+# [[#English|tzompantli]]; {{alternative spelling of|es|zompantli}}
 -------- end text --------
 Page 37188 taxcal: Found match for regex: =
 Page 37188 taxcal: -------- begin text --------
@@ -4270,9 +4078,7 @@ Page 37188 taxcal: -------- begin text --------
 Shortened from {{der|es|nci|tlaxcalchiquihuitl||basket for carrying tortillas}}, from {{m|nci|tlaxcalli||tortilla}} + {{m|nci|chiquihuitl||basket}}.
 
 ===Pronunciation===
-{{es-IPA|tascal}}
-{{es-IPA}}
-* {{rhymes|es|al}}
+{{es-pr|tascal,+}}
 
 ===Noun===
 {{es-noun|m}}
@@ -4295,8 +4101,7 @@ Page 37192 xóchil: -------- begin text --------
 From {{bor|es|nci|xōchitl||flower}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|shóchil}}
+{{es-pr|+,shóchil}}
 
 ===Noun===
 {{es-noun|m}}
@@ -4323,8 +4128,7 @@ Page 37199 xoconostle: -------- begin text --------
 From {{bor|es|nci|xoconōchtli||sour prickly pear}}, from {{m|nci|xococ||something sour}} + {{m|nci|nōchtli||prickly pear}}.
 
 ===Pronunciation===
-{{es-IPA|joconostle}}
-{{es-IPA|shoconostle}}
+{{es-pr|joconostle,shoconostle}}
 
 ===Noun===
 {{es-noun|m}}
@@ -4345,8 +4149,7 @@ Page 37200 xocoatole: -------- begin text --------
 From {{der|es|nci|xococ||something sour}} + {{m|nci|ātōlli||atole}}.
 
 ===Pronunciation===
-{{es-IPA|jocoatole}}
-{{es-IPA|shocoatole}}
+{{es-pr|jocoatole,shocoatole}}
 
 ===Noun===
 {{es-noun|m|-}}
@@ -4372,9 +4175,7 @@ Page 37220 nahual: -------- begin text --------
 From {{bor|es|nci|nāhualli||sorcerer}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|nagual}}
-* {{rhymes|es|al}}
+{{es-pr|+,nagual}}
 
 ===Noun===
 {{es-noun|m}}
@@ -4402,9 +4203,7 @@ Page 38296 yihadista: Found match for regex: =
 Page 38296 yihadista: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|yijadista}}
-* {{hyphenation|es|yi|ha|dis|ta}}
+{{es-pr|+,yijadista}}
 
 ===Noun===
 {{es-noun|mf}}
@@ -4424,8 +4223,7 @@ Page 38304 post mórtem: -------- begin text --------
 From {{bor|es|la|[[post]] [[mors|mortem]]|lit=after death}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|pos mórtem}}
+{{es-pr|+|pos mórtem}}
 
 ===Adjective===
 {{es-adj|inv=1}}
@@ -4440,8 +4238,7 @@ Page 38376 hongkonés: Found match for regex: =
 Page 38376 hongkonés: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|honkonés}}
-{{es-IPA|jonconés}}
+{{es-pr|honkonés,jonconés}}
 
 ===Adjective===
 {{es-adj}}
@@ -4501,11 +4298,11 @@ By surface analysis, from {{m|es|di-}} and {{m|es|-osa}}.
 Page 41015 pulpería: Found match for regex: =
 Page 41015 pulpería: -------- begin text --------
 
+===Pronunciation===
+{{es-pr}}
+
 ===Etymology 1===
 From {{af|es|pulpa|-ería}}.
-
-====Pronunciation====
-{{es-pr}}
 
 ====Noun====
 {{es-noun|f}}
@@ -4520,9 +4317,6 @@ From {{af|es|pulpa|-ería}}.
 
 ===Etymology 2===
 From {{af|es|pulpo|-ería}}.
-
-====Pronunciation====
-{{es-pr}}
 
 ====Noun====
 {{es-noun|f}}
@@ -4541,10 +4335,7 @@ Page 41574 gelatería: -------- begin text --------
 Borrowed from {{bor|es|it|gelateria}}, from {{m|it|gelato||ice cream}} + {{m|it|-eria||-ery}}, equivalent to Spanish {{suffix|es||ería}}. Compare {{m|es|heladería}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|yelatería|pre={{qualifier|following Italian pronunciation}}}}
-* {{rhymes|es|ia|s=5}}
-* {{hyphenation|es|ge|la|te|rí|a}}
+{{es-pr|+|yelatería<q:following Italian pronunciation>}}
 
 ===Noun===
 {{es-noun|f}}
@@ -4560,8 +4351,7 @@ Page 42255 Sídney: -------- begin text --------
 {{wikipedia|lang=es}}
 
 ===Pronunciation===
-{{es-IPA|sidni}}
-{{es-IPA}}
+{{es-pr|Sidni|+}}
 
 ===Proper noun===
 {{es-proper noun}}
@@ -4580,8 +4370,7 @@ Page 42614 ídem: -------- begin text --------
 From {{bor|es|la|idem}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|íden}}
+{{es-pr|+|íden}}
 
 ===Adverb===
 {{es-adv}}
@@ -4606,8 +4395,7 @@ Page 50118 Stávropol: Found match for regex: =
 Page 50118 Stávropol: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|Estávropol}}
+{{es-pr|+,Estávropol}}
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -4618,8 +4406,7 @@ Page 54949 freudianos: Found match for regex: =
 Page 54949 freudianos: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|froidianos}}
-{{es-IPA}}
+{{es-pr|froidianos|+}}
 
 ===Adjective===
 {{head|es|adjective form}}
@@ -4630,8 +4417,7 @@ Page 54950 freudianas: Found match for regex: =
 Page 54950 freudianas: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|froidianas}}
-{{es-IPA}}
+{{es-pr|froidianas|+}}
 
 ===Adjective===
 {{head|es|adjective form}}
@@ -4645,8 +4431,7 @@ Page 55746 tupper: -------- begin text --------
 Clipping of {{der|es|en|Tupperware}}.
 
 ===Pronunciation===
-{{es-IPA|táper}}
-{{es-IPA|tóper}}
+{{es-pr|táper|tóper}}
 
 ===Noun===
 {{es-noun|m|tuppers|pl2=tupper}}
@@ -4665,8 +4450,7 @@ Page 55853 stalkear: -------- begin text --------
 Borrowed from {{bor|es|en|stalk}}.
 
 ===Pronunciation===
-{{es-IPA|estalkear}}
-{{es-IPA}}
+{{es-pr|estalkear,+}}
 
 ===Verb===
 {{es-verb}}
@@ -4687,8 +4471,7 @@ Page 56311 Chaxiraxi: -------- begin text --------
 From {{bor|es|gnc}}.
 
 ===Pronunciation===
-{{es-IPA|cháguirágui}}
-{{es-IPA|chásirási|ref=<ref name="IRG">{{cite-book|author=Ignacio Reyes Garcia|title=Nombres Personales de las Islas Canarias|edition=1|location=Santa Cruz de Tenerife|publisher=Le Canarien ediciones - Libreando|year=2012|page=15|isbn=978-84-940364-1-5}}</ref><ref>{{cite-web|author=Chaxi|title=[http://waltzingmorethanmatilda.com/2013/12/18/famous-name-chaxiraxi/#comment-15432 Hello! My name is Chaxiraxi ...]|work=[http://waltzingmorethanmatilda.com/2013/12/18/famous-name-chaxiraxi/ Waltzing More Than Matilda, "Famous Name: Chaxiraxi"]|url=|format=blog|date=16 April 2014|publisher=|archiveurl=|archivedate=|accessdate=26 February 2016}}</ref>}}
+{{es-pr|cháguirágui|chásirási<ref:{{cite-book|author=Ignacio Reyes Garcia|title=Nombres Personales de las Islas Canarias|edition=1|location=Santa Cruz de Tenerife|publisher=Le Canarien ediciones - Libreando|year=2012|page=15|isbn=978-84-940364-1-5}}<<name:IRG>>><ref:{{cite-web|author=Chaxi|title=[http://waltzingmorethanmatilda.com/2013/12/18/famous-name-chaxiraxi/#comment-15432 Hello! My name is Chaxiraxi ...]|work=[http://waltzingmorethanmatilda.com/2013/12/18/famous-name-chaxiraxi/ Waltzing More Than Matilda, "Famous Name: Chaxiraxi"]|url=|format=blog|date=16 April 2014|publisher=|archiveurl=|archivedate=|accessdate=26 February 2016}}>}}
 
 ===Proper noun===
 {{es-proper noun|f}}
@@ -4708,7 +4491,7 @@ Page 56381 freidora: Found match for regex: =
 Page 56381 freidora: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA}}{{es-IPA|fre.i.dora}}
+{{es-pr|+,fre.idora}}
 
 ===Noun===
 {{es-noun|f}}
@@ -4723,8 +4506,7 @@ Page 56510 Múnich: -------- begin text --------
 {{wikipedia|lang=es}}
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|Múnik}}
+{{es-pr|+|Múnik}}
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -4740,15 +4522,13 @@ Page 57390 guachimán: Found match for regex: =
 Page 57390 guachimán: -------- begin text --------
 
 ===Alternative forms===
-* {{alter|es|huachimán}}
-* {{alter|es|wachimán}}
+* {{alter|es|huachimán|wachimán}}
 
 ===Etymology===
 From earlier {{m|es|wachimán}}, borrowed from {{bor|es|en|watchman}}.
 
 ===Pronunciation===
-{{es-IPA|post=(standard)}}
-{{es-IPA|wachimán|post=(colloquial)}}
+{{es-pr|+<q:standard>|wachimán<q:colloquial>}}
 
 ===Noun===
 {{es-noun|m}}
@@ -4769,8 +4549,7 @@ Page 57747 truhan: -------- begin text --------
 According to Coromines and Pascual, from {{inh|es|osp|trufán}}, attested since the 13th century, borrowed from {{der|es|fro|truand||a mendicant; a crook or gangster}}, from a {{der|es|cel-gau|*trūgantos}}, perhaps diminutive of {{m|cel-gau|*trūgos}}, cognate with {{cog|en|truant}}, {{cog|ga|trogán}}, related to {{cog|sga|tróg||miserable, unfortunate}}, {{cog|br|tru||weak}}.
 
 ===Pronunciation===
-{{es-IPA|tru.hán|pre={{a|commonly|including Central America}}}}
-{{es-IPA|truan|pre={{a|Central America}}}}
+{{es-pr|tru.hán<q:commonly, including Central America>|truan<q:Central America>}}
 
 ===Noun===
 {{es-noun|m|truhanes|f=truhana}}
@@ -4795,8 +4574,7 @@ Page 58244 xató: -------- begin text --------
 From {{bor|es|ca|-}}.
 
 ===Pronunciation===
-{{es-IPA|sható}}
-{{es-IPA|cható}}
+{{es-pr|sható,cható}}
 
 ===Noun===
 {{es-noun|m}}
@@ -4813,8 +4591,7 @@ Page 59685 hiyab: -------- begin text --------
 Borrowed from {{bor|es|ar|حِجَاب}}. {{root|es|ar|ح ج ب}}
 
 ===Pronunciation===
-{{es-IPA|jiyab}}
-{{es-IPA}}
+{{es-pr|jiyab,+}}
 
 ===Noun===
 {{es-noun|m}}
@@ -4853,8 +4630,7 @@ Page 64490 xaminí: -------- begin text --------
 Borrowed from an Otomi language; compare {{cog|ote|xaꞌmni}}.
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|shaminí}}
+{{es-pr|+,shaminí}}
 
 ===Noun===
 {{es-noun|m}}
@@ -4870,8 +4646,7 @@ Page 64559 bertsolari: -------- begin text --------
 From {{bor|es|eu|bertsolari}}.
 
 ===Pronunciation===
-{{es-IPA|bercholari}}
-{{es-IPA|bersolari}}
+{{es-pr|bercholari,bersolari}}
 
 ===Noun===
 {{es-noun|mfbysense}}
@@ -4884,7 +4659,7 @@ Page 66270 Araújo: Found match for regex: =
 Page 66270 Araújo: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA}}{{es-IPA|araujo}}
+{{es-pr|+|Araujo}}{{attn|es|is 'Araujo' correct?}}
 
 ===Proper noun===
 {{es-proper noun|m|g2=f}}
@@ -4895,8 +4670,7 @@ Page 66848 thatcherismo: Found match for regex: =
 Page 66848 thatcherismo: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA|zacherismo}}
-{{es-IPA|tacherismo|pre={{q|also}}}}
+{{es-pr|zacherismo|tacherismo<q:also>}}
 
 ===Noun===
 {{es-noun|m|-}}
@@ -4910,8 +4684,7 @@ Page 66944 huntingtina: Found match for regex: =
 Page 66944 huntingtina: -------- begin text --------
 
 ===Pronunciation===
-{{es-IPA}}
-{{es-IPA|juntingtina}}
+{{es-pr|+,juntingtina}}
 
 ===Noun===
 {{es-noun|f}}
