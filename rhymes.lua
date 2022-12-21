@@ -14,7 +14,7 @@ local function tag_rhyme(rhyme, lang)
 	return formatted_rhyme, cat
 end
 
-local function make_rhyme_link(lang, link_rhyme, display_rhyme, qualifiers)
+local function make_rhyme_link(lang, link_rhyme, display_rhyme)
 	local retval
 	if not link_rhyme then
 		retval = table.concat{"[[Rhymes:", lang:getCanonicalName(), "|", lang:getCanonicalName(), "]]"}
@@ -22,11 +22,7 @@ local function make_rhyme_link(lang, link_rhyme, display_rhyme, qualifiers)
 		local formatted_rhyme, cat = tag_rhyme(display_rhyme or link_rhyme, lang)
 		retval = table.concat{"[[Rhymes:", lang:getCanonicalName(), "/", link_rhyme, "|", formatted_rhyme, "]]", cat}
 	end
-	if qualifiers and #qualifiers > 0 then
-		return require("Module:qualifier").format_qualifier(qualifiers) .. " " .. retval
-	else
-		return retval
-	end
+	return retval
 end
 
 function export.show_row(frame)
@@ -69,7 +65,15 @@ end
 Meant to be called from a module. `data` is a table in the following format:
 {
   lang = LANGUAGE_OBJECT,
-  rhymes = {{rhyme = "RHYME", qualifiers = nil or {"QUALIFIER", "QUALIFIER", ...}, num_syl = nil or {#SYL, #SYL, ...}}, ...},
+  rhymes = {
+	{rhyme = "RHYME",
+	 q = nil or {"LEFT_QUALIFIER", "LEFT_QUALIFIER", ...},
+	 qualifiers = nil or {"LEFT_QUALIFIER", "LEFT_QUALIFIER", ...},
+	 qq = nil or {"RIGHT_QUALIFIER", "RIGHT_QUALIFIER", ...},
+	 a = nil or {"LEFT_ACCENT_QUALIFIER", "LEFT_ACCENT_QUALIFIER", ...},
+	 aa = nil or {"RIGHT_ACCENT_QUALIFIER", "RIGHT_ACCENT_QUALIFIER", ...},
+	 num_syl = nil or {#SYL, #SYL, ...}
+	 }, ...},
   qualifiers = nil or {"QUALIFIER", "QUALIFIER", ...},
   num_syl = nil or {#SYL, #SYL, ...},
   caption = nil or "CAPTION",
@@ -81,8 +85,10 @@ Meant to be called from a module. `data` is a table in the following format:
 Here:
 
 * `lang` is a language object.
-* `rhymes` is the list of rhymes to display. RHYME is the IPA rhyme, without initial hyphen. QUALIFIER is a qualifier
-  string to display before the specific rhyme in question, formatted using format_qualifier() in [[Module:qualifier]].
+* `rhymes` is the list of rhymes to display. RHYME is the IPA rhyme, without initial hyphen. LEFT_QUALIFIER is a
+  qualifier string to display before the specific rhyme in question, formatted using format_qualifier() in
+  [[Module:qualifier]]. RIGHT_QUALIFIER similarly displays after the rhyme. LEFT_ACCENT_QUALIFIER is an accent qualifier
+  (as in {{a}}) to display before the rhyme, and RIGHT_ACCENT_QUALIFIER similarly displays after the rhyme.
   #SYL is the number of syllables of the word or words containing this rhyme, for categorization purposes (see below).
 * `qualifiers` (at top level), if non-nil, is a list of qualifier strings to display after the caption "Rhymes:" and
   before the formatted rhymes, formatted using format_qualifier() in [[Module:qualifier]].
@@ -104,7 +110,12 @@ function export.format_rhymes(data)
 	local categories = {}
 	for i, r in ipairs(data.rhymes) do
 		local rhyme = r.rhyme
-		table.insert(links, make_rhyme_link(data.lang, rhyme, "-" .. rhyme, r.qualifiers))
+		local link = make_rhyme_link(data.lang, rhyme, "-" .. rhyme)
+		if r.q and r.q[1] or r.qq and r.qq[1] or r.qualifiers and r.qualifiers[1]
+			or r.a and r.a[1] or r.aa and r.aa[1] then
+			link = require("Module:pron qualifier").format_qualifiers(r, link)
+		end
+		table.insert(links, link)
 		add_syllable_categories(categories, langname, rhyme, r.num_syl or data.num_syl)
 	end
 
@@ -137,6 +148,12 @@ function export.show(frame)
 	local lang = args[compat and "lang" or 1]
 	lang = require("Module:languages").getByCode(lang, compat and "lang" or 1)
 
+	-- temporary tracking code to find usage of {{rhymes}} in various languages
+	-- [[Special:WhatLinksHere/Template:tracking/rhymes/LANGCODE]]
+	local code = lang:getCode()
+	if code == "it" or code == "es" then
+		require("Module:debug").track("rhymes/" .. code)
+	end
 	local function parse_num_syl(val)
 		val = mw.text.split(val, "%s*,%s*")
 		local ret = {}

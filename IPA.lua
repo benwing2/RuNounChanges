@@ -12,6 +12,11 @@ local match = mw.ustring.match
 local gmatch = mw.ustring.gmatch
 local U = mw.ustring.char
 
+local function track(page)
+	require("Module:debug/track")("IPA/" .. page)
+	return true
+end
+
 function export.format_IPA_full(lang, items, err, separator, sortKey, no_count)
 	local IPA_key, key_link, err_text, prefix, IPAs, category
 	local hasKey = m_data.langs_with_infopages
@@ -91,7 +96,7 @@ end
 
 function export.format_IPA_multiple(lang, items, separator, no_count)
 	local categories = {}
-	separator = separator or ", "
+	separator = separator or ', '
 	
 	-- Format
 	if not items[1] then
@@ -104,7 +109,7 @@ function export.format_IPA_multiple(lang, items, separator, no_count)
 	
 	local bits = {}
 	
-	for j, item in ipairs(items) do
+	for _, item in ipairs(items) do
 		local bit = export.format_IPA(lang, item.pron)
 		
 		if item.pretext then
@@ -114,9 +119,10 @@ function export.format_IPA_multiple(lang, items, separator, no_count)
 		if item.posttext then
 			bit = bit .. item.posttext
 		end
-		
-		if item.qualifiers and item.qualifiers[1] then
-			bit = require("Module:qualifier").format_qualifier(item.qualifiers) .. " " .. bit
+
+		if item.q and item.q[1] or item.qq and item.qq[1] or item.qualifiers and item.qualifiers[1]
+			or item.a and item.a[1] or item.aa and item.aa[1] then
+			bit = require("Module:pron qualifier").format_qualifiers(item, bit)
 		end
 
 		if item.refs or item.note then
@@ -125,7 +131,7 @@ function export.format_IPA_multiple(lang, items, separator, no_count)
 				-- FIXME: eliminate item.note in favor of item.refs. Use tracking to find places
 				-- that use item.note.
 				refspecs = {item.note}
-				require("Module:debug").track("IPA/note")
+				track("note")
 			else
 				refspecs = item.refs
 			end
@@ -145,16 +151,17 @@ function export.format_IPA_multiple(lang, items, separator, no_count)
 			end
 		end
 
-		if j > 1 then
-			bit = (item.separator or separator) .. bit
+		if item.separator then
+			bit = item.separator .. bit
 		end
+
 		table.insert(bits, bit)
 		
 		--[=[	[[Special:WhatLinksHere/Template:tracking/IPA/syntax-error]]
 				The length or gemination symbol should not appear after a syllable break or stress symbol.	]=]
 		
 		if find(item.pron, "[ˈˌ%.][ːˑ]") then
-			require("Module:debug").track("IPA/syntax-error")
+			track("syntax-error")
 		end
 		
 		if lang then
@@ -186,7 +193,7 @@ function export.format_IPA_multiple(lang, items, separator, no_count)
 		end
 	end
 
-	return table.concat(bits) .. table.concat(categories)
+	return table.concat(bits, separator) .. table.concat(categories)
 end
 
 -- Takes an IPA pronunciation and formats it and adds cleanup categories.
@@ -269,6 +276,18 @@ function export.format_IPA(lang, pron, split_output)
 	result = gsub(result, ",%s+", "")
 	result = gsub(result, "⁽[".. m_symbols.superscripts .. "]+⁾", "")
 	result = gsub(result, '[' .. m_symbols.valid .. ']', '')
+	
+	-- VS15
+	local vs15_class = "[" .. m_symbols.add_vs15 .. "]"
+	if mw.ustring.find(pron, vs15_class) then
+		local vs15 = U(0xFE0E)
+		if mw.ustring.find(result, vs15) then
+			result = gsub(result, vs15, "")
+			pron = mw.ustring.gsub(pron, vs15, "")
+		end
+		pron = mw.ustring.gsub(pron, "(" .. vs15_class .. ")", "%1" .. vs15)
+	end
+
 	if result ~= '' then
 		local suggestions = {}
 		mw.log(pron, result)
@@ -333,7 +352,7 @@ function export.format_IPA(lang, pron, split_output)
 					table.insert(phonemes, "<span style=\"color: red\">" .. phoneme .. "</span>")
 					rest = sub(rest, 2)
 					table.insert(categories, "[[Category:IPA pronunciations with invalid phonemes/" .. lang:getCode() .. "]]")
-					require("Module:debug").track("IPA/invalid phonemes/" .. phoneme)
+					track("invalid phonemes/" .. phoneme)
 				end
 			end
 			
@@ -366,64 +385,6 @@ function export.format_IPA(lang, pron, split_output)
 	else
 		return '<span class="IPA">' .. pron .. '</span>' .. err .. table.concat(categories)
 	end
-end
-
-function export.example(frame)
-	local output = {}
-	
-	local m_links = require('Module:links')
-	local m_languages = require('Module:languages')
-	
-	table.insert(
-		output,
-[[
-{| class="wikitable"
-! Term !! IPA !! Generated X-SAMPA !! Regenerated IPA !! Matched?
-]]
-	)
-	local row =
-[[
-|-
-| link || IPA || XSAMPA || regenerated_IPA || matched
-]]
-	
-	local examples = mw.text.split(frame.args[1], ",%s*")
-	
-	local m_XSAMPA = require("Module:IPA/X-SAMPA")
-	
-	for _, example in pairs(examples) do
-		local lang, word = match(example, "(%l%l%l?):(.+) [/%[]")
-		
-		if lang then
-			lang = m_languages.getByCode(lang) or error('"' .. lang .. '" is not a valid language code.')
-		end
-		
-		local IPA = match(example, "/[^/]+/")
-			or match(example, "%[[^%]]+%]")
-			or error('No IPA transcription found in "' .. example .. '".')
-		local XSAMPA = m_XSAMPA.IPA_to_XSAMPA(IPA)
-		local regenerated_IPA = m_XSAMPA.XSAMPA_to_IPA(XSAMPA)
-		
-		content = {
-			link = lang and word and m_links.full_link{ term = word, lang = lang },
-			matched = IPA == regenerated_IPA
-				and '<span style="color: green;">yes</span>'
-				or '<span style="color: red;">no</span>',
-			IPA = '<span class="IPA">' .. IPA .. '</span>',
-			XSAMPA = '<code>' .. XSAMPA .. '</code>',
-			regenerated_IPA = '<span class="IPA">' .. regenerated_IPA .. '</span>'
-		}
-		
-		local function add_content(item)
-			return content[item] or ""
-		end
-		local row = gsub(row, "[%a_]+", add_content)
-		table.insert(output, row)
-	end
-	
-	table.insert(output, "|}")
-	
-	return table.concat(output)
 end
 
 return export

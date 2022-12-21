@@ -2,13 +2,24 @@ local export = {}
 
 local m_links = require("Module:links")
 
+local function track(page)
+	require("Module:debug/track")("homophones/" .. page)
+	return true
+end
+
 --[=[
 Meant to be called from a module. `data` is a table containing the following fields:
 
 {
   lang = LANGUAGE_OBJECT,
-  homophones = {{term = "HOMOPHONE", alt = nil or "DISPLAY_TEXT", gloss = nil or "GLOSS", tr = nil or "TRANSLITERATION",
-				 pos = nil or "PART_OF_SPEECH", qualifiers = nil or {"QUALIFIER", "QUALIFIER", ...}}, ...},
+  homophones = {TERM_OBJECT, ...},
+     where TERM_OBJECT can contain all the fields in the object passed to full_link() in [[Module:links]] except for
+	 `lang` and `sc` (which are copied from the outer level), and in addition can contain the following fields:
+	    q = nil or {"LEFT_QUALIFIER", "LEFT_QUALIFIER", ...}
+	    qualifiers = nil or {"QUALIFIER", "QUALIFIER", ...}
+	    qq = nil or {"RIGHT_QUALIFIER", "RIGHT_QUALIFIER", ...}
+		a = nil or {"LEFT_ACCENT_QUALIFIER", "LEFT_ACCENT_QUALIFIER", ...},
+		aa = nil or {"RIGHT_ACCENT_QUALIFIER", "RIGHT_ACCENT_QUALIFIER", ...}
   sc = nil or SCRIPT_OBJECT,
   sort = nil or "SORTKEY",
   caption = nil or "CAPTION",
@@ -18,9 +29,13 @@ Meant to be called from a module. `data` is a table containing the following fie
 Here:
 
 * `lang` is a language object.
-* `homophones` is the list of homophones to display. HOMOPHONE is a homophone. QUALIFIER is a qualifier string to
-  display after the specific homophone in question, formatted using format_qualifier() in [[Module:qualifier]].
-  (FIXME: This should be changed to display the qualifier before the homophone.)
+* `homophones` is the list of homophones to display. TERM_OBJECT describes the specific homophone; the homophone itself
+  goes in the `term` field, while `alt`, `gloss`, `tr`, `ts`, `g`, `pos` and `lit` are as in full_link() in
+  [[Module:links]]. LEFT_QUALIFIER is a qualifier string to display before the specific homophone in question, formatted
+  using format_qualifier() in [[Module:qualifier]]. RIGHT_QUALIFIER similarly displays after the homophone.
+  QUALIFIER for compatibility displays after the homophone, but you should not use this in new code.
+  LEFT_ACCENT_QUALIFIER is an accent qualifier (as in {{a}}) to display before the homophone, and RIGHT_ACCENT_QUALIFIER
+  similarly displays after the homophone.
 * `sc`, if specified, is a script object.
 * `sort`, if specified, is a sort key.
 * `caption`, if specified, overrides the default caption "Homophone"/"Homophones". A colon and space is automatically
@@ -35,8 +50,10 @@ function export.format_homophones(data)
 		hmp.lang = data.lang
 		hmp.sc = data.sc
 		local text = m_links.full_link(hmp)
-		if hmp.qualifiers and hmp.qualifiers[1] then
-			text = text .. " " .. require("Module:qualifier").format_qualifier(hmp.qualifiers)
+		if hmp.q and hmp.q[1] or hmp.qq and hmp.qq[1] or hmp.qualifiers and hmp.qualifiers[1]
+			or hmp.a and hmp.a[1] or hmp.aa and hmp.aa[1] then
+			-- FIXME, change handling of `qualifiers`
+			text = require("Module:pron qualifier").format_qualifiers(hmp, text, "qualifiers right")
 		end
 		table.insert(hmptexts, text)
 	end
@@ -66,6 +83,7 @@ function export.show(frame)
 		["t"] = {list = true, allow_holes = true},
 		["tr"] = {list = true, allow_holes = true},
 		["q"] = {list = true, allow_holes = true},
+		["qq"] = {list = true, allow_holes = true},
 		["caption"] = {},
 		["nocaption"] = {type = "boolean"},
 		["sc"] = {},
@@ -73,7 +91,7 @@ function export.show(frame)
 	}
 
 	local args = require("Module:parameters").process(parent_args, params)
-	
+
 	local lang = require("Module:languages").getByCode(args[compat and "lang" or 1], compat and "lang" or 1)
 	local sc = args["sc"] and require("Module:scripts").getByCode(args["sc"], "sc") or nil
 
@@ -101,7 +119,8 @@ function export.show(frame)
 			pos = args["pos"][i],
 			gloss = args["t"][i],
 			tr = args["tr"][i],
-			qualifiers = args["q"][i] and {args["q"][i]} or nil,
+			qualifiers = args["q"][i] and track("q") and {args["q"][i]} or nil,
+			qq = args["qq"][i] and {args["qq"][i]} or nil,
 		})
 	end
 
