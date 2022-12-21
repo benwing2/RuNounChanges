@@ -13,22 +13,31 @@ TILDE = u"\u0303" # tilde =  ̃
 DIA = u"\u0308" # diaeresis =  ̈
 
 SYLDIV = u"\uFFF0" # used to represent a user-specific syllable divider (.) so we won't change it
+vowel = u"aeiouüyAEIOUÜY"
+V = "[" + vowel + "]" # vowel class
+W = "[jw]" # glide
 accent = AC + GR + CFLEX
 accent_c = "[" + accent + "]"
 stress = AC + GR
 stress_c = "[" + AC + GR + "]"
 ipa_stress = u"ˈˌ"
 ipa_stress_c = "[" + ipa_stress + "]"
-separator = accent + ipa_stress + r"# \-." + SYLDIV
+separator = accent + ipa_stress + r"# \-." + SYLDIV # hyphen included for syllabifying from spelling
 separator_c = "[" + separator + "]"
+C = "[^" + vowel + separator + "]" # consonant class including h
+C_NOT_H = "[^" + vowel + separator + "h]" # consonant class not including h
 
-def syllabify_from_spelling(text):
+def decompose(text):
   # decompose everything but ñ and ü
   text = unicodedata.normalize("NFD", text)
   text = text.replace("n" + TILDE, u"ñ")
   text = text.replace("N" + TILDE, u"Ñ")
   text = text.replace("u" + DIA, u"ü")
   text = text.replace("U" + DIA, u"Ü")
+  return text
+
+def syllabify_from_spelling(text):
+  text = decompose(text)
   TEMP_I = u"\uFFF1"
   TEMP_U = u"\uFFF2"
   TEMP_Y_CONS = u"\uFFF3"
@@ -41,10 +50,6 @@ def syllabify_from_spelling(text):
   TEMP_GU_CAPS = u"\uFFFA"
   TEMP_SH = u"\uFFFB"
   TEMP_DESH = u"\uFFFC"
-  vowel = u"aeiouüyAEIOUÜY"
-  V = "[" + vowel + "]" # vowel class
-  C = "[^" + vowel + separator + "]" # consonant class including h
-  C_NOT_H = "[^" + vowel + separator + "h]" # consonant class not including h
   # Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
   text = text.replace(".", SYLDIV)
   text = re.sub("y(" + V + ")", TEMP_Y_CONS + r"\1", text)
@@ -66,19 +71,21 @@ def syllabify_from_spelling(text):
   # etc.
   text = rsub_repeatedly("(" + V + accent_c + "*h?)([iu])(" + V + ")",
       lambda m: m.group(1) + vowel_to_glide[m.group(2)] + m.group(3), text)
+  # Divide before the last consonant (possibly followed by a glide). We then move the syllable division marker
+  # leftwards over clusters that can form onsets.
   # Divide VCV as V.CV; but don't divide if C == h, e.g. [[prohibir]] should be prohi.bir.
   text = rsub_repeatedly("(" + V + accent_c + "*)(" + C_NOT_H + V + ")", r"\1.\2", text)
-  text = rsub_repeatedly("(" + V + accent_c + "*" + C + ")(" + C + V + ")", r"\1.\2", text)
-  text = rsub_repeatedly("(" + V + accent_c + "*" + C + "+)(" + C + C + V + ")", r"\1.\2", text)
+  text = rsub_repeatedly("(" + V + accent_c + "*" + C + "+)(" + C + V + ")", r"\1.\2", text)
   # Puerto Rico + most of Spain divide tl as t.l. Mexico and the Canary Islands have .tl. Unclear what other regions
   # do. Here we choose to go with .tl. See https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf
   # and https://www.spanishdict.com/guide/spanish-syllables-and-syllabification-rules.
-  text = re.sub(r"([pbfvkctg])\.([lr])", r".\1\2", text)
+  cluster_r = u"rɾ"
+  text = re.sub(r"([pbfvkctg])\.([l" + cluster_r + "])", r".\1\2", text)
+  text = re.sub(r"d\.([" + cluster_r + "])", r".d\1", text)
   text = text.replace("d.r", ".dr")
   # Per https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf, tl at the end of a word
   # (as in nahuatl, Popocatepetl etc.) is divided .tl from the previous vowel.
   text = re.sub("([^. -])tl([ -]|$)", r"\1.tl\2", text)
-  text = rsub_repeatedly(r"(" + C + ")\.s(" + C + ")", r"\1s.\2", text)
   # Any aeo, or stressed iuüy, should be syllabically divided from a following aeo or stressed iuüy.
   text = rsub_repeatedly("([aeoAEO]" + accent_c + "*)(h?[aeo])", r"\1.\2", text)
   text = rsub_repeatedly("([aeoAEO]" + accent_c + "*)(h?" + V + stress_c + ")", r"\1.\2", text)
@@ -99,6 +106,56 @@ def syllabify_from_spelling(text):
   text = text.replace(TEMP_GU, "gu")
   text = text.replace(TEMP_GU_CAPS, "Gu")
   return unicodedata.normalize("NFC", text)
+
+def align_syllabification_to_spelling(syllab, spelling):
+  result = []
+  syll_chars = list(decompose(syllab))
+  spelling_chars = list(decompose(spelling))
+  i = 0
+  j = 0
+  while i < len(syll_chars) or j < len(spelling_chars):
+    ci = syll_chars[i] if i < len(syll_chars) else None
+    cj = spelling_chars[j] if j < len(spelling_chars) else None
+    if ci == cj:
+      result.append(ci)
+      i += 1
+      j += 1
+    elif ci == ".":
+      result.append(ci)
+      i += 1
+    elif ci in [AC, GR, CFLEX]:
+      # skip character
+      i += 1
+    else:
+      return None
+  if i < len(syll_chars) or j < len(spelling_chars):
+    # left-over characters on one side or the other
+    return None
+  return unicodedata.normalize("NFC", "".join(result))
+
+# Return the number of syllables of a phonemic representation, which should have syllable dividers in it but no
+# hyphens.
+def get_num_syl_from_phonemic(phonemic):
+  # Maybe we should just count vowels instead of the below code.
+  phonemic = phonemic.replace("|", " ") # remove IPA foot boundaries
+  words = re.split(" +", phonemic)
+  for i, word in enumerate(words):
+    # IPA stress marks are syllable divisions if between characters; otherwise just remove.
+    word = re.sub(u"(.)[ˌˈ](.)", r"\1.\2", word)
+    word = re.sub(u"[ˌˈ]", "", word)
+    words[i] = word
+  # There should be a syllable boundary between words.
+  phonemic = ".".join(words)
+  return len(re.sub("[^.]", "", phonemic)) + 1
+
+
+# Get the rhyme by truncating everything up through the last stress mark + any following consonants, and remove
+# syllable boundary markers.
+def convert_phonemic_to_rhyme(phonemic):
+  # NOTE: This works because the phonemic vowels are just [aeiou] possibly with diacritics that are separate
+  # Unicode chars. If we want to handle things like ɛ or ɔ we need to add them to `vowel`.
+  return re.sub("^[^" + vowel + "]*", "", re.sub(u".*[ˌˈ]", "", phonemic)).replace(".", "").replace(u"t͡ʃ", u"tʃ")
+
 
 def process_text_on_page(index, pagetitle, text):
   global args
@@ -136,8 +193,11 @@ def process_text_on_page(index, pagetitle, text):
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
+  sect_for_wiki = 0
   for k in xrange(1, len(subsections), 2):
-    if re.search(r"==\s*Pronunciation\s*==", subsections[k]):
+    if re.search(r"==\s*Etymology [0-9]+\s*==", subsections[k]):
+      sect_for_wiki = k + 1
+    elif re.search(r"==\s*Pronunciation\s*==", subsections[k]):
       secheader = re.sub(r"\s*Pronunciation\s*", "Pronunciation", subsections[k])
       if secheader != subsections[k]:
         subsections[k] = secheader
@@ -172,10 +232,31 @@ def process_text_on_page(index, pagetitle, text):
       audioarg = ""
       arg = ""
       bare_arg = ""
-      hyphenation = False
-      default_hyphenation = False
-      for line in lines:
+      hyphenation_from_respelling = False
+      hyphenation_from_pagetitle = False
+      lines_so_far = []
+      for lineind, line in enumerate(lines):
         origline = line
+        lines_so_far.append(line)
+        if "{{wiki" in line:
+          m = re.search(r"^(.*?)(\{\{wiki[^{}]*\}\})(.*?)$", line)
+          if not m:
+            pagemsg("WARNING: Can't match {{wikipedia}} template in supposed line containing it: %s" % line)
+          else:
+            prevline, wikitemp, postline = m.groups()
+            subsections[sect_for_wiki] = wikitemp + "\n" + subsections[sect_for_wiki]
+            # Remove the {{wikipedia}} line or template from lines seen so far. Put back the remaining lines in case we
+            # run into a problem later on, so we don't end up duplicating the {{wikipedia}} line. We accumulate lines
+            # like this in case for some reason we have two {{wikipedia}} lines in the Pronunciation section.
+            if not prevline and not postline:
+              del lines_so_far[-1]
+            else:
+              line = prevline + postline
+              lines_so_far[-1] = line
+            subsections[k + 1] = "%s\n\n" % "\n".join(lines_so_far + lines[lineind + 1:])
+            notes.append("move {{wikipedia}} line to top of etym section")
+            if not prevline and not postline:
+              continue
         # In case of "* {{es-IPA|...}}", chop off the "* ".
         line = re.sub(r"^\*\s*(\{\{es-IPA)", r"\1", line)
         if line.startswith("{{es-IPA"):
@@ -188,9 +269,13 @@ def process_text_on_page(index, pagetitle, text):
             must_continue = True
             break
           bare_arg = getparam(ipat, "1")
-          arg = bare_arg or "+"
-          default_hyphenation = arg == "+" or arg.replace(".", "") == pagetitle
-          hyphenation = syllabify_from_spelling(pagetitle)
+          normalized_bare_arg = bare_arg or "+"
+          arg = normalized_bare_arg
+          arg_for_hyph = pagetitle if arg == "+" else arg
+          hyphenation_from_pagetitle = syllabify_from_spelling(pagetitle)
+          hyphenation_from_respelling = align_syllabification_to_spelling(
+            syllabify_from_spelling(arg_for_hyph), pagetitle
+          )
           for param in ipat.params:
             pn = pname(param)
             pv = unicode(param.value)
@@ -206,20 +291,14 @@ def process_text_on_page(index, pagetitle, text):
           if must_continue:
             break
           continue
-        if not line.startswith("* ") and not line.startswith("*{"):
-          pagemsg("WARNING: Pronunciation section line doesn't start with '* ', skipping: %s"
-              % origline)
-          must_continue = True
-          break
-        if line.startswith("* "):
-          line = line[2:]
-        else:
-          line = line[1:]
+        # Get rid of any leading * + whitespace; continue without it though.
+        line = re.sub(r"^\*+\s*", "", line, 0, re.U)
         if line.startswith("{{hyph"):
           hyph_lines.append("* " + line)
-        elif line.startswith("{{homophone"):
+        elif re.search(r"^(\{\{(q|qual|qualifier|q-lite|i|a)\|[^{}]*\}\} )?{\{(homophone|hmp)", line):
           homophone_lines.append("* " + line)
-        elif line.startswith("{{audio"):
+        elif re.search(r"^(Audio: *)?\{\{audio", line):
+          line = re.sub("^Audio: *", "", line)
           audiot = verify_template_is_full_line("audio", line)
           if audiot is None:
             must_continue = True
@@ -259,7 +338,7 @@ def process_text_on_page(index, pagetitle, text):
       if rhyme_lines:
         must_continue = False
         for rhyme_line in rhyme_lines:
-          rhymet = verify_template_is_full_line(["rhyme", "rhymes"], rhyme_line)
+          rhymet = verify_template_is_full_line(["rhyme", "rhymes", "rhymes-lite"], rhyme_line)
           if not rhymet:
             must_continue = True
             break
@@ -269,23 +348,52 @@ def process_text_on_page(index, pagetitle, text):
             break
           styles = ["distincion-yeismo", "seseo-yeismo", "distincion-lleismo", "seseo-lleismo"]
           rhyme_pronuns = {}
+          rhyme_nsyl = {}
           rhymes = blib.fetch_param_chain(rhymet, "2")
-          for rhyme in rhymes:
+          for rind, rhyme in enumerate(rhymes):
+            matching_styles = []
+            nsyl = (getparam(rhymet, "s%s" % (rind + 1)) or getparam(rhymet, "s")).strip()
+            if nsyl:
+              if not re.search("^[0-9]+$", nsyl):
+                pagemsg("WARNING: Bad syllable count in rhyme template: %s" % unicode(rhymet))
+                must_continue = True
+                break
+              nsyl = int(nsyl)
+            else:
+              nsyl = None
             for style in styles:
               if style not in rhyme_pronuns:
                 pronun = expand_text(u"{{#invoke:es-pronunc|IPA_string|%s|style=%s}}" % (bare_arg, style))
                 if not pronun:
                   must_continue = True
                   break
-                rhyme_pronuns[style] = re.sub("^[^aeiou]*", "", re.sub(u".*[ˌˈ]", "", pronun)).replace(u"t͡ʃ", u"tʃ")
+                rhyme_pronuns[style] = convert_phonemic_to_rhyme(pronun)
+                rhyme_nsyl[style] = get_num_syl_from_phonemic(pronun)
               if rhyme == rhyme_pronuns[style]:
-                pagemsg("Removing rhyme %s, same as pronunciation-based rhyme for %s for spelling '%s'"
-                    % (rhyme, style, bare_arg))
-                break
+                matching_styles.append(style)
+                if nsyl is None:
+                  pagemsg("Removing rhyme %s, same as pronunciation-based rhyme for %s for spelling '%s': %s"
+                      % (rhyme, style, bare_arg, unicode(rhymet)))
+                  break
+                elif nsyl == rhyme_nsyl[style]:
+                  pagemsg("Removing rhyme %s, same as pronunciation-based rhyme for %s for spelling '%s' and syllable count %s matches: %s"
+                      % (rhyme, style, bare_arg, nsyl, unicode(rhymet)))
+                  break
+                elif pagetitle in allow_mismatching_nsyl:
+                  pagemsg("Removing rhyme %s, same as pronunciation-based rhyme for %s for spelling '%s'; syllable count %s mismatches pronunciation syllable count %s but is known to be incorrect so is ignored: %s"
+                      % (rhyme, style, bare_arg, nsyl, rhyme_nsyl[style], unicode(rhymet)))
+                  extra_notes.append("ignore known-incorrect syllable count %s in {{%s}}" % (nsyl, tname(rhymet)))
+                  break
+
             else: # no break
-              style_pronuns = ["%s=%s" % (style, rhyme_pronuns[style]) for style in styles]
-              pagemsg("WARNING: Rhyme %s not same as pronunciation-based rhyme (%s) for spelling '%s'"
-                  % (rhyme, ", ".join(style_pronuns), bare_arg))
+              if matching_styles:
+                pagemsg("WARNING: For spelling '%s', rhyme %s same as pronunciation-based rhyme for style(s) %s but syllable count %s doesn't match (%s): %s"
+                    % (bare_arg, rhyme, ",".join(matching_styles), nsyl,
+                      ", ".join("%s=%s" % (style, rhyme_nsyl[style]) for style in styles), unicode(rhymet)))
+              else:
+                pagemsg("WARNING: For spelling '%s', rhyme %s%s not same as pronunciation-based rhyme (%s): %s"
+                    % (bare_arg, rhyme, " with explicit syllable count %s" % nsyl if nsyl is not None else "",
+                      ", ".join("%s=%s" % (style, rhyme_pronuns[style]) for style in styles), unicode(rhymet)))
               must_continue = True
             if must_continue:
               break
@@ -304,7 +412,7 @@ def process_text_on_page(index, pagetitle, text):
         else:
           assert hyph_lines[0].startswith("* ")
           hyph_line = hyph_lines[0][2:]
-          hypht = verify_template_is_full_line(["hyph", "hyphenation"], hyph_line)
+          hypht = verify_template_is_full_line(["hyph", "hyphenation", "hyph-lite"], hyph_line)
           if hypht:
             syls = []
             if getparam(hypht, "1") != "es":
@@ -314,28 +422,102 @@ def process_text_on_page(index, pagetitle, text):
                 pn = pname(param)
                 pv = unicode(param.value)
                 if not re.search("^[0-9]+$", pn):
-                  pagemsg("WARNING: Unrecognized param %s=%s in {{%s}} not removing: %s" %
+                  pagemsg("WARNING: Unrecognized param %s=%s in {{%s}}, not removing: %s" %
                       (pn, pv, tname(hypht), hyph_line))
+                  break
+                if not pv:
+                  pagemsg("WARNING: Multiple hyphenations in a single template, not removing: %s" % hyph_line)
                   break
                 if int(pn) > 1:
                   syls.append(pv)
               else: # no break
                 specified_hyphenation = ".".join(syls)
-                if specified_hyphenation != hyphenation:
-                  if default_hyphenation:
-                    pagemsg("WARNING: Specified hyphenation %s not equal to auto-hyphenation %s, adding explicitly: %s" %
-                        (specified_hyphenation, hyphenation, hyph_line))
-                  else:
-                    pagemsg("WARNING: Non-default pronunciation %s and specified hyphenation %s not equal to auto-hyphenation %s, adding explicitly: %s" %
-                        (bare_arg, specified_hyphenation, hyphenation, hyph_line))
-                  arg += "<hyph:%s>" % specified_hyphenation
-                elif default_hyphenation:
+                if "r.r" in specified_hyphenation:
+                  pagemsg("Converting r.r into .rr in specified hyphenation '%s': %s" % (specified_hyphenation, hyph_line))
+                  specified_hyphenation = specified_hyphenation.replace("r.r", ".rr")
+                if "l.l" in specified_hyphenation:
+                  pagemsg("Converting l.l into .ll in specified hyphenation '%s': %s" % (specified_hyphenation, hyph_line))
+                  specified_hyphenation = specified_hyphenation.replace("l.l", ".ll")
+                if specified_hyphenation == hyphenation_from_respelling:
                   pagemsg("Removed explicit hyphenation same as auto-hyphenation: %s" % hyph_line)
+                elif specified_hyphenation == hyphenation_from_pagetitle:
+                  if normalized_bare_arg == "+":
+                    pagemsg("WARNING: Something wrong, {{es-IPA}} used with '+' or empty respelling but respelling auto-hyphenation %s different from pagetitle auto-hyphenation %s"
+                      % (hyphenation_from_respelling, hyphenation_from_pagetitle))
+                  else:
+                    pagemsg("Non-default pronunciation %s, explicit hyphenation same as pagetitle auto-hyphenation, replacing with <hyph:+>: %s" %
+                        (bare_arg, hyph_line))
+                    arg += "<hyph:+>"
                 else:
-                  pagemsg("Non-default pronunciation %s, explicit hyphenation same as auto-hyphenation, replacing with <hyph:+>: %s" % (
-                    bare_arg, hyph_line))
-                  arg += "<hyph:+>"
+                  hyph_text = (
+                    "respelling auto-hyphenation %s or pagetitle auto-hyphenation %s" % (
+                      hyphenation_from_respelling, hyphenation_from_pagetitle
+                    ) if hyphenation_from_respelling != hyphenation_from_pagetitle else
+                    "respelling/pagetitle auto-hyphenation %s" % hyphenation_from_respelling
+                  )
+                  if normalized_bare_arg == "+":
+                    pagemsg("WARNING: {{es-IPA}} used with '+' or empty respelling but specified hyphenation %s not equal to %s, adding explicitly: %s" %
+                        (specified_hyphenation, hyph_text, hyph_line))
+                  else:
+                    pagemsg("WARNING: Non-default pronunciation %s and specified hyphenation %s not equal to %s, adding explicitly: %s" %
+                        (bare_arg, specified_hyphenation, hyph_text, hyph_line))
+                  arg += "<hyph:%s>" % specified_hyphenation
                 hyph_lines = []
+
+      if homophone_lines:
+        if len(homophone_lines) > 1:
+          pagemsg("WARNING: Multiple homophone lines, not removing: %s" % ", ".join(homophone_lines))
+        else:
+          assert homophone_lines[0].startswith("* ")
+          homophone_line = homophone_lines[0][2:]
+          homophones = {}
+          homophone_qualifiers = {}
+          homophone_qualifier_text = None
+          m = re.search(r"^(\{\{(?:hmp|homophones?)\|[^{}]*\}\}) \{\{(?:q|qual|qualifier|q-lite|i|a)\|([^{}|=]*)\}\}$", homophone_line)
+          if m:
+            homophone_line, homophone_qualifier_text = m.groups()
+          if not m:
+            m = re.search(r"^\{\{(?:q|qual|qualifier|q-lite|i|a)\|([^{}|=]*)\}\} (\{\{(?:hmp|homophones?)\|[^{}]*\}\})", homophone_line)
+            if m:
+              homophone_qualifier_text, homophone_line = m.groups()
+          if not m:
+            m = re.search(r"^(\{\{(?:hmp|homophones?)\|[^{}]*\}\}) \('*([^{}|=]*?)'*\)$", homophone_line)
+            if m:
+              homophone_line, homophone_qualifier_text = m.groups()
+          hmpt = verify_template_is_full_line(["hmp", "homophone", "homophones"], homophone_line)
+          if hmpt:
+            if getparam(hmpt, "1") != "es":
+              pagemsg("WARNING: Wrong language in {{%s}}, not removing: %s" % (tname(hmpt), homophone_line))
+            else:
+              for param in hmpt.params:
+                pn = pname(param)
+                pv = unicode(param.value)
+                if pn == "q":
+                  pn = "q1"
+                if not re.search("^q?[0-9]+$", pn):
+                  pagemsg("WARNING: Unrecognized param %s=%s in {{%s}}, not removing: %s" %
+                      (pn, pv, tname(hmpt), homophone_line))
+                  break
+                if pn.startswith("q"):
+                  homophone_qualifiers[int(pn[1:])] = pv
+                elif int(pn) > 1:
+                  homophones[int(pn) - 1] = pv
+              else: # no break
+                def normalize_homophone_qualifier(q):
+                  q = re.sub(u"(non-Castilian|non-Iberian|seseo and ceceo|seseo|Latin-America|in dialects without distinción|in dialects without distinction between S and Z|non-\[*distinción\]*)", "Latin America", q)
+                  q = re.sub(u"((?:in dialects with )?\[*yeísmo\]*)", u"[[yeísmo]]", q)
+                  q = re.sub(" dialects", "", q)
+                  return q
+                hmp_args = []
+                for pn, pv in sorted(homophones.items()):
+                  hmp_args.append(pv)
+                  if pn in homophone_qualifiers:
+                    hmp_args[-1] += "<q:%s>" % normalize_homophone_qualifier(homophone_qualifiers[pn])
+                if homophone_qualifier_text:
+                  hmp_args[-1] += "<q:%s>" % normalize_homophone_qualifier(homophone_qualifier_text)
+                arg += "<hmp:%s>" % ",".join(hmp_args)
+                extra_notes.append("incorporate homophones into {{es-pr}}")
+                homophone_lines = []
 
       if arg == "+":
         es_pr = "{{es-pr}}"
@@ -357,7 +539,12 @@ def process_text_on_page(index, pagetitle, text):
 
 parser = blib.create_argparser("Convert {{es-IPA}} to {{es-pr}}", include_pagefile=True, include_stdin=True)
 parser.add_argument("--partial-page", action="store_true", help="Input was generated with 'find_regex.py --lang LANG' and has no ==LANG== header.")
+parser.add_argument("--allow-mismatching-nsyl", help="Comma-separated list of pages with known incorrect value for number of syllables in {{rhymes}} template.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
+
+allow_mismatching_nsyl = set()
+if args.allow_mismatching_nsyl:
+  allow_mismatching_nsyl = set(blib.split_utf8_arg(args.allow_mismatching_nsyl))
 
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)
