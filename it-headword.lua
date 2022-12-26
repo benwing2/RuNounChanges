@@ -8,14 +8,22 @@
 -- * {{it-pp}};
 -- * {{it-presp}};
 -- * {{it-card-noun}}, {{it-card-adj}}, {{it-card-inv}};
--- * {{it-adv}}.
+-- * {{it-adv}};
+-- * {{it-pos}};
+-- * {{it-suffix form}}.
 -- See [[Module:it-verb]] for Italian conjugation templates.
 -- See [[Module:it-conj]] for an older Italian conjugation module that is still widely used but will be going away.
+
 local export = {}
 local pos_functions = {}
 
+local force_cat = false -- for testing; if true, categories appear in non-mainspace pages
+
 local m_links = require("Module:links")
 local m_table = require("Module:table")
+local romut_module = "Module:romance utilities"
+local lang = require("Module:languages").getByCode("it")
+local langname = lang:getCanonicalName()
 
 local u = mw.ustring.char
 local rfind = mw.ustring.find
@@ -29,11 +37,6 @@ local ulen = mw.ustring.len
 local unfd = mw.ustring.toNFD
 local unfc = mw.ustring.toNFC
 
-local lang = require("Module:languages").getByCode("it")
-local langname = "Italian"
-
-local force_cat = false -- for testing; if true, categories appear in non-mainspace pages
-
 local GR = u(0x0300)
 local V = "[aeiou]"
 local NV = "[^aeiou]"
@@ -43,6 +46,11 @@ local AV = "[àèéìòóù]"
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
 	return retval
+end
+
+local function track(page)
+	require("Module:debug/track")("it-headword/" .. page)
+	return true
 end
 
 local function glossary_link(entry, text)
@@ -63,13 +71,6 @@ local function check_all_missing(forms, plpos, tracking_categories)
 		end
 	end
 end
-
-local suffix_categories = {
-	["adjectives"] = true,
-	["adverbs"] = true,
-	["nouns"] = true,
-	["verbs"] = true,
-}
 
 local prepositions = {
 	-- a, da + optional article
@@ -103,23 +104,21 @@ local prepositions = {
 }
 
 -- The main entry point.
--- FIXME: Convert itprop to go through this.
 function export.show(frame)
-	local tracking_categories = {}
-
 	local poscat = frame.args[1]
 		or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
 
+	local parargs = frame:getParent().args
+
 	local params = {
 		["head"] = {list = true},
-		["suff"] = {type = "boolean"},
 		["id"] = {},
 		["sort"] = {},
 		["splithyph"] = {type = "boolean"},
+		["nolinkhead"] = {type = "boolean"},
+		["json"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing
 	}
-
-	local parargs = frame:getParent().args
 
 	if poscat == "verbs-old" then
 		local m_headword_old = require("Module:it-headword/old")
@@ -134,44 +133,63 @@ function export.show(frame)
 	end
 
 	local args = require("Module:parameters").process(parargs, params)
+
+	local pagename = args.pagename or mw.title.getCurrentTitle().text
+
 	local user_specified_heads = args.head
 	local heads = user_specified_heads
-	local pagename = args.pagename or mw.title.getCurrentTitle().text
-	if #heads == 0 then
-		heads = {require("Module:romance utilities").add_lemma_links(pagename, args.splithyph)}
+	if args.nolinkhead then
+		if #heads == 0 then
+			heads = {pagename}
+		end
+	else
+		local auto_linked_head = require(romut_module).add_lemma_links(pagename, args.splithyph)
+		if #heads == 0 then
+			heads = {auto_linked_head}
+		else
+			for _, head in ipairs(heads) do
+				if head == auto_linked_head then
+					track("redundant-head")
+				end
+			end
+		end
 	end
-		
+
 	local data = {
 		lang = lang,
 		pos_category = poscat,
 		categories = {},
-		user_specified_heads = user_specified_heads,
 		heads = heads,
-		pagename = pagename,
+		user_specified_heads = user_specified_heads,
 		genders = {},
 		inflections = {},
+		pagename = pagename,
 		id = args.id,
 		sort_key = args.sort,
 		force_cat_output = force_cat,
 	}
 
-	if args.suff then
+	local is_suffix = false
+	if pagename:find("^%-") then
+		is_suffix = true
 		data.pos_category = "suffixes"
-
-		if suffix_categories[poscat] then
-			local singular_poscat = poscat:gsub("s$", "")
-			table.insert(data.categories, langname .. " " .. singular_poscat .. "-forming suffixes")
-		else
-			error("No category exists for suffixes forming " .. poscat .. ".")
-		end
+		local singular_poscat = poscat:gsub("s$", "")
+		table.insert(data.categories, langname .. " " .. singular_poscat .. "-forming suffixes")
+		table.insert(data.inflections, {label = singular_poscat .. "-forming suffix"})
 	end
 
+	local tracking_categories = {}
+
 	if pos_functions[poscat] then
-		pos_functions[poscat].func(args, data, tracking_categories, frame)
+		pos_functions[poscat].func(args, data, tracking_categories, frame, is_suffix)
+	end
+
+	if args.json then
+		return require("Module:JSON").toJSON(data)
 	end
 
 	return require("Module:headword").full_headword(data)
-		.. require("Module:utilities").format_categories(tracking_categories, lang, args.sort, nil, force_cat)
+		.. (#tracking_categories > 0 and require("Module:utilities").format_categories(tracking_categories, lang, args.sort, nil, force_cat) or "")
 end
 
 -- Generate a default plural form, which is correct for most regular nouns and adjectives.
@@ -181,7 +199,7 @@ local function make_plural(form, gender, special)
 		plspec = special
 		special = nil
 	end
-	local retval = require("Module:romance utilities").handle_multiword(form, special,
+	local retval = require(romut_module).handle_multiword(form, special,
 		function(form) return make_plural(form, gender, plspec) end, prepositions)
 	if retval and #retval > 0 then
 		if #retval ~= 1 then
@@ -262,7 +280,7 @@ end
 
 -- Generate a default feminine form.
 local function make_feminine(form, special)
-	local retval = require("Module:romance utilities").handle_multiword(form, special, make_feminine, prepositions)
+	local retval = require(romut_module).handle_multiword(form, special, make_feminine, prepositions)
 	if retval then
 		if #retval ~= 1 then
 			error("Internal error: Should have one return value for make_feminine: " .. table.concat(retval, ","))
@@ -284,7 +302,7 @@ end
 
 -- Generate a default masculine form.
 local function make_masculine(form, special)
-	local retval = require("Module:romance utilities").handle_multiword(form, special, make_masculine, prepositions)
+	local retval = require(romut_module).handle_multiword(form, special, make_masculine, prepositions)
 	if retval then
 		if #retval ~= 1 then
 			error("Internal error: Should have one return value for make_masculine: " .. table.concat(retval, ","))
@@ -325,12 +343,21 @@ local function process_terms_with_qualifiers(terms, quals)
 	return infls
 end
 
+
+-----------------------------------------------------------------------------------------
+--                                          Nouns                                      --
+-----------------------------------------------------------------------------------------
+
 local allowed_genders = m_table.listToSet(
 	{"m", "f", "mf", "mfbysense", "m-p", "f-p", "mf-p", "mfbysense-p", "?", "?-p"}
 )
 
-local function do_noun(args, data, tracking_categories, pos)
+local function do_noun(args, data, tracking_categories, pos, is_suffix, is_proper)
 	local is_plurale_tantum = false
+	local has_singular = false
+	if is_suffix then
+		pos = "suffix"
+	end
 	local plpos = require("Module:string utilities").pluralize(pos)
 
 	data.genders = {}
@@ -344,6 +371,7 @@ local function do_noun(args, data, tracking_categories, pos)
 		if g:find("-p$") then
 			is_plurale_tantum = true
 		else
+			has_singular = true
 			if g == "m" or g == "mf" or g == "mfbysense" then
 				saw_m = true
 			end
@@ -388,7 +416,7 @@ local function do_noun(args, data, tracking_categories, pos)
 	local args_fpl = args.fpl
 	local args_pl = args[2]
 
-	if is_plurale_tantum then
+	if is_plurale_tantum and not has_singular then
 		if #args_pl > 0 then
 			error("Can't specify plurals of plurale tantum " .. pos)
 		end
@@ -401,8 +429,12 @@ local function do_noun(args, data, tracking_categories, pos)
 		table.insert(data.inflections, {label = glossary_link("apocopated")})
 		data.pos_category = pos .. " forms"
 	else
+		if is_plurale_tantum then
+			-- both singular and plural
+			table.insert(data.inflections, {label = "sometimes " .. glossary_link("plural only") .. ", in variation"})
+		end
 		-- If no plurals, use the default plural unless mpl= or fpl= explicitly given.
-		if #args_pl == 0 and #args_mpl == 0 and #args_fpl == 0 then
+		if #args_pl == 0 and #args_mpl == 0 and #args_fpl == 0 and not is_proper then
 			args_pl = {"+"}
 		end
 		-- If only ~ given (countable and uncountable), add the default plural after it.
@@ -456,7 +488,7 @@ local function do_noun(args, data, tracking_categories, pos)
 			elseif pl == "+" then
 				make_gendered_plural(lemma, gender_for_default_plural)
 			elseif pl:find("^%+") then
-				pl = require("Module:romance utilities").get_special_indicator(pl)
+				pl = require(romut_module).get_special_indicator(pl)
 				make_gendered_plural(lemma, gender_for_default_plural, pl)
 			elseif pl == "?" or pl == "!" then
 				if i > 1 or #args_pl > 1 then
@@ -519,7 +551,7 @@ local function do_noun(args, data, tracking_categories, pos)
 			elseif mf == "#" then
 				mf = lemma
 			end
-			local special = require("Module:romance utilities").get_special_indicator(mf)
+			local special = require(romut_module).get_special_indicator(mf)
 			if special then
 				mf = inflect(lemma, special)
 			end
@@ -579,7 +611,7 @@ local function do_noun(args, data, tracking_categories, pos)
 				insert_infl(lemma, accel)
 			elseif mfpl == "cap*" or mfpl == "cap*+" or mfpl:find("^%+") then
 				if mfpl:find("^%+") then
-					mfpl = require("Module:romance utilities").get_special_indicator(mfpl)
+					mfpl = require(romut_module).get_special_indicator(mfpl)
 				end
 				if #singulars > 0 then
 					for _, mf in ipairs(singulars) do
@@ -683,9 +715,9 @@ local function do_noun(args, data, tracking_categories, pos)
 	end
 end
 
-local function get_noun_params()
+local function get_noun_params(nountype)
 	return {
-		[1] = {list = "g", required = true, default = "?"},
+		[1] = {list = "g", required = nountype ~= "proper", default = "?"},
 		[2] = {list = "pl"},
 		["apoc"] = {type = "boolean"}, --apocopated
 		["g_qual"] = {list = "g=_qual", allow_holes = true},
@@ -703,14 +735,21 @@ local function get_noun_params()
 end
 
 pos_functions["nouns"] = {
-	params = get_noun_params(),
-	func = function(args, data, tracking_categories)
-		do_noun(args, data, tracking_categories, "noun")
+	params = get_noun_params("base"),
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_noun(args, data, tracking_categories, "noun", is_suffix)
+	end,
+}
+
+pos_functions["proper nouns"] = {
+	params = get_noun_params("proper"),
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_noun(args, data, tracking_categories, "proper noun", is_suffix, "is proper noun")
 	end,
 }
 
 pos_functions["cardinal nouns"] = {
-	params = get_noun_params(),
+	params = get_noun_params("base"),
 	func = function(args, data, tracking_categories)
 		do_noun(args, data, tracking_categories, "numeral")
 		data.pos_category = "numerals"
@@ -718,70 +757,35 @@ pos_functions["cardinal nouns"] = {
 	end,
 }
 
-function export.itprop(frame)
-	local params = {
-		[1] = {list = "g", default = "?"},
 
-		["head"] = {list = true},
-		["m"] = {list = true},
-		["f"] = {list = true},
-		["sort"] = {},
-	}
-	
-	local args = require("Module:parameters").process(frame:getParent().args, params)
-	
-	local data = {
-		lang = lang, pos_category = "proper nouns", categories = {}, sort_key = args.sort,
-		heads = args.head, genders = args[1], inflections = {}
-	}
+-----------------------------------------------------------------------------------------
+--                                       Adjectives                                    --
+-----------------------------------------------------------------------------------------
 
-	local is_plurale_tantum = false
-
-	for _, g in ipairs(args[1]) do
-		if not allowed_genders[g] then
-			error("Unrecognized gender: " .. g)
-		end
-		if g:find("-p$") then
-			is_plurale_tantum = true
-		end
-	end
-
-	if is_plurale_tantum then
-		table.insert(data.inflections, {label = glossary_link("plural only")})
-	end
-
-	-- Other gender
-	if #args.f > 0 then
-		args.f.label = "feminine"
-		table.insert(data.inflections, args.f)
-	end
-	
-	if #args.m > 0  then
-		args.m.label = "masculine"
-		table.insert(data.inflections, args.m)
-	end
-
-	return require("Module:headword").full_headword(data)
-end
-
-
-local function do_adjective(args, data, tracking_categories, pos, is_superlative)
+local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_superlative)
 	local feminines = {}
 	local masculine_plurals = {}
 	local feminine_plurals = {}
+	if is_suffix then
+		pos = "suffix"
+	end
 	local plpos = require("Module:string utilities").pluralize(pos)
 
-	local romut = require("Module:romance utilities")
-	data.pos_category = plpos
-	
-	if args.sp and not romut.allowed_special_indicators[args.sp] then
-		local indicators = {}
-		for indic, _ in pairs(romut.allowed_special_indicators) do
-			table.insert(indicators, "'" .. indic .. "'")
+	if not is_suffix then
+		data.pos_category = plpos
+	end
+
+	if args.sp then
+		local romut = require(romut_module)
+		if not romut.allowed_special_indicators[args.sp] then
+			local indicators = {}
+			for indic, _ in pairs(romut.allowed_special_indicators) do
+				table.insert(indicators, "'" .. indic .. "'")
+			end
+			table.sort(indicators)
+			error("Special inflection indicator beginning can only be " ..
+				m_table.serialCommaJoin(indicators, {dontTag = true}) .. ": " .. args.sp)
 		end
-		table.sort(indicators)
-		error("Special inflection indicator beginning can only be " ..
-			m_table.serialCommaJoin(indicators, {dontTag = true}) .. ": " .. args.sp)
 	end
 
 	local lemma = m_links.remove_links(data.heads[1]) -- should always be specified
@@ -841,7 +845,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_superlative
 			elseif fpl == "#" then
 				fpl = lemma
 			end
-			table.insert(feminine_plurals, {term = fpl, fetch_qualifiers(args.fpl_qual[i])})
+			table.insert(feminine_plurals, {term = fpl, qualifiers = fetch_qualifiers(args.fpl_qual[i])})
 		end
 
 		check_all_missing(feminine_plurals, plpos, tracking_categories)
@@ -977,60 +981,60 @@ end
 
 pos_functions["adjectives"] = {
 	params = get_adjective_params("base"),
-	func = function(args, data, tracking_categories)
-		do_adjective(args, data, tracking_categories, "adjective")
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adjective(args, data, tracking_categories, "adjective", is_suffix)
 	end,
 }
 
 pos_functions["comparative adjectives"] = {
 	params = get_adjective_params("comp"),
-	func = function(args, data, tracking_categories)
-		do_adjective(args, data, tracking_categories, "adjective")
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adjective(args, data, tracking_categories, "adjective", is_suffix)
 	end,
 }
 
 pos_functions["superlative adjectives"] = {
 	params = get_adjective_params("sup"),
-	func = function(args, data, tracking_categories)
-		do_adjective(args, data, tracking_categories, "adjective", true)
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adjective(args, data, tracking_categories, "adjective", is_suffix, "is superlative")
 	end,
 }
 
 pos_functions["cardinal adjectives"] = {
 	params = get_adjective_params("card"),
-	func = function(args, data, tracking_categories)
-		do_adjective(args, data, tracking_categories, "numeral")
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adjective(args, data, tracking_categories, "numeral", is_suffix)
 		table.insert(data.categories, 1, langname .. " cardinal numbers")
 	end,
 }
 
 pos_functions["past participles"] = {
 	params = get_adjective_params("part"),
-	func = function(args, data, tracking_categories)
-		do_adjective(args, data, tracking_categories, "participle")
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adjective(args, data, tracking_categories, "participle", is_suffix)
 		data.pos_category = "past participles"
 	end,
 }
 
 pos_functions["present participles"] = {
 	params = get_adjective_params("part"),
-	func = function(args, data, tracking_categories)
-		do_adjective(args, data, tracking_categories, "participle")
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adjective(args, data, tracking_categories, "participle", is_suffix)
 		data.pos_category = "present participles"
 	end,
 }
 
 pos_functions["determiners"] = {
 	params = get_adjective_params("det"),
-	func = function(args, data, tracking_categories)
-		do_adjective(args, data, tracking_categories, "determiner")
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adjective(args, data, tracking_categories, "determiner", is_suffix)
 	end,
 }
 
 pos_functions["adjective-like pronouns"] = {
 	params = get_adjective_params("pron"),
-	func = function(args, data, tracking_categories)
-		do_adjective(args, data, tracking_categories, "pronoun")
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adjective(args, data, tracking_categories, "pronoun", is_suffix)
 	end,
 }
 
@@ -1050,30 +1054,72 @@ pos_functions["cardinal invariable"] = {
 	end,
 }
 
-pos_functions["adverbs"] = {
-	params = {
-		["comp"] = {list = true}, --comparative(s)
-		["comp_qual"] = {list = "comp=_qual", allow_holes = true},
-		["sup"] = {list = true}, --superlative(s)
-		["sup_qual"] = {list = "sup=_qual", allow_holes = true},
-	},
-	func = function(args, data, tracking_categories)
-		if args.comp and #args.comp > 0 then
-			local comps = process_terms_with_qualifiers(args.comp, args.comp_qual)
-			check_all_missing(comps, "adverbs", tracking_categories)
-			comps.label = "comparative"
-			table.insert(data.inflections, comps)
-		end
 
-		if args.sup and #args.sup > 0 then
-			local sups = process_terms_with_qualifiers(args.sup, args.sup_qual)
-			check_all_missing(sups, "adverbs", tracking_categories)
-			sups.label = "superlative"
-			table.insert(data.inflections, sups)
-		end
+-----------------------------------------------------------------------------------------
+--                                        Adverbs                                      --
+-----------------------------------------------------------------------------------------
+
+local function do_adverb(args, data, tracking_categories, pos, is_suffix)
+	if is_suffix then
+		pos = "suffix"
+	end
+	local plpos = require("Module:string utilities").pluralize(pos)
+
+	if not is_suffix then
+		data.pos_category = plpos
+	end
+
+	if args.comp and #args.comp > 0 then
+		local comps = process_terms_with_qualifiers(args.comp, args.comp_qual)
+		check_all_missing(comps, "adverbs", tracking_categories)
+		comps.label = "comparative"
+		table.insert(data.inflections, comps)
+	end
+
+	if args.sup and #args.sup > 0 then
+		local sups = process_terms_with_qualifiers(args.sup, args.sup_qual)
+		check_all_missing(sups, "adverbs", tracking_categories)
+		sups.label = "superlative"
+		table.insert(data.inflections, sups)
+	end
+end
+
+local function get_adverb_params(advtype)
+	local params = {}
+	if advtype == "base" then
+		params["comp"] = {list = true} --comparative(s)
+		params["comp_qual"] = {list = "comp=_qual", allow_holes = true}
+		params["sup"] = {list = true} --superlative(s)
+		params["sup_qual"] = {list = "sup=_qual", allow_holes = true}
+	end
+	return params
+end
+
+pos_functions["adverbs"] = {
+	params = get_adverb_params("base"),
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adverb(args, data, tracking_categories, "adverb", is_suffix)
 	end,
 }
 
+pos_functions["comparative adverbs"] = {
+	params = get_adverb_params("comp"),
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adverb(args, data, tracking_categories, "adverb", is_suffix)
+	end,
+}
+
+pos_functions["superlative adverbs"] = {
+	params = get_adverb_params("sup"),
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adverb(args, data, tracking_categories, "adverb", is_suffix)
+	end,
+}
+
+
+-----------------------------------------------------------------------------------------
+--                                         Verbs                                       --
+-----------------------------------------------------------------------------------------
 
 pos_functions["verbs"] = {
 	params = {
@@ -1255,6 +1301,56 @@ pos_functions["verbs"] = {
 			end
 		end
 	end
+}
+
+
+-----------------------------------------------------------------------------------------
+--                                      Suffix forms                                   --
+-----------------------------------------------------------------------------------------
+
+pos_functions["suffix forms"] = {
+	params = {
+		[1] = {required = true},
+		["g"] = {list = true},
+		["g_qual"] = {list = "g=_qual", allow_holes = true},
+		["apoc"] = {type = "boolean"}, --apocopated
+	},
+	func = function(args, data, tracking_categories, frame)
+		data.genders = {}
+		for i, g in ipairs(args.g) do
+			if not allowed_genders[g] then
+				error("Unrecognized gender: " .. g)
+			end
+			if args.g_qual[i] then
+				table.insert(data.genders, {spec = g, qualifiers = {args.g_qual[i]}})
+			else
+				table.insert(data.genders, g)
+			end
+		end
+
+		table.insert(data.inflections, {label = "non-lemma form of " .. args[1] .. "-forming suffix"})
+		if args.apoc then
+			table.insert(data.inflections, {label = glossary_link("apocopated")})
+		end
+	end,
+}
+
+
+-----------------------------------------------------------------------------------------
+--                                Arbitrary parts of speech                            --
+-----------------------------------------------------------------------------------------
+
+pos_functions["arbitrary part of speech"] = {
+	params = {
+		[1] = {required = true},
+	},
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		if is_suffix then
+			error("Can't use [[Template:it-pos]] with suffixes")
+		end
+		local plpos = require("Module:string utilities").pluralize(args[1])
+		data.pos_category = plpos
+	end,
 }
 
 return export
