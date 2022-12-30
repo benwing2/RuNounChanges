@@ -4294,6 +4294,7 @@ Page 1187 rarefacciano: <respelling> all: rarefàcciano <end>: <from> {{rhymes|i
 Page 1187 rarefacciano: Skipped, no changes
 Page 1186 rarefaccio: <respelling> all: rarefàccio <end>: <from> {{rhymes|it|attʃo|s=4}} <to> {{rhymes|it|attʃo|s=4}} <end>
 Page 1186 rarefaccio: Skipped, no changes
+# FIXME rasoio
 Page 957 rasoi: <respelling> all: rasó.i,rasò.i|#ra[s]ó.i<r:DiPI|rasoio> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: oi: <from> {{rhymes|it|oi|s=3}} <to> {{rhymes|it|oi|s=3}} <end>
 Page 957 rasoi: Skipped, no changes
 Page 2014 rassodabile: <respelling> all: rassodàbile <end>: <from> {{rhymes|it|abile|s=5}} <to> {{rhymes|it|abile|s=5}} <end>
@@ -4480,44 +4481,11 @@ Page 2000 riconciliabile: <respelling> all: riconciliàbile <end> WARNING: Unabl
 Page 2000 riconciliabile: Skipped, no changes
 Page 1999 riconfermabile: <respelling> all: riconfermàbile <end>: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 Page 1999 riconfermabile: Skipped, no changes
-
-
-
-
-
-
-
-
-
-
-
-
-########################### got here 2022-12-22 #############################
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#Page 433 riconobbe: <respelling> all: riconóbbe <end>: <from> {{rhymes|it|obbe|s=4}} <to> {{rhymes|it|obbe|s=4}} <end>
+#Page 433 riconobbe: <respelling> all: riconóbbe,riconòbbe<r:DiPI|conobbi> <end>: <from> {{rhymes|it|obbe|s=4}} <to> {{rhymes|it|obbe|s=4}} <end>
 #Page 433 riconobbe: Skipped, no changes
-#Page 434 riconobbero: <respelling> all: riconóbbero <end>: <from> {{rhymes|it|obbero|s=5}} <to> {{rhymes|it|obbero|s=5}} <end>
+#Page 434 riconobbero: <respelling> all: riconóbbero,riconòbbero<r:DiPI|conobbi> <end>: <from> {{rhymes|it|obbero|s=5}} <to> {{rhymes|it|obbero|s=5}} <end>
 #Page 434 riconobbero: Skipped, no changes
-#Page 432 riconobbi: <respelling> all: riconóbbi <end>: <from> {{rhymes|it|obbi|s=4}} <to> {{rhymes|it|obbi|s=4}} <end>
+#Page 432 riconobbi: <respelling> all: riconóbbi,riconòbbi<r:DiPI|conobbi> <end>: <from> {{rhymes|it|obbi|s=4}} <to> {{rhymes|it|obbi|s=4}} <end>
 #Page 432 riconobbi: Skipped, no changes
 #Page 435 riconosca: <respelling> all: riconósca <end>: <from> {{rhymes|it|oska|s=4}} <to> {{rhymes|it|oska|s=4}} <end>
 #Page 435 riconosca: Skipped, no changes
@@ -4543,17 +4511,17 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 819 ridisponemmo: Skipped, no changes
 #Page 2747 ridoppio: <respelling> all: ridóppio <end>: <from> {{rhymes|it|oppjo|s=3}} <to> {{rhymes|it|oppjo|s=3}} <end>
 #Page 2747 ridoppio: Skipped, no changes
-#Page 2748 rieccitabile: <respelling> all: rieccitàbile <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
+#Page 2748 rieccitabile: <respelling> all: ri.eccitàbile <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 2748 rieccitabile: Skipped, no changes
-#Page 1996 rieducabile: <respelling> all: rieducàbile <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
+#Page 1996 rieducabile: <respelling> all: ri.educàbile <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 1996 rieducabile: Skipped, no changes
-#Page 962 riemergemmo: <respelling> all: riemergémmo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme emmo: <from> {{rhymes|it|emmo|s=5}} <to> {{rhymes|it|emmo|s=5}} <end>
+#Page 962 riemergemmo: <respelling> all: ri.emergémmo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme emmo: <from> {{rhymes|it|emmo|s=5}} <to> {{rhymes|it|emmo|s=5}} <end>
 #Page 962 riemergemmo: Skipped, no changes
-#Page 768 riesamino: <respelling> all: riesàmino <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: amino: <from> {{rhymes|it|amino|s=5}} <to> {{rhymes|it|amino|s=5}} <end>
+#Page 768 riesamino: <respelling> all: ri.esàmino <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: amino: <from> {{rhymes|it|amino|s=5}} <to> {{rhymes|it|amino|s=5}} <end>
 #Page 768 riesamino: Skipped, no changes
-#Page 1995 riesumabile: <respelling> all: riesumàbile <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
+#Page 1995 riesumabile: <respelling> all: ri.esumàbile <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 1995 riesumabile: Skipped, no changes
-#Page 2749 rievocabile: <respelling> all: rievocàbile <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
+#Page 2749 rievocabile: <respelling> all: ri.evocàbile <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 2749 rievocabile: Skipped, no changes
 #Page 2750 rifabbricabile: <respelling> all: rifabbricàbile <end>: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 2750 rifabbricabile: Skipped, no changes
@@ -4649,7 +4617,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 547 rimuovo: Skipped, no changes
 #Page 983 rincoraggia: <respelling> all: rincoràggia <end>: <from> {{rhymes|it|addʒa|s=4}} <to> {{rhymes|it|addʒa|s=4}} <end>
 #Page 983 rincoraggia: Skipped, no changes
-#Page 982 rinegoziabile: <respelling> all: rinegoziàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
+#Page 982 rinegoziabile: <respelling> all: rinegotsiàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 982 rinegoziabile: Skipped, no changes
 #Page 985 rinfacci: <respelling> all: rinfàcci <end>: <from> {{rhymes|it|attʃi|s=3}} <to> {{rhymes|it|attʃi|s=3}} <end>
 #Page 985 rinfacci: Skipped, no changes
@@ -4659,7 +4627,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 987 rinfaccino: Skipped, no changes
 #Page 984 rinfaccio: <respelling> all: rinfàccio <end>: <from> {{rhymes|it|attʃo|s=3}} <to> {{rhymes|it|attʃo|s=3}} <end>
 #Page 984 rinfaccio: Skipped, no changes
-#Page 2447 ringoi: <respelling> all: ringói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=3}} <to> {{rhymes|it|oi|s=3}} <end>
+#Page 2447 ringoi: <respelling> all: ringó.i,ringò.i<r:DiPI|ingoio> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=3}} <to> {{rhymes|it|oi|s=3}} <end>
 #Page 2447 ringoi: Skipped, no changes
 #Page 1179 rinsalda: <respelling> all: rinsàlda <end>: <from> {{rhymes|it|alda|s=3}} <to> {{rhymes|it|alda|s=3}} <end>
 #Page 1179 rinsalda: Skipped, no changes
@@ -4671,13 +4639,13 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 1189 rinsaldino: Skipped, no changes
 #Page 1177 rinsaldo: <respelling> all: rinsàldo <end>: <from> {{rhymes|it|aldo|s=3}} <to> {{rhymes|it|aldo|s=3}} <end>
 #Page 1177 rinsaldo: Skipped, no changes
-#Page 2446 rinselva: <respelling> all: rinsélva <end>: <from> {{rhymes|it|elva|s=3}} <to> {{rhymes|it|elva|s=3}} <end>
+#Page 2446 rinselva: <respelling> all: rinsélva,rinsèlva<r:DiPI|selva> <end>: <from> {{rhymes|it|elva|s=3}} <to> {{rhymes|it|elva|s=3}} <end>
 #Page 2446 rinselva: Skipped, no changes
-#Page 2445 rinselvo: <respelling> all: rinsélvo <end>: <from> {{rhymes|it|elvo|s=3}} <to> {{rhymes|it|elvo|s=3}} <end>
+#Page 2445 rinselvo: <respelling> all: rinsélvo,rinsèlvo<r:DiPI|selva> <end>: <from> {{rhymes|it|elvo|s=3}} <to> {{rhymes|it|elvo|s=3}} <end>
 #Page 2445 rinselvo: Skipped, no changes
 #Page 592 rinvenuto: <respelling> all: rinvenùto <end>: <from> {{rhymes|it|uto|s=4}} <to> {{rhymes|it|uto|s=4}} <end>
 #Page 592 rinvenuto: Skipped, no changes
-#Page 2752 rioccupabile: <respelling> all: rioccupàbile <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
+#Page 2752 rioccupabile: <respelling> all: ri.occupàbile <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 2752 rioccupabile: Skipped, no changes
 #Page 395 riponemmo: <respelling> all: riponémmo <end>: <from> {{rhymes|it|emmo|s=4}} <to> {{rhymes|it|emmo|s=4}} <end>
 #Page 395 riponemmo: Skipped, no changes
@@ -4693,31 +4661,32 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2352 riquadra: Skipped, no changes
 #Page 1188 riquadri: <respelling> all: riquàdri <end> WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|adri|s=3}} <to> {{rhymes|it|adri|s=3}} <end>
 #Page 1188 riquadri: Skipped, no changes
-#Page 1373 risaia: <respelling> all: risàia <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: aja: <from> {{rhymes|it|aja|s=3}} <to> {{rhymes|it|aja|s=3}} <end>
+#Page 1373 risaia: <respelling> all: risàia,#ri[s]àia<r:DiPI> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: aja: <from> {{rhymes|it|aja|s=3}} <to> {{rhymes|it|aja|s=3}} <end>
 #Page 1373 risaia: Skipped, no changes
-#Page 1374 risaie: <respelling> all: risàie <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: aje: <from> {{rhymes|it|aje|s=3}} <to> {{rhymes|it|aje|s=3}} <end>
+#Page 1374 risaie: <respelling> all: risàie,#ri[s]àie<r:DiPI|risaia> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: aje: <from> {{rhymes|it|aje|s=3}} <to> {{rhymes|it|aje|s=3}} <end>
 #Page 1374 risaie: Skipped, no changes
-#Page 990 risalda: <respelling> all: risàlda <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: alda: <from> {{rhymes|it|alda|s=3}} <to> {{rhymes|it|alda|s=3}} <end>
+#Page 990 risalda: <respelling> all: ri[s]àlda <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: alda: <from> {{rhymes|it|alda|s=3}} <to> {{rhymes|it|alda|s=3}} <end>
 #Page 990 risalda: Skipped, no changes
-#Page 991 risaldano: <respelling> all: risàldano <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: aldano: <from> {{rhymes|it|aldano|s=4}} <to> {{rhymes|it|aldano|s=4}} <end>
+#Page 991 risaldano: <respelling> all: ri[s]àldano <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: aldano: <from> {{rhymes|it|aldano|s=4}} <to> {{rhymes|it|aldano|s=4}} <end>
 #Page 991 risaldano: Skipped, no changes
-#Page 989 risaldi: <respelling> all: risàldi <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: aldi: <from> {{rhymes|it|aldi|s=3}} <to> {{rhymes|it|aldi|s=3}} <end>
+#Page 989 risaldi: <respelling> all: ri[s]àldi <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: aldi: <from> {{rhymes|it|aldi|s=3}} <to> {{rhymes|it|aldi|s=3}} <end>
 #Page 989 risaldi: Skipped, no changes
-#Page 992 risaldino: <respelling> all: risàldino <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: aldino: <from> {{rhymes|it|aldino|s=4}} <to> {{rhymes|it|aldino|s=4}} <end>
+#Page 992 risaldino: <respelling> all: ri[s]àldino <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: aldino: <from> {{rhymes|it|aldino|s=4}} <to> {{rhymes|it|aldino|s=4}} <end>
 #Page 992 risaldino: Skipped, no changes
-#Page 988 risaldo: <respelling> all: risàldo <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: aldo: <from> {{rhymes|it|aldo|s=3}} <to> {{rhymes|it|aldo|s=3}} <end>
+#Page 988 risaldo: <respelling> all: ri[s]àldo <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: aldo: <from> {{rhymes|it|aldo|s=3}} <to> {{rhymes|it|aldo|s=3}} <end>
 #Page 988 risaldo: Skipped, no changes
-#Page 609 risalga: <respelling> all: risàlga <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: alɡa: <from> {{rhymes|it|alɡa|s=3}} <to> {{rhymes|it|alɡa|s=3}} <end>
+#Page 609 risalga: <respelling> all: ri[s]àlga<post:{{q|in_the_literal_sense_"to_climb_again,_to_go_up_again"}}> ri[s]àlga,risàlga<post:{{q|in_the_figurative_senses}}><r:DiPI|risale> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: alɡa: <from> {{rhymes|it|alɡa|s=3}} <to> {{rhymes|it|alɡa|s=3}} <end>
 #Page 609 risalga: Skipped, no changes
-#Page 610 risalgano: <respelling> all: risàlgano <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: alɡano: <from> {{rhymes|it|alɡano|s=4}} <to> {{rhymes|it|alɡano|s=4}} <end>
+#Page 610 risalgano: <respelling> all: ri[s]àlgano<post:{{q|in_the_literal_sense_"to_climb_again,_to_go_up_again"}}> ri[s]àlgano,risàlgano<post:{{q|in_the_figurative_senses}}><r:DiPI|risale> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: alɡano: <from> {{rhymes|it|alɡano|s=4}} <to> {{rhymes|it|alɡano|s=4}} <end>
 #Page 610 risalgano: Skipped, no changes
-#Page 607 risalgo: <respelling> all: risàlgo <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: alɡo: <from> {{rhymes|it|alɡo|s=3}} <to> {{rhymes|it|alɡo|s=3}} <end>
+#Page 607 risalgo: <respelling> all: ri[s]àlgo<post:{{q|in_the_literal_sense_"to_climb_again,_to_go_up_again"}}> ri[s]àlgo,risàlgo<post:{{q|in_the_figurative_senses}}><r:DiPI|risale> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: alɡo: <from> {{rhymes|it|alɡo|s=3}} <to> {{rhymes|it|alɡo|s=3}} <end>
 #Page 607 risalgo: Skipped, no changes
-#Page 608 risalgono: <respelling> all: risàlgono <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: alɡono: <from> {{rhymes|it|alɡono|s=4}} <to> {{rhymes|it|alɡono|s=4}} <end>
+#Page 608 risalgono: <respelling> all: ri[s]àlgono<post:{{q|in_the_literal_sense_"to_climb_again,_to_go_up_again"}}> ri[s]àlgono,risàlgono<post:{{q|in_the_figurative_senses}}><r:DiPI|risale> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: alɡono: <from> {{rhymes|it|alɡono|s=4}} <to> {{rhymes|it|alɡono|s=4}} <end>
 #Page 608 risalgono: Skipped, no changes
-#Page 664 risalto: <respelling> all: risàlto <end> WARNING: Multiple headers Noun,Verb seen ||| WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: alto: <from> {{rhymes|it|alto|s=3}} <to> {{rhymes|it|alto|s=3}} <end>
+## FIXME: split etym
+##Page 664 risalto: <respelling> all: ri[s]àlto<post:{{q|in_the_literal_meanings_"to_jump_again,_to_jump_over_again"}}> risàlto,#ri[s]àlto<post:{{i|in_the_figurative_meanings_"to_jut_out,_to_stand_out"}}> <end> WARNING: Multiple headers Noun,Verb seen ||| WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: alto: <from> {{rhymes|it|alto|s=3}} <to> {{rhymes|it|alto|s=3}} <end>
 #Page 664 risalto: Skipped, no changes
-#Page 620 risaputo: <respelling> all: risapùto <end> WARNING: Multiple headers Adjective,Participle seen ||| WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uto: <from> {{rhymes|it|uto|s=4}} <to> {{rhymes|it|uto|s=4}} <end>
+#Page 620 risaputo: <respelling> all: ri[s]apùto<r:DiPI> <end> WARNING: Multiple headers Adjective,Participle seen ||| WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uto: <from> {{rhymes|it|uto|s=4}} <to> {{rhymes|it|uto|s=4}} <end>
 #Page 620 risaputo: Skipped, no changes
 #Page 368 riscaldano: <respelling> all: riscàldano <end>: <from> {{rhymes|it|aldano|s=4}} <to> {{rhymes|it|aldano|s=4}} <end>
 #Page 368 riscaldano: Skipped, no changes
@@ -4736,11 +4705,12 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 709 ritagli: <respelling> all: ritàgli <end> WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|aʎʎi|s=3}} <to> {{rhymes|it|aʎʎi|s=3}} <end>
 #Page 709 ritagli: Skipped, no changes
 #Page 708 ritaglio: Skipped, no changes
-#Page 2933 ritorcitoi: <respelling> all: ritorcitói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=5}} <to> {{rhymes|it|oi|s=5}} <end>
+## FIXME: fix lemma and all other -toio lemmas
+#Page 2933 ritorcitoi: <respelling> all: ritorcitó.i,ritorcitò.i<r:DiPI|accenditoio> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=5}} <to> {{rhymes|it|oi|s=5}} <end>
 #Page 2933 ritorcitoi: Skipped, no changes
 #Page 158 ritrovo: <respelling> all: ritròvo <end> WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|ɔvo|s=3}} <to> {{rhymes|it|ɔvo|s=3}} <end>
 #Page 158 ritrovo: Skipped, no changes
-#Page 225 rituali: <respelling> all: rituàli <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ali: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
+#Page 225 rituali: <respelling> all: ritu.àli,rituàli<r:DiPI|attuale> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ali: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
 #Page 225 rituali: Skipped, no changes
 #Page 1414 rivalse: <respelling> all: rivàlse <end>: <from> {{rhymes|it|alse|s=3}} <to> {{rhymes|it|alse|s=3}} <end>
 #Page 1414 rivalse: Skipped, no changes
@@ -4757,7 +4727,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 735 romene: Skipped, no changes
 #Page 82 rompemmo: <respelling> all: rompémmo <end>: <from> {{rhymes|it|emmo|s=3}} <to> {{rhymes|it|emmo|s=3}} <end>
 #Page 82 rompemmo: Skipped, no changes
-#Page 1432 rompiballe: <respelling> all: rompibàlle <end>: <from> {{rhymes|it|alle|s=4}} <to> {{rhymes|it|alle|s=4}} <end>
+#Page 1432 rompiballe: <respelling> all: rómpibàlle<r:Olivetti> <end>: <from> {{rhymes|it|alle|s=4}} <to> {{rhymes|it|alle|s=4}} <end>
 #Page 1432 rompiballe: Skipped, no changes
 #Page 1399 rotocalchi: <respelling> all: rotocàlchi <end>: <from> {{rhymes|it|alki|s=4}} <to> {{rhymes|it|alki|s=4}} <end>
 #Page 1399 rotocalchi: Skipped, no changes
@@ -4777,7 +4747,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2853 sagrano: Skipped, no changes
 #Page 2753 salaia: <respelling> all: salàia <end>: <from> {{rhymes|it|aja|s=3}} <to> {{rhymes|it|aja|s=3}} <end>
 #Page 2753 salaia: Skipped, no changes
-#Page 675 salamoi: <respelling> all: salamòi <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɔi: <from> {{rhymes|it|ɔi|s=4}} <to> {{rhymes|it|ɔi|s=4}} <end>
+#Page 675 salamoi: <respelling> all: salamò.i<r:DiPI|salamoia> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɔi: <from> {{rhymes|it|ɔi|s=4}} <to> {{rhymes|it|ɔi|s=4}} <end>
 #Page 675 salamoi: Skipped, no changes
 #Page 143 salano: <respelling> all: sàlano <end>: <from> {{rhymes|it|alano|s=3}} <to> {{rhymes|it|alano|s=3}} <end>
 #Page 143 salano: Skipped, no changes
@@ -4791,7 +4761,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 74 salde: Skipped, no changes
 #Page 1985 salificabile: <respelling> all: salificàbile <end>: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 1985 salificabile: Skipped, no changes
-#Page 2937 salitoi: <respelling> all: salitói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
+#Page 2937 salitoi: <respelling> all: salitó.i,salitò.i<r:DiPI|accenditoio> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
 #Page 2937 salitoi: Skipped, no changes
 #Page 789 salma: Skipped, no changes
 #Page 790 salme: <respelling> all: sàlme <end>: <from> {{rhymes|it|alme|s=2}} <to> {{rhymes|it|alme|s=2}} <end>
@@ -4810,7 +4780,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 1984 santificabile: Skipped, no changes
 #Page 3003 sanvitalie: <respelling> all: sanvitàlie <end>: <from> {{rhymes|it|alje|s=4}} <to> {{rhymes|it|alje|s=4}} <end>
 #Page 3003 sanvitalie: Skipped, no changes
-#Page 1241 sanzionabile: <respelling> all: sanzionàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=5}} <to> {{rhymes|it|abile|s=5}} <end>
+#Page 1241 sanzionabile: <respelling> all: santsionàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=5}} <to> {{rhymes|it|abile|s=5}} <end>
 #Page 1241 sanzionabile: Skipped, no changes
 #Page 1983 saponificabile: <respelling> all: saponificàbile <end>: <from> {{rhymes|it|abile|s=7}} <to> {{rhymes|it|abile|s=7}} <end>
 #Page 1983 saponificabile: Skipped, no changes
@@ -4818,7 +4788,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2522 saprobi: Skipped, no changes
 #Page 2521 saprobio: <respelling> all: sapròbio <end>: <from> {{rhymes|it|ɔbjo|s=3}} <to> {{rhymes|it|ɔbjo|s=3}} <end>
 #Page 2521 saprobio: Skipped, no changes
-#Page 2914 saprozoi: <respelling> all: saprozòi <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔi: <from> {{rhymes|it|ɔi|s=4}} <to> {{rhymes|it|ɔi|s=4}} <end>
+#Page 2914 saprozoi: <respelling> all: saprodzò.i <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔi: <from> {{rhymes|it|ɔi|s=4}} <to> {{rhymes|it|ɔi|s=4}} <end>
 #Page 2914 saprozoi: Skipped, no changes
 #Page 1535 sassaie: <respelling> all: sassàie <end>: <from> {{rhymes|it|aje|s=3}} <to> {{rhymes|it|aje|s=3}} <end>
 #Page 1535 sassaie: Skipped, no changes
@@ -4826,9 +4796,9 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 1534 sassofoniste: Skipped, no changes
 #Page 1982 saturabile: <respelling> all: saturàbile <end>: <from> {{rhymes|it|abile|s=5}} <to> {{rhymes|it|abile|s=5}} <end>
 #Page 1982 saturabile: Skipped, no changes
-#Page 1827 saziabile: <respelling> all: saziàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
+#Page 1827 saziabile: <respelling> all: satsiàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1827 saziabile: Skipped, no changes
-#Page 3062 sbadagli: <respelling> all: sbadàgli <end> WARNING: Multiple etymologies seen ||| WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|aʎʎi|s=3}} <to> {{rhymes|it|aʎʎi|s=3}} <end>
+#Page 3062 sbadagli: <respelling> top: sbadàgli <end> WARNING: Multiple etymologies seen ||| WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|aʎʎi|s=3}} <to> {{rhymes|it|aʎʎi|s=3}} <end>
 #Page 3062 sbadagli: Skipped, no changes
 #Page 3063 sbadagliano: <respelling> all: sbadàgliano <end>: <from> {{rhymes|it|aʎʎano|s=4}} <to> {{rhymes|it|aʎʎano|s=4}} <end>
 #Page 3063 sbadagliano: Skipped, no changes
@@ -4844,7 +4814,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 680 sballano: Skipped, no changes
 #Page 681 sballino: <respelling> all: sbàllino <end>: <from> {{rhymes|it|allino|s=3}} <to> {{rhymes|it|allino|s=3}} <end>
 #Page 681 sballino: Skipped, no changes
-#Page 2935 sbalorditoi: <respelling> all: sbalorditói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=5}} <to> {{rhymes|it|oi|s=5}} <end>
+#Page 2935 sbalorditoi: <respelling> all: sbalorditó.i,sbalorditò.i<r:DiPI|accenditoio> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=5}} <to> {{rhymes|it|oi|s=5}} <end>
 #Page 2935 sbalorditoi: Skipped, no changes
 #Page 2817 sbambagi: <respelling> all: sbambàgi <end>: <from> {{rhymes|it|adʒi|s=3}} <to> {{rhymes|it|adʒi|s=3}} <end>
 #Page 2817 sbambagi: Skipped, no changes
@@ -4947,9 +4917,9 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2449 scalfa: Skipped, no changes
 #Page 1026 scalmo: <respelling> all: scàlmo <end>: <from> {{rhymes|it|almo|s=2}} <to> {{rhymes|it|almo|s=2}} <end>
 #Page 1026 scalmo: Skipped, no changes
-#Page 1978 scalzabile: <respelling> all: scalzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
+#Page 1978 scalzabile: <respelling> all: scaltsàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1978 scalzabile: Skipped, no changes
-#Page 2450 scamoscia: <respelling> all: scamòscia <end>: <from> {{rhymes|it|ɔʃʃa|s=3}} <to> {{rhymes|it|ɔʃʃa|s=3}} <end>
+#Page 2450 scamoscia: <respelling> all: scamòscia,scamóscia<r:DiPI|scamoscio> <end>: <from> {{rhymes|it|ɔʃʃa|s=3}} <to> {{rhymes|it|ɔʃʃa|s=3}} <end>
 #Page 2450 scamoscia: Skipped, no changes
 #Page 905 scanala: <respelling> all: scanàla <end>: <from> {{rhymes|it|ala|s=3}} <to> {{rhymes|it|ala|s=3}} <end>
 #Page 905 scanala: Skipped, no changes
@@ -4969,9 +4939,9 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 730 scandagliano: Skipped, no changes
 #Page 731 scandaglino: <respelling> all: scandàglino <end>: <from> {{rhymes|it|aʎʎino|s=4}} <to> {{rhymes|it|aʎʎino|s=4}} <end>
 #Page 731 scandaglino: Skipped, no changes
-#Page 728 scandaglio: <respelling> all: scandàglio <end> WARNING: Multiple etymologies seen ||| WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|aʎʎo|s=3}} <to> {{rhymes|it|aʎʎo|s=3}} <end>
+#Page 728 scandaglio: <respelling> top: scandàglio <end> WARNING: Multiple etymologies seen ||| WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|aʎʎo|s=3}} <to> {{rhymes|it|aʎʎo|s=3}} <end>
 #Page 728 scandaglio: Skipped, no changes
-#Page 2758 scannerizzabile: <respelling> all: scannerizzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
+#Page 2758 scannerizzabile: <respelling> all: scanneriddzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 2758 scannerizzabile: Skipped, no changes
 #Page 1976 scansabile: <respelling> all: scansàbile <end>: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1976 scansabile: Skipped, no changes
@@ -5008,13 +4978,13 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 1260 schermaglie: Skipped, no changes
 #Page 257 schiaccio: <respelling> all: schiàccio <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme attʃo: <from> {{rhymes|it|attʃo|s=2}} <to> {{rhymes|it|attʃo|s=2}} <end>
 #Page 257 schiaccio: Skipped, no changes
-#Page 2941 schiaritoi: <respelling> all: schiaritói <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
+#Page 2941 schiaritoi: <respelling> all: schiaritó.i,schiaritò.i<r:DiPI|accenditoio> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
 #Page 2941 schiaritoi: Skipped, no changes
-#Page 204 schiene: <respelling> all: schiène <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛne: <from> {{rhymes|it|ɛne|s=2}} <to> {{rhymes|it|ɛne|s=2}} <end>
+#Page 204 schiene: <respelling> all: schiène,schiéne<r:DiPI|schiena> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛne: <from> {{rhymes|it|ɛne|s=2}} <to> {{rhymes|it|ɛne|s=2}} <end>
 #Page 204 schiene: Skipped, no changes
 #Page 2760 schienuto: <respelling> all: schienùto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme uto: <from> {{rhymes|it|uto|s=3}} <to> {{rhymes|it|uto|s=3}} <end>
 #Page 2760 schienuto: Skipped, no changes
-#Page 1974 sciabile: <respelling> all: sciàbile <end>: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
+#Page 1974 sciabile: <respelling> all: sci.àbile <end>: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1974 sciabile: Skipped, no changes
 #Page 2365 sciabolano: <respelling> all: sciàbolano <end>: <from> {{rhymes|it|abolano|s=4}} <to> {{rhymes|it|abolano|s=4}} <end>
 #Page 2365 sciabolano: Skipped, no changes
@@ -5068,11 +5038,11 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2762 sconfessabile: Skipped, no changes
 #Page 333 sconfinata: <respelling> all: sconfinàta <end>: <from> {{rhymes|it|ata|s=4}} <to> {{rhymes|it|ata|s=4}} <end>
 #Page 333 sconfinata: Skipped, no changes
-#Page 439 sconobbe: <respelling> all: sconóbbe <end>: <from> {{rhymes|it|obbe|s=3}} <to> {{rhymes|it|obbe|s=3}} <end>
+#Page 439 sconobbe: <respelling> all: sconóbbe,sconòbbe<r:DiPI|conobbi> <end>: <from> {{rhymes|it|obbe|s=3}} <to> {{rhymes|it|obbe|s=3}} <end>
 #Page 439 sconobbe: Skipped, no changes
-#Page 440 sconobbero: <respelling> all: sconóbbero <end>: <from> {{rhymes|it|obbero|s=4}} <to> {{rhymes|it|obbero|s=4}} <end>
+#Page 440 sconobbero: <respelling> all: sconóbbero,sconòbbero<r:DiPI|conobbi> <end>: <from> {{rhymes|it|obbero|s=4}} <to> {{rhymes|it|obbero|s=4}} <end>
 #Page 440 sconobbero: Skipped, no changes
-#Page 438 sconobbi: <respelling> all: sconóbbi <end>: <from> {{rhymes|it|obbi|s=3}} <to> {{rhymes|it|obbi|s=3}} <end>
+#Page 438 sconobbi: <respelling> all: sconóbbi,sconòbbi<r:DiPI|conobbi> <end>: <from> {{rhymes|it|obbi|s=3}} <to> {{rhymes|it|obbi|s=3}} <end>
 #Page 438 sconobbi: Skipped, no changes
 #Page 441 sconosca: <respelling> all: sconósca <end>: <from> {{rhymes|it|oska|s=3}} <to> {{rhymes|it|oska|s=3}} <end>
 #Page 441 sconosca: Skipped, no changes
@@ -5092,11 +5062,11 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 113 scorbuto: Skipped, no changes
 #Page 520 scorreggemmo: <respelling> all: scorreggémmo <end>: <from> {{rhymes|it|emmo|s=4}} <to> {{rhymes|it|emmo|s=4}} <end>
 #Page 520 scorreggemmo: Skipped, no changes
-#Page 1270 scorsoi: <respelling> all: scorsói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=3}} <to> {{rhymes|it|oi|s=3}} <end>
+#Page 1270 scorsoi: <respelling> all: scorsó.i,scorsò.i<r:DiPI|scorsoio> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=3}} <to> {{rhymes|it|oi|s=3}} <end>
 #Page 1270 scorsoi: Skipped, no changes
 #Page 715 scovo: <respelling> all: scóvo <end>: <from> {{rhymes|it|ovo|s=2}} <to> {{rhymes|it|ovo|s=2}} <end>
 #Page 715 scovo: Skipped, no changes
-#Page 219 scrittoi: <respelling> all: scrittói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=3}} <to> {{rhymes|it|oi|s=3}} <end>
+#Page 219 scrittoi: <respelling> all: scrittó.i,scrittò.i<r:DiPI|scrittoio> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=3}} <to> {{rhymes|it|oi|s=3}} <end>
 #Page 219 scrittoi: Skipped, no changes
 #Page 1970 scritturabile: <respelling> all: scritturàbile <end>: <from> {{rhymes|it|abile|s=5}} <to> {{rhymes|it|abile|s=5}} <end>
 #Page 1970 scritturabile: Skipped, no changes
@@ -5112,11 +5082,11 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 1237 sculaccino: Skipped, no changes
 #Page 1234 sculaccio: <respelling> all: sculàccio <end>: <from> {{rhymes|it|attʃo|s=3}} <to> {{rhymes|it|attʃo|s=3}} <end>
 #Page 1234 sculaccio: Skipped, no changes
-#Page 1436 scuoi: <respelling> all: scuòi <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɔi: <from> {{rhymes|it|ɔi|s=2}} <to> {{rhymes|it|ɔi|s=2}} <end>
+#Page 1436 scuoi: <respelling> all: scuò.i<r:DiPI|scuoio> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɔi: <from> {{rhymes|it|ɔi|s=2}} <to> {{rhymes|it|ɔi|s=2}} <end>
 #Page 1436 scuoi: Skipped, no changes
-#Page 2943 scuotitoi: <respelling> all: scuotitói <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
+#Page 2943 scuotitoi: <respelling> all: scuotitó.i,scuotitò.i<r:DiPI|accenditoio> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
 #Page 2943 scuotitoi: Skipped, no changes
-#Page 1969 sdaziabile: <respelling> all: sdaziàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
+#Page 1969 sdaziabile: <respelling> all: sdatsiàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1969 sdaziabile: Skipped, no changes
 #Page 2763 secciaio: <respelling> all: secciàio <end>: <from> {{rhymes|it|ajo|s=3}} <to> {{rhymes|it|ajo|s=3}} <end>
 #Page 2763 secciaio: Skipped, no changes
@@ -5132,19 +5102,19 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 643 segnalino: Skipped, no changes
 #Page 2765 selciaio: <respelling> all: selciàio <end>: <from> {{rhymes|it|ajo|s=3}} <to> {{rhymes|it|ajo|s=3}} <end>
 #Page 2765 selciaio: Skipped, no changes
-#Page 1967 selezionabile: <respelling> all: selezionàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
+#Page 1967 selezionabile: <respelling> all: seletsionàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 1967 selezionabile: Skipped, no changes
 #Page 1966 sembrabile: <respelling> all: sembràbile <end>: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1966 sembrabile: Skipped, no changes
 #Page 860 semestrali: <respelling> all: semestràli <end>: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
 #Page 860 semestrali: Skipped, no changes
-#Page 1727 semiacerbo: <respelling> all: semiacèrbo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛrbo: <from> {{rhymes|it|ɛrbo|s=5}} <to> {{rhymes|it|ɛrbo|s=5}} <end>
+#Page 1727 semiacerbo: <respelling> all: semi.acèrbo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛrbo: <from> {{rhymes|it|ɛrbo|s=5}} <to> {{rhymes|it|ɛrbo|s=5}} <end>
 #Page 1727 semiacerbo: Skipped, no changes
-#Page 659 semiala: <respelling> all: semiàla <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ala: <from> {{rhymes|it|ala|s=4}} <to> {{rhymes|it|ala|s=4}} <end>
+#Page 659 semiala: <respelling> all: semi.àla <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ala: <from> {{rhymes|it|ala|s=4}} <to> {{rhymes|it|ala|s=4}} <end>
 #Page 659 semiala: Skipped, no changes
-#Page 1729 semialberi: <respelling> all: semiàlberi <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme alberi: <from> {{rhymes|it|alberi|s=5}} <to> {{rhymes|it|alberi|s=5}} <end>
+#Page 1729 semialberi: <respelling> all: semi.àlberi <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme alberi: <from> {{rhymes|it|alberi|s=5}} <to> {{rhymes|it|alberi|s=5}} <end>
 #Page 1729 semialberi: Skipped, no changes
-#Page 1728 semialbero: <respelling> all: semiàlbero <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme albero: <from> {{rhymes|it|albero|s=5}} <to> {{rhymes|it|albero|s=5}} <end>
+#Page 1728 semialbero: <respelling> all: semi.àlbero <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme albero: <from> {{rhymes|it|albero|s=5}} <to> {{rhymes|it|albero|s=5}} <end>
 #Page 1728 semialbero: Skipped, no changes
 #Page 1730 semibrada: <respelling> all: semibràda <end>: <from> {{rhymes|it|ada|s=4}} <to> {{rhymes|it|ada|s=4}} <end>
 #Page 1730 semibrada: Skipped, no changes
@@ -5162,13 +5132,13 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2498 semimetallico: Skipped, no changes
 #Page 444 sensali: <respelling> all: sensàli <end>: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
 #Page 444 sensali: Skipped, no changes
-#Page 805 sensuali: <respelling> all: sensuàli <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ali: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
+#Page 805 sensuali: <respelling> all: sensu.àli,sensuàli<r:DiPI|sessuale> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ali: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
 #Page 805 sensuali: Skipped, no changes
-#Page 2652 sentenziali: <respelling> all: sentenziàli <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
+#Page 2652 sentenziali: <respelling> all: sententsiàli <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
 #Page 2652 sentenziali: Skipped, no changes
 #Page 1965 serbabile: <respelling> all: serbàbile <end>: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1965 serbabile: Skipped, no changes
-#Page 716 serbatoi: <respelling> all: serbatói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
+#Page 716 serbatoi: <respelling> all: serbató.i,serbatò.i<r:DiPI|serbatoio> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
 #Page 716 serbatoi: Skipped, no changes
 #Page 2947 serenoe: <respelling> all: serenòe <end>: <from> {{rhymes|it|ɔe|s=4}} <to> {{rhymes|it|ɔe|s=4}} <end>
 #Page 2947 serenoe: Skipped, no changes
@@ -5178,7 +5148,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2767 serraglia: <respelling> all: serràglia <end>: <from> {{rhymes|it|aʎʎa|s=3}} <to> {{rhymes|it|aʎʎa|s=3}} <end>
 #Page 2767 serraglia: Skipped, no changes
 #Page 688 serraglio: Skipped, no changes
-#Page 3102 serrasalmi: <respelling> all: serrasàlmi <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: almi: <from> {{rhymes|it|almi|s=4}} <to> {{rhymes|it|almi|s=4}} <end>
+#Page 3102 serrasalmi: <respelling> all: serra[s]àlmi<r:Olivetti|serrasalmo> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: almi: <from> {{rhymes|it|almi|s=4}} <to> {{rhymes|it|almi|s=4}} <end>
 #Page 3102 serrasalmi: Skipped, no changes
 #Page 806 setacci: <respelling> all: setàcci <end> WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|attʃi|s=3}} <to> {{rhymes|it|attʃi|s=3}} <end>
 #Page 806 setacci: Skipped, no changes
@@ -5258,17 +5228,17 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 719 sgobba: Skipped, no changes
 #Page 720 sgobbano: <respelling> all: sgòbbano <end>: <from> {{rhymes|it|ɔbbano|s=3}} <to> {{rhymes|it|ɔbbano|s=3}} <end>
 #Page 720 sgobbano: Skipped, no changes
-#Page 718 sgobbi: <respelling> all: sgòbbi <end> WARNING: Multiple etymologies seen ||| WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|ɔbbi|s=2}} <to> {{rhymes|it|ɔbbi|s=2}} <end>
+#Page 718 sgobbi: <respelling> top: sgòbbi <end> WARNING: Multiple etymologies seen ||| WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|ɔbbi|s=2}} <to> {{rhymes|it|ɔbbi|s=2}} <end>
 #Page 718 sgobbi: Skipped, no changes
 #Page 721 sgobbino: <respelling> all: sgòbbino <end>: <from> {{rhymes|it|ɔbbino|s=3}} <to> {{rhymes|it|ɔbbino|s=3}} <end>
 #Page 721 sgobbino: Skipped, no changes
-#Page 1062 sguinzagli: <respelling> all: sguinzàgli <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aʎʎi: <from> {{rhymes|it|aʎʎi|s=3}} <to> {{rhymes|it|aʎʎi|s=3}} <end>
+#Page 1062 sguinzagli: <respelling> all: sguintsàgli <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aʎʎi: <from> {{rhymes|it|aʎʎi|s=3}} <to> {{rhymes|it|aʎʎi|s=3}} <end>
 #Page 1062 sguinzagli: Skipped, no changes
-#Page 1063 sguinzagliano: <respelling> all: sguinzàgliano <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aʎʎano: <from> {{rhymes|it|aʎʎano|s=4}} <to> {{rhymes|it|aʎʎano|s=4}} <end>
+#Page 1063 sguinzagliano: <respelling> all: sguintsàgliano <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aʎʎano: <from> {{rhymes|it|aʎʎano|s=4}} <to> {{rhymes|it|aʎʎano|s=4}} <end>
 #Page 1063 sguinzagliano: Skipped, no changes
-#Page 1064 sguinzaglino: <respelling> all: sguinzàglino <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aʎʎino: <from> {{rhymes|it|aʎʎino|s=4}} <to> {{rhymes|it|aʎʎino|s=4}} <end>
+#Page 1064 sguinzaglino: <respelling> all: sguintsàglino <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aʎʎino: <from> {{rhymes|it|aʎʎino|s=4}} <to> {{rhymes|it|aʎʎino|s=4}} <end>
 #Page 1064 sguinzaglino: Skipped, no changes
-#Page 1061 sguinzaglio: <respelling> all: sguinzàglio <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aʎʎo: <from> {{rhymes|it|aʎʎo|s=3}} <to> {{rhymes|it|aʎʎo|s=3}} <end>
+#Page 1061 sguinzaglio: <respelling> all: sguintsàglio <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aʎʎo: <from> {{rhymes|it|aʎʎo|s=3}} <to> {{rhymes|it|aʎʎo|s=3}} <end>
 #Page 1061 sguinzaglio: Skipped, no changes
 #Page 2560 shogunali: <respelling> all: shogunàli <end>: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
 #Page 2560 shogunali: Skipped, no changes
@@ -5276,7 +5246,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2368 siepaglia: Skipped, no changes
 #Page 2369 siepaglie: <respelling> all: siepàglie <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme aʎʎe: <from> {{rhymes|it|aʎʎe|s=3}} <to> {{rhymes|it|aʎʎe|s=3}} <end>
 #Page 2369 siepaglie: Skipped, no changes
-#Page 1962 silenziabile: <respelling> all: silenziàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=5}} <to> {{rhymes|it|abile|s=5}} <end>
+#Page 1962 silenziabile: <respelling> all: silentsiàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=5}} <to> {{rhymes|it|abile|s=5}} <end>
 #Page 1962 silenziabile: Skipped, no changes
 #Page 1733 silofoniste: <respelling> all: silofonìste <end>: <from> {{rhymes|it|iste|s=5}} <to> {{rhymes|it|iste|s=5}} <end>
 #Page 1733 silofoniste: Skipped, no changes
@@ -5320,7 +5290,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2374 smallino: Skipped, no changes
 #Page 2372 smallo: <respelling> all: smàllo <end>: <from> {{rhymes|it|allo|s=2}} <to> {{rhymes|it|allo|s=2}} <end>
 #Page 2372 smallo: Skipped, no changes
-#Page 1774 smaltitoi: <respelling> all: smaltitói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
+#Page 1774 smaltitoi: <respelling> all: smaltitó.i,smaltitò.i<r:DiPI|accenditoio> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
 #Page 1774 smaltitoi: Skipped, no changes
 #Page 472 smalto: Skipped, no changes
 #Page 1445 smanacci: <respelling> all: smanàcci <end>: <from> {{rhymes|it|attʃi|s=3}} <to> {{rhymes|it|attʃi|s=3}} <end>
@@ -5347,7 +5317,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2869 soccodagnoli: Skipped, no changes
 #Page 1961 sociabile: <respelling> all: sociàbile <end>: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1961 sociabile: Skipped, no changes
-#Page 1960 socializzabile: <respelling> all: socializzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
+#Page 1960 socializzabile: <respelling> all: socialiddzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 1960 socializzabile: Skipped, no changes
 #Page 1282 sodaglia: <respelling> all: sodàglia <end>: <from> {{rhymes|it|aʎʎa|s=3}} <to> {{rhymes|it|aʎʎa|s=3}} <end>
 #Page 1282 sodaglia: Skipped, no changes
@@ -5405,7 +5375,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 521 sorreggemmo: Skipped, no changes
 #Page 466 sorridemmo: <respelling> all: sorridémmo <end>: <from> {{rhymes|it|emmo|s=4}} <to> {{rhymes|it|emmo|s=4}} <end>
 #Page 466 sorridemmo: Skipped, no changes
-#Page 293 sostanziali: <respelling> all: sostanziàli <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
+#Page 293 sostanziali: <respelling> all: sostantsiàli <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
 #Page 293 sostanziali: Skipped, no changes
 #Page 580 sottacciano: <respelling> all: sottàcciano <end>: <from> {{rhymes|it|attʃano|s=4}} <to> {{rhymes|it|attʃano|s=4}} <end>
 #Page 580 sottacciano: Skipped, no changes
@@ -5441,7 +5411,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 634 sovrapponemmo: Skipped, no changes
 #Page 820 sovrimponemmo: <respelling> all: sovrimponémmo <end>: <from> {{rhymes|it|emmo|s=5}} <to> {{rhymes|it|emmo|s=5}} <end>
 #Page 820 sovrimponemmo: Skipped, no changes
-#Page 2381 spaccamontagne: <respelling> all: spaccamontàgne <end>: <from> {{rhymes|it|aɲɲe|s=5}} <to> {{rhymes|it|aɲɲe|s=5}} <end>
+#Page 2381 spaccamontagne: <respelling> all: spàccamontàgne<r:Olivetti> <end>: <from> {{rhymes|it|aɲɲe|s=5}} <to> {{rhymes|it|aɲɲe|s=5}} <end>
 #Page 2381 spaccamontagne: Skipped, no changes
 #Page 1954 spacciabile: <respelling> all: spacciàbile <end>: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1954 spacciabile: Skipped, no changes
@@ -5478,7 +5448,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2860 sparagna: Skipped, no changes
 #Page 2861 sparagnano: <respelling> all: sparàgnano <end>: <from> {{rhymes|it|aɲɲano|s=4}} <to> {{rhymes|it|aɲɲano|s=4}} <end>
 #Page 2861 sparagnano: Skipped, no changes
-#Page 2274 sparagni: <respelling> all: sparàgni <end> WARNING: Multiple etymologies seen ||| WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|aɲɲi|s=3}} <to> {{rhymes|it|aɲɲi|s=3}} <end>
+#Page 2274 sparagni: <respelling> top: sparàgni <end> WARNING: Multiple etymologies seen ||| WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|aɲɲi|s=3}} <to> {{rhymes|it|aɲɲi|s=3}} <end>
 #Page 2274 sparagni: Skipped, no changes
 #Page 2865 sparaguagni: <respelling> all: sparaguàgni <end>: <from> {{rhymes|it|aɲɲi|s=4}} <to> {{rhymes|it|aɲɲi|s=4}} <end>
 #Page 2865 sparaguagni: Skipped, no changes
@@ -5490,7 +5460,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 803 sparpaglino: Skipped, no changes
 #Page 800 sparpaglio: <respelling> all: sparpàglio <end>: <from> {{rhymes|it|aʎʎo|s=3}} <to> {{rhymes|it|aʎʎo|s=3}} <end>
 #Page 800 sparpaglio: Skipped, no changes
-#Page 2386 spastoi: <respelling> all: spastói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=3}} <to> {{rhymes|it|oi|s=3}} <end>
+#Page 2386 spastoi: <respelling> all: spastó.i,spastò.i<r:DiPI|pastoia> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=3}} <to> {{rhymes|it|oi|s=3}} <end>
 #Page 2386 spastoi: Skipped, no changes
 #Page 993 spavalda: <respelling> all: spavàlda <end>: <from> {{rhymes|it|alda|s=3}} <to> {{rhymes|it|alda|s=3}} <end>
 #Page 993 spavalda: Skipped, no changes
@@ -5498,21 +5468,22 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 995 spavalde: Skipped, no changes
 #Page 994 spavaldi: <respelling> all: spavàldi <end>: <from> {{rhymes|it|aldi|s=3}} <to> {{rhymes|it|aldi|s=3}} <end>
 #Page 994 spavaldi: Skipped, no changes
-#Page 2796 spazzabile: <respelling> all: spazzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
+#Page 2796 spazzabile: <respelling> all: spattsàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 2796 spazzabile: Skipped, no changes
 #Page 2387 specchiaio: <respelling> all: specchiàio <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ajo: <from> {{rhymes|it|ajo|s=3}} <to> {{rhymes|it|ajo|s=3}} <end>
 #Page 2387 specchiaio: Skipped, no changes
 #Page 1953 specificabile: <respelling> all: specificàbile <end>: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 1953 specificabile: Skipped, no changes
 #Page 3109 spegnicalce: Skipped, no changes
+## FIXME
 #Page 3109 spegnicalce: WARNING: Rhyme-based respelling spegnicàlce doesn't match it-pr respelling(s) spé̱gnicàlce
-#Page 1775 spegnitoi: <respelling> all: spegnitói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
+#Page 1775 spegnitoi: <respelling> all: spegnitó.i,spegnitò.i<r:DiPI|accenditoio> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
 #Page 1775 spegnitoi: Skipped, no changes
-#Page 123 spermatozoi: <respelling> all: spermatozòi <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔi: <from> {{rhymes|it|ɔi|s=5}} <to> {{rhymes|it|ɔi|s=5}} <end>
+#Page 123 spermatozoi: <respelling> all: spèrmatodzò.i,spermatodzò.i<r:DiPI|spermatozoo><r:Olivetti|spermatozoo> <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔi: <from> {{rhymes|it|ɔi|s=5}} <to> {{rhymes|it|ɔi|s=5}} <end>
 #Page 123 spermatozoi: Skipped, no changes
 #Page 343 spettrali: <respelling> all: spettràli <end>: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
 #Page 343 spettrali: Skipped, no changes
-#Page 1952 spezzabile: <respelling> all: spezzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
+#Page 1952 spezzabile: <respelling> all: spettsàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1952 spezzabile: Skipped, no changes
 #Page 669 spiacciano: <respelling> all: spiàcciano <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme attʃano: <from> {{rhymes|it|attʃano|s=3}} <to> {{rhymes|it|attʃano|s=3}} <end>
 #Page 669 spiacciano: Skipped, no changes
@@ -5522,7 +5493,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 668 spiacciono: Skipped, no changes
 #Page 530 spingemmo: <respelling> all: spingémmo <end>: <from> {{rhymes|it|emmo|s=3}} <to> {{rhymes|it|emmo|s=3}} <end>
 #Page 530 spingemmo: Skipped, no changes
-#Page 363 spionaggi: <respelling> all: spionàggi <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme addʒi: <from> {{rhymes|it|addʒi|s=3}} <to> {{rhymes|it|addʒi|s=3}} <end>
+#Page 363 spionaggi: <respelling> all: spi.onàggi<r:DiPI|spionaggio> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme addʒi: <from> {{rhymes|it|addʒi|s=3}} <to> {{rhymes|it|addʒi|s=3}} <end>
 #Page 363 spionaggi: Skipped, no changes
 #Page 589 spiragli: <respelling> all: spiràgli <end>: <from> {{rhymes|it|aʎʎi|s=3}} <to> {{rhymes|it|aʎʎi|s=3}} <end>
 #Page 589 spiragli: Skipped, no changes
@@ -5531,19 +5502,19 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2151 spirala: Skipped, no changes
 #Page 2883 spiralano: <respelling> all: spiràlano <end>: <from> {{rhymes|it|alano|s=4}} <to> {{rhymes|it|alano|s=4}} <end>
 #Page 2883 spiralano: Skipped, no changes
-#Page 371 spirali: <respelling> all: spiràli <end> WARNING: Multiple etymologies seen ||| WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
+#Page 371 spirali: <respelling> top: spiràli <end> WARNING: Multiple etymologies seen ||| WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
 #Page 371 spirali: Skipped, no changes
 #Page 2884 spiralino: <respelling> all: spiràlino <end>: <from> {{rhymes|it|alino|s=4}} <to> {{rhymes|it|alino|s=4}} <end>
 #Page 2884 spiralino: Skipped, no changes
 #Page 1759 spiralo: <respelling> all: spiràlo <end>: <from> {{rhymes|it|alo|s=3}} <to> {{rhymes|it|alo|s=3}} <end>
 #Page 1759 spiralo: Skipped, no changes
-#Page 682 spirituali: <respelling> all: spirituàli <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
+#Page 682 spirituali: <respelling> all: spiritu.àli,spirituàli<r:DiPI|attuale> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
 #Page 682 spirituali: Skipped, no changes
 #Page 1951 spostabile: <respelling> all: spostàbile <end>: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1951 spostabile: Skipped, no changes
 #Page 2680 spremiaglio: Skipped, no changes
 #Page 2680 spremiaglio: WARNING: Rhyme-based respelling (with problems) spremiàglio doesn't match it-pr respelling(s) sprèmi.àglio<ref:{{R:it:Olivetti}}>: WARNING: Unable to add pronunciation due to hiatus in part before rhyme aʎʎo
-#Page 1950 sprezzabile: <respelling> all: sprezzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
+#Page 1950 sprezzabile: <respelling> all: sprettsàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1950 sprezzabile: Skipped, no changes
 #Page 378 sprovvedemmo: <respelling> all: sprovvedémmo <end>: <from> {{rhymes|it|emmo|s=4}} <to> {{rhymes|it|emmo|s=4}} <end>
 #Page 378 sprovvedemmo: Skipped, no changes
@@ -5581,15 +5552,15 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2391 stallano: Skipped, no changes
 #Page 2392 stallino: <respelling> all: stàllino <end> WARNING: Multiple headers Verb,Adjective seen: <from> {{rhymes|it|allino|s=3}} <to> {{rhymes|it|allino|s=3}} <end>
 #Page 2392 stallino: Skipped, no changes
-#Page 1948 standardizzabile: <respelling> all: standardizzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
+#Page 1948 standardizzabile: <respelling> all: standardiddzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 1948 standardizzabile: Skipped, no changes
-#Page 1947 stanziabile: <respelling> all: stanziàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
+#Page 1947 stanziabile: <respelling> all: stantsiàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1947 stanziabile: Skipped, no changes
 #Page 2393 steccaie: <respelling> all: steccàie <end>: <from> {{rhymes|it|aje|s=3}} <to> {{rhymes|it|aje|s=3}} <end>
 #Page 2393 steccaie: Skipped, no changes
-#Page 1550 stenditoi: <respelling> all: stenditói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
+#Page 1550 stenditoi: <respelling> all: stenditó.i,stenditò.i<r:DiPI|accenditoio> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
 #Page 1550 stenditoi: Skipped, no changes
-#Page 927 sterilizzabile: <respelling> all: sterilizzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
+#Page 927 sterilizzabile: <respelling> all: steriliddzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 927 sterilizzabile: Skipped, no changes
 #Page 332 sterminata: <respelling> all: sterminàta <end>: <from> {{rhymes|it|ata|s=4}} <to> {{rhymes|it|ata|s=4}} <end>
 #Page 332 sterminata: Skipped, no changes
@@ -5599,9 +5570,9 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 1461 sterpaglie: Skipped, no changes
 #Page 2875 sterpagnole: <respelling> all: sterpàgnole <end>: <from> {{rhymes|it|aɲɲole|s=4}} <to> {{rhymes|it|aɲɲole|s=4}} <end>
 #Page 2875 sterpagnole: Skipped, no changes
-#Page 1946 stigmatizzabile: <respelling> all: stigmatizzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
+#Page 1946 stigmatizzabile: <respelling> all: stigmatiddzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 1946 stigmatizzabile: Skipped, no changes
-#Page 2932 stirotorcitoi: <respelling> all: stirotorcitói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=6}} <to> {{rhymes|it|oi|s=6}} <end>
+#Page 2932 stirotorcitoi: <respelling> all: stìrotorcitó.i,stìrotorcitò.i<r:Olivetti|stirotorcitoio><r:DiPI|accenditoio> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=6}} <to> {{rhymes|it|oi|s=6}} <end>
 #Page 2932 stirotorcitoi: Skipped, no changes
 #Page 2886 stivala: <respelling> all: stivàla <end>: <from> {{rhymes|it|ala|s=3}} <to> {{rhymes|it|ala|s=3}} <end>
 #Page 2886 stivala: Skipped, no changes
@@ -5635,7 +5606,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 379 stravedemmo: Skipped, no changes
 #Page 2294 stregabile: <respelling> all: stregàbile <end>: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 2294 stregabile: Skipped, no changes
-#Page 1776 strettoi: <respelling> all: strettói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=3}} <to> {{rhymes|it|oi|s=3}} <end>
+#Page 1776 strettoi: <respelling> all: strettó.i,strettò.i<r:DiPI|accenditoio> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=3}} <to> {{rhymes|it|oi|s=3}} <end>
 #Page 1776 strettoi: Skipped, no changes
 #Page 1255 stroboscopi: <respelling> all: stroboscòpi <end>: <from> {{rhymes|it|ɔpi|s=4}} <to> {{rhymes|it|ɔpi|s=4}} <end>
 #Page 1255 stroboscopi: Skipped, no changes
@@ -5670,7 +5641,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 1942 suonabile: Skipped, no changes
 #Page 655 supereroe: <respelling> all: supereròe <end>: <from> {{rhymes|it|ɔe|s=5}} <to> {{rhymes|it|ɔe|s=5}} <end>
 #Page 655 supereroe: Skipped, no changes
-#Page 656 supereroi: <respelling> all: supereròi <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɔi: <from> {{rhymes|it|ɔi|s=5}} <to> {{rhymes|it|ɔi|s=5}} <end>
+#Page 656 supereroi: <respelling> all: supererò.i <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɔi: <from> {{rhymes|it|ɔi|s=5}} <to> {{rhymes|it|ɔi|s=5}} <end>
 #Page 656 supereroi: Skipped, no changes
 #Page 830 superstrade: <respelling> all: superstràde <end>: <from> {{rhymes|it|ade|s=4}} <to> {{rhymes|it|ade|s=4}} <end>
 #Page 830 superstrade: Skipped, no changes
@@ -5708,7 +5679,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 1070 taccagni: Skipped, no changes
 #Page 2400 tacciabile: <respelling> all: tacciàbile <end>: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 2400 tacciabile: Skipped, no changes
-#Page 2842 tachinistagmi: <respelling> all: tachinistàgmi <end>: <from> {{rhymes|it|aɡmi|s=5}} <to> {{rhymes|it|aɡmi|s=5}} <end>
+#Page 2842 tachinistagmi: <respelling> all: tàchinistàgmi<r:Olivetti|tachinistagmo> <end>: <from> {{rhymes|it|aɡmi|s=5}} <to> {{rhymes|it|aɡmi|s=5}} <end>
 #Page 2842 tachinistagmi: Skipped, no changes
 #Page 576 taciuto: <respelling> all: taciùto <end>: <from> {{rhymes|it|uto|s=3}} <to> {{rhymes|it|uto|s=3}} <end>
 #Page 576 taciuto: Skipped, no changes
@@ -5741,11 +5712,11 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2401 tanagra: Skipped, no changes
 #Page 2402 tanagre: <respelling> all: tanàgre <end>: <from> {{rhymes|it|aɡre|s=3}} <to> {{rhymes|it|aɡre|s=3}} <end>
 #Page 2402 tanagre: Skipped, no changes
-#Page 760 tangenziali: <respelling> all: tangenziàli <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
+#Page 760 tangenziali: <respelling> all: tangentsiàli <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
 #Page 760 tangenziali: Skipped, no changes
 #Page 2773 tarabaralla: <respelling> all: tarabaràlla <end>: <from> {{rhymes|it|alla|s=5}} <to> {{rhymes|it|alla|s=5}} <end>
 #Page 2773 tarabaralla: Skipped, no changes
-#Page 1539 tardoantico: <respelling> all: tardoantìco <end> WARNING: Multiple headers Noun,Adjective seen: <from> {{rhymes|it|iko|s=5}} <to> {{rhymes|it|iko|s=5}} <end>
+#Page 1539 tardoantico: <respelling> all: tàrdoantìco<r:Olivetti> <end> WARNING: Multiple headers Noun,Adjective seen: <from> {{rhymes|it|iko|s=5}} <to> {{rhymes|it|iko|s=5}} <end>
 #Page 1539 tardoantico: Skipped, no changes
 #Page 1552 tartagli: <respelling> all: tartàgli <end>: <from> {{rhymes|it|aʎʎi|s=3}} <to> {{rhymes|it|aʎʎi|s=3}} <end>
 #Page 1552 tartagli: Skipped, no changes
@@ -5763,7 +5734,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 1755 tartufaie: Skipped, no changes
 #Page 1749 tartufaio: <respelling> all: tartufàio <end>: <from> {{rhymes|it|ajo|s=4}} <to> {{rhymes|it|ajo|s=4}} <end>
 #Page 1749 tartufaio: Skipped, no changes
-#Page 683 tatuaggi: <respelling> all: tatuàggi <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme addʒi: <from> {{rhymes|it|addʒi|s=4}} <to> {{rhymes|it|addʒi|s=4}} <end>
+#Page 683 tatuaggi: <respelling> all: tatu.àggi<r:DiPI|tatuo> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme addʒi: <from> {{rhymes|it|addʒi|s=4}} <to> {{rhymes|it|addʒi|s=4}} <end>
 #Page 683 tatuaggi: Skipped, no changes
 #Page 1940 teatrabile: <respelling> all: teatràbile <end>: <from> {{rhymes|it|abile|s=5}} <to> {{rhymes|it|abile|s=5}} <end>
 #Page 1940 teatrabile: Skipped, no changes
@@ -5771,7 +5742,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 294 teatrali: Skipped, no changes
 #Page 980 telefoniste: <respelling> all: telefonìste <end>: <from> {{rhymes|it|iste|s=5}} <to> {{rhymes|it|iste|s=5}} <end>
 #Page 980 telefoniste: Skipped, no changes
-#Page 346 teleradiotrasmettemmo: <respelling> all: teleradiotrasmettémmo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme emmo: <from> {{rhymes|it|emmo|s=8}} <to> {{rhymes|it|emmo|s=8}} <end>
+#Page 346 teleradiotrasmettemmo: <respelling> all: tèleràdiotrasmettémmo<r:Olivetti|teleradiotrasmettere> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme emmo: <from> {{rhymes|it|emmo|s=8}} <to> {{rhymes|it|emmo|s=8}} <end>
 #Page 346 teleradiotrasmettemmo: Skipped, no changes
 #Page 118 telescopi: <respelling> all: telescòpi <end>: <from> {{rhymes|it|ɔpi|s=4}} <to> {{rhymes|it|ɔpi|s=4}} <end>
 #Page 118 telescopi: Skipped, no changes
@@ -5782,11 +5753,11 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 1200 tenaglia: Skipped, no changes
 #Page 1201 tenaglie: <respelling> all: tenàglie <end>: <from> {{rhymes|it|aʎʎe|s=3}} <to> {{rhymes|it|aʎʎe|s=3}} <end>
 #Page 1201 tenaglie: Skipped, no changes
-#Page 1147 tendenziali: <respelling> all: tendenziàli <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
+#Page 1147 tendenziali: <respelling> all: tendentsiàli <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
 #Page 1147 tendenziali: Skipped, no changes
 #Page 1939 tentabile: <respelling> all: tentàbile <end> WARNING: Multiple headers Noun,Adjective seen: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1939 tentabile: Skipped, no changes
-#Page 1938 teorizzabile: <respelling> all: teorizzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
+#Page 1938 teorizzabile: <respelling> all: teoriddzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 1938 teorizzabile: Skipped, no changes
 #Page 1557 teppaglie: <respelling> all: teppàglie <end>: <from> {{rhymes|it|aʎʎe|s=3}} <to> {{rhymes|it|aʎʎe|s=3}} <end>
 #Page 1557 teppaglie: Skipped, no changes
@@ -5812,7 +5783,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2678 terragnoli: Skipped, no changes
 #Page 2871 testagnoli: <respelling> all: testàgnoli <end>: <from> {{rhymes|it|aɲɲoli|s=4}} <to> {{rhymes|it|aɲɲoli|s=4}} <end>
 #Page 2871 testagnoli: Skipped, no changes
-#Page 858 testuali: <respelling> all: testuàli <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ali: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
+#Page 858 testuali: <respelling> all: testu.àli,testuàli<r:DiPI|testuale> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ali: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
 #Page 858 testuali: Skipped, no changes
 #Page 1751 tinaia: <respelling> all: tinàia <end>: <from> {{rhymes|it|aja|s=3}} <to> {{rhymes|it|aja|s=3}} <end>
 #Page 1751 tinaia: Skipped, no changes
@@ -5833,13 +5804,13 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 1043 tomaie: Skipped, no changes
 #Page 1304 topaie: <respelling> all: topàie <end>: <from> {{rhymes|it|aje|s=3}} <to> {{rhymes|it|aje|s=3}} <end>
 #Page 1304 topaie: Skipped, no changes
-#Page 1233 toporagni: <respelling> all: toporàgni <end>: <from> {{rhymes|it|aɲɲi|s=4}} <to> {{rhymes|it|aɲɲi|s=4}} <end>
+#Page 1233 toporagni: <respelling> all: tòporàgni<r:DiPI|toporagno> toporàgni<r:Olivetti|toporagno> <end>: <from> {{rhymes|it|aɲɲi|s=4}} <to> {{rhymes|it|aɲɲi|s=4}} <end>
 #Page 1233 toporagni: Skipped, no changes
-#Page 1777 torcitoi: <respelling> all: torcitói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
+#Page 1777 torcitoi: <respelling> all: torcitó.i,torcitò.i<r:DiPI|accenditoio> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
 #Page 1777 torcitoi: Skipped, no changes
 #Page 2776 tordaio: <respelling> all: tordàio <end>: <from> {{rhymes|it|ajo|s=3}} <to> {{rhymes|it|ajo|s=3}} <end>
 #Page 2776 tordaio: Skipped, no changes
-#Page 631 torrenziali: <respelling> all: torrenziàli <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
+#Page 631 torrenziali: <respelling> all: torrentsiàli <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
 #Page 631 torrenziali: Skipped, no changes
 #Page 90 tovaglia: Skipped, no changes
 #Page 90 tovaglia: WARNING: Rhyme-based respelling tovàglia doesn't match it-pr respelling(s) tovàglia<audio:It-una tovaglia.ogg>
@@ -5881,7 +5852,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2409 tramagli: Skipped, no changes
 #Page 2408 tramaglio: <respelling> all: tramàglio <end>: <from> {{rhymes|it|aʎʎo|s=3}} <to> {{rhymes|it|aʎʎo|s=3}} <end>
 #Page 2408 tramaglio: Skipped, no changes
-#Page 1935 tramezzabile: <respelling> all: tramezzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=5}} <to> {{rhymes|it|abile|s=5}} <end>
+#Page 1935 tramezzabile: <respelling> all: trameddzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=5}} <to> {{rhymes|it|abile|s=5}} <end>
 #Page 1935 tramezzabile: Skipped, no changes
 #Page 1160 tramuto: <respelling> all: tramùto <end>: <from> {{rhymes|it|uto|s=3}} <to> {{rhymes|it|uto|s=3}} <end>
 #Page 1160 tramuto: Skipped, no changes
@@ -5944,7 +5915,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2864 traversagni: Skipped, no changes
 #Page 1075 trentennali: <respelling> all: trentennàli <end>: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
 #Page 1075 trentennali: Skipped, no changes
-#Page 295 triennali: <respelling> all: triennàli <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
+#Page 295 triennali: <respelling> all: tri.ennàli <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
 #Page 295 triennali: Skipped, no changes
 #Page 1766 triforcuto: <respelling> all: triforcùto <end>: <from> {{rhymes|it|uto|s=4}} <to> {{rhymes|it|uto|s=4}} <end>
 #Page 1766 triforcuto: Skipped, no changes
@@ -5952,9 +5923,9 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 1044 trimestrali: Skipped, no changes
 #Page 2783 trinaia: <respelling> all: trinàia <end>: <from> {{rhymes|it|aja|s=3}} <to> {{rhymes|it|aja|s=3}} <end>
 #Page 2783 trinaia: Skipped, no changes
-#Page 1767 trinciapaglia: <respelling> all: trinciapàglia <end>: <from> {{rhymes|it|aʎʎa|s=4}} <to> {{rhymes|it|aʎʎa|s=4}} <end>
+#Page 1767 trinciapaglia: <respelling> all: trìnciapàglia<r:Olivetti> <end>: <from> {{rhymes|it|aʎʎa|s=4}} <to> {{rhymes|it|aʎʎa|s=4}} <end>
 #Page 1767 trinciapaglia: Skipped, no changes
-#Page 1214 trionfali: <respelling> all: trionfàli <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ali: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
+#Page 1214 trionfali: <respelling> all: tri.onfàli<r:DiPI|trionfo><r:Olivetti|trionfale> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ali: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
 #Page 1214 trionfali: Skipped, no changes
 #Page 2563 tripala: <respelling> all: tripàla <end>: <from> {{rhymes|it|ala|s=3}} <to> {{rhymes|it|ala|s=3}} <end>
 #Page 2563 tripala: Skipped, no changes
@@ -5962,7 +5933,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2784 trisagio: Skipped, no changes
 #Page 2670 tritagoniste: <respelling> all: tritagonìste <end>: <from> {{rhymes|it|iste|s=5}} <to> {{rhymes|it|iste|s=5}} <end>
 #Page 2670 tritagoniste: Skipped, no changes
-#Page 2785 tritapaglia: <respelling> all: tritapàglia <end>: <from> {{rhymes|it|aʎʎa|s=4}} <to> {{rhymes|it|aʎʎa|s=4}} <end>
+#Page 2785 tritapaglia: <respelling> all: trìtapàglia<r:Olivetti> <end>: <from> {{rhymes|it|aʎʎa|s=4}} <to> {{rhymes|it|aʎʎa|s=4}} <end>
 #Page 2785 tritapaglia: Skipped, no changes
 #Page 120 triviali: <respelling> all: triviàli <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ali: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
 #Page 120 triviali: Skipped, no changes
@@ -5988,7 +5959,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 1438 tupaie: Skipped, no changes
 #Page 1926 turbabile: <respelling> all: turbàbile <end>: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1926 turbabile: Skipped, no changes
-#Page 2410 turbonave: <respelling> all: turbonàve <end>: <from> {{rhymes|it|ave|s=4}} <to> {{rhymes|it|ave|s=4}} <end>
+#Page 2410 turbonave: <respelling> all: tùrbonàve<r:Olivetti> <end>: <from> {{rhymes|it|ave|s=4}} <to> {{rhymes|it|ave|s=4}} <end>
 #Page 2410 turbonave: Skipped, no changes
 #Page 2485 tutelabile: <respelling> all: tutelàbile <end>: <from> {{rhymes|it|abile|s=5}} <to> {{rhymes|it|abile|s=5}} <end>
 #Page 2485 tutelabile: Skipped, no changes
@@ -6024,7 +5995,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 625 uopi: Skipped, no changes
 #Page 2456 urali: <respelling> all: uràli <end>: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
 #Page 2456 urali: Skipped, no changes
-#Page 837 usuali: <respelling> all: usuàli <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
+#Page 837 usuali: <respelling> all: usu.àli<r:DiPI|usuale> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
 #Page 837 usuali: Skipped, no changes
 #Page 1921 usurabile: Skipped, no changes
 #Page 1920 vaccinabile: <respelling> all: vaccinàbile <end>: <from> {{rhymes|it|abile|s=5}} <to> {{rhymes|it|abile|s=5}} <end>
@@ -6072,7 +6043,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2606 vantaggia: Skipped, no changes
 #Page 2607 vantaggiano: <respelling> all: vantàggiano <end>: <from> {{rhymes|it|addʒano|s=4}} <to> {{rhymes|it|addʒano|s=4}} <end>
 #Page 2607 vantaggiano: Skipped, no changes
-#Page 1917 vaporizzabile: <respelling> all: vaporizzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
+#Page 1917 vaporizzabile: <respelling> all: vaporiddzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 1917 vaporizzabile: Skipped, no changes
 #Page 1916 varcabile: <respelling> all: varcàbile <end>: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1916 varcabile: Skipped, no changes
@@ -6080,7 +6051,7 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2542 vassalla: Skipped, no changes
 #Page 2245 vassalle: <respelling> all: vassàlle <end>: <from> {{rhymes|it|alle|s=3}} <to> {{rhymes|it|alle|s=3}} <end>
 #Page 2245 vassalle: Skipped, no changes
-#Page 633 vassoi: <respelling> all: vassói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=3}} <to> {{rhymes|it|oi|s=3}} <end>
+#Page 633 vassoi: <respelling> all: vassó.i,vassò.i<r:DiPI|vassoio> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=3}} <to> {{rhymes|it|oi|s=3}} <end>
 #Page 633 vassoi: Skipped, no changes
 #Page 215 vecchiaie: <respelling> all: vecchiàie <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme aje: <from> {{rhymes|it|aje|s=3}} <to> {{rhymes|it|aje|s=3}} <end>
 #Page 215 vecchiaie: Skipped, no changes
@@ -6117,13 +6088,13 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2612 verniciabile: Skipped, no changes
 #Page 2613 versabile: <respelling> all: versàbile <end>: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 2613 versabile: Skipped, no changes
-#Page 2931 versatoi: <respelling> all: versatói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
+#Page 2931 versatoi: <respelling> all: versató.i,versatò.i<r:DiPI|accenditoio> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=4}} <to> {{rhymes|it|oi|s=4}} <end>
 #Page 2931 versatoi: Skipped, no changes
 #Page 1913 verseggiabile: <respelling> all: verseggiàbile <end>: <from> {{rhymes|it|abile|s=5}} <to> {{rhymes|it|abile|s=5}} <end>
 #Page 1913 verseggiabile: Skipped, no changes
 #Page 2614 versificabile: <respelling> all: versificàbile <end>: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 2614 versificabile: Skipped, no changes
-#Page 672 versoi: <respelling> all: versói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=3}} <to> {{rhymes|it|oi|s=3}} <end>
+#Page 672 versoi: <respelling> all: versó.i,versò.i<r:DiPI|rasoio> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=3}} <to> {{rhymes|it|oi|s=3}} <end>
 #Page 672 versoi: Skipped, no changes
 #Page 1360 vertemmo: <respelling> all: vertémmo <end>: <from> {{rhymes|it|emmo|s=3}} <to> {{rhymes|it|emmo|s=3}} <end>
 #Page 1360 vertemmo: Skipped, no changes
@@ -6144,25 +6115,25 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2426 vettovaglino: Skipped, no changes
 #Page 2422 vettovaglio: <respelling> all: vettovàglio <end>: <from> {{rhymes|it|aʎʎo|s=4}} <to> {{rhymes|it|aʎʎo|s=4}} <end>
 #Page 2422 vettovaglio: Skipped, no changes
-#Page 1911 viabile: <respelling> all: viàbile <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
+#Page 1911 viabile: <respelling> all: viàbile<r:Olivetti> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1911 viabile: Skipped, no changes
-#Page 103 viaggi: <respelling> all: viàggi <end> WARNING: Multiple etymologies seen ||| WARNING: Multiple headers Noun,Verb seen ||| WARNING: Unable to add pronunciation due to hiatus in part before rhyme addʒi: <from> {{rhymes|it|addʒi|s=3}} <to> {{rhymes|it|addʒi|s=3}} <end>
+#Page 103 viaggi: <respelling> top: vi.àggi<r:DiPI|viaggio> <end> WARNING: Multiple etymologies seen ||| WARNING: Multiple headers Noun,Verb seen ||| WARNING: Unable to add pronunciation due to hiatus in part before rhyme addʒi: <from> {{rhymes|it|addʒi|s=3}} <to> {{rhymes|it|addʒi|s=3}} <end>
 #Page 103 viaggi: Skipped, no changes
-#Page 202 viali: <respelling> all: viàli <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ali: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
+#Page 202 viali: <respelling> all: vi.àli<r:DiPI|viale> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ali: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
 #Page 202 viali: Skipped, no changes
-#Page 2429 vibrovagli: <respelling> all: vibrovàgli <end>: <from> {{rhymes|it|aʎʎi|s=4}} <to> {{rhymes|it|aʎʎi|s=4}} <end>
+#Page 2429 vibrovagli: <respelling> all: vìbrovàgli<r:Olivetti|vibrovaglio> <end>: <from> {{rhymes|it|aʎʎi|s=4}} <to> {{rhymes|it|aʎʎi|s=4}} <end>
 #Page 2429 vibrovagli: Skipped, no changes
-#Page 2427 vibrovaglio: <respelling> all: vibrovàglio <end>: <from> {{rhymes|it|aʎʎo|s=4}} <to> {{rhymes|it|aʎʎo|s=4}} <end>
+#Page 2427 vibrovaglio: <respelling> all: vìbrovàglio<r:Olivetti|vibrovaglio> <end>: <from> {{rhymes|it|aʎʎo|s=4}} <to> {{rhymes|it|aʎʎo|s=4}} <end>
 #Page 2427 vibrovaglio: Skipped, no changes
-#Page 1779 viceammiragli: <respelling> all: viceammiràgli <end>: <from> {{rhymes|it|aʎʎi|s=6}} <to> {{rhymes|it|aʎʎi|s=6}} <end>
+#Page 1779 viceammiragli: <respelling> all: vìceammiràgli<r:Olivetti|viceammiraglio> <end>: <from> {{rhymes|it|aʎʎi|s=6}} <to> {{rhymes|it|aʎʎi|s=6}} <end>
 #Page 1779 viceammiragli: Skipped, no changes
-#Page 1778 viceammiraglio: <respelling> all: viceammiràglio <end>: <from> {{rhymes|it|aʎʎo|s=5}} <to> {{rhymes|it|aʎʎo|s=5}} <end>
+#Page 1778 viceammiraglio: <respelling> all: vìceammiràglio<r:Olivetti> <end>: <from> {{rhymes|it|aʎʎo|s=5}} <to> {{rhymes|it|aʎʎo|s=5}} <end>
 #Page 1778 viceammiraglio: Skipped, no changes
-#Page 1780 vicemadri: <respelling> all: vicemàdri <end>: <from> {{rhymes|it|adri|s=3}} <to> {{rhymes|it|adri|s=3}} <end>
+#Page 1780 vicemadri: <respelling> all: vìcemàdri<r:Olivetti|vicemadre> <end>: <from> {{rhymes|it|adri|s=3}} <to> {{rhymes|it|adri|s=3}} <end>
 #Page 1780 vicemadri: Skipped, no changes
-#Page 1781 vicepadri: <respelling> all: vicepàdri <end>: <from> {{rhymes|it|adri|s=3}} <to> {{rhymes|it|adri|s=3}} <end>
+#Page 1781 vicepadri: <respelling> all: vìcepàdri<r:Olivetti|vicepadre> <end>: <from> {{rhymes|it|adri|s=3}} <to> {{rhymes|it|adri|s=3}} <end>
 #Page 1781 vicepadri: Skipped, no changes
-#Page 347 videotrasmettemmo: <respelling> all: videotrasmettémmo <end>: <from> {{rhymes|it|emmo|s=6}} <to> {{rhymes|it|emmo|s=6}} <end>
+#Page 347 videotrasmettemmo: <respelling> all: vìdeotrasmettémmo<r:Olivetti|videotrasmettere> <end>: <from> {{rhymes|it|emmo|s=6}} <to> {{rhymes|it|emmo|s=6}} <end>
 #Page 347 videotrasmettemmo: Skipped, no changes
 #Page 1910 vietabile: <respelling> all: vietàbile <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1910 vietabile: Skipped, no changes
@@ -6174,19 +6145,19 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 1757 vincaie: Skipped, no changes
 #Page 2626 vincolabile: <respelling> all: vincolàbile <end>: <from> {{rhymes|it|abile|s=5}} <to> {{rhymes|it|abile|s=5}} <end>
 #Page 2626 vincolabile: Skipped, no changes
-#Page 1421 violabile: <respelling> all: violàbile <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
+#Page 1421 violabile: <respelling> all: vi.olàbile<r:DiPI> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 1421 violabile: Skipped, no changes
-#Page 833 violiniste: <respelling> all: violinìste <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme iste: <from> {{rhymes|it|iste|s=5}} <to> {{rhymes|it|iste|s=5}} <end>
+#Page 833 violiniste: <respelling> all: vi.olinìste,violinìste<r:DiPI|violino> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme iste: <from> {{rhymes|it|iste|s=5}} <to> {{rhymes|it|iste|s=5}} <end>
 #Page 833 violiniste: Skipped, no changes
-#Page 296 virtuali: <respelling> all: virtuàli <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ali: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
+#Page 296 virtuali: <respelling> all: virtu.àli,virtuàli<r:DiPI|attuale> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ali: <from> {{rhymes|it|ali|s=3}} <to> {{rhymes|it|ali|s=3}} <end>
 #Page 296 virtuali: Skipped, no changes
 #Page 842 viscerali: <respelling> all: visceràli <end>: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
 #Page 842 viscerali: Skipped, no changes
 #Page 1182 visitabile: <respelling> all: visitàbile <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: abile: <from> {{rhymes|it|abile|s=5}} <to> {{rhymes|it|abile|s=5}} <end>
 #Page 1182 visitabile: Skipped, no changes
-#Page 212 visuali: <respelling> all: visuàli <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
+#Page 212 visuali: <respelling> all: visu.àli<r:DiPI|visuale> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ali: <from> {{rhymes|it|ali|s=4}} <to> {{rhymes|it|ali|s=4}} <end>
 #Page 212 visuali: Skipped, no changes
-#Page 1479 visualizzabile: <respelling> all: visualizzàbile <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: abile: <from> {{rhymes|it|abile|s=7}} <to> {{rhymes|it|abile|s=7}} <end>
+#Page 1479 visualizzabile: <respelling> all: visu.aliddzàbile<r:DiPI|visuale> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: abile: <from> {{rhymes|it|abile|s=7}} <to> {{rhymes|it|abile|s=7}} <end>
 #Page 1479 visualizzabile: Skipped, no changes
 #Page 2430 vivagni: <respelling> all: vivàgni <end>: <from> {{rhymes|it|aɲɲi|s=3}} <to> {{rhymes|it|aɲɲi|s=3}} <end>
 #Page 2430 vivagni: Skipped, no changes
@@ -6194,9 +6165,9 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 2428 vivagno: Skipped, no changes
 #Page 198 vocaboli: <respelling> all: vocàboli <end>: <from> {{rhymes|it|aboli|s=4}} <to> {{rhymes|it|aboli|s=4}} <end>
 #Page 198 vocaboli: Skipped, no changes
-#Page 2431 volatilizzabile: <respelling> all: volatilizzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=7}} <to> {{rhymes|it|abile|s=7}} <end>
+#Page 2431 volatilizzabile: <respelling> all: volatiliddzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=7}} <to> {{rhymes|it|abile|s=7}} <end>
 #Page 2431 volatilizzabile: Skipped, no changes
-#Page 1909 volgarizzabile: <respelling> all: volgarizzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
+#Page 1909 volgarizzabile: <respelling> all: volgariddzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 1909 volgarizzabile: Skipped, no changes
 #Page 2432 volpaia: <respelling> all: volpàia <end>: <from> {{rhymes|it|aja|s=3}} <to> {{rhymes|it|aja|s=3}} <end>
 #Page 2432 volpaia: Skipped, no changes
@@ -6206,11 +6177,11 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 1908 voltabile: Skipped, no changes
 #Page 761 voltaggi: <respelling> all: voltàggi <end>: <from> {{rhymes|it|addʒi|s=3}} <to> {{rhymes|it|addʒi|s=3}} <end>
 #Page 761 voltaggi: Skipped, no changes
-#Page 2628 voltoi: <respelling> all: voltói <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=3}} <to> {{rhymes|it|oi|s=3}} <end>
+#Page 2628 voltoi: <respelling> all: voltó.i,voltò.i<r:DiPI|accenditoio> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: oi: <from> {{rhymes|it|oi|s=3}} <to> {{rhymes|it|oi|s=3}} <end>
 #Page 2628 voltoi: Skipped, no changes
 #Page 1073 voragini: <respelling> all: voràgini <end>: <from> {{rhymes|it|adʒini|s=4}} <to> {{rhymes|it|adʒini|s=4}} <end>
 #Page 1073 voragini: Skipped, no changes
-#Page 1631 vulcanizzabile: <respelling> all: vulcanizzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
+#Page 1631 vulcanizzabile: <respelling> all: vulcaniddzàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=6}} <to> {{rhymes|it|abile|s=6}} <end>
 #Page 1631 vulcanizzabile: Skipped, no changes
 #Page 1562 xeroftalmi: <respelling> all: xeroftàlmi <end>: <from> {{rhymes|it|almi|s=4}} <to> {{rhymes|it|almi|s=4}} <end>
 #Page 1562 xeroftalmi: Skipped, no changes
@@ -6220,21 +6191,22 @@ Page 1999 riconfermabile: Skipped, no changes
 #Page 1561 xilofoniste: Skipped, no changes
 #Page 104 zagaglia: Skipped, no changes
 #Page 104 zagaglia: WARNING: Rhyme-based respelling (with problems) zagàglia doesn't match it-pr respelling(s) dzagàglia: WARNING: Unable to add pronunciation due to z in part before rhyme: aʎʎa
-#Page 211 zagaglie: <respelling> all: zagàglie <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aʎʎe: <from> {{rhymes|it|aʎʎe|s=3}} <to> {{rhymes|it|aʎʎe|s=3}} <end>
+#Page 211 zagaglie: <respelling> all: dzagàglie<r:DiPI|zagaglia> <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aʎʎe: <from> {{rhymes|it|aʎʎe|s=3}} <to> {{rhymes|it|aʎʎe|s=3}} <end>
 #Page 211 zagaglie: Skipped, no changes
-#Page 2690 zigaie: <respelling> all: zigàie <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aje: <from> {{rhymes|it|aje|s=3}} <to> {{rhymes|it|aje|s=3}} <end>
+#Page 2690 zigaie: <respelling> all: dzigàie<r:Treccani|zigaia><r:Olivetti|zigaia> <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aje: <from> {{rhymes|it|aje|s=3}} <to> {{rhymes|it|aje|s=3}} <end>
 #Page 2690 zigaie: Skipped, no changes
-#Page 2434 zippabile: <respelling> all: zippàbile <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
+#Page 2434 zippabile: <respelling> all: dzippàbile<r:DiPI|zippa> <end> WARNING: Unable to add pronunciation due to z in part before rhyme: abile: <from> {{rhymes|it|abile|s=4}} <to> {{rhymes|it|abile|s=4}} <end>
 #Page 2434 zippabile: Skipped, no changes
-#Page 2591 ziraia: <respelling> all: ziràia <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aja: <from> {{rhymes|it|aja|s=3}} <to> {{rhymes|it|aja|s=3}} <end>
+#Page 2591 ziraia: <respelling> all: dziràia<r:Treccani><r:Olivetti> <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aja: <from> {{rhymes|it|aja|s=3}} <to> {{rhymes|it|aja|s=3}} <end>
 #Page 2591 ziraia: Skipped, no changes
-#Page 2592 ziraie: <respelling> all: ziràie <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aje: <from> {{rhymes|it|aje|s=3}} <to> {{rhymes|it|aje|s=3}} <end>
+#Page 2592 ziraie: <respelling> all: dziràie<r:Treccani|ziraia><r:Olivetti|ziraia> <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aje: <from> {{rhymes|it|aje|s=3}} <to> {{rhymes|it|aje|s=3}} <end>
 #Page 2592 ziraie: Skipped, no changes
-#Page 1632 zooiatre: <respelling> all: zooiàtre <end> WARNING: Unable to add pronunciation due to z in part before rhyme: atre: <from> {{rhymes|it|atre|s=4}} <to> {{rhymes|it|atre|s=4}} <end>
+#Page 1632 zooiatre: <respelling> all: dzooiàtre,dzòoiàtre<r:Olivetti|zooiatra><r:DiPI|zooiatria> <end> WARNING: Unable to add pronunciation due to z in part before rhyme: atre: <from> {{rhymes|it|atre|s=4}} <to> {{rhymes|it|atre|s=4}} <end>
 #Page 1632 zooiatre: Skipped, no changes
-#Page 1638 zuccaia: <respelling> all: zuccàia <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aja: <from> {{rhymes|it|aja|s=3}} <to> {{rhymes|it|aja|s=3}} <end>
+#Page 1638 zuccaia: <respelling> all: dzuccàia,#tsuccàia<r:DiPI|zucca> <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aja: <from> {{rhymes|it|aja|s=3}} <to> {{rhymes|it|aja|s=3}} <end>
 #Page 1638 zuccaia: Skipped, no changes
-#Page 1639 zuccaie: <respelling> all: zuccàie <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aje: <from> {{rhymes|it|aje|s=3}} <to> {{rhymes|it|aje|s=3}} <end>
+#Page 1639 zuccaie: <respelling> all: dzuccàie,#tsuccàie<r:DiPI|zucca> <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aje: <from> {{rhymes|it|aje|s=3}} <to> {{rhymes|it|aje|s=3}} <end>
 #Page 1639 zuccaie: Skipped, no changes
-#Page 2540 zwitterionico: <respelling> all: zwitteriònico <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔniko: <from> {{rhymes|it|ɔniko|s=5}} <to> {{rhymes|it|ɔniko|s=5}} <end>
-#Page 2540 zwitterionico: Skipped, no changes
+## FIXME, not in  any dictionary
+##Page 2540 zwitterionico: <respelling> all: zwitteriònico <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔniko: <from> {{rhymes|it|ɔniko|s=5}} <to> {{rhymes|it|ɔniko|s=5}} <end>
+##Page 2540 zwitterionico: Skipped, no changes
