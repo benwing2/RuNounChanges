@@ -342,13 +342,28 @@ local function add_slots(alternant_multiword_spec)
 end
 
 
+-- Return true if `form` is accented and is likely monosyllabic. Used in remove_monosyllabic_accents(); if true, we
+-- run the syllabification algorithm to determine the syllable count, and if monosyllabic, remove the accent. Also used
+-- in conjunction with user-specified form overrides to add an asterisk to prevent accents from being removed.
+local function may_need_monosyllabic_accent_removed(form)
+	return rfind(form, "^%-") and rfind(form, AV) and not rfind(form, V .. C .. V)
+end
+
+
 local overridable_stems = {}
 
-local function allow_multiple_values(separated_groups, data)
+-- If `add_monosyllabic_asterisk` is given, add a * to accented forms that may be monosyllabic to prevent the accent
+-- from being removed in remove_monosyllabic_accents().
+local function allow_multiple_values_for_override(separated_groups, data, add_monosyllabic_asterisk)
 	local retvals = {}
 	for _, separated_group in ipairs(separated_groups) do
 		local footnotes = data.fetch_footnotes(separated_group)
-		local retval = {form = separated_group[1], footnotes = footnotes, suppress_prefix = true}
+		local form = separated_group[1]
+		if add_monosyllabic_asterisk and may_need_monosyllabic_accent_removed(form) then
+			form = form .. "*"
+		end
+		-- Add suppress_prefix to prevent the built-in verb prefix from being added to the override.
+		local retval = {form = form, footnotes = footnotes, suppress_prefix = true}
 		table.insert(retvals, retval)
 	end
 	return retvals
@@ -390,7 +405,7 @@ for _, overridable_stem in ipairs {
 	"pp",
 } do
 	if type(overridable_stem) == "string" then
-		overridable_stems[overridable_stem] = allow_multiple_values
+		overridable_stems[overridable_stem] = allow_multiple_values_for_override
 	else
 		local stem, validator = unpack(overridable_stem)
 		overridable_stems[stem] = validator
@@ -1368,6 +1383,36 @@ local function combine_stem_ending(base, slot, stem, ending, is_combining_ending
 end
 
 
+local function check_stems_for_suppress_prefix(stems)
+	-- Check whether any or all stems have `suppress_prefix`.
+	local any_suppress_prefix = false
+	local any_not_suppress_prefix = false
+	if type(stems) == "table" then
+		if stems.suppress_prefix then
+			-- A single form object.
+			any_suppress_prefix = true
+		else
+			for _, stem in ipairs(stems) do
+				if type(stem) == "table" and stem.suppress_prefix then
+					any_suppress_prefix = true
+				else
+					any_not_suppress_prefix = true
+				end
+			end
+		end
+	else
+		any_not_suppress_prefix = true
+	end
+	if any_suppress_prefix and any_not_suppress_prefix then
+		-- This should never happen because suppress_prefix is set on user-specified stem and individual form
+		-- overrides, which should completely replace built-in overrides (which don't have suppress_prefix).
+		error("Internal error: For slot '" .. slot .. ", saw a mixture of suppress-prefix and non-suppress-prefix stems, and can't handle")
+	else
+		return any_suppress_prefix
+	end
+end
+
+
 local function add(base, slot, stems, endings, is_combining_ending, allow_overrides)
 	if skip_slot(base, slot, allow_overrides) then
 		return
@@ -1380,32 +1425,8 @@ end
 
 
 local function add3(base, slot, stems, endings, allow_overrides)
-	local no_prefix = base.prefix == ""
-	local mixed_prefix
-	if not no_prefix then
-		-- Check whether any or all stems have `suppress_prefix`.
-		local any_suppress_prefix = false
-		local any_not_suppress_prefix = false
-		if type(stems) == "table" then
-			if stems.suppress_prefix then
-				-- A single form object.
-				any_suppress_prefix = true
-			else
-				for _, stem in ipairs(stems) do
-					if type(stem) == "table" and stem.suppress_prefix then
-						any_suppress_prefix = true
-					else
-						any_not_suppress_prefix = true
-					end
-				end
-			end
-		else
-			any_not_suppress_prefix = true
-		end
-
-
-
-	if base.prefix == "" then
+	local suppress_prefix = base.prefix == "" or check_stems_for_suppress_prefix(slot, stems)
+	if suppress_prefix then
 		return add(base, slot, stems, endings, "is combining ending", allow_overrides)
 	end
 
@@ -1621,7 +1642,7 @@ local function remove_monosyllabic_accents(base)
 			for _, form in ipairs(base.forms[slot]) do
 				if form.form:find("%*") then -- * means leave alone any accented vowel
 					form.form = form.form:gsub("%*", "")
-				elseif not rfind(form.form, "^%-") and rfind(form.form, AV) and not rfind(form.form, V .. C .. V) then
+				elseif may_need_monosyllabic_accent_removed(form.form) then
 					-- Has an accented vowel and no VCV sequence and not a suffix; may be monosyllabic, in which
 					-- case we need to remove the accent. Check # of syllables and remove accent if only 1. Note
 					-- that the checks for accented vowel and VCV sequence are not strictly needed, but are
@@ -1712,8 +1733,10 @@ end
 local function process_slot_overrides(base, do_basic, reflexive_only)
 	local overrides = reflexive_only and base.basic_reflexive_only_overrides or
 		do_basic and base.basic_overrides or base.combined_overrides
+
 	for slot, forms in pairs(overrides) do
-		add(base, slot, forms, false, "allow overrides")
+		local suppress_prefix = base.prefix == "" or check_stems_for_suppress_prefix(slot, forms)
+		add(base, slot, suppress_prefix and "" or base.prefix, forms, false, "allow overrides")
 	end
 end
 
@@ -1981,8 +2004,11 @@ local function parse_indicator_spec(angle_bracket_spec)
 					parse_err("Basic override '" .. first_element .. "' specified twice")
 				end
 				table.remove(colon_separated_groups, 1)
-				base.user_basic_overrides[first_element] = allow_multiple_values(colon_separated_groups,
-					{prefix = first_element, base = base, parse_err = parse_err, fetch_footnotes = fetch_footnotes})
+				base.user_basic_overrides[first_element] = allow_multiple_values_for_override(
+					colon_separated_groups,
+					{prefix = first_element, base = base, parse_err = parse_err, fetch_footnotes = fetch_footnotes},
+					"add monosyllabic asterisk"
+				)
 			end
 		else
 			local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*,%s*")
@@ -2170,6 +2196,24 @@ local function construct_stems(base)
 end
 
 
+-- Make a list of the slots given in `list1` and optionally `list2`, with `prefix` added to the beginning of each slot
+-- name. The elements of each list are of the form {SLOT, ACCEL}. Used for error messages.
+local function construct_possible_slots(list1, list2, prefix)
+	list2 = list2 or {}
+	prefix = prefix or ""
+	local slots = {}
+	local function insert_list_slots(list)
+		for _, slotaccel in ipairs(list) do
+			local slot, accel = unpack(slotaccel)
+			table.insert(slots, prefix .. slot)
+		end
+	end
+	insert_list_slots(list1)
+	insert_list_slots(list2)
+	return m_table.serialCommaJoin(slots)
+end
+
+
 local function detect_indicator_spec(base)
 	base.forms = {}
 	base.non_reflexive_forms = {}
@@ -2222,12 +2266,24 @@ local function detect_indicator_spec(base)
 		base.stems[stem] = values
 	end
 	for override, values in pairs(base.user_basic_overrides) do
-		if base.alternant_multiword_spec.verb_slots_basic_map[override] then
+		if override:find("^refl_") then
+			if not base.refl then
+				error("Can't set reflexive-only override '" .. override .. "' on a non-reflexive verb")
+			end
+			override = override:gsub("^refl_", "")
+			if not base.alternant_multiword_spec.verb_slots_basic_map[override] then
+				error("Unrecognized reflexive-only override 'refl_" .. override .. "': possible slots are " ..
+					construct_possible_slots(base.alternant_multiword_spec.verb_slots_basic, nil, "refl_"))
+			end
+			base.basic_reflexive_only_overrides[override] = values
+		elseif base.alternant_multiword_spec.verb_slots_basic_map[override] then
 			base.basic_overrides[override] = values
 		elseif base.alternant_multiword_spec.verb_slots_combined_map[override] then
 			base.combined_overrides[override] = values
 		else
-			error("Unrecognized override '" .. override .. "': " .. base.angle_bracket_spec)
+			error("Unrecognized override '" .. override .. "': possible slots are " ..
+				construct_possible_slots(base.alternant_multiword_spec.verb_slots_basic,
+					base.alternant_multiword_spec.verb_slots_combined))
 		end
 	end
 
