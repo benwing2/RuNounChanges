@@ -6,8 +6,8 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname, pname
 
-def process_text_on_page(index, pagetitle, text, templates, new_names, params_to_add, params_to_insert,
-    params_to_remove, params_to_rename, filters, comment):
+def process_text_on_page(index, pagetitle, text, templates, new_names, params_to_add, params_to_prepend,
+    params_to_insert, params_to_remove, params_to_rename, filters, comment):
   if not any(template in text for template in templates):
     return
   if not re.search(r"\{\{\s*(%s)" % "|".join(templates), text):
@@ -27,24 +27,51 @@ def process_text_on_page(index, pagetitle, text, templates, new_names, params_to
   for t in parsed.filter_templates():
     origt = unicode(t)
     tn = tname(t)
+    def getp(param):
+      return getparam(t, param).strip()
     if tn in templates:
       must_continue = False
       for filt in filters:
-        m = re.search("^(.*)=(.*)$", filt)
+        m = re.search("^(.*)!=(.*)$", filt)
         if m:
-          if getparam(t, m.group(1)) != m.group(2):
+          if getp(m.group(1)) == m.group(2):
             pagemsg("Skipping %s because filter %s doesn't match" % (origt, filt))
             must_continue = True
             break
-        else:
-          m = re.search("^(.*)~(.*)$", filt)
-          if m:
-            if not re.search(m.group(2), getparam(t, m.group(1))):
-              pagemsg("Skipping %s because filter %s doesn't match" % (origt, filt))
-              must_continue = True
-              break
-          else:
-            raise ValueError("Unrecognized filter %s" % filt)
+          continue
+        m = re.search("^(.*)=(.*)$", filt)
+        if m:
+          if getp(m.group(1)) != m.group(2):
+            pagemsg("Skipping %s because filter %s doesn't match" % (origt, filt))
+            must_continue = True
+            break
+          continue
+        m = re.search("^(.*)!~(.*)$", filt)
+        if m:
+          if re.search(m.group(2), getp(m.group(1))):
+            pagemsg("Skipping %s because filter %s doesn't match" % (origt, filt))
+            must_continue = True
+            break
+          continue
+        m = re.search("^(.*)~(.*)$", filt)
+        if m:
+          if not re.search(m.group(2), getp(m.group(1))):
+            pagemsg("Skipping %s because filter %s doesn't match" % (origt, filt))
+            must_continue = True
+            break
+          continue
+        m = re.search("^!(.*)$", filt)
+        if m:
+          if getp(m.group(1)):
+            pagemsg("Skipping %s because filter %s doesn't match" % (origt, filt))
+            must_continue = True
+            break
+          continue
+        if not getp(filt):
+          pagemsg("Skipping %s because filter %s doesn't match" % (origt, filt))
+          must_continue = True
+          break
+        continue
       if must_continue:
         continue
       for old_param, new_param in params_to_rename:
@@ -60,6 +87,18 @@ def process_text_on_page(index, pagetitle, text, templates, new_names, params_to
         if getparam(t, param) != value:
           t.add(param, value)
           notes.append("add %s=%s to {{%s}}" % (param, value, tn))
+      for param, value in reversed(params_to_prepend):
+        if getparam(t, param) != value:
+          if t.has(param):
+            t.add(param, value)
+            notes.append("add %s=%s to {{%s}}" % (param, value, tn))
+          else:
+            first_pn = None
+            for paramobj in t.params:
+              first_pn = pname(paramobj)
+              break
+            t.add(param, value, before=first_pn)
+            notes.append("prepend %s=%s to {{%s}}" % (param, value, tn))
       if params_to_insert:
         new_params = []
         params_to_insert = sorted(params_to_insert, key=lambda x: x[0])
@@ -129,43 +168,71 @@ pa.add_argument("--from", help="Old name of param, can be specified multiple tim
     metavar="FROM", dest="from_", action="append")
 pa.add_argument("--to", help="New name of param, can be specified multiple times",
     action="append")
-pa.add_argument("--add", help="PARAM=VALUE to add, can be specified multiple times",
+pa.add_argument("--prepend", help="PARAM=VALUE to add at the beginning, can be specified multiple times",
+    action="append")
+pa.add_argument("--add", help="PARAM=VALUE to add at the end, can be specified multiple times",
     action="append")
 pa.add_argument("--insert", help="Insert numeric PARAM=VALUE|VALUE|..., moving greater numeric params to the right; can be specified multiple times, works from right to left",
     action="append")
-pa.add_argument("--filter", help="Only take action on templates matching the filter, which should be either PARAM=VALUE meaning the parameter must have the given value, or PARAM~REGEXP meaning the parameter's value must match the given regular expression (unanchored). Can be specified multiple times and all must match.",
+pa.add_argument("--filter", help="Only take action on templates matching the filter, which should be either PARAM meaning the parameter must exist and be non-empty; !PARAM meaning the parameter must not exist or must be empty; PARAM=VALUE meaning the parameter must have the given value; PARAM!=VALUE meaning the parameter must not have the given value; PARAM~REGEXP meaning the parameter's value must match the given regular expression (unanchored); or PARAM!~REGEXP meaning the parameter's value must not match the given regular expression (unanchored). Can be specified multiple times and all must match. Note that all parameter values have whitespace stripped from both ends before comparison.",
     action="append")
 pa.add_argument("-c", "--comment", help="Comment to use in place of auto-generated ones.")
 args = pa.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-templates = args.template.decode("utf-8").split(",")
-new_names = args.new_name and args.new_name.decode("utf-8").split(",")
+def handle_single_param(paramname, process=None):
+  argval = getattr(args, paramname)
+  if argval:
+    rawval = argval.decode("utf-8")
+    if process:
+      return process(rawval)
+    else:
+      return rawval
+  else:
+    return None
+
+def handle_list_param(paramname, process=None):
+  argval = getattr(args, paramname)
+  rawvals = [x.decode("utf-8") for x in argval] if argval else []
+  if process:
+    return [process(x) for x in rawvals]
+  else:
+    return rawvals
+
+def handle_params_to_add(paramname, process_parts=None):
+  argval = getattr(args, paramname)
+  params_to_add = []
+  addspecs = [x.decode("utf-8") for x in argval] if argval else []
+  for spec in addspecs:
+    specparts = spec.split("=")
+    if len(specparts) != 2:
+      raise ValueError("Value %s to --%s must have the form PARAM=VALUE" % (spec, paramname))
+    if process_parts:
+      parts_to_add = process_parts(*specparts)
+    else:
+      parts_to_add = specparts
+    params_to_add.append(parts_to_add)
+  return params_to_add
+
+templates = handle_single_param("template", lambda val: val.split(","))
+new_names = handle_single_param("new_name", lambda val: val.split(","))
 if new_names and len(new_names) != len(templates):
   raise ValueError("Saw %s template(s) '%s' but %s new name(s) '%s'; both must agree in number" %
     (len(templates), ",".join(templates), len(new_names), ",".join(new_names)))
-from_ = [x.decode("utf-8") for x in args.from_] if args.from_ else []
-to = [x.decode("utf-8") for x in args.to] if args.to else []
-addspecs = [x.decode("utf-8") for x in args.add] if args.add else []
-params_to_add = []
-for spec in addspecs:
-  specparts = spec.split("=")
-  if len(specparts) != 2:
-    raise ValueError("Value %s to --add must have the form PARAM=VALUE" % spec)
-  params_to_add.append(specparts)
-insertspecs = [x.decode("utf-8") for x in args.insert] if args.insert else []
-params_to_insert = []
-for spec in insertspecs:
-  specparts = spec.split("=")
-  if len(specparts) != 2:
-    raise ValueError("Value %s to --insert must have the form PARAM=VALUE" % spec)
-  param, value = specparts
+
+from_ = handle_list_param("from_")
+to = handle_list_param("to")
+
+params_to_add = handle_params_to_add("add")
+params_to_prepend = handle_params_to_add("prepend")
+def process_insert_parts(param, value):
   if not re.search("^[0-9]+$", param):
     raise ValueError("Parameter %s to --insert must be numeric" % param)
-  params_to_insert.append((int(param), value.split("|")))
-params_to_remove = [x.decode("utf-8") for x in args.remove] if args.remove else []
-filters = [x.decode("utf-8") for x in args.filter] if args.filter else []
-comment = args.comment and args.comment.decode("utf-8")
+  return (int(param), value.split("|"))
+params_to_insert = handle_params_to_add("insert", process_insert_parts)
+params_to_remove = handle_list_param("remove")
+filters = handle_list_param("filter")
+comment = handle_single_param("comment")
 
 if len(from_) != len(to):
   raise ValueError("Same number of --from and --to arguments must be specified")
@@ -173,8 +240,8 @@ if len(from_) != len(to):
 params_to_rename = zip(from_, to)
 
 def do_process_text_on_page(index, pagetitle, text):
-  return process_text_on_page(index, pagetitle, text, templates, new_names, params_to_add, params_to_insert,
-    params_to_remove, params_to_rename, filters, comment)
+  return process_text_on_page(index, pagetitle, text, templates, new_names, params_to_add, params_to_prepend,
+    params_to_insert, params_to_remove, params_to_rename, filters, comment)
 
 blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, edit=True, stdin=True,
   default_refs=["Template:%s" % template for template in templates])
