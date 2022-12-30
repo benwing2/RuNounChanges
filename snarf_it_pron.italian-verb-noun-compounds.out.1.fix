@@ -1,208 +1,208 @@
 Beginning at Mon Jul 12 00:27:20 2021
-Page 1 acchiappanuvoli: <respelling> all: acchiàppanùvoli n:Olivetti <end> NEED_ACCENT HIATUS
+Page 1 acchiappanuvoli: <respelling> all: acchiàppanùvoli<r:Olivetti> <end> NEED_ACCENT HIATUS
 Page 2 acchiappasogni: <respelling> all: acchiàppa[s]ógni <end> EXISTING
-Page 3 affilalame: <respelling> all: affìlalàme n:Olivetti <end> NEED_ACCENT
-Page 4 ammazzacaffè: <respelling> all: ammàttsacaffè n:Olivetti <end> EXISTING
-Page 4 ammazzasentenze: <respelling> all: ammàttsa[s]entèntse n:Olivetti <end>
-Page 4 ammazzasette: <respelling> all: ammàttsa[s]ètte n:Olivetti <end>
+Page 3 affilalame: <respelling> all: affìlalàme<r:Olivetti> <end> NEED_ACCENT
+Page 4 ammazzacaffè: <respelling> all: ammàttsacaffè<r:Olivetti> <end> EXISTING
+Page 4 ammazzasentenze: <respelling> all: ammàttsa[s]entèntse<r:Olivetti> <end>
+Page 4 ammazzasette: <respelling> all: ammàttsa[s]ètte<r:Olivetti> <end>
 # Page 5 ammazzavampiri: <respelling> all: ammazzavampiri <end> NEED_ACCENT Z
-Page 6 appoggiamano: <respelling> all: appòggiamàno n:Olivetti <end> NEED_ACCENT
-Page 7 apribottiglie: <respelling> all: àpribottìglie n:Olivetti <end> NEED_ACCENT
-Page 8 apriscatole: <respelling> all: àpriscàtole n:Olivetti <end> NEED_ACCENT
-Page 9 arricciacapelli: <respelling> all: arrìcciacapélli n:Olivetti <end> NEED_ACCENT
-Page 10 arrotondadorsi: <respelling> all: arrotóndadórsi #arrotóndadòrsi n:DiPI|dorso n:Olivetti <end> NEED_ACCENT
-Page 11 arruffamatasse: <respelling> all: arrùffamatàsse n:Olivetti <end> NEED_ACCENT
-Page 12 arruffapopoli: <respelling> all: arrùffapòpoli n:Olivetti <end> EXISTING
-Page 13 asciugabiancheria: <respelling> all: asciùgabiancherìa n:Olivetti <end> EXISTING
-Page 14 asciugacapelli: <respelling> all: asciùgacapélli n:Olivetti <end> EXISTING
-Page 15 asciugamano: <respelling> all: asciùgamàno n:Olivetti <end> EXISTING
-Page 16 aspirabriciole: <respelling> all: aspìrabrìciole n:Olivetti <end> NEED_ACCENT
-Page 17 aspirapolvere: <respelling> all: aspìrapólvere n:Olivetti <end> NEED_ACCENT
-Page 18 attaccabrighe: <respelling> all: attàccabrìghe n:Olivetti <end> NEED_ACCENT
-Page 19 attaccamano: <respelling> all: attàccamàno n:Olivetti <end> NEED_ACCENT
-Page 20 buttafuoco: <respelling> all: bùttafuòco n:Olivetti <end> NEED_ACCENT HIATUS
-Page 21 cacciavite: <respelling> all: càcciavìte n:Olivetti <end> EXISTING
-Page 22 calzascarpe: <respelling> all: càltsascàrpe n:Olivetti <end> NEED_ACCENT Z
-Page 23 cercametalli: <respelling> all: cércametàlli n:Olivetti <end> NEED_ACCENT
+Page 6 appoggiamano: <respelling> all: appòggiamàno<r:Olivetti> <end> NEED_ACCENT
+Page 7 apribottiglie: <respelling> all: àpribottìglie<r:Olivetti> <end> NEED_ACCENT
+Page 8 apriscatole: <respelling> all: àpriscàtole<r:Olivetti> <end> NEED_ACCENT
+Page 9 arricciacapelli: <respelling> all: arrìcciacapélli<r:Olivetti> <end> NEED_ACCENT
+Page 10 arrotondadorsi: <respelling> all: arrotóndadórsi,#arrotóndadòrsi<r:DiPI|dorso><r:Olivetti> <end> NEED_ACCENT
+Page 11 arruffamatasse: <respelling> all: arrùffamatàsse<r:Olivetti> <end> NEED_ACCENT
+Page 12 arruffapopoli: <respelling> all: arrùffapòpoli<r:Olivetti> <end> EXISTING
+Page 13 asciugabiancheria: <respelling> all: asciùgabiancherìa<r:Olivetti> <end> EXISTING
+Page 14 asciugacapelli: <respelling> all: asciùgacapélli<r:Olivetti> <end> EXISTING
+Page 15 asciugamano: <respelling> all: asciùgamàno<r:Olivetti> <end> EXISTING
+Page 16 aspirabriciole: <respelling> all: aspìrabrìciole<r:Olivetti> <end> NEED_ACCENT
+Page 17 aspirapolvere: <respelling> all: aspìrapólvere<r:Olivetti> <end> NEED_ACCENT
+Page 18 attaccabrighe: <respelling> all: attàccabrìghe<r:Olivetti> <end> NEED_ACCENT
+Page 19 attaccamano: <respelling> all: attàccamàno<r:Olivetti> <end> NEED_ACCENT
+Page 20 buttafuoco: <respelling> all: bùttafuòco<r:Olivetti> <end> NEED_ACCENT HIATUS
+Page 21 cacciavite: <respelling> all: càcciavìte<r:Olivetti> <end> EXISTING
+Page 22 calzascarpe: <respelling> all: càltsascàrpe<r:Olivetti> <end> NEED_ACCENT Z
+Page 23 cercametalli: <respelling> all: cércametàlli<r:Olivetti> <end> NEED_ACCENT
 # Page 24 combinaguai: <respelling> all: combinaguai <end> NEED_ACCENT FALLING_IN_I
-Page 25 contagocce: <respelling> all: cóntagócce n:Olivetti <end> NEED_ACCENT
-Page 26 copiafatture: <respelling> all: còpiafattùre n:DiPI n:Olivetti <end> NEED_ACCENT HIATUS
-Page 27 copialettere: <respelling> all: còpialéttere #còpialèttere n:Olivetti n:DiPI|copia|lettera <end> NEED_ACCENT HIATUS
-Page 28 fermaporta: <respelling> all: férmapòrta n:Olivetti <end> EXISTING
-Page 29 fermauscio: <respelling> all: férmaùscio n:Olivetti <end> EXISTING
-Page 30 grattacielo: <respelling> all: gràttacièlo n:Olivetti <end> EXISTING
-Page 31 guardamano: <respelling> all: guàrdamàno n:Olivetti <end> NEED_ACCENT
-Page 32 guastafeste: <respelling> all: guàstafèste n:Olivetti <end> NEED_ACCENT
+Page 25 contagocce: <respelling> all: cóntagócce<r:Olivetti> <end> NEED_ACCENT
+Page 26 copiafatture: <respelling> all: còpiafattùre<r:DiPI><r:Olivetti> <end> NEED_ACCENT HIATUS
+Page 27 copialettere: <respelling> all: còpialéttere,#còpialèttere<r:Olivetti><r:DiPI|copia|lettera> <end> NEED_ACCENT HIATUS
+Page 28 fermaporta: <respelling> all: férmapòrta<r:Olivetti> <end> EXISTING
+Page 29 fermauscio: <respelling> all: férmaùscio<r:Olivetti> <end> EXISTING
+Page 30 grattacielo: <respelling> all: gràttacièlo<r:Olivetti> <end> EXISTING
+Page 31 guardamano: <respelling> all: guàrdamàno<r:Olivetti> <end> NEED_ACCENT
+Page 32 guastafeste: <respelling> all: guàstafèste<r:Olivetti> <end> NEED_ACCENT
 Page 33 lanciamissili: <respelling> all: lànciamìssili <end> EXISTING
 Page 34 lanciarazzi: <respelling> all: lànciaràddzi <end> EXISTING
-Page 35 lavastoviglie: <respelling> all: làvastovìglie n:Olivetti n:DiPI <end> EXISTING
-Page 36 mangiabambini: <respelling> all: màngiabambìni n:Olivetti <end> NEED_ACCENT
-Page 37 mangiacarte: <respelling> all: màngiacàrte n:Olivetti <end> NEED_ACCENT
-Page 38 mangiafagioli: <respelling> all: màngiafagiòli n:Olivetti <end> NEED_ACCENT
-Page 39 mangiamoccoli: <respelling> all: màngiamóccoli #màngiamòccoli n:DiPI|moccolo n:Olivetti <end> NEED_ACCENT
+Page 35 lavastoviglie: <respelling> all: làvastovìglie<r:Olivetti><r:DiPI> <end> EXISTING
+Page 36 mangiabambini: <respelling> all: màngiabambìni<r:Olivetti> <end> NEED_ACCENT
+Page 37 mangiacarte: <respelling> all: màngiacàrte<r:Olivetti> <end> NEED_ACCENT
+Page 38 mangiafagioli: <respelling> all: màngiafagiòli<r:Olivetti> <end> NEED_ACCENT
+Page 39 mangiamoccoli: <respelling> all: màngiamóccoli,#màngiamòccoli<r:DiPI|moccolo><r:Olivetti> <end> NEED_ACCENT
 Page 40 mangiapatate: <respelling> all: màngiapatàte <end> EXISTING
 Page 41 mangiapolenta: <respelling> all: màngiapolènta <end> EXISTING
 Page 42 mangiarane: <respelling> all: màngiaràne <end> EXISTING
-Page 43 mondariso: <respelling> all: móndarìso #móndarì[s]o n:Olivetti <end> EXISTING
-Page 44 montacarichi: <respelling> all: móntacàrichi n:Olivetti <end> NEED_ACCENT
-Page 45 parapetto: <respelling> all: pàrapètto n:Olivetti <end> EXISTING
-Page 46 perdifiato: <respelling> all: pèrdifiàto n:Olivetti <end> AUTOSUBBED HIATUS
-Page 47 portabagagli: <respelling> all: pòrtabagàgli n:Olivetti <end> EXISTING
-Page 48 portabandiera: <respelling> all: pòrtabandièra n:Olivetti <end> AUTOSUBBED HIATUS
-Page 49 portabastoni: <respelling> all: pòrtabastóni <end> n:Olivetti NEED_ACCENT
-Page 50 portabiancheria: <respelling> all: pòrtabiancherìa n:Olivetti <end> NEED_ACCENT HIATUS
-Page 51 portabiglietti: <respelling> all: pòrtabigliétti n:Olivetti <end> NEED_ACCENT
-Page 52 portabiti: <respelling> all: pòrtàbiti n:Olivetti <end> NEED_ACCENT
-Page 53 portabollo: <respelling> all: pòrtabóllo n:Olivetti <end> EXISTING
-Page 54 portabombe: <respelling> all: pòrtabómbe n:Olivetti <end> EXISTING
-Page 55 portaborse: <respelling> all: pòrtabórse n:Olivetti <end> NEED_ACCENT
-Page 56 portabottiglie: <respelling> all: pòrtabottìglie n:Olivetti <end> NEED_ACCENT
-Page 57 portaburro: <respelling> all: pòrtabùrro n:Olivetti <end> EXISTING
-Page 58 portacarta: <respelling> all: pòrtacàrta n:Olivetti <end> NEED_ACCENT
-Page 59 portacarte: <respelling> all: pòrtacàrte n:Olivetti <end> NEED_ACCENT
-Page 60 portacassette: <respelling> all: pòrtacassétte n:Olivetti <end> NEED_ACCENT
-Page 61 portacenere: <respelling> all: pòrtacénere n:Olivetti <end> EXISTING
-Page 62 portachiavi: <respelling> all: pòrtachiàvi n:Olivetti <end> NEED_ACCENT HIATUS
-Page 63 portacipria: <respelling> all: pòrtacìpria pòrtacìpri.a n:DiPI n:Olivetti <end> NEED_ACCENT HIATUS
-Page 64 portacolori: <respelling> all: pòrtacolóri n:Olivetti <end> NEED_ACCENT
-Page 65 portacontenitori: <respelling> all: pòrtacontenitóri n:Olivetti <end> EXISTING
-Page 66 portacravatte: <respelling> all: pòrtacravàtte n:Olivetti <end> NEED_ACCENT
-Page 67 portadischi: <respelling> all: pòrtadìschi n:Olivetti <end> NEED_ACCENT
-Page 68 portadocumenti: <respelling> all: pòrtadocuménti n:Olivetti <end> NEED_ACCENT
-Page 69 portadolci: <respelling> all: pòrtadólci n:Olivetti <end> NEED_ACCENT
-Page 70 portaelicotteri: <respelling> all: pòrtaelicòtteri n:Olivetti <end> NEED_ACCENT
-Page 71 portaerei: <respelling> all: pòrtaère.i n:DiPI n:Olivetti <end> EXISTING
-Page 72 portaeromobili: <respelling> all: pòrtaeromòbili n:Olivetti <end> NEED_ACCENT
-Page 73 portaferiti: <respelling> all: pòrtaferìti n:Olivetti <end> NEED_ACCENT
-Page 74 portafiammiferi: <respelling> all: pòrtafiammìferi n:Olivetti <end> NEED_ACCENT HIATUS
-Page 75 portafiori: <respelling> all: pòrtafióri n:Olivetti <end> NEED_ACCENT HIATUS
+Page 43 mondariso: <respelling> all: móndarìso,#móndarì[s]o<r:Olivetti> <end> EXISTING
+Page 44 montacarichi: <respelling> all: móntacàrichi<r:Olivetti> <end> NEED_ACCENT
+Page 45 parapetto: <respelling> all: pàrapètto<r:Olivetti> <end> EXISTING
+Page 46 perdifiato: <respelling> all: pèrdifiàto<r:Olivetti> <end> AUTOSUBBED HIATUS
+Page 47 portabagagli: <respelling> all: pòrtabagàgli<r:Olivetti> <end> EXISTING
+Page 48 portabandiera: <respelling> all: pòrtabandièra<r:Olivetti> <end> AUTOSUBBED HIATUS
+Page 49 portabastoni: <respelling> all: pòrtabastóni <end><r:Olivetti> NEED_ACCENT
+Page 50 portabiancheria: <respelling> all: pòrtabiancherìa<r:Olivetti> <end> NEED_ACCENT HIATUS
+Page 51 portabiglietti: <respelling> all: pòrtabigliétti<r:Olivetti> <end> NEED_ACCENT
+Page 52 portabiti: <respelling> all: pòrtàbiti<r:Olivetti> <end> NEED_ACCENT
+Page 53 portabollo: <respelling> all: pòrtabóllo<r:Olivetti> <end> EXISTING
+Page 54 portabombe: <respelling> all: pòrtabómbe<r:Olivetti> <end> EXISTING
+Page 55 portaborse: <respelling> all: pòrtabórse<r:Olivetti> <end> NEED_ACCENT
+Page 56 portabottiglie: <respelling> all: pòrtabottìglie<r:Olivetti> <end> NEED_ACCENT
+Page 57 portaburro: <respelling> all: pòrtabùrro<r:Olivetti> <end> EXISTING
+Page 58 portacarta: <respelling> all: pòrtacàrta<r:Olivetti> <end> NEED_ACCENT
+Page 59 portacarte: <respelling> all: pòrtacàrte<r:Olivetti> <end> NEED_ACCENT
+Page 60 portacassette: <respelling> all: pòrtacassétte<r:Olivetti> <end> NEED_ACCENT
+Page 61 portacenere: <respelling> all: pòrtacénere<r:Olivetti> <end> EXISTING
+Page 62 portachiavi: <respelling> all: pòrtachiàvi<r:Olivetti> <end> NEED_ACCENT HIATUS
+Page 63 portacipria: <respelling> all: pòrtacìpria,pòrtacìpri.a<r:DiPI><r:Olivetti> <end> NEED_ACCENT HIATUS
+Page 64 portacolori: <respelling> all: pòrtacolóri<r:Olivetti> <end> NEED_ACCENT
+Page 65 portacontenitori: <respelling> all: pòrtacontenitóri<r:Olivetti> <end> EXISTING
+Page 66 portacravatte: <respelling> all: pòrtacravàtte<r:Olivetti> <end> NEED_ACCENT
+Page 67 portadischi: <respelling> all: pòrtadìschi<r:Olivetti> <end> NEED_ACCENT
+Page 68 portadocumenti: <respelling> all: pòrtadocuménti<r:Olivetti> <end> NEED_ACCENT
+Page 69 portadolci: <respelling> all: pòrtadólci<r:Olivetti> <end> NEED_ACCENT
+Page 70 portaelicotteri: <respelling> all: pòrtaelicòtteri<r:Olivetti> <end> NEED_ACCENT
+Page 71 portaerei: <respelling> all: pòrtaère.i<r:DiPI><r:Olivetti> <end> EXISTING
+Page 72 portaeromobili: <respelling> all: pòrtaeromòbili<r:Olivetti> <end> NEED_ACCENT
+Page 73 portaferiti: <respelling> all: pòrtaferìti<r:Olivetti> <end> NEED_ACCENT
+Page 74 portafiammiferi: <respelling> all: pòrtafiammìferi<r:Olivetti> <end> NEED_ACCENT HIATUS
+Page 75 portafiori: <respelling> all: pòrtafióri<r:Olivetti> <end> NEED_ACCENT HIATUS
 # already done
-# Page 76 portafoglio: <respelling> all: portafòglio n:Olivetti <end> EXISTING
-Page 77 portafortuna: <respelling> all: pòrtafortùna n:Olivetti <end> EXISTING
-Page 78 portafotografie: <respelling> all: pòrtafotografìe n:Olivetti <end> NEED_ACCENT HIATUS
-Page 79 portafrutta: <respelling> all: pòrtafrùtta n:Olivetti <end> NEED_ACCENT
-Page 80 portafusibili: <respelling> all: pòrtafusìbili n:Olivetti <end> NEED_ACCENT S_BETWEEN_VOWELS
-Page 81 portaghiaccio: <respelling> all: pòrtaghiàccio n:Olivetti <end> AUTOSUBBED HIATUS
-Page 82 portagioie: <respelling> all: pòrtagiòie n:Olivetti <end> NEED_ACCENT
-Page 83 portagioielli: <respelling> all: pòrtagioièlli n:Olivetti <end> NEED_ACCENT
-Page 84 portaimmondizie: <respelling> all: pòrta.immondìtsie n:Olivetti <end> NEED_ACCENT Z FALLING_IN_I HIATUS
-Page 85 portainnesto: <respelling> all: pòrta.innèsto n:Olivetti <end> NEED_ACCENT FALLING_IN_I
-Page 86 portainsegna: <respelling> all: pòrta.inségna n:Olivetti <end> NEED_ACCENT FALLING_IN_I
-Page 87 portalampada: <respelling> all: pòrtalàmpada n:Olivetti <end> NEED_ACCENT
-Page 88 portalapis: <respelling> all: pòrtalàpis n:Olivetti <end> NEED_ACCENT
-Page 89 portalettere: <respelling> all: pòrtaléttere #pòrtalèttere n:DiPI n:Olivetti <end> NEED_ACCENT
-Page 90 portamantelli: <respelling> all: pòrtamantèlli n:Olivetti <end> NEED_ACCENT
-Page 91 portamatita: <respelling> all: pòrtamatìta n:Olivetti <end> NEED_ACCENT
-Page 92 portamatite: <respelling> all: pòrtamatìte n:Olivetti <end> NEED_ACCENT
-Page 93 portamina: <respelling> all: pòrtamìna n:Olivetti <end> NEED_ACCENT
-Page 94 portamissili: <respelling> all: pòrtamìssili n:Olivetti <end> NEED_ACCENT
-Page 95 portamonete: <respelling> all: pòrtamonéte n:Olivetti <end> NEED_ACCENT
-Page 96 portaobiettivi: <respelling> all: pòrtaobiettìvi n:Olivetti <end> NEED_ACCENT HIATUS
-Page 97 portaocchiali: <respelling> all: pòrtaocchiàli n:Olivetti <end> NEED_ACCENT HIATUS
-Page 98 portaoggetti: <respelling> all: pòrtaoggètti n:Olivetti <end> NEED_ACCENT
-Page 99 portaombrelli: <respelling> all: pòrtaombrèlli n:Olivetti <end> NEED_ACCENT
-Page 100 portaordini: <respelling> all: pòrtaórdini n:Olivetti <end> NEED_ACCENT
-Page 101 portapacchi: <respelling> all: pòrtapàcchi n:Olivetti <end> NEED_ACCENT
-Page 102 portapenne: <respelling> all: pòrtapénne n:Olivetti <end> NEED_ACCENT
-Page 103 portapezzo: <respelling> all: pòrtapèttso n:Olivetti <end> EXISTING
-Page 104 portapiatti: <respelling> all: pòrtapiàtti n:Olivetti <end> NEED_ACCENT HIATUS
-Page 105 portapillole: <respelling> all: pòrtapìllole n:Olivetti <end> NEED_ACCENT
-Page 106 portapipe: <respelling> all: pòrtapìpe n:Olivetti <end> NEED_ACCENT
-Page 107 portaposate: <respelling> all: pòrtaposàte #pòrtapo[s]àte n:Olivetti n:DiPI|posate <end> NEED_ACCENT S_BETWEEN_VOWELS
-Page 108 portapranzi: <respelling> all: pòrtapràndzi pòrtapràntsi n:Olivetti n:DiPI|pranzo <end> NEED_ACCENT Z
-Page 109 portapunta: <respelling> all: pòrtapùnta n:Olivetti <end> NEED_ACCENT
-Page 110 portareliquie: <respelling> all: pòrtarelìquie pòrtarelìqui.e n:Olivetti n:DiPI|reliquia <end> NEED_ACCENT HIATUS
-Page 111 portarifiuti: <respelling> all: pòrtarifiùti n:Olivetti <end> NEED_ACCENT HIATUS
-Page 112 portarinfuse: <respelling> all: pòrtarinfùse n:Olivetti <end> NEED_ACCENT S_BETWEEN_VOWELS
-Page 113 portaritratti: <respelling> all: pòrtaritràtti n:Olivetti <end> NEED_ACCENT
-Page 114 portariviste: <respelling> all: pòrtarivìste n:Olivetti <end> NEED_ACCENT
-Page 115 portarotoli: <respelling> all: pòrtaròtoli n:Olivetti <end> NEED_ACCENT
-Page 116 portasapone: <respelling> all: pòrta[s]apóne n:DiPI n:Olivetti <end> AUTOSUBBED S_BETWEEN_VOWELS
-Page 117 portasciugamani: <respelling> all: pòrtasciùgamàni n:Olivetti <end> NEED_ACCENT
-Page 118 portasigarette: <respelling> all: pòrta[s]igarétte n:DiPI n:Olivetti <end> NEED_ACCENT S_BETWEEN_VOWELS
-Page 119 portasigari: <respelling> all: pòrta[s]ìgari n:Olivetti <end> NEED_ACCENT S_BETWEEN_VOWELS
-Page 120 portaspazzolino: <respelling> all: pòrtaspattsolìno n:Olivetti <end> NEED_ACCENT Z
-Page 121 portaspilli: <respelling> all: pòrtaspìlli n:Olivetti <end> NEED_ACCENT
-Page 122 portassegni: <respelling> all: pòrtasségni n:Olivetti <end> NEED_ACCENT
-Page 123 portastecchini: <respelling> all: pòrtastecchìni n:Olivetti <end> NEED_ACCENT
-Page 124 portastendardo: <respelling> all: pòrtastendàrdo n:Olivetti <end> EXISTING
-Page 125 portatessera: <respelling> all: pòrtatèssera n:Olivetti <end> EXISTING
-Page 126 portatovagliolo: <respelling> all: pòrtatovagliòlo n:Olivetti <end> EXISTING
-Page 127 portattrezzi: <respelling> all: pòrtattréttsi n:Olivetti <end> NEED_ACCENT Z
-Page 128 portauova: <respelling> all: pòrtauòva n:Olivetti <end> NEED_ACCENT
-Page 129 portauovo: <respelling> all: pòrtauòvo n:Olivetti <end> NEED_ACCENT
-Page 130 portautensili: <respelling> all: pòrta.utènsili #!pòrta.utensìli n:Olivetti n:DiPI|utensile <end> NEED_ACCENT
-Page 131 portavalori: <respelling> all: pòrtavalóri n:Olivetti <end> NEED_ACCENT
-Page 132 portavasi: <respelling> all: pòrtavàsi n:Olivetti <end> NEED_ACCENT S_BETWEEN_VOWELS
-Page 133 portavivande: <respelling> all: pòrtavivànde n:Olivetti <end> NEED_ACCENT
-Page 134 portavoce: <respelling> all: pòrtavóce n:Olivetti <end> EXISTING
-Page 135 posacenere: <respelling> all: pòsacénere #pò[s]acénere n:Olivetti n:DiPI|posa <end> EXISTING
-Page 136 prendisole: <respelling> all: prèndi[s]óle prendi[s]óle n:Olivetti n:DiPI <end> EXISTING
-Page 137 reggipalo: <respelling> all: règgipàlo n:Olivetti <end> EXISTING
-Page 138 regolabarba: <respelling> all: règolabàrba n:Olivetti <end> NEED_ACCENT
+# Page 76 portafoglio: <respelling> all: portafòglio<r:Olivetti> <end> EXISTING
+Page 77 portafortuna: <respelling> all: pòrtafortùna<r:Olivetti> <end> EXISTING
+Page 78 portafotografie: <respelling> all: pòrtafotografìe<r:Olivetti> <end> NEED_ACCENT HIATUS
+Page 79 portafrutta: <respelling> all: pòrtafrùtta<r:Olivetti> <end> NEED_ACCENT
+Page 80 portafusibili: <respelling> all: pòrtafusìbili<r:Olivetti> <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 81 portaghiaccio: <respelling> all: pòrtaghiàccio<r:Olivetti> <end> AUTOSUBBED HIATUS
+Page 82 portagioie: <respelling> all: pòrtagiòie<r:Olivetti> <end> NEED_ACCENT
+Page 83 portagioielli: <respelling> all: pòrtagioièlli<r:Olivetti> <end> NEED_ACCENT
+Page 84 portaimmondizie: <respelling> all: pòrta.immondìtsie<r:Olivetti> <end> NEED_ACCENT Z FALLING_IN_I HIATUS
+Page 85 portainnesto: <respelling> all: pòrta.innèsto<r:Olivetti> <end> NEED_ACCENT FALLING_IN_I
+Page 86 portainsegna: <respelling> all: pòrta.inségna<r:Olivetti> <end> NEED_ACCENT FALLING_IN_I
+Page 87 portalampada: <respelling> all: pòrtalàmpada<r:Olivetti> <end> NEED_ACCENT
+Page 88 portalapis: <respelling> all: pòrtalàpis<r:Olivetti> <end> NEED_ACCENT
+Page 89 portalettere: <respelling> all: pòrtaléttere,#pòrtalèttere<r:DiPI><r:Olivetti> <end> NEED_ACCENT
+Page 90 portamantelli: <respelling> all: pòrtamantèlli<r:Olivetti> <end> NEED_ACCENT
+Page 91 portamatita: <respelling> all: pòrtamatìta<r:Olivetti> <end> NEED_ACCENT
+Page 92 portamatite: <respelling> all: pòrtamatìte<r:Olivetti> <end> NEED_ACCENT
+Page 93 portamina: <respelling> all: pòrtamìna<r:Olivetti> <end> NEED_ACCENT
+Page 94 portamissili: <respelling> all: pòrtamìssili<r:Olivetti> <end> NEED_ACCENT
+Page 95 portamonete: <respelling> all: pòrtamonéte<r:Olivetti> <end> NEED_ACCENT
+Page 96 portaobiettivi: <respelling> all: pòrtaobiettìvi<r:Olivetti> <end> NEED_ACCENT HIATUS
+Page 97 portaocchiali: <respelling> all: pòrtaocchiàli<r:Olivetti> <end> NEED_ACCENT HIATUS
+Page 98 portaoggetti: <respelling> all: pòrtaoggètti<r:Olivetti> <end> NEED_ACCENT
+Page 99 portaombrelli: <respelling> all: pòrtaombrèlli<r:Olivetti> <end> NEED_ACCENT
+Page 100 portaordini: <respelling> all: pòrtaórdini<r:Olivetti> <end> NEED_ACCENT
+Page 101 portapacchi: <respelling> all: pòrtapàcchi<r:Olivetti> <end> NEED_ACCENT
+Page 102 portapenne: <respelling> all: pòrtapénne<r:Olivetti> <end> NEED_ACCENT
+Page 103 portapezzo: <respelling> all: pòrtapèttso<r:Olivetti> <end> EXISTING
+Page 104 portapiatti: <respelling> all: pòrtapiàtti<r:Olivetti> <end> NEED_ACCENT HIATUS
+Page 105 portapillole: <respelling> all: pòrtapìllole<r:Olivetti> <end> NEED_ACCENT
+Page 106 portapipe: <respelling> all: pòrtapìpe<r:Olivetti> <end> NEED_ACCENT
+Page 107 portaposate: <respelling> all: pòrtaposàte,#pòrtapo[s]àte<r:Olivetti><r:DiPI|posate> <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 108 portapranzi: <respelling> all: pòrtapràndzi,pòrtapràntsi<r:Olivetti><r:DiPI|pranzo> <end> NEED_ACCENT Z
+Page 109 portapunta: <respelling> all: pòrtapùnta<r:Olivetti> <end> NEED_ACCENT
+Page 110 portareliquie: <respelling> all: pòrtarelìquie,pòrtarelìqui.e<r:Olivetti><r:DiPI|reliquia> <end> NEED_ACCENT HIATUS
+Page 111 portarifiuti: <respelling> all: pòrtarifiùti<r:Olivetti> <end> NEED_ACCENT HIATUS
+Page 112 portarinfuse: <respelling> all: pòrtarinfùse<r:Olivetti> <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 113 portaritratti: <respelling> all: pòrtaritràtti<r:Olivetti> <end> NEED_ACCENT
+Page 114 portariviste: <respelling> all: pòrtarivìste<r:Olivetti> <end> NEED_ACCENT
+Page 115 portarotoli: <respelling> all: pòrtaròtoli<r:Olivetti> <end> NEED_ACCENT
+Page 116 portasapone: <respelling> all: pòrta[s]apóne<r:DiPI><r:Olivetti> <end> AUTOSUBBED S_BETWEEN_VOWELS
+Page 117 portasciugamani: <respelling> all: pòrtasciùgamàni<r:Olivetti> <end> NEED_ACCENT
+Page 118 portasigarette: <respelling> all: pòrta[s]igarétte<r:DiPI><r:Olivetti> <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 119 portasigari: <respelling> all: pòrta[s]ìgari<r:Olivetti> <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 120 portaspazzolino: <respelling> all: pòrtaspattsolìno<r:Olivetti> <end> NEED_ACCENT Z
+Page 121 portaspilli: <respelling> all: pòrtaspìlli<r:Olivetti> <end> NEED_ACCENT
+Page 122 portassegni: <respelling> all: pòrtasségni<r:Olivetti> <end> NEED_ACCENT
+Page 123 portastecchini: <respelling> all: pòrtastecchìni<r:Olivetti> <end> NEED_ACCENT
+Page 124 portastendardo: <respelling> all: pòrtastendàrdo<r:Olivetti> <end> EXISTING
+Page 125 portatessera: <respelling> all: pòrtatèssera<r:Olivetti> <end> EXISTING
+Page 126 portatovagliolo: <respelling> all: pòrtatovagliòlo<r:Olivetti> <end> EXISTING
+Page 127 portattrezzi: <respelling> all: pòrtattréttsi<r:Olivetti> <end> NEED_ACCENT Z
+Page 128 portauova: <respelling> all: pòrtauòva<r:Olivetti> <end> NEED_ACCENT
+Page 129 portauovo: <respelling> all: pòrtauòvo<r:Olivetti> <end> NEED_ACCENT
+Page 130 portautensili: <respelling> all: pòrta.utènsili,#!pòrta.utensìli<r:Olivetti><r:DiPI|utensile> <end> NEED_ACCENT
+Page 131 portavalori: <respelling> all: pòrtavalóri<r:Olivetti> <end> NEED_ACCENT
+Page 132 portavasi: <respelling> all: pòrtavàsi<r:Olivetti> <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 133 portavivande: <respelling> all: pòrtavivànde<r:Olivetti> <end> NEED_ACCENT
+Page 134 portavoce: <respelling> all: pòrtavóce<r:Olivetti> <end> EXISTING
+Page 135 posacenere: <respelling> all: pòsacénere,#pò[s]acénere<r:Olivetti><r:DiPI|posa> <end> EXISTING
+Page 136 prendisole: <respelling> all: prèndi[s]óle,prendi[s]óle<r:Olivetti><r:DiPI> <end> EXISTING
+Page 137 reggipalo: <respelling> all: règgipàlo<r:Olivetti> <end> EXISTING
+Page 138 regolabarba: <respelling> all: règolabàrba<r:Olivetti> <end> NEED_ACCENT
 Page 139 rizzacazzi: <respelling> all: rìttsacàttsi <end> EXISTING
-Page 140 rompicapo: <respelling> all: rómpicàpo n:Olivetti <end> NEED_ACCENT
-Page 141 rompicazzo: <respelling> all: rómpicàttso n:Olivetti <end> EXISTING
-Page 142 rompicoglioni: <respelling> all: rómpicoglióni n:Olivetti <end> EXISTING
-Page 143 rompighiaccio: <respelling> all: rómpighiàccio n:Olivetti <end> AUTOSUBBED HIATUS
-Page 144 rompipalle: <respelling> all: rómpipàlle n:Olivetti <end> EXISTING
-Page 145 rompiscatole: <respelling> all: rómpiscàtole n:Olivetti <end> EXISTING
-Page 146 saltamacchione: <respelling> all: sàltamacchióne n:Olivetti <end> AUTOSUBBED HIATUS
-Page 147 scacciamosche: <respelling> all: scàcciamósche n:Olivetti <end> NEED_ACCENT
-Page 148 scaldaacqua: <respelling> all: scàldaàcqua n:DiPI n:Olivetti <end> EXISTING
-Page 149 scaldabiberon: <respelling> all: scàldabiberòn scàldabiberón n:Olivetti n:DiPI|biberon <end> NEED_ACCENT
+Page 140 rompicapo: <respelling> all: rómpicàpo<r:Olivetti> <end> NEED_ACCENT
+Page 141 rompicazzo: <respelling> all: rómpicàttso<r:Olivetti> <end> EXISTING
+Page 142 rompicoglioni: <respelling> all: rómpicoglióni<r:Olivetti> <end> EXISTING
+Page 143 rompighiaccio: <respelling> all: rómpighiàccio<r:Olivetti> <end> AUTOSUBBED HIATUS
+Page 144 rompipalle: <respelling> all: rómpipàlle<r:Olivetti> <end> EXISTING
+Page 145 rompiscatole: <respelling> all: rómpiscàtole<r:Olivetti> <end> EXISTING
+Page 146 saltamacchione: <respelling> all: sàltamacchióne<r:Olivetti> <end> AUTOSUBBED HIATUS
+Page 147 scacciamosche: <respelling> all: scàcciamósche<r:Olivetti> <end> NEED_ACCENT
+Page 148 scaldaacqua: <respelling> all: scàldaàcqua<r:DiPI><r:Olivetti> <end> EXISTING
+Page 149 scaldabiberon: <respelling> all: scàldabiberòn,scàldabiberón<r:Olivetti><r:DiPI|biberon> <end> NEED_ACCENT
 Page 150 scaldacuore: <respelling> all: scàldacuòre <end> NEED_ACCENT HIATUS
-Page 151 scaldamuscoli: <respelling> all: scàldamùscoli n:Olivetti <end> NEED_ACCENT
-Page 152 scaldapanche: <respelling> all: scàldapànche n:Olivetti <end> NEED_ACCENT
-Page 153 scaldapiatti: <respelling> all: scàldapiàtti n:Olivetti <end> NEED_ACCENT HIATUS
-Page 154 scaldapiedi: <respelling> all: scàldapièdi scàldapiédi n:Olivetti n:DiPI|piede <end> EXISTING
-Page 155 scassapalle: <respelling> all: scàssapàlle n:Olivetti <end> EXISTING
-Page 156 scavapatate: <respelling> all: scàvapatàte n:Olivetti <end> NEED_ACCENT
-Page 157 scendibagno: <respelling> all: scéndibàgno scèndibàgno n:Olivetti n:DiPI|scendere <end> NEED_ACCENT
-Page 158 scendiletto: <respelling> all: scéndilètto scèndilètto n:Olivetti n:DiPI <end> NEED_ACCENT
-Page 159 sciacquabudella: <respelling> all: sciàcquabudèlla n:Olivetti <end> EXISTING
-Page 160 scottadito: <respelling> all: scòttadìto n:Olivetti <end> EXISTING
-Page 161 sgombraneve: <respelling> all: sgómbranéve n:Olivetti <end> EXISTING
+Page 151 scaldamuscoli: <respelling> all: scàldamùscoli<r:Olivetti> <end> NEED_ACCENT
+Page 152 scaldapanche: <respelling> all: scàldapànche<r:Olivetti> <end> NEED_ACCENT
+Page 153 scaldapiatti: <respelling> all: scàldapiàtti<r:Olivetti> <end> NEED_ACCENT HIATUS
+Page 154 scaldapiedi: <respelling> all: scàldapièdi,scàldapiédi<r:Olivetti><r:DiPI|piede> <end> EXISTING
+Page 155 scassapalle: <respelling> all: scàssapàlle<r:Olivetti> <end> EXISTING
+Page 156 scavapatate: <respelling> all: scàvapatàte<r:Olivetti> <end> NEED_ACCENT
+Page 157 scendibagno: <respelling> all: scéndibàgno,scèndibàgno<r:Olivetti><r:DiPI|scendere> <end> NEED_ACCENT
+Page 158 scendiletto: <respelling> all: scéndilètto,scèndilètto<r:Olivetti><r:DiPI> <end> NEED_ACCENT
+Page 159 sciacquabudella: <respelling> all: sciàcquabudèlla<r:Olivetti> <end> EXISTING
+Page 160 scottadito: <respelling> all: scòttadìto<r:Olivetti> <end> EXISTING
+Page 161 sgombraneve: <respelling> all: sgómbranéve<r:Olivetti> <end> EXISTING
 Page 162 spaccamaroni: <respelling> all: spàccamaróni <end> EXISTING
-Page 163 spaccasassi: <respelling> all: spàcca[s]àssi n:Olivetti <end> EXISTING
-Page 164 sparaneve: <respelling> all: spàranéve n:Olivetti <end> EXISTING
-Page 165 spartiacque: <respelling> all: spàrti.àcque n:Olivetti <end> EXISTING
-Page 166 spaventapasseri: <respelling> all: spavèntapàsseri n:Olivetti <end> EXISTING
+Page 163 spaccasassi: <respelling> all: spàcca[s]àssi<r:Olivetti> <end> EXISTING
+Page 164 sparaneve: <respelling> all: spàranéve<r:Olivetti> <end> EXISTING
+Page 165 spartiacque: <respelling> all: spàrti.àcque<r:Olivetti> <end> EXISTING
+Page 166 spaventapasseri: <respelling> all: spavèntapàsseri<r:Olivetti> <end> EXISTING
 Page 167 spellacavi: <respelling> all: spèllacàvi <end> NEED_ACCENT
-Page 168 spellafili: <respelling> all: spèllafìli n:Olivetti <end> NEED_ACCENT
-Page 169 spremiaglio: <respelling> all: sprèmi.àglio n:Olivetti <end> EXISTING
-Page 170 spremiagrumi: <respelling> all: sprèmi.agrùmi n:Olivetti <end> EXISTING
-Page 171 squarciagola: <respelling> all: squàrciagóla n:Olivetti <end> EXISTING
+Page 168 spellafili: <respelling> all: spèllafìli<r:Olivetti> <end> NEED_ACCENT
+Page 169 spremiaglio: <respelling> all: sprèmi.àglio<r:Olivetti> <end> EXISTING
+Page 170 spremiagrumi: <respelling> all: sprèmi.agrùmi<r:Olivetti> <end> EXISTING
+Page 171 squarciagola: <respelling> all: squàrciagóla<r:Olivetti> <end> EXISTING
 Page 172 stendibiancheria: <respelling> all: stèndibiancherìa <end> NEED_ACCENT HIATUS
-Page 173 strappalacrime: <respelling> all: stràppalàcrime n:Olivetti <end> EXISTING
-Page 174 struggicuore: <respelling> all: strùggicuòre n:Olivetti <end> NEED_ACCENT HIATUS
-Page 175 sturabottiglie: <respelling> all: stùrabottìglie n:Olivetti <end> NEED_ACCENT
+Page 173 strappalacrime: <respelling> all: stràppalàcrime<r:Olivetti> <end> EXISTING
+Page 174 struggicuore: <respelling> all: strùggicuòre<r:Olivetti> <end> NEED_ACCENT HIATUS
+Page 175 sturabottiglie: <respelling> all: stùrabottìglie<r:Olivetti> <end> NEED_ACCENT
 Page 176 stuzzicadenti: <respelling> all: stùttsicadènti <end> NEED_ACCENT Z
-Page 177 tagliamare: <respelling> all: tàgliamàre n:Olivetti <end> AUTOSUBBED
+Page 177 tagliamare: <respelling> all: tàgliamàre<r:Olivetti> <end> AUTOSUBBED
 Page 178 tagliapizza: <respelling> all: tàgliapìttsa <end> NEED_ACCENT Z
-Page 179 tagliaspese: <respelling> all: tàgliaspése #tàgliaspé[s]e n:Olivetti n:DiPI|speso <end> NEED_ACCENT AUTO_ESE S_BETWEEN_VOWELS
-Page 180 tendicatena: <respelling> all: tèndicaténa n:Olivetti n:DiPI <end> NEED_ACCENT
-Page 181 tendicinghia: <respelling> all: tèndicìnghia n:Olivetti <end> NEED_ACCENT HIATUS
-Page 182 tendicollo: <respelling> all: tèndicòllo n:Olivetti <end> NEED_ACCENT
-Page 183 tendifilo: <respelling> all: tèndifìlo n:Olivetti n:DiPI <end> NEED_ACCENT
-Page 184 tendiscarpe: <respelling> all: tèndiscàrpe n:Olivetti <end> NEED_ACCENT
-Page 185 tergifari: <respelling> all: tèrgifàri n:Olivetti <end> NEED_ACCENT
-Page 186 tesafili: <respelling> all: tésafìli #té[s]afìli n:Olivetti n:DiPI|teso <end> NEED_ACCENT S_BETWEEN_VOWELS
-Page 187 tirabozze: <respelling> all: tìrabòttse n:Olivetti <end> NEED_ACCENT Z
-Page 188 tiralatte: <respelling> all: tìralàtte n:Olivetti <end> NEED_ACCENT
-Page 189 tiralinee: <respelling> all: tìralìnee n:Olivetti n:DiPI <end> NEED_ACCENT
-Page 190 tiraolio: <respelling> all: tìraòlio n:Olivetti <end> NEED_ACCENT HIATUS
-Page 191 tiraprove: <respelling> all: tìrapròve n:Olivetti <end> NEED_ACCENT
-Page 192 tirastivali: <respelling> all: tìrastivàli n:Olivetti <end> NEED_ACCENT
-Page 193 tiratardi: <respelling> all: tìratàrdi n:Olivetti <end> NEED_ACCENT
-Page 194 tosacani: <respelling> all: tósacàni n:Olivetti <end> NEED_ACCENT S_BETWEEN_VOWELS
-Page 195 tostacaffè: <respelling> all: tòstacaffè n:Olivetti n:DiPI|tosto <end> SELF_ACCENTED
-Page 196 trinciapolli: <respelling> all: trìnciapólli n:Olivetti <end> NEED_ACCENT
-Page 197 turabottiglie: <respelling> all: tùrabottìglie n:Olivetti n:DiPI <end> NEED_ACCENT
-Page 198 voltafieno: <respelling> all: vòltafièno vòltafiéno n:Olivetti n:DiPI|fieno <end> EXISTING
-Page 199 voltagabbana: <respelling> all: vòltagabbàna n:Olivetti <end> NEED_ACCENT
-Page 200 vuotacessi: <respelling> all: vuòtacèssi n:Olivetti <end> NEED_ACCENT HIATUS
-Page 201 vuotamele: <respelling> all: vuòtaméle n:Olivetti n:DiPI <end> NEED_ACCENT HIATUS
-Page 202 vuotazucchine: <respelling> all: vuòtadzucchìne #vuòtatsucchìne n:Olivetti n:DiPI <end> NEED_ACCENT Z HIATUS
+Page 179 tagliaspese: <respelling> all: tàgliaspése,#tàgliaspé[s]e<r:Olivetti><r:DiPI|speso> <end> NEED_ACCENT AUTO_ESE S_BETWEEN_VOWELS
+Page 180 tendicatena: <respelling> all: tèndicaténa<r:Olivetti><r:DiPI> <end> NEED_ACCENT
+Page 181 tendicinghia: <respelling> all: tèndicìnghia<r:Olivetti> <end> NEED_ACCENT HIATUS
+Page 182 tendicollo: <respelling> all: tèndicòllo<r:Olivetti> <end> NEED_ACCENT
+Page 183 tendifilo: <respelling> all: tèndifìlo<r:Olivetti><r:DiPI> <end> NEED_ACCENT
+Page 184 tendiscarpe: <respelling> all: tèndiscàrpe<r:Olivetti> <end> NEED_ACCENT
+Page 185 tergifari: <respelling> all: tèrgifàri<r:Olivetti> <end> NEED_ACCENT
+Page 186 tesafili: <respelling> all: tésafìli,#té[s]afìli<r:Olivetti><r:DiPI|teso> <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 187 tirabozze: <respelling> all: tìrabòttse<r:Olivetti> <end> NEED_ACCENT Z
+Page 188 tiralatte: <respelling> all: tìralàtte<r:Olivetti> <end> NEED_ACCENT
+Page 189 tiralinee: <respelling> all: tìralìnee<r:Olivetti><r:DiPI> <end> NEED_ACCENT
+Page 190 tiraolio: <respelling> all: tìraòlio<r:Olivetti> <end> NEED_ACCENT HIATUS
+Page 191 tiraprove: <respelling> all: tìrapròve<r:Olivetti> <end> NEED_ACCENT
+Page 192 tirastivali: <respelling> all: tìrastivàli<r:Olivetti> <end> NEED_ACCENT
+Page 193 tiratardi: <respelling> all: tìratàrdi<r:Olivetti> <end> NEED_ACCENT
+Page 194 tosacani: <respelling> all: tósacàni<r:Olivetti> <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 195 tostacaffè: <respelling> all: tòstacaffè<r:Olivetti><r:DiPI|tosto> <end> SELF_ACCENTED
+Page 196 trinciapolli: <respelling> all: trìnciapólli<r:Olivetti> <end> NEED_ACCENT
+Page 197 turabottiglie: <respelling> all: tùrabottìglie<r:Olivetti><r:DiPI> <end> NEED_ACCENT
+Page 198 voltafieno: <respelling> all: vòltafièno,vòltafiéno<r:Olivetti><r:DiPI|fieno> <end> EXISTING
+Page 199 voltagabbana: <respelling> all: vòltagabbàna<r:Olivetti> <end> NEED_ACCENT
+Page 200 vuotacessi: <respelling> all: vuòtacèssi<r:Olivetti> <end> NEED_ACCENT HIATUS
+Page 201 vuotamele: <respelling> all: vuòtaméle<r:Olivetti><r:DiPI> <end> NEED_ACCENT HIATUS
+Page 202 vuotazucchine: <respelling> all: vuòtadzucchìne,#vuòtatsucchìne<r:Olivetti><r:DiPI> <end> NEED_ACCENT Z HIATUS
 Elapsed time: 0 mins 21.10 secs
 Ending at Mon Jul 12 00:27:41 2021
