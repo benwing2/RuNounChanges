@@ -103,6 +103,13 @@ local prepositions = {
 	"fra ",
 }
 
+local no_split_apostrophe_words = {
+	["c'è"] = true,
+	["c'era"] = true,
+	["c'erano"] = true,
+}
+
+
 -- The main entry point.
 function export.show(frame)
 	local poscat = frame.args[1]
@@ -143,11 +150,17 @@ function export.show(frame)
 			heads = {pagename}
 		end
 	else
-		local auto_linked_head = require(romut_module).add_lemma_links(pagename, args.splithyph)
+		local romut = require(romut_module)
+		local auto_linked_head = romut.add_links_to_multiword_term(pagename, args.splithyph,
+			no_split_apostrophe_words)
 		if #heads == 0 then
 			heads = {auto_linked_head}
 		else
-			for _, head in ipairs(heads) do
+			for i, head in ipairs(heads) do
+				if head:find("^~") then
+					head = romut.apply_link_modifiers(auto_linked_head, usub(head, 2))
+					heads[i] = head
+				end
 				if head == auto_linked_head then
 					track("redundant-head")
 				end
