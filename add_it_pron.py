@@ -123,10 +123,15 @@ def process_page(index, page, spec):
     return
 
   def construct_new_pron_template():
-    if args.old_it_ipa:
-      return "{{it-IPA|%s}}" % "|".join(prons), "* "
+    pron_arg = "|".join(prons)
+    if pron_arg == pagetitle:
+      pron_arg = ""
     else:
-      return "{{it-pr|%s}}" % "|".join(prons), ""
+      pron_arg = "|" + pron_arg
+    if args.old_it_ipa:
+      return "{{it-IPA%s}}" % pron_arg, "* "
+    else:
+      return "{{it-pr%s}}" % pron_arg, ""
 
   def insert_into_existing_pron_section(k):
     parsed = blib.parse_text(subsections[k])
@@ -181,9 +186,18 @@ def process_page(index, page, spec):
         if origt != unicode(t):
           # Make sure we're not removing references
           if "<ref:" in origt and not args.override_refs:
-            pagemsg("WARNING: Saw existing refs not in new refs, not removing: existing=%s, new=%s" % (
-              origt, unicode(t)))
-            return False
+            origrefs = set()
+            newrefs = set()
+            ref_regex = r"<ref:(?:[^<>]*|<<[^<>]*>>|<[^<>]*>)*>"
+            for m in re.finditer(ref_regex, origt):
+              origrefs.add(m.group(0))
+            for m in re.finditer(ref_regex, unicode(t)):
+              newrefs.add(m.group(0))
+            orig_refs_not_in_new = origrefs - newrefs
+            if len(orig_refs_not_in_new) > 0:
+              pagemsg("WARNING: Saw existing refs %s not in new refs, not removing: existing=%s, new=%s" % (
+                "".join(orig_refs_not_in_new), origt, unicode(t)))
+              return False
 
           # Make sure we're not removing audio or other modifiers
           if re.search("<(audio|hmp|rhyme|hyph|pre|post):", origt) and not args.override_refs:
@@ -342,7 +356,7 @@ def process_page(index, page, spec):
         if re.search(r"<references\s*/?\s*>", subsections[k]):
           pagemsg("Already found <references /> in ===References=== section %s" % (k // 2))
         else:
-          subsections[k] = "<references />\n" + subsections[k]
+          subsections[k] += "<references />\n"
           notes.append("add <references /> to existing ===References=== section for pron footnotes")
         break
     else: # no break
