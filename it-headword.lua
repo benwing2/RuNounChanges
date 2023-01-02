@@ -183,7 +183,7 @@ function export.show(frame)
 	}
 
 	local is_suffix = false
-	if pagename:find("^%-") then
+	if pagename:find("^%-") and poscat ~= "suffix forms" then
 		is_suffix = true
 		data.pos_category = "suffixes"
 		local singular_poscat = poscat:gsub("s$", "")
