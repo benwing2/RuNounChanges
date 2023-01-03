@@ -54,8 +54,8 @@ local quality = AC .. GR
 local quality_c = "[" .. quality .. "]"
 local accent = stress .. quality .. CFLEX .. DOTOVER .. DOTUNDER .. LINEUNDER
 local accent_c = "[" .. accent .. "]"
-local glide = "jw"
-local liquid = "lr"
+local glide = "jwJW"
+local liquid = "lrLR"
 local tie = "‿⁀'"
 local W = "[" .. glide .. "]"
 local W_OR_TIE = "[" .. glide .. tie .. "]"
@@ -69,7 +69,7 @@ local V = "[" .. vowel .. "]"
 local V_NOT_HIGH = "[" .. vowel_not_high .. "]"
 local V_NOT_I = "[" .. vowel_not_i .. "]"
 local V_NOT_U = "[" .. vowel_not_u .. "]"
-local VW = "[" .. vowel .. "jw]"
+local VW = "[" .. vowel .. glide .. "]"
 local NV = "[^" .. vowel .. "]"
 local charsep_not_tie = accent .. "." .. SYLDIV
 local charsep_not_tie_c = "[" .. charsep_not_tie .. "]"
@@ -630,6 +630,8 @@ function export.to_phonemic(text, pagename)
 	-- Divide before the last consonant (possibly followed by a glide). We then move the syllable division marker
 	-- leftwards over clusters that can form onsets.
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*[‿⁀]?" .. C_OR_TIE .. "-)(" .. C .. W_OR_TIE .. "*" .. V .. ")", "%1.%2")
+	-- The previous regex divided VjjV as V.jjV but we want Vj.jV; same for VwwV. Correct this now.
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*[‿⁀]?)%.(" .. W .. ")([‿⁀]?)(%2[‿⁀]?" .. V .. ")", "%1%2.%3%4")
 	-- Existing hyphenations of [[atlante]], [[Betlemme]], [[genetliaco]], [[betlemita]] all divide as .tl,
 	-- and none divide as t.l. No examples of -dl- but it should be the same per
 	-- http://www.italianlanguageguide.com/pronunciation/syllabication.asp.
