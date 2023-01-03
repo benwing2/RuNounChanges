@@ -280,4 +280,183 @@ function export.split_alternating_runs_on_comma(run, tempcomma)
 end
 
 
+function export.parse_inline_modifiers(arg, param_mods, generate_obj, parse_err, split_on_comma)
+	local function get_valid_prefixes()
+		local valid_prefixes = {}
+		for param_mod, _ in pairs(param_mods) do
+			table.insert(valid_prefixes, param_mod)
+		end
+		table.sort(valid_prefixes)
+		return valid_prefixes
+	end
+
+	if not parse_err then
+		parse_err = function(msg)
+			error(msg .. ": " .. arg)
+		end
+	end
+
+	local segments = export.parse_balanced_segment_run(arg, "<", ">")
+
+	local function parse_group(group)
+		local dest_obj = generate_obj(group[1])
+		for k = 2, #group - 1, 2 do
+			if group[k + 1] ~= "" then
+				parse_err("Extraneous text '" .. group[k + 1] .. "' after modifier")
+			end
+			local modtext = group[k]:match("^<(.*)>$")
+			if not modtext then
+				parse_err("Internal error: Modifier '" .. group[k] .. "' isn't surrounded by angle brackets")
+			end
+			local prefix, val = modtext:match("^([a-zA-Z0-9+_-]+):(.*)$")
+			if not prefix then
+				local valid_prefixes = get_valid_prefixes()
+				for i, valid_prefix in ipairs(valid_prefixes) do
+					valid_prefixes[i] = "'" .. valid_prefix .. ":'"
+				end
+				parse_err("Modifier " .. group[k] .. " lacks a prefix, should begin with one of " ..
+					require("Module:table").serialCommaJoin(valid_prefixes))
+			end
+			if param_mods[prefix] then
+				local key = param_mods[prefix].item_dest or prefix
+				local convert = param_mods[prefix].convert
+				local converted
+				if convert then
+					converted = convert(val, parse_err)
+				else
+					converted = val
+				end
+				local store = param_mods[prefix].store
+				if not store then
+					if dest_obj[key] then
+						parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. group[k])
+					end
+					dest_obj[key] = converted
+				elseif store == "insert" then
+					if not dest_obj[key] then
+						dest_obj[key] = {}
+					end
+					table.insert(dest_obj[key], converted)
+				elseif store == "insert-flattened" then
+					if not dest_obj[key] then
+						dest_obj[key] = {}
+					end
+					for _, obj in ipairs(converted) do
+						table.insert(dest_obj[key], obj)
+					end
+				else
+					store(dest_obj, key, converted, parse_err)
+				end
+			else
+				local valid_prefixes = get_valid_prefixes()
+				for i, valid_prefix in ipairs(valid_prefixes) do
+					valid_prefixes[i] = "'" .. valid_prefix .. "'"
+				end
+				parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. group[k]
+					.. ", should be " .. require("Module:table").serialCommaJoin(valid_prefixes))
+			end
+		end
+		return dest_obj
+	end
+
+	if not split_on_comma then
+		return parse_group(segments)
+	else
+		local retval = {}
+		local comma_separated_groups =
+			split_on_comma and put.split_alternating_runs_on_comma(segments) or {segments}
+		for j, group in ipairs(comma_separated_groups) do
+			table.insert(retval, dest_obj)
+		end
+		return retval
+	end
+end
+
+
+local function parse_rhyme(arg, put, parse_err)
+	local function generate_obj(term)
+		return {rhyme = term}
+	end
+	local param_mods = {
+		s = {
+			item_dest = "num_syl",
+			convert = function(arg)
+				local nsyls = rsplit(arg, ",")
+				for i, nsyl in ipairs(nsyls) do
+					if not nsyl:find("^[0-9]+$") then
+						parse_err("Number of syllables '" .. nsyl .. "' should be numeric")
+					end
+					nsyls[i] = tonumber(nsyl)
+				end
+				return nsyls
+			end,
+		},
+	}
+
+	return parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods)
+end
+
+
+local function parse_hyph(arg, put, parse_err)
+	-- None other than qualifiers
+	local param_mods = {}
+
+	return parse_pron_modifier(arg, put, parse_err, generate_hyph_obj, param_mods)
+end
+
+
+local function parse_homophone(arg, put, parse_err)
+	local function generate_obj(term)
+		return {term = term}
+	end
+	local param_mods = {
+		t = {
+			-- We need to store the <t:...> inline modifier into the "gloss" key of the parsed term,
+			-- because that is what [[Module:links]] (called from [[Module:homophones]]) expects.
+			item_dest = "gloss",
+		},
+		gloss = {},
+		pos = {},
+		alt = {},
+		lit = {},
+		id = {},
+		g = {
+			-- We need to store the <g:...> inline modifier into the "genders" key of the parsed term,
+			-- because that is what [[Module:links]] (called from [[Module:homophones]]) expects.
+			item_dest = "genders",
+			convert = function(arg)
+				return rsplit(arg, ",")
+			end,
+		},
+	}
+
+	return parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods)
+end
+
+
+local function generate_audio_obj(arg)
+	local file, gloss
+	if arg:find("#") then
+		file, gloss = arg:match("^(.-)%s*#%s*(.*)$")
+	else
+		file, gloss = arg:match("^(.-)%s*;%s*(.*)$")
+	end
+	if not file then
+		file = arg
+		gloss = "Audio"
+	end
+	return {file = file, gloss = gloss}
+end
+
+
+local function parse_audio(arg, put, parse_err)
+	-- None other than qualifiers
+	local param_mods = {}
+
+	-- Don't split on comma because some filenames have embedded commas not followed by a space
+	-- (typically followed by an underscore).
+	return parse_pron_modifier(arg, put, parse_err, generate_audio_obj, param_mods, "no split on comma")
+end
+
+
 return export
