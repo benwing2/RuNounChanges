@@ -121,6 +121,7 @@ function export.show(frame)
 		["head"] = {list = true},
 		["id"] = {},
 		["sort"] = {},
+		["apoc"] = {type = "boolean"},
 		["splithyph"] = {type = "boolean"},
 		["nolinkhead"] = {type = "boolean"},
 		["json"] = {type = "boolean"},
@@ -186,7 +187,7 @@ function export.show(frame)
 	if pagename:find("^%-") and poscat ~= "suffix forms" then
 		is_suffix = true
 		data.pos_category = "suffixes"
-		local singular_poscat = poscat:gsub("s$", "")
+		local singular_poscat = require("Module:string utilities").singularize(poscat)
 		table.insert(data.categories, langname .. " " .. singular_poscat .. "-forming suffixes")
 		table.insert(data.inflections, {label = singular_poscat .. "-forming suffix"})
 	end
@@ -195,6 +196,19 @@ function export.show(frame)
 
 	if pos_functions[poscat] then
 		pos_functions[poscat].func(args, data, tracking_categories, frame, is_suffix)
+	end
+
+	if args.apoc then
+		-- Apocopated form of a term; do this after calling pos_functions[], because the function might modify
+		-- data.pos_category.
+		local pos = data.pos_category
+		if not pos:find(" forms") then
+			-- Apocopated forms are non-lemma forms.
+			local singular_poscat = require("Module:string utilities").singularize(pos)
+			data.pos_category = singular_poscat .. " forms"
+		end
+		-- If this is a suffix, insert label 'apocopated' after 'FOO-forming suffix', otherwise insert at the beginning.
+		table.insert(data.inflections, is_suffix and 2 or 1, {label = glossary_link("apocopated")})
 	end
 
 	if args.json then
@@ -439,8 +453,6 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 		if #args_pl > 0 then
 			error("Can't specify plurals of apocopated " .. pos)
 		end
-		table.insert(data.inflections, {label = glossary_link("apocopated")})
-		data.pos_category = pos .. " forms"
 	else
 		if is_plurale_tantum then
 			-- both singular and plural
@@ -732,7 +744,6 @@ local function get_noun_params(nountype)
 	return {
 		[1] = {list = "g", required = nountype ~= "proper", default = "?"},
 		[2] = {list = "pl"},
-		["apoc"] = {type = "boolean"}, --apocopated
 		["g_qual"] = {list = "g=_qual", allow_holes = true},
 		["pl_qual"] = {list = "pl=_qual", allow_holes = true},
 		["pl_g"] = {list = "pl=_g", allow_holes = true},
@@ -825,11 +836,9 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 	end
 	if args.apoc then
 		-- apocopated adjective
-		table.insert(data.inflections, {label = glossary_link("apocopated")})
 		if args.sp or #args.f > 0 or #args.pl > 0 or #args.mpl > 0 or #args.fpl > 0 then
 			error("Can't specify inflections with an apocopated adjective")
 		end
-		data.pos_category = pos .. " forms"
 	end
 	if args.inv or args.apoc then
 		--
@@ -968,7 +977,6 @@ end
 local function get_adjective_params(adjtype)
 	local params = {
 		["inv"] = {type = "boolean"}, --invariable
-		["apoc"] = {type = "boolean"}, --apocopated
 		["sp"] = {}, -- special indicator: "first", "first-last", etc.
 		["f"] = {list = true}, --feminine form(s)
 		["f_qual"] = {list = "f=_qual", allow_holes = true},
@@ -1052,18 +1060,12 @@ pos_functions["adjective-like pronouns"] = {
 }
 
 pos_functions["cardinal invariable"] = {
-	params = {
-		["apoc"] = {type = "boolean"},
-	},
+	params = {},
 	func = function(args, data, tracking_categories)
 		data.pos_category = "numerals"
 		table.insert(data.categories, langname .. " cardinal numbers")
 		table.insert(data.categories, langname .. " indeclinable numerals")
 		table.insert(data.inflections, {label = glossary_link("invariable")})
-		if args.apoc then
-			table.insert(data.inflections, {label = glossary_link("apocopated")})
-			data.pos_category = "numeral forms"
-		end
 	end,
 }
 
@@ -1326,7 +1328,6 @@ pos_functions["suffix forms"] = {
 		[1] = {required = true},
 		["g"] = {list = true},
 		["g_qual"] = {list = "g=_qual", allow_holes = true},
-		["apoc"] = {type = "boolean"}, --apocopated
 	},
 	func = function(args, data, tracking_categories, frame)
 		data.genders = {}
@@ -1342,9 +1343,6 @@ pos_functions["suffix forms"] = {
 		end
 
 		table.insert(data.inflections, {label = "non-lemma form of " .. args[1] .. "-forming suffix"})
-		if args.apoc then
-			table.insert(data.inflections, {label = glossary_link("apocopated")})
-		end
 	end,
 }
 
