@@ -6,6 +6,8 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname, pname
 
+change_alter_to_alt = True
+
 def process_text_in_section(sectext, pagemsg):
   notes = []
 
@@ -19,11 +21,12 @@ def process_text_in_section(sectext, pagemsg):
     if re.search(r"==\s*Alternative forms\s*==", subsections[k]):
       subsectext = subsections[k + 1]
       parsed = blib.parse_text(subsectext)
-      for t in parsed.filter_templates():
+      # Don't recurse into templates or we will change {{m}} to {{alt}} inside a param
+      for t in parsed.filter_templates(recursive=False):
         def getp(param):
           return getparam(t, param)
         tn = tname(t)
-        if tn == "alter":
+        if tn == "alter" and change_alter_to_alt:
           lang = getparam(t, "1")
           blib.set_template_name(t, "alt")
           notes.append("rename {{alter|%s}} to {{alt|%s}}" % (lang, lang))
@@ -99,10 +102,12 @@ def process_text_in_section(sectext, pagemsg):
         return retval
 
       def merge_alt(m, could_parse):
-        mergedt = list(blib.parse_text("{{alt|foo}}").filter_templates())[0]
+        mergedt = None
+        altt_name = "alt"
+        origline = m.group(0)
         preceding_space, before, orig_altforms, after = m.groups()
         altforms = orig_altforms.strip()
-        altforms = re.split(r"(\{\{alt\|(?:\{\{[^{}]*\}\}|[^{}])*\}\})", altforms)
+        altforms = re.split(r"(\{\{(?:alt|alter)\|(?:\{\{[^{}]*\}\}|[^{}])*\}\})", altforms)
         thislang = None
         index = 1
         alt_qualifiers = []
@@ -142,12 +147,14 @@ def process_text_in_section(sectext, pagemsg):
           # Copy lang or verify it's same as previously observed
           lang = getparam(altt, "1")
           if i == 1:
+            altt_name = tname(altt)
+            mergedt = list(blib.parse_text("{{%s|foo}}" % altt_name).filter_templates())[0]
             mergedt.add("1", lang)
             thislang = lang
           elif thislang != lang:
             pagemsg("WARNING: Saw different language %s on line from first language %s: %s" %
-              (lang, thislang, m.group(0)))
-            return m.group(0)
+              (lang, thislang, origline))
+            return origline
 
           # Copy terms, moving number of named params and finding maximum term index
           maxparam = 0
@@ -175,20 +182,20 @@ def process_text_in_section(sectext, pagemsg):
                 mergedt.add(str(pind + index), pv)
             else:
               pagemsg("WARNING: Unrecognized param %s=%s: %s" % (pn, pv, unicode(altt)))
-              return m.group(0)
+              return origline
           index += maxparam
 
         if before:
           before_qualifiers = extract_qualifiers_from_before_after(before, thislang)
           if before_qualifiers is None:
-            pagemsg("Unrecognized before-portion '%s' on {{alt}} line: %s" % (before, m.group(0)))
-            return m.group(0)
+            pagemsg("Unrecognized before-portion '%s' on {{%s}} line: %s" % (before, altt_name, origline))
+            return origline
 
         if after:
           after_qualifiers = extract_qualifiers_from_before_after(after, thislang)
           if after_qualifiers is None:
-            pagemsg("Unrecognized after-portion '%s' on {{alt}} line: %s" % (after, m.group(0)))
-            return m.group(0)
+            pagemsg("Unrecognized after-portion '%s' on {{%s}} line: %s" % (after, altt_name, origline))
+            return origline
 
         qualifiers = before_qualifiers + alt_qualifiers + after_qualifiers
         if qualifiers:
@@ -199,19 +206,23 @@ def process_text_in_section(sectext, pagemsg):
             mergedt.add(str(index), qualifier)
 
         if len(altforms) > 3:
-          notes.append("merge multiple {{alt|%s}} into one" % thislang)
+          notes.append("merge multiple {{%s|%s}} into one" % (altt_name, thislang))
         if before:
-          notes.append("merge separate leading qualifiers into {{alt|%s}}" % thislang)
+          notes.append("merge separate leading qualifiers into {{%s|%s}}" % (altt_name, thislang))
         if after:
-          notes.append("merge separate trailing qualifiers into {{alt|%s}}" % thislang)
+          notes.append("merge separate trailing qualifiers into {{%s|%s}}" % (altt_name, thislang))
         if len(altforms) <= 3 and not after and orig_altforms != unicode(mergedt):
           if orig_altforms.strip() == unicode(mergedt):
             notes.append("remove trailing space in ==Alternative forms==")
           else:
-            notes.append("clean up params in {{alt|%s}}" % thislang)
+            notes.append("clean up params in {{%s|%s}}" % (altt_name, thislang))
         if preceding_space != " ":
           notes.append("add missing space after * in ==Alternative forms==")
         could_parse[0] = True
+        if mergedt is None:
+          pagemsg("WARNING: Internal error: Didn't find any {{alt}}/{{alter}} templates in line: %s" %
+              origline)
+          return origline
         return "* " + unicode(mergedt)
 
       lines = subsectext.split("\n")
@@ -221,7 +232,7 @@ def process_text_in_section(sectext, pagemsg):
         def do_merge_alt(m):
           return merge_alt(m, could_parse)
         could_parse[0] = False
-        line = re.sub(r"^\*?(\s*)(.*?):*\s*((?:\{\{alt\|(?:\{\{[^{}]*\}\}|[^{}])*\}\},*\s*)+):*\s*(.*?)$", do_merge_alt,
+        line = re.sub(r"^\*?(\s*)(.*?):*\s*((?:\{\{(?:alt|alter)\|(?:\{\{[^{}]*\}\}|[^{}])*\}\},*\s*)+):*\s*(.*?)$", do_merge_alt,
             line, 0, re.UNICODE)
         return line, could_parse[0]
 

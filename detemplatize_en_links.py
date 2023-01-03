@@ -43,6 +43,21 @@ def process_text_on_page(index, pagetitle, text):
         # inside of a one-part templated link.
         line = re.sub(r"\{\{l\|en\|((?:[^{}|\[\]]|\[\[[^{}\[\]]*\]\])*?)\}\}", replace_templated, line)
 
+        # Now replace two-part templated English links with raw ones.
+        def replace_two_part_templated(m):
+          linktext, displaytext = m.groups()
+          if linktext == pagetitle:
+            # Don't change if link is to same page.
+            return m.group(0)
+          if displaytext.startswith(linktext):
+            # Can use a shortcut in this case, e.g. {{l|en|olive tree|olive trees}} -> [[olive tree]]s.
+            notes.append("replace two-part templated link to English term in defns with one-part raw link with extension text")
+            return "[[%s]]%s" % (linktext, displaytext[len(linktext):])
+          else:
+            notes.append("replace two-part templated link to English term in defns with two-part raw link")
+            return "[[%s|%s]]" % (linktext, displaytext)
+        line = re.sub(r"\{\{l\|en\|([^{}|\[\]=]*)\|([^{}|\[\]=]*)\}\}", replace_two_part_templated, line)
+
         # Now, replace raw English self-links with templated ones.
         template_split_re = r"(\{\{(?:[^{}]|\{\{[^{}]*\}\})*\}\})"
         # Split templates and only change non-template text
@@ -75,8 +90,6 @@ def process_text_on_page(index, pagetitle, text):
 parser = blib.create_argparser("Fix raw self links to English terms on the same page",
   include_pagefile=True, include_stdin=True)
 parser.add_argument("--lang", help="Language to do (optional)")
-parser.add_argument("--convert-raw-self-links", action="store_true",
-    help="Convert raw self-links to [[#English|LINK]] or {{l|en|LINK}} rather than detemplatize templated links")
 parser.add_argument("--self-links-use-raw", action="store_true",
     help="Self-links use [[#English|LINK]] rather than {{l|en|LINK}}")
 parser.add_argument("--partial-page", action="store_true",
