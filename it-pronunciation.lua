@@ -1265,13 +1265,13 @@ local function generate_hyphenation_from_phonemic_output(ipa_full_output, pagena
 end
 
 
-local function parse_rhyme(arg, iut, parse_err)
-	if not iut then
-		iut = require("Module:inflection utilities")
+local function parse_rhyme(arg, put, parse_err)
+	if not put then
+		put = require("Module:parse utilities")
 	end
 	local retval = {}
-	local rhyme_segments = iut.parse_balanced_segment_run(arg, "<", ">")
-	local comma_separated_groups = iut.split_alternating_runs(rhyme_segments, "%s*,%s*")
+	local rhyme_segments = put.parse_balanced_segment_run(arg, "<", ">")
+	local comma_separated_groups = put.split_alternating_runs(rhyme_segments, "%s*,%s*")
 	for _, group in ipairs(comma_separated_groups) do
 		local rhyme_obj = {rhyme = group[1]}
 		for j = 2, #group - 1, 2 do
@@ -1315,13 +1315,13 @@ local function parse_rhyme(arg, iut, parse_err)
 end
 
 
-local function parse_hyph(arg, iut, parse_err)
-	if not iut then
-		iut = require("Module:inflection utilities")
+local function parse_hyph(arg, put, parse_err)
+	if not put then
+		put = require("Module:parse utilities")
 	end
 	local retval = {}
-	local hyph_segments = iut.parse_balanced_segment_run(arg, "<", ">")
-	local comma_separated_groups = iut.split_alternating_runs(hyph_segments, "%s*,%s*")
+	local hyph_segments = put.parse_balanced_segment_run(arg, "<", ">")
+	local comma_separated_groups = put.split_alternating_runs(hyph_segments, "%s*,%s*")
 	for _, group in ipairs(comma_separated_groups) do
 		local hyph_obj = {syllabification = group[1], hyph = rsplit(group[1], "%.")}
 		for j = 2, #group - 1, 2 do
@@ -1352,13 +1352,13 @@ local function parse_hyph(arg, iut, parse_err)
 end
 
 
-local function parse_homophone(arg, iut, parse_err)
-	if not iut then
-		iut = require("Module:inflection utilities")
+local function parse_homophone(arg, put, parse_err)
+	if not put then
+		put = require("Module:parse utilities")
 	end
 	local retval = {}
-	local hmp_segments = iut.parse_balanced_segment_run(arg, "<", ">")
-	local comma_separated_groups = iut.split_alternating_runs(hmp_segments, "%s*,%s*")
+	local hmp_segments = put.parse_balanced_segment_run(arg, "<", ">")
+	local comma_separated_groups = put.split_alternating_runs(hmp_segments, "%s*,%s*")
 	for _, group in ipairs(comma_separated_groups) do
 		local hmp_obj = {term = group[1]}
 		for j = 2, #group - 1, 2 do
@@ -1409,17 +1409,17 @@ function export.show_pr(frame)
 	-- Parse the arguments.
 	local respellings = #args[1] > 0 and args[1] or {"+"}
 	local parsed_respellings = {}
-	local iut
+	local put
 	for i, respelling in ipairs(respellings) do
 		if respelling:find("<") then
 			local function parse_err(msg)
 				error(msg .. ": " .. i .. "= " .. respelling)
 			end
-			if not iut then
-				iut = require("Module:inflection utilities")
+			if not put then
+				put = require("Module:parse utilities")
 			end
-			local segments = iut.parse_balanced_segment_run(respelling, "<", ">")
-			local comma_separated_groups = iut.split_alternating_runs(segments, "%s*,%s*")
+			local segments = put.parse_balanced_segment_run(respelling, "<", ">")
+			local comma_separated_groups = put.split_alternating_runs(segments, "%s*,%s*")
 			local parsed = {terms = {}, audio = {}}
 			for i, group in ipairs(comma_separated_groups) do
 				local term = {term = group[1], ref = {}, qual = {}}
@@ -1444,7 +1444,7 @@ function export.show_pr(frame)
 							parse_err("Modifier '" .. prefix .. "' should occur after the last comma-separated term")
 						end
 						if prefix == "rhyme" then
-							local parsed_rhymes = parse_rhyme(arg, iut, parse_err)
+							local parsed_rhymes = parse_rhyme(arg, put, parse_err)
 							if not parsed.rhyme then
 								parsed.rhyme = parsed_rhymes
 							else
@@ -1453,7 +1453,7 @@ function export.show_pr(frame)
 								end
 							end
 						elseif prefix == "hyph" then
-							local parsed_hyphs = parse_hyph(arg, iut, parse_err)
+							local parsed_hyphs = parse_hyph(arg, put, parse_err)
 							if not parsed.hyph then
 								parsed.hyph = parsed_hyphs
 							else
@@ -1462,7 +1462,7 @@ function export.show_pr(frame)
 								end
 							end
 						elseif prefix == "hmp" then
-							local parsed_homophones = parse_homophone(arg, iut, parse_err)
+							local parsed_homophones = parse_homophone(arg, put, parse_err)
 							if not parsed.hmp then
 								parsed.hmp = parsed_homophones
 							else
