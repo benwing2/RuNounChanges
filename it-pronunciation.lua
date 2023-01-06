@@ -1434,10 +1434,12 @@ function export.show_pr(frame)
 					local prefix, arg = modtext:match("^([a-z]+):(.*)$")
 					if not prefix then
 						parse_err("Modifier " .. group[j] .. " lacks a prefix, should begin with one of " ..
-							"'pre:', 'post:', 'ref:', 'bullets:', 'audio:', 'rhyme:', 'hyph:', 'hmp:' or 'qual:'")
+							"'pre:', 'post:', 'ref:', 'r:', 'bullets:', 'audio:', 'rhyme:', 'hyph:', 'hmp:' or 'qual:'")
 					end
 					if prefix == "ref" or prefix == "qual" then
 						table.insert(term[prefix], arg)
+					elseif prefix == "r" then
+						table.insert(term.ref, require("Module:it-common").parse_abbreviated_references_spec(arg))
 					elseif prefix == "pre" or prefix == "post" or prefix == "bullets" or prefix == "rhyme"
 						or prefix == "hyph" or prefix == "hmp" or prefix == "audio" then
 						if i < #comma_separated_groups then
@@ -1492,7 +1494,7 @@ function export.show_pr(frame)
 						end
 					else
 						parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. group[j]
-							.. ", should be one of 'pre', 'post', 'ref', 'bullets', 'audio', 'rhyme', 'hyph', 'hmp'"
+							.. ", should be one of 'pre', 'post', 'ref', 'r', 'bullets', 'audio', 'rhyme', 'hyph', 'hmp'"
 							.. " or 'qual'")
 					end
 				end
