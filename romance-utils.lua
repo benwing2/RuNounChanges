@@ -4,6 +4,7 @@ local rfind = mw.ustring.find
 local rsubn = mw.ustring.gsub
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
+local u = mw.ustring.char
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -247,11 +248,10 @@ end
 export.add_lemma_links = export.add_links_to_multiword_term
 
 
--- Replace brackets in `term` with equivalent HTML escapes so that the term can be displayed in an error message
--- without interpretation.
+-- Ensure that brackets display literally in error messages. Replacing with equivalent HTML escapes doesn't work
+-- because they are displayed literally; but inserting a Unicode word-joiner symbol works.
 local function escape_brackets(term)
-	term = term:gsub("%[", "&#91;")
-	term = term:gsub("%]", "&#93;")
+	term = term:gsub("%[%[", "[" .. u(0x2060) .. "[")
 	return term
 end
 
@@ -262,40 +262,83 @@ end
 -- also be used to replace a span of adjacent separately-linked words to a single multiword lemma. The format of
 -- `modifier_spec` is one or more semicolon-separated subterm specs, where each such spec is of the form
 -- SUBTERM:DEST, where SUBTERM is one or more words in the `linked_term` but without brackets in them, and DEST is the
--- corresponding link destination to link the subterm to.
+-- corresponding link destination to link the subterm to. Any occurrence of # in DEST is replaced with SUBTERM.
+-- Alternatively, a single modifier spec can be of the form BEGIN[FROM:TO], which is equivalent to writing
+-- BEGINFROM:BEGINTO (see example below).
+--
+-- For example, given the source phrase [[il bue che dice cornuto all'asino]] "the pot calling the kettle black"
+-- (literally "the ox that calls the donkey horned/cuckolded"), the result of calling add_links_to_multiword_term()
+-- is [[il]] [[bue]] [[che]] [[dice]] [[cornuto]] [[all']][[asino]]. With a modifier_spec of 'dice:dire', the result
+-- is [[il]] [[bue]] [[che]] [[dire|dice]] [[cornuto]] [[all']][[asino]]. Here, based on the modifier spec, the
+-- non-lemma form [[dice]] is replaced with the two-part link [[dire|dice]].
+-- 
+-- Another example: given the source phrase [[chi semina vento raccoglie tempesta]] "sow the wind, reap the whirlwind"
+-- (literally (he) who sows wind gathers [the] tempest"). The result of calling add_links_to_multiword_term() is
+-- [[chi]] [[semina]] [[vento]] [[raccoglie]] [[tempesta]], and with a modifier_spec of 'semina:#re; raccoglie:#re',
+-- the result is [[chi]] [[seminare|semina]] [[vento]] [[raccogliere|raccoglie]] [[tempesta]]. Here we use the #
+-- notation to stand for the non-lemma form in the destination link.
+--
+-- A more complex example is [[se non hai altri moccoli puoi andare a letto al buio]], which becomes
+-- [[se]] [[non]] [[hai]] [[altri]] [[moccoli]] [[puoi]] [[andare]] [[a]] [[letto]] [[al]] [[buio]] after calling
+-- add_links_to_multiword_term(). With the following modifier_spec:
+-- 'hai:avere; altr[i:o]; moccol[i:o]; puoi: potere; andare a letto:#; al buio:#', the result of applying the spec is
+-- [[se]] [[non]] [[avere|hai]] [[altro|altri]] [[moccolo|moccoli]] [[potere|puoi]] [[andare a letto]] [[al buio]].
+-- Here, we rely on the alternative notation mentioned above for e.g. 'altr[i:o]', which is equivalent to 'altri:altro',
+-- and link multiword subterms using e.g. 'andare a letto:#'. (The code knows how to handle multiword subexpressions
+-- properly, and if the link text and destination are the same, only a single-part link is formed.)
 function export.apply_link_modifiers(linked_term, modifier_spec)
 	local split_modspecs = rsplit(modifier_spec, "%s*;%s*")
 	for j, modspec in ipairs(split_modspecs) do
-		local modspec_parts = rsplit(modspec, "%s*:%s*")
-		if #modspec_parts ~= 2 then
-			error(("Single modifier spec %s should be of the form SUBTERM:LEMMA where SUBTERM is one or more words in a multiword term and LEMMA is the destination to link the subterm to"):
+		local subterm, dest
+		local begin, end_from, end_to = modspec:match("^([^:]*)%[(.-):(.*)%]$")
+		if begin then
+			subterm = begin .. end_from
+			dest = begin .. end_to
+		else
+			subterm, dest = modspec:match("^(.-)%s*:%s*(.*)$")
+		end
+		if not subterm then
+			error(("Single modifier spec %s should be of the form SUBTERM:DEST where SUBTERM is one or more words in a multiword "
+					.. "term and DEST is the destination to link the subterm to, or of the form BEGIN[FROM:TO] which is equivalent to "
+					.. "BEGINFROM:BEGINTO"):
 				format(modspec))
 		end
-		local subterm, dest = unpack(modspec_parts)
-		if subterm:find("[%[%]]") then
-			error(("Subterm '%s' in modifier spec %s cannot have brackets in it"):format(
-				escape_brackets(subterm), escape_brackets(modspec)))
-		end
-		local patut = require("Module:pattern utilities")
-		local escaped_subterm = patut.pattern_escape(subterm)
-		local subterm_re = "%[%[" .. escaped_subterm:gsub("(%%?[ '%-])", "%%]*%1%%[*") .. "%]%]"
-		local expanded_dest
-		if dest:find("#") then
-			expanded_dest = dest:gsub("#", patut.replacement_escape(subterm))
-		end
-		local subterm_replacement
-		if expanded_dest == subterm then
-			subterm_replacement = "[[" .. subterm .. "]]"
+		if subterm == "^" then
+			linked_term = dest:gsub("_", " ") .. linked_term
+		elseif subterm == "$" then
+			linked_term = linked_term .. dest:gsub("_", " ")
 		else
-			subterm_replacement = "[[" .. expanded_dest .. "|" .. subterm .. "]]"
-		end
-
-		local replaced_linked_term = rsubb(linked_term, subterm_re, subterm_replacement)
-		if replaced_linked_term == linked_term then
-			error(("Subterm '%s' could not be located in %slinked expression %s"):format(
-				subterm, j > 1 and "intermediate " or "", escape_brackets(linked_term)))
-		else
-			linked_term = replaced_linked_term
+			if subterm:find("%[") then
+				error(("Subterm '%s' in modifier spec '%s' cannot have brackets in it"):format(
+					escape_brackets(subterm), escape_brackets(modspec)))
+			end
+			if dest:find("%[") then
+				error(("Link destination '%s' in modifier spec '%s' cannot have brackets in it"):format(
+					escape_brackets(dest), escape_brackets(modspec)))
+			end
+			local patut = require("Module:pattern utilities")
+			local escaped_subterm = patut.pattern_escape(subterm)
+			local subterm_re = "%[%[" .. escaped_subterm:gsub("(%%?[ '%-])", "%%]*%1%%[*") .. "%]%]"
+			local expanded_dest
+			if dest:find("#") then
+				expanded_dest = dest:gsub("#", patut.replacement_escape(subterm))
+			else
+				expanded_dest = dest
+			end
+			local subterm_replacement
+			if expanded_dest == subterm then
+				subterm_replacement = "[[" .. subterm .. "]]"
+			else
+				subterm_replacement = "[[" .. expanded_dest .. "|" .. subterm .. "]]"
+			end
+	
+			local replaced_linked_term = rsub(linked_term, subterm_re, subterm_replacement)
+			if replaced_linked_term == linked_term then
+				error(("Subterm '%s' could not be located in %slinked expression %s"):format(
+					subterm, j > 1 and "intermediate " or "", escape_brackets(linked_term)))
+			else
+				linked_term = replaced_linked_term
+			end
 		end
 	end
 
