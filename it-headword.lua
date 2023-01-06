@@ -22,6 +22,7 @@ local force_cat = false -- for testing; if true, categories appear in non-mainsp
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local romut_module = "Module:romance utilities"
+local com = require("Module:it-common")
 local lang = require("Module:languages").getByCode("it")
 local langname = lang:getCanonicalName()
 
@@ -71,37 +72,6 @@ local function check_all_missing(forms, plpos, tracking_categories)
 		end
 	end
 end
-
-local prepositions = {
-	-- a, da + optional article
-	"d?al? ",
-	"d?all[oae] ",
-	"d?all'",
-	"d?ai ",
-	"d?agli ",
-	-- di, in + optional article
-	"di ",
-	"d'",
-	"in ",
-	"[dn]el ",
-	"[dn]ell[oae] ",
-	"[dn]ell'",
-	"[dn]ei ",
-	"[dn]egli ",
-	-- su + optional article
-	"su ",
-	"sul ",
-	"sull[oae] ",
-	"sull'",
-	"sui ",
-	"sugli ",
-	-- others
-	"come ",
-	"con ",
-	"per ",
-	"tra ",
-	"fra ",
-}
 
 local no_split_apostrophe_words = {
 	["c'è"] = true,
@@ -217,134 +187,6 @@ function export.show(frame)
 
 	return require("Module:headword").full_headword(data)
 		.. (#tracking_categories > 0 and require("Module:utilities").format_categories(tracking_categories, lang, args.sort, nil, force_cat) or "")
-end
-
--- Generate a default plural form, which is correct for most regular nouns and adjectives.
-local function make_plural(form, gender, special)
-	local plspec
-	if special == "cap*" or special == "cap*+" then
-		plspec = special
-		special = nil
-	end
-	local retval = require(romut_module).handle_multiword(form, special,
-		function(form) return make_plural(form, gender, plspec) end, prepositions)
-	if retval and #retval > 0 then
-		if #retval ~= 1 then
-			error("Internal error: Should have one return value for make_plural: " .. table.concat(retval, ","))
-		end
-		return retval[1]
-	end
-
-	local function check_no_mf()
-		if gender == "mf" or gender == "mfbysense" or gender == "?" then
-			error("With gender=" .. gender .. ", unable to pluralize form '" .. form .. "'"
-				.. (special and " using special=" .. special or "") .. " because its plural is gender-specific")
-		end
-	end
-
-	if plspec == "cap*" or plspec == "cap*+" then
-		check_no_mf()
-		if not form:find("^capo") then
-			error("With special=" .. plspec .. ", form '" .. form .. "' must begin with capo-")
-		end
-		if gender == "m" then
-			form = form:gsub("^capo", "capi")
-		end
-		if plspec == "cap*" then
-			return form
-		end
-	end
-
-	if form:find("io$") then
-		form = form:gsub("io$", "i")
-	elseif form:find("ologo$") then
-		form = form:gsub("o$", "i")
-	elseif form:find("[ia]co$") then
-		form = form:gsub("o$", "i")
-	-- Of adjectives in -co but not in -aco or -ico, there are several in -esco that take -eschi, and various
-	-- others that take -chi: [[adunco]], [[anficerco]], [[azteco]], [[bacucco]], [[barocco]], [[basco]],
-	-- [[bergamasco]], [[berlusco]], [[bianco]], [[bieco]], [[bisiacco]], [[bislacco]], [[bisulco]], [[brigasco]],
-	-- [[brusco]], [[bustocco]], [[caduco]], [[ceco]], [[cecoslovacco]], [[cerco]], [[chiavennasco]], [[cieco]],
-	-- [[ciucco]], [[comasco]], [[cosacco]], [[cremasco]], [[crucco]], [[dificerco]], [[dolco]], [[eterocerco]],
-	-- [[etrusco]], [[falisco]], [[farlocco]], [[fiacco]], [[fioco]], [[fosco]], [[franco]], [[fuggiasco]], [[giucco]],
-	-- [[glauco]], [[gnocco]], [[gnucco]], [[guatemalteco]], [[ipsiconco]], [[lasco]], [[livignasco]], [[losco]], 
-	-- [[manco]], [[monco]], [[monegasco]], [[neobarocco]], [[olmeco]], [[parco]], [[pitocco]], [[pluriconco]], 
-	-- [[poco]], [[polacco]], [[potamotoco]], [[prebarocco]], [[prisco]], [[protobarocco]], [[rauco]], [[ricco]], 
-	-- [[risecco]], [[rivierasco]], [[roco]], [[roiasco]], [[sbieco]], [[sbilenco]], [[sciocco]], [[secco]],
-	-- [[semisecco]], [[slovacco]], [[somasco]], [[sordocieco]], [[sporco]], [[stanco]], [[stracco]], [[staricco]],
-	-- [[taggiasco]], [[tocco]], [[tosco]], [[triconco]], [[trisulco]], [[tronco]], [[turco]], [[usbeco]], [[uscocco]],
-	-- [[uto-azteco]], [[uzbeco]], [[valacco]], [[vigliacco]], [[zapoteco]].
-	--
-	-- Only the following take -ci: [[biunivoco]], [[dieco]], [[equivoco]], [[estrinseco]], [[greco]], [[inequivoco]],
-	-- [[intrinseco]], [[italigreco]], [[magnogreco]], [[meteco]], [[neogreco]], [[osco]] (either -ci or -chi),
-	-- [[petulco]] (either -chi or -ci), [[plurivoco]], [[porco]], [[pregreco]], [[reciproco]], [[stenoeco]],
-	-- [[tagicco]], [[univoco]], [[volsco]].
-	elseif form:find("[cg]o$") then
-		form = form:gsub("o$", "hi")
-	elseif form:find("o$") then
-		form = form:gsub("o$", "i")
-	elseif form:find("[cg]a$") then
-		check_no_mf()
-		form = form:gsub("a$", (gender == "m" and "hi" or "he"))
-	elseif form:find("logia$") then
-		if gender ~= "f" then
-			error("Form '" .. form .. "' ending in -logia should have gender=f if it is using the default plural")
-		end
-		form = form:gsub("a$", "e")
-	elseif form:find("[cg]ia$") then
-		check_no_mf()
-		form = form:gsub("ia$", (gender == "m" and "i" or "e"))
-	elseif form:find("a$") then
-		check_no_mf()
-		form = form:gsub("a$", (gender == "m" and "i" or "e"))
-	elseif form:find("e$") then
-		form = form:gsub("e$", "i")
-	else
-		return nil
-	end
-	return form
-end
-
--- Generate a default feminine form.
-local function make_feminine(form, special)
-	local retval = require(romut_module).handle_multiword(form, special, make_feminine, prepositions)
-	if retval then
-		if #retval ~= 1 then
-			error("Internal error: Should have one return value for make_feminine: " .. table.concat(retval, ","))
-		end
-		return retval[1]
-	end
-
-	-- Don't directly return gsub() because then there will be multiple return values.
-	if form:find("o$") then
-		form = form:gsub("o$", "a")
-	elseif form:find("tore$") then
-		form = form:gsub("tore$", "trice")
-	elseif form:find("one$") then
-		form = form:gsub("one$", "ona")
-	end
-
-	return form
-end
-
--- Generate a default masculine form.
-local function make_masculine(form, special)
-	local retval = require(romut_module).handle_multiword(form, special, make_masculine, prepositions)
-	if retval then
-		if #retval ~= 1 then
-			error("Internal error: Should have one return value for make_masculine: " .. table.concat(retval, ","))
-		end
-		return retval[1]
-	end
-
-	-- Don't directly return gsub() because then there will be multiple return values.
-	if form:find("a$") then
-		form = form:gsub("a$", "o")
-	elseif form:find("trice$") then
-		form = form:gsub("trice$", "tore")
-	end
-
-	return form
 end
 
 local function fetch_qualifiers(qual, existing)
@@ -486,8 +328,8 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 			end
 			local function make_gendered_plural(form, gender, special)
 				if gender == "mf" then
-					local default_mpl = make_plural(lemma, "m", special)
-					local default_fpl = make_plural(lemma, "f", special)
+					local default_mpl = com.make_plural(lemma, "m", special)
+					local default_fpl = com.make_plural(lemma, "f", special)
 					if default_mpl then
 						if default_mpl == default_fpl then
 							insert_pl(default_mpl)
@@ -501,7 +343,7 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 						end
 					end
 				else
-					local pl = make_plural(lemma, gender, special)
+					local pl = com.make_plural(lemma, gender, special)
 					if pl then
 						insert_pl(pl)
 					end
@@ -581,7 +423,7 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 				mf = inflect(lemma, special)
 			end
 			insert_infl(retval, mf)
-			local mfpl = make_plural(mf, gender, special)
+			local mfpl = com.make_plural(mf, gender, special)
 			if mfpl then
 				-- Add an accelerator for each masculine/feminine plural whose lemma
 				-- is the corresponding singular, so that the accelerated entry
@@ -595,10 +437,10 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 
 	local default_feminine_plurals = {}
 	local feminine_plurals = {}
-	local feminines = handle_mf(args.f, args.f_qual, "f", make_feminine, default_feminine_plurals)
+	local feminines = handle_mf(args.f, args.f_qual, "f", com.make_feminine, default_feminine_plurals)
 	local default_masculine_plurals = {}
 	local masculine_plurals = {}
-	local masculines = handle_mf(args.m, args.m_qual, "m", make_masculine, default_masculine_plurals)
+	local masculines = handle_mf(args.m, args.m_qual, "m", com.make_masculine, default_masculine_plurals)
 
 	local function handle_mf_plural(mfpl, qualifiers, gender, default_plurals, singulars)
 		local new_mfpls = {}
@@ -627,7 +469,7 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 					end
 				else
 					-- mf is a table
-					local default_mfpl = make_plural(lemma, gender)
+					local default_mfpl = com.make_plural(lemma, gender)
 					if default_mfpl then
 						insert_infl(default_mfpl, accel)
 					end
@@ -641,7 +483,7 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 				if #singulars > 0 then
 					for _, mf in ipairs(singulars) do
 						-- mf is a table
-						local default_mfpl = make_plural(mf.term_for_further_inflection, gender, mfpl)
+						local default_mfpl = com.make_plural(mf.term_for_further_inflection, gender, mfpl)
 						if default_mfpl then
 							-- don't use "invariable" because the plural is not with respect to the lemma but
 							-- with respect to the masc/fem singular
@@ -649,7 +491,7 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 						end
 					end
 				else
-					local default_mfpl = make_plural(lemma, gender, mfpl)
+					local default_mfpl = com.make_plural(lemma, gender, mfpl)
 					if default_mfpl then
 						insert_infl(default_mfpl, accel)
 					end
@@ -859,7 +701,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 		end
 		for i, fpl in ipairs(argsfpl) do
 			if fpl == "+" then
-				local defpl = make_plural(lemma, "f", args.sp)
+				local defpl = com.make_plural(lemma, "f", args.sp)
 				if not defpl then
 					error("Unable to generate default plural of '" .. lemma .. "'")
 				end
@@ -883,7 +725,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 		for i, f in ipairs(argsf) do
 			if f == "+" then
 				-- Generate default feminine.
-				f = make_feminine(lemma, args.sp)
+				f = com.make_feminine(lemma, args.sp)
 			elseif f == "#" then
 				f = lemma
 			end
@@ -909,7 +751,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 		for i, mpl in ipairs(argsmpl) do
 			if mpl == "+" then
 				-- Generate default masculine plural.
-				local defpl = make_plural(lemma, "m", args.sp)
+				local defpl = com.make_plural(lemma, "m", args.sp)
 				if not defpl then
 					error("Unable to generate default plural of '" .. lemma .. "'")
 				end
@@ -924,7 +766,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 			if fpl == "+" then
 				for _, f in ipairs(feminines) do
 					-- Generate default feminine plural; f is a table.
-					local defpl = make_plural(f.term, "f", args.sp)
+					local defpl = com.make_plural(f.term, "f", args.sp)
 					if not defpl then
 						error("Unable to generate default plural of '" .. f.term .. "'")
 					end
