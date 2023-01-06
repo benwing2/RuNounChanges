@@ -7,14 +7,6 @@ local rsplit = mw.text.split
 local u = mw.ustring.char
 
 
--- Ensure that brackets display literally in error messages. Replacing with equivalent HTML escapes doesn't work
--- because they are displayed literally; but inserting a Unicode word-joiner symbol works.
-local function escape_brackets(term)
-	term = term:gsub("%[%[", "[" .. u(0x2060) .. "[")
-	return term
-end
-
-
 -- Return a param_mods structure as required by parse_inline_modifiers() in [[Module:parse utilities]]:
 -- * `convert`: An optional function to convert the raw argument into the form needed for further processing.
 --              This function takes two parameters: (1) `arg` (the raw argument); (2) `parse_err` (a function to
@@ -96,7 +88,10 @@ end
 
 local function parse_term_with_modifiers(paramname, val)
 	local function parse_err(msg)
-		error(msg .. ": " .. paramname .. "=" .. escape_brackets(val))
+		if not put then
+			put = require("Module:parse utilities")
+		end
+		error(msg .. ": " .. paramname .. "=" .. put.escape_brackets(val))
 	end
 
 	local function generate_obj(term)
