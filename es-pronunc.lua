@@ -1322,7 +1322,7 @@ local function dodialect_specified_rhymes(rhymes, hyphs, parsed_respellings, rhy
 end
 
 
-local function parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods, no_split_on_comma)
+local function parse_pron_modifiers(arg, put, parse_err, generate_obj, param_mods, no_split_on_comma)
 	local retval = {}
 
 	if arg:find("<") then
@@ -1393,7 +1393,7 @@ local function parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods
 			table.insert(retval, obj)
 		end
 	elseif no_split_on_comma then
-		table.insert(retval, generate_obj(arg))
+		return generate_obj(arg)
 	else
 		for _, term in ipairs(split_on_comma(arg)) do
 			table.insert(retval, generate_obj(term))
@@ -1424,7 +1424,7 @@ local function parse_rhyme(arg, put, parse_err)
 		},
 	}
 
-	return parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods)
+	return parse_pron_modifiers(arg, put, parse_err, generate_obj, param_mods)
 end
 
 
@@ -1432,7 +1432,7 @@ local function parse_hyph(arg, put, parse_err)
 	-- None other than qualifiers
 	local param_mods = {}
 
-	return parse_pron_modifier(arg, put, parse_err, generate_hyph_obj, param_mods)
+	return parse_pron_modifiers(arg, put, parse_err, generate_hyph_obj, param_mods)
 end
 
 
@@ -1461,7 +1461,7 @@ local function parse_homophone(arg, put, parse_err)
 		},
 	}
 
-	return parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods)
+	return parse_pron_modifiers(arg, put, parse_err, generate_obj, param_mods)
 end
 
 
@@ -1486,7 +1486,7 @@ local function parse_audio(arg, put, parse_err)
 
 	-- Don't split on comma because some filenames have embedded commas not followed by a space
 	-- (typically followed by an underscore).
-	return parse_pron_modifier(arg, put, parse_err, generate_audio_obj, param_mods, "no split on comma")
+	return parse_pron_modifiers(arg, put, parse_err, generate_audio_obj, param_mods, "no split on comma")
 end
 
 
@@ -1539,6 +1539,21 @@ function export.show_pr(frame)
 			end
 
 			local param_mods = {
+				ref = {
+					store = "insert",
+				},
+				q = {
+					store = "insert",
+				},
+				qq = {
+					store = "insert",
+				},
+				a = {
+					store = "insert",
+				},
+				aa = {
+					store = "insert",
+				},
 				pre = {},
 				post = {},
 				style = {},
@@ -1551,23 +1566,19 @@ function export.show_pr(frame)
 					end,
 				},
 				rhyme = {
-					insert = true,
-					flatten = true,
+					store = "insert-flattened",
 					convert = function(arg) return parse_rhyme(arg, put, parse_err) end,
 				},
 				hyph = {
-					insert = true,
-					flatten = true,
+					store = "insert-flattened",
 					convert = function(arg) return parse_hyph(arg, put, parse_err) end,
 				},
 				hmp = {
-					insert = true,
-					flatten = true,
+					store = "insert-flattened",
 					convert = function(arg) return parse_homophone(arg, put, parse_err) end,
 				},
 				audio = {
-					insert = true,
-					flatten = true,
+					store = "insert-flattened",
 					convert = function(arg) return parse_audio(arg, put, parse_err) end,
 				},
 			}
