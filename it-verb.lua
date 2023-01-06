@@ -2301,7 +2301,12 @@ local function parse_inside(base, inside, is_builtin_verb)
 			if not qualifiers then
 				qualifiers = {}
 			end
-			table.insert(qualifiers, separated_group[j])
+			local r_spec = separated_group:match("^r:(.*)$")
+			if r_spec then
+				table.insert(qualifiers, "ref:" .. require("Module:it-common").parse_abbreviated_references_spec(r_spec))
+			else
+				table.insert(qualifiers, separated_group[j])
+			end
 		end
 		return qualifiers
 	end
