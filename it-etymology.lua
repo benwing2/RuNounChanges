@@ -2,8 +2,8 @@ local export = {}
 
 local m_links = require("Module:links")
 local m_languages = require("Module:languages")
-local put_module = "Module:User:Benwing2/parse utilities"
-local com_module = "Module:User:Benwing2/it-common"
+local put_module = "Module:parse utilities"
+local com_module = "Module:it-common"
 local compound_module = "Module:compound"
 local lang = m_languages.getByCode("it")
 
@@ -198,7 +198,13 @@ function export.it_verb_obj(frame)
 	local args = parse_args(frame:getParent().args)
 
 	if #args[1] < 2 then
-		error("Need at least two numbered arguments to [[Template:it-verb-obj]]")
+	    local NAMESPACE = mw.title.getCurrentTitle().nsText
+		if NAMESPACE == "Template" then
+			table.insert(args[1], "lavare<t:to wash>")
+			table.insert(args[1], "piatto<t:plates><pl:1>")
+		else
+			error("Need at least two numbered arguments to [[Template:it-verb-obj]]")
+		end
 	end
 
 	parse_and_format_parts(args[1], function(i, term)
@@ -239,7 +245,13 @@ function export.it_verb_verb(frame)
 	local args = parse_args(frame:getParent().args)
 
 	if #args[1] < 2 then
-		error("Need at least two numbered arguments to [[Template:it-verb-verb]]")
+	    local NAMESPACE = mw.title.getCurrentTitle().nsText
+		if NAMESPACE == "Template" then
+			table.insert(args[1], "lavare<t:to wash>")
+			table.insert(args[1], "asciugare<t:dry>")
+		else
+			error("Need at least two numbered arguments to [[Template:it-verb-verb]]")
+		end
 	end
 
 	parse_and_format_parts(args[1], function(i, term)
