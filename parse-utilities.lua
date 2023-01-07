@@ -17,7 +17,8 @@ end
 In order to understand the following parsing code, you need to understand how inflected text specs work. They are
 intended to work with inflected text where individual words to be inflected may be followed by inflection specs in
 angle brackets. The format of the text inside of the angle brackets is up to the individual language and part-of-speech
-specific implementation. A real-world example is as follows: "[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr>". This is the inflection of a multiword expression "меди́чна сестра́", which means "nurse" in Ukrainian (literally "medical sister"),
+specific implementation. A real-world example is as follows: "[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr>". This is the
+inflection of a multiword expression "меди́чна сестра́", which means "nurse" in Ukrainian (literally "medical sister"),
 consisting of two words: the adjective меди́чна ("medical" in the feminine singular) and the noun сестра́ ("sister"). The
 specs in angle brackets follow each word to be inflected; for example, <+> means that the preceding word should be
 declined as an adjective.
@@ -351,6 +352,8 @@ end
 Parse a term that may have inline modifiers attached (e.g. 'rifiuti<q:plural-only>' or
 'rinfusa<t:bulk cargo><lit:resupplying><qq:more common in the plural {{m|it|rinfuse}}>').
   * `arg` is the term to parse.
+  * `paramname` is the name of the parameter where `arg` comes from, or nil if this isn't available (it is used only
+     in error messages).
   * `param_mods` is a table describing the allowed inline modifiers (see below).
   * `generate_obj` is a function of one or two arguments that should parse the argument minus the inline modifiers
      and return a corresponding parsed  object (into which the inline modifiers will be rewritten). If declared with
@@ -403,7 +406,7 @@ In the table values:
   just stored directly. This means that future appends will side-effect that value, so make sure that the return
   value of the conversion function for this key generates a fresh list each time.
 ]=]
-function export.parse_inline_modifiers(arg, param_mods, generate_obj, parse_err, split_on_comma)
+function export.parse_inline_modifiers(arg, paramname, param_mods, generate_obj, parse_err, split_on_comma)
 	local function get_valid_prefixes()
 		local valid_prefixes = {}
 		for param_mod, _ in pairs(param_mods) do
@@ -413,9 +416,17 @@ function export.parse_inline_modifiers(arg, param_mods, generate_obj, parse_err,
 		return valid_prefixes
 	end
 
+	local function get_arg_gloss()
+		if paramname then
+			return ("%s=%s"):format(paramname, arg)
+		else
+			return arg
+		end
+	end
+
 	if not parse_err then
-		parse_err = function(msg)
-			error(msg .. ": " .. export.escape_brackets(arg))
+		parse_err = function(msg, stack_frames_to_ignore)
+			error(export.escape_brackets(("%s: %s"):format(msg, get_arg_gloss())), stack_frames_to_ignore)
 		end
 	end
 
@@ -441,11 +452,14 @@ function export.parse_inline_modifiers(arg, param_mods, generate_obj, parse_err,
 					require("Module:table").serialCommaJoin(valid_prefixes))
 			end
 			if param_mods[prefix] then
+				local function prefix_parse_err(msg, stack_frames_to_ignore)
+					error(export.escape_brackets(("%s: modifier prefix '%s' in %s"):format(msg, prefix, get_arg_gloss())), stack_frames_to_ignore)
+				end
 				local key = param_mods[prefix].item_dest or prefix
 				local convert = param_mods[prefix].convert
 				local converted
 				if convert then
-					converted = convert(val, parse_err)
+					converted = convert(val, prefix_parse_err)
 				else
 					converted = val
 				end
@@ -484,7 +498,7 @@ function export.parse_inline_modifiers(arg, param_mods, generate_obj, parse_err,
 						end
 					end
 				else
-					store(dest_obj, key, converted, parse_err)
+					store(dest_obj, key, converted, prefix_parse_err)
 				end
 			else
 				local valid_prefixes = get_valid_prefixes()
@@ -509,92 +523,6 @@ function export.parse_inline_modifiers(arg, param_mods, generate_obj, parse_err,
 		end
 		return retval
 	end
-end
-
-
-local function parse_rhyme(arg, put, parse_err)
-	local function generate_obj(term)
-		return {rhyme = term}
-	end
-	local param_mods = {
-		s = {
-			item_dest = "num_syl",
-			convert = function(arg)
-				local nsyls = rsplit(arg, ",")
-				for i, nsyl in ipairs(nsyls) do
-					if not nsyl:find("^[0-9]+$") then
-						parse_err("Number of syllables '" .. nsyl .. "' should be numeric")
-					end
-					nsyls[i] = tonumber(nsyl)
-				end
-				return nsyls
-			end,
-		},
-	}
-
-	return parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods)
-end
-
-
-local function parse_hyph(arg, put, parse_err)
-	-- None other than qualifiers
-	local param_mods = {}
-
-	return parse_pron_modifier(arg, put, parse_err, generate_hyph_obj, param_mods)
-end
-
-
-local function parse_homophone(arg, put, parse_err)
-	local function generate_obj(term)
-		return {term = term}
-	end
-	local param_mods = {
-		t = {
-			-- We need to store the <t:...> inline modifier into the "gloss" key of the parsed term,
-			-- because that is what [[Module:links]] (called from [[Module:homophones]]) expects.
-			item_dest = "gloss",
-		},
-		gloss = {},
-		pos = {},
-		alt = {},
-		lit = {},
-		id = {},
-		g = {
-			-- We need to store the <g:...> inline modifier into the "genders" key of the parsed term,
-			-- because that is what [[Module:links]] (called from [[Module:homophones]]) expects.
-			item_dest = "genders",
-			convert = function(arg)
-				return rsplit(arg, ",")
-			end,
-		},
-	}
-
-	return parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods)
-end
-
-
-local function generate_audio_obj(arg)
-	local file, gloss
-	if arg:find("#") then
-		file, gloss = arg:match("^(.-)%s*#%s*(.*)$")
-	else
-		file, gloss = arg:match("^(.-)%s*;%s*(.*)$")
-	end
-	if not file then
-		file = arg
-		gloss = "Audio"
-	end
-	return {file = file, gloss = gloss}
-end
-
-
-local function parse_audio(arg, put, parse_err)
-	-- None other than qualifiers
-	local param_mods = {}
-
-	-- Don't split on comma because some filenames have embedded commas not followed by a space
-	-- (typically followed by an underscore).
-	return parse_pron_modifier(arg, put, parse_err, generate_audio_obj, param_mods, "no split on comma")
 end
 
 
