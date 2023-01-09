@@ -38,6 +38,13 @@ prepositions = {
   "fra ",
 }
 
+no_split_apostrophe_words = {
+  u"c'è",
+  "c'era",
+  "c'erano",
+}
+
+
 TEMPCHAR = u"\uFFF1"
 
 #old_adj_template = "it-adj-old"
@@ -156,98 +163,143 @@ def process_text_on_page(index, pagetitle, text):
     tn = tname(t)
     def getp(param):
       return getparam(t, param)
-    if tn == "it-noun" and args.remove_redundant_noun_args:
+
+    ############# Convert old-style noun headwords
+
+    if tn == "it-noun" and args.do_nouns:
       origt = unicode(t)
-      lemma = blib.remove_links(getp("head") or pagetitle)
-      if not getp("2") and (getp("pl2") or getp("pl3")):
-        pagemsg("WARNING: Saw pl2= or pl3= without 2=: %s" % unicode(t))
-        continue
-      g = getp("1")
-      ms = blib.fetch_param_chain(t, "m", "m")
-      space_in_m = False
-      for m in ms:
-        if " " in m:
-          space_in_m = True
-      mpls = blib.fetch_param_chain(t, "mpl", "mpl")
-      if space_in_m and not mpls and not g.endswith("-p"):
-        pagemsg("WARNING: Space in m=%s and old default noun algorithm applying" % ",".join(ms))
-      fs = blib.fetch_param_chain(t, "f", "f")
-      space_in_f = False
-      for f in fs:
-        if " " in f:
-          space_in_f = True
-      fpls = blib.fetch_param_chain(t, "fpl", "fpl")
-      if space_in_f and not fpls and not g.endswith("-p"):
-        pagemsg("WARNING: Space in f=%s and old default noun algorithm applying" % ",".join(fs))
-      pls = blib.fetch_param_chain(t, "2", "pl")
-      if not pls and not g.endswith("-p"):
-        if " " in lemma:
-          pagemsg("WARNING: Space in headword and old default noun algorithm applying")
-        continue
-      pls_with_def = []
-      defpl = make_plural(lemma)
-      if not defpl:
-        continue
-      if len(defpl) > 1:
-        if set(pls) == set(defpl):
-          pls_with_def = ["+"]
-        elif set(pls) < set(defpl):
-          pagemsg("WARNING: pls=%s subset of defpls=%s, replacing with default" % (",".join(pls), ",".join(defpl)))
-          pls_with_def = ["+"]
-        else:
-          pls_with_def = pls
-      else:
-        for pl in pls:
-          if pl == defpl[0]:
-            pls_with_def.append("+")
-          else:
-            pls_with_def.append(pl)
+      subnotes = []
 
-      actual_special = None
-      for special in romance_utils.all_specials:
-        special_pl = make_plural(lemma, special)
-        if special_pl is None:
+      head = getp("head")
+      lemma = blib.remove_links(head or pagetitle)
+
+      def replace_lemma_with_hash(term):
+        if term.startswith(lemma):
+          replaced_term = "#" + term[len(lemma):]
+          pagemsg("Replacing lemma-containing term '%s' with '%s'" % (term, replaced_term))
+          subnotes.append("replace lemma-containing term '%s' with '%s'" % (term, replaced_term))
+          term = replaced_term
+        return term
+
+      def warn_when_exiting(txt):
+        pagemsg("WARNING: %s: %s" % (txt, unicode(t)))
+
+      saw_g_or_qual = False
+      for param in t.params:
+        pn = pname(param)
+        pv = unicode(param.value)
+        if re.search("_(g|qual)$", pn):
+          pagemsg("WARNING: Saw _g or _qual parameter, can't handle: %s=%s" % (pn, pv))
+          saw_g_or_qual = True
+          break
+      if saw_g_or_qual:
+        continue
+
+      gs = blib.fetch_param_chain(t, "1", "g")
+      if len(gs) > 1:
+        pagemsg("WARNING: Saw multiple genders, can't handle: %s" % unicode(t))
+        continue
+      if not gs:
+        pagemsg("WARNING: No genders, can't handle: %s" % unicode(t))
+        continue
+      g = gs[0]
+
+      autohead = romance_utils.add_links_to_multiword_term(lemma, splithyph=False,
+          no_split_apostrophe_words=no_split_apostrophe_words)
+      if autohead == head:
+        pagemsg("Remove redundant head %s" % head)
+        subnotes.append("remove redundant head '%s'" % head)
+        head = None
+
+      is_plural = g.endswith("-p")
+
+      if not is_plural:
+        if g not in ["m", "f", "mf", "mfbysense"]:
+          pagemsg("WARNING: Saw unrecognized gender '%s', can't handle: %s" % (g, unicode(t)))
           continue
-        if len(special_pl) > 1 and set(pls) < set(special_pl):
-          pagemsg("WARNING: for special=%s, pls=%s subset of special_pl=%s, allowing" % (
-            special, ",".join(pls), ",".join(special_pl)))
-          actual_special = special
-          break
-        if set(pls) == set(special_pl):
-          pagemsg("Found special=%s with special_pl=%s" % (special, ",".join(special_pl)))
-          actual_special = special
-          break
 
-      if pls_with_def == ["+"]:
-        notes.append("remove redundant plural%s %s from {{it-noun}}" % ("s" if len(pls) > 1 else "", ",".join(pls)))
-        blib.remove_param_chain(t, "2", "pl")
-      elif actual_special:
-        notes.append("replace plural%s %s with +%s in {{it-noun}}" % (
-          "s" if len(pls) > 1 else "", ",".join(pls), actual_special))
-        blib.set_param_chain(t, ["+" + actual_special], "2", "pl")
-      elif pls_with_def != pls:
-        notes.append("replace default plural %s with '+' in {{it-noun}}" % ",".join(defpl))
-        blib.set_param_chain(t, pls_with_def, "2", "pl")
+        pls = blib.fetch_param_chain(t, "2", "pl")
+        mpls = blib.fetch_param_chain(t, "mpl")
+        fpls = blib.fetch_param_chain(t, "fpl")
+        orig_pls = pls
 
-      def handle_mf(mf, mf_full, make_mf):
-        mfs = blib.fetch_param_chain(t, mf, mf)
-        mfpls = blib.fetch_param_chain(t, mf + "pl", mf + "pl")
-        if mfs and not any(x.startswith("+") for x in mfs):
+        if g in ["m", "f"]:
+          if mpls or fpls:
+            pagemsg("Saw g=%s along with mpl=/fpl=, can't handle: %s" % (g, unicode(t)))
+            continue
+          defpl = make_plural(lemma, g, True)
+          if defpl is None:
+            pagemsg("Can't generate default plural, skipping: %s" % unicode(t))
+            continue
+          new_pls = ["+" if pl == defpl else pl for pl in pls]
+          if new_pls == ["+"]:
+            pagemsg("Removing redundant plural '%s'" % pls[0])
+            subnotes.append("remove redundant plural '%s'" % pls[0])
+            pls = []
+          elif new_pls != pls:
+            for old_pl, new_pl in zip(pls, new_pls):
+              if old_pl != new_pl:
+                assert old_pl == defpl
+                assert new_pl == "+"
+                pagemsg("Replacing default plural '%s' with '+'" % defpl)
+                subnotes.append("replace default plural '%s' with '+'" % defpl)
+            pls = new_pls
+
+          for special in romance_utils.all_specials:
+            special_pl = make_plural(lemma, g, True, special)
+            if special_pl is None:
+              continue
+            new_pls = []
+            for pl in pls:
+              if pl == special_pl:
+                pagemsg("Replacing plural '%s' with '+%s'" % (pl, special))
+                subnotes.append("replace plural '%s' with '+%s'" % (pl, special))
+                new_pls.append("+%s" % special)
+              else:
+                new_pls.append(pl)
+            pls = new_pls
+
+          pls = [replace_lemma_with_hash(pl) for pl in pls]
+
+        else:
+          pagemsg("Can't handle g=%s yet, skipping: %s" % (g, unicode(t)))
+
+      def handle_mf(g, g_full, make_mf):
+        mf = getp(g)
+        mf2 = getp(g + "2")
+        mf_qual = getp("qual_" + g)
+        mf2_qual = getp("qual_" + g + "2")
+        if not mf and mf2:
+          warn_when_exiting("Saw gap in %ss, can't handle, skipping" % g_full)
+          return None
+        if not g and mf_qual:
+          warn_when_exiting("No value for %s= but saw qual_%s=%s, skipping" % (g, g, mf_qual))
+          return None
+        if not mf2 and mf2_qual:
+          warn_when_exiting("No value for %s2= but saw qual_%s2=%s, skipping" % (g, g, mf2_qual))
+          return None
+        mfs = [mf, mf2]
+        mfs = [mf for mf in mfs if mf]
+        mf_quals = [mf_qual, mf2_qual]
+
+        if not is_plural:
+          mfpl = getp(g + "pl")
+          mfpl2 = getp(g + "pl2")
+          if not mfpl and mfpl2:
+            warn_when_exiting("Saw gap in %s plurals, can't handle, skipping" % g_full)
+            return None
+          if getp("qual_" + g + "pl") or getp("qual_" + g + "pl2"):
+            warn_when_exiting("Saw %s plural qualifier, can't handle, skipping" % g_full)
+            return None
+          mfpls = [mfpl, mfpl2]
+          mfpls = [mfpl for mfpl in mfpls if mfpl]
+
+        if mfs:
           defmf = make_mf(lemma)
-          if set(mfs) == {defmf}:
-            defpls = make_plural(defmf)
-            ok = False
-            if not mfpls or set(mfpls) == set(defpls):
-              ok = True
-            elif set(mfpls) < set(defpls):
-              pagemsg("WARNING: %pl=%s subset of default=%s, allowing" % (
-                mf, ",".join(mfpls), ",".join(defpls)))
-              ok = True
-            if ok:
-              notes.append("replace %s=%s with '+' in {{it-noun}}" % (mf, ",".join(mfs)))
-              blib.set_param_chain(t, ["+"], mf, mf)
-              blib.remove_param_chain(t, mf + "pl", mf + "pl")
-              return
+          if mfs == [defmf]:
+            if is_plural or (not mfpls or mfpls == [make_plural(defmf, True)]):
+              subnotes.append("replace %s=%s with '+'" % (g, mfs[0]))
+              return ["+"], mf_quals, []
           actual_special = None
           for special in romance_utils.all_specials:
             special_mf = make_mf(lemma, special)
@@ -258,61 +310,85 @@ def process_text_on_page(index, pagetitle, text):
               actual_special = special
               break
           if actual_special:
-            if not mfpls:
-              pagemsg("WARNING: Explicit %s=%s matches special=%s but no %s plural" % (
-                mf, ",".join(mfs), actual_special, mf_full))
+            if is_plural:
+              pass
+            elif not mfpls:
+              pagemsg("WARNING: Explicit %s=%s matches special=%s but no %s plural, allowing" % (
+                g, ",".join(mfs), actual_special, g_full))
             else:
-              special_mfpl = make_plural(special_mf, actual_special)
+              special_mfpl = make_plural(special_mf, True, actual_special)
               if special_mfpl:
-                if len(special_mfpl) > 1 and set(mfpls) < set(special_mfpl):
-                  pagemsg("WARNING: for %s=%s and special=%s, %spls=%s subset of special_%spl=%s, allowing" % (
-                    mf, ",".join(mfs), actual_special, mf, ",".join(mfpls), mf, ",".join(special_mfpl)))
-                elif set(mfpls) == set(special_mfpl):
+                if mfpls == [special_mfpl]:
                   pagemsg("Found %s=%s and special=%s, %spls=%s matches special_%spl" % (
-                    mf, ",".join(mfs), actual_special, mf, ",".join(mfpls), mf))
+                    g, ",".join(mfs), actual_special, g, ",".join(mfpls), g))
                 else:
-                  pagemsg("WARNING: for %s=%s and special=%s, %spls=%s doesn't match special_%spl=%s" % (
-                    mf, ",".join(mfs), actual_special, mf, ",".join(mfpls), mf, ",".join(special_mfpl)))
+                  pagemsg("WARNING: for %s=%s and special=%s, %spls=%s doesn't match special_%spl=%s, allowing" % (
+                    g, ",".join(mfs), actual_special, g, ",".join(mfpls), g, special_mfpl))
                   actual_special = None
             if actual_special:
-              notes.append("replace explicit %s %s with special indicator '+%s' in {{it-noun}} and remove explicit %s plural" %
-                  (mf_full, ",".join(mfs), actual_special, mf_full))
-              blib.set_param_chain(t, ["+%s" % actual_special], mf, mf)
-              blib.remove_param_chain(t, mf + "pl", mf + "pl")
+              subnotes.append("replace explicit %s '%s' with special indicator '+%s' and remove explicit %s plural" %
+                  (g_full, ",".join(mfs), actual_special, g_full))
+              mfs = ["+%s" % actual_special]
+              mfpls = []
           if not actual_special:
             defmf = make_mf(lemma)
             mfs_with_def = ["+" if x == defmf else x for x in mfs]
             if mfs_with_def != mfs:
-              notes.append("replace default %s %s with '+' in {{it-noun}}" % (mf_full, defmf))
-              blib.set_param_chain(t, mfs_with_def, mf, mf)
-            if mfpls:
-              defpl = [x for y in mfs for x in (make_plural(y) or [])]
+              subnotes.append("replace default %s '%s' with '+'" % (g_full, defmf))
+              mfs = mfs_with_def
+            if not is_plural and mfpls:
+              defpl = [make_plural(x, True) for x in mfs]
               ok = False
               if set(defpl) == set(mfpls):
                 ok = True
               elif len(defpl) > 1 and set(mfpls) < set(defpl):
                 pagemsg("WARNING: for %s=%s, %spl=%s subset of default pl %s, allowing" % (
-                  mf, ",".join(mfs), mf, ",".join(mfpls), ",".join(defpl)))
+                  g, ",".join(mfs), g, ",".join(mfpls), ",".join(defpl)))
                 ok = True
               if ok:
-                pagemsg("Found %s=%s, %spl=%s matches default pl" % (mf, ",".join(mfs), mf, ",".join(mfpls)))
-                notes.append("remove redundant explicit %s plural %s in {{it-noun}}" % (mf_full, ",".join(mfpls)))
-                blib.remove_param_chain(t, mf + "pl", mf + "pl")
+                pagemsg("Found %s=%s, %spl=%s matches default pl" % (g, ",".join(mfs), g, ",".join(mfpls)))
+                subnotes.append("remove redundant explicit %s plural '%s'" % (g_full, ",".join(mfpls)))
+                mfpls = []
               else:
                 for special in romance_utils.all_specials:
-                  defpl = [x for y in mfs for x in (make_plural(y, special) or [])]
+                  defpl = [make_plural(x, True, special) for x in mfs]
                   if set(defpl) == set(mfpls):
                     pagemsg("Found %s=%s, %spl=%s matches special=%s" % (
-                      mf, ",".join(mfs), mf, ",".join(mfpls), special))
-                    notes.append("replace explicit %s plural %s with special indicator '+%s' in {{it-noun}}" %
-                        (mf_full, ",".join(mfpls), special))
-                    blib.set_param_chain(t, ["+%s" % special], mf + "pl", mf + "pl")
+                      g, ",".join(mfs), g, ",".join(mfpls), special))
+                    subnotes.append("replace explicit %s plural '%s' with special indicator '+%s'" %
+                        (g_full, ",".join(mfpls), special))
+                    mfpls = ["+%s" % special]
+        mfs = [replace_lemma_with_hash(mf) for mf in mfs]
+        return mfs, mf_quals, mfpls if not is_plural else []
 
-      handle_mf("f", "feminine", make_feminine)
-      handle_mf("m", "masculine", make_masculine)
+      retval = handle_mf("f", "feminine", make_feminine)
+      if retval is None:
+        continue
+      fs, f_quals, fpls = retval
+      retval = handle_mf("m", "masculine", make_masculine)
+      if retval is None:
+        continue
+      ms, m_quals, mpls = retval
+
+      if not is_plural:
+        blib.set_param_chain(t, pls, "2", "pl")
+      blib.set_param_chain(t, fs, "f")
+      if not is_plural:
+        blib.set_param_chain(t, fpls, "fpl")
+      blib.set_param_chain(t, ms, "m")
+      if not is_plural:
+        blib.set_param_chain(t, mpls, "mpl")
+
+      if head is None:
+        rmparam(t, "head")
+      elif head and head == lemma:
+        subnotes.append("convert head= without brackets to nolinkhead=1")
+        rmparam(t, "head")
+        t.add("nolinkhead", "1")
 
       if origt != unicode(t):
         pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        notes.append("clean up {{it-noun}} (%s)" % "; ".join(blib.group_notes(subnotes)))
       else:
         pagemsg("No changes to %s" % unicode(t))
 
@@ -371,7 +447,7 @@ def process_text_on_page(index, pagetitle, text):
       if origt != unicode(t):
         pagemsg("Replaced %s with %s" % (origt, unicode(t)))
 
-    if tn == old_adj_template:
+    if tn == old_adj_template and args.do_adjs:
       if not getp("1") and not getp("2") and not getp("3") and not getp("4") and not getp("5"):
         pagemsg("WARNING: no numbered params: %s" % unicode(t))
         continue
@@ -503,15 +579,17 @@ def process_text_on_page(index, pagetitle, text):
 
 parser = blib.create_argparser("Convert {{it-adj}} templates to new format or remove redundant args in {{it-noun}}",
   include_pagefile=True, include_stdin=True)
-parser.add_argument("--remove-redundant-noun-args", action="store_true")
+parser.add_argument("--do-nouns", action="store_true")
+parser.add_argument("--do-adjs", action="store_true")
 parser.add_argument("--make-multiword-plural-explicit", action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.remove_redundant_noun_args:
-  default_refs=["Template:it-noun"]
-else:
-  default_refs=["Template:%s" % old_adj_template]
+default_refs = []
+if args.do_nouns:
+  default_refs.append("Template:it-noun")
+elif args.do_adjs:
+  default_refs.append("Template:%s" % old_adj_template)
 
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
   default_refs=default_refs)
