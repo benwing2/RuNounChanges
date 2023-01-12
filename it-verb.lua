@@ -249,6 +249,7 @@ local m_string_utilities = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local iut = require("Module:inflection utilities")
+local com_module = "Module:it-common"
 local m_builtin
 
 local force_cat = false -- set to true for debugging
@@ -2301,9 +2302,10 @@ local function parse_inside(base, inside, is_builtin_verb)
 			if not qualifiers then
 				qualifiers = {}
 			end
-			local r_spec = separated_group:match("^r:(.*)$")
+			local r_spec = separated_group[j]:match("^%[r:(.*)%]$")
 			if r_spec then
-				table.insert(qualifiers, "ref:" .. require("Module:it-common").parse_abbreviated_references_spec(r_spec))
+				local expanded_ref = require(com_module).parse_abbreviated_references_spec(r_spec)
+				table.insert(qualifiers, "[ref:" .. expanded_ref .. "]")
 			else
 				table.insert(qualifiers, separated_group[j])
 			end
