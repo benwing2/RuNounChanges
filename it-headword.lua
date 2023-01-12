@@ -4,6 +4,7 @@
 -- * {{it-verb}};
 -- * {{it-adj}}, {{it-adj-comp}}, {{it-adj-sup}};
 -- * {{it-det}};
+-- * {{it-art}};
 -- * {{it-pron-adj}};
 -- * {{it-pp}};
 -- * {{it-presp}};
@@ -22,6 +23,7 @@ local force_cat = false -- for testing; if true, categories appear in non-mainsp
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local romut_module = "Module:romance utilities"
+local it_verb_module = "Module:it-verb"
 local com = require("Module:it-common")
 local lang = require("Module:languages").getByCode("it")
 local langname = lang:getCanonicalName()
@@ -221,6 +223,21 @@ local allowed_genders = m_table.listToSet(
 	{"m", "f", "mf", "mfbysense", "m-p", "f-p", "mf-p", "mfbysense-p", "?", "?-p"}
 )
 
+
+local function process_genders(data, genders, g_qual)
+	for i, g in ipairs(genders) do
+		if not allowed_genders[g] then
+			error("Unrecognized gender: " .. g)
+		end
+		if g_qual[i] then
+			table.insert(data.genders, {spec = g, qualifiers = {g_qual[i]}})
+		else
+			table.insert(data.genders, g)
+		end
+	end
+end
+
+
 local function do_noun(args, data, tracking_categories, pos, is_suffix, is_proper)
 	local is_plurale_tantum = false
 	local has_singular = false
@@ -233,10 +250,9 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 	local saw_m = false
 	local saw_f = false
 	local gender_for_default_plural = args[1][1]
-	for i, g in ipairs(args[1]) do
-		if not allowed_genders[g] then
-			error("Unrecognized gender: " .. g)
-		end
+	process_genders(data, args[1], args.g_qual)
+	-- Check for specific genders and pluralia tantum.
+	for _, g in ipairs(args[1]) do
 		if g:find("-p$") then
 			is_plurale_tantum = true
 		else
@@ -247,11 +263,6 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 			if g == "f" or g == "mf" or g == "mfbysense" then
 				saw_f = true
 			end
-		end
-		if args.g_qual[i] then
-			table.insert(data.genders, {spec = g, qualifiers = {args.g_qual[i]}})
-		else
-			table.insert(data.genders, g)
 		end
 	end
 	if saw_m and saw_f then
@@ -894,6 +905,13 @@ pos_functions["determiners"] = {
 	end,
 }
 
+pos_functions["articles"] = {
+	params = get_adjective_params("det"),
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adjective(args, data, tracking_categories, "article", is_suffix)
+	end,
+}
+
 pos_functions["adjective-like pronouns"] = {
 	params = get_adjective_params("pron"),
 	func = function(args, data, tracking_categories, frame, is_suffix)
@@ -991,7 +1009,7 @@ pos_functions["verbs"] = {
 			local def_forms
 
 			local parargs = frame:getParent().args
-			local alternant_multiword_spec = require("Module:it-verb").do_generate_forms(parargs, "from headword")
+			local alternant_multiword_spec = require(it_verb_module).do_generate_forms(parargs, "from headword")
 
 			local function expand_footnotes_and_references(footnotes)
 				if not footnotes then
@@ -1167,24 +1185,18 @@ pos_functions["verbs"] = {
 
 pos_functions["suffix forms"] = {
 	params = {
-		[1] = {required = true},
+		[1] = {required = true, list = true},
 		["g"] = {list = true},
 		["g_qual"] = {list = "g=_qual", allow_holes = true},
 	},
 	func = function(args, data, tracking_categories, frame)
 		data.genders = {}
-		for i, g in ipairs(args.g) do
-			if not allowed_genders[g] then
-				error("Unrecognized gender: " .. g)
-			end
-			if args.g_qual[i] then
-				table.insert(data.genders, {spec = g, qualifiers = {args.g_qual[i]}})
-			else
-				table.insert(data.genders, g)
-			end
+		process_genders(data, args.g, args.g_qual)
+		local suffix_type = {}
+		for _, typ in ipairs(args[1]) do
+			table.insert(suffix_type, typ .. "-forming suffix")
 		end
-
-		table.insert(data.inflections, {label = "non-lemma form of " .. args[1] .. "-forming suffix"})
+		table.insert(data.inflections, {label = "non-lemma form of " .. m_table.serialCommaJoin(suffix_type, {conj = "or"})})
 	end,
 }
 
@@ -1196,11 +1208,15 @@ pos_functions["suffix forms"] = {
 pos_functions["arbitrary part of speech"] = {
 	params = {
 		[1] = {required = true},
+		["g"] = {list = true},
+		["g_qual"] = {list = "g=_qual", allow_holes = true},
 	},
 	func = function(args, data, tracking_categories, frame, is_suffix)
 		if is_suffix then
 			error("Can't use [[Template:it-pos]] with suffixes")
 		end
+		data.genders = {}
+		process_genders(data, args.g, args.g_qual)
 		local plpos = require("Module:string utilities").pluralize(args[1])
 		data.pos_category = plpos
 	end,
