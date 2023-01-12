@@ -1315,7 +1315,7 @@ end
 
 
 
-function export.show(frame)
+function export.format(template_args)
 	local params = {
 		[1] = {required = true},
 		[2] = {required = true, list = true},
@@ -1336,12 +1336,17 @@ function export.show(frame)
 		["seat"] = {list = true},
 		["shire town"] = {list = true},
 	}
-
-	local args = require("Module:parameters").process(frame:getParent().args, params)
+	
+	local args = require("Module:parameters").process(template_args, params)
 	local lang = require("Module:languages").getByCode(args[1]) or error("The language code \"" .. args[1] .. "\" is not valid.")
 	local place_specs = parse_place_specs(args[2])
 
 	return get_def(args, place_specs) .. get_cats(lang, place_specs, args["cat"], args["sort"])
+end
+
+
+function export.show(frame)
+	return export.format(frame:getParent().args)
 end
 
 
