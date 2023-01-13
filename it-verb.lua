@@ -3198,28 +3198,11 @@ local function make_table(alternant_multiword_spec)
 end
 
 
--- Externally callable function to parse and conjugate a verb given user-specified arguments.
--- Return value is WORD_SPEC, an object where the conjugated forms are in `WORD_SPEC.forms`
--- for each slot. If there are no values for a slot, the slot key will be missing. The value
--- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
-function export.do_generate_forms(parent_args, from_headword, def)
-	local params = {
-		[1] = {required = true, default = def or "mettere<a\\é,mìsi,mésso>"},
-		["noautolinktext"] = {type = "boolean"},
-		["noautolinkverb"] = {type = "boolean"},
-		["pagename"] = {}, -- for testing
-		["json"] = {type = "boolean"}, -- for bot use
-	}
-
-	if from_headword then
-		params["head"] = {list = true}
-		params["id"] = {}
-		params["sort"] = {}
-		params["splithyph"] = {type = "boolean"}
-	end
-
-	local args = require("Module:parameters").process(parent_args, params)
-	local pagename = args.pagename or mw.title.getCurrentTitle().text
+-- Externally callable function to conjugate a verb. Return value is ALTERNANT_MULTIWORD_SPEC, an object where the
+-- conjugated forms are in `ALTERNANT_MULTIWORD_SPEC.forms` for each slot. If there are no values for a slot, the slot
+-- key will be missing. The value for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
+function export.do_generate_forms(args, from_headword)
+	local pagename = from_headword and args.head[1] or args.pagename or mw.title.getCurrentTitle().text
 
 	local arg1 = args[1]
 	local need_surrounding_angle_brackets = true
@@ -3253,7 +3236,7 @@ function export.do_generate_forms(parent_args, from_headword, def)
 				local left_brackets = rsub(refl_clitic_verb, "[^%[]", "")
 				local right_brackets = rsub(refl_clitic_verb, "[^%]]", "")
 				if #left_brackets == #right_brackets then
-					arg1 = refl_clitic_verb .. "<" .. arg1 .. ">" .. post
+					arg1 = iut.remove_redundant_links(refl_clitic_verb) .. "<" .. arg1 .. ">" .. post
 				else
 					need_explicit_angle_brackets = true
 				end
@@ -3302,11 +3285,29 @@ function export.do_generate_forms(parent_args, from_headword, def)
 end
 
 
+-- Externally callable function to parse user-specified arguments and conjugate a verb.
+-- Return value is ALTERNANT_MULTIWORD_SPEC, an object where the conjugated forms are in `ALTERNANT_MULTIWORD_SPEC.forms`
+-- for each slot. If there are no values for a slot, the slot key will be missing. The value
+-- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
+function export.parse_args_and_generate_forms(parent_args)
+	local params = {
+		[1] = {required = true, default = def or "mettere<a\\é,mìsi,mésso>"},
+		["noautolinktext"] = {type = "boolean"},
+		["noautolinkverb"] = {type = "boolean"},
+		["pagename"] = {}, -- for testing
+		["json"] = {type = "boolean"}, -- for bot use
+	}
+
+	local args = require("Module:parameters").process(parent_args, params)
+	return export.do_generate_forms(args)
+end
+
+	
 -- Entry point for {{it-conj}}. Template-callable function to parse and conjugate a verb given
 -- user-specified arguments and generate a displayable table of the conjugated forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
-	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	local alternant_multiword_spec = export.parse_args_and_generate_forms(parent_args)
 	if type(alternant_multiword_spec) == "string" then
 		return alternant_multiword_spec
 	end
@@ -3340,7 +3341,7 @@ end
 function export.generate_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	local alternant_multiword_spec = export.parse_args_and_generate_forms(parent_args)
 	return concat_forms(alternant_multiword_spec, include_props)
 end
 
