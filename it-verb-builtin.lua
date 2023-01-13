@@ -100,7 +100,8 @@ export.builtin_verbs = {
 	-- mansuescere: archaic, rare, infinitive only
 	{"noscere", "ó,nóbbi", "<<conoscere>>, archaic <<cognoscere>> and derivatives"},
 	-- ducere and derivatives: archaic; handled under -durre below
-	-- lucere, tralucere, rilucere: archaic, defective
+	-- [[lucere]] itself is poetic and lacking the past historic
+	{{"lucere", prefixes={"tra", "ri"}}, "ù,+,-", "<<rilucere>>, <<tralucere>>"},
 	-- 'cadere' must precede 'adere'
 	{"cadere", "à,càddi.fut:cadrò", "<<cadere>> and derivatives"},
 	-- NOTE: (1) per DiPI, [[suadere]] can be pronounced suadére (per Treccani/Hoepli) or suàdere.
@@ -214,7 +215,6 @@ export.builtin_verbs = {
 	{"fungere", "ù,fùnsi,fùnto[rare]", "<<fungere>> and derivatives"},
 	{"ungere", "ù,ùnsi,ùnto", "<<ungere>>; <<giungere>> and derivatives; <<mungere>> and derivatives; <<pungere>> and derivatives; but not <<fungere>> and derivatives (past participle is formed the same way but rare)"},
 	-- arrogere: archaic, defective
-	-- allargere: send to RFV
 	{"spargere", "à,spàrsi,spàrso", "<<spargere>> and derivatives"},
 	{{term = "ergere", prefixes = {"^", "ad", "ri"}}, "è,èrsi,èrto:#érto", "<<ergere>>, <<adergere>>, <<riergere>>; but not any other verbs in ''-ergere''"},
 	{{term = "ergere", prefixes = {"m", "sp", "t"}}, "è,èrsi,èrso", "<<mergere>> and derivatives; <<spergere>> and derivatives; <<tergere>> and derivatives"},
