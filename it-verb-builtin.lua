@@ -100,8 +100,7 @@ export.builtin_verbs = {
 	-- mansuescere: archaic, rare, infinitive only
 	{"noscere", "ó,nóbbi", "<<conoscere>>, archaic <<cognoscere>> and derivatives"},
 	-- ducere and derivatives: archaic; handled under -durre below
-	-- [[lucere]] itself is poetic and lacking the past historic
-	{{"lucere", prefixes={"tra", "ri"}}, "ù,+,-", "<<rilucere>>, <<tralucere>>"},
+	-- lucere, tralucere, rilucere: archaic, defective
 	-- 'cadere' must precede 'adere'
 	{"cadere", "à,càddi.fut:cadrò", "<<cadere>> and derivatives"},
 	-- NOTE: (1) per DiPI, [[suadere]] can be pronounced suadére (per Treccani/Hoepli) or suàdere.
@@ -194,7 +193,7 @@ export.builtin_verbs = {
 	{"diligere", "ì+,dilèssi,dilètto", "<<diligere>> and derivatives"},
 	{"rigere", "ì,rèssi,rètto", "<<erigere>>, <<dirigere>> and derivatives"},
 	{"sigere", "ì,+[uncommon],sàtto", "<<esigere>> and <<transigere>>"},
-	{"vigere", "ì,vigéi,-.only3sp", "<<vigere>>"},
+	-- vigere: highly defective
 	-- algere: archaic poetic, defective
 	-- soffolgere: archaic, defective; variant of soffolcere, see above
 	-- molgere: rare, literary, defective
@@ -215,6 +214,7 @@ export.builtin_verbs = {
 	{"fungere", "ù,fùnsi,fùnto[rare]", "<<fungere>> and derivatives"},
 	{"ungere", "ù,ùnsi,ùnto", "<<ungere>>; <<giungere>> and derivatives; <<mungere>> and derivatives; <<pungere>> and derivatives; but not <<fungere>> and derivatives (past participle is formed the same way but rare)"},
 	-- arrogere: archaic, defective
+	-- allargere: send to RFV
 	{"spargere", "à,spàrsi,spàrso", "<<spargere>> and derivatives"},
 	{{term = "ergere", prefixes = {"^", "ad", "ri"}}, "è,èrsi,èrto:#érto", "<<ergere>>, <<adergere>>, <<riergere>>; but not any other verbs in ''-ergere''"},
 	{{term = "ergere", prefixes = {"m", "sp", "t"}}, "è,èrsi,èrso", "<<mergere>> and derivatives; <<spergere>> and derivatives; <<tergere>> and derivatives"},
@@ -278,9 +278,9 @@ export.builtin_verbs = {
 	-- accignere, scignere, pignere and derivatives, strignere and derivatives, ugnere: all obsolete, unclear conjugation
 	-- Past participle cernìto; lacking in derivatives or rare -crèto. Both cerné and cernétte/cernètte
 	-- are very rare, with the former actually occuring more often (same in derivatives).
-	{"^cernere", "è,-,cernìto", "<<cernere>> and derivatives"},
+	{{term = "cernere", prefixes = {"^", "ri"}}, "è,-,cernìto", "<<cernere>> and derivatives"},
 	{{term = "cernere", prefixes = {"con", "dis"}}, "è,-,-", "<<concernere>>, <<discernere>> and derivatives"},
-	{"secernere", "è,+,secrèto", "<<secernere>>"},
+	{"secernere", "è+,+,secrèto", "<<secernere>>"},
 	-- Hoepli specifically says that [[sapere]] lacks a present participle, hence [[sapiente]] isn't it
 	{"sapere", [=[
 		-,sèppi.
@@ -405,8 +405,7 @@ export.builtin_verbs = {
 	{"sbollire", "ó:+isc.presp:+", "<<sbollire>>"},
 	{"bollire", "ó.presp:+", "<<bollire>> and derivatives, except <<sbollire>>"},
 	{"dormire", "ò.presp:+:dormiènte", "<<dormire>> and derivatives"},
-	{{term = "venire", prefixes = {"s"}}, "vèngo^viène,vénni,venùto.fut:verrò:venirò.presp:veniènte", "<<svenire>> and derivatives"},
-	{"venire", "vèngo^viène,vénni,venùto.fut:verrò.presp:veniènte", "<<venire>> and derivatives; but not <<svenire>> or derivatives"},
+	{"venire", "vèngo^viène,vénni,venùto.fut:verrò.presp:veniènte", "<<venire>> and derivatives"},
 	{"empire", "émpio,+:empiéi[less common],+:empiùto[less common].ger:empièndo.presp:empiènte",
 		"<<empire>> and <<riempire>>; not <<adempire>>, which has a more regular conjugation"},
 	-- {"apparire/riapparire", ...},
@@ -476,7 +475,7 @@ export.builtin_verbs = {
 		"<<bere>>, <<strabere>>, <<trabere>>, <<ribere>>; but not verbs in ''-combere'', archaic <<ebere||to weaken>>, archaic <<iubere||to command, to order>> or obsolete <<assorbere>>"},
 	{"bevere", "é,bévvi:bevétti.fut:berrò", "<<bevere>> and derivatives (archaic variant of <<bere>>)"},
 	-- benedire (strabenedire, ribenedire), maledire (stramaledire, rimaledire)
-	{{term = "dire", prefixes = {"bene", "male"}}, "+,dìssi:dìi[popular],détto.stem:dìce.pres2p:dìte.imperf:+:dìvo[popular]", "<<benedire>>, <<maledire>> and derivatives"},
+	{{term = "dire", prefixes = {"bene", "male", "mala"}}, "+,dìssi:dìi[popular],détto.stem:dìce.pres2p:dìte.imperf:+:dìvo[popular]", "<<benedire>>, <<maledire>> and derivatives"},
 	-- dire, ridire
 	{{term = "dire", prefixes = {"^", "ri"}}, "+,dìssi,détto.stem:dìce.pres2p:dìte.imp:dì':dì*!", "<<dire>>, <<ridire>>; not any other derivatives"},
 	-- addire, contraddire, ricontraddire, indire, interdire, predire, etc.
