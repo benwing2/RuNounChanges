@@ -10,7 +10,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_text_on_page(index, pagetitle, text, regex, invert, verbose,
-    include_text, all_matches, mainspace_only, lang_only, from_to):
+    include_text, all_matches, lang_only, from_to):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -63,7 +63,7 @@ def search_pages(args, regex, invert, input_from_diff, start, end, lang_only):
 
   def do_process_text_on_page(index, title, text):
     process_text_on_page(index, title, text, regex, invert, args.verbose,
-        args.text, args.all, args.mainspace_only, lang_only, args.from_to)
+        args.text, args.all, lang_only, args.from_to)
 
   if input_from_diff:
     lines = codecs.open(input_from_diff, "r", "utf-8")
@@ -73,8 +73,7 @@ def search_pages(args, regex, invert, input_from_diff, start, end, lang_only):
       do_process_text_on_page(index, pagename, text)
     return
 
-  blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, stdin=True,
-      filter_pages=args.mainspace_only and (lambda x: ":" not in x) or None)
+  blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, stdin=True)
 
 if __name__ == "__main__":
   parser = blib.create_argparser("Search on pages", include_pagefile=True,
@@ -87,7 +86,6 @@ if __name__ == "__main__":
   parser.add_argument('--all', help="Include all matches.", action="store_true")
   parser.add_argument('--from-to', help="Output in from-to format, for ease in pushing changes.", action="store_true")
   parser.add_argument('--text', help="Include surrounding text.", action="store_true")
-  parser.add_argument('--mainspace-only', help="Skip non-mainspace pages.", action='store_true')
   parser.add_argument('--lang-only', help="Only search the specified language section.")
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
