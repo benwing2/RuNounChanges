@@ -2075,22 +2075,7 @@ local function normalize_all_lemmas(alternant_multiword_spec, pagename)
 
 	-- (1) Add links to all before and after text. Remember the original text so we can reconstruct the verb spec later.
 	if not alternant_multiword_spec.args.noautolinktext then
-		for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
-			alternant_or_word_spec.user_specified_before_text = alternant_or_word_spec.before_text
-			alternant_or_word_spec.before_text = com.add_links(alternant_or_word_spec.before_text)
-			if alternant_or_word_spec.alternants then
-				for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-					for _, word_spec in ipairs(multiword_spec.word_specs) do
-						word_spec.user_specified_before_text = word_spec.before_text
-						word_spec.before_text = com.add_links(word_spec.before_text)
-					end
-					multiword_spec.user_specified_post_text = multiword_spec.post_text
-					multiword_spec.post_text = com.add_links(multiword_spec.post_text)
-				end
-			end
-		end
-		alternant_multiword_spec.user_specified_post_text = alternant_multiword_spec.post_text
-		alternant_multiword_spec.post_text = com.add_links(alternant_multiword_spec.post_text)
+		iut.add_links_to_before_and_after_text(alternant_multiword_spec, "remember original")
 	end
 
 	-- (2) Remove any links from the lemma, but remember the original form
@@ -2124,7 +2109,7 @@ local function normalize_all_lemmas(alternant_multiword_spec, pagename)
 			-- Add links to the lemma so the user doesn't specifically need to, since we preserve
 			-- links in multiword lemmas and include links in non-lemma forms rather than allowing
 			-- the entire form to be a link.
-			linked_lemma = com.add_links(base.user_specified_lemma)
+			linked_lemma = iut.add_links(base.user_specified_lemma)
 		end
 		base.linked_lemma = linked_lemma
 	end)
