@@ -34,11 +34,6 @@ local footnote_abbrevs = {
 }
 
 
-function export.remove_redundant_links(text)
-	-- remove redundant link surrounding entire form
-	return rsub(text, "^%[%[([^%[%]|]*)%]%]$", "%1")
-end
-
 ------------------------------------------------------------------------------------------------------------
 --                                             PARSING CODE                                               --
 ------------------------------------------------------------------------------------------------------------
@@ -1193,6 +1188,60 @@ function export.get_footnote_text(form, footnote_obj)
 	else
 		return link_text .. ref_text
 	end
+end
+
+
+-- Add links around words in a term. If multiword_only, do it only in multiword terms.
+function export.add_links(term, multiword_only)
+	if form == "" or form == " " then
+		return form
+	end
+	if not form:find("%[%[") then
+		if rfind(form, "[%s%p]") then --optimization to avoid loading [[Module:headword]] on single-word forms
+			local m_headword = require("Module:headword")
+			if m_headword.head_is_multiword(form) then
+				form = m_headword.add_multiword_links(form)
+			end
+		end
+		if not multiword_only and not form:find("%[%[") then
+			form = "[[" .. form .. "]]"
+		end
+	end
+	return form
+end
+
+
+-- Remove redundant link surrounding entire term.
+function export.remove_redundant_links(term)
+	return rsub(term, "^%[%[([^%[%]|]*)%]%]$", "%1")
+end
+
+
+-- Add links to all before and after text; for use in inflection modules that preserve links in multiword lemmas and
+-- include links in non-lemma forms rather than allowing the entire form to be a link. If `remember_original`, remember
+-- the original user-specified before/after text so we can reconstruct the original spec later. `add_links` is a
+-- function of one argument to add links to a given piece of text; if unspecified, it defaults to `export.add_links`.
+function export.add_links_to_before_and_after_text(alternant_multiword_spec, remember_original, add_links)
+	add_links = add_links or export.add_links
+	local function add_links_remember_original(object, field)
+		if remember_original then
+			object["user_specified_" .. field] = object[field]
+		end
+		object[field] = add_links(object[field])
+	end
+
+	for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
+		add_links_remember_original(alternant_or_word_spec, "before_text")
+		if alternant_or_word_spec.alternants then
+			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+				for _, word_spec in ipairs(multiword_spec.word_specs) do
+					add_links_remember_original(word_spec, "before_text")
+				end
+				add_links_remember_original(multiword_spec, "post_text")
+			end
+		end
+	end
+	add_links_remember_original(alternant_multiword_spec, "post_text")
 end
 
 
