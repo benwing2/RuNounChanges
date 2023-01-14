@@ -214,55 +214,58 @@ def process_text_on_page(index, pagetitle, text):
       is_plural = g.endswith("-p")
 
       if not is_plural:
-        if g not in ["m", "f", "mf", "mfbysense"]:
-          pagemsg("WARNING: Saw unrecognized gender '%s', can't handle: %s" % (g, unicode(t)))
-          continue
+        while True:
+          pls = blib.fetch_param_chain(t, "2", "pl")
+          mpls = blib.fetch_param_chain(t, "mpl")
+          fpls = blib.fetch_param_chain(t, "fpl")
+          orig_pls = pls
 
-        pls = blib.fetch_param_chain(t, "2", "pl")
-        mpls = blib.fetch_param_chain(t, "mpl")
-        fpls = blib.fetch_param_chain(t, "fpl")
-        orig_pls = pls
+          if g not in ["m", "f", "mf", "mfbysense"]:
+            pagemsg("WARNING: Saw unrecognized gender '%s', can't handle: %s" % (g, unicode(t)))
+            break
 
-        if g in ["m", "f"]:
-          if mpls or fpls:
-            pagemsg("Saw g=%s along with mpl=/fpl=, can't handle: %s" % (g, unicode(t)))
-            continue
-          defpl = make_plural(lemma, g, True)
-          if defpl is None:
-            pagemsg("Can't generate default plural, skipping: %s" % unicode(t))
-            continue
-          new_pls = ["+" if pl == defpl else pl for pl in pls]
-          if new_pls == ["+"]:
-            pagemsg("Removing redundant plural '%s'" % pls[0])
-            subnotes.append("remove redundant plural '%s'" % pls[0])
-            pls = []
-          elif new_pls != pls:
-            for old_pl, new_pl in zip(pls, new_pls):
-              if old_pl != new_pl:
-                assert old_pl == defpl
-                assert new_pl == "+"
-                pagemsg("Replacing default plural '%s' with '+'" % defpl)
-                subnotes.append("replace default plural '%s' with '+'" % defpl)
-            pls = new_pls
+          if g in ["m", "f"]:
+            if mpls or fpls:
+              pagemsg("Saw g=%s along with mpl=/fpl=, can't handle: %s" % (g, unicode(t)))
+              break
+            defpl = make_plural(lemma, g, True)
+            if defpl is None:
+              pagemsg("Can't generate default plural, skipping: %s" % unicode(t))
+              break
+            new_pls = ["+" if pl == defpl else pl for pl in pls]
+            if new_pls == ["+"]:
+              pagemsg("Removing redundant plural '%s'" % pls[0])
+              subnotes.append("remove redundant plural '%s'" % pls[0])
+              pls = []
+            elif new_pls != pls:
+              for old_pl, new_pl in zip(pls, new_pls):
+                if old_pl != new_pl:
+                  assert old_pl == defpl
+                  assert new_pl == "+"
+                  pagemsg("Replacing default plural '%s' with '+'" % defpl)
+                  subnotes.append("replace default plural '%s' with '+'" % defpl)
+              pls = new_pls
 
-          for special in romance_utils.all_specials:
-            special_pl = make_plural(lemma, g, True, special)
-            if special_pl is None:
-              continue
-            new_pls = []
-            for pl in pls:
-              if pl == special_pl:
-                pagemsg("Replacing plural '%s' with '+%s'" % (pl, special))
-                subnotes.append("replace plural '%s' with '+%s'" % (pl, special))
-                new_pls.append("+%s" % special)
-              else:
-                new_pls.append(pl)
-            pls = new_pls
+            for special in romance_utils.all_specials:
+              special_pl = make_plural(lemma, g, True, special)
+              if special_pl is None:
+                continue
+              new_pls = []
+              for pl in pls:
+                if pl == special_pl:
+                  pagemsg("Replacing plural '%s' with '+%s'" % (pl, special))
+                  subnotes.append("replace plural '%s' with '+%s'" % (pl, special))
+                  new_pls.append("+%s" % special)
+                else:
+                  new_pls.append(pl)
+              pls = new_pls
 
-          pls = [replace_lemma_with_hash(pl) for pl in pls]
+            pls = [replace_lemma_with_hash(pl) for pl in pls]
 
-        else:
-          pagemsg("Can't handle g=%s yet, skipping: %s" % (g, unicode(t)))
+          else:
+            pagemsg("Can't handle g=%s yet, skipping: %s" % (g, unicode(t)))
+
+          break
 
       def handle_mf(g, g_full, make_mf):
         mf = getp(g)
@@ -297,7 +300,7 @@ def process_text_on_page(index, pagetitle, text):
         if mfs:
           defmf = make_mf(lemma)
           if mfs == [defmf]:
-            if is_plural or (not mfpls or mfpls == [make_plural(defmf, True)]):
+            if is_plural or (not mfpls or mfpls == [make_plural(defmf, g, True)]):
               subnotes.append("replace %s=%s with '+'" % (g, mfs[0]))
               return ["+"], mf_quals, []
           actual_special = None
@@ -316,7 +319,7 @@ def process_text_on_page(index, pagetitle, text):
               pagemsg("WARNING: Explicit %s=%s matches special=%s but no %s plural, allowing" % (
                 g, ",".join(mfs), actual_special, g_full))
             else:
-              special_mfpl = make_plural(special_mf, True, actual_special)
+              special_mfpl = make_plural(special_mf, g, True, actual_special)
               if special_mfpl:
                 if mfpls == [special_mfpl]:
                   pagemsg("Found %s=%s and special=%s, %spls=%s matches special_%spl" % (
@@ -337,7 +340,7 @@ def process_text_on_page(index, pagetitle, text):
               subnotes.append("replace default %s '%s' with '+'" % (g_full, defmf))
               mfs = mfs_with_def
             if not is_plural and mfpls:
-              defpl = [make_plural(x, True) for x in mfs]
+              defpl = [make_plural(x, g, True) for x in mfs]
               ok = False
               if set(defpl) == set(mfpls):
                 ok = True
@@ -351,7 +354,7 @@ def process_text_on_page(index, pagetitle, text):
                 mfpls = []
               else:
                 for special in romance_utils.all_specials:
-                  defpl = [make_plural(x, True, special) for x in mfs]
+                  defpl = [make_plural(x, g, True, special) for x in mfs]
                   if set(defpl) == set(mfpls):
                     pagemsg("Found %s=%s, %spl=%s matches special=%s" % (
                       g, ",".join(mfs), g, ",".join(mfpls), special))
@@ -381,7 +384,7 @@ def process_text_on_page(index, pagetitle, text):
 
       if head is None:
         rmparam(t, "head")
-      elif head and head == lemma:
+      elif head and head == pagetitle:
         subnotes.append("convert head= without brackets to nolinkhead=1")
         rmparam(t, "head")
         t.add("nolinkhead", "1")
