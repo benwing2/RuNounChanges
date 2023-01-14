@@ -3,12 +3,13 @@ local export = {}
 local m_links = require("Module:links")
 local m_langs = require("Module:languages")
 local m_strutils = require("Module:string utilities")
-local m_debug = require("Module:debug")
+local m_debug_track = require("Module:debug/track")
 local data = require("Module:place/data")
 
 local rmatch = mw.ustring.match
 local rfind = mw.ustring.find
 local rsplit = mw.text.split
+local ulen = mw.ustring.len
 
 local cat_data = data.cat_data
 
@@ -47,7 +48,7 @@ end
 -- Add the page to a tracking "category". To see the pages in the "category",
 -- go to [[Template:tracking/place/PAGE]] and click on "What links here".
 local function track(page)
-	m_debug.track("place/" .. page)
+	m_debug_track("place/" .. page)
 	return true
 end
 
@@ -298,9 +299,48 @@ local function split_holonym(datum)
 end
 
 
--- Parse a "new-style" place spec, with placetypes and holonyms surrounded by <<...>>
--- amid otherwise raw text.  Return value is a place spec, as documented in
--- parse_place_specs().
+-- Apply a function to the non-HTML (including <<...>> segments) and non-Wikilink parts of `text`. We need to do
+-- this especially so that we correctly handle holonyms (e.g. 'c/Italy') without getting confused by </span> and
+-- similar HTML tags. The Wikilink exclusion is a bit less important but may still occur e.g. in links to
+-- [[Admaston/Bromley]]. This is based on munge_text() in [[Module:munge text]].
+local function process_excluding_html_and_links(text, fn)
+	local has_html = text:find("<")
+	local has_link = text:find("%[%[")
+	if not has_html and not has_link then
+		return fn(text)
+	end
+
+	local function do_munge(text, pattern, functor)
+		local index = 1
+		local length = ulen(text)
+		local result = ""
+		pattern = "(.-)(" .. pattern .. ")"
+		while index <= length do
+			local first, last, before, match = rfind(text, pattern, index)
+			if not first then
+				result = result .. functor(mw.ustring.sub(text, index))
+				break
+			end
+			result = result .. functor(before) .. match
+			index = last + 1
+		end
+		return result
+	end
+	
+	local function munge_text_with_html(txt)
+		return do_munge(txt, "<[^<>]->", fn)
+	end
+
+	if has_link then -- contains wikitext links
+		return do_munge(text, "%[%[[^%[%]]-%]%]", has_html and munge_text_with_html or fn)
+	else -- HTML tags only
+		return munge_text_with_html(text)
+	end
+end
+
+
+-- Parse a "new-style" place spec, with placetypes and holonyms surrounded by <<...>> amid otherwise raw text.  Return
+-- value is a place spec, as documented in parse_place_specs().
 local function parse_new_style_place_spec(text)
 	local placetypes = {}
 	local segments = m_strutils.capturing_split(text, "<<(.-)>>")
@@ -362,95 +402,128 @@ local function parse_new_style_place_spec(text)
 end
 
 
--- Process numeric args (except for the language code in 1=). The return value is one or
--- more "place specs", each one corresponding to a single semicolon-separated combination of
--- placetype + holonyms in the numeric arguments. A given place spec is a table
+-- Process numeric args (except for the language code in 1=). `numargs` is a list of the numeric arguments passed to
+-- {{place}}. The return value is one or more "place specs", each one corresponding to a single semicolon-separated
+-- combination of placetype + holonyms in the numeric arguments. A given place spec is a table
 -- {"foobar", PLACETYPES, HOLONYM_SPEC, HOLONYM_SPEC, ..., HOLONYM_PLACETYPE={HOLONYM_PLACENAME, ...}, ...}.
--- For example, the call {{place|en|city|s/Pennsylvania|c/US}} will result in a place spec
--- {"foobar", {"city"}, {"state", "Pennsylvania"}, {"country", "United States"}, state={"Pennsylvania"}, country={"United States"}}.
--- Here, the placetype aliases "s" and "c" have been expanded into "state" and "country"
--- respectively, and the placename alias "US" has been expanded into "United States".
--- PLACETYPES is a list because there may be more than one (e.g. the call
--- {{place|en|city/and/county|s/California}} will result in a place spec
--- {"foobar", {"city", "and", "county"}, {"state", "California"}, state={"California"}})
--- and the value in the key/value pairs is likewise a list (e.g. the call
--- {{place|en|city|s/Kansas|and|s/Missouri}} will result in a place spec
--- {"foobar", {"city"}, {"state", "Kansas"}, {nil, "and"}, {"state", "Missouri"}, state={"Kansas", "Missouri"}}).
+-- For example, the call {{place|en|city|s/Pennsylvania|c/US}} will result in the return value
+-- {{"foobar", {"city"}, {"state", "Pennsylvania"}, {"country", "United States"}, state={"Pennsylvania"}, country={"United States"}}}.
+-- Here, the placetype aliases "s" and "c" have been expanded into "state" and "country" respectively, and the placename
+-- alias "US" has been expanded into "United States". PLACETYPES is a list because there may be more than one (e.g. the
+-- call {{place|en|city/and/county|s/California}} will result in the return value
+-- {{"foobar", {"city", "and", "county"}, {"state", "California"}, state={"California"}}}) and the value in the
+-- key/value pairs is likewise a list (e.g. the call {{place|en|city|s/Kansas|and|s/Missouri}} will return
+-- {{"foobar", {"city"}, {"state", "Kansas"}, {nil, "and"}, {"state", "Missouri"}, state={"Kansas", "Missouri"}}}).
+-- If there is an argument beginning with a semicolon, it separates multiple logical place descriptions and the returned
+-- list will contain more than one value. For example, the call
+-- {{place|en|city-state|cont/Europe|;|enclave|within|city/Rome|c/Italy}} will result in
+-- {{"foobar", {"city-state"}, {"continent", "Europe"}, continent={"Europe"}, joiner="; "}, {"foobar", {"enclave"}, {nil, "within"}, {"city", "Rome"}, {"country", "Italy"}, city={"Rome"}, country={"Italy"}}}.
 local function parse_place_specs(numargs)
 	local specs = {}
-	local c = 1
-	local cY = 1
-	local cX = 2
+	-- Index of separate (semicolon-separated) place descriptions within `specs`.
+	local desc_index = 1
+	-- Index of separate holonyms and placetypes within a place description. It starts at 2 because the first element of
+	-- a place description is always "foobar" for historical reasons (FIXME: clean this up!). At index 2 is the
+	-- placetype(s), while higher indices contain the holonym specs.
+	local holonym_index = 2
 	local last_was_new_style = false
 
-	while numargs[c] do
-		if numargs[c] == ";" or numargs[c]:find("^;[^ ]") then
-			if numargs[c] == ";" then
-				specs[cY].joiner = "; "
-			elseif numargs[c] == ";;" then
-				specs[cY].joiner = " "
+	for _, arg in ipairs(numargs) do
+		if arg == ";" or arg:find("^;[^ ]") then
+			if not specs[desc_index] then
+				error("Saw semicolon joiner without preceding place description")
+			end
+			if arg == ";" then
+				specs[desc_index].joiner = "; "
+			elseif arg == ";;" then
+				specs[desc_index].joiner = " "
 			else
-				local joiner = numargs[c]:sub(2)
+				local joiner = arg:sub(2)
 				if rfind(joiner, "^%a") then
-					specs[cY].joiner = " " .. joiner .. " "
+					specs[desc_index].joiner = " " .. joiner .. " "
 				else
-					specs[cY].joiner = joiner .. " "
+					specs[desc_index].joiner = joiner .. " "
 				end
 			end
-			cY = cY + 1
-			cX = 2
+			desc_index = desc_index + 1
+			holonym_index = 2
 			last_was_new_style = false
 		else
-			if numargs[c]:find("<<") then
-				if cX > 2 then
-					cY = cY + 1
-					cX = 2
+			if arg:find("<<") then
+				if holonym_index > 2 then
+					desc_index = desc_index + 1
+					holonym_index = 2
 				end
-				specs[cY] = parse_new_style_place_spec(numargs[c])
+				specs[desc_index] = parse_new_style_place_spec(arg)
 				last_was_new_style = true
-				cX = cX + 1
+				holonym_index = holonym_index + 1
 			else
 				if last_was_new_style then
 					error("Old-style arguments cannot directly follow new-style place spec")
 				end
 				last_was_new_style = false
-				if cX == 2 then
-					local entry_placetypes = rsplit(numargs[c], "/", true)
+				if arg:find("<") then
+					-- Embedded HTML in the argument.
+					local parts_excluding_html = rsplit(arg, "<[^<>]->")
+					for _, part in ipairs(parts_excluding_html) do
+						if part:find("/") then
+							error("Saw ")
+						end
+					end
+					FIXME
+					...
+				end
+				if holonym_index == 2 then
+					local entry_placetypes = rsplit(arg, "/", true)
 					for n, ept in ipairs(entry_placetypes) do
 						entry_placetypes[n] = data.placetype_aliases[ept] or ept
 					end
-					specs[cY] = {"foobar", entry_placetypes}
-					cX = cX + 1
+					specs[desc_index] = {"foobar", entry_placetypes}
+					holonym_index = holonym_index + 1
 				else
-					local holonym, is_multi = split_holonym(numargs[c])
+					local holonym, is_multi = split_holonym(arg)
 					if is_multi then
 						for j, single_holonym in ipairs(holonym) do
 							if j > 1 then
 								-- Signal that "the" needs to be added if appropriate
 								table.insert(single_holonym[4], "_art_")
 								if j == #holonym then
-									specs[cY][cX] = {nil, "and", nil, {}}
-									cX = cX + 1
+									specs[desc_index][holonym_index] = {nil, "and", nil, {}}
+									holonym_index = holonym_index + 1
 								end
 							end
-							specs[cY][cX] = single_holonym
-							key_holonym_spec_into_place_spec(specs[cY], specs[cY][cX])
-							cX = cX + 1
+							specs[desc_index][holonym_index] = single_holonym
+							key_holonym_spec_into_place_spec(specs[desc_index], specs[desc_index][holonym_index])
+							holonym_index = holonym_index + 1
 						end
 					else
-						specs[cY][cX] = holonym
-						key_holonym_spec_into_place_spec(specs[cY], specs[cY][cX])
-						cX = cX + 1
+						specs[desc_index][holonym_index] = holonym
+						key_holonym_spec_into_place_spec(specs[desc_index], specs[desc_index][holonym_index])
+						holonym_index = holonym_index + 1
 					end
 				end
 			end
 		end
-
-		c = c + 1
 	end
 
 	handle_implications(specs, data.implications, false)
 
+	-- Tracking code. This does nothing but add tracking for seen placetypes and qualifiers. The place will be linked to
+	-- [[Template:tracking/place/entry-placetype/PLACETYPE]] for all entry placetypes seen; in addition, if PLACETYPE
+	-- has qualifiers (e.g. 'small city'), there will be links for the bare placetype minus qualifiers and separately
+	-- for the qualifiers themselves:
+	--   [[Special:WhatLinksHere/Template:tracking/place/entry-placetype/BARE_PLACETYPE]]
+	--   [[Special:WhatLinksHere/Template:tracking/place/entry-qualifier/QUALIFIER]]
+	-- Note that if there are multiple qualifiers, there will be links for each possible split. For example, for
+	-- 'small maritime city'), there will be the following links:
+	--   [[Special:WhatLinksHere/Template:tracking/place/entry-placetype/small maritime city]]
+	--   [[Special:WhatLinksHere/Template:tracking/place/entry-placetype/maritime city]]
+	--   [[Special:WhatLinksHere/Template:tracking/place/entry-placetype/city]]
+	--   [[Special:WhatLinksHere/Template:tracking/place/entry-qualifier/small]]
+	--   [[Special:WhatLinksHere/Template:tracking/place/entry-qualifier/maritime]]
+	-- Finally, there are also links for holonym placetypes, e.g. if the holonym 'c/Italy' occurs, there will be the
+	-- following link:
+	--   [[Special:WhatLinksHere/Template:tracking/place/holonym-placetype/country]]
 	for _, spec in ipairs(specs) do
 		for _, entry_placetype in ipairs(spec[2]) do
 			track("entry-placetype/" .. entry_placetype)
