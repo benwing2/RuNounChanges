@@ -8,7 +8,6 @@ local compound_module = "Module:compound"
 local lang = m_languages.getByCode("it")
 
 local rfind = mw.ustring.find
-local rsubn = mw.ustring.gsub
 local rsplit = mw.text.split
 local u = mw.ustring.char
 -- Assigned to `require("Module:parse utilities")` as necessary.
@@ -17,10 +16,9 @@ local put
 local force_cat = false -- set to true for testing
 
 
--- version of rsubn() that discards all but the first return value
-local function rsub(term, foo, bar)
-	local retval = rsubn(term, foo, bar)
-	return retval
+local function glossary_link(entry, text)
+	text = text or entry
+	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
 end
 
 
@@ -40,44 +38,44 @@ local function link_with_qualifiers(part, pretext)
 end
 
 
-local param_mods = {
-	t = {
-		-- We need to store the <t:...> inline modifier into the "gloss" key of the parsed part, because that is what
-		-- [[Module:links]] expects.
-		item_dest = "gloss",
-	},
-	gloss = {},
-	tr = {},
-	ts = {},
-	g = {
-		-- We need to store the <g:...> inline modifier into the "genders" key of the parsed part, because that is what
-		-- [[Module:links]] expects.
-		item_dest = "genders",
-		convert = function(arg, parse_err)
-			return rsplit(arg, ",")
-		end,
-	},
-	id = {},
-	alt = {},
-	q = {},
-	qq = {},
-	lit = {},
-	pos = {},
-	sc = {
-		convert = function(arg, parse_err)
-			return require("Module:scripts").getByCode(arg, parse_err)
-		end,
-	},
-	pl = {},
-	type = {
-		convert = function(arg, parse_err)
-			if arg ~= "verb" and arg ~= "object" and arg ~= "connector" then
-				parse_err(("Argument '%s' should be either 'verb', 'object' or 'connector'"):format(arg))
-			end
-			return arg
-		end,
-	},
-}
+local function get_param_mods(include_pl_and_type)
+	local param_mods = {
+		t = {
+			-- We need to store the <t:...> inline modifier into the "gloss" key of the parsed part, because that is what
+			-- [[Module:links]] expects.
+			item_dest = "gloss",
+		},
+		gloss = {},
+		-- no 'tr' or 'ts', doesn't make sense for Italian
+		g = {
+			-- We need to store the <g:...> inline modifier into the "genders" key of the parsed part, because that is what
+			-- [[Module:links]] expects.
+			item_dest = "genders",
+			convert = function(arg, parse_err)
+				return rsplit(arg, ",")
+			end,
+		},
+		id = {},
+		alt = {},
+		q = {},
+		qq = {},
+		lit = {},
+		pos = {},
+		-- no 'sc', doesn't make sense for Italian
+	}
+	if include_pl_and_type then
+		param_mods.pl = {}
+		param_mods.type = {
+			convert = function(arg, parse_err)
+				if arg ~= "verb" and arg ~= "object" and arg ~= "connector" then
+					parse_err(("Argument '%s' should be either 'verb', 'object' or 'connector'"):format(arg))
+				end
+				return arg
+			end,
+		}
+	end
+	return param_mods
+end
 
 
 local function parse_args(args, hack_params)
@@ -98,9 +96,9 @@ local function parse_args(args, hack_params)
 end
 
 
-local function parse_term_with_modifiers(paramname, val)
+local function parse_term_with_modifiers(paramname, val, pre_initialized_obj, include_pl_and_type)
 	local function generate_obj(term, parse_err)
-		local obj = {}
+		local obj = pre_initialized_obj or {}
 		if term:find(":") then
 			if not put then
 				put = require(put_module)
@@ -114,16 +112,12 @@ local function parse_term_with_modifiers(paramname, val)
 		return obj
 	end
 
-	-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>, <br/> or
-	-- similar in it, caused by wrapping an argument in {{l|...}}, {{m|...}} or similar. Basically, all tags of
-	-- the sort we parse here should consist of a less-than sign, plus letters, plus a colon, e.g. <tr:...>, so if
-	-- we see a tag on the outer level that isn't in this format, we don't try to parse it. The restriction to the
-	-- outer level is to allow generated HTML inside of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
+	-- Check for inline modifier, e.g. מרים<tr:Miryem>.
 	if val:find("<") then
 		if not put then
 			put = require(put_module)
 		end
-		return put.parse_inline_modifiers(val, paramname, param_mods, generate_obj, parse_err)
+		return put.parse_inline_modifiers(val, paramname, get_param_mods(include_pl_and_type), generate_obj, parse_err)
 	else
 		return generate_obj(val)
 	end
@@ -147,7 +141,7 @@ end
 
 local function parse_and_format_parts(parts, get_part_type)
 	for i, term in ipairs(parts) do
-		local parsed = parse_term_with_modifiers(i, term)
+		local parsed = parse_term_with_modifiers(i, term, nil, "include pl and type")
 		if not parsed.term:find("%[") then
 			local parttype = parsed.type
 			if not parttype then
@@ -274,6 +268,93 @@ function export.it_verb_verb(frame)
 
 	ins(require(compound_module).concat_parts(lang, args[1], {"verb-verb compounds"}, args.nocat, args.sort, args.lit,
 		force_cat))
+	return table.concat(result)
+end
+
+
+function export.it_deverbal(frame)
+	local list_with_holes = { list = true, allow_holes = true }
+	local params = {
+		[1] = {required = true, list = true, default = "cozzare<t:to collide, to crash>"},
+		
+		["alt"] = list_with_holes,
+		["t"] = list_with_holes,
+		["gloss"] = {alias_of = "t", list = true, allow_holes = true},
+		["g"] = list_with_holes,
+		["id"] = list_with_holes,
+		["lit"] = list_with_holes,
+		["pos"] = list_with_holes,
+		["q"] = list_with_holes,
+		["qq"] = list_with_holes,
+		-- no tr, ts or sc; not relevant for Italian
+
+		["nocap"] = {type = "boolean"},
+		["notext"] = {type = "boolean"},
+		["nocat"] = {type = "boolean"},
+		["sort"] = {},
+		["pagename"] = {}, -- for testing
+	}
+
+	local args = require("Module:parameters").process(args, params)
+
+	if #args[1] == 0 then
+	    local NAMESPACE = mw.title.getCurrentTitle().nsText
+		if NAMESPACE == "Template" then
+			table.insert(args[1], "cozzare<t:to collide, to crash>")
+			args.pagename = "cozzo"
+		else
+			error("Internal error: Something went wrong with [[Module:parameters]]; it should not allow zero numbered arguments")
+		end
+	end
+
+	local suffix = args.pagename:match("([aeo])$")
+	if not suffix then
+		error(("Pagename '%s' does not end in a recognizable deverbal suffix -a, -e or -o"):format(args.pagename))
+	end
+
+	local suffix_obj = m_links.full_link({
+		term = "-" .. suffix,
+		lang = lang,
+		id = "deverbal",
+	}, "term")
+
+	for i, term in ipairs(args[1]) do
+		local parsed = parse_term_with_modifiers(i, term, {
+			alt = args.alt[i],
+			gloss = args.t[i],
+			genders = args.g[i] and rsplit(args.g[i], ",") or nil,
+			id = args.id[i],
+			pos = args.pos[i],
+			lit = args.lit[i],
+			q = args.q[i],
+			qq = args.qq[i],
+		}, false)
+		parsed.lang = parsed.lang or lang
+		local formatted_part = link_with_qualifiers(parsed)
+		args[1][i] = require(compound_module).concat_parts(lang, {formatted_part, suffix_obj}, {"deverbals"},
+			args.nocat, args.sort, nil, force_cat) -- FIXME: should we support lit= here?
+	end
+
+	result = {}
+	local function ins(text)
+		table.insert(result, text)
+	end
+
+	if not args.notext then
+		if args.nocap then
+			glossary_link("Appendix:deverbal", "deverbal")
+		else
+			glossary_link("Appendix:deverbal", "Deverbal")
+		end
+		ins(" from ")
+	end
+
+	if #args[1] == 1 then
+		ins(args[1][1])
+	else
+		ins(require("Module:table").serialCommaJoin(args[1], {conj = "or"}))
+	end
+
 	return table.concat(result)
 end
 
