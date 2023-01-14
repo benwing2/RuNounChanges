@@ -161,8 +161,8 @@ def add_single_word_links(space_word, splithyph, no_split_apostrophe_words=None,
     linked_words.append(word)
   return "".join(linked_words) + punct
 
-# Auto-add links to a lemma. Links are not added to single-word lemmas. We split on spaces, and also on hyphens if
-# `splithyph` is given or the word has no spaces. In addition, we split on apostrophes, including the apostrophe in
+# Auto-add links to a multiword term. Links are not added to single-word terms. We split on spaces, and also on hyphens
+# if `splithyph` is given or the word has no spaces. In addition, we split on apostrophes, including the apostrophe in
 # the link to its left (so we auto-split "de l'eau" "[[de]] [[l']][[eau]]"). We don't always split on hyphens because
 # of cases like "boire du petit-lait" where "petit-lait" should be linked as a whole, but provide the option to do it
 # for cases like "croyez-le ou non". If there's no space, however, then it makes sense to split on hyphens by default
@@ -171,15 +171,15 @@ def add_single_word_links(space_word, splithyph, no_split_apostrophe_words=None,
 #
 # `no_split_apostrophe_words` and `include_hyphen_prefixes` allow for special-case handling of particular words and
 # are as described in the comment above add_single_word_links().
-def add_lemma_links(lemma, splithyph, no_split_apostrophe_words=None, include_hyphen_prefixes=None):
-  if " " not in lemma:
+def add_links_to_multiword_term(term, splithyph, no_split_apostrophe_words=None, include_hyphen_prefixes=None):
+  if " " not in term:
     splithyph = True
-  words = lemma.split(" ")
+  words = term.split(" ")
   linked_words = []
   for word in words:
     linked_words.append(add_single_word_links(word, splithyph, no_split_apostrophe_words, include_hyphen_prefixes))
   retval = " ".join(linked_words)
-  # If we ended up with a single link consisting of the entire lemma,
+  # If we ended up with a single link consisting of the entire term,
   # remove the link.
   m = re.search(r"^\[\[([^\[\]]*)\]\]$", retval)
   return m.group(1) if m else retval

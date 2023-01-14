@@ -362,7 +362,7 @@ def process_text_on_page(index, pagetitle, text):
           notes.append("add old=1 to {{pt-noun}} where a warning will be issued")
           t.add("old", "1")
 
-      autohead = romance_utils.add_lemma_links(lemma, splithyph=False)
+      autohead = romance_utils.add_links_to_multiword_term(lemma, splithyph=False)
       if autohead == head:
         pagemsg("Remove redundant head %s" % head)
         subnotes.append("remove redundant head '%s'" % head)
