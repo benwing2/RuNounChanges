@@ -449,25 +449,19 @@ export.builtin_verbs = {
 	{"disfare", [=[
 		-,disféci,disfàtto.
 		stem:disfàce.
-		presrow:disfàccio:dìsfo:disfò[literary, archaic or regional],dìsfi:disfài[less common],dìsfa:disfà[less common],disfacciàmo:disfiàmo[common but proscribed],disfàte,dìsfano:disfànno[less common].
-		sub:dìsfi:disfàccia[less common].
-		fut:disfarò:disferò[informal].
-		imp:fà*:fài:fà'
+		presrow:disfàccio:dìsfo,dìsfi,dìsfa,disfacciàmo,disfàte,dìsfano.
+		sub:dìsfi.
+		fut:disfarò.
+		imp:disfà:disfài
 ]=], "<<disfare>>, <<soddisfare>> (<<sodisfare>>)"},
-	{"liquefare", [=[
-		-,liqueféci,liquefàtto.
-		stem:liquefàce.
-		presrow:liquefàccio:liquefò[literary, archaic or regional]:lìquefo[proscribed],liquefài,liquefà:lìquefa[proscribed],liquefacciàmo,liquefàte,liquefànno:lìquefano[proscribed].
-		sub:liquefàccia.
-		imp:liquefà:liquefài:liquefà'
-]=], "<<liquefare>>"},
+	-- liquefare: same as fare except for proscribed variants e.g. lìquefo, lìquefa
 	{"fare", [=[
 		-,féci,fàtto.
 		stem:fàce.
 		presrow:fàccio,fài,fà*,facciàmo,fàte,fànno.
 		sub:fàccia.
 		imp:fài:fà'
-]=], "<<fare>> and derivatives; but not <<disfare>>, <<soddisfare>> or <<liquefare>>"},
+]=], "<<fare>> and derivatives; but not <<disfare>> or <<soddisfare>>"},
 	{"trarre", "tràggo,tràssi,tràtto.stem:tràe"},
 	-- archaic variant of trarre, with some different present tense (hence subjunctive/imperative) forms
 	{"traggere", "tràggo^tràgge,tràssi,tràtto.pres1p:traggiàmo.fut:trarrò.stem:tràe"},
