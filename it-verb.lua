@@ -242,6 +242,9 @@ FIXME:
     tooltip.
 34. Add 'addnote[SLOT_SPEC]' to make [[tangere]] with disused 1s/2s/1p/2p easier to handle. (DONE)
 35. Throw an error if comma seen in single form specs like 'imp:'. (DONE)
+36. Overrides like phis:+[rare] of [[affarsi]] using built-in @ (from [[fare]]) don't properly pick up the irregular
+    built-in forms.
+37. Overrides like phis:afféci[rare] of [[affarsi]] using built-in @ (from [[fare]]) get the prefix duplicated.
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -422,16 +425,6 @@ local function add_links(form, multiword_only)
 		end
 	end
 	return form
-end
-
-
--- Add prefix to form, removing the PRESERVE_ACCENT notation if present (as for [[ridare]], [[sdarsi]]).
-local function add_prefix_to_form(prefix, form)
-	if prefix ~= "" then
-		return prefix .. rsub(form, PRESERVE_ACCENT, "")
-	else
-		return form
-	end
 end
 
 
@@ -873,7 +866,7 @@ end
 
 
 local function is_single_vowel_spec(spec)
-	return rfind(spec, "^" .. AV .. "[+-]?$") or rfind(spec, "^" .. AV .. "%-%-$")
+	return rfind(spec, "^" .. AV .. "[+-]?$") or rfind(spec, "^" .. AV .. "%-%-$") or rfind(spec, "^" .. AV .. "%+%+$")
 end
 
 
@@ -917,7 +910,7 @@ local function apply_vowel_spec(unaccented_stem, unaccented, unaccented_desc, vo
 		local before, v1, between, v2, after = analyze_stem_for_last_two_vowels(unaccented_stem, unaccented, unaccented_desc)
 		if v1 == v2 then
 			local first_second
-			spec_vowel, first_second = rmatch(vowel_spec, "^(.)([+-])$")
+			spec_vowel, first_second = rmatch(vowel_spec, "^(.)([+-]+)$") -- include ++
 			if not spec_vowel then
 				error("Last two stem vowels of " .. unaccented_desc .. " '" .. unaccented ..
 					"' are the same; you must specify + (second vowel) or - (first vowel) after the vowel spec '" ..
@@ -932,7 +925,9 @@ local function apply_vowel_spec(unaccented_stem, unaccented, unaccented_desc, vo
 				form = before .. v1 .. between .. spec_vowel .. after
 			end
 		else
-			if rfind(vowel_spec, "[+-]$") then
+			if rfind(vowel_spec, "%+%+$") then
+				vowel_spec = rsub(vowel_spec, "%+%+$", "")
+			elseif rfind(vowel_spec, "[+-]$") then
 				error("Last two stem vowels of " .. unaccented_desc .. " '" .. unaccented ..
 					"' are different; specify just an accented vowel, without a following + or -: '" .. vowel_spec .. "'")
 			end
@@ -1323,10 +1318,7 @@ local function add_negative_imperative(base)
 	for _, persnum in ipairs({"2s", "3s", "1p", "2p", "3p"}) do
 		local from = persnum == "2s" and "inf" or "imp" .. persnum
 		insert_forms(base, "negimp" .. persnum, iut.map_forms(base.forms[from], function(form)
-			-- We need to add the prefix explicitly here because it has to go inside the [[non]]. Accordingly, we
-			-- set dont_add_prefix in the row_conjugations entry for negative imperatives so we don't get the prefix
-			-- added again at the end.
-			return "[[non]] [[" .. add_prefix_to_form(base.verb.prefix or "", form) .. "]]"
+			return "[[non]] [[" .. form .. "]]"
 		end))
 	end
 end
@@ -1569,7 +1561,6 @@ The following specs are allowed:
 -- `no_single_overrides` (DOCUMENT ME)
 -- `add_reflexive_clitics` (DOCUMENT ME)
 -- `dont_check_defective_status` (DOCUMENT ME)
--- `dont_add_prefix` (DOCUMENT ME)
 ]=]
 local row_conjugations = {
 	{"inf", {
@@ -1627,9 +1618,6 @@ local row_conjugations = {
 		-- We don't want a category [[:Category:Italian verbs with missing negative imperative]]; doesn't make
 		-- sense as all parts are copied from elsewhere.
 		dont_check_defective_status = true,
-		-- Don't add the prefix at the end because of negative imperatives like "[[non]] [[proporre]]"; the prefix
-		-- must go *inside* the "non", so needs to be handled specially during conjugation.
-		dont_add_prefix = true,
 	}},
 	{"phis", {
 		desc = "past historic",
@@ -1897,6 +1885,20 @@ local function conjugate_row(base, rowslot)
 		rowspec.conjugate(base, rowslot)
 	end
 
+	-- Now add any footnotes derived from principal part overrides of the form '+[footnote]' used in conjunction with
+	-- built-in verbs.
+	if base.principal_part_footnotes[rowslot] then
+		for _, persnum in ipairs(rowspec.persnums) do
+			local full_slot = rowslot .. persnum
+			if base.forms[full_slot] then
+				-- To save on memory, side-effect the existing forms.
+				for _, formobj in ipairs(base.forms[full_slot]) do
+					formobj.footnotes = iut.combine_footnotes(formobj.footnotes, base.principal_part_footnotes[rowslot])
+				end
+			end
+		end
+	end
+
 	handle_row_overrides_for_row(base, rowslot)
 
 	-- If there's a mapping from row override persnums to full persnums, copy the slots accordingly.
@@ -1909,45 +1911,6 @@ local function conjugate_row(base, rowslot)
 	end
 
 	handle_single_overrides_for_row(base, "single_override_specs", rowslot)
-end
-
-
--- If a built-in verb was requested, add the verb's prefix to all forms (except the negative imperative and aux).
--- We don't add to the negative imperative because that row specifies `dont_add_prefix`; we don't add to aux because
--- it's not part of a row (even though it's mentioned in `all_verb_slots`).
-local function add_prefix_to_forms(base)
-	if base.verb.prefix and base.verb.prefix ~= "" then
-		for _, rowconj in ipairs(row_conjugations) do
-			local rowslot, rowspec = unpack(rowconj)
-			if not rowspec.dont_add_prefix then -- used for the negative imperative, which must be handled specially
-				for _, persnum in ipairs(rowspec.persnums) do
-					local slot = rowslot .. persnum
-					if base.forms[slot] then -- slot may not have any forms, e.g. the present participle
-						local saw_preserve_accent = false
-						for _, form in ipairs(base.forms[slot]) do
-							if rfind(form.form, PRESERVE_ACCENT) then
-								saw_preserve_accent = true
-								break
-							end
-						end
-						if saw_preserve_accent then
-							-- We have to do it the "hard" way, re-inserting the forms, in case of redundancy.
-							local existing_forms = base.forms[slot]
-							base.forms[slot] = {}
-							insert_forms(base, slot, iut.map_forms(existing_forms, function(form)
-								return add_prefix_to_form(base.verb.prefix, form)
-							end))
-						else
-							-- To save on memory, side-effect the existing forms.
-							map_side_effecting_forms(base.forms[slot], function(form)
-								return base.verb.prefix .. form
-							end)
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
 
@@ -2034,7 +1997,6 @@ local function conjugate_verb(base)
 		local rowslot, rowspec = unpack(rowconj)
 		conjugate_row(base, rowslot)
 	end
-	add_prefix_to_forms(base)
 	if base.verb.linked_suf ~= "" then
 		for _, rowconj in ipairs(row_conjugations) do
 			local rowslot, rowspec = unpack(rowconj)
@@ -2598,6 +2560,8 @@ local function create_base()
 	--        is given with a slash instead of a backslash;
 	--    (e) an auxiliary specified using e.g. "a[transitive]:e[intransitive]/è" (the key is "aux" and the value will
 	--        contain the actual auxiliary in the form in place of "a" or "e").
+	-- `principal_part_footnotes` contains per-row footnotes derived from overriding principal part specs of the form
+	--    '+[footnote]' used in conjunction with a built-in verb.
 	-- `principal_part_forms` contains the processed versions of the specs contained in `principal_part_specs`. The
 	--    keys are as in `principal_part_specs` and the values are the same as for `forms`.
 	-- `row_override_specs` contains user-specified forms for a full tense/aspect row using 'presrow:', 'subrow:', etc.
@@ -2644,9 +2608,11 @@ local function create_base()
 	--    - `rowprops.all_unknown`: All forms of the row are unknown.
 	--
 	-- There should be no other properties set directly at the `base` level.
-	return {forms = {}, principal_part_specs = {}, principal_part_forms = {}, row_override_specs = {},
-		single_override_specs = {}, late_single_override_specs = {}, addnote_specs = {}, is_irreg = {}, props = {},
-		rowprops = {irreg = {}, defective = {}, all_defective = {}, unknown = {}, all_unknown = {}}}
+	return {forms = {}, principal_part_specs = {}, principal_part_footnotes = {}, principal_part_forms = {},
+		row_override_specs = {}, single_override_specs = {}, late_single_override_specs = {}, addnote_specs = {},
+		is_irreg = {}, props = {},
+		rowprops = {irreg = {}, defective = {}, all_defective = {}, unknown = {}, all_unknown = {}},
+	}
 end
 
 
@@ -2692,7 +2658,8 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 		nbase.lemma = base.lemma
 		nbase.verb = base.verb
 		nbase.verb.prefix = prefix
-		nbase.verb.verb = main_verb
+		nbase.verb.verb = prefix .. main_verb
+		nbase.verb.raw_verb = prefix .. nbase.verb.raw_verb
 		parse_inside(nbase, conj, "is builtin")
 		if nbase.principal_part_specs.root_stressed_inf then
 			local base_rsi = base.principal_part_specs.root_stressed_inf
@@ -2712,12 +2679,119 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 			-- Cancel out the user's spec so it doesn't override the built-in spec.
 			base.principal_part_specs.root_stressed_inf = nil
 		end
-		for _, prop_table in ipairs { "principal_part_specs", "row_override_specs", "single_override_specs",
-			"late_single_override_specs", "props" } do
+
+		-- If there's a prefix, add it now to all the specs derived from the built-in verb.
+		if prefix ~= "" then
+
+			local function form_should_be_preserved(form)
+				return form == "+" or form == "-" or form == "?" or is_single_vowel_spec(form)
+			end
+
+			local function add_prefix_to_forms(tbl, slot)
+				local saw_preserve_accent = false
+				for _, formobj in ipairs(tbl[slot]) do
+					local postspec = rfind(formobj.form, "^.-([*!]*)$")
+					if rfind(postspec, "!") then
+						saw_preserve_accent = true
+						break
+					end
+				end
+				if saw_preserve_accent then
+					-- We have to do it the "hard" way, re-inserting the forms, in case of redundancy.
+					local existing_forms = tbl[slot]
+					tbl[slot] = {}
+					iut.insert_forms(tbl, slot, iut.map_forms(existing_forms, function(form)
+						if form_should_be_preserved(form) then
+							return form
+						else
+							-- If there is a ! after the form (indicating that monosyllabic accents should be
+							-- preserved), remove it.
+							local form_without_postspec, postspec = rfind(form, "^(.-)([*!]*)$")
+							return prefix .. form_without_postspec .. rsub(postspec, "!", "")
+						end
+					end))
+				else
+					-- To save on memory, side-effect the existing forms.
+					map_side_effecting_forms(tbl[slot], function(form)
+						if form_should_be_preserved(form) then
+							return form
+						else
+							return prefix .. form
+						end
+					end)
+				end
+			end
+
+			for _, prop_table in ipairs { "principal_part_specs", "single_override_specs", "late_single_override_specs" } do
+				for slot, _ in pairs(nbase[prop_table]) do
+					add_prefix_to_forms(nbase[prop_table], slot)
+				end
+			end
+
+			-- nbase.row_override_specs is in a different format.
+			for slot, prop in pairs(nbase.row_override_specs) do
+				for persnum, _ in pairs(prop) do
+					add_prefix_to_forms(prop, persnum)
+				end
+			end
+
+			-- We also need to hack any single-vowel specs that don't already specify +, - or -- to use ++, which is
+			-- like + (take the right vowel of two) but won't throw an error if there aren't two matching vowels.
+			-- Thisis needed for e.g. [[porre]] with prefix com-, where [[comporre]] ends up with two of the same vowel.
+			local function hack_single_vowel_spec(specs)
+				if specs then
+					for _, spec in ipairs(specs) do
+						if rfind(spec.form, "^" .. AV .. "$") then
+							spec.form = spec.form .. "++"
+						end
+					end
+				end
+			end
+			hack_single_vowel_spec(nbase.principal_part_specs.root_stressed_inf)
+			hack_single_vowel_spec(nbase.principal_part_specs.pres)
+			hack_single_vowel_spec(nbase.principal_part_specs.pres3s)
+		end
+
+		-- Copy user-specified principal part specs unless '+' is used, which we handle specially. The reason for this
+		-- is that + is normally used in conjunction with footnotes such as 'phis:+[rare]' where the intention is to add
+		-- a footnote to all the forms of that row; but if we don't do the following, the + instead requests the default
+		-- principal part generated from the infinitive.
+		for slot, specs in pairs(base.principal_part_specs) do
+			local saw_plus, saw_non_plus
+			for _, spec in ipairs(specs) do
+				if spec.form == "+" then
+					saw_plus = true
+				else
+					saw_non_plus = true
+				end
+			end
+			if saw_plus and saw_non_plus then
+				parse_err(("For principal part '%s:', can't specify both + and something else when overriding a built-in verb"):
+					format(slot))
+			elseif saw_plus then
+				for _, spec in ipairs(specs) do
+					if spec.form ~= "+" then
+						parse_err(("Internal error: Saw '%s' for principal part form for slot '%s' but expected '+'"):
+							format(slot, spec.form))
+					end
+					if spec.footnotes then
+						nbase.principal_part_footnotes[slot] = iut.combine_footnotes(
+							nbase.principal_part_footnotes[full_slot], spec.footnotes)
+					end
+				end
+			else
+				nbase.principal_part_specs[slot] = specs
+			end
+		end
+
+		-- Now copy remaining user-specified specs into the built-in verb `base`.
+		for _, prop_table in ipairs { "row_override_specs", "single_override_specs", "late_single_override_specs",
+			"props" } do
 			for slot, prop in pairs(base[prop_table]) do
 				nbase[prop_table][slot] = prop
 			end
 		end
+
 		for _, prop_list in ipairs { "addnote_specs" } do
 			for _, prop in ipairs(base[prop_list]) do
 				m_table.insertIfNot(nbase[prop_list], prop)
