@@ -8,13 +8,8 @@ from blib import getparam, rmparam, msg, site, tname, pname
 
 change_alter_to_alt = True
 
-def process_text_in_section(sectext, pagemsg):
+def process_text_in_section(secbody, pagemsg):
   notes = []
-
-  retval = blib.find_modifiable_lang_section(sectext, None, pagemsg)
-  if retval is None:
-    return
-  sections, j, secbody, sectail, has_non_lang = retval
 
   subsections = re.split(r"(^===+[^=\n]+===+[ \t]*\n)", secbody, 0, re.M)
   for k in xrange(1, len(subsections), 2):
@@ -101,7 +96,7 @@ def process_text_in_section(sectext, pagemsg):
           retval.append(parts[i])
         return retval
 
-      def merge_alt(m, could_parse):
+      def merge_alt(m, could_parse, issued_warning):
         mergedt = None
         altt_name = "alt"
         origline = m.group(0)
@@ -154,6 +149,7 @@ def process_text_in_section(sectext, pagemsg):
           elif thislang != lang:
             pagemsg("WARNING: Saw different language %s on line from first language %s: %s" %
               (lang, thislang, origline))
+            issued_warning[0] = True
             return origline
 
           # Copy terms, moving number of named params and finding maximum term index
@@ -173,6 +169,12 @@ def process_text_in_section(sectext, pagemsg):
               pass
             elif re.search("^[0-9]+$", pn):
               if saw_qualifier_gap:
+                if len(altforms) > 3:
+                  # E.g. {{alter|it|huomo||obsolete}}, {{alter|it|huom||apocopic}}; can't merge the tags
+                  pagemsg("WARNING: Multiple (%s) occurrences of {{alt}} with tags, can't merge: %s"
+                      % (len(altforms) // 2, origline))
+                  issued_warning[0] = True
+                  return origline
                 alt_qualifiers.append(pv)
               elif not pv:
                 saw_qualifier_gap = True
@@ -182,6 +184,7 @@ def process_text_in_section(sectext, pagemsg):
                 mergedt.add(str(pind + index), pv)
             else:
               pagemsg("WARNING: Unrecognized param %s=%s: %s" % (pn, pv, unicode(altt)))
+              issued_warning[0] = True
               return origline
           index += maxparam
 
@@ -218,33 +221,38 @@ def process_text_in_section(sectext, pagemsg):
             notes.append("clean up params in {{%s|%s}}" % (altt_name, thislang))
         if preceding_space != " ":
           notes.append("add missing space after * in ==Alternative forms==")
-        could_parse[0] = True
         if mergedt is None:
           pagemsg("WARNING: Internal error: Didn't find any {{alt}}/{{alter}} templates in line: %s" %
               origline)
+          issued_warning[0] = True
           return origline
+        could_parse[0] = True
         return "* " + unicode(mergedt)
 
       lines = subsectext.split("\n")
 
       def merge_alts_in_line(line):
         could_parse = [False]
+        issued_warning = [False]
         def do_merge_alt(m):
-          return merge_alt(m, could_parse)
-        could_parse[0] = False
+          return merge_alt(m, could_parse, issued_warning)
         line = re.sub(r"^\*?(\s*)(.*?):*\s*((?:\{\{(?:alt|alter)\|(?:\{\{[^{}]*\}\}|[^{}])*\}\},*\s*)+):*\s*(.*?)$", do_merge_alt,
             line, 0, re.UNICODE)
-        return line, could_parse[0]
+        return line, could_parse[0], issued_warning[0]
 
       for lineind, line in enumerate(lines):
+        stripped_line = line.strip()
+        removed_whitespace = stripped_line != line
+        line = stripped_line
+
         if not line:
           continue
 
         def warning(txt):
           pagemsg("Line %s: WARNING: %s" % (lineind + 1, txt))
 
-        newline, could_parse = merge_alts_in_line(line)
-        if newline == line and not could_parse:
+        newline, could_parse, issued_warning = merge_alts_in_line(line)
+        if newline == line and not could_parse and not issued_warning:
           # Unable to parse; try splitting on comma and parsing as multiple separate lines
           line_parts = split_on_comma_not_in_template(line)
           if len(line_parts) == 1:
@@ -255,55 +263,49 @@ def process_text_in_section(sectext, pagemsg):
             for partno, line_part in enumerate(line_parts):
               if partno > 0:
                 line_part = "* " + line_part
-              new_line_part, could_parse = merge_alts_in_line(line_part)
+              new_line_part, could_parse, issued_warning = merge_alts_in_line(line_part)
               if new_line_part == line_part and not could_parse:
                 warning("Part %s: Unable to parse ==Alternative forms== line part: %s" % (partno + 1, line_part))
                 break
               line_parts[partno] = new_line_part
             else: # no break
               lines[lineind] = "\n".join(line_parts)
+              if removed_whitespace:
+                notes.append("remove extraneous whitespace from ==Alternative forms== line")
+              if len(line_parts) > 1:
+                notes.append("split multiple comma-separated {{alt}} into different lines")
         else:
           lines[lineind] = newline
+          if removed_whitespace:
+            notes.append("remove extraneous whitespace from ==Alternative forms== line")
       subsectext = "\n".join(lines)
 
       subsections[k + 1] = subsectext
 
   secbody = "".join(subsections)
-  sections[j] = secbody + sectail
-  sectext = "".join(sections)
-  return sectext, notes
+  return secbody, notes
 
 
 def process_text_on_page(index, pagetitle, text):
-  m = re.search(r"\A(.*?)(\n*)\Z", text, re.S)
-  text, text_finalnl = m.groups()
-  text += "\n\n"
-
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  if args.partial_page:
-    if re.search("^==[^\n=]*==$", text, re.M):
-      pagemsg("WARNING: --partial-page specified but saw an L2 header, skipping")
-      return
-    newtext, notes = process_text_in_section(text, pagemsg)
-    return newtext.rstrip("\n") + text_finalnl, notes
+  retval = blib.find_modifiable_lang_section(text, None if args.partial_page else args.langname, pagemsg,
+    force_final_nls=True)
+  if retval is None:
+    return
+  sections, j, secbody, sectail, has_non_lang = retval
+  newsecbody, notes = process_text_in_section(secbody, pagemsg)
 
-  notes = []
-  sections = re.split("(^==[^\n=]*==[ \t]*\n)", text, 0, re.M)
-
-  # Correct extraneous spaces in L2 headers and prepare for sorting by language.
-  sections_for_sorting = []
-  for j in xrange(2, len(sections), 2):
-    newsection, this_notes = check_for_bad_subsections(sections[j], pagemsg)
-    sections[j] = newsection
-    notes.extend(this_notes)
-  return "".join(sections).rstrip("\n") + text_finalnl, notes
+  # Strip extra newlines added to secbody
+  sections[j] = newsecbody.rstrip("\n") + sectail
+  return "".join(sections), notes
 
 
 parser = blib.create_argparser("Convert {{l}}/{{alter}} etc. in ==Alternative forms== sections to {{alt}}",
     include_pagefile=True, include_stdin=True)
 parser.add_argument("--partial-page", action="store_true", help="Input was generated with 'find_regex.py --lang LANG' and has no ==LANG== header.")
+parser.add_argument("--langname", help="Language name. Required if `--partial-page` isn't given.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
