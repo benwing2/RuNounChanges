@@ -243,8 +243,9 @@ FIXME:
 34. Add 'addnote[SLOT_SPEC]' to make [[tangere]] with disused 1s/2s/1p/2p easier to handle. (DONE)
 35. Throw an error if comma seen in single form specs like 'imp:'. (DONE)
 36. Overrides like phis:+[rare] of [[affarsi]] using built-in @ (from [[fare]]) don't properly pick up the irregular
-    built-in forms.
-37. Overrides like phis:afféci[rare] of [[affarsi]] using built-in @ (from [[fare]]) get the prefix duplicated.
+    built-in forms. (DONE)
+37. Overrides like phis:afféci[rare] of [[affarsi]] using built-in @ (from [[fare]]) get the prefix duplicated. (DONE)
+38. Support negated addnote like 'addnote[-pres3s][rare]'. (DONE)
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -657,6 +658,13 @@ local function general_list_form_contains_form(list, form, process_form)
 end
 
 
+-- Parse a raw form that may be decorated with !, # or similar before it and * or ! after it. Return three values:
+-- the prespec, bare form and postspec.
+local function parse_decorated_form(form)
+	return rmatch(form, "^([!#]*)(.-)([*!]*)$")
+end
+
+
 -- Process the user-given specs in `specs` in order to generate verb forms, and insert the resulting forms into
 -- `destforms`[`slot`]. If the destination slot has no forms yet (i.e. it is nil), it will be first set to {}.
 -- Duplicate forms will not be inserted.
@@ -680,8 +688,7 @@ local function process_specs(base, destforms, slot, specs, generate_forms)
 		local decorated_form = spec.form
 		-- Skip "-"; effectively, no forms get inserted into destforms[slot].
 		if decorated_form ~= "-" then
-			local prespec, form, postspec =
-				rmatch(decorated_form, "^([!#]*)(.-)([*!]*)$")
+			local prespec, form, postspec =	parse_decorated_form(decorated_form)
 			local forms = form == "?" and "?" or generate_forms(form)
 			-- If `generate_forms` return nil, no forms get inserted into destforms[slot]. This happens e.g. when
 			-- fut:- is given and no explicit conditional principal part is given. In that case,
@@ -1918,9 +1925,15 @@ end
 local function process_addnote_specs(base)
 	for _, spec in ipairs(base.addnote_specs) do
 		for _, slot_spec in ipairs(spec.slot_specs) do
+			local negated = false
+			if slot_spec:find("^%-") then
+				negated = true
+				slot_spec = usub(slot_spec, 2)
+			end
 			slot_spec = "^" .. slot_spec .. "$"
 			for slot, forms in pairs(base.forms) do
-				if rfind(slot, slot_spec) then
+				local matches = rfind(slot, slot_spec)
+				if not negated and matches or negated and not matches and slot ~= "inf" and slot ~= "aux" then
 					-- To save on memory, side-effect the existing forms.
 					for _, form in ipairs(forms) do
 						form.footnotes = iut.combine_footnotes(form.footnotes, spec.footnotes)
@@ -2682,15 +2695,15 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 
 		-- If there's a prefix, add it now to all the specs derived from the built-in verb.
 		if prefix ~= "" then
-
 			local function form_should_be_preserved(form)
-				return form == "+" or form == "-" or form == "?" or is_single_vowel_spec(form)
+				local prespec, bare_form, postspec = parse_decorated_form(form)
+				return bare_form == "+" or bare_form == "-" or bare_form == "?" or is_single_vowel_spec(bare_form)
 			end
 
 			local function add_prefix_to_forms(tbl, slot)
 				local saw_preserve_accent = false
 				for _, formobj in ipairs(tbl[slot]) do
-					local postspec = rfind(formobj.form, "^.-([*!]*)$")
+					local prespec, bare_form, postspec = parse_decorated_form(formobj.form)
 					if rfind(postspec, "!") then
 						saw_preserve_accent = true
 						break
@@ -2706,8 +2719,8 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 						else
 							-- If there is a ! after the form (indicating that monosyllabic accents should be
 							-- preserved), remove it.
-							local form_without_postspec, postspec = rfind(form, "^(.-)([*!]*)$")
-							return prefix .. form_without_postspec .. rsub(postspec, "!", "")
+							local prespec, bare_form, postspec = parse_decorated_form(form)
+							return prespec .. prefix .. bare_form .. rsub(postspec, "!", "")
 						end
 					end))
 				else
@@ -2716,7 +2729,8 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 						if form_should_be_preserved(form) then
 							return form
 						else
-							return prefix .. form
+							local prespec, bare_form, postspec = parse_decorated_form(form)
+							return prespec .. prefix .. bare_form .. postspec
 						end
 					end)
 				end
@@ -2741,8 +2755,9 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 			local function hack_single_vowel_spec(specs)
 				if specs then
 					for _, spec in ipairs(specs) do
-						if rfind(spec.form, "^" .. AV .. "$") then
-							spec.form = spec.form .. "++"
+						local prespec, bare_form, postspec = parse_decorated_form(spec.form)
+						if rfind(bare_form, "^" .. AV .. "$") then
+							spec.form = prespec .. bare_form .. "++" .. postspec
 						end
 					end
 				end
@@ -2759,7 +2774,8 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 		for slot, specs in pairs(base.principal_part_specs) do
 			local saw_plus, saw_non_plus
 			for _, spec in ipairs(specs) do
-				if spec.form == "+" then
+				local prespec, bare_form, postspec = parse_decorated_form(spec.form)
+				if bare_form == "+" then
 					saw_plus = true
 				else
 					saw_non_plus = true
@@ -2768,9 +2784,14 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 			if saw_plus and saw_non_plus then
 				parse_err(("For principal part '%s:', can't specify both + and something else when overriding a built-in verb"):
 					format(slot))
-			elseif saw_plus then
+			elseif saw_plus and slot ~= "root_stressed_inf" then
+				-- Need a special case for root_stressed_inf. We do want to copy a + from the user-specified specs for
+				-- root_stressed_inf to `nbase`, e.g. for [[condurre]]. The built-in spec doesn't indicate that this is
+				-- root-stressed; this comes from the user-specified 'a\@' or similar, and if we don't copy it, the code in
+				-- add_infinitive() triggers do_ending_stressed_infinitive(), which throws an error on -rre verbs.
 				for _, spec in ipairs(specs) do
-					if spec.form ~= "+" then
+					local prespec, bare_form, postspec = parse_decorated_form(spec.form)
+					if bare_form ~= "+" then
 						parse_err(("Internal error: Saw '%s' for principal part form for slot '%s' but expected '+'"):
 							format(slot, spec.form))
 					end
@@ -2823,10 +2844,8 @@ local function normalize_all_lemmas(alternant_multiword_spec)
 		end
 	end
 
-	-- (2) Remove any links from the lemma, but remember the original form
-	--     so we can use it below in the 'lemma_linked' form.
+	-- (2) Remove any links from the lemma.
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		base.user_specified_lemma = base.lemma
 		base.lemma = m_links.remove_links(base.lemma)
 	end)
 end
