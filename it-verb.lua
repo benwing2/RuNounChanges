@@ -246,6 +246,10 @@ FIXME:
     built-in forms. (DONE)
 37. Overrides like phis:afféci[rare] of [[affarsi]] using built-in @ (from [[fare]]) get the prefix duplicated. (DONE)
 38. Support negated addnote like 'addnote[-pres3s][rare]'. (DONE)
+39. Support comma-separated addnote spec for the equivalent of alternation. (DONE)
+40. Issue an error if addnote spec has no effect. (DONE)
+41. Support verbs in -gliela like [[fargliela]]. (DONE)
+42. Support /\ notation for optional root-stressed infinitive with ending first, for [[suadere]] and derivatives. (DONE)
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -1038,11 +1042,22 @@ end
 local function add_infinitive(base, rowslot)
 	-- When do_root_stressed_inf is called, this also sets base.principal_part_forms.root_stressed_stem, which is needed
 	-- by add_present_indic(), so we have to do this before conjugating the present indicative.
-	if base.principal_part_specs.root_stressed_inf then
+	local function root()
 		do_root_stressed_inf(base, base.principal_part_specs.root_stressed_inf)
 	end
-	if not base.principal_part_specs.root_stressed_inf or base.props.opt_root_stressed_inf then
+	local function ending()
 		do_ending_stressed_inf(base)
+	end
+	if not base.principal_part_specs.root_stressed_inf then
+		ending()
+	elseif base.props.opt_root_stressed_inf == "root-first" then
+		root()
+		ending()
+	elseif base.props.opt_root_stressed_inf == "ending-first" then
+		ending()
+		root()
+	else
+		root()
 	end
 end
 
@@ -1921,24 +1936,38 @@ local function conjugate_row(base, rowslot)
 end
 
 
--- Process specs given by the user using 'addnote[SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'.
+-- Process specs given by the user using 'addnote[SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'. SLOTSPEC can be a Lua pattern,
+-- a comma-separated list of Lua patterns (any of which need to match), or a hyphen followed by one or more
+-- comma-separated patterns (which negates the sense of the matching).
 local function process_addnote_specs(base)
 	for _, spec in ipairs(base.addnote_specs) do
 		for _, slot_spec in ipairs(spec.slot_specs) do
 			local negated = false
+			local any_changed = false
+			local orig_slot_spec = slot_spec
 			if slot_spec:find("^%-") then
 				negated = true
 				slot_spec = usub(slot_spec, 2)
 			end
-			slot_spec = "^" .. slot_spec .. "$"
+			local single_specs = rsplit(slot_spec, ",")
 			for slot, forms in pairs(base.forms) do
-				local matches = rfind(slot, slot_spec)
+				local matches
+				for _, single_spec in ipairs(single_specs) do
+					if rfind(slot, "^" .. slot_spec .. "$") then
+						matches = true
+						break
+					end
+				end
 				if not negated and matches or negated and not matches and slot ~= "inf" and slot ~= "aux" then
 					-- To save on memory, side-effect the existing forms.
 					for _, form in ipairs(forms) do
 						form.footnotes = iut.combine_footnotes(form.footnotes, spec.footnotes)
+						any_changed = true
 					end
 				end
+			end
+			if not any_changed then
+				error(("addnote spec '%s' had no effect; correct it or remove it"):format(orig_slot_spec))
 			end
 		end
 	end
@@ -2076,6 +2105,7 @@ local function analyze_verb(lemma)
 	--   * ci + si: [[trovarcisi]] "to find oneself in a happy situation",
 	--              [[vedercisi]] "to imagine oneself (in a situation)", [[sentircisi]] "to feel at ease"
 	--   * vi + si: [[recarvisi]] "to go there"
+	--   * glie + la: [[fargliela]] "to succeed"
 	--
 	local ret = {}
 	local linked_suf, finite_pref, finite_pref_elided_e, finite_pref_elided_ho
@@ -2093,6 +2123,16 @@ local function analyze_verb(lemma)
 		finite_pref = clitic .. " [[" .. clitic2 .. "]] "
 		finite_pref_elided_e = clitic .. " " .. clitic_to_elided[clitic2]
 		finite_pref_elided_ho = clitic .. " " .. clitic_to_elided[clitic2]
+	end
+	if not verb then
+		verb, clitic = rmatch(lemma, "^(.-)glie(l[oaie])$")
+		if verb then
+			is_pronominal = true
+			linked_suf = "[[glie" .. clitic .. "]]"
+			finite_pref = linked_suf .. " "
+			finite_pref_elided_e = clitic_to_elided[clitic]:gsub("^%[%[", "[[glie")
+			finite_pref_elided_ho = finite_pref_elided_e
+		end
 	end
 	if not verb then
 		verb, clitic = rmatch(lemma, "^(.-)([cvs]e)ne$")
@@ -2329,7 +2369,10 @@ local function parse_inside(base, inside, is_builtin_verb)
 	end
 
 	local function is_root_stressed(separator)
-		return separator == "\\" or separator == "\\/"
+		return separator == "\\" or separator == "\\/" or separator == "/\\"
+	end
+	local function get_opt_root_stressed_value(separator)
+		return separator == "\\/" and "root-first" or separator == "/\\" and "ending-first" or nil
 	end
 
 	local segments = iut.parse_balanced_segment_run(inside, "[", "]")
@@ -2360,9 +2403,7 @@ local function parse_inside(base, inside, is_builtin_verb)
 						else
 							base.principal_part_specs.root_stressed_inf = specs
 						end
-						if first_separator == "\\/" then
-							base.props.opt_root_stressed_inf = true
-						end
+						base.props.opt_root_stressed_inf = get_opt_root_stressed_value(first_separator)
 					elseif specs ~= nil then
 						local errpref = is_builtin_verb and "With built-in verb" or "With reflexive verb"
 						parse_err(errpref .. ", can't specify anything before initial slash, but saw '"
@@ -2420,9 +2461,7 @@ local function parse_inside(base, inside, is_builtin_verb)
 					else
 						base.principal_part_specs.root_stressed_inf = {{form = "+"}}
 					end
-					if first_separator == "\\/" then
-						base.props.opt_root_stressed_inf = true
-					end
+					base.props.opt_root_stressed_inf = get_opt_root_stressed_value(first_separator)
 				end
 			end
 
@@ -2615,8 +2654,8 @@ local function create_base()
 	--                    as well as reflexive verbs ending in '-orsi' or '-ursi' and verbs where the 'rre' indicator
 	--                    was given by the user)
 	--    - `builtin` (verb uses a built-in conjugation in [[Module:it-verb/builtin]])
-	--    - `opt_root_stressed_inf` (verb used the \/ notation to indicate an optionally root-stressed infinitive; to
-	--                               determine if a verb used the \ notation, look for a value in
+	--    - `opt_root_stressed_inf` (verb used the \/ or /\ notation to indicate an optionally root-stressed infinitive;
+	--                               to determine if a verb used the \ notation, look for a value in
 	--                               base.principal_part_specs.root_stressed_inf)
 	-- `rowprops` is a table of tables of row-specific Boolean properties. Each subtable specifies a property of a
 	--    given row, such as whether the row is irregular. Specifically:
