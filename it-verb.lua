@@ -2489,10 +2489,21 @@ local function parse_inside(base, inside, is_builtin_verb)
 			elseif first_element_prefix == "unstressed_stem" then
 				base.principal_part_specs.explicit_unstressed_stem_spec = fetch_specs(dot_separated_group)
 			elseif first_element_prefix == "pres" then
-				if not base.props.builtin then
-					parse_err("Can't specify 'pres:' override except when '@' is given to request a built-in verb")
+				if first_element_minus_prefix == "-" and #dot_separated_group == 1 then
+					-- Allow 'pres:-' to be given to suppress the present. We implement this using the
+					-- equivalent of a row override for each of the present forms; this also cancels out the
+					-- present subjunctive and the imperative.
+					local hyphen_form = {{form = "-"}}
+					base.row_override_specs.pres = {
+						["1s"] = hyphen_form, ["2s"] = hyphen_form, ["3s"] = hyphen_form,
+						["1p"] = hyphen_form, ["2p"] = hyphen_form, ["3p"] = hyphen_form,
+					}
+				else
+					if not base.props.builtin then
+						parse_err("Can't specify 'pres:' override except when '@' is given to request a built-in verb")
+					end
+					parse_present_spec(dot_separated_group)
 				end
-				parse_present_spec(dot_separated_group)
 			elseif row_conjugation_map[first_element_prefix] then
 				local no_explicit_pp = row_conjugation_map[first_element_prefix].no_explicit_principal_part
 				if no_explicit_pp == true or not base.props.builtin and no_explicit_pp == "builtin" then
