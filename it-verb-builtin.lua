@@ -95,7 +95,7 @@ export.builtin_verbs = {
 	{"nascere", "à,nàcqui,nàto", "<<nascere>>, <<rinascere>>, <<prenascere>>"},
 	{"pascere", "à", "<<pascere>>, <<ripascere>>"},
 	-- acquiescere: rare, defective in past participle
-	{"mescere", "é", "<<mescere>>, <<rimescere>>"},
+	{"mescere", "é:è", "<<mescere>>, <<rimescere>>"},
 	{"crescere", "é,crébbi", "<<crescere>> and derivatives"},
 	-- mansuescere: archaic, rare, infinitive only
 	{"noscere", "ó,nóbbi", "<<conoscere>>, archaic <<cognoscere>> and derivatives"},
@@ -155,7 +155,7 @@ export.builtin_verbs = {
 	{"cendere", "è,cési,céso", "<<accendere>> and derivatives, <<incendere>>"},
 	{{term = "fendere", prefixes = {"di", "de", "of"}}, "è,fési,féso", "<<difendere>> (archaic <<defendere>>), <<offendere>> and derivatives"},
 	{"fendere", "è,+,+:fésso", "<<fendere>>, <<rifendere>>, <<sfendere>>; but not <<offendere>>, <<difendere>> or respective derivatives"},
-	-- stridere: past participle is rare (per Hoepli), not used (per DOP and Treccani)
+	-- stridere (FIXME: some other verb intended?): past participle is rare (per Hoepli), not used (per DOP and Treccani)
 	{"splendere", "è,+,-", "<<splendere>> and derivatives"},
 	{"^pendere", "è,+,+[rare]", "<<pendere>>; but not any derivatives"},
 	{"propendere", "è,+,propéso[rare]", "<<propendere>>"},
@@ -202,10 +202,9 @@ export.builtin_verbs = {
 	{"indulgere", "ù,indùlsi,indùlto", "<<indulgere>>"},
 	{"fulgere", "ù,fùlsi,-", "<<fulgere>> and derivatives; lacking past participle"},
 	-- angere: archaic or poetic, defective
-	{{term = "angere", prefixes = {"pi", "pl"}}, "à,ànsi,ànto", "<<piangere>> (archaic <<plangere>>) and derivatives"},
+	{{term = "angere", prefixes = {"fr", "pi", "pl"}}, "à,ànsi,ànto", "<<frangere>> and derivatives (some derivatives need special handling of the past participle); <<piangere>> (archaic <<plangere>>) and derivatives"},
 	-- piagnere: archaic, defective, no past historic or past participle
 	-- clangere: literary, rare, defective, no past historic or past participle
-	{"frangere", "à,frànsi,frànto", "<<frangere>> and derivatives"},
 	-- tangere: literary, defective
 	-- etc.
 	{"spengere", "é:#è,spénsi:#spènsi,spénto:#spènto", "<<spengere>> (Tuscan variant of <<spegnere>>)"},
@@ -330,7 +329,9 @@ export.builtin_verbs = {
 	-- Treccani and Hoepli say [[controvertere]] is conjugated as if it were ''controvertire'', but Google
 	-- disagrees except for ''controvertito'' (which is rare).
 	{"controvertere", "è,-,-", "<<controvertere>>"},
-	{{term = "vertere", prefixes = {"estro", "intro"}}, "è,-,vèrso:vertìto", "<<estrovertere>> and <<introvertere>>"},
+	{"estrovertere", "è,-,estrovèrso:estrovertìto[less common]", "<<estrovertere>>"},
+	-- see also introvertire of the same meaning, which has -ire forms
+	{"introvertere", "è,-,introvèrso", "<<introvertere>>"},
 	{"sistere", "ì,+,sistìto", "verbs in ''-sistere'' (<<consistere>>, <<esistere>>, <<insistere>>, <<resistere>>, etc.)"},
 	{"battere", "à", "<<battere>> and derivatives"},
 	{"flettere", "è,+:flèssi[less common],flèsso", "<<flettere>> and derivatives; <<riflettere>> needs an override to handle differences in the past participle"},
@@ -391,13 +392,13 @@ export.builtin_verbs = {
 	{{term = "sorbire", prefixes = {"as", "ad", "de"}}, "+isc:ò.presp:+", "<<assorbire>>, <<adsorbire>>, rare <<desorbire>>; but not <<sorbire>>"},
 	-- folcire: rare, literary, defective: fólce, folcìsse
 	{"escire", "è.presp:+", "<<escire>> and derivatives (archaic/popular for <<uscire>>)"},
-	{"uscire", "èsco.presp:+", "<<uscire>> and derivatives"},
+	{"uscire", "èsco", "<<uscire>> and derivatives"},
 	{"cucire", "cùcio^ù.presp:+", "<<cucire>> and derivatives"},
 	{"sdrucire", "+isc:sdrùcio[rare]^+isc:ù[rare].pres3p:sdrucìscono:sdrùciono[rare]:sdrùcono[rare].presp:+", "<<sdrucire>> and derivatives"},
 	-- redire, reddire: poetic, highly defective
 	{"applaudire", "à:+isc[rare].presp:+", "<<applaudire>> and derivatives"},
 	{"udire", "òdo.fut:udrò:+.presp:+:udiènte", "<<udire>> and derivatives"}, -- must precede dire
-	{"fuggire", "ù.presp:+", "<<fuggire>> and derivatives"},
+	{"fuggire", "ù", "<<fuggire>> and derivatives"},
 	-- gire: archaic, defective
 	{"salire", "sàlgo^à.presp:+:saliènte", "<<salire>> and derivatives"},
 	-- boglire: archaic, unclear conjugation
@@ -412,32 +413,40 @@ export.builtin_verbs = {
 	-- {"comparire/scomparire", ...},
 	-- {"disparire", ...},
 	-- {"trasparire", ...},
-	{"offrire", "ò,+:offèrsi[less common],offèrto.presp:offerènte:+[rare]", "<<offrire>>, <<soffrire>> and derivatives"},
-	{"morire", "muòio:mòio[popular]^muòre:ò[popular],+,mòrto.fut:+:morrò.presp:+", "<<morrire>> and derivatives (<<smorire>> has no past participle and needs an override)"},
+	-- perire: regular except in archaic/poetic usage pèro, etc.
+	{"offrire", "ò,+:offèrsi[less common],offèrto.presp:offerènte", "<<offrire>>, <<soffrire>> and derivatives"},
+	{"morire", "muòio^muòre,+,mòrto.fut:+:morrò.presp:+", "<<morrire>> and derivatives (<<smorire>> has no past participle and needs an override)"},
 	{"aprire", "à,+:apèrsi[less common],apèrto.presp:+", "<<aprire>> and derivatives"},
 	{"coprire", "ò,+:copèrsi[less common],copèrto.presp:+", "<<coprire>> and derivatives"},
 	-- scovrire: archaic, unclear conjugation
 	{"borrire", "+isc:ò.presp:+", "<<aborrire>>, <<abborrire>>"},
 	{"nutrire", "ù:+isc[less common].presp:nutriènte", "<<nutrire>> and derivatives"},
 	-- putrire: literary, rare
-	{"^mentire", "é:#è:+isc.presp:-", "<<mentire>>; but not derivative <<smentire>>, nor <<sementire>> or <<intormentire>>"},
-	{"sentire", "è.presp:+[rare]", "<<sentire>> and derivatives"},
-	{"invertire", "è:+isc[less common]", "<<invertire>> and derivatives"},
+	-- Hoepli doesn't mention present participle mentente but it probably exists
+	{"^mentire", "é:#è:+isc", "<<mentire>>; but not derivative <<smentire>>, nor <<sementire>> or <<intormentire>>, all of which are regular in -isc-"},
+	{"pentire", "è.presp:-", "<<pentirsi>> and derivatives"},
+	-- sentire has rare sentènte and adjective-only senziènte
+	{{term = "sentire", prefixes = {"^", "^ri", "intra"}}, "è.presp:-", "<<sentire>>, <<risentire>>, <<intrasentire>>; but not any other derivatives"},
+	-- presentire has presenziènte but it's rare and literary
+	{"presentire", "è:+isc.presp:-", "<<presentire>>"},
+	{"sentire", "è.presp:senziènte", "derivatives of <<sentire>> other than <<sentire>> itself, <<risentire>>, <<intrasentire>> and <<presentire>>, e.g. <<assentire>>, <<consentire>>, <<dissentire>>"},
+	{"inghiottire", "+isc[in the literal meaning]:ó[figuratively]"},
+	-- See also introvertere of the same meaning, which has -ere forms.
 	{"introvertire", "+isc,-,+", "<<introvertire>>"},
-	{"pervertire", "è:+isc[rare]", "<<pervertire>>"},
-	{"vertire", "è", "verbs in ''-vertire'' other than <<invertire>>, <<introvertire>> and <<pervertire>>, e.g. <<avvertire>>, <<convertire>>, <<divertire>>, <<sovvertire>>"},
-	-- {"partire/ripartire/dipartire", ...},
-	-- {"sortire", ...},
-	-- {"accestire", ...},
-	-- {"vestire/rivestire/investire/travestire/svestire", ...},
-	-- {"inghiottire", ...},
-	-- {"putire", ...},
-	-- {"languire", ...},
-	-- {"seguire/eseguire/conseguire/proseguire/perseguire/inseguire/susseguire/asseguire", ...},
-	-- costruire (archaic construire): costrùssi, costrùtto given as "literary" by Hoepli; costrùssi just as an alternative
-	--   by Treccani, costrùtto as "less common". Per Anna Thornton in ''Morphological Autonomy'' p. 368, [[costrutto]] is
+	-- Many of the verbs in -vertire have additional archaic, literary, etc. forms; e.g. [[convertire]] has archaic or dialectal +isc forms, archaic or literary past historic convèrsi, archaic or literary past participle convèrso.
+	{"vertire", "è", "verbs in ''-vertire'' other than <<introvertire>>, e.g. <<avvertire>>, <<convertire>>, <<divertire>>, <<invertire>>, <<pervertire>>, <<sovvertire>>"},
+	{"compartire", "+isc:à", "<<compartire>> and derivatives"},
+	{"partire", "à", "<<partire>>, <<dipartire>>, <<ripartire>> in the intransitive usage (use 'a/+isc' for the transitive usage)"},
+	{"^sortire", "ò", "<<sortire>> in the intransitive usage (use 'a/+isc' for the transitive usage); not any derivatives"},
+	{"vestire", "è", "<<vestire>> and derivatives"},
+	{"putire", "+isc:ù", "<<putire>>"},
+	{"languire", "+isc:à", "<<languire>>"},
+	{"eseguire", "+isc:é:è.presp:+", "<<eseguire>> and derivatives"}, -- [r:DiPI:eseguo]
+	{"seguire", "é:è.presp:+", "<<seguire>> and derivatives; but not <<eseguire>> and derivatives"}, -- [r:DiPI:seguo], [r:DiPI:conseguo], [r:DiPI:inseguo], [r:DiPI:perseguo], [r:DiPI:proseguo], [r:DiPI:susseguo]
+	-- costruire (archaic construire); costrùssi, costrùtto given as "literary" by Hoepli but "archaic" by DOP, which
+	-- seems closer to the truth. Per Anna Thornton in ''Morphological Autonomy'' p. 368, [[costrutto]] is
 	--   no longer recognized as a pp in modern Italian but only as a noun.
-	-- {"servire", ...},
+	{"servire", "è", "<<servire>> and derivatives"},
 
 	------------------------------------------- syncopated verbs -----------------------------------------
 	-- affare: 3rd person only, no pp, affà
