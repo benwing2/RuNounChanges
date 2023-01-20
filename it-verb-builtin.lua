@@ -402,20 +402,21 @@ export.builtin_verbs = {
 	-- gire: archaic, defective
 	{"salire", "sàlgo^à.presp:+:saliènte", "<<salire>> and derivatives"},
 	-- boglire: archaic, unclear conjugation
-	{"seppellire", "+isc,+,+:sepólto", "<<seppellire>> and derivatives"},
+	{"seppellire", "+isc,+,sepólto:+", "<<seppellire>> and derivatives"},
 	{"sbollire", "ó:+isc.presp:+", "<<sbollire>>"},
 	{"bollire", "ó.presp:+", "<<bollire>> and derivatives, except <<sbollire>>"},
 	{"dormire", "ò.presp:+:dormiènte", "<<dormire>> and derivatives"},
 	{"venire", "vèngo^viène,vénni,venùto.fut:verrò.presp:veniènte", "<<venire>> and derivatives"},
 	{"empire", "émpio,+:empiéi[less common],+:empiùto[less common].ger:empièndo.presp:empiènte",
 		"<<empire>> and <<riempire>>; not <<adempire>>, which has a more regular conjugation"},
-	-- {"apparire/riapparire", ...},
+	{{term = "parire", prefixes = {"ap", "com"}}, "pàio:+isc^à:+isc,pàrvi:parìi[less common]:pàrsi[less common],pàrso", "<<apparire>>, <<comparire>> and derivatives; but note that <<comparire>> needs special treatment as different variant forms are associated with distinct meanings"},
 	-- {"comparire/scomparire", ...},
 	-- {"disparire", ...},
 	-- {"trasparire", ...},
+	{"inferire", "+isc,infèrsi,infèrto", "<<inferire>> in the meaning \"to inflict, to strike\" (a blow); use 'a/+isc' for other meanings"},
 	-- perire: regular except in archaic/poetic usage pèro, etc.
 	{"offrire", "ò,+:offèrsi[less common],offèrto.presp:offerènte", "<<offrire>>, <<soffrire>> and derivatives"},
-	{"morire", "muòio^muòre,+,mòrto.fut:+:morrò.presp:+", "<<morrire>> and derivatives (<<smorire>> has no past participle and needs an override)"},
+	{"morire", "muòio^muòre,+,mòrto.fut:+:morrò.presp:+", "<<morire>> and derivatives (<<smorire>> has no past participle and needs an override)"},
 	{"aprire", "à,+:apèrsi[less common],apèrto.presp:+", "<<aprire>> and derivatives"},
 	{"coprire", "ò,+:copèrsi[less common],copèrto.presp:+", "<<coprire>> and derivatives"},
 	-- scovrire: archaic, unclear conjugation
@@ -446,7 +447,7 @@ export.builtin_verbs = {
 	-- costruire (archaic construire); costrùssi, costrùtto given as "literary" by Hoepli but "archaic" by DOP, which
 	-- seems closer to the truth. Per Anna Thornton in ''Morphological Autonomy'' p. 368, [[costrutto]] is
 	--   no longer recognized as a pp in modern Italian but only as a noun.
-	{"servire", "è", "<<servire>> and derivatives"},
+	{"servire", "è", "<<servire>> and derivatives (although not <<asservire>>, which should use 'a/+isc')"},
 
 	------------------------------------------- syncopated verbs -----------------------------------------
 	-- affare: 3rd person only, no pp, affà
