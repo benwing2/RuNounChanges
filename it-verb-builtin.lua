@@ -178,6 +178,7 @@ export.builtin_verbs = {
 	{"perdere", "è,pèrsi:perdètti:perdéi[less common],pèrso:perdùto", "<<perdere>> and derivatives"},
 	{"mordere", "ò,mòrsi,mòrso", "<<mordere>> and derivatives"},
 	-- gaudere: literary or archaic, defective
+	{"plaudere", "à,plaudìi,plaudìto", "<<plaudere>>"},
 	{"prudere", "ù,+[rare],-", "<<prudere>>"},
 	{"udere", "ù,ùsi,ùso", "<<chiudere>> and derivatives; verbs in ''-cludere'' (<<concludere>>, <<includere>>, <<escludere>>, etc.); verbs in ''-ludere'' (<<eludere>>, <<deludere>>, <<alludere>>, etc.); verbs in ''-trudere'' (<<intrudere>>, <<protrudere>>, <<estrudere>>, etc.); but not <<prudere>> or <<gaudere>>"},
 	-- piagere, plagere: archaic, defective
@@ -388,15 +389,16 @@ export.builtin_verbs = {
 
 	-- ire: archaic, defective
 	--
-	-- assorbire: assòrto as pp is archaic
-	{{term = "sorbire", prefixes = {"as", "ad", "de"}}, "+isc:ò.presp:+", "<<assorbire>>, <<adsorbire>>, rare <<desorbire>>; but not <<sorbire>>"},
+	-- assorbire: assòrto as pp is archaic; list ò before +isc because it is much more common per Google Ngrams.
+	{{term = "sorbire", prefixes = {"as", "ad", "de"}}, "ò:+isc.presp:+", "<<assorbire>>, <<adsorbire>>, rare <<desorbire>>; but not <<sorbire>>"},
 	-- folcire: rare, literary, defective: fólce, folcìsse
 	{"escire", "è.presp:+", "<<escire>> and derivatives (archaic/popular for <<uscire>>)"},
 	{"uscire", "èsco", "<<uscire>> and derivatives"},
 	{"cucire", "cùcio^ù.presp:+", "<<cucire>> and derivatives"},
-	{"sdrucire", "+isc:sdrùcio[rare]^+isc:ù[rare].pres3p:sdrucìscono:sdrùciono[rare]:sdrùcono[rare].presp:+", "<<sdrucire>> and derivatives"},
+	-- Treccani says sdrùcio/sdrùce forms are rare but Ngrams does not bear that out (relatively).
+	{"sdrucire", "+isc:sdrùcio^+isc:ù.pres3p:+:sdrùcono.presp:+", "<<sdrucire>> and derivatives"},
 	-- redire, reddire: poetic, highly defective
-	{"applaudire", "à:+isc[rare].presp:+", "<<applaudire>> and derivatives"},
+	{"applaudire", "à:+isc[uncommon].presp:+", "<<applaudire>> and derivatives"},
 	{"udire", "òdo.fut:udrò:+.presp:+:udiènte", "<<udire>> and derivatives"}, -- must precede dire
 	{"fuggire", "ù", "<<fuggire>> and derivatives"},
 	-- gire: archaic, defective
@@ -417,8 +419,8 @@ export.builtin_verbs = {
 	-- perire: regular except in archaic/poetic usage pèro, etc.
 	{"offrire", "ò,+:offèrsi[less common],offèrto.presp:offerènte", "<<offrire>>, <<soffrire>> and derivatives"},
 	{"morire", "muòio^muòre,+,mòrto.fut:+:morrò.presp:+", "<<morire>> and derivatives (<<smorire>> has no past participle and needs an override)"},
-	{"aprire", "à,+:apèrsi[less common],apèrto.presp:+", "<<aprire>> and derivatives"},
-	{"coprire", "ò,+:copèrsi[less common],copèrto.presp:+", "<<coprire>> and derivatives"},
+	{"aprire", "à,+:apèrsi,apèrto.presp:+", "<<aprire>> and derivatives"},
+	{"coprire", "ò,+:copèrsi,copèrto.presp:+", "<<coprire>> and derivatives"},
 	-- scovrire: archaic, unclear conjugation
 	{"borrire", "+isc:ò.presp:+", "<<aborrire>>, <<abborrire>>"},
 	{"nutrire", "ù:+isc[less common].presp:nutriènte", "<<nutrire>> and derivatives"},
