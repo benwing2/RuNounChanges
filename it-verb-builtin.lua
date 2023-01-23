@@ -243,10 +243,10 @@ export.builtin_verbs = {
 	{"eccellere", "è+,eccèlsi,eccèlso[rare]", "<<eccellere>>"},
 	{"pellere", "è,pùlsi,pùlso", "verbs in ''-pellere'' (<<espellere>>, <<impellere>>, <<propellere>>, <<repellere>>, etc."},
 	{"avellere", "è,vùlsi,vùlso", "<<avellere>>"},
-	{"svellere", "è\\è:svèlgo,svèlsi,svèlto", "<<svellere>>, <<disvellere>>"},
-	{"vellere", "è\\è:vèlgo,vèlsi:vùlsi[uncommon or archaic],vèlto:vùlso[uncommon or archaic]",
-		"<<vellere>> and certain derivatives, especially <<divellere>>; note that <<evellere>> and <<convellere>> need special handling as they are defective"},
-	-- evellere, convellere: literary or archaic, defective
+	-- per Canepari, svèlto or svélto but just divèlto
+	{"svellere", "è\\è:svèlgo,svèlsi,svèlto:svélto", "<<svellere>>, <<disvellere>>"},
+	{"divellere", "è\\è:divèlgo,divèlsi,divèlto", "<<divellere>>"},
+	-- vellere, evellere, convellere: literary or archaic, defective
 	-- tollere: archaic, unclear conjugation
 	{{term = "tollere", prefixes = {"at", "es"}}, "è,-,-", "<<attollere>>, <<estollere>>"},
 	-- colere: archaic, defective
@@ -385,7 +385,7 @@ export.builtin_verbs = {
 	---------------------------------------------- -ire verbs --------------------------------------------
 	-- NOTE: Does not include verbs whose only irregularity is a present participle in -iènte, e.g. [[ambire]],
 	-- [[ubbidire]], [[impedire]], [[regredire]]/[[progredire]]/[[trasgredire]], [[spedire]], [[blandire]],
-	-- [[adempire]], and many others.
+	-- and many others.
 
 	-- ire: archaic, defective
 	--
@@ -409,6 +409,7 @@ export.builtin_verbs = {
 	{"bollire", "ó.presp:+", "<<bollire>> and derivatives, except <<sbollire>>"},
 	{"dormire", "ò.presp:+:dormiènte", "<<dormire>> and derivatives"},
 	{"venire", "vèngo^viène,vénni,venùto.fut:verrò.presp:veniènte", "<<venire>> and derivatives"},
+	{{term = "mpire", prefixes = {"ade", "co"}}, "+isc.ger:mpièndo.presp:mpiènte", "<<adempire>> and <<compire>>"},
 	{"empire", "émpio,+:empiéi[less common],+:empiùto[less common].ger:empièndo.presp:empiènte",
 		"<<empire>> and <<riempire>>; not <<adempire>>, which has a more regular conjugation"},
 	{{term = "parire", prefixes = {"ap", "com"}}, "pàio:+isc^à:+isc,pàrvi:parìi[less common]:pàrsi[less common],pàrso", "<<apparire>>, <<comparire>> and derivatives; but note that <<comparire>> needs special treatment as different variant forms are associated with distinct meanings"},
@@ -444,8 +445,8 @@ export.builtin_verbs = {
 	{"vestire", "è", "<<vestire>> and derivatives"},
 	{"putire", "+isc:ù", "<<putire>>"},
 	{"languire", "+isc:à", "<<languire>>"},
-	{"eseguire", "+isc:é:è.presp:+", "<<eseguire>> and derivatives"}, -- [r:DiPI:eseguo]
-	{"seguire", "é:è.presp:+", "<<seguire>> and derivatives; but not <<eseguire>> and derivatives"}, -- [r:DiPI:seguo], [r:DiPI:conseguo], [r:DiPI:inseguo], [r:DiPI:perseguo], [r:DiPI:proseguo], [r:DiPI:susseguo]
+	{"eseguire", "+isc:é:è", "<<eseguire>> and derivatives"}, -- [r:DiPI:eseguo]
+	{"seguire", "é:è", "<<seguire>> and derivatives; but not <<eseguire>> and derivatives"}, -- [r:DiPI:seguo], [r:DiPI:conseguo], [r:DiPI:inseguo], [r:DiPI:perseguo], [r:DiPI:proseguo], [r:DiPI:susseguo]
 	-- costruire (archaic construire); costrùssi, costrùtto given as "literary" by Hoepli but "archaic" by DOP, which
 	-- seems closer to the truth. Per Anna Thornton in ''Morphological Autonomy'' p. 368, [[costrutto]] is
 	--   no longer recognized as a pp in modern Italian but only as a noun.
