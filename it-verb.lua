@@ -250,6 +250,8 @@ FIXME:
 40. Issue an error if addnote spec has no effect. (DONE)
 41. Support verbs in -gliela like [[fargliela]]. (DONE)
 42. Support /\ notation for optional root-stressed infinitive with ending first, for [[suadere]] and derivatives. (DONE)
+43. Expand addnote[] notation to support references (maybe needs no work)?
+44. Support head= with the verb as part of a larger bracketed expression, e.g. for [[stare a vedere]], {{it-verb|e/@|head=[[stare a]] [[vedere]]}}
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
