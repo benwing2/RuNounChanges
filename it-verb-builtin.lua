@@ -101,7 +101,7 @@ export.builtin_verbs = {
 	{"noscere", "ó,nóbbi", "<<conoscere>>, archaic <<cognoscere>> and derivatives"},
 	-- ducere and derivatives: archaic; handled under -durre below
 	-- [[lucere]] itself is poetic and lacking the past historic
-	{{"lucere", prefixes={"tra", "ri"}}, "ù,+,-", "<<rilucere>>, <<tralucere>>"},
+	{{term = "lucere", prefixes = {"tra", "ri"}}, "ù,+,-", "<<rilucere>>, <<tralucere>>"},
 	-- 'cadere' must precede 'adere'
 	{"cadere", "à,càddi.fut:cadrò", "<<cadere>> and derivatives"},
 	-- NOTE: (1) per DiPI, [[suadere]] can be pronounced suadére (per Treccani/Hoepli) or suàdere.
