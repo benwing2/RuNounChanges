@@ -1005,11 +1005,9 @@ pos_functions["verbs"] = {
 	func = function(args, data, tracking_categories, frame)
 		if args[1] then
 			local preses, prets, parts
-			local pagename = args.pagename or PAGENAME
 			local def_forms
 
-			local parargs = frame:getParent().args
-			local alternant_multiword_spec = require(it_verb_module).do_generate_forms(parargs, "from headword")
+			local alternant_multiword_spec = require(it_verb_module).do_generate_forms(args, "from headword")
 
 			local function expand_footnotes_and_references(footnotes)
 				if not footnotes then
