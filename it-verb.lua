@@ -250,8 +250,7 @@ FIXME:
 40. Issue an error if addnote spec has no effect. (DONE)
 41. Support verbs in -gliela like [[fargliela]]. (DONE)
 42. Support /\ notation for optional root-stressed infinitive with ending first, for [[suadere]] and derivatives. (DONE)
-43. Expand addnote[] notation to support references (maybe needs no work)?
-44. Support head= with the verb as part of a larger bracketed expression, e.g. for [[stare a vedere]], {{it-verb|e/@|head=[[stare a]] [[vedere]]}}
+43. Support verbs in -gli like [[mancargli qualche rotella]]. (DONE)
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -2070,6 +2069,7 @@ local function analyze_verb(lemma)
 	-- * ne
 	-- * ci, vi (sometimes in the form ce, ve)
 	-- * si (sometimes in the form se)
+	-- * gli
 	-- Observed combinations:
 	--   * ce + la: [[avercela]] "to be angry (at someone)", [[farcela]] "to make it, to succeed",
 	--              [[mettercela tutta]] "to put everything (into something)"
@@ -2115,6 +2115,7 @@ local function analyze_verb(lemma)
 	local clitic_to_elided = {
 		ci = "[[c']]", vi = "[[vi]] ", si = "[[si]] ",
 		lo = "[[l']]", la = "[[l']]", li = "[[li]] ", le = "[[le]] ",
+		gli = "[[gli]] ",
 	}
 	local verb, clitic, clitic2 = rmatch(lemma, "^(.-)([cvs]e)(l[oaie])$")
 	if verb then
@@ -2199,7 +2200,10 @@ local function analyze_verb(lemma)
 		end
 	end
 	if not verb then
-		verb, clitic = rmatch(lemma, "^(.-)(l[oaie])$")
+		verb, clitic = rmatch(lemma, "^(.-)(gli)$")
+		if not verb then
+			verb, clitic = rmatch(lemma, "^(.-)(l[oaie])$")
+		end
 		if verb then
 			is_pronominal = true
 			linked_suf = "[[" .. clitic .. "]]"
@@ -2749,7 +2753,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 		if prefix ~= "" then
 			local function form_should_be_preserved(form)
 				local prespec, bare_form, postspec = parse_decorated_form(form)
-				return bare_form == "+" or bare_form == "-" or bare_form == "?" or is_single_vowel_spec(bare_form)
+				return bare_form == "+" or bare_form == "+isc" or bare_form == "-" or bare_form == "?" or is_single_vowel_spec(bare_form)
 			end
 
 			local function add_prefix_to_forms(tbl, slot)
