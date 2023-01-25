@@ -234,8 +234,8 @@ export.builtin_verbs = {
 	{"empiere", "é\\émpio,empìi:empiéi[less common],empiùto.stem:émpi", "<<empiere>>, <<riempiere>>; but not <<adempiere>>, which borrows fewer forms from <<adempire>>; see also <<empire>>, <<riempire>> of the same meaning"},
 	{"compiere", [=[
 	ó:ò,compiéi:compìi[more common].pres2p:compiéte:compìte[more common].
-	imperf:compiévo,compìvo[more common].
-	impsub:compiéssi,compìssi[more common].
+	imperf:compiévo:compìvo[more common].
+	impsub:compiéssi:compìssi[more common].
 	fut:compierò:compirò[more common]
 ]=], "<<compiere>>, <<ricompiere>>; see also <<compire>>, <<ricompire>>"},
 	-- calere: rare/literary, defective
@@ -413,7 +413,7 @@ export.builtin_verbs = {
 	{"empire", "émpio,+:empiéi[less common],+:empiùto[less common].ger:empièndo.presp:empiènte",
 		"<<empire>> and <<riempire>>; not <<adempire>>, which has a more regular conjugation"},
 	{{term = "parire", prefixes = {"ap", "com"}}, "pàio:+isc^à:+isc,pàrvi:parìi[less common]:pàrsi[less common],pàrso", "<<apparire>>, <<comparire>> and derivatives; but note that <<comparire>> needs special treatment as different variant forms are associated with distinct meanings"},
-	-- {"comparire/scomparire", ...},
+	{"^sparire", "+isc,spàrvi:sparìi[less common]:spàrsi[less common],spàrso", "<<sparire>>"},
 	-- {"disparire", ...},
 	-- {"trasparire", ...},
 	{"inferire", "+isc,infèrsi,infèrto", "<<inferire>> in the meaning \"to inflict, to strike\" (a blow); use 'a/+isc' for other meanings"},
@@ -432,7 +432,7 @@ export.builtin_verbs = {
 	-- sentire has rare sentènte and adjective-only senziènte
 	{{term = "sentire", prefixes = {"^", "^ri", "intra"}}, "è.presp:-", "<<sentire>>, <<risentire>>, <<intrasentire>>; but not any other derivatives"},
 	-- presentire has presenziènte but it's rare and literary
-	{"presentire", "è:+isc.presp:-", "<<presentire>>"},
+	{"presentire", "è+:+isc.presp:-", "<<presentire>>"},
 	{"sentire", "è.presp:senziènte", "derivatives of <<sentire>> other than <<sentire>> itself, <<risentire>>, <<intrasentire>> and <<presentire>>, e.g. <<assentire>>, <<consentire>>, <<dissentire>>"},
 	{"inghiottire", "+isc[in the literal meaning]:ó[figuratively]"},
 	-- See also introvertere of the same meaning, which has -ere forms.
