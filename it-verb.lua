@@ -251,6 +251,8 @@ FIXME:
 41. Support verbs in -gliela like [[fargliela]]. (DONE)
 42. Support /\ notation for optional root-stressed infinitive with ending first, for [[suadere]] and derivatives. (DONE)
 43. Support verbs in -gli like [[mancargli qualche rotella]]. (DONE)
+44. Expand addnote[] notation to support references (maybe needs no work)?
+45. Support head= with the verb as part of a larger bracketed expression, e.g. for [[stare a vedere]], {{it-verb|e/@|head=[[stare a]] [[vedere]]}}
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -760,7 +762,7 @@ local function set_up_base_verb(base)
 end
 
 
-local function add_default_verb_forms(base, from_headword)
+local function add_default_verb_forms(base)
 	local ret = base.verb
 
 	-- Process 'phisstem:...' spec.
@@ -3350,11 +3352,12 @@ end
 -- Externally callable function to conjugate a verb. Return value is ALTERNANT_MULTIWORD_SPEC, an object where the
 -- conjugated forms are in `ALTERNANT_MULTIWORD_SPEC.forms` for each slot. If there are no values for a slot, the slot
 -- key will be missing. The value for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
-function export.do_generate_forms(args, from_headword)
-	local pagename = from_headword and args.head[1] or args.pagename or mw.title.getCurrentTitle().text
-
+function export.do_generate_forms(args, from_headword, headword_head)
+	local pagename = args.pagename or mw.title.getCurrentTitle().text
+	local head = headword_head or pagename
 	local arg1 = args[1]
 	local need_surrounding_angle_brackets = true
+	local incorporated_headword_head_into_lemma = false
 	-- Check whether we need to add <...> around the argument. If the
 	-- argument has no < in it, we definitely do. Otherwise, we need to
 	-- parse the balanced [...] and <...> and add <...> only if there isn't
@@ -3362,8 +3365,7 @@ function export.do_generate_forms(args, from_headword)
 	-- brackets inside of them (HTML tags in qualifiers or <<name:...>> and
 	-- such in references).
 	if arg1:find("<") then
-		local segments = iut.parse_multi_delimiter_balanced_segment_run(arg1,
-			{{"<", ">"}, {"[", "]"}})
+		local segments = iut.parse_multi_delimiter_balanced_segment_run(arg1, {{"<", ">"}, {"[", "]"}})
 		for i = 2, #segments, 2 do
 			if segments[i]:find("^<.*>$") then
 				need_surrounding_angle_brackets = false
@@ -3372,7 +3374,7 @@ function export.do_generate_forms(args, from_headword)
 		end
 	end
 	if need_surrounding_angle_brackets then
-		if pagename:find(" ") then
+		if head:find(" ") then
 			-- If multiword lemma without <...> already, try to add it after the first word.
 			local need_explicit_angle_brackets = false
 			if arg1:find("%(%(") then
@@ -3381,13 +3383,21 @@ function export.do_generate_forms(args, from_headword)
 				-- Try to preserve the brackets in the part after the verb, but don't do it
 				-- if there aren't the same number of left and right brackets in the verb
 				-- (which means the verb was linked as part of a larger expression).
-				local refl_clitic_verb, post = rmatch(pagename, "^(.-)( .*)$")
+				local refl_clitic_verb, post = rmatch(head, "^(.-)( .*)$")
 				local left_brackets = rsub(refl_clitic_verb, "[^%[]", "")
 				local right_brackets = rsub(refl_clitic_verb, "[^%]]", "")
 				if #left_brackets == #right_brackets then
 					arg1 = iut.remove_redundant_links(refl_clitic_verb) .. "<" .. arg1 .. ">" .. post
+					incorporated_headword_head_into_lemma = true
 				else
-					need_explicit_angle_brackets = true
+					-- Try again using the form without links.
+					local linkless_head = m_links.remove_links(head)
+					if linkless_head:find(" ") then
+						refl_clitic_verb, post = rmatch(linkless_head, "^(.-)( .*)$")
+						arg1 = refl_clitic_verb .. "<" .. arg1 .. ">" .. post
+					else
+						need_explicit_angle_brackets = true
+					end
 				end
 			end
 
@@ -3397,11 +3407,13 @@ function export.do_generate_forms(args, from_headword)
 			end
 		else
 			arg1 = "<" .. arg1 .. ">"
+			-- Will be incorporated through `head` below in the call to parse_indicator_spec().
+			incorporated_headword_head_into_lemma = true
 		end
 	end
 
 	local function do_parse_indicator_spec(angle_bracket_spec, lemma)
-		return parse_indicator_spec(angle_bracket_spec, lemma, pagename)
+		return parse_indicator_spec(angle_bracket_spec, lemma, head)
 	end
 
 	local parse_props = {
@@ -3413,6 +3425,7 @@ function export.do_generate_forms(args, from_headword)
 	local alternant_multiword_spec = iut.parse_inflected_text(escaped_arg1, parse_props)
 	alternant_multiword_spec.pos = pos or "verbs"
 	alternant_multiword_spec.args = args
+	alternant_multiword_spec.incorporated_headword_head_into_lemma = incorporated_headword_head_into_lemma
 	normalize_all_lemmas(alternant_multiword_spec)
 	detect_all_indicator_specs(alternant_multiword_spec, from_headword)
 	local inflect_props = {
