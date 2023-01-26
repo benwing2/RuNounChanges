@@ -251,8 +251,11 @@ FIXME:
 41. Support verbs in -gliela like [[fargliela]]. (DONE)
 42. Support /\ notation for optional root-stressed infinitive with ending first, for [[suadere]] and derivatives. (DONE)
 43. Support verbs in -gli like [[mancargli qualche rotella]]. (DONE)
-44. Expand addnote[] notation to support references (maybe needs no work)?
-45. Support head= with the verb as part of a larger bracketed expression, e.g. for [[stare a vedere]], {{it-verb|e/@|head=[[stare a]] [[vedere]]}}
+44. Correctly incorporate links in multiword expressions from [[Module:it-headword]] so the autolinking algorithm there
+    works (e.g. for [[portare il cervello all'ammasso]]) and head=~... specs are correctly propagated. (DONE)
+45. Support head= with the verb as part of a larger bracketed expression, e.g. for [[stare a vedere]],
+    {{it-verb|e/@|head=[[stare a]] [[vedere]]}}. (DONE)
+46. Expand addnote[] notation to support references (maybe needs no work)?
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
