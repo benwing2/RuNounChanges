@@ -218,9 +218,9 @@ export.builtin_verbs = {
 	{"spargere", "à,spàrsi,spàrso", "<<spargere>> and derivatives"},
 	{{term = "ergere", prefixes = {"^", "ad", "ri"}}, "è,èrsi,èrto:#érto", "<<ergere>>, <<adergere>>, <<riergere>>; but not any other verbs in ''-ergere''"},
 	{{term = "ergere", prefixes = {"m", "sp", "t"}}, "è,èrsi,èrso", "<<mergere>> and derivatives; <<spergere>> and derivatives; <<tergere>> and derivatives"},
-	{"^vergere", "è,vergéi,-", "<<vergere>>; but not any derivatives"},
-	{"convergere", "è,convèrsi:+[rare],convèrso[rare]", "<<convergere>>"},
-	{"divergere", "è,divèrsi[rare],-", "<<divergere>>"},
+	-- vergere: literary, rare, defective in the past participle
+	{"convergere", "è,convèrsi,-", "<<convergere>>"},
+	{"divergere", "è,-,-", "<<divergere>>"},
 	{{term = "orgere", prefixes = {"c", "p"}}, "ò:ó,òrsi:órsi,òrto:órto", "<<accorgersi>> and derivatives; <<scorgere>>; <<porgere>> and derivatives"},
 	{"sorgere", "ó:ò,sórsi:sòrsi,sórto:sòrto", "<<sorgere>>"},
 	{"surgere", "ù,sùrsi,sùrto", "<<surgere>> and derivatives"},
@@ -240,7 +240,7 @@ export.builtin_verbs = {
 ]=], "<<compiere>>, <<ricompiere>>; see also <<compire>>, <<ricompire>>"},
 	-- calere: rare/literary, defective
 	{"valere", "vàlgo^à,vàlsi,vàlso.fut:varrò", "<<valere>> and derivatives"},
-	{"eccellere", "è+,eccèlsi,eccèlso[rare]", "<<eccellere>>"},
+	{"eccellere", "è+,eccèlsi,-", "<<eccellere>>"},
 	{"pellere", "è,pùlsi,pùlso", "verbs in ''-pellere'' (<<espellere>>, <<impellere>>, <<propellere>>, <<repellere>>, etc."},
 	{"avellere", "è,vùlsi,vùlso", "<<avellere>>"},
 	-- per Canepari, svèlto or svélto but just divèlto
@@ -248,7 +248,7 @@ export.builtin_verbs = {
 	{"divellere", "è\\è:divèlgo,divèlsi,divèlto", "<<divellere>>"},
 	-- vellere, evellere, convellere: literary or archaic, defective
 	-- tollere: archaic, unclear conjugation
-	{{term = "tollere", prefixes = {"at", "es"}}, "è,-,-", "<<attollere>>, <<estollere>>"},
+	-- attollere, estollere: literary, defective
 	-- colere: archaic, defective
 	{"dolere", "dòlgo^duòle,dòlsi,+.fut:dorrò", "<<dolere>> and derivatives"},
 	{"solere", "sòglio^suòle,soléi[rare],sòlito.pres1p:sogliàmo.fut:-.imp:-.presp:-", "<<solere>>"},
@@ -399,23 +399,26 @@ export.builtin_verbs = {
 	{"sdrucire", "+isc:sdrùcio^+isc:ù.pres3p:+:sdrùcono.presp:+", "<<sdrucire>> and derivatives"},
 	-- redire, reddire: poetic, highly defective
 	{"applaudire", "à:+isc[uncommon].presp:+", "<<applaudire>> and derivatives"},
-	{"udire", "òdo.fut:udrò:+.presp:+:udiènte", "<<udire>> and derivatives"}, -- must precede dire
-	{"fuggire", "ù", "<<fuggire>> and derivatives"},
+	-- Not technically necessary to enumerate the prefixes but we don't want accidental use of @ in verbs like
+	-- [[accudire]], [[esaudire]], [[incrudire]] to trigger this.
+	{{term = "udire", prefixes = {"^", "ri", "tra"}}, "òdo.fut:udrò:+.presp:+:udiènte", "<<udire>> and derivatives"},
 	-- gire: archaic, defective
+	{"fuggire", "ù", "<<fuggire>> and derivatives"},
+	{"muggire", "+isc.pres3s:+:mùgge.pres3p:+:mùggono", "<<muggire>> and derivatives"},
 	{"salire", "sàlgo^à.presp:+:saliènte", "<<salire>> and derivatives"},
 	-- boglire: archaic, unclear conjugation
 	{"seppellire", "+isc,+,sepólto:+", "<<seppellire>> and derivatives"},
-	{"sbollire", "ó:+isc.presp:+", "<<sbollire>>"},
-	{"bollire", "ó.presp:+", "<<bollire>> and derivatives, except <<sbollire>>"},
+	{"sbollire", "+isc:ó", "<<sbollire>>"},
+	{"bollire", "ó", "<<bollire>> and derivatives, except <<sbollire>>"},
 	{"dormire", "ò.presp:+:dormiènte", "<<dormire>> and derivatives"},
 	{"venire", "vèngo^viène,vénni,venùto.fut:verrò.presp:veniènte", "<<venire>> and derivatives"},
 	{{term = "mpire", prefixes = {"ade", "co"}}, "+isc.ger:mpièndo.presp:mpiènte", "<<adempire>> and <<compire>>"},
 	{"empire", "émpio,+:empiéi[less common],+:empiùto[less common].ger:empièndo.presp:empiènte",
 		"<<empire>> and <<riempire>>; not <<adempire>>, which has a more regular conjugation"},
-	{{term = "parire", prefixes = {"ap", "com"}}, "pàio:+isc^à:+isc,pàrvi:parìi[less common]:pàrsi[less common],pàrso", "<<apparire>>, <<comparire>> and derivatives; but note that <<comparire>> needs special treatment as different variant forms are associated with distinct meanings"},
+	{{term = "parire", prefixes = {"ap", "com"}}, "pàio:+isc^à:+isc,pàrvi:parìi[less common]:pàrsi[less common],pàrso", "<<apparire>>, <<comparire>> and derivatives; but note that <<comparire>> and <<scomparire>> need special treatment as different variant forms are associated with distinct meanings"},
 	{"^sparire", "+isc,spàrvi:sparìi[less common]:spàrsi[less common],spàrso", "<<sparire>>"},
-	-- {"disparire", ...},
-	-- {"trasparire", ...},
+	{"disparire", "dispàio^à,+:dispàrvi", "<<disparire>>"},
+	{"trasparire", "traspàio:+isc^à:+isc", "<<trasparire>>"},
 	{"inferire", "+isc,infèrsi,infèrto", "<<inferire>> in the meaning \"to inflict, to strike\" (a blow); use 'a/+isc' for other meanings"},
 	-- perire: regular except in archaic/poetic usage pèro, etc.
 	{"offrire", "ò,+:offèrsi[less common],offèrto.presp:offerènte", "<<offrire>>, <<soffrire>> and derivatives"},
