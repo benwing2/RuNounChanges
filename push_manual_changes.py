@@ -15,7 +15,7 @@ def truncate(text):
     return text
   return text[0:max_truncate_len] + "..."
 
-def push_manual_changes(save, verbose, diff, direcfile, annotation, start, end):
+def push_manual_changes(save, verbose, diff, direcfile, comment, start, end):
   template_changes = []
   for lineno, line in blib.iter_items_from_file(direcfile, start, end):
     def linemsg(txt):
@@ -104,7 +104,7 @@ def push_manual_changes(save, verbose, diff, direcfile, annotation, start, end):
                 % (repl_curr_diff, newtext_text_diff, ratio, curr_template,
                   repl_template))
         changelog = "replace <%s> with <%s> (%s)" % (truncate(curr_template),
-            truncate(repl_template), annotation)
+            truncate(repl_template), comment)
         pagemsg("Change log = %s" % changelog)
       return newtext, changelog
 
@@ -119,10 +119,10 @@ def push_manual_changes(save, verbose, diff, direcfile, annotation, start, end):
 params = blib.create_argparser("Push manual changes to Wiktionary")
 params.add_argument("--file", help="File containing templates to change, as output by parse_log_file.py",
     required=True)
-params.add_argument("--annotation", default="manually",
-    help="Annotation in change log message used to indicate source of changes (default 'manually')")
+params.add_argument("--comment", default="manually",
+    help="Comment in change log message used to indicate source of changes (default 'manually')")
 
 args = params.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-push_manual_changes(args.save, args.verbose, args.diff, args.file, args.annotation.decode("utf-8"), start, end)
+push_manual_changes(args.save, args.verbose, args.diff, args.file, args.comment.decode("utf-8"), start, end)
