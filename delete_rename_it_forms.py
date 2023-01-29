@@ -14,7 +14,7 @@ def remove_anagram_from_page(index, page, pagetitle_to_remove):
     errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
 
   if not blib.safe_page_exists(page, errandpagemsg):
-    pagemsg("WARNING: Trying to remove anagram '%s' but page itself doesn't exist")
+    pagemsg("WARNING: Trying to remove anagram '%s' but page itself doesn't exist" % pagetitle_to_remove)
     return
 
   notes = []
