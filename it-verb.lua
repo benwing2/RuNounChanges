@@ -256,6 +256,7 @@ FIXME:
 45. Support head= with the verb as part of a larger bracketed expression, e.g. for [[stare a vedere]],
     {{it-verb|e/@|head=[[stare a]] [[vedere]]}}. (DONE)
 46. Expand addnote[] notation to support references (maybe needs no work)?
+47. Support verbs in -glire ([[boglire]], [[inorgoglire]], [[saglire]], etc.) correctly. (DONE)
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -615,6 +616,11 @@ local function combine_stem_ending(base, slot, stem, ending)
 		stem = stem .. "h"
 	end
 
+	-- Handle [[boglire]], [[inorgoglire]], [[saglire]], etc.
+	if base.conj_vowel == "ì" and stem:find("gl$") and not rfind(ending, "^[iì]") then
+		stem = stem .. "i"
+	end
+
 	-- Two unstressed i's coming together compress to one.
 	if ending:find("^i") then
 		stem = rsub(stem, "i$", "")
@@ -768,6 +774,12 @@ end
 local function add_default_verb_forms(base)
 	local ret = base.verb
 
+	-- Need to call combine_stem_ending() to combine stem and ending rather than just pasting them together to handle
+	-- cases like [[boglire]], where 'bógl' + 'o' becomes 'bóglio'.
+	local function comb(slot, stem, ending)
+		return combine_stem_ending(base, slot, stem, ending)
+	end
+
 	-- Process 'phisstem:...' spec.
 	if base.principal_part_specs.explicit_phis_stem_spec then
 		-- Put the explicit past historic stem in ret.phisstem (i.e. base.verb.phisstem).
@@ -847,36 +859,36 @@ local function add_default_verb_forms(base)
 		ret.unstressed_stem = iut.map_forms(ret.stem, function(stem) return remove_accents(stem) end)
 	end
 
-	ret.pres = iut.map_forms(ret.stem, function(stem) return stem .. "o" end)
-	ret.pres3s = iut.map_forms(ret.stem, function(stem) return ending_vowel == "a" and stem .. "a" or stem .. "e" end)
+	ret.pres = iut.map_forms(ret.stem, function(stem) return comb("pres1s", stem, "o") end)
+	ret.pres3s = iut.map_forms(ret.stem, function(stem) return comb("pres3s", stem, ending_vowel == "a" and "a" or "e") end)
 	if ending_vowel == "i" then
-		ret.isc_pres = iut.map_forms(ret.unstressed_stem, function(stem) return stem .. "ìsco" end)
-		ret.isc_pres3s = iut.map_forms(ret.unstressed_stem, function(stem) return stem .. "ìsce" end)
+		ret.isc_pres = iut.map_forms(ret.unstressed_stem, function(stem) return comb("pres1s", stem, "ìsco") end)
+		ret.isc_pres3s = iut.map_forms(ret.unstressed_stem, function(stem) return comb("pres3s", stem, "ìsce") end)
 	end
 	ret.phis = iut.map_forms(ret.unstressed_stem, function(stem)
 		if ending_vowel == "a" then
-			return stem .. "ài"
+			return comb("phis1s", stem, "ài")
 		elseif ending_vowel == "e" then
 			-- Per Anna M. Thornton, "Overabundance: Multiple Forms Realizing the Same Cell" in ''Morphological Autonomy'', p. 366
 			-- [https://www.google.com/books/edition/Morphological_Autonomy/oh3UlV6xSQEC?hl=en&gbpv=1&dq=%22fottette%22&pg=PA366&printsec=frontcover],
 			-- -éi tends to occur only with stems ending in -t, while -étti/-ètti occurs with stems not ending in -t.
 			-- The opposite combinations are almost vanishingly rare, and should not be included.
 			if stem:find("t$") then
-				return stem .. "éi"
+				return comb("phis1s", stem, "éi")
 			else
-				return stem .. "étti"
+				return comb("phis1s", stem, "étti")
 			end
 		else
-			return stem .. "ìi"
+			return comb("phis1s", stem, "ìi")
 		end
 	end)
 	ret.pp = iut.map_forms(ret.unstressed_stem, function(stem)
 		if ending_vowel == "a" then
-			return stem .. "àto"
+			return comb("pp", stem, "àto")
 		elseif ending_vowel == "e" then
-			return rfind(stem, "[cg]$") and stem .. "iùto" or stem .. "ùto"
+			return comb("pp", stem, rfind(stem, "[cg]$") and "iùto" or "ùto")
 		else
-			return stem .. "ìto"
+			return comb("pp", stem, "ìto")
 		end
 	end)
 end
@@ -1446,8 +1458,11 @@ end
 local function generate_default_future_principal_part(base, do_err)
 	-- For -are verbs, we may need to make some adjustments to form the future principal part.
 	local function are_stem_to_future_principal_part(stem)
+		local function comb(ending)
+			return combine_stem_ending(base, "fut1s", stem, ending)
+		end
 		if stem:find("[cg]$") then
-			return {stem .. "herò"}
+			return {comb("herò")}
 		elseif stem:find("[cg]i$") then
 			-- Verbs in -ciare/-giare with the accent on the final -ì in the present singular take future in
 			-- -cier-/-gier- not -cer-/-ger-. Compare [[sciare]] "to ski", pres1s ''scìo'', fut1s ''scierò'' vs.
@@ -1455,13 +1470,13 @@ local function generate_default_future_principal_part(base, do_err)
 			-- is to check the present singular, e.g. pres1s.
 			return iut.map_forms(base.forms.pres1s, function(form)
 				if rfind(form, "ìo$") then
-					return stem .. "erò"
+					return comb("erò")
 				else
 					return rsub(stem, "i$", "erò")
 				end
 			end)
 		else
-			return {stem .. "erò"}
+			return {comb("erò")}
 		end
 	end
 
@@ -1492,7 +1507,7 @@ local function generate_default_conditional_principal_part(base, do_err)
 			error(("Internal error: When generating conditional, saw principal part for future '%s' that does not end in -ò")
 				:format(form))
 		end
-		return pref .. "èi"
+		return combine_stem_ending(base, "cond1s", pref, "èi")
 	end)
 end
 
@@ -1512,7 +1527,8 @@ end
 
 local function generate_default_gerund_principal_part(base, do_err)
 	return iut.map_forms(base.verb.unstressed_stem, function(stem)
-		return stem .. (base.conj_vowel == "à" and "àndo" or "èndo")
+		-- Need to call combine_stem_ending() to handle cases like [[boglire]], where 'bógl' + 'èndo' becomes 'boglièndo'.
+		return combine_stem_ending(base, "ger", stem, (base.conj_vowel == "à" and "àndo" or "èndo"))
 	end)
 end
 
@@ -1526,7 +1542,8 @@ end
 
 local function generate_default_present_participle_principal_part(base, do_err)
 	return iut.map_forms(base.verb.unstressed_stem, function(stem)
-		return stem .. (base.conj_vowel == "à" and "ànte" or "ènte")
+		-- Need to call combine_stem_ending() to handle cases like [[boglire]], where 'bógl' + 'ènte' becomes 'bogliènte'.
+		return combine_stem_ending(base, "presp", stem, (base.conj_vowel == "à" and "ànte" or "ènte"))
 	end)
 end
 
@@ -1663,7 +1680,7 @@ local row_conjugations = {
 		tag_suffix = "impf|ind",
 		persnums = full_person_number_list,
 		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unstressed_stem,
-			function(stem) return stem .. base.conj_vowel .. "vo" end) end,
+			function(stem) return combine_stem_ending(base, "imperf1s", stem, base.conj_vowel .. "vo") end) end,
 		conjugate = {"o", "i", "a", "àmo", "àte", "ano"},
 		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
@@ -1674,7 +1691,7 @@ local row_conjugations = {
 		row_override_persnums = {"12s", "3s", "1p", "2p", "3p"},
 		row_override_persnums_to_full_persnums = {["12s"] = {"1s", "2s"}},
 		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unstressed_stem,
-			function(stem) return stem .. base.conj_vowel .. "ssi" end) end,
+			function(stem) return combine_stem_ending(base, "impsub12s", stem, base.conj_vowel .. "ssi") end) end,
 		conjugate = {"ssi", "sse", "ssimo", "ste", "ssero"},
 		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
