@@ -262,7 +262,7 @@ end
 -- also be used to replace a span of adjacent separately-linked words to a single multiword lemma. The format of
 -- `modifier_spec` is one or more semicolon-separated subterm specs, where each such spec is of the form
 -- SUBTERM:DEST, where SUBTERM is one or more words in the `linked_term` but without brackets in them, and DEST is the
--- corresponding link destination to link the subterm to. Any occurrence of # in DEST is replaced with SUBTERM.
+-- corresponding link destination to link the subterm to. Any occurrence of ~ in DEST is replaced with SUBTERM.
 -- Alternatively, a single modifier spec can be of the form BEGIN[FROM:TO], which is equivalent to writing
 -- BEGINFROM:BEGINTO (see example below).
 --
@@ -274,33 +274,51 @@ end
 -- 
 -- Another example: given the source phrase [[chi semina vento raccoglie tempesta]] "sow the wind, reap the whirlwind"
 -- (literally (he) who sows wind gathers [the] tempest"). The result of calling add_links_to_multiword_term() is
--- [[chi]] [[semina]] [[vento]] [[raccoglie]] [[tempesta]], and with a modifier_spec of 'semina:#re; raccoglie:#re',
--- the result is [[chi]] [[seminare|semina]] [[vento]] [[raccogliere|raccoglie]] [[tempesta]]. Here we use the #
+-- [[chi]] [[semina]] [[vento]] [[raccoglie]] [[tempesta]], and with a modifier_spec of 'semina:~re; raccoglie:~re',
+-- the result is [[chi]] [[seminare|semina]] [[vento]] [[raccogliere|raccoglie]] [[tempesta]]. Here we use the ~
 -- notation to stand for the non-lemma form in the destination link.
 --
 -- A more complex example is [[se non hai altri moccoli puoi andare a letto al buio]], which becomes
 -- [[se]] [[non]] [[hai]] [[altri]] [[moccoli]] [[puoi]] [[andare]] [[a]] [[letto]] [[al]] [[buio]] after calling
 -- add_links_to_multiword_term(). With the following modifier_spec:
--- 'hai:avere; altr[i:o]; moccol[i:o]; puoi: potere; andare a letto:#; al buio:#', the result of applying the spec is
+-- 'hai:avere; altr[i:o]; moccol[i:o]; puoi: potere; andare a letto:~; al buio:~', the result of applying the spec is
 -- [[se]] [[non]] [[avere|hai]] [[altro|altri]] [[moccolo|moccoli]] [[potere|puoi]] [[andare a letto]] [[al buio]].
 -- Here, we rely on the alternative notation mentioned above for e.g. 'altr[i:o]', which is equivalent to 'altri:altro',
--- and link multiword subterms using e.g. 'andare a letto:#'. (The code knows how to handle multiword subexpressions
+-- and link multiword subterms using e.g. 'andare a letto:~'. (The code knows how to handle multiword subexpressions
 -- properly, and if the link text and destination are the same, only a single-part link is formed.)
 function export.apply_link_modifiers(linked_term, modifier_spec)
 	local split_modspecs = rsplit(modifier_spec, "%s*;%s*")
 	for j, modspec in ipairs(split_modspecs) do
-		local subterm, dest
+		local subterm, dest, otherlang
 		local begin, end_from, end_to = modspec:match("^([^:]*)%[(.-):(.*)%]$")
 		if begin then
 			subterm = begin .. end_from
 			dest = begin .. end_to
 		else
 			subterm, dest = modspec:match("^(.-)%s*:%s*(.*)$")
+			if subterm and subterm ~= "^" and subterm ~= "$" then
+				local langdest
+				-- Parse off an initial language code (e.g. 'en:Higgs', 'la:minūtia' or 'grc:σκατός'). Also handle
+				-- Wikipedia prefixes ('w:Abatemarco' or 'w:it:Colle Val d'Elsa').
+				otherlang, langdest = dest:match("^([A-Za-z0-9._-]+):([^ ].*)$")
+				if otherlang == "w" then
+					local foreign_wikipedia, foreign_term = langdest:match("^([A-Za-z0-9._-]+):([^ ].*)$")
+					if foreign_wikipedia then
+						otherlang = otherlang .. ":" .. foreign_wikipedia
+						langdest = foreign_term
+					end
+					dest = ("%s:%s"):format(otherlang, langdest)
+					otherlang = nil
+				elseif otherlang then
+					otherlang = require("Module:languages").getByCode(otherlang, true, "allow etym")
+					dest = langdest
+				end
+			end
 		end
 		if not subterm then
 			error(("Single modifier spec %s should be of the form SUBTERM:DEST where SUBTERM is one or more words in a multiword "
-					.. "term and DEST is the destination to link the subterm to, or of the form BEGIN[FROM:TO] which is equivalent to "
-					.. "BEGINFROM:BEGINTO"):
+					.. "term and DEST is the destination to link the subterm to (possibly prefixed by a language code), or of "
+					.. "the form BEGIN[FROM:TO] which is equivalent to BEGINFROM:BEGINTO"):
 				format(modspec))
 		end
 		if subterm == "^" then
@@ -312,29 +330,33 @@ function export.apply_link_modifiers(linked_term, modifier_spec)
 				error(("Subterm '%s' in modifier spec '%s' cannot have brackets in it"):format(
 					escape_brackets(subterm), escape_brackets(modspec)))
 			end
-			if dest:find("%[") then
-				error(("Link destination '%s' in modifier spec '%s' cannot have brackets in it"):format(
-					escape_brackets(dest), escape_brackets(modspec)))
-			end
 			local patut = require("Module:pattern utilities")
 			local escaped_subterm = patut.pattern_escape(subterm)
 			local subterm_re = "%[%[" .. escaped_subterm:gsub("(%%?[ '%-])", "%%]*%1%%[*") .. "%]%]"
 			local expanded_dest
-			if dest:find("#") then
-				expanded_dest = dest:gsub("#", patut.replacement_escape(subterm))
+			-- FIXME, eliminate uses of # to mean ~, so we can use # for anchored links
+			if dest:find("[#~]") then
+				expanded_dest = dest:gsub("[#~]", patut.replacement_escape(subterm))
 			else
 				expanded_dest = dest
 			end
+			if otherlang then
+				expanded_dest = expanded_dest .. "#" .. otherlang:getCanonicalName()
+			end
+
 			local subterm_replacement
-			if expanded_dest == subterm then
+			if expanded_dest:find("%[") then
+				-- Use the destination directly if it has brackets in it (e.g. to put brackets around parts of a word).
+				subterm_replacement = expanded_dest
+			elseif expanded_dest == subterm then
 				subterm_replacement = "[[" .. subterm .. "]]"
 			else
 				subterm_replacement = "[[" .. expanded_dest .. "|" .. subterm .. "]]"
 			end
-	
-			local replaced_linked_term = rsub(linked_term, subterm_re, subterm_replacement)
+
+			local replaced_linked_term = rsub(linked_term, subterm_re, patut.replacement_escape(subterm_replacement))
 			if replaced_linked_term == linked_term then
-				error(("Subterm '%s' could not be located in %slinked expression %s"):format(
+				error(("Subterm '%s' could not be located in %slinked expression %s, or replacement same as subterm"):format(
 					subterm, j > 1 and "intermediate " or "", escape_brackets(linked_term)))
 			else
 				linked_term = replaced_linked_term
