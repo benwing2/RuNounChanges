@@ -24,9 +24,12 @@ local m_links = require("Module:links")
 local m_table = require("Module:table")
 local romut_module = "Module:romance utilities"
 local it_verb_module = "Module:it-verb"
+local put_module = "Module:parse utilities"
 local com = require("Module:it-common")
 local lang = require("Module:languages").getByCode("it")
 local langname = lang:getCanonicalName()
+-- Assigned to `require("Module:parse utilities")` as necessary.
+local put
 
 local u = mw.ustring.char
 local rfind = mw.ustring.find
@@ -99,12 +102,6 @@ function export.show(frame)
 		["json"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing
 	}
-
-	if poscat == "verbs-old" then
-		local m_headword_old = require("Module:it-headword/old")
-		pos_functions = m_headword_old.pos_functions
-		poscat = "verbs"
-	end
 
 	if pos_functions[poscat] then
 		for key, val in pairs(pos_functions[poscat].params) do
@@ -224,12 +221,113 @@ local function replace_hash_with_lemma(term, lemma)
 end
 
 
+local deriv_params = {
+	{"dim", glossary_link("diminutive")},
+	{"aug", glossary_link("augmentative")},
+	{"pej", glossary_link("pejorative")},
+	{"derog", glossary_link("derogatory")},
+	{"end", glossary_link("endearing")},
+	{"dim_pej", glossary_link("diminutive") .. "-" .. glossary_link("pejorative")},
+	{"dim_derog", glossary_link("diminutive") .. "-" .. glossary_link("derogatory")},
+	{"dim_end", glossary_link("diminutive") .. "-" .. glossary_link("endearing")},
+	{"aug_pej", glossary_link("augmentative") .. "-" .. glossary_link("pejorative")},
+	{"aug_derog", glossary_link("augmentative") .. "-" .. glossary_link("derogatory")},
+	{"aug_end", glossary_link("augmentative") .. "-" .. glossary_link("endearing")},
+	{"end_derog", glossary_link("endearing") .. "-" .. glossary_link("derogatory")},
+}
+
+
+local function insert_deriv_params(params)
+	local list_spec = {list = true}
+	for _, deriv_param in ipairs(deriv_params) do
+		local param, desc = unpack(deriv_param)
+		params[param] = list_spec
+	end
+end
+
+
+local param_mods = {
+	t = {
+		-- We need to store the <t:...> inline modifier into the "gloss" key of the parsed part, because that is what
+		-- [[Module:links]] expects.
+		item_dest = "gloss",
+	},
+	gloss = {},
+	-- no 'tr' or 'ts', doesn't make sense for Italian
+	g = {
+		-- We need to store the <g:...> inline modifier into the "genders" key of the parsed part, because that is what
+		-- [[Module:links]] expects.
+		item_dest = "genders",
+		convert = function(arg, parse_err)
+			return rsplit(arg, ",")
+		end,
+	},
+	id = {},
+	alt = {},
+	q = {},
+	qq = {},
+	lit = {},
+	pos = {},
+	-- no 'sc', doesn't make sense for Italian
+}
+
+
+local function parse_term_with_modifiers(paramname, val)
+	local function generate_obj(term)
+		return {term = term}
+	end
+
+	-- Check for inline modifier, e.g. מרים<tr:Miryem>.
+	if val:find("<") then
+		if not put then
+			put = require(put_module)
+		end
+		return put.parse_inline_modifiers(val, paramname, param_mods, generate_obj, nil, "split on comma")
+	else
+		local split
+        if val:find(",%s") then
+			if not put then
+				put = require(put_module)
+			end
+            split = put.split_on_comma(val)
+        else
+            split = rsplit(val, ",")
+        end
+        for i, term in ipairs(split) do
+        	split[i] = generate_obj(term)
+        end
+        return split
+	end
+
+	return part
+end
+
+
+local function insert_deriv_inflections(data, args, plpos)
+	for _, deriv_param in ipairs(deriv_params) do
+		local param, desc = unpack(deriv_param)
+		if #args[param] > 0 then
+			local inflection = {label = desc}
+			for i, term in ipairs(args[param]) do
+				local parsed_terms = parse_term_with_modifiers(param, term)
+				for _, parsed_term in ipairs(parsed_terms) do
+					table.insert(inflection, parsed_term)
+				end
+			end
+			-- These will typically be missing for now so it doesn't help to do this.
+			-- check_all_missing(inflection, plpos, tracking_categories)
+			table.insert(data.inflections, inflection)
+		end
+	end
+end
+
+
 -----------------------------------------------------------------------------------------
 --                                          Nouns                                      --
 -----------------------------------------------------------------------------------------
 
 local allowed_genders = m_table.listToSet(
-	{"m", "f", "mf", "mfbysense", "m-p", "f-p", "mf-p", "mfbysense-p", "?", "?-p"}
+	{"m", "f", "mf", "mfbysense", "n", "m-p", "f-p", "mf-p", "mfbysense-p", "n-p", "?", "?-p"}
 )
 
 
@@ -588,6 +686,8 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 		table.insert(data.inflections, feminine_plurals)
 	end
 
+	insert_deriv_inflections(data, args, plpos)
+
 	-- Maybe add category 'Italian nouns with irregular gender' (or similar)
 	local irreg_gender_lemma = rsub(lemma, " .*", "") -- only look at first word
 	if (irreg_gender_lemma:find("o$") and (gender_for_default_plural == "f" or gender_for_default_plural == "mf"
@@ -599,7 +699,7 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 end
 
 local function get_noun_params(nountype)
-	return {
+	local params = {
 		[1] = {list = "g", required = nountype ~= "proper", default = "?"},
 		[2] = {list = "pl"},
 		["g_qual"] = {list = "g=_qual", allow_holes = true},
@@ -614,6 +714,8 @@ local function get_noun_params(nountype)
 		["fpl"] = {list = true},
 		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
 	}
+	insert_deriv_params(params)
+	return params
 end
 
 pos_functions["nouns"] = {
@@ -830,6 +932,8 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 		table.insert(data.inflections, sups)
 	end
 
+	insert_deriv_inflections(data, args, plpos)
+
 	if args.irreg and is_superlative then
 		table.insert(data.categories, langname .. " irregular superlative adjectives")
 	end
@@ -858,6 +962,7 @@ local function get_adjective_params(adjtype)
 	if adjtype == "sup" then
 		params["irreg"] = {type = "boolean"}
 	end
+	insert_deriv_params(params)
 	return params
 end
 
