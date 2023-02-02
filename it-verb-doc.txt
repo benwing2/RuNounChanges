@@ -146,17 +146,33 @@ which produces
 {{it-verb-old|a/ì--|pagename=scricchiolare}}
 
 ===Regular ''-ire'' verbs===
-For regular ''-ire'' verbs that do ''not'' take the ''-isc-'' infix, use the same form as for ''-are'' verbs. For example, for {{m|it|partire||to depart}}, present tense ''io pàrto'', use:
-:{{temp|it-verb|e/à}}
+For regular ''-ire'' verbs that do ''not'' take the ''-isc-'' infix, use the same form as for ''-are'' verbs. For example, for {{m|it|bollire||to boil}}, present tense ''io bóllo'', use:
+:{{temp|it-verb|a/ó}}
 which produces
 
-{{it-verb-old|e/à|pagename=partire}}
+{{it-verb-old|a/ó|pagename=partire}}
+
+'''However, all such verbs are listed among the "built-in" verb specs, and those specs should be used; see below.'''
 
 For regular ''-ire'' verbs that take the ''-isc-'' infix, use <code>+isc</code> in place of the vowel spec. For example, for {{m|it|punire||to punish}}, present tense ''io punìsco'', use:
 :{{temp|it-verb|a/+isc}}
 which produces
 
 {{it-verb-old|a/+isc|pagename=punire}}
+
+===Built-in verbs===
+A large number of verbs are "built in" to the module in the sense that the module knows internally how to conjugate them. Specifically, this includes:
+# All ''-ere'' verbs, except for some archaic-only or poetic-only verbs (particularly those that are defective).
+# All ''-ire'' verbs that do ''not'' take the ''-isc-'' infix (except for some archaic-only or poetic-only verbs, as with ''-ere'' verbs).
+# All irregular verbs regardless of conjugation class.
+NOTE: The following irregularities do not "count" when considering whether a verb is irregular and needs to be listed among the built-in verbs:
+# Irregularities in the present participle of ''-ire'' verbs that take the ''-isc-'' infix, such as {{m|it|munire||to fortify}}, with present participle {{m|it|muniente}}.
+# Archaic, poetic, rare and proscribed irregular forms, such as the irregular archaic or poetic past participle {{m|it|aggresso}} of {{m|it|aggredire||to attack, to assault}}, which is otherwise completely regular.
+Note further that if a verb is included among the built-in verbs, its conjugation generally does ''NOT'' include archaic, poetic, rare and/or proscribed forms, but includes only forms that are in regular use in modern Italian. For several common verbs ({{m|it|essere}}, {{m|it|venire}}, {{m|it|sapere}}, etc.), two conjugations are given in the verb's entry, one that comes directly from the built-in verb spec and another one, labeled '''Including lesser-used-forms:''', that includes all known archaic, poetic and rare forms, appropriately footnoted.
+
+Most built-in verb specs specify the conjugation of a base verb, and derived verbs will automatically be handled by the same mechanism. For example, the verb {{m|it|volgere||to turn}} is given its own listing, while derivatives like {{m|it|convolgere}}, {{m|it|involgere}}, {{m|it|trasvolgere}}, {{m|it|disinvolgere}}, etc. do not have their own listings but will be handled automatically according to the {{m|it|volgere}} spec. In some cases, certain derivatives will be handled specially while all others use the base verb's spec; rarely, all derivatives will be specifically enumerated and only that set handled.
+
+To specify the conjugation of a built-in verb, use <code>@</code> in place of the portion of the verb's conjugation spec following the slash or backslash. Thus, to specify the conjugation of {{m|it|venire||to come}}, use <code>e/@</code> (since the verb takes {{m|it|essere}} as its auxiliary), and all irregularities of this verb will automatically be handled.
 
 ===Regular ''-ere'' verbs===
 For regular ''-ere'' verbs stressed as ''-ére'', use the same form as above. For example, for {{m|it|temere|temére|to fear}}, present tense ''io témo'', use:
