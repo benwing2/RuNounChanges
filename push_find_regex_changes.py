@@ -21,7 +21,11 @@ def process_page(index, page, contents, prev_comment, origcontents, verbose, arg
   if verbose:
     pagemsg("For [[%s]]:" % pagetitle)
     pagemsg("------- begin text --------")
-    msg(contents.rstrip("\n"))
+    # Strip final newline because msg() adds one.
+    contents_minus_newline = contents
+    if contents_minus_newline.endswith("\n"):
+      contents_minus_newline = contents_minus_newline[-1]
+    msg(contents_minus_newline)
     msg("------- end text --------")
   page_exists = page.exists() and origcontents is not None
   if not page_exists:
@@ -44,20 +48,24 @@ def process_page(index, page, contents, prev_comment, origcontents, verbose, arg
       if not sec_to_search:
         errandpagemsg("WARNING: Couldn't find %s section, skipping page" % lang_only)
         return
-      m = re.match(r"\A(.*?)(\n*)\Z", sections[sec_to_search], re.S)
-      curtext, curnewlines = m.groups()
-      curtext = unicodedata.normalize("NFC", curtext)
-      supposed_curtext = unicodedata.normalize("NFC", origcontents.rstrip("\n"))
+      curtext = unicodedata.normalize("NFC", sections[sec_to_search])
+      # If we're editing the last language of the page, there won't be a newline in the page text but there's always
+      # one in the find_regex content, so we have to add one to make the comparisons work. It won't matter if we add
+      # an extra newline at the end of the page because it will be stripped by MediaWiki.
+      if not curtext.endswith("\n"):
+        curtext += "\n"
+      supposed_curtext = unicodedata.normalize("NFC", origcontents)
       if curtext != supposed_curtext:
-        if curtext == contents.rstrip("\n"):
+        if curtext == contents:
           pagemsg("Section has already been changed to new text, not saving")
         else:
           errandpagemsg("WARNING: Text has changed from supposed original text, not saving")
         return
-      sections[sec_to_search] = contents.rstrip("\n") + curnewlines
+      sections[sec_to_search] = contents
       contents = "".join(sections)
     else:
-      curtext = unicodedata.normalize("NFC", page.text.rstrip("\n"))
+      curtext = unicodedata.normalize("NFC", page.text)
+      # MediaWiki strips newlines from the end of the page so we need to do the same for comparison.
       supposed_curtext = unicodedata.normalize("NFC", origcontents.rstrip("\n"))
       if curtext != supposed_curtext:
         if curtext == contents.rstrip("\n"):
@@ -74,7 +82,7 @@ def process_page(index, page, contents, prev_comment, origcontents, verbose, arg
     comment = prev_comment
   else:
     comment = "%s; %s" % (prev_comment, arg_comment)
-  return contents, comment
+  return contents.rstrip("\n"), comment
 
 if __name__ == "__main__":
   parser = blib.create_argparser("Push changes made to find_regex.py output files",
