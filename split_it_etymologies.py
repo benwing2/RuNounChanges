@@ -6,7 +6,11 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-no_split_etym = set()
+no_split_etym = {
+  "arroge",
+  "arrogi",
+  "glissando",
+}
 
 def process_text_on_page(index, pagetitle, text):
   global args
