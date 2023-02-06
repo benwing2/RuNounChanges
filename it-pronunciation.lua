@@ -21,6 +21,8 @@ local force_cat = false -- for testing
 
 local m_table = require("Module:table")
 local m_strutil = require("Module:string utilities")
+local com_module = "Module:it-common"
+local put_module = "Module:parse utilities"
 
 local u = mw.ustring.char
 local rfind = mw.ustring.find
@@ -144,6 +146,7 @@ local recognized_suffixes = {
 	{"([ae])ndo", "%1" .. GR .. "ndo"}, -- must follow -izzando above
 	{"([ai])bile", "%1" .. GR .. "bile"},
 	{"ale", "àle"},
+	{"([au])me", "%1" .. GR .. "me"},
 	{"([aeiou])nico", "%1" .. GR .. "nico"},
 	{"([ai])stic([ao])", "%1" .. GR .. "stic%2"},
 	-- exceptions to the following: àbato, àcato, acròbata, àgata, apòstata, àstato, cìato, fégato, omeòpata,
@@ -1267,7 +1270,7 @@ end
 
 local function parse_rhyme(arg, put, parse_err)
 	if not put then
-		put = require("Module:parse utilities")
+		put = require(put_module)
 	end
 	local retval = {}
 	local rhyme_segments = put.parse_balanced_segment_run(arg, "<", ">")
@@ -1317,7 +1320,7 @@ end
 
 local function parse_hyph(arg, put, parse_err)
 	if not put then
-		put = require("Module:parse utilities")
+		put = require(put_module)
 	end
 	local retval = {}
 	local hyph_segments = put.parse_balanced_segment_run(arg, "<", ">")
@@ -1354,7 +1357,7 @@ end
 
 local function parse_homophone(arg, put, parse_err)
 	if not put then
-		put = require("Module:parse utilities")
+		put = require(put_module)
 	end
 	local retval = {}
 	local hmp_segments = put.parse_balanced_segment_run(arg, "<", ">")
@@ -1416,7 +1419,7 @@ function export.show_pr(frame)
 				error(msg .. ": " .. i .. "= " .. respelling)
 			end
 			if not put then
-				put = require("Module:parse utilities")
+				put = require(put_module)
 			end
 			local segments = put.parse_balanced_segment_run(respelling, "<", ">")
 			local comma_separated_groups = put.split_alternating_runs(segments, "%s*,%s*")
@@ -1439,7 +1442,7 @@ function export.show_pr(frame)
 					if prefix == "ref" or prefix == "qual" then
 						table.insert(term[prefix], arg)
 					elseif prefix == "r" then
-						table.insert(term.ref, require("Module:it-common").parse_abbreviated_references_spec(arg))
+						table.insert(term.ref, require(com_module).parse_abbreviated_references_spec(arg))
 					elseif prefix == "pre" or prefix == "post" or prefix == "bullets" or prefix == "rhyme"
 						or prefix == "hyph" or prefix == "hmp" or prefix == "audio" then
 						if i < #comma_separated_groups then
