@@ -117,7 +117,11 @@ local function parse_term_with_modifiers(paramname, val, pre_initialized_obj, in
 		if not put then
 			put = require(put_module)
 		end
-		return put.parse_inline_modifiers(val, paramname, get_param_mods(include_pl_and_type), generate_obj, parse_err)
+		return put.parse_inline_modifiers(val, {
+			paramname = paramname,
+			param_mods = get_param_mods(include_pl_and_type),
+			generate_obj = generate_obj,
+		})
 	else
 		return generate_obj(val)
 	end
