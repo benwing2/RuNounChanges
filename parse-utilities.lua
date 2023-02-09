@@ -194,7 +194,7 @@ split_alternating_runs({"foo", "[dated]", "", "[low colloquial]", " baz bat quux
 
 As can be seen, the even-numbered elements in the outer list are one-element lists consisting of the separator text.
 ]=]
-function export.split_alternating_runs(segment_runs, splitchar, preserve_splitchar, frob)
+function export.split_alternating_runs(segment_runs, splitchar, preserve_splitchar)
 	local grouped_runs = {}
 	local run = {}
 	for i, seg in ipairs(segment_runs) do
@@ -252,31 +252,47 @@ function export.split_alternating_runs_and_frob_raw_text(run, splitchar, frob, p
 end
 
 
--- Split text on comma, but not on comma+whitespace. This is similar to `mw.text.split(text, ",")` but will not split
--- on commas directly followed by whitespace, to handle embedded commas in terms (which are almost always followed by
--- a space). `tempcomma` is the Unicode character to temporarily use when doing the splitting; normally U+FFF0, but
--- you can specify a different character if you use U+FFF0 for some internal purpose.
-function export.split_on_comma(val, tempcomma)
-	tempcomma = tempcomma or u(0xFFF0)
-
+-- Split the non-modifier parts of an alternating run (after parse_balanced_segment_run() is called) on a Lua pattern,
+-- but not on certain sequences involving characters in that pattern (e.g. comma+whitespace). `splitchar` is the pattern
+-- to split on; `preserve_splitchar` indicates whether to preserve the delimiter and is the same as in
+-- split_alternating_runs(). `escape_fun` is called beforehand on each run of raw text and should return two values:
+-- the escaped run and whether unescaping is needed. If any call to `escape_fun` indicates that unescaping is needed,
+-- `unescape_fun` will be called on each run of raw text after splitting on `splitchar`. The return value of this
+-- function is as in split_alternating_runs().
+function export.split_alternating_runs_escaping(run, splitchar, preserve_splitchar, escape_fun, unescape_fun)
 	-- First replace comma with a temporary character in comma+whitespace sequences.
-	local need_tempcomma_undo = false
-	if val:find(",%s") then
-		val = val:gsub(",(%s)", tempcomma .. "%1")
-		need_tempcomma_undo = true
-	end
-
-	-- Now split on comma.
-	val = rsplit(val, ",")
-
-	-- Now undo the replacement of comma with a temporary char if needed.
-	if need_tempcomma_undo then
-		for i, v in ipairs(val) do
-			val[i] = v:gsub(tempcomma, ",")
+	local need_unescape = false
+	for i, seg in ipairs(run) do
+		if i % 2 == 1 then
+			local this_need_unescape
+			run[i], this_need_unescape = escape_fun(run[i])
+			need_unescape = need_unescape or this_need_unescape
 		end
 	end
 
-	return val
+	if need_unescape then
+		return export.split_alternating_runs_and_frob_raw_text(run, splitchar, unescape_fun, preserve_splitchar)
+	else
+		return export.split_alternating_runs(run, splitchar, preserve_splitchar)
+	end
+end
+
+
+-- Replace comma with a temporary char in comma + whitespace.
+function export.escape_comma_whitespace(run, tempcomma)
+	if run:find(",%s") then
+		run = run:gsub(",(%s)", tempcomma .. "%1") -- assign to temp to discard second return value
+		return run, true
+	else
+		return run, false
+	end
+end
+
+
+-- Undo the replacement of comma with a temporary char.
+function export.unescape_comma_whitespace(run)
+	run = val:gsub(tempcomma, ",") -- assign to temp to discard second return value
+	return run
 end
 
 
@@ -285,27 +301,51 @@ end
 function export.split_alternating_runs_on_comma(run, tempcomma)
 	tempcomma = tempcomma or u(0xFFF0)
 
-	-- First replace comma with a temporary character in comma+whitespace sequences.
-	local need_tempcomma_undo = false
-	for i, seg in ipairs(run) do
-		if i % 2 == 1 then
-			if seg:find(",%s") then
-				run[i] = run[i]:gsub(",(%s)", tempcomma .. "%1")
-				need_tempcomma_undo = true
-			end
-		end
+	-- Replace comma with a temporary char in comma + whitespace.
+	local function escape_comma_whitespace(seg)
+		return export.escape_comma_whitespace(seg, tempcomma)
 	end
 
-	if need_tempcomma_undo then
-		function unescape_comma_whitespace(val)
-			-- Undo the replacement of comma with a temporary char.
-			val = val:gsub(tempcomma, ",") -- assign to temp to discard second retval
-			return val
+	return export.split_alternating_runs_escaping(run, ",", false, escape_comma_whitespace, export.unescape_comma_whitespace)
+end
+
+
+-- Split text on a Lua pattern, but not on certain sequences involving characters in that pattern (e.g.
+-- comma+whitespace). `splitchar` is the pattern to split on; `preserve_splitchar` indicates whether to preserve the
+-- delimiter between split segments. `escape_fun` is called beforehand on the text and should return two values: the
+-- escaped run and whether unescaping is needed. If the call to `escape_fun` indicates that unescaping is needed,
+-- `unescape_fun` will be called on each run of text after splitting on `splitchar`. The return value of this a list
+-- of runs, interspersed with delimiters if `preserve_splitchar` is specified.
+function export.split_escaping(text, splitchar, preserve_splitchar, escape_fun, unescape_fun)
+	-- First escape sequences we don't want to count for splitting.
+	local need_unescape
+	text, need_unescape = escape_fun(text)
+
+	local parts =
+		preserve_splitchar and m_string_utilities.capturing_split(text, "(" .. splitchar .. ")") or
+		rsplit(text, splitchar)
+	if need_unescape then
+		for i = 1, #parts, (preserve_splitchar and 2 or 1) do
+			parts[i] = unescape_fun(parts[i])
 		end
-		return export.split_alternating_runs_and_frob_raw_text(run, ",", unescape_comma_whitespace)
-	else
-		return export.split_alternating_runs(run, ",")
 	end
+	return parts
+end
+
+
+-- Split text on comma, but not on comma+whitespace. This is similar to `mw.text.split(text, ",")` but will not split
+-- on commas directly followed by whitespace, to handle embedded commas in terms (which are almost always followed by
+-- a space). `tempcomma` is the Unicode character to temporarily use when doing the splitting; normally U+FFF0, but
+-- you can specify a different character if you use U+FFF0 for some internal purpose.
+function export.split_on_comma(text, tempcomma)
+	tempcomma = tempcomma or u(0xFFF0)
+
+	-- Replace comma with a temporary char in comma + whitespace.
+	local function escape_comma_whitespace(run)
+		return export.escape_comma_whitespace(run, tempcomma)
+	end
+
+	return export.split_escaping(text, ",", false, escape_comma_whitespace, export.unescape_comma_whitespace)
 end
 
 
@@ -318,10 +358,6 @@ function export.escape_wikicode(term)
 	term = term:gsub("([%[<'])", "%1" .. u(0x2060))
 	return term
 end
-
-
--- Old name. FIXME: Clean up code using the old name.
-export.escape_brackets = export.escape_wikicode
 
 
 -- Parse a term that may have a language code preceding it (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). Return
@@ -359,23 +395,32 @@ end
 Parse a term that may have inline modifiers attached (e.g. 'rifiuti<q:plural-only>' or
 'rinfusa<t:bulk cargo><lit:resupplying><qq:more common in the plural {{m|it|rinfuse}}>').
   * `arg` is the term to parse.
-  * `paramname` is the name of the parameter where `arg` comes from, or nil if this isn't available (it is used only
-     in error messages).
-  * `param_mods` is a table describing the allowed inline modifiers (see below).
-  * `generate_obj` is a function of one or two arguments that should parse the argument minus the inline modifiers
-     and return a corresponding parsed  object (into which the inline modifiers will be rewritten). If declared with
-     one argument, that will be the raw value to parse; if declared with two arguments, the second argument will be
-     the `parse_err` function (see below).
-  * `parse_err` is an optional function of one argument (an error message) and should display the error message,
-    along with any desired contextual text (e.g. the argument name and value that triggered the error). If omitted,
-    a default function will be generated which displays the error along with the original value of `arg` (passed
-    through escape_wikicode() above to ensure that Wikicode (such as links) is displayed literally).
-  * `split_on_comma` is an optional Boolean argument. If true, `arg` can consist of multiple comma-separated terms,
-    each of which may be followed by inline modifiers, and the return value will be a list of parsed objects instead
-    of a single object. Note that splitting on commas will not happen if there is whitespace directly following the
-    comma, to allow for terms with embedded commas in them. The algorithm to split on commas is sensitive to inline
-    modifier syntax and will not be confused by commas inside of inline modifiers, which do not trigger splitting
-    (whether or not followed by whitespace).
+  * `props` is an object holding further properties controlling how to parse the term:
+	 * `paramname` is the name of the parameter where `arg` comes from, or nil if this isn't available (it is used only
+	   in error messages).
+	 * `param_mods` is a table describing the allowed inline modifiers (see below).
+	 * `generate_obj` is a function of one or two arguments that should parse the argument minus the inline modifiers
+	   and return a corresponding parsed  object (into which the inline modifiers will be rewritten). If declared with
+	   one argument, that will be the raw value to parse; if declared with two arguments, the second argument will be
+	   the `parse_err` function (see below).
+	 * `parse_err` is an optional function of one argument (an error message) and should display the error message,
+	   along with any desired contextual text (e.g. the argument name and value that triggered the error). If omitted,
+	   a default function will be generated which displays the error along with the original value of `arg` (passed
+	   through escape_wikicode() above to ensure that Wikicode (such as links) is displayed literally).
+	 * `splitchar` is a Lua pattern. If specified, `arg` can consist of multiple delimiter-separated terms, each of
+	   which may be followed by inline modifiers, and the return value will be a list of parsed objects instead of a
+	   single object. Note that splitting on delimiters will not happen in certain protected sequences (by default
+	   comma+whitespace; see below). The algorithm to split on delimiters is sensitive to inline modifier syntax and
+	   will not be confused by delimiters inside of inline modifiers, which do not trigger splitting (whether or not
+	   contained within protected sequences).
+	 * `preserve_splitchar`, if specified, causes the actual delimiter matched by `splitchar` to be returned in the
+	   parsed object describing the element that comes after the delimiter. The delimiter is stored in a key whose
+	   name is controlled by `separator_key`, which defaults to "separator".
+	 * `separator_key` controls the key into which the actual delimiter is written when `preserve_splitchar` is used.
+	   See above.
+	 * `escape_fun` and `unescape_fun` are as in split_escaping() and split_alternating_runs_escaping() above and
+	   control the protected sequences that won't be split. By default, `escape_comma_whitespace` and
+	   `unescape_comma_whitespace` are used, so that comma+whitespace sequences won't be split.
 
 `param_mods` is a table describing allowed modifiers. The keys of the table are modifier prefixes and the values are
 tables describing how to parse and store the associated modifier values. Here is a typical example:
@@ -413,10 +458,10 @@ In the table values:
   just stored directly. This means that future appends will side-effect that value, so make sure that the return
   value of the conversion function for this key generates a fresh list each time.
 ]=]
-function export.parse_inline_modifiers(arg, paramname, param_mods, generate_obj, parse_err, split_on_comma)
+function export.parse_inline_modifiers(arg, props)
 	local function get_valid_prefixes()
 		local valid_prefixes = {}
-		for param_mod, _ in pairs(param_mods) do
+		for param_mod, _ in pairs(props.param_mods) do
 			table.insert(valid_prefixes, param_mod)
 		end
 		table.sort(valid_prefixes)
@@ -424,13 +469,14 @@ function export.parse_inline_modifiers(arg, paramname, param_mods, generate_obj,
 	end
 
 	local function get_arg_gloss()
-		if paramname then
-			return ("%s=%s"):format(paramname, arg)
+		if props.paramname then
+			return ("%s=%s"):format(props.paramname, arg)
 		else
 			return arg
 		end
 	end
 
+	local parse_err = props.parse_err
 	if not parse_err then
 		parse_err = function(msg, stack_frames_to_ignore)
 			error(export.escape_wikicode(("%s: %s"):format(msg, get_arg_gloss())), stack_frames_to_ignore)
@@ -440,7 +486,7 @@ function export.parse_inline_modifiers(arg, paramname, param_mods, generate_obj,
 	local segments = export.parse_balanced_segment_run(arg, "<", ">")
 
 	local function parse_group(group)
-		local dest_obj = generate_obj(group[1], parse_err)
+		local dest_obj = props.generate_obj(group[1], parse_err)
 		for k = 2, #group - 1, 2 do
 			if group[k + 1] ~= "" then
 				parse_err("Extraneous text '" .. group[k + 1] .. "' after modifier")
@@ -458,19 +504,19 @@ function export.parse_inline_modifiers(arg, paramname, param_mods, generate_obj,
 				parse_err("Modifier " .. group[k] .. " lacks a prefix, should begin with one of " ..
 					require("Module:table").serialCommaJoin(valid_prefixes, {dontTag = true}))
 			end
-			if param_mods[prefix] then
+			if props.param_mods[prefix] then
 				local function prefix_parse_err(msg, stack_frames_to_ignore)
 					error(export.escape_wikicode(("%s: modifier prefix '%s' in %s"):format(msg, prefix, get_arg_gloss())), stack_frames_to_ignore)
 				end
-				local key = param_mods[prefix].item_dest or prefix
-				local convert = param_mods[prefix].convert
+				local key = props.param_mods[prefix].item_dest or prefix
+				local convert = props.param_mods[prefix].convert
 				local converted
 				if convert then
 					converted = convert(val, prefix_parse_err)
 				else
 					converted = val
 				end
-				local store = param_mods[prefix].store
+				local store = props.param_mods[prefix].store
 				if not store then
 					if dest_obj[key] then
 						parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. group[k])
@@ -519,13 +565,19 @@ function export.parse_inline_modifiers(arg, paramname, param_mods, generate_obj,
 		return dest_obj
 	end
 
-	if not split_on_comma then
+	if not props.splitchar then
 		return parse_group(segments)
 	else
 		local retval = {}
-		local comma_separated_groups = export.split_alternating_runs_on_comma(segments)
-		for j, group in ipairs(comma_separated_groups) do
-			table.insert(retval, parse_group(group))
+		local separated_groups = export.split_alternating_runs_escaping(segments, props.splitchar,
+			props.preserve_splitchar, props.escape_fun or export.escape_comma_whitespace,
+			props.unescape_fun or export.unescape_comma_whitespace)
+		for j = 1, #separated_groups, (props.preserve_splitchar and 2 or 1) do
+			local parsed = parse_group(separated_groups[j])
+			if props.preserve_splitchar and j > 1 then
+				parsed[props.separator_key or "separator"] = separated_groups[j - 1][1]
+			end
+			table.insert(retval, parsed)
 		end
 		return retval
 	end
