@@ -1,6 +1,7 @@
 local export = {}
 
 local romut_module = "Module:romance utilities"
+local put_module = "Module:parse utilities"
 
 local rsplit = mw.text.split
 
@@ -48,7 +49,7 @@ function export.parse_abbreviated_references_spec(spec)
 		props = ""
 	else
 		if props:find(",%s") then
-			props = require("Module:parse utilities").split_on_comma(props)
+			props = require(put_module).split_on_comma(props)
 		else
 			props = rsplit(props, ",")
 		end
@@ -62,7 +63,11 @@ function export.parse_abbreviated_references_spec(spec)
 		end
 		props = table.concat(props)
 	end
-	return mw.getCurrentFrame():preprocess(("{{R:it:%s%s}}"):format(template_name, props)) .. modifiers
+	if template_name == "" and props == "" then
+		return modifiers
+	else
+		return mw.getCurrentFrame():preprocess(("{{R:it:%s%s}}"):format(template_name, props)) .. modifiers
+	end
 end
 
 -- Given a term `term`, if the term is multiword (either through spaces or hyphens), handle inflection of the term by
@@ -90,7 +95,7 @@ function export.make_plural(term, gender, special)
 		plspec = special
 		special = nil
 	end
-	local retval = call_handle_multiword(term, special, function(term) return make_plural(term, gender, plspec) end)
+	local retval = call_handle_multiword(term, special, function(term) return export.make_plural(term, gender, plspec) end)
 	if retval then
 		return retval
 	end
@@ -167,7 +172,7 @@ end
 
 -- Generate a default feminine form.
 function export.make_feminine(term, special)
-	local retval = call_handle_multiword(term, special, make_feminine)
+	local retval = call_handle_multiword(term, special, export.make_feminine)
 	if retval then
 		return retval
 	end
@@ -186,7 +191,7 @@ end
 
 -- Generate a default masculine form.
 function export.make_masculine(term, special)
-	local retval = call_handle_multiword(term, special, make_masculine)
+	local retval = call_handle_multiword(term, special, export.make_masculine)
 
 	-- Don't directly return gsub() because then there will be multiple return values.
 	if term:find("a$") then
