@@ -256,7 +256,7 @@ end
 -- on commas directly followed by whitespace, to handle embedded commas in terms (which are almost always followed by
 -- a space). `tempcomma` is the Unicode character to temporarily use when doing the splitting; normally U+FFF0, but
 -- you can specify a different character if you use U+FFF0 for some internal purpose.
-function export.split_on_comma(text, tempcomma)
+function export.split_on_comma(val, tempcomma)
 	tempcomma = tempcomma or u(0xFFF0)
 
 	-- First replace comma with a temporary character in comma+whitespace sequences.
@@ -309,12 +309,19 @@ function export.split_alternating_runs_on_comma(run, tempcomma)
 end
 
 
--- Ensure that brackets display literally in error messages. Replacing with equivalent HTML escapes doesn't work
--- because they are displayed literally; but inserting a Unicode word-joiner symbol works.
-function export.escape_brackets(term)
-	term = term:gsub("%[%[", "[" .. u(0x2060) .. "[")
+-- Ensure that Wikicode (bracketed links, HTML, bold/italics, etc.) displays literally in error messages by inserting
+-- a Unicode word-joiner symbol after all characters that may trigger Wikicode interpr. Replacing with equivalent
+-- HTML escapes doesn't work because they are displayed literally. I could not get this to work using
+-- <nowiki>...</nowiki> (those tags display literally) and using using {{#tag:nowiki|...}} (same thing).
+-- FIXME: This is a massive hack; there must be a better way.
+function export.escape_wikicode(term)
+	term = term:gsub("([%[<'])", "%1" .. u(0x2060))
 	return term
 end
+
+
+-- Old name. FIXME: Clean up code using the old name.
+export.escape_brackets = export.escape_wikicode
 
 
 -- Parse a term that may have a language code preceding it (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). Return
@@ -362,7 +369,7 @@ Parse a term that may have inline modifiers attached (e.g. 'rifiuti<q:plural-onl
   * `parse_err` is an optional function of one argument (an error message) and should display the error message,
     along with any desired contextual text (e.g. the argument name and value that triggered the error). If omitted,
     a default function will be generated which displays the error along with the original value of `arg` (passed
-    through escape_brackets() above to ensure that bracketed text is displayed literally).
+    through escape_wikicode() above to ensure that Wikicode (such as links) is displayed literally).
   * `split_on_comma` is an optional Boolean argument. If true, `arg` can consist of multiple comma-separated terms,
     each of which may be followed by inline modifiers, and the return value will be a list of parsed objects instead
     of a single object. Note that splitting on commas will not happen if there is whitespace directly following the
@@ -426,7 +433,7 @@ function export.parse_inline_modifiers(arg, paramname, param_mods, generate_obj,
 
 	if not parse_err then
 		parse_err = function(msg, stack_frames_to_ignore)
-			error(export.escape_brackets(("%s: %s"):format(msg, get_arg_gloss())), stack_frames_to_ignore)
+			error(export.escape_wikicode(("%s: %s"):format(msg, get_arg_gloss())), stack_frames_to_ignore)
 		end
 	end
 
@@ -449,11 +456,11 @@ function export.parse_inline_modifiers(arg, paramname, param_mods, generate_obj,
 					valid_prefixes[i] = "'" .. valid_prefix .. ":'"
 				end
 				parse_err("Modifier " .. group[k] .. " lacks a prefix, should begin with one of " ..
-					require("Module:table").serialCommaJoin(valid_prefixes))
+					require("Module:table").serialCommaJoin(valid_prefixes, {dontTag = true}))
 			end
 			if param_mods[prefix] then
 				local function prefix_parse_err(msg, stack_frames_to_ignore)
-					error(export.escape_brackets(("%s: modifier prefix '%s' in %s"):format(msg, prefix, get_arg_gloss())), stack_frames_to_ignore)
+					error(export.escape_wikicode(("%s: modifier prefix '%s' in %s"):format(msg, prefix, get_arg_gloss())), stack_frames_to_ignore)
 				end
 				local key = param_mods[prefix].item_dest or prefix
 				local convert = param_mods[prefix].convert
@@ -506,7 +513,7 @@ function export.parse_inline_modifiers(arg, paramname, param_mods, generate_obj,
 					valid_prefixes[i] = "'" .. valid_prefix .. "'"
 				end
 				parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. group[k]
-					.. ", should be " .. require("Module:table").serialCommaJoin(valid_prefixes))
+					.. ", should be " .. require("Module:table").serialCommaJoin(valid_prefixes, {dontTag = true}))
 			end
 		end
 		return dest_obj
@@ -516,10 +523,9 @@ function export.parse_inline_modifiers(arg, paramname, param_mods, generate_obj,
 		return parse_group(segments)
 	else
 		local retval = {}
-		local comma_separated_groups =
-			split_on_comma and put.split_alternating_runs_on_comma(segments) or {segments}
+		local comma_separated_groups = export.split_alternating_runs_on_comma(segments)
 		for j, group in ipairs(comma_separated_groups) do
-			table.insert(retval, dest_obj)
+			table.insert(retval, parse_group(group))
 		end
 		return retval
 	end
