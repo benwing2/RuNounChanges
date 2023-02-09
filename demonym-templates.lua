@@ -1,8 +1,8 @@
 local export = {}
 
 local m_languages = require("Module:languages")
-local m_demonym = require("Module:User:Benwing2/demonym")
-local put_module = "Module:User:Benwing2/parse utilities"
+local m_demonym = require("Module:demonym")
+local put_module = "Module:parse utilities"
 
 local rsplit = mw.text.split
 local u = mw.ustring.char
