@@ -275,7 +275,7 @@ end
 function export.it_deverbal(frame)
 	local list_with_holes = { list = true, allow_holes = true }
 	local params = {
-		[1] = {required = true, list = true, default = "cozzare<t:to collide, to crash>"},
+		[1] = {required = true, list = true},
 		
 		["alt"] = list_with_holes,
 		["t"] = list_with_holes,
@@ -295,7 +295,7 @@ function export.it_deverbal(frame)
 		["pagename"] = {}, -- for testing
 	}
 
-	local args = require("Module:parameters").process(args, params)
+	local args = require("Module:parameters").process(frame:getParent().args, params)
 
 	if #args[1] == 0 then
 	    local NAMESPACE = mw.title.getCurrentTitle().nsText
@@ -307,9 +307,10 @@ function export.it_deverbal(frame)
 		end
 	end
 
-	local suffix = args.pagename:match("([aeo])$")
+	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
+	local suffix = pagename:match("([aeo])$")
 	if not suffix then
-		error(("Pagename '%s' does not end in a recognizable deverbal suffix -a, -e or -o"):format(args.pagename))
+		error(("Pagename '%s' does not end in a recognizable deverbal suffix -a, -e or -o"):format(pagename))
 	end
 
 	local suffix_obj = m_links.full_link({
@@ -331,7 +332,8 @@ function export.it_deverbal(frame)
 		}, false)
 		parsed.lang = parsed.lang or lang
 		local formatted_part = link_with_qualifiers(parsed)
-		args[1][i] = require(compound_module).concat_parts(lang, {formatted_part, suffix_obj}, {"deverbals"},
+		args[1][i] = require(compound_module).concat_parts(lang, {formatted_part, suffix_obj},
+			{"deverbals", "terms suffixed with -" .. suffix .. " (deverbal)"},
 			args.nocat, args.sort, nil, force_cat) -- FIXME: should we support lit= here?
 	end
 
@@ -342,9 +344,9 @@ function export.it_deverbal(frame)
 
 	if not args.notext then
 		if args.nocap then
-			glossary_link("Appendix:deverbal", "deverbal")
+			ins(glossary_link("Appendix:deverbal", "deverbal"))
 		else
-			glossary_link("Appendix:deverbal", "Deverbal")
+			ins(glossary_link("Appendix:deverbal", "Deverbal"))
 		end
 		ins(" from ")
 	end
