@@ -6,6 +6,8 @@ local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 local u = mw.ustring.char
 
+local put_module = "Module:parse utilities"
+
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
@@ -250,9 +252,8 @@ export.add_lemma_links = export.add_links_to_multiword_term
 
 -- Ensure that brackets display literally in error messages. Replacing with equivalent HTML escapes doesn't work
 -- because they are displayed literally; but inserting a Unicode word-joiner symbol works.
-local function escape_brackets(term)
-	term = term:gsub("%[%[", "[" .. u(0x2060) .. "[")
-	return term
+local function escape_wikicode(term)
+	return require(put_module).escape_wikicode(term)
 end
 
 
@@ -328,15 +329,14 @@ function export.apply_link_modifiers(linked_term, modifier_spec)
 		else
 			if subterm:find("%[") then
 				error(("Subterm '%s' in modifier spec '%s' cannot have brackets in it"):format(
-					escape_brackets(subterm), escape_brackets(modspec)))
+					escape_wikicode(subterm), escape_wikicode(modspec)))
 			end
 			local patut = require("Module:pattern utilities")
 			local escaped_subterm = patut.pattern_escape(subterm)
 			local subterm_re = "%[%[" .. escaped_subterm:gsub("(%%?[ '%-])", "%%]*%1%%[*") .. "%]%]"
 			local expanded_dest
-			-- FIXME, eliminate uses of # to mean ~, so we can use # for anchored links
-			if dest:find("[#~]") then
-				expanded_dest = dest:gsub("[#~]", patut.replacement_escape(subterm))
+			if dest:find("~") then
+				expanded_dest = dest:gsub("~", patut.replacement_escape(subterm))
 			else
 				expanded_dest = dest
 			end
@@ -357,7 +357,7 @@ function export.apply_link_modifiers(linked_term, modifier_spec)
 			local replaced_linked_term = rsub(linked_term, subterm_re, patut.replacement_escape(subterm_replacement))
 			if replaced_linked_term == linked_term then
 				error(("Subterm '%s' could not be located in %slinked expression %s, or replacement same as subterm"):format(
-					subterm, j > 1 and "intermediate " or "", escape_brackets(linked_term)))
+					subterm, j > 1 and "intermediate " or "", escape_wikicode(linked_term)))
 			else
 				linked_term = replaced_linked_term
 			end
