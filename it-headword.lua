@@ -25,6 +25,7 @@ local m_table = require("Module:table")
 local romut_module = "Module:romance utilities"
 local it_verb_module = "Module:it-verb"
 local put_module = "Module:parse utilities"
+local strut_module = "Module:string utilities"
 local com = require("Module:it-common")
 local lang = require("Module:languages").getByCode("it")
 local langname = lang:getCanonicalName()
@@ -227,6 +228,7 @@ local deriv_params = {
 	{"pej", glossary_link("pejorative")},
 	{"derog", glossary_link("derogatory")},
 	{"end", glossary_link("endearing")},
+	{"dim_aug", glossary_link("diminutive") .. "-" .. glossary_link("augmentative")},
 	{"dim_pej", glossary_link("diminutive") .. "-" .. glossary_link("pejorative")},
 	{"dim_derog", glossary_link("diminutive") .. "-" .. glossary_link("derogatory")},
 	{"dim_end", glossary_link("diminutive") .. "-" .. glossary_link("endearing")},
@@ -274,32 +276,58 @@ local param_mods = {
 
 local function parse_term_with_modifiers(paramname, val)
 	local function generate_obj(term)
+		local decomp = com.decompose(term)
+		local lemma = com.remove_non_final_accents(decomp)
+		if lemma ~= decomp then
+			term = com.compose("[[" .. lemma .. "|" .. decomp .. "]]")
+		end
 		return {term = term}
 	end
 
+	local retval
+	local splitchars = "[/;,]"
 	-- Check for inline modifier, e.g. מרים<tr:Miryem>.
 	if val:find("<") then
 		if not put then
 			put = require(put_module)
 		end
-		return put.parse_inline_modifiers(val, paramname, param_mods, generate_obj, nil, "split on comma")
+		retval = put.parse_inline_modifiers(val, {
+			paramname = paramname,
+			param_mods = param_mods,
+			generate_obj = generate_obj,
+			splitchar = splitchars,
+			preserve_splitchar = true,
+		})
 	else
 		local split
         if val:find(",%s") then
 			if not put then
 				put = require(put_module)
 			end
-            split = put.split_on_comma(val)
+            split = put.split_escaping(val, splitchars, true, put.escape_comma_whitespace,
+				put.unescape_comma_whitespace)
         else
-            split = rsplit(val, ",")
+            split = require(strut_module).capturing_split("(" .. splitchars .. ")")
         end
-        for i, term in ipairs(split) do
-        	split[i] = generate_obj(term)
+		retval = {}
+        for j = 1, #split, 2 do
+			local obj = generate_obj(split[j])
+			if j > 1 then
+				obj.separator = split[j - 1]
+			end
+			table.insert(retval, obj)
         end
-        return split
 	end
 
-	return part
+	for _, obj in ipairs(retval) do
+		if obj.separator == ";" then
+			obj.separator = "; "
+		elseif obj.separator == "," then
+			obj.separator = nil
+		end
+	end
+
+	return retval
 end
 
 
