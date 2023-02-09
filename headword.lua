@@ -98,7 +98,7 @@ local function preprocess(data, postype)
 	]=]
 	if type(data.heads) ~= "table" then
 		if data.heads then
-			require("Module:debug").track("headword/heads-not-table")
+			require("Module:debug/track")("headword/heads-not-table")
 		end
 		
 		data.heads = { data.heads }
@@ -106,7 +106,7 @@ local function preprocess(data, postype)
 	
 	if type(data.translits) ~= "table" then
 		if data.translits then
-			require("Module:debug").track("headword/translits-not-table")
+			require("Module:debug/track")("headword/translits-not-table")
 		end
 		
 		data.translits = { data.translits }
@@ -114,7 +114,7 @@ local function preprocess(data, postype)
 	
 	if type(data.transcriptions) ~= "table" then
 		if data.transcriptions then
-			require("Module:debug").track("headword/transcriptions-not-table")
+			require("Module:debug/track")("headword/transcriptions-not-table")
 		end
 		
 		data.transcriptions = { data.transcriptions }
@@ -148,6 +148,16 @@ local function preprocess(data, postype)
 	
 	if is_reconstructed then
 		default_head = "*" .. default_head
+	end
+	
+	-- If using a discouraged character sequence, add to maintenance category
+	if data.sc:hasNormalizationFixes() == true then
+		local toNFC = mw.ustring.toNFC
+		for i, head in ipairs(data.heads) do
+			if data.sc:fixDiscouragedSequences(toNFC(head)) ~= toNFC(head) then
+				table.insert(data.categories, "Pages using discouraged character sequences")
+			end
+		end
 	end
 	
 	-- If a head is the empty string "", then replace it with the default
@@ -233,7 +243,6 @@ end
 
 -- Format a headword with transliterations
 local function format_headword(data)
-	local m_links = require("Module:links")
 	local m_scriptutils = require("Module:script utilities")
 	
 	-- Are there non-empty transliterations?
@@ -252,7 +261,9 @@ local function format_headword(data)
 		
 		-- Apply processing to the headword, for formatting links and such
 		if head:find("[[", nil, true) and (not data.sc or data.sc:getCode() ~= "Imag") then
-			head = m_links.language_link({term = head, lang = data.lang}, false)
+			head = require("Module:links").language_link({term = head, lang = data.lang}, false)
+		else
+			head = data.lang:makeDisplayText(head)
 		end
 		
 		-- Add language and script wrapper
@@ -269,7 +280,7 @@ local function format_headword(data)
 
 	if has_manual_translits then
 		-- [[Special:WhatLinksHere/Template:tracking/headword/has-manual-translit/LANG]]
-		require("Module:debug").track("headword/has-manual-translit/" .. data.lang:getCode())
+		require("Module:debug/track")("headword/has-manual-translit/" .. data.lang:getCode())
 	end
 		
 	if has_translits then
@@ -326,8 +337,7 @@ local function format_genders(data)
 			local pos_category = data.pos_category:gsub("^reconstructed ", "")
 			pos_for_cat = m_data.pos_for_gender_number_cat[pos_category]
 		end
-		local gen = require("Module:gender and number")
-		local text, cats = gen.format_genders(data.genders, data.lang, pos_for_cat)
+		local text, cats = require("Module:gender and number").format_genders(data.genders, data.lang, pos_for_cat)
 		for _, cat in ipairs(cats) do
 			table.insert(data.categories, cat)
 		end
@@ -339,21 +349,27 @@ end
 
 
 local function format_inflection_parts(data, parts)
-	local m_links = require("Module:links")
-	
 	for key, part in ipairs(parts) do
 		if type(part) ~= "table" then
 			part = {term = part}
 		end
 		
-		local qualifiers
+		local left_qualifiers, right_qualifiers
 		local reftext
-		
-		if part.qualifiers and #part.qualifiers > 0 then
-			qualifiers = require("Module:qualifier").format_qualifier(part.qualifiers) .. " "
+
+		left_qualifiers = part.q and #part.q > 0 and part.q or part.qualifiers and #part.qualifiers > 0 and part.qualifiers
+		if left_qualifiers then
+			left_qualifiers = require("Module:qualifier").format_qualifier(left_qualifiers) .. " "
 			
 			-- [[Special:WhatLinksHere/Template:tracking/headword/qualifier]]
-			require("Module:debug").track("headword/qualifier")
+			require("Module:debug/track")("headword/qualifier")
+		end
+		right_qualifiers = part.qq and #part.qq > 0 and part.qq
+		if right_qualifiers then
+			right_qualifiers = " " .. require("Module:qualifier").format_qualifier(right_qualifiers)
+			
+			-- [[Special:WhatLinksHere/Template:tracking/headword/qualifier]]
+			require("Module:debug/track")("headword/qualifier")
 		end
 		if part.refs and #part.refs > 0 then
 			local refs = {}
@@ -372,32 +388,44 @@ local function format_inflection_parts(data, parts)
 		
 		local partaccel = part.accel
 		local face = part.hypothetical and "hypothetical" or "bold"
-		local nolink = part.hypothetical or part.nolink
+
+		-- Here the final part 'or data.nolink' allows to have 'nolink=true'
+		-- right into the 'data' table to disable links of the entire headword
+		-- when inflected forms aren't entry-worthy, e.g.: in Vulgar Latin
+		local nolink = part.hypothetical or part.nolink or data.nolink
+
+		if part.label then
+			-- There should be a better way of italicizing a label. As is, this isn't customizable.
+			part = "<i>" .. part.label .. "</i>"
+		else
+			-- Convert the term into a full link
+			-- Don't show a transliteration here, the consensus seems to be not to
+			-- show them in headword lines to avoid clutter.
+			part = require("Module:links").full_link(
+				{
+					term = not nolink and part.term or nil,
+					alt = part.alt or (nolink and part.term or nil),
+					lang = part.lang or data.lang,
+					sc = part.sc or parts.sc or (not part.lang and data.sc),
+					id = part.id,
+					genders = part.genders,
+					tr = part.translit or (not (parts.enable_auto_translit or data.inflections.enable_auto_translit) and "-" or nil),
+					ts = part.transcription,
+					accel = parts.accel or partaccel,
+				},
+				face,
+				false
+				)
+		end
 		
-		-- Convert the term into a full link
-		-- Don't show a transliteration here, the consensus seems to be not to
-		-- show them in headword lines to avoid clutter.
-		part = m_links.full_link(
-			{
-				term = not nolink and part.term or nil,
-				alt = part.alt or (nolink and part.term or nil),
-				lang = part.lang or data.lang,
-				sc = part.sc or parts.sc or (not part.lang and data.sc),
-				id = part.id,
-				genders = part.genders,
-				tr = part.translit or (not (parts.enable_auto_translit or data.inflections.enable_auto_translit) and "-" or nil),
-				ts = part.transcription,
-				accel = parts.accel or partaccel,
-			},
-			face,
-			false
-			)
-		
-		if qualifiers then
-			part = qualifiers .. part
+		if left_qualifiers then
+			part = left_qualifiers .. part
 		end
 		if reftext then
 			part = part .. reftext
+		end
+		if right_qualifiers then
+			part = part .. right_qualifiers
 		end
 		
 		parts[key] = part
@@ -409,7 +437,7 @@ local function format_inflection_parts(data, parts)
 		parts_output = " " .. table.concat(parts, " <i>or</i> ")
 	elseif parts.request then
 		parts_output = " <small>[please provide]</small>"
-			.. require("Module:utilities").format_categories(
+			.. require("Module:utilities/format_categories")(
 				{"Requests for inflections in " .. data.lang:getCanonicalName() .. " entries"},
 				lang,
 				nil,
@@ -475,14 +503,14 @@ local function show_headword_line(data)
 	end
 	
 	local tracking_categories = {}
-
+	
 	if not data.noposcat then	
 		local pos_category = data.lang:getCanonicalName() .. " " .. data.pos_category
 		if pos_category ~= "Translingual Han characters" then
 			table.insert(data.categories, 1, pos_category)
 		end
 	end
-
+	
 	if data.sccat and data.sc then
 		table.insert(data.categories, data.lang:getCanonicalName() .. " " .. data.pos_category
 			.. " in " .. data.sc:getDisplayForm())
@@ -496,7 +524,7 @@ local function show_headword_line(data)
 		[[Special:WhatLinksHere/Template:tracking/headword/unrecognized pos]]
 		]=]
 		table.insert(tracking_categories, "head tracking/unrecognized pos")
-		require("Module:debug").track{
+		require("Module:debug/track"){
 			"headword/unrecognized pos",
 			"headword/unrecognized pos/lang/" .. data.lang:getCode(),
 			"headword/unrecognized pos/pos/" .. data.pos_category
@@ -508,15 +536,14 @@ local function show_headword_line(data)
 	-- Preprocess
 	preprocess(data, postype)
 	
-	local m_links = require("Module:links")
-	
 	if namespace == "" and data.lang:getType() ~= "reconstructed" then
+		local m_links = require("Module:links")
 		for _, head in ipairs(data.heads) do
-			if title.prefixedText ~= m_links.getLinkPage(m_links.remove_links(head), data.lang) then
+			if title.prefixedText ~= m_links.getLinkPage(m_links.remove_links(head), data.lang, data.sc) then
 				--[=[
 				[[Special:WhatLinksHere/Template:tracking/headword/pagename spelling mismatch]]
 				]=]
-				require("Module:debug").track{
+				require("Module:debug/track"){
 					"headword/pagename spelling mismatch",
 					"headword/pagename spelling mismatch/" .. data.lang:getCode()
 				}
@@ -530,7 +557,7 @@ local function show_headword_line(data)
 		format_headword(data) ..
 		format_genders(data) ..
 		format_inflections(data) ..
-		require("Module:utilities").format_categories(
+		require("Module:utilities/format_categories")(
 			tracking_categories, data.lang, data.sort_key, nil,
 			data.force_cat_output or test_force_categories, data.sc
 			)
@@ -553,14 +580,14 @@ function export.full_headword(data)
 	else
 		-- Track uses of sc parameter
 		local best = require("Module:scripts").findBestScript(pagename, data.lang)
-		require("Module:debug").track("headword/sc")
+		require("Module:debug/track")("headword/sc")
 		
 		if data.sc:getCode() == best:getCode() then
-			require("Module:debug").track("headword/sc/redundant")
-			require("Module:debug").track("headword/sc/redundant/" .. data.sc:getCode())
+			require("Module:debug/track")("headword/sc/redundant")
+			require("Module:debug/track")("headword/sc/redundant/" .. data.sc:getCode())
 		else
-			require("Module:debug").track("headword/sc/needed")
-			require("Module:debug").track("headword/sc/needed/" .. data.sc:getCode())
+			require("Module:debug/track")("headword/sc/needed")
+			require("Module:debug/track")("headword/sc/needed/" .. data.sc:getCode())
 		end
 	end
 	
@@ -571,8 +598,13 @@ function export.full_headword(data)
 	-- to a check for any Latin characters and whitespace or punctuation.
 	if (namespace == "" and data.sc and toBeTagged[data.sc:getCode()]
 			and not pagename:find "^[%z\1-\127]+$")
-			or (data.sc:getCode() == "Jpan" and (test_script(pagename, "Hira") or test_script(pagename, "Kana"))) then
+			or (data.sc:getCode() == "Jpan" and (test_script(pagename, "Hira") or test_script(pagename, "Kana")))
+			or (data.sc:getCode() == "Kore" and (test_script(pagename, "Hang"))) then
 		displayTitle = '<span class="' .. data.sc:getCode() .. '">' .. pagename .. '</span>'
+	-- Keep Han entries region-neutral in the display title.
+	elseif namespace == "" and data.sc and not pagename:find "^[%z\1-\127]+$"
+			and (data.sc:getCode() == "Hant" or data.sc:getCode() == "Hans") then
+		displayTitle = '<span class="Hani">' .. pagename .. '</span>'
 	elseif namespace == "Reconstruction" then
 		displayTitle, matched = mw.ustring.gsub(
 			fullPagename,
@@ -604,7 +636,7 @@ function export.full_headword(data)
 		--[=[
 		[[Special:WhatLinksHere/Template:tracking/headword/force cat output]]
 		]=]
-		require("Module:debug").track("headword/force cat output")
+		require("Module:debug/track")("headword/force cat output")
 	end
 	
 	if data.getCanonicalName then
@@ -613,7 +645,7 @@ function export.full_headword(data)
 		
 	-- Were any categories specified?
 	if data.categories and #data.categories > 0 then
-		local lang_name = require("Module:string").pattern_escape(data.lang:getCanonicalName())
+		local lang_name = require("Module:string/pattern_escape")(data.lang:getCanonicalName())
 		for _, cat in ipairs(data.categories) do
 			-- Does the category begin with the language name? If not, tag it with a tracking category.
 			if not mw.ustring.find(cat, "^" .. lang_name) then
@@ -623,7 +655,7 @@ function export.full_headword(data)
 				--[=[
 				[[Special:WhatLinksHere/Template:tracking/head tracking/no lang category]]
 				]=]
-				require("Module:debug").track{
+				require("Module:debug/track"){
 					"headword/no lang category",
 					"headword/no lang category/lang/" .. data.lang:getCode()
 				}
@@ -666,8 +698,8 @@ function export.full_headword(data)
 	end
 	
 	-- Categorise for palindromes
-	if title.nsText ~= "Reconstruction" and mw.ustring.len(title.subpageText)>2
-		and require('Module:palindromes').is_palindrome(
+	if not data.nopalindromecat and title.nsText ~= "Reconstruction" and mw.ustring.len(title.subpageText) > 2
+		and require("Module:palindromes").is_palindrome(
 			title.subpageText, data.lang, data.sc
 			) then
 		table.insert(data.categories, data.lang:getCanonicalName() .. " palindromes")
@@ -678,11 +710,11 @@ function export.full_headword(data)
 	local text = show_headword_line(data)
 	return
 		text ..
-		require("Module:utilities").format_categories(
+		require("Module:utilities/format_categories")(
 			data.categories, data.lang, data.sort_key, nil,
 			data.force_cat_output or test_force_categories, data.sc
 			) ..
-		require("Module:utilities").format_categories(
+		require("Module:utilities/format_categories")(
 			tracking_categories, data.lang, data.sort_key, nil,
 			data.force_cat_output or test_force_categories, data.sc
 			)
