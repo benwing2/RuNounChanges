@@ -1,6 +1,6 @@
 local ex = {} -- normally called `export` but there are so many references to exported functions in this module
 
-local put_module = "Module:parse utilities"
+local put_module = "Module:User:Benwing2/parse utilities"
 local romut_module = "Module:romance utilities"
 local strutil_module = "Module:string utilities"
 
@@ -156,18 +156,6 @@ function ex.remove_non_final_accents(text)
 	for i, word in ipairs(words) do
 		if (i % 2) == 1 then -- an actual word, not a separator
 			word = ex.rsub_repeatedly(word, ex.accent_c .. "(.)", "%1")
-			words[i] = word
-		end
-	end
-	return table.concat(words)
-end
-
--- Remove word-final accents on monosyllabic words. NOTE: `text` on entry must be decomposed using decompose().
-function ex.remove_final_monosyllabic_accents(text)
-	local words = ex.split_but_rejoin_affixes(text)
-	for i, word in ipairs(words) do
-		if (i % 2) == 1 then -- an actual word, not a separator
-			word = ex.rsub(word, "^(" .. NV .. "*" .. V .. ")" .. ex.accent_c .. "$", "%1")
 			words[i] = word
 		end
 	end
