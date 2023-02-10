@@ -20,9 +20,9 @@ local export = {}
 local force_cat = false -- for testing
 
 local m_table = require("Module:table")
-local com = require("Module:it-common")
+local com = require("Module:User:Benwing2/it-common")
 local strutil_module = "Module:string utilities"
-local put_module = "Module:parse utilities"
+local put_module = "Module:User:Benwing2/parse utilities"
 local put -- replaced with module reference as needed
 local patut_module = "Module:pattern utilities"
 local patut -- replaced with module reference as needed
@@ -38,6 +38,8 @@ local ulen = mw.ustring.len
 
 local lang = require("Module:languages").getByCode("it")
 
+-- Temporarily substitutes for comma+space.
+local TEMP1 = u(0xFFF0)
 local SYLDIV = u(0xFFF0) -- used to represent a user-specific syllable divider (.) so we won't change it
 local WORDDIV = u(0xFFF1) -- used to represent a user-specific word divider (.) so we won't change it
 local TEMP_Z = u(0xFFF2)
@@ -186,6 +188,18 @@ local function canon_spaces(text)
 	return text
 end
 
+-- Remove word-final accents on monosyllabic words. NOTE: `text` on entry must be decomposed using decompose().
+local function remove_final_monosyllabic_accents(text)
+	local words = com.split_but_rejoin_affixes(text)
+	for i, word in ipairs(words) do
+		if (i % 2) == 1 then -- an actual word, not a separator
+			word = com.rsub(word, "^(" .. NV .. "*" .. V .. ")" .. com.accent_c .. "$", "%1")
+			words[i] = word
+		end
+	end
+	return table.concat(words)
+end
+
 -- Return true if all words in `term` have vowels. NOTE: `term` on entry must be decomposed using com.decompose().
 local function all_words_have_vowels(term)
 	local words = com.split_but_rejoin_affixes(term)
@@ -231,7 +245,7 @@ local function canonicalize_and_auto_accent(text, pagename)
 	elseif rfind(text, "^%[[wxzsh]%]$") or text == "[tʃ]" or text == "[dʒ]" then
 		-- Don't do anything to bare use of [C] notation; don't interpret as substitution.
 	else
-		if rfind(text, "^%^[aeiouAEIOU]" .. GR .. "$") or rfind(text, "^%^[eoEO]" .. AC .. "$") then
+		if rfind(text, "^%^[aeiouAEIOU]" .. com.GR .. "$") or rfind(text, "^%^[eoEO]" .. com.AC .. "$") then
 			text = "[" .. text .. "]"
 		end
 		-- Implement substitution notation.
@@ -239,7 +253,7 @@ local function canonicalize_and_auto_accent(text, pagename)
 			local subs = rsplit(rmatch(text, "^%[(.*)%]$"), ",")
 			text = pagename
 			for _, sub in ipairs(subs) do
-				if rfind(sub, "^%^[aeiouAEIOU]" .. GR .. "$") or rfind(sub, "^%^[eoEO]" .. AC .. "$") then
+				if rfind(sub, "^%^[aeiouAEIOU]" .. com.GR .. "$") or rfind(sub, "^%^[eoEO]" .. com.AC .. "$") then
 					-- single vowel spec
 					local abbrev_text = sub
 					local function err(msg)
@@ -349,7 +363,7 @@ local function canonicalize_and_auto_accent(text, pagename)
 					for _, suffix_pair in ipairs(recognized_suffixes) do
 						local orig, respelling = unpack(suffix_pair)
 						local replaced
-						word, replaced = rsubb(word, orig .. "$", respelling)
+						word, replaced = com.rsubb(word, orig .. "$", respelling)
 						if replaced then
 							-- Decompose again because suffix replacements may have accented chars.
 							word = com.decompose(word)
@@ -1173,7 +1187,7 @@ local function spelling_normalized_for_syllabification_matches_pagename(text, pa
 	-- syllable, it may or may not have an accent on it, so also remove final monosyllabic accents from the normalized
 	-- pronunciation when comparing. (Don't remove from both normalized pronunciation and page name because we don't
 	-- want pronunciation rè to match page name ré or vice versa.)
-	return text == pagename or com.remove_final_monosyllabic_accents(text) == pagename
+	return text == pagename or remove_final_monosyllabic_accents(text) == pagename
 end
 
 
@@ -1361,17 +1375,51 @@ function export.show_pr(frame)
 	local respellings = #args[1] > 0 and args[1] or {"+"}
 	local parsed_respellings = {}
 	for i, respelling in ipairs(respellings) do
-		if respelling:find("<") then
+		if respelling:find("[<%[]") then
 			local function parse_err(msg)
 				error(msg .. ": " .. i .. "= " .. respelling)
 			end
 			if not put then
 				put = require(put_module)
 			end
-			local segments = put.parse_balanced_segment_run(respelling, "<", ">")
-			local comma_separated_groups = put.split_alternating_runs(segments, "%s*,%s*")
+			-- We don't want to split off a comma followed by a space, as in [[uomo avvisato, mezzo salvato]], so replace
+			-- comma+space with a special character that we later undo.
+			respelling = respelling:gsub(", ", TEMP1)
+			-- Parse balanced segment runs involving either [...] (substitution notation) or <...> (inline modifiers). We do this
+			-- because we don't want commas inside of square or angle brackets to count as respelling delimiters. However, we
+			-- need to rejoin square-bracketed segments with nearby ones after splitting alternating runs on comma. For example,
+			-- if we are given "a[x]a<q:learned>,[tts,ìo]<q:nonstandard>", after calling
+			-- parse_multi_delimiter_balanced_segment_run() we get the following output:
+			--
+			-- {"a", "[x]", "a", "<q:learned>", ",", "[tts,ìo]", "", "<q:nonstandard>", ""}
+			--
+			-- After calling split_alternating_runs(), we get the following:
+			--
+			-- {{"a", "[x]", "a", "<q:learned>", ""}, {"", "[tts,ìo]", "", "<q:nonstandard>", ""}}
+			--
+			-- We need to rejoin stuff on either side of the square-bracketed portions.
+			local segments = put.parse_multi_delimiter_balanced_segment_run(respelling, {{"<", ">"}, {"[", "]"}})
+			-- Not with spaces around the comma; see above for why we don't want to split off comma followed by space.
+			local comma_separated_groups = put.split_alternating_runs(segments, ",")
+
 			local parsed = {terms = {}, audio = {}}
 			for i, group in ipairs(comma_separated_groups) do
+				-- Rejoin bracketed segments with nearby ones, as described above.
+				local j = 2
+				while j <= #group do
+					if group[j]:find("^%[") then
+						group[j - 1] = group[j - 1] .. group[j] .. group[j + 1]
+						table.remove(group, j)
+						table.remove(group, j)
+					else
+						j = j + 2
+					end
+				end
+				-- Undo replacement of comma+space.
+				for j, segment in ipairs(group) do
+					group[j] = segment:gsub(TEMP1, ", ")
+				end
+
 				local term = {term = group[1], ref = {}, qual = {}}
 				for j = 2, #group - 1, 2 do
 					if group[j + 1] ~= "" then
@@ -1456,7 +1504,11 @@ function export.show_pr(frame)
 			table.insert(parsed_respellings, parsed)
 		else
 			local terms = {}
-			for _, term in ipairs(rsplit(respelling, "%s*,%s*")) do
+			-- We don't want to split on comma+space, which should become a foot boundary as in
+			-- [[uomo avvisato, mezzo salvato]].
+			local subbed_respelling = respelling:gsub(", ", TEMP1)
+			for _, term in ipairs(rsplit(subbed_respelling, ",")) do
+				term = term:gsub(TEMP1, ", ")
 				table.insert(terms, {term = term, ref = {}, qual = {}})
 			end
 			table.insert(parsed_respellings, {
