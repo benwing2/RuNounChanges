@@ -349,7 +349,7 @@ end
 
 
 local function format_inflection_parts(data, parts)
-	for key, part in ipairs(parts) do
+	for j, part in ipairs(parts) do
 		if type(part) ~= "table" then
 			part = {term = part}
 		end
@@ -427,14 +427,18 @@ local function format_inflection_parts(data, parts)
 		if right_qualifiers then
 			part = part .. right_qualifiers
 		end
+		local separator = part.separator or j > 1 and " <i>or</i> " -- use "" to request no separator
+		if separator then
+			part = separator .. part
+		end
 		
-		parts[key] = part
+		parts[j] = part
 	end
 	
 	local parts_output = ""
 	
 	if #parts > 0 then
-		parts_output = " " .. table.concat(parts, " <i>or</i> ")
+		parts_output = " " .. table.concat(parts)
 	elseif parts.request then
 		parts_output = " <small>[please provide]</small>"
 			.. require("Module:utilities/format_categories")(
