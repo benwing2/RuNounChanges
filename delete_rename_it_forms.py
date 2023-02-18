@@ -6,6 +6,8 @@ import pywikibot, re, sys, codecs, argparse, json, unicodedata
 import blib
 from blib import getparam, rmparam, tname, pname, msg, errandmsg, site
 
+output_pages_to_delete = []
+
 def remove_anagram_from_page(index, page, pagetitle_to_remove):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
@@ -71,43 +73,44 @@ def process_page_for_anagrams(index, page, modify_this_page):
   if not text:
     return
 
-  foundlang = False
-  sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
+  retval = blib.find_modifiable_lang_section(text, "Italian", pagemsg, force_final_nls=True)
+  if retval is None:
+    return
+
+  sections, j, secbody, sectail, has_non_lang = retval
 
   anagrams = []
-  for j in xrange(2, len(sections), 2):
-    if sections[j - 1] != "==Italian==\n":
-      pagemsg("WARNING: Found non-Italian section, skipping")
-      return
-    else:
-      subsections = re.split("(^==+[^=\n]+==+\n)", sections[j], 0, re.M)
-      for k in xrange(2, len(subsections), 2):
-        if "===Anagrams===" in subsections[k - 1]:
-          parsed = blib.parse_text(subsections[k])
-          for t in parsed.filter_templates():
-            tn = tname(t)
-            def getp(param):
-              return getparam(t, param)
-            if tn == "anagrams":
-              if getp("1") != "it":
-                pagemsg("WARNING: Wrong language in {{anagrams}}: %s" % unicode(t))
-                return
-              for anagram in blib.fetch_param_chain(t, "2"):
-                if anagram not in anagrams:
-                  anagrams.append(anagram)
-            elif tn == "l":
-              if getp("1") != "it":
-                pagemsg("WARNING: Wrong language in {{l}}: %s" % unicode(t))
-                return
-              anagram = getp("2")
-              if anagram not in anagrams:
-                anagrams.append(anagram)
-          if modify_this_page:
-            subsections[k - 1] = ""
-            subsections[k] = ""
-            notes.append("remove Anagrams section prior to renaming page")
-      sections[j] = "".join(subsections)
 
+  subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
+  for k in xrange(2, len(subsections), 2):
+    if "===Anagrams===" in subsections[k - 1]:
+      parsed = blib.parse_text(subsections[k])
+      for t in parsed.filter_templates():
+        tn = tname(t)
+        def getp(param):
+          return getparam(t, param)
+        if tn == "anagrams":
+          if getp("1") != "it":
+            pagemsg("WARNING: Wrong language in {{anagrams}}: %s" % unicode(t))
+            return
+          for anagram in blib.fetch_param_chain(t, "2"):
+            if anagram not in anagrams:
+              anagrams.append(anagram)
+        elif tn == "l":
+          if getp("1") != "it":
+            pagemsg("WARNING: Wrong language in {{l}}: %s" % unicode(t))
+            return
+          anagram = getp("2")
+          if anagram not in anagrams:
+            anagrams.append(anagram)
+      if modify_this_page:
+        subsections[k - 1] = ""
+        subsections[k] = ""
+        notes.append("remove Anagrams section prior to renaming page")
+  secbody = "".join(subsections)
+
+  # Strip extra newlines added to secbody
+  sections[j] = secbody.rstrip("\n") + sectail
   text = "".join(sections)
 
   for anagram in anagrams:
@@ -117,6 +120,49 @@ def process_page_for_anagrams(index, page, modify_this_page):
       save=args.save, verbose=args.verbose, diff=args.diff)
 
   return text, notes
+
+def process_page_for_deletion(index, page):
+  pagetitle = unicode(page.title())
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
+  if not blib.safe_page_exists(page, errandpagemsg):
+    pagemsg("Skipping because page doesn't exist")
+    return
+
+  notes = []
+
+  text = blib.safe_page_text(page, errandpagemsg)
+  if not text:
+    return
+
+  retval = blib.find_modifiable_lang_section(text, "Italian", pagemsg)
+  if retval is None:
+    return
+
+  sections, j, secbody, sectail, has_non_lang = retval
+  if not has_non_lang:
+    # Can delete the whole page, but check for non-blank section 0
+    cleaned_sec0 = re.sub("^\{\{also\|.*?\}\}\n", "", sections[0])
+    if cleaned_sec0.strip():
+      pagemsg("WARNING: Whole page deletable except that there's text above all sections: <%s>" % cleaned_sec0.strip())
+      return
+    pagemsg("Page should be deleted")
+    output_pages_to_delete.append(pagetitle)
+    return
+
+  del sections[j]
+  del sections[j-1]
+  notes.append("remove Italian section for bad (nonexistent or misspelled) form")
+  if j > len(sections):
+    # We deleted the last section, remove the separator at the end of the
+    # previous section.
+    sections[-1] = re.sub(r"\n+--+\n*\Z", "", sections[-1])
+  text = "".join(sections)
+
+  return text, notes
+
 
 parser = blib.create_argparser("Delete/rename Italian forms, fixing up anagrams")
 parser.add_argument("--direcfile", help="File listing forms to delete/rename.", required=True)
@@ -154,6 +200,9 @@ for index, badpagetitle in input_pages_to_delete:
     pagemsg("Skipping because page doesn't exist")
     continue
   process_page_for_anagrams(index, badpage, modify_this_page=False)
+  def do_process_page(page, index, parsed):
+    return process_page_for_deletion(index, page)
+  blib.do_edit(badpage, index, do_process_page, save=args.save, verbose=args.verbose, diff=args.diff)
   #this_comment = 'delete bad Italian non-lemma form'
   #if args.save:
   #  existing_text = blib.safe_page_text(badpage, errandpagemsg, bad_value_ret=None)
@@ -162,7 +211,6 @@ for index, badpagetitle in input_pages_to_delete:
   #    errandpagemsg("Deleted (comment=%s)" % this_comment)
   #else:
   #  pagemsg("Would delete (comment=%s)" % this_comment)
-  output_pages_to_delete.append(badpagetitle)
 
 for index, frompagetitle, topagetitle in pages_to_rename:
   frompage = pywikibot.Page(site, frompagetitle)
