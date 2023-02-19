@@ -523,7 +523,7 @@ end
 
 
 -- Indicate whether to skip `slot` when conjugating. If `checking_defective` is given, we are checking for defective
--- rows and only want some user-specified indicators respected.
+-- rows and only want certain user-specified indicators respected.
 local function skip_slot(base, slot, checking_defective)
 	if not checking_defective then
 		if base.props.nofinite and slot:find("[123]") then
@@ -532,6 +532,13 @@ local function skip_slot(base, slot, checking_defective)
 		end
 		if base.props.presonly and slot:find("[123]") and not slot:find("^pres") then
 			-- Skip all finite (1/2/3-person) slots except the present indicative.
+			return true
+		end
+		if base.props.no_root_stressed and (slot:find("[123]s") or slot:find("3p")) and (
+			slot:find("^pres") or slot:find("^sub") or slot:find("^imp[123]") or slot:find("^negimp")
+		) then
+			-- Skip all 1s/2s/3s/3p slots in the present indicative and subjunctive and the imperative.
+			-- Beware of impsub slots.
 			return true
 		end
 	end
@@ -1464,17 +1471,21 @@ local function generate_default_future_principal_part(base, do_err)
 		if stem:find("[cg]$") then
 			return {comb("herò")}
 		elseif stem:find("[cg]i$") then
-			-- Verbs in -ciare/-giare with the accent on the final -ì in the present singular take future in
-			-- -cier-/-gier- not -cer-/-ger-. Compare [[sciare]] "to ski", pres1s ''scìo'', fut1s ''scierò'' vs.
-			-- [[lasciare]] "to let", pres1s ''làscio'', fut1s ''lascerò''. The only way to make this distinction
-			-- is to check the present singular, e.g. pres1s.
-			return iut.map_forms(base.forms.pres1s, function(form)
-				if rfind(form, "ìo$") then
-					return comb("erò")
-				else
-					return rsub(stem, "i$", "erò")
-				end
-			end)
+			if not base.forms.pres1s then -- missing pres1s; future still can be generated
+				return {rsub(stem, "i$", "erò")}
+			else
+				-- Verbs in -ciare/-giare with the accent on the final -ì in the present singular take future in
+				-- -cier-/-gier- not -cer-/-ger-. Compare [[sciare]] "to ski", pres1s ''scìo'', fut1s ''scierò'' vs.
+				-- [[lasciare]] "to let", pres1s ''làscio'', fut1s ''lascerò''. The only way to make this distinction
+				-- is to check the present singular, e.g. pres1s.
+				return iut.map_forms(base.forms.pres1s, function(form)
+					if rfind(form, "ìo$") then
+						return comb("erò")
+					else
+						return rsub(stem, "i$", "erò")
+					end
+				end)
+			end
 		else
 			return {comb("erò")}
 		end
@@ -2521,7 +2532,7 @@ local function parse_inside(base, inside, is_builtin_verb)
 				end
 			end
 		elseif first_element == "impers" or first_element == "thirdonly" or first_element == "rre" or
-			first_element == "nofinite" or first_element == "presonly" then
+			first_element == "nofinite" or first_element == "no_root_stressed" or first_element == "presonly" then
 			if #dot_separated_group > 1 then
 				parse_err("No footnotes allowed with '" .. first_element .. "' spec")
 			end
@@ -2545,7 +2556,7 @@ local function parse_inside(base, inside, is_builtin_verb)
 			local first_element_prefix, first_element_minus_prefix = rmatch(first_element,
 				"^%s*([a-z0-9_!]+)%s*:%s*(.-)%s*$")
 			if not first_element_prefix then
-				parse_err("Dot-separated element should be either 'impers', 'thirdonly', 'nofinite', 'presonly', 'rre' or be of the form "
+				parse_err("Dot-separated element should be either 'impers', 'thirdonly', 'nofinite', 'no_root_stressed', 'presonly', 'rre' or be of the form "
 					.. "'PREFIX:SPEC', but saw '" .. table.concat(dot_separated_group) .. "'")
 			end
 			dot_separated_group[1] = first_element_minus_prefix
@@ -2674,6 +2685,7 @@ local function create_base()
 	--    - `impers` (impersonal verb, with only third-singular forms)
 	--    - `thirdonly` (third-person only verb)
 	--    - `nofinite` (verb is missing all finite forms)
+	--    - `no_root_stressed` (verb is missing all root-stressed forms)
 	--    - `presonly` (verb is missing all finite forms except the present indicative)
 	--    - `rre` (user specified the 'rre' indicator in conjunction with a syncopated reflexive verb like
 	--             [[contrarsi]] reflexive of [[contrarre]], which otherwise would get interpreted as the reflexive of
