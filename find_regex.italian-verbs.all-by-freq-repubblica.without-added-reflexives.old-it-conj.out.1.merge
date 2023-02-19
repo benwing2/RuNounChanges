@@ -1,4 +1,4 @@
-Beginning at Fri Feb 10 02:39:15 2023
+Beginning at Sun Feb 19 14:21:47 2023
 Page 2751 sbancare: Found match for regex: it-conj-
 Page 2751 sbancare: -------- begin text --------
 
@@ -63,6 +63,12 @@ From {{af|it|ri-|impinguare}}.
 Page 3605 oberare: Found match for regex: it-conj-
 Page 3605 oberare: -------- begin text --------
 
+===Etymology===
+Based on {{m|it|oberato}}.
+
+===Pronunciation===
+{{it-pr}}
+
 ===Verb===
 {{it-verb}} {{+preo|it|di}}
 
@@ -71,8 +77,8 @@ Page 3605 oberare: -------- begin text --------
 ====Conjugation====
 {{it-conj-are|ober|avere}}
 
-====Related terms====
-* {{l|it|oberato}}
+===Further reading===
+* {{R:it:Treccani}}
 
 ===Anagrams===
 * {{anagrams|it|a=abeeorr|arboree|obererà}}
@@ -770,6 +776,9 @@ Page 3750 svicolare: -------- begin text --------
 
 ===Etymology===
 From {{af|it|s-|vicolo|-are}}.
+
+===Pronunciation===
+{{it-pr}}
 
 ===Verb===
 {{it-verb}}
@@ -2458,7 +2467,10 @@ Page 4078 lessare: Found match for regex: it-conj-
 Page 4078 lessare: -------- begin text --------
 
 ===Etymology===
-From {{inh|it|LL.|elixo|elixāre}}, from {{inh|it|la|lixa||hot water}}, cf. {{m|la|elixus}}. Compare {{cog|es|elijar}}.
+{{inh+|it|LL.|elixo|elixāre}}, from {{inh|it|la|lixa||hot water}}, cf. {{m|la|elixus}}. Compare {{cog|es|elijar}}.
+
+===Pronunciation===
+{{it-pr}}
 
 ===Verb===
 {{it-verb}}
@@ -2468,12 +2480,17 @@ From {{inh|it|LL.|elixo|elixāre}}, from {{inh|it|la|lixa||hot water}}, cf. {{m|
 ====Conjugation====
 {{it-conj-are|less|avere}}
 
-====Related terms====
+====Derived terms====
 * {{l|it|lessatura}}
+
+====Related terms====
 * {{l|it|lesso}}
 
 ====See also====
 * {{l|it|bollire}}
+
+===Further reading===
+* {{R:it:Treccani}}
 
 ===Anagrams===
 * {{anagrams|it|a=aeelrss|esserla|lesserà}}
@@ -8700,6 +8717,12 @@ From {{prefix|it|s|provincializzare}}.
 Page 5516 albergare: Found match for regex: it-conj-
 Page 5516 albergare: -------- begin text --------
 
+===Etymology===
+From {{uder|it|la}}.
+
+===Pronunciation===
+{{it-pr}}
+
 ===Verb===
 {{it-verb}}
 
@@ -8710,10 +8733,15 @@ Page 5516 albergare: -------- begin text --------
 ====Conjugation====
 {{it-conj-care|alberg|avere}}
 
-====Related terms====
+====Derived terms====
 * {{l|it|albergazione}}
+
+====Related terms====
 * {{l|it|albergheria}}
 * {{l|it|albergo}}
+
+===Further reading===
+* {{R:it:Treccani}}
 
 ----
 
@@ -9275,23 +9303,6 @@ From {{suffix|it|ione|izzare}}.
 
 ===Anagrams===
 * {{anagrams|it|a=aeiinorzz|ionizzerà}}
--------- end text --------
-Page 5728 autonominare: Found match for regex: it-conj-
-Page 5728 autonominare: -------- begin text --------
-
-===Etymology===
-From {{prefix|it|auto|nominare}}.
-
-===Verb===
-{{it-verb}}
-
-# to [[appoint]] oneself; be [[self-appointed]]
-
-====Conjugation====
-{{it-conj-are|autonomin|avere or essere}}
-
-===Anagrams===
-* {{anagrams|it|a=aaeimnnoortu|autonominerà}}
 -------- end text --------
 Page 5755 basire: Found match for regex: it-conj-
 Page 5755 basire: -------- begin text --------
@@ -15564,45 +15575,6 @@ From {{af|it|fiocina|-are}}.
 ===Anagrams===
 * {{anagrams|it|a=acefiinor|fiocinerà|reificano}}
 -------- end text --------
-Page 8611 avvallare: Found match for regex: it-conj-
-Page 8611 avvallare: -------- begin text --------
-
-===Verb===
-{{it-verb|a[transitive]:e[intransitive]/à+}}
-
-# {{lb|it|literally|transitive}} to [[send]] to the [[valley]]
-# {{lb|it|by extension|transitive}} to [[send]] [[down]]
-# {{lb|it|by extension|transitive}} to [[sink]] (the terrain, a road, etc.), to [[cause]] to [[sink]]
-#: {{syn|it|affondare|abbassare|sprofondare}}
-# {{lb|it|archaic|or|literary|transitive}} to [[lower]] (one's hood, head, etc.)
-# {{lb|it|archaic|or|literary|transitive}} to [[turn]] (one's eyes, etc.) towards the [[ground]]
-# {{lb|it|archaic|figurative|transitive}} to [[humiliate]], to [[demean]]
-#: {{syn|it|umiliare|avvilire}}
-# {{lb|it|archaic|figurative|transitive}} to [[swallow]]
-# {{lb|it|literary|intransitive}} to [[go]] [[down]], to [[descend]] {{+aux|it|essere}}
-
-====Conjugation====
-{{it-conj|a[transitive]:e[intransitive]/à+}}
-
-====Related terms====
-* {{l|it|avvallamento}}
-* {{l|it|avvallarsi}}
-* {{l|it|valle}}
-
-===Verb===
-{{it-verb}}
-
-# {{lb|it|transitive}} to [[endorse]]; to [[ratify]]
-
-====Conjugation====
-{{it-conj-are|avvall|avere}}
-
-====Related terms====
-* {{l|it|avvallarsi}}
-
-===Anagrams===
-* {{anagrams|it|a=aaaellrvv|avvallerà}}
--------- end text --------
 Page 8628 svasare: Found match for regex: it-conj-
 Page 8628 svasare: -------- begin text --------
 
@@ -16603,8 +16575,9 @@ Page 9208 canforare: -------- begin text --------
 ===Anagrams===
 * {{anagrams|it|a=aacefnorr|canforerà}}
 -------- end text --------
-Page 9242 tiramollare: Found match for regex: it-conj-
+Page 9242 tiramollare: Found match for regex: {
 Page 9242 tiramollare: -------- begin text --------
+{{rfv|it}}
 
 ===Etymology===
 From {{af|it|tiramolla|-are}}.
@@ -17594,6 +17567,9 @@ From {{af|it|re-|importare}}.
 
 ===Anagrams===
 * {{anagrams|it|a=aeeimoprrrt|reimporterà|traromperei}}
+
+----
+
 -------- end text --------
 Page 10131 pazziare: Found match for regex: it-conj-
 Page 10131 pazziare: -------- begin text --------
@@ -18650,6 +18626,12 @@ Page 10988 shoccare: -------- begin text --------
 Page 10989 shakerare: Found match for regex: it-conj-
 Page 10989 shakerare: -------- begin text --------
 
+===Etymology===
+{{bor+|it|en|shake}}.
+
+===Pronunciation===
+{{it-pr}}
+
 ===Verb===
 {{it-verb}}
 
@@ -18658,8 +18640,14 @@ Page 10989 shakerare: -------- begin text --------
 ====Conjugation====
 {{it-conj-are|shaker|avere}}
 
+====Derived terms====
+* {{l|it|shakerato}}
+
 ====Related terms====
 * {{l|it|shaker}}
+
+===Further reading===
+* {{R:it:Treccani}}
 
 ===Anagrams===
 * {{anagrams|it|a=aaeehkrrs|shakererà}}
@@ -19854,20 +19842,6 @@ Page 12176 atare: -------- begin text --------
 
 ----
 
--------- end text --------
-Page 12183 areare: Found match for regex: it-conj-
-Page 12183 areare: -------- begin text --------
-
-===Verb===
-{{it-verb}}
-
-# {{alternative form of|it|aerare}}
-
-====Conjugation====
-{{it-conj-are|are|avere}}
-
-===Anagrams===
-* {{anagrams|it|a=aaeerr|aerare|aererà|areerà}}
 -------- end text --------
 Page 12281 sgasare: Found match for regex: it-conj-
 Page 12281 sgasare: -------- begin text --------
@@ -21927,8 +21901,9 @@ From {{confix|it|de|colonia|izzare}}.
 ===Anagrams===
 * {{anagrams|it|a=acdeeilnoorzz|decolonizzerà}}
 -------- end text --------
-Page 14653 cuntare: Found match for regex: it-conj-
+Page 14653 cuntare: Found match for regex: {
 Page 14653 cuntare: -------- begin text --------
+{{rfv|it}}
 
 ===Verb===
 {{it-verb}}
@@ -23575,8 +23550,9 @@ Page 17397 cennare: -------- begin text --------
 ===Anagrams===
 * {{anagrams|it|a=aceennr|cennerà}}
 -------- end text --------
-Page 17471 baare: Found match for regex: it-conj-
+Page 17471 baare: Found match for regex: {
 Page 17471 baare: -------- begin text --------
+{{rfv|it}}
 
 ===Etymology===
 Probably [[imitative]] or [[echoic]] in origin.
@@ -29648,38 +29624,6 @@ From {{af|it|ri-|abitare}}.
 ===Anagrams===
 * {{anagrams|it|a=aabeiirrt|riabiterà}}
 -------- end text --------
-Page 32269 rappresantare: Found match for regex: it-conj-
-Page 32269 rappresantare: -------- begin text --------
-
-===Etymology===
-From {{uder|it|la|repraesentō|repraesentāre}}.
-
-===Verb===
-{{it-verb}}
-
-# {{lb|it|transitive}} to [[depict]], [[portray]], [[represent]]
-# {{lb|it|transitive}} to [[describe]]
-# {{lb|it|transitive}} to [[symbolize]]
-# {{lb|it|transitive}} to [[stage]]
-
-====Conjugation====
-{{it-conj-are|rappresant|avere}}
-
-====Related terms====
-{{rel-top}}
-* {{l|it|rappresantabilità}}
-* {{l|it|rappresentabile}}
-* {{l|it|rappresentante}}
-* {{l|it|rappresentanza}}
-* {{l|it|rappresentativa}}
-* {{l|it|rappresentatività}}
-* {{l|it|rappresentativo}}
-* {{l|it|rappresentazione}}
-{{rel-bottom}}
-
-===Anagrams===
-* {{anagrams|it|a=aaaeenpprrrst|rappresanterà}}
--------- end text --------
 Page 32279 rannodare: Found match for regex: it-conj-
 Page 32279 rannodare: -------- begin text --------
 
@@ -30800,7 +30744,7 @@ Page 37578 adonare: -------- begin text --------
 {{it-conj-are|adon|avere}}
 
 ===Anagrams===
-* {{anagrams|it|a=aadenor|adonerà|aerando|areando|eradano}}
+* {{anagrams|it|a=aadenor|adonerà|aerando|eradano}}
 -------- end text --------
 Page 37660 accanare: Found match for regex: it-conj-
 Page 37660 accanare: -------- begin text --------
@@ -33408,7 +33352,7 @@ From {{prefix|it|de|scolarizzare}}.
 ===Anagrams===
 * {{anagrams|it|a=aacdeeilorrszz|desacralizzerò|descolarizzerà}}
 -------- end text --------
-Page 49928 coventrizzare: Found match for regex: it-conj-
+Page 49928 coventrizzare: Found match for regex: {
 Page 49928 coventrizzare: -------- begin text --------
 {{wikipedia|lang=it}}
 
@@ -35145,21 +35089,6 @@ From {{confix|it|s|fibbia|gloss2=buckle|are}}.
 
 ===Anagrams===
 * {{anagrams|it|a=abbefiirs|sfibbierà}}
--------- end text --------
-Page 66858 sfiare: Found match for regex: it-conj-
-Page 66858 sfiare: -------- begin text --------
-{{rfv|it}}
-
-===Verb===
-{{it-verb}}
-
-# to let air out (of a balloon, tyre/tire etc.)
-
-====Conjugation====
-{{it-conj-iare|sfi|avere}}
-
-===Anagrams===
-* {{anagrams|it|a=aefirs|freisa|fresai|fresia|sfarei|sfierà}}
 -------- end text --------
 Page 67944 sdorare: Found match for regex: it-conj-
 Page 67944 sdorare: -------- begin text --------
@@ -37852,7 +37781,7 @@ Related to standard Italian {{m|it|meriggiare}}<ref>{{R:it:Treccani}}</ref>, {{m
 <references/>
 
 ===Anagrams===
-* {{anagrams|it|a=aeeimrr|armerei|armerie|armiere|merierà|ramerei|remerai|remiera}}
+* {{anagrams|it|a=aeeimrr|armerei|armerie|armiere|ramerei|remerai|remiera}}
 -------- end text --------
 Page 89215 mercerizzare: Found match for regex: it-conj-
 Page 89215 mercerizzare: -------- begin text --------
@@ -38426,8 +38355,9 @@ Page 102894 forwardare: -------- begin text --------
 ===Anagrams===
 * {{anagrams|it|a=aadeforrrw|forwarderà}}
 -------- end text --------
-Page 102956 formilare: Found match for regex: it-conj-
+Page 102956 formilare: Found match for regex: {
 Page 102956 formilare: -------- begin text --------
+{{rfv|it}}
 
 ===Verb===
 {{it-verb}}
@@ -39785,5 +39715,5 @@ Page 129926 acceffare: -------- begin text --------
 ===Anagrams===
 * {{anagrams|it|a=aacceeffr|accefferà}}
 -------- end text --------
-Elapsed time: 3 hours 4 mins 52.50 secs
-Ending at Fri Feb 10 05:44:07 2023
+Elapsed time: 4 mins 37.83 secs
+Ending at Sun Feb 19 14:26:25 2023
