@@ -46,12 +46,13 @@ def remove_anagram_from_page(index, page, pagetitle_to_remove):
           anagrams = [x for x in anagrams if x != pagetitle_to_remove]
           if anagrams:
             blib.set_param_chain(t, anagrams, "2")
-            notes.append("remove anagram '%s', page deleted or renamed" % pagetitle_to_remove)
+            notes.append("remove anagram '%s', page deleted or renamed%s" % (pagetitle_to_remove, annotation))
             subsections[k] = unicode(parsed)
           else:
             subsections[k - 1] = ""
             subsections[k] = ""
-            notes.append("remove Anagrams section; only had '%s', which has been deleted or renamed" % pagetitle_to_remove)
+            notes.append("remove Anagrams section; only had '%s', which has been deleted or renamed%s"
+                % (pagetitle_to_remove, annotation))
 
   secbody = "".join(subsections)
   # Strip extra newlines added to secbody
@@ -106,7 +107,7 @@ def process_page_for_anagrams(index, page, modify_this_page):
       if modify_this_page:
         subsections[k - 1] = ""
         subsections[k] = ""
-        notes.append("remove Anagrams section prior to renaming page")
+        notes.append("remove Anagrams section prior to renaming page%s" % annotation)
   secbody = "".join(subsections)
 
   # Strip extra newlines added to secbody
@@ -154,7 +155,7 @@ def process_page_for_deletion(index, page):
 
   del sections[j]
   del sections[j-1]
-  notes.append("remove Italian section for bad (nonexistent or misspelled) form")
+  notes.append("remove Italian section for bad (nonexistent or misspelled) form%s" % annotation)
   if j > len(sections):
     # We deleted the last section, remove the separator at the end of the
     # previous section.
@@ -166,9 +167,11 @@ def process_page_for_deletion(index, page):
 
 parser = blib.create_argparser("Delete/rename Italian forms, fixing up anagrams")
 parser.add_argument("--direcfile", help="File listing forms to delete/rename.", required=True)
+parser.add_argument("--comment", help="Optional additional comment to use.")
 parser.add_argument("--output-pages-to-delete", help="Output file containing forms to delete.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
+annotation = " (%s)" % args.comment if args.comment else ""
 
 input_pages_to_delete = []
 output_pages_to_delete = []
