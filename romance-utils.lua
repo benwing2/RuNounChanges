@@ -291,11 +291,26 @@ function export.apply_link_modifiers(linked_term, modifier_spec)
 	local split_modspecs = rsplit(modifier_spec, "%s*;%s*")
 	for j, modspec in ipairs(split_modspecs) do
 		local subterm, dest, otherlang
-		local begin, end_from, end_to = modspec:match("^([^:]*)%[(.-):(.*)%]$")
-		if begin then
-			subterm = begin .. end_from
-			dest = begin .. end_to
-		else
+		local begin_from, begin_to, rest, end_from, end_to = modspec:match("^%[(.-):(.*)%]([^:]*)%[(.-):(.*)%]$")
+		if begin_from then
+			subterm = begin_from .. rest .. end_from
+			dest = begin_to .. rest .. end_to
+		end
+		if not subterm then
+			rest, end_from, end_to = modspec:match("^([^:]*)%[(.-):(.*)%]$")
+			if rest then
+				subterm = rest .. end_from
+				dest = rest .. end_to
+			end
+		end
+		if not subterm then
+			begin_from, begin_to, rest = modspec:match("^%[(.-):(.*)%]([^:]*)$")
+			if begin_from then
+				subterm = begin_from .. rest
+				dest = begin_to .. rest
+			end
+		end
+		if not subterm then
 			subterm, dest = modspec:match("^(.-)%s*:%s*(.*)$")
 			if subterm and subterm ~= "^" and subterm ~= "$" then
 				local langdest
@@ -318,8 +333,9 @@ function export.apply_link_modifiers(linked_term, modifier_spec)
 		end
 		if not subterm then
 			error(("Single modifier spec %s should be of the form SUBTERM:DEST where SUBTERM is one or more words in a multiword "
-					.. "term and DEST is the destination to link the subterm to (possibly prefixed by a language code), or of "
-					.. "the form BEGIN[FROM:TO] which is equivalent to BEGINFROM:BEGINTO"):
+					.. "term and DEST is the destination to link the subterm to (possibly prefixed by a language code); or of "
+					.. "the form BEGIN[FROM:TO], which is equivalent to BEGINFROM:BEGINTO; or similarly [FROM:TO]END, which is "
+					.. "equivalent to FROMEND:TOEND"):
 				format(modspec))
 		end
 		if subterm == "^" then
