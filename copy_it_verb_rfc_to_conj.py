@@ -36,9 +36,42 @@ def process_text_on_page(index, pagetitle, text):
         pagemsg("WARNING: Saw {{it-conj-*}} without preceding {{it-verb-rfc}}: %s" % unicode(t))
       else:
         conj = getparam(it_verb_rfc_t, "1")
+        newconj = None
         aux = getparam(t, "2")
+        if conj.startswith("?/"):
+          if aux == "avere":
+            conjaux = "a"
+          elif aux == "essere":
+            conjaux = "e"
+          elif aux == "avere or essere":
+            conjaux = "a:e"
+          elif aux == "essere or avere":
+            conjaux = "e:a"
+          else:
+            pagemsg("WARNING: Can't parse auxiliary '%s': %s" % (aux, unicode(t)))
+            conjaux = None
+          if conjaux:
+            newconj = conjaux + conj[1:]
+        must_continue = False
+        for param in t.params:
+          pn = pname(param)
+          pv = unicode(param.value)
+          if pn not in ["1", "2"]:
+            pagemsg("WARNING: Unrecognized param %s=%s in old conjugation: %s" % (pn, pv, unicode(t)))
+            must_continue = True
+            break
+        if must_continue:
+          continue
+        if newconj:
+          it_verb_rfc_t.add("1", newconj)
+          notes.append("update {{it-verb-rfc}} based on auxiliary in old {{it-conj-*}} template")
+          conj = newconj
         del t.params[:]
         if conj:
+          trimmed_conj = re.sub(r"\[r:[^\[\]]*\]", "", conj)
+          if trimmed_conj != conj:
+            pagemsg("Trimmed out references from conjugation '%s', producing '%s'" % (conj, trimmed_conj))
+            conj = trimmed_conj
           t.add("1", conj)
         else:
           t.add("aux", aux)
