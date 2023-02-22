@@ -398,7 +398,7 @@ def handle_process_page_retval(retval, existing_text, pagemsg, verbose, do_diff)
 
   return new, comment, has_changed
 
-def expand_text(tempcall, pagetitle, pagemsg, verbose):
+def expand_text(tempcall, pagetitle, pagemsg, verbose, suppress_errors=False):
   if verbose:
     pagemsg("Expanding text: %s" % tempcall)
   result = try_repeatedly(lambda: site.expand_text(tempcall, title=pagetitle), pagemsg, "expand text: %s" % tempcall, bad_value_ret='<strong class="error">Invalid title</strong>')
@@ -408,7 +408,8 @@ def expand_text(tempcall, pagetitle, pagemsg, verbose):
     result = re.sub("<.*?>", "", result)
     if not verbose:
       pagemsg("Expanding text: %s" % tempcall)
-    pagemsg("WARNING: Got error: %s" % result)
+    if not suppress_errors:
+      pagemsg("WARNING: Got error: %s" % result)
     return False
   return result
 
