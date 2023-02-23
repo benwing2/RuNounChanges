@@ -20,9 +20,9 @@ local export = {}
 local force_cat = false -- for testing
 
 local m_table = require("Module:table")
-local com = require("Module:User:Benwing2/it-common")
+local com = require("Module:it-common")
 local strutil_module = "Module:string utilities"
-local put_module = "Module:User:Benwing2/parse utilities"
+local put_module = "Module:parse utilities"
 local put -- replaced with module reference as needed
 local patut_module = "Module:pattern utilities"
 local patut -- replaced with module reference as needed
@@ -145,12 +145,12 @@ local recognized_suffixes = {
 	{"ale", "àle"},
 	{"([aeiou])nico", "%1" .. com.GR .. "nico"},
 	{"([ai])stic([ao])", "%1" .. com.GR .. "stic%2"},
-	{"izzat[ao]", "iddzàt%1"}, -- must precede -at[ao] below
+	{"izzat([ao])", "iddzàt%1"}, -- must precede -at[ao] below
 	-- exceptions to the following: àbato, àcato, acròbata, àgata, apòstata, àstato, cìato, fégato, omeòpata,
 	-- sàb(b)ato, others?
 	{"at([ao])", "àt%1"}, -- must follow -izzat[ao] above
 	-- exceptions to the following: (s)còmputo, (pre)scòrbuto, tànguto; cùscuta, dìsputa, rècluta, lui vàluta
-	{"([^aeo])ut[ao]", "%1ùt%2"},
+	{"([^aeo])ut([ao])", "%1ùt%2"},
 	{"([ae])tic([ao])", "%1" .. com.GR .. "tic%2"},
 	{"ense", "ènse"},
 	{"esc([ao])", "ésc%1"},
@@ -222,13 +222,6 @@ local function convert_respelling_to_original(respelling)
 end
 
 
--- "Canonicalize" a single respelling (after splitting multiple respellings on comma and parsing off inline
--- modifiers). This currently handles '+' and substitution notation.
-function export.canonicalize_respelling(text, pagename)
-	return text
-end
-
-
 -- Given raw respelling, canonicalize it and apply auto-accenting where warranted. This does the following:
 -- (1) Convert abbreviated specs like ^à to the appropriate accented page name (hence the page name must be passed in).
 -- (2) Decompose the text, normalize áíú and similar to àìù, convert commas and em/en dashes to foot boundaries and
@@ -252,13 +245,13 @@ local function canonicalize_and_auto_accent(text, pagename)
 		if rfind(text, "^%[.*%]$") then
 			local subs = rsplit(rmatch(text, "^%[(.*)%]$"), ",")
 			text = pagename
+			local function err(msg)
+				error(msg .. ": " .. text)
+			end
 			for _, sub in ipairs(subs) do
 				if rfind(sub, "^%^[aeiouAEIOU]" .. com.GR .. "$") or rfind(sub, "^%^[eoEO]" .. com.AC .. "$") then
 					-- single vowel spec
 					local abbrev_text = sub
-					local function err(msg)
-						error(msg .. ": " .. text)
-					end
 					if text:find(" ") or text:find("[^ ]%-[^ ]") then
 						err("With abbreviated vowel spec " .. abbrev_text .. ", the processed page name should be a single word")
 					end
