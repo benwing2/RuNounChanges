@@ -174,6 +174,15 @@ function Category:substitute_template_specs(desc)
 	if type(desc) == "number" then
 		desc = tostring(desc)
 	end
+	if type(desc) == "function" then
+		local data = {
+			lang = self._lang,
+			sc = self._sc,
+			label = self._info.label,
+			raw = self._info.raw,
+		}
+		desc = desc(data)
+	end
 	desc = desc:gsub("{{PAGENAME}}", mw.title.getCurrentTitle().text)
 	desc = desc:gsub("{{{umbrella_msg}}}", "This is an umbrella category. It contains no dictionary entries, but only other, language-specific categories, which in turn contain relevant terms in a given language.")
 	desc = desc:gsub("{{{umbrella_meta_msg}}}", 'This is an umbrella metacategory, covering a general area such as "lemmas", "names" or "terms by etymology". It contains no dictionary entries, but holds only umbrella ("by language") categories covering specific subtopics, which in turn contain language-specific categories holding terms in a given language for that same topic.')
@@ -231,7 +240,7 @@ function Category:getBreadcrumbName()
 		ret = self._info.label
 	end
 
-	if type(ret) == "string" or type(ret) == "number" then
+	if type(ret) ~= "table" then
 		ret = {name = ret}
 	end
 
