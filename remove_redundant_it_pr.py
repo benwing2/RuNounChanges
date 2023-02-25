@@ -56,6 +56,7 @@ def process_text_on_page(index, pagetitle, text):
         pron, mods = m.groups()
       else:
         mods = ""
+      orig_base_pron = pron
       if pron == "+":
         pass
       elif pron == pagetitle:
@@ -70,17 +71,20 @@ def process_text_on_page(index, pagetitle, text):
         if default_phonemic == pron_phonemic:
           pagemsg("Respelling '%s' produces phonemic /%s/, same as default: %s" % (pron, pron_phonemic, unicode(t)))
           pron = "+"
+        else:
+          pagemsg("Respelling '%s' produces phonemic /%s/, while pagename as respelling produces /%s/: %s"
+              % (pron, pron_phonemic, default_phonemic, unicode(t)))
       newpron = pron + mods
       if newpron == "+":
         newpron = ""
       if newpron != origpron:
         pagemsg("Replacing respelling '%s' with '%s'" % (origpron, newpron))
-      if not newpron:
-        rmparam(t, "1")
-        notes.append("remove redundant respelling from {{it-pr}}")
-      else:
-        t.add("1", newpron)
-        notes.append("replace defaultable respelling with + in {{it-pr}}")
+        if not newpron:
+          rmparam(t, "1")
+          notes.append("remove redundant respelling '%s' from {{it-pr}}" % orig_base_pron)
+        else:
+          t.add("1", newpron)
+          notes.append("replace defaultable respelling '%s' with + in {{it-pr}}" % orig_base_pron)
       if unicode(t) != origt:
         pagemsg("Replaced %s with %s" % (origt, unicode(t)))
 
