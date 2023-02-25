@@ -167,7 +167,7 @@ function Category:initCommon()
 end
 
 
-function Category:substitute_template_specs(desc)
+function Category:convert_spec_to_string(desc)
 	if not desc then
 		return desc
 	end
@@ -183,6 +183,17 @@ function Category:substitute_template_specs(desc)
 		}
 		desc = desc(data)
 	end
+	return desc
+end
+
+
+function Category:substitute_template_specs(desc)
+	if not desc then
+		return desc
+	end
+	-- This may end up happening twice but that's OK as the function is idempotent.
+	desc = self:convert_spec_to_string(desc)
+
 	desc = desc:gsub("{{PAGENAME}}", mw.title.getCurrentTitle().text)
 	desc = desc:gsub("{{{umbrella_msg}}}", "This is an umbrella category. It contains no dictionary entries, but only other, language-specific categories, which in turn contain relevant terms in a given language.")
 	desc = desc:gsub("{{{umbrella_meta_msg}}}", 'This is an umbrella metacategory, covering a general area such as "lemmas", "names" or "terms by etymology". It contains no dictionary entries, but holds only umbrella ("by language") categories covering specific subtopics, which in turn contain language-specific categories holding terms in a given language for that same topic.')
@@ -428,7 +439,7 @@ function Category:getDescription(isChild)
 		if self._sc then
 			return self:getCategoryName() .. "."
 		else
-			local desc = self._data.description
+			local desc = self.convert_spec_to_string(self._data.description)
 
 			if not isChild and desc and self._data.additional then
 				desc = desc .. "\n\n" .. self._data.additional
@@ -441,10 +452,10 @@ function Category:getDescription(isChild)
 			display_title(self._data.umbrella.displaytitle, nil)
 		end
 
-		local desc = self._data.umbrella and self._data.umbrella.description
+		local desc = self:convert_spec_to_string(self._data.umbrella and self._data.umbrella.description)
 		local has_umbrella_desc = not not desc
 		if not desc then
-			desc = self._data.description
+			desc = self:convert_spec_to_string(self._data.description)
 			if desc then
 				desc = remove_lang_params(desc)
 				desc = mw.getContentLanguage():lcfirst(desc)
@@ -456,7 +467,9 @@ function Category:getDescription(isChild)
 			desc = "Categories with " .. self._info.label .. " in various specific languages."
 		end
 		if not isChild then
-			local additional = self._data.umbrella and self._data.umbrella.additional or not has_umbrella_desc and self._data.additional
+			local additional = self:convert_spec_to_string(
+				self._data.umbrella and self._data.umbrella.additional or not has_umbrella_desc and self._data.additional
+			)
 			if additional then
 				desc = desc .. "\n\n" .. remove_lang_params(additional)
 			end
