@@ -1,3 +1,58 @@
+Page 66525 Abbaside: <respelling> all: Abbàside,#Abbà[s]ide<r:DiPI> <end> MANUAL
+Page 66525 abelmosco: <respelling> all: [mò],[mó]<r:DiPI> <end> MANUAL
+Page 66525 abiogenesi: <respelling> all: [bi.o,gè],[gè]<r:DiPI> <end> MANUAL
+Page 66525 accasermo: <respelling> all: [è],#[a[s]è]<r:DiPI> <end> MANUAL
+Page 66525 accasermi: <respelling> all: [è],#[a[s]è]<r:DiPI:accasermo> <end> MANUAL
+Page 66525 accaserma: <respelling> all: [è],#[a[s]è]<r:DiPI:accasermo> <end> MANUAL
+Page 66525 accasermano: <respelling> all: [è],#[a[s]è]<r:DiPI:accasermo> <end> MANUAL
+Page 66525 accasermino: <respelling> all: [è],#[a[s]è]<r:DiPI:accasermo> <end> MANUAL
+Page 66525 accaso: <respelling> all: [cà],#[cà[s]]<r:DiPI> <end> MANUAL
+Page 66525 accasi: <respelling> all: [cà],#[cà[s]]<r:DiPI:accaso> <end> MANUAL
+Page 66525 accasa: <respelling> all: [cà],#[cà[s]]<r:DiPI:accaso> <end> MANUAL
+Page 66525 accasano: <respelling> all: [cà],#[cà[s]]<r:DiPI:accaso> <end> MANUAL
+Page 66525 accasino: <respelling> all: [cà],#[cà[s]]<r:DiPI:accaso> <end> MANUAL
+Page 66525 acceffo: <respelling> all: accéffo,#accèffo<r:DiPI> <end> MANUAL
+Page 66525 acceffi: <respelling> all: accéffi,#accèffi<r:DiPI:acceffo> <end> MANUAL
+Page 66525 acceffa: <respelling> all: accéffa,#accèffa<r:DiPI:acceffo> <end> MANUAL
+Page 66525 acceffano: <respelling> all: accéffano,#accèffano<r:DiPI:acceffo> <end> MANUAL
+Page 66525 acceffino: <respelling> all: accéffino,#accèffino<r:DiPI:acceffo> <end> MANUAL
+Page 66525 accentuale: <respelling> all: [u.a],+<r:DiPI> <end> MANUAL
+Page 66525 accentuali: <respelling> all: [u.a],+<r:DiPI:accentuale> <end> MANUAL
+Page 66525 accheto: <respelling> all: [é],[è]<r:DiPI> <end> MANUAL
+Page 66525 accheti: <respelling> all: [é],[è]<r:DiPI:accheto> <end> MANUAL
+Page 66525 accheta: <respelling> all: [é],[è]<r:DiPI:accheto> <end> MANUAL
+Page 66525 acchetano: <respelling> all: [é],[è]<r:DiPI:accheto> <end> MANUAL
+Page 66525 acchetino: <respelling> all: [é],[è]<r:DiPI:accheto> <end> MANUAL
+Page 66525 accidempoli: <respelling> all: [é],#[è]<r:DiPI> <end> MANUAL
+Page 66525 acese: <respelling> all: [é],#[é[s]]<r:DiPI> <end> MANUAL
+Page 66525 acesi: <respelling> all: [é],#[é[s]]<r:DiPI:acese> <end> MANUAL
+Page 66525 acetonuria: <respelling> all: [ù],[rì]<r:DiPI> <end> MANUAL
+Page 66525 acetonurie: <respelling> all: [ù],[rì]<r:DiPI:acetonuria> <end> MANUAL
+Page 66525 acheropita: <respelling> all: [ì],[ò]<r:DiPI> <end> MANUAL
+Page 66525 acheropite: <respelling> all: [ì],[ò]<r:DiPI:acheropita> <end> MANUAL
+Page 66525 acmonital: <respelling> all: [mò],[tàl]<r:DiPI> <end> MANUAL
+Page 66525 acrocori: <respelling> all: [còr],[ròc]<r:DiPI:acrocoro> <end> MANUAL
+Page 66525 acuità: <respelling> all: [cu.i],[c[w]i]<r:DiPI> <end> MANUAL
+Page 66525 Meschio: <respelling> all: Méschio,Mèschio<r:DiPI> <end> MANUAL
+Page 66525 mesco: <respelling> all: mésco,mèsco<r:DiPI> <end> MANUAL
+Page 66525 mesci: <respelling> all: mésci,mèsci<r:DiPI:mesco> <end> MANUAL
+Page 66525 mesce: <respelling> all: mésce,mèsce<r:DiPI:mesco> <end> MANUAL
+Page 66525 mescono: <respelling> all: méscono,mèscono<r:DiPI:mesco> <end> MANUAL
+Page 66525 mescano: <respelling> all: méscano,mèscano<r:DiPI:mesco> <end> MANUAL
+Page 66525 mescita: <respelling> all: méscita,mèscita<r:DiPI> <end> MANUAL
+Page 66525 mescola: <respelling> top: méscola,mèscola<r:DiPI> <end> MANUAL
+Page 66525 mescoli: <respelling> top: méscoli,mèscoli<r:DiPI:mescola,mescolo> <end> MANUAL
+Page 66525 mescolo: <respelling> top: méscolo,mèscolo<r:DiPI> <end> MANUAL
+Page 66525 mescolano: <respelling> top: méscolano,mèscolano<r:DiPI:mescola,mescolo> <end> MANUAL
+Page 66525 mescolino: <respelling> top: méscolino,mèscolino<r:DiPI:mescola,mescolo> <end> MANUAL
+
+
+
+
+
+
+
+
 Page 446 abatemarchese: <respelling> all: + <end> EXISTING
 Page 447 abatese: <respelling> all: + <end> EXISTING
 Page 572 abbassatoio: <respelling> all: + <end> EXISTING
@@ -199,19 +254,6 @@ Page 39445 eroso: <respelling> top: +<r:DiPI> <end> EXISTING
 Page 39510 erzegovese: <respelling> all: [dz] !;[ts]<r:DiPI:Erzegovina> <end> EXISTING
 Page 39702 eschimese: <respelling> all: + <end> EXISTING
 Page 39766 -ese: <respelling> all: + <end> EXISTING
-
-
-
-
-
-
-# got here
-
-
-
-
-
-
 #Page 39997 esoso: <respelling> 1: esóso,#esòso<r:DiPI<<name:dipi>>> <end> EXISTING
 #Page 39997 esoso: <respelling> 2: esòso<r:<<name:dipi>>> <end> EXISTING
 Page 40431 estroso: <respelling> all: +<r:DiPI> <end> EXISTING
@@ -336,6 +378,31 @@ Page 62375 luminoso: <respelling> all: + <end> EXISTING
 Page 62538 lussemburghese: <respelling> all: + <end> EXISTING
 Page 62545 lussuoso: <respelling> all: [u.o] +<r:DiPI> <end> EXISTING
 Page 62553 lussurioso: <respelling> all: +<r:DiPI> <end> EXISTING
+Page 62702 macchinoso: <respelling> all: + <end> EXISTING
+Page 62735 maceratese: <respelling> all: + <end> EXISTING
+Page 63007 maestoso: <respelling> all: +<r:DiPI:Maestosi> <end> EXISTING
+Page 63039 mafioso: <respelling> all: + <end> EXISTING
+Page 63069 maggese: <respelling> all: +<r:DiPI> <end> EXISTING
+Page 63328 maionese: <respelling> all: +<r:DiPI> <end> EXISTING
+Page 63453 malavitoso: <respelling> all: + <end> EXISTING
+Page 63541 malese: <respelling> all: +<r:DiPI> <end> EXISTING
+Page 63636 malizioso: <respelling> all: [ts] <end> EXISTING
+Page 63725 maltese: <respelling> all: +<r:DiPI> <end> EXISTING
+Page 63875 mancese: <respelling> all: + <end> EXISTING
+Page 64009 manganese: <respelling> all: +<r:DiPI> <end> EXISTING
+Page 64493 marchesa: <respelling> all: marchésa<r:DiPI:marchese> <end> EXISTING
+Page 64498 marchese: <respelling> all: marchése<r:DiPI> <end> EXISTING
+Page 64795 maroso: <respelling> all: +<r:DiPI> <end> EXISTING
+Page 64842 marsigliese: <respelling> all: +<r:DiPI> <end> EXISTING
+Page 65692 medicamentoso: <respelling> all: + <end> EXISTING
+Page 66057 melodioso: <respelling> all: + [i.o]<r:DiPI> <end> EXISTING
+Page 66317 meraviglioso: <respelling> all: +<r:DiPI><audio:LL-Q652_(ita)-Happypheasant-meraviglioso.wav> <end> EXISTING
+Page 66406 merdoso: <respelling> all: + <end> EXISTING
+Page 66525 mescitoio: <respelling> all: + <end> EXISTING
+Page 66542 mese: <respelling> all: mése,#mé[s]e<r:DiPI><audio:It-un_mese.ogg;un_mese><audio:It-mese.ogg> <end> EXISTING
+Page 66667 messinese: <respelling> all: +<r:DiPI> <end> EXISTING
+Page 66997 meticoloso: <respelling> all: + <end> EXISTING
+
 
 
 
@@ -356,137 +423,111 @@ Page 62553 lussurioso: <respelling> all: +<r:DiPI> <end> EXISTING
 
 
 
-
-
-
-
-Page 62702 macchinoso: <respelling> all: macchinóso,#macchinó[s]o <end> EXISTING
-Page 62735 maceratese: <respelling> all: maceratése,#maceraté[s]e <end> EXISTING
-Page 63007 maestoso: <respelling> all: maestóso,#maestó[s]o <end> EXISTING
-Page 63039 mafioso: <respelling> all: mafióso,#mafió[s]o <end> EXISTING
-Page 63069 maggese: <respelling> all: maggése,#maggé[s]e <end> EXISTING
-Page 63328 maionese: <respelling> all: maionése <end> EXISTING
-Page 63453 malavitoso: <respelling> all: malavitóso,#malavitó[s]o <end> EXISTING
-Page 63541 malese: <respelling> all: malése,#malé[s]e <end> EXISTING
-Page 63636 malizioso: <respelling> all: malitsióso,#malitsió[s]o <end> EXISTING
-Page 63725 maltese: <respelling> all: maltése,#malté[s]e<r:DiPI> <end> EXISTING
-Page 63875 mancese: <respelling> all: mancése,#mancé[s]e <end> EXISTING
-Page 64009 manganese: <respelling> all: manganése,#mangané[s]e <end> EXISTING
-Page 64493 marchesa: <respelling> all: marchésa <end> EXISTING
-Page 64498 marchese: <respelling> all: marchése<r:DiPI> <end> EXISTING
-Page 64795 maroso: <respelling> all: maróso,#maró[s]o <end> EXISTING
-Page 64842 marsigliese: <respelling> all: marsigliése,#marsiglié[s]e<r:DiPI> <end> EXISTING
-Page 65692 medicamentoso: <respelling> all: medicamentóso,#medicamentó[s]o <end> EXISTING
-Page 66057 melodioso: <respelling> all: melodióso,#melodió[s]o,#melodi.ó[s]o <end> EXISTING
-Page 66317 meraviglioso: <respelling> all: meraviglióso,#meraviglió[s]o<r:DiPI><audio:LL-Q652_(ita)-Happypheasant-meraviglioso.wav> <end> EXISTING
-Page 66406 merdoso: <respelling> all: merdóso,#merdó[s]o <end> EXISTING
-Page 66525 mescitoio: <respelling> all: mescitóio <end> EXISTING
-Page 66542 mese: <respelling> all: mése,#mé[s]e<r:DiPI><audio:It-un_mese.ogg;un_mese><audio:It-mese.ogg> <end> EXISTING
-Page 66667 messinese: <respelling> all: messinése,#messiné[s]e<r:DiPI> <end> EXISTING
-Page 66997 meticoloso: <respelling> all: meticolóso,#meticoló[s]o <end> EXISTING
-Page 67006 metilcellulosa: <respelling> all: metìlcellulósa,#metìlcelluló[s]a <end> EXISTING
-Page 67384 micocellulosa: <respelling> all: mìcocellulósa,#mìcocelluló[s]a <end> EXISTING
-Page 67402 micragnoso: <respelling> all: micragnóso <end> EXISTING
-Page 67802 milanese: <respelling> all: milanése,#milané[s]e<r:DiPI> <end> EXISTING
-Page 67939 mimosa: <respelling> all: mimósa <end> EXISTING
-Page 67951 minaccioso: <respelling> all: minaccióso,#minacció[s]o <end> EXISTING
-Page 68140 minuzioso: <respelling> all: minutsióso,#minutsió[s]o <end> EXISTING
-Page 68247 miracoloso: <respelling> all: miracolóso,#miracoló[s]o <end> EXISTING
-Page 68366 misericordioso: <respelling> all: misericordióso,#misericordió[s]o <end> EXISTING
-Page 68421 misterioso: <respelling> all: misterióso,#misterió[s]o <end> EXISTING
-Page 68661 modenese: <respelling> all: modenése,#modené[s]e <end> EXISTING
+Page 67006 metilcellulosa: <respelling> all: [tì̱l]<r:Olivetti><r:DiPI:cellulosa> <end> EXISTING
+Page 67384 micocellulosa: <respelling> all: [mì̱c]<r:Olivetti><r:DiPI:cellulosa> <end> EXISTING
+Page 67402 micragnoso: <respelling> all: + <end> EXISTING
+Page 67802 milanese: <respelling> all: +<r:DiPI> <end> EXISTING
+Page 67939 mimosa: <respelling> all: +<r:DiPI> <end> EXISTING
+Page 67951 minaccioso: <respelling> all: + <end> EXISTING
+Page 68140 minuzioso: <respelling> all: [ts] <end> EXISTING
+Page 68247 miracoloso: <respelling> all: + <end> EXISTING
+Page 68366 misericordioso: <respelling> all: + <end> EXISTING
+Page 68421 misterioso: <respelling> all: + <end> EXISTING
+Page 68661 modenese: <respelling> all: + <end> EXISTING
 Page 69377 monoso: <respelling> all: monòso <end> EXISTING
-Page 69463 montagnoso: <respelling> all: montagnóso,#montagnó[s]o <end> EXISTING
-Page 69585 montuoso: <respelling> all: montu.óso,#montu.ó[s]o<r:Olivetti> <end> EXISTING
-Page 69600 monzese: <respelling> all: mondzése,#montsése,#montsé[s]e<r:DiPI> <end> EXISTING
-Page 69656 morboso: <respelling> all: morbóso,#morbó[s]o <end> EXISTING
-Page 69797 moroso: <respelling> top: moróso <end> EXISTING
-Page 69970 mostruoso: <respelling> all: mostru.óso,#mostru.ó[s]o <end> EXISTING
-Page 70694 muscolomembranoso: <respelling> all: mùscolomembranóso,#mùscolomembranó[s]o <end> EXISTING
-Page 70697 muscoloso: <respelling> all: muscolóso,#muscoló[s]o <end> EXISTING
-Page 71172 nascoso: <respelling> all: nascóso,#nascó[s]o<r:DiPI:nascosi> <end> EXISTING
-Page 71465 nebulosa: <respelling> all: ^ó,#nebuló[s]a <end> EXISTING
-Page 71469 nebuloso: <respelling> all: nebulóso,#nebuló[s]o <end> EXISTING
-Page 71616 neghittoso: <respelling> all: neghittóso <end> EXISTING
-Page 71710 nemboso: <respelling> all: nembóso,#nembó[s]o <end> EXISTING
-Page 71963 neozelandese: <respelling> all: nèodzelandése,#nèodzelandé[s]e<r:DiPI> <end> EXISTING
-Page 71982 nequitoso: <respelling> all: nequitóso <end> EXISTING
-Page 72048 nervoso: <respelling> all: nervóso,#nervó[s]o<r:DiPI> <end> EXISTING
-Page 72320 nevoso: <respelling> top: nevóso,#nevó[s]o <end> EXISTING
-Page 72348 newyorchese: <respelling> all: njuyorchése,#njuyorché[s]e<r:DiPI:newyorkese> <end> EXISTING
-Page 72349 newyorkese: <respelling> all: niuyorkése,#niuyorké[s]e<r:DiPI> <end> EXISTING
-Page 72629 nitrocellulosa: <respelling> all: nìtrocellulósa,#nìtrocelluló[s]a <end> EXISTING
-Page 72651 nitroso: <respelling> all: nitróso,#nitró[s]o <end> EXISTING
-Page 72688 nizzese: <respelling> all: nittsése,#nittsé[s]e <end> EXISTING
-Page 72853 noioso: <respelling> all: noióso,#noió[s]o<audio:LL-Q652_(ita)-Happypheasant-noioso.wav> <end> EXISTING
-Page 72971 non parlo inglese: <respelling> all: non_pàrlo_inglése #non_pàrlo_inglé[s]e <end> EXISTING
-Page 73084 nordirlandese: <respelling> all: nòrdirlandése,#nòrdirlandé[s]e<r:Olivetti> <end> EXISTING
-Page 73130 norvegese: <respelling> all: norvegése,#norvegé[s]e <end> EXISTING
-Page 73564 numeroso: <respelling> all: numeróso,#numeró[s]o<audio:LL-Q652_(ita)-Happypheasant-numeroso.wav> <end> EXISTING
-Page 73593 nuorese: <respelling> all: nuorése,#nu.orése,#nu.oré[s]e <end> EXISTING
-Page 73668 nuvoloso: <respelling> all: nuvolóso,#nuvoló[s]o <end> EXISTING
-Page 73708 obblioso: <respelling> all: obbli.óso,#obbli.ó[s]o <end> EXISTING
-Page 73714 obbrobrioso: <respelling> all: obbrobrióso <end> EXISTING
-Page 73725 obesa: <respelling> all: obésa,#obèsa <end> EXISTING
-Page 73768 oblioso: <respelling> all: obli.óso,#obli.ó[s]o <end> EXISTING
-Page 74023 odioso: <respelling> all: odióso,#odió[s]o <end> EXISTING
-Page 74078 odoroso: <respelling> all: odoróso <end> EXISTING
-Page 74106 offesa: <respelling> all: offésa,#offé[s]a<r:DiPI> <end> EXISTING
-Page 74249 olandese: <respelling> all: olandése,#olandé[s]e<r:DiPI> <end> EXISTING
-Page 74519 oltraggioso: <respelling> all: oltraggióso,#oltraggió[s]o <end> EXISTING
-Page 74622 ombroso: <respelling> all: ombróso,#ombró[s]o <end> EXISTING
-Page 74664 omertoso: <respelling> all: omertóso,#omertó[s]o <end> EXISTING
-Page 74690 ominoso: <respelling> all: ominóso <end> EXISTING
-Page 74914 oneroso: <respelling> all: oneróso,#oneró[s]o <end> EXISTING
-Page 75057 ontoso: <respelling> all: ontóso <end> EXISTING
-Page 75139 operoso: <respelling> all: operóso,#operó[s]o <end> EXISTING
-Page 75548 orgoglioso: <respelling> all: orgoglióso,#orgoglió[s]o <end> EXISTING
-Page 76090 -oso: <respelling> all: -óso,#-ó[s]o <end> EXISTING
+Page 69463 montagnoso: <respelling> all: + <end> EXISTING
+Page 69585 montuoso: <respelling> all: [u.o] +<r:DiPI:sontuoso> <end> EXISTING
+Page 69600 monzese: <respelling> all: [dz] #[ts]<r:DiPI> <end> EXISTING
+Page 69656 morboso: <respelling> all: + <end> EXISTING
+Page 69797 moroso: <respelling> top: + <end> EXISTING
+Page 69970 mostruoso: <respelling> all: [u.o] <end> EXISTING
+Page 70694 muscolomembranoso: <respelling> all: [mù̱s] <end> EXISTING
+Page 70697 muscoloso: <respelling> all: + <end> EXISTING
+Page 71172 nascoso: <respelling> all: +<r:DiPI:nascosi> <end> EXISTING
+Page 71465 nebulosa: <respelling> all: + <end> EXISTING
+Page 71469 nebuloso: <respelling> all: + <end> EXISTING
+Page 71616 neghittoso: <respelling> all: + <end> EXISTING
+Page 71710 nemboso: <respelling> all: + <end> EXISTING
+Page 71963 neozelandese: <respelling> all: [nè̱odz]<r:DiPI> <end> EXISTING
+Page 71982 nequitoso: <respelling> all: + <end> EXISTING
+Page 72048 nervoso: <respelling> all: +<r:DiPI> <end> EXISTING
+Page 72320 nevoso: <respelling> top: + <end> EXISTING
+Page 72348 newyorchese: <respelling> all: njuyorchese<r:DiPI:newyorkese> <end> EXISTING
+Page 72349 newyorkese: <respelling> all: njuyorkese<r:DiPI> <end> EXISTING
+Page 72629 nitrocellulosa: <respelling> all: [nì̱t]<r:Olivetti><r:DiPI:cellulosa> <end> EXISTING
+Page 72651 nitroso: <respelling> all: + <end> EXISTING
+Page 72688 nizzese: <respelling> all: [tts] <end> EXISTING
+Page 72853 noioso: <respelling> all: +<audio:LL-Q652_(ita)-Happypheasant-noioso.wav> <end> EXISTING
+Page 72971 non parlo inglese: <respelling> all: + <end> EXISTING
+Page 73084 nordirlandese: <respelling> all: [nò̱r]<r:Olivetti> <end> EXISTING
+Page 73130 norvegese: <respelling> all: + <end> EXISTING
+Page 73564 numeroso: <respelling> all: +<audio:LL-Q652_(ita)-Happypheasant-numeroso.wav> <end> EXISTING
+Page 73593 nuorese: <respelling> all: + #[nu.o]<r:DiPI> <end> EXISTING
+Page 73668 nuvoloso: <respelling> all: + <end> EXISTING
+Page 73708 obblioso: <respelling> all: [i.o] <end> EXISTING
+Page 73714 obbrobrioso: <respelling> all: + <end> EXISTING
+Page 73725 obesa: <respelling> all: obésa,#obèsa<r:DiPI:obeso> <end> EXISTING
+Page 73768 oblioso: <respelling> all: [i.o] <end> EXISTING
+Page 74023 odioso: <respelling> all: + <end> EXISTING
+Page 74078 odoroso: <respelling> all: + <end> EXISTING
+Page 74106 offesa: <respelling> all: +<r:DiPI> <end> EXISTING
+Page 74249 olandese: <respelling> all: +<r:DiPI> <end> EXISTING
+Page 74519 oltraggioso: <respelling> all: + <end> EXISTING
+Page 74622 ombroso: <respelling> all: + <end> EXISTING
+Page 74664 omertoso: <respelling> all: + <end> EXISTING
+Page 74690 ominoso: <respelling> all: + <end> EXISTING
+Page 74914 oneroso: <respelling> all: + <end> EXISTING
+Page 75057 ontoso: <respelling> all: + <end> EXISTING
+Page 75139 operoso: <respelling> all: + <end> EXISTING
+Page 75548 orgoglioso: <respelling> all: + <end> EXISTING
+Page 76090 -oso: <respelling> all: + <end> EXISTING
 Page 76091 oso: <respelling> top: òso <end> EXISTING
-Page 76819 ozioso: <respelling> all: otsióso,#otsió[s]o <end> EXISTING
-Page 76973 paese: <respelling> all: paése<audio:it-paese.ogg> <end> EXISTING
+Page 76819 ozioso: <respelling> all: [ts] <end> EXISTING
+Page 76973 paese: <respelling> all: paése<audio:it-paese.ogg><r:DiPI> <end> EXISTING
 Page 77290 palese: <respelling> all: palése<r:DiPI> <end> EXISTING
-Page 77293 palestinese: <respelling> all: palestinése,#palestiné[s]e <end> EXISTING
-Page 77426 palloso: <respelling> all: pallóso,#palló[s]o <end> EXISTING
-Page 77801 pannoso: <respelling> top: pannóso <end> EXISTING
-Page 77964 paperopolese: <respelling> all: paperopolése,#paperopolé[s]e <end> EXISTING
-Page 79111 pastoso: <respelling> all: pastóso,#pastó[s]o <end> EXISTING
-Page 79362 pauroso: <respelling> all: pa.uróso,#pa.uró[s]o<r:Olivetti> <end> EXISTING
-Page 79382 pavese: <respelling> top: pavése,#pavé[s]e<r:DiPI> <end> EXISTING
-Page 79784 peloso: <respelling> all: pelóso,#peló[s]o <end> EXISTING
-Page 79950 penoso: <respelling> all: penóso,#penó[s]o <end> EXISTING
-Page 79974 pensieroso: <respelling> all: pensieróso,#pensieró[s]o <end> EXISTING
-Page 79996 pensoso: <respelling> all: pensóso,#pensó[s]o <end> EXISTING
-Page 80112 pentoso: <respelling> all: pentòso <end> EXISTING
-Page 80345 percotitoio: <respelling> all: percotitóio <end> EXISTING
-Page 80461 perfidioso: <respelling> all: perfidióso,#perfidió[s]o <end> EXISTING
-Page 80537 pericoloso: <respelling> all: pericolóso,#pericoló[s]o<audio:It-pericoloso.ogg> <end> EXISTING
-Page 80570 periglioso: <respelling> all: +,#periglió[s]o <end> EXISTING
-Page 80708 permaloso: <respelling> all: permalóso <end> EXISTING
-Page 80766 perniciosa: <respelling> all: perniciósa,#pernició[s]a<r:DiPI> <end> EXISTING
-Page 80770 pernicioso: <respelling> all: pernicióso,#pernició[s]o<r:DiPI> <end> EXISTING
-Page 80989 pesa: <respelling> top: pésa,#pé[s]a<r:DiPI> <end> EXISTING
-Page 81004 pesarese: <respelling> all: pesarése,pe[s]arése,#pesaré[s]e,#pe[s]aré[s]e<r:DiPI:Pesaro> <end> EXISTING
-Page 81026 pescarese: <respelling> all: pescarése,#pescaré[s]e <end> EXISTING
-Page 81115 pescoso: <respelling> all: pescóso <end> EXISTING
-Page 81182 petaloso: <respelling> all: petalóso,#petaló[s]o <end> EXISTING
-Page 81753 pidocchioso: <respelling> all: pidòcchióso <end> EXISTING
-Page 81804 piemontese: <respelling> all: piemontése,#piemonté[s]e <end> EXISTING
-Page 81850 pietoso: <respelling> all: pietóso,#pietó[s]o <end> EXISTING
-Page 81887 pietroso: <respelling> all: pietróso,#pietró[s]o <end> EXISTING
-Page 82262 piovoso: <respelling> top: piovóso,#piovó[s]o <end> EXISTING
-Page 82509 piscoso: <respelling> all: piscóso <end> EXISTING
-Page 82559 Pistoia: <respelling> all: Pistóia,Pistòia<r:DiPI><audio:It-Pistoia.ogg> <end> EXISTING
-Page 82560 pistoiese: <respelling> all: pistoiése,#pistoié[s]e<r:DiPI> <end> EXISTING
-Page 83238 poderoso: <respelling> all: poderóso,#poderó[s]o <end> EXISTING
-Page 83421 poliamoroso: <respelling> all: pòli.amoróso,pòliamoróso,#pòli.amoró[s]o,#pòliamoró[s]o <end> EXISTING
-Page 83737 politichese: <respelling> all: politichése,#politiché[s]e <end> EXISTING
-Page 83876 polposo: <respelling> all: polpóso,#polpó[s]o <end> EXISTING
-Page 83926 polveroso: <respelling> all: polveróso,#polveró[s]o <end> EXISTING
-Page 84017 pomposo: <respelling> all: pompóso,#pompó[s]o<r:DiPI> <end> EXISTING
-Page 84043 ponitoio: <respelling> all: ponitóio <end> EXISTING
-Page 84148 popoloso: <respelling> all: popolóso,#popoló[s]o <end> EXISTING
-Page 84560 portoghese: <respelling> all: portoghése,#portoghé[s]e<r:DiPI> <end> EXISTING
+Page 77293 palestinese: <respelling> all: + <end> EXISTING
+Page 77426 palloso: <respelling> all: + <end> EXISTING
+Page 77801 pannoso: <respelling> top: + <end> EXISTING
+Page 77964 paperopolese: <respelling> all: + <end> EXISTING
+Page 79111 pastoso: <respelling> all: + <end> EXISTING
+Page 79362 pauroso: <respelling> all: [a.u]<r:Olivetti> <end> EXISTING
+Page 79382 pavese: <respelling> top: +<r:DiPI> <end> EXISTING
+Page 79784 peloso: <respelling> all: + <end> EXISTING
+Page 79950 penoso: <respelling> all: + <end> EXISTING
+Page 79974 pensieroso: <respelling> all: + <end> EXISTING
+Page 79996 pensoso: <respelling> all: + <end> EXISTING
+Page 80112 pentoso: <respelling> all: pentòso<r:DiPI> <end> EXISTING
+Page 80345 percotitoio: <respelling> all: + <end> EXISTING
+Page 80461 perfidioso: <respelling> all: + <end> EXISTING
+Page 80537 pericoloso: <respelling> all: +<audio:It-pericoloso.ogg> <end> EXISTING
+Page 80570 periglioso: <respelling> all: + <end> EXISTING
+Page 80708 permaloso: <respelling> all: + <end> EXISTING
+# remove references
+Page 80766 perniciosa: <respelling> all: + <end> EXISTING
+# remove references
+Page 80770 pernicioso: <respelling> all: + <end> EXISTING
+Page 80989 pesa: <respelling> top: +<r:DiPI> <end> EXISTING
+Page 81004 pesarese: <respelling> all: pesarése,#pe[s]aré[s]e<r:DiPI:Pesaro> <end> EXISTING
+Page 81026 pescarese: <respelling> all: + <end> EXISTING
+Page 81115 pescoso: <respelling> all: + <end> EXISTING
+Page 81182 petaloso: <respelling> all: + <end> EXISTING
+Page 81753 pidocchioso: <respelling> all: + <end> EXISTING
+Page 81804 piemontese: <respelling> all: + <end> EXISTING
+Page 81850 pietoso: <respelling> all: + <end> EXISTING
+Page 81887 pietroso: <respelling> all: + <end> EXISTING
+Page 82262 piovoso: <respelling> top: + <end> EXISTING
+Page 82509 piscoso: <respelling> all: + <end> EXISTING
+Page 82559 Pistoia: <respelling> all: +<r:DiPI><audio:It-Pistoia.ogg> <end> EXISTING
+Page 82560 pistoiese: <respelling> all: +<r:DiPI> <end> EXISTING
+Page 83238 poderoso: <respelling> all: + <end> EXISTING
+Page 83421 poliamoroso: <respelling> all: [i.a] + <end> EXISTING
+Page 83737 politichese: <respelling> all: + <end> EXISTING
+Page 83876 polposo: <respelling> all: + <end> EXISTING
+Page 83926 polveroso: <respelling> all: + <end> EXISTING
+Page 84017 pomposo: <respelling> all: +<r:DiPI> <end> EXISTING
+Page 84043 ponitoio: <respelling> all: + <end> EXISTING
+Page 84148 popoloso: <respelling> all: + <end> EXISTING
+Page 84560 portoghese: <respelling> all: +<r:DiPI> <end> EXISTING
 Page 84593 posa: <respelling> top: pòsa,#pò[s]a<r:DiPI> <end> EXISTING
 Page 84612 posatoio: <respelling> all: posatóio,posatòio,#po[s]atóio<r:DiPI:posa,ballatoio><r:Olivetti> <end> EXISTING
 Page 85008 pratese: <respelling> all: pratése,#praté[s]e<r:DiPI> <end> EXISTING
