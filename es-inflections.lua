@@ -12,7 +12,7 @@ and {{es-verb}}).
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local m_form_of = require("Module:form of")
-local m_es_verb = require("Module:User:Benwing2/es-verb")
+local m_es_verb = require("Module:es-verb")
 
 local lang = require("Module:languages").getByCode("es")
 
