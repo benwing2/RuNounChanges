@@ -13,6 +13,10 @@ FIXME:
 6. Handle hyphenation of Uppsala, massmediale correctly. (DONE)
 7. Homophone may end up before rhyme/hyphenation when it should come after, e.g. in [[hanno]].
 8. Cases like [[Katmandu]] with respelling ''Katmandù'' should auto-hyphenate.
+9. Implement multiple expansions for -oso, -ese, -oio. Expansions for -oso and -ese have attached qualifiers,
+   which should not clash with existing same qualifiers, e.g. [[monzese]] respelled '[dz]|#[ts]'.
+10. Implement @ = regional, ; = less-preferred.
+11. Suffix expansions should not be stopped by secondary stress. Cf [[neozelandese]] respelled '[nè̱odz]'.
 ]=]
 
 local export = {}
@@ -159,7 +163,9 @@ local recognized_suffixes = {
 	{"ian([ao])", "iàn%1"},
 	{"iv([ao])", "ìv%1"},
 	{"oide", "òide"},
-	{"oso", "óso"},
+	{"os([ao])", {"ós%1", {respelling = "ó[s]%1", qualifiers = {"[traditional]"}}}},
+	{"ese", {"ése", {respelling = "é[s]e", qualifiers = {"[traditional]"}}}},
+	{"([tsd])oi([ao])", {"%1ói%2", "%1òi%2"}},
 }
 
 local unstressed_words = m_table.listToSet {
@@ -179,6 +185,19 @@ local unstressed_words = m_table.listToSet {
 	"per", "pei",
 	"tra", "fra",
 }
+
+-- Flat-map a function `fun` over `items`. This is like `map` over a sequence followed by `flatten`, i.e. the function
+-- must itself return a sequence and all of the returned sequences are flattened into a single sequence.
+local function flatmap(items, fun)
+	local new = {}
+	for _, item in ipairs(items) do
+		local results = fun(item)
+		for _, result in ipairs(results) do
+			table.insert(new, result)
+		end
+	end
+	return new
+end
 
 -- Canonicalize multiple spaces and remove leading and trailing spaces.
 local function canon_spaces(text)
@@ -341,34 +360,20 @@ local function canonicalize_and_auto_accent(text, pagename)
 
 	text = canon_spaces(text)
 
+	local any_multiple = false
+
 	local words = com.split_but_rejoin_affixes(text)
 	for i, word in ipairs(words) do
 		if (i % 2) == 1 then -- an actual word, not a separator
 			local function err(msg)
 				error(msg .. ": " .. words[i])
 			end
-			local is_prefix = word:find("%-$")
-			local is_suffix = word:find("^%-")
 
-			if not is_prefix then
-				if not rfind(word, com.quality_c) then
-					-- Apply suffix respellings.
-					for _, suffix_pair in ipairs(recognized_suffixes) do
-						local orig, respelling = unpack(suffix_pair)
-						local replaced
-						word, replaced = com.rsubb(word, orig .. "$", respelling)
-						if replaced then
-							-- Decompose again because suffix replacements may have accented chars.
-							word = com.decompose(word)
-							break
-						end
-					end
-				end
-
+			local function auto_stress_mono_bisyllabic(word)
 				-- Auto-stress some monosyllabic and bisyllabic words. Don't auto-stress inherently unstressed words
 				-- (including those with a * at the end of them indicating syntactic gemination).
 				if not unstressed_words[com.rsub(word, "%*$", "")] and not rfind(word, "[" .. com.AC .. com.GR .. com.DOTOVER .. "]") then
-					vowel_count = ulen(com.rsub(word, NV, ""))
+					local vowel_count = ulen(com.rsub(word, NV, ""))
 					if vowel_count > 2 then
 						err("With more than two vowels and an unrecognized suffix, stress must be explicitly given")
 					elseif not is_suffix or vowel_count == 2 then -- don't try to stress suffixes with only one vowel
@@ -381,22 +386,102 @@ local function canonicalize_and_auto_accent(text, pagename)
 						end
 					end
 				end
+
+				return word
+			end
+
+			local is_prefix = word:find("%-$")
+			local is_suffix = word:find("^%-")
+
+			if not is_prefix then
+				if not rfind(word, com.quality_c) then
+					-- Apply suffix respellings.
+					for _, suffix_pair in ipairs(recognized_suffixes) do
+						local orig, respelling = unpack(suffix_pair)
+						if type(respelling) == "string" then
+							local replaced
+							word, replaced = com.rsubb(word, orig .. "$", respelling)
+							if replaced then
+								-- Decompose again because suffix replacements may have accented chars.
+								word = com.decompose(word)
+								break
+							end
+						else
+							local any_replaced
+							for _, rsp in ipairs(respelling) do
+								if type(rsp) == "string" then
+									rsp = {respelling = rsp}
+								end
+								local replaced
+								rsp.respelling, replaced = com.rsubb(word, orig .. "$", rsp.respelling)
+								if replaced then
+									-- Decompose again because suffix replacements may have accented chars.
+									rsp.respelling = com.decompose(word)
+									break
+								end
+
+
+					end
+				end
+
+				word = auto_stress_mono_bisyllabic(word)
 			end
 
 			words[i] = word
 		end
 	end
 
+	if not any_multiple then
+		return {{respelling = table.concat(words)}}
+	end
+
+	local respellings = {{respelling = ""}}
+	for _, word in ipairs(words) do
+		if type(word) == "string" then
+			for i, _ in ipairs(respellings) do
+				respellings[i] = respellings[i] .. word
+			end
+		else
+			local new_respellings = {}
+
+	
 	return words
 end
 
 
-function export.to_phonemic(text, pagename)
-	local orig_respelling = text
-	local words = canonicalize_and_auto_accent(text, pagename)
-	text = table.concat(words)
-	local canon_respelling = text
+--[=[
+Convert raw canonicalized respelling `text` into its phonemic equivalent. `text` can consist of multiple words; however,
+the raw respelling given by the user needs to be passed through canonicalize_and_auto_accent() before being passed to
+this function. In other words, `text` as given to this function needs to have all accents in place and cannot use
+substitution notation (e.g. '[tts]') or a single vowel spec (e.g. '^ò'). It also cannot have symbol pre-qualifiers like
+# ('traditional') or !! ('elevated style').
 
+The return value is an object with the following structure:
+
+{
+  canon_respelling = CANON_RESPELLING,
+  phonemic = PHONEMIC_PRON,
+  auto_cogemination = BOOLEAN,
+  last_word_ends_in_vowel = BOOLEAN,
+  last_word_ends_in_consonant = BOOLEAN,
+  auto_final_self_gemination = BOOLEAN,
+  auto_initial_self_gemination = BOOLEAN,
+}
+
+* CANON_RESPELLING is the respelling that was passed in as `text`.
+* PHONEMIC_PRON is the phonemic IPA pronunciation of the respelling passed in.
+* `auto_cogemination` is true if syntactic gemination of the first consonant of the following word should be
+  triggered; this happens if the last word in `text` is multisyllabic and ends in a primary-stressed vowel.
+* `last_word_ends_in_vowel` is true if the last word in `text` ends in a vowel.
+* `last_word_ends_in_consonant` is true if the last word in `text` ends in a consonant.
+* `auto_final_self_gemination` is true if the last word in `text` ends in a consonant (ts dz ʃ ʎ ɲ) that triggers
+  self-gemination before a following vowel.
+* `auto_initial_self_gemination` is true if the first word in `text` begins in a consonant (ts dz ʃ ʎ ɲ) that triggers
+  self-gemination after a preceding vowel.
+]=]
+
+function export.to_phonemic_canonicalized(text)
+	local canon_respelling = text
 	text = ulower(text)
 	text = com.rsub(text, com.CFLEX, "") -- eliminate circumflex over î, etc.
 	text = com.rsub(text, "y", "i")
@@ -641,7 +726,6 @@ function export.to_phonemic(text, pagename)
 	-- (spaces) including ⁀, marking where two words were joined by syntactic gemination.
 	local last_word_is_multisyllabic = rfind(text, "%.[^ ⁀]*$")
 	local retval = {
-		orig_respelling = orig_respelling,
 		canon_respelling = canon_respelling,
 		-- Automatic co-gemination (syntactic gemination of the following consonant in a multisyllabic word ending in
 		-- a stressed vowel)
@@ -677,13 +761,31 @@ function export.to_phonemic(text, pagename)
 	return retval
 end
 
+
+function export.to_phonemic(text, pagename)
+	local respellings = canonicalize_and_auto_accent(text, pagename)
+
+	for i, respelling in ipairs(respellings) do
+		respellings[i] = export.to_phonemic_canonicalized(respelling)
+		respellings[i].orig_respelling = text
+	end
+
+	return respellings
+end
+
+
 -- For bot usage; {{#invoke:it-pronunciation|to_phonemic_bot|SPELLING}}
 function export.to_phonemic_bot(frame)
 	local iparams = {
 		[1] = {},
 	}
 	local iargs = require("Module:parameters").process(frame.args, iparams)
-	return export.to_phonemic(iargs[1], mw.title.getCurrentTitle().text).phonemic
+	local phonemics = {}
+	local phonemic_objs = export.to_phonemic(iargs[1], mw.title.getCurrentTitle().text)
+	for _, phonemic_obj in ipairs(phonemic_objs) do
+		table.insert(phonemics, phonemic_obj.phonemic)
+	end
+	return table.concat(phonemics, "|||")
 end
 
 
@@ -714,15 +816,16 @@ The return value is an object with the following structure:
 {
   formatted = FORMATTED_IPA_LINE,
   terms = {
-	{phonemic = PHONEMIC_PRON,
+	{
+	 orig_respelling = ORIG_RESPELLING,
+	 canon_respelling = CANON_RESPELLING,
+	 phonemic = PHONEMIC_PRON,
 	 raw = "phonemic" or "phonetic",
 	 auto_cogemination = BOOLEAN,
 	 last_word_ends_in_vowel = BOOLEAN,
 	 last_word_ends_in_consonant = BOOLEAN,
 	 auto_final_self_gemination = BOOLEAN,
 	 auto_initial_self_gemination = BOOLEAN,
-	 orig_respelling = ORIG_RESPELLING,
-	 canon_respelling = CANON_RESPELLING,
 	 prespec = nil or PRESPEC,
 	 pretext = nil or PRETEXT,
 	 postspec = nil or POSTSPEC,
@@ -736,7 +839,8 @@ The return value is an object with the following structure:
 Here:
 
 * FORMATTED_IPA_LINE is the output of format_IPA_full(), a string.
-* `terms` contains one entry per term in the input object to show_IPA_full().
+* `terms` contains one or more entries per term in the input object to show_IPA_full(). Note that a single input
+  respelling given by the user can map to multiple pronunciations, e.g. in the case of the endings -oso, -ese, -oio.
 * PHONEMIC_PRON is the phonemic IPA pronunciation of the respelling passed in, generated by to_phonemic().
 * RAW is "phonemic" if the user specified a raw pronunciation using /.../, "phonetic" if using [...]. In such a case,
   PHONEMIC_PRON is the user-specified pronunciation without the surrounding slashes or brackets.
@@ -803,7 +907,7 @@ function export.show_IPA_full(data)
 			table.insert(qualifiers, 1, "traditional")
 			prespec = prespec:gsub("#", "")
 		end
-		local pron, pretext, posttext
+		local prons
 
 		local raw, raw_type
 		raw = rmatch(respelling, "^raw:/(.*)/$")
@@ -816,80 +920,86 @@ function export.show_IPA_full(data)
 			end
 		end
 		if raw then
-			pron = {
+			prons = {{
 				orig_respelling = respelling,
 				canon_respelling = com.decompose(respelling),
 				phonemic = raw,
 				raw = raw_type,
-			}
+			}}
 		else
-			pron = export.to_phonemic(respelling, data.pagename)
+			prons = export.to_phonemic(respelling, data.pagename)
 		end
 
-		if prespec == "" and pron.auto_initial_self_gemination then
-			prespec = "*"
-		end
-		if postspec == "" and (pron.auto_cogemination or pron.auto_final_self_gemination) then
-			postspec = "*"
-		end
+		for _, pron in ipairs(prons) do
+			local pretext, posttext
+			local canon_prespec = prespec
+			local canon_postspec = postspec
 
-		local function check_symbol_spec(spec, recognized_specs, is_pre)
-			for _, symbol_spec in ipairs(recognized_specs) do
-				local symbol, text = unpack(symbol_spec)
-				if symbol == spec then
-					local abbr = '<abbr title="' .. text .. '"><sup>' .. symbol .. "</sup></abbr>"
-					if is_pre then
-						pretext = abbr
-					else
-						posttext = abbr
+			if canon_prespec == "" and pron.auto_initial_self_gemination then
+				canon_prespec = "*"
+			end
+			if canon_postspec == "" and (pron.auto_cogemination or pron.auto_final_self_gemination) then
+				canon_postspec = "*"
+			end
+
+			local function check_symbol_spec(spec, recognized_specs, is_pre)
+				for _, symbol_spec in ipairs(recognized_specs) do
+					local symbol, text = unpack(symbol_spec)
+					if symbol == spec then
+						local abbr = '<abbr title="' .. text .. '"><sup>' .. symbol .. "</sup></abbr>"
+						if is_pre then
+							pretext = abbr
+						else
+							posttext = abbr
+						end
+						return
 					end
-					return
+				end
+				error("Unrecognized " .. (is_pre and "initial" or "final") .. " symbol " .. spec)
+			end
+
+			if canon_prespec ~= "" then
+				check_symbol_spec(canon_prespec, initial_symbol_specs, true)
+			end
+			if canon_postspec ~= "" then
+				if pron.last_word_ends_in_vowel then
+					check_symbol_spec(canon_postspec, final_vowel_symbol_specs, false)
+				elseif pron.last_word_ends_in_consonant then
+					check_symbol_spec(canon_postspec, final_consonant_symbol_specs, false)
+				else
+					error("Last word ends in neither vowel nor consonant; final symbol " .. spec .. " not allowed here")
 				end
 			end
-			error("Unrecognized " .. (is_pre and "initial" or "final") .. " symbol " .. spec)
-		end
-
-		if prespec ~= "" then
-			check_symbol_spec(prespec, initial_symbol_specs, true)
-		end
-		if postspec ~= "" then
-			if pron.last_word_ends_in_vowel then
-				check_symbol_spec(postspec, final_vowel_symbol_specs, false)
-			elseif pron.last_word_ends_in_consonant then
-				check_symbol_spec(postspec, final_consonant_symbol_specs, false)
+			local refs
+			if #term.ref == 0 then
+				refs = nil
+			elseif #term.ref == 1 then
+				refs = require("Module:references").parse_references(term.ref[1])
 			else
-				error("Last word ends in neither vowel nor consonant; final symbol " .. spec .. " not allowed here")
-			end
-		end
-		local refs
-		if #term.ref == 0 then
-			refs = nil
-		elseif #term.ref == 1 then
-			refs = require("Module:references").parse_references(term.ref[1])
-		else
-			refs = {}
-			for _, refspec in ipairs(term.ref) do
-				local this_refs = require("Module:references").parse_references(refspec)
-				for _, this_ref in ipairs(this_refs) do
-					table.insert(refs, this_ref)
+				refs = {}
+				for _, refspec in ipairs(term.ref) do
+					local this_refs = require("Module:references").parse_references(refspec)
+					for _, this_ref in ipairs(this_refs) do
+						table.insert(refs, this_ref)
+					end
 				end
 			end
-		end
 
-		pron.prespec = prespec
-		pron.pretext = pretext
-		pron.postspec = postspec
-		pron.posttext = posttext
-		pron.qualifiers = qualifiers
-		pron.refs = refs
-		table.insert(retval.terms, pron)
-		table.insert(transcriptions, {
-			pron = pron.raw == "phonetic" and "[" .. pron.phonemic .. "]" or "/" .. pron.phonemic .. "/",
-			qualifiers = #qualifiers > 0 and qualifiers or nil,
-			pretext = pretext,
-			posttext = posttext,
-			refs = refs,
-		})
+			pron.prespec = canon_prespec
+			pron.pretext = pretext
+			pron.postspec = canon_postspec
+			pron.posttext = posttext
+			pron.qualifiers = qualifiers
+			pron.refs = refs
+			table.insert(retval.terms, pron)
+			table.insert(transcriptions, {
+				pron = pron.raw == "phonetic" and "[" .. pron.phonemic .. "]" or "/" .. pron.phonemic .. "/",
+				qualifiers = #qualifiers > 0 and qualifiers or nil,
+				pretext = pretext,
+				posttext = posttext,
+				refs = refs,
+			})
+		end
 	end
 
 	retval.formatted = require("Module:IPA").format_IPA_full(lang, transcriptions)
