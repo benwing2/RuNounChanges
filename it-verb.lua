@@ -1471,7 +1471,7 @@ local function generate_default_future_principal_part(base, do_err)
 		if stem:find("[cg]$") then
 			return {comb("herò")}
 		elseif stem:find("[cg]i$") then
-			if not base.forms.pres1s then -- missing pres1s; future still can be generated
+			if not base.forms.pres1s or base.forms.pres1s[1].form == "?" then -- missing or unknown pres1s; future still can be generated
 				return {rsub(stem, "i$", "erò")}
 			else
 				-- Verbs in -ciare/-giare with the accent on the final -ì in the present singular take future in
