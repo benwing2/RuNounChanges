@@ -311,7 +311,7 @@ local principal_part_person_number_desc = {
 	[""] = "",
 }
 
-local all_verb_slots = {
+export.all_verb_slots = {
 	{"aux", "-"},
 }
 
@@ -562,7 +562,7 @@ end
 
 
 local function erase_suppressed_slots(base)
-	for _, slot_spec in ipairs(all_verb_slots) do
+	for _, slot_spec in ipairs(export.all_verb_slots) do
 		local slot, accel = unpack(slot_spec)
 		if skip_slot(base, slot) then
 			base.forms[slot] = nil
@@ -1778,9 +1778,9 @@ for _, rowconj in ipairs(row_conjugations) do
 		local persnum_tag = person_number_tag_prefix[persnum]
 		local slot = rowslot .. persnum
 		if rowspec.tag_suffix == "-" then
-			table.insert(all_verb_slots, {slot, "-"})
+			table.insert(export.all_verb_slots, {slot, "-"})
 		else
-			table.insert(all_verb_slots, {slot, persnum_tag .. rowspec.tag_suffix})
+			table.insert(export.all_verb_slots, {slot, persnum_tag .. rowspec.tag_suffix})
 		end
 		if not rowspec.no_single_overrides then
 			overridable_slot_set[slot] = true
@@ -2987,12 +2987,34 @@ local function detect_all_indicator_specs(alternant_multiword_spec, from_headwor
 end
 
 
+-- Propagate certain properties (e.g. reflexiveness) upward from individual `base` forms to the overall
+-- `alternant_multiword_spec`. This is done "earlier" than conjugating the verb, and is needed prior to this because
+-- it determines whether to generate extra slots for use with {{it-verb form of}}.
+local function propagate_properties_upward_earlier(alternant_multiword_spec)
+	iut.map_word_specs(alternant_multiword_spec, function(base)
+		-- If there is an explicit stem spec, we display the imperfect principal part explicitly even if not marked
+		-- as irregular.
+		if base.principal_part_specs.explicit_stem_spec then
+			alternant_multiword_spec.props.has_explicit_stem_spec = true
+		end
+		-- If any verb is pronominal, we display the overall lemma as 'pronominal'.
+		if base.verb.is_pronominal then
+			alternant_multiword_spec.props.is_pronominal = true
+		end
+		-- If any verb is non-reflexive, we show the auxiliary.
+		if not base.verb.is_reflexive then
+			alternant_multiword_spec.props.is_non_reflexive = true
+		end
+	end)
+end
+
+
 -- Propagate indications of irregularity, defectiveness and other properties upward from individual `base` forms to the
--- overall `alternant_multiword_spec`. The overall indications of irregularity/defectiveness are used in
--- [[Module:it-headword]] to show irregular/defective principal parts, and other properties are used similarly in
--- [[Module:it-headword]]. This needs to be done later than detect_all_indicator_specs() because it depends on the
--- result of parsing and conjugating the angle bracket spec.
-local function propagate_properties_upward(alternant_multiword_spec)
+-- overall `alternant_multiword_spec`. This is done "later" than conjugating the verb. The overall indications of
+-- irregularity/defectiveness are used in [[Module:it-headword]] to show irregular/defective principal parts, and other
+-- properties are used similarly in [[Module:it-headword]]. This needs to be done later than conjugating the angle
+-- bracket spec because it depends on the result of conjugation.
+local function propagate_properties_upward_later(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		local function copy_property_table(dest_table, source_table, slotprop)
 			if not dest_table[slotprop] then
@@ -3008,19 +3030,6 @@ local function propagate_properties_upward(alternant_multiword_spec)
 		end
 		for subtable_key, subtable in pairs(base.rowprops) do
 			copy_property_table(alternant_multiword_spec.rowprops, base.rowprops, subtable_key)
-		end
-		-- If there is an explicit stem spec, we display the imperfect principal part explicitly even if not marked
-		-- as irregular.
-		if base.principal_part_specs.explicit_stem_spec then
-			alternant_multiword_spec.props.has_explicit_stem_spec = true
-		end
-		-- If any verb is pronominal, we display the overall lemma as 'pronominal'.
-		if base.verb.is_pronominal then
-			alternant_multiword_spec.props.is_pronominal = true
-		end
-		-- If any verb is non-reflexive, we show the auxiliary.
-		if not base.verb.is_reflexive then
-			alternant_multiword_spec.props.is_non_reflexive = true
 		end
 	end)
 end
@@ -3054,7 +3063,7 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	end
 
 	if check_for_red_links and not from_headword and not multiword_lemma then
-		for _, slot_and_accel in ipairs(all_verb_slots) do
+		for _, slot_and_accel in ipairs(export.all_verb_slots) do
 			local slot = slot_and_accel[1]
 			local forms = base.forms[slot]
 			local must_break = false
@@ -3211,7 +3220,7 @@ local function show_forms(alternant_multiword_spec)
 	local props = {
 		lang = lang,
 		lemmas = lemmas,
-		slot_list = all_verb_slots,
+		slot_list = export.all_verb_slots,
 	}
 	iut.show_forms(alternant_multiword_spec.forms, props)
 end
@@ -3460,15 +3469,16 @@ function export.do_generate_forms(args, from_headword, headword_head)
 	alternant_multiword_spec.incorporated_headword_head_into_lemma = incorporated_headword_head_into_lemma
 	normalize_all_lemmas(alternant_multiword_spec)
 	detect_all_indicator_specs(alternant_multiword_spec, from_headword)
+	propagate_properties_upward_earlier(alternant_multiword_spec)
 	local inflect_props = {
-		slot_list = all_verb_slots,
+		slot_list = export.all_verb_slots,
 		inflect_word_spec = conjugate_verb,
 		-- We add links around the generated verbal forms rather than allow the entire multiword
 		-- expression to be a link, so ensure that user-specified links get included as well.
 		include_user_specified_links = true,
 	}
 	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
-	propagate_properties_upward(alternant_multiword_spec)
+	propagate_properties_upward_later(alternant_multiword_spec)
 	compute_auxiliary(alternant_multiword_spec)
 	convert_accented_links(alternant_multiword_spec)
 	compute_categories_and_annotation(alternant_multiword_spec, from_headword)
@@ -3517,7 +3527,7 @@ end
 -- additional properties (currently, none). This is for use by bots.
 local function concat_forms(alternant_multiword_spec, include_props)
 	local ins_text = {}
-	for _, slot_and_accel in ipairs(all_verb_slots) do
+	for _, slot_and_accel in ipairs(export.all_verb_slots) do
 		local slot = slot_and_accel[1]
 		local formtext = iut.concat_forms_in_slot(alternant_multiword_spec.forms[slot])
 		if formtext then
