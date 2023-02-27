@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site, tname, pname
 from snarf_it_pron import apply_default_pronun
 
-refs_re = "(Olivetti|DiPI|Treccani|DOP)"
+refs_re = "(Olivetti|DiPI|Treccani|DOP|Internazionale|Garzanti)"
 
 # FIXME: Handle two 'n:' references for the same pronunciation. Separate with " !!! " in a single param and fix the
 # underlying code to support this format. (DONE)
@@ -83,20 +83,17 @@ def process_page(index, page, spec):
       pronspec_parts = re.split("(<r:[^<>]*)", pronspec)
       for i, pronspec_part in enumerate(pronspec_parts):
         if i % 2 == 1: # a reference
-          if pronspec_part == "<r:": # a cross-reference to another reference
-            pronspec_parts[i] = "<ref:"
+          if pronspec_part == "<r:": # a cross-reference to another reference, e.g. <r:<<name:dipi>>>
+            pass
           else:
-            if not re.search(r"^<r:%s\b" % refs_re, pronspec_part):
-              pagemsg("WARNING: Unrecognized reference %s: pronspec=%s" % (pronspec_part, spec))
-              return
             ref_template_text = pronspec_part[3:]
             # If the argument to the reference template is the page title, remove it.
-            m = re.search(r"^%s\|(.*)$" % refs_re, ref_template_text)
+            m = re.search(r"^([^:]*):(.*)$", ref_template_text)
             if m and m.group(2) == pagetitle:
               ref_template_text = m.group(1)
-            pronspec_parts[i] = "<ref:{{R:it:%s}}" % ref_template_text
+            pronspec_parts[i] = "<r:%s" % ref_template_text
       pronspec = "".join(pronspec_parts)
-      if "<ref:" in pronspec:
+      if "<r:" in pronspec or "<ref:" in pronspec:
         have_footnotes = True # <r: or original <ref:
       # FIXME: Verify respellings checking for NEED_ACCENT and Z, as above.
       prons.append(pronspec)
@@ -185,10 +182,10 @@ def process_page(index, page, spec):
           t.add(str(pn + 1), pv)
         if origt != unicode(t):
           # Make sure we're not removing references
-          if "<ref:" in origt and not args.override_refs:
+          if re.search("<r(ef)?:", origt) and not args.override_refs:
             origrefs = set()
             newrefs = set()
-            ref_regex = r"<ref:(?:[^<>]*|<<[^<>]*>>|<[^<>]*>)*>"
+            ref_regex = r"<r(?:ef)?:(?:[^<>]*|<<[^<>]*>>|<[^<>]*>)*>"
             for m in re.finditer(ref_regex, origt):
               origrefs.add(m.group(0))
             for m in re.finditer(ref_regex, unicode(t)):
