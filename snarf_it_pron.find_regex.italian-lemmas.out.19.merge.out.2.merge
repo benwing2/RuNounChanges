@@ -11,6 +11,16 @@ Page 66525 accasi: <respelling> all: [cà],#[cà[s]]<r:DiPI:accaso> <end> MANUAL
 Page 66525 accasa: <respelling> all: [cà],#[cà[s]]<r:DiPI:accaso> <end> MANUAL
 Page 66525 accasano: <respelling> all: [cà],#[cà[s]]<r:DiPI:accaso> <end> MANUAL
 Page 66525 accasino: <respelling> all: [cà],#[cà[s]]<r:DiPI:accaso> <end> MANUAL
+Page 66525 riaccaso: <respelling> all: [ri.,cà],#[ri.,cà[s]]<r:DiPI:accaso> <end> MANUAL
+Page 66525 riaccasi: <respelling> all: [ri.,cà],#[ri.,cà[s]]<r:DiPI:accaso> <end> MANUAL
+Page 66525 riaccasa: <respelling> all: [ri.,cà],#[ri.,cà[s]]<r:DiPI:accaso> <end> MANUAL
+Page 66525 riaccasano: <respelling> all: [ri.,cà],#[ri.,cà[s]]<r:DiPI:accaso> <end> MANUAL
+Page 66525 riaccasino: <respelling> all: [ri.,cà],#[ri.,cà[s]]<r:DiPI:accaso> <end> MANUAL
+Page 66525 rincaso: <respelling> all: [cà],#[cà[s]]<r:DiPI:accaso> <end> MANUAL
+Page 66525 rincasi: <respelling> all: [cà],#[cà[s]]<r:DiPI:accaso> <end> MANUAL
+Page 66525 rincasa: <respelling> all: [cà],#[cà[s]]<r:DiPI:accaso> <end> MANUAL
+Page 66525 rincasano: <respelling> all: [cà],#[cà[s]]<r:DiPI:accaso> <end> MANUAL
+Page 66525 rincasino: <respelling> all: [cà],#[cà[s]]<r:DiPI:accaso> <end> MANUAL
 Page 66525 acceffo: <respelling> all: accéffo,#accèffo<r:DiPI> <end> MANUAL
 Page 66525 acceffi: <respelling> all: accéffi,#accèffi<r:DiPI:acceffo> <end> MANUAL
 Page 66525 acceffa: <respelling> all: accéffa,#accèffa<r:DiPI:acceffo> <end> MANUAL
@@ -23,6 +33,11 @@ Page 66525 accheti: <respelling> all: [é],[è]<r:DiPI:accheto> <end> MANUAL
 Page 66525 accheta: <respelling> all: [é],[è]<r:DiPI:accheto> <end> MANUAL
 Page 66525 acchetano: <respelling> all: [é],[è]<r:DiPI:accheto> <end> MANUAL
 Page 66525 acchetino: <respelling> all: [é],[è]<r:DiPI:accheto> <end> MANUAL
+Page 66525 raccheto: <respelling> all: [é],[è]<r:DiPI:accheto> <end> MANUAL
+Page 66525 raccheti: <respelling> all: [é],[è]<r:DiPI:accheto> <end> MANUAL
+Page 66525 raccheta: <respelling> all: [é],[è]<r:DiPI:accheto> <end> MANUAL
+Page 66525 racchetano: <respelling> all: [é],[è]<r:DiPI:accheto> <end> MANUAL
+Page 66525 racchetino: <respelling> all: [é],[è]<r:DiPI:accheto> <end> MANUAL
 Page 66525 accidempoli: <respelling> all: [é],#[è]<r:DiPI> <end> MANUAL
 Page 66525 acese: <respelling> all: [é],#[é[s]]<r:DiPI> <end> MANUAL
 Page 66525 acesi: <respelling> all: [é],#[é[s]]<r:DiPI:acese> <end> MANUAL
@@ -175,6 +190,50 @@ Page 66525 annetta: <respelling> all: [né],#[nè]<r:DiPI:annetto> <end> MANUAL
 Page 66525 annettono: <respelling> all: [né],#[nè]<r:DiPI:annetto> <end> MANUAL
 Page 66525 annettino: <respelling> all: [né],#[nè]<r:DiPI:annetto> <end> MANUAL
 Page 66525 annessero: <respelling> all: [né],#[nè]<r:DiPI:annesso> <end> MANUAL
+Page 66525 connetto: <respelling> all: [né],#[nè]<r:DiPI:connettere> <end> MANUAL
+Page 66525 connetti: <respelling> all: [né],#[nè]<r:DiPI:connettere> <end> MANUAL
+Page 66525 connetta: <respelling> all: [né],#[nè]<r:DiPI:connettere> <end> MANUAL
+Page 66525 connettono: <respelling> all: [né],#[nè]<r:DiPI:connettere> <end> MANUAL
+Page 66525 connettino: <respelling> all: [né],#[nè]<r:DiPI:connettere> <end> MANUAL
+Page 66525 connessero: <respelling> all: [né],#[nè]<r:DiPI:connesso> <end> MANUAL
+Page 66525 disconnetto: <respelling> all: [né],#[nè]<r:DiPI:disconnettere> <end> MANUAL
+Page 66525 disconnetti: <respelling> all: [né],#[nè]<r:DiPI:disconnettere> <end> MANUAL
+Page 66525 disconnetta: <respelling> all: [né],#[nè]<r:DiPI:disconnettere> <end> MANUAL
+Page 66525 disconnettono: <respelling> all: [né],#[nè]<r:DiPI:disconnettere> <end> MANUAL
+Page 66525 disconnettino: <respelling> all: [né],#[nè]<r:DiPI:disconnettere> <end> MANUAL
+Page 66525 disconnessero: <respelling> all: [né],#[nè]<r:DiPI:disconnesso> <end> MANUAL
+Page 66525 interconnetto: <respelling> all: [né],#[nè]<r:DiPI:connettere> <end> MANUAL
+Page 66525 interconnetti: <respelling> all: [né],#[nè]<r:DiPI:connettere> <end> MANUAL
+Page 66525 interconnetta: <respelling> all: [né],#[nè]<r:DiPI:connettere> <end> MANUAL
+Page 66525 interconnettono: <respelling> all: [né],#[nè]<r:DiPI:connettere> <end> MANUAL
+Page 66525 interconnettino: <respelling> all: [né],#[nè]<r:DiPI:connettere> <end> MANUAL
+Page 66525 interconnessa: <respelling> all: [né],#[nè]<r:DiPI:connesso> <end> MANUAL
+Page 66525 interconnessi: <respelling> top: [né],#[nè]<r:DiPI:connesso> <end> MANUAL
+Page 66525 interconnesse: <respelling> top: [né],#[nè]<r:DiPI:connesso> <end> MANUAL
+Page 66525 interconnessero: <respelling> all: [né],#[nè]<r:DiPI:connesso> <end> MANUAL
+Page 66525 riannessa: <respelling> all: [ri.,né],#[ri.,nè]<r:DiPI:riannesso> <end> MANUAL
+Page 66525 riannessi: <respelling> all: [ri.,né],#[ri.,nè]<r:DiPI:riannesso> <end> MANUAL
+Page 66525 riannesse: <respelling> all: [ri.,né],#[ri.,nè]<r:DiPI:riannesso> <end> MANUAL
+Page 66525 riconnetto: <respelling> all: [né],#[nè]<r:DiPI:connettere> <end> MANUAL
+Page 66525 riconnetti: <respelling> all: [né],#[nè]<r:DiPI:connettere> <end> MANUAL
+Page 66525 riconnetta: <respelling> all: [né],#[nè]<r:DiPI:connettere> <end> MANUAL
+Page 66525 riconnettono: <respelling> all: [né],#[nè]<r:DiPI:connettere> <end> MANUAL
+Page 66525 riconnettino: <respelling> all: [né],#[nè]<r:DiPI:connettere> <end> MANUAL
+Page 66525 riconnessa: <respelling> all: [né],#[nè]<r:DiPI:connesso> <end> MANUAL
+Page 66525 riconnessi: <respelling> top: [né],#[nè]<r:DiPI:connesso> <end> MANUAL
+Page 66525 riconnesse: <respelling> top: [né],#[nè]<r:DiPI:connesso> <end> MANUAL
+Page 66525 riconnessero: <respelling> all: [né],#[nè]<r:DiPI:connesso> <end> MANUAL
+Page 66525 sconnetto: <respelling> all: [né],#[nè]<r:DiPI:sconnettere> <end> MANUAL
+Page 66525 sconnetti: <respelling> all: [né],#[nè]<r:DiPI:sconnettere> <end> MANUAL
+Page 66525 sconnetta: <respelling> all: [né],#[nè]<r:DiPI:sconnettere> <end> MANUAL
+Page 66525 sconnettono: <respelling> all: [né],#[nè]<r:DiPI:sconnettere> <end> MANUAL
+Page 66525 sconnettino: <respelling> all: [né],#[nè]<r:DiPI:sconnettere> <end> MANUAL
+Page 66525 sconnessero: <respelling> all: [né],#[nè]<r:DiPI:sconnesso> <end> MANUAL
+Page 66525 inetto: <respelling> all: [nè],[né]<r:DiPI:inetto> <end> MANUAL
+Page 66525 inetta: <respelling> all: [nè],[né]<r:DiPI:inetto> <end> MANUAL
+Page 66525 inetti: <respelling> all: [nè],[né]<r:DiPI:inetto> <end> MANUAL
+Page 66525 inette: <respelling> all: [nè],[né]<r:DiPI:inetto> <end> MANUAL
+Page 66525 nessi: <respelling> all: [né],#[nè]<r:DiPI:nesso> <end> MANUAL
 Page 66525 annona: <respelling> all: [nó],#![nò]<r:DiPI> <end> MANUAL
 Page 66525 annone: <respelling> all: [nó],#![nò]<r:DiPI:annona> <end> MANUAL
 Page 66525 annuali: <respelling> all: [nu.à],[nuà]<r:DiPI:annuale> <end> MANUAL
@@ -468,6 +527,15 @@ Page 66525 appropri: <respelling> all: [òp]<r:DiPI:approprio> <end> MANUAL
 Page 66525 appropria: <respelling> all: [òp],[òpri.]<r:DiPI:approprio> <end> MANUAL
 Page 66525 appropriano: <respelling> all: [òp],[òpri.]<r:DiPI:approprio> <end> MANUAL
 Page 66525 approprino: <respelling> all: [òp]<r:DiPI:approprio> <end> MANUAL
+Page 66525 riappropriato: <respelling> all: [ri.ap,prià],[ri.ap,pri.à]<r:DiPI:appropriato> <end> MANUAL
+Page 66525 riappropriata: <respelling> all: [ri.ap,prià],[ri.ap,pri.à]<r:DiPI:appropriato> <end> MANUAL
+Page 66525 riappropriati: <respelling> all: [ri.ap,prià],[ri.ap,pri.à]<r:DiPI:appropriato> <end> MANUAL
+Page 66525 riappropriate: <respelling> all: [ri.ap,prià],[ri.ap,pri.à]<r:DiPI:appropriato> <end> MANUAL
+Page 66525 riapproprio: <respelling> all: [ri.ap,òp],[ri.ap,òpri.]<r:DiPI:approprio> <end> MANUAL
+Page 66525 riappropri: <respelling> all: [ri.ap,òp]<r:DiPI:approprio> <end> MANUAL
+Page 66525 riappropria: <respelling> all: [ri.ap,òp],[ri.ap,òpri.]<r:DiPI:approprio> <end> MANUAL
+Page 66525 riappropriano: <respelling> all: [ri.ap,òp],[ri.ap,òpri.]<r:DiPI:approprio> <end> MANUAL
+Page 66525 riapproprino: <respelling> all: [ri.ap,òp]<r:DiPI:approprio> <end> MANUAL
 Page 66525 aragoste: <respelling> all: [ó],[ò]<r:DiPI:aragosta> <end> MANUAL
 Page 66525 arcidiacono: <respelling> all: [i.à],[à]<r:DiPI> <end> MANUAL
 Page 66525 arcidiaconi: <respelling> all: [i.à],[à]<r:DiPI:arcidiacono> <end> MANUAL
@@ -510,6 +578,13 @@ Page 66525 arrisa: <respelling> all: [ìs],#[ì[s]]<r:DiPI:arriso> <end> MANUAL
 Page 66525 arrisi: <respelling> top: [ìs],#[ì[s]]<r:DiPI:arrisi> <end> MANUAL
 Page 66525 arrise: <respelling> top: [ìs],#[ì[s]]<r:DiPI:arriso> <end> MANUAL
 Page 66525 arrisero: <respelling> all: [ìs],#[ì[s]]<r:DiPI:arrisi> <end> MANUAL
+Page 66525 risero: <respelling> all: [ìs],#[ì[s]]<r:DiPI:risi> <end> MANUAL
+Page 66525 sorrise: <respelling> top: [ìs],#[ì[s]]<r:DiPI:sorrisi> <end> MANUAL
+Page 66525 sorrisero: <respelling> all: [ìs],#[ì[s]]<r:DiPI:sorrisi> <end> MANUAL
+Page 66525 sottorisi: <respelling> top: [ìs],#[ì[s]]<r:DiPI:sorrisi> <end> MANUAL
+Page 66525 sottorisa: <respelling> top: [ìs],#[ì[s]]<r:DiPI:sorriso> <end> MANUAL
+Page 66525 sottorise: <respelling> top: [ìs],#[ì[s]]<r:DiPI:sorrisi> <end> MANUAL
+Page 66525 sottorisero: <respelling> all: [ìs],#[ì[s]]<r:DiPI:sorrisi> <end> MANUAL
 Page 66525 ascisc: <respelling> all: àshish,#ashìsh<r:DiPI> <end> MANUAL
 Page 66525 ascoso: <respelling> all: [ós],#[ó[s]]<r:DiPI> <end> MANUAL
 Page 66525 ascosa: <respelling> all: [ós],#[ó[s]]<r:DiPI:ascoso> <end> MANUAL
@@ -551,6 +626,7 @@ Page 66525 assonna: <respelling> all: [ón],[òn]<r:DiPI:assonno> <end> MANUAL
 Page 66525 assonnano: <respelling> all: [ón],[òn]<r:DiPI:assonno> <end> MANUAL
 Page 66525 assonnino: <respelling> all: [ón],[òn]<r:DiPI:assonno> <end> MANUAL
 Page 66525 sonno: <respelling> all: [ón],[òn]<r:DiPI> <end> MANUAL
+Page 66525 dissonno: <respelling> all: [ón],[òn]<r:DiPI:sonno> <end> MANUAL
 Page 66525 asteria: <respelling> all: [èr],[ìa]<r:DiPI> <end> MANUAL
 Page 66525 asterie: <respelling> all: [èr],[ìe]<r:DiPI:asteria> <end> MANUAL
 Page 66525 ateniesi: <respelling> all: [és],[é[s]]<r:DiPI:ateniese> <end> MANUAL
@@ -563,12 +639,48 @@ Page 66525 attenui: <respelling> all: [ènu.],[èn[w]]<r:DiPI:attenuo> <end> MAN
 Page 66525 attenua: <respelling> all: [ènu.],[èn]<r:DiPI:attenuo> <end> MANUAL
 Page 66525 attenuano: <respelling> all: [ènu.],[èn]<r:DiPI:attenuo> <end> MANUAL
 Page 66525 attenuino: <respelling> all: [ènu.],[èn[w]]<r:DiPI:attenuo> <end> MANUAL
+Page 66525 estenuo: <respelling> all: [ènu.],[èn]<r:DiPI> <end> MANUAL
+Page 66525 estenui: <respelling> all: [ènu.],[èn[w]]<r:DiPI:estenuo> <end> MANUAL
+Page 66525 estenua: <respelling> all: [ènu.],[èn]<r:DiPI:estenuo> <end> MANUAL
+Page 66525 estenuano: <respelling> all: [ènu.],[èn]<r:DiPI:estenuo> <end> MANUAL
+Page 66525 estenuino: <respelling> all: [ènu.],[èn[w]]<r:DiPI:estenuo> <end> MANUAL
 Page 66525 attribuiamo: <respelling> all: [àmo],[b[w]i.àmo]<r:DiPI> <end> MANUAL
 Page 66525 attuo: <respelling> all: [àttu.],[àtt]<r:DiPI> <end> MANUAL
 Page 66525 attui: <respelling> all: [àttu.],[àtt[w]]<r:DiPI:attuo> <end> MANUAL
 Page 66525 attua: <respelling> all: [àttu.],[àtt]<r:DiPI:attuo> <end> MANUAL
 Page 66525 attuano: <respelling> all: [àttu.],[àtt]<r:DiPI:attuo> <end> MANUAL
 Page 66525 attuino: <respelling> all: [àttu.],[àtt[w]]<r:DiPI:attuo> <end> MANUAL
+Page 66525 effettuo: <respelling> all: [èttu.],[ètt]<r:DiPI> <end> MANUAL
+Page 66525 effettui: <respelling> all: [èttu.],[ètt[w]]<r:DiPI:effettuo> <end> MANUAL
+Page 66525 effettua: <respelling> all: [èttu.],[ètt]<r:DiPI:effettuo> <end> MANUAL
+Page 66525 effettuano: <respelling> all: [èttu.],[ètt]<r:DiPI:effettuo> <end> MANUAL
+Page 66525 effettuino: <respelling> all: [èttu.],[ètt[w]]<r:DiPI:effettuo> <end> MANUAL
+Page 66525 eccettuo: <respelling> all: [èttu.],[ètt]<r:DiPI> <end> MANUAL
+Page 66525 eccettui: <respelling> all: [èttu.],[ètt[w]]<r:DiPI:eccettuo> <end> MANUAL
+Page 66525 eccettua: <respelling> all: [èttu.],[ètt]<r:DiPI:eccettuo> <end> MANUAL
+Page 66525 eccettuano: <respelling> all: [èttu.],[ètt]<r:DiPI:eccettuo> <end> MANUAL
+Page 66525 eccettuino: <respelling> all: [èttu.],[ètt[w]]<r:DiPI:eccettuo> <end> MANUAL
+Page 66525 fluttuo: <respelling> all: [ùttu.],[ùtt]<r:DiPI> <end> MANUAL
+Page 66525 fluttui: <respelling> all: [ùttu.],[ùtt[w]]<r:DiPI:fluttuo> <end> MANUAL
+Page 66525 fluttua: <respelling> all: [ùttu.],[ùtt]<r:DiPI:fluttuo> <end> MANUAL
+Page 66525 fluttuano: <respelling> all: [ùttu.],[ùtt]<r:DiPI:fluttuo> <end> MANUAL
+Page 66525 fluttuino: <respelling> all: [ùttu.],[ùtt[w]]<r:DiPI:fluttuo> <end> MANUAL
+Page 66525 autoferrotranviaria: <respelling> all: [àu,fèr,vià],[àu,fèr,vi.à]<r:DiPI:autoferrotranviario> <end> MANUAL
+Page 66525 autoferrotranviarie: <respelling> all: [àu,fèr,vià],[àu,fèr,vi.à]<r:DiPI:autoferrotranviario> <end> MANUAL
+Page 66525 autoferrotranviari: <respelling> all: [àu,fèr,vià],[àu,fèr,vi.à]<r:DiPI:autoferrotranviario> <end> MANUAL
+Page 66525 autoferrotranvieri: <respelling> all: [àu,fèr,viè]<r:DiPI> <end> MANUAL
+Page 66525 autofilotranviario: <respelling> all: [àu,fìl,vià],[àu,fìl,vi.à]<r:DiPI:autofilotranviario> <end> MANUAL
+Page 66525 autofilotranviaria: <respelling> all: [àu,fìl,vià],[àu,fìl,vi.à]<r:DiPI:autofilotranviario> <end> MANUAL
+Page 66525 autofilotranviarie: <respelling> all: [àu,fìl,vià],[àu,fìl,vi.à]<r:DiPI:autofilotranviario> <end> MANUAL
+Page 66525 autofilotranviari: <respelling> all: [àu,fìl,vià],[àu,fìl,vi.à]<r:DiPI:autofilotranviario> <end> MANUAL
+Page 66525 autolisi: <respelling> all: [tò],[lì]<r:DiPI> <end> MANUAL
+Page 66525 avamposti: <respelling> all: [pó],[pò]<r:DiPI:avamposto> <end> MANUAL
+Page 66525 avornio: <respelling> all: [vò],#[vó]<r:DiPI> <end> MANUAL
+Page 66525 avorni: <respelling> all: [vò],#[vó]<r:DiPI:avornio> <end> MANUAL
+Page 66525 azteco: <respelling> all: astèco,atstèco<r:DiPI> <end> MANUAL
+Page 66525 azteca: <respelling> all: astèca,atstèca<r:DiPI:azteco> <end> MANUAL
+Page 66525 aztechi: <respelling> all: astèchi,atstèchi<r:DiPI:azteco> <end> MANUAL
+Page 66525 azteche: <respelling> all: astèche,atstèche<r:DiPI:azteco> <end> MANUAL
 
 
 
@@ -587,7 +699,7 @@ Page 66525 attuino: <respelling> all: [àttu.],[àtt[w]]<r:DiPI:attuo> <end> MAN
 
 
 
-# got as far as auso
+# got as far as: next to process azzanno 
 
 
 
