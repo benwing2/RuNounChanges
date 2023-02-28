@@ -257,6 +257,7 @@ FIXME:
     {{it-verb|e/@|head=[[stare a]] [[vedere]]}}. (DONE)
 46. Expand addnote[] notation to support references (maybe needs no work)?
 47. Support verbs in -glire ([[boglire]], [[inorgoglire]], [[saglire]], etc.) correctly. (DONE)
+48. Support {{it-verb form of}}.
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -983,6 +984,18 @@ local function apply_vowel_spec(unaccented_stem, unaccented, unaccented_desc, vo
 end
 
 
+local function add_prefixed_reflexive_variant(base, slot, persnum)
+	insert_forms(base, slot .. "_variant", iut.map_forms(base.forms[slot], function(form)
+		return substitute_reflexive_pronoun(base.verb.finite_pref, persnum) .. "... [[" .. form .. "]]"
+	end))
+end
+
+
+local function add_non_finite_prefixed_reflexive_variants(base, rowslot)
+	add_prefixed_reflexive_variant(base, rowslot, "nf")
+end
+
+
 local function add_finite_reflexive_clitics(base, rowslot)
 	for _, persnum in ipairs(full_person_number_list) do
 		base.forms[rowslot .. persnum] = iut.map_forms(base.forms[rowslot .. persnum], function(form)
@@ -1309,6 +1322,15 @@ local function get_unlinked_clitic_suffix(base, persnum)
 end
 
 
+local function add_imperative_prefixed_reflexive_variants(base, rowslot)
+	-- Don't include the 2s form, which will always have an attached enclitic reflexive pronoun (in the negative,
+	-- the infinitive is used).
+	for _, persnum in ipairs({"3s", "1p", "2p", "3p"}) do
+		add_prefixed_reflexive_variant(base, rowslot .. persnum, persnum)
+	end
+end
+
+
 local function add_imperative_reflexive_clitics(base, rowslot)
 	local s2suf = get_unlinked_clitic_suffix(base, "2s")
 	local saw_form_with_apostrophe = false
@@ -1629,6 +1651,7 @@ local row_conjugations = {
 		no_row_overrides = true, -- useless because there's only one form; use / or \ notation
 		no_single_overrides = true, --useless because there's only one form; use / or \ notation
 		add_reflexive_clitics = add_infinitive_reflexive_clitics,
+		add_prefixed_reflexive_variants = add_non_finite_prefixed_reflexive_variants,
 	}},
 	{"pres", {
 		desc = "present indicative",
@@ -1661,6 +1684,7 @@ local row_conjugations = {
 		generate_default_principal_part = generate_default_imperative_principal_part,
 		conjugate = add_imperative,
 		add_reflexive_clitics = add_imperative_reflexive_clitics,
+		add_prefixed_reflexive_variants = add_imperative_prefixed_reflexive_variants,
 	}},
 	{"negimp", {
 		desc = "negative imperative",
@@ -1742,6 +1766,7 @@ local row_conjugations = {
 		generate_default_principal_part = generate_default_gerund_principal_part,
 		conjugate = {""},
 		add_reflexive_clitics = add_gerund_reflexive_clitics,
+		add_prefixed_reflexive_variants = add_non_finite_prefixed_reflexive_variants,
 		no_row_overrides = true, -- useless because there's only one form; use explicit principal part
 		no_single_overrides = true, -- useless because there's only one form; use explicit principal part
 	}},
@@ -1789,6 +1814,24 @@ for _, rowconj in ipairs(row_conjugations) do
 		late_overridable_slot_set[slot] = true
 	end
 end
+
+
+local function add_reflexive_verb_form_of_slots()
+	for _, rowconj in ipairs(row_conjugations) do
+		local rowslot, rowspec = unpack(rowconj)
+		for _, persnum in ipairs(rowspec.persnums) do
+			local slot = rowslot .. persnum
+			table.insert(export.all_verb_slots, {slot .. "_non_reflexive", "-"})
+			-- If the row has prefixed reflexive variant forms (which means the clitics normally get suffixed), add
+			-- slots for those forms. Note that this means we may add slots for variant forms never populated (e.g.
+			-- imp2s); but this doesn't really matter, and it's not worth it to add special-casing for this.
+			if rowspec.add_prefixed_reflexive_variants then
+				table.insert(export.all_verb_slots, {slot .. "_variant", "-"})
+			end
+		end
+	end
+end
+
 
 local function handle_row_overrides_for_row(base, rowslot)
 	if base.row_override_specs[rowslot] then
@@ -2072,6 +2115,22 @@ local function conjugate_verb(base)
 	for _, rowconj in ipairs(row_conjugations) do
 		local rowslot, rowspec = unpack(rowconj)
 		conjugate_row(base, rowslot)
+	end
+	-- If any verb in alternant_multiword_spec is reflexive and we're being called from {{it-verb form of}}, we need to
+	-- copy the forms before adding the reflexive clitic(s) so we can properly handle non-reflexive forms of
+	-- reflexive-only verbs.
+	local need_extra_verb_form_of_slots = base.props.any_reflexive and base.props.from_verb_form_of
+	if need_extra_verb_form_of_slots then
+		for _, rowconj in ipairs(row_conjugations) do
+			local rowslot, rowspec = unpack(rowconj)
+			for _, persnum in ipairs(rowspec.persnums) do
+				local slot = rowslot .. persnum
+				copy_forms(base, slot .. "_non_reflexive", base.forms[slot])
+			end
+			if rowspec.add_prefixed_reflexive_variants then
+				rowspec.add_prefixed_reflexive_variants(base, rowslot)
+			end
+		end
 	end
 	if base.verb.linked_suf ~= "" then
 		for _, rowconj in ipairs(row_conjugations) do
@@ -2943,8 +3002,8 @@ end
 
 -- Detect inconsistencies in indicator specs. This checks that the properties 'impers' and 'thirdonly' are consistent
 -- across all verbs; checks that if the past participle is given as -, the auxiliary is also given as -; and propagates
--- certain properties (the `from_headword` property and the template args) down to each `base`.
-local function detect_all_indicator_specs(alternant_multiword_spec, from_headword)
+-- certain properties (the `source_module` property and the template args) down to each `base`.
+local function detect_all_indicator_specs(alternant_multiword_spec, source_module)
 	alternant_multiword_spec.props = {}
 
 	local props_that_must_be_consistent = {"impers", "thirdonly"}
@@ -2955,7 +3014,7 @@ local function detect_all_indicator_specs(alternant_multiword_spec, from_headwor
 				alternant_multiword_spec.props[prop] = true
 			end
 		end
-		base.from_headword = from_headword
+		base.source_module = source_module
 		base.args = alternant_multiword_spec.args
 	end)
 
@@ -3049,7 +3108,7 @@ end
 
 
 -- Add the categories and annotation for `base` into the appropriate structures in `alternant_multiword_spec`.
-local function add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma, from_headword)
+local function add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma, source_module)
 	local function insert_ann(anntype, value)
 		m_table.insertIfNot(alternant_multiword_spec.annotation[anntype], value)
 	end
@@ -3062,7 +3121,7 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		end
 	end
 
-	if check_for_red_links and not from_headword and not multiword_lemma then
+	if check_for_red_links and not source_module and not multiword_lemma then
 		for _, slot_and_accel in ipairs(export.all_verb_slots) do
 			local slot = slot_and_accel[1]
 			local forms = base.forms[slot]
@@ -3172,7 +3231,7 @@ end
 
 -- Compute the categories to add the verb to, as well as the annotation to display in the conjugation title bar. We
 -- combine the code to do these functions as both categories and title bar contain similar information.
-local function compute_categories_and_annotation(alternant_multiword_spec, from_headword)
+local function compute_categories_and_annotation(alternant_multiword_spec, source_module)
 	alternant_multiword_spec.categories = {}
 	local ann = {}
 	alternant_multiword_spec.annotation = ann
@@ -3191,7 +3250,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec, from_
 	end
 
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma, from_headword)
+		add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma, source_module)
 	end)
 	local ann_parts = {}
 	local conj = table.concat(ann.conj, " or ")
@@ -3393,7 +3452,7 @@ end
 -- Externally callable function to conjugate a verb. Return value is ALTERNANT_MULTIWORD_SPEC, an object where the
 -- conjugated forms are in `ALTERNANT_MULTIWORD_SPEC.forms` for each slot. If there are no values for a slot, the slot
 -- key will be missing. The value for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
-function export.do_generate_forms(args, from_headword, headword_head)
+function export.do_generate_forms(args, source_module, headword_head)
 	local pagename = args.pagename or mw.title.getCurrentTitle().text
 	local head = headword_head or pagename
 	local arg1 = args[1]
@@ -3468,7 +3527,7 @@ function export.do_generate_forms(args, from_headword, headword_head)
 	alternant_multiword_spec.args = args
 	alternant_multiword_spec.incorporated_headword_head_into_lemma = incorporated_headword_head_into_lemma
 	normalize_all_lemmas(alternant_multiword_spec)
-	detect_all_indicator_specs(alternant_multiword_spec, from_headword)
+	detect_all_indicator_specs(alternant_multiword_spec, source_module)
 	propagate_properties_upward_earlier(alternant_multiword_spec)
 	local inflect_props = {
 		slot_list = export.all_verb_slots,
@@ -3481,7 +3540,7 @@ function export.do_generate_forms(args, from_headword, headword_head)
 	propagate_properties_upward_later(alternant_multiword_spec)
 	compute_auxiliary(alternant_multiword_spec)
 	convert_accented_links(alternant_multiword_spec)
-	compute_categories_and_annotation(alternant_multiword_spec, from_headword)
+	compute_categories_and_annotation(alternant_multiword_spec, source_module)
 	if args.json then
 		return require("Module:JSON").toJSON(alternant_multiword_spec)
 	end
