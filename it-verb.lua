@@ -229,7 +229,7 @@ FIXME:
 	both sfare and rifare, sdarsi and ridare. (DONE)
 25. When handling built-in verbs, make sure we handle prefixes correctly w.r.t. negative imperatives. (DONE)
 26. Support ref: in footnotes. (DONE)
-27. Finish built-in -ire verbs.
+27. Finish built-in -ire verbs. (DONE)
 28. Implement error("If past participle given as '-', auxiliary must be explicitly specified as '-'"). (DONE)
 29. Make present participles default to enabled. (DONE)
 30. Instead of a qualifier for syntactic gemination, use a superscripted symbol with a tooltip, as for {{it-IPA}}.
@@ -257,7 +257,7 @@ FIXME:
     {{it-verb|e/@|head=[[stare a]] [[vedere]]}}. (DONE)
 46. Expand addnote[] notation to support references (maybe needs no work)?
 47. Support verbs in -glire ([[boglire]], [[inorgoglire]], [[saglire]], etc.) correctly. (DONE)
-48. Support {{it-verb form of}}.
+48. Support {{it-verb form of}}. (DONE)
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -996,7 +996,7 @@ local function add_non_finite_prefixed_reflexive_variants(base, rowslot)
 end
 
 
-local function add_finite_reflexive_clitics(base, rowslot)
+local function add_finite_clitics(base, rowslot)
 	for _, persnum in ipairs(full_person_number_list) do
 		base.forms[rowslot .. persnum] = iut.map_forms(base.forms[rowslot .. persnum], function(form)
 			return substitute_reflexive_pronoun(base.verb.finite_pref, persnum) .. "[[" .. form .. "]]"
@@ -1100,7 +1100,7 @@ local function add_infinitive(base, rowslot)
 end
 
 
-local function add_infinitive_reflexive_clitics(base, rowslot)
+local function add_infinitive_clitics(base, rowslot)
 	base.forms[rowslot] = iut.map_forms(base.forms[rowslot], function(form)
 		local unaccented_form = remove_accents(form)
 		form = rsub(form, "r?re$", "r")
@@ -1331,7 +1331,7 @@ local function add_imperative_prefixed_reflexive_variants(base, rowslot)
 end
 
 
-local function add_imperative_reflexive_clitics(base, rowslot)
+local function add_imperative_clitics(base, rowslot)
 	local s2suf = get_unlinked_clitic_suffix(base, "2s")
 	local saw_form_with_apostrophe = false
 
@@ -1393,7 +1393,7 @@ local function add_negative_imperative(base)
 end
 
 
-local function add_negative_imperative_reflexive_clitics(base, rowslot)
+local function add_negative_imperative_clitics(base, rowslot)
 	for _, persnum in ipairs({"2s", "1p", "2p"}) do
 		local suf = get_unlinked_clitic_suffix(base, persnum)
 		local pref = substitute_reflexive_pronoun(base.verb.finite_pref, persnum)
@@ -1545,7 +1545,7 @@ local function generate_default_conditional_principal_part(base, do_err)
 end
 
 
-local function add_participle_reflexive_clitics(base, rowslot)
+local function add_participle_clitics(base, rowslot)
 	-- do nothing
 end
 
@@ -1566,7 +1566,7 @@ local function generate_default_gerund_principal_part(base, do_err)
 end
 
 
-local function add_gerund_reflexive_clitics(base, rowslot)
+local function add_gerund_clitics(base, rowslot)
 	base.forms[rowslot] = iut.map_forms(base.forms[rowslot], function(form)
 		return form .. get_unlinked_clitic_suffix(base, "nf")
 	end)
@@ -1637,7 +1637,8 @@ The following specs are allowed:
 -- `no_explicit_principal_part` (DOCUMENT ME)
 -- `no_row_overrides` (DOCUMENT ME)
 -- `no_single_overrides` (DOCUMENT ME)
--- `add_reflexive_clitics` (DOCUMENT ME)
+-- `add_clitics` is a mandatory function of two arguments, `base` and `rowslot`, to add clitics to the forms for the
+   specified row. It will only be called if `base.verb.linked_suf` is non-empty, i.e. there is a clitic to add.
 -- `dont_check_defective_status` (DOCUMENT ME)
 ]=]
 local row_conjugations = {
@@ -1650,7 +1651,7 @@ local row_conjugations = {
 		no_explicit_principal_part = true, -- because handled specially using / or \ notation
 		no_row_overrides = true, -- useless because there's only one form; use / or \ notation
 		no_single_overrides = true, --useless because there's only one form; use / or \ notation
-		add_reflexive_clitics = add_infinitive_reflexive_clitics,
+		add_clitics = add_infinitive_clitics,
 		add_prefixed_reflexive_variants = add_non_finite_prefixed_reflexive_variants,
 	}},
 	{"pres", {
@@ -1664,7 +1665,7 @@ local row_conjugations = {
 		-- overrides before checking no_explicit_principal_part. The reason for special-casing is because there are two
 		-- principal parts involved, "pres" and "pres3s", and we allow both to be specified using the syntax
 		-- 'pres:PRES^PRES3S'.
-		add_reflexive_clitics = add_finite_reflexive_clitics,
+		add_clitics = add_finite_clitics,
 	}},
 	{"sub", {
 		desc = "present subjunctive",
@@ -1674,7 +1675,7 @@ local row_conjugations = {
 		row_override_persnums_to_full_persnums = {["123s"] = {"1s", "2s", "3s"}},
 		generate_default_principal_part = generate_default_present_subj_principal_part,
 		conjugate = add_present_subj,
-		add_reflexive_clitics = add_finite_reflexive_clitics,
+		add_clitics = add_finite_clitics,
 	}},
 	{"imp", {
 		desc = "imperative",
@@ -1683,7 +1684,7 @@ local row_conjugations = {
 		row_override_persnums = {"2s", "2p"},
 		generate_default_principal_part = generate_default_imperative_principal_part,
 		conjugate = add_imperative,
-		add_reflexive_clitics = add_imperative_reflexive_clitics,
+		add_clitics = add_imperative_clitics,
 		add_prefixed_reflexive_variants = add_imperative_prefixed_reflexive_variants,
 	}},
 	{"negimp", {
@@ -1692,7 +1693,7 @@ local row_conjugations = {
 		persnums = imp_person_number_list,
 		-- No generate_default_principal_part because all parts are copied from other parts.
 		conjugate = add_negative_imperative,
-		add_reflexive_clitics = add_negative_imperative_reflexive_clitics,
+		add_clitics = add_negative_imperative_clitics,
 		no_explicit_principal_part = true, -- because all parts are copied from other parts
 		no_row_overrides = true, -- not useful; use single overrides if really needed
 		-- We don't want a category [[:Category:Italian verbs with missing negative imperative]]; doesn't make
@@ -1705,7 +1706,7 @@ local row_conjugations = {
 		persnums = full_person_number_list,
 		generate_default_principal_part = generate_default_past_historic_principal_part,
 		conjugate = add_past_historic,
-		add_reflexive_clitics = add_finite_reflexive_clitics,
+		add_clitics = add_finite_clitics,
 		-- Set to "builtin" because normally handled specially in PRES^PRES3S,PHIS,PP spec, but when a built-in verb
 		-- is involved, we want a way of overriding the past historic (using 'phis:').
 		no_explicit_principal_part = "builtin",
@@ -1717,7 +1718,7 @@ local row_conjugations = {
 		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unstressed_stem,
 			function(stem) return combine_stem_ending(base, "imperf1s", stem, base.conj_vowel .. "vo") end) end,
 		conjugate = {"o", "i", "a", "àmo", "àte", "ano"},
-		add_reflexive_clitics = add_finite_reflexive_clitics,
+		add_clitics = add_finite_clitics,
 	}},
 	{"impsub", {
 		desc = "imperfect subjunctive",
@@ -1728,7 +1729,7 @@ local row_conjugations = {
 		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unstressed_stem,
 			function(stem) return combine_stem_ending(base, "impsub12s", stem, base.conj_vowel .. "ssi") end) end,
 		conjugate = {"ssi", "sse", "ssimo", "ste", "ssero"},
-		add_reflexive_clitics = add_finite_reflexive_clitics,
+		add_clitics = add_finite_clitics,
 	}},
 	{"fut", {
 		desc = "future",
@@ -1736,7 +1737,7 @@ local row_conjugations = {
 		persnums = full_person_number_list,
 		generate_default_principal_part = generate_default_future_principal_part,
 		conjugate = {"ò", "ài", "à", "émo", "éte", "ànno"},
-		add_reflexive_clitics = add_finite_reflexive_clitics,
+		add_clitics = add_finite_clitics,
 	}},
 	{"cond", {
 		desc = "conditional",
@@ -1744,7 +1745,7 @@ local row_conjugations = {
 		persnums = full_person_number_list,
 		generate_default_principal_part = generate_default_conditional_principal_part,
 		conjugate = {"èi", "ésti", {"èbbe", "ébbe"}, "émmo", "éste", {"èbbero", "ébbero"}},
-		add_reflexive_clitics = add_finite_reflexive_clitics,
+		add_clitics = add_finite_clitics,
 	}},
 	{"pp", {
 		desc = "past participle",
@@ -1752,7 +1753,7 @@ local row_conjugations = {
 		persnums = {""},
 		generate_default_principal_part = generate_default_past_participle_principal_part,
 		conjugate = {""},
-		add_reflexive_clitics = add_participle_reflexive_clitics,
+		add_clitics = add_participle_clitics,
 		-- Set to "builtin" because normally handled specially in PRES^PRES3S,PHIS,PP spec, but when a built-in verb
 		-- is involved, we want a way of overriding the past participle (using 'pp:').
 		no_explicit_principal_part = "builtin",
@@ -1765,7 +1766,7 @@ local row_conjugations = {
 		persnums = {""},
 		generate_default_principal_part = generate_default_gerund_principal_part,
 		conjugate = {""},
-		add_reflexive_clitics = add_gerund_reflexive_clitics,
+		add_clitics = add_gerund_clitics,
 		add_prefixed_reflexive_variants = add_non_finite_prefixed_reflexive_variants,
 		no_row_overrides = true, -- useless because there's only one form; use explicit principal part
 		no_single_overrides = true, -- useless because there's only one form; use explicit principal part
@@ -1776,7 +1777,7 @@ local row_conjugations = {
 		persnums = {""},
 		generate_default_principal_part = generate_default_present_participle_principal_part,
 		conjugate = {""},
-		add_reflexive_clitics = add_participle_reflexive_clitics,
+		add_clitics = add_participle_clitics,
 		no_row_overrides = true, -- useless because there's only one form; use explicit principal part
 		no_single_overrides = true, -- useless because there's only one form; use explicit principal part
 		-- Disable this; seems most verbs do have present participles
@@ -2136,7 +2137,7 @@ local function conjugate_verb(base)
 	if base.verb.linked_suf ~= "" then
 		for _, rowconj in ipairs(row_conjugations) do
 			local rowslot, rowspec = unpack(rowconj)
-			rowspec.add_reflexive_clitics(base, rowslot)
+			rowspec.add_clitics(base, rowslot)
 		end
 	end
 	erase_suppressed_slots(base)
