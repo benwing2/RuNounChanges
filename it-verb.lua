@@ -1816,6 +1816,7 @@ for _, rowconj in ipairs(row_conjugations) do
 end
 
 
+-- Add extra slots for use with reflexive verbs and {{it-verb form of}}.
 local function add_reflexive_verb_form_of_slots()
 	for _, rowconj in ipairs(row_conjugations) do
 		local rowslot, rowspec = unpack(rowconj)
@@ -2119,7 +2120,7 @@ local function conjugate_verb(base)
 	-- If any verb in alternant_multiword_spec is reflexive and we're being called from {{it-verb form of}}, we need to
 	-- copy the forms before adding the reflexive clitic(s) so we can properly handle non-reflexive forms of
 	-- reflexive-only verbs.
-	local need_extra_verb_form_of_slots = base.props.any_reflexive and base.props.from_verb_form_of
+	local need_extra_verb_form_of_slots = base.props.any_reflexive and base.source_module == "it-inflections"
 	if need_extra_verb_form_of_slots then
 		for _, rowconj in ipairs(row_conjugations) do
 			local rowslot, rowspec = unpack(rowconj)
@@ -3007,15 +3008,43 @@ local function detect_all_indicator_specs(alternant_multiword_spec, source_modul
 	alternant_multiword_spec.props = {}
 
 	local props_that_must_be_consistent = {"impers", "thirdonly"}
-	-- Propagate some settings up or down.
+
+	-- Propagate certain properties (e.g. reflexiveness) upward from individual `base` forms to the overall
+	-- `alternant_multiword_spec`. This is done "earlier" than conjugating the verb, and is needed prior to this because
+	-- it determines whether to generate extra slots for use with {{it-verb form of}}.
 	iut.map_word_specs(alternant_multiword_spec, function(base)
+		-- If there is an explicit stem spec, we display the imperfect principal part explicitly even if not marked
+		-- as irregular.
+		if base.principal_part_specs.explicit_stem_spec then
+			alternant_multiword_spec.props.has_explicit_stem_spec = true
+		end
+		-- If any verb is pronominal, we display the overall lemma as 'pronominal'.
+		if base.verb.is_pronominal then
+			alternant_multiword_spec.props.is_pronominal = true
+		end
+		-- If any verb is non-reflexive, we show the auxiliary.
+		if not base.verb.is_reflexive then
+			alternant_multiword_spec.props.is_non_reflexive = true
+		end
+		-- If any verb is reflexive, we need to generate _non_reflexive and _variant forms for use in
+		-- {{it-verb form of}}.
+		if base.verb.is_reflexive then
+			alternant_multiword_spec.props.any_reflexive = true
+		end
+		-- `impers` and `thirdonly` need to be consistent across all verbs as they determine e.g. which forms are
+		-- shown in the headword.
 		for _, prop in ipairs(props_that_must_be_consistent) do
 			if base.props[prop] then
 				alternant_multiword_spec.props[prop] = true
 			end
 		end
+	end)
+
+	-- Propagate some settings down from `alternant_multiword_spec` to individual `base` forms.
+	iut.map_word_specs(alternant_multiword_spec, function(base)
 		base.source_module = source_module
 		base.args = alternant_multiword_spec.args
+		base.props.any_reflexive = alternant_multiword_spec.props.any_reflexive
 	end)
 
 	for _, prop in ipairs(props_that_must_be_consistent) do
@@ -3041,28 +3070,6 @@ local function detect_all_indicator_specs(alternant_multiword_spec, source_modul
 			if pp_is_missing and not aux_is_missing then
 				error("If past participle given as '-', auxiliary must be explicitly specified as '-'")
 			end
-		end
-	end)
-end
-
-
--- Propagate certain properties (e.g. reflexiveness) upward from individual `base` forms to the overall
--- `alternant_multiword_spec`. This is done "earlier" than conjugating the verb, and is needed prior to this because
--- it determines whether to generate extra slots for use with {{it-verb form of}}.
-local function propagate_properties_upward_earlier(alternant_multiword_spec)
-	iut.map_word_specs(alternant_multiword_spec, function(base)
-		-- If there is an explicit stem spec, we display the imperfect principal part explicitly even if not marked
-		-- as irregular.
-		if base.principal_part_specs.explicit_stem_spec then
-			alternant_multiword_spec.props.has_explicit_stem_spec = true
-		end
-		-- If any verb is pronominal, we display the overall lemma as 'pronominal'.
-		if base.verb.is_pronominal then
-			alternant_multiword_spec.props.is_pronominal = true
-		end
-		-- If any verb is non-reflexive, we show the auxiliary.
-		if not base.verb.is_reflexive then
-			alternant_multiword_spec.props.is_non_reflexive = true
 		end
 	end)
 end
@@ -3453,9 +3460,38 @@ end
 -- conjugated forms are in `ALTERNANT_MULTIWORD_SPEC.forms` for each slot. If there are no values for a slot, the slot
 -- key will be missing. The value for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_forms(args, source_module, headword_head)
-	local pagename = args.pagename or mw.title.getCurrentTitle().text
+	local PAGENAME = mw.title.getCurrentTitle().text
+	local function in_template_space()
+		return mw.title.getCurrentTitle().nsText == "Template"
+	end
+	local pagename = source_module ~= "it-inflections" and args.pagename or PAGENAME
 	local head = headword_head or pagename
 	local arg1 = args[1]
+
+	if not arg1 then
+		if (pagename == "it-conj" or pagename == "it-verb") and in_template_space() then
+			arg1 = "mettere<a\\é,mìsi,mésso>"
+		elseif pagename == "it-verb form of" and in_template_space() then
+			arg1 = "amare"
+		else
+			error("Internal error: Missing 1= and not caught earlier")
+		end
+	end
+
+	-- When called from {{it-verb form of}}, determine the non-lemma form whose inflections we're being asked to
+	-- determine. This normally comes from the page title or the value of |pagename=.
+	local verb_form_of_form
+	if source_module == "it-inflections" then
+		verb_form_of_form = args.pagename
+		if not verb_form_of_form then
+			if PAGENAME == "it-verb form of" and in_template_space() then
+				verb_form_of_form = "ami"
+			else
+				verb_form_of_form = PAGENAME
+			end
+		end
+	end
+
 	local need_surrounding_angle_brackets = true
 	local incorporated_headword_head_into_lemma = false
 	-- Check whether we need to add <...> around the argument. If the
@@ -3525,10 +3561,13 @@ function export.do_generate_forms(args, source_module, headword_head)
 	local alternant_multiword_spec = iut.parse_inflected_text(escaped_arg1, parse_props)
 	alternant_multiword_spec.pos = pos or "verbs"
 	alternant_multiword_spec.args = args
+	alternant_multiword_spec.verb_form_of_form = verb_form_of_form
 	alternant_multiword_spec.incorporated_headword_head_into_lemma = incorporated_headword_head_into_lemma
 	normalize_all_lemmas(alternant_multiword_spec)
 	detect_all_indicator_specs(alternant_multiword_spec, source_module)
-	propagate_properties_upward_earlier(alternant_multiword_spec)
+	if alternant_multiword_spec.props.any_reflexive and source_module == "it-inflections" then
+		add_reflexive_verb_form_of_slots()
+	end
 	local inflect_props = {
 		slot_list = export.all_verb_slots,
 		inflect_word_spec = conjugate_verb,
@@ -3554,7 +3593,7 @@ end
 -- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
 function export.parse_args_and_generate_forms(parent_args)
 	local params = {
-		[1] = {required = true, default = def or "mettere<a\\é,mìsi,mésso>"},
+		[1] = {required = true},
 		["noautolinktext"] = {type = "boolean"},
 		["noautolinkverb"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing
@@ -3565,7 +3604,7 @@ function export.parse_args_and_generate_forms(parent_args)
 	return export.do_generate_forms(args)
 end
 
-	
+
 -- Entry point for {{it-conj}}. Template-callable function to parse and conjugate a verb given
 -- user-specified arguments and generate a displayable table of the conjugated forms.
 function export.show(frame)
