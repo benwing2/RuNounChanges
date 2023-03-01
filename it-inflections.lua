@@ -29,31 +29,8 @@ end
 local function generate_inflection_of(tags, lemma)
 	local has_multiple_tag_sets = #tags > 1
 
-	-- If only one tag set, extract out the "combined with ..." text and move into posttext=, which goes after the lemma.
-	local posttext
-	if #tags == 1 then
-		local tag_set_without_posttext
-		tag_set_without_posttext, posttext = tags[1]:match("^(.*)|(combined with .*)$")
-		if tag_set_without_posttext then
-			tags[1] = tag_set_without_posttext
-			posttext = " " .. posttext
-		end
-	end
-
 	tags = table.concat(tags, "|;|")
 	tags = rsplit(tags, "|")
-
-	local function hack_clitics(text)
-		return text:gsub("%[%[(.-)%]%]", function(pronoun) return m_links.full_link({term = pronoun, lang = lang}, "term") end)
-	end
-
-	-- Hack to convert raw-linked pronouns e.g. in 'combined with [[te]]' to Spanish-linked pronouns.
-	for i, tag in ipairs(tags) do
-		if tag:find("%[%[") then
-			tags[i] = hack_clitics(tag)
-		end
-	end
-	posttext = posttext and hack_clitics(posttext) or nil
 
 	local terminfo = {
 		lang = lang,
@@ -66,14 +43,19 @@ local function generate_inflection_of(tags, lemma)
 	local categories = m_form_of.fetch_lang_categories(lang, tags, terminfo, "verb")
 	local cat_text = #categories > 0 and require("Module:utilities").format_categories(categories, lang) or ""
 	return m_form_of.tagged_inflections({
-		tags = tags, terminfo = terminfo, terminfo_face = "term", posttext = posttext
+		tags = tags, terminfo = terminfo, terminfo_face = "term",
 	}) .. cat_text
 end
 
 function export.verb_form_of(frame)
 	local parargs = frame:getParent().args
-	-- FIXME, calling convention here
-	local alternant_multiword_spec = m_it_verb.do_generate_forms(parargs, false, "from verb form of")
+	local params = {
+		[1] = {required = true, default = def or "mettere<a\\é,mìsi,mésso>"},
+		["pagename"] = {}, -- for testing
+	}
+
+	local args = require("Module:parameters").process(parent_args, params)
+	local alternant_multiword_spec = m_it_verb.do_generate_forms(args, "it-inflections")
 	local non_lemma_form = alternant_multiword_spec.verb_form_of_form
 
 	local lemmas = {}
