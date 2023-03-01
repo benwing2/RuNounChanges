@@ -24,6 +24,13 @@ def process_text_on_page(index, pagetitle, text, templates, new_names, params_to
 
   parsed = blib.parse_text(text)
 
+  def substitute_in_value(value, is_regex=False):
+    repl_pagetitle = pagetitle
+    if is_regex:
+      repl_pagetitle = re.escape(repl_pagetitle)
+    value = value.replace("{{PAGENAME}}", repl_pagetitle)
+    return value
+
   for t in parsed.filter_templates():
     origt = unicode(t)
     tn = tname(t)
@@ -32,30 +39,30 @@ def process_text_on_page(index, pagetitle, text, templates, new_names, params_to
     if tn in templates:
       must_continue = False
       for filt in filters:
-        m = re.search("^(.*)!=(.*)$", filt)
+        m = re.search("^(.*?)!=(.*)$", filt)
         if m:
-          if getp(m.group(1)) == m.group(2):
+          if getp(m.group(1)) == substitute_in_value(m.group(2)):
             pagemsg("Skipping %s because filter %s doesn't match" % (origt, filt))
             must_continue = True
             break
           continue
-        m = re.search("^(.*)=(.*)$", filt)
+        m = re.search("^(.*?)=(.*)$", filt)
         if m:
-          if getp(m.group(1)) != m.group(2):
+          if getp(m.group(1)) != substitute_in_value(m.group(2)):
             pagemsg("Skipping %s because filter %s doesn't match" % (origt, filt))
             must_continue = True
             break
           continue
         m = re.search("^(.*)!~(.*)$", filt)
         if m:
-          if re.search(m.group(2), getp(m.group(1))):
+          if re.search(substitute_in_value(m.group(2), is_regex=True), getp(m.group(1))):
             pagemsg("Skipping %s because filter %s doesn't match" % (origt, filt))
             must_continue = True
             break
           continue
         m = re.search("^(.*)~(.*)$", filt)
         if m:
-          if not re.search(m.group(2), getp(m.group(1))):
+          if not re.search(substitute_in_value(m.group(2), is_regex=True), getp(m.group(1))):
             pagemsg("Skipping %s because filter %s doesn't match" % (origt, filt))
             must_continue = True
             break
@@ -84,10 +91,12 @@ def process_text_on_page(index, pagetitle, text, templates, new_names, params_to
           rmparam(t, param)
           notes.append("remove %s= from {{%s}}" % (param, tn))
       for param, value in params_to_add:
+        value = substitute_in_value(value)
         if getparam(t, param) != value:
           t.add(param, value)
           notes.append("add %s=%s to {{%s}}" % (param, value, tn))
       for param, value in reversed(params_to_prepend):
+        value = substitute_in_value(value)
         if getparam(t, param) != value:
           if t.has(param):
             t.add(param, value)
@@ -119,6 +128,7 @@ def process_text_on_page(index, pagetitle, text, templates, new_names, params_to
               # add blank params to avoid leading a gap between last param so far and new params
               for i in xrange(max(max_existing_numeric_param, local_last_param_inserted) + 1, param_to_insert):
                 new_params.append((unicode(i + local_param_offset), ""))
+              values_to_insert = [substitute_in_value(v) for v in values_to_insert]
               for i, value_to_insert in enumerate(values_to_insert):
                 new_params.append((unicode(param_to_insert + local_param_offset + i), value_to_insert))
               notes.append("insert %s=%s into {{%s}}" % (param_to_insert, "|".join(values_to_insert), tn))
@@ -133,6 +143,7 @@ def process_text_on_page(index, pagetitle, text, templates, new_names, params_to
           if re.search("^[0-9]+$", pn):
             pnint = int(pn)
             for param_to_insert, values_to_insert in params_to_insert:
+              values_to_insert = [substitute_in_value(v) for v in values_to_insert]
               if param_to_insert > last_param_inserted and param_to_insert <= pnint:
                 for i, value_to_insert in enumerate(values_to_insert):
                   new_params.append((unicode(param_to_insert + param_offset + i), value_to_insert))
@@ -168,13 +179,13 @@ pa.add_argument("--from", help="Old name of param, can be specified multiple tim
     metavar="FROM", dest="from_", action="append")
 pa.add_argument("--to", help="New name of param, can be specified multiple times",
     action="append")
-pa.add_argument("--prepend", help="PARAM=VALUE to add at the beginning, can be specified multiple times",
+pa.add_argument("--prepend", help="PARAM=VALUE to add at the beginning, can be specified multiple times; VALUE can have {{PAGENAME}} in it to substitute the page title",
     action="append")
-pa.add_argument("--add", help="PARAM=VALUE to add at the end, can be specified multiple times",
+pa.add_argument("--add", help="PARAM=VALUE to add at the end, can be specified multiple times; VALUE can have {{PAGENAME}} in it to substitute the page title",
     action="append")
-pa.add_argument("--insert", help="Insert numeric PARAM=VALUE|VALUE|..., moving greater numeric params to the right; can be specified multiple times, works from right to left",
+pa.add_argument("--insert", help="Insert numeric PARAM=VALUE|VALUE|..., moving greater numeric params to the right; can be specified multiple times, works from right to left; VALUE can have {{PAGENAME}} in it to substitute the page title",
     action="append")
-pa.add_argument("--filter", help="Only take action on templates matching the filter, which should be either PARAM meaning the parameter must exist and be non-empty; !PARAM meaning the parameter must not exist or must be empty; PARAM=VALUE meaning the parameter must have the given value; PARAM!=VALUE meaning the parameter must not have the given value; PARAM~REGEXP meaning the parameter's value must match the given regular expression (unanchored); or PARAM!~REGEXP meaning the parameter's value must not match the given regular expression (unanchored). Can be specified multiple times and all must match. Note that all parameter values have whitespace stripped from both ends before comparison.",
+pa.add_argument("--filter", help="Only take action on templates matching the filter, which should be either PARAM meaning the parameter must exist and be non-empty; !PARAM meaning the parameter must not exist or must be empty; PARAM=VALUE meaning the parameter must have the given value; PARAM!=VALUE meaning the parameter must not have the given value; PARAM~REGEXP meaning the parameter's value must match the given regular expression (unanchored); or PARAM!~REGEXP meaning the parameter's value must not match the given regular expression (unanchored). Can be specified multiple times and all must match. Note that all parameter values have whitespace stripped from both ends before comparison. VALUE and REGEXP can have {{PAGENAME}} in them to substitute the page title; when substituting into a regular expression, the page title is properly escaped.",
     action="append")
 pa.add_argument("-c", "--comment", help="Comment to use in place of auto-generated ones.")
 args = pa.parse_args()
