@@ -50,6 +50,10 @@ def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
+  if pagetitle.startswith("Template:") or pagetitle.startswith("Module:"):
+    pagemsg("Skipping Template:/Module: page")
+    return
+
   notes = []
 
   retval = process_text_chunk(text, pagemsg)
