@@ -297,6 +297,10 @@ local MAV = "[aeiouàèéìòóù]" -- maybe-accented vowel
 local NMAV = "[^aeiouàèéìòóù]" -- not maybe-accented vowel
 
 local PRESERVE_ACCENT = u(0xFFF0)
+-- We prepend this onto verb forms as we generate them if called from {{it-verb form of}}. We do this so we can
+-- distinguish verb-form links we generate from links supplied by the user in surrounding text, so we can handle
+-- accents in them differently.
+local IS_VERB_FORM = u(0xFFF1)
 
 local full_person_number_list = {"1s", "2s", "3s", "1p", "2p", "3p"}
 local imp_person_number_list = {"2s", "3s", "1p", "2p", "3p"}
@@ -422,7 +426,7 @@ end
 
 
 -- Add links around words. If multiword_only, do it only in multiword forms.
-local function add_links(form, multiword_only)
+local function add_links(form, mark_verb_forms, multiword_only)
 	if form == "" or form == " " then
 		return form
 	end
@@ -434,7 +438,7 @@ local function add_links(form, multiword_only)
 			end
 		end
 		if not multiword_only and not form:find("%[%[") then
-			form = "[[" .. form .. "]]"
+			form = "[[" .. (mark_verb_forms and IS_VERB_FORM or "") .. form .. "]]"
 		end
 	end
 	return form
@@ -1818,17 +1822,22 @@ end
 
 
 -- Add extra slots for use with reflexive verbs and {{it-verb form of}}.
-local function add_reflexive_verb_form_of_slots()
+local function add_verb_form_of_slots(add_reflexive)
 	for _, rowconj in ipairs(row_conjugations) do
 		local rowslot, rowspec = unpack(rowconj)
 		for _, persnum in ipairs(rowspec.persnums) do
 			local slot = rowslot .. persnum
-			table.insert(export.all_verb_slots, {slot .. "_non_reflexive", "-"})
-			-- If the row has prefixed reflexive variant forms (which means the clitics normally get suffixed), add
-			-- slots for those forms. Note that this means we may add slots for variant forms never populated (e.g.
-			-- imp2s); but this doesn't really matter, and it's not worth it to add special-casing for this.
-			if rowspec.add_prefixed_reflexive_variants then
-				table.insert(export.all_verb_slots, {slot .. "_variant", "-"})
+			table.insert(export.all_verb_slots, {slot .. "_unaccented", "-"})
+			if add_reflexive then
+				table.insert(export.all_verb_slots, {slot .. "_non_reflexive", "-"})
+				table.insert(export.all_verb_slots, {slot .. "_non_reflexive_unaccented", "-"})
+				-- If the row has prefixed reflexive variant forms (which means the clitics normally get suffixed), add
+				-- slots for those forms. Note that this means we may add slots for variant forms never populated (e.g.
+				-- imp2s); but this doesn't really matter, and it's not worth it to add special-casing for this.
+				if rowspec.add_prefixed_reflexive_variants then
+					table.insert(export.all_verb_slots, {slot .. "_variant", "-"})
+					table.insert(export.all_verb_slots, {slot .. "_variant_unaccented", "-"})
+				end
 			end
 		end
 	end
@@ -2098,8 +2107,11 @@ end
 
 -- Any forms without links should get them now. Redundant ones will be stripped later.
 local function add_missing_links_to_forms(base)
+	local function do_add_links(form)
+		return add_links(form, base.source_module == "it-inflections" and "mark verb form" or nil)
+	end
 	for slot, forms in pairs(base.forms) do
-		map_side_effecting_forms(forms, add_links)
+		map_side_effecting_forms(forms, do_add_links)
 	end
 end
 
@@ -3566,8 +3578,8 @@ function export.do_generate_forms(args, source_module, headword_head)
 	alternant_multiword_spec.incorporated_headword_head_into_lemma = incorporated_headword_head_into_lemma
 	normalize_all_lemmas(alternant_multiword_spec)
 	detect_all_indicator_specs(alternant_multiword_spec, source_module)
-	if alternant_multiword_spec.props.any_reflexive and source_module == "it-inflections" then
-		add_reflexive_verb_form_of_slots()
+	if source_module == "it-inflections" then
+		add_verb_form_of_slots(alternant_multiword_spec.props.any_reflexive)
 	end
 	local inflect_props = {
 		slot_list = export.all_verb_slots,
