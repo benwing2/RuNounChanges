@@ -97,6 +97,7 @@ def process_text_on_page(index, pagetitle, pagetext):
   pagetext = pagetext_nonl + "\n\n"
 
   def do_sectext(sectext, secheadertext):
+    possible_templates = "{{inflection of}}/{{infl of}}"
     tname_re = "(?:(?:inflection|infl) of\|it)"
     chunks = re.split(r"^((?:# \{\{%s\|.*\n)+)" % tname_re, sectext, 0, re.M)
     this_note_parts = []
@@ -110,7 +111,6 @@ def process_text_on_page(index, pagetitle, pagetext):
             % (m.group(1), escape_newlines(verb_form_chunk)))
           extra_text = re.sub(r"\.$", "", m.group(2))
         else:
-          possible_templates = "{{inflection of}}/{{infl of}}"
           pagemsg("WARNING: Multiple calls to %s with extraneous text, skipping: <%s>"
             % (possible_templates, escape_newlines(verb_form_chunk)))
           continue
