@@ -58,7 +58,7 @@ def process_text_on_page(index, pagetitle, text):
     def getp(param):
       return getparam(t, param)
     tn = tname(t)
-    if tn == "pinyin reading of":
+    if tn in ["pinyin reading of", "pinread", "pinof"]:
       trad = getp("tas") or getp("t") or getp("trad") or getp("tra") or getp("1")
       simp = getp("s") or getp("simp") or getp("sim") or getp("2")
       if simp:
@@ -80,7 +80,8 @@ def process_text_on_page(index, pagetitle, text):
           "s", "simp", "sim", "2",
           "t2", "trad2", "tra2", "3",
           "s2", "simp2", "sim2", "4",
-          "5", "6", "7", "8", "9", "10"
+          "5", "6", "7", "8", "9", "10",
+          "lang", "def", # ignored
         ]:
           pagemsg("WARNING: Unrecognized parameter %s=%s in {{pinyin reading of}} template %s"
             % (pn, pv, unicode(t)))
