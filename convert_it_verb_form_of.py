@@ -27,8 +27,10 @@ def lookup_conjugation(inf, pagemsg, errandpagemsg):
     conjs = []
     for t in parsed.filter_templates():
       tn = tname(t)
-      if tn == "it-conj":
+      if tn in ["it-conj", "it-conj-rfc"]:
         arg1 = getparam(t, "1")
+        # remove references, which may include embedded <<...>> cross-refs etc.
+        arg1 = re.sub(r"\[(r|ref):[^\[\]]*?\]", "", arg1)
         if re.search("^<[^<>]*>$", arg1):
           newconj = "%s%s" % (inf, arg1)
         elif "<" in arg1:
@@ -65,7 +67,7 @@ def lookup_conjugation(inf, pagemsg, errandpagemsg):
     else:
       if len(conjs) > 1:
         warning = "WARNING: Multiple conjugations %s" % ", ".join(conjs)
-      conj = conjs[0]
+        pagemsg("%s: %s" % (inf, warning))
       conj_table[inf] = (conjs, None)
       pagemsg("%s: Returning %s" % (inf, ", ".join("'%s'" % conj for conj in conjs)))
       return conj_table[inf]
@@ -94,9 +96,10 @@ def process_text_on_page(index, pagetitle, pagetext):
   pagetext_nonl, finalnl = m.groups()
   pagetext = pagetext_nonl + "\n\n"
 
-  def do_sectext(sectext):
-    tname_re = "(?:inflection of\|it|infl of\|it)"
+  def do_sectext(sectext, secheadertext):
+    tname_re = "(?:(?:inflection|infl) of\|it)"
     chunks = re.split(r"^((?:# \{\{%s\|.*\n)+)" % tname_re, sectext, 0, re.M)
+    this_note_parts = []
     for k in xrange(1, len(chunks), 2):
       verb_form_chunk = chunks[k]
       extra_text = ""
@@ -125,7 +128,7 @@ def process_text_on_page(index, pagetitle, pagetext):
           must_continue = True
           break
         elif tn in ["inflection of", "infl of"] and getp("1") == "it":
-          misc_params = ["t", "gloss", "lit", "g", "g2", "g3", "g4", "g5", "tr", "ts", "pos", "id"]
+          misc_params = ["g", "g2", "g3", "g4", "g5", "tr", "ts", "pos"]
           for misc_param in misc_params:
             if t.has(misc_param):
               pagemsg("WARNING: Saw misc param %s=%s in {{%s}}, skipping: %s" % (
@@ -133,6 +136,9 @@ def process_text_on_page(index, pagetitle, pagetext):
               must_continue = True
               break
           inf = getp("2")
+          gloss = getp("t") or getp("gloss")
+          lit = getp("lit")
+          id = getp("id")
         else:
           pagemsg("WARNING: Saw non-%s template mixed in with such templates, skipping: %s" % (possible_templates, origt))
           must_continue = True
@@ -152,7 +158,7 @@ def process_text_on_page(index, pagetitle, pagetext):
         expansions = []
         expansion_conjugations = []
         for conj in conjs:
-          blib.set_template_name(t, "it-verb form of")
+          blib.set_template_name(t, "User:Benwing2/it-verb form of")
           del t.params[:]
           t.add("1", conj)
           newtemp = unicode(t)
@@ -173,16 +179,56 @@ def process_text_on_page(index, pagetitle, pagetext):
           must_continue = True
           break
         conj = expansion_conjugations[0]
-        notes.append("replace %s conjugation(s) for infinitive [[%s]] with {{it-verb form of|%s}}" % (old_template_desc, inf, conj))
+        this_note_parts.append((old_template_desc, inf, conj))
+        blib.set_template_name(t, "it-verb form of")
         del t.params[:]
         t.add("1", conj)
+        if gloss:
+          t.add("t", gloss)
+        if lit:
+          t.add("lit", lit)
+        if id:
+          t.add("id", id)
+        t.add("noheadword", "1")
         newtemp = unicode(t)
         parts.append("# " + newtemp + extra_text + "\n")
       if must_continue:
         continue
       chunks[k] = "".join(parts)
       pagemsg("Replaced <%s> with <%s>" % (escape_newlines(verb_form_chunk), escape_newlines(chunks[k])))
-    return "".join(chunks)
+    retval = "".join(chunks)
+    retval_body, retval_tail = blib.split_trailing_separator_and_categories(retval)
+    retval_body_included_headword = (
+      re.sub(r"\A\{\{head\|it\|verb form(?:\|head=[^{}|=]*)?\}\}\n\n*# (\{\{it-verb form of\|.*)\|noheadword=1(\}\}\n*)\Z", r"\1\2", retval_body)
+    )
+    if retval_body_included_headword != retval_body:
+      pagemsg("Removed headword and |noheadword=1 from {{it-verb form of}}")
+      retval_body = retval_body_included_headword
+      for old_template_desc, inf, conj in this_note_parts:
+        notes.append("replace headword and %s conjugation(s) for infinitive [[%s]] with {{it-verb form of|%s}}"
+          % (old_template_desc, inf, conj))
+    else:
+      def split_headers(m):
+        verb_form_ofs, trailing = m.groups()
+        verb_form_ofs = verb_form_ofs.rstrip("\n").split("\n")
+        verb_form_ofs = [re.sub(r"^# (.*)\|noheadword=1(.*)$", r"\1\2", verb_form_of) for verb_form_of in verb_form_ofs]
+        return ("\n\n%s" % secheadertext).join(verb_form_ofs) + "\n" + trailing
+      # there may be more than one {{it-verb form of}}; split headers
+      retval_body_split_headword = (
+        re.sub(r"\A\{\{head\|it\|verb form(?:\|head=[^{}|=]*)?\}\}\n\n*((?:# \{\{it-verb form of\|.*\|noheadword=1\}\}\n)+)(\n*)\Z",
+          split_headers, retval_body)
+      )
+      if retval_body_split_headword != retval_body:
+        pagemsg("Split multiple {{it-verb form of}} invocations into separate header sections")
+        retval_body = retval_body_split_headword
+        for i, (old_template_desc, inf, conj) in enumerate(this_note_parts):
+          notes.append("replace headword and %s conjugation(s) for infinitive [[%s]] with %s{{it-verb form of|%s}}"
+            % (old_template_desc, inf, "header + " if i > 0 else "", conj))
+      else:
+        for old_template_desc, inf, conj in this_note_parts:
+          notes.append("replace %s conjugation(s) for infinitive [[%s]] with {{it-verb form of|%s|noheadword=1}}"
+            % (old_template_desc, inf, conj))
+    return retval_body + retval_tail
 
   # Do {{inflection of}}.
   subsections = re.split("(^==+[^=\n]+==+\n)", pagetext, 0, re.M)
@@ -192,7 +238,7 @@ def process_text_on_page(index, pagetitle, pagetext):
       must_continue = False
       for t in parsed.filter_templates():
         tn = tname(t)
-        if tn in ["it-verb", "it-conj"]:
+        if tn in ["it-verb", "it-verb-rfc", "it-conj", "it-conj-rfc"]:
           pagemsg("WARNING: Saw verb form along with verb, skipping: %s" % (unicode(t)))
           must_continue = True
           break
@@ -204,7 +250,7 @@ def process_text_on_page(index, pagetitle, pagetext):
           pagemsg("WARNING: Saw {{head}} for wrong part of speech, skipping: %s" % (unicode(t)))
           must_continue = True
           break
-        subsections[k] = do_sectext(subsections[k])
+        subsections[k] = do_sectext(subsections[k], subsections[k - 1])
   pagetext = "".join(subsections)
 
   pagetext = pagetext.rstrip("\n") + finalnl
