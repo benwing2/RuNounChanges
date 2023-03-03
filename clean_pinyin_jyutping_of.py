@@ -64,13 +64,13 @@ def process_text_on_page(index, pagetitle, text):
       if simp:
         trad = check_simplified_matches_traditional(trad, simp, "cmn", "Mandarin", "First")
         if not trad:
-          break
+          continue
       trad2 = getp("t2") or getp("trad2") or getp("tra2") or getp("3")
       simp2 = getp("s2") or getp("simp2") or getp("sim2") or getp("4")
       if simp2:
         trad2 = check_simplified_matches_traditional(trad2, simp2, "cmn", "Mandarin", "Second")
         if not trad2:
-          break
+          continue
       remaining_params = [x for x in [getp("5"), getp("6"), getp("7"), getp("8"), getp("9"), getp("10")] if x]
       for param in t.params:
         pn = pname(param)
@@ -102,13 +102,13 @@ def process_text_on_page(index, pagetitle, text):
       if simp:
         trad = check_simplified_matches_traditional(trad, simp, "yue", "Cantonese", "First")
         if not trad:
-          break
+          continue
       trad2 = getp("tra2") or getp("trad2") or getp("3")
       simp2 = getp("sim2") or getp("simp2") or getp("4")
       if simp2:
         trad2 = check_simplified_matches_traditional(trad2, simp2, "yue", "Cantonese", "Second")
         if not trad2:
-          break
+          continue
       remaining_params = [x for x in [getp("5")] if x]
       for param in t.params:
         pn = pname(param)
