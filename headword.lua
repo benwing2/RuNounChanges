@@ -1,5 +1,12 @@
 local export = {}
 
+local find = mw.ustring.find
+local gmatch = mw.ustring.gmatch
+local gsub = mw.ustring.gsub
+local len = mw.ustring.len
+local toNFC = mw.ustring.toNFC
+local upper = mw.ustring.upper
+
 local m_data = mw.loadData("Module:headword/data")
 
 local title = mw.title.getCurrentTitle()
@@ -22,8 +29,8 @@ local function test_script(text, script_code)
 		
 		local out
 		if characters then
-			text = mw.ustring.gsub(text, "%W", "")
-			out = mw.ustring.find(text, "[" .. characters .. "]")
+			text = gsub(text, "%W", "")
+			out = find(text, "[" .. characters .. "]")
 		end
 		
 		if out then
@@ -41,15 +48,15 @@ end
 local spacingPunctuation = "[%s%p]+"
 --[[ List of punctuation or spacing characters that are found inside of words.
 	 Used to exclude characters from the regex above. ]]
-local wordPunc = "-־׳״'.·*’་•"
+local wordPunc = "-־׳״'.·*’་•:"
 local notWordPunc = "[^" .. wordPunc .. "]+"
 
 
 -- Return true if the given head is multiword according to the algorithm used
 -- in full_headword().
 function export.head_is_multiword(head)
-	for possibleWordBreak in mw.ustring.gmatch(head, spacingPunctuation) do
-		if mw.ustring.find(possibleWordBreak, notWordPunc) then
+	for possibleWordBreak in gmatch(head, spacingPunctuation) do
+		if find(possibleWordBreak, notWordPunc) then
 			return true
 		end
 	end
@@ -61,11 +68,11 @@ end
 -- Add links to a multiword head.
 function export.add_multiword_links(head)
 	local function workaround_to_exclude_chars(s)
-		return mw.ustring.gsub(s, notWordPunc, "]]%1[[")
+		return gsub(s, notWordPunc, "]]%1[[")
 	end
 	
 	head = "[["
-		.. mw.ustring.gsub(
+		.. gsub(
 			head,
 			spacingPunctuation,
 			workaround_to_exclude_chars
@@ -74,13 +81,13 @@ function export.add_multiword_links(head)
 	--[=[
 	use this when workaround is no longer needed:
 	head = "[["
-		.. mw.ustring.gsub(head, WORDBREAKCHARS, "]]%1[[")
+		.. gsub(head, WORDBREAKCHARS, "]]%1[[")
 		.. "]]"
 	
 	Remove any empty links, which could have been created above
 	at the beginning or end of the string.
 	]=]
-	head = mw.ustring.gsub(head, "%[%[%]%]", "")
+	head = head:gsub("%[%[%]%]", "")
 	return head
 end
 
@@ -129,7 +136,7 @@ local function preprocess(data, postype)
 		or title.nsText == "Reconstruction"
 	
 	-- Create a default headword.
-	local subpagename = title.subpageText
+	local subpagename = title.subpageText:gsub("^Unsupported titles/", "")
 	local pagename = title.text
 	local default_head
 	if is_reconstructed then
@@ -141,8 +148,7 @@ local function preprocess(data, postype)
 	local unmodified_default_head = default_head
 
 	-- Add links to multi-word page names when appropriate
-	if data.lang:getCode() ~= "zh" and (not is_reconstructed) and
-			export.head_is_multiword(default_head) then
+	if not m_data.no_multiword_links[data.lang:getCode()] and not is_reconstructed and export.head_is_multiword(default_head) then
 		default_head = export.add_multiword_links(default_head)
 	end
 	
@@ -151,10 +157,9 @@ local function preprocess(data, postype)
 	end
 	
 	-- If using a discouraged character sequence, add to maintenance category
-	if data.sc:hasNormalizationFixes() == true then
-		local toNFC = mw.ustring.toNFC
-		for i, head in ipairs(data.heads) do
-			if data.sc:fixDiscouragedSequences(toNFC(head)) ~= toNFC(head) then
+	for i, script in ipairs(data.sc) do
+		if script:hasNormalizationFixes() == true then
+			if script:fixDiscouragedSequences(toNFC(data.heads[i])) ~= toNFC(data.heads[i]) then
 				table.insert(data.categories, "Pages using discouraged character sequences")
 			end
 		end
@@ -182,17 +187,9 @@ local function preprocess(data, postype)
 			-- Exclude hyphens if the data module states that they should for this language
 			checkpattern = ".[%s፡]."
 		end
-		if mw.ustring.find(unmodified_default_head, checkpattern) and not non_categorizable() then
+		if find(unmodified_default_head, checkpattern) and not non_categorizable() then
 			table.insert(data.categories, data.lang:getCanonicalName() .. " multiword terms")
 		end
-	end
-
-	--[[	Try to detect the script if it was not provided
-			We use the first headword for this, and assume
-			that all of them have the same script
-			This *should* always be true, right?		]]
-	if not data.sc then
-		data.sc = require("Module:scripts").findBestScript(data.heads[1], data.lang)
 	end
 	
 	for i, val in pairs(data.translits) do
@@ -204,11 +201,10 @@ local function preprocess(data, postype)
 		local translit = data.translits[i]
 		
 		-- Try to generate a transliteration if necessary
-		-- Generate it if the script is not Latn or similar, and if no transliteration was provided
 		if translit and translit.display == "-" then
 			translit = nil
-		elseif not translit and not (data.sc:getCode():find("Latn", nil, true) or data.sc:getCode() == "Latinx" or data.sc:getCode() == "None") and (not data.sc or data.sc:getCode() ~= "Imag") then
-			translit = data.lang:transliterate(require("Module:links").remove_links(head), data.sc)
+		elseif not translit and data.sc[i]:isTransliterated() then
+			translit = (data.lang:transliterate(require("Module:links").remove_links(head), data.sc[i]))
 			
 			-- There is still no transliteration?
 			-- Add the entry to a cleanup category.
@@ -260,17 +256,17 @@ local function format_headword(data)
 		end
 		
 		-- Apply processing to the headword, for formatting links and such
-		if head:find("[[", nil, true) and (not data.sc or data.sc:getCode() ~= "Imag") then
+		if head:find("[[", nil, true) and (not data.sc[i] or data.sc[i]:getCode() ~= "Imag") then
 			head = require("Module:links").language_link({term = head, lang = data.lang}, false)
 		else
-			head = data.lang:makeDisplayText(head)
+			head = data.lang:makeDisplayText(head, data.sc[i], true)
 		end
 		
 		-- Add language and script wrapper
 		if i == 1 then
-			head = m_scriptutils.tag_text(head, data.lang, data.sc, "head", nil, data.id)
+			head = m_scriptutils.tag_text(head, data.lang, data.sc[i], "head", nil, data.id)
 		else
-			head = m_scriptutils.tag_text(head, data.lang, data.sc, "head", nil)
+			head = m_scriptutils.tag_text(head, data.lang, data.sc[i], "head", nil)
 		end
 		
 		data.heads[i] = head
@@ -394,6 +390,8 @@ local function format_inflection_parts(data, parts)
 		-- when inflected forms aren't entry-worthy, e.g.: in Vulgar Latin
 		local nolink = part.hypothetical or part.nolink or data.nolink
 
+		local separator = part.separator or j > 1 and " <i>or</i> " -- use "" to request no separator
+
 		if part.label then
 			-- There should be a better way of italicizing a label. As is, this isn't customizable.
 			part = "<i>" .. part.label .. "</i>"
@@ -406,7 +404,7 @@ local function format_inflection_parts(data, parts)
 					term = not nolink and part.term or nil,
 					alt = part.alt or (nolink and part.term or nil),
 					lang = part.lang or data.lang,
-					sc = part.sc or parts.sc or (not part.lang and data.sc),
+					sc = part.sc or parts.sc or (not part.lang and data.sc[1]),
 					id = part.id,
 					genders = part.genders,
 					tr = part.translit or (not (parts.enable_auto_translit or data.inflections.enable_auto_translit) and "-" or nil),
@@ -427,7 +425,6 @@ local function format_inflection_parts(data, parts)
 		if right_qualifiers then
 			part = part .. right_qualifiers
 		end
-		local separator = part.separator or j > 1 and " <i>or</i> " -- use "" to request no separator
 		if separator then
 			part = separator .. part
 		end
@@ -441,13 +438,13 @@ local function format_inflection_parts(data, parts)
 		parts_output = " " .. table.concat(parts)
 	elseif parts.request then
 		parts_output = " <small>[please provide]</small>"
-			.. require("Module:utilities/format_categories")(
+			.. require("Module:utilities").format_categories(
 				{"Requests for inflections in " .. data.lang:getCanonicalName() .. " entries"},
 				lang,
 				nil,
 				nil,
 				data.force_cat_output or test_force_categories,
-				data.sc
+				data.sc[1]
 				)
 	end
 	
@@ -516,8 +513,10 @@ local function show_headword_line(data)
 	end
 	
 	if data.sccat and data.sc then
-		table.insert(data.categories, data.lang:getCanonicalName() .. " " .. data.pos_category
-			.. " in " .. data.sc:getDisplayForm())
+		for i, script in ipairs(data.sc) do
+			table.insert(data.categories, data.lang:getCanonicalName() .. " " .. data.pos_category
+				.. " in " .. script:getDisplayForm())
+		end
 	end
 	
 	-- Is it a lemma category?
@@ -542,8 +541,8 @@ local function show_headword_line(data)
 	
 	if namespace == "" and data.lang:getType() ~= "reconstructed" then
 		local m_links = require("Module:links")
-		for _, head in ipairs(data.heads) do
-			if title.prefixedText ~= m_links.getLinkPage(m_links.remove_links(head), data.lang, data.sc) then
+		for i, head in ipairs(data.heads) do
+			if title.prefixedText ~= m_links.getLinkPage(m_links.remove_links(head), data.lang, data.sc[i]) then
 				--[=[
 				[[Special:WhatLinksHere/Template:tracking/headword/pagename spelling mismatch]]
 				]=]
@@ -561,16 +560,15 @@ local function show_headword_line(data)
 		format_headword(data) ..
 		format_genders(data) ..
 		format_inflections(data) ..
-		require("Module:utilities/format_categories")(
+		require("Module:utilities").format_categories(
 			tracking_categories, data.lang, data.sort_key, nil,
-			data.force_cat_output or test_force_categories, data.sc
+			data.force_cat_output or test_force_categories, data.sc[1]
 			)
 end
 
 function export.full_headword(data)
 	local tracking_categories = {}
 	
-	-- Script-tags the topmost header.
 	local pagename = title.text
 	local fullPagename = title.fullText
 	local namespace = title.nsText
@@ -579,38 +577,57 @@ function export.full_headword(data)
 		error("In data, the first argument to full_headword, data.lang should be a language object.")
 	end
 	
-	if not data.sc then
-		data.sc = require("Module:scripts").findBestScript(data.heads and data.heads[1] ~= "" and data.heads[1] or pagename, data.lang)
+	if not data.heads then
+		data.heads = {pagename}
+	elseif type(data.heads) == "string" then
+		data.heads = {data.heads}
+	end
+	
+	--[[	Try to detect the script(s) if not provided	]]
+	if data.sc and data.sc._type == "script object" then
+		data.sc = {data.sc}
+	end
+	
+	if not data.sc or #data.sc ~= #data.heads then
+		data.sc = {}
+		if #data.heads > 1 then
+			for i, head in ipairs(data.heads) do
+				data.sc[i] = data.lang:findBestScript(data.heads[i])
+			end
+		else
+			data.sc[1] = data.lang:findBestScript(data.heads[1] ~= "" and data.heads[1] or pagename)
+		end
 	else
 		-- Track uses of sc parameter
-		local best = require("Module:scripts").findBestScript(pagename, data.lang)
+		local best = data.lang:findBestScript(pagename)
 		require("Module:debug/track")("headword/sc")
 		
-		if data.sc:getCode() == best:getCode() then
+		if data.sc[1]:getCode() == best:getCode() then
 			require("Module:debug/track")("headword/sc/redundant")
-			require("Module:debug/track")("headword/sc/redundant/" .. data.sc:getCode())
+			require("Module:debug/track")("headword/sc/redundant/" .. data.sc[1]:getCode())
 		else
 			require("Module:debug/track")("headword/sc/needed")
-			require("Module:debug/track")("headword/sc/needed/" .. data.sc:getCode())
+			require("Module:debug/track")("headword/sc/needed/" .. data.sc[1]:getCode())
 		end
 	end
 	
-	local displayTitle
 	-- Assumes that the scripts in "toBeTagged" will never occur in the Reconstruction namespace.
 	-- Avoid tagging ASCII as Hani even when it is tagged as Hani in the
 	-- headword, as in [[check]]. The check for ASCII might need to be expanded
 	-- to a check for any Latin characters and whitespace or punctuation.
-	if (namespace == "" and data.sc and toBeTagged[data.sc:getCode()]
+	-- Where there are multiple headwords, use the script for the first.
+	local displayTitle
+	if (namespace == "" and data.sc and toBeTagged[data.sc[1]:getCode()]
 			and not pagename:find "^[%z\1-\127]+$")
-			or (data.sc:getCode() == "Jpan" and (test_script(pagename, "Hira") or test_script(pagename, "Kana")))
-			or (data.sc:getCode() == "Kore" and (test_script(pagename, "Hang"))) then
-		displayTitle = '<span class="' .. data.sc:getCode() .. '">' .. pagename .. '</span>'
+			or (data.sc[1]:getCode() == "Jpan" and (test_script(pagename, "Hira") or test_script(pagename, "Kana")))
+			or (data.sc[1]:getCode() == "Kore" and (test_script(pagename, "Hang"))) then
+		displayTitle = '<span class="' .. data.sc[1]:getCode() .. '">' .. pagename .. '</span>'
 	-- Keep Han entries region-neutral in the display title.
 	elseif namespace == "" and data.sc and not pagename:find "^[%z\1-\127]+$"
-			and (data.sc:getCode() == "Hant" or data.sc:getCode() == "Hans") then
+			and (data.sc[1]:getCode() == "Hant" or data.sc[1]:getCode() == "Hans") then
 		displayTitle = '<span class="Hani">' .. pagename .. '</span>'
 	elseif namespace == "Reconstruction" then
-		displayTitle, matched = mw.ustring.gsub(
+		displayTitle, matched = gsub(
 			fullPagename,
 			"^(Reconstruction:[^/]+/)(.+)$",
 			function(before, term)
@@ -618,7 +635,7 @@ function export.full_headword(data)
 					require("Module:script utilities").tag_text(
 						term,
 						data.lang,
-						data.sc
+						data.sc[1]
 					)
 			end
 		)
@@ -652,7 +669,7 @@ function export.full_headword(data)
 		local lang_name = require("Module:string/pattern_escape")(data.lang:getCanonicalName())
 		for _, cat in ipairs(data.categories) do
 			-- Does the category begin with the language name? If not, tag it with a tracking category.
-			if not mw.ustring.find(cat, "^" .. lang_name) then
+			if not find(cat, "^" .. lang_name) then
 				mw.log(cat, data.lang:getCanonicalName())
 				table.insert(tracking_categories, "head tracking/no lang category")
 				
@@ -667,9 +684,9 @@ function export.full_headword(data)
 		end
 		
 		if not data.pos_category
-			and mw.ustring.find(data.categories[1], "^" .. data.lang:getCanonicalName())
+			and data.categories[1]:find("^" .. data.lang:getCanonicalName())
 				then
-			data.pos_category = mw.ustring.gsub(data.categories[1], "^" .. data.lang:getCanonicalName() .. " ", "")
+			data.pos_category = data.categories[1]:gsub("^" .. data.lang:getCanonicalName() .. " ", "")
 			table.remove(data.categories, 1)
 		end
 	end
@@ -687,10 +704,10 @@ function export.full_headword(data)
 	local standard = data.lang:getStandardCharacters()
 	
 	if standard then
-		if mw.ustring.len(title.subpageText) ~= 1 and not non_categorizable() then
-			for character in mw.ustring.gmatch(title.subpageText, "([^" .. standard .. "])") do
-				local upper = mw.ustring.upper(character)
-				if not mw.ustring.find(upper, "[" .. standard .. "]") then
+		if len(title.subpageText) ~= 1 and not non_categorizable() then
+			for character in gmatch(title.subpageText, "([^" .. standard .. "])") do
+				local upper = upper(character)
+				if not find(upper, "[" .. standard .. "]") then
 					character = upper
 				end
 				table.insert(
@@ -702,9 +719,9 @@ function export.full_headword(data)
 	end
 	
 	-- Categorise for palindromes
-	if not data.nopalindromecat and title.nsText ~= "Reconstruction" and mw.ustring.len(title.subpageText) > 2
+	if not data.nopalindromecat and title.nsText ~= "Reconstruction" and len(title.subpageText) > 2
 		and require("Module:palindromes").is_palindrome(
-			title.subpageText, data.lang, data.sc
+			title.subpageText, data.lang, data.sc[1]
 			) then
 		table.insert(data.categories, data.lang:getCanonicalName() .. " palindromes")
 	end
@@ -714,13 +731,13 @@ function export.full_headword(data)
 	local text = show_headword_line(data)
 	return
 		text ..
-		require("Module:utilities/format_categories")(
+		require("Module:utilities").format_categories(
 			data.categories, data.lang, data.sort_key, nil,
-			data.force_cat_output or test_force_categories, data.sc
+			data.force_cat_output or test_force_categories, data.sc[1]
 			) ..
-		require("Module:utilities/format_categories")(
+		require("Module:utilities").format_categories(
 			tracking_categories, data.lang, data.sort_key, nil,
-			data.force_cat_output or test_force_categories, data.sc
+			data.force_cat_output or test_force_categories, data.sc[1]
 			)
 end
 
