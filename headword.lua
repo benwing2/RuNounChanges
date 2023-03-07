@@ -467,6 +467,22 @@ end
 function export.full_headword(data)
 	local tracking_categories = {}
 
+	------------ Basic checks for old-style (multi-arg) calling convention. ------------
+
+	if data.getCanonicalName then
+		error("In full_headword(), the first argument `data` needs to be a Lua object (table) of properties, not a language object")
+	end
+
+	if not data.lang or type(data.lang) ~= "table" or not data.lang.getCode then
+		error("In full_headword(), the first argument `data` needs to be a Lua object (table) and `data.lang` must be a language object")
+	end
+
+	if data.id and type(data.id) ~= "string" then
+		error("The id in the data table should be a string.")
+	end
+
+	------------ Initialize pagename etc. ------------
+
 	if data.pagename then -- for testing, doc pages, etc.
 		data.title = mw.title.new(data.pagename)
 		if not data.title then
@@ -479,13 +495,9 @@ function export.full_headword(data)
 	local pagename = data.title.text
 	local namespace = data.title.nsText
 
-	if data.getCanonicalName then
-		error("In full_headword(), the first argument `data` needs to be a Lua object (table) of properties, not a language object")
-	end
+	local langcode = data.lang:getCode()
 
-	if not data.lang or type(data.lang) ~= "table" or not data.lang.getCode then
-		error("In full_headword(), the first argument `data` needs to be a Lua object (table) and `data.lang` must be a language object")
-	end
+	------------ Initialize `data.heads` table; if old-style, convert to new-style. ------------
 
 	if type(data.heads) == "table" and type(data.heads[1]) == "table" then
 		-- new-style
@@ -513,6 +525,8 @@ function export.full_headword(data)
 		data.heads[1] = {}
 	end
 
+	------------ Create a default headword, and add links to multiword page names. ------------
+
 	-- Determine if term is reconstructed
 	local is_reconstructed = data.lang:getType() == "reconstructed" or namespace == "Reconstruction"
 
@@ -528,7 +542,7 @@ function export.full_headword(data)
 	local unmodified_default_head = default_head
 
 	-- Add links to multi-word page names when appropriate
-	if not m_data.no_multiword_links[data.lang:getCode()] and not is_reconstructed and export.head_is_multiword(default_head) then
+	if not m_data.no_multiword_links[langcode] and not is_reconstructed and export.head_is_multiword(default_head) then
 		default_head = export.add_multiword_links(default_head)
 	end
 
@@ -536,124 +550,121 @@ function export.full_headword(data)
 		default_head = "*" .. default_head
 	end
 
-	local function check_redundant_sc(head, manual_sc)
-		if data.noscripttracking then
-			return
-		end
-		track("sc")
+	------------ Fill in missing values in `data.heads`. ------------
 
-		local auto_sc = data.lang:findBestScript(head)
-		local manual_code = manual_sc:getCode()
-		if manual_code == auto_sc:getCode() then
-			track("sc/redundant", manual_code)
-		else
-			track("sc/needed", manual_code)
-		end
-	end
+	-- True if any script among the headword scripts has spaces in it.
+	local any_script_has_spaces = false
 
-	-- Fill in missing values in `data.heads`.
 	for _, head in ipairs(data.heads) do
-		-- If missing head, replace with default head.
+
+		------ 1. If missing head, replace with default head.
 		if not head.head then
 			head.head = default_head
+		elseif head.head == default_head and langcode == "en" then
+			-- FIXME! Why are we only doing this for English?
+			table.insert(data.categories, data.lang:getCanonicalName() .. " terms with redundant head parameter")
 		end
 
-		-- Try to detect the script(s) if not provided. If a per-head script is provided, that takes precedence,
-		-- otherwise fall back to the overall script if given. If neither given, autodetect the script.
-		if head.sc then
-			-- Per-head script given.
-			check_redundant_sc(head.head, head.sc)
-		elseif data.sc then
-			-- Overall script given.
-			head.sc = data.sc
-			-- Only check for redundant script if there's a single head present. If multiple heads present, it
-			-- gets complicated (might be redundant for one but not the other), so don't try.
-			if #data.heads == 1 then
-				check_redundant_sc(head.head, head.sc)
+		------ 2. Try to detect the script(s) if not provided. If a per-head script is provided, that takes precedence,
+		------     otherwise fall back to the overall script if given. If neither given, autodetect the script.
+
+		if head.sc or data.sc then
+			-- Only create this closure when needed.
+			local function check_redundant_sc()
+				if data.noscripttracking then
+					return
+				end
+				track("sc")
+
+				local auto_sc = data.lang:findBestScript(head.head)
+				local manual_code = head.sc:getCode()
+				if manual_code == auto_sc:getCode() then
+					track("sc/redundant", manual_code)
+				else
+					track("sc/needed", manual_code)
+				end
+			end
+			if head.sc then
+				-- Per-head script given.
+				check_redundant_sc()
+			else
+				-- Overall script given.
+				head.sc = data.sc
+				-- Only check for redundant script if there's a single head present. If multiple heads present, it
+				-- gets complicated (might be redundant for one but not the other), so don't try.
+				if #data.heads == 1 then
+					check_redundant_sc()
+				end
 			end
 		else
 			head.sc = data.lang:findBestScript(head.head)
 		end
 
-		for i, val in pairs(data.translits) do
-			data.translits[i] = {display = val, is_manual = true}
-		end
-
-		-- Make transliterations
-		for i, head in ipairs(data.heads) do
-			local translit = data.translits[i]
-
-			-- Try to generate a transliteration if necessary
-			if translit and translit.display == "-" then
-				translit = nil
-			elseif not translit and not notranslit[data.lang:getCode()] and data.sc[i]:isTransliterated() then
-				translit = (data.lang:transliterate(require("Module:links").remove_links(head), data.sc[i]))
-				translit = translit and mw.text.trim(translit)
-
-				-- There is still no transliteration?
-				-- Add the entry to a cleanup category.
-				if not translit then
-					translit = "<small>transliteration needed</small>"
-					table.insert(data.categories, "Requests for transliteration of " .. data.lang:getCanonicalName() .. " terms")
-				end
-
-				if translit then
-					translit = {display = translit, is_manual = false}
-				end
-			end
-
-			-- Link to the transliteration entry for languages that require this
-			if translit and data.lang:link_tr() then
-				translit.display = require("Module:links").full_link{
-					term = translit.display,
-					lang = data.lang,
-					sc = require("Module:scripts").getByCode("Latn"),
-					tr = "-"
-					}
-			end
-
-			data.translits[i] = translit
-		end
-
-
-	-- If using a discouraged character sequence, add to maintenance category
-	for i, script in ipairs(data.sc) do
-		if script:hasNormalizationFixes() == true then
-			if script:fixDiscouragedSequences(unfc(data.heads[i])) ~= unfc(data.heads[i]) then
+		-- If using a discouraged character sequence, add to maintenance category.
+		if head.sc:hasNormalizationFixes() == true then
+			local composed_head = unfc(head.head)
+			if head.sc:fixDiscouragedSequences(composed_head) ~= composed_head then
 				table.insert(data.categories, "Pages using discouraged character sequences")
 			end
 		end
-	end
 
-	-- If a head is the empty string "", then replace it with the default
-	for i, head in ipairs(data.heads) do
-		if head == "" then
-			head = default_head
-		else
-			if head == default_head and data.lang:getCanonicalName() == "English" then
-				table.insert(data.categories, data.lang:getCanonicalName() .. " terms with redundant head parameter")
+		any_script_has_spaces = any_script_has_spaces or head.sc:hasSpaces()
+
+		------ 3. Create automatic transliterations for any non-Latin headwords without manual translit given
+		------    (provided automatic translit is available, e.g. not in Persian or Hebrew).
+
+		-- Make transliterations
+		if head.tr then
+			head.tr = {display = head.tr, is_manual = true}
+		end
+
+		local translit = head.tr
+
+		-- Try to generate a transliteration if necessary
+		if translit and translit.display == "-" then
+			translit = nil
+		elseif not translit and not notranslit[langcode] and head.sc:isTransliterated() then
+			translit = (data.lang:transliterate(require("Module:links").remove_links(head), head.sc))
+			translit = translit and mw.text.trim(translit)
+
+			-- There is still no transliteration?
+			-- Add the entry to a cleanup category.
+			if not translit then
+				translit = "<small>transliteration needed</small>"
+				table.insert(data.categories, "Requests for transliteration of " .. data.lang:getCanonicalName() .. " terms")
+			end
+
+			if translit then
+				translit = {display = translit, is_manual = false}
 			end
 		end
-		data.heads[i] = head
+
+		-- Link to the transliteration entry for languages that require this.
+		if translit and data.lang:link_tr() then
+			translit.display = require("Module:links").full_link {
+				term = translit.display,
+				lang = data.lang,
+				sc = require("Module:scripts").getByCode("Latn"),
+				tr = "-"
+			}
+		end
+
+		head.tr = translit
 	end
 
-	-- If the first head is multiword (after removing links), maybe insert into "LANG multiword terms"
-	if (not data.nomultiwordcat) and postype == "lemma" and data.sc[1]:hasSpaces() and (not m_data.no_multiword_cat[data.lang:getCode()]) then
+	-- If the first head is multiword (after removing links), maybe insert into "LANG multiword terms".
+	if not data.nomultiwordcat and any_script_has_spaces and postype == "lemma" and not m_data.no_multiword_cat[langcode] then
 		-- Check for spaces or hyphens, but exclude prefixes and suffixes.
 		-- Use the pagename, not the head= value, because the latter may have extra
 		-- junk in it, e.g. superscripted text that throws off the algorithm.
 		local checkpattern = ".[%s%-፡]."
-		if m_data.hyphen_not_multiword_sep[data.lang:getCode()] then
+		if m_data.hyphen_not_multiword_sep[langcode] then
 			-- Exclude hyphens if the data module states that they should for this language
 			checkpattern = ".[%s፡]."
 		end
 		if rfind(unmodified_default_head, checkpattern) and not non_categorizable(data) then
 			table.insert(data.categories, data.lang:getCanonicalName() .. " multiword terms")
 		end
-	end
-
-	if data.id and type(data.id) ~= "string" then
-		error("The id in the data table should be a string.")
 	end
 
 	-- Assumes that the scripts in "toBeTagged" will never occur in the Reconstruction namespace.
@@ -719,7 +730,7 @@ function export.full_headword(data)
 				--[=[
 				[[Special:WhatLinksHere/Template:tracking/head tracking/no lang category]]
 				]=]
-				track("no lang category", data.lang:getCode())
+				track("no lang category", langcode)
 			end
 		end
 
@@ -760,9 +771,9 @@ function export.full_headword(data)
 
 	-- Categorise for palindromes
 	if not data.nopalindromecat and namespace ~= "Reconstruction" and ulen(data.title.subpageText) > 2
-		and require("Module:palindromes").is_palindrome(
-			data.title.subpageText, data.lang, data.sc[1]
-			) then
+		-- FIXME: Use of first script here seems hacky. What is the clean way of doing this in the presence of
+		-- multiple scripts?
+		and require("Module:palindromes").is_palindrome(data.title.subpageText, data.lang, data.heads[1].sc) then
 		table.insert(data.categories, data.lang:getCanonicalName() .. " palindromes")
 	end
 
@@ -773,11 +784,11 @@ function export.full_headword(data)
 		text ..
 		require("Module:utilities").format_categories(
 			data.categories, data.lang, data.sort_key, nil,
-			data.force_cat_output or test_force_categories, data.sc[1]
+			data.force_cat_output or test_force_categories, data.heads[1].sc
 			) ..
 		require("Module:utilities").format_categories(
 			tracking_categories, data.lang, data.sort_key, nil,
-			data.force_cat_output or test_force_categories, data.sc[1]
+			data.force_cat_output or test_force_categories, data.heads[1].sc
 			)
 end
 
