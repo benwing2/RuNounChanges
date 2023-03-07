@@ -9,10 +9,10 @@ verb form given the form and the conjugation spec for the verb (which is usually
 and {{it-verb}}).
 ]=]
 
-local m_links = require("Module:links")
 local m_table = require("Module:table")
 local m_form_of = require("Module:form of")
-local m_it_verb = require("Module:it-verb")
+local m_links = require("Module:links")
+local m_it_verb = require("Module:User:Benwing2/it-verb")
 
 local lang = require("Module:languages").getByCode("it")
 
@@ -24,6 +24,14 @@ local usub = mw.ustring.sub
 local function track(page)
 	require("Module:debug/track")("it-inflections/" .. page)
 	return true
+end
+
+local function extract_link_targets(text)
+    text = text:gsub("%[%[([^|%]]-)|[^|%]]-%]%]", "%1")
+    text = text:gsub("%[%[", "")
+    text = text:gsub("%]%]", "")
+
+    return text
 end
 
 local function generate_inflection_of(tags, lemma)
@@ -48,9 +56,10 @@ local function generate_inflection_of(tags, lemma)
 end
 
 function export.verb_form_of(frame)
-	local parargs = frame:getParent().args
+	local parent_args = frame:getParent().args
 	local params = {
 		[1] = {required = true, default = def or "mettere<a\\é,mìsi,mésso>"},
+		["noheadword"] = {type = "boolean"}, -- FIXME: ignored for now
 		["pagename"] = {}, -- for testing
 	}
 
@@ -63,28 +72,41 @@ function export.verb_form_of(frame)
 		error("Internal error: No infinitive?")
 	end
 	for _, formobj in ipairs(alternant_multiword_spec.forms.inf) do
-		m_table.insertIfNot(lemmas, m_links.remove_links(formobj.form))
+		m_table.insertIfNot(lemmas, extract_link_targets(formobj.form))
 	end
 
 	-- FIXME: Consider supporting multiple lemmas.
 	local lemma = lemmas[1]
 
 	local tags = {}
+	local accented_forms = {}
 	local function loop_over_verb_slots(verb_slots)
 		for _, slot_accel in ipairs(verb_slots) do
 			local slot, accel = unpack(slot_accel)
 			local forms = alternant_multiword_spec.forms[slot]
 			if forms then
 				for _, formobj in ipairs(forms) do
-					local form = m_links.remove_links(formobj.form)
-					if non_lemma_form == form then
+					local form_with_accents = m_links.remove_links(formobj.form)
+					local form_without_accents = m_it_verb.convert_to_unaccented(formobj.form)
+					if non_lemma_form == form_without_accents then
 						m_table.insertIfNot(tags, accel)
+						m_table.insertIfNot(accented_forms, form_without_accents)
 					end
 				end
 			end
 		end
 	end
-	loop_over_verb_slots(export.all_verb_slots)
+	loop_over_verb_slots(m_it_verb.all_verb_slots)
+
+	local prelude
+	if args.noheadword then
+		prelude = ""
+	else
+		local prelude_parts = {}
+		local explicit_head = args_pagename and "|head=" .. args_pagename or ""
+		add(("{{head|it|verb form%s}}\n\n"):format(explicit_head))
+	end
+
 	if #tags > 0 then
 		return generate_inflection_of(tags, lemma)
 	end

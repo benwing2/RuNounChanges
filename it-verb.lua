@@ -455,7 +455,7 @@ local function add_suffix_to_form(form, suffix)
 end
 
 
-local function convert_accented_links_in_text(text)
+local function convert_accented_links_in_text(text, return_unaccented)
 	local need_preserve_accent_note = false
 	local retval = rsub(text, "%[%[([^%[%]|]+)%]%]",
 		function(linktext)
@@ -468,6 +468,8 @@ local function convert_accented_links_in_text(text)
 				local unaccented = remove_accents(linktext)
 				if unaccented == linktext then
 					-- keep linktext
+				elseif return_unaccented then
+					linktext = unaccented
 				else
 					linktext = unaccented .. "|" .. linktext
 				end
@@ -490,6 +492,9 @@ local function convert_accented_links(alternant_multiword_spec)
 			end
 			return new_form, footnotes
 		end, "include footnotes")
+		if alternant_multiword_spec.source_module == "it-inflections" then
+
+
 	end
 end
 
