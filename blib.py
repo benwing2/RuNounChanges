@@ -1621,6 +1621,9 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
         elif tempname == "ru-ux":
           doparam("1", "ru", langparam=None)
           did_template = True
+      #if "fa" in langs:
+        # Special-casing for Persian
+        # FIXME, implement this
       #if "bg" in langs:
         # Special-casing for Bulgarian
         # FIXME, implement this
@@ -1631,12 +1634,12 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
       if (tempname in [ 
         "cattoc", "commonscat",
         "gloss",
-        "non-gloss definition", "non-gloss", "non gloss", "n-g",
+        "non-gloss definition", "non-gloss", "non gloss", "n-g", "ng",
         "qualifier", "qual", "i", "italbrac",
         # skip Wikipedia templates
         "pedialite", "pedia",
         "sense", "italbrac-colon",
-        "w", "wikipedia", "wp"]
+        "w", "wikipedia", "wp", "lw"]
         # More Wiki-etc. templates
         or tempname.startswith("projectlink")
         or tempname.startswith("PL:")
