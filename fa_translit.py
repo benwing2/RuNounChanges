@@ -88,8 +88,7 @@ dagger_alif_subst = u"\ufff6"
 hamza_match = [u"ʾ",u"ʼ",u"'",u"´",(u"`",),u"ʔ",u"’",(u"‘",),u"ˀ",
     (u"ʕ",),(u"ʿ",),u"2"]
 hamza_match_or_empty = hamza_match + [u""]
-hamza_match_chars = [x[0] if isinstance(x, list) or isinstance(x, tuple) else x
-    for x in hamza_match]
+hamza_match_chars = [x[0] if isinstance(x, (list, tuple)) else x for x in hamza_match]
 
 # Special-case matching at beginning of word. Plain alif normally corresponds
 # to nothing, and hamza seats might correspond to nothing (omitted hamza
@@ -272,39 +271,51 @@ other_arabic_chars = [zwj, zwnj, "-", u"–"]
 word_interrupting_chars = u"ـ[]"
 
 build_canonicalize_latin = {}
-for ch in u"abcdefghijklmnopqrstuvwyz3": # x not in this list! canoned to ḵ
+for ch in u"abcdefghijklmnopqrstuvwxyz3":
   build_canonicalize_latin[ch] = "multiple"
 build_canonicalize_latin[""] = "multiple"
 
+def sort_tt_to_arabic_matching(table):
+  def canonicalize_entry(entries):
+    if not isinstance(entries, list):
+      entries = [entries]
+    canon = entry[0]
+    def element_length(el):
+      if isinstance(el, (list, tuple)):
+        el = el[0]
+      return len(el)
+    return (canon, sorted(entries, key=lambda el: -element_length(el)))
+  return {k: canonicalize_entry(v) for k, v in table.iteritems()}
+
+tt_to_arabic_matching = sort_tt_to_arabic_matching(tt_to_arabic_matching)
+tt_to_arabic_matching_bow = sort_tt_to_arabic_matching(tt_to_arabic_matching_bow)
+tt_to_arabic_matching_eow = sort_tt_to_arabic_matching(tt_to_arabic_matching_eow)
+
 # Make sure we don't canonicalize any canonical letter to any other one;
 # e.g. could happen with ʾ, an alternative for ʿ.
-for arabic in tt_to_arabic_matching:
-  alts = tt_to_arabic_matching[arabic]
-  if isinstance(alts, basestring):
-    build_canonicalize_latin[alts] = "multiple"
+for key, (canon, alts) in tt_to_arabic_matching.iteritems():
+  if isinstance(canon, tuple):
+    # FIXME: Is this correct?
+    pass
+  elif isinstance(canon, list):
+    build_canonicalize_latin[canon[0]] = "multiple"
   else:
-    canon = alts[0]
-    if isinstance(canon, tuple):
-      pass
-    if isinstance(canon, list):
-      build_canonicalize_latin[canon[0]] = "multiple"
-    else:
-      build_canonicalize_latin[canon] = "multiple"
+    build_canonicalize_latin[canon] = "multiple"
 
-for arabic in tt_to_arabic_matching:
-  alts = tt_to_arabic_matching[arabic]
-  if isinstance(alts, basestring):
-    continue
-  canon = alts[0]
+for key, (canon, alts) in tt_to_arabic_matching.iteritems():
   if isinstance(canon, list):
+    # FIXME: What about if canon is tuple?
     continue
-  for alt in alts[1:]:
-    if isinstance(alt, list) or isinstance(alt, tuple):
+  for alt in alts:
+    if alt == canon:
+      continue
+    if isinstance(alt, (list, tuple)):
       continue
     if alt in build_canonicalize_latin and build_canonicalize_latin[alt] != canon:
       build_canonicalize_latin[alt] = "multiple"
     else:
       build_canonicalize_latin[alt] = canon
+
 tt_canonicalize_latin = {}
 for alt in build_canonicalize_latin:
   canon = build_canonicalize_latin[alt]
@@ -755,24 +766,25 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
       eow and tt_to_arabic_matching_eow.get(ac) or
       tt_to_arabic_matching.get(ac))
     debprint("get_matches: matches is %s" % matches)
-    if matches == None:
+    if matches is None:
       if ac in other_arabic_chars:
-        return []
+        return None, []
       if True:
         error("Encountered non-Arabic (?) character " + ac +
           " at index " + str(aind[0]))
       else:
-        matches = [ac]
-    if type(matches) is not list:
-      matches = [matches]
-    return matches
+        canon = ac
+        alts = [ac]
+    else:
+      canon, alts = matches
+    return canon, alts
 
   # attempt to match the current Arabic character against the current
   # Latin character(s). If no match, return False; else, increment the
   # Arabic and Latin pointers over the matched characters, add the Arabic
   # character to the result characters and return True.
   def match():
-    matches = get_matches()
+    canon, alts = get_matches()
 
     ac = ar[aind[0]]
 
@@ -792,7 +804,7 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
     debprint("match: lind=%s, la=%s" % (
       lind[0], lind[0] >= llen and "EOF" or la[lind[0]]))
 
-    for m in matches:
+    for m in alts:
       preserve_latin = False
       # If an element of the match list is a list, it means
       # "don't canonicalize".
@@ -827,7 +839,7 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
             lres.append(u"h")
           # else do nothing
         else:
-          subst = matches[0]
+          subst = canon
           if type(subst) is list or type(subst) is tuple:
             subst = subst[0]
           for cp in subst:
@@ -1037,85 +1049,6 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
 
 def remove_diacritics(word):
   return arabiclib.remove_diacritics(word)
-
-######### Transliterate directly, without unvocalized Arabic to guide #########
-#########             (NEEDS WORK)            #########
-
-tt_to_arabic_direct = {
-  # consonants
-  u"b":u"ب", u"t":u"ت", u"ṯ":u"ث", u"θ":u"ث", # u"th":u"ث",
-  u"j":u"ج",
-  u"ḥ":u"ح", u"ħ":u"ح", u"ḵ":u"خ", u"x":u"خ", # u"kh":u"خ",
-  u"d":u"د", u"ḏ":u"ذ", u"ð":u"ذ", u"đ":u"ذ", # u"dh":u"ذ",
-  u"r":u"ر", u"z":u"ز", u"s":u"س", u"š":u"ش", # u"sh":u"ش",
-  u"ṣ":u"ص", u"ḍ":u"ض", u"ṭ":u"ط", u"ẓ":u"ظ",
-  u"ʿ":u"ع", u"ʕ":u"ع",
-  u"`":u"ع",
-  u"3":u"ع",
-  u"ḡ":u"غ", u"ġ":u"غ", u"ğ":u"غ",  # u"gh":u"غ",
-  u"f":u"ف", u"q":u"ق", u"k":u"ك", u"l":u"ل", u"m":u"م", u"n":u"ن",
-  u"h":u"ه",
-  # u"a":u"ة", u"ah":u"ة"
-  # tâʾ marbûṭa (special) - always after a fátḥa (a), silent at the end of
-  # an utterance, "t" in ʾiḍâfa or with pronounced tanwîn
-  # \u0629 = tâʾ marbûṭa = ة
-  # control characters
-  # zwj:u"", # ZWJ (zero-width joiner)
-  # rare letters
-  u"p":u"پ", u"č":u"چ", u"v":u"ڤ", u"g":u"گ",
-  # semivowels or long vowels, alif, hamza, special letters
-  u"â":u"\u064Eا", # ʾalif = \u0627
-  # u"aa":u"\u064Eا", u"a:":u"\u064Eا"
-  # hamzated letters
-  u"ʾ":u"ء",
-  u"’":u"ء",
-  u"'":u"ء",
-  u"w":u"و",
-  u"y":u"ي",
-  u"û":u"\u064Fو", # u"uu":u"\u064Fو", u"u:":u"\u064Fو"
-  u"î":u"\u0650ي", # u"ii":u"\u0650ي", u"i:":u"\u0650ي"
-  # u"â":u"ى", # ʾalif maqṣûra = \u0649
-  # u"an":u"\u064B" = fatḥatân
-  # u"un":u"\u064C" = ḍammatân
-  # u"in":u"\u064D" = kasratân
-  u"a":u"\u064E", # fatḥa
-  u"u":u"\u064F", # ḍamma
-  u"i":u"\u0650", # kasra
-  # \u0651 = šadda - doubled consonant
-  # u"\u0652":u"", #sukûn - no vowel
-  # ligatures
-  # u"ﻻ":u"lâ",
-  # u"ﷲ":u"llâh",
-  # taṭwîl
-  # numerals
-  u"1":u"١", u"2":u"٢",# u"3":u"٣",
-  u"4":u"٤", u"5":u"٥",
-  u"6":u"٦", u"7":u"٧", u"8":u"٨", u"9":u"٩", u"0":u"٠",
-  # punctuation (leave on separate lines)
-  u"?":u"؟", # question mark
-  u",":u"،", # comma
-  u";":u"؛" # semicolon
-}
-
-# Transliterate any words or phrases from Latin into Arabic script.
-# POS, if not None, is e.g. "noun" or "verb", controlling how to handle
-# final -a.
-#
-# FIXME: NEEDS WORK. Works but ignores POS. Doesn't yet generate the correct
-# seat for hamza (need to reuse code in Module:ar-verb to do this). Always
-# transliterates final -a as fatḥa, never as tâʾ marbûṭa (should make use of
-# POS for this). Doesn't (and can't) know about cases where sh, th, etc.
-# stand for single letters rather than combinations.
-def tr_latin_direct(text, pos, msgfun=msg):
-  text = pre_canonicalize_latin(text, msgfun=msg)
-  text = rsub(text, u"ah$", u"\u064Eة")
-  text = rsub(text, u"âh$", u"\u064Eاة")
-  text = rsub(text, u".", tt_to_arabic_direct)
-  # convert double consonant to consonant + shadda
-  text = rsub(text, u"([" + lconsonants + u"])\\1", u"\\1\u0651")
-  text = post_canonicalize_arabic(text)
-
-  return text
 
 ################################ Test code ##########################
 
