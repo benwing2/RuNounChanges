@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Author: Originally CodeCat for MewBot; rewritten by Benwing
+# Author: Benwing; bits and pieces taken from code written by CodeCat/Rua for MewBot
 
 import pywikibot, mwparserfromhell, re, string, sys, codecs, urllib2, datetime, json, argparse, time
 from arabiclib import reorder_shadda
@@ -239,37 +239,44 @@ def find_following_param(t, param):
 
 # Find maximum term index in templates that can take multiple terms. This is intended for templates such as {{affix}}
 # and {{head}} that can take multiple terms possibly with gaps in them. This checks a subset of parameters and returns
-# the maximum term index found among them. The index of a named param is defined as ### if the param name is of the form
-# NAME### (e.g. "head3") and otherwise 1. The index of a numeric param is the number of the param minus an offset
-# calculated as one less than `first_numeric` (so that e.g. if `first_numeric` is "3", numeric parameter "6"
-# corresponds to term index 4). If `check_named_params` is a list, it should specify the prefixes of the named params to
-# check (i.e. the NAME part of a NAME### param); otherwise, all named parameters are checked. If `first_numeric` is
-# None, numeric parameters are not checked (e.g. in {{head}}, where numeric parameters starting with "3" are alternating
-# inflection names and inflections and need to be handled specially); otherwise, numeric parameters >= `first_numeric`
-# (which can be an integer or stringified integer) are checked. If no matching params are found, 0 is returned.
-def find_max_term_index(t, first_numeric=None, check_named_params=None):
-  if first_numeric is None:
-    pass
-  elif isinstance(first_numeric, basestring):
+# the maximum term index found among them. Numeric parameters are only checked if `first_numeric` is not None, in which
+# case it should be either an integer or stringified integer (in which case only numeric parameters >= `first_numeric`
+# are checked and the term index of the param is the param number minus an offset calculated as one less than
+# `first_numeric`, so that e.g. if `first_numeric` is "3", numeric parameter "6" corresponds to term index 4); or a
+# function of one argument to convert the param number to a term index (or None to skip the param). Named parameters
+# are only checked if `named_params` is not None, in which case it should be:
+# * True, meaning all named params are checked, and the term index of a named param is found by decomposing the param
+#   name into NAME### i.e. a non-numeric part followed by numbers, and returning ###;
+# * a list of prefixes, corresponding to the NAME part of a NAME### param, in which case only params whose non-numeric
+#   prefix is NAME are checked and the term index is ###;
+# * a function of one argument to convert the param name to a term index (or None to skip the param).
+# If no matching params are found, 0 is returned.
+def find_max_term_index(t, first_numeric=None, named_params=None):
+  if isinstance(first_numeric, basestring):
     first_numeric = int(first_numeric)
-  else:
-    assert isinstance(first_numeric, int)
 
   def find_index(pn):
     if re.search("^[0-9]+$", pn):
       pn = int(pn)
-      if first_numeric is None or pn < first_numeric:
+      if callable(first_numeric):
+        return first_numeric(pn)
+      elif first_numeric is None or pn < first_numeric:
         return None
-      # See comment above why we are adding 1 (equivalently, subtracting one from `first_numeric`).
-      return pn - first_numeric + 1
+      else:
+        # See comment above why we are adding 1 (equivalently, subtracting one from `first_numeric`).
+        return pn - first_numeric + 1
+    if callable(named_params):
+      return named_params(pn)
+    if named_params is None:
+      return None
     m = re.search("^(.*?)([0-9]*)$", pn)
     name, index = m.groups()
-    if check_params and name not in check_params:
+    if named_params is not True and name not in named_params:
       return None
     return int(index) if index else 1
 
   retval = 0
-  for param in enumerate(t.params):
+  for param in t.params:
     index = find_index(pname(param))
     if index is not None:
       retval = max(retval, index)
@@ -1652,7 +1659,7 @@ def split_alternating_runs(segment_runs, splitchar, preserve_splitchar=False):
 
 
 class ProcessLinks(object):
-  def __init__(self, index, pagetitle, parsed, template, tlang, param, langparam):
+  def __init__(self, index, pagetitle, parsed, t, tlang, param, langparam):
     # The index of the page containing the template being processed.
     self.index = index
     # The title of the page containing the template being processed.
@@ -1661,7 +1668,7 @@ class ProcessLinks(object):
     # mwparserfromhell structure).
     self.parsed = parsed
     # The template being processed (an mwparserfromhell structure).
-    self.template = template
+    self.t = t
     # The language of the value being considered.
     self.tlang = tlang
     # The parameters of the value being processed (its foreign-script value and corresponding Latin translit). This is
@@ -1734,9 +1741,10 @@ def parse_inline_modifier(value):
   for k in xrange(1, len(segments), 2):
     if segments[k + 1] != "":
       raise ParseException("Extraneous text '" + segments[k + 1] + "' after modifier")
-    modtext = segments[k]:match("^<(.*)>$")
-    if not modtext:
+    m = re.search("^<(.*)>$", segments(k))
+    if not m:
       raise ValueError("Internal error: Modifier '" + segments[k] + "' isn't surrounded by angle brackets")
+    modtext = m.group(1)
     m = re.search("^([a-zA-Z0-9+_-]+):(.*)$", modtext)
     if not m:
       raise ParseException("Modifier " + segments[k] + " lacks a recognized prefix")
@@ -1788,15 +1796,52 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
       msg("Page %s %s: %s" % (index, pagetitle, text))
 
     actions = []
-    for template in parsed.filter_templates():
-      def getp(param):
-        return getparam(template, param)
-      tn = tname(template)
+    for t in parsed.filter_templates():
+      tn = tname(t)
       saw_template = [False]
       changed_template = [False]
 
+      # Return the value of a parameter in template `t`.
+      def getp(param):
+        return getparam(t, param)
+
+      # Return the value of a parameter (possibly with multiple names) in template `t`. `params` is either a string
+      # naming a single param or a list of such strings, which are checked in turn for a present and non-empty param.
+      # Returns a tuple of two values, the value of the first found param and its name. If no param found, returns
+      # an empty string along with the first specified param name.
+      def getpm(params):
+        if isinstance(params, basestring):
+          return getp(params), params
+        assert isinstance(params, list)
+        assert len(params) > 0
+        for param in params:
+          val = getp(param)
+          if val:
+            return val, param
+        return "", params[0]
+
+      # Parse a `langparam` value into the actual lang code and the name of the param.
+      def get_lang_and_langparam(langparam):
+        if isinstance(langparam, tuple):
+          assert langparam[0] == "direct"
+          tlang = langparam[1]
+          langparam = None
+        else:
+          tlang = getp(langparam)
+        return tlang, langparam
+
+      # Create an indexed param suitable for passing to getpm(). If `ind` == 1, a list is returned, without and with the
+      # index (so that e.g. both tr= and tr1= are recognized); otherwise an indexed string is returned.
+      def index_param(param, ind):
+        if ind == 1:
+          return [param, param + "1"]
+        else:
+          return "param%s" % ind
+
       # Call `processfn` on a given foreign-script/Latin combination:
-      # * `tlang` is the language of the foreign script param.
+      # * `langparam` is the parameter holding the language of the foreign script param. If the language is not found in
+      #   a param (e.g. with a lang-specific template), the value should be a two-element tuple ("direct", LANG) where
+      #   LANG is the actual language code.
       # * `param` specifies the parameters involved and is a tuple, where the first element specifies the type of
       #   parameter combination and the remaining elements specify the parameters involved. Specifically:
       #   * ("separate", FOREIGN, LATIN) specifies the case where the foreign-script value is found in parameter
@@ -1814,10 +1859,13 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
       #   * ("notforeign") specifies the case where a template references a given language but doesn't contain a
       #     foreign/Latin combination to process. These cases won't be included at all unless `include_notforeign`
       #     is given in `process_one_page_links`.
-      # * `langparam` is the parameter holding the language found in `tlang`, defaulting to "1".
       #
-      # The return value is True if any changes were made, otherwise False.
-      def doparam(tlang, param, langparam="1"):
+      # Before calling `processfn`, checks are made to ensure that the language is one of those in `langs` and the
+      # requested parameter actually has a value. The return value is True if any changes were made, otherwise False.
+      def doparam(langparam, param):
+        tlang, langparam = get_lang_and_langparam(langparam)
+        if tlang not in langs:
+          return False
         try:
           if param[0] == "separate":
             _, foreign, latin = param
@@ -1837,7 +1885,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
               param = ("inline", foreign_param, foreign_mod, latin_mod, inline_mod)
 
           saw_template[0] = True
-          obj = ProcessLinks(index, pagetitle, parsed, template, tlang, param, langparam)
+          obj = ProcessLinks(index, pagetitle, parsed, t, tlang, param, langparam)
           result = processfn(obj)
           if result:
             if isinstance(result, list):
@@ -1850,61 +1898,77 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
           return False
         except ParseException as e:
           pagemsg("Exception processing lang %s, param %s in template %s: %s"
-            % (tlang, param, unicode(template), e))
+            % (tlang, param, unicode(t), e))
           return False
 
       # Call doparam() and hence `processfn` on a given foreign-script/Latin-translit combination with an optional
-      # display-text (alt) param and possibly inline modifiers. `param` is the name of the foreign-script param;
-      # `altparam` is the display-text param (or None if there is no corresponding display-text param); `trparam` is the
-      # corresponding Latin-translit param (or None if there is no corresponding translit param); `tlang` and
-      # `langparam` are as in doparam(). If `check_inline_modifiers` is specified, check the value of `param` for a
-      # less-than sign and if so, try to parse as an inline modifier. If `other_lang_param` is specified and is a
-      # string, it is the name of the parameter holding the term-specific language of the term. If this parameter
-      # exists, `param` is ignored as presumably not being in the right language. (FIXME: We should consider checking
-      # the term's language against the languages given in `langs` to process_one_page_links(), and take appropriate
-      # action if it matches.) If `other_lang_param` is specified (either as a string or the value True), we also check
-      # for a language code prefixed to the value of `param` (e.g. 'LL.:minūtia' or 'grc:[[σκῶρ|σκατός]]') and (if
-      # `check_inline_modifiers` is given) a <lang:CODE> inline modifier, and ignore `param` if any of these are found.
-      def doparam_checking_alt(tlang, param, altparam, trparam, langparam="1", check_inline_modifiers=False,
-          other_lang_param=None):
-        altval = getp(altparam) if altparam else ""
-        paramval = getp(param)
-        if isinstance(other_lang_param, basestring):
-          other_lang_val = getp(other_lang_param)
+      # display-text (alt) param and possibly inline modifiers.
+      # * `langparam` is as in doparam();
+      # * `param` is the name of the foreign-script param, or a list of such params, checked in turn for a non-empty
+      #   value;
+      # * `altparam` is the display-text param (or None if there is no corresponding display-text param), or a list of
+      #   such params, as in `param`;
+      # * `trparam` is the corresponding Latin-translit param (or None if there is no corresponding translit param), or
+      #   a list of such params, as in `param`;
+      # * If `other_lang_param` is specified and is a string or list, it is the name of the parameter (or parameters, as
+      #   in `param`) holding the term-specific language of the term. If this parameter exists, `param` is ignored as
+      #   presumably not being in the right language. (FIXME: We should consider checking the term's language against
+      #   the languages given in `langs` to process_one_page_links(), and take appropriate action if it matches.) If
+      #   `other_lang_param` is specified (either as a string or the value True), we also check for a language code
+      #   prefixed to the value of `param` (e.g. 'LL.:minūtia' or 'grc:[[σκῶρ|σκατός]]'), and ignore `param` if so.
+      # * If `check_inline_modifiers` is specified, check the value of `param` for a less-than sign and if so, try to
+      #   parse as an inline modifier, checking for a display-text param in 'alt:' and translit in 'tr:'. In this case,
+      #   if `other_lang_param` is specified, check for a 'lang:' inline modifier and ignore `param` if so.
+      def doparam_checking_alt(langparam, param, altparam, trparam, other_lang_param=None,
+          check_inline_modifiers=False):
+        # Here we repeat the check at the beginning of `doparam`; but this short-circuits all the templates for
+        # different languages.
+        tlang, langparam = get_lang_and_langparam(langparam)
+        if tlang not in langs:
+          return False
+        if altparam:
+          altval, altparam = getpm(altparam)
+        else:
+          altval = ""
+        paramval, param = getpm(param)
+        if trparam:
+          _, trparam = getpm(trparam)
+        if isinstance(other_lang_param, (basestring, list)):
+          other_lang_val, other_lang_param = getpm(other_lang_param)
           if other_lang_val:
             pagemsg("Skipping param %s=%s with alt param %s=%s because it is in a different lang %s=%s: %s"
-              % (param, paramval, altparam, altval, other_lang_param, other_lang_val, unicode(template)))
+              % (param, paramval, altparam, altval, other_lang_param, other_lang_val, unicode(t)))
             return False
         if other_lang_param:
           m = re.search("^([A-Za-z0-9._-]+):(.*)$", paramval)
           if m:
             other_lang_val, actual_paramval = m.groups()
             pagemsg("Skipping param %s=%s because of it begins with other-language prefix '%s:': %s"
-              % (param, paramval, other_lang_val, unicode(template)))
+              % (param, paramval, other_lang_val, unicode(t)))
             return False
         if check_inline_modifiers and "<" in paramval:
           try:
             inline_mod = parse_inline_modifier(paramval)
             if altval:
               pagemsg("WARNING: Found inline modifier in param %s=%s along with alt param %s=%s, can't process: %s"
-                % (param, paramval, altparam, altval, unicode(template)))
+                % (param, paramval, altparam, altval, unicode(t)))
               return False
             if other_lang_param and inline_mod.get_modifier("lang") is not None:
               pagemsg("Skipping param %s=%s because of inline 'lang' modifier: %s"
-                % (param, paramval, unicode(template)))
+                % (param, paramval, unicode(t)))
               return False
             if inline_mod.get_modifier("alt") is not None:
-              return doparam(tlang, ("inline", param, "alt", "tr", inline_mod), langparam=langparam)
+              return doparam(langparam, ("inline", param, "alt", "tr", inline_mod))
             else:
-              return doparam(tlang, ("inline", param, None, "tr", inline_mod), langparam=langparam)
+              return doparam(langparam, ("inline", param, None, "tr", inline_mod))
           except ParseException as e:
             pagemsg("WARNING: Exception processing lang %s, param %s=%s in template %s: %s"
-              % (tlang, param, paramval, unicode(template), e))
+              % (tlang, param, paramval, unicode(t), e))
             # fall through to the code below
         if altval:
-          return doparam(tlang, ("separate", altparam, trparam), langparam=langparam)
+          return doparam(langparam, ("separate", altparam, trparam))
         elif paramval:
-          return doparam(tlang, ("separate", param, trparam), langparam=langparam)
+          return doparam(langparam, ("separate", param, trparam))
         else:
           return False
 
@@ -1914,9 +1978,9 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
         did_template = True
         def dogrcparam(trparam):
           if getp("head"):
-            doparam("grc", ("separate", "head", trparam), langparam=None)
+            doparam(("direct", "grc"), ("separate", "head", trparam))
           else:
-            doparam("grc", ("separate-pagetitle", "head", trparam), langparam=None)
+            doparam(("direct", "grc"), ("separate-pagetitle", "head", trparam))
         if tn in ["grc-noun-con"]:
           dogrcparam("5")
         elif tn in ["grc-proper noun", "grc-noun"]:
@@ -1938,9 +2002,9 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
             "ru-etym initialism of", "ru-clipping of", "ru-etym clipping of",
             "ru-pre-reform"]:
           if getp("2"):
-            doparam("ru", ("separate", "2", "tr"), langparam=None)
+            doparam(("direct", "ru"), ("separate", "2", "tr"))
           else:
-            doparam("ru", ("separate", "1", "tr"), langparam=None)
+            doparam(("direct", "ru"), ("separate", "1", "tr"))
           did_template = True
       #if "fa" in langs:
         # Special-casing for Persian
@@ -1949,18 +2013,23 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
         # Special-casing for Bulgarian
         # FIXME, implement this
 
+      if did_template:
+        pass
       # Skip {{cattoc|...}}, {{i|...}}, etc. where the param isn't a language code,
       # as well as {{w|FOO|lang=LANG}} or {{wikipedia|FOO|lang=LANG}} or {{pedia|FOO|lang=LANG}} etc.,
       # where LANG is a Wikipedia language code, not a Wiktionary language code.
-      if (tn in [
+      elif (tn in [
         "cattoc", "commonscat",
-        "gloss",
-        "non-gloss definition", "non-gloss", "non gloss", "n-g", "ng",
-        "qualifier", "qual", "i", "italbrac",
+        "gloss", "gl",
+        "non-gloss definition", "non-gloss", "non gloss", "n-g", "ng", "ngd",
+        "qualifier", "qual", "q", "i", "qf", "q-lite",
         # skip Wikipedia templates
         "pedialite", "pedia",
         "sense", "italbrac-colon",
-        "w", "wikipedia", "wp", "lw"]
+        "w", "wikipedia", "wp", "lw",
+        "slim-wikipedia", "swp",
+        "pedlink",
+        ]
         # More Wiki-etc. templates
         or tn.startswith("projectlink")
         or tn.startswith("PL:")
@@ -1972,7 +2041,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
       # or various others, where FOO is not text in LANG, and {{w|FOO|lang=LANG}}
       # or {{wikipedia|FOO|lang=LANG}} or {{pedia|FOO|lang=LANG}} etc., where
       # FOO is text in LANG but diacritics aren't stripped so shouldn't be added.
-      elif (tn in [
+      elif tn in [
         "attention", "attn",
         "audio", "audio-IPA",
         "categorize", "cat", "catlangname", "cln", "topics", "top", "topic", "catlangcode", "C", "c",
@@ -1981,226 +2050,197 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
         "hyphenation", "hyph",
         "IPA", "IPAchar", "ic",
         "label", "lb", "lbl", "context", "cx", "term-label", "tlb",
-        "langcatboiler",
-        "+preo", "phrasebook", "place",
+        "+preo", "+posto", "+obj", "phrasebook", "place",
         "refcat", "rfe", "rfinfl", "rfc", "rfc-pron-n",
         "rhymes", "rhyme",
         "senseid", "surname",
         "was fwotd"
-      ] and include_notforeign):
-        tlang = getp("1")
-        if tlang in langs:
-          doparam(tlang, ("notforeign",))
-      elif did_template:
-        pass
+      ]:
+        if include_notforeign:
+          doparam("1", ("notforeign",))
       # Look for {{head|LANG|...|head=<FOREIGNTEXT>}}
       elif tn == "head":
-        tlang = getp("1")
-        if tlang in langs:
-          if getp("head"):
-            doparam(tlang, ("separate", "head", "tr"))
+        # There may be holes in heads or inflections.
+        maxhead = find_max_term_index(t, named_params=["head", "tr"])
+        if getp("head"):
+          doparam("1", ("separate", "head", "tr"))
+        else:
+          doparam("1", ("separate-pagetitle", "head", "tr"))
+        for i in range(2, maxhead + 1):
+          doparam("1", ("separate", "head%s" % i, "tr%s" % i))
+        maxinfl = find_max_term_index(t,
+          first_numeric=lambda pn: (pn - 1) // 2 if pn >= 3 else None,
+          check_named_params=lambda pn:
+            int(re.sub("^f([0-9]+)(alt|tr)$", r"\1", pn)) if re.search("^f([0-9]+)(alt|tr)$", pn) else None
+        )
+        for i in range(1, maxinfl + 1):
+          if getp("f%salt" % i):
+            doparam("1", ("separate", "f%salt" % i, "f%str" % i))
           else:
-            doparam(tlang, ("separate-pagetitle", "head", "tr"))
-          for i in range(2, 11): # there may be holes
-            doparam(tlang, ("separate", "head%s" % i, "tr%s" % i))
-          for i in range(1, 11):
-            if getp("f%salt" % i):
-              doparam(tlang, ("separate", "f%salt" % i, "f%str" % i))
-            else:
-              doparam(tlang, ("separate", str(i * 2 + 2), "f%str" % i))
+            doparam("1", ("separate", str(i * 2 + 2), "f%str" % i))
       # Look for {{t|LANG|<PAGENAME>|alt=<FOREIGNTEXT>}}
       elif tn in ["t", "t+", "tt", "tt+", "t-", "t+check", "t-check"]:
-        tlang = getp("1")
-        if tlang in langs:
-          doparam_checking_alt(tlang, "2", "alt", "tr")
+        doparam_checking_alt("1", "2", "alt", "tr")
       # Look for {{suffix|LANG|<PAGENAME>|alt1=<FOREIGNTEXT>|<PAGENAME>|alt2=...}}
       # or  {{suffix|LANG|<FOREIGNTEXT>|<FOREIGNTEXT>|...}}
       elif tn in ["suffix", "suf", "prefix", "pre", "affix", "af",
           "confix", "con", "circumfix", "infix", "compound", "com",
-          "prefixusex", "prefex", "suffixusex", "sufex", "affixusex", "afex"]:
+          "prefixusex", "prefex", "suffixusex", "sufex", "affixusex", "afex",
+          "surf", "surface analysis", "blend", "univerbation", "univ"]: # remove 'blend of'
         if tn in ["circumfix", "confix", "con"]:
           maxind = 3
         elif tn in ["infix"]:
           maxind = 2
         else:
           # Don't just do cases up through where there's a numbered param because there may be holes.
-          maxind = find_max_term_index(t, "2")
-        tlang = getp("1")
-        # FIXME! Finish
-        ...
+          maxind = find_max_term_index(t, first_numeric="2", named_params=True)
         offset = 1
-        if tlang in langs:
-          for i in xrange(1, maxind + 1):
-            if getp("lang" + str(i)):
-              continue
-            if getp("alt" + str(i)):
-              doparam(tlang, ("separate", "alt" + str(i), "tr" + str(i)))
-            else:
-              doparam(tlang, ("separate", str(i + offset), "tr" + str(i)))
+        for i in xrange(1, maxind + 1):
+          # require_index specified in [[Module:compound/templates]]
+          doparam_checking_alt("1", str(i + offset), "alt" + str(i), "tr" + str(i), other_lang_param="lang" + str(i),
+            check_inline_modifiers=True)
+      elif tn in ["pseudo-loan", "pl"]:
+        maxind = find_max_term_index(t, first_numeric="3", named_params=True)
+        offset = 2
+        for i in xrange(1, maxind + 1):
+          # require_index specified in [[Module:compound/templates]]
+          doparam_checking_alt("2", str(i + offset), "alt" + str(i), "tr" + str(i), other_lang_param="lang" + str(i),
+            check_inline_modifiers=True)
+        if include_notforeign:
+          doparam("1", ("notforeign",))
       elif tn in ["synonyms", "syn", "antonyms", "ant", "hypernyms", "hyper",
           "hyponyms", "hypo", "meronyms", "holonyms", "troponyms",
           "coordinate terms", "perfectives", "pf", "imperfectives", "impf",
           "homophone", "homophones", "hmp"]:
-        # FIXME! implement, including handling of semicolons and other separators, which don't increase the
-        # term index.
-        ...
+        maxind = find_max_term_index(t, first_numeric="2", named_params=["alt", "tr"])
+        termind = 0
+        for i in xrange(1, maxind + 1):
+          term = getp(str(i + 1))
+          if term.startswith("Thesaurus:"):
+            break
+          if term != ";": # semicolons are ignored for indexed params
+            termind += 1
+            # require_index not specified in [[Module:nyms]]
+            doparam_checking_alt("1", str(i + 1), index_param("alt", termind), index_param("tr", termind),
+                check_inline_modifiers=True)
       elif tn == "form of":
-        tlang = getp("1")
-        if tlang in langs:
-          if getp("4"):
-            doparam(tlang, ("separate", "4", "tr"))
-          else:
-            doparam(tlang, ("separate", "3", "tr"))
+        if getp("4"):
+          doparam("1", ("separate", "4", "tr"))
+        else:
+          doparam("1", ("separate", "3", "tr"))
       # Templates where we don't check for alternative text because
       # the following parameter is used for the translation.
       elif tn in ["ux", "usex", "uxi", "quote"]:
-        tlang = getp("1")
-        if tlang in langs:
-          doparam(tlang, ("separate", "2", "tr"))
+        doparam("1", ("separate", "2", "tr"))
       elif tn == "Q":
-        tlang = getp("1")
-        if tlang in langs:
-          doparam(tlang, ("separate", "quote", "tr"))
+        doparam("1", ("separate", "quote", "tr"))
       elif tn == "lang":
-        tlang = getp("1")
-        if tlang in langs:
-          doparam(tlang, ("separate", "2", None))
+        doparam("1", ("separate", "2", None))
       #elif tn in ["w", "wikipedia", "wp"]:
-      #  tlang = getp("lang")
-      #  if tlang in langs and getp("2"):
+      #  if getp("2"):
       #    # Can't replace param 1 (page linked to), but it's OK to frob the
       #    # display text
-      #    doparam(tlang, ("separate", "2", None), langparam="lang")
-      elif tn in ["w2"]:
-        tlang = getp("1")
-        if tlang in langs and getp("3"):
+      #    doparam("lang", ("separate", "2", None))
+      elif tn in ["w2"]: # FIXME: review this
+        if getp("3"):
           # Can't replace param 2 (page linked to), but it's OK to frob the
           # display text
-          doparam(tlang, ("separate", "3", "tr"))
+          doparam("1", ("separate", "3", "tr"))
       elif tn in ["cardinalbox", "ordinalbox"]:
-        tlang = getp("1")
-        if tlang in langs:
-          # FUCKME: This is a complicated template, might be doing it wrong
-          doparam(tlang, ("separate", "5", None))
-          doparam(tlang, ("separate", "6", None))
-          for p in ["card", "ord", "adv", "mult", "dis", "coll", "frac",
-              "optx", "opt2x"]:
-            if getp(p + "alt"):
-              doparam(tlang, ("separate", p + "alt", p + "tr"))
-            else:
-              doparam(tlang, ("separate", p, p + "tr"))
-          if getp("alt"):
-            doparam(tlang, ("separate", "alt", "tr"))
+        # FUCKME: This is a complicated template, might be doing it wrong
+        doparam("1", ("separate", "5", None))
+        doparam("1", ("separate", "6", None))
+        for p in ["card", "ord", "adv", "mult", "dis", "coll", "frac",
+            "optx", "opt2x"]:
+          if getp(p + "alt"):
+            doparam("1", ("separate", p + "alt", p + "tr"))
           else:
-            doparam(tlang, ("separate", "wplink", None))
+            doparam("1", ("separate", p, p + "tr"))
+        if getp("alt"):
+          doparam("1", ("separate", "alt", "tr"))
+        else:
+          doparam("1", ("separate", "wplink", None))
       elif tn in ["quote-book", "quote-hansard", "quote-journal",
           "quote-newsgroup", "quote-song", "quote-us-patent", "quote-video",
           "quote-web", "quote-wikipedia"]:
-        tlang = getp("1")
-        if tlang in langs:
-          if getp("passage") or getp("text"):
-            doparam(tlang, ("separate", "passage" if getp("passage") else "text",
-              "transliteration" if getp("transliteration") else "tr"))
+        if getp("passage") or getp("text"):
+          doparam("1", ("separate", "passage" if getp("passage") else "text",
+            "transliteration" if getp("transliteration") else "tr"))
       elif tn in ["alter", "alt"]:
-        tlang = getp("1")
-        if tlang in langs:
-          i = 1
-          # Dialect specifiers follow a blank param.
-          while True:
-            if not getp(str(i + 1)):
-              break
-            doparam_checking_alt(tlang, str(i + 1), "alt" + str(i), "tr" + str(i), check_inline_modifiers=True)
-            i += 1
-      elif tn in ["blend", "univerbation", "univ"]:
-        tlang = getp("1")
-        if tlang in langs:
-
-          i = 1
-          # FIXME: inline modifiers
-          while True:
-            if getp("alt" + str(i)):
-              doparam(tlang, ("separate", "alt" + str(i), "tr" + str(i)))
-            elif getp(str(i + 1)):
-              doparam(tlang, ("separate", str(i + 1), "tr" + str(i)))
-            else:
-              break
-            i += 1
+        i = 1
+        # Dialect specifiers follow a blank param.
+        while True:
+          if not getp(str(i + 1)):
+            break
+          # require_index not specified in [[Module:alternative forms]]
+          doparam_checking_alt("1", str(i + 1), index_param("alt", i), index_param("tr", i),
+              check_inline_modifiers=True)
+      elif tn in ["desc", "descendant", "desctree", "descendants tree"]:
+        # Don't just do cases up through where there's a numbered param because there may be holes.
+        maxind = find_max_term_index(t, first_numeric="2", named_params=True)
+        for i in xrange(1, maxind + 1):
+          # require_index not specified in [[Module:alternative forms]]
+          doparam_checking_alt("1", str(i + 1), index_param("alt", i), index_param("tr", i),
+              check_inline_modifiers=True)
       elif tn in [
           "col1", "col2", "col3", "col4", "col5",
           "col1-u", "col2-u", "col3-u", "col4-u", "col5-u",
           "der2", "der3", "der4",
           "rel2", "rel3", "rel4"]:
-        tlang = getp("1")
-        if tlang in langs:
-          i = 2
-          while getp(str(i)):
-            # FIXME: inline modifiers
-            doparam(tlang, ("separate", str(i), None))
-            i += 1
+        i = 2
+        while getp(str(i)):
+          doparam_checking_alt("1", str(i), None, None, check_inline_modifiers=True)
+          i += 1
       elif tn in ["col", "col-u"]:
-        tlang = getp("1")
-        if tlang in langs:
-          i = 3
-          while getp(str(i)):
-            doparam(tlang, ("separate", str(i), None))
-            i += 1
+        i = 3
+        while getp(str(i)):
+          doparam_checking_alt("1", str(i), None, None, check_inline_modifiers=True)
+          i += 1
       elif tn == "elements":
-        tlang = getp("1")
-        if tlang in langs:
-          doparam(tlang, ("separate", "3", None))
-          doparam(tlang, ("separate", "5", None))
-          doparam(tlang, ("separate", "next2", None))
-          doparam(tlang, ("separate", "prev2", None))
+        doparam("1", ("separate", "3", None))
+        doparam("1", ("separate", "5", None))
+        doparam("1", ("separate", "next2", None))
+        doparam("1", ("separate", "prev2", None))
       elif tn in ["der", "derived", "inh", "inherited", "bor", "borrowed",
           "lbor", "learned borrowing", "slbor", "semi-learned borrowing",
           "obor", "orthographic borrowing", "ubor", "unadapted borrowing",
           "sl", "semantic loan" "psm", "phono-semantic matching",
           "calque", "cal", "clq", "partial calque", "pcal", "partial translation", "semi-calque"]:
-        tlang = getp("2")
-        if tlang in langs:
-          if getp("alt"):
-            doparam(tlang, ("separate", "alt", "tr"), langparam="2")
-          elif getp("4"):
-            doparam(tlang, ("separate", "4", "tr"), langparam="2")
-          else:
-            doparam(tlang, ("separate", "3", "tr"), langparam="2")
+        if getp("alt"):
+          doparam("2", ("separate", "alt", "tr"))
+        elif getp("4"):
+          doparam("2", ("separate", "4", "tr"))
+        else:
+          doparam("2", ("separate", "3", "tr"))
         tlang = getp("1")
-        if tlang in langs and include_notforeign:
-          doparam(tlang, ("notforeign",))
+        if include_notforeign:
+          doparam("1", ("notforeign",))
       elif tn == "root":
-        tlang = getp("2")
-        if tlang in langs:
-          i = 3
-          while getp(str(i)):
-            doparam(tlang, ("separate", str(i), None), langparam="2")
-            i += 1
-        tlang = getp("1")
-        if tlang in langs and include_notforeign:
-          doparam(tlang, ("notforeign",))
+        i = 3
+        while getp(str(i)):
+          doparam("2", ("separate", str(i), None))
+          i += 1
+        if include_notforeign:
+          doparam("1", ("notforeign",))
       elif tn == "etyl":
         if include_notforeign:
-          tlang = getp("1")
-          if tlang in langs:
-            doparam(tlang, ("notforeign",))
-          tlang = getp("2")
-          if tlang in langs:
-            doparam(tlang, ("notforeign",), langparam="2")
+          doparam("1", ("notforeign",))
+          doparam("2", ("notforeign",))
       # Look for any other template with lang as first argument, but skip templates
       # that have what looks like a language prefix in their name, e.g. 'eo-form of',
       # 'cs-conj-pros-it', 'vep-decl-stems', 'sw-adj form of'. Also skip templates with
       # a colon in their name, e.g. 'U:tr:first-person singular'.
       elif not lang_prefix_template(tn) and getp("1") in langs:
-        tlang = getp("1")
         # Look for:
         #   {{m|LANG|<PAGENAME>|<FOREIGNTEXT>}}
         #   {{m|LANG|<PAGENAME>|alt=<FOREIGNTEXT>}}
         #   {{m|LANG|<FOREIGNTEXT>}}
         if getp("alt"):
-          doparam(tlang, ("separate", "alt", "tr"))
+          doparam("1", ("separate", "alt", "tr"))
         elif getp("3"):
-          doparam(tlang, ("separate", "3", "tr"))
+          doparam("1", ("separate", "3", "tr"))
         elif tn != "transliteration":
-          doparam(tlang, ("separate", "2", "tr"))
+          doparam("1", ("separate", "2", "tr"))
       if saw_template[0]:
         templates_seen[tn] = templates_seen.get(tn, 0) + 1
       if changed_template[0]:
@@ -2225,16 +2265,16 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
   #    if fromparam == "page title":
   #      foreign = obj.pagetitle
   #    else:
-  #      foreign = getparam(obj.template, fromparam)
-  #    latin = getparam(obj.template, obj.paramtr)
+  #      foreign = getparam(obj.t, fromparam)
+  #    latin = getparam(obj.t, obj.paramtr)
   #    if (re.search(split_templates, latin) and not
   #        re.search(split_templates, foreign)):
   #      trs = re.split("\\s*" + split_templates + "\\s*", latin)
-  #      oldtemp = unicode(obj.template)
+  #      oldtemp = unicode(obj.t)
   #      newtemps = []
   #      for tr in trs:
-  #        addparam(obj.template, obj.paramtr, tr)
-  #        newtemps.append(unicode(obj.template))
+  #        addparam(obj.t, obj.paramtr, tr)
+  #        newtemps.append(unicode(obj.t))
   #      newtemp = ", ".join(newtemps)
   #      old_newtext = newtext[0]
   #      pagemsg("Splitting template %s into %s" % (oldtemp, newtemp))
