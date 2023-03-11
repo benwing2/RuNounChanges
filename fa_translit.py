@@ -46,10 +46,12 @@ def nfkc_form(txt):
 def nfc_form(txt):
   return unicodedata.normalize("NFC", unicode(txt))
 
-zwnj = u"\u200c" # zero-width non-joiner
-zwj  = u"\u200d" # zero-width joiner
+ZWNJ = u"\u200c" # zero-width non-joiner
+ZWJ  = u"\u200d" # zero-width joiner
 #lrm = u"\u200e" # left-to-right mark
 #rlm = u"\u200f" # right-to-left mark
+
+sun_letters = u"تثدذرزسشصضطظلن"
 
 consonants_needing_vowels = u"بتثجحخدذرزسشصضطظعغفقكلمنهپچڤگڨڧأإؤئءةﷲ"
 # consonants on the right side; includes alif madda
@@ -85,8 +87,7 @@ assimilating_l_subst = u"\ufff4"
 double_l_subst = u"\ufff5"
 dagger_alif_subst = u"\ufff6"
 
-hamza_match = [u"ʾ",u"ʼ",u"'",u"´",(u"`",),u"ʔ",u"’",(u"‘",),u"ˀ",
-    (u"ʕ",),(u"ʿ",),u"2"]
+hamza_match = [u"'",u"ʾ",u"ʼ",u"´",(u"`",),u"ʔ",u"’",(u"‘",),u"ˀ",(u"ʕ",),(u"ʿ",),u"2"]
 hamza_match_or_empty = hamza_match + [u""]
 hamza_match_chars = [x[0] if isinstance(x, (list, tuple)) else x for x in hamza_match]
 
@@ -100,14 +101,16 @@ tt_to_arabic_matching_bow = { #beginning of word
   # put empty string in list so this entry will be recognized -- a plain
   # empty string is considered logically false
   u"ا":[u""],
-  u"أ":hamza_match_or_empty,
-  u"إ":hamza_match_or_empty,
-  u"آ":[u"ʾaâ",u"’aâ",u"'aâ",u"`aâ",u"aâ"], #ʾalif madda = \u0622
+  # These don't occur word-initially in Farsi
+  #u"أ":hamza_match_or_empty,
+  #u"إ":hamza_match_or_empty,
+  u"آ":[u"aâ"], #ʾalif madda = \u0622
 }
 
 # Special-case matching at end of word. Some ʾiʿrâb endings may appear in
 # the Arabic but not the transliteration; allow for that.
 tt_to_arabic_matching_eow = { # end of word
+  u"ه": ["", "h"],
   UN:[u"un",u""], # ḍammatân
   IN:[u"in",u""], # kasratân
   A:[u"a",u""], # fatḥa (in plurals)
@@ -121,10 +124,6 @@ tt_to_arabic_matching_eow = { # end of word
 # in the list is important insofar as which element is first, because the default behavior when canonicalizing a
 # transliteration is to substitute any string in the list with the first element of the list (this can be suppressed by
 # making an element a one-entry list containing a string, as mentioned above).
-#
-# FIXME: Currently if string A is a substring of string B, B needs to be placed first in the list. This doesn't work
-# for Arabic, where e.g. we have to list "s" first for ص but "sˤ" occurs later. We should fix this by sorting the list
-# by decreasing length.
 #
 # If the element of a list is a one-element tuple, we canonicalize during match-canonicalization but we do not trigger
 # the check for multiple possible canonicalizations during self-canonicalization; instead we indicate that this
@@ -183,15 +182,15 @@ tt_to_arabic_matching = {
   u"ن":"n",
   # FIXME! Seems this can map to any of h e. Need to account for this. Dispreferred sequences
   # are eh, a, ah.
-  #u"ه":"h",
+  u"ه":"h",
   # We have special handling for the following in the canonicalized Latin,
   # so that we have -a but -âh and -at-.
   u"ة":[u"h",[u"t"],[u"(t)"],u""],
   # control characters
   # The following are unnecessary because we handle them specially in
   # check_against_hyphen() and other_arabic_chars.
-  #zwnj:[u"-"],#,u""], # ZWNJ (zero-width non-joiner)
-  #zwj:[u"-"],#,u""], # ZWJ (zero-width joiner)
+  #ZWNJ:[u"-"],#,u""], # ZWNJ (zero-width non-joiner)
+  #ZWJ:[u"-"],#,u""], # ZWJ (zero-width joiner)
   # rare letters
   u"پ":u"p",
   u"چ":[u"č",u"ch"],
@@ -202,22 +201,22 @@ tt_to_arabic_matching = {
   u"ا":u"â", # ʾalif = \u0627
   # put empty string in list so not considered logically false, which can
   # mess with the logic
-  silent_alif_subst:[u""],
-  silent_alif_maqsuura_subst:[u""],
+  silent_alif_subst:[[u""]],
+  silent_alif_maqsuura_subst:[[u""]],
   # hamzated letters
   u"أ":hamza_match,
   u"إ":hamza_match,
   u"ؤ":hamza_match,
   u"ئ":hamza_match,
   u"ء":hamza_match,
-  u"و":[[u"w"],[u"û"],[u"ô"], u"v"],
+  u"و":["v",[u"w"],[u"u"],[u"ô"]],
   # Adding j here creates problems with e.g. an-nijir vs. النيجر
-  u"ي":[[u"y"],[u"î"],[u"ê"]], #u"j",
+  u"ي":[[u"y"],[u"i"],[u"ê"]], #u"j",
   u"ى":u"â", # ʾalif maqṣûra = \u0649
   u"آ":[u"ʾaâ",u"’aâ",u"'aâ",u"`aâ"], # ʾalif madda = \u0622
   # put empty string in list so not considered logically false, which can
   # mess with the logic
-  u"ٱ":[u""], # hamzatu l-waṣl = \u0671
+  u"ٱ":[[u""]], # hamzatu l-waṣl = \u0671
   u"\u0670":u"aâ", # ʾalif xanjariyya = dagger ʾalif (Koranic diacritic)
   # short vowels, šadda and sukûn
   u"\u064B":u"an", # fatḥatân
@@ -266,7 +265,7 @@ latin_consonants_no_double_after_cons_re = "[%s]" % (
 # get_matches() about this so it doesn't throw an "Encountered non-Arabic"
 # error, but instead just returns an empty list of matches so match() will
 # properly fail.
-other_arabic_chars = [zwj, zwnj, "-", u"–"]
+other_arabic_chars = [ZWJ, ZWNJ, "-", u"–"]
 
 word_interrupting_chars = u"ـ[]"
 
@@ -279,7 +278,7 @@ def sort_tt_to_arabic_matching(table):
   def canonicalize_entry(entries):
     if not isinstance(entries, list):
       entries = [entries]
-    canon = entry[0]
+    canon = entries[0]
     def element_length(el):
       if isinstance(el, (list, tuple)):
         el = el[0]
@@ -586,9 +585,9 @@ def pre_pre_canonicalize_arabic(text, msgfun=msg):
   text = text.strip()
   # canonicalize interior whitespace
   text = rsub(text, r"\s+", " ")
-  # replace Farsi, etc. characters with corresponding Arabic characters
-  text = text.replace(u"ی", u"ي") # FARSI YEH
-  text = text.replace(u"ک", u"ك") # ARABIC LETTER KEHEH (06A9)
+  # replace Arabic, etc. characters with corresponding Farsi characters
+  text = text.replace(u"ي", u"ی") # FARSI YEH
+  text = text.replace(u"ك", u"ک") # ARABIC LETTER KEHEH (06A9)
   # convert llh for allâh into ll+shadda+dagger-alif+h
   text = rsub(text, u"لله", u"للّٰه")
   # uniprint("text enter: %s" % text)
@@ -598,13 +597,14 @@ def pre_pre_canonicalize_arabic(text, msgfun=msg):
   # transliteration process inconvenient, so undo it.
   text = rsub(text,
     u"([\u064B\u064C\u064D\u064E\u064F\u0650\u0670])\u0651", u"\u0651\\1")
-  # tâʾ marbûṭa should always be preceded by fatḥa, alif, alif madda or
+  # tāʾ marbūṭa should always be preceded by fatḥa, alif, alif madda or
   # dagger alif; infer fatḥa if not. This fatḥa will force a match to an "a"
-  # in the Latin, so we can safely have tâʾ marbûṭa itself match "h", "t"
-  # or "", making it work correctly with alif + tâʾ marbûṭa where
-  # e.g. اة = â and still correctly allow e.g. رة = ra but disallow رة = r.
-  text = rsub(text, u"([^\u064E\u0627\u0622\u0670])\u0629",
-    u"\\1\u064E\u0629")
+  # in the Latin, so we can safely have tāʾ marbūṭa itself match "h", "t"
+  # or "", making it work correctly with alif + tâʾ marbūṭa where
+  # e.g. اة = ā and still correctly allow e.g. رة = ra but disallow رة = r.
+  # FIXME: tāʾ marbūṭa doesn't exist in Farsi.
+  #text = rsub(text, u"([^\u064E\u0627\u0622\u0670])\u0629",
+  #  u"\\1\u064E\u0629")
   # some Arabic text has a shadda after the initial consonant; remove it
   newtext = rsub(text, ur"(^|[ |\[\]])(.)" + SH, r"\1\2")
   if text != newtext:
@@ -753,7 +753,7 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
   def is_eow(pos=None):
     if pos is None:
       pos = aind[0]
-    return pos == alen - 1 or ar[pos + 1] in [u" ", u"]", u"|"]
+    return pos == alen - 1 or ar[pos + 1] in [u" ", u"]", u"|", ZWNJ]
 
   def get_matches():
     ac = ar[aind[0]]
@@ -765,7 +765,7 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
       bow and tt_to_arabic_matching_bow.get(ac) or
       eow and tt_to_arabic_matching_eow.get(ac) or
       tt_to_arabic_matching.get(ac))
-    debprint("get_matches: matches is %s" % matches)
+    debprint("get_matches: matches is %s" % (matches,))
     if matches is None:
       if ac in other_arabic_chars:
         return None, []
@@ -893,14 +893,14 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
       return True
     return False
 
-  # Check for Latin hyphen and match it against -, zwj, zwnj, Arabic space
+  # Check for Latin hyphen and match it against -, ZWJ, ZWNJ, Arabic space
   # or nothing. See the caller for some of the reasons we special-case
   # this.
   def check_against_hyphen():
     if lind[0] < llen and la[lind[0]] == "-":
       if aind[0] >= alen:
         lres.append("-")
-      elif ar[aind[0]] in ["-", u"–", zwj, zwnj]:
+      elif ar[aind[0]] in ["-", u"–", ZWJ, ZWNJ]:
         lres.append("-")
         res.append(ar[aind[0]])
         aind[0] += 1
@@ -1073,6 +1073,9 @@ def test(latin, arabic, should_outcome):
     if trlatin == canonlatin:
       uniprint("tr() MATCHED")
       outcome = "matched"
+    elif trlatin is None:
+      uniprint("tr() SKIPPED")
+      outcome = "matched"
     else:
       uniprint("tr() UNMATCHED (= %s)" % trlatin)
       outcome = "unmatched"
@@ -1091,7 +1094,7 @@ def run_tests():
   num_succeeded = 0
   num_failed = 0
   test(u"loğat-nâme", u"لغت‌نامه", "matched")
-  test("farhang", "فرهنگ", "matched")
+  test("farhang", u"فرهنگ", "matched")
   test(u"vâže-nâme", u"واژه‌نامه", "matched")
   test(u"qâmus", u"قاموس", "matched")
   test("katab", u"كتب", "matched")
