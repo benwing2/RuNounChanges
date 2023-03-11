@@ -2,6 +2,7 @@ local export = {}
 
 local m_compound = require("Module:compound")
 local m_languages = require("Module:languages")
+local put -- initialized once, when needed, to require("Module:parse utilities")
 
 local rsplit = mw.text.split
 
@@ -46,8 +47,7 @@ local param_mods = {
 	id = {},
 	alt = {},
 	q = {},
-	-- Not yet supported in [[Module:compound]].
-	-- qq = {},
+	qq = {},
 	lit = {
 		-- lit1=, lit2=, ... are different from lit=; the former describe the literal meaning of an individual argument
 		-- while the latter applies to the expression as a whole and appears after them at the end. To handle this in
@@ -127,7 +127,6 @@ local function parse_args(args, allow_compat, hack_params, has_source)
 		[term_index] = {list = true, allow_holes = true},
 		
 		["lit"] = {},
-		["pos"] = {},
 		["sc"] = {},
 		["pos"] = {},
 		["sort"] = {},
@@ -200,15 +199,14 @@ local function get_parsed_part(template, args, term_index, i)
 	if term then
 		local termlang, actual_term = term:match("^([A-Za-z0-9._-]+):(.*)$")
 		if termlang and termlang ~= "w" then -- special handling for w:... links to Wikipedia
-			-- term_index + i - 1 because we want to reference the actual term param name, which offsets from
-			-- `term_index` (the index of the first term); subtract 1 since i is one-based.
+			-- -1 since i is one-based
 			termlang = m_languages.getByCode(termlang, term_index + i - 1, "allow etym")
 			term = actual_term
 		else
 			termlang = nil
 		end
 		if part.lang and termlang then
-			error(("Both lang%s= and a language in %s= given; specify one or the other"):format(i, term_index + i - 1))
+			error(("Both lang%s= and a language in %s= given; specify one or the other"):format(i, i + 1))
 		end
 		part.lang = part.lang or termlang
 		part.term = term
@@ -225,8 +223,7 @@ local function get_parsed_part(template, args, term_index, i)
 		end
 		local run = put.parse_balanced_segment_run(term, "<", ">")
 		local function parse_err(msg)
-			-- For term_index + i - 1, see the call to m_languages.getByCode() about 25 lines up.
-			error(msg .. ": " .. (term_index + i - 1) .. "=" .. table.concat(run))
+			error(msg .. ": " .. (i + 1) .. "=" .. table.concat(run))
 		end
 		part.term = run[1]
 
@@ -257,10 +254,6 @@ local function get_parsed_part(template, args, term_index, i)
 			part[dest] = arg
 		end
 	end
-
-	-- FIXME: Either we should have a general mechanism in `param_mods` for default values, or (better) modify
-	-- [[Module:compound]] so it can handle nil for .genders.
-	part.genders = part.genders or {}
 
 	return part
 end
