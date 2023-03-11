@@ -237,6 +237,44 @@ def find_following_param(t, param):
         return None
   return None
 
+# Find maximum term index in templates that can take multiple terms. This is intended for templates such as {{affix}}
+# and {{head}} that can take multiple terms possibly with gaps in them. This checks a subset of parameters and returns
+# the maximum term index found among them. The index of a named param is defined as ### if the param name is of the form
+# NAME### (e.g. "head3") and otherwise 1. The index of a numeric param is the number of the param minus an offset
+# calculated as one less than `first_numeric` (so that e.g. if `first_numeric` is "3", numeric parameter "6"
+# corresponds to term index 4). If `check_named_params` is a list, it should specify the prefixes of the named params to
+# check (i.e. the NAME part of a NAME### param); otherwise, all named parameters are checked. If `first_numeric` is
+# None, numeric parameters are not checked (e.g. in {{head}}, where numeric parameters starting with "3" are alternating
+# inflection names and inflections and need to be handled specially); otherwise, numeric parameters >= `first_numeric`
+# (which can be an integer or stringified integer) are checked. If no matching params are found, 0 is returned.
+def find_max_term_index(t, first_numeric=None, check_named_params=None):
+  if first_numeric is None:
+    pass
+  elif isinstance(first_numeric, basestring):
+    first_numeric = int(first_numeric)
+  else:
+    assert isinstance(first_numeric, int)
+
+  def find_index(pn):
+    if re.search("^[0-9]+$", pn):
+      pn = int(pn)
+      if first_numeric is None or pn < first_numeric:
+        return None
+      # See comment above why we are adding 1 (equivalently, subtracting one from `first_numeric`).
+      return pn - first_numeric + 1
+    m = re.search("^(.*?)([0-9]*)$", pn)
+    name, index = m.groups()
+    if check_params and name not in check_params:
+      return None
+    return int(index) if index else 1
+
+  retval = 0
+  for param in enumerate(t.params):
+    index = find_index(pname(param))
+    if index is not None:
+      retval = max(retval, index)
+  return retval
+
 # Retrieve a chain of parameters from template T, where the first parameter
 # is named FIRST, and the remainder are named PREF2, PREF3, etc. FIRST can be
 # a list of parameters to try in turn. If FIRSTDEFAULT is given, use if FIRST
@@ -1518,36 +1556,224 @@ def safe_page_purge(page, errandpagemsg):
     return True
   return try_repeatedly(do_purge, errandpagemsg, "purge page", bad_value_ret=False)
 
-class ProcessLinks(object):
-  def __init__(self, index, pagetitle, parsed, template, tlang, param, trparam, langparam, notforeign=False):
-    self.index = index
-    self.pagetitle = pagetitle
-    self.parsed = parsed
-    self.template = template
-    self.tlang = tlang
-    self.param = param
-    self.trparam = trparam
-    self.langparam = langparam
-    self.notforeign = notforeign
+class ParseException(Exception):
+  pass
 
-# Process link-like templates containing foreign text in specified language(s).
-# PROCESS_PARAM is the function called, which is called with seven arguments: The page, its index
-# (an integer), the page text, the template on the page, the language code of the template, the param
-# in the template containing the foreign text and the param containing the Latin transliteration, or
-# None if there is no such parameter. NOTE: The param may be an array ["page title", PARAM] for a case
-# where the param value should be fetched from the page title and saved to PARAM. The function should
-# return a list of changelog strings if changes were made, and something else otherwise (e.g. False).
-# Changelog strings for all templates will be joined together using JOIN_ACTIONS; if not supplied,
-# they will be separated by a semi-colon.
+# Parse a string containing matched instances of parens, brackets or the like. Return a list of strings, alternating
+# between textual runs not containing the open/close characters and runs beginning and ending with the open/close
+# characters. For example,
 #
-# Returns two values: the changed text along with a changelog message.
+# parse_balanced_segment_run("foo(x(1)), bar(2)", "(", ")") = {"foo", "(x(1))", ", bar", "(2)", ""}.
+def parse_balanced_segment_run(segment_run, op, cl):
+  break_on_op_cl = re.split("([\\" + op + "\\" + cl + "])", segment_run)
+  text_and_specs = []
+  level = 0
+  seg_group = []
+  for i, seg in enumerate(break_on_op_cl):
+    if i % 2 == 1:
+      if seg == op:
+        seg_group.append(seg)
+        level += 1
+      else:
+        assert seg == cl
+        seg_group.append(seg)
+        level -= 1
+        if level < 0:
+          raise ParseException("Unmatched " + cl + " sign: '" + segment_run + "'")
+        elif level == 0:
+          text_and_specs.append("".join(seg_group))
+          seg_group = []
+    elif level > 0:
+      seg_group.append(seg)
+    else:
+      text_and_specs.append(seg)
+  if level > 0:
+    raise ParseException("Unmatched " + op + " sign: '" + segment_run + "'")
+  return text_and_specs
+
+
+#Split a list of alternating textual runs of the format returned by `parse_balanced_segment_run` on `splitchar`. This
+#only splits the odd-numbered textual runs (the portions between the balanced open/close characters).  The return value
+#is a list of lists, where each list contains an odd number of elements, where the even-numbered elements of the sublists
+#are the original balanced textual run portions. For example, if we do
 #
-# LANGS contains the language code(s) of the languages to do; only templates referencing the specified
-# language(s) will be processed.
+#parse_balanced_segment_run("foo<M.proper noun> bar<F>", "<", ">") =
+#  ["foo", "<M.proper noun>", " bar", "<F>", ""]
 #
-# If SPLIT_TEMPLATES, then if the transliteration contains multiple entries separated by the regex
-# in SPLIT_TEMPLATES with optional spaces on either end, the template is split into multiple copies,
-# each with one of the entries, and the templates are comma-separated.
+#then
+#
+#split_alternating_runs(["foo", "<M.proper noun>", " bar", "<F>", ""], " ") =
+#  [["foo", "<M.proper noun>", ""], ["bar", "<F>", ""]]
+#
+#Note that we did not touch the text "<M.proper noun>" even though it contains a space in it, because it is an
+#even-numbered element of the input list. This is intentional and allows for embedded separators inside of
+#brackets/parens/etc. Note also that the inner lists in the return value are of the same form as the input list (i.e.
+#they consist of alternating textual runs where the even-numbered segments are balanced runs), and can in turn be passed
+#to split_alternating_runs().
+#
+#If `preserve_splitchar` is passed in, the split character is included in the output, as follows:
+#
+#split_alternating_runs(["foo", "<M.proper noun>", " bar", "<F>", ""], " ", true) =
+#  [["foo", "<M.proper noun>", ""], [" "], ["bar", "<F>", ""]]
+#
+#Consider what happens if the original string has multiple spaces between brackets, and multiple sets of brackets
+#without spaces between them.
+#
+#parse_balanced_segment_run("foo[dated][low colloquial] baz-bat quux xyzzy[archaic]", "[", "]") =
+#  ["foo", "[dated]", "", "[low colloquial]", " baz-bat quux xyzzy", "[archaic]", ""]
+#
+#then
+#
+#split_alternating_runs(["foo", "[dated]", "", "[low colloquial]", " baz-bat quux xyzzy", "[archaic]", ""], "[ %-]") =
+#  [["foo", "[dated]", "", "[low colloquial]", ""], ["baz"], ["bat"], ["quux"], ["xyzzy", "[archaic]", ""]]
+#
+#If `preserve_splitchar` is passed in, the split character is included in the output,
+#as follows:
+#
+#split_alternating_runs(["foo", "[dated]", "", "[low colloquial]", " baz bat quux xyzzy", "[archaic]", ""], "[ %-]", true) =
+#  [["foo", "[dated]", "", "[low colloquial]", ""], [" "], ["baz"], ["-"], ["bat"], [" "], ["quux"], [" "], ["xyzzy", "[archaic]", ""]]
+#
+#As can be seen, the even-numbered elements in the outer list are one-element lists consisting of the separator text.
+def split_alternating_runs(segment_runs, splitchar, preserve_splitchar=False):
+  grouped_runs = []
+  run = []
+  for i, seg in enumerate(segment_runs):
+    if i % 2 == 1:
+      run.append(seg)
+    else:
+      parts = preserve_splitchar and re.split("(" + splitchar + ")", seg) or re.split(splitchar, seg)
+      run.append(parts[0])
+      for j in xrange(1, len(parts)):
+        grouped_runs.append(run)
+        run = [parts[j]]
+  if run:
+    grouped_runs.append(run)
+  return grouped_runs
+
+
+class ProcessLinks(object):
+  def __init__(self, index, pagetitle, parsed, template, tlang, param, langparam):
+    # The index of the page containing the template being processed.
+    self.index = index
+    # The title of the page containing the template being processed.
+    self.pagetitle = pagetitle
+    # The result of calling `parse_text()` on the text of the page containing the template being processed (an
+    # mwparserfromhell structure).
+    self.parsed = parsed
+    # The template being processed (an mwparserfromhell structure).
+    self.template = template
+    # The language of the value being considered.
+    self.tlang = tlang
+    # The parameters of the value being processed (its foreign-script value and corresponding Latin translit). This is
+    # a tuple where the first element of the tuple is a string specifying the type of parameter combination being
+    # processed, and the remaining elements specify the parameters being processed and depend on the value of the first
+    # element. The exact format is documented below in the comment above the doparam() function inside of the
+    # do_process_one_page_links() function inside of process_one_page_links().
+    self.param = param
+    # The parameter holding the language of the value being considered.
+    self.langparam = langparam
+
+
+class ParamWithInlineModifier(object):
+  def __init__(self, mainval, modifiers):
+    self.mainval = mainval
+    self.modifiers = modifiers
+
+  def reconstruct_param(self):
+    parts = [self.mainval]
+    for mod, val in self.modifiers:
+      parts.append("<%s:%s>" % (mod, val))
+    return "".join(parts)
+
+  def get_modifier(self, mod, allow_multiple=False):
+    retval = [] if allow_multiple else None
+    for thismod, thisval in self.modifiers:
+      if thismod == mod:
+        if allow_multiple:
+          retval.append(thisval)
+        elif retval is None:
+          retval = thisval
+        else:
+          raise ParseException("Modifier %s occurs twice, with values '%s' and '%s'" % (mod, retval, thisval))
+      return retval
+
+  def set_modifier(self, mod, val):
+    if isinstance(val, list):
+      existing_pos = []
+      for thispos, (thismod, thisval) in enumerate(self.modifiers):
+        if thismod == mod:
+          existing_pos.append(thispos)
+      if len(existing_pos) > len(val):
+        # Maybe we should optionally allow this, with a flag, and delete the excess values.
+        raise ParseException("For modifier %s, saw %s existing value(s) and trying to set only %s value(s)"
+          % (mod, len(existing_pos), len(val)))
+      else:
+        for valpos, pos in enumerate(existing_pos):
+          self.modifiers[pos] = (mod, val[valpos])
+        for val_to_add in val[len(existing_pos):]:
+          self.modifiers.append((mod, val_to_add))
+    else:
+      pos = None
+      for thispos, (thismod, thisval) in enumerate(self.modifiers):
+        if thismod == mod:
+          if pos is None:
+            pos = thispos
+          else:
+            raise ParseException("Modifier %s occurs twice when trying to set modifier, in positions '%s' and '%s'"
+              % (mod, pos, thispos))
+      if pos is None:
+        self.modifiers.append((mod, val))
+      else:
+        self.modifiers[pos] = ((mod, val))
+
+
+def parse_inline_modifier(value):
+  segments = parse_balanced_segment_run(value, "<", ">")
+  mainval = segments[0]
+  modifiers = []
+  for k in xrange(1, len(segments), 2):
+    if segments[k + 1] != "":
+      raise ParseException("Extraneous text '" + segments[k + 1] + "' after modifier")
+    modtext = segments[k]:match("^<(.*)>$")
+    if not modtext:
+      raise ValueError("Internal error: Modifier '" + segments[k] + "' isn't surrounded by angle brackets")
+    m = re.search("^([a-zA-Z0-9+_-]+):(.*)$", modtext)
+    if not m:
+      raise ParseException("Modifier " + segments[k] + " lacks a recognized prefix")
+    prefix, val = m.groups()
+    modifiers.append((prefix, val))
+  return ParamWithInlineModifier(mainval, modifiers)
+
+
+# Process link-like templates containing foreign text in specified language(s). PROCESS_PARAM is the function called,
+# which is called with a single argument, an object of type ProcessLinks holding information on the page; its index
+# (an integer); the page text; the template on the page; the language code of the template; the combination of
+# parameters in the template containing the foreign text and Latin transliteration; and the parameter holding the
+# language code of the template. If the function makes any in-place modifications to the template, it should return
+# a changelog string or a list of changelog strings; otherwise it should return False.
+#
+# Returns two values: the changed text along with a list of changelog messages (created by collecting all the changelog
+# strings returned by PROCESS_PARAM).
+#
+# INDEX is the index of the page to process; PAGETITLE is its title; and TEXT is its text.
+
+# LANGS is a list of the language code(s) of the languages to do; only templates referencing the specified language(s)
+# will be processed.
+#
+# TEMPLATES_SEEN and TEMPLATES_CHANGED on entry should be empty dictionaries. On exit, the keys will record the names
+# respectively of templates "seen" (where PROCESS_PARAM was called at least once on the template) and templates
+# "changed" (where at least one change was made to the template by PROCESS_PARAM). Note the PROCESS_PARAM may be
+# called multiple times on certain templates (e.g. {{affix}}, {{alt}} and other templates containing multiple values).
+#
+# If SPLIT_TEMPLATES is given, then if the transliteration of a given parameter contains multiple entries, the template
+# is split into multiple copies, each with one of the entries, and the templates are comma-separated. SPLIT_TEMPLATES
+# is either True (which splits on commas) or a string specifying a regex used for splitting; optional whitespace is
+# automatically added to both sides of the regex. (FIXME: This is currently disabled because it needs rethinking and
+# expansion to make it more robust.)
+#
+# If INCLUDE_NOTFOREIGN is given, then PROCESS_PARAM will be called on templates referencing one of the languages in
+# LANGS but not containing any foreign-script values. In that case, the first element of the tuple passed in `param`
+# to PROCESS_PARAM will be "notforeign". See below.
 def process_one_page_links(index, pagetitle, text, langs, process_param,
   templates_seen, templates_changed, split_templates=None, include_notforeign=False):
 
@@ -1565,21 +1791,122 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
     for template in parsed.filter_templates():
       def getp(param):
         return getparam(template, param)
-      tempname = unicode(template.name).strip()
+      tn = tname(template)
       saw_template = [False]
       changed_template = [False]
-      def doparam(param, tlang, trparam="tr", langparam="1", noadd=False, notforeign=False):
-        if type(param) is not list and param is not None and not getp(param):
+
+      # Call `processfn` on a given foreign-script/Latin combination:
+      # * `tlang` is the language of the foreign script param.
+      # * `param` specifies the parameters involved and is a tuple, where the first element specifies the type of
+      #   parameter combination and the remaining elements specify the parameters involved. Specifically:
+      #   * ("separate", FOREIGN, LATIN) specifies the case where the foreign-script value is found in parameter
+      #     FOREIGN and the corresponding Latin translit is in LATIN (possibly None).
+      #   * ("separate-pagetitle", FOREIGN_DEST, LATIN) specifies the case where the foreign-script value comes
+      #     directly from the page title. If it needs to be canonicalized (e.g. accents added), the canonicalized
+      #     value should be written to FOREIGN_DEST. The corresponding Latin translit is in LATIN (possibly None).
+      #   * ("inline", FOREIGN_PARAM, FOREIGN_MOD, LATIN_MOD[, PARSED_INLINE_MOD]) specifies the case where inline
+      #     modifiers are involved. FOREIGN_PARAM is the parameter holding everything. FOREIGN_MOD is the inline
+      #     modifier holding the foreign-script value, or None if the main value (the part outside the <...>) is the
+      #     foreign-script value. LATIN_MOD specifies the inline modifier holding the Latin translit. PARSED_INLINE_MOD
+      #     is the parsed version of the contents of FOREIGN_PARAM (a ParamWithInlineModifier object). If omitted, an
+      #     additional value will be appended to the tuple before calling `processfn`, containing the results of calling
+      #     parse_inline_modifier() on the value in FOREIGN_PARAM.
+      #   * ("notforeign") specifies the case where a template references a given language but doesn't contain a
+      #     foreign/Latin combination to process. These cases won't be included at all unless `include_notforeign`
+      #     is given in `process_one_page_links`.
+      # * `langparam` is the parameter holding the language found in `tlang`, defaulting to "1".
+      #
+      # The return value is True if any changes were made, otherwise False.
+      def doparam(tlang, param, langparam="1"):
+        try:
+          if param[0] == "separate":
+            _, foreign, latin = param
+            assert foreign is not None
+            if not getp(foreign):
+              return False
+          elif param[0] == "inline":
+            if len(param) == 4:
+              _, foreign_param, foreign_mod, latin_mod = param
+              assert foreign_param is not None
+              paramval = getp(foreign_param)
+              if not paramval:
+                return False
+              inline_mod = parse_inline_modifier(paramval)
+              if foreign_mod is not None and inline_mod.get_modifier(foreign_mod) is None:
+                return False
+              param = ("inline", foreign_param, foreign_mod, latin_mod, inline_mod)
+
+          saw_template[0] = True
+          obj = ProcessLinks(index, pagetitle, parsed, template, tlang, param, langparam)
+          result = processfn(obj)
+          if result:
+            if isinstance(result, list):
+              actions.extend(result)
+            else:
+              assert isinstance(result, basestring)
+              actions.append(result)
+            changed_template[0] = True
+            return True
           return False
-        saw_template[0] = True
-        obj = ProcessLinks(index, pagetitle, parsed, template, tlang, param, trparam, langparam,
-            notforeign=notforeign)
-        result = processfn(obj)
-        if result and isinstance(result, list):
-          actions.extend(result)
-          changed_template[0] = True
-          return True
-        return False
+        except ParseException as e:
+          pagemsg("Exception processing lang %s, param %s in template %s: %s"
+            % (tlang, param, unicode(template), e))
+          return False
+
+      # Call doparam() and hence `processfn` on a given foreign-script/Latin-translit combination with an optional
+      # display-text (alt) param and possibly inline modifiers. `param` is the name of the foreign-script param;
+      # `altparam` is the display-text param (or None if there is no corresponding display-text param); `trparam` is the
+      # corresponding Latin-translit param (or None if there is no corresponding translit param); `tlang` and
+      # `langparam` are as in doparam(). If `check_inline_modifiers` is specified, check the value of `param` for a
+      # less-than sign and if so, try to parse as an inline modifier. If `other_lang_param` is specified and is a
+      # string, it is the name of the parameter holding the term-specific language of the term. If this parameter
+      # exists, `param` is ignored as presumably not being in the right language. (FIXME: We should consider checking
+      # the term's language against the languages given in `langs` to process_one_page_links(), and take appropriate
+      # action if it matches.) If `other_lang_param` is specified (either as a string or the value True), we also check
+      # for a language code prefixed to the value of `param` (e.g. 'LL.:minūtia' or 'grc:[[σκῶρ|σκατός]]') and (if
+      # `check_inline_modifiers` is given) a <lang:CODE> inline modifier, and ignore `param` if any of these are found.
+      def doparam_checking_alt(tlang, param, altparam, trparam, langparam="1", check_inline_modifiers=False,
+          other_lang_param=None):
+        altval = getp(altparam) if altparam else ""
+        paramval = getp(param)
+        if isinstance(other_lang_param, basestring):
+          other_lang_val = getp(other_lang_param)
+          if other_lang_val:
+            pagemsg("Skipping param %s=%s with alt param %s=%s because it is in a different lang %s=%s: %s"
+              % (param, paramval, altparam, altval, other_lang_param, other_lang_val, unicode(template)))
+            return False
+        if other_lang_param:
+          m = re.search("^([A-Za-z0-9._-]+):(.*)$", paramval)
+          if m:
+            other_lang_val, actual_paramval = m.groups()
+            pagemsg("Skipping param %s=%s because of it begins with other-language prefix '%s:': %s"
+              % (param, paramval, other_lang_val, unicode(template)))
+            return False
+        if check_inline_modifiers and "<" in paramval:
+          try:
+            inline_mod = parse_inline_modifier(paramval)
+            if altval:
+              pagemsg("WARNING: Found inline modifier in param %s=%s along with alt param %s=%s, can't process: %s"
+                % (param, paramval, altparam, altval, unicode(template)))
+              return False
+            if other_lang_param and inline_mod.get_modifier("lang") is not None:
+              pagemsg("Skipping param %s=%s because of inline 'lang' modifier: %s"
+                % (param, paramval, unicode(template)))
+              return False
+            if inline_mod.get_modifier("alt") is not None:
+              return doparam(tlang, ("inline", param, "alt", "tr", inline_mod), langparam=langparam)
+            else:
+              return doparam(tlang, ("inline", param, None, "tr", inline_mod), langparam=langparam)
+          except ParseException as e:
+            pagemsg("WARNING: Exception processing lang %s, param %s=%s in template %s: %s"
+              % (tlang, param, paramval, unicode(template), e))
+            # fall through to the code below
+        if altval:
+          return doparam(tlang, ("separate", altparam, trparam), langparam=langparam)
+        elif paramval:
+          return doparam(tlang, ("separate", param, trparam), langparam=langparam)
+        else:
+          return False
 
       did_template = False
       if "grc" in langs:
@@ -1587,39 +1914,33 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
         did_template = True
         def dogrcparam(trparam):
           if getp("head"):
-            doparam("head", "grc", trparam, langparam=None)
+            doparam("grc", ("separate", "head", trparam), langparam=None)
           else:
-            doparam(["page title", "head"], "grc", trparam, langparam=None)
-        if tempname in ["grc-noun-con"]:
+            doparam("grc", ("separate-pagetitle", "head", trparam), langparam=None)
+        if tn in ["grc-noun-con"]:
           dogrcparam("5")
-        elif tempname in ["grc-proper noun", "grc-noun"]:
+        elif tn in ["grc-proper noun", "grc-noun"]:
           dogrcparam("4")
-        elif tempname in ["grc-adj-1&2", "grc-adj-1&3", "grc-part-1&3"]:
+        elif tn in ["grc-adj-1&2", "grc-adj-1&3", "grc-part-1&3"]:
           dogrcparam("3")
-        elif tempname in ["grc-adj-2nd", "grc-adj-3rd", "grc-adj-2&3"]:
+        elif tn in ["grc-adj-2nd", "grc-adj-3rd", "grc-adj-2&3"]:
           dogrcparam("2")
-        elif tempname in ["grc-num"]:
+        elif tn in ["grc-num"]:
           dogrcparam("1")
-        elif tempname in ["grc-verb"]:
+        elif tn in ["grc-verb"]:
           dogrcparam("tr")
         else:
           did_template = False
       if "ru" in langs:
         # Special-casing for Russian
-        if tempname in ["ru-participle of", "ru-abbrev of", "ru-etym abbrev of",
+        if tn in ["ru-participle of", "ru-abbrev of", "ru-etym abbrev of",
             "ru-acronym of", "ru-etym acronym of", "ru-initialism of",
             "ru-etym initialism of", "ru-clipping of", "ru-etym clipping of",
             "ru-pre-reform"]:
           if getp("2"):
-            doparam("2", "ru", langparam=None)
+            doparam("ru", ("separate", "2", "tr"), langparam=None)
           else:
-            doparam("1", "ru", langparam=None)
-          did_template = True
-        elif tempname == "ru-xlit":
-          doparam("1", "ru", None, langparam=None)
-          did_template = True
-        elif tempname == "ru-ux":
-          doparam("1", "ru", langparam=None)
+            doparam("ru", ("separate", "1", "tr"), langparam=None)
           did_template = True
       #if "fa" in langs:
         # Special-casing for Persian
@@ -1631,7 +1952,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
       # Skip {{cattoc|...}}, {{i|...}}, etc. where the param isn't a language code,
       # as well as {{w|FOO|lang=LANG}} or {{wikipedia|FOO|lang=LANG}} or {{pedia|FOO|lang=LANG}} etc.,
       # where LANG is a Wikipedia language code, not a Wiktionary language code.
-      if (tempname in [ 
+      if (tn in [
         "cattoc", "commonscat",
         "gloss",
         "non-gloss definition", "non-gloss", "non gloss", "n-g", "ng",
@@ -1641,162 +1962,170 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
         "sense", "italbrac-colon",
         "w", "wikipedia", "wp", "lw"]
         # More Wiki-etc. templates
-        or tempname.startswith("projectlink")
-        or tempname.startswith("PL:")
+        or tn.startswith("projectlink")
+        or tn.startswith("PL:")
         # Babel/User templates indicating language proficiency
-        or re.search("([Bb]abel|User)", tempname)):
+        or re.search("([Bb]abel|User)", tn)):
         pass
       # Skip {{attention|LANG|FOO}} or {{etyl|LANG|FOO}} or {{audio|LANG|FOO}}
       # or {{lb|LANG|FOO}} or {{context|LANG|FOO}} or {{Babel-2|LANG|FOO}}
       # or various others, where FOO is not text in LANG, and {{w|FOO|lang=LANG}}
       # or {{wikipedia|FOO|lang=LANG}} or {{pedia|FOO|lang=LANG}} etc., where
       # FOO is text in LANG but diacritics aren't stripped so shouldn't be added.
-      elif (tempname in [
+      elif (tn in [
         "attention", "attn",
         "audio", "audio-IPA",
         "categorize", "cat", "catlangname", "cln", "topics", "top", "topic", "catlangcode", "C", "c",
         "etyl",
         "given name",
         "hyphenation", "hyph",
-        "IPA", "IPAchar",
+        "IPA", "IPAchar", "ic",
         "label", "lb", "lbl", "context", "cx", "term-label", "tlb",
         "langcatboiler",
         "+preo", "phrasebook", "place",
         "refcat", "rfe", "rfinfl", "rfc", "rfc-pron-n",
+        "rhymes", "rhyme",
         "senseid", "surname",
         "was fwotd"
       ] and include_notforeign):
         tlang = getp("1")
         if tlang in langs:
-          doparam(None, tlang, trparam=None, notforeign=True)
+          doparam(tlang, ("notforeign",))
       elif did_template:
         pass
       # Look for {{head|LANG|...|head=<FOREIGNTEXT>}}
-      elif tempname == "head":
+      elif tn == "head":
         tlang = getp("1")
         if tlang in langs:
           if getp("head"):
-            doparam("head", tlang)
+            doparam(tlang, ("separate", "head", "tr"))
           else:
-            doparam(["page title", "head"], tlang)
+            doparam(tlang, ("separate-pagetitle", "head", "tr"))
           for i in range(2, 11): # there may be holes
-            doparam("head%s" % i, tlang, "tr%s" % i)
+            doparam(tlang, ("separate", "head%s" % i, "tr%s" % i))
           for i in range(1, 11):
             if getp("f%salt" % i):
-              doparam("f%salt" % i, tlang, "f%str" % i)
+              doparam(tlang, ("separate", "f%salt" % i, "f%str" % i))
             else:
-              doparam(str(i * 2 + 2), tlang, "f%str" % i)
+              doparam(tlang, ("separate", str(i * 2 + 2), "f%str" % i))
       # Look for {{t|LANG|<PAGENAME>|alt=<FOREIGNTEXT>}}
-      elif tempname in ["t", "t+", "t-", "t+check", "t-check"]:
+      elif tn in ["t", "t+", "tt", "tt+", "t-", "t+check", "t-check"]:
         tlang = getp("1")
         if tlang in langs:
-          if getp("alt"):
-            doparam("alt", tlang)
-          else:
-            doparam("2", tlang)
+          doparam_checking_alt(tlang, "2", "alt", "tr")
       # Look for {{suffix|LANG|<PAGENAME>|alt1=<FOREIGNTEXT>|<PAGENAME>|alt2=...}}
       # or  {{suffix|LANG|<FOREIGNTEXT>|<FOREIGNTEXT>|...}}
-      elif (tempname in ["suffix", "suf", "prefix", "pre", "affix", "af",
+      elif tn in ["suffix", "suf", "prefix", "pre", "affix", "af",
           "confix", "con", "circumfix", "infix", "compound", "com",
-          "prefixusex", "prefex", "suffixusex", "sufex", "affixusex", "afex",
-          "synonyms", "syn", "antonyms", "ant", "hypernyms", "hyper",
-          "hyponyms", "hypo", "meronyms", "holonyms", "troponyms",
-          "coordinate terms", "perfectives", "pf", "imperfectives", "impf",
-          "homophones", "hmp"]):
-        if tempname in ["suffix", "suf", "infix"]:
-          params = [1]
-        elif tempname in ["prefix", "pre", "circumfix"]:
-          params = [2]
-        elif tempname in ["confix", "con"]:
-          if getp("3"):
-            params = [2]
-          else:
-            params = []
+          "prefixusex", "prefex", "suffixusex", "sufex", "affixusex", "afex"]:
+        if tn in ["circumfix", "confix", "con"]:
+          maxind = 3
+        elif tn in ["infix"]:
+          maxind = 2
         else:
-          params = range(1, 11)
+          # Don't just do cases up through where there's a numbered param because there may be holes.
+          maxind = find_max_term_index(t, "2")
         tlang = getp("1")
+        # FIXME! Finish
+        ...
         offset = 1
         if tlang in langs:
-          templates_seen[tempname] = templates_seen.get(tempname, 0) + 1
-          # Don't just do cases up through where there's a numbered param
-          # because there may be holes.
-          for i in params:
+          for i in xrange(1, maxind + 1):
             if getp("lang" + str(i)):
               continue
             if getp("alt" + str(i)):
-              doparam("alt" + str(i), tlang, "tr" + str(i))
+              doparam(tlang, ("separate", "alt" + str(i), "tr" + str(i)))
             else:
-              doparam(str(i + offset), tlang, "tr" + str(i))
-      elif tempname == "form of":
+              doparam(tlang, ("separate", str(i + offset), "tr" + str(i)))
+      elif tn in ["synonyms", "syn", "antonyms", "ant", "hypernyms", "hyper",
+          "hyponyms", "hypo", "meronyms", "holonyms", "troponyms",
+          "coordinate terms", "perfectives", "pf", "imperfectives", "impf",
+          "homophone", "homophones", "hmp"]:
+        # FIXME! implement, including handling of semicolons and other separators, which don't increase the
+        # term index.
+        ...
+      elif tn == "form of":
         tlang = getp("1")
         if tlang in langs:
           if getp("4"):
-            doparam("4", tlang)
+            doparam(tlang, ("separate", "4", "tr"))
           else:
-            doparam("3", tlang)
+            doparam(tlang, ("separate", "3", "tr"))
       # Templates where we don't check for alternative text because
       # the following parameter is used for the translation.
-      elif tempname in ["ux", "usex", "uxi", "quote"]:
+      elif tn in ["ux", "usex", "uxi", "quote"]:
         tlang = getp("1")
         if tlang in langs:
-          doparam("2", tlang)
-      elif tempname == "Q":
+          doparam(tlang, ("separate", "2", "tr"))
+      elif tn == "Q":
         tlang = getp("1")
         if tlang in langs:
-          doparam("quote", tlang)
-      elif tempname == "lang":
+          doparam(tlang, ("separate", "quote", "tr"))
+      elif tn == "lang":
         tlang = getp("1")
         if tlang in langs:
-          doparam("2", tlang, None)
-      #elif tempname in ["w", "wikipedia", "wp"]:
+          doparam(tlang, ("separate", "2", None))
+      #elif tn in ["w", "wikipedia", "wp"]:
       #  tlang = getp("lang")
       #  if tlang in langs and getp("2"):
       #    # Can't replace param 1 (page linked to), but it's OK to frob the
       #    # display text
-      #    doparam("2", tlang, None, langparam="lang")
-      elif tempname in ["w2"]:
+      #    doparam(tlang, ("separate", "2", None), langparam="lang")
+      elif tn in ["w2"]:
         tlang = getp("1")
         if tlang in langs and getp("3"):
           # Can't replace param 2 (page linked to), but it's OK to frob the
           # display text
-          doparam("3", tlang, "tr")
-      elif tempname in ["cardinalbox", "ordinalbox"]:
+          doparam(tlang, ("separate", "3", "tr"))
+      elif tn in ["cardinalbox", "ordinalbox"]:
         tlang = getp("1")
         if tlang in langs:
           # FUCKME: This is a complicated template, might be doing it wrong
-          doparam("5", tlang, None)
-          doparam("6", tlang, None)
+          doparam(tlang, ("separate", "5", None))
+          doparam(tlang, ("separate", "6", None))
           for p in ["card", "ord", "adv", "mult", "dis", "coll", "frac",
               "optx", "opt2x"]:
             if getp(p + "alt"):
-              doparam(p + "alt", tlang, p + "tr")
+              doparam(tlang, ("separate", p + "alt", p + "tr"))
             else:
-              doparam(p, tlang, p + "tr")
+              doparam(tlang, ("separate", p, p + "tr"))
           if getp("alt"):
-            doparam("alt", tlang)
+            doparam(tlang, ("separate", "alt", "tr"))
           else:
-            doparam("wplink", tlang, None)
-      elif tempname in ["quote-book", "quote-hansard", "quote-journal",
+            doparam(tlang, ("separate", "wplink", None))
+      elif tn in ["quote-book", "quote-hansard", "quote-journal",
           "quote-newsgroup", "quote-song", "quote-us-patent", "quote-video",
           "quote-web", "quote-wikipedia"]:
         tlang = getp("1")
         if tlang in langs:
           if getp("passage") or getp("text"):
-            doparam("passage" if getp("passage") else "text", tlang,
-              "transliteration" if getp("transliteration") else "tr")
-      elif tempname in ["alter", "blend", "univerbation", "univ"]:
+            doparam(tlang, ("separate", "passage" if getp("passage") else "text",
+              "transliteration" if getp("transliteration") else "tr"))
+      elif tn in ["alter", "alt"]:
         tlang = getp("1")
         if tlang in langs:
           i = 1
+          # Dialect specifiers follow a blank param.
+          while True:
+            if not getp(str(i + 1)):
+              break
+            doparam_checking_alt(tlang, str(i + 1), "alt" + str(i), "tr" + str(i), check_inline_modifiers=True)
+            i += 1
+      elif tn in ["blend", "univerbation", "univ"]:
+        tlang = getp("1")
+        if tlang in langs:
+
+          i = 1
+          # FIXME: inline modifiers
           while True:
             if getp("alt" + str(i)):
-              doparam("alt" + str(i), tlang, "tr" + str(i))
+              doparam(tlang, ("separate", "alt" + str(i), "tr" + str(i)))
             elif getp(str(i + 1)):
-              doparam(str(i + 1), tlang, "tr" + str(i))
+              doparam(tlang, ("separate", str(i + 1), "tr" + str(i)))
             else:
               break
             i += 1
-      elif tempname in [
+      elif tn in [
           "col1", "col2", "col3", "col4", "col5",
           "col1-u", "col2-u", "col3-u", "col4-u", "col5-u",
           "der2", "der3", "der4",
@@ -1805,23 +2134,24 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
         if tlang in langs:
           i = 2
           while getp(str(i)):
-            doparam(str(i), tlang, None)
+            # FIXME: inline modifiers
+            doparam(tlang, ("separate", str(i), None))
             i += 1
-      elif tempname in ["col", "col-u"]:
+      elif tn in ["col", "col-u"]:
         tlang = getp("1")
         if tlang in langs:
           i = 3
           while getp(str(i)):
-            doparam(str(i), tlang, None)
+            doparam(tlang, ("separate", str(i), None))
             i += 1
-      elif tempname == "elements":
+      elif tn == "elements":
         tlang = getp("1")
         if tlang in langs:
-          doparam("3", tlang, None)
-          doparam("5", tlang, None)
-          doparam("next2", tlang, None)
-          doparam("prev2", tlang, None)
-      elif tempname in ["der", "derived", "inh", "inherited", "bor", "borrowed",
+          doparam(tlang, ("separate", "3", None))
+          doparam(tlang, ("separate", "5", None))
+          doparam(tlang, ("separate", "next2", None))
+          doparam(tlang, ("separate", "prev2", None))
+      elif tn in ["der", "derived", "inh", "inherited", "bor", "borrowed",
           "lbor", "learned borrowing", "slbor", "semi-learned borrowing",
           "obor", "orthographic borrowing", "ubor", "unadapted borrowing",
           "sl", "semantic loan" "psm", "phono-semantic matching",
@@ -1829,98 +2159,99 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
         tlang = getp("2")
         if tlang in langs:
           if getp("alt"):
-            doparam("alt", tlang, langparam="2")
+            doparam(tlang, ("separate", "alt", "tr"), langparam="2")
           elif getp("4"):
-            doparam("4", tlang, langparam="2")
+            doparam(tlang, ("separate", "4", "tr"), langparam="2")
           else:
-            doparam("3", tlang, langparam="2")
+            doparam(tlang, ("separate", "3", "tr"), langparam="2")
         tlang = getp("1")
         if tlang in langs and include_notforeign:
-          doparam(None, tlang, trparam=None, notforeign=True)
-      elif tempname == "root":
+          doparam(tlang, ("notforeign",))
+      elif tn == "root":
         tlang = getp("2")
         if tlang in langs:
           i = 3
           while getp(str(i)):
-            doparam(str(i), tlang, None, langparam="2")
+            doparam(tlang, ("separate", str(i), None), langparam="2")
             i += 1
         tlang = getp("1")
         if tlang in langs and include_notforeign:
-          doparam(None, tlang, trparam=None, notforeign=True)
-      elif tempname == "etyl":
+          doparam(tlang, ("notforeign",))
+      elif tn == "etyl":
         if include_notforeign:
           tlang = getp("1")
           if tlang in langs:
-            doparam(None, tlang, trparam=None, notforeign=True)
+            doparam(tlang, ("notforeign",))
           tlang = getp("2")
           if tlang in langs:
-            doparam(None, tlang, trparam=None, langparam="2", notforeign=True)
+            doparam(tlang, ("notforeign",), langparam="2")
       # Look for any other template with lang as first argument, but skip templates
       # that have what looks like a language prefix in their name, e.g. 'eo-form of',
       # 'cs-conj-pros-it', 'vep-decl-stems', 'sw-adj form of'. Also skip templates with
       # a colon in their name, e.g. 'U:tr:first-person singular'.
-      elif not lang_prefix_template(tempname) and getp("1") in langs:
+      elif not lang_prefix_template(tn) and getp("1") in langs:
         tlang = getp("1")
         # Look for:
         #   {{m|LANG|<PAGENAME>|<FOREIGNTEXT>}}
         #   {{m|LANG|<PAGENAME>|alt=<FOREIGNTEXT>}}
         #   {{m|LANG|<FOREIGNTEXT>}}
         if getp("alt"):
-          doparam("alt", tlang)
+          doparam(tlang, ("separate", "alt", "tr"))
         elif getp("3"):
-          doparam("3", tlang)
-        elif tempname != "transliteration":
-          doparam("2", tlang)
+          doparam(tlang, ("separate", "3", "tr"))
+        elif tn != "transliteration":
+          doparam(tlang, ("separate", "2", "tr"))
       if saw_template[0]:
-        templates_seen[tempname] = templates_seen.get(tempname, 0) + 1
+        templates_seen[tn] = templates_seen.get(tn, 0) + 1
       if changed_template[0]:
-        templates_changed[tempname] = templates_changed.get(tempname, 0) + 1
+        templates_changed[tn] = templates_changed.get(tn, 0) + 1
     return actions
 
   actions = []
   newtext = [text]
   parsed = parse_text(text)
 
-  def pagemsg(txt):
-    msg("Page %s %s: %s" % (index, pagetitle, txt))
-
-  # First split up any templates with commas in the Latin
+  # First split up any templates with commas in the Latin.
   if split_templates:
-    def process_param_for_splitting(obj):
-      if isinstance(obj.param, list):
-        fromparam, toparam = obj.param
-      else:
-        fromparam = obj.param
-      if fromparam == "page title":
-        foreign = obj.pagetitle
-      else:
-        foreign = getparam(obj.template, fromparam)
-      latin = getparam(obj.template, obj.paramtr)
-      if (re.search(split_templates, latin) and not
-          re.search(split_templates, foreign)):
-        trs = re.split("\\s*" + split_templates + "\\s*", latin)
-        oldtemp = unicode(obj.template)
-        newtemps = []
-        for tr in trs:
-          addparam(obj.template, obj.paramtr, tr)
-          newtemps.append(unicode(obj.template))
-        newtemp = ", ".join(newtemps)
-        old_newtext = newtext[0]
-        pagemsg("Splitting template %s into %s" % (oldtemp, newtemp))
-        new_newtext = old_newtext.replace(oldtemp, newtemp)
-        if old_newtext == new_newtext:
-          pagemsg("WARNING: Unable to locate old template when splitting trs on commas: %s"
-              % oldtemp)
-        elif len(new_newtext) - len(old_newtext) != len(newtemp) - len(oldtemp):
-          pagemsg("WARNING: Length mismatch when splitting template on tr commas, may have matched multiple templates: old=%s, new=%s" % (
-            oldtemp, newtemp))
-        newtext[0] = new_newtext
-        return ["split %s=%s" % (obj.paramtr, latin)]
-      return []
+    assert False, "split_templates not currently supported"
+  #  def pagemsg(txt):
+  #    msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-    actions += do_process_one_page_links(pagetitle, index, parsed,
-        process_param_for_splitting)
-    parsed = parse_text(newtext[0])
+  #  def process_param_for_splitting(obj):
+  #    if isinstance(obj.param, list):
+  #      fromparam, toparam = obj.param
+  #    else:
+  #      fromparam = obj.param
+  #    if fromparam == "page title":
+  #      foreign = obj.pagetitle
+  #    else:
+  #      foreign = getparam(obj.template, fromparam)
+  #    latin = getparam(obj.template, obj.paramtr)
+  #    if (re.search(split_templates, latin) and not
+  #        re.search(split_templates, foreign)):
+  #      trs = re.split("\\s*" + split_templates + "\\s*", latin)
+  #      oldtemp = unicode(obj.template)
+  #      newtemps = []
+  #      for tr in trs:
+  #        addparam(obj.template, obj.paramtr, tr)
+  #        newtemps.append(unicode(obj.template))
+  #      newtemp = ", ".join(newtemps)
+  #      old_newtext = newtext[0]
+  #      pagemsg("Splitting template %s into %s" % (oldtemp, newtemp))
+  #      new_newtext = old_newtext.replace(oldtemp, newtemp)
+  #      if old_newtext == new_newtext:
+  #        pagemsg("WARNING: Unable to locate old template when splitting trs on commas: %s"
+  #            % oldtemp)
+  #      elif len(new_newtext) - len(old_newtext) != len(newtemp) - len(oldtemp):
+  #        pagemsg("WARNING: Length mismatch when splitting template on tr commas, may have matched multiple templates: old=%s, new=%s" % (
+  #          oldtemp, newtemp))
+  #      newtext[0] = new_newtext
+  #      return ["split %s=%s" % (obj.paramtr, latin)]
+  #    return []
+  #
+  #  actions += do_process_one_page_links(pagetitle, index, parsed,
+  #      process_param_for_splitting)
+  #  parsed = parse_text(newtext[0])
 
   actions += do_process_one_page_links(pagetitle, index, parsed, process_param)
   return unicode(parsed), actions
@@ -2357,65 +2688,6 @@ def yield_pages_from_previous_output(lines, verbose):
         yield pagenum, pagename
       prev_pagenum = pagenum
       prev_pagename = pagename
-
-
-#Split a list of alternating textual runs of the format returned by `parse_balanced_segment_run` on `splitchar`. This
-#only splits the odd-numbered textual runs (the portions between the balanced open/close characters).  The return value
-#is a list of lists, where each list contains an odd number of elements, where the even-numbered elements of the sublists
-#are the original balanced textual run portions. For example, if we do
-#
-#parse_balanced_segment_run("foo<M.proper noun> bar<F>", "<", ">") =
-#  ["foo", "<M.proper noun>", " bar", "<F>", ""]
-#
-#then
-#
-#split_alternating_runs(["foo", "<M.proper noun>", " bar", "<F>", ""], " ") =
-#  [["foo", "<M.proper noun>", ""], ["bar", "<F>", ""]]
-#
-#Note that we did not touch the text "<M.proper noun>" even though it contains a space in it, because it is an
-#even-numbered element of the input list. This is intentional and allows for embedded separators inside of
-#brackets/parens/etc. Note also that the inner lists in the return value are of the same form as the input list (i.e.
-#they consist of alternating textual runs where the even-numbered segments are balanced runs), and can in turn be passed
-#to split_alternating_runs().
-#
-#If `preserve_splitchar` is passed in, the split character is included in the output, as follows:
-#
-#split_alternating_runs(["foo", "<M.proper noun>", " bar", "<F>", ""], " ", true) =
-#  [["foo", "<M.proper noun>", ""], [" "], ["bar", "<F>", ""]]
-#
-#Consider what happens if the original string has multiple spaces between brackets, and multiple sets of brackets
-#without spaces between them.
-#
-#parse_balanced_segment_run("foo[dated][low colloquial] baz-bat quux xyzzy[archaic]", "[", "]") =
-#  ["foo", "[dated]", "", "[low colloquial]", " baz-bat quux xyzzy", "[archaic]", ""]
-#
-#then
-#
-#split_alternating_runs(["foo", "[dated]", "", "[low colloquial]", " baz-bat quux xyzzy", "[archaic]", ""], "[ %-]") =
-#  [["foo", "[dated]", "", "[low colloquial]", ""], ["baz"], ["bat"], ["quux"], ["xyzzy", "[archaic]", ""]]
-#
-#If `preserve_splitchar` is passed in, the split character is included in the output,
-#as follows:
-#
-#split_alternating_runs(["foo", "[dated]", "", "[low colloquial]", " baz bat quux xyzzy", "[archaic]", ""], "[ %-]", true) =
-#  [["foo", "[dated]", "", "[low colloquial]", ""], [" "], ["baz"], ["-"], ["bat"], [" "], ["quux"], [" "], ["xyzzy", "[archaic]", ""]]
-#
-#As can be seen, the even-numbered elements in the outer list are one-element lists consisting of the separator text.
-def split_alternating_runs(segment_runs, splitchar, preserve_splitchar=False):
-  grouped_runs = []
-  run = []
-  for i, seg in enumerate(segment_runs):
-    if i % 2 == 1:
-      run.append(seg)
-    else:
-      parts = preserve_splitchar and re.split("(" + splitchar + ")", seg) or re.split(splitchar, seg)
-      run.append(parts[0])
-      for j in xrange(1, len(parts)):
-        grouped_runs.append(run)
-        run = [parts[j]]
-  if run:
-    grouped_runs.append(run)
-  return grouped_runs
 
 def do_process(q, iolock, process):
   while True:
