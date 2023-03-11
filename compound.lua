@@ -160,6 +160,18 @@ local function glossary_link(entry, text)
 end
 
 
+local function track(page)
+	if type(page) == "table" then
+		for i, pg in ipairs(page) do
+			page[i] = "compound/" .. pg
+		end
+	else
+		page = "compound/" .. page
+	end
+   	require("Module:debug/track")(page)
+end
+
+
 local function make_compound_type(typ, alttext)
 	return {
 		text = glossary_link(typ, alttext) .. " compound",
@@ -226,7 +238,7 @@ end
 
 local function make_entry_name_no_links(lang, term)
 	-- Remove links and call lang:makeEntryName(term).
-	return m_lang.getNonEtymological(lang):makeEntryName(m_links.remove_links(term))
+	return (m_lang.getNonEtymological(lang):makeEntryName(m_links.remove_links(term)))
 end
 
 function export.link_term(terminfo, display_term, lang, sc, sort_key, force_cat, nocat)
@@ -244,7 +256,12 @@ function export.link_term(terminfo, display_term, lang, sc, sort_key, force_cat,
 	end
 
 	if terminfo_new.q then
+		track("q-after-result")
 		result = result .. " " .. require("Module:qualifier").format_qualifier(terminfo_new.q)
+	end
+
+	if terminfo_new.qq then
+		result = result .. " " .. require("Module:qualifier").format_qualifier(terminfo_new.qq)
 	end
 
 	return result
@@ -292,7 +309,7 @@ local function get_template_and_display_hyphens(text, lang, sc)
 			if not may_have_nondefault_hyphen then
 				scode = "Latn"
 			else
-				scode = require("Module:scripts").findBestScript(text, lang):getCode()
+				scode = lang:findBestScript(text):getCode()
 			end
 		end
 	end
@@ -459,14 +476,10 @@ function export.show_affixes(lang, sc, parts, pos, sort_key, typ, nocap, notext,
 		local affix_type, display_term = get_affix_type(part_lang, part_sc, part.term)
 
 		-- Make a link for the part
-		if display_term == "" then
-			-- If a bare ^ was specified, then insert a blank string. A + will still
-			-- appear next to it. This lets us directly convert things such as
-			-- {{suffix|mul||idae}} to {{affix|mul|^|-idae}}.
-			table.insert(parts_formatted, "")
-		else
-			table.insert(parts_formatted, export.link_term(part, display_term, lang, sc, sort_key, force_cat, nocat))
-		end
+		-- If display_term is an empty string, either a bare ^ was specified or an empty term was used along with inline
+		-- modifiers. The intention in either case is not to link the term.
+		table.insert(parts_formatted, export.link_term(part, display_term ~= "" and display_term or nil, lang, sc, sort_key,
+			force_cat, nocat))
 
 		if affix_type then
 			-- Make a sort key
@@ -536,11 +549,7 @@ function export.show_compound(lang, sc, parts, pos, sort_key, typ, nocap, notext
 		else
 			display_term = part.term
 			if affix_type then
-				require("Module:debug").track{
-					"compound",
-					"compound/" .. affix_type,
-					"compound/" .. affix_type .. "/lang/" .. lang:getCode()
-				}
+				track { affix_type, affix_type .. "/lang/" .. lang:getCode() }
 			else
 				whole_words = whole_words + 1
 			end
@@ -549,9 +558,9 @@ function export.show_compound(lang, sc, parts, pos, sort_key, typ, nocap, notext
 	end
 
 	if whole_words == 1 then
-		require("Module:debug").track("compound/one whole word")
+		track("one whole word")
 	elseif whole_words == 0 then
-		require("Module:debug").track("compound/looks like confix")
+		track("looks like confix")
 	end
 
 	table.insert(text_sections, export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat))
@@ -608,7 +617,7 @@ local function track_wrong_affix_type(template, part, lang, sc, expected_affix_t
 	if part then
 		local affix_type = get_affix_type(part.lang or lang, part.sc or sc, part.term)
 		if affix_type ~= expected_affix_type then
-			require("Module:debug").track{
+			require("Module:debug/track") {
 				template,
 				template .. "/" .. part_name,
 				template .. "/" .. part_name .. "/" .. (affix_type or "none"),
