@@ -114,16 +114,24 @@ local function fetch_script(sc, param)
 end
 
 
-local function parse_args(args, allow_compat, hack_params, has_source)
-	local compat = args["lang"]
-	if compat and not allow_compat then
+-- Parse raw arguments in `args`. If `hack_params` is specified, it should be a one-argument function that is called
+-- on the `params` structure before parsing; its purpose is to specify additional allowed parameters or possibly disable
+-- parameters. If `has_source` is given, there is a source-language parameter following 1= (which becomes the
+-- "destination" language parameter) and preceding the terms. This is currently used for {{pseudo-loan}}. The
+-- source-language parameter is allowed to be an etymology-only language while the language in 1= is currently not so
+-- allowed (FIXME: should we change this?). Returns five values ARGS, TERM_INDEX, LANG_OBJ, SCRIPT_OBJ, SOURCE_LANG_OBJ
+-- where ARGS is a table of the parsed arguments; TERM_INDEX is the argument containing all the terms; LANG_OBJ is the
+-- language object corresponding to the language code specified in 1=; SCRIPT_OBJ is the script object corresponding to
+-- sc= (if given, otherwise nil); and SOURCE_LANG_OBJ is the language object corresponding to the source-language code
+-- specified in 2= if `has_source` is specified (otherwise nil).
+local function parse_args(args, hack_params, has_source)
+	if args.lang then
 		error("The |lang= parameter is not used by this template. Place the language code in parameter 1 instead.")
 	end
 
-	local lang_index = compat and "lang" or 1
-	local term_index = (compat and 1 or 2) + (has_source and 1 or 0)
+	local term_index = 2 + (has_source and 1 or 0)
 	local params = {
-		[lang_index] = {required = true, default = "und"},
+		[1] = {required = true, default = "und"},
 		[term_index] = {list = true, allow_holes = true},
 		
 		["lit"] = {},
@@ -159,7 +167,7 @@ local function parse_args(args, allow_compat, hack_params, has_source)
 	end
 
 	args = require("Module:parameters").process(args, params)
-	local lang = m_languages.getByCode(args[lang_index], lang_index)
+	local lang = m_languages.getByCode(args[1], 1)
 	local source
 	if has_source then
 		source = m_languages.getByCode(args[source_index], source_index, "allow etym")
@@ -168,6 +176,12 @@ local function parse_args(args, allow_compat, hack_params, has_source)
 end
 
 
+-- Return an object containing all the properties of the `i`th term. `template` is the name of the calling template
+-- (used only in the debug-tracking mechanism). `args` is the arguments as returned by parse_args(). `term_index` is
+-- the argument containing all the terms. This handles all the complexities of fetching all the properties associated
+-- with a term either out of separate parameters (e.g. pos3=, g2=) or from inline modifiers (e.g.
+-- 'term<pos:noun><g:m-p>'). It also handles parsing off a separate language code attached to the beginning of a term or
+-- specified using langN= or <lang:CODE>.
 local function get_parsed_part(template, args, term_index, i)
 	local part = {}
 	local term = args[term_index][i]
@@ -259,7 +273,13 @@ local function get_parsed_part(template, args, term_index, i)
 end
 
 
-local function get_parsed_parts(template, args, term_index, start_index)
+-- Return an array of objects describing all the terms specified by the user. The meat of the work is done by
+-- get_parsed_part(). `template`, `args` and `term_index` are as in get_parsed_part() and are required. Optional
+-- `max_terms_allowed` restricts the number of terms that can be specified, and optional `start_index` specifies the
+-- first index in the user-specified terms under the `term_index` argument to pull terms out of, defaulting to 1.
+-- Currently only suffix() specifies a value for `start_index`, because the first term is handled differently by
+-- suffix() compared with all the remaining terms.
+local function get_parsed_parts(template, args, term_index, max_terms_allowed, start_index)
 	local parts = {}
 	start_index = start_index or 1
 
@@ -267,6 +287,17 @@ local function get_parsed_parts(template, args, term_index, start_index)
 	local maxmaxindex = 0
 	for k, v in pairs(args) do
 		if type(v) == "table" and v.maxindex and v.maxindex > maxmaxindex then
+			if max_terms_allowed and v.maxindex > max_terms_allowed then
+				-- Try to determine the original parameter name associated with v.maxindex.
+				if type(k) == "number" then
+					-- Subtract one because e.g. if terms start at 2, the 4th term is in 5=.
+					arg = k + v.maxindex - 1
+				else
+					arg = k .. v.maxindex
+				end
+				error(("In [[Template:%s|%s]], at most %s terms can be specified but argument %s specified, corresponding to term #%s")
+					:format(template, template, maxindex, arg, v.maxindex))
+			end
 			maxmaxindex = v.maxindex
 		end
 	end
@@ -287,7 +318,7 @@ function export.affix(frame)
 		params["notext"] = {type = "boolean"}
 	end
 
-	local args, term_index, lang, sc = parse_args(frame:getParent().args, nil, hack_params)
+	local args, term_index, lang, sc = parse_args(frame:getParent().args, hack_params)
 
 	if args["type"] and not m_compound.compound_types[args["type"]] then
 		error("Unrecognized compound type: '" .. args["type"] .. "'")
@@ -317,7 +348,7 @@ function export.compound(frame)
 		params["notext"] = {type = "boolean"}
 	end
 
-	local args, term_index, lang, sc = parse_args(frame:getParent().args, nil, hack_params)
+	local args, term_index, lang, sc = parse_args(frame:getParent().args, hack_params)
 
 	if args["type"] and not m_compound.compound_types[args["type"]] then
 		error("Unrecognized compound type: '" .. args["type"] .. "'")
@@ -347,7 +378,7 @@ function export.compound_like(frame)
 		params["notext"] = {type = "boolean"}
 	end
 
-	local args, term_index, lang, sc = parse_args(frame:getParent().args, nil, hack_params)
+	local args, term_index, lang, sc = parse_args(frame:getParent().args, hack_params)
 
 	local template = frame.args["template"]
 	local nocat = args["nocat"]
@@ -368,33 +399,10 @@ function export.compound_like(frame)
 end
 
 
-function export.interfix_compound(frame)
-	local args, term_index, lang, sc = parse_args(frame:getParent().args)
-
-	local parts = get_parsed_parts("interfix-compound", args, term_index)
-	local base1 = parts[1]
-	local interfix = parts[2]
-	local base2 = parts[3]
-	
-	-- Just to make sure someone didn't use the template in a silly way
-	if not (base1 and interfix and base2) then
-		if mw.title.getCurrentTitle().nsText == "Template" then
-			base1 = {term = "base1"}
-			interfix = {term = "interfix"}
-			base2 = {term = "base2"}
-		else
-			error("You must provide a base term, an interfix and a second base term.")
-		end
-	end
-	
-	return m_compound.show_interfix_compound(lang, sc, base1, interfix, base2, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
-end
-
-
 function export.circumfix(frame)
 	local args, term_index, lang, sc = parse_args(frame:getParent().args)
 
-	local parts = get_parsed_parts("circumfix", args, term_index)
+	local parts = get_parsed_parts("circumfix", args, term_index, 3)
 	local prefix = parts[1]
 	local base = parts[2]
 	local suffix = parts[3]
@@ -417,7 +425,7 @@ end
 function export.confix(frame)
 	local args, term_index, lang, sc = parse_args(frame:getParent().args)
 
-	local parts = get_parsed_parts("confix", args, term_index)
+	local parts = get_parsed_parts("confix", args, term_index, 3)
 	local prefix = parts[1]
 	local base = #parts >= 3 and parts[2] or nil
 	local suffix = #parts >= 3 and parts[3] or parts[2]
@@ -443,7 +451,7 @@ function export.pseudo_loan(frame)
 		params["notext"] = {type = "boolean"}
 	end
 
-	local args, term_index, lang, sc, source = parse_args(frame:getParent().args, nil, hack_params, "has source")
+	local args, term_index, lang, sc, source = parse_args(frame:getParent().args, hack_params, "has source")
 
 	local parts = get_parsed_parts("pseudo-loan", args, term_index)
 	
@@ -455,7 +463,7 @@ end
 function export.infix(frame)
 	local args, term_index, lang, sc = parse_args(frame:getParent().args)
 
-	local parts = get_parsed_parts("infix", args, term_index)
+	local parts = get_parsed_parts("infix", args, term_index, 2)
 	local base = parts[1]
 	local infix = parts[2]
 	
@@ -502,7 +510,7 @@ function export.suffix(frame)
 	local args, term_index, lang, sc = parse_args(frame:getParent().args)
 
 	local base = get_parsed_part("suffix", args, term_index, 1)
-	local suffixes = get_parsed_parts("suffix", args, term_index, 2)
+	local suffixes = get_parsed_parts("suffix", args, term_index, nil, 2)
 	
 	-- Just to make sure someone didn't use the template in a silly way
 	if #suffixes == 0 then
@@ -515,31 +523,6 @@ function export.suffix(frame)
 	end
 	
 	return m_compound.show_suffixes(lang, sc, base, suffixes, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
-end
-
-
-function export.transfix(frame)
-	local params = {
-		[1] = {required = true, default = "und"},
-		[2] = {required = true, default = "base"},
-		[3] = {required = true, default = "transfix"},
-		
-		["nocat"] = {type = "boolean"},
-		["pos"] = {},
-		["sc"] = {},
-		["sort"] = {},
-		["lit"] = {},
-	}
-	
-	local args = require("Module:parameters").process(frame:getParent().args, params)
-	
-	local lang = m_languages.getByCode(args[1], 1)
-	local sc = fetch_script(args["sc"], "sc")
-
-	local base = {term = args[2]}
-	local transfix = {term = args[3]}
-	
-	return m_compound.show_transfix(lang, sc, base, transfix, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 

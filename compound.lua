@@ -168,7 +168,7 @@ local function track(page)
 	else
 		page = "compound/" .. page
 	end
-   	require("Module:debug/track")(page)
+	require("Module:debug/track")(page)
 end
 
 
@@ -828,28 +828,6 @@ function export.show_suffixes(lang, sc, base, suffixes, pos, sort_key, nocat, li
 			table.insert(categories, "patronymics")
 		end
 	end
-
-	return export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
-end
-
-
-function export.show_transfix(lang, sc, base, transfix, pos, sort_key, nocat, lit, force_cat)
-	local categories = {}
-	pos = pos or default_pos
-
-	pos = pluralize(pos)
-
-	-- Hyphenate the affixes
-	make_part_affix(transfix, lang, sc, "transfix")
-
-	-- Make links out of all the parts
-	local parts_formatted = {}
-
-	table.insert(parts_formatted, export.link_term(base, base.term, lang, sc, sort_key, force_cat, nocat))
-	table.insert(parts_formatted, export.link_term(transfix, transfix.term, lang, sc, sort_key, force_cat, nocat))
-
-	-- Insert the categories
-	insert_affix_category(categories, lang, pos, "transfix", transfix)
 
 	return export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
 end
