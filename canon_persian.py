@@ -17,12 +17,24 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 templates_seen = {}
 templates_changed = {}
+printed_succeeded_failed = False
 def process_text_on_page(index, pagetitle, text):
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
   if args.test:
     def process_param(obj):
       def getp(param):
         return getparam(obj.t, param)
       def test(foreign, latin):
+        global printed_succeeded_failed
+        if int(index) % 100 == 0:
+          if not printed_succeeded_failed:
+            printed_succeeded_failed = True
+            pagemsg("Failure = %s/%s = %.1f%%" % (fa_translit.num_failed, fa_translit.num_succeeded,
+              100.0 * fa_translit.num_failed / fa_translit.num_succeeded))
+        else:
+          printed_succeeded_failed = False
+        pagemsg("Processing %s" % unicode(obj.t))
         return fa_translit.test(latin, foreign, "matched")
       if obj.param[0] == "separate":
         _, foreign, latin = obj.param
