@@ -1741,7 +1741,7 @@ def parse_inline_modifier(value):
   for k in xrange(1, len(segments), 2):
     if segments[k + 1] != "":
       raise ParseException("Extraneous text '" + segments[k + 1] + "' after modifier")
-    m = re.search("^<(.*)>$", segments(k))
+    m = re.search("^<(.*)>$", segments[k])
     if not m:
       raise ValueError("Internal error: Modifier '" + segments[k] + "' isn't surrounded by angle brackets")
     modtext = m.group(1)
@@ -2070,7 +2070,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
           doparam("1", ("separate", "head%s" % i, "tr%s" % i))
         maxinfl = find_max_term_index(t,
           first_numeric=lambda pn: (pn - 1) // 2 if pn >= 3 else None,
-          check_named_params=lambda pn:
+          named_params=lambda pn:
             int(re.sub("^f([0-9]+)(alt|tr)$", r"\1", pn)) if re.search("^f([0-9]+)(alt|tr)$", pn) else None
         )
         for i in range(1, maxinfl + 1):
@@ -2175,6 +2175,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
           # require_index not specified in [[Module:alternative forms]]
           doparam_checking_alt("1", str(i + 1), index_param("alt", i), index_param("tr", i),
               check_inline_modifiers=True)
+          i += 1
       elif tn in ["desc", "descendant", "desctree", "descendants tree"]:
         # Don't just do cases up through where there's a numbered param because there may be holes.
         maxind = find_max_term_index(t, first_numeric="2", named_params=True)
