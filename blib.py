@@ -1659,11 +1659,13 @@ def split_alternating_runs(segment_runs, splitchar, preserve_splitchar=False):
 
 
 class ProcessLinks(object):
-  def __init__(self, index, pagetitle, parsed, t, tlang, param, langparam):
+  def __init__(self, index, pagetitle, text, parsed, t, tlang, param, langparam):
     # The index of the page containing the template being processed.
     self.index = index
     # The title of the page containing the template being processed.
     self.pagetitle = pagetitle
+    # The raw text of the page containing the template being processed.
+    self.text = text
     # The result of calling `parse_text()` on the text of the page containing the template being processed (an
     # mwparserfromhell structure).
     self.parsed = parsed
@@ -1792,8 +1794,8 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
   # calling PROCESSFN for each pair of foreign/Latin. Return a list of
   # changelog actions.
   def do_process_one_page_links(pagetitle, index, parsed, processfn):
-    def pagemsg(text):
-      msg("Page %s %s: %s" % (index, pagetitle, text))
+    def pagemsg(txt):
+      msg("Page %s %s: %s" % (index, pagetitle, txt))
 
     actions = []
     for t in parsed.filter_templates():
@@ -1885,7 +1887,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
               param = ("inline", foreign_param, foreign_mod, latin_mod, inline_mod)
 
           saw_template[0] = True
-          obj = ProcessLinks(index, pagetitle, parsed, t, tlang, param, langparam)
+          obj = ProcessLinks(index, pagetitle, text, parsed, t, tlang, param, langparam)
           result = processfn(obj)
           if result:
             if isinstance(result, list):
