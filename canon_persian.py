@@ -25,7 +25,7 @@ def process_text_on_page(index, pagetitle, text):
     def process_param(obj):
       def getp(param):
         return getparam(obj.t, param)
-      def test(foreign, latin):
+      def test(obj, foreign, latin):
         global printed_succeeded_failed
         if int(index) % 100 == 0:
           if not printed_succeeded_failed:
@@ -35,17 +35,25 @@ def process_text_on_page(index, pagetitle, text):
         else:
           printed_succeeded_failed = False
         pagemsg("Processing %s" % unicode(obj.t))
-        return fa_translit.test(latin, foreign, "matched")
+        return fa_translit.test_with_obj(obj, latin, foreign, "matched")
+      foreign = None
+      latin = None
       if obj.param[0] == "separate":
         _, foreign, latin = obj.param
-        test(getp(foreign), getp(latin))
+        foreign = getp(foreign)
+        latin = getp(latin)
       elif obj.param[0] == "separate-pagetitle":
         _, foreign_dest, latin = obj.param
-        test(pagetitle, getp(latin))
+        foreign = pagetitle
+        latin = getp(latin)
       elif obj.param[0] == "inline":
         _, foreign_param, foreign_mod, latin_mod, inline_mod = obj.param
-        test(inline_mod.mainval if foreign_mod is None else inline_mod.get_modifier(foreign_mod),
-            inline_mod.get_modifier(latin_mod))
+        foreign = inline_mod.mainval if foreign_mod is None else inline_mod.get_modifier(foreign_mod)
+        latin = inline_mod.get_modifier(latin_mod)
+      if not foreign or not latin:
+        pagemsg("Skipped: foreign=%s, latin=%s" % (foreign, latin))
+      else:
+        test(obj, foreign, latin)
     text, actions = blib.process_one_page_links(index, pagetitle, text, ["fa"], process_param,
         templates_seen, templates_changed)
     return text, actions
