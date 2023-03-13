@@ -112,7 +112,7 @@ rconsonants = consonants_needing_vowels + u"ویآ"
 # consonants on the left side; does not include alif madda
 lconsonants = consonants_needing_vowels + u"وی"
 punctuation = (u"؟،؛" # Arabic semicolon, comma, question mark
-         + u"ـ" # taṭwîl
+         + u"ـ" # tatweel
          + ".!'" # period, exclamation point, single quote for bold/italic
          )
 numbers = u"١٢٣٤٥٦٧٨٩٠"
@@ -294,7 +294,7 @@ tt_to_arabic_matching = {
   u"ﷲ":u"llâh",
   # put empty string in list so not considered logically false, which can
   # mess with the logic
-  u"ـ":[""], # taṭwîl, no sound
+  u"ـ":[""], # tatweel, no sound
   # numerals
   u"١":"1", u"٢":"2", u"٣":"3", u"٤":"4", u"٥":"5",
   u"٦":"6", u"٧":"7", u"٨":"8", u"٩":"9", u"٠":"0",
@@ -810,10 +810,12 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
   def is_beginning_of_compound(pos=None):
     if pos is None:
       pos = aind[0]
-    return (pos == 0 or ar[pos - 1] in [" ", "[", "|", ZWNJ]) or (
+    return (pos == 0 or ar[pos - 1] in [" ", "[", "|", ZWNJ]) or ((
       # also when we just processed a hyphen; cf. {{tt+|fa|یادآوری|tr=yâd-âvari}}
-      # also when we output a hyphen even if not in the input
+      # also when we output a hyphen even if not in the input ...
       lind[0] > 0 and la[lind[0] - 1] == "-" or len(lres) > 0 and lres[-1] == "-")
+      # ... unless we just saw a tatweel, which cannot be the end of a compound part
+      and not (pos > 0 and ar[pos - 1] == u"ـ"))
 
   # True if we are at the last character in a word.
   def is_eow(pos=None):
@@ -1103,7 +1105,7 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
     # the right bracket. The is_bow() check is necessary because
     # left-bracket is part of word_interrupting_chars and when the
     # left bracket is word-initial opposite a short vowel, the bracket
-    # needs to be handled first. Similarly for word-initial tatwil, etc.
+    # needs to be handled first. Similarly for word-initial tatweel, etc.
     #
     # Note that we can't easily generalize the word_interrupting_chars
     # check. We used to do so, calling get_matches() and looking where
