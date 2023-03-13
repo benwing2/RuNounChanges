@@ -12,7 +12,7 @@ from blib import remove_links, msg
 # NEEDS LOTS OF WORK
 #
 # Some issues to take care of:
-# 
+#
 # 1. o against و especially in loanwords:
 # * {{t|fa|کروآت|tr=koroât}} "Croatian"
 # * {{t|fa|نوردراین-وستفالن|tr=nordrâyn-vestfâlen|sc=fa-Arab}} "North Rhine-Westphalia"
@@ -144,6 +144,44 @@ hamza_match = ["'",u"ʾ",u"ʼ",u"´",("`",),u"ʔ",u"’",(u"‘",),u"ˀ",(u"ʕ",
 hamza_match_or_empty = hamza_match + [""]
 hamza_match_chars = [x[0] if isinstance(x, (list, tuple)) else x for x in hamza_match]
 
+class LatinMatch(object):
+  def __init__(self, match, canon_to=None, when=None):
+    self.match = match
+    self.canon_to = canon_to
+    self.when = when
+
+class State(object):
+  def __init__(self, ar, aind, alen, la, lind, llen, res, lres):
+    self.ar = ar
+    self.aind = aind
+    self.alen = alen
+    self.la = la
+    self.lind = lind
+    self.llen = llen
+    self.res = res
+    self.lres = lres
+
+  def nextar(self, howmany=1):
+    if self.aind[0] + howmany >= self.alen:
+      return None
+    return self.ar[self.aind[0] + howmany]
+
+  def nextla(self, howmany=1):
+    if self.lind[0] + howmany >= self.llen:
+      return None
+    return self.la[self.lind[0] + howmany]
+
+  def prevar(self, howmany=1):
+    if self.aind[0] - howmany < 0:
+      return None
+    return self.ar[self.aind[0] - howmany]
+
+  def prevla(self, howmany=1):
+    if self.lind[0] - howmany < 0:
+      return None
+    return self.la[self.lind[0] - howmany]
+
+
 # Special-case matching at beginning of word. Plain alif normally corresponds
 # to nothing, and hamza seats might correspond to nothing (omitted hamza
 # at beginning of word). We can't allow e.g. أ to have "" as one of its
@@ -270,9 +308,10 @@ tt_to_arabic_matching = {
   u"ئ":hamza_match,
   u"ء":hamza_match,
   # FIXME, should w between vowels become v?
-  u"و":["v",["w"],["ow"],["ov"],["u"],[u"ô"],["o"]],
+  u"و":["v",["w"],["ow"],LatinMatch("ou", canon_to="ow"),["ov"],["u"],[u"ô"],["o"],LatinMatch(u"û", canon_to="u"),
+      LatinMatch("", canon_to="", when=lambda st: st.prevar() == u"خ" and st.nextar() == u"ا")],
   # Adding j here creates problems with e.g. an-nijir vs. النیجر
-  u"ی":[["y"],["iy"],["i"],[u"ê"]], #"j",
+  u"ی":[["y"],["iy"],["ey"],LatinMatch("ei", canon_to="ey"),["i"],[u"ê"],LatinMatch(u"î", canon_to="i")], #"j",
   u"ى":u"â", # ʾalif maqṣûra = \u0649
   u"آ":[u"'â",u"ʾâ",u"’â",u"'â",u"`â"], # ʾalif madda = \u0622
   # put empty string in list so not considered logically false, which can
@@ -343,6 +382,8 @@ def sort_tt_to_arabic_matching(table):
     def element_length(el):
       if isinstance(el, (list, tuple)):
         el = el[0]
+      elif isinstance(el, LatinMatch):
+        el = el.match
       return len(el)
     return (canon, sorted(entries, key=lambda el: -element_length(el)))
   return {k: canonicalize_entry(v) for k, v in table.iteritems()}
@@ -360,6 +401,12 @@ for key, (canon, alts) in tt_to_arabic_matching.iteritems():
     pass
   elif isinstance(canon, list):
     build_canonicalize_latin[canon[0]] = "multiple"
+  elif isinstance(canon, LatinMatch):
+    if callable(canon.match):
+      # FIXME! Deal with this.
+      pass
+    else:
+      build_canonicalize_latin[canon.match] = "multiple"
   else:
     build_canonicalize_latin[canon] = "multiple"
 
@@ -368,9 +415,19 @@ for key, (canon, alts) in tt_to_arabic_matching.iteritems():
     # FIXME: What about if canon is tuple?
     continue
   for alt in alts:
-    if alt == canon:
+    this_canon = canon
+    if isinstance(alt, LatinMatch):
+      this_canon = alt.canon_to
+      if callable(this_canon):
+        # FIXME! Deal with this.
+        continue
+      alt = alt.match
+      if callable(alt):
+        # FIXME! Deal with this.
+        continue
+    elif isinstance(alt, (list, tuple)):
       continue
-    if isinstance(alt, (list, tuple)):
+    if alt == canon:
       continue
     if alt in build_canonicalize_latin and build_canonicalize_latin[alt] != canon:
       build_canonicalize_latin[alt] = "multiple"
@@ -802,6 +859,9 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
   lind = [0] # index of next Latin character
   llen = len(la)
 
+  def create_state():
+    return State(ar, aind, alen, la, lind, llen, res, lres)
+
   def is_bow(pos=None):
     if pos is None:
       pos = aind[0]
@@ -878,22 +938,35 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
       lind[0], lind[0] >= llen and "EOF" or la[lind[0]]))
 
     for m in alts:
+      this_canon = canon
       preserve_latin = False
       # If an element of the match list is a list, it means
       # "don't canonicalize".
-      if type(m) is list:
+      if isinstance(m, list):
         preserve_latin = True
         m = m[0]
       # A one-element tuple is a signal for use in self-canonicalization,
       # not here.
-      elif type(m) is tuple:
+      elif isinstance(m, tuple):
         m = m[0]
-      l = lind[0]
+      elif isinstance(m, LatinMatch):
+        st = create_state()
+        if m.when and not m.when(st):
+          continue
+        this_canon = m.canon_to
+        if callable(this_canon):
+          this_canon = this_canon(st)
+          if this_canon is None:
+            continue
+        m = m.match
+
       # Don't allow matching against an empty string unless allow_empty_latin=True. This avoids problems matching the
       # empty string too soon, e.g. {{t|fa|شعله‌ور|tr=šo'levar|sc=fa-Arab}}, where ع (`ayn) can match the empty
       # string and canonicalize to ', but before that should happen, we have to consume the unmatched e.
       if not allow_empty_latin and not m:
         continue
+
+      l = lind[0]
       matched = True
       debprint("m: %s" % m)
       for cp in m:
@@ -917,8 +990,8 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
             lres.append("h")
           # else do nothing
         else:
-          subst = canon
-          if type(subst) is list or type(subst) is tuple:
+          subst = this_canon
+          if isinstance(subst, (list, tuple)):
             subst = subst[0]
           for cp in subst:
             lres.append(cp)
@@ -1311,6 +1384,8 @@ def run_tests():
   test("vaz'-e fe'li", "وضع فعلی", "matched", "vaz'-e fe'li")
 # FIXME, ask about the following, should it be kwârk?
   test("kuārk", "کوارک", "matched", "kuârk", gloss="quark")
+  # FIXME, the following is wrong:
+  # tr_matching(باستان‌اخترشناسی, bāstānaxtaršenāsī) = باستانَ‌اختَرشِناسی bâstâna-xtaršenâsi, tr() SKIPPED CANON-CHANGED
 
 
 
