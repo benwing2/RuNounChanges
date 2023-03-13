@@ -59,6 +59,8 @@ from blib import remove_links, msg
 # * {{tt+|fa|میوه|tr=mēva}} "fruit" canon-changed to mêva (RIGHT OR WRONG?)
 # * {{tt+|fa|بارو|tr=bârō}} "wall" canon-changed to bârô (RIGHT OR WRONG?)
 
+debug_tr_matching = False
+
 def uniprint(x):
   print x.encode('utf-8')
 def uniout(x):
@@ -152,6 +154,14 @@ tt_to_arabic_matching_bow = { #beginning of word
   # put empty string in list so this entry will be recognized -- a plain
   # empty string is considered logically false
   u"ا":[""],
+  # These don't occur word-initially in Farsi
+  #u"أ":hamza_match_or_empty,
+  #u"إ":hamza_match_or_empty,
+  u"آ":[u"â"], #ʾalif madda = \u0622
+}
+
+tt_to_arabic_matching_boc = { #beginning of later part of a compound
+  u"ا":["a",["o"],["e"],["'"],[""]],
   # These don't occur word-initially in Farsi
   #u"أ":hamza_match_or_empty,
   #u"إ":hamza_match_or_empty,
@@ -339,6 +349,7 @@ def sort_tt_to_arabic_matching(table):
 
 tt_to_arabic_matching = sort_tt_to_arabic_matching(tt_to_arabic_matching)
 tt_to_arabic_matching_bow = sort_tt_to_arabic_matching(tt_to_arabic_matching_bow)
+tt_to_arabic_matching_boc = sort_tt_to_arabic_matching(tt_to_arabic_matching_boc)
 tt_to_arabic_matching_eow = sort_tt_to_arabic_matching(tt_to_arabic_matching_eow)
 
 # Make sure we don't canonicalize any canonical letter to any other one;
@@ -757,8 +768,6 @@ def post_canonicalize_arabic(text, safe=False):
     SH + u"([\u064B\u064C\u064D\u064E\u064F\u0650])", "\\1" + SH)
   return text
 
-debug_tr_matching = False
-
 # Vocalize Persian Arabic-script text based on transliterated Latin, and canonicalize the transliteration based on
 # the Arabic script.  This works by matching the Latin to the unvocalized Arabic script and inserting the appropriate
 # diacritics in the right places, so that ambiguities of Latin transliteration can be correctly handled. Returns a
@@ -798,6 +807,14 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
       pos = aind[0]
     return (pos == 0 or ar[pos - 1] in [" ", "[", "|"])
 
+  def is_beginning_of_compound(pos=None):
+    if pos is None:
+      pos = aind[0]
+    return (pos == 0 or ar[pos - 1] in [" ", "[", "|", ZWNJ]) or (
+      # also when we just processed a hyphen; cf. {{tt+|fa|یادآوری|tr=yâd-âvari}}
+      # also when we output a hyphen even if not in the input
+      lind[0] > 0 and la[lind[0] - 1] == "-" or len(lres) > 0 and lres[-1] == "-")
+
   # True if we are at the last character in a word.
   def is_eow(pos=None):
     if pos is None:
@@ -808,10 +825,12 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
     ac = ar[aind[0]]
     debprint("get_matches: ac is %s" % ac)
     bow = is_bow()
+    boc = is_beginning_of_compound()
     eow = is_eow()
 
     matches = (
       bow and tt_to_arabic_matching_bow.get(ac) or
+      boc and tt_to_arabic_matching_boc.get(ac) or
       eow and tt_to_arabic_matching_eow.get(ac) or
       tt_to_arabic_matching.get(ac))
     debprint("get_matches: matches is %s" % (matches,))
@@ -936,6 +955,19 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
       return True
     return False
 
+  # Check for an unmatched Latin hyphen; allow.
+  def check_latin_hyphen_not_matching():
+    if not (lind[0] < llen):
+      return False
+    l = la[lind[0]]
+    if l == "-":
+      a = None if aind[0] >= alen else ar[aind[0]]
+      debprint("check_latin_not_matching_arabic(): Saw Latin hyphen against (unmatched) %s, copying" % a)
+      lres.append("-")
+      lind[0] += 1
+      return True
+    return False
+
   # Check for ZWNJ unmatched; insert a hyphen.
   def check_zwnj_not_matching():
     if not (aind[0] < alen):
@@ -997,27 +1029,24 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
     return False
 
   # Check for plain alif matching hamza and canonicalize.
-  def check_bow_alif():
-    if not (is_bow() and aind[0] < alen and ar[aind[0]] == u"ا"):
-      return False
-    # Check for hamza + vowel.
-    if not (lind[0] < llen - 1 and la[lind[0]] in hamza_match_chars and
-        la[lind[0] + 1] in u"aeiouəâêîôû"):
-      return False
-    # long vowels should have been pre-canonicalized to have the
-    # corresponding short vowel before them.
-    assert la[lind[0] + 1] not in u"âêîôû"
-    if la[lind[0] + 1] in "ei":
-      canonalif = u"إ"
-    else:
-      canonalif = u"أ"
-    msgfun("Canonicalized alif to %s in %s (%s)" % (
-      canonalif, origarabic, origlatin))
-    res.append(canonalif)
-    aind[0] += 1
-    lres.append(u"ʾ")
-    lind[0] += 1
-    return True
+  #def check_bow_alif():
+  #  if not (is_bow() and aind[0] < alen and ar[aind[0]] == u"ا"):
+  #    return False
+  #  # Check for hamza + vowel.
+  #  if not (lind[0] < llen - 1 and la[lind[0]] in hamza_match_chars and
+  #      la[lind[0] + 1] in u"aeiouəâêîôû"):
+  #    return False
+  #  if la[lind[0] + 1] in "ei":
+  #    canonalif = u"إ"
+  #  else:
+  #    canonalif = u"أ"
+  #  msgfun("Canonicalized alif to %s in %s (%s)" % (
+  #    canonalif, origarabic, origlatin))
+  #  res.append(canonalif)
+  #  aind[0] += 1
+  #  lres.append(u"'")
+  #  lind[0] += 1
+  #  return True
 
   # Check for inferring tanwîn
   def check_eow_tanwin():
@@ -1091,9 +1120,9 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
         check_latin_not_matching_arabic()):
       debprint("Matched: Clause 1")
       matched = True
-    elif check_bow_alif():
-      debprint("Matched: Clause check_bow_alif()")
-      matched = True
+    #elif check_bow_alif():
+    #  debprint("Matched: Clause check_bow_alif()")
+    #  matched = True
     elif match(allow_empty_latin=False):
       debprint("Matched: Clause match(allow_empty_latin=False)")
       matched = True
@@ -1116,7 +1145,9 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
     elif match(allow_empty_latin=True):
       debprint("Matched: Clause match(allow_empty_latin=True)")
       matched = True
-    #elif check_zwnj_not_matching():
+    elif check_latin_hyphen_not_matching():
+      debprint("Matched: Clause check_latin_hyphen_not_matching()")
+      matched = True
     #  debprint("Matched: Clause check_zwnj_not_matching()")
     #  matched = True
     #elif check_skip_unmatching():
@@ -1185,6 +1216,101 @@ def run_tests():
   test("farhang", u"فرهنگ", "matched", "farhang")
   test(u"vâže-nâme", u"واژه‌نامه", "matched", u"vâže-nâme")
   test(u"chamedan", u"چمدان", "matched", u"čamedân")
+  test(u"žu’an", u"ژوئن‌", "matched", "žu'an")
+  test("bima'ni", u"بی‌معنی", "matched", "bi-ma'ni")
+  test("yekšanbe", "یک‌شنبه", "matched", "yek-šanbe")
+  test("elm-e ešteqâq", "علم اشتقاق", "matched", "'elm-e ešteqâq")
+  test("āb", "آب", "matched", "âb")
+  test("šo'levar", "شعله‌ور", "matched", "šo'le-var")
+  test("qeyre âddi", "غیر عادی", "matched", "ğeyre 'âddi")
+  test("hezaareye sevvom", "هزاره‌ی سوم", "matched", "hezâre-ye sevvom")
+# FIXME, ask about the following (trailing ZWNJ)
+# FIXME, the following is currently wrong
+  test("fehrest-e peygiri", "فهرست پی‌گیری‌", "matched", "fehrest-e pey-giri")
+  test("addasi", "عدسی", "matched", "'addasi")
+  test("Edvârd", "ادوارد", "matched", "edvârd")
+  test("barâye inke", "برای این‌که", "matched", "barâye in-ke")
+  test("mēva", "میوه", "matched", "mêva")
+# FIXME, the following should probably be implemented during matching so that ou matches و but converts to ow
+  test("zouj", "زوج", "matched", "zowj")
+  test("bârō", "بارو", "matched", "bârô")
+  test("âðarbâdgân", "آذربادگان", "matched", "âzarbâdgân")
+# FIXME, ask about the following
+  test("espâniya", "اسپانیا", "matched", "espâniyâ", gloss="Spain")
+# FIXME, the following should probably be implemented during matching so that ei matches ی but converts to ey
+  test("koveit", "کویت", "matched", "koveyt", gloss="Kuwait")
+# FIXME, ask about the following
+  test("trinidad ve tobago", "ترینیداد و توباگو", "matched", "trinidâd ve tobâgo", gloss="Trinidad and Tobago")
+# FIXME, the following is currently wrong
+  test("anbareh", "انباره", "matched", "anbâre")
+  test("lâqar", "لاغر", "matched", "lâğar")
+  test("šenāxtæn", "شناختن", "matched", "šenâxtan")
+# FIXME, ask about the following; should the -h be deleted?
+  test("yāzdah", "یازده", "matched", "yâzdah")
+  test("saranjâm", "سرانجام", "matched", "sarânjâm")
+# FIXME, ask about the following
+  test("zabân havayi", "زبان هاوایی", "matched", "zabân hâvâyi", gloss="Hawaiian")
+# FIXME, ask about the following
+  test("ebrani", "عبرانی", "matched", "'ebrâni", gloss="Hebrew")
+# FIXME, ask about the following
+  test("volapuk", "ولاپوک", "matched", "volâpuk", gloss="Volapük")
+# FIXME, ask about the following
+  test("tailandi", "تایلندی", "matched", "tâylandi", gloss="Thai")
+# FIXME, ask about the following
+  test("piš-afkand", "پیش‌افکند", "matched", "piš-âfkand", gloss="project")
+  test("faʿʿāl kardan", "فعال کردن", "matched", "fa''âl kardan")
+# FIXME, ask about the following
+  test("tundra", "توندرا", "matched", "tundrâ", gloss="tundra")
+# FIXME, the following is currently wrong
+  test("gom", "گم‌", "matched", "gom")
+# FIXME, ask about the following
+  test("raij", "رایج", "matched", "râyj", gloss="common")
+  test("kam-omq", "کم عمق", "matched", "kam-'omq")
+# FIXME, ask about the following
+  test("negah dāštan", "نگه داشتن", "matched", "negah dâštan", gloss="stop")
+# FIXME, ask about the following
+  test("zabân kanara", "زبان کانارا", "matched", "zabân kânârâ", gloss="Kannada")
+# FIXME, the following is currently wrong, produces dâla-'das
+  test("dâladas", "دال‌عدس", "matched", "dâl-'adas")
+# FIXME, ask about the following
+  test("radiyom", "رادیوم", "matched", "râdiyom", gloss="radium")
+# FIXME, ask about the following
+  test("bretayn", "برتاین", "matched", "bretâyn", gloss="Brittany")
+# FIXME, ask about the following
+  test("asetaldehid", "استالدهید", "matched", "asetâldehid", gloss="acetaldehyde")
+  test("motâd", "معتاد", "matched", "mo'tâd")
+# FIXME, ask about the following
+  test("filadelfia", "فیلادلفیا", "matched", "filâdelfiâ", gloss="Philadelphia")
+# FIXME, ask about the following
+  test("kola", "کولا", "matched", "kolâ", gloss="cola")
+# FIXME, the following is currently wrong, produces 'alâmati-e ta'ajjob
+  test("'alâmat-e ta'ajjob", "عَلامَتِ تَعَجُّب", "matched", "'alâmat-e ta'ajjob")
+# FIXME, the following is currently wrong
+  # tr_matching(پدرِ مادربزرگ, pedar-e mādar-bozorg) = پِدَرِِ مادَربُزُرگ pedari-e mâdar-bozorg, tr() SKIPPED CANON-CHANGED
+  test("kârgar-e madan", "کارگر معدن", "matched", "kârgar-e ma'dan")
+  test("manba", "منبع", "matched", "manba'")
+# FIXME, ask about the following
+  test("marâti", "ماراتی", "matched", "mârâti", gloss="Marathi")
+# FIXME, ask about the following
+  test("kamyon", "کامیون", "matched", "kâmyon", gloss="truck")
+  test("bi-adab", "بی‌ادب", "matched", "bi-adab", gloss="rude")
+# FIXME, ask about the following
+  test("maleziyayi", "مالزیایی", "matched", "mâleziyâyi", gloss="Malay")
+  test("salâm aleykom", "سلام علیکم", "matched", "salâm 'aleykom")
+# FIXME, ask about the following
+  test("beratislâvâ", "براتیسلاوا", "matched", "berâtislâvâ", gloss="Bratislava")
+# FIXME, ask about the following
+  test("kwart", "کوارت", "matched", "kwârt", gloss="quart")
+  test("sigâr kashidan memnu ast", "سیگار کشیدن ممنوع است", "matched", "sigâr kašidan memnu' ast")
+# FIXME, ask about the following
+  test("pâsta", "پاستا", "matched", "pâstâ", gloss="pasta")
+# FIXME, ask about the following
+  test("makrofāž", "ماکروفاژ", "matched", "mâkrofâž", gloss="macrophage")
+  test("vaz'-e fe'li", "وضع فعلی", "matched", "vaz'-e fe'li")
+# FIXME, ask about the following, should it be kwârk?
+  test("kuārk", "کوارک", "matched", "kuârk", gloss="quark")
+
+
 
   test(u"qâmus", u"قاموس", "matched")
   test("katab", u"كتب", "matched")
