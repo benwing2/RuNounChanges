@@ -132,7 +132,7 @@ def tr(text, lang=None, sc=None, force_translate=False, msgfun=msg):
 
 
 ############################################################################
-#           Transliterate from Latin to Arabic           #
+#                    Transliterate from Latin to Arabic                    #
 ############################################################################
 
 #########     Transliterate with unvocalized Arabic to guide     #########
@@ -188,6 +188,12 @@ class State(object):
       return None
     return self.la[self.lind[0] - howmany]
 
+  def thisar(self):
+    return self.nextar(0)
+
+  def thisla(self):
+    return self.nextla(0)
+
 
 # Special-case matching at beginning of word. Plain alif normally corresponds
 # to nothing, and hamza seats might correspond to nothing (omitted hamza
@@ -210,9 +216,13 @@ tt_to_arabic_matching_boc = { #beginning of later part of a compound
     u"\uFFFE", # shouldn't match; just a placeholder; all possible matches follow
     LatinMatch("a", canon_to="a", append=A),
     LatinMatch("o", canon_to="o", append=U),
-    LatinMatch("u", canon_to=lambda st: "u" if st.classical else "o", append=U),
+    LatinMatch("u", canon_to=lambda st: "u" if st.classical else "o", append=U,
+      # don't consume u in او
+      when=lambda st: st.nextar() != u"و"),
     LatinMatch("e", canon_to="e", append=I),
-    LatinMatch("i", canon_to=lambda st: "i" if st.classical else "e", append=I),
+    LatinMatch("i", canon_to=lambda st: "i" if st.classical else "e", append=I,
+      # don't consume i in ای
+      when=lambda st: st.nextar() != u"ی"),
     ["'"],
     [""]
   ],
@@ -480,14 +490,16 @@ for alt in build_canonicalize_latin:
 #}
 
 # A list of Latin characters that are allowed to be unmatched in the Arabic. The value is the corresponding Arabic
-# character to insert, or a tuple of the Arabic character to insert and the Latin character to replace the existing
-# Latin character with.
+# character to insert, or a tuple of the Arabic character to insert, the Latin character to replace the existing
+# Latin character with, and a function checking that processing is OK.
 tt_latin_to_unmatched_arabic = {
   "a":u"\u064E",
   "o":u"\u064F",
-  "u":(u"\u064F", "o"),
+  # not if we're opposite ا; this occurs at boc with او
+  "u":(u"\u064F", lambda st: "u" if st.classical else "o", lambda st: st.thisar() != u"ا"),
   "e":u"\u0650",
-  "i":(u"\u0650", "e"),
+  # not if we're opposite ا; this occurs at boc with ای
+  "i":(u"\u0650", lambda st: "i" if st.classical else "e", lambda st: st.thisar() != u"ا"),
   # Shadda because we pre-canonicalize doubled Latin letters to include a shadda.
   SH:SH,
 }
@@ -854,7 +866,7 @@ def post_canonicalize_arabic(text, safe=False):
 # the Arabic script.  This works by matching the Latin to the unvocalized Arabic script and inserting the appropriate
 # diacritics in the right places, so that ambiguities of Latin transliteration can be correctly handled. Returns a
 # tuple of Arabic, Latin. If unable to match, throw an error if ERR, else return None.
-def tr_matching(arabic, latin, err=False, msgfun=msg):
+def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
   origarabic = arabic
   origlatin = latin
   def debprint(x):
@@ -868,6 +880,19 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
   # but not multiple quotes or multiple periods
   latin = re.sub(ur"(^|[\W" + vowel_chars + r"])([^'.])\2", r"\1\2" + SH,
       latin, 0, re.U)
+
+  classical = False
+  if obj:
+    def pagemsg(txt):
+      msg("Page %s %s: %s" % (obj.index, obj.pagetitle, txt))
+    m = re.search("^.*" + re.escape(unicode(obj.t)) + ".*$", obj.text, re.M)
+    if not m:
+      pagemsg("WARNING: Something, can't match template: %s" % unicode(obj.t))
+    else:
+      line = m.group(0)
+      if "Dari" in line or "Classical" in line:
+        pagemsg("Saw 'Dari/Classical' in line: %s" % line)
+        classical = True
 
   ar = [] # exploded Arabic characters
   la = [] # exploded Latin characters
@@ -885,9 +910,7 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
   llen = len(la)
 
   def create_state():
-    return State(ar, aind, alen, la, lind, llen, res, lres,
-        # FIXME, check for "Classical" or "Dari" occurring in line
-        False)
+    return State(ar, aind, alen, la, lind, llen, res, lres, classical)
 
   def is_bow(pos=None):
     if pos is None:
@@ -1053,7 +1076,12 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
     arabic = tt_latin_to_unmatched_arabic.get(l)
     if arabic is not None:
       if isinstance(arabic, tuple):
-        arabic, l = arabic
+        st = create_state()
+        arabic, l, when = arabic
+        if callable(l):
+          l = l(st)
+        if not when(st):
+          return False
       res.append(arabic)
       lres.append(l)
       lind[0] += 1
@@ -1115,7 +1143,7 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
         res.append(ar[aind[0]])
         aind[0] += 1
       elif ar[aind[0]] == " ":
-        if lind[0] + 2 < llen and la[lind[0] + 1] == "e" and la[lind[0] + 2] == " ":
+        if lind[0] + 2 < llen and la[lind[0] + 1] == "e" and la[lind[0] + 2] in [" ", "-"]:
           # ezafe construction, normally unmatched.
           lres.append("-e ")
           lind[0] += 2 # it will get incremented once more below
@@ -1278,10 +1306,10 @@ def remove_diacritics(word):
 num_failed = 0
 num_succeeded = 0
 
-def test(latin, arabic, should_outcome, should_latin=None):
+def test_with_obj(obj, latin, arabic, should_outcome, should_latin=None):
   global num_succeeded, num_failed
   try:
-    result = tr_matching(arabic, latin, True)
+    result = tr_matching(obj, arabic, latin, True)
   except RuntimeError as e:
     uniprint(u"%s" % e)
     result = False
@@ -1312,6 +1340,9 @@ def test(latin, arabic, should_outcome, should_latin=None):
   else:
     uniprint("TEST FAILED.")
     num_failed += 1
+
+def test(obj, latin, arabic, should_outcome, should_latin=None):
+  test_with_obj(None, latin, arabic, should_outcome, should_latin=should_latin)
 
 def run_tests():
   global num_succeeded, num_failed
