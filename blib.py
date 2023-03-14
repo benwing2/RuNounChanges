@@ -1681,6 +1681,7 @@ class ProcessLinks(object):
     self.param = param
     # The parameter holding the language of the value being considered.
     self.langparam = langparam
+    self.addl_params = {}
 
 
 class ParamWithInlineModifier(object):

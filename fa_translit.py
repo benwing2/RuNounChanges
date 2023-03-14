@@ -84,7 +84,8 @@ from blib import remove_links, msg
 # 22. Don't replace initial ال with assimilating_l_subst, which messes up all such words. [DONE]
 # 23. Don't replace double {{ }} [[ ]] with shadda. [DONE]
 # 24. Make sure we correctly handle short vowels already in the Arabic script (e.g. final kasra indicating ezafe).
-# 25. Have an option to turn off insertion of short vowels into the canonicalized Arabic.
+# 25. Have an option to turn off insertion of short vowels into the canonicalized Arabic. [DONE]
+# 26. Make sure kasra gets added in all ways of matching it (e.g. two-char هٔ).
 
 
 debug_tr_matching = False
@@ -189,7 +190,7 @@ class LatinMatch(object):
     self.handle_empty_match_early = handle_empty_match_early
 
 class State(object):
-  def __init__(self, ar, aind, alen, la, lind, llen, res, lres, classical):
+  def __init__(self, ar, aind, alen, la, lind, llen, res, lres, classical, no_vocalize):
     self.ar = ar
     self.aind = aind
     self.alen = alen
@@ -199,6 +200,7 @@ class State(object):
     self.res = res
     self.lres = lres
     self.classical = classical
+    self.no_vocalize = no_vocalize
 
   def nextar(self, howmany=1):
     if self.aind[0] + howmany >= self.alen:
@@ -983,6 +985,8 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
       latin, 0, re.U)
 
   classical = False
+  no_vocalize = False
+
   if obj:
     def pagemsg(txt):
       msg("Page %s %s: %s" % (obj.index, obj.pagetitle, txt))
@@ -994,6 +998,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
       if "Dari" in line or "Classical" in line:
         pagemsg("Saw 'Dari/Classical' in line: %s" % line)
         classical = True
+    no_vocalize = obj.addl_params["no_vocalize"]
 
   ar = [] # exploded Arabic characters
   la = [] # exploded Latin characters
@@ -1011,7 +1016,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
   llen = len(la)
 
   def create_state():
-    return State(ar, aind, alen, la, lind, llen, res, lres, classical)
+    return State(ar, aind, alen, la, lind, llen, res, lres, classical, no_vocalize)
 
   def is_bow(pos=None):
     if pos is None:
@@ -1214,7 +1219,8 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
           l = l(st)
         if not when(st):
           return False
-      res.append(arabic)
+      if not no_vocalize:
+        res.append(arabic)
       lres.append(l)
       lind[0] += 1
       return True
@@ -1328,14 +1334,16 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
           # ezafe construction, normally unmatched.
           lres.append("-e ")
           lind[0] += 2 # it will get incremented once more below
-          res.append(I) # kasra marking the ezafe
+          if not no_vocalize:
+            res.append(I) # kasra marking the ezafe
           res.append(" ")
           aind[0] += 1
         elif lind[0] + 3 < llen and la[lind[0] + 1] == "y" and la[lind[0] + 2] == "e" and la[lind[0] + 3] in [" ", "-"]:
           # ezafe construction with -ye, often unmatched.
           lres.append("-ye ")
           lind[0] += 3 # it will get incremented once more below
-          res.append(I) # kasra marking the ezafe
+          if not no_vocalize:
+            res.append(I) # kasra marking the ezafe
           res.append(" ")
           aind[0] += 1
         else:

@@ -12,6 +12,7 @@ parser = blib.create_argparser("Clean up Persian transliterations",
     include_pagefile=True)
 parser.add_argument("--direcfile", help="File containing output from find_regex.py, to process")
 parser.add_argument("--test", help="Test fa_translit.py", action="store_true")
+parser.add_argument("--no-vocalize", help="Disable vocalization of Persian script", action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -51,6 +52,7 @@ def process_text_on_page(index, pagetitle, text):
         _, foreign_param, foreign_mod, latin_mod, inline_mod = obj.param
         foreign = inline_mod.mainval if foreign_mod is None else inline_mod.get_modifier(foreign_mod)
         latin = inline_mod.get_modifier(latin_mod)
+      obj.addl_params["no_vocalize"] = args.no_vocalize
       if not foreign or not latin or latin in ["-", "?"]:
         pagemsg("Skipped: foreign=%s, latin=%s" % (foreign, latin))
       else:
