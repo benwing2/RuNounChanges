@@ -65,6 +65,7 @@ from blib import remove_links, msg
 # 3. Canonicalize m -> n against ن before ب. [DONE]
 # 4. Canonicalize h -> x against خ. [DONE]
 # 5. Handle اً against -an. [DONE]
+# 6. Make sure we correctly handle short vowels already in the Arabic script.
 
 debug_tr_matching = False
 
@@ -264,11 +265,10 @@ tt_to_arabic_matching_eow = { # end of word
 tt_to_arabic_matching = {
   # consonants
   u"ب":["b",["p"]],
-  u"ت":"t",
+  u"پ":"p",
+  u"ت":["t",u"ṯ"],
   u"ث":["s",u"ṯ",u"ŧ",u"θ","th",u"s̱",u"s̄"],
-  # FIXME! We should canonicalize ʒ to ž
-  u"ج":["j",u"ǧ",u"ğ",u"ǰ","dj",u"dǧ",u"dğ",u"dǰ",u"dž",u"dʒ",[u"ʒ"],[u"ž"],["g"]],
-  u"چ":[u"č","ch","c"],
+  u"ج":["j",u"ǧ",u"ğ",u"ǰ","dj",u"dǧ",u"dğ",u"dǰ",u"dž",u"dʒ",u"ʒ",u"ž","g","c"],
   # Allow what would normally be capital H, but we lowercase all text
   # before processing.
   # I feel a bit uncomfortable allowing kh to match against ح like this,
@@ -277,26 +277,27 @@ tt_to_arabic_matching = {
   # I feel a bit uncomfortable allowing ḥ to match against خ like this,
   # but generally I trust the Arabic more.
   u"خ":["x",u"k͟h",u"ḵ","kh",u"ḫ",u"ḳ",u"ẖ",u"χ",(u"ḥ",),"h"],
+  u"چ":[u"č","ch","c",u"ĉ",u"ç"],
   u"د":"d",
-  u"ذ":["z",u"d͟h",u"ḏ",u"đ",u"ð","dh",u"ḍ",u"ẕ","d"],
+  u"ذ":["z",u"d͟h",u"ḏ",u"đ",u"ð","dh",u"ḍ",u"ẕ",u"δ","d"],
   u"ر":"r",
-  u"ز":"z",
-  u"ژ":[u"ž",u"z͟h","zh"],
+  u"ز":["z",u"ẕ"],
+  u"ژ":[u"ž",u"z͟h","zh",u"ʒ","z"],
   # I feel a bit uncomfortable allowing emphatic variants of s to match
   # against س like this, but generally I trust the Arabic more.
   u"س":["s",(u"ṣ",),(u"sʿ",),(u"sˤ",),(u"sˁ",),(u"sʕ",),(u"ʂ",),(u"ṡ",)],
-  u"ش":[u"š",u"s͟h","sh",u"ʃ"],
+  u"ش":[u"š",u"s͟h","sh",u"ʃ",u"ŝ",u"ş",u"ś","s"],
   u"ص":["s",u"ṣ",u"sʿ",u"sˤ",u"sˁ",u"sʕ",u"ʂ",u"ṡ"],
   u"ض":["z",u"ḍ",u"dʿ",u"dˤ"u"dˁ",u"dʕ",u"ẓ",u"ż",u"ẕ",u"ɖ",u"ḋ","d"],
   u"ط":["t",u"ṭ",u"tʿ",u"tˤ",u"tˁ",u"tʕ",u"ṫ",u"ţ",u"ŧ",u"ʈ",u"t̤"],
   u"ظ":["z",u"ẓ",u"ðʿ",u"ðˤ",u"ðˁ",u"ðʕ",u"ð̣",u"đʿ",u"đˤ",u"đˁ",u"đʕ",u"đ̣",
     u"ż",u"z̧",u"ʐ","dh"],
   u"ع":["'", u"ʿ",u"ʕ","`",u"‘",u"ʻ","3",u"ˤ",u"ˁ",(u"ʾ",),u"῾",(u"’",),""],
-  u"غ":[u"ğ",u"ḡ",u"ġ","gh",["g"],("`",),"q",u"g͟h"],
+  u"غ":[u"ğ",u"ḡ",u"ġ","gh",["g"],("`",),"q",u"g͟h",u"γ",u"ǧ",u"ɣ",u"ĝ"],
   u"ف":["f",["v"]],
   # I feel a bit uncomfortable allowing k to match against q like this,
   # but generally I trust the Arabic more
-  u"ق":["q",u"ḳ",["g"],"gh",u"g͟h","k"],
+  u"ق":["q",u"ḳ",["g"],"gh",u"g͟h","k",u"ğ",u"γ"],
   u"ك":["k",["g"]],
   u"ک":["k",["g"]],
   u"گ":"g",
@@ -314,8 +315,6 @@ tt_to_arabic_matching = {
   ZWNJ:["-",""], # ZWNJ (zero-width non-joiner)
   #ZWJ:["-"],#,""], # ZWJ (zero-width joiner)
   # rare letters
-  u"پ":"p",
-  u"چ":[u"č","ch"],
   u"ڤ":"v",
   u"ڨ":"g",
   u"ڧ":"q",
@@ -526,8 +525,9 @@ def pre_canonicalize_latin(text, arabic=None, msgfun=msg):
     {u"á":"a", u"é":"e", u"í":"i", u"ó":"o", u"ú":"u",
      u"à":"a", u"è":"e", u"ì":"i", u"ò":"o", u"ù":"u",
      u"ă":"a", u"ĕ":"e", u"ĭ":"i", u"ŏ":"o", u"ŭ":"u",
+     u"ä":"a", u"ë":"e", u"ï":"i", u"ö":"o", u"ü":"u",
      u"ḗ":u"ê", u"ṓ":u"ô", # only these two vowels have a single Unicode char for macron+acute
-     u"ä":"a", u"ë":"e", u"ï":"i", u"ö":"o", u"ü":"u"})
+     u"ấ":u"â"})
   # Eliminate miscellaneous acute/grave (e.g. if over ā ī ū)
   text = text.replace(AC, "")
   text = text.replace(GR, "")
@@ -1102,15 +1102,21 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
       return True
     return False
 
-  # Check for an unmatched Latin hyphen; allow.
-  def check_latin_hyphen_not_matching():
+  # Check for certain unmatched Latin chars; allow. We do this at the very very end to avoid interfering with all other
+  # checks.
+  def check_latin_char_not_matching():
     if not (lind[0] < llen):
       return False
     l = la[lind[0]]
-    if l == "-":
+    # Hyphens mark compounds, which may not be marked in the Arabic script (particularly if the last char of the first
+    # part of the compound is non-joining; otherwise a ZWNJ would normally occur).
+    #
+    # Apostrophes in the translit are common in usexes to boldface the portion of the translit corresponding to the
+    # page lemma.
+    if l in ["-"]:#, "'"]:
       a = None if aind[0] >= alen else ar[aind[0]]
-      debprint("check_latin_not_matching_arabic(): Saw Latin hyphen against (unmatched) %s, copying" % a)
-      lres.append("-")
+      debprint("check_latin_char_not_matching(): Saw Latin %s against (unmatched) %s, copying" % (l, a))
+      lres.append(l)
       lind[0] += 1
       return True
     return False
@@ -1299,8 +1305,9 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
     elif match(allow_empty_latin=True):
       debprint("Matched: Clause match(allow_empty_latin=True)")
       matched = True
-    elif check_latin_hyphen_not_matching():
-      debprint("Matched: Clause check_latin_hyphen_not_matching()")
+    elif check_latin_char_not_matching():
+      # This should be the last thing checked.
+      debprint("Matched: Clause check_latin_char_not_matching()")
       matched = True
     #  debprint("Matched: Clause check_zwnj_not_matching()")
     #  matched = True
