@@ -66,6 +66,13 @@ from blib import remove_links, msg
 # 4. Canonicalize h -> x against خ. [DONE]
 # 5. Handle اً against -an. [DONE]
 # 6. Make sure we correctly handle short vowels already in the Arabic script.
+# 7. Support handle_empty_match_early and use when handling silent و in خوا. [DONE]
+# 8. Allow â against FARSI YEH replacing alif maqsuura. [DONE]
+# 9. Alif madda mid-word against â or 'â should canonicalize to -â per discussion with Anatoli. [DONE]
+# 10. Correct cases of â that should be a. [DONE]
+# 11. Don't correct â to a in word-initial اله- (borrowed from the Arabic word for god).
+# 12. Allow unmatched Latin apostrophe in sequences of two or more (otherwise it causes issues). [DONE]
+
 
 debug_tr_matching = False
 
@@ -157,12 +164,13 @@ hamza_match_or_empty = hamza_match + [""]
 hamza_match_chars = [x[0] if isinstance(x, (list, tuple)) else x for x in hamza_match]
 
 class LatinMatch(object):
-  def __init__(self, match, canon_to=None, when=None, insert=None, append=None):
+  def __init__(self, match, canon_to=None, when=None, insert=None, append=None, handle_empty_match_early=False):
     self.match = match
     self.canon_to = canon_to
     self.when = when
     self.insert = insert
     self.append = append
+    self.handle_empty_match_early = handle_empty_match_early
 
 class State(object):
   def __init__(self, ar, aind, alen, la, lind, llen, res, lres, classical):
@@ -337,16 +345,25 @@ tt_to_arabic_matching = {
       ["u"],[u"ô"],["o"],
       LatinMatch(u"û", canon_to=lambda st: u"û" if st.classical else "u"),
       # allow for silent و in خوا
-      LatinMatch("", canon_to="", when=lambda st: st.prevar() == u"خ" and st.nextar() == u"ا")],
+      LatinMatch("", canon_to="", when=lambda st: st.prevar() == u"خ" and st.nextar() == u"ا",
+        handle_empty_match_early=True)],
   # Adding j here creates problems with e.g. an-nijir vs. النیجر
   u"ی":[["y"],["iy"],["ey"],
+      # FARSI YEH sometimes replaces alif maqsuura in words from Arabic:
+      # tr(مصلی, mosallâ); tr(خنثی, xonsâ); tr(موسی, musâ); tr(عیسی, 'isâ); tr(حتی, hattâ)
+      # very occasionally word-internally: tr(علیرغم, 'alârağm-e)
+      [u"â"],
       # not currently needed as we pre-canonicalize ei to ey 
       #LatinMatch("ei", canon_to="ey",insert=I),
       LatinMatch("ey", canon_to="ey",insert=I),
       ["i"],[u"ê"], # no e; short e opposite ی doesn't normally occur
       LatinMatch(u"î", canon_to=lambda st: u"î" if st.classical else "i")], #"j",
   u"ى":u"â", # alif maqsuura = \u0649
-  u"آ":[u"'â",u"ʾâ",u"’â",u"'â",u"`â"], # ʾalif madda = \u0622
+  u"آ":[ # alif madda = \u0622
+    u"\uFFFE", # shouldn't match; just a placeholder; all possible matches follow
+    LatinMatch(u"â", canon_to=u"-â"),
+    LatinMatch(u"'â", canon_to=u"-â")
+  ],
   u"ٱ":[[""]], # hamzatu l-waṣl = \u0671
   u"\u0670":u"â", # alif xanjariyya = dagger alif (Koranic diacritic)
   # short vowels, shadda and sukuun
@@ -494,6 +511,7 @@ tt_latin_to_unmatched_arabic = {
   "e":u"\u0650",
   # not if we're opposite ا; this occurs at boc with ای
   "i":(u"\u0650", lambda st: "i" if st.classical else "e", lambda st: st.thisar() != u"ا"),
+  u"â":(u"\u064E", "a", lambda st: True),
   # Shadda because we pre-canonicalize doubled Latin letters to include a shadda.
   SH:SH,
 }
@@ -993,15 +1011,16 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
     for m in alts:
       this_canon = canon
       preserve_latin = False
+      handle_empty_match_early = False
       # If an element of the match list is a list, it means
       # "don't canonicalize".
       if isinstance(m, list):
         preserve_latin = True
-        m = m[0]
+        match = m[0]
       # A one-element tuple is a signal for use in self-canonicalization,
       # not here.
       elif isinstance(m, tuple):
-        m = m[0]
+        match = m[0]
       elif isinstance(m, LatinMatch):
         st = create_state()
         if m.when and not m.when(st):
@@ -1011,12 +1030,17 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
           this_canon = this_canon(st)
           if this_canon is None:
             continue
-        m = m.match
+        match = m.match
+        handle_empty_match_early = m.handle_empty_match_early
+        if callable(handle_empty_match_early):
+          handle_empty_match_early = handle_empty_match_early(st)
+      else:
+        match = m
 
       # Don't allow matching against an empty string unless allow_empty_latin=True. This avoids problems matching the
       # empty string too soon, e.g. {{t|fa|شعله‌ور|tr=šo'levar|sc=fa-Arab}}, where ع (`ayn) can match the empty
       # string and canonicalize to ', but before that should happen, we have to consume the unmatched o.
-      if not allow_empty_latin and not m:
+      if not allow_empty_latin and not match and not handle_empty_match_early:
         # Allow if we're dealing with ع and ئ between vowels. This allows us to infer ' between vowels when it's not
         # present, instead of adding the apostrophe after both vowels.
         if ac not in [u"ع", u"ئ"]:
@@ -1032,8 +1056,8 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
 
       l = lind[0]
       matched = True
-      debprint("m: %s" % m)
-      for cp in m:
+      debprint("match: %s" % match)
+      for cp in match:
         if l < llen and la[l] == cp:
           debprint("cp: %s, l=%s, la=%s" % (cp, l, la[l]))
           l = l + 1
@@ -1044,7 +1068,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
       if matched:
         res.append(ac)
         if preserve_latin:
-          for cp in m:
+          for cp in match:
             lres.append(cp)
         elif ac == u"ة":
           if not is_eow():
@@ -1113,7 +1137,15 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
     #
     # Apostrophes in the translit are common in usexes to boldface the portion of the translit corresponding to the
     # page lemma.
-    if l in ["-"]:#, "'"]:
+    ok = False
+    if l in ["-"]:
+      ok = True
+    if l == "'":
+      # Make sure there are at least two apostrophes in a row.
+      st = create_state()
+      if st.prevla() == "'" or st.nextla() == "'":
+        ok = True
+    if ok:
       a = None if aind[0] >= alen else ar[aind[0]]
       debprint("check_latin_char_not_matching(): Saw Latin %s against (unmatched) %s, copying" % (l, a))
       lres.append(l)
