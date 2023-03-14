@@ -119,7 +119,7 @@ punctuation = (u"؟،؛" # Arabic semicolon, comma, question mark
          + u"ـ" # tatweel
          + ".!'" # period, exclamation point, single quote for bold/italic
          )
-numbers = u"١٢٣٤٥٦٧٨٩٠"
+numbers = u"۱۲۳۴۵۶۷۸۹۰"
 
 
 # Transliterate the word(s) in TEXT. LANG (the language) and SC (the script)
@@ -202,9 +202,7 @@ class State(object):
 # which won't match at all because the أ will match nothing directly after
 # the Latin "s", and then the ʾ will never be matched.
 tt_to_arabic_matching_bow = { #beginning of word
-  # put empty string in list so this entry will be recognized -- a plain
-  # empty string is considered logically false
-  u"ا":[""],
+  u"ا":"",
   # These don't occur word-initially in Persian
   #u"أ":hamza_match_or_empty,
   #u"إ":hamza_match_or_empty,
@@ -304,6 +302,7 @@ tt_to_arabic_matching = {
   # FIXME! Seems this can map to any of h e. Need to account for this. Dispreferred sequences
   # are eh, a, ah.
   u"ه":"h",
+  u"ۀ":"y",
   # We have special handling for the following in the canonicalized Latin,
   # so that we have -a but -âh and -at-.
   u"ة":["h",["t"],["(t)"],""],
@@ -321,16 +320,14 @@ tt_to_arabic_matching = {
   # semivowels or long vowels, alif, hamza, special letters
   # Note, the following ensures that short a against ا gets canonicalized to â.
   u"ا":[u"â","a"], # ʾalif = \u0627
-  # put empty string in list so not considered logically false, which can
-  # mess with the logic
   silent_alif_subst:[[""]],
   silent_alif_maqsuura_subst:[[""]],
   # hamzated letters
-  u"أ":hamza_match,
-  u"إ":hamza_match,
-  u"ؤ":hamza_match,
-  u"ئ":hamza_match,
-  u"ء":hamza_match,
+  u"أ":hamza_match_or_empty,
+  u"إ":hamza_match_or_empty,
+  u"ؤ":hamza_match_or_empty,
+  u"ئ":hamza_match_or_empty,
+  u"ء":hamza_match_or_empty,
   # FIXME, should w between vowels become v?
   u"و":["v",["w"],LatinMatch("ow", canon_to="ow", insert=U),
       # not currently needed as we pre-canonicalize ou to ow
@@ -349,8 +346,6 @@ tt_to_arabic_matching = {
       LatinMatch(u"î", canon_to=lambda st: u"î" if st.classical else "i")], #"j",
   u"ى":u"â", # alif maqsuura = \u0649
   u"آ":[u"'â",u"ʾâ",u"’â",u"'â",u"`â"], # ʾalif madda = \u0622
-  # put empty string in list so not considered logically false, which can
-  # mess with the logic
   u"ٱ":[[""]], # hamzatu l-waṣl = \u0671
   u"\u0670":u"â", # alif xanjariyya = dagger alif (Koranic diacritic)
   # short vowels, shadda and sukuun
@@ -367,12 +362,10 @@ tt_to_arabic_matching = {
   # ligatures
   u"ﻻ":u"lâ",
   u"ﷲ":u"llâh",
-  # put empty string in list so not considered logically false, which can
-  # mess with the logic
-  u"ـ":[""], # tatweel, no sound
+  u"ـ":"", # tatweel, no sound
   # numerals
-  u"١":"1", u"٢":"2", u"٣":"3", u"٤":"4", u"٥":"5",
-  u"٦":"6", u"٧":"7", u"٨":"8", u"٩":"9", u"٠":"0",
+  u"۱":"1", u"۲":"2", u"۳":"3", u"۴":"4", u"۵":"5",
+  u"۶":"6", u"۷":"7", u"۸":"8", u"۹":"9", u"۰":"0",
   # punctuation (leave on separate lines)
   u"؟":"?", # question mark
   u"،":",", # comma
@@ -917,7 +910,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
       pos = aind[0]
     return (pos == 0 or ar[pos - 1] in [" ", "[", "|"])
 
-  def is_beginning_of_compound(pos=None):
+  def is_boc(pos=None):
     if pos is None:
       pos = aind[0]
     return (pos == 0 or re.search("[" + boc_chars + "]", ar[pos - 1])) or ((
@@ -937,14 +930,22 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
     ac = ar[aind[0]]
     debprint("get_matches: ac is %s" % ac)
     bow = is_bow()
-    boc = is_beginning_of_compound()
+    boc = is_boc()
     eow = is_eow()
 
-    matches = (
-      bow and tt_to_arabic_matching_bow.get(ac) or
-      boc and tt_to_arabic_matching_boc.get(ac) or
-      eow and tt_to_arabic_matching_eow.get(ac) or
-      tt_to_arabic_matching.get(ac))
+    potential_matching_tables = []
+    if is_bow():
+      potential_matching_tables.append(tt_to_arabic_matching_bow)
+    if is_boc():
+      potential_matching_tables.append(tt_to_arabic_matching_boc)
+    if is_eow():
+      potential_matching_tables.append(tt_to_arabic_matching_eow)
+    potential_matching_tables.append(tt_to_arabic_matching)
+    matches = None
+    for table in potential_matching_tables:
+      matches = table.get(ac)
+      if matches is not None:
+        break
     debprint("get_matches: matches is %s" % (matches,))
     if matches is None:
       if ac in other_arabic_chars:
@@ -1012,9 +1013,20 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
 
       # Don't allow matching against an empty string unless allow_empty_latin=True. This avoids problems matching the
       # empty string too soon, e.g. {{t|fa|شعله‌ور|tr=šo'levar|sc=fa-Arab}}, where ع (`ayn) can match the empty
-      # string and canonicalize to ', but before that should happen, we have to consume the unmatched e.
+      # string and canonicalize to ', but before that should happen, we have to consume the unmatched o.
       if not allow_empty_latin and not m:
-        continue
+        # Allow if we're dealing with ع and ئ between vowels. This allows us to infer ' between vowels when it's not
+        # present, instead of adding the apostrophe after both vowels.
+        if ac not in [u"ع", u"ئ"]:
+          continue
+        st = create_state()
+        prevla = st.prevla()
+        thisla = st.thisla()
+        if not prevla or not thisla:
+          continue
+        #msg("prevla=%s, thisla=%s" % (prevla, thisla))
+        if prevla not in vowel_chars or thisla not in vowel_chars:
+          continue
 
       l = lind[0]
       matched = True
@@ -1147,6 +1159,13 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
           # ezafe construction, normally unmatched.
           lres.append("-e ")
           lind[0] += 2 # it will get incremented once more below
+          res.append(I) # kasra marking the ezafe
+          res.append(" ")
+          aind[0] += 1
+        elif lind[0] + 3 < llen and la[lind[0] + 1] == "y" and la[lind[0] + 2] == "e" and la[lind[0] + 3] in [" ", "-"]:
+          # ezafe construction with -ye, often unmatched.
+          lres.append("-ye ")
+          lind[0] += 3 # it will get incremented once more below
           res.append(I) # kasra marking the ezafe
           res.append(" ")
           aind[0] += 1
