@@ -2132,7 +2132,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
           doparam("1", ("separate", "3", "tr"))
       # Templates where we don't check for alternative text because
       # the following parameter is used for the translation.
-      elif tn in ["ux", "usex", "uxi", "quote"]:
+      elif tn in ["ux", "usex", "uxi", "quote", "coi"]:
         doparam("1", ("separate", "2", "tr"))
       elif tn == "Q":
         doparam("1", ("separate", "quote", "tr"))
@@ -2204,7 +2204,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
         doparam("1", ("separate", "5", None))
         doparam("1", ("separate", "next2", None))
         doparam("1", ("separate", "prev2", None))
-      elif tn in ["der", "derived", "inh", "inherited", "inh+", "bor", "borrowed", "bor+",
+      elif tn in ["der", "derived", "uder", "der+", "inh", "inherited", "inh+", "bor", "borrowed", "bor+",
           "lbor", "learned borrowing", "slbor", "semi-learned borrowing",
           "obor", "orthographic borrowing", "ubor", "unadapted borrowing",
           "sl", "semantic loan" "psm", "phono-semantic matching",
