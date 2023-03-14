@@ -2204,7 +2204,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
         doparam("1", ("separate", "5", None))
         doparam("1", ("separate", "next2", None))
         doparam("1", ("separate", "prev2", None))
-      elif tn in ["der", "derived", "inh", "inherited", "bor", "borrowed",
+      elif tn in ["der", "derived", "inh", "inherited", "inh+", "bor", "borrowed", "bor+",
           "lbor", "learned borrowing", "slbor", "semi-learned borrowing",
           "obor", "orthographic borrowing", "ubor", "unadapted borrowing",
           "sl", "semantic loan" "psm", "phono-semantic matching",
