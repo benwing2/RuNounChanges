@@ -13,7 +13,7 @@ from blib import remove_links, msg
 #
 # Some issues to take care of:
 #
-# 1. o against و especially in loanwords:
+# 1. o against و especially in loanwords: [THIS IS OK]
 # * {{t|fa|کروآت|tr=koroât}} "Croatian"
 # * {{t|fa|نوردراین-وستفالن|tr=nordrâyn-vestfâlen|sc=fa-Arab}} "North Rhine-Westphalia"
 # * {{tt+|fa|هورن|tr=horn}} "horn"
@@ -21,20 +21,20 @@ from blib import remove_links, msg
 # but not always:
 # * {{t+|fa|هلند|tr=holand}} "Holland"
 #
-# 2. silent و in خو: {{t+|fa|خوابیده|tr=xâbide|sc=fa-Arab}} "asleep"
+# 2. silent و in خو: {{t+|fa|خوابیده|tr=xâbide|sc=fa-Arab}} "asleep" [SUPPORTED]
 #
-# 3. missing ' against ع: {{t+|fa|عطر|tr=atr|sc=fa-Arab}} "scent"
+# 3. missing ' against ع: {{t+|fa|عطر|tr=atr|sc=fa-Arab}} "scent" [SUPPORTED]
 #
-# 4. ezafe: {{t|fa|برادر ناتنی|tr=barâdar-e nâtani}} "half brother"
+# 4. ezafe: {{t|fa|برادر ناتنی|tr=barâdar-e nâtani}} "half brother" [SUPPORTED]
 #
 # 5. tā' marbūṭa:
 # * {{t+|fa|دایرةالمعارف|tr=dâyerat-ol-ma'âref|sc=fa-Arab}} "encyclopedia"
 # * {{t|fa|دائرةالمعارف|tr=dâ'erat-ol-ma'âref|sc=fa-Arab}} "encyclopedia"
 #
-# 6. short Latin a against long Arabic ا:
+# 6. short Latin a against long Arabic ا: [SUPPORTED AND CANONICALIZED]
 # * {{t+|fa|چمدان|tr=chamedan}} "portmanteau"
 #
-# 7. no Latin hyphen against ZWNJ: (QUESTION: should we add a hyphen here?)
+# 7. no Latin hyphen against ZWNJ: (QUESTION: should we add a hyphen here?) [ANSWER: YES]
 # * {{t|fa|بی‌معنی|tr=bima'ni}} "nonsense"
 #
 # 8. final h or no h against Arabic ه: (QUESTION: should final Arabic ه be transliterated as h always, never or sometimes?)
@@ -48,16 +48,23 @@ from blib import remove_links, msg
 # * {{t+check|fa|نُه|tr=noh}} canon-changed to no (RIGHT OR WRONG?)
 # * {{tt+|fa|انبوه|tr=anbuh|sc=fa-Arab}} canon-changed to anbu (RIGHT OR WRONG?)
 #
-# 9. Latin hyphen against Arabic space: (QUESTION: is it correct to change hyphen to space here?)
+# 9. Latin hyphen against Arabic space: (QUESTION: is it correct to change hyphen to space here?) [ANSWER: NO]
 # * {{t+|fa|کدو حلوایی|tr=kadu-halvâyi}} "pumpkin" canon-changed to kadu halvâyi (RIGHT OR WRONG?)
 # * {{t+|fa|سلاخ خانه|tr=sallâx-xâne|sc=fa-Arab} "abattoir" canon-changed to sallâx xâne (RIGHT OR WRONG?)
 # * {{t|fa|اس ام اس|tr=es-em-es|sc=fa-Arab}} "SMS" canon-changed to es em es (RIGHT OR WRONG?)
 # * {{t+|fa|هرج و مرج|tr=harj-o-marj}} "anarchy" canon-changed to harj o marj (RIGHT OR WRONG?)
 #
-# 10. Canonicalizing ō to ô and ē to ê: (QUESTION: is this OK?)
+# 10. Canonicalizing ō to ô and ē to ê: (QUESTION: is this OK?) [ANSWER: YES]
 # * {{tt|fa|خوروران|tr=xōrvarân}} "west" canon-changed to xôrvarân (RIGHT OR WRONG?)
 # * {{tt+|fa|میوه|tr=mēva}} "fruit" canon-changed to mêva (RIGHT OR WRONG?)
 # * {{tt+|fa|بارو|tr=bârō}} "wall" canon-changed to bârô (RIGHT OR WRONG?)
+#
+# FIXME:
+# 1. Support insert=, append=.
+# 2. Remove final -h after e in multisyllabic words (in post-canonicalization).
+# 3. Canonicalize m -> n against ن before ب. [DONE]
+# 4. Canonicalize h -> x against خ. [DONE]
+# 5. Handle اً against -an. [DONE]
 
 debug_tr_matching = False
 
@@ -263,17 +270,14 @@ tt_to_arabic_matching = {
   u"ج":["j",u"ǧ",u"ğ",u"ǰ","dj",u"dǧ",u"dğ",u"dǰ",u"dž",u"dʒ",[u"ʒ"],[u"ž"],["g"]],
   u"چ":[u"č","ch","c"],
   # Allow what would normally be capital H, but we lowercase all text
-  # before processing; always put the plain letters last so previous longer
-  # sequences match (which may be letter + combining char).
+  # before processing.
   # I feel a bit uncomfortable allowing kh to match against ح like this,
   # but generally I trust the Arabic more.
   u"ح":["h",u"ḥ",u"ħ",u"ẖ",u"ḩ","7",("kh",)],
   # I feel a bit uncomfortable allowing ḥ to match against خ like this,
   # but generally I trust the Arabic more.
-  u"خ":["x",u"k͟h",u"ḵ","kh",u"ḫ",u"ḳ",u"ẖ",u"χ",(u"ḥ",)],
+  u"خ":["x",u"k͟h",u"ḵ","kh",u"ḫ",u"ḳ",u"ẖ",u"χ",(u"ḥ",),"h"],
   u"د":"d",
-  # always put the plain letters last so previous longer sequences match
-  # (which may be letter + combining char)
   u"ذ":["z",u"d͟h",u"ḏ",u"đ",u"ð","dh",u"ḍ",u"ẕ","d"],
   u"ر":"r",
   u"ز":"z",
@@ -298,13 +302,11 @@ tt_to_arabic_matching = {
   u"گ":"g",
   u"ل":"l",
   u"م":"m",
-  u"ن":"n",
-  # FIXME! Seems this can map to any of h e. Need to account for this. Dispreferred sequences
-  # are eh, a, ah.
+  u"ن":["n", LatinMatch("m", canon_to="n", when=lambda st: st.nextla() == "b")],
   u"ه":"h",
   u"ۀ":"y",
-  # We have special handling for the following in the canonicalized Latin,
-  # so that we have -a but -âh and -at-.
+  # [We have special handling for the following in the canonicalized Latin,
+  # so that we have -a but -âh and -at-.] -- I think this is no longer true.
   u"ة":["h",["t"],["(t)"],""],
   # control characters
   # We handle hyphen against ZWNJ specially in check_against_hyphen() and other_arabic_chars, but we still need the
@@ -318,8 +320,8 @@ tt_to_arabic_matching = {
   u"ڨ":"g",
   u"ڧ":"q",
   # semivowels or long vowels, alif, hamza, special letters
-  # Note, the following ensures that short a against ا gets canonicalized to â.
-  u"ا":[u"â","a"], # ʾalif = \u0627
+  # Note, the following ensures that short a against ا gets canonicalized to â, except in اً = -an.
+  u"ا":[u"â",LatinMatch("a", canon_to=lambda st: "a" if st.nextar() == AN else u"â")], # ʾalif = \u0627
   silent_alif_subst:[[""]],
   silent_alif_maqsuura_subst:[[""]],
   # hamzated letters
@@ -328,7 +330,7 @@ tt_to_arabic_matching = {
   u"ؤ":hamza_match_or_empty,
   u"ئ":hamza_match_or_empty,
   u"ء":hamza_match_or_empty,
-  # FIXME, should w between vowels become v?
+  # Note, w before a vowel not after k/g/x is post-canonicalized to v.
   u"و":["v",["w"],LatinMatch("ow", canon_to="ow", insert=U),
       # not currently needed as we pre-canonicalize ou to ow
       #LatinMatch("ou", canon_to="ow",insert=U),
@@ -349,7 +351,7 @@ tt_to_arabic_matching = {
   u"ٱ":[[""]], # hamzatu l-waṣl = \u0671
   u"\u0670":u"â", # alif xanjariyya = dagger alif (Koranic diacritic)
   # short vowels, shadda and sukuun
-  AN:"an", # fatḥatân
+  AN:"n", # fatḥatân
   # These don't normally occur in Persian.
   #u"\u064C":"un", # dammatan
   #u"\u064D":"in", # kasratan
