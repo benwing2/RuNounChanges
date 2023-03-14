@@ -30,8 +30,9 @@ def process_text_on_page(index, pagetitle, text):
         if int(index) % 100 == 0:
           if not printed_succeeded_failed:
             printed_succeeded_failed = True
-            pagemsg("Failure = %s/%s = %.1f%%" % (fa_translit.num_failed, fa_translit.num_succeeded,
-              100.0 * fa_translit.num_failed / fa_translit.num_succeeded))
+            total = fa_translit.num_failed + fa_translit.num_succeeded
+            pagemsg("Failure = %s/%s = %.1f%%" % (fa_translit.num_failed, total,
+              100.0 * fa_translit.num_failed / total))
         else:
           printed_succeeded_failed = False
         pagemsg("Processing %s" % unicode(obj.t))
@@ -50,7 +51,7 @@ def process_text_on_page(index, pagetitle, text):
         _, foreign_param, foreign_mod, latin_mod, inline_mod = obj.param
         foreign = inline_mod.mainval if foreign_mod is None else inline_mod.get_modifier(foreign_mod)
         latin = inline_mod.get_modifier(latin_mod)
-      if not foreign or not latin:
+      if not foreign or not latin or latin in ["-", "?"]:
         pagemsg("Skipped: foreign=%s, latin=%s" % (foreign, latin))
       else:
         test(obj, foreign, latin)
