@@ -5,7 +5,7 @@
 import re, unicodedata
 import arabiclib
 from arabiclib import *
-from blib import remove_links, msg
+from blib import remove_links, msg, msgn
 
 # Some issues to take care of:
 #
@@ -88,11 +88,6 @@ from blib import remove_links, msg
 
 debug_tr_matching = False
 
-def uniprint(x):
-  print x.encode('utf-8')
-def uniout(x):
-  print x.encode('utf-8'),
-
 def rsub(text, fr, to):
   if type(to) is dict:
     def rsub_replace(m):
@@ -159,7 +154,7 @@ numbers = u"۱۲۳۴۵۶۷۸۹۰"
 # since such text is ambiguous in transliteration).
 def tr(text, lang=None, sc=None, force_translate=False, msgfun=msg):
   # FIXME: Implement me
-  return None
+  return NotImplemented
 
 
 ############################################################################
@@ -794,7 +789,7 @@ def post_canonicalize_latin(text):
 # is more reliable when both aare provided. This is less reliable than
 # tr_matching() and is meant when that fails. Return value is a tuple of
 # (CANONLATIN, CANONARABIC).
-def canonicalize_latin_arabic(latin, arabic, msgfun=msg):
+def canonicalize_latin_foreign(latin, arabic, msgfun=msg):
   if arabic is not None:
     arabic = pre_pre_canonicalize_arabic(arabic, msgfun=msgfun)
   if latin is not None:
@@ -880,9 +875,10 @@ def pre_pre_canonicalize_arabic(text, msgfun=msg):
 
   # Underscore weirdly appears at the beginning of several suffixes, where it should be tatweel.
   text = rsub(text, "^_", u"ـ")
+  # Don't do this for Persian unless we really want to vocalize this way.
   # convert llh for allâh into ll+shadda+dagger-alif+h
-  text = rsub(text, u"لله", u"للّٰه")
-  # uniprint("text enter: %s" % text)
+  #text = rsub(text, u"لله", u"للّٰه")
+  # msg("text enter: %s" % text)
   # shadda+short-vowel (including tanwin vowels, i.e. -an -in -un) gets
   # replaced with short-vowel+shadda during NFC normalisation, which
   # MediaWiki does for all Unicode strings; however, it makes the
@@ -1000,16 +996,60 @@ def post_canonicalize_arabic(text, safe=False):
     SH + u"([\u064B\u064C\u064D\u064E\u064F\u0650])", r"\1" + SH)
   return text
 
+def split_multiple_translits(latin, foreign):
+  if "," in latin and not re.search(u"[,،]", foreign):
+    # Check for multiple translits opposite a single Arabic-script term.
+    # If processing for changing, we need to paste the results back together.
+    return re.split(r",\s*", latin)
+  elif "~" in latin and "~" not in foreign:
+    # Similar to comma-separated translits.
+    return re.split(r"\s*~\s*", latin)
+  elif "/" in latin and "/" not in foreign:
+    # Similar to comma-separated translits.
+    return re.split(r"\s*/\s*", latin)
+  elif " ''or'' " in latin and " " not in foreign:
+    # Similar to comma-separated translits.
+    return re.split(r"\s+''or''\s+", latin)
+  elif " or " in latin and " " not in foreign:
+    # Similar to comma-separated translits.
+    return re.split(r"\s+or\s+", latin)
+  else:
+    return None
+
 # Vocalize Persian Arabic-script text based on transliterated Latin, and canonicalize the transliteration based on
 # the Arabic script.  This works by matching the Latin to the unvocalized Arabic script and inserting the appropriate
 # diacritics in the right places, so that ambiguities of Latin transliteration can be correctly handled. Returns a
 # tuple of Arabic, Latin. If unable to match, throw an error if ERR, else return None.
-def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
+def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
   origarabic = arabic
   origlatin = latin
+
   def debprint(x):
     if debug_tr_matching:
-      uniprint(x)
+      msg(x)
+  def pagemsg(txt):
+    if obj:
+      msg("Page %s %s: %s" % (obj.index, obj.pagetitle, txt))
+    else:
+      msg(txt)
+
+  latins = split_multiple_translits(latin, arabic)
+  arabic_res = None
+  if latins is not None:
+    for i, one_latin in enumerate(latins):
+      # Can't vocalize when multiple translits as they are likely different vocalizations. Use the first canonicalized
+      # Arabic script for the return value.
+      try:
+        this_arabic_res, this_latin_res = tr_matching(obj, arabic, one_latin, err=err, msgfun=msgfun, no_vocalize=True)
+        if arabic_res is None:
+          arabic_res = this_arabic_res
+        latins[i] = this_latin_res
+      except RuntimeError as e:
+        msg(u"%s" % e)
+        # Don't change anything if we can't match.
+    latin_res = ", ".join(latins)
+    return arabic_res or arabic, latin_res
+
   arabic = pre_pre_canonicalize_arabic(arabic, msgfun=msgfun)
   latin = pre_canonicalize_latin(latin, arabic, msgfun=msgfun)
   arabic = pre_canonicalize_arabic(arabic, msgfun=msgfun)
@@ -1019,11 +1059,8 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
       latin, 0, re.U)
 
   classical = False
-  no_vocalize = False
 
   if obj:
-    def pagemsg(txt):
-      msg("Page %s %s: %s" % (obj.index, obj.pagetitle, txt))
     m = re.search("^.*" + re.escape(unicode(obj.t)) + ".*$", obj.text, re.M)
     if not m:
       pagemsg("WARNING: Something, can't match template: %s" % unicode(obj.t))
@@ -1032,7 +1069,8 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
       if "Dari" in line or "Classical" in line:
         pagemsg("Saw 'Dari/Classical' in line: %s" % line)
         classical = True
-    no_vocalize = obj.addl_params["no_vocalize"]
+    if no_vocalize is None:
+      no_vocalize = obj.addl_params["no_vocalize"]
 
   ar = [] # exploded Arabic characters
   la = [] # exploded Latin characters
@@ -1425,7 +1463,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
           ar[aind[0]] == SH or ar[aind[0]] == double_l_subst):
         res.append(ar[aind[0]])
         aind[0] += 1
-      else:
+      elif not no_vocalize:
         res.append(SH)
       matched = True
     # The effect of the next clause is to handle cases where the
@@ -1508,36 +1546,36 @@ num_succeeded = 0
 def test_with_obj(obj, latin, arabic, should_outcome, should_latin=None):
   global num_succeeded, num_failed
   try:
-    result = tr_matching(obj, arabic, latin, True)
+    result = tr_matching(obj, arabic, latin, err=True)
   except RuntimeError as e:
-    uniprint(u"%s" % e)
+    msg(u"%s" % e)
     result = False
   if result == False:
-    uniprint("tr_matching(%s, %s) = %s" % (arabic, latin, result))
+    msg("tr_matching(%s, %s) = %s" % (arabic, latin, result))
     outcome = "failed"
   else:
     canonarabic, canonlatin = result
     trlatin = tr(canonarabic)
-    uniout("tr_matching(%s, %s) = %s %s," %
+    msgn("tr_matching(%s, %s) = %s %s," %
         (arabic, latin, canonarabic, canonlatin))
     canon_changed = "" if latin == canonlatin else " CANON-CHANGED"
     if trlatin == canonlatin:
-      uniprint("tr() MATCHED" + canon_changed)
+      msg("tr() MATCHED" + canon_changed)
       outcome = "matched"
     elif trlatin is None:
-      uniprint("tr() SKIPPED" + canon_changed)
+      msg("tr() SKIPPED" + canon_changed)
       outcome = "matched"
     else:
-      uniprint("tr() UNMATCHED (= %s)" % trlatin + canon_changed)
+      msg("tr() UNMATCHED (= %s)" % trlatin + canon_changed)
       outcome = "unmatched"
-  canonlatin, _ = canonicalize_latin_arabic(latin, None)
-  uniprint("canonicalize_latin(%s) = %s" %
+  canonlatin, _ = canonicalize_latin_foreign(latin, None)
+  msg("canonicalize_latin(%s) = %s" %
       (latin, canonlatin))
   if outcome == should_outcome:
-    uniprint("TEST SUCCEEDED.")
+    msg("TEST SUCCEEDED.")
     num_succeeded += 1
   else:
-    uniprint("TEST FAILED.")
+    msg("TEST FAILED.")
     num_failed += 1
 
 def test(obj, latin, arabic, should_outcome, should_latin=None):
@@ -1883,7 +1921,7 @@ def run_tests():
   #test(u"tišrînu θ-θâni", u"تِشرینُ الثّانِی", "matched")
 
   # Final results
-  uniprint("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))
+  msg("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))
 
 if __name__ == "__main__":
   run_tests()
