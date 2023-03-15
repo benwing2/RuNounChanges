@@ -2009,9 +2009,68 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
           else:
             doparam(("direct", "ru"), ("separate", "1", "tr"))
           did_template = True
-      #if "fa" in langs:
+      if "fa" in langs:
         # Special-casing for Persian
-        # FIXME, implement this
+        did_template = True
+        def dofaparam(trparam):
+          if getp("head"):
+            doparam(("direct", "fa"), ("separate", "head", trparam))
+          else:
+            doparam(("direct", "fa"), ("separate-pagetitle", "head", trparam))
+        if tn in ["fa-noun"]:
+          dofaparam("tr")
+          doparam(("direct", "fa"), ("separate-pagetitle", None, "tr2"))
+          doparam(("direct", "fa"), ("separate-pagetitle", None, "tr3"))
+          doparam(("direct", "fa"), ("separate", "pl", "pltr"))
+          doparam(("direct", "fa"), ("separate", "pl2", "pl2tr"))
+          doparam(("direct", "fa"), ("separate", "pl3", "pl3tr"))
+        elif tn in ["fa-proper noun"]:
+          dofaparam("tr")
+          doparam(("direct", "fa"), ("separate-pagetitle", None, "tr2"))
+          doparam(("direct", "fa"), ("separate-pagetitle", None, "tr3"))
+          doparam(("direct", "fa"), ("separate-pagetitle", None, "tr4"))
+          doparam(("direct", "fa"), ("separate", "pl", None))
+          doparam(("direct", "fa"), ("separate", "pl2", None))
+        elif tn in ["fa-adj", "fa-verb/new"]:
+          dofaparam("tr")
+          i = 2
+          while getp("head" + str(i)):
+            doparam(("direct", "fa"), ("separate", "head" + str(i), "tr" + str(i)))
+            i += 1
+          if tn == "fa-verb/new":
+            i = 1
+            while True:
+              suf = "" if i == 1 else str(i)
+              prstem = "prstem%s" % suf
+              prstemtr = "prstem%str" % suf
+              if not getp(prstem):
+                break
+              doparam(("direct", "fa"), ("separate", prstem, prstemtr))
+              i += 1
+        elif tn in ["fa-verb", "fa-colloq-verb"]:
+          dofaparam("tr")
+          doparam(("direct", "fa"), ("separate", "prstem", "tr2"))
+          doparam(("direct", "fa"), ("separate", "prstem2", "tr3"))
+        elif tn in ["fa-conj"]:
+          doparam(("direct", "fa"), ("separate", "1", "2"))
+          doparam(("direct", "fa"), ("separate", "3", "4"))
+          doparam(("direct", "fa"), ("separate", "pre", "pretr"))
+          # FIXME! The fa-conj-lit template uses 5= as an alternative translit for 2= in the past,
+          # and 6= as an alternative translit for 4= in the aorist. We don't currently have a way
+          # of saying "read the Persian from param X= and translit from param Y= but don't save
+          # the canonicalized Persian".
+        elif tn in ["fa-numeral", "fa-number", "fa-interjection", "fa-adv", "fa-conjunction", "fa-preposition",
+            "fa-pronoun"]:
+          dofaparam("tr")
+        elif tn in ["fa-phrase"]:
+          if getp("head"):
+            doparam(("direct", "fa"), ("separate", "head", "tr"))
+          elif getp("1"):
+            doparam(("direct", "fa"), ("separate", "1", "tr"))
+          else:
+            doparam(("direct", "fa"), ("separate-pagetitle", "head", "1"))
+        else:
+          did_template = False
       #if "bg" in langs:
         # Special-casing for Bulgarian
         # FIXME, implement this
@@ -2048,7 +2107,8 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
         "attention", "attn",
         "audio", "audio-IPA",
         "categorize", "cat", "catlangname", "cln", "topics", "top", "topic", "catlangcode", "C", "c",
-        "etyl",
+        "dercat",
+        "etyl", "etymid",
         "given name",
         "hyphenation", "hyph",
         "IPA", "IPAchar", "ic",
@@ -2056,7 +2116,8 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
         "+preo", "+posto", "+obj", "phrasebook", "place",
         "refcat", "rfe", "rfinfl", "rfc", "rfc-pron-n",
         "rhymes", "rhyme",
-        "senseid", "surname",
+        "senseid", "senseno", "surname",
+        "unknown", "unk", "uncertain", "unc",
         "was fwotd"
       ]:
         if include_notforeign:
@@ -2082,14 +2143,15 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
           else:
             doparam("1", ("separate", str(i * 2 + 2), "f%str" % i))
       # Look for {{t|LANG|<PAGENAME>|alt=<FOREIGNTEXT>}}
-      elif tn in ["t", "t+", "tt", "tt+", "t-", "t+check", "t-check"]:
+      elif tn in ["t", "t+", "tt", "tt+", "t-", "t+check", "tt+check", "t-check"]:
         doparam_checking_alt("1", "2", "alt", "tr")
       # Look for {{suffix|LANG|<PAGENAME>|alt1=<FOREIGNTEXT>|<PAGENAME>|alt2=...}}
       # or  {{suffix|LANG|<FOREIGNTEXT>|<FOREIGNTEXT>|...}}
       elif tn in ["suffix", "suf", "prefix", "pre", "affix", "af",
           "confix", "con", "circumfix", "infix", "compound", "com",
           "prefixusex", "prefex", "suffixusex", "sufex", "affixusex", "afex",
-          "surf", "surface analysis", "blend", "univerbation", "univ"]: # remove 'blend of'
+          "surf", "surface analysis", "blend", "univerbation", "univ", # remove 'blend of'
+          "doublet", "dbt"]:
         if tn in ["circumfix", "confix", "con"]:
           maxind = 3
         elif tn in ["infix"]:
@@ -2099,7 +2161,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
           maxind = find_max_term_index(t, first_numeric="2", named_params=True)
         offset = 1
         for i in xrange(1, maxind + 1):
-          # require_index specified in [[Module:compound/templates]]
+          # require_index specified in [[Module:compound/templates]] and [[Module:etymology/templates/doublet]]
           doparam_checking_alt("1", str(i + offset), "alt" + str(i), "tr" + str(i), other_lang_param="lang" + str(i),
             check_inline_modifiers=True)
       elif tn in ["pseudo-loan", "pl"]:
@@ -2111,10 +2173,10 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
             check_inline_modifiers=True)
         if include_notforeign:
           doparam("1", ("notforeign",))
-      elif tn in ["synonyms", "syn", "antonyms", "ant", "hypernyms", "hyper",
-          "hyponyms", "hypo", "meronyms", "holonyms", "troponyms",
-          "coordinate terms", "perfectives", "pf", "imperfectives", "impf",
-          "homophone", "homophones", "hmp"]:
+      elif tn in ["synonyms", "syn", "antonyms", "ant", "antonym", "hypernyms", "hyper",
+          "hyponyms", "hypo", "meronyms", "mer", "mero", "holonyms", "hol", "holo", "troponyms",
+          "coordinate terms", "cot", "coord", "coo", "perfectives", "pf", "imperfectives", "impf",
+          "homophones", "homophone", "hmp", "inline alt forms", "alti", "altform-inline"]:
         maxind = find_max_term_index(t, first_numeric="2", named_params=["alt", "tr"])
         termind = 0
         for i in xrange(1, maxind + 1):
@@ -2183,9 +2245,15 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
         # Don't just do cases up through where there's a numbered param because there may be holes.
         maxind = find_max_term_index(t, first_numeric="2", named_params=True)
         for i in xrange(1, maxind + 1):
-          # require_index not specified in [[Module:alternative forms]]
+          # require_index not specified in [[Module:etymology/templates/descendant]]
           doparam_checking_alt("1", str(i + 1), index_param("alt", i), index_param("tr", i),
               check_inline_modifiers=True)
+      elif tn in ["&lit"]:
+        # Don't just do cases up through where there's a numbered param because there may be holes.
+        maxind = find_max_term_index(t, first_numeric="2", named_params=True)
+        for i in xrange(1, maxind + 1):
+          # require_index specified in [[Module:definition/templates]]; no translit param currently
+          doparam_checking_alt("1", str(i + 1), "alt" + str(i), None)
       elif tn in [
           "col1", "col2", "col3", "col4", "col5",
           "col1-u", "col2-u", "col3-u", "col4-u", "col5-u",
