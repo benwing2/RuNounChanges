@@ -19,6 +19,12 @@ start, end = blib.parse_start_end(args.start, args.end)
 templates_seen = {}
 templates_changed = {}
 printed_succeeded_failed = False
+
+def show_failure(pagemsg):
+  total = fa_translit.num_failed + fa_translit.num_succeeded
+  pagemsg("Failure = %s/%s = %.1f%%" % (fa_translit.num_failed, total,
+    100.0 * fa_translit.num_failed / total))
+
 def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -31,13 +37,16 @@ def process_text_on_page(index, pagetitle, text):
         if int(index) % 100 == 0:
           if not printed_succeeded_failed:
             printed_succeeded_failed = True
-            total = fa_translit.num_failed + fa_translit.num_succeeded
-            pagemsg("Failure = %s/%s = %.1f%%" % (fa_translit.num_failed, total,
-              100.0 * fa_translit.num_failed / total))
+            show_failure(pagemsg)
         else:
           printed_succeeded_failed = False
         pagemsg("Processing %s" % unicode(obj.t))
         return fa_translit.test_with_obj(obj, latin, foreign, "matched")
+      def do_multiple_translits(foreign, latins):
+        # Since there are different vocalizations associated with different translits.
+        obj.addl_params["no_vocalize"] = True
+        for this_latin in latins:
+          test(obj, foreign, this_latin)
       foreign = None
       latin = None
       if obj.param[0] == "separate":
@@ -55,13 +64,34 @@ def process_text_on_page(index, pagetitle, text):
       obj.addl_params["no_vocalize"] = args.no_vocalize
       if not foreign or not latin or latin in ["-", "?"]:
         pagemsg("Skipped: foreign=%s, latin=%s" % (foreign, latin))
+      elif "," in latin and not re.search(u"[,،]", foreign):
+        # Check for multiple translits opposite a single Arabic-script term.
+        # If processing for changing, we need to paste the results back together.
+        latins = re.split(r",\s*", latin)
+        do_multiple_translits(foreign, latins)
+      elif "~" in latin and "~" not in foreign:
+        # Similar to comma-separated translits.
+        latins = re.split(r"\s*~\s*", latin)
+        do_multiple_translits(foreign, latins)
+      elif "/" in latin and "/" not in foreign:
+        # Similar to comma-separated translits.
+        latins = re.split(r"\s*/\s*", latin)
+        do_multiple_translits(foreign, latins)
+      elif " ''or'' " in latin and " " not in foreign:
+        # Similar to comma-separated translits.
+        latins = re.split(r"\s+''or''\s+", latin)
+        do_multiple_translits(foreign, latins)
+      elif " or " in latin and " " not in foreign:
+        # Similar to comma-separated translits.
+        latins = re.split(r"\s+or\s+", latin)
+        do_multiple_translits(foreign, latins)
       else:
         test(obj, foreign, latin)
-    text, actions = blib.process_one_page_links(index, pagetitle, text, ["fa"], process_param,
+    return blib.process_one_page_links(index, pagetitle, text, ["fa"], process_param,
         templates_seen, templates_changed)
-    return text, actions
-  return canon_one_page_links(pagetitle, index, text, "fa", "fa-Arab", fa_translit,
-      templates_seen, templates_changed)
+  else:
+    return canon_one_page_links(pagetitle, index, text, "fa", "fa-Arab", fa_translit,
+        templates_seen, templates_changed)
 
 if args.direcfile:
   for lineindex, line in blib.iter_items_from_file(args.direcfile, start, end):
@@ -76,4 +106,5 @@ if args.direcfile:
       process_text_on_page(index, pagetitle, text)
 else:
   blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)
+show_failure(msg)
 blib.output_process_links_template_counts(templates_seen, templates_changed)
