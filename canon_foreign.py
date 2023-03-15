@@ -100,10 +100,11 @@ def do_canon_param(obj, translit_module):
 
   if not foreign or latin in ["-", "?"]:
     pagemsg("Skipped: foreign=%s, latin=%s" % (foreign, latin))
-    return False, False, []
+    return False, False, [], None
 
   # Compute canonforeign and canonlatin
   match_canon = False
+  match_canon_error = None
   canonlatin = ""
   if latin:
     try:
@@ -112,10 +113,11 @@ def do_canon_param(obj, translit_module):
       global total_num_succeeded
       total_num_succeeded += 1
     except RuntimeError as e:
+      match_canon_error = u"Unable to match-canon %s (%s): %s: %s" % (foreign, latin, e, unicode(obj.t))
       if show_backtrace:
-        errmsg("WARNING: Unable to match-canon %s (%s): %s: %s" % (foreign, latin, e, unicode(obj.t)))
+        errmsg("WARNING: %s" % match_canon_error)
         traceback.print_exc()
-      pagemsg("NOTE: Unable to match-canon %s (%s): %s: %s" % (foreign, latin, e, unicode(obj.t)))
+      pagemsg("NOTE: %s" % match_canon_error)
       global total_num_failed
       total_num_failed += 1
       canonlatin, canonforeign = (
@@ -211,7 +213,7 @@ def do_canon_param(obj, translit_module):
           operation, latin, canonlatin, foreign, newforeign, translit))
       actions.append("%s %s=%s -> %s in {{%s}}" % (actionop, paramtr, latin, canonlatin, template_changelog_name(obj.t, obj.tlang)))
 
-  return (canonforeign, canonlatin, actions)
+  return canonforeign, canonlatin, actions, match_canon_error
 
 # If param is 'head', add it after any numeric params; otherwise, add at the end.
 def add_param_handling_head(template, param, value):
@@ -234,7 +236,7 @@ def add_param_handling_head(template, param, value):
 def canon_param(obj, translit_module):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (obj.index, obj.pagetitle, txt))
-  canonforeign, canonlatin, actions = do_canon_param(obj, translit_module)
+  canonforeign, canonlatin, actions, match_canon_error = do_canon_param(obj, translit_module)
   oldtempl = "%s" % unicode(obj.t)
   if obj.param[0] in ["separate", "separate-pagetitle"]:
     _, toparam, paramtr = obj.param
@@ -267,7 +269,7 @@ def canon_param(obj, translit_module):
 
   if canonforeign or canonlatin:
     pagemsg("Replaced %s with %s" % (oldtempl, unicode(obj.t)))
-  return actions
+  return actions, match_canon_error
 
 def combine_adjacent(values):
   combined = []
@@ -322,7 +324,7 @@ def canon_one_page_links(pagetitle, index, text, lang, script, translit_module, 
     def pagemsg(txt):
       msg("Page %s %s: %s" % (obj.index, obj.pagetitle, txt))
     obj.addl_params = addl_params
-    result = canon_param(obj, translit_module)
+    result, match_canon_error = canon_param(obj, translit_module)
     scvalue = getparam(obj.t, "sc")
     if scvalue in script:
       tn = tname(obj.t)
@@ -337,6 +339,9 @@ def canon_one_page_links(pagetitle, index, text, lang, script, translit_module, 
         result = result + newresult
       else:
         result = newresult
+    if match_canon_error is not None:
+      newt = unicode(obj.t)
+      pagemsg("WARNING: %s: <from> %s <to> %s <end>" % (match_canon_error, newt, newt))
     return result
 
   text, actions = blib.process_one_page_links(index, pagetitle, text, [lang], process_param,
