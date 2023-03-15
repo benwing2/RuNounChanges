@@ -7,10 +7,6 @@ import arabiclib
 from arabiclib import *
 from blib import remove_links, msg
 
-# FIXME!!
-#
-# NEEDS LOTS OF WORK
-#
 # Some issues to take care of:
 #
 # 1. o against و especially in loanwords: [THIS IS OK]
@@ -83,9 +79,10 @@ from blib import remove_links, msg
 # 21. Pre-canonicalize underscore at beginning of text to tatweel, as it marks suffixes. [DONE]
 # 22. Don't replace initial ال with assimilating_l_subst, which messes up all such words. [DONE]
 # 23. Don't replace double {{ }} [[ ]] with shadda. [DONE]
-# 24. Make sure we correctly handle short vowels already in the Arabic script (e.g. final kasra indicating ezafe).
+# 24. Make sure we correctly handle short vowels already in the Arabic script (e.g. final kasra indicating ezafe). [VERIFIED]
 # 25. Have an option to turn off insertion of short vowels into the canonicalized Arabic. [DONE]
 # 26. Make sure kasra gets added in all ways of matching it (e.g. two-char هٔ).
+# 27. Don't add hyphen to Latin when ZWNJ occurs word-finally. [DONE]
 
 
 debug_tr_matching = False
@@ -228,6 +225,33 @@ class State(object):
   def thisla(self):
     return self.nextla(0)
 
+  def is_bow(self, pos=None):
+    if pos is None:
+      pos = self.aind[0]
+    return (pos == 0 or self.ar[pos - 1] in [" ", "[", "|"])
+
+  def is_boc(self, pos=None):
+    if pos is None:
+      pos = self.aind[0]
+    return (pos == 0 or re.search("[" + boc_chars + "]", self.ar[pos - 1])) or ((
+      # also when we just processed a hyphen; cf. {{tt+|fa|یادآوری|tr=yâd-âvari}}
+      # also when we output a hyphen even if not in the input ...
+      self.lind[0] > 0 and self.la[self.lind[0] - 1] == "-" or len(self.lres) > 0 and self.lres[-1] == "-")
+      # ... unless we just saw a tatweel, which cannot be the end of a compound part
+      and not (pos > 0 and self.ar[pos - 1] == u"ـ"))
+
+  # True if we are at the last character in a word.
+  def is_eow(self, pos=None):
+    if pos is None:
+      pos = self.aind[0]
+    if pos == self.alen - 1:
+      return True
+    a = self.ar[pos + 1]
+    return (a in [" ", "]", "|", ZWNJ] or a in word_final_punctuation or
+      # followed by ''' (indicating end of bolded word)
+      a == "'" and pos + 3 < self.alen and self.ar[pos + 2] == "'" and self.ar[pos + 3] == "'"
+    )
+
 
 # Special-case matching at beginning of word. Plain alif normally corresponds
 # to nothing, and hamza seats might correspond to nothing (omitted hamza
@@ -267,6 +291,7 @@ tt_to_arabic_matching_boc = { #beginning of later part of a compound
 # Special-case matching at end of word.
 tt_to_arabic_matching_eow = { # end of word
   u"ه": ["h", [""]],
+  ZWNJ:"",
   # These don't occur word-finally in Persian
   #UN:["un",""], # dammatân
   #IN:["in",""], # kasratân
@@ -349,7 +374,7 @@ tt_to_arabic_matching = {
   # control characters
   # We handle hyphen against ZWNJ specially in check_against_hyphen() and other_arabic_chars, but we still need the
   # following for the case where ZWNJ is unmatched on the Latin side.
-  ZWNJ:["-",""], # ZWNJ (zero-width non-joiner)
+  ZWNJ:["-", ""],
   #ZWJ:["-"],#,""], # ZWJ (zero-width joiner)
 
   # rare letters
@@ -1018,46 +1043,18 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
   def create_state():
     return State(ar, aind, alen, la, lind, llen, res, lres, classical, no_vocalize)
 
-  def is_bow(pos=None):
-    if pos is None:
-      pos = aind[0]
-    return (pos == 0 or ar[pos - 1] in [" ", "[", "|"])
-
-  def is_boc(pos=None):
-    if pos is None:
-      pos = aind[0]
-    return (pos == 0 or re.search("[" + boc_chars + "]", ar[pos - 1])) or ((
-      # also when we just processed a hyphen; cf. {{tt+|fa|یادآوری|tr=yâd-âvari}}
-      # also when we output a hyphen even if not in the input ...
-      lind[0] > 0 and la[lind[0] - 1] == "-" or len(lres) > 0 and lres[-1] == "-")
-      # ... unless we just saw a tatweel, which cannot be the end of a compound part
-      and not (pos > 0 and ar[pos - 1] == u"ـ"))
-
-  # True if we are at the last character in a word.
-  def is_eow(pos=None):
-    if pos is None:
-      pos = aind[0]
-    if pos == alen - 1:
-      return True
-    a = ar[pos + 1]
-    return (a in [" ", "]", "|", ZWNJ] or a in word_final_punctuation or
-      # followed by ''' (indicating end of bolded word)
-      a == "'" and pos + 3 < alen and ar[pos + 2] == "'" and ar[pos + 3] == "'"
-    )
+  st = create_state()
 
   def get_matches():
     ac = ar[aind[0]]
     debprint("get_matches: ac is %s" % ac)
-    bow = is_bow()
-    boc = is_boc()
-    eow = is_eow()
 
     potential_matching_tables = []
-    if is_bow():
+    if st.is_bow():
       potential_matching_tables.append(tt_to_arabic_matching_bow)
-    if is_boc():
+    if st.is_boc():
       potential_matching_tables.append(tt_to_arabic_matching_boc)
-    if is_eow():
+    if st.is_eow():
       potential_matching_tables.append(tt_to_arabic_matching_eow)
     potential_matching_tables.append(tt_to_arabic_matching)
     matches = None
@@ -1121,7 +1118,6 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
       elif isinstance(m, tuple):
         match = m[0]
       elif isinstance(m, LatinMatch):
-        st = create_state()
         if m.when and not m.when(st):
           continue
         this_canon = m.canon_to
@@ -1144,7 +1140,6 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
         # present, instead of adding the apostrophe after both vowels.
         if ac not in [u"ع", u"ئ"]:
           continue
-        st = create_state()
         prevla = st.prevla()
         thisla = st.thisla()
         if not prevla or not thisla:
@@ -1170,7 +1165,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
           for cp in match:
             lres.append(cp)
         elif ac == u"ة":
-          if not is_eow():
+          if not st.is_eow():
             lres.append("t")
           elif aind[0] > 0 and (ar[aind[0] - 1] == u"ا" or
               ar[aind[0] - 1] == u"آ"):
@@ -1206,14 +1201,13 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
       return False
     # Don't allow an unmatching Latin short vowel at the beginning of a word; there should always be a alif, alif madda
     # or similar on the Arabic side.
-    if is_bow():
+    if st.is_bow():
       return False
     l = la[lind[0]]
     debprint("Unmatched Latin: %s at %s" % (l, lind[0]))
     arabic = tt_latin_to_unmatched_arabic.get(l)
     if arabic is not None:
       if isinstance(arabic, tuple):
-        st = create_state()
         arabic, l, when = arabic
         if callable(l):
           l = l(st)
@@ -1243,7 +1237,6 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
       ok = True
     if l == "'":
       # Make sure there are at least two apostrophes in a row.
-      st = create_state()
       if st.prevla() == "'" or st.nextla() == "'":
         ok = True
     if ok:
@@ -1359,7 +1352,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
 
   # Check for plain alif matching hamza and canonicalize.
   #def check_bow_alif():
-  #  if not (is_bow() and aind[0] < alen and ar[aind[0]] == u"ا"):
+  #  if not (st.is_bow() and aind[0] < alen and ar[aind[0]] == u"ا"):
   #    return False
   #  # Check for hamza + vowel.
   #  if not (lind[0] < llen - 1 and la[lind[0]] in hamza_match_chars and
@@ -1381,7 +1374,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
   def check_eow_tanwin():
     tanwin_mapping = {"a":AN, "i":IN, "u":UN}
     # Infer tanwîn at EOW
-    if (aind[0] > 0 and is_eow(aind[0] - 1) and lind[0] < llen - 1 and
+    if (aind[0] > 0 and st.is_eow(aind[0] - 1) and lind[0] < llen - 1 and
         la[lind[0]] in "aiu" and la[lind[0] + 1] == "n"):
       res.append(tanwin_mapping[la[lind[0]]])
       lres.append(la[lind[0]])
@@ -1389,7 +1382,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
       lind[0] += 2
       return True
     # Infer fatḥatân before EOW alif/alif maqsuura
-    if (aind[0] < alen and is_eow() and
+    if (aind[0] < alen and st.is_eow() and
         ar[aind[0]] in u"اى" and lind[0] < llen - 1 and
         la[lind[0]] == "a" and la[lind[0] + 1] == "n"):
       res.append(AN)
@@ -1444,7 +1437,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg):
     # of the matches are an empty string. This had the side-effect of
     # fixing the qiṭṭun problem but made it impossible to vocalize the
     # ghurfatun al-kuuba example, among others.
-    elif (not is_bow() and aind[0] < alen and
+    elif (not st.is_bow() and aind[0] < alen and
         ar[aind[0]] in word_interrupting_chars and
         check_latin_not_matching_arabic()):
       debprint("Matched: Clause 1")
