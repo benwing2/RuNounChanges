@@ -5,6 +5,7 @@
 import re, unicodedata
 import arabiclib
 from arabiclib import *
+import blib
 from blib import remove_links, msg, msgn
 
 # Some issues to take care of:
@@ -610,6 +611,12 @@ tt_latin_to_unmatched_arabic = {
 # it should be the corresponding Arabic (after pre-pre-canonicalization),
 # and is used to do extra canonicalizations.
 def pre_canonicalize_latin(text, arabic=None, msgfun=msg):
+  if "{{" in text:
+    # Embedded templates. Don't touch the stuff inside the embedded part.
+    retval = run_on_non_template_code(text, lambda run: pre_canonicalize_latin(run, None, msgfun=msgfun), msgfun)
+    if retval is not None:
+      return retval
+
   # Map to canonical composed form, eliminate presentation variants etc.
   text = nfkc_form(text)
   # remove L2R, R2L markers
@@ -618,10 +625,11 @@ def pre_canonicalize_latin(text, arabic=None, msgfun=msg):
   text = rsub(text, "<!--.*?-->", "")
   # remove embedded IPAchar templates
   text = rsub(text, r"\{\{IPAchar\|(.*?)\}\}", r"\1")
-  # lowercase and remove leading/trailing spaces
-  text = text.lower().strip()
-  # canonicalize interior whitespace
-  text = rsub(text, r"\s+", " ")
+  # lowercase and remove leading/trailing spaces; don't strip newlines at the edges, which might be intentional, e.g.
+  # in a multiline {{der3}} call.
+  text = text.lower().strip(" ")
+  # canonicalize interior spaces (leave newlines alone)
+  text = rsub(text, r" +", " ")
   # convert macrons to circumflexed vowels
   text = rsub(text, ".",
     {u"ā":u"â", u"ē":u"ê", u"ī":u"î", u"ō":u"ô", u"ū":u"û"})
@@ -771,7 +779,13 @@ def pre_canonicalize_latin(text, arabic=None, msgfun=msg):
   ##text = rsub(text, "[-]", "") # eliminate stray hyphens (e.g. in al-)
   return text
 
-def post_canonicalize_latin(text):
+def post_canonicalize_latin(text, msgfun=msg):
+  if "{{" in text:
+    # Embedded templates. Don't touch the stuff inside the embedded part.
+    retval = run_on_non_template_code(text, lambda text: post_canonicalize_latin(text, msgfun=msgfun), msgfun)
+    if retval is not None:
+      return retval
+
   # iy + V may have been canonicalized to eyV; put it back.
   text = rsub(text, u"ey([" + vowel_chars + "])", r"iy\1")
   # w before a vowel becomes v except in kw-, xw-, gw-, where we leave it alone
@@ -781,7 +795,9 @@ def post_canonicalize_latin(text):
   text = rsub(text, u"(.)" + SH, r"\1\1")
   # Final -eh in multisyllabic word -> -e.
   text = rsub(text, "([" + vowel_chars + "][" + cons_chars + "]*)eh([" + word_final_punctuation + r" |\]]|'''|$)", r"\1e\2")
-  text = text.lower().strip()
+  # lowercase and remove leading/trailing spaces; don't strip newlines at the edges, which might be intentional, e.g.
+  # in a multiline {{der3}} call.
+  text = text.lower().strip(" ")
   return text
 
 # Canonicalize a Latin transliteration and Arabic text to standard form.
@@ -796,7 +812,7 @@ def canonicalize_latin_foreign(latin, arabic, msgfun=msg):
     latin = pre_canonicalize_latin(latin, arabic, msgfun=msgfun)
   if arabic is not None:
     arabic = pre_canonicalize_arabic(arabic, safe=True, msgfun=msgfun)
-    arabic = post_canonicalize_arabic(arabic, safe=True)
+    arabic = post_canonicalize_arabic(arabic, safe=True, msgfun=msgfun)
   if latin is not None:
     # Protect instances of two or more single quotes in a row so they don't
     # get converted to sequences of hamza half-rings.
@@ -810,7 +826,7 @@ def canonicalize_latin_foreign(latin, arabic, msgfun=msg):
     latin = rsub(latin, "(%s)3" % latin_chars, ur"\1ʿ")
     latin = rsub(latin, "3(%s)" % latin_chars, ur"ʿ\1")
     latin = latin.replace(multi_single_quote_subst, "'")
-    latin = post_canonicalize_latin(latin)
+    latin = post_canonicalize_latin(latin, msgfun=msgfun)
   return (latin, arabic)
 
 # Special-casing for punctuation-space and diacritic-only text; don't
@@ -825,10 +841,31 @@ def dont_pre_canonicalize_arabic(text):
     return True
   return False
 
+def run_on_non_template_code(text, fun, pagemsg):
+  # Embedded templates. Don't touch the stuff inside the embedded part.
+  pagemsg(u"Embedded templates in param value, not frobbing template runs: %s" % text)
+  try:
+    runs = blib.parse_balanced_segment_run(text, "{", "}")
+  except blib.ParseException as e:
+    pagemsg(u"WARNING: ParseException parsing braces in param value: %s: %s" % (text, e))
+    runs = None
+  if runs is not None:
+    for i, run in enumerate(runs):
+      if i % 2 == 0:
+        runs[i] = fun(runs[i])
+    return "".join(runs)
+  return None
+
 # Early pre-canonicalization of Arabic, doing stuff that's safe. We split
 # this from pre-canonicalization proper so we can do Latin pre-canonicalization
 # between the two steps.
 def pre_pre_canonicalize_arabic(text, msgfun=msg):
+  if "{{" in text:
+    # Embedded templates. Don't touch the stuff inside the embedded part.
+    retval = run_on_non_template_code(text, lambda run: pre_pre_canonicalize_arabic(run, msgfun=msgfun), msgfun)
+    if retval is not None:
+      return retval
+
   if dont_pre_canonicalize_arabic(text):
     msgfun("Not pre-canonicalizing %s due to U+2008 or overly short" %
         text)
@@ -842,10 +879,11 @@ def pre_pre_canonicalize_arabic(text, msgfun=msg):
     text = nfkc_form(text)
   # remove L2R, R2L markers
   text = rsub(text, u"[\u200E\u200F]", "")
-  # remove leading/trailing spaces;
-  text = text.strip()
-  # canonicalize interior whitespace
-  text = rsub(text, r"\s+", " ")
+  # remove leading/trailing spaces; don't strip newlines at the edges, which might be intentional, e.g. in a multiline
+  # {{der3}} call.
+  text = text.strip(" ")
+  # canonicalize interior spaces (leave newlines alone)
+  text = rsub(text, r" s+", " ")
   # replace Arabic, etc. characters with corresponding Farsi characters
   text = text.replace(u"ي", u"ی") # FARSI YEH
   text = text.replace(u"ك", u"ک") # ARABIC LETTER KEHEH (06A9)
@@ -921,6 +959,12 @@ def pre_pre_canonicalize_arabic(text, msgfun=msg):
 # Pre-canonicalize the Arabic. If SAFE, only do "safe" operations appropriate
 # to canonicalizing Arabic on its own, not before a tr_matching() operation.
 def pre_canonicalize_arabic(text, safe=False, msgfun=msg):
+  if "{{" in text:
+    # Embedded templates. Don't touch the stuff inside the embedded part.
+    retval = run_on_non_template_code(text, lambda run: pre_canonicalize_arabic(run, safe=safe, msgfun=msgfun), msgfun)
+    if retval is not None:
+      return retval
+
   if dont_pre_canonicalize_arabic(text):
     return text
   if not safe:
@@ -950,7 +994,13 @@ def pre_canonicalize_arabic(text, safe=False, msgfun=msg):
     #  r"\1" + assimilating_l_subst + r"\2")
   return text
 
-def post_canonicalize_arabic(text, safe=False):
+def post_canonicalize_arabic(text, safe=False, msgfun=msg):
+  if "{{" in text:
+    # Embedded templates. Don't touch the stuff inside the embedded part.
+    retval = run_on_non_template_code(text, lambda run: post_canonicalize_arabic(run, safe=safe, msgfun=msgfun), msgfun)
+    if retval is not None:
+      return retval
+
   if dont_pre_canonicalize_arabic(text):
     return text
   if not safe:
@@ -1034,8 +1084,9 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
       msg(txt)
 
   latins = split_multiple_translits(latin, arabic)
-  arabic_res = None
   if latins is not None:
+    arabic_res = None
+    match_canon_errors = []
     for i, one_latin in enumerate(latins):
       # Can't vocalize when multiple translits as they are likely different vocalizations. Use the first canonicalized
       # Arabic script for the return value.
@@ -1045,10 +1096,14 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
           arabic_res = this_arabic_res
         latins[i] = this_latin_res
       except RuntimeError as e:
-        msg(u"%s" % e)
+        match_canon_error = u"%s" % e
+        match_canon_errors.append(match_canon_error)
+        pagemsg("NOTE: %s" % match_canon_error)
         # Don't change anything if we can't match.
     latin_res = ", ".join(latins)
-    return arabic_res or arabic, latin_res
+    if arabic_res is None:
+      raise RuntimeError("; ".join(match_canon_errors))
+    return arabic_res, latin_res
 
   arabic = pre_pre_canonicalize_arabic(arabic, msgfun=msgfun)
   latin = pre_canonicalize_latin(latin, arabic, msgfun=msgfun)
@@ -1531,8 +1586,8 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
 
   arabic = "".join(res)
   latin = "".join(lres)
-  arabic = post_canonicalize_arabic(arabic)
-  latin = post_canonicalize_latin(latin)
+  arabic = post_canonicalize_arabic(arabic, msgfun=msgfun)
+  latin = post_canonicalize_latin(latin, msgfun=msgfun)
   return arabic, latin
 
 def remove_diacritics(word):
