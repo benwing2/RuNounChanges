@@ -1736,6 +1736,18 @@ class ParamWithInlineModifier(object):
       else:
         self.modifiers[pos] = ((mod, val))
 
+  def remove_modifier(self, mod):
+    removed = False
+    new_modifiers = []
+    for thispos, (thismod, thisval) in enumerate(self.modifiers):
+      if thismod != mod:
+        new_modifiers.append((thismod, thisval))
+      else:
+        removed = True
+    if not removed:
+      raise ParseException("Modifier %s not found when trying to remove modifier" % mod)
+    self.modifiers = new_modifiers
+
 
 def parse_inline_modifier(value):
   segments = parse_balanced_segment_run(value, "<", ">")
