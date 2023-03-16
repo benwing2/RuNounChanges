@@ -6,7 +6,7 @@ import re, unicodedata
 import arabiclib
 from arabiclib import *
 import blib
-from blib import remove_links, msg, msgn
+from blib import remove_links, msg, msgn, tname
 
 # Some issues to take care of:
 #
@@ -85,6 +85,17 @@ from blib import remove_links, msg, msgn
 # 26. Make sure kasra gets added in all ways of matching it (e.g. two-char هٔ).
 # 27. Don't add hyphen to Latin when ZWNJ occurs word-finally. [DONE]
 # 28. Handle unmatched fatha in fatha+alif sequences. [DONE]
+# 29. Figure out how to not change æ -> a in Sistani terms, e.g. [[بەت]]. [DONE]
+# 30. Don't canonicalize ARABIC LETTER AE to HEH; intentional in Sistani text. [DONE]
+# 31. Don't correct â to a in الله. [DONE]
+# 32. With headword templates, check for Dari or Classical several lines down. [DONE]
+# 33. Check for other Dari keywords: Sistani, dialectal, regional, lowercase classical. [DONE]
+# 34. Recognize semicolon-separated translits. [DONE]
+# 35. When classical or dialectal, don't do certain pre-canonicalizations and post-canonicalizations. [DONE]
+# 36. Move shadda -> double cons in post_canonicalize_latin() to the beginning to avoid interfering in further changes. [DONE]
+# 37. Remove final h in -eh before hyphen + cons, and correct -eh-e to -e-ye. [DONE]
+# 38. Reduce multiple ZWNJ's to one. [DONE]
+# 39. Bug fix for canonicalizing multiple spaces to one. [DONE]
 
 
 debug_tr_matching = False
@@ -599,21 +610,44 @@ tt_latin_to_unmatched_arabic = {
   "e":I,
   # not if we're opposite ا; this occurs at boc with ای
   "i":(I, lambda st: "i" if st.classical else "e", lambda st: st.thisar() != u"ا"),
-  # corrrect unmatched â to a, but not in اله-.
+  # corrrect unmatched â to a, but not in اله- or الله.
   u"â":(A, "a", lambda st: not (
     st.thisar() == u"ه" and st.prevar() == u"ل" and st.prevar(2) == u"ا" and st.prevar(3) in [None, " "]
+  ) and not (
+    st.thisar() == u"ه" and st.prevar() == double_l_subst and st.prevar(2) == u"ل" and st.prevar(3) == u"ا"
   )),
   # Shadda because we pre-canonicalize doubled Latin letters to include a shadda.
   SH:SH,
 }
 
+def check_for_classical_or_dialectal(obj, pagemsg):
+  tn = tname(obj.t)
+  if tn == "head" or tn.startswith("fa-"):
+    # Likely head or inflection template; include up to 3 lines of text below and above so we can check for Dari/Classical labels in
+    # definitions.
+    regex = "^(.*\n){0,3}.*" + re.escape(obj.origt) + ".*(\n.*){0,3}"
+  else:
+    # Check on the same line.
+    regex = "^.*" + re.escape(obj.origt) + ".*$"
+  m = re.search(regex, obj.text, re.M)
+  if not m:
+    pagemsg("WARNING: Something wrong, can't match template: %s" % unicode(obj.t))
+  else:
+    line = m.group(0)
+    # 'regional' only in {{lb|fa|regional}}; not in {{fa-regional}}.
+    if re.search(r"(Dari|[Cc]lassical|Sistani|dialectal|\|regional)", line):
+      pagemsg("Saw 'Dari/Classical/Sistani/dialectal/regional' in line: %s" % line)
+      return True
+  return False
+
 # Pre-canonicalize Latin, and Arabic if supplied. If Arabic is supplied,
 # it should be the corresponding Arabic (after pre-pre-canonicalization),
 # and is used to do extra canonicalizations.
-def pre_canonicalize_latin(text, arabic=None, msgfun=msg):
+def pre_canonicalize_latin(text, arabic=None, classical=False, msgfun=msg):
   if "{{" in text:
     # Embedded templates. Don't touch the stuff inside the embedded part.
-    retval = run_on_non_template_code(text, lambda run: pre_canonicalize_latin(run, None, msgfun=msgfun), msgfun)
+    retval = run_on_non_template_code(text,
+      lambda run: pre_canonicalize_latin(run, None, classical=classical, msgfun=msgfun), msgfun)
     if retval is not None:
       return retval
 
@@ -629,7 +663,7 @@ def pre_canonicalize_latin(text, arabic=None, msgfun=msg):
   # in a multiline {{der3}} call.
   text = text.lower().strip(" ")
   # canonicalize interior spaces (leave newlines alone)
-  text = rsub(text, r" +", " ")
+  text = rsub(text, " +", " ")
   # convert macrons to circumflexed vowels
   text = rsub(text, ".",
     {u"ā":u"â", u"ē":u"ê", u"ī":u"î", u"ō":u"ô", u"ū":u"û"})
@@ -640,17 +674,23 @@ def pre_canonicalize_latin(text, arabic=None, msgfun=msg):
   text = rsub(text, ".",
     {u"á":"a", u"é":"e", u"í":"i", u"ó":"o", u"ú":"u",
      u"à":"a", u"è":"e", u"ì":"i", u"ò":"o", u"ù":"u",
-     u"ă":"a", u"ĕ":"e", u"ĭ":"i", u"ŏ":"o", u"ŭ":"u",
-     u"ä":"a", u"ë":"e", u"ï":"i", u"ö":"o", u"ü":"u",
      u"ḗ":u"ê", u"ṓ":u"ô", # only these two vowels have a single Unicode char for macron+acute
      u"ấ":u"â"})
+  if not classical:
+    # Dialectally, ĭ ö or the like may occur in translit.
+    text = rsub(text, ".",
+      {u"ă":"a", u"ĕ":"e", u"ĭ":"i", u"ŏ":"o", u"ŭ":"u",
+       u"ä":"a", u"ë":"e", u"ï":"i", u"ö":"o", u"ü":"u",
+      })
   # Eliminate miscellaneous acute/grave (e.g. if over ā ī ū)
   text = text.replace(AC, "")
   text = text.replace(GR, "")
   # canonicalize weird vowels
   text = text.replace(u"ɪ", "i")
   text = text.replace(u"ɑ", "a")
-  text = text.replace(u"æ", "a")
+  if not classical and (not arabic or u"ە" not in arabic):
+    # Don't do this if ARABIC LETTER AE occurs (in Sistani text).
+    text = text.replace(u"æ", "a")
   text = text.replace(u"а", "a") # Cyrillic a
   # eliminate doubled vowels = long vowels
   text = rsub(text, r"([aeiou])\1", {"a":u"â", "e":u"ê", "i":u"î", "o":u"ô", "u":u"û"})
@@ -779,22 +819,26 @@ def pre_canonicalize_latin(text, arabic=None, msgfun=msg):
   ##text = rsub(text, "[-]", "") # eliminate stray hyphens (e.g. in al-)
   return text
 
-def post_canonicalize_latin(text, msgfun=msg):
+def post_canonicalize_latin(text, classical=False, msgfun=msg):
   if "{{" in text:
     # Embedded templates. Don't touch the stuff inside the embedded part.
-    retval = run_on_non_template_code(text, lambda text: post_canonicalize_latin(text, msgfun=msgfun), msgfun)
+    retval = run_on_non_template_code(text, lambda text: post_canonicalize_latin(text, classical=classical, msgfun=msgfun), msgfun)
     if retval is not None:
       return retval
 
-  # iy + V may have been canonicalized to eyV; put it back.
-  text = rsub(text, u"ey([" + vowel_chars + "])", r"iy\1")
-  # w before a vowel becomes v except in kw-, xw-, gw-, where we leave it alone
-  text = rsub(text, "(?<![kxg])w([" + vowel_chars + "])", r"v\1")
-  # v after a vowel not before a vowel becomes w? (FIXME: not currently implemented)
-  # Convert shadda back to double letter
+  # Convert shadda back to double letter. Do this first to avoid interfering with the following checks.
   text = rsub(text, u"(.)" + SH, r"\1\1")
-  # Final -eh in multisyllabic word -> -e.
-  text = rsub(text, "([" + vowel_chars + "][" + cons_chars + "]*)eh([" + word_final_punctuation + r" |\]]|'''|$)", r"\1e\2")
+  # iy + V may have been canonicalized to eyV, likewise for iyy + V; put it back.
+  text = rsub(text, u"e(y+[" + vowel_chars + "])", r"i\1")
+  if not classical:
+    # Don't do this in dialectal Persian, e.g. [[بوا]] {{fa-noun|tr=buâ, bwâ, bowâ}}.
+    # w before a vowel becomes v except in kw-, xw-, gw-, where we leave it alone
+    text = rsub(text, "(?<![kxg])w([" + vowel_chars + "])", r"v\1")
+  # v after a vowel not before a vowel becomes w? (FIXME: not currently implemented)
+  # Final -eh in multisyllabic word -> -e. Also before hyphen but only hyphen followed by consonant (farmânde-hâ but farmândeh-e,
+  # which we correct to farmânde-ye in the first line below).
+  text = rsub(text, "([" + vowel_chars + "][" + cons_chars + "]*)eh-e([" + word_final_punctuation + r" |\]]|'''|$])", r"\1e-ye\2")
+  text = rsub(text, "([" + vowel_chars + "][" + cons_chars + "]*)eh([" + word_final_punctuation + r" |\]]|'''|$|-[" + cons_chars + "])", r"\1e\2")
   # lowercase and remove leading/trailing spaces; don't strip newlines at the edges, which might be intentional, e.g.
   # in a multiline {{der3}} call.
   text = text.lower().strip(" ")
@@ -805,11 +849,12 @@ def post_canonicalize_latin(text, msgfun=msg):
 # is more reliable when both aare provided. This is less reliable than
 # tr_matching() and is meant when that fails. Return value is a tuple of
 # (CANONLATIN, CANONARABIC).
-def canonicalize_latin_foreign(latin, arabic, msgfun=msg):
+def canonicalize_latin_foreign(obj, latin, arabic, msgfun=msg):
+  classical = check_for_classical_or_dialectal(obj, msgfun)
   if arabic is not None:
     arabic = pre_pre_canonicalize_arabic(arabic, msgfun=msgfun)
   if latin is not None:
-    latin = pre_canonicalize_latin(latin, arabic, msgfun=msgfun)
+    latin = pre_canonicalize_latin(latin, arabic, classical=classical, msgfun=msgfun)
   if arabic is not None:
     arabic = pre_canonicalize_arabic(arabic, safe=True, msgfun=msgfun)
     arabic = post_canonicalize_arabic(arabic, safe=True, msgfun=msgfun)
@@ -826,7 +871,7 @@ def canonicalize_latin_foreign(latin, arabic, msgfun=msg):
     latin = rsub(latin, "(%s)3" % latin_chars, ur"\1ʿ")
     latin = rsub(latin, "3(%s)" % latin_chars, ur"ʿ\1")
     latin = latin.replace(multi_single_quote_subst, "'")
-    latin = post_canonicalize_latin(latin, msgfun=msgfun)
+    latin = post_canonicalize_latin(latin, classical=classical, msgfun=msgfun)
   return (latin, arabic)
 
 # Special-casing for punctuation-space and diacritic-only text; don't
@@ -879,11 +924,13 @@ def pre_pre_canonicalize_arabic(text, msgfun=msg):
     text = nfkc_form(text)
   # remove L2R, R2L markers
   text = rsub(text, u"[\u200E\u200F]", "")
+  # reduce multiple ZWNJ's to one
+  text = rsub(text, ZWNJ + "+", ZWNJ)
   # remove leading/trailing spaces; don't strip newlines at the edges, which might be intentional, e.g. in a multiline
   # {{der3}} call.
   text = text.strip(" ")
   # canonicalize interior spaces (leave newlines alone)
-  text = rsub(text, r" s+", " ")
+  text = rsub(text, " +", " ")
   # replace Arabic, etc. characters with corresponding Farsi characters
   text = text.replace(u"ي", u"ی") # FARSI YEH
   text = text.replace(u"ك", u"ک") # ARABIC LETTER KEHEH (06A9)
@@ -906,8 +953,9 @@ def pre_pre_canonicalize_arabic(text, msgfun=msg):
   text = text.replace(u"ۀ", u"هٔ")
   # Replace HEH GOAL ہ with regular heh ه.
   text = text.replace(u"ہ", u"ه")
-  # Replace ARABIC LETTER AE ە with regular heh ه; it's a mistake based on visual similarity.
-  text = text.replace(u"ە", u"ه")
+  # [Replace ARABIC LETTER AE ە with regular heh ه; it's a mistake based on visual similarity.]
+  # --Found intentionally in Sistani text.
+  #text = text.replace(u"ە", u"ه")
   # Another weird letter like ه: ARABIC LETTER HEH DOACHASHMEE
   text = text.replace(u"ھ", u"ه")
 
@@ -1047,21 +1095,19 @@ def post_canonicalize_arabic(text, safe=False, msgfun=msg):
   return text
 
 def split_multiple_translits(latin, foreign):
+  # Check for multiple translits opposite a single Arabic-script term.
+  # If processing for changing, we need to paste the results back together.
   if "," in latin and not re.search(u"[,،]", foreign):
-    # Check for multiple translits opposite a single Arabic-script term.
-    # If processing for changing, we need to paste the results back together.
     return re.split(r",\s*", latin)
+  elif ";" in latin and not re.search(u"[;؛]", foreign):
+    return re.split(r";\s*", latin)
   elif "~" in latin and "~" not in foreign:
-    # Similar to comma-separated translits.
     return re.split(r"\s*~\s*", latin)
   elif "/" in latin and "/" not in foreign:
-    # Similar to comma-separated translits.
     return re.split(r"\s*/\s*", latin)
   elif " ''or'' " in latin and " " not in foreign:
-    # Similar to comma-separated translits.
     return re.split(r"\s+''or''\s+", latin)
   elif " or " in latin and " " not in foreign:
-    # Similar to comma-separated translits.
     return re.split(r"\s+or\s+", latin)
   else:
     return None
@@ -1105,27 +1151,19 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
       raise RuntimeError("; ".join(match_canon_errors))
     return arabic_res, latin_res
 
+  classical = False
+  if obj:
+    classical = check_for_classical_or_dialectal(obj, pagemsg)
+    if no_vocalize is None:
+      no_vocalize = obj.addl_params["no_vocalize"]
+
   arabic = pre_pre_canonicalize_arabic(arabic, msgfun=msgfun)
-  latin = pre_canonicalize_latin(latin, arabic, msgfun=msgfun)
+  latin = pre_canonicalize_latin(latin, arabic, classical=classical, msgfun=msgfun)
   arabic = pre_canonicalize_arabic(arabic, msgfun=msgfun)
   # convert double consonant after non-cons to consonant + shadda,
   # but not multiple quotes, periods, braces or brackets
   latin = re.sub(ur"(^|[\W" + vowel_chars + r"])([^'.{}\[\]])\2", r"\1\2" + SH,
       latin, 0, re.U)
-
-  classical = False
-
-  if obj:
-    m = re.search("^.*" + re.escape(unicode(obj.t)) + ".*$", obj.text, re.M)
-    if not m:
-      pagemsg("WARNING: Something, can't match template: %s" % unicode(obj.t))
-    else:
-      line = m.group(0)
-      if "Dari" in line or "Classical" in line:
-        pagemsg("Saw 'Dari/Classical' in line: %s" % line)
-        classical = True
-    if no_vocalize is None:
-      no_vocalize = obj.addl_params["no_vocalize"]
 
   ar = [] # exploded Arabic characters
   la = [] # exploded Latin characters
@@ -1169,8 +1207,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
       if ac in other_arabic_chars:
         return None, []
       if True:
-        error("Encountered non-Arabic (?) character " + ac +
-          " at index " + str(aind[0]))
+        error("Encountered non-Arabic (?) character " + ac + " at index " + str(aind[0]))
       else:
         canon = ac
         alts = [ac]
@@ -1290,11 +1327,9 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
       error("Unable to match Arabic character %s at index %s, Latin character %s at index %s" %
         (ar[aind[0]], aind[0], la[lind[0]], lind[0]))
     elif aind[0] < alen:
-      error("Unable to match trailing Arabic character %s at index %s" %
-        (ar[aind[0]], aind[0]))
+      error("Unable to match trailing Arabic character %s at index %s" % (ar[aind[0]], aind[0]))
     else:
-      error("Unable to match trailing Latin character %s at index %s" %
-        (la[lind[0]], lind[0]))
+      error("Unable to match trailing Latin character %s at index %s" % (la[lind[0]], lind[0]))
 
   # Check for an unmatched Latin short vowel or similar; if so, insert
   # corresponding Arabic diacritic.
@@ -1587,7 +1622,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
   arabic = "".join(res)
   latin = "".join(lres)
   arabic = post_canonicalize_arabic(arabic, msgfun=msgfun)
-  latin = post_canonicalize_latin(latin, msgfun=msgfun)
+  latin = post_canonicalize_latin(latin, classical=classical, msgfun=msgfun)
   return arabic, latin
 
 def remove_diacritics(word):
@@ -1623,7 +1658,7 @@ def test_with_obj(obj, latin, arabic, should_outcome, should_latin=None):
     else:
       msg("tr() UNMATCHED (= %s)" % trlatin + canon_changed)
       outcome = "unmatched"
-  canonlatin, _ = canonicalize_latin_foreign(latin, None)
+  canonlatin, _ = canonicalize_latin_foreign(obj, latin, None)
   msg("canonicalize_latin(%s) = %s" %
       (latin, canonlatin))
   if outcome == should_outcome:
