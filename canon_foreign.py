@@ -113,19 +113,19 @@ def do_canon_param(obj, translit_module):
       global total_num_succeeded
       total_num_succeeded += 1
     except RuntimeError as e:
-      match_canon_error = u"Unable to match-canon %s (%s): %s: %s" % (foreign, latin, e, unicode(obj.t))
+      match_canon_error = u"Unable to match-canon %s (%s): %s" % (foreign, latin, e)
       if show_backtrace:
-        errmsg("WARNING: %s" % match_canon_error)
+        errmsg("WARNING: %s: %s" % (match_canon_error, unicode(obj.t)))
         traceback.print_exc()
-      pagemsg("NOTE: %s" % match_canon_error)
+      pagemsg("NOTE: %s: %s" % (match_canon_error, unicode(obj.t)))
       global total_num_failed
       total_num_failed += 1
       canonlatin, canonforeign = (
-          translit_module.canonicalize_latin_foreign(latin, foreign,
+          translit_module.canonicalize_latin_foreign(obj, latin, foreign,
             msgfun=pagemsg))
   else:
     _, canonforeign = (
-        translit_module.canonicalize_latin_foreign(None, foreign,
+        translit_module.canonicalize_latin_foreign(obj, None, foreign,
           msgfun=pagemsg))
 
   newlatin = canonlatin == latin and "same" or canonlatin
@@ -136,7 +136,7 @@ def do_canon_param(obj, translit_module):
   try:
     translit = translit_module.tr(canonforeign, msgfun=pagemsg)
     if translit is NotImplemented:
-      translit = None
+      pass
     elif not translit:
       pagemsg("NOTE: Unable to auto-translit %s (canoned from %s): %s" %
           (canonforeign, foreign, unicode(obj.t)))
@@ -160,8 +160,10 @@ def do_canon_param(obj, translit_module):
     else:
       operation="Self-canoning"
       actionop="self-canon"
-    pagemsg("%s foreign %s -> %s%s" % (operation, foreign, canonforeign,
-      latintrtext))
+    pagemsg("%s foreign %s -> %s%s" % (operation, foreign, canonforeign, latintrtext))
+    if not match_canon:
+      match_canon_error = match_canon_error or "NO ERROR"
+      match_canon_error += " [%s foreign %s -> %s%s]" % (actionop, foreign, canonforeign, latintrtext)
     if fromparam == toparam:
       actions.append("%s %s=%s -> %s in {{%s}}" % (actionop, fromparam, foreign,
         canonforeign, template_changelog_name(obj.t, obj.tlang)))
@@ -184,18 +186,18 @@ def do_canon_param(obj, translit_module):
 
   if not latin:
     pass
-  elif translit and translit == canonlatin:
+  elif translit and translit is not NotImplemented and translit == canonlatin:
     pagemsg("Removing redundant translit for %s -> %s%s" % (
         foreign, newforeign, latintrtext))
     actions.append("remove redundant %s=%s in {{%s}}" % (paramtr, latin, template_changelog_name(obj.t, obj.tlang)))
     canonlatin = True
   else:
-    if translit:
+    if translit and translit is not NotImplemented:
       pagemsg("NOTE: Canoned Latin %s not same as auto-translit %s, can't remove: %s" %
           (canonlatin, translit, unicode(obj.t)))
     if canonlatin == latin:
-      pagemsg("No change in Latin %s: foreign %s -> %s (auto-translit %s)" %
-          (latin, foreign, newforeign, translit))
+      pagemsg("No change in Latin %s: foreign %s -> %s%s" %
+          (latin, foreign, newforeign, "" if translit is NotImplemented else " (auto-translit %s)" % translit))
       canonlatin = False
     else:
       if match_canon:
@@ -209,8 +211,11 @@ def do_canon_param(obj, translit_module):
       else:
         operation="Self-canoning"
         actionop="self-canon"
-      pagemsg("%s Latin %s -> %s: foreign %s -> %s (auto-translit %s)" % (
-          operation, latin, canonlatin, foreign, newforeign, translit))
+      pagemsg("%s Latin %s -> %s: foreign %s -> %s%s" % (
+          operation, latin, canonlatin, foreign, newforeign, "" if translit is NotImplemented else " (auto-translit %s)" % translit))
+      if not match_canon:
+        match_canon_error = match_canon_error or "NO ERROR"
+        match_canon_error += " [%s Latin %s -> %s]" % (actionop, latin, canonlatin)
       actions.append("%s %s=%s -> %s in {{%s}}" % (actionop, paramtr, latin, canonlatin, template_changelog_name(obj.t, obj.tlang)))
 
   return canonforeign, canonlatin, actions, match_canon_error
