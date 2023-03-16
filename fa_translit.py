@@ -844,11 +844,9 @@ def post_canonicalize_latin(text, classical=False, msgfun=msg):
   text = text.lower().strip(" ")
   return text
 
-# Canonicalize a Latin transliteration and Arabic text to standard form.
-# Can be done on only Latin or only Arabic (with the other one None), but
-# is more reliable when both aare provided. This is less reliable than
-# tr_matching() and is meant when that fails. Return value is a tuple of
-# (CANONLATIN, CANONARABIC).
+# Canonicalize a Latin transliteration and Arabic text to standard form. Can be done on only Latin or only Arabic (with
+# the other one None), but is more reliable when both are provided. This is less reliable than tr_matching() and is
+# meant when that fails. Return value is a tuple of (CANONLATIN, CANONARABIC).
 def canonicalize_latin_foreign(obj, latin, arabic, msgfun=msg):
   classical = check_for_classical_or_dialectal(obj, msgfun)
   if arabic is not None:
@@ -1115,7 +1113,10 @@ def split_multiple_translits(latin, foreign):
 # Vocalize Persian Arabic-script text based on transliterated Latin, and canonicalize the transliteration based on
 # the Arabic script.  This works by matching the Latin to the unvocalized Arabic script and inserting the appropriate
 # diacritics in the right places, so that ambiguities of Latin transliteration can be correctly handled. Returns a
-# tuple of Arabic, Latin. If unable to match, throw an error if ERR, else return None.
+# tuple of (Arabic, Latin, PARTIAL_FAILURE_ERROR_MESSAGES, PARTIAL_SUCCESS) where if there are multiple translits,
+# PARTIAL_FAILURE_ERROR_MESSAGES contains the error messages of any failures and PARTIAL_SUCCESS is True if there was
+# at least one success. Otherwise, if failure (unable to match), throw an error if ERR; if success,
+# PARTIAL_FAILURE_ERROR_MESSAGES and PARTIAL_SUCCESS will be None.
 def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
   origarabic = arabic
   origlatin = latin
@@ -1124,38 +1125,38 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
     if debug_tr_matching:
       msg(x)
   def pagemsg(txt):
-    if obj:
-      msg("Page %s %s: %s" % (obj.index, obj.pagetitle, txt))
-    else:
-      msg(txt)
+    msg("Page %s %s: %s" % (obj.index, obj.pagetitle, txt))
 
   latins = split_multiple_translits(latin, arabic)
   if latins is not None:
     arabic_res = None
     match_canon_errors = []
+    match_canon_partial_success = False
     for i, one_latin in enumerate(latins):
       # Can't vocalize when multiple translits as they are likely different vocalizations. Use the first canonicalized
       # Arabic script for the return value.
       try:
-        this_arabic_res, this_latin_res = tr_matching(obj, arabic, one_latin, err=err, msgfun=msgfun, no_vocalize=True)
+        this_arabic_res, this_latin_res, _, _ = tr_matching(obj, arabic, one_latin, err=err, msgfun=msgfun, no_vocalize=True)
         if arabic_res is None:
           arabic_res = this_arabic_res
         latins[i] = this_latin_res
+        match_canon_partial_success = True
       except RuntimeError as e:
         match_canon_error = u"%s" % e
         match_canon_errors.append(match_canon_error)
         pagemsg("NOTE: %s" % match_canon_error)
-        # Don't change anything if we can't match.
+        # If we can't match, fall back on cross-canonicalization.
+        this_latin_res, this_arabic_res = canonicalize_latin_foreign(obj, one_latin, arabic, msgfun=msgfun)
+        if arabic_res is None:
+          arabic_res = this_arabic_res
+        latins[i] = this_latin_res
     latin_res = ", ".join(latins)
-    if arabic_res is None:
-      raise RuntimeError("; ".join(match_canon_errors))
-    return arabic_res, latin_res
+    match_canon_partial_failure_error = "; ".join(match_canon_errors)
+    return arabic_res, latin_res, match_canon_partial_failure_error, match_canon_partial_success
 
-  classical = False
-  if obj:
-    classical = check_for_classical_or_dialectal(obj, pagemsg)
-    if no_vocalize is None:
-      no_vocalize = obj.addl_params["no_vocalize"]
+  classical = check_for_classical_or_dialectal(obj, pagemsg)
+  if no_vocalize is None:
+    no_vocalize = obj.addl_params["no_vocalize"]
 
   arabic = pre_pre_canonicalize_arabic(arabic, msgfun=msgfun)
   latin = pre_canonicalize_latin(latin, arabic, classical=classical, msgfun=msgfun)
@@ -1623,7 +1624,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
   latin = "".join(lres)
   arabic = post_canonicalize_arabic(arabic, msgfun=msgfun)
   latin = post_canonicalize_latin(latin, classical=classical, msgfun=msgfun)
-  return arabic, latin
+  return arabic, latin, None, None
 
 def remove_diacritics(word):
   return arabiclib.remove_diacritics(word)
@@ -1640,24 +1641,40 @@ def test_with_obj(obj, latin, arabic, should_outcome, should_latin=None):
   except RuntimeError as e:
     msg(u"%s" % e)
     result = False
+  outcome = None
   if result == False:
     msg("tr_matching(%s, %s) = %s" % (arabic, latin, result))
     outcome = "failed"
   else:
-    canonarabic, canonlatin = result
+    canonarabic, canonlatin, match_canon_partial_failure_error, match_canon_partial_success = result
     trlatin = tr(canonarabic)
-    msgn("tr_matching(%s, %s) = %s %s," %
-        (arabic, latin, canonarabic, canonlatin))
-    canon_changed = "" if latin == canonlatin else " CANON-CHANGED"
-    if trlatin == canonlatin:
-      msg("tr() MATCHED" + canon_changed)
-      outcome = "matched"
-    elif trlatin is None:
-      msg("tr() SKIPPED" + canon_changed)
-      outcome = "matched"
+    if match_canon_partial_failure_error is None:
+      multimsg = ""
+    elif match_canon_partial_failure_error:
+      if match_canon_partial_success:
+        multimsg = ", multi-translit partial success (%s)" % match_canon_partial_failure_error
+      else:
+        multimsg = ", multi-translit failure (%s)" % match_canon_partial_failure_error
+        outcome = "failed"
     else:
-      msg("tr() UNMATCHED (= %s)" % trlatin + canon_changed)
-      outcome = "unmatched"
+      multimsg = ", multi-translit success"
+    msgn("tr_matching(%s, %s) = %s %s%s" % (arabic, latin, canonarabic, canonlatin, multimsg))
+    canon_changed = "" if latin == canonlatin else ", CANON-CHANGED"
+    this_outcome = None
+    if trlatin == canonlatin:
+      msg(", tr() MATCHED" + canon_changed)
+      this_outcome = "matched"
+    elif trlatin is NotImplemented:
+      msg(canon_changed)
+      this_outcome = "matched"
+    elif trlatin is None:
+      msg(", tr() SKIPPED" + canon_changed)
+      this_outcome = "matched"
+    else:
+      msg(", tr() UNMATCHED (= %s)" % trlatin + canon_changed)
+      this_outcome = "unmatched"
+    if outcome is None:
+      outcome = this_outcome
   canonlatin, _ = canonicalize_latin_foreign(obj, latin, None)
   msg("canonicalize_latin(%s) = %s" %
       (latin, canonlatin))

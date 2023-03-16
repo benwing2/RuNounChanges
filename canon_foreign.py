@@ -103,22 +103,29 @@ def do_canon_param(obj, translit_module):
     return False, False, [], None
 
   # Compute canonforeign and canonlatin
+  global total_num_succeeded, total_num_failed
   match_canon = False
   match_canon_error = None
   canonlatin = ""
   if latin:
     try:
-      canonforeign, canonlatin = translit_module.tr_matching(obj, foreign, latin, err=True, msgfun=pagemsg)
-      match_canon = True
-      global total_num_succeeded
-      total_num_succeeded += 1
+      canonforeign, canonlatin, match_canon_partial_failure_error, partial_success = translit_module.tr_matching(obj, foreign, latin, err=True, msgfun=pagemsg)
+      if match_canon_partial_failure_error:
+        if partial_success:
+          match_canon_error = u"Partially unable to match-canon %s (%s) with multiple translits: %s" % (foreign, latin, match_canon_partial_failure_error)
+          total_num_succeeded += 1
+        else:
+          match_canon_error = u"Unable to match-canon %s (%s) with multiple translits: %s" % (foreign, latin, match_canon_partial_failure_error)
+        total_num_failed += 1
+      else:
+        match_canon = True
+        total_num_succeeded += 1
     except RuntimeError as e:
       match_canon_error = u"Unable to match-canon %s (%s): %s" % (foreign, latin, e)
       if show_backtrace:
         errmsg("WARNING: %s: %s" % (match_canon_error, unicode(obj.t)))
         traceback.print_exc()
       pagemsg("NOTE: %s: %s" % (match_canon_error, unicode(obj.t)))
-      global total_num_failed
       total_num_failed += 1
       canonlatin, canonforeign = (
           translit_module.canonicalize_latin_foreign(obj, latin, foreign,
