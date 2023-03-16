@@ -80,7 +80,8 @@ if args.direcfile:
       index, pagetitle, text = m.groups()
       process_text_on_page(index, pagetitle, text)
 else:
-  blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)
+  blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+      skip_ignorable_pages=True)
 # If in --test mode, we need to use the num_succeeded/num_failed from fa_translit as the ones in canon_foreign aren't
 # set.
 if args.test:
