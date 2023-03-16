@@ -181,11 +181,7 @@ def getparam(template, param):
     return ""
 
 def addparam(template, param, value, showkey=None, before=None):
-  if re.match("^[0-9]+", param):
-    template.add(param, value, preserve_spacing=False, showkey=showkey,
-        before=before)
-  else:
-    template.add(param, value, showkey=showkey, before=before)
+  template.add(param, value, preserve_spacing=False, showkey=showkey, before=before)
 
 def rmparam(template, param):
   if template.has(param):
@@ -1659,7 +1655,7 @@ def split_alternating_runs(segment_runs, splitchar, preserve_splitchar=False):
 
 
 class ProcessLinks(object):
-  def __init__(self, index, pagetitle, text, parsed, t, tlang, param, langparam):
+  def __init__(self, index, pagetitle, text, parsed, t, origt, tlang, param, langparam):
     # The index of the page containing the template being processed.
     self.index = index
     # The title of the page containing the template being processed.
@@ -1671,6 +1667,8 @@ class ProcessLinks(object):
     self.parsed = parsed
     # The template being processed (an mwparserfromhell structure).
     self.t = t
+    # The Unicode string of the original form of the template (before any mods were made to it).
+    self.origt = origt
     # The language of the value being considered.
     self.tlang = tlang
     # The parameters of the value being processed (its foreign-script value and corresponding Latin translit). This is
@@ -1685,15 +1683,17 @@ class ProcessLinks(object):
 
 
 class ParamWithInlineModifier(object):
-  def __init__(self, mainval, modifiers):
+  def __init__(self, mainval, modifiers, preceding_whitespace="", following_whitespace=""):
     self.mainval = mainval
     self.modifiers = modifiers
+    self.preceding_whitespace = preceding_whitespace
+    self.following_whitespace = following_whitespace
 
   def reconstruct_param(self):
     parts = [self.mainval]
     for mod, val in self.modifiers:
       parts.append("<%s:%s>" % (mod, val))
-    return "".join(parts)
+    return self.preceding_whitespace + "".join(parts) + self.following_whitespace
 
   def get_modifier(self, mod, allow_multiple=False):
     retval = [] if allow_multiple else None
@@ -1750,6 +1750,8 @@ class ParamWithInlineModifier(object):
 
 
 def parse_inline_modifier(value):
+  m = re.search("^(\s*)(.*?)(\s*)$", value)
+  preceding_whitespace, value, following_whitespace = m.groups()
   segments = parse_balanced_segment_run(value, "<", ">")
   mainval = segments[0]
   modifiers = []
@@ -1765,7 +1767,7 @@ def parse_inline_modifier(value):
       raise ParseException("Modifier " + segments[k] + " lacks a recognized prefix")
     prefix, val = m.groups()
     modifiers.append((prefix, val))
-  return ParamWithInlineModifier(mainval, modifiers)
+  return ParamWithInlineModifier(mainval, modifiers, preceding_whitespace, following_whitespace)
 
 
 # Process link-like templates containing foreign text in specified language(s). PROCESS_PARAM is the function called,
@@ -1813,6 +1815,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
     actions = []
     for t in parsed.filter_templates():
       tn = tname(t)
+      origt = unicode(t)
       saw_template = [False]
       changed_template = [False]
 
@@ -1900,7 +1903,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
               param = ("inline", foreign_param, foreign_mod, latin_mod, inline_mod)
 
           saw_template[0] = True
-          obj = ProcessLinks(index, pagetitle, text, parsed, t, tlang, param, langparam)
+          obj = ProcessLinks(index, pagetitle, text, parsed, t, origt, tlang, param, langparam)
           result = processfn(obj)
           if result:
             if isinstance(result, list):
@@ -2031,16 +2034,21 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
             doparam(("direct", "fa"), ("separate-pagetitle", "head", trparam))
         if tn in ["fa-noun"]:
           dofaparam("tr")
-          doparam(("direct", "fa"), ("separate-pagetitle", None, "tr2"))
-          doparam(("direct", "fa"), ("separate-pagetitle", None, "tr3"))
+          if getp("tr2"):
+            doparam(("direct", "fa"), ("separate-pagetitle", None, "tr2"))
+          if getp("tr3"):
+            doparam(("direct", "fa"), ("separate-pagetitle", None, "tr3"))
           doparam(("direct", "fa"), ("separate", "pl", "pltr"))
           doparam(("direct", "fa"), ("separate", "pl2", "pl2tr"))
           doparam(("direct", "fa"), ("separate", "pl3", "pl3tr"))
         elif tn in ["fa-proper noun"]:
           dofaparam("tr")
-          doparam(("direct", "fa"), ("separate-pagetitle", None, "tr2"))
-          doparam(("direct", "fa"), ("separate-pagetitle", None, "tr3"))
-          doparam(("direct", "fa"), ("separate-pagetitle", None, "tr4"))
+          if getp("tr2"):
+            doparam(("direct", "fa"), ("separate-pagetitle", None, "tr2"))
+          if getp("tr3"):
+            doparam(("direct", "fa"), ("separate-pagetitle", None, "tr3"))
+          if getp("tr4"):
+            doparam(("direct", "fa"), ("separate-pagetitle", None, "tr4"))
           doparam(("direct", "fa"), ("separate", "pl", None))
           doparam(("direct", "fa"), ("separate", "pl2", None))
         elif tn in ["fa-adj", "fa-verb/new"]:
@@ -2063,14 +2071,18 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
           dofaparam("tr")
           doparam(("direct", "fa"), ("separate", "prstem", "tr2"))
           doparam(("direct", "fa"), ("separate", "prstem2", "tr3"))
-        elif tn in ["fa-conj"]:
+        elif tn.startswith("fa-conj") and "head" not in tn:
           doparam(("direct", "fa"), ("separate", "1", "2"))
           doparam(("direct", "fa"), ("separate", "3", "4"))
-          doparam(("direct", "fa"), ("separate", "pre", "pretr"))
-          # FIXME! The fa-conj-lit template uses 5= as an alternative translit for 2= in the past,
+          # FIXME! Some fa-conj-* templates use 5= as an alternative translit for 2= in the past,
           # and 6= as an alternative translit for 4= in the aorist. We don't currently have a way
           # of saying "read the Persian from param X= and translit from param Y= but don't save
-          # the canonicalized Persian".
+          # the canonicalized Persian". The following two depend on us running in non-vocalizing mode.
+          doparam(("direct", "fa"), ("separate", "1", "5"))
+          doparam(("direct", "fa"), ("separate", "3", "6"))
+          doparam(("direct", "fa"), ("separate", "7", "8"))
+          doparam(("direct", "fa"), ("separate", "pre", "pretr"))
+          doparam(("direct", "fa"), ("separate", "pr-part", "pr-part-tr"))
         elif tn in ["fa-numeral", "fa-number", "fa-interjection", "fa-adv", "fa-conjunction", "fa-preposition",
             "fa-pronoun"]:
           dofaparam("tr")
@@ -2080,7 +2092,15 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
           elif getp("1"):
             doparam(("direct", "fa"), ("separate", "1", "tr"))
           else:
-            doparam(("direct", "fa"), ("separate-pagetitle", "head", "1"))
+            doparam(("direct", "fa"), ("separate-pagetitle", "head", "tr"))
+        elif tn in ["fa-pred-c", "fa-adj-pred-c"]:
+            doparam(("direct", "fa"), ("separate-pagetitle", None, "1"))
+        elif tn in ["fa-decl-e-unc"]:
+            doparam(("direct", "fa"), ("separate", "1", "2"))
+        elif tn in ["fa-decl-c", "fa-decl-c-unc"]:
+            doparam(("direct", "fa"), ("separate-pagetitle", None, "1"))
+            # 4= when it exists often has a stress mark, which this will remove.
+            doparam(("direct", "fa"), ("separate-pagetitle", None, "4"))
         else:
           did_template = False
       #if "bg" in langs:
