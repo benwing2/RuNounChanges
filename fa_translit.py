@@ -449,7 +449,7 @@ tt_to_arabic_matching = {
     LatinMatch("", canon_to="", when=lambda st: st.nextar() == u"ا", handle_empty_match_early=True),
   ],
   U:[["o"], LatinMatch("u", canon_to=lambda st:"u" if st.classical else "o")], # damma
-  I:[["e"], LatinMatch("i", canon_to=lambda st:"i" if st.classical else "e")], # kasra
+  I:[["e"], LatinMatch("i", canon_to=lambda st:"i" if st.classical or st.nextar() == u"ی" else "e")], # kasra
   SH:SH, # shadda - handled specially when matching Latin shadda
   double_l_subst:SH, # handled specially when matching shadda in Latin
   SK:"", #sukuun - no vowel
@@ -828,8 +828,8 @@ def post_canonicalize_latin(text, classical=False, msgfun=msg):
 
   # Convert shadda back to double letter. Do this first to avoid interfering with the following checks.
   text = rsub(text, u"(.)" + SH, r"\1\1")
-  # iy + V may have been canonicalized to eyV, likewise for iyy + V; put it back.
-  text = rsub(text, u"e(y+[" + vowel_chars + "])", r"i\1")
+  # Word-final -eyâ -> -iyâ.
+  text = rsub(text, u"eyâ([" + word_final_punctuation + r" |\]]|'''|$|-)", ur"iyâ\1")
   if not classical:
     # Don't do this in dialectal Persian, e.g. [[بوا]] {{fa-noun|tr=buâ, bwâ, bowâ}}.
     # w before a vowel becomes v except in kw-, xw-, gw-, where we leave it alone
