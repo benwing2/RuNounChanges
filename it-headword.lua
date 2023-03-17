@@ -22,6 +22,7 @@ local force_cat = false -- for testing; if true, categories appear in non-mainsp
 
 local m_links = require("Module:links")
 local m_table = require("Module:table")
+local headword_module = "Module:headword"
 local romut_module = "Module:romance utilities"
 local it_verb_module = "Module:it-verb"
 local put_module = "Module:parse utilities"
@@ -145,6 +146,7 @@ function export.show(frame)
 		categories = {},
 		heads = heads,
 		user_specified_heads = user_specified_heads,
+		no_redundant_head_cat = #user_specified_heads == 0,
 		genders = {},
 		inflections = {},
 		pagename = pagename,
@@ -185,7 +187,7 @@ function export.show(frame)
 		return require("Module:JSON").toJSON(data)
 	end
 
-	return require("Module:headword").full_headword(data)
+	return require(headword_module).full_headword(data)
 		.. (#tracking_categories > 0 and require("Module:utilities").format_categories(tracking_categories, lang, args.sort, nil, force_cat) or "")
 end
 
@@ -307,7 +309,7 @@ local function parse_term_with_modifiers(paramname, val)
             split = put.split_escaping(val, splitchars, true, put.escape_comma_whitespace,
 				put.unescape_comma_whitespace)
         else
-            split = require(strut_module).capturing_split("(" .. splitchars .. ")")
+            split = require(strut_module).capturing_split(val, "(" .. splitchars .. ")")
         end
 		retval = {}
         for j = 1, #split, 2 do
@@ -818,18 +820,15 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 		-- invariable adjective
 		table.insert(data.inflections, {label = glossary_link("invariable")})
 		table.insert(data.categories, langname .. " indeclinable " .. plpos)
-		if args.sp or #args.f > 0 or #args.pl > 0 or #args.mpl > 0 or #args.fpl > 0 then
-			error("Can't specify inflections with an invariable adjective")
-		end
 	end
-	if args.apoc then
-		-- apocopated adjective
-		if args.sp or #args.f > 0 or #args.pl > 0 or #args.mpl > 0 or #args.fpl > 0 then
-			error("Can't specify inflections with an apocopated adjective")
-		end
+	if args.noforms then
+		-- [[bello]] and any others too complicated to describe in headword
+		table.insert(data.inflections, {label = "see below for inflection"})
 	end
-	if args.inv or args.apoc then
-		--
+	if args.inv or args.apoc or args.noforms then
+		if args.sp or #args.f > 0 or #args.pl > 0 or #args.mpl > 0 or #args.fpl > 0 then
+			error("Can't specify inflections with an invariable or apocopated adjective or with noforms=")
+		end
 	elseif args.fonly then
 		-- feminine-only
 		if #args.f > 0 then
@@ -970,6 +969,7 @@ end
 local function get_adjective_params(adjtype)
 	local params = {
 		["inv"] = {type = "boolean"}, --invariable
+		["noforms"] = {type = "boolean"}, --too complicated to list forms except in a table
 		["sp"] = {}, -- special indicator: "first", "first-last", etc.
 		["f"] = {list = true}, --feminine form(s)
 		["f_qual"] = {list = "f=_qual", allow_holes = true},
