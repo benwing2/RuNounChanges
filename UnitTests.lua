@@ -11,8 +11,6 @@ local tick, cross =
 	'[[File:Yes check.svg|20px|alt=Passed|link=|Test passed]]',
 	'[[File:X mark.svg|20px|alt=Failed|link=|Test failed]]'
 
-local result_table_header = '{| class="unit-tests wikitable"\n! class="unit-tests-img-corner" style="cursor:pointer" title="Only failed tests"| !! Text !! Expected !! Actual'
-
 local function iter_UTF8(str)
 	return string.gmatch(str, UTF8_char)
 end
@@ -149,6 +147,23 @@ local function extract_keys(table, keys)
 	return new_table
 end
 
+-- Return the header for the result table along with the number of columns in the table.
+function UnitTester:result_table_header()
+	local header = ('{| class="unit-tests wikitable"\n! class="unit-tests-img-corner" style="cursor:pointer" title="Only failed tests"| !! %s !! Expected !! Actual'):
+		format(table.concat(self.name_columns, " !! "))
+	local columns = 3 + #self.name_columns
+	if self.differs_at then
+		columns = columns + 1
+		header = header .. ' !! Differs at'
+	end
+	if self.comments then
+		columns = columns + 1
+		header = header .. ' !! Comments'
+	end
+
+	return header, columns
+end
+
 function UnitTester:preprocess_equals(text, expected, options)
 	local actual = self.frame:preprocess(text)
 	if actual == expected then
@@ -200,19 +215,18 @@ function UnitTester:preprocess_equals_preprocess_many(prefix1, suffix1, prefix2,
 	end
 end
 
-function UnitTester:equals(name, actual, expected, options)
-	if actual == expected then
+function UnitTester:display_difference(success, name, actual, expected, options)
+	if type(name) ~= "table" then
+		name = {name}
+	end
+	name = table.concat(name, " || ")
+	if success then
 		self.result_table:insert('|- class="unit-test-pass"\n | ' .. tick)
 	else
 		self.result_table:insert('|- class="unit-test-fail"\n | ' .. cross)
 		self.num_failures = self.num_failures + 1
 	end
-	local difference = first_difference(expected, actual)
-	if options and options.show_difference and type(difference) == "number" then
-		actual = highlight_difference(actual, expected, difference,
-			type(options.show_difference) == "function" and options.show_difference)
-	end
-	local differs_at = self.differs_at and (' || ' .. difference) or ''
+	local differs_at = self.differs_at and (' || ' .. first_difference(expected, actual)) or ''
 	local comment = self.comments and (' || ' .. (options and options.comment or '')) or ''
 	if expected == nil then
 		expected = '(nil)'
@@ -238,42 +252,39 @@ function UnitTester:equals(name, actual, expected, options)
 	self.total_tests = self.total_tests + 1
 end
 
+function UnitTester:equals(name, actual, expected, options)
+	success = actual == expected
+	if options and options.show_difference then
+		local difference = first_difference(expected, actual)
+		if type(difference) == "number" then
+		actual = highlight_difference(actual, expected, difference,
+			type(options.show_difference) == "function" and options.show_difference)
+	end
+
+	self.display_difference(success, name, actual, expected, options)
+end
+
 function UnitTester:equals_deep(name, actual, expected, options)
 	local actual_str, expected_str
-	if deep_compare(actual, expected) then
-		self.result_table:insert('|- class="unit-test-pass"\n | ' .. tick)
+	local success = deep_compare(actual, expected)
+	if success then
 		if options.show_table_difference then
 			actual_str = ''
 			expected_str = ''
 		end
 	else
-		self.result_table:insert('|- class="unit-test-fail"\n | ' .. cross)
 		if options.show_table_difference then
 			local keys = get_differing_keys(actual, expected)
 			actual_str = val_to_str(extract_keys(actual, keys))
 			expected_str = val_to_str(extract_keys(expected, keys))
 		end
-		self.num_failures = self.num_failures + 1
 	end
 	if not options.show_table_difference then
 		actual_str = val_to_str(actual)
 		expected_str = val_to_str(expected)
 	end
-	
-	if self.nowiki or options and options.nowiki then
-		expected_str = mw.text.nowiki(expected_str)
-		actual_str = mw.text.nowiki(actual_str)
-	end
-	
-	if options and type(options.display) == "function" then
-		expected_str = options.display(expected_str)
-		actual_str = options.display(actual_str)
-	end
-	
-	local differs_at = self.differs_at and (' || ' .. first_difference(expected_str, actual_str)) or ''
-	local comment = self.comments and (' || ' .. (options and options.comment or '')) or ''
-	self.result_table:insert(' || ' .. name .. ' || ' .. expected_str .. ' || ' .. actual_str .. differs_at .. comment .. "\n")
-	self.total_tests = self.total_tests + 1
+
+	self.display_difference(success, name, actual_str, expected_str, options)
 end
 
 function UnitTester:iterate(examples, func)
@@ -311,24 +322,27 @@ function UnitTester:run(frame)
 	
 	local output = Array()
 
+	local iparams = {
+		["nowiki"] = {type = "boolean"},
+		["differs_at"] = {type = "boolean"},
+		["comments"] = {type = "boolean"},
+		["summarize"] = {type = "boolean"},
+		["name_column"] = {type = "list", default = "Text"},
+	}
+
+	local iargs = require("Module:parameters").process(frame.args, iparams)
+
 	self.frame = frame
-	self.nowiki = frame.args['nowiki']
-	self.differs_at = frame.args['differs_at']
-	self.comments = frame.args['comments']
-	self.summarize = frame.args['summarize']
+	self.nowiki = iargs.nowiki
+	self.differs_at = iargs.differs_at
+	self.comments = iargs.comments
+	self.summarize = iargs.summarize
+	self.name_columns = iargs.name_column
 	self.total_tests = 0
 	self.result_table = Array()
 
-	self.columns = 4
-	local table_header = result_table_header
-	if self.differs_at then
-		self.columns = self.columns + 1
-		table_header = table_header .. ' !! Differs at'
-	end
-	if self.comments then
-		self.columns = self.columns + 1
-		table_header = table_header .. ' !! Comments'
-	end
+	local table_header
+	table_header, self.columns = self.result_table_header()
 
 	-- Sort results into alphabetical order.
 	local self_sorted = Array()
@@ -370,8 +384,8 @@ function UnitTester:run(frame)
 	
 	local num_successes = self.total_tests - self.num_failures
 	
-	if (self.summarize) then
-		if (self.num_failures == 0) then
+	if self.summarize then
+		if self.num_failures == 0 then
 			return '<strong class="success">' .. self.total_tests .. '/' .. self.total_tests .. ' tests passed</strong>'
 		else
 			return '<strong class="error">' .. num_successes .. '/' .. self.total_tests .. ' tests passed</strong>'
