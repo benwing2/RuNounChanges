@@ -308,7 +308,8 @@ def fetch_param_chain(t, first, pref=None, firstdefault=""):
     if val:
       ret.append(val)
   first_num = 1 if not is_number or pref else int(first[0]) + 1
-  for i in xrange(first_num, 30):
+  maxind = find_max_term_index(first_numeric=1) if is_number else find_max_term_index(named_params=[pref])
+  for i in xrange(first_num, maxind + 1):
     param = pref + str(i)
     if param not in first:
       val = getparam(t, param)
@@ -1046,6 +1047,7 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--contribs-end", help="Timestamp to end doing contributions at.")
     parser.add_argument("--prefix-pages", help="Do pages with these prefixes, comma-separated.")
     parser.add_argument("--prefix-namespace", help="Namespace of pages to do using --prefix-pages.")
+    parser.add_argument("--namespaces", help="List of namespace(s) to restrict pages to.")
     parser.add_argument("--ref-namespaces", help="List of namespace(s) to restrict --refs to.")
     parser.add_argument("--filter-pages", help="Regex to use to filter page names.")
     parser.add_argument("--filter-pages-not", help="Regex to use to filter page names; only includes pages not matching this regex.")
@@ -1137,6 +1139,8 @@ def args_has_non_default_pages(args):
 def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_cats=[],
     default_refs=[], edit=False, stdin=False, only_lang=None,
     filter_pages=None, ref_namespaces=None, canonicalize_pagename=None, skip_ignorable_pages=False):
+  args_namespaces = args.namespaces and args.namespaces.decode("utf-8").split(",") or []
+  args_namespaces = [0 if x == "-" else int(x) if re.search("^[0-9]+$", x) else x for x in args_namespaces]
   args_ref_namespaces = args.ref_namespaces and args.ref_namespaces.decode("utf-8").split(",")
   args_filter_pages = args.filter_pages and args.filter_pages.decode("utf-8")
   args_filter_pages_not = args.filter_pages_not and args.filter_pages_not.decode("utf-8")
@@ -1179,7 +1183,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
           final_newline = "\n"
         pagemsg("-------- begin text --------\n%s%s-------- end text --------" % (new, final_newline))
 
-  def page_should_be_filtered_out(pagetitle):
+  def page_should_be_filtered_out(pagetitle, errandpagemsg):
     if filter_pages or args_filter_pages or args_filter_pages_not:
       if filter_pages and not filter_pages(pagetitle):
         return True
@@ -1188,6 +1192,19 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
       if args_filter_pages_not and re.search(args_filter_pages_not, pagetitle):
         return True
     if (skip_ignorable_pages or args.skip_ignorable_pages) and page_should_be_ignored(pagetitle):
+      return True
+    if args_namespaces:
+      namespace = try_repeatedly(lambda: pywikibot.Page(site, pagetitle).namespace(), errandpagemsg, "find namespace of page")
+      if namespace is None:
+        return True
+      for allowed_namespace in args_namespaces:
+        if type(allowed_namespace) is int:
+          if namespace.id == allowed_namespace:
+            return False
+        else:
+          if (namespace.canonical_prefix() == allowed_namespace + ":" or
+              namespace.custom_prefix() == allowed_namespace + ":"):
+            return False
       return True
     return False
 
@@ -1217,7 +1234,9 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
     return sections, j, secbody, sectail
 
   def do_process_text_on_page(index, pagetitle, text, pagemsg):
-    if page_should_be_filtered_out(pagetitle):
+    def errandpagemsg(txt):
+      errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
+    if page_should_be_filtered_out(pagetitle, errandpagemsg):
       return None, None
     if args.only_lang:
       retval = find_lang_section_for_only_lang(text, args.only_lang, pagemsg)
@@ -1247,12 +1266,12 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
       if pagetitle in seen:
         return
       seen.add(pagetitle)
-    if page_should_be_filtered_out(pagetitle):
-      return
     def pagemsg(txt):
       msg("Page %s %s: %s" % (index, pagetitle, txt))
     def errandpagemsg(txt):
       errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
+    if page_should_be_filtered_out(pagetitle, errandpagemsg):
+      return
     def do_process_page(page, index, parsed=None):
       if stdin:
         pagetext = safe_page_text(page, errandpagemsg)
@@ -1291,7 +1310,9 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
     def do_process_stdin_text_on_page(index, pagetitle, text):
       if pages_to_filter is not None and pagetitle not in pages_to_filter:
         return None
-      elif page_should_be_filtered_out(pagetitle):
+      def errandpagemsg(txt):
+        errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
+      if page_should_be_filtered_out(pagetitle, errandpagemsg):
         return None
       else:
         def pagemsg(txt):
