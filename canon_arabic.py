@@ -19,8 +19,7 @@ def diff_string(old, new):
   i = 0
   while i < minlen:
     if old[i] != new[i]:
-      return "at pos %s, old %s vs new %s" % (i, old[i],
-          new[i])
+      return "at pos %s, old %s vs new %s" % (i, old[i], new[i])
       break
     i += 1
   else:

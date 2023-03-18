@@ -1332,6 +1332,20 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
 def remove_diacritics(word):
   return arabiclib.remove_diacritics(word)
 
+def foreign_diff_msgs(rdforeign, rdcanonforeign):
+  msgs = []
+  if u"ی" in rdarabic:
+    msgs.append("Farsi Yeh")
+  if u"ک" in rdarabic:
+    msgs.append("Keheh")
+  if re.search(u"[\uFB50-\uFDCF]", rdarabic):
+    msgs.append("Arabic Pres-A")
+  if re.search(u"[\uFDF0-\uFDFF]", rdarabic):
+    msgs.append("Arabic word ligatures")
+  if re.search(u"[\uFE70-\uFEFF]", rdarabic):
+    msgs.append("Arabic Pres-B")
+  return msgs
+
 ######### Transliterate directly, without unvocalized Arabic to guide #########
 #########             (NEEDS WORK)            #########
 

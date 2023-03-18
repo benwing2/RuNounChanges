@@ -177,19 +177,22 @@ def do_canon_param(obj, translit_module):
     else:
       actions.append("%s %s=%s -> %s=%s in {{%s}}" % (actionop, fromparam, foreign,
         toparam, canonforeign, template_changelog_name(obj.t, obj.tlang)))
-    if (translit_module.remove_diacritics(canonforeign) !=
-        translit_module.remove_diacritics(foreign)):
-      msgs = ""
+    rdcanonforeign = translit_module.remove_diacritics(canonforeign)
+    rdforeign = translit_module.remove_diacritics(foreign)
+    if rdcanonforeign != rdforeign:
+      msgs = []
       if "  " in foreign or foreign.startswith(" ") or foreign.endswith(" "):
-        msgs += " (stray space in old foreign)"
-      if re.search("[A-Za-z]", nfd_form(foreign)):
-        msgs += " (Latin in old foreign)"
-      if u"\u00A0" in foreign:
-        msgs += " (NBSP in old foreign)"
-      if re.search(u"[\u200E\u200F]", foreign):
-        msgs += " (L2R/R2L in old foreign)"
+        msgs.append("stray space")
+      if re.search("[A-Za-z]", nfd_form(rdforeign)):
+        msgs.append("Latin")
+      if u"\u00A0" in rdforeign:
+        msgs.append("NBSP")
+      if re.search(u"[\u200E\u200F]", rdforeign):
+        msgs.append("L2R/R2L")
+      if hasattr(translit_module, 'foreign_diff_msgs'):
+        msg.extend(translit_module.foreign_diff_msgs(rdforeign, rdcanonforeign)
       pagemsg("NOTE: Without diacritics, old foreign %s different from canon %s%s: %s"
-          % (foreign, canonforeign, msgs, unicode(obj.t)))
+        % (foreign, canonforeign, msgs and " (in old: %s)" % ", ".join(msgs) or "", unicode(obj.t)))
 
   if not latin:
     pass
