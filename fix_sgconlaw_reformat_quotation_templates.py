@@ -8,7 +8,7 @@
 # #*: Preventive physic [...] preventeth sickness in the healthy, or the '''recourse''' thereof in the valetudinary.
 #
 # with:
-#  
+#
 # #* {{RQ:Browne Pseudodoxia Epidemica|passage=Preventive physic [...] preventeth sickness in the healthy, or the '''recourse''' thereof in the valetudinary.}}
 #
 # If 'RQ:Browne Errors' occurs without raw passage text following, we just replace with 'RQ:Browne Pseudodoxia Epidemica'.
@@ -18,13 +18,20 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site, tname, pname
 
-def add_params_to_template(t, params):
+def add_params_to_template(t, params, seen_from_params, pagemsg):
   pn = None
   for param in t.params:
     pn = pname(param)
     break
   for param, value in params:
+    if re.search("^%[0-9]+$", value): # %1, %2, ... for placeholder
+      if value in seen_from_params:
+        value = seen_from_params[value]
+      else:
+        pagemsg("WARNING: Unmatched placeholder %s in replacement params" % value)
+        return False
     t.add(param, value, before=pn)
+  return True
 
 def process_text_on_page(index, pagename, text):
   def pagemsg(txt):
@@ -38,39 +45,59 @@ def process_text_on_page(index, pagename, text):
 
   curtext = text + "\n"
 
-  for (fromtemp, from_params), (totemp, to_params) in templates_to_rename:
-    def reformat_template(m):
-      template, text = m.groups()
-      parsed = blib.parse_text(template)
-      t = list(parsed.filter_templates())[0]
-      if tname(t) != fromtemp:
-        return m.group(0)
-      # If from-template params given, make sure they all match.
-      for param, value in from_params:
-        if getparam(t, param).strip() != value.strip():
-          pagemsg("Skipping template because expected param %s=%s doesn't match: %s" % (
+  def reformat_template(t, from_params, totemp, to_params, text_to_incorporate=None):
+    # If from-template params given, make sure they all match.
+    seen_from_params = {}
+    for param, value in from_params:
+      if re.search("^%[0-9]+$", value): # %1, %2, ... for placeholder
+        curval = getparam(t, param).strip()
+        if not curval:
+          pagemsg("Skipping template because expected param %s=%s doesn't have a value: %s" % (
             param, value, unicode(t)))
-          return m.group(0)
+          return False
+        seen_from_params[value] = curval
+      elif getparam(t, param).strip() != value.strip():
+        pagemsg("Skipping template because expected param %s=%s doesn't match: %s" % (
+          param, value, unicode(t)))
+        return False
+    if text_to_incorporate is not None:
       for existing_param in ["passage", "text"]:
         if getparam(t, existing_param):
           pagemsg("WARNING: Can't incorporate raw passage text into {{%s}} because already has %s=: %s" %
             (fromtemp, existing_param, unicode(t)))
-          return m.group(0)
-      text = re.sub(r"\s*<br */?>\s*", " / ", text)
-      text = re.sub(r"^''(.*)''$", r"\1", text)
-      t.add("passage", text)
-      blib.set_template_name(t, totemp)
-      for param, value in from_params:
-        rmparam(t, param)
-      if to_params:
-        add_params_to_template(t, to_params)
-      notes.append("reformat {{%s%s}} into {{%s%s}}, incorporating following raw passage text into passage=" %
-          (fromtemp, "".join("|%s=%s" % (param, value) for param, value in from_params),
-            totemp, "".join("|%s=%s" % (param, value) for param, value in to_params)))
+          return False
+      text_to_incorporate = re.sub(r"\s*<br */?>\s*", " / ", text_to_incorporate)
+      text_to_incorporate = re.sub(r"^''(.*)''$", r"\1", text_to_incorporate)
+      t.add("passage", text_to_incorporate)
+    blib.set_template_name(t, totemp)
+    for param, value in from_params:
+      rmparam(t, param)
+    if to_params:
+      if not add_params_to_template(t, to_params, seen_from_params, pagemsg):
+        return False
+    if text_to_incorporate is not None:
+      msg_template = "reformat {{%s%s}} into {{%s%s}}, incorporating following raw passage text into passage="
+    else:
+      msg_template = "rename {{%s%s}} to {{%s%s}}"
+    notes.append(msg_template %
+        (fromtemp, "".join("|%s=%s" % (param, value) for param, value in from_params),
+          totemp, "".join("|%s=%s" % (param, value) for param, value in to_params)))
+    return True
+
+  for (fromtemp, from_params), (totemp, to_params) in templates_to_rename:
+    def do_reformat_template(m):
+      template, text = m.groups()
+      parsed = blib.parse_text(template)
+      t = list(parsed.filter_templates())[0]
+      origtext = m.group(0)
+      if tname(t) != fromtemp:
+        return origtext
+      if not reformat_template(t, from_params, totemp, to_params, text_to_incorporate=text):
+        return origtext
       return unicode(t) + "\n"
 
     curtext = re.sub(r"(\{\{%s.*?\}\})\n#+\*:\s*(.*?)\n" % re.escape(fromtemp),
-        reformat_template, curtext)
+        do_reformat_template, curtext)
 
   parsed = blib.parse_text(curtext)
   for t in parsed.filter_templates():
@@ -78,24 +105,8 @@ def process_text_on_page(index, pagename, text):
     for (fromtemp, from_params), (totemp, to_params) in templates_to_rename:
       if tn != fromtemp:
         continue
-      # If from-template params given, make sure they all match.
-      must_continue = False
-      for param, value in from_params:
-        if getparam(t, param).strip() != value.strip():
-          pagemsg("Skipping template because expected param %s=%s doesn't match: %s" % (
-            param, value, unicode(t)))
-          must_continue = True
-          break
-      if must_continue:
+      if not reformat_template(t, from_params, totemp, to_params):
         continue
-      blib.set_template_name(t, totemp)
-      for param, value in from_params:
-        rmparam(t, param)
-      if to_params:
-        add_params_to_template(t, to_params)
-      notes.append("rename {{%s%s}} to {{%s%s}}" %
-          (fromtemp, "".join("|%s=%s" % (param, value) for param, value in from_params),
-            totemp, "".join("|%s=%s" % (param, value) for param, value in to_params)))
   curtext = unicode(parsed)
 
   return curtext.rstrip("\n"), notes
