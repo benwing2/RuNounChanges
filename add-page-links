@@ -1,3 +1,13 @@
 #!/bin/sh
 
-perl -pe 's/^Page ([0-9]+) (.*?): /* Page $1 [[$2]]: /;' -e 's@(\{\{(?:\{\{[^{]*\}\}|[^{])*\}\}|</?small>)@<code><nowiki>$1</nowiki></code>@g;' "$@"
+no_wrap_templates=
+while [ -n "$1" ]; do
+  case "$1" in --no-wrap-templates ) no_wrap_templates=1; shift
+  esac
+done
+
+if [ -n "$no_wrap_templates" ]; then
+  perl -pe 's/^Page ([0-9]+) (.*?): /* Page $1 [[$2]]: /;' -e 's@(<from>.*?<end>)@<code><nowiki>$1</nowiki></code>@;' "$@"
+else
+  perl -pe 's/^Page ([0-9]+) (.*?): /* Page $1 [[$2]]: /;' -e 's@(\{\{(?:\{\{[^{]*\}\}|[^{])*\}\}|</?small>)@<code><nowiki>$1</nowiki></code>@g;' "$@"
+fi
