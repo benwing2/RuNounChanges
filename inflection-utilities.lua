@@ -546,8 +546,8 @@ function export.add_forms(forms, slot, stems, endings, combine_stem_ending, lang
 					if not lang or not combine_stem_ending_tr then
 						error("Internal error: With manual translit, 'lang' and 'combine_stem_ending_tr' must be passed to 'add_forms'")
 					end
-					local stem_tr = stem.translit or lang:transliterate(m_links.remove_links(stem.form))
-					local ending_tr = ending.translit or lang:transliterate(m_links.remove_links(ending.form))
+					local stem_tr = stem.translit or (lang:transliterate(m_links.remove_links(stem.form)))
+					local ending_tr = ending.translit or (lang:transliterate(m_links.remove_links(ending.form)))
 					new_translit = combine_stem_ending_tr(stem_tr, ending_tr)
 				end
 				export.insert_form(forms, slot, {form = new_form, translit = new_translit, footnotes = footnotes})
@@ -652,7 +652,7 @@ local function parse_before_or_post_text(props, text, segments, lemma_is_last)
 		for j, parsed_component in ipairs(parsed_components) do
 			if not parsed_components_translit[j] then
 				parsed_components_translit[j] =
-					props.lang:transliterate(m_links.remove_links(parsed_component))
+					(props.lang:transliterate(m_links.remove_links(parsed_component)))
 			end
 		end
 	end
@@ -938,10 +938,10 @@ local function append_forms(props, formtable, slot, forms, before_text, before_t
 							error("Internal error: If manual translit is given, 'props.lang' must be set")
 						end
 						if not before_text_translit then
-							before_text_translit = props.lang:transliterate(before_text_no_links) or ""
+							before_text_translit = (props.lang:transliterate(before_text_no_links)) or ""
 						end
-						local old_translit = old_form.translit or props.lang:transliterate(m_links.remove_links(old_form.form)) or ""
-						local translit = form.translit or props.lang:transliterate(m_links.remove_links(form.form)) or ""
+						local old_translit = old_form.translit or (props.lang:transliterate(m_links.remove_links(old_form.form))) or ""
+						local translit = form.translit or (props.lang:transliterate(m_links.remove_links(form.form))) or ""
 						new_translit = old_translit .. before_text_translit .. translit
 					end
 				end
@@ -1382,7 +1382,7 @@ function export.show_forms(forms, props)
 					end
 					link = link or m_links.full_link{lang = props.lang, term = origentry, tr = "-", accel = accel_obj}
 				end
-				local tr = props.include_translit and (form.translit or props.lang:transliterate(m_links.remove_links(orig_text))) or nil
+				local tr = props.include_translit and (form.translit or (props.lang:transliterate(m_links.remove_links(orig_text)))) or nil
 				local trentry
 				if props.allow_footnote_symbols and tr then
 					trentry, trnotes = m_table_tools.get_notes(tr)
