@@ -9,11 +9,11 @@ local pos_functions = {}
 
 -- diacritics
 local u = mw.ustring.char
-local A  = u(0x064E) -- fatḥa
+local A = u(0x064E) -- fatḥa
 local AN = u(0x064B) -- fatḥatān (fatḥa tanwīn)
-local U  = u(0x064F) -- ḍamma
+local U = u(0x064F) -- ḍamma
 local UN = u(0x064C) -- ḍammatān (ḍamma tanwīn)
-local I  = u(0x0650) -- kasra
+local I = u(0x0650) -- kasra
 local IN = u(0x064D) -- kasratān (kasra tanwīn)
 local SK = u(0x0652) -- sukūn = no vowel
 local SH = u(0x0651) -- šadda = gemination of consonants
@@ -21,10 +21,13 @@ local DAGGER_ALIF = u(0x0670)
 local DIACRITIC_ANY_BUT_SH = "[" .. A .. I .. U .. AN .. IN .. UN .. SK .. DAGGER_ALIF .. "]"
 
 -- various letters and signs
-local TAM    = u(0x0629) -- tāʾ marbūṭa = ة
+local HAMZA = u(0x0621) -- hamza on the line (stand-alone hamza) = ء
+local ALIF = u(0x0627) -- ʾalif = ا
+local AMAQ = u(0x0649) -- ʾalif maqṣūra = ى
+local TAM = u(0x0629) -- tāʾ marbūṭa = ة
 
 -- common combinations
-local UNU   = "[" .. UN .. U .. "]"
+local UNU = "[" .. UN .. U .. "]"
 
 -----------------------
 -- Utility functions --
@@ -62,6 +65,24 @@ function remove_links(text)
 	return text
 end
 
+local function make_unused_key_tracker(t)
+	local unused_keys = require "Module:table".listToSet(
+			require "Module:table".keysToList(t))
+	local mt = {
+		__index = function(_, key)
+			if key ~= nil then
+				unused_keys[key] = nil
+			end
+			return t[key]
+		end,
+		__newindex = function(_, key, value)
+			t[key] = value
+		end
+	}
+	local proxy_table = setmetatable({}, mt)
+	return proxy_table, unused_keys
+end
+
 function reorder_shadda(text)
 	-- shadda+short-vowel (including tanwīn vowels, i.e. -an -in -un) gets
 	-- replaced with short-vowel+shadda during NFC normalisation, which
@@ -75,71 +96,79 @@ end
 
 -- Tracking functions
 
-local trackfn = require("Module:debug").track
+local trackfn = require("Module:debug/track")
 function track(page)
 	trackfn("ar-headword/" .. page)
 	return true
 end
 
+--[==[
+Examples of what you can find by looking at what links to the given
+pages:
+
+[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized]]
+	all unvocalized pages
+[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized/pl]]
+	all unvocalized pages where the plural is unvocalized,
+	  whether specified using pl=, pl2=, etc.
+[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized/head]]
+	all unvocalized pages where the head is unvocalized
+[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized/head/nouns]]
+	all nouns excluding proper nouns, collective nouns,
+	 singulative nouns where the head is unvocalized
+[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized/head/proper]]
+	nouns all proper nouns where the head is unvocalized
+[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized/head/not]]
+	proper nouns all words that are not proper nouns
+	  where the head is unvocalized
+[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized/adjectives]]
+	all adjectives where any parameter is unvocalized;
+	  currently only works for heads,
+	  so equivalent to .../unvocalized/head/adjectives
+[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized-empty-head]]
+	all pages with an empty head
+[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized-manual-translit]]
+	all unvocalized pages with manual translit
+[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized-manual-translit/head/nouns]]
+	all nouns where the head is unvocalized but has manual translit
+[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized-no-translit]]
+	all unvocalized pages without manual translit
+[[Special:WhatLinksHere/Template:tracking/ar-headword/i3rab]]
+	all pages with any parameter containing i3rab
+	  of either -un, -u, -a or -i
+[[Special:WhatLinksHere/Template:tracking/ar-headword/i3rab-un]]
+	all pages with any parameter containing an -un i3rab ending
+[[Special:WhatLinksHere/Template:tracking/ar-headword/i3rab-un/pl]]
+	all pages where a form specified using pl=, pl2=, etc.
+	  contains an -un i3rab ending
+[[Special:WhatLinksHere/Template:tracking/ar-headword/i3rab-u/head]]
+	all pages with a head containing an -u i3rab ending
+[[Special:WhatLinksHere/Template:tracking/ar-headword/i3rab/head/proper]]
+	nouns (all proper nouns with a head containing i3rab
+	  of either -un, -u, -a or -i)
+
+In general, the format is one of the following:
+
+Template:tracking/ar-headword/FIRSTLEVEL
+Template:tracking/ar-headword/FIRSTLEVEL/ARGNAME
+Template:tracking/ar-headword/FIRSTLEVEL/POS
+Template:tracking/ar-headword/FIRSTLEVEL/ARGNAME/POS
+
+FIRSTLEVEL can be one of "unvocalized", "unvocalized-empty-head" or its
+opposite "unvocalized-specified", "unvocalized-manual-translit" or its
+opposite "unvocalized-no-translit", "i3rab", "i3rab-un", "i3rab-u",
+"i3rab-a", or "i3rab-i".
+
+ARGNAME is either "head" or an argument such as "pl", "f", "cons", etc.
+This automatically includes arguments specified as head2=, pl3=, etc.
+
+POS is a part of speech, lowercase and pluralized, e.g. "nouns",
+"adjectives", "proper nouns", "collective nouns", etc. or
+"not proper nouns", which includes all parts of speech but proper nouns.
+]==]
+
 function track_form(argname, form, translit, pos)
 	form = reorder_shadda(remove_links(form))
-
-	-- Examples of what you can find by looking at what links to the given
-	-- pages:
-	--
-	-- Template:tracking/ar-headword/unvocalized (all unvocalized pages)
-	-- Template:tracking/ar-headword/unvocalized/pl (all unvocalized pages
-	--   where the plural is unvocalized, whether specified using pl=,
-	--   pl2=, etc.)
-	-- Template:tracking/ar-headword/unvocalized/head (all unvocalized pages
-	--   where the head is unvocalized)
-	-- Template:tracking/ar-headword/unvocalized/head/nouns (all nouns --
-	--   excluding proper nouns, collective nouns, singulative nouns --
-	--   where the head is unvocalized)
-	-- Template:tracking/ar-headword/unvocalized/head/proper nouns (all
-	--   proper nouns where the head is unvocalized)
-	-- Template:tracking/ar-headword/unvocalized/head/not proper nouns (all
-	--   words that are not proper nouns where the head is unvocalized)
-	-- Template:tracking/ar-headword/unvocalized/adjectives (all
-	--   adjectives where any parameter is unvocalized; currently only works
-	--   for heads, so equivalent to .../unvocalized/head/adjectives)
-	-- Template:tracking/ar-headword/unvocalized-empty-head (all pages
-	--   with an empty head)
-	-- Template:tracking/ar-headword/unvocalized-manual-translit (all
-	--   unvocalized pages with manual translit)
-	-- Template:tracking/ar-headword/unvocalized-manual-translit/head/nouns
-	--   (all nouns where the head is unvocalized but has manual translit)
-	-- Template:tracking/ar-headword/unvocalized-no-translit (all unvocalized
-	--   pages without manual translit)
-	-- Template:tracking/ar-headword/i3rab (all pages with any parameter
-	--   containing i3rab of either -un, -u, -a or -i)
-	-- Template:tracking/ar-headword/i3rab-un (all pages with any parameter
-	--   containing an -un i3rab ending)
-	-- Template:tracking/ar-headword/i3rab-un/pl (all pages where a form
-	--   specified using pl=, pl2=, etc. contains an -un i3rab ending)
-	-- Template:tracking/ar-headword/i3rab-u/head (all pages with a head
-	--   containing an -u i3rab ending)
-	-- Template:tracking/ar-headword/i3rab/head/proper nouns (all proper nouns
-	--   with a head containing i3rab of either -un, -u, -a or -i)
-	--
-	-- In general, the format is one of the following:
-	--
-	-- Template:tracking/ar-headword/FIRSTLEVEL
-	-- Template:tracking/ar-headword/FIRSTLEVEL/ARGNAME
-	-- Template:tracking/ar-headword/FIRSTLEVEL/POS
-	-- Template:tracking/ar-headword/FIRSTLEVEL/ARGNAME/POS
-	--
-	-- FIRSTLEVEL can be one of "unvocalized", "unvocalized-empty-head" or its
-	-- opposite "unvocalized-specified", "unvocalized-manual-translit" or its
-	-- opposite "unvocalized-no-translit", "i3rab", "i3rab-un", "i3rab-u",
-	-- "i3rab-a", or "i3rab-i".
-	--
-	-- ARGNAME is either "head" or an argument such as "pl", "f", "cons", etc.
-	-- This automatically includes arguments specified as head2=, pl3=, etc.
-	--
-	-- POS is a part of speech, lowercase and pluralized, e.g. "nouns",
-	-- "adjectives", "proper nouns", "collective nouns", etc. or
-	-- "not proper nouns", which includes all parts of speech but proper nouns.
 	function dotrack(page)
 		track(page)
 		track(page .. "/" .. argname)
@@ -162,7 +191,7 @@ function track_form(argname, form, translit, pos)
 	track_i3rab(U, "u")
 	track_i3rab(A, "a")
 	track_i3rab(I, "i")
-	if form == "" or not lang:transliterate(form) then
+	if form == "" or not (lang:transliterate(form)) then
 		dotrack("unvocalized")
 		if form == "" then
 			dotrack("unvocalized-empty-head")
@@ -177,33 +206,20 @@ function track_form(argname, form, translit, pos)
 	end
 end
 
-local function prepend_cat(data, pos)
-	table.insert(data.categories, 1, lang:getCanonicalName() .. " " .. pos)
-end
-
-local function append_cat(data, pos)
-	table.insert(data.categories, lang:getCanonicalName() .. " " .. pos)
-end
-
 -- The main entry point.
 function export.show(frame)
+	-- FIXME, this should use [[Module:parameters]].	
 	local poscat = frame.args[1] or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
-	
-	local params = {
-		[1] = {list = "head", allow_holes = true, default = ""},
-		["head"] = {default = ""},
-		["tr"] = {list = true, allow_holes = true},
-	}
-	
-	local args = frame:getParent().args  -- TODO: Use [[Module:parameters]] here
-	
+
+	local args, unused_keys = make_unused_key_tracker(frame:getParent().args)
+
 	-- Gather parameters
-	local data = {heads = {}, translits = {}, genders = {}, inflections = {}, categories = {lang:getCanonicalName() .. " " .. poscat}}
-	
-	local head = args["head"] or args[1] or ""
+	local data = { lang = lang, pos_category = poscat, categories = {}, heads = {}, translits = {}, genders = {}, inflections = { enable_auto_translit = true } }
+
+	local head = ine(args["head"] or args[1]) or mw.title.getCurrentTitle().subpageText
 	local translit = ine(args["tr"])
 	local i = 1
-	
+
 	local irreg_translit = false
 
 	while head do
@@ -213,33 +229,47 @@ function export.show(frame)
 			irreg_translit = true
 		end
 		track_form("head", head, translit, poscat)
-		
+
 		i = i + 1
 		head = ine(args["head" .. i])
 		translit = ine(args["tr" .. i])
 	end
 
 	if irreg_translit then
-		append_cat(data, "terms with irregular pronunciations")
+		table.insert(data.categories, lang:getCanonicalName() .. " terms with irregular pronunciations")
 	end
-	
+
 	if pos_functions[poscat] then
 		pos_functions[poscat].func(args, data)
 	end
-	
+
+	--[=[
+	[[Special:WhatLinksHere/Template:tracking/ar-headword/num]]
+	[[Special:WhatLinksHere/Template:tracking/ar-headword/head]]
+	[[Special:WhatLinksHere/Template:tracking/ar-headword/g]]
+	]=]
 	if args[3] or args[4] or args[5] or args[6] or args[7] or args[8] or args[9] then
 		track("num")
 	end
-	
+
 	if args["head"] then
 		track("head")
 	end
-	
+
 	if args["g"] then
 		track("g")
 	end
 
-	return require("Module:headword").full_headword(lang, nil, data.heads, data.translits, data.genders, data.inflections, data.categories, nil)
+	local unused_key_list = require "Module:table".keysToList(unused_keys)
+	if #unused_key_list > 0 then
+		local unused_key_string = require "Module:array"(unused_key_list):map(
+				function(key)
+					return "|" .. key .. "=" .. args[key]
+				end)                                                     :concat("\n")
+		error("Unused arguments: " .. unused_key_string)
+	end
+
+	return require("Module:headword").full_headword(data)
 end
 
 -- Get a list of inflections. See handle_infl() for meaning of ARGS, ARGPREF
@@ -247,17 +277,17 @@ end
 local function getargs(args, argpref, defgender)
 	-- Gather parameters
 	local forms = {}
-	
+
 	local form = ine(args[argpref])
 	local translit = ine(args[argpref .. "tr"])
 	local gender = ine(args[argpref .. "g"])
 	local gender2 = ine(args[argpref .. "g2"])
 	local i = 1
-	
+
 	while form do
-		local genderlist = (gender or gender2) and {gender, gender2} or defgender and {defgender} or nil
+		local genderlist = (gender or gender2) and { gender, gender2 } or defgender and { defgender } or nil
 		track_form(argpref, form, translit)
-		table.insert(forms, {term = form, translit = translit, gender = genderlist})
+		table.insert(forms, { term = form, translit = translit, genders = genderlist })
 
 		i = i + 1
 		form = ine(args[argpref .. i])
@@ -295,7 +325,7 @@ local function handle_all_infl(args, data, argpref, label, nobase)
 	if not nobase and argpref ~= "" then
 		handle_infl(args, data, argpref, label)
 	end
-	
+
 	local labelsp = label == "" and "" or label .. " "
 	handle_infl(args, data, argpref .. "cons", labelsp .. "construct state")
 	handle_infl(args, data, argpref .. "def", labelsp .. "definite state")
@@ -306,23 +336,25 @@ end
 -- Handle the case where pl=-, indicating an uncountable noun.
 local function handle_noun_plural(args, data)
 	if args["pl"] == "-" then
-		table.insert(data.inflections, {label = "usually [[Appendix:Glossary#uncountable|uncountable]]"})
-		append_cat(data, "uncountable nouns")
+		table.insert(data.inflections, { label = "usually [[Appendix:Glossary#uncountable|uncountable]]" })
+		table.insert(data.categories, lang:getCanonicalName() .. " uncountable nouns")
 	else
 		handle_infl(args, data, "pl", "plural")
+		handle_infl(args, data, "pauc", "paucal")
 	end
 end
 
 local valid_genders = list_to_set(
-	{"m", "m-s", "m-pr", "m-s-pr", "m-np", "m-s-np",
-	 "f", "f-s", "f-pr", "f-s-pr", "f-np", "f-s-np",
-	 "m-d", "m-d-pr", "m-d-np",
-	 "f-d", "f-d-pr", "f-d-np",
-	 "m-p", "m-p-pr", "m-p-np",
-	 "f-p", "f-p-pr", "f-p-np",
-	 "p", "p-pr", "p-np",
-	 "pr", "np"
-	})
+		{ "m", "m-s", "m-pr", "m-s-pr", "m-np", "m-s-np",
+		  "f", "f-s", "f-pr", "f-s-pr", "f-np", "f-s-np",
+		  "m-d", "m-d-pr", "m-d-np",
+		  "f-d", "f-d-pr", "f-d-np",
+		  "m-p", "m-p-pr", "m-p-np",
+		  "f-p", "f-p-pr", "f-p-np",
+		  "d", "d-pr", "d-np",
+		  "p", "p-pr", "p-np",
+		  "pr", "np"
+		})
 
 local function is_masc_sg(g)
 	return g == "m" or g == "m-pr" or g == "m-np"
@@ -331,22 +363,22 @@ local function is_fem_sg(g)
 	return g == "f" or g == "f-pr" or g == "f-np"
 end
 
--- Handle gender in unnamed param 2 and a second gender in param g2,
--- inserting into the list of genders in GENDER. Also insert categories
--- into CATS if the gender is unexpected for the form of the noun
--- or if multiple genders occur. If gender unspecified, default to
--- DEFAULT, which may be omitted.
-local function handle_gender(args, data, default)
+-- Handle gender in unnamed param 2 and a second gender in param g2, inserting
+-- into the list of genders in GENDER. Also, if a lemma, insert categories
+-- into CATS if the gender is unexpected for the form of the noun or if multiple
+-- genders occur. If gender unspecified, default to DEFAULT, which may be
+-- omitted.
+local function handle_gender(args, data, default, nonlemma)
 	local g = ine(args[2]) or default
 	local g2 = ine(args["g2"])
 
-	local function process_gender(g)
-		if not g then
+	local function process_gender(gender)
+		if not gender then
 			table.insert(data.genders, "?")
-		elseif valid_genders[g] then
-			table.insert(data.genders, g)
+		elseif valid_genders[gender] then
+			table.insert(data.genders, gender)
 		else
-			error("Unrecognized gender: " .. g)
+			error("Unrecognized gender: " .. gender)
 		end
 	end
 
@@ -355,18 +387,24 @@ local function handle_gender(args, data, default)
 		process_gender(g2)
 	end
 
+	if nonlemma then
+		return
+	end
+
 	if g and g2 then
-		append_cat(data, "terms with multiple genders")
+		table.insert(data.categories, lang:getCanonicalName() .. " terms with multiple genders")
 	elseif is_masc_sg(g) or is_fem_sg(g) then
 		local head = ine(args["head"]) or ine(args[1])
 		if head then
 			head = rsub(reorder_shadda(remove_links(head)), UNU .. "?$", "")
 			local ends_with_tam = rfind(head, "^[^ ]*" .. TAM .. "$") or
-				rfind(head, "^[^ ]*" .. TAM .. " ")
+					rfind(head, "^[^ ]*" .. TAM .. " ")
 			if is_masc_sg(g) and ends_with_tam then
-				append_cat(data, "masculine terms with feminine ending")
-			elseif is_fem_sg(g) and not ends_with_tam then
-				append_cat(data, "feminine terms lacking feminine ending")
+				table.insert(data.categories, lang:getCanonicalName() .. " masculine terms with feminine ending")
+			elseif is_fem_sg(g) and not ends_with_tam and
+					not rfind(head, "[" .. ALIF .. AMAQ .. "]$") and
+					not rfind(head, ALIF .. HAMZA .. "$") then
+				table.insert(data.categories, lang:getCanonicalName() .. " feminine terms lacking feminine ending")
 			end
 		end
 	end
@@ -378,7 +416,8 @@ pos_functions["adjectives"] = {
 	func = function(args, data)
 		handle_all_infl(args, data, "", "") -- handle cons, def, obl, inf
 		handle_all_infl(args, data, "f", "feminine")
-		handle_all_infl(args, data, "d", "dual")
+		handle_all_infl(args, data, "d", "masculine dual")
+		handle_all_infl(args, data, "fd", "feminine dual")
 		handle_all_infl(args, data, "cpl", "common plural")
 		handle_all_infl(args, data, "pl", "masculine plural")
 		handle_all_infl(args, data, "fpl", "feminine plural")
@@ -389,7 +428,6 @@ pos_functions["adjectives"] = {
 function handle_sing_coll_noun_infls(args, data)
 	handle_all_infl(args, data, "", "") -- handle cons, def, obl, inf
 	handle_all_infl(args, data, "d", "dual")
-	handle_all_infl(args, data, "pauc", "paucal")
 	handle_noun_plural(args, data)
 	handle_all_infl(args, data, "pl", "plural", "nobase")
 end
@@ -405,7 +443,7 @@ function track_coll_sing(args, collsing, other, defgender)
 	if g ~= defgender then
 		track(collsing .. " n" .. defgender)
 	end
-	
+
 	local otherg = ine(args[other .. "g"])
 	if otherg then
 		track(other .. "g")
@@ -420,9 +458,10 @@ end
 
 pos_functions["collective nouns"] = {
 	func = function(args, data)
-		prepend_cat(data, "nouns")
-		table.insert(data.inflections, {label = "collective"})
-		
+		data.pos_category = "nouns"
+		table.insert(data.categories, lang:getCanonicalName() .. " collective nouns")
+		table.insert(data.inflections, { label = "collective" })
+
 		track_coll_sing(args, "coll", "sing", "m")
 		handle_gender(args, data, "m")
 		-- Handle sing= (the corresponding singulative noun) and singg= (its gender)
@@ -433,9 +472,10 @@ pos_functions["collective nouns"] = {
 
 pos_functions["singulative nouns"] = {
 	func = function(args, data)
-		prepend_cat(data, "nouns")
-		table.insert(data.inflections, {label = "singulative"})
-		
+		data.pos_category = "nouns"
+		table.insert(data.categories, lang:getCanonicalName() .. " singulative nouns")
+		table.insert(data.inflections, { label = "singulative" })
+
 		track_coll_sing(args, "sing", "coll", "f")
 		handle_gender(args, data, "f")
 		-- Handle coll= (the corresponding collective noun) and collg= (its gender)
@@ -446,13 +486,14 @@ pos_functions["singulative nouns"] = {
 
 function handle_noun_infls(args, data, singonly)
 	handle_all_infl(args, data, "", "") -- handle cons, def, obl, inf
-	
+
 	if not singonly then
 		handle_all_infl(args, data, "d", "dual")
 		handle_noun_plural(args, data)
 		handle_all_infl(args, data, "pl", "plural", "nobase")
+		handle_all_infl(args, data, "pauc", "paucal", "nobase")
 	end
-	
+
 	handle_all_infl(args, data, "f", "feminine")
 	handle_all_infl(args, data, "m", "masculine")
 end
@@ -466,7 +507,7 @@ pos_functions["nouns"] = {
 
 pos_functions["numerals"] = {
 	func = function(args, data)
-		append_cat(data, "cardinal numbers")
+		table.insert(data.categories, lang:getCanonicalName() .. " cardinal numbers")
 		handle_gender(args, data)
 		handle_noun_infls(args, data)
 	end
@@ -475,7 +516,7 @@ pos_functions["numerals"] = {
 pos_functions["proper nouns"] = {
 	func = function(args, data)
 		handle_gender(args, data)
-		handle_noun_infls(args, data, "singular only")
+		handle_noun_infls(args, data)
 	end
 }
 
@@ -483,29 +524,29 @@ pos_functions["pronouns"] = {
 	params = {
 		["g"] = {},
 		["g2"] = {},
-		
-		["f"]  = {}, ["ftr"]  = {}, ["fg"]  = {}, ["fg2"]  = {},
-		
-		["fcons"]  = {}, ["fconstr"]  = {}, ["fconsg"]  = {}, ["fconsg2"]  = {},
+
+		["f"] = {}, ["ftr"] = {}, ["fg"] = {}, ["fg2"] = {},
+
+		["fcons"] = {}, ["fconstr"] = {}, ["fconsg"] = {}, ["fconsg2"] = {},
 		["fcons2"] = {}, ["fcons2tr"] = {}, ["fcons2g"] = {}, ["fcons2g2"] = {},
 		["fcons3"] = {}, ["fcons3tr"] = {}, ["fcons3g"] = {}, ["fcons3g2"] = {},
 		["fcons4"] = {}, ["fcons4tr"] = {}, ["fcons4g"] = {}, ["fcons4g2"] = {},
-		
-		["fdef"]  = {}, ["fdeftr"]  = {}, ["fdefg"]  = {}, ["fdefg2"]  = {},
+
+		["fdef"] = {}, ["fdeftr"] = {}, ["fdefg"] = {}, ["fdefg2"] = {},
 		["fdef2"] = {}, ["fdef2tr"] = {}, ["fdef2g"] = {}, ["fdef2g2"] = {},
 		["fdef3"] = {}, ["fdef3tr"] = {}, ["fdef3g"] = {}, ["fdef3g2"] = {},
 		["fdef4"] = {}, ["fdef4tr"] = {}, ["fdef4g"] = {}, ["fdef4g2"] = {},
-		
-		["fobl"]  = {}, ["fobltr"]  = {}, ["foblg"]  = {}, ["foblg2"]  = {},
+
+		["fobl"] = {}, ["fobltr"] = {}, ["foblg"] = {}, ["foblg2"] = {},
 		["fobl2"] = {}, ["fobl2tr"] = {}, ["fobl2g"] = {}, ["fobl2g2"] = {},
 		["fobl3"] = {}, ["fobl3tr"] = {}, ["fobl3g"] = {}, ["fobl3g2"] = {},
 		["fobl4"] = {}, ["fobl4tr"] = {}, ["fobl4g"] = {}, ["fobl4g2"] = {},
-		
-		["finf"]  = {}, ["finftr"]  = {}, ["finfg"]  = {}, ["finfg2"]  = {},
+
+		["finf"] = {}, ["finftr"] = {}, ["finfg"] = {}, ["finfg2"] = {},
 		["finf2"] = {}, ["finf2tr"] = {}, ["finf2g"] = {}, ["finf2g2"] = {},
 		["finf3"] = {}, ["finf3tr"] = {}, ["finf3g"] = {}, ["finf3g2"] = {},
 		["finf4"] = {}, ["finf4tr"] = {}, ["finf4g"] = {}, ["finf4g2"] = {},
-		},
+	},
 	func = function(args, data)
 		handle_gender(args, data)
 		handle_all_infl(args, data, "f", "feminine")
@@ -516,31 +557,30 @@ pos_functions["noun plural forms"] = {
 	params = {
 		["g"] = {},
 		["g2"] = {},
-		
-		["cons"]  = {}, ["constr"]  = {}, ["consg"]  = {}, ["consg2"]  = {},
+
+		["cons"] = {}, ["constr"] = {}, ["consg"] = {}, ["consg2"] = {},
 		["cons2"] = {}, ["cons2tr"] = {}, ["cons2g"] = {}, ["cons2g2"] = {},
 		["cons3"] = {}, ["cons3tr"] = {}, ["cons3g"] = {}, ["cons3g2"] = {},
 		["cons4"] = {}, ["cons4tr"] = {}, ["cons4g"] = {}, ["cons4g2"] = {},
-		
-		["def"]  = {}, ["deftr"]  = {}, ["defg"]  = {}, ["defg2"]  = {},
+
+		["def"] = {}, ["deftr"] = {}, ["defg"] = {}, ["defg2"] = {},
 		["def2"] = {}, ["def2tr"] = {}, ["def2g"] = {}, ["def2g2"] = {},
 		["def3"] = {}, ["def3tr"] = {}, ["def3g"] = {}, ["def3g2"] = {},
 		["def4"] = {}, ["def4tr"] = {}, ["def4g"] = {}, ["def4g2"] = {},
-		
-		["obl"]  = {}, ["obltr"]  = {}, ["oblg"]  = {}, ["oblg2"]  = {},
+
+		["obl"] = {}, ["obltr"] = {}, ["oblg"] = {}, ["oblg2"] = {},
 		["obl2"] = {}, ["obl2tr"] = {}, ["obl2g"] = {}, ["obl2g2"] = {},
 		["obl3"] = {}, ["obl3tr"] = {}, ["obl3g"] = {}, ["obl3g2"] = {},
 		["obl4"] = {}, ["obl4tr"] = {}, ["obl4g"] = {}, ["obl4g2"] = {},
-		
-		["inf"]  = {}, ["inftr"]  = {}, ["infg"]  = {}, ["infg2"]  = {},
+
+		["inf"] = {}, ["inftr"] = {}, ["infg"] = {}, ["infg2"] = {},
 		["inf2"] = {}, ["inf2tr"] = {}, ["inf2g"] = {}, ["inf2g2"] = {},
 		["inf3"] = {}, ["inf3tr"] = {}, ["inf3g"] = {}, ["inf3g2"] = {},
 		["inf4"] = {}, ["inf4tr"] = {}, ["inf4g"] = {}, ["inf4g2"] = {},
-		},
+	},
 	func = function(args, data)
-		prepend_cat(data, "plurals")
-		--prepend_cat(data, "noun forms")
-		handle_gender(args, data, "p")
+		data.pos_category = "noun forms"
+		handle_gender(args, data, "p", "nonlemma")
 		handle_all_infl(args, data, "", "") -- handle cons, def, obl, inf
 	end
 }
@@ -549,11 +589,13 @@ pos_functions["adjective feminine forms"] = {
 	params = {
 		["g"] = {},
 		["g2"] = {},
-		},
+		["pl"] = {},
+		["islemma"] = { type = boolean },
+	},
 	func = function(args, data)
-		--prepend_cat(data, "feminines")
-		--prepend_cat(data, "adjective forms")
-		handle_gender(args, data, "f")
+		data.pos_category = "adjective forms"
+		handle_noun_plural(args, data)
+		handle_gender(args, data, "f", "nonlemma")
 	end
 }
 
@@ -561,11 +603,10 @@ pos_functions["noun dual forms"] = {
 	params = {
 		["g"] = {},
 		["g2"] = {},
-		},
+	},
 	func = function(args, data)
-		prepend_cat(data, "duals")
-		--prepend_cat(data, "noun forms")
-		handle_gender(args, data, "m-d")
+		data.pos_category = "noun forms"
+		handle_gender(args, data, "m-d", "nonlemma")
 	end
 }
 
@@ -573,11 +614,10 @@ pos_functions["adjective plural forms"] = {
 	params = {
 		["g"] = {},
 		["g2"] = {},
-		},
+	},
 	func = function(args, data)
-		prepend_cat(data, "plurals")
-		--prepend_cat(data, "adjective forms")
-		handle_gender(args, data, "m-p")
+		data.pos_category = "adjective forms"
+		handle_gender(args, data, "m-p", "nonlemma")
 	end
 }
 
@@ -585,21 +625,10 @@ pos_functions["adjective dual forms"] = {
 	params = {
 		["g"] = {},
 		["g2"] = {},
-		},
+	},
 	func = function(args, data)
-		prepend_cat(data, "duals")
-		--prepend_cat(data, "adjective forms")
-		handle_gender(args, data, "m-d")
-	end
-}
-
-pos_functions["plurals"] = {
-	params = {
-		["g"] = {},
-		["g2"] = {},
-		},
-	func = function(args, data)
-		handle_gender(args, data, "p")
+		data.pos_category = "adjective forms"
+		handle_gender(args, data, "m-d", "nonlemma")
 	end
 }
 
@@ -607,15 +636,15 @@ pos_functions["noun forms"] = {
 	params = {
 		["g"] = {},
 		["g2"] = {},
-		},
+	},
 	func = function(args, data)
-		handle_gender(args, data)
+		handle_gender(args, data, nil, "nonlemma")
 	end
 }
 
 local valid_forms = list_to_set(
-	{"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII",
-	 "XIII", "XIV", "XV", "Iq", "IIq", "IIIq", "IVq"})
+		{ "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII",
+		  "XIII", "XIV", "XV", "Iq", "IIq", "IIIq", "IVq" })
 
 local function handle_conj_form(args, data)
 	local form = ine(args[2])
@@ -623,15 +652,15 @@ local function handle_conj_form(args, data)
 		if not valid_forms[form] then
 			error("Invalid verb conjugation form " .. form)
 		end
-		
-		table.insert(data.inflections, {label = '[[Appendix:Arabic verbs#Form ' .. form .. '|form ' .. form .. ']]'})
+
+		table.insert(data.inflections, { label = '[[Appendix:Arabic verbs#Form ' .. form .. '|form ' .. form .. ']]' })
 	end
 end
 
 pos_functions["verb forms"] = {
 	params = {
 		[2] = {},
-		},
+	},
 	func = function(args, data)
 		handle_conj_form(args, data)
 	end
@@ -640,20 +669,36 @@ pos_functions["verb forms"] = {
 pos_functions["active participles"] = {
 	params = {
 		[2] = {},
-		},
+	},
 	func = function(args, data)
-		prepend_cat(data, "participles")
+		data.pos_category = "participles"
+		table.insert(data.categories, lang:getCanonicalName() .. " active participles")
 		handle_conj_form(args, data)
+		handle_all_infl(args, data, "", "") -- handle cons, def, obl, inf
+		handle_all_infl(args, data, "f", "feminine")
+		handle_all_infl(args, data, "d", "masculine dual")
+		handle_all_infl(args, data, "fd", "feminine dual")
+		handle_all_infl(args, data, "cpl", "common plural")
+		handle_all_infl(args, data, "pl", "masculine plural")
+		handle_all_infl(args, data, "fpl", "feminine plural")
 	end
 }
 
 pos_functions["passive participles"] = {
 	params = {
 		[2] = {},
-		},
+	},
 	func = function(args, data)
-		prepend_cat(data, "participles")
+		data.pos_category = "participles"
+		table.insert(data.categories, lang:getCanonicalName() .. " passive participles")
 		handle_conj_form(args, data)
+		handle_all_infl(args, data, "", "") -- handle cons, def, obl, inf
+		handle_all_infl(args, data, "f", "feminine")
+		handle_all_infl(args, data, "d", "masculine dual")
+		handle_all_infl(args, data, "fd", "feminine dual")
+		handle_all_infl(args, data, "cpl", "common plural")
+		handle_all_infl(args, data, "pl", "masculine plural")
+		handle_all_infl(args, data, "fpl", "feminine plural")
 	end
 }
 
