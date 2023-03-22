@@ -360,7 +360,7 @@ decls["surname"] = function(base)
 			ending_prefix = com.apply_vowel_alternation(base.ialt, suffix)
 			break
 		end
-		stem, suffix = rmatch(base.lemma, "^(.*)(о́?в)$")
+		stem, suffix = rmatch(base.lemma, "^(.*)([оє]́?в)$")
 		if stem then
 			ending_prefix = suffix
 			break
@@ -370,7 +370,7 @@ decls["surname"] = function(base)
 			ending_prefix = suffix
 			break
 		end
-		error("Unrecognized possessive surname lemma, should end in '-ів', '-їв', '-ов', '-ин', '-ін' or '-їн': '" .. base.lemma .. "'")
+		error("Unrecognized possessive surname lemma, should end in '-ів', '-їв', '-ов', '-єв', '-ин', '-ін' or '-їн': '" .. base.lemma .. "'")
 	end
 
 	local endings = {
