@@ -160,6 +160,7 @@ language_codes_to_properties = {
     'cy':["Welsh", lambda x:x, latin_charset, "latin"],
     'da':["Danish", lambda x:x, latin_charset, "latin"],
     'de':["German", lambda x:x, latin_charset, "latin"],
+    'dlm':["Dalmatian", lambda x:x, latin_charset, "latin"],
     'el':["Greek", lambda x:x, u"Ͱ-Ͽ", True],
     'eo':["Esperanto", lambda x:x, latin_charset, "latin"],
     'es':["Spanish", lambda x:x, latin_charset, "latin"],
@@ -169,6 +170,7 @@ language_codes_to_properties = {
     'fi':["Finnish", lambda x:x.replace(u"ˣ", ""), latin_charset, "latin"],
     'fo':["Faroese", lambda x:x, latin_charset, "latin"],
     'fr':["French", lambda x:x, latin_charset, "latin"],
+    'fur':["Friulian", lambda x:x, latin_charset, "latin"],
     'fy':["West Frisian", lambda x:x, latin_charset, "latin"],
     'ga':["Irish", lambda x:x, latin_charset, "latin"],
     'gd':["Scottish Gaelic", lambda x:x, latin_charset, "latin"],
@@ -190,6 +192,7 @@ language_codes_to_properties = {
     'kn':["Kannada", lambda x:x, u"ಀ-ೲ", False],
     'la':["Latin", la_remove_accents, latin_charset, "latin"],
     'lb':["Luxembourgish", lambda x:x, latin_charset, "latin"],
+    'lmo':["Lombard", lambda x:x, latin_charset, "latin"],
     'lo':["Lao", lambda x:x, u"ກ-ໟ", False],
     'lt':["Lithuanian", lt_remove_accents, latin_charset, "latin"],
     # 'lv': ["Latvian", ..., latin_charset, "latin"],
@@ -212,8 +215,10 @@ language_codes_to_properties = {
     'ps':["Pashto", lambda x:x, arabic_charset, "notranslit"],
     'pt':["Portuguese", lambda x:x, latin_charset, "latin"],
     'qu':["Quechua", lambda x:x, latin_charset, "latin"],
+    'rm':["Romansch", lambda x:x, latin_charset, "latin"],
     'ro':["Romanian", lambda x:x, latin_charset, "latin"],
     'ru':["Russian", rulib.remove_accents, cyrillic_charset, False],
+    'rup':["Aromanian", lambda x:x, latin_charset, "latin"],
     'sh':["Serbo-Croatian", sh_remove_accents, latin_charset + cyrillic_charset, "latin"],
     'si':["Sinhalese", lambda x:x, sinhalese_charset, True],
     'sk':["Slovak", lambda x:x, latin_charset, "latin"],
@@ -288,6 +293,7 @@ def process_text_on_page(index, pagetitle, text):
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
+  notes = []
   subbed_links = []
 
   # Split off templates, tables, in each case allowing one nested template;
@@ -345,7 +351,7 @@ def process_text_on_page(index, pagetitle, text):
             langcode = "el"
           else:
             langcode = thislangcode
-          subbed_links.append("[[%s]]" % text)
+          subbed_links.append((language_codes_to_properties[langcode][0], "[[%s]]" % text))
           page = None
           if len(parts) == 1:
             accented = text
@@ -488,10 +494,10 @@ def process_text_on_page(index, pagetitle, text):
                   # following translit
                   new_subline = re.sub(r"\{\{([lm])\|%s\|([^A-Za-z{}]*?)\}\}(?: \(([^()|]*?)\))" % thislangcode, sub_template_link, subline)
                   if new_subline != subline:
-                    pagemsg("Replacing %s with %s in %s section in %s" %
-                      (subline, new_subline, subsectitle, thislangname))
+                    pagemsg("Replacing %s with %s in %s section in %s" % (subline, new_subline, subsectitle, thislangname))
                     subline = new_subline
                     replaced = True
+
                 if replaced:
                   split_line[ll] = subline
                   lines[l] = "".join(split_line)
@@ -501,6 +507,29 @@ def process_text_on_page(index, pagetitle, text):
                   assert subsections[k][0] == "\n"
                   subsections[k] = subsections[k][1:]
                   sectext = "".join(subsections)
+
+        # Check for gender placed after a link and incorporate into the link.
+        seclines = subsections[k].split("\n")
+        replaced = False
+        for lineind, secline in enumerate(seclines):
+          def incorporate_gender(m):
+            main_template, gender = m.groups()
+            maint = list(blib.parse_text(main_template).filter_templates())[0]
+            if getparam(maint, "g"):
+              pagemsg("WARNING: Found postposed gender template after link template already containing gender: %s"
+                  % m.groups(0))
+              return m.groups(0)
+            notes.append("incorporate g=%s into %s" % (gender, unicode(maint)))
+            maint.add("g", gender)
+            return unicode(maint)
+          new_secline = re.sub(r"(\{\{[lm]\|%s\|[^{}]*\}\}) \{\{g\|([^{}|=]*)\}\}" % thislangcode, incorporate_gender, secline)
+          if new_secline != secline:
+            pagemsg("Replacing %s with %s in %s section in %s" % (secline, new_secline, subsectitle, thislangname))
+            seclines[lineind] = new_secline
+            replaced = True
+        if replaced:
+          subsections[k] = "\n".join(seclines)
+          sectext = "".join(subsections)
 
     return sectext
 
@@ -518,7 +547,18 @@ def process_text_on_page(index, pagetitle, text):
       sections[j] = do_section(sections[j], thislangname)
     newtext = "".join(sections)
 
-  return newtext, "replace raw links with templated links: %s" % ",".join(subbed_links)
+  if subbed_links:
+    seen_langs = {}
+    for langname, subbed_link in subbed_links:
+      if langname in seen_langs:
+        seen_langs[langname].append(subbed_link)
+      else:
+        seen_langs[langname] = [subbed_link]
+    subbed_links_notes = []
+    for langname, lang_subbed_links in sorted(seen_langs.items()):
+      subbed_links_notes.append("replace raw %s links with templated links: %s" % (langname, ",".join(lang_subbed_links)))
+    notes[0:0] = subbed_links_notes
+  return newtext, notes
 
 if __name__ == "__main__":
   parser = blib.create_argparser("Replace raw links with templated links",
