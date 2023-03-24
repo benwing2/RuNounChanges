@@ -3,12 +3,75 @@ local export = {}
 local rsplit = mw.text.split
 local split_term_regex = "%*~!"
 
--- FIXME: Intentionally global, but think whether this is correct. Currently no messages are logged in any code.
--- This potentially could be made non-global by moving inside of generate_JSON() and passed into export.generate(),
--- so it can in turn be passed to language-specific accelerator code.
-messages = require("Module:array")() -- intentionally global
+local m_table = require("Module:table")
 
- 
+--[=[
+The purpose of the acceleration code is to auto-generate pages for non-lemma forms (inflections) of a given lemma.
+The way it works is approximately as follows:
+
+1. When you have the accelerator gadget in [[MediaWiki:Gadget-AcceleratedFormCreation.js]] enabled, and you click on a
+   green link, the JavaScript code gathers all the green links on the page that have the same language and pagename as
+   the clicked-on green link and sends them to the generate_JSON() function in this module, which is a thin wrapper
+   around the generate() function. Each individual green link maps to an "entry" and has associated accelerator
+   properties that were specified by the `accel` object passed into full_link() in [[Module:links]]. Note that there can
+   -- be multiple entries passed to a single generate() call for various reasons, e.g.:
+   (1) Inside of a single inflection table there is syncretism, with two different inflections having the same form;
+       e.g. the same Latin form ''bonī'' occurs in three different inflections of the lemma [[bonus]]: the masculine
+	   genitive singular, neuter genitive singular and masculine nominative plural. Hence there will be three entries.
+   (2) Inside of a single inflection table there are inflections that are spelled differently but map to the same
+       pagename due to diacritic removal; e.g. Latin ''bona'' (occurring in five different inflections: the feminine
+	   nominative and vocative singular and the neuter nominative, accusative and vocative plural) and Latin ''bonā''
+	   (the feminine ablative singular) will be merged together into a single call to generate() with six entries.
+   (3) There are two or more inflection tables, partly or completely duplicative. E.g. if a given lemma has
+       Etymology 1 and Etymology 2 sections, and the inflection of each separate etymology is the same and associated
+	   with its own table, then clicking on any green link will result in (at least) two entries.
+
+2. The generate() function is invoked like a template call, meaning all its arguments come as strings and need to be
+   parsed. It does the following steps:
+
+   (1) Parse its arguments.
+   (2) Convert each set of per-entry parameters into a `params` object.
+   (3) For each `params` object, generate a default entry, then, if there is a language-specific accelerator submodule,
+       call that module to customize the entry.
+   (4) Merge duplicate entries. This not only looks for completely duplicated entries but tries to merge entries that
+       differ only in the definition. In general, this will result in multiple definition lines under a single entry,
+	   but definition lines that consist of calls to {{inflection of}} will be further merged. For example, for the
+	   example above with ''bona'' and ''bonā'', the five inflections of ''bona'' will be merged into a single entry
+	   with a single call to {{inflection of}} that looks something like this:
+	   # {{inflection of|la|bonus||nom//voc|f|s|;|nom//acc//voc|n|p}}
+	   In other words, not only are the inflections combined into a single call to {{inflection of}}, but inflections
+	   with partly shared tags are further merged.
+   (5) Generate the Pronunciation and Etymology sections that go at the top, above all the entries. This is done either
+       by calling custom generate functions in the language-specific accelerator submodule, or (if those aren't given)
+	   by merging the individual pronunciation and etymology lines, removing duplicates. Note that the default entry
+	   generated in step (3) has no pronunciation or etymology (which are generated only by a language-specific
+	   submodule), so by default there will be no Pronunciation or Etymology section.
+   (6) Assemble the parts of each entry into a string and paste all the strings together, along with any combined
+       Pronunciation and Etymology sections, to form the text of the entire per-language L2 section. Note that if you
+	   have enabled the OrangeLinks gadget, accelerator entries can be created on already-existing pages, as long as
+	   there's no L2 section for the language of the entries.
+]=]
+
+-- A simple implementation of an ordered set.
+local function create_ordered_set()
+	return {
+		array = {},
+		set = {},
+	}
+end
+
+-- Add an item to the ordered set. `squashed_item` is a representation of the item as a string or number, so that we
+-- can use it as the key in a set. `orig_item` is the original item and can be omitted if it's the same as
+-- `squashed_item`.
+local function add_item(ordered_set, squashed_item, orig_item)
+	if not ordered_set.set[squashed_item] then
+		table.insert(ordered_set.array, orig_item or squashed_item)
+		ordered_set.set[squashed_item] = true
+	end
+end
+
+
+-- Generate the default entry 
 function export.default_entry(params)
 	local function make_head(pos, default_gender)
 		local gender = params.gender or default_gender
@@ -83,7 +146,7 @@ function export.default_entry(params)
 		make_def = make_def,
 		no_rule_error = no_rule_error,
 	}
-	
+
 	-- Exceptions for some forms
 	local templates = {
 		["p"] = "plural of",
@@ -93,7 +156,7 @@ function export.default_entry(params)
 		["f|p"] = "feminine plural of",
 		["pejorative"] = "pejorative of",
 	}
-	
+
 	if params.form == "comparative" or params.form == "superlative" or params.form == "equative" then
 		entry.head = make_head(params.form .. " " .. params.pos)
 		entry.def = make_def(params.form .. " of", params.pos ~= "adjective" and "|POS=" .. params.pos or "")
@@ -109,7 +172,7 @@ function export.default_entry(params)
 	elseif templates[params.form] then
 		entry.def = make_def(templates[params.form])
 	end
-	
+
 	return entry
 end
 
@@ -220,8 +283,6 @@ function export.combine_tag_sets_into_multipart(tags)
 	if not found_semicolon then
 		return tags
 	end
-
-	local m_table = require("Module:table")
 
 	-- Repeat until no changes can be made.
 	while true do
@@ -383,7 +444,7 @@ function export.combine_tag_sets_into_multipart(tags)
 		end
 
 		local tag_set_group
-		
+
 		if not m_table.deepEqualsList(tag_set_group_by_style["adjacent-first"], tag_set_group_by_style["all-first"]) then
 			local function num_combinations(group)
 				local num_combos = 0
@@ -438,25 +499,41 @@ function export.test_combine_tag_sets_into_multipart(frame)
 	return table.concat(combined_tags, "|")
 end
 
+-- Check whether `entry` (an object describing a given non-lemma form, with properties such as `pronunc` for
+-- pronunciation, `def` for definition, etc.) can be merged with any of the existing entries listed in `candidates`.
+-- "Can be merged" means that all relevant properties (basically, everything but the definition) can are the same.
+-- Return the first such candidate found, or nil if no candidates match `entry`.
 local function find_mergeable(entry, candidates)
 	local function can_merge(candidate)
-		for _, key in ipairs({"pronunc", "pos_header", "head", "inflection", "declension", "conjugation", "altforms"}) do
-			if entry[key] ~= candidate[key] then
+		for _, key in ipairs({"pronunc", "etymology", "pos_header", "head", "inflection", "declension", "conjugation", "altforms"}) do
+			local val1 = entry[key]
+			local val2 = candidate[key]
+			local is_equal
+			-- `pronunc` and `etymology` could be tables; the default code for merging pronunciation and etymology can
+			-- handle tables of strings.
+			if type(val1) == "table" and type(val2) == "table" then
+				is_equal = m_table.deepEquals(val1, val2)
+			else
+				is_equal = val1 == val2
+			end
+
+			if not is_equal then
 				return false
 			end
 		end
-		
+
 		return true
 	end
-	
+
 	for _, candidate in ipairs(candidates) do
 		if can_merge(candidate) then
 			return candidate
 		end
 	end
-	
+
 	return nil
 end
+
 
 -- Merge multiple entries into one if they differ only in the definition, with all other
 -- properties the same. The combined entry has multiple definition lines. We then do
@@ -501,11 +578,11 @@ end
 --    # {{inflection of|ang|dēoren||wk|acc|m//f|sg|;|wk|gen//dat//ins|m//f//n|sg|;|wk|nom//acc|m//f//n|pl}}
 --
 --    Here, 17 separate tag sets are combined down into 3.
-local function merge_entries(entries)
+local function merge_entries(entries_obj)
 	local entries_new = {}
 
 	-- First rewrite {{inflection of|...|lang=LANG}} to {{inflection of|LANG|...}}
-	for _, entry in ipairs(entries) do
+	for _, entry in ipairs(entries_obj.entries) do
 		local params = entry.def:match("^{{inflection of|([^{}]+)}}$")
 		if params then
 			params = rsplit(params, "|", true)
@@ -523,11 +600,11 @@ local function merge_entries(entries)
 	end
 
 	-- Merge entries that match in all of the following properties:
-	-- "pronunc", "pos_header", "head", "inflection", "declension", "conjugation", "altforms"
+	-- "pronunc", "etymology", "pos_header", "head", "inflection", "declension", "conjugation", "altforms"
 	-- This will merge any two mergeable entries even if non-consecutive.
 	-- The definitions of the merged entries do not have to match, but any matching
 	-- definitions will be deduped.
-	for _, entry in ipairs(entries) do
+	for _, entry in ipairs(entries_obj.entries) do
 		-- See if this entry can be merged with any previous entry.
 		local merge_entry = find_mergeable(entry, entries_new)
 
@@ -568,22 +645,22 @@ local function merge_entries(entries)
 						-- Find the last unnamed parameter of the first template.
 						existing_params = rsplit(existing_params, "|", true)
 						local last_numbered_index
-						
+
 						for j, param in ipairs(existing_params) do
 							if not param:find("=", nil, true) then
 								last_numbered_index = j
 							end
 						end
-						
+
 						-- Add grammar tags of the second template
 						new_params = rsplit(new_params, "|")
 						local tags = {}
 						local n = 0
-						
+
 						for k, param in ipairs(new_params) do
 							if not param:find("=", nil, true) then
 								n = n + 1
-								
+
 								-- Skip the first three unnamed parameters,
 								-- which don't indicate grammar tags
 								if n >= 4 then
@@ -592,7 +669,7 @@ local function merge_entries(entries)
 								end
 							end
 						end
-						
+
 						-- Add the new parameters after the existing ones
 						existing_params[last_numbered_index] = existing_params[last_numbered_index] .. "|;|" .. table.concat(tags, "|")
 						existing_defs[i] = "{{inflection of|" .. table.concat(existing_params, "|") .. "}}"
@@ -609,17 +686,17 @@ local function merge_entries(entries)
 
 		entry.def = table.concat(existing_defs, "\n# ")
 	end
-	
+
 	-- Now combine tag sets inside a multiple-tag-set {{inflection of}} call
 	for i, entry in ipairs(entries_new) do
 		local infl_of_params = entry.def:match("^{{inflection of|([^{}]+)}}$")
-			
+
 		if infl_of_params then
 			infl_of_params = rsplit(infl_of_params, "|", true)
 
 			-- Find the last unnamed parameter
 			local last_numbered_index
-			
+
 			for j, param in ipairs(infl_of_params) do
 				if not param:find("=", nil, true) then
 					last_numbered_index = j
@@ -634,11 +711,11 @@ local function merge_entries(entries)
 			local tags = {}
 			local post_tag_params = {}
 			local n = 0
-			
+
 			for j, param in ipairs(infl_of_params) do
 				if not param:find("=", nil, true) then
 					n = n + 1
-					
+
 					-- Skip the first three unnamed parameters, which don't indicate grammar tags
 					if n >= 4 then
 						table.insert(tags, param)
@@ -673,35 +750,105 @@ local function merge_entries(entries)
 		end
 	end
 
-	return entries_new
+	entries_obj.entries = entries_new
 end
 
-local function entries_to_text(entries, lang)
-	lang = require("Module:languages").getByCode(lang, "lang")
-	for i, entry in ipairs(entries) do
+
+local function merge_field(entries, field)
+	local seen_fields = create_ordered_set()
+	for _, entry in ipairs(entries) do
+		local fieldval = entry[field]
+		if fieldval then
+			if type(fieldval) == "table" then
+				-- already a table
+			else
+				fieldval = rsplit(fieldval, "\n")
+			end
+			for _, val in ipairs(fieldval) do
+				if val ~= "" then -- skip newlines, including if there's a final newline when split
+					add_item(seen_fields, val)
+				end
+			end
+		end
+	end
+	return seen_fields.array
+end
+
+
+local function default_merge_pronunciation(entries_obj)
+	local pronuncs = merge_field(entries_obj.entries, "pronunc")
+	if #pronuncs > 0 then
+		return table.concat(pronuncs, "\n")
+	else
+		return nil
+	end
+end
+
+
+local function generate_merged_pronunciation(entries_obj)
+	if entries_obj.lang_module and entries_obj.lang_module.generate_pronunciation then
+		entries_obj.pronunciation = lang_module.generate_pronunciation(entries_obj)
+	else
+		entries_obj.pronunciation = default_merge_pronunciation(entries_obj)
+	end
+end
+
+
+local function default_merge_etymology(entries_obj)
+	local etyms = merge_field(entries_obj.entries, "etymology")
+	if #etyms > 1 then
+		-- Hack! If multiple etymology entries, put a * before each one so they don't run together.
+		-- In such a case we may be better off using a custom merge function.
+		for i, item in ipairs(etyms) do
+			etyms[i] = "* " .. item
+		end
+	end
+	if #etyms > 0 then
+		return table.concat(etyms, "\n")
+	else
+		return nil
+	end
+end
+
+
+local function generate_merged_etymology(entries_obj)
+	if entries_obj.lang_module and entries_obj.lang_module.generate_etymology then
+		entries_obj.etymology = lang_module.generate_etymology(entries_obj)
+	else
+		entries_obj.etymology = default_merge_etymology(entries_obj)
+	end
+end
+
+
+local function entries_to_text(entries_obj)
+	lang = require("Module:languages").getByCode(entries_obj.lang, "lang")
+	for i, entry in ipairs(entries_obj.entries) do
 		if entry.override then
 			entry = "\n" ..(entry.override or "")
 		else
 			entry =
 				"\n\n" ..
-				(entry.etymology and "===Etymology===\n" .. entry.etymology .. "\n\n" or "") ..
-				(entry.pronunc and "===Pronunciation===\n" .. entry.pronunc .. "\n\n" or "") ..
 				"===" .. entry.pos_header .. "===\n" ..
 				entry.head .. "\n\n" ..
 				"# " .. entry.def ..
 				(entry.inflection and "\n\n====Inflection====\n" .. entry.inflection or "") ..
 				(entry.declension and "\n\n====Declension====\n" .. entry.declension or "") ..
 				(entry.conjugation and "\n\n====Conjugation====\n" .. entry.conjugation or "") ..
-				(entry.mutation and "\n\n===Mutation===\n" .. entry.mutation or "") ..
-				(entry.altforms and "\n\n====Alternative forms====\n" .. entry.altforms or "")
+				(entry.altforms and "\n\n====Alternative forms====\n" .. entry.altforms or "") ..
+				-- FIXME, if there are multiple entries, there should either be only one merged L3 Mutation or several
+				-- L4 Mutation sections. Not yet implemented.
+				(entry.mutation and "\n\n===Mutation===\n" .. entry.mutation or "")
 		end
-		entries[i] = entry
+		entries_obj.entries[i] = entry
 	end
-	return "==" .. lang:getCanonicalName() .. "==" .. table.concat(entries)
+	return "==" .. lang:getCanonicalName() .. "==" ..
+		(entries_obj.etymology and "\n\n===Etymology===\n" .. entries_obj.etymology or "") ..
+		(entries_obj.pronunciation and "\n\n===Pronunciation===\n" .. entries_obj.pronunciation or "") ..
+		table.concat(entries_obj.entries)
 end
 
 
-local function split_term_and_translit(encoded_term, encoded_translit)
+local function split_and_zip_term_and_translit(encoded_term, encoded_translit)
 	local terms = rsplit(encoded_term, split_term_regex)
 	local translits = encoded_translit and rsplit(encoded_translit, split_term_regex) or {}
 	if #translits > #terms then
@@ -720,13 +867,22 @@ local function split_term_and_translit(encoded_term, encoded_translit)
 end
 
 
+local function paste_term_translit(termobj)
+	if termobj.translit then
+		return termobj.term .. "//" .. termobj.translit
+	else
+		return termobj.term
+	end
+end
+
+
 function export.generate(frame)
 	local fparams = {
 		lang            = {required = true},
 		origin_pagename = {required = true},
 		target_pagename = {required = true},
 		num             = {required = true, type = "number"},
-		
+
 		pos                    = {list = true, allow_holes = true},
 		form                   = {list = true, allow_holes = true},
 		gender                 = {list = true, allow_holes = true},
@@ -736,59 +892,93 @@ function export.generate(frame)
 		-- I'm pretty sure this is actually required and must have args.num entries in it.
 		target                 = {list = true, allow_holes = true},
 	}
-	
+
 	local args = require("Module:parameters").process(frame.args, fparams)
-	
+
+	-- Try to use a language-specific module, if one exists.
+	local success, lang_module = pcall(require, "Module:accel/" .. args.lang)
+
 	local entries = {}
-	
+
 	-- Generate each entry
+	local seen_origins = create_ordered_set()
+	local seen_targets = create_ordered_set()
+	local params_list = {}
 	for i = 1, args.num do
 		local params = {
 			lang = args.lang,
 			origin_pagename = args.origin_pagename,
 			target_pagename = args.target_pagename,
-			
+
 			pos = args.pos[i] or error("The argument \"pos\" is missing for entry " .. i),
 			form = args.form[i] or error("The argument \"form\" is missing for entry " .. i),
 			gender = args.gender[i],
-			transliteration = args.transliteration[i],
 			origin = args.origin[i] or error("The argument \"origin\" is missing for entry " .. i),
 			origin_transliteration = args.origin_transliteration[i],
 			target = args.target[i],
+			transliteration = args.transliteration[i],
+			num_entries = args.num,
 		}
-		
+
 		params.form = params.form:gsub("&#124;", "|")
-		params.targets = split_term_and_translit(params.target, params.transliteration)
-		params.origins = split_term_and_translit(params.origin, params.origin_transliteration)
-		
-		-- Make a default entry
+		params.targets = split_and_zip_term_and_translit(params.target, params.transliteration)
+		params.origins = split_and_zip_term_and_translit(params.origin, params.origin_transliteration)
+
+		for _, origin in ipairs(params.origins) do
+			add_item(seen_origins, paste_term_translit(origin), origin)
+		end
+
+		for _, target in ipairs(params.targets) do
+			add_item(seen_targets, paste_term_translit(target), target)
+		end
+
+		table.insert(params_list, params)
+	end
+
+	-- Generate entries.
+	for _, params in ipairs(params_list) do
+		-- Add overall stats to all params objects.
+		params.seen_origins = seen_origins
+		params.seen_targets = seen_targets
+
+		-- Make a default entry.
 		local entry = export.default_entry(params)
-		
-		-- Try to use a language-specific module, if one exists
-		local success, lang_module = pcall(require, "Module:accel/" .. args.lang)
-		
+
 		if success then
 			lang_module.generate(params, entry)
 		end
-		
-		-- Add it to the list
+
+		-- Add it to the list.
 		table.insert(entries, entry)
 	end
-	
-	-- Merge entries if possible
-	entries = merge_entries(entries)
-	entries = entries_to_text(entries, args.lang)
-	
-	return entries
+
+	local entries_obj = {
+		entries = entries,
+		lang = args.lang,
+		lang_module = lang_module,
+		seen_origins = seen_origins,
+		seen_targets = seen_targets,
+	}
+
+	-- Merge entries if possible.
+	merge_entries(entries_obj)
+
+	-- Now generate merged pronunciation and etymology, either using a custom generation function or by merging the
+	-- individually specified pronunciation and etymology lines.
+	generate_merged_pronunciation(entries_obj)
+	generate_merged_etymology(entries_obj)
+
+	return entries_to_text(entries_obj)
 end
 
 
 function export.generate_JSON(frame)
 	local success, entries = pcall(export.generate, frame)
-	
+
 	-- If success is false, entries is an error message.
-	local ret = { [success and "entries" or "error"] = entries, messages = messages }
-	
+	-- It appears we need to specify `messages` or nothing will be displayed.
+	local ret = { [success and "entries" or "error"] = entries, messages = require("Module:array")()}
+
 	return require("Module:JSON").toJSON(ret)
 end
 
