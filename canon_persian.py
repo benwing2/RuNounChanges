@@ -65,7 +65,7 @@ def process_text_on_page(index, pagetitle, text):
     return blib.process_one_page_links(index, pagetitle, text, ["fa"], process_param,
         templates_seen, templates_changed)
   else:
-    return canon_one_page_links(pagetitle, index, text, "fa", "fa-Arab", fa_translit,
+    return canon_one_page_links(pagetitle, index, text, "fa", "Persian", "fa-Arab", fa_translit,
         templates_seen, templates_changed, {"no_vocalize": args.no_vocalize})
 
 if args.direcfile:

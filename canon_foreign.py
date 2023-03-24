@@ -37,6 +37,9 @@ def template_changelog_name(template, lang):
     return "head|%s|%s" % (getp("1"), getp("2"))
   elif getp("1") == lang:
     return "%s|%s" % (tn, lang)
+  elif getp("2") == lang:
+    # for {{bor}}, {{inh}}, {{der}}, etc.
+    return "%s|%s|%s" % (tn, getp("1"), lang)
   else:
     return tn
 
@@ -331,8 +334,8 @@ def sort_group_changelogs(actions):
 # is a script code or list of script codes to remove from templates.
 # TRANSLIT_MODULE is the module handling transliteration,
 # match-canonicalization and removal of diacritics.
-def canon_one_page_links(pagetitle, index, text, lang, script, translit_module, templates_seen, templates_changed,
-    addl_params):
+def canon_one_page_links(pagetitle, index, text, lang, langname, script, translit_module, templates_seen,
+    templates_changed, addl_params):
   if not isinstance(script, list):
     script = [script]
   def process_param(obj):
@@ -361,4 +364,4 @@ def canon_one_page_links(pagetitle, index, text, lang, script, translit_module, 
 
   text, actions = blib.process_one_page_links(index, pagetitle, text, [lang], process_param,
       templates_seen, templates_changed)
-  return text, sort_group_changelogs(actions)
+  return text, "%s: %s" % (langname, sort_group_changelogs(actions))
