@@ -90,7 +90,7 @@ def process_text_in_section(secbody, pagemsg):
 
       def split_on_comma_not_in_template(txt):
         retval = []
-        parts = re.split(r"((?:\{\{[^{}]*\}\}|[^{},])*)", txt)
+        parts = re.split(r"((?:\{\{[^{}]*\}\}|[^{},/])*)", txt)
         parts = [x.strip() for x in parts]
         for i in xrange(1, len(parts), 2):
           retval.append(parts[i])
@@ -236,7 +236,7 @@ def process_text_in_section(secbody, pagemsg):
         issued_warning = [False]
         def do_merge_alt(m):
           return merge_alt(m, could_parse, issued_warning)
-        line = re.sub(r"^\*?(\s*)(.*?):*\s*((?:\{\{(?:alt|alter)\|(?:\{\{[^{}]*\}\}|[^{}])*\}\},*\s*)+):*\s*(.*?)$", do_merge_alt,
+        line = re.sub(r"^\*?(\s*)(.*?):*\s*((?:\{\{(?:alt|alter)\|(?:\{\{[^{}]*\}\}|[^{}])*\}\}\s*[,/]*\s*)+):*\s*(.*?)$", do_merge_alt,
             line, 0, re.UNICODE)
         return line, could_parse[0], issued_warning[0]
 
