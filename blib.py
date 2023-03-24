@@ -308,7 +308,7 @@ def fetch_param_chain(t, first, pref=None, firstdefault=""):
     if val:
       ret.append(val)
   first_num = 1 if not is_number or pref else int(first[0]) + 1
-  maxind = find_max_term_index(first_numeric=1) if is_number else find_max_term_index(named_params=[pref])
+  maxind = find_max_term_index(t, first_numeric=1) if is_number else find_max_term_index(t, named_params=[pref])
   for i in xrange(first_num, maxind + 1):
     param = pref + str(i)
     if param not in first:
@@ -2124,6 +2124,10 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
             doparam(("direct", "fa"), ("separate-pagetitle", None, "4"))
         else:
           did_template = False
+      if "ar" in langs:
+        pass
+        # Special-casing for Arabic
+        # FIXME, implement this
       #if "bg" in langs:
         # Special-casing for Bulgarian
         # FIXME, implement this
