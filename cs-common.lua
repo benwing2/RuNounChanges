@@ -1,0 +1,163 @@
+local export = {}
+
+local lang = require("Module:languages").getByCode("cs")
+local m_links = require("Module:links")
+local m_table = require("Module:table")
+local m_string_utilities = require("Module:string utilities")
+
+local u = mw.ustring.char
+local rsplit = mw.text.split
+local rfind = mw.ustring.find
+local rmatch = mw.ustring.match
+local rsubn = mw.ustring.gsub
+local ulen = mw.ustring.len
+local uupper = mw.ustring.upper
+
+-- version of rsubn() that discards all but the first return value
+local function rsub(term, foo, bar)
+	local retval = rsubn(term, foo, bar)
+	return retval
+end
+
+-- version of rsubn() that returns a 2nd argument boolean indicating whether
+-- a substitution was made.
+local function rsubb(term, foo, bar)
+	local retval, nsubs = rsubn(term, foo, bar)
+	return retval, nsubs > 0
+end
+
+local lc_vowel = "aeiouyáéíóúýěů"
+local uc_vowel = uupper(lc_vowel)
+export.vowel = lc_vowel .. uc_vowel
+export.vowel_c = "[" .. export.vowel .. "]"
+export.non_vowel_c = "[^" .. export.vowel .. "]"
+local lc_cons = "bcdfghjklmnpqrstvwxzčňřšžďť"
+local uc_cons = uupper(lc_cons)
+export.cons = lc_cons .. uc_cons
+export.cons_c = "[" .. export.cons .. "]"
+-- uppercase consonants
+export.uppercase = lc_vowel .. uc_vowel
+export.uppercase_c = "[" .. export.uppercase .. "]"
+
+
+function export.iotate(stem)
+	error("Unimplemented")
+	stem = rsub(stem, "с[кт]$", "щ")
+	stem = rsub(stem, "з[дгґ]$", "ждж")
+	stem = rsub(stem, "к?т$", "ч")
+	stem = rsub(stem, "зк$", "жч")
+	stem = rsub(stem, "[кц]$", "ч")
+	stem = rsub(stem, "[сх]$", "ш")
+	stem = rsub(stem, "[гз]$", "ж")
+	stem = rsub(stem, "д$", "дж")
+	stem = rsub(stem, "([бвмпф])$", "%1л")
+	return stem
+end
+
+
+function export.apply_first_palatalization(word)
+	local function try(from, to)
+		local stem = rmatch(word, "^(.*)" .. from .. "$")
+		if stem then
+			return stem .. to
+		end
+		return nil
+	end
+	return try("ch", "š") or
+		try("[hg]", "ž") or
+		try("tr", "tř") or
+		try("sk", "št") or
+		try("ck", "čt") or
+		try("k", "c") or
+		word
+	error("Unimplemented")
+	return rsub(word, "^(.*)([кгґхц])$",
+		function(prefix, lastchar) return prefix .. first_palatalization[lastchar] end
+	)
+end
+
+
+function export.apply_second_palatalization(word)
+	local function try(from, to)
+		local stem = rmatch(word, "^(.*)" .. from .. "$")
+		if stem then
+			return stem .. to
+		end
+		return nil
+	end
+	return try("ch", "š") or
+		try("[hg]", "z") or
+		try("r", "ř") or
+		try("sk", "št") or
+		try("ck", "čt") or
+		try("k", "c") or
+		word
+end
+
+
+function export.reduce(word)
+	error("Unimplemented")
+	local pre, letter, post = rmatch(word, "^(.*)([оОеЕєЄіІ])́?(" .. export.cons_c .. "+)$")
+	if not pre then
+		return nil
+	end
+	if letter == "о" or letter == "О" then
+		-- FIXME, what about when the accent is on the removed letter?
+		if post == "й" or post == "Й" then
+			-- FIXME, is this correct?
+			return nil
+		end
+		letter = ""
+	else
+		local is_upper = rfind(post, export.uppercase_c)
+		if letter == "є" or letter == "Є" then
+			-- англі́єц -> англі́йц-
+			letter = is_upper and "Й" or "й"
+		elseif post == "й" or post == "Й" then
+			-- солове́й -> солов'-
+			letter = "'"
+			post = ""
+		elseif (rfind(post, export.velar_c .. "$") and rfind(pre, export.cons_except_hushing_or_ts_c .. "$")) or
+			(rfind(post, "[^йЙ" .. export.velar .. "]$") and rfind(pre, "[лЛ]$")) then
+			-- FIXME, is this correct? This logic comes from ru-common.lua. The second clause that
+			-- adds ь after л is needed but I'm not sure about the first one.
+			letter = is_upper and "Ь" or "ь"
+		else
+			letter = ""
+		end
+	end
+	return pre .. letter .. post
+end
+
+
+function export.dereduce(stem)
+	-- We don't require there to be two consonants at the end because of ону́ка (gen pl ону́ок).
+	local pre, letter, post = rmatch(stem, "^(.*)(.)(" .. export.cons_c .. ")$")
+	if not pre then
+		return nil
+	end
+	local is_upper = rfind(post, export.uppercase_c)
+	local epvowel
+	--if rfind(letter, export.velar_c) or rfind(post, export.velar_c) or rfind(post, "[vV]") then
+		epvowel = is_upper and "O" or "o"
+	--elseif rfind(post, "['ьЬ]") then
+	--	-- сім'я́ -> gen pl сіме́й
+	--	-- ескадри́лья -> gen pl ескадри́лей
+	--	epvowel = rfind(letter, export.uppercase_c) and "Е" or "е"
+	--	post = ""
+	--elseif rfind(letter, "[йЙ]") then
+	--	-- яйце́ -> gen pl я́єць
+	--	epvowel = is_upper and "Є" or "є"
+	--	letter = ""
+	--else
+		--if rfind(letter, "[ьЬ]") then
+		--	-- кільце́ -> gen pl кі́лець
+		--	letter = ""
+		--end
+		epvowel = is_upper and "E" or "e"
+	-- end
+	return pre .. letter .. epvowel .. post
+end
+
+
+return export
