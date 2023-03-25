@@ -633,37 +633,46 @@ pos_functions["pronouns"] = {
 	end
 }
 
+local function get_gender_only_params(default)
+	local params = {}
+	add_gender_params(params, default)
+	return params
+end
+
 pos_functions["noun plural forms"] = {
+	params = get_gender_only_params("p"),
 	func = function(args, data)
 		data.pos_category = "noun forms"
-		handle_gender(args, data, "p", "nonlemma")
-		handle_all_infl(args, data, "", "") -- handle cons, def, obl, inf
+		handle_gender(args, data, "nonlemma")
 	end
 }
 
 pos_functions["adjective feminine forms"] = {
+	params = get_gender_only_params("f"),
 	func = function(args, data)
 		data.pos_category = "adjective forms"
-		handle_noun_plural(args, data)
-		handle_gender(args, data, "f", "nonlemma")
+		handle_gender(args, data, "nonlemma")
 	end
 }
 
 pos_functions["noun dual forms"] = {
+	params = get_gender_only_params("m-d"),
 	func = function(args, data)
 		data.pos_category = "noun forms"
-		handle_gender(args, data, "m-d", "nonlemma")
+		handle_gender(args, data, "nonlemma")
 	end
 }
 
 pos_functions["adjective plural forms"] = {
+	params = get_gender_only_params("m-p"),
 	func = function(args, data)
 		data.pos_category = "adjective forms"
-		handle_gender(args, data, "m-p", "nonlemma")
+		handle_gender(args, data, "nonlemma")
 	end
 }
 
 pos_functions["adjective dual forms"] = {
+	params = get_gender_only_params("m-p"),
 	func = function(args, data)
 		data.pos_category = "adjective forms"
 		handle_gender(args, data, "m-d", "nonlemma")
@@ -671,6 +680,7 @@ pos_functions["adjective dual forms"] = {
 }
 
 pos_functions["noun forms"] = {
+	params = get_gender_only_params(),
 	func = function(args, data)
 		handle_gender(args, data, nil, "nonlemma")
 	end
