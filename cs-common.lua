@@ -38,6 +38,24 @@ export.cons_c = "[" .. export.cons .. "]"
 -- uppercase consonants
 export.uppercase = lc_vowel .. uc_vowel
 export.uppercase_c = "[" .. export.uppercase .. "]"
+local lc_paired_palatal = "ňďť"
+local uc_paired_palatal = "ŇĎŤ"
+export.paired_palatal = lc_paired_palatal .. uc_paired_palatal
+local lc_paired_plain = "ndt"
+local uc_paired_plain = "NDT"
+export.paired_plain = lc_paired_plain .. uc_paired_plain
+export.paired_palatal_to_plain = {
+	["ň"] = "n",
+	["Ň"] = "N",
+	["ť"] = "t",
+	["Ť"] = "T",
+	["ď"] = "d",
+	["Ď"] = "D",
+}
+export.paired_plain_to_palatal = {}
+for k, v in pairs(export.paired_palatal_to_plain) do
+	export.paired_plain_to_palatal[v] = k
+end
 
 
 function export.iotate(stem)
@@ -68,12 +86,8 @@ function export.apply_first_palatalization(word)
 		try("tr", "tř") or
 		try("sk", "št") or
 		try("ck", "čt") or
-		try("k", "c") or
+		try("[kc]", "č") or
 		word
-	error("Unimplemented")
-	return rsub(word, "^(.*)([кгґхц])$",
-		function(prefix, lastchar) return prefix .. first_palatalization[lastchar] end
-	)
 end
 
 
@@ -96,66 +110,29 @@ end
 
 
 function export.reduce(word)
-	error("Unimplemented")
-	local pre, letter, post = rmatch(word, "^(.*)([оОеЕєЄіІ])́?(" .. export.cons_c .. "+)$")
+	local pre, letter, post = rmatch(word, "^(.*)([eEěĚ])́?(" .. export.cons_c .. "+)$")
 	if not pre then
 		return nil
 	end
-	if letter == "о" or letter == "О" then
-		-- FIXME, what about when the accent is on the removed letter?
-		if post == "й" or post == "Й" then
-			-- FIXME, is this correct?
-			return nil
-		end
-		letter = ""
-	else
-		local is_upper = rfind(post, export.uppercase_c)
-		if letter == "є" or letter == "Є" then
-			-- англі́єц -> англі́йц-
-			letter = is_upper and "Й" or "й"
-		elseif post == "й" or post == "Й" then
-			-- солове́й -> солов'-
-			letter = "'"
-			post = ""
-		elseif (rfind(post, export.velar_c .. "$") and rfind(pre, export.cons_except_hushing_or_ts_c .. "$")) or
-			(rfind(post, "[^йЙ" .. export.velar .. "]$") and rfind(pre, "[лЛ]$")) then
-			-- FIXME, is this correct? This logic comes from ru-common.lua. The second clause that
-			-- adds ь after л is needed but I'm not sure about the first one.
-			letter = is_upper and "Ь" or "ь"
-		else
-			letter = ""
-		end
+	if (letter == "ě" or letter == "Ě") and rfind(pre, "[" .. export.paired_plain .. "]") then
+		pre = export.paired_plain_to_palatal[pre]
 	end
-	return pre .. letter .. post
+	return pre .. post
 end
 
 
 function export.dereduce(stem)
-	-- We don't require there to be two consonants at the end because of ону́ка (gen pl ону́ок).
-	local pre, letter, post = rmatch(stem, "^(.*)(.)(" .. export.cons_c .. ")$")
+	local pre, letter, post = rmatch(stem, "^(.*)(" .. export.cons_c .. ")(" .. export.cons_c .. ")$")
 	if not pre then
 		return nil
 	end
 	local is_upper = rfind(post, export.uppercase_c)
-	local epvowel
-	--if rfind(letter, export.velar_c) or rfind(post, export.velar_c) or rfind(post, "[vV]") then
-		epvowel = is_upper and "O" or "o"
-	--elseif rfind(post, "['ьЬ]") then
-	--	-- сім'я́ -> gen pl сіме́й
-	--	-- ескадри́лья -> gen pl ескадри́лей
-	--	epvowel = rfind(letter, export.uppercase_c) and "Е" or "е"
-	--	post = ""
-	--elseif rfind(letter, "[йЙ]") then
-	--	-- яйце́ -> gen pl я́єць
-	--	epvowel = is_upper and "Є" or "є"
-	--	letter = ""
-	--else
-		--if rfind(letter, "[ьЬ]") then
-		--	-- кільце́ -> gen pl кі́лець
-		--	letter = ""
-		--end
+	if rfind(letter, "[" .. export.paired_palatal .. "]") then
+		letter = export.paired_palatal_to_plain[letter]
+		epvowel = is_upper and "Ě" or "ě"
+	else
 		epvowel = is_upper and "E" or "e"
-	-- end
+	end
 	return pre .. letter .. epvowel .. post
 end
 
