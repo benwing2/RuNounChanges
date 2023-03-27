@@ -1,4 +1,4 @@
--- Authors: Benwing, CodeCat
+-- Author: Benwing2; based on an early version by Rua
 
 local ar_translit = require("Module:ar-translit")
 
@@ -63,24 +63,6 @@ local function remove_links(text)
 	text = rsub(text, "%[%[", "")
 	text = rsub(text, "%]%]", "")
 	return text
-end
-
-local function make_unused_key_tracker(t)
-	local unused_keys = require "Module:table".listToSet(
-			require "Module:table".keysToList(t))
-	local mt = {
-		__index = function(_, key)
-			if key ~= nil then
-				unused_keys[key] = nil
-			end
-			return t[key]
-		end,
-		__newindex = function(_, key, value)
-			t[key] = value
-		end
-	}
-	local proxy_table = setmetatable({}, mt)
-	return proxy_table, unused_keys
 end
 
 local function reorder_shadda(text)
@@ -214,7 +196,7 @@ function export.show(frame)
 	local parargs = frame:getParent().args
 
 	local params = {
-		["head"] = {list = true, disallow_holes = true},
+		[1] = {list = "head", disallow_holes = true},
 		["tr"] = {list = true, allow_holes = true},
 		["id"] = {},
 		["nolinkhead"] = {type = "boolean"},
@@ -230,81 +212,28 @@ function export.show(frame)
 
 	local args = require("Module:parameters").process(parargs, params)
 
-	local pagename = args.pagename or mw.title.getCurrentTitle().text
+	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
 
 	local data = {
 		lang = lang,
 		pos_category = poscat,
 		categories = {},
-		heads = heads,
-		transli
+		heads = args[1],
+		translits = args.tr,
 		genders = {},
-		inflections = {},
+		inflections = {enable_auto_translit = true},
 		pagename = pagename,
 		id = args.id,
 		sort_key = args.sort,
 		force_cat_output = force_cat,
 	}
 
-	local is_suffix = false
-	if pagename:find("^%-") and poscat ~= "suffix forms" then
-		is_suffix = true
-		data.pos_category = "suffixes"
-		local singular_poscat = require("Module:string utilities").singularize(poscat)
-		table.insert(data.categories, langname .. " " .. singular_poscat .. "-forming suffixes")
-		table.insert(data.inflections, {label = singular_poscat .. "-forming suffix"})
-	end
-
-	local tracking_categories = {}
-
-	if pos_functions[poscat] then
-		pos_functions[poscat].func(args, data, tracking_categories, frame, is_suffix)
-	end
-
-	if args.apoc then
-		-- Apocopated form of a term; do this after calling pos_functions[], because the function might modify
-		-- data.pos_category.
-		local pos = data.pos_category
-		if not pos:find(" forms") then
-			-- Apocopated forms are non-lemma forms.
-			local singular_poscat = require("Module:string utilities").singularize(pos)
-			data.pos_category = singular_poscat .. " forms"
-		end
-		-- If this is a suffix, insert label 'apocopated' after 'FOO-forming suffix', otherwise insert at the beginning.
-		table.insert(data.inflections, is_suffix and 2 or 1, {label = glossary_link("apocopated")})
-	end
-
-	if args.json then
-		return require("Module:JSON").toJSON(data)
-	end
-
-	return require(headword_module).full_headword(data)
-		.. (#tracking_categories > 0 and require("Module:utilities").format_categories(tracking_categories, lang, args.sort, nil, force_cat) or "")
-	-- FIXME, this should use [[Module:parameters]].	
-	local poscat = frame.args[1] or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
-
-	local args, unused_keys = make_unused_key_tracker(frame:getParent().args)
-
-	-- Gather parameters
-	local data = { lang = lang, pos_category = poscat, categories = {}, heads = {}, translits = {}, genders = {}, inflections = { enable_auto_translit = true } }
-
-	local head = ine(args["head"] or args[1]) or mw.title.getCurrentTitle().subpageText
-	local translit = ine(args["tr"])
-	local i = 1
-
 	local irreg_translit = false
-
-	while head do
-		table.insert(data.heads, head)
-		data.translits[#data.heads] = translit
-		if ar_translit.irregular_translit(head, translit) then
+	for i = 1, #args[1] do
+		if ar_translit.irregular_translit(args[1][i], args.tr[i]) then
 			irreg_translit = true
+			break
 		end
-		track_form("head", head, translit, poscat)
-
-		i = i + 1
-		head = ine(args["head" .. i])
-		translit = ine(args["tr" .. i])
 	end
 
 	if irreg_translit then
@@ -315,30 +244,8 @@ function export.show(frame)
 		pos_functions[poscat].func(args, data)
 	end
 
-	--[=[
-	[[Special:WhatLinksHere/Template:tracking/ar-headword/num]]
-	[[Special:WhatLinksHere/Template:tracking/ar-headword/head]]
-	[[Special:WhatLinksHere/Template:tracking/ar-headword/g]]
-	]=]
-	if args[3] or args[4] or args[5] or args[6] or args[7] or args[8] or args[9] then
-		track("num")
-	end
-
-	if args["head"] then
-		track("head")
-	end
-
-	if args["g"] then
-		track("g")
-	end
-
-	local unused_key_list = require "Module:table".keysToList(unused_keys)
-	if #unused_key_list > 0 then
-		local unused_key_string = require "Module:array"(unused_key_list):map(
-				function(key)
-					return "|" .. key .. "=" .. args[key]
-				end)                                                     :concat("\n")
-		error("Unused arguments: " .. unused_key_string)
+	if args.json then
+		return require("Module:JSON").toJSON(data)
 	end
 
 	return require("Module:headword").full_headword(data)
@@ -363,8 +270,8 @@ end
 local function add_infl_params(params, argpref, defgender)
 	params[argpref] = {list = true, disallow_holes = true}
 	params[argpref .. "=tr"] = {list = true, allow_holes = true}
-	params[argpref .. "=g"] = {default = defgender}
-	params[argpref .. "=g2"] = {}
+	params[argpref .. "=g"] = {list = true, default = defgender}
+	params[argpref .. "=g2"] = {list = true}
 end
 
 -- Get a list of inflections from the arguments in ARGS based on argument
@@ -376,9 +283,11 @@ end
 -- isn't given; otherwise, no gender is inserted. (This is used for
 -- singulative forms of collective nouns, and collective forms of singulative
 -- nouns, which have different gender from the base form(s).)
-local function handle_infl(args, data, argpref, label)
+local function handle_infl(args, data, argpref, label, generate_default)
 	local newinfls = getargs(args, argpref)
-
+	if #newinfls == 0 then
+		newinfls = generate_default(args, data)
+	end
 	if #newinfls > 0 then
 		newinfls.label = label
 		table.insert(data.inflections, newinfls)
@@ -400,9 +309,9 @@ end
 -- definite and oblique variants of this inflection. Can also handle the base
 -- construct/definite/oblique variants if both ARGPREF and LABEL are given
 -- as blank strings. If ARGPREF is blank, skip the base inflection.
-local function handle_all_infl(args, data, argpref, label)
+local function handle_all_infl(args, data, argpref, label, generate_default)
 	if argpref ~= "" then
-		handle_infl(args, data, argpref, label)
+		handle_infl(args, data, argpref, label, generate_default)
 	end
 
 	local labelsp = label == "" and "" or label .. " "
@@ -452,11 +361,11 @@ end
 -- `data.categories` if the gender is unexpected for the form of the noun. (Note: If there are multiple genders,
 -- [[Module:gender and number]] will automatically insert 'Arabic POS with multiple genders'.)
 local function handle_gender(args, data, nonlemma)
-	for _, g in args[2] do
-		if valid_genders[gender] then
-			table.insert(data.genders, gender)
+	for _, g in ipairs(args[2]) do
+		if valid_genders[g] then
+			table.insert(data.genders, g)
 		else
-			error("Unrecognized gender: " .. gender)
+			error("Unrecognized gender: " .. g)
 		end
 	end
 
@@ -465,7 +374,7 @@ local function handle_gender(args, data, nonlemma)
 	end
 
 	if #args[2] == 1 then
-		local g = args.g[1]
+		local g = args[2][1]
 		if is_masc_sg(g) or is_fem_sg(g) then
 			local head = args.head
 			if head then
@@ -511,11 +420,11 @@ end
 local function handle_infl_list_args(args, data, infl_list)
 	for _, infl in ipairs(infl_list) do
 		if infl.handle then
-			handle(args, data)
+			infl.handle(args, data)
 		elseif infl.basic then
-			handle_infl(args, data, infl.pref, infl.label)
+			handle_infl(args, data, infl.pref, infl.label, infl.generate_default)
 		else
-			handle_all_infl(args, data, infl.pref, infl.label)
+			handle_all_infl(args, data, infl.pref, infl.label, infl.generate_default)
 		end
 	end
 end
@@ -529,6 +438,41 @@ pos_functions["adjectives"] = {
 	func = function(args, data)
 		handle_infl_list_args(args, data, adj_inflections)
 		handle_infl(args, data, "el", "elative")
+	end
+}
+
+
+local function make_nisba_default(ending, endingtr)
+	return function(args, data)
+		local heads = data.heads
+		if #heads == 0 then
+			heads = {data.pagename}
+		end
+		local forms = {}
+		for i = 1, #heads do
+			local tr = data.translits
+			table.insert(forms, {term = heads[i] .. ending, translit = tr and tr .. endingtr or nil})
+		end
+		return forms
+	end
+end
+
+local nisba_adj_inflections = {
+	{pref = "", label = ""}, -- handle cons, def, obl, inf
+	{pref = "f", label = "feminine", generate_default = make_nisba_default(A .. "ة", "a")},
+	{pref = "d", label = "masculine dual"},
+	{pref = "fd", label = "feminine dual"},
+	{pref = "cpl", label = "common plural"},
+	{pref = "pl", label = "masculine plural", generate_default = make_nisba_default(U .. "ون", "ūn")},
+	{pref = "fpl", label = "feminine plural", generate_default = make_nisba_default(A .. "ات", "āt")},
+}
+
+pos_functions["nisba adjectives"] = {
+	params = (function()
+		return create_infl_list_params(nisba_adj_inflections)
+	end)(),
+	func = function(args, data)
+		handle_infl_list_args(args, data, nisba_adj_inflections)
 	end
 }
 
@@ -640,10 +584,16 @@ local function get_gender_only_params(default)
 end
 
 pos_functions["noun plural forms"] = {
-	params = get_gender_only_params("p"),
+	params = (function()
+		local params = {}
+		add_gender_params(params, "p")
+		add_infl_params(params, "cons")
+		return params
+	end)(),
 	func = function(args, data)
 		data.pos_category = "noun forms"
 		handle_gender(args, data, "nonlemma")
+		handle_infl(args, data, "cons", "construct state")
 	end
 }
 
