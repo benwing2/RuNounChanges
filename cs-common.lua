@@ -73,6 +73,38 @@ function export.iotate(stem)
 end
 
 
+function export.apply_vowel_alternation(alt, stem)
+	local modstem, origvowel
+	if alt == "quant" then
+		-- [[sníh]] "snow", gen sg. [[sněhu]]
+		-- [[hůl]] "cane", gen sg. [[hole]]
+		-- [[práce]] "work", ins sg. [[prací]]
+		modstem = rsub(stem, "(.)([íůá])(" .. export.cons_c .. "*)$",
+			function(pre, vowel, post)
+				origvowel = vowel
+				if vowel == "í" then
+					if rfind(pre, "[" .. paired_plain .. "]") then
+						return pre .. "ě" .. post
+					else
+						return pre .. "e" .. post
+					end
+				elseif vowel == "ů" then
+					return pre .. "o" .. post
+				else
+					return pre .. "a" .. post
+				end
+			end
+		)
+		if modstem == stem then
+			error("Indicator 'quant' can't be applied because stem '" .. stem .. "' doesn't have an í, ů or á as its last vowel")
+		end
+	else
+		return stem, nil
+	end
+	return modstem, origvowel
+end
+
+
 function export.apply_first_palatalization(word)
 	local function try(from, to)
 		local stem = rmatch(word, "^(.*)" .. from .. "$")
