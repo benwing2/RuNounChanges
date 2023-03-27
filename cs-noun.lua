@@ -22,6 +22,234 @@ TERMINOLOGY:
 	 masculine singular is missing.
 ]=]
 
+--[=[
+
+Word examples:
+
+Masculine:
+
+[[rozbor]] "analysis" {{cs-ndecl<m>}}
+[[plat]] "salary" {{cs-ndecl<m>}}
+[[ostrov]] "island" {{cs-ndecl|<m.gena.locě>}}
+[[car]] "tsar" {{cs-ndecl|<m.an.nomplové>}}
+[[bratr]] "brother" {{cs-ndecl|((<m.an>,bratři<np.overriding_gender:m-an.[collective, normally archaic]>))}}
+
+
+
+
+Feminine:
+---------
+
+- Reducible vs. non-reducible: If before final a is a two-consonant cluster whose second consonant is b, k, h or a
+  resonant l,r,m,n,v, default to reducible. If second consonant is something else, default to non-reducible. Exception:
+  In a three-consonant cluster ClC and CrC, default to non-reducible as the l and r are vocalic (e.g. [[vrba]]).
+
+Default reducible:
+
+[[bavlnka]] "cotton" {{cs-ndecl|<f}}
+[[čtvrtka]] "Thursday" {{cs-ndecl|<f}}
+[[dršťka]] "tripe" {{cs-ndecl|<f}} [gen pl drštěk]
+[[jiskra]] "spark" {{cs-ndecl|<f}}
+[[kostra]] "skeleton" {{cs-ndecl|<f}}
+[[kůstka]] "bone" {{cs-ndecl|<f}}
+[[pastva]] "pasture" {{cs-ndecl|<f}}
+[[sestra]] "sister" {{cs-ndecl|<f}}
+[[tundra]] "tundra" {{cs-ndecl|<f>}}
+[[vrstva]] "layer" {{cs-ndecl|<f>}}
+[[vyjížďka]] "ride" {{cs-ndecl|<f>}} [gen pl vyjížděk]
+[[hra]] "game" {{cs-ndecl|<f>}} [dat/loc sg hře, gen pl her]
+[[kra]] "floe, iceberg" {{cs-ndecl|<f>}} [dat/loc sg kře, gen pl ker]
+[[kresba]] "drawing" {{cs-ndecl|<f>}}
+[[malba]] "painting" {{cs-ndecl|<f>}}
+[[orba]] "ploughing" {{cs-ndecl|<f>}}
+[[volba]] "choice, (pl) elections" {{cs-ndecl|<f>}}
+[[kuchařka]] "cookbook; female cook" {{cs-ndecl|<f>}}
+[[lebka]] "skull" {{cs-ndecl|<f>}}
+[[loďka]] "small ship; rowing boat" {{cs-ndecl|<f>}} [gen pl loděk]
+[[občanka]] "female citizen" {{cs-ndecl|<f>}}
+[[oháňka]] "tail, oxtail" {{cs-ndecl|<f>}} [gen pl oháněk]
+[[sirka]] "match (for lighting a fire)" {{cs-ndecl|<f>}}
+[[cihla]] "brick" {{cs-ndecl|<f>}}
+[[jehla]] "needle" {{cs-ndecl|<f>}}
+[[metla]] "whisk, scourge, rod (for punishment)" {{cs-ndecl|<f>}}
+[[modla]] "idol" {{cs-ndecl|<f>}}
+[[truhla]] "chest (strong box)" {{cs-ndecl|<f>}}
+[[firma]] "firm (business)" {{cs-ndecl|<f>}}
+[[forma]] "form, mold" {{cs-ndecl|<f>}}
+[[helma]] "helmet" {{cs-ndecl|<f>}}
+[[palma]] "palm tree" {{cs-ndecl|<f>}}
+[[šelma]] "beast of prey; carnivore" {{cs-ndecl|<f>}}
+[[kašna]] "fountain" {{cs-ndecl|<f>}}
+[[kněžna]] "princess" {{cs-ndecl|<f>}}
+[[kůlna]] "shed, hut" {{cs-ndecl|<f>}}
+[[putna]] "indifference, unimportance" {{cs-ndecl|<f>}}
+[[učebna]] "classroom" {{cs-ndecl|<f>}}
+[[cifra]] "digit" {{cs-ndecl|<f>}}
+[[jikra]] "roe" {{cs-ndecl|<f>}}
+[[souhra]] "" {{cs-ndecl|<f>}}
+[[zebra]] "zebra" {{cs-ndecl|<f>}}
+[[barva]] "color" {{cs-ndecl|<f>}}
+[[jizva]] "scar" {{cs-ndecl|<f>}}
+[[larva]] "larva" {{cs-ndecl|<f>}}
+
+Default reducible but should not be reduced:
+
+[[bomba]] "bomb" {{cs-ndecl|<f.-*>}}
+[[plomba]] "filling, seal" {{cs-ndecl|<f.-*>}}
+[[banka]] "bank (financial institution)" {{cs-ndecl|<f.-*>}}
+[[konzerva]] "can, tin" {{cs-ndecl|<f.-*>}}
+[[rezerva]] "reserve" {{cs-ndecl|<f.-*>}}
+[[salva]] "" {{cs-ndecl|<f.-*>}}
+[[želva]] "turtle" {{cs-ndecl|<f.-*>}}
+
+Default non-reducible:
+
+[[pomsta]] "revenge" {{cs-ndecl|<f>}} [gen pl pomst]
+[[garda]] "" {{cs-ndecl|<f>}}
+[[hvězda]] "star" {{cs-ndecl|<f>}}
+[[pravda]] "truth" {{cs-ndecl|<f>}}
+[[vražda]] "murder" {{cs-ndecl|<f>}}
+[[harfa]] "harp" {{cs-ndecl|<f>}}
+[[nymfa]] "nymph" {{cs-ndecl|<f>}}
+[[archa]] "ark" {{cs-ndecl|<f>}}
+[[valcha]] "washboard" {{cs-ndecl|<f>}}
+[[lampa]] "lamp" {{cs-ndecl|<f>}}
+[[pumpa]] "pump" {{cs-ndecl|<f>}}
+[[rampa]] "ramp" {{cs-ndecl|<f>}}
+[[škarpa]] "" {{cs-ndecl|<f>}}
+[[elipsa]] "ellipse" {{cs-ndecl|<f>}}
+[[římsa]] "windowsill, mantelpiece" {{cs-ndecl|<f>}}
+[[gejša]] "geisha" {{cs-ndecl|<f>}}
+[[celta]] "" {{cs-ndecl|<f>}}
+[[cesta]] "road, journey" {{cs-ndecl|<f>}}
+[[fakulta]] "faculty (of a university)" {{cs-ndecl|<f>}}
+[[fronta]] "queue; front (meteorology, military)" {{cs-ndecl|<f>}}
+[[krypta]] "crypt" {{cs-ndecl|<f>}}
+[[lišta]] "slat; bar" {{cs-ndecl|<f>}}
+[[aorta]] "aorta" {{cs-ndecl|<f>}}
+[[plenta]] "" {{cs-ndecl|<f>}}
+[[sekta]] "sect, cult" {{cs-ndecl|<f>}}
+[[brynza]] "bryndza (type of soft cheese)" {{cs-ndecl|<f>}}
+[[burza]] "stock exchange" {{cs-ndecl|<f>}}
+
+Default non-reducible but should be reduced:
+
+[[výspa]] "islet" {{cs-ndecl|<f.*>}}
+[[kapsa]] "pocket" {{cs-ndecl|<f.*>}}
+[[buchta]] "bun" {{cs-ndecl|<f.*>}}
+[[plachta]] "sail" {{cs-ndecl|<f.*>}}
+[[šachta]] "shaft, chute" {{cs-ndecl|<f.*>}}
+
+Should not be reduced due to vocalic l or r:
+
+[[vrba]] "willow" {{cs-ndecl|<f>}}
+[[srha]] "cocksfoot" {{cs-ndecl|<f>}}
+
+Exceptional reducible:
+
+[[mzda]] "wage" {{cs-ndecl|<f.*.genpl:mezd>}}
+[[msta]] "revenge" {{cs-ndecl|<f.*.genpl:mest>}}
+
+Optional reducible:
+
+[[deska]] "plate" {{cs-ndecl|<f.*,-*>}}
+[[jachta]] "yacht" {{cs-ndecl|<f.*,-*>}}
+[[karta]] "card" {{cs-ndecl|<f.*,-*[very rare]>}}
+[[kruchta]] "church porch" {{cs-ndecl|<f.*,-*>}}
+[[přilba]] "helmet" {{cs-ndecl|<f.*,-*[rare]>}}
+
+Shortening in gen pl and maybe elsewhere:
+
+[[bába]] "old woman" {{cs-ndecl|<f.#>}} [gen pl bab]
+[[chvála]] "praise" {{cs-ndecl|<f.#>}} [gen pl chval]
+[[jáma]] "pit, hole" {{cs-ndecl|<f.#>}} [gen pl jam]
+[[sláma]] "straw" {{cs-ndecl|<f.#>}} [gen pl slam]
+[[díra]] "hole" {{cs-ndecl|<f.#ě>}} [gen pl děr, dat/log sg děře]
+[[houba]] "mushroom, sponge" {{cs-ndecl|<f.#>}} [gen pl hub]
+[[smlouva]] "contract, treaty" {{cs-ndecl|<f.#>}} [gen pl smlouv]
+[[moucha]] "fly" {{cs-ndecl|<f.#>}} [gen pl much, dat/log sg mouše]
+[[touha]] "desire" {{cs-ndecl|<f.#>}} [gen pl tuh, dat/log sg touze]
+[[brána]] "gate" {{cs-ndecl|<f.##,#>}} [gen pl bran, dat pl branám/bránám, loc pl branách/bránách, ins pl branami/bránami, ins sg branou/bránou]
+[[žába]] "frog" {{cs-ndecl|<f.##,#.ins:žábou>}} [gen pl žab, dat pl žabám/žábám, loc pl žabách/žábách, ins pl žabami/žábami, ins sg žábou only]
+[[vrána]] "frog" {{cs-ndecl|<f.##,#.ins:vránou>}} [gen pl vran, dat pl vranám/vránám, loc pl vranách/vránách, ins pl vranami/vránami, ins sg vránou only]
+[[žíla]] "vein" {{cs-ndecl|<f.##,#>}} [gen pl žil, dat pl žilám/žílám, loc pl žilách/žílách, ins pl žilami/žílami, ins sg žilou/žílou]
+[[lípa]] "lime tree, linden" {{cs-ndecl|<f.##,#>}} [gen pl lip, dat pl lipám/lípám, loc pl lipách/lípách, ins pl lipami/lípami, ins sg lipou/lípou]
+[[síla]] "strength, force" {{cs-ndecl|<f.##,#>}} [gen pl sil, dat pl silám/sílám, loc pl silách/sílách, ins pl silami/sílami, ins sg silou/sílou]
+[[dráha]] "track, lane" {{cs-ndecl|<f.##,#>}} [gen pl drah, dat pl drahám/dráhám, loc pl drahách/dráhách, ins pl drahami/dráhami, ins sg drahou/dráhou]
+[[míra]] "measure" {{cs-ndecl|<f.##ě,#ě>}} [gen pl měr, dat pl měrám/mírám, loc pl měrách/mírách, ins pl měrami/mírami, ins sg měrou/mírou, dat/log sg míře]
+[[práce]] "work" {{cs-ndecl|<f.##>}} [gen pl prací, dat pl pracím, loc pl pracích, ins pl pracemi, ins sg prací]
+[[autodráha]] "slot car set" {{cs-ndecl|<f.ins:autodrahou:autodráhou>}}
+[[kláda]] "log" {{cs-ndecl|<f>}}
+[[žláza]] "gland" {{cs-ndecl|<f>}}
+[[bříza]] "birch" {{cs-ndecl|<f>}}
+[[hlíza]] "tuber" {{cs-ndecl|<f>}}
+[[jáhla]] "millet" {{cs-ndecl|<f.*#,*>}}
+[[slíva]] "plum" {{cs-ndecl|<f.-,#>}}
+[[mísa]] "bowl" {{cs-ndecl|<f.#,->}}
+
+
+
+
+Neuter:
+-------
+
+- Reducible vs. non-reducible: Same rule as for feminines.
+
+Default reducible:
+
+[[clo]] "" {{cs-ndecl|<n>}} [gen pl cel]
+[[dno]] "" {{cs-ndecl|<n>}} [gen pl den]
+[[jho]] "" {{cs-ndecl|<n.locu.locplách>}} [gen pl jeh]
+[[sklo]] "glass" {{cs-ndecl|<n.loce>}} [gen pl skel, loc sg skle]
+[[zlo]] "evil" {{cs-ndecl|<n.locu:e>}} [gen pl zel, loc sg zlu/zle]
+[[božstvo]] "deity" {{cs-ndecl|<n>}}
+
+Shortening in gen pl and maybe elsewhere:
+
+[[dílo]] "work" {{cs-ndecl|<n.#ě.loce>}} [gen pl děl]
+[[jádro]] "kernel, core" {{cs-ndecl|<n.*#.locu:e>}} [gen pl jader, loc sg jádru/jádře]
+[[jméno]] "name" {{cs-ndecl|<n.#>}} [gen pl jmen, loc sg jméně/jménu]
+[[játra]] "liver" {{cs-ndecl|<n.*#.pl>}} [gen pl jater]
+[[péro]] "pen" {{cs-ndecl|<n.#.locu>}} [gen pl per, loc sg péru]
+[[záda]] "back" {{cs-ndecl|<n.#.pl>}} [gen pl zad]
+[[léto]] "summer; (pl) years" {{cs-ndecl|<n.##,#.ins:létem>}} [gen pl let, dat pl letům/létům, loc pl letech/létech, ins pl lety/léty, ins sg only létem]
+
+Pluralia tantum:
+----------------
+
+Masculine:
+
+[[alimenty]] "alimony" {{cs-ndecl|<mp>}}
+[[Blíženci]] "Gemini" (pl. of [[blíženec]] "twin" reducible) {{cs-ndecl|<mp-an>}}
+[[Bory]] "Bory" (Czech village) {{cs-ndecl|<mp>}}
+[[Cookovy ostrovy]] "Cook Islands" {{cs-ndecl|[[Cookovy]]<+> [[ostrovy]]<mp>}}
+[[čáry]] "magic, spells"
+
+
+Adjectival:
+-----------
+
+Masculine:
+
+Feminine:
+
+Neuter:
+
+[[výživné]] "alimony"
+
+Adjectival pluralia tantum:
+---------------------------
+
+Masculine:
+
+Feminine:
+
+Neuter:
+
+[[výživné]] "alimony"
+
+
+]=]
 local lang = require("Module:languages").getByCode("cs")
 local m_table = require("Module:table")
 local m_links = require("Module:links")
@@ -361,23 +589,6 @@ declprops["hard-m"] = {
 }
 
 
-decls["semisoft-m"] = function(base, stems)
-	error("Unimplemented")
-	local gen_s = default_genitive_u(base) and "u" or "a" -- may be overridden
-	local loc_s = base.animacy ~= "inan" and {"evi", "u", "i"} or {"u", "i"}
-	-- FIXME: Should vocative singular in -u be end-stressed if reducible, parallel
-	-- to soft nouns? I don't have any examples of reducible nouns in -č, ш or щ.
-	local voc_s = rfind(stems.vowel_stem, "[rž]$") and "e" or "у̣" -- dot underneath u
-	add_decl(base, stems, "", gen_s, {"evi", "u"}, nil, "em", loc_s, voc_s,
-		"i", "iv", "am", "amy", "ax")
-end
-
-declprops["semisoft-m"] = {
-	desc = "semisoft masc",
-	cat = "semisoft masculine",
-}
-
-
 decls["soft-m"] = function(base, stems)
 	-- animates with dat_s only in -i need to give this manually, using '<dati>'
 	local dat_s = base.animacy == "inan" and "i" or {"ovi", "i"}
@@ -427,6 +638,7 @@ declprops["a-m"] = {
 
 
 decls["e-m"] = function(base, stems)
+	-- [[soudce]] "judge"
 	add_decl(base, stems, "e", "e", {"ovi", "i"}, nil, "e", {"ovi", "i"}, "em",
 		-- nouns with -ové as well (e.g. [[soudce]] "judge") will need to specify that manually, e.g. <nompli:ové>
 		"i", "ů", "ům", "e", "ích", "i")
@@ -447,6 +659,18 @@ end
 declprops["y-m"] = {
 	desc = "foreign masc in -i/-y",
 	cat = {"foreign masculine nouns in -i/-y"},
+}
+
+
+decls["t-m"] = function(base, stems)
+	-- E.g. [[kníže]] "prince", [[hrabě]] "earl", [[markrabě]] "margrave".
+	add_decl(base, stems, "ě", "ěte", "ěti", "ěte", "ě", "ěti", "ětem",
+		"ata", "at", "atům", nil, "atech", "aty")
+end
+
+declprops["t-m"] = {
+	desc = "t-stem masc",
+	cat = "t-stem masculine",
 }
 
 
@@ -476,8 +700,8 @@ decls["soft-f"] = function(base, stems)
 	-- 'přítelkyň' or 'přítelkyní' and need an override <genpl-:í> (alternation between -ň and -n handled automatically
 	-- by the different stems; FIXME: implement this).
 	local gen_p = rfind(base.pl_vowel_stem, "ic$") and "" or "í"
-	add_decl(base, stems, "e", "e", "i", "i", "e", "i", "í",
-		"e", gen_p, "ím", nil, "ích", "emi")
+	add_decl(base, stems, "ě", "ě", "i", "i", "ě", "i", "í",
+		"ě", gen_p, "ím", nil, "ích", "ěmi")
 end
 
 declprops["soft-f"] = {
@@ -566,6 +790,7 @@ declprops["hard-n"] = {
 
 
 decls["soft-n"] = function(base, stems)
+	-- Examples: [[moře]] "sea", [[slunce]] "sun", [[srdce]] "heart"
 	add_decl(base, stems, "ě", "ě", "i", "ě", "ě", "i", "ěm",
 		"ě", "í", "ím", nil, "ích", "i")
 end
@@ -609,6 +834,23 @@ end
 declprops["t-n"] = {
 	desc = "t-stem neut",
 	cat = "t-stem neuter",
+}
+
+
+decls["ma-n"] = function(base, stems)
+	-- E.g. [[drama]] "drama", [[dogma]] "dogma", [[aneurysma]]/[[aneuryzma]] "aneurysm", [[dilema]] "dilemma",
+	-- [[gumma]] "gumma" (non-cancerous syphilitic growth), [[klima]] "climate", [[kóma]] "coma", [[lemma]] "lemma",
+	-- [[melisma]] "melisma", [[paradigma]] "paradigm", [[plasma]]/[[plazma]] "plasma [partly ionized gas]"
+	-- (note [[plasma]]/[[plazma]] "blood plasma" is feminine), [[revma]] "rheumatism", [[schéma]] "schema, diagram",
+	-- [[schisma]]/[[schizma]] "schism", [[smegma]] "smegma", [[sofisma]]/[[sofizma]] "sophism", [[sperma]] "sperm",
+	-- [[stigma]] "stigma", [[téma]] "theme", [[trauma]] "trauma", [[trilema]] "trilemma", [[zeugma]] "zeugma".
+	add_decl(base, stems, "a", "atu", "atu", "a", "a", "atu", "atem",
+		"ata", "at", "atům", nil, "atech", "aty")
+end
+
+declprops["ma-n"] = {
+	desc = "ma-stem neut",
+	cat = "ma-stem neuter",
 }
 
 
@@ -730,42 +972,38 @@ local function fetch_footnotes(separated_group)
 end
 
 --[=[
-Parse a single override spec (e.g. 'loci:ú' or 'datpl:čобotam:čoбоtяm[rare]') and return
+Parse a single override spec (e.g. 'nomplé:ové' or 'ins:autodráhou:autodrahou[rare]') and return
 two values: the slot the override applies to, and an object describing the override spec.
 The input is actually a list where the footnotes have been separated out; for example,
-given the spec 'inspl:čобotamy:čoбоtяmy[rare]:čoбitьmy[archaic]', the input will be a list
-{"inspl:čобotamy:čoбоtяmy", "[rare]", ":čoбitьmy", "[archaic]", ""}. The object returned
-for 'datpl:čобotam:čoбоtяm[rare]' looks like this:
+given the spec 'inspl:čоbotami:čobоtámi[rare]:čobitmi[archaic]', the input will be a list
+{"inspl:čоbotami:čobоtámi", "[rare]", ":čobitmi", "[archaic]", ""}. The object returned
+for 'ins:autodráhou:autodrahou[rare]' looks like this:
 
 {
   full = true,
   values = {
     {
-      form = "čобotam"
+      form = "autodráhou"
     },
     {
-      form = "čoбоtяm",
+      form = "autodrahou",
       footnotes = {"[rare]"}
     }
   }
 }
 
-The object returned for 'lócji:jú' looks like this:
+The object returned for 'nomplé:ové' looks like this:
 
 {
-  stemstressed = true,
   values = {
     {
-      form = "ї",
+      form = "é",
     },
     {
-      form = "ю́",
+      form = "ové",
     }
   }
 }
-
-Note that all forms (full or partial) are reverse-transliterated, and full forms are
-normalized by adding an accent to monosyllabic forms.
 ]=]
 local function parse_override(segments)
 	local retval = {values = {}}
@@ -830,15 +1068,11 @@ dot-separated indicators within them). Return value is an object of the form
 	},
 	...
   },
-  explicit_gender = "GENDER", -- "m", "f", "n", "mf"; may be missing
+  gender = "GENDER", -- "m", "f", "n"
   number = "NUMBER", -- "sg", "pl"; may be missing
   animacy = "ANIMACY", -- "inan", "an"; may be missing
-  ialt = "VOWEL_ALTERNATION", -- "i", "ie", "ijo", "io"; may be missing
-  rtype = "RTYPE", -- "soft", "semisoft"; may be missing
-  neutertype = "NEUTERTYPE", -- "t", "en"; may be missing
   plsoft = true, -- may be missing
   plhard = true, -- may be missing
-  remove_in = true, -- may be missing
   thirddecl = true, -- may be missing
   surname = true, -- may be missing
   adj = true, -- may be missing
@@ -886,15 +1120,26 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Blank indicator: '" .. inside .. "'")
 				end
 				base.footnotes = fetch_footnotes(dot_separated_group)
-			elseif rfind(part, "^[*]*$") or rfind(part, "^[*]*,") then
+			elseif rfind(part, "^[-*#ě]*$") or rfind(part, "^[-*#ě]*,") then
 				if base.stems then
-					error("Can't specify reducible indicator twice: '" .. inside .. "'")
+					error("Can't specify reducible/vowel-alternant indicator twice: '" .. inside .. "'")
 				end
 				local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, ",")
 				local patterns = {}
 				for i, comma_separated_group in ipairs(comma_separated_groups) do
 					local pattern = comma_separated_group[1]
-					local reducible
+					local orig_pattern = pattern
+					local vowelalt
+					if pattern == "-" then
+						-- default reducible, no vowel alt
+					else
+						local before, after
+						before, reducible, after = rmatch(pattern, "^(.-)(%-?%*)(.-)$")
+						if before then
+							pattern = before .. after
+						else
+
+						pat, vowelalt = rsubb(pattern, "##?ě?", "")
 					if pattern == "" then
 						reducible = false
 					elseif pattern == "*" then
@@ -1019,47 +1264,43 @@ end
 
 
 local function undo_vowel_alternation(base, stem)
-	if base.ialt == "io" then
-		local modstem = rsub(stem, "([oО])(́?" .. com.cons_c .. "*)$",
+	if base.alt == "quant" then
+		local modstem = rsub(stem, "([aeěo])(" .. com.cons_c .. "*)$",
 			function(vowel, post)
-				if vowel == "o" then
-					return "i" .. post
+				if vowel == "a" then
+					return "á" .. post
+				elseif vowel == "e" or vowel == "ě" then
+					return "í" .. post
 				else
-					return "І" .. post
+					return "ů" .. post
 				end
 			end
 		)
 		if modstem == stem then
-			error("Indicator 'io' can't be undone because stem '" .. stem .. "' doesn't have o as its last vowel")
+			error("Indicator 'quant' can't be undone because stem '" .. stem .. "' doesn't have a, e, ě or o as its last vowel")
 		end
 		return modstem
-	elseif base.ialt == "ijo" then
-		local modstem = rsub(stem, "ьo(́?" .. com.cons_c .. "*)$", "i%1")
-		if modstem == stem then
-			error("Indicator 'ijo' can't be undone because stem '" .. stem .. "' doesn't have ьo as its last vowel")
-		end
-		return modstem
-	elseif base.ialt == "ie" then
-		local modstem = rsub(stem, "([eЕєЄ])(́?" .. com.cons_c .. "*)$",
-			function(vowel, post)
-				local reverse_vowel = {
-					["e"] = "i",
-					["Е"] = "І",
-					["є"] = "ї",
-					["Є"] = "Ї",
-				}
-				return reverse_vowel[vowel] .. post
-			end
-		)
-		if modstem == stem then
-			error("Indicator 'ie' can't be undone because stem '" .. stem .. "' doesn't have e or є as its last vowel")
-		end
-		return modstem
-	elseif base.ialt == "i" then
-		error("Don't currently know how to undo 'i' vowel alternation")
 	else
 		return stem
 	end
+end
+
+
+local function undo_second_palatalization(base, word)
+	local function try(from, to)
+		local stem = rmatch(word, "^(.*)" .. from .. "$")
+		if stem then
+			return stem .. to
+		end
+		return nil
+	end
+	return try("št", "sk") or
+		try("čt", "ck") or
+		try("c", "k") or -- FIXME, this could be wrong and c correct
+		try("ř", "r") or
+		try("z", "h") or -- FIXME, this could be wrong and z or g correct
+		try("š", "ch") or
+		word
 end
 
 
@@ -1068,6 +1309,7 @@ end
 -- means the nominative and genitive plural as the remainder are either derived or the same
 -- for all declensions, modulo soft vs. hard).
 local function synthesize_singular_lemma(base)
+	error("Implement me")
 	local stem, ac
 	while true do
 		-- Check neuter endings.
@@ -1097,11 +1339,8 @@ local function synthesize_singular_lemma(base)
 			break
 		end
 		-- Handle masculine/feminine endings.
-		stem, ac = rmatch(base.lemma, "^(.*)y(́?)$")
+		stem, ac = rmatch(base.lemma, "^(.*)y$")
 		if stem then
-			if not base.gender then
-				error("For plural-only lemma in -y, need to specify the gender: '" .. base.lemma .. "'")
-			end
 			if base.gender == "m" then
 				base.lemma = undo_vowel_alternation(base, stem)
 			else
@@ -1160,111 +1399,134 @@ end
 
 -- For an adjectival lemma, synthesize the masc singular form.
 local function synthesize_adj_lemma(base)
-	local stem, ac
+	local stem
 	local gender, number
 	while true do
-		-- Masculine
-		stem, ac = rmatch(base.lemma, "^(.*)[yiї](́?)й$")
-		if stem then
-			gender = "m"
-			break
-		end
-		stem, ac = rmatch(base.lemma, "^(.*[oeєiї]́?v)$")
-		if stem then
-			gender = "m"
-			break
-		end
-		stem, ac = rmatch(base.lemma, "^(.*[yiї]́?n)$")
-		if stem then
-			gender = "m"
-			break
-		end
-		-- Feminine
-		stem, ac = rmatch(base.lemma, "^(.*)a(́?)$")
-		if stem then
-			base.lemma = stem .. "y" .. ac .. "й"
-			gender = "f"
-			break
-		end
-		stem, ac = rmatch(base.lemma, "^(.*c)я(́?)$")
-		if stem then
-			base.lemma = stem .. "y" .. ac .. "й"
-			gender = "f"
-			break
-		end
-		stem, ac = rmatch(base.lemma, "^(.*" .. com.vowel .. AC .. "?)я(́?)$")
-		if stem then
-			base.lemma = stem .. "ї" .. ac .. "й"
-			gender = "f"
-			break
-		end
-		stem, ac = rmatch(base.lemma, "^(.*)я(́?)$")
-		if stem then
-			base.lemma = stem .. "i" .. ac .. "й"
-			gender = "f"
-			break
-		end
-		-- Neuter
-		stem, ac = rmatch(base.lemma, "^(.*)e(́?)$")
-		if stem then
-			base.lemma = stem .. "y" .. ac .. "й"
-			gender = "n"
-			break
-		end
-		stem, ac = rmatch(base.lemma, "^(.*c)e(́?)$")
-		if stem then
-			base.lemma = stem .. "y" .. ac .. "й"
-			gender = "n"
-			break
-		end
-		stem, ac = rmatch(base.lemma, "^(.*" .. com.vowel .. AC .. "?)є(́?)$")
-		if stem then
-			base.lemma = stem .. "ї" .. ac .. "й"
-			gender = "n"
-			break
-		end
-		stem, ac = rmatch(base.lemma, "^(.*)є(́?)$")
-		if stem then
-			base.lemma = stem .. "i" .. ac .. "й"
-			gender = "n"
-			break
-		end
-		-- Plural
-		stem, ac = rmatch(base.lemma, "^(.*c)i(́?)$")
-		if stem then
-			base.lemma = stem .. "y" .. ac .. "й"
-			number = "pl"
-			break
-		end
-		stem, ac = rmatch(base.lemma, "^(.*" .. com.vowel .. AC .. "?)ї(́?)$")
-		if stem then
-			base.lemma = stem .. "ї" .. ac .. "й"
-			number = "pl"
-			break
-		end
-		stem, ac = rmatch(base.lemma, "^(.*)i(́?)$")
-		if stem then
-			if base.soft then
-				base.lemma = stem .. "i" .. ac .. "й"
+		if base.number == "pl" then
+			if base.gender == "m" then
+				stem = rmatch(base.lemma, "^(.*)í$")
+				if stem then
+					if base.softadj then
+						-- nothing to do
+					else
+						if base.animacy ~= "an" then
+							error(("Masculine plural adjective lemma '%s' ending in -í can only be animate unless '.softadj' is specified"):
+								format(base.lemma))
+						end
+						base.lemma = undo_second_palatalization(base, stem) .. "ý"
+					end
+					break
+				end
+				stem = rmatch(base.lemma, "^(.*)é$")
+				if stem then
+					if base.animacy == "an" then
+						error(("Masculine plural adjective lemma '%s' ending in -é must be inanimate"):
+							format(base.lemma))
+					end
+					base.lemma = stem .. "ý"
+					break
+				end
+				stem = rmatch(base.lemma, "^(.*ův)i$") or rmatch(base.lemma, "^(.*in)i$")
+				if stem then
+					if base.animacy ~= "an" then
+						error(("Masculine plural possessive adjective lemma '%s' ending in -i must be animate"):
+							format(base.lemma))
+					end
+					base.lemma = stem
+					break
+				end
+				stem = rmatch(base.lemma, "^(.*ův)y$") or rmatch(base.lemma, "^(.*in)y$")
+				if stem then
+					if base.animacy == "an" then
+						error(("Masculine plural adjective lemma '%s' ending in -y must be inanimate"):
+							format(base.lemma))
+					end
+					base.lemma = stem
+					break
+				end
+				if base.animacy == "an" then
+					error(("Animate masculine plural adjectival lemma '%s' should end in -í, -ůvi or -ini"):
+						format(base.lemma))
+				elseif base.softadj then
+					error(("Soft masculine plural adjectival lemma '%s' should end in -í"):format(base.lemma))
+				else
+					error(("Inanimate masculine plural adjectival lemma '%s' should end in -é, -ůvy or -iny"):
+						format(base.lemma))
+				end
+			elseif base.gender == "f" then
+				stem = rmatch(base.lemma, "^(.*)é$") -- hard adjective
+				if stem then
+					base.lemma = stem .. "ý"
+					break
+				end
+				stem = rmatch(base.lemma, "^(.*)í$") -- soft adjective
+				if stem then
+					break
+				end
+				stem = rmatch(base.lemma, "^(.*ův)y$") or rmatch(base.lemma, "^(.*in)y$") -- possessive adjective
+				if stem then
+					base.lemma = stem
+					break
+				end
+				error(("Feminine plural adjectival lemma '%s' should end in -é, -í, -ůvy or -iny"):format(base.lemma))
 			else
-				base.lemma = stem .. "y" .. ac .. "й"
+				stem = rmatch(base.lemma, "^(.*)á$") -- hard adjective
+				if stem then
+					base.lemma = stem .. "ý"
+					break
+				end
+				stem = rmatch(base.lemma, "^(.*)í$") -- soft adjective
+				if stem then
+					break
+				end
+				stem = rmatch(base.lemma, "^(.*ův)a$") or rmatch(base.lemma, "^(.*in)a$") -- possessive adjective
+				if stem then
+					base.lemma = stem
+					break
+				end
+				error(("Neuter plural adjectival lemma '%s' should end in -á, -í, -ůva or -ina"):format(base.lemma))
 			end
-			number = "pl"
-			break
+		else
+			if base.gender == "m" then
+				stem = rmatch(base.lemma, "^(.*)[ýí]$") or rmatch(base.lemma, "^(.*)ův$") or rmatch(base.lemma, "^(.*)in$")
+				if stem then
+					break
+				end
+				error(("Masculine singular adjectival lemma '%s' should end in -ý, -í, -ův or -in"):format(base.lemma))
+			elseif base.gender == "f" then
+				stem = rmatch(base.lemma, "^(.*)á$")
+				if stem then
+					base.lemma = stem .. "ý"
+					break
+				end
+				stem = rmatch(base.lemma, "^(.*)í$")
+				if stem then
+					break
+				end
+				stem = rmatch(base.lemma, "^(.*ův)a$") or rmatch(base.lemma, "^(.*in)a$")
+				if stem then
+					base.lemma = stem
+					break
+				end
+				error(("Feminine singular adjectival lemma '%s' should end in -á, -í, -ůva or -ina"):format(base.lemma))
+			else
+				stem = rmatch(base.lemma, "^(.*)é$")
+				if stem then
+					base.lemma = stem .. "ý"
+					break
+				end
+				stem = rmatch(base.lemma, "^(.*)í$")
+				if stem then
+					break
+				end
+				stem = rmatch(base.lemma, "^(.*ův)o$") or rmatch(base.lemma, "^(.*in)o$")
+				if stem then
+					base.lemma = stem
+					break
+				end
+				error(("Neuter singular adjectival lemma '%s' should end in -é, -í, -ůvo or -ino"):format(base.lemma))
+			end
 		end
-		error("Don't recognize ending of adjectival lemma '" .. base.lemma .. "'")
-	end
-	if gender then
-		if base.gender and base.gender ~= gender then
-			error("Explicit gender '" .. base.gender .. "' disagrees with detected gender '" .. gender .. "'")
-		end
-		base.gender = gender
-	end
-	if number then
-		if base.number and base.number ~= number then
-			error("Explicit number '" .. base.number .. "' disagrees with detected number '" .. number .. "'")
-		end
-		base.number = number
 	end
 
 	-- Now set the stem sets if not given.
@@ -1304,7 +1566,7 @@ end
 -- Determine the declension based on the lemma, gender and number. The declension is set in base.decl. In the process,
 -- we set either base.vowel_stem (if the lemma ends in a vowel) or base.nonvowel_stem (if the lemma does not end in a
 -- vowel), which is used by determine_stems().
-local function determine_declension_and_gender(base)
+local function determine_declension(base)
 	-- For now we require that the gender be given; there are too many exceptions otherwise.
 	if not base.gender then
 		error("Gender must be specified")
@@ -1325,15 +1587,30 @@ local function determine_declension_and_gender(base)
 	end
 	stem = rmatch(base.lemma, "^(.*)a$")
 	if stem then
-		if base.gender == "n" then
-			error("For lemma ending in -a, gender 'n' not allowed")
+		if base.gender == "m" then
+			if base.animacy ~ = "an" then
+				error("Masculine lemma in -a must be animate")
+			end
+			base.decl = "a-m"
+		elseif base.gender == "f" then
+			base.decl = "hard-f"
+		elseif base.gender == "n" then
+			if rfind(stem, "m$") then
+				base.decl = "ma-n"
+			else
+				error("Lemma ending in -a and neuter must end in -ma")
+			end
 		end
-		base.gender = base.gender or "f"
 		base.vowel_stem = stem
 		return
 	end
-	stem = rmatch(base.lemma, "^(.*)я́?$")
+	stem = rmatch(base.lemma, "^(.*)e$")
 	if stem then
+		if base.gender == "m" then
+			base.decl = "e-m"
+		elseif base.gender == "f" then
+			base.decl = "soft-f"
+
 		if base.neutertype == "en" then
 			base.decl = "en-n"
 		elseif base.neutertype == "t" then
@@ -1442,12 +1719,6 @@ end
 local function determine_stems(base)
 	if not base.stresses then
 		base.stresses = {{reducible = false, genpl_reversed = false}}
-	end
-	if base.stem then
-		base.stem = com.add_monosyllabic_stress(base.stem)
-	end
-	if base.plstem then
-		base.plstem = com.add_monosyllabic_stress(base.plstem)
 	end
 	local end_stressed_lemma = rfind(base.lemma, AC .. "$")
 	for _, stress in ipairs(base.stresses) do
