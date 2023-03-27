@@ -256,8 +256,7 @@ local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:cs-common")
-local m_uk_translit = require("Module:cs-translit")
+local com = require("Module:User:Benwing2/cs-common")
 
 local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
@@ -273,12 +272,6 @@ local ulen = mw.ustring.len
 local usub = mw.ustring.sub
 local uupper = mw.ustring.upper
 local ulower = mw.ustring.lower
-
-local AC = u(0x0301) -- acute =  ́
-local CFLEX = u(0x0302) -- circumflex =  ̂
-local DOTUNDER = u(0x0323) -- dotunder =  ̣
-local accents = AC .. DOTUNDER
-local accents_c = "[" .. accents .. "]"
 
 
 -- version of rsubn() that discards all but the first return value
@@ -502,12 +495,9 @@ local function handle_derived_slots_and_overrides(base)
 			return forms
 		end
 	end
+	-- FIXME
 	if base.animacy == "inan" then
 		iut.insert_forms(base.forms, "acc_p", base.forms["nom_p"])
-	elseif base.animacy == "an" then
-		iut.insert_forms(base.forms, "acc_p", base.forms["gen_p"])
-	else
-		error("Internal error: Unrecognized animacy: " .. (base.animacy or "nil"))
 	end
 	if base.surname then
 		iut.insert_forms(base.forms, "voc_s", base.forms["nom_s"])
@@ -567,7 +557,7 @@ decls["hard-m"] = function(base, stems)
 		-- given manually using <locplích>; it will automatically trigger the second palatalization; loc_p in -ách (e.g.
 		-- [[plech]] "metal plate") also needs to be given manually using <locplách>
 		add_decl(base, stems, nil, nil, nil, nil, nil, nil, nil,
-			"y", "ů", "ům", nil, "ech", "y")
+			nom_p, "ů", "ům", "y", "ech", "y")
 	end
 end
 
@@ -596,7 +586,7 @@ decls["soft-m"] = function(base, stems)
 	local nom_p = base.animacy == "inan" and "e" or "i"
 	-- nouns with loc_p in -ech (e.g. [[cíl]] "goal") need to give this manually, using <locplech>
 	add_decl(base, stems, "", "e", dat_s, nil, "i", loc_s, "em",
-		nom_p, "ů", "ům", nil, "ích", "i")
+		nom_p, "ů", "ům", "e", "ích", "i")
 end
 
 declprops["soft-m"] = {
@@ -609,7 +599,7 @@ decls["mixed-m"] = function(base, stems)
 	-- combination of hard and soft endings; inanimate only; e.g. [[kotel]] "cauldron", [[řemen]] "strap",
 	-- [[pramen]] "source", [[kámen]] "stone", [[loket]] "elbow"
 	add_decl(base, stems, "", {"u", "e"}, {"u", "i"}, nil, "i", {"u", "i"}, "em",
-		{"e", "y"}, "ů", "ům", nil, {"ech", "ích"}, {"i", "y"})
+		{"e", "y"}, "ů", "ům", {"e", "y"}, {"ech", "ích"}, {"i", "y"})
 end
 
 declprops["mixed-m"] = {
@@ -665,7 +655,7 @@ declprops["y-m"] = {
 decls["t-m"] = function(base, stems)
 	-- E.g. [[kníže]] "prince", [[hrabě]] "earl", [[markrabě]] "margrave".
 	add_decl(base, stems, "ě", "ěte", "ěti", "ěte", "ě", "ěti", "ětem",
-		"ata", "at", "atům", nil, "atech", "aty")
+		"ata", "at", "atům", "ata", "atech", "aty")
 end
 
 declprops["t-m"] = {
@@ -685,7 +675,7 @@ decls["hard-f"] = function(base, stems)
 		error("FIXME")
 	else
 		add_decl(base, stems, nil, nil, nil, nil, nil, nil, nil,
-			"y", "", "ám", nil, "ách", "ami")
+			"y", "", "ám", "y", "ách", "ami")
 	end
 end
 
@@ -701,7 +691,7 @@ decls["soft-f"] = function(base, stems)
 	-- by the different stems; FIXME: implement this).
 	local gen_p = rfind(base.pl_vowel_stem, "ic$") and "" or "í"
 	add_decl(base, stems, "ě", "ě", "i", "i", "ě", "i", "í",
-		"ě", gen_p, "ím", nil, "ích", "ěmi")
+		"ě", gen_p, "ím", "ě", "ích", "ěmi")
 end
 
 declprops["soft-f"] = {
@@ -715,7 +705,7 @@ decls["cons-f"] = function(base, stems)
 	-- [[paní]] "Mrs." is vaguely of this type but totally irregular; indeclinable in the singular, with plural forms
 	-- nom/gen/acc 'paní', dat 'paním', loc 'paních', ins 'paními'.
 	add_decl(base, stems, "", "ě", "i", "", "i", "i", "í",
-		"ě", "í", "ím", nil, "ích", "ěmi")
+		"ě", "í", "ím", "ě", "ích", "ěmi")
 end
 
 declprops["cons-f"] = {
@@ -724,16 +714,16 @@ declprops["cons-f"] = {
 }
 
 
-decls["third-f"] = function(base, stems)
-	-- Note convergence between cons-f and third-f, e.g. [[loď]] "boat", which has gen_s/nom_p/acc_p 'lodi' or 'lodě',
+decls["i-f"] = function(base, stems)
+	-- Note convergence between cons-f and i-f, e.g. [[loď]] "boat", which has gen_s/nom_p/acc_p 'lodi' or 'lodě',
 	-- and ins_p 'loděmi' or 'loďmi'.
 	add_decl(base, stems, "", "i", "i", "", "i", "i", "í",
-		"i", "í", "em", nil, "ech", "mi")
+		"i", "í", "em", "i", "ech", "mi")
 end
 
-declprops["third-f"] = {
-	desc = "3rd-decl fem",
-	cat = "third-declension feminine",
+declprops["i-f"] = {
+	desc = "i-stem fem",
+	cat = "i-stem feminine",
 }
 
 
@@ -764,7 +754,7 @@ decls["hard-n"] = function(base, stems)
 	-- some neuter nouns have loc_pl -ích (which triggers the second palatalization) or -ách; need overrides
 	-- <locplích> or <locplách>
 	add_decl(base, stems, "o", "a", "u", "o", "o", velar and "u" or {"ě", "u"}, "em",
-		"a", "", "ům", nil, "ech", "y")
+		"a", "", "ům", "a", "ech", "y")
 	-- FIXME: paired body parts e.g. [[rameno]] "shoulder" (gen_p/loc_p 'ramenou/ramen'), [[koleno]] "knee"
 	-- (gen_p/loc_p 'kolenou/kolen'), [[prsa]] "chest, breasts" (plurale tantum; gen_p/loc_p 'prsou').
 	-- FIXME: Nouns with both neuter and feminine forms in the plural, e.g. [[lýtko]] "calf (of the leg)",
@@ -792,7 +782,7 @@ declprops["hard-n"] = {
 decls["soft-n"] = function(base, stems)
 	-- Examples: [[moře]] "sea", [[slunce]] "sun", [[srdce]] "heart"
 	add_decl(base, stems, "ě", "ě", "i", "ě", "ě", "i", "ěm",
-		"ě", "í", "ím", nil, "ích", "i")
+		"ě", "í", "ím", "ě", "ích", "i")
 end
 
 declprops["soft-n"] = {
@@ -803,7 +793,7 @@ declprops["soft-n"] = {
 
 decls["í-n"] = function(base, stems)
 	add_decl(base, stems, "í", "í", "í", "í", "ím", loc_sg, "ím",
-		"í", "í", "ím", nil, "ích", "ími")
+		"í", "í", "ím", "í", "ích", "ími")
 end
 
 declprops["í-n"] = {
@@ -828,7 +818,7 @@ decls["t-n"] = function(base, stems)
 	-- ([[koště]] "broom"), and one referring to a person ([[kníže]] "prince", with accusative following the genitive
 	-- in the singular; this will need an override <genete>.
 	add_decl(base, stems, "ě", "ěte", "ěti", "ě", "ě", "ěti", "ětem",
-		"ata", "at", "atům", nil, "atech", "aty")
+		"ata", "at", "atům", "ata", "atech", "aty")
 end
 
 declprops["t-n"] = {
@@ -845,7 +835,7 @@ decls["ma-n"] = function(base, stems)
 	-- [[schisma]]/[[schizma]] "schism", [[smegma]] "smegma", [[sofisma]]/[[sofizma]] "sophism", [[sperma]] "sperm",
 	-- [[stigma]] "stigma", [[téma]] "theme", [[trauma]] "trauma", [[trilema]] "trilemma", [[zeugma]] "zeugma".
 	add_decl(base, stems, "a", "atu", "atu", "a", "a", "atu", "atem",
-		"ata", "at", "atům", nil, "atech", "aty")
+		"ata", "at", "atům", "ata", "atech", "aty")
 end
 
 declprops["ma-n"] = {
@@ -873,36 +863,44 @@ decls["adj"] = function(base, stems)
 	if base.number ~= "pl" then
 		if base.gender == "m" then
 			copy("nom_m", "nom_s")
-			copy("gen_m", "gen_s")
-			copy("dat_m", "dat_s")
+			copy("gen_mn", "gen_s")
+			copy("dat_mn", "dat_s")
+			copy("loc_mn", "loc_s")
 			copy("ins_m", "ins_s")
-			copy("loc_m", "loc_s")
-			copy("voc_m", "voc_s")
 		elseif base.gender == "f" then
 			copy("nom_f", "nom_s")
 			copy("gen_f", "gen_s")
 			copy("dat_f", "dat_s")
 			copy("acc_f", "acc_s")
-			copy("ins_f", "ins_s")
 			copy("loc_f", "loc_s")
-			copy("voc_f", "voc_s")
-		elseif base.gender == "n" then
-			copy("nom_n", "nom_s")
-			copy("gen_m", "gen_s")
-			copy("dat_m", "dat_s")
-			copy("acc_n", "acc_s")
-			copy("ins_m", "ins_s")
-			copy("loc_m", "loc_s")
-			copy("voc_n", "voc_s")
+			copy("ins_f", "ins_s")
 		else
-			error("Internal error: Unrecognized gender: " .. base.gender)
+			copy("nom_n", "nom_s")
+			copy("gen_mn", "gen_s")
+			copy("dat_mn", "dat_s")
+			copy("acc_n", "acc_s")
+			copy("loc_mn", "loc_s")
+			copy("ins_mn", "ins_s")
 		end
 		if not base.forms.voc_s then
 			iut.insert_forms(base.forms, "voc_s", base.forms["nom_s"])
 		end
 	end
 	if base.number ~= "sg" then
-		copy("nom_p", "nom_p")
+		if base.gender == "m" then
+			if base.animacy == "an" then
+				copy("nom_mp_an", "nom_p")
+			else
+				copy("nom_fp", "nom_p")
+			end
+			copy("acc_mfp", "acc_p")
+		elseif base.gender == "f" then
+			copy("nom_fp", "nom_p")
+			copy("acc_mfp", "acc_p")
+		else
+			copy("nom_np", "nom_p")
+			copy("acc_np", "acc_p")
+		end
 		copy("gen_p", "gen_p")
 		copy("dat_p", "dat_p")
 		copy("ins_p", "ins_p")
@@ -1108,7 +1106,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 		for i, dot_separated_group in ipairs(dot_separated_groups) do
 			local part = dot_separated_group[1]
 			local case_prefix = usub(part, 1, 3)
-			if cases[case_prefix] or accented_cases[case_prefix] then
+			if cases[case_prefix] then
 				local slot, override = parse_override(dot_separated_group)
 				if base.overrides[slot] then
 					table.insert(base.overrides[slot], override)
@@ -1129,7 +1127,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 				for i, comma_separated_group in ipairs(comma_separated_groups) do
 					local pattern = comma_separated_group[1]
 					local orig_pattern = pattern
-					local vowelalt
+					local reducible, vowelalt, oblique_case_vowelalt
 					if pattern == "-" then
 						-- default reducible, no vowel alt
 					else
@@ -1137,25 +1135,32 @@ local function parse_indicator_spec(angle_bracket_spec)
 						before, reducible, after = rmatch(pattern, "^(.-)(%-?%*)(.-)$")
 						if before then
 							pattern = before .. after
-						else
-
-						pat, vowelalt = rsubb(pattern, "##?ě?", "")
-					if pattern == "" then
-						reducible = false
-					elseif pattern == "*" then
-						reducible = true
-					else
-						error("Unrecognized reducible pattern '" .. pat .. "': '" .. inside .. "'")
+						end
+						if pattern ~= "" then
+							if not rfind(pattern, "^##?ě?$") then
+								error("Unrecognized vowel-alternation pattern '" .. pattern .. "', should be one of #, ##, #ě or ##ě: '" .. inside .. "'")
+							end
+							if pattern == "#ě" or pattern == "##ě" then
+								vowelalt = "quant-ě"
+							else
+								vowelalt = "quant"
+							end
+							if pattern == "##" or pattern == "##ě" then
+								oblique_case_vowelalt = true
+							end
+						end
 					end
 					table.insert(patterns, {
 						reducible = reducible,
+						vowelalt = vowelalt,
+						oblique_case_vowelalt = oblique_case_vowelalt,
 						footnotes = fetch_footnotes(comma_separated_group)
 					})
 				end
-				base.stems = patterns
+				base.stem_sets = patterns
 			elseif #dot_separated_group > 1 then
-				error("Footnotes only allowed with slot overrides, stress patterns or by themselves: '" .. table.concat(dot_separated_group) .. "'")
-			elseif part == "m" or part == "mf" or part == "f" or part == "n" then
+				error("Footnotes only allowed with slot overrides, reducible or vowel alternation specs or by themselves: '" .. table.concat(dot_separated_group) .. "'")
+			elseif part == "m" or part == "f" or part == "n" then
 				if base.explicit_gender then
 					error("Can't specify gender twice: '" .. inside .. "'")
 				end
@@ -1369,7 +1374,7 @@ local function synthesize_singular_lemma(base)
 					base.lemma = stem
 				end
 				base.lemma = undo_vowel_alternation(base, base.lemma)
-			elseif base.gender == "f" or base.gender == "mf" then
+			elseif base.gender == "f" then
 				if base.thirddecl then
 					if rfind(stem, "[dtsзlnc]$") then
 						base.lemma = stem .. "ь"
@@ -1549,9 +1554,6 @@ local function check_indicators_match_lemma(base)
 	if base.rtype and not rfind(base.lemma, "r$") then
 		error("'r' type indicator '" .. base.rtype .. "' can only be specified with a lemma ending in -r")
 	end
-	if base.remove_in and not rfind(base.lemma, "y?n$") then
-		error("'in' can only be specified with a lemma ending in -yn")
-	end
 	if base.neutertype then
 		if not rfind(base.lemma, "я́?$") and not rfind(base.lemma, com.hushing_c .. "a?$") then
 			error("Neuter-type indicator '" .. base.neutertype .. "' can only be specified with a lemma ending in -я or hushing consonant + -a")
@@ -1575,7 +1577,7 @@ local function determine_declension(base)
 	stem = rmatch(base.lemma, "^(.*)a$")
 	if stem then
 		if base.gender == "m" then
-			if base.animacy ~ = "an" then
+			if base.animacy ~= "an" then
 				error("Masculine lemma in -a must be animate")
 			end
 			base.decl = "a-m"
@@ -1591,10 +1593,17 @@ local function determine_declension(base)
 		base.vowel_stem = stem
 		return
 	end
-	stem = rmatch(base.lemma, "^(.*)[eě]$")
+	local ending
+	stem, ending = rmatch(base.lemma, "^(.*)([eě])$")
 	if stem then
+		if ending == "ě" then
+			local stembegin, lastchar = rmatch(stem, "^(.*)(.)$")
+			if lastchar then
+				stem = stembegin .. (com.paired_plain_to_palatal[lastchar] or lastchar)
+			end
+		end
 		if base.gender == "m" then
-			if base.animacy ~ = "an" then
+			if base.animacy ~= "an" then
 				error("Masculine lemma in -e must be animate")
 			end
 			if base.decltype == "t" then
@@ -1638,16 +1647,23 @@ local function determine_declension(base)
 	end
 	stem = rmatch(base.lemma, "^(.*" .. com.cons_c .. ")$")
 	if stem then
-		if rfind(base.lemma, "[cčjřšžťďň]$") or base.soft then
-			base.decl = "soft-m"
-		elseif base.mixed then
-			base.decl = "mixed-m"
-		else
-			base.decl = "hard-m"
+		if base.gender == "m" then
+			if rfind(base.lemma, "[cčjřšžťďň]$") or base.soft then
+				base.decl = "soft-m"
+			elseif base.mixed then
+				base.decl = "mixed-m"
+			else
+				base.decl = "hard-m"
+			end
+		elseif base.gender == "f" then
+			if base.istem then
+				base.decl = "i-f"
+			else
+				base.decl = "cons-f"
+			end
+		elseif base.gender == "n" then
+			error("Support for foreign neuter nouns ending in a consonant not yet implemented")
 		end
-	elseif
-		FIXME
-		base.gender = base.gender or "m"
 		base.nonvowel_stem = stem
 		return
 	end
@@ -1657,112 +1673,59 @@ end
 
 -- Determine the stems to use for each stem set: vowel and nonvowel stems, for singular
 -- and plural. We assume that one of base.vowel_stem or base.nonvowel_stem has been
--- set in determine_declension_and_gender(), depending on whether the lemma ends in
--- a vowel. We construct all the rest given the stress pattern, reducibility, and
--- any explicit stems given. We store the determined stems inside of the stress objects
--- in `base.stresses`, meaning that if the user gave multiple stress patterns, we
--- will compute multiple sets of stems. The reason is that the stems may vary depending
--- on the stress pattern and reducibility. The dependency on reducibility should be
--- obvious but there is also dependency on the stress pattern in that in stress patterns
--- d, d', f and f' the lemma is given in end-stressed form but some other forms need to
--- be stem-stressed. We make the stems stressed on the last syllable for pattern d
--- (množyna pl. množyny) but but on the first syllable for the remaining patterns
--- (гolova pl. гоlovy, skovoroda pl. skоvorody, both pattern d').
+-- set in determine_declension(), depending on whether the lemma ends in
+-- a vowel. We construct all the rest given the reducibility, vowel alternation spec and
+-- any explicit stems given. We store the determined stems inside of the stem-set objects
+-- in `base.stem_sets`, meaning that if the user gave multiple reducible or vowel-alternation
+-- patterns, we will compute multiple sets of stems. The reason is that the stems may vary
+-- depending on the reducibility and vowel alternation.
 local function determine_stems(base)
-	if not base.stresses then
-		base.stresses = {{reducible = false, genpl_reversed = false}}
+	if not base.stem_sets then
+		base.stem_sets = {{reducible = false}}
 	end
-	local end_stressed_lemma = rfind(base.lemma, AC .. "$")
-	for _, stress in ipairs(base.stresses) do
+	for _, stems in ipairs(base.stem_sets) do
 		local function dereduce(stem)
-			local epenthetic_stress = stress_patterns[stress.stress].gen_p == "+"
-			if stress.genpl_reversed then
-				epenthetic_stress = not epenthetic_stress
-			end
-			local dereduced_stem = com.dereduce(stem, epenthetic_stress)
+			local dereduced_stem = com.dereduce(stem)
 			if not dereduced_stem then
 				error("Unable to dereduce stem '" .. stem .. "'")
 			end
 			return dereduced_stem
 		end
-		if not stress.stress then
-			if base.gender ~= "n" and rfind(base.lemma, "[oe]́$") then
-				-- masculine or feminine in -o or -e
-				stress.stress = "b"
-			elseif stress.reducible and rfind(base.lemma, "[eoєi]́" .. com.cons_c .. "ь?$") then
-				-- reducible with stress on the reducible vowel
-				stress.stress = "b"
-			elseif rfind(base.lemma, "[aя]́$") and base.gender == "n" then
-				stress.stress = "b"
-			elseif end_stressed_lemma then
-				stress.stress = "d"
-			else
-				stress.stress = "a"
-			end
-		end
-		if stress.stress ~= "b" then
-			if base.stem and com.needs_accents(base.stem) then
-				error("Explicit stem needs an accent with stress pattern " .. stress.stress .. ": '" .. base.stem .. "'")
-			end
-			if base.plstem and com.needs_accents(base.plstem) then
-				error("Explicit plural stem needs an accent with stress pattern " .. stress.stress .. ": '" .. base.plstem .. "'")
-			end
-		end
 		local lemma_is_vowel_stem = not not base.vowel_stem
 		if base.vowel_stem then
-			if end_stressed_lemma and stress_patterns[stress.stress].nom_s ~= "+" then
-				error("Stress pattern " .. stress.stress .. " requires a stem-stressed lemma, not end-stressed: '" .. base.lemma .. "'")
-			elseif not end_stressed_lemma and stress_patterns[stress.stress].nom_s == "+" then
-				error("Stress pattern " .. stress.stress .. " requires an end-stressed lemma, not stem-stressed: '" .. base.lemma .. "'")
-			end
 			if base.stem then
 				error("Can't specify 'stem:' with lemma ending in a vowel")
 			end
-			stress.vowel_stem = add_stress_for_pattern(stress, base.vowel_stem)
-			if base.gender == "n" and rfind(base.lemma, "(.)%1я́?$") then
-				-- зnačе́nnя -> gen pl зnačе́nь
-				stress.nonvowel_stem = rsub(stress.vowel_stem, ".$", "")
-			else
-				stress.nonvowel_stem = stress.vowel_stem
-			end
-			-- Apply vowel alternation first in cases like viйna -> vоєn;
+			stems.vowel_stem = base.vowel_stem
+			stems.nonvowel_stem = stems.vowel_stem
+			-- Apply vowel alternation first in cases like jádro -> jader;
 			-- apply_vowel_alternation() will throw an error if the vowel being
 			-- modified isn't the last vowel in the stem.
-			stress.nonvowel_stem, stress.origvowel = com.apply_vowel_alternation(base.ialt, stress.nonvowel_stem)
-			if stress.reducible then
-				stress.nonvowel_stem = dereduce(stress.nonvowel_stem)
+			stems.nonvowel_stem, stems.origvowel = com.apply_vowel_alternation(stems.alt, stems.nonvowel_stem)
+			if stems.reducible then
+				stems.nonvowel_stem = dereduce(stems.nonvowel_stem)
 			end
 		else
-			stress.nonvowel_stem = add_stress_for_pattern(stress, base.nonvowel_stem)
-			if stress.reducible then
+			stems.nonvowel_stem = base.nonvowel_stem
+			if stems.reducible then
 				local stem_to_reduce = base.stem_for_reduce or base.nonvowel_stem
-				stress.vowel_stem = com.reduce(stem_to_reduce)
-				if not stress.vowel_stem then
+				stems.vowel_stem = com.reduce(stem_to_reduce)
+				if not stems.vowel_stem then
 					error("Unable to reduce stem '" .. stem_to_reduce .. "'")
 				end
 			else
-				stress.vowel_stem = base.nonvowel_stem
+				stems.vowel_stem = base.nonvowel_stem
 			end
-			if base.stem and base.stem ~= stress.vowel_stem then
-				stress.irregular_stem = true
-				stress.vowel_stem = base.stem
+			if base.stem and base.stem ~= stems.vowel_stem then
+				stems.irregular_stem = true
+				stems.vowel_stem = base.stem
 			end
-			stress.vowel_stem, stress.origvowel = com.apply_vowel_alternation(base.ialt, stress.vowel_stem)
-			stress.vowel_stem = add_stress_for_pattern(stress, stress.vowel_stem)
+			stems.vowel_stem, stems.origvowel = com.apply_vowel_alternation(stems.alt, stems.vowel_stem)
 		end
-		if base.remove_in then
-			stress.pl_vowel_stem = com.maybe_stress_final_syllable(rsub(stress.vowel_stem, "y?n$", ""))
-			stress.pl_nonvowel_stem = stress.pl_vowel_stem
-		else
-			stress.pl_vowel_stem = stress.vowel_stem
-			stress.pl_nonvowel_stem = stress.nonvowel_stem
-		end
+		stems.pl_vowel_stem = stems.vowel_stem
+		stems.pl_nonvowel_stem = stems.nonvowel_stem
 		if base.plstem then
-			local stressed_plstem = add_stress_for_pattern(stress, base.plstem)
-			if stressed_plstem ~= stress.pl_vowel_stem then
-				stress.irregular_plstem = true
-			end
-			stress.pl_vowel_stem = stressed_plstem
+			stems.pl_vowel_stem = base.plstem
 			if lemma_is_vowel_stem then
 				-- If the original lemma ends in a vowel (neuters and most feminines),
 				-- apply i/e/o vowel alternations and dereductions to the explicit plural
@@ -1777,12 +1740,12 @@ local function determine_stems(base)
 				-- "falcon" has both i -> o alternation (vowel stem sоkol-) and special
 				-- plstem sokоl-, but we can't and don't want to apply an i -> o
 				-- alternation to the plstem.
-				stress.pl_nonvowel_stem = com.apply_vowel_alternation(base.ialt, stressed_plstem)
-				if stress.reducible then
-					stress.pl_nonvowel_stem = dereduce(stress.pl_nonvowel_stem)
+				stems.pl_nonvowel_stem = com.apply_vowel_alternation(stems.alt, base.plstem)
+				if stems.reducible then
+					stems.pl_nonvowel_stem = dereduce(stems.pl_nonvowel_stem)
 				end
 			else
-				stress.pl_nonvowel_stem = stressed_plstem
+				stems.pl_nonvowel_stem = base.plstem
 			end
 		end
 	end
@@ -1798,8 +1761,8 @@ local function detect_indicator_spec(base)
 			synthesize_singular_lemma(base)
 		end
 		check_indicators_match_lemma(base)
-		determine_declension_and_gender(base)
-		determine_stress_and_stems(base)
+		determine_declension(base)
+		determine_stems(base)
 	end
 end
 
@@ -1946,37 +1909,35 @@ local function determine_noun_status(alternant_multiword_spec)
 end
 
 
--- Check that multisyllabic lemmas have stress, and add stress to monosyllabic
--- lemmas if needed.
 local function normalize_all_lemmas(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		base.orig_lemma = base.lemma
-		base.orig_lemma_no_links = com.add_monosyllabic_stress(m_links.remove_links(base.lemma))
+		base.orig_lemma_no_links = m_links.remove_links(base.lemma)
 		base.lemma = base.orig_lemma_no_links
-		if not rfind(base.lemma, AC) then
-			error("Multisyllabic lemma '" .. base.orig_lemma .. "' needs an accent")
-		end
 	end)
 end
 
 
 local function decline_noun(base)
-	for _, stress in ipairs(base.stresses) do
+	for _, stems in ipairs(base.stem_sets) do
 		if not decls[base.decl] then
 			error("Internal error: Unrecognized declension type '" .. base.decl .. "'")
 		end
-		decls[base.decl](base, stress)
+		decls[base.decl](base, stems)
 	end
 	handle_derived_slots_and_overrides(base)
 end
 
 
 local function get_variants(form)
+	return nil
+	--[=[
 	return
 		form:find(com.VAR1) and "var1" or
 		form:find(com.VAR2) and "var2" or
 		form:find(com.VAR3) and "var3" or
 		nil
+	]=]
 end
 
 
@@ -2023,7 +1984,6 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		local annparts = {}
 		local animacies = {}
 		local decldescs = {}
-		local patterns = {}
 		local vowelalts = {}
 		local irregs = {}
 		local stemspecs = {}
@@ -2031,6 +1991,19 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		local function do_word_spec(base)
 			m_table.insertIfNot(animacies, base.animacy)
 			for _, stems in ipairs(base.stem_sets) do
+				local props = declprops[base.decl]
+				local desc = props.desc
+				if type(desc) == "function" then
+					desc = desc(base, stems)
+				end
+				m_table.insertIfNot(decldescs, desc)
+				local cats = props.cat
+				if type(cats) == "function" then
+					cats = cats(base, stems)
+				end
+				if type(cats) == "string" then
+					cats = {cats .. " nouns", cats .. " ~ nouns"}
+				end
 				local vowelalt
 				if base.ialt == "ie" then
 					vowelalt = "i-e"
@@ -2039,10 +2012,10 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 				elseif base.ialt == "ijo" then
 					vowelalt = "i-ьo"
 				elseif base.ialt == "i" then
-					if not stress.origvowel then
+					if not stems.origvowel then
 						error("Internal error: Original vowel not set along with 'i' code")
 					end
-					vowelalt = ulower(stress.origvowel) .. "-i"
+					vowelalt = ulower(stems.origvowel) .. "-i"
 				end
 				if vowelalt then
 					m_table.insertIfNot(vowelalts, vowelalt)
@@ -2092,9 +2065,6 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		else
 			table.insert(annparts, table.concat(decldescs, " // "))
 		end
-		if #patterns > 0 then
-			table.insert(annparts, "accent-" .. table.concat(patterns, "/"))
-		end
 		if #vowelalts > 0 then
 			table.insert(annparts, table.concat(vowelalts, "/"))
 		end
@@ -2107,9 +2077,6 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 			table.insert(annparts, table.concat(irregs, " // "))
 		end
 		alternant_multiword_spec.annotation = table.concat(annparts, " ")
-		if #patterns > 1 then
-			insert("nouns with multiple accent patterns")
-		end
 		if #stemspecs > 1 then
 			insert("nouns with multiple stems")
 		end
@@ -2122,11 +2089,11 @@ local function show_forms(alternant_multiword_spec)
 	local lemmas = {}
 	if alternant_multiword_spec.forms.nom_s then
 		for _, nom_s in ipairs(alternant_multiword_spec.forms.nom_s) do
-			table.insert(lemmas, com.remove_monosyllabic_stress(nom_s.form))
+			table.insert(lemmas, nom_s.form)
 		end
 	elseif alternant_multiword_spec.forms.nom_p then
 		for _, nom_p in ipairs(alternant_multiword_spec.forms.nom_p) do
-			table.insert(lemmas, com.remove_monosyllabic_stress(nom_p.form))
+			table.insert(lemmas, nom_p.form)
 		end
 	end
 	local props = {
@@ -2134,7 +2101,8 @@ local function show_forms(alternant_multiword_spec)
 		slot_table = output_noun_slots_with_linked,
 		lang = lang,
 		canonicalize = function(form)
-			return com.remove_variant_codes(com.remove_monosyllabic_stress(form))
+			-- return com.remove_variant_codes(form)
+			return form
 		end,
 		include_translit = true,
 		-- Explicit additional top-level footnotes only occur with {{cs-ndecl-manual}} and variants.
@@ -2174,17 +2142,17 @@ local function make_table(alternant_multiword_spec)
 | {acc_s}
 | {acc_p}
 |-
-!style="background:#eff7ff"|instrumental
-| {ins_s}
-| {ins_p}
+!style="background:#eff7ff"|vocative
+| {voc_s}
+| {voc_p}
 |-
 !style="background:#eff7ff"|locative
 | {loc_s}
 | {loc_p}
 |-
-!style="background:#eff7ff"|vocative
-| {voc_s}
-| {voc_p}
+!style="background:#eff7ff"|instrumental
+| {ins_s}
+| {ins_p}
 |{\cl}{notes_clause}</div></div>]=]
 
 	local table_spec_sg = [=[
@@ -2208,14 +2176,14 @@ local function make_table(alternant_multiword_spec)
 !style="background:#eff7ff"|accusative
 | {acc_s}
 |-
-!style="background:#eff7ff"|instrumental
-| {ins_s}
+!style="background:#eff7ff"|vocative
+| {voc_s}
 |-
 !style="background:#eff7ff"|locative
 | {loc_s}
 |-
-!style="background:#eff7ff"|vocative
-| {voc_s}
+!style="background:#eff7ff"|instrumental
+| {ins_s}
 |{\cl}{notes_clause}</div></div>]=]
 
 	local table_spec_pl = [=[
@@ -2239,14 +2207,14 @@ local function make_table(alternant_multiword_spec)
 !style="background:#eff7ff"|accusative
 | {acc_p}
 |-
-!style="background:#eff7ff"|instrumental
-| {ins_p}
+!style="background:#eff7ff"|vocative
+| {voc_p}
 |-
 !style="background:#eff7ff"|locative
 | {loc_p}
 |-
-!style="background:#eff7ff"|vocative
-| {voc_p}
+!style="background:#eff7ff"|instrumental
+| {ins_p}
 |{\cl}{notes_clause}</div></div>]=]
 
 	local notes_template = [===[
@@ -2292,12 +2260,7 @@ local function compute_headword_genders(alternant_multiword_spec)
 		if animacy == "inan" then
 			animacy = "in"
 		end
-		if base.gender == "mf" then
-			m_table.insertIfNot(genders, "m-" .. animacy .. number)
-			m_table.insertIfNot(genders, "f-" .. animacy .. number)
-		else
-			m_table.insertIfNot(genders, base.gender .. "-" .. animacy .. number)
-		end
+		m_table.insertIfNot(genders, base.gender .. "-" .. animacy .. number)
 	end)
 	return genders
 end
@@ -2310,7 +2273,7 @@ end
 -- {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_forms(parent_args, pos, from_headword, def)
 	local params = {
-		[1] = {required = true, default = "viз<c.io>"},
+		[1] = {required = true, default = "bůh<#.voce>"},
 		footnote = {list = true},
 		title = {},
 		pos = {default = "noun"},
