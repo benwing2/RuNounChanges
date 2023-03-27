@@ -1406,11 +1406,11 @@ local function synthesize_adj_lemma(base)
 			if base.gender == "m" then
 				stem = rmatch(base.lemma, "^(.*)í$")
 				if stem then
-					if base.softadj then
+					if base.soft then
 						-- nothing to do
 					else
 						if base.animacy ~= "an" then
-							error(("Masculine plural adjective lemma '%s' ending in -í can only be animate unless '.softadj' is specified"):
+							error(("Masculine plural adjective lemma '%s' ending in -í can only be animate unless '.soft' is specified"):
 								format(base.lemma))
 						end
 						base.lemma = undo_second_palatalization(base, stem) .. "ý"
@@ -1447,7 +1447,7 @@ local function synthesize_adj_lemma(base)
 				if base.animacy == "an" then
 					error(("Animate masculine plural adjectival lemma '%s' should end in -í, -ůvi or -ini"):
 						format(base.lemma))
-				elseif base.softadj then
+				elseif base.soft then
 					error(("Soft masculine plural adjectival lemma '%s' should end in -í"):format(base.lemma))
 				else
 					error(("Inanimate masculine plural adjectival lemma '%s' should end in -é, -ůvy or -iny"):
@@ -1572,19 +1572,6 @@ local function determine_declension(base)
 		error("Gender must be specified")
 	end
 	-- Determine declension
-	stem = rmatch(base.lemma, "^(.*" .. com.hushing_c .. ")a$")
-	if stem then
-		if base.gender == "m" then
-			base.decl = "t-n"
-		elseif base.gender == "n" then
-			error("For lemma ending in a hushing consonant + -a, gender N not allowed unless spec 't' is given")
-		else
-			base.decl = "semisoft-f"
-			base.gender = base.gender or "f"
-		end
-		base.vowel_stem = stem
-		return
-	end
 	stem = rmatch(base.lemma, "^(.*)a$")
 	if stem then
 		if base.gender == "m" then
@@ -1604,97 +1591,62 @@ local function determine_declension(base)
 		base.vowel_stem = stem
 		return
 	end
-	stem = rmatch(base.lemma, "^(.*)e$")
+	stem = rmatch(base.lemma, "^(.*)[eě]$")
 	if stem then
 		if base.gender == "m" then
-			base.decl = "e-m"
+			if base.animacy ~ = "an" then
+				error("Masculine lemma in -e must be animate")
+			end
+			if base.decltype == "t" then
+				base.decl = "t-m"
+			else
+				base.decl = "e-m"
+			end
 		elseif base.gender == "f" then
 			base.decl = "soft-f"
-
-		if base.neutertype == "en" then
-			base.decl = "en-n"
-		elseif base.neutertype == "t" then
-			base.decl = "t-n"
-		elseif base.gender == "n" then
-			base.decl = "ja-n"
-		elseif not base.gender and (rfind(stem, "'$") or rfind(stem, "(.)%1$")) then
-			base.decl = "ja-n"
-			base.gender = "n"
-		elseif rfind(stem, com.vowel_c .. AC .. "?$") or rfind(stem, "['ьй]$") then
-			base.decl = "j-f"
-			base.gender = base.gender or "f"
 		else
-			base.decl = "soft-f"
-			base.gender = base.gender or "f"
+			if base.decltype == "t" then
+				base.decl = "t-n"
+			else
+				base.decl = "soft-n"
+			end
 		end
 		base.vowel_stem = stem
 		return
 	end
-	stem = rmatch(base.lemma, "^(.*)о?$")
+	stem = rmatch(base.lemma, "^(.*)o$")
 	if stem then
-		if base.gender == "m" or base.gender == "f" or base.gender == "mf" then
-			if rfind(stem, "ь$") then
-				stem = rsub(stem, "ь$", "")
-				base.decl = "soft-o-m"
-			else
-				base.decl = "o-m"
-			end
+		if base.gender == "m" or base.gender == "f" then
+			-- Cf. [[maestro]] m.
+			error("Support for foreign masculine or feminine nouns in -o not yet implemented")
 		else
 			base.decl = "hard-n"
-			base.gender = "n"
 		end
 		base.vowel_stem = stem
 		return
 	end
-	stem = rmatch(base.lemma, "^(.*" .. com.hushing_c .. ")е́?$")
+	stem = rmatch(base.lemma, "^(.*)í$")
 	if stem then
-		if base.gender == "m" then
-			base.decl = "semisoft-e-m"
-		elseif base.gender == "f" then
-			base.decl = "semisoft-e-f"
+		if base.gender == "m" or base.gender == "f" then
+			-- FIXME: Do any exist? If not, update this message.
+			error("Support for foreign masculine or feminine nouns in -í not yet implemented")
 		else
-			base.decl = "semisoft-n"
-			if base.gender == "mf" then
-				error("For lemma ending in -e, gender " .. base.gender .. " not allowed")
-			end
-			base.gender = base.gender or "n"
+			base.decl = "í-n"
 		end
-		base.vowel_stem = stem
-		return
-	end
-	stem = rmatch(base.lemma, "^(.*)е́?$")
-	if stem then
-		base.decl = "soft-n"
-		if base.gender == "f" or base.gender == "mf" then
-			error("For lemma ending in -e, gender " .. base.gender .. " not allowed")
-		end
-		base.gender = base.gender or "n"
-		base.vowel_stem = stem
-		return
-	end
-	stem = rmatch(base.lemma, "^(.*)є́?$")
-	if stem then
-		base.decl = "j-n"
-		if base.gender == "f" or base.gender == "mf" then
-			error("For lemma ending in -є, gender " .. base.gender .. " not allowed")
-		end
-		base.gender = base.gender or "n"
 		base.vowel_stem = stem
 		return
 	end
 	stem = rmatch(base.lemma, "^(.*" .. com.cons_c .. ")$")
 	if stem then
-		if base.gender == "n" or base.gender == "mf" then
-			error("For lemma ending in a consonant, gender " .. base.gender .. " not allowed")
-		elseif base.gender == "f" then
-			base.decl = "third-f"
-		elseif base.rtype == "soft" then
+		if rfind(base.lemma, "[cčjřšžťďň]$") or base.soft then
 			base.decl = "soft-m"
-		elseif base.rtype == "semisoft" then
-			base.decl = "semisoft-m"
+		elseif base.mixed then
+			base.decl = "mixed-m"
 		else
 			base.decl = "hard-m"
 		end
+	elseif
+		FIXME
 		base.gender = base.gender or "m"
 		base.nonvowel_stem = stem
 		return
