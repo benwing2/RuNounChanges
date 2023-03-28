@@ -294,16 +294,16 @@ local output_noun_slots = {
 	gen_s = "gen|s",
 	dat_s = "dat|s",
 	acc_s = "acc|s",
-	ins_s = "ins|s",
-	loc_s = "loc|s",
 	voc_s = "voc|s",
+	loc_s = "loc|s",
+	ins_s = "ins|s",
 	nom_p = "nom|p",
 	gen_p = "gen|p",
 	dat_p = "dat|p",
 	acc_p = "acc|p",
-	ins_p = "ins|p",
-	loc_p = "loc|p",
 	voc_p = "voc|p",
+	loc_p = "loc|p",
+	ins_p = "ins|p",
 }
 
 
@@ -320,12 +320,12 @@ local input_params_to_slots_both = {
 	[6] = "dat_p",
 	[7] = "acc_s",
 	[8] = "acc_p",
-	[9] = "ins_s",
-	[10] = "ins_p",
+	[9] = "voc_s",
+	[10] = "voc_p",
 	[11] = "loc_s",
 	[12] = "loc_p",
-	[13] = "voc_s",
-	[14] = "voc_p",
+	[13] = "ins_s",
+	[14] = "ins_p",
 }
 
 
@@ -334,9 +334,9 @@ local input_params_to_slots_sg = {
 	[2] = "gen_s",
 	[3] = "dat_s",
 	[4] = "acc_s",
-	[5] = "ins_s",
+	[5] = "voc_s",
 	[6] = "loc_s",
-	[7] = "voc_s",
+	[7] = "ins_s",
 }
 
 
@@ -345,9 +345,9 @@ local input_params_to_slots_pl = {
 	[2] = "gen_p",
 	[3] = "dat_p",
 	[4] = "acc_p",
-	[5] = "ins_p",
+	[5] = "voc_p",
 	[6] = "loc_p",
-	[7] = "voc_p",
+	[7] = "ins_p",
 }
 
 
@@ -405,12 +405,14 @@ local function add(base, slot, stems, endings, footnotes, explicit_stem)
 		local stem
 		if explicit_stem then
 			stem = explicit_stem
+		elseif slot == "ins_s" then
+			stem = stems.oblique_stem
+		elseif slot == "dat_p" or slot == "loc_p" or slot == "ins_p" then
+			stem = stems.pl_oblique_stem
+		elseif rfind(ending, "^" .. com.vowel_c) then
+			stem = slot_is_plural and stems.pl_vowel_stem or stems.vowel_stem
 		else
-			if rfind(ending, "^" .. com.vowel_c) then
-				stem = slot_is_plural and stems.pl_vowel_stem or stems.vowel_stem
-			else
-				stem = slot_is_plural and stems.pl_nonvowel_stem or stems.nonvowel_stem
-			end
+			stem = slot_is_plural and stems.pl_nonvowel_stem or stems.nonvowel_stem
 		end
 		stem, ending = apply_special_cases(base, slot, stem, ending)
 		ending = iut.combine_form_and_footnotes(ending, footnotes)
@@ -1135,6 +1137,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 						before, reducible, after = rmatch(pattern, "^(.-)(%-?%*)(.-)$")
 						if before then
 							pattern = before .. after
+							reducible = reducible == "*"
 						end
 						if pattern ~= "" then
 							if not rfind(pattern, "^##?ě?$") then
@@ -1161,10 +1164,10 @@ local function parse_indicator_spec(angle_bracket_spec)
 			elseif #dot_separated_group > 1 then
 				error("Footnotes only allowed with slot overrides, reducible or vowel alternation specs or by themselves: '" .. table.concat(dot_separated_group) .. "'")
 			elseif part == "m" or part == "f" or part == "n" then
-				if base.explicit_gender then
+				if base.gender then
 					error("Can't specify gender twice: '" .. inside .. "'")
 				end
-				base.explicit_gender = part
+				base.gender = part
 			elseif part == "sg" or part == "pl" then
 				if base.number then
 					error("Can't specify number twice: '" .. inside .. "'")
@@ -1175,21 +1178,11 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify animacy twice: '" .. inside .. "'")
 				end
 				base.animacy = part
-			--elseif part == "i" or part == "io" or part == "ijo" or part == "ie" then
-			--	if base.ialt then
-			--		error("Can't specify i-alternation indicator twice: '" .. inside .. "'")
-			--	end
-			--	base.ialt = part
-			--elseif part == "soft" or part == "semisoft" then
-			--	if base.rtype then
-			--		error("Can't specify 'r' type ('soft' or 'semisoft') more than once: '" .. inside .. "'")
-			--	end
-			--	base.rtype = part
-			--elseif part == "t" or part == "en" then
-			--	if base.neutertype then
-			--		error("Can't specify neuter indicator ('t' or 'en') more than once: '" .. inside .. "'")
-			--	end
-			--	base.neutertype = part
+			elseif part == "soft" or part == "mixed" or part == "surname" then
+				if base[part] then
+					error("Can't specify '" .. part .. "' twice: '" .. inside .. "'")
+				end
+				base[part] = true
 			--elseif part == "plsoft" then
 			--	if base.plsoft then
 			--		error("Can't specify 'plsoft' twice: '" .. inside .. "'")
@@ -1200,21 +1193,6 @@ local function parse_indicator_spec(angle_bracket_spec)
 			--		error("Can't specify 'plhard' twice: '" .. inside .. "'")
 			--	end
 			--	base.plhard = true
-			--elseif part == "in" then
-			--	if base.remove_in then
-			--		error("Can't specify 'in' twice: '" .. inside .. "'")
-			--	end
-			--	base.remove_in = true
-			elseif part == "3rd" then
-				if base.thirddecl then
-					error("Can't specify '3rd' twice: '" .. inside .. "'")
-				end
-				base.thirddecl = true
-			elseif part == "surname" then
-				if base.surname then
-					error("Can't specify 'surname' twice: '" .. inside .. "'")
-				end
-				base.surname = true
 			elseif part == "+" then
 				if base.adj then
 					error("Can't specify '+' twice: '" .. inside .. "'")
@@ -1243,12 +1221,8 @@ local function set_defaults_and_check_bad_indicators(base)
 	-- Set default values.
 	if not base.adj then
 		base.number = base.number or "both"
-		base.animacy = base.animacy or base.surname and "pr" or
-			base.neutertype == "t" and "anml" or
-			"inan"
+		base.animacy = base.animacy or "inan"
 	end
-	base.gender = base.explicit_gender
-
 	-- Set some further defaults and check for certain bad indicator/number/gender combinations.
 	if base.thirddecl then
 		if base.number ~= "pl" then
@@ -1268,8 +1242,17 @@ local function set_defaults_and_check_bad_indicators(base)
 end
 
 
+local function set_all_defaults_and_check_bad_indicators(alternant_multiword_spec)
+	local is_multiword = #alternant_multiword_spec.alternant_or_word_specs > 1
+	iut.map_word_specs(alternant_multiword_spec, function(base)
+		set_defaults_and_check_bad_indicators(base)
+		base.multiword = is_multiword
+	end)
+end
+
+
 local function undo_vowel_alternation(base, stem)
-	if base.alt == "quant" then
+	if base.vowelalt == "quant" then
 		local modstem = rsub(stem, "([aeěo])(" .. com.cons_c .. "*)$",
 			function(vowel, post)
 				if vowel == "a" then
@@ -1310,94 +1293,61 @@ end
 
 
 -- For a plural-only lemma, synthesize a likely singular lemma. It doesn't have to be
--- theoretically correct as long as it generates all the correct plural forms (which mostly
--- means the nominative and genitive plural as the remainder are either derived or the same
--- for all declensions, modulo soft vs. hard).
+-- theoretically correct as long as it generates all the correct plural forms.
 local function synthesize_singular_lemma(base)
 	error("Implement me")
-	local stem, ac
+	local stem
 	while true do
-		-- Check neuter endings.
-		if base.neutertype == "t" then
-			stem, ac = rmatch(base.lemma, "^(.*[яa])(́)ta$")
+		if base.gender == "m" then
+			if base.animacy == "an" then
+				error("Implement me")
+			else
+				stem = rmatch(base.lemma, "^(.*)y$")
+				if stem then
+					-- [[droby]] "giblets"; [[tvarůžky]] "Olomouc cheese"; [[alimenty]] "alimony"; etc.
+					base.lemma = stem
+					break
+				end
+				local ending
+				stem, ending = rmatch(base.lemma, "^(.*)([eě])$")
+				if stem then
+					-- [[peníze]] "money", [[tvargle]] "Olomouc cheese" (mixed declension), [[údaje]] "data",
+					-- [[Lazce]] (a village), [[lováče]] "money", [[Krkonoše]] "Giant Mountains", [[kříže]] "clubs"
+					base.lemma = com.convert_paired_plain_to_palatal(stem, ending)
+					if not base.mixed then
+						base.soft = true
+					end
+					break
+				end
+				error(("Inanimate masculine plural-only lemma '%s' should end in -y, -e or -ě"):format(base.lemma))
+			end
+		elseif base.gender == "f" then
+			error("Implement me")
+		else
+			-- -ata nouns like [[slůně]] "baby elephant" nom pl 'slůňata' are declined in the plural same as if
+			-- the singular were 'slůňato' so we don't have to worry about them.
+			stem = rmatch(base.lemma, "^(.*)a$")
 			if stem then
-				base.lemma = stem .. ac
+				base.lemma = stem .. "o"
 				break
 			end
-			error("Unrecognized lemma for 't' indicator: '" .. base.lemma .. "'")
-		end
-		stem, ac = rmatch(base.lemma, "^(.*" .. com.hushing_c .. ")a(́?)$")
-		if stem then
-			base.lemma = stem .. "e" .. ac
-			break
-		end
-		stem, ac = rmatch(base.lemma, "^(.*)a(́?)$")
-		if stem then
-			base.lemma = stem .. "o" .. ac
-			break
-		end
-		stem, ac = rmatch(base.lemma, "^(.*)я(́?)$")
-		if stem then
-			-- Conceivably it should have the -я ending in the singular but I don't
-			-- think it matters.
-			base.lemma = stem .. "e" .. ac
-			break
-		end
-		-- Handle masculine/feminine endings.
-		stem, ac = rmatch(base.lemma, "^(.*)y$")
-		if stem then
-			if base.gender == "m" then
-				base.lemma = undo_vowel_alternation(base, stem)
-			else
-				base.lemma = stem .. "a" .. ac
-			end
-			break
-		end
-		local vowel
-		stem, vowel, ac = rmatch(base.lemma, "^(.*)([iї])(́?)$")
-		if stem then
-			if not base.gender then
-				error("For plural-only lemma in -" .. vowel .. ", need to specify the gender: '" .. base.lemma .. "'")
-			end
-			if base.gender == "m" then
-				if rfind(stem, "[dtsзlnc]$") then
-					base.lemma = stem .. "ь"
-				elseif rfind(stem, "r$") then
-					base.lemma = stem
-					if not base.rtype then
-						-- add an override to cause the -i/-ї to appear
-						table.insert(base.overrides, {values = {{form = vowel}}})
-					end
-				elseif vowel == "ї" then
-					base.lemma = stem .. "й"
-				else
-					base.lemma = stem
+			local ending
+			stem, ending = rmatch(base.lemma, "^(.*)([eěí])$")
+			if stem then
+				-- singular lemma also in -e, -ě or -í
+				if ending == "ě" or ending == "í" then
+					-- cf. [[věčná loviště]] "[[happy hunting ground]]", gen pl 'věčných lovišť'
+					stem = com.convert_paired_plain_to_palatal(stem)
 				end
-				base.lemma = undo_vowel_alternation(base, base.lemma)
-			elseif base.gender == "f" then
-				if base.thirddecl then
-					if rfind(stem, "[dtsзlnc]$") then
-						base.lemma = stem .. "ь"
-					else
-						base.lemma = stem
-					end
-					base.lemma = undo_vowel_alternation(base, base.lemma)
-				elseif rfind(stem, com.hushing_c .. "$") then
-					base.lemma = stem .. "a" .. ac
-				else
-					base.lemma = stem .. "я" .. ac
-				end
-			else
-				error("Don't know how to handle neuter plural-only nouns in -" .. vowel .. ": '" .. base.lemma .. "'")
+				break
 			end
-			break
+			error(("Neuter plural-only lemma '%s' should end in -a, -í, -ě or -e"):format(base.lemma))
 		end
-		error("Don't recognize ending of lemma '" .. base.lemma .. "'")
 	end
 
 	-- Now set the stem sets if not given.
 	if not base.stem_sets then
-		base.stem_sets = {{reducible = false}}
+		base.stem_sets = {{}}
 	end
 end
 
@@ -1415,7 +1365,7 @@ local function synthesize_adj_lemma(base)
 						-- nothing to do
 					else
 						if base.animacy ~= "an" then
-							error(("Masculine plural adjective lemma '%s' ending in -í can only be animate unless '.soft' is specified"):
+							error(("Masculine plural-only adjectival lemma '%s' ending in -í can only be animate unless '.soft' is specified"):
 								format(base.lemma))
 						end
 						base.lemma = undo_second_palatalization(base, stem) .. "ý"
@@ -1425,7 +1375,7 @@ local function synthesize_adj_lemma(base)
 				stem = rmatch(base.lemma, "^(.*)é$")
 				if stem then
 					if base.animacy == "an" then
-						error(("Masculine plural adjective lemma '%s' ending in -é must be inanimate"):
+						error(("Masculine plural-only adjectival lemma '%s' ending in -é must be inanimate"):
 							format(base.lemma))
 					end
 					base.lemma = stem .. "ý"
@@ -1434,7 +1384,7 @@ local function synthesize_adj_lemma(base)
 				stem = rmatch(base.lemma, "^(.*ův)i$") or rmatch(base.lemma, "^(.*in)i$")
 				if stem then
 					if base.animacy ~= "an" then
-						error(("Masculine plural possessive adjective lemma '%s' ending in -i must be animate"):
+						error(("Masculine plural-only possessive adjectival lemma '%s' ending in -i must be animate"):
 							format(base.lemma))
 					end
 					base.lemma = stem
@@ -1443,19 +1393,19 @@ local function synthesize_adj_lemma(base)
 				stem = rmatch(base.lemma, "^(.*ův)y$") or rmatch(base.lemma, "^(.*in)y$")
 				if stem then
 					if base.animacy == "an" then
-						error(("Masculine plural adjective lemma '%s' ending in -y must be inanimate"):
+						error(("Masculine plural-only adjectival lemma '%s' ending in -y must be inanimate"):
 							format(base.lemma))
 					end
 					base.lemma = stem
 					break
 				end
 				if base.animacy == "an" then
-					error(("Animate masculine plural adjectival lemma '%s' should end in -í, -ůvi or -ini"):
+					error(("Animate masculine plural-only adjectival lemma '%s' should end in -í, -ůvi or -ini"):
 						format(base.lemma))
 				elseif base.soft then
-					error(("Soft masculine plural adjectival lemma '%s' should end in -í"):format(base.lemma))
+					error(("Soft masculine plural-only adjectival lemma '%s' should end in -í"):format(base.lemma))
 				else
-					error(("Inanimate masculine plural adjectival lemma '%s' should end in -é, -ůvy or -iny"):
+					error(("Inanimate masculine plural-only adjectival lemma '%s' should end in -é, -ůvy or -iny"):
 						format(base.lemma))
 				end
 			elseif base.gender == "f" then
@@ -1473,7 +1423,7 @@ local function synthesize_adj_lemma(base)
 					base.lemma = stem
 					break
 				end
-				error(("Feminine plural adjectival lemma '%s' should end in -é, -í, -ůvy or -iny"):format(base.lemma))
+				error(("Feminine plural-only adjectival lemma '%s' should end in -é, -í, -ůvy or -iny"):format(base.lemma))
 			else
 				stem = rmatch(base.lemma, "^(.*)á$") -- hard adjective
 				if stem then
@@ -1489,7 +1439,7 @@ local function synthesize_adj_lemma(base)
 					base.lemma = stem
 					break
 				end
-				error(("Neuter plural adjectival lemma '%s' should end in -á, -í, -ůva or -ina"):format(base.lemma))
+				error(("Neuter plural-only adjectival lemma '%s' should end in -á, -í, -ůva or -ina"):format(base.lemma))
 			end
 		else
 			if base.gender == "m" then
@@ -1497,7 +1447,7 @@ local function synthesize_adj_lemma(base)
 				if stem then
 					break
 				end
-				error(("Masculine singular adjectival lemma '%s' should end in -ý, -í, -ův or -in"):format(base.lemma))
+				error(("Masculine adjectival lemma '%s' should end in -ý, -í, -ův or -in"):format(base.lemma))
 			elseif base.gender == "f" then
 				stem = rmatch(base.lemma, "^(.*)á$")
 				if stem then
@@ -1513,7 +1463,7 @@ local function synthesize_adj_lemma(base)
 					base.lemma = stem
 					break
 				end
-				error(("Feminine singular adjectival lemma '%s' should end in -á, -í, -ůva or -ina"):format(base.lemma))
+				error(("Feminine adjectival lemma '%s' should end in -á, -í, -ůva or -ina"):format(base.lemma))
 			else
 				stem = rmatch(base.lemma, "^(.*)é$")
 				if stem then
@@ -1529,7 +1479,7 @@ local function synthesize_adj_lemma(base)
 					base.lemma = stem
 					break
 				end
-				error(("Neuter singular adjectival lemma '%s' should end in -é, -í, -ůvo or -ino"):format(base.lemma))
+				error(("Neuter adjectival lemma '%s' should end in -é, -í, -ůvo or -ino"):format(base.lemma))
 			end
 		end
 	end
@@ -1597,10 +1547,7 @@ local function determine_declension(base)
 	stem, ending = rmatch(base.lemma, "^(.*)([eě])$")
 	if stem then
 		if ending == "ě" then
-			local stembegin, lastchar = rmatch(stem, "^(.*)(.)$")
-			if lastchar then
-				stem = stembegin .. (com.paired_plain_to_palatal[lastchar] or lastchar)
-			end
+			stem = com.convert_paired_plain_to_palatal(stem)
 		end
 		if base.gender == "m" then
 			if base.animacy ~= "an" then
@@ -1671,6 +1618,32 @@ local function determine_declension(base)
 end
 
 
+-- Determine the default value for the 'reducible' flag.
+local function determine_default_reducible(base)
+	local stem
+	stem = rmatch(base.lemma, "^(.*" .. com.cons_c .. ")$")
+	if stem then
+		-- FIXME, investigate whether we need to default reducible to true (e.g. in -ec or -ek?).
+		base.default_reducible = false
+		return
+	end
+	stem = rmatch(base.lemma, "^(.*)" .. com.vowel_c .. "$")
+	if not stem then
+		error(("Internal error: Something wrong, lemma '%s' doesn't end in consonant or vowel"):format(base.lemma))
+	end
+	-- Substitute 'ch' with a single character to make the following code simpler.
+	stem = stem:gsub("ch", com.TEMP_CH)
+	if rfind(stem, com.cons_c .. "[lr]" .. com.cons_c .. "$") then
+		-- [[vrba]], [[slha]]; not reducible.
+		base.default_reducible = false
+	elseif rfind(stem, com.cons_c .. "[bkhlrmnv]$") then
+		base.default_reducible = true
+	else
+		base.default_reducible = false
+	end
+end
+
+
 -- Determine the stems to use for each stem set: vowel and nonvowel stems, for singular
 -- and plural. We assume that one of base.vowel_stem or base.nonvowel_stem has been
 -- set in determine_declension(), depending on whether the lemma ends in
@@ -1681,7 +1654,7 @@ end
 -- depending on the reducibility and vowel alternation.
 local function determine_stems(base)
 	if not base.stem_sets then
-		base.stem_sets = {{reducible = false}}
+		base.stem_sets = {{}}
 	end
 	for _, stems in ipairs(base.stem_sets) do
 		local function dereduce(stem)
@@ -1691,6 +1664,9 @@ local function determine_stems(base)
 			end
 			return dereduced_stem
 		end
+		if stems.reducible == nil then
+			stems.reducible = base.default_reducible
+		end
 		local lemma_is_vowel_stem = not not base.vowel_stem
 		if base.vowel_stem then
 			if base.stem then
@@ -1698,10 +1674,9 @@ local function determine_stems(base)
 			end
 			stems.vowel_stem = base.vowel_stem
 			stems.nonvowel_stem = stems.vowel_stem
-			-- Apply vowel alternation first in cases like jádro -> jader;
-			-- apply_vowel_alternation() will throw an error if the vowel being
-			-- modified isn't the last vowel in the stem.
-			stems.nonvowel_stem, stems.origvowel = com.apply_vowel_alternation(stems.alt, stems.nonvowel_stem)
+			-- Apply vowel alternation first in cases like jádro -> jader; apply_vowel_alternation() will throw an error
+			-- if the vowel being modified isn't the last vowel in the stem.
+			stems.nonvowel_stem, stems.origvowel = com.apply_vowel_alternation(stems.vowelalt, stems.nonvowel_stem)
 			if stems.reducible then
 				stems.nonvowel_stem = dereduce(stems.nonvowel_stem)
 			end
@@ -1720,14 +1695,14 @@ local function determine_stems(base)
 				stems.irregular_stem = true
 				stems.vowel_stem = base.stem
 			end
-			stems.vowel_stem, stems.origvowel = com.apply_vowel_alternation(stems.alt, stems.vowel_stem)
+			stems.vowel_stem, stems.origvowel = com.apply_vowel_alternation(stems.vowelalt, stems.vowel_stem)
 		end
 		stems.pl_vowel_stem = stems.vowel_stem
 		stems.pl_nonvowel_stem = stems.nonvowel_stem
 		if base.plstem then
 			stems.pl_vowel_stem = base.plstem
 			if lemma_is_vowel_stem then
-				-- If the original lemma ends in a vowel (neuters and most feminines),
+				-- [[ If the original lemma ends in a vowel (neuters and most feminines),
 				-- apply i/e/o vowel alternations and dereductions to the explicit plural
 				-- stem, because they most likely apply in the genitive plural. This is
 				-- needed for various words, e.g. kоleso (plstem kolе́s-, gen pl kolis,
@@ -1739,8 +1714,8 @@ local function determine_stems(base)
 				-- the remaining forms, not generally in the plural. For example, sоkil
 				-- "falcon" has both i -> o alternation (vowel stem sоkol-) and special
 				-- plstem sokоl-, but we can't and don't want to apply an i -> o
-				-- alternation to the plstem.
-				stems.pl_nonvowel_stem = com.apply_vowel_alternation(stems.alt, base.plstem)
+				-- alternation to the plstem. ]] -- FIXME: Update this comment.
+				stems.pl_nonvowel_stem = com.apply_vowel_alternation(stems.vowelalt, base.plstem)
 				if stems.reducible then
 					stems.pl_nonvowel_stem = dereduce(stems.pl_nonvowel_stem)
 				end
@@ -1748,12 +1723,13 @@ local function determine_stems(base)
 				stems.pl_nonvowel_stem = base.plstem
 			end
 		end
+		stems.oblique_stem = com.apply_vowel_alternation(stems.oblique_case_vowelalt, stems.vowel_stem)
+		stems.pl_oblique_stem = com.apply_vowel_alternation(stems.oblique_case_vowelalt, stems.pl_vowel_stem)
 	end
 end
 
 
 local function detect_indicator_spec(base)
-	set_defaults_and_check_bad_indicators(base)
 	if base.adj then
 		synthesize_adj_lemma(base)
 	else
@@ -1762,6 +1738,7 @@ local function detect_indicator_spec(base)
 		end
 		check_indicators_match_lemma(base)
 		determine_declension(base)
+		determine_default_reducible(base)
 		determine_stems(base)
 	end
 end
@@ -2299,11 +2276,16 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	alternant_multiword_spec.footnotes = args.footnote
 	alternant_multiword_spec.args = args
 	normalize_all_lemmas(alternant_multiword_spec)
-	detect_all_indicator_specs(alternant_multiword_spec)
+	set_all_defaults_and_check_bad_indicators(alternant_multiword_spec)
+	-- These need to happen before detect_all_indicator_specs() so that adjectives get their genders and numbers set
+	-- appropriately, which are needed to correctly synthesize the adjective lemma.
 	propagate_properties(alternant_multiword_spec, "animacy", "inan", "mixed")
 	propagate_properties(alternant_multiword_spec, "number", "both", "both")
-	-- The default of "m" should apply only to plural adjectives, where it doesn't matter.
-	propagate_properties(alternant_multiword_spec, "gender", "m", "mixed")
+	-- FIXME, the default value (third param) used to be 'm' with a comment indicating that this applied only to
+	-- plural adjectives, where it didn't matter; but in Czech, plural adjectives are distinguished for gender and
+	-- animacy. Make sure 'mixed' works.
+	propagate_properties(alternant_multiword_spec, "gender", "mixed", "mixed")
+	detect_all_indicator_specs(alternant_multiword_spec)
 	determine_noun_status(alternant_multiword_spec)
 	local inflect_props = {
 		skip_slot = function(slot)
@@ -2340,32 +2322,32 @@ function export.do_generate_forms_manual(parent_args, number, pos, from_headword
 		params[2] = {required = true, default = "žuky"}
 		params[3] = {required = true, default = "žuka"}
 		params[4] = {required = true, default = "žukiv"}
-		params[5] = {required = true, default = "žukоvi, žuku"}
+		params[5] = {required = true, default = "žuka"}
 		params[6] = {required = true, default = "žukam"}
-		params[7] = {required = true, default = "žuka"}
+		params[7] = {required = true, default = "žukоvi, žuku"}
 		params[8] = {required = true, default = "žuky, žukiv"}
 		params[9] = {required = true, default = "žukоm"}
 		params[10] = {required = true, default = "žukamy"}
 		params[11] = {required = true, default = "žukоvi, žuku"}
-		params[12] = {required = true, default = "žukax"}
+		params[12] = {required = true, default = "žuky"}
 		params[13] = {required = true, default = "žuče"}
-		params[14] = {required = true, default = "žuky"}
+		params[14] = {required = true, default = "žukách"}
 	elseif number == "sg" then
 		params[1] = {required = true, default = "lyst"}
 		params[2] = {required = true, default = "lystu"}
 		params[3] = {required = true, default = "lystu, lystovi"}
 		params[4] = {required = true, default = "lyst"}
-		params[5] = {required = true, default = "lystom"}
+		params[5] = {required = true, default = "lyste"}
 		params[6] = {required = true, default = "lysti, lystu"}
-		params[7] = {required = true, default = "lyste"}
+		params[7] = {required = true, default = "lystom"}
 	else
-		params[1] = {required = true, default = "dvе́ri"}
-		params[2] = {required = true, default = "dverе́й"}
-		params[3] = {required = true, default = "dvе́rяm"}
-		params[4] = {required = true, default = "dvе́ri"}
-		params[5] = {required = true, default = "dvermy, dveryma"}
-		params[6] = {required = true, default = "dvе́rяx"}
-		params[7] = {required = true, default = "dvе́ri"}
+		params[1] = {required = true, default = "dveře"}
+		params[2] = {required = true, default = "dveři"}
+		params[3] = {required = true, default = "dveřím"}
+		params[4] = {required = true, default = "dveře"}
+		params[5] = {required = true, default = "dveře"}
+		params[6] = {required = true, default = "dveřích"}
+		params[7] = {required = true, default = "dveřmi"}
 	end
 
 	local args = m_para.process(parent_args, params)
