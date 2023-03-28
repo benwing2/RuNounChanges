@@ -46,14 +46,14 @@ Feminine:
 
 Default reducible:
 
-[[bavlnka]] "cotton" {{cs-ndecl|<f}}
-[[čtvrtka]] "Thursday" {{cs-ndecl|<f}}
-[[dršťka]] "tripe" {{cs-ndecl|<f}} [gen pl drštěk]
-[[jiskra]] "spark" {{cs-ndecl|<f}}
-[[kostra]] "skeleton" {{cs-ndecl|<f}}
-[[kůstka]] "bone" {{cs-ndecl|<f}}
-[[pastva]] "pasture" {{cs-ndecl|<f}}
-[[sestra]] "sister" {{cs-ndecl|<f}}
+[[bavlnka]] "cotton" {{cs-ndecl|<f>}}
+[[čtvrtka]] "Thursday" {{cs-ndecl|<f>}}
+[[dršťka]] "tripe" {{cs-ndecl|<f>}} [gen pl drštěk]
+[[jiskra]] "spark" {{cs-ndecl|<f>}}
+[[kostra]] "skeleton" {{cs-ndecl|<f>}}
+[[kůstka]] "bone" {{cs-ndecl|<f>}}
+[[pastva]] "pasture" {{cs-ndecl|<f>}}
+[[sestra]] "sister" {{cs-ndecl|<f>}}
 [[tundra]] "tundra" {{cs-ndecl|<f>}}
 [[vrstva]] "layer" {{cs-ndecl|<f>}}
 [[vyjížďka]] "ride" {{cs-ndecl|<f>}} [gen pl vyjížděk]
@@ -164,7 +164,7 @@ Shortening in gen pl and maybe elsewhere:
 [[chvála]] "praise" {{cs-ndecl|<f.#>}} [gen pl chval]
 [[jáma]] "pit, hole" {{cs-ndecl|<f.#>}} [gen pl jam]
 [[sláma]] "straw" {{cs-ndecl|<f.#>}} [gen pl slam]
-[[díra]] "hole" {{cs-ndecl|<f.#ě>}} [gen pl děr, dat/log sg děře]
+[[díra]] "hole" {{cs-ndecl|<f.#ě>}} [gen pl děr, dat/loc sg díře]
 [[houba]] "mushroom, sponge" {{cs-ndecl|<f.#>}} [gen pl hub]
 [[smlouva]] "contract, treaty" {{cs-ndecl|<f.#>}} [gen pl smlouv]
 [[moucha]] "fly" {{cs-ndecl|<f.#>}} [gen pl much, dat/log sg mouše]
@@ -416,7 +416,10 @@ local function add(base, slot, stems, endings, footnotes, explicit_stem)
 		end
 		stem, ending = apply_special_cases(base, slot, stem, ending)
 		ending = iut.combine_form_and_footnotes(ending, footnotes)
-		iut.add_forms(base.forms, slot, stem, ending, com.combine_stem_ending)
+		local function combine_stem_ending(stem, ending)
+			return com.combine_stem_ending(base, slot, stem, ending)
+		end
+		iut.add_forms(base.forms, slot, stem, ending, combine_stem_ending)
 	end
 end
 
@@ -427,6 +430,7 @@ local function process_slot_overrides(base, do_slot)
 			error("Override specified for invalid slot '" .. slot .. "' due to '" .. base.number .. "' number restriction")
 		end
 		if do_slot(slot) then
+			base.slot_overridden[slot] = true
 			base.forms[slot] = nil
 			local slot_is_plural = rfind(slot, "_p$")
 			for _, override in ipairs(overrides) do
@@ -451,7 +455,7 @@ end
 
 local function add_decl(base, stems,
 	nom_s, gen_s, dat_s, acc_s, voc_s, loc_s, ins_s,
-	nom_p, gen_p, dat_p, acc_p, ins_p, loc_p, footnotes
+	nom_p, gen_p, dat_p, acc_p, loc_p, ins_p, footnotes
 )
 	add(base, "nom_s", stems, nom_s, footnotes)
 	add(base, "gen_s", stems, gen_s, footnotes)
@@ -471,20 +475,21 @@ end
 
 local function handle_derived_slots_and_overrides(base)
 	local function is_non_derived_slot(slot)
-		return slot ~= "voc_s" and slot ~= "voc_p" and slot ~= "acc_s" and slot ~= "acc_p"
+		return slot ~= "voc_s" and slot ~= "voc_p" and slot ~= "acc_s"
 	end
 
 	local function is_derived_slot(slot)
 		return not is_non_derived_slot(slot)
 	end
 
+	base.slot_overridden = {}
 	-- Handle overrides for the non-derived slots. Do this before generating the derived
 	-- slots so overrides of the source slots (e.g. nom_p) propagate to the derived slots.
 	process_slot_overrides(base, is_non_derived_slot)
 
 	-- Generate the remaining slots that are derived from other slots.
-	iut.insert_forms(base.forms, "voc_p", base.forms["nom_p"])
-	if rfind(base.decl, "%-m$") or base.gender == "m" and base.decl == "adj" then
+	iut.insert_forms(base.forms, "voc_p", base.forms.nom_p)
+	if not base.forms.acc_s and not base.slot_overridden.acc_s then
 		iut.insert_forms(base.forms, "acc_s", base.forms[base.animacy == "inan" and "nom_s" or "gen_s"])
 	end
 	local function tag_with_variant(variant)
@@ -497,12 +502,8 @@ local function handle_derived_slots_and_overrides(base)
 			return forms
 		end
 	end
-	-- FIXME
-	if base.animacy == "inan" then
-		iut.insert_forms(base.forms, "acc_p", base.forms["nom_p"])
-	end
 	if base.surname then
-		iut.insert_forms(base.forms, "voc_s", base.forms["nom_s"])
+		iut.insert_forms(base.forms, "voc_s", base.forms.nom_s)
 	end
 
 	-- Handle overrides for derived slots, to allow them to be overridden.
@@ -618,7 +619,7 @@ decls["a-m"] = function(base, stems)
 	-- instead of -ech
 	local velar = rfind(stems.vowel_stem, com.velar_c .. "$")
 	-- Nouns ending in a consonant that cannot be followed by -y (e.g. [[Miša]] "Mike/Misha") use -i
-	local y_ending = rfind(stems, "[cčjřšž]$") and "i" or "y"
+	local y_ending = rfind(stems.vowel_stem, "[cčjřšž]$") and "i" or "y"
 	add_decl(base, stems, "a", y_ending, "ovi", "u", "o", "ovi", "ou",
 		it_ist and "é" or "ové", "ů", "ům", y_ending, velar and "ích" or "ech", y_ending)
 end
@@ -885,7 +886,7 @@ decls["adj"] = function(base, stems)
 			copy("ins_mn", "ins_s")
 		end
 		if not base.forms.voc_s then
-			iut.insert_forms(base.forms, "voc_s", base.forms["nom_s"])
+			iut.insert_forms(base.forms, "voc_s", base.forms.nom_s)
 		end
 	end
 	if base.number ~= "sg" then
@@ -1082,7 +1083,7 @@ dot-separated indicators within them). Return value is an object of the form
   -- The following additional fields are added by other functions:
   orig_lemma = "ORIGINAL-LEMMA", -- as given by the user
   orig_lemma_no_links = "ORIGINAL-LEMMA-NO-LINKS", -- links removed
-  lemma = "LEMMA", -- `orig_lemma_no_links`, converted to singular form if plural
+  lemma = "LEMMA", -- `orig_lemma_no_links`, converted to singular form if plural and lowercase if all-uppercase
   forms = {
 	SLOT = {
 	  {
@@ -1149,7 +1150,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 								vowelalt = "quant"
 							end
 							if pattern == "##" or pattern == "##ě" then
-								oblique_case_vowelalt = true
+								oblique_case_vowelalt = vowelalt
 							end
 						end
 					end
@@ -1890,7 +1891,14 @@ local function normalize_all_lemmas(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		base.orig_lemma = base.lemma
 		base.orig_lemma_no_links = m_links.remove_links(base.lemma)
-		base.lemma = base.orig_lemma_no_links
+		local lemma = base.orig_lemma_no_links
+		-- If the lemma is all-uppercase, lowercase it but note this, so that later in combine_stem_ending() we convert it
+		-- back to uppercase. This allows us to handle all-uppercase acronyms without a lot of extra complexity.
+		if uupper(lemma) == lemma then
+			base.all_uppercase = true
+			lemma = ulower(lemma)
+		end
+		base.lemma = lemma
 	end)
 end
 
