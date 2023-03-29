@@ -27,6 +27,7 @@ TERMINOLOGY:
 Word examples:
 
 Masculine:
+---------
 
 [[rozbor]] "analysis" {{cs-ndecl<m>}}
 [[plat]] "salary" {{cs-ndecl<m>}}
@@ -583,9 +584,16 @@ declprops["hard-m"] = {
 
 
 decls["soft-m"] = function(base, stems)
+	base.palatalize_voc = true
 	-- animates with dat_s only in -i need to give this manually, using '<dati>'
 	local dat_s = base.animacy == "inan" and "i" or {"ovi", "i"}
 	local loc_s = dat_s
+	-- Per IJP, the vast majority of soft masculine animates take -i in the voc_s, but those in -ec take -e with first
+	-- palatalization to -če (e.g. [[otec]] "father", [[lovec]] "hunter", [[blbec]] "fool, idiot",
+	-- [[horolezec]] "mountaineer", [[znalec]] "expert", [[chlapec]] "boy", [[nadšenec]] "enthusiast"). Note that all
+	-- these words are reducible; we should consider making this the default for these words (FIXME).
+	-- [[švec]] "shoemaker" has stem 'ševc-' and voc_s 'ševče' so we need to check the lemma not stem for -ec.
+	local voc_s = base.animacy == "an" and rfind(base.lemma, "ec$") and "e" or "i"
 	local nom_p = base.animacy == "inan" and "e" or "i"
 	-- nouns with loc_p in -ech (e.g. [[cíl]] "goal") need to give this manually, using <locplech>
 	add_decl(base, stems, "", "e", dat_s, nil, "i", loc_s, "em",
@@ -1179,7 +1187,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify animacy twice: '" .. inside .. "'")
 				end
 				base.animacy = part
-			elseif part == "soft" or part == "mixed" or part == "surname" then
+			elseif part == "soft" or part == "mixed" or part == "surname" or part == "istem" then
 				if base[part] then
 					error("Can't specify '" .. part .. "' twice: '" .. inside .. "'")
 				end
@@ -1296,7 +1304,6 @@ end
 -- For a plural-only lemma, synthesize a likely singular lemma. It doesn't have to be
 -- theoretically correct as long as it generates all the correct plural forms.
 local function synthesize_singular_lemma(base)
-	error("Implement me")
 	local stem
 	while true do
 		if base.gender == "m" then
