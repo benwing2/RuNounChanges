@@ -80,16 +80,17 @@ end
 
 function export.apply_vowel_alternation(alt, stem)
 	local modstem, origvowel
-	if alt == "quant" or alt == "quantě" then
+	if alt == "quant" or alt == "quant-ě" then
 		-- [[sníh]] "snow", gen sg. [[sněhu]]
+		-- [[míra]] "snow", gen sg. [[měr]]
 		-- [[hůl]] "cane", gen sg. [[hole]]
 		-- [[práce]] "work", ins sg. [[prací]]
 		modstem = rsub(stem, "(.)([íůáé])(" .. export.cons_c .. "*)$",
 			function(pre, vowel, post)
 				origvowel = vowel
 				if vowel == "í" then
-					if alt == "quantě" then
-						if rfind(pre, "[" .. paired_plain .. "]") then
+					if alt == "quant-ě" then
+						if rfind(pre, "[" .. export.paired_plain .. "mbpfv]$") then
 							return pre .. "ě" .. post
 						else
 							return pre .. "e" .. post
@@ -157,7 +158,7 @@ function export.reduce(word)
 	if not pre then
 		return nil
 	end
-	if (letter == "ě" or letter == "Ě") and rfind(pre, "[" .. export.paired_plain .. "]") then
+	if (letter == "ě" or letter == "Ě") and rfind(pre, "[" .. export.paired_plain .. "]$") then
 		pre = export.paired_plain_to_palatal[pre]
 	end
 	return pre .. post
@@ -212,11 +213,14 @@ function export.convert_paired_palatal_to_plain(stem, ending)
 end
 
 
-function export.combine_stem_ending(stem, ending)
+function export.combine_stem_ending(base, slot, stem, ending)
 	if stem == "?" then
 		return "?"
 	else
 		stem, ending = export.convert_paired_palatal_to_plain(stem, ending)
+		if base.all_uppercase then
+			stem = uupper(stem)
+		end
 		return stem .. ending
 	end
 end
