@@ -26,12 +26,14 @@ local function rsubb(term, foo, bar)
 	return retval, nsubs > 0
 end
 
+export.TEMP_CH = u(0xFFF0) -- used to substitute ch temporarily in the default-reducible code
+
 local lc_vowel = "aeiouyáéíóúýěů"
 local uc_vowel = uupper(lc_vowel)
 export.vowel = lc_vowel .. uc_vowel
 export.vowel_c = "[" .. export.vowel .. "]"
 export.non_vowel_c = "[^" .. export.vowel .. "]"
-local lc_cons = "bcdfghjklmnpqrstvwxzčňřšžďť"
+local lc_cons = "bcdfghjklmnpqrstvwxzčňřšžďť" .. export.TEMP_CH
 local uc_cons = uupper(lc_cons)
 export.cons = lc_cons .. uc_cons
 export.cons_c = "[" .. export.cons .. "]"
@@ -56,7 +58,10 @@ export.paired_plain_to_palatal = {}
 for k, v in pairs(export.paired_palatal_to_plain) do
 	export.paired_plain_to_palatal[v] = k
 end
-
+local lc_velar = "kgh"
+local uc_velar = "KGH"
+export.velar = lc_velar .. uc_velar
+export.velar_c = "[" .. export.velar .. "]"
 
 function export.iotate(stem)
 	error("Unimplemented")
@@ -75,28 +80,34 @@ end
 
 function export.apply_vowel_alternation(alt, stem)
 	local modstem, origvowel
-	if alt == "quant" then
+	if alt == "quant" or alt == "quantě" then
 		-- [[sníh]] "snow", gen sg. [[sněhu]]
 		-- [[hůl]] "cane", gen sg. [[hole]]
 		-- [[práce]] "work", ins sg. [[prací]]
-		modstem = rsub(stem, "(.)([íůá])(" .. export.cons_c .. "*)$",
+		modstem = rsub(stem, "(.)([íůáé])(" .. export.cons_c .. "*)$",
 			function(pre, vowel, post)
 				origvowel = vowel
 				if vowel == "í" then
-					if rfind(pre, "[" .. paired_plain .. "]") then
-						return pre .. "ě" .. post
+					if alt == "quantě" then
+						if rfind(pre, "[" .. paired_plain .. "]") then
+							return pre .. "ě" .. post
+						else
+							return pre .. "e" .. post
+						end
 					else
-						return pre .. "e" .. post
+						return pre .. "i" .. post
 					end
 				elseif vowel == "ů" then
 					return pre .. "o" .. post
+				elseif vowel == "é" then
+					return pre .. "e" .. post
 				else
 					return pre .. "a" .. post
 				end
 			end
 		)
 		if modstem == stem then
-			error("Indicator 'quant' can't be applied because stem '" .. stem .. "' doesn't have an í, ů or á as its last vowel")
+			error("Indicator '" .. alt .. "' can't be applied because stem '" .. stem .. "' doesn't have an í, ů, á or é as its last vowel")
 		end
 	else
 		return stem, nil
@@ -166,6 +177,48 @@ function export.dereduce(stem)
 		epvowel = is_upper and "E" or "e"
 	end
 	return pre .. letter .. epvowel .. post
+end
+
+
+function export.convert_paired_plain_to_palatal(stem, ending)
+	if ending and not rfind(ending, "^[ěií]") then
+		return stem
+	end
+	local stembegin, lastchar = rmatch(stem, "^(.*)([" .. export.paired_plain .. "])$")
+	if lastchar then
+		return stembegin .. com.paired_plain_to_palatal[lastchar]
+	else
+		return stem
+	end
+end
+
+
+function export.convert_paired_palatal_to_plain(stem, ending)
+	-- For stems that alternate between n/t/d and ň/ť/ď, we always maintain the stem in the latter format and
+	-- convert to the corresponding plain as needed, with e -> ě (normally we always have 'ě' as the ending, but
+	-- the user may specify 'e').
+	if ending and not rfind(ending, "^[eěií]") then
+		return stem, ending
+	end
+	local stembegin, lastchar = rmatch(stem, "^(.*)([" .. export.paired_palatal .. "])$")
+	if lastchar then
+		if ending == "e" then
+			ending = rsub(ending, "^e", "ě")
+		end
+		return stembegin .. com.paired_palatal_to_plain[lastchar], ending
+	else
+		return stem, ending
+	end
+end
+
+
+function export.combine_stem_ending(stem, ending)
+	if stem == "?" then
+		return "?"
+	else
+		stem, ending = export.convert_paired_palatal_to_plain(stem, ending)
+		return stem .. ending
+	end
 end
 
 
