@@ -178,10 +178,7 @@ def check_for_bad_subsections(secbody, pagetitle, pagemsg, langname):
         pagemsg("WARNING: Section %s does not end in two newlines" % subsection_id(k))
         if args.correct:
           subsections[k] = subsections[k].rstrip() + "\n\n"
-          if k == len(subsections) - 1 and re.search("^--+$", subsections[k], re.M):
-            append_note("correct whitespace after final language divider")
-          else:
-            correct_whitespace_notes.append("section %s" % subsection_id(k))
+          correct_whitespace_notes.append("section %s" % subsection_id(k))
   if len(correct_whitespace_notes) > 0:
     append_note(group_correction_notes("correct whitespace of %s", correct_whitespace_notes))
 
@@ -442,13 +439,13 @@ def process_text_on_page(index, pagetitle, text):
     if args.correct:
       newsections = [sections[0]]
       numlangs = len(sorted_sections)
-      # Fix up all the dividers, needed esp. if the last language section is reordered.
+      # Remove stray horizontal rules if found and make sure there are two newlines between language sections.
       for j in xrange(numlangs):
         langname, header, contents = sorted_sections[j]
         m = re.search(r"\A(.*?)\s*\n--+\Z", contents.rstrip(), re.S)
-        divider = "\n\n----\n\n" if j < numlangs - 1 else "\n\n"
+        divider = "\n\n"
         if not m:
-          # no divider at end
+          # no horizontal rule at end
           contents = contents.rstrip() + divider
         else:
           contents = m.group(1) + divider
@@ -469,17 +466,15 @@ def process_text_on_page(index, pagetitle, text):
     if j < len(sections) - 2: # no section divider at end of last L2 section
       m = re.search(r"\A(.*?)\s*\n--+\Z", sections[j].rstrip(), re.S)
       if not m:
-        pagemsg("WARNING: Missing language section divider at end")
-        if args.correct:
-          sections[j] = sections[j].rstrip() + "\n\n----\n\n"
-          notes.append("%s: add missing language section divider at end" % langname)
+        newsecj = sections[j].rstrip() + "\n\n"
       else:
-        newsecj = m.group(1) + "\n\n----\n\n"
-        if sections[j] != newsecj:
-          pagemsg("WARNING: Misformatted language section divider at end")
-          if args.correct:
-            sections[j] = newsecj
-            notes.append("%s: correct misformatted language section divider at end" % langname)
+        pagemsg("WARNING: Stray horizontal rule at end")
+        newsecj = m.group(1) + "\n\n"
+      if sections[j] != newsecj:
+        pagemsg("WARNING: Misformatted language section divider at end")
+        if args.correct:
+          sections[j] = newsecj
+          notes.append("%s: correct misformatted language section divider at end" % langname)
 
     check_for_bad_etym_sections(sections[j], pagemsg)
     newsection, this_notes = check_for_bad_subsections(sections[j], pagetitle, pagemsg, langname)
