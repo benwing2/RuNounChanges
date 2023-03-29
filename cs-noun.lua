@@ -596,7 +596,7 @@ decls["soft-m"] = function(base, stems)
 	local voc_s = base.animacy == "an" and rfind(base.lemma, "ec$") and "e" or "i"
 	local nom_p = base.animacy == "inan" and "e" or "i"
 	-- nouns with loc_p in -ech (e.g. [[cíl]] "goal") need to give this manually, using <locplech>
-	add_decl(base, stems, "", "e", dat_s, nil, "i", loc_s, "em",
+	add_decl(base, stems, "", "e", dat_s, nil, voc_s, loc_s, "em",
 		nom_p, "ů", "ům", "e", "ích", "i")
 end
 
