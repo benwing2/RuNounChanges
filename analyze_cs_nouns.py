@@ -21,13 +21,13 @@ noun_endings = {
   "gen_pl": [u"ů", u"í", ""],
   "dat_pl": [u"ům", u"ím", u"ám", "em", u"ěm"],
   "loc_pl": ["ech", u"ěch", u"ích", u"ách"],
-  "ins_pl": [u"ími", "ami", "emi", u"ěmi", "mi", "y", "i"],
+  "ins_pl": [u"ími", "ami", "emi", u"ěmi", "mi", "y", "i", "ama"],
 }
 
 adj_endings = {
   "gen_sg": [u"ého", u"é", u"ího", u"í"],
   "dat_sg": [u"ému", u"é", u"ímu", u"í"],
-  "voc_sg": [u"ý", u"á", u"é"],
+  "voc_sg": [u"ý", u"á", u"é", u"í"],
   "loc_sg": [u"ém", u"é", u"ím", u"í"],
   "ins_sg": [u"ým", "ou", u"ím", u"í"],
   "nom_pl": [u"í", u"é", u"á"],
@@ -117,10 +117,16 @@ def process_text_on_page(index, pagetitle, text):
 
     def fetch(param, pl_tantum=False):
       slot_map = pl_tantum_slot_to_param if pl_tantum else slot_to_param
-      param = slot_map.get(param, param)
-      val = getparam(t, param).strip()
-      val = blib.remove_links(val)
-      vals = re.split(r",\s*", val)
+      numparam = slot_map.get(param, param)
+      pref = re.sub("^(.).*?_(.).*$", r"\1\2", param)
+      vals = blib.fetch_param_chain(t, numparam, pref)
+      newvals = []
+      for thisval in vals:
+        thisval = thisval.strip()
+        thisval = blib.remove_links(thisval)
+        thisvals = re.split(r"\s*[,/]\s*", thisval)
+        newvals.extend(thisvals)
+      vals = newvals
       retval = []
       for v in vals:
         # Remove final footnote symbols are per [[Module:table tools]]
@@ -204,9 +210,9 @@ def process_text_on_page(index, pagetitle, text):
           decl = "n"
       elif lemma.endswith(u"ý"):
         if fetch("acc_sg") == fetch("gen_sg"):
-          decl = "m.an"
+          decl = "m.an.+"
         else:
-          decl = "m"
+          decl = "m.+"
       elif lemma.endswith(u"á"):
         decl = "f.+"
       elif lemma.endswith(u"é"):
@@ -248,11 +254,12 @@ def process_text_on_page(index, pagetitle, text):
                 overrides.append("gen" + gen_sg_endings)
               velar = re.search("[ghk]$", lemma)
               expected_voc_sg_ending = "u" if velar else "e"
+              expected_loc_pl_ending = u"ích" if velar else "ech"
               if voc_sg_endings != expected_voc_sg_ending:
                 overrides.append("voc" + voc_sg_endings)
               if decl == "m.an" and nom_pl_endings != "i":
                 overrides.append("nompl" + nom_pl_endings)
-              if loc_pl_endings != "ech":
+              if loc_pl_endings != expected_loc_pl_ending:
                 overrides.append("locpl" + loc_pl_endings)
 
       if not decl:
@@ -292,6 +299,9 @@ def process_text_on_page(index, pagetitle, text):
         return False
 
     def infer_alternations(inferred_decl, nom_sg, gen_sg, gen_pl):
+      if "+" in inferred_decl:
+        # Adjectival nouns don't have vowel alternations or reducibility
+        return ""
       nom_sg = truncate_extra_forms(nom_sg)
       gen_sg = truncate_extra_forms(gen_sg)
       gen_pl = gen_pl and truncate_extra_forms(gen_pl)
@@ -400,12 +410,13 @@ def process_text_on_page(index, pagetitle, text):
       ]
       ending_header = "\t".join("%s:%%s" % case for case in cases)
       form_header = " || ".join("%s" for case in cases)
-      pagemsg(("%%s\tgender:%%s\tanimacy:%%s\tnumber:both\t%s\t| %s || " % (ending_header, form_header)) % (
+      pagemsg(("%%s\tgender:%%s\tanimacy:%%s\tnumber:both\t%s\t| %s\t%%s" % (ending_header, form_header)) % (
         "/".join(heads), gender, animacy,
         gen_sg_endings, dat_sg_endings, voc_sg_endings, loc_sg_endings, ins_sg_endings,
         nom_pl_endings, gen_pl_endings, dat_pl_endings, loc_pl_endings, ins_pl_endings,
         canon(nom_sg), canon(gen_sg), canon(voc_sg), canon(loc_sg), canon(ins_sg),
-        canon(nom_pl), canon(gen_pl), canon(dat_pl), canon(loc_pl), canon(ins_pl)))
+        canon(nom_pl), canon(gen_pl), canon(dat_pl), canon(loc_pl), canon(ins_pl),
+        decl))
       if len(heads) > 1:
         pagemsg("WARNING: Multiple heads: %s" % ",".join(heads))
       if decl is None:
@@ -419,29 +430,17 @@ def process_text_on_page(index, pagetitle, text):
       if gender != "unknown" and gender != declgender:
         pagemsg("WARNING: Headword gender %s differs from inferred declension gender %s" % (gender, declgender))
 
-    elif tn == "cs-decl-noun-unc":
+    elif tn == "cs-decl-noun-sg":
       pagemsg("WARNING: Singular-only unimplemented")
       continue
-      nom_sg = fetch("1")
-      gen_sg = fetch("2")
-      gen_sg_end_stressed = param_is_end_stressed(gen_sg)
-      dat_sg = fetch("3")
-      dat_sg_end_stressed = param_is_end_stressed(dat_sg, dative_singular_endings)
-      acc_sg = fetch("4")
-      acc_sg_end_stressed = param_is_end_stressed(acc_sg)
-      ins_sg = fetch("5")
-      ins_sg_end_stressed = param_is_end_stressed(ins_sg, instrumental_singular_endings)
-      loc_sg = fetch("6")
-      loc_sg_end_stressed = param_is_end_stressed(loc_sg, locative_singular_endings)
-      voc_sg = fetch("7")
-      voc_sg_end_stressed = param_is_end_stressed(voc_sg)
-      if (gen_sg_end_stressed == "unknown" or
-          acc_sg_end_stressed == "unknown" or
-          voc_sg_end_stressed == "unknown"):
-        pagemsg("WARNING: Missing stresses, can't determine accent pattern: %s" % unicode(t))
-        continue
+      nom_sg = fetch("nom_sg")
+      gen_sg = fetch("gen_sg")
+      dat_sg = fetch("dat_sg")
+      acc_sg = fetch("acc_sg")
+      voc_sg = fetch("voc_sg")
+      loc_sg = fetch("loc_sg")
+      ins_sg = fetch("ins_sg")
       if not heads:
-        pagemsg("WARNING: No head found")
         heads = [pagetitle]
       lemma = heads[0]
       gen_sg_endings = fetch_endings("2", genitive_singular_endings)
@@ -450,10 +449,8 @@ def process_text_on_page(index, pagetitle, text):
       loc_sg_endings = fetch_endings("6", locative_singular_endings)
       voc_sg_endings = fetch_endings("7", vocative_singular_endings)
 
-      pagemsg("%s\tgender:%s\tanimacy:%s\taccent:%s\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tgen_pl:-\tnumber:sg\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tnom_pl:-\tgen_pl:-\t| %s || \"?\" || %s || %s || %s || - || - || - || %s|| " % (
+      pagemsg("%s\tgender:%s\tanimacy:%s\tnumber:sg\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tnom_pl:-\tgen_pl:-\t| %s || \"?\" || %s || %s || %s || - || - || - || %s|| " % (
         "/".join(heads), gender, animacy, ":".join(seen_patterns),
-        stress(gen_sg_end_stressed), stress(dat_sg_end_stressed),
-        stress(loc_sg_end_stressed), stress(voc_sg_end_stressed),
         gen_sg_endings, dat_sg_endings, loc_sg_endings, voc_sg_endings,
         canon(nom_sg), canon(gen_sg), canon(loc_sg), canon(voc_sg), ins_sg_note(ins_sg)))
 
@@ -495,11 +492,9 @@ def process_text_on_page(index, pagetitle, text):
       gen_pl_endings = fetch_endings("2", genitive_plural_endings)
 
       if not heads:
-        pagemsg("WARNING: No head found")
         heads = [pagetitle]
-      pagemsg("%s\tgender:%s\tanimacy:%s\taccent:%s\tgen_sg:-\tdat_sg:-\tloc_sg:-\tvoc_sg:-\tgen_pl:%s\tnumber:pl\tgen_sg:-\tdat_sg:-\tloc_sg:-\tvoc_sg:-\tnom_pl:%s\tgen_pl:%s\t| %s || \"?\" || - || - || - || %s || %s || %s || || " % (
-        "/".join(heads), gender, animacy, ":".join(seen_patterns),
-        stress(gen_pl_end_stressed),
+      pagemsg("%s\tgender:%s\tanimacy:%s\tnumber:pl\tgen_sg:-\tdat_sg:-\tloc_sg:-\tvoc_sg:-\tnom_pl:%s\tgen_pl:%s\t| %s || \"?\" || - || - || - || %s || %s || %s || || " % (
+        "/".join(heads), gender, animacy,
         nom_pl_endings, gen_pl_endings,
         canon(nom_pl), canon(nom_pl), canon(gen_pl), canon(ins_pl)))
 

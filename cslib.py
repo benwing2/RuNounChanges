@@ -38,6 +38,10 @@ lc_velar = "kgh"
 uc_velar = "KGH"
 velar = lc_velar + uc_velar
 velar_c = "[" + velar + "]"
+lc_labial = "mpbfv"
+uc_labial = "MPBFV"
+labial = lc_labial + uc_labial
+labial_c = "[" + labial + "]"
 
 
 def iotate(stem):
@@ -59,7 +63,7 @@ def apply_vowel_alternation(alt, stem):
     pre, vowel, post = m.groups()
     if vowel == u"í":
       if alt == u"quant-ě":
-        if re.search("[" + paired_plain + "mbpfv]$", pre):
+        if re.search("[" + paired_plain + labial + "]$", pre):
           return pre + u"ě" + post
         else:
           return pre + "e" + post
