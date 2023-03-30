@@ -528,8 +528,50 @@ end
 local decls = {}
 local declprops = {}
 
-local function default_genitive_u(base)
-	return base.number == "sg" and not rfind(base.lemma, "^" .. com.uppercase_c)
+local function default_nom_pl_animate_masc(base)
+	return
+		-- monosyllabic words: Dánové, Irové, králové, mágové, Rusové, sokové, synové, špehové, zběhové, zeťové, manové, danové
+		-- (but Žid → Židé, Čech → Češi).
+		com.is_monosyllabic(base.lemma) and "ové" or
+		-- barmani, gentlemani, jazzmani, kameramani, narkomani, ombudsmani, pivotmani, rekordmani, showmani, supermani, toxikomani
+		rfind(base.lemma, "^" .. com.lowercase_c .. ".*man$") and "i" or
+		-- terms ending in -an after a palatal or potentially palatal consonant (but -man forms -mani unless in a proper noun):
+		-- Brňan → Brňané, křesťan → křesťané, měšťan → měšťané, Moravan → Moravané, občan → občané, ostrovan → ostrované,
+		-- Pražan → Pražané, Slovan → Slované, svatebčan → svatebčané, venkovan → venkované; some late formations pluralize this way
+		-- but don't have a palatal consonant preceding the -an, e.g. [[pohan]], [[Oděsan]]; these need manual overrides
+		rfind(base.lemma, "[ňďťščžřj" .. com.labial_c .. "]an$") and {"é", "i"} or -- most now can also take -i
+		-- proper names: Baťové, Novákové, Petrové, Tomášové, Vláďové; but exclude demonyms
+		rfind(base.lemma, "^" .. com.uppercase_c) and not rfind(base.lemma, "ec$") and "ové" or
+		-- demonyms: [[Albánec]], [[Gruzínec]], [[Izraelec]], [[Korejec]], [[Libyjec]], [[Litevec]], [[Němec]], [[Portugalec]]
+		rfind(base.lemma, "^" .. com.uppercase_c .. ".*ec$") and "i" or
+		-- From here on down, we're dealing only with lowercase terms.
+		-- buditelé, budovatelé, čekatelé, činitelé, hostitelé, jmenovatelé, pisatelé, ručitelé, velitelé, živitelé
+		rfind(base.lemma, ".*tel$") and "é" or
+		-- husita → husité, izraelita → izraelité, jezuita → jezuité, kosmopolita → kosmopolité, táborita → táborité
+		-- fašista → fašisté, filatelista → filatelisté, fotbalista → fotbalisté, kapitalista → kapitalisté,
+		--   marxista → marxisté, šachista → šachisté, terorista → teroristé
+		rfind(base.lemma, ".*is?ta$") and "é" or
+		-- gymnasta → gymnasté, fantasta → fantasté
+		rfind(base.lemma, ".*asta$") and "é" or
+		-- remaining masculines in -a (which may not go through this code at all);
+		-- nouns in -j: čaroděj → čarodějové, lokaj → lokajové, patricij → patricijové, plebej → plebejové, šohaj → šohajové, žokej → žokejové
+		-- nouns in -l: apoštol → apoštolové, břídil → břídilové, fňukal → fňukalové, hýřil → hýřilové, kutil → kutilové,
+		--   loudal → loudalové, mazal → mazalové, škrabal → škrabalové, škudlil → škudlilové, vyvrhel → vyvrhelové, žvanil → žvanilové
+		--   (we excluded those in -tel above)
+		rfind(base.lemma, ".*[jla]$") and "ové" or
+		-- archeolog → archeologové, biolog → biologové, geolog → geologové, meteorolog → meteorologové
+		rfind(base.lemma, ".*log$") and "ové" or
+		-- dramaturg → dramaturgové, chirurg → chirurgové
+		rfind(base.lemma, ".*urg$") and "ové" or
+		-- fotograf → fotografové, geograf → geografové, lexikograf → lexikografové
+		rfind(base.lemma, ".*graf$") and "ové" or
+		-- bibliofil → bibliofilové, germanofil → germanofilové
+		rfind(base.lemma, ".*fil$") and "ové" or
+		-- rusofob → rusofobové
+		rfind(base.lemma, ".*fob$") and "ové" or
+		-- gronom → agronomové, ekonom → ekonomové
+		rfind(base.lemma, ".*nom$") and "ové" or
+		"i"
 end
 
 
@@ -549,10 +591,13 @@ decls["hard-m"] = function(base, stems)
 	-- velar-stem animates with voc_s in -e (e.g. [[Bůh]] "God", voc_s 'Bože'; [[člověk]] "person", voc_s 'člověče')
 	-- need to give this manually using <voce>; it will trigger the first palatalization automatically
 	local voc_s = velar and "u" or "e" -- 'e' will trigger first palatalization in apply_special_cases()
-	-- nom_p in -é (e.g. [[soused]] "neighbor", [[křesťan]] "Christian") and -ové (e.g. [[syn]] "son") need to be
-	-- given manually (using <nomplé> or <nomplové>); nom_p in -i will trigger second palatalization in
-	-- apply_special_cases()
-	local nom_p = base.animacy == "inan" and "y" or "i"
+	-- nom_p in -i will trigger second palatalization in apply_special_cases()
+	local nom_p = base.animacy == "inan" and "y" or default_nom_pl_animate_masc(base)
+	-- loc_p in -ích is currently the default for velars but not otherwise; it will automatically trigger the second
+	-- palatalization (e.g. [[práh]] "threshold", loc_p 'prazích'). Otherwise, -ích needs to be given manually using
+	-- <locplích>, e.g. [[les]] "forest"; [[hotel]] "hotel"; likewise for loc_p in -ách (e.g. [[plech]] "metal plate"),
+	-- using <locplách>.
+	local loc_p = velar and "ích" or "ech"
 	add_decl(base, stems, "", gen_s, dat_s, nil, voc_s, loc_s, "em")
 	if base.plsoft then
 		error("Implement me if needed")
@@ -561,7 +606,7 @@ decls["hard-m"] = function(base, stems)
 		-- given manually using <locplích>; it will automatically trigger the second palatalization; loc_p in -ách (e.g.
 		-- [[plech]] "metal plate") also needs to be given manually using <locplách>
 		add_decl(base, stems, nil, nil, nil, nil, nil, nil, nil,
-			nom_p, "ů", "ům", "y", "ech", "y")
+			nom_p, "ů", "ům", "y", loc_p, "y")
 	end
 end
 
@@ -594,7 +639,7 @@ decls["soft-m"] = function(base, stems)
 	-- these words are reducible; we should consider making this the default for these words (FIXME).
 	-- [[švec]] "shoemaker" has stem 'ševc-' and voc_s 'ševče' so we need to check the lemma not stem for -ec.
 	local voc_s = base.animacy == "an" and rfind(base.lemma, "ec$") and "e" or "i"
-	local nom_p = base.animacy == "inan" and "e" or "i"
+	local nom_p = base.animacy == "inan" and "e" or default_nom_pl_animate_masc(base)
 	-- nouns with loc_p in -ech (e.g. [[cíl]] "goal") need to give this manually, using <locplech>
 	add_decl(base, stems, "", "e", dat_s, nil, voc_s, loc_s, "em",
 		nom_p, "ů", "ům", "e", "ích", "i")
@@ -620,16 +665,15 @@ declprops["mixed-m"] = {
 
 
 decls["a-m"] = function(base, stems)
-	-- Nouns in -ita (e.g. [[husita]] "Hussite") and -ista (e.g. [[houslista]] "violinist") have -é in the nom_p
-	-- instead of -ové
-	local it_ist = rfind(stems.vowel_stem, "is?t$")
+	-- Nouns in -ita (e.g. [[husita]] "Hussite"), -ista (e.g. [[houslista]] "violinist") and -asta (e.g.
+	-- [[gymnasta]] "male gymnast") have -é in the nom_p instead of -ové
+	local it_ist = rfind(stems.vowel_stem, "is?t$") or rfind(stems.vowel_stem, "ast$")
 	-- Velar nouns (e.g. [[sluha]] "servant") have -ích in the loc_p (which triggers the second palatalization)
-	-- instead of -ech
+	-- instead of -ech.
 	local velar = rfind(stems.vowel_stem, com.velar_c .. "$")
-	-- Nouns ending in a consonant that cannot be followed by -y (e.g. [[Miša]] "Mike/Misha") use -i
-	local y_ending = rfind(stems.vowel_stem, "[cčjřšž]$") and "i" or "y"
-	add_decl(base, stems, "a", y_ending, "ovi", "u", "o", "ovi", "ou",
-		it_ist and "é" or "ové", "ů", "ům", y_ending, velar and "ích" or "ech", y_ending)
+	local loc_p = velar and "ích" or "ech"
+	add_decl(base, stems, "a", "y", "ovi", "u", "o", "ovi", "ou",
+		it_ist and "é" or "ové", "ů", "ům", "y", loc_p, "y")
 end
 
 declprops["a-m"] = {
@@ -639,15 +683,83 @@ declprops["a-m"] = {
 
 
 decls["e-m"] = function(base, stems)
-	-- [[soudce]] "judge"
+	-- [[zachránce]] "savior"; [[soudce]] "judge"
 	add_decl(base, stems, "e", "e", {"ovi", "i"}, nil, "e", {"ovi", "i"}, "em",
 		-- nouns with -ové as well (e.g. [[soudce]] "judge") will need to specify that manually, e.g. <nompli:ové>
 		"i", "ů", "ům", "e", "ích", "i")
 end
 
 declprops["e-m"] = {
-	desc = "virile masc in -e",
-	cat = {"virile masculine nouns in -e"},
+	desc = "masc in -e",
+	cat = {"masculine nouns in -e"},
+}
+
+
+decls["i-m"] = function(base, stems)
+	-- [[kivi]] "kiwi (bird)"; [[kuli]] "coolie"; [[lori]] "lory, lorikeet (bird)" (loc_pl 'loriech/loriích/lorich');
+	-- [[vini]] "parrot of the genus Vini"; [[yetti]]/[[yeti]] "yeti".
+	--
+	-- [[grizzly]]/[[grizly]] "grizzly bear"; [[pony]] "pony"; [[husky]] "husky".
+	--
+	-- NOTE: Some nouns in -y are regular soft stems, e.g. [[gray]] "gray (unit of absorbed radiation)";
+	-- [[Nagy]] (surname).
+	--
+	-- NOTE: The stem ends in -i/-y.
+	add_decl(base, stems, "", "ho", "mu", nil, "", "m", "m",
+		-- ins_pl 'kivii/kivimi'
+		{"ové", ""}, {"ů", "ch"}, {"ům", "m"}, {"e", ""}, {"ích", "ch"}, {"i", "mi"})
+end
+
+declprops["i-m"] = {
+	desc = "masc in -i/-y",
+	cat = {"masculine nouns in -i/-y"},
+}
+
+
+decls["o-m"] = function(base, stems)
+	-- [[kápo]] "head, leader"; [[lamželezo]] "strongman"; [[torero]] "bullfighter"; [[žako]] "African gray parrot";
+	-- [[dingo]] "dingo"; [[kakapo]] "kakapo" (given in Wiktionary with dat_s/loc_s in -ovi only not -ovi/-u; probably
+	-- wrong but not in IJP); [[maestro]] "maestro"; [[Bruno]] "Bruno", [[Hugo]] "Hugo"; [[Ivo]] "Yves" (these names
+	-- are singular-only per IJP); [[Kvido]] "Guido, Guy" (per IJP has accusative in -a or -ona); [[Oto]] "Otto" (per
+	-- IJP also declinable like virile -a masculines; singular-only); [[Kuřátko]] (a surname; how declined?);
+	-- [[Picasso]] (surname; how declined?); [[Pluto]] "Pluto (God)", also "Pluto (planet)", which is inanimate;
+	-- [[Samo]]/[[Sámo]] "Samo (7th century Slavic ruler)" (dat_s/loc_s only in -ovi, needs override); [[Tomio]]
+	-- "Tomio (Japanese male given name)" (how declined?); [[nemakačenko]] "idler, loafer" (given in Wiktionary with
+	-- dat_s/loc_s in -ovi only, as for [[kakapo]]); [[nefachčenko]] "idler, loafer"; note also [[gadžo]] "gadjo",
+	-- which has a unique declension.
+	--
+	-- Velar nouns ([[žako]], [[dingo]], etc.) have -ích in the loc_p (which triggers the second palatalization)
+	-- instead of -ech.
+	local velar = rfind(stems.vowel_stem, com.velar_c .. "$")
+	-- inanimates e.g. [[Pluto]] (planet) have -u only, like for normal hard masculines.
+	local dat_s = base.animacy == "inan" and "u" or {"ovi", "u"}
+	local loc_s = dat_s
+	local loc_p = velar and "ích" or "ech"
+	add_decl(base, stems, "o", "a", dat_s, nil, "o", loc_s, "em",
+		"ové", "ů", "ům", "y", loc_p, "y")
+end
+
+declprops["o-m"] = {
+	desc = "masc in -o",
+	cat = {"masculine nouns in -o"},
+}
+
+
+decls["u-m"] = function(base, stems)
+	-- [[emu]] "emu", [[guru]] "guru", [[kakadu]] "cockatoo", [[marabu]] "marabou" (declined the same way)
+	-- [[Osamu]] "Osamu (Japanese male given name)" [how declined?]
+	-- [[Višnu]] "Vishnu" (declined like [[guru]] but singular-only)
+	-- [[budižkničemu]] "good-for-nothing, ne'er-do-well" (indeclinable in the singular, declinable as masculine hard stem
+	-- budižkničemové etc. in the plural, declinable as feminine hard stem budižkničemy etc. in the plural when feminine).
+	--
+	-- NOTE: The stem ends in -u.
+	add_decl(base, stems, "", "a", "ovi", nil, "", "ovi", "em",
+		"ové", "ů", "ům", "y", "ech", "y")
+end
+
+declprops["u-m"] = {
+	desc = "masc in -u",
+	cat = {"masculine nouns in -u"},
 }
 
 
@@ -1631,8 +1743,18 @@ local function determine_default_reducible(base)
 	local stem
 	stem = rmatch(base.lemma, "^(.*" .. com.cons_c .. ")$")
 	if stem then
-		-- FIXME, investigate whether we need to default reducible to true (e.g. in -ec or -ek?).
-		base.default_reducible = false
+		-- When analyzing existing manual declensions in -ec and -ek, 290 were reducible vs. 23 non-reducible. Of these
+		-- 23, 15 were monosyllabic (and none of the 290 reducible nouns were monosyllabic) -- and two of these were
+		-- actually reducible but irregularly: [[švec]] "shoemaker" (gen sg 'ševce') and [[žnec]] "reaper (person)"
+		-- (gen sg. 'žence'). Of the remaining 8 multisyllabic non-reducible words, two were actually reducible but
+		-- irregularly: [[stařec]] "old man" (gen sg 'starce') and [[tkadlec]] "weaver" (gen sg 'tkalce'). The remaining
+		-- six consisted of 5 compounds of monosyllabic words: [[dotek]], [[oblek]], [[kramflek]], [[pucflek]],
+		-- [[pokec]], plus [[česnek]], which should be reducible but would lead to an impossible consonant cluster.
+		if rfind(stem, "e[ck]$") and not com.is_monosyllabic(stem) then
+			base.default_reducible = true
+		else
+			base.default_reducible = false
+		end
 		return
 	end
 	stem = rmatch(base.lemma, "^(.*)" .. com.vowel_c .. "$")
