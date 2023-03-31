@@ -29,7 +29,7 @@ end
 export.TEMP_CH = u(0xFFF0) -- used to substitute ch temporarily in the default-reducible code
 export.TEMP_OU = u(0xFFF1) -- used to substitute ou temporarily in is_monosyllabic()
 
-local lc_vowel = "aeiouyáéíóúýěů" .. TEMP_OU
+local lc_vowel = "aeiouyáéíóúýěů" .. export.TEMP_OU
 local uc_vowel = uupper(lc_vowel)
 export.vowel = lc_vowel .. uc_vowel
 export.vowel_c = "[" .. export.vowel .. "]"
@@ -37,8 +37,8 @@ export.non_vowel_c = "[^" .. export.vowel .. "]"
 -- Consonants that can never form a syllabic nucleus.
 local lc_non_syllabic_cons = "bcdfghjkmnpqstvwxzčňšžďť" .. export.TEMP_CH
 local uc_non_syllabic_cons = uupper(lc_non_syllabic_cons)
-local non_syllabic_cons = lc_non_syllabic_cons .. uc_non_syllabic_cons
-local non_syllabic_cons_c = "[" .. non_syllabic_cons .. "]"
+export.non_syllabic_cons = lc_non_syllabic_cons .. uc_non_syllabic_cons
+export.non_syllabic_cons_c = "[" .. export.non_syllabic_cons .. "]"
 local lc_syllabic_cons = "lrř"
 local uc_syllabic_cons = uupper(lc_syllabic_cons)
 local lc_cons = lc_non_syllabic_cons .. lc_syllabic_cons
@@ -46,11 +46,11 @@ local uc_cons = uupper(lc_cons)
 export.cons = lc_cons .. uc_cons
 export.cons_c = "[" .. export.cons .. "]"
 export.lowercase = lc_vowel .. lc_cons
-export.lowercase = "[" .. export.lowercase .. "]"
+export.lowercase_c = "[" .. export.lowercase .. "]"
 export.uppercase = uc_vowel .. uc_cons
 export.uppercase_c = "[" .. export.uppercase .. "]"
 local lc_paired_palatal = "ňďť"
-local uc_paired_palatal = uuper(lc_paired_palatal)
+local uc_paired_palatal = uupper(lc_paired_palatal)
 export.paired_palatal = lc_paired_palatal .. uc_paired_palatal
 local lc_paired_plain = "ndt"
 local uc_paired_plain = uupper(lc_paired_plain)
@@ -75,6 +75,10 @@ local lc_labial = "mpbfv"
 local uc_labial = uupper(lc_labial)
 export.labial = lc_labial .. uc_labial
 export.labial_c = "[" .. export.labial .. "]"
+local lc_followable_by_e_hacek = lc_paired_plain .. lc_labial
+local uc_followable_by_e_hacek = uc_paired_plain .. uc_labial
+export.followable_by_e_hacek = lc_followable_by_e_hacek .. uc_followable_by_e_hacek
+export.followable_by_e_hacek_c = "[" .. export.followable_by_e_hacek .. "]"
 local lc_not_followable_by_y = "cčjřšž"
 local uc_not_followable_by_y = uupper(lc_not_followable_by_y)
 export.not_followable_by_y = lc_not_followable_by_y .. uc_not_followable_by_y
@@ -85,7 +89,7 @@ export.not_followable_by_y_c = "[" .. export.not_followable_by_y .. "]"
 -- monosyllabic but have only one vowel, and contrariwise words like [[brouk]], which are monosyllabic but have
 -- two vowels.
 function export.is_monosyllabic(word)
-	word = word:gsub("ou", TEMP_OU)
+	word = word:gsub("ou", export.TEMP_OU)
 	-- Convert all vowels to 'e'.
 	word = rsub(word, export.vowel_c, "e")
 	-- All consonants next to a vowel are non-syllabic; convert to 't'.
@@ -139,7 +143,7 @@ end
 
 
 local function make_try(word)
-	return function try(from, to)
+	return function(from, to)
 		local stem = rmatch(word, "^(.*)" .. from .. "$")
 		if stem then
 			return stem .. to
@@ -243,9 +247,7 @@ function export.convert_paired_palatal_to_plain(stem, ending)
 	end
 	local stembegin, lastchar = rmatch(stem, "^(.*)([" .. export.paired_palatal .. "])$")
 	if lastchar then
-		if ending == "e" then
-			ending = rsub(ending, "^e", "ě")
-		end
+		ending = rsub(ending, "^e", "ě")
 		return stembegin .. export.paired_palatal_to_plain[lastchar], ending
 	else
 		return stem, ending
@@ -257,7 +259,12 @@ function export.combine_stem_ending(base, slot, stem, ending)
 	if stem == "?" then
 		return "?"
 	else
+		-- Convert ňe and ňě -> ně.
 		stem, ending = export.convert_paired_palatal_to_plain(stem, ending)
+		-- We specify endings with -e/ě using ě, but some consonants cannot be followed by ě; convert to plain e.
+		if rfind(ending, "^ě") and not rfind(stem, export.followable_by_e_hacek_c .. "$") then
+			ending = rsub(ending, "^ě", "e")
+		end
 		-- There are occasional occurrences of soft-only consonants at the end of the stem in hard paradigms, e.g.
 		-- [[banjo]] "banjo", [[gadžo]] "gadjo (non-Romani)", [[Miša]] "Misha, Mike". These force a following y to turn
 		-- into i.
