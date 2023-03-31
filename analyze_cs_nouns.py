@@ -134,7 +134,10 @@ def process_text_on_page(index, pagetitle, text):
         retval.append(v)
       return ", ".join(retval)
 
-    def fetch_endings(param, is_adj=False, pl_tantum=False, uniquify=True):
+    def join_endings(endings):
+      return ":".join(endings) if endings else "-"
+
+    def fetch_endings(param, is_adj=False, pl_tantum=False, uniquify=True, join=True):
       ending_set = adj_endings if is_adj else noun_endings
       endings = ending_set[param]
       endings = sorted(endings, key=lambda x:-len(x))
@@ -150,7 +153,7 @@ def process_text_on_page(index, pagetitle, text):
         else: # no break
           pagemsg("WARNING: Couldn't recognize ending for %s=%s: %s" % (
             param, paramval, unicode(t)))
-      return ":".join(found_endings)
+      return join_endings(found_endings) if join else found_endings
 
     def canon(val):
       return re.sub(", *", "/", val)
@@ -158,7 +161,53 @@ def process_text_on_page(index, pagetitle, text):
     def truncate_extra_forms(form):
       return re.sub(",.*", "", form)
 
-    def infer_basic_decl(lemma):
+    def default_nom_pl_animate_masc(lemma):
+      return (
+        # monosyllabic words: Dánové, Irové, králové, mágové, Rusové, sokové, synové, špehové, zběhové, zeťové, manové, danové
+        # (but Žid → Židé, Čech → Češi).
+        cs.is_monosyllabic(lemma) and [u"ové"] or
+        # barmani, gentlemani, jazzmani, kameramani, narkomani, ombudsmani, pivotmani, rekordmani, showmani, supermani, toxikomani
+        re.search("^" + cs.lowercase_c + ".*man$", lemma) and ["i"] or
+        # terms ending in -an after a palatal or potentially palatal consonant (but -man forms -mani unless in a proper noun):
+        # Brňan → Brňané, křesťan → křesťané, měšťan → měšťané, Moravan → Moravané, občan → občané, ostrovan → ostrované,
+        # Pražan → Pražané, Slovan → Slované, svatebčan → svatebčané, venkovan → venkované; some late formations pluralize this way
+        # but don't have a palatal consonant preceding the -an, e.g. [[pohan]], [[Oděsan]]; these need manual overrides
+        re.search(u"[ňďťščžřj" + cs.labial_c + "]an$", lemma) and [u"é", "i"] or # most now can also take -i
+        # proper names: Baťové, Novákové, Petrové, Tomášové, Vláďové; but exclude demonyms
+        re.search("^" + cs.uppercase_c, lemma) and not re.search("ec$", lemma) and [u"ové"] or
+        # demonyms: [[Albánec]], [[Gruzínec]], [[Izraelec]], [[Korejec]], [[Libyjec]], [[Litevec]], [[Němec]], [[Portugalec]]
+        re.search("^" + cs.uppercase_c + ".*ec$", lemma) and ["i"] or
+        # From here on down, we're dealing only with lowercase terms.
+        # buditelé, budovatelé, čekatelé, činitelé, hostitelé, jmenovatelé, pisatelé, ručitelé, velitelé, živitelé
+        re.search(".*tel$", lemma) and [u"é"] or
+        # husita → husité, izraelita → izraelité, jezuita → jezuité, kosmopolita → kosmopolité, táborita → táborité
+        # fašista → fašisté, filatelista → filatelisté, fotbalista → fotbalisté, kapitalista → kapitalisté,
+        #   marxista → marxisté, šachista → šachisté, terorista → teroristé
+        re.search(".*is?ta$", lemma) and [u"é"] or
+        # gymnasta → gymnasté, fantasta → fantasté
+        re.search(".*asta$", lemma) and [u"é"] or
+        # remaining masculines in -a (which may not go through this code at all);
+        # nouns in -j: čaroděj → čarodějové, lokaj → lokajové, patricij → patricijové, plebej → plebejové, šohaj → šohajové, žokej → žokejové
+        # nouns in -l: apoštol → apoštolové, břídil → břídilové, fňukal → fňukalové, hýřil → hýřilové, kutil → kutilové,
+        #   loudal → loudalové, mazal → mazalové, škrabal → škrabalové, škudlil → škudlilové, vyvrhel → vyvrhelové, žvanil → žvanilové
+        #   (we excluded those in -tel above)
+        re.search(".*[jla]$", lemma) and [u"ové"] or
+        # archeolog → archeologové, biolog → biologové, geolog → geologové, meteorolog → meteorologové
+        re.search(".*log$", lemma) and [u"ové"] or
+        # dramaturg → dramaturgové, chirurg → chirurgové
+        re.search(".*urg$", lemma) and [u"ové"] or
+        # fotograf → fotografové, geograf → geografové, lexikograf → lexikografové
+        re.search(".*graf$", lemma) and [u"ové"] or
+        # bibliofil → bibliofilové, germanofil → germanofilové
+        re.search(".*fil$", lemma) and [u"ové"] or
+        # rusofob → rusofobové
+        re.search(".*fob$", lemma) and [u"ové"] or
+        # gronom → agronomové, ekonom → ekonomové
+        re.search(".*nom$", lemma) and [u"ové"] or
+        ["i"]
+      )
+
+    def infer_basic_decl(lemma, sgonly=False):
       overrides = []
       decl = None
       # * Nouns ending in a consonant are generally masculine, but can be feminine of the -e/ě type (e.g. [[dlaň]]
@@ -238,36 +287,51 @@ def process_text_on_page(index, pagetitle, text):
               else:
                 decl = "m.foreign"
           if not decl:
-            gen_sg_endings = fetch_endings("gen_sg")
-            dat_sg_endings = fetch_endings("dat_sg")
-            voc_sg_endings = fetch_endings("voc_sg")
-            nom_pl_endings = fetch_endings("nom_pl")
-            loc_pl_endings = fetch_endings("loc_pl")
-            ins_pl_endings = fetch_endings("ins_pl")
-            is_soft = ins_pl_endings == "i" or dat_sg_endings == "i"
+            gen_sg_endings = fetch_endings("gen_sg", join=False)
+            dat_sg_endings = fetch_endings("dat_sg", join=False)
+            voc_sg_endings = fetch_endings("voc_sg", join=False)
+            if not sgonly:
+              nom_pl_endings = fetch_endings("nom_pl", join=False)
+              loc_pl_endings = fetch_endings("loc_pl", join=False)
+              ins_pl_endings = fetch_endings("ins_pl", join=False)
+            is_soft = (not sgonly and "i" in ins_pl_endings) or "e" in gen_sg_endings
+            is_hard = (not sgonly and "y" in ins_pl_endings) or "a" in gen_sg_endings or "u" in gen_sg_endings
+            softhard = "mixed" if is_soft and is_hard else "soft" if is_soft else "hard"
+            default_softhard = "soft" if re.search(u"[cčjřšžťďň]$", lemma) or lemma.endswith("tel") else "hard"
             if fetch("acc_sg") == fetch("gen_sg"):
+              animate = True
               decl = "m.an"
             else:
+              animate = False
               decl = "m"
+            if softhard != default_softhard:
+              decl += "." + softhard
             if not is_soft:
-              if decl == "m" and gen_sg_endings != "u":
-                overrides.append("gen" + gen_sg_endings)
+              if not animate and gen_sg_endings != ["u"]:
+                overrides.append("gen" + join_endings(gen_sg_endings))
               velar = re.search("[ghk]$", lemma)
-              expected_voc_sg_ending = "u" if velar else "e"
-              expected_loc_pl_ending = u"ích" if velar else "ech"
+              expected_voc_sg_ending = ["u"] if velar else ["e"]
               if voc_sg_endings != expected_voc_sg_ending:
-                overrides.append("voc" + voc_sg_endings)
-              if decl == "m.an" and nom_pl_endings != "i":
-                overrides.append("nompl" + nom_pl_endings)
-              if loc_pl_endings != expected_loc_pl_ending:
-                overrides.append("locpl" + loc_pl_endings)
+                overrides.append("voc" + join_endings(voc_sg_endings))
+              if not sgonly:
+                expected_loc_pl_ending = [u"ích"] if velar else ["ech"]
+                if animate:
+                  expected_nom_pl_ending = default_nom_pl_animate_masc(lemma)
+                else:
+                  expected_nom_pl_ending = ["y"]
+                if set(nom_pl_endings) != set(expected_nom_pl_ending):
+                  overrides.append("nompl" + join_endings(nom_pl_endings))
+                if loc_pl_endings != expected_loc_pl_ending:
+                  overrides.append("locpl" + join_endings(loc_pl_endings))
 
       if not decl:
         pagemsg("WARNING: Unrecognized lemma ending: %s" % lemma)
+      elif sgonly:
+        decl += ".sg"
       return decl, ".".join(overrides)
 
-    def infer_decl(lemma):
-      decl, overrides = infer_basic_decl(lemma)
+    def infer_decl(lemma, sgonly=False):
+      decl, overrides = infer_basic_decl(lemma, sgonly=sgonly)
       if decl is None:
         return None
       alternation = infer_alternations(decl, fetch("nom_sg"), fetch("gen_sg"), fetch("gen_pl"))
@@ -431,8 +495,11 @@ def process_text_on_page(index, pagetitle, text):
         pagemsg("WARNING: Headword gender %s differs from inferred declension gender %s" % (gender, declgender))
 
     elif tn == "cs-decl-noun-sg":
-      pagemsg("WARNING: Singular-only unimplemented")
-      continue
+      if not heads:
+        heads = [pagetitle]
+      lemma = heads[0]
+      decl = infer_decl(lemma, sgonly=True)
+
       nom_sg = fetch("nom_sg")
       gen_sg = fetch("gen_sg")
       dat_sg = fetch("dat_sg")
@@ -440,63 +507,78 @@ def process_text_on_page(index, pagetitle, text):
       voc_sg = fetch("voc_sg")
       loc_sg = fetch("loc_sg")
       ins_sg = fetch("ins_sg")
+      is_adj = decl and "+" in decl
+      gen_sg_endings = fetch_endings("gen_sg", is_adj, uniquify=False)
+      dat_sg_endings = fetch_endings("dat_sg", is_adj, uniquify=False)
+      voc_sg_endings = fetch_endings("voc_sg", is_adj, uniquify=False)
+      loc_sg_endings = fetch_endings("loc_sg", is_adj, uniquify=False)
+      ins_sg_endings = fetch_endings("ins_sg", is_adj, uniquify=False)
+
+      cases = [
+        "gen_sg", "dat_sg", "voc_sg", "loc_sg", "ins_sg",
+      ]
+      ending_header = "\t".join("%s:%%s" % case for case in cases)
+      form_header = " || ".join("%s" for case in cases)
+      pagemsg(("%%s\tgender:%%s\tanimacy:%%s\tnumber:sg\t%s\t| %s\t%%s" % (ending_header, form_header)) % (
+        "/".join(heads), gender, animacy,
+        gen_sg_endings, dat_sg_endings, voc_sg_endings, loc_sg_endings, ins_sg_endings,
+        canon(nom_sg), canon(gen_sg), canon(voc_sg), canon(loc_sg), canon(ins_sg),
+        decl))
+      if len(heads) > 1:
+        pagemsg("WARNING: Multiple heads: %s" % ",".join(heads))
+      if decl is None:
+        pagemsg("Unable to infer declension")
+        continue
+      pagemsg("Inferred declension %s<%s>" % (lemma, decl))
+      declgender = decl[0]
+      declan = "an" if ".an" in decl else "in"
+      if animacy != "unknown" and (gender == "m" or declgender == "m") and declan != animacy:
+        pagemsg("WARNING: Headword animacy %s differs from inferred declension animacy %s" % (animacy, declan))
+      if gender != "unknown" and gender != declgender:
+        pagemsg("WARNING: Headword gender %s differs from inferred declension gender %s" % (gender, declgender))
+
+    elif tn == "cs-decl-noun-pl":
       if not heads:
         heads = [pagetitle]
       lemma = heads[0]
-      gen_sg_endings = fetch_endings("2", genitive_singular_endings)
-      dat_sg_endings = fetch_endings("3", dative_singular_endings)
-      ins_sg_endings = fetch_endings("5", instrumental_singular_endings)
-      loc_sg_endings = fetch_endings("6", locative_singular_endings)
-      voc_sg_endings = fetch_endings("7", vocative_singular_endings)
+      decl = "" # FIXME
 
-      pagemsg("%s\tgender:%s\tanimacy:%s\tnumber:sg\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tnom_pl:-\tgen_pl:-\t| %s || \"?\" || %s || %s || %s || - || - || - || %s|| " % (
-        "/".join(heads), gender, animacy, ":".join(seen_patterns),
-        gen_sg_endings, dat_sg_endings, loc_sg_endings, voc_sg_endings,
-        canon(nom_sg), canon(gen_sg), canon(loc_sg), canon(voc_sg), ins_sg_note(ins_sg)))
+      nom_pl = fetch("nom_pl", pl_tantum=True)
+      gen_pl = fetch("gen_pl", pl_tantum=True)
+      dat_pl = fetch("dat_pl", pl_tantum=True)
+      acc_pl = fetch("acc_pl", pl_tantum=True)
+      voc_pl = fetch("voc_pl", pl_tantum=True)
+      loc_pl = fetch("loc_pl", pl_tantum=True)
+      ins_pl = fetch("ins_pl", pl_tantum=True)
+      is_adj = decl and "+" in decl
+      nom_pl_endings = fetch_endings("nom_pl", is_adj, uniquify=False)
+      gen_pl_endings = fetch_endings("gen_pl", is_adj, uniquify=False)
+      dat_pl_endings = fetch_endings("dat_pl", is_adj, uniquify=False)
+      loc_pl_endings = fetch_endings("loc_pl", is_adj, uniquify=False)
+      ins_pl_endings = fetch_endings("ins_pl", is_adj, uniquify=False)
 
-      if len(heads) > 1:
-        pagemsg("WARNING: Multiple heads, not inferring declension: %s" % ",".join(heads))
-        continue
-      if gender == "unknown" or animacy == "unknown":
-        pagemsg("WARNING: Unknown gender or animacy, not inferring declension")
-        continue
-      parts = []
-      defg = infer_gender(lemma)
-      if gender != defg:
-        parts.append(gender)
-      alternation = infer_alternations(nom_sg, gen_sg, None)
-      reducible = alternation == "reducible"
-      defaulted_seen_patterns = construct_defaulted_seen_patterns(seen_patterns, lemma, gender, reducible)
-      if defaulted_seen_patterns:
-        parts.append(",".join(defaulted_seen_patterns))
-      if animacy != "in":
-        parts.append(animacy)
-      parts.append("sg")
-      if alternation in ["i", "ie", "io"]:
-        parts.append(alternation)
-      if gender == "m" and re.search("^" + cs.uppercase_c, lemma):
-        if re.search(u"у́?$", gen_sg):
-          parts.append("genu")
-        elif re.search(u"ю́?$", gen_sg):
-          parts.append("genju")
-      pagemsg("Inferred declension %s<%s>" % (lemma, ".".join(parts)))
-
-    elif tn == "cs-decl-noun-pl":
-      pagemsg("WARNING: Plural-only unimplemented")
-      continue
-      nom_pl = fetch("1")
-      gen_pl = fetch("2")
-      ins_pl = fetch("5")
-      loc_pl = fetch("6")
-      nom_pl_endings = fetch_endings("1", nominative_plural_endings)
-      gen_pl_endings = fetch_endings("2", genitive_plural_endings)
-
-      if not heads:
-        heads = [pagetitle]
-      pagemsg("%s\tgender:%s\tanimacy:%s\tnumber:pl\tgen_sg:-\tdat_sg:-\tloc_sg:-\tvoc_sg:-\tnom_pl:%s\tgen_pl:%s\t| %s || \"?\" || - || - || - || %s || %s || %s || || " % (
+      cases = [
+        "nom_pl", "gen_pl", "dat_pl", "loc_pl", "ins_pl"
+      ]
+      ending_header = "\t".join("%s:%%s" % case for case in cases)
+      form_header = " || ".join("%s" for case in cases)
+      pagemsg(("%%s\tgender:%%s\tanimacy:%%s\tnumber:both\t%s\t| %s\t%%s" % (ending_header, form_header)) % (
         "/".join(heads), gender, animacy,
-        nom_pl_endings, gen_pl_endings,
-        canon(nom_pl), canon(nom_pl), canon(gen_pl), canon(ins_pl)))
+        nom_pl_endings, gen_pl_endings, dat_pl_endings, loc_pl_endings, ins_pl_endings,
+        canon(nom_pl), canon(gen_pl), canon(dat_pl), canon(loc_pl), canon(ins_pl),
+        decl))
+      if len(heads) > 1:
+        pagemsg("WARNING: Multiple heads: %s" % ",".join(heads))
+      #if decl is None:
+      #  pagemsg("Unable to infer declension")
+      #  continue
+      #pagemsg("Inferred declension %s<%s>" % (lemma, decl))
+      #declgender = decl[0]
+      #declan = "an" if ".an" in decl else "in"
+      #if animacy != "unknown" and (gender == "m" or declgender == "m") and declan != animacy:
+      #  pagemsg("WARNING: Headword animacy %s differs from inferred declension animacy %s" % (animacy, declan))
+      #if gender != "unknown" and gender != declgender:
+      #  pagemsg("WARNING: Headword gender %s differs from inferred declension gender %s" % (gender, declgender))
 
 
 parser = blib.create_argparser("Analyze Czech noun declensions",

@@ -4,16 +4,28 @@
 import re, sys
 
 TEMP_CH = u"\uFFF0" # used to substitute ch temporarily in the default-reducible code
+TEMP_OU = u"\uFFF1" # used to substitute ou temporarily in is_monosyllabic()
 
-lc_vowel = u"aeiouyáéíóúýěů"
+lc_vowel = u"aeiouyáéíóúýěů" + TEMP_OU
 uc_vowel = lc_vowel.upper()
 vowel = lc_vowel + uc_vowel
 vowel_c = "[" + vowel + "]"
 non_vowel_c = "[^" + vowel + "]"
+# Consonants that can never form a syllabic nucleus.
+lc_non_syllabic_cons = u"bcdfghjkmnpqstvwxzčňšžďť" + TEMP_CH
+uc_non_syllabic_cons = lc_non_syllabic_cons.upper()
+non_syllabic_cons = lc_non_syllabic_cons + uc_non_syllabic_cons
+non_syllabic_cons_c = "[" + non_syllabic_cons + "]"
+lc_syllabic_cons = u"lrř"
+uc_syllabic_cons = lc_syllabic_cons.upper()
 lc_cons = u"bcdfghjklmnpqrstvwxzčňřšžďť" + TEMP_CH
+lc_cons = lc_non_syllabic_cons + lc_syllabic_cons
 uc_cons = lc_cons.upper()
 cons = lc_cons + uc_cons
 cons_c = "[" + cons + "]"
+# lowercase consonants
+lowercase = lc_vowel + lc_cons
+lowercase_c = "[" + lowercase + "]"
 # uppercase consonants
 uppercase = uc_vowel + uc_cons
 uppercase_c = "[" + uppercase + "]"
@@ -56,6 +68,23 @@ def iotate(stem):
   #stem = re.sub(u"д$", u"дж", stem)
   #stem = re.sub(u"([бвмпф])$", ur"\1л", stem)
   #return stem
+
+
+# Return true if `word` is monosyllabic. Beware of words like [[čtvrtek]], [[plný]] and [[třmen]], which aren't
+# monosyllabic but have only one vowel, and contrariwise words like [[brouk]], which are monosyllabic but have
+# two vowels.
+def is_monosyllabic(word):
+  word = word.replace("ou", TEMP_OU)
+  # Convert all vowels to 'e'.
+  word = re.sub(vowel_c, "e", word)
+  # All consonants next to a vowel are non-syllabic; convert to 't'.
+  word = re.sub(cons_c + "e", "te", word)
+  word = re.sub("e" + cons_c, "et", word)
+  # Convert all remaining non-syllabic consonants to 't'.
+  word = re.sub(non_syllabic_cons_c, "t", word)
+  # At this point, what remains is 't', 'e', or a syllabic consonant. Count the latter two types.
+  word = word.replace("t", "")
+  return len(word) <= 1
 
 
 def apply_vowel_alternation(alt, stem):
