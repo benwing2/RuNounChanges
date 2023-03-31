@@ -366,16 +366,10 @@ local cases = {
 -- Maybe modify the stem and/or ending in certain special cases:
 -- 1. Final -e in vocative singular triggers first palatalization of the stem in some cases (e.g. hard masc).
 -- 2. Endings beginning with ě, i, í trigger second palatalization, as does -e in the loc_s.
--- 3. ě at the beginning of an ending changes to e after most consonants.
 local function apply_special_cases(base, slot, stem, ending)
 	if slot == "voc_s" and ending == "e" and base.palatalize_voc then
 		stem = com.apply_first_palatalization(stem)
-	elseif rfind(ending, "^ě") then
-		stem = com.apply_second_palatalization(stem)
-		if not rfind(stem, "[ndtbfmpv]$") then
-			ending = rsub(ending, "^ě", "e")
-		end
-	elseif slot == "loc_s" and ending == "e" or rfind(ending, "^[ií]") then
+	elseif rfind(ending, "^[ěií]") or slot == "loc_s" and ending == "e" then
 		-- loc_s of hard masculines is sometimes -e/ě; the user might indicate this as -e, which we should handle
 		-- correctly
 		stem = com.apply_second_palatalization(stem)
@@ -539,7 +533,7 @@ local function default_nom_pl_animate_masc(base)
 		-- Brňan → Brňané, křesťan → křesťané, měšťan → měšťané, Moravan → Moravané, občan → občané, ostrovan → ostrované,
 		-- Pražan → Pražané, Slovan → Slované, svatebčan → svatebčané, venkovan → venkované; some late formations pluralize this way
 		-- but don't have a palatal consonant preceding the -an, e.g. [[pohan]], [[Oděsan]]; these need manual overrides
-		rfind(base.lemma, "[ňďťščžřj" .. com.labial_c .. "]an$") and {"é", "i"} or -- most now can also take -i
+		rfind(base.lemma, "[ňďťščžřj" .. com.labial .. "]an$") and {"é", "i"} or -- most now can also take -i
 		-- proper names: Baťové, Novákové, Petrové, Tomášové, Vláďové; but exclude demonyms
 		rfind(base.lemma, "^" .. com.uppercase_c) and not rfind(base.lemma, "ec$") and "ové" or
 		-- demonyms: [[Albánec]], [[Gruzínec]], [[Izraelec]], [[Korejec]], [[Libyjec]], [[Litevec]], [[Němec]], [[Portugalec]]
@@ -635,8 +629,7 @@ decls["soft-m"] = function(base, stems)
 	local loc_s = dat_s
 	-- Per IJP, the vast majority of soft masculine animates take -i in the voc_s, but those in -ec take -e with first
 	-- palatalization to -če (e.g. [[otec]] "father", [[lovec]] "hunter", [[blbec]] "fool, idiot",
-	-- [[horolezec]] "mountaineer", [[znalec]] "expert", [[chlapec]] "boy", [[nadšenec]] "enthusiast"). Note that all
-	-- these words are reducible; we should consider making this the default for these words (FIXME).
+	-- [[horolezec]] "mountaineer", [[znalec]] "expert", [[chlapec]] "boy", [[nadšenec]] "enthusiast").
 	-- [[švec]] "shoemaker" has stem 'ševc-' and voc_s 'ševče' so we need to check the lemma not stem for -ec.
 	local voc_s = base.animacy == "an" and rfind(base.lemma, "ec$") and "e" or "i"
 	local nom_p = base.animacy == "inan" and "e" or default_nom_pl_animate_masc(base)
@@ -683,7 +676,7 @@ declprops["a-m"] = {
 
 
 decls["e-m"] = function(base, stems)
-	-- [[zachránce]] "savior"; [[soudce]] "judge"
+	-- [[zachránce]] "savior"; [[soudce]] "judge"
 	add_decl(base, stems, "e", "e", {"ovi", "i"}, nil, "e", {"ovi", "i"}, "em",
 		-- nouns with -ové as well (e.g. [[soudce]] "judge") will need to specify that manually, e.g. <nompli:ové>
 		"i", "ů", "ům", "e", "ích", "i")
@@ -811,7 +804,7 @@ declprops["hard-f"] = {
 decls["soft-f"] = function(base, stems)
 	-- [[ulice]] "street" with gen pl 'ulic'; some nouns have both e.g. [[přítelkyně]] "girlfriend" with gen pl
 	-- 'přítelkyň' or 'přítelkyní' and need an override <genpl-:í> (alternation between -ň and -n handled automatically
-	-- by the different stems; FIXME: implement this).
+	-- by the different stems).
 	local gen_p = rfind(base.pl_vowel_stem, "ic$") and "" or "í"
 	add_decl(base, stems, "ě", "ě", "i", "i", "ě", "i", "í",
 		"ě", gen_p, "ím", "ě", "ích", "ěmi")
@@ -1299,7 +1292,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify animacy twice: '" .. inside .. "'")
 				end
 				base.animacy = part
-			elseif part == "soft" or part == "mixed" or part == "surname" or part == "istem" then
+			elseif part == "hard" or part == "soft" or part == "mixed" or part == "surname" or part == "istem" then
 				if base[part] then
 					error("Can't specify '" .. part .. "' twice: '" .. inside .. "'")
 				end
@@ -1681,7 +1674,7 @@ local function determine_declension(base)
 		elseif base.gender == "f" then
 			base.decl = "soft-f"
 		else
-			if base.decltype == "t" then
+			if base.tstem then
 				base.decl = "t-n"
 			else
 				base.decl = "soft-n"
