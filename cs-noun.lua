@@ -877,7 +877,7 @@ decls["soft-f"] = function(base, stems, overriding_nom_sg)
 	--
 	-- This also includes feminines in -ie, e.g. [[belarie]], [[signorie]], [[uncie]], and feminines in -oe, e.g.
 	-- [[kánoe]], [[aloe]] and medical terms like [[dyspnoe]], [[apnoe]], [[hemoptoe]], [[kalanchoe]].
-	local gen_p = rfind(base.pl_vowel_stem, "ic$") and "" or "í"
+	local gen_p = rfind(stems.pl_vowel_stem, "ic$") and "" or "í"
 	add_decl(base, stems, overriding_nom_sg or "ě", "ě", "i", "i", "ě", "i", "í",
 		"ě", gen_p, "ím", "ě", "ích", "ěmi")
 end
@@ -927,7 +927,13 @@ decls["ea-f"] = function(base, stems)
 end
 
 declprops["ea-f"] = {
-	cat = "GENPOS in -ea"
+	cat = function(base, stems)
+		if base.tech then
+			return {"GENPOS in -ea", "technical GENPOS in -ea"}
+		else
+			return "GENPOS in -ea"
+		end
+	end
 }
 
 
@@ -2227,6 +2233,9 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 			local genanim = gender_code_to_desc[base.gender]
 			if base.gender == "m" then
 				genanim = genanim .. " " .. (base.animacy == "an" and "animate" or "inanimate")
+				-- Insert a category for 'Czech masculine animate nouns' or 'Czech masculine inanimate nouns'; the base categories
+				-- [[:Category:Czech masculine nouns]], [[:Czech animate nouns]] are auto-inserted.
+				insert(genanim .. " " .. alternant_multiword_spec.plpos)
 			end
 			for _, stems in ipairs(base.stem_sets) do
 				local props = declprops[base.decl]
