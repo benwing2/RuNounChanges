@@ -27,9 +27,8 @@ local function rsubb(term, foo, bar)
 end
 
 export.TEMP_CH = u(0xFFF0) -- used to substitute ch temporarily in the default-reducible code
-export.TEMP_OU = u(0xFFF1) -- used to substitute ou temporarily in is_monosyllabic()
 
-local lc_vowel = "aeiouyáéíóúýěů" .. export.TEMP_OU
+local lc_vowel = "aeiouyáéíóúýěů"
 local uc_vowel = uupper(lc_vowel)
 export.vowel = lc_vowel .. uc_vowel
 export.vowel_c = "[" .. export.vowel .. "]"
@@ -91,7 +90,9 @@ export.inherently_soft_c = "[" .. export.inherently_soft .. "]"
 -- monosyllabic but have only one vowel, and contrariwise words like [[brouk]], which are monosyllabic but have
 -- two vowels.
 function export.is_monosyllabic(word)
-	word = word:gsub("ou", export.TEMP_OU)
+	-- Treat ou as a single vowel.
+	word = word:gsub("ou", "ů")
+	word = word:gsub("ay$", "aj")
 	-- Convert all vowels to 'e'.
 	word = rsub(word, export.vowel_c, "e")
 	-- All consonants next to a vowel are non-syllabic; convert to 't'.
@@ -174,11 +175,18 @@ end
 
 
 function export.apply_first_palatalization(word)
+	-- -rr doesn't palatalize (e.g. [[torr]] voc_s 'torre') but otherwise -Cr normally does.
+	if rfind(word, "rr$") then
+		return word
+	end
+	local stem = rmatch(word, "^(.*" .. export.cons_c .. ")r$")
+	if stem then
+		return stem .. "ř"
+	end
 	local try = make_try(word)
 	return
 		try("ch", "š") or
 		try("[hg]", "ž") or
-		try("tr", "tř") or
 		try("sk", "št") or
 		try("ck", "čt") or
 		try("[kc]", "č") or
