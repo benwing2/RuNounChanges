@@ -79,10 +79,12 @@ local lc_followable_by_e_hacek = lc_paired_plain .. lc_labial
 local uc_followable_by_e_hacek = uc_paired_plain .. uc_labial
 export.followable_by_e_hacek = lc_followable_by_e_hacek .. uc_followable_by_e_hacek
 export.followable_by_e_hacek_c = "[" .. export.followable_by_e_hacek .. "]"
-local lc_not_followable_by_y = "cčjřšž"
-local uc_not_followable_by_y = uupper(lc_not_followable_by_y)
-export.not_followable_by_y = lc_not_followable_by_y .. uc_not_followable_by_y
-export.not_followable_by_y_c = "[" .. export.not_followable_by_y .. "]"
+local lc_inherently_soft_not_c = "čjřšžťďň" -- c is sometimes hard
+local uc_inherently_soft_not_c = uupper(lc_inherently_soft_not_c)
+export.inherently_soft_not_c = lc_inherently_soft_not_c .. uc_inherently_soft_not_c
+export.inherently_soft_not_c_c = "[" .. export.inherently_soft_not_c .. "]"
+export.inherently_soft = export.inherently_soft_not_c .. "cC"
+export.inherently_soft_c = "[" .. export.inherently_soft .. "]"
 
 
 -- Return true if `word` is monosyllabic. Beware of words like [[čtvrtek]], [[plný]] and [[třmen]], which aren't
@@ -266,9 +268,12 @@ function export.combine_stem_ending(base, slot, stem, ending)
 			ending = rsub(ending, "^ě", "e")
 		end
 		-- There are occasional occurrences of soft-only consonants at the end of the stem in hard paradigms, e.g.
-		-- [[banjo]] "banjo", [[gadžo]] "gadjo (non-Romani)", [[Miša]] "Misha, Mike". These force a following y to turn
-		-- into i.
-		if rfind(ending, "^y") and rfind(stem, export.not_followable_by_y_c .. "$") then
+		-- [[banjo]] "banjo", [[gadžo]] "gadjo (non-Romani)", [[Miša]] "Misha, Mike", [[paša]] "pasha". These force a
+		-- following y to turn into i. Things are tricky with -c; [[hec]] "joke" (hard masculine) has ins_pl 'hecy',
+		-- but [[paňáca]] "jester, fop" has ins_pl 'paňáci'. We have to set a flag to indicate whether to allow y after
+		-- c.
+		if rfind(ending, "^y") and (rfind(stem, export.inherently_soft_not_c_c .. "$") or
+			not base.hard_c and rfind(stem, "[cC]$")) then
 			ending = rsub(ending, "^y", "i")
 		end
 		if base.all_uppercase then
