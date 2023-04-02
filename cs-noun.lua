@@ -650,7 +650,7 @@ local function default_nom_pl_animate_masc(base)
 		-- Brňan → Brňané, křesťan → křesťané, měšťan → měšťané, Moravan → Moravané, občan → občané, ostrovan → ostrované,
 		-- Pražan → Pražané, Slovan → Slované, svatebčan → svatebčané, venkovan → venkované; some late formations pluralize this way
 		-- but don't have a palatal consonant preceding the -an, e.g. [[pohan]], [[Oděsan]]; these need manual overrides
-		rfind(base.lemma, "[ňďťščžřj" .. com.labial .. "]an$") and {"é", "i"} or -- most now can also take -i
+		rfind(base.lemma, "[" .. com.inherently_soft .. com.labial .. "]an$") and {"é", "i"} or -- most now can also take -i
 		-- proper names: Baťové, Novákové, Petrové, Tomášové, Vláďové; but exclude demonyms
 		rfind(base.lemma, "^" .. com.uppercase_c) and not rfind(base.lemma, "ec$") and "ové" or
 		-- demonyms: [[Albánec]], [[Gruzínec]], [[Izraelec]], [[Korejec]], [[Libyjec]], [[Litevec]], [[Němec]], [[Portugalec]]
@@ -1088,14 +1088,15 @@ declprops["í-n"] = {
 }
 
 
-decls["en-n"] = function(base, stems)
-	-- E.g. [[břemeno]] "burden" (also [[břímě]] FIXME); [[rameno]] (also [[rámě]] FIXME); [[semeno]] (also [[sémě]],
-	-- [[símě]] FIXME)
+decls["n-n"] = function(base, stems)
+	-- E.g. [[břemeno]] "burden" (also [[břímě]], use 'decllemma:'); [[písmen]] "letter"; [[plemen]] "breed";
+	-- [[rameno]] "shoulder" (also [[rámě]], use 'decllemma:'); [[semeno]] "seed" (also [[sémě]], [[símě]], use
+	-- 'decllemma:'); [[temeno]] "crown (of the head)"; [[vemeno]] "udder"
 	decls["hard-n"](base, stems)
 	add_decl(base, stems, "e", "i", nil, nil, "i")
 end
 
-declprops["en-n"] = {
+declprops["n-n"] = {
 	cat = "n-stem"
 }
 
@@ -1396,7 +1397,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 				end
 				base.footnotes = fetch_footnotes(dot_separated_group)
 			elseif rfind(part, "^[-*#ě]*$") or rfind(part, "^[-*#ě]*,") then
-				if base.stems then
+				if base.stem_sets then
 					error("Can't specify reducible/vowel-alternant indicator twice: '" .. inside .. "'")
 				end
 				local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, ",")
@@ -1454,7 +1455,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 				end
 				base.animacy = part
 			elseif part == "hard" or part == "soft" or part == "mixed" or part == "surname" or part == "istem"
-				or part == "-istem" or part == "tstem" or part == "tech" or part == "foreign" then
+				or part == "-istem" or part == "tstem" or part == "nstem" or part == "tech" or part == "foreign" then
 				if base[part] then
 					error("Can't specify '" .. part .. "' twice: '" .. inside .. "'")
 				end
@@ -1476,11 +1477,6 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify 'decllemma:' twice: '" .. inside .. "'")
 				end
 				base.decllemma = rsub(part, "^decllemma:", "")
-			elseif rfind(part, "^stem:") then
-				if base.stem then
-					error("Can't specify stem twice: '" .. inside .. "'")
-				end
-				base.stem = rsub(part, "^stem:", "")
 			else
 				error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
 			end
@@ -1819,7 +1815,7 @@ local function determine_declension(base)
 			if base.animacy ~= "an" then
 				error("Masculine lemma in -e must be animate")
 			end
-			if base.stem then
+			if base.tstem then
 				base.decl = "t-m"
 			else
 				base.decl = "e-m"
@@ -1844,6 +1840,8 @@ local function determine_declension(base)
 		elseif base.gender == "f" then
 			-- [[zoo]]; [[Žemaitsko]]?
 			error("Feminine nouns in -o are indeclinable")
+		elseif base.nstem then
+			base.decl = "n-n"
 		else
 			base.decl = "hard-n"
 		end
@@ -1897,7 +1895,19 @@ local function determine_declension(base)
 	stem = rmatch(base.lemma, "^(.*" .. com.cons_c .. ")$")
 	if stem then
 		if base.gender == "m" then
-			if base.hard then
+			if base.foreign then
+				-- [[komunismus]] "communism", [[kosmos]] "cosmos", [[hádes]] "Hades"
+				stem = rmatch(base.lemma, "^(.*)[ueo]s$")
+				if not stem then
+					error("Unrecognized masculine foreign ending, should be -us, -es or -os")
+				end
+				if rfind(stem, "[ei]$") then
+					error("Implement support for this")
+				else
+					base.decl = "hard-m"
+					base.lemma = stem
+				end
+			elseif base.hard then
 				base.decl = "hard-m"
 			elseif base.soft then
 				base.decl = "soft-m"
@@ -2036,10 +2046,6 @@ local function determine_stems(base)
 		end
 		local lemma_is_vowel_stem = not not base.vowel_stem
 		if base.vowel_stem then
-			if base.stem then
-				-- FIXME: This will have to change, e.g. for [[centurio]]
-				error("Can't specify 'stem:' with lemma ending in a vowel")
-			end
 			stems.vowel_stem = base.vowel_stem
 			stems.nonvowel_stem = stems.vowel_stem
 			-- Apply vowel alternation first in cases like jádro -> jader; apply_vowel_alternation() will throw an error
@@ -2051,17 +2057,12 @@ local function determine_stems(base)
 		else
 			stems.nonvowel_stem = base.nonvowel_stem
 			if stems.reducible then
-				local stem_to_reduce = base.stem_for_reduce or base.nonvowel_stem
-				stems.vowel_stem = com.reduce(stem_to_reduce)
+				stems.vowel_stem = com.reduce(base.nonvowel_stem)
 				if not stems.vowel_stem then
 					error("Unable to reduce stem '" .. stem_to_reduce .. "'")
 				end
 			else
 				stems.vowel_stem = base.nonvowel_stem
-			end
-			if base.stem and base.stem ~= stems.vowel_stem then
-				stems.irregular_stem = true
-				stems.vowel_stem = base.stem
 			end
 			stems.vowel_stem, stems.origvowel = com.apply_vowel_alternation(stems.vowelalt, stems.vowel_stem)
 		end
@@ -2306,6 +2307,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		local annparts = {}
 		local decldescs = {}
 		local vowelalts = {}
+		local foreign = {}
 		local irregs = {}
 		local stemspecs = {}
 		local reducible = nil
@@ -2370,8 +2372,11 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 				if stems.reducible then
 					insert("nouns with reducible stem")
 				end
+				if base.foreign then
+					m_table.insertIfNot(foreign, "foreign")
+				end
 				if stems.irregular_stem or base.user_specified_lemma ~= base.lemma then
-					m_table.insertIfNot(irregs, "irreg-stem")
+ 					m_table.insertIfNot(irregs, "irreg-stem")
 					insert("nouns with irregular stem")
 				end
 				m_table.insertIfNot(stemspecs, stems.vowel_stem)
@@ -2406,6 +2411,9 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 			table.insert(annparts, "mixed-reducible")
 		elseif reducible then
 			table.insert(annparts, "reducible")
+		end
+		if #foreign > 0 then
+			table.insert(annparts, table.concat(foreign, " // "))
 		end
 		if #irregs > 0 then
 			table.insert(annparts, table.concat(irregs, " // "))
