@@ -279,6 +279,7 @@ FIXME:
 8. Support neuter foreign nouns in -ium/-ion.
 9. Support paired body parts, e.g. [[ruka]], [[noha]], [[oko]], [[ucho]], [[koleno]], [[rameno]].
 10. Support masculine nouns in -e/ě that are neuter in the plural.
+11. Correctly handle -e vs. -ě, e.g. soft neuters have both [[kutě]] and [[poledne]].
 
 ]=]
 
@@ -402,9 +403,30 @@ local gender_code_to_desc = {
 }
 
 
--- Maybe modify the stem and/or ending in certain special cases:
--- 1. Final -e in vocative singular triggers first palatalization of the stem in some cases (e.g. hard masc).
--- 2. Endings beginning with ě, i, í trigger second palatalization, as does -e in the loc_s.
+--[=[
+
+Maybe modify the stem and/or ending in certain special cases:
+1. Final -e in vocative singular triggers first palatalization of the stem in some cases (e.g. hard masc).
+2. Endings beginning with ě, i, í trigger second palatalization, as does -e in the loc_s.
+
+NOTE: Correctly handling -e vs. -ě and -tdn/-ťďň alternations is tricky. It's especially tricky with labials, because
+e.g. we have both soft neuter [[Labe]] and t-stem neuter [[hříbě]]. It's true that t-stems generally prefer ě when
+possible and soft stems don't, but some soft stems do have -ě, e.g. [[kutě]] "bed". The way we handle this as follows:
+1. We maintain the underlying stems always in their "pronounced" form, i.e. if the last consonant is pronounced ť/ď/ň
+   we maintain the stem in that form, but if pronounced t/d/n, we use those consonants. Hence neuter [[poledne]] "noon"
+   has stem 'poledn-' but neuter [[štěně]] "puppy" has stem 'štěň'. If the stem ends in labial + /j/, we use a special
+   TEMP_SOFT_LABIAL character after the labial (rather than 'j', in case of stems that actually have a written 'j' in
+   them such as [[banjo]]).
+2. In combine_stem_ending(), we convert the stem back to the written form before adding the ending. If the ending begins
+   with -e, this may entail converting -e to -ě. "Converting to the written form" converts ť/ď/ň to plain equivalents
+   and deleting TEMP_SOFT_LABIAL before -e, converting -e to -ě with such consonants. The same conversions happen
+   before other front consonants -ě/-é/-i/-í, which don't allow ť/ď/ň to precede, and in all cases with
+   TEMP_SOFT_LABIAL, which is not an actual consonant.
+3. Some endings, e.g. feminine dative/locative singular -ě/e, convert underlying plain t/d/n and labials to their
+   palatalized form. This is associated with the second palatalization. In these cases we specify the ending as -ě in
+   the code, which is maintained after plain coronals and labials in combine_stem_ending(); in all other cases we
+   specify the ending as -e.
+]=]
 local function apply_special_cases(base, slot, stem, ending)
 	local palatalize_voc
 	if slot == "voc_s" and ending == "e" and base.palatalize_voc then
@@ -861,7 +883,7 @@ declprops["u-m"] = {
 
 decls["t-m"] = function(base, stems)
 	-- E.g. [[kníže]] "prince", [[hrabě]] "earl", [[markrabě]] "margrave".
-	add_decl(base, stems, "ě", "ěte", "ěti", "ěte", "ě", "ěti", "ětem",
+	add_decl(base, stems, "e", "ete", "eti", "ete", "e", "eti", "etem",
 		"ata", "at", "atům", "ata", "atech", "aty")
 end
 
@@ -900,8 +922,8 @@ decls["soft-f"] = function(base, stems, overriding_nom_sg)
 	-- This also includes feminines in -ie, e.g. [[belarie]], [[signorie]], [[uncie]], and feminines in -oe, e.g.
 	-- [[kánoe]], [[aloe]] and medical terms like [[dyspnoe]], [[apnoe]], [[hemoptoe]], [[kalanchoe]].
 	local gen_p = rfind(stems.pl_vowel_stem, "ic$") and "" or "í"
-	add_decl(base, stems, overriding_nom_sg or "ě", "ě", "i", "i", "ě", "i", "í",
-		"ě", gen_p, "ím", "ě", "ích", "ěmi")
+	add_decl(base, stems, overriding_nom_sg or "e", "e", "i", "i", "e", "i", "í",
+		"e", gen_p, "ím", "e", "ích", "emi")
 end
 
 declprops["soft-f"] = {
@@ -913,8 +935,8 @@ decls["cons-f"] = function(base, stems)
 	-- [[dlaň]] "palm (of the hand)"
 	-- [[paní]] "Mrs." is vaguely of this type but totally irregular; indeclinable in the singular, with plural forms
 	-- nom/gen/acc 'paní', dat 'paním', loc 'paních', ins 'paními'.
-	add_decl(base, stems, "", "ě", "i", "", "i", "i", "í",
-		"ě", "í", "ím", "ě", "ích", "ěmi")
+	add_decl(base, stems, "", "e", "i", "", "i", "i", "í",
+		"e", "í", "ím", "e", "ích", "emi")
 end
 
 declprops["cons-f"] = {
@@ -1054,8 +1076,8 @@ decls["soft-n"] = function(base, stems)
 	--
 	-- Many nouns in -iště, with null genitive plural.
 	local gen_pl = rfind(base.vowel_stem, "išť$") and "" or "í"
-	add_decl(base, stems, "ě", "ě", "i", "ě", "ě", "i", "ěm",
-		"ě", gen_pl, "ím", "ě", "ích", "i")
+	add_decl(base, stems, "e", "e", "i", "e", "e", "i", "em",
+		"e", gen_pl, "ím", "e", "ích", "i")
 	-- NOTE: Some neuter words in -e indeclinable, e.g. [[Belize]], [[Chile]], [[garde]] "chaperone", [[karaoke]],
 	-- [[karate]], [[re]] "double raise (card games)", [[ukulele]], [[Zimbabwe]], [[zombie]] (pl. 'zombie' or
 	-- 'zombies')
@@ -1107,7 +1129,7 @@ decls["t-n"] = function(base, stems)
 	-- Some referring to inanimates, e.g. [[doupě]] "lair" (pl. doupata), [[koště]]/[[chvoště]] "broom", [[paraple]]
 	-- "umbrella", [[poupě]] "bud", [[pukrle]] "curtsey" (also soft-n), [[rajče]] "tomato", [[šuple]] "drawer",
 	-- [[varle]] "testicle", [[vole]] "craw (of a bird); goiter".
-	add_decl(base, stems, "ě", "ěte", "ěti", "ě", "ě", "ěti", "ětem",
+	add_decl(base, stems, "e", "ete", "eti", "e", "e", "eti", "etem",
 		"ata", "at", "atům", "ata", "atech", "aty")
 end
 
