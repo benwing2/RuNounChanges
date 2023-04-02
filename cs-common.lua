@@ -174,7 +174,7 @@ function export.iotate(stem)
 end
 
 
-function export.apply_first_palatalization(word)
+function export.apply_first_palatalization(word, is_adjective)
 	-- -rr doesn't palatalize (e.g. [[torr]] voc_s 'torre') but otherwise -Cr normally does.
 	if rfind(word, "rr$") then
 		return word
@@ -187,21 +187,21 @@ function export.apply_first_palatalization(word)
 	return
 		try("ch", "š") or
 		try("[hg]", "ž") or
-		try("sk", "št") or
-		try("ck", "čt") or
+		is_adjective and try("sk", "št") or
+		is_adjective and try("ck", "čt") or
 		try("[kc]", "č") or
 		word
 end
 
 
-function export.apply_second_palatalization(word)
+function export.apply_second_palatalization(word, is_adjective)
 	local try = make_try(word)
 	return
 		try("ch", "š") or
 		try("[hg]", "z") or
 		try("r", "ř") or
-		try("sk", "št") or
-		try("ck", "čt") or
+		is_adjective and try("sk", "št") or
+		is_adjective and try("ck", "čt") or
 		try("k", "c") or
 		word
 end
