@@ -496,20 +496,17 @@ local function add(base, slot, stems, endings, footnotes)
 	if type(endings) == "string" then
 		endings = {endings}
 	end
-	local slot_is_plural = rfind(slot, "_p$")
 	for _, ending in ipairs(endings) do
 		local stem
 		if ending == "-" then
 			stem = base.user_specified_lemma
 			ending = ""
-		elseif slot == "ins_s" then
+		elseif slot == "ins_s" or slot == "dat_p" or slot == "loc_p" or slot == "ins_p" then
 			stem = stems.oblique_stem
-		elseif slot == "dat_p" or slot == "loc_p" or slot == "ins_p" then
-			stem = stems.pl_oblique_stem
 		elseif rfind(ending, "^" .. com.vowel_c) then
-			stem = slot_is_plural and stems.pl_vowel_stem or stems.vowel_stem
+			stem = stems.vowel_stem
 		else
-			stem = slot_is_plural and stems.pl_nonvowel_stem or stems.nonvowel_stem
+			stem = stems.nonvowel_stem
 		end
 		stem, ending = apply_special_cases(base, slot, stem, ending)
 		ending = iut.combine_form_and_footnotes(ending, footnotes)
@@ -529,7 +526,6 @@ local function process_slot_overrides(base, do_slot)
 		if do_slot(slot) then
 			base.slot_overridden[slot] = true
 			base.forms[slot] = nil
-			local slot_is_plural = rfind(slot, "_p$")
 			for _, override in ipairs(overrides) do
 				for _, value in ipairs(override.values) do
 					local form = value.form
@@ -718,16 +714,11 @@ decls["hard-m"] = function(base, stems)
 	-- * Inanimate hard nouns in -c normally have -ech: [[hec]] "joke", [[tác]] "tray", [[truc]], [[kec]], [[frc]],
 	--   [[flanc]], [[kibuc]] "kibbutz", [[pokec]] "chat".
 	local loc_p = velar and "ích" or "ech"
-	add_decl(base, stems, gen_s, dat_s, nil, voc_s, loc_s, "em")
-	if base.plsoft then
-		error("Implement me if needed")
-	else
+	add_decl(base, stems, gen_s, dat_s, nil, voc_s, loc_s, "em",
 		-- loc_p in -ích (e.g. [[les]] "forest"; [[hotel]] "hotel"; [[práh]] "threshold", loc_p 'prazích') needs to be
 		-- given manually using <locplích>; it will automatically trigger the second palatalization; loc_p in -ách (e.g.
 		-- [[plech]] "metal plate") also needs to be given manually using <locplách>
-		add_decl(base, stems, nil, nil, nil, nil, nil, nil,
-			nom_p, "ů", "ům", "y", loc_p, "y")
-	end
+		nom_p, "ů", "ům", "y", loc_p, "y")
 end
 
 declprops["hard-m"] = {
@@ -896,9 +887,7 @@ declprops["t-m"] = {
 decls["hard-f"] = function(base, stems)
 	base.no_palatalize_c = true
 	add_decl(base, stems, "y", "ě", "u", "o", "ě", "ou")
-	if base.plsoft then
-		error("Implement me if needed")
-	elseif base.pldual then
+	if base.pldual then
 		-- Currently [[ruka]] "hand" and [[noha]] "leg" use a special template {{cs-decl-noun-dual}} that includes
 		-- two columns, one for plural and one for dual; need to investigate further.
 		error("FIXME")
@@ -922,7 +911,7 @@ decls["soft-f"] = function(base, stems, overriding_nom_sg)
 	--
 	-- This also includes feminines in -ie, e.g. [[belarie]], [[signorie]], [[uncie]], and feminines in -oe, e.g.
 	-- [[kánoe]], [[aloe]] and medical terms like [[dyspnoe]], [[apnoe]], [[hemoptoe]], [[kalanchoe]].
-	local gen_p = rfind(stems.pl_vowel_stem, "ic$") and "" or "í"
+	local gen_p = rfind(stems.vowel_stem, "ic$") and "" or "í"
 	-- Vocative really ends in -e, not just a copy of the nominative; cf. [[sinfonia]], which is soft-f except for
 	-- the nominative and has -e in the vocative singular.
 	add_decl(base, stems, "e", "i", "i", "e", "i", "í",
@@ -1353,21 +1342,17 @@ dot-separated indicators within them). Return value is an object of the form
 	  -- The following fields are filled in by determine_stems()
 	  vowel_stem = "STEM",
 	  nonvowel_stem = "STEM",
-	  pl_vowel_stem = "STEM",
-	  pl_nonvowel_stem = "STEM",
+	  oblique_stem = "STEM",
 	},
 	...
   },
   gender = "GENDER", -- "m", "f", "n"
   number = "NUMBER", -- "sg", "pl"; may be missing
   animacy = "ANIMACY", -- "inan", "an"; may be missing
-  plsoft = true, -- may be missing
-  plhard = true, -- may be missing
   thirddecl = true, -- may be missing
   surname = true, -- may be missing
   adj = true, -- may be missing
   stem = "STEM", -- may be missing
-  plstem = "PLSTEM", -- may be missing
 
   -- The following additional fields are added by other functions:
   orig_lemma = "ORIGINAL-LEMMA", -- as given by the user
@@ -1481,16 +1466,6 @@ local function parse_indicator_spec(angle_bracket_spec)
 				if part == "hard" then
 					base.hard_c = true
 				end
-			--elseif part == "plsoft" then
-			--	if base.plsoft then
-			--		error("Can't specify 'plsoft' twice: '" .. inside .. "'")
-			--	end
-			--	base.plsoft = true
-			--elseif part == "plhard" then
-			--	if base.plhard then
-			--		error("Can't specify 'plhard' twice: '" .. inside .. "'")
-			--	end
-			--	base.plhard = true
 			elseif part == "+" then
 				if base.adj then
 					error("Can't specify '+' twice: '" .. inside .. "'")
@@ -1506,11 +1481,6 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify stem twice: '" .. inside .. "'")
 				end
 				base.stem = rsub(part, "^stem:", "")
-			elseif rfind(part, "^plstem:") then
-				if base.plstem then
-					error("Can't specify plural stem twice: '" .. inside .. "'")
-				end
-				base.plstem = rsub(part, "^plstem:", "")
 			else
 				error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
 			end
@@ -1794,10 +1764,7 @@ local function synthesize_adj_lemma(base)
 		-- Set the stems.
 		stems.vowel_stem = stem
 		stems.nonvowel_stem = stem
-		stems.pl_vowel_stem = stem
-		stems.pl_nonvowel_stem = stem
 		stems.oblique_stem = stem
-		stems.pl_oblique_stem = stem
 	end
 	base.decl = "adj"
 end
@@ -2098,37 +2065,7 @@ local function determine_stems(base)
 			end
 			stems.vowel_stem, stems.origvowel = com.apply_vowel_alternation(stems.vowelalt, stems.vowel_stem)
 		end
-		stems.pl_vowel_stem = stems.vowel_stem
-		stems.pl_nonvowel_stem = stems.nonvowel_stem
-		if base.plstem then
-			if base.plstem ~= stems.pl_vowel_stem then
-				stems.irregular_plstem = true
-			end
-			stems.pl_vowel_stem = base.plstem
-			if lemma_is_vowel_stem then
-				-- [[ If the original lemma ends in a vowel (neuters and most feminines),
-				-- apply i/e/o vowel alternations and dereductions to the explicit plural
-				-- stem, because they most likely apply in the genitive plural. This is
-				-- needed for various words, e.g. kоleso (plstem kolе́s-, gen pl kolis,
-				-- alternative ins pl kolisьmy, both with e -> i alternation); гra
-				-- (plstem iгr-, gen pl iгor, with dereduction); likewise rе́шeto with
-				-- special plstem and e -> i alternation and sklo with special plstem and
-				-- dereduction. But we don't want it in lemmas ending in a consonant,
-				-- where the vowel alternations and reductions apply between nom sg and
-				-- the remaining forms, not generally in the plural. For example, sоkil
-				-- "falcon" has both i -> o alternation (vowel stem sоkol-) and special
-				-- plstem sokоl-, but we can't and don't want to apply an i -> o
-				-- alternation to the plstem. ]] -- FIXME: Update this comment.
-				stems.pl_nonvowel_stem = com.apply_vowel_alternation(stems.vowelalt, base.plstem)
-				if stems.reducible then
-					stems.pl_nonvowel_stem = dereduce(stems.pl_nonvowel_stem)
-				end
-			else
-				stems.pl_nonvowel_stem = base.plstem
-			end
-		end
 		stems.oblique_stem = com.apply_vowel_alternation(stems.oblique_case_vowelalt, stems.vowel_stem)
-		stems.pl_oblique_stem = com.apply_vowel_alternation(stems.oblique_case_vowelalt, stems.pl_vowel_stem)
 	end
 end
 
@@ -2436,10 +2373,6 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 				if stems.irregular_stem or base.user_specified_lemma ~= base.lemma then
 					m_table.insertIfNot(irregs, "irreg-stem")
 					insert("nouns with irregular stem")
-				end
-				if stems.irregular_plstem then
-					m_table.insertIfNot(irregs, "irreg-plstem")
-					insert("nouns with irregular plural stem")
 				end
 				m_table.insertIfNot(stemspecs, stems.vowel_stem)
 			end
