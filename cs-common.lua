@@ -27,6 +27,7 @@ local function rsubb(term, foo, bar)
 end
 
 export.TEMP_CH = u(0xFFF0) -- used to substitute ch temporarily in the default-reducible code
+export.TEMP_SOFT_LABIAL = u(0xFFF1) -- used to indicate that a labial consonant is soft and needs ě
 
 local lc_vowel = "aeiouyáéíóúýěů"
 local uc_vowel = uupper(lc_vowel)
@@ -34,7 +35,7 @@ export.vowel = lc_vowel .. uc_vowel
 export.vowel_c = "[" .. export.vowel .. "]"
 export.non_vowel_c = "[^" .. export.vowel .. "]"
 -- Consonants that can never form a syllabic nucleus.
-local lc_non_syllabic_cons = "bcdfghjkmnpqstvwxzčňšžďť" .. export.TEMP_CH
+local lc_non_syllabic_cons = "bcdfghjkmnpqstvwxzčňšžďť" .. export.TEMP_CH .. export.TEMP_SOFT_LABIAL
 local uc_non_syllabic_cons = uupper(lc_non_syllabic_cons)
 export.non_syllabic_cons = lc_non_syllabic_cons .. uc_non_syllabic_cons
 export.non_syllabic_cons_c = "[" .. export.non_syllabic_cons .. "]"
@@ -48,6 +49,20 @@ export.lowercase = lc_vowel .. lc_cons
 export.lowercase_c = "[" .. export.lowercase .. "]"
 export.uppercase = uc_vowel .. uc_cons
 export.uppercase_c = "[" .. export.uppercase .. "]"
+
+local lc_velar = "kgh"
+local uc_velar = uupper(lc_velar)
+export.velar = lc_velar .. uc_velar
+export.velar_c = "[" .. export.velar .. "]"
+
+local lc_plain_labial = "mpbfv"
+local lc_labial = lc_plain_labial .. export.TEMP_SOFT_LABIAL
+local uc_plain_labial = uupper(lc_plain_labial)
+local uc_labial = uupper(lc_labial)
+export.plain_labial = lc_plain_labial .. uc_plain_labial
+export.labial = lc_labial .. uc_labial
+export.labial_c = "[" .. export.labial .. "]"
+
 local lc_paired_palatal = "ňďť"
 local uc_paired_palatal = uupper(lc_paired_palatal)
 export.paired_palatal = lc_paired_palatal .. uc_paired_palatal
@@ -66,16 +81,13 @@ export.paired_plain_to_palatal = {}
 for k, v in pairs(export.paired_palatal_to_plain) do
 	export.paired_plain_to_palatal[v] = k
 end
-local lc_velar = "kgh"
-local uc_velar = uupper(lc_velar)
-export.velar = lc_velar .. uc_velar
-export.velar_c = "[" .. export.velar .. "]"
-local lc_labial = "mpbfv"
-local uc_labial = uupper(lc_labial)
-export.labial = lc_labial .. uc_labial
-export.labial_c = "[" .. export.labial .. "]"
-local lc_followable_by_e_hacek = lc_paired_plain .. lc_labial
-local uc_followable_by_e_hacek = uc_paired_plain .. uc_labial
+export.paired_palatal_to_plain[export.TEMP_SOFT_LABIAL] = ""
+for labial in mw.ustring.gmatch(export.plain_labial, ".") do
+	export.paired_plain_to_palatal[labial] = labial .. export.TEMP_SOFT_LABIAL
+end
+
+local lc_followable_by_e_hacek = lc_paired_plain .. lc_plain_labial
+local uc_followable_by_e_hacek = uc_paired_plain .. uc_plain_labial
 export.followable_by_e_hacek = lc_followable_by_e_hacek .. uc_followable_by_e_hacek
 export.followable_by_e_hacek_c = "[" .. export.followable_by_e_hacek .. "]"
 local lc_inherently_soft_not_c = "čjřšžťďň" -- c is sometimes hard
@@ -118,7 +130,7 @@ function export.apply_vowel_alternation(alt, stem)
 				origvowel = vowel
 				if vowel == "í" then
 					if alt == "quant-ě" then
-						if rfind(pre, "[" .. export.paired_plain .. export.labial .. "]$") then
+						if rfind(pre, "[" .. export.followable_by_e_hacek .. "]$") then
 							return pre .. "ě" .. post
 						else
 							return pre .. "e" .. post
@@ -239,7 +251,7 @@ function export.convert_paired_plain_to_palatal(stem, ending)
 	if ending and not rfind(ending, "^[ěií]") then
 		return stem
 	end
-	local stembegin, lastchar = rmatch(stem, "^(.*)([" .. export.paired_plain .. "])$")
+	local stembegin, lastchar = rmatch(stem, "^(.*)([" .. export.followable_by_e_hacek .. "])$")
 	if lastchar then
 		return stembegin .. export.paired_plain_to_palatal[lastchar]
 	else
@@ -250,12 +262,12 @@ end
 
 function export.convert_paired_palatal_to_plain(stem, ending)
 	-- For stems that alternate between n/t/d and ň/ť/ď, we always maintain the stem in the latter format and
-	-- convert to the corresponding plain as needed, with e -> ě (normally we always have 'ě' as the ending, but
-	-- the user may specify 'e').
+	-- convert to the corresponding plain as needed, with e -> ě. Likewise stems ending in /bj/ /vj/ etc.
+	-- use TEMP_SOFT_LABIAL.
 	if ending and not rfind(ending, "^[eěií]") then
 		return stem, ending
 	end
-	local stembegin, lastchar = rmatch(stem, "^(.*)([" .. export.paired_palatal .. "])$")
+	local stembegin, lastchar = rmatch(stem, "^(.*)([" .. export.paired_palatal .. export.TEMP_SOFT_LABIAL .. "])$")
 	if lastchar then
 		ending = rsub(ending, "^e", "ě")
 		return stembegin .. export.paired_palatal_to_plain[lastchar], ending
