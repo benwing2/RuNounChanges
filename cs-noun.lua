@@ -289,7 +289,7 @@ local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:User:Benwing2/cs-common")
+local com = require("Module:cs-common")
 
 local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
@@ -1489,6 +1489,9 @@ end
 local function set_defaults_and_check_bad_indicators(base)
 	-- Set default values.
 	if not base.adj then
+		if not base.gender then
+			error("For nouns, gender must be specified")
+		end
 		base.number = base.number or "both"
 		base.animacy = base.animacy or "inan"
 	end
@@ -1770,10 +1773,6 @@ end
 -- we set either base.vowel_stem (if the lemma ends in a vowel) or base.nonvowel_stem (if the lemma does not end in a
 -- vowel), which is used by determine_stems().
 local function determine_declension(base)
-	-- For now we require that the gender be given; there are too many exceptions otherwise.
-	if not base.gender then
-		error("Gender must be specified")
-	end
 	-- Determine declension
 	stem = rmatch(base.lemma, "^(.*)a$")
 	if stem then
@@ -2614,7 +2613,7 @@ end
 -- {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_forms(parent_args, from_headword)
 	local params = {
-		[1] = {required = true, default = "bůh<#.voce>"},
+		[1] = {required = true, default = "bůh<m.an.#.voce>"},
 		footnote = {list = true},
 		title = {},
 		pos = {default = "noun"},
