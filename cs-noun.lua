@@ -275,13 +275,17 @@ FIXME:
 4. Allow 'stem:' override after vowel-final words like [[centurio]]. [DONE using decllemma:]
 5. Support masculine foreign nouns in -us/-os/-es. [DONE]
 6. Support masculine foreign nouns in -ius/-etc.
-7. Support masculine foreign nouns in unpronounced final -e (e.g. [[software]]).
+7. Support masculine foreign nouns in unpronounced final -e (e.g. [[software]]). [DONE]
 8. Support neuter foreign nouns in -um/-on. [DONE]
 9. Support neuter foreign nouns in -ium/-ion.
 10. Support paired body parts, e.g. [[ruka]], [[noha]], [[oko]], [[ucho]], [[koleno]], [[rameno]].
 11. Support masculine nouns in -e/ě that are neuter in the plural.
 12. Correctly handle -e vs. -ě, e.g. soft neuters have both [[kutě]] and [[poledne]]. [DONE]
 13. Always use specified lemma in nom_pl and maybe acc_pl when plurale tantum. [DONE]
+14. Support feminine nouns in -ca/-ča/-ša/-ža. [DONE]
+15. Support feminine nouns in -ja/-ňa. [DONE]
+16. Support mixed i-stem feminine nouns. [DONE]
+17. Support "c as k" feminine nouns like [[ayahuasca]].
 
 ]=]
 
@@ -662,8 +666,9 @@ local function default_nom_pl_animate_masc(base, stems)
 		-- terms in -cek/-ček; order of -ové vs. -i sometimes varies:
 		-- [[fracek]] (ové/i), [[klacek]] (i/ové), [[macek]] (ové/i), [[nácek]] (i/ové), [[prcek]] (ové/i), [[racek]] (ové/i);
 		-- [[bazilišek]] (i/ové), [[černoušek]] (i/ové), [[drahoušek]] (ové/i), [[fanoušek]] (i/ové), [[františek]] (an/inan,
-		-- ends in -i/-y but not -ové), [[koloušek]] (-i only), [[kulíšek]] (i/ové), [[oříšek]] (i/ové), [[papoušek]] (-i only)
-		-- make sure to check `stems` as we don't want to include non-reducible words in -cek/-ček (but do want to include
+		-- ends in -i/-y but not -ové), [[koloušek]] (-i only), [[kulíšek]] (i/ové), [[oříšek]] (i/ové), [[papoušek]] (-i only),
+		-- [[prášek]] (i/ové), [[šašek]] (i/ové).
+		-- make sure to check `stems` as we don't want to include non-reducible words in -cek/-ček/-šek (but do want to include
 		-- [[quarterback]], with -i/-ové)
 		rfind(stems.vowel_stem, "[cčš]k$") and {"i", "ové"} or
 		-- barmani, gentlemani, jazzmani, kameramani, narkomani, ombudsmani, pivotmani, rekordmani, showmani, supermani, toxikomani
@@ -914,7 +919,12 @@ declprops["t-m"] = {
 
 decls["hard-f"] = function(base, stems)
 	base.no_palatalize_c = true
-	add_decl(base, stems, "y", "ě", "u", "o", "ě", "ou")
+	-- [[skica]] "sketch", [[gejša]] "geisha", [[rikša]] "rickshaw (vehicle)"; [[arakača]], [[čača]], [[čiča]] (drink),
+	-- [[dača]] "dacha", [[gutaperča]] "guttapercha", [[viskača]]; [[babča]], [[číča]], [[káča]], [[mamča]], [[úča]].
+	-- Also appears to apply to ď (e.g. [[Naďa]]) and ť, but not ň and j, which have a mixed declension.
+	local dat_s = rfind(base.vowel_stem, "[cčšžďť]$") and {"ě", "i"} or "ě"
+	local loc_s = dat_s
+	add_decl(base, stems, "y", dat_s, "u", "o", loc_s, "ou")
 	if base.pldual then
 		-- Currently [[ruka]] "hand" and [[noha]] "leg" use a special template {{cs-decl-noun-dual}} that includes
 		-- two columns, one for plural and one for dual; need to investigate further.
@@ -930,16 +940,14 @@ declprops["hard-f"] = {
 }
 
 
-decls["soft-f"] = function(base, stems, overriding_nom_sg)
-	-- [[ulice]] "street" with gen pl 'ulic'; some nouns have both e.g. [[přítelkyně]] "girlfriend" with gen pl
-	-- 'přítelkyň' or 'přítelkyní' and need an override <genpl-:í> (alternation between -ň and -n and between -e and -ě
-	-- handled automatically by the different stems and by combine_stem_ending()).
-	-- overriding_nom_sg is used for feminines in -ia, which behave like soft feminines except for the nominative
-	-- singular.
-	--
+decls["soft-f"] = function(base, stems)
 	-- This also includes feminines in -ie, e.g. [[belarie]], [[signorie]], [[uncie]], and feminines in -oe, e.g.
 	-- [[kánoe]], [[aloe]] and medical terms like [[dyspnoe]], [[apnoe]], [[hemoptoe]], [[kalanchoe]].
-	local gen_p = rfind(stems.vowel_stem, "ic$") and "" or "í"
+
+	-- Nouns in -ice like [[ulice]] "street" have null genitive plural e.g. 'ulic'; nouns in -yně e.g. [[přítelkyně]]
+	-- "girlfriend" have gen pl 'přítelkyň' or 'přítelkyní' with two possible endings; otherwise -í. (Alternation between
+	-- -ň and -n and between -e and -ě handled automatically by combine_stem_ending().)
+	local gen_p = rfind(base.lemma, "ice$") and "" or rfind(base.lemma, "yně$") and {"", "í"} or "í"
 	-- Vocative really ends in -e, not just a copy of the nominative; cf. [[sinfonia]], which is soft-f except for
 	-- the nominative and has -e in the vocative singular.
 	add_decl(base, stems, "e", "i", "i", "e", "i", "í",
@@ -948,6 +956,17 @@ end
 
 declprops["soft-f"] = {
 	cat = "soft"
+}
+
+
+decls["mixed-f"] = function(base, stems)
+	-- Nouns in -ňa (e.g. bárišňa/báryšňa, doňa, dueňa, piraňa, vikuňa) and -ja (e.g. maracuja, papája, sója)
+	add_decl(base, stems, {"i", "e"}, {"e", "i"}, "u", "o", {"e", "i"}, "ou",
+			{"i", "e"}, {"", "í"}, {"ám", "ím"}, {"i", "e"}, {"ách", "ích"}, {"ami", "emi"})
+end
+
+declprops["mixed-f"] = {
+	cat = "mixed"
 }
 
 
@@ -965,14 +984,52 @@ declprops["cons-f"] = {
 
 
 decls["i-f"] = function(base, stems)
-	-- Note convergence between cons-f and i-f, e.g. [[loď]] "boat", which has gen_s/nom_p/acc_p 'lodi' or 'lodě',
-	-- and ins_p 'loděmi' or 'loďmi'.
 	add_decl(base, stems, "i", "i", "-", "i", "i", "í",
 		"i", "í", "em", "i", "ech", "mi")
 end
 
 declprops["i-f"] = {
 	cat = "i-stem"
+}
+
+
+decls["mixed-i-f"] = function(base, stems)
+	local gen_s, nom_p, dat_p, loc_p, ins_p
+	-- Use of ě vs e below is intentional. Contrast [[mast]] dat pl 'mastem' with [[nit]] ins pl 'nitěmi'.
+	if base.mixedistem == "pěst" then
+		-- pěst, past, mast, lest [reducible], pelest, propust, plst/plsť [ins pl 'plstmi' for both], oběť, zeď [reducible;
+		-- ins pl 'zdmi'], paměť
+		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", {"ím", "em"}, {"ích", "ech"}, "mi"
+	elseif base.mixedistem == "moc" then
+		-- moc, nemoc, pomoc, velmoc; NOTE: pravomoc has -i/-e alternation in gen_s, nom_p
+		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", {"em", "ím"}, {"ech", "ích"}, "ěmi"
+	elseif base.mixedistem == "myš" then
+		-- myš, veš, hruď, měď, pleť, spleť, směs, smrt, step, odpověď [ins pl 'odpověď'mi/odpovědmi'], šeď,
+		-- závěť [ins pl 'závěťmi/závětmi']
+		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", "ím", "ích", "mi"
+	elseif base.mixedistem == "noc" then
+		-- lež [reducible], noc, mosaz, rez, ves [ins pl 'vsemi'], mysl, sůl, běl, žluť
+		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", "ím", "ích", "emi"
+	elseif base.mixedistem == "žluč" then
+		-- žluč, moč, modř, čeleď, kapraď, záď, žerď, čtvrť/čtvrt, drť, huť, chuť, nit, pečeť, závrať, pouť, stať, ocel
+		gen_s, nom_p, dat_p, loc_p, ins_p = {"i", "ě"}, {"i", "ě"}, "ím", "ích", "ěmi"
+	elseif base.mixedistem == "loď" then
+		-- loď, suť
+		gen_s, nom_p, dat_p, loc_p, ins_p = {"i", "ě"}, {"i", "ě"}, "ím", "ích", {"ěmi", "mi"}
+	else
+		error(("Unrecognized value '%s' for 'mixedistem', should be one of 'pěst', 'moc', 'myš', 'lež', 'žluč' or 'loď'"):
+			format(base.mixedistem))
+	end
+	add_decl(base, stems, gen_s, "i", "-", "i", "i", "í",
+		nom_p, "í", dat_p, nom_p, loc_p, ins_p)
+end
+
+declprops["mixed-i-f"] = {
+	-- Include subtype in the table description but not in the category to avoid too many categories.
+	desc = function(base, stems)
+		return ("mixed i-stem [type '%s'] GENDER"):format(base.mixedistem)
+	end,
+	cat = "mixed i-stem"
 }
 
 
@@ -1030,7 +1087,7 @@ decls["hard-n"] = function(base, stems)
 	local velar = rfind(stems.vowel_stem, com.velar_c .. "$")
 	-- NOTE: Per IJP it appears the meaning of the preceding preposition makes a difference: 'o' = "about" takes
 	-- '-u' or '-ě', while 'na/v' = "in, on" normally takes '-ě'.
-	local loc_sg =
+	local loc_s =
 		-- Exceptions: [[mléko]] "milk" ('mléku' or 'mléce'), [[břicho]] "belly" ('břiše' or (less often) 'břichu'),
 		-- [[roucho]] ('na rouchu' or 'v rouše'; why the difference in preposition?).
 		velar and "u" or
@@ -1039,14 +1096,17 @@ decls["hard-n"] = function(base, stems)
 		-- [[kolo]] "wheel", [[křeslo]] "armchair", [[máslo]] "butter", [[peklo]] "hell", [[sklo]] "glass",
 		-- [[světlo]] "light", [[tělo]] "body"; but [[číslo]] "number' with -e/-u; [[zlo]] "evil" and [[kouzlo]] "spell"
 		-- with -u/-e).
-		rfind(base.lemma, "[^d]lo$") and "ě" or
+		rfind(base.lemma, "dlo$") and {"ě", "u"} or
+		rfind(base.lemma, "lo$") and "ě" or
 		(rfind(base.lemma, "[sc]tvo$") or rfind(base.lemma, "ivo$")) and "u" or
-		-- Per IJP: Borrowed words and abstracts (e.g. [[banjo]]/[[bendžo]]/[[benžo]] "banjo", [[depo]] "depot",
+		-- Per IJP: Borrowed words and abstracts take -u (e.g. [[banjo]]/[[bendžo]]/[[benžo]] "banjo", [[depo]] "depot",
 		-- [[chladno]] "cold", [[mokro]] "damp, dampness", [[právo]] "law, right", [[šeru]] "twilight?",
-		-- [[temno]] "dark, darkness", [[tempo]] "rate, tempo", [[ticho]] "quiet, silence", [[vedro]] "heat".
-		-- We have no way of determining this so these need overrides.
-		{"ě", "u"}
-	local loc_pl =
+		-- [[temno]] "dark, darkness", [[tempo]] "rate, tempo", [[ticho]] "quiet, silence", [[vedro]] "heat") and others
+		-- often take -ě/-u. Formerly we defaulted to -ě/-u but it seems better to default to just -u, similarly to hard
+		-- masculines.
+		-- {"ě", "u"}
+		"u"
+	local loc_p =
 		-- Note, lemmas in -isko also have mixed-reducible as default, handled in determine_default_reducible().
 		-- Note also, ending -ích triggers the second palatalization.
 		rfind(base.lemma, "isko$") and {"ích", "ách"} or
@@ -1057,8 +1117,8 @@ decls["hard-n"] = function(base, stems)
 		-- "risk" normally has '-ích' and needs and override.
 		velar and "ách" or
 		"ech"
-	add_decl(base, stems, "a", "u", "-", "-", loc_sg, "em",
-		"a", "", "ům", "a", loc_pl, "y")
+	add_decl(base, stems, "a", "u", "-", "-", loc_s, "em",
+		"a", "", "ům", "a", loc_p, "y")
 	-- FIXME: paired body parts e.g. [[rameno]] "shoulder" (gen_p/loc_p 'ramenou/ramen'), [[koleno]] "knee"
 	-- (gen_p/loc_p 'kolenou/kolen'), [[prsa]] "chest, breasts" (plurale tantum; gen_p/loc_p 'prsou').
 	-- FIXME: Nouns with both neuter and feminine forms in the plural, e.g. [[lýtko]] "calf (of the leg)",
@@ -1091,9 +1151,9 @@ decls["soft-n"] = function(base, stems)
 	-- "noon", [[příslovce]] "adverb", [[pukrle]] "curtsey" (also t-n), [[vejce]] "egg" (NOTE: gen pl 'vajec').
 	--
 	-- Many nouns in -iště, with null genitive plural.
-	local gen_pl = rfind(base.vowel_stem, "išť$") and "" or "í"
+	local gen_p = rfind(base.vowel_stem, "išť$") and "" or "í"
 	add_decl(base, stems, "e", "i", "-", "-", "i", "em",
-		"e", gen_pl, "ím", "e", "ích", "i")
+		"e", gen_p, "ím", "e", "ích", "i")
 	-- NOTE: Some neuter words in -e indeclinable, e.g. [[Belize]], [[Chile]], [[garde]] "chaperone", [[karaoke]],
 	-- [[karate]], [[re]] "double raise (card games)", [[ukulele]], [[Zimbabwe]], [[zombie]] (pl. 'zombie' or
 	-- 'zombies')
@@ -1482,8 +1542,9 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify animacy twice: '" .. inside .. "'")
 				end
 				base.animacy = part
-			elseif part == "hard" or part == "soft" or part == "mixed" or part == "surname" or part == "istem"
-				or part == "-istem" or part == "tstem" or part == "nstem" or part == "tech" or part == "foreign" then
+			elseif part == "hard" or part == "soft" or part == "mixed" or part == "surname" or part == "istem" or
+				part == "-istem" or part == "tstem" or part == "nstem" or part == "tech" or part == "foreign" or
+				part == "mostlyindecl" then
 				if base[part] then
 					error("Can't specify '" .. part .. "' twice: '" .. inside .. "'")
 				end
@@ -1500,6 +1561,11 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify '+' twice: '" .. inside .. "'")
 				end
 				base.adj = true
+			elseif rfind(part, "^mixedistem:") then
+				if base.mixedistem then
+					error("Can't specify 'mixedistem:' twice: '" .. inside .. "'")
+				end
+				base.mixedistem = rsub(part, "^mixedistem:", "")
 			elseif rfind(part, "^decllemma:") then
 				if base.decllemma then
 					error("Can't specify 'decllemma:' twice: '" .. inside .. "'")
@@ -1834,7 +1900,8 @@ end
 
 -- Determine the declension based on the lemma, gender and number. The declension is set in base.decl. In the process,
 -- we set either base.vowel_stem (if the lemma ends in a vowel) or base.nonvowel_stem (if the lemma does not end in a
--- vowel), which is used by determine_stems().
+-- vowel), which is used by determine_stems(). In some cases (specifically with certain foreign nouns), we set
+-- base.lemma to a new value; this is as if the user specified 'decllemma:'.
 local function determine_declension(base)
 	-- Determine declension
 	stem = rmatch(base.lemma, "^(.*)a$")
@@ -1854,6 +1921,9 @@ local function determine_declension(base)
 			elseif rfind(stem, "[ou]$") then
 				-- [[stoa]], [[kongrua]], [[Samoa]], [[Nikaragua]], etc.
 				base.decl = "oa-f"
+			elseif rfind(stem, "[ňj]$") then
+				-- [[maracuja]], [[papája]], [[sója]]; [[piraňa]] etc.
+				base.decl = "mixed-f"
 			else
 				base.decl = "hard-f"
 			end
@@ -1870,10 +1940,22 @@ local function determine_declension(base)
 	local ending
 	stem, ending = rmatch(base.lemma, "^(.*)([eě])$")
 	if stem then
+		if base.gender == "n" and base.mostlyindecl then
+			base.nonvowel_stem = base.lemma
+			base.decl = "mostly-indecl-n"
+			return
+		end
 		if ending == "ě" then
 			stem = com.convert_paired_plain_to_palatal(stem)
 		end
 		if base.gender == "m" then
+			if base.foreign then
+				-- [[software]] and similar English-derived nouns with silent -e; set the lemma here as if decllemma: were given
+				base.lemma = stem
+				base.nonvowel_stem = stem
+				base.decl = "hard-m"
+				return
+			end
 			if base.animacy ~= "an" then
 				error("Masculine lemma in -e must be animate")
 			end
@@ -1967,6 +2049,7 @@ local function determine_declension(base)
 					error("Implement support for this")
 				else
 					base.decl = "hard-m"
+					-- set the lemma here as if decllemma: were given
 					base.lemma = stem
 				end
 			elseif base.hard then
@@ -1981,11 +2064,14 @@ local function determine_declension(base)
 				base.decl = "hard-m"
 			end
 		elseif base.gender == "f" then
-			if base.istem then
+			if base.mixedistem then
+				base.decl = "mixed-i-f"
+			elseif base.istem then
 				base.decl = "i-f"
 			elseif base["-istem"] then
 				base.decl = "cons-f"
 			elseif rfind(base.lemma, "st$") then
+				-- Numerous abstracts in -ost; also [[kost]], [[část]], [[srst]], [[bolest]]
 				base.decl = "i-f"
 			else
 				base.decl = "cons-f"
@@ -2000,7 +2086,10 @@ local function determine_declension(base)
 					error("Implement support for this")
 				else
 					base.decl = "hard-n"
+					-- set the lemma here as if decllemma: were given
 					base.lemma = stem .. "o"
+					base.vowel_stem = stem
+					return
 				end
 			else
 				error("Neuter nouns ending in a consonant should use '.foreign' or '.decllemma:...'")
@@ -2015,7 +2104,9 @@ end
 
 -- Determine the default value for the 'reducible' flag.
 local function determine_default_reducible(base)
-	if rfind(base.lemma, "[iyu]$") or base.gender == "m" and rfind(base.lemma, "[aeo]$") then
+	-- Nouns in vowels other than -a/o as well as masculine nouns ending in all vowels don't have null endings so not
+	-- reducible. Note, we are never called on adjectival nouns.
+	if rfind(base.lemma, "[iyuíeě]$") or base.gender == "m" and rfind(base.lemma, "[ao]$") or base.tstem then
 		base.default_reducible = false
 		return
 	end
@@ -2030,11 +2121,19 @@ local function determine_default_reducible(base)
 		-- irregularly: [[stařec]] "old man" (gen sg 'starce') and [[tkadlec]] "weaver" (gen sg 'tkalce'). The remaining
 		-- six consisted of 5 compounds of monosyllabic words: [[dotek]], [[oblek]], [[kramflek]], [[pucflek]],
 		-- [[pokec]], plus [[česnek]], which should be reducible but would lead to an impossible consonant cluster.
-		if rfind(stem, "e[ck]$") and not com.is_monosyllabic(stem) then
+		if base.gender == "m" and rfind(stem, "e[ck]$") and not com.is_monosyllabic(stem) then
+			base.default_reducible = true
+		elseif base.gender == "f" and rfind(stem, "eň$") then
+			-- [[pochodeň]] "torch", [[píseň]] "leather", [[žeň]] "harvest"; not [[reveň]] "rhubarb" or [[dřeň]] "pulp",
+			-- which need an override.
 			base.default_reducible = true
 		else
 			base.default_reducible = false
 		end
+		return
+	end
+	if base.number == "sg" then
+		base.default_reducible = false
 		return
 	end
 	if rfind(base.lemma, "isko$") then
@@ -2051,7 +2150,11 @@ local function determine_default_reducible(base)
 	if rfind(stem, com.cons_c .. "[lr]" .. com.cons_c .. "$") then
 		-- [[vrba]], [[slha]]; not reducible. (But note [[jablko]], reducible; needs override.)
 		base.default_reducible = false
-	elseif rfind(stem, com.cons_c .. "[bkhlrmnv]$") then
+	elseif not base.foreign and rfind(stem, com.cons_c .. "[bkhlrmnv]$") then
+		base.default_reducible = true
+	elseif base.foreign and rfind(stem, com.cons_c .. "r$") then
+		-- Foreign nouns in -CCum seem generally non-reducible in the gen pl except for those in -Crum like [[centrum]],
+		-- Examples: [[album]], [[verbum]], [[signum]], [[interregnum]], [[sternum]]. [[infernum]] has gen pl 'infern/inferen'.
 		base.default_reducible = true
 	else
 		base.default_reducible = false
