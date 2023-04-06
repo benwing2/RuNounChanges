@@ -263,19 +263,20 @@ end
 
 
 function export.convert_paired_palatal_to_plain(stem, ending)
-	-- For stems that alternate between n/t/d and ň/ť/ď, we always maintain the stem in the latter format and
-	-- convert to the corresponding plain as needed, with e -> ě. Likewise stems ending in /bj/ /vj/ etc.
-	-- use TEMP_SOFT_LABIAL.
-	if ending and not rfind(ending, "^[eěií]") then
+	-- For stems that alternate between n/t/d and ň/ť/ď, we always maintain the stem in the latter format and convert
+	-- to the corresponding plain as needed, with e -> ě. Likewise, stems ending in /bj/ /vj/ etc. use TEMP_SOFT_LABIAL.
+	if ending and not rfind(ending, "^[Eeěií]") then
 		return stem, ending
 	end
 	local stembegin, lastchar = rmatch(stem, "^(.*)([" .. export.paired_palatal .. export.TEMP_SOFT_LABIAL .. "])$")
 	if lastchar then
 		ending = rsub(ending, "^e", "ě")
-		return stembegin .. export.paired_palatal_to_plain[lastchar], ending
-	else
-		return stem, ending
+		stem = stembegin .. export.paired_palatal_to_plain[lastchar]
 	end
+	-- 'E' has served its purpose of preventing the e -> ě conversion after a paired palatal (i.e. it depalatalizes
+	-- paired palatals).
+	ending = rsub(ending, "^E", "e")
+	return stem, ending
 end
 
 
@@ -283,7 +284,7 @@ function export.combine_stem_ending(base, slot, stem, ending)
 	if stem == "?" then
 		return "?"
 	else
-		-- Convert ňe and ňě -> ně.
+		-- Convert ňe and ňě -> ně. Convert nE and ňE -> ne.
 		stem, ending = export.convert_paired_palatal_to_plain(stem, ending)
 		-- We specify endings with -e/ě using ě, but some consonants cannot be followed by ě; convert to plain e.
 		if rfind(ending, "^ě") and not rfind(stem, export.followable_by_e_hacek_c .. "$") then
