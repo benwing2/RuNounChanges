@@ -344,6 +344,9 @@ local output_noun_slots = {
 	voc_p = "voc|p",
 	loc_p = "loc|p",
 	ins_p = "ins|p",
+	body_part_gen_p = "body-part|gen|p",
+	body_part_loc_p = "body-part|loc|p",
+	body_part_ins_p = "body-part|ins|p",
 }
 
 
@@ -415,23 +418,38 @@ Maybe modify the stem and/or ending in certain special cases:
 1. Final -e in vocative singular triggers first palatalization of the stem in some cases (e.g. hard masc).
 2. Endings beginning with ě, i, í trigger second palatalization, as does -e in the loc_s.
 
-NOTE: Correctly handling -e vs. -ě and -tdn/-ťďň alternations is tricky. It's especially tricky with labials, because
-e.g. we have both soft neuter [[Labe]] and t-stem neuter [[hříbě]]. It's true that t-stems generally prefer ě when
-possible and soft stems don't, but some soft stems do have -ě, e.g. [[kutě]] "bed". The way we handle this as follows:
+NOTE: Correctly handling -e vs. -ě and -tdn/-ťďň alternations is tricky. We have to deal with the following:
+1. Soft-stem and t-stem neuters can have either -e or -ě. With coronals we have both [[poledne]] "noon" with /n/ and
+   [[kutě]] "bed" with /ť/. We also have soft-stem neuter [[Labe]] with /b/ vs. t-stem neuter [[hříbě]] with /bj/.
+2. Underlying palatal coronals maintain their nature before back vowels and when not followed by a vowel, e.g. [[štěně]]
+   "puppy" becomes 'štěňata' in the nom/acc/voc plural and [[přítelkyně]] "girlfriend" becomes 'přítelkyň' in the gen
+   plural, but underlying palatal labials become non-palatal, e.g. [[hříbě]] "foal" becomes 'hříbata' in the nom/acc/voc
+   plural.
+3. There are at least four types of endings beginning with '-e':
+   a. "maintaining" endings, e.g. instrumental singular '-em', which do not change the nature of the consonant, e.g.
+      [[zákon]] "law" becomes 'zákonem' while [[vězeň]] "prisoner" becomes 'vězeněm';
+   b. "palatalizing" endings, e.g. locative singular '-e', which palatalizes t/d/n (and more generally applies the
+      Slavic second palatalization, e.g. k -> c, r -> ř), e.g. [[žena]] "woman" becomes 'ženě';
+   c. "depalatalizing" endings, e.g. feminine i-stem dative plural '-em', which actively depalatalize ť/ď/ň, e.g.
+      [[oběť]] "sacrifice, victim" becomes 'obětem';
+   d. vocative singular '-e' of hard-stem masculines, which applies the Slavic first palatalization in some
+      circumstances (e.g. k -> č, Cr -> Cř, sometimes c -> č).
+The way we handle this as follows:
 1. We maintain the underlying stems always in their "pronounced" form, i.e. if the last consonant is pronounced ť/ď/ň
    we maintain the stem in that form, but if pronounced t/d/n, we use those consonants. Hence neuter [[poledne]] "noon"
    has stem 'poledn-' but neuter [[štěně]] "puppy" has stem 'štěň'. If the stem ends in labial + /j/, we use a special
    TEMP_SOFT_LABIAL character after the labial (rather than 'j', in case of stems that actually have a written 'j' in
    them such as [[banjo]]).
-2. In combine_stem_ending(), we convert the stem back to the written form before adding the ending. If the ending begins
-   with -e, this may entail converting -e to -ě. "Converting to the written form" converts ť/ď/ň to plain equivalents
-   and deleting TEMP_SOFT_LABIAL before -e, converting -e to -ě with such consonants. The same conversions happen
-   before other front consonants -ě/-é/-i/-í, which don't allow ť/ď/ň to precede, and in all cases with
-   TEMP_SOFT_LABIAL, which is not an actual consonant.
-3. Some endings, e.g. feminine dative/locative singular -ě/e, convert underlying plain t/d/n and labials to their
-   palatalized form. This is associated with the second palatalization. In these cases we specify the ending as -ě in
-   the code, which is maintained after plain coronals and labials in combine_stem_ending(); in all other cases we
-   specify the ending as -e.
+2. We signal types (a), (b) and (c) above using respectively 'e', 'ě' and 'E'. Type (d) uses 'e' and sets
+   `base.palatalize_voc`.
+3. In combine_stem_ending(), we convert the stem back to the written form before adding the ending. If the ending begins
+   with -e, this may entail converting -e to -ě, and in all cases -E is converted to -e. "Converting to the written
+   form" converts ť/ď/ň to plain equivalents and deletes TEMP_SOFT_LABIAL before -e, converting -e to -ě with such
+   consonants. The same conversions happen before other front consonants -ě/-é/-i/-í, which don't allow ť/ď/ň to
+   precede, and in all cases with TEMP_SOFT_LABIAL, which is not an actual consonant.
+4. If the ending is specified using -ě, this is maintained after plain coronals and labials in combine_stem_ending(),
+   and converted to -e in other cases.
+5. Applying the first and second palatalization happens below in apply_special_cases().
 ]=]
 local function apply_special_cases(base, slot, stem, ending)
 	local palatalize_voc
@@ -773,6 +791,27 @@ declprops["hard-m"] = {
 }
 
 
+decls["semisoft-m"] = function(base, stems)
+	-- Examples: [[rádius]] "radius", [[stereo]] "stereo", [[atrium]] "atrium", [[muzeum]] "museum", [[enkómion]]
+	-- "encomium". Hard in the singular, mostly soft in the plural. Those in -eo e.g. [[stereo]], [[video]],
+	-- [[rodeo]], [[solideo]] have alternative hard endings in the dat/loc/ins pl, but not those in -eum, e.g.
+	-- [[muzeum]], [[lyceum]], [[linoleum]], [[ileum]]. (There are apparently no neuters in -eon; those in -eon e.g.
+	-- [[akordeon]], [[neon]], [[nukleon]] are masculine.)
+	local dat_p, loc_p, ins_p
+	if rfind(base.user_specified_lemma, "eo$") then
+		dat_p, loc_p, ins_p = {"ím", "ům"}, {"ích", "ech"}, {"i", "y"}
+	else
+		dat_p, loc_p, ins_p = "ím", "ích", "i"
+	end
+	add_decl(base, stems, "a", "u", "-", "-", "u", "em",
+		"a", "í", dat_p, "a", loc_p, ins_p)
+end
+
+declprops["semisoft-m"] = {
+	cat = "semisoft"
+}
+
+
 decls["soft-m"] = function(base, stems)
 	base.palatalize_voc = true
 	-- animates with dat_s only in -i need to give this manually, using '<dati>'
@@ -991,7 +1030,8 @@ declprops["cons-f"] = {
 
 decls["i-f"] = function(base, stems)
 	add_decl(base, stems, "i", "i", "-", "i", "i", "í",
-		"i", "í", "em", "i", "ech", "mi")
+		-- See above under apply_special_cases(); -E causes depalatalization of ť/ď/ň.
+		"i", "í", "Em", "i", "Ech", "mi")
 end
 
 declprops["i-f"] = {
@@ -1001,21 +1041,22 @@ declprops["i-f"] = {
 
 decls["mixed-i-f"] = function(base, stems)
 	local gen_s, nom_p, dat_p, loc_p, ins_p
-	-- Use of ě vs e below is intentional. Contrast [[mast]] dat pl 'mastem' with [[nit]] ins pl 'nitěmi'.
+	-- Use of ě vs E below is intentional. Contrast [[oběť]] dat pl 'obětem' (depalatalizing) with [[nit]] ins pl
+	-- 'nitěmi' (palatalizing). See comment above under apply_special_cases().
 	if base.mixedistem == "pěst" then
-		-- pěst, past, mast, lest [reducible], pelest, propust, plst/plsť [ins pl 'plstmi' for both], oběť, zeď [reducible;
-		-- ins pl 'zdmi'], paměť
-		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", {"ím", "em"}, {"ích", "ech"}, "mi"
+		-- pěst, past, mast, lest [reducible; ins pl 'lstmi'], pelest, propust, plst, oběť, zeď [reducible; ins pl
+		-- 'zdmi'], paměť [ins pl 'pamětmi/paměťmi]
+		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", {"ím", "Em"}, {"ích", "Ech"}, "mi"
 	elseif base.mixedistem == "moc" then
 		-- moc, nemoc, pomoc, velmoc; NOTE: pravomoc has -i/-e alternation in gen_s, nom_p
-		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", {"em", "ím"}, {"ech", "ích"}, "ěmi"
+		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", {"Em", "ím"}, {"Ech", "ích"}, "ěmi"
 	elseif base.mixedistem == "myš" then
 		-- myš, veš, hruď, měď, pleť, spleť, směs, smrt, step, odpověď [ins pl 'odpověď'mi/odpovědmi'], šeď,
-		-- závěť [ins pl 'závěťmi/závětmi']
+		-- závěť [ins pl 'závěťmi/závětmi'], plsť [ins pl 'plstmi']
 		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", "ím", "ích", "mi"
 	elseif base.mixedistem == "noc" then
 		-- lež [reducible], noc, mosaz, rez, ves [ins pl 'vsemi'], mysl, sůl, běl, žluť
-		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", "ím", "ích", "emi"
+		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", "ím", "ích", "ěmi"
 	elseif base.mixedistem == "žluč" then
 		-- žluč, moč, modř, čeleď, kapraď, záď, žerď, čtvrť/čtvrt, drť, huť, chuť, nit, pečeť, závrať, pouť, stať, ocel
 		gen_s, nom_p, dat_p, loc_p, ins_p = {"i", "ě"}, {"i", "ě"}, "ím", "ích", "ěmi"
@@ -1166,7 +1207,7 @@ decls["semisoft-n"] = function(base, stems)
 end
 
 declprops["semisoft-n"] = {
-	cat = "semisoft "
+	cat = "semisoft"
 }
 
 
@@ -2706,6 +2747,51 @@ local function make_table(alternant_multiword_spec)
 | {ins_p}
 |{\cl}{notes_clause}</div></div>]=]
 
+	local table_spec_body_part = [=[
+<div class="NavFrame" style="display: inline-block;min-width: 60em">
+<div class="NavHead" style="background:#eff7ff" >{title}{annotation}</div>
+<div class="NavContent">
+{\op}| style="background:#F9F9F9;text-align:center;min-width:60em" class="inflection-table"
+|-
+! rowspan=2 style="width:25%;background:#d9ebff" |
+! rowspan=2 style="background:#d9ebff" | singular
+! colspan=2 style="background:#d9ebff" | plural
+|-
+! style="background:#d9ebff" | body part
+! style="background:#d9ebff" | metaphorical
+|-
+!style="background:#eff7ff"|nominative
+| {nom_s}
+| {nom_p}
+|-
+!style="background:#eff7ff"|genitive
+| {gen_s}
+| {body_part_gen_p}
+| {gen_p}
+|-
+!style="background:#eff7ff"|dative
+| {dat_s}
+| colspan=2 | {dat_p}
+|-
+!style="background:#eff7ff"|accusative
+| {acc_s}
+| colspan=2 | {acc_p}
+|-
+!style="background:#eff7ff"|vocative
+| {voc_s}
+| colspan=2 | {voc_p}
+|-
+!style="background:#eff7ff"|locative
+| {loc_s}
+| {body_part_loc_p}
+| {loc_p}
+|-
+!style="background:#eff7ff"|instrumental
+| {ins_s}
+| {body_part_ins_p}
+| {ins_p}
+|{\cl}{notes_clause}</div></div>]=]
+
 	local table_spec_sg = [=[
 <div class="NavFrame" style="width:30em">
 <div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
@@ -2788,9 +2874,17 @@ local function make_table(alternant_multiword_spec)
 		forms.annotation = " (<span style=\"font-size: smaller;\">" .. annotation .. "</span>)"
 	end
 
-	local table_spec =
-		alternant_multiword_spec.number == "sg" and table_spec_sg or
-		alternant_multiword_spec.number == "pl" and table_spec_pl or
+	local table_spec
+	if alternant_multiword_spec.number == "sg" then
+		table_spec = table_spec_sg
+	elseif alternant_multiword_spec.number == "pl" then
+		table_spec = table_spec_pl
+	else
+		local body_part_slots = {"gen_p", "loc_p", "ins_p"}
+		local body_part_different = false
+		for _, body_part_slot in ipairs(body_part_slots) do
+
+
 		table_spec_both
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
