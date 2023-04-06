@@ -277,7 +277,7 @@ FIXME:
 6. Support masculine foreign nouns in -ius/-etc.
 7. Support masculine foreign nouns in unpronounced final -e (e.g. [[software]]). [DONE]
 8. Support neuter foreign nouns in -um/-on. [DONE]
-9. Support neuter foreign nouns in -ium/-ion.
+9. Support neuter foreign nouns in -ium/-ion. [DONE]
 10. Support paired body parts, e.g. [[ruka]], [[noha]], [[oko]], [[ucho]], [[koleno]], [[rameno]].
 11. Support masculine nouns in -e/ě that are neuter in the plural.
 12. Correctly handle -e vs. -ě, e.g. soft neuters have both [[kutě]] and [[poledne]]. [DONE]
@@ -508,12 +508,15 @@ local function add(base, slot, stems, endings, footnotes)
 		if ending == "-" then
 			stem = base.user_specified_lemma
 			ending = ""
-		elseif slot == "ins_s" or slot == "dat_p" or slot == "loc_p" or slot == "ins_p" then
-			stem = stems.oblique_stem
-		elseif rfind(ending, "^" .. com.vowel_c) then
-			stem = stems.vowel_stem
 		else
-			stem = stems.nonvowel_stem
+			local is_vowel_ending = rfind(ending, "^" .. com.vowel_c)
+			if slot == "ins_s" or slot == "dat_p" or slot == "loc_p" or slot == "ins_p" or is_vowel_ending and slot == "gen_p" then
+				stem = stems.oblique_stem
+			elseif is_vowel_ending then
+				stem = stems.vowel_stem
+			else
+				stem = stems.nonvowel_stem
+			end
 		end
 		stem, ending = apply_special_cases(base, slot, stem, ending)
 		ending = iut.combine_form_and_footnotes(ending, footnotes)
@@ -921,8 +924,9 @@ decls["hard-f"] = function(base, stems)
 	base.no_palatalize_c = true
 	-- [[skica]] "sketch", [[gejša]] "geisha", [[rikša]] "rickshaw (vehicle)"; [[arakača]], [[čača]], [[čiča]] (drink),
 	-- [[dača]] "dacha", [[gutaperča]] "guttapercha", [[viskača]]; [[babča]], [[číča]], [[káča]], [[mamča]], [[úča]].
-	-- Also appears to apply to ď (e.g. [[Naďa]]) and ť, but not ň and j, which have a mixed declension.
-	local dat_s = rfind(base.vowel_stem, "[cčšžďť]$") and {"ě", "i"} or "ě"
+	-- Also appears to apply to ď (e.g. [[Naďa]]) and ť, as well as certain words with stems in -ň and -j (e.g. [[Táña]],
+	-- [[doňa]], [[Darja]], [[Troja]]/[[Trója]]), which normally have a mixed declension.
+	local dat_s = rfind(base.vowel_stem, "[cčšžďťjň]$") and {"ě", "i"} or "ě"
 	local loc_s = dat_s
 	add_decl(base, stems, "y", dat_s, "u", "o", loc_s, "ou")
 	if base.pldual then
@@ -960,7 +964,9 @@ declprops["soft-f"] = {
 
 
 decls["mixed-f"] = function(base, stems)
-	-- Nouns in -ňa (e.g. bárišňa/báryšňa, doňa, dueňa, piraňa, vikuňa) and -ja (e.g. maracuja, papája, sója)
+	-- Lowercase nouns in -ňa (e.g. bárišňa/báryšňa, doňa, dueňa, piraňa, vikuňa) and -ja (e.g. maracuja, papája, sója).
+	-- Does not appear to apply to proper nouns (e.g. [[Táňa]] "Tanya", [[Darja]] "Daria", [[Troja]]/[[Trója]] "Troy",
+	-- which usually decline like [[gejša]], [[dača]], [[skica]]).
 	add_decl(base, stems, {"i", "e"}, {"e", "i"}, "u", "o", {"e", "i"}, "ou",
 			{"i", "e"}, {"", "í"}, {"ám", "ím"}, {"i", "e"}, {"ách", "ích"}, {"ami", "emi"})
 end
@@ -1140,6 +1146,27 @@ declprops["hard-n"] = {
 			return "hard"
 		end
 	end
+}
+
+
+decls["semisoft-n"] = function(base, stems)
+	-- Examples: [[rádio]] "radio", [[stereo]] "stereo", [[atrium]] "atrium", [[muzeum]] "museum", [[enkómion]]
+	-- "encomium". Hard in the singular, mostly soft in the plural. Those in -eo e.g. [[stereo]], [[video]],
+	-- [[rodeo]], [[solideo]] have alternative hard endings in the dat/loc/ins pl, but not those in -eum, e.g.
+	-- [[muzeum]], [[lyceum]], [[linoleum]], [[ileum]]. (There are apparently no neuters in -eon; those in -eon e.g.
+	-- [[akordeon]], [[neon]], [[nukleon]] are masculine.)
+	local dat_p, loc_p, ins_p
+	if rfind(base.user_specified_lemma, "eo$") then
+		dat_p, loc_p, ins_p = {"ím", "ům"}, {"ích", "ech"}, {"i", "y"}
+	else
+		dat_p, loc_p, ins_p = "ím", "ích", "i"
+	end
+	add_decl(base, stems, "a", "u", "-", "-", "u", "em",
+		"a", "í", dat_p, "a", loc_p, ins_p)
+end
+
+declprops["semisoft-n"] = {
+	cat = "semisoft "
 }
 
 
@@ -1912,7 +1939,11 @@ local function determine_declension(base)
 			end
 			base.decl = "a-m"
 		elseif base.gender == "f" then
-			if rfind(stem, "e$") then
+			if base.hard then
+				-- e.g. [[doňa]], which seems not to have soft alternates as [[piraňa]] does (despite IJP; but see the note at the
+				-- bottom)
+				base.decl = "hard-f"
+			elseif rfind(stem, "e$") then
 				-- [[idea]], [[diarea]] (subtype '.tech'), [[Korea]], etc.
 				base.decl = "ea-f"
 			elseif rfind(stem, "i$") then
@@ -1921,8 +1952,9 @@ local function determine_declension(base)
 			elseif rfind(stem, "[ou]$") then
 				-- [[stoa]], [[kongrua]], [[Samoa]], [[Nikaragua]], etc.
 				base.decl = "oa-f"
-			elseif rfind(stem, "[ňj]$") then
-				-- [[maracuja]], [[papája]], [[sója]]; [[piraňa]] etc.
+			elseif rfind(stem, "^" .. com.lowercase_c .. ".*[ňj]$") then
+				-- [[maracuja]], [[papája]], [[sója]]; [[piraňa]] etc. Not [[Táňa]], [[Darja]], [[Troja]]/[[Trója]], which decline
+				-- like [[gejša]], [[skica]], etc. (subtype of hard feminines).
 				base.decl = "mixed-f"
 			else
 				base.decl = "hard-f"
@@ -1986,6 +2018,11 @@ local function determine_declension(base)
 			error("Feminine nouns in -o are indeclinable")
 		elseif base.nstem then
 			base.decl = "n-n"
+		elseif base.hard then
+			base.decl = "hard-n"
+		elseif rfind(stem, "[ei]$") then
+			-- [[rádio]], [[studio]], [[trio]], etc.; [[stereo]], [[rodeo]], [[solideo]], etc. with a slightly different decl
+			base.decl = "semisoft-n"
 		else
 			base.decl = "hard-n"
 		end
@@ -2082,15 +2119,17 @@ local function determine_declension(base)
 				if not stem then
 					error("Unrecognized neuter foreign ending, should be -um or -on")
 				end
-				if rfind(stem, "[ei]$") then
-					error("Implement support for this")
+				if base.hard then
+					base.decl = "hard-n"
+				elseif rfind(stem, "[ei]$") then
+					base.decl = "semisoft-n"
 				else
 					base.decl = "hard-n"
-					-- set the lemma here as if decllemma: were given
-					base.lemma = stem .. "o"
-					base.vowel_stem = stem
-					return
 				end
+				-- set the lemma here as if decllemma: were given
+				base.lemma = stem .. "o"
+				base.vowel_stem = stem
+				return
 			else
 				error("Neuter nouns ending in a consonant should use '.foreign' or '.decllemma:...'")
 			end
