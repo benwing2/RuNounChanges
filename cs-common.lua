@@ -122,7 +122,7 @@ function export.apply_vowel_alternation(alt, stem)
 	local modstem, origvowel
 	if alt == "quant" or alt == "quant-ě" then
 		-- [[sníh]] "snow", gen sg. [[sněhu]]
-		-- [[míra]] "snow", gen sg. [[měr]]
+		-- [[míra]] "snow", gen pl. [[měr]]
 		-- [[hůl]] "cane", gen sg. [[hole]]
 		-- [[práce]] "work", ins sg. [[prací]]
 		modstem = rsub(stem, "(.)([íůáé])(" .. export.cons_c .. "*)$",
@@ -147,8 +147,10 @@ function export.apply_vowel_alternation(alt, stem)
 				end
 			end
 		)
+		-- [[houba]] "mushroom", gen pl. [[hub]]
+		modstem = rsub(modstem, "ou(" .. export.cons_c .. "*)$", "u%1")
 		if modstem == stem then
-			error("Indicator '" .. alt .. "' can't be applied because stem '" .. stem .. "' doesn't have an í, ů, á or é as its last vowel")
+			error("Indicator '" .. alt .. "' can't be applied because stem '" .. stem .. "' doesn't have an í, ů, ou, á or é as its last vowel")
 		end
 	else
 		return stem, nil
@@ -220,7 +222,7 @@ end
 
 
 function export.reduce(word)
-	local pre, letter, vowel, post = rmatch(word, "^(.*)(" .. export.cons_c .. ")([eě])(" .. export.cons_c .. "+)$")
+	local pre, letter, vowel, post = rmatch(word, "^(.*)([" .. export.cons .. "y%-])([eě])(" .. export.cons_c .. "+)$")
 	if not pre then
 		return nil
 	end
