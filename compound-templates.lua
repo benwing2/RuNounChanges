@@ -208,8 +208,7 @@ local function get_parsed_part(template, args, term_index, i)
 		end
 	end
 
-	-- Remove and remember an initial exclamation point from the term, and parse off an initial language code (e.g.
-	-- 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]').
+	-- Parse off an initial language code (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]').
 	if term then
 		local termlang, actual_term = term:match("^([A-Za-z0-9._-]+):(.*)$")
 		if termlang and termlang ~= "w" then -- special handling for w:... links to Wikipedia
