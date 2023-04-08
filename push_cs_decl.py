@@ -5,7 +5,7 @@ import re, argparse, codecs, json
 import traceback, sys
 import pywikibot
 import blib
-from blib import rmparam, getparam, msg, site, tname
+from blib import rmparam, getparam, msg, errandmsg, site, tname
 
 cs_decl_noun_slots = [
   "nom_s", "gen_s", "dat_s", "acc_s", "voc_s", "loc_s", "ins_s",
@@ -27,18 +27,19 @@ def compare_forms(origforms, replforms, pagemsg):
   for slot in set(replforms.keys() + origforms.keys()):
     if slot.endswith("_linked"):
       continue
+    displaycall = tempcall.replace("|json=1", "")
     if slot not in origforms:
       pagemsg("WARNING: for replacement %s, form %s=%s in replacement forms but missing in original forms" % (
-        tempcall, slot, replforms[slot]))
+        displaycall, slot, replforms[slot]))
       return False
     if slot not in replforms:
       pagemsg("WARNING: for predicted %s, form %s=%s in original forms but missing in replacement forms" % (
-        tempcall, slot, origforms[slot]))
+        displaycall, slot, origforms[slot]))
       return False
     origform = origforms[slot]
     if not compare_form(slot, origform, replforms[slot], pagemsg):
       pagemsg("WARNING: for predicted %s, form %s=%s in replacement forms but =%s in original forms" % (
-        tempcall, slot, replforms[slot], origform))
+        displaycall, slot, replforms[slot], origform))
       return False
   return True
 
@@ -46,8 +47,9 @@ def replace_decl(page, index, parsed, decl, declforms):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
-  pagemsg("Processing decl %s" % decl)
+  pagemsg("Processing decl {{cs-ndecl|%s}}" % decl)
   notes = []
+  saw_decl = False
   for t in parsed.filter_templates():
     tn = tname(t)
     forms = {}
@@ -55,22 +57,29 @@ def replace_decl(page, index, parsed, decl, declforms):
     if tn == "cs-decl-noun":
       number = ""
       getslots = cs_decl_noun_slots
+      saw_decl = True
     elif tn == "cs-decl-noun-sg":
       number = "sg"
       getslots = cs_decl_noun_sg_slots
+      saw_decl = True
     elif tn == "cs-decl-noun-pl":
       number = "pl"
       getslots = cs_decl_noun_pl_slots
+      saw_decl = True
     else:
+      if tn == "cs-ndecl":
+        saw_decl = True
       continue
 
     i = 1
     for slot in getslots:
       if slot:
-        form = getparam(t, i).strip()
-        if not form:
+        pref = re.sub("^(.).*(.)$", r"\1\2", slot)
+        vals = blib.fetch_param_chain(t, str(i), pref)
+        vals = [blib.remove_links(v).strip() for v in vals]
+        if not vals:
           continue
-        form = blib.remove_links(form)
+        form = ",".join(vals)
         # eliminate spaces around commas
         form = re.sub(r"\s*[,/]\s*", ",", form)
         forms[slot] = form
@@ -84,6 +93,9 @@ def replace_decl(page, index, parsed, decl, declforms):
       newt = unicode(t)
       pagemsg("Replaced %s with %s" % (origt, newt))
       notes.append("replace {{%s|...}} with %s" % (tn, newt))
+
+  if not saw_decl:
+    pagemsg("WARNING: Didn't see declension")
 
   return unicode(parsed), notes
 
@@ -106,6 +118,8 @@ def yield_decls():
 for index, pagename, decl in yield_decls():
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagename, txt))
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: %s" % (index, pagename, txt))
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagename, pagemsg, args.verbose)
   tempcall = "{{cs-ndecl|%s|json=1}}" % decl
@@ -124,6 +138,9 @@ for index, pagename, decl in yield_decls():
   lemma = predforms["nom_s"] if "nom_s" in predforms else predforms["nom_p"]
   real_pagename = re.sub(",.*", "", blib.remove_links(lemma))
   page = pywikibot.Page(site, real_pagename)
+  if not blib.safe_page_exists(page, errandpagemsg):
+    pagemsg("WARNING: Didn't find page; declension is {{cs-ndecl|%s}}" % decl)
+    continue
   def do_replace_decl(page, index, parsed):
     return replace_decl(page, index, parsed, decl, predforms)
   blib.do_edit(page, index, do_replace_decl, save=args.save, verbose=args.verbose,
