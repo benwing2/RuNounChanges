@@ -760,12 +760,15 @@ decls["hard-m"] = function(base, stems)
 	--   [[flanc]], [[kibuc]] "kibbutz", [[pokec]] "chat".
 	-- In the IJP tables, inanimate reducible nouns in -ček (and most in -cek, although there are many fewer) regularly
 	-- have both -ích and -ách in the locative plural, while similar animate nouns only have -ích. This applies even to
-	-- nouns like [[háček]] and [[koníček]] that can be either animate or inanimate.
-	local loc_p = base.animacy == "inan" and rfind(stems.vowel_stem, "[cč]k$") and {"ích", "ách"} or velar and "ích" or "ech"
+	-- nouns like [[háček]] and [[koníček]] that can be either animate or inanimate. Make sure to exclude nouns in -ck
+	-- such as [[comeback]] and [[joystick]], which have only -ích.
+	local loc_p =
+		base.animacy == "inan" and rfind(base.lemma, "[cč]ek$") and rfind(stems.vowel_stem, "[cč]k$") and {"ích", "ách"} or
+		velar and "ích" or "ech"
 	add_decl(base, stems, gen_s, dat_s, nil, voc_s, loc_s, "em",
-		-- loc_p in -ích (e.g. [[les]] "forest"; [[hotel]] "hotel"; [[práh]] "threshold", loc_p 'prazích') needs to be
-		-- given manually using <locplích>; it will automatically trigger the second palatalization; loc_p in -ách (e.g.
-		-- [[plech]] "metal plate") also needs to be given manually using <locplách>
+		-- loc_p in -ích not after velar stems (e.g. [[les]] "forest"; [[hotel]] "hotel") needs to be given manually
+		-- using <locplích>; it will automatically trigger the second palatalization; loc_p in -ách (e.g. [[plech]]
+		-- "metal plate") also needs to be given manually using <locplách>
 		nom_p, "ů", "ům", "y", loc_p, "y")
 end
 
@@ -1081,18 +1084,18 @@ decls["mixed-i-f"] = function(base, stems)
 	-- Use of ě vs E below is intentional. Contrast [[oběť]] dat pl 'obětem' (depalatalizing) with [[nit]] ins pl
 	-- 'nitěmi' (palatalizing). See comment above under apply_special_cases().
 	if base.mixedistem == "pěst" then
-		-- pěst, past, mast, lest [reducible], pelest, propust, plst/plsť [ins pl 'plstmi' for both], oběť, zeď [reducible;
-		-- ins pl 'zdmi'], paměť
+		-- pěst, past, mast, lest [reducible; ins pl 'lstmi'], pelest, propust, plst, oběť, zeď [reducible; ins pl
+		-- 'zdmi'], paměť [ins pl 'pamětmi/paměťmi]
 		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", {"ím", "Em"}, {"ích", "Ech"}, "mi"
 	elseif base.mixedistem == "moc" then
 		-- moc, nemoc, pomoc, velmoc; NOTE: pravomoc has -i/-e alternation in gen_s, nom_p
 		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", {"Em", "ím"}, {"Ech", "ích"}, "ěmi"
 	elseif base.mixedistem == "myš" then
-		-- myš, veš, hruď, měď, pleť, spleť, směs, smrt, step, odpověď [ins pl 'odpověď'mi/odpovědmi'], šeď,
-		-- závěť [ins pl 'závěťmi/závětmi']
+		-- myš, veš [reducible, ins pl vešmi], hruď, měď, pleť, spleť, směs, smrt, step, odpověď [ins pl 'odpověď'mi/odpovědmi'], šeď,
+		-- závěť [ins pl 'závěťmi/závětmi'], plsť [ins pl 'plstmi']
 		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", "ím", "ích", "mi"
 	elseif base.mixedistem == "noc" then
-		-- lež [reducible], noc, mosaz, rez, ves [ins pl 'vsemi'], mysl, sůl, běl, žluť
+		-- lež [reducible], noc, mosaz, rez [reducible], ves [reducible], mysl, sůl, běl, žluť
 		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", "ím", "ích", "ěmi"
 	elseif base.mixedistem == "žluč" then
 		-- žluč, moč, modř, čeleď, kapraď, záď, žerď, čtvrť/čtvrt, drť, huť, chuť, nit, pečeť, závrať, pouť, stať, ocel
@@ -2313,7 +2316,7 @@ local function determine_default_reducible(base)
 		return
 	end
 	if rfind(base.lemma, "isko$") then
-		-- e.g. [[středisko]] then
+		-- e.g. [[středisko]]
 		base.default_reducible = "mixed"
 		return
 	end
