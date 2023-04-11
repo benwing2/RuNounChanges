@@ -1,0 +1,1114 @@
+{{documentation subpage}}
+
+==Parameters==
+Normally there is only one parameter to specify, e.g. for {{m|cs|žena||woman, wife}}:
+:{{temp|cs-ndecl|f}}
+
+which produces
+
+{{cs-ndecl|f|pagename=žena}}
+
+In most cases, only the gender needs to be given, and the rest will be figured out. If the noun is masculine animate, specify <code>m.an</code>, e.g. for {{m|cs|muž}}:
+
+
+Note that the lemma is given followed by angle brackets, and an accent needs to be placed on the appropriate syllable (it can be omitted in monosyllabic words). In some cases, properties need to be given inside of angle brackets, for example for {{m|cs|брат||brother}}:
+
+:{{temp|cs-ndecl|брат<b.pr>}}
+
+which produces
+
+{{cs-ndecl|брат<b.pr>}}
+
+Here, we specify two properties: <code>b</code> (a stress pattern indicator, in this case specifying that the noun is end-stressed, i.e. the stress is on the endings rather than the stem) and <code>pr</code> (indicating that this is a ''personal'' noun, where the accusative is the same as the genitive rather than the nominative).
+
+The general format is the accented noun lemma (the nominative singular, or nominative plural for plural-only nouns), followed by a spec in angle brackets. The format of the spec is
+:<code><PROP.PROP.PROP...></code>
+i.e. one or more properties, separated by periods. All properties are optional.
+The following properties are recognized:
+* Gender: <code>M</code> for masculine, <code>F</code> for feminine, <code>MF</code> for nouns that can be either masculine or feminine, <code>N</code> for neuter. Most of the time this isn't needed, but it's required for certain nouns (e.g. most nouns ending in ''-ь'' and some nouns ending in ''-я'') to determine the correct declension type. Note that the gender must be given capitalized.
+* Stress pattern: <code>a</code>, <code>b</code>, <code>c</code>, <code>d</code>, <code>d'</code>, <code>e</code>, <code>f</code> or <code>f'</code>. These are based on Zaliznyak's Russian-language patterns. Multiple comma-separated stress patterns can be given. See below for more information.
+* Reducibility: <code>*</code> to indicate an alternation between a vowel (one of ''о'', ''е'', ''є'' or occasionally ''і'') and no vowel in the final syllable, where the vowel appears in endings that do not themselves contain a vowel (typically the nominative/accusative singular and/or the genitive plural). This code should be placed directly after or used in place of the stress pattern, e.g. <code>c*</code> to indicate a reducible noun with stress pattern ''c'', <code>b*,b</code> to indicate a noun with stress pattern ''b'' that can be either reducible or non-reducible, and just <code>*</code> to indicate a reducible noun with the default stress pattern.
+* Reversed genitive plural stress: <code>#</code> to indicate that the genitive plural stress is the opposite of what the stress pattern calls for. This code should be placed directly after or used in place of the stress pattern, e.g. <code>c#</code> to indicate a noun with stress pattern ''c'' and reversed genitive plural stress, <code>c*#</code> to indicate a reducible noun with stress pattern ''c'' and reversed genitive plural stress, <code>d#,d</code> to indicate a noun with stress pattern ''d'' that can have either reversed or normal genitive plural stress, and just <code>#</code> to indicate a noun with reversed genitive plural stress and the default stress pattern.
+* Animacy: <code>pr</code> for personal nouns, <code>anml</code> for animal nouns, <code>inan</code> for inanimate nouns. The default is almost always inanimate (except when <code>t</code> or <code>surname</code> are specified); animate nouns need an animacy code given.
+* Number: <code>sg</code> for singular-only nouns, <code>pl</code> for plural-only nouns. If unspecified, nouns have both singular and plural.
+* Softness/hardness:
+** <code>soft</code> to indicate soft endings for a noun ending in Cyrillic ''-р'';
+** <code>semisoft</code> to indicate semisoft endings for a noun ending in Cyrillic ''-р'';
+** <code>plsoft</code> to indicate soft plural endings, e.g. for {{m|cs|друг||friend}} (only works currently for masculine and feminine hard-stem nouns);
+** <code>plhard</code> to indicate hard plural endings, e.g. for {{m|cs|ім'я́||name}} (only works currently for neuters in ''-я'').
+* Vowel alternations:
+** <code>i</code> (a Latin-script ''i'', not a Cyrillic script ''i'') to indicate a change from Cyrillic ''о'' or ''е'' to ''і'' when the ending does not begin with a vowel;
+** <code>io</code> (a Latin-script ''io'') to indicate a change from ''і'' to ''о'' when the ending ''does'' begin with a vowel;
+** <code>ie</code> (a Latin-script ''ie'') to indicate a similar change from ''і'' to ''е'' when the ending begins with a vowel.
+* Special variants:
+** <code>in</code> to indicate that a noun ending in ''-ин'' (e.g. {{m|cs|кия́нин||Kievan}}, {{m|cs|християни́н||Christian}}) loses this ending in the plural;
+** <code>3rd</code> to indicate that a soft feminine plural-only noun is third-declension rather than first-declension (i.e. its singular would end in ''-ь'' or a consonant rather than ''-я'' or ''-а'');
+** <code>surname</code> to indicate that the noun is a surname, in which case the vocative singular can be the same as the nominative singular in addition to its normal form (this implies <code>pr</code>, as surnames normally refer to people);
+** <code>t</code> to indicate ''t''-stem neuter nouns, i.e. that a neuter noun ending in ''-я'' (e.g. {{m|cs|ягня́||lamb}}) has a stem ''-ят'' in most forms (this implies <code>anml</code>, as nouns of this form usually refer to the young of animals);
+** <code>en</code> to indicate ''en''-stem neuter nouns, i.e. that a neuter noun ending in ''-м'я'' has alternative forms utilizing a stem in ''-ен'' in most singular forms (e.g. {{m|cs|ви́м'я||udder}} with alternative genitive/dative/locative singular ''ви́мені'' and alternative instrumental singular ''ви́менем'').
+* Stem overrides:
+** <code>stem:STEM</code> to specify a different stem than the lemma's stem to use for endings beginning with a vowel;
+** <code>plstem:STEM</code> to specify a different stem to use in the plural.
+* Specific form overrides: Examples are <code>genu</code> to specify that the genitive singular ends in ''-у'', <code>locju:i</code> to specify that the locative singular ends in ''-ю'' or ''-і'', <code>vóce</code> to specify that the vocative singular ends in ''-е'' with stress on the stem (regardless of the accent pattern) and <code>genpl:земе́ль</code> to specify that the genitive plural has the value ''земе́ль''. These are explained more below.
+
+The properties can be given in any order, but it is recommended that the following order be used:
+# Gender
+# Stress pattern, reducibility, reversed genitive plural stress
+# Adjectival indicator
+# Animacy
+# Number
+# Softness/hardness
+# Vowel alternations
+# Special variants
+# Stem overrides
+# Specific form overrides
+
+==Gender==
+The gender can be specified using <code>M</code> for masculine, <code>F</code> for feminine, <code>MF</code> for nouns that can be either masculine or feminine, and <code>N</code> for neuter. The gender can usually be omitted, but is required in certain cases, e.g. with some nouns ending in ''-ь'' and some nouns ending in ''-я''. If the gender is omitted, it defaults as follows:
+# Nouns ending in a consonant default to masculine.
+# Nouns ending in a soft sign must have the gender explicitly given, except in the following cases:
+## Nouns ending in ''-ець'' and ''-єць'', stressed or unstressed, default to masculine.
+## Nouns ending in unstressed ''-тель'' default to masculine.
+## Nouns ending in unstressed ''-ість'' default to feminine.
+# Nouns ending in ''-а'' default to feminine.
+# Nouns ending in ''-о'' or ''-е'' default to neuter.
+# Nouns ending in ''-'я'' (e.g. {{m|cs|здоро́в'я||health}}, {{m|cs|переми́р'я||ceasefire}}, {{m|cs|ті́м'я||crown (of the head)}}) or in a double consonant + ''-я'' (e.g. {{m|cs|зна́чення||importance; meaning}}, {{m|cs|обли́ччя||face; character}}, {{m|cs|життя́||life}}) default to neuter.
+# Nouns with the code <code>t</code> (e.g. {{m|cs|ягня́||lamb}}, {{m|cs|порося́||piglet}}) default to neuter.
+# Other nouns in ''-я'' default to feminine.
+The gender needs to be explicitly given in the following cases:
+# Nouns ending in a soft sign other than those mentioned above; e.g. {{m|cs|готе́ль||hotel}} (masculine), {{m|cs|моде́ль||model}} (feminine).
+# Masculine or feminine nouns ending in ''-'я'' (e.g. {{m|cs|сім'я́||family}}, which is feminine) or in a double consonant + ''-я'' (e.g. {{m|cs|стаття́||article}}, which is feminine, and {{m|cs|суддя́||judge}}, which is either masculine or feminine).
+# Feminine nouns ending in a consonant; e.g. {{m|cs|любо́в||love}}, {{m|cs|ніч||night}}.
+# Neuter nouns ending in ''-я'' other than the two types mentioned above; e.g. {{m|cs|зап'я́стя||wrist}}, {{m|cs|пові́тря||air}}.
+
+Examples:
+
+1. {{m|cs|автомобі́ль||car}} (masculine) ends in a soft sign, and so needs the gender to be specified:
+
+:{{temp|cs-ndecl|автомобі́ль<M>}}
+
+which produces
+
+{{cs-ndecl|автомобі́ль<M>}}
+
+2. {{m|cs|любо́в||love}} is feminine and ends in a consonant, and so needs the gender to be specified:
+
+:{{temp|cs-ndecl|любо́в<F.sg>}}
+
+which produces
+
+{{cs-ndecl|любо́в<F.sg>}}
+
+3. {{m|cs|зап'я́стя||wrist}} is neuter but does not end in a double consonant + ''-я'', and so needs the gender to be specified:
+
+:{{temp|cs-ndecl|зап'я́стя<N>}}
+
+which produces
+
+{{cs-ndecl|зап'я́стя<N>}}
+
+4. {{m|cs|мужчи́на||man}} is masculine but ends in ''-а'', which defaults to feminine. In this case, masculine and feminine nouns in ''-а'' have identical declensions, so the gender doesn't need to be given, but it's a good idea to specify it anyway, because it is needed in {{temp|uk-noun}} (when it is modified to support syntax similar to {{temp|cs-ndecl}}, parallel to {{temp|ru-noun+}}).
+
+:{{temp|cs-ndecl|мужчи́на<M.pr>}}
+
+which produces
+
+{{cs-ndecl|мужчи́на<M.pr>}}
+
+==Stress patterns and reducibility==
+The following table specifies where the stress falls (stem or ending):
+{| class="wikitable"
+!
+! colspan="20" style="text-align: center; font-weight:bold;" | The Stress Falls on:
+|-
+| style="font-weight:bold;" | Pattern Letter
+| colspan="2" style="text-align: center; font-weight:bold;" | a
+| colspan="2" style="text-align: center; font-weight:bold;" | b
+| colspan="2" style="text-align: center; font-weight:bold;" | c
+| colspan="2" style="text-align: center; font-weight:bold;" | d
+| colspan="2" style="text-align: center; font-weight:bold;" | d'
+| colspan="2" style="text-align: center; font-weight:bold;" | e
+| colspan="2" style="text-align: center; font-weight:bold;" | f
+| colspan="2" style="text-align: center; font-weight:bold;" | f'
+|-
+| style="font-weight:bold;" | Number
+| style="text-align: center; font-weight:bold;" | sg
+| style="text-align: center; font-weight:bold;" | pl
+| style="text-align: center; font-weight:bold;" | sg
+| style="text-align: center; font-weight:bold;" | pl
+| style="text-align: center; font-weight:bold;" | sg
+| style="text-align: center; font-weight:bold;" | pl
+| style="text-align: center; font-weight:bold;" | sg
+| style="text-align: center; font-weight:bold;" | pl
+| style="text-align: center; font-weight:bold;" | sg
+| style="text-align: center; font-weight:bold;" | pl
+| style="text-align: center; font-weight:bold;" | sg
+| style="text-align: center; font-weight:bold;" | pl
+| style="text-align: center; font-weight:bold;" | sg
+| style="text-align: center; font-weight:bold;" | pl
+| style="text-align: center; font-weight:bold;" | sg
+| style="text-align: center; font-weight:bold;" | pl
+|-
+| style="font-weight:bold;" | Nom
+| stem
+| stem
+| ending
+| ending
+| stem
+| ending
+| ending
+| stem
+| ending
+| stem
+| stem
+| '''stem'''
+| ending
+| '''stem'''
+| ending
+| '''stem'''
+|-
+| style="font-weight:bold;" | Acc
+| stem
+|
+| ending
+|
+| stem
+|
+| ending
+|
+| '''stem'''
+|
+| stem
+|
+| ending
+|
+| '''stem'''
+|
+|-
+| style="font-weight:bold;" | Gen
+| stem
+| stem
+| ending
+| ending
+| stem
+| ending
+| ending
+| stem
+| ending
+| stem
+| stem
+| ending
+| ending
+| ending
+| ending
+| ending
+|-
+| style="font-weight:bold;" | Dat
+| stem
+| stem
+| ending
+| ending
+| stem
+| ending
+| ending
+| stem
+| ending
+| stem
+| stem
+| ending
+| ending
+| ending
+| ending
+| ending
+|-
+| style="font-weight:bold;" | Ins
+| stem
+| stem
+| ending
+| ending
+| stem
+| ending
+| ending
+| stem
+| ending
+| stem
+| stem
+| ending
+| ending
+| ending
+| ending
+| ending
+|-
+| style="font-weight:bold;" | Loc
+| stem
+| stem
+| ending
+| ending
+| stem
+| ending
+| ending
+| stem
+| ending
+| stem
+| stem
+| ending
+| ending
+| ending
+| ending
+| ending
+|-
+| style="font-weight:bold;" | Voc
+|
+| stem
+|
+| ending
+|
+| ending
+|
+| stem
+|
+| stem
+|
+| '''stem'''
+|
+| '''stem'''
+|
+| '''stem'''
+|-
+| style="font-weight:bold;" | Example
+| colspan="2" style="text-align: center;" | {{m|cs|бана́н}}
+| colspan="2" style="text-align: center;" | {{m|cs|брат}}
+| colspan="2" style="text-align: center;" | {{m|cs|чорт}}
+| colspan="2" style="text-align: center;" | {{m|cs|вода́}}
+| colspan="2" style="text-align: center;" | {{m|cs|середа́}}
+| colspan="2" style="text-align: center;" | {{m|cs|смерть}}
+| colspan="2" style="text-align: center;" | {{m|cs|щока́}}
+| colspan="2" style="text-align: center;" | {{m|cs|рука́}}
+|}
+
+<br>
+'''NOTE''': Boldfaced cases differ from the other cases in the same number (singular or plural).
+
+The accusative plural is left out in the above table because it is derived from either the nominative plural, genitive plural or both, depending on the noun's animacy. The vocative singular is left out because it is frequently stem-stressed even when the remaining singular cases are ending-stressed. (Whether or not this special case applies depends on the particular declension and sometimes other factors.)
+
+An example needing the stress pattern specified is {{m|cs|каву́н||watermelon}}, with stress pattern b (genitive singular ''кавуна́'', nominative plural ''кавуни́'', etc.):
+
+:{{temp|cs-ndecl|каву́н&lt;b>}}
+
+which produces
+
+{{cs-ndecl|каву́н<b>}}
+
+Some nouns are ''reducible'', meaning they have an alternation between a vowel (''о'', ''е'', ''є'' or occasionally ''і'') before the final consonant in forms where the ending does ''not'' begin with a vowel, and no vowel in forms where the ending does begin with a vowel. The forms that use the unreduced stem variant are the nominative singular of masculine nouns; the accusative singular of inanimate masculine nouns; the genitive plural of feminine nouns in ''-а'' and ''-я'', and of neuter nouns in general; and (theoretically) the nominative, accusative and instrumental singular of third-declension feminine nouns. All other forms use the reduced stem variant.
+
+An example is {{m|cs|све́кор||wife's father-in-law}}, where most forms use a stem ''свекр-'' (genitive singular ''све́кра'', nominative plural ''све́кри'', etc.):
+
+:{{temp|cs-ndecl|све́кор<*.pr>}}
+
+which produces
+
+{{cs-ndecl|све́кор<*.pr>}}
+
+If both a stress pattern and the reducible indicator need to be given, they should be combined, as with {{m|cs|за́єць||hare}} (reduced stem ''зайц-'', genitive singular ''за́йця'', nominative plural ''зайці́'', etc.):
+
+:{{temp|cs-ndecl|за́єць<c*.anml>}}
+
+which produces
+
+{{cs-ndecl|за́єць<c*.anml>}}
+
+Multiple stress patterns can be given, comma-separated. An example needing this is {{m|cs|горі́лка||vodka}}, with nominative plural either ''горі́лки'' (stem-stressed) or ''горілки́'' (ending-stressed):
+
+:{{temp|cs-ndecl|горі́лка<a*,c*>}}
+
+which produces
+
+{{cs-ndecl|горі́лка<a*,c*>}}
+
+This noun is reducible because the genitive plural is ''горі́лок'' or ''горіло́к''.
+
+The default stress pattern is as follows:
+* The default is <code>b</code> in the following cases:
+*# The lemma is plural-only and ends in a stressed vowel (e.g. {{m|cs|вуста́||mouth, lips}}).
+*# The lemma is masculine and ends in stressed ''-о́'' or ''-е́'' (e.g. {{m|cs|Петро́||Peter}}).
+*# The lemma is neuter and ends in stressed ''-я́'' or ''-а́'' (e.g. {{m|cs|здання́||opinion}}, {{m|cs|порося́||piglet}}, {{m|cs|лоша́||foal}}, {{m|cs|ім'я́||name}}).
+*# The lemma is reducible and the stress is on the reducible vowel (e.g. {{m|cs|замо́к||lock}}, {{m|cs|стіле́ць||pencil}}).
+* Otherwise, if the lemma ends in a stressed vowel (which includes all feminines, and all neuters in ''-о́'' and ''-е́''), the default is <code>d</code>.
+* Otherwise, the default is <code>a</code>.
+
+==Reversed genitive plural stress==
+Several nouns have unexpected stress in the genitive plural. This could be controlled using an override, but because of its commonness, a shortcut is available using the code <code>#</code>. This code should be placed directly after the stress pattern, as with the reducible code <code>*</code>. If both <code>*</code> and <code>#</code> need to be given, either order is possible, but by convention the order <code>*#</code> should be used. Examples:
+
+Examples:
+
+1. {{m|cs|о́бласть||oblast, province}} is stem-stressed everywhere but in the genitive plural, which has the form ''областе́й'' instead of expected ''*о́бластей''. This can be specified as follows:
+
+:{{temp|cs-ndecl|о́бласть<F.#>}}
+
+which produces
+
+{{cs-ndecl|о́бласть<F.#>}}
+
+2. {{m|cs|ма́сло||butter}} is stem-stressed in the singular and end-stressed in the plural (i.e. stress pattern <code>c</code>), except for the genitive plural, which has the form ''ма́сел'' instead of expected ''*масе́л''. This can be specified as follows:
+
+:{{temp|cs-ndecl|ма́сло<c*#>}}
+
+which produces
+
+{{cs-ndecl|ма́сло<c*#>}}
+
+Here we also supply <code>*</code> to indicate that the noun is reducible (i.e. it has an extra vowel in the genitive plural, whose ending does not begin with a vowel).
+
+3. {{m|cs|голова́||head}} mostly follows stress pattern <code>d'</code> (end-stressed in the singular except for the accusative singular, and stem-stressed in the plural), but has unexpected genitive plural ''голі́в'' instead of ''*го́лів'' or ''*го́лов''. Here, there is also an ''о''-''і'' vowel alternation, which is specified using the <code>i</code> code (described later). This can be specified as follows:
+
+:{{temp|cs-ndecl|голова́<d'#.i>}}
+
+which produces
+
+{{cs-ndecl|голова́<d'#.i>}}
+
+Note that technically, the ''і'' in the genitive plural is part of the stem, and there is no ending. In the case where <code>#</code> calls for ending stress and there is no ending to be stressed, the stress moves onto the last syllable of the stem.
+
+3. {{m|cs|сестра́||sister}} follows stress pattern <code>d</code> and is reducible, hence the expected genitive plural is ''се́стер''. This does occur, but so does the opposite-stress form ''сесте́р''. To specify this, use a specification as follows:
+
+:{{temp|cs-ndecl|сестра́<*,*#.pr>}}
+
+which produces
+
+{{cs-ndecl|сестра́<*,*#.pr>}}
+
+Here we specify two stress indicators, <code>*</code> (reducible and with normal genitive plural stress) and <code>*#</code> (reducible with reversed genitive plural stress). Because the stress pattern itself is left out, it defaults to <code>d</code> (the default for feminines with ending stress in the lemma form). We also have to specify the animacy indicator <code>pr</code> because this is a personal noun (see the next section).
+
+==Adjectival indicator==
+To indicate that a noun declines as if it were an adjective, use <code>+</code>. An example is {{m|cs|лю́тий||February}} (genitive singular ''лю́того''):
+
+:{{temp|cs-ndecl|лю́тий<+>}}
+
+which produces
+
+{{cs-ndecl|лю́тий<+>}}
+
+Other indicators, such as animacy and number, can be included as necessary. An example is {{m|cs|вагі́тна||pregnant woman}}, which is a personal noun:
+
+:{{temp|cs-ndecl|вагі́тна<+.pr>}}
+
+which produces
+
+{{cs-ndecl|вагі́тна<+.pr>}}
+
+Soft adjectival nouns will automatically be recognized by their ending, such as with {{m|cs|майбу́тнє||the future}} (genitive singular ''майбу́тнього''):
+
+:{{temp|cs-ndecl|майбу́тнє<+.sg>}}
+
+which produces
+
+{{cs-ndecl|майбу́тнє<+.sg>}}
+
+==Animacy==
+Animacy is specified using <code>pr</code> for personal nouns and <code>anml</code> for animal nouns. The code <code>inan</code> for inanimate nouns can be given, but is essentially never needed because nouns normally default to inanimate. The only exception is when the neuter variant code <code>t</code> is given; all such nouns refer to the young of animals, and default to <code>anml</code> animacy.
+
+Examples:
+
+1. {{m|cs|бана́н||banana}} is inanimate, so the animacy doesn't need to be given:
+
+:{{temp|cs-ndecl|бана́н<>}}
+
+which produces
+
+{{cs-ndecl|бана́н<>}}
+
+2. {{m|cs|ри́ба||fish}} is an animal noun, so the animacy code <code>anml</code> needs to be specified:
+
+:{{temp|cs-ndecl|ри́ба<anml>}}
+
+which produces
+
+{{cs-ndecl|ри́ба<anml>}}
+
+Note here that the accusative plural has two forms, one identical to the nominative plural and the other identical to the genitive plural; this is characteristic of animal nouns.
+
+3. {{m|cs|біс||demon}} is a personal noun (human-like mythological creatures are considered personal; similarly, animal-like mythological creatures such as dragons are considered animal nouns). Thus the animacy code <code>pr</code> needs to be specified:
+
+:{{temp|cs-ndecl|біс<pr>}}
+
+which produces
+
+{{cs-ndecl|біс<pr>}}
+
+Note here that the accusative singular and plural are identical to the genitive singular and plural, respectively. All personal nouns behave this way in the plural, and all masculine personal and animal nouns behave this way in the singular.
+
+4. {{m|cs|порося́||piglet}} is an animal noun of the ''t''-stem type (genitive singular ''порося́ти'', nominative plural ''порося́та''). Once <code>t</code> is specified, the animacy doesn't need to be given because code <code>t</code> implies animacy <code>anml</code>:
+
+:{{temp|cs-ndecl|порося́<t>}}
+
+which produces
+
+{{cs-ndecl|порося́<t>}}
+
+5. {{m|cs|дівча́||girl (endearing)}} is a personal noun of the ''t''-stem type (genitive singular ''дівча́ти'', nominative plural ''дівча́та''). Code <code>t</code> implies <code>anml</code>, so <code>pr</code> must be given:
+
+:{{temp|cs-ndecl|дівча́<pr.t>}}
+
+which produces
+
+{{cs-ndecl|дівча́<pr.t>}}
+
+==Number==
+By default, all nouns are singular/plural, including proper nouns. (Many proper nouns, such as names and surnames, have plural forms.) To indicate that a noun is singular-only, use <code>sg</code>, as with {{m|cs|ха́ос||chaos, mess}}:
+
+:{{temp|cs-ndecl|ха́ос<sg>}}
+
+which produces
+
+{{cs-ndecl|ха́ос<sg>}}
+
+Note that singular-only nouns are sometimes declined differently from singular/plural nouns. For example, for masculine nouns the genitive singular defaults to ''-у'' instead of ''-а'', and the locative singular defaults to either ''-у'' or ''-і'' instead of just ''-і''.
+
+To indicate that a noun is plural-only, use <code>pl</code> and give the lemma in its plural form, as with {{m|cs|вуста́||mouth, lips}}:
+
+:{{temp|cs-ndecl|вуста́<pl>}}
+
+which produces
+
+{{cs-ndecl|вуста́<pl>}}
+
+In the above case, the module automatically knows that the noun is neuter by its ending. However, if the lemma ends in ''-и'' or ''-і'', you will have to give the gender explicitly (<code>M</code> or <code>F</code>), so that the module knows how to generate the genitive plural. If you are not sure of the gender, look for a related singular/plural noun or for cognate nouns in other languages (especially Russian), or base the gender on the genitive plural (<code>M</code> if the genitive plural ends in ''-ів'', <code>F</code> if the genitive plural ends in nothing, in ''-ь'' or in ''-ей''). An example is {{m|cs|джу́нглі||jungle}}, which should be indicated as masculine because its genitive plural is ''джу́нглів'':
+
+:{{temp|cs-ndecl|джу́нглі<M.pl>}}
+
+which produces
+
+{{cs-ndecl|джу́нглі<M.pl>}}
+
+Another example is {{m|cs|коно́плі||hemp}}, which is shown to be feminine by its genitive plural ''конопе́ль'' as well as by the cognate {{m|ru|конопля́}} in Russian, which is singular/plural and feminine:
+
+:{{temp|cs-ndecl|коно́плі<F.*#.pl>}}
+
+which produces
+
+{{cs-ndecl|коно́плі<F.*#.pl>}}
+
+Note here that the noun is reducible, with reversed genitive plural stress, as indicated by <code>*#</code>.
+
+Some feminine plural-only nouns belong to the third declension, i.e. their singular equivalent would end in a consonant or ''-ь'' rather than ''-а'' or ''-я''. This is shown most clearly by a genitive plural in ''-ей''. An example is {{m|cs|две́рі||door(s)}}, with genitive plural ''двере́й'' (compare {{cog|ru|дверь}}). This should be indicated using the code <code>3rd</code>. This automatically implies <code>F</code>, which doesn't need to be given explicitly:
+
+:{{temp|cs-ndecl|две́рі<#.pl.3rd.insplýma:mý>}}
+
+which produces
+
+{{cs-ndecl|две́рі<#.pl.3rd.insplýma:mý>}}
+
+Here, the genitive plural has reversed stress (''двере́й'' instead of expected ''*две́рей''), and the instrumental plural is irregular.
+
+==Softness and hardness==
+Most of the time, whether a noun is soft, semisoft or hard can be determined automatically from the ending. Occasionally, however, this isn't the case (e.g. with nouns ending in ''-р''). In addition, some nouns are hard in the singular and soft in the plural, or vice-versa. Special codes are provided for these cases.
+
+By default, nouns in ''-р'' are hard. To specify that such a noun is soft, use <code>soft</code>. An example is {{m|cs|бібліоте́кар||librarian}} (genitive singular ''бібліоте́каря'', nominative plural ''бібліоте́карі'', etc.):
+
+:{{temp|cs-ndecl|бібліоте́кар<pr.soft>}}
+
+which produces
+
+{{cs-ndecl|бібліоте́кар<pr.soft>}}
+
+A few nouns in ''-р'' are semisoft, meaning they take endings similar to nouns that end in a hushing consonant (one of ''ч ж ш щ''). An example is {{m|cs|батя́р||ruffian}} (genitive singular ''батяра́'' but instrumental singular ''батяре́м'', nominative plural ''батярі́'', etc.):
+
+:{{temp|cs-ndecl|батя́р<b.pr.semisoft>}}
+
+which produces
+
+{{cs-ndecl|батя́р<b.pr.semisoft>}}
+
+A fourth type of noun in ''-р'' is hard except for the nominative plural, which is ''-і'' rather than expected ''*-и''. An example is {{m|cs|кома́р||mosquito}}. To indicate this type, use an override (see below):
+
+:{{temp|cs-ndecl|кома́р<b.anml.nompli>}}
+
+which produces
+
+{{cs-ndecl|кома́р<b.anml.nompli>}}
+
+A small number of nouns are hard in the singular but soft in the plural, or vice-versa. These nouns generally have other irregularities, such as having a different stem in the plural. An example is {{m|cs|друг||friend}}, which has soft endings in the plural based off of a stem ''друз-'' (nominative plural ''дру́зі'', instrumental plural ''дру́зями'', etc.):
+
+:{{temp|cs-ndecl|друг<pr.plsoft.plstem:друз.voce>}}
+
+which produces
+
+{{cs-ndecl|друг<pr.plsoft.plstem:друз.voce>}}
+
+Here we specify:
+# <code>pr</code> to indicate that this is a personal noun (accusative singular and plural are the same as the genitive singular and plural, respectively);
+# <code>plsoft</code> to indicate that this noun has soft endings in the plural;
+# <code>plstem:друз</code> to specify the irregular plural stem;
+# <code>voce</code> to override the vocative singular, giving it an ending ''-е'' instead of the normal ending ''-у'' for nouns ending in a velar. (This automatically triggers the {{w|Slavic first palatalization}}, giving the form ''дру́же''. See below under [[#Automatic palatalization of velars|automatic palatalization of velars]].)
+
+==Vowel alternations==
+Similar to reducible alternations, some nouns have alternations between ''і'' and either ''о'' or ''е''. Generally the ''і'' appears in the last syllable of a word with an ending not beginning with a vowel (similar to the reducible variant where a fill vowel is present), and the ''о'' or ''е'' appears in its place with an ending beginning with a vowel (similar to the reducible variant with no fill vowel). The cognate words in Russian and Polish generally have an ''о'' or ''е'' in all forms, showing that the ''і'' is a Ukrainian-specific development. An example is {{m|cs|о́бід||rim}}, with genitive singular ''о́бода'', nominative plural ''о́боди'', etc. This is indicated using <code>io</code> to specify that an ''і'' in the lemma changes into an ''о'' in forms with an ending beginning with a vowel:
+
+:{{temp|cs-ndecl|о́бід<io>}}
+
+which produces
+
+{{cs-ndecl|о́бід<io>}}
+
+In some nouns, the sequence ''лі'' changes to ''льо'' rather than ''ло''. To indicate this change, use <code>ijo</code>, as in {{m|cs|вертолі́т||helicopter}}, with genitive singular ''вертольо́та'':
+
+:{{temp|cs-ndecl|вертолі́т<ijo>}}
+
+which produces
+
+{{cs-ndecl|вертолі́т<ijo>}}
+
+Examples of other nouns with this change are {{m|cs|лід||ice}}, {{m|cs|ко́лір||color}}. Note that in some nouns, ''лі'' changes to ''ло'', e.g. {{m|cs|плід||fruit}}, {{m|cs|пліт||raft}}, {{m|cs|глід||hawthorn}}, {{m|cs|барлі́г||bear's lair}}.
+
+To indicate that the ''і'' changes into an ''е'', use <code>ie</code>, as in {{m|cs|ведмі́дь||bear}}, with genitive singular ''ведме́дя'':
+
+:{{temp|cs-ndecl|ведмі́дь<M.anml.ie>}}
+
+which produces
+
+{{cs-ndecl|ведмі́дь<M.anml.ie>}}
+
+The code <code>ie</code> should also be used for nouns with orthographic ''ї'' that changes into ''є'', as in {{m|cs|Ки́їв||Kiev}}, with genitive singular ''Ки́єва'':
+
+:{{temp|cs-ndecl|Ки́їв<sg.ie.datu>}}
+
+which produces
+
+{{cs-ndecl|Ки́їв<sg.ie.datu>}}
+
+(<code>datu</code> is a [[#Specific form overrides|specific form override]].)
+
+Feminines in ''-а'' and ''-я'', and neuters in ''-о'', ''-е'' and ''-я'', that have a vowel alternation will have it in the opposite direction, with an ''о'' or ''е'' in the lemma changing into an ''і'' in the genitive plural. This should be indicated using <code>i</code>, as in {{m|cs|шко́ла||school}}, with genitive plural ''шкіл'':
+
+:{{temp|cs-ndecl|шко́ла&lt;i>}}
+
+which produces
+
+{{cs-ndecl|шко́ла<i>}}
+
+Note that feminines ending in a consonant or in ''-ь'' will have the same sort of alternation as in masculines, for example {{m|cs|річ||thing}} with genitive ''ре́чі'':
+
+:{{temp|cs-ndecl|річ<F.e.ie>}}
+
+which produces
+
+{{cs-ndecl|річ<F.e.ie>}}
+
+Such nouns have the ''і'' variant not only in the nominative and accusative singular but also in the instrumental singular, here ''рі́ччю''.
+
+Some reducible masculine nouns have an ''о'' or ''е'' in the lemma that changes into an ''і'' in most other forms, the opposite of the pattern of the majority of masculine nouns. An example is {{m|cs|вдове́ць||widower}}, with genitive singular ''вдівця́'':
+
+:{{temp|cs-ndecl|вдове́ць<*.pr.i>}}
+
+which produces
+
+{{cs-ndecl|вдове́ць<*.pr.i>}}
+
+==Special variants==
+There are various miscellaneous codes that can be used to indicate special variant declensions.
+
+===Nouns in ''-ин''===
+Some nouns in ''-ин'' lose this ending in the plural. An example is {{m|cs|кия́нин||Kievan}} (nominative plural ''кия́ни''). For these nouns, use <code>in</code>:
+
+:{{temp|cs-ndecl|кия́нин<pr.in>}}
+
+which produces
+
+{{cs-ndecl|кия́нин<pr.in>}}
+
+These nouns have an empty genitive plural ending in place of normal ''-ів'' (e.g. ''кия́н'').
+
+If the stress is on the ending, it automatically moves to the preceding syllable in the plural. An example is {{m|cs|християни́н||Christian}} (nominative plural ''христия́ни''). See [[#Spec alternations#spec alternations]] for an example showing how this noun is declined.
+
+===Third-declension feminine nouns===
+Third-declension feminine nouns are those whose singular ends in ''-ь'' or a consonant rather than ''-я'' or ''-а''. Normally this is autodetected, but this is not possible in the plural, where the ending ''-і'' is the same as for nouns ending in ''-я''. To indicate this type of noun, use <code>3rd</code>. See the section on [[#Number|number]] for an example.
+
+===Surnames===
+Use <code>surname</code> to indicate that the noun is a surname, in which case the vocative singular can be the same as the nominative singular in addition to its normal form. An example is {{m|cs|Януко́вич||Yanukovych}}:
+
+:{{temp|cs-ndecl|Януко́вич<surname>}}
+
+which produces
+
+{{cs-ndecl|Януко́вич<surname>}}
+
+The use of <code>surname</code> automatically implies <code>pr</code>, since surnames almost always refer to people and hence are personal nouns.
+
+===t-stem neuters===
+Use <code>t</code> to indicate a ''t''-stem neuter noun, i.e. a neuter noun that ends in ''-я'' and has a stem ''-ят'' in most forms. An example is {{m|cs|ягня́||lamb}} (genitive singular ''ягня́ти'', nominative plural ''ягня́та''):
+
+:{{temp|cs-ndecl|ягня́<t>}}
+
+which produces
+
+{{cs-ndecl|ягня́<t>}}
+
+Note that <code>t</code> automatically implies <code>anml</code> and <code>N</code>, as nouns of this form are always neuter and usually refer to the young of animals. An exception where animacy <code>pr</code> needs to be given is {{m|cs|дівча́||girl (endearing)}}, which is a personal ''t''-stem neuter; see [[#Animacy|animacy]] for the declension of this noun. Another such exception is {{m|cs|курча́та||small cracks in the weathered skin of the feet, hands or face}} (literally "young chickens"; plural of {{m|cs|курча́||chick, young chicken}}). This can be indicated as follows:
+
+:{{temp|cs-ndecl|курча́та<pl.inan.t>}}
+
+which produces
+
+{{cs-ndecl|курча́та<pl.inan.t>}}
+
+===en-stem neuters===
+Use <code>en</code> to indicate an ''en''-stem neuter noun, i.e. a neuter noun that ends in ''-м'я'' and has an alternative stem ''-ен'' in most forms. An example is {{m|cs|ви́м'я||udder}} with alternative genitive/dative/locative singular ''ви́мені'' and alternative instrumental singular ''ви́менем'':
+
+:{{temp|cs-ndecl|ви́м'я<en>}}
+
+which produces
+
+{{cs-ndecl|ви́м'я<en>}}
+
+As with <code>t</code>, <code>en</code> automatically implies <code>N</code>.
+
+==Stem overrides==
+Some nouns have an irregular stem compared with the lemma, either in all forms whose ending begins with a vowel or in all plural forms. An example of the former is {{m|cs|ти́ждень||week}}, with stem ''тижн-'' (e.g. genitive singular ''ти́жня'', nominative plural ''ти́жні''). To specify this, use <code>stem:STEM</code>:
+
+:{{temp|cs-ndecl|ти́ждень<M.*.stem:тижн>}}
+
+which produces
+
+{{cs-ndecl|ти́ждень<M.*.stem:тижн>}}
+
+Note here that we specify <code>*</code> to indicate a reducible noun, even though we override the stem. It's not actually necessary to specify <code>*</code>, but it affects the categorization and what is displayed in the title bar.
+
+Some nouns, especially neuter nouns, have a distinct stem in the plural. An example is {{m|cs|де́рево||tree}}, with plural stem ''дере́в-'' (note the stress), e.g. nominative plural ''дере́ва''. To specify this, use <code>plstem:STEM</code>:
+
+:{{temp|cs-ndecl|де́рево<plstem:дере́в>}}
+
+which produces
+
+{{cs-ndecl|де́рево<plstem:дере́в>}}
+
+==Specific form overrides==
+Specific forms can be overridden. The way to specify this is either <code>SLOT''ENDING:ENDING:...''</code> to specify the ending(s) of a given slot (i.e. a case/number combination), <code>SLOT:''FORM:FORM:...''</code> to specify the whole form(s) of a given slot. Note the difference: When specifying endings, attach the ending(s) directly to the slot name, while when specifying forms, separate the slot name and form(s) with a colon. In both cases, separate endings and forms from each other using a colon.
+
+===Ending overrides===
+Examples of override is <code>gena</code>, which specifies that the genitive singular ends in ''-a''. This particular override is extremely frequent, as entire classes of masculine nouns require genitive in ''-у'' instead of the default ''-а''. An example is {{m|cs|вокза́л||train station}}:
+
+:{{temp|cs-ndecl|вокза́л<genu>}}
+
+which produces
+
+{{cs-ndecl|вокза́л<genu>}}
+
+Normally, an ending override overrides the ending itself but not the stress pattern, which remains as it would normally be. For example, when <code>genu</code> is used with a noun of stress pattern <code>b</code>, the ending will be stressed, as is normal for this stress pattern. An example is {{m|cs|бур'я́н||weed}}:
+
+:{{temp|cs-ndecl|бур'я́н<b.genu>}}
+
+which produces
+
+{{cs-ndecl|бур'я́н<b.genu>}}
+
+To explicitly specify ending stress, place an accent on the ending, as with {{m|cs|вид||face, appearance}}, which is stem-stressed (pattern <code>a</code>) except that it has an irregular locative ''виду́'':
+
+:{{temp|cs-ndecl|вид<genu.locú>}}
+
+which produces
+
+{{cs-ndecl|вид<genu.locú>}}
+
+To explicitly specify stem stress when the stress pattern calls for ending stress, place an accent on the vowel of the slot name, as with {{m|cs|суд||court (of law)}}, which is ending-stressed (pattern <code>b</code>) except that it has an irregular genitive ''су́ду'':
+
+:{{temp|cs-ndecl|суд<b.génu>}}
+
+which produces
+
+{{cs-ndecl|суд<b.génu>}}
+
+As mentioned above, separate multiple endings with a colon, as with {{m|cs|очере́т||reed}}, which irregularly has locative singular either ''очере́ту'' or ''очере́ті'' and nominative plural either ''очере́та'' or ''очере́ти'':
+
+:{{temp|cs-ndecl|очере́т<locu:i.nompla:y>}}
+
+which produces
+
+{{cs-ndecl|очере́т<locu:i.nompla:y>}}
+
+In more complicated cases, a given slot can be listed more than once. For example, {{m|cs|стіл||table}} mostly follows stress pattern <code>b</code>, but has irregular genitive either ''стола́'' or ''сто́лу''. This can be specified as follows:
+
+:{{temp|cs-ndecl|стіл<b.io.gena.génu.loci:u>}}
+
+which produces
+
+{{cs-ndecl|стіл<b.io.gena.génu.loci:u>}}
+
+Note that for clarity, the genitive singular overrides could also be given as <code>gená.génu</code> to make the stress pattern of these forms completely clear.
+
+===Full overrides===
+Most irregularities in Ukrainian nouns involve irregular endings, but occasionally an irregular stem appears as well. If the irregular stem appears throughout the plural, or throughout the singular and plural except for the lemma, a stem override can be used (see above), but if the irregular stem is in only one or two forms, a full form override must be used. An example is {{m|cs|стаття́||article, item}}, with irregular genitive plural ''стате́й'':
+
+:{{temp|cs-ndecl|стаття́<F.b.genpl:стате́й>}}
+
+which produces
+
+{{cs-ndecl|стаття́<F.b.genpl:стате́й>}}
+
+Here we specify the gender <code>F</code> (otherwise the noun would be inferred as neuter), and the stress pattern <code>b</code> (otherwise the noun would be inferred as pattern <code>d</code>).
+
+Another example involving the genitive plural is {{m|cs|вівця́||sheep}}, with irregular genitive plural ''ове́ць'':
+
+:{{temp|вівця́<*.anml.genpl:ове́ць>}}
+
+which produces
+
+{{cs-ndecl|вівця́<*.anml.genpl:ове́ць>}}
+
+===Null and missing overrides===
+To specify that a given form has a null ending, use <code>-</code> as the ending. An example is {{m|cs|хоза́р||Khazar}}, which has genitive plural either ''хоза́р'' (with a null ending) or ''хоза́рів'' (with the regular ending ''-ів''):
+
+:{{temp|хоза́р<pr.genpl-:iv>}}
+
+which produces
+
+{{cs-ndecl|хоза́р<pr.genpl-:iv>}}
+
+When <code>-</code> is used in a full override, it indicates that this particular form is entirely missing. An example is {{m|cs|ага́||aga, agha (Turkish honorific)}}, which per [https://goroh.pp.ua/%D0%A1%D0%BB%D0%BE%D0%B2%D0%BE%D0%B7%D0%BC%D1%96%D0%BD%D0%B0/%D0%B0%D0%B3%D0%B0 Goroh Slovozmina] has no genitive plural:
+
+:{{temp|cs-ndecl|ага́<b.pr.genpl:->}}
+
+which produces
+
+{{cs-ndecl|ага́<b.pr.genpl:->}}
+
+Note the difference between this and the preceding example. This example uses a full override (colon directly follows <code>genpl</code>), while the preceding example uses an ending override (no colon directly after <code>genpl</code>).
+
+Missing overrides can be useful in [[#Spec alternations|spec alternations]] in place of a full or ending override, when the other of the two alternatives in the alternation already specifies all the possible forms for a given slot. See [[#More complex examples|more complex examples]] for an example of this.
+
+===Overrides and derived forms===
+Certain forms are derived from others, in that the forms in one slot are copied to another slot. Specifically:
+* The accusative plural of all nouns is derived from either the nominative singular, the genitive singular or both, depending on animacy.
+* The vocative plural of all nouns is derived from the nominative plural.
+* The accusative singular of masculine nouns is derived from either the nominative singular or genitive singular, depending on animacy.
+* The vocative singular of surnames (those with the <code>surname</code> code) is derived from the nominative singular ''in addition to'' whatever the form would normally be.
+This has implications for overrides. Specifically, overrides of source slots (nominative singular, genitive singular, nominative plural, genitive plural) are implemented ***before*** copying to derived slots, but overrides of derived slots (accusative singular, accusative plural, vocative singular, vocative plural) are implemented ***after*** copying. This means that overrides of source slots such as the nominative and genitive plural will automatically be propagated to the slots derived from them, but overrides of derived slots is still possible.
+
+For example, in the preceding example with {{m|cs|вівця́||sheep}}, where a genitive plural override ''ове́ць'' was given, the accusative plural will also have ''ове́ць'' as one of the two possibilities (along with ''ві́вці'', derived from the nominative plural). Similarly, in the earlier example above with {{m|cs|очере́т||reed}}, where a nominative plural ending override <code>nompla:y</code> is given to specify that the nominative plural should be either ''очере́та'' or ''очере́ти'', both forms will also be found in the accusative and vocative plural.
+
+An example of overriding a derived slot is {{m|cs|пан||lord, sir}}, which has an irregular alternative vocative plural ''пано́ве'' as well as the regular vocative plural ''пани́'' derived from the nominative plural. This can be specified as follows:
+
+:{{temp|пан<c.pr.locovi:u.vocply:ove>}}
+
+which produces
+
+{{cs-ndecl|пан<c.pr.locovi:u.vocply:ove>}}
+
+===Slot names for overrides===
+The slot names are as follows:
+
+{|class="wikitable"
+! Case !! Singular !! Accented variant !! Plural !! Accented variant
+|-
+| Nominative || <code>nom</code> || <code>nóm</code> || <code>nompl</code> || <code>nómpl</code>
+|-
+| Genitive || <code>gen</code> || <code>gén</code> || <code>genpl</code> || <code>génpl</code>
+|-
+| Dative || <code>dat</code> || <code>dát</code> || <code>datpl</code> || <code>dátpl</code>
+|-
+| Accusative || <code>acc</code> || <code>ácc</code> || <code>accpl</code> || <code>áccpl</code>
+|-
+| Instrumental || <code>ins</code> || <code>íns</code> || <code>inspl</code> || <code>ínspl</code>
+|-
+| Locative || <code>loc</code> || <code>lóc</code> || <code>locpl</code> || <code>lócpl</code>
+|-
+| Vocative || <code>voc</code> || <code>vóc</code> || <code>vocpl</code> || <code>vócpl</code>
+|}
+
+===Automatic palatalization of velars===
+Certain endings, when used as overrides (as well as when they are the default), automatically trigger the {{w|Slavic first palatalization}} or {{w|Slavic second palatalization}} of velar consonants. Specifically:
+* The ending ''-е'' in the vocative singular triggers the Slavic first palatalization.
+* The ending ''-і'' in the dative or locative singular triggers the Slavic second palatalization.
+The palatalizations are as follows:
+{|class="wikitable"
+! Letter !! First palatalization !! Second palatalization
+|-
+| к || ч || ц
+|-
+| г || ж || з
+|-
+| х || ш || с
+|-
+| ц || ч || ц
+|}
+
+An example is {{m|cs|чолові́к||man}}. The default vocative singular ending for masculines ending in a velar is ''-у'', but this noun has vocative singular ''чолові́че''. To specify this, just use a regular ending override <code>voce</code>, and the first palatalization will automatically apply, converting ''к'' into ''ч'':
+
+:{{temp|cs-ndecl|чолові́к<pr.voce>}}
+
+which produces
+
+{{cs-ndecl|чолові́к<pr.voce>}}
+
+Another example is {{m|cs|ріг||horn (object)}}. The default locative singular ending for inanimate masculines ending in a velar is ''-у'', but this noun has locative singular ''ро́зі''. As above, use a regular ending override <code>loci</code>, and the second palatalization will automatically apply:
+
+:{{temp|cs-ndecl|ріг<io.loci>}}
+
+which produces
+
+{{cs-ndecl|ріг<io.loci>}}
+
+==Default forms for specific slots==
+The rules for which endings are used by default in specific slots (e.g. locative singular) are fairly complicated. This is because Ukrainian nouns are complex, often with multiple possible endings allowed for a given slot and with many exceptions.
+
+===Genitive singular===
+* Masculine nouns default to ''-а'' (or ''-я'' for soft nouns) in most cases, but default to ''-у'' (or ''-ю'' for soft nouns) in singular-only common nouns (not singular-only proper nouns). The default of ''-а''/''-я'' is correct for essentially all animate nouns, and the default of ''-у''/''-ю'' is correct for almost all singular-only common nouns. However, there are many inanimate singular/plural common nouns, and many inanimate proper nouns, that need a <code>genu</code> or <code>genju</code> override. The particular ending used is a function of the semantic category of the noun. For example, names of cities use ''-а''/''-я'', but names of states and countries use ''-у''/''-ю''; words referring to most types of objects use ''-а''/''-я'', but words referring to materials use ''-у''/''-ю''. Hence, {{m|cs|Алжи́р||Algiers}} (a city) uses ''-а'', but {{m|cs|Алжи́р||Algeria}} (a country) uses ''-у'', and {{m|cs|ріг||horn (object)}} uses ''-а'', but {{m|cs|ріг||horn (material)}} uses ''-у''.
+
+===Locative singular===
+The rules for the locative singular of masculine nouns are quite complex.
+* For velar-stem nouns:
+*# Animate nouns use either ''-ові'' or ''-у''.
+*# Reducible inanimate nouns also use either ''-ові'' or ''-у''.
+*# Non-reducible inanimate nouns use ''-у''.
+* For non-velar hard-stem nouns:
+*# Animate nouns use either ''-ові'' or ''-і''.
+*# Inanimate singular-only nouns use either ''-у'' or ''-і''.
+*# Inanimate singular/plural nouns use ''-і''.
+* For soft-stem nouns:
+*# Animate nouns use either ''-еві'', ''-ю'' or ''-і''.
+*# Inanimate nouns use either ''-ю'' or ''-і''.
+* Semisoft-stem nouns are analogous to soft-stem nouns:
+*# Animate nouns use either ''-еві'', ''-у'' or ''-і''.
+*# Inanimate nouns use either ''-у'' or ''-і''.
+
+===Vocative singular===
+FILL IN
+
+===Genitive plural===
+FILL IN
+
+==Spec alternations==
+Some nouns have declensions with multiple possible stress patterns, or which appear to be composed of the union of multiple individual declensions. This can be handled using a ''spec alternation''. A basic example is {{m|cs|апо́строф||apostrophe}}, also stressable as {{m|cs|апостро́ф}}:
+
+:{{temp|cs-ndecl|((апо́строф<>,апостро́ф<>))}}
+
+which produces
+
+{{cs-ndecl|((апо́строф<>,апостро́ф<>))}}
+
+Note the format: Two (or more) full declension specifications, comma-separated, surrounded by double parentheses.
+
+If both declensions overlap in some forms, the forms will be deduplicated, and will only appear once. For example, {{m|cs|христия́нин}} has nominative plural ''христия́ни'' (where ''-ин'' disappears in the plural), and has an alternative stress pattern {{m|cs|християни́н}}, with the same nominative plural ''христия́ни'' (here again, ''-ин'' disppears in the plural, and since it is stressed, the stress moves onto the previous syllable). This can be specified as follows:
+
+:{{temp|cs-ndecl|((христия́нин<pr.in>,християни́н<pr.in>))}}
+
+which produces
+
+{{cs-ndecl|((христия́нин<pr.in>,християни́н<pr.in>))}}
+
+Note how the plural has only one form per slot.
+
+There is no requirement that the lemmas in the two alternative specifications have different stress patterns, or that the associated specifications inside of <code><...></code> are the same. For example, {{m|cs|сту́пінь||step}} has two alternative declensions, one with an ''і'' -> ''е'' alternation (genitive singular ''сту́пеня'') and the other with vowel reduction (genitive singular ''сту́пня''). This can be specified as follows:
+
+:{{temp|cs-ndecl|((сту́пінь<M.ie>,сту́пінь<M.*>))}}
+
+which produces
+
+{{cs-ndecl|((сту́пінь<M.ie>,сту́пінь<M.*>))}}
+
+==Footnotes==
+Footnotes can be attached in any of the following three places:
+* Onto an entire spec, applying to all forms generated by that spec. This is most useful when multiple alternative specs are used in a [[#Spec alternations|spec alternation]].
+* Onto a stress pattern, applying to all forms generated by the stress pattern.
+* Onto an individual override, applying to that form.
+
+An example is {{m|cs|пе́рстень||ring}}, where the normal stem used in most forms is ''персн-''. Regular forms using the stem ''пе́рстен-'' also exist but are rare. Specify this as follows:
+
+:{{temp|cs-ndecl|((пе́рстень<M.*.stem:персн>,пе́рстень<M.[rare]>))}}
+
+which produces
+
+{{cs-ndecl|((пе́рстень<M.*.stem:персн>,пе́рстень<M.[rare]>))}}
+
+Here, we attach a footnote "rare" to the second of two specs in a spec alternation. The effect of this is that all forms generated by the second spec that are ***not*** also present in the first spec will have this footnote. (Hence, nominative and accusative singular ''пе́рстень'' will not have it.)
+
+Another example that attaches a footnote to a single override is with {{m|cs|вік||age, lifetime}}, which has two locative singular forms, ''ві́ці'' (used with {{m|cs|у}}) and ''віку́'' (used with {{m|cs|на}}). To indicate this, we can attach a footnote to the second form as follows:
+
+:<code><nowiki>{{cs-ndecl|вік<sg.loci:ú[''ві́ці'' is normally used with {{m|cs|у}}, and ''віку́'' with {{m|cs|на}}]>}}</nowiki></code>
+
+which produces
+
+{{cs-ndecl|вік<sg.loci:ú[''ві́ці'' is normally used with {{m|cs|у}}, and ''віку́'' with {{m|cs|на}}]>}}
+
+Note that nested brackets, angle brackets, braces, etc. can occur inside the footnote as long as they are properly paired.
+
+==More complex examples==
+1. {{m|cs|штани́||trousers, pants}} has the following forms:
+* Nominative/accusative/vocative plural: ''штани́''
+* Genitive plural: ''штані́в''
+* Dative plural: ''шта́ням, штана́м''
+* Instrumental plural: ''шта́нями, штана́ми, штаньми́''
+* Locative plural: ''шта́нях, штана́х''
+The dative, instrumental and locative plural have both soft and hard endings, with different stress patterns. This suggests that a [[#Spec alternations|spec alternation]] could be used. Since the nominative plural only has hard endings, the soft alternative needs to use a soft-ending lemma and override the nominative plural. The result is as follows:
+
+:{{temp|cs-ndecl|((шта́ні<M.#.pl.nompl:->,штани́<M.pl.insplamy:ьmy>))}}
+
+which produces
+
+{{cs-ndecl|((шта́ні<M.#.pl.nompl:->,штани́<M.pl.insplamy:ьmy>))}}
+
+The first alternative captures the soft stem-stressed forms, with a missing nominative plural override (see [[#Null and missing overrides|null and missing overrides]] above) and the reversed genitive-stress indicator <code>#</code>. The second alternative captures the hard ending-stressed forms, and specifies an instrumental plural override to capture the additional form ''штаньми́''.
+
+2. {{m|cs|чо́біт||boot}} has mostly regular forms in the singular, with an ''і''-''о'' vowel alternation (e.g. genitive singular ''чо́бота'') but has irregular locative singular ''чо́боту, чо́боті'' as well as the following forms in the plural:
+* Nominative/accusative/vocative plural: ''чо́боти''
+* Genitive plural: ''чобі́т''
+* Dative plural: ''чо́ботам, чобо́тям''
+* Instrumental plural: ''чо́ботами, чобітьми́''
+* Locative plural: ''чо́ботах, чобо́тях''
+It is possible to use a spec alternation as in the previous example (where the second alternative uses <code>plsoft</code> and <code>plstem:чобо́т</code>), but in this case it may be simpler just to explicitly specify the irregular plural forms using full overrides:
+
+:{{temp|cs-ndecl|чо́біт<io.locu:i.genpl:чобі́т.datpl:чо́ботам:чобо́тям.insplamy:ьmý.locpl:чо́ботах:чобо́тях>}}
+
+which produces
+
+{{cs-ndecl|чо́біт<io.locu:i.genpl:чобі́т.datpl:чо́ботам:чобо́тям.insplamy:ьmý.locpl:чо́ботах:чобо́тях>}}
+
+Note the use of an ending override in the instrumental plural. Since the specified instrumental plural ending ''-ьми́'' does not begin with a vowel, the non-vowel alternant with ''і'' instead of ''о'' is used. A full override would also be possible; conversely, an ending override could be used in the genitive plural, with a reversed genitive-plural stress indicator, i.e. <code>#.genpl-</code>.
+
+The shortest equivalent using a spec alternation would be as follows:
+
+:{{temp|cs-ndecl|((чо́біт<io.#.locu:i.genpl->,чо́біт<io.plsoft.plstem:чобо́т.nompl:-.genpl:-.insplьmý>))}}
+
+Note that this is even longer than the specification using full overrides, and harder to understand.
+
+===Example uses===
+
+[[tác]] "platter, tray": {{cs-ndecl|m.hard.loce:u}}
+[[tuzemsko]] "this country": {{cs-ndecl|n.*,-*}} [default reducible]
+[[trouba]] "oven": {{cs-ndecl|f.#}}
+[[pěst]] "fist": {{cs-ndecl|f.mixedistem:pěst}}
+[[moc]] "power": {{cs-ndecl|f.mixedistem:moc}}
+[[loď]] "ship, vessel": {{cs-ndecl|f.mixedistem:loď}}
+[[město]] "city": {{cs-ndecl|n.locě:u}}
+[[ostrov]] "island": {{cs-ndecl|m.gena.locě}}
+[[plná moc]] "power of attorney": {{cs-ndecl|plná<+> moc<f.mixedistem:moc>}}
+[[banka]] "bank": {{cs-ndecl|f.-*}}
+[[antihistaminikum]] "antihistamine": {{cs-ndecl|n.foreign}} [loc pl defaults to -ách due to velar]
+[[vítr]] "wind": {{cs-ndecl|m.#ě}} [note voc sg 'větre/větře']
+[[tradice]] "tradition": {{cs-ndecl|f.genpl-:í}}
+[[svíce]] "candle": {{cs-ndecl|((<f.#ě,#.genpl->,<f>))}}
+[[plíce]] "lung": {{cs-ndecl|f.##,#.genpl-}}
+[[lžíce]] "spoon": {{cs-ndecl|f.##,#.genpl-}}
+[[míle]] "mile": {{cs-ndecl|f.#.genpl-}}
+[[chvíle]] "moment": {{cs-ndecl|f.#.genpl-}}
+[[košile]] "shirt": {{cs-ndecl|f.genpl-}}
+[[kostě]] "broom": {{cs-ndecl|n.tstem}}
+[[štokrle]] "stool": {{cs-ndecl|n.tstem}}
+[[buchta]] "lazybones, sluggard": {{cs-ndecl|m.an}}
+[[buchta]] "bun": {{cs-ndecl|f.*}}
+[[plachta]] "sail": {{cs-ndecl|f.*}}
+[[biřic]] "warrant officer": {{cs-ndecl|m.an.nompli:ové}}
+[[okolky]] "hesitation": {{cs-ndecl|m.pl}}
+[[nemačenko]] "idler, loafer": {{cs-ndecl|m.an}}
+[[bůh]] "god": {{cs-ndecl|m.an.#.voce.nompli:ové}}
+[[král]] "king": {{cs-ndecl|m.an.soft}} [nom pl defaults to 'klálové']
+[[soused]] "neighbor": {{cs-ndecl|m.an.nomplé:i}}
+[[Blíženci]] "Gemini": {{cs-ndecl|m.an.pl}}
+[[banjo]] "banjo": {{cs-ndecl|n}} [ins pl is correctly 'banji']
+[[album]] "album": {{cs-ndecl|n.foreign}} [not reducible by default]
+[[starosta]] "old man": {{cs-ndecl|m.an}} [nom pl 'starostové']
+[[komunista]] "communist": {{cs-ndecl|m.an}} [nom pl 'komunisté']
+[[počet]] "count, number": {{cs-ndecl|m.*}}
+[[konvence]] "convention": {{cs-ndecl|f}} [gen pl 'konvencí']
+[[ulice]] "street": {{cs-ndecl|f}} [gen pl 'ulic']
+[[komunismus]] "communism": {{cs-ndecl|m.foreign}}
+[[humus]] "humus": {{cs-ndecl|m.loce:u}}
+[[jméno]] "name": {{cs-ndecl|n.#.locě:u}}
+[[ráno]] "early morning": {{cs-ndecl|n}}
+[[volba]] "choice": {{cs-ndecl|f}} [default reducible]
+[[houba]] "mushroom, sponge": {{cs-ndecl|f.#}}
+[[torba]] "pouch": {{cs-ndecl|f.-*,*}}
+[[kruchta]] "choir (area in a church for singers)": {{cs-ndecl|f.*,-*}}
+[[páka]] "lever": {{cs-ndecl|f}} [dat/loc sg 'páce' automatically]
+[[pán]] "Mr; man, gentleman": {{cs-ndecl|m.an.voc:pane.nomplové:i}}
+[[pan]] "Mr ...": {{cs-ndecl|((pan<m.an.sg>,páni<m.an.pl>))}}
+[[pes]] "dog": {{cs-ndecl|m.an.*}}
+[[kos]] "blackbird": {{cs-ndecl|m.an.nompli:ové}}
+[[klec]] "cage": {{cs-ndecl|f}} [soft feminine]
+[[věc]] "thing": {{cs-ndecl|f.istem}}
+[[robot]] "non-humanoid robot": {{cs-ndecl|((m,m.an))}}
+[[pastel]] "pastel": {{cs-ndecl|m.hard}}
+[[pytel]] "bag, sack": {{cs-ndecl|m.*.soft.locplech:ích}}
+[[hůl]] "stick": {{cs-ndecl|f.#}}
+[[stůl]] "table": {{cs-ndecl|m.#.loce:u}}
+[[kůl]] "stake, post": {{cs-ndecl|m}}
+[[vůl]] "ox": {{cs-ndecl|m.an.#.nompli:ové}}
+[[posel]] "messenger": {{cs-ndecl|m.an.*}}
+[[vězeň]] "prisoner": {{cs-ndecl|m.an.*.nompli:ové}} [soft reducible; note ň -> n]
+[[tuleň]] "earless seal": {{cs-ndecl|m.an}} [note ň -> n]
+[[osel]] "donkey": {{cs-ndecl|m.an.*.nompli:ové}}
+[[mazel]] "cuddler": {{cs-ndecl|m.an.*}} [nom pl defaults to 'mazlové']
+[[učitel]] "teacher": {{cs-ndecl|m.an}} [nom pl defaults to 'učitelé]
+[[datel]] "woodpecker": {{cs-ndecl|m.an.*.hard.nompli:ové}}<!-- need .hard or would default to .soft due to -tel ending -->
+[[orel]] "eagle": {{cs-ndecl|m.an.*.nompli:ové}}
+[[Petr]] "Peter": {{cs-ndecl|m.an}} [pl defaults to -ové, voc Petře]
+[[mzda]] "wage": {{cs-ndecl|f.genpl:mezd}}
+[[práce]] "work": {{cs-ndecl|f.##}}
+[[jádro]] "kernel, nucleus": {{cs-ndecl|n.*#.locu:e}} [note: still palatalizes with loce]
+[[hejno]] "flock": {{cs-ndecl|n.-*.locě:u}}
+[[plsť]] "felt": {{cs-ndecl|f.mixedistem:myš.inspl:plstmi}}
+[[zeď]] "wall": {{cs-ndecl|f.*.mixedistem:pěst.inspl:zdmi}} [note: depalatalized ins/loc pl]
+[[pravomoc]] "authority": {{cs-ndecl|((f,f.mixedistem:moc))}}
+[[veš]] "louse": {{cs-ndecl|f.*.mixedistem:myš}} [note: ins pl 'vešmi' due to consonant-initial ending]
+[[sůl]] "salt": {{cs-ndecl|f.#.mixedistem:noc}}
+[[centurio]] "centurion": {{cs-ndecl|m.an.decllemma:centurion.nomplové:i}}
+[[pronomen]] "pronoun": {{cs-ndecl|n.decllemma:pronomino}}
+[[onomatopoion]] "onomatopoeia": {{cs-ndecl|n.foreign}}
+[[Mirek Dušín]] "Honest Abe": {{cs-ndecl|Mirek<m.an> Dušín<m.an.datovi.locovi>}}<!-- in a series of names in the dat or loc sg, the last one takes -ovi -->
+[[Apeninský poloostrov]] "Apennine Peninsula": {{cs-ndecl|Apeninský<+> poloostrov<m.sg.gena.locě>}}
+[[Havířov]] "Havířov": {{cs-ndecl|<m.sg.locě:u[after {{m|cs|o}}]>}} [need angle brackets]
+[[ovce]] "sheep": {{cs-ndecl|((f,f.*.genpl-[now rare]))}}
+[[Frýdek-Místek]] "Frýdek-Místek": {{cs-ndecl|Frýdek<m.sg>-Místek<m.sg>}}
+[[Zeus]] "Zeus": {{cs-ndecl|m.an.sg.foreign.decllemma:Dius.surname}}<!-- declines as a surname (no -u in dat/loc sg); unpredictable -->
+[[Deimos]] "Deimos (Greek god)": {{cs-ndecl|m.an.sg.foreign.surname}}
+[[syfilis]] "syphilis": {{cs-ndecl|f.decllemma:syfilida}}
+[[den]] "day": {{cs-ndecl|m.*.mixed.gene.voce:i.nompli:y.genplí:ů.accpli:y}}<!-- there is really no clean way of doing this -->
+[[pára]] "steam, vapor": {{cs-ndecl|<f.##,#.ins:párou:parou[only in the expressions {{m|cs|[[plný|plnou]] '''parou'''||with full steam}} and {{m|cs|[[pod]] '''parou'''||under steam}}]>}}
+[[hrách]] "pea": {{cs-ndecl|m.#.nompl+accpl:hrachy:hráchy}}
+[[století]] "century": {{cs-ndecl|((n,staletí<n.pl>))}}
+[[kněz]] "priest": {{cs-ndecl|((m.an.soft.sg,kněží<m.an.pl.declgender:n.accpl:kněze>))}}
+[[přítel]] "friend, boyfriend": {{cs-ndecl|((m.an.sg,přátelé<m.an.pl.genpl->))}}
+[[jezdec]] "knight (chess)": {{cs-ndecl|((m.an.dat+loc+voci,m))}}
+[[vnitřní nepřítel]] "fifth column": {{cs-ndecl|vnitřní<+> ((nepřítel<m.an.sg>,nepřátelé<m.an.pl.genpl->))}}
+[[louk]] "meadow": {{cs-ndecl|f.-,#}}
+[[poledne]] "noon": {{cs-ndecl|n.datplím:ám[in some literary and archaic fixed expressions].locplech:ách[in some literary and archaic fixed expressions].insply}}
+[[Jana]] "Jane, Joanna": {{cs-ndecl|f.voco:i[informal]}}
+[[Její Výsost]] "Her Highness": {{cs-ndecl|((Její<+.sg>,Jejich<+.indecl.pl>)) Výsost<f>}}
+
+
+
+
+
+
+
+
+STILL TO DO:
+
+[[deska]] "board; record" [footnote attached to non-reducible gen pl]
+[[rorýs]] "swift (bird)" [mixed decl; not handled correctly]
+[[primas]] [mixed decl; not handled correctly]
+[[ruka]] "hand" [irregular pl]
+[[Alois]] "Alois" [mixed decl; not handled correctly]
+
+
+
+
+
+
+==Czech==
+
+===Pronunciation===
+* {{cs-IPA}}
+
+===Noun===
+{{cs-noun|m}}
+
+# {{l|en|pastel}}
+
+====Declension====
+{{cs-ndecl|m.hard}}
+
+
+
+<includeonly>
+[[Category:Ukrainian noun inflection-table templates]]
+</includeonly>
