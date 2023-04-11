@@ -181,7 +181,7 @@ def process_text_on_page(index, pagetitle, text):
         # [[prášek]] (i/ové), [[šašek]] (i/ové).
         # make sure to check `stems` as we don't want to include non-reducible words in -cek/-ček/-šek (but do want to include
         # [[quarterback]], with -i/-ové)
-        reducible and re.search("[cčš]ek$", lemma) and ["i", u"ové"] or
+        reducible and re.search("^" + cs.lowercase_c + u".*[cčš]ek$", lemma) and ["i", u"ové"] or
         # barmani, gentlemani, jazzmani, kameramani, narkomani, ombudsmani, pivotmani, rekordmani, showmani, supermani, toxikomani
         re.search("^" + cs.lowercase_c + ".*man$", lemma) and ["i"] or
         # terms ending in -an after a palatal or a consonant that doesn't change when palatalized, i.e. labial or l (but -man
@@ -199,10 +199,14 @@ def process_text_on_page(index, pagetitle, text):
         re.search(".*tel$", lemma) and [u"é"] or
         # husita → husité, izraelita → izraelité, jezuita → jezuité, kosmopolita → kosmopolité, táborita → táborité
         # fašista → fašisté, filatelista → filatelisté, fotbalista → fotbalisté, kapitalista → kapitalisté,
-        #   marxista → marxisté, šachista → šachisté, terorista → teroristé
-        re.search(".*is?ta$", lemma) and [u"é"] or
-        # gymnasta → gymnasté, fantasta → fantasté
-        re.search(".*asta$", lemma) and [u"é"] or
+        # marxista → marxisté, šachista → šachisté, terorista → teroristé. NOTE: most these words actually appear in
+        # the IJP tables with -é/-i, so we go accordingly.
+        re.search(".*is?ta$", lemma) and [u"é", "i"] or
+        # gymnasta → gymnasté, fantasta → fantasté; also chiliasta, orgiasta, scholiasta, entuziasta, dynasta, ochlasta,
+        # sarkasta, vymasta; NOTE: Only 'gymnasta' actually given with just -é; 'fantasta' with -ové/-é, 'dynasta' and
+        # 'ochlasta' with just -ové, vymasta not in IJP (no plural given in SSJC), and the rest with -é/-i. So we go
+        # accordingly.
+        re.search(".*asta$", lemma) and [u"é", "i"] or
         # remaining masculines in -a (which may not go through this code at all);
         # nouns in -j: čaroděj → čarodějové, lokaj → lokajové, patricij → patricijové, plebej → plebejové, šohaj → šohajové, žokej → žokejové
         # nouns in -l: apoštol → apoštolové, břídil → břídilové, fňukal → fňukalové, hýřil → hýřilové, kutil → kutilové,
