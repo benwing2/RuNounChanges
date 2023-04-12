@@ -286,6 +286,7 @@ FIXME:
 15. Support feminine nouns in -ja/-ňa. [DONE]
 16. Support mixed i-stem feminine nouns. [DONE]
 17. Support "c as k" feminine nouns like [[ayahuasca]].
+18. Support 'declgender'.
 
 ]=]
 
@@ -687,10 +688,10 @@ local function default_masc_animate_nom_pl(base, stems)
 		-- Australan → Australané; some late formations pluralize this way but don't have a palatal consonant preceding the -an,
 		-- e.g. [[pohan]], [[Oděsan]]; these need manual overrides
 		rfind(base.lemma, "[" .. com.inherently_soft .. com.labial .. "l]an$") and {"é", "i"} or -- most now can also take -i
-		-- proper names: Baťové, Novákové, Petrové, Tomášové, Vláďové; but exclude demonyms
-		rfind(base.lemma, "^" .. com.uppercase_c) and not rfind(base.lemma, "ec$") and "ové" or
+		-- proper names: Baťové, Novákové, Petrové, Tomášové, Vláďové; exclude demonyms (but include surnames)
+		rfind(base.lemma, "^" .. com.uppercase_c) and (base.surname or not rfind(base.lemma, "[eě]c$")) and "ové" or
 		-- demonyms: [[Albánec]], [[Gruzínec]], [[Izraelec]], [[Korejec]], [[Libyjec]], [[Litevec]], [[Němec]], [[Portugalec]]
-		rfind(base.lemma, "^" .. com.uppercase_c .. ".*ec$") and "i" or
+		rfind(base.lemma, "^" .. com.uppercase_c .. ".*[eě]c$") and "i" or
 		-- From here on down, we're dealing only with lowercase terms.
 		-- buditelé, budovatelé, čekatelé, činitelé, hostitelé, jmenovatelé, pisatelé, ručitelé, velitelé, živitelé
 		rfind(base.lemma, ".*tel$") and "é" or
@@ -758,10 +759,11 @@ decls["hard-m"] = function(base, stems)
 	--   "metal plate"), using <locplách>.
 	-- * Inanimate hard nouns in -c normally have -ech: [[hec]] "joke", [[tác]] "tray", [[truc]], [[kec]], [[frc]],
 	--   [[flanc]], [[kibuc]] "kibbutz", [[pokec]] "chat".
-	-- In the IJP tables, inanimate reducible nouns in -ček (and most in -cek, although there are many fewer) regularly
-	-- have both -ích and -ách in the locative plural, while similar animate nouns only have -ích. This applies even to
-	-- nouns like [[háček]] and [[koníček]] that can be either animate or inanimate. Make sure to exclude nouns in -ck
-	-- such as [[comeback]] and [[joystick]], which have only -ích.
+	-- In the IJP tables, inanimate reducible nouns in -ček (and most in -cek, although there are many fewer; also some
+	-- in -žek, but in this case it's too inconsistent to make the default) regularly have both -ích and -ách in the
+	-- locative plural, while similar animate nouns only have -ích. This applies even to nouns like [[háček]] and
+	-- [[koníček]] that can be either animate or inanimate. Make sure to exclude nouns in -ck such as [[comeback]] and
+	-- [[joystick]], which have only -ích.
 	local loc_p =
 		base.animacy == "inan" and rfind(base.lemma, "[cč]ek$") and rfind(stems.vowel_stem, "[cč]k$") and {"ích", "ách"} or
 		velar and "ích" or "ech"
@@ -814,13 +816,14 @@ decls["soft-m"] = function(base, stems)
 	-- animates with dat_s only in -i need to give this manually, using '<dati>'
 	local dat_s = base.animacy == "inan" and "i" or base.surname and "ovi" or {"ovi", "i"}
 	local loc_s = dat_s
-	-- Per IJP, the vast majority of soft masculine animates take -i in the voc_s, but those in -ec take -e with first
-	-- palatalization to -če (e.g. [[otec]] "father", [[lovec]] "hunter", [[blbec]] "fool, idiot",
-	-- [[horolezec]] "mountaineer", [[znalec]] "expert", [[chlapec]] "boy", [[nadšenec]] "enthusiast").
-	-- Demonyms ending in -ec but beginning with a capital letter take either -e or -i (only the former triggers the
-	-- first palatalization). Examples: [[Portugalec]], [[Slovinec]] "Slovenian", [[Japonec]], [[Vietnamec]].
-	local voc_s = base.animacy == "an" and rfind(base.lemma, "ec$") and
-		(rfind(base.lemma, "^" .. com.uppercase_c) and {"e", "i"} or "e") or "i"
+	-- Per IJP, the vast majority of soft masculine animates take -i in the voc_s, but those in -ec/-ěc take -e with first
+	-- palatalization to -če, e.g. [[otec]] "father", [[lovec]] "hunter", [[blbec]] "fool, idiot", [[horolezec]]
+	-- "mountaineer", [[znalec]] "expert", [[chlapec]] "boy", [[nadšenec]] "enthusiast", [[luněc]] (type of bird).
+	-- Demonyms but not surnames ending in -ec but beginning with a capital letter take either -e or -i (only the former
+	-- triggers the first palatalization). Examples: [[Portugalec]], [[Slovinec]] "Slovenian", [[Japonec]], [[Vietnamec]].
+	-- Not [[Kadlec]] (surname).
+	local voc_s = base.animacy == "an" and rfind(base.lemma, "[eě]c$") and stems.reducible and
+		(not base.surname and rfind(base.lemma, "^" .. com.uppercase_c) and {"e", "i"} or "e") or "i"
 	local nom_p = base.animacy == "inan" and "e" or default_masc_animate_nom_pl(base, stems)
 	-- nouns with loc_p in -ech (e.g. [[cíl]] "goal") need to give this manually, using <locplech>
 	add_decl(base, stems, "e", dat_s, nil, voc_s, loc_s, "em",
@@ -860,9 +863,9 @@ decls["mixed-m"] = function(base, stems)
 		end
 	else
 		-- Given in IJP: burel, hnědel, chmel, krevel, kužel, námel, plevel, tmel, zádrhel, apríl, artikul, koukol, rubl,
-		-- úběl, plus reducible nouns cumel, chrchel, kotel, sopel, uhel. Many of them are listed in the IJP tables with
-		-- only hard or with fewer soft forms, so need to be investigated individually.
-		if rfind(base.lemma, "l$") then
+		-- úběl, plus reducible nouns cumel, chrchel, kotel, sopel, uhel. Also [[městys]]. Many of them are listed in the
+		-- IJP tables with only hard or with fewer soft forms, so need to be investigated individually.
+		if rfind(base.lemma, "[ls]$") then
 			add_decl(base, stems, {"u", "e"}, {"u", "i"}, nil, {"e", "i"}, {"u", "e", "i"}, "em",
 				{"y", "e"}, "ů", "ům", {"y", "e"}, {"ech", "ích"}, {"y", "i"})
 		else
@@ -1282,7 +1285,7 @@ decls["soft-n"] = function(base, stems)
 	-- NOTE: Some neuter words in -e indeclinable, e.g. [[Belize]], [[Chile]], [[garde]] "chaperone", [[karaoke]],
 	-- [[karate]], [[re]] "double raise (card games)", [[ukulele]], [[Zimbabwe]], [[zombie]] (pl. 'zombie' or
 	-- 'zombies')
-	-- some nearly indeclinable, e.g. [[finále]], [[chucpe]]; see mostly-indecl-n below
+	-- some nearly indeclinable, e.g. [[finále]], [[chucpe]]; see mostly-indecl below
 end
 
 declprops["soft-n"] = {
@@ -1354,19 +1357,6 @@ end
 
 declprops["ma-n"] = {
 	cat = "ma-stem"
-}
-
-
-decls["mostly-indecl-n"] = function(base, stems)
-	-- E.g. [[finále]] "final (sports)", [[čtvrtfinále]] "quarterfinal", [[chucpe]] "chutzpah", [[penále]]
-	-- "fine, penalty", [[promile]] "" (NOTE: loc pl also promilech), [[rande]] "rendezvous", [[semifinále]]
-	-- "semifinal", [[skóre]] "score"
-	add_decl(base, stems, "", "", "-", "-", "", {"", "m"},
-		"", "", "", "", "", "")
-end
-
-declprops["mostly-indecl-n"] = {
-	cat = "mostly indeclinable"
 }
 
 
@@ -1445,18 +1435,37 @@ declprops["adj"] = {
 }
 
 
+decls["mostly-indecl"] = function(base, stems)
+	-- Several neuters: E.g. [[finále]] "final (sports)", [[čtvrtfinále]] "quarterfinal", [[chucpe]] "chutzpah",
+	-- [[penále]] "fine, penalty", [[promile]] "" (NOTE: loc pl also promilech), [[rande]] "rendezvous", [[semifinále]]
+	-- "semifinal", [[skóre]] "score".
+	-- At least one masculine animate: [[kamikaze]]/[[kamikadze]], where IJP says only -m in the ins sg.
+	local ins_s = base.gender == "m" and "m" or {"-", "m"}
+	add_decl(base, stems, "-", "-", "-", "-", "-", ins_s,
+		"-", "-", "-", "-", "-", "-")
+end
+
+declprops["mostly-indecl"] = {
+	cat = "mostly indeclinable"
+}
+
+
 decls["indecl"] = function(base, stems)
 	-- Indeclinable. Note that fully indeclinable nouns should not have a table at all rather than one all of whose forms
 	-- are the same; but having an indeclinable declension is useful for nouns that may or may not be indeclinable, e.g.
 	-- [[desatero]] "group of ten" or the plural of [[peso]], which may be indeclinable 'pesos'.
-	add_decl(base, stems, "", "", "", "", "", "",
-		"", "", "", "", "", "")
+	add_decl(base, stems, "-", "-", "-", "-", "-", "-",
+		"-", "-", "-", "-", "-", "-")
 end
 
 declprops["indecl"] = {
 	cat = function(base, stems)
-		return {"indeclinable POS", "indeclinable GENPOS"}
-	end,
+		if base.adj then
+			return {"adjectival POS", "indeclinable adjectival POS", "indeclinable GENDER adjectival POS"}
+		else
+			return {"indeclinable POS", "indeclinable GENPOS"}
+		end
+	end
 }
 
 
@@ -1596,6 +1605,7 @@ dot-separated indicators within them). Return value is an object of the form
   indecl = true, -- may be missing
   adj = true, -- may be missing
   decllemma = "DECLENSION-LEMMA", -- may be missing
+  declgender = "DECLENSION-GENDER", -- may be missing
 
   -- The following additional fields are added by other functions:
   orig_lemma = "ORIGINAL-LEMMA", -- as given by the user
@@ -1727,6 +1737,11 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify 'decllemma:' twice: '" .. inside .. "'")
 				end
 				base.decllemma = rsub(part, "^decllemma:", "")
+			elseif rfind(part, "^declgender:") then
+				if base.declgender then
+					error("Can't specify 'declgender:' twice: '" .. inside .. "'")
+				end
+				base.declgender = rsub(part, "^declgender:", "")
 			else
 				error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
 			end
@@ -1738,12 +1753,31 @@ end
 
 local function set_defaults_and_check_bad_indicators(base)
 	-- Set default values.
-	if not base.adj then
+	if base.adj then
+		if base.declgender then
+			error("Can't specify 'declgender' for adjectives and adjectival nouns")
+		end
+	else
 		if not base.gender then
 			error("For nouns, gender must be specified")
 		end
 		base.number = base.number or "both"
 		base.animacy = base.animacy or "inan"
+		base.user_specified_gender = base.gender
+		base.user_specified_animacy = base.animacy
+		if base.declgender then
+			if base.declgender == "m-an" then
+				base.gender = "m"
+				base.animacy = "an"
+			elseif base.declgender == "m-in" then
+				base.gender = "m"
+				base.animacy = "inan"
+			elseif base.declgender == "f" or base.declgender == "n" then
+				base.gender = base.declgender
+			else
+				error(("Unrecognized value '%s' for 'declgender', should be 'm-an', 'm-in', 'f' or 'n'"):format(base.declgender))
+			end
+		end
 	end
 	-- Check for bad indicator combinations.
 	if (base.hard and 1 or 0) + (base.soft and 1 or 0) + (base.mixed and 1 or 0) > 1 then
@@ -1910,137 +1944,143 @@ end
 -- For an adjectival lemma, synthesize the masc singular form.
 local function synthesize_adj_lemma(base)
 	local stem
-	local gender, number
-	local function sub_ov(stem)
-		stem = stem:gsub("ov$", "ův")
-		return stem
-	end
-	while true do
-		if base.number == "pl" then
-			if base.gender == "m" then
-				stem = rmatch(base.lemma, "^(.*)í$")
-				if stem then
-					if base.soft then
-						-- nothing to do
-					else
-						if base.animacy ~= "an" then
-							error(("Masculine plural-only adjectival lemma '%s' ending in -í can only be animate unless '.soft' is specified"):
+	if base.indecl then
+		base.decl = "indecl"
+		stem = base.lemma
+	else
+		local gender, number
+		local function sub_ov(stem)
+			stem = stem:gsub("ov$", "ův")
+			return stem
+		end
+		while true do
+			if base.number == "pl" then
+				if base.gender == "m" then
+					stem = rmatch(base.lemma, "^(.*)í$")
+					if stem then
+						if base.soft then
+							-- nothing to do
+						else
+							if base.animacy ~= "an" then
+								error(("Masculine plural-only adjectival lemma '%s' ending in -í can only be animate unless '.soft' is specified"):
+									format(base.lemma))
+							end
+							base.lemma = undo_second_palatalization(base, stem, "is adjective") .. "ý"
+						end
+						break
+					end
+					stem = rmatch(base.lemma, "^(.*)é$")
+					if stem then
+						if base.animacy == "an" then
+							error(("Masculine plural-only adjectival lemma '%s' ending in -é must be inanimate"):
 								format(base.lemma))
 						end
-						base.lemma = undo_second_palatalization(base, stem, "is adjective") .. "ý"
+						base.lemma = stem .. "ý"
+						break
 					end
-					break
-				end
-				stem = rmatch(base.lemma, "^(.*)é$")
-				if stem then
+					stem = rmatch(base.lemma, "^(.*ov)i$") or rmatch(base.lemma, "^(.*in)i$")
+					if stem then
+						if base.animacy ~= "an" then
+							error(("Masculine plural-only possessive adjectival lemma '%s' ending in -i must be animate"):
+								format(base.lemma))
+						end
+						base.lemma = sub_ov(stem)
+						break
+					end
+					stem = rmatch(base.lemma, "^(.*ov)y$") or rmatch(base.lemma, "^(.*in)y$")
+					if stem then
+						if base.animacy == "an" then
+							error(("Masculine plural-only possessive adjectival lemma '%s' ending in -y must be inanimate"):
+								format(base.lemma))
+						end
+						base.lemma = sub_ov(stem)
+						break
+					end
 					if base.animacy == "an" then
-						error(("Masculine plural-only adjectival lemma '%s' ending in -é must be inanimate"):
+						error(("Animate masculine plural-only adjectival lemma '%s' should end in -í, -ovi or -ini"):
+							format(base.lemma))
+					elseif base.soft then
+						error(("Soft masculine plural-only adjectival lemma '%s' should end in -í"):format(base.lemma))
+					else
+						error(("Inanimate masculine plural-only adjectival lemma '%s' should end in -é, -ovy or -iny"):
 							format(base.lemma))
 					end
-					base.lemma = stem .. "ý"
-					break
-				end
-				stem = rmatch(base.lemma, "^(.*ov)i$") or rmatch(base.lemma, "^(.*in)i$")
-				if stem then
-					if base.animacy ~= "an" then
-						error(("Masculine plural-only possessive adjectival lemma '%s' ending in -i must be animate"):
-							format(base.lemma))
+				elseif base.gender == "f" then
+					stem = rmatch(base.lemma, "^(.*)é$") -- hard adjective
+					if stem then
+						base.lemma = stem .. "ý"
+						break
 					end
-					base.lemma = sub_ov(stem)
-					break
-				end
-				stem = rmatch(base.lemma, "^(.*ov)y$") or rmatch(base.lemma, "^(.*in)y$")
-				if stem then
-					if base.animacy == "an" then
-						error(("Masculine plural-only possessive adjectival lemma '%s' ending in -y must be inanimate"):
-							format(base.lemma))
+					stem = rmatch(base.lemma, "^(.*)í$") -- soft adjective
+					if stem then
+						break
 					end
-					base.lemma = sub_ov(stem)
-					break
-				end
-				if base.animacy == "an" then
-					error(("Animate masculine plural-only adjectival lemma '%s' should end in -í, -ovi or -ini"):
-						format(base.lemma))
-				elseif base.soft then
-					error(("Soft masculine plural-only adjectival lemma '%s' should end in -í"):format(base.lemma))
+					stem = rmatch(base.lemma, "^(.*ov)y$") or rmatch(base.lemma, "^(.*in)y$") -- possessive adjective
+					if stem then
+						base.lemma = sub_ov(stem)
+						break
+					end
+					error(("Feminine plural-only adjectival lemma '%s' should end in -é, -í, -ovy or -iny"):format(base.lemma))
 				else
-					error(("Inanimate masculine plural-only adjectival lemma '%s' should end in -é, -ovy or -iny"):
-						format(base.lemma))
+					stem = rmatch(base.lemma, "^(.*)á$") -- hard adjective
+					if stem then
+						base.lemma = stem .. "ý"
+						break
+					end
+					stem = rmatch(base.lemma, "^(.*)í$") -- soft adjective
+					if stem then
+						break
+					end
+					stem = rmatch(base.lemma, "^(.*ov)a$") or rmatch(base.lemma, "^(.*in)a$") -- possessive adjective
+					if stem then
+						base.lemma = sub_ov(stem)
+						break
+					end
+					error(("Neuter plural-only adjectival lemma '%s' should end in -á, -í, -ova or -ina"):format(base.lemma))
 				end
-			elseif base.gender == "f" then
-				stem = rmatch(base.lemma, "^(.*)é$") -- hard adjective
-				if stem then
-					base.lemma = stem .. "ý"
-					break
-				end
-				stem = rmatch(base.lemma, "^(.*)í$") -- soft adjective
-				if stem then
-					break
-				end
-				stem = rmatch(base.lemma, "^(.*ov)y$") or rmatch(base.lemma, "^(.*in)y$") -- possessive adjective
-				if stem then
-					base.lemma = sub_ov(stem)
-					break
-				end
-				error(("Feminine plural-only adjectival lemma '%s' should end in -é, -í, -ovy or -iny"):format(base.lemma))
 			else
-				stem = rmatch(base.lemma, "^(.*)á$") -- hard adjective
-				if stem then
-					base.lemma = stem .. "ý"
-					break
+				if base.gender == "m" then
+					stem = rmatch(base.lemma, "^(.*)[ýí]$") or rmatch(base.lemma, "^(.*)ův$") or rmatch(base.lemma, "^(.*)in$")
+					if stem then
+						break
+					end
+					error(("Masculine adjectival lemma '%s' should end in -ý, -í, -ův or -in"):format(base.lemma))
+				elseif base.gender == "f" then
+					stem = rmatch(base.lemma, "^(.*)á$")
+					if stem then
+						base.lemma = stem .. "ý"
+						break
+					end
+					stem = rmatch(base.lemma, "^(.*)í$")
+					if stem then
+						break
+					end
+					stem = rmatch(base.lemma, "^(.*ov)a$") or rmatch(base.lemma, "^(.*in)a$")
+					if stem then
+						base.lemma = sub_ov(stem)
+						break
+					end
+					error(("Feminine adjectival lemma '%s' should end in -á, -í, -ova or -ina"):format(base.lemma))
+				else
+					stem = rmatch(base.lemma, "^(.*)é$")
+					if stem then
+						base.lemma = stem .. "ý"
+						break
+					end
+					stem = rmatch(base.lemma, "^(.*)í$")
+					if stem then
+						break
+					end
+					stem = rmatch(base.lemma, "^(.*ov)o$") or rmatch(base.lemma, "^(.*in)o$")
+					if stem then
+						base.lemma = sub_ov(stem)
+						break
+					end
+					error(("Neuter adjectival lemma '%s' should end in -é, -í, -ovo or -ino"):format(base.lemma))
 				end
-				stem = rmatch(base.lemma, "^(.*)í$") -- soft adjective
-				if stem then
-					break
-				end
-				stem = rmatch(base.lemma, "^(.*ov)a$") or rmatch(base.lemma, "^(.*in)a$") -- possessive adjective
-				if stem then
-					base.lemma = sub_ov(stem)
-					break
-				end
-				error(("Neuter plural-only adjectival lemma '%s' should end in -á, -í, -ova or -ina"):format(base.lemma))
-			end
-		else
-			if base.gender == "m" then
-				stem = rmatch(base.lemma, "^(.*)[ýí]$") or rmatch(base.lemma, "^(.*)ův$") or rmatch(base.lemma, "^(.*)in$")
-				if stem then
-					break
-				end
-				error(("Masculine adjectival lemma '%s' should end in -ý, -í, -ův or -in"):format(base.lemma))
-			elseif base.gender == "f" then
-				stem = rmatch(base.lemma, "^(.*)á$")
-				if stem then
-					base.lemma = stem .. "ý"
-					break
-				end
-				stem = rmatch(base.lemma, "^(.*)í$")
-				if stem then
-					break
-				end
-				stem = rmatch(base.lemma, "^(.*ov)a$") or rmatch(base.lemma, "^(.*in)a$")
-				if stem then
-					base.lemma = sub_ov(stem)
-					break
-				end
-				error(("Feminine adjectival lemma '%s' should end in -á, -í, -ova or -ina"):format(base.lemma))
-			else
-				stem = rmatch(base.lemma, "^(.*)é$")
-				if stem then
-					base.lemma = stem .. "ý"
-					break
-				end
-				stem = rmatch(base.lemma, "^(.*)í$")
-				if stem then
-					break
-				end
-				stem = rmatch(base.lemma, "^(.*ov)o$") or rmatch(base.lemma, "^(.*in)o$")
-				if stem then
-					base.lemma = sub_ov(stem)
-					break
-				end
-				error(("Neuter adjectival lemma '%s' should end in -é, -í, -ovo or -ino"):format(base.lemma))
 			end
 		end
+		base.decl = "adj"
 	end
 
 	-- Now set the stem sets if not given.
@@ -2053,7 +2093,6 @@ local function synthesize_adj_lemma(base)
 		stems.nonvowel_stem = stem
 		stems.oblique_stem = stem
 	end
-	base.decl = "adj"
 end
 
 
@@ -2062,6 +2101,11 @@ end
 -- vowel), which is used by determine_stems(). In some cases (specifically with certain foreign nouns), we set
 -- base.lemma to a new value; this is as if the user specified 'decllemma:'.
 local function determine_declension(base)
+	if base.mostlyindecl then
+		base.decl = "mostly-indecl"
+		base.nonvowel_stem = base.lemma
+		return
+	end
 	if base.indecl then
 		base.decl = "indecl"
 		base.nonvowel_stem = base.lemma
@@ -2109,11 +2153,6 @@ local function determine_declension(base)
 	local ending
 	stem, ending = rmatch(base.lemma, "^(.*)([eě])$")
 	if stem then
-		if base.gender == "n" and base.mostlyindecl then
-			base.nonvowel_stem = base.lemma
-			base.decl = "mostly-indecl-n"
-			return
-		end
 		if ending == "ě" then
 			stem = com.convert_paired_plain_to_palatal(stem)
 		end
@@ -2302,7 +2341,7 @@ local function determine_default_reducible(base)
 		-- [[pokec]], plus [[česnek]], which should be reducible but would lead to an impossible consonant cluster.
 		if base.gender == "m" and rfind(stem, "[eě][ck]$") and not com.is_monosyllabic(stem) then
 			base.default_reducible = true
-		elseif base.gender == "f" and rfind(stem, "eň$") then
+		elseif base.gender == "f" and rfind(stem, "[eě]ň$") then
 			-- [[pochodeň]] "torch", [[píseň]] "leather", [[žeň]] "harvest"; not [[reveň]] "rhubarb" or [[dřeň]] "pulp",
 			-- which need an override.
 			base.default_reducible = true
@@ -2327,7 +2366,7 @@ local function determine_default_reducible(base)
 	-- Substitute 'ch' with a single character to make the following code simpler.
 	stem = stem:gsub("ch", com.TEMP_CH)
 	if rfind(stem, com.cons_c .. "[lr]" .. com.cons_c .. "$") then
-		-- [[vrba]], [[slha]]; not reducible. (But note [[jablko]], reducible; needs override.)
+		-- [[vrba]], [[vlha]]; not reducible. (But note [[jablko]], reducible; needs override.)
 		base.default_reducible = false
 	elseif not base.foreign and rfind(stem, com.cons_c .. "[bkhlrmnv]$") then
 		base.default_reducible = true
@@ -2437,10 +2476,10 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		detect_indicator_spec(base)
 		if base.number ~= "pl" then
-			alternant_multiword_spec.sg_genders[base.gender] = true
+			alternant_multiword_spec.sg_genders[base.user_specified_gender] = true
 		end
 		if base.number ~= "sg" then
-			alternant_multiword_spec.pl_genders[base.gender] = true
+			alternant_multiword_spec.pl_genders[base.user_specified_gender] = true
 		end
 	end)
 end
@@ -2502,25 +2541,38 @@ end
 
 
 local function propagate_properties_downward(alternant_multiword_spec, property, default_propval)
-	local propval1 = alternant_multiword_spec[property] or default_propval
+	local function set_and_fetch(obj, default)
+		local retval
+		if obj[property] then
+			retval = obj[property]
+		else
+			obj[property] = default
+			retval = default
+		end
+		if not obj["user_specified_" .. property] then
+			obj["user_specified_" .. property] = retval
+		end
+		return retval
+	end
+	local propval1 = set_and_fetch(alternant_multiword_spec, default_propval)
 	for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
-		local propval2 = alternant_or_word_spec[property] or propval1
+		local propval2 = set_and_fetch(alternant_or_word_spec, propval1)
 		if alternant_or_word_spec.alternants then
 			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-				local propval3 = multiword_spec[property] or propval2
+				local propval3 = set_and_fetch(multiword_spec, propval2)
 				for _, word_spec in ipairs(multiword_spec.word_specs) do
-					local propval4 = word_spec[property] or propval3
+					local propval4 = set_and_fetch(word_spec, propval3)
 					if propval4 == "mixed" then
 						error("Attempt to assign mixed " .. property .. " to word")
 					end
-					word_spec[property] = propval4
+					set_and_fetch(word_spec, propval4)
 				end
 			end
 		else
 			if propval2 == "mixed" then
 				error("Attempt to assign mixed " .. property .. " to word")
 			end
-			alternant_or_word_spec[property] = propval2
+			set_and_fetch(alternant_or_word_spec, propval2)
 		end
 	end
 end
@@ -2666,13 +2718,28 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		local irregs = {}
 		local stemspecs = {}
 		local reducible = nil
+		local function get_genanim(gender, animacy)
+			local genanim = gender_code_to_desc[gender]
+			if gender == "m" then
+				genanim = genanim .. " " .. (animacy == "an" and "animate" or "inanimate")
+			end
+			return genanim
+		end
+			
 		local function do_word_spec(base)
-			local genanim = gender_code_to_desc[base.gender]
-			if base.gender == "m" then
-				genanim = genanim .. " " .. (base.animacy == "an" and "animate" or "inanimate")
+			local actual_genanim = get_genanim(base.user_specified_gender, base.user_specified_animacy)
+			local declined_genanim = get_genanim(base.gender, base.animacy)
+			local genanim
+			if actual_genanim ~= declined_genanim then
+				genanim = ("%s (declined as %s)"):format(actual_genanim, declined_genanim)
+				insert("nouns with actual gender different from declined gender")
+			else
+				genanim = actual_genanim
+			end
+			if base.user_specified_gender == "m" then
 				-- Insert a category for 'Czech masculine animate nouns' or 'Czech masculine inanimate nouns'; the base categories
 				-- [[:Category:Czech masculine nouns]], [[:Czech animate nouns]] are auto-inserted.
-				insert(genanim .. " " .. alternant_multiword_spec.plpos)
+				insert(actual_genanim .. " " .. alternant_multiword_spec.plpos)
 			end
 			for _, stems in ipairs(base.stem_sets) do
 				local props = declprops[base.decl]
@@ -2695,7 +2762,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 					if i == #cats then
 						default_desc = cat:gsub(" POS", "")
 					end
-					cat = cat:gsub("GENDER", genanim)
+					cat = cat:gsub("GENDER", actual_genanim)
 					cat = cat:gsub("POS", alternant_multiword_spec.plpos)
 					insert(cat)
 				end
