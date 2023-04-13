@@ -2232,8 +2232,13 @@ local function determine_declension(base)
 				base.decl = "i-m"
 			end
 		elseif base.gender == "f" then
-			-- [[tsunami]]/[[cunami]], [[okapi]]
-			error("Feminine nouns in -i are indeclinable")
+			if base.soft then
+				-- [[Uruguay]], [[Paraguay]]
+				base.decl = "soft-f"
+			else
+				-- [[tsunami]]/[[cunami]], [[okapi]]
+				error("Feminine nouns in -i are indeclinable")
+			end
 		else
 			error("Neuter nouns in -i are indeclinable")
 		end
@@ -2703,8 +2708,14 @@ local function process_manual_overrides(forms, args, number)
 		if args[param] then
 			forms[slot] = nil
 			if args[param] ~= "-" and args[param] ~= "—" then
-				for _, form in ipairs(rsplit(args[param], "%s*,%s*")) do
-					iut.insert_form(forms, slot, {form=form})
+				local segments = iut.parse_balanced_segment_run(args[param], "[", "]")
+				local comma_separated_groups = iut.split_alternating_runs(segments, "%s*,%s*")
+				for _, comma_separated_group in ipairs(comma_separated_groups) do
+					local formobj = {
+						form = comma_separated_group[1],
+						footnotes = fetch_footnotes(comma_separated_group),
+					}
+					iut.insert_form(forms, slot, formobj)
 				end
 			end
 		end
