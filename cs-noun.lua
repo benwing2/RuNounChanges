@@ -469,7 +469,7 @@ local function apply_special_cases(base, slot, stem, ending)
 		--
 		-- -- Inanimate nouns that don't palatalize: [[ampérmetr]], [[anemometr]], [[sfygmomanometr]], [[sfygmometr]];
 		--	[[dodekaedr]], [[Hamr]], [[ikozaedr]], [[kvádr]], [[sandr]], [[torr]]
-		--	
+		--
 		-- -- Animate nouns that palatalize: [[arbitr]], [[bratr]], [[ekonometr]], [[foniatr]], [[fotr]], [[geometr]],
 		--	[[kmotr]], [[lotr]], [[magistr]], [[metr]] (NOTE: is both animate and inanimate), [[ministr]], [[mistr]],
 		--	[[pediatr]], [[Petr]], [[psychiatr]], [[purkmistr]], [[setr]], [[šamstr]]; [[bobr]], [[fajnšmekr]],
@@ -526,8 +526,14 @@ local function add(base, slot, stems, endings, footnotes)
 			ending = ""
 		else
 			local is_vowel_ending = rfind(ending, "^" .. com.vowel_c)
-			if slot == "ins_s" or slot == "dat_p" or slot == "loc_p" or slot == "ins_p" or is_vowel_ending and slot == "gen_p" then
-				stem = stems.oblique_stem
+			if stems.oblique_slots == "all" or
+				(stems.oblique_slots == "gen_p" or stems.oblique_slots == "all-oblique") and slot == "gen_p" or
+				stems.oblique_slots == "all-oblique" and (slot == "ins_s" or slot == "dat_p" or slot == "loc_p" or slot == "ins_p") then
+				if is_vowel_ending then
+					stem = stems.oblique_vowel_stem
+				else
+					stem = stems.oblique_nonvowel_stem
+				end
 			elseif is_vowel_ending then
 				stem = stems.vowel_stem
 			else
@@ -561,6 +567,12 @@ local function process_slot_overrides(base, do_slot)
 							iut.insert_form(base.forms, slot, {form = form, footnotes = combined_notes})
 						end
 					else
+						-- Convert a null ending to "-" in the acc/voc sg slots so that e.g. [[Kerberos]] declared as
+						-- <m.sg.foreign.gena:u.acc-:a> works correctly and generates accusative 'Kerberos/Kerbera' not
+						-- #'Kerber/Kerbera'.
+						if (slot == "acc_s" or slot == "voc_s") and form == "" then
+							form = "-"
+						end
 						for _, stems in ipairs(base.stem_sets) do
 							add(base, slot, stems, form, combined_notes)
 						end
@@ -1584,7 +1596,9 @@ dot-separated indicators within them). Return value is an object of the form
 	  -- The following fields are filled in by determine_stems()
 	  vowel_stem = "STEM",
 	  nonvowel_stem = "STEM",
-	  oblique_stem = "STEM",
+	  oblique_slots = one of {nil, "gen_p", "all", "all-oblique"},
+	  oblique_vowel_stem = "STEM" or nil (only needs to be set if oblique_slots is non-nil),
+	  oblique_nonvowel_stem = "STEM" or nil (only needs to be set if oblique_slots is non-nil),
 	},
 	...
   },
@@ -1659,7 +1673,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 				for i, comma_separated_group in ipairs(comma_separated_groups) do
 					local pattern = comma_separated_group[1]
 					local orig_pattern = pattern
-					local reducible, vowelalt, oblique_case_vowelalt
+					local reducible, vowelalt, oblique_slots
 					if pattern == "-" then
 						-- default reducible, no vowel alt
 					else
@@ -1678,15 +1692,18 @@ local function parse_indicator_spec(angle_bracket_spec)
 							else
 								vowelalt = "quant"
 							end
+							-- `oblique_slots` will be later changed to "all" if the lemma ends in a consonant.
 							if pattern == "##" or pattern == "##ě" then
-								oblique_case_vowelalt = vowelalt
+								oblique_slots = "all-oblique"
+							else
+								oblique_slots = "gen_p"
 							end
 						end
 					end
 					table.insert(stem_sets, {
 						reducible = reducible,
 						vowelalt = vowelalt,
-						oblique_case_vowelalt = oblique_case_vowelalt,
+						oblique_slots = oblique_slots,
 						footnotes = fetch_footnotes(comma_separated_group)
 					})
 				end
@@ -2091,7 +2108,6 @@ local function synthesize_adj_lemma(base)
 		-- Set the stems.
 		stems.vowel_stem = stem
 		stems.nonvowel_stem = stem
-		stems.oblique_stem = stem
 	end
 end
 
@@ -2328,7 +2344,7 @@ local function determine_default_reducible(base)
 		base.default_reducible = false
 		return
 	end
-		
+
 	local stem
 	stem = rmatch(base.lemma, "^(.*" .. com.cons_c .. ")$")
 	if stem then
@@ -2433,12 +2449,20 @@ local function determine_stems(base)
 			stems.nonvowel_stem = stems.vowel_stem
 			-- Apply vowel alternation first in cases like jádro -> jader; apply_vowel_alternation() will throw an error
 			-- if the vowel being modified isn't the last vowel in the stem.
-			stems.nonvowel_stem, stems.origvowel = com.apply_vowel_alternation(stems.vowelalt, stems.nonvowel_stem)
+			stems.oblique_nonvowel_stem = com.apply_vowel_alternation(stems.vowelalt, stems.nonvowel_stem)
 			if stems.reducible then
 				stems.nonvowel_stem = dereduce(stems.nonvowel_stem)
+				stems.oblique_nonvowel_stem = dereduce(stems.oblique_nonvowel_stem)
 			end
 		else
 			stems.nonvowel_stem = base.nonvowel_stem
+			-- The user specified #, #ě, ## or ##ě and we're dealing with a term like masculine [[bůh]] or feminine
+			-- [[sůl]] that ends in a consonant. In this case, all slots except the nom_s and maybe acc_s have vowel
+			-- alternation.
+			if stems.oblique_slots then
+				stems.oblique_slots = "all"
+			end
+			stems.oblique_nonvowel_stem = com.apply_vowel_alternation(stems.vowelalt, stems.nonvowel_stem)
 			if stems.reducible then
 				stems.vowel_stem = com.reduce(base.nonvowel_stem)
 				if not stems.vowel_stem then
@@ -2447,9 +2471,8 @@ local function determine_stems(base)
 			else
 				stems.vowel_stem = base.nonvowel_stem
 			end
-			stems.vowel_stem, stems.origvowel = com.apply_vowel_alternation(stems.vowelalt, stems.vowel_stem)
 		end
-		stems.oblique_stem = com.apply_vowel_alternation(stems.oblique_case_vowelalt, stems.vowel_stem)
+		stems.oblique_vowel_stem = com.apply_vowel_alternation(stems.vowelalt, stems.vowel_stem)
 	end
 end
 
@@ -2725,7 +2748,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 			end
 			return genanim
 		end
-			
+
 		local function do_word_spec(base)
 			local actual_genanim = get_genanim(base.user_specified_gender, base.user_specified_animacy)
 			local declined_genanim = get_genanim(base.gender, base.animacy)
