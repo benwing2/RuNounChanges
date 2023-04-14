@@ -403,13 +403,6 @@ local cases = {
 }
 
 
-local gender_code_to_desc = {
-	m = "masculine",
-	f = "feminine",
-	n = "neuter",
-}
-
-
 --[=[
 
 Maybe modify the stem and/or ending in certain special cases:
@@ -922,12 +915,13 @@ declprops["a-m"] = {
 
 
 decls["e-m"] = function(base, stems)
-	-- [[zachránce]] "savior"; [[soudce]] "judge"
-	local dat_s = base.surname and "ovi" or {"ovi", "i"}
+	-- [[zachránce]] "savior"; [[soudce]] "judge"; etc.
+	-- At least two inanimates: [[průvodce]] "guide, guidebook; computing wizard"; [[správce]] "manager (software program), configuration program"
+	local dat_s = base.animacy == "inan" and "i" or base.surname and "ovi" or {"ovi", "i"}
 	local loc_s = dat_s
 	add_decl(base, stems, "e", dat_s, nil, "-", loc_s, "em",
 		-- nouns with -ové as well (e.g. [[soudce]] "judge") will need to specify that manually, e.g. <nompli:ové>
-		"i", "ů", "ům", "e", "ích", "i")
+		base.animacy == "inan" and "e" or "i", "ů", "ům", "e", "ích", "i")
 end
 
 declprops["e-m"] = {
@@ -1003,13 +997,13 @@ declprops["u-m"] = {
 }
 
 
-decls["t-m"] = function(base, stems)
+decls["tstem-m"] = function(base, stems)
 	-- E.g. [[kníže]] "prince", [[hrabě]] "earl", [[markrabě]] "margrave".
 	add_decl(base, stems, "ete", "eti", "ete", "-", "eti", "etem",
 		"ata", "at", "atům", "ata", "atech", "aty")
 end
 
-declprops["t-m"] = {
+declprops["tstem-m"] = {
 	cat = "t-stem"
 }
 
@@ -1083,18 +1077,18 @@ declprops["cons-f"] = {
 }
 
 
-decls["i-f"] = function(base, stems)
+decls["istem-f"] = function(base, stems)
 	add_decl(base, stems, "i", "i", "-", "i", "i", "í",
 		-- See above under apply_special_cases(); -E causes depalatalization of ť/ď/ň.
 		"i", "í", "Em", "i", "Ech", "mi")
 end
 
-declprops["i-f"] = {
+declprops["istem-f"] = {
 	cat = "i-stem"
 }
 
 
-decls["mixed-i-f"] = function(base, stems)
+decls["mixed-istem-f"] = function(base, stems)
 	local gen_s, nom_p, dat_p, loc_p, ins_p
 	-- Use of ě vs E below is intentional. Contrast [[oběť]] dat pl 'obětem' (depalatalizing) with [[nit]] ins pl
 	-- 'nitěmi' (palatalizing). See comment above under apply_special_cases().
@@ -1126,7 +1120,7 @@ decls["mixed-i-f"] = function(base, stems)
 		nom_p, "í", dat_p, nom_p, loc_p, ins_p)
 end
 
-declprops["mixed-i-f"] = {
+declprops["mixed-istem-f"] = {
 	-- Include subtype in the table description but not in the category to avoid too many categories.
 	desc = function(base, stems)
 		return ("mixed i-stem [type '%s'] GENDER"):format(base.mixedistem)
@@ -1329,7 +1323,7 @@ declprops["n-n"] = {
 }
 
 
-decls["t-n"] = function(base, stems)
+decls["tstem-n"] = function(base, stems)
 	-- E.g. [[batole]] "toddler", [[čuně]] "pig", [[daňče]] "fallow deer fawn", [[děvče]] "girl", [[ďouče]] "girl"
 	-- (dialectal), [[dítě]] "child" (NOTE: feminine in the plural [[děti]], declined as a feminine i-stem), [[dvojče]]
 	-- "twin", [[hádě]] "young snake", [[house]] "gosling", [[hříbě]] "foal" (pl. hříbata), [[jehně]] "lamb", [[kavče]]
@@ -1351,7 +1345,7 @@ decls["t-n"] = function(base, stems)
 		"ata", "at", "atům", "ata", "atech", "aty")
 end
 
-declprops["t-n"] = {
+declprops["tstem-n"] = {
 	cat = "t-stem"
 }
 
@@ -1478,6 +1472,21 @@ declprops["indecl"] = {
 			return {"indeclinable POS", "indeclinable GENPOS"}
 		end
 	end
+}
+
+
+decls["irreg"] = function(base, stems)
+	if base.lemma == "kdo" then
+		add_decl(base, stems, "koho", "komu", nil, nil, "kom", "kým")
+	elseif base.lemma == "co" then
+		add_decl(base, stems, "čeho", "čemu", nil, nil, "čem", "čím")
+	else
+		error(("Unrecognized irregular lemma '%s'"):format(base.lemma))
+	end
+end
+
+declprops["irreg"] = {
+	cat = "irregular"
 }
 
 
@@ -1727,7 +1736,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 				base.animacy = part
 			elseif part == "hard" or part == "soft" or part == "mixed" or part == "surname" or part == "istem" or
 				part == "-istem" or part == "tstem" or part == "nstem" or part == "tech" or part == "foreign" or
-				part == "mostlyindecl" or part == "indecl" then
+				part == "mostlyindecl" or part == "indecl" or part == "irreg" then
 				if base[part] then
 					error("Can't specify '" .. part .. "' twice: '" .. inside .. "'")
 				end
@@ -1770,11 +1779,15 @@ end
 
 local function set_defaults_and_check_bad_indicators(base)
 	-- Set default values.
-	if base.adj then
-		if base.declgender then
-			error("Can't specify 'declgender' for adjectives and adjectival nouns")
+	if base.irreg then
+		if base.gender or base.number or base.animacy then
+			error("Can't specify gender, number or animacy for irregular pronouns")
 		end
-	else
+		base.gender = "none"
+		base.user_specified_gender = "none"
+		base.number = "sg"
+		base.animacy = base.lemma == "kdo" and "an" or "inan"
+	elseif not base.adj then
 		if not base.gender then
 			error("For nouns, gender must be specified")
 		end
@@ -1807,9 +1820,12 @@ local function set_defaults_and_check_bad_indicators(base)
 		if base.gender ~= "f" then
 			error("'istem' and '-istem' can only be specified with the feminine gender")
 		end
-		if base.adj then
-			error("'istem' and '-istem' cannot be specified with adjectival nouns")
+		if base.adj or base.irreg then
+			error("'istem' and '-istem' cannot be specified with adjectival nouns or irregular pronouns")
 		end
+	end
+	if base.declgender and (base.adj or base.irreg) then
+		error("'declgender' cannot be specified with adjectival nouns or irregular pronouns")
 	end
 end
 
@@ -2180,11 +2196,11 @@ local function determine_declension(base)
 				base.decl = "hard-m"
 				return
 			end
-			if base.animacy ~= "an" then
-				error("Masculine lemma in -e must be animate")
-			end
 			if base.tstem then
-				base.decl = "t-m"
+				if base.animacy ~= "an" then
+					error("T-stem masculine lemma in -e must be animate")
+				end
+				base.decl = "tstem-m"
 			else
 				base.decl = "e-m"
 			end
@@ -2192,7 +2208,7 @@ local function determine_declension(base)
 			base.decl = "soft-f"
 		else
 			if base.tstem then
-				base.decl = "t-n"
+				base.decl = "tstem-n"
 			else
 				base.decl = "soft-n"
 			end
@@ -2302,14 +2318,14 @@ local function determine_declension(base)
 			end
 		elseif base.gender == "f" then
 			if base.mixedistem then
-				base.decl = "mixed-i-f"
+				base.decl = "mixed-istem-f"
 			elseif base.istem then
-				base.decl = "i-f"
+				base.decl = "istem-f"
 			elseif base["-istem"] then
 				base.decl = "cons-f"
 			elseif rfind(base.lemma, "st$") then
 				-- Numerous abstracts in -ost; also [[kost]], [[část]], [[srst]], [[bolest]]
-				base.decl = "i-f"
+				base.decl = "istem-f"
 			else
 				base.decl = "cons-f"
 			end
@@ -2483,7 +2499,13 @@ end
 
 
 local function detect_indicator_spec(base)
-	if base.adj then
+	if base.irreg then
+		if base.stem_sets then
+			error("Reducible and vowel alternation specs cannot be given with irregular pronouns")
+		end
+		base.stem_sets = {{reducible = false, vowel_stem = "", nonvowel_stem = ""}}
+		base.decl = "irreg"
+	elseif base.adj then
 		synthesize_adj_lemma(base)
 	else
 		if base.number == "pl" then
@@ -2507,7 +2529,14 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 			alternant_multiword_spec.sg_genders[base.user_specified_gender] = true
 		end
 		if base.number ~= "sg" then
-			alternant_multiword_spec.pl_genders[base.user_specified_gender] = true
+			-- All t-stem masculines are neuter in the plural.
+			local plgender
+			if base.decl == "tstem-m" then
+				plgender = "n"
+			else
+				plgender = base.user_specified_gender
+			end
+			alternant_multiword_spec.pl_genders[plgender] = true
 		end
 	end)
 end
@@ -2540,7 +2569,7 @@ propagate_multiword_properties = function(multiword_spec, property, mixed_value,
 			propagate_alternant_properties(word_specs[i], property, mixed_value)
 			is_nounal = not not word_specs[i][property]
 		elseif nouns_only then
-			is_nounal = not word_specs[i].adj
+			is_nounal = not word_specs[i].adj and not word_specs[i].irreg
 		else
 			is_nounal = not not word_specs[i][property]
 		end
@@ -2637,7 +2666,7 @@ local function determine_noun_status(alternant_multiword_spec)
 			local is_noun = false
 			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
 				for j, word_spec in ipairs(multiword_spec.word_specs) do
-					if not word_spec.adj then
+					if not word_spec.adj and not word_spec.irreg then
 						multiword_spec.first_noun = j
 						is_noun = true
 						break
@@ -2647,7 +2676,7 @@ local function determine_noun_status(alternant_multiword_spec)
 			if is_noun then
 				alternant_multiword_spec.first_noun = i
 			end
-		elseif not alternant_or_word_spec.adj then
+		elseif not alternant_or_word_spec.adj and not alternant_or_word_spec.irreg then
 			alternant_multiword_spec.first_noun = i
 			return
 		end
@@ -2753,9 +2782,15 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		local stemspecs = {}
 		local reducible = nil
 		local function get_genanim(gender, animacy)
+			local gender_code_to_desc = {
+				m = "masculine",
+				f = "feminine",
+				n = "neuter",
+				none = "",
+			}
 			local genanim = gender_code_to_desc[gender]
-			if gender == "m" then
-				genanim = genanim .. " " .. (animacy == "an" and "animate" or "inanimate")
+			if gender == "m" or gender == "none" then
+				genanim = genanim .. (genanim == "" and "" or " ") .. (animacy == "an" and "animate" or "inanimate")
 			end
 			return genanim
 		end
