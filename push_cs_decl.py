@@ -23,11 +23,16 @@ def compare_form(slot, orig, repl, pagemsg):
   replforms = repl.split(",")
   return set(origforms) == set(replforms)
 
-def compare_forms(origforms, replforms, pagemsg):
+def compare_forms(origforms, replforms, ignore_slots, pagemsg):
+  displaycall = tempcall.replace("|json=1", "")
   for slot in set(replforms.keys() + origforms.keys()):
     if slot.endswith("_linked"):
       continue
-    displaycall = tempcall.replace("|json=1", "")
+    if slot in ignore_slots:
+      origform = origforms.get(slot, "missing")
+      replform = replforms.get(slot, "missing")
+      pagemsg("Skipping slot %s in ignore_slots (original=%s, replacement=%s)" % (slot, origform, replform))
+      continue
     if slot not in origforms:
       pagemsg("WARNING: for replacement %s, form %s=%s in replacement forms but missing in original forms" % (
         displaycall, slot, replforms[slot]))
@@ -43,7 +48,7 @@ def compare_forms(origforms, replforms, pagemsg):
       return False
   return True
 
-def replace_decl(page, index, parsed, decl, declforms):
+def replace_decl(page, index, parsed, decl, declforms, ignore_slots):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -85,14 +90,19 @@ def replace_decl(page, index, parsed, decl, declforms):
         forms[slot] = form
       i += 1
 
-    if compare_forms(forms, declforms, pagemsg):
+    if compare_forms(forms, declforms, ignore_slots, pagemsg):
       origt = unicode(t)
       t.name = "cs-ndecl"
       del t.params[:]
       t.add("1", decl)
       newt = unicode(t)
-      pagemsg("Replaced %s with %s" % (origt, newt))
-      notes.append("replace {{%s|...}} with %s" % (tn, newt))
+      ignore_msg = ""
+      if ignore_slots:
+        ignore_msg = " (ignoring slot%s %s, likely wrong)" % (
+          "s" if len(ignore_slots) > 1 else "", ",".join(ignore_slots)
+        )
+      pagemsg("Replaced %s with %s%s" % (origt, newt, ignore_msg))
+      notes.append("replace {{%s|...}} with %s%s" % (tn, newt, ignore_msg))
 
   if not saw_decl:
     pagemsg("WARNING: Didn't see declension")
@@ -108,14 +118,20 @@ def yield_decls():
   for lineno, line in blib.iter_items_from_file(args.declfile, start, end):
     m = re.search(r'^\[\[(.*?)\]\] ".*?" (.*)$', line)
     if not m:
-      m = re.search(r'^\[\[(.*?)\]\] (.*)$', line)
+      m = re.search(r"^\[\[(.*?)\]\] (.*)$", line)
     if not m:
       msg("Line %s: WARNING: Unrecognized line: %s" % (lineno, line))
       continue
     pagename, decl = m.groups()
-    yield lineno, pagename, decl
+    m = re.search("^(.*) !([^ ]*)$", decl)
+    if m:
+      decl, ignore_slots = m.groups()
+      ignore_slots = ignore_slots.split(",")
+    else:
+      ignore_slots = []
+    yield lineno, pagename, decl, ignore_slots
 
-for index, pagename, decl in yield_decls():
+for index, pagename, decl, ignore_slots in yield_decls():
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagename, txt))
   def errandpagemsg(txt):
@@ -142,6 +158,6 @@ for index, pagename, decl in yield_decls():
     pagemsg("WARNING: Didn't find page; declension is {{cs-ndecl|%s}}" % decl)
     continue
   def do_replace_decl(page, index, parsed):
-    return replace_decl(page, index, parsed, decl, predforms)
+    return replace_decl(page, index, parsed, decl, predforms, ignore_slots)
   blib.do_edit(page, index, do_replace_decl, save=args.save, verbose=args.verbose,
       diff=args.diff)
