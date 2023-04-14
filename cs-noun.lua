@@ -278,15 +278,21 @@ FIXME:
 7. Support masculine foreign nouns in unpronounced final -e (e.g. [[software]]). [DONE]
 8. Support neuter foreign nouns in -um/-on. [DONE]
 9. Support neuter foreign nouns in -ium/-ion. [DONE]
-10. Support paired body parts, e.g. [[ruka]], [[noha]], [[oko]], [[ucho]], [[koleno]], [[rameno]].
-11. Support masculine nouns in -e/ě that are neuter in the plural.
+10. Support paired body parts, e.g. [[ruka]], [[noha]], [[oko]], [[ucho]], [[koleno]], [[rameno]]. [WON'T DO;
+    JUST SEPARATE THE MEANINGS AND GIVE THEM DIFFERENT DECLENSIONS]
+11. Support masculine nouns in -e/ě that are neuter in the plural. [DONE]
 12. Correctly handle -e vs. -ě, e.g. soft neuters have both [[kutě]] and [[poledne]]. [DONE]
 13. Always use specified lemma in nom_pl and maybe acc_pl when plurale tantum. [DONE]
 14. Support feminine nouns in -ca/-ča/-ša/-ža. [DONE]
 15. Support feminine nouns in -ja/-ňa. [DONE]
 16. Support mixed i-stem feminine nouns. [DONE]
 17. Support "c as k" feminine nouns like [[ayahuasca]].
-18. Support 'declgender'.
+18. Support 'declgender'. [DONE]
+19. Support pronouns with clitics. [DONE]
+20. Singular-only and plural-only terms should not have number in accelerator form. [DONE]
+21. Support [[úterý]] (like neuters in -í). [DONE]
+22. Support feminines in -i ([[máti]], [[pramáti]]).
+23. Support foreign nouns in -ie ([[zombie]], [[hippie]], [[yuppie]]).
 
 ]=]
 
@@ -332,13 +338,19 @@ end
 
 local output_noun_slots = {
 	nom_s = "nom|s",
+	nom_s_linked = "nom|s",
 	gen_s = "gen|s",
+	gen_s_linked = "gen|s",
+	clitic_gen_s = "clitic|gen|s",
 	dat_s = "dat|s",
+	clitic_dat_s = "clitic|dat|s",
 	acc_s = "acc|s",
+	clitic_acc_s = "clitic|acc|s",
 	voc_s = "voc|s",
 	loc_s = "loc|s",
 	ins_s = "ins|s",
 	nom_p = "nom|p",
+	nom_p_linked = "nom|p",
 	gen_p = "gen|p",
 	dat_p = "dat|p",
 	acc_p = "acc|p",
@@ -348,9 +360,20 @@ local output_noun_slots = {
 }
 
 
-local output_noun_slots_with_linked = m_table.shallowcopy(output_noun_slots)
-output_noun_slots_with_linked["nom_s_linked"] = "nom|s"
-output_noun_slots_with_linked["nom_p_linked"] = "nom|p"
+local function get_output_noun_slots(alternant_multiword_spec)
+	-- FIXME: To save memory we modify the table in-place. This won't work if we ever end up with multiple calls to
+	-- this module in the same Lua invocation, and we would need to clone the table.
+	if alternant_multiword_spec.number ~= "both" then
+		for slot, accel_form in pairs(output_noun_slots) do
+			output_noun_slots[slot] = accel_form:gsub("|[sp]$", "")
+		end
+	end
+	return output_noun_slots
+end
+
+
+local potential_lemma_slots = {"nom_s", "nom_p", "gen_s"}
+
 
 local input_params_to_slots_both = {
 	[1] = "nom_s",
@@ -400,6 +423,13 @@ local cases = {
 	voc = true,
 	loc = true,
 	ins = true,
+}
+
+
+local clitic_cases = {
+	gen = true,
+	dat = true,
+	acc = true,
 }
 
 
@@ -607,10 +637,41 @@ local function add_decl(base, stems,
 	add(base, "ins_p", stems, ins_p, footnotes)
 end
 
+local function add_sg_decl(base, stems,
+	gen_s, dat_s, acc_s, voc_s, loc_s, ins_s, footnotes
+)
+	add_decl(base, stems, gen_s, dat_s, acc_s, voc_s, loc_s, ins_s,
+		nil, nil, nil, nil, nil, nil, footnotes)
+end
+
+local function add_pl_only_decl(base, stems,
+	gen_p, dat_p, acc_p, loc_p, ins_p, footnotes
+)
+	add_decl(base, stems, nil, nil, nil, nil, nil, nil, 
+		"-", gen_p, dat_p, acc_p, loc_p, ins_p, footnotes)
+end
+
+local function add_sg_decl_with_clitic(base, stems,
+	gen_s, clitic_gen_s, dat_s, clitic_dat_s, acc_s, clitic_acc_s, voc_s, loc_s, ins_s, footnotes, no_nom_s
+)
+	if not no_nom_s then
+		add(base, "nom_s", stems, "-", footnotes)
+	end
+	add(base, "gen_s", stems, gen_s, footnotes)
+	add(base, "clitic_gen_s", stems, clitic_gen_s, footnotes)
+	add(base, "dat_s", stems, dat_s, footnotes)
+	add(base, "clitic_dat_s", stems, clitic_dat_s, footnotes)
+	add(base, "acc_s", stems, acc_s, footnotes)
+	add(base, "clitic_acc_s", stems, clitic_acc_s, footnotes)
+	add(base, "voc_s", stems, voc_s, footnotes)
+	add(base, "loc_s", stems, loc_s, footnotes)
+	add(base, "ins_s", stems, ins_s, footnotes)
+end
+
 
 local function handle_derived_slots_and_overrides(base)
 	local function is_non_derived_slot(slot)
-		return slot ~= "voc_p" and slot ~= "acc_s"
+		return slot ~= "voc_p" and slot ~= "acc_s" and slot ~= "clitic_acc_s"
 	end
 
 	local function is_derived_slot(slot)
@@ -623,9 +684,15 @@ local function handle_derived_slots_and_overrides(base)
 	process_slot_overrides(base, is_non_derived_slot)
 
 	-- Generate the remaining slots that are derived from other slots.
-	iut.insert_forms(base.forms, "voc_p", base.forms.nom_p)
+	if not base.irreg then
+		-- Irregular pronouns don't have a vocative (singular or plural).
+		iut.insert_forms(base.forms, "voc_p", base.forms.nom_p)
+	end
 	if not base.forms.acc_s and not base.slot_overridden.acc_s then
 		iut.insert_forms(base.forms, "acc_s", base.forms[base.animacy == "inan" and "nom_s" or "gen_s"])
+	end
+	if not base.forms.clitic_acc_s and not base.slot_overridden.clitic_acc_s then
+		iut.insert_forms(base.forms, "clitic_acc_s", base.forms[base.animacy == "inan" and "nom_s" or "clitic_gen_s"])
 	end
 
 	-- Handle overrides for derived slots, to allow them to be overridden.
@@ -634,7 +701,7 @@ local function handle_derived_slots_and_overrides(base)
 	-- Compute linked versions of potential lemma slots, for use in {{cs-noun}}.
 	-- We substitute the original lemma (before removing links) for forms that
 	-- are the same as the lemma, if the original lemma has links.
-	for _, slot in ipairs({"nom_s", "nom_p"}) do
+	for _, slot in ipairs(potential_lemma_slots) do
 		iut.insert_forms(base.forms, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
 			if form == base.orig_lemma_no_links and rfind(base.orig_lemma, "%[%[") then
 				return base.orig_lemma
@@ -844,9 +911,6 @@ decls["mixed-m"] = function(base, stems)
 	-- NOTE: IJP tends to list the soft endings first, but per their section on this
 	-- (https://prirucka.ujc.cas.cz/en/?id=220), the hard endings tend to predominate in modern use, so we list them
 	-- first.
-	-- FIXME: Implement different handling for -l, -n, -t and animate
-	-- combination of hard and soft endings; inanimate only; e.g. [[kotel]] "cauldron", [[řemen]] "strap",
-	-- [[pramen]] "source", [[kámen]] "stone", [[loket]] "elbow"
 	if base.animacy == "an" then
 		if rfind(base.lemma, "l$") then
 			-- [[anděl]] "angel", [[manžel]] "husband", [[strašpytel]] "coward"; 'strašpytel' has a different declension
@@ -868,13 +932,14 @@ decls["mixed-m"] = function(base, stems)
 		end
 	else
 		-- Given in IJP: burel, hnědel, chmel, krevel, kužel, námel, plevel, tmel, zádrhel, apríl, artikul, koukol, rubl,
-		-- úběl, plus reducible nouns cumel, chrchel, kotel, sopel, uhel. Also [[městys]]. Many of them are listed in the
+		-- úběl, plus reducible nouns cumel, chrchel, [[kotel]] "cauldron", sopel, uhel. Also [[městys]]. Many of them are listed in the
 		-- IJP tables with only hard or with fewer soft forms, so need to be investigated individually.
 		if rfind(base.lemma, "[ls]$") then
 			add_decl(base, stems, {"u", "e"}, {"u", "i"}, nil, {"e", "i"}, {"u", "e", "i"}, "em",
 				{"y", "e"}, "ů", "ům", {"y", "e"}, {"ech", "ích"}, {"y", "i"})
 		else
-			-- -n/-t; hard in the plural: hřeben, ječmen, kámen, kmen, kořen, křemen, plamen, pramen, řemen, den, týden.
+			-- -n/-t; hard in the plural: hřeben, ječmen, [[kámen]] "stone", kmen, kořen, křemen, plamen,
+			-- [[pramen]] "source", [[řemen]] "strap", den, týden, [[loket]] "elbow".
 			-- There may be deviations (e.g. soft plural forms for [[den]]), so need to be investigated individually.
 			add_decl(base, stems, {"u", "e"}, {"u", "i"}, nil, "i", {"u", "i"}, "em",
 				"y", "ů", "ům", "y", "ech", "y")
@@ -1016,15 +1081,8 @@ decls["hard-f"] = function(base, stems)
 	-- [[doňa]], [[Darja]], [[Troja]]/[[Trója]]), which normally have a mixed declension.
 	local dat_s = rfind(base.vowel_stem, "[cčšžďťjň]$") and {"ě", "i"} or "ě"
 	local loc_s = dat_s
-	add_decl(base, stems, "y", dat_s, "u", "o", loc_s, "ou")
-	if base.pldual then
-		-- Currently [[ruka]] "hand" and [[noha]] "leg" use a special template {{cs-decl-noun-dual}} that includes
-		-- two columns, one for plural and one for dual; need to investigate further.
-		error("FIXME")
-	else
-		add_decl(base, stems, nil, nil, nil, nil, nil, nil,
-			"y", "", "ám", "y", "ách", "ami")
-	end
+	add_decl(base, stems, "y", dat_s, "u", "o", loc_s, "ou",
+		"y", "", "ám", "y", "ách", "ami")
 end
 
 declprops["hard-f"] = {
@@ -1300,13 +1358,14 @@ declprops["soft-n"] = {
 
 
 decls["í-n"] = function(base, stems)
-	-- [[nábřeží]] "waterfront"
-	add_decl(base, stems, "í", "í", "-", "-", "í", "ím",
-		"í", "í", "ím", "í", "ích", "ími")
+	-- [[nábřeží]] "waterfront" and a zillion others; also [[úterý]] "Tuesday".
+	-- NOTE: The stem ends in -í/-ý.
+	add_decl(base, stems, "", "", "-", "-", "", "m",
+		"", "", "m", "", "ch", "mi")
 end
 
 declprops["í-n"] = {
-	cat = "GENPOS in -í"
+	cat = "GENPOS in -í/-ý"
 }
 
 
@@ -1475,13 +1534,88 @@ declprops["indecl"] = {
 }
 
 
+local function set_irreg_defaults(base)
+	if base.gender or base.lemma ~= "ona" and base.number or base.animacy then
+		error("Can't specify gender, number or animacy for irregular pronouns")
+	end
+
+	local function irreg_props()
+		-- Return values are GENDER, NUMBER, ANIMACY, HAS_CLITIC.
+		if base.lemma == "kdo" then
+			return "none", "sg", "an", false
+		elseif base.lemma == "co" then
+			return "none", "sg", "inan", false
+		elseif base.lemma == "já" or base.lemma == "ty" then
+			return "none", "sg", "an", true
+		elseif base.lemma == "my" or base.lemma == "vy" then
+			return "none", "pl", "an", false
+		elseif base.lemma == "on" then
+			return "m", "sg", "none", true
+		elseif base.lemma == "ono" then
+			return "n", "sg", "inan", true
+		elseif base.lemma == "oni" then
+			return "m", "pl", "an", false
+		elseif base.lemma == "ony" then
+			return "none", "pl", "none", false
+		elseif base.lemma == "ona" then
+			if base.number ~= "sg" and base.number ~= "pl" then
+				error("Must specify '.sg' or '.pl' with lemma 'ona'")
+			end
+			if base.number == "sg" then
+				return "f", "sg", "none", false
+			else
+				return "n", "pl", "inan", false
+			end
+		elseif base.lemma == "sebe" then
+			return "none", "none", "none", true
+		else
+			error(("Unrecognized irregular pronoun '%s'"):format(base.lemma))
+		end
+	end
+
+	local gender, number, animacy, has_clitic = irreg_props()
+	base.gender = gender
+	base.user_specified_gender = gender
+	base.number = number
+	base.animacy = animacy
+	base.has_clitic = has_clitic
+end
+
+
 decls["irreg"] = function(base, stems)
+	local after_prep_footnote =	"[after a preposition]"
 	if base.lemma == "kdo" then
 		add_decl(base, stems, "koho", "komu", nil, nil, "kom", "kým")
 	elseif base.lemma == "co" then
 		add_decl(base, stems, "čeho", "čemu", nil, nil, "čem", "čím")
+	elseif base.lemma == "já" then
+		add_sg_decl_with_clitic(base, stems, "mne", "mě", "mně", "mi", nil, nil, nil, "mně", "mnou")
+	elseif base.lemma == "ty" then
+		add_sg_decl_with_clitic(base, stems, "tebe", "tě", "tobě", "ti", nil, nil, nil, "tobě", "tebou")
+	elseif base.lemma == "my" then
+		add_pl_only_decl(base, stems, "nás", "nám", "nás", "nás", "námi")
+	elseif base.lemma == "vy" then
+		add_pl_only_decl(base, stems, "vás", "vám", "vás", "vás", "vámi")
+	elseif base.lemma == "on" or base.lemma == "ono" then
+		local acc_s = base.lemma == "on" and {"jeho", "jej"} or "je"
+		local clitic_acc_s = base.lemma == "on" and {"jej", "ho"} or "je"
+		local prep_acc_s = base.lemma == "on" and {"něho", "něj"} or "ně"
+		local prep_clitic_acc_s = base.lemma == "on" and "-ň" or nil
+		add_sg_decl_with_clitic(base, stems, "jeho", "ho", "jemu", "mu", acc_s, clitic_acc_s, nil, nil, "jím")
+		add_sg_decl_with_clitic(base, stems, "něho", nil, "němu", nil, prep_acc_s, prep_clitic_acc_s, nil, "něm", "ním",
+			after_prep_footnote)
+	elseif base.lemma == "ona" and base.number == "sg" then
+		add_sg_decl(base, stems, "jí", "jí", "ji", nil, nil, "jí")
+		add_sg_decl(base, stems, "ní", "ní", "ni", nil, "ní", "ní", after_prep_footnote)
+	elseif base.lemma == "oni" or base.lemma == "ony" or base.lemma == "ona" then
+		add_pl_only_decl(base, stems, "jich", "jim", "je", nil, "jimi")
+		add_pl_only_decl(base, stems, "nich", "nim", "ně", "nich", "nimi", after_prep_footnote)
+	elseif base.lemma == "sebe" then
+		-- Underlyingly we handle [[sebe]]'s slots as singular.
+		add_sg_decl_with_clitic(base, stems, "sebe", "sebe", "sobě", "si", "sebe", "se", nil, "sobě", "sebou",
+			nil, "no nom_s")
 	else
-		error(("Unrecognized irregular lemma '%s'"):format(base.lemma))
+		error(("Internal error: Unrecognized irregular lemma '%s'"):format(base.lemma))
 	end
 end
 
@@ -1554,6 +1688,14 @@ local function parse_override(segments)
 		if rfind(part, "^pl") then
 			part = usub(part, 3)
 			slot = case .. "_p"
+		elseif rfind(part, "^cl") then
+			-- No plural clitic cases at this point.
+			part = usub(part, 3)
+			if clitic_cases[case] then
+				slot = "clitic_" .. case .. "_s"
+			else
+				error(("Unrecognized clitic case '%s' in override: '%s'"):format(case, table.concat(segments)))
+			end
 		else
 			slot = case .. "_s"
 		end
@@ -1780,13 +1922,7 @@ end
 local function set_defaults_and_check_bad_indicators(base)
 	-- Set default values.
 	if base.irreg then
-		if base.gender or base.number or base.animacy then
-			error("Can't specify gender, number or animacy for irregular pronouns")
-		end
-		base.gender = "none"
-		base.user_specified_gender = "none"
-		base.number = "sg"
-		base.animacy = base.lemma == "kdo" and "an" or "inan"
+		set_irreg_defaults(base)
 	elseif not base.adj then
 		if not base.gender then
 			error("For nouns, gender must be specified")
@@ -1834,32 +1970,9 @@ local function set_all_defaults_and_check_bad_indicators(alternant_multiword_spe
 	local is_multiword = #alternant_multiword_spec.alternant_or_word_specs > 1
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		set_defaults_and_check_bad_indicators(base)
-		base.multiword = is_multiword -- not currently used; consider deleting
+		base.multiword = is_multiword -- FIXME: not currently used; consider deleting
+		alternant_multiword_spec.has_clitic = alternant_multiword_spec.has_clitic or base.has_clitic
 	end)
-end
-
-
-local function undo_vowel_alternation(base, stem)
-	error("Needs rethinking, may not be needed at all")
-	if base.vowelalt == "quant" then
-		local modstem = rsub(stem, "([aeěo])(" .. com.cons_c .. "*)$",
-			function(vowel, post)
-				if vowel == "a" then
-					return "á" .. post
-				elseif vowel == "e" or vowel == "ě" then
-					return "í" .. post
-				else
-					return "ů" .. post
-				end
-			end
-		)
-		if modstem == stem then
-			error("Indicator 'quant' can't be undone because stem '" .. stem .. "' doesn't have a, e, ě or o as its last vowel")
-		end
-		return modstem
-	else
-		return stem
-	end
 end
 
 
@@ -2275,11 +2388,11 @@ local function determine_declension(base)
 		base.vowel_stem = stem
 		return
 	end
-	stem = rmatch(base.lemma, "^(.*)í$")
+	stem = rmatch(base.lemma, "^(.*[íý])$")
 	if stem then
 		if base.gender == "m" or base.gender == "f" then
 			-- FIXME: Do any exist? If not, update this message.
-			error("Support for masculine or feminine nouns in -í not yet implemented")
+			error("Support for non-adjectival non-indeclinable masculine and feminine nouns in -í/-ý not yet implemented")
 		else
 			base.decl = "í-n"
 		end
@@ -2786,13 +2899,25 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 				m = "masculine",
 				f = "feminine",
 				n = "neuter",
-				none = "",
+				none = nil,
 			}
-			local genanim = gender_code_to_desc[gender]
-			if gender == "m" or gender == "none" then
-				genanim = genanim .. (genanim == "" and "" or " ") .. (animacy == "an" and "animate" or "inanimate")
+			local animacy_code_to_desc = {
+				an = "animate",
+				inan = "inanimate",
+				none = nil,
+			}
+			local descs = {}
+			table.insert(descs, gender_code_to_desc[gender])
+			if gender ~= "f" and gender ~= "n" then
+				-- masculine or "none" (e.g. certain irregular pronouns)
+				table.insert(descs, animacy_code_to_desc[animacy])
 			end
-			return genanim
+			return table.concat(descs, " ")
+		end
+
+		local function trim(text)
+			text = text:gsub(" +", " ")
+			return mw.text.trim(text)
 		end
 
 		local function do_word_spec(base)
@@ -2833,7 +2958,8 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 					end
 					cat = cat:gsub("GENDER", actual_genanim)
 					cat = cat:gsub("POS", alternant_multiword_spec.plpos)
-					insert(cat)
+					-- Need to trim `cat` because actual_genanim may be an empty string.
+					insert(trim(cat))
 				end
 
 				local desc = props.desc
@@ -2842,7 +2968,8 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 				end
 				desc = desc or default_desc
 				desc = desc:gsub("GENDER", genanim)
-				m_table.insertIfNot(decldescs, desc)
+				-- Need to trim `desc` because genanim may be an empty string.
+				m_table.insertIfNot(decldescs, trim(desc))
 
 				local vowelalt
 				if stems.vowelalt == "quant" then
@@ -2894,7 +3021,8 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 				do_word_spec(alternant_or_word_spec)
 			end
 		end
-		if alternant_multiword_spec.number ~= "both" then
+		if alternant_multiword_spec.number == "sg" or alternant_multiword_spec.number == "pl" then
+			-- not "both" or "none" (for [[sebe]])
 			table.insert(annparts, alternant_multiword_spec.number == "sg" and "sg-only" or "pl-only")
 		end
 		if #decldescs == 0 then
@@ -2930,26 +3058,23 @@ end
 
 local function show_forms(alternant_multiword_spec)
 	local lemmas = {}
-	if alternant_multiword_spec.forms.nom_s then
-		for _, nom_s in ipairs(alternant_multiword_spec.forms.nom_s) do
-			table.insert(lemmas, nom_s.form)
-		end
-	elseif alternant_multiword_spec.forms.nom_p then
-		for _, nom_p in ipairs(alternant_multiword_spec.forms.nom_p) do
-			table.insert(lemmas, nom_p.form)
+	for _, slot in ipairs(potential_lemma_slots) do
+		if alternant_multiword_spec.forms[slot] then
+			for _, formobj in ipairs(alternant_multiword_spec.forms[slot]) do
+				-- FIXME, now can support footnotes as qualifiers in headwords?
+				table.insert(lemmas, formobj.form)
+			end
+			break
 		end
 	end
 	local props = {
 		lemmas = lemmas,
-		slot_table = output_noun_slots_with_linked,
+		slot_table = alternant_multiword_spec.output_noun_slots,
 		lang = lang,
 		canonicalize = function(form)
 			-- return com.remove_variant_codes(form)
 			return form
 		end,
-		-- Explicit additional top-level footnotes only occur with {{cs-ndecl-manual}} and variants.
-		footnotes = alternant_multiword_spec.footnotes,
-		allow_footnote_symbols = not not alternant_multiword_spec.footnotes,
 	}
 	iut.show_forms(alternant_multiword_spec.forms, props)
 end
@@ -2958,12 +3083,23 @@ end
 local function make_table(alternant_multiword_spec)
 	local forms = alternant_multiword_spec.forms
 
-	local table_spec_both = [=[
-<div class="NavFrame" style="display: inline-block;min-width: 45em">
-<div class="NavHead" style="background:#eff7ff" >{title}{annotation}</div>
+	local function template_prelude(min_width)
+		return rsub([=[
+<div>
+<div class="NavFrame" style="display: inline-block; min-width: MINWIDTHem">
+<div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
 <div class="NavContent">
-{\op}| style="background:#F9F9F9;text-align:center;min-width:45em" class="inflection-table"
+{\op}| style="background:#F9F9F9;text-align:center;min-width:MINWIDTHem" class="inflection-table"
 |-
+]=], "MINWIDTH", min_width)
+	end
+
+	local function template_postlude()
+		return [=[
+|{\cl}{notes_clause}</div></div></div>]=]
+	end
+
+	local table_spec_both = template_prelude("45") .. [=[
 ! style="width:33%;background:#d9ebff" |
 ! style="background:#d9ebff" | singular
 ! style="background:#d9ebff" | plural
@@ -2995,76 +3131,80 @@ local function make_table(alternant_multiword_spec)
 !style="background:#eff7ff"|instrumental
 | {ins_s}
 | {ins_p}
-|{\cl}{notes_clause}</div></div>]=]
+]=] .. template_postlude()
 
-	local table_spec_sg = [=[
-<div class="NavFrame" style="width:30em">
-<div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
-<div class="NavContent">
-{\op}| style="background:#F9F9F9;text-align:center;width:30em" class="inflection-table"
-|-
+	local function get_table_spec_one_number(number, numcode)
+		local table_spec_one_number = [=[
 ! style="width:33%;background:#d9ebff" |
-! style="background:#d9ebff" | singular
+! style="background:#d9ebff" | NUMBER
 |-
 !style="background:#eff7ff"|nominative
-| {nom_s}
+| {nom_CODE}
 |-
 !style="background:#eff7ff"|genitive
-| {gen_s}
+| {gen_CODE}
 |-
 !style="background:#eff7ff"|dative
-| {dat_s}
+| {dat_CODE}
 |-
 !style="background:#eff7ff"|accusative
-| {acc_s}
+| {acc_CODE}
 |-
 !style="background:#eff7ff"|vocative
-| {voc_s}
+| {voc_CODE}
 |-
 !style="background:#eff7ff"|locative
-| {loc_s}
+| {loc_CODE}
 |-
 !style="background:#eff7ff"|instrumental
-| {ins_s}
-|{\cl}{notes_clause}</div></div>]=]
+| {ins_CODE}
+]=]
+		return template_prelude("30") .. table_spec_one_number:gsub("NUMBER", number):gsub("CODE", numcode) ..
+			template_postlude()
+	end
 
-	local table_spec_pl = [=[
-<div class="NavFrame" style="width:30em">
-<div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
-<div class="NavContent">
-{\op}| style="background:#F9F9F9;text-align:center;width:30em" class="inflection-table"
+	local function get_table_spec_one_number_clitic(number, numcode)
+		local table_spec_one_number_clitic = [=[
+! rowspan=2 style="width:33%;background:#d9ebff"|
+! colspan=2 style="background:#d9ebff" | NUMBER
 |-
-! style="width:33%;background:#d9ebff" |
-! style="background:#d9ebff" | plural
+! style="width:33%;background:#d9ebff" | stressed
+! style="background:#d9ebff" | clitic
 |-
 !style="background:#eff7ff"|nominative
-| {nom_p}
+| colspan=2 | {nom_CODE}
 |-
 !style="background:#eff7ff"|genitive
-| {gen_p}
+| {gen_CODE}
+| {clitic_gen_CODE}
 |-
 !style="background:#eff7ff"|dative
-| {dat_p}
+| {dat_CODE}
+| {clitic_dat_CODE}
 |-
 !style="background:#eff7ff"|accusative
-| {acc_p}
+| {acc_CODE}
+| {clitic_acc_CODE}
 |-
 !style="background:#eff7ff"|vocative
-| {voc_p}
+| colspan=2 | {voc_CODE}
 |-
 !style="background:#eff7ff"|locative
-| {loc_p}
+| colspan=2 | {loc_CODE}
 |-
 !style="background:#eff7ff"|instrumental
-| {ins_p}
-|{\cl}{notes_clause}</div></div>]=]
+| colspan=2 | {ins_CODE}
+]=]
+		return template_prelude("40") .. table_spec_one_number_clitic:gsub("NUMBER", number):gsub("CODE", numcode) ..
+			template_postlude()
+	end
 
-	local notes_template = [===[
+	local notes_template = [=[
 <div style="width:100%;text-align:left;background:#d9ebff">
 <div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
 {footnote}
 </div></div>
-]===]
+]=]
 
 	if alternant_multiword_spec.title then
 		forms.title = alternant_multiword_spec.title
@@ -3079,10 +3219,19 @@ local function make_table(alternant_multiword_spec)
 		forms.annotation = " (<span style=\"font-size: smaller;\">" .. annotation .. "</span>)"
 	end
 
+	local number, numcode
+	if alternant_multiword_spec.number == "sg" then
+		number, numcode = "singular", "s"
+	elseif alternant_multiword_spec.number == "pl" then
+		number, numcode = "plural", "p"
+	elseif alternant_multiword_spec.number == "none" then -- used for [[sebe]]
+		number, numcode = "", "s"
+	end
+
 	local table_spec =
-		alternant_multiword_spec.number == "sg" and table_spec_sg or
-		alternant_multiword_spec.number == "pl" and table_spec_pl or
-		table_spec_both
+		alternant_multiword_spec.number == "both" and table_spec_both or
+		alternant_multiword_spec.has_clitic and get_table_spec_one_number_clitic(number, numcode) or
+		get_table_spec_one_number(number, numcode)
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
 	return m_string_utilities.format(table_spec, forms)
@@ -3116,7 +3265,6 @@ end
 function export.do_generate_forms(parent_args, from_headword)
 	local params = {
 		[1] = {required = true, default = "bůh<m.an.#.voce>"},
-		footnote = {list = true},
 		title = {},
 		pagename = {},
 		json = {type = "boolean"},
@@ -3144,7 +3292,6 @@ function export.do_generate_forms(parent_args, from_headword)
 	alternant_multiword_spec.title = args.title
 	alternant_multiword_spec.pos = args.pos
 	alternant_multiword_spec.plpos = require("Module:string utilities").pluralize(alternant_multiword_spec.pos)
-	alternant_multiword_spec.footnotes = args.footnote
 	alternant_multiword_spec.args = args
 	local pagename = args.pagename or from_headword and args.head[1] or mw.title.getCurrentTitle().subpageText
 	normalize_all_lemmas(alternant_multiword_spec, pagename)
@@ -3159,11 +3306,12 @@ function export.do_generate_forms(parent_args, from_headword)
 	propagate_properties(alternant_multiword_spec, "gender", "mixed", "mixed")
 	detect_all_indicator_specs(alternant_multiword_spec)
 	determine_noun_status(alternant_multiword_spec)
+	alternant_multiword_spec.output_noun_slots = get_output_noun_slots(alternant_multiword_spec)
 	local inflect_props = {
 		skip_slot = function(slot)
 			return skip_slot(alternant_multiword_spec.number, slot)
 		end,
-		slot_table = output_noun_slots_with_linked,
+		slot_table = alternant_multiword_spec.output_noun_slots,
 		get_variants = get_variants,
 		inflect_word_spec = decline_noun,
 	}
@@ -3229,7 +3377,6 @@ function export.do_generate_forms_manual(parent_args, number, from_headword)
 	local args = m_para.process(parent_args, params)
 	local alternant_multiword_spec = {
 		title = args.title,
-		footnotes = args.footnote,
 		pos = args.pos,
 		forms = {},
 		number = number,
