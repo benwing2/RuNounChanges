@@ -50,7 +50,9 @@ FIXME:
 20. Singular-only and plural-only terms should not have number in accelerator form. [DONE]
 21. Support [[úterý]] (like neuters in -í). [DONE]
 22. Support feminines in -i ([[máti]], [[pramáti]]).
-23. Support foreign nouns in -ie ([[zombie]], [[hippie]], [[yuppie]]).
+23. Support foreign nouns in -ie ([[zombie]], [[hippie]], [[yuppie]]). [DONE]
+24. Support foreign nouns in -í ([[muftí]], [[qádí]]). [DONE]
+25. Support manual declensions. [DONE]
 
 ]=]
 
@@ -131,46 +133,6 @@ end
 
 
 local potential_lemma_slots = {"nom_s", "nom_p", "gen_s"}
-
-
-local input_params_to_slots_both = {
-	[1] = "nom_s",
-	[2] = "nom_p",
-	[3] = "gen_s",
-	[4] = "gen_p",
-	[5] = "dat_s",
-	[6] = "dat_p",
-	[7] = "acc_s",
-	[8] = "acc_p",
-	[9] = "voc_s",
-	[10] = "voc_p",
-	[11] = "loc_s",
-	[12] = "loc_p",
-	[13] = "ins_s",
-	[14] = "ins_p",
-}
-
-
-local input_params_to_slots_sg = {
-	[1] = "nom_s",
-	[2] = "gen_s",
-	[3] = "dat_s",
-	[4] = "acc_s",
-	[5] = "voc_s",
-	[6] = "loc_s",
-	[7] = "ins_s",
-}
-
-
-local input_params_to_slots_pl = {
-	[1] = "nom_p",
-	[2] = "gen_p",
-	[3] = "dat_p",
-	[4] = "acc_p",
-	[5] = "voc_p",
-	[6] = "loc_p",
-	[7] = "ins_p",
-}
 
 
 local cases = {
@@ -754,15 +716,13 @@ declprops["e-m"] = {
 
 decls["i-m"] = function(base, stems)
 	-- [[kivi]] "kiwi (bird)"; [[kuli]] "coolie"; [[lori]] "lory, lorikeet (bird)" (loc_pl 'loriech/loriích/lorich');
-	-- [[vini]] "parrot of the genus Vini"; [[yetti]]/[[yeti]] "yeti".
+	-- [[vini]] "parrot of the genus Vini"; [[yetti]]/[[yeti]] "yeti". other examples: [[aguti]], [[efendi]], [[hadži]],
+	-- [[pekari]], [[regenschori]], [[yetti]]/[[yeti]].
 	--
-	-- [[grizzly]]/[[grizly]] "grizzly bear"; [[pony]] "pony"; [[husky]] "husky"; [[Billy]] "billy".
+	-- [[grizzly]]/[[grizly]] "grizzly bear"; [[pony]] "pony"; [[husky]] "husky"; [[dandy]] "dandy"; [[Billy]] "billy".
 	--
-	-- NOTE also: [[zombie]]: 'zombie, zombieho, zombiemu, zombieho, zombie, zombiem, zombiem'; pl.
-	--   'zombiové, zombiů, zombiům, zombie, zombiové, zombiích, zombii' or 'zombies' (indeclinable)
-	--
-	-- NOTE: Some nouns in -y are regular soft stems, e.g. [[gray]] "gray (unit of absorbed radiation)";
-	-- [[Nagy]] (surname).
+	-- NOTE: Some nouns in -y are regular soft stems, e.g. [[gay]] "gay person"; [[gray]] "gray (unit of absorbed
+	--   radiation)"; [[Nagy]] (surname).
 	--
 	-- NOTE: The stem ends in -i/-y.
 	add_decl(base, stems, "ho", "mu", nil, "-", "m", "m",
@@ -772,6 +732,35 @@ end
 
 declprops["i-m"] = {
 	cat = "GENPOS in -i/-y"
+}
+
+
+decls["í-m"] = function(base, stems)
+	-- [[kádí]] "qadi (Islamic judge)", [[mahdí]] "Mahdi (Islamic prophet)", [[muftí]] "mufti (Islamic scholar)",
+	-- [[sipáhí]] "sipahi (Algerian cavalryman in the French army)"
+	--
+	-- No obvious examples in -ý, but the support is there.
+	--
+	-- NOTE: The stem ends in -í/-ý.
+	add_decl(base, stems, "ho", "mu", nil, "-", "m", "m",
+		{"ové", ""}, {"ů", "ch"}, {"ům", "m"}, {"e", ""}, "ích", "mi")
+end
+
+declprops["í-m"] = {
+	cat = "GENPOS in -í/-ý"
+}
+
+
+decls["ie-m"] = function(base, stems)
+	-- [[zombie]] "zombie" (also fem/neut), [[hippie]] "hippie", [[yuppie]] "yuppie", [[rowdie]] "rowdy/hooligan"
+	--
+	-- NOTE: The stem ends in -i (not -ie, because of the plural).
+	add_decl(base, stems, "eho", "emu", nil, "-", "em", "em",
+		{"ové", "es"}, {"ů", "es"}, {"ům", "es"}, {"e", "es"}, {"ích", "es"}, {"i", "es"})
+end
+
+declprops["ie-m"] = {
+	cat = "GENPOS in -ie"
 }
 
 
@@ -1292,6 +1281,18 @@ declprops["indecl"] = {
 }
 
 
+decls["manual"] = function(base, stems)
+	-- Anything declined manually using overrides. We don't set any declensions except the nom_s (or nom_p if plurale
+	-- tantum).
+	add(base, base.number == "pl" and "nom_p" or "nom_s", stems, "-")
+end
+
+declprops["manual"] = {
+	desc = "GENDER",
+	cat = {},
+}
+
+
 local function set_irreg_defaults(base)
 	if base.gender or base.lemma ~= "ona" and base.number or base.animacy then
 		error("Can't specify gender, number or animacy for irregular pronouns")
@@ -1396,6 +1397,7 @@ local function fetch_footnotes(separated_group)
 	return footnotes
 end
 
+
 --[=[
 Parse a single override spec (e.g. 'nomplé:ové' or 'ins:autodráhou:autodrahou[rare]') and return
 two values: the slot(s) the override applies to, and an object describing the override spec.
@@ -1469,7 +1471,7 @@ local function parse_override(segments)
 		part = usub(part, 2)
 	end
 	segments[1] = part
-	local colon_separated_groups = iut.split_alternating_runs(segments, ":")
+	local colon_separated_groups = iut.split_alternating_runs_and_strip_spaces(segments, ":")
 	for i, colon_separated_group in ipairs(colon_separated_groups) do
 		local value = {}
 		local form = colon_separated_group[1]
@@ -1526,6 +1528,7 @@ dot-separated indicators within them). Return value is an object of the form
   foreign = true, -- may be missing
   mostlyindecl = true, -- may be missing
   indecl = true, -- may be missing
+  manual = true, -- may be missing
   adj = true, -- may be missing
   decllemma = "DECLENSION-LEMMA", -- may be missing
   declgender = "DECLENSION-GENDER", -- may be missing
@@ -1555,7 +1558,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 	local base = {overrides = {}, forms = {}}
 	if inside ~= "" then
 		local segments = iut.parse_balanced_segment_run(inside, "[", "]")
-		local dot_separated_groups = iut.split_alternating_runs(segments, "%.")
+		local dot_separated_groups = iut.split_alternating_runs_and_strip_spaces(segments, "%.")
 		for i, dot_separated_group in ipairs(dot_separated_groups) do
 			local part = dot_separated_group[1]
 			local case_prefix = usub(part, 1, 3)
@@ -1577,7 +1580,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 				if base.stem_sets then
 					error("Can't specify reducible/vowel-alternant indicator twice: '" .. inside .. "'")
 				end
-				local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, ",")
+				local comma_separated_groups = iut.split_alternating_runs_and_strip_spaces(dot_separated_group, ",")
 				local stem_sets = {}
 				for i, comma_separated_group in ipairs(comma_separated_groups) do
 					local pattern = comma_separated_group[1]
@@ -1653,6 +1656,11 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify '+' twice: '" .. inside .. "'")
 				end
 				base.adj = true
+			elseif part == "!" then
+				if base.manual then
+					error("Can't specify '!' twice: '" .. inside .. "'")
+				end
+				base.manual = true
 			elseif rfind(part, "^mixedistem:") then
 				if base.mixedistem then
 					error("Can't specify 'mixedistem:' twice: '" .. inside .. "'")
@@ -2014,6 +2022,11 @@ local function determine_declension(base)
 		base.nonvowel_stem = base.lemma
 		return
 	end
+	if base.manual then
+		base.decl = "manual"
+		base.nonvowel_stem = base.lemma
+		return
+	end
 	-- Determine declension
 	stem = rmatch(base.lemma, "^(.*)a$")
 	if stem then
@@ -2072,6 +2085,9 @@ local function determine_declension(base)
 					error("T-stem masculine lemma in -e must be animate")
 				end
 				base.decl = "tstem-m"
+			elseif rfind(stem, "i") then
+				-- [[zombie]], [[hippie]], [[yuppie]], [[rowdie]]
+				base.decl = "ie-m"
 			else
 				base.decl = "e-m"
 			end
@@ -2094,7 +2110,7 @@ local function determine_declension(base)
 			base.decl = "o-m"
 		elseif base.gender == "f" then
 			-- [[zoo]]; [[Žemaitsko]]?
-			error("Feminine nouns in -o are indeclinable")
+			error("Feminine nouns in -o are indeclinable; use '.indecl' if needed")
 		elseif base.nstem then
 			base.decl = "n-n"
 		elseif base.hard then
@@ -2124,10 +2140,10 @@ local function determine_declension(base)
 				base.decl = "soft-f"
 			else
 				-- [[tsunami]]/[[cunami]], [[okapi]]
-				error("Feminine nouns in -i are indeclinable")
+				error("Feminine nouns in -i are indeclinable; use '.indecl' if needed")
 			end
 		else
-			error("Neuter nouns in -i are indeclinable")
+			error("Neuter nouns in -i are indeclinable; use '.indecl' if needed")
 		end
 		base.vowel_stem = stem
 		return
@@ -2138,19 +2154,22 @@ local function determine_declension(base)
 			-- Cf. [[emu]], [[guru]], etc.
 			base.decl = "u-m"
 		elseif base.gender == "f" then
-			-- Only one I know is [[budižkničemu]], which is usually masculine.
-			error("Support for feminine nouns in -u not yet implemented")
+			-- Only one I know is [[budižkničemu]], which is indeclinable in the singular and declines in the plural as
+			-- if written 'budižkničema'.
+			error("Feminine nouns in -u are indeclinable; use '.indecl' if needed")
 		else
-			error("Neuter nouns in -u are indeclinable")
+			error("Neuter nouns in -u are indeclinable; use '.indecl' if needed")
 		end
 		base.vowel_stem = stem
 		return
 	end
 	stem = rmatch(base.lemma, "^(.*[íý])$")
 	if stem then
-		if base.gender == "m" or base.gender == "f" then
+		if base.gender == "m" then
+			base.decl = "í-m"
+		elseif base.gender == "f" then
 			-- FIXME: Do any exist? If not, update this message.
-			error("Support for non-adjectival non-indeclinable masculine and feminine nouns in -í/-ý not yet implemented")
+			error("Support for non-adjectival non-indeclinable feminine nouns in -í/-ý not yet implemented")
 		else
 			base.decl = "í-n"
 		end
@@ -2599,30 +2618,6 @@ local function get_variants(form)
 end
 
 
-local function process_manual_overrides(forms, args, number)
-	local params_to_slots_map =
-		number == "sg" and input_params_to_slots_sg or
-		number == "pl" and input_params_to_slots_pl or
-		input_params_to_slots_both
-	for param, slot in pairs(params_to_slots_map) do
-		if args[param] then
-			forms[slot] = nil
-			if args[param] ~= "-" and args[param] ~= "—" then
-				local segments = iut.parse_balanced_segment_run(args[param], "[", "]")
-				local comma_separated_groups = iut.split_alternating_runs(segments, "%s*,%s*")
-				for _, comma_separated_group in ipairs(comma_separated_groups) do
-					local formobj = {
-						form = comma_separated_group[1],
-						footnotes = fetch_footnotes(comma_separated_group),
-					}
-					iut.insert_form(forms, slot, formobj)
-				end
-			end
-		end
-	end
-end
-
-
 -- Compute the categories to add the noun to, as well as the annotation to display in the
 -- declension title bar. We combine the code to do these functions as both categories and
 -- title bar contain similar information.
@@ -2639,176 +2634,169 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		end
 	end
 	local annotation
-	if alternant_multiword_spec.manual then
-		alternant_multiword_spec.annotation =
-			alternant_multiword_spec.number == "sg" and "sg-only" or
-			alternant_multiword_spec.number == "pl" and "pl-only" or
-			""
-	else
-		local annparts = {}
-		local decldescs = {}
-		local vowelalts = {}
-		local foreign = {}
-		local irregs = {}
-		local stemspecs = {}
-		local reducible = nil
-		local function get_genanim(gender, animacy)
-			local gender_code_to_desc = {
-				m = "masculine",
-				f = "feminine",
-				n = "neuter",
-				none = nil,
-			}
-			local animacy_code_to_desc = {
-				an = "animate",
-				inan = "inanimate",
-				none = nil,
-			}
-			local descs = {}
-			table.insert(descs, gender_code_to_desc[gender])
-			if gender ~= "f" and gender ~= "n" then
-				-- masculine or "none" (e.g. certain irregular pronouns)
-				table.insert(descs, animacy_code_to_desc[animacy])
-			end
-			return table.concat(descs, " ")
+	local annparts = {}
+	local decldescs = {}
+	local vowelalts = {}
+	local foreign = {}
+	local irregs = {}
+	local stemspecs = {}
+	local reducible = nil
+	local function get_genanim(gender, animacy)
+		local gender_code_to_desc = {
+			m = "masculine",
+			f = "feminine",
+			n = "neuter",
+			none = nil,
+		}
+		local animacy_code_to_desc = {
+			an = "animate",
+			inan = "inanimate",
+			none = nil,
+		}
+		local descs = {}
+		table.insert(descs, gender_code_to_desc[gender])
+		if gender ~= "f" and gender ~= "n" then
+			-- masculine or "none" (e.g. certain irregular pronouns)
+			table.insert(descs, animacy_code_to_desc[animacy])
 		end
+		return table.concat(descs, " ")
+	end
 
-		local function trim(text)
-			text = text:gsub(" +", " ")
-			return mw.text.trim(text)
-		end
+	local function trim(text)
+		text = text:gsub(" +", " ")
+		return mw.text.trim(text)
+	end
 
-		local function do_word_spec(base)
-			local actual_genanim = get_genanim(base.user_specified_gender, base.user_specified_animacy)
-			local declined_genanim = get_genanim(base.gender, base.animacy)
-			local genanim
-			if actual_genanim ~= declined_genanim then
-				genanim = ("%s (declined as %s)"):format(actual_genanim, declined_genanim)
-				insert("nouns with actual gender different from declined gender")
-			else
-				genanim = actual_genanim
-			end
-			if base.user_specified_gender == "m" then
-				-- Insert a category for 'Czech masculine animate nouns' or 'Czech masculine inanimate nouns'; the base categories
-				-- [[:Category:Czech masculine nouns]], [[:Czech animate nouns]] are auto-inserted.
-				insert(actual_genanim .. " " .. alternant_multiword_spec.plpos)
-			end
-			for _, stems in ipairs(base.stem_sets) do
-				local props = declprops[base.decl]
-				local cats = props.cat
-				if type(cats) == "function" then
-					cats = cats(base, stems)
-				end
-				if type(cats) == "string" then
-					cats = {cats}
-				end
-				local default_desc
-				for i, cat in ipairs(cats) do
-					if not cat:find("GENDER") and not cat:find("GENPOS") and not cat:find("POS") then
-						cat = cat .. " GENPOS"
-					end
-					cat = cat:gsub("GENPOS", "GENDER POS")
-					if not cat:find("POS") then
-						cat = cat .. " POS"
-					end
-					if i == #cats then
-						default_desc = cat:gsub(" POS", "")
-					end
-					cat = cat:gsub("GENDER", actual_genanim)
-					cat = cat:gsub("POS", alternant_multiword_spec.plpos)
-					-- Need to trim `cat` because actual_genanim may be an empty string.
-					insert(trim(cat))
-				end
-
-				local desc = props.desc
-				if type(desc) == "function" then
-					desc = desc(base, stems)
-				end
-				desc = desc or default_desc
-				desc = desc:gsub("GENDER", genanim)
-				-- Need to trim `desc` because genanim may be an empty string.
-				m_table.insertIfNot(decldescs, trim(desc))
-
-				local vowelalt
-				if stems.vowelalt == "quant" then
-					vowelalt = "quant-alt"
-					insert("nouns with quantitative vowel alternation")
-				elseif stems.vowelalt == "quant-ě" then
-					vowelalt = "í-ě-alt"
-					insert("nouns with í-ě alternation")
-				end
-				if vowelalt then
-					m_table.insertIfNot(vowelalts, vowelalt)
-				end
-				if reducible == nil then
-					reducible = stems.reducible
-				elseif reducible ~= stems.reducible then
-					reducible = "mixed"
-				end
-				if stems.reducible then
-					insert("nouns with reducible stem")
-				end
-				if base.foreign then
-					m_table.insertIfNot(foreign, "foreign")
-					if not base.decllemma then
-						-- NOTE: there are nouns that use both 'foreign' and 'decllemma', e.g. [[Zeus]].
-						insert("nouns with regular foreign declension")
-					end
-				end
-				-- User-specified 'decllemma:' indicates irregular stem. Don't consider foreign nouns in -us/-os/-es, -um/-on or
-				-- silent -e (e.g. [[software]]) where this ending is simply dropped in oblique and plural forms as irregular;
-				-- there are too many of these and they are already categorized above as 'nouns with regular foreign declension'.
-				if base.decllemma then
- 					m_table.insertIfNot(irregs, "irreg-stem")
-					insert("nouns with irregular stem")
-				end
-				m_table.insertIfNot(stemspecs, stems.vowel_stem)
-			end
-		end
-		local key_entry = alternant_multiword_spec.first_noun or 1
-		if #alternant_multiword_spec.alternant_or_word_specs >= key_entry then
-			local alternant_or_word_spec = alternant_multiword_spec.alternant_or_word_specs[key_entry]
-			if alternant_or_word_spec.alternants then
-				for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-					key_entry = multiword_spec.first_noun or 1
-					if #multiword_spec.word_specs >= key_entry then
-						do_word_spec(multiword_spec.word_specs[key_entry])
-					end
-				end
-			else
-				do_word_spec(alternant_or_word_spec)
-			end
-		end
-		if alternant_multiword_spec.number == "sg" or alternant_multiword_spec.number == "pl" then
-			-- not "both" or "none" (for [[sebe]])
-			table.insert(annparts, alternant_multiword_spec.number == "sg" and "sg-only" or "pl-only")
-		end
-		if #decldescs == 0 then
-			table.insert(annparts, "indecl")
+	local function do_word_spec(base)
+		local actual_genanim = get_genanim(base.user_specified_gender, base.user_specified_animacy)
+		local declined_genanim = get_genanim(base.gender, base.animacy)
+		local genanim
+		if actual_genanim ~= declined_genanim then
+			genanim = ("%s (declined as %s)"):format(actual_genanim, declined_genanim)
+			insert("nouns with actual gender different from declined gender")
 		else
-			table.insert(annparts, table.concat(decldescs, " // "))
+			genanim = actual_genanim
 		end
-		if #vowelalts > 0 then
-			table.insert(annparts, table.concat(vowelalts, "/"))
+		if base.user_specified_gender == "m" then
+			-- Insert a category for 'Czech masculine animate nouns' or 'Czech masculine inanimate nouns'; the base categories
+			-- [[:Category:Czech masculine nouns]], [[:Czech animate nouns]] are auto-inserted.
+			insert(actual_genanim .. " " .. alternant_multiword_spec.plpos)
 		end
-		if reducible == "mixed" then
-			table.insert(annparts, "mixed-reducible")
-		elseif reducible then
-			table.insert(annparts, "reducible")
+		for _, stems in ipairs(base.stem_sets) do
+			local props = declprops[base.decl]
+			local cats = props.cat
+			if type(cats) == "function" then
+				cats = cats(base, stems)
+			end
+			if type(cats) == "string" then
+				cats = {cats}
+			end
+			local default_desc
+			for i, cat in ipairs(cats) do
+				if not cat:find("GENDER") and not cat:find("GENPOS") and not cat:find("POS") then
+					cat = cat .. " GENPOS"
+				end
+				cat = cat:gsub("GENPOS", "GENDER POS")
+				if not cat:find("POS") then
+					cat = cat .. " POS"
+				end
+				if i == #cats then
+					default_desc = cat:gsub(" POS", "")
+				end
+				cat = cat:gsub("GENDER", actual_genanim)
+				cat = cat:gsub("POS", alternant_multiword_spec.plpos)
+				-- Need to trim `cat` because actual_genanim may be an empty string.
+				insert(trim(cat))
+			end
+
+			local desc = props.desc
+			if type(desc) == "function" then
+				desc = desc(base, stems)
+			end
+			desc = desc or default_desc
+			desc = desc:gsub("GENDER", genanim)
+			-- Need to trim `desc` because genanim may be an empty string.
+			m_table.insertIfNot(decldescs, trim(desc))
+
+			local vowelalt
+			if stems.vowelalt == "quant" then
+				vowelalt = "quant-alt"
+				insert("nouns with quantitative vowel alternation")
+			elseif stems.vowelalt == "quant-ě" then
+				vowelalt = "í-ě-alt"
+				insert("nouns with í-ě alternation")
+			end
+			if vowelalt then
+				m_table.insertIfNot(vowelalts, vowelalt)
+			end
+			if reducible == nil then
+				reducible = stems.reducible
+			elseif reducible ~= stems.reducible then
+				reducible = "mixed"
+			end
+			if stems.reducible then
+				insert("nouns with reducible stem")
+			end
+			if base.foreign then
+				m_table.insertIfNot(foreign, "foreign")
+				if not base.decllemma then
+					-- NOTE: there are nouns that use both 'foreign' and 'decllemma', e.g. [[Zeus]].
+					insert("nouns with regular foreign declension")
+				end
+			end
+			-- User-specified 'decllemma:' indicates irregular stem. Don't consider foreign nouns in -us/-os/-es, -um/-on or
+			-- silent -e (e.g. [[software]]) where this ending is simply dropped in oblique and plural forms as irregular;
+			-- there are too many of these and they are already categorized above as 'nouns with regular foreign declension'.
+			if base.decllemma then
+				m_table.insertIfNot(irregs, "irreg-stem")
+				insert("nouns with irregular stem")
+			end
+			m_table.insertIfNot(stemspecs, stems.vowel_stem)
 		end
-		if #foreign > 0 then
-			table.insert(annparts, table.concat(foreign, " // "))
+	end
+	local key_entry = alternant_multiword_spec.first_noun or 1
+	if #alternant_multiword_spec.alternant_or_word_specs >= key_entry then
+		local alternant_or_word_spec = alternant_multiword_spec.alternant_or_word_specs[key_entry]
+		if alternant_or_word_spec.alternants then
+			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+				key_entry = multiword_spec.first_noun or 1
+				if #multiword_spec.word_specs >= key_entry then
+					do_word_spec(multiword_spec.word_specs[key_entry])
+				end
+			end
+		else
+			do_word_spec(alternant_or_word_spec)
 		end
-		if #irregs > 0 then
-			table.insert(annparts, table.concat(irregs, " // "))
-		end
-		alternant_multiword_spec.annotation = table.concat(annparts, " ")
-		if #stemspecs > 1 then
-			insert("nouns with multiple stems")
-		end
-		if alternant_multiword_spec.number == "both" and not m_table.deepEquals(alternant_multiword_spec.sg_genders, alternant_multiword_spec.pl_genders) then
-			insert("nouns that change gender in the plural")
-		end
+	end
+	if alternant_multiword_spec.number == "sg" or alternant_multiword_spec.number == "pl" then
+		-- not "both" or "none" (for [[sebe]])
+		table.insert(annparts, alternant_multiword_spec.number == "sg" and "sg-only" or "pl-only")
+	end
+	if #decldescs == 0 then
+		table.insert(annparts, "indecl")
+	else
+		table.insert(annparts, table.concat(decldescs, " // "))
+	end
+	if #vowelalts > 0 then
+		table.insert(annparts, table.concat(vowelalts, "/"))
+	end
+	if reducible == "mixed" then
+		table.insert(annparts, "mixed-reducible")
+	elseif reducible then
+		table.insert(annparts, "reducible")
+	end
+	if #foreign > 0 then
+		table.insert(annparts, table.concat(foreign, " // "))
+	end
+	if #irregs > 0 then
+		table.insert(annparts, table.concat(irregs, " // "))
+	end
+	alternant_multiword_spec.annotation = table.concat(annparts, " ")
+	if #stemspecs > 1 then
+		insert("nouns with multiple stems")
+	end
+	if alternant_multiword_spec.number == "both" and not m_table.deepEquals(alternant_multiword_spec.sg_genders, alternant_multiword_spec.pl_genders) then
+		insert("nouns that change gender in the plural")
 	end
 	alternant_multiword_spec.categories = all_cats
 end
@@ -3084,68 +3072,6 @@ function export.do_generate_forms(parent_args, from_headword)
 end
 
 
--- Externally callable function to parse and decline a noun where all forms
--- are given manually. Return value is ALTERNANT_MULTIWORD_SPEC, an object where the declined
--- forms are in `ALTERNANT_MULTIWORD_SPEC.forms` for each slot. If there are no values for a
--- slot, the slot key will be missing. The value for a given slot is a list of
--- objects {form=FORM, footnotes=FOOTNOTES}.
-function export.do_generate_forms_manual(parent_args, number, from_headword)
-	if number ~= "sg" and number ~= "pl" and number ~= "both" then
-		error("Internal error: number (arg 1) must be 'sg', 'pl' or 'both': '" .. number .. "'")
-	end
-
-	local params = {
-		footnote = {list = true},
-		title = {},
-		pos = {default = "noun"},
-	}
-	if number == "both" then
-		params[1] = {required = true, default = "žuk"}
-		params[2] = {required = true, default = "žuky"}
-		params[3] = {required = true, default = "žuka"}
-		params[4] = {required = true, default = "žukiv"}
-		params[5] = {required = true, default = "žuka"}
-		params[6] = {required = true, default = "žukam"}
-		params[7] = {required = true, default = "žukоvi, žuku"}
-		params[8] = {required = true, default = "žuky, žukiv"}
-		params[9] = {required = true, default = "žukоm"}
-		params[10] = {required = true, default = "žukamy"}
-		params[11] = {required = true, default = "žukоvi, žuku"}
-		params[12] = {required = true, default = "žuky"}
-		params[13] = {required = true, default = "žuče"}
-		params[14] = {required = true, default = "žukách"}
-	elseif number == "sg" then
-		params[1] = {required = true, default = "lyst"}
-		params[2] = {required = true, default = "lystu"}
-		params[3] = {required = true, default = "lystu, lystovi"}
-		params[4] = {required = true, default = "lyst"}
-		params[5] = {required = true, default = "lyste"}
-		params[6] = {required = true, default = "lysti, lystu"}
-		params[7] = {required = true, default = "lystom"}
-	else
-		params[1] = {required = true, default = "dveře"}
-		params[2] = {required = true, default = "dveři"}
-		params[3] = {required = true, default = "dveřím"}
-		params[4] = {required = true, default = "dveře"}
-		params[5] = {required = true, default = "dveře"}
-		params[6] = {required = true, default = "dveřích"}
-		params[7] = {required = true, default = "dveřmi"}
-	end
-
-	local args = m_para.process(parent_args, params)
-	local alternant_multiword_spec = {
-		title = args.title,
-		pos = args.pos,
-		forms = {},
-		number = number,
-		manual = true,
-	}
-	process_manual_overrides(alternant_multiword_spec.forms, args, alternant_multiword_spec.number)
-	compute_categories_and_annotation(alternant_multiword_spec)
-	return alternant_multiword_spec
-end
-
-
 -- Entry point for {{cs-ndecl}}. Template-callable function to parse and decline a noun given
 -- user-specified arguments and generate a displayable table of the declined forms.
 function export.show(frame)
@@ -3155,22 +3081,6 @@ function export.show(frame)
 		-- JSON return value
 		return alternant_multiword_spec
 	end
-	show_forms(alternant_multiword_spec)
-	return make_table(alternant_multiword_spec) ..
-		require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang, nil, nil, force_cat)
-end
-
-
--- Entry point for {{cs-ndecl-manual}}, {{cs-ndecl-manual-sg}} and {{cs-ndecl-manual-pl}}.
--- Template-callable function to parse and decline a noun given manually-specified inflections
--- and generate a displayable table of the declined forms.
-function export.show_manual(frame)
-	local iparams = {
-		[1] = {required = true},
-	}
-	local iargs = m_para.process(frame.args, iparams)
-	local parent_args = frame:getParent().args
-	local alternant_multiword_spec = export.do_generate_forms_manual(parent_args, iargs[1])
 	show_forms(alternant_multiword_spec)
 	return make_table(alternant_multiword_spec) ..
 		require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang, nil, nil, force_cat)
