@@ -14,6 +14,9 @@ local function format_list_items(items, lang, sc)
 			if item.q then
 				link = require("Module:qualifier").format_qualifier(item.q) .. " " .. link
 			end
+			if item.qq then
+				link = link .. " " .. require("Module:qualifier").format_qualifier(item.qq)
+			end
 			item = link
 		-- XXX: "<span" is an ugly hack: [[Thread:User talk:CodeCat/MewBot adding lang to column templates]]
 		elseif lang and not string.find(item, "<span") then
@@ -100,7 +103,7 @@ function export.create_table(...)
 end
 
 
-local param_mods = {"t", "alt", "tr", "ts", "pos", "lit", "id", "sc", "g", "q"}
+local param_mods = {"t", "alt", "tr", "ts", "pos", "lit", "id", "sc", "g", "q", "qq"}
 local param_mod_set = m_table.listToSet(param_mods)
 
 function export.display_from(column_args, list_args)
@@ -148,11 +151,7 @@ function export.display_from(column_args, list_args)
 	local lang = frame_args["lang"] or args[lang_param]
 	lang = m_languages.getByCode(lang, lang_param)
 
-	local sc = args["sc"]
-	if sc then
-		sc = require "Module:scripts".getByCode(sc)
-			or error("|sc= does not contain a valid script code")
-	end
+	local sc = args["sc"] and require("Module:scripts").getByCode(sc, "sc") or nil
 
 	local sort = frame_args["sort"]
 	if args["sort"] ~= nil then
@@ -174,9 +173,7 @@ function export.display_from(column_args, list_args)
 		else
 			termlang = lang
 		end
-		local termobj = {term = {}}
-		part.lang = part.lang or termlang
-		part.term = term
+		local termobj = {term = {lang = termlang, sc = sc}}
 
 		-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>, <br/> or
 		-- similar in it, caused by wrapping an argument in {{l|...}}, {{af|...}} or similar. Basically, all tags of
@@ -192,8 +189,6 @@ function export.display_from(column_args, list_args)
 			local function parse_err(msg)
 				error(msg .. ": " .. orig_param .. "= " .. table.concat(run))
 			end
-			local termobj = {term = {}}
-			termobj.term.lang = lang
 			termobj.term.term = run[1]
 
 			for j = 2, #run - 1, 2 do
@@ -232,8 +227,10 @@ function export.display_from(column_args, list_args)
 					parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. run[j])
 				end
 			end
-			args[first_content_param][i] = termobj
+		else
+			termobj.term.term = item
 		end
+		args[first_content_param][i] = termobj
 	end
 
 	return export.create_list { column_count = frame_args["columns"] or args[columns_param],
