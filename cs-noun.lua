@@ -49,7 +49,7 @@ FIXME:
 19. Support pronouns with clitics. [DONE]
 20. Singular-only and plural-only terms should not have number in accelerator form. [DONE]
 21. Support [[úterý]] (like neuters in -í). [DONE]
-22. Support feminines in -i ([[máti]], [[pramáti]]).
+22. Support feminines in -i ([[máti]], [[pramáti]]). [DONE]
 23. Support foreign nouns in -ie ([[zombie]], [[hippie]], [[yuppie]]). [DONE]
 24. Support foreign nouns in -í ([[muftí]], [[qádí]]). [DONE]
 25. Support manual declensions. [DONE]
@@ -933,6 +933,17 @@ declprops["mixed-istem-f"] = {
 	cat = function(base, stems)
 		return {"mixed i-stem", ("mixed i-stem GENPOS (type '%s')"):format(base.mixedistem)}
 	end,
+}
+
+
+decls["i-f"] = function(base, stems)
+	-- [[máti]] "mother" (singular-only), [[pramáti]] "foremother"; very similar to the 'noc' mixed i-stem type
+	add_decl(base, stems, "i", "i", "-", "i", "i", "í",
+		"i", "í", "ím", "i", "ích", "ěmi")
+end
+
+declprops["i-f"] = {
+	cat = "GENPOS in -i"
 }
 
 
@@ -2139,8 +2150,13 @@ local function determine_declension(base)
 				-- [[Uruguay]], [[Paraguay]]
 				base.decl = "soft-f"
 			else
-				-- [[tsunami]]/[[cunami]], [[okapi]]
-				error("Feminine nouns in -i are indeclinable; use '.indecl' if needed")
+				-- [[máti]], [[pramáti]]; note also indeclinable [[tsunami]]/[[cunami]], [[okapi]]
+				base.decl = "i-f"
+				if stem:find("i$") then
+					stem = stem:gsub("i$", "")
+				else
+					error("Feminine nouns in -y are either soft or indeclinable; use '.soft' or '.indecl' as needed")
+				end
 			end
 		else
 			error("Neuter nouns in -i are indeclinable; use '.indecl' if needed")
