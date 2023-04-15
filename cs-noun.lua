@@ -54,6 +54,24 @@ FIXME:
 24. Support foreign nouns in -í ([[muftí]], [[qádí]]). [DONE]
 25. Support manual declensions. [DONE]
 26. Support numerals. [DONE]
+27. Allow for reducible spec in pluralia tantum and dereduce accordingly; also automatically assign reducibility
+    if singular stem ends in -Ck or -Cc.
+28. Use `pos` value in all categories.
+29. Support determiners [[kolik]], [[tolik]], [[několik]], [[mnoho]].
+30. Support a '.velar' indicator for foreign names whose pronunciation but not spelling ends in a velar: [[Remarque]],
+    [[Braque]], [[Mike]], [[Drake]], [[Jake]] with vocative 'Remarquu', 'Braquu', 'Mikeu', 'Drakeu', 'Jakeu'. In
+    general we need more thought around such foreign names; essentially, for names in a silent e, sometimes the -e
+    is dropped in all oblique forms (e.g. [[Shakespeare]], [[Pierre]], [[Barrande]], [[La Fontaine]], [[Braque]],
+    [[Remarque]] with gen sg 'Shakespeara', 'Pierra', Barranda', 'La Fontaina', 'Braqua', 'Remarqua') and sometimes
+    it's kept in all oblique forms except those ending in an -e, where -ee is avoided (e.g. [[Pete]], [[Gable]],
+    [[Jake]], [[White]], [[Byrne]], [[Mike]], [[Drake]] with gen sg 'Petea', 'Gablea' etc. and voc sg 'Pete', 'Gable'
+    but 'Jakeu', 'Mikeu'). Sometimes there are doublets, e.g. [[Hubble]] and [[Hume]] have gen sg 'Hubbla/Hubblea'
+    (where the second form is used among astronomers in a technical sense and the first form may be more popular)
+    and 'Huma/Humea'. We already have a '.foreign' indicator that when applied to a noun ending in -e drops the -e
+    in oblique forms e.g. for [[software]]. We may need to combine this with an explicit indicator of hard, soft or
+    velar as there will be names with silent -e and preceding soft consonant e.g. [[Bruce]], [[Coleridge]]. Note
+    that when the -e is kept it is still dropped before front vowels, hence dat sg 'Bruci'/Bruceovi'. Need some
+    investigation in IJP and cswikt.
 
 ]=]
 
@@ -1423,7 +1441,7 @@ local function set_num_defaults(base)
 
 	local function num_props()
 		-- Return values are GENDER, NUMBER, ANIMACY, HAS_CLITIC.
-		return "none", "none", "none", false
+		return "none", "pl", "none", false
 	end
 
 	local gender, number, animacy, has_clitic = num_props()
@@ -1447,37 +1465,36 @@ end
 
 decls["num"] = function(base, stems)
 	local after_prep_footnote =	"[after a preposition]"
-	if base.lemma == "jedna" then
-		-- in compound numbers; stem is jedn-
-		add_sg_decl(base, stems, "é", "é", "u", "-", "é", "ou")
-	elseif base.lemma == "dva" or base.lemma == "dvě" then
+	if base.lemma == "dva" or base.lemma == "dvě" then
 		-- in compound numbers; stem is dv-
-		add_sg_decl(base, stems, "ou", "ěma", "-", "-", "ou", "ěma")
+		add_pl_only_decl(base, stems, "ou", "ěma", "-", "ou", "ěma")
 	elseif base.lemma == "tři" or base.lemma == "čtyři" then
 		-- stem is without -i
 		local is_three = base.lemma == "tři"
-		add_sg_decl(base, stems, is_three and "í" or "", "em", "-", "-", "ech", is_three and "emi" or "mi")
-		add_sg_decl(base, stems, "ech", nil, nil, nil, nil, nil, "[colloquial]")
-		add_sg_decl(base, stems, nil, nil, nil, nil, nil, is_three and "ema" or "ma",
+		add_pl_only_decl(base, stems, is_three and "í" or "", "em", "-", "ech", is_three and "emi" or "mi")
+		add_pl_only_decl(base, stems, "ech", nil, nil, nil, nil, "[colloquial]")
+		add_pl_only_decl(base, stems, nil, nil, nil, nil, is_three and "ema" or "ma",
 			"[when modifying a form ending in ''-ma'']")
 	elseif base.lemma == "devět" then
-		add_sg_decl(base, "", "devíti", "devíti", "-", "-", "devíti", "devíti", stems.footnotes)
+		add_pl_only_decl(base, "", "devíti", "devíti", "-", "devíti", "devíti", stems.footnotes)
+	elseif base.lemma == "sta" or base.lemma == "stě" or base.lemma == "set" then
+		add_pl_only_decl(base, "", "set", "stům", "-", "stech", "sty", stems.footnotes)
 	elseif rfind(base.lemma, "[cs]et$") then
 		-- [[deset]] and all numbers ending in -cet ([[dvacet]], [[třicet]], [[čtyřicet]] and inverted compound
 		-- numerals such as [[pětadvacet]] "25" and [[dvaatřicet]] "32")
 		local begin = rmatch(base.lemma, "^(.*)et$")
-		add_sg_decl(base, stems, "i", "i", "-", "-", "i", "i")
-		add_sg_decl(base, begin, "íti", "íti", "-", "-", "íti", "íti", stems.footnotes)
+		add_pl_only_decl(base, stems, "i", "i", "-", "i", "i")
+		add_pl_only_decl(base, begin, "íti", "íti", "-", "íti", "íti", stems.footnotes)
 	elseif rfind(base.lemma, "oje$") then
 		-- [[dvoje]], [[troje]]
 		-- stem is without -e
-		add_decl(base, stems, "ích", "ím", "-", "-", "ích", "ími")
+		add_pl_only_decl(base, stems, "ích", "ím", "-", "ích", "ími")
 	elseif rfind(base.lemma, "ery$") then
 		-- [[čtvery]], [[patery]], [[šestery]], [[sedmery]], [[osmery]], [[devatery]], [[desatery]]
 		-- stem is without -y
-		add_decl(base, stems, "ých", "ým", "-", "-", "ých", "ými")
+		add_pl_only_decl(base, stems, "ých", "ým", "-", "ých", "ými")
 	else
-		error(("Unrecognized numeral lemma '%s'"):format(base.lemma))
+		add_pl_only_decl(base, stems, "i", "i", "-", "i", "i")
 	end
 end
 
