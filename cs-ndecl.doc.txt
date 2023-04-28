@@ -854,12 +854,253 @@ Note that this is even longer than the specification using full overrides, and h
 [[bratr]] "brother": {{cs-ndecl|((m.an,bratří<m.an.pl.declgender:n.[archaic, similar to English ''brethren'']>))}}
 
 
+--[=[
+
+Word examples:
+
+Masculine:
+---------
+
+[[rozbor]] "analysis" {{cs-ndecl<m>}}
+[[plat]] "salary" {{cs-ndecl<m>}}
+[[ostrov]] "island" {{cs-ndecl|<m.gena.locě>}}
+[[car]] "tsar" {{cs-ndecl|<m.an.nomplové>}}
+[[bratr]] "brother" {{cs-ndecl|((<m.an>,bratři<np.overriding_gender:m-an.[collective, normally archaic]>))}}
+
+
+
+
+Feminine:
+---------
+
+- Reducible vs. non-reducible: If before final a is a two-consonant cluster whose second consonant is b, k, h or a
+  resonant l,r,m,n,v, default to reducible. If second consonant is something else, default to non-reducible. Exception:
+  In a three-consonant cluster ClC and CrC, default to non-reducible as the l and r are vocalic (e.g. [[vrba]]).
+
+Default reducible:
+
+[[bavlnka]] "cotton" {{cs-ndecl|<f>}}
+[[čtvrtka]] "Thursday" {{cs-ndecl|<f>}}
+[[dršťka]] "tripe" {{cs-ndecl|<f>}} [gen pl drštěk]
+[[jiskra]] "spark" {{cs-ndecl|<f>}}
+[[kostra]] "skeleton" {{cs-ndecl|<f>}}
+[[kůstka]] "bone" {{cs-ndecl|<f>}}
+[[pastva]] "pasture" {{cs-ndecl|<f>}}
+[[sestra]] "sister" {{cs-ndecl|<f>}}
+[[tundra]] "tundra" {{cs-ndecl|<f>}}
+[[vrstva]] "layer" {{cs-ndecl|<f>}}
+[[vyjížďka]] "ride" {{cs-ndecl|<f>}} [gen pl vyjížděk]
+[[hra]] "game" {{cs-ndecl|<f>}} [dat/loc sg hře, gen pl her]
+[[kra]] "floe, iceberg" {{cs-ndecl|<f>}} [dat/loc sg kře, gen pl ker]
+[[kresba]] "drawing" {{cs-ndecl|<f>}}
+[[malba]] "painting" {{cs-ndecl|<f>}}
+[[orba]] "ploughing" {{cs-ndecl|<f>}}
+[[volba]] "choice, (pl) elections" {{cs-ndecl|<f>}}
+[[kuchařka]] "cookbook; female cook" {{cs-ndecl|<f>}}
+[[lebka]] "skull" {{cs-ndecl|<f>}}
+[[loďka]] "small ship; rowing boat" {{cs-ndecl|<f>}} [gen pl loděk]
+[[občanka]] "female citizen" {{cs-ndecl|<f>}}
+[[oháňka]] "tail, oxtail" {{cs-ndecl|<f>}} [gen pl oháněk]
+[[sirka]] "match (for lighting a fire)" {{cs-ndecl|<f>}}
+[[cihla]] "brick" {{cs-ndecl|<f>}}
+[[jehla]] "needle" {{cs-ndecl|<f>}}
+[[metla]] "whisk, scourge, rod (for punishment)" {{cs-ndecl|<f>}}
+[[modla]] "idol" {{cs-ndecl|<f>}}
+[[truhla]] "chest (strong box)" {{cs-ndecl|<f>}}
+[[firma]] "firm (business)" {{cs-ndecl|<f>}}
+[[forma]] "form, mold" {{cs-ndecl|<f>}}
+[[helma]] "helmet" {{cs-ndecl|<f>}}
+[[palma]] "palm tree" {{cs-ndecl|<f>}}
+[[šelma]] "beast of prey; carnivore" {{cs-ndecl|<f>}}
+[[kašna]] "fountain" {{cs-ndecl|<f>}}
+[[kněžna]] "princess" {{cs-ndecl|<f>}}
+[[kůlna]] "shed, hut" {{cs-ndecl|<f>}}
+[[putna]] "indifference, unimportance" {{cs-ndecl|<f>}}
+[[učebna]] "classroom" {{cs-ndecl|<f>}}
+[[cifra]] "digit" {{cs-ndecl|<f>}}
+[[jikra]] "roe" {{cs-ndecl|<f>}}
+[[souhra]] "" {{cs-ndecl|<f>}}
+[[zebra]] "zebra" {{cs-ndecl|<f>}}
+[[barva]] "color" {{cs-ndecl|<f>}}
+[[jizva]] "scar" {{cs-ndecl|<f>}}
+[[larva]] "larva" {{cs-ndecl|<f>}}
+
+Default reducible but should not be reduced:
+
+[[bomba]] "bomb" {{cs-ndecl|<f.-*>}}
+[[plomba]] "filling, seal" {{cs-ndecl|<f.-*>}}
+[[banka]] "bank (financial institution)" {{cs-ndecl|<f.-*>}}
+[[konzerva]] "can, tin" {{cs-ndecl|<f.-*>}}
+[[rezerva]] "reserve" {{cs-ndecl|<f.-*>}}
+[[salva]] "" {{cs-ndecl|<f.-*>}}
+[[želva]] "turtle" {{cs-ndecl|<f.-*>}}
+
+Default non-reducible:
+
+[[pomsta]] "revenge" {{cs-ndecl|<f>}} [gen pl pomst]
+[[garda]] "" {{cs-ndecl|<f>}}
+[[hvězda]] "star" {{cs-ndecl|<f>}}
+[[pravda]] "truth" {{cs-ndecl|<f>}}
+[[vražda]] "murder" {{cs-ndecl|<f>}}
+[[harfa]] "harp" {{cs-ndecl|<f>}}
+[[nymfa]] "nymph" {{cs-ndecl|<f>}}
+[[archa]] "ark" {{cs-ndecl|<f>}}
+[[valcha]] "washboard" {{cs-ndecl|<f>}}
+[[lampa]] "lamp" {{cs-ndecl|<f>}}
+[[pumpa]] "pump" {{cs-ndecl|<f>}}
+[[rampa]] "ramp" {{cs-ndecl|<f>}}
+[[škarpa]] "" {{cs-ndecl|<f>}}
+[[elipsa]] "ellipse" {{cs-ndecl|<f>}}
+[[římsa]] "windowsill, mantelpiece" {{cs-ndecl|<f>}}
+[[gejša]] "geisha" {{cs-ndecl|<f>}}
+[[celta]] "" {{cs-ndecl|<f>}}
+[[cesta]] "road, journey" {{cs-ndecl|<f>}}
+[[fakulta]] "faculty (of a university)" {{cs-ndecl|<f>}}
+[[fronta]] "queue; front (meteorology, military)" {{cs-ndecl|<f>}}
+[[krypta]] "crypt" {{cs-ndecl|<f>}}
+[[lišta]] "slat; bar" {{cs-ndecl|<f>}}
+[[aorta]] "aorta" {{cs-ndecl|<f>}}
+[[plenta]] "" {{cs-ndecl|<f>}}
+[[sekta]] "sect, cult" {{cs-ndecl|<f>}}
+[[brynza]] "bryndza (type of soft cheese)" {{cs-ndecl|<f>}}
+[[burza]] "stock exchange" {{cs-ndecl|<f>}}
+
+Default non-reducible but should be reduced:
+
+[[výspa]] "islet" {{cs-ndecl|<f.*>}}
+[[kapsa]] "pocket" {{cs-ndecl|<f.*>}}
+[[buchta]] "bun" {{cs-ndecl|<f.*>}}
+[[plachta]] "sail" {{cs-ndecl|<f.*>}}
+[[šachta]] "shaft, chute" {{cs-ndecl|<f.*>}}
+
+Should not be reduced due to vocalic l or r:
+
+[[vrba]] "willow" {{cs-ndecl|<f>}}
+[[srha]] "cocksfoot" {{cs-ndecl|<f>}}
+
+Exceptional reducible:
+
+[[mzda]] "wage" {{cs-ndecl|<f.*.genpl:mezd>}}
+[[msta]] "revenge" {{cs-ndecl|<f.*.genpl:mest>}}
+
+Optional reducible:
+
+[[deska]] "plate" {{cs-ndecl|<f.*,-*>}}
+[[jachta]] "yacht" {{cs-ndecl|<f.*,-*>}}
+[[karta]] "card" {{cs-ndecl|<f.*,-*[very rare]>}}
+[[kruchta]] "church porch" {{cs-ndecl|<f.*,-*>}}
+[[přilba]] "helmet" {{cs-ndecl|<f.*,-*[rare]>}}
+
+Shortening in gen pl and maybe elsewhere:
+
+[[bába]] "old woman" {{cs-ndecl|<f.#>}} [gen pl bab]
+[[chvála]] "praise" {{cs-ndecl|<f.#>}} [gen pl chval]
+[[jáma]] "pit, hole" {{cs-ndecl|<f.#>}} [gen pl jam]
+[[sláma]] "straw" {{cs-ndecl|<f.#>}} [gen pl slam]
+[[díra]] "hole" {{cs-ndecl|<f.#ě>}} [gen pl děr, dat/loc sg díře]
+[[houba]] "mushroom, sponge" {{cs-ndecl|<f.#>}} [gen pl hub]
+[[smlouva]] "contract, treaty" {{cs-ndecl|<f.#>}} [gen pl smlouv]
+[[moucha]] "fly" {{cs-ndecl|<f.#>}} [gen pl much, dat/log sg mouše]
+[[touha]] "desire" {{cs-ndecl|<f.#>}} [gen pl tuh, dat/log sg touze]
+[[brána]] "gate" {{cs-ndecl|<f.##,#>}} [gen pl bran, dat pl branám/bránám, loc pl branách/bránách, ins pl branami/bránami, ins sg branou/bránou]
+[[žába]] "frog" {{cs-ndecl|<f.##,#.ins:žábou>}} [gen pl žab, dat pl žabám/žábám, loc pl žabách/žábách, ins pl žabami/žábami, ins sg žábou only]
+[[vrána]] "frog" {{cs-ndecl|<f.##,#.ins:vránou>}} [gen pl vran, dat pl vranám/vránám, loc pl vranách/vránách, ins pl vranami/vránami, ins sg vránou only]
+[[žíla]] "vein" {{cs-ndecl|<f.##,#>}} [gen pl žil, dat pl žilám/žílám, loc pl žilách/žílách, ins pl žilami/žílami, ins sg žilou/žílou]
+[[lípa]] "lime tree, linden" {{cs-ndecl|<f.##,#>}} [gen pl lip, dat pl lipám/lípám, loc pl lipách/lípách, ins pl lipami/lípami, ins sg lipou/lípou]
+[[síla]] "strength, force" {{cs-ndecl|<f.##,#>}} [gen pl sil, dat pl silám/sílám, loc pl silách/sílách, ins pl silami/sílami, ins sg silou/sílou]
+[[dráha]] "track, lane" {{cs-ndecl|<f.##,#>}} [gen pl drah, dat pl drahám/dráhám, loc pl drahách/dráhách, ins pl drahami/dráhami, ins sg drahou/dráhou]
+[[míra]] "measure" {{cs-ndecl|<f.##ě,#ě>}} [gen pl měr, dat pl měrám/mírám, loc pl měrách/mírách, ins pl měrami/mírami, ins sg měrou/mírou, dat/log sg míře]
+[[práce]] "work" {{cs-ndecl|<f.##>}} [gen pl prací, dat pl pracím, loc pl pracích, ins pl pracemi, ins sg prací]
+[[autodráha]] "slot car set" {{cs-ndecl|<f.ins:autodrahou:autodráhou>}}
+[[kláda]] "log" {{cs-ndecl|<f>}}
+[[žláza]] "gland" {{cs-ndecl|<f>}}
+[[bříza]] "birch" {{cs-ndecl|<f>}}
+[[hlíza]] "tuber" {{cs-ndecl|<f>}}
+[[jáhla]] "millet" {{cs-ndecl|<f.*#,*>}}
+[[slíva]] "plum" {{cs-ndecl|<f.-,#>}}
+[[mísa]] "bowl" {{cs-ndecl|<f.#,->}}
+
+
+
+
+Neuter:
+-------
+
+- Reducible vs. non-reducible: Same rule as for feminines.
+
+Default reducible:
+
+[[clo]] "" {{cs-ndecl|<n>}} [gen pl cel]
+[[dno]] "" {{cs-ndecl|<n>}} [gen pl den]
+[[jho]] "" {{cs-ndecl|<n.locu.locplách>}} [gen pl jeh]
+[[sklo]] "glass" {{cs-ndecl|<n.loce>}} [gen pl skel, loc sg skle]
+[[zlo]] "evil" {{cs-ndecl|<n.locu:e>}} [gen pl zel, loc sg zlu/zle]
+[[božstvo]] "deity" {{cs-ndecl|<n>}}
+
+Default reducible but should not be reduced:
+
+[[hejno]] "flock" {{cs-ndecl|<n.-*>}}
+[[manko]] "" {{cs-ndecl|<n.-*>}}
+
+Should not be reduced due to vocalic l or r:
+
+[[zrno]] "grain" {{cs-ndecl|<n>}}
+
+Default non-reducible but should be reduced:
+
+[[jablko]] "apple" {{cs-ndecl|<n.*>}}
+
+Shortening in gen pl and maybe elsewhere:
+
+[[dílo]] "work" {{cs-ndecl|<n.#ě.loce>}} [gen pl děl]
+[[jádro]] "kernel, core" {{cs-ndecl|<n.*#.locu:e>}} [gen pl jader, loc sg jádru/jádře]
+[[jméno]] "name" {{cs-ndecl|<n.#>}} [gen pl jmen, loc sg jméně/jménu]
+[[játra]] "liver" {{cs-ndecl|<n.*#.pl>}} [gen pl jater]
+[[péro]] "pen" {{cs-ndecl|<n.#.locu>}} [gen pl per, loc sg péru]
+[[záda]] "back" {{cs-ndecl|<n.#.pl>}} [gen pl zad]
+[[léto]] "summer; (pl) years" {{cs-ndecl|<n.##,#.ins:létem>}} [gen pl let, dat pl letům/létům, loc pl letech/létech, ins pl lety/léty, ins sg only létem]
+
+Pluralia tantum:
+----------------
+
+Masculine:
+
+[[alimenty]] "alimony" {{cs-ndecl|<mp>}}
+[[Blíženci]] "Gemini" (pl. of [[blíženec]] "twin" reducible) {{cs-ndecl|<mp-an>}}
+[[Bory]] "Bory" (Czech village) {{cs-ndecl|<mp>}}
+[[Cookovy ostrovy]] "Cook Islands" {{cs-ndecl|[[Cookovy]]<+> [[ostrovy]]<mp>}}
+[[čáry]] "magic, spells"
+
+
+Adjectival:
+-----------
+
+Masculine:
+
+Feminine:
+
+Neuter:
+
+[[výživné]] "alimony"
+
+Adjectival pluralia tantum:
+---------------------------
+
+Masculine:
+
+Feminine:
+
+Neuter:
+
+[[výživné]] "alimony"
+
+
+]=]
 
 
 STILL TO DO:
 
 [[deska]] "board; record" [footnote attached to non-reducible gen pl]
-[[rorýs]] "swift (bird)" [mixed decl; not handled correctly]
 [[primas]] [mixed decl; not handled correctly]
 [[ruka]] "hand" [irregular pl]
 [[Alois]] "Alois" [mixed decl; not handled correctly]
