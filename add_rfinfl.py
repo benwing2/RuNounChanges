@@ -35,6 +35,12 @@ pos_to_headword_template = {
     "adjective": "uk-adj",
     "verb": "uk-verb",
   },
+  "cs": {
+    "noun": "cs-noun",
+    "proper noun": "cs-proper noun",
+    "adjective": "cs-adj",
+    "verb": "cs-verb",
+  },
   "hi": {
     "noun": "hi-noun",
     "proper noun": "hi-proper noun",
@@ -49,9 +55,7 @@ def be_lemma_is_indeclinable(t, pagetitle, pagemsg):
   return False
 
 def bg_lemma_is_indeclinable(t, pagetitle, pagemsg):
-  if getparam(t, "indecl"):
-    return True
-  return False
+  return not not getparam(t, "indecl")
 
 def ru_lemma_is_indeclinable(t, pagetitle, pagemsg):
   if tname(t) in ["ru-noun", "ru-proper noun"] and getparam(t, "3") == "-":
@@ -71,6 +75,9 @@ def uk_lemma_is_indeclinable(t, pagetitle, pagemsg):
   if tname(t) == "uk-adj" and getparam(t, "indecl"):
     return True
   return False
+
+def cs_lemma_is_indeclinable(t, pagetitle, pagemsg):
+  return not not getparam(t, "indecl")
 
 def hi_lemma_is_indeclinable(t, pagetitle, pagemsg):
   if tname(t) in ["hi-noun", "hi-proper noun"]:
@@ -92,12 +99,14 @@ lemma_is_indeclinable = {
   "bg": bg_lemma_is_indeclinable,
   "ru": ru_lemma_is_indeclinable,
   "uk": uk_lemma_is_indeclinable,
+  "cs": cs_lemma_is_indeclinable,
   "hi": hi_lemma_is_indeclinable,
 }
 
 pos_to_nonlemma_template = {
   "be": None,
   "bg": "(bg-verbal noun|bg-verbal noun form|bg-part|bg-part form)",
+  "cs": None,
   "ru": u"(ru-noun form|ru-.*alt-ё|ru-verb-cform)",
   "uk": None,
   "hi": "(hi-verb-form|hi-noun-form|hi-adj-form)",
@@ -128,6 +137,12 @@ pos_to_infl_template = {
     "verb": "uk-conj.*",
     "adjective": "(uk-decl-adj.*|uk-adj-.*)",
   },
+  "cs": {
+    "noun": "cs-ndecl",
+    "proper noun": "cs-ndecl",
+    "verb": "cs-conj.*",
+    "adjective": "cs-adecl",
+  },
   "hi": {
     "noun": "hi-ndecl",
     "proper noun": "hi-ndecl",
@@ -149,6 +164,7 @@ lang_to_name = {
   "bg": "Bulgarian",
   "ru": "Russian",
   "uk": "Ukrainian",
+  "cs": "Czech",
   "hi": "Hindi",
 }
 
@@ -159,6 +175,7 @@ def process_text_on_page(index, pagetitle, text, lang, pos):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
+  origtext = text
   cappos = pos.capitalize()
   notes = []
 
@@ -173,7 +190,7 @@ def process_text_on_page(index, pagetitle, text, lang, pos):
   k = 1
   last_pos = None
   if "indeclinable %ss" % pos in secbody + sectail:
-    pagemsg("Saw 'indeclinable %ss' in text, skipping: %s" % pos)
+    pagemsg("Saw 'indeclinable %ss' in text, skipping" % pos)
     return
   while k < len(subsections):
     if re.search(r"=\s*%s\s*=" % cappos, subsections[k]):
@@ -281,7 +298,7 @@ def process_text_on_page(index, pagetitle, text, lang, pos):
   sections[j] = secbody + sectail
   text = "".join(sections)
   text = re.sub("\n\n\n+", "\n\n", text)
-  if not notes:
+  if not notes and origtext != text:
     notes.append("convert 3+ newlines to 2")
   return text, notes
 
