@@ -37,7 +37,7 @@ FIXME:
 8. Support neuter foreign nouns in -um/-on. [DONE]
 9. Support neuter foreign nouns in -ium/-ion. [DONE]
 10. Support paired body parts, e.g. [[ruka]], [[noha]], [[oko]], [[ucho]], [[koleno]], [[rameno]]. [WON'T DO;
-    JUST SEPARATE THE MEANINGS AND GIVE THEM DIFFERENT DECLENSIONS]
+	JUST SEPARATE THE MEANINGS AND GIVE THEM DIFFERENT DECLENSIONS]
 11. Support masculine nouns in -e/ě that are neuter in the plural. [DONE]
 12. Correctly handle -e vs. -ě, e.g. soft neuters have both [[kutě]] and [[poledne]]. [DONE]
 13. Always use specified lemma in nom_pl and maybe acc_pl when plurale tantum. [DONE]
@@ -55,23 +55,23 @@ FIXME:
 25. Support manual declensions. [DONE]
 26. Support numerals. [DONE]
 27. Allow for reducible spec in pluralia tantum and dereduce accordingly; also automatically assign reducibility
-    if singular stem ends in -Ck or -Cc.
+	if singular stem ends in -Ck or -Cc. [DONE]
 28. Use `pos` value in all categories.
 29. Support determiners [[kolik]], [[tolik]], [[několik]], [[mnoho]].
 30. Support a '.velar' indicator for foreign names whose pronunciation but not spelling ends in a velar: [[Remarque]],
-    [[Braque]], [[Mike]], [[Drake]], [[Jake]] with vocative 'Remarquu', 'Braquu', 'Mikeu', 'Drakeu', 'Jakeu'. In
-    general we need more thought around such foreign names; essentially, for names in a silent e, sometimes the -e
-    is dropped in all oblique forms (e.g. [[Shakespeare]], [[Pierre]], [[Barrande]], [[La Fontaine]], [[Braque]],
-    [[Remarque]] with gen sg 'Shakespeara', 'Pierra', Barranda', 'La Fontaina', 'Braqua', 'Remarqua') and sometimes
-    it's kept in all oblique forms except those ending in an -e, where -ee is avoided (e.g. [[Pete]], [[Gable]],
-    [[Jake]], [[White]], [[Byrne]], [[Mike]], [[Drake]] with gen sg 'Petea', 'Gablea' etc. and voc sg 'Pete', 'Gable'
-    but 'Jakeu', 'Mikeu'). Sometimes there are doublets, e.g. [[Hubble]] and [[Hume]] have gen sg 'Hubbla/Hubblea'
-    (where the second form is used among astronomers in a technical sense and the first form may be more popular)
-    and 'Huma/Humea'. We already have a '.foreign' indicator that when applied to a noun ending in -e drops the -e
-    in oblique forms e.g. for [[software]]. We may need to combine this with an explicit indicator of hard, soft or
-    velar as there will be names with silent -e and preceding soft consonant e.g. [[Bruce]], [[Coleridge]]. Note
-    that when the -e is kept it is still dropped before front vowels, hence dat sg 'Bruci'/Bruceovi'. Need some
-    investigation in IJP and cswikt.
+	[[Braque]], [[Mike]], [[Drake]], [[Jake]] with vocative 'Remarquu', 'Braquu', 'Mikeu', 'Drakeu', 'Jakeu'. In
+	general we need more thought around such foreign names; essentially, for names in a silent e, sometimes the -e
+	is dropped in all oblique forms (e.g. [[Shakespeare]], [[Pierre]], [[Barrande]], [[La Fontaine]], [[Braque]],
+	[[Remarque]] with gen sg 'Shakespeara', 'Pierra', Barranda', 'La Fontaina', 'Braqua', 'Remarqua') and sometimes
+	it's kept in all oblique forms except those ending in an -e, where -ee is avoided (e.g. [[Pete]], [[Gable]],
+	[[Jake]], [[White]], [[Byrne]], [[Mike]], [[Drake]] with gen sg 'Petea', 'Gablea' etc. and voc sg 'Pete', 'Gable'
+	but 'Jakeu', 'Mikeu'). Sometimes there are doublets, e.g. [[Hubble]] and [[Hume]] have gen sg 'Hubbla/Hubblea'
+	(where the second form is used among astronomers in a technical sense and the first form may be more popular)
+	and 'Huma/Humea'. We already have a '.foreign' indicator that when applied to a noun ending in -e drops the -e
+	in oblique forms e.g. for [[software]]. We may need to combine this with an explicit indicator of hard, soft or
+	velar as there will be names with silent -e and preceding soft consonant e.g. [[Bruce]], [[Coleridge]]. Note
+	that when the -e is kept it is still dropped before front vowels, hence dat sg 'Bruci'/Bruceovi'. Need some
+	investigation in IJP and cswikt.
 
 ]=]
 
@@ -176,6 +176,15 @@ local clitic_cases = {
 	dat = true,
 	acc = true,
 }
+
+
+local function dereduce(stem)
+	local dereduced_stem = com.dereduce(stem)
+	if not dereduced_stem then
+		error("Unable to dereduce stem '" .. stem .. "'")
+	end
+	return dereduced_stem
+end
 
 
 --[=[
@@ -445,7 +454,7 @@ local function handle_derived_slots_and_overrides(base)
 	process_slot_overrides(base, is_non_derived_slot)
 
 	-- Generate the remaining slots that are derived from other slots.
-	if not base.pron then
+	if not base.pron and not base.det then
 		-- Pronouns don't have a vocative (singular or plural).
 		iut.insert_forms(base.forms, "voc_p", base.forms.nom_p)
 	end
@@ -1760,7 +1769,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 				base.animacy = part
 			elseif part == "hard" or part == "soft" or part == "mixed" or part == "surname" or part == "istem" or
 				part == "-istem" or part == "tstem" or part == "nstem" or part == "tech" or part == "foreign" or
-				part == "mostlyindecl" or part == "indecl" or part == "pron" or part == "num" then
+				part == "mostlyindecl" or part == "indecl" or part == "pron" or part == "det" or part == "num" then
 				if base[part] then
 					error("Can't specify '" .. part .. "' twice: '" .. inside .. "'")
 				end
@@ -1772,13 +1781,6 @@ local function parse_indicator_spec(angle_bracket_spec)
 				if part == "hard" then
 					base.hard_c = true
 				end
-			elseif part == "irreg" then
-				track("irreg")
-				-- FIXME: Delete this after uses are renamed to '.pron'.
-				if base.pron then
-					error("Can't specify 'irreg' twice: '" .. inside .. "'")
-				end
-				base.pron = true
 			elseif part == "+" then
 				if base.adj then
 					error("Can't specify '+' twice: '" .. inside .. "'")
@@ -1814,19 +1816,23 @@ end
 
 
 local function is_regular_noun(base)
-	return not base.adj and not base.pron and not base.num
+	return not base.adj and not base.pron and not base.det and not base.num
 end
 
 local function set_defaults_and_check_bad_indicators(base)
 	-- Set default values.
 	local regular_noun = is_regular_noun(base)
-	if base.pron then
+	if base.pron or base.det then
 		set_pron_defaults(base)
 	elseif base.num then
 		set_num_defaults(base)
 	elseif not base.adj then
 		if not base.gender then
-			error("For nouns, gender must be specified")
+			if base.manual then
+				base.gender = "none"
+			else
+				error("For nouns, gender must be specified")
+			end
 		end
 		base.number = base.number or "both"
 		base.animacy = base.animacy or "inan"
@@ -1878,6 +1884,11 @@ local function set_all_defaults_and_check_bad_indicators(alternant_multiword_spe
 		else
 			alternant_multiword_spec.saw_non_pron = true
 		end
+		if base.det then
+			alternant_multiword_spec.saw_det = true
+		else
+			alternant_multiword_spec.saw_non_det = true
+		end
 		if base.num then
 			alternant_multiword_spec.saw_num = true
 		else
@@ -1908,92 +1919,115 @@ end
 -- For a plural-only lemma, synthesize a likely singular lemma. It doesn't have to be
 -- theoretically correct as long as it generates all the correct plural forms.
 local function synthesize_singular_lemma(base)
-	local stem
-	while true do
-		if base.indecl then
-			-- If specified as indeclinable, leave it alone; e.g. 'pesos' indeclinable plural of [[peso]].
-			break
-		elseif base.gender == "m" then
-			if base.animacy == "an" then
-				stem = rmatch(base.lemma, "^(.*)i$")
-				if stem then
-					if base.soft then
-						-- [[Blíženci]] "Gemini"
-						-- Since the nominative singular has no ending.
-						base.lemma = com.convert_paired_plain_to_palatal(stem, ending)
-					else
-						base.lemma = undo_second_palatalization(base, stem)
-					end
-					break
-				end
-				stem = rmatch(base.lemma, "^(.*)ové$") or rmatch(base.lemma, "^(.*)é$")
-				if stem then
-					-- [[manželé]] "married couple", [[Velšané]] "Welsh people"
-					base.lemma = stem
-					break
-				end
-				error(("Animate masculine plural-only lemma '%s' should end in -i, -ové or -é"):format(base.lemma))
-			else
-				stem = rmatch(base.lemma, "^(.*)y$")
-				if stem then
-					-- [[droby]] "giblets"; [[tvarůžky]] "Olomouc cheese"; [[alimenty]] "alimony"; etc.
-					base.lemma = stem
-					break
-				end
-				local ending
-				stem, ending = rmatch(base.lemma, "^(.*)([eě])$")
-				if stem then
-					-- [[peníze]] "money", [[tvargle]] "Olomouc cheese" (mixed declension), [[údaje]] "data",
-					-- [[Lazce]] (a village), [[lováče]] "money", [[Krkonoše]] "Giant Mountains", [[kříže]] "clubs"
-					base.lemma = com.convert_paired_plain_to_palatal(stem, ending)
-					if not base.mixed then
-						base.soft = true
-					end
-					break
-				end
-				error(("Inanimate masculine plural-only lemma '%s' should end in -y, -e or -ě"):format(base.lemma))
-			end
-		elseif base.gender == "f" then
-			stem = rmatch(base.lemma, "^(.*)y$")
-			if stem then
-				base.lemma = stem .. "a"
-				break
-			end
-			stem = rmatch(base.lemma, "^(.*)[eě]$")
-			if stem then
-				-- Singular like the plural. Cons-stem feminines like [[dlaň]] "palm (of the hand)" have identical
-				-- plurals to soft-stem feminines like [[růže]] (modulo e/ě differences), so we don't need to
-				-- reconstruct the former type.
-				break
-			end
-			stem = rmatch(base.lemma, "^(.*)i$")
-			if stem then
-				-- i-stems.
-				base.lemma = stem
-				base.istem = true
-				break
-			end
-			error(("Feminine plural-only lemma '%s' should end in -y, -ě, -e or -i"):format(base.lemma))
-		else
-			-- -ata nouns like [[slůně]] "baby elephant" nom pl 'slůňata' are declined in the plural same as if
-			-- the singular were 'slůňato' so we don't have to worry about them.
-			stem = rmatch(base.lemma, "^(.*)a$")
-			if stem then
-				base.lemma = stem .. "o"
-				break
-			end
-			stem = rmatch(base.lemma, "^(.*)[eěí]$")
-			if stem then
-				-- singular lemma also in -e, -ě or -í; e.g. [[věčná loviště]] "[[happy hunting ground]]"
-				break
-			end
-			error(("Neuter plural-only lemma '%s' should end in -a, -í, -ě or -e"):format(base.lemma))
-		end
-	end
-
-	-- Now set the stem sets if not given.
 	if not base.stem_sets then
 		base.stem_sets = {{}}
+	end
+
+	local lemma_determined
+	-- Loop over all stem sets in case the user specified multiple ones (e.g. '*,-*'). If we try to reconstruct
+	-- different lemmas for different stem sets, we'll throw an error below.
+	for _, stems in ipairs(base.stem_sets) do
+		local stem, lemma
+		while true do
+			if base.indecl then
+				-- If specified as indeclinable, leave it alone; e.g. 'pesos' indeclinable plural of [[peso]].
+				lemma = base.lemma
+				break
+			elseif base.gender == "m" then
+				if base.animacy == "an" then
+					stem = rmatch(base.lemma, "^(.*)i$")
+					if stem then
+						if base.soft then
+							-- [[Blíženci]] "Gemini"
+							-- Since the nominative singular has no ending.
+							lemma = com.convert_paired_plain_to_palatal(stem, ending)
+						else
+							lemma = undo_second_palatalization(base, stem)
+						end
+					else
+						stem = rmatch(base.lemma, "^(.*)ové$") or rmatch(base.lemma, "^(.*)é$")
+						if stem then
+							-- [[manželé]] "married couple", [[Velšané]] "Welsh people"
+							lemma = stem
+						else
+							error(("Animate masculine plural-only lemma '%s' should end in -i, -ové or -é"):format(base.lemma))
+						end
+					end
+				else
+					stem = rmatch(base.lemma, "^(.*)y$")
+					if stem then
+						-- [[droby]] "giblets"; [[tvarůžky]] "Olomouc cheese"; [[alimenty]] "alimony"; etc.
+						lemma = stem
+					else
+						local ending
+						stem, ending = rmatch(base.lemma, "^(.*)([eě])$")
+						if stem then
+							-- [[peníze]] "money", [[tvargle]] "Olomouc cheese" (mixed declension), [[údaje]] "data",
+							-- [[Lazce]] (a village), [[lováče]] "money", [[Krkonoše]] "Giant Mountains", [[kříže]] "clubs"
+							lemma = com.convert_paired_plain_to_palatal(stem, ending)
+							if not base.mixed then
+								base.soft = true
+							end
+						else
+							error(("Inanimate masculine plural-only lemma '%s' should end in -y, -e or -ě"):format(base.lemma))
+						end
+					end
+				end
+				if stems.reducible == nil then
+					if rfind(lemma, com.cons_c .. "[ck]$") and not com.is_monosyllabic(base.lemma) then
+						stems.reducible = true
+					end
+					if stems.reducible then
+						lemma = dereduce(lemma)
+					end
+				end
+				break
+			elseif base.gender == "f" then
+				stem = rmatch(base.lemma, "^(.*)y$")
+				if stem then
+					lemma = stem .. "a"
+					break
+				end
+				stem = rmatch(base.lemma, "^(.*)[eě]$")
+				if stem then
+					-- Singular like the plural. Cons-stem feminines like [[dlaň]] "palm (of the hand)" have identical
+					-- plurals to soft-stem feminines like [[růže]] (modulo e/ě differences), so we don't need to
+					-- reconstruct the former type.
+					lemma = base.lemma
+					break
+				end
+				stem = rmatch(base.lemma, "^(.*)i$")
+				if stem then
+					-- i-stems.
+					lemma = stem
+					base.istem = true
+					break
+				end
+				error(("Feminine plural-only lemma '%s' should end in -y, -ě, -e or -i"):format(base.lemma))
+			elseif base.gender == "n" then
+				-- -ata nouns like [[slůně]] "baby elephant" nom pl 'slůňata' are declined in the plural same as if
+				-- the singular were 'slůňato' so we don't have to worry about them.
+				stem = rmatch(base.lemma, "^(.*)a$")
+				if stem then
+					lemma = stem .. "o"
+					break
+				end
+				stem = rmatch(base.lemma, "^(.*)[eěí]$")
+				if stem then
+					-- singular lemma also in -e, -ě or -í; e.g. [[věčná loviště]] "[[happy hunting ground]]"
+					lemma = base.lemma
+					break
+				end
+				error(("Neuter plural-only lemma '%s' should end in -a, -í, -ě or -e"):format(base.lemma))
+			else
+				error(("Internal error: Unrecognized gender '%s'"):format(base.gender))
+			end
+		end
+		if lemma_determined and lemma_determined ~= lemma then
+			error(("Attempt to set two different singular lemmas '%s' and '%s'"):format(lemma_determined, lemma))
+		end
+		base.lemma = lemma
+		lemma_determined = lemma
 	end
 end
 
@@ -2141,6 +2175,7 @@ local function synthesize_adj_lemma(base)
 	end
 
 	-- Now set the stem sets if not given.
+        -- Now set the stem sets if not given.
 	if not base.stem_sets then
 		base.stem_sets = {{reducible = false}}
 	end
@@ -2164,11 +2199,6 @@ local function determine_declension(base)
 	end
 	if base.indecl then
 		base.decl = "indecl"
-		base.nonvowel_stem = base.lemma
-		return
-	end
-	if base.manual then
-		base.decl = "manual"
 		base.nonvowel_stem = base.lemma
 		return
 	end
@@ -2497,13 +2527,6 @@ local function determine_stems(base)
 
 	-- Now determine all the stems for each stem set.
 	for _, stems in ipairs(base.stem_sets) do
-		local function dereduce(stem)
-			local dereduced_stem = com.dereduce(stem)
-			if not dereduced_stem then
-				error("Unable to dereduce stem '" .. stem .. "'")
-			end
-			return dereduced_stem
-		end
 		local lemma_is_vowel_stem = not not base.vowel_stem
 		if base.vowel_stem then
 			stems.vowel_stem = base.vowel_stem
@@ -2539,16 +2562,23 @@ end
 
 
 local function detect_indicator_spec(base)
-	if base.pron then
+	if base.pron or base.det then
 		if base.stem_sets then
-			error("Reducible and vowel alternation specs cannot be given with pronouns")
+			error("Reducible and vowel alternation specs cannot be given with pronouns and determiners")
 		end
 		base.stem_sets = {{reducible = false, vowel_stem = "", nonvowel_stem = ""}}
-		base.decl = "pron"
+		base.decl = base.pron and "pron" or "det"
 	elseif base.num then
 		determine_numeral_stems(base)
 	elseif base.adj then
 		synthesize_adj_lemma(base)
+	elseif base.manual then
+		if base.stem_sets then
+			-- FIXME, maybe this should be allowed?
+			error("Reducible and vowel alternation specs cannot be given with manual declensions")
+		end
+		base.stem_sets = {{reducible = false, vowel_stem = "", nonvowel_stem = ""}}
+		base.decl = "manual"
 	else
 		if base.number == "pl" then
 			synthesize_singular_lemma(base)
@@ -2581,8 +2611,8 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 			alternant_multiword_spec.pl_genders[plgender] = true
 		end
 	end)
-	if alternant_multiword_spec.saw_pron and alternant_multiword_spec.saw_num then
-		error("Can't combine pronouns and numerals")
+	if (alternant_multiword_spec.saw_pron and 1 or 0) + (alternant_multiword_spec.saw_det and 1 or 0) + (alternant_multiword_spec.saw_num and 1 or 0) > 1 then
+		error("Can't combine pronouns, determiners and/or numerals")
 	end
 end
 
@@ -2737,6 +2767,8 @@ local function set_pos(alternant_multiword_spec)
 		alternant_multiword_spec.pos = alternant_multiword_spec.args.pos
 	elseif alternant_multiword_spec.saw_pron and not alternant_multiword_spec.saw_non_pron then
 		alternant_multiword_spec.pos = "pronoun"
+	elseif alternant_multiword_spec.saw_det and not alternant_multiword_spec.saw_non_det then
+		alternant_multiword_spec.pos = "determiner"
 	elseif alternant_multiword_spec.saw_num and not alternant_multiword_spec.saw_non_num then
 		alternant_multiword_spec.pos = "numeral"
 	else
