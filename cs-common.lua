@@ -174,10 +174,10 @@ function export.iotate(stem)
 	-- FIXME! This is based off of page 14 of Janda and Townsend but needs reviewing with verbs.
 	local try = make_try(word)
 	return
-		try("st", "št") or
-		try("zd", "žd") or
-		try("t", "c") or
-		try("d", "z") or
+		try("s[tť]", "šť") or
+		try("z[dď]", "žď") or
+		try("[tť]", "c") or
+		try("[dď]", "z") or
 		try("s", "š") or
 		try("z", "ž") or
 		try("r", "ř") or
