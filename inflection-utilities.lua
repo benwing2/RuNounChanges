@@ -62,7 +62,7 @@ end
 The following code is used in building up the inflection of terms in inflected languages, where a term can potentially
 consist of several inflected words, each surrounded by fixed text, and a given slot (e.g. accusative singular) of a
 given word can potentially consist of multiple possible inflected forms. In addition, each form may be associated with
-a manual translation and/or a list of footnotes (or qualifiers, in the case of headword lines). The following
+a manual transliteration and/or a list of footnotes (or qualifiers, in the case of headword lines). The following
 terminology is helpful to understand:
 
 * An `inflection dimension` is a particular dimension over which a term may be inflected, such as case, number, gender,
@@ -731,9 +731,17 @@ local function parse_multiword_spec(segments, props, disable_allow_default_indic
 	local multiword_spec = {
 		word_specs = {}
 	}
-	if not disable_allow_default_indicator and props.allow_default_indicator and #segments == 1 then
-		table.insert(segments, "<>")
-		table.insert(segments, "")
+	if not disable_allow_default_indicator then
+		if #segments == 1 then
+			if props.allow_default_indicator then
+				table.insert(segments, "<>")
+				table.insert(segments, "")
+			elseif props.angle_brackets_omittable then
+				segments[1] = "<" .. segments[1] .. ">"
+				table.insert(segments, 1, "")
+				table.insert(segments, "")
+			end
+		end
 	end
 	-- Loop over every other segment. The even-numbered segments are angle-bracket specs while
 	-- the odd-numbered segments are the text between them.
@@ -795,6 +803,7 @@ be inflected, and may have alternants indicated using double parens. Examples:
   transliterate_respelling = FUNCTION_TO_TRANSLITERATE_RESPELLING,
   split_bracketed_runs_into_words = nil or FUNCTION_TO_SPLIT_BRACKETED_RUNS_INTO_WORDS,
   allow_default_indicator = BOOLEAN_OR_NIL,
+  angle_brackets_omittable = BOOLEAN_OR_NIL,
   allow_blank_lemma = BOOLEAN_OR_NIL,
 }
 						
@@ -819,8 +828,14 @@ the value passed in is the result of calling `parse_balanced_segment_run(text, "
 and `pattern` splits on either spaces or hyphens (unless the text begins with a hyphen, in which case splitting is only
 on spaces, so that suffixes can be inflected).
 
-`allow_default_indicator` should be true if the indicator in angle brackets can be omitted and should be automatically
-added at the end of the multiword text (if no alternants) or at the end of each alternant (if alternants present).
+`allow_default_indicator` should be true if an empty indicator in angle brackets <> can be omitted and should be
+automatically added at the end of the multiword text (if no alternants) or at the end of each alternant (if alternants
+present).
+
+`angle_brackets_omittable` should be true if angle brackets can be omitted around a non-empty indicator in the presence
+of a blank lemma. In this case, if the combined indicator spec has no angle brackets, they will be added around the
+indicator (or around all indicators, if alternants are present). This only makes sense when `allow_blank_lemma` is
+specified.
 
 `allow_blank_lemma` should be true of if a blank lemma is allowed; in such a case, the calling function should
 substitute a default lemma, typically taken from the pagename.
@@ -846,6 +861,9 @@ i.e. it is like what is returned by parse_alternant() but has extra `before_text
 and `before_text_no_links` fields.
 ]=]
 function export.parse_inflected_text(text, props)
+	if props.angle_brackets_omittable and not props.allow_blank_lemma then
+		error("If 'angle_brackets_omittable' is specified, so should 'allow_blank_lemma'")
+	end
 	local alternant_multiword_spec = {alternant_or_word_specs = {}}
 	local alternant_segments = m_string_utilities.capturing_split(text, "(%(%(.-%)%))")
 	local last_post_text, last_post_text_no_links, last_post_text_translit
@@ -1417,7 +1435,7 @@ function export.show_forms(forms, props)
 								local this_accel_lemma, this_accel_lemma_translit = fetch_form_and_translit(props.lemmas[j], "remove links")
 								-- Do not use table.insert() especially for the translit because it may be nil and in
 								-- that case we want gaps in the array.
-								accel_lemma[j - first_lemma + 1] = this_lemma
+								accel_lemma[j - first_lemma + 1] = this_accel_lemma
 								accel_lemma_translit[j - first_lemma + 1] = this_accel_lemma_translit
 							end
 						end
