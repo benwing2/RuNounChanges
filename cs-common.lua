@@ -118,31 +118,37 @@ function export.is_monosyllabic(word)
 end
 
 
-function export.apply_vowel_alternation(alt, stem)
+function export.apply_vowel_alternation(alt, stem, noerror, ring_u_to_u)
 	local modstem, origvowel
 	if alt == "quant" or alt == "quant-ě" then
-		-- [[sníh]] "snow", gen sg. [[sněhu]]
-		-- [[míra]] "snow", gen pl. [[měr]]
-		-- [[hůl]] "cane", gen sg. [[hole]]
-		-- [[práce]] "work", ins sg. [[prací]]
-		modstem = rsub(stem, "(.)([íůáé])(" .. export.cons_c .. "*)$",
+		modstem = rsub(stem, "(.)([ýíůáé])(" .. export.cons_c .. "*)$",
 			function(pre, vowel, post)
 				origvowel = vowel
-				if vowel == "í" then
-					if alt == "quant-ě" then
-						if rfind(pre, "[" .. export.followable_by_e_hacek .. "]$") then
-							return pre .. "ě" .. post
-						else
-							return pre .. "e" .. post
-						end
+				if alt == "quant-ě" then
+					if vowel == "í" or vowel == "á" then
+						-- [[sníh]] "snow", gen sg. 'sněhu'
+						-- [[míra]] "snow", gen pl. 'měr'
+						-- [[zábsti]] pres1s 'zebu'
+						-- [[smát se]] pres1s 'směji se'
+						-- [[přát]] pres1s 'přeji'
+						-- Use combine_stem_ending() so we get ě or e as appropriate (and conceivably we could have
+						-- e.g. 'ťát' -> 'těji' or similar).
+						return export.combine_stem_ending(nil, nil, pre, "ě" .. post)
 					else
-						return pre .. "i" .. post
+						error(("Bad vowel in form '%s' for quantitative ě alternation, should be í or á"):format(stem))
 					end
+				elseif vowel == "í" then
+					return pre .. "i" .. post
+				elseif vowel == "ý" then
+					return pre .. "y" .. post
 				elseif vowel == "ů" then
-					return pre .. "o" .. post
+					-- [[hůl]] "cane", gen sg. 'hole'
+					-- [[půlit]] impv. 'pul'
+					return pre .. (ring_u_to_u and "u" or "o") .. post
 				elseif vowel == "é" then
 					return pre .. "e" .. post
 				else
+					-- [[práce]] "work", ins sg. 'prací'
 					return pre .. "a" .. post
 				end
 			end
@@ -150,8 +156,14 @@ function export.apply_vowel_alternation(alt, stem)
 		-- [[houba]] "mushroom", gen pl. [[hub]]
 		modstem = rsub(modstem, "ou(" .. export.cons_c .. "*)$", "u%1")
 		if modstem == stem then
-			error("Indicator '" .. alt .. "' can't be applied because stem '" .. stem .. "' doesn't have an í, ů, ou, á or é as its last vowel")
+			if noerror then
+				return stem, nil
+			else
+				error("Indicator '" .. alt .. "' can't be applied because stem '" .. stem .. "' doesn't have an í, ů, ou, á or é as its last vowel")
+			end
 		end
+	elseif alt then
+		error("Unrecognized quantitative alternation indicator '" .. alt .. "'")
 	else
 		return stem, nil
 	end
@@ -171,13 +183,13 @@ end
 
 
 function export.iotate(stem)
-	-- FIXME! This is based off of page 14 of Janda and Townsend but needs reviewing with verbs.
 	local try = make_try(word)
 	return
 		try("s[tť]", "šť") or
 		try("z[dď]", "žď") or
 		try("[tť]", "c") or
 		try("[dď]", "z") or
+		try("n", "ň") or
 		try("s", "š") or
 		try("z", "ž") or
 		try("r", "ř") or
@@ -188,35 +200,40 @@ function export.iotate(stem)
 end
 
 
-function export.apply_first_palatalization(word, is_adjective)
-	-- -rr doesn't palatalize (e.g. [[torr]] voc_s 'torre') but otherwise -Cr normally does.
-	if rfind(word, "rr$") then
-		return word
-	end
-	local stem = rmatch(word, "^(.*" .. export.cons_c .. ")r$")
-	if stem then
-		return stem .. "ř"
+function export.apply_first_palatalization(word, adjective_or_verb)
+	if not adjective_or_verb then
+		-- -rr doesn't palatalize (e.g. [[torr]] voc_s 'torre') but otherwise -Cr normally does.
+		if rfind(word, "rr$") then
+			return word
+		end
+		local stem = rmatch(word, "^(.*" .. export.cons_c .. ")r$")
+		if stem then
+			return stem .. "ř"
+		end
 	end
 	local try = make_try(word)
 	return
 		try("ch", "š") or
 		try("[hg]", "ž") or
-		is_adjective and try("sk", "št") or
-		is_adjective and try("ck", "čt") or
+		adjective_or_verb and try("sk", "šť") or
+		adjective_or_verb and try("ck", "čť") or
 		try("[kc]", "č") or
 		word
 end
 
 
-function export.apply_second_palatalization(word, is_adjective)
+function export.apply_second_palatalization(word, adjective_or_verb)
 	local try = make_try(word)
 	return
 		try("ch", "š") or
 		try("[hg]", "z") or
 		try("r", "ř") or
-		is_adjective and try("sk", "št") or
-		is_adjective and try("ck", "čt") or
+		adjective_or_verb and try("sk", "šť") or
+		adjective_or_verb and try("ck", "čť") or
 		try("k", "c") or
+		try("t", "ť") or
+		try("d", "ď") or
+		try("n", "ň") or
 		word
 end
 
@@ -266,16 +283,17 @@ function export.convert_paired_palatal_to_plain(stem, ending)
 	-- For stems that alternate between n/t/d and ň/ť/ď, we always maintain the stem in the latter format and convert
 	-- to the corresponding plain as needed, with e -> ě. Likewise, stems ending in /bj/ /vj/ etc. use TEMP_SOFT_LABIAL.
 	if ending and not rfind(ending, "^[Eeěií]") then
+		stem = stem:gsub(export.TEMP_SOFT_LABIAL, "")
 		return stem, ending
 	end
 	local stembegin, lastchar = rmatch(stem, "^(.*)([" .. export.paired_palatal .. export.TEMP_SOFT_LABIAL .. "])$")
 	if lastchar then
-		ending = rsub(ending, "^e", "ě")
+		ending = ending and rsub(ending, "^e", "ě") or nil
 		stem = stembegin .. export.paired_palatal_to_plain[lastchar]
 	end
 	-- 'E' has served its purpose of preventing the e -> ě conversion after a paired palatal (i.e. it depalatalizes
 	-- paired palatals).
-	ending = rsub(ending, "^E", "e")
+	ending = ending and rsub(ending, "^E", "e") or nil
 	return stem, ending
 end
 
@@ -284,22 +302,23 @@ function export.combine_stem_ending(base, slot, stem, ending)
 	if stem == "?" then
 		return "?"
 	else
-		-- Convert ňe and ňě -> ně. Convert nE and ňE -> ne.
+		-- There are occasional occurrences of soft-only consonants at the end of the stem in hard paradigms, e.g.
+		-- [[banjo]] "banjo", [[gadžo]] "gadjo (non-Romani)", [[Miša]] "Misha, Mike", [[paša]] "pasha". These force a
+		-- following y to turn into i. Things are tricky with -c; [[hec]] "joke" (hard masculine) has ins_pl 'hecy',
+		-- but [[paňáca]] "jester, fop" has ins_pl 'paňáci'. We have to set a flag to indicate whether to allow y after
+		-- c. This needs to proceed depalatalization of paired palatal consonants in the case of e.g. [[říďa]]
+		-- "principal, headmaster", with instrumental plural 'řídi' (říďy -> říďi -> řídi).
+		if rfind(ending, "^y") and (rfind(stem, export.inherently_soft_not_c_c .. "$") or
+			not (base and base.hard_c) and rfind(stem, "[cC]$")) then
+			ending = rsub(ending, "^y", "i")
+		end
+		-- Convert ňe and ňě -> ně. Convert nE and ňE -> ne. Convert ňi and ni -> ni.
 		stem, ending = export.convert_paired_palatal_to_plain(stem, ending)
 		-- We specify endings with -e/ě using ě, but some consonants cannot be followed by ě; convert to plain e.
 		if rfind(ending, "^ě") and not rfind(stem, export.followable_by_e_hacek_c .. "$") then
 			ending = rsub(ending, "^ě", "e")
 		end
-		-- There are occasional occurrences of soft-only consonants at the end of the stem in hard paradigms, e.g.
-		-- [[banjo]] "banjo", [[gadžo]] "gadjo (non-Romani)", [[Miša]] "Misha, Mike", [[paša]] "pasha". These force a
-		-- following y to turn into i. Things are tricky with -c; [[hec]] "joke" (hard masculine) has ins_pl 'hecy',
-		-- but [[paňáca]] "jester, fop" has ins_pl 'paňáci'. We have to set a flag to indicate whether to allow y after
-		-- c.
-		if rfind(ending, "^y") and (rfind(stem, export.inherently_soft_not_c_c .. "$") or
-			not base.hard_c and rfind(stem, "[cC]$")) then
-			ending = rsub(ending, "^y", "i")
-		end
-		if base.all_uppercase then
+		if base and base.all_uppercase then
 			stem = uupper(stem)
 		end
 		return stem .. ending
