@@ -318,6 +318,8 @@ local function add_imperative_from_present(base, pres3p_stems, overriding_imptyp
 				stem = com.apply_vowel_alternation(imptype == "short-ě" and "quant-ě" or "quant", stem, "noerror", "ring-u-to-u")
 				if rfind(stem, "[" .. com.paired_plain .. com.velar .. "]$") then
 					sg2 = com.apply_second_palatalization(stem, "is verb")
+				else
+					sg2 = stem
 				end
 				if rfind(stem, com.velar_c .. "$") then
 					sg2_2 = com.apply_first_palatalization(stem, "is verb")
@@ -444,8 +446,8 @@ local function add_past(base, msgstems, reststems, ptr_stems)
 			table.insert(ptr_stems, {form = ptr_stem, footnotes = footnotes})
 		end)
 	end
-	add(base, "past_tgress_ms", ptr_stems, "")
-	add(base, "past_tgress_fns", ptr_stems, "ši")
+	add(base, "past_tgress_m", ptr_stems, "")
+	add(base, "past_tgress_fn", ptr_stems, "ši")
 	add(base, "past_tgress_p", ptr_stems, "še")
 	add(base, "past_act_part", ptr_stems, "ší")
 end
@@ -1895,7 +1897,7 @@ end
 local function make_table(alternant_multiword_spec)
 	local forms = alternant_multiword_spec.forms
 
-	local table_spec_part1 = [=[
+	local table_spec_overall = [=[
 <div class="NavFrame" style="width:120em;">
 <div class="NavHead" style="background:#e0e0ff;">{title}{annotation}</div>
 <div class="NavContent">
@@ -1961,6 +1963,38 @@ local function make_table(alternant_multiword_spec)
 ! style="background:#eff7ff; text-align: center;"| case/number<br/>only
 ! style="background:#d9ebff; text-align: center; vertical-align: middle;"| [[verbal noun|verbal&nbsp;noun]]
 | style="vertical-align: middle;" colspan=7 | {vnoun}
+|-
+{indicative_header}{present_table}| {fut_1s}
+| {fut_2s}
+| {fut_3s}
+| {fut_1p}
+| colspan=2 | {fut_2p}
+| {fut_3p}
+|-
+{past_table}{conditional_header}{cond_table}{cond_past_table}! style="background:#d9ebff; text-align: center; border-top-width: 3px;" colspan=2 | [[imperative mood|imperative]]
+| style="border-top-width: 3px;" | —
+| style="border-top-width: 3px;" | {imp_2s}
+| style="border-top-width: 3px;" | —
+| style="border-top-width: 3px;" | {imp_1p}
+| style="border-top-width: 3px;" colspan=2 | {imp_2p}
+| style="border-top-width: 3px;" | —
+|{\cl}{notes_clause}</div></div>]=]
+
+	local table_spec_person_number_header = [=[
+!style="background:#d9ebff; text-align: center; vertical-align: middle; border-top-width: 3px;" rowspan=3 colspan=2 | MOOD
+!style="background:#d9ebff; text-align: center; border-top-width: 3px;" colspan=3 | [[singular]]
+!style="background:#d9ebff; text-align: center; border-top-width: 3px;" colspan=4 | [[plural]] (or polite)
+|-
+!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[first person|first]]
+!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[second person|second]]
+!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[third person|third]]
+!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[first person|first]]
+!style="background:#eff7ff; text-align: center; vertical-align: middle;" colspan=2 | [[second person|second]]
+!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[third person|third]]
+|-
+!style="background:#eff7ff; text-align: center;" | [[polite]] [[singular]]
+!style="background:#eff7ff; text-align: center;" | [[plural]]
+|-
 ]=]
 
 	local table_spec_single_aspect_present = [=[
@@ -1989,70 +2023,39 @@ local function make_table(alternant_multiword_spec)
 ! style="background:#d9ebff; text-align: center;" colspan=2 | [[future tense|future]]&nbsp;(imperfective)
 ]=]
 
-	local table_spec_part2 = [=[
-|-
-!style="background:#d9ebff; text-align: center; vertical-align: middle; border-top-width: 3px;" rowspan=3 colspan=2 | [[indicative]]
-!style="background:#d9ebff; text-align: center; border-top-width: 3px;" colspan=3 | [[singular]]
-!style="background:#d9ebff; text-align: center; border-top-width: 3px;" colspan=4 | [[plural]] (or polite)
-|-
-!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[first person|first]]
-!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[second person|second]]
-!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[third person|third]]
-!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[first person|first]]
-!style="background:#eff7ff; text-align: center; vertical-align: middle;" colspan=2 | [[second person|second]]
-!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[third person|third]]
-|-
-!style="background:#eff7ff; text-align: center;" | [[polite]] [[singular]]
-!style="background:#eff7ff; text-align: center;" | [[plural]]
-|-
-{present_table}| {fut_1s}
-| {fut_2s}
-| {fut_3s}
-| {fut_1p}
-| colspan=2 | {fut_2p}
-| {fut_3p}
-|-
-!style="background:#d9ebff; text-align: center; vertical-align: middle;" rowspan=4 | [[past tense|past]]
+	local table_spec_person_number_gender = [=[
+!style="background:#d9ebff; text-align: center; vertical-align: middle;" rowspan=4 | TENSE
 !style="background:#eff7ff; text-align: center;"| [[masculine]]&nbsp;[[animate]]
-| rowspan=2 | {past_1sm}
-| rowspan=2 | {past_2sm}
-| rowspan=2 | {past_3sm}
-| rowspan=2 | {past_1pm}
-| rowspan=2 | {past_2pm_polite}
-| rowspan=2 | {past_2pm_plural}
-| {past_3pm_an}
+| rowspan=2 | {PREF_1sm}
+| rowspan=2 | {PREF_2sm}
+| rowspan=2 | {PREF_3sm}
+| rowspan=2 | {PREF_1pm}
+| rowspan=2 | {PREF_2pm_polite}
+| rowspan=2 | {PREF_2pm_plural}
+| {PREF_3pm_an}
 |-
 !style="background:#eff7ff; text-align: center;"| [[masculine]]&nbsp;[[inanimate]]
-| {past_3pm_in}
+| {PREF_3pm_in}
 |-
 !style="background:#eff7ff; text-align: center;"| [[feminine]]
-| {past_1sf}
-| {past_2sf}
-| {past_3sf}
-| {past_1pf}
-| {past_2pf_polite}
-| {past_2pf_plural}
-| {past_3pf}
+| {PREF_1sf}
+| {PREF_2sf}
+| {PREF_3sf}
+| {PREF_1pf}
+| {PREF_2pf_polite}
+| {PREF_2pf_plural}
+| {PREF_3pf}
 |-
 !style="background:#eff7ff; text-align: center;"| [[neuter]]
-| {past_1sn}
-| {past_2sn}
-| {past_3sn}
-| {past_1pn}
-| {past_2pn_polite}
-| {past_2pn_plural}
-| {past_3pn}
+| {PREF_1sn}
+| {PREF_2sn}
+| {PREF_3sn}
+| {PREF_1pn}
+| {PREF_2pn_polite}
+| {PREF_2pn_plural}
+| {PREF_3pn}
 |-
-! style="background:#d9ebff; text-align: center; border-top-width: 3px;" colspan=2 | [[imperative]]
-| style="border-top-width: 3px;" | —
-| style="border-top-width: 3px;" | {imp_2s}
-| style="border-top-width: 3px;" | —
-| style="border-top-width: 3px;" | {imp_1p}
-| style="border-top-width: 3px;" colspan=2 | {imp_2p}
-| style="border-top-width: 3px;" | —
-|{\cl}{notes_clause}</div></div>]=]
-
-	local table_spec = table_spec_part1 .. table_spec_part2
+]=]
 
 	local notes_template = [===[
 <div style="width:100%;text-align:left;background:#d9ebff">
@@ -2124,7 +2127,17 @@ local function make_table(alternant_multiword_spec)
 		alternant_multiword_spec.aspect == "both" and table_spec_biaspectual_present or table_spec_single_aspect_present,
 		forms
 	)
-	return m_string_utilities.format(table_spec, forms)
+	local table_spec_indicative_header = table_spec_person_number_header:gsub("MOOD", "[[indicative mood|indicative]]")
+	forms.indicative_header = m_string_utilities.format(table_spec_indicative_header, forms)
+	local table_spec_conditional_header = table_spec_person_number_header:gsub("MOOD", "[[conditional mood|conditional]]")
+	forms.conditional_header = m_string_utilities.format(table_spec_conditional_header, forms)
+	local table_spec_past = table_spec_person_number_gender:gsub("TENSE", "[[past tense|past]]"):gsub("PREF", "past")
+	forms.past_table = m_string_utilities.format(table_spec_past, forms)
+	local table_spec_cond = table_spec_person_number_gender:gsub("TENSE", "[[present tense|present]]"):gsub("PREF", "cond")
+	forms.cond_table = m_string_utilities.format(table_spec_cond, forms)
+	local table_spec_cond_past = table_spec_person_number_gender:gsub("TENSE", "[[past tense|past]]"):gsub("PREF", "cond_past")
+	forms.cond_past_table = m_string_utilities.format(table_spec_cond_past, forms)
+	return m_string_utilities.format(table_spec_overall, forms)
 end
 
 
