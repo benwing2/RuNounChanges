@@ -24,11 +24,12 @@ TERMINOLOGY:
 
 local lang = require("Module:languages").getByCode("cs")
 local m_table = require("Module:table")
+local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local m_script_utilities = require("Module:script utilities")
-local iut = require("Module:inflection utilities")
+local iut = require("Module:User:Benwing2/inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:cs-common")
+local com = require("Module:User:Benwing2/cs-common")
 
 local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
@@ -42,6 +43,8 @@ local rgmatch = mw.ustring.gmatch
 local rsubn = mw.ustring.gsub
 local ulen = mw.ustring.len
 local uupper = mw.ustring.upper
+
+local TEMP_REFLEXIVE_INSERTION_POINT = u(0xFFF0) -- temporary character used to mark the reflexive insertion point
 
 
 -- version of rsubn() that discards all but the first return value
@@ -64,7 +67,7 @@ local function tag_text(text)
 end
 
 
-local output_verb_slots = {
+local verb_slots = {
 	["infinitive"] = "inf",
 	["pres_act_part"] = "pres|act|part",
 	["past_act_part"] = "past|act|part",
@@ -76,6 +79,12 @@ local output_verb_slots = {
 	["past_tgress_fn"] = "f//n|s|past|tgress",
 	["past_tgress_p"] = "p|past|tgress",
 	["vnoun"] = "vnoun",
+	["pres_fut_1s"] = "-",
+	["pres_fut_2s"] = "-",
+	["pres_fut_3s"] = "-",
+	["pres_fut_1p"] = "-",
+	["pres_fut_2p"] = "-",
+	["pres_fut_3p"] = "-",
 	["pres_1s"] = "1|s|pres|ind",
 	["pres_2s"] = "2|s|pres|ind",
 	["pres_3s"] = "3|s|pres|ind",
@@ -91,54 +100,54 @@ local output_verb_slots = {
 	["imp_2s"] = "2|s|imp",
 	["imp_1p"] = "1|p|imp",
 	["imp_2p"] = "2|p|imp",
-	["lpart_m"] = "m|s|l-part",
-	["lpart_f"] = "f|s|l-part",
-	["lpart_n"] = "n|s|l-part",
-	["lpart_mp_an"] = "an|m|p|l-part",
-	["lpart_mp_in"] = "in|m|p|l-part",
-	["lpart_fp"] = "f|p|l-part",
-	["lpart_np"] = "n|p|l-part",
-	["ppp_m"] = "short|m|s|past|pass|part",
-	["ppp_f"] = "short|f|s|past|pass|part",
-	["ppp_n"] = "short|n|s|past|pass|part",
-	["ppp_mp_an"] = "short|an|m|p|past|pass|part",
-	["ppp_mp_in"] = "short|in|m|p|past|pass|part",
-	["ppp_fp"] = "short|f|p|past|pass|part",
-	["ppp_np"] = "short|n|p|past|pass|part",
-	["past_1sm"] = "-",
-	["past_1sf"] = "-",
-	["past_1sn"] = "-",
-	["past_2sm"] = "-",
-	["past_2sf"] = "-",
-	["past_2sn"] = "-",
-	["past_3sm"] = "-",
-	["past_3sf"] = "-",
-	["past_3sn"] = "-",
-	["past_1pm"] = "-",
-	["past_1pf"] = "-",
-	["past_1pn"] = "-",
-	["past_2pm_polite"] = "-",
-	["past_2pm_plural"] = "-",
-	["past_2pf_polite"] = "-",
-	["past_2pf_plural"] = "-",
-	["past_2pn_polite"] = "-",
-	["past_2pn_plural"] = "-",
-	["past_3pm_an"] = "-",
-	["past_3pm_in"] = "-",
-	["past_3pf"] = "-",
-	["past_3pn"] = "-",
 }
 
 
-local input_verb_slots = {}
-for slot, _ in pairs(output_verb_slots) do
-	if rfind(slot, "^pres_[123]") then
-		table.insert(input_verb_slots, rsub(slot, "^pres_", "pres_fut_"))
-	elseif not rfind(slot, "^fut_") then
-		table.insert(input_verb_slots, slot)
+local function add_part_gender_number(pref, accel_template)
+	for _, slot_accel_part in ipairs {
+		{"m", "m|s"},
+		{"f", "f|s"},
+		{"n", "n|s"},
+		{"mp_an", "an|m|p"},
+		{"mp_in", "in|m|p"},
+		{"fp", "f|p"},
+		{"np", "n|p"},
+	} do
+		local slot, accel_part = unpack(slot_accel_part)
+		verb_slots[pref .. "_" .. slot] = accel_template:format(accel_part)
 	end
 end
 
+-- List used for generating person-number-gender tenses like the past and conditional. Each element is a three-element
+-- list of {DEST_SUFFIX, GENDER_NUMBER_SUFFIX, TEMPLATE_IND} where DEST_SUFFIX is the suffix to add onto the destination
+-- prefix (e.g. "past_") to generate the slot; GENDER_NUMBER_SUFFIX is the suffix used to fetch the participle; and
+-- TEMPLATE_IND is the suffix used to fetch the appropriate person-number template.
+local person_number_gender_props = {
+	{"1sm", "m", 1}, {"1sf", "f", 1}, {"1sn", "n", 1},
+	{"2sm", "m", 2}, {"2sf", "f", 2}, {"2sn", "n", 2},
+	{"3sm", "m", 3}, {"3sf", "f", 3}, {"3sn", "n", 3},
+	{"1pm", "mp_an", 4}, {"1pf", "fp", 4}, {"1pn", "np", 4},
+	{"2pm_polite", "m", 5}, {"2pm_plural", "mp_an", 5},
+	{"2pf_polite", "f", 5}, {"2pf_plural", "fp", 5},
+	{"2pn_polite", "n", 5}, {"2pn_plural", "np", 5},
+	{"3pm_an", "mp_an", 6}, {"3pm_in", "mp_in", 6}, {"3pf", "fp", 6}, {"3pn", "np", 6},
+}
+
+local function add_tense_person_number_gender(pref)
+	for _, suffix_pair in ipairs(person_number_gender_props) do
+		local suffix, _, _ = unpack(suffix_pair)
+		verb_slots[pref .. "_" .. suffix] = "-"
+	end
+end
+
+add_part_gender_number("lpart", "%s|l-part")
+add_part_gender_number("ppp", "short|%s|past|pass|part")
+
+add_tense_person_number_gender("past")
+add_tense_person_number_gender("cond")
+-- Skip this as it's obsolete.
+-- add_tense_person_number_gender("past_perf")
+add_tense_person_number_gender("cond_past")
 
 local budu_forms = {
 	["1s"] = "budu",
@@ -147,6 +156,17 @@ local budu_forms = {
 	["1p"] = "budeme",
 	["2p"] = "budete",
 	["3p"] = "budou",
+}
+
+
+local override_stems = m_table.listToSet {
+	"pres",
+	"past",
+	"imp",
+	"ppp",
+	"vn",
+	"prtr",
+	"patr",
 }
 
 
@@ -192,7 +212,10 @@ local function add(base, slot, stems, endings, footnotes)
 		return
 	end
 	endings = iut.combine_form_and_footnotes(endings, footnotes)
-	iut.add_forms(base.forms, slot, stems, endings, com.combine_stem_ending)
+	local function combine_stem_ending(stem, ending)
+		return com.combine_stem_ending(base, slot, stem, ending)
+	end
+	iut.add_forms(base.forms, slot, stems, endings, combine_stem_ending)
 end
 
 
@@ -235,17 +258,17 @@ end
 
 
 local function add_imperative(base, sg2, footnotes)
-	add(base, "imp_2s", sg2form, "", footnotes)
+	add(base, "imp_2s", sg2, "", footnotes)
 	-- "Long" imperatives end in -i
 	local stem = rmatch(sg2, "^(.-)i$")
 	if stem then
-		add(base, "imp_1p", plstem, "ěme", footnotes)
-		add(base, "imp_2p", plstem, "ěte", footnotes)
-	elseif com.ends_in_vowel(sg2) then
+		add(base, "imp_1p", stem, "ěme", footnotes)
+		add(base, "imp_2p", stem, "ěte", footnotes)
+	elseif rfind(sg2, com.vowel_c .. "$") then
 		error("Invalid 2sg imperative, ends in vowel other than -i: '" .. sg2 .. "'")
 	else
-		add(base, "imp_1p", sg2form, "me", footnotes)
-		add(base, "imp_2p", sg2form, "te", footnotes)
+		add(base, "imp_1p", sg2, "me", footnotes)
+		add(base, "imp_2p", sg2, "te", footnotes)
 	end
 end
 
@@ -292,7 +315,7 @@ local function add_imperative_from_present(base, pres3p_stems, overriding_imptyp
 				-- See comment below at IV.1, there are rare cases where i-ě alternations occur in imperatives, e.g.
 				-- [[podnítit]] impv. 'podniť ~ [rare] podněť'. 'ů' is reduced to 'u' rather than 'o', at least in
 				-- [[půlit]] and derivatives.
-				stem = com.apply_vowel_alternation(base.ye and "quant-ě" or "quant", stem, "noerror", "ring-u-to-u")
+				stem = com.apply_vowel_alternation(imptype == "short-ě" and "quant-ě" or "quant", stem, "noerror", "ring-u-to-u")
 				if rfind(stem, "[" .. com.paired_plain .. com.velar .. "]$") then
 					sg2 = com.apply_second_palatalization(stem, "is verb")
 				end
@@ -336,7 +359,7 @@ local function add_pres_tgress(base, stems, prtr_endings)
 		end
 		add(base, "pres_tgress_fn", stems, prtr_ending .. "c", prtr_footnotes)
 		add(base, "pres_tgress_p", stems, prtr_ending .. "ce", prtr_footnotes)
-		add(base, "past_act_part", stems, prtr_ending .. "ce", prtr_footnotes)
+		add(base, "pres_act_part", stems, prtr_ending .. "cí", prtr_footnotes)
 	end)
 end
 
@@ -381,68 +404,31 @@ local function add_present_i(base, stems, noimp)
 end
 
 
+local part_suffix_to_ending_list = {
+	{"m", ""},
+	{"f", "a"},
+	{"n", "o"},
+	{"mp_an", "i"},
+	{"mp_in", "y"},
+	{"fp", "y"},
+	{"np", "a"},
+}
+
+local part_suffix_to_ending = {}
+
+for _, suffix_ending in ipairs(part_suffix_to_ending_list) do
+	local suffix, ending = unpack(suffix_ending)
+	part_suffix_to_ending[suffix] = ending
+end
+
+
 local function add_past(base, msgstems, reststems, ptr_stems)
 	reststems = reststems or msgstems
 	-- First, generate the l-participle forms.
-	add(base, "lpart_m", msgstems, "l")
-	add(base, "lpart_f", reststems, "la")
-	add(base, "lpart_n", reststems, "lo")
-	add(base, "lpart_mp_an", reststems, "li")
-	add(base, "lpart_mp_in", reststems, "ly")
-	add(base, "lpart_fp", reststems, "ly")
-	add(base, "lpart_np", reststems, "la")
-
-	-- Then generate the past tense by combining the l-participle with the present tense of [[být]].
-	local function add_forms_with_aux(source_slot, dest_slot, aux_form, split_by_animacy)
-		if split_by_animacy then
-			genders = {"m_an", "m_in", "f", "n"}
-		else
-			genders = {"m", "f", "n"}
-		end
-		for _, gender in ipairs(genders) do
-			if type(source_slot) == "string" then
-				source_slot = source_slot:format(gender)
-			else
-				source_slot = source_slot(gender)
-			end
-			if type(dest_slot) == "string" then
-				dest_slot = dest_slot:format(gender)
-			else
-				dest_slot = dest_slot(gender)
-			end
-			if aux_form then
-				iut.insert_forms(base.forms, dest_slot, iut.map_forms(base.forms[source_slot], function(form)
-					return "[[" .. form .. "]] [[" .. aux_form .. "]]" end))
-			else
-				iut.insert_forms(base.forms, dest_slot, iut.map_forms(base.forms[source_slot], function(form)
-					return form end))
-			end
-		end
+	for _, suffix_ending in ipairs(part_suffix_to_ending_list) do
+		local suffix, ending = unpack(suffix_ending)
+		add(base, "lpart_" .. suffix, suffix == "m" and msgstems or reststems, "l" .. ending)
 	end
-
-	add_forms_with_aux("lpart_%s", "past_1s%s", "jsem")
-	add_forms_with_aux("lpart_%s", "past_2s%s", "jsi")
-	add_forms_with_aux("lpart_%s", "past_3s%s", nil)
-	local function plural_source_slot(gender)
-		if gender == "m" then
-			return "lpart_mp_an"
-		else
-			return ("lpart_%sp"):format(gender)
-		end
-	end
-	add_forms_with_aux(plural_source_slot, "past_1p%s", "jsme")
-	add_forms_with_aux("lpart_%s", "past_2p%s_polite", "jste")
-	add_forms_with_aux(plural_source_slot, "past_2p%s_plural", "jste")
-	local function plural_source_slot_with_animacy(gender)
-		if gender == "m_an" then
-			return "lpart_mp_an"
-		elseif gender == "m_in" then
-			return "lpart_mp_an"
-		else
-			return ("lpart_%sp"):format(gender)
-		end
-	end
-	add_forms_with_aux(plural_source_slot_with_animacy, "past_3p%s", nil, "split by animacy")
 
 	-- Add the past transgressive; not available for imperfective verbs.
 	if base.aspect == "impf" then
@@ -461,23 +447,22 @@ local function add_past(base, msgstems, reststems, ptr_stems)
 	add(base, "past_tgress_ms", ptr_stems, "")
 	add(base, "past_tgress_fns", ptr_stems, "ši")
 	add(base, "past_tgress_p", ptr_stems, "še")
+	add(base, "past_act_part", ptr_stems, "ší")
 end
 
 
 local function add_ppp(base, stems, vn_stems)
 	if base.ppp then
 		add(base, "long_pass_part", stems, "ý")
-		add(base, "ppp_m", stems, "")
-		add(base, "ppp_f", stems, "a")
-		add(base, "ppp_n", stems, "o")
-		add(base, "ppp_mp_an", stems, "i")
-		add(base, "ppp_mp_in", stems, "y")
-		add(base, "ppp_fp", stems, "y")
-		add(base, "ppp_np", stems, "a")
+		for _, suffix_ending in ipairs(part_suffix_to_ending_list) do
+			local suffix, ending = unpack(suffix_ending)
+			add(base, "ppp_" .. suffix, stems, ending)
+		end
 	end
 	vn_stems = vn_stems or stems
-	-- FIXME, sometimes the vowel shortens; e.g. [[ptát]] ppp 'ptán' vn 'ptaní'; similarly [[hrát]] but not all
-	-- monosyllabic verbs, e.g. [[dbát]] ppp 'dbán' vn. 'dbání' or 'dbaní' and [[znát]] ppp. 'znán' vn. only 'znání'.
+	-- FIXME, sometimes the vowel shortens; e.g. [[ptát]] ppp 'ptán' vn 'ptaní'; similarly [[hrát]] 'hraní',
+	-- [[spát]] 'spaní', [[tkát]] 'tkaní', but not all- monosyllabic verbs, e.g. [[dbát]] ppp 'dbán' vn. 'dbání' or 'dbaní'
+	-- and [[znát]] ppp. 'znán' vn. only 'znání'.
 	add(base, "vnoun", vn_stems, "í")
 end
 
@@ -508,7 +493,8 @@ local function parse_variant_codes(run, allowed_codes, variant_type, parse_err)
 	return retval
 end
 
-	
+
+local parse = {}
 local conjs = {}
 
 
@@ -706,9 +692,6 @@ past tgress: -nuv, null, -nuv ~ null, null ~ -nuv: nu - nu:- -:nu [defaults to n
 vn: -nutí, -ení, -nutí ~ -ení, -ení ~ -nutí: defaults to same as PPP, or t if no PPP
 ]=]
 parse["II.1"] = function(base, conjmod_run, parse_err)
-	local function parse_err(msg)
-		error(msg .. ": " .. table.concat(conjmod_run))
-	end
 	local separated_groups = iut.split_alternating_runs_and_strip_spaces(conjmod_run, "[/,]", "preserve splitchar")
 	local past_conjmod = separated_groups[1]
 	local ppp_conjmod, vn_conjmod, ptr_conjmod
@@ -929,6 +912,8 @@ end
 
 
 --[=[
+III.2:
+
 [[darovat]] "to donate"
 [[sledovat]] "to follow"
 [[konstruovat]] "to construct"
@@ -942,7 +927,7 @@ end
 
 
 --[=[
-E.g.:
+IV.1:
 
 [[prosit]] (prosím, pros, prosil, prošen, prose, prošení)
 [[vyprosit]] (vyprosím, vypros, vyprosil, vyprošen, vyprosiv, vyprošení)
@@ -963,13 +948,11 @@ E.g.:
 [[vábit]] (vábím, vab ~ vábi, vábil, váben, vábě, vábení)
 [[učit]] (učím, uč, učil, učen, uče, učení)
 [[křivdit]] (křivdím, křivdi ~ křivď, křivdil, křivděn, křivdě, křivdění)
-[[pohřbít]] (pohřbím, pohřbi, pohřbil, pohřben, pohřbiv, pohřbení)
 [[mírnit]] (mírním, mírni, mírnil, mírněn, mírně, mírnění)
 [[jezdit]] (jezdím, jezdi, jezdil, ježděn ~ jezděn, jezdě, ježdění ~ jezdění)
 [[zpozdit]] (zpozdím, zpozdi, zpozdil, zpožděn, zpozdiv, zpoždění)
 [[zaostřit]] (zaostřím, zaostři, zaostřil, zaostřen, zaostřiv, zaostření)
 [[zvětšit]] (zvětším, zvětši, zvětšil, zvětšen, zvětšiv, zvětšení)
-[[ctit]] (ctím, cti, ctil, ctěn, ctě, ctění)
 [[oprostit]] (oprostím, oprosti ~ oprosť, oprostil, oproštěn, oprostiv, oproštění)
 [[roztříštit]] (roztříštím, roztříšti, roztříštil, roztříštěn, roztříštiv, roztříštění) [NOTE: SSJC says impv roztříšť or roztříšti; IJP's commentary also says this should be the case]
 [[opatřit]] (opatřím, opatři ~ opatř, opatřil, opatřen, opatřiv, opatření)
@@ -992,6 +975,20 @@ E.g.:
 [[trůnit]] (trůním, trůni, trůnil, no PPP, trůně, trůnění)
 [[podnítit]] (podnítím, podniť ~ [rare] podněť, podnítil, podnícen, podnítiv, podnícení)
 [[vštípit]] (vštípím, vštěp ~ vštip, vštípil, vštípen, vštípiv, vštípení)
+
+In -ít:
+
+[[ctít]] (ctím, cti, ctil, ctěn, ctě, ctění)
+[[clít]] (clím, cli, clil, clen, cle, clení)
+[[dštít]] (dštím, dšti, dštil, dštěn, dště, dštění)
+[[pohřbít]] (pohřbím, pohřbi, pohřbil, pohřben, pohřbiv, pohřbení)
+[[křtít]] (křtím, křti, křtil, křtěn, křtě, křtění)
+[[obelstít]] (obelstím, obelsti, obelstil, obelstěn, obelstiv, obelstění)
+[[mdlít]] (mdlím, mdli, mdlil, no PPP?, mdle, mdlení) [NOTE: also mdlít IV.2]
+[[mstít]] (mstím, msti, mstil, mstěn, mstě, mstění)
+[[mžít]] (mžím, mži, mžil, mžen, mže, mžení)
+
+
 
 Variation:
 
@@ -1026,7 +1023,7 @@ parse["IV.1"] = function(base, conjmod_run, parse_err)
 			if base.impspec then
 				parse_err("Saw two sets of long/short imperative specs")
 			end
-			base.impspec = parse_variant_codes(separated_group, {"long", "short"}, "imperative type", parse_err)
+			base.impspec = parse_variant_codes(separated_group, {"long", "short", "short-ě"}, "imperative type", parse_err)
 		elseif rfind(separated_group[1], "^iot") or rfind(separated_group[1], "^ni") then
 			-- PPP specs
 			if base.pppspec then
@@ -1042,7 +1039,8 @@ end
 
 
 conjs["IV.1"] = function(base, lemma)
-	local stem = separate_stem_suffix(lemma, "^(.*)it$", "IV.1")
+	-- Some with -ít e.g. [[pohřbít]]
+	local stem = separate_stem_suffix(lemma, "^(.*)[ií]t$", "IV.1")
 
 	stem = com.convert_paired_plain_to_palatal(stem)
 
@@ -1059,11 +1057,42 @@ conjs["IV.1"] = function(base, lemma)
 		end
 	end
 
-	add_present_e(base, stem .. "j", nil, "soft")
-	add_present_e(base, {}, stem .. "j", false, {}, false, "[colloquial]")
+	add_present_i(base, stem, "noimp")
+	add_imperative_from_present(base, stem, base.impspec)
 	add_past(base, past_stem)
 	add_ppp(base, base.ppp_stem)
 end
+
+--[=[
+IV.2:
+
+[[bdít]] (bdím # bdí, bdi, bděl, bděn, bdě, bdění)
+[[čnět]] ~ [[čnít]] (čním # čnějí ~ ční, čni, čněl, čněn, čněje ~ čně, čnění)
+[[čpět]] ~ [[čpít]] (čpím # čpí, čpi, čpěl, čpěn, čpě, čpění)
+[[dít]] [biasp] (dím # dějí, děj, děl, no PPP, děje / děv, no VN)
+[[dlít]] (dlím # dlejí ~ dlí, dli, dlel, dlen, dle ~ dleje, dlení)
+[[hřmět]] ~ [[hřmít]] (hřmím # hřmí ~ hřmějí, hřmi, hřměl, no PPP, hřmě ~ presumably hřměje, hřmění)
+[[lpět]] ~ [[lpít]] (lpím # lpějí ~ lpí, lpi ~ lpěj, lpěl, lpěn, lpěje ~ lpě, lpění)
+[[mdlít]] (mdlím # mdlejí ~ mdlí, mdli, mdlel, no PPP?, mdleje ~ presumably mdle, mdlení) [NOTE: also mdlít IV.1]
+etc.
+
+[[trpět]] (trpím # trpí, trp, trpěl, trpěn, trpě, trpění)
+[[bolet]] (bolím # bolejí ~ bolí, bol, bolel, no PPP, boleje ~ bole, bolení)
+[[hovět]] (hovím # hovějí ~ hoví, hověj ~ hov, hověl, no PPP, hověje ~ hově, hovění)
+[[náležet]] (náležím # náležejí ~ náleží, náležej ~ nálež, náležel, náležen, náleže ~ náležeje, náležení)
+[[souviset]] (souvisím # souvisejí ~ souvisí, souvisej, souvisel, no PPP, souvise ~ souviseje, souvisení)
+[[šumět]] (šumím # šumějí ~ šumí, šuměj ~ šum, šuměl, no PPP, šuměje ~ šumě, šumění)
+[[večeřet]] (večeřím # večeřejí ~ večeří, večeř, večeřel, no PPP, večeře, večeření)
+[[záviset]] (závisím # závisejí ~ závisí, závisej, závisel, no PPP, závise ~ záviseje, závisení)
+[[zmizet]] (zmizím # zmizejí ~ zmizí, zmiz, zmizel, zmizen, zmizev, zmizení)
+[[čumět]] (čumím # čumějí ~ čumí, čum, čuměl, no PPP, čuměje ~ čumě, čumění)
+[[slyšet]] (slyším # slyší, slyš ~ poslyš ["perceive by hearing"], slyšel, slyšen, slyše, slyšení)
+[[běžet]] (běžím # běží, běž ~ poběž, běžel, běžen, běže, běžení; fut. poběžím ... poběží)
+[[letet]] (letím # letí, leť ~ poleť, letěl, letěn, letě, letění; fut. poletím ... poletí)
+[[vidět]] (vidím # vidí, viz [IRREG], viděl, viděn, vida [IRREG], vidění)
+
+]=]
+
 
 --[=[
 [[dělat]] "to do"
@@ -1478,156 +1507,290 @@ conjs["irreg"] = function(base, lemma)
 end
 
 
+local function add_infinitive(base)
+	add(base, "infinitive", base.lemma, "")
+	-- FIXME: Consider adding old infinitive in -ti as an alternant at the end (after adding imperfective future)
+end
+
+
+local function set_present_future(base)
+	local forms = base.forms
+	if base.aspect == "pf" then
+		for slot_suffix, _ in pairs(budu_forms) do
+			forms["fut_" .. slot_suffix] = forms["pres_fut_" .. slot_suffix]
+			forms["pres_fut_" .. slot_suffix] = nil
+		end
+	else
+		for slot_suffix, _ in pairs(budu_forms) do
+			forms["pres_" .. slot_suffix] = forms["pres_fut_" .. slot_suffix]
+			forms["pres_fut_" .. slot_suffix] = nil
+		end
+		-- Do the periphrastic future with [[budu]]
+		if forms.infinitive then
+			for slot_suffix, budu_form in pairs(budu_forms) do
+				local futslot = "fut_" .. slot_suffix
+				if not skip_slot(base, futslot) then
+					iut.insert_forms(forms, futslot, iut.map_forms(forms.infinitive, function(form)
+						if not form:find("%[") then
+							form = "[[" .. form .. "]]"
+						end
+						return "[[" .. budu_form .. "]]" .. TEMP_REFLEXIVE_INSERTION_POINT .. " " .. form
+					end))
+				end
+			end
+		end
+	end
+end
+
+
+-- Generate a composed tense. `pref` is the prefix of the tense (e.g. "past") and `templates` is a 6-element list of
+-- templates used to generate the composed tense. Each template should have a %s where the l-participle is substituted
+-- and a * where TEMP_REFLEXIVE_INSERTION_POINT is substituted, indicating where the reflexive clitic should go.
+-- `dual_template` is true if each template has two slots in it (the first for the l-participle of [[být]], the second
+-- for the l-participle of the verb itself).
+local function add_composed_tense(base, pref, templates, dual_template)
+	for _, props in ipairs(person_number_gender_props) do
+		local dest_suffix, part_suffix, template_index = unpack(props)
+		local template = templates[template_index]
+		template = template:gsub("%*", TEMP_REFLEXIVE_INSERTION_POINT)
+		iut.insert_forms(base.forms, pref .. "_" .. dest_suffix, iut.map_forms(base.forms["lpart_" .. part_suffix], function(form)
+			if not form:find("%[") then
+				form = "[[" .. form .. "]]"
+			end
+			if dual_template then
+				local byl_form = "[[byl" .. part_suffix_to_ending[part_suffix] .. "]]"
+				return template:format(byl_form, form)
+			else
+				return template:format(form)
+			end
+		end))
+	end
+end
+
+
+local function generate_composed_tenses(base)
+	-- Then generate the past tense by combining the l-participle with the present tense of [[být]].
+	add_composed_tense(base, "past", {"%s [[jsem]]*", "%s [[jsi]]*", "%s*", "%s [[jsme]]*", "%s [[jste]]*", "%s*"})
+	add_composed_tense(base, "cond", {"%s [[bych]]*", "%s [[bys]]*", "%s [[by]]*", "%s [[bychom]]*", "%s [[byste]]*", "%s [[by]]*"})
+	add_composed_tense(base, "cond_past", {"%s [[bych]]* %s", "%s [[bys]]* %s", "%s [[by]]* %s",
+		"%s [[bychom]]* %s", "%s [[byste]]* %s", "%s [[by]]* %s"}, "dual template")
+end
+
+
+-- Add a reflexive pronoun as appropriate to the base forms that were generated.
+local function add_reflexive_to_forms(base)
+	if not base.refl then
+		-- Remove insertion point character.
+		for slot, accel in pairs(verb_slots) do
+			if base.forms[slot] then
+				for _, form in ipairs(base.forms[slot]) do
+					form.form = form.form:gsub(TEMP_REFLEXIVE_INSERTION_POINT, "")
+				end
+			end
+		end
+		return
+	end
+
+	clitic = " [[" .. base.refl .. "]]"
+	local paren_clitic = " ([[" .. base.refl .. "]])"
+	for slot, accel in pairs(verb_slots) do
+		if base.forms[slot] then
+			local this_clitic = slot == "vnoun" and paren_clitic or clitic
+			-- Add clitic as separate word before all other forms.
+			for _, form in ipairs(base.forms[slot]) do
+				if form.form:find(TEMP_REFLEXIVE_INSERTION_POINT) then
+					form.form = form.form:gsub(TEMP_REFLEXIVE_INSERTION_POINT, this_clitic)
+				else
+					if not form.form:find("%[") then
+						form.form = "[[" .. form.form .. "]]"
+					end
+					form.form = form.form .. this_clitic
+				end
+				form.form = form.form:gsub("%[%[bys%]%] %[%[(s[ei])%]%]", "[[by]] [[%1s]]")
+				form.form = form.form:gsub("%[%[jsi%]%] %[%[(s[ei])%]%]", "[[%1s]]")
+			end
+		end
+	end
+end
+
+
+local function conjugate_verb(base)
+	add_infinitive(base)
+	conjs[base.conj](base, base.lemma)
+	set_present_future(base)
+	generate_composed_tenses(base)
+	add_reflexive_to_forms(base)
+end
+
+
+local function fetch_footnotes(separated_group)
+	local footnotes
+	for j = 2, #separated_group - 1, 2 do
+		if separated_group[j + 1] ~= "" then
+			error("Extraneous text after bracketed footnotes: '" .. table.concat(separated_group) .. "'")
+		end
+		if not footnotes then
+			footnotes = {}
+		end
+		table.insert(footnotes, separated_group[j])
+	end
+	return footnotes
+end
+
+
 local function parse_indicator_spec(angle_bracket_spec)
 	local inside = rmatch(angle_bracket_spec, "^<(.*)>$")
 	assert(inside)
+	local function parse_err(msg)
+		error(msg .. ": '" .. inside .. "'")
+	end
 	local base = {overrides = {}, forms = {}}
-	local parts = rsplit(inside, ".", true)
-	local conjarg = parts[1]
-	local conj, past_accent = rmatch(conjarg, "^(.*)/(.*)$")
-	if past_accent then
-		if past_accent ~= "a" and past_accent ~= "b" then
-			error("Unrecognized past-tense accent in conjugation spec '" .. conjarg .. "', should be 'a' or 'b': '" .. past_accent .. "'")
-		end
-		base.past_accent = past_accent
-	else
-		conj = conjarg
+	local segments = iut.parse_balanced_segment_run(inside, "[", "]")
+	local dot_separated_groups = iut.split_alternating_runs_and_strip_spaces(segments, "%.")
+	local major_class = dot_separated_groups[1][1]
+	if major_class ~= "I" and major_class ~= "II" and major_class ~= "III" and major_class ~= "IV" and
+		major_class ~= "V" and major_class ~= "irreg" then
+		parse_err("Unrecognized major verb class '" .. major_class .. "'; expected 'I', 'II', 'III', 'IV', 'V' or 'irreg'")
 	end
-	if conj == "irreg" then
-		base.conjnum = "irreg"
+	if #dot_separated_groups[1] > 1 then
+		parse_err("No footnotes allowed after major class")
+	end
+	local start_of_indicators = major_class == "irreg" and 2 or 3
+	if major_class == "irreg" then
+		base.conj = "irreg"
 	else
-		conj, base.conj_star = rsubb(conj, "%*", "")
-		base.conjnum, base.conjmod, base.accent = rmatch(conj, "^([0-9]+)([°()%[%]]*)([abc])$")
-		if not base.conjnum then
-			error("Invalid format for conjugation, should be e.g. '1a', '4b' or '6°c': '" .. conj .. "'")
+		local minor_class_and_variants = dot_separated_groups[2][1]
+		local minor_class, variants = rmatch(minor_class_and_variants, "^([123])/(.*)$")
+		if not minor_class then
+			minor_class = rmatch(minor_class_and_variants, "^([123])$")
 		end
-		if not conjs[base.conjnum] then
-			error("Unrecognized conjugation: '" .. base.conjnum .. "'")
+		if not minor_class then
+			parse_err("Unrecognized minor verb class; expected 1, 2 or 3")
+		end
+		base.conj = major_class .. "." .. minor_class
+		if variants then
+			dot_separated_groups[2][1] = variants
+			if parse[base.conj] then
+				local function parse_err(msg)
+					error(msg .. ": '" .. table.concat(dot_separated_groups[2]) .. "'")
+				end
+				parse[base.conj](base, dot_separated_groups[2], parse_err)
+			else
+				parse_err("No variants allowed for conjugation " .. base.conj)
+			end
+		elseif #dot_separated_groups[2] > 1 then
+			parse_err("No footnotes allowed after minor class")
 		end
 	end
-	base.conj = conj
-	for i=2,#parts do
-		local part = parts[i]
-		if part == "impf" or part == "pf" or part == "both" then
-			if base.aspect then
-				error("Can't specify aspect twice: " .. angle_bracket_spec)
+	for i, dot_separated_group in ipairs(dot_separated_groups) do
+		if i >= start_of_indicators then
+			local part = dot_separated_group[1]
+			local stem, rest = rmatch(part, "^([a-z_]+):(.*)$")
+			if override_stems[stem] then
+				if base.overrides[stem] then
+					parse_err(("Two overrides specified for stem '%s'"):format(stem))
+				end
+				base.overrides[stem] = {}
+				dot_separated_group[1] = rest
+				local colon_separated_groups = iut.split_alternating_runs_and_strip_spaces(dot_separated_group, ":")
+				for i, colon_separated_group in ipairs(colon_separated_groups) do
+					local form = colon_separated_group[1]
+					if form == "" then
+						-- No need to use parse_err() as the overall spec is probably irrelevant
+						error(("Use - to indicate a missing stem '%s': '%s'"):format(stem, table.concat(dot_separated_group)))
+					elseif form == "-" then
+						if #colon_separated_group > 1 then
+							error(("No footnotes allowed with '-' as stem value for stem '%s': '%s'"):format(stem,
+								table.concat(dot_separated_group)))
+						end
+						-- don't record a value
+					else
+						local value = {}
+						value.form = form
+						value.footnotes = fetch_footnotes(colon_separated_group)
+						table.insert(base.overrides[stem], value)
+					end
+				end
+			elseif part == "" then
+				if #dot_separated_group == 1 then
+					error("Blank indicator: '" .. inside .. "'")
+				end
+				base.footnotes = fetch_footnotes(dot_separated_group)
+			elseif #dot_separated_group > 1 then
+				error("Footnotes only allowed with stem overridese or by themselves: '" .. table.concat(dot_separated_group) .. "'")
+			elseif part == "impf" or part == "pf" or part == "both" then
+				if base.aspect then
+					parse_err("Can't specify aspect twice")
+				end
+				base.aspect = part
+			elseif part == "tr" or part == "intr" or part == "mixed" then
+				if base.trans then
+					parse_err("Can't specify transitivity twice")
+				end
+				base.trans = part
+			elseif part == "ppp" or part == "-ppp" then
+				if base.ppp ~= nil then
+					parse_err("Can't specify past passive participle indicator twice")
+				end
+				base.ppp = part == "ppp"
+			elseif part == "impers" or part == "3only" or part == "plonly" or part == "3plonly" or part == "3orplonly" or
+				part == "ě" then
+				local field = part
+				if part == "ě" then
+					field = "ye"
+				end
+				if base[field] then
+					parse_err(("Can't specify '%s' twice"):format(part))
+				end
+				base[field] = true
+			else
+				error("Unrecognized indicator '" .. part .. "': " .. angle_bracket_spec)
 			end
-			base.aspect = part
-		elseif part == "tr" or part == "intr" or part == "mixed" then
-			if base.trans then
-				error("Can't specify transitivity twice: " .. angle_bracket_spec)
-			end
-			base.trans = part
-		elseif part == "ppp" or part == "-ppp" then
-			if base.ppp ~= nil then
-				error("Can't specify past passive participle indicator twice: " .. angle_bracket_spec)
-			end
-			base.ppp = part == "ppp"
-		elseif part == "retractedppp" or part == "-retractedppp" then
-			if base.retractedppp ~= nil then
-				error("Can't specify retracted past passive participle indicator twice: " .. angle_bracket_spec)
-			end
-			base.retractedppp = part == "retractedppp"
-		elseif part == "impers" then
-			if base.impers then
-				error("Can't specify 'impers' twice: " .. angle_bracket_spec)
-			end
-			base.impers = true
-		elseif part == "longimp" or part == "shortimp" then
-			if base.imptype then
-				error("Can't specify imperative type twice: " .. angle_bracket_spec)
-			end
-			base.imptype = rsub(part, "imp$", "")
-		elseif part == "-imp" then
-			if base.noimp then
-				error("Can't specify '-imp' twice: " .. angle_bracket_spec)
-			end
-			base.noimp = true
-		elseif part == "-pres" then
-			if base.nopres then
-				error("Can't specify '-pres' twice: " .. angle_bracket_spec)
-			end
-			base.nopres = true
-		elseif part == "-past" then
-			if base.nopast then
-				error("Can't specify '-past' twice: " .. angle_bracket_spec)
-			end
-			base.nopast = true
-		elseif part == "3only" then
-			if base.only3 then
-				error("Can't specify '3only' twice: " .. angle_bracket_spec)
-			end
-			base.only3 = true
-		elseif part == "plonly" then
-			if base.onlypl then
-				error("Can't specify 'plonly' twice: " .. angle_bracket_spec)
-			end
-			base.onlypl = true
-		elseif part == "3plonly" then
-			if base.only3pl then
-				error("Can't specify '3plonly' twice: " .. angle_bracket_spec)
-			end
-			base.only3pl = true
-		elseif part == "3orplonly" then
-			if base.only3orpl then
-				error("Can't specify '3orplonly' twice: " .. angle_bracket_spec)
-			end
-			base.only3orpl = true
-		elseif part == "с" or part == "д" or part == "т" or part == "ст" or part == "в" or part == "н" then
-			if base.cons then
-				error("Can't specify consonant modifier twice: " .. angle_bracket_spec)
-			end
-			base.cons = part
-		elseif part == "і" or part == "-і" then -- Cyrillic і
-			if base.i ~= nil then
-				error("Can't specify і-modifier twice: " .. angle_bracket_spec)
-			end
-			base.i = part == "і" -- Latin i in base.i
-		elseif part == "ї" then -- Cyrillic ї 
-			if base.yi ~= nil then
-				error("Can't specify 'ї' twice: " .. angle_bracket_spec)
-			end
-			base.yi = true
-		elseif rfind(part, "^pres:") then
-			part = rsub(part, "^pres:", "")
-			base.pres_stems = rsplit(part, ":", true)
-		else
-			error("Unrecognized indicator '" .. part .. "': " .. angle_bracket_spec)
 		end
 	end
 	return base
 end
 
 
--- Separate out reflexive suffix, check that multisyllabic lemmas have stress, and add stress
--- to monosyllabic lemmas if needed.
-local function normalize_lemma(base)
-	base.orig_lemma = base.lemma
-	base.lemma = com.add_monosyllabic_stress(base.lemma)
-	if not rfind(base.lemma, AC) then
-		error("Multisyllabic lemma '" .. base.orig_lemma .. "' needs an accent")
-	end
-	local active_verb, refl = rmatch(base.lemma, "^(.*)(с[яь])$")
-	if active_verb then
-		base.is_refl = true
-		base.lemma = active_verb
-	end
-	if rfind(base.lemma, "ть$") then
-		if refl == "сь" then
-			error("Reflexive infinitive lemma in -тьсь not possible, use -тися, -тись or ться: '" .. base.orig_lemma)
+local function normalize_all_lemmas(alternant_multiword_spec, pagename)
+	iut.map_word_specs(alternant_multiword_spec, function(base)
+		if base.lemma == "" then
+			base.lemma = pagename
 		end
-		base.lemma = rsub(base.lemma, "ть$", "ти")
-	end
+		base.orig_lemma = base.lemma
+		base.orig_lemma_no_links = m_links.remove_links(base.lemma)
+		-- If reflexive verb is explicitly specified by the user, we will convert the space before the reflexive clitic
+		-- to an underscore in split_bracketed_runs_into_words().
+		local active_verb, refl = rmatch(base.orig_lemma_no_links, "^(.*)[ _](s[ei])$")
+		if active_verb then
+			base.refl = refl
+			base.lemma = active_verb
+		else
+			base.lemma = base.orig_lemma_no_links
+		end
+		-- Convert "old-style" lemma e.g. [[dělati]], [[nésti]], [[moci]] into new-style [[dělat]], [[nést]], [[moct]]
+		local old_style_stem = rmatch(base.lemma, "^(.*)i$")
+		if old_style_stem then
+			if rfind(old_style_stem, "c$") then
+				-- [[moci]], [[peci]], etc.
+				base.lemma = old_style_stem .. "t"
+			elseif rfind(old_style_stem, "t$") then
+				base.lemma = old_style_stem
+			else
+				error(("Unrecognized old-style lemma '%s', should end in -ci or -ti"):format(base.orig_lemma_no_links))
+			end
+		end
+	end)
 end
 
 
-local function detect_indicator_and_form_spec(base)
+local function detect_indicator_spec(base)
 	if not base.aspect then
 		error("Aspect of 'pf', 'impf' or 'both' must be specified")
 	end
-	if base.is_refl then
+	if base.refl then
 		if base.trans then
-			error("Can't specify transitivity with reflexive verb, they're always intransitive: '" .. base.orig_lemma .. "'")
+			error("Can't specify transitivity with reflexive verb, they're always intransitive: '" .. base.orig_lemma_no_links .. "'")
 		end
 	elseif not base.trans then
 		error("Transitivity of 'tr', 'intr' or 'mixed' must be specified")
@@ -1639,79 +1802,21 @@ local function detect_indicator_and_form_spec(base)
 	elseif base.trans and base.trans ~= "intr" then
 		error("Must specify 'ppp' or '-ppp' with transitive or mixed-transitive verbs")
 	end
-	if base.ppp and base.retractedppp == nil then
-		if base.conjnum == "14" or base.conjnum == "4" and base.accent == "b" then
-			-- Does not retract normally, but can.
-		else
-			-- Will be ignored when add_retractable_ppp() isn't called.
-			base.retractedppp = true
-		end
-	end
-	if base.cons then
-		if (base.conjnum == "3" or base.conjnum == "10") and rfind(base.cons, "^[тн]$") then
-			-- ok
-		elseif base.conjnum == "7" and (rfind(base.cons, "^[сдтв]$") or base.cons == "ст") then
-			-- ok
-		else
-			error("Consonant modifier '" .. base.cons .. "' can't be specified with class " .. base.conjnum)
-		end
-	end
-	if base.i ~= nil then
-		if rfind(base.conjnum, "^[4578]$") then
-			-- ok
-		else
-			error("і-modifier can't be specified with class " .. base.conjnum)
-		end
-	elseif base.yi then
-		if base.conjnum ~= "4" then
-			error("'ї' can only be specified with class 4")
-		end
-	elseif base.conjnum == "7" or base.conjnum == "8" then
-		base.i = true
-	end
-	if base.conjnum == "3" then
-		if base.conjmod ~= "" and base.conjmod ~= "°" and base.conjmod ~= "(°)" and base.conjmod ~= "[°]" then
-			error("Unrecognized conjugation modifier for class 3: '" .. base.conjmod .. "'")
-		end
-	elseif base.conjnum == "6" then
-		if base.conjmod ~= "" and base.conjmod ~= "°" then
-			error("Unrecognized conjugation modifier for class 6: '" .. base.conjmod .. "'")
-		end
-	elseif base.conjmod and base.conjmod ~= "" then
-		error("Conjugation modifiers only allowed for conjugations 3 and 6: '" .. base.conjmod .. "'")
-	end
-	if base.pres_stems and base.conjnum ~= "14" then
-		base.irreg = true
-	end
-	if (base.accent == "a" or base.accent == "c") and base.pres_stems then
-		for _, pres_stem in ipairs(base.pres_stems) do
-			if not com.is_stressed(pres_stem) then
-				error("Explicit present stem '" .. pres_stem .. "' must have an accent")
-			end
-		end
-	end
-	if not base.past_accent then
-		if (base.conjnum == "7" or base.conjnum == "8") and base.accent == "b" then
-			base.past_accent = "b"
-		else
-			base.past_accent = "a"
-		end
-	end
 end
 
 
-local function detect_all_indicator_and_form_specs(alternant_multiword_spec)
-	for _, base in ipairs(alternant_multiword_spec.alternants) do
-		detect_indicator_and_form_spec(base)
+local function detect_all_indicator_specs(alternant_multiword_spec)
+	iut.map_word_specs(alternant_multiword_spec, function(base)
+		detect_indicator_spec(base)
 		if not alternant_multiword_spec.aspect then
 			alternant_multiword_spec.aspect = base.aspect
 		elseif alternant_multiword_spec.aspect ~= base.aspect then
 			alternant_multiword_spec.aspect = "both"
 		end
-		if alternant_multiword_spec.is_refl == nil then
-			alternant_multiword_spec.is_refl = base.is_refl
-		elseif alternant_multiword_spec.is_refl ~= base.is_refl then
-			error("With multiple alternants, all must agree on reflexivity")
+		if alternant_multiword_spec.refl == nil then
+			alternant_multiword_spec.refl = base.refl
+		elseif alternant_multiword_spec.refl ~= base.refl then
+			error("With multiple alternants, all must agree on reflexive clitic")
 		end
 		if not alternant_multiword_spec.trans then
 			alternant_multiword_spec.trans = base.trans
@@ -1725,151 +1830,7 @@ local function detect_all_indicator_and_form_specs(alternant_multiword_spec)
 				alternant_multiword_spec[prop] = false
 			end
 		end
-	end
-end
-
-
-local function parse_word_spec(segments)
-	if #segments ~= 3 or segments[3] ~= "" then
-		error("Verb spec must be of the form 'LEMMA<CONJ.SPECS>': '" .. text .. "'")
-	end
-	local lemma = segments[1]
-	local base = parse_indicator_and_form_spec(segments[2])
-	base.lemma = lemma
-	return base
-end
-
-
--- Parse an alternant, e.g. "((ви́сіти<5a.impf.intr>,висі́ти<5b.impf.intr>))". The return value is a table of the form
--- {
---   alternants = {WORD_SPEC, WORD_SPEC, ...}
--- }
---
--- where WORD_SPEC describes a given alternant and is as returned by parse_word_spec().
-local function parse_alternant(alternant)
-	local parsed_alternants = {}
-	local alternant_text = rmatch(alternant, "^%(%((.*)%)%)$")
-	local segments = iut.parse_balanced_segment_run(alternant_text, "<", ">")
-	local comma_separated_groups = iut.split_alternating_runs(segments, ",")
-	local alternant_spec = {alternants = {}}
-	for _, comma_separated_group in ipairs(comma_separated_groups) do
-		table.insert(alternant_spec.alternants, parse_word_spec(comma_separated_group))
-	end
-	return alternant_spec
-end
-
-
-local function parse_alternant_or_word_spec(text)
-	if rfind(text, "^%(%((.*)%)%)$") then
-		return parse_alternant(text)
-	else
-		local segments = iut.parse_balanced_segment_run(text, "<", ">")
-		return {alternants = {parse_word_spec(segments)}}
-	end
-end
-
-
-local function add_infinitive(base)
-	add(base, "infinitive", base.lemma, "")
-	-- Alternative infinitive in -ть only exists for lemmas ending in unstressed -ти
-	-- and preceded by a vowel. Not уме́рти, not нести́.
-	if rfind(base.lemma, com.vowel_c .. AC .. "?ти$") then
-		add(base, "infinitive", rsub(base.lemma, "ти$", "ть"), "")
-	end
-end
-
-
-local function add_reflexive_suffix(alternant_multiword_spec)
-	if not alternant_multiword_spec.is_refl then
-		return
-	end
-	for slot, formvals in pairs(alternant_multiword_spec.forms) do
-		alternant_multiword_spec.forms[slot] = iut.flatmap_forms(formvals, function(form)
-			if rfind(slot, "adv_part$") then
-				-- pp. 235-236 of Routledge's "Czech: A Comprehensive Grammar" say that
-				-- -ся becomes -сь after adverbial participles. I take this to mean that
-				-- the -ся form doesn't occur. FIXME: Verify this.
-				return {form .. "сь"}
-			elseif rfind(form, com.vowel_c .. AC .. "?[вй]?$") then
-				return {form .. "ся", form .. "сь"}
-			else
-				return {form .. "ся"}
-			end
-		end)
-	end
-end
-
-
-local function process_overrides(forms, args)
-	for _, slot in ipairs(input_verb_slots) do
-		if args[slot] then
-			forms[slot] = nil
-			if args[slot] ~= "-" and args[slot] ~= "—" then
-				for _, form in ipairs(rsplit(args[slot], "%s*,%s*")) do
-					iut.insert_form(forms, slot, {form=form})
-				end
-			end
-		end
-	end
-end
-
-
--- Used for manual specification using {{cs-conj-manual}}.
-local function augment_with_alt_infinitive(alternant_multiword_spec)
-	local newinf = {}
-	local forms = alternant_multiword_spec.forms
-	if forms.infinitive then
-		forms.infinitive = iut.flatmap_forms(forms.infinitive, function(inf)
-			inf = com.add_monosyllabic_stress(inf)
-			if rfind(inf, com.vowel_c .. AC .. "?ти$") then
-				return {inf, rsub(inf, "ти$", "ть")}
-			elseif rfind(inf, com.vowel_c .. AC .. "?тис[яь]$") then
-				return {inf, rsub(inf, "тис[яь]$", "ться")}
-			else
-				return {inf}
-			end
-		end)
-	end
-end
-
-
--- Used for manual specification using {{cs-conj-manual}}.
-local function set_reflexive_flag(alternant_multiword_spec)
-	if alternant_multiword_spec.forms.infinitive then
-		for _, inf in ipairs(alternant_multiword_spec.forms.infinitive) do
-			if rfind(inf.form, "с[яь]$") then
-				alternant_multiword_spec.is_refl = true
-			end
-		end
-	end
-end
-
-
-local function set_present_future(alternant_multiword_spec)
-	local forms = alternant_multiword_spec.forms
-	if alternant_multiword_spec.aspect == "pf" then
-		for suffix, _ in pairs(fut_suffixes) do
-			forms["fut_" .. suffix] = forms["pres_fut_" .. suffix]
-		end
-	else
-		for suffix, _ in pairs(fut_suffixes) do
-			forms["pres_" .. suffix] = forms["pres_fut_" .. suffix]
-		end
-		-- Do the periphrastic future with búdu
-		if forms.infinitive then
-			for _, inf in ipairs(forms.infinitive) do
-				for slot_suffix, _ in pairs(fut_suffixes) do
-					local futslot = "fut_" .. slot_suffix
-					if not skip_slot(alternant_multiword_spec, futslot) then
-						iut.insert_form(forms, futslot, {
-							form = "[[" .. budu_forms[slot_suffix] .. "]] [[" .. inf.form .. "]]",
-							no_accel = true,
-						})
-					end
-				end
-			end
-		end
-	end
+	end)
 end
 
 
@@ -1902,17 +1863,15 @@ local function add_categories(alternant_multiword_spec)
 	if alternant_multiword_spec.impers then
 		insert("impersonal")
 	end
-	if alternant_multiword_spec.alternants then -- not when manual
-		for _, base in ipairs(alternant_multiword_spec.alternants) do
-			if base.conj == "irreg" or base.irreg then
-				insert("irregular")
-			end
-			if base.conj ~= "irreg" then
-				insert("class " .. base.conj)
-				insert("class " .. rsub(base.conj, "^([0-9]+).*", "%1"))
-			end
+	iut.map_word_specs(alternant_multiword_spec, function(base)
+		if base.conj == "irreg" or base.irreg then
+			insert("irregular")
 		end
-	end
+		if base.conj ~= "irreg" then
+			insert("class " .. base.conj)
+			insert("class " .. rsub(base.conj, "^([0-9]+).*", "%1"))
+		end
+	end)
 	alternant_multiword_spec.categories = cats
 end
 
@@ -1921,16 +1880,13 @@ local function show_forms(alternant_multiword_spec)
 	local lemmas = {}
 	if alternant_multiword_spec.forms.infinitive then
 		for _, inf in ipairs(alternant_multiword_spec.forms.infinitive) do
-			table.insert(lemmas, com.remove_monosyllabic_stress(inf.form))
+			table.insert(lemmas, inf.form)
 		end
 	end
 	local props = {
 		lemmas = lemmas,
-		slot_table = output_verb_slots,
+		slot_table = verb_slots,
 		lang = lang,
-		-- Explicit additional top-level footnotes only occur with {{cs-conj-manual}}.
-		footnotes = alternant_multiword_spec.footnotes,
-		allow_footnote_symbols = not not alternant_multiword_spec.footnotes,
 	}
 	iut.show_forms(alternant_multiword_spec.forms, props)
 end
@@ -1940,31 +1896,31 @@ local function make_table(alternant_multiword_spec)
 	local forms = alternant_multiword_spec.forms
 
 	local table_spec_part1 = [=[
-<div class="NavFrame" style="width:120em">
-<div class="NavHead" style="text-align:left; background:#e0e0ff;">{title}{annotation}</div>
+<div class="NavFrame" style="width:120em;">
+<div class="NavHead" style="background:#e0e0ff;">{title}{annotation}</div>
 <div class="NavContent">
-{\op}| class="inflection-table inflection inflection-cs inflection-verb"
+{\op}| class="inflection-table inflection inflection-cs inflection-verb" style="border: 2px solid black;" border=1
 |-
 ! rowspan=3 colspan=2 style="background:#d9ebff" |
-! colspan=3 style="background:#d9ebff" | [[singular]]
-! colspan=4 style="background:#d9ebff" | [[plural]]
+! colspan=3 style="background:#d9ebff; text-align: center;" | [[singular]]
+! colspan=4 style="background:#d9ebff; text-align: center;" | [[plural]]
 |-
-! rowspan=2 style="background:#eff7ff;vertical-align:top;"| [[masculine]]
-! rowspan=2 style="background:#eff7ff;vertical-align:top;"| [[feminine]]
-! rowspan=2 style="background:#eff7ff;vertical-align:top;"| [[neuter]]
-! colspan=2 style="background:#eff7ff"| [[masculine]]
-! rowspan=2 style="background:#eff7ff;vertical-align:top;"| [[feminine]]
-! rowspan=2 style="background:#eff7ff;vertical-align:top;"| [[neuter]]
+! rowspan=2 style="background:#eff7ff; text-align: center;vertical-align:middle;"| [[masculine]]
+! rowspan=2 style="background:#eff7ff; text-align: center;vertical-align:middle;"| [[feminine]]
+! rowspan=2 style="background:#eff7ff; text-align: center;vertical-align:middle;"| [[neuter]]
+! colspan=2 style="background:#eff7ff; text-align: center;"| [[masculine]]
+! rowspan=2 style="background:#eff7ff; text-align: center;vertical-align:middle;"| [[feminine]]
+! rowspan=2 style="background:#eff7ff; text-align: center;vertical-align:middle;"| [[neuter]]
 |-
-! style="background:#eff7ff"| [[animate]]
-! style="background:#eff7ff"| [[inanimate]]
+! style="background:#eff7ff; text-align: center;"| [[animate]]
+! style="background:#eff7ff; text-align: center;"| [[inanimate]]
 |-
-! style="background:#d9ebff"| invariable
-! style="background:#d9ebff"| [[infinitive]]
+! style="background:#eff7ff; text-align: center;"| invariable
+! style="background:#d9ebff; text-align: center;"| [[infinitive]]
 | colspan=7 | {infinitive}
 |-
-! colspan=4 style="background:#d9ebff"| number/gender<br/>only
-! style="background:#d9ebff"| [[short]]&nsbp;[[passive]]&nbsp;[[participle]]
+! rowspan=4 style="background:#eff7ff; text-align: center; vertical-align: middle;"| number/gender<br/>only
+! style="background:#d9ebff; text-align: center;"| [[short]]&nbsp;[[passive]]&nbsp;[[participle]]
 | {ppp_m}
 | {ppp_f}
 | {ppp_n}
@@ -1973,7 +1929,7 @@ local function make_table(alternant_multiword_spec)
 | {ppp_fp}
 | {ppp_np}
 |-
-! style="background:#d9ebff"| l-participle
+! style="background:#d9ebff; text-align: center;"| l-participle
 | {lpart_m}
 | {lpart_f}
 | {lpart_n}
@@ -1982,33 +1938,33 @@ local function make_table(alternant_multiword_spec)
 | {lpart_fp}
 | {lpart_np}
 |-
-! style="background:#d9ebff"| [[present]]&nsbp;[[transgressive]]
+! style="background:#d9ebff; text-align: center;"| [[present]]&nbsp;[[transgressive]]
 | {pres_tgress_m}
 | colspan=2|{pres_tgress_fn}
 | colspan=4|{pres_tgress_p}
 |-
-! style="background:#d9ebff"| [[past]]&nsbp;[[transgressive]]
+! style="background:#d9ebff; text-align: center;"| [[past]]&nbsp;[[transgressive]]
 | {past_tgress_m}
 | colspan=2|{past_tgress_fn}
 | colspan=4|{past_tgress_p}
 |-
-! colspan=3 style="background:#d9ebff"| declined<br/>as<br/>adjective
-! style="background:#d9ebff"| [[present]]&nsbp;[[active]]&nbsp;[[participle]]
+! rowspan=3 style="background:#eff7ff; text-align: center; vertical-align: middle;"| declined<br/>as<br/>adjective
+! style="background:#d9ebff; text-align: center;"| [[present]]&nbsp;[[active]]&nbsp;[[participle]]
 | colspan=7 | {pres_act_part}
 |-
-! style="background:#d9ebff"| [[past]]&nsbp;[[active]]&nbsp;[[participle]]
+! style="background:#d9ebff; text-align: center;"| [[past]]&nbsp;[[active]]&nbsp;[[participle]]
 | colspan=7 | {past_act_part}
 |-
-! style="background:#d9ebff"| [[long]]&nsbp;[[passive]]&nbsp;[[participle]]
+! style="background:#d9ebff; text-align: center;"| [[long]]&nbsp;[[passive]]&nbsp;[[participle]]
 | colspan=7 | {long_pass_part}
 |-
-! style="background:#d9ebff"| case/number<br/>only
-! style="background:#d9ebff"| [[verbal noun|verbal&nsbp;noun]]
-| colspan=7 | {vnoun}
+! style="background:#eff7ff; text-align: center;"| case/number<br/>only
+! style="background:#d9ebff; text-align: center; vertical-align: middle;"| [[verbal noun|verbal&nbsp;noun]]
+| style="vertical-align: middle;" colspan=7 | {vnoun}
 ]=]
 
 	local table_spec_single_aspect_present = [=[
-! style="background:#d9ebff" colspan=2 | [[present tense|present]]
+! style="background:#d9ebff; text-align: center;" colspan=2 | [[present tense|present]]
 | {pres_1s}
 | {pres_2s}
 | {pres_3s}
@@ -2016,11 +1972,11 @@ local function make_table(alternant_multiword_spec)
 | colspan=2 | {pres_2p}
 | {pres_3p}
 |-
-! style="background:#d9ebff" colspan=2 | [[future tense|future]]
+! style="background:#d9ebff; text-align: center;" colspan=2 | [[future tense|future]]
 ]=]
 
 	local table_spec_biaspectual_present = [=[
-! style="background:#d9ebff" colspan=2 | [[present tense|present]]&nbsp;(imperfective)
+! style="background:#d9ebff; text-align: center;" colspan=2 | [[present tense|present]]&nbsp;(imperfective)
 | rowspan=2 | {pres_1s}
 | rowspan=2 | {pres_2s}
 | rowspan=2 | {pres_3s}
@@ -2028,25 +1984,26 @@ local function make_table(alternant_multiword_spec)
 | colspan=2 rowspan=2 | {pres_2p}
 | rowspan=2 | {pres_3p}
 |-
-! style="background:#d9ebff" colspan=2 | [[future tense|future]]&nbsp;(perfective)
+! style="background:#d9ebff; text-align: center;" colspan=2 | [[future tense|future]]&nbsp;(perfective)
 |-
-! style="background:#d9ebff" colspan=2 | [[future tense|future]]&nbsp;(imperfective)
+! style="background:#d9ebff; text-align: center;" colspan=2 | [[future tense|future]]&nbsp;(imperfective)
 ]=]
 
 	local table_spec_part2 = [=[
-!style="background:#d9ebff" rowspan=3 colspan=2 | [[indicative]]
-!style="background:#d9ebff" colspan=3 | [[singular]]
-!style="background:#d9ebff" colspan=4 | [[plural]] (or polite)
 |-
-!style="background:#eff7ff" rowspan=2 | [[first person|first]]
-!style="background:#eff7ff" rowspan=2 | [[second person|second]]
-!style="background:#eff7ff" rowspan=2 | [[third person|third]]
-!style="background:#eff7ff" rowspan=2 | [[first person|first]]
-!style="background:#eff7ff" colspan=2 | [[second person|second]]
-!style="background:#eff7ff" rowspan=2 | [[third person|third]]
+!style="background:#d9ebff; text-align: center; vertical-align: middle; border-top-width: 3px;" rowspan=3 colspan=2 | [[indicative]]
+!style="background:#d9ebff; text-align: center; border-top-width: 3px;" colspan=3 | [[singular]]
+!style="background:#d9ebff; text-align: center; border-top-width: 3px;" colspan=4 | [[plural]] (or polite)
 |-
-!style="background:#eff7ff" [[polite]] [[singular]]
-!style="background:#eff7ff" [[plural]]
+!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[first person|first]]
+!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[second person|second]]
+!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[third person|third]]
+!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[first person|first]]
+!style="background:#eff7ff; text-align: center; vertical-align: middle;" colspan=2 | [[second person|second]]
+!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[third person|third]]
+|-
+!style="background:#eff7ff; text-align: center;" | [[polite]] [[singular]]
+!style="background:#eff7ff; text-align: center;" | [[plural]]
 |-
 {present_table}| {fut_1s}
 | {fut_2s}
@@ -2055,8 +2012,8 @@ local function make_table(alternant_multiword_spec)
 | colspan=2 | {fut_2p}
 | {fut_3p}
 |-
-!style="background:#d9ebff" rowspan=4 | [[past tense|past]]
-!style="background:#eff7ff"| [[masculine]]&nbsp;[[animate]]
+!style="background:#d9ebff; text-align: center; vertical-align: middle;" rowspan=4 | [[past tense|past]]
+!style="background:#eff7ff; text-align: center;"| [[masculine]]&nbsp;[[animate]]
 | rowspan=2 | {past_1sm}
 | rowspan=2 | {past_2sm}
 | rowspan=2 | {past_3sm}
@@ -2065,10 +2022,10 @@ local function make_table(alternant_multiword_spec)
 | rowspan=2 | {past_2pm_plural}
 | {past_3pm_an}
 |-
-!style="background:#eff7ff"| [[masculine]]&nbsp;[[inanimate]]
+!style="background:#eff7ff; text-align: center;"| [[masculine]]&nbsp;[[inanimate]]
 | {past_3pm_in}
 |-
-!style="background:#eff7ff"| [[feminine]]
+!style="background:#eff7ff; text-align: center;"| [[feminine]]
 | {past_1sf}
 | {past_2sf}
 | {past_3sf}
@@ -2077,7 +2034,7 @@ local function make_table(alternant_multiword_spec)
 | {past_2pf_plural}
 | {past_3pf}
 |-
-!style="background:#eff7ff"| [[neuter]]
+!style="background:#eff7ff; text-align: center;"| [[neuter]]
 | {past_1sn}
 | {past_2sn}
 | {past_3sn}
@@ -2086,18 +2043,16 @@ local function make_table(alternant_multiword_spec)
 | {past_2pn_plural}
 | {past_3pn}
 |-
-! style="background:#d9ebff" colspan=2 | [[imperative]]
-| —
-| {imp_2s}
-| —
-| {imp_1p}
-| colspan=2 | {imp_2p}
-| —
+! style="background:#d9ebff; text-align: center; border-top-width: 3px;" colspan=2 | [[imperative]]
+| style="border-top-width: 3px;" | —
+| style="border-top-width: 3px;" | {imp_2s}
+| style="border-top-width: 3px;" | —
+| style="border-top-width: 3px;" | {imp_1p}
+| style="border-top-width: 3px;" colspan=2 | {imp_2p}
+| style="border-top-width: 3px;" | —
 |{\cl}{notes_clause}</div></div>]=]
 
-	local table_spec = table_spec_part1 ..
-		(alternant_multiword_spec.aspect == "both" and table_spec_biaspectual or table_spec_single_aspect) ..
-		table_spec_part2
+	local table_spec = table_spec_part1 .. table_spec_part2
 
 	local notes_template = [===[
 <div style="width:100%;text-align:left;background:#d9ebff">
@@ -2111,70 +2066,49 @@ local function make_table(alternant_multiword_spec)
 	else
 		forms.title = 'Conjugation of <i lang="cs">' .. forms.lemma .. '</i>'
 	end
-	if forms.past_pasv_part_impers == "—" then
-		forms.past_pasv_part_impers = ""
-	else
-		forms.past_pasv_part_impers = "<br />impersonal: " .. forms.past_pasv_part_impers
-	end
 
-	if alternant_multiword_spec.manual then
-		forms.annotation = ""
-	else
-		local ann_parts = {}
-		local saw_irreg_conj = false
-		local saw_base_irreg = false
-		local all_irreg_conj = true
-		local conjs = {}
-		for _, base in ipairs(alternant_multiword_spec.alternants) do
-			m_table.insertIfNot(conjs, base.conj)
-			if base.conj == "irreg" then
-				saw_irreg_conj = true
-			else
-				all_irreg_conj = false
-			end
-			if base.irreg then
-				saw_base_irreg = true
-			end
-		end
-		if all_irreg_conj then
-			table.insert(ann_parts, "irregular")
+	local ann_parts = {}
+	local saw_irreg_conj = false
+	local saw_base_irreg = false
+	local all_irreg_conj = true
+	local conjs = {}
+	iut.map_word_specs(alternant_multiword_spec, function(base)
+		m_table.insertIfNot(conjs, base.conj)
+		if base.conj == "irreg" then
+			saw_irreg_conj = true
 		else
-			table.insert(ann_parts, "class " .. table.concat(conjs, " // "))
+			all_irreg_conj = false
 		end
-		table.insert(ann_parts,
-			alternant_multiword_spec.aspect == "impf" and "imperfective" or
-			alternant_multiword_spec.aspect == "pf" and "perfective" or
-			"biaspectual")
-		if alternant_multiword_spec.trans then
-			table.insert(ann_parts,
-				alternant_multiword_spec.trans == "tr" and "transitive" or
-				alternant_multiword_spec.trans == "intr" and "intransitive" or
-				"transitive and intransitive"
-			)
+		if base.irreg then
+			saw_base_irreg = true
 		end
-		if alternant_multiword_spec.is_refl then
-			table.insert(ann_parts, "reflexive")
-		end
-		if alternant_multiword_spec.impers then
-			table.insert(ann_parts, "impersonal")
-		end
-		if saw_base_irreg and not saw_irreg_conj then
-			table.insert(ann_parts, "irregular")
-		end
-		forms.annotation = " (" .. table.concat(ann_parts, ", ") .. ")"
+	end)
+	if all_irreg_conj then
+		table.insert(ann_parts, "irregular")
+	else
+		table.insert(ann_parts, "class " .. table.concat(conjs, " // "))
 	end
-
-	-- pronouns used in the table
-	forms.ya = tag_text("я")
-	forms.ty = tag_text("ти")
-	forms.vin_vona_vono = tag_text("він / вона / воно")
-	forms.my = tag_text("ми")
-	forms.vy = tag_text("ви")
-	forms.vony = tag_text("вони")
-	forms.my_vy_vony = tag_text("ми / ви / вони")
-	forms.ya_ty_vin = tag_text("я / ти / він")
-	forms.ya_ty_vona = tag_text("я / ти / вона")
-	forms.vono = tag_text("воно")
+	table.insert(ann_parts,
+		alternant_multiword_spec.aspect == "impf" and "imperfective" or
+		alternant_multiword_spec.aspect == "pf" and "perfective" or
+		"biaspectual")
+	if alternant_multiword_spec.trans then
+		table.insert(ann_parts,
+			alternant_multiword_spec.trans == "tr" and "transitive" or
+			alternant_multiword_spec.trans == "intr" and "intransitive" or
+			"transitive and intransitive"
+		)
+	end
+	if alternant_multiword_spec.is_refl then
+		table.insert(ann_parts, "reflexive")
+	end
+	if alternant_multiword_spec.impers then
+		table.insert(ann_parts, "impersonal")
+	end
+	if saw_base_irreg and not saw_irreg_conj then
+		table.insert(ann_parts, "irregular")
+	end
+	forms.annotation = " (" .. table.concat(ann_parts, ", ") .. ")"
 
 	if alternant_multiword_spec.aspect == "pf" then
 		forms.aspect_indicator = "[[perfective aspect]]"
@@ -2186,6 +2120,10 @@ local function make_table(alternant_multiword_spec)
 
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
+	forms.present_table = m_string_utilities.format(
+		alternant_multiword_spec.aspect == "both" and table_spec_biaspectual_present or table_spec_single_aspect_present,
+		forms
+	)
 	return m_string_utilities.format(table_spec, forms)
 end
 
@@ -2204,8 +2142,20 @@ function export.do_generate_forms(parent_args, from_headword)
 	}
 
 	local args = m_para.process(parent_args, params)
+
+	-- Ensure we don't split a reflexive verb by replacing the space before 'se' or 'si' with an underscore.
+	local function split_bracketed_runs_into_words(bracketed_runs)
+		for j, segment in ipairs(bracketed_runs) do
+			if j % 2 == 1 then
+				bracketed_runs[j] = segment:gsub(" (s[ei])$", "_%1")
+			end
+		end
+		return iut.default_split_bracketed_runs_into_words(bracketed_runs)
+	end
+
 	local parse_props = {
 		parse_indicator_spec = parse_indicator_spec,
+		split_bracketed_runs_into_words = split_bracketed_runs_into_words,
 		angle_brackets_omittable = true,
 		allow_blank_lemma = true,
 	}
@@ -2215,48 +2165,17 @@ function export.do_generate_forms(parent_args, from_headword)
 	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
 	alternant_multiword_spec.forms = {}
 	normalize_all_lemmas(alternant_multiword_spec, pagename)
-	detect_all_indicator_and_form_specs(alternant_multiword_spec)
-	for _, base in ipairs(alternant_multiword_spec.alternants) do
-		add_infinitive(base)
-		conjs[base.conjnum](base, base.lemma, base.accent)
-	end
-	add_reflexive_suffix(alternant_multiword_spec)
-	process_overrides(alternant_multiword_spec.forms, args)
-	set_present_future(alternant_multiword_spec)
-	add_categories(alternant_multiword_spec)
-	return alternant_multiword_spec
-end
-
-
--- Externally callable function to parse and conjugate a verb where all forms are given manually. Return value is
--- ALTERNANT_MULTIWORD_SPEC, an object where the conjugated forms are in `ALTERNANT_MULTIWORD_SPEC.forms` for each
--- slot. If there are no values for a slot, the slot key will be missing. The value for a given slot is a list of
--- objects {form=FORM, footnotes=FOOTNOTES}.
-function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
-	local params = {
-		footnote = {list = true},
-		title = {},
-		aspect = {required = true, default = "impf"},
+	detect_all_indicator_specs(alternant_multiword_spec)
+	local inflect_props = {
+		slot_table = verb_slots,
+		lang = lang,
+		inflect_word_spec = conjugate_verb,
+		-- We add links around the generated verbal forms rather than allow the entire multiword
+		-- expression to be a link, so ensure that user-specified links get included as well.
+		include_user_specified_links = true,
 	}
-	for _, slot in ipairs(input_verb_slots) do
-		params[slot] = {}
-	end
-
-	local args = m_para.process(parent_args, params)
-	if args.aspect ~= "pf" and args.aspect ~= "impf" and args.aspect ~= "both" then
-		error("Aspect '" .. args.aspect .. "' must be 'pf', 'impf' or 'both'")
-	end
-	local alternant_multiword_spec = {
-		aspect = args.aspect,
-		title = args.title,
-		footnotes = args.footnote,
-		forms = {},
-		manual = true,
-	}
-	process_overrides(alternant_multiword_spec.forms, args)
-	augment_with_alt_infinitive(alternant_multiword_spec)
-	set_reflexive_flag(alternant_multiword_spec)
-	set_present_future(alternant_multiword_spec)
+	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
+	-- process_overrides(alternant_multiword_spec.forms, args)
 	add_categories(alternant_multiword_spec)
 	return alternant_multiword_spec
 end
@@ -2269,46 +2188,6 @@ function export.show(frame)
 	local alternant_multiword_spec = export.do_generate_forms(parent_args)
 	show_forms(alternant_multiword_spec)
 	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
-end
-
-
--- Entry point for {{cs-conj-manual}}. Template-callable function to parse and conjugate a verb given
--- manually-specified inflections and generate a displayable table of the conjugated forms.
-function export.show_manual(frame)
-	local parent_args = frame:getParent().args
-	local alternant_multiword_spec = export.do_generate_forms_manual(parent_args)
-	show_forms(alternant_multiword_spec)
-	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
-end
-
-
--- Concatenate all forms of all slots into a single string of the form
--- "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might occur
--- in embedded links) are converted to <!>. If INCLUDE_PROPS is given, also include
--- additional properties (currently, only "|aspect=ASPECT"). This is for use by bots.
-local function concat_forms(alternant_multiword_spec, include_props)
-	local ins_text = {}
-	for slot, _ in pairs(output_verb_slots) do
-		local formtext = com.concat_forms_in_slot(alternant_multiword_spec.forms[slot])
-		if formtext then
-			table.insert(ins_text, slot .. "=" .. formtext)
-		end
-	end
-	if include_props then
-		table.insert(ins_text, "aspect=" .. alternant_multiword_spec.aspect)
-	end
-	return table.concat(ins_text, "|")
-end
-
--- Template-callable function to parse and conjugate a verb given user-specified arguments and return
--- the forms as a string "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might
--- occur in embedded links) are converted to <!>. If |include_props=1 is given, also include
--- additional properties (currently, only "|aspect=ASPECT"). This is for use by bots.
-function export.generate_forms(frame)
-	local include_props = frame.args["include_props"]
-	local parent_args = frame:getParent().args
-	local alternant_multiword_spec = export.do_generate_forms(parent_args)
-	return concat_forms(alternant_multiword_spec, include_props)
 end
 
 
