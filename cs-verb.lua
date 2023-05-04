@@ -1898,7 +1898,7 @@ local function make_table(alternant_multiword_spec)
 	local forms = alternant_multiword_spec.forms
 
 	local table_spec_overall = [=[
-<div class="NavFrame" style="width:120em;">
+<div class="NavFrame" style="width:90em;">
 <div class="NavHead" style="background:#e0e0ff;">{title}{annotation}</div>
 <div class="NavContent">
 {\op}| class="inflection-table inflection inflection-cs inflection-verb" style="border: 2px solid black;" border=1
@@ -1917,8 +1917,8 @@ local function make_table(alternant_multiword_spec)
 ! style="background:#eff7ff; text-align: center;"| [[animate]]
 ! style="background:#eff7ff; text-align: center;"| [[inanimate]]
 |-
-! style="background:#eff7ff; text-align: center;"| invariable
-! style="background:#d9ebff; text-align: center;"| [[infinitive]]
+! style="background:#eff7ff; text-align: center; width:8%;"| invariable
+! style="background:#d9ebff; text-align: center; width:8%;"| [[infinitive]]
 | colspan=7 | {infinitive}
 |-
 ! rowspan=4 style="background:#eff7ff; text-align: center; vertical-align: middle;"| number/gender<br/>only
