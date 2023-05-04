@@ -55,7 +55,7 @@ local uc_velar = uupper(lc_velar)
 export.velar = lc_velar .. uc_velar
 export.velar_c = "[" .. export.velar .. "]"
 
-local lc_plain_labial = "mpbfv"
+local lc_plain_labial = "mpbfvw"
 local lc_labial = lc_plain_labial .. export.TEMP_SOFT_LABIAL
 local uc_plain_labial = uupper(lc_plain_labial)
 local uc_labial = uupper(lc_labial)
@@ -227,6 +227,7 @@ function export.apply_second_palatalization(word, adjective_or_verb)
 	return
 		try("ch", "š") or
 		try("[hg]", "z") or
+		try("rr", "ř") or
 		try("r", "ř") or
 		adjective_or_verb and try("sk", "šť") or
 		adjective_or_verb and try("ck", "čť") or
