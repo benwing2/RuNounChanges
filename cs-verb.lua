@@ -375,7 +375,7 @@ local function add_present_e(base, stems, pres1s3p_stems, soft_stem, prtr_ending
 		p3_ending = "í"
 	else
 		s1_ending = "u"
-		p3_ending = "ú"
+		p3_ending = "ou"
 	end
 	add_pres_fut(base, stems, nil, "eš", "e", "eme", "ete", nil, footnotes)
 	add_pres_fut(base, pres1s3p_stems, s1_ending, nil, nil, nil, nil, p3_ending, footnotes)
@@ -455,7 +455,12 @@ end
 
 local function add_ppp(base, stems, vn_stems)
 	if base.ppp then
-		add(base, "long_pass_part", stems, "ý")
+		-- Add the long passive participle. Short participles in -án shorten to -an (e.g. 'jmenován' -> 'jmenovaný',
+		--  'dělán' -> 'dělaný').
+		map_forms(stems, function(stem, footnotes)
+			stem = stem:gsub("án$", "an")
+			add(base, "long_pass_part", stem, "ý", footnotes)
+		end)
 		for _, suffix_ending in ipairs(part_suffix_to_ending_list) do
 			local suffix, ending = unpack(suffix_ending)
 			add(base, "ppp_" .. suffix, stems, ending)
@@ -480,7 +485,7 @@ end
 
 local function parse_variant_codes(run, allowed_codes, variant_type, parse_err)
 	local allowed_code_set = m_table.listToSet(allowed_codes)
-	local colon_separated_groups = iut.split_alternating_runs_and_strip_spaces(conjmod_segments, ":")
+	local colon_separated_groups = iut.split_alternating_runs_and_strip_spaces(run, ":")
 	local retval = {}
 	for _, group in ipairs(colon_separated_groups) do
 		for i, code in ipairs(allowed_codes) do
@@ -490,7 +495,7 @@ local function parse_variant_codes(run, allowed_codes, variant_type, parse_err)
 			parse_err(("Unrecognized variant code '%s' for %s: should be one of %s"):format(group[1], variant_type,
 				m_table.serialCommaJoin(allowed_codes)))
 		end
-		table.insert(list, {form = group[1], footnotes = fetch_footnotes(group)})
+		table.insert(retval, {form = group[1], footnotes = fetch_footnotes(group)})
 	end
 	return retval
 end
@@ -771,8 +776,9 @@ conjs["II.1"] = function(base, lemma)
 			break
 		end
 	end
+	local expanded_past
 	if saw_paren_nu then
-		local expanded_past = {}
+		expanded_past = {}
 		for _, formobj in ipairs(base.past_stem) do
 			if formobj.form == "(nu)" then
 				table.insert(expanded_past, {form = "-", footnotes = formobj.footnotes})
@@ -781,8 +787,10 @@ conjs["II.1"] = function(base, lemma)
 				table.insert(expanded_past, formobj)
 			end
 		end
+	else
+		 expanded_past = base.past_stem
 	end
-	for _, formobj in ipairs(base.past_stem) do
+	for _, formobj in ipairs(expanded_past) do
 		if formobj.form == "-" then
 			formobj.form = stem
 		elseif formobj.form == "nu" then
@@ -822,7 +830,7 @@ conjs["II.1"] = function(base, lemma)
 
 	add_present_e(base, stem .. "n")
 	-- Masculine singular past may have -l, -nul or both, but other forms of the past generally only have -l.
-	add_past(base, base.past_stem, stem, base.ptr_stem)
+	add_past(base, expanded_past, stem, base.ptr_stem)
 	add_ppp(base, base.ppp_stem, base.vn_stem)
 end
 
