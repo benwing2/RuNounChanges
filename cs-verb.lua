@@ -1036,10 +1036,10 @@ parse["IV.1"] = function(base, conjmod_run, parse_err)
 			base.impspec = parse_variant_codes(separated_group, {"long", "short", "short-ě"}, "imperative type", parse_err)
 		elseif rfind(separated_group[1], "^iot") or rfind(separated_group[1], "^ni") then
 			-- PPP specs
-			if base.pppspec then
+			if base.ppp_stem then
 				parse_err("Saw two sets of iotated/non-iotated past passive participle specs")
 			end
-			base.pppspec = parse_variant_codes(separated_group, {"iot", "ni"}, "past passive participle type",
+			base.ppp_stem = parse_variant_codes(separated_group, {"iot", "ni"}, "past passive participle type",
 				parse_err)
 		else
 			parse_err("Unrecognized indicator '" .. separated_group[1] .. "'")
@@ -1069,7 +1069,7 @@ conjs["IV.1"] = function(base, lemma)
 
 	add_present_i(base, stem, "noimp")
 	add_imperative_from_present(base, stem, base.impspec)
-	add_past(base, past_stem)
+	add_past(base, com.combine_stem_ending(base, "lpart_m", stem, "i"))
 	add_ppp(base, base.ppp_stem)
 end
 
