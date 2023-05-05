@@ -273,9 +273,10 @@ local function add_imperative(base, sg2, footnotes)
 end
 
 
-local function add_present_a_imperative(base, stems)
-	map_forms(stems, function(stem, footnotes)
-		add_imperative(base, stem .. "ej", footnotes)
+local function add_present_a_imperative(base, stems, footnotes)
+	map_forms(stems, function(stem, stem_footnotes)
+		stem_footnotes = iut.combine_footnotes(stem_footnotes, footnotes)
+		add_imperative(base, stem .. "ej", stem_footnotes)
 	end)
 end
 
@@ -337,7 +338,7 @@ local function add_imperative_from_present(base, pres3p_stems, overriding_imptyp
 end
 
 
-local function add_pres_fut(base, stems, sg1, sg2, sg3, pl1, pl2, pl3, footnotes, ptr_endings)
+local function add_pres_fut(base, stems, sg1, sg2, sg3, pl1, pl2, pl3, footnotes)
 	add(base, "pres_fut_1s", stems, sg1, footnotes)
 	add(base, "pres_fut_2s", stems, sg2, footnotes)
 	add(base, "pres_fut_3s", stems, sg3, footnotes)
@@ -347,8 +348,9 @@ local function add_pres_fut(base, stems, sg1, sg2, sg3, pl1, pl2, pl3, footnotes
 end
 
 
-local function add_pres_tgress(base, stems, prtr_endings)
+local function add_pres_tgress(base, stems, prtr_endings, footnotes)
 	map_forms(prtr_endings, function(prtr_ending, prtr_footnotes)
+		prtr_footnotes = iut.combine_footnotes(prtr_footnotes, footnotes)
 		if prtr_ending == "ou" then
 			add(base, "pres_tgress_m", stems, "a", prtr_footnotes)
 		elseif prtr_ending == "í" then
@@ -379,19 +381,19 @@ local function add_present_e(base, stems, pres1s3p_stems, soft_stem, prtr_ending
 	end
 	add_pres_fut(base, stems, nil, "eš", "e", "eme", "ete", nil, footnotes)
 	add_pres_fut(base, pres1s3p_stems, s1_ending, nil, nil, nil, nil, p3_ending, footnotes)
-	add_pres_tgress(base, stems, prtr_endings or p3_ending)
+	add_pres_tgress(base, stems, prtr_endings or p3_ending, footnotes)
 	if not noimp then
 		add_imperative_from_present(base, pres1s3p_stems, nil, footnotes)
 	end
 end
 
 
-local function add_present_a(base, stems, noimp)
+local function add_present_a(base, stems, prtr_endings, noimp, footnotes)
 	stems = base.pres_stems or stems
-	add_pres_fut(base, stems, "ám", "áš", "á", "áme", "áte", "ají")
-	add_pres_tgress(base, stems, "ají")
+	add_pres_fut(base, stems, "ám", "áš", "á", "áme", "áte", "ají", footnotes)
+	add_pres_tgress(base, stems, prtr_endings or "ají", footnotes)
 	if not noimp then
-		add_present_a_imperative(base, stems)
+		add_present_a_imperative(base, stems, footnotes)
 	end
 end
 
@@ -906,16 +908,15 @@ conjs["III.1"] = function(base, lemma)
 	local past_stem = lastv == "á" and stem or pres_stem
 
 	-- Normalize the codes computed by the parse function above.
+	if not base.ppp_stem then
+		base.ppp_stem = {{form = lastv == "á" and "n" or "t"}}
+	end
 	for _, formobj in ipairs(base.ppp_stem) do
-		local form = formobj.form
-		if form == "" then
-			form = lastv == "á" and "n" or "t"
-		end
-		formobj.form = past_stem .. form
+		formobj.form = past_stem .. formobj.form
 	end
 
-	add_present_e(base, stem .. "j", nil, "soft")
-	add_present_e(base, {}, stem .. "j", false, {}, false, "[colloquial]")
+	add_present_e(base, pres_stem .. "j", nil, "soft")
+	add_present_e(base, {}, pres_stem .. "j", false, {}, "noimp", "[colloquial]")
 	add_past(base, past_stem)
 	add_ppp(base, base.ppp_stem)
 end
@@ -1056,6 +1057,9 @@ conjs["IV.1"] = function(base, lemma)
 
 	-- Normalize the codes computed by the parse function above. We don't need to do anything to the 'long'/'short'
 	-- imperative codes because add_imperative_from_present() takes the codes directly.
+	if not base.ppp_stem then
+		base.ppp_stem = {{form = "iot"}}
+	end
 	for _, formobj in ipairs(base.ppp_stem) do
 		if formobj.form == "iot" then
 			local iotated_stem = com.iotate(stem)
@@ -1135,42 +1139,40 @@ end
 --[=[
 
 * Verbs in [sz]:
-[[tesat]] "to carve" (impv 'tesej ~ teš', tr.ppp)
-[[česat]] "to comb" ('češu' listed first in IJP, impv 'češ ~ česej', tr.ppp)
-[[klusat]] "to trot" (impv only 'klusej' in IJP; intr)
-[[křesat]] "to scrape" (impf 'křesej ~ křeš', tr.-ppp)
-[[řezat]] "to cut" ('řežu' listed first in IJP, impv 'řež ~ řežej'; tr.ppp)
-[[lízat]] "to lick" (impv 'lízej ~ líž', tr.-ppp)
-[[hryzat]] "to bite" (also [[hrýzt]]; impv 'hryzej ~ hryž', tr.ppp)
-[[hlásat]] "to proclaim" (V.1 in IJP; tr.ppp)
-[[plesat]] "to dance" (V.1 in IJP; intr PPP?)
-[[pásat se]] "to graze" (not in IJP; prefixed 'přepásat' etc. in IJP [V.2, tr.ppp; impv only 'přepásej' in IJP)
-[[klouzat]] "to slide" (impv only 'klouzej' in IJP; intr PPP?)
+[[tesat]] "to carve" (pres 'tesám ~ tešu', impv 'tesej ~ teš', tr.ppp)
+[[česat]] "to comb" (pres 'češu ~ česám', impv 'češ ~ česej', tr.ppp)
+[[klusat]] "to trot" (pres 'klusám ~ klušu', impv 'klusej'; intr)
+[[křesat]] "to scrape" (pres 'křesám ~ křešu', impv 'křesej ~ křeš', tr.-ppp)
+[[řezat]] "to cut" (pres 'řežu ~ řezám', impv 'řež ~ řežej'; tr.ppp)
+[[lízat]] "to lick" (pres 'lízám ~ lížu', impv 'lízej ~ liž' [NOTE: short vowel], tr.-ppp)
+[[hryzat]] "to bite" (also [[hrýzt]]; pres 'hryzám ~ hryžu', impv 'hryzej ~ hryž', tr.ppp)
+[[pásat se]] "to graze" (not in IJP; prefixed 'přepásat' etc. in IJP [pres 'přepásám ~ přepášu', impv 'přepásej', tr.ppp)
+[[klouzat]] "to slide" (pres 'klouzám ~ kloužu', impv 'klouzej'; intr PPP?)
 
 * Verbs in [bpvfm]:
-[[hýbat]] "to move" (impv 'hýbej'; intr no PPP)
-[[dlabat]] "to gouge" (impv 'dlab ~ dlabej', PPP)
-[[škrabat]] "to scratch" (impv 'škrabej ~ škrab', PPP)
-[[klepat]] "to knock" (impv 'klep ~ klepej', PPP)
-[[kopat]] "to kick" (impv 'kopej', PPP)
-[[koupat]] "to bathe" (impv 'koupej', PPP)
-[[sypat]] "to sprinkle" (impv 'syp ~ sypej', PPP)
-[[drápat]] "to claw" (impv 'drápej', PPP)
-[[dupat]] "to stomp" (impv 'dupej', PPP)
-[[loupat]] "to peel" (impv 'loupej', PPP)
-[[rýpat]] "to dig" (impv 'rýpej', PPP)
-[[štípat]] "to pinch" (impv 'štípej', PPP)
-[[šlapat]] "to step; to trample" (impv 'šlap ~ šlapej', PPP)
-[[tápat]] "to grope" (impv 'tápej', intr no PPP)
-[[dřímat]] "to doze" (impv 'dřímej', intr no PPP)
-[[klamat]] "to deceive" (impv 'klamej ~ klam', PPP)
-[[lámat]] "to break" (impv 'lam [note, short] ~ lámej', PPP)
-[[plavat]] "to swim, to float" (pres only 'plavu, plaveš', impv 'plavej ~ plav ~ poplav', intr PPP? 'plaván', pres tgress 'plavaje')
-[[klofat]] "to peck; to tap, to knock" (impv 'klofej', PPP)
+[[hýbat]] "to move" (pres 'hýbám ~ hýbu', impv 'hýbej'; intr no PPP)
+[[dlabat]] "to gouge" (pres 'dlabám ~ dlabu', impv 'dlab ~ dlabej', PPP)
+[[škrábat]] "to scratch" (also [[škrabat]]; pres 'škrábám ~ škrábu', impv 'škrábej ~ škrab' [NOTE: short vowel], PPP)
+[[klepat]] "to knock" (pres 'klepám ~ klepu', impv 'klep ~ klepej', PPP)
+[[kopat]] "to kick" (pres 'kopám ~ kopu', impv 'kopej', PPP)
+[[koupat]] "to bathe" (pres 'koupám ~ koupu', impv 'koupej', PPP)
+[[sypat]] "to sprinkle" (pres 'sypám ~ sypu', impv 'syp ~ sypej', PPP)
+[[drápat]] "to claw" (pres 'drápám ~ drápu', impv 'drápej', PPP)
+[[dupat]] "to stomp" (pres 'dupám ~ dupu', impv 'dupej', PPP)
+[[loupat]] "to peel" (pres 'loupám ~ loupu', impv 'loupej', PPP)
+[[rýpat]] "to dig" (pres 'rýpám ~ rýpu', impv 'rýpej', PPP)
+[[štípat]] "to pinch" (pres 'štípám ~ štípu', impv 'štípej', PPP)
+[[šlapat]] "to step; to trample" (pres 'šlapám ~ šlapu', impv 'šlap ~ šlapej', PPP)
+[[tápat]] "to grope" (pres 'tápám ~ tápu', impv 'tápej', intr no PPP)
+[[dřímat]] "to doze" (pres 'dřímám ~ dřímu', impv 'dřímej', intr no PPP)
+[[klamat]] "to deceive" (pres 'klamu', impv 'klamej ~ klam', PPP)
+[[lámat]] "to break" (pres 'lámu', impv 'lam [NOTE: short vowel] ~ lámej', PPP)
+[[plavat]] "to swim, to float" (pres 'plavu', impv 'plavej ~ plav ~ poplav', intr PPP? 'plaván', pres tgress 'plavaje')
+[[klofat]] "to peck; to tap, to knock" (pres 'klofám ~ klofu', impv 'klofej', PPP)
 
 * Verbs in [rln]:
-[[orat]] "to plow" (impv 'orej ~ oř', PPP)
-[[párat]] "to unstitch; to unravel" (impv 'párej', PPP)
+[[orat]] "to plow" (pres 'orám ~ ořu', impv 'orej ~ oř', PPP)
+[[párat]] "to unstitch; to unravel" (pres 'párám ~ pářu', impv 'párej', PPP)
 [[dudlat]] "to hum, to drone (of an instrument or musician); to grumble, to groan; to suck (one's thumb, etc.; of a
   child)" (not in IJP; SSJC says 'dudlám' or 'dudlu', impv 'dudlej', 'dudli'; tr no PPP)
 [[stonat]] "to moan, to groan" (pres only 'stůňu, stůněš', impv 'stonej', intr no PPP, vnoun 'stonání', pres tgress 'stonaje')
@@ -1183,59 +1185,75 @@ end
 
 * Verbs in [td]:
 [none; all verbs given in Wikipedia as examples are either V.1 or missing in IJP]
+
+Types:
+* [default] = a-stem + e-stem, impv only a-stem = [[klusat]], [[přepásat]], [[klouzat]], [[hýbat]], [[škrabat]], [[kopat]], [[koupat]], [[drápat]], [[dupat]], [[loupat]], [[rýpat]], [[štípat]], [[tápat]], [[dřímat]], [[klamat]], [[klofat]], [[párat]], [[páchat]]
+* /e:a = e-stem + a-stem, impv only a-stem = [[týkat se]], [[kdákat]], [[kvákat]]
+* /e = e-stem, impv only a-stem = [[stonat]]
+* /impe:impa = a-stem + e-stem, impv e-stem + a-stem = [[dlabat]], [[klepat]], [[sypat]], [[šlapat]], [[lámat]] (short 'lam')
+* /e:a,impe:impa = e-stem + a-stem, impv e-stem + a-stem = [[česat]], [[řezat]]
+* /e,impe:impa = e-stem, impv only e-stem + a-stem
+* /impa:impe = a-stem + e-stem, impv a-stem + e-stem = [[tesat]], [[křesat]], [[lízej]], [[hryzat]], [[orat]], [[dudlat]]
+* /e:a,impa:impe = e-stem + a-stem, impv a-stem + e-stem
+* /e,impa:impe = e-stem, impv only a-stem + e-stem = [[plavat]]
 ]=]
+
+parse["V.2"] = function(base, conjmod_run, parse_err)
+	local separated_groups = iut.split_alternating_runs_and_strip_spaces(conjmod_run, ",")
+	for _, separated_group in ipairs(separated_groups) do
+		if rfind(separated_group[1], "^a") or rfind(separated_group[1], "^e") then
+			-- pres specs
+			if base.pres_stem then
+				parse_err("Saw two sets of present stem specs")
+			end
+			base.pres_stem = parse_variant_codes(separated_group, {"a", "e"}, "present stem type", parse_err)
+		elseif rfind(separated_group[1], "^imp") then
+			-- Imperative specs
+			if base.imp_stem then
+				parse_err("Saw two sets of imperative specs")
+			end
+			base.imp_stem = parse_variant_codes(separated_group, {"impa", "impe"}, "imperative type", parse_err)
+		else
+			parse_err("Unrecognized indicator '" .. separated_group[1] .. "'")
+		end
+	end
+end
+
 
 conjs["V.2"] = function(base, lemma)
 	local stem = separate_stem_suffix(lemma, "^(.*)at$", "V.2")
 	local iotated_stem = com.iotate(stem)
-	-- Types:
-	-- * a = a-stem + e-stem, impv only a-stem = [[klusat]], [[přepásat]], [[klouzat]], [[hýbat]], [[škrabat]], [[kopat]], [[koupat]], [[drápat]], [[dupat]], [[loupat]], [[rýpat]], [[štípat]], [[tápat]], [[dřímat]], [[klamat]], [[klofat]], [[párat]], [[páchat]]
-	-- * a' = e-stem + a-stem, impv only a-stem = [[týkat se]], [[kdákat]], [[kvákat]]
-	-- * a'' = e-stem, impv only a-stem = [[stonat]]
-	-- * b = a-stem + e-stem, impv e-stem + a-stem = [[dlabat]], [[klepat]], [[sypat]], [[šlapat]], [[lámat]] (short 'lam')
-	-- * b' = e-stem + a-stem, impv e-stem + a-stem = [[česat]], [[řezat]]
-	-- * b'' = e-stem, impv only e-stem + a-stem
-	-- * c = a-stem + e-stem, impv a-stem + e-stem = [[tesat]], [[křesat]], [[lízej]], [[hryzat]], [[orat]], [[dudlat]]
-	-- * c' = e-stem + a-stem, impv a-stem + e-stem
-	-- * c'' = e-stem, impv only a-stem + e-stem = [[plavat]]
-	local conjletter, conjprime = rmatch(base.conjmod, "^([abc])('*)$")
-	if not conjletter then
-		error("Internal error: Unable to match conjugation modifier '" .. base.conjmod .. "'")
+
+	-- Normalize the codes computed by the parse function above.
+	if not base.pres_stem then
+		base.pres_stem = {{form = "a"}, {form = "e"}}
 	end
-	local function add_a()
-		add_present_a(base, stem, false)
+	for _, formobj in ipairs(base.pres_stem) do
+		if formobj.form == "a" then
+			add_present_a(base, stem, {}, "noimp", formobj.footnotes)
+		elseif formobj.form == "e" then
+			add_present_e(base, iotated_stem, nil, false, {}, "noimp", formobj.footnotes)
+		else
+			error("Internal error: Saw unrecognized present tense code '" .. formobj.form .. "'")
+		end
 	end
-	local function add_a_imperative()
-		add_present_a_imperative(base, stem)
+	-- Present transgressive is always a-stem regardless of present tense.
+	add_pres_tgress(base, stem, "ají")
+	if not base.imp_stem then
+		base.imp_stem = {{form = "impa"}}
 	end
-	local function add_e()
-		add_present_e(base, iotated_stem, nil, false, "í", false)
+	for _, formobj in ipairs(base.imp_stem) do
+		if formobj.form == "impa" then
+			add_present_a_imperative(base, stem, formobj.footnotes)
+		elseif formobj.form == "impe" then
+			add_imperative_from_present(base, iotated_stem, nil, formobj.footnotes)
+		else
+			error("Internal error: Saw unrecognized imperative code '" .. formobj.form .. "'")
+		end
 	end
-	local function add_e_imperative()
-		add_imperative_from_present(base, iotated_stem)
-	end
-	if conjprime == "" then
-		add_a()
-		add_e()
-	elseif conjprime == "'" then
-		add_e()
-		add_a()
-	elseif conjprime == "''" then
-		add_e()
-	else
-		error("Internal error: Unable to match conjugation prime modifier '" .. conjprime .. "'")
-	end
-	if conjletter == "a" then
-		add_a_imperative()
-	elseif conjletter == "b" then
-		add_e_imperative()
-		add_a_imperative()
-	else
-		add_a_imperative()
-		add_e_imperative()
-	end
+
 	add_past(base, stem .. "a")
-	add_ppp(base, stem .. "á")
+	add_ppp(base, stem .. "án")
 end
 
 
@@ -1911,26 +1929,26 @@ local function make_table(alternant_multiword_spec)
 <div class="NavContent">
 {\op}| class="inflection-table inflection inflection-cs inflection-verb" style="border: 2px solid black;" border=1
 |-
-! rowspan=3 colspan=2 style="background:#d9ebff" |
-! colspan=3 style="background:#d9ebff; text-align: center;" | [[singular]]
-! colspan=4 style="background:#d9ebff; text-align: center;" | [[plural]]
+! rowspan=3 colspan=2 style="background:#cddfff" |
+! colspan=3 style="background:#cddfff; text-align: center;" | [[singular]]
+! colspan=4 style="background:#cddfff; text-align: center;" | [[plural]]
 |-
-! rowspan=2 style="background:#eff7ff; text-align: center;vertical-align:middle;"| [[masculine]]
-! rowspan=2 style="background:#eff7ff; text-align: center;vertical-align:middle;"| [[feminine]]
-! rowspan=2 style="background:#eff7ff; text-align: center;vertical-align:middle;"| [[neuter]]
-! colspan=2 style="background:#eff7ff; text-align: center;"| [[masculine]]
-! rowspan=2 style="background:#eff7ff; text-align: center;vertical-align:middle;"| [[feminine]]
-! rowspan=2 style="background:#eff7ff; text-align: center;vertical-align:middle;"| [[neuter]]
+! rowspan=2 style="background:#e7f3ff; text-align: center;vertical-align:middle;"| [[masculine]]
+! rowspan=2 style="background:#e7f3ff; text-align: center;vertical-align:middle;"| [[feminine]]
+! rowspan=2 style="background:#e7f3ff; text-align: center;vertical-align:middle;"| [[neuter]]
+! colspan=2 style="background:#e7f3ff; text-align: center;"| [[masculine]]
+! rowspan=2 style="background:#e7f3ff; text-align: center;vertical-align:middle;"| [[feminine]]
+! rowspan=2 style="background:#e7f3ff; text-align: center;vertical-align:middle;"| [[neuter]]
 |-
-! style="background:#eff7ff; text-align: center;"| [[animate]]
-! style="background:#eff7ff; text-align: center;"| [[inanimate]]
+! style="background:#e7f3ff; text-align: center;"| [[animate]]
+! style="background:#e7f3ff; text-align: center;"| [[inanimate]]
 |-
-! style="background:#eff7ff; text-align: center; width:8%;"| invariable
-! style="background:#d9ebff; text-align: center; width:8%;"| [[infinitive]]
+! style="background:#e7f3ff; text-align: center; width:8%;"| invariable
+! style="background:#cddfff; text-align: center; width:8%;"| [[infinitive]]
 | colspan=7 | {infinitive}
 |-
-! rowspan=4 style="background:#eff7ff; text-align: center; vertical-align: middle;"| number/gender<br/>only
-! style="background:#d9ebff; text-align: center;"| [[short]]&nbsp;[[passive]]&nbsp;[[participle]]
+! rowspan=4 style="background:#e7f3ff; text-align: center; vertical-align: middle;"| number/gender<br/>only
+! style="background:#cddfff; text-align: center;"| [[short]]&nbsp;[[passive]]&nbsp;[[participle]]
 | {ppp_m}
 | {ppp_f}
 | {ppp_n}
@@ -1939,7 +1957,7 @@ local function make_table(alternant_multiword_spec)
 | {ppp_fp}
 | {ppp_np}
 |-
-! style="background:#d9ebff; text-align: center;"| l-participle
+! style="background:#cddfff; text-align: center;"| l-participle
 | {lpart_m}
 | {lpart_f}
 | {lpart_n}
@@ -1948,28 +1966,28 @@ local function make_table(alternant_multiword_spec)
 | {lpart_fp}
 | {lpart_np}
 |-
-! style="background:#d9ebff; text-align: center;"| [[present]]&nbsp;[[transgressive]]
+! style="background:#cddfff; text-align: center;"| [[present]]&nbsp;[[transgressive]]
 | {pres_tgress_m}
 | colspan=2|{pres_tgress_fn}
 | colspan=4|{pres_tgress_p}
 |-
-! style="background:#d9ebff; text-align: center;"| [[past]]&nbsp;[[transgressive]]
+! style="background:#cddfff; text-align: center;"| [[past]]&nbsp;[[transgressive]]
 | {past_tgress_m}
 | colspan=2|{past_tgress_fn}
 | colspan=4|{past_tgress_p}
 |-
-! rowspan=3 style="background:#eff7ff; text-align: center; vertical-align: middle;"| declined<br/>as<br/>adjective
-! style="background:#d9ebff; text-align: center;"| [[present]]&nbsp;[[active]]&nbsp;[[participle]]
+! rowspan=3 style="background:#e7f3ff; text-align: center; vertical-align: middle;"| declined<br/>as<br/>adjective
+! style="background:#cddfff; text-align: center;"| [[present]]&nbsp;[[active]]&nbsp;[[participle]]
 | colspan=7 | {pres_act_part}
 |-
-! style="background:#d9ebff; text-align: center;"| [[past]]&nbsp;[[active]]&nbsp;[[participle]]
+! style="background:#cddfff; text-align: center;"| [[past]]&nbsp;[[active]]&nbsp;[[participle]]
 | colspan=7 | {past_act_part}
 |-
-! style="background:#d9ebff; text-align: center;"| [[long]]&nbsp;[[passive]]&nbsp;[[participle]]
+! style="background:#cddfff; text-align: center;"| [[long]]&nbsp;[[passive]]&nbsp;[[participle]]
 | colspan=7 | {long_pass_part}
 |-
-! style="background:#eff7ff; text-align: center;"| case/number<br/>only
-! style="background:#d9ebff; text-align: center; vertical-align: middle;"| [[verbal noun|verbal&nbsp;noun]]
+! style="background:#e7f3ff; text-align: center;"| case/number<br/>only
+! style="background:#cddfff; text-align: center; vertical-align: middle;"| [[verbal noun|verbal&nbsp;noun]]
 | style="vertical-align: middle;" colspan=7 | {vnoun}
 |-
 {indicative_header}{present_table}| {fut_1s}
@@ -1979,7 +1997,7 @@ local function make_table(alternant_multiword_spec)
 | colspan=2 | {fut_2p}
 | {fut_3p}
 |-
-{past_table}{conditional_header}{cond_table}{cond_past_table}! style="background:#d9ebff; text-align: center; border-top-width: 3px;" colspan=2 | [[imperative mood|imperative]]
+{past_table}{conditional_header}{cond_table}{cond_past_table}! style="background:#cddfff; text-align: center; border-top-width: 3px;" colspan=2 | [[imperative mood|imperative]]
 | style="border-top-width: 3px;" | —
 | style="border-top-width: 3px;" | {imp_2s}
 | style="border-top-width: 3px;" | —
@@ -1989,24 +2007,24 @@ local function make_table(alternant_multiword_spec)
 |{\cl}{notes_clause}</div></div>]=]
 
 	local table_spec_person_number_header = [=[
-!style="background:#d9ebff; text-align: center; vertical-align: middle; border-top-width: 3px;" rowspan=3 colspan=2 | MOOD
-!style="background:#d9ebff; text-align: center; border-top-width: 3px;" colspan=3 | [[singular]]
-!style="background:#d9ebff; text-align: center; border-top-width: 3px;" colspan=4 | [[plural]] (or polite)
+!style="background:#cddfff; text-align: center; vertical-align: middle; border-top-width: 3px;" rowspan=3 colspan=2 | MOOD
+!style="background:#cddfff; text-align: center; border-top-width: 3px;" colspan=3 | [[singular]]
+!style="background:#cddfff; text-align: center; border-top-width: 3px;" colspan=4 | [[plural]] (or polite)
 |-
-!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[first person|first]]
-!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[second person|second]]
-!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[third person|third]]
-!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[first person|first]]
-!style="background:#eff7ff; text-align: center; vertical-align: middle;" colspan=2 | [[second person|second]]
-!style="background:#eff7ff; text-align: center; vertical-align: middle;" rowspan=2 | [[third person|third]]
+!style="background:#e7f3ff; text-align: center; vertical-align: middle;" rowspan=2 | [[first person|first]]
+!style="background:#e7f3ff; text-align: center; vertical-align: middle;" rowspan=2 | [[second person|second]]
+!style="background:#e7f3ff; text-align: center; vertical-align: middle;" rowspan=2 | [[third person|third]]
+!style="background:#e7f3ff; text-align: center; vertical-align: middle;" rowspan=2 | [[first person|first]]
+!style="background:#e7f3ff; text-align: center; vertical-align: middle;" colspan=2 | [[second person|second]]
+!style="background:#e7f3ff; text-align: center; vertical-align: middle;" rowspan=2 | [[third person|third]]
 |-
-!style="background:#eff7ff; text-align: center;" | [[polite]] [[singular]]
-!style="background:#eff7ff; text-align: center;" | [[plural]]
+!style="background:#e7f3ff; text-align: center;" | [[polite]] [[singular]]
+!style="background:#e7f3ff; text-align: center;" | [[plural]]
 |-
 ]=]
 
 	local table_spec_single_aspect_present = [=[
-! style="background:#d9ebff; text-align: center;" colspan=2 | [[present tense|present]]
+! style="background:#cddfff; text-align: center;" colspan=2 | [[present tense|present]]
 | {pres_1s}
 | {pres_2s}
 | {pres_3s}
@@ -2014,11 +2032,11 @@ local function make_table(alternant_multiword_spec)
 | colspan=2 | {pres_2p}
 | {pres_3p}
 |-
-! style="background:#d9ebff; text-align: center;" colspan=2 | [[future tense|future]]
+! style="background:#cddfff; text-align: center;" colspan=2 | [[future tense|future]]
 ]=]
 
 	local table_spec_biaspectual_present = [=[
-! style="background:#d9ebff; text-align: center;" colspan=2 | [[present tense|present]]&nbsp;(imperfective)
+! style="background:#cddfff; text-align: center;" colspan=2 | [[present tense|present]]&nbsp;(imperfective)
 | rowspan=2 | {pres_1s}
 | rowspan=2 | {pres_2s}
 | rowspan=2 | {pres_3s}
@@ -2026,14 +2044,14 @@ local function make_table(alternant_multiword_spec)
 | colspan=2 rowspan=2 | {pres_2p}
 | rowspan=2 | {pres_3p}
 |-
-! style="background:#d9ebff; text-align: center;" colspan=2 | [[future tense|future]]&nbsp;(perfective)
+! style="background:#cddfff; text-align: center;" colspan=2 | [[future tense|future]]&nbsp;(perfective)
 |-
-! style="background:#d9ebff; text-align: center;" colspan=2 | [[future tense|future]]&nbsp;(imperfective)
+! style="background:#cddfff; text-align: center;" colspan=2 | [[future tense|future]]&nbsp;(imperfective)
 ]=]
 
 	local table_spec_person_number_gender = [=[
-!style="background:#d9ebff; text-align: center; vertical-align: middle;" rowspan=4 | TENSE
-!style="background:#eff7ff; text-align: center;"| [[masculine]]&nbsp;[[animate]]
+!style="background:#cddfff; text-align: center; vertical-align: middle;" rowspan=4 | TENSE
+!style="background:#e7f3ff; text-align: center;"| [[masculine]]&nbsp;[[animate]]
 | rowspan=2 | {PREF_1sm}
 | rowspan=2 | {PREF_2sm}
 | rowspan=2 | {PREF_3sm}
@@ -2042,10 +2060,10 @@ local function make_table(alternant_multiword_spec)
 | rowspan=2 | {PREF_2pm_plural}
 | {PREF_3pm_an}
 |-
-!style="background:#eff7ff; text-align: center;"| [[masculine]]&nbsp;[[inanimate]]
+!style="background:#e7f3ff; text-align: center;"| [[masculine]]&nbsp;[[inanimate]]
 | {PREF_3pm_in}
 |-
-!style="background:#eff7ff; text-align: center;"| [[feminine]]
+!style="background:#e7f3ff; text-align: center;"| [[feminine]]
 | {PREF_1sf}
 | {PREF_2sf}
 | {PREF_3sf}
@@ -2054,7 +2072,7 @@ local function make_table(alternant_multiword_spec)
 | {PREF_2pf_plural}
 | {PREF_3pf}
 |-
-!style="background:#eff7ff; text-align: center;"| [[neuter]]
+!style="background:#e7f3ff; text-align: center;"| [[neuter]]
 | {PREF_1sn}
 | {PREF_2sn}
 | {PREF_3sn}
@@ -2066,7 +2084,7 @@ local function make_table(alternant_multiword_spec)
 ]=]
 
 	local notes_template = [===[
-<div style="width:100%;text-align:left;background:#d9ebff">
+<div style="width:100%;text-align:left;background:#cddfff">
 <div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
 {footnote}
 </div></div>
