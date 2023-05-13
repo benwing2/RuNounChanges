@@ -1,4 +1,4 @@
-Beginning at Mon May  8 15:50:01 2023
+Beginning at Sat May 13 01:58:35 2023
 Page 1 Člověče, nezlob se!: Found match for regex: =
 Page 1 Člověče, nezlob se!: -------- begin text --------
 
@@ -15213,6 +15213,9 @@ From {{suffix|cs|Morava|ec}}.
 Page 830 Královec: Found match for regex: =
 Page 830 Královec: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA}}
+
 ===Proper noun===
 {{cs-proper noun|m-in}}
 
@@ -19351,22 +19354,17 @@ From  {{bor|cs|rap|Makemake}}.
 ===Proper noun===
 {{cs-proper noun|m-an}}
 
-# {{senseid|cs|Q233674}}{{lb|cs|mythology|animate}} {{l|en|Makemake}}, the [[creator]] [[deity]] in the mythology of [[Easter Island]]
+# {{senseid|cs|Q233674}}{{lb|cs|mythology}} {{l|en|Makemake}}, the [[creator]] [[deity]] in the mythology of [[Easter Island]]
 #* {{quote-journal|cs|author=Stanislav Novotný|title=Věčné záhady Velikonočního ostrova|journal=Nový orient|url=|year=1972|volume=27–28|issue=|page=|passage=Na počest těchto Ptačích mužů, představitelů boha '''Makemakeho''', byly během čekání v Orongo do skal tesány rytiny {{...}} |translation=While waiting in Orongo, people chiselled engravings of these Bird Men, representing the god '''Makemake''' {{...}}}}
 
 ====Declension====
 {{cs-ndecl|((m.an.sg.surname,!.an.sg.gen:Makemakeho.dat:Makemakemu.acc:Makemakeho.loc:Makemakem))}}<!-- based on former manual declension; not clear if actually correct -->
 
 ===Proper noun===
-{{cs-proper noun|m-in}}
+{{cs-proper noun|m-in|indecl=1}}
 
-# {{senseid|cs|Q233674}}{{lb|cs|mythology|animate}} {{l|en|Makemake}}, the [[creator]] [[deity]] in the mythology of [[Easter Island]]
-#* {{quote-journal|cs|author=Stanislav Novotný|title=Věčné záhady Velikonočního ostrova|journal=Nový orient|url=|year=1972|volume=27–28|issue=|page=|passage=Na počest těchto Ptačích mužů, představitelů boha '''Makemakeho''', byly během čekání v Orongo do skal tesány rytiny {{...}} |translation=While waiting in Orongo, people chiselled engravings of these Bird Men, representing the god '''Makemake''' {{...}}}}
-# {{senseid|cs|Q604}}{{lb|cs|astronomy|inanimate}}  {{l|en|Makemake}}, a [[dwarf planet]] and large [[Kuiper belt object]] {{defdate|since 2008}}
+# {{senseid|cs|Q604}}{{lb|cs|astronomy}}  {{l|en|Makemake}}, a [[dwarf planet]] and large [[Kuiper belt object]] {{defdate|since 2008}}
 #* {{quote-journal|cs|author=|coauthors=|title=Jako šišatý Saturn. Vědci našli u trpasličí planety Haumea prstenec|journal=Česká televize.cz|url=http://www.ceskatelevize.cz/ct24/veda/2271057-jako-sisaty-saturn-vedci-nasli-u-trpaslici-planety-haumea-prstenec|date=2017-10-12|volume=|issue=|page=|passage=Haumea byla uznána Mezinárodní astronomickou unií v roce 2008 a je jednou z pěti trpasličích planet vedle Pluta, Ceres, Eris a '''Makemake'''.|translation=Haumea was acknowledged by the International Astronomical Union in 2008 and is one of the five dwarf planets together with Pluto, Ceres, Eris and '''Makemake'''.}}
-
-====Declension====
-* The [[masculine]] [[inanimate]] declension has not been settled in the Czech language yet.
 
 {{cln|cs|eponyms}}
 {{C|cs|Gods|Dwarf planets of the Solar System}}
@@ -43028,36 +43026,44 @@ Page 2277 Maledivy: -------- begin text --------
 * {{R:cs:SSJC}}
 * {{R:cs:IJP}}
 -------- end text --------
-Page 2278 Cookovy ostrovy: Found match for regex: =
+Page 2278 Cookovy ostrovy: Found match for regex: {
 Page 2278 Cookovy ostrovy: -------- begin text --------
+{{wp|lang=cs}}
 
 ===Pronunciation===
 * {{cs-IPA|Kukovy ostrovy}}
 * {{cs-IPA|Kúkovy ostrovy}}
-* {{audio|cs|Cs-Cookovy ostrovy.ogg|Audio}}
+* {{audio|cs|Cs-{{PAGENAME}}.ogg|Audio}}
 
 ===Proper noun===
-{{cs-proper noun|m-in-p}}
+{{cs-proper noun|m-in-p|head=[[Cook|Cookovy]] [[ostrov|ostrovy]]}}
 
-# [[Cook Islands]]
+# {{place|cs|country/and/archipelago|r/Oceania|t=Cook Islands}}
 
 ====Declension====
 {{cs-ndecl|Cookovy<+> ostrovy<m.pl>}}
 
-{{C|cs|Countries}}
+===Further reading===
+* {{R:cs:IJP}}
 -------- end text --------
-Page 2279 Marshallovy ostrovy: Found match for regex: =
+Page 2279 Marshallovy ostrovy: Found match for regex: {
 Page 2279 Marshallovy ostrovy: -------- begin text --------
+{{wp|lang=cs}}
+
+===Pronunciation===
+* {{cs-IPA|Maršalovy ostrovy}}
+* {{cs-IPA|Maršálovy ostrovy}}
 
 ===Proper noun===
-{{cs-proper noun|m-in-p}}
+{{cs-proper noun|m-in-p|head=[[Marshall|Marshallovy]] [[ostrov|ostrovy]]|adj=maršálský}}
 
-# [[Marshall Islands]]
+# {{place|cs|country/and/archipelago|r/Micronesia|t1=Marshall Islands}}
 
 ====Declension====
 {{cs-ndecl|Marshallovy<+> ostrovy<m.pl>}}
 
-{{C|cs|Countries}}
+===Further reading===
+* {{R:cs:IJP}}
 -------- end text --------
 Page 2280 Šalamounovy ostrovy: Found match for regex: {
 Page 2280 Šalamounovy ostrovy: -------- begin text --------
@@ -47433,5 +47439,5 @@ Page 2533 Kroměříž: -------- begin text --------
 ====Derived terms====
 {{col-auto|cs|Kroměřížan|Kroměřížák|kroměřížský|Kroměřížsko|Kromcl|Krompl}}
 -------- end text --------
-Elapsed time: 3 mins 39.41 secs
-Ending at Mon May  8 15:53:40 2023
+Elapsed time: 5 mins 45.80 secs
+Ending at Sat May 13 02:04:21 2023
