@@ -1090,9 +1090,9 @@ IV.2:
 [[mdlít]] (mdlím # mdlejí ~ mdlí, mdli, mdlel, no PPP?, mdleje ~ presumably mdle, mdlení) [NOTE: also mdlít IV.1]
 etc.
 
-[[trpět]] (trpím # trpí, trp, trpěl, trpěn, trpě, trpění)
-[[bolet]] (bolím # bolejí ~ bolí, bol, bolel, no PPP, boleje ~ bole, bolení)
-[[hovět]] (hovím # hovějí ~ hoví, hověj ~ hov, hověl, no PPP, hověje ~ hově, hovění)
+[[trpět]] [default] (trpím # trpí, trp, trpěl, trpěn, trpě, trpění)
+[[bolet]] /preslong:short (bolím # bolejí ~ bolí, bol, bolel, no PPP, boleje ~ bole, bolení)
+[[hovět]] /preslong:short,implong:short (hovím # hovějí ~ hoví, hověj ~ hov, hověl, no PPP, hověje ~ hově, hovění)
 [[náležet]] (náležím # náležejí ~ náleží, náležej ~ nálež, náležel, náležen, náleže ~ náležeje, náležení)
 [[souviset]] (souvisím # souvisejí ~ souvisí, souvisej, souvisel, no PPP, souvise ~ souviseje, souvisení)
 [[šumět]] (šumím # šumějí ~ šumí, šuměj ~ šum, šuměl, no PPP, šuměje ~ šumě, šumění)
