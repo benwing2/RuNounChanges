@@ -596,6 +596,16 @@ local function iterate_slot_list_or_table(props, do_slot)
 end
 
 
+function export.default_split_bracketed_runs_into_words(bracketed_runs)
+	-- If the text begins with a hyphen, include the hyphen in the set of allowed characters
+	-- for an inflected segment. This way, e.g. conjugating "-ir" is treated as a regular
+	-- -ir verb rather than a hyphen + irregular [[ir]].
+	local is_suffix = rfind(bracketed_runs[1], "^%-")
+	local split_pattern = is_suffix and " " or "[ %-]"
+	return put.split_alternating_runs(bracketed_runs, split_pattern, "preserve splitchar")
+end
+
+
 local function parse_before_or_post_text(props, text, segments, lemma_is_last)
 	-- Call parse_balanced_segment_run() to keep multiword links together.
 	local bracketed_runs = put.parse_balanced_segment_run(text, "[", "]")
@@ -606,12 +616,7 @@ local function parse_before_or_post_text(props, text, segments, lemma_is_last)
 		space_separated_groups = props.split_bracketed_runs_into_words(bracketed_runs)
 	end
 	if not space_separated_groups then
-		-- If the text begins with a hyphen, include the hyphen in the set of allowed characters
-		-- for an inflected segment. This way, e.g. conjugating "-ir" is treated as a regular
-		-- -ir verb rather than a hyphen + irregular [[ir]].
-		local is_suffix = rfind(text, "^%-")
-		local split_pattern = is_suffix and " " or "[ %-]"
-		space_separated_groups = put.split_alternating_runs(bracketed_runs, split_pattern, "preserve splitchar")
+		space_separated_groups = export.default_split_bracketed_runs_into_words(bracketed_runs)
 	end
 
 	local parsed_components = {}
