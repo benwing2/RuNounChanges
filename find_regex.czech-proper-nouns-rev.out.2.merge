@@ -3,7 +3,7 @@ Page 1 Člověče, nezlob se!: Skipped, no changes
 Page 1 Člověče, nezlob se!: -------- begin text --------
 
 ===Proper noun===
-{{head|cs|proper noun|head=[[člověk|Člověče]], [[nezlob]] [[se]]!}}
+{{cs-proper noun|?|head=[[člověk|Člověče]], [[nezlob]] [[se]]!}}
 
 # [[Mensch ärgere Dich nicht]], a board game similar to Ludo
 
@@ -69,7 +69,7 @@ Page 5 ČNB: Skipped, no changes
 Page 5 ČNB: -------- begin text --------
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|f}}
 
 # {{init of|cs|{{w|Česká národní banka}}, [[national]] [[bank]] of the [[Czech Republic]]}}
 
@@ -96,7 +96,7 @@ Page 7 JZD: -------- begin text --------
 * {{audio|cs|Cs-JZD.ogg|Audio}}
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|n}}
 
 # {{initialism of|cs|[[w:cs:Jednotné zemědělské družstvo|Jednotné zemědělské družstvo]]}}
 
@@ -110,7 +110,7 @@ Page 8 ČTK: Skipped, no changes
 Page 8 ČTK: -------- begin text --------
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|f}}
 
 # {{init of|cs|{{w|Česká tisková kancelář}}}}
 
@@ -121,7 +121,7 @@ Page 9 OSN: Skipped, no changes
 Page 9 OSN: -------- begin text --------
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|f}}
 
 # {{init of|cs|Organizace spojených národů|nodot=1}}: [[UN]]
 
@@ -136,7 +136,7 @@ Page 10 SMO: -------- begin text --------
 * {{audio|cs|Cs-SMO.ogg|Audio}}
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|f}}
 
 # {{initialism of|cs|[[w:cs:Světová meteorologická organizace|Světová meteorologická organizace]]}} – [[World Meteorological Organisation]], [[WMO]]
 
@@ -160,7 +160,7 @@ Page 12 RVHP: -------- begin text --------
 {{wikipedia|lang=cs}}
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|f}}
 
 # {{initialism of|cs|[[rada|Rada]] [[vzájemný|vzájemné]] [[hospodářský|hospodářské]] [[pomoc]]i||[[Comecon]], [[:w:Council for Mutual Economic Assistance|Council for Mutual Economic Assistance]]}}
 
@@ -172,7 +172,7 @@ Page 13 OOP: Skipped, no changes
 Page 13 OOP: -------- begin text --------
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|f}}
 
 # {{initialism of|cs|[[organizace|Organizace]] [[pro]] [[osvobození]] [[Palestina|Palestiny]]||[[PLO]] (Palestine Liberation Organization)}}
 
@@ -224,7 +224,7 @@ Page 17 SSSR: -------- begin text --------
 * {{audio|cs|Cs-SSSR.ogg|Audio}}
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|m-in}}
 
 # {{initialism of|cs|[[Svaz sovětských socialistických republik]]}} — The [[Union of Soviet Socialist Republics]]; [[USSR]]
 
@@ -257,7 +257,7 @@ Page 19 ODS: -------- begin text --------
 {{wikipedia|lang=cs}}
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|f}}
 
 # {{acronym of|cs|[[w:Občanská demokratická strana|Občanská demokratická strana]]|dot=,}} Czech political party
 
@@ -269,7 +269,7 @@ Page 20 ČT: Skipped, no changes
 Page 20 ČT: -------- begin text --------
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|f}}
 
 # {{init of|cs|{{w|Česká televize}}}}
 
@@ -284,7 +284,7 @@ Page 21 ČSAV: -------- begin text --------
 {{acronym|cs|Československá akademie věd}}.
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|f}}
 
 # [[Czechoslovak]] [[academy|Academy]] of [[science|Sciences]]
 
@@ -298,7 +298,7 @@ Page 22 ČEZ: Skipped, no changes
 Page 22 ČEZ: -------- begin text --------
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|m-in-p}}
 
 # {{abbreviation of|cs|[[w:ČEZ Group|České energetické závody]]}}
 
@@ -379,20 +379,24 @@ Page 27 Kuba: -------- begin text --------
 ===Pronunciation===
 * {{cs-IPA}}
 
-===Proper noun===
+===Etymology 1===
+
+====Proper noun====
 {{cs-proper noun|f|adj=kubánský|dem=Kubánec|fdem=Kubánka}}
 
 # {{place|cs|island/and/country|r/Caribbean|t=Cuba|capital=Havana}}
 
-====Declension====
+=====Declension=====
 {{cs-ndecl|f.sg}}
 
-===Proper noun===
+===Etymology 2===
+
+====Proper noun====
 {{cs-proper noun|m-an}}
 
 # {{given name|cs|male|dim=Jakub}}
 
-====Declension====
+=====Declension=====
 {{cs-ndecl|m.an}}
 
 ===Further reading===
@@ -552,13 +556,20 @@ Page 36 Ada: -------- begin text --------
 * {{cs-IPA}}
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|f}}
 
 # {{given name|cs|female}} and a [[nickname]] from women's names beginning with Ad-
+
+====Declension====
+{{cs-ndecl|f}}
+
+===Proper noun===
+{{cs-proper noun|m-an}}
+
 # {{given name|cs|male|dim=Adam}}
 
 ====Declension====
-{{rfinfl|cs|proper noun}}
+{{cs-ndecl|m.an}}
 
 -------- end text --------
 Page 37 Eda: Skipped, no changes
@@ -972,7 +983,7 @@ Page 58 Vanda: -------- begin text --------
 {{wikipedia|lang=cs}}
 
 ===Etymology===
-{{der+|cs|pl|Wanda}}.
+{{bor+|cs|pl|Wanda}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -991,7 +1002,7 @@ Page 59 Uganda: -------- begin text --------
 {{wp|lang=cs}}
 
 ===Etymology===
-{{der+|cs|sw|Uganda|t={{w|Buganda}}, subnational kingdom}}, from {{der|cs|lg|Buganda|t=land of the [[Ganda]]}}.
+{{bor+|cs|sw|Uganda|t={{w|Buganda}}, subnational kingdom}}, from {{der|cs|lg|Buganda|t=land of the [[Ganda]]}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -2752,7 +2763,7 @@ Page 154 Veronika: -------- begin text --------
 {{wikipedia|lang=cs}}
 
 ===Etymology===
-{{der+|cs|LL.|Veronica}}.
+{{bor+|cs|LL.|Veronica}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ny]}}
@@ -2788,7 +2799,7 @@ Page 156 Marika: -------- begin text --------
 {{wikipedia|lang=cs}}
 
 ===Etymology===
-{{der+|cs|hu|Marika}}, a diminutive form of {{m|hu|Mária||[[Mary]]}}.
+{{bor+|cs|hu|Marika}}, a diminutive form of {{m|hu|Mária||[[Mary]]}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -5012,12 +5023,20 @@ Page 278 Jirka: -------- begin text --------
 * {{cs-IPA}}
 
 ===Proper noun===
-{{head|cs|proper nouns|g=m}}
+{{cs-proper noun|m-an}}
 
 # {{given name|cs|male|dim=Jiří<eq:George>}}
 
 ====Declension====
-{{rfinfl|cs|proper noun}}
+{{cs-ndecl|m.an}}
+
+===Proper noun===
+{{cs-proper noun|f}}
+
+# {{given name|cs|female|dim=Jiřina}}
+
+====Declension====
+{{cs-ndecl|f}}
 
 ===Further reading===
 * {{R:cs:PSJC}}
@@ -5134,7 +5153,7 @@ Page 285 Sněhurka: -------- begin text --------
 # [[Snow White]]
 
 ====Declension====
-{{cs-ndecl|f}}
+{{cs-ndecl|f.sg}}
 
 ===Further reading===
 * {{R:cs:PSJC}}
@@ -6334,6 +6353,7 @@ Page 354 Františka: -------- begin text --------
 
 ===Proper noun===
 {{head|cs|proper noun form}}
+
 # {{inflection of|cs|František||gen|s}}
 # {{inflection of|cs|František||acc|s}}
 
@@ -7397,7 +7417,7 @@ Page 415 Nikola: -------- begin text --------
 {{wikipedia|lang=cs}}
 
 ===Etymology===
-{{der+|cs|fr|Nicolas}}, as a variant of the traditional Czech {{m|cs|Mikuláš}}, and from the French female name {{m|fr|Nicole}}.
+{{bor+|cs|fr|Nicolas}}, as a variant of the traditional Czech {{m|cs|Mikuláš}}, and from the French female name {{m|fr|Nicole}}.
 
 ===Pronunciation===
 * {{cs-IPA|[Ny]}}
@@ -8519,7 +8539,7 @@ Page 476 Magdalena: Skipped, no changes
 Page 476 Magdalena: -------- begin text --------
 
 ===Etymology===
-{{der+|cs|grc|Μαγδαληνή||woman from Magdala}}.
+{{bor+|cs|grc|Μαγδαληνή||woman from Magdala}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -10857,7 +10877,7 @@ Page 600 Laura: -------- begin text --------
 {{wikipedia|lang=cs}}
 
 ===Etymology===
-{{der+|cs|la|Laura}}.
+{{bor+|cs|la|Laura}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -12031,6 +12051,7 @@ Page 665 Marta: -------- begin text --------
 
 ====Proper noun====
 {{head|cs|proper noun form}}
+
 # {{inflection of|cs|Mars||an|gen//acc}}
 
 -------- end text --------
@@ -13394,13 +13415,13 @@ Page 736 Honza: -------- begin text --------
 * {{cs-IPA}}
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|m-an}}
 
-# {{given name|cs|male|A=a common|dim=Jan|eq=Jack}}
+# {{given name|cs|male|dim=Jan|eq=Jack}}
 #: {{syn|cs|Janek|Jenda|Jeník}}
 
 ====Declension====
-{{rfinfl|cs|proper noun}}
+{{cs-ndecl|m.an}}
 
 ===Further reading===
 * {{R:cs:PSJC}}
@@ -16036,7 +16057,7 @@ Page 869 Freund: Skipped, no changes
 Page 869 Freund: -------- begin text --------
 
 ===Etymology===
-{{der+|cs|de|Freund|gloss={{l|en|friend}}}}.
+{{bor+|cs|de|Freund|lit=friend}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -17082,7 +17103,7 @@ Page 923 Galicie: -------- begin text --------
 * {{alt|cs|Galície}}
 
 ===Etymology===
-{{der+|cs|ML.|Gallicia}}, from Classical {{der|cs|la|Gallaecia}}, from {{m|la|Gallaecī||a tribe in the region}}.
+{{bor+|cs|ML.|Gallicia}}, from Classical {{der|cs|la|Gallaecia}}, from {{m|la|Gallaecī||a tribe in the region}}.
 
 ===Proper noun===
 {{cs-proper noun|f|adj=galicijský}}
@@ -19613,7 +19634,7 @@ Page 1059 Jozue: Skipped, no changes
 Page 1059 Jozue: -------- begin text --------
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|m-an}}
 
 # {{lb|cs|religion}} [[Joshua]]
 #: {{syn|cs|Kniha Jozue}}
@@ -21454,7 +21475,7 @@ Page 1172 Filemonovi: Skipped, no changes
 Page 1172 Filemonovi: -------- begin text --------
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|m-an}}
 
 # {{lb|cs|religion}} [[Philemon]]
 
@@ -27144,7 +27165,7 @@ Page 1461 Vencl: -------- begin text --------
 {{wp|lang=cs}}
 
 ===Etymology===
-{{der+|cs|de|Wenzel}}, from {{der|cs|zlw-ocs}}.
+{{bor+|cs|de|Wenzel}}, from {{der|cs|zlw-ocs}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -27769,7 +27790,7 @@ Page 1492 Nikol: Skipped, no changes
 Page 1492 Nikol: -------- begin text --------
 
 ===Etymology===
-{{der+|cs|fr|Nicole}}.
+{{bor+|cs|fr|Nicole}}.
 
 ===Pronunciation===
 * {{cs-IPA|[Ny]}}
@@ -28282,7 +28303,7 @@ Page 1520 Vietnam: -------- begin text --------
 {{wp|lang=cs}}
 
 ===Etymology===
-{{der+|cs|vi|Việt Nam}}.
+{{bor+|cs|vi|Việt Nam}}.
 
 ===Pronunciation===
 * {{cs-IPA|Vjetnam}}
@@ -29060,7 +29081,7 @@ Page 1563 Roman: -------- begin text --------
 {{wikipedia|lang=cs}}
 
 ===Etymology===
-{{der+|cs|la|Rōmānus}}.
+{{bor+|cs|la|Rōmānus}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -29665,18 +29686,18 @@ Page 1596 Konstantin: Skipped, no changes
 Page 1596 Konstantin: -------- begin text --------
 
 ===Etymology===
-{{der+|cs|la|Constantinus}}.
+{{bor+|cs|la|Constantinus}}.
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[tý]}}
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|m-an}}
 
 # {{given name|cs|male|from=Latin|eq=Constantine}}
 
 ====Declension====
-{{rfinfl|cs|proper noun}}
+{{cs-ndecl|m.an}}
 
 -------- end text --------
 Page 1597 Valentin: Skipped, no changes
@@ -36601,9 +36622,9 @@ Page 1927 Epir: Skipped, no changes
 Page 1927 Epir: -------- begin text --------
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|m-in}}
 
-# [[Epirus]]
+# {{place|cs|historical region|in present-day|c/Greece,Albania|t=Epirus}}
 
 ====Declension====
 {{rfinfl|cs|proper noun}}
@@ -37891,7 +37912,7 @@ Page 1998 Nový Jižní Wales: Skipped, no changes
 Page 1998 Nový Jižní Wales: -------- begin text --------
 
 ===Proper noun===
-{{head|cs|proper noun|head=[[nový|Nový]] [[jižní|Jižní]] [[Wales]]}}
+{{cs-proper noun|m-in|head=[[nový|Nový]] [[jižní|Jižní]] [[Wales]]}}
 
 # {{place|cs|state|c/Australia|t=New South Wales}}
 
@@ -38032,26 +38053,33 @@ Page 2006 Ceres: -------- begin text --------
 * {{hyphenation|cs|Ce|res}}
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|f|adj=Cereřin}}
 
-# {{senseid|cs|Q32102}}{{lb|cs|Roman god|feminine}} {{l|en|Ceres}}, Roman [[goddess]] of [[agriculture]]; equivalent to the [[Greek]] goddess [[Demeter]]
+# {{senseid|cs|Q32102}}{{lb|cs|Roman god}} {{l|en|Ceres}}, Roman [[goddess]] of [[agriculture]]; equivalent to the [[Greek]] goddess [[Demeter]]
 #* {{quote-book|cs|year=2014|author=Mireia Ryšková |title=Pavel z Tarsu a jeho svět |chapter= |page=436 |publisher=Karolinum |location=Praha |apageurl=https://books.google.com/books?id=2UolDwAAQBAJ&pg=PA436&dq=cerery |isbn=978-80-246-2333-7 |passage=Filón kritizuje i náboženská shromáždění a průvody k poctě bohyně '''Cerery''', {{...}}|translation=Philo criticises also the religious meetings and parades in honour of the goddes '''Ceres''', {{...}}}}
-# {{senseid|cs|Q596}}{{lb|cs|astronomy|feminine|[[Appendix:Glossary#masculine|masculine]] [[Appendix:Glossary#inanimate|inanimate]]}} {{l|en|Ceres}}, a [[dwarf planet]] [[orbit]]ing between [[Mars]] and [[Jupiter]]
-#* {{quote-web|1=cs|author=kar|title=Na trpasličí planetě '''Ceres''' jsme našli organický materiál, oznámila NASA|work=ČT24|url=http://www.ceskatelevize.cz/ct24/veda/2038740-na-trpaslici-planete-ceres-jsme-nasli-organicky-material-oznamila-nasa|archiveurl=https://web.archive.org/web/20180219070958/http://www.ceskatelevize.cz/ct24/veda/2038740-na-trpaslici-planete-ceres-jsme-nasli-organicky-material-oznamila-nasa|archivedate=19 February 2018|publisher=Česká televize|date=2017-02-17|passage=Mise Dawn, v jejímž rámci NASA zkoumá trpasličí planetu '''Ceres''', našla důkazy o organickém materiálu.|translation=The Dawn mission, in which NASA explores the dwarf planet '''Ceres''', found evidence of organic material.|accessdate=3 March 2018}}
-#* {{quote-journal|cs|author=Petr Kubala|title=Sonda Dawn zůstane věrná Cereře |journal=VTM|url=https://vtm.zive.cz/clanky/sonda-dawn-zustane-verna-cerere/sc-870-a-190115/default.aspx|date=2017-10-24|archiveurl=https://web.archive.org/web/20171114042248/https://vtm.zive.cz/clanky/sonda-dawn-zustane-verna-cerere/sc-870-a-190115/default.aspx|archivedate=2017-11-14|passage=Dawn bude '''Cereru''' zkoumat i v době, kdy bude nejblíže od Slunce.|translation=Dawn is going to explore '''Ceres''' also during the time when it is nearest from the Sun.}}
-
-====Usage notes====
-Both the name of the goddess and the celestial body are traditionally feminine, but in modern usage the latter one is sometimes also treated as [[indeclinable]] or inflected as masculine [[inanimate]].
 
 ====Declension====
-'''when feminine (goddess or dwarf planet):'''
+''when feminine:''
 {{cs-ndecl|f.sg.decllemma:Cerera}}
 
 '''when masculine inanimate (dwarf planet):'''
 {{cs-ndecl|m.sg}}
 
-====Derived terms====
-{{col-auto|cs|Cereřin}}
+===Proper noun===
+{{cs-proper noun|f|g2=m-in}}
+
+# {{senseid|cs|Q596}}{{lb|cs|astronomy}} {{l|en|Ceres}}, a [[dwarf planet]] [[orbit]]ing between [[Mars]] and [[Jupiter]]
+#* {{quote-web|1=cs|author=kar|title=Na trpasličí planetě '''Ceres''' jsme našli organický materiál, oznámila NASA|work=ČT24|url=http://www.ceskatelevize.cz/ct24/veda/2038740-na-trpaslici-planete-ceres-jsme-nasli-organicky-material-oznamila-nasa|archiveurl=https://web.archive.org/web/20180219070958/http://www.ceskatelevize.cz/ct24/veda/2038740-na-trpaslici-planete-ceres-jsme-nasli-organicky-material-oznamila-nasa|archivedate=19 February 2018|publisher=Česká televize|date=2017-02-17|passage=Mise Dawn, v jejímž rámci NASA zkoumá trpasličí planetu '''Ceres''', našla důkazy o organickém materiálu.|translation=The Dawn mission, in which NASA explores the dwarf planet '''Ceres''', found evidence of organic material.|accessdate=3 March 2018}}
+#* {{quote-journal|cs|author=Petr Kubala|title=Sonda Dawn zůstane věrná Cereře |journal=VTM|url=https://vtm.zive.cz/clanky/sonda-dawn-zustane-verna-cerere/sc-870-a-190115/default.aspx|date=2017-10-24|archiveurl=https://web.archive.org/web/20171114042248/https://vtm.zive.cz/clanky/sonda-dawn-zustane-verna-cerere/sc-870-a-190115/default.aspx|archivedate=2017-11-14|passage=Dawn bude '''Cereru''' zkoumat i v době, kdy bude nejblíže od Slunce.|translation=Dawn is going to explore '''Ceres''' also during the time when it is nearest from the Sun.}}
+
+====Usage notes====
+* Both the name of the goddess and the celestial body are traditionally feminine, but in modern usage the latter one is sometimes also treated as [[indeclinable]] or inflected as masculine [[inanimate]].
+
+====Declension====
+''when feminine:''
+{{cs-ndecl|f.sg.decllemma:Cerera}}
+''when masculine:''
+{{cs-ndecl|m.sg}}
 
 ===See also===
 {{table:Solar System/cs}}
@@ -39052,7 +39080,7 @@ Page 2052 Morfeus: -------- begin text --------
 * {{cs-IPA}}
 
 ===Proper noun===
-{{head|cs|proper noun}}
+{{cs-proper noun|m-an}}
 
 # {{lb|cs|Greek mythology}} [[Morpheus]], god of [[dream]]s
 
