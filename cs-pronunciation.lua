@@ -41,15 +41,7 @@ local AC = U(0x0301)			-- combining acute accent
 local primary_stress = "ˈ"
 local secondary_stress = "ˌ"
 
-local replacements = {
-	--[[	ě, i, and í indicate that the preceding consonant
-			t, d, or n is palatal, as if written ť, ď, or ň.	]]
-	["([tdn])ě"] = "%1" .. caron .. "e",
-	["([tdn])([ií])"] = "%1" .. caron .. "%2",
-	["mě"] = "mn" .. caron .. "e",
-}
-
-local data = {
+local single_char_subs = {
 	["á"] = "a" .. long,
 	["c"] = "t" .. tie .. "s",
 	["č"] = "t" .. tie .. "ʃ",
@@ -59,7 +51,6 @@ local data = {
 	["ě"] = "jɛ",
 	["g"] = "ɡ",
 	["h"] = "ɦ",
-	["ch"] = "x",
 	["i"] = "ɪ",
 	["í"] = "i" .. long,
 	["ň"] = "ɲ",
@@ -75,18 +66,10 @@ local data = {
 	["y"] = "ɪ",
 	["ý"] = "i" .. long,
 	["ž"] = "ʒ",
-	["ou"] = "ou" .. nonsyllabic,
-	["au"] = "au" .. nonsyllabic,
-	["eu"] = "ɛu" .. nonsyllabic,
 	["\""] = primary_stress,
 	["%"] = secondary_stress,
 	["?"] = "ʔ",
 }
-
--- Add data["a"] = "a", data["b"] = "b", etc.
-for character in rgmatch("abdfjklmnoprstuvz ", ".") do
-	data[character] = character
-end
 
 --[[	This allows multiple-character sounds to be replaced
 		with single characters to make them easier to process.	]]
@@ -124,14 +107,15 @@ for index, consonant in pairs(voiceless) do
 	indices[consonant] = index
 end
 
-for index, consonant in pairs (voiced) do
+for index, consonant in pairs(voiced) do
 	if not features[consonant] then
 		features[consonant] = {}
 	end
 	features[consonant]["voicing"] = "voiced"
 	indices[consonant] = index
 end
-	
+
+local written_vowel = "[aeiouyáéíóúýěů]"
 local short_vowel = "[aɛɪou]"
 local long_vowel = "[aɛiou]" .. long
 local diphthong ="[aɛo]u" .. nonsyllabic
@@ -172,6 +156,14 @@ end
 -- Apply canonical Unicode composition to text, e.g. e + ◌̀ → è.
 local function compose(text)
 	return mw.ustring.toNFC(text)
+end
+
+-- Canonicalize multiple spaces and remove leading and trailing spaces.
+local function canon_spaces(text)
+	text = rsub(text, "%s+", " ")
+	text = rsub(text, "^ ", "")
+	text = rsub(text, " $", "")
+	return text
 end
 
 -- all but v and r̝
@@ -265,7 +257,7 @@ end
 local function add_stress(IPA)
 	local syllable_count = m_syllables.getVowels(IPA, lang)
 	
-	if not ( nostress or rfind(IPA, ".#.") or rfind(IPA, primary_stress) ) then
+	if not (rfind(IPA, " ") or rfind(IPA, primary_stress)) then
 		IPA = primary_stress .. IPA
 	end
 	
@@ -310,17 +302,10 @@ local function syllabify(IPA)
 end
 
 local function apply_rules(IPA)
-	--[[	Adds # at word boundaries and in place of spaces, to
-			unify treatment of initial and final conditions.
-			# is commonly used in phonological rule notation
-			to represent word boundaries.						]]
-	IPA = "#" .. IPA .. "#"
-	IPA = rsub(IPA, "%s+", "#")
-	
 	-- Handle consonantal prepositions: v, z.
 	IPA = rsub(
 		IPA,
-		"(#[vz])#(.)",
+		"(#[vz])# #(.)",
 		function (preposition, initial_sound)
 			if rfind(initial_sound, short_vowel) then
 				return preposition .. "ʔ" .. initial_sound
@@ -338,7 +323,7 @@ local function apply_rules(IPA)
 	IPA = devoice_fricative_r(IPA)
 	IPA = syllabicize_sonorants(IPA)
 	IPA = assimilate_nasal(IPA)
-	IPA = add_stress(IPA, nostress)
+	IPA = add_stress(IPA)
 	
 	for sound, character in pairs(multiple_to_single) do
 		IPA = rsub(IPA, character, sound)
@@ -349,52 +334,60 @@ local function apply_rules(IPA)
 			for instance, [tt͡s] to [t͡s].								]]
 	IPA = rsub(IPA, "(" .. consonant .. ")%1", "%1")
 	
-	-- Replace # with space or remove it.
-	IPA = rsub(IPA, "([^" .. primary_stress .. secondary_stress .. "])#(.)", "%1 %2")
+	-- Remove # at word boundaries.
 	IPA = rsub(IPA, "#", "")
-	
-	
+
 	return IPA
 end
 
-function export.toIPA(term, nostress)
-	local IPA = {}
+function export.toIPA(text)
+	local orig_respelling = text
 	
-	local transcription = mw.ustring.lower(term)
-	transcription = rsub(transcription, "^%-", "")
-	transcription = rsub(transcription, "%-?$", "")
-	transcription = rsub(transcription, "nn", "n") -- similar operation is applied to IPA above
+	text = mw.ustring.lower(text)
+
+	-- convert commas and en/en dashes to IPA foot boundaries
+	text = com.rsub_repeatedly(text, "%s*[,–—]%s*", " | ")
+	-- question mark or exclamation point in the middle of a sentence -> IPA foot boundary
+	text = com.rsub_repeatedly(text, "([^%s])%s*[!?]%s*([^%s])", "%1 | %2")
+	text = com.rsub(text, "[!?]", "") -- eliminate remaining punctuation
+
+	text = canon_spaces(text)
+
+	-- put # at word beginning and end and double ## at text/foot boundary beginning/end
+	text = com.rsub(text, " | ", "# | #")
+	text = "##" .. com.rsub(text, " ", "# #") .. "##"
+
+	text = rsub(text, "^%-", "")
+	text = rsub(text, "%-?$", "")
+	text = rsub(text, "nn", "n") -- similar operation is applied to IPA above
+
+	-- Handle palatalization before ě, i and í.
+	text = rsub(text, "([tdn])ě", "%1" .. caron .. "e")
+	text = rsub(text, "([tdn])([ií])", "%1" .. caron .. "%2")
+	text = rsub(text, "mě", "mn" .. caron .. "e")
+	text = recompose(text) -- recompose combining caron
+
+	-- Handle initial ex- pronounced /egz/.
+	text = rsub(text, "#exh", "#egzh")
+	text = rsub(text, "#ex(" .. written_vowel .. ")", "#egz%1")
+
+	-- Initial i- and y- + vowel are pronounced like /j/. Other sequences of i/y/í/ý + vowel need an interpolated /j/.
+	text = rsub(text, "#[iy](" .. written_vowel .. ")", "#j%1")
+	text = rsub(text, "([iyíý])(" .. written_vowel .. ")", "%1j%2")
+
+	text = rsub(text, "ch", "X") -- temporary substitution
+
+	-- convert to approximate phonetic notation; FIXME: this is being done way too early
+	text = rsub(text, "([oa])u", "%1u" .. nonsyllabic)
+	text = rsub(text, "eu", "ɛu" .. nonsyllabic)
+	text = rsub(text, "eu", "ɛu" .. nonsyllabic)
+	text = rsub(text, ".", single_char_subs)
+
+	text = rsub(text, "X", "x")
+
+	text = apply_rules(text)
 	
-	for regex, replacement in pairs(replacements) do
-		transcription = rsub(transcription, regex, replacement)
-	end
-	transcription = mw.ustring.toNFC(transcription)	-- Recompose combining caron.
-	
-	local working_string = transcription
-	
-	while mw.ustring.len(working_string) > 0 do
-		local IPA_letter
-		
-		local letter = usub(working_string, 1, 1)
-		local twoletters = usub(working_string, 1, 2) or ""
-		
-		if data[twoletters] then
-			IPA_letter = data[twoletters]
-			working_string = usub(working_string, 3)
-		else
-			IPA_letter = data[letter]
-				or error('The letter "' .. tostring(letter)
-					.. '" is not a member of the Czech alphabet.')
-			working_string = usub(working_string, 2)
-		end
-		
-		table.insert(IPA, IPA_letter)
-	end
-	
-	IPA = table.concat(IPA)
-	IPA = apply_rules(IPA, nostress)
-	
-	return IPA, transcription
+	return text
 end
 
 local function convert_respelling_to_original(to, pagename, whole_word)
@@ -477,7 +470,6 @@ end
 function export.show(frame)
 	local params = {
 		[1] = {list = true},
-		["nostress"] = { type = "boolean" },
 		["pagename"] = {}, -- for testing
 	}
 
@@ -491,101 +483,13 @@ function export.show(frame)
 	local prons = {}
 	for i, respelling in ipairs(respellings) do
 		respelling = canonicalize(respelling, pagename)
-		local IPA = export.toIPA(respelling, nostress)
+		local IPA = export.toIPA(respelling)
 		IPA = "[" .. IPA .. "]"
 		IPA = m_IPA.format_IPA_full(lang, { { pron = IPA } } )
 		table.insert(prons, IPA)
 	end
 
 	return table.concat(prons, "\n* ")
-end
-
-function export.example(frame)
-	local output = {
-[[
-{| class="wikitable"
-]]
-	}
-	local row
-	
-	local namespace = mw.title.getCurrentTitle().nsText
-	
-	if namespace == "Template" then
-		table.insert(
-			output, 
-[[
-! headword !! code !! result
-]]
-		)
-		row =
-[[
-|-
-| link || template_code || IPA
-]]
-	else
-		table.insert(
-			output, 
-[[
-! headword !! result
-]]
-		)
-		row =
-[[
-|-
-| link || IPA
-]]
-	end
-	
-	local params = {
-		[1] = { required = true },
-	}
-	
-	local args = m_params.process(frame:getParent().args, params)
-	local terms = mw.text.split(args[1] or "příklad", ", ")
-	
-	for _, term in ipairs(terms) do
-		local template_parameter
-		local respelling_regex = "[%a\"%?%% ]+"
-		local respelling = rmatch(term, "(" .. respelling_regex .. ") %(")
-			or rmatch(term, respelling_regex)
-		local entry = rmatch(term, "%(([%a ]+)%)") or respelling
-		local link = export.link(entry)
-		
-		local IPA, transcribable = export.toIPA(respelling)
-		IPA = m_IPA.format_IPA_full(lang, { { pron = "[" .. IPA .. "]" } } )
-		
-		if term ~= respelling then
-			template_parameter = respelling
-		end
-		
-		if term ~= transcribable then
-			link = link .. " (" .. export.tag_text(transcribable) .. ")"
-		end
-		
-		template_code = m_template_link.format_link{ "cs-IPA", template_parameter }
-		
-		local content = {
-			link = link,
-			template_code = template_code,
-			IPA = IPA
-		}
-		
-		local function add_content(name)
-			if content[name] then
-				return content[name]
-			else
-				error('No content for "' .. name .. '".')
-			end
-		end
-		
-		local current_row = rsub(row, "[%a_]+", add_content)
-		
-		table.insert(output, current_row)
-	end
-	
-	table.insert(output, "|}")
-	
-	return table.concat(output)
 end
 
 return export
