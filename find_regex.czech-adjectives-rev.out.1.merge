@@ -1480,6 +1480,9 @@ Page 93 Luciin: -------- begin text --------
 Page 94 Klaudiin: Found match for regex: =
 Page 94 Klaudiin: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[dy]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -1490,6 +1493,9 @@ Page 94 Klaudiin: -------- begin text --------
 -------- end text --------
 Page 95 Lýdiin: Found match for regex: =
 Page 95 Lýdiin: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[dy]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -1635,6 +1641,9 @@ Page 106 Xeniin: -------- begin text --------
 Page 107 Evženiin: Found match for regex: =
 Page 107 Evženiin: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ny]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -1645,6 +1654,9 @@ Page 107 Evženiin: -------- begin text --------
 -------- end text --------
 Page 108 Antoniin: Found match for regex: =
 Page 108 Antoniin: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -1660,7 +1672,7 @@ Page 109 Mariin: -------- begin text --------
 ===Adjective===
 {{cs-adj}}
 
-# {{form of|cs|possessive|Marie}}: Marie's, Marry's
+# {{form of|cs|possessive|Marie}}: Marie's, Mary's
 
 ====Declension====
 {{cs-adecl}}
@@ -1890,6 +1902,9 @@ Page 125 Rachelin: -------- begin text --------
 -------- end text --------
 Page 126 Danielin: Found match for regex: =
 Page 126 Danielin: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -2304,6 +2319,9 @@ Page 151 Johanin: -------- begin text --------
 -------- end text --------
 Page 152 Dianin: Found match for regex: =
 Page 152 Dianin: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[Dy]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -2804,6 +2822,9 @@ Page 183 Marinin: -------- begin text --------
 -------- end text --------
 Page 184 Martinin: Found match for regex: =
 Page 184 Martinin: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -3428,6 +3449,9 @@ Page 225 Ivetin: -------- begin text --------
 Page 226 Ditin: Found match for regex: =
 Page 226 Ditin: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[Dy]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -3464,6 +3488,9 @@ Page 228 Zitin: -------- begin text --------
 Page 229 Editin: Found match for regex: =
 Page 229 Editin: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[dy]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -3474,6 +3501,9 @@ Page 229 Editin: -------- begin text --------
 -------- end text --------
 Page 230 Juditin: Found match for regex: =
 Page 230 Juditin: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[dy]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -3525,26 +3555,31 @@ Page 233 Dorotin: -------- begin text --------
 Page 234 Martin: Found match for regex: =
 Page 234 Martin: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{bor+|cs|la|Mārtīnus|t=of or like Mars” or “little Mars}}, {{m|la|Mars|Mārs, Mārtis}} + {{m|la|-īnus|pos=diminutive suffix}}.
 
-===Pronunciation===
+====Pronunciation====
 * {{cs-IPA|[ty]}}
 
-===Proper noun===
+====Proper noun====
 {{cs-proper noun|m-an|f=Martina}}
 
 # {{given name|cs|male|eq=Martin|from=Latin}}
 
-====Declension====
+=====Declension=====
 {{cs-ndecl|m.an}}
 
-===Adjective===
+===Etymology 2===
+
+====Pronunciation====
+* {{cs-IPA}}
+
+====Adjective====
 {{cs-adj}}
 
 # {{form of|cs|possessive|Marta}}: Marta's
 
-====Declension====
+=====Declension=====
 {{cs-adecl}}
 
 ===Further reading===
@@ -3674,6 +3709,9 @@ Page 243 Markétin: -------- begin text --------
 -------- end text --------
 Page 244 Afrodítin: Found match for regex: =
 Page 244 Afrodítin: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[dy]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -3969,6 +4007,9 @@ Page 262 Rebečin: -------- begin text --------
 -------- end text --------
 Page 263 Bereničin: Found match for regex: =
 Page 263 Bereničin: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -6763,12 +6804,12 @@ Page 432 Hawkingův: -------- begin text --------
 From {{suffix|cs|Hawking|ův}}.
 
 ===Pronunciation===
-* {{cs-IPA|hókingův}}
+* {{cs-IPA|Hókingův}}
 
 ===Adjective===
 {{cs-adj}}
 
-# [[Hawking]]'s
+# {{form of|cs|possessive|Hawking}}: [[Hawking]]'s
 #* {{quote-book|cs|year=1997|author=Jiří Grygar |authorlink=Jiří Grygar |title=Vesmír, jaký je|chapter=|page=77|publisher=Mladá fronta |location=Praha|url=https://books.google.cz/books?id=CwYIAQAAMAAJ&q=%22Hawkingova%22&dq=%22Z+Hawkingova+v%C3%BDpo%C4%8Dtu+plyne%22 |isbn=80-204-0637-9|passage=Z '''Hawkingova''' výpočtu plyne, že spodní mez pro hmotnost doposud existující černé díry je asi 10<sup>12</sup> kg.|translation='''Hawking's''' calculation shows that the lower limit of the mass of a still existing black hole is about 10<sup>12</sup> kg.}}
 
 ====Declension====
@@ -7647,7 +7688,7 @@ Page 482 Danielův: Found match for regex: =
 Page 482 Danielův: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -8281,6 +8322,9 @@ Page 517 hrdinův: -------- begin text --------
 Page 518 Einsteinův: Found match for regex: =
 Page 518 Einsteinův: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|Ajnštajnův}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -8319,6 +8363,9 @@ Page 520 Leninův: -------- begin text --------
 -------- end text --------
 Page 521 Martinův: Found match for regex: =
 Page 521 Martinův: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -8689,7 +8736,7 @@ Page 543 Shakespearův: -------- begin text --------
 From {{af|cs|Shakespeare|lang1=en|-ův}}.
 
 ===Pronunciation===
-* {{cs-IPA|šejkspírův}}
+* {{cs-IPA|Šejkspírův}}
 
 ===Adjective===
 {{cs-adj}}
@@ -10217,7 +10264,7 @@ Page 636 politická: -------- begin text --------
 * {{cs-IPA|[ty]}}
 
 ===Adjective===
-{{cs-adj}}
+{{head|cs|adjective form}}
 
 # {{inflection of|cs|politický||f|s|nom//voc|;|n|p|nom//acc//voc}}
 -------- end text --------
@@ -10228,7 +10275,7 @@ Page 637 samá: -------- begin text --------
 * {{cs-IPA}}
 
 ===Adjective===
-{{cs-adj}}
+{{head|cs|adjective form}}
 
 # {{inflection of|cs|samý||f|nom//voc|s|;|n|nom//acc//voc|p}}
 -------- end text --------
@@ -10476,28 +10523,6 @@ Page 656 chudý jako kostelní myš: -------- begin text --------
 
 ====Declension====
 {{rfinfl|cs|adjective}}
--------- end text --------
-Page 657 vzdálené: Found match for regex: =
-Page 657 vzdálené: -------- begin text --------
-
-===Pronunciation===
-* {{cs-IPA}}
-
-===Adjective===
-{{head|cs|adjective form}}
-
-# {{inflection of|cs|vzdálený||nom//acc|n|s|;|gen//dat//loc|f|s|;|in|nom|m|p|;|nom|f|p|;|acc|m//f|p}}
--------- end text --------
-Page 658 koncové: Found match for regex: =
-Page 658 koncové: -------- begin text --------
-
-===Pronunciation===
-* {{cs-IPA}}
-
-===Adjective===
-{{head|cs|adjective form}}
-
-# {{inflection of|cs|koncový||nom//acc|n|s|;|gen//dat//loc|f|s|;|in|nom|m|p|;|nom|f|p|;|acc|m//f|p}}
 -------- end text --------
 Page 659 babí: Found match for regex: =
 Page 659 babí: -------- begin text --------
@@ -12678,7 +12703,7 @@ Page 752 nicneříkající: Found match for regex: =
 Page 752 nicneříkající: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|nic|neříkat}}
+From {{af|cs|nic|neříkat}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -14700,7 +14725,7 @@ From {{af|cs|krokodil|-í}}.
 ===Adjective===
 {{cs-adj}}
 
-# {{lb|cs|relational}} {{obsolete spelling of|cs|krokodýlí}}.
+# {{lb|cs|relational}} {{obsolete spelling of|cs|krokodýlí}}
 
 ====Declension====
 {{cs-adecl}}
@@ -18454,7 +18479,7 @@ Page 1006 hyení: -------- begin text --------
 From {{af|cs|hyena|-í}}.
 
 ===Pronunciation===
-* {{cs-IPA|hyjení}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -18638,6 +18663,9 @@ From {{af|cs|antropo-|morf|-ní}}.
 Page 1014 isomorfní: Found match for regex: =
 Page 1014 isomorfní: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[izo]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -18682,6 +18710,9 @@ Page 1016 maligní: -------- begin text --------
 -------- end text --------
 Page 1017 benigní: Found match for regex: =
 Page 1017 benigní: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -19294,7 +19325,7 @@ Page 1048 oficielní: Found match for regex: =
 Page 1048 oficielní: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|oficijelní}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -19600,7 +19631,7 @@ Page 1064 variabilní: Found match for regex: =
 Page 1064 variabilní: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|varijabilní}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -19687,7 +19718,7 @@ Page 1068 disponibilní: Found match for regex: =
 Page 1068 disponibilní: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|[dy]}}
+* {{cs-IPA|[dy,ny]}}
 * {{audio|cs|Cs-disponibilní.ogg|Audio}}
 
 ===Adjective===
@@ -19708,7 +19739,7 @@ Page 1069 plausibilní: -------- begin text --------
 * {{alt|cs|plauzibilní}}
 
 ===Pronunciation===
-* {{cs-IPA|plauzibilní}}
+* {{cs-IPA|[auz]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -19953,6 +19984,9 @@ Page 1081 bazofilní: -------- begin text --------
 Page 1082 penilní: Found match for regex: =
 Page 1082 penilní: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ny]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -19965,7 +19999,7 @@ Page 1083 senilní: Found match for regex: =
 Page 1083 senilní: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 * {{hyphenation|cs|se|nil|ní}}
 
 ===Adjective===
@@ -20071,6 +20105,9 @@ From {{af|cs|fosilie|-ní}}.
 Page 1088 subtilní: Found match for regex: =
 Page 1088 subtilní: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ty]}}
+
 ===Adjective===
 {{cs-adj|subtilnější}}
 
@@ -20108,7 +20145,7 @@ Page 1090 infantilní: Found match for regex: =
 Page 1090 infantilní: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|[ny]}}
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj|infantilnější}}
@@ -20824,6 +20861,9 @@ Page 1120 gastroezofageální: -------- begin text --------
 Page 1121 meningeální: Found match for regex: =
 Page 1121 meningeální: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ny]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -21210,7 +21250,7 @@ Page 1141 oficiální: -------- begin text --------
 * {{alt|cs|oficielní||archaic}}
 
 ===Pronunciation===
-* {{cs-IPA|oficijální}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -21237,6 +21277,9 @@ Page 1141 oficiální: -------- begin text --------
 -------- end text --------
 Page 1142 iniciální: Found match for regex: =
 Page 1142 iniciální: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -21319,7 +21362,7 @@ Page 1146 esenciální: Found match for regex: =
 Page 1146 esenciální: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|esencijální}}
+* {{cs-IPA}}
 * {{rhymes|cs|aːlɲiː|s=5}}
 
 ===Adjective===
@@ -21492,7 +21535,7 @@ Page 1154 multimediální: Found match for regex: =
 Page 1154 multimediální: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|[dy]}}
+* {{cs-IPA|[ty,dy]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -21527,7 +21570,7 @@ Page 1156 bronchiální: Found match for regex: =
 Page 1156 bronchiální: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|bronchijální}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -21603,6 +21646,9 @@ From {{affix|cs|intra-|kraniální}}.
 Page 1160 transkraniální: Found match for regex: =
 Page 1160 transkraniální: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ny]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -21617,7 +21663,7 @@ Page 1161 geniální: Found match for regex: =
 Page 1161 geniální: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -21789,7 +21835,7 @@ Page 1169 ekvatoriální: Found match for regex: =
 Page 1169 ekvatoriální: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|ekvatorijálňí}}
+* {{cs-IPA}}
 * {{rhymes|cs|aːlɲiː}}
 
 ===Adjective===
@@ -21878,7 +21924,7 @@ Page 1173 triviální: Found match for regex: =
 Page 1173 triviální: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|trivijální}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -21952,7 +21998,7 @@ Page 1177 axiální: Found match for regex: =
 Page 1177 axiální: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|axijální}}
+* {{cs-IPA}}
 * {{audio|cs|Cs-axiální.ogg|Audio}}
 
 ===Adjective===
@@ -22111,6 +22157,9 @@ Page 1185 radikální: -------- begin text --------
 Page 1186 vertikální: Found match for regex: =
 Page 1186 vertikální: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ty]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -22191,6 +22240,9 @@ Page 1189 fyzikální: -------- begin text --------
 -------- end text --------
 Page 1190 multifokální: Found match for regex: =
 Page 1190 multifokální: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -22313,6 +22365,9 @@ Page 1195 minimální: -------- begin text --------
 Page 1196 infinitesimální: Found match for regex: =
 Page 1196 infinitesimální: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ny,zi]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -22356,6 +22411,9 @@ Page 1198 suboptimální: -------- begin text --------
 
 ===Etymology===
 From {{af|cs|sub-|optimální}}.
+
+===Pronunciation===
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -23013,6 +23071,9 @@ Page 1227 spinální: -------- begin text --------
 Page 1228 gastrointestinální: Found match for regex: =
 Page 1228 gastrointestinální: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ty]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -23115,7 +23176,7 @@ Page 1233 racionální: -------- begin text --------
 * {{alt|cs|racionelní||obsolete}}
 
 ===Etymology===
-{{der+|cs|la|reor}}.
+From {{af|cs|la:ratiōnālis|-ní}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -23186,7 +23247,7 @@ Page 1235 funkcionální: Found match for regex: =
 Page 1235 funkcionální: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|funkcijonální}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -23281,7 +23342,7 @@ Page 1239 regionální: Found match for regex: =
 Page 1239 regionální: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|regionální}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -23527,7 +23588,7 @@ Page 1252 embryonální: Found match for regex: =
 Page 1252 embryonální: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|embryjonální}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -24626,6 +24687,9 @@ From {{af|cs|en:digital|-ní}}, from {{der|cs|la|digitalis}}, from {{der|cs|la|d
 Page 1308 kongenitální: Found match for regex: =
 Page 1308 kongenitální: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ny]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -25091,6 +25155,9 @@ Page 1330 manuální: -------- begin text --------
 -------- end text --------
 Page 1331 kontinuální: Found match for regex: =
 Page 1331 kontinuální: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -28446,7 +28513,10 @@ Page 1485 miniaturní: Found match for regex: =
 Page 1485 miniaturní: -------- begin text --------
 
 ===Etymology===
-{{der+|cs|la|minium}}.
+From {{af|cs|it:miniatura|-ní}}.
+
+===Pronunciation===
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -29386,6 +29456,9 @@ Page 1533 intraartikulární: -------- begin text --------
 ===Etymology===
 {{rfe|cs}}
 
+===Pronunciation===
+* {{cs-IPA|[ty]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -29399,6 +29472,9 @@ Page 1533 intraartikulární: -------- begin text --------
 -------- end text --------
 Page 1534 extraartikulární: Found match for regex: =
 Page 1534 extraartikulární: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -30384,6 +30460,9 @@ Page 1585 monetární: -------- begin text --------
 Page 1586 utilitární: Found match for regex: =
 Page 1586 utilitární: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ty]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -30460,6 +30539,9 @@ Page 1589 sanitární: -------- begin text --------
 -------- end text --------
 Page 1590 unitární: Found match for regex: =
 Page 1590 unitární: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -31642,7 +31724,7 @@ Page 1644 imunitní: Found match for regex: =
 Page 1644 imunitní: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -31666,6 +31748,9 @@ Page 1644 imunitní: -------- begin text --------
 -------- end text --------
 Page 1645 autoimunitní: Found match for regex: =
 Page 1645 autoimunitní: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -31927,7 +32012,7 @@ Page 1657 exaktní: Found match for regex: =
 Page 1657 exaktní: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|egzaktní}}
+* {{cs-IPA}}
 * {{audio|cs|Cs-exaktní.ogg|Audio}}
 * {{hyphenation|cs|exakt|ní}}
 
@@ -32066,6 +32151,9 @@ Page 1662 korektní: -------- begin text --------
 -------- end text --------
 Page 1663 politicky korektní: Found match for regex: =
 Page 1663 politicky korektní: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -34087,6 +34175,9 @@ Page 1769 permanentní: -------- begin text --------
 Page 1770 inkontinentní: Found match for regex: =
 Page 1770 inkontinentní: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ty]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -34388,7 +34479,7 @@ Page 1785 omnipotentní: -------- begin text --------
 From {{af|cs|la:[[omnipotens|omnipotentem]]|-ní}}.
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 * {{hyphenation|cs|omni|po|tent|ní}}
 * {{rhymes|cs|ɛntɲiː}}
 
@@ -34412,7 +34503,7 @@ Page 1786 nilpotentní: Found match for regex: =
 Page 1786 nilpotentní: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -34482,6 +34573,9 @@ Page 1789 persistentní: -------- begin text --------
 -------- end text --------
 Page 1790 multirezistentní: Found match for regex: =
 Page 1790 multirezistentní: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -36729,6 +36823,9 @@ Page 1883 trilingvní: -------- begin text --------
 Page 1884 multilingvní: Found match for regex: =
 Page 1884 multilingvní: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ty]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -36925,7 +37022,7 @@ Page 1893 pasivní: -------- begin text --------
 * {{alt|cs|pasívní}}
 
 ===Etymology===
-{{der+|cs|la|passivus}} + suffix {{l|cs|-ní}}.
+From {{af|cs|la:passivus|-ní}}.
 
 ===Pronunciation===
 * {{cs-IPA|+|[ív]}}
@@ -40360,7 +40457,7 @@ Page 2050 religiózní: Found match for regex: =
 Page 2050 religiózní: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|religijózní}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -40649,7 +40746,7 @@ Page 2066 antioxidační: Found match for regex: =
 Page 2066 antioxidační: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|[anty]}}
+* {{cs-IPA|[anty]|[anty?]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -41257,7 +41354,7 @@ Page 2094 antiimigrační: -------- begin text --------
 From {{af|cs|anti-|imigrační}}.
 
 ===Pronunciation===
-* {{cs-IPA|[anty]}}
+* {{cs-IPA|[anty]|[anty?]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -41696,6 +41793,9 @@ Page 2116 demyelinizační: -------- begin text --------
 ===Etymology===
 From {{af|cs|demyelinizace|-ní}}.
 
+===Pronunciation===
+* {{cs-IPA|[ny]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -41751,6 +41851,9 @@ From {{af|cs|popularizace|-ní}}.
 -------- end text --------
 Page 2119 autentizační: Found match for regex: =
 Page 2119 autentizační: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -43044,6 +43147,9 @@ Page 2175 luminiscenční: -------- begin text --------
 ===Etymology===
 From {{af|cs|luminiscence|-ní}}.
 
+===Pronunciation===
+* {{cs-IPA|[ny]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -43058,6 +43164,9 @@ From {{af|cs|luminiscence|-ní}}.
 -------- end text --------
 Page 2176 bioluminiscenční: Found match for regex: =
 Page 2176 bioluminiscenční: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -43231,7 +43340,7 @@ Page 2184 existenční: -------- begin text --------
 From {{af|cs|existence|-ní}}.
 
 ===Pronunciation===
-* {{cs-IPA|egzistenční}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -43539,7 +43648,7 @@ Page 2196 každoroční: Found match for regex: =
 Page 2196 každoroční: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|každý|-o-|roční}}; ''roční'' from {{suffix|cs|rok|ní}}.
+From {{af|cs|každý|-o-|rok|-ní}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -44172,7 +44281,7 @@ Page 2224 paviání: -------- begin text --------
 From {{af|cs|pavián|-í}}.
 
 ===Pronunciation===
-* {{cs-IPA|pavijání}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -49862,7 +49971,7 @@ Page 2470 bohulibý: Found match for regex: =
 Page 2470 bohulibý: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|bohu|libý}}
+From {{af|cs|bohu|libý}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -50511,7 +50620,7 @@ Page 2493 šedohnědý: Found match for regex: =
 Page 2493 šedohnědý: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|šedý|-o-|hnědý}}
+From {{af|cs|šedý|-o-|hnědý}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -51484,7 +51593,7 @@ Page 2528 sobecký: Found match for regex: =
 Page 2528 sobecký: -------- begin text --------
 
 ===Etymology===
-From {{af|cs|sobec|-cký}}.
+From {{af|cs|sobec|-ký}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -51584,7 +51693,7 @@ Page 2532 královéhradecký: Found match for regex: =
 Page 2532 královéhradecký: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|králové|hradecký}}, from {{m|cs|Hradec Králové}}.
+From {{af|cs|králové|Hradec|-ký}}, from {{m|cs|Hradec Králové}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -51630,7 +51739,7 @@ Page 2534 vědecký: Found match for regex: =
 Page 2534 vědecký: -------- begin text --------
 
 ===Etymology===
-From {{af|cs|vědec|-cký}}.
+From {{af|cs|vědec|-ký}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -51697,7 +51806,7 @@ Page 2538 německý: Found match for regex: =
 Page 2538 německý: -------- begin text --------
 
 ===Etymology===
-{{inh+|cs|zlw-ocs|němečský}}, from {{inh|cs|sla-pro|*němьčьskъ}}. Equivalent to {{affix|cs|Němec|-cký}}.
+{{inh+|cs|zlw-ocs|němečský}}, from {{inh|cs|sla-pro|*němьčьskъ}}. Equivalent to {{affix|cs|Němec|-ký}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -51727,7 +51836,7 @@ Page 2539 protiněmecký: Found match for regex: =
 Page 2539 protiněmecký: -------- begin text --------
 
 ===Etymology===
-From {{af|cs|proti-|Němec|-cký}}.
+From {{af|cs|proti-|Němec|-ký}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -51824,7 +51933,7 @@ Page 2544 severoněmecký: Found match for regex: =
 Page 2544 severoněmecký: -------- begin text --------
 
 ===Etymology===
-From {{affix|cs|sever|-o-|Německo|-ý}}.
+From {{affix|cs|sever|-o-|Němec|-ký}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -52044,7 +52153,7 @@ Page 2554 chlapecký: Found match for regex: =
 Page 2554 chlapecký: -------- begin text --------
 
 ===Etymology===
-From {{af|cs|chlapec|-cký}}.
+From {{af|cs|chlapec|-ký}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -52141,7 +52250,7 @@ Page 2558 herecký: Found match for regex: =
 Page 2558 herecký: -------- begin text --------
 
 ===Etymology===
-From {{af|cs|herec|-cký}}.
+From {{af|cs|herec|-ký}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -52257,7 +52366,7 @@ Page 2563 pokrytecký: Found match for regex: =
 Page 2563 pokrytecký: -------- begin text --------
 
 ===Etymology===
-From {{af|cs|pokrytec|-cký}}.
+From {{af|cs|pokrytec|-ký}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -52387,7 +52496,7 @@ Page 2569 pěvecký: -------- begin text --------
 * {{alt|cs|zpěvecký}}
 
 ===Etymology===
-From {{af|cs|pěvec|-cký}}.
+From {{af|cs|pěvec|-ký}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -52437,7 +52546,7 @@ Page 2571 archaický: Found match for regex: =
 Page 2571 archaický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|ἀρχαϊκός}} + {{af|cs|-ický}}
+From {{af|cs|grc:ἀρχαϊκός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|archajický}}
@@ -52468,7 +52577,7 @@ Page 2572 laický: Found match for regex: =
 Page 2572 laický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|laicus}} + {{af|cs|-ický}}
+From {{af|cs|la:laicus|-ický}}.
 
 ===Pronunciation===
 * {{rhymes|cs|ɪtskiː|s=3}}
@@ -52489,7 +52598,7 @@ Page 2573 algebraický: Found match for regex: =
 Page 2573 algebraický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|algebraicus}} + {{af|cs|-ický}}
+From {{af|cs|la:algebraicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|algebrajický}}
@@ -52513,7 +52622,7 @@ Page 2574 prozaický: Found match for regex: =
 Page 2574 prozaický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|prosaicus}} + {{af|cs|-ický}}
+From {{af|cs|la:prosaicus|-ický}}.
 
 ===Pronunciation===
 * {{rhymes|cs|ɪtskiː|s=4}}
@@ -52814,7 +52923,7 @@ Page 2588 lidický: Found match for regex: =
 Page 2588 lidický: -------- begin text --------
 
 ===Etymology===
-From {{af|cs|Lidice|-cký}}.
+From {{af|cs|Lidice|-ký}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -52892,7 +53001,7 @@ Page 2592 melodický: Found match for regex: =
 Page 2592 melodický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|melodicus}} + {{af|cs|-ický}}
+From {{af|cs|la:melodicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[dy]}}
@@ -53350,7 +53459,7 @@ Page 2616 specifický: Found match for regex: =
 Page 2616 specifický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|specificus}} + {{af|cs|-ický}}
+From {{af|cs|la:specificus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -53438,7 +53547,7 @@ Page 2620 filozofický: Found match for regex: =
 Page 2620 filozofický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|philosophicus}} + {{af|cs|-ický}}
+From {{af|cs|la:philosophicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -53465,7 +53574,7 @@ Page 2621 magický: Found match for regex: =
 Page 2621 magický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|magicus}} + {{af|cs|-ický}}
+From {{af|cs|la:magicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -53515,7 +53624,7 @@ Page 2623 tragický: Found match for regex: =
 Page 2623 tragický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|tragicus}} + {{af|cs|-ický}}
+From {{af|cs|la:tragicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -53540,7 +53649,7 @@ Page 2624 strategický: Found match for regex: =
 Page 2624 strategický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|στρατηγικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:στρατηγικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -53634,7 +53743,7 @@ Page 2629 logický: Found match for regex: =
 Page 2629 logický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|logicus}} + {{af|cs|-ický}}
+From {{af|cs|la:logicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -53900,7 +54009,7 @@ Page 2641 biologický: -------- begin text --------
 From {{af|cs|la:biologicus|-ický}}.
 
 ===Pronunciation===
-* {{cs-IPA|bijologický}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -53974,6 +54083,9 @@ Page 2644 kardiologický: -------- begin text --------
 Page 2645 epidemiologický: Found match for regex: =
 Page 2645 epidemiologický: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -54024,7 +54136,7 @@ Page 2648 fyziologický: -------- begin text --------
 * {{alt|cs|fysiologický}}
 
 ===Etymology===
-{{der|cs|la|physiologicus}} + {{af|cs|-ický}}
+From {{af|cs|la:physiologicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -54832,6 +54944,9 @@ Page 2689 herpetologický: -------- begin text --------
 Page 2690 ornitologický: Found match for regex: =
 Page 2690 ornitologický: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ny]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -55165,7 +55280,7 @@ Page 2708 psychický: Found match for regex: =
 Page 2708 psychický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|ψυχικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:ψυχικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -55312,7 +55427,7 @@ Page 2715 biblický: Found match for regex: =
 Page 2715 biblický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|biblicus}} + {{af|cs|-ický}}
+From {{af|cs|la:biblicus|-ický}}.
 
 ===Pronunciation===
 * {{rhymes|cs|ɪtskiː|s=3}}
@@ -55369,7 +55484,7 @@ Page 2718 anglický: Found match for regex: =
 Page 2718 anglický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|anglicus}} + {{af|cs|-ický}}
+From {{af|cs|la:anglicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -55397,7 +55512,7 @@ Page 2719 cyklický: Found match for regex: =
 Page 2719 cyklický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|κυκλικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:κυκλικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -55499,7 +55614,7 @@ Page 2724 parabolický: Found match for regex: =
 Page 2724 parabolický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|παραβολικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:παραβολικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -55550,7 +55665,7 @@ Page 2726 symbolický: -------- begin text --------
 {{cs-adj}}
 
 # [[symbolic]]
-# [[nominal]] {{gloss|​insignificantly small; trifling}}
+# [[nominal]] {{gloss|insignificantly small; trifling}}
 #: {{coi|cs|symbolický poplatek|nominal fee}}
 
 ====Declension====
@@ -55567,7 +55682,7 @@ Page 2727 hyperbolický: Found match for regex: =
 Page 2727 hyperbolický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|ὑπερβολικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:ὑπερβολικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -55669,7 +55784,7 @@ Page 2731 katolický: Found match for regex: =
 Page 2731 katolický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|catholicus}} + {{af|cs|-ický}}
+From {{af|cs|la:catholicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -55793,7 +55908,7 @@ Page 2737 dynamický: Found match for regex: =
 Page 2737 dynamický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|δυναμικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:δυναμικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -55913,7 +56028,7 @@ Page 2743 pandemický: Found match for regex: =
 Page 2743 pandemický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|πάνδημος}} + {{af|cs|-ický}}
+From {{af|cs|grc:πάνδημος|-ický}}.
 
 ===Pronunciation===
 * {{rhymes|cs|ɪtskiː|s=4}}
@@ -55962,7 +56077,7 @@ Page 2745 chemický: Found match for regex: =
 Page 2745 chemický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|chemicus}} + {{af|cs|-ický}}
+From {{af|cs|la:chemicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -56041,7 +56156,7 @@ Page 2749 polemický: Found match for regex: =
 Page 2749 polemický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|πολεμικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:πολεμικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -56088,7 +56203,7 @@ Page 2751 komický: Found match for regex: =
 Page 2751 komický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|comicus}} + {{af|cs|-ický}}
+From {{af|cs|la:comicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -56312,6 +56427,9 @@ Page 2761 seismický: -------- begin text --------
 ===Alternative forms===
 * {{alt|cs|seizmický}}
 
+===Pronunciation===
+* {{cs-IPA|[seis:sejz]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -56332,7 +56450,7 @@ Page 2762 kosmický: Found match for regex: =
 Page 2762 kosmický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|κοσμικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:κοσμικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -56431,7 +56549,7 @@ Page 2766 rytmický: Found match for regex: =
 Page 2766 rytmický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|ῥυθμικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:ῥυθμικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -56485,6 +56603,9 @@ Page 2769 seizmický: -------- begin text --------
 ===Alternative forms===
 * {{alt|cs|seismický}}
 
+===Pronunciation===
+* {{cs-IPA|[seiz:sejz]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -56505,7 +56626,7 @@ Page 2770 organický: Found match for regex: =
 Page 2770 organický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|organicus}} + {{af|cs|-ický}}
+From {{af|cs|la:organicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ny]}}
@@ -56547,7 +56668,7 @@ Page 2772 mechanický: Found match for regex: =
 Page 2772 mechanický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|mechanicus}} + {{af|cs|-ický}}
+From {{af|cs|la:mechanicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ny]}}
@@ -56603,7 +56724,7 @@ Page 2774 vulkanický: Found match for regex: =
 Page 2774 vulkanický: -------- begin text --------
 
 ===Etymology===
-{{der+|cs|fr|volcanique}} or {{der|cs|en|volcanic}} + {{af|cs|-ický}}, as if {{af|cs|vulkán|-ický}}.
+From {{af|cs|fr:volcanique|-ický}} or {{af|cs|en:volcanic|-ický}}. {{surf|vulkán|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ny]}}
@@ -56632,7 +56753,7 @@ Page 2775 panický: Found match for regex: =
 Page 2775 panický: -------- begin text --------
 
 ===Etymology 1===
-From {{af|cs|panic|-cký}}.
+From {{af|cs|panic|-ký}}.
 
 ====Pronunciation====
 * {{cs-IPA}}
@@ -56692,7 +56813,7 @@ Page 2777 botanický: Found match for regex: =
 Page 2777 botanický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|botanicus}} + {{af|cs|-ický}}
+From {{af|cs|la:botanicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ny]}}
@@ -56784,6 +56905,9 @@ Page 2780 porodnický: -------- begin text --------
 Page 2781 fotogenický: Found match for regex: =
 Page 2781 fotogenický: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ny]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -56796,6 +56920,9 @@ Page 2781 fotogenický: -------- begin text --------
 Page 2782 hygienický: Found match for regex: =
 Page 2782 hygienický: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ny]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -56806,6 +56933,9 @@ Page 2782 hygienický: -------- begin text --------
 -------- end text --------
 Page 2783 ekumenický: Found match for regex: =
 Page 2783 ekumenický: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -56819,7 +56949,7 @@ Page 2784 technický: Found match for regex: =
 Page 2784 technický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|technicus}} + {{af|cs|-ický}}
+From {{af|cs|la:technicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ny]}}
@@ -56846,7 +56976,7 @@ Page 2785 mnemotechnický: Found match for regex: =
 Page 2785 mnemotechnický: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -56868,6 +56998,9 @@ Page 2786 elektrotechnický: -------- begin text --------
 ===Etymology===
 From {{af|cs|elektro-|technický}}.
 
+===Pronunciation===
+* {{cs-IPA|[ny]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -56880,7 +57013,7 @@ Page 2787 klinický: Found match for regex: =
 Page 2787 klinický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|κλινικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:κλινικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ny]}}
@@ -56900,6 +57033,9 @@ Page 2787 klinický: -------- begin text --------
 -------- end text --------
 Page 2788 subklinický: Found match for regex: =
 Page 2788 subklinický: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -56932,6 +57068,9 @@ Page 2789 dominický: -------- begin text --------
 -------- end text --------
 Page 2790 foinický: Found match for regex: =
 Page 2790 foinický: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[fojnycký]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -57020,7 +57159,7 @@ Page 2794 telefonický: Found match for regex: =
 Page 2794 telefonický: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -57048,7 +57187,7 @@ Page 2795 konický: -------- begin text --------
 * {{alt|cs|kónický}}
 
 ===Etymology===
-{{der|cs|la|conicus}} + {{af|cs|-ický}}
+From {{af|cs|la:conicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ny]}}
@@ -57070,7 +57209,7 @@ Page 2796 lakonický: Found match for regex: =
 Page 2796 lakonický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|Laconicus}} + {{af|cs|-ický}}
+From {{af|cs|la:Laconicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ny]}}
@@ -57095,7 +57234,7 @@ Page 2797 drakonický: Found match for regex: =
 Page 2797 drakonický: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 * {{rhymes|cs|ɪtskiː|s=4}}
 
 ===Adjective===
@@ -57111,7 +57250,7 @@ Page 2798 mnemonický: Found match for regex: =
 Page 2798 mnemonický: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -57131,7 +57270,7 @@ Page 2799 harmonický: Found match for regex: =
 Page 2799 harmonický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|harmonicus}} + {{af|cs|-ický}}
+From {{af|cs|la:harmonicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ny]}}
@@ -57159,7 +57298,10 @@ Page 2800 démonický: Found match for regex: =
 Page 2800 démonický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|δαίμων}} + {{af|cs|-ický}}, as if {{af|cs|démon|-ický}}
+From {{af|cs|grc:δαίμων|-ický}}. {{surf|cs|démon|-ický}}.
+
+===Pronunciation===
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -57177,7 +57319,7 @@ Page 2801 kanonický: Found match for regex: =
 Page 2801 kanonický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|canonicus}} + {{af|cs|-ický}}
+From {{af|cs|la:canonicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ny]}}
@@ -57202,7 +57344,7 @@ Page 2802 chronický: Found match for regex: =
 Page 2802 chronický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|chronicus}} + {{af|cs|-ický}}, from {{der|cs|grc|χρονικός}}
+From {{af|cs|la:chronicus|-ický}}, from {{der|cs|grc|χρονικός}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ny]}}
@@ -57232,7 +57374,7 @@ Page 2803 ironický: Found match for regex: =
 Page 2803 ironický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|LL.|ironicus}} (from {{der|cs|grc|εἰρωνικός}}) + {{af|cs|-ický}}
+From {{af|cs|LL.:īrōnicus|-ický}}, from {{der|cs|grc|εἰρωνικός}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ny]}}
@@ -57349,9 +57491,10 @@ Page 2808 platonický: Found match for regex: =
 Page 2808 platonický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|Platonicus}} + {{af|cs|-ický}}
+From {{af|cs|la:Platonicus|-ický}}.
 
 ===Pronunciation===
+* {{cs-IPA|[ny]}}
 * {{rhymes|cs|ɪtskiː|s=4}}
 
 ===Adjective===
@@ -57373,6 +57516,9 @@ Page 2808 platonický: -------- begin text --------
 Page 2809 katatonický: Found match for regex: =
 Page 2809 katatonický: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ny]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -57392,6 +57538,7 @@ Page 2810 tektonický: Found match for regex: =
 Page 2810 tektonický: -------- begin text --------
 
 ===Pronunciation===
+* {{cs-IPA|[ny]}}
 * {{rhymes|cs|ɪtskiː|s=4}}
 
 ===Adjective===
@@ -57404,6 +57551,9 @@ Page 2810 tektonický: -------- begin text --------
 -------- end text --------
 Page 2811 hypotonický: Found match for regex: =
 Page 2811 hypotonický: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -57427,6 +57577,9 @@ Page 2811 hypotonický: -------- begin text --------
 -------- end text --------
 Page 2812 isotonický: Found match for regex: =
 Page 2812 isotonický: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[izo,ny]}}
 
 ===Alternative forms===
 * {{alt|cs|izotonický}}
@@ -57454,6 +57607,9 @@ Page 2813 izotonický: -------- begin text --------
 ===Alternative forms===
 * {{alt|cs|isotonický}}
 
+===Pronunciation===
+* {{cs-IPA|[ny]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -57473,6 +57629,9 @@ Page 2813 izotonický: -------- begin text --------
 -------- end text --------
 Page 2814 hypertonický: Found match for regex: =
 Page 2814 hypertonický: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -57539,7 +57698,7 @@ Page 2817 etnický: Found match for regex: =
 Page 2817 etnický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|ethnicus}} + {{af|cs|-ický}}
+From {{af|cs|la:ethnicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ny]}}
@@ -57744,10 +57903,10 @@ Page 2825 scénický: Found match for regex: =
 Page 2825 scénický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|scenicus}} + {{af|cs|-ický}}
+From {{af|cs|la:scenicus|-ický}}.
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 * {{rhymes|cs|ɪtskiː|s=3}}
 
 ===Adjective===
@@ -57769,7 +57928,7 @@ Page 2826 fénický: Found match for regex: =
 Page 2826 fénický: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -57793,7 +57952,7 @@ Page 2827 kónický: -------- begin text --------
 * {{alt|cs|konický}}
 
 ===Etymology===
-{{der|cs|la|conicus}} + {{af|cs|-ický}}
+From {{af|cs|la:conicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ny]}}
@@ -57849,7 +58008,7 @@ Page 2830 heroický: Found match for regex: =
 Page 2830 heroický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|heroicus}} + {{af|cs|-ický}}
+From {{af|cs|la:heroicus|-ický}}.
 
 ===Adjective===
 {{cs-adj}}
@@ -57868,7 +58027,7 @@ Page 2831 stoický: Found match for regex: =
 Page 2831 stoický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|stoicus}} + {{af|cs|-ický}}
+From {{af|cs|la:stoicus|-ický}}.
 
 ===Pronunciation===
 * {{rhymes|cs|ɪtskiː|s=3}}
@@ -57889,7 +58048,7 @@ Page 2832 epický: Found match for regex: =
 Page 2832 epický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|epicus}} + {{af|cs|-ický}}
+From {{af|cs|la:epicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -58020,7 +58179,7 @@ Page 2839 tropický: Found match for regex: =
 Page 2839 tropický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|LL.|tropicus}} + {{af|cs|-ický}}
+From {{af|cs|LL.:tropicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -58314,6 +58473,9 @@ Page 2853 anglo-americký: -------- begin text --------
 ===Etymology===
 From {{af|cs|[[anglický|angl(ický)]]|-o-|americký}}.
 
+===Pronunciation===
+* {{cs-IPA|+|[?am]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -58329,7 +58491,7 @@ Page 2854 antiamerický: -------- begin text --------
 From {{af|cs|anti-|americký}}.
 
 ===Pronunciation===
-* {{cs-IPA|[anty]}}
+* {{cs-IPA|[anty]|[anty?]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -58350,7 +58512,7 @@ Page 2855 protiamerický: -------- begin text --------
 From {{af|cs|proti-|Amerika|-cký}}.
 
 ===Pronunciation===
-* {{cs-IPA|}}
+* {{cs-IPA|+|[i?a]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -58369,7 +58531,7 @@ Page 2856 čechoamerický: Found match for regex: =
 Page 2856 čechoamerický: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|+|[o?a]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -58416,10 +58578,10 @@ Page 2858 latinskoamerický: Found match for regex: =
 Page 2858 latinskoamerický: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|latinský|americký}}
+From {{af|cs|latinský|americký}}.
 
 ===Pronunciation===
-*{{cs-IPA}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -58673,7 +58835,7 @@ Page 2871 empirický: Found match for regex: =
 Page 2871 empirický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|empiricus}} + {{af|cs|-ický}}
+From {{af|cs|la:empiricus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -58699,6 +58861,7 @@ Page 2872 satirický: Found match for regex: =
 Page 2872 satirický: -------- begin text --------
 
 ===Pronunciation===
+* {{cs-IPA|[ty]}}
 * {{rhymes|cs|ɪtskiː|s=4}}
 
 ===Adjective===
@@ -58921,7 +59084,7 @@ Page 2882 notorický: Found match for regex: =
 Page 2882 notorický: -------- begin text --------
 
 ===Etymology===
-{{der+|cs|la|nōtōrius}}.
+From {{af|cs|la:nōtōrius|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -58969,7 +59132,7 @@ Page 2884 historický: Found match for regex: =
 Page 2884 historický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|historicus}} + {{af|cs|-ický}}
+From {{af|cs|la:historicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -59040,7 +59203,7 @@ Page 2887 psychiatrický: Found match for regex: =
 Page 2887 psychiatrický: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|psychijatrický}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -59061,6 +59224,9 @@ Page 2887 psychiatrický: -------- begin text --------
 -------- end text --------
 Page 2888 foniatrický: Found match for regex: =
 Page 2888 foniatrický: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -59096,7 +59262,7 @@ Page 2890 metrický: Found match for regex: =
 Page 2890 metrický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|metricus}} + {{af|cs|-ický}}
+From {{af|cs|la:metricus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -59137,7 +59303,7 @@ Page 2892 geometrický: Found match for regex: =
 Page 2892 geometrický: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|geometrycký}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -59191,6 +59357,9 @@ Page 2894 stechiometrický: -------- begin text --------
 -------- end text --------
 Page 2895 goniometrický: Found match for regex: =
 Page 2895 goniometrický: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -59328,7 +59497,7 @@ Page 2901 elektrický: Found match for regex: =
 Page 2901 elektrický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|NL.|electricus}} + {{af|cs|-ický}}
+From {{af|cs|NL.:electricus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -59515,7 +59684,7 @@ Page 2909 lyrický: Found match for regex: =
 Page 2909 lyrický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|lyricus}} + {{af|cs|-ický}}
+From {{af|cs|la:lyricus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -59543,7 +59712,7 @@ Page 2910 sférický: Found match for regex: =
 Page 2910 sférický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|σφαιρικός}} + {{af|cs|-ický}}, as if {{af|cs|sféra|-ický}}
+From {{af|cs|grc:σφαιρικός|-ický}}. {{surf|cs|sféra|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -59650,7 +59819,7 @@ Page 2915 klasický: Found match for regex: =
 Page 2915 klasický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|classicus}} + {{af|cs|-ický}}
+From {{af|cs|la:classicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -59849,7 +60018,7 @@ Page 2924 dramatický: Found match for regex: =
 Page 2924 dramatický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|δραματικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:δραματικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -60029,7 +60198,7 @@ Page 2932 pragmatický: Found match for regex: =
 Page 2932 pragmatický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|pragmaticus}} + {{af|cs|-ický}}
+From {{af|cs|la:pragmaticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -60054,7 +60223,7 @@ Page 2933 flegmatický: Found match for regex: =
 Page 2933 flegmatický: -------- begin text --------
 
 ===Etymology===
-{{der+|cs|la|phlegmaticus}} + {{af|cs|-ický}}.
+From {{af|cs|la:phlegmaticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -60076,7 +60245,7 @@ Page 2934 dogmatický: Found match for regex: =
 Page 2934 dogmatický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|dogmaticus}} + {{af|cs|-ický}}
+From {{af|cs|la:dogmaticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -60200,7 +60369,7 @@ Page 2939 aromatický: Found match for regex: =
 Page 2939 aromatický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|aromaticus}} + {{af|cs|-ický}}
+From {{af|cs|la:aromaticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -60240,7 +60409,7 @@ Page 2941 somatický: Found match for regex: =
 Page 2941 somatický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|σωματικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:σωματικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -60287,7 +60456,7 @@ Page 2943 symptomatický: Found match for regex: =
 Page 2943 symptomatický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|NL.|symptomaticus}} + {{af|cs|-ický}}
+From {{af|cs|NL.:symptomaticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -60460,7 +60629,7 @@ Page 2951 traumatický: Found match for regex: =
 Page 2951 traumatický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|traumaticus}} + {{af|cs|-ický}}
+From {{af|cs|la:traumaticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -60483,10 +60652,10 @@ Page 2951 traumatický: -------- begin text --------
 -------- end text --------
 Page 2952 posttraumatický: Found match for regex: =
 Page 2952 posttraumatický: -------- begin text --------
-
+<!-- not quite yet
 ===Pronunciation===
 * {{cs-IPA|[t.t,ty]}}
-
+-->
 ===Adjective===
 {{cs-adj}}
 
@@ -60535,7 +60704,7 @@ Page 2955 apatický: Found match for regex: =
 Page 2955 apatický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|apathicus}} + {{af|cs|-ický}}
+From {{af|cs|la:apathicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -60655,7 +60824,7 @@ Page 2961 kvadratický: Found match for regex: =
 Page 2961 kvadratický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|quadratus}} + {{af|cs|-ický}}, as if {{af|cs|kvadrát|-ický}}
+From {{af|cs|la:quadrātus|-ický}}. {{surf|cs|kvadrát|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -60862,7 +61031,7 @@ Page 2971 statický: Found match for regex: =
 Page 2971 statický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|staticus}} + {{af|cs|-ický}}
+From {{af|cs|la:staticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -61024,7 +61193,7 @@ Page 2979 etický: Found match for regex: =
 Page 2979 etický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|ethicus}} + {{af|cs|-ický}}
+From {{af|cs|la:ethicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -61193,7 +61362,7 @@ Page 2985 asketický: Found match for regex: =
 Page 2985 asketický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|ML.|asceticus}} + {{af|cs|-ický}}
+From {{af|cs|ML.:asceticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -61218,7 +61387,7 @@ Page 2986 atletický: Found match for regex: =
 Page 2986 atletický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|athleticus}} + {{af|cs|-ický}}
+From {{af|cs|la:athleticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -61244,7 +61413,7 @@ Page 2987 hermetický: Found match for regex: =
 Page 2987 hermetický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|ML.|hermeticus}} + {{af|cs|-ický}}
+From {{af|cs|ML.:hermeticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -61265,7 +61434,7 @@ Page 2988 kosmetický: Found match for regex: =
 Page 2988 kosmetický: -------- begin text --------
 
 ===Etymology===
-{{der+|cs|grc|κοσμητικός}} + {{af|cs|-ický}}, from {{m|grc|κοσμέω}}, from {{m|grc|κόσμος}}.
+From {{af|cs|grc:κοσμητικός|-ický}}, from {{m|grc|κοσμέω}}, from {{m|grc|κόσμος}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -61381,7 +61550,7 @@ Page 2993 magnetický: Found match for regex: =
 Page 2993 magnetický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|magneticus}} + {{af|cs|-ický}}
+From {{af|cs|la:magneticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -61456,7 +61625,7 @@ Page 2996 kinetický: Found match for regex: =
 Page 2996 kinetický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|κινητικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:κινητικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -61568,7 +61737,7 @@ Page 3001 poetický: Found match for regex: =
 Page 3001 poetický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|poeticus}} + {{af|cs|-ický}}
+From {{af|cs|la:poeticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -61593,7 +61762,7 @@ Page 3002 teoretický: Found match for regex: =
 Page 3002 teoretický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|theoreticus}} + {{af|cs|-ický}}
+From {{af|cs|la:theoreticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -61699,7 +61868,7 @@ Page 3007 estetický: Found match for regex: =
 Page 3007 estetický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|αἰσθητικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:αἰσθητικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -61839,7 +62008,7 @@ Page 3014 politický: Found match for regex: =
 Page 3014 politický: -------- begin text --------
 
 ===Etymology===
-{{der+|cs|la|politicus}} + {{af|cs|-ický}}.
+From {{af|cs|la:politicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -62029,7 +62198,7 @@ Page 3023 kritický: -------- begin text --------
 {{wikipedia|lang=cs}}
 
 ===Etymology===
-{{der|cs|la|criticus}} + {{af|cs|-ický}}
+From {{af|cs|la:criticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -62146,7 +62315,7 @@ Page 3028 didaktický: Found match for regex: =
 Page 3028 didaktický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|διδακτικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:διδακτικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[dy,ty]}}
@@ -62257,7 +62426,7 @@ Page 3033 praktický: Found match for regex: =
 Page 3033 praktický: -------- begin text --------
 
 ===Etymology===
-{{der+|cs|la|practicus}} + {{af|cs|-ický}}.
+From {{af|cs|la:practicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -62314,7 +62483,7 @@ Page 3035 taktický: Found match for regex: =
 Page 3035 taktický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|τακτικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:τακτικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -62360,7 +62529,7 @@ Page 3037 hektický: Found match for regex: =
 Page 3037 hektický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|ἑκτικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:ἑκτικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -62410,7 +62579,7 @@ Page 3039 eklektický: Found match for regex: =
 Page 3039 eklektický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|ἐκλεκτικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:ἐκλεκτικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -62456,7 +62625,7 @@ Page 3041 arktický: Found match for regex: =
 Page 3041 arktický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|arcticus}} + {{af|cs|-ický}}
+From {{af|cs|la:arcticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -62547,7 +62716,7 @@ Page 3045 atlantický: Found match for regex: =
 Page 3045 atlantický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|atlanticus}} + {{af|cs|-ický}}
+From {{af|cs|la:atlanticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -62628,7 +62797,7 @@ Page 3049 romantický: Found match for regex: =
 Page 3049 romantický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|en|romantic}} + {{af|cs|-ický}}, from {{der|cs|fro|romanz}}.
+From {{af|cs|en:romantic|-ický}}, from {{der|cs|fro|romanz}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -62704,7 +62873,7 @@ Page 3052 autentický: Found match for regex: =
 Page 3052 autentický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|authenticus}} + {{af|cs|-ický}}
+From {{af|cs|la:authenticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -62731,7 +62900,7 @@ Page 3053 chaotický: Found match for regex: =
 Page 3053 chaotický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|chaoticus}} (from {{m|la|chaos}}) + {{af|cs|-ický}}
+From {{af|cs|la:chaoticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -62770,7 +62939,7 @@ Page 3055 gotický: Found match for regex: =
 Page 3055 gotický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|gothicus}} + {{af|cs|-ický}}
+From {{af|cs|la:gothicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -63038,7 +63207,7 @@ Page 3068 despotický: Found match for regex: =
 Page 3068 despotický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|δεσποτικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:δεσποτικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -63193,7 +63362,7 @@ Page 3076 skeptický: Found match for regex: =
 Page 3076 skeptický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|σκεπτικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:σκεπτικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -63240,7 +63409,7 @@ Page 3078 epileptický: Found match for regex: =
 Page 3078 epileptický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|epilepticus}} + {{af|cs|-ický}}
+From {{af|cs|la:epilepticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -63285,7 +63454,7 @@ Page 3080 eliptický: Found match for regex: =
 Page 3080 eliptický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|ἐλλειπτικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:ἐλλειπτικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -63311,7 +63480,7 @@ Page 3081 optický: Found match for regex: =
 Page 3081 optický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|opticus}} + {{af|cs|-ický}}
+From {{af|cs|la:opticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -63450,7 +63619,7 @@ Page 3089 plastický: Found match for regex: =
 Page 3089 plastický: -------- begin text --------
 
 ===Etymology===
-{{der+|cs|la|plasticus}} + {{m|cs|-ický}}, as if {{af|cs|plast|-ický}}.
+From {{af|cs|la:plasticus|-ický}}. {{surf|cs|plast|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -63542,7 +63711,7 @@ Page 3093 drastický: Found match for regex: =
 Page 3093 drastický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|δραστικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:δραστικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -63565,7 +63734,7 @@ Page 3094 fantastický: Found match for regex: =
 Page 3094 fantastický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|φανταστικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:φανταστικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -64454,7 +64623,7 @@ Page 3134 nihilistický: Found match for regex: =
 Page 3134 nihilistický: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|[ty]}}
+* {{cs-IPA|[ny,ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -64668,7 +64837,7 @@ Page 3144 alarmistický: Found match for regex: =
 Page 3144 alarmistický: -------- begin text --------
 
 ===Etymology===
-From {{af|cs|alarmista|-ský}}.
+From {{af|cs|alarmista|-cký}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -65804,7 +65973,7 @@ Page 3196 akustický: Found match for regex: =
 Page 3196 akustický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|grc|ἀκουστικός}} + {{af|cs|-ický}}
+From {{af|cs|grc:ἀκουστικός|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -65832,7 +66001,7 @@ Page 3197 mystický: Found match for regex: =
 Page 3197 mystický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|mysticus}} + {{af|cs|-ický}}
+From {{af|cs|la:mysticus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA|[ty]}}
@@ -66180,7 +66349,7 @@ Page 3212 českobudějovický: Found match for regex: =
 Page 3212 českobudějovický: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|český|-o-|budějovický}}, from {{m|cs|České Budějovice}}.
+From {{af|cs|český|-o-|Budějovice|-ký}}, from {{m|cs|České Budějovice}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -66217,7 +66386,7 @@ Page 3214 toxický: Found match for regex: =
 Page 3214 toxický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|toxicus}} + {{af|cs|-ický}}
+From {{af|cs|la:toxicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -66286,7 +66455,7 @@ Page 3217 fyzický: Found match for regex: =
 Page 3217 fyzický: -------- begin text --------
 
 ===Etymology===
-{{der|cs|la|physicus}} + {{af|cs|-ický}}
+From {{af|cs|la:physicus|-ický}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -67019,8 +67188,8 @@ Page 3246 sladký: -------- begin text --------
 {{cs-adecl}}
 
 ====Related terms====
-{{col-auto|cs|title=adjectives|hořkosladký|nasládlý|polosladký|přesladký|sladičký|sladinký|sladkobolný|sladkokyselý|‎sladkovodní|sladký jako cumel|‎slaďounký|‎slaďoučký|‎slaďoulinký}}
-{{col-auto|cs|title=adverbs|‎sladce|sladko}}
+{{col-auto|cs|title=adjectives|hořkosladký|nasládlý|polosladký|přesladký|sladičký|sladinký|sladkobolný|sladkokyselý|sladkovodní|sladký jako cumel|slaďounký|slaďoučký|slaďoulinký}}
+{{col-auto|cs|title=adverbs|sladce|sladko}}
 {{col-auto|cs|title=nouns|slad|sladko|sladkost|slaďák}}
 {{col-auto|cs|title=verbs|sladit|slast}}
 
@@ -69792,7 +69961,7 @@ Page 3364 západočeský: Found match for regex: =
 Page 3364 západočeský: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|západ|-o-|český}}
+From {{af|cs|západ|-o-|český}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -69809,7 +69978,7 @@ Page 3365 středočeský: Found match for regex: =
 Page 3365 středočeský: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|střed|-o-|český}}
+From {{af|cs|střed|-o-|český}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -69830,7 +69999,7 @@ Page 3366 východočeský: Found match for regex: =
 Page 3366 východočeský: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|východ|-o-|český}}
+From {{af|cs|východ|-o-|český}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -69864,7 +70033,7 @@ Page 3368 severočeský: Found match for regex: =
 Page 3368 severočeský: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|sever|-o-|český}}
+From {{af|cs|sever|-o-|český}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -69884,7 +70053,7 @@ Page 3369 haifský: -------- begin text --------
 From {{af|cs|Haifa|-ský}}.
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|hajfský}}
 
 ===Adjective===
 {{cs-adj}}
@@ -69904,7 +70073,7 @@ Page 3370 tongský: -------- begin text --------
 ===Adjective===
 {{cs-adj}}
 
-# [[Tongan]], of [[Tonga]], [[Tonga]]'s
+# {{lb|cs|relational}} [[Tonga]]; [[Tongan]]
 
 ====Declension====
 {{cs-adecl}}
@@ -69918,7 +70087,7 @@ Page 3371 lesothský: -------- begin text --------
 ===Adjective===
 {{cs-adj}}
 
-# [[Lesotho]], of [[Lesotho]]
+# {{lb|cs|relational}} [[Lesotho]]; [[Lesothan]]
 
 ====Declension====
 {{cs-adecl}}
@@ -69934,6 +70103,9 @@ Page 3372 skythský: -------- begin text --------
 
 ===Alternative forms===
 * {{alt|cs|skytský}}
+
+===Pronunciation===
+* {{cs-IPA|skytský}}
 
 ===Adjective===
 {{cs-adj}}
@@ -70062,7 +70234,7 @@ Page 3379 malajský: Found match for regex: =
 Page 3379 malajský: -------- begin text --------
 
 ===Etymology===
-{{der+|cs|en|Malay}}, from {{der|cs|ms|Melayu}}, {{suffix|cs||ský}}.
+From {{af|cs|en:Malay|-ský}}, from {{der|cs|ms|Melayu}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -70926,7 +71098,7 @@ Page 3422 nigerijský: -------- begin text --------
 From {{affix|cs|Nigérie|-ský}}.
 
 ===Pronunciation===
-* {{cs-IPA|nygerijský}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -70969,7 +71141,7 @@ Page 3424 asijský: Found match for regex: =
 Page 3424 asijský: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|azijský}}
+* {{cs-IPA|[az]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -70988,6 +71160,9 @@ Page 3425 středoasijský: -------- begin text --------
 
 ===Etymology===
 [[střední]] + [[Asie]]
+
+===Pronunciation===
+* {{cs-IPA|[az]|[o?az]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -71152,6 +71327,9 @@ From {{af|cs|Trója|-ský}}.
 -------- end text --------
 Page 3433 nikaragujský: Found match for regex: =
 Page 3433 nikaragujský: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -71377,7 +71555,7 @@ Page 3444 protiitalský: -------- begin text --------
 From {{af|cs|proti-|Ital|-ský}}.
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|+|i?i}}
 
 ===Adjective===
 {{cs-adj}}
@@ -72082,7 +72260,7 @@ Page 3477 nilský: Found match for regex: =
 Page 3477 nilský: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|nylský}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -74141,7 +74319,7 @@ Page 3570 československý: Found match for regex: =
 Page 3570 československý: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|český|-o-|slovenský}}
+From {{af|cs|český|-o-|slovenský}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -74512,6 +74690,9 @@ From {{affix|cs|Benin|-ský}}.
 Page 3585 marxisticko-leninský: Found match for regex: =
 Page 3585 marxisticko-leninský: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ty]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -74672,6 +74853,9 @@ Page 3593 palestinský: -------- begin text --------
 
 ===Etymology===
 From {{suffix|cs|Palestina|ský}}.
+
+===Pronunciation===
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -75643,7 +75827,7 @@ Page 3645 sociniánský: Found match for regex: =
 Page 3645 sociniánský: -------- begin text --------
 
 ===Pronunciation===
-{{cs-IPA}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -75657,7 +75841,7 @@ Page 3646 mariánský: Found match for regex: =
 Page 3646 mariánský: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|marijánský}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -75802,6 +75986,9 @@ Page 3653 malthusiánský: -------- begin text --------
 Page 3654 kantiánský: Found match for regex: =
 Page 3654 kantiánský: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ty]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -75934,6 +76121,9 @@ Page 3659 anglikánský: -------- begin text --------
 Page 3660 dominikánský: Found match for regex: =
 Page 3660 dominikánský: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ny]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -75995,6 +76185,9 @@ Page 3662 portorikánský: -------- begin text --------
 -------- end text --------
 Page 3663 vatikánský: Found match for regex: =
 Page 3663 vatikánský: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -77231,7 +77424,7 @@ Page 3722 gruzínský: Found match for regex: =
 Page 3722 gruzínský: -------- begin text --------
 
 ===Etymology===
-{{der+|cs|ru|грузи́нский|alt=грузи́нскій}}. Equivalent to {{suffix|cs|Gruzín|ský}}.
+{{bor+|cs|ru|грузи́нский|alt=грузи́нскій}}. {{surf|cs|Gruzín|-ský}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -77985,7 +78178,7 @@ Page 3756 myanmarský: -------- begin text --------
 From {{affix|cs|Myanmar|-ský}}.
 
 ===Pronunciation===
-* {{cs-IPA|myjanmarský}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -78113,7 +78306,7 @@ Page 3762 heidelberský: Found match for regex: =
 Page 3762 heidelberský: -------- begin text --------
 
 ===Etymology===
-{{der|cs|de|Heidelberg}} + {{af|cs|-ský}}
+From {{af|cs|de:Heidelberg|-ský}}.
 
 ===Adjective===
 {{cs-adj}}
@@ -78194,6 +78387,9 @@ From {{af|cs|negr|-ský}}.
 Page 3766 nigerský: Found match for regex: =
 Page 3766 nigerský: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ny]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -78236,7 +78432,7 @@ Page 3768 rakousko-uherský: Found match for regex: =
 Page 3768 rakousko-uherský: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|rakousko uherský}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -78421,7 +78617,7 @@ Page 3777 westminsterský: -------- begin text --------
 From {{af|cs|Westminster|-ský}}.
 
 ===Pronunciation===
-* {{cs-IPA|vestminsterský}}
+* {{cs-IPA}}
 * {{rhymes|cs|ɛrskiː|s=4}}
 
 ===Adjective===
@@ -79318,6 +79514,9 @@ Page 3822 tibetský: -------- begin text --------
 
 ===Etymology===
 From {{af|cs|Tibet|-ský}}.
+
+===Pronunciation===
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -80721,7 +80920,7 @@ Page 3892 českomoravský: Found match for regex: =
 Page 3892 českomoravský: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|český|-o-|moravský}}
+From {{af|cs|český|-o-|moravský}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -81291,7 +81490,7 @@ Page 3922 boccacciovský: -------- begin text --------
 {{wikipedia|Giovanni Boccaccio|lang=cs}}
 
 ===Etymology===
-{{der|cs|it|Boccaccio}} + {{af|cs|-ovský}}
+From {{af|cs|it:Boccaccio|-ovský}}.
 
 ===Pronunciation===
 * {{cs-IPA|bokačovský}}
@@ -81826,6 +82025,9 @@ Page 3950 einsteinovský: -------- begin text --------
 ===Etymology===
 From {{af|cs|Einstein|-ovský}}.
 
+===Pronunciation===
+* {{cs-IPA|ajnštajnovský}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -81845,6 +82047,9 @@ Page 3951 darwinovský: -------- begin text --------
 ===Etymology===
 From {{af|cs|Darwin|-ovský}}.
 
+===Pronunciation===
+* {{cs-IPA}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -81863,6 +82068,9 @@ Page 3952 protidarwinovský: -------- begin text --------
 
 ===Etymology===
 From {{af|cs|proti-|Darwin|-ovský}}.
+
+===Pronunciation===
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -82844,7 +83052,7 @@ Page 4006 glasgowský: -------- begin text --------
 From {{af|cs|Glasgow|-ský}}.
 
 ===Pronunciation===
-* {{cs-IPA|glasgovský}}
+* {{cs-IPA}}
 * {{rhymes|cs|ofskiː}}
 
 ===Adjective===
@@ -88103,7 +88311,7 @@ Page 4228 dalekosáhlý: Found match for regex: =
 Page 4228 dalekosáhlý: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|daleko|t1=far|sáhnout|t2=to reach}}
+From {{af|cs|daleko|t1=far|sáhnout|t2=to reach}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -88194,7 +88402,7 @@ Page 4232 pravoúhlý: Found match for regex: =
 Page 4232 pravoúhlý: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|pravý|-o-|úhel}}
+From {{af|cs|pravý|-o-|úhel}}.
 
 ===Adjective===
 {{cs-adj}}
@@ -90811,7 +91019,7 @@ Page 4337 černobílý: Found match for regex: =
 Page 4337 černobílý: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|černý|-o-|bílý}}
+From {{af|cs|černý|-o-|bílý}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -91444,7 +91652,7 @@ Page 4361 hluchoněmý: Found match for regex: =
 Page 4361 hluchoněmý: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|hluchý|-o-|němý}}
+From {{af|cs|hluchý|-o-|němý}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -91550,7 +91758,7 @@ Page 4365 světoznámý: Found match for regex: =
 Page 4365 světoznámý: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|svět|t1=world|-o-|známý|t3=well-known}}
+From {{af|cs|svět|t1=world|-o-|známý|t3=well-known}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -94427,6 +94635,9 @@ Page 4495 disciplinovaný: -------- begin text --------
 Page 4496 retinovaný: Found match for regex: =
 Page 4496 retinovaný: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ty]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -94938,6 +95149,9 @@ Page 4523 motivovaný: -------- begin text --------
 ===Etymology===
 [[motivovat]]
 
+===Pronunciation===
+* {{cs-IPA|[ty]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -95166,7 +95380,7 @@ Page 4535 zmodernizovaný: -------- begin text --------
 * {{alt|cs|zmodernisovaný}}
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj|zmodernizovanější}}
@@ -95206,6 +95420,9 @@ Page 4537 automatizovaný: -------- begin text --------
 ===Etymology===
 From {{m|cs|automatizovat}}.
 
+===Pronunciation===
+* {{cs-IPA|[ty]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -95216,6 +95433,9 @@ From {{m|cs|automatizovat}}.
 -------- end text --------
 Page 4538 sklerotizovaný: Found match for regex: =
 Page 4538 sklerotizovaný: -------- begin text --------
+
+===Pronunciation===
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -95371,7 +95591,7 @@ Page 4545 takzvaný: -------- begin text --------
 * {{alt|cs|tak zvaný||archaic, rare}}
 
 ===Etymology===
-{{compound|cs|tak|zvaný}}
+From {{af|cs|tak|zvaný}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -96109,7 +96329,7 @@ Page 4575 pravděpodobný: Found match for regex: =
 Page 4575 pravděpodobný: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|pravda|podobný}}
+From {{af|cs|pravda|podobný}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -96298,7 +96518,7 @@ Page 4582 několikanásobný: Found match for regex: =
 Page 4582 několikanásobný: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|několik|násobný}}
+From {{af|cs|několik|násobný}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -98697,7 +98917,7 @@ Page 4674 pozoruhodný: Found match for regex: =
 Page 4674 pozoruhodný: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|pozor|hodný}}
+From {{af|cs|pozor|hodný}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -98819,7 +99039,7 @@ Page 4679 chvályhodný: Found match for regex: =
 Page 4679 chvályhodný: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|chvála|hodný}}
+From {{af|cs|chvála|hodný}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -99074,7 +99294,7 @@ Page 4689 záviděníhodný: Found match for regex: =
 Page 4689 záviděníhodný: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|závidění|hodný}}
+From {{af|cs|závidění|hodný}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -108791,7 +109011,7 @@ Page 5102 unifikovatelný: -------- begin text --------
 From {{af|cs|unifikovat|-telný}}.
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -108849,7 +109069,7 @@ Page 5105 kvantifikovatelný: -------- begin text --------
 From {{af|cs|kvantifikovat|-telný}}.
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -108894,7 +109114,7 @@ Page 5107 certifikovatelný: -------- begin text --------
 From {{af|cs|certifikovat|-telný}}.
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -108990,7 +109210,7 @@ Page 5111 komunikovatelný: -------- begin text --------
 From {{af|cs|komunikovat|-telný}}.
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -109400,7 +109620,7 @@ Page 5130 manipulovatelný: -------- begin text --------
 From {{af|cs|manipulovat|-telný}}.
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -109420,7 +109640,7 @@ Page 5131 zmanipulovatelný: -------- begin text --------
 From {{af|cs|zmanipulovat|-telný}}.
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -109895,7 +110115,7 @@ Page 5154 monitorovatelný: -------- begin text --------
 From {{af|cs|monitorovat|-telný}}.
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -110794,7 +111014,7 @@ Page 5197 aktivovatelný: -------- begin text --------
 From {{af|cs|aktivovat|-telný}}.
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -110982,7 +111202,7 @@ Page 5205 mechanizovatelný: -------- begin text --------
 From {{af|cs|mechanizovat|-telný}}.
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -111069,7 +111289,7 @@ Page 5209 objektivizovatelný: -------- begin text --------
 From {{af|cs|objektivizovat|-telný}}.
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -112705,7 +112925,7 @@ Page 5280 splatitelný: Found match for regex: =
 Page 5280 splatitelný: -------- begin text --------
 
 ===Pronunciation===
-{{cs-IPA}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj|-}}
@@ -114885,7 +115105,7 @@ Page 5372 krvesmilný: Found match for regex: =
 Page 5372 krvesmilný: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|krev|smilný}}
+From {{af|cs|krev|smilný}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -118828,7 +119048,7 @@ Page 5525 životaschopný: Found match for regex: =
 Page 5525 životaschopný: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|život|schopný}}
+From {{af|cs|život|schopný}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -118879,7 +119099,7 @@ Page 5527 konkurenceschopný: Found match for regex: =
 Page 5527 konkurenceschopný: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|konkurence|schopný}}
+From {{af|cs|konkurence|schopný}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -122668,7 +122888,7 @@ Page 5676 vodotěsný: Found match for regex: =
 Page 5676 vodotěsný: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|voda|-o-|těsný}}
+From {{af|cs|voda|-o-|těsný}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -122968,7 +123188,7 @@ Page 5687 právoplatný: Found match for regex: =
 Page 5687 právoplatný: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|právo|platný}}
+From {{af|cs|právo|platný}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -131722,7 +131942,7 @@ Page 6044 fešný: Found match for regex: =
 Page 6044 fešný: -------- begin text --------
 
 ===Etymology===
-{{der+|cs|de|fesch}}, from {{der|cs|en|fashionable}}.
+From {{af|cs|de:fesch|-ný}}, from {{der|cs|en|fashionable}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -133655,7 +133875,7 @@ Page 6115 šeroslepý: Found match for regex: =
 Page 6115 šeroslepý: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|šero|slepý}}
+From {{af|cs|šero|slepý}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -134122,7 +134342,7 @@ Page 6131 zelenomodrý: Found match for regex: =
 Page 6131 zelenomodrý: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|zelený|-o-|modrý}}
+From {{af|cs|zelený|-o-|modrý}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -137663,6 +137883,9 @@ Page 6281 hbitý: -------- begin text --------
 Page 6282 niobitý: Found match for regex: =
 Page 6282 niobitý: -------- begin text --------
 
+===Pronunciation===
+* {{cs-IPA|[ny]}}
+
 ===Adjective===
 {{cs-adj}}
 
@@ -139523,7 +139746,7 @@ Page 6355 manganistý: -------- begin text --------
 From {{af|cs|mangan|-istý}}.
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[ny]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -139642,7 +139865,7 @@ Page 6359 čistý: -------- begin text --------
 {{cs-adecl}}
 
 ====Derived terms====
-{{col-auto|cs|title=adjectives|čistokrevný|čisťoučký|čisťoulinký|‎čisťounký|čistý jako lilie}}
+{{col-auto|cs|title=adjectives|čistokrevný|čisťoučký|čisťoulinký|čisťounký|čistý jako lilie}}
 {{col-auto|cs|title=adverb|čistě}}
 {{col-auto|cs|title=nouns|čistá matematika|čistka|čistopis|čistota}}
 {{col-auto|cs|title=verb|čistit}}
@@ -142832,7 +143055,7 @@ From {{affix|cs|hnis|-avý}}.
 ===Adjective===
 {{cs-adj}}
 
-# [[suppurate|Suppurating]]
+# [[suppurate|suppurating]]
 
 ====Declension====
 {{cs-adecl}}
@@ -145142,7 +145365,7 @@ From {{affix|cs|marnit|-ivý}}.
 # [[vain]], [[showy]] (overly interested in one's dress, appearance etc)
 
 ====Usage notes====
-* In the "vain, showy" sense best translatable into English as [[foppish]], but in Czech used (in the feminime form {{l|cs|marnivá}}) for women as well, maybe even more often than for men.
+* In the "vain, showy" sense best translatable into English as [[foppish]], but in Czech used (in the feminine form {{l|cs|marnivá}}) for women as well, maybe even more often than for men.
 
 ====Declension====
 {{cs-adecl}}
@@ -146992,7 +147215,7 @@ Page 6659 webový: -------- begin text --------
 From {{suffix|cs|web|ový}}.
 
 ===Pronunciation===
-* {{cs-IPA|vebový}}
+* {{cs-IPA}}
 * {{rhymes|cs|oviː|s=3}}
 * {{hyphenation|cs|we|bo|vý}}
 
@@ -148430,7 +148653,7 @@ Page 6723 slangový: -------- begin text --------
 From {{suffix|cs|slang|ový}}.
 
 ===Pronunciation===
-* {{cs-IPA|slengoví}}
+* {{cs-IPA|slengový}}
 * {{rhymes|cs|oviː|s=3}}
 * {{hyphenation|cs|slan|go|vý}}
 
@@ -148472,7 +148695,10 @@ Page 6725 marketingový: Found match for regex: =
 Page 6725 marketingový: -------- begin text --------
 
 ===Etymology===
-{{der+|cs|en|-}}.
+From {{af|cs|marketing|-ový}}.
+
+===Pronunciation===
+* {{cs-IPA|[ty]}}
 
 ===Adjective===
 {{cs-adj|-}}
@@ -148997,7 +149223,7 @@ Page 6748 akciový: -------- begin text --------
 From {{suffix|cs|akcie|ový}}.
 
 ===Pronunciation===
-* {{cs-IPA|akcijový}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -149060,7 +149286,7 @@ Page 6751 sériový: Found match for regex: =
 Page 6751 sériový: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA|sérijový}}
+* {{cs-IPA}}
 
 ===Adjective===
 {{cs-adj}}
@@ -153060,7 +153286,7 @@ Page 6929 mainstreamový: Found match for regex: =
 Page 6929 mainstreamový: -------- begin text --------
 
 ===Etymology===
-{{der|cs|en|mainstream}} + {{af|cs|-ový}}
+From {{af|cs|en:mainstream|-ový}}.
 
 ===Adjective===
 {{cs-adj}}
@@ -153347,7 +153573,7 @@ Page 6942 protiatomový: -------- begin text --------
 From {{af|cs|proti-|atomový}}.
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|+|i?a}}
 
 ===Adjective===
 {{cs-adj}}
@@ -157532,7 +157758,7 @@ Page 7126 nízkorozpočtový: Found match for regex: =
 Page 7126 nízkorozpočtový: -------- begin text --------
 
 ===Etymology===
-{{compound|cs|nízký|-o-|rozpočtový}}
+From {{af|cs|nízký|-o-|rozpočtový}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
