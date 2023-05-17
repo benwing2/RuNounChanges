@@ -62,6 +62,7 @@ local single_char_subs = {
 	["ť"] = "c",
 	["ú"] = "u" .. long,
 	["ů"] = "u" .. long,
+	["w"] = "v",
 	["x"] = "ks",
 	["y"] = "ɪ",
 	["ý"] = "i" .. long,
@@ -115,11 +116,21 @@ for index, consonant in pairs(voiced) do
 	indices[consonant] = index
 end
 
-local written_vowel = "[aeiouyáéíóúýěů]"
 local short_vowel = "[aɛɪou]"
 local long_vowel = "[aɛiou]" .. long
 local diphthong ="[aɛo]u" .. nonsyllabic
 local syllabic_consonant = "[mnrl]" .. syllabic
+
+local written_vowel = "[aeiouyáéíóúýěů]"
+local written_acute_vowel = "[áéíóúý]"
+local written_acute_to_plain_vowel = {
+	["á"] = "a",
+	["é"] = "e",
+	["í"] = "i",
+	["ó"] = "o",
+	["ú"] = "u",
+	["ý"] = "y",
+}
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -127,33 +138,17 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
--- Apply canonical Unicode decomposition to text, e.g. è → e + ◌̀. But recompose characters with caron and ringabove.
-local function decompose(text)
-	text = mw.ustring.toNFD(text)
-	text = rsub(text, ".[" .. caron .. ringabove .. "]", {
-		["c" .. caron] = "č",
-		["C" .. caron] = "Č",
-		["s" .. caron] = "š",
-		["S" .. caron] = "Š",
-		["z" .. caron] = "ž",
-		["Z" .. caron] = "Ž",
-		["n" .. caron] = "ň",
-		["N" .. caron] = "Ň",
-		["d" .. caron] = "ď",
-		["D" .. caron] = "Ď",
-		["t" .. caron] = "ť",
-		["T" .. caron] = "Ť",
-		["r" .. caron] = "ř",
-		["R" .. caron] = "Ř",
-		["e" .. caron] = "ě",
-		["E" .. caron] = "Ě",
-		["u" .. ringabove] = "ů",
-		["U" .. ringabove] = "Ů",
-	})
-	return text
+-- apply rsub() repeatedly until no change
+local function rsub_repeatedly(term, foo, bar)
+	while true do
+		local new_term = rsub(term, foo, bar)
+		if new_term == term then
+			return term
+		end
+		term = new_term
+	end
 end
 
--- Apply canonical Unicode composition to text, e.g. e + ◌̀ → è.
 local function compose(text)
 	return mw.ustring.toNFC(text)
 end
@@ -346,26 +341,27 @@ function export.toIPA(text)
 	text = mw.ustring.lower(text)
 
 	-- convert commas and en/en dashes to IPA foot boundaries
-	text = com.rsub_repeatedly(text, "%s*[,–—]%s*", " | ")
+	text = rsub_repeatedly(text, "%s*[,–—]%s*", " | ")
 	-- question mark or exclamation point in the middle of a sentence -> IPA foot boundary
-	text = com.rsub_repeatedly(text, "([^%s])%s*[!?]%s*([^%s])", "%1 | %2")
-	text = com.rsub(text, "[!?]", "") -- eliminate remaining punctuation
+	text = rsub_repeatedly(text, "([^%s])%s*[!?]%s+([^%s])", "%1 | %2")
+	text = rsub(text, "[!?]$", "") -- eliminate remaining punctuation
 
 	text = canon_spaces(text)
 
 	-- put # at word beginning and end and double ## at text/foot boundary beginning/end
-	text = com.rsub(text, " | ", "# | #")
-	text = "##" .. com.rsub(text, " ", "# #") .. "##"
+	text = rsub(text, " | ", "# | #")
+	text = "##" .. rsub(text, " ", "# #") .. "##"
 
 	text = rsub(text, "^%-", "")
-	text = rsub(text, "%-?$", "")
+	text = rsub(text, "%-$", "")
+	text = rsub(text, "%-", " ")
 	text = rsub(text, "nn", "n") -- similar operation is applied to IPA above
 
 	-- Handle palatalization before ě, i and í.
 	text = rsub(text, "([tdn])ě", "%1" .. caron .. "e")
 	text = rsub(text, "([tdn])([ií])", "%1" .. caron .. "%2")
 	text = rsub(text, "mě", "mn" .. caron .. "e")
-	text = recompose(text) -- recompose combining caron
+	text = compose(text) -- recompose combining caron
 
 	-- Handle initial ex- pronounced /egz/.
 	text = rsub(text, "#exh", "#egzh")
@@ -394,7 +390,8 @@ local function convert_respelling_to_original(to, pagename, whole_word)
 	if not patut then
 		patut = require(patut_module)
 	end
-	local from = to:gsub("y", "i"):gsub("z", "s"):gsub(AC, "")
+	local from = rsub(to, "[yý]", "i"):gsub("z", "s"):gsub("%?", "")
+	from = rsub(from, written_acute_vowel, written_acute_to_plain_vowel)
 	local escaped_from = patut.pattern_escape(from)
 	if whole_word then
 		escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
@@ -404,7 +401,10 @@ local function convert_respelling_to_original(to, pagename, whole_word)
 	end
 	-- Check for partial replacement.
 	escaped_from = patut.pattern_escape(to)
-	escaped_from = "(" .. escaped_from:gsub("y", "[iy]"):gsub("z", "[sz]"):gsub(AC, AC .. "?") .. ")"
+	-- Replace specially-handled characters with a class matching the character and possible replacements. Order of the
+	-- following substitutions is important to avoid a later substitution interfering with an earlier one.
+	escaped_from = rsub(escaped_from, "[áéíóú]", function(v) return "[" .. v .. written_acute_to_plain_vowel[v] .. "]" end)
+	escaped_from = "(" .. escaped_from:gsub("y", "[iy]"):gsub("ý", "[iíyý]"):gsub("z", "[sz]"):gsub("%%%?", "[?]?") .. ")"
 	if whole_word then
 		escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
 	end
@@ -422,8 +422,6 @@ end
 
 -- Given raw respelling, canonicalize it. This currently applies substitutions of the form e.g. [ny] or [th:t,nýz].
 local function canonicalize(text, pagename)
-	text = decompose(text)
-	pagename = decompose(pagename)
 	if text == "+" then
 		text = pagename
 	elseif rfind(text, "^%[.*%]$") then
@@ -464,7 +462,7 @@ local function canonicalize(text, pagename)
 		end
 	end
 
-	return compose(text)
+	return text
 end
 
 function export.show(frame)
