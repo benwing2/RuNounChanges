@@ -585,18 +585,18 @@ II.1 (stem ends in a consonant):
 
 E.g.
 
-[[blbnout]] (nu) (blbl ~ blbnul, blbnut, impf, vn blbnutí)
-[[plácnout]] (nu) (plácl ~ plácnul, plácnut, plácnuv, vn plácnutí)
-[[padnout]] (pf.) -,nu:- (padl, no PPP, padnuv ~ pad, padnutí)
-[[padnout]] (biasp.) -,nu:- (padl, no PPP, padnuv ~ pad, padnutí)
-[[napadnout]] -/n/n:t,nu:- (napadl, napaden, napadnuv ~ napad, napadení ~ napadnutí)
-[[odpadnout]] -,-:nu (odpadl, no PPP, odpad ~ odpadnuv, odpadnutí)
-[[přepadnout]] -/n/n:t,-:nu (přepadl, přepaden, přepad ~ přepadnuv, přepadení ~ přepadnutí)
-[[rozpadnout se]] -,nu:- (rozpadl se, rozpadnut, rozpadnuv se ~ rozpad se, rozpadnutí se)
-[[dopadnout]] -/n/n:t,nu:- (dopadl, dopaden, dopadnuv ~ dopad, dopadení ~ dopadnutí [VN differentiated by meaning: dopadení [přistižení = "catch?"] vs. dopadnutí [padnutí = "fall?"])
-[[spadnout]] -/n/t,nu:- (spadl, spaden, spadnuv ~ spad, vn spadnutí)
-[[upadnout]] -/n:t/t,-:nu (upadl, upaden ~ upadnut, upad ~ upadnuv, vn upadnutí)
-[[vypadnout]] -,-:nu (vypadl, no PPP, vypad ~ vypadnuv, vn vypadnutí)
+[[blbnout]] past^(nu) (blbl ~ blbnul, blbnut, impf, vn blbnutí)
+[[plácnout]] past^(nu) (plácl ~ plácnul, plácnut, plácnuv, vn plácnutí)
+[[padnout]] (pf.) patr^nu^- (padl, no PPP, padnuv ~ pad, padnutí)
+[[padnout]] (biasp.) patr^nu^- (padl, no PPP, padnuv ~ pad, padnutí)
+[[napadnout]] ppp^n.vn^n^t.patr^nu^- (napadl, napaden, napadnuv ~ napad, napadení ~ napadnutí)
+[[odpadnout]] patr^-^nu (odpadl, no PPP, odpad ~ odpadnuv, odpadnutí)
+[[přepadnout]] ppp^n.vn^n^t.patr^-^nu (přepadl, přepaden, přepad ~ přepadnuv, přepadení ~ přepadnutí)
+[[rozpadnout se]] patr^nu^- (rozpadl se, rozpadnut, rozpadnuv se ~ rozpad se, rozpadnutí se)
+[[dopadnout]] ppp^n.vn^n^t.patr^nu^- (dopadl, dopaden, dopadnuv ~ dopad, dopadení ~ dopadnutí [VN differentiated by meaning: dopadení [přistižení = "catch?"] vs. dopadnutí [padnutí = "fall?"])
+[[spadnout]] ppp^n.vn^t.patr^nu^- (spadl, spaden, spadnuv ~ spad, vn spadnutí)
+[[upadnout]] ppp^n^t.vn^t.patr^-^nu (upadl, upaden ~ upadnut, upad ~ upadnuv, vn upadnutí)
+[[vypadnout]] patr^-^nu (vypadl, no PPP, vypad ~ vypadnuv, vn vypadnutí)
 [[ukradnout]] - (ukradl, ukradnut, ukradnuv, ukradnutí) [but IJP commentary says 'ukraden' and 'ukradení' still in use]
 [[chřadnout]] - (chřadl, no PPP, impf, chřadnutí)
 [[blednout]] - (bledl, no PPP, impv, blednutí)
@@ -606,89 +606,89 @@ E.g.
 [[sládnout]] - (sládl, no PPP, impf, sládnutí)
 [[vládnout]] - (vladl, no PPP, impf, vn vládnutí)
 [[zvládnout]] - (zvládl, zvládnut, zvládnuv, vn zvládnutí)
-[[rafnout]] (nu) (rafl ~ rafnul, rafnut, rafnuv, vn rafnutí)
-[[hnout]] nu (hnul, hnut, hnuv, hnutí), same for [[pohnout]]
-[[nadchnout]] (nu)/t:n (nadchl ~ nadchnul, nadchnut ~ nadšen, nadchnuv, nadchnutí ~ nadšení)
+[[rafnout]] past^(nu) (rafl ~ rafnul, rafnut, rafnuv, vn rafnutí)
+[[hnout]] past^nu (hnul, hnut, hnuv, hnutí), same for [[pohnout]]
+[[nadchnout]] past^(nu).ppp^t^n (nadchl ~ nadchnul, nadchnut ~ nadšen, nadchnuv, nadchnutí ~ nadšení)
 [[schnout]] - (schnul, schnut, impf, vn schnutí)
-[[uschnout]] (nu) (uschl ~ uschnul, uschnut, uschnuv, vn uschnutí)
-[[vyschnout]] (nu) (vyschl ~ vyschnul, no PPP, vyschnuv, vn vyschnutí)
-[[bouchnout]] (nu) (bouchl ~ bouchnul, bouchnut, bouchnuv, vn bouchnutí)
-[[oblehnout]] -/n (oblehl, obležen, oblehnuv, obležení)
-[[stihnout]] -/n/t:n (stihl, stižen, stihnuv, stihnutí ~ stižení)
-[[zastihnout]] -/n (zastihl, zastižen, zastihnuv, zastižení)
-[[zdvihnout]] -/n/t:n (zdvihl, zdvižen, zdvihnuv, vn zdvihnutí ~ zdvižení)
-[[pozdvihnout]] -/n (pozdvihl, pozdvižen, pozdvihnuv, vn pozdvižení)
-[[střihnout]] -/n/t:n (střihl, střižen, střihnuv, střihnutí ~ střižení)
-[[ustřihnout]] -/n/t:n (ustřihl, ustřižen, ustřihnuv, ustřihnutí ~ ustřižení)
-[[trhnout]] (nu)/t:n (trhl ~ trhnul, trhnut ~ tržen, trhnuv, trhnutí ~ tržení)
-[[podtrhnout]] (nu)/n/t or (nu)/n [by meaning] (podtrhl ~ podtrhnul, podtržen, podtrhnuv, podtrhnutí ~ podtržení [VN differentiated by meaning: podtrhnutí [of a chair], podtržení [of words]])
-[[roztrhnout]] -/n (roztrhl, roztržen, roztrhnuv, roztržení)
-[[vrhnout]] (nu)/t:n (vrhl ~ vrhnul, vrhnut ~ vržen, vrhnuv, vn vrhnutí ~ vržení)
-[[svrhnout]] -/n (svrhl, svržen, svrhnuv, svržení)
-[[vyvrhnout]] (nu) or (nu)/n [by meaning] (vyvhrl ~ vyvrhnul, vyvrhnut ~ vyvržen [PPP differentiated by meaning: 'vyvržen' [ejected (from society)], 'vyvrhnut' [published]], vyvrhnuv, vyvrhnutí ~ vyvržení)
+[[uschnout]] past^(nu) (uschl ~ uschnul, uschnut, uschnuv, vn uschnutí)
+[[vyschnout]] past^(nu) (vyschl ~ vyschnul, no PPP, vyschnuv, vn vyschnutí)
+[[bouchnout]] past^(nu) (bouchl ~ bouchnul, bouchnut, bouchnuv, vn bouchnutí)
+[[oblehnout]] ppp^n (oblehl, obležen, oblehnuv, obležení)
+[[stihnout]] ppp^n.vn^t^n (stihl, stižen, stihnuv, stihnutí ~ stižení)
+[[zastihnout]] ppp^n (zastihl, zastižen, zastihnuv, zastižení)
+[[zdvihnout]] ppp^n.vn^t^n (zdvihl, zdvižen, zdvihnuv, vn zdvihnutí ~ zdvižení)
+[[pozdvihnout]] ppp^n (pozdvihl, pozdvižen, pozdvihnuv, vn pozdvižení)
+[[střihnout]] ppp^n.vn^t^n (střihl, střižen, střihnuv, střihnutí ~ střižení)
+[[ustřihnout]] ppp^n.vn^t^n (ustřihl, ustřižen, ustřihnuv, ustřihnutí ~ ustřižení)
+[[trhnout]] past^(nu).ppp^t^n (trhl ~ trhnul, trhnut ~ tržen, trhnuv, trhnutí ~ tržení)
+[[podtrhnout]] past^(nu).ppp^n.vn^t or past^(nu).ppp^n [by meaning] (podtrhl ~ podtrhnul, podtržen, podtrhnuv, podtrhnutí ~ podtržení [VN differentiated by meaning: podtrhnutí [of a chair], podtržení [of words]])
+[[roztrhnout]] ppp^n (roztrhl, roztržen, roztrhnuv, roztržení)
+[[vrhnout]] past^(nu).ppp^t^n (vrhl ~ vrhnul, vrhnut ~ vržen, vrhnuv, vn vrhnutí ~ vržení)
+[[svrhnout]] ppp^n (svrhl, svržen, svrhnuv, svržení)
+[[vyvrhnout]] past^(nu) or past^(nu).ppp^n [by meaning] (vyvhrl ~ vyvrhnul, vyvrhnut ~ vyvržen [PPP differentiated by meaning: 'vyvržen' [ejected (from society)], 'vyvrhnut' [published]], vyvrhnuv, vyvrhnutí ~ vyvržení)
 [[sáhnout]] - (sáhl, no PPP, sáhnuv, sáhnutí)
-[[zasáhnout]] -/n/t:n (zasáhl, zasažen, zasáhnuv, zasáhnuti ~ zasažení)
-[[obsáhnout]] - or -/n [by meaning] (obsáhl, obsáhnut ~ obsažen [differentiated by meaning], obsáhnuv, obsáhnutí ~ obsažení)
-[[přesáhnout]] -/n/t (přesáhl, přesažen, přesáhnuv, přesáhnutí)
-[[dosáhnout]] -/n (dosáhl, dosažen, dosáhnuv, dosažení)
-[[táhnout]] -/n (táhl, tažen, impv, tažení)
-[[zatáhnout]] -/n (zatáhl, zatažen, zatáhnuv, zatažení)
-[[vytáhnout]] -/n (vytáhl, vytažen, vytáhnuv, vytažení)
-[[napřáhnout]] -/n/t (napřáhl, napřažen, napřáhnuv, napřáhnutí)
-[[přeřeknout se]] -/n:t/t (přeřekl se, přeřečen ~ přeřeknut, přeřeknuv se, přeřeknutí se)
-[[křiknout]] (nu) (křikl ~ křiknul, no PPP, křiknuv, vn křiknutí)
-[[polknout]] (nu) (polkl ~ polknul, polknut, polknuv, vn polknutí)
-[[zamknout]] -/n:t (zamkl, zamčen ~ zamknut, zamknuv, zamčení ~ zamknutí)
+[[zasáhnout]] ppp^n.vn^t^n (zasáhl, zasažen, zasáhnuv, zasáhnuti ~ zasažení)
+[[obsáhnout]] - or ppp^n [by meaning] (obsáhl, obsáhnut ~ obsažen [differentiated by meaning], obsáhnuv, obsáhnutí ~ obsažení)
+[[přesáhnout]] ppp^n.vn^t (přesáhl, přesažen, přesáhnuv, přesáhnutí)
+[[dosáhnout]] ppp^n (dosáhl, dosažen, dosáhnuv, dosažení)
+[[táhnout]] ppp^n (táhl, tažen, impv, tažení)
+[[zatáhnout]] ppp^n (zatáhl, zatažen, zatáhnuv, zatažení)
+[[vytáhnout]] ppp^n (vytáhl, vytažen, vytáhnuv, vytažení)
+[[napřáhnout]] ppp^n.vn^t (napřáhl, napřažen, napřáhnuv, napřáhnutí)
+[[přeřeknout se]] ppp^n^t.vn^t (přeřekl se, přeřečen ~ přeřeknut, přeřeknuv se, přeřeknutí se)
+[[křiknout]] past^(nu) (křikl ~ křiknul, no PPP, křiknuv, vn křiknutí)
+[[polknout]] past^(nu) (polkl ~ polknul, polknut, polknuv, vn polknutí)
+[[zamknout]] ppp^n^t (zamkl, zamčen ~ zamknut, zamknuv, zamčení ~ zamknutí)
 [[obemknout]] - (obemkl, obemknut, obemknuv, obemknutí)
-[[odemknout]] -/n:t (odemkl, odemčen ~ odemknut, odemknuv, odemčení ~ odemknutí)
-[[semknout]] -,- (semkl, semknut, semk, semknutí)
+[[odemknout]] ppp^n^t (odemkl, odemčen ~ odemknut, odemknuv, odemčení ~ odemknutí)
+[[semknout]] patr^- (semkl, semknut, semk, semknutí)
 [[přimknout]] - (přimkl, přimknut, přimknuv, přimknutí)
 [[vymknout]] - (vymkl, vymknut, vymknuv, vymknutí)
-[[cinknout]] (nu) (cinkl ~ cinknul, cinknut, cinknuv, vn cinknutí)
-[[fnrknout]] (nu) (fnrkl ~ fnrknul, no PPP, fnrknuv, fnrknutí)
-[[prasknout]] (nu) (praskl ~ prasknul, prasknut, prasknuv, vn prasknutí)
-[[tisknout]] - or -/n [by meaning] (tiskl, tisknut ~ tištěn [differentiated by meaning], impf, tisknutí ~ tištění)
+[[cinknout]] past^(nu) (cinkl ~ cinknul, cinknut, cinknuv, vn cinknutí)
+[[fnrknout]] past^(nu) (fnrkl ~ fnrknul, no PPP, fnrknuv, fnrknutí)
+[[prasknout]] past^(nu) (praskl ~ prasknul, prasknut, prasknuv, vn prasknutí)
+[[tisknout]] - or ppp^n [by meaning] (tiskl, tisknut ~ tištěn [differentiated by meaning], impf, tisknutí ~ tištění)
 [[stisknout]] - (stiskl, stisknut, stisknuv, stisknutí)
-[[vytisknout]] (nu)/t:n (vytiskl ~ vytisknul, vytisknut ~ vytištěn, vytisknuv, vytisknutí ~ vytištění)
-[[blýsknout]] (nu) (blýskl ~ blýsknul, no PPP, blýsknuv, blýsknutí)
+[[vytisknout]] past^(nu).ppp^t^n (vytiskl ~ vytisknul, vytisknut ~ vytištěn, vytisknuv, vytisknutí ~ vytištění)
+[[blýsknout]] past^(nu) (blýskl ~ blýsknul, no PPP, blýsknuv, blýsknutí)
 [[tknout se]] - (tknul se, tknut [PPP with reflexive], tknuv se, vn tknutí)
-[[dotknout se]] (nu)/n:t/t (dotkl se ~ dotknul se, dotčen ~ dotknut [PPP with reflexive], dotknuv se, vn dotknutí)
-[[vytknout]] (nu)/n:t (vytkl ~ vytknul, vytčen ~ vytknut, vytknuv, vn vytčení ~ vytknutí); same for [[protknout]], [[zatknout]]
-[[kouknout]] (nu) (koukl ~ kouknul, no PPP, kouknuv, kouknutí)
-[[nařknout]] -/n:t (nařkl, nařčen ~ nařknut, nařknuv, nařčení ~ nařknutí)
-[[přiřknout]] -/n:t (přiřkl, přiřčen ~ přiřknut, přiřknuv, přiřčení ~ přiřknutí)
+[[dotknout se]] past^(nu).ppp^n^t.vn^t (dotkl se ~ dotknul se, dotčen ~ dotknut [PPP with reflexive], dotknuv se, vn dotknutí)
+[[vytknout]] past^(nu).ppp^n^t (vytkl ~ vytknul, vytčen ~ vytknut, vytknuv, vn vytčení ~ vytknutí); same for [[protknout]], [[zatknout]]
+[[kouknout]] past^(nu) (koukl ~ kouknul, no PPP, kouknuv, kouknutí)
+[[nařknout]] ppp^n^t (nařkl, nařčen ~ nařknut, nařknuv, nařčení ~ nařknutí)
+[[přiřknout]] ppp^n^t (přiřkl, přiřčen ~ přiřknut, přiřknuv, přiřčení ~ přiřknutí)
 [[uřknout]] - (uřkl, uřknut, uřknuv, uřknutí)
-[[vyřknout]] -/n:t (vyřkl, vyřčen ~ vyřknut, vyřknuv, vyřčení ~ vyřknutí)
-[[obléknout]] [also oblíknout ~ obléct ~ obléci ~ oblíct] -/n:t (oblékl, oblečen ~ obléknut, obléknuv, oblečení ~ obléknutí [VN differentiated by meaning: oblečení [of clothing], obléknutí])
+[[vyřknout]] ppp^n^t (vyřkl, vyřčen ~ vyřknut, vyřknuv, vyřčení ~ vyřknutí)
+[[obléknout]] [also oblíknout ~ obléct ~ obléci ~ oblíct] ppp^n^t (oblékl, oblečen ~ obléknut, obléknuv, oblečení ~ obléknutí [VN differentiated by meaning: oblečení [of clothing], obléknutí])
 [[vléknout]] [obsolete for vléct per IJP]
-[[navléknout]] [also navlíknout ~ navléct ~ navléci ~ navlíct] -/n:t/t (navlékl, navlečen ~ navléknut, navléknuv, navléknutí)
-[[převléknout]] [also převlíknout ~ převléct ~ převléci ~ převlíct] ?? -/n:t/n vs. -/n:t/t [by meaning; unless PPP is also distinguished by meaning] (převlékl ~ převléknul, převlečen ~ převléknut, převléknuv, převlečení ~ převléknutí [VN differentiated by meaning: převlečení [disguise] ~ převléknutí [change clothing]])
-[[svléknout]] [also svlíknout ~ svléct ~ svléci ~ svlíct] (nu)/n:t (svlékl ~ svléknul, svlečen ~ svléknut, svléknuv, svlečení ~ svléknutí)
+[[navléknout]] [also navlíknout ~ navléct ~ navléci ~ navlíct] ppp^n^t.vn^t (navlékl, navlečen ~ navléknut, navléknuv, navléknutí)
+[[převléknout]] [also převlíknout ~ převléct ~ převléci ~ převlíct] ?? ppp^n^t.vn^n vs. ppp^n^t.vn^t [by meaning; unless PPP is also distinguished by meaning] (převlékl ~ převléknul, převlečen ~ převléknut, převléknuv, převlečení ~ převléknutí [VN differentiated by meaning: převlečení [disguise] ~ převléknutí [change clothing]])
+[[svléknout]] [also svlíknout ~ svléct ~ svléci ~ svlíct] past^(nu).ppp^n^t (svlékl ~ svléknul, svlečen ~ svléknut, svléknuv, svlečení ~ svléknutí)
 [[oblíknout]] - (oblíkl, oblíknut, oblíknuv, oblíknutí)
-[[lnout]] nu (lnul, no PPP, impf, lnutí)
-[[přilnout]] nu (přilnul, přilnut, přilnuv, přilnutí)
+[[lnout]] past^nu (lnul, no PPP, impf, lnutí)
+[[přilnout]] past^nu (přilnul, přilnut, přilnuv, přilnutí)
 [[povšimnout si]] - (povšiml si, povšimnut si, povšimnuv si, povšimnutí)
-[[klapnout]] (nu) (klapl ~ klapnul, klapnut, klapnuv, vn klapnutí)
-[[klepnout]] (nu) (klepl ~ klepnul, klepnut, klepnuv, vn klepnutí)
-[[dupnout]] (nu) (dupl ~ dupnul, no PPP, dupnuv, vn dupnutí)
-[[vyhoupnout se]] (nu) (vyhoupl se ~ vyhoupnul se, vyhoupnut [WHAT DOES A REFLEXIVE VERB WITH PPP MEAN?], vyhoupnuv se, vyhoupnutí)
-[[křupnout]] (nu) (křupl ~ křupnul, křupnut, křupnuv, křupnutí)
+[[klapnout]] past^(nu) (klapl ~ klapnul, klapnut, klapnuv, vn klapnutí)
+[[klepnout]] past^(nu) (klepl ~ klepnul, klepnut, klepnuv, vn klepnutí)
+[[dupnout]] past^(nu) (dupl ~ dupnul, no PPP, dupnuv, vn dupnutí)
+[[vyhoupnout se]] past^(nu) (vyhoupl se ~ vyhoupnul se, vyhoupnut [WHAT DOES A REFLEXIVE VERB WITH PPP MEAN?], vyhoupnuv se, vyhoupnutí)
+[[křupnout]] past^(nu) (křupl ~ křupnul, křupnut, křupnuv, křupnutí)
 [[stárnout]] - (stárl, no PPP, impf, stárnutí)
 [[užasnout]] - (užasl, no PPP, užasnuv, užasnutí)
-[[zesnout]] nu (zesnul, no PPP, zesnuv, zesnutí)
-[[smlsnout]] (nu) (smlsl ~ smlsnul, no PPP, impf, vn smlsnutí)
-[[usnout]] nu (usnul, usnut, usnuv, usnutí)
+[[zesnout]] past^nu (zesnul, no PPP, zesnuv, zesnutí)
+[[smlsnout]] past^(nu) (smlsl ~ smlsnul, no PPP, impf, vn smlsnutí)
+[[usnout]] past^nu (usnul, usnut, usnuv, usnutí)
 [[bohatnout]] - (bohatl, no PPP, impf, bohatnutí)
 [[procitnout]] - (procitl, no PPP, procitnuv, procitnutí)
-[[zhltnout]] (nu) (zhltl ~ zhltnul, zhltnut, zhltnuv, vn zhltnutí)
-[[škrtnout]] (nu) (šrktl ~ šrktnul, škrtnout, šrktnuv, vn šrktnutí)
-[[zvrtnout]] (nu) (zvrtl ~ zvrtnul, zvrtnut, zvrtnuv, vn zvrtnutí)
-[[couvnout]] (nu) (couvl ~ couvnul, no PPP, couvnuv, vn couvnutí)
+[[zhltnout]] past^(nu) (zhltl ~ zhltnul, zhltnut, zhltnuv, vn zhltnutí)
+[[škrtnout]] past^(nu) (šrktl ~ šrktnul, škrtnout, šrktnuv, vn šrktnutí)
+[[zvrtnout]] past^(nu) (zvrtl ~ zvrtnul, zvrtnut, zvrtnuv, vn zvrtnutí)
+[[couvnout]] past^(nu) (couvl ~ couvnul, no PPP, couvnuv, vn couvnutí)
 [[naleznout]] [not in IJP] [but IJP commentary says 'nalezen' and 'nalezení' still in use]
 [[vynaleznout]] [not in IJP] [but IJP commentary says 'vynalezen' and 'vynalezení' still in use]
-[[mrznout]] (nu) (mrzl ~ mrznul, mrznut, impf, vn mrznutí)
-[[uváznout]] (nu) (uvázl ~ uváznul, no PPP, uváznuv, uváznutí)
-[[říznout]] (nu) (řízl ~ říznul, říznut, říznuv, říznutí), same for [[vyříznout]], [[doříznout]], [[naříznout]], [[rozříznout]])
+[[mrznout]] past^(nu) (mrzl ~ mrznul, mrznut, impf, vn mrznutí)
+[[uváznout]] past^(nu) (uvázl ~ uváznul, no PPP, uváznuv, uváznutí)
+[[říznout]] past^(nu) (řízl ~ říznul, říznut, říznuv, říznutí), same for [[vyříznout]], [[doříznout]], [[naříznout]], [[rozříznout]])
 
 Per IJP, the past transgressive always ends in -nuv, and the endingless forms are totally obsolete.
 (But not always it seems, see above.)
@@ -883,11 +883,11 @@ Variant codes:
 - Use 'n' for PPP in -n, 't' for PPP in '-t', 'n:t' or 't:n' for both (defaults to 'n'):
 * [[lát]], [[vylát]]: III.1
 * [[tát]], [[roztát]]: III.1
-* [[přát]], [[popřát]]: III.1.ě
-* [[smát se]]: III.1.ě.vn:-
-* [[usmát se]], [[nasmát se]]: III.1/n.ě
-* [[vát]]: III.1/n:t[rare]
-* [[navát]]: III.1/t
+* [[přát]], [[popřát]]: III.1.pres^ě
+* [[smát se]]: III.1.pres^ě.vn:-
+* [[usmát se]], [[nasmát se]]: III.1.ppp^n.ě
+* [[vát]]: III.1.ppp^n^t[rare]
+* [[navát]]: III.1.ppp^t
 
 ]=]
 parse["III.1"] = function(base, conjmod_run, parse_err)
@@ -1018,11 +1018,11 @@ Variation:
 Variant codes:
 - Use 'long' for long imperative, 'short' for short imperative, 'long:short' or 'short:long' for both (default as above).
 - Use 'iot' for iotated PPP, 'ni' for non-iotated PPP, 'iot:ni' or 'ni:iot' for both (default is iotated).
-* [[čistit]]: IV.1/short:long,iot:ni
-* [[brzdit]]: IV.1/long:short,ni:iot
-* [[spasit]]: IV.1/ni
-* [[vozit]]: IV.1/iot:ni
-* [[loudit]]: IV.1/long:short,ni
+* [[čistit]]: IV.1.imp^short^long.ppp^iot^ni
+* [[brzdit]]: IV.1.imp^long^short.ppp^ni^iot
+* [[spasit]]: IV.1.ppp^ni
+* [[vozit]]: IV.1.ppp^iot^ni
+* [[loudit]]: IV.1.imp^long^short.ppp^ni
 
 ]=]
 
@@ -1188,14 +1188,14 @@ end
 
 Types:
 * [default] = a-stem + e-stem, impv only a-stem = [[klusat]], [[přepásat]], [[klouzat]], [[hýbat]], [[škrabat]], [[kopat]], [[koupat]], [[drápat]], [[dupat]], [[loupat]], [[rýpat]], [[štípat]], [[tápat]], [[dřímat]], [[klamat]], [[klofat]], [[párat]], [[páchat]]
-* /e:a = e-stem + a-stem, impv only a-stem = [[týkat se]], [[kdákat]], [[kvákat]]
-* /e = e-stem, impv only a-stem = [[stonat]]
-* /impe:impa = a-stem + e-stem, impv e-stem + a-stem = [[dlabat]], [[klepat]], [[sypat]], [[šlapat]], [[lámat]] (short 'lam')
-* /e:a,impe:impa = e-stem + a-stem, impv e-stem + a-stem = [[česat]], [[řezat]]
-* /e,impe:impa = e-stem, impv only e-stem + a-stem
-* /impa:impe = a-stem + e-stem, impv a-stem + e-stem = [[tesat]], [[křesat]], [[lízej]], [[hryzat]], [[orat]], [[dudlat]]
-* /e:a,impa:impe = e-stem + a-stem, impv a-stem + e-stem
-* /e,impa:impe = e-stem, impv only a-stem + e-stem = [[plavat]]
+* pres^e^a = e-stem + a-stem, impv only a-stem = [[týkat se]], [[kdákat]], [[kvákat]]
+* pres^e = e-stem, impv only a-stem = [[stonat]]
+* imp^e^a = a-stem + e-stem, impv e-stem + a-stem = [[dlabat]], [[klepat]], [[sypat]], [[šlapat]], [[lámat]] (short 'lam')
+* pres^e^a.imp^e^a = e-stem + a-stem, impv e-stem + a-stem = [[česat]], [[řezat]]
+* pres^e.imp^e^a = e-stem, impv only e-stem + a-stem
+* imp^a^e = a-stem + e-stem, impv a-stem + e-stem = [[tesat]], [[křesat]], [[lízej]], [[hryzat]], [[orat]], [[dudlat]]
+* pres^e^a.imp^a^e = e-stem + a-stem, impv a-stem + e-stem
+* pres^e.imp^a^e = e-stem, impv only a-stem + e-stem = [[plavat]]
 ]=]
 
 parse["V.2"] = function(base, conjmod_run, parse_err)
