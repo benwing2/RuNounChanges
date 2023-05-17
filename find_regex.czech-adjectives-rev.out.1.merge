@@ -1,4 +1,4 @@
-Beginning at Mon May 15 16:10:18 2023
+Beginning at Wed May 17 00:03:47 2023
 Page 1 bibl.: Found match for regex: =
 Page 1 bibl.: -------- begin text --------
 
@@ -11338,35 +11338,6 @@ Page 634 příště: -------- begin text --------
 * {{R:cs:PSJC}}
 * {{R:cs:SSJC}}
 -------- end text --------
-Page 635 sametonohá: Found match for regex: =
-Page 635 sametonohá: -------- begin text --------
-
-===Etymology===
-From {{compound|cs|samet|t1=velvet|-o-|noha||t3=leg}} {{suffix|cs||á}}. It refers to the [[velvety]] surface of the [[stipe]] of the [[fruiting body]] of the specified [[fungus]].
-
-===Pronunciation===
-* {{cs-IPA}}
-* {{rhymes|cs|oɦaː|s=5}}
-* {{hyphenation|cs|sa|me|to|no|há}}
-
-===Adjective===
-{{cs-adj|-}} {{g|f}}
-
-# {{lb|cs|relational}} a species of fungi with velvety surface of the stipe, {{m|cs|penízovka sametonohá||[[velvet foot]], ''Flammulina velutipes''}}
-#* {{quote-book|cs|year=2013|author=Mikšík Michal|title=Poznáváme jarní houby|publisher=Grada Publishing|location=Praha|page=167|url=https://books.google.cz/books?id=HOS-AgAAQBAJ&pg=PA167|passage=Penízovka '''sametonohá''' je výtečná jedlá houba.|translation=Velvet foot is a tasty edible mushroom.}}
-
-====Usage notes====
-Although all three [[Appendix:Glossary#gender|genders]] of the adjective can be created ([[masculine]] ''sametonohý'', [[feminine]] ''sametonohá'' and [[neuter]] ''sametonohé''), in practical usage only the feminine (''sametonohá'') can be found, since the word appears only in the above mentioned name of the fungus (though exceptions may be possible).
-
-====Declension====
-{{cs-ndecl|f.+}}
-
-====Related terms====
-{{col-auto|cs|samet|sametový|noha}}
-
-===Further reading===
-* {{R:cs:PSJC|sametonohý}}
--------- end text --------
 Page 636 politická: Found match for regex: =
 Page 636 politická: -------- begin text --------
 
@@ -11644,13 +11615,9 @@ Page 657 vzdálené: -------- begin text --------
 * {{cs-IPA}}
 
 ===Adjective===
-{{cs-adj}}
+{{head|cs|adjective form}}
 
-# {{neuter singular of|cs|vzdálený}}
-# {{feminine plural of|cs|vzdálený}}
-
-====Declension====
-{{rfinfl|cs|adjective}}
+# {{inflection of|cs|vzdálený||nom//acc|n|s|;|gen//dat//loc|f|s|;|in|nom|m|p|;|nom|f|p|;|acc|m//f|p}}
 -------- end text --------
 Page 658 koncové: Found match for regex: =
 Page 658 koncové: -------- begin text --------
@@ -11659,9 +11626,9 @@ Page 658 koncové: -------- begin text --------
 * {{cs-IPA}}
 
 ===Adjective===
-{{cs-adj}}
+{{head|cs|adjective form}}
 
-# {{inflection of|cs|koncový||s|f|gen//dat//loc|;|p|f|nom//acc//voc|;|s|n|nom//acc//voc}}
+# {{inflection of|cs|koncový||nom//acc|n|s|;|gen//dat//loc|f|s|;|in|nom|m|p|;|nom|f|p|;|acc|m//f|p}}
 -------- end text --------
 Page 659 babí: Found match for regex: =
 Page 659 babí: -------- begin text --------
@@ -50692,7 +50659,7 @@ Page 2462 duží: Found match for regex: =
 Page 2462 duží: -------- begin text --------
 
 ===Etymology===
-{{inh+|cs|sla-pro|*dužь}}.
+{{inh+|cs|sla-pro|*dužь}}. {{surf|cs|duh|-í}}.
 
 ===Pronunciation===
 * {{cs-IPA}}
@@ -50705,6 +50672,9 @@ Page 2462 duží: -------- begin text --------
 
 ====Declension====
 {{cs-adecl}}
+
+====Related terms====
+{{col-auto|cs|duh|dužina|neduh|neduživý}}
 
 ===Further reading===
 * {{R:cs:PSJC}}
@@ -80741,7 +80711,7 @@ Page 3853 idiotský: Found match for regex: =
 Page 3853 idiotský: -------- begin text --------
 
 ===Pronunciation===
-* {{cs-IPA}}
+* {{cs-IPA|[dy]}}
 
 ===Adjective===
 {{cs-adj}}
@@ -96020,7 +95990,7 @@ Page 4540 pohřešovaný: Found match for regex: =
 Page 4540 pohřešovaný: -------- begin text --------
 
 ===Etymology===
-[[pohřešovat]]
+From {{af|cs|pohřešovat|-aný}}.
 
 ===Adjective===
 {{cs-adj}}
@@ -123218,6 +123188,7 @@ From {{af|cs|rosa|-ný}}.
 ===Further reading===
 * {{R:cs:PSJC}}
 * {{R:cs:SSJC}}
+* {{R:cs:IJP}}
 -------- end text --------
 Page 5668 drsný: Found match for regex: =
 Page 5668 drsný: -------- begin text --------
@@ -157709,7 +157680,7 @@ Page 7098 sametový: -------- begin text --------
 {{cs-adecl}}
 
 ====Related terms====
-{{col-auto|cs|samet|sametonohá}}
+{{col-auto|cs|samet|sametonohý}}
 
 ===Further reading===
 * {{R:cs:PSJC}}
@@ -160125,5 +160096,5 @@ Page 7203 papežštější než papež: -------- begin text --------
 ====Declension====
 {{rfinfl|cs|adjective}}
 -------- end text --------
-Elapsed time: 11 mins 1.39 secs
-Ending at Mon May 15 16:21:19 2023
+Elapsed time: 13 mins 6.11 secs
+Ending at Wed May 17 00:16:54 2023
