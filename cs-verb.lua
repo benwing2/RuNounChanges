@@ -280,6 +280,48 @@ local function add_present_a_imperative(base, stems, footnotes)
 	end)
 end
 
+local function get_imptypes_for_stem(base)
+	local imptypes
+	if rfind(base.stem, "[sš][tť]$") or rfind(base.stem, "tř$") then
+		imptypes = {"long", "short"}
+	else
+		-- Substitute 'ch' with a single character to make the following code simpler.
+		local modstem = base.stem:gsub("ch", com.TEMP_CH)
+		if rfind(modstem, com.cons_c .. "[lr]" .. com.cons_c .. "$") then
+			-- [[trp]]; not long imperative.
+			imptypes = "short"
+		elseif rfind(modstem, com.cons_c .. com.cons_c .. "$") then
+			imptypes = "long"
+		else
+			imptypes = "short"
+		end
+	end
+
+	return imptypes
+end
+
+
+local function get_imperative_principal_part(base, infstem, imptype)
+	local sg2, sg2_2
+	if imptype == "long" then
+		sg2 = com.combine_stem_ending(base, "imp_2s", infstem, "i")
+	else
+		-- See comment below at IV.1, there are rare cases where i-ě alternations occur in imperatives, e.g.
+		-- [[podnítit]] impv. 'podniť ~ [rare] podněť'. 'ů' is reduced to 'u' rather than 'o', at least in
+		-- [[půlit]] and derivatives.
+		infstem = com.apply_vowel_alternation(imptype == "short-ě" and "quant-ě" or "quant", infstem, "noerror", "ring-u-to-u")
+		if rfind(infstem, "[" .. com.paired_plain .. com.velar .. "]$") then
+			sg2 = com.apply_second_palatalization(infstem, "is verb")
+		else
+			sg2 = infstem
+		end
+		if rfind(infstem, com.velar_c .. "$") then
+			sg2_2 = com.apply_first_palatalization(infstem, "is verb")
+		end
+	end
+	return {sg2, sg2_2}
+end
+
 
 local function add_imperative_from_present(base, pres3p_stems, overriding_imptypes, footnotes)
 	local imptypes
@@ -291,20 +333,7 @@ local function add_imperative_from_present(base, pres3p_stems, overriding_imptyp
 
 	local function add_imp_for_stem(stem, stem_footnotes)
 		if not imptypes then
-			if rfind(stem, "[sš][tť]$") or rfind(stem, "tř$") then
-				imptypes = {"long", "short"}
-			else
-				-- Substitute 'ch' with a single character to make the following code simpler.
-				local modstem = stem:gsub("ch", com.TEMP_CH)
-				if rfind(modstem, com.cons_c .. "[lr]" .. com.cons_c .. "$") then
-					-- [[trp]]; not long imperative.
-					imptypes = "short"
-				elseif rfind(modstem, com.cons_c .. com.cons_c .. "$") then
-					imptypes = "long"
-				else
-					imptypes = "short"
-				end
-			end
+			imptypes = get_imptypes_for_stem(imptypes)
 		end
 		local function add_imp_for_type(imptype, imptype_footnotes)
 			local all_footnotes = iut.combine_footnotes(stem_footnotes,
@@ -348,23 +377,59 @@ local function add_pres_fut(base, stems, sg1, sg2, sg3, pl1, pl2, pl3, footnotes
 end
 
 
-local function add_pres_tgress(base, stems, prtr_endings, footnotes)
-	map_forms(prtr_endings, function(prtr_ending, prtr_footnotes)
-		prtr_footnotes = iut.combine_footnotes(prtr_footnotes, footnotes)
-		if prtr_ending == "ou" then
-			add(base, "pres_tgress_m", stems, "a", prtr_footnotes)
-		elseif prtr_ending == "í" then
-			-- ě may be converted to e by com.combine_stem_ending()
-			add(base, "pres_tgress_m", stems, "ě", prtr_footnotes)
-		elseif prtr_ending == "ají" then
-			add(base, "pres_tgress_m", stems, "aje", prtr_footnotes)
+local function generate_default_pres_tgress_principal_part(base, do_err)
+	return iut.map_forms(base.forms.pres_fut_3p, function(form)
+		local pref = rmatch(form, "^(.*)ou$")
+		local ending
+		if pref then
+			ending = "a"
 		else
-			error(("Unrecognized present transgressive ending '%s', expected 'ou', 'í' or 'ají'"):format(prtr_ending))
+			pref = rmatch(form, "^(.*)í")
+			if pref then
+				-- ě may be converted to e by com.combine_stem_ending()
+				ending = "ě"
+			else
+				error("'prtr:' must be given in order to specify the present transgressive principal part because third-person "
+					.. "plural present/future '" .. form .. "' does not end in -ou or -í")
+			end
 		end
-		add(base, "pres_tgress_fn", stems, prtr_ending .. "c", prtr_footnotes)
-		add(base, "pres_tgress_p", stems, prtr_ending .. "ce", prtr_footnotes)
-		add(base, "pres_act_part", stems, prtr_ending .. "cí", prtr_footnotes)
+		return combine_stem_ending(base, "pres_tgress_m", pref, ending)
 	end)
+end
+
+
+local function add_pres_tgress(base)
+	add(base, "pres_tgress_m", base.principal_part_forms.prtr, "")
+	local prtr_stems = iut.map_forms(base.principal_part_forms.prtr, function(form)
+		local pref = rmatch(form, "^(.*)a$")
+		if pref then
+			pref = pref .. "ou"
+		end
+		if not pref then
+			pref = rmatch(form, "^(.*)[eě]$")
+			if pref then
+				pref = pref .. "í"
+			end
+		end
+		if not pref then
+			error("Unrecognized present transgressive principal part '" .. form .. "', which does not end in -a, -e or -ě")
+		end
+		return pref
+	end)
+	add(base, "pres_tgress_fn", prtr_stems, "c")
+	add(base, "pres_tgress_p", prtr_stems, "ce")
+end
+
+
+local function generate_default_pres_act_part_principal_part(base, do_err)
+	return iut.map_forms(base.forms.pres_tgress_fn, function(form)
+		return form .. "í"
+	end)
+end
+
+
+local function add_pres_act_part(base)
+	add(base, "pres_act_part", base.principal_part_forms.pres_act_part, "")
 end
 
 
@@ -426,32 +491,72 @@ for _, suffix_ending in ipairs(part_suffix_to_ending_list) do
 end
 
 
-local function add_past(base, msgstems, reststems, ptr_stems)
-	reststems = reststems or msgstems
-	-- First, generate the l-participle forms.
+-- No generate_default_past_principal_part(), which generates the past_m principal part.
+-- This must be specified by each verb conjugation.
+
+
+local function add_past_m(base)
+	add(base, "lpart_m", base.principal_part_forms.past, "")
+end
+
+
+local function generate_default_past_f_principal_part(base, do_err)
+	iut.map_forms(base.principal_part_forms.past, function(form)
+		return form .. "a"
+	end)
+end
+
+
+local function add_past_other_than_m(base)
 	for _, suffix_ending in ipairs(part_suffix_to_ending_list) do
 		local suffix, ending = unpack(suffix_ending)
-		add(base, "lpart_" .. suffix, suffix == "m" and msgstems or reststems, "l" .. ending)
+		if suffix ~= "m" then
+			add(base, "lpart_" .. suffix, base.principal_part_forms.pastf, ending)
+		end
 	end
+end
 
-	-- Add the past transgressive; not available for imperfective verbs.
+
+local function generate_default_past_tgress_principal_part(base, do_err)
+	return iut.map_forms(base.forms.lpart_m, function(form)
+		local pref = rmatch(form, "^(.*)l$")
+		if not pref then
+			error("'patr:' must be given in order to specify the past transgressive principal part because masculine "
+				.. "singular l-participle '" .. form .. "' does not end in -l")
+		end
+		if rfind(pref, com.vowel_c .. "$") then
+			pref = pref .. "v"
+		end
+		return pref
+	end)
+end
+
+
+local function add_past_tgress(base)
+	-- Past transgressive not available for imperfective verbs.
 	if base.aspect == "impf" then
 		return
 	end
-	if not ptr_stems then
-		ptr_stems = {}
-		map_forms(msgstems, function(stem, footnotes)
-			local ptr_stem = stem
-			if rfind(stem, com.vowel_c .. "$") then
-				ptr_stem = ptr_stem .. "v"
-			end
-			table.insert(ptr_stems, {form = ptr_stem, footnotes = footnotes})
-		end)
+	local patr_stems = base.principal_part_forms.patr
+	add(base, "past_tgress_m", patr_stems, "")
+	add(base, "past_tgress_fn", patr_stems, "ši")
+	add(base, "past_tgress_p", patr_stems, "še")
+	add(base, "past_act_part", patr_stems, "ší")
+end
+
+
+-- No generate_default_ppp_principal_part(), which generates the ppp_m principal part.
+-- This must be specified by each verb conjugation.
+
+
+local function add_ppp(base)
+	if not base.ppp then
+		return
 	end
-	add(base, "past_tgress_m", ptr_stems, "")
-	add(base, "past_tgress_fn", ptr_stems, "ši")
-	add(base, "past_tgress_p", ptr_stems, "še")
-	add(base, "past_act_part", ptr_stems, "ší")
+	for _, suffix_ending in ipairs(part_suffix_to_ending_list) do
+		local suffix, ending = unpack(suffix_ending)
+		add(base, "ppp_" .. suffix, base.principal_part_forms.ppp, ending)
+	end
 end
 
 
@@ -473,6 +578,224 @@ local function add_ppp(base, stems, vn_stems)
 	-- [[spát]] 'spaní', [[tkát]] 'tkaní', but not all- monosyllabic verbs, e.g. [[dbát]] ppp 'dbán' vn. 'dbání' or 'dbaní'
 	-- and [[znát]] ppp. 'znán' vn. only 'znání'.
 	add(base, "vnoun", vn_stems, "í")
+end
+
+
+local function add_vn(base)
+	add(base, "vnoun", base.principal_part_forms.vn, "")
+end
+
+
+--[=[
+Data on how to conjugate individual rows (i.e. tense/aspect combinations, such as present indicative or
+conditional).
+
+The order listed here matters. It determines the order of generating row forms. The order must have
+'inf' < 'pres' < 'sub' < 'imp' < 'negimp' because the present indicative uses the root_stressed_stem generated
+by add_infinitive; the present subjunctive uses generated forms from the present indicative; the imperative uses
+forms from the present subjunctive and present indicative; and the negative imperative uses forms from the infinitive
+and the imperative. Similarly we must have 'fut' < 'cond' because the conditional uses the future principal part.
+
+The following specs are allowed:
+
+-- `desc` must be present and is an all-lowercase English description of the row. It is used in error messages and in
+   generating categories of the form 'Italian verbs with irregular ROW' and 'Italian verbs with missing ROW'.
+-- `tag_suffix` must be present is a string containing the {{inflection of}} tags that are appended onto the
+   person/number tags to form the accelerator spec. For example, the spec "pres|sub" means that the accelerator spec
+   for the third singular present subjunctive will be "3|s|pres|sub". This accelerator spec is passed to
+   [[Module:inflection utilities]], which in turn passes it to [[Module:links]] when generating the link(s) for the
+   corresponding verb form(s). The spec ultimately gets processed by [[Module:accel]] to generate the definition line
+   for nonexistent verb forms. (FIXME: Accelerator support is currently disabled for forms with non-final accents.
+   We need to change the code in [[Module:inflection utilities]] so it sets the correct target not containing the
+   non-final accent.)
+-- `persnums` must be present and specifies the possible person/number suffixes to add onto the row-level slot
+   (e.g. "phis" for the past historic) to form the individual person/number-specific slot (e.g. "phis2s" for the
+   second-person singular past historic).
+-- `row_override_persnums`, if present, specifies the person/number suffixes that are specified by a row override.
+   If omitted, `persnums` is used.
+-- `row_override_persnums_to_full_persnums`, if present, specifies a mapping from the person/number suffixes
+   specified by a row override to the person/number/suffixes used for conjugating the row. This is used, for example,
+   with the subjunctive and imperfect subjunctive, where the first element of the row override specifies
+   (respectively) the 123s and 12s forms, which need to be copied (respectively) to the 1s/2s/3s and 1s/3s forms.
+   If omitted, no such copying happens. It's still possible for the row override persnums to disagree with the
+   overall persnums. This happens, for example, with the imperative, where the 'improw:' row override spec specifies
+   only the 2s and 2p forms; the remaining forms (3s, 1p, 3p) are generated during conjugation by copying from other
+   forms, and can't be overridden using a row override. (They can still be overridden using a single override such
+   as 'imp3s:...' or a late single override such as 'imp3s!:...'.
+-- `generate_default_principal_part`, if present, should be a function of two arguments, `base` and `do_err`, and
+   should return the principal part(s) for the row. The return value can be anything that is convertible to the
+   "general list form" of a slot's forms, i.e. it can return a string, an object
+   {form = FORM, footnotes = {FOOTNOTE, FOOTNOTE, ...}}, or a list of either. It must be present if `conjugate` is
+   a table, but may be missing if `conjugate` is a function, in which case the function needs to generate the
+   principal part itself or otherwise handle things differently. For example, the present indicative does not
+   specify a value for `generate_default_principal_part` because there are actually two principal parts for the
+   present tense (first and third singular), which are processed at the beginning of the present indicative
+   `conjugate` function. Similarly, the infinitive does not specify a value for `generate_default_principal_part`
+   because there is no principal part to speak of; the infinitive is generated directly from the lemma in combination
+   with the slash or backslash that follows the auxiliary and (in the case of a root-stressed infinitive) the
+   single-vowel spec following the backslash. If `do_err` is given to this function, the function may throw an error
+   if it can't generate the principal part; otherwise it should return nil.
+-- `conjugate` is either a function to conjugate the row (of two arguments, `base` and `rowslot`), or a table
+   containing the endings to add onto the principal part to conjugate the row. In the latter case, there should be
+   the same number of elements in the table as there are elements in `row_override_persnums` (if given) or
+   `persnums` (otherwise).
+-- `no_explicit_principal_part` (DOCUMENT ME)
+-- `no_row_overrides` (DOCUMENT ME)
+-- `no_single_overrides` (DOCUMENT ME)
+-- `add_clitics` is a mandatory function of two arguments, `base` and `rowslot`, to add clitics to the forms for the
+   specified row. It will only be called if `base.verb.linked_suf` is non-empty, i.e. there is a clitic to add.
+-- `dont_check_defective_status` (DOCUMENT ME)
+]=]
+local row_conjugations = {
+	{"inf", {
+		desc = "infinitive",
+		tag_suffix = "inf",
+		persnums = {""},
+		-- No generate_default_principal_part; handled specially in add_infinitive.
+		conjugate = add_infinitive,
+		no_explicit_principal_part = true, -- because handled specially using / or \ notation
+		no_row_overrides = true, -- useless because there's only one form; use / or \ notation
+		no_single_overrides = true, --useless because there's only one form; use / or \ notation
+		add_clitics = add_infinitive_clitics,
+		add_prefixed_reflexive_variants = add_non_finite_prefixed_reflexive_variants,
+	}},
+	{"pres", {
+		desc = "present indicative",
+		tag_suffix = "pres|ind",
+		persnums = full_person_number_list,
+		-- No generate_default_principal_part; handled specially in add_present_indic because we actually have
+		-- two principal parts for the present indicative ("pres" and "pres3s").
+		conjugate = add_present_indic,
+		-- No setting for no_explicit_principal_part here because it would never be checked; we special-case 'pres:'
+		-- overrides before checking no_explicit_principal_part. The reason for special-casing is because there are two
+		-- principal parts involved, "pres" and "pres3s", and we allow both to be specified using the syntax
+		-- 'pres:PRES^PRES3S'.
+		add_clitics = add_finite_clitics,
+	}},
+	{"sub", {
+		desc = "present subjunctive",
+		tag_suffix = "pres|sub",
+		persnums = full_person_number_list,
+		row_override_persnums = {"123s", "1p", "2p", "3p"},
+		row_override_persnums_to_full_persnums = {["123s"] = {"1s", "2s", "3s"}},
+		generate_default_principal_part = generate_default_present_subj_principal_part,
+		conjugate = add_present_subj,
+		add_clitics = add_finite_clitics,
+	}},
+	{"imp", {
+		desc = "imperative",
+		tag_suffix = "imp",
+		persnums = imp_person_number_list,
+		row_override_persnums = {"2s", "2p"},
+		generate_default_principal_part = generate_default_imperative_principal_part,
+		conjugate = add_imperative,
+		add_clitics = add_imperative_clitics,
+		add_prefixed_reflexive_variants = add_imperative_prefixed_reflexive_variants,
+	}},
+	{"negimp", {
+		desc = "negative imperative",
+		tag_suffix = "-",
+		persnums = imp_person_number_list,
+		-- No generate_default_principal_part because all parts are copied from other parts.
+		conjugate = add_negative_imperative,
+		add_clitics = add_negative_imperative_clitics,
+		no_explicit_principal_part = true, -- because all parts are copied from other parts
+		no_row_overrides = true, -- not useful; use single overrides if really needed
+		-- We don't want a category [[:Category:Italian verbs with missing negative imperative]]; doesn't make
+		-- sense as all parts are copied from elsewhere.
+		dont_check_defective_status = true,
+	}},
+	{"phis", {
+		desc = "past historic",
+		tag_suffix = "phis",
+		persnums = full_person_number_list,
+		generate_default_principal_part = generate_default_past_historic_principal_part,
+		conjugate = add_past_historic,
+		add_clitics = add_finite_clitics,
+		-- Set to "builtin" because normally handled specially in PRES^PRES3S,PHIS,PP spec, but when a built-in verb
+		-- is involved, we want a way of overriding the past historic (using 'phis:').
+		no_explicit_principal_part = "builtin",
+	}},
+	{"imperf", {
+		desc = "imperfect indicative",
+		tag_suffix = "impf|ind",
+		persnums = full_person_number_list,
+		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unstressed_stem,
+			function(stem) return combine_stem_ending(base, "imperf1s", stem, base.conj_vowel .. "vo") end) end,
+		conjugate = {"o", "i", "a", "àmo", "àte", "ano"},
+		add_clitics = add_finite_clitics,
+	}},
+	{"impsub", {
+		desc = "imperfect subjunctive",
+		tag_suffix = "impf|sub",
+		persnums = full_person_number_list,
+		row_override_persnums = {"12s", "3s", "1p", "2p", "3p"},
+		row_override_persnums_to_full_persnums = {["12s"] = {"1s", "2s"}},
+		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unstressed_stem,
+			function(stem) return combine_stem_ending(base, "impsub12s", stem, base.conj_vowel .. "ssi") end) end,
+		conjugate = {"ssi", "sse", "ssimo", "ste", "ssero"},
+		add_clitics = add_finite_clitics,
+	}},
+	{"fut", {
+		desc = "future",
+		tag_suffix = "fut",
+		persnums = full_person_number_list,
+		generate_default_principal_part = generate_default_future_principal_part,
+		conjugate = {"ò", "ài", "à", "émo", "éte", "ànno"},
+		add_clitics = add_finite_clitics,
+	}},
+	{"cond", {
+		desc = "conditional",
+		tag_suffix = "cond",
+		persnums = full_person_number_list,
+		generate_default_principal_part = generate_default_conditional_principal_part,
+		conjugate = {"èi", "ésti", {"èbbe", "ébbe"}, "émmo", "éste", {"èbbero", "ébbero"}},
+		add_clitics = add_finite_clitics,
+	}},
+	{"pp", {
+		desc = "past participle",
+		tag_suffix = "past|part",
+		persnums = {""},
+		generate_default_principal_part = generate_default_past_participle_principal_part,
+		conjugate = {""},
+		add_clitics = add_participle_clitics,
+		-- Set to "builtin" because normally handled specially in PRES^PRES3S,PHIS,PP spec, but when a built-in verb
+		-- is involved, we want a way of overriding the past participle (using 'pp:').
+		no_explicit_principal_part = "builtin",
+		no_row_overrides = true, -- useless because there's only one form; use the PRES^PRES3S,PHIS,PP or pp: spec
+		no_single_overrides = true, --useless because there's only one form; use the PRES^PRES3S,PHIS,PP or pp: spec
+	}},
+	{"ger", {
+		desc = "gerund",
+		tag_suffix = "ger",
+		persnums = {""},
+		generate_default_principal_part = generate_default_gerund_principal_part,
+		conjugate = {""},
+		add_clitics = add_gerund_clitics,
+		add_prefixed_reflexive_variants = add_non_finite_prefixed_reflexive_variants,
+		no_row_overrides = true, -- useless because there's only one form; use explicit principal part
+		no_single_overrides = true, -- useless because there's only one form; use explicit principal part
+	}},
+	{"presp", {
+		desc = "present participle",
+		tag_suffix = "pres|part",
+		persnums = {""},
+		generate_default_principal_part = generate_default_present_participle_principal_part,
+		conjugate = {""},
+		add_clitics = add_participle_clitics,
+		no_row_overrides = true, -- useless because there's only one form; use explicit principal part
+		no_single_overrides = true, -- useless because there's only one form; use explicit principal part
+		-- Disable this; seems most verbs do have present participles
+		-- not_defaulted = true, -- not defaulted, user has to request it explicitly
+		dont_check_defective_status = true, -- this is frequently missing and doesn't indicate a defective verb
+	}},
+}
+
+local row_conjugation_map = {}
+
+for _, rowconj in ipairs(row_conjugations) do
+	local rowslot, rowspec = unpack(rowconj)
+	row_conjugation_map[rowslot] = rowspec
 end
 
 
@@ -982,7 +1305,7 @@ IV.1:
 [[čepýřit]] (čepýřím, čepyř ~ čepýři, čepýřil, čepýřen, čepýře, čepýření)
 [[chýlit]] (chýlím, chyl, chýlil, chýlen, chýle, chýlení)
 [[půlit]] (půlím, pul, půlil, půlen, půle, půlení)
-[[půjčit]] (půjčím, půjč, půjčil, půjčen, půjčiv, půjčení)
+[[půjčit]] (půjčím, půjč [IRREG], půjčil, půjčen, půjčiv, půjčení)
 [[trůnit]] (trůním, trůni, trůnil, no PPP, trůně, trůnění)
 [[podnítit]] (podnítím, podniť ~ [rare] podněť, podnítil, podnícen, podnítiv, podnícení)
 [[vštípit]] (vštípím, vštěp ~ vštip, vštípil, vštípen, vštípiv, vštípení)
@@ -1025,6 +1348,37 @@ Variant codes:
 * [[loudit]]: IV.1.imp^long^short.ppp^ni
 
 ]=]
+
+conj["IV.1"] = {
+	init = function(base)
+		-- Some with -ít e.g. [[pohřbít]]
+		local infstem = separate_stem_suffix(base.lemma, "^(.*)[ií]t$", "IV.1")
+		base.infstem = com.convert_paired_plain_to_palatal(infstem)
+	end,
+	pres = function(base) return base.infstem .. "ím" end,
+	imp = {
+		choices = {"long", "short", "short-ě"},
+		default = get_imptypes_for_stem,
+		generate_part = function(base, variant)
+			return get_imperative_principal_part(base, base.infstem, form)
+		end,
+	},
+	past = function(base) return base.infstem .. "il" end,
+	ppp = {
+		choices = {"iot", "ni"},
+		default = "iot",
+		generate_part = function(base, variant)
+			if variant == "iot" then
+				local iotated_stem = com.iotate(base.infstem)
+				return com.combine_stem_ending(base, "ppp_m", iotated_stem, "en")
+			elseif variant == "ni" then
+				return com.combine_stem_ending(base, "ppp_m", base.infstem, "en")
+			else
+				error("Internal error: Saw unrecognized PPP variant code '" .. variant .. "'")
+			end
+		end,
+	},
+
 
 parse["IV.1"] = function(base, conjmod_run, parse_err)
 	local separated_groups = iut.split_alternating_runs_and_strip_spaces(conjmod_run, ",")
@@ -1109,24 +1463,24 @@ etc.
 
 
 --[=[
-[[dělat]] "to do"
-[[konat]] "to act"
-[[chovat]] "to behave"
-[[doufat]] "to hope"
-[[ptát se]] "to ask" (vn 'ptaní se')
-[[dbát]] "to care" (vn 'dbání ~ dbaní')
-[[zanedbat]] "to neglect"
-[[znát]] "to know"
-[[poznat]] "to know (pf.)"
-[[poznávat]] "to know (secondary impf.)"
-[[nechat]] "to let (pf)" (imperative 'nech ~ nechej')
-[[nechávat]] "to let (impf)"
-[[obědvat]] "to lunch"
-[[odolat]] "to resist"/[[zdolat]]/[[udolat]]
-[[plácat]] "to slap"
-[[drncat]] "to rattle"
-[[kecat]] "to chatter"
-[[cucat]] "to suck"
+[[dělat]] "to do" V.1
+[[konat]] "to act" V.1
+[[chovat]] "to behave" V.1
+[[doufat]] "to hope" V.1
+[[ptát se]] "to ask" (vn 'ptaní se') V.1.vn:ptaní
+[[dbát]] "to care" (vn 'dbání ~ dbaní') V.1.vn:dbání:dbaní
+[[zanedbat]] "to neglect" V.1
+[[znát]] "to know" V.1
+[[poznat]] "to know (pf.)" V.1
+[[poznávat]] "to know (secondary impf.)" V.1
+[[nechat]] "to let (pf)" (imperative 'nech ~ nechej') V.1.imp:nech:nechej
+[[nechávat]] "to let (impf)" V.1
+[[obědvat]] "to lunch" V.1
+[[odolat]] "to resist"/[[zdolat]]/[[udolat]] V.1
+[[plácat]] "to slap" V.1
+[[drncat]] "to rattle" V.1
+[[kecat]] "to chatter" V.1
+[[cucat]] "to suck" V.1
 ]=]
 
 conjs["V.1"] = function(base, lemma)
