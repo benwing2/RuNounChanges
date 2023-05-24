@@ -63,10 +63,18 @@ def process_text_on_page(index, pagetitle, text):
         # Split templates and only change non-template text
         split_templates = re.split(template_split_re, line)
         for l in xrange(0, len(split_templates), 2):
-          def replace_raw(m):
+          def replace_raw_self_link(m):
             notes.append("replace raw self link to English term with templated one")
             return get_templated_self_link(pagetitle)
-          split_templates[l] = re.sub(r"\[\[(?:#English\|)?%s\]\]" % re.escape(pagetitle), replace_raw, split_templates[l])
+          split_templates[l] = re.sub(r"\[\[(?:#English\|)?%s\]\]" % re.escape(pagetitle), replace_raw_self_link, split_templates[l])
+          def replace_raw_two_part_link(m):
+            link = m.group(1)
+            if link == pagetitle:
+              notes.append("replace two-part raw self link to English term with templated one")
+              return get_templated_self_link(pagetitle)
+            notes.append("replace two-part link to English term with raw link")
+            return "[[%s]]" % link
+          split_templates[l] = re.sub(r"\[\[([^|\[\]]+)(?:#English)?\|\1\]\]", replace_raw_two_part_link, split_templates[l])
         line = "".join(split_templates)
 
       new_lines.append(line)
