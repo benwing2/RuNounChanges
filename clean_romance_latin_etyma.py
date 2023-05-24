@@ -51,13 +51,16 @@ def verify_latin1_verb(lemma, pagemsg):
   pagemsg(u"For lemma %s, didn't find page, assuming OK to add -āre/-ārī etymon" % lemma)
   return True
 
-es_suffixes_to_latin_etym_suffixes = [
+romance_suffixes_to_latin_etym_suffixes = [
   ({"es": "ada", "fr": u"ée"}, u"āta", None, [(u"[aā]tam$", u"āta")]),
+  ({"es": "ura", "fr": "ure"}, u"ūra", None, [(u"[uū]ram$", u"ūra")]),
+  ({"es": "osa", "fr": "euse"}, u"ōsa", None, [(u"[oō]sam$", u"ōsa")]),
   ({"es": "a", "fr": "e"}, "a", None, [("am$", "a")]),
   ({"es": "dad", "fr": u"té"}, u"tās", u"tātem", [(u"t[āa]tis$", u"tātem")]),
   ({"es": "tud", "fr": "tu"}, u"tūs", u"tūtem", [(u"t[ūu]tis$", u"tūtem")]),
   ({"es": "able", "fr": "able"}, u"ābilis", None, [(u"[āa]bilem$", u"ābilis")]),
   ({"es": "ble", "fr": "ble"}, u"bilis", None, [("bilem$", "bilis")]),
+  ({"es": "aje", "fr": "age"}, u"āticum", None, []),
   ({"es": "ante", "fr": "ant"}, u"āns", "antem", [("antis$", "antem")]),
   ({"es": "ente", "fr": ["ant", "ent"]}, u"ēns", "entem", [("entis$", "entem")]),
   ({"es": "al", "fr": ["al", "el"]}, u"ālis", None, [(u"[aā]lem$", u"ālis")]),
@@ -70,7 +73,8 @@ es_suffixes_to_latin_etym_suffixes = [
   ({"es": "torio", "fr": "teur"}, u"tōrius", None, [(u"tōrium$", u"tōrius")]),
   ({"es": "sorio", "fr": "seur"}, u"sōrius", None, [(u"sōrium$", u"sōrius")]),
   ({"es": "ado", "fr": u"é"}, u"ātus", None, [(u"[aā]tum$", u"ātus")]),
-  ({"es", "ado", "fr": u"é"}, u"ātum", None, []),
+  ({"es": "ado", "fr": u"é"}, u"ātum", None, []),
+  ({"es": "oso", "fr": "eux"}, u"ōsus", None, [(u"[oō]sum$", u"ōsus")]),
   ({"es": "o"}, "us", None, [("um$", "us")]),
   ({"es": "o"}, "um", None, []),
   ({"es": "ar"}, u"āris", None, [(u"[aā]rem$", u"āris")]),
@@ -99,6 +103,9 @@ deny_list_canonicalize_suffix = {
   "Macarius",
   "Hilarius",
   "varius",
+  "tragemata",
+  "taura",
+  "Mosa",
 }
 
 latin_etymon_should_match = "(m|[aei]r[ei]|i)$"
@@ -190,7 +197,7 @@ def process_text_on_page(index, pagetitle, text):
         return m.group(0)
       existing_gloss = getparam(temp1t, "t") or getparam(temp1t, "5") or getparam(temp1t, "gloss")
       if existing_gloss:
-        pagemsg("WARNING: When incorporating accusative singular or present active infinitive, saw existing gloss %s: %s" %
+        pagemsg("WARNING: When incorporating accusative singular or present active infinitive, saw existing gloss '%s': %s" %
           (existing_gloss, temp1))
         return m.group(0)
       existing_lemma_alt = getparam(lemmat, "3") or getparam(lemmat, "alt")
@@ -255,7 +262,7 @@ def process_text_on_page(index, pagetitle, text):
         return m.group(0)
       existing_gloss = getparam(temp1t, "t") or getparam(temp1t, "5") or getparam(temp1t, "gloss")
       if existing_gloss:
-        pagemsg("WARNING: When incorporating probable accusative singular or present active infinitive, saw existing gloss %s: %s" %
+        pagemsg("WARNING: When incorporating probable accusative singular or present active infinitive, saw existing gloss '%s': %s" %
           (existing_gloss, temp1))
         return m.group(0)
       existing_non_lemma_alt = getparam(non_lemmat, "3") or getparam(non_lemmat, "alt")
@@ -310,9 +317,15 @@ def process_text_on_page(index, pagetitle, text):
             continue
           alt_lemma, alt_form = altparts
           if remove_macrons(lemma) != remove_macrons(alt_lemma):
-            pagemsg("WARNING: In etymology template, Latin lemma %s doesn't match alt text lemma %s: %s" %
-                (lemma, alt_lemma, unicode(t)))
-            continue
+            if remove_macrons(lemma) == remove_macrons(alt_form):
+              pagemsg("In etymology template, lemma and non-lemma etymon are reversed, switching them: %s" % unicode(t))
+              temp = alt_lemma
+              alt_lemma = alt_form
+              alt_form = temp
+            else:
+              pagemsg("WARNING: In etymology template, Latin lemma %s doesn't match alt text lemma %s: %s" %
+                  (lemma, alt_lemma, unicode(t)))
+              continue
           if alt_lemma.startswith("*") and not alt_form.startswith("*"):
             alt_form = "*" + alt_form
           t.add("3", alt_lemma)
@@ -342,79 +355,89 @@ def process_text_on_page(index, pagetitle, text):
           rmparam(t, "4")
           t.add("3", alt)
         else:
-          for es_suffix_to_latin_etym_suffix in es_suffixes_to_latin_etym_suffixes:
-            if len(es_suffix_to_latin_etym_suffix) == 4:
-              romance_suffix, latin_lemma_suffix, latin_form_suffix, latin_subs = es_suffix_to_latin_etym_suffix
+          for romance_suffix_to_latin_etym_suffix in romance_suffixes_to_latin_etym_suffixes:
+            if len(romance_suffix_to_latin_etym_suffix) == 4:
+              romance_suffix_dict, latin_lemma_suffix, latin_form_suffix, latin_subs = romance_suffix_to_latin_etym_suffix
               verify_lemma = None
             else:
-              romance_suffix, latin_lemma_suffix, latin_form_suffix, latin_subs, verify_lemma = es_suffix_to_latin_etym_suffix
-            if pagetitle.endswith(romance_suffix):
-              if remove_macrons(lemma).endswith(remove_macrons(latin_lemma_suffix)):
-                if latin_form_suffix:
-                  if alt:
-                    for refrom, reto in latin_subs:
-                      newalt = re.sub(refrom, reto, alt)
-                      if newalt != alt:
-                        notes.append("canonicalize Latin non-lemma etymon %s -> %s in {{%s|%s}}" %
-                          (alt, newalt, tn, args.langcode))
-                        alt = newalt
-                    if not remove_macrons(alt).endswith(remove_macrons(latin_form_suffix)):
-                      pagemsg("WARNING: Canonicalized Latin non-lemma etymon %s doesn't match expected suffix %s: %s" %
-                        (alt, latin_form_suffix, unicode(t)))
-                    elif latin_form_suffix != remove_macrons(latin_form_suffix) and alt.endswith(remove_macrons(latin_form_suffix)):
-                      newalt = alt[:-len(latin_form_suffix)] + latin_form_suffix
-                      if newalt != alt:
-                        notes.append("add missing long vowels in suffix -%s to Latin non-lemma etymon %s in {{%s|%s}}" %
-                          (latin_form_suffix, alt, tn, args.langcode))
-                        alt = newalt
-                    elif remove_macrons(alt).endswith(remove_macrons(latin_form_suffix)):
-                      newalt = alt[:-len(latin_form_suffix)] + latin_form_suffix
-                      if newalt != alt:
-                        pagemsg("WARNING: Possible wrong macrons in non-lemma etymon %s, expected suffix -%s, please verify: %s" %
+              romance_suffix_dict, latin_lemma_suffix, latin_form_suffix, latin_subs, verify_lemma = romance_suffix_to_latin_etym_suffix
+            if args.langcode not in romance_suffix_dict:
+              continue
+            romance_suffixes = romance_suffix_dict[args.langcode]
+            if type(romance_suffixes) is not list:
+              romance_suffixes = [romance_suffixes]
+            must_break = False
+            for romance_suffix in romance_suffixes:
+              if pagetitle.endswith(romance_suffix):
+                if remove_macrons(lemma).endswith(remove_macrons(latin_lemma_suffix)):
+                  if latin_form_suffix:
+                    if alt:
+                      for refrom, reto in latin_subs:
+                        newalt = re.sub(refrom, reto, alt)
+                        if newalt != alt:
+                          notes.append("canonicalize Latin non-lemma etymon %s -> %s in {{%s|%s}}" %
+                            (alt, newalt, tn, args.langcode))
+                          alt = newalt
+                      if not remove_macrons(alt).endswith(remove_macrons(latin_form_suffix)):
+                        pagemsg("WARNING: Canonicalized Latin non-lemma etymon %s doesn't match expected suffix %s: %s" %
                           (alt, latin_form_suffix, unicode(t)))
-                    addparam_after(t, "4", alt, "3")
-                  else:
-                    if verify_lemma:
-                      verified = verify_lemma(lemma, pagemsg)
-                    else:
-                      verified = True
-                    if verified:
-                      alt = lemma[:-len(latin_lemma_suffix)] + latin_form_suffix
-                      notes.append("add presumably correct Latin non-lemma etymon %s for lemma %s to {{%s|%s}}" %
-                        (alt, lemma, tn, args.langcode))
+                      elif latin_form_suffix != remove_macrons(latin_form_suffix) and alt.endswith(remove_macrons(latin_form_suffix)):
+                        newalt = alt[:-len(latin_form_suffix)] + latin_form_suffix
+                        if newalt != alt:
+                          notes.append("add missing long vowels in suffix -%s to Latin non-lemma etymon %s in {{%s|%s}}" %
+                            (latin_form_suffix, alt, tn, args.langcode))
+                          alt = newalt
+                      elif remove_macrons(alt).endswith(remove_macrons(latin_form_suffix)):
+                        newalt = alt[:-len(latin_form_suffix)] + latin_form_suffix
+                        if newalt != alt:
+                          pagemsg("WARNING: Possible wrong macrons in non-lemma etymon %s, expected suffix -%s, please verify: %s" %
+                            (alt, latin_form_suffix, unicode(t)))
                       addparam_after(t, "4", alt, "3")
-                else:
-                  if alt:
-                    for refrom, reto in latin_subs:
-                      newalt = re.sub(refrom, reto, alt)
-                      if newalt != alt:
-                        notes.append("canonicalize Latin non-lemma etymon %s -> %s in {{%s|%s}}" %
-                          (alt, newalt, tn, args.langcode))
-                        alt = newalt
-                    if remove_macrons(alt) == remove_macrons(lemma):
-                      # We may e.g. canonicalize -am to -a, making the non-lemma etymon duplicative.
-                      notes.append("move duplicative Latin lemma %s from 4= to 3= in {{%s|%s}}" %
-                        (alt, tn, args.langcode))
-                      rmparam(t, "4")
-                      t.add("3", alt)
                     else:
-                      pagemsg("WARNING: Should be no Latin non-lemma etymon for lemma %s but saw %s: %s" %
-                        (lemma, alt, unicode(t)))
-                  elif latin_lemma_suffix != remove_macrons(latin_lemma_suffix) and lemma.endswith(remove_macrons(latin_lemma_suffix)):
-                    newlemma = lemma[:-len(latin_lemma_suffix)] + latin_lemma_suffix
-                    if newlemma != lemma:
-                      notes.append("add missing long vowels in suffix -%s to Latin lemma %s in {{%s|%s}}" %
-                        (latin_lemma_suffix, lemma, tn, args.langcode))
-                      lemma = newlemma
-                      t.add("3", lemma)
-                  elif remove_macrons(lemma).endswith(remove_macrons(latin_lemma_suffix)):
-                    newlemma = lemma[:-len(latin_lemma_suffix)] + latin_lemma_suffix
-                    if newlemma != lemma:
-                      pagemsg("WARNING: Possible wrong macrons in lemma %s, expected suffix -%s, please verify: %s" %
-                        (lemma, latin_lemma_suffix, unicode(t)))
+                      if verify_lemma:
+                        verified = verify_lemma(lemma, pagemsg)
+                      else:
+                        verified = True
+                      if verified:
+                        alt = lemma[:-len(latin_lemma_suffix)] + latin_form_suffix
+                        notes.append("add presumably correct Latin non-lemma etymon %s for lemma %s to {{%s|%s}}" %
+                          (alt, lemma, tn, args.langcode))
+                        addparam_after(t, "4", alt, "3")
+                  else:
+                    if alt:
+                      for refrom, reto in latin_subs:
+                        newalt = re.sub(refrom, reto, alt)
+                        if newalt != alt:
+                          notes.append("canonicalize Latin non-lemma etymon %s -> %s in {{%s|%s}}" %
+                            (alt, newalt, tn, args.langcode))
+                          alt = newalt
+                      if remove_macrons(alt) == remove_macrons(lemma):
+                        # We may e.g. canonicalize -am to -a, making the non-lemma etymon duplicative.
+                        notes.append("move duplicative Latin lemma %s from 4= to 3= in {{%s|%s}}" %
+                          (alt, tn, args.langcode))
+                        rmparam(t, "4")
+                        t.add("3", alt)
+                      else:
+                        pagemsg("WARNING: Should be no Latin non-lemma etymon for lemma %s but saw %s: %s" %
+                          (lemma, alt, unicode(t)))
+                    elif latin_lemma_suffix != remove_macrons(latin_lemma_suffix) and lemma.endswith(remove_macrons(latin_lemma_suffix)):
+                      newlemma = lemma[:-len(latin_lemma_suffix)] + latin_lemma_suffix
+                      if newlemma != lemma:
+                        notes.append("add missing long vowels in suffix -%s to Latin lemma %s in {{%s|%s}}" %
+                          (latin_lemma_suffix, lemma, tn, args.langcode))
+                        lemma = newlemma
+                        t.add("3", lemma)
+                    elif remove_macrons(lemma).endswith(remove_macrons(latin_lemma_suffix)):
+                      newlemma = lemma[:-len(latin_lemma_suffix)] + latin_lemma_suffix
+                      if newlemma != lemma:
+                        pagemsg("WARNING: Possible wrong macrons in lemma %s, expected suffix -%s, please verify: %s" %
+                          (lemma, latin_lemma_suffix, unicode(t)))
 
-                # Once we've seen the appropriage Romance and Latin suffixes, don't process further.
-                break
+                  # Once we've seen the appropriage Romance and Latin suffixes, don't process further.
+                  must_break = True
+                  break
+            if must_break:
+              break
 
         # make sure etymon in the right form
         lemma = getp("3")
