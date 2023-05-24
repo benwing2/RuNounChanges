@@ -257,36 +257,13 @@ local function fetch_footnotes(separated_group, allow_multiple_groups)
 end
 
 
-local function add_imperative(base, sg2, footnotes)
-	add(base, "imp_2s", sg2, "", footnotes)
-	-- "Long" imperatives end in -i
-	local stem = rmatch(sg2, "^(.-)i$")
-	if stem then
-		add(base, "imp_1p", stem, "ěme", footnotes)
-		add(base, "imp_2p", stem, "ěte", footnotes)
-	elseif rfind(sg2, com.vowel_c .. "$") then
-		error("Invalid 2sg imperative, ends in vowel other than -i: '" .. sg2 .. "'")
-	else
-		add(base, "imp_1p", sg2, "me", footnotes)
-		add(base, "imp_2p", sg2, "te", footnotes)
-	end
-end
-
-
-local function add_present_a_imperative(base, stems, footnotes)
-	map_forms(stems, function(stem, stem_footnotes)
-		stem_footnotes = iut.combine_footnotes(stem_footnotes, footnotes)
-		add_imperative(base, stem .. "ej", stem_footnotes)
-	end)
-end
-
 local function get_imptypes_for_stem(base)
 	local imptypes
-	if rfind(base.stem, "[sš][tť]$") or rfind(base.stem, "tř$") then
+	if rfind(base.infstem, "[sš][tť]$") or rfind(base.infstem, "tř$") then
 		imptypes = {"long", "short"}
 	else
 		-- Substitute 'ch' with a single character to make the following code simpler.
-		local modstem = base.stem:gsub("ch", com.TEMP_CH)
+		local modstem = base.infstem:gsub("ch", com.TEMP_CH)
 		if rfind(modstem, com.cons_c .. "[lr]" .. com.cons_c .. "$") then
 			-- [[trp]]; not long imperative.
 			imptypes = "short"
@@ -301,8 +278,9 @@ local function get_imptypes_for_stem(base)
 end
 
 
-local function get_imperative_principal_part(base, infstem, imptype)
+local function get_imperative_principal_part_for_imptype(base, imptype)
 	local sg2, sg2_2
+	local infstem = base.infstem
 	if imptype == "long" then
 		sg2 = com.combine_stem_ending(base, "imp_2s", infstem, "i")
 	else
@@ -320,6 +298,27 @@ local function get_imperative_principal_part(base, infstem, imptype)
 		end
 	end
 	return {sg2, sg2_2}
+end
+
+
+local function generate_default_imperative_principal_part(base, do_err)
+	FIXME
+end
+
+
+local function add_imperative(base, sg2, footnotes)
+	add(base, "imp_2s", sg2, "", footnotes)
+	-- "Long" imperatives end in -i
+	local stem = rmatch(sg2, "^(.-)i$")
+	if stem then
+		add(base, "imp_1p", stem, "ěme", footnotes)
+		add(base, "imp_2p", stem, "ěte", footnotes)
+	elseif rfind(sg2, com.vowel_c .. "$") then
+		error("Invalid 2sg imperative, ends in vowel other than -i: '" .. sg2 .. "'")
+	else
+		add(base, "imp_1p", sg2, "me", footnotes)
+		add(base, "imp_2p", sg2, "te", footnotes)
+	end
 end
 
 
@@ -550,34 +549,27 @@ end
 
 
 local function add_ppp(base)
-	if not base.ppp then
-		return
-	end
-	for _, suffix_ending in ipairs(part_suffix_to_ending_list) do
-		local suffix, ending = unpack(suffix_ending)
-		add(base, "ppp_" .. suffix, base.principal_part_forms.ppp, ending)
+	if base.ppp then
+		for _, suffix_ending in ipairs(part_suffix_to_ending_list) do
+			local suffix, ending = unpack(suffix_ending)
+			add(base, "ppp_" .. suffix, base.principal_part_forms.ppp, ending)
+		end
+		-- Add the long passive participle. Short participles in -án shorten to -an (e.g. 'jmenován' -> 'jmenovaný',
+		--  'dělán' -> 'dělaný').
+		add(base, "long_past_part", iut.map_forms(base.forms.ppp_m, function(form)
+			return form:gsub("án$", "an")
+		end), "ý")
 	end
 end
 
 
-local function add_ppp(base, stems, vn_stems)
-	if base.ppp then
-		-- Add the long passive participle. Short participles in -án shorten to -an (e.g. 'jmenován' -> 'jmenovaný',
-		--  'dělán' -> 'dělaný').
-		map_forms(stems, function(stem, footnotes)
-			stem = stem:gsub("án$", "an")
-			add(base, "long_pass_part", stem, "ý", footnotes)
-		end)
-		for _, suffix_ending in ipairs(part_suffix_to_ending_list) do
-			local suffix, ending = unpack(suffix_ending)
-			add(base, "ppp_" .. suffix, stems, ending)
-		end
-	end
-	vn_stems = vn_stems or stems
-	-- FIXME, sometimes the vowel shortens; e.g. [[ptát]] ppp 'ptán' vn 'ptaní'; similarly [[hrát]] 'hraní',
-	-- [[spát]] 'spaní', [[tkát]] 'tkaní', but not all- monosyllabic verbs, e.g. [[dbát]] ppp 'dbán' vn. 'dbání' or 'dbaní'
-	-- and [[znát]] ppp. 'znán' vn. only 'znání'.
-	add(base, "vnoun", vn_stems, "í")
+local function generate_default_vn_principal_part(base, do_err)
+	-- Sometimes the vowel shortens; e.g. [[ptát]] ppp 'ptán' vn 'ptaní'; similarly [[hrát]] 'hraní', [[spát]] 'spaní',
+	-- [[tkát]] 'tkaní', but not all- monosyllabic verbs, e.g. [[dbát]] ppp 'dbán' vn. 'dbání' or 'dbaní'
+	-- and [[znát]] ppp. 'znán' vn. only 'znání'. These exceptional cases must be specified using overrides.
+	return iut.map_forms(base.principal_part_forms.ppp, function(form)
+		return form .. "í"
+	end)
 end
 
 
@@ -691,19 +683,6 @@ local row_conjugations = {
 		conjugate = add_imperative,
 		add_clitics = add_imperative_clitics,
 		add_prefixed_reflexive_variants = add_imperative_prefixed_reflexive_variants,
-	}},
-	{"negimp", {
-		desc = "negative imperative",
-		tag_suffix = "-",
-		persnums = imp_person_number_list,
-		-- No generate_default_principal_part because all parts are copied from other parts.
-		conjugate = add_negative_imperative,
-		add_clitics = add_negative_imperative_clitics,
-		no_explicit_principal_part = true, -- because all parts are copied from other parts
-		no_row_overrides = true, -- not useful; use single overrides if really needed
-		-- We don't want a category [[:Category:Italian verbs with missing negative imperative]]; doesn't make
-		-- sense as all parts are copied from elsewhere.
-		dont_check_defective_status = true,
 	}},
 	{"phis", {
 		desc = "past historic",
@@ -1253,10 +1232,13 @@ III.2:
 [[konstruovat]] "to construct"
 ]=]
 conjs["III.2"] = function(base, lemma)
-	local stem = separate_stem_suffix(lemma, "^(.*)ovat$", "III.2")
-	add_present_e(base, stem .. "uj", nil, "soft")
-	add_past(base, stem .. "ova")
-	add_ppp(base, stem .. "ován")
+	get_infstem = function(base)
+		return separate_stem_suffix(base.lemma, "^(.*)ovat$", "III.2")
+	end,
+	pres1s = {{form = "uji"}, {form = "uju", footnotes = {"[colloquial]"}}},
+	prtr = "ě",
+	past = "oval",
+	ppp = "ován",
 end
 
 
@@ -1350,20 +1332,20 @@ Variant codes:
 ]=]
 
 conj["IV.1"] = {
-	init = function(base)
+	get_infstem = function(base)
 		-- Some with -ít e.g. [[pohřbít]]
 		local infstem = separate_stem_suffix(base.lemma, "^(.*)[ií]t$", "IV.1")
-		base.infstem = com.convert_paired_plain_to_palatal(infstem)
+		return com.convert_paired_plain_to_palatal(infstem)
 	end,
-	pres = function(base) return base.infstem .. "ím" end,
+	pres1s = "ím",
 	imp = {
 		choices = {"long", "short", "short-ě"},
 		default = get_imptypes_for_stem,
 		generate_part = function(base, variant)
-			return get_imperative_principal_part(base, base.infstem, form)
+			return get_imperative_principal_part_for_imptype(base, variant)
 		end,
 	},
-	past = function(base) return base.infstem .. "il" end,
+	past = "il",
 	ppp = {
 		choices = {"iot", "ni"},
 		default = "iot",
@@ -1378,6 +1360,7 @@ conj["IV.1"] = {
 			end
 		end,
 	},
+}
 
 
 parse["IV.1"] = function(base, conjmod_run, parse_err)
@@ -1484,10 +1467,13 @@ etc.
 ]=]
 
 conjs["V.1"] = function(base, lemma)
-	local stem = separate_stem_suffix(lemma, "^(.*)[aá]t$", "V.1")
-	add_present_a(base, stem)
-	add_past(base, stem .. "a")
-	add_ppp(base, stem .. "án")
+	get_infstem = function(base)
+		return separate_stem_suffix(base.lemma, "^(.*)[aá]t$", "V.1")
+	end,
+	pres1s = "ám",
+	imp = "ej",
+	past = "al",
+	past = "án",
 end
 
 --[=[
