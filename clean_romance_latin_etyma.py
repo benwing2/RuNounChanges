@@ -51,41 +51,52 @@ def verify_latin1_verb(lemma, pagemsg):
   pagemsg(u"For lemma %s, didn't find page, assuming OK to add -āre/-ārī etymon" % lemma)
   return True
 
+class Suffix(object):
+  def __init__(self, romance_suffix_dict, latin_lemma_suffix, latin_form_suffix=None, canonicalize_to_form_re=None,
+      latin_deny_re=None, verify_lemma=None):
+    self.romance_suffix_dict = romance_suffix_dict
+    self.latin_lemma_suffix = latin_lemma_suffix
+    self.latin_form_suffix = latin_form_suffix
+    self.canonicalize_to_form_re = canonicalize_to_form_re
+    self.latin_deny_re = latin_deny_re
+    self.verify_lemma = verify_lemma
+
 romance_suffixes_to_latin_etym_suffixes = [
-  ({"es": "ada", "fr": u"ée"}, u"āta", None, [(u"[aā]tam$", u"āta")]),
-  ({"es": "ura", "fr": "ure"}, u"ūra", None, [(u"[uū]ram$", u"ūra")]),
-  ({"es": "osa", "fr": "euse"}, u"ōsa", None, [(u"[oō]sam$", u"ōsa")]),
-  ({"es": "a", "fr": "e"}, "a", None, [("am$", "a")]),
-  ({"es": "dad", "fr": u"té"}, u"tās", u"tātem", [(u"t[āa]tis$", u"tātem")]),
-  ({"es": "tud", "fr": "tu"}, u"tūs", u"tūtem", [(u"t[ūu]tis$", u"tūtem")]),
-  ({"es": "able", "fr": "able"}, u"ābilis", None, [(u"[āa]bilem$", u"ābilis")]),
-  ({"es": "ble", "fr": "ble"}, u"bilis", None, [("bilem$", "bilis")]),
-  ({"es": "aje", "fr": "age"}, u"āticum", None, []),
-  ({"es": "ante", "fr": "ant"}, u"āns", "antem", [("antis$", "antem")]),
-  ({"es": "ente", "fr": ["ant", "ent"]}, u"ēns", "entem", [("entis$", "entem")]),
-  ({"es": "al", "fr": ["al", "el"]}, u"ālis", None, [(u"[aā]lem$", u"ālis")]),
-  ({"es": u"ación", "fr": ["ation", "aison"]}, u"ātiō", u"ātiōnem", [(u"[āa]ti[ōo]nis$", u"ātiōnem")]),
-  ({"es": u"ción", "fr": ["tion", "son"]}, u"tiō", u"tiōnem", [(u"ti[ōo]nis$", u"tiōnem")]),
-  ({"es": u"ión", "fr": ["ion", "on"]}, u"iō", u"iōnem", [(u"i[ōo]nis$", u"iōnem")]),
-  ({"es": ["ario", "ero"], "fr": ["aire", "ier"]}, u"ārius", None, [(u"[aā]rium$", u"ārius")]),
-  ({"es": ["ario", "ero"], "fr": ["aire", "ier"]}, u"ārium", None, []),
-  ({"es": "atorio", "fr": "ateur"}, u"ātōrius", None, [(u"[aā]tōrium$", u"ātōrius")]),
-  ({"es": "torio", "fr": "teur"}, u"tōrius", None, [(u"tōrium$", u"tōrius")]),
-  ({"es": "sorio", "fr": "seur"}, u"sōrius", None, [(u"sōrium$", u"sōrius")]),
-  ({"es": "ado", "fr": u"é"}, u"ātus", None, [(u"[aā]tum$", u"ātus")]),
-  ({"es": "ado", "fr": u"é"}, u"ātum", None, []),
-  ({"es": "oso", "fr": "eux"}, u"ōsus", None, [(u"[oō]sum$", u"ōsus")]),
-  ({"es": "o"}, "us", None, [("um$", "us")]),
-  ({"es": "o"}, "um", None, []),
-  ({"es": "ar"}, u"āris", None, [(u"[aā]rem$", u"āris")]),
-  ({"es": "ar", "fr": "er"}, u"ō", u"āre", [], verify_latin1_verb),
-  ({"es": "ar", "fr": "er"}, "or", u"ārī", [], verify_latin1_verb),
-  ({"es": "ecer"}, u"ēscō", u"ēscere", []),
-  ({"es": "ecer"}, u"ēscor", u"ēscī", []),
-  ({"es": "er"}, u"eō", u"ēre", []),
-  ({"es": "er"}, "eor", u"ērī", []),
-  ({"es": "ador", "fr": "eur"}, u"ātor", u"ātōrem", [(u"[aā]tōris", u"ātōrem")]),
-  ({"es": "triz", "fr": "trice"}, u"trīx", u"trīcem", [(u"trīcis", u"trīcem")]),
+  Suffix({"es": "ada", "pt": "ada", "fr": u"ée"}, u"āta", None, [u"[aā]tam$"]),
+  Suffix({"es": "ura", "pt": "ura", "fr": "ure"}, u"ūra", None, [u"[uū]ram$"], latin_deny_re="aura$"),
+  Suffix({"es": "osa", "pt": "osa", "fr": "euse"}, u"ōsa", None, [u"[oō]sam$"]),
+  Suffix({"es": "a", "pt": "a", "fr": "e"}, "a", None, ["am$"]),
+  Suffix({"es": "dad", "pt": "dade", "fr": u"té"}, u"tās", u"tātem", [u"t[āa]tis$"]),
+  Suffix({"es": "tud", "pt": "tude", "fr": "tu"}, u"tūs", u"tūtem", [u"t[ūu]tis$"]),
+  Suffix({"es": "able", "pt": u"ável", "fr": "able"}, u"ābilis", None, [u"[āa]bilem$"]),
+  Suffix({"es": "ble", "pt": "vel", "fr": "ble"}, u"bilis", None, ["bilem$"]),
+  Suffix({"es": "aje", "pt": "agem", "fr": "age"}, u"āticum", None),
+  Suffix({"es": "ante", "pt": "ante", "fr": "ant"}, u"āns", "antem", ["antis$"]),
+  Suffix({"es": "ente", "pt": "ente", "fr": ["ant", "ent"]}, u"ēns", "entem", ["entis$"]),
+  Suffix({"es": "al", "pt": "al", "fr": ["al", "el"]}, u"ālis", None, [u"[aā]lem$"]),
+  Suffix({"es": u"ación", "pt": u"ação", "fr": ["ation", "aison"]}, u"ātiō", u"ātiōnem", [u"[āa]ti[ōo]nis$"]),
+  Suffix({"es": u"ción", "pt": u"ção", "fr": ["tion", "son"]}, u"tiō", u"tiōnem", [u"ti[ōo]nis$"]),
+  Suffix({"es": u"ión", "pt": u"ão", "fr": ["ion", "on"]}, u"iō", u"iōnem", [u"i[ōo]nis$"]),
+  # Don't include -ō -> -ōnem because it will try to canonicalize verbs in -ō.
+  Suffix({"es": ["ario", "ero"], "pt": [u"ário", "eiro"], "fr": ["aire", "ier"]}, u"ārius", None, [u"[aā]rium$"]),
+  Suffix({"es": ["ario", "ero"], "pt": [u"ário", "eiro"], "fr": ["aire", "ier"]}, u"ārium", None),
+  Suffix({"es": "atorio", "pt": u"atório", "fr": "ateur"}, u"ātōrius", None, [u"[aā]tōrium$"]),
+  Suffix({"es": "torio", "pt": u"tório", "fr": "teur"}, u"tōrius", None, [u"tōrium$"]),
+  Suffix({"es": "sorio", "pt": u"sório", "fr": "seur"}, u"sōrius", None, [u"sōrium$"]),
+  Suffix({"es": "ado", "pt": "ado", "fr": u"é"}, u"ātus", None, [u"[aā]tum$"]),
+  Suffix({"es": "ado", "pt": "ado", "fr": u"é"}, u"ātum", None),
+  Suffix({"es": "oso", "pt": "oso", "fr": "eux"}, u"ōsus", None, [u"[oō]sum$"]),
+  Suffix({"es": "o", "pt": "o"}, "us", None, ["um$"]),
+  Suffix({"es": "o", "pt": "o"}, "um", None),
+  Suffix({"es": "ar", "pt": "ar"}, u"āris", None, [u"[aā]rem$"]),
+  Suffix({"es": "ar", "pt": "ar", "fr": "er"}, u"ō", u"āre", verify_lemma=verify_latin1_verb),
+  Suffix({"es": "ar", "pt": "ar", "fr": "er"}, "or", u"ārī", verify_lemma=verify_latin1_verb),
+  Suffix({"es": "ecer", "pt": "ecer"}, u"ēscō", u"ēscere"),
+  Suffix({"es": "ecer", "pt": "ecer"}, u"ēscor", u"ēscī"),
+  Suffix({"es": "er", "pt": "er"}, u"eō", u"ēre"),
+  Suffix({"es": "er", "pt": "er"}, "eor", u"ērī"),
+  Suffix({"es": "ador", "pt": "ador", "fr": "eur"}, u"ātor", u"ātōrem", [u"[aā]tōris"]),
+  Suffix({"es": "triz", "pt": "triz", "fr": "trice"}, u"trīx", u"trīcem", [u"trīcis"]),
   # Don't include -ĕre or -īre verbs because potentially either could produce an -ir or -ecer verb, so we wouldn't
   # be able to confidently extend '-iō' into either '-ere' or '-īre'.
 ]
@@ -99,12 +110,12 @@ deny_list_canonicalize_suffix = {
   "circumdatio",
   "ratio",
   "satio",
+  "duo",
   "Marius",
   "Macarius",
   "Hilarius",
   "varius",
   "tragemata",
-  "taura",
   "Mosa",
 }
 
@@ -355,62 +366,72 @@ def process_text_on_page(index, pagetitle, text):
           rmparam(t, "4")
           t.add("3", alt)
         else:
-          for romance_suffix_to_latin_etym_suffix in romance_suffixes_to_latin_etym_suffixes:
-            if len(romance_suffix_to_latin_etym_suffix) == 4:
-              romance_suffix_dict, latin_lemma_suffix, latin_form_suffix, latin_subs = romance_suffix_to_latin_etym_suffix
-              verify_lemma = None
-            else:
-              romance_suffix_dict, latin_lemma_suffix, latin_form_suffix, latin_subs, verify_lemma = romance_suffix_to_latin_etym_suffix
-            if args.langcode not in romance_suffix_dict:
+          for suffix in romance_suffixes_to_latin_etym_suffixes:
+            if args.langcode not in suffix.romance_suffix_dict:
               continue
-            romance_suffixes = romance_suffix_dict[args.langcode]
+            romance_suffixes = suffix.romance_suffix_dict[args.langcode]
             if type(romance_suffixes) is not list:
               romance_suffixes = [romance_suffixes]
             must_break = False
             for romance_suffix in romance_suffixes:
               if pagetitle.endswith(romance_suffix):
-                if remove_macrons(lemma).endswith(remove_macrons(latin_lemma_suffix)):
-                  if latin_form_suffix:
+                if remove_macrons(lemma).endswith(remove_macrons(suffix.latin_lemma_suffix)):
+                  if suffix.latin_deny_re and re.search(suffix.latin_deny_re, lemma):
+                    pagemsg("WARNING: Skipping lemma %s because it matches latin_deny_re '%s', review manually: %s" %
+                      (lemma, suffix.latin_deny_re, unicode(t)))
+                    must_break = True
+                    break
+                  if suffix.latin_form_suffix:
                     if alt:
-                      for refrom, reto in latin_subs:
-                        newalt = re.sub(refrom, reto, alt)
-                        if newalt != alt:
-                          notes.append("canonicalize Latin non-lemma etymon %s -> %s in {{%s|%s}}" %
-                            (alt, newalt, tn, args.langcode))
-                          alt = newalt
-                      if not remove_macrons(alt).endswith(remove_macrons(latin_form_suffix)):
+                      if suffix.canonicalize_to_form_re:
+                        for refrom in suffix.canonicalize_to_form_re:
+                          if type(refrom) is tuple:
+                            refrom, reto = refrom
+                          else:
+                            reto = suffix.latin_form_suffix
+                          newalt = re.sub(refrom, reto, alt)
+                          if newalt != alt:
+                            notes.append("canonicalize Latin non-lemma etymon %s -> %s in {{%s|%s}}" %
+                              (alt, newalt, tn, args.langcode))
+                            alt = newalt
+                      if not remove_macrons(alt).endswith(remove_macrons(suffix.latin_form_suffix)):
                         pagemsg("WARNING: Canonicalized Latin non-lemma etymon %s doesn't match expected suffix %s: %s" %
-                          (alt, latin_form_suffix, unicode(t)))
-                      elif latin_form_suffix != remove_macrons(latin_form_suffix) and alt.endswith(remove_macrons(latin_form_suffix)):
-                        newalt = alt[:-len(latin_form_suffix)] + latin_form_suffix
+                          (alt, suffix.latin_form_suffix, unicode(t)))
+                      elif suffix.latin_form_suffix != remove_macrons(suffix.latin_form_suffix) and alt.endswith(remove_macrons(suffix.latin_form_suffix)):
+                        newalt = alt[:-len(suffix.latin_form_suffix)] + suffix.latin_form_suffix
                         if newalt != alt:
                           notes.append("add missing long vowels in suffix -%s to Latin non-lemma etymon %s in {{%s|%s}}" %
-                            (latin_form_suffix, alt, tn, args.langcode))
+                            (suffix.latin_form_suffix, alt, tn, args.langcode))
                           alt = newalt
-                      elif remove_macrons(alt).endswith(remove_macrons(latin_form_suffix)):
-                        newalt = alt[:-len(latin_form_suffix)] + latin_form_suffix
+                      elif remove_macrons(alt).endswith(remove_macrons(suffix.latin_form_suffix)):
+                        newalt = alt[:-len(suffix.latin_form_suffix)] + suffix.latin_form_suffix
                         if newalt != alt:
                           pagemsg("WARNING: Possible wrong macrons in non-lemma etymon %s, expected suffix -%s, please verify: %s" %
-                            (alt, latin_form_suffix, unicode(t)))
+                            (alt, suffix.latin_form_suffix, unicode(t)))
                       addparam_after(t, "4", alt, "3")
                     else:
-                      if verify_lemma:
-                        verified = verify_lemma(lemma, pagemsg)
+                      if suffix.verify_lemma:
+                        verified = suffix.verify_lemma(lemma, pagemsg)
                       else:
                         verified = True
                       if verified:
-                        alt = lemma[:-len(latin_lemma_suffix)] + latin_form_suffix
+                        alt = lemma[:-len(suffix.latin_lemma_suffix)] + suffix.latin_form_suffix
                         notes.append("add presumably correct Latin non-lemma etymon %s for lemma %s to {{%s|%s}}" %
                           (alt, lemma, tn, args.langcode))
                         addparam_after(t, "4", alt, "3")
                   else:
                     if alt:
-                      for refrom, reto in latin_subs:
-                        newalt = re.sub(refrom, reto, alt)
-                        if newalt != alt:
-                          notes.append("canonicalize Latin non-lemma etymon %s -> %s in {{%s|%s}}" %
-                            (alt, newalt, tn, args.langcode))
-                          alt = newalt
+                      if suffix.canonicalize_to_form_re:
+                        for refrom in suffix.canonicalize_to_form_re:
+                          if type(refrom) is tuple:
+                            refrom, reto = refrom
+                          else:
+                            reto = suffix.latin_form_suffix or suffix.latin_lemma_suffix
+                          newalt = re.sub(refrom, reto, alt)
+                          if newalt != alt:
+                            notes.append("canonicalize Latin non-lemma etymon %s -> %s in {{%s|%s}}" %
+                              (alt, newalt, tn, args.langcode))
+                            alt = newalt
                       if remove_macrons(alt) == remove_macrons(lemma):
                         # We may e.g. canonicalize -am to -a, making the non-lemma etymon duplicative.
                         notes.append("move duplicative Latin lemma %s from 4= to 3= in {{%s|%s}}" %
@@ -420,18 +441,18 @@ def process_text_on_page(index, pagetitle, text):
                       else:
                         pagemsg("WARNING: Should be no Latin non-lemma etymon for lemma %s but saw %s: %s" %
                           (lemma, alt, unicode(t)))
-                    elif latin_lemma_suffix != remove_macrons(latin_lemma_suffix) and lemma.endswith(remove_macrons(latin_lemma_suffix)):
-                      newlemma = lemma[:-len(latin_lemma_suffix)] + latin_lemma_suffix
+                    elif suffix.latin_lemma_suffix != remove_macrons(suffix.latin_lemma_suffix) and lemma.endswith(remove_macrons(suffix.latin_lemma_suffix)):
+                      newlemma = lemma[:-len(suffix.latin_lemma_suffix)] + suffix.latin_lemma_suffix
                       if newlemma != lemma:
                         notes.append("add missing long vowels in suffix -%s to Latin lemma %s in {{%s|%s}}" %
-                          (latin_lemma_suffix, lemma, tn, args.langcode))
+                          (suffix.latin_lemma_suffix, lemma, tn, args.langcode))
                         lemma = newlemma
                         t.add("3", lemma)
-                    elif remove_macrons(lemma).endswith(remove_macrons(latin_lemma_suffix)):
-                      newlemma = lemma[:-len(latin_lemma_suffix)] + latin_lemma_suffix
+                    elif remove_macrons(lemma).endswith(remove_macrons(suffix.latin_lemma_suffix)):
+                      newlemma = lemma[:-len(suffix.latin_lemma_suffix)] + suffix.latin_lemma_suffix
                       if newlemma != lemma:
                         pagemsg("WARNING: Possible wrong macrons in lemma %s, expected suffix -%s, please verify: %s" %
-                          (lemma, latin_lemma_suffix, unicode(t)))
+                          (lemma, suffix.latin_lemma_suffix, unicode(t)))
 
                   # Once we've seen the appropriage Romance and Latin suffixes, don't process further.
                   must_break = True
