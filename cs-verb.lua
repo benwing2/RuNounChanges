@@ -257,13 +257,44 @@ local function fetch_footnotes(separated_group, allow_multiple_groups)
 end
 
 
-local function get_imptypes_for_stem(base)
+-- No generate_default_pres1s_principal_part(), which generates the pres_fut_1s principal part.
+-- This must be specified by each verb conjugation.
+
+
+local function generate_default_pres3s_principal_part(base, do_err)
+	return iut.map_forms(base.principal_part_forms.pres1s, function(form)
+		local stem = rmatch(form, "^(.*)[ui]$")
+		if stem then
+			-- There does not seem to be a case where ě can occur in the present third singular.
+			return stem .. "e"
+		end
+		stem = rmatch(form, "^(.*)m$") -- -ím or -ám
+		if stem then
+			return stem
+		end
+		error("'pres3s:' must be given in order to specify the present third-person singular principal part because "
+			.. "first-person singular principal part '" .. form .. "' does not end in -u, -i or -m")
+	end)
+end
+
+
+local function add_present_minus_1s_3p(base)
+	local pres3s = base.principal_part_forms.pres3s
+	add(base, "pres_fut_2s", pres3s, "š")
+	add(base, "pres_fut_3s", pres3s, "")
+	add(base, "pres_fut_1p", pres3s, "me")
+	add(base, "pres_fut_2p", pres3s, "te")
+end
+
+
+
+local function get_imptypes_for_stem(base, stem)
 	local imptypes
-	if rfind(base.infstem, "[sš][tť]$") or rfind(base.infstem, "tř$") then
+	if rfind(stem, "[sš][tť]$") or rfind(stem, "tř$") then
 		imptypes = {"long", "short"}
 	else
 		-- Substitute 'ch' with a single character to make the following code simpler.
-		local modstem = base.infstem:gsub("ch", com.TEMP_CH)
+		local modstem = stem:gsub("ch", com.TEMP_CH)
 		if rfind(modstem, com.cons_c .. "[lr]" .. com.cons_c .. "$") then
 			-- [[trp]]; not long imperative.
 			imptypes = "short"
@@ -278,31 +309,41 @@ local function get_imptypes_for_stem(base)
 end
 
 
-local function get_imperative_principal_part_for_imptype(base, imptype)
+local function get_imperative_principal_part_for_imptype(base, stem, imptype)
 	local sg2, sg2_2
-	local infstem = base.infstem
 	if imptype == "long" then
-		sg2 = com.combine_stem_ending(base, "imp_2s", infstem, "i")
+		return com.combine_stem_ending(base, "imp_2s", stem, "i")
 	else
 		-- See comment below at IV.1, there are rare cases where i-ě alternations occur in imperatives, e.g.
 		-- [[podnítit]] impv. 'podniť ~ [rare] podněť'. 'ů' is reduced to 'u' rather than 'o', at least in
 		-- [[půlit]] and derivatives.
-		infstem = com.apply_vowel_alternation(imptype == "short-ě" and "quant-ě" or "quant", infstem, "noerror", "ring-u-to-u")
-		if rfind(infstem, "[" .. com.paired_plain .. com.velar .. "]$") then
-			sg2 = com.apply_second_palatalization(infstem, "is verb")
+		stem = com.apply_vowel_alternation(imptype == "short-ě" and "quant-ě" or "quant", stem, "noerror", "ring-u-to-u")
+		if rfind(stem, com.velar_c .. "$") then
+			return {
+				{form = com.apply_first_palatalization(stem, "is verb")},
+				{form = com.apply_second_palatalization(stem, "is verb"), footnotes = "[obsolescent]"},
+			}
+		elseif rfind(stem, "[" .. com.paired_plain .. "]$") then
+			return com.apply_second_palatalization(stem, "is verb")
 		else
-			sg2 = infstem
-		end
-		if rfind(infstem, com.velar_c .. "$") then
-			sg2_2 = com.apply_first_palatalization(infstem, "is verb")
+			return stem
 		end
 	end
-	return {sg2, sg2_2}
 end
 
 
 local function generate_default_imperative_principal_part(base, do_err)
-	FIXME
+	return iut.flatmap_forms(base.forms.pres_fut_3p, function(form)
+		local stem = rmatch(form, "^(.*)ou$") or rmatch(form, "^(.*)í")
+		if not stem then
+			error("'imp:' must be given in order to specify the imperative principal part because third-person "
+				.. "plural present/future '" .. form .. "' does not end in -ou or -í")
+		end
+		local imptypes = get_imptypes_for_stem(base, stem)
+		return iut.flatmap_forms(iut.convert_to_general_list_form(imptypes), function(imptype)
+			return get_imperative_principal_part_for_imptype(base, stem, imptype)
+		end)
+	end)
 end
 
 
@@ -319,50 +360,6 @@ local function add_imperative(base, sg2, footnotes)
 		add(base, "imp_1p", sg2, "me", footnotes)
 		add(base, "imp_2p", sg2, "te", footnotes)
 	end
-end
-
-
-local function add_imperative_from_present(base, pres3p_stems, overriding_imptypes, footnotes)
-	local imptypes
-	if overriding_imptypes then
-		imptypes = overriding_imptypes
-	elseif base.imptypes then
-		imptypes = base.imptyoes
-	end
-
-	local function add_imp_for_stem(stem, stem_footnotes)
-		if not imptypes then
-			imptypes = get_imptypes_for_stem(imptypes)
-		end
-		local function add_imp_for_type(imptype, imptype_footnotes)
-			local all_footnotes = iut.combine_footnotes(stem_footnotes,
-				iut.combine_footnotes(imptype_footnotes, footnotes))
-			local sg2, sg2_2
-			if imptype == "long" then
-				sg2 = com.combine_stem_ending(base, "imp_2s", stem, "i")
-			else
-				-- See comment below at IV.1, there are rare cases where i-ě alternations occur in imperatives, e.g.
-				-- [[podnítit]] impv. 'podniť ~ [rare] podněť'. 'ů' is reduced to 'u' rather than 'o', at least in
-				-- [[půlit]] and derivatives.
-				stem = com.apply_vowel_alternation(imptype == "short-ě" and "quant-ě" or "quant", stem, "noerror", "ring-u-to-u")
-				if rfind(stem, "[" .. com.paired_plain .. com.velar .. "]$") then
-					sg2 = com.apply_second_palatalization(stem, "is verb")
-				else
-					sg2 = stem
-				end
-				if rfind(stem, com.velar_c .. "$") then
-					sg2_2 = com.apply_first_palatalization(stem, "is verb")
-				end
-			end
-			add_imperative(base, sg2, all_footnotes)
-			if sg2_2 then
-				add_imperative(base, sg2_2, all_footnotes)
-			end
-		end
-		map_forms(imptypes, add_imp_for_type)
-	end
-
-	map_forms(pres3p_stems, add_imp_for_stem)
 end
 
 
@@ -1340,9 +1337,11 @@ conj["IV.1"] = {
 	pres1s = "ím",
 	imp = {
 		choices = {"long", "short", "short-ě"},
-		default = get_imptypes_for_stem,
+		default = function(base)
+			return get_imptypes_for_stem(base, base.infstem)
+		end,
 		generate_part = function(base, variant)
-			return get_imperative_principal_part_for_imptype(base, variant)
+			return get_imperative_principal_part_for_imptype(base, base.infstem, variant)
 		end,
 	},
 	past = "il",
@@ -1362,57 +1361,6 @@ conj["IV.1"] = {
 	},
 }
 
-
-parse["IV.1"] = function(base, conjmod_run, parse_err)
-	local separated_groups = iut.split_alternating_runs_and_strip_spaces(conjmod_run, ",")
-	for _, separated_group in ipairs(separated_groups) do
-		if rfind(separated_group[1], "^long") or rfind(separated_group[1], "^short") then
-			-- Imperative specs
-			if base.impspec then
-				parse_err("Saw two sets of long/short imperative specs")
-			end
-			base.impspec = parse_variant_codes(separated_group, {"long", "short", "short-ě"}, "imperative type", parse_err)
-		elseif rfind(separated_group[1], "^iot") or rfind(separated_group[1], "^ni") then
-			-- PPP specs
-			if base.ppp_stem then
-				parse_err("Saw two sets of iotated/non-iotated past passive participle specs")
-			end
-			base.ppp_stem = parse_variant_codes(separated_group, {"iot", "ni"}, "past passive participle type",
-				parse_err)
-		else
-			parse_err("Unrecognized indicator '" .. separated_group[1] .. "'")
-		end
-	end
-end
-
-
-conjs["IV.1"] = function(base, lemma)
-	-- Some with -ít e.g. [[pohřbít]]
-	local stem = separate_stem_suffix(lemma, "^(.*)[ií]t$", "IV.1")
-
-	stem = com.convert_paired_plain_to_palatal(stem)
-
-	-- Normalize the codes computed by the parse function above. We don't need to do anything to the 'long'/'short'
-	-- imperative codes because add_imperative_from_present() takes the codes directly.
-	if not base.ppp_stem then
-		base.ppp_stem = {{form = "iot"}}
-	end
-	for _, formobj in ipairs(base.ppp_stem) do
-		if formobj.form == "iot" then
-			local iotated_stem = com.iotate(stem)
-			formobj.form = com.combine_stem_ending(base, "ppp_m", iotated_stem, "en")
-		elseif formobj.form == "ni" then
-			formobj.form = com.combine_stem_ending(base, "ppp_m", stem, "en")
-		else
-			error("Internal error: Saw unrecognized PPP variant code '" .. formobj.form .. "'")
-		end
-	end
-
-	add_present_i(base, stem, "noimp")
-	add_imperative_from_present(base, stem, base.impspec)
-	add_past(base, com.combine_stem_ending(base, "lpart_m", stem, "i"))
-	add_ppp(base, base.ppp_stem)
-end
 
 --[=[
 IV.2:
