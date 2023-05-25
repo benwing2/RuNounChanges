@@ -243,13 +243,13 @@ local function call_map_function_obj(form, fun)
 end
 
 
--- Map a function over the form values in FORMS (a list of form objects of the form {form=FORM,
--- translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). If the input form is "?", it is preserved on output and the
--- function is not called. The function is called with two arguments, the original form and manual translit; if manual
--- translit isn't relevant, it's fine to declare the function with only one argument. The return value is either a
--- single value (the new form) or two values (the new form and new manual translit). The footnotes (if any) from the
--- input form objects are preserved on output. Uses insert_form_into_list() to insert the resulting form objects into
--- the returned list in case two different forms map to the same thing.
+-- Map a function over the form values in FORMS (a list of form objects in "general list form", i.e. of the form
+-- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). If the input form is "?", it is preserved on output and
+-- the function is not called. Otherwise, the function is called with two arguments, the original form and manual
+-- translit; if manual translit isn't relevant, it's fine to declare the function with only one argument. The return
+-- value is either a single value (the new form) or two values (the new form and new manual translit). The footnotes
+-- (if any) from the input form objects are preserved on output. Uses insert_form_into_list() to insert the resulting
+-- form objects into the returned list in case two different forms map to the same thing.
 function export.map_forms(forms, fun)
 	if not forms then
 		return nil
@@ -262,13 +262,14 @@ function export.map_forms(forms, fun)
 end
 
 
--- Map a list-returning function over the form values in FORMS (a list of form objects of the form {form=FORM,
--- translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). If the input form is "?", it is preserved on output and the
--- function is not called. The function is called with two arguments, the original form and manual translit; if manual
--- translit isn't relevant, it's fine to declare the function with only one argument. The return value is either a list
--- of forms or a list of form objects of the form {form=FORM, translit=MANUAL_TRANSLIT}. The footnotes (if any) from
--- the input form objects are preserved on output. Uses insert_form_into_list() to insert the resulting form objects
--- into the returned list in case two different forms map to the same thing.
+-- Map a list-returning function over the form values in FORMS (a list of form objects in "general list form", i.e. of
+-- the form {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). If the input form is "?", it is preserved on
+-- output and the function is not called. Otherwise, the function is called with two arguments, the original form and
+-- manual translit; if manual translit isn't relevant, it's fine to declare the function with only one argument. The
+-- return value of the function can be nil or anything that is convertible into a general list form, i.e. a single
+-- form, a list of forms, a form object or a list of form objects. For each form object in the return value, the
+-- footnotes of that form object (if any) are combined with any footnotes from the input form object, and the result
+-- inserted into the returned list using insert_form_into_list() in case two different forms map to the same thing.
 function export.flatmap_forms(forms, fun)
 	if not forms then
 		return nil
@@ -276,14 +277,12 @@ function export.flatmap_forms(forms, fun)
 	local retval = {}
 	for _, form in ipairs(forms) do
 		local funret = form.form == "?" and {"?"} or fun(form.form, form.translit)
-		for _, fr in ipairs(funret) do
-			local newform
-			if type(fr) == "table" then
-				newform = {form=fr.form, translit=fr.translit, footnotes=form.footnotes}
-			else
-				newform = {form=fr, footnotes=form.footnotes}
+		if funret then
+			funret = export.convert_to_general_list_form(funret)
+			for _, fr in ipairs(funret) do
+				local newform = {form=fr.form, translit=fr.translit, footnotes=export.combine_footnotes(form.footnotes, fr.footnotes)}
+				export.insert_form_into_list(retval, newform)
 			end
-			export.insert_form_into_list(retval, newform)
 		end
 	end
 	return retval
