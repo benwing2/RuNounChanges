@@ -13,7 +13,7 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  retval = blib.find_modifiable_lang_section(text, None if args.partial_page else args.lang, pagemsg,
+  retval = blib.find_modifiable_lang_section(text, None if args.partial_page else args.langname, pagemsg,
     force_final_nls=True)
   if retval is None:
     return
@@ -64,10 +64,11 @@ def process_text_on_page(index, pagetitle, text):
   secbody = "".join(subsections)
   # Strip extra newlines added to secbody
   sections[j] = secbody.rstrip("\n") + sectail
-  newsecj = re.sub(r"(\{\{it-noun[^{}]*\}\}\n)([^\n])", r"\1" + "\n" + r"\2", sections[j])
-  if newsecj != sections[j]:
-    notes.append("add missing newline after {{it-noun}}")
-    sections[j] = newsecj
+  if args.langname == "Italian": # why this special case?
+    newsecj = re.sub(r"(\{\{it-noun[^{}]*\}\}\n)([^\n])", r"\1" + "\n" + r"\2", sections[j])
+    if newsecj != sections[j]:
+      notes.append("add missing newline after {{it-noun}}")
+      sections[j] = newsecj
   text = "".join(sections)
   newtext = re.sub(r"\n\n\n+", "\n\n", text)
   if text != newtext:
@@ -78,7 +79,7 @@ def process_text_on_page(index, pagetitle, text):
 parser = blib.create_argparser("Move {{wikipedia}} lines to top of etym section",
   include_pagefile=True, include_stdin=True)
 parser.add_argument("--partial-page", action="store_true", help="Input was generated with 'find_regex.py --lang LANG' and has no ==LANG== header.")
-parser.add_argument("--lang", help="Only do this language name (optional).")
+parser.add_argument("--langname", help="Only do this language name (optional).")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
