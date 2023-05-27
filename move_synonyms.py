@@ -86,7 +86,7 @@ def process_text_on_page(pageindex, pagetitle, text):
             syns = before_text + after_text
             break
           # check for qualifiers using e.g. {{lb|ru|...}}
-          m = re.search("^(.*?)\{\{(?:lb)\|%s\|([^{}=]*)\}\}(.*?)$" % re.escape(args.lang), syns)
+          m = re.search("^(.*?)\{\{(?:lb)\|%s\|([^{}=]*)\}\}(.*?)$" % re.escape(args.langcode), syns)
           if m:
             before_text, qualifier, after_text = m.groups()
             # do this before handling often/sometimes/etc. in case the label has often|_|pejorative or similar
@@ -125,7 +125,7 @@ def process_text_on_page(pageindex, pagetitle, text):
         joiner_after = ";" if qualifier or len(syns) > 1 else ","
         for synindex, syn in enumerate(syns):
           orig_syn = syn
-          m = re.search(r"^\{\{[lm]\|%s\|([^{}]*)\}\}$" % re.escape(args.lang), syn)
+          m = re.search(r"^\{\{[lm]\|%s\|([^{}]*)\}\}$" % re.escape(args.langcode), syn)
           if m:
             decl = blib.parse_text(syn).filter_templates()[0]
             gender = None
@@ -185,7 +185,7 @@ def process_text_on_page(pageindex, pagetitle, text):
               if "[[" not in raw_syn:
                 raw_syn = "[[%s]]" % raw_syn
               return raw_syn
-            syn = re.sub(r"\{\{[lm]\|%s\|([^{}=]*)\}\}" % re.escape(args.lang), add_brackets_if_not_already, syn)
+            syn = re.sub(r"\{\{[lm]\|%s\|([^{}=]*)\}\}" % re.escape(args.langcode), add_brackets_if_not_already, syn)
             gender = None
             translit = None
             gloss = None
@@ -289,14 +289,14 @@ def process_text_on_page(pageindex, pagetitle, text):
           if re.search(r"\{\{(syn|synonyms)\|", defn):
             pagemsg("WARNING: Already saw inline synonyms in definition: <%s>" % defn)
             return None
-          return re.sub(r"^(.*\n)", r"\1#: {{syn|%s|%s}}%s" % (args.lang, joined_syns, fixme_msg) + "\n", defn)
+          return re.sub(r"^(.*\n)", r"\1#: {{syn|%s|%s}}%s" % (args.langcode, joined_syns, fixme_msg) + "\n", defn)
         else:
           if re.search(r"\{\{(ant|antonyms)\|", defn):
             pagemsg("WARNING: Already saw inline antonyms in definition: <%s>" % defn)
             return None
           # Need to put antonyms after any inline synonyms
           return re.sub(r"^(.*\n(?:#: *\{\{(?:syn|synonyms)\|.*\n)*)", r"\1#: {{ant|%s|%s}}%s" %
-              (args.lang, joined_syns, fixme_msg) + "\n", defn)
+              (args.langcode, joined_syns, fixme_msg) + "\n", defn)
 
       # Find definitions
       before_defn_text, defns, after_defn_text = find_defns()
@@ -599,7 +599,7 @@ def process_text_on_page(pageindex, pagetitle, text):
 
 parser = blib.create_argparser("Convert =Synonyms= sections to inline synonyms", include_pagefile=True, include_stdin=True)
 parser.add_argument("--partial-page", action="store_true", help="Input was generated with 'find_regex.py --lang LANG' and has no ==LANG== header.")
-parser.add_argument("--lang", required=True, help="Lang code of language to do.")
+parser.add_argument("--langcode", required=True, help="Lang code of language to do.")
 parser.add_argument("--langname", required=True, help="Lang name of language to do.")
 parser.add_argument("--do-your-best", action="store_true", help="Try to take action even if there might be issues.")
 args = parser.parse_args()
