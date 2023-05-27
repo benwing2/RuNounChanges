@@ -1486,6 +1486,54 @@ Types:
 * pres^e.imp^a^e = e-stem, impv only a-stem + e-stem = [[plavat]]
 ]=]
 
+conjs["V.2"] = function(base, lemma)
+	init = function(base)
+		base.infstem = separate_stem_suffix(base.lemma, "^(.*)[aá]t$", "V.2")
+		base.palstem = com.apply_first_palatalization(base.infstem, "is verb")
+	end,
+	pres1s = {
+		choices = {"a", "e"},
+		default = {"a", "e"},
+		generate_part = function(base, variant)
+			if variant == "a" then
+				return base.infstem .. "ám"
+			elseif variant == "e" then
+				return base.palstem .. "u"
+			else
+				error("Internal error: Saw unrecognized pres1s variant code '" .. variant .. "'")
+			end
+		end,
+	},
+	imp = {
+		choices = {"long", "short", "short-ě"},
+		default = function(base)
+			return get_imptypes_for_stem(base, base.infstem)
+		end,
+		generate_part = function(base, variant)
+			return get_imperative_principal_part_for_imptype(base, base.infstem, variant)
+		end,
+	},
+	past = "il",
+	ppp = {
+		choices = {"iot", "ni"},
+		default = "iot",
+		generate_part = function(base, variant)
+			if variant == "iot" then
+				local iotated_stem = com.iotate(base.infstem)
+				return com.combine_stem_ending(base, "ppp_m", iotated_stem, "en")
+			elseif variant == "ni" then
+				return com.combine_stem_ending(base, "ppp_m", base.infstem, "en")
+			else
+				error("Internal error: Saw unrecognized PPP variant code '" .. variant .. "'")
+			end
+		end,
+	},
+	pres1s = "ám",
+	imp = "ej",
+	past = "al",
+	past = "án",
+end
+
 parse["V.2"] = function(base, conjmod_run, parse_err)
 	local separated_groups = iut.split_alternating_runs_and_strip_spaces(conjmod_run, ",")
 	for _, separated_group in ipairs(separated_groups) do
