@@ -82,12 +82,12 @@ def process_text_on_page(index, pagetitle, text, lang, langname, topicstemp):
 
 if __name__ == "__main__":
   parser = blib.create_argparser(u"Templatize categories", include_pagefile=True, include_stdin=True)
-  parser.add_argument("--lang", help="Code of language to templatize", required=True)
+  parser.add_argument("--langcode", help="Code of language to templatize", required=True)
   parser.add_argument("--langname", help="Name of language to templatize", required=True)
   parser.add_argument("--topics-template", help="Name of topics template to use", default="C")
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
   def do_process_text_on_page(index, pagetitle, text):
-    return process_text_on_page(index, pagetitle, text, args.lang, args.langname, args.topics_template)
+    return process_text_on_page(index, pagetitle, text, args.langcode, args.langname, args.topics_template)
   blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, default_cats=[args.langname + " lemmas"], edit=True, stdin=True)
