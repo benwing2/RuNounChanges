@@ -111,7 +111,7 @@ def process_text_in_section(secbody, pagemsg):
 
         def extract_qualifiers_from_before_after(text_to_parse, lang):
           returned_qualifiers = []
-          mm = re.search(r"^\{\{(?:sense|s|q|i|qual|qualifier|qf|gloss|gl)\|(?:\{\{[^{}]*\}\}|[^{}])*\}\}$", text_to_parse)
+          mm = re.search(r"^\{\{(?:sense|s|q|i|qual|qualifier|qf|gloss|gl|a|accent)\|(?:\{\{[^{}]*\}\}|[^{}])*\}\}$", text_to_parse)
           if mm:
             qual = list(blib.parse_text(text_to_parse).filter_templates())[0]
             returned_qualifiers.extend(blib.fetch_param_chain(qual, "1"))
