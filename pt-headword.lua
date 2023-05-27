@@ -1,22 +1,38 @@
+-- This module contains code for Italian headword templates.
+-- Templates covered are:
+-- * {{pt-noun}}, {{pt-proper noun}};
+-- * {{pt-verb}};
+-- * {{pt-adj}}, {{pt-adj-comp}}, {{pt-adj-sup}};
+-- * {{pt-det}};
+-- * {{pt-pron-adj}};
+-- * {{pt-contr-adj}};
+-- * {{pt-pp}};
+-- * {{pt-cardinal}};
+-- * {{pt-adv}}.
+-- See [[Module:pt-verb]] for Portuguese conjugation templates.
+
 local export = {}
 local pos_functions = {}
-local rfind = mw.ustring.find
-local rmatch = mw.ustring.match
-local rsplit = mw.text.split
+
+local force_cat = false -- for testing; if true, categories appear in non-mainspace pages
 
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local com = require("Module:pt-common")
 local romut_module = "Module:romance utilities"
+local pt_verb_module = "Module:pt-verb"
 local lang = require("Module:languages").getByCode("pt")
 local langname = lang:getCanonicalName()
+
+local rfind = mw.ustring.find
+local rmatch = mw.ustring.match
+local rsplit = mw.text.split
 
 local suffix_categories = {
 	["adjectives"] = true,
 	["adverbs"] = true,
 	["nouns"] = true,
 	["verbs"] = true,
-	["prepositional phrases"] = true,
 }
 
 -- When followed by a hyphen in a hyphenated compound, the hyphen will be included with the prefix when linked.
@@ -85,6 +101,7 @@ function export.show(frame)
 
 	local params = {
 		["head"] = {list = true},
+		["id"] = {},
 		["splithyph"] = {type = "boolean"},
 		["nolinkhead"] = {type = "boolean"},
 		["json"] = {type = "boolean"},
@@ -127,10 +144,12 @@ function export.show(frame)
 		categories = {},
 		heads = heads,
 		user_specified_heads = user_specified_heads,
+		no_redundant_head_cat = #user_specified_heads == 0,
 		genders = {},
 		inflections = {},
-		categories = {},
-		pagename = pagename
+		pagename = pagename,
+		id = args.id,
+		force_cat_output = force_cat,
 	}
 
 	local is_suffix = false
@@ -148,12 +167,12 @@ function export.show(frame)
 		pos_functions[poscat].func(args, data, tracking_categories, frame, is_suffix)
 	end
 
-	if args["json"] then
+	if args.json then
 		return require("Module:JSON").toJSON(data)
 	end
 
 	return require("Module:headword").full_headword(data)
-		.. (#tracking_categories > 0 and require("Module:utilities").format_categories(tracking_categories, lang) or "")
+		.. (#tracking_categories > 0 and require("Module:utilities").format_categories(tracking_categories, lang, nil, nil, force_cat) or "")
 end
 
 
@@ -176,7 +195,7 @@ end
 local function process_terms_with_qualifiers(terms, quals)
 	local infls = {}
 	for i, term in ipairs(terms) do
-		table.insert(infls, {term = term, qualifiers = fetch_qualifiers(quals[i])})
+		table.insert(infls, {term = term, q = fetch_qualifiers(quals[i])})
 	end
 	return infls
 end
@@ -251,7 +270,7 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 	local lemma = m_links.remove_links(data.heads[1]) -- should always be specified
 
 	local function insert_inflection(list, term, accel, qualifiers, no_inv)
-		local infl = {qualifiers = qualifiers, accel = accel}
+		local infl = {q = qualifiers, accel = accel}
 		--if term == lemma and not no_inv then
 		--	infl.label = glossary_link("invariable")
 		--else
@@ -290,7 +309,7 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 			local function insert_pl(term)
 				local quals = fetch_qualifiers(args.pl_qual[i])
 				if term == lemma and i == 1 and #args_pl == 1 then
-					table.insert(data.inflections, {label = glossary_link("invariable"), qualifiers = quals})
+					table.insert(data.inflections, {label = glossary_link("invariable"), q = quals})
 					table.insert(data.categories, langname .. " indeclinable " .. plpos)
 				else
 					insert_inflection(plurals, term, nil, quals)
@@ -413,7 +432,7 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 						-- defpl is a table
 						-- don't use "invariable" because the plural is not with respect to the lemma but
 						-- with respect to the masc/fem singular
-						insert_infl(defpl.term_for_further_inflection, defpl.accel, defpl.qualifiers, "no inv")
+						insert_infl(defpl.term_for_further_inflection, defpl.accel, defpl.q, "no inv")
 					end
 				else
 					-- mf is a table
@@ -431,7 +450,7 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 						if default_mfpl then
 							-- don't use "invariable" because the plural is not with respect to the lemma but
 							-- with respect to the masc/fem singular
-							insert_infl(default_mfpl, accel, mf.qualifiers, "no inv")
+							insert_infl(default_mfpl, accel, mf.q, "no inv")
 						end
 					end
 				else
@@ -780,6 +799,10 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 		end
 	end
 
+	if args.short then
+		table.insert(data.inflections, {label = "[[Appendix:Portuguese verbs#Participles|short participle]]"})
+	end
+
 	if args.inv then
 		-- invariable adjective
 		table.insert(data.inflections, {label = glossary_link("invariable")})
@@ -812,7 +835,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 			else
 				fpl = replace_hash_with_lemma(fpl, lemma)
 			end
-			table.insert(feminine_plurals, {term = fpl, qualifiers = fetch_qualifiers(args.fpl_qual[i])})
+			table.insert(feminine_plurals, {term = fpl, q = fetch_qualifiers(args.fpl_qual[i])})
 		end
 
 		check_all_missing(feminine_plurals, plpos, tracking_categories)
@@ -832,7 +855,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 			else
 				f = replace_hash_with_lemma(f, lemma)
 			end
-			table.insert(feminines, {term = f, qualifiers = fetch_qualifiers(args.f_qual[i])})
+			table.insert(feminines, {term = f, q = fetch_qualifiers(args.f_qual[i])})
 		end
 
 		local argsmpl = args.mpl
@@ -864,7 +887,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 			else
 				mpl = replace_hash_with_lemma(mpl, lemma)
 			end
-			table.insert(masculine_plurals, {term = mpl, qualifiers = fetch_qualifiers(args.mpl_qual[i])})
+			table.insert(masculine_plurals, {term = mpl, q = fetch_qualifiers(args.mpl_qual[i])})
 		end
 
 		for i, fpl in ipairs(argsfpl) do
@@ -875,11 +898,11 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 					if not defpl then
 						error("Unable to generate default plural of '" .. f.term .. "'")
 					end
-					table.insert(feminine_plurals, {term = defpl, qualifiers = fetch_qualifiers(args.fpl_qual[i], f.qualifiers)})
+					table.insert(feminine_plurals, {term = defpl, q = fetch_qualifiers(args.fpl_qual[i], f.q)})
 				end
 			else
 				fpl = replace_hash_with_lemma(fpl, lemma)
-				table.insert(feminine_plurals, {term = fpl, qualifiers = fetch_qualifiers(args.fpl_qual[i])})
+				table.insert(feminine_plurals, {term = fpl, q = fetch_qualifiers(args.fpl_qual[i])})
 			end
 		end
 
@@ -887,11 +910,11 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 		check_all_missing(masculine_plurals, plpos, tracking_categories)
 		check_all_missing(feminine_plurals, plpos, tracking_categories)
 
-		local fem_like_lemma = #feminines == 1 and feminines[1].term == lemma and not feminines[1].qualifiers
+		local fem_like_lemma = #feminines == 1 and feminines[1].term == lemma and not feminines[1].q
 		local fem_pl_like_masc_pl = #masculine_plurals > 0 and #feminine_plurals > 0 and
 			m_table.deepEquals(masculine_plurals, feminine_plurals)
 		local masc_pl_like_lemma = #masculine_plurals == 1 and masculine_plurals[1].term == lemma and
-			not masculine_plurals[1].qualifiers
+			not masculine_plurals[1].q
 		if fem_like_lemma and fem_pl_like_masc_pl and masc_pl_like_lemma then
 			-- actually invariable
 			table.insert(data.inflections, {label = glossary_link("invariable")})
@@ -968,7 +991,7 @@ local function get_adjective_params(adjtype)
 		["meta"] = {type = "boolean"}, -- metaphonic
 		["nometa"] = {type = "boolean"}, -- explicitly not metaphonic
 	}
-	if adjtype == "base" or adjtype == "part" then
+	if adjtype == "base" then
 		params["comp"] = {list = true} --comparative(s)
 		params["comp_qual"] = {list = "comp=_qual", allow_holes = true}
 		params["sup"] = {list = true} --superlative(s)
@@ -979,6 +1002,9 @@ local function get_adjective_params(adjtype)
 		params["aug_qual"] = {list = "aug=_qual", allow_holes = true}
 		params["fonly"] = {type = "boolean"} -- feminine only
 		params["hascomp"] = {} -- has comparative
+	end
+	if adjtype == "part" then
+		params["short"] = {type = "boolean"} -- short participle
 	end
 	if adjtype == "sup" then
 		params["irreg"] = {type = "boolean"}
@@ -1130,7 +1156,8 @@ pos_functions["verbs"] = {
 		end
 
 		local parargs = frame:getParent().args
-		local alternant_multiword_spec = require("Module:User:Benwing2/pt-verb").do_generate_forms(parargs, "from headword")
+		local pt_verb = require(pt_verb_module)
+		local alternant_multiword_spec = pt_verb.do_generate_forms(parargs, "from headword")
 		for _, cat in ipairs(alternant_multiword_spec.categories) do
 			table.insert(data.categories, cat)
 		end
@@ -1242,15 +1269,17 @@ pos_functions["verbs"] = {
 				to_insert = {label = "no " .. slot_desc.label}
 			else
 				local into_table = {label = slot_desc.label}
-				local accel = {form = slot_desc.accel}
 				for _, form in ipairs(forms) do
 					local qualifiers = strip_brackets(form.footnotes)
 					-- Strip redundant brackets surrounding entire form. These may get generated e.g.
 					-- if we use the angle bracket notation with a single word.
 					local stripped_form = rmatch(form.form, "^%[%[([^%[%]]*)%]%]$") or form.form
+					stripped_form = pt_verb.remove_variant_codes(stripped_form)
 					-- Don't include accelerators if brackets remain in form, as the result will be wrong.
-					local this_accel = not stripped_form:find("%[%[") and accel or nil
-					table.insert(into_table, {term = stripped_form, qualifiers = qualifiers, accel = this_accel})
+					-- FIXME: For now, don't include accelerators. We should use the new {{pt-verb form of}} once implemented.
+					-- local this_accel = not stripped_form:find("%[%[") and accel or nil
+					local this_accel = nil
+					table.insert(into_table, {term = stripped_form, q = qualifiers, accel = this_accel})
 				end
 				to_insert = into_table
 			end
