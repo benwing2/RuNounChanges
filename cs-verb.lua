@@ -332,6 +332,14 @@ local function get_imperative_principal_part_for_imptype(base, stem, imptype)
 end
 
 
+local function generate_default_imperative_principal_part_from_stem(base, stem)
+	local imptypes = get_imptypes_for_stem(base, stem)
+	return iut.flatmap_forms(iut.convert_to_general_list_form(imptypes), function(imptype)
+		return get_imperative_principal_part_for_imptype(base, stem, imptype)
+	end)
+end
+
+
 local function generate_default_imperative_principal_part(base, do_err)
 	return iut.flatmap_forms(base.forms.pres_fut_3p, function(form)
 		local stem = rmatch(form, "^(.*)ou$") or rmatch(form, "^(.*)í")
@@ -339,10 +347,7 @@ local function generate_default_imperative_principal_part(base, do_err)
 			error("'imp:' must be given in order to specify the imperative principal part because third-person "
 				.. "plural present/future '" .. form .. "' does not end in -ou or -í")
 		end
-		local imptypes = get_imptypes_for_stem(base, stem)
-		return iut.flatmap_forms(iut.convert_to_general_list_form(imptypes), function(imptype)
-			return get_imperative_principal_part_for_imptype(base, stem, imptype)
-		end)
+		return generate_default_imperative_principal_part_from_stem(base, stem)
 	end)
 end
 
@@ -1421,68 +1426,69 @@ conjs["V.1"] = function(base, lemma)
 	pres1s = "ám",
 	imp = "ej",
 	past = "al",
-	past = "án",
+	ppp = "án",
 end
 
 --[=[
 
 * Verbs in [sz]:
-[[tesat]] "to carve" (pres 'tesám ~ tešu', impv 'tesej ~ teš', tr.ppp)
-[[česat]] "to comb" (pres 'češu ~ česám', impv 'češ ~ česej', tr.ppp)
-[[klusat]] "to trot" (pres 'klusám ~ klušu', impv 'klusej'; intr)
-[[křesat]] "to scrape" (pres 'křesám ~ křešu', impv 'křesej ~ křeš', tr.-ppp)
-[[řezat]] "to cut" (pres 'řežu ~ řezám', impv 'řež ~ řežej'; tr.ppp)
-[[lízat]] "to lick" (pres 'lízám ~ lížu', impv 'lízej ~ liž' [NOTE: short vowel], tr.-ppp)
-[[hryzat]] "to bite" (also [[hrýzt]]; pres 'hryzám ~ hryžu', impv 'hryzej ~ hryž', tr.ppp)
-[[pásat se]] "to graze" (not in IJP; prefixed 'přepásat' etc. in IJP [pres 'přepásám ~ přepášu', impv 'přepásej', tr.ppp)
-[[klouzat]] "to slide" (pres 'klouzám ~ kloužu', impv 'klouzej'; intr PPP?)
+[[tesat]] "to carve" (tesám ~ tešu, tesej ~ teš, tesal, tesán, tesaje ~ teše, tesání; tr.ppp): imp^a^e.prtr^a^e
+[[česat]] "to comb" (češu ~ česám, češ ~ česej, česal, česán, češe ~ česaje, česání; tr.ppp): pres^e^a.imp^e^a.prtr^e^a
+[[klusat]] "to trot" (klusám ~ klušu, klusej, klusal, no PPP, klusaje ~ kluše, klusání; intr): prtr^a^e
+[[křesat]] "to scrape" (křesám ~ křešu, křesej ~ křeš, křesal, no PPP, křesaje, křesání; tr.-ppp): imp^a^e
+[[řezat]] "to cut" (řežu ~ řezám, řež ~ řežej, řezal, řezán, řeže ~ řezaje, řezání; tr.ppp): pres^e^a.imp^e^a.prtr^e^a
+[[lízat]] "to lick" (lízám ~ lížu, lízej ~ liž [NOTE: short vowel], lízal, no PPP, lízaje ~ líže, lízání; tr.-ppp): imp^a^e.prtr^a^e
+[[hryzat]] ~ [[hrýzat]] "to bite" (hryzám ~ hryžu, hryzej ~ hryž, hryzal, hryzán, hryzaje ~ hryže, hryzání; tr.ppp): imp^a^e.prtr^a^e
+[[pásat se]] "to graze" (not in IJP)
+[[přepásat]] (přepásám ~ přepášu, přepásej, přepásal, přepásán, přepásav, přepásání; tr.ppp): [default]
+[[klouzat]] "to slide" (klouzám ~ kloužu, klouzej, klouzal, klouzán, klouzaje, klouzání; intr PPP?) [default]
 
 * Verbs in [bpvfm]:
-[[hýbat]] "to move" (pres 'hýbám ~ hýbu', impv 'hýbej'; intr no PPP)
-[[dlabat]] "to gouge" (pres 'dlabám ~ dlabu', impv 'dlab ~ dlabej', PPP)
-[[škrábat]] "to scratch" (also [[škrabat]]; pres 'škrábám ~ škrábu', impv 'škrábej ~ škrab' [NOTE: short vowel], PPP)
-[[klepat]] "to knock" (pres 'klepám ~ klepu', impv 'klep ~ klepej', PPP)
-[[kopat]] "to kick" (pres 'kopám ~ kopu', impv 'kopej', PPP)
-[[koupat]] "to bathe" (pres 'koupám ~ koupu', impv 'koupej', PPP)
-[[sypat]] "to sprinkle" (pres 'sypám ~ sypu', impv 'syp ~ sypej', PPP)
-[[drápat]] "to claw" (pres 'drápám ~ drápu', impv 'drápej', PPP)
-[[dupat]] "to stomp" (pres 'dupám ~ dupu', impv 'dupej', PPP)
-[[loupat]] "to peel" (pres 'loupám ~ loupu', impv 'loupej', PPP)
-[[rýpat]] "to dig" (pres 'rýpám ~ rýpu', impv 'rýpej', PPP)
-[[štípat]] "to pinch" (pres 'štípám ~ štípu', impv 'štípej', PPP)
-[[šlapat]] "to step; to trample" (pres 'šlapám ~ šlapu', impv 'šlap ~ šlapej', PPP)
-[[tápat]] "to grope" (pres 'tápám ~ tápu', impv 'tápej', intr no PPP)
-[[dřímat]] "to doze" (pres 'dřímám ~ dřímu', impv 'dřímej', intr no PPP)
-[[klamat]] "to deceive" (pres 'klamu', impv 'klamej ~ klam', PPP)
-[[lámat]] "to break" (pres 'lámu', impv 'lam [NOTE: short vowel] ~ lámej', PPP)
-[[plavat]] "to swim, to float" (pres 'plavu', impv 'plavej ~ plav ~ poplav', intr PPP? 'plaván', pres tgress 'plavaje')
-[[klofat]] "to peck; to tap, to knock" (pres 'klofám ~ klofu', impv 'klofej', PPP)
+[[hýbat]] "to move" (hýbám ~ hýbu, hýbej, hýbal, no PPP, hýbaje, hýbání; intr no PPP) [default]
+[[dlabat]] "to gouge" (dlabám ~ dlabu, dlab ~ dlabej, dlabal, dlabán, dlabaje, dlabání): imp^e^a
+[[škrábat]] ~ [[škrabat]] "to scratch" (škrábám ~ škrábu, škrábej ~ škrab [NOTE: short vowel], škrábal, škrábán, škrábaje, škrábání): imp^e^a
+[[klepat]] "to knock" (klepám ~ klepu, klep ~ klepej, klepal, klepán, klepaje, klepání): imp^e^a
+[[kopat]] "to kick" (kopám ~ kopu, kopej, kopal, kopán, kopaje, kopání) [default]
+[[koupat]] "to bathe" (koupám ~ koupu, koupej, koupal, koupán, koupaje, koupání) [default]
+[[sypat]] "to sprinkle" (sypám ~ sypu, syp ~ sypej, sypal, sypán, sypaje, sypání): imp^e^a
+[[drápat]] "to claw" (drápám ~ drápu, drápej, drápal, drápán, drápaje, drápání) [default]
+[[dupat]] "to stomp" (dupám ~ dupu, dupej, dupal, dupán, dupaje, dupání) [default]
+[[loupat]] "to peel" (loupám ~ loupu, loupej, loupal, loupán, loupaje, loupání) [default]
+[[rýpat]] "to dig" (rýpám ~ rýpu, rýpej, rýpal, rýpán, rýpaje, rýpání) [default]
+[[štípat]] "to pinch" (štípám ~ štípu, štípej, štípal, štípán, štípaje, štípání) [default]
+[[šlapat]] "to step; to trample" (šlapám ~ šlapu, šlap ~ šlapej, šlapal, šlapán, šlapaje, šlapání): imp^e^a
+[[tápat]] "to grope" (tápám ~ tápu, tápej, tápal, no PPP, tápaje, tápání; intr) [default]
+[[dřímat]] "to doze" (dřímám ~ dřímu, dřímej, dřímal, no PPP, dřímaje, dřímání; intr) [default]
+[[klamat]] "to deceive" (klamu, klamej ~ klam, klamal, klamán, klamaje, klamání): pres^e.imp^a^e
+[[lámat]] "to break" (lámu ~ lámam [rare per SSJC; not in IJP except as a note], lam [NOTE: short vowel] ~ lámej, lámal, lámán, lámaje, lámání): pres^e^a[rare].imp^e^a
+[[plavat]] "to swim, to float" (plavu, plavej ~ plav ~ poplav, plaval, plaván, plavaje, plavání) [NOTE: fut either 'budu plavat, budeš plavat, etc.' or 'poplavu, poplaveš, etc.']: pres^e.imp^a^e:poplav.fut:+:poplavu
+[[klofat]] "to peck; to tap, to knock" (klofám ~ klofu, klofej, klofal, klofán, klofaje, klofání) [default]
+[[hrabat]] (hrabu, hrab ~ hrabej, hrabal, hrabán, hrabaje, hrabání): pres^e.imp^e^a
+[[zahrabat]] (zahrabu, zahrabej ~ zahrab, zahrabal, zahrabán, zahrabav, zahrabání): pres^e.imp^a^e
 
 * Verbs in [rln]:
-[[orat]] "to plow" (pres 'orám ~ ořu', impv 'orej ~ oř', PPP)
-[[párat]] "to unstitch; to unravel" (pres 'párám ~ pářu', impv 'párej', PPP)
+[[orat]] "to plow" (orám ~ ořu, orej ~ oř, oral, orán, oraje, orání): imp^a^e
+[[párat]] "to unstitch; to unravel" (párám ~ pářu, párej, páral, párán, páraje, párání) [default]
 [[dudlat]] "to hum, to drone (of an instrument or musician); to grumble, to groan; to suck (one's thumb, etc.; of a
-  child)" (not in IJP; SSJC says 'dudlám' or 'dudlu', impv 'dudlej', 'dudli'; tr no PPP)
-[[stonat]] "to moan, to groan" (pres only 'stůňu, stůněš', impv 'stonej', intr no PPP, vnoun 'stonání', pres tgress 'stonaje')
+  child)" (not in IJP; SSJC says pres dudlám ~ dudlu, impv dudlej ~ dudli; tr no PPP): imp^a^e
+[[stonat]] "to moan, to groan" (stůňu/stůněš/etc., stonej, stonal, no PPP, stonaje, stonání): pres:stůňu
 
 * Verbs in [kh] and -ch:
-[[týkat se]] (pres 'týči se ~ týču se ~ týkám se'; impv only 'týkej se'; vn 'týkání')
-[[kdákat]] (pres 'kdáču ~ kdákám', impv 'kdákej', PPP)
-[[kvákat]] (pres 'kváču ~ kvákám', impv 'kvákej', no PPP)
-[[páchat]] (pres 'páchám ~ pášu', impv 'páchej', PPP)
+[[týkat se]] (týči se ~ týču se ~ týkám se, týkej se, týkal se, no PPP, týče se ~ týkaje se, týkání (se))
+[[kdákat]] (kdáču ~ kdákám, kdákej, kdákal, kdákán, kdáče ~ kdákaje, kdákání)
+[[kvákat]] (kváču ~ kvákám, kvákej, kvákal, no PPP, kváče ~ kvákaje, kvákání)
+[[páchat]] (páchám ~ pášu, páchej, páchal, páchán, páchaje, páchání)
 
 * Verbs in [td]:
 [none; all verbs given in Wikipedia as examples are either V.1 or missing in IJP]
 
 Types:
-* [default] = a-stem + e-stem, impv only a-stem = [[klusat]], [[přepásat]], [[klouzat]], [[hýbat]], [[škrabat]], [[kopat]], [[koupat]], [[drápat]], [[dupat]], [[loupat]], [[rýpat]], [[štípat]], [[tápat]], [[dřímat]], [[klamat]], [[klofat]], [[párat]], [[páchat]]
-* pres^e^a = e-stem + a-stem, impv only a-stem = [[týkat se]], [[kdákat]], [[kvákat]]
-* pres^e = e-stem, impv only a-stem = [[stonat]]
+* [default] = a-stem + e-stem, impv only a-stem, prtr only a-stem = [[klusat]], [[přepásat]], [[klouzat]], [[hýbat]], [[škrabat]], [[kopat]], [[koupat]], [[drápat]], [[dupat]], [[loupat]], [[rýpat]], [[štípat]], [[tápat]], [[dřímat]], [[klamat]], [[klofat]], [[párat]], [[páchat]]
+* pres^e^a.prtr^e^a = e-stem + a-stem, impv only a-stem = [[týkat se]], [[kdákat]], [[kvákat]]
+* pres:stůňu = e-stem, impv only a-stem = [[stonat]]
 * imp^e^a = a-stem + e-stem, impv e-stem + a-stem = [[dlabat]], [[klepat]], [[sypat]], [[šlapat]], [[lámat]] (short 'lam')
-* pres^e^a.imp^e^a = e-stem + a-stem, impv e-stem + a-stem = [[česat]], [[řezat]]
-* pres^e.imp^e^a = e-stem, impv only e-stem + a-stem
-* imp^a^e = a-stem + e-stem, impv a-stem + e-stem = [[tesat]], [[křesat]], [[lízej]], [[hryzat]], [[orat]], [[dudlat]]
-* pres^e^a.imp^a^e = e-stem + a-stem, impv a-stem + e-stem
+* pres^e^a.imp^e^a.prtr^e^a = e-stem + a-stem, impv e-stem + a-stem = [[česat]], [[řezat]]
+* imp^a^e = a-stem + e-stem, impv a-stem + e-stem = [[tesat]], [[křesat]], [[lízat]], [[hryzat]], [[orat]], [[dudlat]]
 * pres^e.imp^a^e = e-stem, impv only a-stem + e-stem = [[plavat]]
 ]=]
 
@@ -1505,91 +1511,29 @@ conjs["V.2"] = function(base, lemma)
 		end,
 	},
 	imp = {
-		choices = {"long", "short", "short-ě"},
-		default = function(base)
-			return get_imptypes_for_stem(base, base.infstem)
-		end,
+		choices = {"a", "e"},
+		default = {"a"},
 		generate_part = function(base, variant)
-			return get_imperative_principal_part_for_imptype(base, base.infstem, variant)
-		end,
-	},
-	past = "il",
-	ppp = {
-		choices = {"iot", "ni"},
-		default = "iot",
-		generate_part = function(base, variant)
-			if variant == "iot" then
-				local iotated_stem = com.iotate(base.infstem)
-				return com.combine_stem_ending(base, "ppp_m", iotated_stem, "en")
-			elseif variant == "ni" then
-				return com.combine_stem_ending(base, "ppp_m", base.infstem, "en")
+			if variant == "a" then
+				return base.infstem .. "ej"
 			else
-				error("Internal error: Saw unrecognized PPP variant code '" .. variant .. "'")
+				return generate_default_imperative_principal_part_from_stem(base, base.palstem)
 			end
 		end,
 	},
-	pres1s = "ám",
-	imp = "ej",
 	past = "al",
-	past = "án",
-end
-
-parse["V.2"] = function(base, conjmod_run, parse_err)
-	local separated_groups = iut.split_alternating_runs_and_strip_spaces(conjmod_run, ",")
-	for _, separated_group in ipairs(separated_groups) do
-		if rfind(separated_group[1], "^a") or rfind(separated_group[1], "^e") then
-			-- pres specs
-			if base.pres_stem then
-				parse_err("Saw two sets of present stem specs")
+	ppp = "án",
+	prtr = {
+		choices = {"a", "e"},
+		default = {"a"},
+		generate_part = function(base, variant)
+			if variant == "a" then
+				return base.infstem .. "aje"
+			else
+				return com.combine_stem_ending(base, "pres_tgress_m", base.palstem, "ě")
 			end
-			base.pres_stem = parse_variant_codes(separated_group, {"a", "e"}, "present stem type", parse_err)
-		elseif rfind(separated_group[1], "^imp") then
-			-- Imperative specs
-			if base.imp_stem then
-				parse_err("Saw two sets of imperative specs")
-			end
-			base.imp_stem = parse_variant_codes(separated_group, {"impa", "impe"}, "imperative type", parse_err)
-		else
-			parse_err("Unrecognized indicator '" .. separated_group[1] .. "'")
-		end
-	end
-end
-
-
-conjs["V.2"] = function(base, lemma)
-	local stem = separate_stem_suffix(lemma, "^(.*)at$", "V.2")
-	local iotated_stem = com.iotate(stem)
-
-	-- Normalize the codes computed by the parse function above.
-	if not base.pres_stem then
-		base.pres_stem = {{form = "a"}, {form = "e"}}
-	end
-	for _, formobj in ipairs(base.pres_stem) do
-		if formobj.form == "a" then
-			add_present_a(base, stem, {}, "noimp", formobj.footnotes)
-		elseif formobj.form == "e" then
-			add_present_e(base, iotated_stem, nil, false, {}, "noimp", formobj.footnotes)
-		else
-			error("Internal error: Saw unrecognized present tense code '" .. formobj.form .. "'")
-		end
-	end
-	-- Present transgressive is always a-stem regardless of present tense.
-	add_pres_tgress(base, stem, "ají")
-	if not base.imp_stem then
-		base.imp_stem = {{form = "impa"}}
-	end
-	for _, formobj in ipairs(base.imp_stem) do
-		if formobj.form == "impa" then
-			add_present_a_imperative(base, stem, formobj.footnotes)
-		elseif formobj.form == "impe" then
-			add_imperative_from_present(base, iotated_stem, nil, formobj.footnotes)
-		else
-			error("Internal error: Saw unrecognized imperative code '" .. formobj.form .. "'")
-		end
-	end
-
-	add_past(base, stem .. "a")
-	add_ppp(base, stem .. "án")
+		end,
+	},
 end
 
 
