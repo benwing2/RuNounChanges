@@ -377,6 +377,7 @@ def set_param_chain(t, values, firstparam, parampref=None, before=None):
     first = False
   for i in xrange(paramno + 1, 30):
     next_param = firstparam if first else "%s%s" % (parampref, i)
+    first = False
     rmparam(t, next_param)
 
 def sort_params(t):
