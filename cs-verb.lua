@@ -643,8 +643,6 @@ The following specs are allowed:
 local row_conjugations = {
 	{"inf", {
 		desc = "infinitive",
-		tag_suffix = "inf",
-		persnums = {""},
 		-- No generate_default_principal_part; handled specially in add_infinitive.
 		conjugate = add_infinitive,
 		no_explicit_principal_part = true, -- because handled specially using / or \ notation
@@ -655,10 +653,6 @@ local row_conjugations = {
 	}},
 	{"pres", {
 		desc = "present indicative",
-		tag_suffix = "pres|ind",
-		persnums = full_person_number_list,
-		-- No generate_default_principal_part; handled specially in add_present_indic because we actually have
-		-- two principal parts for the present indicative ("pres" and "pres3s").
 		conjugate = add_present_indic,
 		-- No setting for no_explicit_principal_part here because it would never be checked; we special-case 'pres:'
 		-- overrides before checking no_explicit_principal_part. The reason for special-casing is because there are two
@@ -668,10 +662,6 @@ local row_conjugations = {
 	}},
 	{"sub", {
 		desc = "present subjunctive",
-		tag_suffix = "pres|sub",
-		persnums = full_person_number_list,
-		row_override_persnums = {"123s", "1p", "2p", "3p"},
-		row_override_persnums_to_full_persnums = {["123s"] = {"1s", "2s", "3s"}},
 		generate_default_principal_part = generate_default_present_subj_principal_part,
 		conjugate = add_present_subj,
 		add_clitics = add_finite_clitics,
@@ -686,9 +676,8 @@ local row_conjugations = {
 		add_clitics = add_imperative_clitics,
 		add_prefixed_reflexive_variants = add_imperative_prefixed_reflexive_variants,
 	}},
-	{"phis", {
-		desc = "past historic",
-		tag_suffix = "phis",
+	{"past", {
+		desc = "past",
 		persnums = full_person_number_list,
 		generate_default_principal_part = generate_default_past_historic_principal_part,
 		conjugate = add_past_historic,
@@ -696,26 +685,6 @@ local row_conjugations = {
 		-- Set to "builtin" because normally handled specially in PRES^PRES3S,PHIS,PP spec, but when a built-in verb
 		-- is involved, we want a way of overriding the past historic (using 'phis:').
 		no_explicit_principal_part = "builtin",
-	}},
-	{"imperf", {
-		desc = "imperfect indicative",
-		tag_suffix = "impf|ind",
-		persnums = full_person_number_list,
-		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unstressed_stem,
-			function(stem) return combine_stem_ending(base, "imperf1s", stem, base.conj_vowel .. "vo") end) end,
-		conjugate = {"o", "i", "a", "àmo", "àte", "ano"},
-		add_clitics = add_finite_clitics,
-	}},
-	{"impsub", {
-		desc = "imperfect subjunctive",
-		tag_suffix = "impf|sub",
-		persnums = full_person_number_list,
-		row_override_persnums = {"12s", "3s", "1p", "2p", "3p"},
-		row_override_persnums_to_full_persnums = {["12s"] = {"1s", "2s"}},
-		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unstressed_stem,
-			function(stem) return combine_stem_ending(base, "impsub12s", stem, base.conj_vowel .. "ssi") end) end,
-		conjugate = {"ssi", "sse", "ssimo", "ste", "ssero"},
-		add_clitics = add_finite_clitics,
 	}},
 	{"fut", {
 		desc = "future",
