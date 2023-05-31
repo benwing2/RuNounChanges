@@ -7,7 +7,7 @@ local lang_en = m_languages.getByCode("en")
 local force_cat = false -- set to true for testing
 
 
-local function link_with_qualifiers(part, pretext)
+local function link_with_qualifiers(part, face, pretext)
 	local partparts = {}
 	if part.q then
 		table.insert(partparts, require("Module:qualifier").format_qualifier(part.q) .. " ")
@@ -15,7 +15,7 @@ local function link_with_qualifiers(part, pretext)
 	if pretext then
 		table.insert(partparts, pretext)
 	end
-	table.insert(partparts, m_links.full_link(part, nil, "allow self link"))
+	table.insert(partparts, m_links.full_link(part, face, "allow self link"))
 	if part.qq then
 		table.insert(partparts, " " .. require("Module:qualifier").format_qualifier(part.qq))
 	end
@@ -46,7 +46,7 @@ local function format_glosses(data, gloss_pretext)
 		end
 		for i, gloss in ipairs(data.gloss) do
 			gloss.lang = gloss.lang or lang_en
-			data.gloss[i] = link_with_qualifiers(gloss, gloss_pretext)
+			data.gloss[i] = link_with_qualifiers(gloss, nil, gloss_pretext)
 		end
 		return table.concat(data.gloss, ", ")
 	else
