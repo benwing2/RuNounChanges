@@ -289,6 +289,7 @@ raw_categories["Entries using missing taxonomic names"] = {
 -- `1`, `2`, `3`, ...: See above.
 -- `language_name`, `language_code`, `language_object`: See above.
 -- `nolang`: See above.
+-- `allow_etym_lang`: Language names can be etymology-only languages.
 -- `description`: Override the description (normally taken directly from the pagename).
 -- `template_name`: Name of template which generates this category.
 -- `template_sample_call`: Syntax for calling the template. Defaults to "{{{template_name}}}|{{{language_code}}}".
@@ -317,6 +318,17 @@ raw_categories["Entries using missing taxonomic names"] = {
 -- An actual template call can be inserted into a string using the syntax <<{{TEMPLATE|ARG1|ARG2|...}}>>.
 local requests_categories = {
 	{
+		-- This handles etymology languages.
+		regex = "^Requests concerning (.+)$",
+		description = "Categories with {{{1}}} entries that need the attention of experienced editors.",
+		etym_lang_only = true,
+		parents = {{name = "Requests concerning {{{parent_language_name}}}", sort = "{{{1}}}"}},
+		umbrella = false,
+		breadcrumb = "{{{1}}}",
+		not_hidden_category = true
+	},
+	{
+		-- This handles regular languages.
 		regex = "^Requests concerning (.+)$",
 		description = "Categories with {{{1}}} entries that need the attention of experienced editors.",
 		parents = {{name = "entry maintenance", is_label = true, sort = "requests"}},
@@ -503,6 +515,22 @@ local requests_categories = {
 		"automated transliteration, such as Hebrew and Persian).",
 	},
 	{
+		-- This handles etymology languages.
+		regex = "^Requests for native script for (.+) terms$",
+		etym_lang_only = true,
+		parents = {
+			{name = "Requests for native script for {{{parent_language_name}}} terms", sort = "{{{1}}}"},
+			{name = "Requests concerning {{{language_name}}}", sort = "native script"},
+		},
+		umbrella = false,
+		breadcrumb = "{{{1}}}",
+		template_name = "rfscript",
+		template_actual_sample_call = "{{rfscript|{{{language_code}}}|nocat=1}}",
+		catfix = false,
+		additional_template_description = "Many templates such as {{temp|l}}, {{temp|m}} and {{temp|t}} automatically place the page in this category when they are missing the term but have been provided with a transliteration."
+	},
+	{
+		-- This handles regular languages.
 		regex = "^Requests for native script for (.+) terms$",
 		umbrella = "Requests for native script by language",
 		template_name = "rfscript",
@@ -631,7 +659,11 @@ This category is hidden.]=],
 }
 
 table.insert(raw_handlers, function(data)
-	local items = {pagename = data.category}
+	local items
+
+	local function init_items()
+		items = {pagename = data.category}
+	end
 
 	local function replace_template_refs(result)
 		if not result then
@@ -686,102 +718,121 @@ table.insert(raw_handlers, function(data)
 		return result
 	end
 
-	local valid_category = false
+	local function convert_items_to_category_data(items)
+		if not items.nolang then
+			items.language_name = items.language_name or "{{{1}}}"
+			items.language_name = replace_template_refs(items.language_name)
+			if items.etym_lang_only then
+				items.language_object = require("Module:etymology languages").getByCanonicalName(items.language_name)
+				if not items.language_object then
+					return nil
+				end
+				items.language_code = items.language_object:getCode()
+				items.parent_language_object = items.language_object:getNonEtymological()
+				-- Reject weird cases where etymology language has no parent.
+				if not items.parent_language_object then
+					return nil
+				end
+				items.parent_language_code = items.parent_language_object:getCode()
+				items.parent_language_name = items.parent_language_object:getCanonicalName()
+			else
+				items.language_object = require("Module:languages").getByCanonicalName(items.language_name, true)
+				items.language_code = items.language_object:getCode()
+			end
+		end
 
+		if items.template_name then
+			items.template_sample_call = items.template_sample_call or "{{{{{template_name}}}|{{{language_code}}}}}"
+			items.full_text_about_the_template = "To make this request, in this specific language, use this code in the entry (see also the documentation at [[Template:{{{template_name}}}]]):\n\n<pre>{{{template_sample_call}}}</pre>"
+
+			if items.template_example_output then
+				items.full_text_about_the_template = items.full_text_about_the_template .. " " .. items.template_example_output
+			else
+				items.template_actual_sample_call = items.template_actual_sample_call or items.template_sample_call
+				items.full_text_about_the_template = items.full_text_about_the_template .. "\nIt results in the message below:\n\n{{{template_actual_sample_call}}}"
+			end
+			if items.additional_template_description then
+				items.full_text_about_the_template = items.full_text_about_the_template .. "\n\n" .. items.additional_template_description
+			end
+		end
+
+		local parents = items.parents
+		local breadcrumb = items.breadcrumb and replace_template_refs(items.breadcrumb)
+
+		if parents then
+			for _, parent in ipairs(parents) do
+				parent.name = replace_template_refs(parent.name)
+				parent.sort = replace_template_refs(parent.sort)
+			end
+		else
+			local umbrella_type = items.pagename:match("^Requests for (.+) by language$")
+			if umbrella_type then
+				breadcrumb = breadcrumb or umbrella_type
+				parents = {{name = "Request subcategories by language", sort = umbrella_type}}
+			elseif not items.language_name then
+				error("Internal error: Don't know how to compute parents for non-language-specific category '" .. items.pagename .. "'")
+			else
+				local default_breadcrumb = items.pagename:match("^Requests for (.+) in .*$") or items.pagename:match("^Requests for (.+)$")
+				breadcrumb = breadcrumb or default_breadcrumb
+				parents = {{name = "Requests concerning " .. items.language_name, sort = default_breadcrumb}}
+			end
+		end
+
+		if not items.nolang and items.umbrella ~= false then
+			table.insert(parents, {name = replace_template_refs(items.umbrella), sort = items.language_name})
+		end
+
+		local additional = replace_template_refs(items.full_text_about_the_template)
+		if items.pagename:find(" by language$") then
+			additional = "{{{umbrella_msg}}}" .. (additional and "\n\n" .. additional or "")
+		end
+
+		return {
+			description = replace_template_refs(items.description) or items.pagename .. ".",
+			lang = items.parent_language_code or items.language_code,
+			additional = additional,
+			parents = parents,
+			-- If no breadcrumb=, it will default to the category name
+			breadcrumb = breadcrumb,
+			catfix = replace_template_refs(items.catfix),
+			toc_template = replace_template_refs(items.toc_template),
+			toc_template_full = replace_template_refs(items.toc_template_full),
+			hidden = not items.not_hidden_category,
+			can_be_empty = true,
+		}
+	end
+
+	-- First look for a regular (usually language or script-specific) category.
 	for i, category in ipairs(requests_categories) do
-		local matchvals = {mw.ustring.match(items.pagename, category.regex)}
+		local matchvals = {mw.ustring.match(data.category, category.regex)}
 		if #matchvals > 0 then
-			valid_category = true
-
+			init_items()
 			for key, value in pairs(category) do
 				items[key] = value
 			end
 			for key, value in ipairs(matchvals) do
 				items["" .. key] = value
 			end
-			break
-		end
-	end
-
-	if not valid_category then
-		for i, category in ipairs(requests_categories) do
-			if items.pagename == category.umbrella then
-				valid_category = true
-				items.nolang = true
+			local catdata = convert_items_to_category_data(items)
+			if catdata then
+				return catdata
 			end
 		end
 	end
 
-	if not valid_category then
-		return nil
-	end
-
-	if not items.nolang then
-		items.language_name = items.language_name or "{{{1}}}"
-		items.language_name = replace_template_refs(items.language_name)
-		items.language_object = require("Module:languages").getByCanonicalName(items.language_name, true)
-		items.language_code = items.language_object:getCode()
-	end
-
-	if items.template_name then
-		items.template_sample_call = items.template_sample_call or "{{{{{template_name}}}|{{{language_code}}}}}"
-		items.full_text_about_the_template = "To make this request, in this specific language, use this code in the entry (see also the documentation at [[Template:{{{template_name}}}]]):\n\n<pre>{{{template_sample_call}}}</pre>"
-
-		if items.template_example_output then
-			items.full_text_about_the_template = items.full_text_about_the_template .. " " .. items.template_example_output
-		else
-			items.template_actual_sample_call = items.template_actual_sample_call or items.template_sample_call
-			items.full_text_about_the_template = items.full_text_about_the_template .. "\nIt results in the message below:\n\n{{{template_actual_sample_call}}}"
-		end
-		if items.additional_template_description then
-			items.full_text_about_the_template = items.full_text_about_the_template .. "\n\n" .. items.additional_template_description
+	-- Now look for umbrella categories.
+	for i, category in ipairs(requests_categories) do
+		if data.category == category.umbrella then
+			init_items()
+			items.nolang = true
+			local catdata = convert_items_to_category_data(items)
+			if catdata then
+				return catdata
+			end
 		end
 	end
 
-	local parents = items.parents
-	local breadcrumb = items.breadcrumb and replace_template_refs(items.breadcrumb)
-
-	if parents then
-		for _, parent in ipairs(parents) do
-			parent.name = replace_template_refs(parent.name)
-			parent.sort = replace_template_refs(parent.sort)
-		end
-	else
-		local umbrella_type = items.pagename:match("^Requests for (.+) by language$")
-		if umbrella_type then
-			breadcrumb = breadcrumb or umbrella_type
-			parents = {{name = "Request subcategories by language", sort = umbrella_type}}
-		elseif not items.language_name then
-			error("Internal error: Don't know how to compute parents for non-language-specific category '" .. items.pagename .. "'")
-		else
-			local default_breadcrumb = items.pagename:match("^Requests for (.+) in .*$") or items.pagename:match("^Requests for (.+)$")
-			breadcrumb = breadcrumb or default_breadcrumb
-			parents = {{name = "Requests concerning " .. items.language_name, sort = default_breadcrumb}}
-		end
-	end
-
-	if not items.nolang then
-		table.insert(parents, {name = replace_template_refs(items.umbrella), sort = items.language_name})
-	end
-
-	local additional = replace_template_refs(items.full_text_about_the_template)
-	if items.pagename:find(" by language$") then
-		additional = "{{{umbrella_msg}}}" .. (additional and "\n\n" .. additional or "")
-	end
-
-	return {
-		description = replace_template_refs(items.description) or items.pagename .. ".",
-		lang = items.language_code,
-		additional = additional,
-		parents = parents,
-		-- If no breadcrumb=, it will default to the category name
-		breadcrumb = breadcrumb,
-		catfix = replace_template_refs(items.catfix),
-		toc_template = replace_template_refs(items.toc_template),
-		toc_template_full = replace_template_refs(items.toc_template_full),
-		hidden = not items.not_hidden_category,
-		can_be_empty = true,
-	}
+	return nil
 end)
 
 
