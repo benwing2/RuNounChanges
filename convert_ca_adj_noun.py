@@ -150,6 +150,12 @@ def make_feminine(base, special=None):
     prev, first_vowel, cons = m.groups()
     return prev + accent_vowel[first_vowel] + cons + "ia"
 
+  # multisyllabic -at/-it/-ut (also -ït/-üt) with stress on the final vowel -> -ada/-ida/-uda
+  mod_base = re.sub("([gq])u(" + UV + ")", r"\1w\2", base) # hack so we don't treat the u in qu/gu as a vowel
+  if (re.search(V + "[^ ]*[aiu]t$", mod_base) and not re.search(AV + "[^ ]*[aiu]t$", mod_base) and
+      not re.search("[aeo][iu]t$", mod_base)) or re.search(u"[ïü]t$", mod_base):
+    return base[:-1] + "da"
+
   return base + "a"
 
 def make_plural(base, gender, special=None):
@@ -427,13 +433,10 @@ def process_text_on_page(index, pagetitle, text):
         saw_unhandlable = True
 
       if not saw_unhandlable:
-        dont_touch_f = False
-        if fs == ["mf"]:
-          dont_touch_f = True
-          fs = [lemma]
         deff = make_feminine(lemma)
+        if fs == ["mf"]:
+          fs = [lemma]
         if not fs:
-          dont_touch_f = True
           fs = [deff]
 
         fem_like_lemma = fs == [lemma]
@@ -474,8 +477,8 @@ def process_text_on_page(index, pagetitle, text):
           deffpl = [x for f in fs for x in make_plural(f, "f")]
 
         new_fs = []
-        if not dont_touch_f:
-          this_subnotes = []
+        this_subnotes = []
+        if origfs:
           for f in fs:
             if f == deff:
               pagemsg("Replacing feminine '%s' with '+'" % f)
@@ -484,13 +487,19 @@ def process_text_on_page(index, pagetitle, text):
             else:
               new_fs.append(replace_lemma_with_hash(f))
           if new_fs == ["+"]:
-            redundant_msg = "redundant feminine%s %s" % ("s" if len(fs) > 1 else "", ",".join("'%s'" % f for f in fs))
+            redundant_msg = "redundant feminine%s %s" % ("s" if len(origfs) > 1 else "", ",".join("'%s'" % f for f in origfs))
             pagemsg("Removing %s" % redundant_msg)
             subnotes.append("remove %s" % redundant_msg)
             fs = []
+          elif fem_like_lemma:
+            fs = ["mf"]
+            if fs != origfs:
+              notes.append("convert feminine same as lemma to 'mf'")
           else:
             fs = new_fs
             subnotes.extend(this_subnotes)
+        else:
+          fs = []
      
         new_mpls = []
 
@@ -550,8 +559,7 @@ def process_text_on_page(index, pagetitle, text):
 
         # Don't bother trying to deduce sp=. There are few instances and most are invariable.
 
-        if not dont_touch_f:
-          blib.set_param_chain(t, fs, "1", "f")
+        blib.set_param_chain(t, fs, "1", "f")
         blib.set_param_chain(t, pls, "pl")
         blib.set_param_chain(t, mpls, "mpl")
 
@@ -576,18 +584,19 @@ def process_text_on_page(index, pagetitle, text):
 
   return unicode(parsed), notes
 
-parser = blib.create_argparser("Remove redundant args in {{ca-noun}} or {{ca-adj}}",
-  include_pagefile=True, include_stdin=True)
-parser.add_argument("--do-nouns", action="store_true")
-parser.add_argument("--do-adjs", action="store_true")
-args = parser.parse_args()
-start, end = blib.parse_start_end(args.start, args.end)
+if __name__ == "__main__":
+  parser = blib.create_argparser("Remove redundant args in {{ca-noun}} or {{ca-adj}}",
+    include_pagefile=True, include_stdin=True)
+  parser.add_argument("--do-nouns", action="store_true")
+  parser.add_argument("--do-adjs", action="store_true")
+  args = parser.parse_args()
+  start, end = blib.parse_start_end(args.start, args.end)
 
-default_refs = []
-if args.do_nouns:
-  default_refs.append("Template:ca-noun")
-elif args.do_adjs:
-  default_refs.append("Template:ca-adj")
+  default_refs = []
+  if args.do_nouns:
+    default_refs.append("Template:ca-noun")
+  elif args.do_adjs:
+    default_refs.append("Template:ca-adj")
 
-blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
-  default_refs=default_refs)
+  blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+    default_refs=default_refs)
