@@ -149,7 +149,7 @@ local function parse_and_format_parts(parts, get_part_type)
 		if not parsed.term:find("%[") then
 			local parttype = parsed.type
 			if not parttype then
-				parttype = get_part_type(i, term)
+				parttype = get_part_type(i, parsed.term)
 			end
 			if parttype ~= "object" and parsed.pl then
 				parse_err(("Can't specify <pl:...> with an argument that is not an object (argument type is '%s')"):
