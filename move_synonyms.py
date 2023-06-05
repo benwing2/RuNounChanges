@@ -352,7 +352,7 @@ def process_text_on_page(pageindex, pagetitle, text):
         else:
           syns_by_number[int(defnum)] += parsed_syns
 
-      if not unparsable:
+      if not unparsable and len(syns_by_number) > 0:
         # Find definitions
         before_defn_text, defns, after_defn_text = find_defns()
         if before_defn_text is None:
