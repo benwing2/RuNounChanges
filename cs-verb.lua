@@ -973,6 +973,44 @@ PPP: -nut, -en, -nut ~ -en, -en ~ -nut: t n t:n n:t [defaults to t]
 past tgress: -nuv, null, -nuv ~ null, null ~ -nuv: nu - nu:- -:nu [defaults to nu]
 vn: -nutí, -ení, -nutí ~ -ení, -ení ~ -nutí: defaults to same as PPP, or t if no PPP
 ]=]
+
+conj["II.1"] = {
+	get_infstem = function(base)
+		return separate_stem_suffix(lemma, "^(.*)nout$", "II.1")
+	end,
+	pres1s = "n",
+	imp = "ni",
+	ppp = {
+		choices = {"l", "nul", "(nu)"},
+		default = "iot",
+		generate_part = function(base, variant)
+			if variant == "iot" then
+				local iotated_stem = com.iotate(base.infstem)
+				return com.combine_stem_ending(base, "ppp_m", iotated_stem, "en")
+			elseif variant == "ni" then
+				return com.combine_stem_ending(base, "ppp_m", base.infstem, "en")
+			else
+				error("Internal error: Saw unrecognized PPP variant code '" .. variant .. "'")
+			end
+		end,
+	},
+	past = "il",
+	ppp = {
+		choices = {"iot", "ni"},
+		default = "iot",
+		generate_part = function(base, variant)
+			if variant == "iot" then
+				local iotated_stem = com.iotate(base.infstem)
+				return com.combine_stem_ending(base, "ppp_m", iotated_stem, "en")
+			elseif variant == "ni" then
+				return com.combine_stem_ending(base, "ppp_m", base.infstem, "en")
+			else
+				error("Internal error: Saw unrecognized PPP variant code '" .. variant .. "'")
+			end
+		end,
+	},
+}
+
 parse["II.1"] = function(base, conjmod_run, parse_err)
 	local separated_groups = iut.split_alternating_runs_and_strip_spaces(conjmod_run, "[/,]", "preserve splitchar")
 	local past_conjmod = separated_groups[1]
