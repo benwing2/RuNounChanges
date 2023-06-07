@@ -1240,7 +1240,7 @@ III.2:
 [[sledovat]] "to follow"
 [[konstruovat]] "to construct"
 ]=]
-conjs["III.2"] = function(base, lemma)
+conjs["III.2"] = {
 	get_infstem = function(base)
 		return separate_stem_suffix(base.lemma, "^(.*)ovat$", "III.2")
 	end,
@@ -1248,7 +1248,7 @@ conjs["III.2"] = function(base, lemma)
 	prtr = "ě",
 	past = "oval",
 	ppp = "ován",
-end
+}
 
 
 --[=[
@@ -1426,7 +1426,7 @@ etc.
 [[cucat]] "to suck" V.1
 ]=]
 
-conjs["V.1"] = function(base, lemma)
+conjs["V.1"] = {
 	get_infstem = function(base)
 		return separate_stem_suffix(base.lemma, "^(.*)[aá]t$", "V.1")
 	end,
@@ -1434,7 +1434,7 @@ conjs["V.1"] = function(base, lemma)
 	imp = "ej",
 	past = "al",
 	ppp = "án",
-end
+}
 
 --[=[
 
@@ -1499,7 +1499,7 @@ Types:
 * pres^e.imp^a^e = e-stem, impv only a-stem + e-stem = [[plavat]]
 ]=]
 
-conjs["V.2"] = function(base, lemma)
+conjs["V.2"] = {
 	init = function(base)
 		base.infstem = separate_stem_suffix(base.lemma, "^(.*)[aá]t$", "V.2")
 		base.palstem = com.apply_first_palatalization(base.infstem, "is verb")
@@ -1541,7 +1541,7 @@ conjs["V.2"] = function(base, lemma)
 			end
 		end,
 	},
-end
+}
 
 
 conjs["5"] = function(base, lemma)

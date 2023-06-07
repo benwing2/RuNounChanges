@@ -182,7 +182,7 @@ local function make_try(word)
 end
 
 
-function export.iotate(stem)
+function export.iotate(word)
 	local try = make_try(word)
 	return
 		try("s[tť]", "šť") or
