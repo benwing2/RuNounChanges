@@ -535,7 +535,7 @@ pos_functions["cardinal numbers"] = {
 
 -- Display information for a noun's gender
 -- This is separate so that it can also be used for proper nouns
-function noun_gender(args, data)
+local function noun_gender(args, data)
 	local gender = args[1]
 	table.insert(data.genders, gender)
 	if #data.genders == 0 then
@@ -835,6 +835,13 @@ pos_functions["nouns"] = {
 			args.pej.label = glossary_link("pejorative")
 			table.insert(data.inflections, args.pej)
 		end
+
+		-- Maybe add category 'Spanish nouns with irregular gender' (or similar)
+		local irreg_gender_lemma = rsub(lemma, " .*", "") -- only look at first word
+		if (rfind(irreg_gender_lemma, "o$") and (args[1] == "f" or args[1] == "mf" or args[1] == "mfbysense")) or
+			(irreg_gender_lemma:find("a$") and (args[1] == "m" or args[1] == "mf" or args[1] == "mfbysense")) then
+			table.insert(data.categories, langname .. " nouns with irregular gender")
+		end
 	end
 }
 
@@ -874,6 +881,7 @@ pos_functions["verbs"] = {
 		end
 
 		if #data.heads == 0 then
+			data.no_redundant_head_cat = true
 			for _, head in ipairs(alternant_multiword_spec.forms.infinitive_linked) do
 				table.insert(data.heads, head.form)
 			end
@@ -977,7 +985,7 @@ pos_functions["verbs"] = {
 					local stripped_form = rmatch(form.form, "^%[%[([^%[%]]*)%]%]$") or form.form
 					-- Don't include accelerators if brackets remain in form, as the result will be wrong.
 					local this_accel = not stripped_form:find("%[%[") and accel or nil
-					table.insert(into_table, {term = stripped_form, qualifiers = qualifiers, accel = this_accel})
+					table.insert(into_table, {term = stripped_form, q = qualifiers, accel = this_accel})
 				end
 				return into_table
 			end
