@@ -13,6 +13,7 @@ local langname = lang:getCanonicalName()
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsubn = mw.ustring.gsub
+local usub = mw.ustring.sub
 
 local unaccented_vowel = "aeiou"
 local accented_vowel = "àèéíòóú"
@@ -30,13 +31,6 @@ local accent_vowel = {
 	["i"] = "í",
 	["o"] = "ò",
 	["u"] = "ù",
-}
-
-local suffix_categories = {
-	["adjectives"] = true,
-	["adverbs"] = true,
-	["nouns"] = true,
-	["verbs"] = true,
 }
 
 local prepositions = {
@@ -106,11 +100,16 @@ function export.show(frame)
 			heads = {pagename}
 		end
 	else
-		local auto_linked_head = require(romut_module).add_lemma_links(pagename, args.splithyph)
+		local romut = require(romut_module)
+		local auto_linked_head = romut.add_links_to_multiword_term(pagename, args.splithyph)
 		if #heads == 0 then
 			heads = {auto_linked_head}
 		else
-			for _, head in ipairs(heads) do
+			for i, head in ipairs(heads) do
+				if head:find("^~") then
+					head = romut.apply_link_modifiers(auto_linked_head, usub(head, 2))
+					heads[i] = head
+				end
 				if head == auto_linked_head then
 					track("redundant-head")
 				end
@@ -133,10 +132,10 @@ function export.show(frame)
 	}
 
 	local is_suffix = false
-	if pagename:find("^%-") and suffix_categories[poscat] then
+	if pagename:find("^%-") and poscat ~= "suffix forms" then
 		is_suffix = true
 		data.pos_category = "suffixes"
-		local singular_poscat = poscat:gsub("s$", "")
+		local singular_poscat = require("Module:string utilities").singularize(poscat)
 		table.insert(data.categories, langname .. " " .. singular_poscat .. "-forming suffixes")
 		table.insert(data.inflections, {label = singular_poscat .. "-forming suffix"})
 	end
@@ -650,8 +649,22 @@ pos_functions["pronouns"] = {
 -----------------------------------------------------------------------------------------
 
 local allowed_genders = m_table.listToSet(
-	{"m", "f", "mf", "mfbysense", "m-p", "f-p", "mf-p", "mfbysense-p", "?", "?-p", "n", "n-p"}
+	{"m", "f", "mf", "mfbysense", "n", "m-p", "f-p", "mf-p", "mfbysense-p", "n-p", "?", "?-p"}
 )
+
+
+local function process_genders(data, genders, g_qual)
+	for i, g in ipairs(genders) do
+		if not allowed_genders[g] then
+			error("Unrecognized gender: " .. g)
+		end
+		if g_qual[i] then
+			table.insert(data.genders, {spec = g, qualifiers = {g_qual[i]}})
+		else
+			table.insert(data.genders, g)
+		end
+	end
+end
 
 local function do_noun(args, data, pos, is_suffix, is_proper)
 	local is_plurale_tantum = false
@@ -665,10 +678,9 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 	local saw_m = false
 	local saw_f = false
 	local gender_for_default_plural, gender_for_irreg_ending
-	for i, g in ipairs(args[1]) do
-		if not allowed_genders[g] then
-			error("Unrecognized gender: " .. g)
-		end
+	process_genders(data, args[1], args.g_qual)
+	-- Check for specific genders and pluralia tantum.
+	for _, g in ipairs(args[1]) do
 		if g:find("-p$") then
 			is_plurale_tantum = true
 		else
@@ -679,11 +691,6 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 			if g == "f" or g == "mf" or g == "mfbysense" then
 				saw_f = true
 			end
-		end
-		if args.g_qual[i] then
-			table.insert(data.genders, {spec = g, qualifiers = {args.g_qual[i]}})
-		else
-			table.insert(data.genders, g)
 		end
 	end
 	if saw_m and saw_f then
@@ -914,7 +921,7 @@ pos_functions["verbs"] = {
 		["pres_1_sg"] = {},
 		["past_part"] = {},
 		},
-	func = function(args, data)
+	func = function(args, data, is_suffix)
 		-- Does this verb end in a recognised verb ending (possibly reflexive)?
 		if not data.pagename:find(" ") and (data.pagename:find("re?$") or data.pagename:find("r%-se$") or data.pagename:find("re's$")) then
 			local base = data.pagename:gsub("r%-se$", "r"):gsub("re's$", "re")
@@ -958,7 +965,7 @@ pos_functions["numerals"] = {
 		[1] = {},
 		[2] = {},
 		},
-	func = function(args, data)
+	func = function(args, data, is_suffix)
 		local feminine = args[1]
 		local noun_form = args[2]
 		
@@ -974,6 +981,48 @@ pos_functions["numerals"] = {
 			table.insert(data.genders, "f")
 		end
 	end
+}
+
+-----------------------------------------------------------------------------------------
+--                                      Phrases                                        --
+-----------------------------------------------------------------------------------------
+
+pos_functions["phrases"] = {
+	params = {
+		["g"] = {list = true},
+		["g_qual"] = {list = "g=_qual", allow_holes = true},
+		["m"] = {list = true},
+		["m_qual"] = {list = "m=_qual", allow_holes = true},
+		["f"] = {list = true},
+		["f_qual"] = {list = "f=_qual", allow_holes = true},
+	},
+	func = function(args, data, is_suffix)
+		data.genders = {}
+		process_genders(data, args.g, args.g_qual)
+		insert_ancillary_inflection(data, args.m, args.m_qual, "masculine", "phrases")
+		insert_ancillary_inflection(data, args.f, args.f_qual, "feminine", "phrases")
+	end,
+}
+
+-----------------------------------------------------------------------------------------
+--                                    Suffix forms                                     --
+-----------------------------------------------------------------------------------------
+
+pos_functions["suffix forms"] = {
+	params = {
+		[1] = {required = true, list = true},
+		["g"] = {list = true},
+		["g_qual"] = {list = "g=_qual", allow_holes = true},
+	},
+	func = function(args, data, is_suffix)
+		data.genders = {}
+		process_genders(data, args.g, args.g_qual)
+		local suffix_type = {}
+		for _, typ in ipairs(args[1]) do
+			table.insert(suffix_type, typ .. "-forming suffix")
+		end
+		table.insert(data.inflections, {label = "non-lemma form of " .. m_table.serialCommaJoin(suffix_type, {conj = "or"})})
+	end,
 }
 
 return export
