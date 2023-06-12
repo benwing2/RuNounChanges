@@ -28,13 +28,6 @@ local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 
-local suffix_categories = {
-	["adjectives"] = true,
-	["adverbs"] = true,
-	["nouns"] = true,
-	["verbs"] = true,
-}
-
 -- When followed by a hyphen in a hyphenated compound, the hyphen will be included with the prefix when linked.
 local include_hyphen_prefixes = m_table.listToSet {
 	"ab",
@@ -153,10 +146,10 @@ function export.show(frame)
 	}
 
 	local is_suffix = false
-	if pagename:find("^%-") and suffix_categories[poscat] then
+	if pagename:find("^%-") and poscat ~= "suffix forms" then
 		is_suffix = true
 		data.pos_category = "suffixes"
-		local singular_poscat = poscat:gsub("s$", "")
+		local singular_poscat = require("Module:string utilities").singularize(poscat)
 		table.insert(data.categories, langname .. " " .. singular_poscat .. "-forming suffixes")
 		table.insert(data.inflections, {label = singular_poscat .. "-forming suffix"})
 	end
@@ -230,6 +223,19 @@ local allowed_genders = m_table.listToSet(
 	{"m", "f", "mf", "mfbysense", "m-p", "f-p", "mf-p", "mfbysense-p", "?", "?-p", "n", "n-p"}
 )
 
+local function process_genders(data, genders, g_qual)
+	for i, g in ipairs(genders) do
+		if not allowed_genders[g] then
+			error("Unrecognized gender: " .. g)
+		end
+		if g_qual[i] then
+			table.insert(data.genders, {spec = g, qualifiers = {g_qual[i]}})
+		else
+			table.insert(data.genders, g)
+		end
+	end
+end
+
 local function do_noun(args, data, tracking_categories, pos, is_suffix, is_proper)
 	local is_plurale_tantum = false
 	local has_singular = false
@@ -241,11 +247,10 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 	data.genders = {}
 	local saw_m = false
 	local saw_f = false
-	local gender_for_default_plural = args[1][1]
+	local gender_for_default_plural
+	process_genders(data, args[1], args.g_qual)
+	-- Check for specific genders and pluralia tantum.
 	for i, g in ipairs(args[1]) do
-		if not allowed_genders[g] then
-			error("Unrecognized gender: " .. g)
-		end
 		if g:find("-p$") then
 			is_plurale_tantum = true
 		else
@@ -257,14 +262,13 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 				saw_f = true
 			end
 		end
-		if args.g_qual[i] then
-			table.insert(data.genders, {spec = g, qualifiers = {args.g_qual[i]}})
-		else
-			table.insert(data.genders, g)
-		end
 	end
 	if saw_m and saw_f then
-		gender_for_default_plural = "mf"
+		gender_for_default_plural = "m"
+	elseif saw_f then
+		gender_for_default_plural = "f"
+	else
+		gender_for_default_plural = "m"
 	end
 
 	local lemma = m_links.remove_links(data.heads[1]) -- should always be specified
@@ -1325,5 +1329,25 @@ pos_functions["verbs"] = {
 	end
 }
 
+-----------------------------------------------------------------------------------------
+--                                    Suffix forms                                     --
+-----------------------------------------------------------------------------------------
+
+pos_functions["suffix forms"] = {
+	params = {
+		[1] = {required = true, list = true},
+		["g"] = {list = true},
+		["g_qual"] = {list = "g=_qual", allow_holes = true},
+	},
+	func = function(args, data, is_suffix)
+		data.genders = {}
+		process_genders(data, args.g, args.g_qual)
+		local suffix_type = {}
+		for _, typ in ipairs(args[1]) do
+			table.insert(suffix_type, typ .. "-forming suffix")
+		end
+		table.insert(data.inflections, {label = "non-lemma form of " .. m_table.serialCommaJoin(suffix_type, {conj = "or"})})
+	end,
+}
 
 return export
