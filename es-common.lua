@@ -1,5 +1,7 @@
 local export = {}
 
+local romut_module = "Module:romance utilities"
+
 local u = mw.ustring.char
 local rsplit = mw.text.split
 local rfind = mw.ustring.find
@@ -32,6 +34,17 @@ local add_accent = {
 
 export.remove_accent = remove_accent
 export.add_accent = add_accent
+
+
+local prepositions = {
+	"al? ",
+	"del? ",
+	"como ",
+	"con ",
+	"en ",
+	"para ",
+	"por ",
+}
 
 
 -- version of rsubn() that discards all but the first return value
@@ -112,7 +125,7 @@ function export.apply_vowel_alternation(stem, alternation)
 			err = "should have -u- as the last vowel"
 		end
 	else
-		error("Internal error: Unrecognized vowel alternation '" .. alternation .. "'")
+		error("Unrecognized vowel alternation '" .. alternation .. "'")
 	end
 	ret = ret and ret:gsub(TEMPC1, "u") or nil
 	return {ret = ret, err = err}
@@ -267,5 +280,124 @@ function export.strip_redundant_links(form)
 	return rmatch(form, "^%[%[([^%[%]]*)%]%]$") or form
 end
 
+
+function export.make_plural(form, special)
+	local retval = require(romut_module).handle_multiword(form, special, export.make_plural, prepositions)
+	if retval then
+		return retval
+	end
+
+	-- ends in unstressed vowel or á, é, ó
+	if rfind(form, "[aeiouáéó]$") then return {form .. "s"} end
+
+	-- ends in í or ú
+	if rfind(form, "[íú]$") then
+		return {form .. "s", form .. "es"}
+	end
+
+	-- ends in a vowel + z
+	if rfind(form, V .. "z$") then
+		return {rsub(form, "z$", "ces")}
+	end
+
+	-- ends in tz
+	if rfind(form, "tz$") then return {form} end
+
+	local syllables = export.syllabify(form)
+
+	-- ends in s or x with more than 1 syllable, last syllable unstressed
+	if syllables[2] and rfind(form, "[sx]$") and not rfind(syllables[#syllables], AV) then
+		return {form}
+	end
+
+	-- ends in l, r, n, d, z, or j with 3 or more syllables, stressed on third to last syllable
+	if syllables[3] and rfind(form, "[lrndzj]$") and rfind(syllables[#syllables - 2], AV) then
+		return {form}
+	end
+
+	-- ends in an accented vowel + consonant
+	if rfind(form, AV .. C .. "$") then
+		return {rsub(form, "(.)(.)$", function(vowel, consonant)
+			return export.remove_accent[vowel] .. consonant .. "es"
+		end)}
+	end
+
+	-- ends in a vowel + y, l, r, n, d, j, s, x
+	if rfind(form, "[aeiou][ylrndjsx]$") then
+		-- two or more syllables: add stress mark to plural; e.g. joven -> jóvenes
+		if syllables[2] and rfind(form, "n$") then
+			syllables[#syllables - 1] = export.add_accent_to_syllable(syllables[#syllables - 1])
+			return {table.concat(syllables, "") .. "es"}
+		end
+
+		return {form .. "es"}
+	end
+
+	-- ends in a vowel + ch
+	if rfind(form, "[aeiou]ch$") then return {form .. "es"} end
+
+	-- ends in two consonants
+	if rfind(form, C .. C .. "$") then return {form .. "s"} end
+
+	-- ends in a vowel + consonant other than l, r, n, d, z, j, s, or x
+	if rfind(form, "[aeiou][^aeioulrndzjsx]$") then return {form .. "s"} end
+
+	return nil
+end
+
+function export.make_feminine(form, special)
+	local retval = require(romut_module).handle_multiword(form, special, export.make_feminine, prepositions)
+	if retval then
+		if #retval ~= 1 then
+			error("Internal error: Should have one return value for make_feminine: " .. table.concat(retval, ","))
+		end
+		return retval[1]
+	end
+
+	if form:find("o$") then
+		local retval = form:gsub("o$", "a") -- discard second retval
+		return retval
+	end
+
+	local function make_stem(form)
+		return rsub(
+			form,
+			"^(.+)(.)(.)$",
+			function (before_stress, stressed_vowel, after_stress)
+				return before_stress .. (export.remove_accent[stressed_vowel] or stressed_vowel) .. after_stress
+			end)
+	end
+
+	if rfind(form, "[áíó]n$") or rfind(form, "[éí]s$") or rfind(form, "[dtszxñ]or$") or rfind(form, "ol$") then
+		-- holgazán, comodín, bretón (not común); francés, kirguís (not mandamás);
+		-- volador, agricultor, defensor, avizor, flexor, señor (not posterior, bicolor, mayor, mejor, menor, peor);
+		-- español, mongol
+		return make_stem(form) .. "a"
+	end
+
+	return form
+end
+
+function export.make_masculine(form, special)
+	local retval = require(romut_module).handle_multiword(form, special, export.make_masculine, prepositions)
+	if retval then
+		if #retval ~= 1 then
+			error("Internal error: Should have one return value for make_masculine: " .. table.concat(retval, ","))
+		end
+		return retval[1]
+	end
+
+	if form:find("dora$") then
+		local retval = form:gsub("a$", "") -- discard second retval
+		return retval
+	end
+
+	if form:find("a$") then
+		local retval = form:gsub("a$", "o") -- discard second retval
+		return retval
+	end
+
+	return form
+end
 
 return export
