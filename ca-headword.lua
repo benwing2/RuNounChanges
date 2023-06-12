@@ -3,7 +3,7 @@ local pos_functions = {}
 
 local force_cat = false -- for testing; if true, categories appear in non-mainspace pages
 
-local m_com = require("Module:ca-common")
+local com = require("Module:ca-common")
 local m_table = require("Module:table")
 local romut_module = "Module:romance utilities"
 
@@ -225,132 +225,6 @@ end
 
 
 -----------------------------------------------------------------------------------------
---                                  Inflection functions                               --
------------------------------------------------------------------------------------------
-
--- Given a term `term`, if the term is multiword (either through spaces or hyphens), handle inflection of the term by
--- calling handle_multiword() in [[Module:romance utilities]]. `special` indicates which parts of the multiword term to
--- inflect, and `inflect` is a function of one argument to inflect the individual parts of the term. As an optimization,
--- if the term is not multiword and `special` is not given, do nothing.
-local function call_handle_multiword(term, special, inflect, allow_multiple)
-	if not special and not term:find("[ %-]") then
-		return nil
-	end
-	local retval = require(romut_module).handle_multiword(term, special, inflect, prepositions)
-	if retval and #retval > 0 then
-		if allow_multiple then
-			return retval
-		end
-		if #retval ~= 1 then
-			error("Internal error: Should have only one return value from inflection function: " .. table.concat(retval, ","))
-		end
-		return retval[1]
-	end
-	return nil
-end
-
-local function make_feminine(base, special)
-	local retval = call_handle_multiword(base, special, make_feminine)
-	if retval then
-		return retval
-	end
-
-	-- special cases
-	-- -able, -ible, -uble
-	if base:find("ble$") or
-		-- stressed -al/-ar in a multisyllabic word (not [[gal]], [[anòmal]], or [[car]], [[clar]], [[rar]], [[var]],
-		-- [[isòbar]], [[èuscar]], [[búlgar]], [[tàrtar]]/[[tàtar]], [[càtar]], [[àvar]])
-		(rfind(base, V .. "[^ ]*a[lr]$") and not rfind(base, AV .. "[^ ]*a[lr]$")) or
-		-- -ant in a multisyllabic word (not [[mant]], [[tant]], also [[quant]] but that needs manual handling)
-		-- -ent in a multisyllabic word (not [[lent]]; some other words in -lent have feminine in -a but not all)
-		rfind(base, V .. "[^ ]*[ae]nt$") or
-		-- Words in -aç, -iç, -oç (not [[descalç]], [[dolç]], [[agredolç]]; [[balbuç]] has -a and needs manual handling)
-		rfind(base, V .. "ç$") or
-		-- Words in -il including when non-stressed ([[hàbil]], [[dèbil]], [[mòbil]], [[fàcil]], [[símil]], [[tàmil]],
-		-- etc.); but not words in -òfil, -èfil, etc.
-		base:find("[^f]il$") then
-		return base
-	end
-
-	-- final vowel -> -a
-	if base:find("a$") then return base end
-	if base:find("o$") then return (base:gsub("o$", "a")) end	
-	if base:find("e$") then return m_com.front_to_back(base:gsub("e$", "")) .. "a" end
-	
-	-- -u -> -va
-	if base:find(UV .. "u$") then return (base:gsub("u$", "v") .. "a") end
-	
-	-- accented vowel -> -na
-	if rfind(base, AV .. "$") then return m_com.remove_accents(base) .. "na" end
-	
-	-- accented vowel + -s -> -sa
-	if rfind(base, AV .. "s$") then return m_com.remove_accents(base) .. "a" end
-	
-	-- vowel + consonant(s) + i -> accent the first vowel, add -a
-	local prev, first_vowel, cons = rmatch(base, "^(.*)([aeo])i(" .. C .. "+)i$")
-	if first_vowel then
-		-- At least [[malaisi]]
-		return prev .. accent_vowel[first_vowel] .. "i" .. cons .. "ia"
-	end
-	local prev, first_vowel, cons = rmatch(base, "^(.*)(" .. UV .. ")(" .. C .. "+)i$")
-	if first_vowel then
-		return prev .. accent_vowel[first_vowel] .. cons .. "ia"
-	end
-
-	-- multisyllabic -at/-it/-ut (also -ït/-üt) with stress on the final vowel -> -ada/-ida/-uda
-	local mod_base = rsub(base, "([gq])u(" .. UV .. ")", "%1w%2") -- hack so we don't treat the u in qu/gu as a vowel
-	if (rfind(mod_base, V .. "[^ ]*[aiu]t$") and not rfind(mod_base, AV .. "[^ ]*[aiu]t$") and
-		not rfind(mod_base, "[aeo][iu]t$")) or rfind(mod_base, "[ïü]t$") then
-		return rsub(base, "t$", "da")
-	end
-
-	return base .. "a"
-end
-
-local function make_plural(base, gender, special)
-	local retval = call_handle_multiword(base, special, function(term) return make_plural(term, gender) end, "allow multiple")
-	if retval then
-		return retval
-	end
-
-	-- a -> es
-	if base:find("a$") then return {m_com.back_to_front(base:gsub("a$", "")) .. "es"} end
-	
-	-- accented vowel -> -ns
-	if rfind(base, AV .. "$") then
-		return {m_com.remove_accents(base) .. "ns"}
-	end
-	
-	if gender == "m" then
-		if rfind(base, AV .. "s$") then
-			return {m_com.remove_accents(base) .. "os"}
-		end
-
-		if rfind(base, "[sçxz]$") then
-			return {base .. "os"}
-		end
-
-		if base:find("sc$") or base:find("[sx]t$") then
-			return {base .. "s", base .. "os"}
-		end
-	end
-	
-	if gender == "f" then
-		if base:find("s$") then return {base} end
-
-		if base:find("sc$") or base:find("[sx]t$") then
-			return {base .. "s", base .. "es"}
-		end
-	end
-
-	if base:find("eig$") then
-		return {base .. "s", rsub(base, "ig$", "jos")}
-	end
-
-	return {base .. "s"}
-end
-
------------------------------------------------------------------------------------------
 --                                       Adjectives                                    --
 -----------------------------------------------------------------------------------------
 
@@ -420,7 +294,7 @@ local function do_adjective(args, data, pos, is_suffix, is_superlative)
 			local quals = fetch_qualifiers(args.fpl_qual[i])
 			if fpl == "+" then
 				-- Generate default feminine plural.
-				local defpls = make_plural(lemma, "f", args.sp)
+				local defpls = com.make_plural(lemma, "f", args.sp)
 				if not defpls then
 					error("Unable to generate default plural of '" .. lemma .. "'")
 				end
@@ -448,7 +322,7 @@ local function do_adjective(args, data, pos, is_suffix, is_superlative)
 				f = lemma
 			elseif f == "+" then
 				-- Generate default feminine.
-				f = make_feminine(lemma, args.sp)
+				f = com.make_feminine(lemma, args.sp)
 			else
 				f = replace_hash_with_lemma(f, lemma)
 			end
@@ -504,7 +378,7 @@ local function do_adjective(args, data, pos, is_suffix, is_superlative)
 					end
 				end
 
-				defpls = defpls or make_plural(lemma, "m", args.sp)
+				defpls = defpls or com.make_plural(lemma, "m", args.sp)
 				if not defpls then
 					error("Unable to generate default plural of '" .. lemma .. "'")
 				end
@@ -522,7 +396,7 @@ local function do_adjective(args, data, pos, is_suffix, is_superlative)
 				if fem_like_lemma and not args.sp and not lemma:find(" ") and lemma:find("[çx]$") then
 					-- Adjectives ending in -ç or -x behave as mf-type in the singular, but
 					-- regular type in the plural.
-					local defpls = make_plural(lemma .. "a", "f")
+					local defpls = com.make_plural(lemma .. "a", "f")
 					if not defpls then
 						error("Unable to generate default plural of '" .. lemma .. "a'")
 					end
@@ -533,7 +407,7 @@ local function do_adjective(args, data, pos, is_suffix, is_superlative)
 				else
 					for _, f in ipairs(feminines) do
 						-- Generate default feminine plural; f is a table.
-						local defpls = make_plural(f.term, "f", args.sp)
+						local defpls = com.make_plural(f.term, "f", args.sp)
 						if not defpls then
 							error("Unable to generate default plural of '" .. f.term .. "'")
 						end
@@ -754,7 +628,7 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 				table.insert(data.categories, langname .. " countable " .. plpos)
 			end
 			local function make_plural_and_insert(form, special)
-				local pls = make_plural(lemma, gender_for_default_plural, special)
+				local pls = com.make_plural(lemma, gender_for_default_plural, special)
 				if pls then
 					for _, pl in ipairs(pls) do
 						insert_pl(pl)
@@ -844,7 +718,7 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 		return retval
 	end
 
-	local feminines = handle_mf(args.f, args.f_qual, make_feminine)
+	local feminines = handle_mf(args.f, args.f_qual, com.make_feminine)
 	-- FIXME, write make_masculine()
 	local masculines = handle_mf(args.m, args.m_qual)
 
