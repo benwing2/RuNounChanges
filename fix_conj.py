@@ -48,7 +48,7 @@ def process_page(page, index, parsed):
       notes.append("ru-conj-* -> ru-conj, moving params up by one%s" %
           (variant and " (and move variant spec)" or ""))
       seenval = False
-      for i in xrange(20, 0, -1):
+      for i in range(20, 0, -1):
         val = getparam(t, str(i))
         if val:
           seenval = True

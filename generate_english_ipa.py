@@ -208,7 +208,7 @@ def process_cmu_pronun(index, word, pronun):
   # In the middle of a word, move stress before possible onsets as listed above
   def move_before_onset(m):
     v, c, accent = m.groups()
-    for i in xrange(len(c)):
+    for i in range(len(c)):
       if c[i:] in possible_onsets:
         return v + c[0:i] + accent + c[i:]
     return v + c + accent
@@ -225,7 +225,7 @@ def process_moby_pronun(index, word, pronun):
   i = 0
   wl = len(pronun)
   while i < wl:
-    for l in xrange(min(max_moby_length, wl - i), 0, -1):
+    for l in range(min(max_moby_length, wl - i), 0, -1):
       nextphon = pronun[i:i+l]
       if nextphon in moby_pronun_mapping:
         phonemes.append(moby_pronun_mapping[nextphon])

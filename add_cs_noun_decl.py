@@ -203,7 +203,7 @@ def process_text_on_page(index, pagetitle, text):
   # List of Headword objects. Separator is the separator that goes after the word.
   headwords = []
   wordind = 0
-  for i in xrange(1, len(headwords_separators), 2):
+  for i in range(1, len(headwords_separators), 2):
     hword = headwords_separators[i]
     separator = headwords_separators[i+1]
     if i < len(headwords_separators) - 2 and separator != " " and separator != "-":

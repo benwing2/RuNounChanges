@@ -11,10 +11,10 @@ import blib
 from blib import getparam, rmparam, msg, site, tname
 
 
-punc_chars = "".join("\\" + unichr(i) for i in xrange(sys.maxunicode)
+punc_chars = "".join("\\" + unichr(i) for i in range(sys.maxunicode)
     if unicodedata.category(unichr(i)).startswith('P'))
 
-tbl = dict.fromkeys(i for i in xrange(sys.maxunicode)
+tbl = dict.fromkeys(i for i in range(sys.maxunicode)
                           if unicodedata.category(unichr(i)).startswith('P'))
 def remove_punctuation(text):
       return text.translate(tbl)

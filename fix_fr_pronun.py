@@ -148,7 +148,7 @@ def process_text_on_page(index, pagetitle, text):
           autopron = autopron[:-1] + "a"
         if re.search(ur"ɑ[mt]$", autopron) and re.search(u"a[mt]$", pron):
           autopron = re.sub(ur"ɑ([mt])$", r"a\1", autopron)
-        for i in xrange(2):
+        for i in range(2):
           # {{fr-IPA}} deletes schwa in the sequence V.Cə.CV esp. in the
           # sequence V.Cə.ʁV in verbs, whereas the bot-generated pronunciation
           # doesn't. We have separate cases depending on the identity of C,
@@ -204,7 +204,7 @@ def process_text_on_page(index, pagetitle, text):
     if "{{IPA|" in etym_sections[0]:
       secbody = fix_up_section(secbody)
     else:
-      for k in xrange(2, len(etym_sections), 2):
+      for k in range(2, len(etym_sections), 2):
         etym_sections[k] = fix_up_section(etym_sections[k])
       secbody = "".join(etym_sections)
   else:

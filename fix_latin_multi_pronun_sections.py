@@ -45,7 +45,7 @@ def process_page(page, index, parsed):
       offset = 0
     if not (len(subsections) == 9 + offset or (len(subsections) == 11 + offset and subsections[9 + offset] == "===References===\n")):
       pagemsg("WARNING: Not right # of sections (normally four, potentially five or six with ===Etymology=== and/or ===References===): %s" % (
-        ",".join(subsections[k].strip() for k in xrange(1, len(subsections), 2))
+        ",".join(subsections[k].strip() for k in range(1, len(subsections), 2))
       ))
       return sectext
     if (subsections[1 + offset] != "%sPronunciation 1%s\n" % (equalsigns, equalsigns) or
@@ -131,7 +131,7 @@ def process_page(page, index, parsed):
     secbody = process_etym_section(secbody, is_etym_section=False)
   else:
     etym_sections = re.split("(^===Etymology [0-9]+===\n)", secbody, 0, re.M)
-    for k in xrange(2, len(etym_sections), 2):
+    for k in range(2, len(etym_sections), 2):
       etym_sections[k] = process_etym_section(etym_sections[k], is_etym_section=True)
     secbody = "".join(etym_sections)
 

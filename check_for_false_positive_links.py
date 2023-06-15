@@ -13,7 +13,7 @@ def find_english_pages(index, pagetitle, text):
   splitsections = re.split("^==([^=\n]+)==\n", text, 0, re.M)
   saw_langs = set()
   saw_english = False
-  for k in xrange(1, len(splitsections), 2):
+  for k in range(1, len(splitsections), 2):
     if splitsections[k] == "English":
       saw_english = True
     else:

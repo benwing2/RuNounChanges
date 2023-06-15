@@ -21,7 +21,7 @@ def process_text_on_page(index, pagetitle, text):
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
-  for k in xrange(1, len(subsections), 2):
+  for k in range(1, len(subsections), 2):
     if re.search("==Anagrams==", subsections[k]):
       if k + 2 < len(subsections):
         subsections = (

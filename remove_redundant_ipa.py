@@ -22,7 +22,7 @@ def process_text_on_page(index, pagetitle, text):
     origt = unicode(t)
     if tn in ["es-IPA", "fr-IPA", "it-IPA"]:
       must_continue = False
-      for i in xrange(2, 11):
+      for i in range(2, 11):
         if getparam(t, str(i)):
           pagemsg("Template has %s=, not touching: %s" % (i, origt))
           must_continue = True

@@ -30,7 +30,7 @@ def process_page(index, page, save, verbose):
     foundrussian = False
     sections = re.split("(^==[^=]*==\n)", unicode(page.text), 0, re.M)
 
-    for j in xrange(2, len(sections), 2):
+    for j in range(2, len(sections), 2):
       if sections[j-1] == "==Russian==\n":
         if foundrussian:
           pagemsg("WARNING: Found multiple Russian sections, skipping page")

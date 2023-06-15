@@ -89,12 +89,12 @@ def process_text_on_page(index, pagetitle, text):
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
 
   if not pagetitle.startswith("Citations"):
-    for j in xrange(2, len(sections), 2):
+    for j in range(2, len(sections), 2):
       m = re.search("^==(.*)==\n$", sections[j - 1])
       assert m
       langname = m.group(1)
       subsections = re.split("(^==.*==\n)", sections[j], 0, re.M)
-      for k in xrange(2, len(subsections), 2):
+      for k in range(2, len(subsections), 2):
         m = re.search("^===*(.*?)=*==\n$", subsections[k - 1])
         assert m
         subsectitle = m.group(1)
@@ -105,7 +105,7 @@ def process_text_on_page(index, pagetitle, text):
   else:
     # Citation section?
     langnamecode = None
-    for j in xrange(0, len(sections), 2):
+    for j in range(0, len(sections), 2):
       if j == 0:
         langname = "Unknown"
       else:

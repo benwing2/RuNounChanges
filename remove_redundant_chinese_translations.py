@@ -55,7 +55,7 @@ def process_text_on_page(index, pagetitle, text):
 
   subsections = re.split(r"(^\s*==+[^=\n]+==+\s*\n)", text, 0, re.M)
 
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if re.search(r"==\s*Translations\s*==", subsections[k - 1]):
       lines = subsections[k].split("\n")
       in_chinese = False

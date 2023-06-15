@@ -497,7 +497,7 @@ def process_text_in_section(index, pagetitle, text):
   declts = []
   subsection_with_declts = None
   subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
-  for k in xrange(0, len(subsections), 2):
+  for k in range(0, len(subsections), 2):
     parsed = blib.parse_text(subsections[k])
 
     for t in parsed.filter_templates():
@@ -566,7 +566,7 @@ def process_text_on_page(index, pagetitle, text):
   if "=Etymology 1=" in secbody:
     notes = []
     etym_sections = re.split("(^===Etymology [0-9]+===\n)", secbody, 0, re.M)
-    for k in xrange(2, len(etym_sections), 2):
+    for k in range(2, len(etym_sections), 2):
       retval = process_text_in_section(index, pagetitle, etym_sections[k])
       if retval:
         newsectext, newnotes = retval

@@ -141,7 +141,7 @@ def process_page(page, index, parsed):
   sections, j, secbody, sectail, has_non_lang = retval
   if "Etymology 1" in secbody:
     etym_sections = re.split("(^===Etymology [0-9]+===\n)", secbody, 0, re.M)
-    for k in xrange(2, len(etym_sections), 2):
+    for k in range(2, len(etym_sections), 2):
       etym_sections[k], this_notes = process_section(index, pagetitle, etym_sections[k])
       notes.extend(this_notes)
     secbody = "".join(etym_sections)

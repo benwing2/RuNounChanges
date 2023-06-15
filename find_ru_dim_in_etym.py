@@ -24,7 +24,7 @@ def process_text_on_page(index, pagetitle, text):
   # Go through each subsection in turn, looking for subsection
   # matching the POS with an appropriate headword template whose
   # head matches the inflected form
-  for j in xrange(2, len(subsections), 2):
+  for j in range(2, len(subsections), 2):
     if "==Etymology" in subsections[j - 1]:
       parsed = blib.parse_text(subsections[j])
       for t in parsed.filter_templates():

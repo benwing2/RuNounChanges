@@ -55,7 +55,7 @@ def process_page(page, index, parsed):
 
   subsections = re.split("(^===[^=\n]*===\n)", secbody, 0, re.M)
 
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if "==Adverb==" in subsections[k - 1]:
       parsed = blib.parse_text(subsections[k])
       posdeg = None

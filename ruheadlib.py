@@ -249,7 +249,7 @@ def lookup_heads_and_inflections(pagename, pagemsg):
     foundrussian = False
     sections = re.split("(^==[^=]*==\n)", unicode(page.text), 0, re.M)
 
-    for j in xrange(2, len(sections), 2):
+    for j in range(2, len(sections), 2):
       if sections[j-1] == "==Russian==\n":
         if foundrussian:
           pagemsg("WARNING: lookup_heads_and_inflections: Found multiple Russian sections")
@@ -257,7 +257,7 @@ def lookup_heads_and_inflections(pagename, pagemsg):
         foundrussian = True
 
         subsections = re.split("(^===+[^=\n]+===+\n)", sections[j], 0, re.M)
-        for k in xrange(2, len(subsections), 2):
+        for k in range(2, len(subsections), 2):
           parsed = blib.parse_text(subsections[k])
           this_heads = set()
           def add(val, tr, is_lemma):
@@ -299,7 +299,7 @@ def lookup_heads_and_inflections(pagename, pagemsg):
               inflections_of.add((frozenset(this_heads),
                 normalize_text(getparam(t, "1"))))
             if check_addl_heads:
-              for i in xrange(2, 10):
+              for i in range(2, 10):
                 headn = getparam(t, "head" + str(i))
                 if headn:
                   add(headn, getparam(t, "tr" + str(i)), is_lemma)

@@ -201,7 +201,7 @@ def process_text_on_page(index, pagetitle, text):
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     m = re.search("^===*([^=]*)=*==\n$", subsections[k - 1])
     subsectitle = m.group(1)
     if not subsectitle.startswith("Etymology"):

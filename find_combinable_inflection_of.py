@@ -29,7 +29,7 @@ def process_text_on_page(index, pagetitle, text):
     return
 
   subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
-  for j in xrange(2, len(subsections), 2):
+  for j in range(2, len(subsections), 2):
     for template in inflection_of_templates:
       if re.search(r"^[#*]+ \{\{%s.*\n[#*]+ \{\{%s.*" % (template, template), subsections[j], re.M):
         pagemsg("Found subsection with combinable %s:\n%s" %

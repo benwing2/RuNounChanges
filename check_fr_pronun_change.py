@@ -22,10 +22,10 @@ def process_page(page, index):
       posval = getparam(t, "pos")
       pos_arg = "|pos=%s" % posval if posval else ""
       max_arg = 1
-      for pronarg in xrange(2, 30):
+      for pronarg in range(2, 30):
         if getparam(t, str(pronarg)):
           max_arg = pronarg
-      for pronarg in xrange(1, max_arg + 1):
+      for pronarg in range(1, max_arg + 1):
         pronval = getparam(t, str(pronarg)) or pagetitle
         pron = expand_text("{{#invoke:fr-pron|show|%s%s|check_new_module=1}}" % (pronval, pos_arg))
         if " || " in pron:

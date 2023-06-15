@@ -33,13 +33,13 @@ def split_one_page_etymologies(page, index, pagetext, verbose):
   # Extract off pagehead and recombine section headers with following text
   pagehead = splitsections[0]
   sections = []
-  for i in xrange(1, len(splitsections)):
+  for i in range(1, len(splitsections)):
     if (i % 2) == 1:
       sections.append("")
     sections[-1] += splitsections[i]
 
   # Go through each section in turn, looking for existing Arabic section
-  for i in xrange(len(sections)):
+  for i in range(len(sections)):
     m = re.match("^==([^=\n]+)==$", sections[i], re.M)
     if not m:
       pagemsg("WARNING: Can't find language name in text: [[%s]]" % (sections[i]))
@@ -64,13 +64,13 @@ def split_one_page_etymologies(page, index, pagetext, verbose):
       sechead = subsections[0]
       if "\n===Etymology 1=" in sections[i]:
         etyms_were_separate = True
-        for j in xrange(1, len(subsections), 2):
+        for j in range(1, len(subsections), 2):
           if not re.match("^===Etymology [0-9]+=", subsections[j]):
             pagemsg("WARNING: Non-etymology level-3 header when split etymologies: %s" % subsections[j][0:-1])
-        etymsections = [subsections[j] for j in xrange(2, len(subsections), 2)]
+        etymsections = [subsections[j] for j in range(2, len(subsections), 2)]
         # Reduce indent by one. We will increase it again when we split
         # etymologies.
-        for j in xrange(len(etymsections)):
+        for j in range(len(etymsections)):
           etymsections[j] = re.sub("^==", "=", etymsections[j], 0, re.M)
       else:
         etyms_were_separate = False
@@ -90,7 +90,7 @@ def split_one_page_etymologies(page, index, pagetext, verbose):
 
         last_lemma = None
         last_inflection_of_lemma = None
-        for j in xrange(1, len(subsections), 2):
+        for j in range(1, len(subsections), 2):
           if re.match("^===+(References|Related|See)", subsections[j]):
             pagemsg("Found level-3 section that should maybe be at higher level: %s" % subsections[j][0:-1])
             append_section(j)
@@ -159,7 +159,7 @@ def split_one_page_etymologies(page, index, pagetext, verbose):
         j += 1
 
       if len(etymologies) > 1:
-        for j in xrange(len(etymologies)):
+        for j in range(len(etymologies)):
           # Stuff like "===Alternative forms===" that goes before the
           # etymology section should be moved after.
           newetymj = re.sub(r"^(.*?\n)(===Etymology===\n(\n|[^=\n].*?\n)*)",
@@ -175,7 +175,7 @@ def split_one_page_etymologies(page, index, pagetext, verbose):
             etymologies[j] = "\n" + etymologies[j]
         sections[i] = (sechead +
             ''.join(["===Etymology %s===\n" % (j + 1) + etymologies[j]
-              for j in xrange(len(etymologies))]))
+              for j in range(len(etymologies))]))
       elif len(etymologies) == 1:
         if etyms_were_separate:
           # We might need to add an Etymology header at the beginning.

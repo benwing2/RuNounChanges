@@ -30,7 +30,7 @@ def process_text_on_page(index, pagetitle, text):
     textparts = []
     if tn == "projectlinks":
       sc = getp("sc").strip()
-      for i in xrange(1, 10):
+      for i in range(1, 10):
         project = getp(str(i)).strip()
         if project:
           page = getp("page%s" % i).strip()

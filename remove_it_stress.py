@@ -111,7 +111,7 @@ def process_page(index, page, title_with_syllable_divs=None):
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     parsed = blib.parse_text(subsections[k])
     it_stress_template = None
     it_hyph_template = None

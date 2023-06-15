@@ -228,7 +228,7 @@ def process_page(index, page, spec):
     notes.append("add top-level Italian pron %s (manually assisted)" % new_pron_template)
 
   if location == "all":
-    for k in xrange(2, len(subsections), 2):
+    for k in range(2, len(subsections), 2):
       if "==Pronunciation==" in subsections[k - 1]:
         if not insert_into_existing_pron_section(k):
           return
@@ -242,13 +242,13 @@ def process_page(index, page, spec):
         return
       insert_new_l3_pron_section(k - 1)
   elif location == "top":
-    for k in xrange(2, len(subsections), 2):
+    for k in range(2, len(subsections), 2):
       if "==Pronunciation==" in subsections[k - 1]:
         if not insert_into_existing_pron_section(k):
           return
         break
     else: # no break
-      for k in xrange(2, len(subsections), 2):
+      for k in range(2, len(subsections), 2):
         if "==Etymology 1==" in subsections[k - 1]:
           insert_new_l3_pron_section(k - 1)
           break
@@ -269,7 +269,7 @@ def process_page(index, page, spec):
       subsections[k - 1:k - 1] = ["====Pronunciation====\n", pron_prefix + new_pron_template + "\n\n"]
       notes.append("add Italian pron %s to Etymology %s (manually assisted)" % (new_pron_template, location))
 
-    for k in xrange(2, len(subsections), 2):
+    for k in range(2, len(subsections), 2):
       if "==Etymology %s==" % location in subsections[k - 1]:
         begin_etym_n_section = k
       elif re.search("==Etymology [0-9]", subsections[k - 1]):
@@ -294,7 +294,7 @@ def process_page(index, page, spec):
     if refs or have_footnotes:
       # Check for refs in References or Further reading embedded in Etym section
       begin_etym_n_section = None
-      for k in xrange(2, len(subsections), 2):
+      for k in range(2, len(subsections), 2):
         if "==Etymology %s==" % location in subsections[k - 1]:
           begin_etym_n_section = k - 1
         elif re.search("==Etymology [0-9]", subsections[k - 1]):
@@ -319,7 +319,7 @@ def process_page(index, page, spec):
 
   if refs:
     # Check for references already present
-    for k in xrange(2, len(subsections), 2):
+    for k in range(2, len(subsections), 2):
       if re.search("^===(References|Further reading)===\n", subsections[k - 1]):
         needed_refs = []
         for ref in refs:
@@ -331,7 +331,7 @@ def process_page(index, page, spec):
     if refs:
       added_ref_text = "\n".join("* " + ref for ref in refs) + "\n\n"
       # Still some references, need to add them to existing References section or create new one
-      for k in xrange(2, len(subsections), 2):
+      for k in range(2, len(subsections), 2):
         if re.search("^===References===\n", subsections[k - 1]):
           subsections[k] = subsections[k].rstrip("\n") + "\n" + added_ref_text
           notes.append("add Italian pronun reference%s %s to existing ===References=== section" % ("s" if len(refs) > 1 else "", ", ".join(refs)))
@@ -348,7 +348,7 @@ def process_page(index, page, spec):
 
   if have_footnotes:
     # Need <references/>; check if already present
-    for k in xrange(len(subsections) - 1, 2, -2):
+    for k in range(len(subsections) - 1, 2, -2):
       if re.search(r"^===\s*References\s*===$", subsections[k - 1].strip()):
         if re.search(r"<references\s*/?\s*>", subsections[k]):
           pagemsg("Already found <references /> in ===References=== section %s" % (k // 2))

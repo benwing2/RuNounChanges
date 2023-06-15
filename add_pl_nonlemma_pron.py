@@ -198,7 +198,7 @@ def process_text_on_page(index, pagetitle, text):
     subsections[k:k] = ["===Pronunciation===\n", pron_prefix + new_pron_template + "\n\n"]
     notes.append("add top-level Polish pron %s" % new_pron_template)
 
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if "==Pronunciation==" in subsections[k - 1]:
       if not insert_into_existing_pron_section(k):
         return

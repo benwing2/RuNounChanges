@@ -24,7 +24,7 @@ def process_text_on_page(index, pagetitle, text, regex, invert, verbose,
     foundlang = False
     sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
 
-    for j in xrange(2, len(sections), 2):
+    for j in range(2, len(sections), 2):
       if sections[j-1] == "==%s==\n" % lang_only:
         if foundlang:
           pagemsg("WARNING: Found multiple %s sections, skipping page" % lang_only)

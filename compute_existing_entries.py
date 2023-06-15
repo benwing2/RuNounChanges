@@ -52,7 +52,7 @@ def process_text_on_page(index, pagetitle, pagetext):
   # Split into sections
   splitsections = re.split("(^==[^=\n]+==\n)", pagetext, 0, re.M)
   langs = []
-  for k in xrange(1, len(splitsections), 2):
+  for k in range(1, len(splitsections), 2):
     m = re.search(r"^==\s*(.*?)\s*==\n", splitsections[k])
     if not m:
       pagemsg("WARNING: Can't parse language header?: %s" % splitsections[k].strip())

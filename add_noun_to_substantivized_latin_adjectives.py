@@ -19,7 +19,7 @@ def process_text_on_page(index, pagetitle, text):
   def fix_up_section(sectext, indent):
     subsections = re.split("(^%s[^=\n]+=+\n)" % indent, sectext, 0, re.M)
     saw_adecl = False
-    for k in xrange(2, len(subsections), 2):
+    for k in range(2, len(subsections), 2):
       parsed = blib.parse_text(subsections[k])
       la_adecl_template = None
       for t in parsed.filter_templates():
@@ -39,7 +39,7 @@ def process_text_on_page(index, pagetitle, text):
       if len(split_subsec) == 1:
         pagemsg("WARNING: Didn't see substantive defn, skipping")
         continue
-      for i in xrange(len(split_subsec)):
+      for i in range(len(split_subsec)):
         if i % 2 == 0:
           remaining_parts.append(split_subsec[i])
         else:
@@ -71,7 +71,7 @@ def process_text_on_page(index, pagetitle, text):
     text = fix_up_section(text, "===")
   else:
     etym_sections = re.split("(^===Etymology [0-9]+===\n)", text, 0, re.M)
-    for k in xrange(2, len(etym_sections), 2):
+    for k in range(2, len(etym_sections), 2):
       etym_sections[k] = fix_up_section(etym_sections[k], "====")
     text = "".join(etym_sections)
 

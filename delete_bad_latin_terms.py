@@ -34,7 +34,7 @@ def delete_term(index, term, expected_head_templates, save, verbose):
   saw_head = False
   infl_template = None
   saw_bad_template = False
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     parsed = blib.parse_text(subsections[k])
     for t in parsed.filter_templates():
       tn = tname(t)

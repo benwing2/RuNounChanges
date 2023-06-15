@@ -20,7 +20,7 @@ def process_text_on_page(index, pagetitle, text):
   sections, j, secbody, sectail, has_non_lang = retval
 
   col3_splits = re.split(r"^((?:\{\{col3\|pl\|[^{}\n]*\}\}\n)+)", secbody, 0, re.M)
-  for k in xrange(1, len(col3_splits), 2):
+  for k in range(1, len(col3_splits), 2):
     col3_split = col3_splits[k].rstrip("\n").split("\n")
     decorated_lines = []
     must_continue = False

@@ -29,7 +29,7 @@ def process_text_on_page(index, pagetitle, text):
       pagemsg("Saw %s" % unicode(t))
       default_pron_phonemic = None
       prons = []
-      for i in xrange(1, 11):
+      for i in range(1, 11):
         pron = getparam(t, str(i))
         if pron:
           prons.append(pron)

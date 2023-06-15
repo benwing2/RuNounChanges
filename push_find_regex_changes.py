@@ -38,7 +38,7 @@ def process_page(index, page, contents, prev_comment, origcontents, verbose, arg
       sec_to_search = 0
       sections = re.split("(^==[^=]*==\n)", page.text, 0, re.M)
 
-      for j in xrange(2, len(sections), 2):
+      for j in range(2, len(sections), 2):
         if sections[j-1] == "==%s==\n" % lang_only:
           if foundlang:
             errandpagemsg("WARNING: Found multiple %s sections, skipping page" % lang_only)

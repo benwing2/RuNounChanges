@@ -36,7 +36,7 @@ def process_text_on_page(pageindex, pagetitle, text):
   lemma_defn_subsection = None
   non_lemma_defn_subsection = None
   num_defn_subsections_seen = 0
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if re.search("=Etymology", subsections[k - 1]):
       lemma_defn_subsection = None
       non_lemma_defn_subsection = None
@@ -221,9 +221,9 @@ def process_text_on_page(pageindex, pagetitle, text):
               return "[[%s]]" % text
             # Put brackets around the remainin words not already bracketed or partially bracketed. But don't put
             # brackets around words inside of HTML comments, and don't include punctuation inside the brackets.
-            for i in xrange(0, len(split_by_brackets), 2):
+            for i in range(0, len(split_by_brackets), 2):
               split_out_comments = re.split("(<!--.*?-->)", split_by_brackets[i])
-              for j in xrange(0, len(split_out_comments), 2):
+              for j in range(0, len(split_out_comments), 2):
                 split_out_comments[j] = re.sub("([^ ,*/{}:;()?!+<>]+)", maybe_add_brackets, split_out_comments[j])
               split_by_brackets[i] = "".join(split_out_comments)
 
@@ -259,7 +259,7 @@ def process_text_on_page(pageindex, pagetitle, text):
           pagemsg("WARNING: Found ## definition in definition subsection #%s, not sure what to do" % (defn_subsection // 2 + 1))
           return None, None, None
         defns = re.split("^(#[^*:].*\n(?:#[*:].*\n)*)", defn_text, 0, re.M)
-        for between_index in xrange(0, len(defns), 2):
+        for between_index in range(0, len(defns), 2):
           if defns[between_index]:
             pagemsg("WARNING: Saw unknown text <%s> between definitions, not sure what to do" % defns[between_index].strip())
             return None, None, None

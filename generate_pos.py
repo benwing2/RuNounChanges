@@ -45,7 +45,7 @@ def generate_multiline_defn(peeker):
     nextline = peeker.peek_next_line(1)
   nextline = peeker.peek_next_line(lineind)
   if nextline != None and re.search(r"^\[(def|defn|definition)\]$", nextline.strip()):
-    for i in xrange(lineind + 1):
+    for i in range(lineind + 1):
       peeker.get_next_line()
     if not (peeker.peek_next_line(0) or "").strip():
       peeker.get_next_line()

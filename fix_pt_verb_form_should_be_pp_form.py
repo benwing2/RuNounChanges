@@ -22,7 +22,7 @@ def process_text_on_page(index, pagetitle, text):
   sections, j, secbody, sectail, has_non_lang = retval
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if not re.search("==(Verb|Participle)==", subsections[k - 1]):
       continue
     parsed = blib.parse_text(subsections[k])

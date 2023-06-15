@@ -45,10 +45,10 @@ def process_page(page, index, parsed):
 
   def fetch_numbered_params(t):
     p = []
-    for i in xrange(1,10):
+    for i in range(1,10):
       val = getparam(t, str(i)) or ""
       p.append(val)
-    for i in xrange(8,-1,-1):
+    for i in range(8,-1,-1):
       if p[i]:
         break
       else:

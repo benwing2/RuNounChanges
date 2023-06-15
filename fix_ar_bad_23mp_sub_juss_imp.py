@@ -70,7 +70,7 @@ def convert_etym_subsection_to_single_etymology_section(text):
       subsections[3:5] = subsections[1:3]
       subsections[1:3] = altforms_subsecs
   # Remove one indentation level from each header.
-  for j in xrange(1, len(subsections), 2):
+  for j in range(1, len(subsections), 2):
     subsections[j] = subsections[j][1:-2] + "\n"
   return "".join(subsections)
 
@@ -99,7 +99,7 @@ def process_page(page, index, parsed):
   has_non_arabic = False
 
   arabic_j = -1
-  for j in xrange(2, len(sections), 2):
+  for j in range(2, len(sections), 2):
     if sections[j-1] != "==Arabic==\n":
       has_non_arabic = True
     else:
@@ -223,7 +223,7 @@ def process_page(page, index, parsed):
     if len(etym_sections) > 3:
       # Two or more remaining etym sections, just renumber.
       next_etym_section = 1
-      for k in xrange(1, len(etym_sections), 2):
+      for k in range(1, len(etym_sections), 2):
         etym_sections[k] = "===Etymology %s===\n" % next_etym_section
         next_etym_section += 1
       secbody = "".join(etym_sections)

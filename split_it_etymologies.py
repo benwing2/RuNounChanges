@@ -42,18 +42,18 @@ def process_text_on_page(index, pagetitle, text):
   # Anagrams and such go after all etym sections and remain as such even if we start with non-etym-split text
   # and end with multiple etym sections.
   l3_secs = re.split("(^===[^=\n]+===\n)", secbody, 0, re.M)
-  for last_included_sec in xrange(len(l3_secs) - 1, 0, -2):
+  for last_included_sec in range(len(l3_secs) - 1, 0, -2):
     if not re.search(r"^===\s*(References|See also|Derived terms|Related terms|Further reading|Anagrams)\s*=== *\n",
         l3_secs[last_included_sec - 1]):
       break
 
-  for first_l3_sec in xrange(2, last_included_sec + 2, 2):
+  for first_l3_sec in range(2, last_included_sec + 2, 2):
     if not re.search(r"^===\s*(Etymology|Pronunciation|Alternative forms)\s*=== *\n",
         l3_secs[first_l3_sec - 1]):
       break
 
   verb_form_sec = None
-  for k in xrange(first_l3_sec, last_included_sec + 2, 2):
+  for k in range(first_l3_sec, last_included_sec + 2, 2):
     if re.search(r"^===\s*Verb\s*=== *\n", l3_secs[k - 1]):
       if "{{head|it|verb form}}" not in l3_secs[k]:
         pagemsg("WARNING: Saw ==Verb== without verb-form header in section %s" % (k // 2 + 1))
@@ -104,7 +104,7 @@ def process_text_on_page(index, pagetitle, text):
     return re.sub("^(==.*==)$", r"=\1=", subsectext, 0, re.M)
 
   split_etym_sections.append("===Etymology 1===\n")
-  for k in xrange(2, last_included_sec + 2, 2):
+  for k in range(2, last_included_sec + 2, 2):
     if "=Pronunciation=" in l3_secs[k - 1]:
       if saw_pronunciation:
         pagemsg("WARNING: Saw two ===Pronunciation=== sections at L3")

@@ -101,7 +101,7 @@ def process_text_on_page(index, pagetitle, pagetext):
     tname_re = "(?:(?:inflection|infl) of\|it)"
     chunks = re.split(r"^((?:# \{\{%s\|.*\n)+)" % tname_re, sectext, 0, re.M)
     this_note_parts = []
-    for k in xrange(1, len(chunks), 2):
+    for k in range(1, len(chunks), 2):
       verb_form_chunk = chunks[k]
       extra_text = ""
       if not re.search(r"\A((?:# \{\{%s\|.*\}\}\n)+)\Z" % tname_re, verb_form_chunk):
@@ -232,7 +232,7 @@ def process_text_on_page(index, pagetitle, pagetext):
 
   # Do {{inflection of}}.
   subsections = re.split("(^==+[^=\n]+==+\n)", pagetext, 0, re.M)
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if "=Verb=" in subsections[k - 1] and re.search(r"\{\{head\|it\|verb form[|}]", subsections[k]):
       parsed = blib.parse_text(subsections[k])
       must_continue = False

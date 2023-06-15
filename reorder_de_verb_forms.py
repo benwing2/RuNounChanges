@@ -27,7 +27,7 @@ def process_text_on_page(index, pagetitle, text):
 
   while True:
     # Look for a participle and move it up.
-    for k in xrange(2, len(subsections), 2):
+    for k in range(2, len(subsections), 2):
       if re.search("==Participle==", subsections[k - 1]):
         l = k
         while l > 2 and (re.search("=(Adjective|Adverb)=", subsections[l - 3])
@@ -41,7 +41,7 @@ def process_text_on_page(index, pagetitle, text):
           break
 
     # Look for a verb form and move it down.
-    for k in xrange(2, len(subsections), 2):
+    for k in range(2, len(subsections), 2):
       if re.search("==Verb==", subsections[k - 1]) and re.search(r"\{\{head\|de\|verb form", subsections[k]):
         l = k
         while l < len(subsections) - 2 and re.search("=(Adjective|Adverb|Participle)=", subsections[l + 1]):

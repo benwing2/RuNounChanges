@@ -47,7 +47,7 @@ def split_noun_decl_arg_sets(decl_template, pagemsg):
   arg_sets = []
   arg_set = []
   per_word_info = []
-  for i in xrange(1, highest_numbered_param + 2):
+  for i in range(1, highest_numbered_param + 2):
     end_arg_set = False
     end_word = False
     val = getparam(decl_template, str(i))
@@ -113,7 +113,7 @@ def check_old_noun_headword_forms(headword_template, args, subpagetitle, pagemsg
       words2 = re.split("[ -]", f2)
       if len(words1) != len(words2):
         return None
-      for i in xrange(len(words1)):
+      for i in range(len(words1)):
         if words1[i] != words2[i]:
           w1 = fixup_link(words1[i])
           w2 = words2[i]
@@ -161,7 +161,7 @@ def check_old_noun_headword_forms(headword_template, args, subpagetitle, pagemsg
 
   headwords = blib.fetch_param_chain(headword_template, "1", "head", subpagetitle)
   translits = blib.fetch_param_chain(headword_template, "tr", "tr")
-  for i in xrange(len(translits)):
+  for i in range(len(translits)):
     if len(headwords) <= i:
       pagemsg("WARNING: Not enough headwords for translit tr%s=%s, skipping" % (
         "" if i == 0 else str(i+1), translits[i]))

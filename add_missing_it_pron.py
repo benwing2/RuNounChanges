@@ -176,7 +176,7 @@ def hack_respelling(pagetitle, respelling):
         warnings.append("WARNING: Different # of c/k/q's in pagetitle word %s vs. c/k/q's in respelling word %s" % (ptw, rw))
       else:
         parts = []
-        for i in xrange(len(split_rw)):
+        for i in range(len(split_rw)):
           if i % 2 == 0:
             parts.append(split_rw[i])
           else:
@@ -190,7 +190,7 @@ def hack_respelling(pagetitle, respelling):
         warnings.append("WARNING: Different # of c(i)e's in pagetitle word %s vs. c(i)e's in respelling word %s" % (ptw, rw))
       else:
         parts = []
-        for i in xrange(len(split_rw)):
+        for i in range(len(split_rw)):
           if i % 2 == 0:
             parts.append(split_rw[i])
           else:
@@ -204,7 +204,7 @@ def hack_respelling(pagetitle, respelling):
         warnings.append("WARNING: Different # of z's in pagetitle word %s vs. ts/dz's in respelling word %s" % (ptw, rw))
       else:
         parts = []
-        for i in xrange(len(split_rw)):
+        for i in range(len(split_rw)):
           if i % 2 == 0:
             parts.append(split_rw[i])
           elif split_rw[i] == "tts" and split_ptw[i] == "z":
@@ -236,7 +236,7 @@ def process_text_on_page(index, pagetitle, text):
 
   need_ref_section = False
 
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if "==Pronunciation==" in subsections[k - 1]:
       parsed = blib.parse_text(subsections[k])
 
@@ -318,7 +318,7 @@ def process_text_on_page(index, pagetitle, text):
                     hacked_putative_pagetitle_words.append(puptw)
                   else:
                     parts = []
-                    for i in xrange(len(split_puptw)):
+                    for i in range(len(split_puptw)):
                       if i % 2 == 0:
                         parts.append(split_puptw[i])
                       else:
@@ -531,14 +531,14 @@ def process_text_on_page(index, pagetitle, text):
                   ": %s" % " ||| ".join(all_warnings) if len(all_warnings) > 0 else ""))
 
   if need_ref_section:
-    for k in xrange(len(subsections) - 1, 2, -2):
+    for k in range(len(subsections) - 1, 2, -2):
       if re.search(r"^===\s*References\s*===$", subsections[k - 1].strip()):
         if not re.search(r"<references\s*/?\s*>", subsections[k]):
           subsections[k] = subsections[k].rstrip("\n") + "\n<references />\n\n"
           notes.append("add <references /> to existing ===References=== section for pronunciation refs")
         break
     else: # no break
-      for k in xrange(len(subsections) - 1, 2, -2):
+      for k in range(len(subsections) - 1, 2, -2):
         if not re.search(r"==\s*(Anagrams|Further reading)\s*==", subsections[k - 1]):
           subsections[k + 1:k + 1] = ["===References===\n", "<references />\n\n"]
           notes.append("add new ===References=== section for pronunciation refs")

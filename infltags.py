@@ -145,7 +145,7 @@ def fetch_tag_tables(preferred_tag_variants=set()):
 
 def combine_adjacent_inflection_of_calls(text, notes, pagemsg, verbose=False):
   subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
-  for j in xrange(0, len(subsections), 2):
+  for j in range(0, len(subsections), 2):
     for template in inflection_of_templates:
       def combine_adjacent_inflections(m):
         inflections = re.split(r"(\{\{%s\|.*\}\})" % template, m.group(0))
@@ -426,7 +426,7 @@ def combine_adjacent_tags_into_multipart(tn, lang, lemma, tags, tag_to_dimension
                   tag2 = split_and_canonicalize_tag(tag2)
                   combined_tag = "//".join(tag1 + tag2)
                   new_tag_set = []
-                  for i in xrange(len(cur_tag_set)):
+                  for i in range(len(cur_tag_set)):
                     if i == mismatch_ind:
                       new_tag_set.append(combined_tag)
                     else:

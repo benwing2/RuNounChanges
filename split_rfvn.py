@@ -25,11 +25,11 @@ def process_text_on_page(index, pagetitle, text):
   regex = args.regex
   if regex == "CJK":
     regex = cjk_regex
-  for j in xrange(2, len(months), 2):
+  for j in range(2, len(months), 2):
     month = re.sub(r"^\s*=+\s*(.*?)\s*=+\s*$", r"\1", months[j - 1])
     extracted_in_month = []
     level2_secs = re.split("(^==[^=].*\n)", months[j], 0, re.M)
-    for k in xrange(2, len(level2_secs), 2):
+    for k in range(2, len(level2_secs), 2):
       to_extract = re.search(regex, level2_secs[k - 1])
       if not args.invert and to_extract or args.invert and not to_extract:
         this_header = re.sub(r"^\s*=+\s*(.*?)\s*=+\s*$", r"\1", level2_secs[k - 1])

@@ -306,7 +306,7 @@ def process_text_on_page(index, pagetitle, text):
           language_names_to_properties[thislangname])
 
       subsections = re.split("(^==.*==\n)", sectext, 0, re.M)
-      for k in xrange(2, len(subsections), 2):
+      for k in range(2, len(subsections), 2):
         m = re.search("^===*([^=]*)=*==\n$", subsections[k-1])
         subsectitle = m.group(1).strip()
         if not (
@@ -444,7 +444,7 @@ def process_text_on_page(index, pagetitle, text):
         # have newlines in them
         split_templates = re.split(template_table_split_re, subsections[k], 0, re.S)
         must_continue = False
-        for l in xrange(0, len(split_templates), 2):
+        for l in range(0, len(split_templates), 2):
           if "{" in split_templates[l] or "}" in split_templates[l]:
             pagemsg("WARNING: Stray brace in split_templates[%s] in '%s' in %s: Skipping section: <<%s>>" %
               (l, subsectitle, thislangname, split_templates[l].replace("\n", r"\n")))
@@ -456,7 +456,7 @@ def process_text_on_page(index, pagetitle, text):
         # below for lines beginning with *, rather than * directly after
         # a template; will remove the newline later
         split_text = ["\n" + split_templates[0]]
-        for l in xrange(1, len(split_templates), 2):
+        for l in range(1, len(split_templates), 2):
           if "\n" in split_templates[l]:
             split_text.append(split_templates[l])
             split_text.append(split_templates[l+1])
@@ -467,15 +467,15 @@ def process_text_on_page(index, pagetitle, text):
         #  pagemsg("Processing split_text: %s" % split_text)
         # Split on newlines and look for lines beginning with *. Then
         # split on templates and look for links without Latin in them.
-        for kk in xrange(0, len(split_text), 2):
+        for kk in range(0, len(split_text), 2):
           lines = re.split(r"(\n)", split_text[kk])
-          for l in xrange(0, len(lines), 2):
+          for l in range(0, len(lines), 2):
             line = lines[l]
             #if verbose:
             #  pagemsg("Processing line: %s" % line)
             if line.startswith("*"):
               split_line = re.split(template_table_split_re, line, 0, re.S)
-              for ll in xrange(0, len(split_line), 2):
+              for ll in range(0, len(split_line), 2):
                 subline = split_line[ll]
                 replaced = False
                 # Ignore links with a colon (category links and such)
@@ -537,7 +537,7 @@ def process_text_on_page(index, pagetitle, text):
     newtext = do_section(text, args.single_lang)
   else:
     sections = re.split("(^==[^\n=]*==\n)", text, 0, re.M)
-    for j in xrange(2, len(sections), 2):
+    for j in range(2, len(sections), 2):
       m = re.search("^==(.*?)==\n$", sections[j - 1])
       if not m:
         pagemsg("WARNING: Something wrong, can't parse section from %s" %

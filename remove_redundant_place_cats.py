@@ -114,7 +114,7 @@ def process_page(page, index, parsed):
     if tn in ["topics", "topic", "top", "c", "C", "catlangcode"]:
       lang = getparam(t, "1")
       cats = []
-      for paramno in xrange(2, 30):
+      for paramno in range(2, 30):
         cat = getparam(t, str(paramno))
         if cat:
           cats.append(cat)

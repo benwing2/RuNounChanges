@@ -86,7 +86,7 @@ def process_page(page, index, parsed):
     secbody = newsecbody
   elif has_etym_1:
     etym_sections = re.split("(^===Etymology [0-9]+===\n)", secbody, 0, re.M)
-    for k in xrange(2, len(etym_sections), 2):
+    for k in range(2, len(etym_sections), 2):
       etym_sections[k] = fix_up_section(etym_sections[k], warn_on_multiple_heads=True)
     secbody = "".join(etym_sections)
 

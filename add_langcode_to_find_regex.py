@@ -19,7 +19,7 @@ def process_text_on_page(index, pagetitle, text):
 
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
 
-  for j in xrange(2, len(sections), 2):
+  for j in range(2, len(sections), 2):
     m = re.search("^==(.*)==\n$", sections[j - 1])
     assert m
     langname = m.group(1)

@@ -98,7 +98,7 @@ def tr(text, lang=None, sc=None, msgfun=msg):
         ttab = {u"Е":u"Je", u"е":u"je", u"Ѣ":u"Jě", u"ѣ":u"jě"}
         return m.group(1) + ttab[m.group(2)]
     # repeat to handle sequences of ЕЕЕЕЕ...
-    for i in xrange(2):
+    for i in range(2):
         text = re.sub("(^|[" + russian_vowels + r"\W]" + ACGROPT +
                 # re.U so \W is Unicode-dependent
                 u")([ЕеѢѣ])", replace_e, text, 0, re.U)
@@ -601,7 +601,7 @@ def post_canonicalize_latin(text, msgfun=msg):
     non_cons = ur"(^|[aeiouyěɛAEIOUYĚƐʹʺ\W%s%s]%s)" % (
             capital_e_subst, small_e_subst, ACGROPT)
     # repeat to handle sequences of EEEEE... or eeeee....
-    for i in xrange(2):
+    for i in range(2):
         text = re.sub(u"(%s)%s" % (non_cons, capital_e_subst), r"\1Je", text,
                 0, re.U)
         text = re.sub(u"(%s)%s" % (non_cons, small_e_subst), r"\1je", text,
@@ -613,7 +613,7 @@ def post_canonicalize_latin(text, msgfun=msg):
 
     # ɛ not after cons -> e; same for Ɛ
     # repeat to handle sequences of ƐƐƐƐƐ... or ɛɛɛɛɛ....
-    for i in xrange(2):
+    for i in range(2):
         text = re.sub(u"(%s)Ɛ" % non_cons, r"\1E", text, 0, re.U)
         text = re.sub(u"(%s)ɛ" % non_cons, r"\1e", text, 0, re.U)
 

@@ -47,7 +47,7 @@ def delete_form_1(page, index, lemma, formind, formval, lang):
 
   #if "==Etymology 1==" in secbody:
   #  etym_sections = re.split("(^===Etymology [0-9]+===\n)", secbody, 0, re.M)
-  #  for k in xrange(2, len(etym_sections), 2):
+  #  for k in range(2, len(etym_sections), 2):
   #    etym_sections[k] = fix_up_section(etym_sections[k], warn_on_multiple_heads=True)
   #  secbody = "".join(etym_sections)
 
@@ -55,7 +55,7 @@ def delete_form_1(page, index, lemma, formind, formval, lang):
   subsections_to_remove_inflections_from = []
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     parsed = blib.parse_text(subsections[k])
     saw_head = False
     saw_infl = False
@@ -175,7 +175,7 @@ def delete_form_1(page, index, lemma, formind, formval, lang):
   if len(subsections) == 1:
     whole_section_deletable = True
   else:
-    for k in xrange(3, len(subsections), 2):
+    for k in range(3, len(subsections), 2):
       if not re.search("^==+(References|Anagrams)==+$", subsections[k].strip()):
         break
     else:

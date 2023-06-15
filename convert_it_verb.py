@@ -9,7 +9,7 @@ from blib import getparam, rmparam, tname, pname, msg, site
 def split_with_footnotes(text):
   split_text = re.split(r"(\[.*?\])", text) + [""]
   retval = [""]
-  for i in xrange(0, len(split_text), 2):
+  for i in range(0, len(split_text), 2):
     split_part = split_text[i].split(",")
     retval[-1] += split_part[0]
     retval.extend(split_part[1:])

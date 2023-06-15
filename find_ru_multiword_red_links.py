@@ -79,7 +79,7 @@ def process_text_on_page(index, pagetitle, text):
       pagemsg("WARNING: Found junk at beginning or end of headword, skipping: %s" % lemma)
       return
     wordind = 0
-    for i in xrange(1, len(headwords_separators), 2):
+    for i in range(1, len(headwords_separators), 2):
       hword = headwords_separators[i]
       separator = headwords_separators[i+1]
       if i < len(headwords_separators) - 2 and separator != " " and separator != "-":
@@ -104,7 +104,7 @@ def process_text_on_page(index, pagetitle, text):
 
     # Now split based on arg sets.
     arg_set = []
-    for i in xrange(1, highest_numbered_param + 2):
+    for i in range(1, highest_numbered_param + 2):
       end_arg_set = False
       val = getparam(htemp, str(i))
       if (i == highest_numbered_param + 1 or val in ["or", "_", "-"] or

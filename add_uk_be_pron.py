@@ -201,7 +201,7 @@ def get_headword_pronuns(parsed, pagetitle, pagemsg, expand_text):
         check_extra_heads = True
 
     if check_extra_heads:
-      for i in xrange(2, 10):
+      for i in range(2, 10):
         headn = getparam(t, "head" + str(i))
         if headn:
           append_headword(headn)
@@ -233,7 +233,7 @@ def get_headword_pronuns(parsed, pagetitle, pagemsg, expand_text):
       h1words = re.split(r"([\s\-]+)", h1)
       h2words = re.split(r"([\s\-]+)", h2)
       if len(h1words) == len(h2words):
-        for i in xrange(len(h1words)):
+        for i in range(len(h1words)):
           if not (h1words[i] == h2words[i] or not com.is_accented(h1words[i]) and com.remove_accents(h2words[i]) == h1words[i]):
             return False
       return True
@@ -766,7 +766,7 @@ def process_section(section, indentlevel, headword_pronuns,
       pronwords = re.split(r"([\s\-]+)", pron)
       changed = False
       if len(hwords) == len(pronwords):
-        for i in xrange(len(hwords)):
+        for i in range(len(hwords)):
           hword = hwords[i]
           pronword = pronwords[i]
           if (len(hword) > len(pronword) and not com.is_accented(pronword) and
@@ -901,7 +901,7 @@ def process_page_text(index, text, pagetitle):
   was_unable_to_match = False
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
   orig_text = text
-  for j in xrange(2, len(sections), 2):
+  for j in range(2, len(sections), 2):
     if sections[j-1] == "==%s==\n" % langname:
       if foundlang:
         pagemsg("WARNING: Found multiple %s sections" % langname)
@@ -935,7 +935,7 @@ def process_page_text(index, text, pagetitle):
         expected_etym_num = 0
         l3split = re.split(r"^(===[^=\n].*===\n)", sections[j], 0, re.M)
         seen_etym_1 = False
-        for k in xrange(1, len(l3split), 2):
+        for k in range(1, len(l3split), 2):
           if not seen_etym_1 and l3split[k] != "===Etymology 1===\n":
             continue
           seen_etym_1 = True
@@ -961,7 +961,7 @@ def process_page_text(index, text, pagetitle):
         # per-section pronunciations.
         etym_headword_pronuns[2] = get_headword_pronuns(etymparsed2, pagetitle, pagemsg, expand_text)
         need_per_section_pronuns = False
-        for k in xrange(4, len(etymsections), 2):
+        for k in range(4, len(etymsections), 2):
           etymparsed = blib.parse_text(etymsections[k])
           # Fetch the headword pronuns of the ===Etymology N=== section.
           # We don't check for None here; see above.
@@ -1034,7 +1034,7 @@ def process_page_text(index, text, pagetitle):
           # Check for a single pronunciation section that we can move
           num_secs_with_pronun = 0
           first_sec_with_pronun = 0
-          for k in xrange(2, len(etymsections), 2):
+          for k in range(2, len(etymsections), 2):
             if "===Pronunciation===" in etymsections[k]:
               num_secs_with_pronun += 1
               if not first_sec_with_pronun:
@@ -1066,7 +1066,7 @@ def process_page_text(index, text, pagetitle):
 
         # Now add the per-section or combined pronunciation
         if need_per_section_pronuns:
-          for k in xrange(2, len(etymsections), 2):
+          for k in range(2, len(etymsections), 2):
             # Skip processing if pronuns are None.
             if not etym_headword_pronuns[k]:
               continue

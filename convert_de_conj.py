@@ -267,15 +267,15 @@ def process_text_on_page(index, pagetitle, text):
         pagemsg("Would replace %s with {{de-conj|%s}}" % (unicode(t), newarg1))
         maxarg = 0
         # Find maximum argument
-        for i in xrange(1, 13):
+        for i in range(1, 13):
           if getparam(t, str(i)):
             maxarg = i
         # Fill in blank arguments for any missing arguments below that
-        for i in xrange(1, maxarg):
+        for i in range(1, maxarg):
           if not t.has(str(i)):
             t.add(str(i), "")
         # Remove any blank arguments above that
-        for i in xrange(maxarg + 1, 13):
+        for i in range(maxarg + 1, 13):
           if t.has(str(i)):
             rmparam(t, str(i))
         if unicode(t) != origt and not notes:

@@ -75,7 +75,7 @@ def process_page(page, index, parsed):
 
   saw_a_template = False
 
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     parsed = blib.parse_text(subsections[k])
     la_verb_template = None
     la_conj_template = None

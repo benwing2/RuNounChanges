@@ -31,7 +31,7 @@ def rewrite_one_page_verb_headword(page, index, text):
       if form:
         # In order to keep in the same order, just forcibly change the
         # param "names" (numbers)
-        for pno in xrange(10, 0, -1):
+        for pno in range(10, 0, -1):
           if template.has(str(pno)):
             template.get(str(pno)).name = str(pno + 1)
         # Make sure form= param is first ...

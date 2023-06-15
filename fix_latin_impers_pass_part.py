@@ -36,7 +36,7 @@ def correct_nom_sg_n_participle(page, index, participle, lemma):
 
 # {{inflection of|la|%s||perf|pasv|part}}\n\n""" % (participle, lemma)
   saw_participle = False
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if subsections[k - 1] == "===Participle===\n":
       if saw_participle:
         pagemsg("WARNING: Saw multiple participles, skipping")
@@ -47,7 +47,7 @@ def correct_nom_sg_n_participle(page, index, participle, lemma):
           (participle, lemma))
   secbody = "".join(subsections)
   if not saw_participle:
-    for k in xrange(2, len(subsections), 2):
+    for k in range(2, len(subsections), 2):
       insert_before = False
       if subsections[k - 1] == "===References===\n":
         pagemsg("Inserting new participle subsection before references subsection")

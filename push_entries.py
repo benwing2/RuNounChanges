@@ -25,7 +25,7 @@ def process_page(index, page, contents, lang, verbose, comment):
     curtext = page.text
     sections = re.split("(^==[^=]*==\n)", curtext, 0, re.M)
 
-    for j in xrange(2, len(sections), 2):
+    for j in range(2, len(sections), 2):
       m = re.search(r"^==\s*(.*?)\s*==\n", sections[j - 1])
       if not m:
         errandpagemsg("WARNING: Saw bad second-level header: %s" % sections[j - 1].strip())

@@ -36,7 +36,7 @@ def delete_participle_1(page, index, lemma, formind, formval, pos, preserve_diae
   saw_head = False
   infl_template = None
   saw_bad_template = False
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     parsed = blib.parse_text(subsections[k])
     for t in parsed.filter_templates():
       tn = tname(t)
@@ -192,7 +192,7 @@ def delete_form_1(page, index, lemma, formind, formval, pos, tag_sets_to_delete,
 
   #if "==Etymology 1==" in secbody:
   #  etym_sections = re.split("(^===Etymology [0-9]+===\n)", secbody, 0, re.M)
-  #  for k in xrange(2, len(etym_sections), 2):
+  #  for k in range(2, len(etym_sections), 2):
   #    etym_sections[k] = fix_up_section(etym_sections[k], warn_on_multiple_heads=True)
   #  secbody = "".join(etym_sections)
 
@@ -200,7 +200,7 @@ def delete_form_1(page, index, lemma, formind, formval, pos, tag_sets_to_delete,
   subsections_to_remove_inflections_from = []
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     parsed = blib.parse_text(subsections[k])
     saw_head = False
     saw_infl = False

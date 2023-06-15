@@ -40,7 +40,7 @@ def process_text_on_page(index, pagetitle, text):
   above_pron_1_sec_0 = subsections[0]
   above_pron_1 = None
   pronsec = None
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if "==Pronunciation" in subsections[k - 1]:
       if "==Pronunciation 1" in subsections[k - 1]:
         above_pron_1 = above_pron_1_sec_0 + "".join(pronsec_text_parts)

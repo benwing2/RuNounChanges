@@ -46,7 +46,7 @@ def process_text_on_page(index, pagetitle, text):
     subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
     saw_references_sec = False
-    for k in xrange(2, len(subsections), 2):
+    for k in range(2, len(subsections), 2):
       if re.search(r"^===*\s*References\s*===* *\n", subsections[k - 1]):
         if saw_references_sec:
           pagemsg("WARNING: Saw two ===References=== sections")

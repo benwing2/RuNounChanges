@@ -55,7 +55,7 @@ def process_text_on_page(index, pagetitle, text):
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
     
   # Check for templates in sections outside of 'Further reading'
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if not re.search("^==+Further reading==+\n", subsections[k - 1]):
       if "{{R:pl:WSJP}}" in subsections[k] or "{{R:pl:PWN}}" in subsections[k]:
         if re.search("^==+References==+\n", subsections[k - 1]):
@@ -65,11 +65,11 @@ def process_text_on_page(index, pagetitle, text):
           pagemsg("WARNING: Saw {{R:pl:WSJP}} or {{R:pl:PWN}} in %s section, need to review manually" % subsections[k - 1].strip())
 
   # Check for References or Further reading already present
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if re.search("^==+Further reading==+\n", subsections[k - 1]):
       newsubsecval = "===Further reading===\n"
       if subsections[k - 1] != newsubsecval:
-        for l in xrange(k + 2, len(subsections), 2):
+        for l in range(k + 2, len(subsections), 2):
           if not re.search("^===Anagrams===\n", subsections[l - 1]):
             pagemsg("WARNING: Saw level > 3 Further reading and a following non-Anagrams section %s, can't handle"
                 % subsections[l - 1].strip())

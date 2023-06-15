@@ -46,7 +46,7 @@ def process_text_on_page(index, pagetitle, text):
   rawest_toponym_to_marked_up = {}
   need_to_remove_cat = [False]
 
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     def raw_toponym_to_toponym(raw_toponym):
       toponym = None
       rawest_toponym = None

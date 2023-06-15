@@ -31,7 +31,7 @@ def process_text_on_page(pagetitle, index, text):
   notes = []
 
   subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
-  for j in xrange(2, len(subsections), 2):
+  for j in range(2, len(subsections), 2):
     if not re.search("==(Adjective|Numeral|Ordinal Numeral|Participle)==", subsections[j - 1]):
       continue
     parsed = blib.parse_text(subsections[j])

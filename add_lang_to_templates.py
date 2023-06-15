@@ -91,7 +91,7 @@ def process_page(page, index, parsed, lang_in_1):
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
 
   if not pagetitle.startswith("Citations"):
-    for j in xrange(2, len(sections), 2):
+    for j in range(2, len(sections), 2):
       m = re.search("^==(.*)==\n$", sections[j - 1])
       assert m
       langname = m.group(1)
@@ -101,7 +101,7 @@ def process_page(page, index, parsed, lang_in_1):
   else:
     # Citation section?
     langnamecode = None
-    for j in xrange(0, len(sections), 2):
+    for j in range(0, len(sections), 2):
       if j == 0:
         langname = "Unknown"
       else:

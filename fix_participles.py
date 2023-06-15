@@ -48,7 +48,7 @@ def process_page(page, index, parsed, nowarn=False):
 
   sections = re.split("(^==[^=\n]+==\n)", pagebody, 0, re.M)
 
-  for j in xrange(2, len(sections), 2):
+  for j in range(2, len(sections), 2):
     if sections[j-1] == "==Russian==\n":
       if foundrussian:
         pagemsg("WARNING: Found multiple Russian sections, skipping page")
@@ -66,7 +66,7 @@ def process_page(page, index, parsed, nowarn=False):
         sectail = ""
 
       subsections = re.split("(^===.*===\n)", secbody, 0, re.M)
-      for k in xrange(2, len(subsections), 2):
+      for k in range(2, len(subsections), 2):
         found_subsec_participle = False
         # Try to canonicalize existing 'inflection of'
         parsed = blib.parse_text(subsections[k])
@@ -89,7 +89,7 @@ def process_page(page, index, parsed, nowarn=False):
             gloss3 = False
             # Fetch the numbered params starting with 3
             numbered_params = []
-            for i in xrange(3,20):
+            for i in range(3,20):
               numbered_params.append(getparam(t, str(i)))
             while len(numbered_params) > 0 and not numbered_params[-1]:
               del numbered_params[-1]
@@ -162,7 +162,7 @@ def process_page(page, index, parsed, nowarn=False):
       subsections = re.split("(^===[^=]*===\n)", secbody, 0, re.M)
       while True:
         rearranged = False
-        for k in xrange(2, len(subsections), 2):
+        for k in range(2, len(subsections), 2):
           if subsections[k-1] in ["===Noun===\n", "===Adjective===\n"] and k+1 < len(subsections) and subsections[k+1] == "===Participle===\n":
             tmp = subsections[k-1]
             subsections[k-1] = subsections[k+1]

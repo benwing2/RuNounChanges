@@ -62,7 +62,7 @@ def process_text_on_page(index, pagetitle, text):
         template_split_re = r"(\{\{(?:[^{}]|\{\{[^{}]*\}\})*\}\})"
         # Split templates and only change non-template text
         split_templates = re.split(template_split_re, line)
-        for l in xrange(0, len(split_templates), 2):
+        for l in range(0, len(split_templates), 2):
           def replace_raw_self_link(m):
             notes.append("replace raw self link to English term with templated one")
             return get_templated_self_link(pagetitle)

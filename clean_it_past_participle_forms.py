@@ -666,7 +666,7 @@ def process_text_on_page(index, pagetitle, text):
           return False
     return True
 
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if re.search("==(Verb|Participle)==", subsections[k - 1]):
       # Make sure that we're dealing with a potential participle
       maybe_saw_participle = True
@@ -1157,7 +1157,7 @@ def process_text_on_page(index, pagetitle, text):
       text_before_etym_sections.append(subsections[0])
     else:
       goes_at_top_of_first_etym_section = subsections[0]
-    for k in xrange(2, len(subsections), 2):
+    for k in range(2, len(subsections), 2):
       pos = None
       lemma = None
       if "=Pronunciation=" in subsections[k - 1]:
@@ -1324,7 +1324,7 @@ def process_text_on_page(index, pagetitle, text):
     # Anagrams and such go after all etym sections and remain as such even if we start with non-etym-split text
     # and end with multiple etym sections.
     subsections_at_level_3 = re.split("(^===[^=\n]+===\n)", secbody, 0, re.M)
-    for last_included_sec in xrange(len(subsections_at_level_3) - 1, 0, -2):
+    for last_included_sec in range(len(subsections_at_level_3) - 1, 0, -2):
       if not re.search(r"^===\s*(References|See also|Derived terms|Related terms|Further reading|Anagrams)\s*=== *\n",
           subsections_at_level_3[last_included_sec - 1]):
         break
@@ -1350,7 +1350,7 @@ def process_text_on_page(index, pagetitle, text):
         if len(etym_sections) < 5:
           pagemsg("WARNING: Something wrong, saw 'Etymology 1' but didn't see two etym sections")
         else:
-          for k in xrange(2, len(etym_sections), 2):
+          for k in range(2, len(etym_sections), 2):
             process_etym_section(k // 2, etym_sections[k], is_etym_section=True)
           if text_before_etym_sections:
             pagemsg("WARNING: Internal error: Should see empty text_before_etym_sections but saw: %s" %

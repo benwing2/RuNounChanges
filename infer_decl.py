@@ -194,7 +194,7 @@ def separate_multiwords(forms, splitre):
         i += 1
   # Remove duplicates from individual words (e.g. if overall form was
   # бри́твой О́ккама,бри́твою О́ккама)
-  for i in xrange(len(words)):
+  for i in range(len(words)):
     for case in words[i]:
       words[i][case] = remove_duplicates(words[i][case])
   return words
@@ -739,7 +739,7 @@ def infer_one_page_decls_1(page, index, text):
       head = getparam(t, "1")
       if head:
         headwords.add(head)
-      for i in xrange(2, 10):
+      for i in range(2, 10):
         head = getparam(t, "head" + str(i))
         if head:
           headwords.add(head)
@@ -747,7 +747,7 @@ def infer_one_page_decls_1(page, index, text):
   split_headwords = set()
   for headword in headwords:
     splitvals = re.split(r"(\[\[[^\[\]]*\]\])", headword)
-    for i in xrange(len(splitvals)):
+    for i in range(len(splitvals)):
       if i % 2 == 1:
         split_headwords.add(splitvals[i])
   linked_headwords = {}
@@ -777,7 +777,7 @@ def infer_one_page_decls_1(page, index, text):
       args = infer_decl(t, gender, linked_headwords, pagemsg)
       if args:
         inferred_decls.append("{{%s|%s}}" % (decl_template, "|".join(args)))
-        for i in xrange(15, 0, -1):
+        for i in range(15, 0, -1):
           rmparam(t, i)
         t.name = decl_template
         i = 1

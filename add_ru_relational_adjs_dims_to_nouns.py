@@ -49,7 +49,7 @@ def add_rel_adj_or_dim_to_noun_page(nounpage, index, new_adj_or_dims, param, des
     notes.append("add %s=%s to Russian noun" % (param, ",".join(added_adjs_or_dims)))
     secbody = unicode(parsed)
   subsecs = re.split("(^==.*==\n)", secbody, 0, re.M)
-  for k in xrange(2, len(subsecs), 2):
+  for k in range(2, len(subsecs), 2):
     if "==Derived terms==" in subsecs[k - 1] or "==Related terms==" in subsecs[k - 1]:
       header = re.sub("=", "", subsecs[k - 1]).strip()
       for adj_or_dim in adjs_or_dims:
@@ -120,7 +120,7 @@ def process_section_for_relational_adj_snarf(index, pagetitle, text, is_multi_et
   if is_multi_etym_section:
     etymtext = subsecs[0]
   else:
-    for k in xrange(2, len(subsecs), 2):
+    for k in range(2, len(subsecs), 2):
       if "==Etymology==" in subsecs[k - 1]:
         etymtext = subsecs[k]
         break
@@ -169,7 +169,7 @@ def snarf_relational_adjs(index, pagetitle, text):
   secbody = text
   if "Etymology 1" in secbody:
     etym_sections = re.split("(^===Etymology [0-9]+===\n)", secbody, 0, re.M)
-    for k in xrange(2, len(etym_sections), 2):
+    for k in range(2, len(etym_sections), 2):
       process_section_for_relational_adj_snarf(index, pagetitle, etym_sections[k], True)
   else:
     process_section_for_relational_adj_snarf(index, pagetitle, secbody, False)
@@ -230,7 +230,7 @@ def snarf_diminutives(index, pagetitle, text):
   secbody = text
   if "Etymology 1" in secbody:
     etym_sections = re.split("(^===Etymology [0-9]+===\n)", secbody, 0, re.M)
-    for k in xrange(2, len(etym_sections), 2):
+    for k in range(2, len(etym_sections), 2):
       process_section_for_diminutive_snarf(index, pagetitle, etym_sections[k], True)
   else:
     process_section_for_diminutive_snarf(index, pagetitle, secbody, False)

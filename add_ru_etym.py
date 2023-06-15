@@ -151,13 +151,13 @@ def process_line(index, line, add_passive_of, override_etym, save, verbose):
   # Extract off pagehead and recombine section headers with following text
   pagehead = splitsections[0]
   sections = []
-  for i in xrange(1, len(splitsections)):
+  for i in range(1, len(splitsections)):
     if (i % 2) == 1:
       sections.append("")
     sections[-1] += splitsections[i]
 
   # Go through each section in turn, looking for existing Russian section
-  for i in xrange(len(sections)):
+  for i in range(len(sections)):
     m = re.match("^==([^=\n]+)==$", sections[i], re.M)
     if not m:
       pagemsg("Can't find language name in text: [[%s]]" % (sections[i]))
@@ -166,7 +166,7 @@ def process_line(index, line, add_passive_of, override_etym, save, verbose):
         subsections = re.split("(^===+[^=\n]+===+\n)", sections[i], 0, re.M)
 
         replaced_etym = False
-        for j in xrange(2, len(subsections), 2):
+        for j in range(2, len(subsections), 2):
           if "==Etymology==" in subsections[j - 1] or "==Etymology 1==" in subsections[j - 1]:
             subsections[j] = etymbody
             replaced_etym = True

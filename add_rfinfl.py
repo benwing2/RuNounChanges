@@ -251,7 +251,7 @@ def process_text_on_page(index, pagetitle, text, lang, pos):
         elif head_is_indeclinable:
           pagemsg("Headword template is indeclinable, not adding {{rfinfl}}")
         else:
-          for l in xrange(k, endk, 2):
+          for l in range(k, endk, 2):
             if re.search(r"=\s*(Declension|Inflection|Conjugation)\s*=", subsections[l]):
               secparsed = blib.parse_text(subsections[l + 1])
               for t in secparsed.filter_templates():

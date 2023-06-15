@@ -878,7 +878,7 @@ def find_heads_and_defns(text, pagemsg):
       'level': level,
     }
 
-  for k in xrange(len(subsections)):
+  for k in range(len(subsections)):
     if k < 2 or (k % 2) == 1:
       parsed_subsections[k] = blib.parse_text(subsections[k])
       continue

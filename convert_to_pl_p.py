@@ -63,7 +63,7 @@ def process_text_on_page(index, pagetitle, text):
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
-  for k in xrange(1, len(subsections), 2):
+  for k in range(1, len(subsections), 2):
     if re.search(r"==\s*Pronunciation\s*==", subsections[k]):
       secheader = re.sub(r"\s*Pronunciation\s*", "Pronunciation", subsections[k])
       if secheader != subsections[k]:

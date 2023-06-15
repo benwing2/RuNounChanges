@@ -24,7 +24,7 @@ def process_text_on_page(pageindex, pagetitle, text):
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if not subsections[k].startswith("{{%s-verb|" % args.langcode):
       continue
     m = re.search("^===*([^=]*)=*==\n$", subsections[k - 1])

@@ -134,7 +134,7 @@ def process_text_on_page(index, pagetitle, text):
         "stemstressed" if endstressed == False else "mixed"
       )
     def check_multi_stressed(maxparam):
-      for i in xrange(1, maxparam + 1):
+      for i in range(1, maxparam + 1):
         val = getparam(t, str(i))
         vals = re.split(r",\s*", val)
         for v in vals:

@@ -13,7 +13,7 @@ blib.getData()
 wordPunc = u"-־׳״'.·*’་•:"
 notWordPunc = "([^" + wordPunc + "]+)"
 
-punc_chars = "".join("\\" + unichr(i) for i in xrange(sys.maxunicode)
+punc_chars = "".join("\\" + unichr(i) for i in range(sys.maxunicode)
     if unicodedata.category(unichr(i)).startswith('P'))
 
 spacingPunctuation = "[" + punc_chars + r"\s]+"

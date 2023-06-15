@@ -209,7 +209,7 @@ def process_page(page, index, parsed)::
         pagemsg("Replacing %s with %s in %s" %
             (origt, unicode(t), in_what))
 
-  for j in xrange(0, len(subsections), 2):
+  for j in range(0, len(subsections), 2):
     parsed = blib.parse_text(subsections[j])
     if j > 0 and re.search(r"^===*References===*\n", subsections[j-1]):
       replace_in_reference(parsed, "==References== section")

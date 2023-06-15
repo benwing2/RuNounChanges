@@ -27,7 +27,7 @@ def process_page(page, index, parsed):
 
   sections = re.split("(^==[^=\n]+==\n)", text, 0, re.M)
 
-  for j in xrange(2, len(sections), 2):
+  for j in range(2, len(sections), 2):
     if sections[j-1] == "==Russian==\n":
       if foundrussian:
         pagemsg("WARNING: Found multiple Russian sections, skipping page")
@@ -35,7 +35,7 @@ def process_page(page, index, parsed):
       foundrussian = True
 
       subsections = re.split("(^===.*===\n)", sections[j], 0, re.M)
-      for k in xrange(2, len(subsections), 2):
+      for k in range(2, len(subsections), 2):
         parsed = blib.parse_text(subsections[k])
         found_adj_comp = False
         found_adv_comp = False

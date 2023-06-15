@@ -195,7 +195,7 @@ def process_page(page, index, do_fix):
           for newval in newvals:
             t.add(base + ("" if curindex == 1 else str(curindex)), newval)
             curindex += 1
-          for i in xrange(curindex, 10):
+          for i in range(curindex, 10):
             rmparam(t, base + ("" if i == 1 else str(i)))
           pagemsg("Replacing %s with %s" % (origt, unicode(t)))
           notes.append("removed bad past pasv part(s) %s"

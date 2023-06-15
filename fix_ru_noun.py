@@ -37,7 +37,7 @@ def process_page(page, index, parsed):
   num_ru_proper_noun_subs = 0
   num_replace_bian = 0
   transferred_tr = []
-  for j in xrange(2, len(sections), 2):
+  for j in range(2, len(sections), 2):
     if sections[j-1] == "==Russian==\n":
       if foundrussian:
         pagemsg("WARNING: Found multiple Russian sections, skipping")
@@ -45,7 +45,7 @@ def process_page(page, index, parsed):
       foundrussian = True
 
       subsections = re.split("(^===[^=]*===\n)", sections[j], 0, re.M)
-      for k in xrange(2, len(subsections), 2):
+      for k in range(2, len(subsections), 2):
         retval = process_page_section(index, page, subsections[k], verbose)
         if retval:
           (replaced, this_num_ru_noun_subs, this_num_ru_proper_noun_subs,
@@ -171,7 +171,7 @@ def process_page_section(index, page, section, verbose):
           if val == "-" or val == "_" or val.startswith("join:"):
             pagemsg("WARNING: Manual translit and multi-word templates, can't handle, skipping: %s" % unicode(decl_template))
             return None
-      for i in xrange(2, 10):
+      for i in range(2, 10):
         if getparam(headword_template, "tr%s" % i):
           pagemsg("WARNING: Headword template has translit param tr%s, can't handle, skipping: %s" % (
             i, unicode(headword_template)))

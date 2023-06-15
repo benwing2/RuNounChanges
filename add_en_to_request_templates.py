@@ -51,7 +51,7 @@ def process_page(page, index, parsed):
 
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
 
-  for j in xrange(0, len(sections), 2):
+  for j in range(0, len(sections), 2):
     if j == 0:
       langname = None
     else:

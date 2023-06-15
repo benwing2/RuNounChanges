@@ -314,7 +314,7 @@ def process_text_on_page(index, pagetitle, text):
     offset = 0
     arg_sets = []
     arg_set = []
-    for i in xrange(1, highest_numbered_param + 2):
+    for i in range(1, highest_numbered_param + 2):
       end_arg_set = False
       val = getparam(decl_template, str(i))
       if i == highest_numbered_param + 1:
@@ -441,7 +441,7 @@ def process_text_on_page(index, pagetitle, text):
 
     # Now gather all params, including named ones.
     params = []
-    params.extend((str(i+1), val) for i, val in zip(xrange(len(numbered_params)), numbered_params))
+    params.extend((str(i+1), val) for i, val in zip(range(len(numbered_params)), numbered_params))
     num = None
     anim = None
     for p in decl_template.params:
@@ -553,7 +553,7 @@ def process_text_on_page(index, pagetitle, text):
   # because the words are linked individually but the ru-decl-noun-see
   # has пистолет-пулемёт given as a single entry. We have a check below
   # to try to catch this case, because no inflected nouns will show up.
-  for i in xrange(1, len(headwords_separators), 2):
+  for i in range(1, len(headwords_separators), 2):
     hword = headwords_separators[i]
     separator = headwords_separators[i+1]
     if i < len(headwords_separators) - 2 and separator != " " and separator != "-":

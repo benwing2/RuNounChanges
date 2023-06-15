@@ -59,14 +59,14 @@ def process_page(page, index, parsed):
 
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
 
-  for j in xrange(2, len(sections), 2):
+  for j in range(2, len(sections), 2):
     m = re.search("^==(.*)==\n$", sections[j - 1])
     assert m
     langname = m.group(1)
     if langname != "Translingual":
       continue
     subsections = re.split("(^==.*==\n)", sections[j], 0, re.M)
-    for k in xrange(2, len(subsections), 2):
+    for k in range(2, len(subsections), 2):
       m = re.search("^===*(.*?)=*==\n$", subsections[k - 1])
       assert m
       subsectitle = m.group(1)

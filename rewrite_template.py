@@ -126,7 +126,7 @@ def process_text_on_page(index, pagetitle, text, templates, new_names, params_to
           for param_to_insert, values_to_insert in params_to_insert:
             if param_to_insert > local_last_param_inserted:
               # add blank params to avoid leading a gap between last param so far and new params
-              for i in xrange(max(max_existing_numeric_param, local_last_param_inserted) + 1, param_to_insert):
+              for i in range(max(max_existing_numeric_param, local_last_param_inserted) + 1, param_to_insert):
                 new_params.append((unicode(i + local_param_offset), ""))
               values_to_insert = [substitute_in_value(v) for v in values_to_insert]
               for i, value_to_insert in enumerate(values_to_insert):

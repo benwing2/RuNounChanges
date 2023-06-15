@@ -43,7 +43,7 @@ def process_text_on_page(index, pagename, text):
         rmparam(t, "3")
 
       need_to_move_genders = False
-      for i in xrange(2, 20):
+      for i in range(2, 20):
         if t.has("g%s" % i):
           need_to_move_genders = True
           break
@@ -52,7 +52,7 @@ def process_text_on_page(index, pagename, text):
         g = getparam(t, "g")
         if g:
           genders.append(g)
-        for i in xrange(2, 20):
+        for i in range(2, 20):
           g = getparam(t, "g%s" % i)
           rmparam(t, "g%s" % i)
           if g:

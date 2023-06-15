@@ -112,13 +112,13 @@ def create_declension(page, index, save, pos, tempname, decltempname, sgnum,
   # Extract off head and recombine section headers with following text
   pagehead = splitsections[0]
   sections = []
-  for i in xrange(1, len(splitsections)):
+  for i in range(1, len(splitsections)):
     if (i % 2) == 1:
       sections.append("")
     sections[-1] += splitsections[i]
 
   # Look for Arabic section
-  for seci in xrange(len(sections)):
+  for seci in range(len(sections)):
     m = re.match("^==([^=\n]+)==$", sections[seci], re.M)
     if not m:
       pgmsg("Can't find language name in text: [[%s]]" % (sections[seci]))
@@ -136,7 +136,7 @@ def create_declension(page, index, save, pos, tempname, decltempname, sgnum,
       subsections = re.split("(^===+[^=\n]+===+\n)", secbody, 0, re.M)
 
       # Go through each subsection
-      for j in xrange(len(subsections)):
+      for j in range(len(subsections)):
         notes = []
 
         def add_note(note):
@@ -449,7 +449,7 @@ def create_declension(page, index, save, pos, tempname, decltempname, sgnum,
               params_to_check = ["pl", "sing", "coll", "pauc", "f", "fpl"]
               for param in params_to_check:
                 check_for_al(param)
-              for i in xrange(2, 10):
+              for i in range(2, 10):
                 check_for_al("head%s" % i)
                 for param in params_to_check:
                   check_for_al("%s%s" % (param, i))
@@ -461,7 +461,7 @@ def create_declension(page, index, save, pos, tempname, decltempname, sgnum,
               check_for_al("tr")
               for param in params_to_check:
                 check_for_al("%str" % param)
-              for i in xrange(2, 10):
+              for i in range(2, 10):
                 check_for_al("tr%s" % i)
                 for param in params_to_check:
                   check_for_al("%s%str" % (param, i))

@@ -27,7 +27,7 @@ def investigate_possible_adj(index, adj_pagename, adv, adv_defns):
 
   subsections = re.split("(^===+[^=\n]+===+\n)", secbody, 0, re.M)
 
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     parsed = blib.parse_text(subsections[k])
     for t in parsed.filter_templates():
       origt = unicode(t)
@@ -59,7 +59,7 @@ def process_page(page, index):
 
   subsections = re.split("(^===+[^=\n]+===+\n)", secbody, 0, re.M)
 
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     parsed = blib.parse_text(subsections[k])
     for t in parsed.filter_templates():
       origt = unicode(t)

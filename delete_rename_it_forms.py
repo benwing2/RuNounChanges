@@ -31,7 +31,7 @@ def remove_anagram_from_page(index, page, pagetitle_to_remove):
   sections, j, secbody, sectail, has_non_lang = retval
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if "===Anagrams===" in subsections[k - 1]:
       parsed = blib.parse_text(subsections[k])
       for t in parsed.filter_templates():
@@ -83,7 +83,7 @@ def process_page_for_anagrams(index, page, modify_this_page):
   anagrams = []
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if "===Anagrams===" in subsections[k - 1]:
       parsed = blib.parse_text(subsections[k])
       for t in parsed.filter_templates():

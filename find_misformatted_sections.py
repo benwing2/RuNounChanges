@@ -98,7 +98,7 @@ def check_for_bad_etym_sections(secbody, pagemsg):
   while l3_last_etym_header > 1 and re.search(final_section_re, l3_subsections[l3_last_etym_header]):
     l3_last_etym_header -= 2
   expected_etym_no = 1
-  for k in xrange(l3_first_etym_header, l3_last_etym_header + 2, 2):
+  for k in range(l3_first_etym_header, l3_last_etym_header + 2, 2):
     if not re.search(r"===\s*Etymology %s\s*===[ \t]*\n" % expected_etym_no, l3_subsections[k]):
       pagemsg("WARNING: Expected ===Etymology %s=== but saw section %s" % (
         expected_etym_no, get_subsection_id(l3_subsections, k, include_equal_signs=True)))
@@ -138,7 +138,7 @@ def check_for_bad_subsections(secbody, pagetitle, pagemsg, langname):
   # Look for Etymology 1 by itself and maybe correct.
   saw_plain_etymology_section = False
   num_numbered_etym_sections = 0
-  for k in xrange(1, len(subsections), 2):
+  for k in range(1, len(subsections), 2):
     if re.search(r"==\s*Etymology\s*==", subsections[k]):
       saw_plain_etymology_section = True
     if re.search(r"==\s*Etymology [0-9]+\s*==", subsections[k]):
@@ -149,7 +149,7 @@ def check_for_bad_subsections(secbody, pagetitle, pagemsg, langname):
     else:
       pagemsg("WARNING: Saw a single numbered Etymology section")
       if args.correct:
-        for k in xrange(1, len(subsections), 2):
+        for k in range(1, len(subsections), 2):
           if re.search(r"==\s*(Etymology [0-9]+)\s*==", subsections[k]):
             subsec_id = subsection_id(k)
             subsections[k] = "===Etymology===\n"
@@ -159,7 +159,7 @@ def check_for_bad_subsections(secbody, pagetitle, pagemsg, langname):
 
   # Correct whitespace.
   correct_whitespace_notes = []
-  for k in xrange(0, len(subsections), 2):
+  for k in range(0, len(subsections), 2):
     if not subsections[k].strip():
       newsubseck = "\n"
       if newsubseck != subsections[k]:
@@ -210,10 +210,10 @@ def check_for_bad_subsections(secbody, pagetitle, pagemsg, langname):
         subsections[k] = ("=" * expected_indentation) + m.group(2) + ("=" * expected_indentation) + "\n"
         indentation[k] = expected_indentation
         correct_indentation_notes.append("section %s to %s" % (subsection_id(k), expected_indentation))
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if re.search("^==", subsections[k], re.M):
       pagemsg("WARNING: Saw badly formatted section header in section %s <%s>" % (subsection_id(k), subsections[k].strip()))
-  for k in xrange(1, len(subsections), 2):
+  for k in range(1, len(subsections), 2):
     if re.search(r"===+[ \t]+\n", subsections[k]):
       pagemsg("WARNING: Space at end of section header in section %s" % subsection_id(k))
       if args.correct:
@@ -229,7 +229,7 @@ def check_for_bad_subsections(secbody, pagetitle, pagemsg, langname):
     if indentation[k] != len(m.group(2)):
       pagemsg("WARNING: Mismatched indentation, %s equal signs on left but %s on right in section %s"
           % (indentation[k], len(m.group(2)), subsection_id(k)))
-  for k in xrange(1, len(subsections) - 2, 2):
+  for k in range(1, len(subsections) - 2, 2):
     if re.search(r"=\s*Pronunciation\s*=", subsections[k]) and re.search(r"=\s*Etymology\s*=", subsections[k + 2]):
       pagemsg("WARNING: Pronunciation before Etymology in section %s" % subsection_id(k))
       if args.correct:
@@ -240,7 +240,7 @@ def check_for_bad_subsections(secbody, pagetitle, pagemsg, langname):
         subsections[k + 2] = pronheader
         subsections[k + 3] = proncontents
         append_note("switch Pronunciation and Etymology sections")
-  for k in xrange(3, len(subsections), 2):
+  for k in range(3, len(subsections), 2):
     if indentation[k] - indentation[k - 2] > 1:
       pagemsg("WARNING: Increase in %s from %s to %s in indentation level from section %s to section %s" % (
         indentation[k] - indentation[k - 2], indentation[k - 2],
@@ -249,7 +249,7 @@ def check_for_bad_subsections(secbody, pagetitle, pagemsg, langname):
   has_etym_sections = re.search(r"==\s*Etymology 1\s*==", secbody)
   last_etym_header = 0
   if has_etym_sections:
-    for k in xrange(1, len(subsections), 2):
+    for k in range(1, len(subsections), 2):
       if re.search(r"=\s*Etymology [0-9]", subsections[k]):
         last_etym_header = k
   pos_since_etym_section = 0
@@ -257,7 +257,7 @@ def check_for_bad_subsections(secbody, pagetitle, pagemsg, langname):
   num_seen_by_header = defaultdict(int)
   num_seen_by_header_since_etym_section = defaultdict(int)
   pos_sections_seen_by_header_since_etym_section = defaultdict(set)
-  for k in xrange(1, len(subsections), 2):
+  for k in range(1, len(subsections), 2):
     if re.search(r"=\s*Etymology [0-9]", subsections[k]):
       pos_since_etym_section = 0
       num_seen_by_header_since_etym_section = defaultdict(int)
@@ -336,7 +336,7 @@ def check_for_bad_subsections(secbody, pagetitle, pagemsg, langname):
           % (subsection_id(k + 2, include_equal_signs=True), subsection_id(k, include_equal_signs=True)))
   beginning_of_etym_sections = None
   if has_etym_sections:
-    for k in xrange(1, len(subsections), 2):
+    for k in range(1, len(subsections), 2):
       if re.search(r"==\s*Etymology 1\s*==", subsections[k]):
         beginning_of_etym_sections = k
         break
@@ -348,7 +348,7 @@ def check_for_bad_subsections(secbody, pagetitle, pagemsg, langname):
   expected_pron_indentation = 3
   expected_altform_indentation = 3
   dont_correct_until_etym_header = False
-  for k in xrange(1, len(subsections), 2):
+  for k in range(1, len(subsections), 2):
     check_correct = False
     if re.search(r"==\s*Etymology [0-9]+\s*==", subsections[k]):
       expected_pron_indentation = 4
@@ -403,7 +403,7 @@ def process_text_on_page(index, pagetitle, text):
 
   # Correct extraneous spaces in L2 headers and prepare for sorting by language.
   sections_for_sorting = []
-  for j in xrange(2, len(sections), 2):
+  for j in range(2, len(sections), 2):
     # Fetch L2 language name.
     m = re.search("^==([ \t]*)(.*?)([ \t]*)==([ \t]*)\n$", sections[j - 1])
     space1, langname, space2, space3 = m.groups()
@@ -440,7 +440,7 @@ def process_text_on_page(index, pagetitle, text):
       newsections = [sections[0]]
       numlangs = len(sorted_sections)
       # Remove stray horizontal rules if found and make sure there are two newlines between language sections.
-      for j in xrange(numlangs):
+      for j in range(numlangs):
         langname, header, contents = sorted_sections[j]
         m = re.search(r"\A(.*?)\s*\n--+\Z", contents.rstrip(), re.S)
         divider = "\n\n"
@@ -456,7 +456,7 @@ def process_text_on_page(index, pagetitle, text):
 
   # Correct missing or misformatted section divider at end of section.
   # This should have no effect if we re-sorted the language sections.
-  for j in xrange(2, len(sections), 2):
+  for j in range(2, len(sections), 2):
     # Fetch L2 language name.
     m = re.search("^==([ \t]*)(.*?)([ \t]*)==([ \t]*)\n$", sections[j - 1])
     space1, langname, space2, space3 = m.groups()

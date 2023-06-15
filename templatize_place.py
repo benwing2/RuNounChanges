@@ -1742,7 +1742,7 @@ def output_stats(num_counts):
 
 # Compute the list of all uppercase Unicode characters, see
 # https://stackoverflow.com/questions/36187349/python-regex-for-unicode-capitalized-words
-pLu = u'[{}]'.format(u"".join([unichr(i) for i in xrange(sys.maxunicode) if unichr(i).isupper()]))
+pLu = u'[{}]'.format(u"".join([unichr(i) for i in range(sys.maxunicode) if unichr(i).isupper()]))
 proper_noun_word_regex = r"(?u)%s[\w'.-]*" % pLu
 # The following regex requires that the first word of a county/parish/borough name be capitalized
 # and contain only letters, hyphens (Stratford-on-Avon), apostrophes (King's Lynn) and periods
@@ -2189,7 +2189,7 @@ def process_text_on_page(index, pagetitle, text):
           # Append qualifiers and bare placetype to split_placetype_with_quals.
           split_placetype_with_quals.append((pt_quals, pt))
           this_recognized_place_types.add(pt)
-          for i in xrange(len(pt_quals)):
+          for i in range(len(pt_quals)):
             this_recognized_place_types.add("%s %s" % (" ".join(pt_quals[i:]), pt))
 
         if outer_break:
@@ -2326,7 +2326,7 @@ def process_text_on_page(index, pagetitle, text):
 
           # If country occurs before country subdivision, switch them. If multiple country subdivisions
           # follow, the country will bubble to the end.
-          for i in xrange(2, len(run)):
+          for i in range(2, len(run)):
             if re.search("^(c|cc)/", run[i - 1]) and (
               re.search("^(p|s|voi|bor|cobor|metbor|lbor|can|co|par|dist|div|dept|isl|mun|pref|city|town)/", run[i])
             ) or run[i - 1].startswith("c/") and run[i].startswith("cc/"):
@@ -2429,7 +2429,7 @@ def process_text_on_page(index, pagetitle, text):
         return origline
 
   sections = re.split("(^==[^\n=]*==\n)", text, 0, re.M)
-  for j in xrange(2, len(sections), 2):
+  for j in range(2, len(sections), 2):
     m = re.search("^==(.*)==\n$", sections[j - 1])
     assert m
     langname = m.group(1)

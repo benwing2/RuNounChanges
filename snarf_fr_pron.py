@@ -35,7 +35,7 @@ def process_text_on_page(index, pagetitle, text):
   etymsections_to_raw_msgs = defaultdict(list)
   if etymsection == "top":
     after_etym_1 = False
-    for k in xrange(2, len(subsections), 2):
+    for k in range(2, len(subsections), 2):
       if "==Etymology 1==" in subsections[k - 1]:
         after_etym_1 = True
       if "==Pronunciation==" in subsections[k - 1]:
@@ -53,7 +53,7 @@ def process_text_on_page(index, pagetitle, text):
     if txt not in msgs:
       msgs.append(txt)
 
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     msgs = []
     def check_missing_pronun(etymsection):
       if split_pronun_sections and not saw_existing_pron_this_etym_section:

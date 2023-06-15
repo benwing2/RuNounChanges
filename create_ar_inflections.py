@@ -281,13 +281,13 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
     # Extract off pagehead and recombine section headers with following text
     pagehead = splitsections[0]
     sections = []
-    for i in xrange(1, len(splitsections)):
+    for i in range(1, len(splitsections)):
       if (i % 2) == 1:
         sections.append("")
       sections[-1] += splitsections[i]
 
     # Go through each section in turn, looking for existing Arabic section
-    for i in xrange(len(sections)):
+    for i in range(len(sections)):
       m = re.match("^==([^=\n]+)==$", sections[i], re.M)
       if not m:
         pagemsg("WARNING: Can't find language name in text: [[%s]]" % (sections[i]))
@@ -313,7 +313,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
         # Convert existing ===Verbal noun=== headers into ===Noun===,
         # ===Adjective form=== into ===Adjective=== and
         # ===Noun form=== into ===Noun===.
-        for j in xrange(1, len(subsections), 2):
+        for j in range(1, len(subsections), 2):
           for frompos, topos in [("Verbal noun", "Noun"),
               ("Adjective form", "Adjective"), ("Noun form", "Noun")]:
             if re.match("^===+%s===+" % frompos, subsections[j]):
@@ -341,7 +341,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
         if is_vn or is_participle or is_feminine_noun:
           num_matching_headword_templates = 0
           found_matching_headword_and_defn_templates = False
-          for j in xrange(len(subsections)):
+          for j in range(len(subsections)):
             if j > 0 and (j % 2) == 0:
               if re.match("^===+%s===+" % pos, subsections[j - 1]):
                 parsed = blib.parse_text(subsections[j])
@@ -389,7 +389,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
           if "|juss" in tstr:
             vf_mood = "d"
           persons = all_person_infls
-          for k in xrange(len(persons)):
+          for k in range(len(persons)):
             if "|" + persons[k] in tstr:
               vf_person = k
           return (vf_person, vf_voice, vf_mood)
@@ -423,7 +423,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
         # Return True if text was changed.
         def sort_defns_in_verb_part_subsections():
           sorted_any = False
-          for j in xrange(2, len(subsections), 2):
+          for j in range(2, len(subsections), 2):
             is_verb_form = "{{ar-verb-form|" in subsections[j]
             if is_verb_form:
               sorted_this = sort_defns_in_one_verb_part_subsection(j)
@@ -442,13 +442,13 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
           assert((end % 2) == 0 and end > start)
           assert(end < len(subsections))
           header1 = subsections[start - 1]
-          for j in xrange(start + 1, end + 1, 2):
+          for j in range(start + 1, end + 1, 2):
             if subsections[j] != header1:
               pagemsg("WARNING: Header [[%s]] doesn't match prior header [[%s]], not sorting"
                   % (subsections[j], header1))
               return
           subsecs = []
-          for j in xrange(start, end + 2, 2):
+          for j in range(start, end + 2, 2):
             subsecs.append(subsections[j])
           def keyfunc(subsec):
             parsed = blib.parse_text(subsec)
@@ -479,17 +479,17 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
             return sort_key
           newsubsecs = sorted(subsecs, key=keyfunc)
           if newsubsecs != subsecs:
-            for k, j in zip(xrange(len(subsecs)), xrange(start, end + 2, 2)):
+            for k, j in zip(range(len(subsecs)), range(start, end + 2, 2)):
               subsections[j] = ensure_two_trailing_nl(newsubsecs[k])
 
         # Sort the order of individual verb-part subsections. Return True
         # if text was changed.
         def sort_verb_part_subsections():
           subsections_sentinel = subsections + ["", ""]
-          #for jj in xrange(len(subsections_sentinel)):
+          #for jj in range(len(subsections_sentinel)):
             #pagemsg("Subsection %s: [[%s]]" % (jj, subsections_sentinel[jj]))
           start = None
-          for j in xrange(len(subsections_sentinel)):
+          for j in range(len(subsections_sentinel)):
             if j > 0 and (j % 2) == 0:
               is_verb_form = "{{ar-verb-form|" in subsections_sentinel[j]
               if start == None and is_verb_form:
@@ -527,7 +527,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
           lemma = None
           # Keep track of lemmas seen to reduce warnings
           lemmas_seen = []
-          for j in xrange(1, len(subsecs), 2):
+          for j in range(1, len(subsecs), 2):
             if not re.match("^=+Verb=+\n", subsecs[j]):
               return False
             parsed = blib.parse_text(subsecs[j + 1])
@@ -575,7 +575,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
             # Separate verb-part and non-verb-part etyms
             non_verb_part_etyms = []
             verb_part_etyms = []
-            for j in xrange(2, len(etym_groups), 2):
+            for j in range(2, len(etym_groups), 2):
               is_verb_part_etym = verb_part_etym_group_key(
                   etym_groups[j], warn=True)
               if is_verb_part_etym:
@@ -588,11 +588,11 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
             new_etym_groups = [etym_header]
             sorted_etyms = non_verb_part_etyms + new_vpes
             for index, etym_group in zip(
-                xrange(len(sorted_etyms)), sorted_etyms):
+                range(len(sorted_etyms)), sorted_etyms):
               new_etym_groups.append("===Etymology %s===\n" % (index + 1))
               new_etym_groups.append(etym_group)
             if new_etym_groups != etym_groups:
-              for j in xrange(2, len(new_etym_groups), 2):
+              for j in range(2, len(new_etym_groups), 2):
                 new_etym_groups[j] = ensure_two_trailing_nl(
                     new_etym_groups[j])
               sections[i] = ''.join(new_etym_groups)
@@ -632,7 +632,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
         # Go through each subsection in turn, looking for subsection
         # matching the POS with an appropriate headword template whose
         # head matches the inflected form
-        for j in xrange(len(subsections)):
+        for j in range(len(subsections)):
           match_pos = False
           particip_pos_mismatch = False
           if j > 0 and (j % 2) == 0:
@@ -1192,7 +1192,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
 
             def section_to_insert_after():
               insert_at = None
-              for j in xrange(2, len(subsections), 2):
+              for j in range(2, len(subsections), 2):
                 if re.match("^===+Verb===+" if is_verb_part else
                     "^===+(Noun|Adjective)===+", subsections[j - 1]):
                   parsed = blib.parse_text(subsections[j])
@@ -1251,7 +1251,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
           # same lemma to insert before. Insert before the first such one.
           if is_participle:
             insert_at = None
-            for j in xrange(len(subsections)):
+            for j in range(len(subsections)):
               if j > 0 and (j % 2) == 0:
                 if re.match("^===+(Noun|Adjective)===+", subsections[j - 1]):
                   parsed = blib.parse_text(subsections[j])
@@ -1581,7 +1581,7 @@ def should_match_head(heads, inflindex, originfl, originfltr, is_plural):
     return inflindex
   if headnv in [u"عرس"]:
     return None
-  for i in xrange(len(heads)):
+  for i in range(len(heads)):
     head, headtr = heads[i]
     head = reorder_shadda(head)
     originfl = reorder_shadda(originfl)
@@ -1658,7 +1658,7 @@ def create_inflection_entries(save, pos, tempname, param, startFrom, upTo,
             msg("Page %s %s(lemma): WARNING: More than one head and inflection: %s" % (
               index, remove_diacritics(heads[0][0]), unicode(template)))
 
-          for i in xrange(numinfls):
+          for i in range(numinfls):
             if i == 0:
               originfl = getparam(template, param)
               originfltr = getparam(template, param + "tr")
@@ -1889,7 +1889,7 @@ def create_participles(save, startFrom, upTo):
 all_form_classes = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX",
     "X", "XI", "XII", "XIII", "XIV", "XV", "Iq", "IIq", "IIIq", "IVq"]
 form_classes_to_number = dict(
-    zip(all_form_classes, xrange(1, len(all_form_classes) + 1)))
+    zip(all_form_classes, range(1, len(all_form_classes) + 1)))
 
 # List of all person/number/gender combinations, using the ID's in
 # {{ar-verb-part-all|...}}

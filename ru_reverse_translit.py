@@ -91,7 +91,7 @@ def reverse_translit(text, cyrillic=None):
     textwords = re.split(r"([\s,-]+)", text)
     cyrwords = re.split(r"([\s,-]+)", cyrillic)
     if len(textwords) == len(cyrwords):
-      for i in xrange(len(textwords)):
+      for i in range(len(textwords)):
         if re.search(u"го́?$", cyrwords[i]) and re.search(u"во́?$", textwords[i]):
           textwords[i] = re.sub(u"в(о́?)$", ur"г\1", textwords[i])
       return "".join(textwords)

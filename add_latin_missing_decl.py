@@ -51,7 +51,7 @@ def process_page(page, index, headword_template, decl_template):
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
   num_declension_headers = 0
-  for k in xrange(1, len(subsections), 2):
+  for k in range(1, len(subsections), 2):
     if "Declension" in subsections[k] or "Inflection" in subsections[k]:
       num_declension_headers += 1
   if num_declension_headers >= num_noun_headword_templates:
@@ -59,7 +59,7 @@ def process_page(page, index, headword_template, decl_template):
       num_declension_headers, num_noun_headword_templates))
     return None, None
 
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if headword_template in subsections[k]:
       pagemsg("Inserting declension section after subsection %s" % k)
       subsections[k] = subsections[k].rstrip('\n') + "\n\n"

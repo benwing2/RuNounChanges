@@ -686,7 +686,7 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
   # Check for unbalanced brackets.
   unbalanced = False
   substs = []
-  for i in xrange(1, len(words), 2):
+  for i in range(1, len(words), 2):
     word = words[i]
     if word.count("[") != word.count("]"):
       pagemsg("WARNING: find_accented_split_words: Unbalanced brackets in word #%s %s: %s" %
@@ -706,7 +706,7 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
     # (in fact, usually will) return a result without manual translit.
     sawtr = False
     # Go through each word and separator.
-    for i in xrange(len(words)):
+    for i in range(len(words)):
       word = words[i]
       trword = trwords[i] if trwords else ""
       # If it's a non-blank word (not a separator), look it up.

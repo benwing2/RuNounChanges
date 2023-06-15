@@ -363,7 +363,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
     # Extract off pagehead and recombine section headers with following text
     pagehead = splitsections[0]
     sections = []
-    for i in xrange(1, len(splitsections)):
+    for i in range(1, len(splitsections)):
       if (i % 2) == 1:
         sections.append("")
       sections[-1] += splitsections[i]
@@ -371,7 +371,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
     found_plurale_tantum_lemma = False
 
     # Go through each section in turn, looking for existing Yiddish section
-    for i in xrange(len(sections)):
+    for i in range(len(sections)):
       m = re.match("^==([^=\n]+)==$", sections[i], re.M)
       if not m:
         pagemsg("Can't find language name in text: [[%s]]" % (sections[i]))
@@ -487,13 +487,13 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
         # a form into an earlier subsection when there's already such a
         # definition in a later subsection.
 
-        for process_section_pass in xrange(4):
+        for process_section_pass in range(4):
           need_outer_break = False
 
           # Go through each subsection in turn, looking for subsection
           # matching the POS with an appropriate headword template whose
           # head matches the inflected form
-          for j in xrange(2, len(subsections), 2):
+          for j in range(2, len(subsections), 2):
             if re.match("^===+%s===+\n" % pos, subsections[j - 1]):
               # Found a POS match
               parsed = blib.parse_text(subsections[j])
@@ -943,7 +943,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           # one.
           if is_adj_form:
             insert_at = None
-            for j in xrange(2, len(subsections), 2):
+            for j in range(2, len(subsections), 2):
               if re.match("^===+Participle===+", subsections[j - 1]):
                 parsed = blib.parse_text(subsections[j])
                 for t in parsed.filter_templates():
@@ -998,7 +998,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           # first such one.
           if is_adj_form:
             insert_at = None
-            for j in xrange(2, len(subsections), 2):
+            for j in range(2, len(subsections), 2):
               if re.match("^===+Noun===+", subsections[j - 1]):
                 parsed = blib.parse_text(subsections[j])
                 defn_templates = matching_defn_templates(parsed)
@@ -1021,7 +1021,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           # last such one.
           if is_noun_form:
             insert_at = None
-            for j in xrange(2, len(subsections), 2):
+            for j in range(2, len(subsections), 2):
               if re.match("^===+Adjective===+", subsections[j - 1]):
                 parsed = blib.parse_text(subsections[j])
                 defn_templates = matching_defn_templates(parsed)
@@ -1043,7 +1043,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           # бакенбарды). Insert after the last such one.
           if is_noun_form:
             insert_at = None
-            for j in xrange(2, len(subsections), 2):
+            for j in range(2, len(subsections), 2):
               if re.match("^===+Noun===+", subsections[j - 1]):
                 parsed = blib.parse_text(subsections[j])
                 for t in parsed.filter_templates():
@@ -1068,7 +1068,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           # Insert after the last such section.
 
           insert_at = None
-          for j in xrange(2, len(subsections), 2):
+          for j in range(2, len(subsections), 2):
             if re.match("^===+%s===+\n" % pos, subsections[j - 1]):
               parsed = blib.parse_text(subsections[j])
               defn_templates = matching_defn_templates(parsed,
@@ -1084,7 +1084,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           # Check for another plural noun form if we're a plural noun form
           if is_noun_form and is_noun_adj_plural:
             found_plural_noun_form = False
-            for j in xrange(2, len(subsections), 2):
+            for j in range(2, len(subsections), 2):
               if re.match("^===+Noun===+", subsections[j - 1]):
                 parsed = blib.parse_text(subsections[j])
                 # Check for singular in any existing definition templates
@@ -1135,7 +1135,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
             comment = "Wrap existing Yiddish section in Etymology 1, append entry (Etymology 2) for %s %s of %s, pos=%s" % (
                 infltype, joined_infls, lemma, pos)
 
-            for j in xrange(2, len(subsections), 2):
+            for j in range(2, len(subsections), 2):
               if re.match("^===+Etymology===+\n", subsections[j - 1]):
                 pagemsg("Found Etymology section at position %s-%s" % (
                     j - 1, j))
@@ -1309,12 +1309,12 @@ def find_inflection_templates(text, expected_header, expected_poses, skip_poses,
   templates = []
 
   sections = re.split("(^==[^=\n]+==\n)", text, 0, re.M)
-  for i in xrange(2, len(sections), 2):
+  for i in range(2, len(sections), 2):
     if sections[i-1] == "==Yiddish==\n":
       subsections = re.split("(^===+[^=\n]+===+\n)", sections[i], 0, re.M)
       headers_at_level = {}
       last_levelno = 2
-      for j in xrange(2, len(subsections), 2):
+      for j in range(2, len(subsections), 2):
         m = re.search("^(=+)([^=\n]+)", subsections[j-1])
         levelno = len(m.group(1))
         header = m.group(2)

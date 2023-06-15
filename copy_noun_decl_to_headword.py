@@ -33,7 +33,7 @@ def process_page(page, index, parsed):
   num_ru_noun_table_link_copied_subs = 0
   num_ru_noun_subs = 0
   num_ru_proper_noun_subs = 0
-  for j in xrange(2, len(sections), 2):
+  for j in range(2, len(sections), 2):
     if sections[j-1] == "==Russian==\n":
       if foundrussian:
         pagemsg("WARNING: Found multiple Russian sections, skipping")
@@ -41,7 +41,7 @@ def process_page(page, index, parsed):
       foundrussian = True
 
       subsections = re.split("(^===[^=]*===\n)", sections[j], 0, re.M)
-      for k in xrange(2, len(subsections), 2):
+      for k in range(2, len(subsections), 2):
         retval = process_page_section(index, page, subsections[k], verbose)
         if retval:
           (replaced, this_num_ru_noun_table_cleaned_subs,

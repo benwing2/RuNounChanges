@@ -28,7 +28,7 @@ def process_page(page, index, parsed):
 
   if len(subsections) != 3:
     pagemsg("WARNING: Not right # of sections (expected 1): %s" %
-        ",".join(subsections[k].strip() for k in xrange(1, len(subsections), 2)))
+        ",".join(subsections[k].strip() for k in range(1, len(subsections), 2)))
     return None, None
 
   if subsections[1] != "===Verb===\n":

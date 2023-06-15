@@ -123,7 +123,7 @@ def process_page(page, index, parsed):
 
   saw_a_template = False
 
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     parsed = blib.parse_text(subsections[k])
     la_noun_template = None
     la_ndecl_template = None
@@ -273,7 +273,7 @@ def process_page(page, index, parsed):
         return
       segments = re.split(r"([^<> -]+<[^<>]*>)", decl_lemma)
       decl_decls = []
-      for i in xrange(1, len(segments) - 1, 2):
+      for i in range(1, len(segments) - 1, 2):
         m = re.search("^([^<> -]+)<([^<>]*)>$", segments[i])
         stem_spec, decl_and_subtype_spec = m.groups()
         decl_and_subtypes = decl_and_subtype_spec.split(".")

@@ -26,7 +26,7 @@ def process_text_on_page(index, pagetitle, text):
     further_reading_sec = None
     subsections = re.split("(^==+[^=\n]+==+\n)", sectext, 0, re.M)
 
-    for k in xrange(2, len(subsections), 2):
+    for k in range(2, len(subsections), 2):
       if re.search(r"^===*\s*References\s*===* *\n", subsections[k - 1]):
         if references_sec:
           pagemsg("WARNING: Saw two ===References=== sections in a single etym section")
@@ -89,7 +89,7 @@ def process_text_on_page(index, pagetitle, text):
     if len(etym_sections) < 5:
       pagemsg("WARNING: Something wrong, saw 'Etymology 1' but didn't see two etym sections")
     else:
-      for k in xrange(2, len(etym_sections), 2):
+      for k in range(2, len(etym_sections), 2):
         etym_sections[k] = process_etym_section(etym_sections[k])
         secbody = "".join(etym_sections)
 

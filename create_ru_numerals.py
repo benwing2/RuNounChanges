@@ -394,13 +394,13 @@ def process_page(index, num, save, verbose, params):
     # Extract off pagehead and recombine section headers with following text
     pagehead = splitsections[0]
     sections = []
-    for i in xrange(1, len(splitsections)):
+    for i in range(1, len(splitsections)):
       if (i % 2) == 1:
         sections.append("")
       sections[-1] += splitsections[i]
 
     # Go through each section in turn, looking for existing Russian section
-    for i in xrange(len(sections)):
+    for i in range(len(sections)):
       m = re.match("^==([^=\n]+)==$", sections[i], re.M)
       if not m:
         pagemsg("Can't find language name in text: [[%s]]" % (sections[i]))

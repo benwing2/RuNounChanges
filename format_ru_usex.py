@@ -46,7 +46,7 @@ def process_page(page, index, parsed):
         return True
     return False
 
-  for j in xrange(2, len(sections), 2):
+  for j in range(2, len(sections), 2):
     if sections[j-1] == "==Russian==\n":
       if foundrussian:
         pagemsg("WARNING: Found multiple Russian sections, skipping page")

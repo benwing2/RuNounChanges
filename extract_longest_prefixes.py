@@ -15,7 +15,7 @@ def process_page(page, index):
   global args
 
   pagetitle = unicode(page.title())
-  for i in xrange(1, args.max_prefix_length + 1):
+  for i in range(1, args.max_prefix_length + 1):
     if len(pagetitle) >= i:
       prefix = pagetitle[0:i]
       prefixes_by_length[i][prefix].append(pagetitle)
@@ -28,7 +28,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 blib.do_pagefile_cats_refs(args, start, end, process_page)
 
-for i in xrange(1, args.max_prefix_length + 1):
+for i in range(1, args.max_prefix_length + 1):
   max_prefixes = sorted(list(prefixes_by_length[i].iteritems()), key=lambda x: -len(x[1]))
   msg("Prefix length = %s" % i)
   msg("------------------- begin -----------------------")

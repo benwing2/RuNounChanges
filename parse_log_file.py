@@ -97,7 +97,7 @@ def yield_page_lines(fn):
   # Fix page lines in the range [FRM+1,TO), where FRM and TO are the indices
   # of the bracketing "Replaced {{FOO}} with {{BAR}}" lines.
   def fix_page_lines(frm, to):
-    for i in xrange(frm+1, to):
+    for i in range(frm+1, to):
       page_lines[i] = fix_page_line(page_lines[i])
 
   for line in codecs.open(fn, "r", encoding="utf-8"):

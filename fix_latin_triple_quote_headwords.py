@@ -33,7 +33,7 @@ def process_text_on_page(index, pagename, text):
     msg(text.rstrip('\n'))
     msg("------- end text --------")
     return
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     m = re.search("^=+(.*?)=+$", subsections[k - 1].strip())
     header = m.group(1)
     def replace_triple_quote_header(m):

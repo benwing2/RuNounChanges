@@ -29,7 +29,7 @@ def process_page(page, index, parsed):
           rmparam(t, "6")
           if not getparam(t, "5"):
             rmparam(t, "5")
-          for i in xrange(1, 4):
+          for i in range(1, 4):
             if not t.has(str(i)):
               t.add(str(i), "")
           t.add("4", param6)
@@ -38,7 +38,7 @@ def process_page(page, index, parsed):
         param7 = getparam(t, "7")
         if param7:
           rmparam(t, "7")
-          for i in xrange(1, 6):
+          for i in range(1, 6):
             if not t.has(str(i)):
               t.add(str(i), "")
           t.add("6", param7)

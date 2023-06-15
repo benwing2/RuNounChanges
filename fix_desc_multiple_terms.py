@@ -210,7 +210,7 @@ def process_text_on_page(index, pagetitle, pagetext):
       g = getp("g")
       if g:
         genders.append(g)
-      for i in xrange(2, 20):
+      for i in range(2, 20):
         g = getp("g%s" % i)
         if g:
           genders.append(g)
@@ -257,13 +257,13 @@ def process_text_on_page(index, pagetitle, pagetext):
     # Extract off pagehead and recombine section headers with following text
     pagehead = splitsections[0]
     sections = []
-    for i in xrange(1, len(splitsections)):
+    for i in range(1, len(splitsections)):
       if (i % 2) == 1:
         sections.append("")
       sections[-1] += splitsections[i]
 
   # Go through each section in turn, looking for Descendants sections
-  for i in xrange(len(sections)):
+  for i in range(len(sections)):
     if args.do_all_sections or re.match("^===*Descendants=*==\n", sections[i]):
       text = sections[i]
       #text = re.sub(ur"^(\*+:?)( *(?:→ *)?)(Serbo-Croat(?:ian):|\{\{desc(?:\|.*?)?\|sh(?:\|.*?)?\|-(?:\|.*?)?\}\})((?:\n\1[*:] *(?:Latin|Roman|Cyrillic): *(?:\[\[[^\[\]\n]*?\]\]|\{\{[lm]\|sh\|[^{}\n]*?\}\}))+)",

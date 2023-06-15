@@ -348,7 +348,7 @@ def convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg):
   else:
     um = []
   num = getrmparam(t, "num")
-  for i in xrange(1, len(segments) - 1, 2):
+  for i in range(1, len(segments) - 1, 2):
     m = re.search("^([^<> ]+)<([^<>]*)>$", segments[i])
     stem_spec, decl_and_subtype_spec = m.groups()
     stems = stem_spec.split("/")

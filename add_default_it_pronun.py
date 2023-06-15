@@ -79,7 +79,7 @@ def process_text_on_page(index, pagetitle, text):
             pagemsg("WARNING: Unrecognized voiced=%s" % voiced)
             must_continue = True
             break
-          for i in xrange(1, len(split_z), 2):
+          for i in range(1, len(split_z), 2):
             if split_z[i - 1].endswith("d"):
               continue # already converted appropriately
             default_voiced = False

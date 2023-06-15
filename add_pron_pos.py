@@ -42,7 +42,7 @@ def find_noun_word_types_of_decl(lemma, decl_template, pagemsg):
 
   if unicode(decl_template.name) == "ru-decl-adj":
     per_word_types = []
-    for i in xrange(0, len(words) - 1):
+    for i in range(0, len(words) - 1):
       per_word_types.append("inv")
     per_word_types.append("a")
     return per_word_types
@@ -82,7 +82,7 @@ def find_noun_word_types_of_decl(lemma, decl_template, pagemsg):
     if len(per_word_info) == 1:
       pos = get_per_word_info(lemma, per_word_info)[0]
       per_word_types = []
-      for i in xrange(0, len(words) - 1):
+      for i in range(0, len(words) - 1):
         per_word_types.append("inv")
       per_word_types.append(pos)
       return per_word_types
@@ -168,7 +168,7 @@ def process_text_on_page(index, pagetitle, text):
   foundrussian = False
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
 
-  for j in xrange(2, len(sections), 2):
+  for j in range(2, len(sections), 2):
     if sections[j-1] == "==Russian==\n":
       if foundrussian:
         pagemsg("WARNING: Found multiple Russian sections, skipping page")
@@ -183,7 +183,7 @@ def process_text_on_page(index, pagetitle, text):
 
       subsections_with_ru_ipa_to_fix = set()
       subsections_with_ru_ipa = set()
-      for k in xrange(0, len(subsections), 2):
+      for k in range(0, len(subsections), 2):
         for t in blib.parse_text(subsections[k]).filter_templates():
           if unicode(t.name) == "ru-IPA":
             subsections_with_ru_ipa.add(k)
@@ -196,7 +196,7 @@ def process_text_on_page(index, pagetitle, text):
               if len(phonwords) != len(titlewords):
                 pagemsg("WARNING: #Words (%s) in phon=%s not same as #words (%s) in title" % (
                     (len(phonwords)+1)//2, phon, (len(titlewords)+1)//2))
-                for i in xrange(0, len(phonwords), 2):
+                for i in range(0, len(phonwords), 2):
                   phonword = phonwords[i]
                   wordno = i//2 + 1
                   if rulib.is_monosyllabic(phonword):
@@ -210,7 +210,7 @@ def process_text_on_page(index, pagetitle, text):
                         (phonword, wordno, k//2, unicode(t)))
                     subsections_with_ru_ipa_to_fix.add(k)
               else:
-                for i in xrange(0, len(phonwords), 2):
+                for i in range(0, len(phonwords), 2):
                   titleword = titlewords[i]
                   phonword = phonwords[i]
                   wordno = i//2 + 1
@@ -510,7 +510,7 @@ def process_text_on_page(index, pagetitle, text):
               pass # Already output msg
             else:
               phonwords = split_words(phon, True)
-              for i in xrange(0, len(phonwords), 2):
+              for i in range(0, len(phonwords), 2):
                 if re.search(u"е$", phonwords[i]):
                   saw_final_e[i] = True
 
@@ -531,7 +531,7 @@ def process_text_on_page(index, pagetitle, text):
             else:
               phonwords = split_words(phon, True)
               mismatched_phon_title = len(phonwords) != len(titlewords)
-              for i in xrange(0, len(phonwords), 2):
+              for i in range(0, len(phonwords), 2):
                 titleword = not mismatched_phon_title and titlewords[i]
                 phonword = phonwords[i]
                 lphonword = phonword.lower()

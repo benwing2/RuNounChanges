@@ -112,7 +112,7 @@ def rewrite_one_page_idafa(page, index, text):
       ## Change modN into modheadN
       #oldt = unicode(t)
       #changed = False
-      #for i in xrange(2, 20):
+      #for i in range(2, 20):
       #  modn = getparam(t, "mod" + str(i))
       #  if modn:
       #    t.remove("mod" + str(i))

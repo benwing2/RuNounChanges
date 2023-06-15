@@ -29,7 +29,7 @@ def process_page(page, index, parsed):
   foundrussian = False
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
 
-  for j in xrange(2, len(sections), 2):
+  for j in range(2, len(sections), 2):
     if sections[j-1] == "==Russian==\n":
       if foundrussian:
         pagemsg("WARNING: Found multiple Russian sections, skipping page")
@@ -43,7 +43,7 @@ def process_page(page, index, parsed):
           origt = unicode(t)
           # Fetch the numbered params starting with 3, skipping blank ones
           numbered_params = []
-          for i in xrange(3,20):
+          for i in range(3,20):
             val = getparam(t, str(i))
             if val:
               numbered_params.append(val)
@@ -94,7 +94,7 @@ def process_page(page, index, parsed):
               ("inanimate", "in"), ("animate", "an"),
               ]:
             origt = unicode(t)
-            for i in xrange(3,20):
+            for i in range(3,20):
               val = getparam(t, str(i))
               if val == frm:
                 t.add(str(i), to)

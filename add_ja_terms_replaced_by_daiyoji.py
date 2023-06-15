@@ -107,7 +107,7 @@ def process_text_on_page(index, pagetitle, text):
     saw_templates = False
     if "Etymology 1" in secbody:
       etym_sections = re.split("(^===Etymology [0-9]+===\n)", secbody, 0, re.M)
-      for k in xrange(2, len(etym_sections), 2):
+      for k in range(2, len(etym_sections), 2):
         this_saw_templates = check_secbody_for_readings(etym_sections[k])
         saw_templates = saw_templates or this_saw_templates
     else:

@@ -67,7 +67,7 @@ def read_existing_number_data(langindex, lang):
           term = term_and_modifiers[0]
           tr = None
           q = None
-          for i in xrange(1, len(term_and_modifiers), 2):
+          for i in range(1, len(term_and_modifiers), 2):
             if i > 1 and term_and_modifiers[i - 1]:
               linemsg("WARNING: Extraneous text between modifiers for number %s: %s" % (numval, line))
               must_continue = True

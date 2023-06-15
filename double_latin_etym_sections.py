@@ -33,7 +33,7 @@ def process_text_on_page(index, pagename, text):
 
   def increase_indent(subsecs):
     new_subsecs = []
-    for k in xrange(len(subsecs)):
+    for k in range(len(subsecs)):
       if k % 2 == 1:
         new_subsecs.append(re.sub("^(.*)\n$", r"=\1=\n", subsecs[k]))
       else:

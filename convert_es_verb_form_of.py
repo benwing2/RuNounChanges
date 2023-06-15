@@ -92,7 +92,7 @@ def process_text_on_page(index, pagetitle, pagetext):
   pagetext = pagetext_nonl + "\n\n"
 
   chunks = re.split(r"^((?:# \{\{es-verb form of\|.*\n)+)", pagetext, 0, re.M)
-  for k in xrange(1, len(chunks), 2):
+  for k in range(1, len(chunks), 2):
     verb_form_chunk = chunks[k]
     extra_text = ""
     if not re.search(r"\A((?:# \{\{es-verb form of\|.*\}\}\n)+)\Z", verb_form_chunk):

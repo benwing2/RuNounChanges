@@ -332,7 +332,7 @@ def infer_one_page_decls_1(page, index, text):
           t.add("1", stem)
           t.add("2", decl)
           # Remove any trailing blank arguments.
-          for i in xrange(15, 0, -1):
+          for i in range(15, 0, -1):
             if not getparam(t, i):
               rmparam(t, i)
             else:
@@ -342,7 +342,7 @@ def infer_one_page_decls_1(page, index, text):
             if not compare_results(orig_template, new_template, pagemsg):
               return None, None
         else:
-          for i in xrange(15, 0, -1):
+          for i in range(15, 0, -1):
             rmparam(t, i)
           rmparam(t, "short_m")
           rmparam(t, "short_f")

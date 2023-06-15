@@ -51,7 +51,7 @@ def process_form(page, index, slot, form, pos, pagemsg):
     raise ValueError("Unrecognized POS %s" % pos)
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if (re.search(r"\{\{%s([|}])" % from_headword_template, subsections[k]) or
         re.search(r"\{\{head\|la\|%s([|}])" % from_pos, subsections[k])):
       newsubsec = subsections[k]

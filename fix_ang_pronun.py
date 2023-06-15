@@ -74,7 +74,7 @@ def process_text_on_page(index, pagetitle, text):
     if "=Pronunciation=" in etym_sections[0]:
       process_section(index, pagetitle, secbody)
     else:
-      for k in xrange(2, len(etym_sections), 2):
+      for k in range(2, len(etym_sections), 2):
         process_section(index, pagetitle, etym_sections[k])
   else:
     process_section(index, pagetitle, secbody)
@@ -109,7 +109,7 @@ def process_section_for_modification(index, pagetitle, sectext, indent_level, ne
   if saw_pronun:
     return sectext
   subsecs = re.split("(^%s[^=]*?%s\n)" % ("=" * indent_level, "=" * indent_level), sectext, 0, re.M)
-  for k in xrange(1, len(subsecs), 2):
+  for k in range(1, len(subsecs), 2):
     if "=Pronunciation=" in subsecs[k]:
       pagemsg("WARNING: Already saw pronunciation section without pronunciation in it")
       return sectext
@@ -152,7 +152,7 @@ def process_page_for_modification(index, pagetitle, text, new_pronuns):
   heads = None
   if "Etymology 1" in secbody:
     etym_sections = re.split("(^===Etymology [0-9]+===\n)", secbody, 0, re.M)
-    for k in xrange(2, len(etym_sections), 2):
+    for k in range(2, len(etym_sections), 2):
       parsed = blib.parse_text(etym_sections[k])
       secheads = []
       for t in parsed.filter_templates():
@@ -167,7 +167,7 @@ def process_page_for_modification(index, pagetitle, text, new_pronuns):
       elif set(heads) != set(secheads):
         pagemsg("Saw head(s) %s in one etym section and %s in another, splitting pronuns per etym section" % (
           ",".join(heads), ",".join(secheads)))
-        for k in xrange(2, len(etym_sections), 2):
+        for k in range(2, len(etym_sections), 2):
           etym_sections[k] = process_section_for_modification(index, pagetitle, etym_sections[k], 4,
               new_pronuns[pagetitle])
         sections[j] = "".join(etym_sections) + sectail

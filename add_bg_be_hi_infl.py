@@ -169,7 +169,7 @@ def process_text_on_page(index, pagetitle, text, pos):
               infl = "{{hi-ndecl|<F>}}"
           else:
             infl = "{{%s|%s<>}}" % (pos_to_new_style_infl_template[pos] % args.lang, head or pagetitle)
-          for l in xrange(k, endk, 2):
+          for l in range(k, endk, 2):
             if re.search(r"=\s*(Declension|Inflection|Conjugation)\s*=", subsections[l]):
               secparsed = blib.parse_text(subsections[l + 1])
               for t in secparsed.filter_templates():

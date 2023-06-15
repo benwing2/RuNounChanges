@@ -701,7 +701,7 @@ def pre_canonicalize_latin(text, arabic=None, msgfun=msg):
     latinwords = re.split(u" +", text)
     # ... but only if the number of words in both is the same.
     if len(arabicwords) == len(latinwords):
-      for i in xrange(len(latinwords)):
+      for i in range(len(latinwords)):
         aword = arabicwords[i]
         lword = latinwords[i]
         # If Arabic word ends with long alif or alif maqṣūra, not

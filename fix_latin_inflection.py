@@ -28,7 +28,7 @@ def process_page(page, index, parsed):
 
   notes = []
 
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     if "==Inflection==" in subsections[k - 1]:
       parsed = blib.parse_text(subsections[k])
       poses = set()

@@ -23,7 +23,7 @@ def process_text_on_page(index, pagetitle, text):
 
   sect_for_wiki = 0
   seen_lemmas = []
-  for k in xrange(1, len(subsections), 2):
+  for k in range(1, len(subsections), 2):
     if re.search(r"==\s*Etymology [0-9]+\s*==", subsections[k]):
       sect_for_wiki = k + 1
       seen_lemmas = []

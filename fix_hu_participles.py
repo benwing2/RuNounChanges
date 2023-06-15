@@ -24,7 +24,7 @@ def process_text_on_page(index, pagetitle, text):
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
-  for k in xrange(1, len(subsections), 2):
+  for k in range(1, len(subsections), 2):
     if ("===Verb===" in subsections[k] and "{{head|hu|verb form" in subsections[k + 1] and
       "{{participle of|hu|" in subsections[k + 1]):
       if args.split_participle:

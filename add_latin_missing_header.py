@@ -37,7 +37,7 @@ def process_page(page, index, parsed):
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
   notes = []
-  for k in xrange(2, len(subsections), 2):
+  for k in range(2, len(subsections), 2):
     newtext = re.sub(r"^\n*(\{\{la-.*?-form)", r"\1", subsections[k])
     if newtext != subsections[k]:
       notes.append("remove extraneous newlines before Latin non-lemma headword")

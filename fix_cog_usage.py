@@ -117,7 +117,7 @@ def process_text_on_page(index, pagetitle, pagetext):
   # Extract off pagehead and recombine section headers with following text
   pagehead = splitsections[0]
   sections = []
-  for i in xrange(1, len(splitsections)):
+  for i in range(1, len(splitsections)):
     if (i % 2) == 1:
       sections.append("")
     sections[-1] += splitsections[i]
@@ -177,7 +177,7 @@ def process_text_on_page(index, pagetitle, pagetext):
     return newtext
 
   # Go through each section in turn, looking for Etymology sections
-  for i in xrange(len(sections)):
+  for i in range(len(sections)):
     if re.match("^===*Etymology( [0-9]+)?=*==", sections[i]):
       text = sections[i]
       while True:

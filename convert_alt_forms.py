@@ -12,7 +12,7 @@ def process_text_in_section(secbody, pagemsg):
   notes = []
 
   subsections = re.split(r"(^===+[^=\n]+===+[ \t]*\n)", secbody, 0, re.M)
-  for k in xrange(1, len(subsections), 2):
+  for k in range(1, len(subsections), 2):
     if re.search(r"==\s*Alternative forms\s*==", subsections[k]):
       subsectext = subsections[k + 1]
       parsed = blib.parse_text(subsectext)
@@ -58,7 +58,7 @@ def process_text_in_section(secbody, pagemsg):
           # Gather all genders
           genders = []
           first_gender_param = None
-          for i in xrange(0, 30):
+          for i in range(0, 30):
             if i == 0:
               pn = "g"
             else:
@@ -73,7 +73,7 @@ def process_text_in_section(secbody, pagemsg):
             # Hack
             t.add("ggg1", ",".join(genders), before=first_gender_param)
           # Remove all gender params
-          for i in xrange(0, 30):
+          for i in range(0, 30):
             if i == 0:
               pn = "g"
             else:
@@ -92,7 +92,7 @@ def process_text_in_section(secbody, pagemsg):
         retval = []
         parts = re.split(r"((?:\{\{[^{}]*\}\}|[^{},/])*)", txt)
         parts = [x.strip() for x in parts]
-        for i in xrange(1, len(parts), 2):
+        for i in range(1, len(parts), 2):
           retval.append(parts[i])
         return retval
 
@@ -136,7 +136,7 @@ def process_text_in_section(secbody, pagemsg):
               return None
           return returned_qualifiers
 
-        for i in xrange(1, len(altforms), 2):
+        for i in range(1, len(altforms), 2):
           altt = list(blib.parse_text(altforms[i]).filter_templates())[0]
 
           # Copy lang or verify it's same as previously observed

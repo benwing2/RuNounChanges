@@ -85,7 +85,7 @@ def process_page(page, index, pos):
           pos, head or pagetitle, pos_to_new_style_infl_template[pos], head or pagetitle,
           "" if pos == "noun" else "<>"))
         if pages_to_infls:
-          for l in xrange(k, endk, 2):
+          for l in range(k, endk, 2):
             if re.search(r"=\s*(Declension|Inflection|Conjugation)\s*=", subsections[l]):
               secparsed = blib.parse_text(subsections[l + 1])
               for t in secparsed.filter_templates():

@@ -502,7 +502,7 @@ def process_text_on_page(index, pagetitle, text):
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
   sect_for_wiki = 0
-  for k in xrange(1, len(subsections), 2):
+  for k in range(1, len(subsections), 2):
     if re.search(r"==\s*Etymology [0-9]+\s*==", subsections[k]):
       sect_for_wiki = k + 1
     elif re.search(r"==\s*Pronunciation\s*==", subsections[k]):

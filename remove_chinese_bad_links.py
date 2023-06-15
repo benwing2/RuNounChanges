@@ -39,7 +39,7 @@ def process_page(page, index, parsed):
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
   subsections_to_delete = []
-  for k in xrange(1, len(subsections), 2):
+  for k in range(1, len(subsections), 2):
     if (subsections[k] in ["===References===\n", "====References====\n"] and
         not subsections[k + 1].strip()):
       subsections_to_delete.append(k)

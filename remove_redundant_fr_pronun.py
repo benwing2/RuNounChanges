@@ -22,7 +22,7 @@ def process_page(page, index, parsed):
     tn = tname(t)
     if tn == "fr-IPA":
       maxindex = 1
-      for i in xrange(2, 11):
+      for i in range(2, 11):
         if getparam(t, str(i)):
           maxindex = i
       params = []
@@ -33,7 +33,7 @@ def process_page(page, index, parsed):
       if not default_autopron:
         continue
       origt = unicode(t)
-      for i in xrange(1, maxindex + 1):
+      for i in range(1, maxindex + 1):
         pron = getparam(t, str(i))
         if pron:
           autopron = expand_text("{{#invoke:fr-pron|show|%s%s}}" % (

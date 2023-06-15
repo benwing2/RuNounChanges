@@ -30,7 +30,7 @@ def process_page(page, index, parsed):
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
-  for k in xrange(1, len(subsections), 2):
+  for k in range(1, len(subsections), 2):
     if subsections[k] == "====Derived terms====\n":
       endk = k + 2
       while endk < len(subsections) and (

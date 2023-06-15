@@ -47,7 +47,7 @@ def process_text_on_page(index, pagetitle, text):
         has_lang_param = True
         lang = getparam(t, "1").strip()
       cats = []
-      for paramno in xrange(first_cat_param, 30):
+      for paramno in range(first_cat_param, 30):
         cat = getparam(t, str(paramno)).strip()
         if cat:
           cats.append(cat)

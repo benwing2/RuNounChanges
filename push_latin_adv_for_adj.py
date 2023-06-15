@@ -48,7 +48,7 @@ def process_page(page, index, adverb):
     return None, None
   existing_advs = blib.fetch_param_chain(template_to_fix, "adv", "adv")
   changed = False
-  for i in xrange(len(existing_advs)):
+  for i in range(len(existing_advs)):
     if lalib.remove_macrons(existing_advs[i]) == lalib.remove_macrons(adv):
       if existing_advs[i] != adv:
         pagemsg("Updating macrons of %s -> %s in %s" % (existing_advs[i], adv,

@@ -20,7 +20,7 @@ fr_head_only_templates = ["fr-noun", "fr-proper noun", "fr-proper-noun",
 fr_head_templates = fr_head_or_1_templates + fr_head_only_templates
 
 exclude_punc_chars = u"-־׳״'.·*[]"
-punc_chars = "".join("\\" + unichr(i) for i in xrange(sys.maxunicode)
+punc_chars = "".join("\\" + unichr(i) for i in range(sys.maxunicode)
     if unicodedata.category(unichr(i)).startswith('P') and
     unichr(i) not in exclude_punc_chars)
 

@@ -41,7 +41,7 @@ titles_and_text = re.split(r"\n\n\n\n+", fulltext)
 assert len(titles_and_text) % 2 == 0
 
 title_and_text_pairs = []
-for i in xrange(0, len(titles_and_text), 2):
+for i in range(0, len(titles_and_text), 2):
   title_and_text_pairs.append((titles_and_text[i], titles_and_text[i + 1]))
 
 for i, (pagetitle, pagetext) in blib.iter_items(title_and_text_pairs, start, end, get_name=lambda x: x[0]):

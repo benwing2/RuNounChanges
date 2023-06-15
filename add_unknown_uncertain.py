@@ -43,12 +43,12 @@ def process_text_on_page(index, pagetitle, text):
 
   sections = re.split("(^\s*==[^=]*==\s*\n)", text, 0, re.M)
 
-  for j in xrange(2, len(sections), 2):
+  for j in range(2, len(sections), 2):
     m = re.search(r"^\s*==\s*(.*?)\s*==\s*\n$", sections[j - 1])
     assert m
     langname = m.group(1)
     subsections = re.split("(^\s*==.*==\s*\n)", sections[j], 0, re.M)
-    for k in xrange(2, len(subsections), 2):
+    for k in range(2, len(subsections), 2):
       m = re.search("^\s*===*\s*(.*?)\s*=*==\s*\n$", subsections[k - 1])
       assert m
       subsectitle = m.group(1)

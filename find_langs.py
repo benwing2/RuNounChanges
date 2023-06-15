@@ -19,7 +19,7 @@ def process_text_on_page(index, pagetitle, text):
 
   sections = re.split("(^==[^=\n]+==\n)", text, 0, re.M)
   langs = []
-  for j in xrange(1, len(sections), 2):
+  for j in range(1, len(sections), 2):
     m = re.search("^==(.*)==$", sections[j])
     langs.append(m.group(1))
   pagemsg("Languages = %s" % ",".join(langs))

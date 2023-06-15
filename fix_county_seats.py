@@ -22,7 +22,7 @@ def process_line(index, line):
     tn = tname(t)
     if tn == "place":
       numargs = []
-      for i in xrange(1, 40):
+      for i in range(1, 40):
         param = getparam(t, str(i))
         if param:
           numargs.append(param)

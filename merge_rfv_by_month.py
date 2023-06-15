@@ -23,7 +23,7 @@ def process_text_on_page(index, pagetitle, text):
   by_month = defaultdict(list)
   order = []
 
-  for j in xrange(2, len(months), 2):
+  for j in range(2, len(months), 2):
     month_header = months[j - 1].strip()
     m = re.match(r"^\A=+\s*(.*?)\s*=+\Z", month_header)
     if not m:

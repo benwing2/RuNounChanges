@@ -149,10 +149,10 @@ def remove_translit(params, startFrom, upTo):
             template_params_removed[tempparam] = (
                 template_params_removed.get(tempparam, 0) + 1)
       def remove_even(upto=10):
-        for i in xrange(2, upto, 2):
+        for i in range(2, upto, 2):
           doparam(str(i))
       def remove_odd(upto=9):
-        for i in xrange(1, upto, 2):
+        for i in range(1, upto, 2):
           doparam(str(i))
       # (Old) Armenian declension templates
       if re.match("^xcl-noun-.*pl", tname) and tname not in [
@@ -246,7 +246,7 @@ def remove_translit(params, startFrom, upTo):
           getp("lang") in remove_tr_langs):
         # Don't just do cases up through where there's a numbered param
         # because there may be holes.
-        for i in xrange(1, 11):
+        for i in range(1, 11):
           doparam("tr" + str(i))
       if (#tname in ["t", "t+", "t-", "t+check", "t-check", "l", "m",
           #"link", "mention", "head", "ux"] and
