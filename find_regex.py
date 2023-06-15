@@ -66,7 +66,7 @@ def search_pages(args, regex, invert, input_from_diff, start, end, lang_only):
         args.text, args.all, lang_only, args.from_to)
 
   if input_from_diff:
-    lines = codecs.open(input_from_diff, "r", "utf-8")
+    lines = open(input_from_diff, "r", encoding="utf-8")
     index_pagename_and_text = blib.yield_text_from_diff(lines, args.verbose)
     for _, (index, pagename, text) in blib.iter_items(index_pagename_and_text, start, end,
         get_name=lambda x:x[1], get_index=lambda x:x[0]):
@@ -92,7 +92,4 @@ if __name__ == "__main__":
 
   if args.not_ and args.all:
     raise ValueError("Can't combine --not with --all")
-  regex = args.regex.decode("utf-8")
-  input_from_diff = args.input_from_diff and args.input_from_diff.decode("utf-8")
-  lang_only = args.lang_only and args.lang_only.decode("utf-8")
-  search_pages(args, regex, args.not_, input_from_diff, start, end, lang_only)
+  search_pages(args, args.regex, args.not_, args.input_from_diff, start, end, args.lang_only)

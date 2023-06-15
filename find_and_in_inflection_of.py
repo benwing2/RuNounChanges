@@ -48,4 +48,4 @@ parser = blib.create_argparser("Find 'inflection of' tags with |and|, |or|, |;|,
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-blib.parse_dump(sys.stdin, process_text_on_page, startsort=start, endsort=end)
+blib.parse_dump(sys.stdin, process_text_on_page, startprefix=start, endprefix=end)

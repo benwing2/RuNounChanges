@@ -3,7 +3,7 @@
 
 # Author: Benwing; bits and pieces taken from code written by CodeCat/Rua for MewBot
 
-import pywikibot, mwparserfromhell, re, string, sys, codecs, urllib2, datetime, json, argparse, time
+import pywikibot, mwparserfromhell, re, string, sys, codecs, urllib, datetime, json, argparse, time
 from arabiclib import reorder_shadda
 from collections import defaultdict
 import xml.sax
@@ -25,7 +25,7 @@ appendix_only_langnames = [
   "Interlingue",
   "Klingon",
   "Kotava",
-  u"Láadan",
+  "Láadan",
   "Lapine",
   "Lingua Franca Nova",
   "Lojban",
@@ -140,18 +140,18 @@ def remove_redundant_links(text):
 
 def msg(text):
   #pywikibot.output(text.encode('utf-8'), toStdout = True)
-  print text.encode('utf-8')
+  print(text)
 
 def msgn(text):
   #pywikibot.output(text.encode('utf-8'), toStdout = True)
-  print text.encode('utf-8'),
+  print(text, end='')
 
 def errmsg(text):
   #pywikibot.output(text.encode('utf-8'))
-  print >> sys.stderr, text.encode('utf-8')
+  print(text, file=sys.stderr)
 
 def errmsgn(text):
-  print >> sys.stderr, text.encode('utf-8'),
+  print(text, end='', file=sys.stderr)
 
 def errandmsg(text):
   msg(text)
@@ -176,7 +176,7 @@ def parse(page):
 
 def getparam(template, param):
   if template.has(param):
-    return unicode(template.get(param).value)
+    return str(template.get(param).value)
   else:
     return ""
 
@@ -196,14 +196,14 @@ def bool_param_is_true(param):
   return param and param not in ["0", "no", "n", "false"]
 
 def tname(template):
-  return unicode(template.name).strip()
+  return str(template.name).strip()
 
 def pname(param):
-  return unicode(param.name).strip()
+  return str(param.name).strip()
 
 def set_template_name(template, name, origname=None):
   if not origname:
-    origname = unicode(template.name)
+    origname = str(template.name)
   if origname.endswith("\n"):
     template.name = name + "\n"
   else:
@@ -248,7 +248,7 @@ def find_following_param(t, param):
 # * a function of one argument to convert the param name to a term index (or None to skip the param).
 # If no matching params are found, 0 is returned.
 def find_max_term_index(t, first_numeric=None, named_params=None):
-  if isinstance(first_numeric, basestring):
+  if isinstance(first_numeric, str):
     first_numeric = int(first_numeric)
 
   def find_index(pn):
@@ -309,7 +309,7 @@ def fetch_param_chain(t, first, pref=None, firstdefault=""):
       ret.append(val)
   first_num = 1 if not is_number or pref else int(first[0]) + 1
   maxind = find_max_term_index(t, first_numeric=1) if is_number and not pref else find_max_term_index(t, named_params=[pref])
-  for i in xrange(first_num, maxind + 1):
+  for i in range(first_num, maxind + 1):
     param = pref + str(i)
     if param not in first:
       val = getparam(t, param)
@@ -375,7 +375,7 @@ def set_param_chain(t, values, firstparam, parampref=None, before=None):
       t.add(next_param, val, before=before or insert_before_param)
     insert_before_param = find_following_param(t, next_param)
     first = False
-  for i in xrange(paramno + 1, 30):
+  for i in range(paramno + 1, 30):
     next_param = firstparam if first else "%s%s" % (parampref, i)
     first = False
     rmparam(t, next_param)
@@ -384,11 +384,11 @@ def sort_params(t):
   numbered_params = []
   named_params = []
   for param in t.params:
-    if re.search(r"^[0-9]+$", unicode(param.name)):
+    if re.search(r"^[0-9]+$", str(param.name)):
       numbered_params.append((param.name, param.value))
     else:
       named_params.append((param.name, param.value))
-  numbered_params.sort(key=lambda nameval: int(unicode(nameval[0])))
+  numbered_params.sort(key=lambda nameval: int(str(nameval[0])))
   del t.params[:]
   for name, value in numbered_params:
     t.add(name, value)
@@ -412,7 +412,7 @@ def handle_process_page_retval(retval, existing_text, pagemsg, verbose, do_diff)
     new, comment = retval
 
   if new:
-    new = unicode(new)
+    new = str(new)
 
     # Canonicalize shaddas when comparing pages so we don't do saves
     # that only involve different shadda orders.
@@ -464,7 +464,7 @@ class EditParams(object):
   def __init__(self, index, page, save=False, verbose=False, diff=False):
     self.index = index
     self.page = page
-    self.title = unicode(page.title())
+    self.title = str(page.title())
     self.save = save
     self.verbose = verbose
     self.diff = diff
@@ -504,7 +504,7 @@ def new_do_edit(index, page, func=None, null=False, save=False, verbose=False, d
       else:
         p.pagemsg("Purged page cache")
         safe_page_purge(page, p.errandpagemsg)
-    except urllib2.HTTPError as e:
+    except urllib.error.HTTPError as e:
       if e.code != 503: # Service unavailable
         raise
     except:
@@ -514,7 +514,7 @@ def new_do_edit(index, page, func=None, null=False, save=False, verbose=False, d
     break
 
 def do_edit(page, index, func=None, null=False, save=False, verbose=False, diff=False):
-  title = unicode(page.title())
+  title = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, title, txt))
   def errandpagemsg(txt):
@@ -544,7 +544,7 @@ def do_edit(page, index, func=None, null=False, save=False, verbose=False, diff=
       else:
         pagemsg("Purged page cache")
         safe_page_purge(page, errandpagemsg)
-    except urllib2.HTTPError as e:
+    except urllib.error.HTTPError as e:
       if e.code != 503: # Service unavailable
         raise
     except:
@@ -586,7 +586,7 @@ def page_should_be_ignored(pagetitle, allow_user_pages=False):
   return False
 
 # FIXME: Deprecated. Eliminate.
-def iter_pages(pageiter, startsort = None, endsort = None, key = None):
+def iter_pages(pageiter, startprefix = None, endprefix = None, key = None):
   i = 0
   t = None
   steps = 50
@@ -594,27 +594,27 @@ def iter_pages(pageiter, startsort = None, endsort = None, key = None):
   for current in pageiter:
     i += 1
 
-    if startsort != None and isinstance(startsort, int) and i < startsort:
+    if startprefix != None and isinstance(startprefix, int) and i < startprefix:
       continue
 
     if key:
       keyval = key(current)
       pagetitle = keyval
-    elif isinstance(current, basestring):
+    elif isinstance(current, str):
       keyval = current
       pagetitle = keyval
     else:
       keyval = current.title(withNamespace=False)
-      pagetitle = unicode(current.title())
-    if endsort != None:
-      if isinstance(endsort, int):
-        if i > endsort:
+      pagetitle = str(current.title())
+    if endprefix != None:
+      if isinstance(endprefix, int):
+        if i > endprefix:
           break
       else:
-        if keyval >= endsort:
+        if keyval >= endprefix:
           break
 
-    if not t and isinstance(endsort, int):
+    if not t and isinstance(endprefix, int):
       t = datetime.datetime.now()
 
     # Ignore user pages, talk pages and certain Wiktionary pages
@@ -624,19 +624,19 @@ def iter_pages(pageiter, startsort = None, endsort = None, key = None):
     if i % steps == 0:
       tdisp = ""
 
-      if isinstance(endsort, int):
+      if isinstance(endprefix, int):
         told = t
         t = datetime.datetime.now()
-        pagesleft = (endsort - i) / steps
+        pagesleft = (endprefix - i) / steps
         tfuture = t + (t - told) * pagesleft
         tdisp = ", est. " + tfuture.strftime("%X")
 
-      errmsg(str(i) + "/" + str(endsort) + tdisp)
+      errmsg(str(i) + "/" + str(endprefix) + tdisp)
 
 
-def references(page, startsort = None, endsort = None, namespaces = None,
+def references(page, startprefix = None, endprefix = None, namespaces = None,
     only_template_inclusion = False, filter_redirects = False, include_page = False):
-  if isinstance(page, basestring):
+  if isinstance(page, str):
     page = pywikibot.Page(site, page)
   pageiter = page.getReferences(only_template_inclusion = only_template_inclusion,
       namespaces = namespaces, filter_redirects = filter_redirects)
@@ -644,61 +644,59 @@ def references(page, startsort = None, endsort = None, namespaces = None,
     pages = [page] + list(pageiter)
   else:
     pages = pageiter
-  for i, current in iter_items(pages, startsort, endsort):
+  for i, current in iter_items(pages, startprefix, endprefix):
     yield i, current
 
-def get_contributions(user, startsort=None, endsort=None, max=None, namespaces=None):
+def get_contributions(user, startprefix=None, endprefix=None, max=None, namespaces=None):
   """Get contributions for a given user."""
   itemiter = site.usercontribs(user=user, namespaces=namespaces, total=max)
-  for i, current in iter_items(itemiter, startsort, endsort, get_name=lambda item: item['title']):
+  for i, current in iter_items(itemiter, startprefix, endprefix, get_name=lambda item: item['title']):
     yield i, current
 
-def yield_articles(page, seen, startsort=None, prune_cats_regex=None, recurse=False):
+def yield_articles(page, seen, startprefix=None, prune_cats_regex=None, recurse=False):
   if not recurse:
     # Only use when non-recursive. Has a recurse= flag but doesn't allow for prune_cats_regex, doesn't correctly
     # ignore subcats and pages that may be seen multiple times.
-    for article in page.articles(startsort=startsort):
+    for article in page.articles(startprefix=startprefix):
       if seen is None:
         yield article
       else:
-        pagetitle = unicode(article.title())
+        pagetitle = str(article.title())
         if pagetitle not in seen:
           seen.add(pagetitle)
           yield article
   else:
     for subcat in yield_subcats(page, seen, prune_cats_regex=prune_cats_regex, do_this_page=True, recurse=True):
-      for article in subcat.articles(startsort=startsort):
+      for article in subcat.articles(startprefix=startprefix):
         if seen is None:
           yield article
         else:
-          pagetitle = unicode(article.title())
+          pagetitle = str(article.title())
           if pagetitle not in seen:
             seen.add(pagetitle)
             yield article
 
-def raw_cat_articles(page, seen, startsort=None, prune_cats_regex=None, recurse=False):
-  if type(page) is str:
-    page = page.decode("utf-8")
-  if isinstance(page, basestring):
+def raw_cat_articles(page, seen, startprefix=None, prune_cats_regex=None, recurse=False):
+  if isinstance(page, str):
     page = pywikibot.Category(site, "Category:" + page)
-  for article in yield_articles(page, seen, startsort=startsort, prune_cats_regex=prune_cats_regex, recurse=recurse):
+  for article in yield_articles(page, seen, startprefix=startprefix, prune_cats_regex=prune_cats_regex, recurse=recurse):
     yield article
 
-def cat_articles(page, startsort=None, endsort=None, seen=None, prune_cats_regex=None, recurse=False, track_seen=False):
+def cat_articles(page, startprefix=None, endprefix=None, seen=None, prune_cats_regex=None, recurse=False, track_seen=False):
   if seen is None and track_seen:
     seen = set()
-  for i, current in iter_items(raw_cat_articles(page, seen, startsort=startsort if not isinstance(startsort, int) else None,
-      prune_cats_regex=prune_cats_regex, recurse=recurse), startsort, endsort):
+  for i, current in iter_items(raw_cat_articles(page, seen, startprefix=startprefix if not isinstance(startprefix, int) else None,
+      prune_cats_regex=prune_cats_regex, recurse=recurse), startprefix, endprefix):
     yield i, current
 
 def yield_subcats(page, seen, prune_cats_regex=None, do_this_page=False, recurse=False):
   if seen is not None:
-    pagetitle = unicode(page.title())
+    pagetitle = str(page.title())
     if pagetitle in seen:
       return
     seen.add(pagetitle)
   if prune_cats_regex:
-    this_cat = re.sub("^Category:", "", unicode(page.title()))
+    this_cat = re.sub("^Category:", "", str(page.title()))
     if re.search(prune_cats_regex, this_cat):
       msg("Pruned category '%s'" % this_cat)
       return
@@ -714,71 +712,62 @@ def yield_subcats(page, seen, prune_cats_regex=None, do_this_page=False, recurse
       if seen is None:
         yield subcat
       else:
-        pagetitle = unicode(subcat.title())
+        pagetitle = str(subcat.title())
         if pagetitle not in seen:
           seen.add(pagetitle)
           yield subcat
 
-def cat_subcats(page, startsort=None, endsort=None, seen=None, prune_cats_regex=None, do_this_page=False, recurse=False):
+def cat_subcats(page, startprefix=None, endprefix=None, seen=None, prune_cats_regex=None, do_this_page=False, recurse=False):
   if seen is None:
     seen = set()
-  if type(page) is str:
-    page = page.decode("utf-8")
-  if isinstance(page, basestring):
+  if isinstance(page, str):
     page = pywikibot.Category(site, "Category:" + page)
   pageiter = yield_subcats(page, seen, prune_cats_regex=prune_cats_regex, do_this_page=do_this_page, recurse=recurse)
   # Recursive support is built into page.subcategories() but it isn't smart enough to skip pages
   # already seen, which can lead to infinite loops, e.g. ku:All topics -> ku:List of topics -> ku:All topics.
-  # pageiter = page.subcategories(recurse=recurse) #no startsort; startsort = startsort if not isinstance(startsort, int) else None)
-  for i, current in iter_items(pageiter, startsort, endsort):
+  # pageiter = page.subcategories(recurse=recurse) #no startprefix; startprefix = startprefix if not isinstance(startprefix, int) else None)
+  for i, current in iter_items(pageiter, startprefix, endprefix):
     yield i, current
 
-def prefix_pages(prefix, startsort=None, endsort=None, namespace=None):
+def prefix_pages(prefix, startprefix=None, endprefix=None, namespace=None):
   pageiter = site.allpages(prefix=prefix, namespace=namespace)
-  for i, current in iter_items(pageiter, startsort, endsort):
+  for i, current in iter_items(pageiter, startprefix, endprefix):
     yield i, current
 
-def query_special_pages(specialpage, startsort=None, endsort=None):
-  for i, current in iter_items(site.querypage(specialpage), startsort, endsort):
+def query_special_pages(specialpage, startprefix=None, endprefix=None):
+  for i, current in iter_items(site.querypage(specialpage), startprefix, endprefix):
     yield i, current
 
-def query_usercontribs(username, startsort=None, endsort=None, starttime=None, endtime=None):
-  for i, current in iter_items(site.usercontribs(user=username, start=starttime, end=endtime), startsort, endsort,
+def query_usercontribs(username, startprefix=None, endprefix=None, starttime=None, endtime=None):
+  for i, current in iter_items(site.usercontribs(user=username, start=starttime, end=endtime), startprefix, endprefix,
       get_name=lambda item: item['title']):
     yield i, current
 
-def stream(st, startsort = None, endsort = None):
+def stream(st, startprefix=None, endprefix=None):
   i = 0
 
   for name in st:
     i += 1
 
-    if startsort != None and i < startsort:
+    if startprefix != None and i < startprefix:
       continue
-    if endsort != None and i > endsort:
+    if endprefix != None and i > endprefix:
       break
 
-    if type(name) is str:
-      name = str.decode(name, "utf-8")
-
-    name = re.sub(ur"^[#*] *\[\[(.+)]]$", ur"\1", name, flags=re.UNICODE)
+    name = re.sub(r"^[#*] *\[\[(.+)]]$", r"\1", name)
 
     yield i, pywikibot.Page(site, name)
 
-def split_utf8_arg(arg, canonicalize=None):
-  arg = arg.decode("utf-8")
+def split_arg(arg, canonicalize=None):
   def process(pagename):
     if canonicalize:
       pagename = canonicalize(pagename)
     return pagename
   return [process(x) for x in re.split(r",(?=[^ ])", arg)]
 
-def yield_items_from_file(filename, canonicalize=None, filename_is_utf8=True, include_original_lineno=False,
-    preserve_blank_lines=False):
-  if filename_is_utf8:
-    filename = filename.decode("utf-8")
+def yield_items_from_file(canonicalize=None, include_original_lineno=False, preserve_blank_lines=False):
   lineno = 0
-  for line in codecs.open(filename, "r", "utf-8"):
+  for line in open(filename, "r", encoding="utf-8"):
     lineno += 1
     line = line.strip()
     if line.startswith("#"):
@@ -792,29 +781,29 @@ def yield_items_from_file(filename, canonicalize=None, filename_is_utf8=True, in
     else:
       yield line
 
-def iter_items_from_file(filename, startsort=None, endsort=None, canonicalize=None, filename_is_utf8=True,
+def iter_items_from_file(filename, startprefix=None, endprefix=None, canonicalize=None, filename_is_utf8=True,
     preserve_blank_lines=False, skip_ignorable_pages=False):
   file_items = yield_items_from_file(filename, canonicalize=canonicalize, filename_is_utf8=filename_is_utf8,
       include_original_lineno=True, preserve_blank_lines=preserve_blank_lines)
-  for _, (index, line) in iter_items(file_items, startsort=startsort, endsort=endsort, get_name=lambda x:x[1], get_index=lambda x:x[0],
+  for _, (index, line) in iter_items(file_items, startprefix=startprefix, endprefix=endprefix, get_name=lambda x:x[1], get_index=lambda x:x[0],
       skip_ignorable_pages=skip_ignorable_pages):
     yield index, line
 
 def get_page_name(page):
-  if isinstance(page, basestring):
+  if isinstance(page, str):
     return page
   # FIXME: withNamespace=False was used previously by cat_articles, in a
   # line like this:
-  #    elif current.title(withNamespace=False) >= endsort:
+  #    elif current.title(withNamespace=False) >= endprefix:
   # Should we add this flag or support an option to add it?
-  #return unicode(page.title(withNamespace=False))
-  return unicode(page.title())
+  #return str(page.title(withNamespace=False))
+  return str(page.title())
 
 class ProcessItems(object):
-  def __init__(self, startsort=None, endsort=None, get_name=get_page_name,
+  def __init__(self, startprefix=None, endprefix=None, get_name=get_page_name,
       skip_ignorable_pages=False):
-    self.startsort = startsort
-    self.endsort = endsort
+    self.startprefix = startprefix
+    self.endprefix = endprefix
     self.get_name = get_name
     self.skip_ignorable_pages = skip_ignorable_pages
     self.i = 0
@@ -826,26 +815,26 @@ class ProcessItems(object):
   def should_process(self, item):
     self.i += 1
 
-    if self.startsort != None:
+    if self.startprefix != None:
       should_skip = False
-      if isinstance(self.startsort, int):
-        if self.i < self.startsort:
+      if isinstance(self.startprefix, int):
+        if self.i < self.startprefix:
           should_skip = True
-      elif self.get_name(item) < self.startsort:
+      elif self.get_name(item) < self.startprefix:
         should_skip = True
       if should_skip:
         if self.i % self.skipsteps == 0:
           pywikibot.output("skipping %s" % str(self.i))
         return False
 
-    if self.endsort != None:
-      if isinstance(self.endsort, int):
-        if self.i > self.endsort:
+    if self.endprefix != None:
+      if isinstance(self.endprefix, int):
+        if self.i > self.endprefix:
           return None
-      elif self.get_name(item) > self.endsort:
+      elif self.get_name(item) > self.endprefix:
         return None
 
-    if isinstance(self.endsort, int) and not self.t:
+    if isinstance(self.endprefix, int) and not self.t:
       self.t = datetime.datetime.now()
 
     if self.skip_ignorable_pages and page_should_be_ignored(get_name(item)):
@@ -858,24 +847,24 @@ class ProcessItems(object):
     if self.i % self.steps == 0:
       tdisp = ""
 
-      if isinstance(self.endsort, int):
+      if isinstance(self.endprefix, int):
         told = self.t
         self.t = datetime.datetime.now()
-        pagesleft = (self.endsort - self.i) / self.steps
+        pagesleft = (self.endprefix - self.i) / self.steps
         tfuture = self.t + (self.t - told) * pagesleft
         tdisp = ", est. " + tfuture.strftime("%X")
 
-      pywikibot.output(str(self.i) + "/" + str(self.endsort) + tdisp)
+      pywikibot.output(str(self.i) + "/" + str(self.endprefix) + tdisp)
 
     return retval
 
-def iter_items(items, startsort=None, endsort=None, get_name=get_page_name, get_index=None,
+def iter_items(items, startprefix=None, endprefix=None, get_name=get_page_name, get_index=None,
     skip_ignorable_pages=False):
   i = 0
   t = None
   steps = 50
   skipsteps = 1000
-  actual_startsort = None
+  actual_startprefix = None
   tstart = datetime.datetime.now()
 
   for current in items:
@@ -885,30 +874,30 @@ def iter_items(items, startsort=None, endsort=None, get_name=get_page_name, get_
     else:
       index = i
 
-    if startsort != None:
+    if startprefix != None:
       should_skip = False
-      if isinstance(startsort, int):
-        if index < startsort:
+      if isinstance(startprefix, int):
+        if index < startprefix:
           should_skip = True
-      elif get_name(current) < startsort:
+      elif get_name(current) < startprefix:
         should_skip = True
       if should_skip:
         if i % skipsteps == 0:
           pywikibot.output("skipping %s" % str(i))
         continue
 
-    if actual_startsort is None:
-      actual_startsort = i
-    actual_endsort = None
+    if actual_startprefix is None:
+      actual_startprefix = i
+    actual_endprefix = None
 
-    if endsort != None:
-      if isinstance(endsort, int):
-        if index > endsort:
+    if endprefix != None:
+      if isinstance(endprefix, int):
+        if index > endprefix:
           break
-      elif get_name(current) > endsort:
+      elif get_name(current) > endprefix:
         break
 
-    if isinstance(endsort, int) and not t:
+    if isinstance(endprefix, int) and not t:
       t = datetime.datetime.now()
 
     if skip_ignorable_pages and page_should_be_ignored(get_name(current)):
@@ -920,29 +909,29 @@ def iter_items(items, startsort=None, endsort=None, get_name=get_page_name, get_
     if i % steps == 0:
       tdisp = ""
 
-      if isinstance(endsort, int):
+      if isinstance(endprefix, int):
         t = datetime.datetime.now()
-        startsort_as_int = startsort if isinstance(startsort, int) else 1
-        actual_endsort = endsort - (startsort_as_int - actual_startsort)
+        startprefix_as_int = startprefix if isinstance(startprefix, int) else 1
+        actual_endprefix = endprefix - (startprefix_as_int - actual_startprefix)
         # Logically:
         #
         # time_so_far = t - tstart
-        # pages_so_far = i - startsort + 1
+        # pages_so_far = i - startprefix + 1
         # time_per_page = time_so_far / pages_so_far
-        # remaining_pages = endsort - i
+        # remaining_pages = endprefix - i
         # remaining_time = time_per_page * remaining_pages
         #
         # We do the same but multiply before dividing, for increased precision and due to the inability
-        # to multiply or divide timedeltas by floats. We also use the actual startsort (i.e. the actual
+        # to multiply or divide timedeltas by floats. We also use the actual startprefix (i.e. the actual
         # index of the first page relative to the pages seen in the input stream, in case get_index() is
         # supplied and e.g. the indices supplied by get_index() are offset significantly compared with
-        # the ordering in the input stream), and adjust the supplied `endsort` value by the difference
-        # between the supplied `startsort` and observed actual first page. This way, for example, if the
-        # get_index() indices start at 80000 and `startsort` = 82000 and `endsort` = 85000, we will
+        # the ordering in the input stream), and adjust the supplied `endprefix` value by the difference
+        # between the supplied `startprefix` and observed actual first page. This way, for example, if the
+        # get_index() indices start at 80000 and `startprefix` = 82000 and `endprefix` = 85000, we will
         # correctly account for there being 3000 pages to do. NOTE: If the indices supplied by get_index()
         # have gaps in them or are completely out of order, our calculations will be incorrect.
-        remaining_pages = actual_endsort - i
-        pages_so_far = i - actual_startsort + 1
+        remaining_pages = actual_endprefix - i
+        pages_so_far = i - actual_startprefix + 1
         remaining_time = (t - tstart) * remaining_pages / pages_so_far
         seconds_left = remaining_time.seconds
         hours_left_in_day = seconds_left // 3600
@@ -969,7 +958,7 @@ def iter_items(items, startsort=None, endsort=None, get_name=get_page_name, get_
         )
         tdisp = ", est. %s left" % time_left_str
 
-      pywikibot.output(str(i) + "/" + str(actual_endsort) + tdisp)
+      pywikibot.output(str(i) + "/" + str(actual_endprefix) + tdisp)
 
 # Parse the output of group_notes() back into individual notes. If a note is repeated, include that many copies
 # in the result.
@@ -987,7 +976,7 @@ def parse_grouped_notes(comment):
   return notes
 
 def group_notes(notes):
-  if isinstance(notes, basestring):
+  if isinstance(notes, str):
     return [notes]
   notes_count = {}
   uniq_notes = []
@@ -1064,28 +1053,28 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
   return parser
 
 def parse_args(args = sys.argv[1:]):
-  startsort = None
-  endsort = None
+  startprefix = None
+  endprefix = None
 
   if len(args) >= 1:
-    startsort = args[0]
+    startprefix = args[0]
   if len(args) >= 2:
-    endsort = args[1]
-  return parse_start_end(startsort, endsort)
+    endprefix = args[1]
+  return parse_start_end(startprefix, endprefix)
 
-def parse_start_end(startsort, endsort):
-  if startsort != None:
+def parse_start_end(startprefix, endprefix):
+  if startprefix != None:
     try:
-      startsort = int(startsort)
+      startprefix = int(startprefix)
     except ValueError:
-      startsort = str.decode(startsort, "utf-8")
-  if endsort != None:
+      pass
+  if endprefix != None:
     try:
-      endsort = int(endsort)
+      endprefix = int(endprefix)
     except ValueError:
-      endsort = str.decode(endsort, "utf-8")
+      pass
 
-  return (startsort, endsort)
+  return (startprefix, endprefix)
 
 def args_has_non_default_pages(args):
   return not not (args.pages or args.pagefile or args.pages_from_find_regex or args.pages_from_previous_output
@@ -1140,11 +1129,11 @@ def args_has_non_default_pages(args):
 def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_cats=[],
     default_refs=[], edit=False, stdin=False, only_lang=None,
     filter_pages=None, ref_namespaces=None, canonicalize_pagename=None, skip_ignorable_pages=False):
-  args_namespaces = args.namespaces and args.namespaces.decode("utf-8").split(",") or []
+  args_namespaces = args.namespaces and args.namespaces.split(",") or []
   args_namespaces = [0 if x == "-" else int(x) if re.search("^[0-9]+$", x) else x for x in args_namespaces]
-  args_ref_namespaces = args.ref_namespaces and args.ref_namespaces.decode("utf-8").split(",")
-  args_filter_pages = args.filter_pages and args.filter_pages.decode("utf-8")
-  args_filter_pages_not = args.filter_pages_not and args.filter_pages_not.decode("utf-8")
+  args_ref_namespaces = args.ref_namespaces and args.ref_namespaces.split(",")
+  args_filter_pages = args.filter_pages
+  args_filter_pages_not = args.filter_pages_not
 
   seen = set() if args.track_seen else None
 
@@ -1213,7 +1202,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
     sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
 
     lang_j = -1
-    for j in xrange(2, len(sections), 2):
+    for j in range(2, len(sections), 2):
       if sections[j-1] == "==" + lang + "==\n":
         if lang_j >= 0:
           pagemsg("WARNING: Found two %s sections, skipping" % lang)
@@ -1262,7 +1251,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
   # (necessary because it can recursively process subcategories) so if we check the `seen` set we'll never process any
   # pages.
   def process_pywikibot_page(index, page, no_check_seen=False):
-    pagetitle = unicode(page.title())
+    pagetitle = str(page.title())
     if not no_check_seen and seen is not None:
       if pagetitle in seen:
         return
@@ -1301,7 +1290,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
   if stdin and args.stdin:
     pages_to_filter = None
     if args.pages:
-      pages_to_filter = set(split_utf8_arg(args.pages, canonicalize=canonicalize_pagename))
+      pages_to_filter = set(split_arg(args.pages, canonicalize=canonicalize_pagename))
     if args.pagefile:
       new_pages_to_filter = set(yield_items_from_file(args.pagefile, canonicalize=canonicalize_pagename))
       if pages_to_filter is None:
@@ -1320,8 +1309,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
           msg("Page %s %s: %s" % (index, pagetitle, txt))
         return do_process_text_on_page(index, pagetitle, text, pagemsg)
     if args.find_regex:
-      utf8_stdin = (line.decode("utf-8") for line in sys.stdin)
-      index_pagetitle_text_comment = yield_text_from_find_regex(utf8_stdin, args.verbose)
+      index_pagetitle_text_comment = yield_text_from_find_regex(sys.stdin, args.verbose)
       for _, (index, pagetitle, text, prev_comment) in iter_items(index_pagetitle_text_comment, start, end,
           get_name=lambda x:x[1], get_index=lambda x:x[0]):
         retval = do_process_stdin_text_on_page(index, pagetitle, text)
@@ -1339,9 +1327,9 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
       parse_dump(sys.stdin, do_process_stdin_dump_text_on_page, start, end)
 
   elif args_has_non_default_pages(args):
-    args_prune_cats = args.prune_cats and args.prune_cats.decode("utf-8") or None
+    args_prune_cats = args.prune_cats
     if args.pages:
-      pages = split_utf8_arg(args.pages, canonicalize=canonicalize_pagename)
+      pages = split_arg(args.pages, canonicalize=canonicalize_pagename)
       for index, pagetitle in iter_items(pages, start, end):
         process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.pagefile:
@@ -1349,20 +1337,20 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
         process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.pages_from_find_regex:
       index_pagetitle_text_comment = yield_text_from_find_regex(
-        codecs.open(args.pages_from_find_regex.decode("utf-8"), "r", "utf-8"), args.verbose
+        open(args.pages_from_find_regex, "r", encoding="utf-8"), args.verbose
       )
       for _, (index, pagetitle, _, _) in iter_items(index_pagetitle_text_comment, start, end,
           get_name=lambda x:x[1], get_index=lambda x:x[0]):
         process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.pages_from_previous_output:
       index_pagetitle = yield_pages_from_previous_output(
-        codecs.open(args.pages_from_previous_output.decode("utf-8"), "r", "utf-8"), args.verbose
+        open(args.pages_from_previous_output, "r", encoding="utf-8"), args.verbose
       )
       for _, (index, pagetitle) in iter_items(index_pagetitle, start, end,
           get_name=lambda x:x[1], get_index=lambda x:x[0]):
         process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.cats:
-      for cat in split_utf8_arg(args.cats):
+      for cat in split_arg(args.cats):
         if args.do_cat_and_subcats:
           for index, subcat in cat_subcats(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
               do_this_page=True, recurse=args.recursive):
@@ -1376,20 +1364,20 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
               recurse=args.recursive, track_seen=args.track_seen):
             process_pywikibot_page(index, page, no_check_seen=True)
     if args.refs:
-      for ref in split_utf8_arg(args.refs):
+      for ref in split_arg(args.refs):
         # We don't use ref_namespaces here because the user might not want it.
         for index, page in references(ref, start, end, namespaces=args_ref_namespaces):
           process_pywikibot_page(index, page)
     if args.pages_and_refs:
-      for page_and_ref in split_utf8_arg(args.pages_and_refs):
+      for page_and_ref in split_arg(args.pages_and_refs):
         # We don't use ref_namespaces here because the user might not want it.
         for index, page in references(page_and_ref, start, end, namespaces=args_ref_namespaces,
             include_page=True):
           process_pywikibot_page(index, page)
     if args.specials:
-      for special in split_utf8_arg(args.specials):
+      for special in split_arg(args.specials):
         for index, page in query_special_pages(special, start, end):
-          title = unicode(page.title())
+          title = str(page.title())
           if args.do_specials_cat_pages and title.startswith("Category:"):
             for index2, subcat in cat_articles(re.sub("^Category:", "", title), seen=seen, prune_cats_regex=args_prune_cats,
                 recurse=args.recursive):
@@ -1401,12 +1389,12 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
           if not args.do_specials_cat_pages and not args.do_specials_refs:
             process_pywikibot_page(index, page)
     if args.contribs:
-      for contrib in split_utf8_arg(args.contribs):
+      for contrib in split_arg(args.contribs):
         for index, page in query_usercontribs(contrib, start, end, starttime=args.contribs_start, endtime=args.contribs_end):
           process_pywikibot_page(index, pywikibot.Page(site, page['title']))
     if args.prefix_pages:
-      for prefix in split_utf8_arg(args.prefix_pages):
-        namespace = args.prefix_namespace and args.prefix_namespace.decode("utf-8") or None
+      for prefix in split_arg(args.prefix_pages):
+        namespace = args.prefix_namespace
         for index, page in prefix_pages(prefix, start, end, namespace):
           process_pywikibot_page(index, page)
 
@@ -1467,7 +1455,7 @@ def getData():
 def getLanguageData():
   global languages, languages_byCode, languages_byCanonicalName
 
-  jsondata = site.expand_text(u"{{#invoke:User:MewBot|getLanguageData}}")
+  jsondata = site.expand_text("{{#invoke:User:MewBot|getLanguageData}}")
   languages = json.loads(jsondata)
   languages_byCode = {}
   languages_byCanonicalName = {}
@@ -1480,7 +1468,7 @@ def getLanguageData():
 def getFamilyData():
   global families, families_byCode, families_byCanonicalName
 
-  families = json.loads(site.expand_text(u"{{#invoke:User:MewBot|getFamilyData}}"))
+  families = json.loads(site.expand_text("{{#invoke:User:MewBot|getFamilyData}}"))
   families_byCode = {}
   families_byCanonicalName = {}
 
@@ -1492,7 +1480,7 @@ def getFamilyData():
 def getScriptData():
   global scripts, scripts_byCode, scripts_byCanonicalName
 
-  scripts = json.loads(site.expand_text(u"{{#invoke:User:MewBot|getScriptData}}"))
+  scripts = json.loads(site.expand_text("{{#invoke:User:MewBot|getScriptData}}"))
   scripts_byCode = {}
   scripts_byCanonicalName = {}
 
@@ -1504,7 +1492,7 @@ def getScriptData():
 def getEtymLanguageData():
   global etym_languages, etym_languages_byCode, etym_languages_byCanonicalName
 
-  etym_languages = json.loads(site.expand_text(u"{{#invoke:User:MewBot|getEtymLanguageData}}"))
+  etym_languages = json.loads(site.expand_text("{{#invoke:User:MewBot|getEtymLanguageData}}"))
   etym_languages_byCode = {}
   etym_languages_byCanonicalName = {}
 
@@ -1516,7 +1504,7 @@ def try_repeatedly(fun, errandpagemsg, operation="save", bad_value_ret=None, max
   num_tries = 0
   def log_exception(txt, e, skipping=False):
     txt = "WARNING: %s when trying to %s%s: %s" % (
-      txt, operation, ", skipping" if skipping else "", unicode(e)
+      txt, operation, ", skipping" if skipping else "", str(e)
     )
     errandpagemsg(txt)
     traceback.print_exc(file=sys.stdout)
@@ -1535,19 +1523,19 @@ def try_repeatedly(fun, errandpagemsg, operation="save", bad_value_ret=None, max
     #except pywikibot.exceptions.PageSaveRelatedError as e:
     #  log_exception("Unable to save (abuse filter?)", e, skipping=True)
     except Exception as e:
-      if "invalidtitle" in unicode(e):
+      if "invalidtitle" in str(e):
         log_exception("Invalid title", e, skipping=True)
         return bad_value_ret
-      if "abusefilter-disallowed" in unicode(e):
+      if "abusefilter-disallowed" in str(e):
         log_exception("Abuse filter: Disallowed", e, skipping=True)
         return bad_value_ret
-      if "abusefilter-warning" in unicode(e):
+      if "abusefilter-warning" in str(e):
         log_exception("Abuse filter warning: Disallowed", e, skipping=True)
         return bad_value_ret
-      if "customjsprotected" in unicode(e):
+      if "customjsprotected" in str(e):
         log_exception("Protected JavaScript page: Disallowed", e, skipping=True)
         return bad_value_ret
-      if "protectednamespace-interface" in unicode(e):
+      if "protectednamespace-interface" in str(e):
         log_exception("Protected namespace interface: Disallowed", e, skipping=True)
         return bad_value_ret
       #except (pywikibot.exceptions.Error, StandardError) as e:
@@ -1668,7 +1656,7 @@ def split_alternating_runs(segment_runs, splitchar, preserve_splitchar=False):
     else:
       parts = preserve_splitchar and re.split("(" + splitchar + ")", seg) or re.split(splitchar, seg)
       run.append(parts[0])
-      for j in xrange(1, len(parts)):
+      for j in range(1, len(parts)):
         grouped_runs.append(run)
         run = [parts[j]]
   if run:
@@ -1777,7 +1765,7 @@ def parse_inline_modifier(value):
   segments = parse_balanced_segment_run(value, "<", ">")
   mainval = segments[0]
   modifiers = []
-  for k in xrange(1, len(segments), 2):
+  for k in range(1, len(segments), 2):
     if segments[k + 1] != "":
       raise ParseException("Extraneous text '" + segments[k + 1] + "' after modifier")
     m = re.search("^<(.*)>$", segments[k])
@@ -1837,7 +1825,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
     actions = []
     for t in parsed.filter_templates():
       tn = tname(t)
-      origt = unicode(t)
+      origt = str(t)
       saw_template = [False]
       changed_template = [False]
 
@@ -1850,7 +1838,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
       # Returns a tuple of two values, the value of the first found param and its name. If no param found, returns
       # an empty string along with the first specified param name.
       def getpm(params):
-        if isinstance(params, basestring):
+        if isinstance(params, str):
           return getp(params), params
         assert isinstance(params, list)
         assert len(params) > 0
@@ -1931,14 +1919,14 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
             if isinstance(result, list):
               actions.extend(result)
             else:
-              assert isinstance(result, basestring)
+              assert isinstance(result, str)
               actions.append(result)
             changed_template[0] = True
             return True
           return False
         except ParseException as e:
           pagemsg("Exception processing lang %s, param %s in template %s: %s"
-            % (tlang, param, unicode(t), e))
+            % (tlang, param, str(t), e))
           return False
 
       # Call doparam() and hence `processfn` on a given foreign-script/Latin-translit combination with an optional
@@ -1973,29 +1961,29 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
         paramval, param = getpm(param)
         if trparam:
           _, trparam = getpm(trparam)
-        if isinstance(other_lang_param, (basestring, list)):
+        if isinstance(other_lang_param, (str, list)):
           other_lang_val, other_lang_param = getpm(other_lang_param)
           if other_lang_val:
             pagemsg("Skipping param %s=%s with alt param %s=%s because it is in a different lang %s=%s: %s"
-              % (param, paramval, altparam, altval, other_lang_param, other_lang_val, unicode(t)))
+              % (param, paramval, altparam, altval, other_lang_param, other_lang_val, str(t)))
             return False
         if other_lang_param:
           m = re.search("^([A-Za-z0-9._-]+):(.*)$", paramval)
           if m:
             other_lang_val, actual_paramval = m.groups()
             pagemsg("Skipping param %s=%s because of it begins with other-language prefix '%s:': %s"
-              % (param, paramval, other_lang_val, unicode(t)))
+              % (param, paramval, other_lang_val, str(t)))
             return False
         if check_inline_modifiers and "<" in paramval:
           try:
             inline_mod = parse_inline_modifier(paramval)
             if altval:
               pagemsg("WARNING: Found inline modifier in param %s=%s along with alt param %s=%s, can't process: %s"
-                % (param, paramval, altparam, altval, unicode(t)))
+                % (param, paramval, altparam, altval, str(t)))
               return False
             if other_lang_param and inline_mod.get_modifier("lang") is not None:
               pagemsg("Skipping param %s=%s because of inline 'lang' modifier: %s"
-                % (param, paramval, unicode(t)))
+                % (param, paramval, str(t)))
               return False
             if inline_mod.get_modifier("alt") is not None:
               return doparam(langparam, ("inline", param, "alt", "tr", inline_mod))
@@ -2003,7 +1991,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
               return doparam(langparam, ("inline", param, None, "tr", inline_mod))
           except ParseException as e:
             pagemsg("WARNING: Exception processing lang %s, param %s=%s in template %s: %s"
-              % (tlang, param, paramval, unicode(t), e))
+              % (tlang, param, paramval, str(t), e))
             # fall through to the code below
         if altval:
           return doparam(langparam, ("separate", altparam, trparam))
@@ -2219,14 +2207,14 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
           # Don't just do cases up through where there's a numbered param because there may be holes.
           maxind = find_max_term_index(t, first_numeric="2", named_params=True)
         offset = 1
-        for i in xrange(1, maxind + 1):
+        for i in range(1, maxind + 1):
           # require_index specified in [[Module:compound/templates]] and [[Module:etymology/templates/doublet]]
           doparam_checking_alt("1", str(i + offset), "alt" + str(i), "tr" + str(i), other_lang_param="lang" + str(i),
             check_inline_modifiers=True)
       elif tn in ["pseudo-loan", "pl"]:
         maxind = find_max_term_index(t, first_numeric="3", named_params=True)
         offset = 2
-        for i in xrange(1, maxind + 1):
+        for i in range(1, maxind + 1):
           # require_index specified in [[Module:compound/templates]]
           doparam_checking_alt("2", str(i + offset), "alt" + str(i), "tr" + str(i), other_lang_param="lang" + str(i),
             check_inline_modifiers=True)
@@ -2238,7 +2226,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
           "homophones", "homophone", "hmp", "inline alt forms", "alti", "altform-inline"]:
         maxind = find_max_term_index(t, first_numeric="2", named_params=["alt", "tr"])
         termind = 0
-        for i in xrange(1, maxind + 1):
+        for i in range(1, maxind + 1):
           term = getp(str(i + 1))
           if term.startswith("Thesaurus:"):
             break
@@ -2303,14 +2291,14 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
       elif tn in ["desc", "descendant", "desctree", "descendants tree"]:
         # Don't just do cases up through where there's a numbered param because there may be holes.
         maxind = find_max_term_index(t, first_numeric="2", named_params=True)
-        for i in xrange(1, maxind + 1):
+        for i in range(1, maxind + 1):
           # require_index not specified in [[Module:etymology/templates/descendant]]
           doparam_checking_alt("1", str(i + 1), index_param("alt", i), index_param("tr", i),
               check_inline_modifiers=True)
       elif tn in ["&lit"]:
         # Don't just do cases up through where there's a numbered param because there may be holes.
         maxind = find_max_term_index(t, first_numeric="2", named_params=True)
-        for i in xrange(1, maxind + 1):
+        for i in range(1, maxind + 1):
           # require_index specified in [[Module:definition/templates]]; no translit param currently
           doparam_checking_alt("1", str(i + 1), "alt" + str(i), None)
       elif tn in [
@@ -2401,11 +2389,11 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
   #    if (re.search(split_templates, latin) and not
   #        re.search(split_templates, foreign)):
   #      trs = re.split("\\s*" + split_templates + "\\s*", latin)
-  #      oldtemp = unicode(obj.t)
+  #      oldtemp = str(obj.t)
   #      newtemps = []
   #      for tr in trs:
   #        addparam(obj.t, obj.paramtr, tr)
-  #        newtemps.append(unicode(obj.t))
+  #        newtemps.append(str(obj.t))
   #      newtemp = ", ".join(newtemps)
   #      old_newtext = newtext[0]
   #      pagemsg("Splitting template %s into %s" % (oldtemp, newtemp))
@@ -2425,10 +2413,10 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
   #  parsed = parse_text(newtext[0])
 
   actions += do_process_one_page_links(pagetitle, index, parsed, process_param)
-  return unicode(parsed), actions
+  return str(parsed), actions
 
 #def process_one_page_links_wrapper(page, index, text):
-#  return process_one_page_links(unicode(page.title()), index, text)
+#  return process_one_page_links(str(page.title()), index, text)
 #
 #if "," in cattype:
 #  cattypes = cattype.split(",")
@@ -2484,7 +2472,7 @@ def find_lang_section(pagename, lang, pagemsg, errandpagemsg):
     pagemsg("Page %s doesn't exist" % pagename)
     return False
 
-  pagetext = unicode(page.text)
+  pagetext = str(page.text)
 
   return find_lang_section_from_text(pagetext, lang, pagemsg)
 
@@ -2530,7 +2518,7 @@ def find_modifiable_lang_section(text, lang, pagemsg, force_final_nls=False):
     j = 0
   else:
     lang_j = -1
-    for j in xrange(2, len(sections), 2):
+    for j in range(2, len(sections), 2):
       if sections[j-1] != "==" + lang + "==\n":
         has_non_lang = True
       else:
@@ -2589,7 +2577,7 @@ def split_text_into_sections(pagetext, lang):
   # Extract off pagehead and recombine section headers with following text
   pagehead = splitsections[0]
   sections = []
-  for i in xrange(1, len(splitsections)):
+  for i in range(1, len(splitsections)):
     if (i % 2) == 1:
       sections.append("")
     sections[-1] += splitsections[i]
@@ -2599,7 +2587,7 @@ def find_lang_section_from_text(pagetext, lang, pagemsg):
   pagehead, sections = split_text_into_sections(pagetext, lang)
 
   # Go through each section in turn, looking for existing language section
-  for i in xrange(len(sections)):
+  for i in range(len(sections)):
     m = re.match("^==([^=\n]+)==$", sections[i], re.M)
     if not m:
       pagemsg("Can't find language name in text: [[%s]]" % (sections[i]))
@@ -2759,9 +2747,9 @@ class WikiDumpHandler(xml.sax.ContentHandler):
 class DumpExitException(Exception):
   pass
 
-def parse_dump(fp, pagecallback, startsort=None, endsort=None,
+def parse_dump(fp, pagecallback, startprefix=None, endprefix=None,
     skip_ignorable_pages=False):
-  item_handler = ProcessItems(startsort=startsort, endsort=endsort,
+  item_handler = ProcessItems(startprefix=startprefix, endprefix=endprefix,
       skip_ignorable_pages=skip_ignorable_pages)
 
   def mycallback(title, text):
