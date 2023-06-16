@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Convert ru-ux to ux|ru or uxi|ru (depending on whether inline= is present).

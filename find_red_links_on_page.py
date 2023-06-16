@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Find redlinks (non-existent pages) and yellow links (non-existent language section)
@@ -78,7 +78,7 @@ parser.add_argument("--templates", help="Comma-separated list of templates to ch
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-templates = args.templates.decode("utf-8").split(",")
+templates = args.templates.split(",")
 def do_process_page(page, index):
   process_page(page, index, templates)
 blib.do_pagefile_cats_refs(args, start, end, do_process_page)

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Move text outside of {{RQ:Bacon SS}} inside, with some renaming of templates and args.

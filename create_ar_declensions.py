@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # اِضْمَحَلَّ Form XII? "to disappear, vanish, dwindle, fade away, melt away; to decrease, become less"

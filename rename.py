@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import blib, re, codecs
@@ -77,11 +77,8 @@ params.add_argument("--direcfile", help="File containing pairs of from/to pages 
 args = params.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-from_ = [x.decode("utf-8") for x in args.from_] if args.from_ else []
-to = [x.decode("utf-8") for x in args.to] if args.to else []
-direcfile = args.direcfile and args.direcfile.decode("utf-8")
-rename_comment = args.rename_comment and args.rename_comment.decode("utf-8")
-delete_comment = args.delete_comment and args.delete_comment.decode("utf-8")
+from_ = list(args.from_) if args.from_ else []
+to = list(args.to) if args.to else []
 
 if len(from_) != len(to):
   raise ValueError("Same number of --from and --to arguments must be specified")
@@ -96,9 +93,9 @@ if args.delete_from_direcfile:
       frompage, topage = line.split(" ||| ")
       pages_to_rename.append((index, frompage, topage))
   for index, page in pages_to_delete:
-    delete_page(index, pywikibot.Page(blib.site, page), delete_comment)
+    delete_page(index, pywikibot.Page(blib.site, page), args.delete_comment)
   for index, frompage, topage in pages_to_rename:
-    rename_page(index, pywikibot.Page(blib.site, frompage), topage, rename_comment, from_, to)
+    rename_page(index, pywikibot.Page(blib.site, frompage), topage, args.rename_comment, from_, to)
 elif args.direcfile:
   for index, line in blib.iter_items_from_file(args.direcfile, start, end):
     if " ||| " not in line:
@@ -106,8 +103,8 @@ elif args.direcfile:
         msg("Line %s: WARNING: Saw bad line in --from-to-pagefile: %s" % (index, line))
       continue
     frompage, topage = line.split(" ||| ")
-    rename_page(index, pywikibot.Page(blib.site, frompage), topage, rename_comment, from_, to)
+    rename_page(index, pywikibot.Page(blib.site, frompage), topage, args.rename_comment, from_, to)
 else:
   def do_process_page(page, index):
-    return rename_page(index, page, None, rename_comment, from_, to)
+    return rename_page(index, page, None, args.rename_comment, from_, to)
   blib.do_pagefile_cats_refs(args, start, end, do_process_page)

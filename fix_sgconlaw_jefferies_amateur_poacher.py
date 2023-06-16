@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Move text outside of {{RQ:RJfrs AmtrPqr}} inside, with some renaming of

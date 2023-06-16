@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Fix up raw verb forms when possible, canonicalize existing 'conjugation of'

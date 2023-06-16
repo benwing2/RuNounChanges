@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
@@ -108,7 +108,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 ignore_pages = []
 if args.ignore:
-  ignore_pages = args.ignore.decode("utf-8").split(",")
+  ignore_pages = args.ignore.split(",")
 
 def do_process_page(page, index, parsed):
   if str(page.title()) not in ignore_pages:

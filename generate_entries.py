@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import re, sys, codecs, argparse
@@ -984,7 +984,7 @@ def process_line(line, pagename, etymnum, pronuns, pronuns_at_top):
 
   return headertext, bodytext, footertext
 
-peeker = generate_pos.Peeker(codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8"))
+peeker = generate_pos.Peeker(open(args.direcfile, "r", encoding="utf-8"))
 nextpage = 0
 
 def get_lemmas(line):

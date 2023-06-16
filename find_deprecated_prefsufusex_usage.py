@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Find and fix deprecated usages of {{prefixusex}} and {{suffixusex}}: Either use of the lang= param,

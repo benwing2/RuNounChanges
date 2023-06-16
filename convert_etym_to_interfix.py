@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Convert expressions like {{affix|ru|кот|alt1=ко́то-|кафе́|tr2=kafɛ́}} to {{affix|ru|кот|-о-|кафе́|tr3=kafɛ́}}.

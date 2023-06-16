@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
@@ -926,7 +926,7 @@ if args.lemma_file or args.lemmas:
   if args.lemma_file:
     lemmas = blib.iter_items_from_file(args.lemma_file, start, end)
   else:
-    lemmas = blib.iter_items(re.split(",", args.lemmas.decode("utf-8")), start, end)
+    lemmas = blib.iter_items(re.split(",", args.lemmas), start, end)
   for i, lemma in lemmas:
     process_lemma(i, lalib.remove_macrons(lemma), slots, args)
 

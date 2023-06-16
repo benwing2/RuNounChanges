@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import re, sys, codecs, argparse
@@ -150,7 +150,7 @@ def do_split(sep, text):
   elems = re.split(r"(?<![\\])%s" % sep, text)
   return [re.sub(r"\\(%s)" % sep, r"\1", elem) for elem in elems]
 
-peeker = generate_pos.Peeker(codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8"))
+peeker = generate_pos.Peeker(open(args.direcfile, "r", encoding="utf-8"))
 while True:
   line = peeker.get_next_line()
   if line == None:

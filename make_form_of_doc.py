@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import blib
@@ -11,7 +11,7 @@ parser.add_argument('--save', help="Save pages.", action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-lines = codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8")
+lines = open(args.direcfile, "r", encoding="utf-8")
 in_multiline = False
 
 nextpage = 0

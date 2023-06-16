@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
@@ -194,17 +194,16 @@ start, end = blib.parse_start_end(args.start, args.end)
 def handle_single_param(paramname, process=None):
   argval = getattr(args, paramname)
   if argval:
-    rawval = argval.decode("utf-8")
     if process:
-      return process(rawval)
+      return process(argval)
     else:
-      return rawval
+      return argval
   else:
     return None
 
 def handle_list_param(paramname, process=None):
   argval = getattr(args, paramname)
-  rawvals = [x.decode("utf-8") for x in argval] if argval else []
+  rawvals = list(argval) if argval else []
   if process:
     return [process(x) for x in rawvals]
   else:
@@ -213,7 +212,7 @@ def handle_list_param(paramname, process=None):
 def handle_params_to_add(paramname, process_parts=None):
   argval = getattr(args, paramname)
   params_to_add = []
-  addspecs = [x.decode("utf-8") for x in argval] if argval else []
+  addspecs = list(argval) if argval else []
   for spec in addspecs:
     specparts = spec.split("=")
     if len(specparts) != 2:

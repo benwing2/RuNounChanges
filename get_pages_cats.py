@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
@@ -12,7 +12,7 @@ parser.add_argument("--cats", help="Categories to list for the pages in question
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-cats = args.cats.decode("utf-8").split(",")
+cats = args.cats.split(",")
 cat_contents = {}
 for cat in cats:
   cat_contents[cat] = set()

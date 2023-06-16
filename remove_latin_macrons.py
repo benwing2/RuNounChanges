@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import blib
@@ -11,5 +11,5 @@ args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 for index, line in blib.iter_items(sys.stdin, start, end):
-  line = line.strip().decode('utf-8')
+  line = line.strip()
   msg(lalib.remove_macrons(line))

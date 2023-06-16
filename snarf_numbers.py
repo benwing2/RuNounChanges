@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
@@ -216,7 +216,7 @@ parser.add_argument("--langs", help="Do these language codes.", required=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-langcodes = args.langs.decode("utf-8").split(",")
+langcodes = args.langs.split(",")
 for langindex, langcode in enumerate(langcodes):
   read_existing_number_data(langindex + 1, langcode)
 

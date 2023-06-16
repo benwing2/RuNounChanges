@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import blib, re, codecs
@@ -67,16 +67,13 @@ pa.add_argument('--warn-on-no-replacement', action="store_true",
 args = pa.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-from_ = [x.decode("utf-8") for x in args.from_]
-to = [x.decode("utf-8") for x in args.to]
-pagetitle_sub = args.pagetitle and args.pagetitle.decode("utf-8")
-comment = args.comment and args.comment.decode("utf-8")
-lang_only = args.lang_only and args.lang_only.decode("utf-8")
+from_ = list(args.from_)
+to = list(args.to)
 
 if len(from_) != len(to):
   raise ValueError("Same number of --from and --to arguments must be specified")
 
 def do_process_page(page, index, parsed):
-  return process_page(page, index, from_, to, pagetitle_sub, comment, lang_only,
+  return process_page(page, index, from_, to, args.pagetitle, args.comment, args.lang_only,
     args.warn_on_no_replacement, args.verbose, args.reorder_shadda)
 blib.do_pagefile_cats_refs(args, start, end, do_process_page, edit=True)

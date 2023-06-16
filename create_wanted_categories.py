@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import blib, re, codecs
@@ -39,7 +39,7 @@ def process_page(page, index):
   if num_pages == 0 and num_subcats == 0:
     pagemsg("Skipping empty category")
     return
-  contents = u"{{auto cat}}"
+  contents = "{{auto cat}}"
   result = expand_text(contents)
   if not result:
     return

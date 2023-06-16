@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import re, codecs
@@ -111,7 +111,7 @@ def push_one_manual_change(pagetitle, index, text, curr_template, repl_template)
             % (repl_curr_diff, newtext_text_diff, ratio, curr_template,
               repl_template))
     changelog = "replace <%s> with <%s> (%s)" % (truncate(curr_template),
-        truncate(repl_template), comment)
+        truncate(repl_template), args.comment)
     pagemsg("Change log = %s" % changelog)
   return newtext, changelog
 
@@ -150,7 +150,6 @@ params.add_argument("--comment", default="manually",
 
 args = params.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
-comment = args.comment.decode("utf-8")
 direcfile_changes = read_direcfile(args.direcfile, start, end)
 
 if args.stdin:

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Copy the declension in ru-noun-table to ru-noun+, preserving any m=, f=,

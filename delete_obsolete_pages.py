@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
@@ -16,7 +16,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 pages_to_delete = list(blib.yield_items_from_file(args.pagefile))
 
-comment = args.comment and args.comment.decode('utf-8') or "Delete obsolete page"
+comment = args.comment or "Delete obsolete page"
 doc_comment = "Delete documentation page of " + re.sub("^([Dd]elete|[Rr]emove) ", "", comment)
 
 def delete_page(page, comment):

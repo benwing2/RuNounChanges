@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # This program replaces raw links of the form '[[foo]]' with templated links
@@ -575,7 +575,7 @@ if __name__ == "__main__":
   if args.langs == "all":
     langs = sorted(list(language_codes_to_properties.keys()))
   else:
-    langs = [x.decode("utf-8") for x in args.langs.split(",")]
+    langs = args.langs.split(",")
   default_cats = []
   thislangnames = set()
   for lang in langs:

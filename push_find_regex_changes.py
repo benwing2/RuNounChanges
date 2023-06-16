@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import blib
@@ -98,13 +98,11 @@ if __name__ == "__main__":
   origpages = {}
 
   if args.origfile:
-    origlines = codecs.open(args.origfile.decode("utf-8"), "r", "utf-8")
+    origlines = open(args.origfile, "r", encoding="utf-8")
     for index, pagetitle, text, comment in blib.yield_text_from_find_regex(origlines, args.verbose):
       origpages[pagetitle] = text
 
-  lines = codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8")
-  arg_comment = args.comment.decode("utf-8")
-  arg_lang_only = args.lang_only and args.lang_only.decode("utf-8")
+  lines = open(args.direcfile, "r", encoding="utf-8")
 
   if blib.args_has_non_default_pages(args):
     newpages = {}
@@ -124,7 +122,7 @@ if __name__ == "__main__":
         pagemsg("Skipping contents because no change")
         return
       return process_page(index, page, newtext, comment, origcontents,
-        args.verbose, arg_comment, arg_lang_only, args.allow_page_creation)
+        args.verbose, args.comment, args.lang_only, args.allow_page_creation)
     blib.do_pagefile_cats_refs(args, start, end, do_process_page, edit=True)
 
   else:
@@ -137,6 +135,6 @@ if __name__ == "__main__":
       else:
         def do_process_page(page, index, parsed):
           return process_page(index, page, newtext, comment, origcontents,
-              args.verbose, arg_comment, arg_lang_only, args.allow_page_creation)
+              args.verbose, args.comment, args.lang_only, args.allow_page_creation)
         blib.do_edit(pywikibot.Page(site, pagetitle), index, do_process_page,
             save=args.save, verbose=args.verbose, diff=args.diff)

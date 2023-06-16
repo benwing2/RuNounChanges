@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Author: Benwing; bits and pieces taken from code written by CodeCat/Rua for MewBot
@@ -426,7 +426,7 @@ def handle_process_page_retval(retval, existing_text, pagemsg, verbose, do_diff)
         dangling_newline = False
         for line in diff:
           dangling_newline = not line.endswith('\n')
-          sys.stdout.write(line.encode('utf-8'))
+          sys.stdout.write(line)
           if dangling_newline:
             sys.stdout.write("\n")
         if dangling_newline:
@@ -735,7 +735,7 @@ def prefix_pages(prefix, startprefix=None, endprefix=None, namespace=None):
     yield i, current
 
 def query_special_pages(specialpage, startprefix=None, endprefix=None):
-  for i, current in iter_items(site.querypage(specialpage), startprefix, endprefix):
+  for i, current in iter_items(site.querypage(specialpage, total=None), startprefix, endprefix):
     yield i, current
 
 def query_usercontribs(username, startprefix=None, endprefix=None, starttime=None, endtime=None):
@@ -781,9 +781,9 @@ def yield_items_from_file(canonicalize=None, include_original_lineno=False, pres
     else:
       yield line
 
-def iter_items_from_file(filename, startprefix=None, endprefix=None, canonicalize=None, filename_is_utf8=True,
+def iter_items_from_file(filename, startprefix=None, endprefix=None, canonicalize=None,
     preserve_blank_lines=False, skip_ignorable_pages=False):
-  file_items = yield_items_from_file(filename, canonicalize=canonicalize, filename_is_utf8=filename_is_utf8,
+  file_items = yield_items_from_file(filename, canonicalize=canonicalize,
       include_original_lineno=True, preserve_blank_lines=preserve_blank_lines)
   for _, (index, line) in iter_items(file_items, startprefix=startprefix, endprefix=endprefix, get_name=lambda x:x[1], get_index=lambda x:x[0],
       skip_ignorable_pages=skip_ignorable_pages):
@@ -1559,7 +1559,7 @@ def safe_page_exists(page, errandpagemsg):
 
 def safe_page_save(page, comment, errandpagemsg):
   def do_save():
-    page.save(comment=comment)
+    page.save(summary=comment)
     return True
   return try_repeatedly(do_save, errandpagemsg, "save page", bad_value_ret=False)
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
@@ -16,13 +16,13 @@ def process_text_on_page(index, pagetitle, text):
   notes = []
 
   parsed = blib.parse_text(text)
-  rhymes_templates = args.rhymes_templates.decode("utf-8").split(",")
+  rhymes_templates = args.rhymes_templates.split(",")
   if args.skip_langs:
-    skip_lang_codes = args.skip_langs.decode("utf-8").split(",")
+    skip_lang_codes = args.skip_langs.split(",")
   else:
     skip_lang_codes = []
   if args.include_langs:
-    include_lang_codes = args.include_langs.decode("utf-8").split(",")
+    include_lang_codes = args.include_langs.split(",")
   else:
     include_lang_codes = []
   for t in parsed.filter_templates():

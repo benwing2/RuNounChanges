@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
@@ -12,9 +12,8 @@ args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 if args.namespace:
-  ns = args.namespace.decode("utf-8")
   for i, page in blib.iter_items(site.allpages(
-    start=start if isinstance(start, basestring) else '!', namespace=ns,
+    start=start if isinstance(start, basestring) else '!', namespace=args.namespace,
     filterredir=False), start, end):
       msg("Page %s %s: Processing" % (i, str(page.title())))
 else:

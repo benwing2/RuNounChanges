@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import blib
@@ -52,16 +52,15 @@ if __name__ == "__main__":
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
-  lines = codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8")
-  arg_comment = args.comment.decode("utf-8")
+  lines = open(args.direcfile, "r", encoding="utf-8")
 
   index_pagename_text_comment = blib.yield_text_from_find_regex(lines, args.verbose)
   for _, (index, pagename, text, comment) in blib.iter_items(index_pagename_text_comment, start, end,
       get_name=lambda x:x[1], get_index=lambda x:x[0]):
     if comment:
-      comment = "%s; %s" % (comment, arg_comment)
+      comment = "%s; %s" % (comment, args.comment)
     else:
-      comment = arg_comment
+      comment = args.comment
     def do_process_page(page, index, parsed):
       return process_page(index, page, text, args.lang, args.verbose, comment)
     blib.do_edit(pywikibot.Page(site, pagename), index, do_process_page,

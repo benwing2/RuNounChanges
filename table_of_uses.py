@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
@@ -17,7 +17,7 @@ parser.add_argument("--raw-refs", help="References are raw instead of in Templat
     action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
-ref_namespaces = args.ref_namespaces and args.ref_namespaces.decode("utf-8").split(",") or None
+ref_namespaces = args.ref_namespaces and args.ref_namespaces.split(",") or None
 
 msg('{|class="wikitable"')
 msg("! Aliased template !! Canonical template !! #Uses%s%s" %

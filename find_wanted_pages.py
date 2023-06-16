@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Go through a dump finding links to nonexistent pages.
@@ -122,6 +122,6 @@ parser.add_argument("--existing-pages", help="Gzipped file containing existing p
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-pages_with_langs = read_existing_pages(args.existing_pages.decode("utf-8"))
+pages_with_langs = read_existing_pages(args.existing_pages)
 
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, stdin=True)

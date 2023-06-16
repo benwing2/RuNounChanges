@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
@@ -269,7 +269,7 @@ args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 verbs = {}
-for line in blib.yield_items_from_file(args.direcfile.decode("utf-8")):
+for line in blib.yield_items_from_file(args.direcfile):
   if args.mode == "full-conj":
     verb = re.sub("<.*?>", "", line)
     verbs[verb] = line

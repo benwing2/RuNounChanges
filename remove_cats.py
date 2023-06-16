@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
@@ -26,10 +26,9 @@ def process_text_on_page(index, pagetitle, text):
   origtext = text
   notes = []
   removed_cats = []
-  regex = args.regex.decode("utf-8")
 
   def should_remove_cat(cat):
-    return re.match(regex + "$", cat.replace("_", " "))
+    return re.match(args.regex + "$", cat.replace("_", " "))
 
   parsed = blib.parse_text(text)
 

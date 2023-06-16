@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import blib
@@ -143,10 +143,8 @@ if __name__ == "__main__":
   else:
     pages = set()
 
-  arg_comment = args.comment.decode("utf-8")
-
   if args.direcfile:
-    lines = codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8")
+    lines = codecs.open(args.direcfile, "r", encoding="utf-8")
 
     index_pagename_text_comment = blib.yield_text_from_find_regex(lines, args.verbose)
     for _, (index, pagename, text, comment) in blib.iter_items(index_pagename_text_comment,
@@ -154,9 +152,9 @@ if __name__ == "__main__":
       if pages and pagename not in pages:
         continue
       if comment:
-        comment = "%s; %s" % (comment, arg_comment)
+        comment = "%s; %s" % (comment, args.comment)
       else:
-        comment = arg_comment
+        comment = args.comment
       def do_process_page(page, index, parsed):
         return process_page(index, page, text, args.verbose, comment)
       blib.do_edit(pywikibot.Page(site, pagename), index, do_process_page,
@@ -164,8 +162,8 @@ if __name__ == "__main__":
   else:
     for index, extfn in enumerate(args.files):
       lines = list(blib.yield_items_from_file(extfn))
-      pagename = re.sub(r"\.der$", "", rulib.recompose(extfn.decode("utf-8")))
+      pagename = re.sub(r"\.der$", "", rulib.recompose(extfn))
       def do_process_page(page, index, parsed):
-        return process_page(index, page, "\n".join(lines), args.verbose, arg_comment)
+        return process_page(index, page, "\n".join(lines), args.verbose, args.comment)
       blib.do_edit(pywikibot.Page(site, pagename), index + 1, do_process_page,
           save=args.save, verbose=args.verbose, diff=args.diff)

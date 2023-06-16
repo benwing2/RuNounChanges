@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import blib, re, codecs
@@ -50,8 +50,6 @@ params.add_argument("--comment", help="Specify the change comment to use")
 args = params.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-comment = args.comment and args.comment.decode("utf-8")
-
 def do_process_page(page, index):
-  return process_page(page, index, args, comment)
+  return process_page(page, index, args, args.comment)
 blib.do_pagefile_cats_refs(args, start, end, do_process_page)

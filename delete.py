@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import blib, re, codecs
@@ -32,8 +32,6 @@ params.add_argument("--direcfile", help="File containing pages to delete, option
 args = params.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-comment = args.comment and args.comment.decode("utf-8")
-
 if args.direcfile:
   for index, line in blib.iter_items_from_file(args.direcfile, start, end):
     if " ||| " in line:
@@ -45,5 +43,5 @@ if args.direcfile:
     process_page(page, index, args, page_comment)
 else:
   def do_process_page(page, index):
-    return process_page(page, index, args, comment)
+    return process_page(page, index, args, args.comment)
   blib.do_pagefile_cats_refs(args, start, end, do_process_page)

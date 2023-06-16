@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import blib, re, codecs
@@ -29,8 +29,6 @@ params.add_argument("--contents", help="Contents of pages", required=True)
 args = params.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-contents = args.contents.decode("utf-8")
-
 def do_process_page(page, index):
-  return process_page(page, index, args, contents)
+  return process_page(page, index, args, args.contents)
 blib.do_pagefile_cats_refs(args, start, end, do_process_page)

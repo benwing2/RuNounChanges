@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Fix ru-noun headers to be ru-noun+ and ru-proper noun to ru-proper noun+

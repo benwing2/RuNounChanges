@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import re, sys, codecs, argparse, unicodedata
@@ -519,5 +519,5 @@ if args.direcfile:
 else:
   for index, extfn in enumerate(args.files):
     lines = list(blib.iter_items_from_file(extfn, None, None))
-    fn = rulib.recompose(extfn.decode("utf-8"))
+    fn = rulib.recompose(extfn)
     process_lines_from_file(index + 1, lines, fn)

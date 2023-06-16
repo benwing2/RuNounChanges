@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
@@ -12,7 +12,7 @@ parser.add_argument("--textfile", help="Pages and inflections to process.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-with codecs.open(args.textfile.decode("utf-8"), "r", "utf-8") as fp:
+with open(args.textfile, "r", encoding="utf-8") as fp:
   text = fp.read()
   pages = text.split('\001')
 for index, page in blib.iter_items(pages, start, end):

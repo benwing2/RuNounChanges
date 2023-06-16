@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
@@ -113,7 +113,7 @@ parser.add_argument("--from-to",
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-templates = re.split(",", args.templates.decode('utf-8'))
+templates = re.split(",", args.templates)
 
 def process_param(param):
   if "!=" in param:
@@ -131,7 +131,7 @@ def process_param(param):
   return param
 
 if args.params:
-  paramspecs = [process_param(param) for param in re.split(",", args.params.decode('utf-8'))]
+  paramspecs = [process_param(param) for param in re.split(",", args.params)]
 else:
   paramspecs = None
 

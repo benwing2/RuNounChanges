@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Move text outside of {{RQ:Browne Errors}}, {{RQ:L'Estrange Fables}} and {{RQ:Chapman Odyssey}} inside,

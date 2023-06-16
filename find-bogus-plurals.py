@@ -1,10 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import fileinput
 import re
 
 for line in fileinput.input():
-  line = line.decode('utf-8')
-  if re.search(ur"plural أَ.ْ.َات", line):
+  if re.search(r"plural أَ.ْ.َات", line):
     print line

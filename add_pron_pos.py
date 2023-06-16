@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Add pos= to ru-IPA pronunciations. Also find instances where и/я/ы/а/е̂ has
