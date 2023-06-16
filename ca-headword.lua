@@ -156,11 +156,6 @@ end
 --                                     Utility functions                               --
 -----------------------------------------------------------------------------------------
 
-local function track(page)
-	require("Module:debug/track")("ca-headword/" .. page)
-	return true
-end
-
 local function glossary_link(entry, text)
 	text = text or entry
 	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
@@ -833,6 +828,10 @@ pos_functions["verbs"] = {
 	end
 }
 
+-----------------------------------------------------------------------------------------
+--                                        Numerals                                     --
+-----------------------------------------------------------------------------------------
+
 -- Display additional inflection information for a numeral
 pos_functions["numerals"] = {
 	params = {
@@ -858,7 +857,7 @@ pos_functions["numerals"] = {
 }
 
 -----------------------------------------------------------------------------------------
---                                      Phrases                                        --
+--                                       Phrases                                       --
 -----------------------------------------------------------------------------------------
 
 pos_functions["phrases"] = {
