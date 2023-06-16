@@ -391,7 +391,7 @@ def combine_adjacent_tags_into_multipart(tn, lang, lemma, tags, tag_to_dimension
             else:
               prev_tag_range = [tag_ind - 1]
           else:
-            prev_tag_range = range(tag_ind)
+            prev_tag_range = list(range(tag_ind))
           for prev_tag_ind in prev_tag_range:
             cur_tag_set = tag_sets[prev_tag_ind]
             tag_set = tag_sets[tag_ind]
