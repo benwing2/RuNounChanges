@@ -427,8 +427,8 @@ pos_functions["cardinal numbers"] = {
 }
 
 
-local allowed_genders = m_table.listToSet(
-	{"m", "f", "mf", "mfbysense", "n", "m-p", "f-p", "mf-p", "mfbysense-p", "n-p", "?", "?-p"}
+local allowed_genders = require("Module:table/listToSet")(
+	{"m", "f", "mf", "mfbysense", "mfequiv", "n", "m-p", "f-p", "mf-p", "mfbysense-p", "mfequiv-p", "n-p", "?", "?-p"}
 )
 
 
@@ -917,7 +917,7 @@ pos_functions["suffix forms"] = {
 		for _, typ in ipairs(args[1]) do
 			table.insert(suffix_type, typ .. "-forming suffix")
 		end
-		table.insert(data.inflections, {label = "non-lemma form of " .. m_table.serialCommaJoin(suffix_type, {conj = "or"})})
+		table.insert(data.inflections, {label = "non-lemma form of " .. require("Module:table").serialCommaJoin(suffix_type, {conj = "or"})})
 	end,
 }
 
