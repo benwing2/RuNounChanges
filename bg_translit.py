@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # Authors: Benwing; Atitarev for tr() and tr_adj() functions, in Lua
 
@@ -11,15 +11,10 @@ from blib import remove_links, msg
 # 1. Converts grave-и to и with both acute and grave.
 # 2. Doesn't convert grave to acute when no transliteration.
 
-AC = u"\u0301"
-GR = u"\u0300"
+AC = "\u0301"
+GR = "\u0300"
 ACGR = "[" + AC + GR + "]"
 ACGROPT = "[" + AC + GR + "]?"
-
-def uniprint(x):
-  print x.encode('utf-8')
-def uniout(x):
-  print x.encode('utf-8'),
 
 def rsub(text, fr, to):
     if type(to) is dict:
@@ -40,19 +35,19 @@ def error(text):
     raise RuntimeError(text)
 
 tt = {
-    u"А":u"A", u"а":u"a", u"Б":u"B", u"б":u"b", u"В":u"V", u"в":u"v", u"Г":u"G", u"г":u"g", u"Д":u"D", u"д":u"d", 
-    u"Е":u"E", u"е":u"e", u"Ж":u"Ž", u"ж":u"ž", u"З":u"Z", u"з":u"z", u"И":u"I", u"и":u"i", u"Й":u"J", u"й":u"j", 
-    u"К":u"K", u"к":u"k", u"Л":u"L", u"л":u"l", u"М":u"M", u"м":u"m", u"Н":u"N", u"н":u"n", u"О":u"O", u"о":u"o", 
-    u"П":u"P", u"п":u"p", u"Р":u"R", u"р":u"r", u"С":u"S", u"с":u"s", u"Т":u"T", u"т":u"t", u"У":u"U", u"у":u"u", 
-    u"Ф":u"F", u"ф":u"f", u"Х":u"H", u"х":u"h", u"Ц":u"C", u"ц":u"c", u"Ч":u"Č", u"ч":u"č", u"Ш":u"Š", u"ш":u"š", 
-    u"Щ":u"Št", u"щ":u"št", u"Ъ":u"Ǎ", u"ъ":u"ǎ", u"Ю":u"Ju", u"ю":u"ju", u"Я":u"Ja", u"я":u"ja",
-    u"ѝ":u"ì",
+    "А":"A", "а":"a", "Б":"B", "б":"b", "В":"V", "в":"v", "Г":"G", "г":"g", "Д":"D", "д":"d", 
+    "Е":"E", "е":"e", "Ж":"Ž", "ж":"ž", "З":"Z", "з":"z", "И":"I", "и":"i", "Й":"J", "й":"j", 
+    "К":"K", "к":"k", "Л":"L", "л":"l", "М":"M", "м":"m", "Н":"N", "н":"n", "О":"O", "о":"o", 
+    "П":"P", "п":"p", "Р":"R", "р":"r", "С":"S", "с":"s", "Т":"T", "т":"t", "У":"U", "у":"", 
+    "Ф":"F", "ф":"f", "Х":"H", "х":"h", "Ц":"C", "ц":"c", "Ч":"Č", "ч":"č", "Ш":"Š", "ш":"š", 
+    "Щ":"Št", "щ":"št", "Ъ":"Ǎ", "ъ":"ǎ", "Ю":"Ju", "ю":"ju", "Я":"Ja", "я":"ja",
+    "ѝ":"ì",
 
     # Pre-reform
-    u"Ѫ":u"Ǫ", u"ѫ":u"ǫ", u"Ѣ":u"Ě", u"ѣ":u"ě", u"Ь":u"ʹ", u"ь":u"ʹ",
+    "Ѫ":"Ǫ", "ѫ":"ǫ", "Ѣ":"Ě", "ѣ":"ě", "Ь":"ʹ", "ь":"ʹ",
 }
 
-bulgarian_vowels = u"АОУЯЮИЕЪЬѢѪаоуяюиеъьѣѫAEIOUĚǪaeiouěǫʹ"
+bulgarian_vowels = "АОУЯЮИЕЪЬѢѪаоуяюиеъьѣѫAEIOUĚǪaeiouěǫʹ"
 
 # Transliterates text, which should be a single word or phrase. It should
 # include stress marks, which are then preserved in the transliteration.
@@ -61,11 +56,11 @@ def tr(text, lang=None, sc=None, msgfun=msg):
     text = tr_canonicalize_bulgarian(text)
 
     # Remove word-final hard sign
-    text = rsub(text, u"[Ъъ]($|[- \]])", ur"\1")
+    text = rsub(text, "[Ъъ]($|[- \]])", ur"\1")
 
     # ьо becomes jo, Ьо becomes Jo
-    text = rsub(text, u"ь(?=[Оо])", ur"j")
-    text = rsub(text, u"Ь(?=[Оо])", ur"J")
+    text = rsub(text, "ь(?=[Оо])", ur"j")
+    text = rsub(text, "Ь(?=[Оо])", ur"J")
     text = rsub(text, '.', tt)
 
     # compose accented characters
@@ -83,30 +78,30 @@ debug_tr_matching = False
 #########       Transliterate with Bulgarian to guide       #########
 
 # list of items to pre-canonicalize to ʺ, which needs to be first in the list
-double_quote_like = [u"ʺ",u"”",u"″"]
+double_quote_like = ["ʺ","”","″"]
 # list of items to pre-canonicalize to ʹ, which needs to be first in the list
-single_quote_like = [u"ʹ",u"’",u"ʼ",u"´",u"′",u"ʲ",u"ь",u"ˈ",u"`",u"‘"]
+single_quote_like = ["ʹ","’","ʼ","´","′","ʲ","ь","ˈ","`","‘"]
 # regexps to use for early canonicalization in pre_canonicalize_latin()
 double_quote_like_re = "[" + "".join(double_quote_like) + "]"
 single_quote_like_re = "[" + "".join(single_quote_like) + "]"
 # list of items to match-canonicalize against a Bulgarian hard sign;
 # the character Ǎ needs to be first in the list
-hard_sign_matching = [u"Ǎ", u"Ă", u"Ŭ", u"A"]
+hard_sign_matching = ["Ǎ", "Ă", "Ŭ", "A"]
 # list of items to match-canonicalize against a Bulgarian soft sign;
 # the character ʹ which needs to be first in the list
 # Don't put 'j here because we might legitimately have ья or similar
-soft_sign_matching = single_quote_like + [u"'ʹ",u"'",u"y",u"j"]
+soft_sign_matching = single_quote_like + ["'ʹ","'","y","j"]
 
 bulgarian_to_latin_lookalikes_lc = {
-        u"а":"a", u"е":"e", u"о":"o", u"х":"x", u"ӓ":u"ä", u"ё":u"ë", u"с":"c",
-        u"і":"i",
-        u"а́":u"á", u"е́":u"é", u"о́":u"ó", u"і́":u"í",
-        u"р":"p", u"у":"y",
+        "а":"a", "е":"e", "о":"o", "х":"x", "ӓ":"ä", "ё":"ë", "с":"c",
+        "і":"i",
+        "а́":"á", "е́":"é", "о́":"ó", "і́":"í",
+        "р":"p", "у":"y",
     }
 bulgarian_to_latin_lookalikes_cap = {
-        u"А":"A", u"Е":"E", u"О":"O", u"Х":"X", u"Ӓ":u"ä", u"Ё":u"Ë", u"С":"C",
-        u"І":"I", u"К":"K",
-        u"А́":u"Á", u"Е́":u"É", u"О́":u"Ó", u"І́":u"Í",
+        "А":"A", "Е":"E", "О":"O", "Х":"X", "Ӓ":"ä", "Ё":"Ë", "С":"C",
+        "І":"I", "К":"K",
+        "А́":"Á", "Е́":"É", "О́":"Ó", "І́":"Í",
     }
 bulgarian_to_latin_lookalikes = dict(bulgarian_to_latin_lookalikes_lc.items() +
         bulgarian_to_latin_lookalikes_cap.items())
@@ -124,15 +119,15 @@ bulgarian_lookalikes_re = "[" + "".join(
 latin_lookalikes_re = "[" + "".join(
         [x for x in bulgarian_to_latin_lookalikes.values() if len(x) == 1]) + "]"
 
-multi_single_quote_subst = u"\ufff1"
-capital_silent_hard_sign = u"\ufff6"
-small_silent_hard_sign = u"\ufff7"
+multi_single_quote_subst = "\ufff1"
+capital_silent_hard_sign = "\ufff6"
+small_silent_hard_sign = "\ufff7"
 
 # List of characters we don't self-canonicalize at all, on top of
 # whatever may be derived from the matching tables. Note that we also
 # don't self-canonicalize the canonical entries in the matching tables.
 dont_self_canonicalize = (
-  u"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 )
 # Lists of characters that can be unmatched on either Latin or Bulgarian side.
 # unmatch_either_before indicates characters handled before match(),
@@ -173,9 +168,9 @@ unmatch_either_after = ["!", "?", "."]
 # others don't it is possible to control what a character is
 # self-canonicalized to. For example, single-quote ("'") occurs in various
 # entries, but most occurrences are surrounded by one-element tuples;
-# only the occurrences where the canonical character is u"ʹ" aren't so
+# only the occurrences where the canonical character is "ʹ" aren't so
 # surrounded. The effect is that single-quote will be self-canonicalized
-# to u"ʹ", even though it will be match-canonicalized to multiple
+# to "ʹ", even though it will be match-canonicalized to multiple
 # possibilities depending on the corresponding Bulgarian character.
 # (If the first item in an entry is a tuple, it overrides the behavior
 # that normally suppresses all self-canonicalization of the character.
@@ -183,52 +178,52 @@ unmatch_either_after = ["!", "?", "."]
 # entry with the same single-quote on the Bulgarian side. That allows
 # single-quote to remain as a single-quote when match-canonicalizing a
 # single-quote on the Bulgarian side, but ensures that it will be
-# stll self-canonicalized to u"ʹ", as previously described.)
+# stll self-canonicalized to "ʹ", as previously described.)
 #
 # Each string might have multiple characters, to handle things
 # like ж=zh.
 
 tt_to_bulgarian_matching_uppercase = {
-    u"А":u"A",
-    u"Б":u"B",
-    u"В":[u"V",u"B",u"W"],
+    "А":"A",
+    "Б":"B",
+    "В":["V","B","W"],
     # most of these entries are here for the lowercase equivalent
     # second X is Greek
-    u'Г':[u'G',[u'V'],[u'X'],[(u"Χ",),"X"],[u'Kh'],[u'H']],
-    u"Д":u"D",
-    u"Е":"E",
-    u"Ж":[u"Ž",u"Zh",u"ʐ",u"Z"], # no cap equiv: u"ʐ"?
-    u"З":u"Z",
-    u"И":[u"I",u"Yi",u"Y",u"'I",u"ʹI",u"Ji",u"И"],
-    u"Й":[u"J",u"Y",u"Ĭ",u"I",u"Ÿ"],
+    'Г':['G',['V'],['X'],[("Χ",),"X"],['Kh'],['H']],
+    "Д":"D",
+    "Е":"E",
+    "Ж":["Ž","Zh","ʐ","Z"], # no cap equiv: "ʐ"?
+    "З":"Z",
+    "И":["I","Yi","Y","'I","ʹI","Ji","И"],
+    "Й":["J","Y","Ĭ","I","Ÿ"],
     # Second K is Cyrillic
-    u"К":[u"K","Ck",u"C",u"К"],
-    u"Л":u"L",
-    u"М":u"M",
-    u"Н":[u"N",u"H"],
-    u"О":u"O",
-    u"П":u"P",
-    u"Р":u"R",
-    u"С":[u"S",u"C"],
-    u"Т":u"T",
-    u"У":[u"U",u"Y",u"Ou",u"W"],
-    u"Ф":[u"F",u"Ph"],
+    "К":["K","Ck","C","К"],
+    "Л":"L",
+    "М":"M",
+    "Н":["N","H"],
+    "О":"O",
+    "П":"P",
+    "Р":"R",
+    "С":["S","C"],
+    "Т":"T",
+    "У":["U","Y","Ou","W"],
+    "Ф":["F","Ph"],
     # final X is Greek
-    u"Х":[u"H", u"X",u"Kh",u"Ch",u"Č",u"Χ"], # Ch might have been canoned to Č
-    u"Ц":[u"C",u"T͡s",u"Ts",u"Tz",u"Č"],
-    u'Ч':[u'Č',u"Ch",u"Tsch",u"Tsč",u"Tch",u"Tč",u"T͡ɕ",u"Ć",[u"Š"],[u"Sh"]],
-    u"Ш":[u"Š",u"Sh"],
+    "Х":["H", "X","Kh","Ch","Č","Χ"], # Ch might have been canoned to Č
+    "Ц":["C","T͡s","Ts","Tz","Č"],
+    'Ч':['Č',"Ch","Tsch","Tsč","Tch","Tč","T͡ɕ","Ć",["Š"],["Sh"]],
+    "Ш":["Š","Sh"],
     # don't self-canon Ŝ to Щ because it might be occurring in a sequence Ŝč
     # or similar
-    u"Щ":[u"Št",u"Sht",u"St",u"St",u"Š(t)",u"Ŝt",(u"Ŝ",),u"Š'",u"ʂ",u"Sh'",
-        u"Š",u"Sh"],# No cap equiv: u"ʂ"?
-    u"Ъ":hard_sign_matching + [u""],
-    u"Ю":[u"Ju",u"Yu",u"'U",u"ʹU",u"U",u"'Ju",u"ʹJu"],
-    u"Я":[u"Ja",u"Ya",u"'A",u"ʹA",u"A",u"'Ja",u"ʹJa"],
+    "Щ":["Št","Sht","St","St","Š(t)","Ŝt",("Ŝ",),"Š'","ʂ","Sh'",
+        "Š","Sh"],# No cap equiv: "ʂ"?
+    "Ъ":hard_sign_matching + [""],
+    "Ю":["Ju","Yu","'U","ʹU","U","'Ju","ʹJu"],
+    "Я":["Ja","Ya","'A","ʹA","A","'Ja","ʹJa"],
     # archaic, pre-1918 letters
-    u'Ѫ':u'Ǫ',
-    u'Ѣ':[u'Ě',u"E"],
-    u"Ь":soft_sign_matching + [u""],
+    'Ѫ':'Ǫ',
+    'Ѣ':['Ě',"E"],
+    "Ь":soft_sign_matching + [""],
 }
 
 # Match Latin characters in the Bulgarian against same characters
@@ -237,36 +232,36 @@ for ch in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
 
 tt_to_bulgarian_matching_non_case = {
     # Bulgarian style quotes
-    u'«':[u'“',u'"'],
-    u'»':[u'”',(u'ʺ',),u'"'],
+    '«':['“','"'],
+    '»':['”',('ʺ',),'"'],
     # punctuation (leave on separate lines)
     # these are now handled by check_unmatch_either(unmatch_either_before)
-    #u"?":[u"?",u""], # question mark
-    #u".":[u".",u""], # period
-    #u"!":[u"!",u""], # exclamation point
-    u"-":u"-", # hyphen/dash
-    u"—":[u"—",u"-"], # long dash
-    u'"':[(u'"',)], # quotation mark
+    #"?":["?",""], # question mark
+    #".":[".",""], # period
+    #"!":["!",""], # exclamation point
+    "-":"-", # hyphen/dash
+    "—":["—","-"], # long dash
+    '"':[('"',)], # quotation mark
     # allow parens on the Bulgarian side to get copied over the the Latin
     # side if unmatching
-    u"(":[u"(",u""],
-    u")":[u")",u""],
+    "(":["(",""],
+    ")":[")",""],
     # allow single quote to match nothing so we can handle bolded text in
     # the Cyrillic without corresponding bold in the translit and add the
     # bold to the translit (occurs a lot in usexes)
-    u"'":[(u"'",),(u"ʹ",),u""], # single quote, for bold/italic
-    u"’":[(u"’",),(u"ʹ",),(u"'",)], # Кот-д’Ивуар
-    u" ":u" ",
-    u"[":u"",
-    u"]":u"",
-    u",":[u",", u" ,", u""],
-    u"\u00A0":[u"\u00A0", u" "],
+    "'":[("'",),("ʹ",),""], # single quote, for bold/italic
+    "’":[("’",),("ʹ",),("'",)], # Кот-д’Ивуар
+    " ":" ",
+    "[":"",
+    "]":"",
+    ",":[",", " ,", ""],
+    "\u00A0":["\u00A0", " "],
     # these are now handled by check_unmatch_either(unmatch_either_after)
     #AC:[AC,""],
     #GR:[GR,""],
     # now handled by consume_against_eow_hard_sign()
-    #capital_silent_hard_sign:[u""],
-    #small_silent_hard_sign:[u""],
+    #capital_silent_hard_sign:[""],
+    #small_silent_hard_sign:[""],
 }
 
 # Match numbers and some punctuation against itself
@@ -314,22 +309,22 @@ if debug_tables:
 # accented entries one character up.
 tt_to_bulgarian_matching_2char = {
     # ja for ся is strange but occurs in ться vs. tʹja
-    u"ся":["sja","sa",u"ja"], # especially in the reflexive ending
-    u"нн":["nn","n"],
-    u"те":[u"te",u"ťe",u"țe"],
-    u"ие":["ije",u"ʹje",u"'je","je"],
-    u"ия":["ija","ia"],
-    u"ьо":[u"ʹo",u"ʹjo",u"'jo",u"jo"],
-    u"дж":[u"dž",u"j"],
-    u"кс":[u"ks",u"x"],
+    "ся":["sja","sa","ja"], # especially in the reflexive ending
+    "нн":["nn","n"],
+    "те":["te","ťe","țe"],
+    "ие":["ije","ʹje","'je","je"],
+    "ия":["ija","ia"],
+    "ьо":["ʹo","ʹjo","'jo","jo"],
+    "дж":["dž","j"],
+    "кс":["ks","x"],
 }
 
 tt_to_bulgarian_matching_3char = {
-    u" — ":[u" — ",u"—",u" - ",u"-"],
+    " — ":[" — ","—"," - ","-"],
 }
 
 tt_to_bulgarian_matching_4char = {
-    u"вств":[u"vstv","stv"],
+    "вств":["vstv","stv"],
 }
 
 tt_to_bulgarian_matching_all_char = dict(
@@ -412,9 +407,9 @@ if debug_tables:
 def pre_canonicalize_latin(text, bulgarian=None, msgfun=msg):
     debprint("pre_canonicalize_latin: Enter, text=%s" % text)
     # remove L2R, R2L markers
-    text = rsub(text, u"[\u200E\u200F]", "")
+    text = rsub(text, "[\u200E\u200F]", "")
     # remove embedded comments
-    text = rsub(text, u"<!--.*?-->", "")
+    text = rsub(text, "<!--.*?-->", "")
     # remove embedded IPAchar templates
     text = rsub(text, r"\{\{IPAchar\|(.*?)\}\}", r"\1")
     # canonicalize whitespace, including things like no-break space
@@ -422,22 +417,22 @@ def pre_canonicalize_latin(text, bulgarian=None, msgfun=msg):
     # remove leading/trailing spaces
     text = text.strip()
     # decompose accented letters
-    text = rsub(text, u"[áéíóúýńÁÉÍÓÚÝŃàèìòùỳÀÈÌÒÙỲ]",
-            {u"á":"a"+AC, u"é":"e"+AC, u"í":"i"+AC,
-             u"ó":"o"+AC, u"ú":"u"+AC, u"ý":"y"+AC, u"ń":"n"+AC,
-             u"Á":"A"+AC, u"É":"E"+AC, u"Í":"I"+AC,
-             u"Ó":"O"+AC, u"Ú":"U"+AC, u"Ý":"Y"+AC, u"Ń":"N"+AC,
-             u"à":"a"+GR, u"è":"e"+GR, u"ì":"i"+GR,
-             u"ò":"o"+GR, u"ù":"u"+GR, u"ỳ":"y"+GR,
-             u"À":"A"+GR, u"È":"E"+GR, u"Ì":"I"+GR,
-             u"Ò":"O"+GR, u"Ù":"U"+GR, u"Ỳ":"Y"+GR,})
+    text = rsub(text, "[áéíóúýńÁÉÍÓÚÝŃàèìòùỳÀÈÌÒÙỲ]",
+            {"á":"a"+AC, "é":"e"+AC, "í":"i"+AC,
+             "ó":"o"+AC, "ú":""+AC, "ý":"y"+AC, "ń":"n"+AC,
+             "Á":"A"+AC, "É":"E"+AC, "Í":"I"+AC,
+             "Ó":"O"+AC, "Ú":"U"+AC, "Ý":"Y"+AC, "Ń":"N"+AC,
+             "à":"a"+GR, "è":"e"+GR, "ì":"i"+GR,
+             "ò":"o"+GR, "ù":""+GR, "ỳ":"y"+GR,
+             "À":"A"+GR, "È":"E"+GR, "Ì":"I"+GR,
+             "Ò":"O"+GR, "Ù":"U"+GR, "Ỳ":"Y"+GR,})
 
     ## "compose" digraphs
     ## This causes problems for words beginning with разх- and isn't necessary
     ## when both Latin and Cyrillic are available.
-    #text = rsub(text, u"[czskCZSK]h",
-    #    {"ch":u"č", "zh":u"ž", "sh":u"š", "kh":"x",
-    #     "Ch":u"Č", "Zh":u"Ž", "Sh":u"Š", "Kh":"X"})
+    #text = rsub(text, "[czskCZSK]h",
+    #    {"ch":"č", "zh":"ž", "sh":"š", "kh":"x",
+    #     "Ch":"Č", "Zh":"Ž", "Sh":"Š", "Kh":"X"})
 
     # canonicalize quote-like signs to make matching easier.
     text = rsub(text, double_quote_like_re, double_quote_like[0])
@@ -445,14 +440,14 @@ def pre_canonicalize_latin(text, bulgarian=None, msgfun=msg):
 
     # sub non-Latin similar chars to Latin
     text = rsub(text, bulgarian_lookalikes_re, bulgarian_to_latin_lookalikes)
-    text = rsub(text, u"[эε]",u'ɛ') # Cyrillic э, Greek ε to Latin ɛ
+    text = rsub(text, "[эε]",'ɛ') # Cyrillic э, Greek ε to Latin ɛ
 
     # remove some accents; don't include Ǎ, ǎ, Ě, ě which transliterate Bulgarian characters
-    text = rsub(text, u"[äïöüÿÄÏÖÜŸǐǒǔǏǑǓ]",
-            {u"ä":"a",u"ï":"i",u"ö":"o",u"ü":"u",
-             u"ǐ":"i",u"ǒ":"o",u"ǔ":"u",
-             u"Ä":"A",u"Ï":"I",u"ö":"O",u"Ü":"U",
-             u"Ǐ":"I",u"Ǒ":"O",u"Ǔ":"U",})
+    text = rsub(text, "[äïöüÿÄÏÖÜŸǐǒǔǏǑǓ]",
+            {"ä":"a","ï":"i","ö":"o","ü":"",
+             "ǐ":"i","ǒ":"o","ǔ":"",
+             "Ä":"A","Ï":"I","ö":"O","Ü":"U",
+             "Ǐ":"I","Ǒ":"O","Ǔ":"U",})
 
     # remove [[...]] from Latin
     if text.startswith("[[") and text.endswith("]]"):
@@ -493,7 +488,7 @@ def pre_canonicalize_latin(text, bulgarian=None, msgfun=msg):
     new_latin_words = []
     for word in latin_words:
         if (re.search(GR, word) and not re.search(AC, word) and
-                not re.search(r"\bi" + GR + r"($|\W)", word, re.UNICODE) and
+                not re.search(r"\bi" + GR + r"($|\W)", word) and
                 len(rsub(word, "[^" + GR + "]", "")) == 1):
             msgfun("Changing grave to acute in Latin word %s (Latin %s, Bulgarian %s)"
                     % (word, text, bulgarian))
@@ -509,14 +504,14 @@ def pre_canonicalize_latin(text, bulgarian=None, msgfun=msg):
 def tr_canonicalize_latin(text):
     # recompose accented letters
     text = rsub(text, "[aeiouyAEIOUY][" + AC + GR + "]",
-        {"a"+AC:u"á", "e"+AC:u"é", "i"+AC:u"í",
-         "o"+AC:u"ó", "u"+AC:u"ú", "y"+AC:u"ý", "n"+AC:u"ń",
-         "A"+AC:u"Á", "E"+AC:u"É", "I"+AC:u"Í",
-         "O"+AC:u"Ó", "U"+AC:u"Ú", "Y"+AC:u"Ý", "N"+AC:u"Ń",
-         "a"+GR:u"à", "e"+GR:u"è", "i"+GR:u"ì",
-         "o"+GR:u"ò", "u"+GR:u"ù", "y"+GR:u"ỳ",
-         "A"+GR:u"À", "E"+GR:u"È", "I"+GR:u"Ì",
-         "O"+GR:u"Ò", "U"+GR:u"Ù", "Y"+GR:u"Ỳ",})
+        {"a"+AC:"á", "e"+AC:"é", "i"+AC:"í",
+         "o"+AC:"ó", ""+AC:"ú", "y"+AC:"ý", "n"+AC:"ń",
+         "A"+AC:"Á", "E"+AC:"É", "I"+AC:"Í",
+         "O"+AC:"Ó", "U"+AC:"Ú", "Y"+AC:"Ý", "N"+AC:"Ń",
+         "a"+GR:"à", "e"+GR:"è", "i"+GR:"ì",
+         "o"+GR:"ò", ""+GR:"ù", "y"+GR:"ỳ",
+         "A"+GR:"À", "E"+GR:"È", "I"+GR:"Ì",
+         "O"+GR:"Ò", "U"+GR:"Ù", "Y"+GR:"Ỳ",})
 
     return text
 
@@ -524,14 +519,14 @@ def post_canonicalize_latin(text, msgfun=msg):
     # Handle Bulgarian jo.
     # FIXME, it may be correct to convert this to Jo, if the Bulgarian text has
     # Ь. But there don't seem to be any examples of that.
-    text = rsub(text, u"ʹo", u"jo")
+    text = rsub(text, "ʹo", "jo")
 
     # recompose accented letters
     text = tr_canonicalize_latin(text)
 
     text = text.strip()
 
-    if re.search(u"[\u0400-\u052F\u2DE0-\u2DFF\uA640-\uA69F]", text):
+    if re.search("[\u0400-\u052F\u2DE0-\u2DFF\uA640-\uA69F]", text):
         msgfun("WARNING: Latin text %s contains Cyrillic characters" % text)
     return text
 
@@ -554,7 +549,7 @@ def canonicalize_latin_bulgarian(latin, bulgarian, msgfun=msg):
         def quote_subst(m):
             return m.group(0).replace("'", multi_single_quote_subst)
         latin = re.sub(r"''+", quote_subst, latin)
-        latin = rsub(latin, u".", tt_canonicalize_latin)
+        latin = rsub(latin, ".", tt_canonicalize_latin)
         latin = latin.replace(multi_single_quote_subst, "'")
         latin = post_canonicalize_latin(latin, msgfun)
     return (latin, bulgarian)
@@ -564,10 +559,10 @@ def canonicalize_latin_foreign(latin, bulgarian, msgfun=msg):
 
 def tr_canonicalize_bulgarian(text):
     # need to decompose grave-accented еЕиИ
-    text = rsub(text, u"ѝ", u"и" + GR)
-    text = rsub(text, u"Ѝ", u"И" + GR)
-    text = rsub(text, u"ѐ", u"е" + GR)
-    text = rsub(text, u"Ѐ", u"Е" + GR)
+    text = rsub(text, "ѝ", "и" + GR)
+    text = rsub(text, "Ѝ", "И" + GR)
+    text = rsub(text, "ѐ", "е" + GR)
+    text = rsub(text, "Ѐ", "Е" + GR)
     return text
 
 # Early pre-canonicalization of Bulgarian, doing stuff that's safe. We split
@@ -575,7 +570,7 @@ def tr_canonicalize_bulgarian(text):
 # between the two steps.
 def pre_pre_canonicalize_bulgarian(text, msgfun=msg):
     # remove L2R, R2L markers
-    text = rsub(text, u"[\u200E\u200F]", "")
+    text = rsub(text, "[\u200E\u200F]", "")
     # canonicalize whitespace, including things like no-break space
     text = re.sub(r"\s+", " ", text, 0, re.U)
     # remove leading/trailing spaces
@@ -585,8 +580,8 @@ def pre_pre_canonicalize_bulgarian(text, msgfun=msg):
 
     # Convert word-final hard sign to special silent character; will be
     # undone later
-    text = rsub(text, u"Ъ($|[- \]])", capital_silent_hard_sign + r"\1")
-    text = rsub(text, u"ъ($|[- \]])", small_silent_hard_sign + r"\1")
+    text = rsub(text, "Ъ($|[- \]])", capital_silent_hard_sign + r"\1")
+    text = rsub(text, "ъ($|[- \]])", small_silent_hard_sign + r"\1")
 
     # sub non-Cyrillic similar chars to Cyrillic
     newtext = rsub(text, latin_lookalikes_re, latin_to_bulgarian_lookalikes)
@@ -617,7 +612,7 @@ def pre_pre_canonicalize_bulgarian(text, msgfun=msg):
     new_bulgarian_words = []
     for word in bulgarian_words:
         if (re.search(GR, word) and not re.search(AC, word) and
-                not re.search(ur"\bи" + GR + ur"($|\W)", word, re.UNICODE) and
+                not re.search(r"\bи" + GR + r"($|\W)", word) and
                 len(rsub(word, "[^" + GR + "]", "")) == 1):
             msgfun("Changing grave to acute in Bulgarian word %s (Latin %s, Bulgarian %s)"
                     % (word, text, text))
@@ -634,17 +629,17 @@ def pre_canonicalize_bulgarian(text, msgfun=msg):
 
 def post_canonicalize_bulgarian(text, msgfun=msg):
     # need to recompose grave-accented еЕиИ
-    text = text.replace(u"и" + GR, u"ѝ")
-    text = text.replace(u"И" + GR, u"Ѝ")
-    text = text.replace(u"е" + GR, u"ѐ")
-    text = text.replace(u"Е" + GR, u"Ѐ")
-    text = text.replace(capital_silent_hard_sign, u"Ъ")
-    text = text.replace(small_silent_hard_sign, u"ъ")
+    text = text.replace("и" + GR, "ѝ")
+    text = text.replace("И" + GR, "Ѝ")
+    text = text.replace("е" + GR, "ѐ")
+    text = text.replace("Е" + GR, "Ѐ")
+    text = text.replace(capital_silent_hard_sign, "Ъ")
+    text = text.replace(small_silent_hard_sign, "ъ")
     return text
 
 def debprint(x):
     if debug_tr_matching:
-        uniprint(x)
+        print(x)
 
 # Vocalize Bulgarian based on transliterated Latin, and canonicalize the
 # transliteration based on the Bulgarian.  This works by matching the Latin
@@ -675,13 +670,13 @@ def tr_matching(bulgarian, latin, err=False, msgfun=msg):
     def is_bow(pos=None):
         if pos is None:
             pos = rind[0]
-        return pos == 0 or ru[pos - 1] in [u" ", u"[", u"|", u"-"]
+        return pos == 0 or ru[pos - 1] in [" ", "[", "|", "-"]
 
     # True if we are at the last character in a word.
     def is_eow(pos=None):
         if pos is None:
             pos = rind[0]
-        return pos == rlen - 1 or ru[pos + 1] in [u" ", u"]", u"|", u"-"]
+        return pos == rlen - 1 or ru[pos + 1] in [" ", "]", "|", "-"]
 
     def get_matches_nchar(numchar):
         assert numchar >= 2 and numchar <= 4
@@ -855,7 +850,7 @@ def tr_matching(bulgarian, latin, err=False, msgfun=msg):
         if rind[0] < rlen and ru[rind[0]] in [capital_silent_hard_sign,
                 small_silent_hard_sign]:
             # Consume any hard/soft-like signs
-            if lind[0] < llen and la[lind[0]] in ([u"Ъ",u"ъ"] +
+            if lind[0] < llen and la[lind[0]] in (["Ъ","ъ"] +
                     hard_sign_matching + soft_sign_matching):
                 lind[0] += 1
             res.append(ru[rind[0]])
@@ -936,28 +931,27 @@ def test(latin, bulgarian, should_outcome, expectedbulgarian=None):
     try:
         result = tr_matching(bulgarian, latin, True)
     except RuntimeError as e:
-        uniprint(u"%s" % e)
+        print("%s" % e)
         result = False
     if result == False:
-        uniprint("tr_matching(%s, %s) = %s" % (bulgarian, latin, result))
+        print("tr_matching(%s, %s) = %s" % (bulgarian, latin, result))
         outcome = "failed"
         canonbulgarian = expectedbulgarian
     else:
         canonbulgarian, canonlatin = result
         trlatin = tr(canonbulgarian)
-        uniout("tr_matching(%s, %s) = %s %s," %
-                (bulgarian, latin, canonbulgarian, canonlatin))
+        print("tr_matching(%s, %s) = %s %s," % (bulgarian, latin, canonbulgarian, canonlatin), end='')
         if trlatin == canonlatin:
-            uniprint("tr() MATCHED")
+            print("tr() MATCHED")
             outcome = "matched"
         else:
-            uniprint("tr() UNMATCHED (= %s)" % trlatin)
+            print("tr() UNMATCHED (= %s)" % trlatin)
             outcome = "unmatched"
     if canonbulgarian != expectedbulgarian:
-        uniprint("Canon Bulgarian FAILED, expected %s got %s"% (
+        print("Canon Bulgarian FAILED, expected %s got %s"% (
             expectedbulgarian, canonbulgarian))
     canonlatin, _ = canonicalize_latin_bulgarian(latin, None)
-    uniprint("canonicalize_latin(%s) = %s" %
+    print("canonicalize_latin(%s) = %s" %
             (latin, canonlatin))
     if outcome == should_outcome and canonbulgarian == expectedbulgarian:
         uniprint("TEST SUCCEEDED.")
@@ -972,154 +966,151 @@ def run_tests():
     num_failed = 0
 
     # Test inferring accents in both Cyrillic and Latin
-    test("zontik", u"зонтик", "matched")
-    test(u"zóntik", u"зо́нтик", "matched", u"зо́нтик")
-    test(u"zóntik", u"зонтик", "matched", u"зо́нтик")
-    test("zontik", u"зо́нтик", "matched")
-    test("zontik", u"зо́нтик", "matched")
+    test("zontik", "зонтик", "matched")
+    test("zóntik", "зо́нтик", "matched", "зо́нтик")
+    test("zóntik", "зонтик", "matched", "зо́нтик")
+    test("zontik", "зо́нтик", "matched")
+    test("zontik", "зо́нтик", "matched")
 
     # Things that should fail
-    test("zontak", u"зонтик", "failed")
-    test("zontika", u"зонтик", "failed")
+    test("zontak", "зонтик", "failed")
+    test("zontika", "зонтик", "failed")
 
     # Test with Cyrillic e
-    test(u"jebepʹje jebe", u"ебепье ебе", "matched")
-    test(u"jebepʹe jebe", u"ебепье ебе", "matched")
-    test("Jebe Jebe", u"Ебе Ебе", "matched")
-    test("ebe ebe", u"ебе ебе", "matched")
-    test("Ebe Ebe", u"Ебе Ебе", "matched")
-    test("yebe yebe", u"ебе ебе", "matched")
-    test("yebe yebe", u"[[ебе]] [[ебе]]", "matched")
-    test("Yebe Yebe", u"Ебе Ебе", "matched")
-    test(u"ébe ébe", u"ебе ебе", "matched", u"е́бе е́бе")
-    test(u"Ébe Ébe", u"Ебе Ебе", "matched", u"Е́бе Е́бе")
-    test(u"yéye yéye", u"ее ее", "matched", u"е́е е́е")
-    test(u"yéye yéye", u"е́е е́е", "matched")
-    test("yeye yeye", u"е́е е́е", "matched")
+    test("jebepʹje jebe", "ебепье ебе", "matched")
+    test("jebepʹe jebe", "ебепье ебе", "matched")
+    test("Jebe Jebe", "Ебе Ебе", "matched")
+    test("ebe ebe", "ебе ебе", "matched")
+    test("Ebe Ebe", "Ебе Ебе", "matched")
+    test("yebe yebe", "ебе ебе", "matched")
+    test("yebe yebe", "[[ебе]] [[ебе]]", "matched")
+    test("Yebe Yebe", "Ебе Ебе", "matched")
+    test("ébe ébe", "ебе ебе", "matched", "е́бе е́бе")
+    test("Ébe Ébe", "Ебе Ебе", "matched", "Е́бе Е́бе")
+    test("yéye yéye", "ее ее", "matched", "е́е е́е")
+    test("yéye yéye", "е́е е́е", "matched")
+    test("yeye yeye", "е́е е́е", "matched")
 
     # Test handling of embedded links, including unmatched acute accent
     # directly before right bracket on Bulgarian side
-    test(u"pala volu", u"пала [[вола|волу]]", "matched")
-    test(u"pala volú", u"пала [[вола|волу]]", "matched", u"пала [[вола|волу́]]")
-    test(u"volu pala", u"[[вола|волу]] пала", "matched")
-    test(u"volú pala", u"[[вола|волу]] пала", "matched", u"[[вола|волу́]] пала")
-    test(u"volupala", u"[[вола|волу]]пала", "matched")
-    test(u"pala volu", u"пала [[волу]]", "matched")
-    test(u"pala volú", u"пала [[волу]]", "matched", u"пала [[волу́]]")
-    test(u"volu pala", u"[[волу]] пала", "matched")
-    test(u"volú pala", u"[[волу]] пала", "matched", u"[[волу́]] пала")
-    test(u"volúpala", u"[[волу]]пала", "matched", u"[[волу́]]пала")
+    test("pala volu", "пала [[вола|волу]]", "matched")
+    test("pala volú", "пала [[вола|волу]]", "matched", "пала [[вола|волу́]]")
+    test("volu pala", "[[вола|волу]] пала", "matched")
+    test("volú pala", "[[вола|волу]] пала", "matched", "[[вола|волу́]] пала")
+    test("volupala", "[[вола|волу]]пала", "matched")
+    test("pala volu", "пала [[волу]]", "matched")
+    test("pala volú", "пала [[волу]]", "matched", "пала [[волу́]]")
+    test("volu pala", "[[волу]] пала", "matched")
+    test("volú pala", "[[волу]] пала", "matched", "[[волу́]] пала")
+    test("volúpala", "[[волу]]пала", "matched", "[[волу́]]пала")
 
     # Silent hard signs
-    test("mir", u"миръ", "matched")
-    test("mir", u"міръ", "matched")
-    test("MIR", u"МІРЪ", "matched")
+    test("mir", "миръ", "matched")
+    test("mir", "міръ", "matched")
+    test("MIR", "МІРЪ", "matched")
 
     # Single quotes in Bulgarian
-    test("volu '''pala'''", u"волу '''пала'''", "matched")
-    test("volu pala", u"волу '''пала'''", "matched")
-    test(u"volu '''palá'''", u"волу '''пала'''", "matched", u"волу '''пала́'''")
-    test(u"volu palá", u"волу '''пала'''", "matched", u"волу '''пала́'''")
+    test("volu '''pala'''", "волу '''пала'''", "matched")
+    test("volu pala", "волу '''пала'''", "matched")
+    test("volu '''palá'''", "волу '''пала'''", "matched", "волу '''пала́'''")
+    test("volu palá", "волу '''пала'''", "matched", "волу '''пала́'''")
     # Here the single quote after l should become ʹ but not the others
-    test(u"volu '''pal'dá'''", u"волу '''пальда'''", "matched", u"волу '''пальда́'''")
-    test(u"bólʹše vsevó", u"[[бо́льше]] [[всё|всего́]]", "unmatched")
+    test("volu '''pal'dá'''", "волу '''пальда'''", "matched", "волу '''пальда́'''")
+    test("bólʹše vsevó", "[[бо́льше]] [[всё|всего́]]", "unmatched")
 
     # Some real-world tests
     # FIXME!!
-    # test(u"Gorbačóv", u"Горбачев", "matched", u"Горбачёв")
-    test(u"Igor", u"Игорь", "matched")
-    test(u"rajón″", u"районъ", "matched", u"райо́нъ")
-    test(u"karantin’", u"карантинъ", "matched")
-    test(u"blyad", u"блядь", "matched")
-    test(u"ródъ", u"родъ", "matched", u"ро́дъ")
-    test(u"soból´", u"соболь", "matched", u"собо́ль")
-    test(u"časóvn'a", u"часовня", "matched", u"часо́вня")
-    test(u"ėkzistencializm", u"экзистенциализм", "matched")
-    test(u"ješčó", u"ещё", "matched")
-    test(u"pardoń", u"пардон́", "matched")
+    # test("Gorbačóv", "Горбачев", "matched", "Горбачёв")
+    test("Igor", "Игорь", "matched")
+    test("rajón″", "районъ", "matched", "райо́нъ")
+    test("karantin’", "карантинъ", "matched")
+    test("blyad", "блядь", "matched")
+    test("ródъ", "родъ", "matched", "ро́дъ")
+    test("soból´", "соболь", "matched", "собо́ль")
+    test("časóvn'a", "часовня", "matched", "часо́вня")
+    test("ėkzistencializm", "экзистенциализм", "matched")
+    test("ješčó", "ещё", "matched")
+    test("pardoń", "пардон́", "matched")
     # The following Latin has Bulgarian ё
-    test(u"lёgkoe", u"лёгкое", "matched")
-    test(u"prýšik", u"прыщик", "matched", u"пры́щик")
-    test(u"''d'ejstvít'el'nost'''", u"действительность", "matched",
-            u"действи́тельность")
-    test(u"óstrov Rejun'jón", u"остров Реюньон", "matched", u"о́стров Реюньо́н")
-    test(u"staromodny", u"старомодный", "matched")
+    test("lёgkoe", "лёгкое", "matched")
+    test("prýšik", "прыщик", "matched", "пры́щик")
+    test("''d'ejstvít'el'nost'''", "действительность", "matched",
+            "действи́тельность")
+    test("óstrov Rejun'jón", "остров Реюньон", "matched", "о́стров Реюньо́н")
+    test("staromodny", "старомодный", "matched")
     # also should match when listed Bulgarian 2-char sequence fails to match
     # as such but can match char-by-char
-    test(u"niy", u"ный", "matched")
-    test(u"trudít’sa", u"трудиться", "matched", u"труди́ться")
-    test(u"vsestorónij", u"всесторонний", "matched", u"всесторо́нний")
-    test(u"Válle-d’Aósta", u"Валле-д'Аоста", "matched", u"Ва́лле-д'Ао́ста")
-    test(u"interesovátʹja", u"интересоваться", "matched", u"интересова́ться")
-    test(u"rešímosť", u"решимость", "matched", u"реши́мость")
-    test(u"smirénje", u"смирение", "matched", u"смире́ние")
-    test(u"prékhodjaschij", u"преходящий", "matched", u"пре́ходящий")
-    test(u"čústvo jazyká", u"чувство языка", "matched", u"чу́вство языка́")
-    test(u"zanoš'ivost'", u"заносчивость", "matched")
-    test(u"brezgátь", u"брезгать", "matched", u"брезга́ть")
-    test(u"adaptacia", u"адаптация", "matched")
-    test(u"apryiórniy", u"априо́рный", "matched")
+    test("niy", "ный", "matched")
+    test("trudít’sa", "трудиться", "matched", "труди́ться")
+    test("vsestorónij", "всесторонний", "matched", "всесторо́нний")
+    test("Válle-d’Aósta", "Валле-д'Аоста", "matched", "Ва́лле-д'Ао́ста")
+    test("interesovátʹja", "интересоваться", "matched", "интересова́ться")
+    test("rešímosť", "решимость", "matched", "реши́мость")
+    test("smirénje", "смирение", "matched", "смире́ние")
+    test("prékhodjaschij", "преходящий", "matched", "пре́ходящий")
+    test("čústvo jazyká", "чувство языка", "matched", "чу́вство языка́")
+    test("zanoš'ivost'", "заносчивость", "matched")
+    test("brezgátь", "брезгать", "matched", "брезга́ть")
+    test("adaptacia", "адаптация", "matched")
+    test("apryiórniy", "априо́рный", "matched")
     # The following has Latin é in the Cyrillic
-    test(u"prostrе́l", u"прострéл", "matched", u"простре́л")
-    test(u"razdvaibat'", u"раздваивать", "matched")
+    test("prostrе́l", "прострéл", "matched", "простре́л")
+    test("razdvaibat'", "раздваивать", "matched")
     # The following has Latin a in the Cyrillic
-    test(u"Malán'ja", u"Мaла́нья", "matched", u"Мала́нья")
-    test(u"''podnimát' ''", u"поднимать", "matched", u"поднима́ть")
-    test(u"priv'áš'ivyj", u"привязчивый", "matched", u"привя́зчивый")
-    test(u"zaméthyj", u"заметный", "matched", u"заме́тный")
-    test(u"beznadyozhnyi", u"безнадëжный", "unmatched", u"безнадёжный")
-    test(u"žénščinы", u"женщины", "matched", u"же́нщины")
-    test(u"diakhronicheskyi", u"диахронический", "matched")
-    test(u"m'áχkij", u"мягкий", "unmatched", u"мя́гкий")
-    test(u"vnimӓtelʹnyj",u"внима́тельный", "matched")
-    test(u"brítanskij ángliskij", u"британский английский", "matched",
-            u"бри́танский а́нглийский")
-    test(u"gospódʹ", u"Госпо́дь", "matched")
-    test(u"ťomnij", u"тёмный", "unmatched")
-    test(u"bidonviľ", u"бидонвиль", "matched")
-    test(u"zádneje sidénʹje", u"заднее сидение", "matched", u"за́днее сиде́ние")
-    test(u"s volkámi žitʹ - po-vólčʹi vytʹ", u"с волками жить — по-волчьи выть",
-            "matched", u"с волка́ми жить — по-во́лчьи выть")
-    test(u"Tajikskaja SSR", u"Таджикская ССР", "matched")
-    test(u"loxodroma", u"локсодрома", "matched")
-    test(u"prostophilya", u"простофиля", "matched")
-    test(u"polevój gospitál‘", u"полевой госпиталь", "matched",
-            u"полево́й госпита́ль")
-    test(u"vrémja—dén’gi", u"время — деньги", "matched", u"вре́мя — де́ньги")
-    test(u"piniǎ", u"пиния", "matched")
-    test(u"losjón", u"лосьон", "matched", u"лосьо́н")
-    test(u"εkzegéza", u"экзегеза", "matched", u"экзеге́за")
-    test(u"brunɛ́jec", u"бруне́ец", "unmatched")
-    test(u"runglíjskij jazýk", u"рунглийский язык", "matched", u"рунгли́йский язы́к")
-    test(u"skyy jazýk", u"скый язык", "matched", u"скый язы́к")
-    test(u"skýy jazýk", u"скый язык", "matched", u"скы́й язы́к")
-    test(u"ni púha ni perá", u"ни пуха, ни пера", "matched",
-            u"ни пу́ха, ни пера́")
-    test(u"predpolozytelyniy", u"предположи́тельный", "matched")
+    test("Malán'ja", "Мaла́нья", "matched", "Мала́нья")
+    test("''podnimát' ''", "поднимать", "matched", "поднима́ть")
+    test("priv'áš'ivyj", "привязчивый", "matched", "привя́зчивый")
+    test("zaméthyj", "заметный", "matched", "заме́тный")
+    test("beznadyozhnyi", "безнадëжный", "unmatched", "безнадёжный")
+    test("žénščinы", "женщины", "matched", "же́нщины")
+    test("diakhronicheskyi", "диахронический", "matched")
+    test("m'áχkij", "мягкий", "unmatched", "мя́гкий")
+    test("vnimӓtelʹnyj","внима́тельный", "matched")
+    test("brítanskij ángliskij", "британский английский", "matched",
+            "бри́танский а́нглийский")
+    test("gospódʹ", "Госпо́дь", "matched")
+    test("ťomnij", "тёмный", "unmatched")
+    test("bidonviľ", "бидонвиль", "matched")
+    test("zádneje sidénʹje", "заднее сидение", "matched", "за́днее сиде́ние")
+    test("s volkámi žitʹ - po-vólčʹi vytʹ", "с волками жить — по-волчьи выть",
+            "matched", "с волка́ми жить — по-во́лчьи выть")
+    test("Tajikskaja SSR", "Таджикская ССР", "matched")
+    test("loxodroma", "локсодрома", "matched")
+    test("prostophilya", "простофиля", "matched")
+    test("polevój gospitál‘", "полевой госпиталь", "matched",
+            "полево́й госпита́ль")
+    test("vrémja—dén’gi", "время — деньги", "matched", "вре́мя — де́ньги")
+    test("piniǎ", "пиния", "matched")
+    test("losjón", "лосьон", "matched", "лосьо́н")
+    test("εkzegéza", "экзегеза", "matched", "экзеге́за")
+    test("brunɛ́jec", "бруне́ец", "unmatched")
+    test("runglíjskij jazýk", "рунглийский язык", "matched", "рунгли́йский язы́к")
+    test("skyy jazýk", "скый язык", "matched", "скый язы́к")
+    test("skýy jazýk", "скый язык", "matched", "скы́й язы́к")
+    test("ni púha ni perá", "ни пуха, ни пера", "matched",
+            "ни пу́ха, ни пера́")
+    test("predpolozytelyniy", "предположи́тельный", "matched")
 
     # Test adding !, ? or .
-    test(u"fan", u"фан!", "matched")
-    test(u"fan!", u"фан!", "matched")
-    test(u"fan!", u"фан", "matched", u"фан!")
-    test(u"fan", u"фан?", "matched")
-    test(u"fan?", u"фан?", "matched")
-    test(u"fan?", u"фан", "matched", u"фан?")
-    test(u"fan", u"фан.", "matched")
-    test(u"fan.", u"фан.", "matched")
-    test(u"fan.", u"фан", "matched", u"фан.")
+    test("fan", "фан!", "matched")
+    test("fan!", "фан!", "matched")
+    test("fan!", "фан", "matched", "фан!")
+    test("fan", "фан?", "matched")
+    test("fan?", "фан?", "matched")
+    test("fan?", "фан", "matched", "фан?")
+    test("fan", "фан.", "matched")
+    test("fan.", "фан.", "matched")
+    test("fan.", "фан", "matched", "фан.")
 
     # Check behavior of parens
-    test(u"(fan)", u"(фан)", "matched")
-    test(u"fan", u"(фан)", "matched")
-    test(u"(fan", u"фан", "matched")
-    test(u"fan)", u"фан", "matched")
-    test(u"(fan)", u"фан", "failed")
+    test("(fan)", "(фан)", "matched")
+    test("fan", "(фан)", "matched")
+    test("(fan", "фан", "matched")
+    test("fan)", "фан", "matched")
+    test("(fan)", "фан", "failed")
 
     # Final results
     uniprint("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))
 
 if __name__ == "__main__":
     run_tests()
-
-# For Vim, so we get 4-space indent
-# vim: set sw=4:
