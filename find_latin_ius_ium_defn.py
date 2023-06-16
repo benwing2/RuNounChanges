@@ -23,7 +23,7 @@ def process_text_on_page(index, pagetitle, text):
   for k in range(2, len(subsections), 2):
     parsed = blib.parse_text(subsections[k])
     for t in parsed.filter_templates():
-      origt = unicode(t)
+      origt = str(t)
       tn = tname(t)
       if tn in ["la-noun", "la-proper noun"]:
         param1 = getparam(t, "1")

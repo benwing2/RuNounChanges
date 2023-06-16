@@ -7,14 +7,14 @@ import blib
 from blib import getparam, rmparam, msg, site, tname
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
   notes = []
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   if len(re.findall("^#", text, re.M)) >= 3:
     pagemsg("WARNING: Page has 3 or more definition lines, skipping")

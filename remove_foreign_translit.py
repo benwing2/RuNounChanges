@@ -42,9 +42,9 @@ def canon_param(pagetitle, index, template, tlang, param, paramtr,
   if not foreign or not latin:
     return False
   autotr = expand_text("{{xlit|%s|%s}}" % (tlang, foreign))
-  tname = unicode(template.name)
+  tname = str(template.name)
   if autotr == latin or languages[tlang][1]:
-    oldtempl = "%s" % unicode(template)
+    oldtempl = "%s" % str(template)
     rmparam(template, paramtr)
     pagemsg("Removing redundant translit for %s.%s (%s)" % (
         tname, foreign, latin))
@@ -52,7 +52,7 @@ def canon_param(pagetitle, index, template, tlang, param, paramtr,
       paramtrname = "%s.%s.%s" % (tname, tlang, paramtr)
     else:
       paramtrname = paramtr
-    pagemsg("Replaced %s with %s" % (oldtempl, unicode(template)))
+    pagemsg("Replaced %s with %s" % (oldtempl, str(template)))
     return ["remove redundant %s=%s" % (paramtrname, latin)]
   else:
     pagemsg("Not removing non-redundant translit for %s.%s (%s); autotr=%s" % (
@@ -125,15 +125,15 @@ def canon_links(save, verbose, cattype, lang, longlang,
       predicted_script = expand_text("{{#invoke:scripts/templates|findBestScript|%s|%s}}"
           % (foreign, tlang))
       if scvalue == predicted_script:
-        tname = unicode(template.name)
+        tname = str(template.name)
         if show_template and result == False:
           pagemsg("%s.%s.%s: Processing %s" % (
-            tname, tlang, "sc", unicode(template)))
+            tname, tlang, "sc", str(template)))
         pagemsg("%s.%s.%s: Removing sc=%s" % (
           tname, tlang, "sc", scvalue))
-        oldtempl = "%s" % unicode(template)
+        oldtempl = "%s" % str(template)
         template.remove("sc")
-        pagemsg("Replaced %s with %s" % (oldtempl, unicode(template)))
+        pagemsg("Replaced %s with %s" % (oldtempl, str(template)))
         newresult = ["remove %s.%s.sc=%s" % (tname, tlang, scvalue)]
         if result != False:
           result = result + newresult

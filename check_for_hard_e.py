@@ -10,7 +10,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(index, page, phon, softphon, variant, verbose, lemmas):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -32,7 +32,7 @@ def process_page(index, page, phon, softphon, variant, verbose, lemmas):
   parsed = blib.parse_text(page.text)
   prons = []
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
+    tname = str(t.name)
     if tname in ["ru-IPA"]:
       tphon = getparam(t, "phon")
       if tphon:

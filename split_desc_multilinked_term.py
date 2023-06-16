@@ -24,7 +24,7 @@ def process_text_on_page(index, pagetitle, pagetext):
 
   parsed = blib.parse_text(pagetext)
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in ["desc", "desctree", "descendant", "descendants tree"]:
       terms = blib.fetch_param_chain(t, "2")
@@ -34,18 +34,18 @@ def process_text_on_page(index, pagetitle, pagetext):
       must_continue = False
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if re.search("[a-z][0-9]", pn):
-          pagemsg("WARNING: comma in terms but saw term-specific param %s=%s, skipping: %s" % (pn, pv, unicode(t)))
+          pagemsg("WARNING: comma in terms but saw term-specific param %s=%s, skipping: %s" % (pn, pv, str(t)))
           must_continue = True
           break
         if "<" in pv:
-          pagemsg("WARNING: Saw less-than in param %s=%s, skipping: %s" % (pn, pv, unicode(t)))
+          pagemsg("WARNING: Saw less-than in param %s=%s, skipping: %s" % (pn, pv, str(t)))
           must_continue = True
           break
         # g= is short enough and commonly occurs with nested params, so allow it to be split
         if pn != "g" and pn in item_params:
-          pagemsg("WARNING: Saw term-specific item param %s=%s, skipping: %s" % (pn, pv, unicode(t)))
+          pagemsg("WARNING: Saw term-specific item param %s=%s, skipping: %s" % (pn, pv, str(t)))
           must_continue = True
           break
       if must_continue:
@@ -56,7 +56,7 @@ def process_text_on_page(index, pagetitle, pagetext):
       for j, term in enumerate(terms):
         if ", " in term:
           if "[" not in term:
-            pagemsg("WARNING: Saw multiple terms in a single param '%s' but no links, please verify it's OK to split: %s" % (term, unicode(t)))
+            pagemsg("WARNING: Saw multiple terms in a single param '%s' but no links, please verify it's OK to split: %s" % (term, str(t)))
           this_new_terms = re.split("([,;]) +", term)
           terms_to_append = []
           must_continue = False
@@ -82,9 +82,9 @@ def process_text_on_page(index, pagetitle, pagetext):
               term_g = term_g.replace("|", ",")
             new_term = blib.remove_redundant_links(new_term)
             if "[" in new_term:
-              pagemsg("WARNING: Still saw bracket in term '%s' after removing redundant ones: %s" % (new_term, unicode(t)))
+              pagemsg("WARNING: Still saw bracket in term '%s' after removing redundant ones: %s" % (new_term, str(t)))
             if "{" in new_term:
-              pagemsg("WARNING: Still saw braces in term '%s' after removing qualifiers, not splitting: %s" % (new_term, unicode(t)))
+              pagemsg("WARNING: Still saw braces in term '%s' after removing qualifiers, not splitting: %s" % (new_term, str(t)))
               new_terms.append(term)
               must_continue = True
               break
@@ -94,7 +94,7 @@ def process_text_on_page(index, pagetitle, pagetext):
               new_term += "<qq:%s>" % right_q
             if g and j == 0:
               if term_g:
-                pagemsg("WARNING: Saw both overall g= and term-specific {{g|....}}, can't handle, not splitting: %s" % (new_term, unicode(t)))
+                pagemsg("WARNING: Saw both overall g= and term-specific {{g|....}}, can't handle, not splitting: %s" % (new_term, str(t)))
                 new_terms.append(term)
                 must_continue = True
                 break
@@ -122,7 +122,7 @@ def process_text_on_page(index, pagetitle, pagetext):
             # term.
             can_remove_g = True
       blib.set_param_chain(t, new_terms, "2")
-      if origt != unicode(t):
+      if origt != str(t):
         notes.append("split nested terms in {{%s}}" % tn)
       if can_remove_g and t.has("g"):
         rmparam(t, "g")
@@ -130,10 +130,10 @@ def process_text_on_page(index, pagetitle, pagetext):
           notes.append("move g= to inline modifier on individual term(s) in {{%s}}" % tn)
         else:
           notes.append("remove redundant g= in {{%s}}" % tn)
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Split multiple terms in a single param in {{desc}} into multiple params",
   include_pagefile=True, include_stdin=True)

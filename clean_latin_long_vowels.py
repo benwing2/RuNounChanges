@@ -378,7 +378,7 @@ def raw_frob_value(t, param, oldval, newval, pagemsg, notes, comment):
   no_macrons_newval = remove_macrons(newval)
   if no_macrons_oldval != no_macrons_newval:
     pagemsg("WARNING: Unable to match value %s in param %s against replacement %s: %s" % (
-      oldval, param, newval, unicode(t)
+      oldval, param, newval, str(t)
     ))
     return "mismatch"
   if oldval != newval:
@@ -390,7 +390,7 @@ def raw_frob_value(t, param, oldval, newval, pagemsg, notes, comment):
 
 # Return True if changed.
 def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, comment, split_slashes=False, no_warn=False, add_if_needed=False, allow_case_difference=False):
-  origt = unicode(t)
+  origt = str(t)
   origval = getparam(t, param)
   if split_slashes:
     vals = origval.split("/")
@@ -434,19 +434,19 @@ def frob_param(t, param, stem_or_exact, is_exact, pagemsg, notes, comment, split
           val = nonempty[0]
         else:
           pagemsg("WARNING: Unable to add blank value to param %s: %s" % (
-            param, unicode(t)))
+            param, str(t)))
       elif val or not no_warn:
         if is_exact:
           pagemsg("WARNING: Unable to match value %s in param %s against replacement(s) %s: %s" % (
-            val, param, ",".join(stem_or_exact), unicode(t)))
+            val, param, ",".join(stem_or_exact), str(t)))
         else:
           pagemsg("WARNING: Unable to match value %s in param %s against replacement stem(s) %s: %s" % (
-            val, param, ",".join(stem_or_exact), unicode(t)))
+            val, param, ",".join(stem_or_exact), str(t)))
       newvals.append(val)
   newval = "/".join(newvals)
   if newval != origval:
     t.add(param, newval)
-    pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    pagemsg("Replaced %s with %s" % (origt, str(t)))
     notes.append(comment % tname(t))
     return True
   return False
@@ -533,23 +533,23 @@ def process_pronun_templates(pronun_section, lemma, pagemsg, notes, comment):
   pronun_templates = pronun_section['pronun_templates']
   if len(pronun_templates) > 1:
     pagemsg("WARNING: Multiple pronunciation templates, not changing: %s" %
-      ",".join(unicode(t) for t in pronun_templates))
+      ",".join(str(t) for t in pronun_templates))
   elif len(pronun_templates) == 1:
     pront = pronun_templates[0]
-    origpront = unicode(pront)
+    origpront = str(pront)
     pagetitle = remove_macrons(lemma)
     headwords = set(x for hw in pronun_section['headwords'] for x in lalib.la_get_headword_from_template(hw['head_template'], pagetitle, pagemsg))
     if len(list(headwords)) > 1:
       pagemsg("WARNING: One pronunciation template %s but multiple headword templates with different headwords %s, not changing: %s" %
-        (origpront, ",".join(headwords), ",".join(unicode(hw['head_template']) for hw in pronun_section['headwords'])))
+        (origpront, ",".join(headwords), ",".join(str(hw['head_template']) for hw in pronun_section['headwords'])))
     elif process_pronun_template(pront, lemma, pagemsg, notes, comment):
       if len(pronun_section['headwords']) > 1:
         pagemsg("WARNING: Multiple headwords for changed pronunciation template (originally %s, changed to %s), check manually: %s" % (
-          origpront, unicode(pront),
-          ",".join(unicode(hw['head_template']) for hw in pronun_section['headwords'])))
+          origpront, str(pront),
+          ",".join(str(hw['head_template']) for hw in pronun_section['headwords'])))
 
 def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_process, progargs):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
 
   def pagemsg(txt):
     msg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
@@ -610,7 +610,7 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
 
   pagemsg("Processing")
 
-  retval = lalib.find_heads_and_defns(unicode(page.text), pagemsg)
+  retval = lalib.find_heads_and_defns(str(page.text), pagemsg)
   if retval is None:
     return None, None
 
@@ -639,11 +639,11 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
 
     if tn == "head":
       if getparam(ht, "1") != "la":
-        errandpagemsg("WARNING: Wrong-language {{head}} template in Latin section: %s" % unicode(ht))
+        errandpagemsg("WARNING: Wrong-language {{head}} template in Latin section: %s" % str(ht))
         continue
       head_pos = getparam(ht, "2")
       if head_pos != expected_pos:
-        pagemsg("Skipping incorrect part of speech %s: %s" % (head_pos, unicode(ht)))
+        pagemsg("Skipping incorrect part of speech %s: %s" % (head_pos, str(ht)))
         continue
       head_param = "head"
       found_head = True
@@ -659,7 +659,7 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
 
     if headword['header'] != expected_header_pos:
       pagemsg("WARNING: Bad section header %s != %s for headword template %s" % (
-        headword['header'], expected_header_pos, unicode(ht)))
+        headword['header'], expected_header_pos, str(ht)))
 
     for t in headword['infl_of_templates']:
       lang = getparam(t, "lang")
@@ -670,15 +670,15 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
         lemma_param = 2
       if lang != "la":
         errandpagemsg("WARNING: In Latin section, found {{inflection of}} for different language %s: %s" % (
-          lang, unicode(t)))
+          lang, str(t)))
         continue
       actual_lemma = getparam(t, str(lemma_param))
       if remove_macrons(actual_lemma) == remove_macrons(lemma):
         # fetch tags
         tags = []
         for param in t.params:
-          pname = unicode(param.name).strip()
-          pval = unicode(param.value).strip()
+          pname = str(param.name).strip()
+          pval = str(param.value).strip()
           if re.search("^[0-9]+$", pname):
             if int(pname) >= lemma_param + 2:
               if pval:
@@ -697,12 +697,12 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
           else:
             expected_tag_sets = "|".join(lalib.combine_tag_set_group(tag_sets_to_process))
             pagemsg("Found {{inflection of}} for correct lemma but wrong tag set %s (expected %s): %s" % (
-              "|".join(canon_tag_set), expected_tag_sets, unicode(t)))
+              "|".join(canon_tag_set), expected_tag_sets, str(t)))
             saw_other_infl = True
             bad_tag_sets.append(canon_tag_set)
       else:
         pagemsg("Found {{inflection of}} for different lemma %s: %s" % (
-          actual_lemma, unicode(t)))
+          actual_lemma, str(t)))
         saw_other_infl = True
         other_lemmas.append(actual_lemma)
 
@@ -739,7 +739,7 @@ def do_process_form(index, page, lemma, formind, formval, pos, tag_sets_to_proce
     process_pronun_templates(headword['pronun_section'], formval, pagemsg, notes,
         default_comment)
 
-  secbody = "".join(unicode(x) for x in parsed_subsections)
+  secbody = "".join(str(x) for x in parsed_subsections)
   sections[j] = secbody + sectail
   return "".join(sections), notes
 
@@ -770,7 +770,7 @@ def process_all_forms(args, index, lemma, pos, progargs):
 
 def do_process_participle(index, page, lemma, formind, formval, explicit_stem,
     progargs):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
 
   def pagemsg(txt):
     msg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
@@ -803,7 +803,7 @@ def do_process_participle(index, page, lemma, formind, formval, explicit_stem,
 
   pagemsg("Processing")
 
-  retval = lalib.find_heads_and_defns(unicode(page.text), pagemsg)
+  retval = lalib.find_heads_and_defns(str(page.text), pagemsg)
   if retval is None:
     return None, None
 
@@ -823,11 +823,11 @@ def do_process_participle(index, page, lemma, formind, formval, explicit_stem,
 
     if tn == "head":
       if getparam(ht, "1") != "la":
-        errandpagemsg("WARNING: Wrong-language {{head}} template in Latin section: %s" % unicode(ht))
+        errandpagemsg("WARNING: Wrong-language {{head}} template in Latin section: %s" % str(ht))
         continue
       head_pos = getparam(ht, "2")
       if head_pos != "participle":
-        pagemsg("Skipping incorrect part of speech %s: %s" % (head_pos, unicode(ht)))
+        pagemsg("Skipping incorrect part of speech %s: %s" % (head_pos, str(ht)))
         continue
       param_to_frob = "head"
       value_to_frob = formval
@@ -862,7 +862,7 @@ def do_process_participle(index, page, lemma, formind, formval, explicit_stem,
           lemma_templates_in_etym.append(et)
         else:
           pagemsg("WARNING: Saw wrong lemma %s != %s in Etymology section for participle: %s" % (
-            actual_lemma, lemma, unicode(et)))
+            actual_lemma, lemma, str(et)))
           saw_wrong_lemma_in_etym = True
     if saw_lemma_in_etym and saw_wrong_lemma_in_etym:
       pagemsg("WARNING: Saw both correct and wrong lemma in Etymology section for participle, skipping")
@@ -881,11 +881,11 @@ def do_process_participle(index, page, lemma, formind, formval, explicit_stem,
       infltn = tname(inflt)
       if infltn != "la-adecl":
         pagemsg("WARNING: Saw bad declension template for participle: %s" % (
-          unicode(inflt)))
+          str(inflt)))
         continue
       frob_exact(inflt, "1", expected_decl_arg, pagemsg, notes, default_comment)
 
-      args = lalib.generate_adj_forms(unicode(inflt), errandpagemsg, expand_text)
+      args = lalib.generate_adj_forms(str(inflt), errandpagemsg, expand_text)
       if args is None:
         return None, None
 
@@ -894,7 +894,7 @@ def do_process_participle(index, page, lemma, formind, formval, explicit_stem,
     process_pronun_templates(headword['pronun_section'], formval, pagemsg, notes,
         default_comment)
 
-  secbody = "".join(unicode(x) for x in parsed_subsections)
+  secbody = "".join(str(x) for x in parsed_subsections)
   sections[j] = secbody + sectail
   return "".join(sections), notes
 
@@ -912,10 +912,10 @@ def frob_nominal_lemma_spec(ht, lemmaspec, stem, pagemsg, notes, comment):
       return "nochange"
   param1 = getparam(ht, "1")
   if "((" in param1:
-    pagemsg("WARNING: (( in first param of nominal template, don't know how to handle: %s" % unicode(ht))
+    pagemsg("WARNING: (( in first param of nominal template, don't know how to handle: %s" % str(ht))
     return "fail"
   elif " " in param1:
-    pagemsg("WARNING: Space in first param of nominal template, don't know how to handle: %s" % unicode(ht))
+    pagemsg("WARNING: Space in first param of nominal template, don't know how to handle: %s" % str(ht))
     return "fail"
   else:
     m = re.search("^(.*)<([^<>]*?)>$", param1)
@@ -925,7 +925,7 @@ def frob_nominal_lemma_spec(ht, lemmaspec, stem, pagemsg, notes, comment):
       head_lemma = param1
       head_decl = ""
     if "<" in head_lemma:
-      pagemsg("WARNING: Non-final < in first param of nominal template, don't know how to handle: %s" % unicode(ht))
+      pagemsg("WARNING: Non-final < in first param of nominal template, don't know how to handle: %s" % str(ht))
       return "fail"
     else:
       if "/" in head_lemma:
@@ -945,19 +945,19 @@ def frob_nominal_lemma_spec(ht, lemmaspec, stem, pagemsg, notes, comment):
         if retval == "changed":
           changed = True
       if changed:
-        oright = unicode(ht)
+        oright = str(ht)
         if head_decl:
           head_decl = "<%s>" % head_decl
         if stem:
           ht.add("1", "%s/%s%s" % (lemmaspec, stem, head_decl))
         else:
           ht.add("1", "%s%s" % (lemmaspec, head_decl))
-        pagemsg("Replaced %s with %s" % (oright, unicode(ht)))
+        pagemsg("Replaced %s with %s" % (oright, str(ht)))
         return "changed"
       return "nochange"
 
 def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit_stem, progargs):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -977,7 +977,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
 
   pagemsg("Processing")
 
-  retval = lalib.find_heads_and_defns(unicode(page.text), pagemsg)
+  retval = lalib.find_heads_and_defns(str(page.text), pagemsg)
   if retval is None:
     return None, None
 
@@ -999,7 +999,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
 
     if tn == "head":
       if getparam(ht, "1") != "la":
-        errandpagemsg("WARNING: Wrong-language {{head}} template in Latin section: %s" % unicode(ht))
+        errandpagemsg("WARNING: Wrong-language {{head}} template in Latin section: %s" % str(ht))
         continue
 
       pos_to_full_pos = {
@@ -1075,7 +1075,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
           frob_stem(inflt, override, stem, pagemsg, notes, default_comment,
               split_slashes=True, no_warn=True)
 
-        args = lalib.generate_noun_forms(unicode(inflt), errandpagemsg, expand_text)
+        args = lalib.generate_noun_forms(str(inflt), errandpagemsg, expand_text)
         if args is None:
           return None, None
 
@@ -1132,7 +1132,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
 
         else:
           pagemsg("WARNING: Unrecognized adjective headword template %s" % (
-            unicode(ht)))
+            str(ht)))
           continue
 
       found_matching_head = True
@@ -1141,7 +1141,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
         infltn = tname(inflt)
         if infltn != "la-adecl":
           pagemsg("WARNING: Saw bad declension template for adj %s: %s" % (
-            lemma, unicode(inflt)))
+            lemma, str(inflt)))
           continue
 
         if frob_nominal_lemma_spec(inflt, lemmaspec, explicit_stem, pagemsg, notes,
@@ -1152,7 +1152,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
           frob_stem(inflt, override, stem, pagemsg, notes, default_comment,
               split_slashes=True, no_warn=True)
 
-        args = lalib.generate_adj_forms(unicode(inflt), errandpagemsg, expand_text)
+        args = lalib.generate_adj_forms(str(inflt), errandpagemsg, expand_text)
         if args is None:
           return None, None
 
@@ -1188,7 +1188,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
             no_macron_value = remove_macrons(value)
             if no_macron_existing != no_macron_value:
               pagemsg("WARNING: Principal part mismatch for param=%s, saw %s, expected %s: %s" % (
-                param, existing, value, unicode(t)))
+                param, existing, value, str(t)))
               return False
             return True
 
@@ -1214,7 +1214,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
         infltn = tname(inflt)
         if infltn != "la-conj":
           pagemsg("WARNING: Saw bad conjugation template for infl=%s verb %s: %s" % (
-            explicit_infl, lemma, unicode(inflt)))
+            explicit_infl, lemma, str(inflt)))
           continue
 
         if not fix_verb_template(inflt, explicit_infl, lemma, param3, param4):
@@ -1225,9 +1225,9 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
           overval = getparam(inflt, override)
           if overval:
             pagemsg("WARNING: Found override %s=%s: %s" % (
-              override, overval, unicode(inflt)))
+              override, overval, str(inflt)))
 
-        args = lalib.generate_verb_forms(unicode(inflt), errandpagemsg, expand_text)
+        args = lalib.generate_verb_forms(str(inflt), errandpagemsg, expand_text)
         if args is None:
           return None, None
 
@@ -1263,7 +1263,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
   if not found_any_matching_head:
     pagemsg("WARNING: Unable to find matching head")
 
-  secbody = "".join(unicode(x) for x in parsed_subsections)
+  secbody = "".join(str(x) for x in parsed_subsections)
   sections[j] = secbody + sectail
   return "".join(sections), notes
 

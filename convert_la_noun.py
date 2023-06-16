@@ -332,7 +332,7 @@ def convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg):
   global args
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
-  origt = unicode(t)
+  origt = str(t)
   segments = re.split(r"([^<> ]+<[^<>]*>)", getparam(t, "1"))
   g = getrmparam(t, "g")
   if g:
@@ -436,14 +436,14 @@ def convert_la_decl_multi_to_new(t, pagetitle, pagemsg, errandpagemsg):
     segments[i] = lemma
   blib.set_template_name(t, "la-ndecl" if g else "la-adecl")
   t.add("1", "".join(segments))
-  pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-  if compare_new_and_old_templates(origt, unicode(t), pagetitle, pagemsg, errandpagemsg):
+  pagemsg("Replaced %s with %s" % (origt, str(t)))
+  if compare_new_and_old_templates(origt, str(t), pagetitle, pagemsg, errandpagemsg):
     return t
   else:
     return None
 
 def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
-  origt = unicode(t)
+  origt = str(t)
   tn = tname(t)
   m = re.search(r"^la-decl-(.*)$", tn)
   if not m:
@@ -455,7 +455,7 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
     return None
   retval = la_noun_decl_suffix_to_decltype[decl_suffix]
   if retval is None:
-    pagemsg("WARNING: Unable to convert template: %s" % unicode(t))
+    pagemsg("WARNING: Unable to convert template: %s" % str(t))
     return None
   declspec, stem_suffix, pl_suffix, to_auto = retval
   if type(declspec) is tuple:
@@ -481,7 +481,7 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
   # Fetch all params
   named_params = []
   for param in t.params:
-    pname = unicode(param.name)
+    pname = str(param.name)
     if pname.strip() in ["1", "2", "noun"]:
       continue
     named_params.append((pname, param.value, param.showkey))
@@ -494,14 +494,14 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
   t.add("1", lemma)
   for name, value, showkey in named_params:
     t.add(name, value, showkey=showkey, preserve_spacing=False)
-  pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-  if compare_new_and_old_templates(origt, unicode(t), pagetitle, pagemsg, errandpagemsg):
+  pagemsg("Replaced %s with %s" % (origt, str(t)))
+  if compare_new_and_old_templates(origt, str(t), pagetitle, pagemsg, errandpagemsg):
     return t
   else:
     return None
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -525,7 +525,7 @@ def process_page(page, index, parsed):
       else:
         return None, None
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert Latin noun decl templates to new form",
     include_pagefile=True)

@@ -22,7 +22,7 @@ def process_form(page, index, slot, form, pos):
     pagemsg("Skipping form value %s, page doesn't exist" % form)
     return None, None
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   retval = lalib.find_latin_section(text, pagemsg)
   if retval is None:
@@ -73,13 +73,13 @@ def process_form(page, index, slot, form, pos):
 
 def process_page(page, index):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   retval = lalib.find_latin_section(text, pagemsg)
   if retval is None:
@@ -95,13 +95,13 @@ def process_page(page, index):
     if tn == "la-noun":
       if saw_noun:
         pagemsg("WARNING: Saw multiple nouns %s and %s, not sure how to proceed, skipping" % (
-          unicode(saw_noun), unicode(t)))
+          str(saw_noun), str(t)))
         return
       saw_noun = t
     elif tn == "la-proper noun":
       if saw_proper_noun:
         pagemsg("WARNING: Saw multiple proper nouns %s and %s, not sure how to proceed, skipping" % (
-          unicode(saw_proper_noun), unicode(t)))
+          str(saw_proper_noun), str(t)))
         return
       saw_proper_noun = t
   if saw_noun and saw_proper_noun:
@@ -113,9 +113,9 @@ def process_page(page, index):
   pos = "pn" if saw_proper_noun else "n"
   ht = saw_proper_noun or saw_noun
   if getparam(ht, "indecl"):
-    pagemsg("Noun is indeclinable, skipping: %s" % unicode(ht))
+    pagemsg("Noun is indeclinable, skipping: %s" % str(ht))
     return
-  generate_template = blib.parse_text(unicode(ht)).filter_templates()[0]
+  generate_template = blib.parse_text(str(ht)).filter_templates()[0]
   blib.set_template_name(generate_template, "la-generate-noun-forms")
   blib.remove_param_chain(generate_template, "lemma", "lemma")
   blib.remove_param_chain(generate_template, "m", "m")
@@ -125,7 +125,7 @@ def process_page(page, index):
   rmparam(generate_template, "indecl")
   rmparam(generate_template, "id")
   rmparam(generate_template, "pos")
-  result = expand_text(unicode(generate_template))
+  result = expand_text(str(generate_template))
   if not result:
     pagemsg("WARNING: Error generating forms, skipping")
     return

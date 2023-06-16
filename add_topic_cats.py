@@ -54,7 +54,7 @@ def process_text_on_page(index, pagetitle, text, cats_to_add, japanese_sort_keys
         if topics_temp_lang:
           topics_lang = getparam(t, topics_temp_lang)
           if topics_lang != lang:
-            pagemsg("WARNING: Saw wrong-language topics template: %s" % unicode(t))
+            pagemsg("WARNING: Saw wrong-language topics template: %s" % str(t))
             continue
         last_topics_temp = t
         existing_topics = blib.fetch_param_chain(t, topics_temp_cats)
@@ -64,7 +64,7 @@ def process_text_on_page(index, pagetitle, text, cats_to_add, japanese_sort_keys
             cats = [cat for cat in cats if cat != existing_topic]
     if cats:
       if last_topics_temp and (lang != "ja" or japanese_sort_keys and getparam(last_topics_temp, "sort") == sort_key):
-        origt = unicode(last_topics_temp)
+        origt = str(last_topics_temp)
         existing_topics.extend(cats)
         sort = getparam(last_topics_temp, "sort")
         rmparam(last_topics_temp, sort)
@@ -73,9 +73,9 @@ def process_text_on_page(index, pagetitle, text, cats_to_add, japanese_sort_keys
           last_topics_temp.add("sort", sort)
         notes.append("add categories %s to existing {{%s}}" % (
           ",".join("%s:%s" % (lang, cat) for cat in cats), topics_temp))
-        if unicode(t) != origt:
-          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-        sections[j] = unicode(parsed)
+        if str(t) != origt:
+          pagemsg("Replaced %s with %s" % (origt, str(t)))
+        sections[j] = str(parsed)
       else:
         secbody, sectail = blib.split_trailing_separator(langtext)
         if not secbody.endswith("\n"):

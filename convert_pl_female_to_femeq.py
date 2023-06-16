@@ -54,14 +54,14 @@ def process_text_on_page(index, pagetitle, text):
     headt_head = None
     for t in parsed.filter_templates():
       tn = tname(t)
-      origt = unicode(t)
+      origt = str(t)
       def getp(param):
         return getparam(t, param)
       if tn in ["pl-noun"] or tn == "head" and getp("1") == "pl" and getp("2") == "noun":
         other_head = headt or headt_other_gender or headt_head
         if other_head:
           pagemsg("WARNING: Saw two head templates %s and %s in subsection %s" % (
-            unicode(other_head), unicode(t), k // 2))
+            str(other_head), str(t), k // 2))
           return
         if tn == "head":
           headt_head = t
@@ -76,46 +76,46 @@ def process_text_on_page(index, pagetitle, text):
       if re.search("^#[:*]", line):
         continue
       if args.warn_on_woman and "woman" in line:
-        pagemsg("WARNING: Saw line with 'woman' in it: headt=%s, line=%s" % (unicode(headt), line))
+        pagemsg("WARNING: Saw line with 'woman' in it: headt=%s, line=%s" % (str(headt), line))
         continue
       if (line.startswith("#") and re.search(r"\bfemale\b", line) and not
           re.search(r"\b(given name|surname|female equivalent|femeq)\b", line)):
         if not headt:
           if headt_other_gender:
             pagemsg("WARNING: Saw female line with {{pl-noun}} with other gender: headt=%s, line=%s" % (
-              unicode(headt_other_gender), line))
+              str(headt_other_gender), line))
             continue
           if headt_head:
             pagemsg("WARNING: Saw female line with {{head|pl|noun}}: headt=%s, line=%s" % (
-              unicode(headt_head), line))
+              str(headt_head), line))
             continue
           pagemsg("WARNING: Saw female line without {{pl-noun}}: line=%s" % line)
           continue
         if not ms:
-          pagemsg("WARNING: Saw female line without m=: headt=%s, line=%s" % (unicode(headt), line))
+          pagemsg("WARNING: Saw female line without m=: headt=%s, line=%s" % (str(headt), line))
           continue
         beginning, labeltext, rest, gloss, line = split_line(line)
         rest = re.sub(r"\[\[female\]\]\s+", "", rest)
         rest = re.sub(r"female\s+", "", rest)
         if "female" in rest:
           pagemsg("WARNING: Saw rest '%s' with 'female' after attempting to remove it, won't change: headt=%s, line=%s" % (
-            rest, unicode(headt), line))
+            rest, str(headt), line))
           continue
         if "woman" in rest:
           pagemsg("WARNING: Saw rest '%s' with 'woman' after removing 'female', won't change: headt=%s, line=%s" % (
-            rest, unicode(headt), line))
+            rest, str(headt), line))
           continue
 #        if "female" in gloss:
 #          pagemsg("WARNING: Saw gloss '%s' with 'female', won't change: headt=%s, line=%s" % (
-#            gloss, unicode(headt), line))
+#            gloss, str(headt), line))
 #          continue
 #        if "woman" in gloss:
 #          pagemsg("WARNING: Saw gloss '%s' with 'woman', won't change: headt=%s, line=%s" % (
-#            gloss, unicode(headt), line))
+#            gloss, str(headt), line))
 #          continue
         if "{{" in rest or "}}" in rest:
           pagemsg("WARNING: Saw template call in rest '%s', won't change: headt=%s, line=%s" % (
-            rest, unicode(headt), line))
+            rest, str(headt), line))
           continue
         newrest_parts = []
         for m in ms[:-1]:
@@ -141,14 +141,14 @@ def process_text_on_page(index, pagetitle, text):
     headt_head = None
     for t in parsed.filter_templates():
       tn = tname(t)
-      origt = unicode(t)
+      origt = str(t)
       def getp(param):
         return getparam(t, param)
       if tn in ["pl-noun"] or tn == "head" and getp("1") == "pl" and getp("2") == "noun":
         other_head = headt or headt_animate or headt_other_gender
         if other_head:
           pagemsg("WARNING: Internal error: Saw two head templates %s and %s in subsection %s" % (
-            unicode(other_head), unicode(t), k // 2))
+            str(other_head), str(t), k // 2))
           return
         if tn == "head":
           headt_head = t
@@ -169,26 +169,26 @@ def process_text_on_page(index, pagetitle, text):
         if not headt:
           if headt_animate:
             pagemsg("WARNING: Saw male line with {{pl-noun|m-an}}: headt=%s, line=%s" % (
-              unicode(headt_animate), line))
+              str(headt_animate), line))
             continue
           if headt_other_gender:
             pagemsg("WARNING: Saw male line with {{pl-noun}} with other gender: headt=%s, line=%s" % (
-              unicode(headt_other_gender), line))
+              str(headt_other_gender), line))
             continue
           if headt_head:
             pagemsg("WARNING: Saw male line with {{head|pl|noun}}: headt=%s, line=%s" % (
-              unicode(headt_head), line))
+              str(headt_head), line))
             continue
           pagemsg("WARNING: Saw male line without {{pl-noun}}: line=%s" % line)
           continue
         if not fs:
-          pagemsg("WARNING: Saw male line without f= (will continue): headt=%s, line=%s" % (unicode(headt), line))
+          pagemsg("WARNING: Saw male line without f= (will continue): headt=%s, line=%s" % (str(headt), line))
         beginning, labeltext, rest, gloss, line = split_line(line)
         rest = re.sub(r"\[\[male\]\]\s+", "", rest)
         rest = re.sub(r"male\s+", "", rest)
         if "male" in rest:
           pagemsg("WARNING: Saw rest '%s' with 'male' after attempting to remove it, won't change: headt=%s, line=%s" % (
-            rest, unicode(headt), line))
+            rest, str(headt), line))
           continue
         if gloss:
           gloss = " " + gloss

@@ -7,18 +7,18 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    if unicode(t.name) in ["quote-book", "quote-hansard", "quote-journal",
+    origt = str(t)
+    if str(t.name) in ["quote-book", "quote-hansard", "quote-journal",
           "quote-newsgroup", "quote-song", "quote-us-patent", "quote-video",
           "quote-web", "quote-wikipedia"] and getparam(t, "lang") == "ru":
       passage = getparam(t, "passage")
@@ -26,11 +26,11 @@ def process_page(page, index, parsed):
       if m:
         t.add("passage", m.group(1))
         notes.append("remove {{lang|ru|...}} from passage= in quote-*")
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Remove {{lang|ru|...}} from passage= in quote-*",
   include_pagefile=True)

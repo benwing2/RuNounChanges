@@ -27,17 +27,17 @@ def process_line(index, line, online):
 
   t = blib.parse_text(noun_headword_template).filter_templates()[0]
   if getparam(t, "indecl"):
-    pagemsg("Skipping indeclinable noun: %s" % unicode(t))
+    pagemsg("Skipping indeclinable noun: %s" % str(t))
     return
   lemma = blib.fetch_param_chain(t, ["1", "head", "head1"], "head") or [pagetitle]
   genitive = blib.fetch_param_chain(t, ["2", "gen", "gen1"], "gen")
   noun_gender = blib.fetch_param_chain(t, ["3", "g", "g1"], "g")
   noun_decl = blib.fetch_param_chain(t, ["4", "decl", "decl1"], "decl")
   if " " in lemma[0]:
-    pagemsg("WARNING: Space in lemma %s, skipping: %s" % (lemma[0], unicode(t)))
+    pagemsg("WARNING: Space in lemma %s, skipping: %s" % (lemma[0], str(t)))
     return
   if len(lemma) > 1:
-    pagemsg("WARNING: Multiple lemmas %s, skipping: %s" % (",".join(lemma), unicode(t)))
+    pagemsg("WARNING: Multiple lemmas %s, skipping: %s" % (",".join(lemma), str(t)))
     return
   lemma = lemma[0]
   noun_decl_to_decl_type = {
@@ -49,16 +49,16 @@ def process_line(index, line, online):
     "irregular": "irreg",
   }
   if len(noun_decl) == 0:
-    pagemsg("WARNING: No declension, skipping: %s" % unicode(t))
+    pagemsg("WARNING: No declension, skipping: %s" % str(t))
     return
   if len(noun_decl) > 1:
     pagemsg("WARNING: Multiple decls %s, skipping: %s" % (
-      ",".join(noun_decl), unicode(t)))
+      ",".join(noun_decl), str(t)))
     return
   noun_decl = noun_decl[0]
   if noun_decl not in noun_decl_to_decl_type:
     pagemsg("WARNING: Unrecognized declension %s, skipping: %s" % (
-      noun_decl, unicode(t)))
+      noun_decl, str(t)))
     return
   decl_type = noun_decl_to_decl_type[noun_decl]
   if decl_type in ["1", "2", "4", "5"]:
@@ -66,11 +66,11 @@ def process_line(index, line, online):
   elif decl_type == "3":
     if len(genitive) == 0:
       pagemsg("WARNING: No genitives with decl 3 lemma %s, skipping: %s" % (
-        lemma, unicode(t)))
+        lemma, str(t)))
       return
     elif len(genitive) > 1:
       pagemsg("WARNING: Multiple genitives %s with decl 3 lemma %s, skipping: %s" % (
-        ",".join(genitive), lemma, unicode(t)))
+        ",".join(genitive), lemma, str(t)))
       return
     else:
       gen1 = genitive[0]
@@ -87,27 +87,27 @@ def process_line(index, line, online):
           la_ndecl = "{{la-ndecl|%s<3.I.pl>}}" % lemma
         else:
           pagemsg("WARNING: Unrecognized lemma %s with decl 3 genitive -ium, skipping: %s" % (
-            lemma, unicode(t)))
+            lemma, str(t)))
           return
       elif gen1.endswith("um"):
         if lemma.endswith("a") or lemma.endswith(u"ēs"):
           la_ndecl = "{{la-ndecl|%s<3.pl>}}" % lemma
         else:
           pagemsg("WARNING: Unrecognized lemma %s with decl 3 genitive -um, skipping: %s" % (
-            lemma, unicode(t)))
+            lemma, str(t)))
           return
       else:
         pagemsg("WARNING: Unrecognized genitive %s with decl 3 lemma %s, skipping: %s" % (
-          gen1, lemma, unicode(t)))
+          gen1, lemma, str(t)))
         return
   elif decl_type == "irreg":
-    pagemsg("WARNING: Can't handle irregular nouns, skipping: %s" % unicode(t))
+    pagemsg("WARNING: Can't handle irregular nouns, skipping: %s" % str(t))
     return
   else:
     pagemsg("WARNING: Something wrong, unrecognized decl_type %s, skipping: %s" % (
-      decl_type, unicode(t)))
+      decl_type, str(t)))
     return
-  pagemsg("For noun %s, declension %s" % (unicode(t), la_ndecl))
+  pagemsg("For noun %s, declension %s" % (str(t), la_ndecl))
   if online:
     noun_props = convert_la_headword_noun.new_generate_noun_forms(la_ndecl, errandpagemsg,
       expand_text)
@@ -115,7 +115,7 @@ def process_line(index, line, online):
       return
     convert_la_headword_noun.compare_headword_decl_forms("genitive", genitive,
         ["gen_sg", "gen_pl"], noun_props,
-        "headword=%s, decl=%s" % (unicode(t), la_ndecl), pagemsg,
+        "headword=%s, decl=%s" % (str(t), la_ndecl), pagemsg,
         adjust_for_missing_gen_forms=True, remove_headword_links=True)
 
 parser = blib.create_argparser("Add missing declension to Latin terms")

@@ -519,9 +519,9 @@ def process_text_on_page(index, pagetitle, text):
               pagemsg("WARNING: Found postposed gender template after link template already containing gender: %s"
                   % m.groups(0))
               return m.groups(0)
-            notes.append("incorporate g=%s into %s" % (gender, unicode(maint)))
+            notes.append("incorporate g=%s into %s" % (gender, str(maint)))
             maint.add("g", gender)
-            return unicode(maint)
+            return str(maint)
           new_secline = re.sub(r"(\{\{[lm]\|%s\|[^{}]*\}\}) \{\{g\|([^{}|=]*)\}\}" % thislangcode, incorporate_gender, secline)
           if new_secline != secline:
             pagemsg("Replacing %s with %s in %s section in %s" % (secline, new_secline, subsectitle, thislangname))

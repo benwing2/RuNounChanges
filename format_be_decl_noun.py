@@ -9,7 +9,7 @@ from blib import getparam, rmparam, tname, pname, msg, site
 import belib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -19,7 +19,7 @@ def process_page(page, index, parsed):
 
   head = None
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "be-decl-noun":
       t.name = "be-decl-noun\n"
@@ -27,11 +27,11 @@ def process_page(page, index, parsed):
         val = getparam(t, str(i)).strip()
         if val:
           t.add(str(i), val + "\n", preserve_spacing=False)
-    if origt != unicode(t):
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if origt != str(t):
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
       notes.append("format {{be-decl-noun}} using newlines")
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Format be-decl-noun using newlines",
     include_pagefile=True)

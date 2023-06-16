@@ -33,7 +33,7 @@ def compare_new_and_old_templates(oldt, newt, pagetitle, pagemsg, errandpagemsg)
     generate_new_forms, pagemsg, errandpagemsg)
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -46,7 +46,7 @@ def process_page(page, index, parsed):
   bad_compare = False
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "la-ndecl":
       while True:
@@ -108,15 +108,15 @@ def process_page(page, index, parsed):
         subtypes = [x for x in subtypes if x != "-I"]
         newspec = ".".join([decl] + subtypes)
         t.add("1", "%s<%s>" % (newlemma, newspec))
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("convert 3rd-declension plural term to have plural lemma in {{la-ndecl}}")
         break
-      if not compare_new_and_old_templates(origt, unicode(t), pagetitle, pagemsg, errandpagemsg):
+      if not compare_new_and_old_templates(origt, str(t), pagetitle, pagemsg, errandpagemsg):
         bad_compare = True
 
   if bad_compare:
     return None, None
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Fix Latin 3rd-decl plural nouns to specify plural lemma, and check new against old {{la-ndecl}} code",
   include_pagefile=True)

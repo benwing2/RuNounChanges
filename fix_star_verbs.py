@@ -8,7 +8,7 @@ from blib import getparam, rmparam, tname, msg, errmsg, site
 
 def process_page(page, index, parsed):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errpagemsg(txt):
@@ -22,10 +22,10 @@ def process_page(page, index, parsed):
 
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     if tname(t) in ["ru-conj", "ru-conj-old"]:
-      if [x for x in t.params if unicode(x.value) == "or"]:
-        errpagemsg("WARNING: Skipping multi-arg conjugation: %s" % unicode(t))
+      if [x for x in t.params if str(x.value) == "or"]:
+        errpagemsg("WARNING: Skipping multi-arg conjugation: %s" % str(t))
         continue
       param2 = getparam(t, "2")
       if "*" in param2:
@@ -45,9 +45,9 @@ def process_page(page, index, parsed):
       else:
         notes.append("Removed unnecessary manual pres/futr stem")
       if tname(t) == "ru-conj":
-        new_tempcall = re.sub(r"^\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t))
+        new_tempcall = re.sub(r"^\{\{ru-conj", "{{ru-generate-verb-forms", str(t))
       else:
-        new_tempcall = re.sub(r"^\{\{ru-conj-old", "{{ru-generate-verb-forms|old=1", unicode(t))
+        new_tempcall = re.sub(r"^\{\{ru-conj-old", "{{ru-generate-verb-forms|old=1", str(t))
       result = expand_text(new_tempcall)
       if not result:
         errpagemsg("WARNING: Error expanding new template %s" % new_tempcall)
@@ -85,7 +85,7 @@ def process_page(page, index, parsed):
           orig_tempcall, new_tempcall, " || ".join(mismatches)))
         return None, ""
 
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 

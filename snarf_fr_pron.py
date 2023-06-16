@@ -105,7 +105,7 @@ def process_text_on_page(index, pagetitle, text):
           last_numbered_param = 0
           for param in t.params:
             pn = pname(param)
-            pv = unicode(param.value).strip().replace("_", r"\u").replace(" ", "_")
+            pv = str(param.value).strip().replace("_", r"\u").replace(" ", "_")
             if re.search("^[0-9]+$", pn):
               last_numbered_param += 1
               saw_pronun = True
@@ -123,8 +123,8 @@ def process_text_on_page(index, pagetitle, text):
             this_respellings.append("+")
           respellings.extend(this_respellings)
         if tn == "IPA" and getparam(t, "1") == "fr":
-          pagemsg("Saw raw: %s" % unicode(t))
-          etymsections_to_raw_msgs[etymsection].append(unicode(t))
+          pagemsg("Saw raw: %s" % str(t))
+          etymsections_to_raw_msgs[etymsection].append(str(t))
         if tn == "fr-pr":
           saw_existing_pron = True
           saw_existing_pron_this_etym_section = True
@@ -139,7 +139,7 @@ def process_text_on_page(index, pagetitle, text):
           saw_pronun = False
           for param in t.params:
             pn = pname(param)
-            pv = unicode(param.value).strip().replace("_", r"\u").replace(" ", "_")
+            pv = str(param.value).strip().replace("_", r"\u").replace(" ", "_")
             if re.search("^[0-9]+$", pn):
               saw_pronun = True
               append_msg("EXISTING")

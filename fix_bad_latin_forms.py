@@ -10,7 +10,7 @@ import lalib
 from lalib import remove_macrons
 
 def process_form(index, page, lemma, formind, formval, subs):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
 
   def pagemsg(txt):
     msg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
@@ -20,7 +20,7 @@ def process_form(index, page, lemma, formind, formval, subs):
   parsed = blib.parse(page)
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
 
     def fix_head(headparam, head, tn):
@@ -34,7 +34,7 @@ def process_form(index, page, lemma, formind, formval, subs):
       else:
         # no break
         pagemsg("WARNING: Head %s not same as page title and doesn't begin with bad stem %s: %s" % (
-          head, " or ".join(badstem for badstem, goodstem in subs), unicode(t)))
+          head, " or ".join(badstem for badstem, goodstem in subs), str(t)))
         return False
 
     # la-suffix-form has its own format, don't handle
@@ -48,7 +48,7 @@ def process_form(index, page, lemma, formind, formval, subs):
         newhead = fix_head(headparam, head, tn)
         if newhead and remove_macrons(newhead) != pagetitle:
           pagemsg("WARNING: Replacement head %s not same as page title: %s" % (
-            newhead, unicode(t)))
+            newhead, str(t)))
     elif tn in lalib.la_infl_of_templates:
       langparam = "lang"
       headparam = "1"
@@ -70,15 +70,15 @@ def process_form(index, page, lemma, formind, formval, subs):
               t.add(altparam, "")
               if remove_macrons(newhead) != remove_macrons(lemma):
                 pagemsg("WARNING: Replacement lemma %s not same as lemma %s: %s" % (
-                  newhead, lemma, unicode(t)))
+                  newhead, lemma, str(t)))
         else:
           if link != lemma or alt != "":
             t.add(headparam, lemma)
             t.add(altparam, "")
             notes.append("correct lemma and/or move alt text to link text in {{%s|la}}" % tn)
-    if origt != unicode(t):
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-  return unicode(parsed), notes
+    if origt != str(t):
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
+  return str(parsed), notes
 
 def process_page(index, pos, lemma, subs, infl, save, verbose):
   def pagemsg(txt):

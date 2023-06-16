@@ -211,15 +211,15 @@ def process_text_on_page(index, pagetitle, text):
     headword_templates = []
     decl_z_templates = []
     for t in parsed.filter_templates():
-      tname = unicode(t.name)
+      tname = str(t.name)
       if tname in ["ru-noun-table", "ru-decl-adj"]:
-        pagemsg("find_decl_args: Found decl template: %s" % unicode(t))
+        pagemsg("find_decl_args: Found decl template: %s" % str(t))
         decl_templates.append(t)
       if tname in ["ru-noun", "ru-proper noun"]:
-        pagemsg("find_decl_args: Found headword template: %s" % unicode(t))
+        pagemsg("find_decl_args: Found headword template: %s" % str(t))
         headword_templates.append(t)
       if tname in ["ru-decl-noun-z"]:
-        pagemsg("find_decl_args: Found z-decl template: %s" % unicode(t))
+        pagemsg("find_decl_args: Found z-decl template: %s" % str(t))
         decl_z_templates.append(t)
 
     if not decl_templates:
@@ -234,18 +234,18 @@ def process_text_on_page(index, pagetitle, text):
           decl_z_template = decl_z_templates[0]
           headword_template = None
           pagemsg("find_decl_args: Using z-decl template: %s" %
-              unicode(decl_z_template))
+              str(decl_z_template))
           if len(headword_templates) == 0:
             pagemsg("WARNING: find_decl_args: No headword templates for use with z-decl template conversion during decl lookup for word #%s: lemma=%s, infl=%s, zdecl=%s" %
-                (wordind, lemma, infl, unicode(decl_z_template)))
+                (wordind, lemma, infl, str(decl_z_template)))
           elif len(headword_templates) > 1:
             pagemsg("WARNING: find_decl_args: Multiple headword templates for use with z-decl template conversion during decl lookup for word #%s, ignoring: lemma=%s, infl=%s, zdecl=%s" %
-                (wordind, lemma, infl, unicode(decl_z_template)))
+                (wordind, lemma, infl, str(decl_z_template)))
           else:
             headword_template = headword_templates[0]
             pagemsg("find_decl_args: For word #%s, lemma=%s, infl=%s, using headword template %s for use with z-decl template %s" %
-                (wordind, lemma, infl, unicode(headword_template),
-                  unicode(decl_z_template)))
+                (wordind, lemma, infl, str(headword_template),
+                  str(decl_z_template)))
           decl_template = runounlib.convert_zdecl_to_ru_noun_table(decl_z_template,
               subpagetitle, pagemsg, headword_template=headword_template)
           decl_templates = [decl_template]
@@ -263,7 +263,7 @@ def process_text_on_page(index, pagetitle, text):
     else:
       # Multiple decl templates
       for t in decl_templates:
-        if unicode(t.name) == "ru-decl-adj" and re.search(u"(ий|ый|ой)$", lemma):
+        if str(t.name) == "ru-decl-adj" and re.search(u"(ий|ый|ой)$", lemma):
           pagemsg("WARNING: Multiple decl templates during decl lookup for word #%s, assuming adjectival: lemma=%s, infl=%s" %
             (wordind, lemma, infl))
           decl_template = t
@@ -289,15 +289,15 @@ def process_text_on_page(index, pagetitle, text):
               (wordind, lemma, infl))
           return None
 
-    pagemsg("find_decl_args: Using decl template: %s" % unicode(decl_template))
-    if unicode(decl_template.name) == "ru-decl-adj":
+    pagemsg("find_decl_args: Using decl template: %s" % str(decl_template))
+    if str(decl_template.name) == "ru-decl-adj":
       if re.search(ur"\bь\b", getparam(decl_template, "2"), re.U):
         return [("1", wordlink), ("2", u"+ь")], True, None, None
       else:
         return [("1", wordlink), ("2", "+")], True, None, None
 
     # ru-noun-table
-    assert unicode(decl_template.name) == "ru-noun-table"
+    assert str(decl_template.name) == "ru-noun-table"
 
     # Split out the arg sets in the declension and check the
     # lemma of each one, taking care to handle cases where there is no lemma
@@ -305,7 +305,7 @@ def process_text_on_page(index, pagetitle, text):
 
     highest_numbered_param = 0
     for p in decl_template.params:
-      pname = unicode(p.name)
+      pname = str(p.name)
       if re.search("^[0-9]+$", pname):
         highest_numbered_param = max(highest_numbered_param, int(pname))
 
@@ -445,8 +445,8 @@ def process_text_on_page(index, pagetitle, text):
     num = None
     anim = None
     for p in decl_template.params:
-      pname = unicode(p.name)
-      val = unicode(p.value)
+      pname = str(p.name)
+      val = str(p.value)
       if pname == "a":
         anim = val
       elif pname == "n":
@@ -489,7 +489,7 @@ def process_text_on_page(index, pagetitle, text):
   headword_template = None
   see_template = None
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
+    tname = str(t.name)
     if tname == "ru-decl-noun-see":
       if see_template:
         pagemsg("WARNING: Multiple ru-decl-noun-see templates, skipping")
@@ -511,9 +511,9 @@ def process_text_on_page(index, pagetitle, text):
     pagemsg("WARNING: Can't find headword template, skipping")
     return
 
-  pagemsg("Found headword template: %s" % unicode(headword_template))
+  pagemsg("Found headword template: %s" % str(headword_template))
 
-  headword_is_proper = unicode(headword_template.name) == "ru-proper noun"
+  headword_is_proper = str(headword_template.name) == "ru-proper noun"
 
   if getparam(headword_template, "3") == "-" or "[[Category:Russian indeclinable nouns]]" in page.text:
     pagemsg("WARNING: Indeclinable noun, skipping")
@@ -611,8 +611,8 @@ def process_text_on_page(index, pagetitle, text):
     lemmas_infls.append((lemma, infl))
 
   if see_template:
-    pagemsg("Found decl-see template: %s" % unicode(see_template))
-    inflected_words = set(rulib.remove_accents(blib.remove_links(unicode(x.value)))
+    pagemsg("Found decl-see template: %s" % str(see_template))
+    inflected_words = set(rulib.remove_accents(blib.remove_links(str(x.value)))
         for x in see_template.params)
     if saw_unlinked_word:
       pagemsg("WARNING: Unlinked word(s) in headword, found decl-see template, proceeding, please check: %s" % headword)
@@ -854,7 +854,7 @@ def process_text_on_page(index, pagetitle, text):
       blib.parse_text("{{ru-generate-noun-args}}").filter_templates()[0])
   for name, value in params:
     generate_template.add(name, value)
-  proposed_template_text = unicode(generate_template)
+  proposed_template_text = str(generate_template)
   if headword_is_proper:
     proposed_template_text = re.sub(r"^\{\{ru-generate-noun-args",
         "{{ru-proper noun+", proposed_template_text)
@@ -871,7 +871,7 @@ def process_text_on_page(index, pagetitle, text):
 
   if headword_is_proper:
     generate_template.add("ndef", "sg")
-  generate_result = expand_text(unicode(generate_template))
+  generate_result = expand_text(str(generate_template))
   if not generate_result:
     pagemsg_with_proposed("WARNING: Error generating noun args, skipping")
     return
@@ -886,7 +886,7 @@ def process_text_on_page(index, pagetitle, text):
   if new_genders == None:
     return None
 
-  orig_headword_template = unicode(headword_template)
+  orig_headword_template = str(headword_template)
   params_to_preserve = runounlib.fix_old_headword_params(headword_template,
       params, new_genders, pagemsg_with_proposed)
   if params_to_preserve == None:
@@ -897,37 +897,37 @@ def process_text_on_page(index, pagetitle, text):
   notes = []
   ru_noun_changed = 0
   ru_proper_noun_changed = 0
-  if unicode(headword_template.name) == "ru-noun":
+  if str(headword_template.name) == "ru-noun":
     headword_template.name = "ru-noun+"
     notes.append("convert multi-word ru-noun to ru-noun+ by looking up decls")
   else:
     headword_template.name = "ru-proper noun+"
     notes.append("convert multi-word ru-proper noun to ru-proper noun+ by looking up decls")
 
-  pagemsg("Replacing headword %s with %s" % (orig_headword_template, unicode(headword_template)))
-  newtext = unicode(parsed)
+  pagemsg("Replacing headword %s with %s" % (orig_headword_template, str(headword_template)))
+  newtext = str(parsed)
 
   if see_template:
-    orig_see_template = unicode(see_template)
+    orig_see_template = str(see_template)
     del see_template.params[:]
     see_template.name = "ru-noun-table"
     for param in proposed_decl.params:
       see_template.add(param.name, param.value)
-    pagemsg("Replacing see-template %s with decl %s" % (orig_see_template, unicode(see_template)))
+    pagemsg("Replacing see-template %s with decl %s" % (orig_see_template, str(see_template)))
     notes.append("replace see-template with declension")
-    newtext = unicode(parsed)
+    newtext = str(parsed)
   else:
     if "==Declension==" in newtext:
       pagemsg("WARNING: No ru-decl-noun-see template, but found declension section, not adding new declension, proposed declension follows: %s" %
-          unicode(proposed_decl))
+          str(proposed_decl))
     else:
       nounsecs = re.findall("^===(?:Noun|Proper noun)===$", newtext, re.M)
       if len(nounsecs) == 0:
         pagemsg("WARNING: Found no noun sections, not adding new declension, proposed declension follows: %s" %
-            unicode(proposed_decl))
+            str(proposed_decl))
       elif len(nounsecs) > 1:
         pagemsg("WARNING: Found multiple noun sections, not adding new declension, proposed declension follows: %s" %
-            unicode(proposed_decl))
+            str(proposed_decl))
       else:
         text = newtext
         newtext = re.sub(r"\n*$", "\n\n", newtext)
@@ -935,13 +935,13 @@ def process_text_on_page(index, pagetitle, text):
         # (====Synonyms====) or a wikilink ([[pl:гонка вооружений]]) or
         # a category ([[Category:...]]).
         newtext = re.sub(r"^(===(?:Noun|Proper noun)===$.*?)^(==|\[\[|\Z)",
-            r"\1====Declension====\n%s\n\n\2" % unicode(proposed_decl), newtext,
+            r"\1====Declension====\n%s\n\n\2" % str(proposed_decl), newtext,
             1, re.M|re.S)
         if text == newtext:
           pagemsg("WARNING: Something wrong, can't sub in new declension, proposed declension follows: %s" %
-              unicode(proposed_decl))
+              str(proposed_decl))
         else:
-          pagemsg("Subbed in new declension: %s" % unicode(proposed_decl))
+          pagemsg("Subbed in new declension: %s" % str(proposed_decl))
           notes.append("create declension from headword")
           if args.verbose:
             pagemsg("Replaced <%s> with <%s>" % (text, newtext))

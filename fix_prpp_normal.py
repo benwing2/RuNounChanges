@@ -7,25 +7,25 @@ import blib
 from blib import getparam, rmparam, tname, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     if tname(t) == "ru-conj" and getparam(t, 1) == "impf":
       t.add("prpp", "+")
       notes.append("added |prpp=+ to imperfective %s" % pagetitle)
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Find Russian terms with bad past passive participles",
   include_pagefile=True)

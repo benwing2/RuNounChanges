@@ -912,7 +912,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
     paramval = rulib.remove_monosyllabic_accents(blib.remove_links(getparam(t, param)))
     if rulib.is_multi_stressed(paramval):
       warn_if(issue_warnings, "Param %s=%s has multiple accents: %s" % (
-        param, paramval, unicode(t)))
+        param, paramval, str(t)))
     if rulib.is_multi_stressed(value):
       warn_if(issue_warnings, "Value %s to compare to param %s=%s has multiple accents" % (
         value, param, paramval))
@@ -937,7 +937,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       if valueaccents != paramvalaccents:
         warn_if(issue_warnings, "Value %s (%s accents) matches param %s=%s (%s accents) except for accents, and different numbers of accents: %s" % (
           value, valueaccents, param, paramval, paramvalaccents,
-          unicode(t)))
+          str(t)))
     # Now, if there's a match, check the translit
     if matches:
       if param_is_head and param in ["1", "2", "head"]:
@@ -957,7 +957,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       if valuetr == trparamval:
         return True
       warn_if(issue_warnings, "Value %s matches param %s=%s, but translit %s doesn't match param %s=%s: %s" % (
-        value, param, paramval, valuetr, trparam, trparamval, unicode(t)))
+        value, param, paramval, valuetr, trparam, trparamval, str(t)))
       return False
     return False
 
@@ -1017,15 +1017,15 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
 
     if some_match and not all_match:
       warn_if(issue_warnings, "Some but not all inflections %s match template when %s: %s" %
-          (joined_infls_with_tr(), purpose, unicode(t)))
+          (joined_infls_with_tr(), purpose, str(t)))
     elif all_match and left_over_heads:
       if fail_when_left_over_heads:
         warn_if(issue_warnings, "All inflections %s match template, but extra heads in template when %s, treating as a non-match: %s" %
-            (joined_infls_with_tr(), purpose, unicode(t)))
+            (joined_infls_with_tr(), purpose, str(t)))
         return False
       else:
         warn_if(issue_warnings, "All inflections %s match template, but extra heads in template when %s: %s" %
-            (joined_infls_with_tr(), purpose, unicode(t)))
+            (joined_infls_with_tr(), purpose, str(t)))
     return all_match
 
   # Prepare parts of new entry to insert
@@ -1250,7 +1250,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
         parsed = blib.parse_text(sections[i])
         for t in parsed.filter_templates():
           if tname(t) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "noun form":
-            origt = unicode(t)
+            origt = str(t)
             head = getparam(t, "head") or pagename
             t.add("1", head) # 1= is already set
             rmparam(t, "head")
@@ -1261,9 +1261,9 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               rmparam(t, "2")
             rmparam(t, "g")
             blib.set_template_name(t, "ru-noun form")
-            pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+            pagemsg("Replaced %s with %s" % (origt, str(t)))
             notes.append("convert {{head|ru|noun form}} to {{ru-noun form}}")
-        sections[i] = unicode(parsed)
+        sections[i] = str(parsed)
 
         # Canonicalize tags in {{inflection of}} to those in
         # preferred_tag_variants.
@@ -1271,23 +1271,23 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
         for t in parsed.filter_templates():
           if tname(t) not in deftemp:
             continue
-          origt = unicode(t)
+          origt = str(t)
           lang_in_1 = deftemp_needs_lang and not t.has("lang")
           lang_param = lang_in_1 and "1" or "lang"
           if (not deftemp_needs_lang or
               compare_param(t, lang_param, "ru", None, param_is_head=False)):
             for param in t.params:
               pnam = pname(param)
-              pvalue = unicode(param.value)
+              pvalue = str(param.value)
               if (pnam not in ["1", "2"] and not (lang_in_1 and pnam == "3")
                   and re.search("^[0-9]+$", pnam)):
                 if pvalue in tag_to_canonical_form_table:
                    param.value = tag_to_canonical_form_table[pvalue]
-            newt = unicode(t)
+            newt = str(t)
             if origt != newt:
               pagemsg("Replaced %s with %s" % (origt, newt))
               notes.append("canonicalize tags in {{%s}}" % tname(t))
-        sections[i] = unicode(parsed)
+        sections[i] = str(parsed)
 
         # When creating non-lemma forms, warn about matching lemma template
         if is_lemma_template:
@@ -1295,7 +1295,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           for t in parsed.filter_templates():
             if is_lemma_template(t):
               if template_head_matches(t, inflections, "checking for lemma"):
-                warn("Creating non-lemma form and found matching lemma template: %s" % unicode(t))
+                warn("Creating non-lemma form and found matching lemma template: %s" % str(t))
               if is_noun_form:
                 tnam = tname(t)
                 if tnam in ["ru-noun", "ru-proper noun"] and any([re.search(r"\bp\b", x) for x in blib.fetch_param_chain(t, "2", "g")]):
@@ -1304,7 +1304,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   args = rulib.fetch_noun_args(t, expand_text)
                   if args is None:
                     warn("Error expanding template when checking for plurale tantum nouns: %s" %
-                        unicode(t))
+                        str(t))
                   elif args["n"] == "p":
                     found_plurale_tantum_lemma = True
 
@@ -1495,7 +1495,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                     notes.append("add gender %s" % g)
                     changed = True
                   if changed:
-                    subsections[j] = unicode(parsed)
+                    subsections[j] = str(parsed)
                     sections[i] = ''.join(subsections)
                 return True # changed and "changed" or "nochange"
 
@@ -1508,7 +1508,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               #      newparam = blib.append_param_to_chain(headword_template, g,
               #        first_gender_param, "g")
               #      pagemsg("Added verb gender %s=%s" % (newparam, g))
-              #      subsections[j] = unicode(parsed)
+              #      subsections[j] = str(parsed)
               #      sections[i] = ''.join(subsections)
               #      notes.append("update gender %s" % g)
 
@@ -1542,7 +1542,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   # instead goes into the definition line
                   if blib.remove_param_chain(headword_template,
                       first_gender_param, "g"):
-                    subsections[j] = unicode(parsed)
+                    subsections[j] = str(parsed)
                     sections[i] = ''.join(subsections)
                     notes.append("remove gender")
 
@@ -1569,7 +1569,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 #    changed = True
                 #    notes.append("update %s=%s" % (param, value))
                 #if changed:
-                #  subsections[j] = unicode(parsed)
+                #  subsections[j] = str(parsed)
                 #  sections[i] = ''.join(subsections)
                 return True
 
@@ -1629,7 +1629,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                           param_is_head=False, issue_warnings=issue_warnings)):
                     for param in t.params:
                       pnam = pname(param)
-                      pvalue = unicode(param.value)
+                      pvalue = str(param.value)
                       if (pnam not in ["1", "2"] and not (lang_in_1 and pnam == "3")
                           and re.search("^[0-9]+$", pnam)):
                         # Individual components may be separated by //
@@ -1646,7 +1646,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               # if TAG_SET_NO == "all", replace all tag sets.
               def check_fix_defn_params(t, tag_set_no, infls):
                 # Following code mostly copied from fix_verb_form.py
-                origt = unicode(t)
+                origt = str(t)
                 # Fetch lemma and alt params, and non-numbered params.
                 lang = getparam(t, "lang")
                 lang_in_1 = deftemp_needs_lang and not lang
@@ -1659,7 +1659,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 non_numbered_params = []
                 for param in t.params:
                   pnam = pname(param)
-                  pvalue = unicode(param.value)
+                  pvalue = str(param.value)
                   if (pnam not in ["1", "2"] and not (lang_in_1 and pnam == "3")
                       and re.search("^[0-9]+$", pnam) and pvalue):
                     tags.append(pvalue)
@@ -1700,7 +1700,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   t.add(str(paramno+(4 if lang else 3)), param)
                 for name, value in non_numbered_params:
                   t.add(name, value)
-                newt = unicode(t)
+                newt = str(t)
                 if origt != newt:
                   pagemsg("Replaced %s with %s" % (origt, newt))
                   if tag_set_no != -1:
@@ -1710,7 +1710,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                     # number or "all" are used for updating aspect
                     # codes.
                     notes.append("update form codes (pfv/impfv)")
-                  subsections[j] = unicode(parsed)
+                  subsections[j] = str(parsed)
                   sections[i] = ''.join(subsections)
 
               # True if the tag sets in template T (an "inflection of"
@@ -1736,7 +1736,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 tags = []
                 for param in t.params:
                   name = pname(param)
-                  value = unicode(param.value)
+                  value = str(param.value)
                   if (name not in ["1", "2"] and not (lang_in_1 and name == "3")
                       and re.search("^[0-9]+$", name) and value):
                     tags.append(value)
@@ -1757,7 +1757,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   for indiv_tag_set in split_tag_set_group:
                     if set(indiv_tag_set) > inflset:
                       warn_if(issue_warnings, "Found actual inflection %s in template %s whose codes are a superset of intended codes %s, accepting" % (
-                        "|".join(indiv_tag_set), unicode(t), "|".join(infls)))
+                        "|".join(indiv_tag_set), str(t), "|".join(infls)))
                       return True, tag_set_no
                 # See if there's a subset match.
                 for tag_set_no, split_tag_set_group in enumerate(split_tag_sets):
@@ -1769,11 +1769,11 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                       if (indiv_set | {"pfv"}) == inflset or (indiv_set | {"impfv"}) == inflset:
                         if len(split_tag_set_group) == 1:
                           pagemsg_if(issue_warnings, "Need to update actual inflection %s in template %s with intended codes %s" % (
-                            "|".join(indiv_tag_set), unicode(t), "|".join(infls)))
+                            "|".join(indiv_tag_set), str(t), "|".join(infls)))
                           return "update", tag_set_no
                         else:
                           warn_if(issue_warnings, "Found actual inflection %s in template %s whose codes are a subset of intended codes %s and could update aspect except that multipart tags are present" % (
-                            "|".join(indiv_tag_set), unicode(t), "|".join(infls)))
+                            "|".join(indiv_tag_set), str(t), "|".join(infls)))
                 return False, 0
 
               # Find the inflection headword template(s) (e.g. 'ru-noun form' or
@@ -1915,7 +1915,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                     if len(decl_templates) != len(new_decl_template_parts):
                       warn("Found %s existing participial decl templates %s but want %s new decl templates %s" %
                           (len(decl_templates),
-                          " ".join(unicode(t) for t in decl_templates),
+                          " ".join(str(t) for t in decl_templates),
                           len(new_decl_template_parts),
                           " ".join(new_decl_template_parts)))
                       return False
@@ -1926,7 +1926,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                     for k in range(len(decl_templates)):
                       declt = decl_templates[k]
                       newdeclt = blib.parse_text(new_decl_template_parts[k]).filter_templates()[0]
-                      if unicode(declt) != unicode(newdeclt):
+                      if str(declt) != str(newdeclt):
                         if getparam(declt, "1") == getparam(newdeclt, "1"):
                           shortdecl = getparam(declt, "2")
                           newshortdecl = getparam(newdeclt, "2")
@@ -1937,11 +1937,11 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                             notes.append("update participle short decl from %s to %s" %
                                 (shortdecl, newshortdecl))
                             declt.add("2", newshortdecl)
-                            subsections[check_subsection + 1] = unicode(subsecparsed)
+                            subsections[check_subsection + 1] = str(subsecparsed)
                             sections[i] = "".join(subsections)
                             continue
                         warn("Existing decl %s and wanted decl %s differ and can't fix" %
-                          (unicode(declt), unicode(newdeclt)))
+                          (str(declt), str(newdeclt)))
 
                     return False
                   check_subsection += 1
@@ -2719,7 +2719,7 @@ def get_headword_noun_gender(section, pagemsg, expand_text):
         args = rulib.fetch_noun_args(t, expand_text)
         if args is None:
           pagemsg("WARNING: Error generating args for headword template: %s" %
-              unicode(t))
+              str(t))
         else:
           new_genders = get_noun_gender_from_args(args)
     if new_genders:
@@ -2773,7 +2773,7 @@ def find_inflection_templates(text, expected_header, expected_poses, skip_poses,
               templates.append((t, latest_genders))
             else:
               pagemsg("Skipping inflection template because under part of speech %s: %s" % (
-                pos_header, unicode(t)))
+                pos_header, str(t)))
   return templates
 
 # Split forms where there are stress variants with corresponding stress-variant
@@ -2976,7 +2976,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
     lemmas_to_process_set = set(lemmas_to_process)
     unaccented_lemmas = {}
     for index, page in blib.cat_articles("Russian %ss" % pos):
-      pagetitle = unicode(page.title())
+      pagetitle = str(page.title())
       unaccented_title = rulib.make_unstressed_ru(pagetitle)
       if unaccented_title in lemmas_to_process_set:
         if unaccented_title in unaccented_lemmas:
@@ -2998,7 +2998,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
     pages_to_process = blib.cat_articles("Russian %ss" % pos, startFrom, upTo)
 
   for index, page in pages_to_process:
-    pagetitle = unicode(page.title())
+    pagetitle = str(page.title())
     def pagemsg(txt):
       msg("Page %s %s: %s" % (index, pagetitle, txt))
     def errpagemsg(txt):
@@ -3302,7 +3302,7 @@ def create_verb_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       verb_form_aliases, "verb", "head|ru|verb form",
       "infinitive", "Conjugation", ["Verb", "Idiom"], [],
       lambda t:tname(t) == "ru-conj",
-      lambda t, expand_text: expand_text(re.sub(r"^\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t))),
+      lambda t, expand_text: expand_text(re.sub(r"^\{\{ru-conj", "{{ru-generate-verb-forms", str(t))),
       lambda t:tname(t) == "ru-verb",
       get_gender=get_verb_gender,
       skip_inflections=skip_future_periphrastic,
@@ -3318,11 +3318,11 @@ def get_adj_gender(t, formname, args):
 
 def generate_adj_forms(t, expand_text):
   if tname(t) == "ru-decl-adj":
-    return expand_text(re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t)))
+    return expand_text(re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", str(t)))
   else:
     assert tname(t) == "ru-decl-adj-irreg"
     return expand_text(re.sub(r"^\{\{ru-decl-adj-irreg\s*\|", r"{{ru-generate-adj-forms|-|manual|",
-      unicode(t)))
+      str(t)))
 
 def create_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process,
     lemmas_no_jo, lemmas_to_overwrite, lemmas_to_not_overwrite, program_args):
@@ -3378,7 +3378,7 @@ def create_noun_forms(save, startFrom, upTo, formspec, lemmas_to_process,
       noun_form_inflection_dict, noun_form_aliases, "noun", "ru-noun form",
       ["nom_sg", "nom_pl"], "Declension", ["Noun", "Proper noun"], [],
       lambda t:tname(t) == "ru-noun-table",
-      lambda t, expand_text: expand_text(re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args", unicode(t))),
+      lambda t, expand_text: expand_text(re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args", str(t))),
       lambda t:tname(t) in ["ru-noun", "ru-proper noun", "ru-noun+", "ru-proper noun+"],
       get_gender=get_noun_gender)
 
@@ -3396,7 +3396,7 @@ def numeral_is_tantum(t, dicform_code):
 
 def generate_numeral_noun_forms(t, expand_text):
   if tname(t) == "ru-noun-table":
-    temp_to_expand = unicode(t)
+    temp_to_expand = str(t)
   elif tname(t) == "ru-decl-noun":
     temp_to_expand = "{{ru-noun-table|a|%s|manual|a=%s|nom_sg=%s|nom_pl=%s|gen_sg=%s|gen_pl=%s|dat_sg=%s|dat_pl=%s|acc_sg=%s|acc_pl=%s|ins_sg=%s|ins_pl=%s|pre_sg=%s|pre_pl=%s|loc=%s|voc=%s|notes=%s}}" % (
       getparam(t, "1"),

@@ -6,7 +6,7 @@ from blib import msg, errmsg, site
 import pywikibot
 
 def rename_page(index, page, totitle, comment, refrom, reto):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -44,7 +44,7 @@ def rename_page(index, page, totitle, comment, refrom, reto):
       pagemsg("Would rename to %s (comment=%s)" % (totitle, this_comment))
 
 def delete_page(index, page, comment):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):

@@ -6,7 +6,7 @@ import blib
 from blib import site, msg, errmsg
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
 
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -21,7 +21,7 @@ def process_page(page, index, parsed):
     return
 
   notes = []
-  pagetext = unicode(page.text)
+  pagetext = str(page.text)
 
   def put_attributive_first(m):
     labels = m.group(1).split('|')

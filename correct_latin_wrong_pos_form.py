@@ -21,7 +21,7 @@ def process_form(page, index, slot, form, pos, pagemsg):
     pagemsg("Skipping form value %s, page doesn't exist" % form)
     return None, None
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   retval = lalib.find_latin_section(text, pagemsg)
   if retval is None:
@@ -72,7 +72,7 @@ def process_form(page, index, slot, form, pos, pagemsg):
 
 def process_page(page, index):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -80,7 +80,7 @@ def process_page(page, index):
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   retval = lalib.find_heads_and_defns(text, pagemsg)
   if retval is None:
@@ -125,9 +125,9 @@ def process_page(page, index):
       infltn = tname(inflt)
       if infltn != expected_inflt:
         pagemsg("WARNING: Saw bad declension template for %s, expected {{%s}}: %s" % (
-          pos, expected_inflt, unicode(inflt)))
+          pos, expected_inflt, str(inflt)))
         continue
-      inflargs = lalib.generate_infl_forms(pos, unicode(inflt), errandpagemsg, expand_text)
+      inflargs = lalib.generate_infl_forms(pos, str(inflt), errandpagemsg, expand_text)
       forms_seen = set()
       slots_and_forms_to_process = []
       for slot, formarg in inflargs.iteritems():

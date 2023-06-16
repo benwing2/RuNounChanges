@@ -57,7 +57,7 @@ def process_text_on_page(index, pagetitle, text):
   parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
 
     if tn in ["compound", "com"]:
@@ -68,7 +68,7 @@ def process_text_on_page(index, pagetitle, text):
         # Fetch all params, moving numbered params over to the right by one.
         params = [("1", lang, False)]
         for param in t.params:
-          pname = unicode(param.name)
+          pname = str(param.name)
           if re.search("^[0-9]+$", pname):
             params.append((str(int(pname) + 1), param.value, param.showkey))
           elif pname != "lang":
@@ -79,9 +79,9 @@ def process_text_on_page(index, pagetitle, text):
         for name, value, showkey in params:
           t.add(name, value, showkey=showkey, preserve_spacing=False)
       t.name = "affix"
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
       notes.append("convert {{compound}} to {{affix}}")
-      origt = unicode(t)
+      origt = str(t)
       tn = tname(t)
 
     if tn in ["affix", "af"]:
@@ -111,7 +111,7 @@ def process_text_on_page(index, pagetitle, text):
         # Fetch all params, moving params > 1 over to the right by one.
         params = []
         for param in t.params:
-          pname = unicode(param.name)
+          pname = str(param.name)
           if pname == "1":
             params.append((pname, param.value, param.showkey))
           elif pname == "2":
@@ -133,13 +133,13 @@ def process_text_on_page(index, pagetitle, text):
         # Put back parameters in order.
         for name, value, showkey in params:
           t.add(name, value, showkey=showkey, preserve_spacing=False)
-        pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+        pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
         notes.append("convert use of alt1= in etyms to proper use of interfixes")
       else:
         for param in t.params:
-          if unicode(param.value) in [u"-о-", u"-е-"]:
+          if str(param.value) in [u"-о-", u"-е-"]:
             for param2 in t.params:
-              if unicode(param2.name) == "alt1":
+              if str(param2.name) == "alt1":
                 warning("Has both interfix and alt1= in affix template")
                 break
             else:
@@ -156,7 +156,7 @@ def process_text_on_page(index, pagetitle, text):
   if not found_affix:
     pagemsg("WARNING: No affix template")
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser('Convert use of alt1= in etyms to proper use of interfixes',
     include_pagefile=True, include_stdin=True)

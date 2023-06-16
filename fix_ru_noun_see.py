@@ -9,7 +9,7 @@ from blib import getparam, rmparam, msg, site
 def process_page(page, index, parsed):
   global args
   verbose = args.verbose
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -23,12 +23,12 @@ def process_page(page, index, parsed):
   headword_template = None
   see_template = None
   for t in parsed.filter_templates():
-    if unicode(t.name) in ["ru-noun+", "ru-proper noun+"]:
+    if str(t.name) in ["ru-noun+", "ru-proper noun+"]:
       if headword_template:
         pagemsg("WARNING: Multiple headword templates, skipping")
         return
       headword_template = t
-    if unicode(t.name) in ["ru-decl-noun-see"]:
+    if str(t.name) in ["ru-decl-noun-see"]:
       if see_template:
         pagemsg("WARNING: Multiple ru-decl-noun-see templates, skipping")
         return
@@ -45,7 +45,7 @@ def process_page(page, index, parsed):
     see_template.add(param.name, param.value)
   see_template.name = "ru-noun-table"
 
-  if unicode(headword_template.name) == "ru-proper noun+":
+  if str(headword_template.name) == "ru-proper noun+":
     # Things are trickier for proper nouns because they default to n=sg, whereas
     # ru-noun-table defaults to n=both. We have to expand both templates and
     # fetch the value of n, and set it in ru-noun-table if not the same.
@@ -54,7 +54,7 @@ def process_page(page, index, parsed):
     #    because ru-proper noun+ defaults to sg and ru-generate-noun-args
     #    would otherwise default to both.
     headword_generate_template = re.sub(r"^\{\{ru-proper noun\+", "{{ru-generate-noun-args",
-        unicode(headword_template))
+        str(headword_template))
     headword_generate_template = re.sub(r"\}\}$", "|ndef=sg}}", headword_generate_template)
     headword_generate_result = expand_text(headword_generate_template)
     if not headword_generate_result:
@@ -78,7 +78,7 @@ def process_page(page, index, parsed):
       assert headword_n == "b"
       rmparam(see_template, "n")
       see_generate_template = re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args",
-          unicode(see_template))
+          str(see_template))
       see_generate_result = expand_text(see_generate_template)
       if not see_generate_result:
         pagemsg("WARNING: Error generating ru-noun-table args")
@@ -87,7 +87,7 @@ def process_page(page, index, parsed):
       if see_args["n"] != "b":
         see_template.add("n", "both")
 
-  return unicode(parsed), "Replace ru-decl-noun-see with ru-noun-table, taken from headword template (%s)" % unicode(headword_template.name)
+  return str(parsed), "Replace ru-decl-noun-see with ru-noun-table, taken from headword template (%s)" % str(headword_template.name)
 
 parser = blib.create_argparser("Convert ru-decl-noun-see into ru-noun-table decl template, taken from headword ru-(proper )noun+ template",
   include_pagefile=True)

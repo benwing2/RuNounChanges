@@ -61,8 +61,8 @@ def paste_arg_sets(arg_sets, t, verb_type, rm_pres_stem, as_string,
         args.append((str(next_numbered_param), arg_set[i]))
       next_numbered_param += 1
   for param in t.params:
-    pname = unicode(param.name)
-    pvalue = unicode(param.value)
+    pname = str(param.name)
+    pvalue = str(param.value)
     if re.search("^[0-9]+$", pname):
       doadd = False
     elif change_only:
@@ -71,14 +71,14 @@ def paste_arg_sets(arg_sets, t, verb_type, rm_pres_stem, as_string,
       doadd = not rm_pres_stem or pname != "pres_stem"
     if doadd:
       if as_string:
-        args.append("%s=%s" % (unicode(param.name), unicode(param.value)))
+        args.append("%s=%s" % (str(param.name), str(param.value)))
       else:
-        args.append((unicode(param.name), unicode(param.value)))
+        args.append((str(param.name), str(param.value)))
   return args
 
 def process_page(page, index, parsed):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errpagemsg(txt):
@@ -90,11 +90,11 @@ def process_page(page, index, parsed):
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     if tname(t) in ["ru-conj", "ru-conj-old", "User:Benwing2/ru-conj",
         "User:Benwing2/ru-conj-old"] or tname(t) == "temp" and getparam(t, "1") == "ru-conj":
       verb_type, arg_sets = split_ru_conj_args(t, tname(t) == "temp")
@@ -368,11 +368,11 @@ def process_page(page, index, parsed):
         notes.append("ru-conj: normalized %s to %s" % (
           "|".join(orig_changed_params), "|".join(new_changed_params)))
 
-      newt = unicode(t)
+      newt = str(t)
       if origt != newt:
         pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Fix up verb conjugations to use the infinitive",
   include_pagefile=True)

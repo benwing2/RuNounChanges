@@ -22,24 +22,24 @@ def process_text_on_page(index, pagetitle, text):
   parsed = blib.parse_text(text)
   headt = None
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in ["de-verb-old", "de-verb-strong", "de-verb-weak"] or tn == "head" and getparam(t, "1") == "de" and getparam(t, "2") == "verb":
       if headt:
-        pagemsg("WARNING: Encountered headword twice without declension: old %s, current %s" % (unicode(headt), unicode(t)))
+        pagemsg("WARNING: Encountered headword twice without declension: old %s, current %s" % (str(headt), str(t)))
         return
       headt = t
       headtn = tn
     if tn == "de-conj":
       if not headt:
-        pagemsg("WARNING: Encountered conj without headword: %s" % unicode(t))
+        pagemsg("WARNING: Encountered conj without headword: %s" % str(t))
         return
       param4_ignorable = False
       if getparam(headt, "4") in ["h", "haben", "s", "sein"]:
         param4_ignorable = True
       for param in headt.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if not pv:
           continue
         if headtn == "head":
@@ -55,7 +55,7 @@ def process_text_on_page(index, pagetitle, text):
         if param4_ignorable:
           allowed_params.append("4")
         if pn not in allowed_params:
-          pagemsg("WARNING: Encountered unknown param %s=%s in %s" % (pn, pv, unicode(headt)))
+          pagemsg("WARNING: Encountered unknown param %s=%s in %s" % (pn, pv, str(headt)))
           return
       def canonicalize_existing(forms):
         forms = [re.sub(" '*or'* ", ",", form) for form in forms]
@@ -66,7 +66,7 @@ def process_text_on_page(index, pagetitle, text):
           return True
         if set(old) != set(new):
           pagemsg("WARNING: Old %s %s disagree with new %s %s: head=%s, decl=%s" % (
-            entities_compared, ",".join(old), entities_compared, ",".join(new), unicode(headt), unicode(t)))
+            entities_compared, ",".join(old), entities_compared, ",".join(new), str(headt), str(t)))
           return False
         return True
       def fetch_aux():
@@ -78,7 +78,7 @@ def process_text_on_page(index, pagetitle, text):
         elif not aux:
           aux = []
         else:
-          pagemsg("WARNING: Unrecognized auxiliary=%s, skipping: %s" % (aux, unicode(headt)))
+          pagemsg("WARNING: Unrecognized auxiliary=%s, skipping: %s" % (aux, str(headt)))
           return None
         if not aux:
           param4 = getparam(headt, "4")
@@ -88,7 +88,7 @@ def process_text_on_page(index, pagetitle, text):
             aux = ["sein"]
         return aux
       if headtn == "de-verb-weak":
-        generate_template = re.sub(r"^\{\{de-conj(?=[|}])", "{{User:Benwing2/de-generate-verb-props", unicode(t))
+        generate_template = re.sub(r"^\{\{de-conj(?=[|}])", "{{User:Benwing2/de-generate-verb-props", str(t))
         result = expand_text(generate_template)
         if not result:
           continue
@@ -106,7 +106,7 @@ def process_text_on_page(index, pagetitle, text):
           headt = None
           continue
       if headtn == "de-verb-strong":
-        generate_template = re.sub(r"^\{\{de-conj(?=[|}])", "{{User:Benwing2/de-generate-verb-props", unicode(t))
+        generate_template = re.sub(r"^\{\{de-conj(?=[|}])", "{{User:Benwing2/de-generate-verb-props", str(t))
         result = expand_text(generate_template)
         if not result:
           continue
@@ -137,10 +137,10 @@ def process_text_on_page(index, pagetitle, text):
         (arg1 and "|" + arg1 or "")))
       headt = None
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert German verb headwords to use new {{de-verb}}",
     include_pagefile=True, include_stdin=True)

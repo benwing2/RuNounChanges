@@ -9,7 +9,7 @@ import blib
 from blib import getparam, rmparam, msg, errmsg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -24,12 +24,12 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title and not a recognized namespace to include, skipping page")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    if unicode(t.name) == "RQ:Wodehouse Offing":
+    origt = str(t)
+    if str(t.name) == "RQ:Wodehouse Offing":
       chapter = getparam(t, "1")
       passage = getparam(t, "2")
       if chapter or passage:
@@ -40,11 +40,11 @@ def process_page(page, index, parsed):
         if passage:
           t.add("passage", passage)
         notes.append("Fix params in RQ:Wodehouse Offing")
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 if __name__ == "__main__":
   parser = blib.create_argparser("Fix params in RQ:Wodehouse Offing templates",

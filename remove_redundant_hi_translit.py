@@ -75,11 +75,11 @@ def process_text_on_page(index, pagetitle, text):
   saw_ndecl = False
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     if tn in hindi_head_templates:
       if noun_head_template and head_template_tr and not saw_ndecl:
         pagemsg("WARNING: Missing declension for noun needing phonetic respelling, headtr=%s, autotr=%s: %s" % (
-          ",".join(head_template_tr), ",".join(head_auto_tr), unicode(noun_head_template)))
+          ",".join(head_template_tr), ",".join(head_auto_tr), str(noun_head_template)))
       if tn in ["hi-noun", "hi-proper noun"]:
         noun_head_template = t
       else:
@@ -93,7 +93,7 @@ def process_text_on_page(index, pagetitle, text):
           multi_trs = True
           # We might have tr=some special translit and tr2=the default one, and in that case
           # we don't want to remove tr2= even though it appears redundant.
-          pagemsg("More than one translit, not removing any redundant ones: %s" % unicode(t))
+          pagemsg("More than one translit, not removing any redundant ones: %s" % str(t))
           break
       for i in range(1, 10):
         trparam = "tr" if i == 1 else "tr%s" % i
@@ -120,17 +120,17 @@ def process_text_on_page(index, pagetitle, text):
               pagemsg("Page has non-redundant translit %s=%s vs. auto tr=%s in {{%s}}" % (
                 trparam, tr, autotr, tn))
               if origtr != tr:
-                pagemsg("Canonicalizing %s=%s to %s: %s" % (trparam, origtr, tn, unicode(t)))
+                pagemsg("Canonicalizing %s=%s to %s: %s" % (trparam, origtr, tn, str(t)))
                 t.add(trparam, tr)
                 notes.append("canonicalize %s=%s to %s in {{%s}}" % (trparam, origtr, tr, tn))
-      if unicode(t) != origt:
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if str(t) != origt:
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
     if tn == "hi-ndecl":
       saw_ndecl = True
       decl = getparam(t, "1")
       phon_respellings = re.findall("//([^<>, -]*)", decl)
       if head_template_tr is None:
-        pagemsg("WARNING: Saw {{hi-ndecl}} before any headwords: %s" % unicode(t))
+        pagemsg("WARNING: Saw {{hi-ndecl}} before any headwords: %s" % str(t))
       else:
         respelling_tr = [expand_text("{{xlit|hi|%s}}" % x) for x in phon_respellings]
         if None in respelling_tr:
@@ -140,27 +140,27 @@ def process_text_on_page(index, pagetitle, text):
         for phon_respelling in phon_respellings:
           if u"॰" in phon_respelling:
             pagemsg(u"WARNING: Saw ॰ in phon_respelling %s in %s" % (
-              phon_respelling, unicode(t)))
+              phon_respelling, str(t)))
         if head_template_tr and not phon_respellings:
           pagemsg("WARNING: Missing phonetic respelling in %s, headtr=%s, autotr=%s" % (
-            unicode(t), ",".join(head_template_tr), ",".join(head_auto_tr)))
+            str(t), ",".join(head_template_tr), ",".join(head_auto_tr)))
         elif phon_respellings and not head_template_tr:
           pagemsg("WARNING: Extra phonetic respelling %s (translit %s) in %s, no head tr" % (
-            ",".join(phon_respellings), ",".join(respelling_tr), unicode(t)))
+            ",".join(phon_respellings), ",".join(respelling_tr), str(t)))
         elif set(respelling_tr) != set(head_template_tr):
           pagemsg("WARNING: Phonetic respelling %s (translit %s) in %s differs from head translit %s, auto translit %s" % (
-            ",".join(phon_respellings), ",".join(respelling_tr), unicode(t),
+            ",".join(phon_respellings), ",".join(respelling_tr), str(t),
             ",".join(head_template_tr), ",".join(head_auto_tr)))
         elif phon_respellings:
           pagemsg("Phonetic respelling %s (translit %s) in %s agrees with head translit %s, auto translit %s" % (
-            ",".join(phon_respellings), ",".join(respelling_tr), unicode(t),
+            ",".join(phon_respellings), ",".join(respelling_tr), str(t),
             ",".join(head_template_tr), ",".join(head_auto_tr)))
 
   if noun_head_template and head_template_tr and not saw_ndecl:
     pagemsg("WARNING: Missing declension for noun needing phonetic respelling, headtr=%s, autotr=%s: %s" % (
-      ",".join(head_template_tr), ",".join(head_auto_tr), unicode(noun_head_template)))
+      ",".join(head_template_tr), ",".join(head_auto_tr), str(noun_head_template)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Remove redundant translit from Hindi headwords and check translit against phonetic respelling",
   include_pagefile=True, include_stdin=True)

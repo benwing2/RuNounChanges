@@ -17,7 +17,7 @@ langs_to_remove_sort = {
 }
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -25,11 +25,11 @@ def process_page(page, index, parsed):
   notes = []
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "rfdef":
       if getparam(t, "lang"):
-        pagemsg("WARNING: has lang=, skipping: %s" % unicode(t))
+        pagemsg("WARNING: has lang=, skipping: %s" % str(t))
         continue
       lang = getparam(t, "1")
       if lang in langs_to_convert:
@@ -41,10 +41,10 @@ def process_page(page, index, parsed):
         if t.has("sort"):
           rmparam(t, "sort")
           notes.append("remove sort= from {{rfdef|%s}}, now auto-computed" % lang)
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Remove sort= from Asian-language {{rfdef}} and unify Chinese varieties", include_pagefile=True)
 args = parser.parse_args()

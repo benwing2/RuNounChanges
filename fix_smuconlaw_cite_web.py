@@ -9,7 +9,7 @@ import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -24,13 +24,13 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title and not a recognized namespace to include, skipping page")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
-    origt = unicode(t)
+    tname = str(t.name)
+    origt = str(t)
     if tname.strip() == "cite-web":
       changed = False
       if t.has("title") and not t.has("work"):
@@ -49,8 +49,8 @@ def process_page(page, index, parsed):
         changed = True
         notes.append("trans-title -> trans-work in {{%s}}" % tname.strip())
       if changed:
-        pagemsg(("Replacing %s with %s" % (origt, unicode(t))).replace("\n", r"\n"))
-  return unicode(parsed), notes
+        pagemsg(("Replacing %s with %s" % (origt, str(t))).replace("\n", r"\n"))
+  return str(parsed), notes
 
 if __name__ == "__main__":
   parser = blib.create_argparser("Fix title and entry in a couple reference templates",

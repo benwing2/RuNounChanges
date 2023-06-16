@@ -64,7 +64,7 @@ args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 for i, page in blib.cat_articles("Russian nouns"):
-  nouns.append(unicode(page.title()))
+  nouns.append(str(page.title()))
 
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
   default_cats=["Russian adjectives"])

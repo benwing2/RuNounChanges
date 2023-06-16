@@ -9,7 +9,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -19,28 +19,28 @@ def process_page(page, index, parsed):
   adjval = None
   numval = None
   for t in parsed.filter_templates():
-    if unicode(t.name) == "ru-adj":
+    if str(t.name) == "ru-adj":
       adjval = blib.remove_links(getparam(t, "1"))
-    if (unicode(t.name) == "head" and getparam(t, "1") == "ru" and
+    if (str(t.name) == "head" and getparam(t, "1") == "ru" and
         getparam(t, "2") == "numeral"):
       numval = blib.remove_links(getparam(t, "head"))
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    if unicode(t.name) == "ordinalbox" and getparam(t, "1") == "ru":
+    origt = str(t)
+    if str(t.name) == "ordinalbox" and getparam(t, "1") == "ru":
       if not adjval:
         pagemsg("WARNING: Can't find accented ordinal form")
       elif adjval != pagetitle:
         t.add("alt", adjval)
         notes.append("Add alt=%s to ordinalbox" % adjval)
-    if unicode(t.name) == "cardinalbox" and getparam(t, "1") == "ru":
+    if str(t.name) == "cardinalbox" and getparam(t, "1") == "ru":
       if not numval:
         pagemsg("WARNING: Can't find accented cardinal form")
       elif numval != pagetitle:
         t.add("alt", numval)
         notes.append("Add alt=%s to cardinalbox" % numval)
-      if "[[Category:Russian cardinal numbers]]" not in unicode(parsed):
+      if "[[Category:Russian cardinal numbers]]" not in str(parsed):
         pagemsg("WARNING: Numeral not in [[Category:Russian cardinal numbers]]")
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 

@@ -169,10 +169,10 @@ def process_text_on_page(index, pagetitle, text):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn == "es-noun" and args.remove_redundant_noun_args:
-      origt = unicode(t)
+      origt = str(t)
       lemma = blib.remove_links(getparam(t, "head") or pagetitle)
       if not getparam(t, "2") and (getparam(t, "pl2") or getparam(t, "pl3")):
-        pagemsg("WARNING: Saw pl2= or pl3= without 2=: %s" % unicode(t))
+        pagemsg("WARNING: Saw pl2= or pl3= without 2=: %s" % str(t))
         continue
       g = getparam(t, "1")
       ms = blib.fetch_param_chain(t, "m", "m")
@@ -323,13 +323,13 @@ def process_text_on_page(index, pagetitle, text):
       handle_mf("f", "feminine", make_feminine)
       handle_mf("m", "masculine", make_masculine)
 
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
       else:
-        pagemsg("No changes to %s" % unicode(t))
+        pagemsg("No changes to %s" % str(t))
 
     if tn == "es-noun" and args.make_multiword_plural_explicit:
-      origt = unicode(t)
+      origt = str(t)
       lemma = blib.remove_links(getparam(t, "head") or pagetitle)
       def expand_text(tempcall):
         return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
@@ -380,11 +380,11 @@ def process_text_on_page(index, pagetitle, text):
           fpls.extend(this_fpls)
         blib.set_param_chain(t, fpls, "fpl", "fpl")
         notes.append("add explicit plural to f=%s" % ",".join(fs))
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
     if tn == old_adj_template:
-      origt = unicode(t)
+      origt = str(t)
       lemma = blib.remove_links(getparam(t, "head") or pagetitle)
       deff = make_feminine(pagetitle)
       defmpl = make_plural(pagetitle)
@@ -449,12 +449,12 @@ def process_text_on_page(index, pagetitle, text):
       must_continue = False
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if pn == "1" and pv in ["m", "mf"]:
-          pagemsg("WARNING: Extraneous param %s=%s in %s, ignoring" % (pn, pv, unicode(t)))
+          pagemsg("WARNING: Extraneous param %s=%s in %s, ignoring" % (pn, pv, str(t)))
           continue
         if pn not in ["head", "f", "f2", "pl", "pl2", "mpl", "mpl2", "fpl", "fpl2"]:
-          pagemsg("WARNING: Saw unrecognized param %s=%s in %s" % (pn, pv, unicode(t)))
+          pagemsg("WARNING: Saw unrecognized param %s=%s in %s" % (pn, pv, str(t)))
           must_continue = True
           break
       if must_continue:
@@ -483,13 +483,13 @@ def process_text_on_page(index, pagetitle, text):
             if fpls != ["+"]:
               blib.set_param_chain(t, fpls, "fpl", "fpl")
 
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("convert {{%s}} to new {{%s}} format" % (old_adj_template, tname(t)))
       else:
-        pagemsg("No changes to %s" % unicode(t))
+        pagemsg("No changes to %s" % str(t))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{es-adj}} templates to new format or remove redundant args in {{es-noun}}",
   include_pagefile=True, include_stdin=True)

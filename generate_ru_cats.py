@@ -166,7 +166,7 @@ def create_cat(cat, args, adj=False, verb=False):
   if not overwrite and page.exists():
     msg("Page %s already exists, not overwriting" % cat)
     return
-  page.text = unicode(text)
+  page.text = str(text)
   changelog = "Creating '%s' with text '%s'" % (cat, text)
   msg("Changelog = %s" % changelog)
   if dosave:

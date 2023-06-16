@@ -43,27 +43,27 @@ def process_text_on_page(index, pagetitle, text):
     if tn == "it-noun" and getp("2") != "-": # Skip singular-only nouns, which may be languages or dialects
       g = getp("1")
       if g != expected_gender:
-        pagemsg("WARNING: Actual gender %s not same as expected gender %s: %s" % (g, expected_gender, unicode(t)))
+        pagemsg("WARNING: Actual gender %s not same as expected gender %s: %s" % (g, expected_gender, str(t)))
         return
     if tn == "demonym-noun":
-      origt = unicode(t)
+      origt = str(t)
       demonym_g = getp("g")
       if expected_gender == "mfbysense":
         if demonym_g:
           pagemsg("WARNING: Saw gender %s for expected mfbysense term in {{demonym-noun}}: %s" %
-            (demonym_g, unicode(t)))
+            (demonym_g, str(t)))
           return
       if demonym_g and demonym_g != expected_gender:
         pagemsg("WARNING: Saw gender %s in {{demonym-noun}} but expected %s: %s" %
-          (demonym_g, expected_gender, unicode(t)))
+          (demonym_g, expected_gender, str(t)))
         return
       if not demonym_g and expected_gender != "mfbysense":
         t.add("g", expected_gender)
         notes.append("add g=%s in {{demonym-noun|it}}" % expected_gender)
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Add missing gender to {{demonym-noun|it}} as needed and check for misspecified genders",
   include_pagefile=True, include_stdin=True)

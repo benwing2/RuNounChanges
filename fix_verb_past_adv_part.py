@@ -9,31 +9,31 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    if (unicode(t.name) in ["ru-conj", "ru-conj-old"] and
+    if (str(t.name) in ["ru-conj", "ru-conj-old"] and
         getparam(t, "2") in ["7a", "7b"]):
-      if [x for x in t.params if unicode(x.value) == "or"]:
-        pagemsg("WARNING: Skipping multi-arg conjugation: %s" % unicode(t))
+      if [x for x in t.params if str(x.value) == "or"]:
+        pagemsg("WARNING: Skipping multi-arg conjugation: %s" % str(t))
         continue
       if t.has("past_adv_part_short") and getparam(t, "past_adv_part_short") == "":
         notes.append("set past_adv_part_short=-")
-        origt = unicode(t)
+        origt = str(t)
         t.add("past_adv_part_short", "-")
-        pagemsg("Replacing %s with %s" % (origt, unicode(t)))
+        pagemsg("Replacing %s with %s" % (origt, str(t)))
       if t.has("past_actv_part") and getparam(t, "past_actv_part") == "":
         notes.append("set past_actv_part=-")
-        origt = unicode(t)
+        origt = str(t)
         t.add("past_actv_part", "-")
-        pagemsg("Replacing %s with %s" % (origt, unicode(t)))
+        pagemsg("Replacing %s with %s" % (origt, str(t)))
 
   if new_text != text:
     return new_text, notes

@@ -32,7 +32,7 @@ def split_noun_decl_arg_sets(decl_template, pagemsg):
 
   highest_numbered_param = 0
   for p in decl_template.params:
-    pname = unicode(p.name)
+    pname = str(p.name)
     if re.search("^[0-9]+$", pname):
       highest_numbered_param = max(highest_numbered_param, int(pname))
 
@@ -228,15 +228,15 @@ def check_old_noun_headword_forms(headword_template, args, subpagetitle, pagemsg
 def fix_old_headword_params(headword_template, new_params, genders, pagemsg):
 
   for param in headword_template.params:
-    name = unicode(param.name)
+    name = str(param.name)
     if name not in ["1", "2", "3", "4"] and re.search(r"^[0-9]+$", name):
       pagemsg("WARNING: Extraneous numbered param %s=%s in headword template, skipping" % (
-        unicode(param.name), unicode(param.value)))
+        str(param.name), str(param.value)))
       return None
 
   params_to_preserve = []
   for param in headword_template.params:
-    name = unicode(param.name)
+    name = str(param.name)
     if (name not in ["1", "2", "3", "4", "g", "gen", "pl", "tr"] and
         not re.search(r"^(head|g|gen|pl|tr)[0-9]+$", name)):
       params_to_preserve.append(param)
@@ -274,7 +274,7 @@ def extract_headword_anim_spec(headword_template):
 # template for converting bianimate animacy to either ai or ia.
 def convert_zdecl_to_ru_noun_table(decl_z_template, subpagetitle, pagemsg,
     headword_template=None):
-  zdecl = unicode(decl_z_template)
+  zdecl = str(decl_z_template)
   zdeclcopy = blib.parse_text(zdecl).filter_templates()[0]
   decl_template = blib.parse_text("{{ru-noun-table}}").filter_templates()[0]
   # {{ru-decl-noun-z|звезда́|f-in|d|ё}}
@@ -360,7 +360,7 @@ def convert_zdecl_to_ru_noun_table(decl_z_template, subpagetitle, pagemsg,
     if headword_anim_spec and headword_anim_spec not in allowed_headword_ans:
       pagemsg("WARNING: z-decl anim %s disagrees with headword-derived %s (%s allowed): zdecl=%s, headword=%s" %
           (zdecl_an, headword_anim_spec, ",".join(allowed_headword_ans),
-            zdecl, unicode(headword_template)))
+            zdecl, str(headword_template)))
 
   if zanim == "an":
     anim_mismatch(zanim, ["an"])
@@ -374,7 +374,7 @@ def convert_zdecl_to_ru_noun_table(decl_z_template, subpagetitle, pagemsg,
       decl_template.add("a", headword_anim_spec)
     else:
       pagemsg("WARNING: Unable to convert z-decl -inan to a=ai or a=ia, preserving as a=bi: zdecl=%s, headword=%s" %
-          (zdecl, unicode(headword_template or "(no headword)")))
+          (zdecl, str(headword_template or "(no headword)")))
       decl_template.add("a", "bi")
   else:
     assert(zanim == "in")
@@ -435,8 +435,8 @@ def convert_zdecl_to_ru_noun_table(decl_z_template, subpagetitle, pagemsg,
     decl_template.add('notes', notes)
 
   if zdeclcopy.params:
-    pagemsg("WARNING: Extraneous params in z-decl: %s" % unicode(zdeclcopy))
+    pagemsg("WARNING: Extraneous params in z-decl: %s" % str(zdeclcopy))
 
   #pagemsg("Replacing z-decl %s with regular decl %s" %
-  #    (zdecl, unicode(decl_template)))
+  #    (zdecl, str(decl_template)))
   return decl_template

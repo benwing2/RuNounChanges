@@ -53,18 +53,18 @@ def process_text_on_page(index, pagename, text):
         curval = getparam(t, param).strip()
         if not curval:
           pagemsg("Skipping template because expected param %s=%s doesn't have a value: %s" % (
-            param, value, unicode(t)))
+            param, value, str(t)))
           return False
         seen_from_params[value] = curval
       elif getparam(t, param).strip() != value.strip():
         pagemsg("Skipping template because expected param %s=%s doesn't match: %s" % (
-          param, value, unicode(t)))
+          param, value, str(t)))
         return False
     if text_to_incorporate is not None:
       for existing_param in ["passage", "text"]:
         if getparam(t, existing_param):
           pagemsg("WARNING: Can't incorporate raw passage text into {{%s}} because already has %s=: %s" %
-            (fromtemp, existing_param, unicode(t)))
+            (fromtemp, existing_param, str(t)))
           return False
       text_to_incorporate = re.sub(r"\s*<br */?>\s*", " / ", text_to_incorporate)
       text_to_incorporate = re.sub(r"^''(.*)''$", r"\1", text_to_incorporate)
@@ -94,7 +94,7 @@ def process_text_on_page(index, pagename, text):
         return origtext
       if not reformat_template(t, from_params, totemp, to_params, text_to_incorporate=text):
         return origtext
-      return unicode(t) + "\n"
+      return str(t) + "\n"
 
     curtext = re.sub(r"(\{\{%s.*?\}\})\n#+\*:\s*(.*?)\n" % re.escape(fromtemp),
         do_reformat_template, curtext)
@@ -107,7 +107,7 @@ def process_text_on_page(index, pagename, text):
         continue
       if not reformat_template(t, from_params, totemp, to_params):
         continue
-  curtext = unicode(parsed)
+  curtext = str(parsed)
 
   return curtext.rstrip("\n"), notes
 

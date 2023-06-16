@@ -34,7 +34,7 @@ def process_text_on_page(index, pagetitle, text):
       langnamecode = blib.languages_byCanonicalName[langname]["code"]
 
     for t in parsed.filter_templates():
-      origt = unicode(t)
+      origt = str(t)
       tn = tname(t)
       if tn in ["citation", "citations"] and is_citation:
         langnamecode = getparam(t, "lang")
@@ -63,7 +63,7 @@ def process_text_on_page(index, pagetitle, text):
         # Fetch all params.
         params = []
         for param in t.params:
-          pname = unicode(param.name)
+          pname = str(param.name)
           params.append((pname, param.value, param.showkey))
         # Erase all params.
         del t.params[:]
@@ -73,14 +73,14 @@ def process_text_on_page(index, pagetitle, text):
         else:
           termlang = None
         # Put lang parameter.
-        newline = "\n" if "\n" in unicode(t.name) else ""
+        newline = "\n" if "\n" in str(t.name) else ""
         t.add("lang", langnamecode + newline, preserve_spacing=False)
         if termlang:
           t.add("termlang", termlang + newline, preserve_spacing=False)
         # Put remaining parameters in order.
         for name, value, showkey in params:
           t.add(name, value, showkey=showkey, preserve_spacing=False)
-        pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+        pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
     return langnamecode
 
@@ -100,7 +100,7 @@ def process_text_on_page(index, pagetitle, text):
         subsectitle = m.group(1)
         parsed = blib.parse_text(subsections[k])
         hack_templates(parsed, langname, subsectitle)
-        subsections[k] = unicode(parsed)
+        subsections[k] = str(parsed)
       sections[j] = "".join(subsections)
   else:
     # Citation section?
@@ -115,7 +115,7 @@ def process_text_on_page(index, pagetitle, text):
       parsed = blib.parse_text(sections[j])
       langnamecode = hack_templates(parsed, langname, "Unknown",
           langnamecode=langnamecode, is_citation=True)
-      sections[j] = unicode(parsed)
+      sections[j] = str(parsed)
 
   newtext = "".join(sections)
   return newtext, notes

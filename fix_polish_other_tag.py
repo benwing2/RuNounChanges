@@ -28,7 +28,7 @@ def process_text_on_page(pagetitle, index, text):
   templates_to_replace = []
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
 
     if tn == "inflection of":
@@ -46,8 +46,8 @@ def process_text_on_page(pagetitle, index, text):
       alt = getparam(t, "alt") or getparam(t, str(term_param + 1))
       tags = []
       for param in t.params:
-        pname = unicode(param.name).strip()
-        pval = unicode(param.value).strip()
+        pname = str(param.name).strip()
+        pval = str(param.value).strip()
         if re.search("^[0-9]+$", pname):
           if int(pname) >= term_param + 2:
             if pval:
@@ -82,14 +82,14 @@ def process_text_on_page(pagetitle, index, text):
         next_tag_param += 1
       for pname, pval, showkey in params:
         t.add(pname, pval, showkey=showkey, preserve_spacing=False)
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
-  text = unicode(page.text)
+  pagetitle = str(page.title())
+  text = str(page.text)
   return process_text_on_page(pagetitle, index, text)
 
 parser = blib.create_argparser("Replace 'other' with 'nv' in Polish {{inflection of}} templates",

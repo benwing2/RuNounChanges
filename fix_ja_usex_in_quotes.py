@@ -18,20 +18,20 @@ quote_templates_text_param_7 = ["quote-journal", "quote-news", "quote-video"]
 quote_templates_text_param_8 = ["quote-hansard"]
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   newtext = text
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
-    # pagemsg("tn=%s" % unicode(tn))
+    # pagemsg("tn=%s" % str(tn))
     if tn in quote_templates:
       text_param = None
       if tn in quote_templates_text_param_6:
@@ -54,7 +54,7 @@ def process_page(page, index, parsed):
       if re.search(r"^\{\{ja-usex\|.*\}\}$", textval, re.S):
         rmparam(t, text_param)
         newnewtext = re.sub(r"(\n#+\*) *%s" % re.escape(origt),
-          r"\1 %s\1: %s" % (unicode(t), textval), newtext)
+          r"\1 %s\1: %s" % (str(t), textval), newtext)
         if newtext == newnewtext:
           pagemsg("WARNING: Can't find quote template in text: %s" % origt)
         else:

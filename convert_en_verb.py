@@ -109,9 +109,9 @@ def process_text_on_page(index, pagetitle, text):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn == "en-verb":
-      origt = unicode(t)
+      origt = str(t)
       if getparam(t, "new"):
-        pagemsg("Template has new=%s, not touching: %s" % (getparam(t, "new"), unicode(t)))
+        pagemsg("Template has new=%s, not touching: %s" % (getparam(t, "new"), str(t)))
         continue
       pagename = getparam(t, "pagename") or pagetitle
       par1 = getparam(t, "1") or getparam(t, "pres_3sg") or getparam(t, "pres_3sg1")
@@ -131,7 +131,7 @@ def process_text_on_page(index, pagetitle, text):
       dont_touch = ["+", "++", "*", "++*"]
 
       if par3 and par4 and par3 == par4 and not getparam(t, "past_ptc_qual") and not getparam(t, "past_ptc1_qual"):
-        pagemsg("Removing redundant 4=%s: %s" % (par4, unicode(t)))
+        pagemsg("Removing redundant 4=%s: %s" % (par4, str(t)))
         rmparam(t, "4")
         rmparam(t, "past_ptc")
         rmparam(t, "past_ptc1")
@@ -153,7 +153,7 @@ def process_text_on_page(index, pagetitle, text):
           past_form = pagename + "ed"
         elif par1 == "ies":
           if not pagename.endswith("y"):
-            pagemsg("WARNING: 1=ies but pagename %s doesn't end in -y: %s" % (pagename, unicode(t)))
+            pagemsg("WARNING: 1=ies but pagename %s doesn't end in -y: %s" % (pagename, str(t)))
             num_would_not_convert += 1
             continue
           stem = pagename[:-1]
@@ -165,7 +165,7 @@ def process_text_on_page(index, pagetitle, text):
           pres_ptc_form = pagename + "ing"
           past_form = pagename + "d"
         elif par1 in dont_touch:
-          pagemsg("Template has 1=%s, not touching: %s" % (par1, unicode(t)))
+          pagemsg("Template has 1=%s, not touching: %s" % (par1, str(t)))
           continue
         else:
           pres_3sg_form = pagename + "s"
@@ -185,7 +185,7 @@ def process_text_on_page(index, pagetitle, text):
           elif par2 == "ies":
             if par1 + "y" != pagename:
               pagemsg("WARNING: Legacy -ies format, 1=%s + y is not pagename %s: %s" % (
-                par1, pagename, unicode(t)))
+                par1, pagename, str(t)))
             pres_3sg_form = par1 + "ies"
             pres_ptc_form = par1 + "ying"
             past_form = par1 + "ied"
@@ -200,7 +200,7 @@ def process_text_on_page(index, pagetitle, text):
           elif par2 == "d":
             if par1 != pagename:
               pagemsg("WARNING: Legacy -d format, 1=%s is not pagename %s: %s" % (
-                par1, pagename, unicode(t)))
+                par1, pagename, str(t)))
             pres_3sg_form = pagename + "s"
             pres_ptc_form = par1 + "ing"
             past_form = par1 + "d"
@@ -208,7 +208,7 @@ def process_text_on_page(index, pagetitle, text):
       if not pres_3sg_form or not pres_ptc_form or not past_form:
         assert not pres_3sg_form and not pres_ptc_form and not past_form
         if pres_3sg_form in dont_touch or pres_ptc_form in dont_touch or past_form in dont_touch:
-          pagemsg("Template %s, not touching: %s" % (" or ".join(dont_touch), unicode(t)))
+          pagemsg("Template %s, not touching: %s" % (" or ".join(dont_touch), str(t)))
           continue
         pres_3sg_form = par1 or default_s
         pres_ptc_form = par2 or default_ing
@@ -257,7 +257,7 @@ def process_text_on_page(index, pagetitle, text):
       has4 = not not getparam(t, "4")
 
       if pres_3sg_form == default_s and pres_ptc_form == default_ing and past_form == default_ed:
-        pagemsg("Converting %s to all-default format" % unicode(t))
+        pagemsg("Converting %s to all-default format" % str(t))
         if has4:
           t.add("1", "")
         else:
@@ -299,16 +299,16 @@ def process_text_on_page(index, pagetitle, text):
           first_en, rest_en = split_first_rest(past_ptc_form)
           rest_unmatch = False
           if rest_s != rest:
-            pagemsg("WARNING: Skipping because rest of 1=%s doesn't match pagename: %s" % (pres_3sg_form, unicode(t)))
+            pagemsg("WARNING: Skipping because rest of 1=%s doesn't match pagename: %s" % (pres_3sg_form, str(t)))
             rest_unmatch = True
           elif rest_ing != rest:
-            pagemsg("WARNING: Skipping because rest of 2=%s doesn't match pagename: %s" % (pres_ptc_form, unicode(t)))
+            pagemsg("WARNING: Skipping because rest of 2=%s doesn't match pagename: %s" % (pres_ptc_form, str(t)))
             rest_unmatch = True
           elif rest_ed != rest:
-            pagemsg("WARNING: Skipping because rest of 3=%s doesn't match pagename: %s" % (past_form, unicode(t)))
+            pagemsg("WARNING: Skipping because rest of 3=%s doesn't match pagename: %s" % (past_form, str(t)))
             rest_unmatch = True
           elif rest_en != rest:
-            pagemsg("WARNING: Skipping because rest of 4=%s doesn't match pagename: %s" % (past_ptc_form, unicode(t)))
+            pagemsg("WARNING: Skipping because rest of 4=%s doesn't match pagename: %s" % (past_ptc_form, str(t)))
             rest_unmatch = True
           if not rest_unmatch:
             if first_s == default_first_s:
@@ -325,27 +325,27 @@ def process_text_on_page(index, pagetitle, text):
             if len(inside_forms) == 4 and inside_forms[2] == inside_forms[3]:
               del inside_forms[3]
             if not inside_forms:
-              pagemsg("WARNING: Something wrong, all-default multiword {{en-verb}} should have been caught above: %s" % unicode(t))
+              pagemsg("WARNING: Something wrong, all-default multiword {{en-verb}} should have been caught above: %s" % str(t))
             else:
               head = getparam(t, "head")
               if head:
                 if blib.remove_links(head) != pagename:
-                  pagemsg("WARNING: head %s doesn't agree with pagename after links removed: %s" % (head, unicode(t)))
+                  pagemsg("WARNING: head %s doesn't agree with pagename after links removed: %s" % (head, str(t)))
                 else:
                   if "[[" not in head:
-                    pagemsg("No links in head %s, removing redundant head: %s" % (head, unicode(t)))
+                    pagemsg("No links in head %s, removing redundant head: %s" % (head, str(t)))
                     notes.append("remove redundant head=")
                     rmparam(t, "head")
                   else:
                     m = re.search(r"^(\[\[.*?\]\]|.*?)( .*)$", head)
                     if not m:
-                      pagemsg("WARNING: Something wrong, can't match first and rest of head %s: %s" % (head, unicode(t)))
+                      pagemsg("WARNING: Something wrong, can't match first and rest of head %s: %s" % (head, str(t)))
                     if m:
                       firsthead, resthead = m.groups()
                       if blib.remove_links(firsthead) == first and blib.remove_links(resthead) == rest:
                         new_code = "%s<%s>%s" % (firsthead, ",".join(inside_forms), resthead)
                         new_code_msg = "'%s'" % new_code
-                        pagemsg("Removing head %s, links moved into 1=: %s" % (head, unicode(t)))
+                        pagemsg("Removing head %s, links moved into 1=: %s" % (head, str(t)))
                         notes.append("move head= links into 1=")
                         rmparam(t, "head")
               if not new_code:
@@ -354,7 +354,7 @@ def process_text_on_page(index, pagetitle, text):
               remove4 = True
 
         if new_code:
-          pagemsg("Converting %s to %s" % (unicode(t), new_code_msg or "%s format" % new_code))
+          pagemsg("Converting %s to %s" % (str(t), new_code_msg or "%s format" % new_code))
           t.add("1", new_code)
           rmparam(t, "pres_3sg")
           rmparam(t, "pres_3sg1")
@@ -378,7 +378,7 @@ def process_text_on_page(index, pagetitle, text):
           converted = True
 
       if legacy and not converted:
-        pagemsg("WARNING: Unable to convert legacy-formatted {{en-verb}} to new format: %s" % unicode(t))
+        pagemsg("WARNING: Unable to convert legacy-formatted {{en-verb}} to new format: %s" % str(t))
 
       if converted:
         pagemsg("Would convert {{en-verb}}")
@@ -387,8 +387,8 @@ def process_text_on_page(index, pagetitle, text):
         pagemsg("Would not convert {{en-verb}}")
         num_would_not_convert += 1
 
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
   if num_would_convert > 0 and num_would_not_convert > 0:
     pagemsg("Page with {{en-verb}}, would both convert %s and not convert %s" % (
@@ -397,7 +397,7 @@ def process_text_on_page(index, pagetitle, text):
     pagemsg("Page with {{en-verb}}, would convert all %s instances" % num_would_convert)
   elif num_would_not_convert > 0:
     pagemsg("Page with {{en-verb}}, would not convert %s instances" % num_would_not_convert)
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{en-verb}} forms to new format",
   include_pagefile=True, include_stdin=True)

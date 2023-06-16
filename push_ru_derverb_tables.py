@@ -8,7 +8,7 @@ import pywikibot, re, sys, codecs, argparse
 import rulib
 
 def process_page(index, page, contents, verbose, comment):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):

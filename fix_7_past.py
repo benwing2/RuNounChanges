@@ -9,7 +9,7 @@ from blib import getparam, rmparam, msg, site
 import rulib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -21,8 +21,8 @@ def process_page(page, index, parsed):
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    if unicode(t.name) in ["ru-conj-7a", "ru-conj-7b"]:
+    origt = str(t)
+    if str(t.name) in ["ru-conj-7a", "ru-conj-7b"]:
       past_stem = getparam(t, "4")
       vowel_end = re.search(u"[аэыоуяеиёю́]$", past_stem)
       past_m = getparam(t, "past_m")
@@ -43,11 +43,11 @@ def process_page(page, index, parsed):
         else:
           msg("WARNING: Remaining past overrides: past_m=%s, past_f=%s, past_n=%s, past_pl=%s, expected_past_m=%s, expected_past_f=%s, expected_past_n=%s, expected_past_pl=%s" %
               (past_m, past_f, past_n, past_pl, expected_past_m, expected_past_f, expected_past_n, expected_past_pl))
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert class-7 past overrides to past stress pattern",
   include_pagefile=True)

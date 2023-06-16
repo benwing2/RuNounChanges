@@ -27,7 +27,7 @@ def process_text_on_page(index, pagename, text):
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     if tn == "RQ:Buk Baibel":
       param1 = getparam(t, "1")
       if param1 in book_map:
@@ -39,10 +39,10 @@ def process_text_on_page(index, pagename, text):
         rmparam(t, "4")
         notes.append("4= -> passage= in {{%s}}" % tn)
 
-    if unicode(t) != origt:
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Reformat {{RQ:Buk Baibel}}", include_pagefile=True,
     include_stdin=True)

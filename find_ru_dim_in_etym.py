@@ -30,7 +30,7 @@ def process_text_on_page(index, pagetitle, text):
       for t in parsed.filter_templates():
         tn = tname(t)
         if tn == "diminutive of":
-          pagemsg("WARNING: Found diminutive-of in etymology: %s" % unicode(t))
+          pagemsg("WARNING: Found diminutive-of in etymology: %s" % str(t))
 
 parser = blib.create_argparser("Find uses of {{diminutive of}} in Russian Etymology sections",
     include_pagefile=True, include_stdin=True)

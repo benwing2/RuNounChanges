@@ -17,7 +17,7 @@ def process_text_on_page(index, pagetitle, text):
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     def getp(param):
       return getparam(t, param)
     if tn in ["de-noun", "de-proper noun"]:
@@ -30,7 +30,7 @@ def process_text_on_page(index, pagetitle, text):
         t.add("old", "1")
         notes.append("add old=1 to {{%s}} because compatible with new signature" % tn)
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Add old=1 to {{de-noun}}/{{de-proper noun}} if compatible with new signature",
   include_pagefile=True, include_stdin=True)

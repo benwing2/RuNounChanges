@@ -137,7 +137,7 @@ def process_text_on_page(pageindex, pagetitle, text):
             pos = None
             for param in decl.params:
               pn = pname(param)
-              pv = unicode(param.value)
+              pv = str(param.value)
               if pn in ["1"]:
                 pass
               elif pn == "2":

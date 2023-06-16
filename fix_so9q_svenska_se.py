@@ -12,7 +12,7 @@ import blib
 from blib import getparam, rmparam, tname, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -29,12 +29,12 @@ def process_page(page, index, parsed):
     elif tn == "R:SAOB online":
       param1 = "saob"
     if param1:
-      origt = unicode(t)
+      origt = str(t)
       rmparam(t, "2")
       # Fetch all params.
       params = []
       for param in t.params:
-        pname = unicode(param.name)
+        pname = str(param.name)
         if re.search("^[0-9]+$", pname.strip()):
           params.append((str(1 + int(pname.strip())), param.value, param.showkey))
         else:
@@ -47,7 +47,7 @@ def process_page(page, index, parsed):
         t.add(name, value, showkey=showkey, preserve_spacing=False)
       blib.set_template_name(t, "R:svenska.se")
       notes.append("replace {{%s}} with {{R:svenska.se|%s}}" % (tn, param1))
-      newt = unicode(t)
+      newt = str(t)
       if origt != newt:
         pagemsg("Replaced %s with %s" % (origt, newt))
 

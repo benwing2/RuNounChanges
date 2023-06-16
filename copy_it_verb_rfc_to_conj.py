@@ -21,19 +21,19 @@ def process_text_on_page(index, pagetitle, text):
   it_verb_rfc_t = None
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     if tn == "it-verb-rfc":
       if it_verb_rfc_t:
         pagemsg("WARNING: Saw two headword templates %s and %s without intervening conjugation" % (
-          unicode(it_verb_rfc_t), unicode(t)))
+          str(it_verb_rfc_t), str(t)))
       it_verb_rfc_t = t
     elif tn == "it-conj" and it_verb_rfc_t:
-      pagemsg("WARNING: Saw {{it-conj}} following {{it-verb-rfc}}: %s" % unicode(t))
+      pagemsg("WARNING: Saw {{it-conj}} following {{it-verb-rfc}}: %s" % str(t))
     elif tn == "it-conj-rfc":
       it_verb_rfc_t = None
     elif tn.startswith("it-conj-"):
       if not it_verb_rfc_t:
-        pagemsg("WARNING: Saw {{it-conj-*}} without preceding {{it-verb-rfc}}: %s" % unicode(t))
+        pagemsg("WARNING: Saw {{it-conj-*}} without preceding {{it-verb-rfc}}: %s" % str(t))
       else:
         conj = getparam(it_verb_rfc_t, "1")
         newconj = None
@@ -48,16 +48,16 @@ def process_text_on_page(index, pagetitle, text):
           elif aux == "essere or avere":
             conjaux = "e:a"
           else:
-            pagemsg("WARNING: Can't parse auxiliary '%s': %s" % (aux, unicode(t)))
+            pagemsg("WARNING: Can't parse auxiliary '%s': %s" % (aux, str(t)))
             conjaux = None
           if conjaux:
             newconj = conjaux + conj[1:]
         must_continue = False
         for param in t.params:
           pn = pname(param)
-          pv = unicode(param.value)
+          pv = str(param.value)
           if pn not in ["1", "2"]:
-            pagemsg("WARNING: Unrecognized param %s=%s in old conjugation: %s" % (pn, pv, unicode(t)))
+            pagemsg("WARNING: Unrecognized param %s=%s in old conjugation: %s" % (pn, pv, str(t)))
             must_continue = True
             break
         if must_continue:
@@ -79,7 +79,7 @@ def process_text_on_page(index, pagetitle, text):
         notes.append("copy {{it-verb-rfc}} conjugation to {{it-conj-rfc}}")
         it_verb_rfc_t = None
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Copy {{it-verb-rfc}} conjugation to {{it-conj-rfc}}",
   include_pagefile=True, include_stdin=True)

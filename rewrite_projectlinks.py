@@ -23,7 +23,7 @@ def process_text_on_page(index, pagetitle, text):
   subs = []
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     def getp(param):
       return getparam(t, param)
     tn = tname(t)
@@ -38,7 +38,7 @@ def process_text_on_page(index, pagetitle, text):
           lang = getp("lang%s" % i).strip()
           textparts.append("* {{projectlink|%s%s%s%s%s}}" % (project, "|%s" % page if page or label else "",
             "|%s" % label if label else "", "|lang=%s" % lang if lang else "", "|sc=%s" % sc if sc else""))
-      subs.append((unicode(t), "\n".join(textparts)))
+      subs.append((str(t), "\n".join(textparts)))
       notes.append("replace {{projectlinks}} with multiple calls to {{projectlink}}")
 
   for subfrom, subto in subs:

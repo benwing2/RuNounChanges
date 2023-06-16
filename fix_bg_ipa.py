@@ -18,7 +18,7 @@ def decompose_bulgarian(text):
     return text
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -26,11 +26,11 @@ def process_page(page, index, parsed):
 
   notes = []
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     if tn == "bg-IPA":
       if not getparam(t, "old"):
         continue
@@ -43,8 +43,8 @@ def process_page(page, index, parsed):
         t.add("1", pron)
       rmparam(t, "old")
       notes.append("convert {{bg-IPA}} pronunciation to new style (flip acute and grave) and remove old=1")
-    if unicode(t) != origt:
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
   return parsed, notes
 
 parser = blib.create_argparser("Fix {{bg-IPA}} to new format",

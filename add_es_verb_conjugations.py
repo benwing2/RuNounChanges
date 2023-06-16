@@ -34,7 +34,7 @@ def singularize(word):
   return "[[%s]]s" % word[:-1]
 
 def process_page_for_generate(page, index, verbs):
-  pagename = unicode(page.title())
+  pagename = str(page.title())
   def pagemsg(txt):
     msg("# Page %s %s: %s" % (index, pagename, txt))
   if " " not in pagename:
@@ -91,10 +91,10 @@ def process_text_on_page_for_full_conj(index, pagename, text, verbs):
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     if tn == "es-verb":
       if not getparam(t, "attn"):
-        pagemsg("Didn't see attn=1: %s" % unicode(t))
+        pagemsg("Didn't see attn=1: %s" % str(t))
         continue
       rmparam(t, "attn")
       if entry:
@@ -106,7 +106,7 @@ def process_text_on_page_for_full_conj(index, pagename, text, verbs):
       head = getparam(t, "head")
       if head:
         pagemsg("WARNING: Removing head=%s compared with entry '%s', original entry '%s': %s" %
-            (head, entry, origentry, unicode(t)))
+            (head, entry, origentry, str(t)))
         rmparam(t, "head")
       rmparam(t, "2")
       rmparam(t, "1")
@@ -116,10 +116,10 @@ def process_text_on_page_for_full_conj(index, pagename, text, verbs):
         notes.append("convert {{head|es|verb}} to {{es-verb|%s}}" % entry)
       else:
         notes.append("convert {{head|es|verb}} to {{es-verb}}")
-    if origt != unicode(t):
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if origt != str(t):
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 
 def process_text_on_page_for_single_word(index, pagename, text, spec):
@@ -136,10 +136,10 @@ def process_text_on_page_for_single_word(index, pagename, text, spec):
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     if tn == "es-verb":
       if not getparam(t, "attn"):
-        pagemsg("Didn't see attn=1: %s" % unicode(t))
+        pagemsg("Didn't see attn=1: %s" % str(t))
         continue
       rmparam(t, "attn")
       if "<" in spec:
@@ -150,10 +150,10 @@ def process_text_on_page_for_single_word(index, pagename, text, spec):
       else:
         t.add("pres", spec)
         notes.append("add conjugation pres=%s to Spanish verb" % spec)
-    if origt != unicode(t):
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if origt != str(t):
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Add conjugations to Spanish verbs lacking them",
     include_pagefile=True, include_stdin=True)
@@ -168,7 +168,7 @@ if args.mode == "full-conj":
     verb = blib.remove_links(re.sub("<.*?>", "", line))
     verbs[verb] = line
     def do_process_page(page, index, parsed=None):
-      pagetitle = unicode(page.title())
+      pagetitle = str(page.title())
       def pagemsg(txt):
         msg("Page %s %s: %s" % (index, pagetitle, txt))
       pagetext = blib.safe_page_text(page, pagemsg)
@@ -197,7 +197,7 @@ else:
       errandmsg("Page %s %s: WARNING: Page doesn't exist" % (lineno, verb))
     else:
       def do_process_page(page, index, parsed=None):
-        pagetitle = unicode(page.title())
+        pagetitle = str(page.title())
         def pagemsg(txt):
           msg("Page %s %s: %s" % (index, pagetitle, txt))
         pagetext = blib.safe_page_text(page, pagemsg)

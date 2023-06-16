@@ -30,11 +30,11 @@ def process_text_on_page(index, pagetitle, text):
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     def getp(param):
       return getparam(t, param)
     if tn in ["it-verb"]:
-      pagemsg("Saw %s" % unicode(t))
+      pagemsg("Saw %s" % str(t))
       if not getp("1"):
         continue
       parts = []
@@ -63,7 +63,7 @@ def process_text_on_page(index, pagetitle, text):
       for param in t.params:
         pn = pname(param)
         if pn not in ["1", "2", "3", "aux", "impers", "only3sp"] and pn not in irregparams:
-          pagemsg("WARNING: Unrecognized param %s=%s" % (pn, unicode(param.value)))
+          pagemsg("WARNING: Unrecognized param %s=%s" % (pn, str(param.value)))
           must_continue = True
           break
       if must_continue:
@@ -71,10 +71,10 @@ def process_text_on_page(index, pagetitle, text):
       del t.params[:]
       t.add("1", "".join(parts))
       notes.append("convert {{it-verb}} params to new form")
-    if unicode(t) != origt:
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Remove redundant respellings in {{it-IPA}}",
   include_pagefile=True, include_stdin=True)

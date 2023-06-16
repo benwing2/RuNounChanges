@@ -434,12 +434,12 @@ def process_text_on_page(index, pagetitle, text):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn == "IPA" and getparam(t, "1") == "bg":
-      origt = unicode(t)
+      origt = str(t)
       ipas = blib.fetch_param_chain(t, "2")
       must_continue = False
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if not re.search("^[0-9]+$", pn):
           pagemsg("WARNING: Saw unrecognized param %s=%s in raw IPA, skipping: %s" % (pn, pv, origt))
           must_continue = True
@@ -472,7 +472,7 @@ def process_text_on_page(index, pagetitle, text):
         t.add("1", respelling)
         if endschwa:
           t.add("endschwa", "1")
-        pagemsg("Replaced %s with %s directly" % (origt, unicode(t)))
+        pagemsg("Replaced %s with %s directly" % (origt, str(t)))
       else:
         replacement_parts = []
         annparam = "|ann=1" if len(respellings) > 1 else ""
@@ -483,7 +483,7 @@ def process_text_on_page(index, pagetitle, text):
         to_substitute.append((origt, replacement_text))
       notes.extend(this_notes)
 
-  secbody = unicode(parsed)
+  secbody = str(parsed)
   for fromtext, totext in to_substitute:
     secbody, replaced = blib.replace_in_text(secbody, fromtext, totext, pagemsg, abort_if_warning=True)
     if not replaced:

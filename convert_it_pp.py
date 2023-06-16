@@ -29,16 +29,16 @@ def process_text_on_page(index, pagetitle, text):
     def getp(param):
       return getparam(t, param)
     if tn == "it-pp":
-      origt = unicode(t)
+      origt = str(t)
       if getp("2") == "-":
         rmparam(t, "2")
         t.add("inv", "1")
       rmparam(t, "1")
       notes.append("convert {{it-pp}} to new form")
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{it-pp}} templates to new format",
   include_pagefile=True, include_stdin=True)

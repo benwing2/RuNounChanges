@@ -8,7 +8,7 @@ from blib import getparam, rmparam, tname, pname, msg, site
 
 def process_page(page, index):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def expand_text(tempcall):

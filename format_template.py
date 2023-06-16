@@ -81,7 +81,7 @@ def search_category_for_missing_form(form, pos, templates, save, startFrom,
     return templ
 
   def correct_one_page_headword_formatting(page, index, text):
-    text = unicode(text)
+    text = str(text)
     pagetitle = page.title()
     sawtemp = False
     for temp in templates:
@@ -176,7 +176,7 @@ def correct_headword_formatting(save, startFrom, upTo):
   search_category_for_missing_template("pronoun", "ar-pron", save, startFrom, upTo)
 
 def correct_one_page_link_formatting(page, index, text):
-  text = unicode(text)
+  text = str(text)
   pagetitle = page.title()
   linkschanged = []
   for m in re.finditer(r"\{\{l\|ar\|([^}]*?)\}\} *(?:'*(?:(?:\{\{IPAchar\|)?\(([^{})]*?)\)(?:\}\})?)'*)? *(?:\{\{g\|(.*?)\}\})?", text):

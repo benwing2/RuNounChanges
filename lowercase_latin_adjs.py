@@ -33,10 +33,10 @@ def process_text_on_page(index, pagename, text):
         if tn == "la-adj":
           orig_headword = param1
         param1 = param1[0].lower() + param1[1:]
-        origt = unicode(t)
+        origt = str(t)
         t.add("1", param1)
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-  text = unicode(parsed)
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
+  text = str(parsed)
 
   subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
   if len(subsections) < 3:

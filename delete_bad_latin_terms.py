@@ -20,7 +20,7 @@ def delete_term(index, term, expected_head_templates, save, verbose):
     pagemsg("Skipping form value %s, page doesn't exist" % term)
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   retval = lalib.find_latin_section(text, pagemsg)
   if retval is None:
@@ -44,7 +44,7 @@ def delete_term(index, term, expected_head_templates, save, verbose):
         pass
       else:
         pagemsg("WARNING: Saw unrecognized template in subsection #%s %s: %s" % (
-          k // 2, subsections[k - 1].strip(), unicode(t)))
+          k // 2, subsections[k - 1].strip(), str(t)))
         saw_bad_template = True
 
   delete = False
@@ -78,7 +78,7 @@ def delete_term(index, term, expected_head_templates, save, verbose):
     if cleaned_sec0.strip():
       pagemsg("WARNING: Whole page deletable except that there's text above all sections: <%s>" % cleaned_sec0.strip())
       return
-    pagetitle = unicode(page.title())
+    pagetitle = str(page.title())
     pagemsg("Page %s should be deleted" % pagetitle)
     pages_to_delete.append(pagetitle)
     return

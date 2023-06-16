@@ -9,13 +9,13 @@ from blib import getparam, rmparam, tname, msg, site
 import lalib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
 
   retval = lalib.find_latin_section(text, pagemsg)
@@ -41,22 +41,22 @@ def process_page(page, index, parsed):
         lang = getparam(t, "1")
         termparam = 2
       if lang != "la":
-        #pagemsg("WARNING: Wrong language in template: %s" % unicode(t))
+        #pagemsg("WARNING: Wrong language in template: %s" % str(t))
         continue
       term = getparam(t, str(termparam))
       alt = getparam(t, str(termparam + 1))
       gloss = getparam(t, str(termparam + 2))
       if alt and lalib.remove_macrons(alt) == term:
-        origt = unicode(t)
+        origt = str(t)
         t.add(str(termparam), alt)
         if gloss:
           t.add(str(termparam + 1), "")
         else:
           rmparam(t, str(termparam + 1))
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("move alt param to link param in %s" % tn)
 
-  secbody = unicode(parsed)
+  secbody = str(parsed)
   sections[j] = secbody + sectail
   return "".join(sections), notes
 

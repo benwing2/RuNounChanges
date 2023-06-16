@@ -8,7 +8,7 @@ from blib import getparam, rmparam, tname, pname, msg, site
 
 def process_page(page, index, parsed):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def expand_text(tempcall):
@@ -32,7 +32,7 @@ def process_page(page, index, parsed):
       default_autopron = expand_text("{{#invoke:fr-pron|show|%s%s}}" % (pagetitle, pos_arg))
       if not default_autopron:
         continue
-      origt = unicode(t)
+      origt = str(t)
       for i in range(1, maxindex + 1):
         pron = getparam(t, str(i))
         if pron:
@@ -49,10 +49,10 @@ def process_page(page, index, parsed):
               t.add(str(i), "+")
               notes.append("set redundant respelling %s in {{fr-IPA}} to +" %
                   pron)
-      if unicode(t) != origt:
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if str(t) != origt:
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Remove redundant French respelling from {{fr-IPA}}",
   include_pagefile=True)

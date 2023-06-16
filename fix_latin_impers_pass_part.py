@@ -9,13 +9,13 @@ from blib import getparam, rmparam, tname, msg, site
 import lalib
 
 def correct_nom_sg_n_participle(page, index, participle, lemma):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
 
   retval = lalib.find_latin_section(text, pagemsg)
@@ -70,7 +70,7 @@ def correct_nom_sg_n_participle(page, index, participle, lemma):
   return "".join(sections), notes
 
 def process_page(index, page, save, verbose, diff):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -84,7 +84,7 @@ def process_page(index, page, save, verbose, diff):
 
   for t in parsed.filter_templates():
     if tname(t) == "la-conj":
-      args = lalib.generate_verb_forms(unicode(t), errandpagemsg, expand_text)
+      args = lalib.generate_verb_forms(str(t), errandpagemsg, expand_text)
       supforms = args.get("sup_acc", "")
       if supforms:
         supforms = supforms.split(",")
@@ -111,7 +111,7 @@ if args.ignore:
   ignore_pages = args.ignore.decode("utf-8").split(",")
 
 def do_process_page(page, index, parsed):
-  if unicode(page.title()) not in ignore_pages:
+  if str(page.title()) not in ignore_pages:
     return process_page(index, page, args.save, args.verbose, args.diff)
   return None, None
 

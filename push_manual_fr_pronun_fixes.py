@@ -8,7 +8,7 @@ from blib import getparam, rmparam, tname, pname, msg, errandmsg, site
 
 def process_page(page, index, line, respelling, orig_template, repl_template,
     args):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -22,7 +22,7 @@ def process_page(page, index, line, respelling, orig_template, repl_template,
 
   notes = []
 
-  text = unicode(page.text)
+  text = str(page.text)
   if orig_template not in text:
     pagemsg("WARNING: Can't find original template %s in text" % orig_template)
     return
@@ -62,17 +62,17 @@ def process_page(page, index, line, respelling, orig_template, repl_template,
       if tn == "fr-conj-auto":
         if saw_fr_conj_auto:
           pagemsg("WARNING: Saw {{fr-conj-auto}} twice, first=%s, second=%s" % (
-            saw_fr_conj_auto, unicode(t)))
-        saw_fr_conj_auto = unicode(t)
+            saw_fr_conj_auto, str(t)))
+        saw_fr_conj_auto = str(t)
         if getparam(t, "pron"):
-          pagemsg("WARNING: Already saw pron= param: %s" % unicode(t))
+          pagemsg("WARNING: Already saw pron= param: %s" % str(t))
           continue
         pronarg = ",".join(pron or pagetitle for pron in respelling.split(","))
-        origt = unicode(t)
+        origt = str(t)
         t.add("pron", pronarg)
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("add pron=%s to {{fr-conj-auto}}" % pronarg)
-    text = unicode(parsed)
+    text = str(parsed)
 
   return text, notes
 

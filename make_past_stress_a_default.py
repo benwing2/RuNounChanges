@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, errmsg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errpagemsg(txt):
@@ -18,12 +18,12 @@ def process_page(page, index, parsed):
 
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     param2 = getparam(t, "2")
     param3 = getparam(t, "3")
-    if unicode(t.name) in ["ru-conj", "ru-conj-old"] and param2.startswith("8b"):
-      if [x for x in t.params if unicode(x.value) == "or"]:
-        errpagemsg("WARNING: Skipping multi-arg conjugation: %s" % unicode(t))
+    if str(t.name) in ["ru-conj", "ru-conj-old"] and param2.startswith("8b"):
+      if [x for x in t.params if str(x.value) == "or"]:
+        errpagemsg("WARNING: Skipping multi-arg conjugation: %s" % str(t))
         continue
       if param2 in ["8b", "8b+p"]:
         t.add("2", getparam(t, "2").replace("8b", "8b/b"))
@@ -33,7 +33,7 @@ def process_page(page, index, parsed):
         notes.append("make past stress /a default in class 8b")
       elif param2 not in ["8b/b", "8b/b+p"]:
         errpagemsg("WARNING: Unable to parse param2 %s" % param2)
-    if unicode(t.name) in ["ru-conj", "ru-conj-old"] and param2.startswith("irreg"):
+    if str(t.name) in ["ru-conj", "ru-conj-old"] and param2.startswith("irreg"):
       if re.search(u"(да́?ть|бы́?ть|кля́?сть)(ся)?$", param3):
         if param2 == "irreg":
           if param3.startswith(u"вы́"):
@@ -54,7 +54,7 @@ def process_page(page, index, parsed):
         elif not param2.startswith("irreg/"):
           errpagemsg("WARNING: Unable to parse param2 %s" % param2)
 
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 

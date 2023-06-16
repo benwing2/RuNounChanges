@@ -8,7 +8,7 @@ from blib import msg, getparam, addparam
 from arabiclib import arabic_decl_templates
 
 def rewrite_one_page_idafa(page, index, text):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   num_new_style = 0
@@ -25,21 +25,21 @@ def rewrite_one_page_idafa(page, index, text):
       changed = False
 
       # Change state=ind for proper noun to state=ind-def
-      oldt = unicode(t)
+      oldt = str(t)
       if getparam(t, "state") == "ind" and has_proper_noun:
         addparam(t, "state", "ind-def")
         pagemsg("Converting state=ind to state=ind-def for proper noun")
-        pagemsg("Replacing %s with %s" % (oldt, unicode(t)))
+        pagemsg("Replacing %s with %s" % (oldt, str(t)))
         num_state_ind_to_ind_def += 1
       elif getparam(t, "state") == "def" and getparam(t, "basestate") == "ind":
         t.remove("basestate")
         addparam(t, "state", "ind-def")
         pagemsg("Converting state=def|basestate=ind to state=ind-def")
-        pagemsg("Replacing %s with %s" % (oldt, unicode(t)))
+        pagemsg("Replacing %s with %s" % (oldt, str(t)))
         num_basestate_ind_def += 1
 
       # Change old-style ʾidāfa (state=con) to new-style (basestate=con)
-      #oldt = unicode(t)
+      #oldt = str(t)
       #if (getparam(t, "state") == "con" and getparam(t, "modcase") and
       #    not getparam(t, "basestate")):
       #  modstate = getparam(t, "modstate")
@@ -49,17 +49,17 @@ def rewrite_one_page_idafa(page, index, text):
       #    t.remove("state")
       #  else:
       #    addparam(t, "state", modstate)
-      #  pagemsg("Replacing %s with %s" % (oldt, unicode(t)))
+      #  pagemsg("Replacing %s with %s" % (oldt, str(t)))
       #  changed = True
 
       # Remove manual ʾidāfa params when possible and substitute idafa=
-      #oldt = unicode(t)
+      #oldt = str(t)
       #if getparam(t, "basestate") == "con" and getparam(t, "modcase") == "gen":
       #  idafa = ""
       #  modnumber = getparam(t, "modnumber")
       #  if not modnumber:
       #    pagemsg("WARNING: Missing modnumber= in idafa template, substituting sg: %s" %
-      #        unicode(t))
+      #        str(t))
       #    modnumber = "sg"
       #    addparam(t, "modnumber", "sg")
       #  modstate = getparam(t, "modstate")
@@ -67,11 +67,11 @@ def rewrite_one_page_idafa(page, index, text):
       #  if not modstate:
       #    if state:
       #      pagemsg("WARNING: Extraneous state= in idafa template: %s" %
-      #          unicode(t))
+      #          str(t))
       #    idafa = modnumber
       #  elif state != modstate:
       #    pagemsg("WARNING: modstate= in idafa template but state= doesn't match: %s"
-      #        % unicode(t))
+      #        % str(t))
       #  else:
       #    idafa = "%s-%s" % (modstate, modnumber)
       #    t.remove("state")
@@ -85,12 +85,12 @@ def rewrite_one_page_idafa(page, index, text):
       #    if m:
       #      if has_proper_noun:
       #        pagemsg("Not replacing idafa state 'ind' because proper noun: %s"
-      #            % unicode(t))
+      #            % str(t))
       #      elif pagetitle in [u"أقدم مهنة", u"غير طبيعي"]:
-      #        pagemsg("Not replacing idafa state 'ind' because it's special-cased: %s" % unicode(t))
+      #        pagemsg("Not replacing idafa state 'ind' because it's special-cased: %s" % str(t))
       #      else:
       #        pagemsg("NOTE: Replacing idafa state 'ind' with no state restriction: %s"
-      #            % unicode(t))
+      #            % str(t))
       #        idafa = m.group(1)
       #    m = re.match("^(.*?)-sg$", idafa)
       #    if m:
@@ -98,7 +98,7 @@ def rewrite_one_page_idafa(page, index, text):
       #    if idafa == "sg":
       #      idafa = "yes"
       #    addparam(t, "idafa", idafa)
-      #    pagemsg("Replacing %s with %s" % (oldt, unicode(t)))
+      #    pagemsg("Replacing %s with %s" % (oldt, str(t)))
       #    idafa_added.append(idafa)
       #  elif changed:
       #    num_new_style += 1
@@ -107,10 +107,10 @@ def rewrite_one_page_idafa(page, index, text):
           getparam(t, "modstate") or getparam(t, "modnumber") or
           getparam(t, "modidafa")):
         pagemsg("WARNING: idafa params remain after processing: %s" %
-            unicode(t))
+            str(t))
 
       ## Change modN into modheadN
-      #oldt = unicode(t)
+      #oldt = str(t)
       #changed = False
       #for i in range(2, 20):
       #  modn = getparam(t, "mod" + str(i))
@@ -119,13 +119,13 @@ def rewrite_one_page_idafa(page, index, text):
       #    addparam(t, "modhead" + str(i), modn)
       #    changed = True
       #if changed:
-      #  pagemsg("Replacing %s with %s" % (oldt, unicode(t)))
+      #  pagemsg("Replacing %s with %s" % (oldt, str(t)))
       #  num_modhead_changed += 1
 
       if getparam(t, "omitarticle"):
-        pagemsg("WARNING: omitarticle present: %s" % unicode(t))
+        pagemsg("WARNING: omitarticle present: %s" % str(t))
       if getparam(t, "state") == "ind":
-        pagemsg("WARNING: state=ind still present: %s" % unicode(t))
+        pagemsg("WARNING: state=ind still present: %s" % str(t))
 
   actions = []
   if idafa_added:

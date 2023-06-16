@@ -55,7 +55,7 @@ def look_up_tonal_form(pagename, pagemsg, verbose):
     page = pywikibot.Page(site, pagename)
   except Exception as e:
     pagemsg("WARNING: Error looking up page %s: %s" % (pagename,
-      unicode(e)))
+      str(e)))
     return None
   try:
     if not page.exists():
@@ -64,17 +64,17 @@ def look_up_tonal_form(pagename, pagemsg, verbose):
       return None
   except Exception as e:
     pagemsg("WARNING: Error checking page existence for %s: %s" % (pagename,
-      unicode(e)))
+      str(e)))
     return None
   tonal_forms = []
   for t in blib.parse(page).filter_templates():
-    if unicode(t.name) == "sl-tonal":
+    if str(t.name) == "sl-tonal":
       if verbose:
         pagemsg("look_up_tonal_form: For page %s, found tonal template %s" %
-            (pagename, unicode(t)))
+            (pagename, str(t)))
       if tonal_forms:
         pagemsg("WARNING: Found multiple {{sl-tonal}} calls for page %s: new one is %s; can't handle" % (pagename,
-          unicode(t)))
+          str(t)))
         return None
       tonal_forms.append(getparam(t, "1"))
       for param in ["2", "3", "4", "5", "6"]:
@@ -83,7 +83,7 @@ def look_up_tonal_form(pagename, pagemsg, verbose):
   return tonal_forms
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -93,7 +93,7 @@ def process_page(page, index, parsed):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
   parsed = blib.parse(page)
   saw_sl_tonal = False
@@ -102,10 +102,10 @@ def process_page(page, index, parsed):
     # In case we already substituted multiple tonal variants, the first
     # one will have {{l|sl|...}} and we'll try to replace it again unless
     # we have this check.
-    if unicode(t.name) == "l/sl-tonal":
-      pagemsg("Already found %s, not replacing anything" % unicode(t))
+    if str(t.name) == "l/sl-tonal":
+      pagemsg("Already found %s, not replacing anything" % str(t))
       saw_sl_tonal = True
-    if unicode(t.name) == "l" and getparam(t, "1") == "sl":
+    if str(t.name) == "l" and getparam(t, "1") == "sl":
       saw_sl_plain += 1
   if saw_sl_plain and saw_sl_tonal:
     pagemsg("WARNING: Saw both {{l|sl|...}} and {{l/sl-tonal|...}}, needs fixing")
@@ -122,8 +122,8 @@ def process_page(page, index, parsed):
   while repeat:
     parsed = blib.parse(page)
     for t in parsed.filter_templates():
-      origt = unicode(t)
-      if unicode(t.name) in ["l"] and getparam(t, "1") == "sl":
+      origt = str(t)
+      if str(t.name) in ["l"] and getparam(t, "1") == "sl":
         linkpage = getparam(t, "2")
         altlink = getparam(t, "3")
         defn = getparam(t, "4")
@@ -133,20 +133,20 @@ def process_page(page, index, parsed):
         gender2 = getparam(t, "g2")
         if (defn and 1 or 0) + (gloss and 1 or 0) + (tgloss and 1 or 0) > 1:
           pagemsg("WARNING: Found more than one of defn=%s, gloss=%s, t=%s in %s, skipping"
-              % (defn, gloss, tgloss, unicode(t)))
+              % (defn, gloss, tgloss, str(t)))
           continue
         defn = defn or gloss or tgloss
         if altlink:
           if remove_slovene_accents(linkpage) != remove_slovene_accents(altlink):
             pagemsg("WARNING: Template %s has both link and altlink and they don't point to the same page skipping" %
-                unicode(t))
+                str(t))
             continue
           linkpage = altlink
         for param in t.params:
-          pname = unicode(param.name)
+          pname = str(param.name)
           if pname not in ["1", "2", "3", "4", "gloss", "t", "g", "g2", "pos"]:
             pagemsg("WARNING: Found unexpected param %s in %s, skipping" %
-                (pname, unicode(t)))
+                (pname, str(t)))
             break
         else:
           tonal_forms = look_up_tonal_form(remove_slovene_accents(linkpage),
@@ -166,8 +166,8 @@ def process_page(page, index, parsed):
               #    "|g=%s" % gender if gender else "",
               #    "|g2=%s" % gender2 if gender2 else "")
               #eventual_newsub = newsub.replace("{{l-REPLACEME|", "{{l|")
-              #fromsub = unicode(t)
-              #fromtext = unicode(parsed)
+              #fromsub = str(t)
+              #fromtext = str(parsed)
               #newtext = fromtext.replace(fromsub, newsub)
               #if newtext == fromtext:
               #  pagemsg("WARNING: Something wrong, can't locate template %s in text"
@@ -194,13 +194,13 @@ def process_page(page, index, parsed):
                 rmparam(t, "gloss")
               notes.append("replaced Slovene %s with tonal %s" % (linkpage,
                 ", ".join(tonal_forms)))
-      newt = unicode(t)
+      newt = str(t)
       if origt != newt:
         pagemsg("Replaced %s with %s" % (origt, newt))
     else:
       repeat = False
 
-  return unicode(parsed).replace("{{l-REPLACEME|", "{{l|"), notes
+  return str(parsed).replace("{{l-REPLACEME|", "{{l|"), notes
 
 parser = blib.create_argparser(u"Convert Slovene links in Proto-Slavic pages to tonal form",
   include_pagefile=True)

@@ -23,7 +23,7 @@ def process_text_on_page(index, pagetitle, text):
   parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in is_lemma_templates:
       if t.has("is lemma"):
@@ -33,10 +33,10 @@ def process_text_on_page(index, pagetitle, text):
         notes.append("Remove is_lemma= from {{%s}}" % tn)
         rmparam(t, "is_lemma")
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Remove is lemma= and is_lemma= from comparative/superlative templates",
     include_pagefile=True, include_stdin=True)

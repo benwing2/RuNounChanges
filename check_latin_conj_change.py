@@ -33,7 +33,7 @@ def compare_new_and_old_templates(t, pagetitle, pagemsg, errandpagemsg):
     generate_new_forms, pagemsg, errandpagemsg)
 
 def process_page(page, index):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -41,12 +41,12 @@ def process_page(page, index):
 
   pagemsg("Processing")
 
-  parsed = blib.parse_text(unicode(page.text))
+  parsed = blib.parse_text(str(page.text))
 
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn == "la-conj":
-      compare_new_and_old_templates(unicode(t), pagetitle, pagemsg, errandpagemsg)
+      compare_new_and_old_templates(str(t), pagetitle, pagemsg, errandpagemsg)
 
 parser = blib.create_argparser("Check potential changes to {{la-conj}} implementation",
     include_pagefile=True)

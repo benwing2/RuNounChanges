@@ -34,11 +34,11 @@ def process_text_on_page(index, pagetitle, text):
     if tn in ["la-noun-form", "la-proper noun-form", "la-pronoun-form", "la-verb-form",
         "la-adj-form", "la-num-form", "la-suffix-form"]:
       if not getparam(t, "1"):
-        pagemsg("WARNING: Missing 1=: %s" % unicode(t))
+        pagemsg("WARNING: Missing 1=: %s" % str(t))
       for param in t.params:
         pn = pname(param)
         if pn not in ["1", "g", "g2", "g3", "g4"]:
-          pagemsg("WARNING: Extraneous param %s=: %s" % (pn, unicode(t)))
+          pagemsg("WARNING: Extraneous param %s=: %s" % (pn, str(t)))
 
 parser = blib.create_argparser("Check for Latin non-lemma forms with bad params",
     include_pagefile=True, include_stdin=True)

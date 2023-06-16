@@ -21,7 +21,7 @@ def delete_participle_1(page, index, lemma, formind, formval, pos, preserve_diae
 
   expected_head_template = "la-part"
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
 
   retval = lalib.find_latin_section(text, pagemsg)
@@ -46,25 +46,25 @@ def delete_participle_1(page, index, lemma, formind, formval, pos, preserve_diae
           saw_lemma_in_etym = True
         else:
           pagemsg("WARNING: Saw wrong lemma %s != %s in Etymology section: %s" % (
-            actual_lemma, lemma, unicode(t)))
+            actual_lemma, lemma, str(t)))
           saw_wrong_lemma_in_etym = True
       elif tn == expected_head_template:
         saw_head = True
       elif tn == "la-adecl":
         if not saw_head:
           pagemsg("WARNING: Saw inflection template without (or before) head template, skipping: %s" %
-            unicode(t))
+            str(t))
         elif infl_template:
           pagemsg("WARNING: Saw two possible inflection templates: first %s, second %s" % (
-            infl_template, unicode(t)))
+            infl_template, str(t)))
         else:
-          infl_template = unicode(t)
+          infl_template = str(t)
       elif tn in ["rfdef", "R:L&S", "R:Elementary Lewis", "R:du Cange", "R:Gaffiot",
           "R:NLW", "alternative form of", "la-IPA"]:
         pass
       else:
         pagemsg("WARNING: Saw unrecognized template in subsection #%s %s: %s" % (
-          k // 2, subsections[k - 1].strip(), unicode(t)))
+          k // 2, subsections[k - 1].strip(), str(t)))
         saw_bad_template = True
 
   delete = False
@@ -106,7 +106,7 @@ def delete_participle_1(page, index, lemma, formind, formval, pos, preserve_diae
     if cleaned_sec0.strip():
       pagemsg("WARNING: Whole page deletable except that there's text above all sections: <%s>" % cleaned_sec0.strip())
       return None, None
-    pagetitle = unicode(page.title())
+    pagetitle = str(page.title())
     pagemsg("Page %s should be deleted" % pagetitle)
     pages_to_delete.append(pagetitle)
     return None, None
@@ -179,7 +179,7 @@ def delete_form_1(page, index, lemma, formind, formval, pos, tag_sets_to_delete,
   else:
     raise ValueError("Unrecognized part of speech %s" % pos)
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
 
   retval = lalib.find_latin_section(text, pagemsg)
@@ -222,7 +222,7 @@ def delete_form_1(page, index, lemma, formind, formval, pos, tag_sets_to_delete,
           lemma_param = 2
         if lang != "la":
           errandpagemsg("WARNING: In Latin section, found {{inflection of}} for different language %s: %s" % (
-            lang, unicode(t)))
+            lang, str(t)))
           return None, None
         actual_lemma = getparam(t, str(lemma_param))
         # Allow mismatch in macrons, which often happens, e.g. because
@@ -231,15 +231,15 @@ def delete_form_1(page, index, lemma, formind, formval, pos, tag_sets_to_delete,
           # fetch tags
           tags = []
           for param in t.params:
-            pname = unicode(param.name).strip()
-            pval = unicode(param.value).strip()
+            pname = str(param.name).strip()
+            pval = str(param.value).strip()
             if re.search("^[0-9]+$", pname):
               if int(pname) >= lemma_param + 2:
                 if pval:
                   tags.append(pval)
           for tag in tags:
             if "//" in tag:
-              pagemsg("WARNING: Don't know how to handle multipart tags yet: %s" % unicode(t))
+              pagemsg("WARNING: Don't know how to handle multipart tags yet: %s" % str(t))
               saw_other_infl = True
               break
           else:
@@ -250,11 +250,11 @@ def delete_form_1(page, index, lemma, formind, formval, pos, tag_sets_to_delete,
                 saw_infl = True
               else:
                 pagemsg("Found {{inflection of}} for correct lemma but wrong tag set %s, expected one of %s: %s" % (
-                  "|".join(tag_set), ",".join("|".join(x) for x in tag_sets_to_delete), unicode(t)))
+                  "|".join(tag_set), ",".join("|".join(x) for x in tag_sets_to_delete), str(t)))
                 saw_other_infl = True
         else:
           pagemsg("Found {{inflection of}} for different lemma %s: %s" % (
-            actual_lemma, unicode(t)))
+            actual_lemma, str(t)))
           saw_other_infl = True
     if saw_head and saw_infl:
       if saw_other_infl:
@@ -266,7 +266,7 @@ def delete_form_1(page, index, lemma, formind, formval, pos, tag_sets_to_delete,
             tn == "head" and getparam(t, "1") == "la" and getparam(t, "2") == expected_head_pos
           ):
           pagemsg("WARNING: Saw unrecognized template in otherwise deletable subsection #%s: %s" % (
-            k // 2, unicode(t)))
+            k // 2, str(t)))
           saw_bad_template = True
           break
       else:
@@ -314,8 +314,8 @@ def delete_form_1(page, index, lemma, formind, formval, pos, tag_sets_to_delete,
             tags = []
             params = []
             for param in t.params:
-              pname = unicode(param.name).strip()
-              pval = unicode(param.value).strip()
+              pname = str(param.name).strip()
+              pval = str(param.value).strip()
               if re.search("^[0-9]+$", pname):
                 if int(pname) >= lemma_param + 2:
                   if pval:
@@ -342,7 +342,7 @@ def delete_form_1(page, index, lemma, formind, formval, pos, tag_sets_to_delete,
             for tag in lalib.combine_tag_set_group(filtered_tag_sets):
               t.add(str(next_tag_param), tag)
               next_tag_param += 1
-      return unicode(parsed)
+      return str(parsed)
 
     newnewsubsec = re.sub(r"^# \{\{inflection of\|[^{}\n]*\}\}\n", remove_inflections, newsubsec, 0, re.M)
     if newnewsubsec != newsubsec:
@@ -368,7 +368,7 @@ def delete_form_1(page, index, lemma, formind, formval, pos, tag_sets_to_delete,
       if cleaned_sec0.strip():
         pagemsg("WARNING: Whole page deletable except that there's text above all sections: <%s>" % cleaned_sec0.strip())
         return None, None
-      pagetitle = unicode(page.title())
+      pagetitle = str(page.title())
       pagemsg("Page %s should be deleted" % pagetitle)
       pages_to_delete.append(pagetitle)
       return None, None

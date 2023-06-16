@@ -119,10 +119,10 @@ def process_text_on_page(index, pagetitle, text, langcodes):
     else:
       m = re.search("^([0-9]+)[^0-9]+$", num)
       if m:
-        pagemsg("WARNING: Number %s has extraneous text after it, ignoring extraneous text: %s" % (num, unicode(t)))
+        pagemsg("WARNING: Number %s has extraneous text after it, ignoring extraneous text: %s" % (num, str(t)))
         num = m.group(1)
       elif not re.search("^[0-9]+$", num):
-        pagemsg("WARNING: Bad number %s, doesn't look numeric: %s" % (num, unicode(t)))
+        pagemsg("WARNING: Bad number %s, doesn't look numeric: %s" % (num, str(t)))
         return
 
     # Check for multiple values embedded in a single parameter.
@@ -130,7 +130,7 @@ def process_text_on_page(index, pagetitle, text, langcodes):
     if len(vals) > 1:
       if tr:
         pagemsg("WARNING: For number %s, type %s, multiple values '%s' and tr=%s, can't handle: %s" % (
-          num, typ, vals, tr, unicode(t)))
+          num, typ, vals, tr, str(t)))
         return
       for val in vals:
         val = blib.remove_links(val)
@@ -169,21 +169,21 @@ def process_text_on_page(index, pagetitle, text, langcodes):
           putval(t, langcode, num, typ, val, tr)
         num = getp("3")
         if not num:
-          pagemsg("WARNING: Blank current number for {{%s}}: %s" % (tn, unicode(t)))
+          pagemsg("WARNING: Blank current number for {{%s}}: %s" % (tn, str(t)))
         else:
           put(num, boxtype, getp("alt") or pagetitle, getp("tr"))
         prevnum = getp("2")
         if prevnum:
           prevnumtext = getp("5")
           if not prevnumtext:
-            pagemsg("WARNING: Previous number %s but blank textual form in {{%s}}: %s" % (prevnum, tn, unicode(t)))
+            pagemsg("WARNING: Previous number %s but blank textual form in {{%s}}: %s" % (prevnum, tn, str(t)))
           else:
             put(prevnum, boxtype, prevnumtext, None)
         nextnum = getp("4")
         if nextnum:
           nextnumtext = getp("6")
           if not nextnumtext:
-            pagemsg("WARNING: Next number %s but blank textual form in {{%s}}: %s" % (nextnum, tn, unicode(t)))
+            pagemsg("WARNING: Next number %s but blank textual form in {{%s}}: %s" % (nextnum, tn, str(t)))
           else:
             put(nextnum, boxtype, nextnumtext, None)
         for (other, othertype) in [
@@ -203,7 +203,7 @@ def process_text_on_page(index, pagetitle, text, langcodes):
           if opttype:
             optval = getp(opt + "xalt") or getp(opt + "x")
             if not optval:
-              pagemsg("WARNING: Saw optional type %s but no optional form in {{%s}}: %s" % (opttype, tn, unicode(t)))
+              pagemsg("WARNING: Saw optional type %s but no optional form in {{%s}}: %s" % (opttype, tn, str(t)))
             else:
               put(num, opttype, optval, getp(opt + "xtr"))
         wplink = getp("wplink")

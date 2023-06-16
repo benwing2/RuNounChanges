@@ -12,7 +12,7 @@ def delete_page(page, comment, errandpagemsg):
       page.delete(comment)
       return
     except APIError as e:
-      if "missingtitle" in unicode(e):
+      if "missingtitle" in str(e):
         errandpagemsg("WARNING: APIError due to page no longer existing, skipping: %s" % e)
         return
       if i == 10:
@@ -20,7 +20,7 @@ def delete_page(page, comment, errandpagemsg):
       errandpagemsg("WARNING: APIError, try #%s: %s" % (i + 1, e))
 
 def process_page(page, index, args, comment):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -38,7 +38,7 @@ def process_page(page, index, args, comment):
   this_comment = comment or 'delete empty category'
   if page.exists():
     if args.save:
-      delete_page(page, '%s (content was "%s")' % (this_comment, unicode(page.text)), errandpagemsg)
+      delete_page(page, '%s (content was "%s")' % (this_comment, str(page.text)), errandpagemsg)
       errandpagemsg("Deleted (comment=%s)" % this_comment)
     else:
       pagemsg("Would delete (comment=%s)" % this_comment)

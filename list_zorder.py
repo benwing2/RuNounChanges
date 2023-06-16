@@ -18,6 +18,6 @@ if args.cat:
 else:
   pages_to_list = blib.references(args.ref, start, end)
 for i, page in pages_to_list:
-  pages.append(unicode(page.title()))
+  pages.append(str(page.title()))
 for page in sorted(pages, key=lambda x:x[::-1]):
   msg(page)

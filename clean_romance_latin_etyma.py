@@ -81,9 +81,9 @@ def verify_latin1_verb(lemma, pagemsg):
       tn = tname(t)
       if tn == "la-verb":
         if getparam(t, "1").startswith("1"):
-          saw_1 = unicode(t)
+          saw_1 = str(t)
         else:
-          saw_non_1 = unicode(t)
+          saw_non_1 = str(t)
     if saw_non_1 and saw_1:
       pagemsg(u"WARNING: For lemma %s, saw both class-1 verb %s and non-class-1 verb %s, not adding -āre/-ārī etymon but needs manual verification" %
         (lemma, saw_1, saw_non_1))
@@ -227,7 +227,7 @@ def process_text_on_page(index, pagetitle, text):
       notes.append("incorporate separate genitive singular into {{%s|%s|%s}}" %
         (tname(temp1t), getparam(temp1t, "1"), getparam(temp1t, "2")))
       addparam_after(temp1t, "4", gen_sg, "3")
-      return unicode(temp1t)
+      return str(temp1t)
 
     # Do cases where the lang code on the left and right agree.
     subsections[k] = re.sub(r"(\{\{%s\|%s\|([^|{}=\[\]]+)\|[^{}]*\}\}) \(genitive(?: singular)? \{\{m\|\2\|([^{}|=\[\]]+)\}\}\)" %
@@ -251,7 +251,7 @@ def process_text_on_page(index, pagetitle, text):
       notes.append("incorporate following Latin etymon into {{%s|%s|%s}}" %
         (tname(temp1t), getparam(temp1t, "1"), getparam(temp1t, "2")))
       addparam_after(temp1t, "4", etymon, "3")
-      return unicode(temp1t)
+      return str(temp1t)
 
     subsections[k] = re.sub(r"(\{\{%s\|%s\|%s\|[^{}]*\}\}), ''+([^'{}]+?)''+" %
       (etym_template_re, args.langcode, latin_langcode_re), replace_following_etymon, subsections[k])
@@ -289,7 +289,7 @@ def process_text_on_page(index, pagetitle, text):
         pn = pname(param)
         if pn not in ["1", "2", "3", "4", "t", "gloss", "alt"]:
           pagemsg("WARNING: Unrecognized param %s=%s in lemma template: %s" %
-            (pn, unicode(param.value), lemma_temp))
+            (pn, str(param.value), lemma_temp))
           return m.group(0)
       existing_lemma_gloss = getparam(lemmat, "t") or getparam(lemmat, "4") or getparam(lemmat, "gloss")
       temp1t.add("3", lemma)
@@ -298,7 +298,7 @@ def process_text_on_page(index, pagetitle, text):
         temp1t.add("t", existing_lemma_gloss)
       notes.append("incorporate separate accusative singular or present active infinitive into {{%s|%s|%s}}" %
         (tname(temp1t), getparam(temp1t, "1"), getparam(temp1t, "2")))
-      return unicode(temp1t)
+      return str(temp1t)
 
     subsections[k] = re.sub(r"(\{\{%s\|%s\|%s\|[^{}]*\}\}), (?:accusative singular|singular accusative|accusative|present active infinitive|present infinitive) of (\{\{m\|la\|[^{}]*\}\})" %
       (etym_template_re, args.langcode, latin_langcode_re), replace_acc_sg_pres_act_inf, subsections[k])
@@ -344,7 +344,7 @@ def process_text_on_page(index, pagetitle, text):
         pn = pname(param)
         if pn not in ["1", "2", "3", "4", "t", "gloss", "alt"]:
           pagemsg("WARNING: Unrecognized param %s=%s in non-lemma template: %s" %
-            (pn, unicode(param.value), non_lemma_temp))
+            (pn, str(param.value), non_lemma_temp))
           return m.group(0)
       existing_non_lemma_gloss = getparam(non_lemmat, "t") or getparam(non_lemmat, "4") or getparam(non_lemmat, "gloss")
       if non_lemma.endswith("is"):
@@ -356,10 +356,10 @@ def process_text_on_page(index, pagetitle, text):
       if existing_non_lemma_gloss:
         temp1t.add("t", existing_non_lemma_gloss)
       pagemsg("WARNING: Replaced '%s' with %s, assuming accusative singular or present active infinitive, please check" % (
-        m.group(0), unicode(temp1t)))
+        m.group(0), str(temp1t)))
       notes.append("incorporate probable separate accusative singular or present active infinitive into {{%s|%s|%s}}" %
         (tname(temp1t), getparam(temp1t, "1"), getparam(temp1t, "2")))
-      return unicode(temp1t)
+      return str(temp1t)
 
     subsections[k] = re.sub(r"(\{\{%s\|%s\|%s\|[^{}]*\}\}), (\{\{m\|la\|[^{}]*\}\})" %
       (etym_template_re, args.langcode, latin_langcode_re), replace_probable_acc_sg_pres_act_inf, subsections[k])
@@ -371,7 +371,7 @@ def process_text_on_page(index, pagetitle, text):
         return getparam(t, param)
       if tn in etym_templates:
         if getp("1") != args.langcode:
-          pagemsg("WARNING: Wrong language code in etymology template: %s" % unicode(t))
+          pagemsg("WARNING: Wrong language code in etymology template: %s" % str(t))
           continue
         if getp("2") not in latin_langcodes:
           continue
@@ -383,26 +383,26 @@ def process_text_on_page(index, pagetitle, text):
           altparts = alt.split(", ")
           if len(altparts) > 2:
             pagemsg("WARNING: Saw more than two parts in comma-separated etymon alt text '%s': %s" %
-              (alt, unicode(t)))
+              (alt, str(t)))
             continue
           alt_lemma, alt_form = altparts
           forms_reversed = False
           if remove_macrons(lemma) != remove_macrons(alt_lemma):
             if remove_macrons(lemma) == remove_macrons(alt_form):
-              pagemsg("In etymology template, lemma and non-lemma etymon are reversed, switching them: %s" % unicode(t))
+              pagemsg("In etymology template, lemma and non-lemma etymon are reversed, switching them: %s" % str(t))
               temp = alt_lemma
               alt_lemma = alt_form
               alt_form = temp
               forms_reversed = True
             else:
               pagemsg("WARNING: In etymology template, Latin lemma %s doesn't match alt text lemma %s: %s" %
-                  (lemma, alt_lemma, unicode(t)))
+                  (lemma, alt_lemma, str(t)))
               continue
           if alt_lemma.startswith("*") and not alt_form.startswith("*"):
             alt_form = "*" + alt_form
           if not re.search(latin_etymon_should_match_acc_gen_inf, remove_macrons(alt_form)):
             pagemsg("WARNING: Latin non-lemma etymon %s doesn't look like accusative, genitive or infinitive, not splitting: %s" %
-              (alt_form, unicode(t)))
+              (alt_form, str(t)))
             if forms_reversed:
               t.add("4", "%s, %s" % (alt_lemma, alt_form))
               notes.append("switch reversed Latin lemma and non-lemma etymon")
@@ -417,12 +417,12 @@ def process_text_on_page(index, pagetitle, text):
         alt = getp("4")
         if remove_macrons(lemma) in deny_list_canonicalize_suffix:
           pagemsg("WARNING: Skipping lemma %s because in deny_list_canonicalize_suffix, review manually: %s" %
-            (lemma, unicode(t)))
+            (lemma, str(t)))
           continue
         if remove_macrons(alt) == remove_macrons(lemma):
           if number_of_macrons(lemma) > number_of_macrons(alt):
             pagemsg("WARNING: More macrons in link %s than alt text %s, not moving duplicative Latin lemma: %s"
-              % (lemma, alt, unicode(t)))
+              % (lemma, alt, str(t)))
             continue
           notes.append("move duplicative Latin lemma %s from 4= to 3= in {{%s|%s}}" %
             (alt, tn, args.langcode))
@@ -441,7 +441,7 @@ def process_text_on_page(index, pagetitle, text):
                 if remove_macrons(lemma).endswith(remove_macrons(suffix.latin_lemma_suffix)):
                   if suffix.latin_deny_re and re.search(suffix.latin_deny_re, lemma):
                     pagemsg("WARNING: Skipping lemma %s because it matches latin_deny_re '%s', review manually: %s" %
-                      (lemma, suffix.latin_deny_re, unicode(t)))
+                      (lemma, suffix.latin_deny_re, str(t)))
                     must_break = True
                     break
                   if suffix.latin_form_suffix:
@@ -459,7 +459,7 @@ def process_text_on_page(index, pagetitle, text):
                             alt = newalt
                       if not remove_macrons(alt).endswith(remove_macrons(suffix.latin_form_suffix)):
                         pagemsg("WARNING: Canonicalized Latin non-lemma etymon %s doesn't match expected suffix %s: %s" %
-                          (alt, suffix.latin_form_suffix, unicode(t)))
+                          (alt, suffix.latin_form_suffix, str(t)))
                       elif suffix.latin_form_suffix != remove_macrons(suffix.latin_form_suffix) and alt.endswith(remove_macrons(suffix.latin_form_suffix)):
                         newalt = alt[:-len(suffix.latin_form_suffix)] + suffix.latin_form_suffix
                         if newalt != alt:
@@ -470,7 +470,7 @@ def process_text_on_page(index, pagetitle, text):
                         newalt = alt[:-len(suffix.latin_form_suffix)] + suffix.latin_form_suffix
                         if newalt != alt and remove_non_macron_accents(newalt) != remove_non_macron_accents(alt):
                           pagemsg("WARNING: Possible wrong macrons in non-lemma etymon %s, expected suffix -%s, please verify: %s" %
-                            (alt, suffix.latin_form_suffix, unicode(t)))
+                            (alt, suffix.latin_form_suffix, str(t)))
                       addparam_after(t, "4", alt, "3")
                     else:
                       if suffix.verify_lemma:
@@ -498,7 +498,7 @@ def process_text_on_page(index, pagetitle, text):
                       if remove_macrons(alt) == remove_macrons(lemma):
                         if number_of_macrons(lemma) > number_of_macrons(alt):
                           pagemsg("WARNING: More macrons in link %s than alt text %s, not moving duplicative Latin lemma: %s"
-                            % (lemma, alt, unicode(t)))
+                            % (lemma, alt, str(t)))
                           must_break = True
                           break
                         # We may e.g. canonicalize -am to -a, making the non-lemma etymon duplicative.
@@ -508,7 +508,7 @@ def process_text_on_page(index, pagetitle, text):
                         t.add("3", alt)
                       else:
                         pagemsg("WARNING: Should be no Latin non-lemma etymon for lemma %s but saw %s: %s" %
-                          (lemma, alt, unicode(t)))
+                          (lemma, alt, str(t)))
                     elif suffix.latin_lemma_suffix != remove_macrons(suffix.latin_lemma_suffix) and lemma.endswith(remove_macrons(suffix.latin_lemma_suffix)):
                       newlemma = lemma[:-len(suffix.latin_lemma_suffix)] + suffix.latin_lemma_suffix
                       if newlemma != lemma:
@@ -521,7 +521,7 @@ def process_text_on_page(index, pagetitle, text):
                       newlemma = lemma[:-len(suffix.latin_lemma_suffix)] + suffix.latin_lemma_suffix
                       if newlemma != lemma and remove_non_macron_accents(newlemma) != remove_non_macron_accents(lemma):
                         pagemsg("WARNING: Possible wrong macrons in lemma %s, expected suffix -%s, please verify: %s" %
-                          (lemma, suffix.latin_lemma_suffix, unicode(t)))
+                          (lemma, suffix.latin_lemma_suffix, str(t)))
 
                   # Once we've seen the appropriage Romance and Latin suffixes, don't process further.
                   must_break = True
@@ -541,7 +541,7 @@ def process_text_on_page(index, pagetitle, text):
           addparam_after(t, "4", alt, "3")
         if alt and not re.search(latin_etymon_should_match_acc_inf, remove_macrons(alt)):
           pagemsg("WARNING: Latin non-lemma etymon %s doesn't look like accusative or infinitive: %s" %
-            (alt, unicode(t)))
+            (alt, str(t)))
 
         # self-canonicalize lemma or etymon
         lemma = getp("3")
@@ -561,7 +561,7 @@ def process_text_on_page(index, pagetitle, text):
             lemma = newlemma
             t.add("3", lemma)
 
-    subsections[k] = unicode(parsed)
+    subsections[k] = str(parsed)
 
   secbody = "".join(subsections)
   # Strip extra newlines added to secbody

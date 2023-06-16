@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, tname, msg, errmsg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errpagemsg(txt):
@@ -18,13 +18,13 @@ def process_page(page, index, parsed):
 
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     if tname(t) in ["ru-conj", "ru-conj-old", "User:Benwing2/ru-conj",
         "User:Benwing2/ru-conj-old"]:
       t.add("1", getparam(t, "1").replace("-refl", ""))
     elif tname(t) == "temp" and getparam(t, "1") == "ru-conj":
       t.add("2", getparam(t, "2").replace("-refl", ""))
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       notes.append("remove -refl from verb type")
       pagemsg("Replaced %s with %s" % (origt, newt))

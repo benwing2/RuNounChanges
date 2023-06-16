@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, fix_indeclinable):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   subpagetitle = re.sub(".*:", "", pagetitle)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -19,7 +19,7 @@ def process_page(page, index, fix_indeclinable):
     return
 
   notes = []
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
 
   def frob_gender_param(t, param):
@@ -30,8 +30,8 @@ def process_page(page, index, fix_indeclinable):
       t.add(param, "n-in-p")
 
   for t in parsed.filter_templates():
-    if unicode(t.name) in ["ru-noun", "ru-proper noun"]:
-      origt = unicode(t)
+    if str(t.name) in ["ru-noun", "ru-proper noun"]:
+      origt = str(t)
       frob_gender_param(t, "2")
       i = 2
       while True:
@@ -40,7 +40,7 @@ def process_page(page, index, fix_indeclinable):
           i += 1
         else:
           break
-      if origt != unicode(t):
+      if origt != str(t):
         param3 = getparam(t, "3")
         if param3 != "-":
           if fix_indeclinable:
@@ -50,18 +50,18 @@ def process_page(page, index, fix_indeclinable):
             else:
               t.add("3", "-")
               notes.append("make indeclinable")
-              pagemsg("Making indeclinable: %s" % unicode(t))
+              pagemsg("Making indeclinable: %s" % str(t))
           else:
             pagemsg("WARNING: Would add inanimacy to neuter, but isn't marked as indeclinable: %s" % origt)
             return
-        pagemsg("Replacing %s with %s" % (origt, unicode(t)))
+        pagemsg("Replacing %s with %s" % (origt, str(t)))
 
   if notes:
     comment = "Add inanimacy to neuters (%s)" % "; ".join(notes)
   else:
     comment = "Add inanimacy to neuters"
 
-  return unicode(parsed), comment
+  return str(parsed), comment
 
 parser = blib.create_argparser("Make neuter nouns be inanimate",
   include_pagefile=True)

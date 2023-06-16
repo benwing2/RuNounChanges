@@ -13,7 +13,7 @@ langs_to_codes = {}
 
 def process_page(page, index, parsed):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -26,7 +26,7 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title, skipping page")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
@@ -36,8 +36,8 @@ def process_page(page, index, parsed):
     lang = m.group(1)
     parsed = blib.parse_text(sections[j])
     for t in parsed.filter_templates():
-      if unicode(t.name) == "audio" and not getparam(t, "lang"):
-        origt = unicode(t)
+      if str(t.name) == "audio" and not getparam(t, "lang"):
+        origt = str(t)
         if lang in langs_to_codes:
           langcode = langs_to_codes[lang]
         else:
@@ -47,10 +47,10 @@ def process_page(page, index, parsed):
             continue
           langs_to_codes[lang] = langcode
         t.add("lang", langcode)
-        newt = unicode(t)
+        newt = str(t)
         if origt != newt:
           pagemsg("Replaced %s with %s" % (origt, newt))
-    sections[j] = unicode(parsed)
+    sections[j] = str(parsed)
 
   return "".join(sections), "add lang code to audio templates"
 

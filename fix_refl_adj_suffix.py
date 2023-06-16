@@ -9,7 +9,7 @@ from blib import getparam, rmparam, msg, site
 import rulib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -18,24 +18,24 @@ def process_page(page, index, parsed):
   if not pagetitle.endswith(u"ся"):
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   parsed = blib.parse(page)
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    if unicode(t.name) in ["ru-decl-adj", "ru-adj-old"] and getparam(t, "suffix") == u"ся":
+    origt = str(t)
+    if str(t.name) in ["ru-decl-adj", "ru-adj-old"] and getparam(t, "suffix") == u"ся":
       lemma = getparam(t, "1")
       lemma = re.sub(",", u"ся,", lemma)
       lemma = re.sub("$", u"ся", lemma)
       t.add("1", lemma)
       rmparam(t, "suffix")
       notes.append(u"move suffix=ся to lemma")
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Rewrite reflexive adjectival participle declensions involving suffix=ся to put suffix in the lemma",
   include_pagefile=True)

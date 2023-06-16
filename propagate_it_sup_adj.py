@@ -8,7 +8,7 @@ from blib import getparam, rmparam, tname, msg, errandmsg, site
 
 def process_lemma_page(page, index, form):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -16,7 +16,7 @@ def process_lemma_page(page, index, form):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   notes = []
 
@@ -28,13 +28,13 @@ def process_lemma_page(page, index, form):
     if tn == "it-adj":
       if it_adj_template:
         pagemsg("WARNING: Saw multiple adjective headword templates in subsection, %s and %s, skipping" % (
-          unicode(it_adj_template), unicode(t)))
+          str(it_adj_template), str(t)))
         return
       it_adj_template = t
     if tn == "it-pp":
       if it_part_template:
         pagemsg("WARNING: Saw multiple adjective headword templates in subsection, %s and %s, skipping" % (
-          unicode(it_part_template), unicode(t)))
+          str(it_part_template), str(t)))
         return
       it_part_template = t
   if not it_adj_template and not it_part_template:
@@ -43,21 +43,21 @@ def process_lemma_page(page, index, form):
   if it_part_template:
     if it_adj_template:
       pagemsg("WARNING: Saw both %s and %s, choosing adjective template" % (
-        unicode(it_adj_template), unicode(it_part_template)))
+        str(it_adj_template), str(it_part_template)))
       template = it_adj_template
     else:
       template = it_part_template
   else:
     template = it_adj_template
   if getparam(template, "sup"):
-    pagemsg("Already saw sup=: %s" % unicode(template))
+    pagemsg("Already saw sup=: %s" % str(template))
   else:
-    origt = unicode(template)
+    origt = str(template)
     template.add("sup", form)
-    pagemsg("Replaced %s with %s" % (origt, unicode(template)))
+    pagemsg("Replaced %s with %s" % (origt, str(template)))
     notes.append("add sup=%s to {{%s}}" % (form, tname(template)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 def process_text_on_non_lemma_page(index, pagetitle, text):
   global args

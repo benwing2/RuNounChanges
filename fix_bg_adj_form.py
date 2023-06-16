@@ -12,7 +12,7 @@ adjs_to_accents = {}
 
 def snarf_adj_accents():
   for index, page in blib.cat_articles("Bulgarian adjectives"):
-    pagetitle = unicode(page.title())
+    pagetitle = str(page.title())
     def pagemsg(txt):
       msg("Page %s %s: %s" % (index, pagetitle, txt))
     parsed = blib.parse(page)
@@ -20,19 +20,19 @@ def snarf_adj_accents():
       if tname(t) == "bg-adj":
         adj = getparam(t, "1")
         if not adj:
-          pagemsg("WARNING: Missing headword in adj: %s" % unicode(t))
+          pagemsg("WARNING: Missing headword in adj: %s" % str(t))
           continue
         if bglib.needs_accents(adj):
-          pagemsg("WARNING: Adjective %s missing an accent: %s" % (adj, unicode(t)))
+          pagemsg("WARNING: Adjective %s missing an accent: %s" % (adj, str(t)))
           continue
         unaccented_adj = bglib.remove_accents(adj)
         if unaccented_adj in adjs_to_accents and adjs_to_accents[unaccented_adj] != adj:
           pagemsg("WARNING: Two different accents possible for %s: %s and %s: %s" % (
-            unaccented_adj, adjs_to_accents[unaccented_adj], adj, unicode(t)))
+            unaccented_adj, adjs_to_accents[unaccented_adj], adj, str(t)))
         adjs_to_accents[unaccented_adj] = adj
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -44,11 +44,11 @@ def process_page(page, index, parsed):
 
   for t in parsed.filter_templates():
     if tname(t) == "bg-adj-form":
-      origt = unicode(t)
+      origt = str(t)
       must_continue = False
       for param in t.params:
         if pname(param) not in ["1", "2", "3", "head"]:
-          pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pname(param), unicode(param.value), origt))
+          pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pname(param), str(param.value), origt))
           must_continue = True
           break
       if must_continue:
@@ -67,12 +67,12 @@ def process_page(page, index, parsed):
       else:
         if bglib.needs_accents(pagetitle):
           pagemsg("WARNING: Can't add head= to {{bg-adj-form}} missing it because pagetitle is multisyllabic: %s" %
-              unicode(t))
+              str(t))
         else:
           t.add("head", pagetitle)
       if g:
         t.add("g", g)
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
       notes.append("replace {{bg-adj-form}} with {{head|bg|adjective form}}")
 
   headt = None
@@ -81,14 +81,14 @@ def process_page(page, index, parsed):
   saw_inflt = False
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     saw_infl = False
     already_fetched_forms = False
     if tn == "head" and getparam(t, "1") == "bg" and getparam(t, "2") == "adjective form":
       saw_headt = True
       if headt and not saw_infl_after_head:
         pagemsg("WARNING: Saw two head templates %s and %s without intervening inflection" % (
-          unicode(headt), origt))
+          str(headt), origt))
       saw_infl_after_head = False
       headt = t
     if tn == "bg-adj form of":
@@ -99,7 +99,7 @@ def process_page(page, index, parsed):
       must_continue = False
       for param in t.params:
         if pname(param) not in ["1", "2", "3", "adj"]:
-          pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pname(param), unicode(param.value), origt))
+          pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pname(param), str(param.value), origt))
           must_continue = True
           break
       if must_continue:
@@ -151,16 +151,16 @@ def process_page(page, index, parsed):
       t.add("3", "")
       for i, infl in enumerate(infls):
         t.add(str(i + 4), infl)
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
       notes.append("convert {{bg-adj form of}} to {{inflection of}}")
       tn = tname(t)
     elif tn == "inflection of" and getparam(t, "1") == "bg":
       saw_inflt = True
 
   if saw_headt and not saw_inflt:
-    pagemsg("WARNING: Saw head template %s but no inflection template" % unicode(headt))
+    pagemsg("WARNING: Saw head template %s but no inflection template" % str(headt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Convert Bulgarian adjective forms to standard templates",
     include_pagefile=True)

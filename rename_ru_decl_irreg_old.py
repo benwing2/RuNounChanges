@@ -17,7 +17,7 @@ import blib
 from blib import getparam, rmparam, tname, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -28,7 +28,7 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title, skipping page")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   parsed = blib.parse_text(text)
@@ -61,7 +61,7 @@ def process_page(page, index, parsed):
         newval = "1"
       if newname:
         notes.append("renamed %s -> %s|%s=%s" % (tname(t), newname, newarg, newval))
-        has_newline = "" #"\n" if "\n" in unicode(t.name) else ""
+        has_newline = "" #"\n" if "\n" in str(t.name) else ""
         t.name = newname
         if t.has("1"):
           before = "1"
@@ -69,14 +69,14 @@ def process_page(page, index, parsed):
           before = "nom_m"
         else:
           pagemsg("WARNING: Don't know where to insert %s=%s, inserting at end: %s" % (
-            newarg, newval, unicode(t)))
+            newarg, newval, str(t)))
           before = None
         if before:
           t.add(newarg, newval + has_newline, before=before)
         else:
           t.add(newarg, newval + has_newline)
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Rename declension templates for irregular and old (pre-reform) nouns",
   include_pagefile=True)

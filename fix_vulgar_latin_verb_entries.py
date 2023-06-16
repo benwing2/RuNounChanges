@@ -9,7 +9,7 @@ from blib import getparam, rmparam, tname, msg, errandmsg, site
 import lalib
 
 def process_page(page, index, template):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -19,7 +19,7 @@ def process_page(page, index, template):
 
   notes = []
 
-  text = unicode(page.text)
+  text = str(page.text)
   if "{{la-verb|" in text:
     newtext = re.sub(r"\{\{la-verb\|.*?\}\}", template, text, 1)
     if newtext != text:

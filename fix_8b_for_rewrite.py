@@ -9,7 +9,7 @@ from blib import getparam, rmparam, msg, errmsg, site
 import rulib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -18,8 +18,8 @@ def process_page(page, index, parsed):
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    if unicode(t.name) in ["ru-conj", "ru-conj-old"]:
+    origt = str(t)
+    if str(t.name) in ["ru-conj", "ru-conj-old"]:
       param1 = getparam(t, "1")
       param2 = getparam(t, "2")
       if not param2.startswith("8b"):
@@ -40,7 +40,7 @@ def process_page(page, index, parsed):
       # Fetch non-numbered params.
       non_numbered_params = []
       for param in t.params:
-        pname = unicode(param.name)
+        pname = str(param.name)
         if not re.search(r"^[0-9]+$", pname) and pname not in ["lang", "nocat", "tr"]:
           non_numbered_params.append((pname, param.value))
       # Erase all params.
@@ -55,12 +55,12 @@ def process_page(page, index, parsed):
       # Put back non-numbered params.
       for name, value in non_numbered_params:
         t.add(name, value)
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
       notes.append("rewrite class 8b verb to correspond to module changes")
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Rewrite class 8b verbs to correspond to module changes",
   include_pagefile=True)

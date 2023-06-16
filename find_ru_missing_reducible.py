@@ -29,8 +29,8 @@ def process_text_on_page(index, pagetitle, text):
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
     tn = tname(t)
-    if tn == "ru-noun-table" and "*" not in unicode(t):
-      pagemsg("WARNING: Likely incorrectly-declined reducible: %s" % unicode(t))
+    if tn == "ru-noun-table" and "*" not in str(t):
+      pagemsg("WARNING: Likely incorrectly-declined reducible: %s" % str(t))
 
 parser = blib.create_argparser("Find places where reduciible * notation is likely missing in Russian noun declensions",
     include_pagefile=True, include_stdin=True)

@@ -229,7 +229,7 @@ def lookup_heads_and_inflections(pagename, pagemsg):
           accented_cache[pagename] = None
         return False, None
     except Exception as e:
-      pagemsg("WARNING: lookup_heads_and_inflections: Error checking page existence: %s" % unicode(e))
+      pagemsg("WARNING: lookup_heads_and_inflections: Error checking page existence: %s" % str(e))
       if not global_disable_cache:
         accented_cache[pagename] = None
       return False, None
@@ -247,7 +247,7 @@ def lookup_heads_and_inflections(pagename, pagemsg):
     adj_forms = set()
 
     foundrussian = False
-    sections = re.split("(^==[^=]*==\n)", unicode(page.text), 0, re.M)
+    sections = re.split("(^==[^=]*==\n)", str(page.text), 0, re.M)
 
     for j in range(2, len(sections), 2):
       if sections[j-1] == "==Russian==\n":
@@ -267,7 +267,7 @@ def lookup_heads_and_inflections(pagename, pagemsg):
             val_to_add, tr = remove_monosyllabic_accents(val_to_add, tr)
             this_heads.add((val_to_add, tr, is_lemma))
           for t in parsed.filter_templates():
-            tname = unicode(t.name)
+            tname = str(t.name)
             check_addl_heads = False
             if tname in ru_head_templates:
               is_lemma = tname in ru_lemma_templates
@@ -304,10 +304,10 @@ def lookup_heads_and_inflections(pagename, pagemsg):
                 if headn:
                   add(headn, getparam(t, "tr" + str(i)), is_lemma)
             elif tname == "ru-decl-adj":
-              result = expand_text(re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", unicode(t)))
+              result = expand_text(re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms", str(t)))
               if not result:
                 pagemsg("WARNING: lookup_heads_and_inflections: Error expanding template %s, page %s" %
-                  (unicode(t), pagename))
+                  (str(t), pagename))
               else:
                 args = blib.split_generate_args(result)
                 for value in args.itervalues():
@@ -326,10 +326,10 @@ def lookup_heads_and_inflections(pagename, pagemsg):
       # If no lemmas or inflections found, check for alt-ё templates.
       # If the term is a non-ё variant of a single term with ё, look up
       # and return the heads and inflections on that page.
-      parsed = blib.parse_text(unicode(page.text))
+      parsed = blib.parse_text(str(page.text))
       yo_pages = set()
       for t in parsed.filter_templates():
-        if unicode(t.name) in alt_yo_templates:
+        if str(t.name) in alt_yo_templates:
           yo_pages.add(getparam(t, "1"))
       if len(yo_pages) > 1:
         pagemsg(u"WARNING: lookup_heads_and_inflections: Found multiple alt-ё templates for different lemmas: %s" %

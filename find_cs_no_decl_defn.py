@@ -27,11 +27,11 @@ def process_text_on_page(index, pagetitle, text):
     if re.search("==(Noun|Proper noun)==", subsections[k - 1]):
       parsed = blib.parse_text(subsections[k])
       for t in parsed.filter_templates():
-        origt = unicode(t)
+        origt = str(t)
         tn = tname(t)
         if tn in ["cs-noun", "cs-proper noun"]:
           if headt is not None:
-            pagemsg("WARNING: Saw two headwords %s and %s" % (unicode(headt), unicode(t)))
+            pagemsg("WARNING: Saw two headwords %s and %s" % (str(headt), str(t)))
           headt = t
           genders = blib.fetch_param_chain(t, "1", "g")
           defns = blib.find_defns(subsections[k], "la")
@@ -42,8 +42,8 @@ def process_text_on_page(index, pagetitle, text):
       m = re.search(r"\{\{rfinfl\|cs\|[^{}]*\}\}", subsections[k])
       assert m
       rfinfl = m.group(0)
-      pagemsg("<from> %s <to> %s <end> <from> %s <to> %s <end> gender: %s; defn: %s" % (rfinfl, rfinfl, unicode(headt),
-        unicode(headt), ",".join(genders), ";".join(defns)))
+      pagemsg("<from> %s <to> %s <end> <from> %s <to> %s <end> gender: %s; defn: %s" % (rfinfl, rfinfl, str(headt),
+        str(headt), ",".join(genders), ";".join(defns)))
 
 parser = blib.create_argparser("Find Czech nouns needing declension and output corresponding gender and definition",
     include_pagefile=True, include_stdin=True)

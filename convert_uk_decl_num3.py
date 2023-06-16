@@ -17,7 +17,7 @@ def process_text_on_page(index, pagetitle, text):
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     def getp(param):
       return getparam(t, param)
     if tn == "uk-decl-num3":
@@ -35,7 +35,7 @@ def process_text_on_page(index, pagetitle, text):
           acc_in, acc_an = acc_parts
         for param in t.params:
           pn = pname(param)
-          pv = unicode(param.value)
+          pv = str(param.value)
           if not re.search("^[1-6]$", pn):
             pagemsg("WARNING: Unrecognized param: %s=%s" % (pn, pv))
             return
@@ -50,9 +50,9 @@ def process_text_on_page(index, pagetitle, text):
         t.add("ins_p", ins + "\n", preserve_spacing=False)
         t.add("loc_p", loc + "\n", preserve_spacing=False)
         notes.append("replace {{uk-decl-num3}} with {{uk-adecl-manual}}")
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{uk-decl-num3}} to {{uk-adecl-manual}}", include_pagefile=True, include_stdin=True)
 args = parser.parse_args()

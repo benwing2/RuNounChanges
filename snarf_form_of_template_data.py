@@ -22,14 +22,14 @@ def process_text_on_page(index, pagetitle, text):
   for t in parsed.filter_templates():
     def getp(param):
       return getparam(t, param)
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "#invoke:form of/templates":
       if saw_invoke_form_of_templates:
         pagemsg("WARNING: Saw two module invocations of [[Module:form of/templates]]")
         return
       if getp("lang"):
-        pagemsg("WARNING: Saw lang-specific form of template: %s" % unicode(t))
+        pagemsg("WARNING: Saw lang-specific form of template: %s" % str(t))
         return
       if getp("withcap"):
         props["withcap"] = True
@@ -58,7 +58,7 @@ def process_text_on_page(index, pagetitle, text):
     return
   aliases = []
   for i, subpage in blib.references(pagetitle, namespaces=[u"Template"], only_template_inclusion=False, filter_redirects=True):
-    alias = unicode(subpage.title())
+    alias = str(subpage.title())
     num_refs = len(list(blib.references(alias, namespaces=[0])))
     pagemsg("Found alias '%s', num_refs=%s" % (alias, num_refs))
     aliases.append(re.sub("^Template:", "", alias))

@@ -9,7 +9,7 @@ from blib import getparam, rmparam, tname, pname, msg, site
 import uklib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -19,7 +19,7 @@ def process_page(page, index, parsed):
 
   head = None
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "uk-noun":
       gen = blib.fetch_param_chain(t, "3", "gen")
@@ -32,11 +32,11 @@ def process_page(page, index, parsed):
       if "," not in gens and gens.endswith(u"і"):
         gens += ", " + gens[0:-1] + u"и"
         t.add(str(gensparam), gens)
-    if origt != unicode(t):
+    if origt != str(t):
       notes.append(u"add alternative genitive singular to Ukrainian nouns ending in -сть")
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Add alternative genitive singular to Ukrainian nouns ending in -сть",
     include_pagefile=True)

@@ -30,12 +30,12 @@ def process_text_on_page(index, pagetitle, text):
     if tn in ["it-verb", "it-verb-rfc", "it-conj", "it-conj-rfc"]:
       conj = getp("1")
       if "[r:" in conj or "[ref:" in conj:
-        pagemsg("Found conjugation template with reference: %s" % unicode(t))
+        pagemsg("Found conjugation template with reference: %s" % str(t))
         needs_refs = True
     elif tn in ["it-IPA", "it-pr"]:
       respelling = getp("1")
       if "<r:" in respelling or "<ref:" in respelling:
-        pagemsg("Found pronunciation template with reference: %s" % unicode(t))
+        pagemsg("Found pronunciation template with reference: %s" % str(t))
         needs_refs = True
 
   if needs_refs:

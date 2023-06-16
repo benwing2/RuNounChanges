@@ -9,7 +9,7 @@ from blib import getparam, rmparam, tname, msg, site
 import lalib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -26,12 +26,12 @@ def process_page(page, index, parsed):
       param1 = getparam(t, "1")
       newparam1 = re.sub(r"^(a[bd]|ob|sub)\.([lr])", r"\1\2", param1)
       if newparam1 != param1:
-        origt = unicode(t)
+        origt = str(t)
         t.add("1", newparam1)
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("remove unnecessary period in %s in {{la-IPA}}" % param1)
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Remove extraneous dot in {{la-IPA}} pronunciation",
     include_pagefile=True)

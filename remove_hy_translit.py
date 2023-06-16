@@ -98,7 +98,7 @@ def remove_translit(params, startFrom, upTo):
 
     params_removed = []
     for t in text.filter_templates():
-      tname = unicode(t.name)
+      tname = str(t.name)
       def getp(param):
         return getparam(t, param)
       def doparam(param, value=None):
@@ -118,27 +118,27 @@ def remove_translit(params, startFrom, upTo):
               getp("1") == "grc")
           has_nwc = has_non_western_chars(val)
           if val == "-":
-            pagemsg("Not removing %s=-: %s" % (param, unicode(t)))
+            pagemsg("Not removing %s=-: %s" % (param, str(t)))
           elif has_nwc and not param.startswith("tr"):
             pagemsg("WARNING: Value %s=%s has non-Western chars in it, not removing: %s" %
-                (param, val, unicode(t)))
+                (param, val, str(t)))
           elif is_ignore_prefix:
             pagemsg("Not removing %s=%s from page in to-ignore category: %s" % (
-              param, val, unicode(t)))
+              param, val, str(t)))
           # We don't need to do accented chars because they are normalized into
           # char with macron + combining accent; the only combined macro/accent
           # single chars are ḗ and ṓ
           elif is_grc and re.search(ur"[āīūĀĪŪ]", val):
             pagemsg("WARNING: grc and value %s=%s has long a/i/u in it, not removing: %s" %
-                (param, val, unicode(t)))
+                (param, val, str(t)))
           elif is_grc and re.search(ur"[ăĭŭĂĬŬ]", val):
             pagemsg("WARNING: grc and value %s=%s has a/i/u with breve in it, not removing: %s" %
-                (param, val, unicode(t)))
+                (param, val, str(t)))
           else:
             if has_nwc:
               pagemsg("NOTE: Value %s=%s has non-Western chars but removing anyway because starts with 'tr': %s" %
-                  (param, val, unicode(t)))
-            pagemsg("Removed %s=%s: %s" % (param, val, unicode(t)))
+                  (param, val, str(t)))
+            pagemsg("Removed %s=%s: %s" % (param, val, str(t)))
             if value is None:
               tempparam = "%s.%s" % (tname, param)
             else:
@@ -252,7 +252,7 @@ def remove_translit(params, startFrom, upTo):
           #"link", "mention", "head", "ux"] and
           getp("1") in remove_tr_langs):
         if tname == "head" and not params.do_head:
-          pagemsg("Not removing tr= from {{head|...}}: %s" % unicode(t))
+          pagemsg("Not removing tr= from {{head|...}}: %s" % str(t))
         else:
           doparam("tr")
       if (#tname in ["term", "usex"] and

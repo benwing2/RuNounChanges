@@ -22,7 +22,7 @@ def process_text_on_page(index, pagetitle, text):
 
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "autocat":
       blib.set_template_name(t, "auto cat")
@@ -48,18 +48,18 @@ def process_text_on_page(index, pagetitle, text):
       non_numbered_params = []
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value).strip()
+        pv = str(param.value).strip()
         if pn == "1" or not pv:
           pass
         elif re.search("^[0-9]+$", pn):
           numbered_params.append(pv)
         elif pn not in ["setwiki", "setwikt", "setsister", "entryname"]:
-          pagemsg("WARNING: Unrecognized param %s=%s, skipping: %s" % (pn, pv, unicode(t)))
+          pagemsg("WARNING: Unrecognized param %s=%s, skipping: %s" % (pn, pv, str(t)))
           return
         elif (pn in ["setwiki", "setsister"] and pv == langname + " language" or
             pn == "entryname" and pv == langname or
             pn == "setwikt" and pv == langobj["code"]):
-          pagemsg("WARNING: Unnecessary param %s=%s, omitting: %s" % (pn, pv, unicode(t)))
+          pagemsg("WARNING: Unnecessary param %s=%s, omitting: %s" % (pn, pv, str(t)))
         else:
           non_numbered_params.append((pn, pv))
       if len(numbered_params) == 0:
@@ -76,10 +76,10 @@ def process_text_on_page(index, pagetitle, text):
         t.add(name, value, preserve_spacing=False)
       notes.append("convert {{%s}} to {{auto cat}}" % tn)
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{langcatboiler}} to {{auto cat}}",
     include_pagefile=True, include_stdin=True)

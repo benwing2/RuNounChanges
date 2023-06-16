@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site, tname
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -16,7 +16,7 @@ def process_page(page, index, parsed):
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     if (tn == "head" and getparam(t, "1") == "it" and getparam(t, "2") in ["noun", "nouns"] and
         getparam(t, "3") == "invariable"):
       must_continue = False
@@ -24,8 +24,8 @@ def process_page(page, index, parsed):
       g2 = None
       head = None
       for param in t.params:
-        pname = unicode(param.name).strip()
-        pval = unicode(param.value).strip()
+        pname = str(param.name).strip()
+        pval = str(param.value).strip()
         showkey = param.showkey
         if pname in ["1", "2", "3"]:
           pass
@@ -36,15 +36,15 @@ def process_page(page, index, parsed):
         elif pname == "head":
           head = pval
         else:
-          pagemsg("WARNING: Saw unrecognized param %s: %s" % (pname, unicode(t)))
+          pagemsg("WARNING: Saw unrecognized param %s: %s" % (pname, str(t)))
           must_continue = True
           break
       if must_continue:
         continue
       if not g:
-        pagemsg("WARNING: Didn't see gender: %s" % unicode(t))
+        pagemsg("WARNING: Didn't see gender: %s" % str(t))
         continue
-      origt = unicode(t)
+      origt = str(t)
       del t.params[:]
       blib.set_template_name(t, "it-noun")
       if head:
@@ -54,11 +54,11 @@ def process_page(page, index, parsed):
         t.add("g2", g2)
       t.add("2", "-")
       notes.append("replace {{head|it|noun|...|invariable}} with {{it-noun|...|-}}")
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Replace {{head|it|noun|...|invariable}} with {{it-noun|...|-}}",
   include_pagefile=True)

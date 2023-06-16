@@ -22,7 +22,7 @@ def process_text_on_page(index, pagetitle, text):
   parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
 
     def feminize_noun(noun):
@@ -32,20 +32,20 @@ def process_text_on_page(index, pagetitle, text):
         return noun + "a"
       if noun.endswith("o"):
         return noun[:-1] + "a"
-      pagemsg("WARNING: Don't know how to compute female equivalent of %s: %s" % (noun, unicode(t)))
+      pagemsg("WARNING: Don't know how to compute female equivalent of %s: %s" % (noun, str(t)))
       return None
 
     def singularize_feminine_noun(noun):
       if noun.endswith("as"):
         return noun[:-1]
-      pagemsg("WARNING: Don't know how to compute singular equivalent of feminine noun %s: %s" % (noun, unicode(t)))
+      pagemsg("WARNING: Don't know how to compute singular equivalent of feminine noun %s: %s" % (noun, str(t)))
       return None
 
     if tn == "pt-noun form of":
       for param in t.params:
         pn = pname(param)
         if pn not in ["1", "2", "3", "4", "t", "nocap", "nodot"]:
-          pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pn, unicode(param.value, origt)))
+          pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pn, str(param.value, origt)))
           return
 
       lemma = blib.remove_links(getparam(t, "1"))
@@ -86,10 +86,10 @@ def process_text_on_page(index, pagetitle, text):
         t.add("3", "")
         t.add("4", gloss)
       notes.append("replace {{pt-noun form of}} with {{%s|pt}}" % newname)
-    if unicode(t) != origt:
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Replace {{pt-noun form of}} with appropriate non-language specific templates",
   include_pagefile=True, include_stdin=True)

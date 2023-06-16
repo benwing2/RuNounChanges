@@ -25,7 +25,7 @@ def process_text_on_page(index, pagetitle, text):
   templates_to_replace = []
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
 
     if tn in ["inflection of"]:
@@ -34,8 +34,8 @@ def process_text_on_page(index, pagetitle, text):
       else:
         term_param = 2
       for param in t.params:
-        pname = unicode(param.name).strip()
-        pval = unicode(param.value).strip()
+        pname = str(param.name).strip()
+        pval = str(param.value).strip()
         if re.search("^[0-9]+$", pname):
           if int(pname) >= term_param + 2:
             if pval in ["and", "or", ";", ";<!--\n-->"] or "/" in pval or "," in pval:

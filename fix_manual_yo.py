@@ -9,13 +9,13 @@ from blib import getparam, rmparam, msg, site
 import rulib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   newtext = text
 
   newtext = re.sub(ur"\{\{ru-noun form\|[^|=]*\|([^|=]*)\|tr=.*?\}\}\n\n# \{\{alternative (?:form|spelling) of\|(.*?)\|lang=ru\}\}\n\n\[\[Category:Russian spellings with е instead of ё\]\]",

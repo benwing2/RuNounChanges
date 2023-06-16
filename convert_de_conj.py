@@ -23,12 +23,12 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
-  old_generate_template = re.sub(r"\}\}$", "|generate_forms=1}}", unicode(origt))
+  old_generate_template = re.sub(r"\}\}$", "|generate_forms=1}}", str(origt))
   old_result = expand_text(old_generate_template)
   if not old_result:
     return None
 
-  new_generate_template = re.sub(r"^\{\{de-conj\|", "{{User:Benwing2/de-generate-verb-forms|", unicode(newt))
+  new_generate_template = re.sub(r"^\{\{de-conj\|", "{{User:Benwing2/de-generate-verb-forms|", str(newt))
   new_result = expand_text(new_generate_template)
   if not new_result:
     return None
@@ -96,17 +96,17 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
   for form in set(old_forms.keys() + new_forms.keys()):
     if form not in new_forms:
       pagemsg("WARNING: for original %s and new %s, form %s=%s in old forms but missing in new forms" % (
-        unicode(origt), unicode(newt), form, old_forms[form]))
+        str(origt), str(newt), form, old_forms[form]))
       return False
     if form not in old_forms:
       pagemsg("WARNING: for original %s and new %s, form %s=%s in new forms but missing in old forms" % (
-        unicode(origt), unicode(newt), form, new_forms[form]))
+        str(origt), str(newt), form, new_forms[form]))
       return False
     if set(new_forms[form].split(",")) != set(old_forms[form].split(",")):
       pagemsg("WARNING: for original %s and new %s, form %s=%s in old forms but =%s in new forms" % (
-        unicode(origt), unicode(newt), form, old_forms[form], new_forms[form]))
+        str(origt), str(newt), form, old_forms[form], new_forms[form]))
       return False
-  pagemsg("%s and %s have same forms" % (unicode(origt), unicode(newt)))
+  pagemsg("%s and %s have same forms" % (str(origt), str(newt)))
   return True
 
 def process_text_on_page(index, pagetitle, text):
@@ -123,7 +123,7 @@ def process_text_on_page(index, pagetitle, text):
 
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     newarg1 = None
     if tn == "de-conj-strong":
@@ -258,13 +258,13 @@ def process_text_on_page(index, pagetitle, text):
       for param in t.params:
         pn = pname(param)
         if pn not in ["1", "2", "2b", "3", "3b", "4", "5", "6", "7", "7b", "8", "9", "10", "11", "12"]:
-          pagemsg("WARNING: Unrecognized param %s=%s" % (pn, unicode(param.value)))
+          pagemsg("WARNING: Unrecognized param %s=%s" % (pn, str(param.value)))
           must_continue = True
           break
       if must_continue:
         continue
       if args.correct:
-        pagemsg("Would replace %s with {{de-conj|%s}}" % (unicode(t), newarg1))
+        pagemsg("Would replace %s with {{de-conj|%s}}" % (str(t), newarg1))
         maxarg = 0
         # Find maximum argument
         for i in range(1, 13):
@@ -278,7 +278,7 @@ def process_text_on_page(index, pagetitle, text):
         for i in range(maxarg + 1, 13):
           if t.has(str(i)):
             rmparam(t, str(i))
-        if unicode(t) != origt and not notes:
+        if str(t) != origt and not notes:
           notes.append("add missing blank arguments in {{de-conj-strong}}")
         continue
     elif tn == "de-conj-weak":
@@ -314,7 +314,7 @@ def process_text_on_page(index, pagetitle, text):
       for param in t.params:
         pn = pname(param)
         if pn not in ["1", "2", "3", "4", "5", "6", "7"]:
-          pagemsg("WARNING: Unrecognized param %s=%s" % (pn, unicode(param.value)))
+          pagemsg("WARNING: Unrecognized param %s=%s" % (pn, str(param.value)))
           must_continue = True
           break
       if must_continue:
@@ -386,7 +386,7 @@ def process_text_on_page(index, pagetitle, text):
       for param in t.params:
         pn = pname(param)
         if pn not in ["1", "2", "3", "4", "5", "6", "7", "pref"]:
-          pagemsg("WARNING: Unrecognized param %s=%s" % (pn, unicode(param.value)))
+          pagemsg("WARNING: Unrecognized param %s=%s" % (pn, str(param.value)))
           must_continue = True
           break
       if must_continue:
@@ -402,10 +402,10 @@ def process_text_on_page(index, pagetitle, text):
         if newarg1:
           t.add("1", newarg1)
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{de-conj-strong}} to {{de-conj}}",
     include_pagefile=True, include_stdin=True)

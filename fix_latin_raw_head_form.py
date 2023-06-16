@@ -43,20 +43,20 @@ def process_text_on_page(index, pagename, text):
     if tn == "head" and getparam(t, "1") == "la":
       pos = getparam(t, "2")
       if pos not in pos_to_template:
-        pagemsg("WARNING: Saw unrecognized part of speech %s: %s" % (pos, unicode(t)))
+        pagemsg("WARNING: Saw unrecognized part of speech %s: %s" % (pos, str(t)))
         continue
       if getparam(t, "3") or getparam(t, "head"):
-        pagemsg("WARNING: Saw 3= or head=: %s" % unicode(t))
+        pagemsg("WARNING: Saw 3= or head=: %s" % str(t))
         continue
-      origt = unicode(t)
+      origt = str(t)
       t.add("1", pagename)
       blib.set_template_name(t, pos_to_template[pos])
       rmparam(t, "2")
       t.add("FIXME", "1")
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
       notes.append("replace {{head|la|%s}} with {{%s}}" % (pos, tname(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Fix Latin raw-form {{head|la|... form}} usages",
     include_pagefile=True, include_stdin=True)

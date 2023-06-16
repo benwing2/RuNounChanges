@@ -24,9 +24,9 @@ def process_text_on_page(index, pagetitle, text):
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     if tn in ["it-IPA"]:
-      pagemsg("Saw %s" % unicode(t))
+      pagemsg("Saw %s" % str(t))
       default_pron_phonemic = None
       prons = []
       for i in range(1, 11):
@@ -69,16 +69,16 @@ def process_text_on_page(index, pagetitle, text):
           add(pron)
       if defaulted_prons == ["+"]:
         blib.remove_param_chain(t, "1", "")
-        if unicode(t) != origt:
+        if str(t) != origt:
           notes.append("remove redundant respelling(s) from {{it-IPA}}")
       else:
         blib.set_param_chain(t, defaulted_prons, "1", "")
-        if unicode(t) != origt:
+        if str(t) != origt:
           notes.append("replace default respelling(s) with single-vowel spec or '+' in {{it-IPA}}")
-      if unicode(t) != origt:
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if str(t) != origt:
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Remove redundant respellings in {{it-IPA}}",
   include_pagefile=True, include_stdin=True)

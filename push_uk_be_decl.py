@@ -70,7 +70,7 @@ def compare_forms(origforms, replforms, pagemsg):
   return True
 
 def replace_decl(page, index, parsed, decl, declforms):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   pagemsg("Processing decl %s" % decl)
@@ -109,15 +109,15 @@ def replace_decl(page, index, parsed, decl, declforms):
       i += 1
 
     if compare_forms(forms, declforms, pagemsg):
-      origt = unicode(t)
+      origt = str(t)
       t.name = args.lang + "-ndecl"
       del t.params[:]
       t.add("1", decl)
-      newt = unicode(t)
+      newt = str(t)
       pagemsg("Replaced %s with %s" % (origt, newt))
       notes.append("replace {{%s|...}} with %s" % (tn, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Replace manual declensions with given automatic ones")
 parser.add_argument("--declfile", help="File containing replacement declensions", required=True)

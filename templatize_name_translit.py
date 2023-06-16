@@ -46,13 +46,13 @@ def process_text_on_page(index, pagetitle, text):
         return origline
       if alt:
         pagemsg("WARNING: Can't handle alt=%s in %s: <from> %s <to> %s <end>" %
-          (alt, unicode(t), origline, origline))
+          (alt, str(t), origline, origline))
         return origline
       for param in t.params:
         pn = pname(param)
         if pn not in ["1", "2", "3", "4", "sc"]:
           pagemsg("WARNING: Can't handle %s=%s in %s: <from> %s <to> %s <end>" %
-            (pn, unicode(param.value), origline, origline))
+            (pn, str(param.value), origline, origline))
           return origline
       return "{{name translit|%s|%s|%s|type=%s%s}}%s" % (thislangcode, source_lang_code, name, name_type,
           "|eq=%s" % eq if eq else "", period)

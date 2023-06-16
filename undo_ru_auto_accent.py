@@ -30,8 +30,8 @@ def undo_ru_auto_accent(save, verbose, direcfile, start, end):
       continue
     def undo_one_page_ru_auto_accent(page, index, text):
       def pagemsg(txt):
-        msg("Page %s %s: %s" % (index, unicode(page.title()), txt))
-      text = unicode(text)
+        msg("Page %s %s: %s" % (index, str(page.title()), txt))
+      text = str(text)
       if not re.search("^#\*:* *%s" % re.escape(repl_template), text, re.M):
         return None, ""
       found_orig_template = orig_template in text

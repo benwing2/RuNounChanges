@@ -23,7 +23,7 @@ def process_text_on_page(index, pagetitle, pagetext):
   for t in parsed.filter_templates():
     def getp(param):
       return getparam(t, param)
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in wikipedia_box_templates or tn in interproject_templates_lang_in_1 or tn in interproject_templates_lang_in_lang:
       if t.has("disambiguation"):
@@ -52,7 +52,7 @@ def process_text_on_page(index, pagetitle, pagetext):
             named_params = []
             for param in t.params:
               pn = pname(param)
-              pv = unicode(param.value)
+              pv = str(param.value)
               if pn not in ["1", "2", "3", "dab"]:
                 named_params.append((pn, pv))
             del t.params[:]
@@ -78,7 +78,7 @@ def process_text_on_page(index, pagetitle, pagetext):
             named_params = []
             for param in t.params:
               pn = pname(param)
-              pv = unicode(param.value)
+              pv = str(param.value)
               if pn not in ["1", "2", "dab"]:
                 named_params.append((pn, pv))
             del t.params[:]
@@ -90,11 +90,11 @@ def process_text_on_page(index, pagetitle, pagetext):
               t.add(pn, pv, preserve_spacing=False)
             notes.append("eliminate dab= in {{%s}}" % tn)
 
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
   
 parser = blib.create_argparser("Eliminate dab= in interproject templates", include_pagefile=True, include_stdin=True)
 args = parser.parse_args()

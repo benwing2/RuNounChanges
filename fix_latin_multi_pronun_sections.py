@@ -9,13 +9,13 @@ from blib import getparam, rmparam, tname, msg, site
 import lalib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
 
   retval = lalib.find_latin_section(text, pagemsg)
@@ -118,7 +118,7 @@ def process_page(page, index, parsed):
       for t in parsed.filter_templates():
         if tname(t) == "la-IPA":
           t.add("ann", "1")
-      subsections[2 + offset] = unicode(parsed)
+      subsections[2 + offset] = str(parsed)
       subsections[2 + offset] = re.sub(r"^\{\{rfc-pron-n\|.*?\}\}\n", "", subsections[2 + offset], 0, re.M)
       del subsections[6 + offset]
       del subsections[5 + offset]

@@ -32,7 +32,7 @@ def process_text_on_page(index, pagetitle, text):
         continue
       if skip_lang_codes and langcode in skip_lang_codes:
         continue
-      expanded = expand_text(unicode(t))
+      expanded = expand_text(str(t))
       if not expanded:
         continue
       for cattext in re.findall(r"\[\[Category:Rhymes:.*?\]\]", expanded):

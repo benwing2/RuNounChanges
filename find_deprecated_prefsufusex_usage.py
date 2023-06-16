@@ -11,7 +11,7 @@ import blib
 from blib import getparam, rmparam, msg, site, tname
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -21,12 +21,12 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title, skipping page")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     if tname(t) == "prefixusex":
       if getparam(t, "1").endswith("-") or getparam(t, "2").endswith("-"):
         pagemsg("WARNING: Has prefix as term: %s" % origt)
@@ -50,7 +50,7 @@ def process_page(page, index, parsed):
         # Fetch remaining non-numbered params.
         non_numbered_params = []
         for param in t.params:
-          pname = unicode(param.name)
+          pname = str(param.name)
           if not re.search(r"^[0-9]+$", pname) and pname not in ["lang", "t1", "gloss1", "t2", "gloss2",
               "alt1", "alt2", "pos1", "pos2", "altpref", "altsuf"]:
             non_numbered_params.append((pname, param.value))
@@ -84,11 +84,11 @@ def process_page(page, index, parsed):
         if getparam(t, "inline"):
           rmparam(t, "inline")
           notes.append("Remove inline= in prefixusex/suffixusex")
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 
 parser = blib.create_argparser('Find deprecated usages of {{prefixusex}} and {{suffixusex}} and fix some of them',

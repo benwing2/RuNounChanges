@@ -7,8 +7,8 @@ import blib
 from blib import getparam, rmparam, msg, errmsg, site, tname
 
 def process_subpage(origpage, origindex, page, index):
-  origpagetitle = unicode(origpage.title())
-  pagetitle = unicode(page.title())
+  origpagetitle = str(origpage.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s %s: %s" % (origindex, origpagetitle, index, pagetitle, txt))
 
@@ -17,7 +17,7 @@ def process_subpage(origpage, origindex, page, index):
 
 def process_page(page, index):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errpagemsg(txt):
@@ -27,7 +27,7 @@ def process_page(page, index):
     pagemsg("Processing references")
   aliases = []
   for i, subpage in blib.references(pagetitle, namespaces=[10], only_template_inclusion=False, filter_redirects=args.redirects_only):
-    aliases.append(unicode(subpage.title()))
+    aliases.append(str(subpage.title()))
     if not args.table_of_uses:
       process_subpage(page, index, subpage, i)
   if args.table_of_uses:

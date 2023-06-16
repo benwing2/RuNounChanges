@@ -16,7 +16,7 @@ def process_text_on_page(index, pagetitle, text):
   parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     def getp(param):
       return getparam(t, param)
@@ -39,10 +39,10 @@ def process_text_on_page(index, pagetitle, text):
       if t.has("gloss") and not gloss:
         notes.append("remove empty gloss=")
       rmparam(t, "gloss")
-    if origt != unicode(t):
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if origt != str(t):
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Clean Lojban lemmas", include_pagefile=True, include_stdin=True)
 args = parser.parse_args()

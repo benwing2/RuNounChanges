@@ -16,13 +16,13 @@ def process_page(page, index, parsed):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   headword_aspects = set()
   found_multiple_headwords = False
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
+    tname = str(t.name)
     if tname in ["ru-verb", "ru-verb-cform"]:
       if headword_aspects:
         found_multiple_headwords = True
@@ -44,7 +44,7 @@ def process_page(page, index, parsed):
             getparam(t, "1"))
       else:
         if not headword_aspects:
-          pagemsg("WARNING: No ru-verb preceding ru-conj: %s" % unicode(t))
+          pagemsg("WARNING: No ru-verb preceding ru-conj: %s" % str(t))
         elif aspect not in headword_aspects:
           pagemsg("WARNING: ru-conj aspect %s not in ru-verb aspect %s" %
               (aspect, ",".join(headword_aspects)))
@@ -57,19 +57,19 @@ def process_page(page, index, parsed):
       pagemsg("WARNING: Multiple aspects in ru-verb, not fixing")
     else:
       for t in parsed.filter_templates():
-        origt = unicode(t)
-        tname = unicode(t.name)
+        origt = str(t)
+        tname = str(t.name)
         if tname in ["ru-conj", "ru-conj-old"]:
 
           param1 = getparam(t, "1")
           param1 = re.sub("^(pf|impf)((-.*)?)$", r"%s\2" % list(headword_aspects)[0], param1)
           t.add("1", param1)
-        newt = unicode(t)
+        newt = str(t)
         if origt != newt:
           pagemsg("Replaced %s with %s" % (origt, newt))
           notes.append("overrode conjugation aspect with %s" % list(headword_aspects)[0])
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Find incorrect Russian verb aspects",
     include_pagefile=True)

@@ -249,11 +249,11 @@ def process_text_on_page(index, pagetitle, text):
       saw_it_pr = False
       pronun_based_respellings = []
       for t in parsed.filter_templates():
-        origt = unicode(t)
+        origt = str(t)
         def tmsg(txt):
           other_templates = []
           for t in all_pronun_templates:
-            thist = unicode(t)
+            thist = str(t)
             if thist != origt:
               other_templates.append(thist)
           pagemsg("%s: %s%s" % (
@@ -393,7 +393,7 @@ def process_text_on_page(index, pagetitle, text):
               pn = pname(param)
               if not re.search("^[0-9]+$", pn) and pn != "nocount":
                 unable[0] = True
-                append_warnings("WARNING: Saw unrecognized param %s=%s" % (pn, unicode(param.value)))
+                append_warnings("WARNING: Saw unrecognized param %s=%s" % (pn, str(param.value)))
           manual_assist = ""
           if unable[0]:
             if pagetitle in ipa_directives:
@@ -423,16 +423,16 @@ def process_text_on_page(index, pagetitle, text):
             blib.set_template_name(t, "it-pr")
             notes.append("replace raw {{IPA|it}} with {{it-pr|%s}}%s" % ("|".join(respellings), manual_assist))
           pronun_based_respellings.extend(respellings)
-        if unicode(t) != origt:
-          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-      subsections[k] = unicode(parsed)
+        if str(t) != origt:
+          pagemsg("Replaced %s with %s" % (origt, str(t)))
+      subsections[k] = str(parsed)
 
       rhymes_template = None
       for t in parsed.filter_templates():
         tn = tname(t)
         if tn in ["rhyme", "rhymes"] and getparam(t, "1") == "it":
           if rhymes_template:
-            pagemsg("WARNING: Saw two {{rhymes|it}} templates: %s and %s" % (unicode(rhymes_template), unicode(t)))
+            pagemsg("WARNING: Saw two {{rhymes|it}} templates: %s and %s" % (str(rhymes_template), str(t)))
           rhymes_template = t
       if rhymes_template:
         rhyme_based_respellings = []
@@ -504,7 +504,7 @@ def process_text_on_page(index, pagetitle, text):
               manual_assist = " (manually assisted)"
               pagemsg("Using manually-specified rhyme-based respelling%s %s; original warnings follow: %s: %s" % (
                 "s" if len(rhyme_based_respellings) > 1 else "", ",".join(rhyme_based_respellings),
-                " ||| ".join(all_warnings), unicode(rhymes_template)))
+                " ||| ".join(all_warnings), str(rhymes_template)))
               subsections[k] = "* {{it-pr|%s}}\n" % ",".join(rhyme_based_respellings) + subsections[k]
               notes.append("add Italian rhyme-based respelling%s %s%s" % (
                 "s" if len(rhyme_based_respellings) > 1 else "", ",".join(rhyme_based_respellings), manual_assist))
@@ -520,7 +520,7 @@ def process_text_on_page(index, pagetitle, text):
 
               pagemsg("<respelling> all: %s <end>%s: <from> %s <to> %s <end>" % (" ".join(rhyme_based_respellings),
                 " " + " ||| ".join(all_warnings) if all_warnings else "",
-                unicode(rhymes_template), unicode(rhymes_template)))
+                str(rhymes_template), str(rhymes_template)))
           else:
             for respelling in rhyme_based_respellings:
               if (not re.search("^qual[0-9]*=", respelling) and pronun_based_respellings and

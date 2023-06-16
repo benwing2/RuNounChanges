@@ -18,7 +18,7 @@ def process_text_on_page(index, pagetitle, text):
   pronuns = []
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     def getp(param):
       return getparam(t, param)
     if tn == "IPA":

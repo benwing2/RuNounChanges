@@ -36,20 +36,20 @@ def process_text_on_page(index, pagetitle, text):
     if tn == "alternative spelling of":
       if saw_altspell:
         pagemsg("WARNING: Saw multiple {{alternative spelling of}}, skipping: %s and %s" % (
-          unicode(saw_altspell), unicode(t)))
+          str(saw_altspell), str(t)))
         return
-      saw_altspell = unicode(t)
+      saw_altspell = str(t)
       if getparam(t, "1") != "ang":
-        pagemsg("WARNING: {{alternative spelling of}} without language 'ang', skipping: %s" % unicode(t))
+        pagemsg("WARNING: {{alternative spelling of}} without language 'ang', skipping: %s" % str(t))
         return
       param2 = getparam(t, "2")
       should_param2 = blib.remove_links(head).replace(u"ƿ", "w")
       if param2 != should_param2:
-        origt = unicode(t)
+        origt = str(t)
         t.add("2", should_param2)
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("fix 2= in {{alternative spelling of}} in wynn Old English entries")
-  text = re.sub("\n\n+", "\n\n", unicode(parsed))
+  text = re.sub("\n\n+", "\n\n", str(parsed))
   if origtext != text and not notes:
     notes.append("condense 3+ newlines to 2")
   return text, notes

@@ -113,7 +113,7 @@ def form_ppp(conjtype, pagetitle, args):
     return None
 
 def process_page(page, index, do_fix):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -122,20 +122,20 @@ def process_page(page, index, do_fix):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
+    tname = str(t.name)
     if tname in ["ru-conj", "ru-conj-old"]:
-      if [x for x in t.params if unicode(x.value) == "or"]:
-        pagemsg("WARNING: Skipping multi-arg conjugation: %s" % unicode(t))
+      if [x for x in t.params if str(x.value) == "or"]:
+        pagemsg("WARNING: Skipping multi-arg conjugation: %s" % str(t))
         continue
       conjtype = getparam(t, "2")
       if tname == "ru-conj":
-        tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t))
+        tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", str(t))
       else:
-        tempcall = re.sub(r"\{\{ru-conj-old", "{{ru-generate-verb-forms|old=y", unicode(t))
+        tempcall = re.sub(r"\{\{ru-conj-old", "{{ru-generate-verb-forms|old=y", str(t))
       result = expand_text(tempcall)
       if not result:
         pagemsg("WARNING: Error generating forms, skipping")
@@ -191,17 +191,17 @@ def process_page(page, index, do_fix):
             pagemsg("WARNING: Something wrong, couldn't remove all PPP forms %s"
                 % ",".join(forms_to_remove))
           curindex = 1
-          origt = unicode(t)
+          origt = str(t)
           for newval in newvals:
             t.add(base + ("" if curindex == 1 else str(curindex)), newval)
             curindex += 1
           for i in range(curindex, 10):
             rmparam(t, base + ("" if i == 1 else str(i)))
-          pagemsg("Replacing %s with %s" % (origt, unicode(t)))
+          pagemsg("Replacing %s with %s" % (origt, str(t)))
           notes.append("removed bad past pasv part(s) %s"
               % ",".join(forms_to_remove))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Find Russian terms with bad past passive participles",
   include_pagefile=True)

@@ -42,11 +42,11 @@ def process_text_on_page(index, pagetitle, text):
   saw_decl = False
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
 
     if tn == "it-IPA":
-      pagemsg("Saw %s" % unicode(t))
+      pagemsg("Saw %s" % str(t))
       if getparam(t, "voiced2"):
         pagemsg("WARNING: Can't yet handle voiced2=%s" % getparam(t, "voiced2"))
         continue
@@ -135,10 +135,10 @@ def process_text_on_page(index, pagetitle, text):
         rmparam(t, "voiced")
         notes.append("remove voiced= in {{it-IPA}}")
 
-    if origt != unicode(t):
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if origt != str(t):
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Add missing stress and z resolution to {{it-IPA}}",
   include_pagefile=True, include_stdin=True)

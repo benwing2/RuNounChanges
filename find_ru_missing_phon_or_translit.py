@@ -45,7 +45,7 @@ def process_text_on_page(index, pagetitle, text):
         found_ru_ipa.append(("nophon", pron))
         prons.append(pron)
         if u"э" in pron:
-          pagemsg("WARNING: Likely missing phon=: %s" % unicode(t))
+          pagemsg("WARNING: Likely missing phon=: %s" % str(t))
       pronwords = re.split("[ -]", pron)
       if len(words) != len(pronwords):
         pagemsg("WARNING: Something wrong, %s words but %s pron words: pron is %s" % (

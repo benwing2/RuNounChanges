@@ -6,7 +6,7 @@ from blib import msg, errmsg, site
 import pywikibot
 
 def process_page(page, index, args, comment):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):

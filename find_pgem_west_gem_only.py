@@ -9,7 +9,7 @@ from blib import getparam, rmparam, msg, site, tname
 import find_regex
 
 def process_page(page, index):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -29,7 +29,7 @@ def process_page(page, index):
         "is", "fo", "nrn", "no", "nb", "nn", "sv", "da",
         "gmq-osw", "gwq-oda", "gmq-bot", "gmq-jmk", "gmq-scy", "gmq-gut", "ovd"
       ]:
-        pagemsg("Saw non-West-Germanic descendant %s" % unicode(t))
+        pagemsg("Saw non-West-Germanic descendant %s" % str(t))
         non_wgem = True
       else:
         wgem.append(desc)

@@ -23,7 +23,7 @@ split_recognized_tag_sets = [
 ]
 
 def fix_new_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -31,7 +31,7 @@ def fix_new_page(page, index, parsed):
 
   pagemsg("Fixing new page")
 
-  origtext = unicode(page.text)
+  origtext = str(page.text)
   text = origtext
   newtext = re.sub("^\{\{also\|.*?\}\}\n", "", text)
   if text != newtext:
@@ -40,7 +40,7 @@ def fix_new_page(page, index, parsed):
 
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "ar-verb-form":
       form = getparam(t, "1")
@@ -52,11 +52,11 @@ def fix_new_page(page, index, parsed):
       form = form + u"ا"
       t.add("1", form)
       notes.append("add missing final alif to form in {{ar-verb-form}}")
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 def convert_etym_subsection_to_single_etymology_section(text):
   subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
@@ -76,7 +76,7 @@ def convert_etym_subsection_to_single_etymology_section(text):
 
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errpagemsg(txt):
@@ -92,7 +92,7 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Page doesn't exist, skipping")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
 
@@ -146,16 +146,16 @@ def process_page(page, index, parsed):
           lang = getparam(t, "1")
           first_tag_param = 4
         if lang != "ar":
-          pagemsg("WARNING: Non-Arabic language in Arabic {{inflection of}} in %s, skipping: %s" % (header, unicode(t)))
+          pagemsg("WARNING: Non-Arabic language in Arabic {{inflection of}} in %s, skipping: %s" % (header, str(t)))
           return False
         tags = []
         for param in t.params:
           pn = pname(param)
-          pv = unicode(param.value).strip()
+          pv = str(param.value).strip()
           if re.search("^[0-9]+$", pn) and int(pn) >= first_tag_param:
             tags.append(pv)
         if tags not in split_recognized_tag_sets:
-          inflection_of_templates_with_unrecognized_tags.append(unicode(t))
+          inflection_of_templates_with_unrecognized_tags.append(str(t))
         else:
           saw_inflection_of_with_recognized_tag = True
 
@@ -174,11 +174,11 @@ def process_page(page, index, parsed):
       if tn == "ar-verb-form":
         form = getparam(t, "1")
         if not form.endswith(u"و") and form.endswith(u"وْ"):
-          pagemsg("WARNING: ar-verb-form form doesn't end with waw in %s with recognized {{inflection of}} tags, skipping: %s" % (header, unicode(t)))
+          pagemsg("WARNING: ar-verb-form form doesn't end with waw in %s with recognized {{inflection of}} tags, skipping: %s" % (header, str(t)))
           return False
         continue
       if tn != "inflection of":
-        pagemsg("WARNING: Unrecognized template in %s with recognized {{inflection of}} tags, skipping: %s" % (header, unicode(t)))
+        pagemsg("WARNING: Unrecognized template in %s with recognized {{inflection of}} tags, skipping: %s" % (header, str(t)))
         return False
     return True
 

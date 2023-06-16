@@ -104,7 +104,7 @@ def process_text_on_page(index, pagetitle, text):
             pn = pname(param)
             if pn not in ["1", "2", "lang"]:
               pagemsg("WARNING: Can't parse Wikipedia link, unrecognized param %s=%s: %s"
-                % unicode(pn, unicode(param.value), linkt))
+                % str(pn, str(param.value), linkt))
               return None
           rawest_toponym = display
           toponym = generate_wikilink(wikilang, link, display)
@@ -234,7 +234,7 @@ def process_text_on_page(index, pagetitle, text):
           elif g in [["mf"], ["mfbysense"], ["m", "f"]]:
             demonym_gender = ""
           elif g not in [["m-p"], ["f-p"], ["mf-p"], ["mfbysense-p"], ["mfequiv"]]:
-            pagemsg("WARNING: Unable to determine demonym gender from headword template: %s" % unicode(t))
+            pagemsg("WARNING: Unable to determine demonym gender from headword template: %s" % str(t))
           break
       if demonym_gender is not None:
         someone_from_re = "(?:(?:someone|(?:a )?person) from|(?:an? )?(?:native or )?(?:resident|inhabitant) (?:of|from))"

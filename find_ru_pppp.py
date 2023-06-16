@@ -9,7 +9,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(index, page, save, verbose):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -20,11 +20,11 @@ def process_page(index, page, save, verbose):
 
   parsed = blib.parse(page)
   for t in parsed.filter_templates():
-    if unicode(t.name) in ["ru-conj", "ru-conj-old"] and getparam(t, "1").startswith("pf"):
+    if str(t.name) in ["ru-conj", "ru-conj-old"] and getparam(t, "1").startswith("pf"):
       if tname == "ru-conj":
-        tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t))
+        tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", str(t))
       else:
-        tempcall = re.sub(r"\{\{ru-conj-old", "{{ru-generate-verb-forms|old=y", unicode(t))
+        tempcall = re.sub(r"\{\{ru-conj-old", "{{ru-generate-verb-forms|old=y", str(t))
       result = expand_text(tempcall)
       if not result:
         pagemsg("WARNING: Error generating forms, skipping")

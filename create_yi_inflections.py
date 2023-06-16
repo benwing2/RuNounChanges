@@ -225,7 +225,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       if valuetr == trparamval:
         return True
       pagemsg_if(issue_warnings, "WARNING: Value %s matches param %s=%s, but translit %s doesn't match param %s=%s: %s" % (
-        value, param, paramval, valuetr, trparam, trparamval, unicode(t)))
+        value, param, paramval, valuetr, trparam, trparamval, str(t)))
       return False
     return False
 
@@ -263,15 +263,15 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
 
     if some_match and not all_match:
       pagemsg_if(issue_warnings, "WARNING: Some but not all inflections %s match template when %s: %s" %
-          (joined_infls_with_tr(), purpose, unicode(t)))
+          (joined_infls_with_tr(), purpose, str(t)))
     elif all_match and left_over_heads:
       if fail_when_left_over_heads:
         pagemsg_if(issue_warnings, "WARNING: All inflections %s match template, but extra heads in template when %s, treating as a non-match: %s" %
-            (joined_infls_with_tr(), purpose, unicode(t)))
+            (joined_infls_with_tr(), purpose, str(t)))
         return False
       else:
         pagemsg_if(issue_warnings, "WARNING: All inflections %s match template, but extra heads in template when %s: %s" %
-            (joined_infls_with_tr(), purpose, unicode(t)))
+            (joined_infls_with_tr(), purpose, str(t)))
     return all_match
 
   # Prepare parts of new entry to insert
@@ -435,7 +435,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           for t in parsed.filter_templates():
             if is_lemma_template(t):
               if template_head_matches(t, inflections, "checking for lemma"):
-                pagemsg("WARNING: Creating non-lemma form and found matching lemma template: %s" % unicode(t))
+                pagemsg("WARNING: Creating non-lemma form and found matching lemma template: %s" % str(t))
               if is_noun_form:
                 tnam = tname(t)
                 if tnam in ["yi-noun", "yi-proper noun"] and any([re.search(r"\bp\b", x) for x in blib.fetch_param_chain(t, "2", "g")]):
@@ -551,7 +551,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                           issue_warnings=issue_warnings)):
                     for param in t.params:
                       pnam = pname(param)
-                      pvalue = unicode(param.value)
+                      pvalue = str(param.value)
                       if (pnam not in ["1", "2"] and not (lang_in_1 and pnam == "3")
                           and re.search("^[0-9]+$", pnam)):
                         # Individual components may be separated by //
@@ -568,7 +568,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               # if TAG_SET_NO == "all", replace all tag sets.
               def check_fix_defn_params(t, tag_set_no, infls):
                 # Following code mostly copied from fix_verb_form.py
-                origt = unicode(t)
+                origt = str(t)
                 # Fetch lemma and alt params, and non-numbered params.
                 lang = getparam(t, "lang")
                 lang_in_1 = deftemp_needs_lang and not lang
@@ -581,7 +581,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 non_numbered_params = []
                 for param in t.params:
                   pnam = pname(param)
-                  pvalue = unicode(param.value)
+                  pvalue = str(param.value)
                   if (pnam not in ["1", "2"] and not (lang_in_1 and pnam == "3")
                       and re.search("^[0-9]+$", pnam) and pvalue):
                     tags.append(pvalue)
@@ -613,7 +613,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   t.add(str(paramno+(4 if lang else 3)), param)
                 for name, value in non_numbered_params:
                   t.add(name, value)
-                newt = unicode(t)
+                newt = str(t)
                 if origt != newt:
                   pagemsg("Replaced %s with %s" % (origt, newt))
                   if tag_set_no != -1:
@@ -623,7 +623,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                     # number or "all" are used for updating aspect
                     # codes.
                     notes.append("update form codes (pfv/impfv)")
-                  subsections[j] = unicode(parsed)
+                  subsections[j] = str(parsed)
                   sections[i] = ''.join(subsections)
 
               # True if the tag sets in template T (an "inflection of"
@@ -649,7 +649,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 tags = []
                 for param in t.params:
                   name = pname(param)
-                  value = unicode(param.value)
+                  value = str(param.value)
                   if (name not in ["1", "2"] and not (lang_in_1 and name == "3")
                       and re.search("^[0-9]+$", name) and value):
                     tags.append(value)
@@ -670,7 +670,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   for indiv_tag_set in split_tag_set_group:
                     if set(indiv_tag_set) > inflset:
                       pagemsg_if(issue_warnings, "WARNING: Found actual inflection %s in template %s whose codes are a superset of intended codes %s, accepting" % (
-                        "|".join(indiv_tag_set), unicode(t), "|".join(infls)))
+                        "|".join(indiv_tag_set), str(t), "|".join(infls)))
                       return True, tag_set_no
                 # See if there's a subset match.
                 for tag_set_no, split_tag_set_group in enumerate(split_tag_sets):
@@ -682,11 +682,11 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                       if (indiv_set | {"pfv"}) == inflset or (indiv_set | {"impfv"}) == inflset:
                         if len(split_tag_set_group) == 1:
                           pagemsg_if(issue_warnings, "Need to update actual inflection %s in template %s with intended codes %s" % (
-                            "|".join(indiv_tag_set), unicode(t), "|".join(infls)))
+                            "|".join(indiv_tag_set), str(t), "|".join(infls)))
                           return "update", tag_set_no
                         else:
                           pagemsg_if(issue_warnings, "WARNING: Found actual inflection %s in template %s whose codes are a subset of intended codes %s and could update aspect except that multipart tags are present" % (
-                            "|".join(indiv_tag_set), unicode(t), "|".join(infls)))
+                            "|".join(indiv_tag_set), str(t), "|".join(infls)))
                 return False, 0
 
               # Find the inflection headword template(s) (e.g.
@@ -1337,7 +1337,7 @@ def find_inflection_templates(text, expected_header, expected_poses, skip_poses,
               templates.append(t)
             else:
               pagemsg("Skipping inflection template because under part of speech %s: %s" % (
-                pos_header, unicode(t)))
+                pos_header, str(t)))
   return templates
 
 # Create required forms for all nouns/verbs/adjectives.
@@ -1413,7 +1413,7 @@ def create_forms(lemmas_to_process, lemmas_to_overwrite,
     pages_to_process = blib.cat_articles("Yiddish %ss" % pos, startFrom, upTo)
 
   for index, page in pages_to_process:
-    pagetitle = unicode(page.title())
+    pagetitle = str(page.title())
     def pagemsg(txt):
       msg("Page %s %s: %s" % (index, pagetitle, txt))
     def errandpagemsg(txt):
@@ -1534,11 +1534,11 @@ def create_forms(lemmas_to_process, lemmas_to_overwrite,
 
 def generate_adj_forms(t, expand_text):
   if tname(t) == "yi-decl":
-    return expand_text(re.sub(r"^\{\{yi-decl", "{{yi-generate-adj-forms", unicode(t)))
+    return expand_text(re.sub(r"^\{\{yi-decl", "{{yi-generate-adj-forms", str(t)))
   else:
     assert tname(t) == "yi-decl-poss"
     return expand_text(re.sub(r"^\{\{yi-decl-poss\s*\|", r"{{yi-generate-adj-forms|decltype=possessive|",
-      unicode(t)))
+      str(t)))
 
 def create_adj_forms(save, startFrom, upTo, formspec, lemmas_to_process,
     lemmas_to_overwrite, lemmas_to_not_overwrite, program_args):

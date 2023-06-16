@@ -28,9 +28,9 @@ def process_text_on_page(index, pagetitle, text, templates, paramspecs, negate, 
   lines_output = 0
   for t in parsed.filter_templates():
     if from_to:
-      temptext = "<from> %s <to> %s <end>" % (unicode(t), unicode(t))
+      temptext = "<from> %s <to> %s <end>" % (str(t), str(t))
     else:
-      temptext = unicode(t)
+      temptext = str(t)
     tn = tname(t)
     if tn in templates:
       if not paramspecs and not countparams:
@@ -40,8 +40,8 @@ def process_text_on_page(index, pagetitle, text, templates, paramspecs, negate, 
         seen_params = set()
         counted_param_values = counted_param_values_by_template[tn]
         for tparam in t.params:
-          pname = unicode(tparam.name).strip()
-          pvalue = unicode(tparam.value).strip()
+          pname = str(tparam.name).strip()
+          pvalue = str(tparam.value).strip()
           seen_params.add(pname)
           if pname in countparams or "*" in countparams:
             if pname not in counted_param_values:

@@ -45,7 +45,7 @@ def process_decl(index, pagetitle, decl, forms, save, verbose):
         elif formpagename == pagetitle:
           pagemsg("WARNING: Attempt to delete dictionary form, skipping")
         else:
-          text = unicode(formpage.text)
+          text = str(formpage.text)
           if "Etymology 1" in text:
             pagemsg("WARNING: Found 'Etymology 1', skipping form %s" % formpagename)
           else:

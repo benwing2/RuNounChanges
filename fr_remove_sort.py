@@ -15,7 +15,7 @@ fr_head_templates = ["fr-noun", "fr-proper noun", "fr-proper-noun",
   "fr-punctuation mark", "fr-suffix", "fr-verb form", "fr-verb-form"]
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -25,21 +25,21 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title, skipping")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   notes = []
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    name = unicode(t.name)
+    origt = str(t)
+    name = str(t.name)
     if name in fr_head_templates:
       rmparam(t, "sort")
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replacing %s with %s" % (origt, newt))
       notes.append("remove sort= from {{%s}}" % name)
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Remove sort= from French terms",
   include_pagefile=True)

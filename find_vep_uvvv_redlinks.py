@@ -11,7 +11,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -19,7 +19,7 @@ def process_page(page, index):
 
   parsed = blib.parse(page)
   for t in parsed.filter_templates():
-    if unicode(t.name) == "R:vep:UVVV":
+    if str(t.name) == "R:vep:UVVV":
       refpages = blib.fetch_param_chain(t, "1", "")
       for refpage in refpages:
         if not pywikibot.Page(site, refpage).exists():

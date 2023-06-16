@@ -9,7 +9,7 @@ from blib import getparam, rmparam, tname, msg, site
 import lalib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -26,7 +26,7 @@ def process_page(page, index, parsed):
         t.add("1", stem[:-1])
         notes.append("Fix noun in -ius to use {{la-decl-2nd-ius}}")
       else:
-        pagemsg("WARNING: Found la-decl-2nd without stem in -i: %s" % unicode(t))
+        pagemsg("WARNING: Found la-decl-2nd without stem in -i: %s" % str(t))
     elif tn == "la-decl-2nd-N":
       stem = getparam(t, "1")
       if stem.endswith("i"):
@@ -34,9 +34,9 @@ def process_page(page, index, parsed):
         t.add("1", stem[:-1])
         notes.append("Fix noun in -ium to use {{la-decl-2nd-N-ium}}")
       else:
-        pagemsg("WARNING: Found la-decl-2nd-N without stem in -i: %s" % unicode(t))
+        pagemsg("WARNING: Found la-decl-2nd-N without stem in -i: %s" % str(t))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Fix Latin declensions of -ius/-ium nouns",
   include_pagefile=True)

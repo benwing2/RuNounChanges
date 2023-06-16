@@ -9,7 +9,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -20,7 +20,7 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title, skipping page")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   foundrussian = False
@@ -40,7 +40,7 @@ def process_page(page, index, parsed):
         found_adj_comp = False
         found_adv_comp = False
         for t in parsed.filter_templates():
-          tname = unicode(t.name)
+          tname = str(t.name)
           if tname == "comparative of" and getparam(t, "lang") == "ru":
             if getparam(t, "POS") == "adjective":
               found_adj_comp = True
@@ -56,8 +56,8 @@ def process_page(page, index, parsed):
           pagemsg("WARNING: Found adverb but not adjective 'comparative of'")
 
         for t in parsed.filter_templates():
-          origt = unicode(t)
-          tname = unicode(t.name)
+          origt = str(t)
+          tname = str(t.name)
           template_fixed = False
           if tname == "ru-adv":
             t.name = "ru-comparative"
@@ -76,11 +76,11 @@ def process_page(page, index, parsed):
               t.add("noadv", "1")
             if found_adv_comp and not found_adj_comp:
               t.add("noadj", "1")
-          newt = unicode(t)
+          newt = str(t)
           if origt != newt:
             pagemsg("Replaced %s with %s" % (origt, newt))
             notes.append("convert headword to ru-comparative")
-        subsections[k] = unicode(parsed)
+        subsections[k] = str(parsed)
       sections[j] = "".join(subsections)
 
   return "".join(sections), notes

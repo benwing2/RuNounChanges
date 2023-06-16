@@ -15,7 +15,7 @@ from blib import getparam, rmparam, msg, site
 import rulib
 
 def process_page(page, index, fixdirecs):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -24,12 +24,12 @@ def process_page(page, index, fixdirecs):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   saw_paired_verb = False
   for t in parsed.filter_templates():
-    if unicode(t.name) == "ru-verb":
+    if str(t.name) == "ru-verb":
       saw_paired_verb = False
       if getparam(t, "2") in ["impf", "both"]:
         verb = getparam(t, "1") or pagetitle
@@ -38,12 +38,12 @@ def process_page(page, index, fixdirecs):
         for otheraspect in pfs + impfs:
           if verb[0:2] == otheraspect[0:2]:
             saw_paired_verb = True
-    if (unicode(t.name) in ["ru-conj", "ru-conj-old"] and
+    if (str(t.name) in ["ru-conj", "ru-conj-old"] and
         getparam(t, "1") == "impf" and not saw_paired_verb):
       if getparam(t, "ppp") or getparam(t, "past_pasv_part"):
         pass
-      elif [x for x in t.params if unicode(x.value) == "or"]:
-        pagemsg("WARNING: Skipping multi-arg conjugation: %s" % unicode(t))
+      elif [x for x in t.params if str(x.value) == "or"]:
+        pagemsg("WARNING: Skipping multi-arg conjugation: %s" % str(t))
         pass
       elif re.search(r"\+p|\[?\([78]\)\]?", getparam(t, "2")):
         pass
@@ -52,15 +52,15 @@ def process_page(page, index, fixdirecs):
         if pagetitle in fixdirecs:
           direc = fixdirecs[pagetitle]
           assert direc in ["fixed", "paired", "intrans", "+p", "|ppp=-"]
-          origt = unicode(t)
+          origt = str(t)
           if direc == "+p":
             t.add("2", getparam(t, "2") + "+p")
             notes.append("add missing past passive participle to transitive unpaired imperfective verb")
-            pagemsg("Add missing PPP, replace %s with %s" % (origt, unicode(t)))
+            pagemsg("Add missing PPP, replace %s with %s" % (origt, str(t)))
           elif direc == "|ppp=-":
             t.add("ppp", "-")
             notes.append("note transitive unpaired imperfective verb as lacking past passive participle")
-            pagemsg("Note no PPP, replace %s with %s" % (origt, unicode(t)))
+            pagemsg("Note no PPP, replace %s with %s" % (origt, str(t)))
           elif direc == "paired":
             pagemsg("Verb actually is paired")
           elif direc == "fixed":
@@ -68,7 +68,7 @@ def process_page(page, index, fixdirecs):
           elif direc == "intrans":
             pagemsg("WARNING: Transitive verb marked as intrans")
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Find verbs with missing past passive participles")
 parser.add_argument('--fix-pagefile', help="File containing pages to fix.")

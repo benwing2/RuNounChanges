@@ -9,7 +9,7 @@ from blib import getparam, rmparam, msg, site, tname, pname
 import rulib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -17,11 +17,11 @@ def process_page(page, index, parsed):
 
   notes = []
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     if tn == "head" and getparam(t, "1") == "bg" and getparam(t, "2") in [
         "verb", "verbs", "adjective", "adjectives"]:
       pos = getparam(t, "2")
@@ -31,8 +31,8 @@ def process_page(page, index, parsed):
         newtn = "bg-adj"
       params = []
       for param in t.params:
-        pname = unicode(param.name).strip()
-        pval = unicode(param.value).strip()
+        pname = str(param.name).strip()
+        pval = str(param.value).strip()
         showkey = param.showkey
         if (pname not in ["1", "2", "head", "g"] or
             pname == "g" and (newtn != "bg-adj" or pval != "m")):
@@ -68,8 +68,8 @@ def process_page(page, index, parsed):
         pagemsg("WARNING: Unrecognized aspect %s in %s" % (a, origt))
       params = []
       for param in t.params:
-        pname = unicode(param.name).strip()
-        pval = unicode(param.value).strip()
+        pname = str(param.name).strip()
+        pval = str(param.value).strip()
         showkey = param.showkey
         if not pval:
           continue
@@ -84,8 +84,8 @@ def process_page(page, index, parsed):
         notes.append("move a= to 2= in {{%s}}" % tn)
       for pname, pval, showkey in params:
         t.add(pname, pval, showkey=showkey, preserve_spacing=False)
-    if unicode(t) != origt:
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
   return parsed, notes
 
 parser = blib.create_argparser("Fix Bulgarian verb/adjective headwords to new format",

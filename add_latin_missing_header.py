@@ -19,13 +19,13 @@ tempname_to_header = {
 }
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
 
   retval = lalib.find_latin_section(text, pagemsg)

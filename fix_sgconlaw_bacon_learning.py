@@ -36,7 +36,7 @@ def process_text_on_page(index, pagename, text):
     t.add("passage", text)
     blib.set_template_name(t, "RQ:Bacon Learning")
     notes.append("reformat {{RQ:Bacon The Advancement of Learning}} into {{RQ:Bacon Learning}}")
-    return unicode(t) + "\n"
+    return str(t) + "\n"
 
   curtext = re.sub(r"(\{\{RQ:Bacon The Advancement of Learning\}\})\n#+\*:\s*(.*?)\n",
       replace_bacon_the_advancement_of_learning, curtext)

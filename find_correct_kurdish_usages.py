@@ -25,32 +25,32 @@ def process_text_on_page(index, pagename, text):
   def process_param(obj):
     t = obj.template
     if type(obj.param) is list:
-      pagemsg("WARNING: Skipping param %s referencing page title: %s" % (obj.param, unicode(t)))
+      pagemsg("WARNING: Skipping param %s referencing page title: %s" % (obj.param, str(t)))
       return
     if args.find:
-      pagemsg("Found %s" % unicode(t))
+      pagemsg("Found %s" % str(t))
       return
     if obj.notforeign:
-      pagemsg("WARNING: Skipping template with not-foreign text, needs manual review: %s" % unicode(t))
+      pagemsg("WARNING: Skipping template with not-foreign text, needs manual review: %s" % str(t))
       return
     pval = getparam(t, obj.param)
     if not pval or pval == "-":
-      pagemsg("Leaving as ku: %s" % unicode(t))
+      pagemsg("Leaving as ku: %s" % str(t))
       return
-    origt = unicode(t)
+    origt = str(t)
     lpar = obj.langparam
     if re.search("[%s]" % arabic_charset, getparam(t, obj.param)):
       if getparam(t, lpar) != "ku":
-        pagemsg("WARNING: %s=%s not ku, don't know how to change language: %s" % (lpar, getparam(t, lpar), unicode(t)))
+        pagemsg("WARNING: %s=%s not ku, don't know how to change language: %s" % (lpar, getparam(t, lpar), str(t)))
         return
       t.add(lpar, "ckb")
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
       return ["convert {{%s|ku}} to lang ckb based on Arabic script in param" % tname(t)]
     if getparam(t, lpar) != "ku":
-      pagemsg("WARNING: %s=%s not ku, don't know how to change language: %s" % (lpar, getparam(t, lpar), unicode(t)))
+      pagemsg("WARNING: %s=%s not ku, don't know how to change language: %s" % (lpar, getparam(t, lpar), str(t)))
       return
     t.add(lpar, "kmr")
-    pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    pagemsg("Replaced %s with %s" % (origt, str(t)))
     return ["convert {{%s|ku}} to lang kmr based on Latin script in param" % tname(t)]
 
   return blib.process_one_page_links(index, pagename, text, ['ku'], process_param,

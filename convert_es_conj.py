@@ -146,7 +146,7 @@ def generate_old_verb_forms(template, errandpagemsg, expand_text, include_combin
         return getparam(t, param)
       tn = tname(t)
       if tn != "es-verb form of":
-        errandpagemsg("WARNING: Unrecognized verb form template: " % unicode(t))
+        errandpagemsg("WARNING: Unrecognized verb form template: " % str(t))
         return None
       mood = getp("mood")
       tense = getp("tense")
@@ -181,7 +181,7 @@ def generate_old_verb_forms(template, errandpagemsg, expand_text, include_combin
         else:
           continue
       else:
-        errandpagemsg("WARNING: Unrecognized template args: %s" % unicode(t))
+        errandpagemsg("WARNING: Unrecognized template args: %s" % str(t))
         return None
       person = getp("person")
       if person:
@@ -191,7 +191,7 @@ def generate_old_verb_forms(template, errandpagemsg, expand_text, include_combin
         if formal == "y":
           if mood == "imperative":
             if person != "2":
-              errandpagemsg("WARNING: Unrecognized template args for imperative: %s" % unicode(t))
+              errandpagemsg("WARNING: Unrecognized template args for imperative: %s" % str(t))
               return None
             person = "3"
           else:
@@ -283,7 +283,7 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
 
 def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
   global args
-  origt = unicode(t)
+  origt = str(t)
   tn = tname(t)
   m = re.search(r"^es-conj(-.*)$", tn)
   if not m:
@@ -291,7 +291,7 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
     return None
   conj_suffix = m.group(1)
   if conj_suffix not in es_conv_verb:
-    pagemsg("WARNING: Something wrong, unrecognized verb conj suffix %s: %s" % (conj_suffix, unicode(t)))
+    pagemsg("WARNING: Something wrong, unrecognized verb conj suffix %s: %s" % (conj_suffix, str(t)))
     return None
   old_conj_type = getparam(t, "p")
   if not old_conj_type:
@@ -301,7 +301,7 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
     # otherwise have <ue>
     arg = "<>"
   elif old_conj_type not in es_conv_verb[conj_suffix]:
-    pagemsg("WARNING: Unrecognized verb conj %s: %s" % (old_conj_type, unicode(t)))
+    pagemsg("WARNING: Unrecognized verb conj %s: %s" % (old_conj_type, str(t)))
     return None
   else:
     arg = es_conv_verb[conj_suffix][old_conj_type]
@@ -310,14 +310,14 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
   for param in t.params:
     pn = pname(param)
     if pn not in ["p", "1", "2", "ref", "combined"]:
-      pagemsg("WARNING: Unrecognized param %s=%s: %s" % (pn, unicode(param.value), unicode(t)))
+      pagemsg("WARNING: Unrecognized param %s=%s: %s" % (pn, str(param.value), str(t)))
       return None
   if arg == "<>":
     arg = ""
   if ref and not pagetitle.endswith("se"):
     arg = pagetitle + "se" + arg
   elif not ref and pagetitle.endswith("se"):
-    pagemsg("WARNING: Reflexive verb without reflexive conjugation, skipping: %s" % unicode(t))
+    pagemsg("WARNING: Reflexive verb without reflexive conjugation, skipping: %s" % str(t))
     return None
   # Erase all params
   del t.params[:]
@@ -326,19 +326,19 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
   if not combined:
     t.add("nocomb", "1")
   blib.set_template_name(t, "es-conj")
-  pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-  is_same = compare_new_and_old_templates(origt, unicode(t), pagetitle, pagemsg, errandpagemsg, combined)
+  pagemsg("Replaced %s with %s" % (origt, str(t)))
+  is_same = compare_new_and_old_templates(origt, str(t), pagetitle, pagemsg, errandpagemsg, combined)
   if is_same:
     pass
   elif args.ignore_differences:
     pagemsg("WARNING: Comparison doesn't check out, still replacing due to --ignore-differences")
   else:
     return None
-  notes.append("converted {{%s|...}} to %s" % (tn, unicode(t)))
+  notes.append("converted {{%s|...}} to %s" % (tn, str(t)))
   return t
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -356,7 +356,7 @@ def process_page(page, index, parsed):
       else:
         return
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert Spanish verb conj templates to new form",
     include_pagefile=True)

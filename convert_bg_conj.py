@@ -48,7 +48,7 @@ def is_monosyllabic(word):
   return len(re.sub(u"[^аеиоуяюъ]", "", word)) <= 1
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -59,7 +59,7 @@ def process_page(page, index, parsed):
   head = None
   headt = None
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in ["bg-verb"]:
       if head is None:
@@ -140,10 +140,10 @@ def process_page(page, index, parsed):
       rmparam(t, "2")
       rmparam(t, "1")
       t.add("1", "%s<%s%s%s>" % (head, newconj, aspect, transitivity))
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-      notes.append("convert %s to %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
+      notes.append("convert %s to %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Convert Bulgarian verb conjugations to new {{bg-conj}}",
     include_pagefile=True)

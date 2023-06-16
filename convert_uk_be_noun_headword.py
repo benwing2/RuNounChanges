@@ -12,7 +12,7 @@ import belib as be
 AC = u"\u0301"
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -32,7 +32,7 @@ def process_page(page, index, parsed):
     tn = tname(t)
     if tn in [args.lang + "-noun", args.lang + "-proper noun"]:
       if heads:
-        pagemsg("WARNING: Encountered headword twice without declension: %s" % unicode(t))
+        pagemsg("WARNING: Encountered headword twice without declension: %s" % str(t))
         return
       headt = t
       headtn = tn
@@ -43,10 +43,10 @@ def process_page(page, index, parsed):
       genitive_plurals = blib.fetch_param_chain(t, "5", "genpl")
     if tn == args.lang + "-ndecl":
       if not heads:
-        pagemsg("WARNING: Encountered decl without headword: %s" % unicode(t))
+        pagemsg("WARNING: Encountered decl without headword: %s" % str(t))
         return
       generate_template = re.sub(r"^\{\{%s-ndecl\|" % args.lang, "{{User:Benwing2/%s-generate-prod-noun-props|" % args.lang,
-          unicode(t))
+          str(t))
       result = expand_text(generate_template)
       if not result:
         return
@@ -64,7 +64,7 @@ def process_page(page, index, parsed):
           new = [remove_monosyllabic_accents(x) for x in new]
         if set(old) != set(new):
           pagemsg("WARNING: Old %ss %s disagree with new %ss %s: head=%s, decl=%s" % (
-            stuff, ",".join(old), stuff, ",".join(new), unicode(headt), unicode(t)))
+            stuff, ",".join(old), stuff, ",".join(new), str(headt), str(t)))
           return False
         return True
       if not compare(gender_and_animacy, new_g, "gender", nocanon=True):
@@ -73,7 +73,7 @@ def process_page(page, index, parsed):
       is_plural = [x.endswith("-p") for x in new_g]
       if any(is_plural) and not all(is_plural):
         pagemsg("WARNING: Mixture of plural-only and non-plural-only genders, can't process: %s" %
-            unicode(t))
+            str(t))
         return
       is_plural = any(is_plural)
       if is_plural:
@@ -95,9 +95,9 @@ def process_page(page, index, parsed):
       blib.remove_param_chain(headt, "3", "gen")
       blib.remove_param_chain(headt, "4", "pl")
       blib.remove_param_chain(headt, "5", "genpl")
-      notes.append("convert {{%s}} to new style using decl %s" % (unicode(headt.name), decl))
+      notes.append("convert {{%s}} to new style using decl %s" % (str(headt.name), decl))
       heads = None
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{uk-noun}}/{{be-noun}} to new style", include_pagefile=True)
 parser.add_argument("--lang", required=True, help="Language (uk or be)")

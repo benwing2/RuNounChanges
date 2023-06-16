@@ -17,7 +17,7 @@ def process_text_on_page(index, pagetitle, text):
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     def getp(param):
       return getparam(t, param)
     if tn == "pl-decl-adj-ki":
@@ -72,7 +72,7 @@ def process_text_on_page(index, pagetitle, text):
         t.add("1", param1 + "owy")
       notes.append("Convert {{pl-decl-adj-owy}} to {{pl-decl-adj-auto}}")
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{pl-decl-adj-*}} to {{pl-decl-adj-auto}}",
   include_pagefile=True, include_stdin=True)

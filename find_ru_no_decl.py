@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(index, page):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -19,13 +19,13 @@ def process_page(index, page):
   found_invariant_headword_template = False
   found_decl_template = False
   for t in parsed.filter_templates():
-    if unicode(t.name) in ["ru-noun", "ru-proper noun"]:
+    if str(t.name) in ["ru-noun", "ru-proper noun"]:
       found_headword_template = True
       if getparam(t, "3") == "-":
         found_invariant_headword_template = True
       else:
-        headword_templates.append(unicode(t))
-    if unicode(t.name) in ["ru-noun-table", "ru-decl-noun-see"]:
+        headword_templates.append(str(t))
+    if str(t.name) in ["ru-noun-table", "ru-decl-noun-see"]:
       found_decl_template = True
   if found_headword_template and not found_invariant_headword_template:
     if found_decl_template:

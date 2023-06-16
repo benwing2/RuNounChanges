@@ -20,9 +20,9 @@ def is_transitive_verb(pagename, pagemsg, errandpagemsg):
   for t in parsed.filter_templates():
     if tname(t) == "ru-verb":
       if getparam(t, "2") in ["impf", "pf", "both"]:
-        pagemsg("Saw transitive verb: %s" % unicode(t))
+        pagemsg("Saw transitive verb: %s" % str(t))
         return True
-      pagemsg("Saw intransitive verb: %s" % unicode(t))
+      pagemsg("Saw intransitive verb: %s" % str(t))
 
   return False
 
@@ -175,7 +175,7 @@ args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 def scrape_pagetitle(page, index):
-  lemmas.append(unicode(page.title()))
+  lemmas.append(str(page.title()))
 blib.do_pagefile_cats_refs(args, start, end, scrape_pagetitle, default_cats=["Russian verbs"])
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
   default_cats=["Russian verbs"])

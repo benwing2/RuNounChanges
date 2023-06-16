@@ -126,10 +126,10 @@ def error(text):
   raise RuntimeError(text)
 
 def nfkc_form(txt):
-  return unicodedata.normalize("NFKC", unicode(txt))
+  return unicodedata.normalize("NFKC", str(txt))
 
 def nfc_form(txt):
-  return unicodedata.normalize("NFC", unicode(txt))
+  return unicodedata.normalize("NFC", str(txt))
 
 ZWNJ = u"\u200c" # zero-width non-joiner
 ZWJ = u"\u200d" # zero-width joiner
@@ -631,7 +631,7 @@ def check_for_classical_or_dialectal(obj, pagemsg):
     regex = "^.*" + re.escape(obj.origt) + ".*$"
   m = re.search(regex, obj.text, re.M)
   if not m:
-    pagemsg("WARNING: Something wrong, can't match template: %s" % unicode(obj.t))
+    pagemsg("WARNING: Something wrong, can't match template: %s" % str(obj.t))
   else:
     line = m.group(0)
     # 'regional' only in {{lb|fa|regional}}; not in {{fa-regional}}.

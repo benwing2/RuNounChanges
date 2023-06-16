@@ -150,16 +150,16 @@ def process_text_on_page(index, pagetitle, text, pos):
         ):
           if inflt:
             pagemsg("WARNING: Found two inflection templates under one POS section: %s and %s" % (
-              unicode(inflt), unicode(t)))
+              str(inflt), str(t)))
           inflt = t
-          pagemsg("Found %s inflection for headword %s: %s" % (pos, head or pagetitle, unicode(t)))
+          pagemsg("Found %s inflection for headword %s: %s" % (pos, head or pagetitle, str(t)))
         if tn == "bg-pre-reform":
-          pagemsg("Found bg-pre-reform, won't add inflection: %s" % (unicode(t)))
+          pagemsg("Found bg-pre-reform, won't add inflection: %s" % (str(t)))
           found_bg_pre_reform = True
       if headt and not inflt and not found_bg_pre_reform:
         pagemsg("Didn't find %s inflection for headword %s" % (pos, head or pagetitle))
         if args.lang == "hi" and found_hi_head_needing_manual:
-          pagemsg("WARNING: Won't add declension: %s: %s" % (found_hi_head_needing_manual, unicode(headt)))
+          pagemsg("WARNING: Won't add declension: %s: %s" % (found_hi_head_needing_manual, str(headt)))
         else:
           if args.lang == "hi":
             if hi_head_gender == "m":
@@ -176,7 +176,7 @@ def process_text_on_page(index, pagetitle, text, pos):
                 tn = tname(t)
                 if tname(t) != "rfinfl":
                   pagemsg("WARNING: Saw unknown template %s in existing inflection section, skipping" % (
-                    unicode(t)))
+                    str(t)))
                   break
               else: # no break
                 m = re.search(r"\A(.*?)(\n*)\Z", subsections[l + 1], re.S)

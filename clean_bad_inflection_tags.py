@@ -836,8 +836,8 @@ def process_text_on_page(index, pagetitle, text):
         ts = ""
         extraparams = ""
         for param in linkt.params:
-          pname = unicode(param.name).strip()
-          pval = unicode(param.value).strip()
+          pname = str(param.name).strip()
+          pval = str(param.value).strip()
           if pname in ["1", "2"]:
             continue
           elif pname in ["3", "alt"]:
@@ -852,7 +852,7 @@ def process_text_on_page(index, pagetitle, text):
             extraparams += "|%s=%s" % (pname, pval)
           else:
             pagemsg("WARNING: Unrecognized param %s=%s in link template %s: %s" % (
-              pname, pval, unicode(linkt), m.group(0)))
+              pname, pval, str(linkt), m.group(0)))
             return m.group(0)
         if this_gloss and gloss:
           pagemsg("WARNING: Both gloss in link and after link: %s" % m.group(0))
@@ -992,7 +992,7 @@ def process_text_on_page(index, pagetitle, text):
   def convert_form_of(text):
     parsed = blib.parse_text(text)
     for t in parsed.filter_templates():
-      origt = unicode(t)
+      origt = str(t)
       tn = tname(t)
       if tn == "form of":
         lang = getparam(t, "lang")
@@ -1016,14 +1016,14 @@ def process_text_on_page(index, pagetitle, text):
           gloss = getparam(t, "t") or getparam(t, "gloss")
         if re.search(raw_and_form_of_alternation_re, tags):
           for param in t.params:
-            pname = unicode(param.name).strip()
-            pval = unicode(param.value).strip()
+            pname = str(param.name).strip()
+            pval = str(param.value).strip()
             # Igore nodot
             if (pname in ["lang", "1", "2", "3", "4", "tr", "t", "gloss", "sc", "id", "nodot"] or
                 not lang_in_lang and pname == "5"):
               continue
             pagemsg("WARNING: Unrecognized param %s=%s in otherwise convertible form-of: %s" % (
-              pname, pval, unicode(t)))
+              pname, pval, str(t)))
             break
           else:
             # no break
@@ -1047,8 +1047,8 @@ def process_text_on_page(index, pagetitle, text):
             shortenable_tags.append((lang, lemma, tags))
             notes.append("replace {{form of}} containing inflection tags with %s" %
               infltags.construct_abbreviated_template("inflection of", lang, lemma))
-            pagemsg("Replacing %s with %s" % (origt, unicode(t)))
-    return unicode(parsed)
+            pagemsg("Replacing %s with %s" % (origt, str(t)))
+    return str(parsed)
 
   if args.convert_form_of:
     if pagetitle in skip_pages:
@@ -1064,7 +1064,7 @@ def process_text_on_page(index, pagetitle, text):
   templates_to_replace = []
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
 
     if tn in infltags.inflection_of_templates:
@@ -1320,10 +1320,10 @@ def process_text_on_page(index, pagetitle, text):
       # (7) Put back the new parameters.
       infltags.put_back_new_inflection_of_params(t, notes, tags, params, lang, term, tr, alt,
         convert_to_more_specific_template=True)
-      if origt != unicode(t):
+      if origt != str(t):
         if not notes:
           notes.append("canonicalize %s" % infltags.construct_abbreviated_template(tn, lang, term))
-        pagemsg("Replaced %s with %s%s" % (origt, unicode(t), sorted_tags_info))
+        pagemsg("Replaced %s with %s%s" % (origt, str(t), sorted_tags_info))
 
       global num_total_templates
       num_total_templates += 1
@@ -1331,9 +1331,9 @@ def process_text_on_page(index, pagetitle, text):
       if has_bad_tags:
         num_templates_with_bad_tags += 1
       if has_joiner:
-        pagemsg("WARNING: Template has unconverted joiner: %s" % unicode(t))
+        pagemsg("WARNING: Template has unconverted joiner: %s" % str(t))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Clean up bad inflection tags",
   include_pagefile=True, include_stdin=True)

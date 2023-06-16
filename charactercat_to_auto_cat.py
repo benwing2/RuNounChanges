@@ -25,7 +25,7 @@ def process_text_on_page(index, pagetitle, text):
 
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "autocat":
       blib.set_template_name(t, "auto cat")
@@ -55,31 +55,31 @@ def process_text_on_page(index, pagetitle, text):
         t_char = None
       if langname in ["Japanese", "Okinawan"]:
         if not one_char(char):
-          pagemsg("WARNING: Japanese/Okinawan category with multichar character (length %s), skipping: %s" % (len(char), unicode(t)))
+          pagemsg("WARNING: Japanese/Okinawan category with multichar character (length %s), skipping: %s" % (len(char), str(t)))
           continue
         if t_char:
-          pagemsg("WARNING: Japanese/Okinawan category with manual char %s != automatic char: %s" % (t_char, unicode(t)))
+          pagemsg("WARNING: Japanese/Okinawan category with manual char %s != automatic char: %s" % (t_char, str(t)))
         if not t_sort:
-          pagemsg("WARNING: Japanese/Okinawan category without manual sort key: %s" % unicode(t))
+          pagemsg("WARNING: Japanese/Okinawan category without manual sort key: %s" % str(t))
         else:
           autosort = expand_text("{{#invoke:zh-sortkey/templates|sortkey|%s|%s}}" % (t_char or char, t_lang))
           if autosort == t_sort:
             t_sort = None
           else:
-            pagemsg("WARNING: Japanese/Okinawan category with manual sort key %s != automatic %s: %s" % (t_sort, autosort, unicode(t)))
+            pagemsg("WARNING: Japanese/Okinawan category with manual sort key %s != automatic %s: %s" % (t_sort, autosort, str(t)))
       elif t_sort:
         autosort = expand_text("{{#invoke:languages/templates|getByCode|%s|makeSortKey|%s}}" % (t_lang, t_char or char))
         if autosort == t_sort:
           t_sort = None
         else:
-          pagemsg("%s category with manual sort key %s != automatic %s: %s" % (langname, t_sort, autosort, unicode(t)))
+          pagemsg("%s category with manual sort key %s != automatic %s: %s" % (langname, t_sort, autosort, str(t)))
 
       must_continue = False
       all_existing_params = ["1", "2", "alt", "sort", "context", "context2"]
       for param in t.params:
         pn = pname(param)
         if pn not in all_existing_params:
-          pagemsg("WARNING: Unrecognized param %s=%s in charactercat: %s" % (pn, unicode(param.value), unicode(t)))
+          pagemsg("WARNING: Unrecognized param %s=%s in charactercat: %s" % (pn, str(param.value), str(t)))
           must_continue = True
           break
       if must_continue:
@@ -99,10 +99,10 @@ def process_text_on_page(index, pagetitle, text):
         t.add("context2", t_context2)
       notes.append("convert {{%s}} to {{auto cat}}" % tn)
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{charactercat}} to {{auto cat}}",
     include_pagefile=True, include_stdin=True)

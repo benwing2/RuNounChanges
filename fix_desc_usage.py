@@ -266,7 +266,7 @@ def process_text_on_page(index, pagetitle, pagetext):
             rmparam(t, "sc")
             t.add("sclb", "1")
             blib.set_template_name(t, "desc")
-        termlink = unicode(parsed)
+        termlink = str(parsed)
       return termlink
 
     terms = re.sub(r"(?:Latin|Roman|Cyrillic): *(\[\[[^\[\]\n]*?\]\]|\{\{[lm]\|sh\|[^{}\n]*?\}\})",
@@ -393,26 +393,26 @@ def process_text_on_page(index, pagetitle, pagetext):
                 template_langcode, origtext))
               break
             pagemsg("Replacing language name %s with %s based on template langcode %s in %s: %s" % (
-              langname, new_langname, template_langcode, unicode(t), origtext))
+              langname, new_langname, template_langcode, str(t), origtext))
             langname = new_langname
             langcode = template_langcode
             break
           if new_langcode != langcode:
             pagemsg("Replacing language code %s with %s based on language name %s and template langcode %s in %s: %s" % (
-              langcode, new_langcode, langname, template_langcode, unicode(t), origtext))
+              langcode, new_langcode, langname, template_langcode, str(t), origtext))
             langcode = new_langcode
           link_langcode = etym_language_to_parent.get(langcode, langcode)
-          origt = unicode(t)
+          origt = str(t)
           t.add("1", link_langcode)
           if langcode == link_langcode:
             pagemsg("Replacing langcode %s in template %s with %s based on language name %s, producing %s: %s" %
-              (template_langcode, origt, link_langcode, langname, unicode(t), origtext))
+              (template_langcode, origt, link_langcode, langname, str(t), origtext))
           else:
             pagemsg("Replacing langcode %s in template %s with %s based on etymology language name %s with langcode %s, producing %s: %s" %
-              (template_langcode, origt, link_langcode, langname, langcode, unicode(t), origtext))
+              (template_langcode, origt, link_langcode, langname, langcode, str(t), origtext))
           made_mod = True
     if made_mod:
-      links = unicode(parsed)
+      links = str(parsed)
 
     # Replace leftmost templated link with {{desc}}.
 

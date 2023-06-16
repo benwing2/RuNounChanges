@@ -9,7 +9,7 @@ import blib
 from blib import getparam, rmparam, tname, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -18,7 +18,7 @@ def process_page(page, index, parsed):
   notes = []
   for t in parsed.filter_templates():
     if tname(t) == "RQ:Don Quixote" and getparam(t, "lang").strip() == "fr":
-      origt = unicode(t)
+      origt = str(t)
       blib.set_template_name(t, "RQ:Cervantes Viardot Don Quichotte")
       rmparam(t, "lang")
       volume = getparam(t, "volume").strip()
@@ -39,7 +39,7 @@ def process_page(page, index, parsed):
       numbered_params = []
       named_params = []
       for param in t.params:
-        pname = unicode(param.name)
+        pname = str(param.name)
         if re.search("^[0-9]+$", pname):
           numbered_params.append((pname, param.value, param.showkey))
         else:
@@ -60,7 +60,7 @@ def process_page(page, index, parsed):
       for name, value, showkey in named_params:
         t.add(name, value, showkey=showkey, preserve_spacing=False)
       notes.append("Replace {{RQ:Don Quixote}} with {{RQ:Cervantes Viardot Don Quichotte}}")
-      newt = unicode(t)
+      newt = str(t)
       if origt != newt:
         pagemsg("Replaced %s with %s" % (origt, newt))
 

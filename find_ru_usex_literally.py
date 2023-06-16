@@ -13,7 +13,7 @@ args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 def process_page(index, page, save, verbose):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -28,7 +28,7 @@ def process_page(index, page, save, verbose):
     pagemsg("WARNING: Colon in page title and not a recognized namespace to include, skipping page")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   lines = text.split("\n")
   for line in lines:
     if re.search(r"\{\{(ru-ux|uxi?\|ru)\|.*[Ll]it(erally|\.)", line):

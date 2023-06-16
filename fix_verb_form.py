@@ -10,7 +10,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -21,7 +21,7 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title, skipping page")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   foundrussian = False
@@ -37,14 +37,14 @@ def process_page(page, index, parsed):
       # Try to canonicalize existing 'conjugation of'
       parsed = blib.parse_text(sections[j])
       for t in parsed.filter_templates():
-        if unicode(t.name) == "conjugation of" and getparam(t, "lang") == "ru":
-          origt = unicode(t)
+        if str(t.name) == "conjugation of" and getparam(t, "lang") == "ru":
+          origt = str(t)
           t.name = "inflection of"
-          newt = unicode(t)
+          newt = str(t)
           if origt != newt:
             pagemsg("Replaced %s with %s" % (origt, newt))
             notes.append("converted 'conjugation of' to 'inflection of'")
-      sections[j] = unicode(parsed)
+      sections[j] = str(parsed)
 
       # Try to split 'inflection of' containing 'present or future' into two
       # defns
@@ -60,7 +60,7 @@ def process_page(page, index, parsed):
       # 'impr' to 'imp'
       parsed = blib.parse_text(sections[j])
       for t in parsed.filter_templates():
-        if unicode(t.name) == "inflection of" and getparam(t, "lang") == "ru":
+        if str(t.name) == "inflection of" and getparam(t, "lang") == "ru":
           for frm, to in [
               ("indc", "ind"), ("indicative", "ind"),
               ("futr", "fut"), ("future", "fut"),
@@ -73,22 +73,22 @@ def process_page(page, index, parsed):
               ("feminine", "f"), ("(feminine)", "f"),
               ("neuter", "n"), ("(neuter)", "n"), ("neutral", "n"), ("(neutral)", "n"),
               ]:
-            origt = unicode(t)
+            origt = str(t)
             for i in range(3,20):
               val = getparam(t, str(i))
               if val == frm:
                 t.add(str(i), to)
-            newt = unicode(t)
+            newt = str(t)
             if origt != newt:
               pagemsg("Replaced %s with %s" % (origt, newt))
               notes.append("converted '%s' form code to '%s'" % (frm, to))
-      sections[j] = unicode(parsed)
+      sections[j] = str(parsed)
 
       # Remove blank form codes and canonicalize position of lang=, tr=
       parsed = blib.parse_text(sections[j])
       for t in parsed.filter_templates():
-        if unicode(t.name) == "inflection of" and getparam(t, "lang") == "ru":
-          origt = unicode(t)
+        if str(t.name) == "inflection of" and getparam(t, "lang") == "ru":
+          origt = str(t)
           # Fetch the numbered params starting with 3, skipping blank ones
           numbered_params = []
           for i in range(3,20):
@@ -103,7 +103,7 @@ def process_page(page, index, parsed):
           nocat = getparam(t, "nocat")
           non_numbered_params = []
           for param in t.params:
-            pname = unicode(param.name)
+            pname = str(param.name)
             if not re.search(r"^[0-9]+$", pname) and pname not in ["lang", "nocat", "tr"]:
               non_numbered_params.append((pname, param.value))
           # Erase all params.
@@ -119,19 +119,19 @@ def process_page(page, index, parsed):
             t.add(str(i+3), param)
           for name, value in non_numbered_params:
             t.add(name, value)
-          newt = unicode(t)
+          newt = str(t)
           if origt != newt:
             pagemsg("Replaced %s with %s" % (origt, newt))
             notes.append("removed any blank form codes and maybe rearranged lang=, tr=")
             if nocat:
               notes.append("removed nocat=")
-      sections[j] = unicode(parsed)
+      sections[j] = str(parsed)
 
       # Try to canonicalize 'inflection of' involving the imperative,
       # present, future
       parsed = blib.parse_text(sections[j])
       for t in parsed.filter_templates():
-        if unicode(t.name) == "inflection of" and getparam(t, "lang") == "ru":
+        if str(t.name) == "inflection of" and getparam(t, "lang") == "ru":
           # Fetch the numbered params starting with 3
           numbered_params = []
           for i in range(3,20):
@@ -171,7 +171,7 @@ def process_page(page, index, parsed):
                 canon_params = [m.group(1), m.group(2), m.group(3), "ind"]
             break
           if canon_params:
-            origt = unicode(t)
+            origt = str(t)
             # Fetch param 1 and param 2. Erase all numbered params.
             # Put back param 1 and param 2 (this will put them after lang=ru),
             # then the replacements for the higher params.
@@ -183,13 +183,13 @@ def process_page(page, index, parsed):
             t.add("2", param2)
             for i, param in enumerate(canon_params):
               t.add(str(i+3), param)
-            newt = unicode(t)
+            newt = str(t)
             if origt != newt:
               pagemsg("Replaced %s with %s" % (origt, newt))
               notes.append("canonicalized 'inflection of' for %s" % "/".join(canon_params))
             else:
               pagemsg("Apparently already canonicalized: %s" % newt)
-      sections[j] = unicode(parsed)
+      sections[j] = str(parsed)
 
       # Try to add 'inflection of' to raw-specified participial inflection
       def add_participle_inflection_of(m):

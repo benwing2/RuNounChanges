@@ -9,7 +9,7 @@ import unicodedata
 
 def process_page(index, page, contents, prev_comment, origcontents, verbose, arg_comment,
     lang_only, allow_page_creation):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -112,7 +112,7 @@ if __name__ == "__main__":
       newpages[pagetitle] = (text, comment)
 
     def do_process_page(page, index, parsed):
-      pagetitle = unicode(page.title())
+      pagetitle = str(page.title())
       def pagemsg(txt):
         msg("Page %s %s: %s" % (index, pagetitle, txt))
       origcontents = origpages.get(pagetitle, None)

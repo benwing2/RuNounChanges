@@ -10,7 +10,7 @@ from blib import site, msg, errmsg, group_notes, iter_items
 # periods in some cases. This script undoes the damage.
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 

@@ -12,7 +12,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -20,8 +20,8 @@ def process_page(page, index, parsed):
 
   notes = []
   for t in parsed.filter_templates():
-    if unicode(t.name) == "ru-ux":
-      origt = unicode(t)
+    if str(t.name) == "ru-ux":
+      origt = str(t)
       if t.has("noadj") or t.has("noshto"):
         pagemsg("WARNING: Can't convert %s, has noadj= or noshto=" % origt)
       elif t.has("adj") or t.has("shto"):
@@ -30,8 +30,8 @@ def process_page(page, index, parsed):
         tname = "ux"
         new_params = []
         for param in t.params:
-          pname = unicode(param.name)
-          pval = unicode(param.value)
+          pname = str(param.name)
+          pval = str(param.value)
           if pname == "inline":
             if pval and pval not in ["0", "n", "no", "false"]:
               tname = "uxi"
@@ -48,7 +48,7 @@ def process_page(page, index, parsed):
         for pname, pval in new_params:
           t.add(pname, pval)
         notes.append("Replace {{ru-ux}} with {{%s|ru}}" % tname)
-      newt = unicode(t)
+      newt = str(t)
       if origt != newt:
         pagemsg("Replaced %s with %s" % (origt, newt))
 

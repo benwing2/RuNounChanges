@@ -9,7 +9,7 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
 import lalib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -18,7 +18,7 @@ def process_page(page, index, parsed):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn.startswith("ang-decl-"):
-      origt = unicode(t)
+      origt = str(t)
       alt1 = getparam(t, "alt1")
       if alt1:
         t.add("1", alt1, before="alt1")
@@ -31,11 +31,11 @@ def process_page(page, index, parsed):
       if altnomsg:
         t.add("nomsg", altnomsg, before="altnomsg")
         rmparam(t, "altnomsg")
-      if unicode(t) != origt:
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if str(t) != origt:
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("move alt param to main param in {{ang-decl-*}}")
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Move alt form to main form in {{ang-decl-*}}",
   include_pagefile=True)

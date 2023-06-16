@@ -15,8 +15,8 @@ templates = {
 }
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
-  text = unicode(page.text)
+  pagetitle = str(page.title())
+  text = str(page.text)
 
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -31,7 +31,7 @@ def process_page(page, index, parsed):
   parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
 
     if tn in templates:
@@ -50,8 +50,8 @@ def process_page(page, index, parsed):
         gloss = getparam(t, "4")
       params = []
       for param in t.params:
-        pname = unicode(param.name).strip()
-        pval = unicode(param.value).strip()
+        pname = str(param.name).strip()
+        pval = str(param.value).strip()
         if pname in ["lang", "1", "2", "3"] or (pname == "4" and not has_lang):
           continue
         pagemsg("WARNING: Unrecognized param %s, skipping" % pname)
@@ -67,11 +67,11 @@ def process_page(page, index, parsed):
         t.add(str(index + 4), tag)
       if gloss:
         t.add("t", gloss)
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("replace {{%s}} with {{inflection of}}" % tn)
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Rewrite 'genitive {singular/plural} {indefinite/definite}' to use {{inflection of}}")
 args = parser.parse_args()

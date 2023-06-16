@@ -233,7 +233,7 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
         unmatched_hpron.add(hpron)
     if not all_match:
       pagemsg("WARNING: Unable to match headword pronuns %s against found pronuns %s" %
-          (",".join(unmatched_hpron), ",".join(unicode(x) for x in found_pronuns)))
+          (",".join(unmatched_hpron), ",".join(str(x) for x in found_pronuns)))
       return None
 
   # Apply a function to a list of found pronunciations. Don't include results
@@ -282,7 +282,7 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
 def get_lemmas_of_form_page(parsed):
   lemmas = set()
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
+    tname = str(t.name)
     first_param = None
     if (tname in ["inflection of", "comparative of", "superlative of"]):
       first_param = get_first_param(t)
@@ -342,13 +342,13 @@ def lookup_pronun_mapping(parsed, verbose, pagemsg):
         if pretext or posttext:
           pagemsg("WARNING: pre-text or post-text with la-IPA: %s" % wholeline)
         laIPA_t = blib.parse_text(laIPA).filter_templates()[0]
-        assert unicode(laIPA_t.name) == "la-IPA"
+        assert str(laIPA_t.name) == "la-IPA"
         foundpronun = getparam(laIPA_t, "1")
         paramstrs = []
         for param in laIPA_t.params:
           pn = pname(param)
           if pn != "1":
-            paramstrs.append(unicode(param))
+            paramstrs.append(str(param))
         extra_params = "|".join(paramstrs)
         foundpronuns.append(FoundPronun(foundpronun, extra_params, pretext, posttext))
       pronunmapping = match_headword_and_found_pronuns(headwords, foundpronuns,
@@ -361,7 +361,7 @@ def lookup_pronun_mapping(parsed, verbose, pagemsg):
     # where PRONUN may be PRON or [PRE]PRON or PRON[POST] or [PRE]PRON[POST]
     pagemsg("For lemma %s, found pronun mapping %s%s" % (lemma, "None" if
       pronunmapping is None else "(empty)" if not pronunmapping else ",".join(
-        "%s->(%s)" % (hpron, ",".join("%s:%s" % (stem, "/".join(unicode(x) for x in foundprons))
+        "%s->(%s)" % (hpron, ",".join("%s:%s" % (stem, "/".join(str(x) for x in foundprons))
           for stem, foundprons in stem_foundprons))
         for hpron, stem_foundprons in pronunmapping.iteritems()),
       cached and " (cached)" or ""))
@@ -417,7 +417,7 @@ def process_section(section, indentlevel, headword_pronuns, program_args,
       else:
         headword_annparam = ""
 
-      pronun_for_comment = unicode(FoundPronun(pronun, extra_params, pre, post))
+      pronun_for_comment = str(FoundPronun(pronun, extra_params, pre, post))
       if pronun_for_comment not in pronuns_for_comment:
         pronuns_for_comment.append(pronun_for_comment)
 
@@ -482,7 +482,7 @@ def process_section(section, indentlevel, headword_pronuns, program_args,
     for hpron, stem_foundprons in pronunmapping.iteritems():
       if hpron not in matched_hpron:
         pagemsg("WARNING: Unable to match mapping %s->(%s) in non-lemma form(s)"
-          % (hpron, ",".join("%s:%s" % (stem, "/".join(unicode(x) for x in foundprons))
+          % (hpron, ",".join("%s:%s" % (stem, "/".join(str(x) for x in foundprons))
             for stem, foundprons in stem_foundprons)))
         was_unable_to_match = True
 
@@ -818,7 +818,7 @@ def process_page_text(index, text, pagetitle, program_args):
   return text, comment, was_unable_to_match
 
 def process_page(index, page, program_args):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
 
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -839,7 +839,7 @@ def process_page(index, page, program_args):
     pagemsg("WARNING: Page doesn't exist")
     return None, None
 
-  text = unicode(page.text)
+  text = str(page.text)
   result = process_page_text(index, text, pagetitle, program_args)
   if result is None:
     return None, None
@@ -884,7 +884,7 @@ def process_lemma(index, pagetitle, slots, program_args):
     elif tn == "la-adecl":
       pos = "adj"
     if pos:
-      args = lalib.generate_infl_forms(pos, unicode(t), errandpagemsg, expand_text)
+      args = lalib.generate_infl_forms(pos, str(t), errandpagemsg, expand_text)
       for slot in args:
         matches = False
         for spec in slots:
@@ -939,7 +939,7 @@ else:
 def subval_to_string(subval):
   if type(subval) is tuple:
     pron, extra_params, pre, post = subval
-    return unicode(FoundPronun(pron, extra_params, pre, post))
+    return str(FoundPronun(pron, extra_params, pre, post))
   else:
     return subval
 

@@ -247,7 +247,7 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
     generate_new_forms, pagemsg, errandpagemsg)
 
 def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
-  origt = unicode(t)
+  origt = str(t)
   tn = tname(t)
   m = re.search(r"^la-(.*)$", tn)
   if not m:
@@ -277,7 +277,7 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
   # Fetch all params
   named_params = []
   for param in t.params:
-    pname = unicode(param.name)
+    pname = str(param.name)
     if pname.strip() in ["1", "2", "noun"]:
       continue
     named_params.append((pname, param.value, param.showkey))
@@ -292,14 +292,14 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
   t.add("1", lemma)
   for name, value, showkey in named_params:
     t.add(name, value, showkey=showkey, preserve_spacing=False)
-  pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-  if compare_new_and_old_templates(origt, unicode(t), pagetitle, pagemsg, errandpagemsg):
+  pagemsg("Replaced %s with %s" % (origt, str(t)))
+  if compare_new_and_old_templates(origt, str(t), pagetitle, pagemsg, errandpagemsg):
     return t
   else:
     return None
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -312,16 +312,16 @@ def process_page(page, index, parsed):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn == "la-decl-multi":
-      pagemsg("Skipping la-decl-multi for now: %s" % unicode(t))
+      pagemsg("Skipping la-decl-multi for now: %s" % str(t))
     elif tn == "la-decl-irreg" and getparam(t, "noun"):
-      pagemsg("Skipping noun la-decl-irreg: %s" % unicode(t))
+      pagemsg("Skipping noun la-decl-irreg: %s" % str(t))
     elif tn in old_la_adj_decl_templates:
       if convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
         notes.append("converted {{%s}} to {{la-adecl}}" % tn)
       else:
         return None, None
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 if __name__ == "__main__":
   parser = blib.create_argparser("Convert Latin adj decl templates to new form",

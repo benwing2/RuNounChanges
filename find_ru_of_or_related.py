@@ -9,7 +9,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(index, page, save, verbose):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -20,7 +20,7 @@ def process_page(index, page, save, verbose):
     pagemsg("WARNING: Colon in page title, skipping page")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   foundrussian = False

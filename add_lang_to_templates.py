@@ -25,7 +25,7 @@ templates_to_process = ["SI-unit-np"]
 blib.getData()
 
 def process_page(page, index, parsed, lang_in_1):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -43,7 +43,7 @@ def process_page(page, index, parsed, lang_in_1):
       langnamecode = blib.languages_byCanonicalName[langname]["code"]
 
     for t in parsed.filter_templates():
-      origt = unicode(t)
+      origt = str(t)
       tn = tname(t)
       if tn in ["citation", "citations"] and is_citation:
         langnamecode = getparam(t, "lang") or getparam(t, "1")
@@ -55,7 +55,7 @@ def process_page(page, index, parsed, lang_in_1):
         else:
           notes.append("infer %s=%s for {{%s}} based on section it's in" % (
             langparam, langnamecode, tn))
-          newline = "\n" if "\n" in unicode(t.name) else ""
+          newline = "\n" if "\n" in str(t.name) else ""
           if langparam == "1":
             if t.has("lang"):
               pagemsg("WARNING: Template has lang=, removing: %s" % origt)
@@ -66,7 +66,7 @@ def process_page(page, index, parsed, lang_in_1):
             # Fetch all params.
             params = []
             for param in t.params:
-              pname = unicode(param.name)
+              pname = str(param.name)
               params.append((pname, param.value, param.showkey))
             # Erase all params.
             del t.params[:]
@@ -77,7 +77,7 @@ def process_page(page, index, parsed, lang_in_1):
       if tn in templates_to_rename:
         blib.set_template_name(t, templates_to_rename[tn])
         notes.append("rename {{%s}} to {{%s}}" % (tn, templates_to_rename[tn]))
-      newt = unicode(t)
+      newt = str(t)
       if newt != origt:
         pagemsg("Replaced <%s> with <%s>" % (origt, newt))
 
@@ -85,7 +85,7 @@ def process_page(page, index, parsed, lang_in_1):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
@@ -97,7 +97,7 @@ def process_page(page, index, parsed, lang_in_1):
       langname = m.group(1)
       parsed = blib.parse_text(sections[j])
       hack_templates(parsed, langname)
-      sections[j] = unicode(parsed)
+      sections[j] = str(parsed)
   else:
     # Citation section?
     langnamecode = None
@@ -111,7 +111,7 @@ def process_page(page, index, parsed, lang_in_1):
       parsed = blib.parse_text(sections[j])
       langnamecode = hack_templates(parsed, langname,
           langnamecode=langnamecode, is_citation=True)
-      sections[j] = unicode(parsed)
+      sections[j] = str(parsed)
 
   newtext = "".join(sections)
   return newtext, notes

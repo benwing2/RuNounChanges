@@ -32,7 +32,7 @@ def process_text_on_page(index, pagetitle, text):
     for t in parsed.filter_templates():
       def getp(param):
         return getparam(t, param)
-      origt = unicode(t)
+      origt = str(t)
       tn = tname(t)
       if tn == "head":
         if getp("1") != "pt":
@@ -40,13 +40,13 @@ def process_text_on_page(index, pagetitle, text):
           must_continue = True
           break
         if headt:
-          pagemsg("WARNING: Saw two head templates in section: %s and %s" % (unicode(headt), origt))
+          pagemsg("WARNING: Saw two head templates in section: %s and %s" % (str(headt), origt))
           must_continue = True
           break
         headt = t
       elif tn in ["pt-verb form of", "pt-verb-form-of"]:
         if form_of_t:
-          pagemsg("WARNING: Saw two {{pt-verb form of}} templates in section: %s and %s" % (unicode(form_of_t), origt))
+          pagemsg("WARNING: Saw two {{pt-verb form of}} templates in section: %s and %s" % (str(form_of_t), origt))
           must_continue = True
           break
         form_of_t = t
@@ -104,7 +104,7 @@ def process_text_on_page(index, pagetitle, text):
         must_continue = True
     if must_continue:
       continue
-    subsections[k] = unicode(parsed)
+    subsections[k] = str(parsed)
   secbody = "".join(subsections)
 
   sections[j] = secbody + sectail
@@ -113,8 +113,8 @@ def process_text_on_page(index, pagetitle, text):
   return text, notes
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
-  text = unicode(page.text)
+  pagetitle = str(page.title())
+  text = str(page.text)
   return process_text_on_page(pagetitle, index, text)
 
 parser = blib.create_argparser("Fix Portuguese verb form headers that should be past participle forms",

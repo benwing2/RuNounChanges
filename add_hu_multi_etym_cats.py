@@ -56,14 +56,14 @@ def add_category(secbody, sectail, pagemsg, notes, cat):
         if not getparam(t, str(i)):
           break
       else: # no break
-        pagemsg("WARNING: Something strange, reached 30= in %s and didn't see place to insert" % unicode(t))
+        pagemsg("WARNING: Something strange, reached 30= in %s and didn't see place to insert" % str(t))
         return secbody, sectail + separator
       before = str(i + 1) if getparam(t, str(i + 1)) else "sort" if getparam(t, "sort") else None
-      origt = unicode(t)
+      origt = str(t)
       t.add(str(i), cat, before=before)
       notes.append("insert '%s' into existing {{%s|hu}}" % (cat, tname(t)))
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-      return secbody, unicode(parsed) + separator
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
+      return secbody, str(parsed) + separator
   # Need to create {{cln}}.
   newtext = "{{cln|hu|%s}}" % cat
   sectail = sectail.strip()

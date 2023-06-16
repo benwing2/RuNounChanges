@@ -8,7 +8,7 @@ from blib import getparam, rmparam, msg, site, tname
 
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -16,13 +16,13 @@ def process_page(page, index, parsed):
   notes = []
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "cs-imperfective form of":
       # Fetch all params.
       params = []
       for param in t.params:
-        pname = unicode(param.name)
+        pname = str(param.name)
         if pname.strip() != "lang":
           params.append((pname, param.value, param.showkey))
       # Erase all params.
@@ -37,10 +37,10 @@ def process_page(page, index, parsed):
       blib.set_template_name(t, "imperfective form of")
       notes.append("rename {{cs-imperfective form of}} to {{imperfective form of|cs}}")
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Rename {{cs-imperfective form of}} to {{imperfective form of|cs}}")
 args = parser.parse_args()

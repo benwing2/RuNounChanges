@@ -31,7 +31,7 @@ def output_heads_seen(overall=False):
     msg("  %s = %s" % (head, count))
 
 def process_page(index, page, save, verbose):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -41,7 +41,7 @@ def process_page(index, page, save, verbose):
   found_page_head = False
   for t in parsed.filter_templates():
     found_this_head = False
-    tname = unicode(t.name)
+    tname = str(t.name)
     if tname in ru_head_templates:
       headname = tname
       found_this_head = True

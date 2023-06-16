@@ -50,10 +50,10 @@ def error(text):
   raise RuntimeError(text)
 
 def nfkc_form(txt):
-  return unicodedata.normalize("NFKC", unicode(txt))
+  return unicodedata.normalize("NFKC", str(txt))
 
 def nfc_form(txt):
-  return unicodedata.normalize("NFC", unicode(txt))
+  return unicodedata.normalize("NFC", str(txt))
 
 zwnj = u"\u200c" # zero-width non-joiner
 zwj  = u"\u200d" # zero-width joiner

@@ -17,7 +17,7 @@ from blib import getparam, rmparam, msg, site
 import runounlib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -26,12 +26,12 @@ def process_page(page, index, parsed):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    if unicode(t.name) == "ux" and getparam(t, "1") == "ru" and t.has("inline"):
+    origt = str(t)
+    if str(t.name) == "ux" and getparam(t, "1") == "ru" and t.has("inline"):
       inline = getparam(t, "inline")
       if inline and inline not in ["0", "n", "no", "false"]:
         t.name = "uxi"
@@ -39,25 +39,25 @@ def process_page(page, index, parsed):
       else:
         notes.append("remove unneeded inline=%s" % inline)
       rmparam(t, "inline")
-    if unicode(t.name) in ["ux", "uxi"] and getparam(t, "1") == "ru":
+    if str(t.name) in ["ux", "uxi"] and getparam(t, "1") == "ru":
       pval = getparam(t, "2")
       newpval = runounlib.fixup_link(pval)
       if pval != newpval:
         t.add("2", newpval)
-        notes.append("canonicalize two-part links in %s|ru" % unicode(t.name))
+        notes.append("canonicalize two-part links in %s|ru" % str(t.name))
       pval = getparam(t, "tr")
       if pval:
         auto_translit = expand_text("{{xlit|ru|%s}}" % getparam(t, "2"))
         if auto_translit == pval:
           rmparam(t, "tr")
-          notes.append("remove redundant translit in %s|ru" % unicode(t.name))
+          notes.append("remove redundant translit in %s|ru" % str(t.name))
         else:
-          pagemsg("WARNING: Non-redundant translit in %s" % unicode(t))
-    newt = unicode(t)
+          pagemsg("WARNING: Non-redundant translit in %s" % str(t))
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Remove inline=, converting ux|ru to uxi|ru as necessary, canonicalize two-part links and remove redundant translit",
   include_pagefile=True)

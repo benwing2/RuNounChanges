@@ -83,7 +83,7 @@ def find_noun(pagename, pagemsg, errandpagemsg, expand_text):
   for t in parsed.filter_templates():
     if tname(t) == "ru-noun+":
       generate_template = re.sub(r"^\{\{ru-noun\+",
-          "{{ru-generate-noun-forms", unicode(t))
+          "{{ru-generate-noun-forms", str(t))
       generate_result = expand_text(generate_template)
       if not generate_result:
         pagemsg("WARNING: Error generating noun forms")
@@ -190,11 +190,11 @@ def process_text_on_page(index, pagetitle, text):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn == "ru-conj":
-      if [x for x in t.params if unicode(x.value) == "or"]:
-        pagemsg("WARNING: Skipping multi-arg conjugation: %s" % unicode(t))
+      if [x for x in t.params if str(x.value) == "or"]:
+        pagemsg("WARNING: Skipping multi-arg conjugation: %s" % str(t))
         continue
       conjtype = getparam(t, "2")
-      tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t))
+      tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", str(t))
       result = expand_text(tempcall)
       if not result:
         pagemsg("WARNING: Error generating forms, skipping")

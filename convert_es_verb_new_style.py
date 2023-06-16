@@ -97,53 +97,53 @@ def process_text_on_page(index, pagetitle, text):
 
     if tn == "es-verb":
       if headt:
-        pagemsg("WARNING: Saw two {{es-verb}} without {{es-conj}}: %s and %s" % (unicode(headt), unicode(t)))
+        pagemsg("WARNING: Saw two {{es-verb}} without {{es-conj}}: %s and %s" % (str(headt), str(t)))
       headt = t
       continue
 
     if tn == "es-conj":
       if not headt:
-        pagemsg("WARNING: Saw {{es-conj}} without {{es-verb}}: %s" % unicode(t))
+        pagemsg("WARNING: Saw {{es-conj}} without {{es-verb}}: %s" % str(t))
         continue
 
       if getparam(headt, "attn"):
-        pagemsg("WARNING: Saw attn=, skipping: %s" % unicode(headt))
+        pagemsg("WARNING: Saw attn=, skipping: %s" % str(headt))
         headt = None
         continue
 
       if getparam(headt, "new"):
-        pagemsg("Saw new=, skipping: %s" % unicode(headt))
+        pagemsg("Saw new=, skipping: %s" % str(headt))
         headt = None
         continue
 
-      new_template = blib.parse_text(unicode(t))
+      new_template = blib.parse_text(str(t))
       newt = list(new_template.filter_templates())[0]
       blib.set_template_name(newt, "es-verb")
       newt.add("new", "1")
       rmparam(newt, "nocomb")
 
-      if compare_new_and_old_templates(unicode(headt), unicode(newt), pagetitle, pagemsg, errandpagemsg):
-        origt = unicode(headt)
+      if compare_new_and_old_templates(str(headt), str(newt), pagetitle, pagemsg, errandpagemsg):
+        origt = str(headt)
         del headt.params[:]
         for param in newt.params:
           pn = pname(param)
-          pv = unicode(param.value)
+          pv = str(param.value)
           if pn != "new":
             showkey = param.showkey
             headt.add(pn, pv, showkey=showkey, preserve_spacing=False)
 
-        if origt != unicode(headt):
+        if origt != str(headt):
           headt.add("new", "1")
-          pagemsg("Replaced %s with %s" % (origt, unicode(headt)))
+          pagemsg("Replaced %s with %s" % (origt, str(headt)))
           notes.append("convert {{es-verb}} to new format compatible with {{es-conj}}")
         else:
-          pagemsg("No changes to %s" % unicode(headt))
+          pagemsg("No changes to %s" % str(headt))
       headt = None
 
   if headt:
-    pagemsg("WARNING: Saw {{es-verb}} without {{es-conj}}: %s" % unicode(headt))
+    pagemsg("WARNING: Saw {{es-verb}} without {{es-conj}}: %s" % str(headt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{es-verb}} templates to newest format that mirrors {{es-conj}}",
   include_pagefile=True, include_stdin=True)

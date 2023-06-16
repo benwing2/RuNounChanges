@@ -273,7 +273,7 @@ def process_text_on_page(index, pagetitle, text):
           last_numbered_param = 0
           for param in t.params:
             pn = pname(param)
-            pv = unicode(param.value).strip().replace(" ", "_")
+            pv = str(param.value).strip().replace(" ", "_")
             if re.search("^[0-9]+$", pn):
               last_numbered_param += 1
               saw_pronun = True
@@ -311,7 +311,7 @@ def process_text_on_page(index, pagetitle, text):
           saw_pronun = False
           for param in t.params:
             pn = pname(param)
-            pv = unicode(param.value).strip().replace(" ", "_")
+            pv = str(param.value).strip().replace(" ", "_")
             if re.search("^[0-9]+$", pn):
               saw_pronun = True
               #if pv == "+":

@@ -45,10 +45,10 @@ def vocalize_param(pagetitle, index, template, param, paramtr):
   if latin:
     vocalized = do_vocalize_param(pagetitle, index, template, param, arabic, latin)
     if vocalized:
-      oldtempl = "%s" % unicode(template)
+      oldtempl = "%s" % str(template)
       addparam(template, param, vocalized)
       msg("Page %s %s: Replaced %s with %s" % (index, pagetitle,
-        oldtempl, unicode(template)))
+        oldtempl, str(template)))
       return vocalized
   return True
 
@@ -75,7 +75,7 @@ def vocalize_param_chain(pagetitle, index, template, param):
 # use in the changelog message.
 def vocalize_head(pagetitle, index, template):
   paramschanged = []
-  #pagetitle = unicode(page.title(withNamespace=False))
+  #pagetitle = str(page.title(withNamespace=False))
 
   # Handle existing 1= and head from page title
   if template.has("tr"):
@@ -112,20 +112,20 @@ def vocalize_head(pagetitle, index, template):
 
     # If 1= not found, try vocalizing the page title and make it the 1= value
     if not result:
-      arabic = unicode(pagetitle)
+      arabic = str(pagetitle)
       latin = getparam(template, "tr")
       if arabic and latin:
         vocalized = do_vocalize_param(pagetitle, index, template, "page title",
             arabic, latin)
         if vocalized:
-          oldtempl = "%s" % unicode(template)
+          oldtempl = "%s" % str(template)
           if template.has("2"):
             addparam(template, "1", vocalized, before="2")
           else:
             addparam(template, "1", vocalized, before="tr")
           paramschanged.append("1")
           msg("Page %s %s: Replaced %s with %s" % (index, pagetitle,
-            oldtempl, unicode(template)))
+            oldtempl, str(template)))
 
   # Check and try to vocalize extra heads
   i = 2
@@ -166,7 +166,7 @@ def vocalize_one_page_headwords(pagetitle, index, text):
 # Show exact changes if VERBOSE is true.
 def vocalize_headwords(save, verbose, startFrom, upTo):
   def process_page(page, index, text):
-    return vocalize_one_page_headwords(unicode(page.title()), index, text)
+    return vocalize_one_page_headwords(str(page.title()), index, text)
   #for page in blib.references(u"Template:tracking/ar-head/head", startFrom, upTo):
   #for page in blib.references("Template:ar-nisba", startFrom, upTo):
   for cat in [u"Arabic lemmas", u"Arabic non-lemma forms"]:

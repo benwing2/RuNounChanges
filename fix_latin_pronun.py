@@ -9,13 +9,13 @@ from blib import getparam, rmparam, tname, msg, site
 import lalib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
 
   retval = lalib.find_latin_section(text, pagemsg)
@@ -61,11 +61,11 @@ def process_page(page, index, parsed):
         pagemsg("WARNING: Found manual Ecclesiastical pronunciation but not {{la-IPA}} template")
       elif len(pronun_templates) > 1:
         pagemsg("WARNING: Found manual Ecclesiastical pronunciation and multiple {{la-IPA}} templates: %s" %
-          ",".join(unicode(tt) for tt in pronun_templates))
+          ",".join(str(tt) for tt in pronun_templates))
       else:
-        origt = unicode(pronun_templates[0])
+        origt = str(pronun_templates[0])
         pronun_templates[0].add("eccl", "yes")
-        pagemsg("Replaced %s with %s" % (origt, unicode(pronun_templates[0])))
+        pagemsg("Replaced %s with %s" % (origt, str(pronun_templates[0])))
         newsectext = re.sub(r"^\* \{\{a\|Ecclesiastical\}\} \{\{IPA(char)?\|.*?\}\}\n", "",
             sectext, 0, re.M)
         if newsectext == sectext:

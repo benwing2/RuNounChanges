@@ -44,7 +44,7 @@ rename_templates = {
 }
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -59,9 +59,9 @@ def process_page(page, index, parsed):
   #  tn = tname(t)
   #  if tn in back_formation_templates:
   #    if not getparam(t, "nodot"):
-  #      to_add_period.append(unicode(t))
+  #      to_add_period.append(str(t))
 
-  #text = unicode(page.text)
+  #text = str(page.text)
   #for curr_template in to_add_period:
   #  repl_template = curr_template + "."
   #  found_curr_template = curr_template in text
@@ -90,7 +90,7 @@ def process_page(page, index, parsed):
   #parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     #if tn in back_formation_templates:
     #  if getparam(t, "nodot"):
@@ -105,7 +105,7 @@ def process_page(page, index, parsed):
         # Fetch all params.
         params = []
         for param in t.params:
-          pname = unicode(param.name)
+          pname = str(param.name)
           if pname.strip() != "lang":
             params.append((pname, param.value, param.showkey))
         # Erase all params.
@@ -119,10 +119,10 @@ def process_page(page, index, parsed):
             t.add(name, value, showkey=showkey, preserve_spacing=False)
         notes.append("move lang= to 1= in {{%s}}" % tn)
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Clean up etymology-related templates, moving lang= to 1= and renaming some")
 args = parser.parse_args()

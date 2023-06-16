@@ -22,7 +22,7 @@ def process_text_on_page(index, pagetitle, text):
   parsed = blib.parse_text(secbody)
   saw_mpos_inflection_of = False
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "inflection of":
       if getparam(t, "1") != "hu":
@@ -45,11 +45,11 @@ def process_text_on_page(index, pagetitle, text):
         t.add("n", "isg")
         notes.append("n=sg -> n=isg in {{hu-infl-nom}} in the context of {{inflection of|hu|...|mpos|poss}}")
       else:
-        pagemsg("WARNING: Saw strange value n=%s in %s" % (n, unicode(t)))
-    if unicode(t) != origt:
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        pagemsg("WARNING: Saw strange value n=%s in %s" % (n, str(t)))
+    if str(t) != origt:
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  secbody = unicode(parsed)
+  secbody = str(parsed)
   if notes and "==Etymology 1==" in secbody:
     pagemsg("WARNING: Would make a change, but saw ==Etymology 1==, skipping")
     return

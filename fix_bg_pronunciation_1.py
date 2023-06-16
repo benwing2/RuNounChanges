@@ -76,7 +76,7 @@ def process_text_on_page(index, pagetitle, text):
         pronsec_prons.append((pron, endschwa))
       else:
         pagemsg("WARNING: Unrecognized template in ==Pronunciation %s== section, skipping: %s" %
-          (pronsec_index + 1, unicode(t)))
+          (pronsec_index + 1, str(t)))
         return
     parsed = blib.parse_text(pronsec_text)
     pronsec_types = []
@@ -85,17 +85,17 @@ def process_text_on_page(index, pagetitle, text):
       if tn in ["inflection of", "infl of"]:
         lang = getparam(t, "1")
         if lang != "bg":
-          pagemsg("WARNING: Saw invalid language %s, skipping: %s" % (lang, unicode(t)))
+          pagemsg("WARNING: Saw invalid language %s, skipping: %s" % (lang, str(t)))
           return
         lemma = getparam(t, "2")
         if not observed_lemma:
           observed_lemma = lemma
         elif lemma != observed_lemma:
           pagemsg("WARNING: Saw two lemmas %s and %s, skipping: %s" %
-            (observed_lemma, lemma, unicode(t)))
+            (observed_lemma, lemma, str(t)))
           return
         if getparam(t, "3"):
-          pagemsg("WARNING: Saw display/alt form of lemma, skipping: %s" % unicode(t))
+          pagemsg("WARNING: Saw display/alt form of lemma, skipping: %s" % str(t))
           return
         tags = blib.fetch_param_chain(t, "4")
         tag_sets = infltags.split_tags_into_tag_sets(tags)
@@ -124,7 +124,7 @@ def process_text_on_page(index, pagetitle, text):
             pronsec_type = "vocative singular"
           else:
             pagemsg("WARNING: Unrecognized tag set %s, skipping: %s" %
-              ("|".join(tag_set), unicode(t)))
+              ("|".join(tag_set), str(t)))
             return
           if pronsec_type not in pronsec_types:
             pronsec_types.append(pronsec_type)

@@ -48,6 +48,6 @@ for lineno, ref_and_aliases in blib.iter_items_from_file(args.tempfile):
       maybe_strikethru("[[%s]]" % alias if mainref else "'''[[%s]]'''" % alias),
       "[[%s]]" % mainref if mainref else "'''[[%s]]'''" % alias,
       num_refs,
-      " || %s" % ", ".join("[[%s]]" % unicode(ref.title()) for i, ref in template_refs) if args.include_refs else "",
+      " || %s" % ", ".join("[[%s]]" % str(ref.title()) for i, ref in template_refs) if args.include_refs else "",
       " || ?" if args.include_disposition else ""))
 msg("|}")

@@ -45,13 +45,13 @@ def process_section(index, pagetitle, sectext):
     tn = tname(t)
     if tn == "IPA":
       if getparam(t, "1") != "ang":
-        pagemsg("WARNING: Wrong-language IPA template: %s" % unicode(t))
+        pagemsg("WARNING: Wrong-language IPA template: %s" % str(t))
         continue
       pagemsg("<from> %s <to> {{ang-IPA|%s}} <end>" % (
-        unicode(t), "|".join(head) or "<<%s>>" % pagetitle))
+        str(t), "|".join(head) or "<<%s>>" % pagetitle))
       saw_pronun = True
     elif tn == "ang-IPA":
-      pagemsg("Saw existing pronunciation: %s" % unicode(t))
+      pagemsg("Saw existing pronunciation: %s" % str(t))
       saw_pronun = True
   if not saw_pronun:
     pagemsg("WARNING: Didn't see pronunciation for headword %s <new> {{ang-IPA|%s}} <end>" % (
@@ -100,11 +100,11 @@ def process_section_for_modification(index, pagetitle, sectext, indent_level, ne
     tn = tname(t)
     if tn == "IPA":
       if getparam(t, "1") != "ang":
-        pagemsg("WARNING: Wrong-language IPA template: %s" % unicode(t))
+        pagemsg("WARNING: Wrong-language IPA template: %s" % str(t))
         continue
       saw_pronun = True
     elif tn == "ang-IPA":
-      pagemsg("Saw existing pronunciation: %s" % unicode(t))
+      pagemsg("Saw existing pronunciation: %s" % str(t))
       saw_pronun = True
   if saw_pronun:
     return sectext

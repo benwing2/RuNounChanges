@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site, tname
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -16,7 +16,7 @@ def process_page(page, index, parsed):
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     if tn in ["place:Brazil/municipality", "place:municipality of Brazil"]:
       state = getparam(t, "state")
       trans = getparam(t, "2")
@@ -61,12 +61,12 @@ def process_page(page, index, parsed):
       t.add("7", "c/Brazil")
       if trans:
         t.add("t", trans)
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       notes.append("replace {{%s}} with {{place}}" % tn)
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Rewrite Brazil-specific place templates to use {{place}}",
   include_pagefile=True)

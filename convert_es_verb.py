@@ -243,22 +243,22 @@ def process_text_on_page(index, pagetitle, text):
       return getparam(t, param)
     tn = tname(t)
     if tn == "es-verb" and args.add_attn and not getp("1"):
-      origt = unicode(t)
+      origt = str(t)
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
-        pagemsg("WARNING: No 1= but saw param %s=%s: %s" % (pn, pv, unicode(t)))
+        pv = str(param.value)
+        pagemsg("WARNING: No 1= but saw param %s=%s: %s" % (pn, pv, str(t)))
         break
       t.add("attn", "1")
       notes.append("add attn=1 to verb with missing 1=")
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
       else:
-        pagemsg("No changes to %s" % unicode(t))
+        pagemsg("No changes to %s" % str(t))
       continue
 
     if tn == "es-verb":
-      origt = unicode(t)
+      origt = str(t)
       lemma = getparam(t, "head") or pagetitle
       if " " in lemma:
         pagemsg("WARNING: Space in lemma")
@@ -266,13 +266,13 @@ def process_text_on_page(index, pagetitle, text):
       shouldlemma = getp("1") + getp("2") + ("se" if getp("ref") == "y" else "") + (" " + blib.remove_links(prep) if prep else "")
       if shouldlemma != blib.remove_links(lemma):
         pagemsg("WARNING: lemma=%s from 1/2/ref != lemma=%s from head or pagetitle: %s" % (
-          shouldlemma, blib.remove_links(lemma), unicode(t)))
+          shouldlemma, blib.remove_links(lemma), str(t)))
         continue
       d = get_def_forms(lemma, prep, pagemsg)
       if not d:
         continue
       if getp("part2") and not getp("part"):
-        pagemsg("WARNING: Saw part2= without part=: %s" % unicode(t))
+        pagemsg("WARNING: Saw part2= without part=: %s" % str(t))
         part = [d["part"], getp("part2")]
       else:
         part = blib.fetch_param_chain(t, "part")
@@ -310,12 +310,12 @@ def process_text_on_page(index, pagetitle, text):
       must_continue = False
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if pn == "1" and pv in ["m", "mf"]:
-          pagemsg("WARNING: Extraneous param %s=%s in %s, ignoring" % (pn, pv, unicode(t)))
+          pagemsg("WARNING: Extraneous param %s=%s in %s, ignoring" % (pn, pv, str(t)))
           continue
         if pn not in ["head", "1", "2", "ref", "pres", "pret", "part", "part2", "prep"]:
-          pagemsg("WARNING: Saw unrecognized param %s=%s in %s" % (pn, pv, unicode(t)))
+          pagemsg("WARNING: Saw unrecognized param %s=%s in %s" % (pn, pv, str(t)))
           must_continue = True
           break
       if must_continue:
@@ -352,12 +352,12 @@ def process_text_on_page(index, pagetitle, text):
         blib.set_param_chain(t, pret, "pret")
         blib.set_param_chain(t, part, "part")
 
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
       else:
-        pagemsg("No changes to %s" % unicode(t))
+        pagemsg("No changes to %s" % str(t))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{es-verb}} templates to new format and remove redundant args",
   include_pagefile=True, include_stdin=True)

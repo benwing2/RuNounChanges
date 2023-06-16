@@ -19,7 +19,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 lemmas = set()
 msg("Reading %s lemmas" % args.lang)
 for i, page in blib.cat_articles("%s lemmas" % args.lang, start, end):
-  lemmas.add(unicode(page.title()))
+  lemmas.add(str(page.title()))
 
 words_freq = {}
 
@@ -38,7 +38,7 @@ for i, line in blib.iter_items_from_file(args.pagefile, start, end):
       else:
         page = pywikibot.Page(site, pagenm)
         if page.exists():
-          text = unicode(page.text)
+          text = str(page.text)
           if re.search("#redirect", text, re.I):
             outtext = "exists%s as redirect" % pagetype
           elif re.search(r"\{\{superlative of", text):

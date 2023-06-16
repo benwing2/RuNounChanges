@@ -70,7 +70,7 @@ def process_section(index, pagetitle, sectext):
     if tn == "be-conj-manual":
       if conjt:
         pagemsg("WARNING: Saw two conjugation templates %s and %s, skipping" %
-          (unicode(conjt), unicode(t)))
+          (str(conjt), str(t)))
         return sectext, notes
       conjt = t
   if not conjt:
@@ -93,7 +93,7 @@ def process_section(index, pagetitle, sectext):
   if not autoconj.startswith("(("):
     infinitive = getparam(conjt, "infinitive").strip()
     if not infinitive:
-      pagemsg("WARNING: Couldn't find infinitive=: %s" % unicode(conjt))
+      pagemsg("WARNING: Couldn't find infinitive=: %s" % str(conjt))
       return sectext, notes
     autoconj = "%s<%s>" % (infinitive, autoconj)
   tempcall = "{{User:Benwing2/be-generate-verb-forms|%s}}" % autoconj
@@ -115,14 +115,14 @@ def process_section(index, pagetitle, sectext):
       else:
         forms[slot] = form
   if compare_forms(autoconj, forms, predforms, pagemsg):
-    origt = unicode(conjt)
+    origt = str(conjt)
     conjt.name = "be-conj"
     del conjt.params[:]
     conjt.add("1", autoconj)
-    newt = unicode(conjt)
+    newt = str(conjt)
     pagemsg("Replaced %s with %s" % (origt, newt))
     notes.append("replace {{be-conj-manual|...}} with %s" % newt)
-  sectext = unicode(parsed)
+  sectext = str(parsed)
   if notes:
     sectext = re.sub("<!-- type (.*?) -->", "", sectext)
 
@@ -130,10 +130,10 @@ def process_section(index, pagetitle, sectext):
 
 def process_page(page, index, parsed):
   notes = []
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
-  text = unicode(page.text)
+  text = str(page.text)
   retval = blib.find_modifiable_lang_section(text, "Belarusian", pagemsg)
   if retval is None:
     pagemsg("WARNING: Couldn't find Belarusian section")

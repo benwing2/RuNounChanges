@@ -17,7 +17,7 @@ def process_text_on_page(index, pagetitle, text):
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     def getp(param):
       return getparam(t, param)
     def convert_g(g):
@@ -37,11 +37,11 @@ def process_text_on_page(index, pagetitle, text):
       must_continue = False
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if pn in ["1", "g", "g2", "g3", "and", "compare", "noast"]:
           continue
         if re.search("^[0-9]+$", pn):
-          pagemsg("WARNING: Saw unrecognized numbered param %s=%s, skipping: %s" % (pn, pv, unicode(t)))
+          pagemsg("WARNING: Saw unrecognized numbered param %s=%s, skipping: %s" % (pn, pv, str(t)))
           must_continue = True
           break
         named_params.append((pn, pv))
@@ -70,9 +70,9 @@ def process_text_on_page(index, pagetitle, text):
         t.add(pn, pv, preserve_spacing=False)
       blib.set_template_name(t, "see")
       notes.append("replace {{el-see}} with {{see|el}}")
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{el-see}} to {{see|el}}", include_pagefile=True, include_stdin=True)
 args = parser.parse_args()

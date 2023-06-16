@@ -40,7 +40,7 @@ def process_text_on_page(index, pagename, text):
       for existing_param in ["passage", "text"]:
         if getparam(t, existing_param):
           pagemsg("WARNING: Can't incorporate raw passage text into {{%s}} because already has %s=: %s" %
-            (fromtemp, existing_param, unicode(t)))
+            (fromtemp, existing_param, str(t)))
           return m.group(0)
       text = re.sub(r"\s*<br */?>\s*", " / ", text)
       text = re.sub(r"^''(.*)''$", r"\1", text)
@@ -49,7 +49,7 @@ def process_text_on_page(index, pagename, text):
       blib.set_template_name(t, "RQ:Bacon Essayes")
       notes.append("reformat {{%s}} into {{RQ:Bacon Essayes|chapter=%s}}, incorporating following raw passage text into passage=" %
           (fromtemp, chapter))
-      return unicode(t) + "\n"
+      return str(t) + "\n"
 
     curtext = re.sub(r"(\{\{%s.*?\}\})\n#+\*:\s*(.*?)\n" % re.escape(fromtemp),
         reformat_template, curtext)
@@ -62,7 +62,7 @@ def process_text_on_page(index, pagename, text):
       t.add("chapter", chapter)
       blib.set_template_name(t, chapter)
       notes.append("rename {{%s}} to {{RQ:Bacon Essayes|chapter=%s}}" % (tn, chapter))
-  curtext = unicode(parsed)
+  curtext = str(parsed)
 
   return curtext.rstrip("\n"), notes
 

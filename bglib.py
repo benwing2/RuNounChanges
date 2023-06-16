@@ -36,7 +36,7 @@ def decompose_acute_grave(text):
   # Decompose sequences of character + acute or grave, but compose all other
   # accented sequences, e.g. Latin č and ě, Cyrillic ё and й.
   # (1) Decompose entirely.
-  decomposed = unicodedata.normalize("NFD", unicode(text))
+  decomposed = unicodedata.normalize("NFD", str(text))
   # (2) Split into text sections separated by acutes and graves.
   split = re.split("([%s%s])" % (AC, GR), decomposed)
   # (3) Recompose each section.

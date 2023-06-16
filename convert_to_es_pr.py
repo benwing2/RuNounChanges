@@ -178,7 +178,7 @@ def process_text_on_page(index, pagetitle, text):
       pagemsg("WARNING: Putative {{%s}} line doesn't have {{%s...}} as the first template, skipping: %s" %
           (tntext, tntext, line))
       return None
-    if unicode(t) != line:
+    if str(t) != line:
       pagemsg("WARNING: {{%s}} line has text other than {{%s...}}, skipping: %s" % (tntext, tntext, line))
       return None
     return t
@@ -214,7 +214,7 @@ def process_text_on_page(index, pagetitle, text):
         if tn == "es-IPA":
           num_es_IPA += 1
       if saw_es_pr:
-        pagemsg("Already saw {{es-pr}}, skipping: %s" % unicode(t))
+        pagemsg("Already saw {{es-pr}}, skipping: %s" % str(t))
         continue
       if num_es_IPA == 0:
         pagemsg("WARNING: Didn't see {{es-IPA}} in Pronunciation section, skipping")
@@ -278,7 +278,7 @@ def process_text_on_page(index, pagetitle, text):
           )
           for param in ipat.params:
             pn = pname(param)
-            pv = unicode(param.value)
+            pv = str(param.value)
             if pn == "1":
               continue
             if pn in ["pre", "post", "bullets", "ref", "style"]:
@@ -311,7 +311,7 @@ def process_text_on_page(index, pagetitle, text):
           audiogloss = getparam(audiot, "3")
           for param in audiot.params:
             pn = pname(param)
-            pv = unicode(param.value)
+            pv = str(param.value)
             if pn not in ["1", "2", "3"]:
               pagemsg("WARNING: Unrecognized param %s=%s in {{audio}}, skipping: %s" % (
                 pn, pv, origline))
@@ -325,8 +325,8 @@ def process_text_on_page(index, pagetitle, text):
             audiogloss = ";%s" % audiogloss
           audiopart = "<audio:%s%s>" % (audiofile, audiogloss)
           audioarg += audiopart
-          pagemsg("Replacing %s with argument part %s" % (unicode(audiot), audiopart))
-          extra_notes.append("incorporate %s into {{es-pr}}" % unicode(audiot))
+          pagemsg("Replacing %s with argument part %s" % (str(audiot), audiopart))
+          extra_notes.append("incorporate %s into {{es-pr}}" % str(audiot))
         elif line.startswith("{{rhyme"):
           rhyme_lines.append(line)
         else:
@@ -355,7 +355,7 @@ def process_text_on_page(index, pagetitle, text):
             nsyl = (getparam(rhymet, "s%s" % (rind + 1)) or getparam(rhymet, "s")).strip()
             if nsyl:
               if not re.search("^[0-9]+$", nsyl):
-                pagemsg("WARNING: Bad syllable count in rhyme template: %s" % unicode(rhymet))
+                pagemsg("WARNING: Bad syllable count in rhyme template: %s" % str(rhymet))
                 must_continue = True
                 break
               nsyl = int(nsyl)
@@ -373,15 +373,15 @@ def process_text_on_page(index, pagetitle, text):
                 matching_styles.append(style)
                 if nsyl is None:
                   pagemsg("Removing rhyme %s, same as pronunciation-based rhyme for %s for spelling '%s': %s"
-                      % (rhyme, style, bare_arg, unicode(rhymet)))
+                      % (rhyme, style, bare_arg, str(rhymet)))
                   break
                 elif nsyl == rhyme_nsyl[style]:
                   pagemsg("Removing rhyme %s, same as pronunciation-based rhyme for %s for spelling '%s' and syllable count %s matches: %s"
-                      % (rhyme, style, bare_arg, nsyl, unicode(rhymet)))
+                      % (rhyme, style, bare_arg, nsyl, str(rhymet)))
                   break
                 elif pagetitle in allow_mismatching_nsyl:
                   pagemsg("Removing rhyme %s, same as pronunciation-based rhyme for %s for spelling '%s'; syllable count %s mismatches pronunciation syllable count %s but is known to be incorrect so is ignored: %s"
-                      % (rhyme, style, bare_arg, nsyl, rhyme_nsyl[style], unicode(rhymet)))
+                      % (rhyme, style, bare_arg, nsyl, rhyme_nsyl[style], str(rhymet)))
                   extra_notes.append("ignore known-incorrect syllable count %s in {{%s}}" % (nsyl, tname(rhymet)))
                   break
 
@@ -389,11 +389,11 @@ def process_text_on_page(index, pagetitle, text):
               if matching_styles:
                 pagemsg("WARNING: For spelling '%s', rhyme %s same as pronunciation-based rhyme for style(s) %s but syllable count %s doesn't match (%s): %s"
                     % (bare_arg, rhyme, ",".join(matching_styles), nsyl,
-                      ", ".join("%s=%s" % (style, rhyme_nsyl[style]) for style in styles), unicode(rhymet)))
+                      ", ".join("%s=%s" % (style, rhyme_nsyl[style]) for style in styles), str(rhymet)))
               else:
                 pagemsg("WARNING: For spelling '%s', rhyme %s%s not same as pronunciation-based rhyme (%s): %s"
                     % (bare_arg, rhyme, " with explicit syllable count %s" % nsyl if nsyl is not None else "",
-                      ", ".join("%s=%s" % (style, rhyme_pronuns[style]) for style in styles), unicode(rhymet)))
+                      ", ".join("%s=%s" % (style, rhyme_pronuns[style]) for style in styles), str(rhymet)))
               must_continue = True
             if must_continue:
               break
@@ -420,7 +420,7 @@ def process_text_on_page(index, pagetitle, text):
             else:
               for param in hypht.params:
                 pn = pname(param)
-                pv = unicode(param.value)
+                pv = str(param.value)
                 if not re.search("^[0-9]+$", pn):
                   pagemsg("WARNING: Unrecognized param %s=%s in {{%s}}, not removing: %s" %
                       (pn, pv, tname(hypht), hyph_line))
@@ -491,7 +491,7 @@ def process_text_on_page(index, pagetitle, text):
             else:
               for param in hmpt.params:
                 pn = pname(param)
-                pv = unicode(param.value)
+                pv = str(param.value)
                 if pn == "q":
                   pn = "q1"
                 if not re.search("^q?[0-9]+$", pn):
@@ -523,7 +523,7 @@ def process_text_on_page(index, pagetitle, text):
         es_pr = "{{es-pr}}"
       else:
         es_pr = "{{es-pr|%s}}" % arg
-      pagemsg("Replaced %s with %s" % (unicode(ipat), es_pr))
+      pagemsg("Replaced %s with %s" % (str(ipat), es_pr))
 
       all_lines = "\n".join([es_pr] + hyph_lines + homophone_lines)
       newsubsec = "%s\n\n" % all_lines

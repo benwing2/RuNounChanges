@@ -79,7 +79,7 @@ def process_text_on_page(index, pagetitle, text):
               if tn in translation_templates:
                 sc = getparam(t, "sc")
                 if sc:
-                  line_pagemsg("Remove unnecessary sc=%s from %s" % (sc, unicode(t)))
+                  line_pagemsg("Remove unnecessary sc=%s from %s" % (sc, str(t)))
                   rmparam(t, "sc")
                   notes.append("remove sc=%s from Chinese translation template" % sc)
                 lang = getparam(t, "1")
@@ -91,7 +91,7 @@ def process_text_on_page(index, pagetitle, text):
                     t.add("1", langnamecode)
                     notes.append("convert 'zh' to '%s' for %s translation template {{%s}}" % (langnamecode, lect, tn))
 
-            line = unicode(parsed)
+            line = str(parsed)
             lines[j] = line
 
             if lect not in blib.languages_byCanonicalName:
@@ -116,10 +116,10 @@ def process_text_on_page(index, pagetitle, text):
               get = getparam
               lang = get(simpt, "1")
               if lang == "zh":
-                append_line_pagemsg("WARNING: Internal error: Unconverted 'zh' in Chinese translation template %s" % unicode(simpt))
+                append_line_pagemsg("WARNING: Internal error: Unconverted 'zh' in Chinese translation template %s" % str(simpt))
                 return False, warnings
               if lang != lectcode:
-                append_line_pagemsg("WARNING: Strange language in %s translation template %s" % (lect, unicode(simpt)))
+                append_line_pagemsg("WARNING: Strange language in %s translation template %s" % (lect, str(simpt)))
                 return False, warnings
               trad = get(tradt, "2")
               simp = get(simpt, "2")
@@ -127,32 +127,32 @@ def process_text_on_page(index, pagetitle, text):
               if trad_to_simp == simp:
                 if tname(tradt) != tname(simpt):
                   append_line_pagemsg("Traditional translation template %s and corresponding simplified translation template %s have different template names, will still combine"
-                    % (unicode(tradt), unicode(simpt)))
+                    % (str(tradt), str(simpt)))
                 simp_alt = get(simpt, "alt")
                 simp_tr = get(simpt, "tr")
                 simp_lit = get(simpt, "lit")
                 for param in simpt.params:
                   pn = pname(param)
-                  pv = unicode(param.value)
+                  pv = str(param.value)
                   if pn not in ["1", "2", "3", "tr", "alt", "sc", "lit"]:
                     append_line_pagemsg("WARNING: Unrecognized parameter %s=%s in simplified translation template %s, can't combine"
-                      % (pn, pv, unicode(simpt)))
+                      % (pn, pv, str(simpt)))
                     return False, warnings
                   if pn == "3" and pv:
                     append_line_pagemsg("WARNING: Gender %s=%s specified in simplified translation template %s, can't combine"
-                      % (pn, pv, unicode(simpt)))
+                      % (pn, pv, str(simpt)))
                     return False, warnings
                 else: # no break
                   for param in tradt.params:
                     pn = pname(param)
-                    pv = unicode(param.value)
+                    pv = str(param.value)
                     if pn not in ["1", "2", "3", "tr", "alt", "sc", "lit"]:
                       append_line_pagemsg("WARNING: Unrecognized parameter %s=%s in traditional translation template %s, can't combine"
-                        % (pn, pv, unicode(tradt)))
+                        % (pn, pv, str(tradt)))
                       return False, warnings
                     if pn == "3" and pv:
                       append_line_pagemsg("WARNING: Gender %s=%s specified in simplified translation template %s, can't combine"
-                        % (pn, pv, unicode(simpt)))
+                        % (pn, pv, str(simpt)))
                       return False, warnings
                   else: # no break
                     trad_tr = get(tradt, "tr")
@@ -160,33 +160,33 @@ def process_text_on_page(index, pagetitle, text):
                       pass # leave traditional tr= alone
                     elif trad_tr and trad_tr != simp_tr:
                       append_line_pagemsg("WARNING: Saw transliteration parameter '%s' in traditional translation template %s different from simplified transliteration '%s', can't combine"
-                        % (trad_tr, unicode(tradt), simp_tr))
+                        % (trad_tr, str(tradt), simp_tr))
                       return False, warnings
                     trad_lit = get(tradt, "lit")
                     if trad_lit and not simp_lit:
                       pass # leave traditional lit= alone
                     elif trad_lit and trad_lit != simp_lit:
                       append_line_pagemsg("WARNING: Saw literal parameter '%s' in traditional translation template %s different from simplified literal '%s', can't combine"
-                        % (trad_lit, unicode(tradt), simp_lit))
+                        % (trad_lit, str(tradt), simp_lit))
                       return False, warnings
                     trad_alt = get(tradt, "alt")
                     if trad_alt and not simp_alt:
                       append_line_pagemsg("WARNING: Traditional translation template %s has alt= but corresponding simplified template %s doesn't, can't combine"
-                        % (unicode(tradt), unicode(simpt)))
+                        % (str(tradt), str(simpt)))
                       return False, warnings
                     if not trad_alt and simp_alt:
                       append_line_pagemsg("WARNING: Traditional translation template %s doesn't have alt= but corresponding simplified template %s does, can't combine"
-                        % (unicode(tradt), unicode(simpt)))
+                        % (str(tradt), str(simpt)))
                       return False, warnings
                     if trad_alt and simp_alt:
                       auto_simp_alt = convert_traditional_to_simplified(lectcode, trad_alt)
                       if auto_simp_alt != simp_alt:
                         append_line_pagemsg("WARNING: Traditional translation template %s has alt= which converts to %s != %s from corresponding simplified template %s, can't combine"
-                          % (unicode(tradt), auto_simp_alt, simp_alt, unicode(simpt)))
+                          % (str(tradt), auto_simp_alt, simp_alt, str(simpt)))
                         return False, warnings
                     if tradt.has("3"):
                       if get(tradt, "3"):
-                        append_line_pagemsg("WARNING: Internal error: Non-blank gender 3= in traditional template %s" % unicode(tradt))
+                        append_line_pagemsg("WARNING: Internal error: Non-blank gender 3= in traditional template %s" % str(tradt))
                         return False, warnings
                       rmparam(tradt, "3")
                       notes.append("remove blank 3= in traditional %s template" % lect)
@@ -194,14 +194,14 @@ def process_text_on_page(index, pagetitle, text):
                       tradt.add("tr", simp_tr)
                       #this_notes.append("move tr=%s from simplified %s template to traditional equivalent" % (simp_tr, lect))
                     for delim in [", ", ",", " / ", "/", " "]:
-                      this_text_to_remove = "%s%s" % (unicode(simpt), delim) if reversed else "%s%s" % (delim, unicode(simpt))
-                      if this_text_to_remove in unicode(parsed):
+                      this_text_to_remove = "%s%s" % (str(simpt), delim) if reversed else "%s%s" % (delim, str(simpt))
+                      if this_text_to_remove in str(parsed):
                         break
                     if trad == simp:
                       # just trying to remove 'this_text_to_remove' may match twice; include the preceding traditional template in the line
                       text_to_remove.append((
-                        "%s%s" % (this_text_to_remove, unicode(tradt)) if reversed else "%s%s" % (unicode(tradt), this_text_to_remove),
-                        unicode(tradt)
+                        "%s%s" % (this_text_to_remove, str(tradt)) if reversed else "%s%s" % (str(tradt), this_text_to_remove),
+                        str(tradt)
                       ))
                     else:
                       text_to_remove.append((this_text_to_remove, ""))
@@ -212,7 +212,7 @@ def process_text_on_page(index, pagetitle, text):
                     return True, warnings
               elif not get(tradt, "tr") and get(simpt, "tr"):
                 append_line_pagemsg("WARNING: Traditional translation template %s has translation %s which simplifies to %s != %s from corresponding simplified template %s, can't combine"
-                  % (unicode(tradt), trad, trad_to_simp, simp, unicode(simpt)))
+                  % (str(tradt), trad, trad_to_simp, simp, str(simpt)))
                 return False, warnings
               else:
                 # could just be for different translations
@@ -224,11 +224,11 @@ def process_text_on_page(index, pagetitle, text):
                 combinable, warnings = combine_traditional_simplified(prevt, t)
                 if combinable is False:
                   line_pagemsg("Can't combine traditional template %s and simplified template %s, trying reversed"
-                    % (unicode(prevt), unicode(t)))
+                    % (str(prevt), str(t)))
                   rev_combinable, rev_warnings = combine_traditional_simplified(t, prevt, reversed=True)
                   if rev_combinable:
                     line_pagemsg("Able to combine simplified template %s with traditional template %s by assuming backwards order"
-                      % (unicode(prevt), unicode(t)))
+                      % (str(prevt), str(t)))
                     for warning in rev_warnings:
                       msg(warning)
                     prevt = t
@@ -237,7 +237,7 @@ def process_text_on_page(index, pagetitle, text):
                   msg(warning)
               prevt = t
 
-            line = unicode(parsed)
+            line = str(parsed)
             for this_text_to_remove, this_repl in text_to_remove:
               newline, replaced = blib.replace_in_text(line, this_text_to_remove, this_repl, line_pagemsg, abort_if_warning=True,
                   # since when trad == simp, the replacement will already be there

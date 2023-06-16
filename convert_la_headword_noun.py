@@ -98,7 +98,7 @@ def compare_headword_decl_forms(id_slot, headword_forms, decl_slots, noun_props,
 
 def process_page(page, index, parsed):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -108,7 +108,7 @@ def process_page(page, index, parsed):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
 
   notes = []
@@ -133,7 +133,7 @@ def process_page(page, index, parsed):
       if tn == "la-ndecl":
         if la_ndecl_template:
           pagemsg("WARNING: Saw multiple noun declension templates in subsection, %s and %s, skipping" % (
-            unicode(la_ndecl_template), unicode(t)))
+            str(la_ndecl_template), str(t)))
           must_continue = True
           break
         la_ndecl_template = t
@@ -143,7 +143,7 @@ def process_page(page, index, parsed):
       ):
         if la_noun_template:
           pagemsg("WARNING: Saw multiple noun headword templates in subsection, %s and %s, skipping" % (
-            unicode(la_noun_template), unicode(t)))
+            str(la_noun_template), str(t)))
           must_continue = True
           break
         la_noun_template = t
@@ -166,7 +166,7 @@ def process_page(page, index, parsed):
           getparam(la_noun_template, "indecl")):
         if new_style_headword_template:
           pagemsg("Found new-style indeclinable noun headword template, skipping: %s" %
-            unicode(la_noun_template))
+            str(la_noun_template))
           continue
         if (getparam(la_noun_template, "head2") or
             getparam(la_noun_template, "decl") or
@@ -174,25 +174,25 @@ def process_page(page, index, parsed):
             getparam(la_noun_template, "2") != getparam(la_noun_template, "1") or
             not getparam(la_noun_template, "3")):
           pagemsg("WARNING: Found old-style indeclinable noun headword template and don't know how to convert: %s" %
-              unicode(la_noun_template))
+              str(la_noun_template))
           continue
         gender = getparam(la_noun_template, "3")
-        orig_la_noun_template = unicode(la_noun_template)
+        orig_la_noun_template = str(la_noun_template)
         la_noun_template.add("g", gender[0], before="3")
         rmparam(la_noun_template, "3")
         rmparam(la_noun_template, "2")
-        pagemsg("Replaced %s with %s" % (orig_la_noun_template, unicode(la_noun_template)))
+        pagemsg("Replaced %s with %s" % (orig_la_noun_template, str(la_noun_template)))
         notes.append("convert indeclinable {{la-noun}}/{{la-proper noun}} template to new style")
-        subsections[k] = unicode(parsed)
+        subsections[k] = str(parsed)
         continue
       else:
-        pagemsg("WARNING: Saw noun headword template but no declension template: %s" % unicode(la_noun_template))
+        pagemsg("WARNING: Saw noun headword template but no declension template: %s" % str(la_noun_template))
         continue
     if la_ndecl_template and not la_noun_template:
-      pagemsg("WARNING: Saw noun declension template but no headword template: %s" % unicode(la_ndecl_template))
+      pagemsg("WARNING: Saw noun declension template but no headword template: %s" % str(la_ndecl_template))
       continue
 
-    orig_la_noun_template = unicode(la_noun_template)
+    orig_la_noun_template = str(la_noun_template)
     if new_style_headword_template:
       pagemsg("Found new-style noun headword template, skipping: %s" %
         orig_la_noun_template)
@@ -201,7 +201,7 @@ def process_page(page, index, parsed):
     def render_headword_and_decl():
       return "headword template <from> %s <to> %s <end>, declension template <from> %s <to> %s <end>" % (
         orig_la_noun_template, orig_la_noun_template,
-        unicode(la_ndecl_template), unicode(la_ndecl_template)
+        str(la_ndecl_template), str(la_ndecl_template)
       )
 
     if tname(la_noun_template) == "head":
@@ -232,13 +232,13 @@ def process_page(page, index, parsed):
           ndecl_lemma = ndecl_lemma.replace(plainlink, link, 1)
         if must_continue:
           continue
-        new_ndecl_template = blib.parse_text(unicode(la_ndecl_template)).filter_templates()[0]
+        new_ndecl_template = blib.parse_text(str(la_ndecl_template)).filter_templates()[0]
         new_ndecl_template.add("1", ndecl_lemma)
         pagemsg("Adding links to decl template %s to produce %s" % (
-          unicode(la_ndecl_template), unicode(new_ndecl_template)))
+          str(la_ndecl_template), str(new_ndecl_template)))
         la_ndecl_template = new_ndecl_template
 
-    noun_props = new_generate_noun_forms(unicode(la_ndecl_template), errandpagemsg, expand_text, include_props=True)
+    noun_props = new_generate_noun_forms(str(la_ndecl_template), errandpagemsg, expand_text, include_props=True)
     if noun_props is None:
       continue
     decl_gender = noun_props.get("g", None)
@@ -311,7 +311,7 @@ def process_page(page, index, parsed):
       del la_noun_template.params[:]
       # Copy params from decl template
       for param in la_ndecl_template.params:
-        pname = unicode(param.name)
+        pname = str(param.name)
         la_noun_template.add(pname, param.value, showkey=param.showkey, preserve_spacing=False)
       # Add explicit gender if needed
       if need_explicit_gender:
@@ -333,7 +333,7 @@ def process_page(page, index, parsed):
       must_continue = False
       is_proper_noun = getparam(la_ndecl_template, "2") == "proper noun"
       for param in la_noun_template.params:
-        pname = unicode(param.name)
+        pname = str(param.name)
         if pname.strip() in ["1", "2"] or re.search("^(head|g)[0-9]*$", pname.strip()):
           continue
         pagemsg("WARNING: Saw extraneous param %s in {{head}} template, skipping: %s" % (
@@ -346,7 +346,7 @@ def process_page(page, index, parsed):
       blib.set_template_name(la_noun_template,
         "la-proper noun" if is_proper_noun else "la-noun")
       erase_and_copy_params_and_add_gender(need_explicit_gender, noun_gender)
-      pagemsg("Replaced %s with %s" % (orig_la_noun_template, unicode(la_noun_template)))
+      pagemsg("Replaced %s with %s" % (orig_la_noun_template, str(la_noun_template)))
       notes.append("convert {{head|la|...}} to new-style {{la-noun}}/{{la-proper noun}} template")
 
     elif tname(la_noun_template) == "la-location":
@@ -381,7 +381,7 @@ def process_page(page, index, parsed):
       # Check for extraneous {{la-location}} parameters
       must_continue = False
       for param in la_noun_template.params:
-        pname = unicode(param.name)
+        pname = str(param.name)
         if pname.strip() in ["1", "2", "3", "4", "5", "6"]:
           continue
         pagemsg("WARNING: Saw extraneous param %s in {{la-location}} template, skipping: %s" % (
@@ -392,7 +392,7 @@ def process_page(page, index, parsed):
         continue
       blib.set_template_name(la_noun_template, "la-proper noun")
       erase_and_copy_params_and_add_gender(need_explicit_gender, noun_gender)
-      pagemsg("Replaced %s with %s" % (orig_la_noun_template, unicode(la_noun_template)))
+      pagemsg("Replaced %s with %s" % (orig_la_noun_template, str(la_noun_template)))
       notes.append("convert {{la-location}} to new-style {{la-proper noun}} template")
 
     else:
@@ -429,7 +429,7 @@ def process_page(page, index, parsed):
       # Fetch remaining params from headword template
       headword_params = []
       for param in la_noun_template.params:
-        pname = unicode(param.name)
+        pname = str(param.name)
         if pname.strip() in ["1", "2", "3", "4"] or re.search("^(head|gen|g|decl)[0-9]*$", pname.strip()):
           continue
         headword_params.append((pname, param.value, param.showkey))
@@ -437,10 +437,10 @@ def process_page(page, index, parsed):
       # Copy remaining params from headword template
       for name, value, showkey in headword_params:
         la_noun_template.add(name, value, showkey=showkey, preserve_spacing=False)
-      pagemsg("Replaced %s with %s" % (orig_la_noun_template, unicode(la_noun_template)))
+      pagemsg("Replaced %s with %s" % (orig_la_noun_template, str(la_noun_template)))
       notes.append("convert {{la-noun}}/{{la-proper noun}} params to new style")
 
-    subsections[k] = unicode(parsed)
+    subsections[k] = str(parsed)
 
   if not saw_a_template:
     pagemsg("WARNING: Saw no noun headword or declension templates")

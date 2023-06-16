@@ -10,10 +10,10 @@ import rulib
 
 def add_rel_adj_or_dim_to_noun_page(nounpage, index, new_adj_or_dims, param, desc):
   notes = []
-  pagetitle = unicode(nounpage.title())
+  pagetitle = str(nounpage.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
-  text = unicode(nounpage.text)
+  text = str(nounpage.text)
   retval = blib.find_modifiable_lang_section(text, "Russian", pagemsg)
   if retval is None:
     pagemsg("WARNING: Couldn't find Russian section for noun of %s %s" % (
@@ -27,7 +27,7 @@ def add_rel_adj_or_dim_to_noun_page(nounpage, index, new_adj_or_dims, param, des
     if tn in ["ru-noun+", "ru-proper noun+", "ru-noun", "ru-proper noun"]:
       if head:
         pagemsg("WARNING: Saw multiple heads %s and %s for noun of %s %s, not modifying" %
-            (unicode(head), unicode(t), desc, ",".join(new_adj_or_dims)))
+            (str(head), str(t), desc, ",".join(new_adj_or_dims)))
         return
       head = t
   if not head:
@@ -38,16 +38,16 @@ def add_rel_adj_or_dim_to_noun_page(nounpage, index, new_adj_or_dims, param, des
   added_adjs_or_dims = []
   for adj_or_dim in new_adj_or_dims:
     if adj_or_dim in adjs_or_dims:
-      pagemsg("Already saw %s %s in head %s" % (desc, adj_or_dim, unicode(head)))
+      pagemsg("Already saw %s %s in head %s" % (desc, adj_or_dim, str(head)))
     else:
       adjs_or_dims.append(adj_or_dim)
       added_adjs_or_dims.append(adj_or_dim)
   if adjs_or_dims != orig_adjs_or_dims:
-    orighead = unicode(head)
+    orighead = str(head)
     blib.set_param_chain(head, adjs_or_dims, param, param)
-    pagemsg("Replaced %s with %s" % (orighead, unicode(head)))
+    pagemsg("Replaced %s with %s" % (orighead, str(head)))
     notes.append("add %s=%s to Russian noun" % (param, ",".join(added_adjs_or_dims)))
-    secbody = unicode(parsed)
+    secbody = str(parsed)
   subsecs = re.split("(^==.*==\n)", secbody, 0, re.M)
   for k in range(2, len(subsecs), 2):
     if "==Derived terms==" in subsecs[k - 1] or "==Related terms==" in subsecs[k - 1]:
@@ -104,16 +104,16 @@ def process_section_for_relational_adj_snarf(index, pagetitle, text, is_multi_et
   for t in parsed.filter_templates():
     if tname(t) == "ru-adj":
       if getparam(t, "head2"):
-        pagemsg("WARNING: Multihead relational adjective %s, skipping" % unicode(t))
+        pagemsg("WARNING: Multihead relational adjective %s, skipping" % str(t))
         return
       newadj = getparam(t, "1") or pagetitle
       if adj and adj != newadj:
         pagemsg("WARNING: Saw multiple adjectives %s and %s on relational page, skipping: head=%s" %
-            (adj, newadj, unicode(t)))
+            (adj, newadj, str(t)))
         return
       if "[[" in newadj:
         pagemsg("WARNING: Saw links in relational adjective %s, skipping: head=%s" % (
-          newadj, unicode(t)))
+          newadj, str(t)))
         return
       adj = newadj
   subsecs = re.split("(^==.*==\n)", text, 0, re.M)
@@ -133,22 +133,22 @@ def process_section_for_relational_adj_snarf(index, pagetitle, text, is_multi_et
     if tn in ["affix", "af", "suffix", "suf"] and getparam(t, "1") == "ru":
       noun = getparam(t, "2")
       if getparam(t, "lang1"):
-        pagemsg("WARNING: lang1= in affix template %s for relational adjective %s" % (unicode(t), adj))
+        pagemsg("WARNING: lang1= in affix template %s for relational adjective %s" % (str(t), adj))
       elif noun.endswith("-"):
         pagemsg("WARNING: Prefix %s found as putative source noun for relational adjective %s: affix template %s" %
-            (noun, adj, unicode(t)))
+            (noun, adj, str(t)))
       elif noun.startswith("-"):
         pagemsg("WARNING: Suffix %s found as putative source noun for relational adjective %s: affix template %s" %
-            (noun, adj, unicode(t)))
+            (noun, adj, str(t)))
       elif not noun:
         pagemsg("WARNING: Blank string found as putative source noun for relational adjective %s: affix template %s" %
-            (adj, unicode(t)))
+            (adj, str(t)))
       elif tn in ["affix", "af"] and not getparam(t, "3").startswith("-"):
         pagemsg("WARNING: Apparent compound etymology for relational adjective %s, skipping: affix template %s" %
-            (adj, unicode(t)))
+            (adj, str(t)))
       elif tn in ["affix", "af"] and getparam(t, "3").endswith("-"):
         pagemsg("WARNING: Infix %s, hence apparent compound etymology for relational adjective %s, skipping: affix template %s" %
-            (getparam(t, "3"), adj, unicode(t)))
+            (getparam(t, "3"), adj, str(t)))
       else:
         msg("%s ||| %s" % (adj, noun))
         break
@@ -194,7 +194,7 @@ def process_section_for_diminutive_snarf(index, pagetitle, text, is_multi_etym_s
     if tname(t) in ["ru-noun+", "ru-noun"]:
       if nount and not saw_dim:
         pagemsg("WARNING: Saw multiple heads (first=%s, second=%s), the first of which may or may not be a diminutive" % (
-          unicode(nount), unicode(t)))
+          str(nount), str(t)))
       nount = t
       saw_dim = False
     if tname(t) in ["diminutive of", "dim of", "endearing diminutive of"]:

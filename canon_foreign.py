@@ -27,7 +27,7 @@ def show_failure(pagemsg, num_succeeded=None, num_failed=None):
     pagemsg("Failure = %s/%s = %.1f%%" % (num_failed, total, 100.0 * num_failed / total))
 
 def nfd_form(txt):
-  return unicodedata.normalize("NFD", unicode(txt))
+  return unicodedata.normalize("NFD", str(txt))
 
 def template_changelog_name(template, lang):
   tn = tname(template)
@@ -99,7 +99,7 @@ def do_canon_param(obj, translit_module):
     printed_succeeded_failed = False
 
   if show_template:
-    pagemsg("Processing %s" % (unicode(obj.t)))
+    pagemsg("Processing %s" % (str(obj.t)))
 
   if not foreign or latin in ["-", "?"]:
     pagemsg("Skipped: foreign=%s, latin=%s" % (foreign, latin))
@@ -126,9 +126,9 @@ def do_canon_param(obj, translit_module):
     except RuntimeError as e:
       match_canon_error = u"Unable to match-canon %s (%s): %s" % (foreign, latin, e)
       if show_backtrace:
-        errmsg("WARNING: %s: %s" % (match_canon_error, unicode(obj.t)))
+        errmsg("WARNING: %s: %s" % (match_canon_error, str(obj.t)))
         traceback.print_exc()
-      pagemsg("NOTE: %s: %s" % (match_canon_error, unicode(obj.t)))
+      pagemsg("NOTE: %s: %s" % (match_canon_error, str(obj.t)))
       total_num_failed += 1
       canonlatin, canonforeign = (
           translit_module.canonicalize_latin_foreign(obj, latin, foreign,
@@ -149,10 +149,10 @@ def do_canon_param(obj, translit_module):
       pass
     elif not translit:
       pagemsg("NOTE: Unable to auto-translit %s (canoned from %s): %s" %
-          (canonforeign, foreign, unicode(obj.t)))
+          (canonforeign, foreign, str(obj.t)))
   except Exception as e:
     pagemsg("NOTE: Unable to transliterate %s (canoned from %s): %s: %s" %
-        (canonforeign, foreign, e, unicode(obj.t)))
+        (canonforeign, foreign, e, str(obj.t)))
     translit = None
 
   if canonforeign == foreign:
@@ -195,7 +195,7 @@ def do_canon_param(obj, translit_module):
       if hasattr(translit_module, 'foreign_diff_msgs'):
         msg.extend(translit_module.foreign_diff_msgs(rdforeign, rdcanonforeign)
       pagemsg("NOTE: Without diacritics, old foreign %s different from canon %s%s: %s"
-        % (foreign, canonforeign, msgs and " (in old: %s)" % ", ".join(msgs) or "", unicode(obj.t)))
+        % (foreign, canonforeign, msgs and " (in old: %s)" % ", ".join(msgs) or "", str(obj.t)))
 
   if not latin:
     pass
@@ -207,7 +207,7 @@ def do_canon_param(obj, translit_module):
   else:
     if translit and translit is not NotImplemented:
       pagemsg("NOTE: Canoned Latin %s not same as auto-translit %s, can't remove: %s" %
-          (canonlatin, translit, unicode(obj.t)))
+          (canonlatin, translit, str(obj.t)))
     if canonlatin == latin:
       pagemsg("No change in Latin %s: foreign %s -> %s%s" %
           (latin, foreign, newforeign, "" if translit is NotImplemented else " (auto-translit %s)" % translit))
@@ -240,7 +240,7 @@ def add_param_handling_head(template, param, value):
     return
   before = None
   for paramobj in template.params:
-    pname = unicode(paramobj.name).strip()
+    pname = str(paramobj.name).strip()
     if re.match("^[0-9]+", pname):
       continue
     before = pname
@@ -255,13 +255,13 @@ def canon_param(obj, translit_module):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (obj.index, obj.pagetitle, txt))
   canonforeign, canonlatin, actions, match_canon_error = do_canon_param(obj, translit_module)
-  oldtempl = "%s" % unicode(obj.t)
+  oldtempl = "%s" % str(obj.t)
   if obj.param[0] in ["separate", "separate-pagetitle"]:
     _, toparam, paramtr = obj.param
     if canonforeign:
       if toparam is None:
         pagemsg("WARNING: No param to set new foreign value `%s` to in %s" %
-          (canonforeign, unicode(obj.t)))
+          (canonforeign, str(obj.t)))
       else:
         add_param_handling_head(obj.t, toparam, canonforeign)
     if canonlatin == True:
@@ -286,7 +286,7 @@ def canon_param(obj, translit_module):
       fromparam = "%s<%s>" % (foreign_param, foreign_mod)
 
   if canonforeign or canonlatin:
-    pagemsg("Replaced %s with %s" % (oldtempl, unicode(obj.t)))
+    pagemsg("Replaced %s with %s" % (oldtempl, str(obj.t)))
   return actions, match_canon_error
 
 def combine_adjacent(values):
@@ -347,18 +347,18 @@ def canon_one_page_links(pagetitle, index, text, lang, langname, script, transli
     if scvalue in script:
       tn = tname(obj.t)
       if show_template and result == False:
-        pagemsg("%s.%s: Processing %s" % (tn, "sc", unicode(obj.t)))
+        pagemsg("%s.%s: Processing %s" % (tn, "sc", str(obj.t)))
       pagemsg("%s.%s: Removing sc=%s" % (tn, "sc", scvalue))
-      oldtempl = "%s" % unicode(obj.t)
+      oldtempl = "%s" % str(obj.t)
       obj.t.remove("sc")
-      pagemsg("Replaced %s with %s" % (oldtempl, unicode(obj.t)))
+      pagemsg("Replaced %s with %s" % (oldtempl, str(obj.t)))
       newresult = ["remove sc=%s in {{%s}}" % (scvalue, template_changelog_name(obj.t, obj.tlang))]
       if result != False:
         result = result + newresult
       else:
         result = newresult
     if match_canon_error is not None:
-      newt = unicode(obj.t)
+      newt = str(obj.t)
       pagemsg("WARNING: %s: <from> %s <to> %s <end>" % (match_canon_error, newt, newt))
     return result
 

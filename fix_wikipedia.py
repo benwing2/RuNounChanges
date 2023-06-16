@@ -9,29 +9,29 @@ from blib import getparam, rmparam, msg, site
 import rulib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    if unicode(t.name) == "wikipedia":
+    origt = str(t)
+    if str(t.name) == "wikipedia":
       val = getparam(t, "1")
       newval = rulib.remove_accents(val)
       if val != newval:
         pagemsg("Removing accents from 1= in {{wikipedia|...}}")
         notes.append("remove accents from 1= in {{wikipedia|...}}")
         t.add("1", newval)
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Remove accents from 1= in {{wikipedia|...}}",
   include_pagefile=True)

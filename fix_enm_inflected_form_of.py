@@ -36,7 +36,7 @@ def process_text_on_page(pagetitle, index, text):
       continue
     parsed = blib.parse_text(subsections[j])
     for t in parsed.filter_templates():
-      origt = unicode(t)
+      origt = str(t)
       tn = tname(t)
       if tn in rename_templates_without_lang:
         lemma = getparam(t, "1")
@@ -119,16 +119,16 @@ def process_text_on_page(pagetitle, index, text):
         nextparam += 1
       if gloss:
         t.add("t", gloss)
-      notes.append("replace %s with %s" % (origt, unicode(t)))
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
-    subsections[j] = unicode(parsed)
+      notes.append("replace %s with %s" % (origt, str(t)))
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
+    subsections[j] = str(parsed)
   text = "".join(subsections)
 
   return text, notes
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
-  text = unicode(page.text)
+  pagetitle = str(page.title())
+  text = str(page.text)
   return process_text_on_page(pagetitle, index, text)
 
 parser = blib.create_argparser("Replace {{enm-inflected form of}} with proper call to {{inflection of}}")

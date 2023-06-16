@@ -67,7 +67,7 @@ auto_cat_to_manual = {
 
 def process_page(page, index, parsed):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def expand_text(tempcall):
@@ -76,7 +76,7 @@ def process_page(page, index, parsed):
   if ":" in pagetitle and not re.search("^(Appendix|Reconstruction|Citations):", pagetitle):
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
   pagemsg("Processing")
   notes = []
@@ -100,7 +100,7 @@ def process_page(page, index, parsed):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn == "place":
-      wikicode = expand_text(unicode(t))
+      wikicode = expand_text(str(t))
       if not wikicode:
         continue
       for m in re.finditer(r"\[\[(?:[Cc]ategory|CAT):(.*?)\]\]", wikicode):
@@ -130,13 +130,13 @@ def process_page(page, index, parsed):
         continue
       non_numbered_params = []
       for param in t.params:
-        pname = unicode(param.name).strip()
-        pval = unicode(param.value).strip()
+        pname = str(param.name).strip()
+        pval = str(param.value).strip()
         showkey = param.showkey
         if not re.search("^[0-9]+$", pname):
           non_numbered_params.append((pname, pval, showkey))
       if filtered_cats:
-        origt = unicode(t)
+        origt = str(t)
         # Erase all params.
         del t.params[:]
         # Put back new params.
@@ -145,11 +145,11 @@ def process_page(page, index, parsed):
           t.add(str(catind + 2), cat)
         for pname, pval, showkey in non_numbered_params:
           t.add(pname, pval, showkey=showkey, preserve_spacing=False)
-        if origt != unicode(t):
-          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        if origt != str(t):
+          pagemsg("Replaced %s with %s" % (origt, str(t)))
       else:
-        text_to_remove.append(unicode(t))
-  text = unicode(parsed)
+        text_to_remove.append(str(t))
+  text = str(parsed)
 
   for m in re.finditer(r"\[\[(?:[Cc]ategory|CAT):(.*?)\]\]\n?", text):
     cat = m.group(1)

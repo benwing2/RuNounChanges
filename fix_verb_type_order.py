@@ -9,19 +9,19 @@ from blib import getparam, rmparam, msg, site
 import rulib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   parsed = blib.parse(page)
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    if unicode(t.name) in ["ru-conj", "ru-conj-old"]:
+    origt = str(t)
+    if str(t.name) in ["ru-conj", "ru-conj-old"]:
       verbtype = getparam(t, "2")
       if verbtype in ["pf", "pf-intr", "pf-refl",
           "pf-impers", "pf-intr-impers", "pf-refl-impers",
@@ -31,11 +31,11 @@ def process_page(page, index, parsed):
         t.add("2", conjtype)
         t.add("1", verbtype)
         notes.append("move verb type from arg 2 to arg 1")
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Move verb type from arg 2 to arg 1",
   include_pagefile=True)

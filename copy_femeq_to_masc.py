@@ -8,7 +8,7 @@ from blib import getparam, rmparam, set_template_name, msg, errandmsg, site, tna
 
 def process_masc_page(index, page, fem):
   notes = []
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   orig_fem = fem
   def pagemsg(txt):
     msg("Page %s %s: %s: %s" % (index, orig_fem, pagetitle, txt))
@@ -16,28 +16,28 @@ def process_masc_page(index, page, fem):
     return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
   prev_fr_noun = False
-  parsed = blib.parse_text(unicode(page.text))
+  parsed = blib.parse_text(str(page.text))
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in ["fr-noun"]:
       if prev_fr_noun:
-        pagemsg("WARNING: Saw two {{fr-noun}} templates, not changing: %s and %s" % (prev_fr_noun, unicode(t)))
+        pagemsg("WARNING: Saw two {{fr-noun}} templates, not changing: %s and %s" % (prev_fr_noun, str(t)))
         return
-      prev_fr_noun = unicode(t)
+      prev_fr_noun = str(t)
       default_fem = expand_text("{{#invoke:fr-headword|make_feminine|%s}}" % pagetitle)
       if not default_fem:
         return
       if fem == default_fem:
-        pagemsg("Substituting '+' for default feminine %s: %s" % (fem, unicode(t)))
+        pagemsg("Substituting '+' for default feminine %s: %s" % (fem, str(t)))
         fem = "+"
       else:
-        pagemsg("Feminine %s not equal to default feminine %s, not substituting: %s" % (fem, default_fem, unicode(t)))
+        pagemsg("Feminine %s not equal to default feminine %s, not substituting: %s" % (fem, default_fem, str(t)))
       fems = blib.fetch_param_chain(t, "f")
       if fem in fems:
-        pagemsg("Feminine %s already in feminine(s) %s: %s" % (fem, ",".join(fems), unicode(t)))
+        pagemsg("Feminine %s already in feminine(s) %s: %s" % (fem, ",".join(fems), str(t)))
       elif orig_fem in fems:
-        pagemsg("Replacing default feminine %s with + in %s: %s" % (orig_fem, ",".join(fems), unicode(t)))
+        pagemsg("Replacing default feminine %s with + in %s: %s" % (orig_fem, ",".join(fems), str(t)))
         fems = [fem if f == orig_fem else f for f in fems]
         blib.set_param_chain(t, fems, "f")
         notes.append("replace default feminine %s with + in {{fr-noun}}" % orig_fem)
@@ -46,10 +46,10 @@ def process_masc_page(index, page, fem):
         blib.set_param_chain(t, fems, "f")
         notes.append("add female equivalent %s%s to {{fr-noun}}" % (fem, "" if fem == orig_fem else " (%s)" % orig_fem))
 
-    if origt != unicode(t):
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if origt != str(t):
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 
 def process_text_on_page(index, pagetitle, text):
@@ -65,17 +65,17 @@ def process_text_on_page(index, pagetitle, text):
 
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in ["female equivalent of", "femeq"]:
       lang = getparam(t, "1")
       if lang != "fr":
-        pagemsg("WARNING: Can't handle lang %s: %s" % (lang, unicode(t)))
+        pagemsg("WARNING: Can't handle lang %s: %s" % (lang, str(t)))
         continue
       masc = getparam(t, "2")
       mascpage = pywikibot.Page(site, masc)
       if not blib.safe_page_exists(mascpage, errandpagemsg):
-        pagemsg("WARNING: Masculine %s doesn't exist: %s" % (masc, unicode(t)))
+        pagemsg("WARNING: Masculine %s doesn't exist: %s" % (masc, str(t)))
         continue
       def do_process(page, index, parsed):
         return process_masc_page(index, page, pagetitle)

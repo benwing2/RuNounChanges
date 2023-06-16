@@ -8,8 +8,8 @@ import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
-  text = unicode(page.text)
+  pagetitle = str(page.title())
+  text = str(page.text)
 
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -35,11 +35,11 @@ def process_page(page, index, parsed):
       tlang = getparam(t, "1")
       if lang != tlang:
         pagemsg("WARNING: Lang %s in continuation template %s not same as lang %s in first template %s" % (
-          tlang, unicode(t), lang, unicode(t1)))
+          tlang, str(t), lang, str(t1)))
         return m.group(0)
       for param in t.params:
-        pname = unicode(param.name).strip()
-        pval = unicode(param.value).strip()
+        pname = str(param.name).strip()
+        pval = str(param.value).strip()
         if not pval:
           continue
         if pname == "2":
@@ -58,7 +58,7 @@ def process_page(page, index, parsed):
           pass
         else:
           pagemsg("WARNING: Unrecognized param %s=%s in %s, skipping" %
-              (pname, pval, unicode(t)))
+              (pname, pval, str(t)))
           return m.group(0)
       next_index += 1
     for param in ["notext", "nocap", "nocat"]:
@@ -66,7 +66,7 @@ def process_page(page, index, parsed):
       rmparam(t1, param)
       if val:
         t1.add(param, val)
-    newtext = unicode(t1)
+    newtext = str(t1)
     pagemsg("Replaced %s with %s" % (m.group(0), newtext))
     return newtext
 

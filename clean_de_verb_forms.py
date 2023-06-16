@@ -556,30 +556,30 @@ def process_text_on_page(index, pagetitle, text):
   def verify_lang(t, lang=None):
     lang = lang or getparam(t, "1")
     if lang != "de":
-      pagemsg("WARNING: Saw {{%s}} for non-German language: %s" % (tname(t), unicode(t)))
+      pagemsg("WARNING: Saw {{%s}} for non-German language: %s" % (tname(t), str(t)))
       raise BreakException()
 
   def verify_verb_lemma(t, term):
     if not re.search("(e[rl]*n|th?un|sein)$", term):
-      pagemsg("WARNING: Term %s doesn't look like an infinitive: %s" % (term, unicode(t)))
+      pagemsg("WARNING: Term %s doesn't look like an infinitive: %s" % (term, str(t)))
       raise BreakException()
 
   def verify_past_participle(t, term):
     if not re.search("(t|en|th?an)$", term):
-      pagemsg("WARNING: Term %s doesn't look like a past participle: %s" % (term, unicode(t)))
+      pagemsg("WARNING: Term %s doesn't look like a past participle: %s" % (term, str(t)))
       raise BreakException()
 
   def verify_present_participle(t, term):
     if not re.search("e[rl]*nd$", term):
-      pagemsg("WARNING: Term %s doesn't look like a present participle: %s" % (term, unicode(t)))
+      pagemsg("WARNING: Term %s doesn't look like a present participle: %s" % (term, str(t)))
       raise BreakException()
 
   def check_unrecognized_params(t, allowed_params, no_break=False):
     for param in t.params:
       pn = pname(param)
-      pv = unicode(param.value)
+      pv = str(param.value)
       if pn not in allowed_params:
-        pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pn, pv, unicode(t)))
+        pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pn, pv, str(t)))
         if not no_break:
           raise BreakException()
         else:
@@ -639,7 +639,7 @@ def process_text_on_page(index, pagetitle, text):
               )
               verify_lang(t, lang)
               if params or tr or alt:
-                pagemsg("WARNING: Saw extra parameters in {{%s}}, skipping: %s" % (tn, unicode(t)))
+                pagemsg("WARNING: Saw extra parameters in {{%s}}, skipping: %s" % (tn, str(t)))
                 raise BreakException()
               tag_sets = infltags.split_multipart_tag_sets(infltags.split_tags_into_tag_sets(tags))
 
@@ -679,7 +679,7 @@ def process_text_on_page(index, pagetitle, text):
                   removed_tag_set = tag_set
 
               def put_back_tags(new_tags):
-                origt = unicode(t)
+                origt = str(t)
                 # Now combine adjacent tags into multipart tags.
                 def warn(text):
                   pagemsg("WARNING: %s" % text)
@@ -688,23 +688,23 @@ def process_text_on_page(index, pagetitle, text):
                   tag_to_canonical_form_table=tag_to_canonical_form_table
                 )
                 infltags.put_back_new_inflection_of_params(t, this_notes, new_tags, params, lang, term, tr, alt)
-                if origt != unicode(t):
+                if origt != str(t):
                   this_sec_notes.extend(this_notes)
-                  pagemsg("Replace %s with %s" % (origt, unicode(t)))
+                  pagemsg("Replace %s with %s" % (origt, str(t)))
                   return True
                 else:
                   return False
 
               if addltemp and not filtered_tag_sets:
-                origt = unicode(t)
+                origt = str(t)
                 blib.set_template_name(t, addltemp)
                 del t.params[:]
                 t.add("1", "de")
                 t.add("2", addltemp_arg)
                 this_sec_notes.append("replace {{%s|de}} with {{%s|de}}" % (tn, addltemp))
                 made_a_change = True
-                pagemsg("Replace %s with %s" % (origt, unicode(t)))
-                newsubseck = unicode(parsed)
+                pagemsg("Replace %s with %s" % (origt, str(t)))
+                newsubseck = str(parsed)
               elif filtered_tag_sets and not addltemp:
                 new_tags = infltags.combine_tag_set_group(filtered_tag_sets)
                 changed = put_back_tags(new_tags)
@@ -712,12 +712,12 @@ def process_text_on_page(index, pagetitle, text):
                   if new_tags != tags or not this_sec_notes:
                     this_sec_notes.append("clean {{%s|de}}" % tn)
                   made_a_change = True
-                  newsubseck = unicode(parsed)
+                  newsubseck = str(parsed)
               elif addltemp and filtered_tag_sets:
                 new_tags = infltags.combine_tag_set_group(filtered_tag_sets)
-                m = re.search(r"\A(.*)^([^\n]*)%s([^\n]*)\n(.*)\Z" % re.escape(unicode(t)), newsubseck, re.S | re.M)
+                m = re.search(r"\A(.*)^([^\n]*)%s([^\n]*)\n(.*)\Z" % re.escape(str(t)), newsubseck, re.S | re.M)
                 if not m:
-                  pagemsg("WARNING: Something wrong, can't find %s in <<%s>>" % (unicode(t), newsubseck))
+                  pagemsg("WARNING: Something wrong, can't find %s in <<%s>>" % (str(t), newsubseck))
                   raise BreakException()
                 before_lines, before_on_line, after_on_line, after_lines = m.groups()
                 put_back_tags(new_tags)
@@ -725,10 +725,10 @@ def process_text_on_page(index, pagetitle, text):
                   addltemp))
                 made_a_change = True
                 newsubseck = "%s%s%s%s\n%s{{%s|de|%s}}%s\n%s" % (
-                  before_lines, before_on_line, unicode(t), after_on_line, before_on_line, addltemp, addltemp_arg,
+                  before_lines, before_on_line, str(t), after_on_line, before_on_line, addltemp, addltemp_arg,
                   after_on_line, after_lines)
               else:
-                pagemsg("WARNING: Something wrong, no tag sets remain and no new templates added: %s" % unicode(t))
+                pagemsg("WARNING: Something wrong, no tag sets remain and no new templates added: %s" % str(t))
                 raise BreakException()
               
               if made_a_change:
@@ -753,7 +753,7 @@ def process_text_on_page(index, pagetitle, text):
             verify_lang(t)
             check_unrecognized_params(t, ["1", "2", "3", "4"])
             if getp("3"):
-              pagemsg("WARNING: {{participle of}} has 3=: %s" % unicode(t))
+              pagemsg("WARNING: {{participle of}} has 3=: %s" % str(t))
               raise BreakException()
             part_type = getp("4")
             if part_type == "past":
@@ -763,7 +763,7 @@ def process_text_on_page(index, pagetitle, text):
               name = "present participle of"
               verify_present_participle(t, pagetitle)
             else:
-              pagemsg("WARNING: Unrecognized 4= in {{participle of}}: %s" % unicode(t))
+              pagemsg("WARNING: Unrecognized 4= in {{participle of}}: %s" % str(t))
               raise BreakException()
             lemma = getp("2")
             verify_verb_lemma(t, lemma)
@@ -771,7 +771,7 @@ def process_text_on_page(index, pagetitle, text):
             rmparam(t, "4")
             rmparam(t, "3")
             this_sec_notes.append("convert {{participle of|de|...|%s}} to {{%s|de}}" % (part_type, name))
-            newsubseck = unicode(parsed)
+            newsubseck = str(parsed)
 
           elif tn in ["past participle of", "present participle of"]:
             verify_lang(t)
@@ -783,19 +783,19 @@ def process_text_on_page(index, pagetitle, text):
             if getp("nocat"):
               rmparam(t, "nocat")
               this_sec_notes.append("remove nocat=1 from {{%s|de}}" % tn)
-              newsubseck = unicode(parsed)
+              newsubseck = str(parsed)
 
           elif tn in infltags.generic_inflection_of_templates:
             verify_lang(t)
             verify_verb_lemma(t, getp("2"))
             blib.set_template_name(t, "verb form of")
             this_sec_notes.append("replace {{%s|de}} with {{verb form of|de}}" % tn)
-            newsubseck = unicode(parsed)
+            newsubseck = str(parsed)
 
           elif tn == "head" and getp("1") == "de" and getp("2") == "verb forms":
             t.add("2", "verb form")
             this_sec_notes.append("replace {{head|de|verb forms}} with {{head|de|verb form}}")
-            newsubseck = unicode(parsed)
+            newsubseck = str(parsed)
 
 
         # Now split {{inflection of}} and {{present/past participle of}} under the same header. Also correct header
@@ -821,7 +821,7 @@ def process_text_on_page(index, pagetitle, text):
               saw_presp_of = True
             if part_template:
               pagemsg("WARNING: Saw two participle templates %s and %s in likely verb form subsection" % (
-                unicode(part_template), unicode(t)))
+                str(part_template), str(t)))
               raise BreakException()
             part_template = t
           elif tn == "de-adj form of":
@@ -830,11 +830,11 @@ def process_text_on_page(index, pagetitle, text):
             verify_lang(t)
             if getp("2") not in ["verb form", "participle form", "past participle form", "participle",
                 "past participle", "present participle"]:
-              pagemsg("WARNING: Saw strange headword POS in likely verb form subsection: %s" % unicode(t))
+              pagemsg("WARNING: Saw strange headword POS in likely verb form subsection: %s" % str(t))
               raise BreakException()
             if head_template:
               pagemsg("WARNING: Saw two head templates %s and %s in likely verb form subsection" % (
-                unicode(head_template), unicode(t)))
+                str(head_template), str(t)))
               raise BreakException()
             head_template = t
 
@@ -860,10 +860,10 @@ def process_text_on_page(index, pagetitle, text):
           if pos in ["verb form", "participle"]:
             head_template.add("2", should_pos)
             this_sec_notes.append("convert {{head|de|verb form}} to {{head|de|%s}}" % should_pos)
-            newsubseck = unicode(parsed)
+            newsubseck = str(parsed)
           elif pos != should_pos:
             pagemsg("WARNING: Head template has strange POS for participle, should be '%s': %s"
-                % (should_pos, unicode(head_template)))
+                % (should_pos, str(head_template)))
             raise BreakException()
           if "Verb" in newsubsecheader:
             newsubsecheader = newsubsecheader.replace("Verb", "Participle")
@@ -918,7 +918,7 @@ def process_text_on_page(index, pagetitle, text):
           if not headword_line:
             pagemsg("WARNING: Something wrong, didn't see headword line in subsection: <<%s>>" % newsubseck)
             raise BreakException()
-          if headword_line != unicode(head_template):
+          if headword_line != str(head_template):
             pagemsg("WARNING: Additional text on headword line besides headword template: %s" % headword_line)
             raise BreakException()
           head_template_head = getparam(head_template, "head")
@@ -949,12 +949,12 @@ def process_text_on_page(index, pagetitle, text):
           check_unrecognized_params(head_template, ["1", "2", "head"])
           pos = getparam(head_template, "2")
           if pos in ["participle", "present participle", "past participle", "past participle form"]:
-            pagemsg("WARNING: Head template has strange POS for participle form: %s" % unicode(head_template))
+            pagemsg("WARNING: Head template has strange POS for participle form: %s" % str(head_template))
             raise BreakException()
           if pos == "verb form":
             head_template.add("2", "participle form")
             this_sec_notes.append("convert {{head|de|%s}} to {{head|de|participle form}} for participle form" % pos)
-            newsubseck = unicode(parsed)
+            newsubseck = str(parsed)
           if "Verb" in newsubsecheader:
             newsubsecheader = newsubsecheader.replace("Verb", "Participle")
             this_sec_notes.append("correct ==Verb== to ==Participle== for participle form")
@@ -1037,11 +1037,11 @@ def process_text_on_page(index, pagetitle, text):
   #          pagemsg("WARNING: Didn't see headword template in %s section: <<%s>>" % (lemma_pos, subsectext))
   #          raise BreakException()
   #        if lemma is True:
-  #          pagemsg("WARNING: Saw form-of template %s in lemma %s section: <<%s>>" % (unicode(t), lemma_pos, subsectext))
+  #          pagemsg("WARNING: Saw form-of template %s in lemma %s section: <<%s>>" % (str(t), lemma_pos, subsectext))
   #          raise BreakException()
   #        if lemma:
   #          pagemsg("WARNING: Saw two form-of templates in lemma %s section, second is %s: <<%s>>" %
-  #            (lemma_pos, unicode(t), subsectext))
+  #            (lemma_pos, str(t), subsectext))
   #        lemma = getp("2")
   #    if lemma is None:
   #      pagemsg("WARNING: Unable to locate lemma in nonlemma %s section: <<%s>>" % (lemma_pos, subsectext))

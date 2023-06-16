@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, tname, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -16,7 +16,7 @@ def process_page(page, index, parsed):
   notes = []
   for t in parsed.filter_templates():
     if tname(t) == "R:Lexico":
-      origt = unicode(t)
+      origt = str(t)
       rmparam(t, "lang")
       entry_uk = getparam(t, "entry_uk")
       if entry_uk:
@@ -30,7 +30,7 @@ def process_page(page, index, parsed):
       if p4:
         t.add("text", p4, before="4")
       rmparam(t, "4")
-      newt = unicode(t)
+      newt = str(t)
       if origt != newt:
         notes.append("Remove/rearrange params in {{R:Lexico}}")
         pagemsg("Replaced %s with %s" % (origt, newt))

@@ -72,7 +72,7 @@ def lookup_inflection(lemma_no_macrons, pos, expected_headtemps, expected_inflte
       heads_and_defns_cache[lemma_pagetitle] = "nonexistent"
       return None
 
-    retval = lalib.find_heads_and_defns(unicode(page.text), pagemsg)
+    retval = lalib.find_heads_and_defns(str(page.text), pagemsg)
     heads_and_defns_cache[lemma_pagetitle] = retval
 
   if retval == "nonexistent":
@@ -105,7 +105,7 @@ def lookup_inflection(lemma_no_macrons, pos, expected_headtemps, expected_inflte
       if infltn not in seen_infltns:
         seen_infltns.append(infltn)
     if tn in expected_headtemps:
-      oright = unicode(ht)
+      oright = str(ht)
       for head in heads:
         head_no_links = blib.remove_links(head)
         if lalib.remove_macrons(head_no_links) == lemma_no_macrons:
@@ -119,10 +119,10 @@ def lookup_inflection(lemma_no_macrons, pos, expected_headtemps, expected_inflte
         if infltn not in expected_infltemps:
           pagemsg("WARNING: Saw bad declension template for %s, expected one of {{%s}}: %s" % (
             pos, ",".join("{{%s}}" % temp for temp in expected_infltemps),
-            unicode(inflt)))
+            str(inflt)))
           continue
 
-        originflt = unicode(inflt)
+        originflt = str(inflt)
         inflargs = lalib.generate_infl_forms(pos, originflt, errandpagemsg, expand_text)
         if inflargs is None:
           continue
@@ -297,14 +297,14 @@ def process_text_on_page(index, pagetitle, text):
     matching_headword_forms = []
     for headword_form in headword_forms:
       if "[" in headword_form or "|" in headword_form:
-        pagemsg("WARNING: Bracket or pipe symbol in non-lemma headword form, should not happen: %s" % unicode(ht))
+        pagemsg("WARNING: Bracket or pipe symbol in non-lemma headword form, should not happen: %s" % str(ht))
         headword_form = blib.remove_links(headword_form)
       if lalib.remove_macrons(headword_form) != pagetitle:
         pagemsg("WARNING: Bad headword form %s, doesn't match page title: %s" % (
-        headword_form, unicode(ht)))
+        headword_form, str(ht)))
       elif headword_form in matching_headword_forms:
         pagemsg("WARNING: Duplicate headword form %s: %s" % (
-          headword_form, unicode(ht)))
+          headword_form, str(ht)))
       else:
         matching_headword_forms.append(headword_form)
     headword_forms = matching_headword_forms
@@ -325,12 +325,12 @@ def process_text_on_page(index, pagetitle, text):
             lemma_param = 2
           if lang != "la":
             errandstagemsg("WARNING: In Latin section, found {{inflection of}} for different language %s: %s" % (
-              lang, unicode(t)))
+              lang, str(t)))
             continue
           lemma = getparam(t, str(lemma_param))
           if "[" in lemma or "|" in lemma:
             stagemsg("WARNING: Link in lemma %s, skipping: %s" % (
-              lemma, unicode(t)))
+              lemma, str(t)))
             continue
           inflargs_sets = lookup_inflection(lalib.remove_macrons(lemma), pos,
               expected_headtemps, expected_infltemps, stagemsg, errandstagemsg)
@@ -341,8 +341,8 @@ def process_text_on_page(index, pagetitle, text):
           # fetch tags
           tags = []
           for param in t.params:
-            pname = unicode(param.name).strip()
-            pval = unicode(param.value).strip()
+            pname = str(param.name).strip()
+            pval = str(param.value).strip()
             if re.search("^[0-9]+$", pname):
               if int(pname) >= lemma_param + 2:
                 if pval:
@@ -399,7 +399,7 @@ def process_text_on_page(index, pagetitle, text):
               return []
             if slot not in possible_slots:
               stagemsg("WARNING: Unrecognized slot %s from tag set: %s" % (
-                slot, unicode(t)))
+                slot, str(t)))
               return []
             saw_slot_in_inflargs = False
             matching_actual_lemmas = []
@@ -475,14 +475,14 @@ def process_text_on_page(index, pagetitle, text):
                 stagemsg("WARNING: Matched tag sets %s but not %s, counting as a match: %s" % (
                   ",".join("|".join(tag_set) for tag_set in tag_set_matches),
                   ",".join("|".join(tag_set) for tag_set in tag_set_mismatches),
-                  unicode(t)))
+                  str(t)))
             else:
-              stagemsg("WARNING: Couldn't match any tag sets: %s" % unicode(t))
+              stagemsg("WARNING: Couldn't match any tag sets: %s" % str(t))
 
           else:
             stagemsg("WARNING: Couldn't match lemma %s among potential lemmas %s, trying without lemma matches: %s" % (
               lemma, ",".join(actual_lemma for actual_lemmas, this_inflargs in inflargs_sets for actual_lemma in actual_lemmas),
-              unicode(t)))
+              str(t)))
             tag_set_matches = []
             tag_set_mismatches = []
             all_matching_lemmas = []
@@ -505,25 +505,25 @@ def process_text_on_page(index, pagetitle, text):
                     lemma, all_matching_lemmas[0], 
                     ",".join("|".join(tag_set) for tag_set in tag_set_matches),
                     ",".join("|".join(tag_set) for tag_set in tag_set_mismatches),
-                    unicode(t)))
+                    str(t)))
                 else:
                   stagemsg("WARNING: Fixing macrons in lemma %s -> %s; all tag sets match: %s" % (
-                    lemma, all_matching_lemmas[0], unicode(t)))
-                origt = unicode(t)
+                    lemma, all_matching_lemmas[0], str(t)))
+                origt = str(t)
                 t.add(str(lemma_param), all_matching_lemmas[0])
-                stagemsg("Replaced %s with %s" % (origt, unicode(t)))
+                stagemsg("Replaced %s with %s" % (origt, str(t)))
               else:
                 if len(tag_set_mismatches) > 0:
                   stagemsg("WARNING: Multiple possible lemmas %s match some tag sets %s but not %s, counting as a match but not updating lemma %s: %s" % (
                     ",".join(all_matching_lemmas),
                     ",".join("|".join(tag_set) for tag_set in tag_set_matches),
                     ",".join("|".join(tag_set) for tag_set in tag_set_mismatches),
-                    lemma, unicode(t)))
+                    lemma, str(t)))
                 else:
                   stagemsg("WARNING: Multiple possible lemmas %s match tag sets, with all tag sets matching, counting as a match but not updating lemma %s: %s" % (
-                    ",".join(all_matching_lemmas), lemma, unicode(t)))
+                    ",".join(all_matching_lemmas), lemma, str(t)))
             else:
-              stagemsg("WARNING: Couldn't match any tag sets even when allowing macron mismatches with lemma %s: %s" % (lemma, unicode(t)))
+              stagemsg("WARNING: Couldn't match any tag sets even when allowing macron mismatches with lemma %s: %s" % (lemma, str(t)))
 
         if matched_infl_of_templates:
           break
@@ -573,16 +573,16 @@ def process_text_on_page(index, pagetitle, text):
             break
         if no_common_forms or common_forms is None:
           stagemsg("WARNING: No forms match pagetitle %s across all {{inflection of}} tags and tag sets, not changing headword form(s) but trying again allowing macron differences in lemmas: %s" % (
-            pagetitle, unicode(ht)))
+            pagetitle, str(ht)))
         else:
           notes.append("fix macrons in forms of '%s' (stage 2): %s -> %s" % (
             tname(ht), ",".join(headword_forms), ",".join(common_forms)))
-          oright = unicode(ht)
+          oright = str(ht)
           if tname(ht) == "head":
             blib.set_param_chain(ht, common_forms, "head", "head")
           else:
             blib.set_param_chain(ht, common_forms, "1", "head")
-          stagemsg("Replaced %s with %s" % (oright, unicode(ht)))
+          stagemsg("Replaced %s with %s" % (oright, str(ht)))
           if len(common_forms) > 1:
             stagemsg("WARNING: FIXME: No support yet for pronunciation for multiple headword forms %s" %
                 ",".join(common_forms))
@@ -608,7 +608,7 @@ def process_text_on_page(index, pagetitle, text):
                   matching_lemmas.append(actual_lemma)
           if len(matching_lemmas) > 1:
             stagemsg("WARNING: Multiple actual lemmas %s match {{inflection of}} lemma %s, hence multiple assignments, doing things the hard way: %s" % (
-              ",".join(matching_lemmas), lemma, unicode(t)))
+              ",".join(matching_lemmas), lemma, str(t)))
             multiple_assignments = True
           infl_of_assignments.append(matching_lemmas)
 
@@ -657,30 +657,30 @@ def process_text_on_page(index, pagetitle, text):
               stagemsg("WARNING: Multiple assignments of lemmas have common forms, at least %s -> %s and %s -> %s, not changing: %s" % (
                 ",".join(cur_assignment), ",".join(cur_common_forms),
                 ",".join(assignment), ",".join(common_forms),
-                unicode(ht)))
+                str(ht)))
             else:
               cur_assignment = assignment
               cur_common_forms = common_forms
         if cur_assignment is None:
           stagemsg("WARNING: No forms match pagetitle %s across all {{inflection of}} tags and tag sets when allowing macron differences in lemmas, not changing headword form(s): %s" % (
-            pagetitle, unicode(ht)))
+            pagetitle, str(ht)))
         else:
           for actual_lemma, (t, lemma_param, lemma, inflargs_sets, tag_sets) in zip(cur_assignment, yield_infl_of_templates_and_properties()):
             notes.append("fix macrons in lemma of '%s' (stage 3): %s -> %s" % (
               tname(t), lemma, actual_lemma))
             stagemsg("WARNING: found common forms %s, updating lemma %s to %s: %s" % (
-              ",".join(cur_common_forms), lemma, actual_lemma, unicode(t)))
-            origt = unicode(t)
+              ",".join(cur_common_forms), lemma, actual_lemma, str(t)))
+            origt = str(t)
             t.add(str(lemma_param), actual_lemma)
-            stagemsg("Replaced %s with %s" % (origt, unicode(t)))
+            stagemsg("Replaced %s with %s" % (origt, str(t)))
           notes.append("fix macrons in forms of '%s' (stage 3): %s -> %s" % (
             tname(ht), ",".join(headword_forms), ",".join(cur_common_forms)))
-          oright = unicode(ht)
+          oright = str(ht)
           if tname(ht) == "head":
             blib.set_param_chain(ht, cur_common_forms, "head", "head")
           else:
             blib.set_param_chain(ht, cur_common_forms, "1", "head")
-          stagemsg("Replaced %s with %s" % (oright, unicode(ht)))
+          stagemsg("Replaced %s with %s" % (oright, str(ht)))
           if len(cur_common_forms) > 1:
             stagemsg("WARNING: FIXME: No support yet for pronunciation for multiple headword forms %s" %
                 ",".join(cur_common_forms))
@@ -692,7 +692,7 @@ def process_text_on_page(index, pagetitle, text):
                   ",".join(headword_forms), ",".join(cur_common_forms)))
           break
 
-  secbody = "".join(unicode(x) for x in parsed_subsections)
+  secbody = "".join(str(x) for x in parsed_subsections)
   sections[j] = secbody + sectail
   return "".join(sections), notes
 

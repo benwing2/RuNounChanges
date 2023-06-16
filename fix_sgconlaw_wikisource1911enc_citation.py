@@ -20,16 +20,16 @@ def process_text_on_page(index, pagetitle, text):
     def getp(param):
       return getparam(t, param)
     if tn == "Wikisource1911Enc Citation":
-      origt = unicode(t)
+      origt = str(t)
       param1 = getp("1")
       t.add("1", "1911")
       t.add("2", param1)
       blib.set_template_name(t, "projectlink")
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("convert {{Wikisource1911Enc Citation}} to {{projectlink|1911}}")
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{Wikisource1911Enc Citation}} to {{projectlink|1911}}",
   include_pagefile=True, include_stdin=True)

@@ -9,7 +9,7 @@ from blib import getparam, rmparam, tname, pname, msg, errandmsg, site
 output_pages_to_delete = []
 
 def remove_anagram_from_page(index, page, pagetitle_to_remove):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -40,14 +40,14 @@ def remove_anagram_from_page(index, page, pagetitle_to_remove):
           return getparam(t, param)
         if tn == "anagrams":
           if getp("1") != "it":
-            pagemsg("WARNING: Wrong language in {{anagrams}}: %s" % unicode(t))
+            pagemsg("WARNING: Wrong language in {{anagrams}}: %s" % str(t))
             return
           anagrams = blib.fetch_param_chain(t, "2")
           anagrams = [x for x in anagrams if x != pagetitle_to_remove]
           if anagrams:
             blib.set_param_chain(t, anagrams, "2")
             notes.append("remove anagram '%s', page deleted or renamed%s" % (pagetitle_to_remove, annotation))
-            subsections[k] = unicode(parsed)
+            subsections[k] = str(parsed)
           else:
             subsections[k - 1] = ""
             subsections[k] = ""
@@ -62,7 +62,7 @@ def remove_anagram_from_page(index, page, pagetitle_to_remove):
   return text, notes
 
 def process_page_for_anagrams(index, page, modify_this_page):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -92,14 +92,14 @@ def process_page_for_anagrams(index, page, modify_this_page):
           return getparam(t, param)
         if tn == "anagrams":
           if getp("1") != "it":
-            pagemsg("WARNING: Wrong language in {{anagrams}}: %s" % unicode(t))
+            pagemsg("WARNING: Wrong language in {{anagrams}}: %s" % str(t))
             return
           for anagram in blib.fetch_param_chain(t, "2"):
             if anagram not in anagrams:
               anagrams.append(anagram)
         elif tn == "l":
           if getp("1") != "it":
-            pagemsg("WARNING: Wrong language in {{l}}: %s" % unicode(t))
+            pagemsg("WARNING: Wrong language in {{l}}: %s" % str(t))
             return
           anagram = getp("2")
           if anagram not in anagrams:
@@ -123,7 +123,7 @@ def process_page_for_anagrams(index, page, modify_this_page):
   return text, notes
 
 def process_page_for_deletion(index, page):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):

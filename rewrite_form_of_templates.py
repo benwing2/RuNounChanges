@@ -18,7 +18,7 @@ templates_to_process = form_of_templates + alt_form_of_templates + (
 )
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -26,7 +26,7 @@ def process_page(page, index, parsed):
   notes = []
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "#invoke:form of/templates" and getparam(t, "1") == "template_tags":
       t.add("1", "tagged_form_of_t")
@@ -54,10 +54,10 @@ def process_page(page, index, parsed):
         t.add("withdot", "1")
       t.add("1", "form_of_t")
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert form_of_t and alt_form_of_t invocations in [[Module:form of]] to form_of_t in [[Module:form of/templates]]")
 args = parser.parse_args()

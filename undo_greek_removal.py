@@ -23,16 +23,16 @@ def undo_greek_removal(save, verbose, direcfile, start, end):
 
     def undo_one_page_greek_removal(page, index, text):
       def pagemsg(txt):
-        msg("Page %s %s: %s" % (index, unicode(page.title()), txt))
+        msg("Page %s %s: %s" % (index, str(page.title()), txt))
       template = blib.parse_text(template_text).filter_templates()[0]
-      orig_template = unicode(template)
+      orig_template = str(template)
       if getparam(template, "sc") == "polytonic":
         template.remove("sc")
-      to_template = unicode(template)
+      to_template = str(template)
       param_value = getparam(template, removed_param)
       template.remove(removed_param)
-      from_template = unicode(template)
-      text = unicode(text)
+      from_template = str(template)
+      text = str(text)
       found_orig_template = orig_template in text
       newtext = text.replace(from_template, to_template)
       changelog = ""

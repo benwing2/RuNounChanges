@@ -91,15 +91,15 @@ def remove_diacritics(text):
 
 def rewrite_one_page_ru_decl_adj(page, index, text):
   oldtemps = []
-  pagename = unicode(page.title())
+  pagename = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagename, txt))
   for t in text.filter_templates():
     converted = True
     def tname():
-      return unicode(t.name).strip()
+      return str(t.name).strip()
     origname = tname()
-    origtemplate = unicode(t)
+    origtemplate = str(t)
     if tname() == "ru-adj-table":
       t.name = "ru-decl-adj"
     else:
@@ -169,7 +169,7 @@ def rewrite_one_page_ru_decl_adj(page, index, text):
         if suffix:
           addparam(t, "suffix", suffix)
         t.name = "ru-decl-adj"
-        pagemsg("Rewrote %s as %s" % (origtemplate, unicode(t)))
+        pagemsg("Rewrote %s as %s" % (origtemplate, str(t)))
       else:
         converted = False
     if converted:
@@ -182,7 +182,7 @@ def rewrite_one_page_ru_decl_adj(page, index, text):
 
 def rewrite_one_page_ru_decl_noun(page, index, text):
   oldtemps = []
-  pagename = unicode(page.title())
+  pagename = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagename, txt))
   nochange = False
@@ -190,9 +190,9 @@ def rewrite_one_page_ru_decl_noun(page, index, text):
   for t in text.filter_templates():
     converted = True
     def tname():
-      return unicode(t.name).strip()
+      return str(t.name).strip()
     origname = tname()
-    origtemplate = unicode(t)
+    origtemplate = str(t)
     if tname() in ["ru-noun-table", "ru-noun-old"]:
       continue
     stem = ""
@@ -330,7 +330,7 @@ def rewrite_one_page_ru_decl_noun(page, index, text):
             stem = stem[0:-2]
           else:
             pagemsg(u"WARNING: Stem %s doesn't end in и in %s, skipping" %
-                (stem, unicode(t)))
+                (stem, str(t)))
             nochange = True
             break
         else:
@@ -342,7 +342,7 @@ def rewrite_one_page_ru_decl_noun(page, index, text):
         break
       else:
         if re.match("^ru-noun-", tname()):
-          pagemsg("Encountered unknown noun decl template %s" % unicode(t))
+          pagemsg("Encountered unknown noun decl template %s" % str(t))
     if change:
       if not stem:
         pagemsg("WARNING: Can't locate stem in %s, skipping" % origtemplate)
@@ -354,7 +354,7 @@ def rewrite_one_page_ru_decl_noun(page, index, text):
       n = getrmparam(t, "n")
       notes = getrmparam(t, "note")
       if len(t.params) > 0:
-        pagemsg("WARNING: Extraneous parameters in %s, skipping" % unicode(t))
+        pagemsg("WARNING: Extraneous parameters in %s, skipping" % str(t))
         nochange = True
         break
       addparam(t, "1", accentclass)
@@ -373,7 +373,7 @@ def rewrite_one_page_ru_decl_noun(page, index, text):
       if notes:
         addparam(t, "notes", notes)
       t.name = "ru-noun-table"
-      pagemsg("Rewrote %s as %s" % (origtemplate, unicode(t)))
+      pagemsg("Rewrote %s as %s" % (origtemplate, str(t)))
       oldtemps.append(origname)
   if nochange:
     return None, ""

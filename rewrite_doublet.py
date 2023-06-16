@@ -10,8 +10,8 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 # WARNING: Not idempotent.
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
-  text = unicode(page.text)
+  pagetitle = str(page.title())
+  text = str(page.text)
 
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -26,14 +26,14 @@ def process_page(page, index, parsed):
   parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
 
     if tn == "doublet":
       params = []
       for param in t.params:
-        pname = unicode(param.name).strip()
-        pval = unicode(param.value).strip()
+        pname = str(param.name).strip()
+        pval = str(param.value).strip()
         showkey = param.showkey
         if not pval:
           continue
@@ -59,11 +59,11 @@ def process_page(page, index, parsed):
         # Put back new params.
         for pname, pval, showkey in params:
           t.add(pname, pval, showkey=showkey, preserve_spacing=False)
-        if origt != unicode(t):
-          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        if origt != str(t):
+          pagemsg("Replaced %s with %s" % (origt, str(t)))
           notes.append("restructure {{doublet}} for new syntax")
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Rewrite 'doublet' to use multiple-term syntax",
   include_pagefile=True)

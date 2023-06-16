@@ -29,13 +29,13 @@ def process_text_on_page(index, pagetitle, text):
     def getp(param):
       return getparam(t, param)
     if tn == "pt-pp":
-      origt = unicode(t)
+      origt = str(t)
       must_continue = False
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if pn not in ["1", "2"]:
-          pagemsg("WARNING: Saw unrecognized param %s=%s in %s" % (pn, pv, unicode(t)))
+          pagemsg("WARNING: Saw unrecognized param %s=%s in %s" % (pn, pv, str(t)))
           must_continue = True
           break
       if must_continue:
@@ -49,10 +49,10 @@ def process_text_on_page(index, pagetitle, text):
         notes.append("convert {{pt-pp}} for participle form to {{head|pt|past participle form}}")
       else:
         notes.append("convert {{pt-pp}} to new syntax")
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  text = unicode(parsed)
+  text = str(parsed)
   newtext = re.sub(r"==Verb(==+\n\{\{(?:pt-pp[|}]|head\|pt\|(?:past )?participle))", r"==Participle\1", text)
   if text != newtext:
     notes.append("replace ==Verb== with ==Participle== for participles and participle forms")

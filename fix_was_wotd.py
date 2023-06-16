@@ -9,13 +9,13 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  origtext = unicode(page.text)
+  origtext = str(page.text)
   text = origtext
   text = re.sub(r"(\{\{was wotd\|.*?\}\}\n)(==English==\n)", r"\2\1", text)
   notes = ["put {{was wotd}} after ==English== per [[User:Smuconlaw]]"]

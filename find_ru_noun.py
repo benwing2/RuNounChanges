@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(index, page, save, verbose):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   subpagetitle = re.sub(".*:", "", pagetitle)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -19,11 +19,11 @@ def process_page(index, page, save, verbose):
     return
 
   notes = []
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
 
   for t in parsed.filter_templates():
-    if unicode(t.name) in ["ru-noun", "ru-proper noun"]:
+    if str(t.name) in ["ru-noun", "ru-proper noun"]:
       param3 = getparam(t, "3")
       if param3 == "-":
         pagemsg("Found indeclinable noun")
@@ -31,7 +31,7 @@ def process_page(index, page, save, verbose):
         pagemsg("WARNING: Indeclinable noun but not marked in template")
       else:
         for tt in parsed.filter_templates():
-          ttname = unicode(tt.name)
+          ttname = str(tt.name)
           if ttname == u"ru-noun-alt-ё":
             pagemsg(u"Found alternative ё spelling")
             break
@@ -40,7 +40,7 @@ def process_page(index, page, save, verbose):
             break
           elif ttname == "ru-pre-reform":
             for ttt in parsed.filter_templates():
-              if unicode(ttt.name) == "ru-noun-old":
+              if str(ttt.name) == "ru-noun-old":
                 pagemsg("Found pre-reform word with ru-noun-old declension")
                 break
             else:

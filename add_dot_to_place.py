@@ -7,10 +7,10 @@ import blib
 from blib import getparam, rmparam, msg, site, tname
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
-  text = unicode(page.text)
+  text = str(page.text)
   if pagetitle.startswith("Module:"):
     return
 
@@ -24,7 +24,7 @@ def process_page(page, index, parsed):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn == "place" and not t.has("t") and not t.has("t1") and not t.has("t2") and not t.has("t3"):
-      to_add_period.append(unicode(t))
+      to_add_period.append(str(t))
 
   for curr_template in to_add_period:
     repl_template = curr_template + "."

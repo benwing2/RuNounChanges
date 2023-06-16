@@ -118,7 +118,7 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
 
 def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
   global args
-  origt = unicode(t)
+  origt = str(t)
   tn = tname(t)
   if pagetitle in manual_conjs:
     newt = "{{%s|%s}}" % (tn, manual_conjs[pagetitle])
@@ -140,7 +140,7 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
   return t
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -158,7 +158,7 @@ def process_page(page, index, parsed):
       else:
         return
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 def process_text_on_page(index, pagetitle, text):
   global args
@@ -179,40 +179,40 @@ def process_text_on_page(index, pagetitle, text):
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     def getp(param):
       return getparam(t, param)
     if tn == "pt-verb" and getp("2"):
-      pagemsg("Saw %s" % unicode(t))
+      pagemsg("Saw %s" % str(t))
       saw_headt = True
       if headt:
-        pagemsg("WARNING: Saw multiple head templates: %s and %s" % (unicode(headt), unicode(t)))
+        pagemsg("WARNING: Saw multiple head templates: %s and %s" % (str(headt), str(t)))
         return
       headt = t
     elif tn == "pt-conj" and getp("2"):
       if not headt:
-        pagemsg("WARNING: Saw conjugation template without {{pt-verb}} head template: %s" % unicode(t))
+        pagemsg("WARNING: Saw conjugation template without {{pt-verb}} head template: %s" % str(t))
         return
-      headt_as_conj_str = re.sub(r"^\{\{pt-verb\|", "{{pt-conj|", unicode(headt))
-      if unicode(t) != headt_as_conj_str:
+      headt_as_conj_str = re.sub(r"^\{\{pt-verb\|", "{{pt-conj|", str(headt))
+      if str(t) != headt_as_conj_str:
         pagemsg("WARNING: Saw head template %s with different params from conjugation template %s" % (
-          unicode(headt), unicode(t)))
+          str(headt), str(t)))
         return
       if convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
-        orig_headt = unicode(headt)
+        orig_headt = str(headt)
         headtn = tname(headt)
         # Erase all params
         del headt.params[:]
         if pagetitle in manual_conjs:
           headt.add("1", manual_conjs[pagetitle])
-        notes.append("converted {{%s|...}} to %s" % (headtn, unicode(headt)))
+        notes.append("converted {{%s|...}} to %s" % (headtn, str(headt)))
       headt = None
 
   if not saw_headt:
     pagemsg("WARNING: Didn't see {{pt-verb}} head template")
     return
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert Portuguese verb conj templates to new form",
     include_pagefile=True, include_stdin=True)

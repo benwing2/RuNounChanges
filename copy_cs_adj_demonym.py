@@ -117,7 +117,7 @@ def process_text_on_page(index, pagetitle, text):
     if tn in ["cs-noun", "cs-proper noun"]:
       if headword_template:
         pagemsg("WARNING: Multiple cs-noun or cs-proper noun templates %s and %s" %
-          (unicode(headword_template), unicode(t)))
+          (str(headword_template), str(t)))
       headword_template = t
       col_auto_template = None
       col_auto_items_to_keep = []
@@ -127,14 +127,14 @@ def process_text_on_page(index, pagetitle, text):
       for param in t.params:
         pn = pname(param)
         if re.search("^(adj|dem|fdem)[0-9]*_qual$", pn):
-          pagemsg("WARNING: Saw qualifier for adj, dem or fdem: %s=%s" % (pn, unicode(param.value)))
+          pagemsg("WARNING: Saw qualifier for adj, dem or fdem: %s=%s" % (pn, str(param.value)))
           return
     elif tn == "col-auto":
       if getparam(t, "1").strip() != "cs":
-        pagemsg("WARNING: Wrong language for {{col-auto}}: %s" % unicode(t))
+        pagemsg("WARNING: Wrong language for {{col-auto}}: %s" % str(t))
         continue
       if not headword_template:
-        pagemsg("WARNING: Encountered {{col-auto|cs}} without preceding headword template: %s" % unicode(t))
+        pagemsg("WARNING: Encountered {{col-auto|cs}} without preceding headword template: %s" % str(t))
         continue
       col_auto_items = blib.fetch_param_chain(t, "2")
       for item in col_auto_items:
@@ -146,7 +146,7 @@ def process_text_on_page(index, pagetitle, text):
             col_auto_items_to_keep.append(origitem)
           elif item[0:2].lower() != pagetitle[0:2].lower():
             pagemsg("WARNING: Saw apparent %s %s but first two chars %s don't agree with pagename: %s" %
-                (listparam, item, item[0:2], unicode(t)))
+                (listparam, item, item[0:2], str(t)))
             col_auto_items_to_keep.append(origitem)
           else:
             if item not in itemlist:
@@ -170,13 +170,13 @@ def process_text_on_page(index, pagetitle, text):
         elif re.search("ka$", item) and item[0].isupper():
           add_item(fdems, "fdem")
         elif re.search("ko$", item):
-          pagemsg("Skipping apparent region item %s: %s" % (item, unicode(t)))
+          pagemsg("Skipping apparent region item %s: %s" % (item, str(t)))
           col_auto_items_to_keep.append(origitem)
         elif re.search("tina$", item):
-          pagemsg("Skipping apparent language item %s: %s" % (item, unicode(t)))
+          pagemsg("Skipping apparent language item %s: %s" % (item, str(t)))
           col_auto_items_to_keep.append(origitem)
         else:
-          pagemsg("WARNING: Unrecognized item %s, needs manual handling: %s" % (item, unicode(t)))
+          pagemsg("WARNING: Unrecognized item %s, needs manual handling: %s" % (item, str(t)))
           col_auto_items_to_keep.append(origitem)
       if len(col_auto_items) > len(col_auto_items_to_keep):
         if adjs:
@@ -195,9 +195,9 @@ def process_text_on_page(index, pagetitle, text):
           notes.append("keep %s of %s original item(s) in {{col-auto|cs}}" %
             (len(col_auto_items_to_keep), len(col_auto_items)))
         else:
-          col_auto_templates_to_remove.append((unicode(t), len(col_auto_items)))
+          col_auto_templates_to_remove.append((str(t), len(col_auto_items)))
 
-  secbody = unicode(parsed)
+  secbody = str(parsed)
   if col_auto_templates_to_remove:
     for col_auto_template_to_remove, num_items in col_auto_templates_to_remove:
       newtext, changed = blib.replace_in_text(secbody, col_auto_template_to_remove + "\n", "", pagemsg, abort_if_warning=True)

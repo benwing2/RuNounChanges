@@ -9,7 +9,7 @@ from blib import getparam, rmparam, tname, pname, msg, site
 import uklib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -19,7 +19,7 @@ def process_page(page, index, parsed):
 
   head = None
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "uk-adj":
       head = getparam(t, "1")
@@ -55,10 +55,10 @@ def process_page(page, index, parsed):
         rmparam(t, "notes")
       blib.set_template_name(t, "uk-adecl-manual")
       notes.append("convert {{uk-adj-table}} to {{uk-adecl-manual}}")
-    if origt != unicode(t):
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if origt != str(t):
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Convert old Ukrainian adjective declension templates to new ones",
     include_pagefile=True)

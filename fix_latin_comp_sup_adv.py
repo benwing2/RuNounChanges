@@ -10,7 +10,7 @@ import lalib
 
 def find_head_comp_sup(pagetitle, pagemsg):
   page = pywikibot.Page(site, pagetitle)
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
     if tname(t) == "la-adv":
@@ -36,13 +36,13 @@ def find_head_comp_sup(pagetitle, pagemsg):
   return None, None, None
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
 
   retval = lalib.find_latin_section(text, pagemsg)
@@ -65,24 +65,24 @@ def process_page(page, index, parsed):
         if tname(t) == "comparative of":
           if compt:
             pagemsg("WARNING: Saw multiple {{comparative of}}: %s and %s" % (
-              unicode(compt), unicode(t)))
+              str(compt), str(t)))
           else:
             compt = t
             posdeg = blib.remove_links(getparam(t, "1"))
             if not posdeg:
-              pagemsg("WARNING: Didn't see positive degree in {{comparative of}}: %s" % unicode(t))
+              pagemsg("WARNING: Didn't see positive degree in {{comparative of}}: %s" % str(t))
         elif tname(t) == "superlative of":
           if supt:
             pagemsg("WARNING: Saw multiple {{superlative of}}: %s and %s" % (
-              unicode(supt), unicode(t)))
+              str(supt), str(t)))
           else:
             supt = t
             posdeg = blib.remove_links(getparam(t, "1"))
             if not posdeg:
-              pagemsg("WARNING: Didn't see positive degree in {{superlative of}}: %s" % unicode(t))
+              pagemsg("WARNING: Didn't see positive degree in {{superlative of}}: %s" % str(t))
       if compt and supt:
         pagemsg("WARNING: Saw both comparative and superlative, skipping: %s and %s" % (
-          unicode(compt), unicode(supt)))
+          str(compt), str(supt)))
         continue
       if not compt and not supt:
         pagemsg("WARNING: Didn't see {{comparative of}} or {{superlative of}} in section %s" %
@@ -91,11 +91,11 @@ def process_page(page, index, parsed):
       for t in parsed.filter_templates():
         tn = tname(t)
         if tn in ["la-adv-comp", "la-adv-sup"]:
-          pagemsg("Already saw fixed headword: %s" % unicode(t))
+          pagemsg("Already saw fixed headword: %s" % str(t))
           break
         if tn == "head":
           if not getparam(t, "1") == "la":
-            pagemsg("WARNING: Saw wrong language in {{head}}: %s" % unicode(t))
+            pagemsg("WARNING: Saw wrong language in {{head}}: %s" % str(t))
           else:
             pos = getparam(t, "2")
             head = blib.remove_links(getparam(t, "head")) or pagetitle
@@ -105,7 +105,7 @@ def process_page(page, index, parsed):
                 "adverb superlative form", "adverb superlative forms",
             ]:
               pagemsg("WARNING: Unrecognized part of speech '%s': %s" % (
-                pos, unicode(t)))
+                pos, str(t)))
             else:
               real_head, real_comp, real_sup = find_head_comp_sup(lalib.remove_macrons(posdeg), pagemsg)
               if real_head:
@@ -116,9 +116,9 @@ def process_page(page, index, parsed):
                   pagemsg("Using real positive degree %s instead of %s" % (
                     real_head, posdeg))
                   inflt = compt or supt
-                  origt = unicode(inflt)
+                  origt = str(inflt)
                   inflt.add("1", real_head)
-                  pagemsg("Replaced %s with %s" % (origt, unicode(inflt)))
+                  pagemsg("Replaced %s with %s" % (origt, str(inflt)))
               if compt:
                 newname = "la-adv-comp"
                 infldeg = "comparative"
@@ -145,17 +145,17 @@ def process_page(page, index, parsed):
                     head = real_sup
                 else:
                   pagemsg("WARNING: Couldn't retrieve real superlative for positive degree %s" % real_head)
-              origt = unicode(t)
+              origt = str(t)
               rmparam(t, "head")
               rmparam(t, "2")
               rmparam(t, "1")
               blib.set_template_name(t, newname)
               t.add("1", head)
-              pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+              pagemsg("Replaced %s with %s" % (origt, str(t)))
               notes.append("replace {{head|la|...}} with {{%s}} and fix up positive/%s" %
                   (newname, infldeg))
 
-      subsections[k] = unicode(parsed)
+      subsections[k] = str(parsed)
 
   secbody = "".join(subsections)
   sections[j] = secbody + sectail

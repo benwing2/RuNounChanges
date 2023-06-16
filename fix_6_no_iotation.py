@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -16,13 +16,13 @@ def process_page(page, index, parsed):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     param1 = getparam(t, "1")
-    if unicode(t.name) in ["ru-conj"]:
+    if str(t.name) in ["ru-conj"]:
       if re.search(r"^6[ac]", param1):
         if getparam(t, "no_iotation"):
           rmparam(t, "no_iotation")
@@ -34,11 +34,11 @@ def process_page(page, index, parsed):
       elif re.search(r"^6b", param1):
         notes.append(u"6b -> 6°b")
         t.add("1", re.sub("^6", u"6°", param1))
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Fix up class-6 no-iotation verbs",
   include_pagefile=True)

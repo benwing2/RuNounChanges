@@ -22,7 +22,7 @@ for i, line in blib.iter_items_from_file(args.pagefile, start, end):
   for ending in endings:
     page = pywikibot.Page(site, frombase + ending)
     def pagemsg(txt):
-      msg("Page %s %s: %s" % (i, unicode(page.title()), txt))
+      msg("Page %s %s: %s" % (i, str(page.title()), txt))
     topagename = tobase + ending
     if page.exists():
       if pywikibot.Page(site, topagename).exists():

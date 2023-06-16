@@ -67,7 +67,7 @@ def process_text_on_page(index, pagetitle, pagetext):
       for param in wordt.params:
         pn = pname(param)
         if pn not in ["1", "2", "g", "g2"]:
-          pagemsg("WARNING: Unrecognized param %s=%s in template: %s" % (pn, unicode(param.value), term))
+          pagemsg("WARNING: Unrecognized param %s=%s in template: %s" % (pn, str(param.value), term))
           return False
       if getparam(wordt, "1") != "ru":
         pagemsg("WARNING: Wrong language for term template: %s" % term)

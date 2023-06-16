@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site, tname
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -17,7 +17,7 @@ def process_page(page, index, parsed):
 
   notes = []
 
-  text = unicode(page.text)
+  text = str(page.text)
   if not re.search(r"\{\{reconstruct(ed|ion)\}\}", text):
     text = "{{reconstructed}}\n" + text
     notes.append("add missing {{reconstructed}} to Reconstruction: pages")

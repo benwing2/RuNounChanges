@@ -12,7 +12,7 @@ import convert_la_headword_noun
 
 def process_page(page, index, parsed):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -20,7 +20,7 @@ def process_page(page, index, parsed):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
 
   notes = []
@@ -44,7 +44,7 @@ def process_page(page, index, parsed):
       if tn == "la-adj":
         if la_adj_template:
           pagemsg("WARNING: Saw multiple adjective headword templates in subsection, %s and %s, skipping" % (
-            unicode(la_adj_template), unicode(t)))
+            str(la_adj_template), str(t)))
           must_continue = True
           break
         la_adj_template = t
@@ -71,12 +71,12 @@ def process_page(page, index, parsed):
       comp = parse_comp_sup(comp)
       sup = parse_comp_sup(sup)
       if comp and sup:
-        orig_la_adj_template = unicode(la_adj_template)
+        orig_la_adj_template = str(la_adj_template)
         la_adj_template.add("comp", comp)
         la_adj_template.add("sup", sup)
-        pagemsg("Replaced %s with %s" % (orig_la_adj_template, unicode(la_adj_template)))
+        pagemsg("Replaced %s with %s" % (orig_la_adj_template, str(la_adj_template)))
         notes.append("move comparative/superative to {{la-adj}} headword params")
-        subsections[k] = unicode(parsed)
+        subsections[k] = str(parsed)
         subsections[k] = re.sub(r"\n+\* *'*comparative'*: '*(.*?)'+,* *'*superlative'*: '*(.*?)'+\n+", "\n\n", subsections[k], 1)
 
   secbody = "".join(subsections)

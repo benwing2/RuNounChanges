@@ -34,15 +34,15 @@ def process_text_on_page(index, pagetitle, text):
             thisline_lang = getparam(t, "1")
             if thisline_lang == "ku":
               if getparam(t, "2") != "-":
-                pagemsg("WARNING: Saw real 'Kurdish' descendant rather than anchoring line: %s" % unicode(t))
+                pagemsg("WARNING: Saw real 'Kurdish' descendant rather than anchoring line: %s" % str(t))
                 continue
               kurdish_indent = thisline_indent
               kurdish_borrowing = getparam(t, "bor")
-              line, did_replace = blib.replace_in_text(line, unicode(t), "Kurdish:", pagemsg)
+              line, did_replace = blib.replace_in_text(line, str(t), "Kurdish:", pagemsg)
               notes.append("replace {{desc|ku}} with raw 'Kurdish:'")
             elif kurdish_indent and thisline_indent > kurdish_indent and kurdish_borrowing:
                 t.add("bor", "1")
-                line = unicode(parsed)
+                line = str(parsed)
                 notes.append("add bor=1 to Kurdish-language (%s) descendant" % thisline_lang)
     else:
       kurdish_indent = None

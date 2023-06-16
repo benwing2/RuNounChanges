@@ -31,13 +31,13 @@ prefixes = [
 vowel_re = u"[aeiouyāēīōūȳăĕĭŏŭ]"
 
 def process_page(page, index, add_dot_after_i, convert_j):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
 
   retval = lalib.find_latin_section(text, pagemsg)
@@ -67,11 +67,11 @@ def process_page(page, index, add_dot_after_i, convert_j):
             param1 = re.sub("^%sj" % macron_prefix, "%si" % macron_prefix, param1)
             notes.append("convert j to i in {{la-IPA}} to match pagename; j no longer necessary to force consonantal pronunciation")
           if param1 != orig_param1:
-            origt = unicode(t)
+            origt = str(t)
             # Fetch all params.
             params = []
             for param in t.params:
-              pname = unicode(param.name)
+              pname = str(param.name)
               if pname.strip() not in ["1"]:
                 params.append((pname, param.value, param.showkey))
             # Erase all params.
@@ -80,13 +80,13 @@ def process_page(page, index, add_dot_after_i, convert_j):
             # Put remaining parameters in order.
             for name, value, showkey in params:
               t.add(name, value, showkey=showkey, preserve_spacing=False)
-            pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+            pagemsg("Replaced %s with %s" % (origt, str(t)))
           break
       else:
         # no break
-        pagemsg("WARNING: Unable to match pronun template against any prefixes: %s" % unicode(t))
+        pagemsg("WARNING: Unable to match pronun template against any prefixes: %s" % str(t))
 
-  secbody = unicode(parsed)
+  secbody = str(parsed)
   sections[j] = secbody + sectail
   return "".join(sections), notes
 

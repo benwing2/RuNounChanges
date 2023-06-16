@@ -17,7 +17,7 @@ quote_templates = ["quote-av", "quote-book", "quote-hansard",
 blib.getData()
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -27,7 +27,7 @@ def process_page(page, index, parsed):
       
   def hack_templates(parsed, subsectitle):
     for t in parsed.filter_templates():
-      origt = unicode(t)
+      origt = str(t)
       tn = tname(t)
       if tn in quote_templates:
         if not getparam(t, "nocat"):
@@ -38,23 +38,23 @@ def process_page(page, index, parsed):
         # Fetch all params.
         params = []
         for param in t.params:
-          pname = unicode(param.name)
+          pname = str(param.name)
           if pname.strip() != "nocat":
             params.append((pname, param.value, param.showkey))
         # Erase all params.
         del t.params[:]
         # Put lang and termlang parameters.
-        newline = "\n" if "\n" in unicode(t.name) else ""
+        newline = "\n" if "\n" in str(t.name) else ""
         t.add("lang", "en" + newline, preserve_spacing=False)
         t.add("termlang", "mul" + newline, preserve_spacing=False)
         # Put remaining parameters in order.
         for name, value, showkey in params:
           t.add(name, value, showkey=showkey, preserve_spacing=False)
-        pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+        pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
@@ -72,7 +72,7 @@ def process_page(page, index, parsed):
       subsectitle = m.group(1)
       parsed = blib.parse_text(subsections[k])
       hack_templates(parsed, subsectitle)
-      subsections[k] = unicode(parsed)
+      subsections[k] = str(parsed)
     sections[j] = "".join(subsections)
 
   newtext = "".join(sections)

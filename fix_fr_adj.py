@@ -9,7 +9,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -19,32 +19,32 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title, skipping")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   notes = []
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    name = unicode(t.name)
-    if unicode(t.name) == "fr-adj":
+    origt = str(t)
+    name = str(t.name)
+    if str(t.name) == "fr-adj":
       g = getparam(t, "1")
       if g and g != "mf":
-        pagemsg("WARNING: Strange value 1=%s, removing: %s" % (g, unicode(t)))
+        pagemsg("WARNING: Strange value 1=%s, removing: %s" % (g, str(t)))
         rmparam(t, "1")
         notes.append("remove bogus 1=%s" % g)
         g = None
       inv = getparam(t, "inv")
       if inv:
         if inv not in ["y", "yes", "1"]:
-          pagemsg("WARNING: Strange value inv=%s: %s" % (inv, unicode(t)))
+          pagemsg("WARNING: Strange value inv=%s: %s" % (inv, str(t)))
         if (getparam(t, "1") or getparam(t, "f") or
             getparam(t, "mp") or getparam(t, "fp") or getparam(t, "p")):
           pagemsg("WARNING: Found extraneous params with inv=: %s" %
-              unicode(t))
+              str(t))
         continue
       if (getparam(t, "f2") or getparam(t, "mp2") or getparam(t, "fp2")
           or getparam(t, "p2")):
-        pagemsg("Skipping multiple feminines or plurals: %s" % unicode(t))
+        pagemsg("Skipping multiple feminines or plurals: %s" % str(t))
         continue
       expected_mp = (pagetitle if re.search("[sx]$", pagetitle)
           else re.sub("al$", "aux", pagetitle) if pagetitle.endswith("al")
@@ -66,7 +66,7 @@ def process_page(page, index, parsed):
           else re.sub("c$", "que", pagetitle) if pagetitle.endswith("c")
           else pagetitle + "e")
       if re.search("(el|on|et|[^i]eur|eux|if|c)$", pagetitle) and not getparam(t, "f") and g != "mf":
-        pagemsg("WARNING: Found suffix -el/-on/-et/-[^i]eur/-eux/-if/-c and no f= or 1=mf: %s" % unicode(t))
+        pagemsg("WARNING: Found suffix -el/-on/-et/-[^i]eur/-eux/-if/-c and no f= or 1=mf: %s" % str(t))
       if getparam(t, "f") == expected_fem:
         rmparam(t, "f")
         notes.append("remove redundant f=")
@@ -74,7 +74,7 @@ def process_page(page, index, parsed):
       if not fem.endswith("e"):
         if not getparam(t, "fp"):
           pagemsg("WARNING: Found f=%s not ending with -e and no fp=: %s" %
-              (fem, unicode(t)))
+              (fem, str(t)))
         continue
       expected_fp = fem + "s"
       if getparam(t, "fp") == expected_fp:
@@ -82,11 +82,11 @@ def process_page(page, index, parsed):
         notes.append("remove redundant fp=")
       if getparam(t, "fp") and not getparam(t, "f"):
         pagemsg("WARNING: Found fp=%s and no f=: %s" % (getparam(t, "fp"),
-          unicode(t)))
+          str(t)))
         continue
       if getparam(t, "fp") == fem:
         pagemsg("WARNING: Found fp=%s same as fem=%s: %s" % (getparam(t, "fp"),
-          fem, unicode(t)))
+          fem, str(t)))
         continue
       if pagetitle.endswith("e") and not getparam(t, "f") and not getparam(t, "fp"):
         if g == "mf":
@@ -96,13 +96,13 @@ def process_page(page, index, parsed):
       if g == "mf":
         f = getparam(t, "f")
         if f:
-          pagemsg("WARNING: Found f=%s and 1=mf: %s" % (f, unicode(t)))
+          pagemsg("WARNING: Found f=%s and 1=mf: %s" % (f, str(t)))
         mp = getparam(t, "mp")
         if mp:
-          pagemsg("WARNING: Found mp=%s and 1=mf: %s" % (mp, unicode(t)))
+          pagemsg("WARNING: Found mp=%s and 1=mf: %s" % (mp, str(t)))
         fp = getparam(t, "fp")
         if fp:
-          pagemsg("WARNING: Found fp=%s and 1=mf: %s" % (fp, unicode(t)))
+          pagemsg("WARNING: Found fp=%s and 1=mf: %s" % (fp, str(t)))
         if f or mp or fp:
           continue
         expected_p = (pagetitle if re.search("[sx]$", pagetitle)
@@ -113,16 +113,16 @@ def process_page(page, index, parsed):
           notes.append("remove redundant p=")
       elif getparam(t, "p"):
         pagemsg("WARNING: Found unexpected p=%s: %s" % (getparam(t, "p"),
-          unicode(t)))
+          str(t)))
       if not re.search("[ -]", pagetitle) and (getparam(t, "f") or
           getparam(t, "mp") or getparam(t, "fp") or getparam(t, "p")):
         pagemsg("Found remaining explicit feminine or plural in single-word base form: %s"
-            % unicode(t))
-    newt = unicode(t)
+            % str(t))
+    newt = str(t)
     if origt != newt:
       pagemsg("Replacing %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Remove extraneous params from {{fr-adj}}",
   include_pagefile=True)

@@ -96,7 +96,7 @@ def process_text_on_page(index, pagetitle, text):
   inflection_of_t = None
   need_superlative_of_t_lemma = None
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
 
     def do_comparative_superlative_of(pos, existing_t, should_end):
@@ -104,7 +104,7 @@ def process_text_on_page(index, pagetitle, text):
         pagemsg("WARNING: Saw wrong language in {{%s of}}, skipping: %s" % (pos, origt))
         return False
       if existing_t:
-        pagemsg("WARNING: Saw two {{%s of}} templates, skipping: %s and %s" % (pos, unicode(existing_t), origt))
+        pagemsg("WARNING: Saw two {{%s of}} templates, skipping: %s and %s" % (pos, str(existing_t), origt))
         return False
       if not headt:
         pagemsg("WARNING: Saw {{%s of}} without head template, skipping: %s" % (pos, origt))
@@ -122,7 +122,7 @@ def process_text_on_page(index, pagetitle, text):
         "adjective form", "adjective comparative form", "adjective superlative form",
         "participle form"]:
       if headt:
-        pagemsg("WARNING: Saw two head templates, skipping: %s and %s" % (unicode(headt), origt))
+        pagemsg("WARNING: Saw two head templates, skipping: %s and %s" % (str(headt), origt))
         return
       headt = t
     elif tn == "head" and getparam(t, "1") == "de" and getparam(t, "2") == "verb form":
@@ -149,7 +149,7 @@ def process_text_on_page(index, pagetitle, text):
         pagemsg("WARNING: Saw {{inflection of}} without head template, skipping: %s" % origt)
         return
       if inflection_of_t:
-        pagemsg("WARNING: Saw {{inflection of}} twice, skipping: %s and %s" % (unicode(inflection_of_t), origt))
+        pagemsg("WARNING: Saw {{inflection of}} twice, skipping: %s and %s" % (str(inflection_of_t), origt))
         return
       inflection_of_t = t
       lemma = getparam(t, "2")
@@ -159,7 +159,7 @@ def process_text_on_page(index, pagetitle, text):
       infl_tags = []
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if not re.search("^[0-9]+$", pn):
           pagemsg("WARNING: Saw unrecognized param %s=%s in {{inflection of}}, skipping: %s" % (pn, pv, origt))
           return
@@ -192,7 +192,7 @@ def process_text_on_page(index, pagetitle, text):
           headt.add("2", "superlative adjective form")
           notes.append("convert {{head|de|%s}} to {{head|de|superlative adjective form}}" % param2)
 
-  secbody = unicode(parsed)
+  secbody = str(parsed)
 
   def add_adj_form_of(secbody, pos, comparative_superlative_t, ending):
     lemma = getparam(comparative_superlative_t, "2")
@@ -204,10 +204,10 @@ def process_text_on_page(index, pagetitle, text):
 {{head|de|%s}}
 
 # {{de-adj form of|%s}}""" % (form_pos, lemma)
-      secbody, replaced = blib.replace_in_text(secbody, unicode(comparative_superlative_t),
-          unicode(comparative_superlative_t) + newsec, pagemsg, abort_if_warning=True)
+      secbody, replaced = blib.replace_in_text(secbody, str(comparative_superlative_t),
+          str(comparative_superlative_t) + newsec, pagemsg, abort_if_warning=True)
       if not replaced:
-        pagemsg("WARNING: Couldn't add -%s inflection, skipping: %s" % (ending, unicode(comparative_of_t)))
+        pagemsg("WARNING: Couldn't add -%s inflection, skipping: %s" % (ending, str(comparative_of_t)))
         return secbody, False
       notes.append("add {{de-adj form of}} for %s" % pos)
     else:
@@ -229,7 +229,7 @@ def process_text_on_page(index, pagetitle, text):
     cursec = """===Adjective===
 {{head|de|superlative adjective form}}
 
-# %s""" % unicode(inflection_of_t)
+# %s""" % str(inflection_of_t)
     newsec = """===Adjective===
 {{head|de|superlative adjective}}
 
@@ -238,7 +238,7 @@ def process_text_on_page(index, pagetitle, text):
 """ % need_superlative_of_t_lemma
     secbody, replaced = blib.replace_in_text(secbody, cursec, newsec + cursec, pagemsg, abort_if_warning=True)
     if not replaced:
-      pagemsg("WARNING: Couldn't add {{superlative of}}, skipping: %s" % unicode(inflection_of_t))
+      pagemsg("WARNING: Couldn't add {{superlative of}}, skipping: %s" % str(inflection_of_t))
       return
     notes.append("add {{superlative of|de|...}}")
 

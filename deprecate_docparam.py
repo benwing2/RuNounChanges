@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, tname, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -28,7 +28,7 @@ def process_page(page, index, parsed):
       elif re.search(r"^'*optional'*$", para2):
         opt = True
         para2 = None
-      origt = unicode(t)
+      origt = str(t)
       t.add("1", para1)
       if para2:
         t.add("2", "")
@@ -40,12 +40,12 @@ def process_page(page, index, parsed):
       if opt:
         t.add("opt", "1")
       blib.set_template_name(t, "para")
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
       if para2:
-        pagemsg("Set additional info param 3=%s in %s" % (para2, unicode(t)))
+        pagemsg("Set additional info param 3=%s in %s" % (para2, str(t)))
       notes.append(u"convert {{docparam}} to {{para}}")
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Deprecate {{docparam}} in favor of {{para}}",
   include_pagefile=True)

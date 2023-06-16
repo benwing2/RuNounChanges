@@ -21,7 +21,7 @@ def split_multi_accented_word(word):
   return retval
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -31,7 +31,7 @@ def process_page(page, index, parsed):
 
   head = None
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "uk-noun":
       head = getparam(t, "1")
@@ -63,11 +63,11 @@ def process_page(page, index, parsed):
         if len(formvals) > 1:
           t.add(str(i), ", ".join(formvals))
 
-    if origt != unicode(t):
+    if origt != str(t):
       notes.append("split multi-stressed forms in {{%s}}" % tn)
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Split multi-stressed Ukrainian noun forms",
     include_pagefile=True)

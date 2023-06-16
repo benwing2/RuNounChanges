@@ -16,7 +16,7 @@ def process_text_on_page(index, pagetitle, text):
   parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     paramschanged = []
     if tn in ["ar-verb"]:
@@ -53,12 +53,12 @@ def process_text_on_page(index, pagetitle, text):
       if III == u"ء":
         pagemsg("form=%s, removing III=%s" % (form, III))
         remove_param("III")
-      if unicode(t) != origt:
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if str(t) != origt:
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
       if len(paramschanged) > 0:
         actions_taken.append("form=%s (%s)" % (form, ', '.join(paramschanged)))
   changelog = "ar-verb: remove params: %s" % '; '.join(actions_taken)
-  return unicode(parsed), changelog
+  return str(parsed), changelog
 
 parser = blib.create_argparser("Clean up Arabic vevrb headword templates", include_pagefile=True, include_stdin=True)
 args = parser.parse_args()

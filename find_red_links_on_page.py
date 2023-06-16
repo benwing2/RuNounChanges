@@ -39,10 +39,10 @@ def remove_diacritics(text, langcode):
   return text
 
 def process_page(page, index, templates):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
-  parsed = blib.parse_text(unicode(page.text))
+  parsed = blib.parse_text(str(page.text))
   for t in parsed.filter_templates():
     if tname(t) in templates:
       lang = getparam(t, "1")
@@ -58,7 +58,7 @@ def process_page(page, index, templates):
         pagenm = "Reconstruction:%s/%s" % (langname, pagenm[1:])
       page = pywikibot.Page(site, pagenm)
       if blib.safe_page_exists(page, pagemsg):
-        text = unicode(page.text)
+        text = str(page.text)
         if re.search("#redirect", text, re.I):
           outtext = "exists as redirect"
         elif "==%s==" % langname in text:

@@ -7,13 +7,13 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, warn_on_no_change=False):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
   notes = []
 

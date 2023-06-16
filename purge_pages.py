@@ -15,7 +15,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 def process_page(page, index):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):

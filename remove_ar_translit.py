@@ -52,10 +52,10 @@ def process_param(pagetitle, index, template, param, paramtr,
       #    translit == u"ʾ" + canonlatin or
       #    translit == u"ʾ" + canonlatin + "un"):
         pagemsg("Removing redundant translit for %s (%s)" % (arabic, latin))
-        oldtempl = "%s" % unicode(template)
+        oldtempl = "%s" % str(template)
         template.remove(paramtr)
         msg("Page %s %s: Replaced %s with %s" %
-            (index, pagetitle, oldtempl, unicode(template)))
+            (index, pagetitle, oldtempl, str(template)))
         return ["remove redundant %s=%s" % (paramtrname, latin)]
       else:
         pagemsg("Auto-translit for %s (%s) not same as manual translit %s (canonicalized %s)" %
@@ -63,19 +63,19 @@ def process_param(pagetitle, index, template, param, paramtr,
     if canonlatin:
       if latin != canonlatin:
         pagemsg("Match-canonicalizing Latin %s to %s" % (latin, canonlatin))
-        oldtempl = "%s" % unicode(template)
+        oldtempl = "%s" % str(template)
         addparam(template, paramtr, canonlatin)
         msg("Page %s %s: Replaced %s with %s" %
-            (index, pagetitle, oldtempl, unicode(template)))
+            (index, pagetitle, oldtempl, str(template)))
         return ["match-canon %s=%s -> %s" % (paramtrname, latin, canonlatin)]
       return True
     canonlatin, _ = ar_translit.canonicalize_latin_arabic(latin, None)
     if latin != canonlatin:
       pagemsg("Self-canonicalizing Latin %s to %s" % (latin, canonlatin))
-      oldtempl = "%s" % unicode(template)
+      oldtempl = "%s" % str(template)
       addparam(template, paramtr, canonlatin)
       msg("Page %s %s: Replaced %s with %s" %
-          (index, pagetitle, oldtempl, unicode(template)))
+          (index, pagetitle, oldtempl, str(template)))
       return ["self-canon %s=%s -> %s" % (paramtrname, latin, canonlatin)]
   return True
 
@@ -168,7 +168,7 @@ def process_one_page_headwords(pagetitle, index, text):
 # changes if SAVE is true. Show exact changes if VERBOSE is true.
 def process_headwords(save, verbose, startFrom, upTo):
   def process_page(page, index, text):
-    return process_one_page_headwords(unicode(page.title()), index, text)
+    return process_one_page_headwords(str(page.title()), index, text)
   #for page in blib.references(u"Template:tracking/ar-head/head", startFrom, upTo):
   #for page in blib.references("Template:ar-nisba", startFrom, upTo):
   for cat in [u"Arabic lemmas", u"Arabic non-lemma forms"]:
@@ -188,10 +188,10 @@ def process_links(save, verbose, cattype, startFrom, upTo):
     if getparam(template, "sc") == "Arab":
       msg("Page %s %s: %s.%s: Removing sc=Arab" % (index, pagetitle,
         template.name, "sc"))
-      oldtempl = "%s" % unicode(template)
+      oldtempl = "%s" % str(template)
       template.remove("sc")
       msg("Page %s %s: Replaced %s with %s" %
-          (index, pagetitle, oldtempl, unicode(template)))
+          (index, pagetitle, oldtempl, str(template)))
       newresult = ["remove %s.sc=Arab" % template.name]
       if isinstance(result, list):
         result = result + newresult

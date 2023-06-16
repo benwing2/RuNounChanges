@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -16,12 +16,12 @@ def process_page(page, index, parsed):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    if unicode(t.name) in ["ru-conj-4a"]:
+    origt = str(t)
+    if str(t.name) in ["ru-conj-4a"]:
       shch = getparam(t, "4")
       if shch == u"щ":
         t.add("3", getparam(t, "3") + shch)
@@ -29,11 +29,11 @@ def process_page(page, index, parsed):
         notes.append(u"move param 4 (щ) to param 3")
       elif shch:
         pagemsg("WARNING: Strange value %s for param 4" % shch)
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Convert class-4a 4th param щ to 3rd param",
   include_pagefile=True)

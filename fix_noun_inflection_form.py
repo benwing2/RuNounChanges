@@ -12,7 +12,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -23,7 +23,7 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title, skipping page")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   foundrussian = False
@@ -39,8 +39,8 @@ def process_page(page, index, parsed):
       # Remove blank form codes and canonicalize position of lang=, tr=
       parsed = blib.parse_text(sections[j])
       for t in parsed.filter_templates():
-        if unicode(t.name) == "inflection of" and getparam(t, "lang") == "ru":
-          origt = unicode(t)
+        if str(t.name) == "inflection of" and getparam(t, "lang") == "ru":
+          origt = str(t)
           # Fetch the numbered params starting with 3, skipping blank ones
           numbered_params = []
           for i in range(3,20):
@@ -55,7 +55,7 @@ def process_page(page, index, parsed):
           nocat = getparam(t, "nocat")
           non_numbered_params = []
           for param in t.params:
-            pname = unicode(param.name)
+            pname = str(param.name)
             if not re.search(r"^[0-9]+$", pname) and pname not in ["lang", "nocat", "tr"]:
               non_numbered_params.append((pname, param.value))
           # Erase all params.
@@ -71,18 +71,18 @@ def process_page(page, index, parsed):
             t.add(str(i+3), param)
           for name, value in non_numbered_params:
             t.add(name, value)
-          newt = unicode(t)
+          newt = str(t)
           if origt != newt:
             pagemsg("Replaced %s with %s" % (origt, newt))
             notes.append("removed any blank form codes and maybe rearranged lang=, tr=")
             if nocat:
               notes.append("removed nocat=")
-      sections[j] = unicode(parsed)
+      sections[j] = str(parsed)
 
       # Convert 'prep' to 'pre', etc.
       parsed = blib.parse_text(sections[j])
       for t in parsed.filter_templates():
-        if unicode(t.name) == "inflection of" and getparam(t, "lang") == "ru":
+        if str(t.name) == "inflection of" and getparam(t, "lang") == "ru":
           for frm, to in [
               ("nominative", "nom"), ("accusative", "acc"),
               ("genitive", "gen"), ("dative", "dat"),
@@ -93,35 +93,35 @@ def process_page(page, index, parsed):
               ("plural", "p"), ("(plural)", "p"),
               ("inanimate", "in"), ("animate", "an"),
               ]:
-            origt = unicode(t)
+            origt = str(t)
             for i in range(3,20):
               val = getparam(t, str(i))
               if val == frm:
                 t.add(str(i), to)
-            newt = unicode(t)
+            newt = str(t)
             if origt != newt:
               pagemsg("Replaced %s with %s" % (origt, newt))
               notes.append("converted '%s' form code to '%s'" % (frm, to))
-      sections[j] = unicode(parsed)
+      sections[j] = str(parsed)
 
       # Rearrange order of s|gen, p|nom etc. to gen|s, nom|p etc.
       parsed = blib.parse_text(sections[j])
       for t in parsed.filter_templates():
-        if unicode(t.name) == "inflection of" and getparam(t, "lang") == "ru":
+        if str(t.name) == "inflection of" and getparam(t, "lang") == "ru":
           if (getparam(t, "3") in ["s", "p"] and
               getparam(t, "4") in ["nom", "gen", "dat", "acc", "ins", "pre", "voc", "loc", "par"] and
               not getparam(t, "5")):
-            origt = unicode(t)
+            origt = str(t)
             number = getparam(t, "3")
             case = getparam(t, "4")
             t.add("3", case)
             t.add("4", number)
-            newt = unicode(t)
+            newt = str(t)
             if origt != newt:
               pagemsg("Replaced %s with %s" % (origt, newt))
               notes.append("converted '%s|%s' to '%s|%s'" %
                   (number, case, case, number))
-      sections[j] = unicode(parsed)
+      sections[j] = str(parsed)
 
   return "".join(sections), notes
 

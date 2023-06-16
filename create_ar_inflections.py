@@ -351,7 +351,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                 if is_vn:
                   for t in parsed.filter_templates():
                     if t.name == deftemp and not getparam(t, "form"):
-                      pagemsg("WARNING: Verbal noun template %s missing form= param" % unicode(t))
+                      pagemsg("WARNING: Verbal noun template %s missing form= param" % str(t))
 
                 matching_headword_templates = [
                     t for t in parsed.filter_templates()
@@ -472,7 +472,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
               # Only use first inflection-of template
               if t.name == "inflection of" and not seen_inflection_of:
                 vf_person, vf_voice, vf_mood = (
-                    inflection_of_sort_key(unicode(t)))
+                    inflection_of_sort_key(str(t)))
                 seen_inflection_of = True
             sort_key = (vf_person, vf_voice, vf_last_vowel, vf_mood)
             #pagemsg("Sort key: %s" % (sort_key,))
@@ -651,7 +651,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
             # NOTE: Any time you modify a template coming from this parsed,
             # representation, you need to execute the following:
             #
-            # subsections[j] = unicode(parsed)
+            # subsections[j] = str(parsed)
             # sections[i] = ''.join(subsections)
             parsed = blib.parse_text(subsections[j])
 
@@ -663,7 +663,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
               if reorder_shadda(existing) != reorder_shadda(existing_no_i3rab):
                 notes.append("removed %s i3rab" % wordtype)
                 addparam(template, param, existing_no_i3rab)
-                subsections[j] = unicode(parsed)
+                subsections[j] = str(parsed)
                 sections[i] = ''.join(subsections)
                 trparam = "tr" if param == "1" else param.replace("head", "tr")
                 existing_tr = getparam(template, trparam)
@@ -810,7 +810,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                 addparam(headword_template, "g2", new_gender2)
                 changed = True
               if changed:
-                subsections[j] = unicode(parsed)
+                subsections[j] = str(parsed)
                 sections[i] = ''.join(subsections)
                 notes.append("updated gender")
               return True # changed and "changed" or "nochange"
@@ -859,7 +859,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                   changed = True
                   notes.append("updated %s=%s" % (param, value))
               if changed:
-                subsections[j] = unicode(parsed)
+                subsections[j] = str(parsed)
                 sections[i] = ''.join(subsections)
               return True
 
@@ -919,7 +919,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                     if lemmatr:
                       addparam(defn_template, "tr", lemmatr)
 
-                  subsections[j] = unicode(parsed)
+                  subsections[j] = str(parsed)
                   sections[i] = ''.join(subsections)
                   comment = "Update Arabic with better vocalized versions: %s %s, %s %s, pos=%s" % (
                       infltype, inflection, lemmatype, lemma, pos)
@@ -961,14 +961,14 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                       canonicalize_defn_template(code2))
                 found_exact_matching = False
                 for d_t in defn_templates:
-                  if compare_verb_part_defn_templates(unicode(d_t),
+                  if compare_verb_part_defn_templates(str(d_t),
                       new_defn_template):
                     pagemsg("Found exact-matching definitional template for %s; taking no action"
                         % (infltype))
                     found_exact_matching = True
                   else:
                     pagemsg("Found non-matching definitional template for %s: %s"
-                        % (infltype, unicode(d_t)))
+                        % (infltype, str(d_t)))
 
                 if verb_part_inserted_defn:
                   # If we already inserted an entry or found an exact-matching
@@ -986,7 +986,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                     notes.append("delete duplicate definition for %s %s, form %s"
                         % (infltype, inflection, verb_part_form))
                 elif not found_exact_matching:
-                  subsections[j] = unicode(parsed)
+                  subsections[j] = str(parsed)
                   if subsections[j][-1] != '\n':
                     subsections[j] += '\n'
                   subsections[j] = re.sub(r"^(.*\n#[^\n]*\n)",
@@ -1063,7 +1063,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
                     # new entry.
                     if check_fix_infl_params(infl_headword_template,
                         infltemp_params, gender, False):
-                      subsections[j] = unicode(parsed)
+                      subsections[j] = str(parsed)
                       # If there's already a defn line present, insert after
                       # any such defn lines. Else, insert at beginning.
                       if re.search(r"^# \{\{%s\|" % deftemp, subsections[j], re.M):
@@ -1656,7 +1656,7 @@ def create_inflection_entries(save, pos, tempname, param, startFrom, upTo,
 
           if len(heads) > 1 and numinfls > 1:
             msg("Page %s %s(lemma): WARNING: More than one head and inflection: %s" % (
-              index, remove_diacritics(heads[0][0]), unicode(template)))
+              index, remove_diacritics(heads[0][0]), str(template)))
 
           for i in range(numinfls):
             if i == 0:
@@ -1781,7 +1781,7 @@ def get_part_prop(page, template, prefix):
   # Make an expand-template call to convert the conjugation template to
   # the desired form or property.
   return expand_template(page,
-      re.sub("\{\{ar-(conj|verb)\|", "{{%s|" % prefix, unicode(template)))
+      re.sub("\{\{ar-(conj|verb)\|", "{{%s|" % prefix, str(template)))
 
 #def get_dicform(page, template):
 #  return get_part_prop(page, template, "ar-past3sm")
@@ -2202,20 +2202,20 @@ def create_elatives(save, elfile, startFrom, upTo):
           if template.name in ["ar-adj", "ar-adj-sound", "ar-adj-in", "ar-adj-an"]:
             if reorder_shadda(getparam(template, "1")) != reorder_shadda(arpositive):
               pagemsg("Skipping, found adjective template with wrong positive, expecting %s: %s" % (
-                  arpositive, unicode(template)))
+                  arpositive, str(template)))
               continue
             found_positive = True
             existingel = getparam(template, "el")
             if existingel:
               if reorder_shadda(existingel) == reorder_shadda(elative):
                 pagemsg("Skipping template with elative already in it: %s" % (
-                    unicode(template)))
+                    str(template)))
               else:
                 pagemsg("Strange, template has elative already in it but not expected %s: %s" % (
-                    elative, unicode(template)))
+                    elative, str(template)))
             else:
               pagemsg("Adding elative %s to template: %s" % (
-                elative, unicode(template)))
+                elative, str(template)))
               addparam(template, "el", elative)
         if not found_positive:
           pagemsg("WARNING, positive %s not found for elative %s (page exists but couldn't find appropriate template)" % (

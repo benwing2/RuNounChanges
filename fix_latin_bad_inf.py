@@ -9,13 +9,13 @@ from blib import getparam, rmparam, tname, msg, site
 import lalib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
 
   retval = lalib.find_latin_section(text, pagemsg)
@@ -44,13 +44,13 @@ def process_page(page, index, parsed):
     if tname(t) == "la-verb-form":
       if infl:
         pagemsg("WARNING: Saw more than one {{la-verb-form}} call: %s" %
-            unicode(t))
+            str(t))
         return None, None
       infl = getparam(t, "1")
     elif tname(t) == "inflection of":
       if lemma:
         pagemsg("WARNING: Saw more than one {{inflection of}} call: %s" %
-            unicode(t))
+            str(t))
         return None, None
       if getparam(t, "lang"):
         lemma = getparam(t, "1")
@@ -58,7 +58,7 @@ def process_page(page, index, parsed):
         lemma = getparam(t, "2")
       infloft = t
     else:
-      pagemsg("WARNING: Saw unexpected template: %s" % unicode(t))
+      pagemsg("WARNING: Saw unexpected template: %s" % str(t))
       return None, None
   if not infl or not lemma:
     pagemsg("WARNING: Didn't find both inflection %s and lemma %s" % (
@@ -71,7 +71,7 @@ def process_page(page, index, parsed):
       head_template = "{{la-future participle|%s}}" % infl[:-2]
       infl_template = "{{la-decl-1&2|%s}}" % infl[:-2]
     else:
-      if "perf|act" in unicode(infloft):
+      if "perf|act" in str(infloft):
         partdesc = "Perfect active participle"
       else:
         partdesc = "Perfect passive participle"

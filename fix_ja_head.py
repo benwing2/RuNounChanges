@@ -17,28 +17,28 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(index, page, romaji_to_keep):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
+    tname = str(t.name)
     if tname in ["ja-noun", "ja-adj", "ja-verb", "ja-pos"]:
-      origt = unicode(t)
+      origt = str(t)
 
       # Remove old script code
       p1 = getparam(t, "1")
       if p1 in ["r", "h", "ka", "k", "s", "ky", "kk"]:
-        pagemsg("Removing 1=%s: %s" % (p1, unicode(t)))
+        pagemsg("Removing 1=%s: %s" % (p1, str(t)))
         notes.append("remove 1=%s from %s" % (p1, tname))
         rmparam(t, "1")
         for param in t.params:
-          pname = unicode(param.name)
+          pname = str(param.name)
           if re.search(r"^[0-9]+$", pname):
             param.name = str(int(pname) - 1)
             param.showkey = False
@@ -52,9 +52,9 @@ def process_page(index, page, romaji_to_keep):
         numbered_params = []
         non_numbered_params = []
         for param in t.params:
-          pname = unicode(param.name)
+          pname = str(param.name)
           if re.search(r"^[0-9]+$", pname):
-            val = unicode(param.value)
+            val = str(param.value)
             if val:
               numbered_params.append(val)
           elif pname not in ["hira", "kata"]:
@@ -63,14 +63,14 @@ def process_page(index, page, romaji_to_keep):
         if hira:
           numbered_params.append(hira)
           pagemsg("Moving hira=%s to %s=: %s" % (hira, len(numbered_params),
-            unicode(t)))
+            str(t)))
           notes.append("move hira= to %s= in %s" % (len(numbered_params),
             tname))
         kata = getparam(t, "kata")
         if kata:
           numbered_params.append(kata)
           pagemsg("Moving kata=%s to %s=: %s" % (kata, len(numbered_params),
-            unicode(t)))
+            str(t)))
           notes.append("move kata= to %s= in %s" % (len(numbered_params),
             tname))
         del t.params[:]
@@ -84,23 +84,23 @@ def process_page(index, page, romaji_to_keep):
       if t.has("rom"):
         if pagetitle in romaji_to_keep:
           pagemsg("Keeping rom=%s because in romaji_to_keep: %s" % (
-            getparam(t, "rom"), unicode(t)))
+            getparam(t, "rom"), str(t)))
         else:
-          pagemsg("Removing rom=%s: %s" % (getparam(t, "rom"), unicode(t)))
+          pagemsg("Removing rom=%s: %s" % (getparam(t, "rom"), str(t)))
           rmparam(t, "rom")
           notes.append("remove rom= from %s" % tname)
 
       # Remove hidx=
       if t.has("hidx"):
-        pagemsg("Removing hidx=%s: %s" % (getparam(t, "hidx"), unicode(t)))
+        pagemsg("Removing hidx=%s: %s" % (getparam(t, "hidx"), str(t)))
         rmparam(t, "hidx")
         notes.append("remove hidx= from %s" % tname)
 
-      newt = unicode(t)
+      newt = str(t)
       if origt != newt:
         pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Convert Japanese headwords from old-style to new-style",
   include_pagefile=True)
@@ -109,7 +109,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 romaji_to_keep = set()
 for i, page in blib.cat_articles("Japanese terms with romaji needing attention"):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   romaji_to_keep.add(pagetitle)
 
 def do_process_page(page, index, parsed):

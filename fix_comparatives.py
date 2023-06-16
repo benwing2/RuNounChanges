@@ -11,7 +11,7 @@ import rulib
 def process_page(page, index, parsed):
   global args
   verbose = args.verbose
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -20,33 +20,33 @@ def process_page(page, index, parsed):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   hascomp = False
   headword_templates = []
   decl_templates = []
   for t in parsed.filter_templates():
-    if unicode(t.name) == "ru-adj":
+    if str(t.name) == "ru-adj":
       headword_templates.append(t)
       if getparam(t, "2"):
         hascomp = True
       elif getparam(t, "comp2") or getparam(t, "comp3") or getparam(t, "comp4") or getparam(t, "comp5"):
-        pagemsg("WARNING: Found compN= but no 2=: %s" % unicode(t))
-    if unicode(t.name) == "ru-decl-adj":
+        pagemsg("WARNING: Found compN= but no 2=: %s" % str(t))
+    if str(t.name) == "ru-decl-adj":
       decl_templates.append(t)
   if hascomp:
     if len(headword_templates) > 1 or len(decl_templates) > 1:
       pagemsg("WARNING: Found comparative and multiple headword or decl templates, can't proceed")
     elif len(decl_templates) == 1 and not headword_templates:
       pagemsg("WARNING: Strange, decl template but no headword template: %s" %
-          unicode(decl_templates[0]))
+          str(decl_templates[0]))
     elif len(headword_templates) == 1 and not decl_templates:
       pagemsg("WARNING: Strange, headword template but no decl template: %s" %
-          unicode(headword_templates[0]))
+          str(headword_templates[0]))
     elif pagetitle.endswith(u"ся"):
       pagemsg("WARNING: Comparative with reflexive adjective, not sure what to do: %s" %
-          unicode(headword_templates[0]))
+          str(headword_templates[0]))
     else:
       head = getparam(decl_templates[0], "1")
       decl = getparam(decl_templates[0], "2")
@@ -82,7 +82,7 @@ def process_page(page, index, parsed):
       for comp in comparatives:
         if comp not in unique_comparatives:
           unique_comparatives.append(comp)
-      origt = unicode(headword_templates[0])
+      origt = str(headword_templates[0])
       existing_comparatives = []
       compparams = []
       i = 0
@@ -112,11 +112,11 @@ def process_page(page, index, parsed):
           rmparam(headword_templates[0], compparam)
         headword_templates[0].add("2", compspec)
         blib.set_param_chain(headword_templates[0], superlatives, "3", "sup")
-        pagemsg("Replaced %s with %s" % (origt, unicode(headword_templates[0])))
+        pagemsg("Replaced %s with %s" % (origt, str(headword_templates[0])))
         notes.append("replaced explicit comparative %s with %s" %
             (",".join(existing_comparatives), compspec))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Fix up comparatives that can be converted to +, +c, etc.")
 args = parser.parse_args()

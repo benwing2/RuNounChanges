@@ -34,7 +34,7 @@ def find_noun_lemmas(parsed, pagetitle, errandpagemsg, expand_text):
     if tname(t) in ["ru-noun+", "ru-proper noun+"]:
       lemmaarg = rulib.fetch_noun_lemma(t, expand_text)
       if lemmaarg is None:
-        errandpagemsg("WARNING: Error generating noun forms: %s" % unicode(t))
+        errandpagemsg("WARNING: Error generating noun forms: %s" % str(t))
         return
       else:
         for lemma in re.split(",", lemmaarg):
@@ -263,7 +263,7 @@ if args.derived_lemmafile:
   derived_lemmas = blib.yield_items_from_file(args.derived_lemmafile, canonicalize=rulib.remove_accents)
 else:
   for i, page in blib.cat_articles("Russian adverbs" if args.adverbs else "Russian nouns" if args.nouns else "Russian adjectives"):
-    derived_lemmas.append(unicode(page.title()))
+    derived_lemmas.append(str(page.title()))
 
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
   default_cats=["Russian adjectives"] if args.adverbs else ["Russian proper nouns", "Russian nouns", "Russian verbs"])

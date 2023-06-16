@@ -58,7 +58,7 @@ def process_text_on_page(index, pagename, text):
     t.add("passage", text)
     blib.set_template_name(t, "RQ:Browne Pseudodoxia Epidemica")
     notes.append("reformat {{RQ:Browne Errors}} into {{RQ:Browne Pseudodoxia Epidemica}}")
-    return unicode(t) + "\n"
+    return str(t) + "\n"
 
   curtext = re.sub(r"(\{\{RQ:Browne Errors.*?\}\})\n#+\*:\s*(.*?)\n",
       replace_browne_errors, curtext)
@@ -74,7 +74,7 @@ def process_text_on_page(index, pagename, text):
     t.add("passage", text)
     blib.set_template_name(t, "RQ:L'Estrange Fables of Aesop")
     notes.append("reformat {{RQ:L'Estrange Fables}} into {{RQ:L'Estrange Fables of Aesop}}")
-    return unicode(t) + "\n"
+    return str(t) + "\n"
 
   curtext = re.sub(r"(\{\{RQ:L'Estrange Fables.*?\}\})\n#+\*:\s*(.*?)\n",
       replace_lestrange_fables, curtext)
@@ -85,7 +85,7 @@ def process_text_on_page(index, pagename, text):
     if tn == "RQ:L'Estrange Fables":
       blib.set_template_name(t, "RQ:L'Estrange Fables of Aesop")
       notes.append("rename {{RQ:L'Estrange Fables}} to {{RQ:L'Estrange Fables of Aesop}}")
-  curtext = unicode(parsed)
+  curtext = str(parsed)
 
   def replace_chapman_odyssey(m):
     template, text = m.groups()
@@ -98,7 +98,7 @@ def process_text_on_page(index, pagename, text):
     t.add("passage", text)
     blib.set_template_name(t, "RQ:Homer Chapman Odysseys")
     notes.append("reformat {{RQ:Chapman Odyssey}} into {{RQ:Homer Chapman Odysseys}}")
-    return unicode(t) + "\n"
+    return str(t) + "\n"
 
   curtext = re.sub(r"(\{\{RQ:Chapman Odyssey.*?\}\})\n#+\*:\s*(.*?)\n",
       replace_chapman_odyssey, curtext)

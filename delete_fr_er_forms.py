@@ -40,7 +40,7 @@ def process_er_verb(index, pagetitle, save, verbose, doall):
     elif form == pagetitle:
       pagemsg("WARNING: Attempt to delete dictionary form, skipping")
     else:
-      text = unicode(formpage.text)
+      text = str(formpage.text)
       if "Etymology 1" in text:
         pagemsg("WARNING: Found 'Etymology 1', skipping form %s" % form)
       else:

@@ -179,8 +179,8 @@ def combine_adjacent_inflection_of_calls(text, notes, pagemsg, verbose=False):
           this_tags = []
           for param in t.params:
           # Extract the tags and the non-tag parameters.
-            pname = unicode(param.name).strip()
-            pval = unicode(param.value).strip()
+            pname = str(param.name).strip()
+            pval = str(param.value).strip()
             if re.search("^[0-9]+$", pname):
               if int(pname) >= first_tag:
                 if pval:
@@ -218,8 +218,8 @@ def combine_adjacent_inflection_of_calls(text, notes, pagemsg, verbose=False):
 
             # Replace prev + this with combination.
             pagemsg("Replaced %s + %s with %s" % (inflections[j - 2],
-              inflections[j], unicode(t)))
-            inflections[j] = unicode(parsed)
+              inflections[j], str(t)))
+            inflections[j] = str(parsed)
             del inflections[j-2:j]
             # Don't increment j; this happened effectively because we
             # deleted the preceding {{inflection of}}/etc. call
@@ -282,8 +282,8 @@ def extract_tags_and_nontag_params_from_inflection_of(t, notes):
   alt = getparam(t, "alt") or getparam(t, str(term_param + 1))
   tags = []
   for param in t.params:
-    pname = unicode(param.name).strip()
-    pval = unicode(param.value).strip()
+    pname = str(param.name).strip()
+    pval = str(param.value).strip()
     if re.search("^[0-9]+$", pname):
       if int(pname) >= term_param + 2:
         if pval:

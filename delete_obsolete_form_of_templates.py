@@ -44,7 +44,7 @@ templates_to_delete = [
 for i, temp in blib.iter_items(templates_to_delete, start, end):
   template_page = pywikibot.Page(site, "Template:%s" % temp)
   if template_page.exists():
-    template_page.delete('Delete obsoleted and orphaned form-of template (content was "%s")' % unicode(template_page.text))
+    template_page.delete('Delete obsoleted and orphaned form-of template (content was "%s")' % str(template_page.text))
   template_doc_page = pywikibot.Page(site, "Template:%s/documentation" % temp)
   if template_doc_page.exists():
-    template_doc_page.delete('Delete documentation page of obsoleted and orphaned form-of template (content was "%s")' % unicode(template_doc_page.text))
+    template_doc_page.delete('Delete documentation page of obsoleted and orphaned form-of template (content was "%s")' % str(template_doc_page.text))

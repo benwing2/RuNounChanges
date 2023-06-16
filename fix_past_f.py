@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, verbose):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -16,22 +16,22 @@ def process_page(page, index, verbose):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    if unicode(t.name) in ["ru-conj-5c", "ru-conj-6b"]:
+    origt = str(t)
+    if str(t.name) in ["ru-conj-5c", "ru-conj-6b"]:
       past_f = getparam(t, "4")
       if past_f:
         t.add("past_f", past_f, before="4")
         rmparam(t, "4")
         notes.append("Replace 4= with past_f=")
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert 4th param to past_f",
   include_pagefile=True)

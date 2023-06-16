@@ -198,7 +198,7 @@ def process_text_on_page(index, pagetitle, text):
     def join_with_brackets(args):
       return ",".join("'%s'" % arg if arg in ["s", "x", "e", "+", "#"] else "[[%s]]" % arg for arg in args)
     if tn == "fr-noun" and args.do_nouns:
-      origt = unicode(t)
+      origt = str(t)
       from_to_end = "<from> %s <to> %s <end>" % (origt, origt)
       lemma = pagetitle
 
@@ -225,8 +225,8 @@ def process_text_on_page(index, pagetitle, text):
           t.add("nolinkhead", "1", before="head")
           rmparam(t, "head")
         notes.extend(headnotes)
-        if origt != unicode(t):
-          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        if origt != str(t):
+          pagemsg("Replaced %s with %s" % (origt, str(t)))
 
       g = getp("1")
       pls = blib.fetch_param_chain(t, "2")
@@ -246,7 +246,7 @@ def process_text_on_page(index, pagetitle, text):
           new_algorithm_pl = do_make_plural(lemma)
           if old_algorithm_pl == new_algorithm_pl:
             pagemsg("Space in headword and old default noun algorithm applying, leading to same results '%s' as new: %s"
-                % (",".join(old_algorithm_pl), unicode(t)))
+                % (",".join(old_algorithm_pl), str(t)))
           else:
             pagemsg("WARNING: Space in headword and old default noun algorithm applying, leading to '%s' which is not the same as new algorithm '%s': %s"
                 % (",".join(old_algorithm_pl), ",".join(new_algorithm_pl), from_to_end))
@@ -359,7 +359,7 @@ def process_text_on_page(index, pagetitle, text):
       continue
 
     if tn == "fr-adj" and args.do_adjectives:
-      origt = unicode(t)
+      origt = str(t)
       from_to_end = "<from> %s <to> %s <end>" % (origt, origt)
       lemma = pagetitle
       head = getp("head")
@@ -379,15 +379,15 @@ def process_text_on_page(index, pagetitle, text):
           use_nolinkhead = True
 
       if getp("sp") or getp("inv"):
-        pagemsg("Already saw sp= or inv= in {{fr-adj}}, skipping other than maybe removing head=: %s" % unicode(t))
+        pagemsg("Already saw sp= or inv= in {{fr-adj}}, skipping other than maybe removing head=: %s" % str(t))
         if remove_head:
           rmparam(t, "head")
         elif use_nolinkhead:
           t.add("nolinkhead", "1", before="head")
           rmparam(t, "head")
         notes.extend(headnotes)
-        if origt != unicode(t):
-          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        if origt != str(t):
+          pagemsg("Replaced %s with %s" % (origt, str(t)))
         continue
 
       fs = blib.fetch_param_chain(t, "f")
@@ -437,8 +437,8 @@ def process_text_on_page(index, pagetitle, text):
         if use_nolinkhead:
           t.add("nolinkhead", "1")
         notes.extend(headnotes)
-        if origt != unicode(t):
-          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        if origt != str(t):
+          pagemsg("Replaced %s with %s" % (origt, str(t)))
           if not notes:
             # This can happen e.g. if we end up just moving head= to the end, or we convert |1=mf to |mf
             notes.append("clean up {{fr-adj}}")
@@ -472,7 +472,7 @@ def process_text_on_page(index, pagetitle, text):
         must_continue = False
         for param in t.params:
           pn = pname(param)
-          pv = unicode(param.value)
+          pv = str(param.value)
           if pn not in ["head", "1", "p"]:
             pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pn, pv, from_to_end))
             must_continue = True
@@ -484,7 +484,7 @@ def process_text_on_page(index, pagetitle, text):
           old_algorithm_pl = make_plural(lemma, "last")
           if old_algorithm_pl == pl:
             pagemsg("Space in headword and old default noun algorithm applying, leading to same results as new: pl='%s': %s"
-                % (old_algorithm_pl, unicode(t)))
+                % (old_algorithm_pl, str(t)))
           else:
             pagemsg("WARNING: Space in headword and old default noun algorithm applying, leading to values not all same as new algorithm: oldpl='%s', newpl='%s': %s"
                 % (old_algorithm_pl, pl, from_to_end))
@@ -554,7 +554,7 @@ def process_text_on_page(index, pagetitle, text):
       must_continue = False
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if pn not in ["head", "f", "mp", "fp"]:
           pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pn, pv, from_to_end))
           must_continue = True
@@ -569,7 +569,7 @@ def process_text_on_page(index, pagetitle, text):
         old_algorithm_fpl = make_plural(old_algorithm_f, "last")
         if (fs or old_algorithm_f == f) and (mpls or old_algorithm_mpl == mpl) and (fpls or old_algorithm_fpl == fpl):
           pagemsg("Space in headword and old default noun algorithm applying, leading to same results as new: f='%s', mpl='%s', fpl='%s': %s"
-              % (old_algorithm_f, old_algorithm_mpl, old_algorithm_fpl, unicode(t)))
+              % (old_algorithm_f, old_algorithm_mpl, old_algorithm_fpl, str(t)))
         else:
           pagemsg("WARNING: Space in headword and old default noun algorithm applying, leading to values not all same as new algorithm: %s; %s; %s: %s"
               % (fs and "explicit-f=%s" % f or "oldf='%s', newf='%s'" % (old_algorithm_f, f),
@@ -629,7 +629,7 @@ def process_text_on_page(index, pagetitle, text):
       add_head_params()
       continue
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Remove redundant params in {{fr-noun}}/{{fr-adj}} or replace with shortcut(s)",
   include_pagefile=True, include_stdin=True)

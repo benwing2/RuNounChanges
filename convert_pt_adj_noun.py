@@ -344,7 +344,7 @@ def process_text_on_page(index, pagetitle, text):
 
     if tn == "pt-noun" and (args.do_nouns or args.do_old_nouns and getp("old")):
       subnotes = []
-      origt = unicode(t)
+      origt = str(t)
 
       head = getp("head")
       lemma = blib.remove_links(head or pagetitle)
@@ -357,7 +357,7 @@ def process_text_on_page(index, pagetitle, text):
         return term
 
       def warn_when_exiting(txt):
-        pagemsg("WARNING: %s: %s" % (txt, unicode(t)))
+        pagemsg("WARNING: %s: %s" % (txt, str(t)))
         if args.add_old:
           notes.append("add old=1 to {{pt-noun}} where a warning will be issued")
           t.add("old", "1")
@@ -583,7 +583,7 @@ def process_text_on_page(index, pagetitle, text):
       must_continue = False
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if pn not in ["head", "1", "2", "f", "f2", "fpl", "fpl2", "g2", "meta", "pl", "pl2", "pl3", "plural",
             "qual_f", "qual_f2", "qual_g1", "qual_g2", "qual_pl", "qual_pl2", "qual_pl3", "unc",
             "m", "m2", "qual_m", "qual_m2", "old"]:
@@ -635,26 +635,26 @@ def process_text_on_page(index, pagetitle, text):
           t.add("head", head)
 
       if args.add_old:
-        if origt != unicode(t):
-          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        if origt != str(t):
+          pagemsg("Replaced %s with %s" % (origt, str(t)))
           notes.append("add old=1 to {{pt-noun}} that will change with new syntax")
           realt.add("old", "1")
         else:
-          pagemsg("No changes to %s" % unicode(realt))
+          pagemsg("No changes to %s" % str(realt))
 
-      elif origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      elif origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("replace {{pt-noun}} with new syntax%s" %
             (" (%s)" % ", ".join(subnotes) if subnotes else ""))
       else:
-        pagemsg("No changes to %s" % unicode(t))
+        pagemsg("No changes to %s" % str(t))
 
 
     ############# Convert new-style noun headwords for hyphenated terms
 
     if tn == "pt-noun" and args.do_new_hyphenated_nouns:
       subnotes = []
-      origt = unicode(t)
+      origt = str(t)
 
       head = getp("head")
       lemma = blib.remove_links(head or pagetitle)
@@ -763,25 +763,25 @@ def process_text_on_page(index, pagetitle, text):
       if mpls is not None:
         blib.set_param_chain(t, mpls, "mpl")
 
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("replace hyphenated {{pt-noun}} with special indicator(s)%s" %
             (" (%s)" % ", ".join(subnotes) if subnotes else ""))
       else:
-        pagemsg("No changes to %s" % unicode(t))
+        pagemsg("No changes to %s" % str(t))
 
 
     ############# Convert old-style adjective headwords
 
     if tn == "pt-adj" and args.do_adjs:
-      origt = unicode(t)
+      origt = str(t)
       if args.add_old:
         if not t.has("old") and not t.has("1") and not t.has("2"):
           # needs old=1
           t.add("old", "1")
           notes.append("add old=1 to old-style Portuguese adjective template not automatically identifiable as such")
-          if origt != unicode(t):
-            pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+          if origt != str(t):
+            pagemsg("Replaced %s with %s" % (origt, str(t)))
         continue
 
       #if not getp("old") and not getp("1") and not getp("2"):
@@ -796,7 +796,7 @@ def process_text_on_page(index, pagetitle, text):
         if not infl_type:
           lemma = pagetitle
           if not getp("f") and not getp("mpl") and not getp("pl") and not getp("fpl"):
-            pagemsg("WARNING: Probable bad template invocation, no parameters: %s" % unicode(t))
+            pagemsg("WARNING: Probable bad template invocation, no parameters: %s" % str(t))
             continue
           f = getp("f") or lemma
           mpl = (getp("mpl") if t.has("mpl") else getp("pl")) or lemma
@@ -807,11 +807,11 @@ def process_text_on_page(index, pagetitle, text):
           mpl = base + mpl
           fpl = base + fpl
           if f is None:
-            pagemsg("WARNING: Unrecognized inflection type %s: %s" % (infl_type, unicode(t)))
+            pagemsg("WARNING: Unrecognized inflection type %s: %s" % (infl_type, str(t)))
             continue
           lemma = base + infl_type
           if lemma != pagetitle:
-            pagemsg("WARNING: Saw lemma '%s' not equal to page title: %s" % (lemma, unicode(t)))
+            pagemsg("WARNING: Saw lemma '%s' not equal to page title: %s" % (lemma, str(t)))
 
         deff = make_feminine(lemma)
         defmpl = do_make_plural(lemma)
@@ -862,15 +862,15 @@ def process_text_on_page(index, pagetitle, text):
       must_continue = False
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if pn not in ["head", "1", "2", "f", "mpl", "pl", "fpl", "comp", "old"]:
-          pagemsg("WARNING: Saw unrecognized param %s=%s in %s" % (pn, pv, unicode(t)))
+          pagemsg("WARNING: Saw unrecognized param %s=%s in %s" % (pn, pv, str(t)))
           must_continue = True
           break
       if must_continue:
         continue
       if comp and comp not in ["yes", "no", "both"]:
-        pagemsg("WARNING: Saw unrecognized value '%s' for comp=: %s" % (comp, unicode(t)))
+        pagemsg("WARNING: Saw unrecognized value '%s' for comp=: %s" % (comp, str(t)))
         continue
 
       del t.params[:]
@@ -897,11 +897,11 @@ def process_text_on_page(index, pagetitle, text):
       if comp:
         t.add("hascomp", comp)
 
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("convert {{pt-adj}} to new syntax")
       else:
-        pagemsg("No changes to %s" % unicode(t))
+        pagemsg("No changes to %s" % str(t))
 
 
     ############# Convert new-style adjective headwords with inflections
@@ -910,14 +910,14 @@ def process_text_on_page(index, pagetitle, text):
       if tn == "pt-adj":
         if adj_headword:
           pagemsg("Saw adjective headword without intervening inflection; first=%s, second=%s" % (
-            unicode(adj_headword), unicode(t)))
+            str(adj_headword), str(t)))
         adj_headword = t
       if tn == "pt-adj-infl":
         if not adj_headword:
           pagemsg("WARNING: Saw adjective inflection template %s without previous adjective headword" %
-            unicode(t))
+            str(t))
           continue
-        orig_adj_headword = unicode(adj_headword)
+        orig_adj_headword = str(adj_headword)
         head = getparam(adj_headword, "head")
         headword_lemma = blib.remove_links(head or pagetitle)
         infl_base = getp("1")
@@ -925,7 +925,7 @@ def process_text_on_page(index, pagetitle, text):
         infl_lemma = infl_base + (infl_type[:-1] if infl_type in ["co2", u"ático2"] else infl_type)
         if infl_lemma != headword_lemma:
           pagemsg("WARNING: Inflection lemma %s not same as headword lemma %s: adj_headword=%s, infl=%s" % (
-            infl_lemma, headword_lemma, unicode(adj_headword), unicode(t)))
+            infl_lemma, headword_lemma, str(adj_headword), str(t)))
           continue
         has_dim = getp("dim") and getp("dim") != "0"
         has_aug = getp("aug") and getp("aug") != "0"
@@ -978,13 +978,13 @@ def process_text_on_page(index, pagetitle, text):
           notes.append("add augmentative(s) '%s' to {{pt-adj}}" % ",".join(augvals))
           blib.set_param_chain(adj_headword, augvals, "aug")
 
-        if orig_adj_headword != unicode(adj_headword):
-          pagemsg("Replaced %s with %s" % (orig_adj_headword, unicode(adj_headword)))
+        if orig_adj_headword != str(adj_headword):
+          pagemsg("Replaced %s with %s" % (orig_adj_headword, str(adj_headword)))
         else:
-          pagemsg("No changes to %s" % unicode(adj_headword))
-        adj_infl_templates_to_remove.append(unicode(t))
+          pagemsg("No changes to %s" % str(adj_headword))
+        adj_infl_templates_to_remove.append(str(t))
 
-  text = unicode(parsed)
+  text = str(parsed)
   for template_to_remove in adj_infl_templates_to_remove:
     text, changed = blib.replace_in_text(text,
         "\n\n==+(Inflection|Declension|Conjugation)==+\n%s" % re.escape(template_to_remove), "", pagemsg, is_re=True)

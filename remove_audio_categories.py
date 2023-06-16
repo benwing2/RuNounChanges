@@ -7,18 +7,18 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
 
   found_audio = False
   for t in parsed.filter_templates():
-    if unicode(t.name) == "audio" and getparam(t, "lang") == "ru":
+    if str(t.name) == "audio" and getparam(t, "lang") == "ru":
       found_audio = True
       break
   if found_audio:

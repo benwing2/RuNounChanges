@@ -801,7 +801,7 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
         newtrwords.append(trword or word)
         if trword and word != trword:
           pagemsg("WARNING: find_accented_split_words: Separator <%s> at index %s has manual translit <%s> that's different from it: %s" % (
-            word, i, trword, unicode(template)))
+            word, i, trword, str(template)))
           sawtr = True
     if sawtr:
       newertrwords = []
@@ -1021,17 +1021,17 @@ def apply_substs(ru, substs, pagemsg):
 # param.
 def process_template(pagetitle, index, pagetext, template, ruparam, trparam,
     output_line, find_accents, accent_hidden, verbose):
-  origt = unicode(template)
+  origt = str(template)
   saveparam = ruparam
   def pagemsg(text):
     msg("Page %s %s: %s" % (index, pagetitle, text))
   if semi_verbose:
     pagemsg("process_template: Processing template: %s" % origt)
-  if unicode(template.name) == "head":
+  if str(template.name) == "head":
     # Skip {{head}}. We don't want to mess with headwords.
     return False
   if not accent_hidden and re.search("^#\*:* *%s" % re.escape(origt),
-      unicode(pagetext), re.M):
+      str(pagetext), re.M):
     if semi_verbose:
       pagemsg("process_template: Skipping template because hidden by #*: %s" % origt)
       return False
@@ -1044,7 +1044,7 @@ def process_template(pagetitle, index, pagetext, template, ruparam, trparam,
   valtr = getparam(template, trparam) if trparam else ""
   if find_accents:
     newval, newtr, substs = find_accented(val, valtr, verbose, pagetitle,
-      pagemsg, template, unicode(template.name) in link_expandable_templates,
+      pagemsg, template, str(template.name) in link_expandable_templates,
       True)
     if newval != val or newtr != valtr:
       if ruheadlib.normalize_text(newval) != ruheadlib.normalize_text(val):
@@ -1056,7 +1056,7 @@ def process_template(pagetitle, index, pagetext, template, ruparam, trparam,
         if not trparam:
           pagemsg("WARNING: process_template: Unable to change translit to %s because no translit param available (Cyrillic param %s): %s" %
               (newtr, saveparam, origt))
-        elif unicode(template.name) in templates_with_subst and substs:
+        elif str(template.name) in templates_with_subst and substs:
           subst_param = ",".join(substs)
           if valtr:
             if newtr == valtr:
@@ -1116,11 +1116,11 @@ def process_template(pagetitle, index, pagetext, template, ruparam, trparam,
         output_line("Need accents (changed)")
       else:
         output_line("Found accents")
-  changed = unicode(template) != origt
+  changed = str(template) != origt
   if not changed and check_need_accent(val):
     output_line("Need accents")
   if changed:
-    pagemsg("process_template: Replaced %s with %s" % (origt, unicode(template)))
+    pagemsg("process_template: Replaced %s with %s" % (origt, str(template)))
   return ["auto-accent %s%s%s" % (newval, "//%s" % newtr if newtr else "",
     ", subst=" + ",".join(substs) if substs else "")] if changed else False
 
@@ -1143,7 +1143,7 @@ def auto_accent_auto_bracket_russian(find_accents, accent_hidden, cattype, direc
           template, templang, ruparam, trparam):
         def output_line(directive):
           msg("* %s[[%s]]%s %s: <nowiki>%s%s</nowiki>" % (pagenum, pagetitle,
-              tempname, directive, unicode(template), rest))
+              tempname, directive, str(template), rest))
         return process_template(pagetitle, index, pagetext, template, ruparam,
             trparam, output_line, find_accents, accent_hidden, verbose)
 
@@ -1159,7 +1159,7 @@ def auto_accent_auto_bracket_russian(find_accents, accent_hidden, cattype, direc
       def pagemsg(text):
         msg("Page %s %s: %s" % (index, pagetitle, text))
       def output_line(directive):
-        pagemsg("%s: %s" % (directive, unicode(template)))
+        pagemsg("%s: %s" % (directive, str(template)))
       result = process_template(pagetitle, index, pagetext, template, ruparam,
           trparam, output_line, find_accents, accent_hidden, verbose)
       if index % 100 == 0:

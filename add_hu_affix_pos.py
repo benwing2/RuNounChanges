@@ -9,14 +9,14 @@ from blib import getparam, rmparam, tname, pname, msg, site
 import belib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   notes = []
 
   pagemsg("Processing")
-  text = unicode(page.text)
+  text = str(page.text)
 
   retval = blib.find_modifiable_lang_section(text, "Hungarian", pagemsg)
   if retval is None:
@@ -29,14 +29,14 @@ def process_page(page, index, parsed):
 
   parsed = blib.parse_text(secbody)
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in ["compound", "affix", "af"] and getparam(t, "1") == "hu" and not getparam(t, "pos"):
       t.add("pos", "noun")
-    if origt != unicode(t):
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if origt != str(t):
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
       notes.append("add pos=noun to {{%s|hu}}" % tn)
-  sections[j] = unicode(parsed) + sectail
+  sections[j] = str(parsed) + sectail
   text = "".join(sections)
   return text, notes
 

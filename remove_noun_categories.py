@@ -7,13 +7,13 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, do_noun):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
 
   cat = do_noun and "nouns" or "proper nouns"

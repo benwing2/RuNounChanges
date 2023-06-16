@@ -9,7 +9,7 @@ from blib import getparam, rmparam, tname, msg, site
 import lalib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -21,12 +21,12 @@ def process_page(page, index, parsed):
     if tname(t) == "la-gerund":
       stem = getparam(t, "1")
       if stem and not stem.endswith("um"):
-        origt = unicode(t)
+        origt = str(t)
         t.add("1", stem + "um")
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("modify {{la-gerund}} param 1 from %s to %sum" % (
           stem, stem))
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Fix calls to {{la-gerund}} to include final -um",
     include_pagefile=True)

@@ -34,13 +34,13 @@ def process_text_on_page(index, pagetitle, text):
     def getp(param):
       return getparam(t, param)
     if tn == old_template:
-      origt = unicode(t)
+      origt = str(t)
       must_continue = False
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if pn not in ["1", "f", "feminine", "mpl", "mp", "masculine plural", "fpl", "fp", "feminine plural"]:
-          pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pn, pv, unicode(t)))
+          pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pn, pv, str(t)))
           must_continue = True
           break
       if must_continue:
@@ -50,13 +50,13 @@ def process_text_on_page(index, pagetitle, text):
       fpl = getp("fpl") or getp("fp") or getp("feminine plural")
       p1 = getp("1")
       if p1 and (f or mpl or fpl):
-        pagemsg("WARNING: Saw both 1= and f=/mpl=/fpl=, skipping: %s" % unicode(t))
+        pagemsg("WARNING: Saw both 1= and f=/mpl=/fpl=, skipping: %s" % str(t))
         continue
       if not p1 and not (f and mpl and fpl):
-        pagemsg("WARNING: Some of f=/mpl=/fpl= missing, skipping: %s" % unicode(t))
+        pagemsg("WARNING: Some of f=/mpl=/fpl= missing, skipping: %s" % str(t))
         continue
       if f.endswith("ssa") or f.endswith("na"):
-        pagemsg("WARNING: Feminine %s ends in -ssa or -na, can't handle yet: %s" % unicode(t))
+        pagemsg("WARNING: Feminine %s ends in -ssa or -na, can't handle yet: %s" % str(t))
         continue
       if p1:
         pass
@@ -68,21 +68,21 @@ def process_text_on_page(index, pagetitle, text):
           f = None
         if [mpl] != defmpl:
           pagemsg("WARNING: Masculine plural %s not same as default masculine plural %s, can't handle yet: %s"
-            % (mpl, ",".join(defmpl), unicode(t)))
+            % (mpl, ",".join(defmpl), str(t)))
           continue
         if [fpl] != deffpl:
           pagemsg("WARNING: Feminine plural %s not same as default feminine plural %s, can't handle yet: %s"
-            % (fpl, ",".join(deffpl), unicode(t)))
+            % (fpl, ",".join(deffpl), str(t)))
           continue
       del t.params[:]
       if f:
         t.add("1", f)
       blib.set_template_name(t, "ca-pp")
       notes.append("convert {{%s}} to new form" % old_template)
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{%s}} templates to new format" % old_template,
   include_pagefile=True, include_stdin=True)

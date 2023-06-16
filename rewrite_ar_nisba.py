@@ -8,7 +8,7 @@ def rewrite_one_page_ar_nisba(page, index, text):
   for template in text.filter_templates():
     if template.name == "ar-nisba":
       if template.has("head") and not template.has(1):
-        head = unicode(template.get("head").value)
+        head = str(template.get("head").value)
         template.remove("head")
         addparam(template, "1", head, before=template.params[0].name if len(template.params) > 0 else None)
       if template.has("plhead"):

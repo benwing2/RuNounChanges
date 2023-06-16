@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -16,12 +16,12 @@ def process_page(page, index, parsed):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    tname = unicode(t.name)
+    origt = str(t)
+    tname = str(t.name)
     if tname.startswith("ru-conj-") and tname != "ru-conj-verb-see":
       m = re.search("^ru-conj-(.*)$", tname)
       t.name = "ru-conj"
@@ -56,11 +56,11 @@ def process_page(page, index, parsed):
           t.add(str(i + 1), val)
       t.add("1", conjtype)
       blib.sort_params(t)
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Convert ru-conj-* to ru-conj and move variant",
   include_pagefile=True)

@@ -406,7 +406,7 @@ templates_to_check_for_empty_dot = []
 templates_to_remove_nodot = []
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -414,7 +414,7 @@ def process_page(page, index, parsed):
   notes = []
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in templates_to_remove_nodot:
       if t.has("nodot"):
@@ -423,12 +423,12 @@ def process_page(page, index, parsed):
     if tn in templates_to_remove_empty_dot:
       if t.has("dot"):
         if getparam(t, "dot") and getparam(t, "dot") != "<nowiki/>":
-          pagemsg("WARNING: non-empty dot= in form_of_t template: %s" % unicode(t))
+          pagemsg("WARNING: non-empty dot= in form_of_t template: %s" % str(t))
         rmparam(t, "dot")
         notes.append("remove effectless empty dot= from {{%s}}" % tn)
     if tn in templates_to_check_for_empty_dot:
       if t.has("dot") and (not getparam(t, "dot") or getparam(t, "dot") == "<nowiki/>"):
-        pagemsg("WARNING: empty dot= in alt_form_of_t template: %s" % unicode(t))
+        pagemsg("WARNING: empty dot= in alt_form_of_t template: %s" % str(t))
         rmparam(t, "dot")
         t.add("nodot", "1")
         notes.append("convert empty dot= to nodot=1 in {{%s}}" % tn)
@@ -438,7 +438,7 @@ def process_page(page, index, parsed):
         # Fetch all params.
         params = []
         for param in t.params:
-          pname = unicode(param.name)
+          pname = str(param.name)
           if pname.strip() != "lang":
             params.append((pname, param.value, param.showkey))
         # Erase all params.
@@ -455,10 +455,10 @@ def process_page(page, index, parsed):
       blib.set_template_name(t, template_renamings[tn])
       notes.append("rename {{%s}} to {{%s}}" % (tn, template_renamings[tn]))
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Move lang= to 1=", include_pagefile=True)
 args = parser.parse_args()

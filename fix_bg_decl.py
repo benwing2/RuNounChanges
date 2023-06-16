@@ -27,14 +27,14 @@ def do_process_text_on_page(index, pagename, text, adj):
     if tn in (adj and ["bg-adj"] or ["bg-noun", "bg-proper noun"]):
       headword = getparam(t, "1")
     if (tn == "bg-decl-adj" if adj else tn.startswith("bg-noun-")):
-      origt = unicode(t)
+      origt = str(t)
       if not headword:
         pagemsg("WARNING: Saw %s without {{%s}} headword" % (origt, "bg-adj" if adj else "bg-noun"))
         continue
       del t.params[:]
       t.add("1", "%s<>" % headword)
       blib.set_template_name(t, "bg-adecl" if adj else "bg-ndecl")
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
       notes.append("convert {{%s}} to {{%s}}" % (tn, tname(t)))
 
   return text, notes

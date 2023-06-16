@@ -12,7 +12,7 @@ import convert_la_headword_noun
 
 def process_page(page, index, parsed):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -29,7 +29,7 @@ def process_page(page, index, parsed):
     if tn not in ["la-noun", "la-proper noun"]:
       continue
 
-    origt = unicode(t)
+    origt = str(t)
 
     def render_headword():
       return "headword template <from> %s <to> %s <end>" % (origt, origt)
@@ -151,7 +151,7 @@ def process_page(page, index, parsed):
     # Fetch remaining params from headword template
     headword_params = []
     for param in t.params:
-      pname = unicode(param.name)
+      pname = str(param.name)
       if pname.strip() in ["1", "2", "3", "4"] or re.search("^(head|gen|g|decl)[0-9]*$", pname.strip()):
         continue
       headword_params.append((pname, param.value, param.showkey))
@@ -170,10 +170,10 @@ def process_page(page, index, parsed):
     # Copy remaining params from headword template
     for name, value, showkey in headword_params:
       t.add(name, value, showkey=showkey, preserve_spacing=False)
-    pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    pagemsg("Replaced %s with %s" % (origt, str(t)))
     notes.append("convert {{la-noun}}/{{la-proper noun}} params to new style")
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert headword template to new style params without decl",
     include_pagefile=True)

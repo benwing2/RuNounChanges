@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(index, page):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -17,14 +17,14 @@ def process_page(index, page):
 
   found_headword_template = False
   for t in parsed.filter_templates():
-    if unicode(t.name) in ["ru-adj"]:
+    if str(t.name) in ["ru-adj"]:
       found_headword_template = True
   if not found_headword_template:
     notes = []
     for t in parsed.filter_templates():
-      if unicode(t.name) in ["ru-noun", "ru-noun+", "ru-proper noun", "ru-proper noun+"]:
-        notes.append("found noun header (%s)" % unicode(t.name))
-      if unicode(t.name) == "head":
+      if str(t.name) in ["ru-noun", "ru-noun+", "ru-proper noun", "ru-proper noun+"]:
+        notes.append("found noun header (%s)" % str(t.name))
+      if str(t.name) == "head":
         notes.append("found head header (%s)" % getparam(t, "2"))
     pagemsg("Missing adj headword template%s" % (notes and "; " + ",".join(notes)))
 

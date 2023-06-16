@@ -16,7 +16,7 @@ seen_pages = set()
 
 def process_page(index, page, spec):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -103,7 +103,7 @@ def process_page(index, page, spec):
 
   notes = []
 
-  text = unicode(page.text)
+  text = str(page.text)
   retval = blib.find_modifiable_lang_section(text, "Italian", pagemsg, force_final_nls=True)
   if retval is None:
     return
@@ -135,7 +135,7 @@ def process_page(index, page, spec):
     for t in parsed.filter_templates():
       tn = tname(t)
       if tn == "it-IPA" and args.old_it_ipa:
-        origt = unicode(t)
+        origt = str(t)
         # Compute set of current reference params
         current_refs = set()
         for param in t.params:
@@ -169,18 +169,18 @@ def process_page(index, page, spec):
         del t.params[:]
         for pn, pv in params_to_add:
           t.add(pn, pv)
-        if origt != unicode(t):
-          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-          notes.append("replace existing %s with %s (manually assisted)" % (origt, unicode(t)))
-          subsections[k] = unicode(parsed)
+        if origt != str(t):
+          pagemsg("Replaced %s with %s" % (origt, str(t)))
+          notes.append("replace existing %s with %s (manually assisted)" % (origt, str(t)))
+          subsections[k] = str(parsed)
         break
       if tn == "it-pr" and not args.old_it_ipa:
-        origt = unicode(t)
+        origt = str(t)
         # Now change the params
         del t.params[:]
         for pn, pv in enumerate(prons):
           t.add(str(pn + 1), pv)
-        if origt != unicode(t):
+        if origt != str(t):
           # Make sure we're not removing references
           if re.search("<r(ef)?:", origt) and not args.override_refs:
             origrefs = set()
@@ -188,23 +188,23 @@ def process_page(index, page, spec):
             ref_regex = r"<r(?:ef)?:(?:[^<>]*|<<[^<>]*>>|<[^<>]*>)*>"
             for m in re.finditer(ref_regex, origt):
               origrefs.add(m.group(0))
-            for m in re.finditer(ref_regex, unicode(t)):
+            for m in re.finditer(ref_regex, str(t)):
               newrefs.add(m.group(0))
             orig_refs_not_in_new = origrefs - newrefs
             if len(orig_refs_not_in_new) > 0:
               pagemsg("WARNING: Saw existing refs %s not in new refs, not removing: existing=%s, new=%s" % (
-                "".join(orig_refs_not_in_new), origt, unicode(t)))
+                "".join(orig_refs_not_in_new), origt, str(t)))
               return False
 
           # Make sure we're not removing audio or other modifiers
           if re.search("<(audio|hmp|rhyme|hyph|pre|post):", origt) and not args.override_refs:
             pagemsg("WARNING: Saw existing audio/hmp/rhyme/hyph/pre/post not in new refs, not removing: existing=%s, new=%s" % (
-              origt, unicode(t)))
+              origt, str(t)))
             return False
 
-          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-          notes.append("replace existing %s with %s (manually assisted)" % (origt, unicode(t)))
-          subsections[k] = unicode(parsed)
+          pagemsg("Replaced %s with %s" % (origt, str(t)))
+          notes.append("replace existing %s with %s (manually assisted)" % (origt, str(t)))
+          subsections[k] = str(parsed)
         break 
     else: # no break
       new_pron_template, pron_prefix = construct_new_pron_template()

@@ -26,7 +26,7 @@ def rewrite_one_page_verb_headword(page, index, text):
 
   for template in text.filter_templates():
     if template.name in ["ar-verb"]:
-      origtemp = unicode(template)
+      origtemp = str(template)
       form = getparam(template, "form")
       if form:
         # In order to keep in the same order, just forcibly change the
@@ -40,7 +40,7 @@ def rewrite_one_page_verb_headword(page, index, text):
         # ... then forcibly change its name to 1=
         template.get("form").name = "1"
         template.get("1").showkey = False
-      newtemp = unicode(template)
+      newtemp = str(template)
       if origtemp != newtemp:
         msg("Replacing %s with %s" % (origtemp, newtemp))
       if re.match("^[1I](-|$)", form):
@@ -68,11 +68,11 @@ def canonicalize_verb_form(save, startFrom, upTo, tempname, formarg):
 
     for template in text.filter_templates():
       if template.name == tempname:
-        origtemp = unicode(template)
+        origtemp = str(template)
         form = getparam(template, formarg)
         if form:
           addparam(template, formarg, canonicalize_form(form))
-        newtemp = unicode(template)
+        newtemp = str(template)
         if origtemp != newtemp:
           msg("Replacing %s with %s" % (origtemp, newtemp))
         if re.match("^[1I](-|$)", form):

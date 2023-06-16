@@ -33,7 +33,7 @@ def process_text_on_page(index, pagetitle, text):
         else:
           unprefixed_title = pagetitle
         if no_macrons_head != unprefixed_title:
-          pagemsg("WARNING: Bad Latin head: %s" % unicode(t))
+          pagemsg("WARNING: Bad Latin head: %s" % str(t))
   return None, None
 
 parser = blib.create_argparser("Check for bad Latin forms",

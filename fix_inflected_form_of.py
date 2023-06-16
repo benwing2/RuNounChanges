@@ -63,7 +63,7 @@ def process_text_on_page(index, pagetitle, text):
       continue
     parsed = blib.parse_text(subsections[j])
     for t in parsed.filter_templates():
-      origt = unicode(t)
+      origt = str(t)
       tn = tname(t)
       if tn in rename_templates_without_lang:
         lemma = getparam(t, "1")
@@ -211,9 +211,9 @@ def process_text_on_page(index, pagetitle, text):
       for tag in "|;|".join(tag_sets).split("|"):
         t.add(str(nextparam), tag)
         nextparam += 1
-      notes.append("replace %s with %s" % (origt, unicode(t)))
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
-    subsections[j] = unicode(parsed)
+      notes.append("replace %s with %s" % (origt, str(t)))
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
+    subsections[j] = str(parsed)
   text = "".join(subsections)
 
   return text, notes

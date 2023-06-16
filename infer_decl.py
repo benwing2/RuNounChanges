@@ -209,9 +209,9 @@ def arg1_is_stress(arg1):
 
 def infer_decl(t, noungender, linked_headwords, pagemsg):
   if verbose:
-    pagemsg("Processing %s" % unicode(t))
+    pagemsg("Processing %s" % str(t))
 
-  tname = unicode(t.name).strip()
+  tname = str(t.name).strip()
   forms = {}
 
   # Initialize all cases to blank in case we don't set them again later
@@ -267,7 +267,7 @@ def infer_decl(t, noungender, linked_headwords, pagemsg):
           pagemsg("Inferring word #%s: %s" % (wordno, wordforms.get("nom_pl", "(blank)") if numonly == "pl" else wordforms.get("nom_sg", "(blank)")))
           args = infer_word(wordforms, noungender, linked_headwords, number, numonly, True, pagemsg)
           if not args:
-            pagemsg("Unable to infer word #%s: %s" % (wordno, unicode(t)))
+            pagemsg("Unable to infer word #%s: %s" % (wordno, str(t)))
             return None
           # If we have a gen_pl override, it needs to be for a specific word
           numbered_args = [re.sub("^gen_pl=", "gen_pl%s=" % wordno, arg) for arg in args]
@@ -275,7 +275,7 @@ def infer_decl(t, noungender, linked_headwords, pagemsg):
         animacies = [x for args in argses for x in args if x in ["a=in", "a=an"]]
         if "a=in" in animacies and "a=an" in animacies:
           pagemsg("WARNING: Conflicting animacies in multi-word expression: %s" %
-              unicode(t))
+              str(t))
           # FIXME, handle this better
           return None
         animacy = [animacies[0]] if animacies else []
@@ -302,7 +302,7 @@ def infer_decl(t, noungender, linked_headwords, pagemsg):
     else:
       args = infer_word(forms, noungender, {}, number, numonly, False, pagemsg)
       if not args:
-        pagemsg("Unable to infer word: %s" % unicode(t))
+        pagemsg("Unable to infer word: %s" % str(t))
         return None
       return [x for x in args if x != "a=in"]
   for ty in ["space", "dash", "single"]:
@@ -725,15 +725,15 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, multiword, 
 
 def infer_one_page_decls_1(page, index, text):
   def pagemsg(txt):
-    msg("Page %s %s: %s" % (index, unicode(page.title()), txt))
+    msg("Page %s %s: %s" % (index, str(page.title()), txt))
   genders = set()
   headwords = set()
   # Extract the genders and the headwords
   for t in text.filter_templates():
-    if unicode(t.name).strip() in ["ru-noun", "ru-proper noun"]:
+    if str(t.name).strip() in ["ru-noun", "ru-proper noun"]:
       m = re.search("^([mfn])", getparam(t, "2"))
       if not m:
-        pagemsg("WARNING: Strange ru-noun template: %s" % unicode(t))
+        pagemsg("WARNING: Strange ru-noun template: %s" % str(t))
       else:
         genders.add(m.group(1))
       head = getparam(t, "1")
@@ -760,8 +760,8 @@ def infer_one_page_decls_1(page, index, text):
 
   inferred_decls = []
   for t in text.filter_templates():
-    if unicode(t.name).strip() in manual_templates:
-      if unicode(t.name).strip() == "ru-decl-noun-pl":
+    if str(t.name).strip() in manual_templates:
+      if str(t.name).strip() == "ru-decl-noun-pl":
         genders = list(genders)
         if len(genders) == 0:
           pagemsg("WARNING: Can't find gender for pl-only nominal")
@@ -794,7 +794,7 @@ def infer_one_page_decls(page, index, text):
   try:
     return infer_one_page_decls_1(page, index, text)
   except StandardError as e:
-    msg("%s %s: WARNING: Got an error: %s" % (index, unicode(page.title()), repr(e)))
+    msg("%s %s: WARNING: Got an error: %s" % (index, str(page.title()), repr(e)))
     traceback.print_exc(file=sys.stdout)
     return text, "no change"
 
@@ -1380,7 +1380,7 @@ def test_infer():
     page = Page()
     msg("original text = [[%s]]" % pagetext)
     newtext, comment = infer_one_page_decls(page, 1, text)
-    msg("newtext = %s" % unicode(newtext))
+    msg("newtext = %s" % str(newtext))
     msg("comment = %s" % comment)
 
 parser = blib.create_argparser("Add pronunciation sections to Russian Wiktionary entries")
@@ -1389,7 +1389,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 def ignore_page(page):
   if not isinstance(page, basestring):
-    page = unicode(page.title())
+    page = str(page.title())
   if re.search(r"^(Appendix|Appendix talk|User|User talk|Talk):", page):
     return True
   return False
@@ -1400,7 +1400,7 @@ else:
   for template in manual_templates:
     for index, page in blib.references("Template:" + template, start, end):
       if ignore_page(page):
-        msg("Page %s %s: Skipping due to namespace" % (index, unicode(page.title())))
+        msg("Page %s %s: Skipping due to namespace" % (index, str(page.title())))
       else:
         blib.do_edit(page, index, infer_one_page_decls, save=args.save)
 

@@ -44,10 +44,10 @@ def do_nouns(poses, headtempls, save, startFrom, upTo):
         entry = getparam(template, "1")
         for param in template.params:
           value = param.value
-          newvalue = remove_i3rab(pagename, index, entry, unicode(value))
+          newvalue = remove_i3rab(pagename, index, entry, str(value))
           if newvalue != value:
             param.value = newvalue
-            params_done.append(unicode(param.name))
+            params_done.append(str(param.name))
         if params_done:
           nounids.append("#%s %s %s (%s)" %
               (nouncount, template.name, entry, ", ".join(params_done)))

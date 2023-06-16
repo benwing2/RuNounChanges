@@ -31,7 +31,7 @@ def get_indentation_level(header):
   return len(re.sub("[^=].*", "", header, 0, re.S))
 
 def process_page(page, index, pos):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -40,7 +40,7 @@ def process_page(page, index, pos):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   retval = blib.find_modifiable_lang_section(text, "Old English", pagemsg)
   if retval is None:
     pagemsg("WARNING: Couldn't find Old English section")
@@ -75,10 +75,10 @@ def process_page(page, index, pos):
         ):
           if inflt:
             pagemsg("WARNING: Found two inflection templates under one POS section: %s and %s" % (
-              unicode(inflt), unicode(t)))
+              str(inflt), str(t)))
           inflt = t
           pagemsg("Found %s inflection for headword %s: <from> %s <to> {{%s|%s}} <end>" %
-              (pos, head or pagetitle, unicode(t), pos_to_new_style_infl_template[pos],
+              (pos, head or pagetitle, str(t), pos_to_new_style_infl_template[pos],
                 getparam(t, "1") if pos == "verb" else head or pagetitle))
       if not inflt:
         pagemsg("Didn't find %s inflection for headword %s: <new> {{%s|%s%s}} <end>" % (
@@ -92,7 +92,7 @@ def process_page(page, index, pos):
                 tn = tname(t)
                 if tname(t) != "rfinfl":
                   pagemsg("WARNING: Saw unknown template %s in existing inflection section, skipping" % (
-                    unicode(t)))
+                    str(t)))
                   break
               else: # no break
                 if pagetitle not in pages_to_infls:

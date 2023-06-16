@@ -48,7 +48,7 @@ def add_remove_nobycat(index, pagename, text):
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     if tn in ["coin", "coinage"]:
       lang = getparam(t, "1")
       coiner = getparam(t, "2")
@@ -59,14 +59,14 @@ def add_remove_nobycat(index, pagename, text):
       elif len(coiner_count[(lang, coiner)]) > 1:
         if getparam(t, "nocat"):
           pagemsg("WARNING: Lang %s, coiner %s has %s total words coined but has nocat=1: %s" % (
-            lang, coiner, len(coiner_count[(lang, coiner)]), unicode(t)))
+            lang, coiner, len(coiner_count[(lang, coiner)]), str(t)))
         elif getparam(t, "nobycat"):
           rmparam(t, "nobycat")
           notes.append("remove nobycat= from {{coinage|%s|%s}}" % (lang, coiner))
-    if unicode(t) != origt:
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Add or remove nobycat= as necessary to/from {{coinage}}", include_pagefile=True,
     include_stdin=True)

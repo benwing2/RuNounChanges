@@ -21,14 +21,14 @@ templates = [
 ]
 
 def process_page(page, index, parsed, remove_manual_cats=False):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
   notes = []
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   for t in templates:
     newtext = re.sub(r"\n*\{\{%s\}\}" % t, "", text)
@@ -52,17 +52,17 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 if args.remove_manual_cats:
   for i, catpage in blib.cat_subcats("Sanskrit verb forms", recurse=True):
-    msg("In category %s:" % unicode(catpage.title()))
+    msg("In category %s:" % str(catpage.title()))
     for j, page in blib.cat_articles(catpage, start, end):
-      msg("Page %s" % unicode(page.title()))
+      msg("Page %s" % str(page.title()))
       blib.do_edit(page, j,
         lambda p, index, parsed: process_page(p, index, parsed, remove_manual_cats=True),
         save=args.save, verbose=args.verbose)
 elif args.delete_verb_subcats:
   for i, catpage in blib.cat_subcats("Sanskrit verb forms", recurse=True):
-    msg("In category %s:" % unicode(catpage.title()))
+    msg("In category %s:" % str(catpage.title()))
     if catpage.isEmptyCategory():
-      msg("Category %s is empty, deleting" % unicode(catpage.title()))
+      msg("Category %s is empty, deleting" % str(catpage.title()))
       if args.save:
         catpage.delete("Remove empty, unnecessary verb-form category")
 elif args.delete_templates:

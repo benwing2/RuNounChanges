@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site, tname
 
 def process_page(page, index, template):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -23,7 +23,7 @@ def process_page(page, index, template):
         if getparam(t, str(i)):
           break
       else:
-        pagemsg("Found %s template without parts: %s" % (template, unicode(t)))
+        pagemsg("Found %s template without parts: %s" % (template, str(t)))
 
 parser = blib.create_argparser("Find templates without any parts")
 parser.add_argument("--templates",

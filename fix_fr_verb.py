@@ -127,7 +127,7 @@ all_verb_props = [
 cached_template_calls = {}
 
 def find_old_template_props(template, pagemsg, verbose):
-  name = unicode(template.name)
+  name = str(template.name)
   if name in cached_template_calls:
     template_text = cached_template_calls[name]
   else:
@@ -135,16 +135,16 @@ def find_old_template_props(template, pagemsg, verbose):
     if not page.exists():
       pagemsg("WARNING: Can't locate template 'Template:%s'" % name)
       return None
-    template_text = unicode(template_page.text)
+    template_text = str(template_page.text)
     cached_template_calls[name] = template_text
   if verbose:
     pagemsg("Found template text: %s" % template_text)
   for t in blib.parse_text(template_text).filter_templates():
-    tname = unicode(t.name).strip() # template name may have spaces
+    tname = str(t.name).strip() # template name may have spaces
     if tname == "fr-conj" or tname == "#invoke:fr-conj" and getparam(t, "1").strip() == "frconj":
       args = {}
       # Yuck. Template param names sometimes have spaces in them; must strip.
-      tparams = [(unicode(param.name.strip()), unicode(param.value.strip())) for param in t.params]
+      tparams = [(str(param.name.strip()), str(param.value.strip())) for param in t.params]
       tparamdict = dict(tparams)
       debug_args = []
       def sub_template(val):
@@ -171,13 +171,13 @@ def find_old_template_props(template, pagemsg, verbose):
       pagemsg("Found args: %s" % "|".join(debug_args))
       return args
   pagemsg("WARNING: Can't find {{fr-conj}} in template definition for %s" %
-      unicode(template))
+      str(template))
   return None
 
 def compare_conjugation(index, page, template, refl, pagemsg, expand_text,
     verbose):
   # Force reflexive templates to succeed since they don't use {{fr-conj}}
-  if unicode(template.name) in refl_templates_to_change:
+  if str(template.name) in refl_templates_to_change:
     return []
   generate_result = expand_text("{{fr-generate-verb-forms%s}}" %
       ("|refl=yes" if refl else ""))
@@ -207,7 +207,7 @@ def compare_conjugation(index, page, template, refl, pagemsg, expand_text,
 def process_page(page, index, parsed):
   global args
   verbose = args.verbose
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -221,12 +221,12 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title, skipping")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   notes = []
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    name = unicode(t.name)
+    name = str(t.name)
     if name in templates_to_change or name in refl_templates_to_change:
       refl = name in refl_templates_to_change
       difvals = compare_conjugation(index, page, t, refl, pagemsg, expand_text, verbose)
@@ -237,40 +237,40 @@ def process_page(page, index, parsed):
         for prop, (oldval, newval) in difvals:
           difprops.append("%s=%s vs. %s" % (prop, oldval or "(missing)", newval or "(missing)"))
         pagemsg("WARNING: Different conjugation when changing template %s to {{fr-conj-auto}}: %s" %
-            (unicode(t), "; ".join(difprops)))
+            (str(t), "; ".join(difprops)))
       else:
         aux = ""
         for param in t.params:
-          pname = unicode(param.name)
-          pval = unicode(param.value)
+          pname = str(param.name)
+          pval = str(param.value)
           if not pval.strip():
             continue
           if (pname not in ["1", "2", "3", "aux", "sort", "cat"] or
               pname == "3" and pval not in ["avoir", u"être", u"avoir or être"]):
             pagemsg("WARNING: Found extra param %s=%s in %s" %
-                (pname, pval, unicode(t)))
+                (pname, pval, str(t)))
           if pname == "aux" and pval != "avoir":
             aux = pval
             pagemsg("Found non-avoir auxiliary aux=%s in %s" % (
-              pval, unicode(t)))
+              pval, str(t)))
           auxpname = ("3" if name in ["fr-conj-e-er", "fr-conj-ir (s)"] else
               "aux" if name in ["fr-conj-xx-er", u"fr-conj-é-er"] else "2")
           if pname == auxpname and pval != "avoir":
             aux = pval
             pagemsg("Found non-avoir auxiliary %s=%s in %s" % (
-              pname, pval, unicode(t)))
-        oldt = unicode(t)
+              pname, pval, str(t)))
+        oldt = str(t)
         del t.params[:]
         t.name = "fr-conj-auto"
         if refl:
           t.add("refl", "yes")
         if aux:
           t.add("aux", aux)
-        newt = unicode(t)
+        newt = str(t)
         pagemsg("Replacing %s with %s" % (oldt, newt))
         notes.append("replaced {{%s}} with %s" % (name, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert old fr-conj-* to fr-conj-auto",
   include_pagefile=True)

@@ -10,7 +10,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -21,7 +21,7 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title, skipping page")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
   already_canonicalized = False
   found_short_inflection_of = False
@@ -40,7 +40,7 @@ def process_page(page, index, parsed):
       # Try to canonicalize existing 'inflection of'
       parsed = blib.parse_text(sections[j])
       for t in parsed.filter_templates():
-        if unicode(t.name) == "inflection of" and getparam(t, "lang") == "ru":
+        if str(t.name) == "inflection of" and getparam(t, "lang") == "ru":
           # Fetch the numbered params starting with 3
           numbered_params = []
           for i in range(3,20):
@@ -75,10 +75,10 @@ def process_page(page, index, parsed):
               found_short_inflection_of = True
               warned_about_short = True
               pagemsg("WARNING: Apparent short-form 'inflection of' but can't canonicalize: %s" %
-                  unicode(t))
+                  str(t))
             break
           if canon_params:
-            origt = unicode(t)
+            origt = str(t)
             # Fetch param 1 and param 2. Erase all numbered params.
             # Put back param 1 and param 2 (this will put them after lang=ru),
             # then the replacements for the higher params.
@@ -90,14 +90,14 @@ def process_page(page, index, parsed):
             t.add("2", param2)
             for i, param in enumerate(canon_params):
               t.add(str(i+3), param)
-            newt = unicode(t)
+            newt = str(t)
             if origt != newt:
               pagemsg("Replaced %s with %s" % (origt, newt))
               notes.append("canonicalized 'inflection of' for %s" % "/".join(canon_params))
             else:
               pagemsg("Apparently already canonicalized: %s" % newt)
               already_canonicalized = True
-      sections[j] = unicode(parsed)
+      sections[j] = str(parsed)
 
       # Try to add 'inflection of' to raw-specified singular inflection
       def add_sing_inflection_of(m):

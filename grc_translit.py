@@ -67,10 +67,10 @@ def error(text):
     raise RuntimeError(text)
 
 def nfc_form(txt):
-    return unicodedata.normalize("NFC", unicode(txt))
+    return unicodedata.normalize("NFC", str(txt))
 
 def nfd_form(txt):
-    return unicodedata.normalize("NFD", unicode(txt))
+    return unicodedata.normalize("NFD", str(txt))
 
 tt = {
     # Plain vowels

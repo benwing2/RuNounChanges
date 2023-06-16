@@ -9,7 +9,7 @@ import blib
 from blib import getparam, rmparam, tname, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -18,14 +18,14 @@ def process_page(page, index, parsed):
   notes = []
   for t in parsed.filter_templates():
     if tname(t) == "quote-Fanny Hill":
-      origt = unicode(t)
+      origt = str(t)
       t.name = "RQ:Cleland Fanny Hill"
       rmparam(t, "part")
       if getparam(t, "1"):
         t.add("passage", getparam(t, "1"))
         rmparam(t, "1")
       notes.append("Replace {{quote-Fanny Hill}} with {{RQ:Cleland Fanny Hill}}")
-      newt = unicode(t)
+      newt = str(t)
       if origt != newt:
         pagemsg("Replaced %s with %s" % (origt, newt))
 

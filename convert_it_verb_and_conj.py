@@ -139,26 +139,26 @@ def process_text_on_page(index, pagetitle, text):
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     def getp(param):
       return getparam(t, param)
     if tn in ["it-verb-old", "it-verb"]:
-      pagemsg("Saw %s" % unicode(t))
+      pagemsg("Saw %s" % str(t))
       saw_headt = True
       arg = getp("1")
       if not arg:
-        pagemsg("WARNING: Saw {{%s}} without param, skipping: %s" % (tn, unicode(t)))
+        pagemsg("WARNING: Saw {{%s}} without param, skipping: %s" % (tn, str(t)))
         return
       if headt:
-        pagemsg("WARNING: Saw multiple head templates: %s and %s" % (unicode(headt), unicode(t)))
+        pagemsg("WARNING: Saw multiple head templates: %s and %s" % (str(headt), str(t)))
         return
       headt = t
     elif tn.startswith("it-conj-"):
       if not headt:
-        pagemsg("WARNING: Saw conjugation template without {{it-verb-old}}/{{it-verb}} head template: %s" % unicode(conjt))
+        pagemsg("WARNING: Saw conjugation template without {{it-verb-old}}/{{it-verb}} head template: %s" % str(conjt))
         return
       conjt = t
-      conjt_str = unicode(conjt)
+      conjt_str = str(conjt)
       headtn = tname(headt)
       headarg1 = getparam(headt, "1")
       if headtn == "it-verb":
@@ -177,7 +177,7 @@ def process_text_on_page(index, pagetitle, text):
         else:
           headarg1 = "/@"
       else:
-        pagemsg("WARNING: Can't handle verb automatically; head=%s, conj=%s" % (unicode(headt), unicode(conjt)))
+        pagemsg("WARNING: Can't handle verb automatically; head=%s, conj=%s" % (str(headt), str(conjt)))
         return
       conjarg1 = headarg1
 
@@ -186,15 +186,15 @@ def process_text_on_page(index, pagetitle, text):
 
       if compare_new_and_old_templates(conjt_str, newconjt_str, pagetitle, pagemsg, errandpagemsg):
         if headtn == "it-verb-old":
-          orig_headt = unicode(headt)
+          orig_headt = str(headt)
           blib.set_template_name(headt, "it-verb")
           headt.add("1", headarg1)
-          pagemsg("Replaced %s with %s" % (orig_headt, unicode(headt)))
-        orig_conjt = unicode(conjt)
+          pagemsg("Replaced %s with %s" % (orig_headt, str(headt)))
+        orig_conjt = str(conjt)
         del conjt.params[:]
         conjt.add("1", conjarg1)
         blib.set_template_name(conjt, "it-conj")
-        pagemsg("Replaced %s with %s" % (orig_conjt, unicode(conjt)))
+        pagemsg("Replaced %s with %s" % (orig_conjt, str(conjt)))
         if headtn == "it-verb-old":
           notes.append("convert {{it-verb-old}}/{{it-conj-*}} to new {{it-verb}}/{{it-conj}}")
         else:
@@ -205,7 +205,7 @@ def process_text_on_page(index, pagetitle, text):
     pagemsg("WARNING: Didn't see {{it-verb-old}}/{{it-verb}} head template")
     return
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{it-verb-old}}/{{it-verb}}/{{it-conj-*}} to {{it-verb}}/{{it-conj}}",
   include_pagefile=True, include_stdin=True)

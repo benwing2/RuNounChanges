@@ -31,7 +31,7 @@ french_head_templates_1_not_head = [
 
 def process_page(page, index, parsed):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -41,7 +41,7 @@ def process_page(page, index, parsed):
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     if tn in french_head_templates:
       if getparam(t, "head"):
         rmparam(t, "head")
@@ -49,10 +49,10 @@ def process_page(page, index, parsed):
       if tn not in french_head_templates_1_not_head and getparam(t, "1"):
         rmparam(t, "1")
         notes.append("remove redundant 1= from {{%s}}" % tn)
-      if unicode(t) != origt:
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if str(t) != origt:
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Remove redundant head params from French headwords",
   include_pagefile=True)

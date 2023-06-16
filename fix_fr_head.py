@@ -9,7 +9,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(index, page, fix_missing_plurals):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -19,13 +19,13 @@ def process_page(index, page, fix_missing_plurals):
     pagemsg("WARNING: Colon in page title, skipping")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   notes = []
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    name = unicode(t.name)
+    origt = str(t)
+    name = str(t.name)
     if name == "head" and getparam(t, "1") == "fr":
       headtype = getparam(t, "2")
       fixed_plural_warning = False
@@ -38,7 +38,7 @@ def process_page(index, page, fix_missing_plurals):
           plural = getparam(t, "4")
         unrecognized_params = False
         for param in t.params:
-          pname = unicode(param.name)
+          pname = str(param.name)
           if pname in ["1", "2", "head", "g", "g2", "sort"] or plural and pname in ["3", "4"]:
             pass
           else:
@@ -46,15 +46,15 @@ def process_page(index, page, fix_missing_plurals):
             break
         if unrecognized_params:
           pagemsg("WARNING: Unrecognized parameters in %s, skipping"
-              % unicode(t))
+              % str(t))
           continue
         if not g:
-          pagemsg("WARNING: No gender given in %s, skipping" % unicode(t))
+          pagemsg("WARNING: No gender given in %s, skipping" % str(t))
           continue
         found_feminine_noun = False
         if g == "f" and not g2 and not plural:
           for tt in parsed.filter_templates():
-            if (unicode(tt.name) == "feminine noun of" and
+            if (str(tt.name) == "feminine noun of" and
                 getparam(tt, "lang") == "fr"):
               found_feminine_noun = True
         if found_feminine_noun:
@@ -62,10 +62,10 @@ def process_page(index, page, fix_missing_plurals):
         elif g not in ["m-p", "f-p"] and not plural:
           if fix_missing_plurals:
             pagemsg("WARNING: No plural given in %s, assuming default plural, PLEASE REVIEW"
-                % unicode(t))
+                % str(t))
             fixed_plural_warning = True
           else:
-            pagemsg("WARNING: No plural given in %s, skipping" % unicode(t))
+            pagemsg("WARNING: No plural given in %s, skipping" % str(t))
             continue
         rmparam(t, "4")
         rmparam(t, "3")
@@ -93,7 +93,7 @@ def process_page(index, page, fix_missing_plurals):
           remove_3 = True
         unrecognized_params = False
         for param in t.params:
-          pname = unicode(param.name)
+          pname = str(param.name)
           if pname in ["1", "2", "head", "g", "g2", "sort"] or remove_3 and pname in ["3"]:
             pass
           else:
@@ -101,10 +101,10 @@ def process_page(index, page, fix_missing_plurals):
             break
         if unrecognized_params:
           pagemsg("WARNING: Unrecognized parameters in %s, skipping"
-              % unicode(t))
+              % str(t))
           continue
         if not g:
-          pagemsg("WARNING: No gender given in %s, skipping" % unicode(t))
+          pagemsg("WARNING: No gender given in %s, skipping" % str(t))
           continue
         rmparam(t, "3")
         rmparam(t, "2")
@@ -121,7 +121,7 @@ def process_page(index, page, fix_missing_plurals):
           t.add("g2", g2)
       elif headtype in ["adjective", "adjectives"]:
         if getparam(t, "3") in ["invariable", "invariant"]:
-          params = dict((unicode(p.name), unicode(p.value)) for p in t.params)
+          params = dict((str(p.name), str(p.value)) for p in t.params)
           del params["1"]
           del params["2"]
           del params["3"]
@@ -138,10 +138,10 @@ def process_page(index, page, fix_missing_plurals):
             t.add("inv", "y")
           else:
             pagemsg("WARNING: Unrecognized parameters in %s, skipping" %
-                unicode(t))
+                str(t))
         else:
           pagemsg("WARNING: Unrecognized parameters in %s, skipping" %
-              unicode(t))
+              str(t))
       elif headtype in ["adjective form", "verb form", "verb forms",
           "interjection", "preposition", "prefix", "prefixes",
           "suffix", "suffixes"]:
@@ -150,7 +150,7 @@ def process_page(index, page, fix_missing_plurals):
         head = getparam(t, "head")
         unrecognized_params = False
         for param in t.params:
-          pname = unicode(param.name)
+          pname = str(param.name)
           if pname in ["1", "2", "head", "sort"] or headtype_supports_g and pname == "g":
             pass
           else:
@@ -158,7 +158,7 @@ def process_page(index, page, fix_missing_plurals):
             break
         if unrecognized_params:
           pagemsg("WARNING: Unrecognized parameters in %s, skipping"
-              % unicode(t))
+              % str(t))
           continue
         rmparam(t, "sort")
         rmparam(t, "head")
@@ -174,13 +174,13 @@ def process_page(index, page, fix_missing_plurals):
         if head:
           t.add("head", head)
 
-      newt = unicode(t)
+      newt = str(t)
       if origt != newt:
         pagemsg("Replacing %s with %s" % (origt, newt))
         notes.append("replaced {{head|fr|%s}} with {{%s}}%s" % (headtype,
-          unicode(t.name), " (NEEDS REVIEW)" if fixed_plural_warning else ""))
+          str(t.name), " (NEEDS REVIEW)" if fixed_plural_warning else ""))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert head|fr|* to fr-*",
   include_pagefile=True)

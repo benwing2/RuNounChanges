@@ -11,7 +11,7 @@ def split_one_page_etymologies(page, index, pagetext, verbose):
 
   # Fetch pagename, create pagemsg() fn to output msg with page name included
   pagename = page.title()
-  pagetext = unicode(pagetext)
+  pagetext = str(pagetext)
   def pagemsg(text):
     msg("Page %s %s: %s" % (index, pagename, text))
 

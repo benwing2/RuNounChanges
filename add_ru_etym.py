@@ -144,7 +144,7 @@ def process_line(index, line, add_passive_of, override_etym, save, verbose):
     
   pagemsg("Adding etymology")
   notes = []
-  pagetext = unicode(page.text)
+  pagetext = str(page.text)
 
   # Split into sections
   splitsections = re.split("(^==[^=\n]+==\n)", pagetext, 0, re.M)

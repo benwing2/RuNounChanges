@@ -60,7 +60,7 @@ def decompose_acute_grave(text):
   # Decompose sequences of character + acute or grave, but compose all other
   # accented sequences, e.g. Latin č and ě, Cyrillic ё and й.
   # (1) Decompose entirely.
-  decomposed = unicodedata.normalize("NFD", unicode(text))
+  decomposed = unicodedata.normalize("NFD", str(text))
   # (2) Split into text sections separated by acutes and graves.
   split = re.split("([%s%s])" % (AC, GR), decomposed)
   # (3) Recompose each section.
@@ -597,12 +597,12 @@ def paste_russian_tr(ru, tr):
 def fetch_noun_args(t, expand_text, forms_only=False):
   generate_template = ("ru-generate-noun-forms" if forms_only else
       "ru-generate-noun-args")
-  if unicode(t.name) == "ru-noun+":
+  if str(t.name) == "ru-noun+":
     generate_template = re.sub(r"^\{\{ru-noun\+",
-        "{{%s" % generate_template, unicode(t))
+        "{{%s" % generate_template, str(t))
   else:
     generate_template = re.sub(r"^\{\{ru-proper noun\+",
-        "{{%s|ndef=sg" % generate_template, unicode(t))
+        "{{%s|ndef=sg" % generate_template, str(t))
   generate_result = expand_text(generate_template)
   if not generate_result:
     return None
@@ -659,7 +659,7 @@ def group_translits(formvals, pagemsg, verbose=False):
 def check_for_alt_yo_terms(text, pagemsg):
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
+    tname = str(t.name)
     if tname in [u"ru-adj-alt-ё", u"ru-noun-alt-ё", u"ru-proper noun-alt-ё",
         u"ru-verb-alt-ё", u"ru-pos-alt-ё"]:
       pagemsg(u"Skipping alt-ё term")

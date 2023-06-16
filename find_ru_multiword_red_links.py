@@ -98,7 +98,7 @@ def process_text_on_page(index, pagetitle, text):
 
     highest_numbered_param = 0
     for p in htemp.params:
-      pname = unicode(p.name)
+      pname = str(p.name)
       if re.search("^[0-9]+$", pname):
         highest_numbered_param = max(highest_numbered_param, int(pname))
 
@@ -127,22 +127,22 @@ def process_text_on_page(index, pagetitle, text):
       word = rulib.remove_accents(blib.remove_right_side_links(word))
       if "[" in word or "]" in word:
         pagemsg("WARNING: Found stray bracket in word %s in %s" %
-            (word, unicode(htemp)))
+            (word, str(htemp)))
       else:
         check_lemma(word)
 
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn == "ru-decl-noun-see":
-      pagemsg("WARNING: Skipping ru-decl-noun-see, can't handle yet: %s" % unicode(t))
+      pagemsg("WARNING: Skipping ru-decl-noun-see, can't handle yet: %s" % str(t))
     elif tn in ["ru-noun+", "ru-proper noun+"]:
-      pagemsg("Found %s" % unicode(t))
+      pagemsg("Found %s" % str(t))
       process_new_style_headword(t)
     elif tn in ["ru-verb"]:
-      pagemsg("Found %s" % unicode(t))
+      pagemsg("Found %s" % str(t))
       process_verb_headword(t)
     elif tn in ["ru-noun", "ru-proper noun"]:
-      pagemsg("WARNING: Skipping ru-noun or ru-proper noun, can't handle yet: %s" % unicode(t))
+      pagemsg("WARNING: Skipping ru-noun or ru-proper noun, can't handle yet: %s" % str(t))
 
 parser = blib.create_argparser(u"Find red links in multiword Russian lemmas",
     include_pagefile=True, include_stdin=True)
@@ -151,7 +151,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 msg("Reading Russian lemmas")
 for i, page in blib.cat_articles("Russian lemmas", start, end):
-  lemmas.add(unicode(page.title()))
+  lemmas.add(str(page.title()))
 
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
   default_refs=["Template:tracking/ru-headword/space-in-headword/" + pos

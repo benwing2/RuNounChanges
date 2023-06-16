@@ -31,14 +31,14 @@ pos_to_pos = {
 }
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
   notes = []
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   def replace_pos(m):
     return "%s|pos=%s}}" % (m.group(1), pos_to_pos[m.group(2)])

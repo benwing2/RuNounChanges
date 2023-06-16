@@ -231,7 +231,7 @@ def process_text_on_page(index, pagetitle, text):
     ############# Remove redundant params
 
     if tn == "ca-noun" and args.do_nouns:
-      origt = unicode(t)
+      origt = str(t)
       subnotes = []
 
       head = getp("head")
@@ -248,7 +248,7 @@ def process_text_on_page(index, pagetitle, text):
       saw_qual = False
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if re.search("_qual$", pn):
           pagemsg("WARNING: Saw _qual parameter, can't handle: %s=%s" % (pn, pv))
           saw_qual = True
@@ -258,10 +258,10 @@ def process_text_on_page(index, pagetitle, text):
 
       gs = blib.fetch_param_chain(t, "1", "g")
       if len(gs) > 1:
-        pagemsg("WARNING: Saw multiple genders, can't handle: %s" % unicode(t))
+        pagemsg("WARNING: Saw multiple genders, can't handle: %s" % str(t))
         continue
       if not gs:
-        pagemsg("WARNING: No genders, can't handle: %s" % unicode(t))
+        pagemsg("WARNING: No genders, can't handle: %s" % str(t))
         continue
       g = gs[0]
 
@@ -281,14 +281,14 @@ def process_text_on_page(index, pagetitle, text):
           orig_pls = pls
 
           if g not in ["m", "f", "mf", "mfbysense"]:
-            pagemsg("WARNING: Saw unrecognized gender '%s', can't handle: %s" % (g, unicode(t)))
+            pagemsg("WARNING: Saw unrecognized gender '%s', can't handle: %s" % (g, str(t)))
             break
 
           g_for_plural = "f" if g == "f" else "m"
           new_pls = []
           defpl = make_plural(lemma, g_for_plural)
           if defpl is None:
-            pagemsg("Can't generate default plural, skipping: %s" % unicode(t))
+            pagemsg("Can't generate default plural, skipping: %s" % str(t))
             break
           if len(defpl) > 1:
             if set(pls) == set(defpl):
@@ -392,14 +392,14 @@ def process_text_on_page(index, pagetitle, text):
         rmparam(t, "head")
         t.add("nolinkhead", "1")
 
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("clean up {{ca-noun}} (%s)" % "; ".join(blib.group_notes(subnotes)))
       else:
-        pagemsg("No changes to %s" % unicode(t))
+        pagemsg("No changes to %s" % str(t))
 
     if tn == "ca-adj" and args.do_adjs:
-      origt = unicode(t)
+      origt = str(t)
       subnotes = []
 
       head = getp("head")
@@ -416,20 +416,20 @@ def process_text_on_page(index, pagetitle, text):
       saw_unhandlable = False
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if pn == "sp" or pn.startswith("fpl") or pn.endswith("_qual"):
-          pagemsg("WARNING: Saw sp=, fpl* or *_qual parameter, can't handle: %s=%s: %s" % (pn, pv, unicode(t)))
+          pagemsg("WARNING: Saw sp=, fpl* or *_qual parameter, can't handle: %s=%s: %s" % (pn, pv, str(t)))
           saw_unhandlable = True
           break
         if (pn == "1" or pn.startswith("f") or pn.startswith("pl") or pn.startswith("mpl")) and (pv == "+" or pv.startswith("#")):
-          pagemsg("Saw + or #, skipping: %s=%s: %s" % (pn, pv, unicode(t)))
+          pagemsg("Saw + or #, skipping: %s=%s: %s" % (pn, pv, str(t)))
           saw_unhandlable = True
           break
 
       fs = blib.fetch_param_chain(t, "1", "f")
       origfs = fs
       if fs == ["inv"] or fs == ["ind"]:
-        pagemsg("Saw invariable adjective, skipping: %s" % unicode(t))
+        pagemsg("Saw invariable adjective, skipping: %s" % str(t))
         saw_unhandlable = True
 
       if not saw_unhandlable:
@@ -576,13 +576,13 @@ def process_text_on_page(index, pagetitle, text):
         rmparam(t, "head")
         t.add("nolinkhead", "1")
 
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("clean up {{ca-adj}} (%s)" % "; ".join(blib.group_notes(subnotes)))
       else:
-        pagemsg("No changes to %s" % unicode(t))
+        pagemsg("No changes to %s" % str(t))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 if __name__ == "__main__":
   parser = blib.create_argparser("Remove redundant args in {{ca-noun}} or {{ca-adj}}",

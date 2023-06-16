@@ -486,7 +486,7 @@ def process_text_on_page(index, pagetitle, text):
       pagemsg("WARNING: Putative {{%s}} line doesn't have {{%s...}} as the first template, skipping: %s" %
           (tntext, tntext, line))
       return None
-    if unicode(t) != line:
+    if str(t) != line:
       pagemsg("WARNING: {{%s}} line has text other than {{%s...}}, skipping: %s" % (tntext, tntext, line))
       return None
     return t
@@ -522,7 +522,7 @@ def process_text_on_page(index, pagetitle, text):
         if tn == "it-IPA":
           num_it_IPA += 1
       if saw_it_pr:
-        pagemsg("Already saw {{it-pr}}, skipping: %s" % unicode(t))
+        pagemsg("Already saw {{it-pr}}, skipping: %s" % str(t))
         continue
       if num_it_IPA == 0:
         pagemsg("WARNING: Didn't see {{it-IPA}} in Pronunciation section, skipping")
@@ -593,7 +593,7 @@ def process_text_on_page(index, pagetitle, text):
 
           for param in ipat.params:
             pn = pname(param)
-            pv = unicode(param.value)
+            pv = str(param.value)
             if re.search("^[0-9]+$", pn):
               continue
             m = re.search("^(ref|qual)([0-9]*)$", pn)
@@ -662,7 +662,7 @@ def process_text_on_page(index, pagetitle, text):
           audiogloss = getparam(audiot, "3")
           for param in audiot.params:
             pn = pname(param)
-            pv = unicode(param.value)
+            pv = str(param.value)
             if pn not in ["1", "2", "3"]:
               pagemsg("WARNING: Unrecognized param %s=%s in {{audio}}, skipping: %s" % (
                 pn, pv, origline))
@@ -676,8 +676,8 @@ def process_text_on_page(index, pagetitle, text):
             audiogloss = ";%s" % audiogloss
           audiopart = "<audio:%s%s>" % (audiofile, audiogloss)
           audioarg += audiopart
-          pagemsg("Replacing %s with argument part %s" % (unicode(audiot), audiopart))
-          extra_notes.append("incorporate %s into {{it-pr}}" % unicode(audiot))
+          pagemsg("Replacing %s with argument part %s" % (str(audiot), audiopart))
+          extra_notes.append("incorporate %s into {{it-pr}}" % str(audiot))
         elif line.startswith("{{rhyme"):
           rhyme_lines.append(line)
         elif remove_accents(line) == remove_accents(pagetitle):
@@ -721,7 +721,7 @@ def process_text_on_page(index, pagetitle, text):
             rhyme_specific_num_syl = []
             for param in rhymet.params:
               pn = pname(param)
-              pv = unicode(param.value)
+              pv = str(param.value)
               if not re.search("^s?[0-9]*$", pn):
                 pagemsg("WARNING: Unrecognized param %s=%s in {{%s}}, not removing: %s" %
                     (pn, pv, tname(rhymet), rhyme_line))
@@ -806,7 +806,7 @@ def process_text_on_page(index, pagetitle, text):
               must_break = False
               for param in hypht.params:
                 pn = pname(param)
-                pv = unicode(param.value)
+                pv = str(param.value)
                 if not re.search("^[0-9]+$", pn) and pn != "nocaption":
                   pagemsg("WARNING: Unrecognized param %s=%s in {{%s}}, not removing: %s" %
                       (pn, pv, tname(hypht), hyph_line))
@@ -884,7 +884,7 @@ def process_text_on_page(index, pagetitle, text):
             else:
               for param in hmpt.params:
                 pn = pname(param)
-                pv = unicode(param.value)
+                pv = str(param.value)
                 if not re.search("^q?[0-9]+$", pn):
                   pagemsg("WARNING: Unrecognized param %s=%s in {{%s}}, not removing: %s" %
                       (pn, pv, tname(hmpt), homophone_line))
@@ -907,7 +907,7 @@ def process_text_on_page(index, pagetitle, text):
         it_pr = "{{it-pr}}"
       else:
         it_pr = "{{it-pr|%s}}" % ",".join(args)
-      pagemsg("Replaced %s with %s" % (unicode(ipat), it_pr))
+      pagemsg("Replaced %s with %s" % (str(ipat), it_pr))
 
       all_lines = "\n".join([it_pr] + rhyme_lines + rfap_lines + hyph_lines + homophone_lines)
       newsubsec = "%s\n\n" % all_lines

@@ -13,7 +13,7 @@ templates_to_add_en = [
 ]
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -21,7 +21,7 @@ def process_page(page, index, parsed):
   notes = []
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in templates_to_add_en:
       lang = getparam(t, "lang")
@@ -29,7 +29,7 @@ def process_page(page, index, parsed):
         # Fetch all params.
         params = []
         for param in t.params:
-          pname = unicode(param.name)
+          pname = str(param.name)
           params.append((pname, param.value, param.showkey))
         # Erase all params.
         del t.params[:]
@@ -42,10 +42,10 @@ def process_page(page, index, parsed):
             t.add(name, value, showkey=showkey, preserve_spacing=False)
         notes.append("add |en to {{%s}}" % tn)
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Add |en to templates missing it")
 args = parser.parse_args()

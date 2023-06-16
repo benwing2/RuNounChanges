@@ -9,7 +9,7 @@ def fix(page, index, text):
   for template in text.filter_templates():
     if template.name in arabiclib.arabic_all_headword_templates:
       if template.has("head") and not template.has(1) and not template.has(2) and not template.has(3) and not template.has(4) and not template.has(5) and not template.has(6) and not template.has(7) and not template.has(8):
-        head = unicode(template.get("head").value)
+        head = str(template.get("head").value)
         template.remove("head")
         addparam(template, "head", head, before=template.params[0].name if len(template.params) > 0 else None)
  

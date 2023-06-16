@@ -34,7 +34,7 @@ def process_text_on_page(index, pagetitle, pagetext, subs):
   for t in parsed.filter_templates():
     def getp(param):
       return getparam(t, param)
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in ["R:wsource"]:
       frobparam(t, "2")
@@ -43,11 +43,11 @@ def process_text_on_page(index, pagetitle, pagetext, subs):
       frobparam(t, "1")
     elif tn in ["wikisource"]:
       frobparam(t, "1")
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  pagetext = unicode(parsed)
+  pagetext = str(parsed)
   newpagetext = re.sub(r"url=(\[(s|wikisource):.*?\])", lambda m: "urls=[%s]" % m.group(1).replace("{{!}}", "|"), pagetext)
   if newpagetext != pagetext:
     notes.append("convert url=(hacked-up Wikisource link) to urls=(proper Wikisouce link)")

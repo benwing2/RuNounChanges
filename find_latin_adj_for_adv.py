@@ -17,7 +17,7 @@ def investigate_possible_adj(index, adj_pagename, adv, adv_defns):
     pagemsg("Doesn't exist for adverb %s" % adv)
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   retval = lalib.find_latin_section(text, pagemsg)
   if retval is None:
@@ -30,7 +30,7 @@ def investigate_possible_adj(index, adj_pagename, adv, adv_defns):
   for k in range(2, len(subsections), 2):
     parsed = blib.parse_text(subsections[k])
     for t in parsed.filter_templates():
-      origt = unicode(t)
+      origt = str(t)
       tn = tname(t)
       if tn in ["la-adj", "la-part"]:
         adj = lalib.la_get_headword_from_template(t, adj_pagename, pagemsg)[0]
@@ -38,7 +38,7 @@ def investigate_possible_adj(index, adj_pagename, adv, adv_defns):
         msg("%s /// %s /// %s /// %s" % (adv, adj, ";".join(adv_defns), ";".join(adj_defns)))
 
 def process_page(page, index):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -49,7 +49,7 @@ def process_page(page, index):
     return
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   retval = lalib.find_latin_section(text, pagemsg)
   if retval is None:
@@ -62,7 +62,7 @@ def process_page(page, index):
   for k in range(2, len(subsections), 2):
     parsed = blib.parse_text(subsections[k])
     for t in parsed.filter_templates():
-      origt = unicode(t)
+      origt = str(t)
       tn = tname(t)
       if tn == "la-adv":
         adv = blib.remove_links(getparam(t, "1")) or pagetitle

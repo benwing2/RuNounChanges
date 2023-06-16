@@ -33,11 +33,11 @@ for i, pagename in blib.iter_items(pages_to_delete, start, end):
   page = pywikibot.Page(site, pagename)
   if page.exists():
     msg("Deleting %s (comment=%s)" % (page.title(), comment))
-    delete_page(page, '%s (content was "%s")' % (comment, unicode(page.text)))
+    delete_page(page, '%s (content was "%s")' % (comment, str(page.text)))
     errandmsg("Page [[%s]] deleted" % page.title())
   if args.delete_docs:
     doc_page = pywikibot.Page(site, "%s/documentation" % pagename)
     if doc_page.exists():
       msg("Deleting %s (comment=%s)" % (doc_page.title(), doc_comment))
-      delete_page(doc_page, '%s (content was "%s")' % (doc_comment, unicode(doc_page.text)))
+      delete_page(doc_page, '%s (content was "%s")' % (doc_comment, str(doc_page.text)))
       errandmsg("Page [[%s]] deleted" % doc_page.title())

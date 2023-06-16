@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site, tname, pname
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -18,7 +18,7 @@ def process_page(page, index, parsed):
   pagemsg("Processing")
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "head" and getparam(t, "1") == "be" and getparam(t, "2") == "verb":
       head = getparam(t, "head") or pagetitle
@@ -53,7 +53,7 @@ def process_page(page, index, parsed):
             # params to ignore
             "sc"]:
           pagemsg("WARNING: Unrecognized param %s=%s, skipping: %s" %
-              (pn, unicode(param.value), origt))
+              (pn, str(param.value), origt))
           must_continue = True
           break
       if must_continue:
@@ -67,9 +67,9 @@ def process_page(page, index, parsed):
       t.add("2", aspect)
       if other_aspect:
         t.add(other_aspect, other_verb)
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
       notes.append("convert {{head|be|verb}} to {{be-verb}}")
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{head|be|verb}} to {{be-verb}}", include_pagefile=True)
 args = parser.parse_args()

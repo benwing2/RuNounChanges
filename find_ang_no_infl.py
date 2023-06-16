@@ -19,13 +19,13 @@ def process_text_on_page(index, pagetitle, text):
   for t in parsed.filter_templates():
     tn = tname(t)
     if pos == "verbs" and tn.startswith("ang-conj"):
-      pagemsg("Found verb conjugation: %s" % unicode(t))
+      pagemsg("Found verb conjugation: %s" % str(t))
       found_infl = True
     elif pos == "nouns" and tn.startswith("ang-decl-noun"):
-      pagemsg("Found noun conjugation: %s" % unicode(t))
+      pagemsg("Found noun conjugation: %s" % str(t))
       found_infl = True
     elif pos == "adjectives" and tn.startswith("ang-decl-adj"):
-      pagemsg("Found adjective conjugation: %s" % unicode(t))
+      pagemsg("Found adjective conjugation: %s" % str(t))
       found_infl = True
   if not found_infl:
     pagemsg("WARNING: Couldn't find inflection template")

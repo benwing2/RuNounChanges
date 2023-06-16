@@ -12,7 +12,7 @@ templates_to_rewrite = {
 }
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -20,14 +20,14 @@ def process_page(page, index, parsed):
   notes = []
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in templates_to_rewrite:
       new_template_name, lang = templates_to_rewrite[tn]
       # Fetch all params.
       params = []
       for param in t.params:
-        pname = unicode(param.name)
+        pname = str(param.name)
         params.append((pname, param.value, param.showkey))
       # Erase all params.
       del t.params[:]
@@ -42,10 +42,10 @@ def process_page(page, index, parsed):
       notes.append("rename {{%s}} to {{%s|%s}}" %
         (tn, new_template_name, lang))
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Rename language-specific templates to generic templates")
 args = parser.parse_args()

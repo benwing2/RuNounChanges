@@ -14,7 +14,7 @@ from blib import getparam, rmparam, msg, site
 def process_page(page, index, parsed):
   global args
   verbose = args.verbose
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -25,7 +25,7 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title, skipping")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   foundrussian = False
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
@@ -75,7 +75,7 @@ def process_page(page, index, parsed):
     return new_text, notes
 
 def process_page_section(index, page, section, verbose):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -93,14 +93,14 @@ def process_page_section(index, page, section, verbose):
   noun_old_templates = []
 
   for t in parsed.filter_templates():
-    if unicode(t.name) == "ru-decl-noun-see":
+    if str(t.name) == "ru-decl-noun-see":
       pagemsg("Found ru-decl-noun-see, skipping")
       return None
 
   for t in parsed.filter_templates():
-    if unicode(t.name) == "ru-noun-table":
+    if str(t.name) == "ru-noun-table":
       noun_table_templates.append(t)
-    if unicode(t.name) == "ru-noun-old":
+    if str(t.name) == "ru-noun-old":
       noun_old_templates.append(t)
 
   if len(noun_table_templates) > 1:
@@ -112,25 +112,25 @@ def process_page_section(index, page, section, verbose):
   if len(noun_table_templates) < 1:
     if noun_old_templates:
       pagemsg("WARNING: No ru-noun-table templates but found ru-noun-old template(s): %s" %
-          ", ".join(unicode(x) for x in noun_old_templates))
-    return unicode(parsed), 0, 0, 0, 0
+          ", ".join(str(x) for x in noun_old_templates))
+    return str(parsed), 0, 0, 0, 0
 
   for t in parsed.filter_templates():
-    if unicode(t.name) in ["ru-noun", "ru-proper noun"]:
+    if str(t.name) in ["ru-noun", "ru-proper noun"]:
       pagemsg("Found ru-noun or ru-proper noun, skipping")
       return None
 
   headword_templates = []
 
   for t in parsed.filter_templates():
-    if unicode(t.name) in ["ru-noun+", "ru-proper noun+"]:
+    if str(t.name) in ["ru-noun+", "ru-proper noun+"]:
       headword_templates.append(t)
 
   if len(headword_templates) > 1:
     pagemsg("WARNING: Found multiple headword templates, skipping")
     return None
   if len(headword_templates) < 1:
-    return unicode(parsed), 0, 0, 0, 0
+    return str(parsed), 0, 0, 0, 0
 
   noun_table_template = noun_table_templates[0]
   noun_old_template = noun_old_templates[0] if len(noun_old_templates) == 1 else None
@@ -138,13 +138,13 @@ def process_page_section(index, page, section, verbose):
   decl_templates = [x for x in [noun_table_template, noun_old_template] if x]
 
   if verbose:
-    pagemsg("Found headword template: %s" % unicode(headword_template))
-    pagemsg("Found decl template: %s" % unicode(noun_table_template))
+    pagemsg("Found headword template: %s" % str(headword_template))
+    pagemsg("Found decl template: %s" % str(noun_table_template))
     if noun_old_template:
-      pagemsg("Found old decl template: %s" % unicode(noun_old_template))
+      pagemsg("Found old decl template: %s" % str(noun_old_template))
 
-  orig_headword_template = unicode(headword_template)
-  orig_noun_table_template = unicode(noun_table_template)
+  orig_headword_template = str(headword_template)
+  orig_noun_table_template = str(noun_table_template)
 
   genders = blib.fetch_param_chain(headword_template, "g", "g")
   masculines = blib.fetch_param_chain(headword_template, "m", "m")
@@ -152,7 +152,7 @@ def process_page_section(index, page, section, verbose):
   notrcat = getparam(headword_template, "notrcat")
   filtered_headword_params = []
   for param in headword_template.params:
-    name = unicode(param.name)
+    name = str(param.name)
     if re.search("^[gmf][0-9]*$", name) or name == "notrcat":
       pass
     else:
@@ -168,16 +168,16 @@ def process_page_section(index, page, section, verbose):
 
   new_decl_params = []
   for param in noun_table_template.params:
-    name = unicode(param.name)
+    name = str(param.name)
     if re.search("^[gmf][0-9]*$", name):
       pagemsg("WARNING: Found g=, m= or f= in noun-table, removing: %s" %
-          unicode(noun_table_template))
+          str(noun_table_template))
     else:
       new_decl_params.append((param.name, param.value))
   del noun_table_template.params[:]
   for name, value in new_decl_params:
     noun_table_template.add(name, value)
-  if orig_noun_table_template != unicode(noun_table_template):
+  if orig_noun_table_template != str(noun_table_template):
     ru_noun_table_cleaned = 1
 
   modified_noun_table_template = blib.parse_text("{{ru-noun-table}}").filter_templates()[0]
@@ -186,9 +186,9 @@ def process_page_section(index, page, section, verbose):
 
   # If proper noun and n is both then we need to add n=both because
   # proper noun+ defaults to n=sg
-  if unicode(headword_template.name) == "ru-proper noun+":
+  if str(headword_template.name) == "ru-proper noun+":
     generate_template = re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args",
-        unicode(noun_table_template))
+        str(noun_table_template))
     generate_result = expand_text(generate_template)
     if not generate_result:
       pagemsg("WARNING: Error generating noun args, skipping")
@@ -224,8 +224,8 @@ def process_page_section(index, page, section, verbose):
             ndef_args["n"])
 
   new_headword_template = re.sub(r"^\{\{ru-noun-table", "{{ru-noun+",
-      unicode(modified_noun_table_template))
-  existing_filtered_headword_template = unicode(filtered_headword_template)
+      str(modified_noun_table_template))
+  existing_filtered_headword_template = str(filtered_headword_template)
   change_existing_headword = False
   if existing_filtered_headword_template != new_headword_template:
     if "[" in existing_filtered_headword_template and "[" not in new_headword_template:
@@ -269,21 +269,21 @@ def process_page_section(index, page, section, verbose):
   #if params_to_preserve == None:
   #  return None
 
-  new_noun_table_template = unicode(noun_table_template)
+  new_noun_table_template = str(noun_table_template)
   if new_noun_table_template != orig_noun_table_template:
     pagemsg("Replacing noun table %s with %s" % (orig_noun_table_template,
       new_noun_table_template))
 
-  new_headword_template = unicode(headword_template)
+  new_headword_template = str(headword_template)
   if new_headword_template != orig_headword_template:
     pagemsg("Replacing headword %s with %s" % (orig_headword_template,
       new_headword_template))
-    if unicode(headword_template.name) == "ru-noun+":
+    if str(headword_template.name) == "ru-noun+":
       ru_noun_changed = 1
     else:
       ru_proper_noun_changed = 1
 
-  return unicode(parsed), ru_noun_table_cleaned, ru_noun_table_link_copied, ru_noun_changed, ru_proper_noun_changed
+  return str(parsed), ru_noun_table_cleaned, ru_noun_table_link_copied, ru_noun_changed, ru_proper_noun_changed
 
 parser = blib.create_argparser("Copy the declension in ru-noun-table to ru-noun+, preserving any m=, f=, g=, etc. in the latter.",
   include_pagefile=True)

@@ -66,7 +66,7 @@ def process_text_on_page(index, pagetitle, text):
     def getp(param):
       return getparam(t, param)
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     params_to_check = None
     if tn in [
         "head",
@@ -97,10 +97,10 @@ def process_text_on_page(index, pagetitle, text):
           pagemsg("Removing redundant %s=%s in {{%s}}" % (param, default_head, changelog_name))
           rmparam(t, param)
           notes.append("remove redundant %s=%s in {{%s}}" % (param, default_head, changelog_name))
-    if origt != unicode(t):
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if origt != str(t):
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  text = unicode(parsed)
+  text = str(parsed)
   return text, notes
 
 parser = blib.create_argparser("Remove redundant head parameters", include_pagefile=True, include_stdin=True)

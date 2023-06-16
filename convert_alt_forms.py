@@ -29,10 +29,10 @@ def process_text_in_section(secbody, pagemsg):
           must_continue = False
           for param in t.params:
             pn = pname(param)
-            pv = unicode(param.value)
+            pv = str(param.value)
             if (pn not in ["1", "2", "3", "4", "gloss", "id", "lit", "pos", "t", "tr", "ts", "sc"]
                 and not re.search("^g[0-9]*$", pn)):
-              pagemsg("WARNING: Unrecognized param %s=%s in %s" % (pn, pv, unicode(t)))
+              pagemsg("WARNING: Unrecognized param %s=%s in %s" % (pn, pv, str(t)))
               must_continue = True
               break
           if must_continue:
@@ -86,7 +86,7 @@ def process_text_in_section(secbody, pagemsg):
             rmparam(t, "ggg1")
           notes.append("convert {{%s|%s}} to {{alt|%s}}" % (tn, lang, lang))
 
-      subsectext = unicode(parsed)
+      subsectext = str(parsed)
 
       def split_on_comma_not_in_template(txt):
         retval = []
@@ -157,7 +157,7 @@ def process_text_in_section(secbody, pagemsg):
           saw_qualifier_gap = False
           for param in altt.params:
             pn = pname(param)
-            pv = unicode(param.value)
+            pv = str(param.value)
             mm = re.search("(^[a-z]+)([0-9]*)$", pn)
             if mm:
               pbase = mm.group(1)
@@ -183,7 +183,7 @@ def process_text_in_section(secbody, pagemsg):
                 maxparam = max(maxparam, pind)
                 mergedt.add(str(pind + index), pv)
             else:
-              pagemsg("WARNING: Unrecognized param %s=%s: %s" % (pn, pv, unicode(altt)))
+              pagemsg("WARNING: Unrecognized param %s=%s: %s" % (pn, pv, str(altt)))
               issued_warning[0] = True
               return origline
           index += maxparam
@@ -214,8 +214,8 @@ def process_text_in_section(secbody, pagemsg):
           notes.append("merge separate leading qualifiers into {{%s|%s}}" % (altt_name, thislang))
         if after:
           notes.append("merge separate trailing qualifiers into {{%s|%s}}" % (altt_name, thislang))
-        if len(altforms) <= 3 and not after and orig_altforms != unicode(mergedt):
-          if orig_altforms.strip() == unicode(mergedt):
+        if len(altforms) <= 3 and not after and orig_altforms != str(mergedt):
+          if orig_altforms.strip() == str(mergedt):
             notes.append("remove trailing space in ==Alternative forms==")
           else:
             notes.append("clean up params in {{%s|%s}}" % (altt_name, thislang))
@@ -227,7 +227,7 @@ def process_text_in_section(secbody, pagemsg):
           issued_warning[0] = True
           return origline
         could_parse[0] = True
-        return "* " + unicode(mergedt)
+        return "* " + str(mergedt)
 
       lines = subsectext.split("\n")
 

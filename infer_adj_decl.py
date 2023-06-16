@@ -62,8 +62,8 @@ def get_case_forms(formval):
   return forms
 
 def compare_results(oldt, newt, pagemsg):
-  oldt = unicode(oldt)
-  newt = unicode(newt)
+  oldt = str(oldt)
+  newt = str(newt)
   oldresult = expand_text(oldt, pagemsg)
   newresult = expand_text(newt, pagemsg)
   if not oldresult or not newresult:
@@ -89,16 +89,16 @@ def compare_results(oldt, newt, pagemsg):
   return ok
 
 def trymatch(t, args, pagemsg):
-  orig_template = unicode(t)
-  tname = unicode(t.name).strip()
+  orig_template = str(t)
+  tname = str(t.name).strip()
   new_arg_str = "|".join(args)
   if new_arg_str:
     new_arg_str = "|" + new_arg_str
   new_named_params = [x for x in t.params
-      if unicode(x.name) not in ["1", "2", "3", "4", "5", "6", "7", "8",
+      if str(x.name) not in ["1", "2", "3", "4", "5", "6", "7", "8",
         "9", "10", "11", "12", "13", "14", "15",
         "short_m", "short_f", "short_n", "short_p"]]
-  new_named_param_str = "|".join(unicode(x) for x in new_named_params)
+  new_named_param_str = "|".join(str(x) for x in new_named_params)
   if new_named_param_str:
     new_named_param_str = "|" + new_named_param_str
   new_template = "{{%s%s%s}}" % (tname, new_arg_str, new_named_param_str)
@@ -131,7 +131,7 @@ def combine_stem(stem, decl):
 
 def infer_decl(t, pagemsg):
   if verbose:
-    pagemsg("Processing %s" % unicode(t))
+    pagemsg("Processing %s" % str(t))
 
   forms = {}
 
@@ -320,11 +320,11 @@ def infer_decl(t, pagemsg):
 
 def infer_one_page_decls_1(page, index, text):
   def pagemsg(txt):
-    msg("Page %s %s: %s" % (index, unicode(page.title()), txt))
+    msg("Page %s %s: %s" % (index, str(page.title()), txt))
   for tempname in decl_templates:
     for t in text.filter_templates():
-      if unicode(t.name).strip() == tempname:
-        orig_template = unicode(t)
+      if str(t.name).strip() == tempname:
+        orig_template = str(t)
         args = infer_decl(t, pagemsg)
         if not args:
           # At least combine stem and declension, blanking decl when possible.
@@ -337,7 +337,7 @@ def infer_one_page_decls_1(page, index, text):
               rmparam(t, i)
             else:
               break
-          new_template = unicode(t)
+          new_template = str(t)
           if orig_template != new_template:
             if not compare_results(orig_template, new_template, pagemsg):
               return None, None
@@ -357,7 +357,7 @@ def infer_one_page_decls_1(page, index, text):
             else:
               t.add(i, arg)
               i += 1
-          new_template = unicode(t)
+          new_template = str(t)
         if orig_template != new_template:
           if verbose:
             pagemsg("Replacing %s with %s" % (orig_template, new_template))
@@ -368,7 +368,7 @@ def infer_one_page_decls(page, index, text):
   try:
     return infer_one_page_decls_1(page, index, text)
   except StandardError as e:
-    msg("%s %s: WARNING: Got an error: %s" % (index, unicode(page.title()), repr(e)))
+    msg("%s %s: WARNING: Got an error: %s" % (index, str(page.title()), repr(e)))
     traceback.print_exc(file=sys.stdout)
     return None, None
 
@@ -401,7 +401,7 @@ def test_infer():
     text = blib.parse_text(pagetext)
     page = Page()
     newtext, comment = infer_one_page_decls(page, 1, text)
-    msg("newtext = %s" % unicode(newtext))
+    msg("newtext = %s" % str(newtext))
     msg("comment = %s" % comment)
 
 parser = blib.create_argparser("Add pronunciation sections to Russian Wiktionary entries")
@@ -412,7 +412,7 @@ mockup = args.mockup
 
 def ignore_page(page):
   if not isinstance(page, basestring):
-    page = unicode(page.title())
+    page = str(page.title())
   if re.search(r"^(Appendix|Appendix talk|User|User talk|Talk):", page):
     return True
   return False
@@ -423,6 +423,6 @@ else:
   for tempname in decl_templates:
     for index, page in blib.references("Template:" + tempname, start, end):
       if ignore_page(page):
-        msg("Page %s %s: Skipping due to namespace" % (index, unicode(page.title())))
+        msg("Page %s %s: Skipping due to namespace" % (index, str(page.title())))
       else:
         blib.do_edit(page, index, infer_one_page_decls, save=args.save)

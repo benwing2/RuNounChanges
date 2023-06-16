@@ -67,27 +67,27 @@ def process_text_on_page(index, pagetitle, text):
     if tn in sv_verb_templates_with_plural_of and tn in all_templates:
       plural_of = getparam(t, "plural of")
       if plural_of:
-        origt = unicode(t)
+        origt = str(t)
         rmparam(t, "plural of")
-        newt = "{{sv-obs verb pl|%s}} %s" % (plural_of, unicode(t))
+        newt = "{{sv-obs verb pl|%s}} %s" % (plural_of, str(t))
         templates_to_replace.append((origt, newt, "move plural of= in {{%s}} to {{sv-obs verb pl}} outside of template" % tn))
 
     if tn in sv_noun_templates_with_obsoleted_by and tn in all_templates:
       obsoleted_by = getparam(t, "obsoleted by")
       if obsoleted_by:
-        origt = unicode(t)
+        origt = str(t)
         rmparam(t, "obsoleted by")
-        newt = "{{sv-obs noun form|%s}} %s" % (obsoleted_by, unicode(t))
+        newt = "{{sv-obs noun form|%s}} %s" % (obsoleted_by, str(t))
         templates_to_replace.append((origt, newt, "move plural of= in {{%s}} to {{sv-obs noun form}} outside of template" % tn))
 
     if tn in ca_templates_with_val and tn in all_templates:
       val = getparam(t, "val")
       val2 = getparam(t, "val2")
       if val:
-        origt = unicode(t)
+        origt = str(t)
         rmparam(t, "val")
         rmparam(t, "val2")
-        newt = "%s {{ca-val|%s%s}}" % (unicode(t), val, "|" + val2 if val2 else "")
+        newt = "%s {{ca-val|%s%s}}" % (str(t), val, "|" + val2 if val2 else "")
         templates_to_replace.append((origt, newt, "move val= in {{%s}} to {{ca-val}} outside of template" % tn))
 
     if tn in nl_templates_with_comp_of_sup_of and tn in all_templates:
@@ -98,30 +98,30 @@ def process_text_on_page(index, pagetitle, text):
       if sup_of:
         sup_of = ", the {{nc sup of|nl|%s}}" % sup_of
       if comp_of or sup_of:
-        origt = unicode(t)
+        origt = str(t)
         rmparam(t, "comp-of")
         rmparam(t, "sup-of")
-        newt = "%s%s%s" % (unicode(t), comp_of, sup_of)
+        newt = "%s%s%s" % (str(t), comp_of, sup_of)
         templates_to_replace.append((origt, newt, "move comp-of=/sup-of== in {{%s}} to {{nc comp of}}/{{nc sup of}} outside of template" % tn))
 
     if tn in el_templates_with_active and tn in all_templates:
       active = getparam(t, "active")
       ta = getparam(t, "ta")
       if active:
-        origt = unicode(t)
+        origt = str(t)
         rmparam(t, "active")
         rmparam(t, "ta")
-        newt = "%s, {{nc pass of|el|%s%s}}" % (unicode(t), active, "|t=" + ta if ta else "")
+        newt = "%s, {{nc pass of|el|%s%s}}" % (str(t), active, "|t=" + ta if ta else "")
         templates_to_replace.append((origt, newt, "move active= in {{%s}} to {{nc pass of}} outside of template" % tn))
 
     if tn in el_templates_to_move_dot and tn in all_templates:
-      origt = unicode(t)
+      origt = str(t)
       nodot = getparam(t, "nodot")
       rmparam(t, "nodot") # in case it's blank
       if nodot:
-        templates_to_replace.append((origt, unicode(t), "remove nodot= from {{%s}}, with changed semantics" % tn))
+        templates_to_replace.append((origt, str(t), "remove nodot= from {{%s}}, with changed semantics" % tn))
       else:
-        newt = "%s." % unicode(t)
+        newt = "%s." % str(t)
         templates_to_replace.append((origt, newt, "add explicit final period to {{%s}} when nodot= not specified, due to change in semantics" % tn))
 
   for curr_template, repl_template, note in templates_to_replace:

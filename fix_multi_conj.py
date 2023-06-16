@@ -9,13 +9,13 @@ from blib import getparam, rmparam, msg, site
 import rulib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   parsed = blib.parse(page)
@@ -24,8 +24,8 @@ def process_page(page, index, parsed):
   conj_templates = []
   mixed_verb_types = False
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    if unicode(t.name) in ["ru-conj"]:
+    origt = str(t)
+    if str(t.name) in ["ru-conj"]:
       num_conjs += 1
       new_verbtype = getparam(t, "1")
       if verbtype and new_verbtype != verbtype:
@@ -66,16 +66,16 @@ def process_page(page, index, parsed):
     t2 = blib.parse_text(verb2).filter_templates()[0]
     for t in [t1, t2]:
       for param in t.params:
-        if not re.search("^[0-9]+$", unicode(param.name)):
+        if not re.search("^[0-9]+$", str(param.name)):
           pagemsg("Verb conjugation has non-numeric args, skipping: %s" %
-              unicode(t))
+              str(t))
           return m.group(0)
     params = fetch_numbered_params(t1)
     params.append("or")
     newparams = fetch_numbered_params(t2)
     if len(newparams) < 2:
       pagemsg("WARNING: Something wrong, no verb type in ru-conj: %s" %
-          unicode(t2))
+          str(t2))
       return m.group(0)
     vt1 = getparam(t1, "1")
     vt2 = getparam(t2, "1")
@@ -88,10 +88,10 @@ def process_page(page, index, parsed):
     blib.set_param_chain(t1, params, "1", "")
     pagemsg("Combining verb conjugations %s and %s" % (
       getparam(t1, "2"), getparam(t2, "2")))
-    pagemsg("Replaced %s with %s" % (m.group(0).replace("\n", r"\n"), unicode(t1)))
+    pagemsg("Replaced %s with %s" % (m.group(0).replace("\n", r"\n"), str(t1)))
     notes.append("combined verb conjugations %s and %s" % (
       getparam(t1, "2"), getparam(t2, "2")))
-    return unicode(t1)
+    return str(t1)
 
   new_text = re.sub(r"(\{\{ru-conj\|[^{}]*\}\})\s*''or(.*?)''\s*(\{\{ru-conj\|[^{}]*\}\})",
       combine_verbs, text)

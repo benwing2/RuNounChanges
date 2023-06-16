@@ -9,7 +9,7 @@ from blib import msg, getparam, addparam, rmparam
 def rewrite_one_page_arz_headword(page, index, text):
   temps_changed = []
   for t in text.filter_templates():
-    if unicode(t.name) == "arz-noun":
+    if str(t.name) == "arz-noun":
       head = getparam(t, "head")
       rmparam(t, "head")
       tr = getparam(t, "tr")
@@ -37,7 +37,7 @@ def rewrite_one_page_arz_headword(page, index, text):
       if sort:
         addparam(t, "sort", sort)
       temps_changed.append("arz-noun")
-    elif unicode(t.name) == "arz-adj":
+    elif str(t.name) == "arz-adj":
       head = getparam(t, "head")
       rmparam(t, "head")
       tr = getparam(t, "tr")

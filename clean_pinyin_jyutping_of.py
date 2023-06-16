@@ -51,7 +51,7 @@ def process_text_on_page(index, pagetitle, text):
       % (prefix, dispchar(simp), dispchar(trad_to_simp), langname, dispchar(trad),
         ("; assuming params reversed, 'simplified' %s doesn't match auto-generated 'simplified' %s from 'traditional' %s, either"
         % (dispchar(trad), dispchar(rev_trad_to_simp), dispchar(simp)) if rev_trad_to_simp != simp else ""),
-        unicode(t)))
+        str(t)))
     return False
 
   for t in parsed.filter_templates():
@@ -74,7 +74,7 @@ def process_text_on_page(index, pagetitle, text):
       remaining_params = [x for x in [getp("5"), getp("6"), getp("7"), getp("8"), getp("9"), getp("10")] if x]
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if pn not in [
           "tas", "t", "trad", "tra", "1",
           "s", "simp", "sim", "2",
@@ -84,16 +84,16 @@ def process_text_on_page(index, pagetitle, text):
           "lang", "def", # ignored
         ]:
           pagemsg("WARNING: Unrecognized parameter %s=%s in {{pinyin reading of}} template %s"
-            % (pn, pv, unicode(t)))
+            % (pn, pv, str(t)))
           break
       else: # no break
         all_numeric = [x for x in [trad, trad2] + remaining_params if x]
-        origt = unicode(t)
+        origt = str(t)
         del t.params[:]
         blib.set_param_chain(t, all_numeric, "1")
         blib.set_template_name(t, "cmn-pinyin of")
-        if origt != unicode(t):
-          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        if origt != str(t):
+          pagemsg("Replaced %s with %s" % (origt, str(t)))
           notes.append("convert {{pinyin reading of}} to {{cmn-pinyin of}}, standardize params and remove unnecessary simplified variants")
 
     elif tn == "yue-jyutping of":
@@ -112,7 +112,7 @@ def process_text_on_page(index, pagetitle, text):
       remaining_params = [x for x in [getp("5")] if x]
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if pn not in [
           "tas", "trad", "tra", "1",
           "sim", "simp", "2",
@@ -121,18 +121,18 @@ def process_text_on_page(index, pagetitle, text):
           "5",
         ]:
           pagemsg("WARNING: Unrecognized parameter %s=%s in {{yue-jyutping of}} template %s"
-            % (pn, pv, unicode(t)))
+            % (pn, pv, str(t)))
           break
       else: # no break
         all_numeric = [x for x in [trad, trad2] + remaining_params if x]
-        origt = unicode(t)
+        origt = str(t)
         del t.params[:]
         blib.set_param_chain(t, all_numeric, "1")
-        if origt != unicode(t):
-          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        if origt != str(t):
+          pagemsg("Replaced %s with %s" % (origt, str(t)))
           notes.append("standardize params in {{yue-jyutping of}} and remove unnecessary simplified variants")
 
-  text = unicode(parsed)
+  text = str(parsed)
   return text, notes
 
 parser = blib.create_argparser("Clean {{pinyin reading of}} and {{yue-jyutping of}}", include_pagefile=True, include_stdin=True)

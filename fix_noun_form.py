@@ -14,7 +14,7 @@ def getrmparam(t, param):
   return value
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -25,16 +25,16 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title, skipping page")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    if unicode(t.name) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "noun form":
+    origt = str(t)
+    if str(t.name) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "noun form":
       if getparam(t, "3"):
         pagemsg("WARNING: Found param 3 in {{head|ru|noun form}}: %s" %
-            unicode(t))
+            str(t))
         return
       rmparam(t, "1")
       rmparam(t, "2")
@@ -47,7 +47,7 @@ def process_page(page, index, parsed):
       g3 = getrmparam(t, "g3")
       if len(t.params) > 0:
         pagemsg("WARNING: Extra params in noun form template: %s" %
-            unicode(t))
+            str(t))
         return
       t.name = "ru-noun form"
       if head or g:
@@ -64,18 +64,18 @@ def process_page(page, index, parsed):
         t.add("tr", tr)
       if tr2:
         t.add("tr2", tr2)
-      newt = unicode(t)
+      newt = str(t)
       if origt != newt:
         pagemsg("Replaced %s with %s" % (origt, newt))
         notes.append("convert {{head|ru|noun form}} to {{ru-noun form}}")
-    elif unicode(t.name) == "ru-noun form":
+    elif str(t.name) == "ru-noun form":
       if getparam(t, "head") and getparam(t, "1"):
         pagemsg("WARNING: ru-noun form has both params 1= and head=: %s" %
-            unicode(t))
+            str(t))
         return
       if getparam(t, "g") and getparam(t, "2"):
         pagemsg("WARNING: ru-noun form has both params 2= and g=: %s" %
-            unicode(t))
+            str(t))
         return
       head = getrmparam(t, "1") or getrmparam(t, "head")
       head2 = getrmparam(t, "head2")
@@ -86,7 +86,7 @@ def process_page(page, index, parsed):
       g3 = getrmparam(t, "g3")
       if len(t.params) > 0:
         pagemsg("WARNING: Extra params in noun form template: %s" %
-            unicode(t))
+            str(t))
         return
       if head or g:
         t.add("1", head)
@@ -102,12 +102,12 @@ def process_page(page, index, parsed):
         t.add("tr", tr)
       if tr2:
         t.add("tr2", tr2)
-      newt = unicode(t)
+      newt = str(t)
       if origt != newt:
         pagemsg("Replaced %s with %s" % (origt, newt))
         notes.append("canonicalize ru-noun form")
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Canonicalize {{head|ru|noun form}} and {{ru-noun form}}",
   include_pagefile=True)

@@ -165,7 +165,7 @@ def convert_pls(pagetitle, pls, is_proper=False):
 
 
 def declts_to_unicode(declts):
-  return ",".join(unicode(declt) for declt in declts)
+  return ",".join(str(declt) for declt in declts)
 
 
 def normalize_values(values):
@@ -215,7 +215,7 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
         is_sg = False
         for param in ["head", "ns", "gs", "ds", "as", "bs", "vs", "np", "gp", "dp", "ap", "notes"]:
           if getp(param):
-            pagemsg("WARNING: Saw %s=%s, can't handle yet: %s" % (param, getp(param), unicode(declt)))
+            pagemsg("WARNING: Saw %s=%s, can't handle yet: %s" % (param, getp(param), str(declt)))
             return None
         if gender in ["m", "n"]:
           arg1 = getp("1")
@@ -227,14 +227,14 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
           elif arg1 in ["s", "es", "ses", "(e)s", "(s)", "'"]:
             gen = arg1
           else:
-            pagemsg("WARNING: Unrecognized arg1=%s: %s" % (arg1, unicode(declt)))
+            pagemsg("WARNING: Unrecognized arg1=%s: %s" % (arg1, str(declt)))
             return None
           decl_gens = convert_gens(pagetitle, [gen], from_decl=True)
         num = getp("n")
         if num == "sg":
           is_sg = True
         elif num not in ["full", ""]:
-          pagemsg("WARNING: Unrecognized n=%s: %s" % (num, unicode(declt)))
+          pagemsg("WARNING: Unrecognized n=%s: %s" % (num, str(declt)))
           return None
         if not is_sg:
           if gender == "f":
@@ -332,7 +332,7 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
       old_style_headt = True
       break
   if not old_style_headt:
-    pagemsg("NOTE: Skipping new-style headt=%s%s" % (unicode(headt),
+    pagemsg("NOTE: Skipping new-style headt=%s%s" % (str(headt),
       declts and ", declts=%s" % declts_to_unicode(declts) or ""))
     return notes
 
@@ -364,26 +364,26 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
     gens = []
   for param in headt.params:
     pn = pname(param)
-    pv = unicode(param.value)
+    pv = str(param.value)
     if pn not in ["1", "2", "3", "4", "m", "f", "old"] and not re.search("^(g|gen|pl|dim|m|f)[0-9]+$", pn) and (
         not adjectival or pn not in "head"):
-      pagemsg("WARNING: Unrecognized param %s=%s: %s" % (pn, pv, unicode(headt)))
+      pagemsg("WARNING: Unrecognized param %s=%s: %s" % (pn, pv, str(headt)))
       return
   if not genders:
-    pagemsg("WARNING: No genders in head template: %s" % unicode(headt))
+    pagemsg("WARNING: No genders in head template: %s" % str(headt))
     return
   if "p" in genders and len(genders) > 1:
-    pagemsg("WARNING: Saw gender 'p' and another gender: %s" % unicode(headt))
+    pagemsg("WARNING: Saw gender 'p' and another gender: %s" % str(headt))
     return
   if "p" in genders and (gens or pls):
-    pagemsg("WARNING: Saw genitive(s) or plural(s) with plural-only: %s" % unicode(headt))
+    pagemsg("WARNING: Saw genitive(s) or plural(s) with plural-only: %s" % str(headt))
     return
   saw_mn = "m" in genders or "n" in genders
   if not saw_mn and not adjectival:
     if gens and gens == [pagetitle]:
       gens = []
     if gens:
-      pagemsg("WARNING: Saw genitive(s) with feminine-only gender: %s" % unicode(headt))
+      pagemsg("WARNING: Saw genitive(s) with feminine-only gender: %s" % str(headt))
       return
 
   if adjectival:
@@ -425,7 +425,7 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
         expected_pls = [adj + "e", adj + "en"]
       if not noun:
         if noun_gen != "-" or noun_pl_full or (noun_pl and noun_pl != "-"):
-          pagemsg("WARNING: Bad parameters for adjectival noun: %s" % unicode(declt))
+          pagemsg("WARNING: Bad parameters for adjectival noun: %s" % str(declt))
           return
         all_decl_genders = [gender]
       else:
@@ -437,7 +437,7 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
             m = re.search("^([^ ]+) ([^ ]+)$", part.strip())
             if not m:
               pagemsg("WARNING: Can't analyze headword %s '%s' into adjective and noun, continuing: head=%s, decl=%s"
-                  % (desc, part, unicode(headt), unicode(declt)))
+                  % (desc, part, str(headt), str(declt)))
               return []
             part_adj, part_noun = m.groups()
             noun_headword_parts.append(part_noun)
@@ -457,24 +457,24 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
           expected_pls = ["%se %s" % (adj, pl) for pl in all_decl_pls]
       if pagetitle != expected_lemma:
         pagemsg("WARNING: For adjectival noun or adjective-noun combination, expected lemma '%s' but saw '%s': head=%s, decl=%s"
-            % (expected_lemma, pagetitle, unicode(headt), unicode(declt)))
+            % (expected_lemma, pagetitle, str(headt), str(declt)))
         return
       if set(genders) != set(all_decl_genders):
         pagemsg("WARNING: For adjectival noun or adjective-noun combination, expected gender(s) '%s' but saw '%s': head=%s, decl=%s"
-            % (",".join(all_decl_genders), ",".join(genders), unicode(headt), unicode(declt)))
+            % (",".join(all_decl_genders), ",".join(genders), str(headt), str(declt)))
         return
       if not (set(gens) <= set(expected_gens)):
         pagemsg("WARNING: For adjectival noun or adjective-noun combination, expected genitive(s) '%s' but saw '%s': head=%s, decl=%s"
-            % (",".join(expected_gens), ",".join(gens), unicode(headt), unicode(declt)))
+            % (",".join(expected_gens), ",".join(gens), str(headt), str(declt)))
         return
       if pls == ["-"]:
         if expected_pls:
           pagemsg("WARNING: For adjectival noun or adjective-noun combination, expected plural(s) '%s' but saw '%s': head=%s, decl=%s"
-              % (",".join(expected_pls), ",".join(pls), unicode(headt), unicode(declt)))
+              % (",".join(expected_pls), ",".join(pls), str(headt), str(declt)))
           return
       elif not (set(pls) <= set(expected_pls)):
         pagemsg("WARNING: For adjectival noun or adjective-noun combination, expected plural(s) '%s' but saw '%s': head=%s, decl=%s"
-            % (",".join(expected_pls), ",".join(pls), unicode(headt), unicode(declt)))
+            % (",".join(expected_pls), ",".join(pls), str(headt), str(declt)))
         return
       if not noun:
         declspec = "+"
@@ -500,7 +500,7 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
         #  m = re.search("^([^ ]*) ([^ ]*)$", head)
         #  if not m:
         #    pagemsg("WARNING: Can't parse head=%s for adjective-noun combination, continuing: head=%s, decl=%s"
-        #        % (head, unicode(headt), unicode(declt)))
+        #        % (head, str(headt), str(declt)))
         #  else:
         #    head_adj_link, head_noun_link = m.groups()
         #    m = re.search(r"\[\[([^][]*)\|([^][]*)\]\]$", head_adj_link)
@@ -510,11 +510,11 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
         #        head_adj_link = "[[%s]]%s" % (adj_link_lemma, adj_link_form[len(adj_link_lemma):])
         #    if head_adj_link != adj_link:
         #      pagemsg("NOTE: Head-derived adjective link %s not same as decl-template-derived adjective link %s, using the former: head=%s, decl=%s"
-        #          % (head_adj_link, adj_link, unicode(headt), unicode(declt)))
+        #          % (head_adj_link, adj_link, str(headt), str(declt)))
         #      adj_link = head_adj_link
         #    if head_noun_link != noun_link:
         #      pagemsg("NOTE: Head-derived noun link %s not same as decl-template-derived noun link %s, using the former: head=%s, decl=%s"
-        #          % (head_noun_link, noun_link, unicode(headt), unicode(declt)))
+        #          % (head_noun_link, noun_link, str(headt), str(declt)))
         #      noun_link = head_noun_link
         declspec = "%s<+> %s<%s>" % (adj_link, noun_link, declspec)
       headspec = declspec
@@ -589,18 +589,18 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
         if set(all_decl_genders) == set(headword_genders):
           pagemsg("NOTE: Headword spec '%s' not same as declension spec '%s', but decl gens %s a subset of headword gens %s and decl pls %s a subset of headword pls %s and gender(s) %s agree: headt=%s, declt=%s"
               % (headspec, declspec, ",".join(all_decl_gens), ",".join(headword_gens), ",".join(all_decl_pls),
-                ",".join(headword_pls), ",".join(all_decl_genders), unicode(headt), unicode(declt)))
+                ",".join(headword_pls), ",".join(all_decl_genders), str(headt), str(declt)))
           declspec = headspec
         else:
           pagemsg("WARNING: Headword spec '%s' not same as declension spec '%s', decl gens %s a subset of headword gens %s and decl pls %s a subset of headword pls %s, but decl gender(s) %s don't agree with headword gender(s) %s: headt=%s, declt=%s"
               % (headspec, declspec, ",".join(all_decl_gens), ",".join(headword_gens), ",".join(all_decl_pls),
-                ",".join(headword_pls), ",".join(all_decl_genders), ",".join(headword_genders), unicode(headt), unicode(declt)))
+                ",".join(headword_pls), ",".join(all_decl_genders), ",".join(headword_genders), str(headt), str(declt)))
 
           return
       else:
         pagemsg("WARNING: Headword spec '%s' not same as declension spec '%s' and either decl gens %s not a subset of headword gens %s or decl pls %s not a subset of headword pls %s, with decl gender(s) %s and headword gender(s) %s: headt=%s, declt=%s"
             % (headspec, declspec, ",".join(all_decl_gens), ",".join(headword_gens), ",".join(all_decl_pls),
-              ",".join(headword_pls), ",".join(all_decl_genders), ",".join(headword_genders), unicode(headt), unicode(declt)))
+              ",".join(headword_pls), ",".join(all_decl_genders), ",".join(headword_genders), str(headt), str(declt)))
         return
 
   if is_proper:
@@ -611,7 +611,7 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
       else:
         headspec += ".both"
   newheadt = "{{de-%s|%s%s}}" % ("proper noun" if is_proper else "noun", headspec, extraspec)
-  headt_outmsg = "convert %s to new-format %s" % (unicode(headt), newheadt)
+  headt_outmsg = "convert %s to new-format %s" % (str(headt), newheadt)
   outmsg = "Would " + headt_outmsg
   if declts:
     newdeclt = "{{de-ndecl|%s}}" % declspec
@@ -619,14 +619,14 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
     outmsg += " and " + declt_outmsg
   pagemsg(outmsg)
 
-  if unicode(headt) != newheadt:
-    newsectext, replaced = blib.replace_in_text(subsections[subsection_with_head], unicode(headt), newheadt, pagemsg, abort_if_warning=True)
+  if str(headt) != newheadt:
+    newsectext, replaced = blib.replace_in_text(subsections[subsection_with_head], str(headt), newheadt, pagemsg, abort_if_warning=True)
     if not replaced:
       return
     notes.append(headt_outmsg)
     subsections[subsection_with_head] = newsectext
   if declts:
-    declts_existing = "\n".join(unicode(declt) for declt in declts)
+    declts_existing = "\n".join(str(declt) for declt in declts)
     newsectext, replaced = blib.replace_in_text(subsections[subsection_with_declts], declts_existing, newdeclt, pagemsg, abort_if_warning=True)
     if not replaced:
       return
@@ -653,7 +653,7 @@ def process_text_in_section(index, pagetitle, text):
 
     for t in parsed.filter_templates():
       tn = tname(t)
-      origt = unicode(t)
+      origt = str(t)
       def getp(param):
         return getparam(t, param)
       if tn in ["de-noun", "de-proper noun"]:
@@ -666,10 +666,10 @@ def process_text_in_section(index, pagetitle, text):
           declts = []
         if headt:
           if subsection_with_head == k:
-            pagemsg("WARNING: Saw two head templates in same section: %s and %s" % (unicode(headt), unicode(t)))
+            pagemsg("WARNING: Saw two head templates in same section: %s and %s" % (str(headt), str(t)))
             return
           pagemsg("NOTE: Saw head template without corresponding declension template, still processing: %s"
-              % unicode(headt))
+              % str(headt))
           this_notes = do_headword_template(headt, declts, pagetitle, subsections, subsection_with_head, subsection_with_declts, pagemsg)
           if this_notes is None:
             return
@@ -680,20 +680,20 @@ def process_text_in_section(index, pagetitle, text):
         if declts:
           if subsection_with_declts == k:
             pagemsg("NOTE: Saw declension template #%s without intervening head template: previous decl template(s)=%s, decl=%s%s"
-                % (1 + len(declts), declts_to_unicode(declts), unicode(t),
-                  headt and "; head=%s" % unicode(headt) or ""))
+                % (1 + len(declts), declts_to_unicode(declts), str(t),
+                  headt and "; head=%s" % str(headt) or ""))
           else:
-            pagemsg("WARNING: Saw declension template in new section without preceding head template: %s" % unicode(t))
+            pagemsg("WARNING: Saw declension template in new section without preceding head template: %s" % str(t))
             return
         if not headt:
-          pagemsg("WARNING: Saw declension template without preceding head template: %s" % unicode(t))
+          pagemsg("WARNING: Saw declension template without preceding head template: %s" % str(t))
           return
         declts.append(t)
         subsection_with_declts = k
   if headt:
     if not declts:
       pagemsg("NOTE: Saw head template without corresponding declension template, still processing: %s"
-          % unicode(headt))
+          % str(headt))
     this_notes = do_headword_template(headt, declts, pagetitle, subsections, subsection_with_head, subsection_with_declts, pagemsg)
     if this_notes is None:
       return

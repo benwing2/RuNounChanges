@@ -19,7 +19,7 @@ def process_text_on_page(index, pagetitle, text):
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     if tn in ["es-IPA", "fr-IPA", "it-IPA"]:
       must_continue = False
       for i in range(2, 11):
@@ -33,10 +33,10 @@ def process_text_on_page(index, pagetitle, text):
       if par1 == pagetitle:
         rmparam(t, "1")
         notes.append("remove redundant 1=%s from {{%s}}" % (par1, tn))
-      if unicode(t) != origt:
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if str(t) != origt:
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Remove redundant 1= from Romance *-IPA",
   include_pagefile=True, include_stdin=True)

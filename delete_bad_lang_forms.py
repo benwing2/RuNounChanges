@@ -34,7 +34,7 @@ def delete_form_1(page, index, lemma, formind, formval, lang):
   def errandpagemsg(txt):
     errandmsg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
 
   retval = blib.find_modifiable_lang_section(text, lang_to_langname[lang], pagemsg)
@@ -72,20 +72,20 @@ def delete_form_1(page, index, lemma, formind, formval, lang):
         langcode = getparam(t, "1")
         if langcode != lang:
           errandpagemsg("WARNING: In %s section, found {{%s}} for different language %s: %s" % (
-            lang_to_langname[lang], tn, langcode, unicode(t)))
+            lang_to_langname[lang], tn, langcode, str(t)))
           return
         actual_lemma = getparam(t, "2")
         if actual_lemma == lemma:
           saw_infl = True
         else:
-          pagemsg("Found {{%s}} for different lemma %s: %s" % (tn, actual_lemma, unicode(t)))
+          pagemsg("Found {{%s}} for different lemma %s: %s" % (tn, actual_lemma, str(t)))
           saw_other_infl = True
       elif tn in lang_inflection_of_templates[lang]:
         actual_lemma = getparam(t, "1")
         if actual_lemma == lemma:
           saw_infl = True
         else:
-          pagemsg("Found {{%s}} for different lemma %s: %s" % (tn, actual_lemma, unicode(t)))
+          pagemsg("Found {{%s}} for different lemma %s: %s" % (tn, actual_lemma, str(t)))
           saw_other_infl = True
     if saw_head and saw_infl:
       if saw_other_infl:
@@ -97,7 +97,7 @@ def delete_form_1(page, index, lemma, formind, formval, lang):
             tn == "head" and getparam(t, "1") == lang and getparam(t, "2") in form_poses
           ):
           pagemsg("WARNING: Saw unrecognized template in otherwise deletable subsection #%s: %s" % (
-            k // 2, unicode(t)))
+            k // 2, str(t)))
           saw_bad_template = True
           break
       else:
@@ -157,7 +157,7 @@ def delete_form_1(page, index, lemma, formind, formval, lang):
           actual_lemma = getparam(t, "1")
           if actual_lemma == lemma:
             return ""
-      return unicode(parsed)
+      return str(parsed)
 
     for tn in lang_inflection_of_templates[lang] + inflection_of_templates:
       newnewsubsec = re.sub(r"^# \{\{%s\|[^{}\n]*\}\}\n" % re.escape(tn), remove_inflections, newsubsec, 0, re.M)
@@ -197,7 +197,7 @@ def delete_form_1(page, index, lemma, formind, formval, lang):
       if cleaned_sec0.strip():
         pagemsg("WARNING: Whole page deletable except that there's text above all sections: <%s>" % cleaned_sec0.strip())
         return
-      pagetitle = unicode(page.title())
+      pagetitle = str(page.title())
       pagemsg("Page %s should be deleted" % pagetitle)
       pages_to_delete.append(pagetitle)
       return

@@ -82,7 +82,7 @@ def process_text_on_page(index, pagetitle, pagetext):
             rmparam(t, "sc")
             t.add("sclb", "1")
             blib.set_template_name(t, "desc")
-        termlink = unicode(parsed)
+        termlink = str(parsed)
       return termlink
 
     terms = re.sub(r"(?:Latin|Roman|Cyrillic): *(\[\[[^\[\]\n]*?\]\]|\{\{[lm]\|sh\|[^{}\n]*?\}\})",
@@ -100,7 +100,7 @@ def process_text_on_page(index, pagetitle, pagetext):
     desct = list(parsed_desc.filter_templates())[0]
     if tname(desct) != "desc":
       pagemsg("WARNING: Internal error: Putative {{desc}} template does not have 'desc' as template name: %s" %
-          unicode(desct))
+          str(desct))
       return origtext
 
     langcode = getparam(desct, "1")
@@ -132,7 +132,7 @@ def process_text_on_page(index, pagetitle, pagetext):
     desc_params_at_end = []
     for param in desct.params:
       pn = pname(param)
-      pv = unicode(param.value)
+      pv = str(param.value)
       if pn in ["1", "2"] or pn in item_params:
         pass
       elif pn in global_params:
@@ -196,13 +196,13 @@ def process_text_on_page(index, pagetitle, pagetext):
       tn = tname(t)
       if tn != "l":
         pagemsg("WARNING: Internal error: Saw non-{{l}} template %s in links: %s" %
-            (unicode(t), origtext))
+            (str(t), origtext))
         return origtext
       term_index += 1
       tlang = getp("1")
       if tlang != link_langcode:
         pagemsg("WARNING: Internal error: Langcode %s of template %s is not %s: %s" %
-          (tlang, unicode(t), link_langcode, origtext))
+          (tlang, str(t), link_langcode, origtext))
         return origtext
       term = getp("2")
       desct.add(str(term_index + 1), term)
@@ -218,7 +218,7 @@ def process_text_on_page(index, pagetitle, pagetext):
         desct.add("g%s" % term_index, ",".join(genders))
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if pn == "1" or pn == "2" or not pv:
           continue
         if re.search("^g[0-9]*$", pn):
@@ -229,11 +229,11 @@ def process_text_on_page(index, pagetitle, pagetext):
           desct.add("t%s" % term_index, pv)
         elif re.search("^[0-9]+$", pn):
           pagemsg("WARNING: Saw numbered param > 4 %s=%s in {{l}} template %s: %s" %
-            (pn, pv, unicode(t), origtext))
+            (pn, pv, str(t), origtext))
           return origtext
         elif re.search("[0-9]", pn):
           pagemsg("WARNING: Saw indexed param %s=%s in {{l}} template %s: %s" %
-            (pn, pv, unicode(t), origtext))
+            (pn, pv, str(t), origtext))
           return origtext
         else:
           desct.add("%s%s" % (pn, term_index), pv)
@@ -244,7 +244,7 @@ def process_text_on_page(index, pagetitle, pagetext):
       if pv:
         desct.add(pn, pv, preserve_spacing=False)
 
-    newtext = "%s%s" % (bullets, unicode(desct))
+    newtext = "%s%s" % (bullets, str(desct))
     pagemsg("Replacing <%s> with <%s>" % (origtext, newtext))
     return newtext
 

@@ -498,8 +498,8 @@ def create_declension(page, index, save, pos, tempname, decltempname, sgnum,
           # adding any specified manual translit as a / annotation.
 
           def param_should_be_removed(param):
-            name = unicode(param.name)
-            if name == "sc" and unicode(param.value) == "Arab":
+            name = str(param.name)
+            if name == "sc" and str(param.value) == "Arab":
               return True
             if name.endswith("tr"):
               return True
@@ -511,10 +511,10 @@ def create_declension(page, index, save, pos, tempname, decltempname, sgnum,
             return False
 
           def remove_i3rab(param):
-            text = unicode(param)
+            text = str(param)
             if text.endswith(UN):
               pgmsg("Removing i3rab from %s: %s" % (text,
-                unicode(headword_template)))
+                str(headword_template)))
               add_note("removing i3rab")
             return re.sub(UN + "$", "", text)
 
@@ -533,19 +533,19 @@ def create_declension(page, index, save, pos, tempname, decltempname, sgnum,
             if arabic.endswith("=+"):
               newarabic = re.sub(r"=\+$", "=sp", arabic)
               pgmsg("Converting %s to %s: %s" % (arabic,
-                newarabic, unicode(headword_template)))
+                newarabic, str(headword_template)))
               arabic = newarabic
             # Value of - is used in ar-adj-in to signal an unknown
             # feminine plural.
             if arabic.endswith("=-"):
               newarabic = re.sub(r"=-$", "=?", arabic)
               pgmsg("Converting %s to %s: %s" % (arabic,
-                newarabic, unicode(headword_template)))
+                newarabic, str(headword_template)))
               arabic = newarabic
             # Don't process translit in modifier constructions, where the
             # translit is also processed.
             if not headspace:
-              tr = getparam(headword_template, trparam(unicode(param.name)))
+              tr = getparam(headword_template, trparam(str(param.name)))
               if tr:
                 return arabic + "/" + tr
             return arabic

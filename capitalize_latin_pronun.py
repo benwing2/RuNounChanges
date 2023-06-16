@@ -9,7 +9,7 @@ from blib import getparam, rmparam, tname, msg, site
 import lalib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -25,14 +25,14 @@ def process_page(page, index, parsed):
     if tname(t) == "la-IPA":
       param1 = getparam(t, "1")
       if param1:
-        origt = unicode(t)
+        origt = str(t)
         newparam1 = param1[0].upper() + param1[1:]
         if newparam1 != param1:
           t.add("1", newparam1)
-          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+          pagemsg("Replaced %s with %s" % (origt, str(t)))
           notes.append("capitalize %s in {{la-IPA}} to match page title" % param1)
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Capitalize {{la-IPA}} as appropriate for page title",
     include_pagefile=True)

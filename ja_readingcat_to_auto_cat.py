@@ -20,7 +20,7 @@ def process_text_on_page(index, pagetitle, text):
 
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "autocat":
       blib.set_template_name(t, "auto cat")
@@ -38,33 +38,33 @@ def process_text_on_page(index, pagetitle, text):
       t_lang = re.sub("-.*", "", tn)
       if t_lang != auto_lang:
         pagemsg("WARNING: Auto-determined lang code %s for language name %s != template specified %s: %s" % (
-          auto_lang, langname, t_lang, unicode(t)))
+          auto_lang, langname, t_lang, str(t)))
         continue
       t_kanji = getparam(t, "1").strip()
       t_reading = getparam(t, "2").strip()
       if t_kanji != kanji:
-        pagemsg("WARNING: Auto-determined kanji %s != template specified %s: %s" % (kanji, t_kanji, unicode(t)))
+        pagemsg("WARNING: Auto-determined kanji %s != template specified %s: %s" % (kanji, t_kanji, str(t)))
         continue
       if t_reading != reading:
-        pagemsg("WARNING: Auto-determined reading %s != template specified %s: %s" % (reading, t_reading, unicode(t)))
+        pagemsg("WARNING: Auto-determined reading %s != template specified %s: %s" % (reading, t_reading, str(t)))
         continue
       numbered_params = []
       must_continue = False
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if pn in ["1", "2"]:
           pass
         elif re.search("^[0-9]+$", pn):
           numbered_params.append(pv)
         else:
-          pagemsg("WARNING: Saw unknown non-numeric param %s=%s, skipping: %s" % (pn, pv, unicode(t)))
+          pagemsg("WARNING: Saw unknown non-numeric param %s=%s, skipping: %s" % (pn, pv, str(t)))
           must_continue = True
           break
       if must_continue:
         continue
       if len(numbered_params) == 0:
-        pagemsg("WARNING: No reading types given, skipping: %s" % unicode(t))
+        pagemsg("WARNING: No reading types given, skipping: %s" % str(t))
         continue
       blib.set_template_name(t, "auto cat")
       del t.params[:]
@@ -72,10 +72,10 @@ def process_text_on_page(index, pagetitle, text):
         t.add(str(index + 1), numbered_param, preserve_spacing=False)
       notes.append("convert {{%s}} to {{auto cat}}" % tn)
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{ja-readingcat}}/{{ryu-readingcat}} to {{auto cat}}",
     include_pagefile=True, include_stdin=True)

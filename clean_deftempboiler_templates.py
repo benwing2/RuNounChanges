@@ -14,7 +14,7 @@ from form_of_templates import (
 )
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -22,7 +22,7 @@ def process_page(page, index, parsed):
   notes = []
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in deftempboiler_templates:
       cap = getparam(t, "cap")
@@ -38,10 +38,10 @@ def process_page(page, index, parsed):
         t.add("nodot", "1")
         notes.append("convert empty dot= to nodot=1 in {{%s}}" % tn)
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert cap= to nocap= and empty dot= to nodot= in templates based on {{deftempboiler}}")
 args = parser.parse_args()

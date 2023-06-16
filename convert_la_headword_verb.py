@@ -50,7 +50,7 @@ def new_generate_verb_forms(template, errandpagemsg, expand_text, return_raw=Fal
 
 def process_page(page, index, parsed):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -60,7 +60,7 @@ def process_page(page, index, parsed):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
 
   notes = []
@@ -85,7 +85,7 @@ def process_page(page, index, parsed):
       if tn == "la-conj":
         if la_conj_template:
           pagemsg("WARNING: Saw multiple verb conjugation templates in subsection, %s and %s, skipping" % (
-            unicode(la_conj_template), unicode(t)))
+            str(la_conj_template), str(t)))
           must_continue = True
           break
         la_conj_template = t
@@ -93,7 +93,7 @@ def process_page(page, index, parsed):
       if tn == "la-verb":
         if la_verb_template:
           pagemsg("WARNING: Saw multiple verb headword templates in subsection, %s and %s, skipping" % (
-            unicode(la_verb_template), unicode(t)))
+            str(la_verb_template), str(t)))
           must_continue = True
           break
         la_verb_template = t
@@ -103,13 +103,13 @@ def process_page(page, index, parsed):
     if not la_verb_template and not la_conj_template:
       continue
     if la_verb_template and not la_conj_template:
-      pagemsg("WARNING: Saw verb headword template but no conjugation template: %s" % unicode(la_verb_template))
+      pagemsg("WARNING: Saw verb headword template but no conjugation template: %s" % str(la_verb_template))
       continue
     if la_conj_template and not la_verb_template:
-      pagemsg("WARNING: Saw verb conjugation template but no headword template: %s" % unicode(la_conj_template))
+      pagemsg("WARNING: Saw verb conjugation template but no headword template: %s" % str(la_conj_template))
       continue
 
-    orig_la_verb_template = unicode(la_verb_template)
+    orig_la_verb_template = str(la_verb_template)
     if re.search(r"^(irreg|[0-9]\+*)(\..*)?$", getparam(la_verb_template, "1")):
       pagemsg("Found new-style verb headword template, skipping: %s" %
         orig_la_verb_template)
@@ -118,10 +118,10 @@ def process_page(page, index, parsed):
     def render_headword_and_conj():
       return "headword template <from> %s <to> %s <end>, conjugation template <from> %s <to> %s <end>" % (
         orig_la_verb_template, orig_la_verb_template,
-        unicode(la_conj_template), unicode(la_conj_template)
+        str(la_conj_template), str(la_conj_template)
       )
 
-    verb_props = new_generate_verb_forms(unicode(la_conj_template), errandpagemsg, expand_text, include_props=True)
+    verb_props = new_generate_verb_forms(str(la_conj_template), errandpagemsg, expand_text, include_props=True)
     if verb_props is None:
       continue
     subtypes = [x.replace("-", "") for x in safe_split(verb_props["subtypes"], ".")]
@@ -268,7 +268,7 @@ def process_page(page, index, parsed):
     # Fetch remaining params from headword template
     headword_params = []
     for param in la_verb_template.params:
-      pname = unicode(param.name)
+      pname = str(param.name)
       if pname.strip() in ["1", "2", "3", "4", "44", "conj", "c", "pattern"] or re.search("^(head|inf|perf|sup)[0-9]*$", pname.strip()):
         continue
       headword_params.append((pname, param.value, param.showkey))
@@ -276,14 +276,14 @@ def process_page(page, index, parsed):
     del la_verb_template.params[:]
     # Copy params from conj template
     for param in la_conj_template.params:
-      pname = unicode(param.name)
+      pname = str(param.name)
       la_verb_template.add(pname, param.value, showkey=param.showkey, preserve_spacing=False)
     # Copy remaining params from headword template
     for name, value, showkey in headword_params:
       la_verb_template.add(name, value, showkey=showkey, preserve_spacing=False)
-    pagemsg("Replaced %s with %s" % (orig_la_verb_template, unicode(la_verb_template)))
+    pagemsg("Replaced %s with %s" % (orig_la_verb_template, str(la_verb_template)))
     notes.append("convert {{la-verb}} params to new style")
-    subsections[k] = unicode(parsed)
+    subsections[k] = str(parsed)
 
   if not saw_a_template:
     pagemsg("WARNING: Saw no verb headword or conjugation templates")

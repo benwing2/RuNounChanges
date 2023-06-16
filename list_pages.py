@@ -16,8 +16,8 @@ if args.namespace:
   for i, page in blib.iter_items(site.allpages(
     start=start if isinstance(start, basestring) else '!', namespace=ns,
     filterredir=False), start, end):
-      msg("Page %s %s: Processing" % (i, unicode(page.title())))
+      msg("Page %s %s: Processing" % (i, str(page.title())))
 else:
   def process_page(page, index):
-    msg("Page %s %s: Processing" % (index, unicode(page.title())))
+    msg("Page %s %s: Processing" % (index, str(page.title())))
   blib.do_pagefile_cats_refs(args, start, end, process_page)

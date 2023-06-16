@@ -19,7 +19,7 @@ def ensure_two_trailing_nl(text):
   return re.sub(r"\n*$", r"\n\n", text)
 
 def process_page(page, index, parsed, nowarn=False):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -30,7 +30,7 @@ def process_page(page, index, parsed, nowarn=False):
     pagemsg("WARNING: Colon in page title, skipping page")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   found_participle = False
@@ -72,7 +72,7 @@ def process_page(page, index, parsed, nowarn=False):
         parsed = blib.parse_text(subsections[k])
         for t in parsed.filter_templates():
           gloss3 = True
-          tname = unicode(t.name)
+          tname = str(t.name)
           canon_params = None
           if tname == "ru-participle of":
             found_participle = True
@@ -108,8 +108,8 @@ def process_page(page, index, parsed, nowarn=False):
           if canon_params:
             found_participle = True
             found_subsec_participle = True
-            origt = unicode(t)
-            origname = unicode(t.name)
+            origt = str(t)
+            origname = str(t.name)
             t.name = "ru-participle of"
             # Fetch param 1 and param 2, and non-numbered params except lang=
             # and nocat=.
@@ -117,7 +117,7 @@ def process_page(page, index, parsed, nowarn=False):
             param2 = getparam(t, "2")
             non_numbered_params = []
             for param in t.params:
-              pname = unicode(param.name)
+              pname = str(param.name)
               if not re.search(r"^[0-9]+$", pname) and pname not in ["lang", "nocat"]:
                 non_numbered_params.append((pname, param.value))
             # Convert 3rd parameter to gloss= if called for
@@ -135,7 +135,7 @@ def process_page(page, index, parsed, nowarn=False):
               t.add(str(i+3), param)
             for name, value in non_numbered_params:
               t.add(name, value)
-            newt = unicode(t)
+            newt = str(t)
             pagemsg("Replaced %s with %s" % (origt, newt))
             notes.append("replaced '%s' with 'ru-participle of/%s'" % (origname, "/".join(canon_params)))
         if found_subsec_participle:
@@ -146,14 +146,14 @@ def process_page(page, index, parsed, nowarn=False):
               subsections[k-1].replace("\n", r"\n")))
             notes.append("set section header to Participle")
           for t in parsed.filter_templates():
-            if unicode(t.name) == "head" and getparam(t, "1") == "ru":
-              origt = unicode(t)
+            if str(t.name) == "head" and getparam(t, "1") == "ru":
+              origt = str(t)
               t.add("2", "participle")
-              newt = unicode(t)
+              newt = str(t)
               if origt != newt:
                 pagemsg("Replaced %s with %s" % (origt, newt))
                 notes.append("set headword part of speech to 'participle'")
-        subsections[k] = unicode(parsed)
+        subsections[k] = str(parsed)
       secbody = "".join(subsections)
 
       # Rearrange Participle and Noun/Adjective sections; repeat until no

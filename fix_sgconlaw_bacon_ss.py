@@ -39,7 +39,7 @@ def process_text_on_page(index, pagename, text):
     t.add("passage", text)
     blib.set_template_name(t, "RQ:Bacon Sylva Sylvarum")
     notes.append("reformat {{RQ:Bacon SS}} into {{RQ:Bacon Sylva Sylvarum}}")
-    return unicode(t) + "\n"
+    return str(t) + "\n"
 
   curtext = re.sub(r"(\{\{RQ:Bacon SS.*?\}\})\n#+\*:\s*(.*?)\n",
       replace_bacon_ss, curtext)

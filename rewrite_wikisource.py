@@ -22,7 +22,7 @@ def process_text_on_page(index, pagetitle, text):
   notes = []
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     def getp(param):
       return getparam(t, param)
     tn = tname(t)
@@ -34,7 +34,7 @@ def process_text_on_page(index, pagetitle, text):
       named_params = []
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
+        pv = str(param.value)
         if pn not in ["1", "2", "lang"]:
           named_params.append((pn, pv))
       del t.params[:]
@@ -51,10 +51,10 @@ def process_text_on_page(index, pagetitle, text):
       else:
         notes.append("rename {{source|lang=%s}} -> {{R:wsource|%s}}" % (lang, lang))
 
-    if origt != unicode(t):
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if origt != str(t):
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Rewrite {{source}} to {{R:wsource}}", include_pagefile=True, include_stdin=True)
 args = parser.parse_args()

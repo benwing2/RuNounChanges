@@ -10,7 +10,7 @@ import bglib
 from bglib import AC, GR
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -18,11 +18,11 @@ def process_page(page, index, parsed):
 
   notes = []
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     param = None
     if tn in ["bg-noun", "bg-proper noun", "bg-verb", "bg-adj", "bg-adv",
         "bg-part", "bg-part form", "bg-verbal noun", "bg-verbal noun form",
@@ -37,9 +37,9 @@ def process_page(page, index, parsed):
         val = val.replace(GR, AC)
         t.add(param, val)
         notes.append("convert grave to acute in {{%s}}" % tn)
-    if unicode(t) != origt:
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-  return unicode(parsed), notes
+    if str(t) != origt:
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
+  return str(parsed), notes
 
 parser = blib.create_argparser("Change grave to acute in Bulgarian headwords",
     include_pagefile=True)

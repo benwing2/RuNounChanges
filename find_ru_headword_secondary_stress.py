@@ -22,7 +22,7 @@ overall_head_count = {}
 cat_head_count = {}
 
 def has_secondary_stress(text):
-  return GR in unicodedata.normalize("NFD", unicode(text))
+  return GR in unicodedata.normalize("NFD", str(text))
 
 def output_heads_seen(overall=False):
   if overall:
@@ -53,25 +53,25 @@ def process_text_on_page(index, pagetitle, text):
       for head in heads:
         if has_secondary_stress(head):
           pagemsg("Found secondarily stressed head %s in %s" % (head,
-            unicode(t)))
+            str(t)))
     elif tn == "head" and getparam(t, "1") == "ru":
       heads = blib.fetch_param_chain(t, "head", "head")
       for head in heads:
         if has_secondary_stress(head):
           pagemsg("Found secondarily stressed head %s in %s" % (head,
-            unicode(t)))
+            str(t)))
     elif tn in ["ru-noun+", "ru-proper noun+", "ru-noun-table", "ru-noun-old"]:
       per_word_objs = runounlib.split_noun_decl_arg_sets(t, pagemsg)
       for per_word in per_word_objs:
         for arg_set in per_word:
           if has_secondary_stress(arg_set[1]):
             pagemsg("Found secondarily stressed head %s in %s" % (
-              arg_set[1], unicode(t)))
+              arg_set[1], str(t)))
     elif tn == "ru-decl-adj":
       head = getparam(t, "1")
       if has_secondary_stress(head):
         pagemsg("Found secondarily stressed head %s in %s" % (head,
-          unicode(t)))
+          str(t)))
 
 parser = blib.create_argparser("Find Russian terms with secondary stress in the headword",
     include_pagefile=True, include_stdin=True)

@@ -75,7 +75,7 @@ def process_text_on_page(index, pagetitle, text):
             readings.append(contents_reading)
         if len(kanji_in_contents_title) != len(readings):
           pagemsg_with_contents("WARNING: Saw %s chars in contents title but %s readings %s, skipping: %s" % (
-            len(kanji_in_contents_title), len(readings), ",".join(readings), unicode(t)))
+            len(kanji_in_contents_title), len(readings), ",".join(readings), str(t)))
           continue
         saw_daiyoji_in_contents = False
         for i, (ch, contents_reading) in enumerate(zip(kanji_in_contents_title, readings)):
@@ -87,12 +87,12 @@ def process_text_on_page(index, pagetitle, text):
                 notes.append("add sort key %s based on {{%s-kanjitab}} on page [[%s]]" %
                     (contents_reading, langcode, contents_title))
         if not saw_daiyoji_in_contents:
-          pagemsg_with_contents("WARNING: Didn't see daiyoji in contents: %s" % unicode(t))
+          pagemsg_with_contents("WARNING: Didn't see daiyoji in contents: %s" % str(t))
           continue
     return saw_kanjitab
 
   for i, contents_page in blib.cat_articles(re.sub("^Category:", "", pagetitle)):
-    contents_title = unicode(contents_page.title())
+    contents_title = str(contents_page.title())
     def pagemsg_with_contents(txt):
       pagemsg("%s: %s" % (contents_title, txt))
     def errandpagemsg_with_contents(txt):

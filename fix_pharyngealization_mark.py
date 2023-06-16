@@ -9,7 +9,7 @@ import blib
 from blib import getparam, rmparam, tname, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -25,7 +25,7 @@ def process_page(page, index, parsed):
         t.add(param, newval)
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     if tname(t) == "IPAchar":
       frob(t, "1")
     elif tname(t) == "IPA":
@@ -35,7 +35,7 @@ def process_page(page, index, parsed):
         firstparam = 2
       for i in range(firstparam, 20):
         frob(t, str(i))
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       notes.append("Correct use of U+02C1 pharyngealization mark to U+02E4")
       pagemsg("Replaced %s with %s" % (origt, newt))

@@ -70,7 +70,7 @@ def uk_lemma_is_indeclinable(t, pagetitle, pagemsg):
       return True
     headword = getparam(t, "1")
     if headword and headword == getparam(t, "3") and (not re.search(u"я́?$", headword) or not getparam(t, "2").startswith("n")):
-      pagemsg("WARNING: Indeclinable noun not marked as such: %s" % unicode(t))
+      pagemsg("WARNING: Indeclinable noun not marked as such: %s" % str(t))
       return True
   if tname(t) == "uk-adj" and getparam(t, "indecl"):
     return True
@@ -218,10 +218,10 @@ def process_text_on_page(index, pagetitle, text, lang, pos):
           tn == "head" and getparam(t, "1") == lang and getparam(t, "2") in [pos, "%ss" % pos]
         ):
           if saw_head:
-            pagemsg("WARNING: Found two heads under one POS section: second is %s" % unicode(t))
+            pagemsg("WARNING: Found two heads under one POS section: second is %s" % str(t))
           saw_head = True
           if tn != "head" and lemma_is_indeclinable[lang](t, pagetitle, pagemsg):
-            pagemsg("Headword template is indeclinable: %s" % unicode(t))
+            pagemsg("Headword template is indeclinable: %s" % str(t))
             head_is_indeclinable = True
             break
         if re.search("^" + pos_to_infl_template[lang][pos] + "$", tn):
@@ -229,16 +229,16 @@ def process_text_on_page(index, pagetitle, text, lang, pos):
           if not exclude_re or not re.search("^" + exclude_re + "$", tn):
             if inflt:
               pagemsg("WARNING: Found two inflection templates under one POS section: %s and %s" % (
-                unicode(inflt), unicode(t)))
+                str(inflt), str(t)))
             inflt = t
-            pagemsg("Found %s inflection: %s" % (pos, unicode(t)))
+            pagemsg("Found %s inflection: %s" % (pos, str(t)))
         if tn in ["inflection of", "infl of"]:
-          pagemsg("Saw 'inflection of': %s" % unicode(t))
+          pagemsg("Saw 'inflection of': %s" % str(t))
           saw_inflection_of = True
         if pos_to_nonlemma_template[lang] and re.search("^" + pos_to_nonlemma_template[lang] + "$", tn) or (
           tn == "head" and getparam(t, "1") == lang and re.search(" forms?$", getparam(t, "2"))
         ):
-          pagemsg("Saw non-lemma headword template: %s" % unicode(t))
+          pagemsg("Saw non-lemma headword template: %s" % str(t))
           saw_head_form = True
       if not inflt:
         pagemsg("Didn't find %s inflection" % pos)
@@ -258,10 +258,10 @@ def process_text_on_page(index, pagetitle, text, lang, pos):
                 tn = tname(t)
                 if tname(t) != "rfinfl":
                   pagemsg("WARNING: Saw unknown template %s in existing inflection section, skipping" % (
-                    unicode(t)))
+                    str(t)))
                   break
                 else:
-                  pagemsg("Found %s" % unicode(t))
+                  pagemsg("Found %s" % str(t))
               break
           else: # no break
             insert_k = k + 2

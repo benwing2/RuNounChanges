@@ -22,7 +22,7 @@ def process_text_on_page(index, pagetitle, text):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn == "ru-noun-table":
-      ut = unicode(t)
+      ut = str(t)
       if re.search(ur"ни́к(\||$)", ut) and "|b" not in ut:
         pagemsg("WARNING: Likely missing accent b: %s" % ut)
       if re.search(ur"о́к(\||$)", ut) and "*" in ut and "|b" not in ut:

@@ -18,7 +18,7 @@ import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -29,7 +29,7 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title and not a recognized namespace to include, skipping page")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   newtext = text

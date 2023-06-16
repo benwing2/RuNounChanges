@@ -646,7 +646,7 @@ def la_get_headword_from_template(t, pagename, pagemsg, expand_text=None):
     if not retval:
       retval = getparam(t, "1")
       if "<" in retval or "((" in retval or " " in retval or "-" in retval:
-        generate_template = blib.parse_text(unicode(t)).filter_templates()[0]
+        generate_template = blib.parse_text(str(t)).filter_templates()[0]
         blib.set_template_name(generate_template, "la-generate-adj-forms")
         blib.remove_param_chain(generate_template, "comp", "comp")
         blib.remove_param_chain(generate_template, "sup", "sup")
@@ -657,7 +657,7 @@ def la_get_headword_from_template(t, pagename, pagemsg, expand_text=None):
         rmparam(generate_template, "indecl")
         rmparam(generate_template, "id")
         rmparam(generate_template, "pos")
-        result = expand_text(unicode(generate_template))
+        result = expand_text(str(generate_template))
         if not result:
           pagemsg("WARNING: Error generating forms, skipping")
           retval = ""
@@ -669,7 +669,7 @@ def la_get_headword_from_template(t, pagename, pagemsg, expand_text=None):
             retval = args["linked_nom_pl_m"]
           else:
             pagemsg("WARNING: Can't locate lemma in {{la-generate-adj-forms}} result: generate_template=%s, result=%s" % (
-              unicode(generate_template), result))
+              str(generate_template), result))
             retval = ""
           retval = retval.split(",")
       else:
@@ -677,7 +677,7 @@ def la_get_headword_from_template(t, pagename, pagemsg, expand_text=None):
   elif tn in ["la-noun", "la-num-noun", "la-suffix-noun", "la-proper noun"]:
     retval = blib.fetch_param_chain(t, "lemma", "lemma")
     if not retval:
-      generate_template = blib.parse_text(unicode(t)).filter_templates()[0]
+      generate_template = blib.parse_text(str(t)).filter_templates()[0]
       blib.set_template_name(generate_template, "la-generate-noun-forms")
       blib.remove_param_chain(generate_template, "lemma", "lemma")
       blib.remove_param_chain(generate_template, "m", "m")
@@ -688,7 +688,7 @@ def la_get_headword_from_template(t, pagename, pagemsg, expand_text=None):
       rmparam(generate_template, "indecl")
       rmparam(generate_template, "id")
       rmparam(generate_template, "pos")
-      result = expand_text(unicode(generate_template))
+      result = expand_text(str(generate_template))
       if not result:
         pagemsg("WARNING: Error generating forms, skipping")
         retval = ""
@@ -700,16 +700,16 @@ def la_get_headword_from_template(t, pagename, pagemsg, expand_text=None):
           retval = args["linked_nom_pl"]
         else:
           pagemsg("WARNING: Can't locate lemma in {{la-generate-noun-forms}} result: generate_template=%s, result=%s" % (
-            unicode(generate_template), result))
+            str(generate_template), result))
           retval = ""
         retval = retval.split(",")
   elif tn in ["la-verb", "la-suffix-verb"]:
     retval = blib.fetch_param_chain(t, "lemma", "lemma")
     if not retval:
-      generate_template = blib.parse_text(unicode(t)).filter_templates()[0]
+      generate_template = blib.parse_text(str(t)).filter_templates()[0]
       blib.set_template_name(generate_template, "la-generate-verb-forms")
       rmparam(generate_template, "id")
-      result = expand_text(unicode(generate_template))
+      result = expand_text(str(generate_template))
       if not result:
         pagemsg("WARNING: Error generating forms, skipping")
         retval = ""
@@ -723,7 +723,7 @@ def la_get_headword_from_template(t, pagename, pagemsg, expand_text=None):
         else:
           # no break
           pagemsg("WARNING: Can't locate lemma in {{la-generate-verb-forms}} result: generate_template=%s, result=%s" % (
-            unicode(generate_template), result))
+            str(generate_template), result))
           retval = ""
         retval = retval.split(",")
   elif tn in la_adj_headword_templates or tn in la_adv_headword_templates or (
@@ -737,7 +737,7 @@ def la_get_headword_from_template(t, pagename, pagemsg, expand_text=None):
   elif tn in la_nonlemma_headword_templates or tn in la_misc_headword_templates:
     retval = blib.fetch_param_chain(t, "1", "head")
   else:
-    pagemsg("WARNING: Unrecognized headword template %s" % unicode(t))
+    pagemsg("WARNING: Unrecognized headword template %s" % str(t))
     retval = ""
   retval = retval or pagename
   if type(retval) is not list:
@@ -918,20 +918,20 @@ def find_heads_and_defns(text, pagemsg):
           most_recent_pronun_section['pronun_templates'].append(t)
         else:
           pagemsg("WARNING: Pronunciation template %s in %s section, not pronunciation section" % (
-            unicode(t), header))
+            str(t), header))
       elif tn in la_headword_templates or tn == "head":
         if tn == "head":
           if getparam(t, "1") != "la":
-            pagemsg("WARNING: Wrong-language {{head}} template in Latin section: %s" % unicode(t))
+            pagemsg("WARNING: Wrong-language {{head}} template in Latin section: %s" % str(t))
             continue
           head_pos = getparam(t, "2")
           if head_pos not in la_poses:
             pagemsg("WARNING: Unrecognized part of speech %s" % head_pos)
         if headword_templates_in_section:
-          pagemsg("WARNING: Found additional headword template in same section: %s" % unicode(t))
+          pagemsg("WARNING: Found additional headword template in same section: %s" % str(t))
           headwords.append(most_recent_headword)
         elif most_recent_headword:
-          pagemsg("WARNING: Found headword template nested under previous one: %s" % unicode(t))
+          pagemsg("WARNING: Found headword template nested under previous one: %s" % str(t))
           headwords.append(most_recent_headword)
         most_recent_headword = new_headword(header, level, k, t,
           tn in la_lemma_headword_templates or (
@@ -939,12 +939,12 @@ def find_heads_and_defns(text, pagemsg):
         headword_templates_in_section.append(t)
       elif tn in la_infl_templates:
         if not most_recent_headword:
-          pagemsg("WARNING: Found inflection template not under headword template: %s" % unicode(t))
+          pagemsg("WARNING: Found inflection template not under headword template: %s" % str(t))
         else:
           most_recent_headword['infl_templates'].append(t)
       elif tn in la_infl_of_templates:
         if not most_recent_headword:
-          pagemsg("WARNING: Found inflection-of template not under headword template: %s" % unicode(t))
+          pagemsg("WARNING: Found inflection-of template not under headword template: %s" % str(t))
         else:
           most_recent_headword['infl_of_templates'].append(t)
 

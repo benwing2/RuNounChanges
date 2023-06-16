@@ -28,10 +28,10 @@ def process_text_on_page(index, pagetitle, pagetext):
       for t in parsed.filter_templates():
         def getp(param):
           return getparam(t, param)
-        origt = unicode(t)
+        origt = str(t)
         tn = tname(t)
         if tn != "cu-IPA":
-          pagemsg("WARNING: Saw non-{{cu-IPA}} template in Old Church Slavonic pronunciation section: %s" % unicode(t))
+          pagemsg("WARNING: Saw non-{{cu-IPA}} template in Old Church Slavonic pronunciation section: %s" % str(t))
           break
       else: # no break
         subsections[k - 1] = ""

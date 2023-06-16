@@ -24,28 +24,28 @@ def process_text_on_page(index, pagetitle, text):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn in name_templates:
-      origt = unicode(t)
+      origt = str(t)
       def getp(param):
         return getparam(t, param).strip()
       lang = getp("1")
       aval = getp("A")
       if lang != "en":
         if aval in ["A", "a", "An", "an"]:
-          pagemsg("Remove redundant article A=%s in {{%s|%s}}: %s" % (aval, tn, lang, unicode(t)))
+          pagemsg("Remove redundant article A=%s in {{%s|%s}}: %s" % (aval, tn, lang, str(t)))
           notes.append("remove redundant article A=%s in {{%s|%s}}" % (aval, tn, lang))
           rmparam(t, "A")
         else:
           m = re.search("^(A|An) +(.*)$", aval)
           if m:
-            pagemsg("Change explicit article A=%s to lowercase in non-English {{%s|%s}}: %s" % (aval, tn, lang, unicode(t)))
+            pagemsg("Change explicit article A=%s to lowercase in non-English {{%s|%s}}: %s" % (aval, tn, lang, str(t)))
             notes.append("change explicit article A=%s to lowercase in non-English {{%s|%s}}" % (aval, tn, lang))
             aval = "a" + aval[1:]
             t.add("A", aval)
 
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  text = unicode(parsed)
+  text = str(parsed)
   lines = text.split("\n")
   for lineno, line in enumerate(lines):
     if re.search(r"\{\{%s\|" % name_template_re, line):

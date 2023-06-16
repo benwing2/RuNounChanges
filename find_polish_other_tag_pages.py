@@ -32,7 +32,7 @@ for index, page in blib.iter_items(pages, start, end):
         lang = getparam(t, "1")
       if lang == "pl":
         for param in t.params:
-          pname = unicode(param.name).strip()
-          pval = unicode(param.value).strip()
+          pname = str(param.name).strip()
+          pval = str(param.value).strip()
           if re.search("^[0-9]+$", pname) and pval == "other":
             msg(pagetitle)

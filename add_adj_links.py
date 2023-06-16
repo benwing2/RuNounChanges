@@ -9,7 +9,7 @@ from blib import getparam, rmparam, msg, site
 import rulib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -19,18 +19,18 @@ def process_page(page, index, parsed):
     pagemsg("Skipping, no dash in title")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
 
-    if unicode(t.name) in ["ru-IPA"]:
+    if str(t.name) in ["ru-IPA"]:
       pron = getparam(t, "1") or getparam(t, "phon")
       if not re.search(u"[̀ѐЀѝЍ]", pron):
         pagemsg("WARNING: No secondary accent in pron %s" % pron)
 
-    if unicode(t.name) in ["ru-adj"]:
+    if str(t.name) in ["ru-adj"]:
       head = getparam(t, "1")
       if head and "[[" not in head:
         def add_links(m):
@@ -42,11 +42,11 @@ def process_page(page, index, parsed):
           return u"[[%s|%s]]-[[%s]]" % (rulib.remove_accents(first), prefix, m.group(2))
         t.add("1", re.sub(u"^(.*?о)-([^-]*)$", add_links, head))
       notes.append("add links to two-part adjective")
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Add links to two-part adjectives",
   include_pagefile=True)

@@ -72,14 +72,14 @@ def push_one_manual_change(pagetitle, index, text, curr_template, repl_template)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   #template = blib.parse_text(template_text).filter_templates()[0]
-  #orig_template = unicode(template)
+  #orig_template = str(template)
   #if getparam(template, "sc") == "polytonic":
   #  template.remove("sc")
-  #to_template = unicode(template)
+  #to_template = str(template)
   #param_value = getparam(template, removed_param)
   #template.remove(removed_param)
-  #from_template = unicode(template)
-  text = unicode(text)
+  #from_template = str(template)
+  text = str(text)
   found_repl_template = repl_template in text
   newtext = text.replace(curr_template, repl_template)
   changelog = ""
@@ -123,7 +123,7 @@ def push_manual_changes(save, verbose, diff, template_changes, start, end):
         index, pagename))
     else:
       def do_push_one_manual_change(page, index, text):
-        return push_one_manual_change(unicode(page.title()), index, text, curr_template, repl_template)
+        return push_one_manual_change(str(page.title()), index, text, curr_template, repl_template)
       blib.do_edit(page, index, do_push_one_manual_change, save=save,
           verbose=verbose, diff=diff)
 

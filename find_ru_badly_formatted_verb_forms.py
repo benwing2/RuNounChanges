@@ -9,26 +9,26 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(index, page, save, verbose):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   found_inflection_of = False
   found_head_verb_form = False
   for t in parsed.filter_templates():
-    if unicode(t.name) in ["inflection of"]:
+    if str(t.name) in ["inflection of"]:
       found_inflection_of = True
-    if unicode(t.name) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "verb form":
+    if str(t.name) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "verb form":
       found_head_verb_form = True
 
   if not found_head_verb_form or not found_inflection_of:
     # Find definition line
     foundrussian = False
-    sections = re.split("(^==[^=]*==\n)", unicode(page.text), 0, re.M)
+    sections = re.split("(^==[^=]*==\n)", str(page.text), 0, re.M)
 
     for j in range(2, len(sections), 2):
       if sections[j-1] == "==Russian==\n":

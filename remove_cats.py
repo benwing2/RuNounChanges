@@ -72,13 +72,13 @@ def process_text_on_page(index, pagetitle, text):
         continue
       non_numbered_params = []
       for param in t.params:
-        pname = unicode(param.name).strip()
-        pval = unicode(param.value).strip()
+        pname = str(param.name).strip()
+        pval = str(param.value).strip()
         showkey = param.showkey
         if not re.search("^[0-9]+$", pname):
           non_numbered_params.append((pname, pval, showkey))
       if filtered_cats:
-        origt = unicode(t)
+        origt = str(t)
         # Erase all params.
         del t.params[:]
         # Put back new params.
@@ -88,12 +88,12 @@ def process_text_on_page(index, pagetitle, text):
           t.add(str(catind + first_cat_param), cat)
         for pname, pval, showkey in non_numbered_params:
           t.add(pname, pval, showkey=showkey, preserve_spacing=False)
-        if origt != unicode(t):
-          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        if origt != str(t):
+          pagemsg("Replaced %s with %s" % (origt, str(t)))
       else:
-        text_to_remove.append(unicode(t))
+        text_to_remove.append(str(t))
 
-  text = unicode(parsed)
+  text = str(parsed)
 
   for m in re.finditer(r"\[\[(?:[Cc][Aa][Tt][Ee][Gg][Oo][Rr][Yy]|[Cc][Aa][Tt]):(.*?)\]\]\n?", text):
     cat = m.group(1)

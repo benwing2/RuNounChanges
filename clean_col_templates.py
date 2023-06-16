@@ -33,7 +33,7 @@ templates_to_clean = templates_to_rename.keys() + [
 ]
   
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -41,7 +41,7 @@ def process_page(page, index, parsed):
   notes = []
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in templates_to_rename:
       blib.set_template_name(t, templates_to_rename[tn])
@@ -53,7 +53,7 @@ def process_page(page, index, parsed):
         # Fetch all params.
         params = []
         for param in t.params:
-          pname = unicode(param.name)
+          pname = str(param.name)
           if pname.strip() != "lang":
             params.append((pname, param.value, param.showkey))
         # Erase all params.
@@ -70,7 +70,7 @@ def process_page(page, index, parsed):
       # Then remove unnecessary links
       lang = getparam(t, "1").strip()
       num = 2
-      oldt = unicode(t)
+      oldt = str(t)
       while True:
         link = getparam(t, str(num))
         if not link:
@@ -82,13 +82,13 @@ def process_page(page, index, parsed):
         if m:
           t.add(str(num), "%s%s%s" % m.groups(), preserve_spacing=False)
         num += 1
-      if oldt != unicode(t):
+      if oldt != str(t):
         notes.append("remove unnecessary links in {{%s}}" % tn)
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("In multicolumn templates, orphan lesser-used ones, move lang= to 1= and remove unnecessary links")
 args = parser.parse_args()

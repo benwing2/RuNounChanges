@@ -159,7 +159,7 @@ def get_headword_pronuns(parsed, pagetitle, pagemsg, expand_text):
 
   for t in parsed.filter_templates():
     check_extra_heads = False
-    tname = unicode(t.name)
+    tname = str(t.name)
     if (tname in ["%s-adj" % args.lang, "%s-adv" % args.lang, "%s-verb" % args.lang] or
         args.lang == "bg" and tname in ["bg-noun", "bg-proper noun"]):
       head = getparam(t, "1") or pagetitle
@@ -179,7 +179,7 @@ def get_headword_pronuns(parsed, pagetitle, pagemsg, expand_text):
     elif args.lang != "bg" and tname in ["%s-noun" % args.lang, "%s-proper noun" % args.lang]:
       param1 = getparam(t, "1")
       if "<" in param1:
-        parsed_t = blib.parse_text(unicode(t)).filter_templates()[0]
+        parsed_t = blib.parse_text(str(t)).filter_templates()[0]
         blib.set_template_name(parsed_t, "%s-generate-noun-forms" % args.lang)
         blib.remove_param_chain(parsed_t, "adj", "adj")
         blib.remove_param_chain(parsed_t, "dim", "dim")
@@ -187,7 +187,7 @@ def get_headword_pronuns(parsed, pagetitle, pagemsg, expand_text):
         blib.remove_param_chain(parsed_t, "f", "f")
         blib.remove_param_chain(parsed_t, "g", "g")
         blib.remove_param_chain(parsed_t, "lemma", "lemma")
-        generate_template = unicode(parsed_t)
+        generate_template = str(parsed_t)
         generate_result = expand_text(generate_template)
         if not generate_result:
           pagemsg("WARNING: Error generating noun forms")
@@ -383,7 +383,7 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
         unmatched_hpron.add(hpron)
     if not all_match:
       pagemsg("WARNING: Unable to match headword pronuns %s against found pronuns %s" %
-          (",".join(unmatched_hpron), ",".join(unicode(x) for x in found_pronuns)))
+          (",".join(unmatched_hpron), ",".join(str(x) for x in found_pronuns)))
       return None
 
   def get_reduced_stem(nom):
@@ -445,7 +445,7 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
             lambda x:re.sub(adj_ending_regex, "", x))
         append_stem_foundstems(adjstem, foundpronstems)
         pagemsg("Adding adjectival stem mapping %s->%s" % (
-          adjstem, ",".join(unicode(x) for x in foundpronstems)))
+          adjstem, ",".join(str(x) for x in foundpronstems)))
         # If adjectival, dereduce with both stressed and unstressed epenthetic
         # vowel
         for epvowel in [False, True]:
@@ -454,7 +454,7 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
               lambda x:com.dereduce(x, epvowel))
           append_stem_foundstems(deredstem, deredfoundpronstems)
           pagemsg("Adding adjectival dereduced stem mapping %s->%s" % (
-            deredstem, ",".join(unicode(x) for x in deredfoundpronstems)))
+            deredstem, ",".join(str(x) for x in deredfoundpronstems)))
     # Also check for verbal stem; peel off parts that don't occur in all
     # forms of the verb
     verb_ending_regex = (
@@ -467,13 +467,13 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
           lambda x:re.sub(verb_ending_regex, "", x))
       append_stem_foundstems(verbstem, foundpronstems)
       pagemsg("Adding verbal stem mapping %s->%s" % (
-        verbstem, ",".join(unicode(x) for x in foundpronstems)))
+        verbstem, ",".join(str(x) for x in foundpronstems)))
       iotstem = com.iotate(verbstem)
       iotfoundpronstems = frob_foundprons(foundpronstems,
           lambda x:com.iotate(x))
       append_stem_foundstems(iotstem, iotfoundpronstems)
       pagemsg("Adding verbal iotated stem mapping %s->%s" % (
-        iotstem, ",".join(unicode(x) for x in iotfoundpronstems)))
+        iotstem, ",".join(str(x) for x in iotfoundpronstems)))
 
     matches_stems[hpron] = stems
 
@@ -496,7 +496,7 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
 def get_lemmas_of_form_page(parsed):
   lemmas = set()
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
+    tname = str(t.name)
     first_param = None
     if (tname in ["inflection of", "comparative of", "superlative of"]):
       first_param = get_first_param(t)
@@ -555,7 +555,7 @@ def lookup_pronun_mapping(parsed, pagemsg):
         if pretext or posttext:
           pagemsg("WARNING: pre-text or post-text with %s: %s" % (pron_temp_name, wholeline))
         ipa_t = blib.parse_text(ipa_temp_text).filter_templates()[0]
-        assert unicode(ipa_t.name) == pron_temp_name
+        assert str(ipa_t.name) == pron_temp_name
         foundpronun = com.add_monosyllabic_stress(getparam(ipa_t, "1"))
         foundpronuns.append(FoundPronun(foundpronun, pretext, posttext))
       pronunmapping = match_headword_and_found_pronuns(headwords, foundpronuns,
@@ -568,7 +568,7 @@ def lookup_pronun_mapping(parsed, pagemsg):
     # where PRONUN may be PRON or [PRE]PRON or PRON[POST] or [PRE]PRON[POST]
     pagemsg("For lemma %s, found pronun mapping %s%s" % (lemma, "None" if
       pronunmapping is None else "(empty)" if not pronunmapping else ",".join(
-        "%s->(%s)" % (hpron, ",".join("%s:%s" % (stem, "/".join(unicode(x) for x in foundprons))
+        "%s->(%s)" % (hpron, ",".join("%s:%s" % (stem, "/".join(str(x) for x in foundprons))
           for stem, foundprons in stem_foundprons))
         for hpron, stem_foundprons in pronunmapping.iteritems()),
       cached and " (cached)" or ""))
@@ -660,7 +660,7 @@ def process_section(section, indentlevel, headword_pronuns,
             "WARNING: Cyrillic pronunciation %s contains Latin characters, skipping" %
             pronun)
 
-      pronun_for_comment = unicode(FoundPronun(pronun, pre, post))
+      pronun_for_comment = str(FoundPronun(pronun, pre, post))
       if pronun_for_comment not in pronuns_for_comment:
         pronuns_for_comment.append(pronun_for_comment)
 
@@ -730,12 +730,12 @@ def process_section(section, indentlevel, headword_pronuns,
     for hpron, stem_foundprons in pronunmapping.iteritems():
       if hpron not in matched_hpron:
         pagemsg("WARNING: Unable to match mapping %s->(%s) in non-lemma form(s)"
-          % (hpron, ",".join("%s:%s" % (stem, "/".join(unicode(x) for x in foundprons))
+          % (hpron, ",".join("%s:%s" % (stem, "/".join(str(x) for x in foundprons))
             for stem, foundprons in stem_foundprons)))
         was_unable_to_match = True
 
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
+    tname = str(t.name)
     if tname in ["%s-IPA-manual" % args.lang]:
       pagemsg("WARNING: Found %s template, skipping" % tname)
       return None
@@ -781,8 +781,8 @@ def process_section(section, indentlevel, headword_pronuns,
 
   parsed = blib.parse_text(section)
   for t in parsed.filter_templates():
-    if unicode(t.name) == pron_temp_name:
-      origt = unicode(t)
+    if str(t.name) == pron_temp_name:
+      origt = str(t)
       arg1 = getparam(t, "1") or pagetitle
       newarg1, their_notes = canonicalize_pronun(arg1, "1")
       if arg1 != newarg1:
@@ -798,10 +798,10 @@ def process_section(section, indentlevel, headword_pronuns,
         rmparam(t, "1")
       else:
         notes.extend(their_notes)
-      newt = unicode(t)
+      newt = str(t)
       if newt != origt:
         pagemsg("Replaced %s with %s" % (origt, newt))
-  section = unicode(parsed)
+  section = str(parsed)
 
   overrode_existing_pronun = False
   if args.override_pronun:
@@ -1117,7 +1117,7 @@ def process_page_text(index, text, pagetitle):
   return text, notes, was_unable_to_match
 
 def process_page(page, index, parsed=None):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
 
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -1138,7 +1138,7 @@ def process_page(page, index, parsed=None):
     pagemsg("WARNING: Page doesn't exist")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   result = process_page_text(index, text, pagetitle)
   if result is None:
     return
@@ -1172,17 +1172,17 @@ def process_lemma(index, pagetitle, forms):
   page = pywikibot.Page(site, pagetitle)
   parsed = blib.parse(page)
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
+    tname = str(t.name)
     tempcall = None
     if tname == "%s-conj" % args.lang:
       tempcall = re.sub(r"^\{\{%s-conj" % args.lang, "{{%s-generate-verb-forms" % args.lang,
-          unicode(t))
+          str(t))
     elif tname == "%s-ndecl" % args.lang:
       tempcall = re.sub(r"^\{\{%s-ndecl" % args.lang, "{{%s-generate-noun-forms" % args.lang,
-          unicode(t))
+          str(t))
     elif tname == "%s-adecl" % args.lang:
       tempcall = re.sub(r"^\{\{%s-adecl" % args.lang, "{{%s-generate-adj-forms" % args.lang,
-          unicode(t))
+          str(t))
     if tempcall:
       result = expand_text(tempcall)
       if not result:
@@ -1345,7 +1345,7 @@ else:
 def subval_to_string(subval):
   if type(subval) is tuple:
     pron, pre, post = subval
-    return unicode(FoundPronun(pron, pre, post))
+    return str(FoundPronun(pron, pre, post))
   else:
     return subval
 

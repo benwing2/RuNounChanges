@@ -49,7 +49,7 @@ def compare_forms(origforms, replforms, ignore_slots, pagemsg):
   return True
 
 def replace_decl(page, index, parsed, decl, declforms, ignore_slots):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   pagemsg("Processing decl {{cs-ndecl|%s}}" % decl)
@@ -91,11 +91,11 @@ def replace_decl(page, index, parsed, decl, declforms, ignore_slots):
       i += 1
 
     if compare_forms(forms, declforms, ignore_slots, pagemsg):
-      origt = unicode(t)
+      origt = str(t)
       t.name = "cs-ndecl"
       del t.params[:]
       t.add("1", decl)
-      newt = unicode(t)
+      newt = str(t)
       ignore_msg = ""
       if ignore_slots:
         ignore_msg = " (ignoring slot%s %s, likely wrong)" % (
@@ -107,7 +107,7 @@ def replace_decl(page, index, parsed, decl, declforms, ignore_slots):
   if not saw_decl:
     pagemsg("WARNING: Didn't see declension")
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Replace manual declensions with given automatic ones")
 parser.add_argument("--declfile", help="File containing replacement declensions", required=True)

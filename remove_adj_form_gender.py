@@ -9,7 +9,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -20,7 +20,7 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title, skipping page")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   foundrussian = False
@@ -36,17 +36,17 @@ def process_page(page, index, parsed):
       # Remove gender from adjective forms
       parsed = blib.parse_text(sections[j])
       for t in parsed.filter_templates():
-        if unicode(t.name) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "adjective form":
-          origt = unicode(t)
+        if str(t.name) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "adjective form":
+          origt = str(t)
           rmparam(t, "g")
           rmparam(t, "g2")
           rmparam(t, "g3")
           rmparam(t, "g4")
-          newt = unicode(t)
+          newt = str(t)
           if origt != newt:
             pagemsg("Replaced %s with %s" % (origt, newt))
             notes.append("remove gender from adjective forms")
-      sections[j] = unicode(parsed)
+      sections[j] = str(parsed)
   new_text = "".join(sections)
 
   return new_text, notes

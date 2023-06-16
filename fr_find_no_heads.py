@@ -33,7 +33,7 @@ def output_heads_seen(overall=False):
     msg("  %s = %s" % (head, count))
 
 def process_page(index, page, save, verbose):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -43,7 +43,7 @@ def process_page(index, page, save, verbose):
   found_page_head = False
   for t in parsed.filter_templates():
     found_this_head = False
-    tname = unicode(t.name)
+    tname = str(t.name)
     if tname in fr_head_templates:
       headname = tname
       found_this_head = True
@@ -51,7 +51,7 @@ def process_page(index, page, save, verbose):
       headtype = getparam(t, "2")
       headname = "head|fr|%s" % headtype
       if headtype in fr_heads_to_warn_about:
-        pagemsg("WARNING: Found %s" % unicode(t))
+        pagemsg("WARNING: Found %s" % str(t))
       found_this_head = True
     if found_this_head:
       cat_head_count[headname] = cat_head_count.get(headname, 0) + 1

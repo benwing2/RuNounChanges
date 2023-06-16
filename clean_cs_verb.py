@@ -19,7 +19,7 @@ def process_text_on_page(index, pagetitle, text):
       return getparam(t, param)
     tn = tname(t)
     if tn == "cs-verb-old":
-      origt = unicode(t)
+      origt = str(t)
       inf = getp("inf")
       if inf:
         t.add("head", inf, before="inf")
@@ -52,10 +52,10 @@ def process_text_on_page(index, pagetitle, text):
       rmparam(t, "2")
       rmparam(t, "3")
       blib.set_template_name(t, "cs-verb")
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
       notes.append("rename {{cs-verb-old}} to {{cs-verb}} and standardize params")
 
-  text = unicode(parsed)
+  text = str(parsed)
   return text, notes
 
 parser = blib.create_argparser("Rename {{cs-verb-old}} to {{cs-verb}} and clean/standardize parameters", include_pagefile=True, include_stdin=True)

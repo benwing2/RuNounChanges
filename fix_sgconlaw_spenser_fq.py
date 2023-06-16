@@ -103,7 +103,7 @@ def process_text_on_page(index, pagename, text):
     t.add("passage", text)
     blib.set_template_name(t, "RQ:Spenser Faerie Queene")
     notes.append("reformat {{RQ:Spenser FQ}} into {{RQ:Spenser Faerie Queene}}")
-    return unicode(t) + "\n"
+    return str(t) + "\n"
 
   curtext = re.sub(r"(\{\{RQ:Spenser FQ\|.*?\}\})\n#+\*: (.*?)\n",
       replace_spenser_fq, curtext)

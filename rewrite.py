@@ -7,13 +7,13 @@ from arabiclib import reorder_shadda
 
 def process_page(page, index, refrom, reto, pagetitle_sub, comment, lang_only,
     warn_on_no_replacement, verbose, do_reorder_shadda):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     blib.msg("Page %s %s: %s" % (index, pagetitle, txt))
   if verbose:
     blib.msg("Processing %s" % pagetitle)
   #blib.msg("From: [[%s]], To: [[%s]]" % (refrom, reto))
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
   if do_reorder_shadda:
     text = reorder_shadda(text)

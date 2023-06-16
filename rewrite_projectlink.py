@@ -22,17 +22,17 @@ def process_text_on_page(index, pagetitle, text):
   notes = []
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     def getp(param):
       return getparam(t, param)
     tn = tname(t)
     if tn == "projectlink":
       project = getp("1")
       if "{" in project:
-        pagemsg("WARNING: Saw brace in 1=, not changing: %s" % unicode(t))
+        pagemsg("WARNING: Saw brace in 1=, not changing: %s" % str(t))
         continue
       elif not project:
-        pagemsg("WARNING: Saw blank 1=, not changing: %s" % unicode(t))
+        pagemsg("WARNING: Saw blank 1=, not changing: %s" % str(t))
         continue
       project = re.sub("^[Ww]iki", "", project)
       movelang = False
@@ -76,7 +76,7 @@ def process_text_on_page(index, pagetitle, text):
       elif project == "meta":
         newname = "R:metawiki"
       else:
-        pagemsg("WARNING: Unknown project '%s', not changing: %s" % (project, unicode(t)))
+        pagemsg("WARNING: Unknown project '%s', not changing: %s" % (project, str(t)))
         continue
       # FIXME, eliminate disambig, dab manually
       if movelang:
@@ -87,7 +87,7 @@ def process_text_on_page(index, pagetitle, text):
         named_params = []
         for param in t.params:
           pn = pname(param)
-          pv = unicode(param.value)
+          pv = str(param.value)
           if pn not in ["1", "2", "e", "lang"]:
             named_params.append((pn, pv))
         del t.params[:]
@@ -127,10 +127,10 @@ def process_text_on_page(index, pagetitle, text):
       else:
         notes.append("rename {{projectlink|%s}} -> {{%s}}" % (project, newname))
 
-    if origt != unicode(t):
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if origt != str(t):
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Rewrite {{projectlink}}", include_pagefile=True, include_stdin=True)
 args = parser.parse_args()

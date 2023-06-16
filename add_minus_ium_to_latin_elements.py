@@ -9,7 +9,7 @@ from blib import getparam, rmparam, tname, msg, site
 import lalib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -25,7 +25,7 @@ def process_page(page, index, parsed):
 
   num_ndecl_templates = 0
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "la-ndecl":
       num_ndecl_templates += 1
@@ -39,13 +39,13 @@ def process_page(page, index, parsed):
       if ".-ium" not in spec:
         spec += ".-ium"
         t.add("1", "%s<%s>" % (lemma, spec))
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("add .-ium to declension of Latin chemical element")
   if num_ndecl_templates > 1:
     pagemsg("WARNING: Saw multiple {{la-ndecl}} templates, some may not be elements")
     return None, None
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Add missing .-ium to Latin elements",
     include_pagefile=True)

@@ -34,7 +34,7 @@ def process_text_on_page(index, pagetitle, text):
             show_failure(pagemsg, fa_translit.num_succeeded, fa_translit.num_failed)
         else:
           printed_succeeded_failed = False
-        pagemsg("Processing %s" % unicode(obj.t))
+        pagemsg("Processing %s" % str(obj.t))
         return fa_translit.test_with_obj(obj, latin, foreign, "matched")
       foreign = None
       latin = None

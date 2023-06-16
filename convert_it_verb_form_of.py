@@ -119,7 +119,7 @@ def process_text_on_page(index, pagetitle, pagetext):
       seen_infs = set()
       parts = []
       for t in parsed.filter_templates():
-        origt = unicode(t)
+        origt = str(t)
         def getp(param):
           return getparam(t, param)
         tn = tname(t)
@@ -161,7 +161,7 @@ def process_text_on_page(index, pagetitle, pagetext):
           blib.set_template_name(t, "User:Benwing2/it-verb form of")
           del t.params[:]
           t.add("1", conj)
-          newtemp = unicode(t)
+          newtemp = str(t)
           expansion = expand_text(newtemp)
           if expansion is not False and expansion not in expansions:
             expansions.append(expansion)
@@ -190,7 +190,7 @@ def process_text_on_page(index, pagetitle, pagetext):
         if id:
           t.add("id", id)
         t.add("noheadword", "1")
-        newtemp = unicode(t)
+        newtemp = str(t)
         parts.append("# " + newtemp + extra_text + "\n")
       if must_continue:
         continue
@@ -239,15 +239,15 @@ def process_text_on_page(index, pagetitle, pagetext):
       for t in parsed.filter_templates():
         tn = tname(t)
         if tn in ["it-verb", "it-verb-rfc", "it-conj", "it-conj-rfc"]:
-          pagemsg("WARNING: Saw verb form along with verb, skipping: %s" % (unicode(t)))
+          pagemsg("WARNING: Saw verb form along with verb, skipping: %s" % (str(t)))
           must_continue = True
           break
         if tn == "head" and getparam(t, "1") != "it":
-          pagemsg("WARNING: Saw {{head}} for wrong language, skipping: %s" % (unicode(t)))
+          pagemsg("WARNING: Saw {{head}} for wrong language, skipping: %s" % (str(t)))
           must_continue = True
           break
         if tn == "head" and getparam(t, "2") != "verb form":
-          pagemsg("WARNING: Saw {{head}} for wrong part of speech, skipping: %s" % (unicode(t)))
+          pagemsg("WARNING: Saw {{head}} for wrong part of speech, skipping: %s" % (str(t)))
           must_continue = True
           break
         subsections[k] = do_sectext(subsections[k], subsections[k - 1])

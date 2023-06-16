@@ -95,10 +95,10 @@ def process_text_on_page(index, pagetitle, text):
     for t in parsed.filter_templates():
       tn = tname(t)
       if tn in ["cs-ndecl", "cs-adecl"]:
-        pagemsg("find_decl_args: Found decl template: %s" % unicode(t))
+        pagemsg("find_decl_args: Found decl template: %s" % str(t))
         decl_templates.append(t)
       if tn in ["cs-noun", "cs-proper noun"]:
-        pagemsg("find_decl_args: Found headword template: %s" % unicode(t))
+        pagemsg("find_decl_args: Found headword template: %s" % str(t))
         headword_templates.append(t)
 
     if not decl_templates:
@@ -133,7 +133,7 @@ def process_text_on_page(index, pagetitle, text):
             (wordind, lemma, infl))
         return
 
-    pagemsg("find_decl_args: Using decl template: %s" % unicode(decl_template))
+    pagemsg("find_decl_args: Using decl template: %s" % str(decl_template))
     if tname(decl_template) == "cs-adecl":
       return "+", "adj"
 
@@ -166,7 +166,7 @@ def process_text_on_page(index, pagetitle, text):
     pagemsg("WARNING: Can't find headword template, skipping")
     return
 
-  pagemsg("Found headword template: %s" % unicode(headword_template))
+  pagemsg("Found headword template: %s" % str(headword_template))
 
   headword_is_proper = tname(headword_template) == "cs-proper noun"
 
@@ -176,7 +176,7 @@ def process_text_on_page(index, pagetitle, text):
 
   rfinfl = "{{rfinfl|cs|%s}}" % ("proper noun" if headword_is_proper else "noun")
   def print_from_to():
-    pagemsg("<from> %s <to> %s <end> <from> %s <to> %s <end>" % (rfinfl, rfinfl, unicode(headword_template), unicode(headword_template)))
+    pagemsg("<from> %s <to> %s <end> <from> %s <to> %s <end>" % (rfinfl, rfinfl, str(headword_template), str(headword_template)))
 
   headword = getparam(headword_template, "head")
   saw_explicit_headword = not not headword
@@ -359,7 +359,7 @@ def process_text_on_page(index, pagetitle, text):
 
   new_decl_template = "{{cs-ndecl|%s}}" % "".join(decl_parts)
   pagemsg("Generated new declension template %s" % new_decl_template)
-  new_headword_template = unicode(headword_template)
+  new_headword_template = str(headword_template)
   if not saw_explicit_headword:
     new_headword = "".join(headword_parts)
     potential_new_headword_template = re.sub(r"\}\}$", "|head=%s}}" % "".join(new_headword), new_headword_template)
@@ -370,7 +370,7 @@ def process_text_on_page(index, pagetitle, text):
       new_headword_template = potential_new_headword_template
   gender = None
   def new_print_from_to():
-    pagemsg("<from> %s <to> %s <end> <from> %s <to> %s <end>" % (rfinfl, new_decl_template, unicode(headword_template), new_headword_template))
+    pagemsg("<from> %s <to> %s <end> <from> %s <to> %s <end>" % (rfinfl, new_decl_template, str(headword_template), new_headword_template))
   if noun_decl is not None:
     if noun_decl.startswith("m.an"):
       gender = "m-an"

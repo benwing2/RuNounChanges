@@ -33,23 +33,23 @@ def process_text_on_page(index, pagetitle, text):
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     def getp(param):
       return getparam(t, param)
     if tn in ["it-pr"]:
-      pagemsg("Saw %s" % unicode(t))
+      pagemsg("Saw %s" % str(t))
       if getp("2"):
-        pagemsg("Skipping multiple pronunciations: %s" % unicode(t))
+        pagemsg("Skipping multiple pronunciations: %s" % str(t))
         continue
       pron = getp("1")
       if not pron:
         continue
       origpron = pron
       if "," in pron:
-        pagemsg("Skipping multiple pronunciations: %s" % unicode(t))
+        pagemsg("Skipping multiple pronunciations: %s" % str(t))
         continue
       if "*" in pron or "!" in pron or u"°" in pron:
-        pagemsg("Skipping pron with initial/final symbol: %s" % unicode(t))
+        pagemsg("Skipping pron with initial/final symbol: %s" % str(t))
         continue
       m = re.search("^(.*?)(<.*>)$", pron)
       if m:
@@ -69,11 +69,11 @@ def process_text_on_page(index, pagetitle, text):
         if not pron_phonemic:
           continue
         if default_phonemic == pron_phonemic:
-          pagemsg("Respelling '%s' produces phonemic /%s/, same as default: %s" % (pron, pron_phonemic, unicode(t)))
+          pagemsg("Respelling '%s' produces phonemic /%s/, same as default: %s" % (pron, pron_phonemic, str(t)))
           pron = "+"
         else:
           pagemsg("Respelling '%s' produces phonemic /%s/, while pagename as respelling produces /%s/: %s"
-              % (pron, pron_phonemic, default_phonemic, unicode(t)))
+              % (pron, pron_phonemic, default_phonemic, str(t)))
       newpron = pron + mods
       if newpron == "+":
         newpron = ""
@@ -85,10 +85,10 @@ def process_text_on_page(index, pagetitle, text):
         else:
           t.add("1", newpron)
           notes.append("replace defaultable respelling '%s' with + in {{it-pr}}" % orig_base_pron)
-      if unicode(t) != origt:
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if str(t) != origt:
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Remove redundant respellings in {{it-pr}}",
   include_pagefile=True, include_stdin=True)

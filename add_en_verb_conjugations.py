@@ -149,17 +149,17 @@ def process_text_on_page(index, pagename, text, verbs):
     parsed = blib.parse_text(text)
     for t in parsed.filter_templates():
       tn = tname(t)
-      origt = unicode(t)
+      origt = str(t)
       if tn == "head" and getparam(t, "1") == "en" and getparam(t, "2") == "verb":
         if getparam(t, "3"):
-          pagemsg("WARNING: Already has 3=, not touching: %s" % unicode(t))
+          pagemsg("WARNING: Already has 3=, not touching: %s" % str(t))
           continue
         blib.set_template_name(t, "en-verb")
         t.add("1", verbs[pagename])
         rmparam(t, "2")
         notes.append("convert {{head|en|verb}} of multiword expression to {{en-verb}}")
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
   else:
     first, rest = pagename.split(" ", 1)
@@ -170,10 +170,10 @@ def process_text_on_page(index, pagename, text, verbs):
     parsed = blib.parse_text(text)
     for t in parsed.filter_templates():
       tn = tname(t)
-      origt = unicode(t)
+      origt = str(t)
       if tn == "head" and getparam(t, "1") == "en" and getparam(t, "2") == "verb":
         if getparam(t, "3"):
-          pagemsg("WARNING: Already has 3=, not touching: %s" % unicode(t))
+          pagemsg("WARNING: Already has 3=, not touching: %s" % str(t))
           continue
         blib.set_template_name(t, "en-verb")
         done = False
@@ -256,10 +256,10 @@ def process_text_on_page(index, pagename, text, verbs):
         rmparam(t, "2")
 
         notes.append("convert {{head|en|verb}} of multiword expression to {{en-verb}}")
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert {{head|en|verb}} to {{en-verb}} with specified conjugation",
     include_pagefile=True, include_stdin=True)

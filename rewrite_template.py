@@ -32,7 +32,7 @@ def process_text_on_page(index, pagetitle, text, templates, new_names, params_to
     return value
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     def getp(param):
       return getparam(t, param).strip()
@@ -127,10 +127,10 @@ def process_text_on_page(index, pagetitle, text, templates, new_names, params_to
             if param_to_insert > local_last_param_inserted:
               # add blank params to avoid leading a gap between last param so far and new params
               for i in range(max(max_existing_numeric_param, local_last_param_inserted) + 1, param_to_insert):
-                new_params.append((unicode(i + local_param_offset), ""))
+                new_params.append((str(i + local_param_offset), ""))
               values_to_insert = [substitute_in_value(v) for v in values_to_insert]
               for i, value_to_insert in enumerate(values_to_insert):
-                new_params.append((unicode(param_to_insert + local_param_offset + i), value_to_insert))
+                new_params.append((str(param_to_insert + local_param_offset + i), value_to_insert))
               notes.append("insert %s=%s into {{%s}}" % (param_to_insert, "|".join(values_to_insert), tn))
               local_last_param_inserted = param_to_insert
               # subtract one because we're not inserting a param after the numeric params just inserted
@@ -139,18 +139,18 @@ def process_text_on_page(index, pagetitle, text, templates, new_names, params_to
           insert_remaining_numeric_params()
         for param in t.params:
           pn = pname(param)
-          pv = unicode(param.value)
+          pv = str(param.value)
           if re.search("^[0-9]+$", pn):
             pnint = int(pn)
             for param_to_insert, values_to_insert in params_to_insert:
               values_to_insert = [substitute_in_value(v) for v in values_to_insert]
               if param_to_insert > last_param_inserted and param_to_insert <= pnint:
                 for i, value_to_insert in enumerate(values_to_insert):
-                  new_params.append((unicode(param_to_insert + param_offset + i), value_to_insert))
+                  new_params.append((str(param_to_insert + param_offset + i), value_to_insert))
                 notes.append("insert %s=%s into {{%s}}" % (param_to_insert, "|".join(values_to_insert), tn))
                 last_param_inserted = param_to_insert
                 param_offset += len(values_to_insert)
-            new_params.append((unicode(pnint + param_offset), pv))
+            new_params.append((str(pnint + param_offset), pv))
             if pnint == max_existing_numeric_param:
               insert_remaining_numeric_params()
           else:
@@ -164,10 +164,10 @@ def process_text_on_page(index, pagetitle, text, templates, new_names, params_to
         blib.set_template_name(t, new_name)
         notes.append("rename {{%s}} to {{%s}}" % (tn, new_name))
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), comment or notes
+  return str(parsed), comment or notes
 
 pa = blib.create_argparser("Rewrite templates, possibly renaming params or the template itself, or removing params",
   include_pagefile=True, include_stdin=True)

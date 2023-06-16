@@ -63,13 +63,13 @@ def process_text_on_page(index, pagetitle, text):
           readings = [re.sub("[<-].*", "", r) for r in readings]
           if reading in readings:
             reading_type = canonicalize_reading_types.get(reading_type, reading_type)
-            pagemsg_with_spelling("Appending reading type %s based on %s" % (reading_type, unicode(t)))
+            pagemsg_with_spelling("Appending reading type %s based on %s" % (reading_type, str(t)))
             if reading_type not in reading_types:
               reading_types.append(reading_type)
               notes.append("add %s reading based on {{%s-readings}} on page [[%s]]" % (reading_type, langcode, spelling))
       if not reading_types:
         pagemsg_with_spelling("WARNING: Can't find reading %s among readings listed in %s" %
-          (reading, unicode(t).replace("\n", r"\n")))
+          (reading, str(t).replace("\n", r"\n")))
 
   if not saw_readings_template:
     pagemsg_with_spelling("WARNING: Couldn't find reading template {{%s-readings}}" % langcode)
@@ -81,7 +81,7 @@ def process_text_on_page(index, pagetitle, text):
     pagemsg_with_spelling("WARNING: Can't find reading %s on page" % reading)
 
   for i, contents_page in blib.cat_articles(re.sub("^Category:", "", pagetitle)):
-    contents_title = unicode(contents_page.title())
+    contents_title = str(contents_page.title())
     def pagemsg_with_contents(txt):
       pagemsg("%s: %s" % (contents_title, txt))
     def errandpagemsg_with_contents(txt):
@@ -127,11 +127,11 @@ def process_text_on_page(index, pagetitle, text):
             readings.append(contents_reading)
         if len(kanji_in_contents_title) != len(readings):
           pagemsg_with_contents("WARNING: Saw %s chars in contents title but %s readings %s, skipping: %s" % (
-            len(kanji_in_contents_title), len(readings), ",".join(readings), unicode(t)))
+            len(kanji_in_contents_title), len(readings), ",".join(readings), str(t)))
           continue
         yomi = getparam(t, "yomi")
         if not yomi:
-          pagemsg_with_contents("WARNING: No yomi, skipping: %s" % unicode(t))
+          pagemsg_with_contents("WARNING: No yomi, skipping: %s" % str(t))
           continue
         if "," in yomi or re.search("[0-9]$", yomi):
           yomi = yomi.split(",")
@@ -150,7 +150,7 @@ def process_text_on_page(index, pagetitle, text):
           yomi = expanded_yomi
         if type(yomi) is list and len(yomi) != len(kanji_in_contents_title):
           pagemsg_with_contents("WARNING: %s values in yomi=%s but %s chars in contents, skipping: %s" % (
-            len(yomi), ",".join(yomi), len(kanji_in_contents_title), unicode(t)))
+            len(yomi), ",".join(yomi), len(kanji_in_contents_title), str(t)))
           continue
         saw_spelling_in_contents = False
         must_continue = False
@@ -188,23 +188,23 @@ def process_text_on_page(index, pagetitle, text):
                 "irregular": "irregular",
               }
               if reading_type not in yomi_to_canonical_reading_type:
-                pagemsg_with_contents("WARNING: Unrecognized reading type %s: %s" % (reading_type, unicode(t)))
+                pagemsg_with_contents("WARNING: Unrecognized reading type %s: %s" % (reading_type, str(t)))
                 must_continue = True
                 break
               reading_type = yomi_to_canonical_reading_type[reading_type]
               if reading_type not in allowed_reading_types:
-                pagemsg_with_contents("WARNING: Disallowed reading type %s: %s" % (reading_type, unicode(t)))
+                pagemsg_with_contents("WARNING: Disallowed reading type %s: %s" % (reading_type, str(t)))
                 must_continue = True
                 break
               reading_type = canonicalize_reading_types.get(reading_type, reading_type)
-              pagemsg_with_contents("Appending reading type %s based on %s" % (reading_type, unicode(t)))
+              pagemsg_with_contents("Appending reading type %s based on %s" % (reading_type, str(t)))
               if reading_type not in reading_types:
                 reading_types.append(reading_type)
                 notes.append("add %s reading based on {{%s-kanjitab}} on page [[%s]]" % (reading_type, langcode, contents_title))
         if must_continue:
           continue
         if not saw_spelling_in_contents:
-          pagemsg_with_contents("WARNING: Didn't see spelling in contents: %s" % unicode(t))
+          pagemsg_with_contents("WARNING: Didn't see spelling in contents: %s" % str(t))
           continue
     if not saw_kanjitab:
       pagemsg_with_contents("WARNING: Didn't see {{%s-kanjitab}}" % langcode)

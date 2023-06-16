@@ -9,13 +9,13 @@ from blib import getparam, rmparam, tname, msg, site
 import lalib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
 
   retval = lalib.find_latin_section(text, pagemsg)
@@ -37,11 +37,11 @@ def process_page(page, index, parsed):
         t.add("1", stem[:-5])
         notes.append("Fix noun in -polis to use {{la-decl-3rd-polis}}")
       else:
-        pagemsg("WARNING: Found la-decl-3rd-I without stem in -polis: %s" % unicode(t))
+        pagemsg("WARNING: Found la-decl-3rd-I without stem in -polis: %s" % str(t))
     elif tn == "la-noun":
       blib.set_template_name(t, "la-proper noun")
 
-  secbody = unicode(parsed).replace("==Noun==", "==Proper noun==")
+  secbody = str(parsed).replace("==Noun==", "==Proper noun==")
 
   sections[j] = secbody + sectail
   return "".join(sections), notes

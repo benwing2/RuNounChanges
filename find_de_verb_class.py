@@ -21,21 +21,21 @@ def process_text_on_page(index, pagetitle, text):
 
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     newarg1 = None
     if tn == "de-conj":
-      generate_template = re.sub(r"^\{\{de-conj(?=[|}])", "{{User:Benwing2/de-generate-verb-props", unicode(t))
+      generate_template = re.sub(r"^\{\{de-conj(?=[|}])", "{{User:Benwing2/de-generate-verb-props", str(t))
       result = expand_text(generate_template)
       if not result:
         continue
       forms = blib.split_generate_args(result)
-      pagemsg("For %s, class=%s" % (unicode(t), forms["class"]))
+      pagemsg("For %s, class=%s" % (str(t), forms["class"]))
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert German verb headwords to use new {{de-verb}}",
     include_pagefile=True, include_stdin=True)

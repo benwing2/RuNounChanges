@@ -32,7 +32,7 @@ def link_text(text):
   return "".join(linked_words)
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -42,7 +42,7 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title, skipping")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   def check_bad_head(text, arg):
     canontext = re.sub(u"[׳’]", "'", blib.remove_links(text))
@@ -54,8 +54,8 @@ def process_page(page, index, parsed):
   notes = []
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    name = unicode(t.name)
+    origt = str(t)
+    name = str(t.name)
     if name in fr_head_templates:
       head = getparam(t, "head")
       if head:
@@ -81,11 +81,11 @@ def process_page(page, index, parsed):
           pagemsg("Not removing non-redundant 1=%s" % head)
           check_bad_head(head, "1")
 
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replacing %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Remove redundant head= from French terms",
   include_pagefile=True)

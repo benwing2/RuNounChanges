@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, set_template_name, msg, errandmsg, site, tname
 
 def process_page_for_rename(page, index):
-  pagename = unicode(page.title())
+  pagename = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagename, txt))
   def errandpagemsg(txt):
@@ -31,7 +31,7 @@ def process_page_for_rename(page, index):
 
 
 def process_page_for_fix(page, index, parsed):
-  pagename = unicode(page.title())
+  pagename = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagename, txt))
   def errandpagemsg(txt):
@@ -41,7 +41,7 @@ def process_page_for_fix(page, index, parsed):
 
   notes = []
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   newtext = re.sub(r"\[\[(.*?)\]\]", r"{{l|kmr|\1}}", text)
   if newtext != text:
@@ -50,16 +50,16 @@ def process_page_for_fix(page, index, parsed):
 
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in ["l", "rhymes nav"] and getparam(t, "1") == "ku":
       t.add("1", "kmr")
       notes.append("convert {{%s|ku}} to {{%s|kmr}}" % (tn, tn))
     elif getparam(t, "1") == "ku":
-      pagemsg("WARNING: Kurdish-language template of unrecognized name: %s" % unicode(t))
-    if origt != unicode(t):
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-  text = unicode(parsed)
+      pagemsg("WARNING: Kurdish-language template of unrecognized name: %s" % str(t))
+    if origt != str(t):
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
+  text = str(parsed)
 
   return text, notes
 

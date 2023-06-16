@@ -7,7 +7,7 @@ from blib import getparam, rmparam, msg, errmsg, errandmsg, site
 import pywikibot, re, sys, codecs, argparse
 
 def process_page(index, page, contents, lang, verbose, comment):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):

@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site, tname, pname
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -15,16 +15,16 @@ def process_page(page, index, parsed):
 
   notes = []
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     if tn == "head" and getparam(t, "1") == "ang" and getparam(t, "2") in ["adjective", "adjectives"]:
       for param in t.params:
         pn = pname(param)
         if pn not in ["1", "2", "head"]:
-          pagemsg("WARNING: head|ang|adjective with extra params: %s" % unicode(t))
+          pagemsg("WARNING: head|ang|adjective with extra params: %s" % str(t))
           break
       else:
         # no break
@@ -51,8 +51,8 @@ def process_page(page, index, parsed):
           t.add("2", "")
         t.add("3", param4)
         notes.append("move 4= to 3= in {{ang-adj}}")
-    if unicode(t) != origt:
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
   return parsed, notes
 
 parser = blib.create_argparser("Fix Old English adjective headwords to new format",

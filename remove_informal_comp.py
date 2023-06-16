@@ -7,18 +7,18 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    if unicode(t.name) == "ru-adj":
+    origt = str(t)
+    if str(t.name) == "ru-adj":
       comps = blib.fetch_param_chain(t, "2", "comp")
       newcomps = []
       for comp in comps:
@@ -34,11 +34,11 @@ def process_page(page, index, parsed):
           newcomps.append(comp)
       if comps != newcomps:
         blib.set_param_chain(t, newcomps, "2", "comp")
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Remove informal comparatives from adjectives when regular comparative present",
   include_pagefile=True)

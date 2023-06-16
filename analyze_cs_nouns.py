@@ -159,7 +159,7 @@ def process_text_on_page(index, pagetitle, text):
             break
         else: # no break
           pagemsg("WARNING: Couldn't recognize ending for %s=%s: %s" % (
-            param, paramval, unicode(t)))
+            param, paramval, str(t)))
       return join_endings(found_endings) if join else found_endings
 
     def canon(val):
@@ -611,7 +611,7 @@ def process_text_on_page(index, pagetitle, text):
       ins_pl = fetch("ins_pl")
       if not nom_pl and not gen_pl and not dat_pl and not acc_pl and not voc_pl and not loc_pl and not ins_pl:
         pagemsg("WARNING: {{cs-decl-noun}} wrongly used for singulare tantum, proceeding as if {{cs-decl-noun-sg}} specified: %s"
-          % unicode(t))
+          % str(t))
         tn = "cs-decl-noun-sg"
 
     if tn == "cs-decl-noun":

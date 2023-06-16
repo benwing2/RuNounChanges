@@ -39,7 +39,7 @@ def process_text_on_page(index, pagename, text):
     t.add("passage", text)
     blib.set_template_name(t, "RQ:Homer Chapman Iliads")
     notes.append("reformat {{RQ:Chapman Iliad}} into {{RQ:Homer Chapman Iliads}}")
-    return unicode(t) + "\n"
+    return str(t) + "\n"
 
   curtext = re.sub(r"(\{\{RQ:Chapman Iliad.*?\}\})\n#+\*:\s*(.*?)\n",
       replace_chapman_iliad, curtext)

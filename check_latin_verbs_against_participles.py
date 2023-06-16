@@ -18,7 +18,7 @@ def check_participle(form, pagemsg):
   page = pywikibot.Page(site, lalib.remove_macrons(form))
   if not blib.safe_page_exists(page, pagemsg):
     pagemsg("Skipping nonexistent page")
-  parsed = blib.parse_text(unicode(page.text))
+  parsed = blib.parse_text(str(page.text))
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn == "la-part":
@@ -29,7 +29,7 @@ def check_participle(form, pagemsg):
 
 def process_page(page, index):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -39,12 +39,12 @@ def process_page(page, index):
 
   pagemsg("Processing")
 
-  parsed = blib.parse_text(unicode(page.text))
+  parsed = blib.parse_text(str(page.text))
 
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn == "la-conj":
-      vargs = lalib.generate_verb_forms(unicode(t), errandpagemsg,
+      vargs = lalib.generate_verb_forms(str(t), errandpagemsg,
         expand_text)
       for partslot in ["pres_actv_ptc", "perf_actv_ptc", "perf_pasv_ptc",
           "futr_actv_ptc", "futr_pasv_ptc"]:

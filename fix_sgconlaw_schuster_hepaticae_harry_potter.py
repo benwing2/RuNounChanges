@@ -19,14 +19,14 @@ def rsub_repeatedly(fr, to, text):
     text = newtext
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
   notes = []
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   newtext = rsub_repeatedly(r"\n(:?#+)\* \{\{RQ:Schuster Hepaticae V\|(.*)\}\}:?\n\1\*: (.*)(\n|$)",
       r"\n\1* {{RQ:Schuster Hepaticae|volume=V|page=\2|text=\3}}\4",

@@ -4091,7 +4091,7 @@ templates_to_rename_specs = (
 )
 
 def rewrite_to_foo_form_of(t, pagemsg, comment):
-  origt = unicode(t)
+  origt = str(t)
   tn = tname(t)
   if tn == "inflection of":
     pos = getparam(t, "p")
@@ -4107,19 +4107,19 @@ def rewrite_to_foo_form_of(t, pagemsg, comment):
   newtn = tname(t)
   if newtn != tn:
     comment = re.sub(r"(to|with \{\{)%s([|\}])" % tn, r"\1%s\2" % newtn, comment)
-  if unicode(t) != origt:
+  if str(t) != origt:
     pagemsg("rewrite_to_foo_form_of: Replaced %s with %s" %
-      (origt, unicode(t)))
+      (origt, str(t)))
 
   return t, comment
 
 def rewrite_to_participle_of(t, pagemsg, comment):
-  origt = unicode(t)
+  origt = str(t)
   tn = tname(t)
   if tn in ["inflection of", "verb form of"]:
     max_numbered = 0
     for param in t.params:
-      pname = unicode(param.name).strip()
+      pname = str(param.name).strip()
       if re.search("^[0-9]$", pname) and int(pname) > max_numbered:
         max_numbered = int(pname)
     if getparam(t, str(max_numbered)) == "part":
@@ -4129,21 +4129,21 @@ def rewrite_to_participle_of(t, pagemsg, comment):
   if newtn != tn:
     comment = re.sub(r"(to|with \{\{)%s([|\}])" % tn, r"\1%s\2" % newtn, comment)
 
-  if unicode(t) != origt:
+  if str(t) != origt:
     pagemsg("rewrite_to_participle_of: Replaced %s with %s" %
-      (origt, unicode(t)))
+      (origt, str(t)))
 
   return t, comment
 
 def rewrite_person_number_of(t, pagemsg, comment):
-  origt = unicode(t)
+  origt = str(t)
   tn = tname(t)
   if tn in ["inflection of", "verb form of", "noun form of", "adj form of",
       "participle of"]:
     first_rewrite_param = None
     first_rewrite_val = None
     for param in t.params:
-      pname = unicode(param.name).strip()
+      pname = str(param.name).strip()
       if re.search("^[0-9]$", pname) and int(pname) > 1:
         pval = getparam(t, pname)
         prevval = getparam(t, str(int(pname) - 1))
@@ -4155,25 +4155,25 @@ def rewrite_person_number_of(t, pagemsg, comment):
       # Fetch all params.
       params = []
       for param in t.params:
-        pname = unicode(param.name).strip()
+        pname = str(param.name).strip()
         if re.search("^[0-9]$", pname):
           if int(pname) < first_rewrite_param:
-            params.append((unicode(param.name), param.value, param.showkey))
+            params.append((str(param.name), param.value, param.showkey))
           elif int(pname) == first_rewrite_param:
-            params.append((unicode(param.name), first_rewrite_val, param.showkey))
+            params.append((str(param.name), first_rewrite_val, param.showkey))
           elif int(pname) >= first_rewrite_param + 2:
             params.append((str(int(pname) - 1), param.value, param.showkey))
         else:
-          params.append((unicode(param.name), param.value, param.showkey))
+          params.append((str(param.name), param.value, param.showkey))
       # Erase all params.
       del t.params[:]
       # Put back new params.
       for pname, pval, showkey in params:
         t.add(pname, pval, showkey=showkey, preserve_spacing=False)
 
-  if unicode(t) != origt:
+  if str(t) != origt:
     pagemsg("rewrite_person_number_of: Replaced %s with %s" %
-      (origt, unicode(t)))
+      (origt, str(t)))
 
   return t, comment
 
@@ -4207,7 +4207,7 @@ def expand_set_value(value, t, pagemsg):
   def check(cond, err):
     if not cond:
       raise BadRewriteSpec("Error expanding set value for template %s: %s; value=%s" %
-          (unicode(t), err, value))
+          (str(t), err, value))
   if callable(value):
     return expand_set_value(value(t, pagemsg), t, pagemsg)
   if isinstance(value, basestring):
@@ -4244,7 +4244,7 @@ def expand_spec(spec, t, pagemsg):
   def check(cond, err):
     if not cond:
       raise BadRewriteSpec("Error expanding spec for template %s: %s; spec=%s" %
-          (unicode(t), err, spec))
+          (str(t), err, spec))
   if callable(spec):
     return expand_spec(spec(t, pagemsg), t, pagemsg)
   check(type(spec) is tuple, "wrong type %s of %s, not tuple" % (type(spec), spec))
@@ -4265,7 +4265,7 @@ def expand_spec(spec, t, pagemsg):
             (len(subspec[1]), subspec[1]))
         allowed_params = set(subspec[1][1])
         for param in t.params:
-          pname = unicode(param.name).strip()
+          pname = str(param.name).strip()
           if pname not in allowed_params:
             raise BadTemplateValue(
                 "Disallowed param %s=%s" % (pname, getparam(t, pname)))
@@ -4369,7 +4369,7 @@ def expand_spec(spec, t, pagemsg):
       # Now, go through all the existing parameters, looking for any
       # parameters that match the `fromparam` spec.
       for param in t.params:
-        pname = unicode(param.name).strip()
+        pname = str(param.name).strip()
         m = re.search("^(.*?)([0-9]*)$", pname)
         pbase, pind = m.groups()
         # For a parameter to match, it must have the same non-numeric base
@@ -4391,7 +4391,7 @@ def expand_spec(spec, t, pagemsg):
             actual_toparam = tobase
           else:
             actual_toparam = "%s%s" % (tobase, actual_toind)
-          expanded_specs.append((actual_toparam, unicode(param.value)))
+          expanded_specs.append((actual_toparam, str(param.value)))
 
     elif subspec[0] == "copyallbut":
       check(len(subspec) == 2, "wrong length %s of subspec %s, != 2" %
@@ -4404,7 +4404,7 @@ def expand_spec(spec, t, pagemsg):
       # if the param ends with a number, only numbered params from that
       # number up will be excluded.
       for param in t.params:
-        pname = unicode(param.name).strip()
+        pname = str(param.name).strip()
         m = re.search("^(.*?)([0-9]*)$", pname)
         pbase, pind = m.groups()
         excludeme = False
@@ -4432,7 +4432,7 @@ def expand_spec(spec, t, pagemsg):
                 break
         if not excludeme:
           expanded_specs.append(
-            (unicode(param.name), unicode(param.value), unicode(param.showkey)))
+            (str(param.name), str(param.value), str(param.showkey)))
 
     elif subspec[0] == "comment":
       check(len(subspec) == 2, "wrong length %s of subspec %s, != 2" %
@@ -4479,17 +4479,17 @@ def process_text_on_page(index, pagetitle, text):
   parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in templates_to_actually_do_set:
       template_spec = templates_to_rename_map[tn]
       try:
         new_name, new_params, comment = expand_spec(template_spec, t, pagemsg)
       except BadTemplateValue as e:
-        pagemsg("WARNING: %s: %s" % (unicode(e.message), origt))
+        pagemsg("WARNING: %s: %s" % (str(e.message), origt))
         continue
       except BadRewriteSpec as e:
-        errandmsg("INTERNAL ERROR: %s: Processing template %s" % (unicode(e.message), origt))
+        errandmsg("INTERNAL ERROR: %s: Processing template %s" % (str(e.message), origt))
         pagemsg("Spec being processed:")
         pprint.pprint(template_spec)
         traceback.print_exc()
@@ -4512,10 +4512,10 @@ def process_text_on_page(index, pagetitle, text):
 
       notes.append(comment)
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  text = unicode(parsed)
+  text = str(parsed)
 
   if args.lang_for_combine_inflection_of:
     retval = blib.find_modifiable_lang_section(text, args.lang_for_combine_inflection_of, pagemsg)
@@ -4528,7 +4528,7 @@ def process_text_on_page(index, pagetitle, text):
     for t in parsed.filter_templates():
       tn = tname(t)
       if tn in infltags.inflection_of_templates:
-        origt = unicode(t)
+        origt = str(t)
         tags, params, lang, term, tr, alt = infltags.extract_tags_and_nontag_params_from_inflection_of(
             t, notes)
         # Now combine adjacent tags into multipart tags.
@@ -4541,16 +4541,16 @@ def process_text_on_page(index, pagetitle, text):
         notes.extend(this_notes)
         infltags.put_back_new_inflection_of_params(t, notes, tags, params, lang, term, tr, alt,
           convert_to_more_specific_template=False)
-        if unicode(t) != origt:
-          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-    secbody = unicode(parsed)
+        if str(t) != origt:
+          pagemsg("Replaced %s with %s" % (origt, str(t)))
+    secbody = str(parsed)
     sections[j] = secbody + sectail
     text = "".join(sections)
 
   return text, notes
 
 def process_page_for_check_ignore(page, index, template, ignore_type):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -4563,7 +4563,7 @@ def process_page_for_check_ignore(page, index, template, ignore_type):
     pagemsg("WARNING: Page has a prefix or suffix indicating it should not be touched, skipping")
     return None, None
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   parsed = blib.parse_text(text)
 
@@ -4571,7 +4571,7 @@ def process_page_for_check_ignore(page, index, template, ignore_type):
     tn = tname(t)
     if tn == template:
       foundit = False
-      for m in re.finditer(r"^(.*?)%s(.*?)$" % re.escape(unicode(t)), text, re.M):
+      for m in re.finditer(r"^(.*?)%s(.*?)$" % re.escape(str(t)), text, re.M):
         foundit = True
         pretext = m.group(1)
         posttext = m.group(2)
@@ -4586,7 +4586,7 @@ def process_page_for_check_ignore(page, index, template, ignore_type):
         elif has_posttext:
           pagemsg("WARNING: Found form-of template with post-text: %s" % m.group(0))
       if not foundit:
-        errandpagemsg("WARNING: Couldn't find form-of template on page: %s" % unicode(t))
+        errandpagemsg("WARNING: Couldn't find form-of template on page: %s" % str(t))
 
 parser = blib.create_argparser("Rename various lang-specific form-of templates to more general variants",
     include_pagefile=True, include_stdin=True)

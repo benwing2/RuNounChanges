@@ -41,7 +41,7 @@ def process_text_on_page(index, pagetitle, text):
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     if tn == "hi-adj":
       headt = t
       if getparam(t, "tr") or getparam(t, "tr2") or getparam(t, "tr3"):
@@ -52,17 +52,17 @@ def process_text_on_page(index, pagetitle, text):
           notes.append("add ind=1 to {{%s}}" % tn)
       else:
         saw_potentially_declinable_adjective = True
-        pagemsg("Skipping potentially declinable adjective: %s" % unicode(t))
-      if unicode(t) != origt:
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        pagemsg("Skipping potentially declinable adjective: %s" % str(t))
+      if str(t) != origt:
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
     elif tn == "hi-adecl":
       saw_hi_adecl = True
   if saw_potentially_declinable_adjective and not saw_hi_adecl:
-    pagemsg("WARNING: Potentially declinable adjective and no declension template: %s" % unicode(headt))
+    pagemsg("WARNING: Potentially declinable adjective and no declension template: %s" % str(headt))
   if saw_potentially_declinable_adjective and saw_hi_adecl and saw_hi_adj_with_translit:
-    pagemsg("WARNING: Declinable adjective with manual translit: %s" % unicode(headt))
+    pagemsg("WARNING: Declinable adjective with manual translit: %s" % str(headt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Add ind=1 to indeclinable adjectives",
   include_pagefile=True, include_stdin=True)

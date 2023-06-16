@@ -25,7 +25,7 @@ def process_text_on_page(index, pagetitle, text):
   parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in ["hi-adj-1"]:
       rmparam(t, "1")
@@ -38,10 +38,10 @@ def process_text_on_page(index, pagetitle, text):
       ):
         blib.set_template_name(t, "hi-adecl")
         notes.append("convert {{%s}} to {{hi-ndecl}}" % tn)
-    if origt != unicode(t):
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if origt != str(t):
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Convert old Hindi adjective declension templates to new ones",
     include_pagefile=True, include_stdin=True)

@@ -129,7 +129,7 @@ def process_text_on_page(index, pagetitle, text):
           tn = tname(t)
           if tn in ["desc", "desctree"]:
             thisline_lang = getparam(t, "1")
-            pagemsg("Saw descendant template %s with lang %s" % (unicode(t), thisline_lang))
+            pagemsg("Saw descendant template %s with lang %s" % (str(t), thisline_lang))
             prevline_lang = langs_at_levels.get(thisline_indent - 1, None)
             if thisline_lang and prevline_lang:
               thisline_main_lang = etym_language_to_parent.get(thisline_lang, thisline_lang)
@@ -165,7 +165,7 @@ def process_text_on_page(index, pagetitle, text):
                   tn, thisline_lang, lang_desc(prevline_lang, prevline_main_lang)))
             langs_at_levels[thisline_indent] = thisline_lang
         if did_mod:
-          line = unicode(parsed)
+          line = str(parsed)
       else:
         langs_at_levels[thisline_indent] = None
     newlines.append(line)

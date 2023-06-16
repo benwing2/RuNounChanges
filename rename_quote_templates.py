@@ -12,7 +12,7 @@ import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site, tname
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -23,7 +23,7 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title and not a recognized namespace to include, skipping page")
     return None, None
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   def move_param(t, fr, to, frob_from=None):
@@ -42,7 +42,7 @@ def process_page(page, index, parsed):
 
       if getparam(t, to).strip():
           pagemsg("WARNING: Would replace %s= -> %s= but %s= is already present: %s"
-              % (fr, to, to, unicode(t)))
+              % (fr, to, to, str(t)))
       elif oldval != newval:
         rmparam(t, to) # in case of blank param
         # If either old or new name is a number, use remove/add to automatically set the
@@ -69,7 +69,7 @@ def process_page(page, index, parsed):
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     changed = False
     if tn in ["quote-magazine", "quote-news"]:
       blib.set_template_name(t, "quote-journal")
@@ -89,12 +89,12 @@ def process_page(page, index, parsed):
       move_param(t, "4", "title")
       move_param(t, "3", "chapter")
       blib.set_template_name(t, "quote-book")
-      changed = origt != unicode(t)
+      changed = origt != str(t)
       if changed:
         notes.append("quote-poem -> quote-book with fixed params")
 
     if changed:
-      pagemsg("Replacing %s with %s" % (origt, unicode(t)))
+      pagemsg("Replacing %s with %s" % (origt, str(t)))
 
   return parsed, notes
 

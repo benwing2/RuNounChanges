@@ -9,7 +9,7 @@ from blib import getparam, rmparam, msg, site
 import rulib
 
 def process_page(index, page, direc):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -18,14 +18,14 @@ def process_page(index, page, direc):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   origdirec = direc
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     direc = origdirec
-    if unicode(t.name) in ["ru-conj-7b"]:
+    if str(t.name) in ["ru-conj-7b"]:
       rmparam(t, "past_m")
       rmparam(t, "past_f")
       rmparam(t, "past_n")
@@ -66,8 +66,8 @@ def process_page(index, page, direc):
           pagemsg("Not removing unpredictable past_actv_part=%s (predicted %s)" %
               (pap, pred_pap))
       for param in t.params:
-        if not re.search("^([0-9]+$|past_pasv_part)", unicode(param.name)):
-          pagemsg("Found additional named param %s" % unicode(param))
+        if not re.search("^([0-9]+$|past_pasv_part)", str(param.name)):
+          pagemsg("Found additional named param %s" % str(param))
       t.add("3", presstem)
       if direc:
         t.add("4", "")
@@ -76,11 +76,11 @@ def process_page(index, page, direc):
       #blib.set_param_chain(t, ppps, "past_pasv_part", "past_pasv_part")
       notes.append("set class-7b verb to directive %s%s" %
           (direc, npp and u" (no ё in present stem)" or ""))
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Fix up class-7b arguments")
 parser.add_argument('--direcfile', help="File containing pages to fix and directives.")

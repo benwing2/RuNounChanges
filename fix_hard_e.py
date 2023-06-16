@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_page(index, page, direc):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   subpagetitle = re.sub(".*:", "", pagetitle)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -15,7 +15,7 @@ def process_page(index, page, direc):
   pagemsg("Processing")
 
   notes = []
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
 
   def frob_gender_param(t, param):
@@ -26,14 +26,14 @@ def process_page(index, page, direc):
       t.add(param, "n-in-p")
 
   for t in parsed.filter_templates():
-    if unicode(t.name) in ["ru-noun+", "ru-noun-table"]:
-      origt = unicode(t)
+    if str(t.name) in ["ru-noun+", "ru-noun-table"]:
+      origt = str(t)
       for param in t.params:
-        if unicode(param.name) != "1":
-          pagemsg("WARNING: Found other than a single param in template, skipping: %s" % unicode(t))
+        if str(param.name) != "1":
+          pagemsg("WARNING: Found other than a single param in template, skipping: %s" % str(t))
           return
       FIXME
-      if origt != unicode(t):
+      if origt != str(t):
         param3 = getparam(t, "3")
         if param3 != "-":
           if fix_indeclinable:
@@ -43,18 +43,18 @@ def process_page(index, page, direc):
             else:
               t.add("3", "-")
               notes.append("make indeclinable")
-              pagemsg("Making indeclinable: %s" % unicode(t))
+              pagemsg("Making indeclinable: %s" % str(t))
           else:
             pagemsg("WARNING: Would add inanimacy to neuter, but isn't marked as indeclinable: %s" % origt)
             return
-        pagemsg("Replacing %s with %s" % (origt, unicode(t)))
+        pagemsg("Replacing %s with %s" % (origt, str(t)))
 
   if notes:
     comment = "Add inanimacy to neuters (%s)" % "; ".join(notes)
   else:
     comment = "Add inanimacy to neuters"
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Fix hard-е nouns according to directives")
 parser.add_argument("--direcfile", help="File listing directives to apply to nouns",

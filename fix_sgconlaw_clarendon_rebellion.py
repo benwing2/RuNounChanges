@@ -38,7 +38,7 @@ def process_text_on_page(index, pagename, text):
     t.add("passage", text)
     blib.set_template_name(t, "RQ:Clarendon History")
     notes.append("reformat {{RQ:Clarendon Rebellion}} into {{RQ:Clarendon History}}")
-    return unicode(t) + "\n"
+    return str(t) + "\n"
 
   curtext = re.sub(r"(\{\{RQ:Clarendon Rebellion.*?\}\})\n#+\*:\s*(.*?)\n",
       replace_clarendon_rebellion, curtext)

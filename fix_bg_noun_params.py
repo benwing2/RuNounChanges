@@ -9,7 +9,7 @@ from blib import getparam, rmparam, msg, site, tname, pname
 import rulib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -17,18 +17,18 @@ def process_page(page, index, parsed):
 
   notes = []
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     if tn == "head" and getparam(t, "1") == "bg" and getparam(t, "2") in [
         "noun", "nouns", "proper noun", "proper nouns"]:
       pos = getparam(t, "2")
       params = []
       for param in t.params:
-        pname = unicode(param.name).strip()
-        pval = unicode(param.value).strip()
+        pname = str(param.name).strip()
+        pval = str(param.value).strip()
         showkey = param.showkey
         if (pname not in ["1", "2", "head", "g", "g2", "g3", "3", "4", "5", "6", "7", "8", "9", "10"] or
             pname == "3" and pval not in ["masculine", "feminine"] or
@@ -136,8 +136,8 @@ def process_page(page, index, parsed):
       rmparam(t, "g3")
       params = []
       for param in t.params:
-        pname = unicode(param.name).strip()
-        pval = unicode(param.value).strip()
+        pname = str(param.name).strip()
+        pval = str(param.value).strip()
         showkey = param.showkey
         if not pval:
           continue
@@ -149,10 +149,10 @@ def process_page(page, index, parsed):
       blib.set_param_chain(t, genders, "2", "g")
       for pname, pval, showkey in params:
         t.add(pname, pval, showkey=showkey, preserve_spacing=False)
-      if origt != unicode(t):
+      if origt != str(t):
         notes.append("move head=/sg= to 1=, g= to 2= in {{%s}}" % tn)
-    if unicode(t) != origt:
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
   return parsed, notes
 
 parser = blib.create_argparser("Fix Bulgarian noun headwords to new format",

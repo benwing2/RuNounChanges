@@ -14,7 +14,7 @@ pos_mapper = {
 }
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -22,14 +22,14 @@ def process_page(page, index, parsed):
   notes = []
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "hu-suffix":
       if getparam(t, "pos2"):
-        pagemsg("Has pos2: %s" % unicode(t))
+        pagemsg("Has pos2: %s" % str(t))
         continue
       if (getparam(t, "3") or getparam(t, "4") or getparam(t, "5") or getparam(t, "6")) and not getparam(t, "nocat"):
-        pagemsg("Has more than one suffix and not nocat=: %s" % unicode(t))
+        pagemsg("Has more than one suffix and not nocat=: %s" % str(t))
         continue
       for i in range(1, 11):
         trnum = getparam(t, "tr%s" % i)
@@ -58,7 +58,7 @@ def process_page(page, index, parsed):
       # Fetch all params.
       params = []
       for param in t.params:
-        pname = unicode(param.name)
+        pname = str(param.name)
         params.append((pname, param.value, param.showkey))
       # Erase all params.
       del t.params[:]
@@ -71,10 +71,10 @@ def process_page(page, index, parsed):
           t.add(name, value, showkey=showkey, preserve_spacing=False)
       blib.set_template_name(t, "affix")
       notes.append("convert {{hu-suffix}} to {{affix}}")
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Clean up {{hu-suffix}}")
 args = parser.parse_args()

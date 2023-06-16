@@ -12,7 +12,7 @@ import clean_latin_long_vowels
 
 def process_page(page, index, parsed):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -36,15 +36,15 @@ def process_page(page, index, parsed):
       if alt:
         if lalib.remove_macrons(alt) != lalib.remove_macrons(term):
           pagemsg("WARNING: alt not same as term modulo macrons: %s" %
-              unicode(t))
+              str(t))
           continue
-        origt = unicode(t)
+        origt = str(t)
         t.add(str(term_param), alt)
         t.add(str(term_param + 1), "")
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("move alt param to term param in Latin {{inflection of}}")
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Move alt form to main form in Latin {{inflection of}}",
   include_pagefile=True)

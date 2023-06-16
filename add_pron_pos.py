@@ -40,7 +40,7 @@ def find_noun_word_types_of_decl(lemma, decl_template, pagemsg):
 
   words = split_words(lemma, False)
 
-  if unicode(decl_template.name) == "ru-decl-adj":
+  if str(decl_template.name) == "ru-decl-adj":
     per_word_types = []
     for i in range(0, len(words) - 1):
       per_word_types.append("inv")
@@ -67,13 +67,13 @@ def find_noun_word_types_of_decl(lemma, decl_template, pagemsg):
           word_types.add("a")
         elif "manual" in arg_set[2]:
           pagemsg("WARNING: Found manually-declined noun in lemma %s, skipping: decl = %s" %
-              (lemma, unicode(decl_template)))
+              (lemma, str(decl_template)))
           return None
         else:
           word_types.add("decln")
       if len(word_types) > 1:
         pagemsg("WARNING: Found multiple declension types %s for word %s in lemma %s, skipping: decl = %s" %
-            (",".join(word_types), word, lemma, unicode(decl_template)))
+            (",".join(word_types), word, lemma, str(decl_template)))
         return None
       per_word_types.append(list(word_types)[0])
     return per_word_types
@@ -88,7 +88,7 @@ def find_noun_word_types_of_decl(lemma, decl_template, pagemsg):
       return per_word_types
 
     pagemsg("WARNING: Lemma %s has %s words but %s words in declension, skipping: decl = %s" %
-        (lemma, len(words), len(per_word_info), unicode(decl_template)))
+        (lemma, len(words), len(per_word_info), str(decl_template)))
     return None
 
   return get_per_word_info(words, per_word_info)
@@ -105,9 +105,9 @@ def find_noun_word_types(lemma, pagemsg):
   parsed = blib.parse_text(declpage.text)
   decl_templates = []
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
+    tname = str(t.name)
     if tname in ["ru-noun-table", "ru-decl-adj"]:
-      pagemsg("find_noun_word_types: Found decl template: %s" % unicode(t))
+      pagemsg("find_noun_word_types: Found decl template: %s" % str(t))
       decl_templates.append(t)
 
   if not decl_templates:
@@ -124,13 +124,13 @@ def find_noun_word_types(lemma, pagemsg):
       return None
     if other_per_word_types != per_word_types:
       pagemsg("WARNING: Found word types %s for decl %s, not same as word types %s for decl %s on same page" %
-          (",".join(other_per_word_types), unicode(decl),
-           ",".join(per_word_types), unicode(decl_templates[0])))
+          (",".join(other_per_word_types), str(decl),
+           ",".join(per_word_types), str(decl_templates[0])))
       return None
 
   seen_poses = set()
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
+    tname = str(t.name)
     if tname == "ru-IPA":
       val = getparam(t, "pos")
       if val:
@@ -185,11 +185,11 @@ def process_text_on_page(index, pagetitle, text):
       subsections_with_ru_ipa = set()
       for k in range(0, len(subsections), 2):
         for t in blib.parse_text(subsections[k]).filter_templates():
-          if unicode(t.name) == "ru-IPA":
+          if str(t.name) == "ru-IPA":
             subsections_with_ru_ipa.add(k)
             if getparam(t, "pos"):
               pagemsg("Already has pos=, skipping template in section %s: %s" %
-                  (k//2, unicode(t)))
+                  (k//2, str(t)))
             else:
               phon = (getparam(t, "phon") or getparam(t, "1") or pagetitle).lower()
               phonwords = split_words(phon, True)
@@ -201,13 +201,13 @@ def process_text_on_page(index, pagetitle, text):
                   wordno = i//2 + 1
                   if rulib.is_monosyllabic(phonword):
                     pagemsg("Skipping monosyllabic pronun %s (#%s) in section %s: %s" %
-                        (phonword, wordno, k//2, unicode(t)))
+                        (phonword, wordno, k//2, str(t)))
                   elif not phonword.endswith(u"е"):
                     pagemsg(u"Skipping pronun word %s (#%s) in section %s because doesn't end in -е" %
                         (phonword, wordno, k//2))
                   else:
                     pagemsg("Found template that will be modified due to phonword %s (#%s) in section %s: %s" %
-                        (phonword, wordno, k//2, unicode(t)))
+                        (phonword, wordno, k//2, str(t)))
                     subsections_with_ru_ipa_to_fix.add(k)
               else:
                 for i in range(0, len(phonwords), 2):
@@ -216,20 +216,20 @@ def process_text_on_page(index, pagetitle, text):
                   wordno = i//2 + 1
                   if rulib.is_monosyllabic(phonword):
                     pagemsg("Skipping monosyllabic pronun %s (#%s) in section %s: %s" %
-                        (phonword, wordno, k//2, unicode(t)))
+                        (phonword, wordno, k//2, str(t)))
                   elif not titleword.endswith(u"е"):
                     pagemsg(u"Skipping title word %s (#%s) in section %s because doesn't end in -е" %
                         (titleword, wordno, k//2))
                   elif re.search(u"([еия]|цы|е̂|[кгхцшжщч]а)" + rulib.DOTABOVE + "?$", phonword):
                     pagemsg("Found template that will be modified due to phonword %s, titleword %s (#%s) in section %s: %s" %
-                        (phonword, titleword, wordno, k//2, unicode(t)))
+                        (phonword, titleword, wordno, k//2, str(t)))
                     subsections_with_ru_ipa_to_fix.add(k)
                   elif not re.search(u"[еэѐ][" + rulib.AC + rulib.GR + rulib.CFLEX + rulib.DUBGR + "]?$", phonword):
                     pagemsg(u"WARNING: ru-IPA pronunciation word %s (#%s) doesn't end in [еэия] or е̂ or hard sibilant + [ыа] when corresponding titleword %s ends in -е, something wrong in section %s: %s" %
-                        (phonword, wordno, titleword, k//2, unicode(t)))
+                        (phonword, wordno, titleword, k//2, str(t)))
                   else:
                     pagemsg(u"Pronun word %s (#%s) with final -э or stressed vowel, ignoring in section %s: %s" %
-                        (phonword, wordno, k//2, unicode(t)))
+                        (phonword, wordno, k//2, str(t)))
 
       if not subsections_with_ru_ipa:
         pagemsg("No ru-IPA on page, skipping page")
@@ -264,68 +264,68 @@ def process_text_on_page(index, pagetitle, text):
           for t in parsed.filter_templates():
             def getp(param):
               return getparam(t, param)
-            tname = unicode(t.name)
+            tname = str(t.name)
             if tname in ["ru-noun", "ru-proper noun"]:
               if getparam(t, "2") == "-":
-                pagemsg("Found invariable noun: %s" % unicode(t))
+                pagemsg("Found invariable noun: %s" % str(t))
                 pos.add("inv")
               else:
-                pagemsg("Found declined noun: %s" % unicode(t))
+                pagemsg("Found declined noun: %s" % str(t))
                 pos.add("n")
               is_lemma.add(True)
             elif tname in ["ru-noun+", "ru-proper noun+"]:
               for param in t.params:
-                if re.search("^[0-9]+$", unicode(param.name)) and "+" in unicode(param.value):
-                  pagemsg("Found declined adjectival noun, treating as adjective: %s" % unicode(t))
+                if re.search("^[0-9]+$", str(param.name)) and "+" in str(param.value):
+                  pagemsg("Found declined adjectival noun, treating as adjective: %s" % str(t))
                   pos.add("a")
                   break
               else:
-                pagemsg("Found declined noun: %s" % unicode(t))
+                pagemsg("Found declined noun: %s" % str(t))
                 pos.add("n")
               is_lemma.add(True)
             elif tname == "comparative of" and getp("lang") == "ru":
-              pagemsg("Found comparative: %s" % unicode(t))
+              pagemsg("Found comparative: %s" % str(t))
               pos.add("com")
               is_lemma.add(False)
             elif tname == "ru-adv":
-              pagemsg("Found adverb: %s" % unicode(t))
+              pagemsg("Found adverb: %s" % str(t))
               pos.add("adv")
               is_lemma.add(True)
             elif tname == "ru-adj":
-              pagemsg("Found adjective: %s" % unicode(t))
+              pagemsg("Found adjective: %s" % str(t))
               pos.add("a")
               is_lemma.add(True)
             elif tname == "ru-noun form":
-              pagemsg("Found noun form: %s" % unicode(t))
+              pagemsg("Found noun form: %s" % str(t))
               saw_noun_form = True
               is_lemma.add(False)
             elif tname == "head" and getp("1") == "ru":
               if getp("2") == "verb form":
-                pagemsg("Found verb form: %s" % unicode(t))
+                pagemsg("Found verb form: %s" % str(t))
                 pos.add("v")
                 is_lemma.add(False)
               elif getp("2") in ["adjective form", "participle form"]:
-                pagemsg("Found adjective form: %s" % unicode(t))
+                pagemsg("Found adjective form: %s" % str(t))
                 pos.add("a")
                 is_lemma.add(False)
               elif getp("2") == "noun form":
-                pagemsg("Found noun form: %s" % unicode(t))
+                pagemsg("Found noun form: %s" % str(t))
                 saw_noun_form = True
                 is_lemma.add(False)
               elif getp("2") == "pronoun form":
-                pagemsg("Found pronoun form: %s" % unicode(t))
+                pagemsg("Found pronoun form: %s" % str(t))
                 pos.add("pro")
                 is_lemma.add(False)
               elif getp("2") == "preposition":
-                pagemsg("Found preposition: %s" % unicode(t))
+                pagemsg("Found preposition: %s" % str(t))
                 pos.add("p")
                 is_lemma.add(True)
               elif getp("2") == "numeral":
-                pagemsg("Found numeral: %s" % unicode(t))
+                pagemsg("Found numeral: %s" % str(t))
                 pos.add("num")
                 is_lemma.add(True)
               elif getp("2") == "pronoun":
-                pagemsg("Found pronoun: %s" % unicode(t))
+                pagemsg("Found pronoun: %s" % str(t))
                 pos.add("pro")
                 is_lemma.add(True)
             elif tname == "inflection of" and getp("lang") == "ru":
@@ -337,7 +337,7 @@ def process_text_on_page(index, pagetitle, text):
                 for param in t.params:
                   if param.name in ["1", "2"]:
                     continue
-                  val = unicode(param.value)
+                  val = str(param.value)
                   if val == ";":
                     if inflection_group:
                       inflection_groups.append(inflection_group)
@@ -350,7 +350,7 @@ def process_text_on_page(index, pagetitle, text):
                   igroup = set(igroup)
                   is_plural = not not ({"p", "plural"} & igroup)
                   if is_plural and ({"nom", "nominative"} & igroup):
-                    pagemsg("Found nominative plural case inflection: %s" % unicode(t))
+                    pagemsg("Found nominative plural case inflection: %s" % str(t))
                     pos.add("nnp")
                   elif {"acc", "accusative"} & igroup:
                     # We use "n" for misc cases, but skip accusative for now,
@@ -360,31 +360,31 @@ def process_text_on_page(index, pagetitle, text):
                     saw_acc = True
                   elif not is_plural and (
                       {"pre", "prep", "prepositional"} & igroup):
-                    pagemsg("Found prepositional singular case inflection: %s" % unicode(t))
+                    pagemsg("Found prepositional singular case inflection: %s" % str(t))
                     pos.add("pre")
                   elif not is_plural and ({"dat", "dative"} & igroup):
-                    pagemsg("Found dative singular case inflection: %s" % unicode(t))
+                    pagemsg("Found dative singular case inflection: %s" % str(t))
                     pos.add("dat")
                   elif not is_plural and ({"loc", "locative"} & igroup):
-                    pagemsg("Found locative singular case inflection: %s" % unicode(t))
+                    pagemsg("Found locative singular case inflection: %s" % str(t))
                     pos.add("dat")
                   elif not is_plural and ({"voc", "vocative"} & igroup):
-                    pagemsg("Found vocative case inflection: %s" % unicode(t))
+                    pagemsg("Found vocative case inflection: %s" % str(t))
                     pos.add("voc")
                   else:
                     pos.add("n")
             elif tname == "prepositional singular of" and getp("lang") == "ru":
-              pagemsg("Found prepositional singular case inflection: %s" % unicode(t))
+              pagemsg("Found prepositional singular case inflection: %s" % str(t))
               pos.add("pre")
               is_lemma.add(False)
               lemma.add(getp("1"))
             elif tname == "dative singular of" and getp("lang") == "ru":
-              pagemsg("Found dative singular case inflection: %s" % unicode(t))
+              pagemsg("Found dative singular case inflection: %s" % str(t))
               pos.add("dat")
               is_lemma.add(False)
               lemma.add(getp("1"))
             elif tname == "vocative singular of" and getp("lang") == "ru":
-              pagemsg("Found vocative case inflection: %s" % unicode(t))
+              pagemsg("Found vocative case inflection: %s" % str(t))
               pos.add("voc")
               is_lemma.add(False)
               lemma.add(getp("1"))
@@ -497,7 +497,7 @@ def process_text_on_page(index, pagetitle, text):
         # and we want to leave those alone with a warning.
         saw_final_e = {}
         for t in parsed.filter_templates():
-          if unicode(t.name) == "ru-IPA":
+          if str(t.name) == "ru-IPA":
             param = "phon"
             phon = getparam(t, param)
             if not phon:
@@ -516,7 +516,7 @@ def process_text_on_page(index, pagetitle, text):
 
         # Now modify the templates.
         for t in parsed.filter_templates():
-          if unicode(t.name) == "ru-IPA":
+          if str(t.name) == "ru-IPA":
             param = "phon"
             phon = getparam(t, param)
             if not phon:
@@ -525,7 +525,7 @@ def process_text_on_page(index, pagetitle, text):
               if not phon:
                 param = "pagetitle"
                 phon = pagetitle
-            origt = unicode(t)
+            origt = str(t)
             if getparam(t, "pos"):
               pass # Already output msg
             else:
@@ -553,51 +553,51 @@ def process_text_on_page(index, pagetitle, text):
                         phonword, wordno))
                       continue
                     if re.search(u"и" + rulib.DOTABOVE + "?$", lphonword):
-                      pagemsg(u"phon=%s (word #%s) ends in -и, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
+                      pagemsg(u"phon=%s (word #%s) ends in -и, will modify to -е in section %s: %s" % (phonword, wordno, k//2, str(t)))
                       notes.append(u"unstressed -и -> -е")
                     elif re.search(u"е̂$", lphonword):
                       # Make this a warning because we're not sure this is correct
-                      pagemsg(u"WARNING: phon=%s (word #%s) ends in -е̂, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
+                      pagemsg(u"WARNING: phon=%s (word #%s) ends in -е̂, will modify to -е in section %s: %s" % (phonword, wordno, k//2, str(t)))
                       notes.append(u"-е̂ -> -е")
                     elif re.search(u"я" + rulib.DOTABOVE + "?$", lphonword):
-                      pagemsg(u"phon=%s (word #%s) ends in -я, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
+                      pagemsg(u"phon=%s (word #%s) ends in -я, will modify to -е in section %s: %s" % (phonword, wordno, k//2, str(t)))
                       notes.append(u"unstressed -я -> -е")
                     elif re.search(u"цы" + rulib.DOTABOVE + "?$", lphonword):
-                      pagemsg(u"phon=%s (word #%s) ends in ц + -ы, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
+                      pagemsg(u"phon=%s (word #%s) ends in ц + -ы, will modify to -е in section %s: %s" % (phonword, wordno, k//2, str(t)))
                       notes.append(u"unstressed -ы after ц -> -е")
                     elif re.search(u"[кгхцшжщч]а" + rulib.DOTABOVE + "?$", lphonword):
-                      pagemsg(u"phon=%s (word #%s) ends in unpaired cons + -а, will modify to -е in section %s: %s" % (phonword, wordno, k//2, unicode(t)))
+                      pagemsg(u"phon=%s (word #%s) ends in unpaired cons + -а, will modify to -е in section %s: %s" % (phonword, wordno, k//2, str(t)))
                       notes.append(u"unstressed -а after unpaired cons -> -е")
                     else:
                       assert False, "Something wrong, strange ending, logic not correct: section %s, phon=%s (word #%s)" % (k//2, phonword, wordno)
                     newphonword = re.sub(u"(?:[ияыа]|е̂)(" + rulib.DOTABOVE + "?)$", ur"е\1", phonword)
                     newphonword = re.sub(u"(?:[ИЯЫА]|Е̂)(" + rulib.DOTABOVE + "?)$", ur"Е\1", newphonword)
                     pagemsg("Modified phon=%s (word #%s) to %s in section %s: %s" % (
-                      phonword, wordno, newphonword, k//2, unicode(t)))
+                      phonword, wordno, newphonword, k//2, str(t)))
                     phonwords[i] = newphonword
               newphon = "".join(phonwords)
               if newphon != phon:
                 assert param != "pagetitle", u"Something wrong, page title should not have -и or similar that needs modification: section %s, phon=%s, newphon=%s" % (k//2, phon, newphon)
                 if pos in ["voc", "inv", "pro"]:
                   pagemsg(u"WARNING: pos=%s may be unstable or inconsistent in handling final -е, please check change of phon=%s to %s in section %s: %s" % (
-                    pos, phon, newphon, k//2, unicode(t)))
+                    pos, phon, newphon, k//2, str(t)))
                 pagemsg("Modified phon=%s to %s in section %s: %s" % (
-                  phon, newphon, k//2, unicode(t)))
+                  phon, newphon, k//2, str(t)))
                 if pos == "none":
                   pagemsg("WARNING: pos=none, should not occur, not modifying phon=%s to %s in section %s: %s" % (
-                    phon, newphon, k//2, unicode(t)))
+                    phon, newphon, k//2, str(t)))
                 else:
                   t.add(param, newphon)
 
               if pos == "none":
                 pagemsg("WARNING: pos=none, should not occur, not setting pos= in section %s: %s" %
-                    (k//2, unicode(t)))
+                    (k//2, str(t)))
               else:
                 t.add("pos", pos)
                 notes.append("added pos=%s%s" % (pos, override_pos and " (override)" or ""))
                 pagemsg("Replaced %s with %s in section %s%s" % (
-                  origt, unicode(t), k//2, override_pos and " (using override)" or ""))
-        subsections[k] = unicode(parsed)
+                  origt, str(t), k//2, override_pos and " (using override)" or ""))
+        subsections[k] = str(parsed)
       sections[j] = "".join(subsections)
 
   new_text = "".join(sections)

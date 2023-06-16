@@ -21,7 +21,7 @@ def process_text_on_page(index, pagename, text):
 
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in ["desc", "descendant", "desctree", "descendants tree"]:
       if t.has("4"):
@@ -60,10 +60,10 @@ def process_text_on_page(index, pagename, text):
         t.add("g", ",".join(genders))
         notes.append("consolidate genders in {{%s}}" % tn)
 
-    if origt != unicode(t):
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    if origt != str(t):
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Move 3=/4= in {{desc}}/{{desctree}} to alt=/t=, consolidate genders", include_pagefile=True,
     include_stdin=True)

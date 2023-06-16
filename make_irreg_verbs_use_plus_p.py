@@ -8,7 +8,7 @@ from blib import getparam, rmparam, tname, msg, errmsg, site
 
 def process_page(page, index, parsed):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errpagemsg(txt):
@@ -22,10 +22,10 @@ def process_page(page, index, parsed):
 
   notes = []
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     if tname(t) in ["ru-conj", "ru-conj-old"]:
-      if [x for x in t.params if unicode(x.value) == "or"]:
-        errpagemsg("WARNING: Skipping multi-arg conjugation: %s" % unicode(t))
+      if [x for x in t.params if str(x.value) == "or"]:
+        errpagemsg("WARNING: Skipping multi-arg conjugation: %s" % str(t))
         continue
       param2 = getparam(t, "2")
       if "+p" in param2:
@@ -40,9 +40,9 @@ def process_page(page, index, parsed):
       rmparam(t, "past_pasv_part2")
       t.add("2", param2 + "+p")
       if tname(t) == "ru-conj":
-        tempcall = re.sub(r"^\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t))
+        tempcall = re.sub(r"^\{\{ru-conj", "{{ru-generate-verb-forms", str(t))
       else:
-        tempcall = re.sub(r"^\{\{ru-conj-old", "{{ru-generate-verb-forms|old=1", unicode(t))
+        tempcall = re.sub(r"^\{\{ru-conj-old", "{{ru-generate-verb-forms|old=1", str(t))
       result = expand_text(tempcall)
       if not result:
         errpagemsg("WARNING: Error expanding template %s" % tempcall)
@@ -64,7 +64,7 @@ def process_page(page, index, parsed):
         if ppp != pppform:
           errpagemsg("WARNING: ppp %s != auto_ppp %s" % (ppp, pppform))
           continue
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       notes.append("Replaced manual ppp= with irreg verb with +p")
       pagemsg("Replaced %s with %s" % (origt, newt))

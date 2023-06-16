@@ -9,7 +9,7 @@ from blib import getparam, rmparam, msg, site
 borrowed_langs = {}
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -31,11 +31,11 @@ def process_page(page, index, parsed):
     parsed = blib.parse_text(text)
     for t in parsed.filter_templates():
       targs = ""
-      if unicode(t.name) in ["m", "l"] and getparam(t, "1") == langcode:
-        targs = re.sub(r"^\{\{\s*[ml]\s*\|\s*%s\s*" % langcode, "", unicode(t))
-      elif unicode(t.name) == "term" and getparam(t, "lang") == langcode:
+      if str(t.name) in ["m", "l"] and getparam(t, "1") == langcode:
+        targs = re.sub(r"^\{\{\s*[ml]\s*\|\s*%s\s*" % langcode, "", str(t))
+      elif str(t.name) == "term" and getparam(t, "lang") == langcode:
         rmparam(t, "lang")
-        targs = re.sub(r"^\{\{\s*term\s*", "", unicode(t))
+        targs = re.sub(r"^\{\{\s*term\s*", "", str(t))
       if targs:
         if targs.startswith("{{"):
           pagemsg("WARNING: Something went wrong in substitution with %s: %s" % (
@@ -62,7 +62,7 @@ def process_page(page, index, parsed):
     borrowed_langs[langcode] = borrowed_langs.get(langcode, 0) + 1
     return "{{bor|ru|%s|%s}}" % (langcode, term)
 
-  text = unicode(page.text)
+  text = str(page.text)
   orig_text = text
 
   # Do inherited cases. We look for a line beginning with either nothing or
@@ -106,7 +106,7 @@ def process_page(page, index, parsed):
     for m in re.finditer(r"\{\{bor(rowing)?\|[^{}]*\}\}", text):
       parsed = blib.parse_text(m.group(0))
       for t in parsed.filter_templates():
-        if unicode(t.name) in ["bor", "borrowing"] and (
+        if str(t.name) in ["bor", "borrowing"] and (
             getparam(t, "lang") == "ru" or
             not getparam(t, "lang") and getparam(t, "1") == "ru"):
           found_borrowing = True

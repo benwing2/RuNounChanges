@@ -21,7 +21,7 @@ templates_to_rename = {
 }
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -29,7 +29,7 @@ def process_page(page, index, parsed):
   notes = []
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in templates_to_rename:
       template_specs = templates_to_rename[tn]
@@ -40,7 +40,7 @@ def process_page(page, index, parsed):
       params = []
       old_1 = getparam(t, "1")
       for param in t.params:
-        pname = unicode(param.name)
+        pname = str(param.name)
         if pname.strip() in ["1", "lang", "sc"]:
           continue
         if pname.strip() in ["2", "3", "4"]:
@@ -61,10 +61,10 @@ def process_page(page, index, parsed):
       notes.append("rename {{%s}} to {{%s|%s|%s={{{1}}}}}" % (tn,
         new_name, "|".join(new_params), main_entry_param))
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Rename overly specific {{bg-*}} templates to more general ones")
 args = parser.parse_args()

@@ -48,16 +48,16 @@ def process_line(index, line):
           numargs = [numargs[0], "%s/%s" % (runs[0][0], runs[1][0]), runs[1][1]] + runs[0][1:]
         non_numbered_params = []
         for param in t.params:
-          pname = unicode(param.name).strip()
-          pval = unicode(param.value).strip()
+          pname = str(param.name).strip()
+          pval = str(param.value).strip()
           showkey = param.showkey
           if not re.search("^[0-9]+$", pname):
             non_numbered_params.append((pname, pval, showkey))
         namedargs = "".join("|%s=%s" % (pname, pval) for pname, pval, showkey in non_numbered_params)
         pagemsg("<from> %s <to> {{place|%s%s}} <end>" % (
-          unicode(t), "|".join(numargs), namedargs))
+          str(t), "|".join(numargs), namedargs))
       else:
-        pagemsg("WARNING: Don't recognize structure of place template: %s" % unicode(t))
+        pagemsg("WARNING: Don't recognize structure of place template: %s" % str(t))
 
 parser = blib.create_argparser("Remove redundant manually-added categories when {{place}} also adds them")
 parser.add_argument("--direcfile", help="File containing lines from templatize_place.py", required=True)

@@ -9,7 +9,7 @@ from blib import getparam, rmparam, tname, msg, site
 import lalib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -21,7 +21,7 @@ def process_page(page, index, parsed):
   pagemsg("Processing")
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "la-ndecl":
       lemmaspec = getparam(t, "1")
@@ -47,10 +47,10 @@ def process_page(page, index, parsed):
       else:
         newlemma = base
       t.add("1", "%s<%s>" % (newlemma, spec))
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
       notes.append(u"convert 3rd-declension -gō term according to new default stem -gin in {{la-ndecl}}")
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Fix Latin 3rd-decl -gō nouns to default to stem in -gin",
     include_pagefile=True)

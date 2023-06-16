@@ -28,7 +28,7 @@ months = ["January", "February", "March", "April", "May", "June", "July",
 month_re = "(?:%s)" % "|".join(months)
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -43,13 +43,13 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title and not a recognized namespace to include, skipping page")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
-    origt = unicode(t)
+    tname = str(t.name)
+    origt = str(t)
     if tname.strip() in replace_templates:
       date = getparam(t, "date")
       if date.strip():
@@ -60,10 +60,10 @@ def process_page(page, index, parsed):
           # it will appear in the value but t.add() will try to preserve the
           # newline separately and you'll get two newlines.
           t.get("date").value = newdate
-          pagemsg(("Replacing %s with %s" % (origt, unicode(t))).replace("\n", r"\n"))
+          pagemsg(("Replacing %s with %s" % (origt, str(t))).replace("\n", r"\n"))
           notes.append("fix date in %s" % tname.strip())
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 if __name__ == "__main__":
   parser = blib.create_argparser("Fix date in cite/quote templates",

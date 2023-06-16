@@ -77,7 +77,7 @@ def process_text_on_page(index, pagetitle, text):
               saw_pron_in_etym = True
               break
             else:
-              pagemsg("Already saw pronunciation template above ==Etymology 1==: %s" % unicode(t))
+              pagemsg("Already saw pronunciation template above ==Etymology 1==: %s" % str(t))
               return
         else: # no break
           pagemsg("WARNING: Saw ==Pronunciation== section without pronunciation template, along with ==Etymology 1==; can't handle, skipping")
@@ -104,7 +104,7 @@ def process_text_on_page(index, pagetitle, text):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn in pronun_templates:
-      pagemsg("Already saw pronunciation template: %s" % unicode(t))
+      pagemsg("Already saw pronunciation template: %s" % str(t))
       return
 
   if not args.ignore_lemma_respelling:
@@ -115,7 +115,7 @@ def process_text_on_page(index, pagetitle, text):
         def getp(param):
           return getparam(t, param)
         if getp("1") != "pl":
-          pagemsg("WARNING: Wrong language in {{%s}}, skipping: %s" % (tn, unicode(t)))
+          pagemsg("WARNING: Wrong language in {{%s}}, skipping: %s" % (tn, str(t)))
           return
         lemma = getparam(t, "2")
         lemmas.add(lemma)
@@ -145,7 +145,7 @@ def process_text_on_page(index, pagetitle, text):
     for t in parsed.filter_templates():
       tn = tname(t)
       if tn in pronun_templates:
-        pagemsg("Already saw pronunciation template: %s" % unicode(t))
+        pagemsg("Already saw pronunciation template: %s" % str(t))
         break
     else: # no break
       new_pron_template, pron_prefix = construct_new_pron_template()
@@ -175,7 +175,7 @@ def process_text_on_page(index, pagetitle, text):
           audiogloss = getparam(audiot, "3")
           for param in audiot.params:
             pn = pname(param)
-            pv = unicode(param.value)
+            pv = str(param.value)
             if pn not in ["1", "2", "3"]:
               pagemsg("WARNING: Unrecognized param %s=%s in {{audio}}, skipping: %s" % (
                 pn, pv, audio_line))

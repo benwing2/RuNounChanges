@@ -9,7 +9,7 @@ from blib import getparam, rmparam, msg, site
 # List whether pages exist and if so, are redirects and/or contain a specific language.
 
 def process_page(page, index):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   if not blib.safe_page_exists(page, pagemsg):

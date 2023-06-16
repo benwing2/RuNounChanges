@@ -14,7 +14,7 @@ replace_templates = [
 ]
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -29,13 +29,13 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Colon in page title and not a recognized namespace to include, skipping page")
     return
 
-  text = unicode(page.text)
+  text = str(page.text)
   notes = []
 
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
-    origt = unicode(t)
+    tname = str(t.name)
+    origt = str(t)
     if tname.strip() in replace_templates:
       changed = False
       title = getparam(t, "title")
@@ -45,8 +45,8 @@ def process_page(page, index, parsed):
         changed = True
       entry = getparam(t, "entry")
       if changed:
-        pagemsg(("Replacing %s with %s" % (origt, unicode(t))).replace("\n", r"\n"))
-  newtext = unicode(parsed)
+        pagemsg(("Replacing %s with %s" % (origt, str(t))).replace("\n", r"\n"))
+  newtext = str(parsed)
   for tname in replace_templates:
     curtext = newtext
     newtext = re.sub(r"(\{\{%s\|[^{}]*\}\})\." % tname, r"\1", curtext)

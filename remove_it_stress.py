@@ -85,7 +85,7 @@ def synchronize(term, hyphenation, pagemsg):
   return "".join(secs).replace(" ", "").split("|")
 
 def process_page(index, page, title_with_syllable_divs=None):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -93,7 +93,7 @@ def process_page(index, page, title_with_syllable_divs=None):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   notes = []
 
@@ -121,7 +121,7 @@ def process_page(index, page, title_with_syllable_divs=None):
       if tn == "it-stress":
         if it_stress_template:
           pagemsg("WARNING: Saw multiple it-stress templates: %s and %s" % (
-            unicode(it_stress_template), unicode(t)))
+            str(it_stress_template), str(t)))
           do_continue = True
           break
         else:
@@ -133,7 +133,7 @@ def process_page(index, page, title_with_syllable_divs=None):
         if lang == "it":
           if it_hyph_template:
             pagemsg("WARNING: Saw multiple hyph|it templates: %s and %s" % (
-              unicode(it_hyph_template), unicode(t)))
+              str(it_hyph_template), str(t)))
             do_continue = True
             break
           else:
@@ -147,16 +147,16 @@ def process_page(index, page, title_with_syllable_divs=None):
     if not it_hyph_template:
       if not title_with_syllable_divs:
         pagemsg("WARNING: Saw it-stress template %s but no hyphenation template and --stressfile not given" %
-            unicode(it_stress_template))
+            str(it_stress_template))
         continue
       new_hyph = synchronize(getparam(it_stress_template, "1"),
           title_with_syllable_divs.split("."), pagemsg)
       if new_hyph is None:
         continue
       it_hyph_template = "{{hyph|it|%s}}" % "|".join(new_hyph)
-      subsec_k = unicode(parsed)
+      subsec_k = str(parsed)
       subsec_k, modified = blib.replace_in_text(subsec_k,
-        "* %s\n" % unicode(it_stress_template), "* %s\n" % it_hyph_template,
+        "* %s\n" % str(it_stress_template), "* %s\n" % it_hyph_template,
         pagemsg, no_found_repl_check=True)
       if not modified:
         continue
@@ -177,18 +177,18 @@ def process_page(index, page, title_with_syllable_divs=None):
       if new_hyph is None:
         continue
       assert len(hyph_params) == len(new_hyph)
-      orig_hyph_template = unicode(it_hyph_template)
+      orig_hyph_template = str(it_hyph_template)
       i = first_hyph_param
       for param in new_hyph:
         it_hyph_template.add(str(i), param)
         i += 1
-      if orig_hyph_template != unicode(it_hyph_template):
-        pagemsg("Replaced %s with %s" % (orig_hyph_template, unicode(it_hyph_template)))
+      if orig_hyph_template != str(it_hyph_template):
+        pagemsg("Replaced %s with %s" % (orig_hyph_template, str(it_hyph_template)))
       else:
         pagemsg("No changes to hyph template %s" % (orig_hyph_template))
-      subsec_k = unicode(parsed)
+      subsec_k = str(parsed)
       subsec_k, modified = blib.replace_in_text(subsec_k,
-        "* %s\n" % unicode(it_stress_template), "", pagemsg, no_found_repl_check=True)
+        "* %s\n" % str(it_stress_template), "", pagemsg, no_found_repl_check=True)
       if not modified:
         continue
       subsections[k] = subsec_k

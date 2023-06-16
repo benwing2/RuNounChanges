@@ -20,7 +20,7 @@ def process_text_on_page(index, pagetitle, text):
     def getp(param):
       return getparam(t, param)
     if tn == "mn-variant":
-      origt = unicode(t)
+      origt = str(t)
       m = getp("m")
       if m:
         t.add("1", m, before="m")
@@ -30,11 +30,11 @@ def process_text_on_page(index, pagetitle, text):
         t.add("3", c, before="c")
       rmparam(t, "m")
       rmparam(t, "c")
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("Convert m=/c= in {{mn-variant}} to numbered params")
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert m=/c= in {{mn-variant}} to numbered params",
   include_pagefile=True, include_stdin=True)

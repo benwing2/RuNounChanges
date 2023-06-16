@@ -32,27 +32,27 @@ def snarf_noun_accents_and_forms(noun, orig_pagemsg):
   for t in parsed.filter_templates():
     if tname(t) in ["bg-noun", "bg-proper noun"]:
       if lemma:
-        pagemsg("WARNING: Saw two {{bg-noun}} invocations without intervening {{bg-ndecl}}: %s" % unicode(t))
+        pagemsg("WARNING: Saw two {{bg-noun}} invocations without intervening {{bg-ndecl}}: %s" % str(t))
       lemma = getparam(t, "1")
       if not lemma:
-        pagemsg("WARNING: Missing headword in noun: %s" % unicode(t))
+        pagemsg("WARNING: Missing headword in noun: %s" % str(t))
         continue
       if bglib.needs_accents(lemma):
-        pagemsg("WARNING: Noun %s missing an accent: %s" % (lemma, unicode(t)))
+        pagemsg("WARNING: Noun %s missing an accent: %s" % (lemma, str(t)))
         lemma = False
         continue
     if tname(t) == "bg-ndecl":
       if lemma is False:
-        pagemsg("WARNING: Skipping %s because noun missing an accent" % unicode(t))
+        pagemsg("WARNING: Skipping %s because noun missing an accent" % str(t))
         continue
       if lemma is None:
-        pagemsg("WARNING: Skipping %s because no preceding {{bg-noun}}" % unicode(t))
+        pagemsg("WARNING: Skipping %s because no preceding {{bg-noun}}" % str(t))
         continue
       if pagetitle in nouns_to_accents_and_forms:
-        pagemsg("WARNING: Saw two {{bg-ndecl}} on the same page: %s" % unicode(t))
+        pagemsg("WARNING: Saw two {{bg-ndecl}} on the same page: %s" % str(t))
         nouns_to_accents_and_forms[pagetitle] = (None, None)
         return (None, None)
-      generate_template = re.sub(r"^\{\{bg-ndecl\|", "{{bg-generate-noun-forms|", unicode(t))
+      generate_template = re.sub(r"^\{\{bg-ndecl\|", "{{bg-generate-noun-forms|", str(t))
       def expand_text(tempcall):
         return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
       generate_result = expand_text(generate_template)
@@ -90,7 +90,7 @@ def infls_to_slot(infls):
     return None
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -102,11 +102,11 @@ def process_page(page, index, parsed):
 
   for t in parsed.filter_templates():
     if tname(t) == "bg-noun-form":
-      origt = unicode(t)
+      origt = str(t)
       must_continue = False
       for param in t.params:
         if pname(param) not in ["1", "2", "3", "head"]:
-          pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pname(param), unicode(param.value), origt))
+          pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pname(param), str(param.value), origt))
           must_continue = True
           break
       if must_continue:
@@ -125,12 +125,12 @@ def process_page(page, index, parsed):
       else:
         if bglib.needs_accents(pagetitle):
           pagemsg("WARNING: Can't add head= to {{bg-noun-form}} missing it because pagetitle is multisyllabic: %s" %
-              unicode(t))
+              str(t))
         else:
           t.add("head", pagetitle)
       if g:
         t.add("g", g)
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
       notes.append("replace {{bg-noun-form}} with {{head|bg|noun form}}")
 
   headt = None
@@ -139,14 +139,14 @@ def process_page(page, index, parsed):
   saw_inflt = False
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     saw_infl = False
     already_fetched_forms = False
     if tn == "head" and getparam(t, "1") == "bg" and getparam(t, "2") == "noun form":
       saw_headt = True
       if headt and not saw_infl_after_head:
         pagemsg("WARNING: Saw two head templates %s and %s without intervening inflection" % (
-          unicode(headt), origt))
+          str(headt), origt))
       saw_infl_after_head = False
       headt = t
     if tn == "bg-noun form of":
@@ -157,7 +157,7 @@ def process_page(page, index, parsed):
       must_continue = False
       for param in t.params:
         if pname(param) not in ["1", "2", "3", "noun"]:
-          pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pname(param), unicode(param.value), origt))
+          pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pname(param), str(param.value), origt))
           must_continue = True
           break
       if must_continue:
@@ -210,7 +210,7 @@ def process_page(page, index, parsed):
       t.add("3", "")
       for i, infl in enumerate(infls):
         t.add(str(i + 4), infl)
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
       notes.append("convert {{bg-noun form of}} to {{inflection of}}")
       tn = tname(t)
       saw_infls = infls_to_slot(infls)
@@ -255,7 +255,7 @@ def process_page(page, index, parsed):
           pagemsg("WARNING: Unable to find accented equivalent of %s: %s" % (noun, origt))
           continue
         t.add("2", lemma)
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
         notes.append("replace lemma with accented %s in {{%s}}" % (lemma, tn))
       if saw_infl == "def_sg":
         def_sub_sg = forms.get("def_sub_sg", None)
@@ -283,7 +283,7 @@ def process_page(page, index, parsed):
         for f in existing_form:
           if bglib.remove_accents(f) != pagetitle:
             pagemsg("WARNING: Existing head %s doesn't match page title: %s" % (
-              f, unicode(headt)))
+              f, str(headt)))
             must_continue = True
             break
         if must_continue:
@@ -291,29 +291,29 @@ def process_page(page, index, parsed):
         needs_accents = [bglib.needs_accents(f) for f in existing_form]
         if any(needs_accents) and not all(needs_accents):
           pagemsg("WARNING: Some but not all existing heads missing accents: %s" %
-              unicode(headt))
+              str(headt))
           continue
         if not any(needs_accents):
           if existing_form != form:
             pagemsg("WARNING: For inflection %s, existing form(s) %s != new form(s) %s" % (
               saw_infl, ",".join(existing_form), ",".join(form)))
           continue
-      origheadt = unicode(headt)
+      origheadt = str(headt)
       blib.set_param_chain(headt, form, "head", "head")
-      pagemsg("Replaced %s with %s" % (origheadt, unicode(headt)))
+      pagemsg("Replaced %s with %s" % (origheadt, str(headt)))
       notes.append("add accented form %s=%s to {{head|bg|noun form}}" % (saw_infl, ",".join(form)))
 
   if saw_headt and not saw_inflt:
-    pagemsg("WARNING: Saw head template %s but no inflection template" % unicode(headt))
+    pagemsg("WARNING: Saw head template %s but no inflection template" % str(headt))
 
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn in template_to_infl_codes and getparam(t, "1") == "bg":
       must_continue = False
       for param in t.params:
         if pname(param) not in ["1", "2"]:
-          pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pname(param), unicode(param.value), origt))
+          pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pname(param), str(param.value), origt))
           must_continue = True
           break
       if must_continue:
@@ -323,10 +323,10 @@ def process_page(page, index, parsed):
       t.add("3", "")
       for i, infl in enumerate(infl_codes):
         t.add(str(i + 4), infl)
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
       notes.append("convert {{%s}} to {{inflection of}}" % tn)
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Convert Bulgarian noun forms to standard templates",
     include_pagefile=True)

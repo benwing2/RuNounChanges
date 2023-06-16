@@ -180,7 +180,7 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
     generate_new_forms, pagemsg, errandpagemsg)
 
 def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
-  origt = unicode(t)
+  origt = str(t)
   tn = tname(t)
   m = re.search(r"^la-conj-(.*)$", tn)
   if not m:
@@ -247,7 +247,7 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
   # Fetch all params
   named_params = []
   for param in t.params:
-    pname = unicode(param.name)
+    pname = str(param.name)
     if pname.strip() in ["1", "2", "3", "4", "type"]:
       continue
     named_params.append((pname, param.value, param.showkey))
@@ -268,14 +268,14 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
   for name, value, showkey in named_params:
     t.add(name, value, showkey=showkey, preserve_spacing=False)
   blib.set_template_name(t, "la-conj")
-  pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-  if compare_new_and_old_templates(origt, unicode(t), pagetitle, pagemsg, errandpagemsg):
+  pagemsg("Replaced %s with %s" % (origt, str(t)))
+  if compare_new_and_old_templates(origt, str(t), pagetitle, pagemsg, errandpagemsg):
     return t
   else:
     return None
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -293,7 +293,7 @@ def process_page(page, index, parsed):
       else:
         return None, None
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert Latin verb conj templates to new form",
     include_pagefile=True)

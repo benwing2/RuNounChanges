@@ -12,7 +12,7 @@ import ar_translit
 show_template=True
 
 def nfd_form(txt):
-    return unicodedata.normalize("NFD", unicode(txt))
+    return unicodedata.normalize("NFD", str(txt))
 
 def diff_string(old, new):
   minlen = min(len(old), len(new))
@@ -44,12 +44,12 @@ def diff_string(old, new):
 def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
     arabic, latin, include_tempname_in_changelog=False):
   actions = []
-  tname = unicode(template.name)
+  tname = str(template.name)
   def pagemsg(text):
     msg("Page %s %s: %s.%s: %s" % (index, pagetitle, tname, fromparam, text))
 
   if show_template:
-    pagemsg("Processing %s" % (unicode(template)))
+    pagemsg("Processing %s" % (str(template)))
 
   if include_tempname_in_changelog:
     paramtrname = "%s.%s" % (tname, paramtr)
@@ -69,7 +69,7 @@ def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
           msgfun=pagemsg)
       match_canon = True
     except Exception as e:
-      pagemsg("NOTE: Unable to vocalize %s (%s): %s: %s" % (arabic, latin, e, unicode(template)))
+      pagemsg("NOTE: Unable to vocalize %s (%s): %s: %s" % (arabic, latin, e, str(template)))
       canonlatin, canonarabic = ar_translit.canonicalize_latin_arabic(latin,
           arabic, msgfun=pagemsg)
   else:
@@ -85,10 +85,10 @@ def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
     translit = ar_translit.tr(canonarabic, msgfun=pagemsg)
     if not translit:
       pagemsg("NOTE: Unable to auto-translit %s (canoned from %s): %s" %
-          (canonarabic, arabic, unicode(template)))
+          (canonarabic, arabic, str(template)))
   except Exception as e:
     pagemsg("NOTE: Unable to transliterate %s (canoned from %s): %s: %s" %
-        (canonarabic, arabic, e, unicode(template)))
+        (canonarabic, arabic, e, str(template)))
     translit = None
 
   show_diff_string = False
@@ -112,7 +112,7 @@ def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
     else:
       diffmsg = ""
     pagemsg("%s Arabic %s -> %s%s%s: %s" % (operation, arabic, canonarabic,
-      latintrtext, diffmsg, unicode(template)))
+      latintrtext, diffmsg, str(template)))
     if fromparam == toparam:
       actions.append("%s %s=%s -> %s" % (actionop, fromparam, arabic,
         canonarabic))
@@ -145,7 +145,7 @@ def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
 
       pagemsg("NOTE: Without diacritics, old Arabic %s different from canon %s%s (%s): %s"
           % (arabic, canonarabic, msgs and " (in old: %s)" % ", ".join(msgs) or "",
-            diffmsg, unicode(template)))
+            diffmsg, str(template)))
 
   if not latin:
     pass
@@ -169,7 +169,7 @@ def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
       actionop="cross-canon"
     if translit:
       pagemsg("NOTE: %s Latin %s not same as auto-translit %s, can't remove: %s" %
-          (passive, canonlatin, translit, unicode(template)))
+          (passive, canonlatin, translit, str(template)))
     if canonlatin == latin:
       pagemsg("No change in Latin %s: Arabic %s -> %s (auto-translit %s)" %
           (latin, arabic, newarabic, translit))
@@ -177,7 +177,7 @@ def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
     else:
       pagemsg("%s Latin %s -> %s: Arabic %s -> %s (auto-translit %s): %s" % (
           operation, latin, canonlatin, arabic, newarabic, translit,
-          unicode(template)))
+          str(template)))
       actions.append("%s %s=%s -> %s" % (actionop, paramtrname, latin,
         canonlatin))
 
@@ -200,7 +200,7 @@ def canon_param(pagetitle, index, template, param, paramtr,
     return False
   canonarabic, canonlatin, actions = do_canon_param(pagetitle, index, template,
       fromparam, toparam, paramtr, arabic, latin, include_tempname_in_changelog)
-  oldtempl = "%s" % unicode(template)
+  oldtempl = "%s" % str(template)
   if canonarabic:
     addparam(template, toparam, canonarabic)
   if canonlatin == True:
@@ -209,7 +209,7 @@ def canon_param(pagetitle, index, template, param, paramtr,
     addparam(template, paramtr, canonlatin)
   if canonarabic or canonlatin:
     msg("Page %s %s: Replaced %s with %s" % (index, pagetitle,
-      oldtempl, unicode(template)))
+      oldtempl, str(template)))
   return actions
 
 def combine_adjacent(values):
@@ -268,7 +268,7 @@ def canon_param_chain(pagetitle, index, template, param):
 # use in the changelog message.
 def canon_head(pagetitle, index, template):
   actions = []
-  #pagetitle = unicode(page.title(withNamespace=False))
+  #pagetitle = str(page.title(withNamespace=False))
 
   # Handle existing 1= and head from page title
   if template.has("tr"):
@@ -310,7 +310,7 @@ def canon_head(pagetitle, index, template):
       if arabic and latin:
         canonarabic, canonlatin, newactions = do_canon_param(
             pagetitle, index, template, "page title", "1", "tr", arabic, latin)
-        oldtempl = "%s" % unicode(template)
+        oldtempl = "%s" % str(template)
         if canonarabic:
           if template.has("2"):
             addparam(template, "1", canonarabic, before="2")
@@ -323,7 +323,7 @@ def canon_head(pagetitle, index, template):
         actions.extend(newactions)
         if canonarabic or canonlatin:
           msg("Page %s %s: Replaced %s with %s" % (index, pagetitle,
-            oldtempl, unicode(template)))
+            oldtempl, str(template)))
 
   # Check and try to vocalize extra heads
   i = 2
@@ -341,7 +341,7 @@ def canon_head(pagetitle, index, template):
 def canon_one_page_headwords(pagetitle, index, text):
   actions = []
   for template in text.filter_templates():
-    tname = unicode(template.name)
+    tname = str(template.name)
     if tname in arabiclib.arabic_non_verbal_headword_templates:
       thisactions = []
       thisactions += canon_head(pagetitle, index, template)
@@ -361,7 +361,7 @@ def canon_one_page_headwords(pagetitle, index, text):
 # changes if SAVE is true. Show exact changes if VERBOSE is true.
 def canon_headwords(save, verbose, startFrom, upTo):
   def process_page(page, index, text):
-    return canon_one_page_headwords(unicode(page.title()), index, text)
+    return canon_one_page_headwords(str(page.title()), index, text)
   #for page in blib.references(u"Template:tracking/ar-head/head", startFrom, upTo):
   #for page in blib.references("Template:ar-nisba", startFrom, upTo):
   for cat in [u"Arabic lemmas", u"Arabic non-lemma forms"]:
@@ -380,16 +380,16 @@ def canon_links(save, verbose, cattype, startFrom, upTo, pages_to_do=[]):
     result = canon_param(pagetitle, index, template, param, paramtr,
         include_tempname_in_changelog=True)
     if getparam(template, "sc") == "Arab":
-      tname = unicode(template.name)
+      tname = str(template.name)
       if show_template and result == False:
         msg("Page %s %s: %s.%s: Processing %s" % (index,
-          pagetitle, tname, "sc", unicode(template)))
+          pagetitle, tname, "sc", str(template)))
       msg("Page %s %s: %s.%s: Removing sc=Arab" % (index,
         pagetitle, tname, "sc"))
-      oldtempl = "%s" % unicode(template)
+      oldtempl = "%s" % str(template)
       template.remove("sc")
       msg("Page %s %s: Replaced %s with %s" %
-          (index, pagetitle, oldtempl, unicode(template)))
+          (index, pagetitle, oldtempl, str(template)))
       newresult = ["remove %s.sc=Arab" % tname]
       if result != False:
         result = result + newresult

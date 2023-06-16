@@ -23,7 +23,7 @@ def process_text_on_page(index, pagetitle, text):
 
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     tn = tname(t)
     if tn == "autocat":
       blib.set_template_name(t, "auto cat")
@@ -141,7 +141,7 @@ def process_text_on_page(index, pagetitle, text):
       for param in t.params:
         pn = pname(param)
         if pn not in all_existing_params:
-          pagemsg("WARNING: Unrecognized param %s=%s in affix cat: %s" % (pn, unicode(param.value), unicode(t)))
+          pagemsg("WARNING: Unrecognized param %s=%s in affix cat: %s" % (pn, str(param.value), str(t)))
           must_continue = True
           break
       if must_continue:
@@ -162,10 +162,10 @@ def process_text_on_page(index, pagetitle, text):
         t.add("sc", t_sc)
       notes.append("convert {{%s}} to {{auto cat}}" % tn)
 
-    if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+    if str(t) != origt:
+      pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert affix cat usages to {{auto cat}}",
     include_pagefile=True, include_stdin=True)

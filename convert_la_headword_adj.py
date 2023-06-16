@@ -32,7 +32,7 @@ def lengthen_ns_nf(text):
 
 def process_page(page, index, parsed):
   global args
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -42,7 +42,7 @@ def process_page(page, index, parsed):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   origtext = text
 
   notes = []
@@ -67,7 +67,7 @@ def process_page(page, index, parsed):
       if tn == "la-adecl":
         if la_adecl_template:
           pagemsg("WARNING: Saw multiple adjective declension templates in subsection, %s and %s, skipping" % (
-            unicode(la_adecl_template), unicode(t)))
+            str(la_adecl_template), str(t)))
           must_continue = True
           break
         la_adecl_template = t
@@ -77,7 +77,7 @@ def process_page(page, index, parsed):
       ]:
         if la_adj_template:
           pagemsg("WARNING: Saw multiple adjective headword templates in subsection, %s and %s, skipping" % (
-            unicode(la_adj_template), unicode(t)))
+            str(la_adj_template), str(t)))
           must_continue = True
           break
         la_adj_template = t
@@ -87,15 +87,15 @@ def process_page(page, index, parsed):
     if not la_adj_template and not la_adecl_template:
       continue
     if la_adj_template and not la_adecl_template:
-      pagemsg("WARNING: Saw adjective headword template but no declension template: %s" % unicode(la_adj_template))
+      pagemsg("WARNING: Saw adjective headword template but no declension template: %s" % str(la_adj_template))
       continue
     if la_adecl_template and not la_adj_template:
-      pagemsg("WARNING: Saw adjective declension template but no headword template: %s" % unicode(la_adecl_template))
+      pagemsg("WARNING: Saw adjective declension template but no headword template: %s" % str(la_adecl_template))
       continue
-    adj_forms = lalib.generate_adj_forms(unicode(la_adecl_template), errandpagemsg, expand_text)
+    adj_forms = lalib.generate_adj_forms(str(la_adecl_template), errandpagemsg, expand_text)
     if adj_forms is None:
       continue
-    orig_la_adj_template = unicode(la_adj_template)
+    orig_la_adj_template = str(la_adj_template)
     tn_adj = tname(la_adj_template)
 
     def compare_headword_decl_forms(id_slot, headword_forms, decl_slots):
@@ -167,7 +167,7 @@ def process_page(page, index, parsed):
     # Fetch remaining params from headword template
     headword_params = []
     for param in la_adj_template.params:
-      pname = unicode(param.name)
+      pname = str(param.name)
       if pname.strip() in ["1", "2", "3"] or re.search("^(head|gen|f|n)[0-9]*$", pname.strip()):
         continue
       headword_params.append((pname, param.value, param.showkey))
@@ -175,15 +175,15 @@ def process_page(page, index, parsed):
     del la_adj_template.params[:]
     # Copy params from decl template
     for param in la_adecl_template.params:
-      pname = unicode(param.name)
+      pname = str(param.name)
       la_adj_template.add(pname, param.value, showkey=param.showkey, preserve_spacing=False)
     # Copy remaining params from headword template
     for name, value, showkey in headword_params:
       la_adj_template.add(name, value, showkey=showkey, preserve_spacing=False)
     blib.set_template_name(la_adj_template, "la-adj")
-    pagemsg("Replaced %s with %s" % (orig_la_adj_template, unicode(la_adj_template)))
+    pagemsg("Replaced %s with %s" % (orig_la_adj_template, str(la_adj_template)))
     notes.append("convert {{%s}} to {{la-adj}} with new params" % tn_adj)
-    subsections[k] = unicode(parsed)
+    subsections[k] = str(parsed)
 
   if not saw_a_template:
     pagemsg("WARNING: Saw no adjective headword or declension templates")

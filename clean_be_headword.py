@@ -9,7 +9,7 @@ from blib import getparam, rmparam, tname, pname, msg, site
 import belib
 
 def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -21,8 +21,8 @@ def process_page(page, index, parsed):
     return
 
   def process_noun_headt(t, declt=None):
-    origt = unicode(t)
-    origdeclt = declt and unicode(declt) or "None"
+    origt = str(t)
+    origdeclt = declt and str(declt) or "None"
     def getp(param):
       return getparam(t, param)
     if tname(t) == "head":
@@ -51,7 +51,7 @@ def process_page(page, index, parsed):
             # extra params to ignore
             "sc"]:
           pagemsg("WARNING: Unrecognized param %s=%s, skipping: %s" %
-              (pn, unicode(param.value), origt))
+              (pn, str(param.value), origt))
           must_continue = True
           break
       if must_continue:
@@ -84,7 +84,7 @@ def process_page(page, index, parsed):
             # extra params to ignore
             "sc"]:
           pagemsg("WARNING: Unrecognized param %s=%s, skipping: %s" %
-              (pn, unicode(param.value), origt))
+              (pn, str(param.value), origt))
           must_continue = True
           break
       if must_continue:
@@ -215,12 +215,12 @@ def process_page(page, index, parsed):
         for g in genders:
           if not g.endswith("-p"):
             pagemsg("WARNING: Mismatch between headword gender %s and decl template %s: %s" % (
-              g, unicode(declt), origt))
+              g, str(declt), origt))
       else:
         for g in genders:
           if g.endswith("-p"):
             pagemsg("WARNING: Mismatch between headword gender %s and decl template %s: %s" % (
-              g, unicode(declt), origt))
+              g, str(declt), origt))
 
     handle_multiform("1", "head", head, headtr, decl_headparam)
     blib.set_param_chain(t, genders, "2", "g")
@@ -232,13 +232,13 @@ def process_page(page, index, parsed):
     handle_multiform("f", "f", f, ftr)
     handle_multiform("collective", "collective", collective, collectivetr)
 
-    if origt != unicode(t):
+    if origt != str(t):
       notes.append("fix up {{%s}} to use new param convention" % tname(t))
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
     return True
 
   def process_verb_headt(t):
-    origt = unicode(t)
+    origt = str(t)
     def getp(param):
       return getparam(t, param)
     tr = getp("tr")
@@ -256,7 +256,7 @@ def process_page(page, index, parsed):
       if pn not in ["head", "tr", "1", "a", "2", "pf", "pf2", "pf3",
           "impf", "impf2", "impf3"]:
         pagemsg("WARNING: Unrecognized param %s=%s, skipping: %s" %
-            (pn, unicode(param.value), origt))
+            (pn, str(param.value), origt))
         must_continue = True
         break
     if must_continue:
@@ -276,14 +276,14 @@ def process_page(page, index, parsed):
     blib.set_param_chain(t, pf, "pf", "pf")
     blib.set_param_chain(t, impf, "impf", "impf")
 
-    if origt != unicode(t):
+    if origt != str(t):
       notes.append("fix up {{be-verb}} to use new param convention")
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
     return True
 
 
   def process_adj_headt(t):
-    origt = unicode(t)
+    origt = str(t)
     def getp(param):
       return getparam(t, param)
     tr = getp("tr")
@@ -296,7 +296,7 @@ def process_page(page, index, parsed):
       pn = pname(param)
       if pn not in ["head", "tr"]:
         pagemsg("WARNING: Unrecognized param %s=%s, skipping: %s" %
-            (pn, unicode(param.value), origt))
+            (pn, str(param.value), origt))
         must_continue = True
         break
     if must_continue:
@@ -310,9 +310,9 @@ def process_page(page, index, parsed):
     if tr:
       t.add("tr", tr)
 
-    if origt != unicode(t):
+    if origt != str(t):
       notes.append("fix up {{be-adj}} to use new param convention")
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
     return True
 
 
@@ -323,13 +323,13 @@ def process_page(page, index, parsed):
       tn == "head" and getparam(t, "1") == "be" and getparam(t, "2") in ["noun", "proper noun"]
     ):
       if headt:
-        pagemsg("WARNING: Encountered headword template without declension: %s" % unicode(headt))
+        pagemsg("WARNING: Encountered headword template without declension: %s" % str(headt))
         process_noun_headt(headt)
         headt = None
       headt = t
     elif tn in ["be-decl-noun", "be-decl-noun-unc", "be-decl-noun-pl"]:
       if not headt:
-        pagemsg("WARNING: Encountered declension template without headword: %s" % unicode(t))
+        pagemsg("WARNING: Encountered declension template without headword: %s" % str(t))
       else:
         process_noun_headt(headt, t)
         headt = None
@@ -342,10 +342,10 @@ def process_page(page, index, parsed):
     elif tn == "be-adj":
       process_adj_headt(t)
   if headt:
-    pagemsg("WARNING: Encountered headword template without declension: %s" % unicode(headt))
+    pagemsg("WARNING: Encountered headword template without declension: %s" % str(headt))
     process_noun_headt(headt)
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser(u"Clean up be-noun params",
     include_pagefile=True)

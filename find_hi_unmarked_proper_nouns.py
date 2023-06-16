@@ -28,7 +28,7 @@ def process_text_on_page(index, pagetitle, text):
   saw_place = False
   for t in parsed.filter_templates():
     tn = tname(t)
-    origt = unicode(t)
+    origt = str(t)
     if tn == "hi-noun":
       noun_head_template = None
       noun_head_template_maybe_unmarked = False
@@ -51,9 +51,9 @@ def process_text_on_page(index, pagetitle, text):
       saw_ndecl = True
       decl = getparam(t, "1")
       if "unmarked" not in decl and noun_head_template_maybe_unmarked:
-        pagemsg(u"WARNING: Saw proper noun ending in -ā or -ā̃, probably needing 'unmarked': %s" % unicode(t))
+        pagemsg(u"WARNING: Saw proper noun ending in -ā or -ā̃, probably needing 'unmarked': %s" % str(t))
       if saw_place and "sg" not in decl:
-        pagemsg("WARNING: Saw proper noun with {{place}} but without 'sg' in declension template: %s" % unicode(t))
+        pagemsg("WARNING: Saw proper noun with {{place}} but without 'sg' in declension template: %s" % str(t))
 
 parser = blib.create_argparser("Check for proper noun needing 'unmarked' in declension",
   include_pagefile=True, include_stdin=True)

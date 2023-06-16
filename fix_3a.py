@@ -9,7 +9,7 @@ from blib import getparam, rmparam, msg, site
 import rulib
 
 def process_page(index, page, direc, delete_bad, verbose):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -21,20 +21,20 @@ def process_page(index, page, direc, delete_bad, verbose):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
+  text = str(page.text)
   parsed = blib.parse(page)
   notes = []
   direc = direc.replace("3oa", u"3°a")
   for t in parsed.filter_templates():
-    origt = unicode(t)
-    if unicode(t.name) in ["ru-conj"]:
+    origt = str(t)
+    if str(t.name) in ["ru-conj"]:
       conjtype = getparam(t, "1")
       if not conjtype.startswith("3olda"):
         continue
       if conjtype.startswith("3olda") and conjtype != "3olda":
-        pagemsg("WARNING: Found 3a-old with variant, can't process: %s" % unicode(t))
+        pagemsg("WARNING: Found 3a-old with variant, can't process: %s" % str(t))
         continue
-      tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t))
+      tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", str(t))
       result = expand_text(tempcall)
       if not result:
         pagemsg("WARNING: Error generating forms, skipping")
@@ -44,7 +44,7 @@ def process_page(index, page, direc, delete_bad, verbose):
       rmparam(t, "5")
       rmparam(t, "4")
       t.add("1", direc)
-      tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", unicode(t))
+      tempcall = re.sub(r"\{\{ru-conj", "{{ru-generate-verb-forms", str(t))
       result = expand_text(tempcall)
       if not result:
         pagemsg("WARNING: Error generating forms, skipping")
@@ -64,7 +64,7 @@ def process_page(index, page, direc, delete_bad, verbose):
               elif formpagename == pagetitle:
                 pagemsg("WARNING: Attempt to delete dictionary form, skipping")
               else:
-                text = unicode(formpage.text)
+                text = str(formpage.text)
                 if "Etymology 1" in text:
                   pagemsg("WARNING: Found 'Etymology 1', skipping form %s" % formpagename)
                 elif "----" in text:
@@ -86,11 +86,11 @@ def process_page(index, page, direc, delete_bad, verbose):
                           (formpagename, comment))
 
       notes.append("fix 3olda -> %s" % direc)
-    newt = unicode(t)
+    newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Fix up class 3a")
 parser.add_argument('--direcfile', help="File containing pages to fix and directives.")

@@ -52,14 +52,14 @@ all_he_form_of_template_map = {
 all_he_form_of_templates = [x[0] for x in all_he_form_of_template_specs]
 
 def process_page(page, index, parsed, move_dot, rename):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
   notes = []
 
-  text = unicode(page.text)
+  text = str(page.text)
 
   if ":" in pagetitle and not re.search(
       "^(Citations|Appendix|Reconstruction|Transwiki|Talk|Wiktionary|[A-Za-z]+ talk):", pagetitle):
@@ -74,9 +74,9 @@ def process_page(page, index, parsed, move_dot, rename):
       if tn in all_he_form_of_templates:
         dot = getparam(t, ".")
         if dot:
-          origt = unicode(t)
+          origt = str(t)
           rmparam(t, ".")
-          newt = unicode(t) + dot
+          newt = str(t) + dot
           templates_to_replace.append((origt, newt))
 
     for curr_template, repl_template in templates_to_replace:
@@ -106,7 +106,7 @@ def process_page(page, index, parsed, move_dot, rename):
   if rename:
     parsed = blib.parse_text(text)
     for t in parsed.filter_templates():
-      origt = unicode(t)
+      origt = str(t)
       tn = tname(t)
       if tn in all_he_form_of_template_map:
         newname, add_nocap = all_he_form_of_template_map[tn]
@@ -119,7 +119,7 @@ def process_page(page, index, parsed, move_dot, rename):
         params = []
         old_1 = getparam(t, "1")
         for param in t.params:
-          pname = unicode(param.name)
+          pname = str(param.name)
           if pname.strip() in ["1", "lang", "sc"]:
             continue
           if pname.strip() in (
@@ -154,10 +154,10 @@ def process_page(page, index, parsed, move_dot, rename):
         if add_nocap:
           t.add("nocap", "1")
 
-      if unicode(t) != origt:
-        pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+      if str(t) != origt:
+        pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-    text = unicode(parsed)
+    text = str(parsed)
 
   return text, notes
 

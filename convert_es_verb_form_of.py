@@ -110,7 +110,7 @@ def process_text_on_page(index, pagetitle, pagetext):
     seen_infs = set()
     parts = []
     for t in parsed.filter_templates():
-      origt = unicode(t)
+      origt = str(t)
       def getp(param):
         return getparam(t, param)
       tn = tname(t)
@@ -147,7 +147,7 @@ def process_text_on_page(index, pagetitle, pagetext):
       for conj in conjs:
         del t.params[:]
         t.add("1", conj)
-        newtemp = unicode(t)
+        newtemp = str(t)
         expansion = expand_text(newtemp)
         if expansion is not False and expansion not in expansions:
           expansions.append(expansion)
@@ -166,7 +166,7 @@ def process_text_on_page(index, pagetitle, pagetext):
       notes.append("replace {{es-verb form of}} conjugation(s) for infinitive [[%s]] with '%s'" % (inf, conj))
       del t.params[:]
       t.add("1", conj)
-      newtemp = unicode(t)
+      newtemp = str(t)
       parts.append("# " + newtemp + extra_text + "\n")
     if must_continue:
       continue
@@ -176,7 +176,7 @@ def process_text_on_page(index, pagetitle, pagetext):
 
   parsed = blib.parse_text(pagetext)
   for t in parsed.filter_templates():
-    origt = unicode(t)
+    origt = str(t)
     def getp(param):
       return getparam(t, param)
     tn = tname(t)
@@ -221,8 +221,8 @@ def process_text_on_page(index, pagetitle, pagetext):
       del t.params[:]
       t.add("1", conj)
       blib.set_template_name(t, "es-verb form of")
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-  pagetext = unicode(parsed)
+      pagemsg("Replaced %s with %s" % (origt, str(t)))
+  pagetext = str(parsed)
 
   return pagetext, notes
   

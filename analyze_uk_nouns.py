@@ -123,7 +123,7 @@ def process_text_on_page(index, pagetitle, text):
             break
         else: # no break
           pagemsg("WARNING: Couldn't recognize ending for %s=%s: %s" % (
-            param, paramval, unicode(t)))
+            param, paramval, str(t)))
       return ":".join(found_endings)
 
     def canon(val):
@@ -140,10 +140,10 @@ def process_text_on_page(index, pagetitle, text):
         for v in vals:
           if uk.is_multi_stressed(v):
             pagemsg("WARNING: Param %s=%s has multiple stresses: %s" % (
-              (str(i), val, unicode(t))))
+              (str(i), val, str(t))))
           if uk.needs_accents(v):
             pagemsg("WARNING: Param %s=%s has missing stress: %s" % (
-              (str(i), val, unicode(t))))
+              (str(i), val, str(t))))
     def ins_sg_note(ins_sg):
       if re.search(u"[чшжщфвбмпь]$", heads[0]) and gender == "f":
         return "ins_sg=%s " % canon(ins_sg)
@@ -298,7 +298,7 @@ def process_text_on_page(index, pagetitle, text):
           voc_sg_end_stressed == "unknown" or
           nom_pl_end_stressed == "unknown" or
           loc_pl_end_stressed == "unknown"):
-        pagemsg("WARNING: Missing stresses, can't determine accent pattern: %s" % unicode(t))
+        pagemsg("WARNING: Missing stresses, can't determine accent pattern: %s" % str(t))
         continue
       seen_patterns = []
       for pattern, accents in stress_patterns:
@@ -389,7 +389,7 @@ def process_text_on_page(index, pagetitle, text):
       if (gen_sg_end_stressed == "unknown" or
           acc_sg_end_stressed == "unknown" or
           voc_sg_end_stressed == "unknown"):
-        pagemsg("WARNING: Missing stresses, can't determine accent pattern: %s" % unicode(t))
+        pagemsg("WARNING: Missing stresses, can't determine accent pattern: %s" % str(t))
         continue
       if not heads:
         pagemsg("WARNING: No head found")
@@ -458,7 +458,7 @@ def process_text_on_page(index, pagetitle, text):
       loc_pl_end_stressed = param_is_end_stressed(loc_pl)
       if (nom_pl_end_stressed == "unknown" or
           loc_pl_end_stressed == "unknown"):
-        pagemsg("WARNING: Missing stresses, can't determine accent pattern: %s" % unicode(t))
+        pagemsg("WARNING: Missing stresses, can't determine accent pattern: %s" % str(t))
         continue
       seen_patterns = []
       for pattern, accents in stress_patterns:

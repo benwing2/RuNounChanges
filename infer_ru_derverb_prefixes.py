@@ -379,7 +379,7 @@ def do_line_group(group, is_last_group, fn, outfd, suffix_lines, extra_suffixes,
 
     except InferError as e:
       if pass_ == 1:
-        linemsg("WARNING: %s: %s" % (unicode(e), line))
+        linemsg("WARNING: %s: %s" % (str(e), line))
         unattached_lines.append(line.replace(" ", "/"))
 
   if pass_ == 0:

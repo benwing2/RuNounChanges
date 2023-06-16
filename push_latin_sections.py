@@ -9,13 +9,13 @@ from blib import getparam, rmparam, tname, msg, site
 import lalib
 
 def process_page(page, index, sectext, comment):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
-  retval = lalib.find_latin_section(unicode(page.text), pagemsg)
+  retval = lalib.find_latin_section(str(page.text), pagemsg)
   if retval is None:
     return None, None
 

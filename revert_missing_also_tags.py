@@ -43,7 +43,7 @@ def process_item(index, item):
   restore_removed_pagehead(index, item['title'], item['comment'], item['parentid'])
 
 def process_page(page, index):
-  pagetitle = unicode(page.title())
+  pagetitle = str(page.title())
   revisions = list(page.revisions(total=50))
   for rev in revisions:
     if rev['user'] == 'WingerBot':

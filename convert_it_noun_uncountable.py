@@ -23,14 +23,14 @@ def process_text_on_page(index, pagetitle, text):
     def getp(param):
       return getparam(t, param)
     if tn == "it-noun":
-      origt = unicode(t)
+      origt = str(t)
       if getp("2") == "~":
         t.add("2", "-")
         notes.append("convert ~ in {{it-noun}} to -")
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      if origt != str(t):
+        pagemsg("Replaced %s with %s" % (origt, str(t)))
 
-  return unicode(parsed), notes
+  return str(parsed), notes
 
 parser = blib.create_argparser("Convert ~ in {{it-noun}} to -",
   include_pagefile=True, include_stdin=True)
