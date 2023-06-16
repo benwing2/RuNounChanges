@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
@@ -236,8 +236,8 @@ def process_text_in_section(secbody, pagemsg):
         issued_warning = [False]
         def do_merge_alt(m):
           return merge_alt(m, could_parse, issued_warning)
-        line = re.sub(r"^\*?(\s*)(.*?):*\s*((?:\{\{(?:alt|alter)\|(?:\{\{[^{}]*\}\}|[^{}])*\}\}\s*[,/]*\s*)+):*\s*(.*?)$", do_merge_alt,
-            line, 0, re.UNICODE)
+        line = re.sub(r"^\*?(\s*)(.*?):*\s*((?:\{\{(?:alt|alter)\|(?:\{\{[^{}]*\}\}|[^{}])*\}\}\s*[,/]*\s*)+):*\s*(.*?)$",
+            do_merge_alt, line)
         return line, could_parse[0], issued_warning[0]
 
       for lineind, line in enumerate(lines):
