@@ -144,9 +144,9 @@ def process_page(page, index, parsed):
         # There are several instances of 4++ verbs where only the -īvī variant,
         # not the -iī variant, is listed in the headword. Don't get tripped up
         # by that.
-        ivi_conj_forms = [x for x in corrected_conj_forms if x.endswith(u"īvī")]
+        ivi_conj_forms = [x for x in corrected_conj_forms if x.endswith("īvī")]
         for ivi_conj_form in ivi_conj_forms:
-          ii_conj_form = re.sub(u"īvī$", u"iī", ivi_conj_form)
+          ii_conj_form = re.sub("īvī$", "iī", ivi_conj_form)
           if ii_conj_form in corrected_conj_forms and ii_conj_form not in corrected_headword_forms:
             corrected_headword_forms.append(ii_conj_form)
       if set(corrected_headword_forms) != set(corrected_conj_forms):
@@ -173,8 +173,8 @@ def process_page(page, index, parsed):
     sup = blib.fetch_param_chain(la_verb_template, ["4", "sup", "sup1"], "sup")
     # Hack to handle cases like abeō where the headword normally lists perfect
     # abiī but the conj lists abiī, abīvī.
-    if verb_conj == "irreg" and len(lemma) > 0 and lemma[0].endswith(u"eō"):
-      ivi = re.sub(u"eō$", u"īvī", lemma[0])
+    if verb_conj == "irreg" and len(lemma) > 0 and lemma[0].endswith("eō"):
+      ivi = re.sub("eō$", "īvī", lemma[0])
       if ivi not in perf:
         perf.append(ivi)
     if not compare_headword_conj_forms("lemma", lemma, ["1s_pres_actv_indc", "3s_pres_actv_indc", "1s_perf_actv_indc", "3s_perf_actv_indc"]):
@@ -193,7 +193,7 @@ def process_page(page, index, parsed):
           # adsoluī,adsolitus sum.
           remove_conj_links=True):
         continue
-    if len(sup) > 0 and sup[0].endswith(u"ūrus"):
+    if len(sup) > 0 and sup[0].endswith("ūrus"):
       if not compare_headword_conj_forms("future participle", sup, ["futr_actv_ptc"]):
         continue
       if "supfutractvonly" not in subtypes:

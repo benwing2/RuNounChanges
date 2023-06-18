@@ -22,8 +22,8 @@ def process_page(page, index, parsed):
       comps = blib.fetch_param_chain(t, "2", "comp")
       newcomps = []
       for comp in comps:
-        if re.search(u"е́?й$", comp):
-          regcomp = re.sub(u"(е́?)й$", r"\1е", comp)
+        if re.search("е́?й$", comp):
+          regcomp = re.sub("(е́?)й$", r"\1е", comp)
           if regcomp in newcomps:
             pagemsg("Skipping informal form %s" % comp)
             notes.append("remove informal comparative %s" % comp)

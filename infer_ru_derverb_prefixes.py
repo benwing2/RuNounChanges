@@ -16,7 +16,7 @@ parser.add_argument('--sort', action='store_true', help="Sort template suffix gr
 parser.add_argument('--output-files', action='store_true', help="Output results to *.new files instead of to stdout.")
 args = parser.parse_args()
 
-AC = u"\u0301"
+AC = "\u0301"
 
 def remove_stress(term):
   return rulib.remove_accents(term)
@@ -73,7 +73,7 @@ def extract_prefix_and_suffix(term, suffixes_no_stress):
   if num_acs > 1:
     raise InferError("Saw term with multiple accents: %s" % term)
   for suffix_no_stress in suffixes_no_stress:
-    for refl_suffix in ["", u"ся", u"сь"]:
+    for refl_suffix in ["", "ся", "сь"]:
       full_suffix = suffix_no_stress + refl_suffix
       suflen = len(full_suffix)
       if term.endswith(full_suffix):
@@ -96,7 +96,7 @@ def extract_prefix_and_suffixes(pfs, impfs, suffixes_no_stress):
             pass
           elif this_prefix == remove_stress(prefix):
             this_prefix = prefix
-          elif this_prefix + u"о" == prefix:
+          elif this_prefix + "о" == prefix:
             pass
           else:
             raise InferError("Saw two different prefixes %s and %s for suffixes %s" %
@@ -114,7 +114,7 @@ def extract_prefix_and_suffixes(pfs, impfs, suffixes_no_stress):
       prefix_no_stress = remove_stress(prefix)
       if verb.startswith(prefix_no_stress):
         suffix = verb[len(prefix_no_stress):]
-      elif prefix.endswith(u"о") and verb.startswith(prefix[:-1]):
+      elif prefix.endswith("о") and verb.startswith(prefix[:-1]):
         new_prefix = prefix[:-1]
         suffix = verb[len(new_prefix):]
       else:
@@ -154,15 +154,15 @@ def augment_suffix(suffix):
   retval = []
   def augment_1(suffix):
     retval.append(suffix)
-    if suffix.endswith(u"ть") or suffix.endswith(u"чь"):
-      retval.append(suffix + u"ся")
-    elif suffix.endswith(u"ти"):
-      retval.append(suffix + u"сь")
-    elif suffix.endswith(u"ся") or suffix.endswith(u"сь"):
+    if suffix.endswith("ть") or suffix.endswith("чь"):
+      retval.append(suffix + "ся")
+    elif suffix.endswith("ти"):
+      retval.append(suffix + "сь")
+    elif suffix.endswith("ся") or suffix.endswith("сь"):
       retval.append(suffix[:-2])
   augment_1(suffix)
-  if u"ё" in suffix:
-    augment_1(suffix.replace(u"ё", u"е"))
+  if "ё" in suffix:
+    augment_1(suffix.replace("ё", "е"))
   return retval
 
 def augment_suffixes(suffixes):
@@ -299,7 +299,7 @@ def do_line_group(group, is_last_group, fn, outfd, suffix_lines, extra_suffixes,
   # as suffixes.
   extra_suffixes_with_o = []
   for extra_suffix in extra_suffixes:
-    if extra_suffix.startswith(u"о") and extra_suffix[1:] in  extra_suffixes:
+    if extra_suffix.startswith("о") and extra_suffix[1:] in  extra_suffixes:
       extra_suffixes_with_o.append(extra_suffix)
   extra_suffixes = [x for x in extra_suffixes if x not in extra_suffixes_with_o] + extra_suffixes_with_o
 

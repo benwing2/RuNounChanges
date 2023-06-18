@@ -18,12 +18,12 @@ def process_text_on_page(index, pagetitle, text):
   if not re.search(r"(ник|ок|ка)([ -]|$)", pagetitle):
     return
 
-  cons = u"[бцдфгчйклмнпрствшхзжщ]"
-  if (pagetitle.endswith(u"ство") or pagetitle.endswith(u"ёнок") or re.search(u"[шжчщ]онок$", pagetitle) or (
-      not re.search(cons + u"[кц][оаяеёыи]$", pagetitle) and
-      not re.search(cons + cons + u"[оаяеёыи]$", pagetitle) and
-      # not re.search(u"[оеё]" + cons + "$", pagetitle) and # but too many false positives
-      not re.search(u"[оеё][кц]$", pagetitle)
+  cons = "[бцдфгчйклмнпрствшхзжщ]"
+  if (pagetitle.endswith("ство") or pagetitle.endswith("ёнок") or re.search("[шжчщ]онок$", pagetitle) or (
+      not re.search(cons + "[кц][оаяеёыи]$", pagetitle) and
+      not re.search(cons + cons + "[оаяеёыи]$", pagetitle) and
+      # not re.search("[оеё]" + cons + "$", pagetitle) and # but too many false positives
+      not re.search("[оеё][кц]$", pagetitle)
      )):
     return
   parsed = blib.parse_text(text)

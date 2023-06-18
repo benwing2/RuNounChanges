@@ -127,19 +127,19 @@ def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
         msgs.append("stray space")
       if re.search("[A-Za-z]", nfd_form(rdarabic)):
         msgs.append("Latin")
-      if u"\u00A0" in rdarabic:
+      if "\u00A0" in rdarabic:
         msgs.append("NBSP")
-      if re.search(u"[\u200E\u200F]", rdarabic):
+      if re.search("[\u200E\u200F]", rdarabic):
         msgs.append("L2R/R2L")
-      if u"ی" in rdarabic:
+      if "ی" in rdarabic:
         msgs.append("Farsi Yeh")
-      if u"ک" in rdarabic:
+      if "ک" in rdarabic:
         msgs.append("Keheh")
-      if re.search(u"[\uFB50-\uFDCF]", rdarabic):
+      if re.search("[\uFB50-\uFDCF]", rdarabic):
         msgs.append("Arabic Pres-A")
-      if re.search(u"[\uFDF0-\uFDFF]", rdarabic):
+      if re.search("[\uFDF0-\uFDFF]", rdarabic):
         msgs.append("Arabic word ligatures")
-      if re.search(u"[\uFE70-\uFEFF]", rdarabic):
+      if re.search("[\uFE70-\uFEFF]", rdarabic):
         msgs.append("Arabic Pres-B")
       diffmsg = diff_string(rdarabic, rdcanonarabic)
 
@@ -151,8 +151,8 @@ def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
     pass
   elif translit and (translit == canonlatin
       # or translit == canonlatin + "un" or
-      #    translit == u"ʾ" + canonlatin or
-      #    translit == u"ʾ" + canonlatin + "un"
+      #    translit == "ʾ" + canonlatin or
+      #    translit == "ʾ" + canonlatin + "un"
       ):
     pagemsg("Removing redundant translit for %s -> %s%s" % (
         arabic, newarabic, latintrtext))
@@ -288,7 +288,7 @@ def canon_head(pagetitle, index, template):
         # for new heads, only use existing head in 1= if ends with -un (tanwīn),
         # because many of the existing 1= values are vocalized according to the
         # first transliterated entry in the list and won't work with the others
-        if not head.endswith(u"\u064C"):
+        if not head.endswith("\u064C"):
           head = pagetitle
       else:
         head = pagetitle
@@ -362,9 +362,9 @@ def canon_one_page_headwords(pagetitle, index, text):
 def canon_headwords(save, verbose, startFrom, upTo):
   def process_page(page, index, text):
     return canon_one_page_headwords(str(page.title()), index, text)
-  #for page in blib.references(u"Template:tracking/ar-head/head", startFrom, upTo):
+  #for page in blib.references("Template:tracking/ar-head/head", startFrom, upTo):
   #for page in blib.references("Template:ar-nisba", startFrom, upTo):
-  for cat in [u"Arabic lemmas", u"Arabic non-lemma forms"]:
+  for cat in ["Arabic lemmas", "Arabic non-lemma forms"]:
     for index, page in blib.cat_articles(cat, startFrom, upTo):
       blib.do_edit(page, index, process_page, save=save, verbose=verbose)
 
@@ -399,7 +399,7 @@ def canon_links(save, verbose, cattype, startFrom, upTo, pages_to_do=[]):
 
   return blib.process_links(save, verbose, "ar", "Arabic", cattype,
       startFrom, upTo, process_param, sort_group_changelogs,
-      pages_to_do=pages_to_do, split_templates=u"[,،/]")
+      pages_to_do=pages_to_do, split_templates="[,،/]")
 
 if __name__ == "__main__":
   pa = blib.create_argparser("Correct vocalization and translit")

@@ -24,17 +24,17 @@ def process_page(page, index, parsed):
     origt = str(t)
     if str(t.name) in ["ru-conj-7a", "ru-conj-7b"]:
       past_stem = getparam(t, "4")
-      vowel_end = re.search(u"[аэыоуяеиёю́]$", past_stem)
+      vowel_end = re.search("[аэыоуяеиёю́]$", past_stem)
       past_m = getparam(t, "past_m")
       past_f = getparam(t, "past_f")
       past_n = getparam(t, "past_n")
       past_pl = getparam(t, "past_pl")
       if past_m or past_f or past_n or past_pl:
         upast_stem = rulib.make_unstressed_ru(past_stem)
-        expected_past_m = past_stem + (u"л" if vowel_end else "")
-        expected_past_f = upast_stem + u"ла́"
-        expected_past_n = upast_stem + u"ло́"
-        expected_past_pl = upast_stem + u"ли́"
+        expected_past_m = past_stem + ("л" if vowel_end else "")
+        expected_past_f = upast_stem + "ла́"
+        expected_past_n = upast_stem + "ло́"
+        expected_past_pl = upast_stem + "ли́"
         if ((not past_m or expected_past_m == past_m) and
             expected_past_f == past_f and
             expected_past_n == past_n and

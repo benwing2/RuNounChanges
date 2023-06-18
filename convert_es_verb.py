@@ -7,22 +7,22 @@ import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
 remove_stress = {
-  u"á": "a",
-  u"é": "e",
-  u"í": "i",
-  u"ó": "o",
-  u"ú": "u",
+  "á": "a",
+  "é": "e",
+  "í": "i",
+  "ó": "o",
+  "ú": "u",
 }
 
 add_stress = {
-  "a": u"á",
-  "e": u"é",
-  "i": u"í",
-  "o": u"ó",
-  "u": u"ú",
+  "a": "á",
+  "e": "é",
+  "i": "í",
+  "o": "ó",
+  "u": "ú",
 }
 
-vowel = u"aeiouáéíóúý"
+vowel = "aeiouáéíóúý"
 V = "[" + vowel + "]"
 C = "[^" + vowel + "]"
 
@@ -61,7 +61,7 @@ def get_def_forms(lemma, prep, pagemsg):
   else:
     verb = refl_verb
     refl = None
-  m = re.search(u"^(.*)([aeiáéí])r$", verb)
+  m = re.search("^(.*)([aeiáéí])r$", verb)
   if m:
     base, suffix_vowel = m.groups()
   else:
@@ -70,7 +70,7 @@ def get_def_forms(lemma, prep, pagemsg):
   suffix = remove_stress.get(suffix_vowel, suffix_vowel) + "r"
   ends_in_vowel = re.search("[aeo]$", base)
   if suffix == "ir" and ends_in_vowel:
-    verb = base + u"ír"
+    verb = base + "ír"
   else:
     verb = base + suffix
   if prep:
@@ -93,7 +93,7 @@ def get_def_forms(lemma, prep, pagemsg):
     def_pres = base[:-2] + "go" # distinguir -> distingo
   elif base.endswith("u"):
     def_pres = base + "yo" # concluir -> concluyo
-  elif base.endswith(u"ü"):
+  elif base.endswith("ü"):
     def_pres = base[:-1] + "uyo" # argüir -> arguyo
   else:
     def_pres = base + "o"
@@ -110,32 +110,32 @@ def get_def_forms(lemma, prep, pagemsg):
     def_pres_ie = last_vowel in ["e", "i"] and before_last_vowel + "ie" + after_last_vowel + "o" or None
     # allow u for jugar -> juego; correctly handle avergonzar -> avergüenzo
     def_pres_ue = (
-      last_vowel == "o" and before_last_vowel.endswith("g") and before_last_vowel + u"üe" + after_last_vowel + "o" or
+      last_vowel == "o" and before_last_vowel.endswith("g") and before_last_vowel + "üe" + after_last_vowel + "o" or
       last_vowel in ["o", "u"] and before_last_vowel + "ue" + after_last_vowel + "o" or
       None
     )
     def_pres_i = last_vowel == "e" and before_last_vowel + "i" + after_last_vowel + "o" or None
-    def_pres_iacc = (last_vowel == "e" or last_vowel == "i") and before_last_vowel + u"í" + after_last_vowel + "o" or None
-    def_pres_uacc = last_vowel == "u" and before_last_vowel + u"ú" + after_last_vowel + "o" or None
+    def_pres_iacc = (last_vowel == "e" or last_vowel == "i") and before_last_vowel + "í" + after_last_vowel + "o" or None
+    def_pres_uacc = last_vowel == "u" and before_last_vowel + "ú" + after_last_vowel + "o" or None
   if suffix == "ar":
     if re.search("^" + C + "*[iu]$", base) or base == "gui": # criar, fiar, guiar, liar, etc.
       def_pret = base + "e"
     else:
-      def_pret = base + u"é"
-    def_pret = re.sub(u"gué$", u"güé", def_pret) # averiguar -> averigüé
-    def_pret = re.sub(u"gé$", u"gué", def_pret) # cargar -> cargué
-    def_pret = re.sub(u"cé$", u"qué", def_pret) # marcar -> marqué
-    def_pret = re.sub(u"[çz]é$", u"cé", def_pret) # aderezar/adereçar -> aderecé
+      def_pret = base + "é"
+    def_pret = re.sub("gué$", "güé", def_pret) # averiguar -> averigüé
+    def_pret = re.sub("gé$", "gué", def_pret) # cargar -> cargué
+    def_pret = re.sub("cé$", "qué", def_pret) # marcar -> marqué
+    def_pret = re.sub("[çz]é$", "cé", def_pret) # aderezar/adereçar -> aderecé
   elif suffix == "ir" and re.search("^" + C + "*u$", base): # fluir, fruir, huir, muir
     def_pret = base + "i"
   else:
-    def_pret = base + u"í"
+    def_pret = base + "í"
   end
   if suffix == "ar":
     def_part = base + "ado"
   elif ends_in_vowel:
     # reír -> reído, poseer -> poseído, caer -> caído, etc.
-    def_part = base + u"ído"
+    def_part = base + "ído"
   else:
     def_part = base + "ido"
   #if clitic or refl or post:
@@ -285,8 +285,8 @@ def process_text_on_page(index, pagetitle, text):
         "+ie" if x == d["pres_ie"] else
         "+ue" if x == d["pres_ue"] else
         "+i" if x == d["pres_i"] else
-        u"+í" if x == d["pres_iacc"] else
-        u"+ú" if x == d["pres_uacc"] else
+        "+í" if x == d["pres_iacc"] else
+        "+ú" if x == d["pres_uacc"] else
         x for x in pres
       ]
       notes.append("convert {{es-verb}} to new format")
@@ -299,7 +299,7 @@ def process_text_on_page(index, pagetitle, text):
       if part == ["+"]:
         notes.append("remove redundant participle from {{es-verb}}")
         part = []
-      for vowel_var in ["+ie", "+ue", "+i", u"+í", u"+ú"]:
+      for vowel_var in ["+ie", "+ue", "+i", "+í", "+ú"]:
         if vowel_var in pres:
           notes.append("replace vowel-varying present with '%s' in {{es-verb}}" % vowel_var)
       if "+" in part:

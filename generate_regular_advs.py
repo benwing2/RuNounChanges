@@ -12,7 +12,7 @@ for line in fileinput.input():
   args = re.split(" +", line)
   assert len(args) in [1, 2]
   adv = args[0]
-  assert adv.endswith(u"о")
+  assert adv.endswith("о")
   negbez = [] if len(args) == 1 else re.split(",", args[1])
   adj = re.sub("о$", "ий" if adv.endswith("ко") else "ый", adv)
   rels = []

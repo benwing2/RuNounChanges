@@ -34,15 +34,15 @@ def process_page(page, index, parsed):
       elif param2 not in ["8b/b", "8b/b+p"]:
         errpagemsg("WARNING: Unable to parse param2 %s" % param2)
     if str(t.name) in ["ru-conj", "ru-conj-old"] and param2.startswith("irreg"):
-      if re.search(u"(да́?ть|бы́?ть|кля́?сть)(ся)?$", param3):
+      if re.search("(да́?ть|бы́?ть|кля́?сть)(ся)?$", param3):
         if param2 == "irreg":
-          if param3.startswith(u"вы́"):
+          if param3.startswith("вы́"):
             t.add("2", "irreg/a(1)")
             notes.append("make past stress /a(1) explicit in irreg verb")
-          elif param3.endswith(u"ся"):
+          elif param3.endswith("ся"):
             t.add("2", "irreg/c''")
             notes.append("make past stress /c'' explicit in irreg verb")
-          elif param3.endswith(u"дать") or param3.endswith(u"да́ть"):
+          elif param3.endswith("дать") or param3.endswith("да́ть"):
             t.add("2", "irreg/c'")
             notes.append("make past stress /c' explicit in irreg verb")
           else:
@@ -60,7 +60,7 @@ def process_page(page, index, parsed):
 
   return parsed, notes
 
-parser = blib.create_argparser(u"Fix up class-8 and irregular arguments to have class a as default past stress")
+parser = blib.create_argparser("Fix up class-8 and irregular arguments to have class a as default past stress")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

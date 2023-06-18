@@ -6,7 +6,7 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-parser = blib.create_argparser(u"Find usexes with 'literally' in them")
+parser = blib.create_argparser("Find usexes with 'literally' in them")
 parser.add_argument('--cats', default="Russian lemmas", help="Categories to do (can be comma-separated list)")
 parser.add_argument('--refs', help="References to do (can be comma-separated list)")
 args = parser.parse_args()

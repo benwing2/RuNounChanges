@@ -7,10 +7,10 @@ import blib
 from blib import getparam, rmparam, tname, pname, msg, errandmsg, site
 import unicodedata
 
-AC = u"\u0301"
-GR = u"\u0300"
-CFLEX = u"\0302"
-vowel = u"AEIOUaeiouɛɔy"
+AC = "\u0301"
+GR = "\u0300"
+CFLEX = "\0302"
+vowel = "AEIOUaeiouɛɔy"
 vowel_c = "[" + vowel + "]"
 vocalic_c = "[^" + vowel + "jw]"
 not_vowel_c = "[^" + vowel + "]"
@@ -62,7 +62,7 @@ def process_text_on_page(index, pagetitle, text):
             pagemsg("WARNING: Single-vowel word")
           if vowel_count > 1:
             new_ipa = re.sub("(" + vowel_c + ")(" + not_vowel_c + "*[iyu]?" + vowel_c + not_vowel_c + "*)$",
-                lambda m: m.group(1) + (AC if m.group(1) in u"eoɛɔ" else GR) + m.group(2), ipa)
+                lambda m: m.group(1) + (AC if m.group(1) in "eoɛɔ" else GR) + m.group(2), ipa)
             if new_ipa == ipa:
               pagemsg("WARNING: Unable to add stress: %s" % ipa)
             else:
@@ -108,20 +108,20 @@ def process_text_on_page(index, pagetitle, text):
             notes.append(unicodedata.normalize("NFC",
               "convert z to ts or dz in %s -> %s in {{it-IPA}}" % (ipa, new_ipa)))
             ipa = new_ipa
-        new_ipa = ipa.replace(u"ʦ", "ts")
-        new_ipa = new_ipa.replace(u"ʣ", "dz")
+        new_ipa = ipa.replace("ʦ", "ts")
+        new_ipa = new_ipa.replace("ʣ", "dz")
         if new_ipa != ipa:
-          notes.append(u"normalize ʦ/ʣ to ts/dz in {{it-IPA}} pronun")
+          notes.append("normalize ʦ/ʣ to ts/dz in {{it-IPA}} pronun")
           ipa = new_ipa
         ipa = unicodedata.normalize("NFC", ipa)
         # module special-cases -izzare
-        new_ipa = re.sub(u"iddz[àá]re", "izzare", ipa)
+        new_ipa = re.sub("iddz[àá]re", "izzare", ipa)
         if new_ipa != ipa:
-          notes.append(u"normalize -iddzàre to -izzare in {{it-IPA}}")
+          notes.append("normalize -iddzàre to -izzare in {{it-IPA}}")
           ipa = new_ipa
-        new_ipa = ipa.replace(u"á", u"à").replace(u"í", u"ì").replace(u"ú", u"ù")
+        new_ipa = ipa.replace("á", "à").replace("í", "ì").replace("ú", "ù")
         if new_ipa != ipa:
-          notes.append(unicodedata.normalize("NFC", u"normalize stress in %s in {{it-IPA}}" % ipa))
+          notes.append(unicodedata.normalize("NFC", "normalize stress in %s in {{it-IPA}}" % ipa))
           ipa = new_ipa
         frobbed_pronuns.append(ipa)
       if must_continue:

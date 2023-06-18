@@ -65,33 +65,33 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
   new_forms = blib.split_generate_args(new_result)
   if "subii_2s" in new_forms:
     # New code generates subii 2s in both -est and -st; old only in -est
-    new_forms["subii_2s"] = remove_forms_in(new_forms["subii_2s"], u"^[^ ]*([^e]|ie)[sxßz]t($| )")
+    new_forms["subii_2s"] = remove_forms_in(new_forms["subii_2s"], "^[^ ]*([^e]|ie)[sxßz]t($| )")
   if "subii_2p" in new_forms:
     # New code generates subii 2p in both -et and -t; old only in -et
     new_forms["subii_2p"] = remove_forms_in(new_forms["subii_2p"], "^[^ ]*[^e]t($| )")
   if "subc_subii_2s" in new_forms:
     # New code generates subii 2s in both -est and -st; old only in -est
-    new_forms["subc_subii_2s"] = remove_forms_in(new_forms["subc_subii_2s"], u"([^e]|ie)[sxßz]t$")
+    new_forms["subc_subii_2s"] = remove_forms_in(new_forms["subc_subii_2s"], "([^e]|ie)[sxßz]t$")
   if "subc_subii_2p" in new_forms:
     # New code generates subii 2p in both -et and -t; old only in -et
     new_forms["subc_subii_2p"] = remove_forms_in(new_forms["subc_subii_2p"], "[^e]t$")
   #if "perf_sub_2s" in new_forms and "seiest" in new_forms["perf_sub_2s"] and not re.search("e[rl]n$", newarg1):
   #  # New code generates perf sub 2s in both seist and seiest; old only in seist
   #  new_forms["perf_sub_2s"] = remove_forms_in(new_forms["perf_sub_2s"], "seiest")
-  if re.search(u"[sxzß]en$", newarg1):
+  if re.search("[sxzß]en$", newarg1):
     if "pret_2s" in new_forms:
       # New code generates pret 2s for -sen verbs in both -sest and -st; old only in -st
-      new_forms["pret_2s"] = remove_forms_in(new_forms["pret_2s"], u"^[^ ]*[sxzß]est($| )")
+      new_forms["pret_2s"] = remove_forms_in(new_forms["pret_2s"], "^[^ ]*[sxzß]est($| )")
     if "subc_pret_2s" in new_forms:
       # New code generates pret 2s for -sen verbs in both -sest and -st; old only in -st
-      new_forms["subc_pret_2s"] = remove_forms_in(new_forms["subc_pret_2s"], u"[sxzß]est$")
-  if re.search(u"[td]en$", newarg1):
+      new_forms["subc_pret_2s"] = remove_forms_in(new_forms["subc_pret_2s"], "[sxzß]est$")
+  if re.search("[td]en$", newarg1):
     if "pret_2s" in new_forms:
       # New code generates pret 2s for -ten verbs in both -test and -tst; old only in -test
-      new_forms["pret_2s"] = remove_forms_in(new_forms["pret_2s"], u"^[^ ]*[td]st($| )")
+      new_forms["pret_2s"] = remove_forms_in(new_forms["pret_2s"], "^[^ ]*[td]st($| )")
     if "subc_pret_2s" in new_forms:
       # New code generates pret 2s for -sen verbs in both -test and -tst; old only in -test
-      new_forms["subc_pret_2s"] = remove_forms_in(new_forms["subc_pret_2s"], u"[td]st$")
+      new_forms["subc_pret_2s"] = remove_forms_in(new_forms["subc_pret_2s"], "[td]st$")
 
   for form in set(old_forms.keys() + new_forms.keys()):
     if form not in new_forms:
@@ -155,7 +155,7 @@ def process_text_on_page(index, pagetitle, text):
           t.add("7", "")
           notes.append("discard redundant 7= in {{de-conj-strong}} (subiistem)")
       prestem_actually_ends_in_dt = re.search("[dt]$", presstem)
-      prestem_actually_ends_in_sxz = re.search(u"[sxzß]$", presstem)
+      prestem_actually_ends_in_sxz = re.search("[sxzß]$", presstem)
       if (not not prestem_actually_ends_in_dt) != (not not ends_in_dt):
         pagemsg("WARNING: explicit ends_in_dt=%s (orig 5=) not same as prestem_actually_ends_in_dt=%s for presstem=%s (orig 1=)" % (
           not not ends_in_dt, not not prestem_actually_ends_in_dt, presstem))
@@ -172,10 +172,10 @@ def process_text_on_page(index, pagetitle, text):
         if args.correct:
           if prestem_actually_ends_in_sxz:
             t.add("12", "a")
-            notes.append(u"add 12=a in {{de-conj-strong}} because stem ends in -s, -z or -ß")
+            notes.append("add 12=a in {{de-conj-strong}} because stem ends in -s, -z or -ß")
           else:
             t.add("12", "")
-            notes.append(u"remove 12= in {{de-conj-strong}} because stem doesn't end in -s, -z or -ß")
+            notes.append("remove 12= in {{de-conj-strong}} because stem doesn't end in -s, -z or -ß")
       if seppref:
         seppref = seppref.replace("&#32;", " ").replace("&nbsp;", " ")
         seppref_with_underscore = seppref.replace(" ", "_")
@@ -190,7 +190,7 @@ def process_text_on_page(index, pagetitle, text):
       if lemma != pagetitle:
         pagemsg("WARNING: Pagetitle doesn't match lemma %s constructed from presstem=%s (orig 1=) and seppref=%s (orig 10=)" % (
           lemma, presstem, seppref))
-      pres23stem_ao_umlaut = not not re.search(u"[äö]", pres23stem)
+      pres23stem_ao_umlaut = not not re.search("[äö]", pres23stem)
       if impnotpres23:
         if not pres23stem:
           pagemsg("WARNING: impnotpres23=%s (orig 11=) specified but not pres23stem (orig 6=)" % impnotpres23)
@@ -198,15 +198,15 @@ def process_text_on_page(index, pagetitle, text):
             t.add("11", "")
             notes.append("remove 11= (impnotpres23) in {{de-conj-strong}} because pres23stem (6=) not given")
         elif not pres23stem_ao_umlaut:
-          pagemsg(u"WARNING: impnotpres23=%s (orig 11=) specified but pres23stem=%s (orig 6=) doesn't have ä or ö" % (impnotpres23, pres23stem))
+          pagemsg("WARNING: impnotpres23=%s (orig 11=) specified but pres23stem=%s (orig 6=) doesn't have ä or ö" % (impnotpres23, pres23stem))
           if args.correct:
             t.add("11", "")
-            notes.append(u"remove 11= (impnotpres23) in {{de-conj-strong}} because pres23stem (6=) doesn't have ä or ö")
+            notes.append("remove 11= (impnotpres23) in {{de-conj-strong}} because pres23stem (6=) doesn't have ä or ö")
       elif pres23stem_ao_umlaut:
-        pagemsg(u"WARNING: impnotpres23 (orig 11=) not specified but pres23stem=%s (orig 6=) has ä or ö" % pres23stem)
+        pagemsg("WARNING: impnotpres23 (orig 11=) not specified but pres23stem=%s (orig 6=) has ä or ö" % pres23stem)
         if args.correct:
           t.add("11", "a")
-          notes.append(u"add 11=a (impnotpres23) in {{de-conj-strong}} because pres23stem (6=) has ä or ö")
+          notes.append("add 11=a (impnotpres23) in {{de-conj-strong}} because pres23stem (6=) has ä or ö")
       if shortimp:
         if not pres23stem:
           pagemsg("WARNING: shortimp=%s (orig 9=) specified but not pres23stem (orig 6=)" % shortimp)
@@ -214,10 +214,10 @@ def process_text_on_page(index, pagetitle, text):
             t.add("9", "")
             notes.append("remove 9= (shortimp) in {{de-conj-strong}} because pres23stem (6=) not given")
       elif pres23stem and not pres23stem_ao_umlaut:
-        pagemsg(u"WARNING: shortimp (orig 9=) not specified but pres23stem=%s (orig 6=) given without ä or ö" % pres23stem)
+        pagemsg("WARNING: shortimp (orig 9=) not specified but pres23stem=%s (orig 6=) given without ä or ö" % pres23stem)
         if args.correct:
           t.add("9", "a")
-          notes.append(u"add 9=a (shortimp) in {{de-conj-strong}} because non-redundant pres23stem (6=) given without ä or ö")
+          notes.append("add 9=a (shortimp) in {{de-conj-strong}} because non-redundant pres23stem (6=) given without ä or ö")
       parts = []
       parts.append(lemma_with_dot)
       if lemma.endswith("haben"):

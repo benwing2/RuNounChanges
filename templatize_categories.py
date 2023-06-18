@@ -81,7 +81,7 @@ def process_text_on_page(index, pagetitle, text, lang, langname, topicstemp):
   return text, notes
 
 if __name__ == "__main__":
-  parser = blib.create_argparser(u"Templatize categories", include_pagefile=True, include_stdin=True)
+  parser = blib.create_argparser("Templatize categories", include_pagefile=True, include_stdin=True)
   parser.add_argument("--langcode", help="Code of language to templatize", required=True)
   parser.add_argument("--langname", help="Name of language to templatize", required=True)
   parser.add_argument("--topics-template", help="Name of topics template to use", default="C")

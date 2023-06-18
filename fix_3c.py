@@ -24,7 +24,7 @@ def process_page(page, index, parsed):
       assert not getparam(t, "4")
       inf = getparam(t, "3")
       inf = rulib.make_unstressed_ru(inf)
-      inf = re.sub(u"нуть((ся)?)$", r"ну́ть\1", inf)
+      inf = re.sub("нуть((ся)?)$", r"ну́ть\1", inf)
       t.add("3", inf)
       notes.append("Remove stray accent from 3c infinitive")
     newt = str(t)

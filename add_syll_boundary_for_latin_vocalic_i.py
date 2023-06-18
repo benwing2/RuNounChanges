@@ -25,10 +25,10 @@ prefixes = [
   "sub",
   "subter",
   "super",
-  ["trans", u"trāns"],
+  ["trans", "trāns"],
 ]
 
-vowel_re = u"[aeiouyāēīōūȳăĕĭŏŭ]"
+vowel_re = "[aeiouyāēīōūȳăĕĭŏŭ]"
 
 def process_page(page, index, add_dot_after_i, convert_j):
   pagetitle = str(page.title())
@@ -60,7 +60,7 @@ def process_page(page, index, add_dot_after_i, convert_j):
           macron_prefix = prefix
         orig_param1 = param1
         if re.search("^%s[ij]" % macron_prefix, param1):
-          if re.search(u"^%si%s" % (macron_prefix, vowel_re), param1) and add_dot_after_i:
+          if re.search("^%si%s" % (macron_prefix, vowel_re), param1) and add_dot_after_i:
             param1 = re.sub("^%si" % macron_prefix, "%si." % macron_prefix, param1)
             notes.append("add dot after i in {{la-IPA}} to force vocalic pronunciation")
           elif re.search("^%sj%s" % (macron_prefix, vowel_re), param1) and convert_j:

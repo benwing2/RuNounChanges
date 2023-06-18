@@ -6,7 +6,7 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-parser = blib.create_argparser(u"Delete obsolete pages")
+parser = blib.create_argparser("Delete obsolete pages")
 parser.add_argument('--pagefile', help="File of ///-separated pairs of base declensions to move",
     required=True)
 parser.add_argument('--comment', help="Comment to use when deleting")

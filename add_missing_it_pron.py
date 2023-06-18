@@ -7,48 +7,48 @@ import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
 vowel_ipa_to_spelling = {
-  "a": u"à",
-  "e": u"é",
-  u"ɛ": u"è",
-  "i": u"ì",
-  "o": u"ó",
-  u"ɔ": u"ò",
-  "u": u"ù",
+  "a": "à",
+  "e": "é",
+  "ɛ": "è",
+  "i": "ì",
+  "o": "ó",
+  "ɔ": "ò",
+  "u": "ù",
 }
 
 vowel_respelling_to_spelling = {
-  u"à": "a",
-  u"é": "e",
-  u"è": "e",
-  u"ì": "i",
-  u"ó": "o",
-  u"ò": "o",
-  u"ù": "u",
-  u"À": "A",
-  u"É": "E",
-  u"È": "E",
-  u"Ì": "I",
-  u"Ó": "O",
-  u"Ò": "O",
-  u"Ù": "U",
+  "à": "a",
+  "é": "e",
+  "è": "e",
+  "ì": "i",
+  "ó": "o",
+  "ò": "o",
+  "ù": "u",
+  "À": "A",
+  "É": "E",
+  "È": "E",
+  "Ì": "I",
+  "Ó": "O",
+  "Ò": "O",
+  "Ù": "U",
 }
 
 def rhyme_to_spelling(rhy):
-  rhy = re.sub(u"^(.*?)([aɛeiɔou])", lambda m: m.group(1) + vowel_ipa_to_spelling[m.group(2)], rhy)
+  rhy = re.sub("^(.*?)([aɛeiɔou])", lambda m: m.group(1) + vowel_ipa_to_spelling[m.group(2)], rhy)
   rhy = re.sub("([iu])([aeiou])", r"\1.\2", rhy)
-  rhy = rhy.replace("j", "i").replace(u"ɡ", "g").replace(u"ɲɲ", "gn")
+  rhy = rhy.replace("j", "i").replace("ɡ", "g").replace("ɲɲ", "gn")
   rhy = rhy.replace("kw", "qu").replace("w", "u")
   rhy = re.sub("k([ei])", r"ch\1", rhy).replace("k", "c")
   rhy = re.sub("g([ei])", r"gh\1", rhy)
-  rhy = re.sub(u"ddʒ([ei])", r"gg\1", rhy).replace(u"ddʒ", "ggi")
-  rhy = re.sub(u"dʒ([ei])", r"g\1", rhy).replace(u"dʒ", "gi")
-  rhy = re.sub(u"ttʃ([ei])", r"cc\1", rhy).replace(u"ttʃ", "cci")
-  rhy = re.sub(u"tʃ([ei])", r"c\1", rhy).replace(u"tʃ", "ci")
-  rhy = re.sub(u"ʃ+([ei])", r"sc\1", rhy)
-  rhy = re.sub(u"ʃ+", "sci", rhy)
-  rhy = re.sub(u"ʎʎi?", "gli", rhy)
+  rhy = re.sub("ddʒ([ei])", r"gg\1", rhy).replace("ddʒ", "ggi")
+  rhy = re.sub("dʒ([ei])", r"g\1", rhy).replace("dʒ", "gi")
+  rhy = re.sub("ttʃ([ei])", r"cc\1", rhy).replace("ttʃ", "cci")
+  rhy = re.sub("tʃ([ei])", r"c\1", rhy).replace("tʃ", "ci")
+  rhy = re.sub("ʃ+([ei])", r"sc\1", rhy)
+  rhy = re.sub("ʃ+", "sci", rhy)
+  rhy = re.sub("ʎʎi?", "gli", rhy)
   rhy = re.sub("([^d])z", r"\1s", rhy)
-  spelling = re.sub(u"([àéèìóòù])(.)", lambda m: vowel_respelling_to_spelling[m.group(1)] + m.group(2), rhy)
+  spelling = re.sub("([àéèìóòù])(.)", lambda m: vowel_respelling_to_spelling[m.group(1)] + m.group(2), rhy)
   spelling = spelling.replace(".", "")
   spelling = re.sub("([^t])ts", r"\1z", spelling)
   spelling = re.sub("([^d])dz", r"\1z", spelling)
@@ -62,9 +62,9 @@ def rhyme_to_spelling(rhy):
   for spelling, respelling in ret:
     ret_with_cap.append((spelling, respelling))
     ret_with_cap.append((spelling.capitalize(), respelling.capitalize()))
-    if re.search(u"[àéèìóòù]", spelling):
+    if re.search("[àéèìóòù]", spelling):
       # final stressed vowel; also add possibilities without the accent in case word is a monosyllable
-      spelling = re.sub(u"([àéèìóòù])", lambda m: vowel_respelling_to_spelling[m.group(1)], spelling)
+      spelling = re.sub("([àéèìóòù])", lambda m: vowel_respelling_to_spelling[m.group(1)], spelling)
       ret_with_cap.append((spelling, respelling))
       ret_with_cap.append((spelling.capitalize(), respelling.capitalize()))
   return ret_with_cap
@@ -78,73 +78,73 @@ def sub_repeatedly(fro, to, text):
 
 def ipa_to_respelling(ipa):
   ipa = re.sub(r"[/\[\]]", "", ipa)
-  ipa = ipa.replace(u"ɡ", "g")
-  ipa = ipa.replace(u"ɾ", "r")
-  ipa = ipa.replace(u"ä", "a")
-  ipa = ipa.replace(u"ã", "a")
-  ipa = ipa.replace(u"ẽ", "e")
-  ipa = ipa.replace(u"ĩ", "i")
-  ipa = ipa.replace(u"õ", "o")
-  ipa = ipa.replace(u"ũ", "u")
-  ipa = ipa.replace(u"\u0361", "") # get rid of tie bar in t͡ʃ, t͡ːs, etc.
-  ipa = ipa.replace(u"\u032a", "") # get rid of dentalization marker in t̪ d̪ s̪ etc.
-  ipa = ipa.replace(u"\u033a", "") # get rid of marker in r̺ etc.
-  ipa = ipa.replace(u"\u031a", "") # get rid of marker in c̚ etc.
-  ipa = ipa.replace(u"\u031e", "") # get rid of lowering marker in e̞ etc.
-  ipa = ipa.replace(u"\u031f", "") # get rid of marker in ɡ̟ etc.
-  ipa = ipa.replace(u"\u0320", "") # get rid of underline in n̠ etc.
-  ipa = ipa.replace(u"ʲ", "")
-  ipa = re.sub(u"([aeɛioɔu])ː", r"\1", ipa)
-  ipa = ipa.replace(u"tʃː", u"ttʃ")
-  ipa = ipa.replace(u"dʒː", u"ddʒ")
-  ipa = ipa.replace(u"tsː", u"tts")
-  ipa = ipa.replace(u"dzː", u"ddz")
-  ipa = re.sub(u"(.)ː", r"\1\1", ipa)
+  ipa = ipa.replace("ɡ", "g")
+  ipa = ipa.replace("ɾ", "r")
+  ipa = ipa.replace("ä", "a")
+  ipa = ipa.replace("ã", "a")
+  ipa = ipa.replace("ẽ", "e")
+  ipa = ipa.replace("ĩ", "i")
+  ipa = ipa.replace("õ", "o")
+  ipa = ipa.replace("ũ", "u")
+  ipa = ipa.replace("\u0361", "") # get rid of tie bar in t͡ʃ, t͡ːs, etc.
+  ipa = ipa.replace("\u032a", "") # get rid of dentalization marker in t̪ d̪ s̪ etc.
+  ipa = ipa.replace("\u033a", "") # get rid of marker in r̺ etc.
+  ipa = ipa.replace("\u031a", "") # get rid of marker in c̚ etc.
+  ipa = ipa.replace("\u031e", "") # get rid of lowering marker in e̞ etc.
+  ipa = ipa.replace("\u031f", "") # get rid of marker in ɡ̟ etc.
+  ipa = ipa.replace("\u0320", "") # get rid of underline in n̠ etc.
+  ipa = ipa.replace("ʲ", "")
+  ipa = re.sub("([aeɛioɔu])ː", r"\1", ipa)
+  ipa = ipa.replace("tʃː", "ttʃ")
+  ipa = ipa.replace("dʒː", "ddʒ")
+  ipa = ipa.replace("tsː", "tts")
+  ipa = ipa.replace("dzː", "ddz")
+  ipa = re.sub("(.)ː", r"\1\1", ipa)
   # Include negative lookahead of 032f (inverted underbreve as in e̯) so that pronuns like /fiˈde̯is.mo/
   # get the stress on the right vowel. Right afterwords we remove the inverted underbreves.
-  ipa = sub_repeatedly(u"ˌ([^ ]*?)([aeɛioɔu])(?!\u032f)(.*ˈ)", lambda m: m.group(1) + vowel_ipa_to_spelling[m.group(2)] + m.group(3), ipa)
+  ipa = sub_repeatedly("ˌ([^ ]*?)([aeɛioɔu])(?!\u032f)(.*ˈ)", lambda m: m.group(1) + vowel_ipa_to_spelling[m.group(2)] + m.group(3), ipa)
   # 0331 = LINEUNDER
-  ipa = re.sub(u"ˌ(.*?)([aeɛioɔu])(?!\u032f)", lambda m: m.group(1) + vowel_ipa_to_spelling[m.group(2)] + u"\u0331", ipa)
-  ipa = re.sub(u"ˈ(.*?)([aeɛioɔu])(?!\u032f)", lambda m: m.group(1) + vowel_ipa_to_spelling[m.group(2)], ipa)
+  ipa = re.sub("ˌ(.*?)([aeɛioɔu])(?!\u032f)", lambda m: m.group(1) + vowel_ipa_to_spelling[m.group(2)] + "\u0331", ipa)
+  ipa = re.sub("ˈ(.*?)([aeɛioɔu])(?!\u032f)", lambda m: m.group(1) + vowel_ipa_to_spelling[m.group(2)], ipa)
   # 0323 = DOTUNDER
-  ipa = re.sub(u"([ɛɔ])", lambda m: vowel_ipa_to_spelling[m.group(1)] + u"\u0323", ipa)
-  ipa = ipa.replace(u"a̯", "a")
-  ipa = ipa.replace(u"e̯", "e")
-  ipa = ipa.replace(u"o̯", "o")
-  ipa = ipa.replace(u"i̯", "j")
-  ipa = ipa.replace(u"u̯", "w")
+  ipa = re.sub("([ɛɔ])", lambda m: vowel_ipa_to_spelling[m.group(1)] + "\u0323", ipa)
+  ipa = ipa.replace("a̯", "a")
+  ipa = ipa.replace("e̯", "e")
+  ipa = ipa.replace("o̯", "o")
+  ipa = ipa.replace("i̯", "j")
+  ipa = ipa.replace("u̯", "w")
   ipa = sub_repeatedly(r"([iu])\.?([aeiouàèéìòóù])", r"\1*\2", ipa)
   ipa = sub_repeatedly(r"([aeiouàèéìòóù])\.?([iu])", r"\1*\2", ipa)
   ipa = ipa.replace(".", "").replace("*", ".")
-  ipa = ipa.replace(u"dʒdʒ", u"ddʒ")
-  ipa = ipa.replace("dzdz", u"ddz")
-  ipa = ipa.replace(u"tʃtʃ", u"ttʃ")
-  ipa = ipa.replace("tsts", u"tts")
-  ipa = ipa.replace(u"ɱ", "n")
-  ipa = re.sub(u"ŋ([kg])", r"n\1", ipa)
+  ipa = ipa.replace("dʒdʒ", "ddʒ")
+  ipa = ipa.replace("dzdz", "ddz")
+  ipa = ipa.replace("tʃtʃ", "ttʃ")
+  ipa = ipa.replace("tsts", "tts")
+  ipa = ipa.replace("ɱ", "n")
+  ipa = re.sub("ŋ([kg])", r"n\1", ipa)
   ipa = ipa.replace("j", "i")
-  ipa = re.sub(u"ɲ+", "gn", ipa)
+  ipa = re.sub("ɲ+", "gn", ipa)
   ipa = ipa.replace("kw", "qu").replace("w", "u")
   iap = ipa.replace("h", "[h]")
-  ipa = re.sub(u"k([eièéì])", r"ch\1", ipa).replace("k", "c")
-  ipa = re.sub(u"g([eièéì])", r"gh\1", ipa)
-  ipa = re.sub(u"ddʒ([eièéì])", r"gg\1", ipa)
-  ipa = re.sub(u"ddʒ([aàoòóuù])", r"ggi\1", ipa)
-  ipa = re.sub(u"dʒ([eièéì])", r"g\1", ipa)
-  ipa = re.sub(u"dʒ([aàoòóuù])", r"gi\1", ipa)
-  ipa = ipa.replace(u"dʒ", u"[dʒ]")
-  ipa = re.sub(u"ttʃ([eièéì])", r"cc\1", ipa)
-  ipa = re.sub(u"ttʃ([aàoòóuù])", r"cci\1", ipa)
-  ipa = re.sub(u"tʃ([eièéì])", r"c\1", ipa)
-  ipa = re.sub(u"tʃ([aàoòóuù])", r"ci\1", ipa)
-  ipa = ipa.replace(u"tʃ", u"[tʃ]")
-  ipa = re.sub(u"ʃ+([eièéì])", r"sc\1", ipa)
-  ipa = re.sub(u"ʃ+([aàoòóuù])", r"sci\1", ipa)
+  ipa = re.sub("k([eièéì])", r"ch\1", ipa).replace("k", "c")
+  ipa = re.sub("g([eièéì])", r"gh\1", ipa)
+  ipa = re.sub("ddʒ([eièéì])", r"gg\1", ipa)
+  ipa = re.sub("ddʒ([aàoòóuù])", r"ggi\1", ipa)
+  ipa = re.sub("dʒ([eièéì])", r"g\1", ipa)
+  ipa = re.sub("dʒ([aàoòóuù])", r"gi\1", ipa)
+  ipa = ipa.replace("dʒ", "[dʒ]")
+  ipa = re.sub("ttʃ([eièéì])", r"cc\1", ipa)
+  ipa = re.sub("ttʃ([aàoòóuù])", r"cci\1", ipa)
+  ipa = re.sub("tʃ([eièéì])", r"c\1", ipa)
+  ipa = re.sub("tʃ([aàoòóuù])", r"ci\1", ipa)
+  ipa = ipa.replace("tʃ", "[tʃ]")
+  ipa = re.sub("ʃ+([eièéì])", r"sc\1", ipa)
+  ipa = re.sub("ʃ+([aàoòóuù])", r"sci\1", ipa)
   ipa = re.sub(r"ʃ+(?!\])", "sh", ipa) # don't change [tʃ] generated above
-  ipa = re.sub(u"ʎ+([iì])", r"gl\1", ipa)
-  ipa = re.sub(u"ʎ+([aàeèéoòóuù])", r"gli\1", ipa)
-  ipa = sub_repeatedly(u"([aeiouàèéìòóù][\u0323\u0331]?)s([aeiouàèéìòóù])", r"\1[s]\2", ipa)
-  ipa = sub_repeatedly(u"([aeiouàèéìòóù][\u0323\u0331]?)z([aeiouàèéìòóùbdglmnrv])", r"\1s\2", ipa)
+  ipa = re.sub("ʎ+([iì])", r"gl\1", ipa)
+  ipa = re.sub("ʎ+([aàeèéoòóuù])", r"gli\1", ipa)
+  ipa = sub_repeatedly("([aeiouàèéìòóù][\u0323\u0331]?)s([aeiouàèéìòóù])", r"\1[s]\2", ipa)
+  ipa = sub_repeatedly("([aeiouàèéìòóù][\u0323\u0331]?)z([aeiouàèéìòóùbdglmnrv])", r"\1s\2", ipa)
   ipa = re.sub("z([bdglmnrv])", r"s\1", ipa)
   ipa = re.sub("(^|[^d])z", r"\1[z]", ipa)
   return ipa
@@ -170,8 +170,8 @@ def hack_respelling(pagetitle, respelling):
 
       # Change 'c' in respelling to 'k' as appropriate for pagetitle; similarly, change 'cs' to 'x' as
       # appropriate and 'qu' to 'cu'.
-      split_ptw = re.split(u"([cC]+[sh]|[Cc]*[xXkKqQ]+|[cC]+(?![eèéiì]))", ptw)
-      split_rw = re.split(u"([cC]+[sh]|[Cc]*[xXkKqQ]+|[cC]+(?![eèéiì]))", rw)
+      split_ptw = re.split("([cC]+[sh]|[Cc]*[xXkKqQ]+|[cC]+(?![eèéiì]))", ptw)
+      split_rw = re.split("([cC]+[sh]|[Cc]*[xXkKqQ]+|[cC]+(?![eèéiì]))", rw)
       if len(split_ptw) != len(split_rw):
         warnings.append("WARNING: Different # of c/k/q's in pagetitle word %s vs. c/k/q's in respelling word %s" % (ptw, rw))
       else:
@@ -184,8 +184,8 @@ def hack_respelling(pagetitle, respelling):
         rw = "".join(parts)
 
       # Change 'ce' in respelling to 'cie' as appropriate for pagetitle.
-      split_ptw = re.split(u"([cC]i?(?=[eèé]))", ptw)
-      split_rw = re.split(u"([cC]i?(?=[eèé]))", rw)
+      split_ptw = re.split("([cC]i?(?=[eèé]))", ptw)
+      split_rw = re.split("([cC]i?(?=[eèé]))", rw)
       if len(split_ptw) != len(split_rw):
         warnings.append("WARNING: Different # of c(i)e's in pagetitle word %s vs. c(i)e's in respelling word %s" % (ptw, rw))
       else:
@@ -292,14 +292,14 @@ def process_text_on_page(index, pagetitle, text):
             for rw in respelling_words:
               if rw.endswith("-"): # prefix
                 continue
-              hacked_rw = re.sub(u".[\u0323\u0331]", "e", rw) # pretend vowels with secondary or no stress are 'e'
-              if not re.search(u"[àèéìòóùÀÈÉÌÒÓÙ]", hacked_rw) and len(re.sub("[^aeiouAEIOU]", "", hacked_rw)) > 1:
+              hacked_rw = re.sub(".[\u0323\u0331]", "e", rw) # pretend vowels with secondary or no stress are 'e'
+              if not re.search("[àèéìòóùÀÈÉÌÒÓÙ]", hacked_rw) and len(re.sub("[^aeiouAEIOU]", "", hacked_rw)) > 1:
                 set_unable("WARNING: For respelling %s for pronun %s, word %s is missing stress" %
                   (respelling, pronun, rw))
-            if not re.search(u"^[a-zA-ZàèéìòóùÀÈÉÌÒÓÙ. ʒʃ\[\]-]+$", respelling):
+            if not re.search("^[a-zA-ZàèéìòóùÀÈÉÌÒÓÙ. ʒʃ\[\]-]+$", respelling):
               set_unable("WARNING: Strange char in respelling %s for pronun %s" % (respelling, pronun))
             else:
-              putative_pagetitle = re.sub(u"([àèéìòóùÀÈÉÌÒÓÙ])([^ ])",
+              putative_pagetitle = re.sub("([àèéìòóùÀÈÉÌÒÓÙ])([^ ])",
                   lambda m: vowel_respelling_to_spelling[m.group(1)] + m.group(2),
                   respelling)
               pagetitle_words = pagetitle.split(" ")
@@ -453,23 +453,23 @@ def process_text_on_page(index, pagetitle, text):
               prevpart = pagetitle[:-len(ending)]
               respelling = prevpart + ending_respelling
               saw_oso_ese = False
-              if ending_respelling == u"óso":
+              if ending_respelling == "óso":
                 saw_oso_ese = True
                 append_respelling(respelling)
-                append_respelling("#" + prevpart + u"ó[s]o")
-              elif ending_respelling == u"ése":
+                append_respelling("#" + prevpart + "ó[s]o")
+              elif ending_respelling == "ése":
                 saw_oso_ese = True
                 append_respelling(respelling)
-                append_respelling("#" + prevpart + u"é[s]e")
+                append_respelling("#" + prevpart + "é[s]e")
               else:
-                if respelling.endswith(u"zióne"):
-                  new_respelling = re.sub(u"zióne$", u"tsióne", respelling)
+                if respelling.endswith("zióne"):
+                  new_respelling = re.sub("zióne$", "tsióne", respelling)
                   pagemsg("Replaced respelling '%s' with '%s'" % (respelling, new_respelling))
                   respelling = new_respelling
                   prevpart = respelling[:-len(ending)] + ending_respelling
                 append_respelling(respelling)
-              if (re.search(u"[aeiouàèéìòóù]s([aeiouàèéìòóù]|$)", prevpart.lower()) or
-                  not saw_oso_ese and re.search(u"[aeiouàèéìòóù][sz][aeiouàèéìòóù]", ending_respelling.lower())):
+              if (re.search("[aeiouàèéìòóù]s([aeiouàèéìòóù]|$)", prevpart.lower()) or
+                  not saw_oso_ese and re.search("[aeiouàèéìòóù][sz][aeiouàèéìòóù]", ending_respelling.lower())):
                 append_warnings("WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: %s" % rhy)
                 unable = True
                 break
@@ -484,7 +484,7 @@ def process_text_on_page(index, pagetitle, text):
                 append_warnings("WARNING: Unable to add pronunciation due to hiatus in part before rhyme %s" % rhy)
                 unable = True
                 break
-              if re.search(u"[aeiouàèéìòóù]i([^aeiouàèéìòóù]|$)", respelling.lower()):
+              if re.search("[aeiouàèéìòóù]i([^aeiouàèéìòóù]|$)", respelling.lower()):
                 append_warnings("WARNING: Unable to add pronunciation due to falling diphthong in -i: %s" % rhy)
                 unable = True
                 break

@@ -29,11 +29,11 @@ def process_page(page, index, parsed):
       param5 = getparam(t, "5")
       assert not getparam(t, "6")
       if param2.startswith("7b"):
-        if re.search(u"[еѣ]сти́(сь)?$", param3) and u"ё" not in param4 and u"ѣ̈" not in param4:
+        if re.search("[еѣ]сти́(сь)?$", param3) and "ё" not in param4 and "ѣ̈" not in param4:
           assert not param5
-          param5 = u"ёе"
+          param5 = "ёе"
         param4 = rulib.make_unstressed_ru(param4)
-      if re.search(u"(л[еѣ]́?зть|с[еѣ]́?сть|обокра́сть)(ся)?$", param3):
+      if re.search("(л[еѣ]́?зть|с[еѣ]́?сть|обокра́сть)(ся)?$", param3):
         param5 = ""
       # Fetch non-numbered params.
       non_numbered_params = []

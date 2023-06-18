@@ -6,7 +6,7 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-parser = blib.create_argparser(u"List pages in category or references in Zaliznyak order")
+parser = blib.create_argparser("List pages in category or references in Zaliznyak order")
 parser.add_argument('--cat', help="Category to list")
 parser.add_argument('--ref', help="References to list")
 args = parser.parse_args()

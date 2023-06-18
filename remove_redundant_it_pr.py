@@ -6,7 +6,7 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-vowels = u"aeiouàèéìòóùAEIOUÀÈÉÌÒÓÙ"
+vowels = "aeiouàèéìòóùAEIOUÀÈÉÌÒÓÙ"
 V = "[" + vowels + "]"
 
 def process_text_on_page(index, pagetitle, text):
@@ -48,7 +48,7 @@ def process_text_on_page(index, pagetitle, text):
       if "," in pron:
         pagemsg("Skipping multiple pronunciations: %s" % str(t))
         continue
-      if "*" in pron or "!" in pron or u"°" in pron:
+      if "*" in pron or "!" in pron or "°" in pron:
         pagemsg("Skipping pron with initial/final symbol: %s" % str(t))
         continue
       m = re.search("^(.*?)(<.*>)$", pron)

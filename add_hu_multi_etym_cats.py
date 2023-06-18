@@ -172,7 +172,7 @@ def process_text_on_page(index, pagetitle, text):
   sections[j] = secbody + sectail
   return "".join(sections), notes
 
-parser = blib.create_argparser(u"Add multi-lemma categories to Hungarian terms",
+parser = blib.create_argparser("Add multi-lemma categories to Hungarian terms",
     include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

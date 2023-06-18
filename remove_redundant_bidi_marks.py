@@ -8,7 +8,7 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
 from bidi.algorithm import get_display
 
 def remove_bidi_marks(text):
-  return re.sub(u"[\u200E\u200F]", "", text)
+  return re.sub("[\u200E\u200F]", "", text)
 
 def process_text_chunk(text, pagemsg):
   notes = []

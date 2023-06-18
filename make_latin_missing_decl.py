@@ -83,14 +83,14 @@ def process_line(index, line, online):
       elif gen1.endswith("ium"):
         if lemma.endswith("ia"):
           la_ndecl = "{{la-ndecl|%s<3.pl>}}" % lemma
-        elif lemma.endswith(u"ēs"):
+        elif lemma.endswith("ēs"):
           la_ndecl = "{{la-ndecl|%s<3.I.pl>}}" % lemma
         else:
           pagemsg("WARNING: Unrecognized lemma %s with decl 3 genitive -ium, skipping: %s" % (
             lemma, str(t)))
           return
       elif gen1.endswith("um"):
-        if lemma.endswith("a") or lemma.endswith(u"ēs"):
+        if lemma.endswith("a") or lemma.endswith("ēs"):
           la_ndecl = "{{la-ndecl|%s<3.pl>}}" % lemma
         else:
           pagemsg("WARNING: Unrecognized lemma %s with decl 3 genitive -um, skipping: %s" % (

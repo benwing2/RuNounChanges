@@ -107,19 +107,19 @@ def pronun_matches(hpron, foundpron, pagemsg):
   foundpron = re.sub("J+", "I", re.sub("j+", "i", foundpron))
   hpron = re.sub("J+", "I", re.sub("j+", "i", hpron))
   if hpron == foundpron:
-    pagemsg(u"Matching headword pronun %s to found pronun %s after converting j/jj to i (and removing non-macron accents and apostrophes/periods/underscores)" %
+    pagemsg("Matching headword pronun %s to found pronun %s after converting j/jj to i (and removing non-macron accents and apostrophes/periods/underscores)" %
       (orighpron, origfoundpron))
     return True
   foundpron = re.sub("V", "U", re.sub("v", "u", foundpron))
   hpron = re.sub("V", "U", re.sub("v", "u", hpron))
   if hpron == foundpron:
-    pagemsg(u"Matching headword pronun %s to found pronun %s after converting v to u (and converting j/jj to i, and removing non-macron accents and apostrophes/periods/underscores)" %
+    pagemsg("Matching headword pronun %s to found pronun %s after converting v to u (and converting j/jj to i, and removing non-macron accents and apostrophes/periods/underscores)" %
       (orighpron, origfoundpron))
     return True
   foundpron = foundpron.lower()
   hpron = hpron.lower()
   if hpron == foundpron:
-    pagemsg(u"Matching headword pronun %s to found pronun %s after lowercasing (and converting v to u and j/jj to i, and removing non-macron accents and apostrophes/periods/underscores)" %
+    pagemsg("Matching headword pronun %s to found pronun %s after lowercasing (and converting v to u and j/jj to i, and removing non-macron accents and apostrophes/periods/underscores)" %
       (orighpron, origfoundpron))
     return True
 
@@ -261,7 +261,7 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
       if stem and foundpronunstems:
         stems.append((stem, foundpronunstems))
     # Check for noun/adjective stem
-    nominal_ending_re = u"(a|ae|[ou][mns]|ī|is|ēs|e)$"
+    nominal_ending_re = "(a|ae|[ou][mns]|ī|is|ēs|e)$"
     append_stem_foundstems(re.sub(nominal_ending_re, "", hpron),
       frob_foundprons(foundprons, lambda x:re.sub(nominal_ending_re, "", x)))
     # Also check for -er noun or adjective
@@ -271,7 +271,7 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
         frob_foundprons(foundprons, lambda x:re.sub("er$", "r", x)))
     # Also check for verbal stem; peel off parts that don't occur in all
     # forms of the verb
-    verb_ending_re = u"([ei]?(ō|or)|[aei]t|[āēiī]tur)$"
+    verb_ending_re = "([ei]?(ō|or)|[aei]t|[āēiī]tur)$"
     append_stem_foundstems(re.sub(verb_ending_re, "", hpron),
       frob_foundprons(foundprons, lambda x:re.sub(verb_ending_re, "", x)))
     # FIXME! Need to do a better job with two-stem nouns/adjectives

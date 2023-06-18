@@ -27,13 +27,13 @@ def process_page(page, index, parsed):
         if getparam(t, "no_iotation"):
           rmparam(t, "no_iotation")
           if param1.startswith("6a"):
-            notes.append(u"6a + no_iotation -> 6°a")
+            notes.append("6a + no_iotation -> 6°a")
           else:
-            notes.append(u"6c + no_iotation -> 6°c")
-          t.add("1", re.sub("^6", u"6°", param1))
+            notes.append("6c + no_iotation -> 6°c")
+          t.add("1", re.sub("^6", "6°", param1))
       elif re.search(r"^6b", param1):
-        notes.append(u"6b -> 6°b")
-        t.add("1", re.sub("^6", u"6°", param1))
+        notes.append("6b -> 6°b")
+        t.add("1", re.sub("^6", "6°", param1))
     newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))

@@ -7,9 +7,9 @@ import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
 # Hindi vowel diacritics; don't display nicely on their own
-M = u"\u0901"
-N = u"\u0902"
-AA = u"\u093e"
+M = "\u0901"
+N = "\u0902"
+AA = "\u093e"
 
 def process_text_on_page(index, pagetitle, text):
   global args
@@ -37,7 +37,7 @@ def process_text_on_page(index, pagetitle, text):
     elif tn == "hi-proper noun":
       noun_head_template = t
       head = getparam(t, "head") or pagetitle
-      if "m" in getparam(t, "g") and re.search("[" + AA + u"आ][" + M + N + "]?$", head):
+      if "m" in getparam(t, "g") and re.search("[" + AA + "आ][" + M + N + "]?$", head):
         noun_head_template_maybe_unmarked = True
       else:
         noun_head_template_maybe_unmarked = False
@@ -51,7 +51,7 @@ def process_text_on_page(index, pagetitle, text):
       saw_ndecl = True
       decl = getparam(t, "1")
       if "unmarked" not in decl and noun_head_template_maybe_unmarked:
-        pagemsg(u"WARNING: Saw proper noun ending in -ā or -ā̃, probably needing 'unmarked': %s" % str(t))
+        pagemsg("WARNING: Saw proper noun ending in -ā or -ā̃, probably needing 'unmarked': %s" % str(t))
       if saw_place and "sg" not in decl:
         pagemsg("WARNING: Saw proper noun with {{place}} but without 'sg' in declension template: %s" % str(t))
 

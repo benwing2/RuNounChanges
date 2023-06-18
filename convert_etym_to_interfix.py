@@ -24,7 +24,7 @@ def find_stress(term, pagemsg):
   # there's no tr1= param; we skipped that case.
   if rulib.is_monosyllabic(term) or rulib.is_stressed(term):
     return term, None
-  if term.endswith(u"ый") and rulib.is_monosyllabic(term[:-2]):
+  if term.endswith("ый") and rulib.is_monosyllabic(term[:-2]):
     return rulib.make_beginning_stressed_ru(term), None
   cached, info = ruheadlib.lookup_heads_and_inflections(term, pagemsg)
   if info is None:
@@ -101,7 +101,7 @@ def process_text_on_page(index, pagetitle, text):
 
       found_affix = True
       alt1 = getparam(t, "alt1")
-      if alt1 and re.search(u"[ое]-$", alt1):
+      if alt1 and re.search("[ое]-$", alt1):
         tr1 = getparam(t, "tr1")
         if tr1:
           warning("Found alt1= and tr1=, not sure what to do")
@@ -118,7 +118,7 @@ def process_text_on_page(index, pagetitle, text):
             params.append(("2", term, False))
             if termtr:
               params.append(("tr1", termtr, True))
-            params.append(("3", alt1.endswith(u"о-") and u"-о-" or u"-е-", False))
+            params.append(("3", alt1.endswith("о-") and "-о-" or "-е-", False))
           elif pname != "alt1":
             if re.search("^[0-9]+$", pname):
               params.append((str(int(pname) + 1), param.value, param.showkey))
@@ -137,7 +137,7 @@ def process_text_on_page(index, pagetitle, text):
         notes.append("convert use of alt1= in etyms to proper use of interfixes")
       else:
         for param in t.params:
-          if str(param.value) in [u"-о-", u"-е-"]:
+          if str(param.value) in ["-о-", "-е-"]:
             for param2 in t.params:
               if str(param2.name) == "alt1":
                 warning("Has both interfix and alt1= in affix template")

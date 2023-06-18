@@ -6,7 +6,7 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-parser = blib.create_argparser(u"List pages, lemmas and/or non-lemmas")
+parser = blib.create_argparser("List pages, lemmas and/or non-lemmas")
 parser.add_argument('--cats', default="Russian lemmas", help="Categories to do (can be comma-separated list)")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

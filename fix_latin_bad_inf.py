@@ -64,9 +64,9 @@ def process_page(page, index, parsed):
     pagemsg("WARNING: Didn't find both inflection %s and lemma %s" % (
       infl, lemma))
     return None, None
-  infl = re.sub(u" (esse|īrī)$", "", infl)
-  if infl.endswith(u"us"):
-    if infl.endswith(u"ūrus"):
+  infl = re.sub(" (esse|īrī)$", "", infl)
+  if infl.endswith("us"):
+    if infl.endswith("ūrus"):
       partdesc = "Future active participle"
       head_template = "{{la-future participle|%s}}" % infl[:-2]
       infl_template = "{{la-decl-1&2|%s}}" % infl[:-2]

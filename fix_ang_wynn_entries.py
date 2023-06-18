@@ -28,7 +28,7 @@ def process_text_on_page(index, pagetitle, text):
         pagemsg("WARNING: Saw head=%s and newhead=%s, skipping" % (head, newhead))
         return
       head = newhead
-  if u"ƿ" not in head:
+  if "ƿ" not in head:
     pagemsg("WARNING: Something wrong, didn't see wynn in head: %s" % head)
   saw_altspell = None
   for t in parsed.filter_templates():
@@ -43,7 +43,7 @@ def process_text_on_page(index, pagetitle, text):
         pagemsg("WARNING: {{alternative spelling of}} without language 'ang', skipping: %s" % str(t))
         return
       param2 = getparam(t, "2")
-      should_param2 = blib.remove_links(head).replace(u"ƿ", "w")
+      should_param2 = blib.remove_links(head).replace("ƿ", "w")
       if param2 != should_param2:
         origt = str(t)
         t.add("2", should_param2)

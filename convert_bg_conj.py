@@ -6,7 +6,7 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, tname, msg, site
 
-AC = u"\u0301"
+AC = "\u0301"
 
 old_bg_conj_to_conj = {
   "bg-conj-1st (kapya)": ["1.3.", "stem-stressed", "need-vn"],
@@ -45,7 +45,7 @@ old_bg_conj_to_conj = {
 }
 
 def is_monosyllabic(word):
-  return len(re.sub(u"[^аеиоуяюъ]", "", word)) <= 1
+  return len(re.sub("[^аеиоуяюъ]", "", word)) <= 1
 
 def process_page(page, index, parsed):
   pagetitle = str(page.title())
@@ -97,7 +97,7 @@ def process_page(page, index, parsed):
         newconj, stress, need_vn = bg_conj_spec
       else:
         newconj, stress = bg_conj_spec
-      active = re.sub(u" с[еи]$", "", head)
+      active = re.sub(" с[еи]$", "", head)
       ends_in_accent = active.endswith(AC) or is_monosyllabic(active)
       if stress == "end-stressed" and not ends_in_accent or stress == "stem-stressed" and ends_in_accent:
         pagemsg("WARNING: Stress appears wrongly placed in %s, expected %s: %s, %s" % (
@@ -116,10 +116,10 @@ def process_page(page, index, parsed):
           conj_aspect, aspect, headt, origt))
         continue
       transitivity = getparam(t, "3")
-      if transitivity not in ["intr", "tr", u"се", u"си"]:
+      if transitivity not in ["intr", "tr", "се", "си"]:
         pagemsg("WARNING: Bad transitivity %s: %s, %s" % (transitivity, headt, origt))
         continue
-      if transitivity in [u"се", u"си"]:
+      if transitivity in ["се", "си"]:
         if not head.endswith(" " + transitivity):
           pagemsg("WARNING: Conjugation reflexive %s disagrees with head %s, converting to reflexive: %s, %s" % (
             transitivity, head, headt, origt))
@@ -145,7 +145,7 @@ def process_page(page, index, parsed):
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Convert Bulgarian verb conjugations to new {{bg-conj}}",
+parser = blib.create_argparser("Convert Bulgarian verb conjugations to new {{bg-conj}}",
     include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

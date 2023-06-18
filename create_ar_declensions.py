@@ -22,38 +22,38 @@ verbose = True
 # -- Use عَمُود فَقْرِيّ as example of an adjectival modifier, plural is أَعْمِدَة فَقْرِيَّة
 
 adjectival_phrases = [
-    u"كتابة لاتينية",
-    u"نقطة مزدوجة",
-    u"مرحلة زمنية",
-    u"حدث متكرر",
-    u"منظومة شمسية",
-    u"مدونة إلكترونية",
-    u"خيانة عظمى",
-    u"فلفل أسود",
-    u"نحلة طنانة",
-    u"كوارك ساحر",
-    u"كوارك غريب",
-    u"جسيم مضاد",
-    u"وصفة طبية",
-    u"مادة مظلمة",
-    u"رياح شمسية",
-    u"رياح نجمية",
-    u"وحدة فلكية",
-    u"كيمياء حيوية",
-    u"كيمياء عضوية",
-    u"عادة سرية",
-    u"ثقب أسود",
-    u"اشتراكية ديمقراطية",
-    u"فعل صحيح",
-    u"فعل مضعف",
-    u"فعل مهموز",
-    u"فعل معتل",
-    u"فعل أجوف",
-    u"فعل ناقص",
-    u"أرقام هندية",
-    u"كذا وكذا",
-    u"حنطة سوداء",
-    u"إبادة جماعية",
+    "كتابة لاتينية",
+    "نقطة مزدوجة",
+    "مرحلة زمنية",
+    "حدث متكرر",
+    "منظومة شمسية",
+    "مدونة إلكترونية",
+    "خيانة عظمى",
+    "فلفل أسود",
+    "نحلة طنانة",
+    "كوارك ساحر",
+    "كوارك غريب",
+    "جسيم مضاد",
+    "وصفة طبية",
+    "مادة مظلمة",
+    "رياح شمسية",
+    "رياح نجمية",
+    "وحدة فلكية",
+    "كيمياء حيوية",
+    "كيمياء عضوية",
+    "عادة سرية",
+    "ثقب أسود",
+    "اشتراكية ديمقراطية",
+    "فعل صحيح",
+    "فعل مضعف",
+    "فعل مهموز",
+    "فعل معتل",
+    "فعل أجوف",
+    "فعل ناقص",
+    "أرقام هندية",
+    "كذا وكذا",
+    "حنطة سوداء",
+    "إبادة جماعية",
 ]
 
 # Create or insert declension sections in a given page. POS is the part of
@@ -303,7 +303,7 @@ def create_declension(page, index, save, pos, tempname, decltempname, sgnum,
                 pagemsg("Proper noun headword template head %s has space in it and found ind-def with definite adjectival modifier" % (orighead))
                 add_note("modifier proper noun + definite adjective construction")
                 putp("state", "ind-def")
-              elif remove_diacritics(words[0]) == u"جمهورية":
+              elif remove_diacritics(words[0]) == "جمهورية":
                 if word1al:
                   pagemsg("Proper noun headword template head %s has space in it and found definite idafa" % (orighead))
                   add_note("modifier definite idafa construction")
@@ -467,10 +467,10 @@ def create_declension(page, index, save, pos, tempname, decltempname, sgnum,
                   check_for_al("%s%str" % (param, i))
             elif is_proper:
               if head.endswith(ALIF):
-                pagemsg(u"Headword template head %s ends in -ā" % (head))
+                pagemsg("Headword template head %s ends in -ā" % (head))
                 putp("state", "ind-def")
               else:
-                pagemsg(u"WARNING: Headword template head %s is indefinite proper noun, not ending in -ā, skipping" % (head))
+                pagemsg("WARNING: Headword template head %s is indefinite proper noun, not ending in -ā, skipping" % (head))
                 continue
 
             if head.endswith(UN):

@@ -6,7 +6,7 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-TEMPSEP = u"\uFFF0"
+TEMPSEP = "\uFFF0"
 def process_text_on_page(index, pagetitle, text):
   global args
   def pagemsg(txt):

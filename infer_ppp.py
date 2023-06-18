@@ -65,28 +65,28 @@ def form_ppp(verbtype, pagetitle, args):
     if not re.search("^[0-9]+", verbtype):
       return None
     verbtype = int(re.sub("^([0-9]+).*", r"\1", verbtype))
-    if ((pagetitle.endswith(u"ать") or pagetitle.endswith(u"ять")) and
+    if ((pagetitle.endswith("ать") or pagetitle.endswith("ять")) and
         verbtype != 14):
-      return re.sub(u"ть$", u"нный", pagetitle)
-    if pagetitle.endswith(u"еть") and verbtype == 1:
-      return re.sub(u"ть$", u"нный", pagetitle)
+      return re.sub("ть$", "нный", pagetitle)
+    if pagetitle.endswith("еть") and verbtype == 1:
+      return re.sub("ть$", "нный", pagetitle)
     if verbtype in [4, 5]:
       sg1 = args["pres_1sg"] if "pres_1sg" in args else args["futr_1sg"]
       if not sg1 or sg1 == "-":
         return None
       sg1 = first_entry(sg1)
-      assert re.search(u"[ую]́?$", sg1)
-      return re.sub(u"[ую]́?$", u"енный", sg1)
+      assert re.search("[ую]́?$", sg1)
+      return re.sub("[ую]́?$", "енный", sg1)
     if verbtype in [7, 8]:
       sg3 = args["pres_3sg"] if "pres_3sg" in args else args["futr_3sg"]
       sg3 = first_entry(sg3)
-      assert re.search(u"[её]́?т$", sg3)
-      return re.sub(u"[её]́?т$", u"енный", sg3)
+      assert re.search("[её]́?т$", sg3)
+      return re.sub("[её]́?т$", "енный", sg3)
     if verbtype in [3, 10]:
-      return re.sub(u"ть$", u"тый", pagetitle)
+      return re.sub("ть$", "тый", pagetitle)
     assert verbtype in [9, 11, 12, 14, 15, 16]
     pastm = first_entry(args["past_m"])
-    return re.sub(u"л?$", u"тый", pastm)
+    return re.sub("л?$", "тый", pastm)
 
   retval = form_ppp_1(verbtype, pagetitle, args)
   if retval:
@@ -133,10 +133,10 @@ def process_page(page, index, parsed):
       for form in manual_ppp_forms:
         rmparam(t2, form)
       variants_to_try = ["+p"]
-      if u"ё" in re.sub(u"ённый$", "", manual_ppps[0]):
-        variants_to_try.append(u"+pё")
-      if u"жденный" in manual_ppps[0] or u"ждённый" in manual_ppps[0]:
-        variants_to_try.append(u"+pжд")
+      if "ё" in re.sub("ённый$", "", manual_ppps[0]):
+        variants_to_try.append("+pё")
+      if "жденный" in manual_ppps[0] or "ждённый" in manual_ppps[0]:
+        variants_to_try.append("+pжд")
       notsamemsgs = []
       for variant in variants_to_try:
         t2.add("2", curvariant + variant)

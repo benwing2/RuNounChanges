@@ -44,7 +44,7 @@ def process_page(page, index, parsed):
     elif len(headword_templates) == 1 and not decl_templates:
       pagemsg("WARNING: Strange, headword template but no decl template: %s" %
           str(headword_templates[0]))
-    elif pagetitle.endswith(u"ся"):
+    elif pagetitle.endswith("ся"):
       pagemsg("WARNING: Comparative with reflexive adjective, not sure what to do: %s" %
           str(headword_templates[0]))
     else:
@@ -67,8 +67,8 @@ def process_page(page, index, parsed):
           pagemsg("WARNING: Strange canonicalized decl %s (orig %s), don't know what to do" %
               (decl, getparam(decl_templates[0], "2")))
           return
-        if (decl == "a" and not pagetitle.endswith(u"ой") or
-            decl == "b" and pagetitle.endswith(u"ой")):
+        if (decl == "a" and not pagetitle.endswith("ой") or
+            decl == "b" and pagetitle.endswith("ой")):
           compspec = "+"
         else:
           compspec = "+" + decl
@@ -118,7 +118,7 @@ def process_page(page, index, parsed):
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Fix up comparatives that can be converted to +, +c, etc.")
+parser = blib.create_argparser("Fix up comparatives that can be converted to +, +c, etc.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

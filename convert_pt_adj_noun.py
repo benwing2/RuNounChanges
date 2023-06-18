@@ -7,15 +7,15 @@ import romance_utils
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-unaccented_vowel = u"aeiouà"
-accented_vowel = u"áéíóúýâêô"
-maybe_accented_vowel = u"ãõ"
+unaccented_vowel = "aeiouà"
+accented_vowel = "áéíóúýâêô"
+maybe_accented_vowel = "ãõ"
 vowel = unaccented_vowel + accented_vowel + maybe_accented_vowel
 V = "[" + vowel + "]"
 AV = "[" + accented_vowel + "]"
 NAV = "[^" + accented_vowel + "]"
 C = "[^" + vowel + ".]"
-remove_accent = {u"á": "a", u"é": "e", u"í": "i", u"ó": "o", u"ú": "u", u"ý": "y", u"â": "a", u"ê": "e", u"ô": "o"}
+remove_accent = {"á": "a", "é": "e", "í": "i", "ó": "o", "ú": "u", "ý": "y", "â": "a", "ê": "e", "ô": "o"}
 
 prepositions = [
   # a + optional article
@@ -42,7 +42,7 @@ prepositions = [
   "sobre ",
 ]
 
-TEMPCHAR = u"\uFFF1"
+TEMPCHAR = "\uFFF1"
 
 def get_old_inflections(ending):
   if ending == "a":
@@ -59,54 +59,54 @@ def get_old_inflections(ending):
     return "z", "z", "zes", "zes", "c", "z", "z"
   if ending == "al":
     return "al", "al", "ais", "ais", "al", "al", "al"
-  if ending == u"ável":
-    return u"ável", u"ável", u"áveis", u"áveis", "abil", "abil", "abil"
-  if ending == u"ímico":
-    return u"ímico", u"ímica", u"ímicos", u"ímicas", "qu", "c", "qu"
-  if ending == u"ível":
-    return u"ível", u"ível", u"íveis", u"íveis", "ibil", "ibil", "ibil"
-  if ending == u"incrível":
-    return u"incrível", u"incrível", u"incríveis", u"incríveis", "incredibil", "incredibil", "incredibil"
+  if ending == "ável":
+    return "ável", "ável", "áveis", "áveis", "abil", "abil", "abil"
+  if ending == "ímico":
+    return "ímico", "ímica", "ímicos", "ímicas", "qu", "c", "qu"
+  if ending == "ível":
+    return "ível", "ível", "íveis", "íveis", "ibil", "ibil", "ibil"
+  if ending == "incrível":
+    return "incrível", "incrível", "incríveis", "incríveis", "incredibil", "incredibil", "incredibil"
   if ending == "il":
     return "il", "il", "is", "is", "il", "il", "il"
-  if ending == u"ágico":
-    return u"ágico", u"ágica", u"ágicos", u"ágicas", "agiqu", "agic", "agiqu"
-  if ending == u"ágil":
-    return u"ágil", u"ágil", u"ágeis", u"ágeis", "agil", "agil", "agil"
-  if ending == u"ão":
-    return u"ão", "ona", u"ões", "onas", "on", "on", "on"
+  if ending == "ágico":
+    return "ágico", "ágica", "ágicos", "ágicas", "agiqu", "agic", "agiqu"
+  if ending == "ágil":
+    return "ágil", "ágil", "ágeis", "ágeis", "agil", "agil", "agil"
+  if ending == "ão":
+    return "ão", "ona", "ões", "onas", "on", "on", "on"
   if ending == "o":
     return "o", "a", "os", "as", "", "", ""
   if ending == "co":
     return "co", "ca", "cos", "cas", "qu", "c", "qu"
   if ending == "co2":
     return "co", "ca", "cos", "cas", ["c", "qu"], "c", "qu"
-  if ending == u"ógico":
-    return u"ógico", u"ógica", u"ógicos", u"ógicas", "ogiqu", "ogic", "ogiqu"
-  if ending == u"ítmico":
-    return u"ítmico", u"ítmica", u"ítmicos", u"ítmicas", "itmiqu", "itmic", "itmiqu"
-  if ending == u"áfico":
-    return u"áfico", u"áfica", u"áficos", u"áficas", "afic", "afic", "afic"
-  if ending == u"ático":
-    return u"ático", u"ática", u"áticos", u"áticas", "atic", "atic", "atic"
-  if ending == u"ático2":
-    return u"ático", u"ática", u"áticos", u"áticas", ["atic", "atiqu"], "atic", "atic"
-  if ending == u"ítico":
-    return u"ítico", u"ítica", u"íticos", u"íticas", "itic", "itic", "itic"
-  if ending == u"ótico":
-    return u"ótico", u"ótica", u"óticos", u"óticas", "otic", "otic", "otic"
-  if ending == u"ástico":
-    return u"ástico", u"ástica", u"ásticos", u"ásticas", "astiqu", "astic", "astiqu"
-  if ending == u"ácido":
-    return u"ácido", u"ácida", u"ácidos", u"ácidas", "acid", "acid", "acid"
-  if ending == u"tímido":
-    return u"tímido", u"tímida", u"tímidos", u"tímidas", "timid", "timid", "timid"
-  if ending == u"ítido":
-    return u"ítido", u"ítida", u"ítidos", u"ítidas", "itid", "itid", "itid"
+  if ending == "ógico":
+    return "ógico", "ógica", "ógicos", "ógicas", "ogiqu", "ogic", "ogiqu"
+  if ending == "ítmico":
+    return "ítmico", "ítmica", "ítmicos", "ítmicas", "itmiqu", "itmic", "itmiqu"
+  if ending == "áfico":
+    return "áfico", "áfica", "áficos", "áficas", "afic", "afic", "afic"
+  if ending == "ático":
+    return "ático", "ática", "áticos", "áticas", "atic", "atic", "atic"
+  if ending == "ático2":
+    return "ático", "ática", "áticos", "áticas", ["atic", "atiqu"], "atic", "atic"
+  if ending == "ítico":
+    return "ítico", "ítica", "íticos", "íticas", "itic", "itic", "itic"
+  if ending == "ótico":
+    return "ótico", "ótica", "óticos", "óticas", "otic", "otic", "otic"
+  if ending == "ástico":
+    return "ástico", "ástica", "ásticos", "ásticas", "astiqu", "astic", "astiqu"
+  if ending == "ácido":
+    return "ácido", "ácida", "ácidos", "ácidas", "acid", "acid", "acid"
+  if ending == "tímido":
+    return "tímido", "tímida", "tímidos", "tímidas", "timid", "timid", "timid"
+  if ending == "ítido":
+    return "ítido", "ítida", "ítidos", "ítidas", "itid", "itid", "itid"
   if ending == "go":
     return "go", "ga", "gos", "gas", "gu", "g", "gu"
-  if ending == u"ério":
-    return u"ério", u"éria", u"érios", u"érias", ["er", "eri"], ("mf", "erioz", "eriaz"), ("mf", "erioz", "eriaz")
+  if ending == "ério":
+    return "ério", "éria", "érios", "érias", ["er", "eri"], ("mf", "erioz", "eriaz"), ("mf", "erioz", "eriaz")
   if ending == "frio":
     return "frio", "fria", "frios", "frias", ["fri", "frigid"], "fri", ["frioz", "fri"]
   if ending == "r":
@@ -115,10 +115,10 @@ def get_old_inflections(ending):
     return "ar", "ar", "ares", "ares", "ar", "ar", "ar"
   if ending == "or":
     return "or", "ora", "ores", "oras", "or", "or", "or"
-  if ending == u"ôr":
-    return u"ôr", u"ôra", u"ôres", u"ôras", u"ôr", u"ôr", u"ôr"
-  if ending == u"ês":
-    return u"ês", "esa", "eses", "esas", "es", "es", "es"
+  if ending == "ôr":
+    return "ôr", "ôra", "ôres", "ôras", "ôr", "ôr", "ôr"
+  if ending == "ês":
+    return "ês", "esa", "eses", "esas", "es", "es", "es"
   if ending == "eu":
     return "eu", "eia", "eus", "eias", "euz", "euz", "euz"
   if ending == "ez":
@@ -145,16 +145,16 @@ def make_plural(form, new_algorithm, special=None):
   # This is ported from the former [[Module:pt-plural]] except that the old code sometimes returned nil (final -ão
   # other than -ção and -são, final consonant other than [lrmzs]), whereas we always return a default plural
   # (all -ão -> ões, all final consonants other than [lrmzs] are left unchanged).
-  if not new_algorithm and re.search(u"([^çs]ão|[^ç]aõ|[^" + vowel + "lrmzs])$", formarr[0]):
+  if not new_algorithm and re.search("([^çs]ão|[^ç]aõ|[^" + vowel + "lrmzs])$", formarr[0]):
     return None
   (
-  check(u"ão$", u"ões") or
-  check(u"aõ$", u"oens") or
+  check("ão$", "ões") or
+  check("aõ$", "oens") or
   check("(" + AV + ".*)[ei]l$", r"\1eis") or # final unstressed -el or -il
-  check("el$", u"éis") or # final stressed -el
+  check("el$", "éis") or # final stressed -el
   check("il$", "is") or # final stressed -il
   check("(" + AV + ".*)ol$", r"\1ois") or # final unstressed -ol
-  check("ol$", u"óis") or # final stressed -ol
+  check("ol$", "óis") or # final stressed -ol
   check("(" + V + ")l$", r"\1is") or # any other vowel + -l
   check("m$", "ns") or # final -m
   check("([rz])$", r"\1es") or # final -r or -z
@@ -191,10 +191,10 @@ def make_feminine(form, special=None):
   #             [[paleocristão]] (paleocristã), [[parmesão]] (parmesã), [[romão]] (romã), [[são]] (sã),
   #             [[saxão]] (saxã), [[temporão]] (temporã), [[teutão]] (teutona/teutã/teutoa), [[vão]] (vã),
   #             [[varão]] (varoa), [[verde-limão]] (invariable), [[vilão]] (vilã/viloa)
-  check(u"ão$", "ona") or
+  check("ão$", "ona") or
   check("o$", "a") or
   # [[francês]], [[português]], [[inglês]], [[holandês]] etc.
-  check(u"ês$", "esa") or
+  check("ês$", "esa") or
   # [[francez]], [[portuguez]], [[inglez]], [[holandez]] (archaic)
   check("ez$", "eza") or
   # adjectives in:
@@ -204,7 +204,7 @@ def make_feminine(form, special=None):
   # but not:
   # * [[anterior]]/[[posterior]]/[[inferior]]/[[maior]]/[[pior]]/[[melhor]]
   # * [[bicolor]]/[[incolor]]/[[multicolor]]/etc., [[indolor]], etc.
-  check(u"([dts][oô]r)$", r"\1a") or
+  check("([dts][oô]r)$", r"\1a") or
   # [[amebeu]], [[aqueu]], [[aquileu]], [[arameu]], [[cananeu]], [[cireneu]], [[egeu]], [[eritreu]],
   # [[europeu]], [[galileu]], [[indo-europeu]]/[[indoeuropeu]], [[macabeu]], [[mandeu]], [[pigmeu]],
   # [[proto-indo-europeu]]
@@ -249,14 +249,14 @@ def munge_form_for_ending(form, typ):
     return False
 
   (
-  check(u"ão$", "on") or
+  check("ão$", "on") or
   typ != "aug" and check("c[oa]$", "qu") or
   typ != "aug" and check("g[oa]$", "gu") or
   check("[oae]$", "") or
   typ == "sup" and check("z$", "c") or
   # Adverb stems won't have the acute accent but we should handle them correctly regardless.
-  check(u"[áa]vel$", "abil") or
-  check(u"[íi]vel$", "ibil") or
+  check("[áa]vel$", "abil") or
+  check("[íi]vel$", "ibil") or
   check("eu$", "euz")
   )
 
@@ -272,7 +272,7 @@ def make_absolute_superlative(form, special=None):
   if special:
     return None
 
-  return munge_form_for_ending(form, "sup") + u"íssimo"
+  return munge_form_for_ending(form, "sup") + "íssimo"
 
 # Generate a default adverbial absolute superlative form.
 def make_adverbial_absolute_superlative(form, special=None):
@@ -305,7 +305,7 @@ def make_augmentative(form, special=None):
   if special:
     return None
 
-  return munge_form_for_ending(form, "aug") + u"ão"
+  return munge_form_for_ending(form, "aug") + "ão"
 
 def process_text_on_page(index, pagetitle, text):
   global args
@@ -922,7 +922,7 @@ def process_text_on_page(index, pagetitle, text):
         headword_lemma = blib.remove_links(head or pagetitle)
         infl_base = getp("1")
         infl_type = getp("2")
-        infl_lemma = infl_base + (infl_type[:-1] if infl_type in ["co2", u"ático2"] else infl_type)
+        infl_lemma = infl_base + (infl_type[:-1] if infl_type in ["co2", "ático2"] else infl_type)
         if infl_lemma != headword_lemma:
           pagemsg("WARNING: Inflection lemma %s not same as headword lemma %s: adj_headword=%s, infl=%s" % (
             infl_lemma, headword_lemma, str(adj_headword), str(t)))
@@ -954,7 +954,7 @@ def process_text_on_page(index, pagetitle, text):
             retvals.append(retval)
           return retvals
 
-        supvals = add_ending("superlative", sups, u"íssimo", u"íssima")
+        supvals = add_ending("superlative", sups, "íssimo", "íssima")
         defsup = make_absolute_superlative(headword_lemma)
         supvals = ["+abs" if sup == defsup else sup for sup in supvals]
         notes.append("add superlative(s) '%s' to {{pt-adj}}" % ",".join(supvals))
@@ -965,14 +965,14 @@ def process_text_on_page(index, pagetitle, text):
           notes.append("remove unnecessary hascomp=%s from {{pt-adj}}" % hascompval)
 
         if has_dim:
-          dimvals = add_ending("diminutive", dims, u"inho", "inha")
+          dimvals = add_ending("diminutive", dims, "inho", "inha")
           defdim = make_diminutive(headword_lemma)
           dimvals = ["+" if dim == defdim else dim for dim in dimvals]
           notes.append("add diminutive(s) '%s' to {{pt-adj}}" % ",".join(dimvals))
           blib.set_param_chain(adj_headword, dimvals, "dim")
 
         if has_aug:
-          augvals = add_ending("augmentative", augs, u"ão", "ona")
+          augvals = add_ending("augmentative", augs, "ão", "ona")
           defaug = make_augmentative(headword_lemma)
           augvals = ["+" if aug == defaug else aug for aug in augvals]
           notes.append("add augmentative(s) '%s' to {{pt-adj}}" % ",".join(augvals))

@@ -5,12 +5,12 @@ import blib
 from blib import msg, getparam, addparam
 
 def search_iyya_noetym(startFrom, upTo):
-  for index, page in blib.cat_articles(u"Arabic nouns", startFrom, upTo):
+  for index, page in blib.cat_articles("Arabic nouns", startFrom, upTo):
     text = blib.parse(page)
     pagetitle = page.title()
     etym = False
     suffix = False
-    if pagetitle.endswith(u"ية"):
+    if pagetitle.endswith("ية"):
       for t in text.filter_templates():
         if t.name in ["ar-etym-iyya", "ar-etym-nisba-a",
             "ar-etym-noun-nisba", "ar-etym-noun-nisba-linking"]:

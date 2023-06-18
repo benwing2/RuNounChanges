@@ -33,13 +33,13 @@ def process_page(page, index, parsed):
       lemma, spec = m.groups()
       if "/" in lemma:
         base, stem2 = lemma.split("/")
-        if stem2 == re.sub(u"gō$", "gin", base):
+        if stem2 == re.sub("gō$", "gin", base):
           stem2 = ""
       else:
         base = lemma
         stem2 = base + "n"
-      if not base.endswith(u"gō"):
-        pagemsg(u"WARNING: Base %s doesn't end in -gō, skipping: %s" % (
+      if not base.endswith("gō"):
+        pagemsg("WARNING: Base %s doesn't end in -gō, skipping: %s" % (
           base, origt))
         continue
       if stem2:
@@ -48,11 +48,11 @@ def process_page(page, index, parsed):
         newlemma = base
       t.add("1", "%s<%s>" % (newlemma, spec))
       pagemsg("Replaced %s with %s" % (origt, str(t)))
-      notes.append(u"convert 3rd-declension -gō term according to new default stem -gin in {{la-ndecl}}")
+      notes.append("convert 3rd-declension -gō term according to new default stem -gin in {{la-ndecl}}")
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Fix Latin 3rd-decl -gō nouns to default to stem in -gin",
+parser = blib.create_argparser("Fix Latin 3rd-decl -gō nouns to default to stem in -gin",
     include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

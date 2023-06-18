@@ -43,7 +43,7 @@ def process_page(page, index, parsed):
       pagemsg("Replaced %s with %s" % (origt, str(t)))
       if para2:
         pagemsg("Set additional info param 3=%s in %s" % (para2, str(t)))
-      notes.append(u"convert {{docparam}} to {{para}}")
+      notes.append("convert {{docparam}} to {{para}}")
 
   return str(parsed), notes
 

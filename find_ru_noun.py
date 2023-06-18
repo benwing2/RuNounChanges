@@ -32,8 +32,8 @@ def process_page(index, page, save, verbose):
       else:
         for tt in parsed.filter_templates():
           ttname = str(tt.name)
-          if ttname == u"ru-noun-alt-ё":
-            pagemsg(u"Found alternative ё spelling")
+          if ttname == "ru-noun-alt-ё":
+            pagemsg("Found alternative ё spelling")
             break
           elif ttname == "misspelling of":
             pagemsg("Found misspelling of")

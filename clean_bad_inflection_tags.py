@@ -10,9 +10,9 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname
 import infltags
 
 skip_pages = [
-  u"náhádleeh",
-  u"hoditłééʼ",
-  u"придти",
+  "náhádleeh",
+  "hoditłééʼ",
+  "придти",
   "gumawa",
   "kuna",
   "hakuna",
@@ -25,7 +25,7 @@ skip_pages = [
   "kneen",
   "calveren",
   "lambren",
-  u"escrivões",
+  "escrivões",
   "octopii",
   "kifunze",
   "yupo",
@@ -41,23 +41,23 @@ skip_pages = [
   # Gets tripped up by # {{lb|la|grammar}} [[ablative case|ablative]] of [[cause]]
   "ablativus causae",
   # Gets tripped up by # {{lb|ga|obsolete}} [[vocative case|Vocative case]] of [[collective noun|collective nouns]]
-  u"slógacallam",
+  "slógacallam",
   # Gets tripped up by # {{n-g|form of {{m|mn|-жээ}} before {{m|mn|уу}}}}
-  u"-ж",
+  "-ж",
   # Gets tripped up by # {{lb|en|physics}} [[independent|Independent]] of [[arbitrary]] units of measurement, [[standard]]s, or [[property|properties]]; not [[comparative]] or [[relative]].
   "absolute",
   # Gets tripped up by # {{lb|en|slang}} Indicative of [[police]] [[presence]] or [[activity]].
   "hot",
   # Gets tripped up by # {{given name|female|lang=pt|eq=Victoria}} and feminine of {{l|pt|Vítor}}
-  u"Vitória",
+  "Vitória",
   # {{non-gloss definition|The feminine of [[lord]].}}
   "lady",
   # {{given name|female|lang=nl}}: feminine form of [[Willem]].
   "Wilhelmina",
   # {{n-g|Dative singular of ''o''-stem {{grc-apdx|3d|third-declension}} nouns}}
-  u"-οι",
+  "-οι",
   # [[posturing]], plural of [[coquetry]]
-  u"ادائیں"
+  "ادائیں"
 ]
 
 joiner_tags = ['and', 'or', '/', ',', '&']
@@ -149,9 +149,9 @@ subtag_replacements = [
   ("past historic", "phis"),
   ("alternative form of the", "alternative"),
   ("as well as", "and"),
-  (u"genitive-accusative", "genitive and accusative"),
-  (u"dative-accusative", "dative and accusative"),
-  (u"dative-locative", "dative and locative"),
+  ("genitive-accusative", "genitive and accusative"),
+  ("dative-accusative", "dative and accusative"),
+  ("dative-locative", "dative and locative"),
   ("present active particle", "present active participle"),
   ("plural noun", "plural"),
   ("conditional mood", "conditional"),

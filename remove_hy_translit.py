@@ -76,8 +76,8 @@ def has_non_western_chars(val):
   # consonants and pretty much all real Greek words will have vowels
   # in them, so this is unlikely to lead to missing actual Greek
   # text.
-  checkval = re.sub(u"[χφθβγδ]", "", val)
-  return re.search(u"[\u0370-\u1CFF\u1F00-\u1FFF\u2C00-\u2C5F\u2C80-\uA6FF\uA800-\uAB2F\uAB70-\uFEFF]", checkval)
+  checkval = re.sub("[χφθβγδ]", "", val)
+  return re.search("[\u0370-\u1CFF\u1F00-\u1FFF\u2C00-\u2C5F\u2C80-\uA6FF\uA800-\uAB2F\uAB70-\uFEFF]", checkval)
 
 ignore_prefixes = ["User:", "Talk:",
     "Wiktionary:Beer parlour", "Wiktionary:Translation requests",
@@ -92,8 +92,8 @@ def remove_translit(params, startFrom, upTo):
       msg("Page %s %s: %s" % (index, pagetitle, text))
 
     # Hack for grc pages where we don't want to remove the translit
-    if u"Ͷ" in pagetitle or u"ͷ" in pagetitle:
-      pagemsg(u"Page has Ͷ or ͷ in it, not doing")
+    if "Ͷ" in pagetitle or "ͷ" in pagetitle:
+      pagemsg("Page has Ͷ or ͷ in it, not doing")
       return text, ""
 
     params_removed = []
@@ -156,13 +156,13 @@ def remove_translit(params, startFrom, upTo):
           doparam(str(i))
       # (Old) Armenian declension templates
       if re.match("^xcl-noun-.*pl", tname) and tname not in [
-          u"xcl-noun-ն-pl", u"xcl-noun-ն-2-pl", u"xcl-noun-ն-3-pl",
-          u"xcl-noun-ո-ա-pl"]:
+          "xcl-noun-ն-pl", "xcl-noun-ն-2-pl", "xcl-noun-ն-3-pl",
+          "xcl-noun-ո-ա-pl"]:
         remove_even()
       elif tname.startswith("xcl-noun-collnum"):
         remove_even()
-      elif tname in [u"xcl-noun-հայր", u"xcl-noun-տէր", u"xcl-noun-այր",
-          u"xcl-noun-կին"]:
+      elif tname in ["xcl-noun-հայր", "xcl-noun-տէր", "xcl-noun-այր",
+          "xcl-noun-կին"]:
         remove_even()
       else:
         for start_template in ["hy-noun-", "xcl-noun-"]:

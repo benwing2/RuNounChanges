@@ -75,7 +75,7 @@ def do_verbs(save, startFrom, upTo):
           uncertain = True
         if not vnvalue:
           continue
-        vns = re.split(u"[,،]", vnvalue)
+        vns = re.split("[,،]", vnvalue)
         form = getparam(template, "1")
         verbid = "#%s form %s" % (verbcount, form)
         if re.match("^[1I](-|$)", form):

@@ -18,118 +18,118 @@ import pywikibot, re, sys, argparse, unicodedata
 import blib
 from blib import getparam, rmparam, msg, site, tname, pname
 
-GRAVE = u"\u0300"
-ACUTE = u"\u0301"
-PRIMARY = u"\u02C8"
-SECONDARY = u"\u02CC"
-TIE = u"\u0361"
-RAISED = u"\u031D"
-LOWERED = u"\u031E"
-FRONTED = u"\u031F"
-DOTUNDER = u"\u0323"
-DENTAL = u"\u032A"
+GRAVE = "\u0300"
+ACUTE = "\u0301"
+PRIMARY = "\u02C8"
+SECONDARY = "\u02CC"
+TIE = "\u0361"
+RAISED = "\u031D"
+LOWERED = "\u031E"
+FRONTED = "\u031F"
+DOTUNDER = "\u0323"
+DENTAL = "\u032A"
 accent = ACUTE + GRAVE
 accent_c = "[" + accent + "]"
 stress_mark = PRIMARY + SECONDARY
 stress_mark_c = "[" + stress_mark + "]"
-vowel = u"аеиоуъяю"
+vowel = "аеиоуъяю"
 V = "[" + vowel + "]"
 NV = "[^" + vowel + "]"
-cons = u"бцдфгчйклмнпрствшхзщжь"
+cons = "бцдфгчйклмнпрствшхзщжь"
 C = "[" + cons + "]"
 
 # These should be ignored because the raw pronunciation is unstressed and using {{bg-IPA}} will generate stress (I think).
-deny_list = {u"ю", u"я"}
+deny_list = {"ю", "я"}
 
 # Special case replacements based on known cases where we get it wrong and need explicit syllable divisions.
 # Only at the beginning of a word.
 special_case_replacements = [
-  (u"зам.р", u"за.мр"),
-  (u"изм.р", u"из.мр"),
-  (u"надв.н", u"над.вн"),
-  (u"о.брек", u"об.рек"),
-  (u"о.бреч", u"об.реч"),
-  (u"о.брич", u"об.рич"),
-  (u"отм.р", u"от.мр"),
+  ("зам.р", "за.мр"),
+  ("изм.р", "из.мр"),
+  ("надв.н", "над.вн"),
+  ("о.брек", "об.рек"),
+  ("о.бреч", "об.реч"),
+  ("о.брич", "об.рич"),
+  ("отм.р", "от.мр"),
   # The manual IPA claims от.рав and от.ров "to poison; to exhume" but it is derived from о- + трав- per Vasmer.
-  # (u"о.трав", u"от.рав"),
-  # (u"о.тров", u"от.ров"),
-  (u"о.трек", u"от.рек"),
-  (u"о.треч", u"от.реч"),
-  (u"о.трич", u"от.рич"),
-  (u"о.тсек", u"от.сек"),
-  (u"о.тсеч", u"от.сеч"),
-  (u"о.тсич", u"от.сич"),
-  (u"о.тсъст", u"от.съст"),
-  (u"о.тсяк", u"от.сяк"),
-  (u"пре.дрек", u"пред.рек"),
-  (u"пре.дреч", u"пред.реч"),
-  (u"пре.дрич", u"пред.рич"),
-  (u"прем.р", u"пре.мр"),
+  # ("о.трав", "от.рав"),
+  # ("о.тров", "от.ров"),
+  ("о.трек", "от.рек"),
+  ("о.треч", "от.реч"),
+  ("о.трич", "от.рич"),
+  ("о.тсек", "от.сек"),
+  ("о.тсеч", "от.сеч"),
+  ("о.тсич", "от.сич"),
+  ("о.тсъст", "от.съст"),
+  ("о.тсяк", "от.сяк"),
+  ("пре.дрек", "пред.рек"),
+  ("пре.дреч", "пред.реч"),
+  ("пре.дрич", "пред.рич"),
+  ("прем.р", "пре.мр"),
   # The manual IPA claims при.внас and при.внес "to bring in, to introduce". This is derived from при- + в- + нес-.
   # Unclear if при.вн makes sense but we also have над.вн, which is clearly better than надв.н.
-  (u"прив.н", u"при.вн"),
-  (u"прим.р", u"при.мр"),
-  (u"съ.зда", u"съз.да"),
-  (u"ум.р", u"у.мр"),
+  ("прив.н", "при.вн"),
+  ("прим.р", "при.мр"),
+  ("съ.зда", "съз.да"),
+  ("ум.р", "у.мр"),
 ]
 
 voiced_to_unvoiced = {
-  u"б": u"п",
-  u"в": u"ф",
-  u"г": u"к",
-  u"д": u"т",
-  u"ж": u"ш",
-  u"з": u"с",
+  "б": "п",
+  "в": "ф",
+  "г": "к",
+  "д": "т",
+  "ж": "ш",
+  "з": "с",
 }
-voiced_obstruent = u"бвгджз"
+voiced_obstruent = "бвгджз"
 
 unvoiced_to_voiced = {y: x for x, y in voiced_to_unvoiced.iteritems()}
-unvoiced_obstruent = u"пфктшсхчщц"
+unvoiced_obstruent = "пфктшсхчщц"
 
-prefixes = [u"без", u"въз", u"възпроиз", u"из", u"наиз", u"поиз", u"превъз", u"произ", u"раз"]
+prefixes = ["без", "въз", "възпроиз", "из", "наиз", "поиз", "превъз", "произ", "раз"]
 
 ipa_to_cyrillic = {
-  "a": u"а",
-  u"æ": u"а",
-  "b": u"б",
-  "v": u"в",
-  u"ɡ": u"г",
-  "d": u"д",
-  "e": u"е",
-  u"ɛ": u"е",
-  u"ʒ": u"ж",
-  "z": u"з",
-  "i": u"и",
-  u"ɪ": u"и",
-  "j": u"й",
-  "k": u"к",
-  "l": u"л",
-  u"ɫ": u"л",
-  u"ʎ": u"ль",
-  "m": u"м",
-  u"ɱ": u"м", # e.g. ансамбъл with pronunciation /əŋˈsaɱbəl/
-  "n": u"н",
-  u"ŋ": u"н",
-  "o": u"о",
-  u"ɔ": u"о",
-  "p": u"п",
-  "r": u"р",
-  u"ɾ": u"р",
-  "s": u"с",
-  "t": u"т",
-  "u": u"у",
-  u"ʊ": u"у",
-  u"ʉ": u"у",
-  "f": u"ф",
-  "x": u"х",
-  "h": u"х",
-  u"ʃ": u"ш",
-  u"ɐ": u"ъ",
-  u"ə": u"ъ",
-  u"ɤ": u"ъ",
-  u"ɵ": u"ъ", # e.g. арменка with pronunciation /ərˈmɛnkɵ/
-  u"ʲ": u"ь",
+  "a": "а",
+  "æ": "а",
+  "b": "б",
+  "v": "в",
+  "ɡ": "г",
+  "d": "д",
+  "e": "е",
+  "ɛ": "е",
+  "ʒ": "ж",
+  "z": "з",
+  "i": "и",
+  "ɪ": "и",
+  "j": "й",
+  "k": "к",
+  "l": "л",
+  "ɫ": "л",
+  "ʎ": "ль",
+  "m": "м",
+  "ɱ": "м", # e.g. ансамбъл with pronunciation /əŋˈsaɱbəl/
+  "n": "н",
+  "ŋ": "н",
+  "o": "о",
+  "ɔ": "о",
+  "p": "п",
+  "r": "р",
+  "ɾ": "р",
+  "s": "с",
+  "t": "т",
+  "u": "у",
+  "ʊ": "у",
+  "ʉ": "у",
+  "f": "ф",
+  "x": "х",
+  "h": "х",
+  "ʃ": "ш",
+  "ɐ": "ъ",
+  "ə": "ъ",
+  "ɤ": "ъ",
+  "ɵ": "ъ", # e.g. арменка with pronunciation /ərˈmɛnkɵ/
+  "ʲ": "ь",
   TIE: "",
   DENTAL: "",
   RAISED: "",
@@ -145,7 +145,7 @@ def convert_bg_manual_ipa(ipa, pagetitle, pagemsg):
   orig_ipa = ipa
 
   ########## Some early substitutions.
-  ipa = ipa.replace(u"i̯", "j")
+  ipa = ipa.replace("i̯", "j")
 
   ########## Decompose.
   ipa = unicodedata.normalize("NFD", ipa)
@@ -154,46 +154,46 @@ def convert_bg_manual_ipa(ipa, pagetitle, pagemsg):
   ipa = re.sub("(.)", lambda m: ipa_to_cyrillic.get(m.group(1), m.group(1)), ipa)
 
   ########## Geminate consonant correction.
-  ipa = ipa.replace(u"иː", u"ий")
-  ipa = re.sub(u"(.)ː", r"\1\1", ipa)
+  ipa = ipa.replace("иː", "ий")
+  ipa = re.sub("(.)ː", r"\1\1", ipa)
 
   ########## Sometimes i appears for й instead of j, e.g. действителност /dɛisˈtvitɛlnost/; correct this.
 
   # To allow matching up и/й chars properly, hack the pagetitle to contain йа/йу in place of я/ю word-initial or after a vowel.
-  hacked_pagetitle = re.sub(r"(\b|" + V + u")я", r"\1йа", pagetitle, 0, re.U)
-  hacked_pagetitle = re.sub(r"(\b|" + V + u")ю", r"\1йу", hacked_pagetitle, 0, re.U)
+  hacked_pagetitle = re.sub(r"(\b|" + V + ")я", r"\1йа", pagetitle, 0, re.U)
+  hacked_pagetitle = re.sub(r"(\b|" + V + ")ю", r"\1йу", hacked_pagetitle, 0, re.U)
   hacked_pagetitle_chars = list(hacked_pagetitle)
   ipa_chars = list(ipa)
 
   # Get the indices of all и/й in the pagetitle, along with the corresponding char.
-  pagetitle_ij_indices = [[i, x] for i, x in enumerate(hacked_pagetitle_chars) if x in u"ий"]
+  pagetitle_ij_indices = [[i, x] for i, x in enumerate(hacked_pagetitle_chars) if x in "ий"]
   # Get the indices of all i/j in the IPA, along with the corresponding char.
-  ipa_ij_indices = [[i, x] for i, x in enumerate(ipa_chars) if x in u"ий"]
+  ipa_ij_indices = [[i, x] for i, x in enumerate(ipa_chars) if x in "ий"]
 
   # Make sure same number of i/j in both.
   num_ipa_ij = len(ipa_ij_indices)
   num_pagetitle_ij = len(pagetitle_ij_indices)
   if num_ipa_ij != num_pagetitle_ij:
-    pagemsg(u"WARNING: IPA %s (original %s) has %s i/j chars but pagetitle '%s' has %s и/й chars" % (
+    pagemsg("WARNING: IPA %s (original %s) has %s i/j chars but pagetitle '%s' has %s и/й chars" % (
       ipa, orig_ipa, num_ipa_ij, pagetitle, num_pagetitle_ij))
   else:
     # If so, match up corresponding i/j.
     for (ipa_index, ipa_ij), (pagetitle_index, pagetitle_ij) in zip(ipa_ij_indices, pagetitle_ij_indices):
       # Correct IPA и to й as appropriate.
-      if ipa_ij == u"и" and pagetitle_ij == u"й":
-        pagemsg(u"Replacing IPA и with й at index %s in %s based on pagetitle й at index %s" %
+      if ipa_ij == "и" and pagetitle_ij == "й":
+        pagemsg("Replacing IPA и with й at index %s in %s based on pagetitle й at index %s" %
           (ipa_index, ipa, pagetitle_index))
-        ipa_chars[ipa_index] = u"й"
+        ipa_chars[ipa_index] = "й"
 
   ipa = "".join(ipa_chars)
 
   ########## Preliminary handling of ю/я. More work needed to handle vowel reduction and endschwa; see below.
-  ipa = ipa.replace(u"ьу", u"ю")
-  ipa = ipa.replace(u"ьа", u"я")
-  ipa = ipa.replace(u"йу", u"ю")
-  ipa = ipa.replace(u"йа", u"я")
-  ipa = ipa.replace(u"ьи", u"и") # e.g. абаджийките with pronunciation /ˌabəˈd̪ʒijkʲit̪ɛ/
-  ipa = ipa.replace(u"ье", u"е") # e.g. аборигена with pronunciation /ˌaboɾiˈɡʲɛnə/
+  ipa = ipa.replace("ьу", "ю")
+  ipa = ipa.replace("ьа", "я")
+  ipa = ipa.replace("йу", "ю")
+  ipa = ipa.replace("йа", "я")
+  ipa = ipa.replace("ьи", "и") # e.g. абаджийките with pronunciation /ˌabəˈd̪ʒijkʲit̪ɛ/
+  ipa = ipa.replace("ье", "е") # e.g. аборигена with pronunciation /ˌaboɾiˈɡʲɛnə/
 
   ########## Move accents after vowels, but leave original IPA stress mark there as well for later syllable division checking
   ipa = re.sub("(" + PRIMARY + C + "*" + V + ")", r"\1" + ACUTE, ipa)
@@ -233,81 +233,81 @@ def convert_bg_manual_ipa(ipa, pagetitle, pagemsg):
     # If so, match up corresponding vowels.
     for (ipa_index, ipa_vowel), (pagetitle_index, pagetitle_vowel) in zip(ipa_vowel_indices, pagetitle_vowel_indices):
       # Correct unstressed IPA о to у/ю as appropriate.
-      if ipa_vowel == u"о" and pagetitle_vowel == u"у":
-        pagemsg(u"Replacing unstressed IPA о with у at index %s in %s based on pagetitle vowel at index %s" %
+      if ipa_vowel == "о" and pagetitle_vowel == "у":
+        pagemsg("Replacing unstressed IPA о with у at index %s in %s based on pagetitle vowel at index %s" %
           (ipa_index, ipa, pagetitle_index))
-        ipa_chars[ipa_index] = u"у"
-      elif ipa_vowel == u"о" and ipa_index > 0 and ipa_chars[ipa_index - 1] in [u"ь", u"й"] and pagetitle_vowel == u"ю":
-        pagemsg(u"Replacing unstressed IPA %sо with ю at index %s in %s based on pagetitle vowel at index %s" %
+        ipa_chars[ipa_index] = "у"
+      elif ipa_vowel == "о" and ipa_index > 0 and ipa_chars[ipa_index - 1] in ["ь", "й"] and pagetitle_vowel == "ю":
+        pagemsg("Replacing unstressed IPA %sо with ю at index %s in %s based on pagetitle vowel at index %s" %
           (ipa_chars[ipa_index - 1], ipa_index, ipa, pagetitle_index))
-        ipa_chars[ipa_index] = u"ю"
+        ipa_chars[ipa_index] = "ю"
         ipa_chars[ipa_index - 1] = ""
       # Correct unstressed IPA у to о as appropriate (e.g. акробатика with pronunciation /akruˈbatikə/)
-      elif ipa_vowel == u"у" and pagetitle_vowel == u"о":
-        pagemsg(u"Replacing unstressed IPA у with о at index %s in %s based on pagetitle vowel at index %s" %
+      elif ipa_vowel == "у" and pagetitle_vowel == "о":
+        pagemsg("Replacing unstressed IPA у with о at index %s in %s based on pagetitle vowel at index %s" %
           (ipa_index, ipa, pagetitle_index))
-        ipa_chars[ipa_index] = u"о"
+        ipa_chars[ipa_index] = "о"
       # Correct unstressed IPA ъ to а/я as appropriate.
-      elif ipa_vowel == u"ъ" and pagetitle_vowel == u"а":
-        pagemsg(u"Replacing unstressed IPA ъ with а at index %s in %s based on pagetitle vowel at index %s" %
+      elif ipa_vowel == "ъ" and pagetitle_vowel == "а":
+        pagemsg("Replacing unstressed IPA ъ with а at index %s in %s based on pagetitle vowel at index %s" %
           (ipa_index, ipa, pagetitle_index))
-        ipa_chars[ipa_index] = u"а"
-      elif ipa_vowel == u"ъ" and ipa_index > 0 and ipa_chars[ipa_index - 1] in [u"ь", u"й"] and pagetitle_vowel == u"я":
-        pagemsg(u"Replacing unstressed IPA %sъ with я at index %s in %s based on pagetitle vowel at index %s" %
+        ipa_chars[ipa_index] = "а"
+      elif ipa_vowel == "ъ" and ipa_index > 0 and ipa_chars[ipa_index - 1] in ["ь", "й"] and pagetitle_vowel == "я":
+        pagemsg("Replacing unstressed IPA %sъ with я at index %s in %s based on pagetitle vowel at index %s" %
           (ipa_chars[ipa_index - 1], ipa_index, ipa, pagetitle_index))
-        ipa_chars[ipa_index] = u"я"
+        ipa_chars[ipa_index] = "я"
         ipa_chars[ipa_index - 1] = ""
       # Correct stressed IPA ъ to а/я as appropriate if word-final, setting endschwa=1.
-      elif ipa_vowel == u"ъ́" and pagetitle_vowel == u"а" and (
-          ipa_index == len(ipa) - 2 or ipa_index == len(ipa) - 3 and ipa.endswith(u"т")):
-        pagemsg(u"Replacing stressed IPA ъ with а at index %s in %s and endschwa=1 based on pagetitle vowel at index %s" %
+      elif ipa_vowel == "ъ́" and pagetitle_vowel == "а" and (
+          ipa_index == len(ipa) - 2 or ipa_index == len(ipa) - 3 and ipa.endswith("т")):
+        pagemsg("Replacing stressed IPA ъ with а at index %s in %s and endschwa=1 based on pagetitle vowel at index %s" %
           (ipa_index, ipa, pagetitle_index))
-        ipa_chars[ipa_index] = u"а"
+        ipa_chars[ipa_index] = "а"
         endschwa = True
-      elif (ipa_vowel == u"ъ́" and ipa_index > 0 and ipa_chars[ipa_index - 1] in [u"ь", u"й"] and pagetitle_vowel == u"я" and (
-        ipa_index == len(ipa) - 2 or ipa_index == len(ipa) - 3 and ipa.endswith(u"т"))):
-        pagemsg(u"Replacing unstressed IPA %sъ with я at index %s in %s and endschwa=1 based on pagetitle vowel at index %s" %
+      elif (ipa_vowel == "ъ́" and ipa_index > 0 and ipa_chars[ipa_index - 1] in ["ь", "й"] and pagetitle_vowel == "я" and (
+        ipa_index == len(ipa) - 2 or ipa_index == len(ipa) - 3 and ipa.endswith("т"))):
+        pagemsg("Replacing unstressed IPA %sъ with я at index %s in %s and endschwa=1 based on pagetitle vowel at index %s" %
           (ipa_chars[ipa_index - 1], ipa_index, ipa, pagetitle_index))
-        ipa_chars[ipa_index] = u"я"
+        ipa_chars[ipa_index] = "я"
         ipa_chars[ipa_index - 1] = ""
         endschwa = True
 
   ipa = "".join(ipa_chars)
 
   ########## Misc cluster corrections. FIXME: Might not work in some cases.
-  if u"щ" in pagetitle:
-    ipa = re.sub(u"ш(" + stress_mark_c + u"?)т", r"\1щ", ipa)
-  if u"ц" in pagetitle:
-    ipa = re.sub(u"т(" + stress_mark_c + u"?)с", r"\1ц", ipa)
-  if u"ч" in pagetitle:
-    ipa = re.sub(u"т(" + stress_mark_c + u"?)ш", r"\1ч", ipa)
-  if u"нтс" in pagetitle:
-    ipa = re.sub(u"н(" + stress_mark_c + u"?)с", r"нт\1с", ipa)
-  if u"стк" in pagetitle:
-    ipa = re.sub(u"с(" + stress_mark_c + u"?)к", r"ст\1к", ipa)
-  if u"ктн" in pagetitle:
-    ipa = re.sub(u"к(" + stress_mark_c + u"?)н", r"кт\1н", ipa)
-  if u"ждн" in pagetitle:
-    ipa = re.sub(u"ж(" + stress_mark_c + u"?)н", r"жд\1н", ipa)
-  if u"щн" in pagetitle:
-    ipa = re.sub(u"ш(" + stress_mark_c + u"?)н", r"щ\1н", ipa) # e.g. срещнала /ˈsrɛʃnəɫə/
-  if re.search(u"зс" + C, pagetitle):
+  if "щ" in pagetitle:
+    ipa = re.sub("ш(" + stress_mark_c + "?)т", r"\1щ", ipa)
+  if "ц" in pagetitle:
+    ipa = re.sub("т(" + stress_mark_c + "?)с", r"\1ц", ipa)
+  if "ч" in pagetitle:
+    ipa = re.sub("т(" + stress_mark_c + "?)ш", r"\1ч", ipa)
+  if "нтс" in pagetitle:
+    ipa = re.sub("н(" + stress_mark_c + "?)с", r"нт\1с", ipa)
+  if "стк" in pagetitle:
+    ipa = re.sub("с(" + stress_mark_c + "?)к", r"ст\1к", ipa)
+  if "ктн" in pagetitle:
+    ipa = re.sub("к(" + stress_mark_c + "?)н", r"кт\1н", ipa)
+  if "ждн" in pagetitle:
+    ipa = re.sub("ж(" + stress_mark_c + "?)н", r"жд\1н", ipa)
+  if "щн" in pagetitle:
+    ipa = re.sub("ш(" + stress_mark_c + "?)н", r"щ\1н", ipa) # e.g. срещнала /ˈsrɛʃnəɫə/
+  if re.search("зс" + C, pagetitle):
     # Stress mark should be before с
-    ipa = re.sub("(" + stress_mark_c + u"?с" + C + ")", r"з\1", ipa)
-  if u"зсъ" in pagetitle and u"зсъ" not in ipa: # HACK, e.g. неразсъдителност /nɛrəsəˈditɛlnost/
-    ipa = re.sub(u"съ", u"зсъ", ipa)
-  if u"нв" in pagetitle:
-    ipa = re.sub(u"м(" + stress_mark_c + u"?)в", r"н\1в", ipa)
-  if u"нф" in pagetitle:
-    ipa = re.sub(u"м(" + stress_mark_c + u"?)ф", r"н\1ф", ipa)
-  if u"чт" in pagetitle:
-    ipa = re.sub(u"т(" + stress_mark_c + u"?)щ", r"ч\1т", ipa) # e.g. мечтаещ /mɛtʃˈt̪aɛʃt̪/
+    ipa = re.sub("(" + stress_mark_c + "?с" + C + ")", r"з\1", ipa)
+  if "зсъ" in pagetitle and "зсъ" not in ipa: # HACK, e.g. неразсъдителност /nɛrəsəˈditɛlnost/
+    ipa = re.sub("съ", "зсъ", ipa)
+  if "нв" in pagetitle:
+    ipa = re.sub("м(" + stress_mark_c + "?)в", r"н\1в", ipa)
+  if "нф" in pagetitle:
+    ipa = re.sub("м(" + stress_mark_c + "?)ф", r"н\1ф", ipa)
+  if "чт" in pagetitle:
+    ipa = re.sub("т(" + stress_mark_c + "?)щ", r"ч\1т", ipa) # e.g. мечтаещ /mɛtʃˈt̪aɛʃt̪/
 
   ########## Correct consonant voicing assimilation.
 
   #### First, correct final devoicing.
   if pagetitle[-1] in voiced_to_unvoiced and ipa[-1] == voiced_to_unvoiced[pagetitle[-1]]:
-    pagemsg(u"Replacing final devoiced IPA %s with %s based on final voiced pagetitle consonant" % (ipa[-1], pagetitle[-1]))
+    pagemsg("Replacing final devoiced IPA %s with %s based on final voiced pagetitle consonant" % (ipa[-1], pagetitle[-1]))
     ipa = ipa[:-1] + pagetitle[-1]
 
   #### Then, correct voicing assimilation before an obstruent.
@@ -339,7 +339,7 @@ def convert_bg_manual_ipa(ipa, pagetitle, pagemsg):
         pagetitle_cons == unvoiced_to_voiced[ipa_cons]
       ):
         new_ipa_cons = unvoiced_to_voiced[ipa_cons]
-        pagemsg(u"Replacing unvoiced IPA %s before unvoiced obstruent with %s at index %s in %s based on pagetitle cons at index %s" %
+        pagemsg("Replacing unvoiced IPA %s before unvoiced obstruent with %s at index %s in %s based on pagetitle cons at index %s" %
           (ipa_cons, new_ipa_cons, ipa_index, ipa, pagetitle_index))
         ipa_chars[ipa_index] = new_ipa_cons
       # Correct voiced IPA obstruent to unvoiced equivalent as appropriate.
@@ -347,7 +347,7 @@ def convert_bg_manual_ipa(ipa, pagetitle, pagemsg):
         pagetitle_cons == voiced_to_unvoiced[ipa_cons]
       ):
         new_ipa_cons = voiced_to_unvoiced[ipa_cons]
-        pagemsg(u"Replacing voiced IPA %s before voiced obstruent with %s at index %s in %s based on pagetitle cons at index %s" %
+        pagemsg("Replacing voiced IPA %s before voiced obstruent with %s at index %s in %s based on pagetitle cons at index %s" %
           (ipa_cons, new_ipa_cons, ipa_index, ipa, pagetitle_index))
         ipa_chars[ipa_index] = new_ipa_cons
 
@@ -358,19 +358,19 @@ def convert_bg_manual_ipa(ipa, pagetitle, pagemsg):
   # what we had before moving accents after vowels.
   auto_stress_ipa = ipa.replace(PRIMARY, "").replace(SECONDARY, "")
   # First, move leftwards over the vowel.
-  auto_stress_ipa = re.sub(u"(" + V + ")(" + accent_c + ")", r"\2\1", auto_stress_ipa)
+  auto_stress_ipa = re.sub("(" + V + ")(" + accent_c + ")", r"\2\1", auto_stress_ipa)
   # Then, move leftwards over й or soft sign.
-  auto_stress_ipa = re.sub(u"([йь])(" + accent_c + ")", r"\2\1", auto_stress_ipa)
+  auto_stress_ipa = re.sub("([йь])(" + accent_c + ")", r"\2\1", auto_stress_ipa)
   # Then, move leftwards over a single consonant.
-  auto_stress_ipa = re.sub(u"(" + C + ")(" + accent_c + ")", r"\2\1", auto_stress_ipa)
+  auto_stress_ipa = re.sub("(" + C + ")(" + accent_c + ")", r"\2\1", auto_stress_ipa)
   # Then, move leftwards over Cl/Cr combinations where C is an obstruent.
-  auto_stress_ipa = re.sub(u"([бдгпткхфв]" + ")(" + accent_c + u")([рл])", r"\2\1\3", auto_stress_ipa)
+  auto_stress_ipa = re.sub("([бдгпткхфв]" + ")(" + accent_c + ")([рл])", r"\2\1\3", auto_stress_ipa)
   # Then, move leftwards over kv/gv.
-  auto_stress_ipa = re.sub(u"([кг]" + ")(" + accent_c + u")(в)", r"\2\1\3", auto_stress_ipa)
+  auto_stress_ipa = re.sub("([кг]" + ")(" + accent_c + ")(в)", r"\2\1\3", auto_stress_ipa)
   # Then, move leftwards over sC combinations, where C is a stop or resonant.
-  auto_stress_ipa = re.sub(u"([сз]" + ")(" + accent_c + u")([бдгптквлрмн])", r"\2\1\3", auto_stress_ipa)
+  auto_stress_ipa = re.sub("([сз]" + ")(" + accent_c + ")([бдгптквлрмн])", r"\2\1\3", auto_stress_ipa)
   # Then, move leftwards over affricates not followed by a consonant.
-  auto_stress_ipa = re.sub(u"([тд])(" + accent_c + u")([сзшж]" + V + ")", r"\2\1\3", auto_stress_ipa)
+  auto_stress_ipa = re.sub("([тд])(" + accent_c + ")([сзшж]" + V + ")", r"\2\1\3", auto_stress_ipa)
   # Then, move leftwards over any remaining consonants at the beginning of a word.
   auto_stress_ipa = re.sub(r"\b(" + C + "*)(" + accent_c + ")", r"\2\1", auto_stress_ipa, 0, re.U)
   # Then correct for known prefixes.

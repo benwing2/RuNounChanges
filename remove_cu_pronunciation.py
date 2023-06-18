@@ -43,7 +43,7 @@ def process_text_on_page(index, pagetitle, pagetext):
   sections[j] = secbody.rstrip("\n") + sectail
   return "".join(sections), notes
   
-parser = blib.create_argparser(u"Remove Pronunciation sections with {{cu-IPA}} from Old Church Slavonic terms",
+parser = blib.create_argparser("Remove Pronunciation sections with {{cu-IPA}} from Old Church Slavonic terms",
   include_pagefile=True, include_stdin=True)
 parser.add_argument("--partial-page", action="store_true", help="Input was generated with 'find_regex.py --lang LANG' and has no ==LANG== header.")
 args = parser.parse_args()

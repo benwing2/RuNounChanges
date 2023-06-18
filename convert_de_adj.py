@@ -6,25 +6,25 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-vowels = u"aeiouyäöüAEIOUYÄÖÜ"
-capletters = u"A-ZÄÖÜ"
+vowels = "aeiouyäöüAEIOUYÄÖÜ"
+capletters = "A-ZÄÖÜ"
 CAP = "[" + capletters + "]"
 V = "[" + vowels + "]"
 NV = "[^" + vowels + "]"
-OMITTED_E = u"\uFFF0"
+OMITTED_E = "\uFFF0"
 
 umlaut = {
-  "a": u"ä",
-  "A": u"Ä",
-  "o": u"ö",
-  "O": u"Ö",
-  "u": u"ü",
-  "U": u"Ü",
+  "a": "ä",
+  "A": "Ä",
+  "o": "ö",
+  "O": "Ö",
+  "u": "ü",
+  "U": "Ü",
 }
 
 def generate_default_stem(lemma, ss):
   if ss:
-    return re.sub(u"ß$", "ss", lemma)
+    return re.sub("ß$", "ss", lemma)
   if lemma.endswith("e"):
     return lemma[:-1]
   return re.sub("([ai])bel$", r"\1b" + OMITTED_E + "l", lemma)
@@ -43,22 +43,22 @@ def generate_default_sup(stem, ss):
     non_ending, ending = m.groups()
     if ss:
       # [[abgeschlossen]] -> ''abgeschloßner'' -> ''abgeschlossenst'' (pre-1996 spelling)
-      non_ending = re.sub(u"ß$", "ss", non_ending)
+      non_ending = re.sub("ß$", "ss", non_ending)
     return non_ending + "e" + ending + "st"
-  elif re.search(u"gr[oö](ß|ss)$", stem):
+  elif re.search("gr[oö](ß|ss)$", stem):
     # Write this way so we can be called either on positive or comparative stem.
     return stem + "t"
-  elif re.search(u"h[oö]h$", stem):
+  elif re.search("h[oö]h$", stem):
     # [[hoch]], [[ranghoch]], etc.
     # Write this way so we can be called either on positive or comparative stem.
-    return stem[:-2] + u"öchst"
-  elif re.search(u"n[aä]h$", stem):
+    return stem[:-2] + "öchst"
+  elif re.search("n[aä]h$", stem):
     # [[nah]], [[äquatornah]], [[bahnhofsnah]], [[bodennah]], [[citynah]], [[hautnah]] (has no comp in dewikt),
     # [[körpernah]], [[zeitnah]], etc.
     # NOTE: [[erdnah]], [[praxisnah]] can be either regular (like [[froh]] below) or following [[nah]].
     # Write this way so we can be called either on positive or comparative stem.
-    return stem[:-2] + u"ächst"
-  elif re.search(u"[aeiouäöü]h$", stem):
+    return stem[:-2] + "ächst"
+  elif re.search("[aeiouäöü]h$", stem):
     # [[froh]], [[farbenfroh]], [[lebensfroh]], [[schadenfroh]], [[früh]], [[jäh]] (has only jähest in dewikt), [[rauh]],
     # [[roh]], [[weh]], [[zäh]]
     return [stem + "st", stem + "est"]
@@ -77,8 +77,8 @@ def generate_default_sup(stem, ss):
   elif re.search("[ae][iuwy]$", stem):
     # Those ending in diphthongs can take either -est -or -st (scheu, neu, schlau, frei, blau/blaw, etc.)
     return [stem + "est", stem + "st"]
-  elif re.search(u"[szxßdt]$", stem):
-    if ss and stem.endswith(u"ß"):
+  elif re.search("[szxßdt]$", stem):
+    if ss and stem.endswith("ß"):
       return stem[:-1] + "ssest"
     return stem + "est"
   elif stem.endswith("sk"):
@@ -238,7 +238,7 @@ def process_spec(specs, stems, generate_default, ss, pagemsg):
           return None
         non_ending, ending = m.groups()
         if ss:
-          non_ending = re.sub("ss$", u"ß")
+          non_ending = re.sub("ss$", "ß")
         retval.extend(do_generate_default(non_ending + OMITTED_E + ending))
     else:
       retval.append(spec)
@@ -310,7 +310,7 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
     decl_comps = []
     decl_sups = []
     ss = False
-    if pagetitle.endswith(u"ß"):
+    if pagetitle.endswith("ß"):
       if declt and getparam(declt, "1").endswith("ss") or not declt and getparam(headt, "1").endswith("sser"):
         ss = True
 

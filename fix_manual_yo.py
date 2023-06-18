@@ -23,15 +23,15 @@ def process_page(page, index, parsed):
   newtext = re.sub(r"\{\{head\|ru\|([^|=]*)\|.*?g=(.*?)(?:\|.*?)?\}\}\n\n# \{\{alternative (?:form|spelling) of\|(.*?)\|lang=ru\}\}\n\n\[\[Category:Russian spellings with е instead of ё\]\]",
       r"{{ru-pos-alt-ё|\3|\1|g=\2}}", newtext)
 
-  if newtext == text and u"[[Category:Russian spellings with е instead of ё]]" in text:
-    pagemsg(u"WARNING: Unable to match manual alt-ё form")
+  if newtext == text and "[[Category:Russian spellings with е instead of ё]]" in text:
+    pagemsg("WARNING: Unable to match manual alt-ё form")
 
-  return newtext, u"Replaced manual alt-ё specification with {{ru-pos-alt-ё}}"
+  return newtext, "Replaced manual alt-ё specification with {{ru-pos-alt-ё}}"
 
-parser = blib.create_argparser(u"Replace manual alt-ё specification with {{ru-pos-alt-ё}}",
+parser = blib.create_argparser("Replace manual alt-ё specification with {{ru-pos-alt-ё}}",
   include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
-  default_cats=[u"Russian spellings with е instead of ё"])
+  default_cats=["Russian spellings with е instead of ё"])

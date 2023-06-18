@@ -9,7 +9,7 @@ from blib import getparam, rmparam, msg, site, tname
 import uklib as uk
 import belib as be
 
-AC = u"\u0301"
+AC = "\u0301"
 
 def process_page(page, index, parsed):
   pagetitle = str(page.title())

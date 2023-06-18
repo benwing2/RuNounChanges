@@ -27,29 +27,29 @@ def process_text_on_page(index, pagetitle, text):
     if tn in [
       "hi-noun-c-m", "hi-noun-c-c",
       "hi-noun-a-m", "hi-noun-a-a",
-      u"hi-noun-ā-m", u"hi-noun-ā-e",
+      "hi-noun-ā-m", "hi-noun-ā-e",
       "hi-noun-i-m", "hi-noun-i-i",
-      u"hi-noun-ī-m", u"hi-noun-ī-ī",
+      "hi-noun-ī-m", "hi-noun-ī-ī",
       "hi-noun-o-m",
       "hi-noun-u-m", "hi-noun-u-u",
-      u"hi-noun-ū-m", u"hi-noun-ū-ū",
+      "hi-noun-ū-m", "hi-noun-ū-ū",
     ]:
       decl = "<M>"
     elif tn in [
-      u"hi-noun-ā-ā-m", u"hi-noun-ā-ā",
+      "hi-noun-ā-ā-m", "hi-noun-ā-ā",
     ]:
       decl = "<M.unmarked>"
     elif tn in [
-      "hi-noun-c-f", u"hi-noun-c-ẽ",
-      u"hi-noun-ā-f", u"hi-noun-ā-āẽ",
-      "hi-noun-i-f", u"hi-noun-i-iyā̃",
-      u"hi-noun-ī-f", u"hi-noun-ī-iyā̃",
-      "hi-noun-u-f", u"hi-noun-u-uẽ",
-      u"hi-noun-ū-f", u"hi-noun-ū-ūẽ",
+      "hi-noun-c-f", "hi-noun-c-ẽ",
+      "hi-noun-ā-f", "hi-noun-ā-āẽ",
+      "hi-noun-i-f", "hi-noun-i-iyā̃",
+      "hi-noun-ī-f", "hi-noun-ī-iyā̃",
+      "hi-noun-u-f", "hi-noun-u-uẽ",
+      "hi-noun-ū-f", "hi-noun-ū-ūẽ",
     ]:
       decl = "<F>"
     elif tn in [
-      u"hi-noun-iyā-f", u"hi-noun-iyā-iyā̃",
+      "hi-noun-iyā-f", "hi-noun-iyā-iyā̃",
     ]:
       decl = "<F.iyā>"
     if decl:
@@ -62,7 +62,7 @@ def process_text_on_page(index, pagetitle, text):
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Convert old Hindi noun declension templates to new ones",
+parser = blib.create_argparser("Convert old Hindi noun declension templates to new ones",
     include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

@@ -326,32 +326,32 @@ tag_to_dimension_table, tag_to_canonical_form_table = (
   infltags.fetch_tag_tables(preferred_tag_variants)
 )
 
-AC = u"\u0301" # acute accent
-GR = u"\u0300" # grave accent
+AC = "\u0301" # acute accent
+GR = "\u0300" # grave accent
 
 # List of nouns where there are multiple headword genders and the gender
 # in the declension is acceptable
 ignore_headword_gender = [
-    u"редактор",
+    "редактор",
 ]
 
 skip_lemma_pages = [
-    u"роженица", # 3 stress variants
-    u"лицо, ищущее убежище", # can't properly handle comma in title
-    u"витамин B2", # can't handle < in form titles
-    u"ложное срабатывание", # will be deleted
+    "роженица", # 3 stress variants
+    "лицо, ищущее убежище", # can't properly handle comma in title
+    "витамин B2", # can't handle < in form titles
+    "ложное срабатывание", # will be deleted
 ]
 
 # Skip non-lemma forms if specified here. Format is (FORM, LEMMA) for the
 # form and corresponding lemma.
 skip_form_pages = [
-    (u"добытый", u"добыть"), # has two variants which need to be split
-    (u"бабки", u"бабка"), # etymologically split, wrongly adds an-acc-pl
-    (u"посла", u"посол"), # wrongly adds an-acc-sg
-    (u"попа", u"поп"), # wrongly adds an-acc-sg
-    (u"кисы", u"киса"), # wrongly adds in-acc-pl
-    (u"трёпла", u"трепло"), # wrongly adds in-acc-pl
-    (u"чухи", u"чуха"), # wrongly adds in-acc-pl
+    ("добытый", "добыть"), # has two variants which need to be split
+    ("бабки", "бабка"), # etymologically split, wrongly adds an-acc-pl
+    ("посла", "посол"), # wrongly adds an-acc-sg
+    ("попа", "поп"), # wrongly adds an-acc-sg
+    ("кисы", "киса"), # wrongly adds in-acc-pl
+    ("трёпла", "трепло"), # wrongly adds in-acc-pl
+    ("чухи", "чуха"), # wrongly adds in-acc-pl
 ]
 
 # Used to manually assign forms to lemmas when there are stress variants.
@@ -359,91 +359,91 @@ skip_form_pages = [
 # that should match the form, and LEMMA is the corresponding lemma with
 # accents.
 manual_split_form_list = [
-    (u"^аппара́тн.*обеспе́чен", u"аппара́тное обеспе́чение"),
-    (u"^аппара́тн.*обеспече́н", u"аппара́тное обеспече́ние"),
-    (u"^бондар", u"бонда́рь"),
-    (u"^грабар", u"граба́рь"),
-    (u"^договор", u"до́говор"),
-    (u"^йо́ркширск.*терье́р", u"йо́ркширский терье́р"),
-    (u"^йоркши́рск.*терье́р", u"йоркши́рский терье́р"),
-    (u"^кожух", u"кожу́х"),
-    (u"^козы́рн.*ка́рт", u"козы́рная ка́рта"),
-    (u"^козырн.*ка́рт", u"козырна́я ка́рта"),
-    (u"^колок", u"коло́к"),
-    (u"^ко́мплекс.*чис", u"ко́мплексное число́"),
-    (u"^компле́кс.*чис", u"компле́ксное число́"),
-    (u"^лемех", u"леме́х"),
-    (u"^морск.*у́ш", u"морско́е у́шко"),
-    (u"^морск.*уш", u"морско́е ушко́"),
-    (u"^не́топыр", u"не́топырь"),
-    (u"^нетопыр", u"нетопы́рь"),
-    (u"^обух", u"обу́х"),
-    (u"^пехтер", u"пехте́рь"),
+    ("^аппара́тн.*обеспе́чен", "аппара́тное обеспе́чение"),
+    ("^аппара́тн.*обеспече́н", "аппара́тное обеспече́ние"),
+    ("^бондар", "бонда́рь"),
+    ("^грабар", "граба́рь"),
+    ("^договор", "до́говор"),
+    ("^йо́ркширск.*терье́р", "йо́ркширский терье́р"),
+    ("^йоркши́рск.*терье́р", "йоркши́рский терье́р"),
+    ("^кожух", "кожу́х"),
+    ("^козы́рн.*ка́рт", "козы́рная ка́рта"),
+    ("^козырн.*ка́рт", "козырна́я ка́рта"),
+    ("^колок", "коло́к"),
+    ("^ко́мплекс.*чис", "ко́мплексное число́"),
+    ("^компле́кс.*чис", "компле́ксное число́"),
+    ("^лемех", "леме́х"),
+    ("^морск.*у́ш", "морско́е у́шко"),
+    ("^морск.*уш", "морско́е ушко́"),
+    ("^не́топыр", "не́топырь"),
+    ("^нетопыр", "нетопы́рь"),
+    ("^обух", "обу́х"),
+    ("^пехтер", "пехте́рь"),
     # split algorithm doesn't currently handle adjectives correctly
-    (u"^Пика́ссо прямоуго́льчат", u"Пика́ссо прямоуго́льчатый"),
-    (u"^Пикассо́ прямоуго́льчат", u"Пикассо́ прямоуго́льчатый"),
+    ("^Пика́ссо прямоуго́льчат", "Пика́ссо прямоуго́льчатый"),
+    ("^Пикассо́ прямоуго́льчат", "Пикассо́ прямоуго́льчатый"),
     # combined entry with при́вод type c(1) and приво́д type a.
-    (u"^привод", u"при́вод"),
-    (u"^програ́ммн.*обеспе́чен", u"програ́ммное обеспе́чение"),
-    (u"^програ́ммн.*обеспече́н", u"програ́ммное обеспече́ние"),
-    (u"^пу́рпур", u"пу́рпурный"),
-    (u"^пурпу́р", u"пурпу́рный"),
-    (u"^пяден", u"пя́день"),
+    ("^привод", "при́вод"),
+    ("^програ́ммн.*обеспе́чен", "програ́ммное обеспе́чение"),
+    ("^програ́ммн.*обеспече́н", "програ́ммное обеспече́ние"),
+    ("^пу́рпур", "пу́рпурный"),
+    ("^пурпу́р", "пурпу́рный"),
+    ("^пяден", "пя́день"),
     # FIXME, following three don't work because of the three-way split
-    (u"^рожени́ц", u"рожени́ца"),
-    (u"^роже́ниц", u"роже́ница"),
-    (u"^ро́жениц", u"ро́женица"),
-    (u"^рыбар", u"рыба́рь"),
-    (u"^сажен", u"са́жень"),
-    (u"^творог", u"творо́г"),
-    (u"^тео́ри.*ха́оса", u"тео́рия ха́оса"),
-    (u"^тео́ри.*хао́са", u"тео́рия хао́са"),
-    (u"^украи́нск", u"украи́нский"),
-    (u"^укра́инск", u"укра́инский"),
+    ("^рожени́ц", "рожени́ца"),
+    ("^роже́ниц", "роже́ница"),
+    ("^ро́жениц", "ро́женица"),
+    ("^рыбар", "рыба́рь"),
+    ("^сажен", "са́жень"),
+    ("^творог", "творо́г"),
+    ("^тео́ри.*ха́оса", "тео́рия ха́оса"),
+    ("^тео́ри.*хао́са", "тео́рия хао́са"),
+    ("^украи́нск", "украи́нский"),
+    ("^укра́инск", "укра́инский"),
     # verbs; need to split every one since we don't yet have automatic
     # handling of them
-    (u"^гази́р", u"гази́ровать"),
-    (u"^газир", u"газирова́ть"),
-    (u"^вкли́н.*с[ья]$", u"вкли́ниться"),
-    (u"^вклин.*с[ья]$", u"вклини́ться"),
-    (u"^вкли́н", u"вкли́нить"),
-    (u"^вклин", u"вклини́ть"),
-    (u"^закли́н", u"закли́нить"),
-    (u"^заклин", u"заклини́ть"),
-    (u"^запы́ха", u"запы́хаться"),
-    (u"^запыха́", u"запыха́ться"),
-    (u"^зареше[тч]", u"зарешети́ть"),
-    (u"^зареше́[тч]", u"зареше́тить"),
-    (u"^заржа́ве", u"заржа́веть"),
-    (u"^заржаве́", u"заржаве́ть"),
-    (u"^и́скр", u"и́скриться"),
-    (u"^искр", u"искри́ться"),
-    (u"^норми́р", u"норми́ровать"),
-    (u"^нормир", u"нормирова́ть"),
-    (u"^обрам", u"обрами́ть"),
-    (u"^обра́м", u"обра́мить"),
-    (u"^опорожн", u"опорожни́ть"),
-    (u"^опоро́жн", u"опоро́жнить"),
-    (u"^преуме́ньш", u"преуме́ньшить"),
-    (u"^преуменьш", u"преуменьши́ть"),
-    (u"^прину́[жд]", u"прину́дить"),
-    (u"^прину[жд]", u"принуди́ть"),
-    (u"^пузы́р", u"пузы́риться"),
-    (u"^пузыр", u"пузыри́ться"),
-    (u"^ржа́ве", u"ржа́веть"),
-    (u"^ржаве́", u"ржаве́ть"),
-    (u"^са́дн", u"са́днить"),
-    (u"^садн", u"садни́ть"),
-    (u"^сгру́[жд]", u"сгру́диться"),
-    (u"^сгру[жд]", u"сгруди́ться"),
-    (u"^уме́ньш.*с[ья]$", u"уме́ньшиться"),
-    (u"^уменьш.*с[ья]$", u"уменьши́ться"),
-    (u"^уме́ньш", u"уме́ньшить"),
-    (u"^уменьш", u"уменьши́ть"),
-    (u"^предвосхи́", u"предвосхи́тить"),
-    (u"^предвосхи", u"предвосхити́ть"),
-    (u"^ю́ркн", u"ю́ркнуть"),
-    (u"^юркн", u"юркну́ть"),
+    ("^гази́р", "гази́ровать"),
+    ("^газир", "газирова́ть"),
+    ("^вкли́н.*с[ья]$", "вкли́ниться"),
+    ("^вклин.*с[ья]$", "вклини́ться"),
+    ("^вкли́н", "вкли́нить"),
+    ("^вклин", "вклини́ть"),
+    ("^закли́н", "закли́нить"),
+    ("^заклин", "заклини́ть"),
+    ("^запы́ха", "запы́хаться"),
+    ("^запыха́", "запыха́ться"),
+    ("^зареше[тч]", "зарешети́ть"),
+    ("^зареше́[тч]", "зареше́тить"),
+    ("^заржа́ве", "заржа́веть"),
+    ("^заржаве́", "заржаве́ть"),
+    ("^и́скр", "и́скриться"),
+    ("^искр", "искри́ться"),
+    ("^норми́р", "норми́ровать"),
+    ("^нормир", "нормирова́ть"),
+    ("^обрам", "обрами́ть"),
+    ("^обра́м", "обра́мить"),
+    ("^опорожн", "опорожни́ть"),
+    ("^опоро́жн", "опоро́жнить"),
+    ("^преуме́ньш", "преуме́ньшить"),
+    ("^преуменьш", "преуменьши́ть"),
+    ("^прину́[жд]", "прину́дить"),
+    ("^прину[жд]", "принуди́ть"),
+    ("^пузы́р", "пузы́риться"),
+    ("^пузыр", "пузыри́ться"),
+    ("^ржа́ве", "ржа́веть"),
+    ("^ржаве́", "ржаве́ть"),
+    ("^са́дн", "са́днить"),
+    ("^садн", "садни́ть"),
+    ("^сгру́[жд]", "сгру́диться"),
+    ("^сгру[жд]", "сгруди́ться"),
+    ("^уме́ньш.*с[ья]$", "уме́ньшиться"),
+    ("^уменьш.*с[ья]$", "уменьши́ться"),
+    ("^уме́ньш", "уме́ньшить"),
+    ("^уменьш", "уменьши́ть"),
+    ("^предвосхи́", "предвосхи́тить"),
+    ("^предвосхи", "предвосхити́ть"),
+    ("^ю́ркн", "ю́ркнуть"),
+    ("^юркн", "юркну́ть"),
 ]
 
 # These represent pairs of lemmas, typically where the first one is a plurale
@@ -457,102 +457,102 @@ manual_split_form_list = [
 # plural, insert the subsection after the lemma rather than creating a new
 # etymology section.
 allow_in_same_etym_section = [
-    (u"авиалинии", u"авиалиния"),
-    (u"агулы", u"агул"),
-    (u"азы", u"аз"),
+    ("авиалинии", "авиалиния"),
+    ("агулы", "агул"),
+    ("азы", "аз"),
     # the following is complicated because there are two амур etymologies,
     # one of which is shared with амуры.
-    (u"амуры", u"амур"),
-    (u"антресоли", u"антресоль"),
-    (u"бакенбарды", u"бакенбарда"),
-    (u"бега", u"бег"),
-    (u"боеприпасы", u"боеприпас"),
-    (u"бразды", u"бразда"),
-    (u"брусья", u"брус"),
-    (u"брюхоногие", u"брюхоногий"),
-    (u"бубны", u"бубна"),
-    (u"внучата", u"внук"),
-    (u"внутренности", u"внутренность"),
-    (u"вожжи", u"вожжа"),
-    (u"войска", u"войско"),
-    (u"волосы", u"волос"),
-    (u"выборы", u"выбор"),
-    (u"выходные", u"выходной"),
-    (u"гонки", u"гонка"),
-    (u"горелки", u"горелка"), # at least partly related
-    (u"деньги", u"деньга"),
-    (u"домашние", u"домашний"),
-    (u"доспехи", u"доспех"),
-    (u"жабры", u"жабра"),
-    (u"заморозки", u"зоморозок"),
-    (u"запчасти", u"запчасть"),
-    (u"кавычки", u"кавычка"),
-    (u"кадры", u"кадр"),
-    (u"капли", u"капля"),
-    (u"карты", u"карта"),
-    (u"коньки", u"конёк"),
-    (u"коронавирусы", u"коронавирус"),
-    (u"кости", u"кость"),
-    (u"кракозябры", u"кракозябра"),
-    (u"курсы", u"курс"),
-    (u"ладоши", u"ладоша"),
-    (u"леса", u"лес"),
-    (u"литавры", u"литавра"),
-    (u"люди", u"человек"),
-    (u"лыжи", u"лыжа"),
-    (u"мозги", u"мозг"),
-    (u"морепродукты", u"морепродукт"),
-    (u"мостки", u"мосток"),
-    (u"мурашки", u"мурашка"),
-    (u"нарты", u"нарта"),
-    (u"наручники", u"наручник"),
-    (u"наушники", u"наушник"),
-    (u"небеса", u"небо"),
-    (u"нечистоты", u"нечистота"),
-    (u"новости", u"новость"),
-    (u"ноты", u"нота"),
-    (u"окрестности", u"окрестность"),
-    (u"окружающие", u"окружающее"),
-    (u"осадки", u"осадок"),
-    (u"опилки", u"опилка"),
-    (u"отбросы", u"отброс"),
-    (u"отговоры", u"отговор"),
-    (u"падонки", u"падонак"),
-    (u"пики", u"пика"),
-    (u"подтяжки", u"подтяжка"),
-    (u"позывные", u"позывной"),
-    (u"покои", u"покой"),
-    (u"полдни", u"полдень"),
-    (u"почести", u"почесть"),
-    (u"правнучата", u"правнук"),
-    (u"права", u"право"),
-    (u"припасы", u"припас"),
-    (u"реалии", u"реалия"),
-    (u"ребята", u"ребёнок"),
-    (u"роды", u"род"),
-    (u"секундочку", u"секундочка"),
-    (u"сиги", u"сиг"),
-    (u"сласти", u"сласть"),
-    (u"слухи", u"слух"),
-    (u"слюнки", u"слюнка"),
-    (u"слюни", u"слюна"),
-    (u"сопли", u"сопля"),
-    (u"соты", u"сота"),
+    ("амуры", "амур"),
+    ("антресоли", "антресоль"),
+    ("бакенбарды", "бакенбарда"),
+    ("бега", "бег"),
+    ("боеприпасы", "боеприпас"),
+    ("бразды", "бразда"),
+    ("брусья", "брус"),
+    ("брюхоногие", "брюхоногий"),
+    ("бубны", "бубна"),
+    ("внучата", "внук"),
+    ("внутренности", "внутренность"),
+    ("вожжи", "вожжа"),
+    ("войска", "войско"),
+    ("волосы", "волос"),
+    ("выборы", "выбор"),
+    ("выходные", "выходной"),
+    ("гонки", "гонка"),
+    ("горелки", "горелка"), # at least partly related
+    ("деньги", "деньга"),
+    ("домашние", "домашний"),
+    ("доспехи", "доспех"),
+    ("жабры", "жабра"),
+    ("заморозки", "зоморозок"),
+    ("запчасти", "запчасть"),
+    ("кавычки", "кавычка"),
+    ("кадры", "кадр"),
+    ("капли", "капля"),
+    ("карты", "карта"),
+    ("коньки", "конёк"),
+    ("коронавирусы", "коронавирус"),
+    ("кости", "кость"),
+    ("кракозябры", "кракозябра"),
+    ("курсы", "курс"),
+    ("ладоши", "ладоша"),
+    ("леса", "лес"),
+    ("литавры", "литавра"),
+    ("люди", "человек"),
+    ("лыжи", "лыжа"),
+    ("мозги", "мозг"),
+    ("морепродукты", "морепродукт"),
+    ("мостки", "мосток"),
+    ("мурашки", "мурашка"),
+    ("нарты", "нарта"),
+    ("наручники", "наручник"),
+    ("наушники", "наушник"),
+    ("небеса", "небо"),
+    ("нечистоты", "нечистота"),
+    ("новости", "новость"),
+    ("ноты", "нота"),
+    ("окрестности", "окрестность"),
+    ("окружающие", "окружающее"),
+    ("осадки", "осадок"),
+    ("опилки", "опилка"),
+    ("отбросы", "отброс"),
+    ("отговоры", "отговор"),
+    ("падонки", "падонак"),
+    ("пики", "пика"),
+    ("подтяжки", "подтяжка"),
+    ("позывные", "позывной"),
+    ("покои", "покой"),
+    ("полдни", "полдень"),
+    ("почести", "почесть"),
+    ("правнучата", "правнук"),
+    ("права", "право"),
+    ("припасы", "припас"),
+    ("реалии", "реалия"),
+    ("ребята", "ребёнок"),
+    ("роды", "род"),
+    ("секундочку", "секундочка"),
+    ("сиги", "сиг"),
+    ("сласти", "сласть"),
+    ("слухи", "слух"),
+    ("слюнки", "слюнка"),
+    ("слюни", "слюна"),
+    ("сопли", "сопля"),
+    ("соты", "сота"),
     # FIXME! This should be split into стих "verse" (goes with стихи),
     # стих "mood" (does not go)
-    (u"стихи", u"стих"),
-    (u"тапочки", u"тапочка"),
-    (u"трефы", u"трефа"),
-    (u"усы", u"ус"),
-    (u"французы", u"француз"),
-    (u"цимбалы", u"цимбал"),
-    (u"часы", u"час"),
-    (u"червы", u"черва"),
-    (u"шашки", u"шашка"),
-    (u"шлёпанцы", u"шлёпанец"),
-    (u"энергоресурсы", u"энергоресурс"),
-    (u"японцы", u"японец"),
-    (u"яства", u"яство"),
+    ("стихи", "стих"),
+    ("тапочки", "тапочка"),
+    ("трефы", "трефа"),
+    ("усы", "ус"),
+    ("французы", "француз"),
+    ("цимбалы", "цимбал"),
+    ("часы", "час"),
+    ("червы", "черва"),
+    ("шашки", "шашка"),
+    ("шлёпанцы", "шлёпанец"),
+    ("энергоресурсы", "энергоресурс"),
+    ("японцы", "японец"),
+    ("яства", "яство"),
 ]
 
 # These represent pairs of lemmas, typically where the first one is a plurale
@@ -560,36 +560,36 @@ allow_in_same_etym_section = [
 # This is the opposite of allow_in_same_etym_section and is used to avoid
 # warnings about these pairs.
 not_in_same_etym_section = [
-    (u"асы", u"ас"),
-    (u"бабки", u"бабка"),
-    (u"бачки", u"бачок"),
-    (u"вьетнамки", u"вьетнамка"),
-    (u"городки", u"городок"),
-    (u"денежки", u"денежка"),
-    (u"духи", u"дух"),
-    (u"дыбы", u"дыба"),
-    (u"кеды", u"кед"),
-    (u"клещи", u"клещ"),
-    (u"козлы", u"козёл"),
-    (u"ладушки", u"ладушка"),
-    (u"латы", u"лат"),
-    (u"нары", u"нар"),
-    (u"нарды", u"нард"),
-    (u"отходы", u"отход"),
-    (u"очки", u"очко"),
-    (u"плавки", u"плавка"),
-    (u"плечики", u"плечико"),
-    (u"сланцы", u"сланец"),
-    (u"трусы", u"трус"),
-    (u"цыпочки", u"цыпочка"),
-    (u"чари", u"чара"),
-    (u"черви", u"червь"),
+    ("асы", "ас"),
+    ("бабки", "бабка"),
+    ("бачки", "бачок"),
+    ("вьетнамки", "вьетнамка"),
+    ("городки", "городок"),
+    ("денежки", "денежка"),
+    ("духи", "дух"),
+    ("дыбы", "дыба"),
+    ("кеды", "кед"),
+    ("клещи", "клещ"),
+    ("козлы", "козёл"),
+    ("ладушки", "ладушка"),
+    ("латы", "лат"),
+    ("нары", "нар"),
+    ("нарды", "нард"),
+    ("отходы", "отход"),
+    ("очки", "очко"),
+    ("плавки", "плавка"),
+    ("плечики", "плечико"),
+    ("сланцы", "сланец"),
+    ("трусы", "трус"),
+    ("цыпочки", "цыпочка"),
+    ("чари", "чара"),
+    ("черви", "червь"),
 ]
 
 # List of lemmas where we allow stress mismatches to go into the same etym
 # section.
 allow_stress_mismatch_list = [
-    u"щавель"
+    "щавель"
 ]
 
 # These represent pairs of lemmas where we allow definition lines from the
@@ -598,71 +598,71 @@ allow_stress_mismatch_list = [
 # nominative singular and the other doesn't; by convention, we list the one
 # with the epenthetic vowel first).
 allow_defn_in_same_subsection = [
-    (u"басня", u"баснь"),
-    (u"бобёр", u"бобр"),
-    (u"ветер", u"ветр"),
-    (u"водоросель", u"водоросль"),
-    (u"воспитание", u"воспитанье"),
-    (u"вылезти", u"вылезть"),
-    (u"деревцо", u"деревце"),
-    (u"дыхание", u"дыханье"),
-    (u"дитя", u"ребёнок"), # special-case with same plural
-    (u"жалование", u"жалованье"),
-    (u"жарение", u"жаренье"),
-    (u"купание", u"купанье"),
-    (u"либеральничание", u"либеральничанье"),
+    ("басня", "баснь"),
+    ("бобёр", "бобр"),
+    ("ветер", "ветр"),
+    ("водоросель", "водоросль"),
+    ("воспитание", "воспитанье"),
+    ("вылезти", "вылезть"),
+    ("деревцо", "деревце"),
+    ("дыхание", "дыханье"),
+    ("дитя", "ребёнок"), # special-case with same plural
+    ("жалование", "жалованье"),
+    ("жарение", "жаренье"),
+    ("купание", "купанье"),
+    ("либеральничание", "либеральничанье"),
     # three-way equivalence of мать, мати, матерь; need to list all pairs
-    (u"мать", u"мати"),
-    (u"матерь", u"мати"),
-    (u"мать", u"матерь"),
-    (u"мнение", u"мненье"),
-    (u"нуль", u"ноль"),
-    (u"обличие", u"обличье"),
-    (u"ожидание", u"ожиданье"),
-    (u"огонь", u"огнь"),
-    (u"остыть", u"остынуть"),
-    (u"пение", u"пенье"),
-    (u"плавание", u"плаванье"),
-    (u"подножие", u"подножье"),
-    (u"пол-литра", u"поллитра"),
-    (u"простыть", u"простынуть"),
-    (u"прощение", u"прощенье"),
-    (u"рождение", u"рожденье"),
-    (u"свёкор", u"свёкр"),
-    (u"свёкла", u"свекла"),
-    (u"служение", u"служенье"),
-    (u"собрание", u"собранье"),
-    (u"соление", u"соленье"),
-    (u"сражение", u"сраженье"),
-    (u"судия", u"судья"),
-    (u"уединение", u"уединенье"),
-    (u"уголь", u"угль"),
-    (u"умиление", u"умиленье"),
-    (u"учение", u"ученье"),
-    (u"хотение", u"хотенье"),
-    (u"чёрт", u"чорт"),
+    ("мать", "мати"),
+    ("матерь", "мати"),
+    ("мать", "матерь"),
+    ("мнение", "мненье"),
+    ("нуль", "ноль"),
+    ("обличие", "обличье"),
+    ("ожидание", "ожиданье"),
+    ("огонь", "огнь"),
+    ("остыть", "остынуть"),
+    ("пение", "пенье"),
+    ("плавание", "плаванье"),
+    ("подножие", "подножье"),
+    ("пол-литра", "поллитра"),
+    ("простыть", "простынуть"),
+    ("прощение", "прощенье"),
+    ("рождение", "рожденье"),
+    ("свёкор", "свёкр"),
+    ("свёкла", "свекла"),
+    ("служение", "служенье"),
+    ("собрание", "собранье"),
+    ("соление", "соленье"),
+    ("сражение", "сраженье"),
+    ("судия", "судья"),
+    ("уединение", "уединенье"),
+    ("уголь", "угль"),
+    ("умиление", "умиленье"),
+    ("учение", "ученье"),
+    ("хотение", "хотенье"),
+    ("чёрт", "чорт"),
     # -стигнуть vs. -стичь
-    (u"достигнуть", u"достичь"),
-    (u"застигнуть", u"застичь"),
-    (u"настигнуть", u"настичь"),
-    (u"постигнуть", u"постичь"),
+    ("достигнуть", "достичь"),
+    ("застигнуть", "застичь"),
+    ("настигнуть", "настичь"),
+    ("постигнуть", "постичь"),
     # Type 4a1a vs. type 1a: мерить
-    (u"измерить", u"измерять"),
-    (u"измериться", u"измеряться"),
-    (u"мерить", u"мерять"),
-    (u"обмерить", u"обмерять"),
-    (u"отмерить", u"отмерять"),
-    (u"примерить", u"примерять"),
-    (u"примериться", u"примеряться"),
-    (u"размерить", u"размерять"),
-    (u"смерить", u"смерять"),
+    ("измерить", "измерять"),
+    ("измериться", "измеряться"),
+    ("мерить", "мерять"),
+    ("обмерить", "обмерять"),
+    ("отмерить", "отмерять"),
+    ("примерить", "примерять"),
+    ("примериться", "примеряться"),
+    ("размерить", "размерять"),
+    ("смерить", "смерять"),
     # Type 4a1a vs. type 1a: мучить
-    (u"замучить", u"замучать"),
-    (u"замучиться", u"замучаться"),
-    (u"измучить", u"измучать"),
-    (u"измучиться", u"измучаться"),
-    (u"мучить", u"мучать"),
-    (u"мучиться", u"мучаться"),
+    ("замучить", "замучать"),
+    ("замучиться", "замучаться"),
+    ("измучить", "измучать"),
+    ("измучиться", "измучаться"),
+    ("мучить", "мучать"),
+    ("мучиться", "мучаться"),
 ]
 
 def check_re_sub(warnfun, action, refrom, reto, text, numsub=1, flags=0):
@@ -1086,10 +1086,10 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       part_short_decls = []
       for infl, infltr in inflections:
         part_short_decl = (
-          ("a(2),dated-c(2)" if past_f_end_stressed else "a(2)") if re.search(u"(е|а́|а|я́|я)нный$", infl) else
-          "b(2)" if infl.endswith(u"ённый") else
-          "c" if infl.endswith(u"тый") and past_f_end_stressed else
-          "a" if re.search(u"[мт]ый$", infl) else "-")
+          ("a(2),dated-c(2)" if past_f_end_stressed else "a(2)") if re.search("(е|а́|а|я́|я)нный$", infl) else
+          "b(2)" if infl.endswith("ённый") else
+          "c" if infl.endswith("тый") and past_f_end_stressed else
+          "a" if re.search("[мт]ый$", infl) else "-")
         part_short_decls.append(part_short_decl)
 
       # Combine inflection and its translit the way that it's expected in
@@ -1222,8 +1222,8 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
             for t in parsed.filter_templates():
               tnam = tname(t)
               if tnam in ["ru-noun", "ru-noun+", "ru-proper noun",
-                  "ru-proper noun+", u"ru-noun-alt-ё", u"ru-proper noun-alt-ё",
-                  "ru-adj", u"ru-adj-alt-ё", "ru-verb", u"ru-verb-alt-ё",
+                  "ru-proper noun+", "ru-noun-alt-ё", "ru-proper noun-alt-ё",
+                  "ru-adj", "ru-adj-alt-ё", "ru-verb", "ru-verb-alt-ё",
                   "ru-adv", "ru-phrase"] or (tnam == "head" and
                       getparam(t, "1") == "ru" and getparam(t, "2") in
                       ["circumfix", "conjunction", "determiner", "interfix",
@@ -2817,15 +2817,15 @@ def split_forms_with_stress_variants(args, forms_desired, dicforms, pagemsg,
     pagemsg("WARNING: Two dictionary forms %s and %s aren't stress variants, not splitting" %
         (dicform1, dicform2))
     return [(dicforms, args)]
-  dicform1_stem = re.sub(u"[аяеоьыий]́?$", "", dicform1)
-  dicform2_stem = re.sub(u"[аяеоьыий]́?$", "", dicform2)
+  dicform1_stem = re.sub("[аяеоьыий]́?$", "", dicform1)
+  dicform2_stem = re.sub("[аяеоьыий]́?$", "", dicform2)
   # Also compute reduced/unreduced stem
   # The stem for reduce_stem() should preserve -й
-  dicform1_stem_for_reduce = re.sub(u"[аяеоьыи]́?$", "", dicform1)
-  dicform2_stem_for_reduce = re.sub(u"[аяеоьыи]́?$", "", dicform2)
+  dicform1_stem_for_reduce = re.sub("[аяеоьыи]́?$", "", dicform1)
+  dicform2_stem_for_reduce = re.sub("[аяеоьыи]́?$", "", dicform2)
   dicform1_epenthetic_vowel = dicform1.endswith(AC)
   dicform2_epenthetic_vowel = dicform2.endswith(AC)
-  if re.search(u"[аяеоыи]́?$", dicform1):
+  if re.search("[аяеоыи]́?$", dicform1):
     dicform1_reduced_stem = expand_text("{{#invoke:ru-common|dereduce_stem|%s||%s}}" %
         (dicform1_stem_for_reduce, "y" if dicform1_epenthetic_vowel else ""))
     dicform2_reduced_stem = expand_text("{{#invoke:ru-common|dereduce_stem|%s||%s}}" %
@@ -3083,7 +3083,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
             if formname != dicform_code and formname in split_args and split_args[formname]:
               # Warn if footnote symbol found; may need to manually add a note
               if formname + "_raw" in split_args:
-                raw_form = re.sub(u"△", "", blib.remove_links(split_args[formname + "_raw"]))
+                raw_form = re.sub("△", "", blib.remove_links(split_args[formname + "_raw"]))
                 if split_args[formname] != raw_form:
                   pagemsg("WARNING: Raw form %s=%s contains footnote symbol (notes=%s)" % (
                     formname, split_args[formname + "_raw"],
@@ -3222,7 +3222,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                     # and variants with во.
                     if pos == "noun" and formname == "loc":
                       def frob_locative(ru, tr):
-                        newru = re.sub(u"^(во?|на|во?/на|на/во?) ", "", ru)
+                        newru = re.sub("^(во?|на|во?/на|на/во?) ", "", ru)
                         if ru != newru:
                           pagemsg("Modifying locative from %s to %s" %
                               (ru, newru))
@@ -3412,8 +3412,8 @@ def generate_numeral_noun_forms(t, expand_text):
       getparam(t, "9"),
       getparam(t, "10"),
       # Get rid of preposition 'о' in the prepositional case if it exists
-      re.sub(u"^о ", "", getparam(t, "11")),
-      re.sub(u"^о ", "", getparam(t, "12")),
+      re.sub("^о ", "", getparam(t, "11")),
+      re.sub("^о ", "", getparam(t, "12")),
       getparam(t, "13"),
       getparam(t, "14"),
       getparam(t, "notes")
@@ -3429,7 +3429,7 @@ def generate_numeral_noun_forms(t, expand_text):
       getparam(t, "4"),
       getparam(t, "5"),
       # Get rid of preposition 'о' in the prepositional case if it exists
-      re.sub(u"^о ", "", getparam(t, "6")),
+      re.sub("^о ", "", getparam(t, "6")),
       getparam(t, "7"),
       getparam(t, "8")
     )
@@ -3487,39 +3487,39 @@ forms), 'futr' (all future forms), 'impr' (all imperative forms), 'past'
 because it is the same as the dictionary/lemma form. Also, non-existent forms
 for particular verbs will not be created.""")
 pa.add_argument("--lemmafile",
-    help=u"""List of lemmas to process, without accents. May have е in place
+    help="""List of lemmas to process, without accents. May have е in place
 of ё; see '--lemmas-no-jo'.""")
 pa.add_argument("--lemmas",
-    help=u"""Comma-separated list of lemmas to process. May have е in place
+    help="""Comma-separated list of lemmas to process. May have е in place
 of ё; see '--lemmas-no-jo'.""")
 pa.add_argument("--lemmas-no-jo",
-    help=u"""If specified, lemmas specified using --lemmafile have е in place of ё.""",
+    help="""If specified, lemmas specified using --lemmafile have е in place of ё.""",
     action="store_true")
 pa.add_argument("--perfective-past-passive-participles", "--pppp",
-    help=u"""File containing list of extracted perfective past passive
+    help="""File containing list of extracted perfective past passive
 participles, which won't be considered imperfective participles even if found
 in an imperfective conjugation. Entries are with accents.""")
 pa.add_argument("--overwrite-lemmas",
-    help=u"""File containing list of lemmas where the current inflections are
+    help="""File containing list of lemmas where the current inflections are
 considered to have errors in them (e.g. due to the conjugation template having
 incorrect aspect) and thus should be overwritten. Entries are without
 accents.""")
 pa.add_argument("--lemmas-to-not-overwrite",
-    help=u"""File containing list of lemma pages, which should in general
+    help="""File containing list of lemma pages, which should in general
 be the entire set of lemmas. Any non-lemma form that would overwrite the
 Russian section (--overwrite-page) will not do so if the form is one of
 these pages. Entries are without accents.""")
 pa.add_argument("--overwrite-page", action="store_true",
-    help=u"""If specified, overwrite the entire existing page of inflections.
+    help="""If specified, overwrite the entire existing page of inflections.
 Won't do this if it finds "Etymology N", unless --overwrite-etymologies is
 given. WARNING: Be careful!""")
 pa.add_argument("--overwrite-etymologies", action="store_true",
-    help=u"""If specified and --overwrite-page, overwrite the entire existing
+    help="""If specified and --overwrite-page, overwrite the entire existing
 page of inflections even if "Etymology N". WARNING: Be careful!""")
 pa.add_argument("--numeral", action="store_true",
-    help=u"""If specified, create numeral forms instead of noun/adj forms.""")
+    help="""If specified, create numeral forms instead of noun/adj forms.""")
 pa.add_argument("--pronoun", action="store_true",
-    help=u"""If specified, create pronoun forms instead of noun/adj forms.""")
+    help="""If specified, create pronoun forms instead of noun/adj forms.""")
 
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)

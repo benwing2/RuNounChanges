@@ -6,7 +6,7 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-parser = blib.create_argparser(u"Find verbs with impersonal conjugations")
+parser = blib.create_argparser("Find verbs with impersonal conjugations")
 parser.add_argument('--verbfile', help="File listing verbs to check.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

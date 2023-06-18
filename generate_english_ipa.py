@@ -9,110 +9,110 @@ from blib import getparam, rmparam, msg, site
 cmu_pronun_mapping = {
   # consonants
   "B": "b",
-  "CH": u"tʃ",
+  "CH": "tʃ",
   "D": "d",
-  "DH": u"ð",
+  "DH": "ð",
   "F": "f",
-  "G": u"ɡ",
+  "G": "ɡ",
   "HH": "h",
-  "JH": u"dʒ",
+  "JH": "dʒ",
   "K": "k",
   "L": "l",
   "M": "m",
   "N": "n",
-  "NG": u"ŋ",
+  "NG": "ŋ",
   "P": "p",
-  "R": u"ɹ",
+  "R": "ɹ",
   "S": "s",
-  "SH": u"ʃ",
+  "SH": "ʃ",
   "T": "t",
-  "TH": u"θ",
+  "TH": "θ",
   "V": "v",
   "W": "w",
   "Y": "j",
   "Z": "z",
-  "ZH": u"ʒ",
+  "ZH": "ʒ",
   # vowels
-  "AA": u"ɑ",
-  "AE": u"æ",
-  "AH0": u"ə",
-  "AH1": u"ʌ",
-  "AH2": u"ʌ",
-  "AO": u"ɔ",
-  "AW": u"aʊ",
-  "AY": u"aɪ",
-  "EH": u"ɛ",
-  "ER0": u"ɚ",
-  "ER1": u"ɝ",
-  "ER2": u"ɝ",
-  "EY": u"eɪ",
-  "IH": u"ɪ",
+  "AA": "ɑ",
+  "AE": "æ",
+  "AH0": "ə",
+  "AH1": "ʌ",
+  "AH2": "ʌ",
+  "AO": "ɔ",
+  "AW": "aʊ",
+  "AY": "aɪ",
+  "EH": "ɛ",
+  "ER0": "ɚ",
+  "ER1": "ɝ",
+  "ER2": "ɝ",
+  "EY": "eɪ",
+  "IH": "ɪ",
   "IY": "i",
-  "OW": u"oʊ",
-  "OY": u"ɔɪ",
-  "UH": u"ʊ",
+  "OW": "oʊ",
+  "OY": "ɔɪ",
+  "UH": "ʊ",
   "UW": "u"
 }
 
 moby_pronun_mapping = {
   # consonants
   "b": "b",
-  "/tS/": u"tʃ",
+  "/tS/": "tʃ",
   "d": "d",
-  "/D/": u"ð",
+  "/D/": "ð",
   "f": "f",
-  "g": u"ɡ",
+  "g": "ɡ",
   "h": "h",
-  "/dZ/": u"dʒ",
+  "/dZ/": "dʒ",
   "k": "k",
   "l": "l",
   "m": "m",
   "n": "n",
-  "/N/": u"ŋ",
+  "/N/": "ŋ",
   "p": "p",
-  "r": u"ɹ",
+  "r": "ɹ",
   "s": "s",
-  "/S/": u"ʃ",
+  "/S/": "ʃ",
   "t": "t",
-  "/T/": u"θ",
+  "/T/": "θ",
   "v": "v",
   "w": "w",
   "/hw/": "hw",
   "/j/": "j",
   "z": "z",
-  "/Z/": u"ʒ",
+  "/Z/": "ʒ",
   # vowels
-  "/A/": u"ɑ",
-  "/&/": u"æ",
-  "/@/": u"ə",
-  "/(@)/": u"e", # always before r, e.g. Mary, Aaron
-  "/O/": u"ɔ",
-  "/AU/": u"aʊ",
-  "/aI/": u"aɪ",
-  "/E/": u"ɛ",
-  "/[@]/r": u"ɝ",
-  "/[@]/R": u"ɝ",
-  "/[@]/": u"ɜ",
-  "/eI/": u"eɪ",
-  "/I/": u"ɪ",
+  "/A/": "ɑ",
+  "/&/": "æ",
+  "/@/": "ə",
+  "/(@)/": "e", # always before r, e.g. Mary, Aaron
+  "/O/": "ɔ",
+  "/AU/": "aʊ",
+  "/aI/": "aɪ",
+  "/E/": "ɛ",
+  "/[@]/r": "ɝ",
+  "/[@]/R": "ɝ",
+  "/[@]/": "ɜ",
+  "/eI/": "eɪ",
+  "/I/": "ɪ",
   "/i/": "i",
-  "/oU/": u"oʊ",
-  "//Oi//": u"ɔɪ",
-  "/U/": u"ʊ",
+  "/oU/": "oʊ",
+  "//Oi//": "ɔɪ",
+  "/U/": "ʊ",
   "/u/": "u",
-  "/-/n": u"n̩",
-  "/-/l": u"l̩",
-  "/-/r": u"ᵊɹ",
-  "'": u"ˈ",
-  ",": u"ˌ",
-  "_": u" ",
+  "/-/n": "n̩",
+  "/-/l": "l̩",
+  "/-/r": "ᵊɹ",
+  "'": "ˈ",
+  ",": "ˌ",
+  "_": " ",
   # foreign phonemes
   "/x/": "X",
-  "/y/": u"Œ",
+  "/y/": "Œ",
   "A": "A",
   "R": "R",
   "N": "N",
-  "Zh": u"ʒ",
+  "Zh": "ʒ",
 }
 
 max_moby_length = max([len(x) for x in moby_pronun_mapping.iterkeys()])
@@ -121,38 +121,38 @@ max_moby_length = max([len(x) for x in moby_pronun_mapping.iterkeys()])
 # onsets but omits uncommon ones that occur primarily in foreign words or
 # in small numbers of learned words (e.g. 'sphere', 'phthalene').
 possible_onsets = set([
-  "b", "bj", "bl", u"bɹ",
-  "d", "dj", u"dɹ", "dw",
-  u"dʒ",
-  "f", "fj", "fl", u"fɹ",
+  "b", "bj", "bl", "bɹ",
+  "d", "dj", "dɹ", "dw",
+  "dʒ",
+  "f", "fj", "fl", "fɹ",
   "h", "hj", "hw",
   "j",
-  "k", "kj", "kl", u"kɹ", "kw",
+  "k", "kj", "kl", "kɹ", "kw",
   "l",
   "m", "mj",
   "n",
-  "p", "pj", "pl", u"pɹ",
-  u"ɹ",
-  "s", "sj", "sk", "skj", "skl", u"skɹ", "skw", "sl", "sm", "sn",
-  "sp", "spj", "spl", u"spɹ", "st", "stj", u"stɹ", "sw",
-  "t", "tj", u"tɹ", "tw", u"tʃ",
-  "v", "vj", u"vɹ", # arguable whether we should include vɹ
+  "p", "pj", "pl", "pɹ",
+  "ɹ",
+  "s", "sj", "sk", "skj", "skl", "skɹ", "skw", "sl", "sm", "sn",
+  "sp", "spj", "spl", "spɹ", "st", "stj", "stɹ", "sw",
+  "t", "tj", "tɹ", "tw", "tʃ",
+  "v", "vj", "vɹ", # arguable whether we should include vɹ
   "w",
   "z",
-  u"ð", u"ðj",
-  u"ɡ", u"ɡj", u"ɡl", u"ɡɹ", u"ɡw",
-  u"ʃ", u"ʃɹ",
-  u"ʒ",
-  u"θ", u"θj", u"θɹ", u"θw"
+  "ð", "ðj",
+  "ɡ", "ɡj", "ɡl", "ɡɹ", "ɡw",
+  "ʃ", "ʃɹ",
+  "ʒ",
+  "θ", "θj", "θɹ", "θw"
 ])
 
 seen_onsets = set()
-vocalized_diacritic = u"\u0329"
-vowel = u"aeiouɑæɛɪɔʊʌəɜɚɝ" + vocalized_diacritic
+vocalized_diacritic = "\u0329"
+vowel = "aeiouɑæɛɪɔʊʌəɜɚɝ" + vocalized_diacritic
 vowel_c = "[" + vowel + "]"
-consonant = u"bdfɡhjklmnpɹstvwzʃʒθðŋ"
+consonant = "bdfɡhjklmnpɹstvwzʃʒθðŋ"
 consonant_c = "[" + consonant + "]"
-accent = u"ˈˌ"
+accent = "ˈˌ"
 accent_c = "[" + accent + "]"
 vowel_or_accent_c = "[" + vowel + accent + "]"
 
@@ -182,28 +182,28 @@ def process_cmu_pronun(index, word, pronun):
     else:
       ipa = cmu_pronun_mapping[phoneme]
     if accent == "1":
-      ipa_sounds.append(u"ˈ")
+      ipa_sounds.append("ˈ")
     if accent == "2":
-      ipa_sounds.append(u"ˌ")
+      ipa_sounds.append("ˌ")
     ipa_sounds.append(ipa)
   ipa_word = "".join(ipa_sounds)
   # ɚ before vowel -> əɹ
-  ipa_word = rsub_repeatedly(u"ɚ(" + accent_c + "?" + vowel_c + ")", r"əɹ\1",
+  ipa_word = rsub_repeatedly("ɚ(" + accent_c + "?" + vowel_c + ")", r"əɹ\1",
       ipa_word)
   # ɚ after vowel -> əɹ
-  ipa_word = rsub_repeatedly("(" + vowel_c + u")ɚ", r"\1əɹ",
+  ipa_word = rsub_repeatedly("(" + vowel_c + ")ɚ", r"\1əɹ",
       ipa_word)
   # ɝ before vowel -> ɜɹ
-  ipa_word = rsub_repeatedly(u"ɝ(" + accent_c + "?" + vowel_c + ")", r"ɜɹ\1",
+  ipa_word = rsub_repeatedly("ɝ(" + accent_c + "?" + vowel_c + ")", r"ɜɹ\1",
       ipa_word)
   # əl after consonant not before vowel -> l̩
-  ipa_word = rsub_repeatedly("(" + consonant_c + u")əl($|" + consonant_c + ")",
+  ipa_word = rsub_repeatedly("(" + consonant_c + ")əl($|" + consonant_c + ")",
       r"\1l̩\2", ipa_word)
   # ən after alveolar and not before vowel -> n̩
-  ipa_word = rsub_repeatedly(u"([tdszln])ən($|" + consonant_c + ")", r"\1n̩\2",
+  ipa_word = rsub_repeatedly("([tdszln])ən($|" + consonant_c + ")", r"\1n̩\2",
       ipa_word)
   # Move stress before any initial consonant cluster
-  ipa_word = re.sub("^(" + consonant_c + u"+)(" + accent_c + ")", r"\2\1",
+  ipa_word = re.sub("^(" + consonant_c + "+)(" + accent_c + ")", r"\2\1",
     ipa_word)
   # In the middle of a word, move stress before possible onsets as listed above
   def move_before_onset(m):
@@ -212,7 +212,7 @@ def process_cmu_pronun(index, word, pronun):
       if c[i:] in possible_onsets:
         return v + c[0:i] + accent + c[i:]
     return v + c + accent
-  ipa_word = re.sub("(" + vowel_c + ")(" + consonant_c + u"+)(" + accent_c + ")",
+  ipa_word = re.sub("(" + vowel_c + ")(" + consonant_c + "+)(" + accent_c + ")",
       move_before_onset, ipa_word)
   m = re.search("^" + accent_c + "*(" + consonant_c + "*)", ipa_word)
   seen_onsets.add(m.group(1))

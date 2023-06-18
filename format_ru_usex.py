@@ -82,8 +82,8 @@ def process_page(page, index, parsed):
         def single_line_usex_lang_l_m(m):
           prefix, ru, dash, en = m.groups()
           en = check_for_translation_italics(en, m.group(0))
-          if dash == u"≈":
-            en = u"≈ " + dash
+          if dash == "≈":
+            en = "≈ " + dash
           if tempname == "lang" or "[" in ru:
             if check_for_stray_vertical_bar(ru) or check_for_stray_vertical_bar(en):
               return m.group(0)
@@ -122,8 +122,8 @@ def process_page(page, index, parsed):
           en = check_for_translation_italics(en, m.group(0))
           if check_for_stray_vertical_bar(ru) or check_for_stray_vertical_bar(en):
             return m.group(0)
-          if dash == u"≈":
-            en = u"≈ " + en
+          if dash == "≈":
+            en = "≈ " + en
           retval = prefix + " {{uxi|ru|%s|%s}}" % (ru, en)
           pagemsg("Replaced <<%s>> with <<%s>>" % (m.group(0), retval))
           notes.append("converted pure raw single-line usex to 'uxi|ru'%s" %
@@ -144,7 +144,7 @@ def process_page(page, index, parsed):
 
   return "".join(sections), notes
 
-parser = blib.create_argparser(u"Convert manually formatted Russian usage examples to uxi|ru",
+parser = blib.create_argparser("Convert manually formatted Russian usage examples to uxi|ru",
   include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

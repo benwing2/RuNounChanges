@@ -36,7 +36,7 @@ def process_page(index, page, save, verbose):
       if re.search("[Oo]f or related", sections[j]):
         pagemsg("Found likely of-or-related")
 
-parser = blib.create_argparser(u"Find pages that need definitions")
+parser = blib.create_argparser("Find pages that need definitions")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

@@ -7,13 +7,13 @@ import blib
 from blib import getparam, rmparam, tname, pname, msg, errandmsg, site
 import unicodedata
 
-AC = u"\u0301"
-GR = u"\u0300"
+AC = "\u0301"
+GR = "\u0300"
 
 old_template_to_gender = {
   "sa-decl-noun-a-m": "m",
-  u"sa-decl-noun-ā-f": "f",
-  u"sa-decl-noun-ā": "f",
+  "sa-decl-noun-ā-f": "f",
+  "sa-decl-noun-ā": "f",
   "sa-decl-noun-a-n": "n",
   "sa-decl-noun-i-m": "m",
   "sa-decl-noun-i-f": "f",
@@ -21,13 +21,13 @@ old_template_to_gender = {
   "sa-decl-noun-u-m": "m",
   "sa-decl-noun-u-f": "f",
   "sa-decl-noun-u-n": "n",
-  # u"sa-decl-noun-ū": "f", already converted, has mono=
-  u"sa-decl-noun-ī": "f", # has mono=
-  u"sa-decl-noun-ī-f": "f", # has mono=
+  # "sa-decl-noun-ū": "f", already converted, has mono=
+  "sa-decl-noun-ī": "f", # has mono=
+  "sa-decl-noun-ī-f": "f", # has mono=
   "sa-decl-noun-n-n": "n",
-  # u"sa-decl-noun-ṛ1": "m", already converted, has r_stem_a=
-  # u"sa-decl-noun-ās-m": "m", already converted
-  # u"sa-decl-noun-ās-f": "f", already converted
+  # "sa-decl-noun-ṛ1": "m", already converted, has r_stem_a=
+  # "sa-decl-noun-ās-m": "m", already converted
+  # "sa-decl-noun-ās-f": "f", already converted
   # "sa-decl-noun-as-n": "n", already converted
 }
 
@@ -88,7 +88,7 @@ def process_text_on_page(index, pagetitle, text):
         if "-" in tr:
           pagemsg("WARNING: Saw translit %s in head with hyphen: headt=%s, declt=%s" % (tr, str(headt), str(t)))
           tr = tr.replace("-", "")
-        decomptr = unicodedata.normalize("NFD", tr).replace("s" + AC, u"ś")
+        decomptr = unicodedata.normalize("NFD", tr).replace("s" + AC, "ś")
         if AC not in decomptr and GR not in decomptr:
           pagemsg("WARNING: Saw translit %s in head without accent: headt=%s, declt=%s" % (tr, str(headt), str(t)))
         else:
@@ -116,7 +116,7 @@ def process_text_on_page(index, pagetitle, text):
             pagemsg("WARNING: No param in {{%s}}, replacing with accented tr %s from head: headt=%s, declt=%s" % (tn, tr, str(headt), str(t)))
             t.add("1", tr)
             notes.append("add accented translit %s to {{%s}}" % (tr, tn))
-        elif re.search(u"[\u0900-\u097F]", decltr): # translit is actually Devanagari
+        elif re.search("[\u0900-\u097F]", decltr): # translit is actually Devanagari
           if not accented_tr:
             pagemsg("WARNING: Devanagari in {{%s}}, replacing with unaccented tr %s from head or pagename: headt=%s, declt=%s" % (tn, tr, str(headt), str(t)))
             t.add("1", tr)
@@ -126,7 +126,7 @@ def process_text_on_page(index, pagetitle, text):
             t.add("1", tr)
             notes.append("replace Devanagari in {{%s}} with accented translit %s" % (tr, tn))
         else:
-          decompdecltr = unicodedata.normalize("NFD", decltr).replace("s" + AC, u"ś")
+          decompdecltr = unicodedata.normalize("NFD", decltr).replace("s" + AC, "ś")
           subbed = False
           if AC not in decompdecltr and GR not in decompdecltr:
             if accented_tr:
@@ -155,7 +155,7 @@ def process_text_on_page(index, pagetitle, text):
             subbed = True
         continue
 
-      if tn in [u"sa-decl-noun-ī", u"sa-decl-noun-ī-f"] and getparam(t, "mono"):
+      if tn in ["sa-decl-noun-ī", "sa-decl-noun-ī-f"] and getparam(t, "mono"):
         pagemsg("WARNING: Saw mono=, skipping: headt=%s, declt=%s" % (str(headt), str(t)))
         continue
 

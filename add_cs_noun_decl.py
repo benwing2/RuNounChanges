@@ -6,20 +6,20 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname
 
-cons_re = u"[bcdfghjklmnprřqstvwxzčňšžďť]"
+cons_re = "[bcdfghjklmnprřqstvwxzčňšžďť]"
 
 # Regexes matching noun endings. Assume -ova and -ovo cannot be nouns. Regexes must be end-anchored.
-noun_endings = [cons_re, "(?<!ov)a", "(?<!ov)o", "e", u"í"]
+noun_endings = [cons_re, "(?<!ov)a", "(?<!ov)o", "e", "í"]
 
 infer_adj_lemma = [
-    [u"ý", u"ý"],
-    [u"ův", u"ův"],
-    [u"á", u"ý"],
-    [u"ova", u"ův"],
-    [u"é", u"ý"],
-    [u"ovo", u"ův"],
+    ["ý", "ý"],
+    ["ův", "ův"],
+    ["á", "ý"],
+    ["ova", "ův"],
+    ["é", "ý"],
+    ["ovo", "ův"],
     # FIXME, this might be a masc animate plural of -ý
-    [u"í", u"í"],
+    ["í", "í"],
 ]
 
 adj_form_endings = []
@@ -33,19 +33,19 @@ for form_ending, lemma_ending in infer_adj_lemma:
 particles = [
   # List of prepositions and particles, from Janda and Townsend pp. 40-42
   # prepositions
-  u"během", u"běheme", "bez", u"blízko", "daleko", "dle", "do", "k", "ke", "ku", "kolem", "koleme", u"kromě", "mezi",
-  "mimo", u"místo", "na", "nad", "nade", "naproti", "navzdory", "o", "ob", "obe", "od", "ode", "okolo", "po",
-  u"poblíž", u"poblíže" "pod", "pode", u"podél", u"podéle", "podle", "pro", "proti", u"před", u"přede", u"přes",
-  u"přese", u"při", "s", "se", "skrz", "skrze", "u", u"uprostřed", u"uprostřede", u"uvnitř", u"uvnitře", "v", "ve",
-  u"včetně", "vedle", u"vně", u"vůči", "vyjma", "z", "ze", "za", "zpod", "zpode",
+  "během", "běheme", "bez", "blízko", "daleko", "dle", "do", "k", "ke", "ku", "kolem", "koleme", "kromě", "mezi",
+  "mimo", "místo", "na", "nad", "nade", "naproti", "navzdory", "o", "ob", "obe", "od", "ode", "okolo", "po",
+  "poblíž", "poblíže" "pod", "pode", "podél", "podéle", "podle", "pro", "proti", "před", "přede", "přes",
+  "přese", "při", "s", "se", "skrz", "skrze", "u", "uprostřed", "uprostřede", "uvnitř", "uvnitře", "v", "ve",
+  "včetně", "vedle", "vně", "vůči", "vyjma", "z", "ze", "za", "zpod", "zpode",
   # conjunctions
-  "a", u"ačkoliv", "ale", "ani", u"aniž", u"až", u"buď", "i", "dokud", "jak", u"jelikož", "jestli", u"jestliže",
-  u"kdežto", u"když", "nebo", "anebo", u"neboť", u"než", u"nýbrž", "pokud", u"poněvadž", u"protože", u"přestože",
-  "zda", "zdali", u"že",
+  "a", "ačkoliv", "ale", "ani", "aniž", "až", "buď", "i", "dokud", "jak", "jelikož", "jestli", "jestliže",
+  "kdežto", "když", "nebo", "anebo", "neboť", "než", "nýbrž", "pokud", "poněvadž", "protože", "přestože",
+  "zda", "zdali", "že",
   # omitted conjunctions
   "jako",
   # particles
-  "ale", "copak", "hele", u"kéž", u"konečně", "no", "nu", u"nuže", u"přece", "tedy", "teda", u"třeba", u"vždyť"
+  "ale", "copak", "hele", "kéž", "konečně", "no", "nu", "nuže", "přece", "tedy", "teda", "třeba", "vždyť"
   ]
 
 # List of words where we use the specified declension, to deal with cases

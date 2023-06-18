@@ -37,7 +37,7 @@ def process_page(page, index, parsed):
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Move alt form to main form in {{ang-decl-*}}",
+parser = blib.create_argparser("Move alt form to main form in {{ang-decl-*}}",
   include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

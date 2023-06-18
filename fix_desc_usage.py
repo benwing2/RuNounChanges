@@ -247,8 +247,8 @@ def process_text_on_page(index, pagetitle, pagetext):
     origtext = m.group(0)
 
     if "{{desc|" not in langname:
-      if u"→" in spacing1:
-        spacing1 = re.sub(u"→ *", "", spacing1)
+      if "→" in spacing1:
+        spacing1 = re.sub("→ *", "", spacing1)
         langname = "{{desc|sh|-|bor=1}}"
       else:
         langname = "{{desc|sh|-}}"
@@ -428,8 +428,8 @@ def process_text_on_page(index, pagetitle, pagetext):
         langname, langcode, template_langcode, origtext))
       return origtext
     # (3) Actually replace.
-    if u"→" in bullets:
-      bullets = re.sub(u"→ *", "", bullets)
+    if "→" in bullets:
+      bullets = re.sub("→ *", "", bullets)
       bortext = "|bor=1"
     else:
       bortext = ""

@@ -31,7 +31,7 @@ def process_page(page, index, parsed):
 
   return parsed, notes
 
-parser = blib.create_argparser(u"Convert {{quote-Fanny Hill}} to {{RQ:Cleland Fanny Hill}}")
+parser = blib.create_argparser("Convert {{quote-Fanny Hill}} to {{RQ:Cleland Fanny Hill}}")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

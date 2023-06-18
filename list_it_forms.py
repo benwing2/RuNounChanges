@@ -6,8 +6,8 @@ import pywikibot, re, sys, argparse, json, unicodedata
 import blib
 from blib import getparam, rmparam, tname, pname, msg, errandmsg, site
 
-AC = u"\u0301"
-GR = u"\u0300"
+AC = "\u0301"
+GR = "\u0300"
 
 def list_forms(template, errandpagemsg, expand_text):
   template = re.sub(r"\}\}$", "|json=1}}", template)

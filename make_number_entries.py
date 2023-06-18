@@ -49,7 +49,7 @@ site = pywikibot.Site()
 # -- 'thousand': For numbers 1-10, Arabic form of number*1000
 # -- 'thousandtr': For numgers 1-10, translit form of number*1000
 class Number(object):
-  thousandpl = u"آلَاف"
+  thousandpl = "آلَاف"
   thousandpltr = ar_translit.tr(thousandpl)
   def __init__(self, eastarabnum, english, nom, femnom=None, obl=None,
       femobl=None, hundred=None, thousand=None,
@@ -106,72 +106,72 @@ class Number(object):
         self.ordgloss = self.ordeng
         self.ordlemma = (self.ordroot[0] + AA + self.ordroot[1] + I +
             self.ordroot[2])
-        self.cardteen = self.nom + A + u" عَشَرَ"
+        self.cardteen = self.nom + A + " عَشَرَ"
       self.ordlemmatr = ar_translit.tr(self.ordlemma)
       R1 = self.ordroot[0]
       R2 = self.ordroot[1]
       R3 = self.ordroot[2]
       self.femordlemma = R1 + AA + R2 + I + R3 + AH
       self.femordlemmatr = ar_translit.tr(self.femordlemma)
-      self.ordteen = R1 + AA + R2 + I + R3 + A + u" عَشَرَ"
-      self.femordteen = self.femordlemma + A + u" عَشْرَةَ"
+      self.ordteen = R1 + AA + R2 + I + R3 + A + " عَشَرَ"
+      self.femordteen = self.femordlemma + A + " عَشْرَةَ"
       self.ordteeneng = ("twelfth" if self.cardteeneng == "twelve" else
           "twentieth" if self.cardteeneng == "twenty" else
           self.cardteeneng + "th")
       # one and two are totally special-cased
       if self.english != "one" and self.english != "two":
         self.frac = R1 + U + R2 + SK + R3
-        self.adv = self.femnom + u" مَرَّات"
-        self.mult = u"مُ" + R1 + A + R2 + SH + A + R3
+        self.adv = self.femnom + " مَرَّات"
+        self.mult = "مُ" + R1 + A + R2 + SH + A + R3
         self.numadj = R1 + U + R2 + AA + R3 + IY + SH
         if not self.hundred:
-          self.hundred = self.femnom + U + u"مِائَة"
+          self.hundred = self.femnom + U + "مِائَة"
         if not self.thousand:
           self.thousand = self.nom + " " + self.thousandpl
           self.thousandtr = self.nomtr + "t " + self.thousandpltr
-      self.hundredtr = ar_translit.tr(self.hundred.replace(u"مِا", u"مِ"))
+      self.hundredtr = ar_translit.tr(self.hundred.replace("مِا", "مِ"))
 
-digits = {1:Number(u"١", "one", u"وَاحِد", u"وَاحِدَة",
-            hundred=u"مِائَة", thousand=u"أَلْف",
-            ord=[u"حدي", "first", "first|first (combining form)", "eleven", u"حَادٍ",
-              u"أَحَدَ عََشَرَ"],
-            adv=u"مَرَّة", mult=u"مُفْرَد", dist=[u"أُحَاد", u"وُحَاد", u"مَوْحَد"],
-            numadj=u"أُحَادِيّ"),
-          2:Number(u"٢", "two", u"اِثْنَان", u"اِثْنَتَان", u"اِثْنَيْن", u"اِثْنَتَيْن",
-            hundred=u"مِائَتَان", thousand=u"أَلْفَان",
-            ord=[u"ثني", "second", "second", "twelve", u"ثَانٍ", u"اِثْنَا عَشَرَ"],
-            frac=u"نِصْف", adv=u"مَرَّتَان", mult=u"مُثَنًّى", dist=[u"ثُنَاء", u"مَثْنَى"],
-            numadj=u"ثُنَائِيّ"),
-          3:Number(u"٣", "three", u"ثَلَاثَة",
-            ord=[u"ثلث", "third", "thirteen"],
-            dist=[u"ثُلَاث", u"مَثْلَث"]),
-          4:Number(u"٤", "four", u"أَرْبَعَة",
-            ord=[u"ربع", "fourth", "fourteen"],
-            dist=[u"رُبَاع", u"مَرْبَع"]),
-          5:Number(u"٥", "five", u"خَمْسَة",
-            ord=[u"خمس", "fifth", "fifteen"]),
-          6:Number(u"٦", "six", u"سِتَّة",
-            ord=[u"سدس", "sixth", "sixteen"]),
-          7:Number(u"٧", "seven", u"سَبْعَة",
-            ord=[u"سبع", "seventh", "seventeen"]),
-          8:Number(u"٨", "eight", u"ثَمَانِيَة", u"ثَمَانٍ",
-            hundred=u"ثَمَانِمِائَة",
-            ord=[u"ثمن", "eighth", "eighteen"]),
-          9:Number(u"٩", "nine", u"تِسْعَة",
-            ord=[u"تسع", "ninth", "nineteen"]),
-          10:Number(u"١٠", "ten", u"عَشَرَة", u"عَشْر",
-            hundred=u"أَلْف",
-            ord=[u"عشر", "tenth", "twenty"]),
+digits = {1:Number("١", "one", "وَاحِد", "وَاحِدَة",
+            hundred="مِائَة", thousand="أَلْف",
+            ord=["حدي", "first", "first|first (combining form)", "eleven", "حَادٍ",
+              "أَحَدَ عََشَرَ"],
+            adv="مَرَّة", mult="مُفْرَد", dist=["أُحَاد", "وُحَاد", "مَوْحَد"],
+            numadj="أُحَادِيّ"),
+          2:Number("٢", "two", "اِثْنَان", "اِثْنَتَان", "اِثْنَيْن", "اِثْنَتَيْن",
+            hundred="مِائَتَان", thousand="أَلْفَان",
+            ord=["ثني", "second", "second", "twelve", "ثَانٍ", "اِثْنَا عَشَرَ"],
+            frac="نِصْف", adv="مَرَّتَان", mult="مُثَنًّى", dist=["ثُنَاء", "مَثْنَى"],
+            numadj="ثُنَائِيّ"),
+          3:Number("٣", "three", "ثَلَاثَة",
+            ord=["ثلث", "third", "thirteen"],
+            dist=["ثُلَاث", "مَثْلَث"]),
+          4:Number("٤", "four", "أَرْبَعَة",
+            ord=["ربع", "fourth", "fourteen"],
+            dist=["رُبَاع", "مَرْبَع"]),
+          5:Number("٥", "five", "خَمْسَة",
+            ord=["خمس", "fifth", "fifteen"]),
+          6:Number("٦", "six", "سِتَّة",
+            ord=["سدس", "sixth", "sixteen"]),
+          7:Number("٧", "seven", "سَبْعَة",
+            ord=["سبع", "seventh", "seventeen"]),
+          8:Number("٨", "eight", "ثَمَانِيَة", "ثَمَانٍ",
+            hundred="ثَمَانِمِائَة",
+            ord=["ثمن", "eighth", "eighteen"]),
+          9:Number("٩", "nine", "تِسْعَة",
+            ord=["تسع", "ninth", "nineteen"]),
+          10:Number("١٠", "ten", "عَشَرَة", "عَشْر",
+            hundred="أَلْف",
+            ord=["عشر", "tenth", "twenty"]),
          }
-tens = { #10:Number(u"١٠", "ten", u"عَشَرَة", u"عَشْر"),
-         20:Number(u"٢٠", "twenty", u"عِشْرُون"),
-         30:Number(u"٣٠", "thirty", u"ثَلَاثُون"),
-         40:Number(u"٤٠", "forty", u"أَرْبَعُون"),
-         50:Number(u"٥٠", "fifty", u"خَمْسُون"),
-         60:Number(u"٦٠", "sixty", u"سِتُّون"),
-         70:Number(u"٧٠", "seventy", u"سَبْعُون"),
-         80:Number(u"٨٠", "eighty", u"ثَمَانُون"),
-         90:Number(u"٩٠", "ninety", u"تِسْعُون")}
+tens = { #10:Number("١٠", "ten", "عَشَرَة", "عَشْر"),
+         20:Number("٢٠", "twenty", "عِشْرُون"),
+         30:Number("٣٠", "thirty", "ثَلَاثُون"),
+         40:Number("٤٠", "forty", "أَرْبَعُون"),
+         50:Number("٥٠", "fifty", "خَمْسُون"),
+         60:Number("٦٠", "sixty", "سِتُّون"),
+         70:Number("٧٠", "seventy", "سَبْعُون"),
+         80:Number("٨٠", "eighty", "ثَمَانُون"),
+         90:Number("٩٠", "ninety", "تِسْعُون")}
 
 def iter_numerals():
   for tenval, ten in sorted(tens.iteritems(), key=lambda x:x[0]):
@@ -195,19 +195,19 @@ def iter_numerals():
 # {{ar-decl-numeral|-|pl=تِسْعَة|f=-|fpl=تِسْع|mod=-|modpl=عِشْرُون|modf=-|modfpl=عِشْرُون|modprefix=وَ/wa-|state=ind,def}}
 
 def create_lemma(tenval, ten, digval, dig):
-  pagename = u"%s وَ%s" % (dig.nom, ten.nom)
+  pagename = "%s وَ%s" % (dig.nom, ten.nom)
   nbox = "{{number box|ar|%s}}" % (tenval + digval)
-  etym = u"""{{compound|lang=ar|%s|t1=[[%s]]|وَ|tr2=wa-|t2=[[and]]|%s|t3=[[%s]]}}.""" % (
+  etym = """{{compound|lang=ar|%s|t1=[[%s]]|وَ|tr2=wa-|t2=[[and]]|%s|t3=[[%s]]}}.""" % (
       (dig.nom, dig.english, ten.nom, ten.english))
-  headword = u"""{{ar-numeral|%s|m|tr=%s wa-%s|f=%s وَ%s|ftr=%s wa-%s}}""" % (
+  headword = """{{ar-numeral|%s|m|tr=%s wa-%s|f=%s وَ%s|ftr=%s wa-%s}}""" % (
       pagename, dig.nomtr, ten.nomtr,
       dig.femnom, ten.femnom, dig.femnomtr, ten.femnomtr)
 
-  defn = u"""# [[%s-%s]]
+  defn = """# [[%s-%s]]
 #: Eastern Arabic numeral: {{l|ar|%s%s}}""" % (
       ten.english, dig.english, ten.eastarabnum[0], dig.eastarabnum)
 
-  decl = u"""{{ar-decl-numeral|-|pl=%s%s|f=-|fpl=%s%s|mod=-|modpl=%s|modf=-|modfpl=%s|modprefix=وَ/wa-|state=ind,def}}""" % (
+  decl = """{{ar-decl-numeral|-|pl=%s%s|f=-|fpl=%s%s|mod=-|modpl=%s|modf=-|modfpl=%s|modprefix=وَ/wa-|state=ind,def}}""" % (
       # Force dual for اِثْنَان so it will be conjugated correctly even though
       # labeled as plural
       dig.nom, digval == 2 and ":d" or "",
@@ -255,12 +255,12 @@ def create_non_lemma(tenval, ten, digval, dig, obl=False, fem=False):
     return num.femobl if fem and obl else num.fem if fem else num.obl
   def tr(num):
     return num.femobltr if fem and obl else num.femtr if fem else num.obltr
-  pagename = u"%s وَ%s" % (arabig(dig), arabic(ten))
-  headword = u"""{{head|ar|numeral form|head=%s|%s|tr=%s wa-%s}}""" % (
+  pagename = "%s وَ%s" % (arabig(dig), arabic(ten))
+  headword = """{{head|ar|numeral form|head=%s|%s|tr=%s wa-%s}}""" % (
       pagename, "f" if fem else "m", tr(dig), tr(ten))
   defns = []
   for case in ["informal", "acc", "gen"] if obl else ["nom"]:
-    defns.append(u"""# {{inflection of|lang=ar|%s وَ%s|tr=%s wa-%s||%s|%s|gloss=[[%s-%s]]}}""" % (
+    defns.append("""# {{inflection of|lang=ar|%s وَ%s|tr=%s wa-%s||%s|%s|gloss=[[%s-%s]]}}""" % (
       dig.nom, ten.nom, dig.nomtr, ten.nomtr, "f" if fem else "m", case,
       ten.english, dig.english))
   defn = "\n".join(defns)
@@ -292,18 +292,18 @@ def create_non_lemma(tenval, ten, digval, dig, obl=False, fem=False):
 # {{ar-decl-adj|تَاسِع|mod=عِشْرُون:smp|modf=عِشْرُون:smp|modprefix=وَ/wa-|number=sg}}
 
 def create_ordinal_lemma(tenval, ten, digval, dig):
-  pagename = u"%s وَ%s" % (dig.ordlemma, ten.nom)
+  pagename = "%s وَ%s" % (dig.ordlemma, ten.nom)
   nbox = "{{number box|ar|%s}}" % (tenval + digval)
-  etym = u"""{{compound|lang=ar|%s|t1=[[%s]]|وَ|tr2=wa-|t2=[[and]]|%s|t3=[[%s]]}}.""" % (
+  etym = """{{compound|lang=ar|%s|t1=[[%s]]|وَ|tr2=wa-|t2=[[and]]|%s|t3=[[%s]]}}.""" % (
       (dig.ordlemma, dig.ordgloss, ten.nom, ten.english))
-  headword = u"""{{ar-adj|%s|m|tr=%s wa-%s|f=%s وَ%s|ftr=%s wa-%s}}""" % (
+  headword = """{{ar-adj|%s|m|tr=%s wa-%s|f=%s وَ%s|ftr=%s wa-%s}}""" % (
       pagename, dig.ordlemmatr, ten.nomtr,
       dig.femordlemma, ten.femnom, dig.femordlemmatr, ten.femnomtr)
 
-  defn = u"""# {{context|ordinal|lang=ar}} {{l|en|%s-%s}}""" % (
+  defn = """# {{context|ordinal|lang=ar}} {{l|en|%s-%s}}""" % (
       ten.english, dig.ordeng)
 
-  decl = u"""{{ar-decl-adj|%s|mod=%s:smp|modf=%s:smp|modprefix=وَ/wa-|number=sg}}""" % (
+  decl = """{{ar-decl-adj|%s|mod=%s:smp|modf=%s:smp|modprefix=وَ/wa-|number=sg}}""" % (
       dig.ordlemma, ten.nom, ten.femnom)
 
   text = """
@@ -342,15 +342,15 @@ def create_ordinal_lemma(tenval, ten, digval, dig):
 def create_unit_ordinal_lemma(digval, dig):
   pagename = dig.ordlemma
   nbox = "{{number box|ar|%s}}" % digval
-  etym = u"""From the root {{ar-root|%s}}; compare {{m|ar|%s||%s}}.""" % (
-      " ".join(dig.ordroot), u"أَحَد" if digval == 1 else dig.nom,
+  etym = """From the root {{ar-root|%s}}; compare {{m|ar|%s||%s}}.""" % (
+      " ".join(dig.ordroot), "أَحَد" if digval == 1 else dig.nom,
       dig.english)
 
-  headword = u"""{{ar-adj|%s|f=%s}}""" % (dig.ordlemma, dig.femordlemma)
+  headword = """{{ar-adj|%s|f=%s}}""" % (dig.ordlemma, dig.femordlemma)
 
-  defn = u"""# {{context|ordinal|lang=ar}} {{l|en|%s}}""" % dig.ordeng
+  defn = """# {{context|ordinal|lang=ar}} {{l|en|%s}}""" % dig.ordeng
 
-  decl = u"""{{ar-decl-adj|%s|number=sg}}""" % dig.ordlemma
+  decl = """{{ar-decl-adj|%s|number=sg}}""" % dig.ordlemma
 
   text = """
 ==Arabic==
@@ -380,8 +380,8 @@ def create_unit_ordinal_lemma(digval, dig):
 
 def create_unit_ordinal_non_lemma(digval, dig):
   pagename = dig.femordlemma
-  headword = u"""{{ar-adj-fem|%s}}}""" % pagename
-  defn = u"""# {{inflection of|lang=ar|%s||f|gloss=%s}}""" % (
+  headword = """{{ar-adj-fem|%s}}}""" % pagename
+  defn = """# {{inflection of|lang=ar|%s||f|gloss=%s}}""" % (
       dig.ordlemma, dig.ordeng)
   text = """\
 ==Arabic==
@@ -412,15 +412,15 @@ def create_unit_ordinal_non_lemma(digval, dig):
 def create_teen_ordinal_lemma(digval, dig):
   pagename = dig.ordteen
   nbox = "{{number box|ar|%s}}" % (10 + digval)
-  etym = u"""{{compound|lang=ar|%s|t1=%s|عَشَرَ|t2=-ten}}, with both parts in the accusative case as with the cardinal numeral {{m|ar|%s|%s}}, and the same form for the tens part as with the cardinal. Units part from the root {{ar-root|%s}}.""" % (
+  etym = """{{compound|lang=ar|%s|t1=%s|عَشَرَ|t2=-ten}}, with both parts in the accusative case as with the cardinal numeral {{m|ar|%s|%s}}, and the same form for the tens part as with the cardinal. Units part from the root {{ar-root|%s}}.""" % (
       dig.ordlemma, dig.ordeng, dig.cardteen, dig.cardteeneng,
       " ".join(dig.ordroot))
 
-  headword = u"""{{ar-adj|%s|f=%s}}""" % (dig.ordteen, dig.femordteen)
+  headword = """{{ar-adj|%s|f=%s}}""" % (dig.ordteen, dig.femordteen)
 
-  defn = u"""# {{context|ordinal|lang=ar}} {{l|en|%s}}""" % dig.ordteeneng
+  defn = """# {{context|ordinal|lang=ar}} {{l|en|%s}}""" % dig.ordteeneng
 
-  decl = u"""{{ar-decl-adj|%s:inv|f=%s:inv|number=sg}}""" % (dig.ordteen, dig.femordteen)
+  decl = """{{ar-decl-adj|%s:inv|f=%s:inv|number=sg}}""" % (dig.ordteen, dig.femordteen)
 
   text = """
 ==Arabic==
@@ -450,8 +450,8 @@ def create_teen_ordinal_lemma(digval, dig):
 
 def create_teen_ordinal_non_lemma(digval, dig):
   pagename = dig.femordteen
-  headword = u"""{{ar-adj-fem|%s}}}""" % pagename
-  defn = u"""# {{inflection of|lang=ar|%s||f|gloss=%s}}""" % (
+  headword = """{{ar-adj-fem|%s}}}""" % pagename
+  defn = """# {{inflection of|lang=ar|%s||f|gloss=%s}}""" % (
       dig.ordteen, dig.ordteeneng)
   text = """\
 ==Arabic==
@@ -490,7 +490,7 @@ export.numbers[%s] = {
   # Do 11-19
   for digval, dig in sorted(digits.iteritems(), key=lambda x:x[0]):
     if digval != 10:
-      msg(u"""
+      msg("""
 export.numbers[%s] = {
 	numeral = "١%s",
 	cardinal = "%s",
@@ -514,24 +514,24 @@ export.numbers[%s] = {
 	cardinal = {{"%s", "%s"}},
 	ordinal = {{"%s", "%s"}},
 }""" % (tenval + digval, ten.eastarabnum[0] + dig.eastarabnum,
-        dig.nom + u" وَ" + ten.nom, dig.nomtr + " wa-" + ten.nomtr,
-        dig.ordlemma + u" وَ" + ten.nom, dig.ordlemmatr + " wa-" + ten.nomtr))
+        dig.nom + " وَ" + ten.nom, dig.nomtr + " wa-" + ten.nomtr,
+        dig.ordlemma + " وَ" + ten.nom, dig.ordlemmatr + " wa-" + ten.nomtr))
   # Do 100, 200, 300, ..., 900
   for digval, dig in sorted(digits.iteritems(), key=lambda x:x[0]):
     if digval != 10:
-      msg(u"""
+      msg("""
 export.numbers[%s] = {
 	numeral = "%s٠٠",
 	cardinal = {{"%s", "%s"}},
 }""" % (digval * 100, dig.eastarabnum, dig.hundred, dig.hundredtr))
   # Do 1000, 2000, 3000, ..., 10000
   for digval, dig in sorted(digits.iteritems(), key=lambda x:x[0]):
-    msg(u"""
+    msg("""
 export.numbers[%s] = {
       numeral = "%s٠٠٠",
       cardinal = {{"%s", "%s"}},
 }""" % (digval * 1000, dig.eastarabnum, dig.thousand, dig.thousandtr))
-  msg(u"""
+  msg("""
 return export""")
 
 pa = blib.create_argparser("Save numbers to Wiktionary")

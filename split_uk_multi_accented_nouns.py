@@ -8,7 +8,7 @@ from blib import getparam, rmparam, tname, pname, msg, site
 
 import uklib
 
-AC = u"\u0301"
+AC = "\u0301"
 
 def split_multi_accented_word(word):
   retval = []
@@ -69,7 +69,7 @@ def process_page(page, index, parsed):
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Split multi-stressed Ukrainian noun forms",
+parser = blib.create_argparser("Split multi-stressed Ukrainian noun forms",
     include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

@@ -20,7 +20,7 @@ def process_page(page, index, parsed):
   def frob(t, param):
     val = getparam(t, param)
     if val:
-      newval = val.replace(u"\u02C1", u"\u02E4")
+      newval = val.replace("\u02C1", "\u02E4")
       if newval != val:
         t.add(param, newval)
 
@@ -42,7 +42,7 @@ def process_page(page, index, parsed):
 
   return parsed, notes
 
-parser = blib.create_argparser(u"Correct use of U+02C1 pharyngealization mark to U+02E4",
+parser = blib.create_argparser("Correct use of U+02C1 pharyngealization mark to U+02E4",
   include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

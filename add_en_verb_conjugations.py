@@ -110,7 +110,7 @@ def link(word):
     return "[[" + word + "]]"
 
 def canonicalize_existing_linked_head(head, pagemsg, link_the=False):
-  head = head.replace(u"’", "'").replace("[[one's|one's]]", "[[one's]]").replace("[['s|'s]]", "[['s]]")
+  head = head.replace("’", "'").replace("[[one's|one's]]", "[[one's]]").replace("[['s|'s]]", "[['s]]")
   words = re.split(r"((?:\[\[.*?\]\]|[^ \[\]])+)", head)
   modwords = []
   for word in words:

@@ -71,7 +71,7 @@ def process_page(page, index, parsed):
 
   return parsed, notes
 
-parser = blib.create_argparser(u"Make irregular verbs use +p instead of manual ppp=")
+parser = blib.create_argparser("Make irregular verbs use +p instead of manual ppp=")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

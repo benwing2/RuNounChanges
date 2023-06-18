@@ -31,7 +31,7 @@ def process_page(page, index, parsed):
 
   return parsed, notes
 
-parser = blib.create_argparser(u"Fix up verb conjugations to not specify -refl")
+parser = blib.create_argparser("Fix up verb conjugations to not specify -refl")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

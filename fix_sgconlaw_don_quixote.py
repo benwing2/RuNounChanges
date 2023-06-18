@@ -66,7 +66,7 @@ def process_page(page, index, parsed):
 
   return parsed, notes
 
-parser = blib.create_argparser(u"Convert {{RQ:Don Quixote}} to {{RQ:Cervantes Viardot Don Quichotte}}")
+parser = blib.create_argparser("Convert {{RQ:Don Quixote}} to {{RQ:Cervantes Viardot Don Quichotte}}")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

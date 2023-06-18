@@ -11,9 +11,9 @@ allowed_reading_types = ["goon", "kanon", "toon", "soon", "kanyoon", "on", "kun"
 
 canonicalize_reading_types = {
   "kanon": "kan'on",
-  "toon": u"tōon",
-  "soon": u"sōon",
-  "kanyoon": u"kan'yōon",
+  "toon": "tōon",
+  "soon": "sōon",
+  "kanyoon": "kan'yōon",
 }
 
 def process_text_on_page(index, pagetitle, text):
@@ -105,9 +105,9 @@ def process_text_on_page(index, pagetitle, text):
       continue
     chars_in_contents_title = [x for x in contents_title]
     for i, ch in enumerate(chars_in_contents_title):
-      if ch == u"々": # kanji repeat char
+      if ch == "々": # kanji repeat char
         if i == 0:
-          pagemsg_with_contents(u"Repeat char 々 found at beginning of contents title")
+          pagemsg_with_contents("Repeat char 々 found at beginning of contents title")
           must_continue = True
           break
         else:

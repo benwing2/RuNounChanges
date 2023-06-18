@@ -7,10 +7,10 @@ import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
 prepositions = {
-  u"à ",
+  "à ",
   "aux? ",
   "d[eu] ",
-  u"d['’]",
+  "d['’]",
   "des ",
   "en ",
   "sous ",
@@ -22,12 +22,12 @@ prepositions = {
   "contre ",
   "sans ",
   "comme ",
-  u"jusqu['’]",
+  "jusqu['’]",
 }
 
 all_specials = ["first", "second", "first-second", "first-last", "last", "each"]
 
-TEMPCHAR = u"\uFFF1"
+TEMPCHAR = "\uFFF1"
 
 def add_endings(bases, endings):
   if bases is None or endings is None:
@@ -135,7 +135,7 @@ def make_feminine(form, special=None):
   elif form.endswith("en"):
     return form + "ne"
   elif form.endswith("er"):
-    return form[:-2] + u"ère"
+    return form[:-2] + "ère"
   elif form.endswith("el"):
     return form + "le"
   elif form.endswith("et"):

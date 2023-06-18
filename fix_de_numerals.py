@@ -20,7 +20,7 @@ def process_page(page, index, parsed):
   notes.append("change headword from adjective form to numeral form")
   return text, notes
 
-parser = blib.create_argparser(u"Change ordinal numeral form headwords from adjective to numeral")
+parser = blib.create_argparser("Change ordinal numeral form headwords from adjective to numeral")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

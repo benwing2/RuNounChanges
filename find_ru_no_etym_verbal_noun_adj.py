@@ -56,20 +56,20 @@ import rulib
 
 # FIXME, not used
 def iotate(word):
-  if re.search(u"[бвфпм]$", word):
-    return [word + u"л"]
-  if re.search(u"[зг]$", word):
-    return [re.sub(u"[зг]$", u"ж", word)]
-  if re.search(u"[сш]$", word):
-    return [re.sub(u"[сш]$", u"ш", word)]
-  if re.search(u"с[тк]$", word):
-    return [re.sub(u"с[тк]$", u"щ", word)]
-  if re.search(u"д$", word):
-    return [re.sub(u"д$", u"ж", word), re.sub(u"д$", u"жд", word)]
-  if re.search(u"т$", word):
-    return [re.sub(u"т$", u"ч", word), re.sub(u"т$", u"щ", word)]
-  if re.search(u"к$", word):
-    return [re.sub(u"к$", u"ч", word)]
+  if re.search("[бвфпм]$", word):
+    return [word + "л"]
+  if re.search("[зг]$", word):
+    return [re.sub("[зг]$", "ж", word)]
+  if re.search("[сш]$", word):
+    return [re.sub("[сш]$", "ш", word)]
+  if re.search("с[тк]$", word):
+    return [re.sub("с[тк]$", "щ", word)]
+  if re.search("д$", word):
+    return [re.sub("д$", "ж", word), re.sub("д$", "жд", word)]
+  if re.search("т$", word):
+    return [re.sub("т$", "ч", word), re.sub("т$", "щ", word)]
+  if re.search("к$", word):
+    return [re.sub("к$", "ч", word)]
   return [word]
 
 def find_noun(pagename, pagemsg, errandpagemsg, expand_text):
@@ -134,36 +134,36 @@ def form_ppp(conjtype, pagetitle, args):
     if not re.search("^[0-9]+", conjtype):
       return None
     conjtype = int(re.sub("^([0-9]+).*", r"\1", conjtype))
-    if ((pagetitle.endswith(u"ать") or pagetitle.endswith(u"ять")) and
+    if ((pagetitle.endswith("ать") or pagetitle.endswith("ять")) and
         conjtype != 14):
-      return re.sub(u"ть$", u"нный", pagetitle)
-    if pagetitle.endswith(u"еть") and conjtype == 1:
-      return re.sub(u"ть$", u"нный", pagetitle)
+      return re.sub("ть$", "нный", pagetitle)
+    if pagetitle.endswith("еть") and conjtype == 1:
+      return re.sub("ть$", "нный", pagetitle)
     if conjtype in [4, 5]:
       sg1 = (
         args["pres_1sg"] if "pres_1sg" in args else
         args["futr_1sg"] if "futr_1sg" in args else
         None
       )
-      if not sg1 or sg1 == "-" or sg1.startswith(u"бу́ду "):
+      if not sg1 or sg1 == "-" or sg1.startswith("бу́ду "):
         return None
       sg1 = first_entry(sg1)
-      assert re.search(u"[ую]́?$", sg1)
-      return re.sub(u"[ую]́?$", u"енный", sg1)
+      assert re.search("[ую]́?$", sg1)
+      return re.sub("[ую]́?$", "енный", sg1)
     if conjtype in [7, 8]:
       sg3 = args["pres_3sg"] if "pres_3sg" in args else args["futr_3sg"]
       sg3 = first_entry(sg3)
-      assert re.search(u"[её]́?т$", sg3)
-      return re.sub(u"[её]́?т$", u"енный", sg3)
+      assert re.search("[её]́?т$", sg3)
+      return re.sub("[её]́?т$", "енный", sg3)
     if conjtype in [3, 10]:
-      if pagetitle.endswith(u"чь"):
-        return re.sub(u"чь", u"гнутый", pagetitle)
-      return re.sub(u"ть$", u"тый", pagetitle)
+      if pagetitle.endswith("чь"):
+        return re.sub("чь", "гнутый", pagetitle)
+      return re.sub("ть$", "тый", pagetitle)
     assert conjtype in [9, 11, 12, 14, 15, 16]
     if "past_m" not in args: # occurs with e.g. impersonal verbs e.g. спереть
       return None
     pastm = first_entry(args["past_m"])
-    return re.sub(u"л?$", u"тый", pastm)
+    return re.sub("л?$", "тый", pastm)
 
   retval = form_ppp_1(conjtype, pagetitle, args)
   if retval:
@@ -182,7 +182,7 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  if re.search(u"с[яь]$", pagetitle):
+  if re.search("с[яь]$", pagetitle):
     pagemsg("Skipping reflexive verb")
     return
 
@@ -213,43 +213,43 @@ def process_text_on_page(index, pagetitle, text):
       ppp = form_ppp(conjtype, pagetitle, args)
       if not ppp:
         continue
-      if ppp.endswith(u"тый"):
-        verbal_noun = re.sub(u"тый$", u"тие", ppp)
-        verbal_noun_suffix = u"тие"
-        verbal_adj = re.sub(u"тый$", u"тельный", ppp)
-        verbal_adj_suffix = u"тельный"
-      elif ppp.endswith(u"ённый"):
-        verbal_noun = re.sub(u"ённый$", u"ение", ppp)
-        verbal_noun_suffix = u"ение"
-        verbal_adj = re.sub(u"ённый$", u"ительный", ppp)
-        verbal_adj_suffix = u"ительный"
-      elif ppp.endswith(u"енный"):
-        verbal_noun = re.sub(u"енный$", u"ение", ppp)
-        verbal_noun_suffix = u"ение"
-        verbal_adj = re.sub(u"енный$", u"ительный", ppp)
-        verbal_adj_suffix = u"ительный"
+      if ppp.endswith("тый"):
+        verbal_noun = re.sub("тый$", "тие", ppp)
+        verbal_noun_suffix = "тие"
+        verbal_adj = re.sub("тый$", "тельный", ppp)
+        verbal_adj_suffix = "тельный"
+      elif ppp.endswith("ённый"):
+        verbal_noun = re.sub("ённый$", "ение", ppp)
+        verbal_noun_suffix = "ение"
+        verbal_adj = re.sub("ённый$", "ительный", ppp)
+        verbal_adj_suffix = "ительный"
+      elif ppp.endswith("енный"):
+        verbal_noun = re.sub("енный$", "ение", ppp)
+        verbal_noun_suffix = "ение"
+        verbal_adj = re.sub("енный$", "ительный", ppp)
+        verbal_adj_suffix = "ительный"
       else:
-        assert ppp.endswith(u"анный") or ppp.endswith(u"янный")
-        verbal_noun = re.sub(u"нный$", u"ние", ppp)
-        verbal_adj = re.sub(u"нный$", u"тельный", ppp)
-        m = re.search(u"(.)нный$", ppp)
+        assert ppp.endswith("анный") or ppp.endswith("янный")
+        verbal_noun = re.sub("нный$", "ние", ppp)
+        verbal_adj = re.sub("нный$", "тельный", ppp)
+        m = re.search("(.)нный$", ppp)
         suffix_start = m.group(1)
-        verbal_noun_suffix = suffix_start + u"ние"
-        verbal_adj_suffix = suffix_start + u"тельный"
-      agent_noun = re.sub(u"ный$", "", verbal_adj)
-      agent_noun_suffix = re.sub(u"ный$", "", verbal_adj_suffix)
-      stressed_verbal_noun_suffix = re.sub(u"^([аяеи])", r"\1́", verbal_noun_suffix)
-      stressed_verbal_adj_suffix = re.sub(u"^([аяеи])", r"\1́", verbal_adj_suffix)
-      stressed_agent_noun_suffix = re.sub(u"ный$", "", stressed_verbal_adj_suffix)
+        verbal_noun_suffix = suffix_start + "ние"
+        verbal_adj_suffix = suffix_start + "тельный"
+      agent_noun = re.sub("ный$", "", verbal_adj)
+      agent_noun_suffix = re.sub("ный$", "", verbal_adj_suffix)
+      stressed_verbal_noun_suffix = re.sub("^([аяеи])", r"\1́", verbal_noun_suffix)
+      stressed_verbal_adj_suffix = re.sub("^([аяеи])", r"\1́", verbal_adj_suffix)
+      stressed_agent_noun_suffix = re.sub("ный$", "", stressed_verbal_adj_suffix)
       if conjtype.startswith("7"):
         stem = getparam(t, "4")
-        if infinitive.endswith(u"ть"):
-          stem = stem.replace(u"ё", u"е́")
+        if infinitive.endswith("ть"):
+          stem = stem.replace("ё", "е́")
         else:
           stem = rulib.make_unstressed_ru(stem)
         stem = rulib.remove_accents(infinitive) + "+alt1=" + stem + "-"
       elif conjtype.startswith("8"):
-        stem = rulib.remove_accents(infinitive) + "+alt1=" + getparam(t, "3").replace(u"ё", u"е́") + "-"
+        stem = rulib.remove_accents(infinitive) + "+alt1=" + getparam(t, "3").replace("ё", "е́") + "-"
       else:
         stem = rulib.remove_monosyllabic_accents(infinitive)
 
@@ -271,17 +271,17 @@ def process_text_on_page(index, pagetitle, text):
         if stressed_noun == -1:
           pagemsg("Would add etym for %s but already has one" % agent_noun)
         else:
-          msg(u"%s %s+-тель no-etym agent-noun" % (agent_noun, stem))
+          msg("%s %s+-тель no-etym agent-noun" % (agent_noun, stem))
 
       if verbal_adj in adjectives:
         stressed_adj = find_adj(verbal_adj, pagemsg, errandpagemsg, expand_text)
         if stressed_adj == -1:
           pagemsg("Would add etym for %s but already has one" % verbal_adj)
         else:
-          msg(u"%s %s+-тельный no-etym verbal-adj" % (verbal_adj, stem))
+          msg("%s %s+-тельный no-etym verbal-adj" % (verbal_adj, stem))
 
 # Pages specified using --pages or --pagefile may have accents, which will be stripped.
-parser = blib.create_argparser(u"Find etymologies for Russian verbal nouns in -ние and verbal adjectives in -тельный",
+parser = blib.create_argparser("Find etymologies for Russian verbal nouns in -ние and verbal adjectives in -тельный",
     include_pagefile=True, include_stdin=True, canonicalize_pagename=rulib.remove_accents)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

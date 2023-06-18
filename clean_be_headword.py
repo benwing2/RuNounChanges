@@ -347,7 +347,7 @@ def process_page(page, index, parsed):
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Clean up be-noun params",
+parser = blib.create_argparser("Clean up be-noun params",
     include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

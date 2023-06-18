@@ -8,7 +8,7 @@ from blib import getparam, rmparam, tname, msg, errmsg, site
 
 import lalib
 
-parser = blib.create_argparser(u"Fix old-style verb declarations in latin-macrons.txt")
+parser = blib.create_argparser("Fix old-style verb declarations in latin-macrons.txt")
 parser.add_argument("--direcfile", help="List of directives to process.",
     required=True)
 args = parser.parse_args()
@@ -46,15 +46,15 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
       if must_continue:
         continue
       supine = "/".join(supine_bases)
-    if lemma.endswith("ior") and lemma[:-3] + u"ī" == inf:
+    if lemma.endswith("ior") and lemma[:-3] + "ī" == inf:
       vtype = "v3"
-    elif lemma.endswith("ior") and lemma[:-3] + u"īrī" == inf:
+    elif lemma.endswith("ior") and lemma[:-3] + "īrī" == inf:
       vtype = "v4"
-    elif lemma.endswith("eor") and lemma[:-3] + u"ērī" == inf:
+    elif lemma.endswith("eor") and lemma[:-3] + "ērī" == inf:
       vtype = "v2"
-    elif lemma.endswith("or") and lemma[:-2] + u"ī" == inf:
+    elif lemma.endswith("or") and lemma[:-2] + "ī" == inf:
       vtype = "v3"
-    elif lemma.endswith("or") and lemma[:-2] + u"ārī" == inf:
+    elif lemma.endswith("or") and lemma[:-2] + "ārī" == inf:
       vtype = "v1"
     else:
       err("Unrecognized infinitive %s for lemma %s: %s" % (inf, lemma, line))
@@ -87,9 +87,9 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
       perfect_bases = []
       must_continue = False
       for perf in perfects:
-        if perf.endswith(u"ī"):
+        if perf.endswith("ī"):
           perfect_bases.append(perf[:-1])
-        elif perf.endswith(u"it"):
+        elif perf.endswith("it"):
           perfect_bases.append(perf[:-2])
         else:
           err("Bad perfect %s: %s" % (perf, line))
@@ -98,15 +98,15 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
       if must_continue:
         continue
       perfect = "/".join(perfect_bases)
-    if lemma.endswith(u"iō") and lemma[:-2] + u"ere" == inf:
+    if lemma.endswith("iō") and lemma[:-2] + "ere" == inf:
       vtype = "v3"
-    elif lemma.endswith(u"iō") and lemma[:-2] + u"īre" == inf:
+    elif lemma.endswith("iō") and lemma[:-2] + "īre" == inf:
       vtype = "v4"
-    elif lemma.endswith(u"eō") and lemma[:-2] + u"ēre" == inf:
+    elif lemma.endswith("eō") and lemma[:-2] + "ēre" == inf:
       vtype = "v2"
-    elif lemma.endswith(u"ō") and lemma[:-1] + u"ere" == inf:
+    elif lemma.endswith("ō") and lemma[:-1] + "ere" == inf:
       vtype = "v3"
-    elif lemma.endswith(u"ō") and lemma[:-1] + u"āre" == inf:
+    elif lemma.endswith("ō") and lemma[:-1] + "āre" == inf:
       vtype = "v1"
     else:
       err("Unrecognized infinitive %s for lemma %s: %s" % (inf, lemma, line))

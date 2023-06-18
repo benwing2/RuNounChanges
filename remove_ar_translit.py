@@ -49,8 +49,8 @@ def process_param(pagetitle, index, template, param, paramtr,
       if translit == canonlatin:
       #if (translit == canonlatin or
       #    translit == canonlatin + "un" or
-      #    translit == u"ʾ" + canonlatin or
-      #    translit == u"ʾ" + canonlatin + "un"):
+      #    translit == "ʾ" + canonlatin or
+      #    translit == "ʾ" + canonlatin + "un"):
         pagemsg("Removing redundant translit for %s (%s)" % (arabic, latin))
         oldtempl = "%s" % str(template)
         template.remove(paramtr)
@@ -169,9 +169,9 @@ def process_one_page_headwords(pagetitle, index, text):
 def process_headwords(save, verbose, startFrom, upTo):
   def process_page(page, index, text):
     return process_one_page_headwords(str(page.title()), index, text)
-  #for page in blib.references(u"Template:tracking/ar-head/head", startFrom, upTo):
+  #for page in blib.references("Template:tracking/ar-head/head", startFrom, upTo):
   #for page in blib.references("Template:ar-nisba", startFrom, upTo):
-  for cat in [u"Arabic lemmas", u"Arabic non-lemma forms"]:
+  for cat in ["Arabic lemmas", "Arabic non-lemma forms"]:
     for index, page in blib.cat_articles(cat, startFrom, upTo):
       blib.do_edit(page, index, process_page, save=save, verbose=verbose)
 

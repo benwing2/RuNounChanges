@@ -18,14 +18,14 @@ def find_head_comp_sup(pagetitle, pagemsg):
       comp = getparam(t, "comp") or getparam(t, "2")
       sup = getparam(t, "sup") or getparam(t, "3")
       if not comp or not sup:
-        for suff in ["iter", "nter", "ter", "er", u"iē", u"ē", "im", u"ō"]:
+        for suff in ["iter", "nter", "ter", "er", "iē", "ē", "im", "ō"]:
           m = re.search("^(.*?)%s$" % suff, head)
           if m:
             stem = m.group(1)
             if suff == "nter":
               stem += "nt"
             default_comp = stem + "ius"
-            default_sup = stem + u"issimē"
+            default_sup = stem + "issimē"
             break
         else:
           pagemsg("WARNING: Didn't recognize ending of adverb headword %s" % head)

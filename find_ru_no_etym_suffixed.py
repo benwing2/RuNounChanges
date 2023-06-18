@@ -13,11 +13,11 @@ import rulib
 
 def first_palatalization(term):
   conversion = [
-    (u"ск", u"щ"),
-    (u"к", u"ч"),
-    (u"г", u"ж"),
-    (u"х", u"ш"),
-    (u"ц", u"ч"),
+    ("ск", "щ"),
+    ("к", "ч"),
+    ("г", "ж"),
+    ("х", "ш"),
+    ("ц", "ч"),
   ]
   for ending, converted in conversion:
     if term.endswith(ending):
@@ -57,25 +57,25 @@ def process_text_on_page(index, pagetitle, text):
 
   # ending and whether final consonant is palatal
   endings = [
-    (u"ывать", False),
-    (u"ивать", False),
-    (u"ать", False),
-    (u"ять", True),
-    (u"еть", True),
-    (u"ить", True),
-    (u"нуть", False),
-    (u"ия", True),
-    (u"ие", True),
-    (u"я", True),
-    (u"е", True),
-    (u"ь", True),
-    (u"и", True),
-    (u"а", False),
-    (u"о", False),
-    (u"ы", False),
-    (u"ый", False),
-    (u"ий", True),
-    (u"ой", False),
+    ("ывать", False),
+    ("ивать", False),
+    ("ать", False),
+    ("ять", True),
+    ("еть", True),
+    ("ить", True),
+    ("нуть", False),
+    ("ия", True),
+    ("ие", True),
+    ("я", True),
+    ("е", True),
+    ("ь", True),
+    ("и", True),
+    ("а", False),
+    ("о", False),
+    ("ы", False),
+    ("ый", False),
+    ("ий", True),
+    ("ой", False),
   ]
   stems = []
   for ending, is_palatal in endings:
@@ -92,10 +92,10 @@ def process_text_on_page(index, pagetitle, text):
     stems_to_try = []
     def frob(stem):
       stem = first_palatalization(stem)
-      if stem.endswith(u"л"):
-        stem += u"ь"
+      if stem.endswith("л"):
+        stem += "ь"
       if re.search("[" + rulib.vowel + "]$", stem):
-        stem += u"й"
+        stem += "й"
       return stem
     to_try_1 = frob(stem)
     to_try_2 = rulib.dereduce_stem(stem, False)
@@ -110,16 +110,16 @@ def process_text_on_page(index, pagetitle, text):
     if to_try_3 and to_try_3 != to_try_2:
       stems_to_try.append(to_try_3)
     for stem_to_try in stems_to_try:
-      append_possible(stem_to_try, u"ный")
-      append_possible(stem_to_try, u"ной")
-      append_possible(stem_to_try, u"ский")
-      append_possible(stem_to_try, u"ской")
-      append_possible(stem_to_try, u"ник")
-      append_possible(stem_to_try, u"чик")
-      append_possible(stem_to_try, u"щик")
-      append_possible(stem_to_try, u"ка")
-      append_possible(stem_to_try, u"ко")
-      append_possible(stem_to_try, u"ство")
+      append_possible(stem_to_try, "ный")
+      append_possible(stem_to_try, "ной")
+      append_possible(stem_to_try, "ский")
+      append_possible(stem_to_try, "ской")
+      append_possible(stem_to_try, "ник")
+      append_possible(stem_to_try, "чик")
+      append_possible(stem_to_try, "щик")
+      append_possible(stem_to_try, "ка")
+      append_possible(stem_to_try, "ко")
+      append_possible(stem_to_try, "ство")
   # Try -овый/-евый/-ёвый/-овой/-евой, -ик, -ок/-ек/-ёк
   for stem, palatal in stems:
     stems_to_try = []
@@ -128,31 +128,31 @@ def process_text_on_page(index, pagetitle, text):
     if reduced:
       stems_to_try.append(reduced)
     for stem_to_try in stems_to_try:
-      if stem_to_try.endswith(u"й"):
+      if stem_to_try.endswith("й"):
         stem_to_try = stem_to_try[:-1]
-      append_possible(stem_to_try, u"овый")
-      append_possible(stem_to_try, u"евый")
-      append_possible(stem_to_try, u"ёвый")
-      append_possible(stem_to_try, u"овой")
-      append_possible(stem_to_try, u"евой")
+      append_possible(stem_to_try, "овый")
+      append_possible(stem_to_try, "евый")
+      append_possible(stem_to_try, "ёвый")
+      append_possible(stem_to_try, "овой")
+      append_possible(stem_to_try, "евой")
       stem_to_try = first_palatalization(stem_to_try)
-      append_possible(stem_to_try, u"еский")
-      append_possible(stem_to_try, u"ический")
-      append_possible(stem_to_try, u"ество")
-      append_possible(stem_to_try, u"ик")
-      append_possible(stem_to_try, u"ок")
-      append_possible(stem_to_try, u"ек")
-      append_possible(stem_to_try, u"ёк")
-      append_possible(stem_to_try, u"ец")
+      append_possible(stem_to_try, "еский")
+      append_possible(stem_to_try, "ический")
+      append_possible(stem_to_try, "ество")
+      append_possible(stem_to_try, "ик")
+      append_possible(stem_to_try, "ок")
+      append_possible(stem_to_try, "ек")
+      append_possible(stem_to_try, "ёк")
+      append_possible(stem_to_try, "ец")
   # If derived adverbs, try -о, -е, -и
   if adverbs:
     for stem, palatal in stems:
       stems_to_try = []
       stems_to_try.append(stem)
     for stem_to_try in stems_to_try:
-      append_possible(stem_to_try, u"о")
-      append_possible(stem_to_try, u"е")
-      append_possible(stem_to_try, u"и")
+      append_possible(stem_to_try, "о")
+      append_possible(stem_to_try, "е")
+      append_possible(stem_to_try, "и")
 
   would_output = False
   for possible_derived, suffix in possible:
@@ -250,7 +250,7 @@ def process_text_on_page(index, pagetitle, text):
           concat_defns(base_defns), concat_defns(derived_defns)))
 
 # Pages specified using --pages or --pagefile may have accents, which will be stripped.
-parser = blib.create_argparser(u"Find etymologies for adjectives and nouns with common suffixes",
+parser = blib.create_argparser("Find etymologies for adjectives and nouns with common suffixes",
     include_pagefile=True, include_stdin=True, canonicalize_pagename=rulib.remove_accents)
 parser.add_argument("--nouns", action='store_true', help="Do derived nouns instead of adjectives")
 parser.add_argument("--adverbs", action='store_true', help="Do derived adverbs")

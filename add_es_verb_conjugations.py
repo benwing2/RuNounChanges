@@ -7,23 +7,23 @@ import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
 
 add_stress = {
-  "a": u"á",
-  "e": u"é",
-  "i": u"í",
-  "o": u"ó",
-  "u": u"ú",
+  "a": "á",
+  "e": "é",
+  "i": "í",
+  "o": "ó",
+  "u": "ú",
 }
 
-vowel = u"aeiouáéíóúý"
+vowel = "aeiouáéíóúý"
 V = "[" + vowel + "]"
 C = "[^" + vowel + "]"
 
 def singularize(word):
-  if not word.endswith("s") or len(re.sub("[^aeiou]", "", word)) <= 1 or re.search(u"[áéíóúiu]s$", word):
+  if not word.endswith("s") or len(re.sub("[^aeiou]", "", word)) <= 1 or re.search("[áéíóúiu]s$", word):
     # not a plural
     return "[[%s]]" % word
   if re.search(V + "[ns]es$", word):
-    if re.search(u"[áéíóúý]", word) or len(re.sub("[^aeiou]", "", word)) <= 2:
+    if re.search("[áéíóúý]", word) or len(re.sub("[^aeiou]", "", word)) <= 2:
       return "[[%s]]es" % word[:-2]
     # need to add an accent in the singular
     return "[[%s%s%s|%s]]" % (word[:-4], add_stress[word[-4]], word[-3], word)

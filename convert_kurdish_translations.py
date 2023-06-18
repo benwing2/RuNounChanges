@@ -15,7 +15,7 @@ for i, art in blib.cat_articles("Central Kurdish lemmas"):
 
 trans_templates = ["t", "t+", "t-", "tt", "tt+", "t-check", "t+check", "t-needed"]
 
-arabic_charset = u"؀-ۿݐ-ݿࢠ-ࣿﭐ-﷽ﹰ-ﻼ"
+arabic_charset = "؀-ۿݐ-ݿࢠ-ࣿﭐ-﷽ﹰ-ﻼ"
 
 def process_text_on_page(index, pagename, text):
   def pagemsg(txt):

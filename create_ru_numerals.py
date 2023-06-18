@@ -12,55 +12,55 @@ from collections import OrderedDict
 import rulib
 
 ordinals = {
-  1: u"пе́рвый",
-  2: u"второ́й",
-  3: u"тре́тий",
-  4: u"четвёртый",
-  5: u"пя́тый",
-  6: u"шесто́й",
-  7: u"седьмо́й",
-  8: u"восьмо́й",
-  9: u"девя́тый",
+  1: "пе́рвый",
+  2: "второ́й",
+  3: "тре́тий",
+  4: "четвёртый",
+  5: "пя́тый",
+  6: "шесто́й",
+  7: "седьмо́й",
+  8: "восьмо́й",
+  9: "девя́тый",
 }
 
 cardinal_ten_decls = {
   # order is nom, gen, dat, acc, ins, pre
-  20: [u"два́дцать", u"двадцати́", u"двадцати́", u"два́дцать", u"двадцатью́", u"двадцати́"],
-  30: [u"три́дцать", u"тридцати́", u"тридцати́", u"три́дцать", u"тридцатью́", u"тридцати́"],
-  40: [u"со́рок", u"сорока́", u"сорока́", u"со́рок", u"сорока́", u"сорока́"],
-  50: [u"пятьдеся́т", u"пяти́десяти", u"пяти́десяти", u"пятьдеся́т", u"пятью́десятью", u"пяти́десяти"],
-  60: [u"шестьдеся́т", u"шести́десяти", u"шести́десяти", u"шестьдеся́т", u"шестью́десятью", u"шести́десяти"],
-  70: [u"се́мьдесят", u"семи́десяти", u"семи́десяти", u"се́мьдесят", u"семью́десятью", u"семи́десяти"],
-  80: [u"во́семьдесят", u"восьми́десяти", u"восьми́десяти", u"во́семьдесят", [u"восемью́десятью", u"восьмью́десятью"], u"восьми́десяти"],
-  90: [u"девяно́сто", u"девяно́ста", u"девяно́ста", u"девяно́сто", u"девяно́ста", u"девяно́ста"],
+  20: ["два́дцать", "двадцати́", "двадцати́", "два́дцать", "двадцатью́", "двадцати́"],
+  30: ["три́дцать", "тридцати́", "тридцати́", "три́дцать", "тридцатью́", "тридцати́"],
+  40: ["со́рок", "сорока́", "сорока́", "со́рок", "сорока́", "сорока́"],
+  50: ["пятьдеся́т", "пяти́десяти", "пяти́десяти", "пятьдеся́т", "пятью́десятью", "пяти́десяти"],
+  60: ["шестьдеся́т", "шести́десяти", "шести́десяти", "шестьдеся́т", "шестью́десятью", "шести́десяти"],
+  70: ["се́мьдесят", "семи́десяти", "семи́десяти", "се́мьдесят", "семью́десятью", "семи́десяти"],
+  80: ["во́семьдесят", "восьми́десяти", "восьми́десяти", "во́семьдесят", ["восемью́десятью", "восьмью́десятью"], "восьми́десяти"],
+  90: ["девяно́сто", "девяно́ста", "девяно́ста", "девяно́сто", "девяно́ста", "девяно́ста"],
 }
 
 cardinal_one_decls = {
   # order is nom_m, nom_f, gen, dat, ins, pre
-  2: [u"два́", u"две́", u"дву́х", u"дву́м", u"двумя́", u"дву́х"],
-  3: [u"три́", u"три́", u"трёх", u"трём", u"тремя́", u"трёх"],
-  4: [u"четы́ре", u"четы́ре", u"четырёх", u"четырём", u"четырьмя́", u"четырёх"],
-  5: [u"пя́ть", u"пя́ть", u"пяти́", u"пяти́", u"пятью́", u"пяти́"],
-  6: [u"ше́сть", u"ше́сть", u"шести́", u"шести́", u"шестью́", u"шести́"],
-  7: [u"се́мь", u"се́мь", u"семи́", u"семи́", u"семью́", u"семи́"],
-  8: [u"во́семь", u"во́семь", u"восьми́", u"восьми́", [u"восемью́", u"восьмью́"], u"восьми́"],
-  9: [u"де́вять", u"де́вять", u"девяти́", u"девяти́", u"девятью́", u"девяти́"],
+  2: ["два́", "две́", "дву́х", "дву́м", "двумя́", "дву́х"],
+  3: ["три́", "три́", "трёх", "трём", "тремя́", "трёх"],
+  4: ["четы́ре", "четы́ре", "четырёх", "четырём", "четырьмя́", "четырёх"],
+  5: ["пя́ть", "пя́ть", "пяти́", "пяти́", "пятью́", "пяти́"],
+  6: ["ше́сть", "ше́сть", "шести́", "шести́", "шестью́", "шести́"],
+  7: ["се́мь", "се́мь", "семи́", "семи́", "семью́", "семи́"],
+  8: ["во́семь", "во́семь", "восьми́", "восьми́", ["восемью́", "восьмью́"], "восьми́"],
+  9: ["де́вять", "де́вять", "девяти́", "девяти́", "девятью́", "девяти́"],
 }
 
 cardinal_tens = {num: decl[0] for num, decl in cardinal_ten_decls.items()}
-cardinal_tens[100] = u"сто́"
+cardinal_tens[100] = "сто́"
 
 cardinal_ones = {
   0: "",
-  1: u"оди́н",
-  2: u"два́",
-  3: u"три́",
-  4: u"четы́ре",
-  5: u"пя́ть",
-  6: u"ше́сть",
-  7: u"се́мь",
-  8: u"во́семь",
-  9: u"де́вять",
+  1: "оди́н",
+  2: "два́",
+  3: "три́",
+  4: "четы́ре",
+  5: "пя́ть",
+  6: "ше́сть",
+  7: "се́мь",
+  8: "во́семь",
+  9: "де́вять",
 }
 
 english_cardinals = {
@@ -127,7 +127,7 @@ def generate_decl(num):
   tnom, tgen, tdat, tacc, tins, tpre = cardinal_ten_decls[tens]
   ones = num % 10
   if ones == 1:
-    return u"""{{ru-adj-table
+    return """{{ru-adj-table
 |nom_m=%s
 |nom_n=%s
 |nom_f=%s
@@ -148,116 +148,116 @@ def generate_decl(num):
 |pre_f=%s
 |pre_p=%s
 }}""" % (
-      combine(tnom, u"оди́н"), combine(tnom, u"одно́"), combine(tnom, u"одна́"),
-      combine(tnom, u"одни́"),
-      combine(tgen, u"одного́"), combine(tgen, u"одно́й"),
-      combine(tgen, u"одни́х"),
-      combine(tdat, u"одному́"), combine(tdat, u"одно́й"),
-      combine(tdat, u"одни́м"),
-      combine(tacc, u"одного́"), combine(tacc, u"одну́"),
-      combine(tacc, u"одни́х"),
-      combine(tins, u"одни́м"), combine(tins, [u"одно́й", u"одно́ю"]),
-      combine(tins, u"одни́ми"),
-      combine(tpre, u"одно́м"), combine(tpre, u"одно́й"),
-      combine(tpre, u"одни́х")
+      combine(tnom, "оди́н"), combine(tnom, "одно́"), combine(tnom, "одна́"),
+      combine(tnom, "одни́"),
+      combine(tgen, "одного́"), combine(tgen, "одно́й"),
+      combine(tgen, "одни́х"),
+      combine(tdat, "одному́"), combine(tdat, "одно́й"),
+      combine(tdat, "одни́м"),
+      combine(tacc, "одного́"), combine(tacc, "одну́"),
+      combine(tacc, "одни́х"),
+      combine(tins, "одни́м"), combine(tins, ["одно́й", "одно́ю"]),
+      combine(tins, "одни́ми"),
+      combine(tpre, "одно́м"), combine(tpre, "одно́й"),
+      combine(tpre, "одни́х")
       )
   elif ones == 2:
-    return u"""{{ru-decl-adj|-|manual|nom_mp=%s|nom_fp=%s|gen_p=%s|dat_p=%s|ins_p=%s|pre_p=%s|special=cdva}}""" % (
-      combine(tnom, u"два́"), combine(tnom, u"две́"), combine(tgen, u"дву́х"),
-      combine(tdat, u"дву́м"), combine(tins, u"двумя́"), combine(tpre, u"дву́х"))
+    return """{{ru-decl-adj|-|manual|nom_mp=%s|nom_fp=%s|gen_p=%s|dat_p=%s|ins_p=%s|pre_p=%s|special=cdva}}""" % (
+      combine(tnom, "два́"), combine(tnom, "две́"), combine(tgen, "дву́х"),
+      combine(tdat, "дву́м"), combine(tins, "двумя́"), combine(tpre, "дву́х"))
   elif ones == 3:
-    return u"""{{ru-decl-noun-unc
+    return """{{ru-decl-noun-unc
 |%s
 |%s
 |%s
 |%s
 |%s
 |%s
-}}""" % (combine(tnom, u"три́"), combine(tgen, u"трёх"), combine(tdat, u"трём"),
-      combine(tacc, u"три́"), combine(tins, u"тремя́"), combine(tpre, u"трёх"))
+}}""" % (combine(tnom, "три́"), combine(tgen, "трёх"), combine(tdat, "трём"),
+      combine(tacc, "три́"), combine(tins, "тремя́"), combine(tpre, "трёх"))
   elif ones == 4:
-    return u"""{{ru-decl-noun-unc
+    return """{{ru-decl-noun-unc
 |%s
 |%s
 |%s
 |%s
 |%s
 |%s
-}}""" % (combine(tnom, u"четы́ре"), combine(tgen, u"четырёх"), combine(tdat, u"четырём"),
-      combine(tacc, u"четы́ре"), combine(tins, u"четырьмя́"), combine(tpre, u"четырёх"))
+}}""" % (combine(tnom, "четы́ре"), combine(tgen, "четырёх"), combine(tdat, "четырём"),
+      combine(tacc, "четы́ре"), combine(tins, "четырьмя́"), combine(tpre, "четырёх"))
   elif ones == 5:
-    return u"""{{ru-decl-noun-unc
+    return """{{ru-decl-noun-unc
 |%s
 |%s
 |%s
 |%s
 |%s
 |%s
-}}""" % (combine(tnom, u"пя́ть"), combine(tgen, u"пяти́"), combine(tdat, u"пяти́"),
-      combine(tacc, u"пя́ть"), combine(tins, u"пятью́"), combine(tpre, u"пяти́"))
+}}""" % (combine(tnom, "пя́ть"), combine(tgen, "пяти́"), combine(tdat, "пяти́"),
+      combine(tacc, "пя́ть"), combine(tins, "пятью́"), combine(tpre, "пяти́"))
   elif ones == 6:
-    return u"""{{ru-decl-noun-unc
+    return """{{ru-decl-noun-unc
 |%s
 |%s
 |%s
 |%s
 |%s
 |%s
-}}""" % (combine(tnom, u"ше́сть"), combine(tgen, u"шести́"), combine(tdat, u"шести́"),
-      combine(tacc, u"ше́сть"), combine(tins, u"шестью́"), combine(tpre, u"шести́"))
+}}""" % (combine(tnom, "ше́сть"), combine(tgen, "шести́"), combine(tdat, "шести́"),
+      combine(tacc, "ше́сть"), combine(tins, "шестью́"), combine(tpre, "шести́"))
   elif ones == 7:
-    return u"""{{ru-decl-noun-unc
+    return """{{ru-decl-noun-unc
 |%s
 |%s
 |%s
 |%s
 |%s
 |%s
-}}""" % (combine(tnom, u"се́мь"), combine(tgen, u"семи́"), combine(tdat, u"семи́"),
-      combine(tacc, u"се́мь"), combine(tins, u"семью́"), combine(tpre, u"семи́"))
+}}""" % (combine(tnom, "се́мь"), combine(tgen, "семи́"), combine(tdat, "семи́"),
+      combine(tacc, "се́мь"), combine(tins, "семью́"), combine(tpre, "семи́"))
   elif ones == 8:
-    return u"""{{ru-decl-noun-unc
+    return """{{ru-decl-noun-unc
 |%s
 |%s
 |%s
 |%s
 |%s
 |%s
-}}""" % (combine(tnom, u"во́семь"), combine(tgen, u"восьми́"), combine(tdat, u"восьми́"),
-      combine(tacc, u"во́семь"), combine(tins, [u"восемью́", u"восьмью́"]), combine(tpre, u"восьми́"))
+}}""" % (combine(tnom, "во́семь"), combine(tgen, "восьми́"), combine(tdat, "восьми́"),
+      combine(tacc, "во́семь"), combine(tins, ["восемью́", "восьмью́"]), combine(tpre, "восьми́"))
   elif ones == 9:
-    return u"""{{ru-decl-noun-unc
+    return """{{ru-decl-noun-unc
 |%s
 |%s
 |%s
 |%s
 |%s
 |%s
-}}""" % (combine(tnom, u"де́вять"), combine(tgen, u"девяти́"), combine(tdat, u"девяти́"),
-      combine(tacc, u"де́вять"), combine(tins, u"девятью́"), combine(tpre, u"девяти́"))
+}}""" % (combine(tnom, "де́вять"), combine(tgen, "девяти́"), combine(tdat, "девяти́"),
+      combine(tacc, "де́вять"), combine(tins, "девятью́"), combine(tpre, "девяти́"))
 
 def generate_pron(num):
   tens = (num / 10) * 10
   ones = num % 10
   ones_pron = cardinal_ones[ones]
   if ones == 4:
-    ones_pron = u"четы́ре|pos=num"
+    ones_pron = "четы́ре|pos=num"
   if tens in [20, 30, 40, 90]:
     return "* {{ru-IPA|%s %s}}" % (cardinal_tens[tens], ones_pron)
   if tens == 50:
-    return u"""* {{ru-IPA|пятьдеся́т %s|gem=opt}}
+    return """* {{ru-IPA|пятьдеся́т %s|gem=opt}}
 * {{i|colloquial or fast speech}} {{ru-IPA|phon=пееся́т %s}}""" % (
       ones_pron, ones_pron)
   if tens == 60:
-    return u"""* {{ru-IPA|шестьдеся́т %s}}
+    return """* {{ru-IPA|шестьдеся́т %s}}
 * {{i|colloquial or fast speech}} {{ru-IPA|phon=шееся́т %s}}""" % (
       ones_pron, ones_pron)
   if tens == 70:
-    return u"""* {{ru-IPA|се́мьдесят %s}}
+    return """* {{ru-IPA|се́мьдесят %s}}
 * {{ru-IPA|phon=се́мдесят %s}}""" % (
       ones_pron, ones_pron)
   if tens == 80:
-    return u"""* {{ru-IPA|во́семьдесят %s}}
+    return """* {{ru-IPA|во́семьдесят %s}}
 * {{ru-IPA|phon=во́семдесят %s}}""" % (
       ones_pron, ones_pron)
   raise ValueError("Unrecognized tens: %s" % tens)
@@ -270,7 +270,7 @@ def generate_usage(num):
   ones = num % 10
 
   if ones == 1:
-    return u"""* '''{tnom} оди́н''' governs the singular of the noun in the appropriate case, exactly as if it were an adjective.
+    return """* '''{tnom} оди́н''' governs the singular of the noun in the appropriate case, exactly as if it were an adjective.
 :* {{{{uxi|ru|[[здесь|Здесь]] '''{tnom} оди́н''' [[ру́сский]] [[ма́льчик]].|Here are '''{eng}''' Russian boys.}}}}
 :* {{{{uxi|ru|[[здесь|Здесь]] '''{tnom} одна́''' [[большой|больша́я]] [[кни́га]].|Here are '''{eng}''' large books.}}}}
 :* {{{{uxi|ru|[[здесь|Здесь]] '''{tnom} одно́''' [[маленький|ма́ленькое]] [[окно́]].|Here are '''{eng}''' small windows.}}}}
@@ -293,7 +293,7 @@ def generate_usage(num):
     oins = "/".join(oins)
 
   if ones in [2, 3, 4]:
-    return u"""* '''{tnom} {onom_m}''' in the nominative and accusative case governs the genitive singular of the noun, although modifying adjectives are in the genitive plural (or alternatively and preferably, for feminine nouns, in the nominative plural). Unlike with bare {{{{m|ru|{onom_m}}}}}, there is no animate/inanimate distinction.
+    return """* '''{tnom} {onom_m}''' in the nominative and accusative case governs the genitive singular of the noun, although modifying adjectives are in the genitive plural (or alternatively and preferably, for feminine nouns, in the nominative plural). Unlike with bare {{{{m|ru|{onom_m}}}}}, there is no animate/inanimate distinction.
 :* {{{{uxi|ru|[[здесь|Здесь]] '''{tnom} {onom_m}''' [[русский|ру́сских]] [[мальчик|ма́льчика]].|Here are '''{eng}''' Russian boys.}}}}
 :* {{{{uxi|ru|[[здесь|Здесь]] '''{tnom} {onom_f}''' [[большой|больши́е]]/[[большой|больши́х]] [[книга|кни́ги]].|Here are '''{eng}''' large books.}}}}
 :* {{{{uxi|ru|[[я|Я]] [[видеть|ви́жу]] '''{tacc} {onom_m}''' [[русский|ру́сских]] [[мальчик|ма́льчика]].|I see '''{eng}''' Russian boys.}}}}
@@ -306,7 +306,7 @@ def generate_usage(num):
       onom_m=onom_m, onom_f=onom_f, ogen=ogen, odat=odat, oins=oins, opre=opre,
       eng=en_num(num))
   if ones in [5, 6, 7, 8, 9]:
-    return u"""* '''{tnom} {onom_m}''' in the nominative and accusative case governs the genitive plural of the noun. There is no animate/inanimate distinction.
+    return """* '''{tnom} {onom_m}''' in the nominative and accusative case governs the genitive plural of the noun. There is no animate/inanimate distinction.
 :* {{{{uxi|ru|[[здесь|Здесь]] '''{tnom} {onom_m}''' [[русский|ру́сских]] [[мальчик|ма́льчиков]].|Here are '''{eng}''' Russian boys.}}}}
 :* {{{{uxi|ru|[[здесь|Здесь]] '''{tnom} {onom_f}''' [[большой|больши́х]] [[книга|кни́г]].|Here are '''{eng}''' large books.}}}}
 :* {{{{uxi|ru|[[я|Я]] [[видеть|ви́жу]] '''{tacc} {onom_m}''' [[русский|ру́сских]] [[мальчик|ма́льчиков]].|I see '''{eng}''' Russian boys.}}}}
@@ -325,7 +325,7 @@ def generate_page(num):
   nextnum = num + 1
   tens = (num / 10) * 10
   ones = num % 10
-  return u"""==Russian==
+  return """==Russian==
 {{cardinalbox|ru|%s|%s|%s|%s|%s|ord=%s|alt=%s}}
 
 ===Pronunciation===
@@ -495,14 +495,14 @@ def process_page(index, num, save, verbose, params):
 pa = blib.create_argparser("Save Russian numbers to Wiktionary")
 pa.add_argument("--offline", help="Operate offline, outputting text of new pages", action="store_true")
 pa.add_argument("--overwrite-page", action="store_true",
-    help=u"""If specified, overwrite the entire existing page of inflections.
+    help="""If specified, overwrite the entire existing page of inflections.
 Won't do this if it finds "Etymology N", unless --overwrite-etymologies is
 given. WARNING: Be careful!""")
 pa.add_argument("--overwrite-etymologies", action="store_true",
-    help=u"""If specified and --overwrite-page, overwrite the entire existing
+    help="""If specified and --overwrite-page, overwrite the entire existing
 page of inflections even if "Etymology N". WARNING: Be careful!""")
 pa.add_argument("--numerals",
-    help=u"""Comma-separated and/or hyphen-separated list of numerals to process.""")
+    help="""Comma-separated and/or hyphen-separated list of numerals to process.""")
 
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)

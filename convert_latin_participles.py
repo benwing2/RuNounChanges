@@ -47,11 +47,11 @@ def process_page(page, index, parsed):
         pagemsg("WARNING: Empty param 2: %s" % origt)
         continue
       if ending == "ans":
-        lemma = base + u"āns"
+        lemma = base + "āns"
       elif ending == "ens":
-        lemma = base + u"ēns"
+        lemma = base + "ēns"
       elif ending == "iens":
-        lemma = u"%siēns/%seunt" % (base, base)
+        lemma = "%siēns/%seunt" % (base, base)
       else:
         pagemsg("WARNING: Unrecognized param 2: %s" % origt)
         continue
@@ -71,11 +71,11 @@ def process_page(page, index, parsed):
       t.add("1", lemma)
       blib.set_template_name(t, "la-part")
       pagemsg("Replaced %s with %s" % (origt, str(t)))
-      notes.append(u"convert {{%s}} to {{la-part}}" % tn)
+      notes.append("convert {{%s}} to {{la-part}}" % tn)
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Convert Latin participle headwords to use {{la-part}}",
+parser = blib.create_argparser("Convert Latin participle headwords to use {{la-part}}",
     include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

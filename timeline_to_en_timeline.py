@@ -33,7 +33,7 @@ def process_page(page, index, parsed):
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"timeline -> en-timeline on English citation pages",
+parser = blib.create_argparser("timeline -> en-timeline on English citation pages",
     include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

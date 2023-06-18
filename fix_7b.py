@@ -42,22 +42,22 @@ def process_page(index, page, direc):
       rmparam(t, "3")
       npp = "npp" in direc
       direc = direc.replace("npp", "")
-      yo = u"ё" in direc
-      direc = direc.replace(u"ё", "")
+      yo = "ё" in direc
+      direc = direc.replace("ё", "")
       direc = re.sub("7b/?", "", direc)
-      if re.search(u"е́?[^аэыоуяеиёю]*$", presstem):
+      if re.search("е́?[^аэыоуяеиёю]*$", presstem):
         if not yo:
-          pagemsg(u"Something wrong, е-stem present and no ё directive")
+          pagemsg("Something wrong, е-stem present and no ё directive")
         if npp:
           presstem = rulib.make_ending_stressed_ru(presstem)
         else:
-          presstem = re.sub(u"е́?([^аэыоуяеиёю]*)$", r"ё\1", presstem)
+          presstem = re.sub("е́?([^аэыоуяеиёю]*)$", r"ё\1", presstem)
       else:
         presstem = rulib.make_ending_stressed_ru(presstem)
       pap = getparam(t, "past_actv_part")
-      pred_pap = presstem + u"ший"
-      if direc not in ["b", "b(9)"] and re.search(u"[дт]$", presstem):
-        pred_pap = re.sub(u"[дт]$", "", presstem) + u"вший"
+      pred_pap = presstem + "ший"
+      if direc not in ["b", "b(9)"] and re.search("[дт]$", presstem):
+        pred_pap = re.sub("[дт]$", "", presstem) + "вший"
       if pap:
         if pap == pred_pap:
           pagemsg("Removing past_actv_part=%s because same as predicted" % pap)
@@ -75,14 +75,14 @@ def process_page(index, page, direc):
       blib.sort_params(t)
       #blib.set_param_chain(t, ppps, "past_pasv_part", "past_pasv_part")
       notes.append("set class-7b verb to directive %s%s" %
-          (direc, npp and u" (no ё in present stem)" or ""))
+          (direc, npp and " (no ё in present stem)" or ""))
     newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Fix up class-7b arguments")
+parser = blib.create_argparser("Fix up class-7b arguments")
 parser.add_argument('--direcfile', help="File containing pages to fix and directives.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

@@ -41,16 +41,16 @@ def process_text_on_page(index, pagetitle, text):
       if getparam(t, "sc") == "Arab":
         remove_param("sc")
       I = getparam(t, "I")
-      if I in [u"ء", u"و", u"ي"] and form not in ["8", "VIII"]:
+      if I in ["ء", "و", "ي"] and form not in ["8", "VIII"]:
         pagemsg("form=%s, removing I=%s" % (form, I))
         remove_param("I")
       II = getparam(t, "II")
-      if (II == u"ء" or II in [u"و", u"ي"] and
+      if (II == "ء" or II in ["و", "ي"] and
           form in ["2", "II", "3", "III", "5", "V", "6", "VI"]):
         pagemsg("form=%s, removing II=%s" % (form, II))
         remove_param("II")
       III = getparam(t, "III")
-      if III == u"ء":
+      if III == "ء":
         pagemsg("form=%s, removing III=%s" % (form, III))
         remove_param("III")
       if str(t) != origt:

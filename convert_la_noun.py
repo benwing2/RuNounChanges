@@ -33,37 +33,37 @@ def stem_matches_any(stem1, stem2, endings_and_subtypes):
   return False
 
 def la_noun_2nd_ius_subtype(stem1, stem2, num):
-  if re.search(u"^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", stem1) and num != "pl":
+  if re.search("^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", stem1) and num != "pl":
     return ('-voci',)
   else:
     return ()
 
 def la_noun_2nd_ius_voci_subtype(stem1, stem2, num):
-  if not re.search(u"^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", stem1):
+  if not re.search("^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", stem1):
     return ('voci',)
   else:
     return ()
 
 def la_noun_3rd_subtype(stem1, stem2, num):
   return stem_matches_any(stem1, stem2, [
-    ((u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", "pol"), ('-polis', '-I')),
-    (u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", ('-polis',)),
+    (("^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", "pol"), ('-polis', '-I')),
+    ("^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", ('-polis',)),
     (("is", ""), ('-I',)),
-    ((u"^([a-zāēīōūȳăĕĭŏŭ].*)ēs$", ""), ('-I',)),
+    (("^([a-zāēīōūȳăĕĭŏŭ].*)ēs$", ""), ('-I',)),
     (("us", "or"), ('-N',)),
     (("us", "er"), ('-N',)),
     (("ma", "mat"), ('-N',)),
     (("men", "min"), ('-N',)),
     (("e", ""), ('-N',)),
-    (("al", u"āl"), ('-N',)),
-    (("ar", u"ār"), ('-N',)),
+    (("al", "āl"), ('-N',)),
+    (("ar", "ār"), ('-N',)),
     ("", ()),
   ])
 
 def la_noun_3rd_Greek_subtype(stem1, stem2, num):
-  if stem1.endswith(u"ēr"):
+  if stem1.endswith("ēr"):
     return ('Greek', '-er')
-  if stem1.endswith(u"ōn"):
+  if stem1.endswith("ōn"):
     return ('Greek', '-on')
   if stem1.endswith("s"):
     return ('Greek', '-s')
@@ -71,17 +71,17 @@ def la_noun_3rd_Greek_subtype(stem1, stem2, num):
 
 def la_noun_3rd_I_subtype(stem1, stem2, num):
   return stem_matches_any(stem1, stem2, [
-    ((u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", "pol"), ('-polis',)),
-    (u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", ('-polis', 'I')),
+    (("^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", "pol"), ('-polis',)),
+    ("^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)polis$", ('-polis', 'I')),
     (("is", ""), ()),
-    ((u"^([a-zāēīōūȳăĕĭŏŭ].*)ēs$", ""), ()),
+    (("^([a-zāēīōūȳăĕĭŏŭ].*)ēs$", ""), ()),
     (("us", "or"), ('-N', 'I')),
     (("us", "er"), ('-N', 'I')),
     (("ma", "mat"), ('-N', 'I')),
     (("men", "min"), ('-N', 'I')),
     (("e", ""), ('-N', 'I')),
-    (("al", u"āl"), ('-N', 'I')),
-    (("ar", u"ār"), ('-N', 'I')),
+    (("al", "āl"), ('-N', 'I')),
+    (("ar", "ār"), ('-N', 'I')),
     ("", ('I',)),
   ])
 
@@ -91,33 +91,33 @@ def la_noun_3rd_N_subtype(stem1, stem2, num):
     (("us", "er"), ()),
     (("ma", "mat"), ()),
     (("men", "min"), ()),
-    ((u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)e$", ""), ()),
+    (("^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)e$", ""), ()),
     (("e", ""), ('N', '-pure')),
-    (("al", u"āl"), ('N', '-pure')),
-    (("ar", u"ār"), ('N', '-pure')),
+    (("al", "āl"), ('N', '-pure')),
+    (("ar", "ār"), ('N', '-pure')),
     ("", ('N',)),
   ])
 
 def la_noun_3rd_N_I_subtype(stem1, stem2, num):
   return stem_matches_any(stem1, stem2, [
-    ((u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)e$", ""), ('N', 'I')),
+    (("^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)e$", ""), ('N', 'I')),
     (("e", ""), ('N', 'I', '-pure')),
-    (("al", u"āl"), ('N', 'I', '-pure')),
-    (("ar", u"ār"), ('N', 'I', '-pure')),
+    (("al", "āl"), ('N', 'I', '-pure')),
+    (("ar", "ār"), ('N', 'I', '-pure')),
     ("", ('N', 'I')),
   ])
 
 def la_noun_3rd_N_I_pure_subtype(stem1, stem2, num):
   return stem_matches_any(stem1, stem2, [
-    ((u"^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)e$", ""), ('N', 'I', 'pure')),
+    (("^([A-ZĀĒĪŌŪȲĂĔĬŎŬ].*)e$", ""), ('N', 'I', 'pure')),
     (("e", ""), ()),
-    (("al", u"āl"), ()),
-    (("ar", u"ār"), ()),
+    (("al", "āl"), ()),
+    (("ar", "ār"), ()),
     ("", ('N', 'I', 'pure')),
   ])
 
 def la_noun_3rd_polis_subtype(stem1, stem2, num):
-  if not re.search(u"^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", stem1):
+  if not re.search("^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", stem1):
     return ('polis',)
   else:
     return ()
@@ -305,7 +305,7 @@ def compute_noun_lemma_and_subtypes(decl, stem1, stem2, num, stem_suffix, pl_suf
     if subtype.startswith('-'):
       pagemsg("WARNING: Inferred canceling subtype %s, need to verify: %s" % (subtype, origt))
     subtypes.append(subtype)
-  if re.search(u"^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", lemma):
+  if re.search("^[A-ZĀĒĪŌŪȲĂĔĬŎŬ]", lemma):
     # Proper nouns in -polis that use {{la-decl-3rd-polis}} won't specify
     # num=sg because the declension template itself specifies num=sg when
     # invoking the module. Meanwhile the module itself specifies num=sg for
@@ -314,7 +314,7 @@ def compute_noun_lemma_and_subtypes(decl, stem1, stem2, num, stem_suffix, pl_suf
     auto_sg = (
       decl == "3" and lemma.endswith("polis") and "-polis" not in subtypes or
       decl == "indecl" or
-      decl == "irreg" and lemma in ["Deus", u"Iēsus", u"Jēsus", u"Callistō", u"Themistō"]
+      decl == "irreg" and lemma in ["Deus", "Iēsus", "Jēsus", "Callistō", "Themistō"]
     )
     if not num and not num_originally_pl and not auto_sg:
       num = "both"

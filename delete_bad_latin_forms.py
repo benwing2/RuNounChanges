@@ -535,7 +535,7 @@ def process_page(index, lemma, pos, infl, slots, pages_to_delete, preserve_diaer
         True if slot is None else tag_sets_to_delete,
         preserve_diaeresis, save, verbose, diff)
 
-parser = blib.create_argparser(u"Delete bad Latin forms")
+parser = blib.create_argparser("Delete bad Latin forms")
 parser.add_argument('--inflfile', help="File containing lemmas and inflection templates.")
 parser.add_argument('--slot-inflfile', help="File containing lemmas, slots to delete and infl templates.")
 parser.add_argument('--pos-slot-inflfile', help="File containing POSes, lemmas, slots to delete and infl templates.")

@@ -11,9 +11,9 @@ from blib import getparam, rmparam, getrmparam, tname, msg, errandmsg, site
 def la_verb_1st_subtype(stem, arg2, arg3, arg4, types):
   depon = 'depon' in types or 'semidepon' in types or 'semi-depon' in types
   if 'impers' in types or '3only' in types:
-    lemma = stem + (u"ātur" if 'depon' in types else "at")
+    lemma = stem + ("ātur" if 'depon' in types else "at")
   else:
-    lemma = stem + ("or" if 'depon' in types else u"ō")
+    lemma = stem + ("or" if 'depon' in types else "ō")
   if depon:
     perf_stem = None
     supine_stem = arg2
@@ -21,19 +21,19 @@ def la_verb_1st_subtype(stem, arg2, arg3, arg4, types):
     perf_stem = arg2
     supine_stem = arg3
   if not perf_stem and not depon and 'noperf' not in types:
-    perf_stem = stem + u"āv"
+    perf_stem = stem + "āv"
     arg2 = perf_stem
   if not supine_stem and ('nopass' not in types and 'noperf' not in types
       and 'nosup' not in types and 'no-pasv-perf' not in types and
       'nopasvperf' not in types and 'memini' not in types and
       'pass-3only' not in types and 'pass3only' not in types):
-    supine_stem = stem + u"āt"
+    supine_stem = stem + "āt"
     if depon:
       arg2 = supine_stem
     else:
       arg3 = supine_stem
   types = [x for x in types if x != 'depon' and x != 'impers']
-  if supine_stem == stem + u"āt" and (depon or perf_stem == stem + u"āv"):
+  if supine_stem == stem + "āt" and (depon or perf_stem == stem + "āv"):
     return "1+", lemma, None, None, types
   else:
     return "1", lemma, arg2, arg3, types
@@ -41,9 +41,9 @@ def la_verb_1st_subtype(stem, arg2, arg3, arg4, types):
 def la_verb_2nd_subtype(stem, arg2, arg3, arg4, types):
   depon = 'depon' in types or 'semidepon' in types or 'semi-depon' in types
   if 'impers' in types or '3only' in types:
-    lemma = stem + (u"ētur" if 'depon' in types else "et")
+    lemma = stem + ("ētur" if 'depon' in types else "et")
   else:
-    lemma = stem + ("eor" if 'depon' in types else u"eō")
+    lemma = stem + ("eor" if 'depon' in types else "eō")
   types = [x for x in types if x != 'depon' and x != 'impers']
   if ((depon and arg2 == stem + "it") or
       (not depon and arg2 == stem + "u" and arg3 == stem + "it")):
@@ -55,7 +55,7 @@ def la_verb_3rd_subtype(stem, arg2, arg3, arg4, types):
   if 'impers' in types or '3only' in types:
     lemma = stem + ("itur" if 'depon' in types else "it")
   else:
-    lemma = stem + ("or" if 'depon' in types else u"ō")
+    lemma = stem + ("or" if 'depon' in types else "ō")
   if stem.endswith("i"):
     types = types + ["-I"]
   types = [x for x in types if x != 'depon' and x != 'impers']
@@ -66,7 +66,7 @@ def la_verb_3rd_io_subtype(stem, arg2, arg3, arg4, types):
     lemma = stem + ("itur" if 'depon' in types else "it")
     types = types + ["I"]
   else:
-    lemma = stem + ("ior" if 'depon' in types else u"iō")
+    lemma = stem + ("ior" if 'depon' in types else "iō")
   types = [x for x in types if x != 'depon' and x != 'impers']
   return "3", lemma, arg2, arg3, types
 
@@ -78,38 +78,38 @@ def la_verb_4th_subtype(stem, arg2, arg3, arg4, types):
   arg3 = arg3 and arg3.replace(".", "") or ""
   depon = 'depon' in types or 'semidepon' in types or 'semi-depon' in types
   if 'impers' in types or '3only' in types:
-    lemma = stem + (u"ītur" if 'depon' in types else "it")
+    lemma = stem + ("ītur" if 'depon' in types else "it")
   else:
-    lemma = stem + ("ior" if 'depon' in types else u"iō")
+    lemma = stem + ("ior" if 'depon' in types else "iō")
   types = [x for x in types if x != 'depon' and x != 'impers']
-  if ((depon and arg2 == stem + u"īt") or
-      (not depon and arg2 == stem + u"īv" and arg3 == stem + u"īt")):
+  if ((depon and arg2 == stem + "īt") or
+      (not depon and arg2 == stem + "īv" and arg3 == stem + "īt")):
     return "4+", lemma, None, None, types
   else:
     return "4", lemma, arg2, arg3, types
 
 irreg_verb_type_to_lemma = {
-  'aio': u"āiō",
-  'aiio': u"aiiō",
-  'dico': u"dīcō",
-  'duco': u"dūcō",
-  'facio': u"faciō",
-  'fio': u"fīō",
-  'fero': u"ferō",
+  'aio': "āiō",
+  'aiio': "aiiō",
+  'dico': "dīcō",
+  'duco': "dūcō",
+  'facio': "faciō",
+  'fio': "fīō",
+  'fero': "ferō",
   'inquam': "inquam",
   'libet': "libet",
   'lubet': "lubet",
   'licet': "licet",
-  'volo': u"volō",
-  'malo': u"mālō",
-  'nolo': u"nōlō",
+  'volo': "volō",
+  'malo': "mālō",
+  'nolo': "nōlō",
   'possum': "possum",
   'piget': "piget",
-  'coepi': u"coepī",
+  'coepi': "coepī",
   'sum': "sum",
-  'edo': u"edō",
-  'do': u"dō",
-  'eo': u"eō",
+  'edo': "edō",
+  'do': "dō",
+  'eo': "eō",
 }
 
 def la_verb_irreg_subtype(stem, arg2, arg3, arg4, types):

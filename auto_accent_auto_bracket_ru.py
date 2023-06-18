@@ -157,14 +157,14 @@ import ru_reverse_translit
 site = pywikibot.Site()
 semi_verbose = False # Set by --semi-verbose or --verbose
 
-AC = u"\u0301" # acute =  ́
-GR = u"\u0300" # grave =  ̀
+AC = "\u0301" # acute =  ́
+GR = "\u0300" # grave =  ̀
 
 # List of accentless multisyllabic words that are lemmas.
-accentless_multisyllable_lemma = [u"надо", u"обо", u"ото",
-  u"перед", u"передо", u"подо", u"предо", u"через"]
+accentless_multisyllable_lemma = ["надо", "обо", "ото",
+  "перед", "передо", "подо", "предо", "через"]
 # List of all accentless multisyllabic words.
-accentless_multisyllable = [u"либо", u"нибудь"] + accentless_multisyllable_lemma
+accentless_multisyllable = ["либо", "нибудь"] + accentless_multisyllable_lemma
 # List of templates with a subst= parameter that can be used in place of
 # manual transliteration.
 templates_with_subst = ["ux", "uxi", "quote", "usex",
@@ -176,9 +176,9 @@ templates_with_subst = ["ux", "uxi", "quote", "usex",
 link_expandable_templates = templates_with_subst + ["Q"]
 
 # List of monosyllabic prepositions.
-monosyllabic_prepositions = [u"без", u"близ", u"во", u"да", u"до", u"за",
-    u"из", u"ко", u"меж", u"на", u"над", u"не", u"ни", u"о", u"об", u"от",
-    u"по", u"под", u"пред", u"при", u"про", u"со", u"у"]
+monosyllabic_prepositions = ["без", "близ", "во", "да", "до", "за",
+    "из", "ко", "меж", "на", "над", "не", "ни", "о", "об", "от",
+    "по", "под", "пред", "при", "про", "со", "у"]
 # Derived list of accented equivalents of above, for use with expressions
 # like до́ смерти, where the word following an accented monosyllabic
 # preposition should remain unaccented.
@@ -191,18 +191,18 @@ monosyllabic_accented_prepositions = [
 # beginning of a sentence (not including [[б]] and [[ж]]), and also to
 # вы (where Вы is an alternative letter-case form) and по (where По is a
 # proper name, either the Po river or Edgar Allan Poe).
-ignore_capitalized_variant_words = [u"я", u"в", u"с", u"к", u"о", u"а", u"у", u"и",
-  u"вы", u"по"]
+ignore_capitalized_variant_words = ["я", "в", "с", "к", "о", "а", "у", "и",
+  "вы", "по"]
 
 # Regex range of Cyrillic characters.
-cyrillic_char_range = u"Ѐ-џҊ-ԧꚀ-ꚗ"
+cyrillic_char_range = "Ѐ-џҊ-ԧꚀ-ꚗ"
 # Regex for a word ending in a possibly-accented Cyrillic char.
 ends_in_cyrillic_re = r"[%s][" % cyrillic_char_range + AC + GR + "]?$"
 # Regex for a word beginning in a Cyrillic char.
 begins_in_cyrillic_re = r"^[%s]" % cyrillic_char_range
 
 # List of possible stem categories of adjectives where the first letter of
-# the ending is as specified. For example, the entry for u"ы" means that any
+# the ending is as specified. For example, the entry for "ы" means that any
 # ending found that starts in ы (e.g. -ый, -ым, -ыми, -ых) can occur only in
 # hard-stem adjectives or ц-stem adjectives. This is used to derive the
 # corresponding lemma, in this case by adding -ий if the stem ends in ц and
@@ -232,14 +232,14 @@ begins_in_cyrillic_re = r"^[%s]" % cyrillic_char_range
 # in a consonant or in -а, -я, -о, -е, -ы or -и can potentially be a short
 # form of an adjective).
 adj_endings_first_letter = {
-  u"о": ["hard", "hush-acc", "velar"],
-  u"е": ["soft", "hush-unacc", "ts"],
-  u"а": ["hard", "velar", "hush-acc", "hush-unacc", "ts"],
-  u"я": ["soft"],
-  u"ы": ["hard", "ts"],
-  u"и": ["soft", "velar", "hush-acc", "hush-unacc"],
-  u"у": ["hard", "velar", "hush-acc", "hush-unacc", "ts"],
-  u"ю": ["soft"],
+  "о": ["hard", "hush-acc", "velar"],
+  "е": ["soft", "hush-unacc", "ts"],
+  "а": ["hard", "velar", "hush-acc", "hush-unacc", "ts"],
+  "я": ["soft"],
+  "ы": ["hard", "ts"],
+  "и": ["soft", "velar", "hush-acc", "hush-unacc"],
+  "у": ["hard", "velar", "hush-acc", "hush-unacc", "ts"],
+  "ю": ["soft"],
 }
 
 # Check if a piece of text is missing one or more accents. The algorithm is
@@ -248,7 +248,7 @@ adj_endings_first_letter = {
 def check_need_accent(text):
   for word in re.split(" +", text):
     word = blib.remove_links(word)
-    if AC in word or u"ё" in word:
+    if AC in word or "ё" in word:
       continue
     if not rulib.is_monosyllabic(word):
       return True
@@ -273,36 +273,36 @@ def terms_match(ru1, ru2):
 
 # For a possible adjective form, return the lemmas that it might belong to.
 def get_adj_form_lemmas(form):
-  if re.search(u"(ье|ья|ьи|ью)$", form):
+  if re.search("(ье|ья|ьи|ью)$", form):
     bases = [form[:-2]]
     types = ["poss"]
-  elif re.search(u"(ьей|ьих|ьим|ьею|ьем)$", form):
+  elif re.search("(ьей|ьих|ьим|ьею|ьем)$", form):
     bases = [form[:-3]]
     types = ["poss"]
-  elif re.search(u"(ьего|ьему|ьими)$", form):
+  elif re.search("(ьего|ьему|ьими)$", form):
     bases = [form[:-4]]
     types = ["poss"]
-  elif re.search(u"(ое|ее|ая|яя|ые|ие|ой|ей|ых|их|ым|им|ую|юю|ою|ею|ом|ем)$", form):
+  elif re.search("(ое|ее|ая|яя|ые|ие|ой|ей|ых|их|ым|им|ую|юю|ою|ею|ом|ем)$", form):
     bases = [form[:-2]]
     types = adj_endings_first_letter[form[-2]]
-  elif re.search(u"(ого|его|ому|ему|ыми|ими)$", form):
+  elif re.search("(ого|его|ому|ему|ыми|ими)$", form):
     bases = [form[:-3]]
     types = adj_endings_first_letter[form[-3]]
   # For the moment, only do short participles, not all short adjectives.
-  elif re.search(u"[ёеая]н$", form):
-    bases = [form, form + u"н"]
+  elif re.search("[ёеая]н$", form):
+    bases = [form, form + "н"]
     types = ["hard"]
-  elif re.search(u"[еая]н[аоы]$", form):
+  elif re.search("[еая]н[аоы]$", form):
     base1 = form[:-1]
-    base2 = re.sub(u"ен$", u"ён", base1)
-    bases = [base1 + u"н"]
+    base2 = re.sub("ен$", "ён", base1)
+    bases = [base1 + "н"]
     if base2 != base1:
-      bases.extend([base2 + u"н"])
+      bases.extend([base2 + "н"])
     types = ["hard"]
-  elif re.search(u"[еи]м$", form):
+  elif re.search("[еи]м$", form):
     bases = form
     types = ["hard"]
-  elif re.search(u"[еи]м[аоы]$", form):
+  elif re.search("[еи]м[аоы]$", form):
     bases = [form[:-1]]
     types = ["hard"]
   else:
@@ -312,29 +312,29 @@ def get_adj_form_lemmas(form):
     if not base:
       continue
     if "poss" in types:
-      lemmas.append(base + u"ий")
-    elif base[-1] == u"ц":
+      lemmas.append(base + "ий")
+    elif base[-1] == "ц":
       if "ts" in types:
-        lemmas.append(base + u"ый")
-        if not form.endswith(u"ой"):
-          lemmas.append(base + u"ой")
-    elif base[-1] in u"шжчщ":
+        lemmas.append(base + "ый")
+        if not form.endswith("ой"):
+          lemmas.append(base + "ой")
+    elif base[-1] in "шжчщ":
       if "hush-unacc" in types:
-        lemmas.append(base + u"ий")
-      if "hush-acc" in types and not form.endswith(u"ой"):
-        lemmas.append(base + u"ой")
-    elif base[-1] in u"кгх":
+        lemmas.append(base + "ий")
+      if "hush-acc" in types and not form.endswith("ой"):
+        lemmas.append(base + "ой")
+    elif base[-1] in "кгх":
       if "velar" in types:
-        lemmas.append(base + u"ий")
-        if not form.endswith(u"ой"):
-          lemmas.append(base + u"ой")
+        lemmas.append(base + "ий")
+        if not form.endswith("ой"):
+          lemmas.append(base + "ой")
     else:
       if "hard" in types:
-        lemmas.append(base + u"ый")
-        if not form.endswith(u"ой"):
-          lemmas.append(base + u"ой")
+        lemmas.append(base + "ый")
+        if not form.endswith("ой"):
+          lemmas.append(base + "ой")
       if "soft" in types:
-        lemmas.append(base + u"ий")
+        lemmas.append(base + "ий")
     # no end-accented soft adjectives
   return lemmas
 
@@ -606,7 +606,7 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
       # than just accents. This occurs most commonly in the manual-override
       # entries such as кому-л -> кому́-либо, so don't warn in that case, but
       # otherwise do so.
-      if u"ё" in newterm and (rulib.remove_accents(newterm.replace(u"ё", u"е")) ==
+      if "ё" in newterm and (rulib.remove_accents(newterm.replace("ё", "е")) ==
           rulib.remove_accents(term)):
         # Allow mismatch in ё vs. е because we handle ru-*-alt-ё templates
         # in lookup_heads_and_inflections.
@@ -620,9 +620,9 @@ def lookup_term_for_accents(term, termtr, verbose, pagemsg, expect_cap):
         # "&#48;". But we don't want this going into links/usexes/etc.
         keep_existing = True
     else:
-      if AC in term or u"ё" in term:
+      if AC in term or "ё" in term:
         keep_existing = True
-        pagemsg(u"lookup_term_for_accents: Term has accent or ё, not replacing accents: %s" % term)
+        pagemsg("lookup_term_for_accents: Term has accent or ё, not replacing accents: %s" % term)
       if rulib.is_monosyllabic(term):
         keep_existing = True
         pagemsg("lookup_term_for_accents: Term is monosyllabic, no need for accents: %s" % term)
@@ -754,7 +754,7 @@ def find_accented_split_words(term, termtr, words, trwords, verbose, pagetitle,
             #     where the capitalized word is should not be looked up
             #     lowercase).
             expect_cap and i == 1 or (
-              re.search(u"(> *|“|\"|[/.…!:—}]  ?)$", words[i - 1]) and
+              re.search("(> *|“|\"|[/.…!:—}]  ?)$", words[i - 1]) and
               not (i >= 2 and len(words[i - 2]) == 1 and words[i - 2].isupper())
             ))
         if "," in tr:

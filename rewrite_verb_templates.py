@@ -54,7 +54,7 @@ def rewrite_one_page_verb_headword(page, index, text):
   return text, changelog
 
 def rewrite_verb_headword(save, startFrom, upTo):
-  for cat in [u"Arabic verbs"]:
+  for cat in ["Arabic verbs"]:
     for index, page in blib.cat_articles(cat, startFrom, upTo):
       blib.do_edit(page, index, rewrite_one_page_verb_headword, save=save)
 

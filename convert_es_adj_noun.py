@@ -8,19 +8,19 @@ import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
 remove_stress = {
-  u"á": "a",
-  u"é": "e",
-  u"í": "i",
-  u"ó": "o",
-  u"ú": "u",
+  "á": "a",
+  "é": "e",
+  "í": "i",
+  "ó": "o",
+  "ú": "u",
 }
 
 add_stress = {
-  "a": u"á",
-  "e": u"é",
-  "i": u"í",
-  "o": u"ó",
-  "u": u"ú",
+  "a": "á",
+  "e": "é",
+  "i": "í",
+  "o": "ó",
+  "u": "ú",
 }
 
 prepositions = {
@@ -35,7 +35,7 @@ prepositions = {
   "por ",
 }
 
-TEMPCHAR = u"\uFFF1"
+TEMPCHAR = "\uFFF1"
 
 old_adj_template = "es-adj-old"
 #old_adj_template = "es-adj"
@@ -48,15 +48,15 @@ def make_plural(form, special=None):
     return None
   
   # ends in unstressed vowel or á, é, ó
-  if re.search(u"[aeiouáéó]$", form):
+  if re.search("[aeiouáéó]$", form):
     return [form + "s"]
   
   # ends in í or ú
-  if re.search(u"[íú]$", form):
+  if re.search("[íú]$", form):
     return [form + "s", form + "es"]
   
   # ends in a vowel + z
-  if re.search(u"[aeiouáéíóú]z$", form):
+  if re.search("[aeiouáéíóú]z$", form):
     return [re.sub("z$", "ces", form)]
   
   # ends in tz
@@ -66,7 +66,7 @@ def make_plural(form, special=None):
   vowels = []
   # Replace qu before e or i so that the u isn't counted as a vowel.
   modified_form = re.sub("qu([ie])", TEMPCHAR + r"\1", form)
-  for m in re.finditer(u"([aeiouáéíóú])", modified_form):
+  for m in re.finditer("([aeiouáéíóú])", modified_form):
     vowels.append(m.group(1))
   
   # ends in s or x with more than 1 syllable, last syllable unstressed
@@ -74,11 +74,11 @@ def make_plural(form, special=None):
     return [form]
   
   # ends in l, r, n, d, z, or j with 3 or more syllables, accented on third to last syllable
-  if len(vowels) >= 3 and re.search("[lrndzj]$", form) and re.search(u"[áéíóú]", vowels[-3]):
+  if len(vowels) >= 3 and re.search("[lrndzj]$", form) and re.search("[áéíóú]", vowels[-3]):
     return [form]
   
   # ends in a stressed vowel + consonant
-  if re.search(u"[áéíóú][^aeiouáéíóú]$", form):
+  if re.search("[áéíóú][^aeiouáéíóú]$", form):
     return [re.sub("(.)(.)$", lambda m: remove_stress[m.group(1)] + m.group(2) + "es", form)]
   
   # ends in a vowel + y, l, r, n, d, j, s, x
@@ -99,7 +99,7 @@ def make_plural(form, special=None):
     return [form + "es"]
   
   # ends in two consonants
-  if re.search(u"[^aeiouáéíóú][^aeiouáéíóú]$", form):
+  if re.search("[^aeiouáéíóú][^aeiouáéíóú]$", form):
     return [form + "s"]
   
   # ends in a vowel + consonant other than l, r, n, d, z, j, s, or x
@@ -126,7 +126,7 @@ def make_feminine(form, special=None):
       form
     )
   
-  if re.search(u"([áíó]n|[éí]s|[dtszxñ]or|ol)$", form):
+  if re.search("([áíó]n|[éí]s|[dtszxñ]or|ol)$", form):
     # holgazán, comodín, bretón (not común); francés, kirguís (not mandamás);
     # volador, agricultor, defensor, avizor, flexor, señor (not posterior, bicolor, mayor, mejor, menor, peor);
     # español, mongol

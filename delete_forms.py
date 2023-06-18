@@ -63,7 +63,7 @@ def process_decl(index, pagetitle, decl, forms, save, verbose):
                 pagemsg("Would delete page %s with comment=%s" %
                     (formpagename, comment))
 
-parser = blib.create_argparser(u"Delete erroneously created forms")
+parser = blib.create_argparser("Delete erroneously created forms")
 parser.add_argument("--declfile", help="File containing declensions to expand to get forms.")
 parser.add_argument("--forms", help="Form codes of forms to delete.")
 args = parser.parse_args()

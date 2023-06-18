@@ -17,9 +17,9 @@ all_suffixes = ["e", "es", "ons", "ez", "ent",
     "ais", "ait", "ions", "iez", "aient",
     "erai", "eras", "era", "erons", "erez", "eront",
     "erais", "erait", "erions", "eriez", "eraient",
-    "ai", "as", "a", u"âmes", u"âtes", u"èrent",
-    "asse", "asses", u"ât", "assions", "assiez", "assent",
-    "ant", u"é"]
+    "ai", "as", "a", "âmes", "âtes", "èrent",
+    "asse", "asses", "ât", "assions", "assiez", "assent",
+    "ant", "é"]
 
 def process_er_verb(index, pagetitle, save, verbose, doall):
   def pagemsg(txt):
@@ -61,7 +61,7 @@ def process_er_verb(index, pagetitle, save, verbose, doall):
             pagemsg("Would delete page '%s' with comment=%s" %
                 (form, comment))
 
-parser = blib.create_argparser(u"Delete erroneously created French -er verb forms")
+parser = blib.create_argparser("Delete erroneously created French -er verb forms")
 parser.add_argument("--declfile", help="File containing verbs to delete.")
 parser.add_argument("--all-suffixes", action="store_true",
     help="If specifies, do all conjugational suffixes rather than just those using the stressed or future stem.")

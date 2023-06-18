@@ -189,10 +189,10 @@ while True:
     altyoparts = do_split(":", els[1])
     assert len(altyoparts) in [2, 3]
     pos_to_altyo = {
-      "n": u"ru-noun-alt-ё",
-      "pn": u"ru-proper noun-alt-ё",
-      "adj": u"ru-adj-alt-ё",
-      "v": u"ru-verb-alt-ё"
+      "n": "ru-noun-alt-ё",
+      "pn": "ru-proper noun-alt-ё",
+      "adj": "ru-adj-alt-ё",
+      "v": "ru-verb-alt-ё"
     }
     if pos in pos_to_altyo:
       altyotemp = pos_to_altyo[pos]
@@ -205,7 +205,7 @@ while True:
       assert pos in pos_to_full_pos
       fullpos = pos_to_full_pos[pos]
       if len(altyoparts) == 2:
-        yoline = u"{{ru-pos-alt-ё|%s|%s}}" % (altyoparts[1], fullpos.lower())
+        yoline = "{{ru-pos-alt-ё|%s|%s}}" % (altyoparts[1], fullpos.lower())
       else:
         error("With misc. part of speech, gender/aspect not supported")
     msg("""%s
@@ -216,7 +216,7 @@ while True:
 %s
 
 
-""" % (rulib.remove_accents(altyoparts[1]).replace(u"ё", u"е"),
+""" % (rulib.remove_accents(altyoparts[1]).replace("ё", "е"),
       pos_to_full_pos[pos], yoline))
     continue
 
@@ -250,7 +250,7 @@ while True:
   term = remove_links(term)
   declterm = "%s//%s" % (term, translit) if translit else term
   if pos == "adj":
-    assert re.search(u"((ый|ий|о́й)(ся)?|[оеё]́?в|и́?н)$", term)
+    assert re.search("((ый|ий|о́й)(ся)?|[оеё]́?в|и́?н)$", term)
   trtext = translit and "|tr=" + translit or ""
   check_stress(term)
 

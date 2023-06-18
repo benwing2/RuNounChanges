@@ -7,13 +7,13 @@ import unicodedata
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-GR = u"\u0300"
-unaccented_vowel = u"aeiouöüy"
-unaccented_vowel_not_a = u"eiouöüy"
+GR = "\u0300"
+unaccented_vowel = "aeiouöüy"
+unaccented_vowel_not_a = "eiouöüy"
 unaccented_vowel_c = "[" + unaccented_vowel + "]"
 # For whatever reason, there's a single character for ǜ but not for ö̀
-accented_vowel = u"àèéìòóùǜỳ" + GR # GR for ö̀
-accented_vowel_not_a = u"èéìòóùǜỳ" + GR # GR for ö̀
+accented_vowel = "àèéìòóùǜỳ" + GR # GR for ö̀
+accented_vowel_not_a = "èéìòóùǜỳ" + GR # GR for ö̀
 accented_vowel_c = "[" + accented_vowel + "]"
 vowel_c = "[" + unaccented_vowel + accented_vowel + "]"
 vowel_not_a_c = "[" + unaccented_vowel_not_a + accented_vowel_not_a + "]"
@@ -24,64 +24,64 @@ recognized_suffixes = [
   ("ment([eo])", r"mént\1"), # must precede -ente/o below
   ("ent([eo])", r"ènt\1"), # must follow -mente/o above
   # verbs
-  ("izzare", u"iddzàre"), # must precede -are below
-  ("izzarsi", u"iddzàrsi"), # must precede -arsi below
+  ("izzare", "iddzàre"), # must precede -are below
+  ("izzarsi", "iddzàrsi"), # must precede -arsi below
   ("([ai])re", r"\1" + GR + "re"), # must follow -izzare above
   ("([ai])rsi", r"\1" + GR + "rsi"), # must follow -izzarsi above
   # nouns
-  ("izzatore", u"iddzatóre"), # must precede -tore below
+  ("izzatore", "iddzatóre"), # must precede -tore below
   ("([st])ore", r"\1óre"), # must follow -izzatore above
-  ("izzatrice", u"iddzatrìce"), # must precede -trice below
-  ("trice", u"trìce"), # must follow -izzatrice above
-  ("izzazione", u"iddzatsióne"), # must precede -zione below
-  ("zione", u"tsióne"), # must precede -one below and follow -izzazione above
-  ("one", u"óne"), # must follow -zione above
-  ("acchio", u"àcchio"),
+  ("izzatrice", "iddzatrìce"), # must precede -trice below
+  ("trice", "trìce"), # must follow -izzatrice above
+  ("izzazione", "iddzatsióne"), # must precede -zione below
+  ("zione", "tsióne"), # must precede -one below and follow -izzazione above
+  ("one", "óne"), # must follow -zione above
+  ("acchio", "àcchio"),
   ("acci([ao])", r"àcci\1"),
   ("([aiu])ggine", r"\1" + GR + "ggine"),
-  ("aggio", u"àggio"),
+  ("aggio", "àggio"),
   ("([ai])gli([ao])", r"\1" + GR + r"gli\2"),
   ("ai([ao])", r"ài\1"),
   ("([ae])nza", r"\1" + GR + "ntsa"),
-  ("ario", u"àrio"),
+  ("ario", "àrio"),
   ("([st])orio", r"\1òrio"),
   ("astr([ao])", r"àstr\1"),
   ("ell([ao])", r"èll\1"),
-  ("etta", u"étta"),
+  ("etta", "étta"),
   # do not include -etto, both ètto and étto are common
-  ("ezza", u"éttsa"),
-  ("ficio", u"fìcio"),
+  ("ezza", "éttsa"),
+  ("ficio", "fìcio"),
   ("ier([ao])", r"ièr\1"),
-  ("ifero", u"ìfero"),
-  ("ismo", u"ìsmo"),
-  ("ista", u"ìsta"),
+  ("ifero", "ìfero"),
+  ("ismo", "ìsmo"),
+  ("ista", "ìsta"),
   ("izi([ao])", r"ìtsi\1"),
-  ("logia", u"logìa"),
+  ("logia", "logìa"),
   # do not include -otto, both òtto and ótto are common
-  ("tudine", u"tùdine"),
-  ("ura", u"ùra"),
+  ("tudine", "tùdine"),
+  ("ura", "ùra"),
   ("([^aeo])uro", r"\1ùro"),
   # adjectives
-  ("izzante", u"iddzànte"), # must precede -ante below
-  ("ante", u"ànte"), # must follow -izzante above
-  ("izzando", u"iddzàndo"), # must precede -ando below
+  ("izzante", "iddzànte"), # must precede -ante below
+  ("ante", "ànte"), # must follow -izzante above
+  ("izzando", "iddzàndo"), # must precede -ando below
   ("([ae])ndo", r"\1" + GR + "ndo"), # must follow -izzando above
   ("([ai])bile", r"\1" + GR + "bile"),
-  ("ale", u"àle"),
+  ("ale", "àle"),
   ("([aeiou])nico", r"\1" + GR + "nico"),
   ("([ai])stic([ao])", r"\1" + GR + r"stic\2"),
   # exceptions to the following: àbato, àcato, acròbata, àgata, apòstata, àstato, cìato, fégato, omeòpata,
   # sàb(b)ato, others?
   ("at([ao])", r"àt\1"),
   ("([ae])tic([ao])", r"\1" + GR + r"tic\2"),
-  ("ense", u"ènse"),
+  ("ense", "ènse"),
   ("esc([ao])", r"ésc\1"),
-  ("evole", u"évole"),
+  ("evole", "évole"),
   # FIXME: Systematic exceptions to the following in 3rd plural present tense verb forms
   ("ian([ao])", r"iàn\1"),
   ("iv([ao])", r"ìv\1"),
-  ("oide", u"òide"),
-  ("oso", u"óso"),
+  ("oide", "òide"),
+  ("oso", "óso"),
 ]
 
 unstressed_words = {
@@ -141,12 +141,12 @@ def apply_default_pronun(pronun):
           subbed_word = word
     if re.search(vowel_c + ".*ese$", hacked_word):
       append_msg("AUTO_ESE")
-      respelled_words.append(re.sub("ese$", u"ése", word))
-      traditional_respelled_words.append(re.sub("ese$", u"é[s]e", word))
+      respelled_words.append(re.sub("ese$", "ése", word))
+      traditional_respelled_words.append(re.sub("ese$", "é[s]e", word))
     elif re.search(vowel_c + ".*oso$", hacked_word):
       append_msg("AUTO_OSO")
-      respelled_words.append(re.sub("oso$", u"óso", word))
-      traditional_respelled_words.append(re.sub("oso$", u"ó[s]o", word))
+      respelled_words.append(re.sub("oso$", "óso", word))
+      traditional_respelled_words.append(re.sub("oso$", "ó[s]o", word))
     else:
       respelled_words.append(subbed_word)
       traditional_respelled_words.append(subbed_word)
@@ -155,15 +155,15 @@ def apply_default_pronun(pronun):
       append_msg("S_BETWEEN_VOWELS")
     if re.search(r"(^|[^d\[])z", hacked_subbed):
       append_msg("Z")
-    if re.search(u"%si(%s|$)" % (vowel_c, non_vowel_c), hacked_subbed):
+    if re.search("%si(%s|$)" % (vowel_c, non_vowel_c), hacked_subbed):
       append_msg("FALLING_IN_I")
-    if re.search(u"%su(%s|$)" % (vowel_not_a_c, non_vowel_c), hacked_subbed): # not au, àu
+    if re.search("%su(%s|$)" % (vowel_not_a_c, non_vowel_c), hacked_subbed): # not au, àu
       append_msg("FALLING_IN_U")
     hacked_subbed = re.sub("([gq])u", r"\1w", hacked_subbed)
     hacked_subbed = hacked_subbed.replace("gli", "gl")
     hacked_subbed = re.sub("([cg])i", r"\1", hacked_subbed)
     hacked_subbed = hacked_subbed.replace("qu", "Q")
-    if re.search(u"%s[iu]%s" % (non_vowel_c, vowel_c), hacked_subbed):
+    if re.search("%s[iu]%s" % (non_vowel_c, vowel_c), hacked_subbed):
       append_msg("HIATUS")
   respelled_term = "_".join(respelled_words)
   traditional_respelled_term = "_".join(traditional_respelled_words)

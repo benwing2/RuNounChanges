@@ -64,7 +64,7 @@ def process_text_on_page(index, pagetitle, pagetext):
         langs.append(blib.languages_byCanonicalName[langname]["code"])
   pagemsg("Langs=%s" % ",".join(langs))
 
-parser = blib.create_argparser(u"Find red links", include_pagefile=True,
+parser = blib.create_argparser("Find red links", include_pagefile=True,
   include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

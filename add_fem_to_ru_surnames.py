@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 non_adjectival_names = [
-  u"Дарвин"
+  "Дарвин"
 ]
 
 def process_page(page, index, parsed):
@@ -38,18 +38,18 @@ def process_page(page, index, parsed):
       if not (not getparam(t, 2) or getparam(t, "2") == "+" and not getparam(t, "3")):
         pagemsg("WARNING: Complex proper noun header, not sure how to handle: %s" % str(t))
       else:
-        if re.search(u"([оеё]́?в|и́?н)$", name):
-          new_fem = name + u"а"
-        elif re.search(u"ый$", name):
-          new_fem = re.sub(u"ый$", u"ая", name)
-        elif re.search(u"о́й$", name):
-          new_fem = re.sub(u"о́й$", u"а́я", name)
-        elif re.search(u"[кгхчшжщ]ий$", name):
-          new_fem = re.sub(u"ий$", u"ая", name)
+        if re.search("([оеё]́?в|и́?н)$", name):
+          new_fem = name + "а"
+        elif re.search("ый$", name):
+          new_fem = re.sub("ый$", "ая", name)
+        elif re.search("о́й$", name):
+          new_fem = re.sub("о́й$", "а́я", name)
+        elif re.search("[кгхчшжщ]ий$", name):
+          new_fem = re.sub("ий$", "ая", name)
         else:
           new_fem = None
-          if re.search(u"ий$", name):
-            pagemsg(u"WARNING: Name ending in non-velar/hushing consonant + -ий: %s" % str(t))
+          if re.search("ий$", name):
+            pagemsg("WARNING: Name ending in non-velar/hushing consonant + -ий: %s" % str(t))
         if new_fem:
           if getparam(t, "2") != "+":
             pagemsg("WARNING: Adjectival name not correctly conjugated in headword, fixing: %s" % str(t))

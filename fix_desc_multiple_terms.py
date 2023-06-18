@@ -63,8 +63,8 @@ def process_text_on_page(index, pagetitle, pagetext):
     origtext = m.group(0)
 
     if "{{desc|" not in langname:
-      if u"→" in spacing1:
-        spacing1 = re.sub(u"→ *", "", spacing1)
+      if "→" in spacing1:
+        spacing1 = re.sub("→ *", "", spacing1)
         langname = "{{desc|sh|-|bor=1}}"
       else:
         langname = "{{desc|sh|-}}"

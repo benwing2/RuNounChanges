@@ -65,9 +65,9 @@ def process_text_on_page(index, pagetitle, text):
       saw_paired_verb = False
       printed_msg = False
       heads = blib.fetch_param_chain(t, "1", "head") or [pagetitle]
-      refl = heads[0].endswith(u"ся") or heads[0].endswith(u"сь")
+      refl = heads[0].endswith("ся") or heads[0].endswith("сь")
       if refl:
-        m = re.search(u"^(.*)(с[яь])$", heads[0])
+        m = re.search("^(.*)(с[яь])$", heads[0])
         assert m
         transverb_no_passive = (False if (saw_passive or saw_bad_passive)
           else is_transitive_verb(rulib.remove_accents(m.group(1)), pagemsg, errandpagemsg))
@@ -90,18 +90,18 @@ def process_text_on_page(index, pagetitle, text):
           printed_msg = True
       if getparam(t, "2").startswith("pf"):
         prefixes = [
-          u"взъ", u"вз", u"вс", u"возъ", u"воз", u"вос", u"вы́",
-          u"въ", u"в",
-          u"до", u"за", u"изъ", u"из", u"ис", u"на",
-          u"объ", u"об", u"отъ", u"от", u"о",
-          u"пере", u"подъ", u"под", u"по", u"предъ", u"пред", u"пре",
-          u"при", u"про",
-          u"разъ", u"раз", u"рас", u"съ", u"с", u"у"
+          "взъ", "вз", "вс", "возъ", "воз", "вос", "вы́",
+          "въ", "в",
+          "до", "за", "изъ", "из", "ис", "на",
+          "объ", "об", "отъ", "от", "о",
+          "пере", "подъ", "под", "по", "предъ", "пред", "пре",
+          "при", "про",
+          "разъ", "раз", "рас", "съ", "с", "у"
         ]
         for break_reflexives in [False, True]:
           head = heads[0]
           if break_reflexives:
-            if not head.endswith(u"ся") and not head.endswith(u"сь"):
+            if not head.endswith("ся") and not head.endswith("сь"):
               break
             reflsuf = "+-" + head[-2:] # fetch reflexive suffix
             head = head[:-2] # drop reflexive suffix
@@ -111,7 +111,7 @@ def process_text_on_page(index, pagetitle, text):
             m = re.match("^(%s)(.*)$" % prefix, head)
             if m:
               base = rulib.remove_monosyllabic_accents(
-                re.sub(u"^ы", u"и", m.group(2))
+                re.sub("^ы", "и", m.group(2))
               )
               if rulib.remove_accents(base) in lemmas:
                 base_to_do = base
@@ -120,8 +120,8 @@ def process_text_on_page(index, pagetitle, text):
               else:
                 base_to_do = None
               if base_to_do:
-                prefix = prefix.replace(u"ъ", "")
-                if m.group(1) == u"вы́":
+                prefix = prefix.replace("ъ", "")
+                if m.group(1) == "вы́":
                   need_accent = "-NEED-ACCENT"
                 else:
                   need_accent = ""

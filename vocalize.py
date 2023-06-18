@@ -95,7 +95,7 @@ def vocalize_head(pagetitle, index, template):
         # for new heads, only use existing head in 1= if ends with -un (tanwīn),
         # because many of the existing 1= values are vocalized according to the
         # first transliterated entry in the list and won't work with the others
-        if not head.endswith(u"\u064C"):
+        if not head.endswith("\u064C"):
           head = pagetitle
       else:
         head = pagetitle
@@ -167,9 +167,9 @@ def vocalize_one_page_headwords(pagetitle, index, text):
 def vocalize_headwords(save, verbose, startFrom, upTo):
   def process_page(page, index, text):
     return vocalize_one_page_headwords(str(page.title()), index, text)
-  #for page in blib.references(u"Template:tracking/ar-head/head", startFrom, upTo):
+  #for page in blib.references("Template:tracking/ar-head/head", startFrom, upTo):
   #for page in blib.references("Template:ar-nisba", startFrom, upTo):
-  for cat in [u"Arabic lemmas", u"Arabic non-lemma forms"]:
+  for cat in ["Arabic lemmas", "Arabic non-lemma forms"]:
     for index, page in blib.cat_articles(cat, startFrom, upTo):
       blib.do_edit(page, index, process_page, save=save, verbose=verbose)
 

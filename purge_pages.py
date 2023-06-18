@@ -6,7 +6,7 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site
 
-parser = blib.create_argparser(u"Purge (null-save) pages in category or references",
+parser = blib.create_argparser("Purge (null-save) pages in category or references",
   include_pagefile=True)
 parser.add_argument('--ignore-non-mainspace', help="Ignore pages not in the mainspace",
     action="store_true")

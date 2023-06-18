@@ -132,7 +132,7 @@ def process_text_on_page(index, pagetitle, text):
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Rewrite {{projectlink}}", include_pagefile=True, include_stdin=True)
+parser = blib.create_argparser("Rewrite {{projectlink}}", include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

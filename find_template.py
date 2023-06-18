@@ -95,20 +95,20 @@ def process_text_on_page(index, pagetitle, text, templates, paramspecs, negate, 
 parser = blib.create_argparser("Find templates with specified params",
     include_pagefile=True, include_stdin=True)
 parser.add_argument("--templates",
-    help=u"""Comma-separated list of templates to check params of.""")
+    help="""Comma-separated list of templates to check params of.""")
 parser.add_argument("--params",
-    help=u"""Comma-separated list of params to check for.
+    help="""Comma-separated list of params to check for.
 Normally, will output a template if it has any of the specified parameters.
 Can be of the form PARAM=VALUE to only find cases where the parameter has a
 specific value, or PARAM!=VALUE to only find cases where the parameter doesn't
 have a specific value. If omitted, output all templates.""")
 parser.add_argument("--count",
-    help=u"""Comma-separated list of params to count values of. If '*', count all params.""")
+    help="""Comma-separated list of params to count values of. If '*', count all params.""")
 parser.add_argument("--negate",
-    help=u"""Check if any params NOT in '--params' are present.""",
+    help="""Check if any params NOT in '--params' are present.""",
     action="store_true")
 parser.add_argument("--from-to",
-    help=u"""Output in from-to format for use with push_manual_changes.py.""",
+    help="""Output in from-to format for use with push_manual_changes.py.""",
     action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

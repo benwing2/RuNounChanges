@@ -31,7 +31,7 @@ pages_pos = {}
 # split on that symbol.
 def split_words(pagename, capture_delims):
   pagename = re.sub(r"\s*([,–—])\s*", r" \1 ", pagename)
-  return re.split(u"([ -]+)" if capture_delims else u"[ -]+",
+  return re.split("([ -]+)" if capture_delims else "[ -]+",
       re.sub("[!?]$", "", pagename))
 
 # For the given multiword noun lemma and ru-noun-table declension template,
@@ -154,15 +154,15 @@ def process_text_on_page(index, pagetitle, text):
   titlewords = split_words(pagetitle, True)
   saw_e = False
   for word in titlewords:
-    if word.endswith(u"е") and not rulib.is_monosyllabic(word):
+    if word.endswith("е") and not rulib.is_monosyllabic(word):
       saw_e = True
       break
   if not saw_e:
-    pagemsg(u"No possible final unstressed -е in page title, skipping")
+    pagemsg("No possible final unstressed -е in page title, skipping")
     return
 
   #if (" " in pagetitle or "-" in pagetitle) and not override_pos:
-  #  pagemsg(u"WARNING: Space or hyphen in page title and probable final unstressed -е, not sure how to handle yet")
+  #  pagemsg("WARNING: Space or hyphen in page title and probable final unstressed -е, not sure how to handle yet")
   #  return
 
   foundrussian = False
@@ -202,8 +202,8 @@ def process_text_on_page(index, pagetitle, text):
                   if rulib.is_monosyllabic(phonword):
                     pagemsg("Skipping monosyllabic pronun %s (#%s) in section %s: %s" %
                         (phonword, wordno, k//2, str(t)))
-                  elif not phonword.endswith(u"е"):
-                    pagemsg(u"Skipping pronun word %s (#%s) in section %s because doesn't end in -е" %
+                  elif not phonword.endswith("е"):
+                    pagemsg("Skipping pronun word %s (#%s) in section %s because doesn't end in -е" %
                         (phonword, wordno, k//2))
                   else:
                     pagemsg("Found template that will be modified due to phonword %s (#%s) in section %s: %s" %
@@ -217,18 +217,18 @@ def process_text_on_page(index, pagetitle, text):
                   if rulib.is_monosyllabic(phonword):
                     pagemsg("Skipping monosyllabic pronun %s (#%s) in section %s: %s" %
                         (phonword, wordno, k//2, str(t)))
-                  elif not titleword.endswith(u"е"):
-                    pagemsg(u"Skipping title word %s (#%s) in section %s because doesn't end in -е" %
+                  elif not titleword.endswith("е"):
+                    pagemsg("Skipping title word %s (#%s) in section %s because doesn't end in -е" %
                         (titleword, wordno, k//2))
-                  elif re.search(u"([еия]|цы|е̂|[кгхцшжщч]а)" + rulib.DOTABOVE + "?$", phonword):
+                  elif re.search("([еия]|цы|е̂|[кгхцшжщч]а)" + rulib.DOTABOVE + "?$", phonword):
                     pagemsg("Found template that will be modified due to phonword %s, titleword %s (#%s) in section %s: %s" %
                         (phonword, titleword, wordno, k//2, str(t)))
                     subsections_with_ru_ipa_to_fix.add(k)
-                  elif not re.search(u"[еэѐ][" + rulib.AC + rulib.GR + rulib.CFLEX + rulib.DUBGR + "]?$", phonword):
-                    pagemsg(u"WARNING: ru-IPA pronunciation word %s (#%s) doesn't end in [еэия] or е̂ or hard sibilant + [ыа] when corresponding titleword %s ends in -е, something wrong in section %s: %s" %
+                  elif not re.search("[еэѐ][" + rulib.AC + rulib.GR + rulib.CFLEX + rulib.DUBGR + "]?$", phonword):
+                    pagemsg("WARNING: ru-IPA pronunciation word %s (#%s) doesn't end in [еэия] or е̂ or hard sibilant + [ыа] when corresponding titleword %s ends in -е, something wrong in section %s: %s" %
                         (phonword, wordno, titleword, k//2, str(t)))
                   else:
-                    pagemsg(u"Pronun word %s (#%s) with final -э or stressed vowel, ignoring in section %s: %s" %
+                    pagemsg("Pronun word %s (#%s) with final -э or stressed vowel, ignoring in section %s: %s" %
                         (phonword, wordno, k//2, str(t)))
 
       if not subsections_with_ru_ipa:
@@ -415,7 +415,7 @@ def process_text_on_page(index, pagetitle, text):
 
           # If multiword term or potential adjectival term, can't trust
           # the part of speech coming from the above process
-          if (" " in pagetitle or "-" in pagetitle or re.search(u"[ыиео]́?е$", pagetitle)):
+          if (" " in pagetitle or "-" in pagetitle or re.search("[ыиео]́?е$", pagetitle)):
             if not is_lemma:
               pagemsg("WARNING: Can't determine whether lemma or not, skipping section")
               continue
@@ -424,7 +424,7 @@ def process_text_on_page(index, pagetitle, text):
               continue
             is_lemma = list(is_lemma)[0]
             if (" " in pagetitle or "-" in pagetitle) and is_lemma:
-              pagemsg(u"WARNING: Space or hyphen in lemma page title and probable final unstressed -e, not sure how to handle yet, skipping section")
+              pagemsg("WARNING: Space or hyphen in lemma page title and probable final unstressed -e, not sure how to handle yet, skipping section")
               continue
             # If is_lemma, we are a single-word adjective and will be handled
             # correctly by the above code
@@ -447,15 +447,15 @@ def process_text_on_page(index, pagetitle, text):
               need_to_continue = False
               # FIXME: Should we be using phonetic version of lemma?
               for wordno, (word, ty) in enumerate(zip(words, word_types)):
-                if word.endswith(u"е") and not rulib.is_monosyllabic(word):
+                if word.endswith("е") and not rulib.is_monosyllabic(word):
                   if ty == "inv":
                     if len(seen_pos_specs) > 1:
-                      pagemsg(u"WARNING: In multiword term %s, found word %s ending in -е and marked as invariable and lemma has ambiguous pos= params (%s), not sure what to do, skipping section" %
+                      pagemsg("WARNING: In multiword term %s, found word %s ending in -е and marked as invariable and lemma has ambiguous pos= params (%s), not sure what to do, skipping section" %
                           (pagetitle, word, ",".join(seen_pos_specs)))
                       need_to_continue = True
                       break
                     elif not seen_pos_specs:
-                      pagemsg(u"WARNING: In multiword term %s, found word %s ending in -е and marked as invariable and lemma has no pos= params, not sure what to do, skipping section" %
+                      pagemsg("WARNING: In multiword term %s, found word %s ending in -е and marked as invariable and lemma has no pos= params, not sure what to do, skipping section" %
                           (pagetitle, word))
                       need_to_continue = True
                       break
@@ -465,7 +465,7 @@ def process_text_on_page(index, pagetitle, text):
                       if len(seen_poses) == 1:
                         ty = seen_poses[0]
                       elif len(words) != len(seen_poses):
-                        pagemsg(u"WARNING: In multiword term %s, found word %s ending in -е and marked as invariable and lemma param pos=%s has wrong number of parts of speech, not sure what to do, skipping section" %
+                        pagemsg("WARNING: In multiword term %s, found word %s ending in -е and marked as invariable and lemma param pos=%s has wrong number of parts of speech, not sure what to do, skipping section" %
                             (pagetitle, word, seen_pos_spec))
                         need_to_continue = True
                         break
@@ -511,7 +511,7 @@ def process_text_on_page(index, pagetitle, text):
             else:
               phonwords = split_words(phon, True)
               for i in range(0, len(phonwords), 2):
-                if re.search(u"е$", phonwords[i]):
+                if re.search("е$", phonwords[i]):
                   saw_final_e[i] = True
 
         # Now modify the templates.
@@ -541,45 +541,45 @@ def process_text_on_page(index, pagetitle, text):
                   pass # Already output msg
                 elif mismatched_phon_title:
                   pass # Can't canonicalize template
-                elif not titleword.endswith(u"е"):
+                elif not titleword.endswith("е"):
                   pass # Already output msg
-                elif re.search(u"([еия]|цы|е̂|[кгхцшжщч]а)" + rulib.DOTABOVE + "?$", lphonword):
+                elif re.search("([еия]|цы|е̂|[кгхцшжщч]а)" + rulib.DOTABOVE + "?$", lphonword):
                   # Found a template to modify
-                  if re.search(u"е" + rulib.DOTABOVE + "?$", lphonword):
+                  if re.search("е" + rulib.DOTABOVE + "?$", lphonword):
                     pass # No need to canonicalize
                   else:
                     if saw_final_e.get(i, False):
-                      pagemsg(u"WARNING: Found another pronunciation with final -е, skipping: phon=%s (word #%s)" % (
+                      pagemsg("WARNING: Found another pronunciation with final -е, skipping: phon=%s (word #%s)" % (
                         phonword, wordno))
                       continue
-                    if re.search(u"и" + rulib.DOTABOVE + "?$", lphonword):
-                      pagemsg(u"phon=%s (word #%s) ends in -и, will modify to -е in section %s: %s" % (phonword, wordno, k//2, str(t)))
-                      notes.append(u"unstressed -и -> -е")
-                    elif re.search(u"е̂$", lphonword):
+                    if re.search("и" + rulib.DOTABOVE + "?$", lphonword):
+                      pagemsg("phon=%s (word #%s) ends in -и, will modify to -е in section %s: %s" % (phonword, wordno, k//2, str(t)))
+                      notes.append("unstressed -и -> -е")
+                    elif re.search("е̂$", lphonword):
                       # Make this a warning because we're not sure this is correct
-                      pagemsg(u"WARNING: phon=%s (word #%s) ends in -е̂, will modify to -е in section %s: %s" % (phonword, wordno, k//2, str(t)))
-                      notes.append(u"-е̂ -> -е")
-                    elif re.search(u"я" + rulib.DOTABOVE + "?$", lphonword):
-                      pagemsg(u"phon=%s (word #%s) ends in -я, will modify to -е in section %s: %s" % (phonword, wordno, k//2, str(t)))
-                      notes.append(u"unstressed -я -> -е")
-                    elif re.search(u"цы" + rulib.DOTABOVE + "?$", lphonword):
-                      pagemsg(u"phon=%s (word #%s) ends in ц + -ы, will modify to -е in section %s: %s" % (phonword, wordno, k//2, str(t)))
-                      notes.append(u"unstressed -ы after ц -> -е")
-                    elif re.search(u"[кгхцшжщч]а" + rulib.DOTABOVE + "?$", lphonword):
-                      pagemsg(u"phon=%s (word #%s) ends in unpaired cons + -а, will modify to -е in section %s: %s" % (phonword, wordno, k//2, str(t)))
-                      notes.append(u"unstressed -а after unpaired cons -> -е")
+                      pagemsg("WARNING: phon=%s (word #%s) ends in -е̂, will modify to -е in section %s: %s" % (phonword, wordno, k//2, str(t)))
+                      notes.append("-е̂ -> -е")
+                    elif re.search("я" + rulib.DOTABOVE + "?$", lphonword):
+                      pagemsg("phon=%s (word #%s) ends in -я, will modify to -е in section %s: %s" % (phonword, wordno, k//2, str(t)))
+                      notes.append("unstressed -я -> -е")
+                    elif re.search("цы" + rulib.DOTABOVE + "?$", lphonword):
+                      pagemsg("phon=%s (word #%s) ends in ц + -ы, will modify to -е in section %s: %s" % (phonword, wordno, k//2, str(t)))
+                      notes.append("unstressed -ы after ц -> -е")
+                    elif re.search("[кгхцшжщч]а" + rulib.DOTABOVE + "?$", lphonword):
+                      pagemsg("phon=%s (word #%s) ends in unpaired cons + -а, will modify to -е in section %s: %s" % (phonword, wordno, k//2, str(t)))
+                      notes.append("unstressed -а after unpaired cons -> -е")
                     else:
                       assert False, "Something wrong, strange ending, logic not correct: section %s, phon=%s (word #%s)" % (k//2, phonword, wordno)
-                    newphonword = re.sub(u"(?:[ияыа]|е̂)(" + rulib.DOTABOVE + "?)$", r"е\1", phonword)
-                    newphonword = re.sub(u"(?:[ИЯЫА]|Е̂)(" + rulib.DOTABOVE + "?)$", r"Е\1", newphonword)
+                    newphonword = re.sub("(?:[ияыа]|е̂)(" + rulib.DOTABOVE + "?)$", r"е\1", phonword)
+                    newphonword = re.sub("(?:[ИЯЫА]|Е̂)(" + rulib.DOTABOVE + "?)$", r"Е\1", newphonword)
                     pagemsg("Modified phon=%s (word #%s) to %s in section %s: %s" % (
                       phonword, wordno, newphonword, k//2, str(t)))
                     phonwords[i] = newphonword
               newphon = "".join(phonwords)
               if newphon != phon:
-                assert param != "pagetitle", u"Something wrong, page title should not have -и or similar that needs modification: section %s, phon=%s, newphon=%s" % (k//2, phon, newphon)
+                assert param != "pagetitle", "Something wrong, page title should not have -и or similar that needs modification: section %s, phon=%s, newphon=%s" % (k//2, phon, newphon)
                 if pos in ["voc", "inv", "pro"]:
-                  pagemsg(u"WARNING: pos=%s may be unstable or inconsistent in handling final -е, please check change of phon=%s to %s in section %s: %s" % (
+                  pagemsg("WARNING: pos=%s may be unstable or inconsistent in handling final -е, please check change of phon=%s to %s in section %s: %s" % (
                     pos, phon, newphon, k//2, str(t)))
                 pagemsg("Modified phon=%s to %s in section %s: %s" % (
                   phon, newphon, k//2, str(t)))
@@ -627,7 +627,7 @@ def process_text_on_page(index, pagetitle, text):
 
     return new_text, notes
 
-parser = blib.create_argparser(u"Add pos= to final -е ru-IPA, fix use of phonetic -и/-я",
+parser = blib.create_argparser("Add pos= to final -е ru-IPA, fix use of phonetic -и/-я",
   include_pagefile=True, include_stdin=True)
 parser.add_argument('--posfile', help="File containing parts of speech for pages, in the form of part of speech, space, page name, one per line")
 args = parser.parse_args()

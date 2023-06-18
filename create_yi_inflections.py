@@ -1561,25 +1561,25 @@ form will not be created even if specified, because it is the same as the
 dictionary/lemma form. Also, non-existent forms for particular adjectives
 will not be created.""")
 pa.add_argument("--lemmafile",
-    help=u"""File containing lemmas to process.""")
+    help="""File containing lemmas to process.""")
 pa.add_argument("--lemmas",
-    help=u"""Comma-separated list of lemmas to process.""")
+    help="""Comma-separated list of lemmas to process.""")
 pa.add_argument("--overwrite-lemmas",
-    help=u"""File containing list of lemmas where the current inflections are
+    help="""File containing list of lemmas where the current inflections are
 considered to have errors in them (e.g. due to the conjugation template having
 incorrect aspect) and thus should be overwritten. Entries are without
 accents.""")
 pa.add_argument("--lemmas-to-not-overwrite",
-    help=u"""File containing list of lemma pages, which should in general
+    help="""File containing list of lemma pages, which should in general
 be the entire set of lemmas. Any non-lemma form that would overwrite the
 Yiddish section (--overwrite-page) will not do so if the form is one of
 these pages. Entries are without accents.""")
 pa.add_argument("--overwrite-page", action="store_true",
-    help=u"""If specified, overwrite the entire existing page of inflections.
+    help="""If specified, overwrite the entire existing page of inflections.
 Won't do this if it finds "Etymology N", unless --overwrite-etymologies is
 given. WARNING: Be careful!""")
 pa.add_argument("--overwrite-etymologies", action="store_true",
-    help=u"""If specified and --overwrite-page, overwrite the entire existing
+    help="""If specified and --overwrite-page, overwrite the entire existing
 page of inflections even if "Etymology N". WARNING: Be careful!""")
 
 params = pa.parse_args()

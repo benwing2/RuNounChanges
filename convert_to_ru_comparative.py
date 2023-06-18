@@ -85,7 +85,7 @@ def process_page(page, index, parsed):
 
   return "".join(sections), notes
 
-parser = blib.create_argparser(u"Convert ru-adv to ru-compararative for comparatives",
+parser = blib.create_argparser("Convert ru-adv to ru-compararative for comparatives",
   include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

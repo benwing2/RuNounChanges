@@ -99,7 +99,7 @@ def process_text_on_page(index, pagetitle, text):
       m = re.search("^(.*?)(au|[aou])([^aeiouy]+)$", lemma)
       if m:
         # Umlautable adjectives: nass -> nässeren, gesund -> gesünderen, geraum -> geräumeren
-        umlauts = {"a": u"ä", "o": u"ö", "u": u"ü", "au": u"äu"}
+        umlauts = {"a": "ä", "o": "ö", "u": "ü", "au": "äu"}
         umlauted_lemma = m.group(1) + umlauts[m.group(2)] + m.group(3)
         lemmas_to_try.append(umlauted_lemma)
         # Add -e in case of nass -> nässesten
@@ -108,10 +108,10 @@ def process_text_on_page(index, pagetitle, text):
         # ranghoch -> ranghohen
         lemmas_to_try.append(lemma[0:-4] + "hoh")
         # ranghoch -> ranghöheren; ranghöchsten will be handled above
-        lemmas_to_try.append(lemma[0:-4] + u"höh")
+        lemmas_to_try.append(lemma[0:-4] + "höh")
       if re.search("nah$", lemma):
         # körpernah -> körpernächsten; körpernäheren will be handled above
-        lemmas_to_try.append(lemma[0:-3] + u"näch")
+        lemmas_to_try.append(lemma[0:-3] + "näch")
       if re.search("gut$", lemma):
         # gut -> besseren
         lemmas_to_try.append(lemma[0:-3] + "bess")
@@ -134,15 +134,15 @@ def process_text_on_page(index, pagetitle, text):
         elif pagetitle.startswith("meist"):
           # normal ending_sets_to_try works
           lemmas_to_try = ["mei"]
-      elif lemma.endswith(u"groß"):
+      elif lemma.endswith("groß"):
         # größer handled normally
-        if re.search(u"größte[mnrs]?$", pagetitle):
-          lemmas_to_try = [lemma[0:-4] + u"größt"]
+        if re.search("größte[mnrs]?$", pagetitle):
+          lemmas_to_try = [lemma[0:-4] + "größt"]
           ending_sets_to_try = [special_superlative_ending_tags]
       elif lemma.endswith("gross"):
         # grösser handled normally
-        if re.search(u"grösste[mnrs]?$", pagetitle):
-          lemmas_to_try = [lemma[0:-5] + u"grösst"]
+        if re.search("grösste[mnrs]?$", pagetitle):
+          lemmas_to_try = [lemma[0:-5] + "grösst"]
           ending_sets_to_try = [special_superlative_ending_tags]
       else:
         gut_prefixed = [

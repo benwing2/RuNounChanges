@@ -54,7 +54,7 @@ def process_page(page, index, parsed):
         notes.append("remove redundant mp=")
       expected_fem = (pagetitle if pagetitle.endswith("e")
           else pagetitle + "ne" if pagetitle.endswith("en")
-          else re.sub("er$", u"ère", pagetitle) if pagetitle.endswith("er")
+          else re.sub("er$", "ère", pagetitle) if pagetitle.endswith("er")
           else pagetitle + "le" if pagetitle.endswith("el")
           else pagetitle + "ne" if pagetitle.endswith("on")
           else pagetitle + "te" if pagetitle.endswith("et")

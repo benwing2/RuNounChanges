@@ -208,7 +208,7 @@ def correct_one_page_link_formatting(page, index, text):
   return text, "incorporated translit/gender into links: %s" % ', '.join(linkschanged)
 
 def correct_link_formatting(save, startFrom, upTo):
-  for cat in [u"Arabic lemmas", u"Arabic non-lemma forms"]:
+  for cat in ["Arabic lemmas", "Arabic non-lemma forms"]:
     for index, page in blib.cat_articles(cat, startFrom, upTo):
       blib.do_edit(page, index, correct_one_page_link_formatting, save=save)
 

@@ -7,71 +7,71 @@ import blib, pywikibot
 from blib import msg, getparam, addparam, rmparam, getrmparam, remove_links
 
 ru_noun_transl = [
-  [u"ru-noun-([12])", "", "stem-bare"],
-  [u"ru-noun-(2)-а", u"-а", "stem-bare"],
-  [u"ru-noun-(3)", "", "u-stem-bare-pagename"],
-  [u"ru-noun-(3)-а", u"-а", "u-stem-bare-pagename"],
-  [u"ru-noun-(5)", "", "u-stem-pagename"],
-  [u"ru-noun-а-([12])", u"а", "u-stem-u-bare"],
-  [u"ru-noun-а-(4)", u"а", "u-stem-u-bare-irregpl-irregaccsg"],
-  [u"ru-noun-а-(6)", u"а", "u-stem-bare"],
-  #u"ru-noun-ин", This needs to be special-cased,
-  [u"ru-noun-о-([123])", u"о", "u-stem-u-bare"],
-  [u"ru-noun-о-(4)", u"о", "u-stem-u-bare-irregpl"],
-  [u"ru-noun-е-(1)", u"е", "u-stem-u-bare"],
-  [u"ru-noun-е-(3)", u"е", "u-stem"],
-  [u"ru-noun-я-([12])", u"я", "u-stem-u-bare"],
-  [u"ru-noun-я-(4)", u"я", "u-stem-u-bare-irregpl-irregaccsg"],
-  [u"ru-noun-я-([56])", u"я", "u-stem"],
-  [u"ru-noun-ь-([1256])-m", u"ь-m", "u-stem-bare-pagename"],
-  [u"ru-noun-ь-(3)-m", u"ь-m", "u-stem"],
-  [u"ru-noun-vel-([124])", "", "u-stem-bare-pagename"],
-  #u"ru-noun-vel-3", This needs to be special-cased,
-  [u"ru-noun-vel-(5)", "", "u-stem"],
-  [u"ru-noun-vel-а-([12])", u"а", "u-stem-u-bare"],
-  [u"ru-noun-vel-а-(4)", u"а", "u-stem-u-bare-irregpl-irregaccsg"],
-  [u"ru-noun-vel-а-(6)", u"а", "u-stem-bare"],
-  [u"ru-noun-vel-о-([12])-и", u"о-и", "u-stem-u-bare"],
-  [u"ru-noun-sib-([123])", "", "u-stem-bare-pagename"],
-  [u"ru-noun-sib-(3)-а", "-а", "u-stem-bare-pagename"],
-  [u"ru-noun-sib-(5)", "", "u-stem-pagename"],
-  [u"ru-noun-sib-а-(1)", u"а", "u-stem-u-bare"],
-  [u"ru-noun-sib-а-(2)", u"а", "stem"],
-  [u"ru-noun-sib-а-(4)", u"а", "u-stem-u-bare-irregpl"],
-  [u"ru-noun-sib-а-(6)", u"а", "u-stem"],
-  [u"ru-noun-sib-е-(1)", u"о", "u-stem-u-bare"],
-  [u"ru-noun-ц-([12])", "", "u-stem-bare-pagename"],
-  [u"ru-noun-ца-(1)", u"а", "u-stem-u-bare"],
-  [u"ru-noun-це-([13])", u"о", "u-stem-u-bare"],
-  [u"ru-noun-й-([123])", u"й", "u-stem-bare"],
-  [u"ru-noun-ье-(1)", u"ье", "u-stem-u-bare"],
-  [u"ru-noun-ьё-([24])", u"ьё", "u-stem-u-bare"],
-  [u"ru-noun-ь-([15])-f", u"ь-f", "u-stem"],
-  [u"ru-noun-sib-ь-([15])-f", u"ь-f", "u-stem"],
-  [u"ru-noun-мя-(1)", u"мя-1", "u-stem"],
-  [u"ru-noun-мя-(3)", u"мя", "u-stem-u-bare"],
-  [u"ru-noun-ий", u"ий", "u-stem-minus-i", "1"],
-  [u"ru-noun-ия", u"ия", "u-stem-u-bare-minus-i", "1"],
-  [u"ru-noun-ие", u"ие", "u-stem-u-bare-minus-i", "1"],
-  [u"ru-noun-ие-2", u"ие", "u-stem-minus-i", "2"],
-  [u"ru-noun-иё", u"иё", "u-stem-u-minus-i", "1"],
-  #u"ru-noun-нок", This needs to be special-cased,
+  ["ru-noun-([12])", "", "stem-bare"],
+  ["ru-noun-(2)-а", "-а", "stem-bare"],
+  ["ru-noun-(3)", "", "u-stem-bare-pagename"],
+  ["ru-noun-(3)-а", "-а", "u-stem-bare-pagename"],
+  ["ru-noun-(5)", "", "u-stem-pagename"],
+  ["ru-noun-а-([12])", "а", "u-stem-u-bare"],
+  ["ru-noun-а-(4)", "а", "u-stem-u-bare-irregpl-irregaccsg"],
+  ["ru-noun-а-(6)", "а", "u-stem-bare"],
+  #"ru-noun-ин", This needs to be special-cased,
+  ["ru-noun-о-([123])", "о", "u-stem-u-bare"],
+  ["ru-noun-о-(4)", "о", "u-stem-u-bare-irregpl"],
+  ["ru-noun-е-(1)", "е", "u-stem-u-bare"],
+  ["ru-noun-е-(3)", "е", "u-stem"],
+  ["ru-noun-я-([12])", "я", "u-stem-u-bare"],
+  ["ru-noun-я-(4)", "я", "u-stem-u-bare-irregpl-irregaccsg"],
+  ["ru-noun-я-([56])", "я", "u-stem"],
+  ["ru-noun-ь-([1256])-m", "ь-m", "u-stem-bare-pagename"],
+  ["ru-noun-ь-(3)-m", "ь-m", "u-stem"],
+  ["ru-noun-vel-([124])", "", "u-stem-bare-pagename"],
+  #"ru-noun-vel-3", This needs to be special-cased,
+  ["ru-noun-vel-(5)", "", "u-stem"],
+  ["ru-noun-vel-а-([12])", "а", "u-stem-u-bare"],
+  ["ru-noun-vel-а-(4)", "а", "u-stem-u-bare-irregpl-irregaccsg"],
+  ["ru-noun-vel-а-(6)", "а", "u-stem-bare"],
+  ["ru-noun-vel-о-([12])-и", "о-и", "u-stem-u-bare"],
+  ["ru-noun-sib-([123])", "", "u-stem-bare-pagename"],
+  ["ru-noun-sib-(3)-а", "-а", "u-stem-bare-pagename"],
+  ["ru-noun-sib-(5)", "", "u-stem-pagename"],
+  ["ru-noun-sib-а-(1)", "а", "u-stem-u-bare"],
+  ["ru-noun-sib-а-(2)", "а", "stem"],
+  ["ru-noun-sib-а-(4)", "а", "u-stem-u-bare-irregpl"],
+  ["ru-noun-sib-а-(6)", "а", "u-stem"],
+  ["ru-noun-sib-е-(1)", "о", "u-stem-u-bare"],
+  ["ru-noun-ц-([12])", "", "u-stem-bare-pagename"],
+  ["ru-noun-ца-(1)", "а", "u-stem-u-bare"],
+  ["ru-noun-це-([13])", "о", "u-stem-u-bare"],
+  ["ru-noun-й-([123])", "й", "u-stem-bare"],
+  ["ru-noun-ье-(1)", "ье", "u-stem-u-bare"],
+  ["ru-noun-ьё-([24])", "ьё", "u-stem-u-bare"],
+  ["ru-noun-ь-([15])-f", "ь-f", "u-stem"],
+  ["ru-noun-sib-ь-([15])-f", "ь-f", "u-stem"],
+  ["ru-noun-мя-(1)", "мя-1", "u-stem"],
+  ["ru-noun-мя-(3)", "мя", "u-stem-u-bare"],
+  ["ru-noun-ий", "ий", "u-stem-minus-i", "1"],
+  ["ru-noun-ия", "ия", "u-stem-u-bare-minus-i", "1"],
+  ["ru-noun-ие", "ие", "u-stem-u-bare-minus-i", "1"],
+  ["ru-noun-ие-2", "ие", "u-stem-minus-i", "2"],
+  ["ru-noun-иё", "иё", "u-stem-u-minus-i", "1"],
+  #"ru-noun-нок", This needs to be special-cased,
 ]
 
 ending_for_ru_adj = {
-  "ru-adj1": u"ый",
-  "ru-adj2": u"ий",
-  "ru-adj3": u"ий",
-  "ru-adj4": u"ой",
-  "ru-adj5": u"ой",
-  "ru-adj6": u"ий",
-  "ru-adj7": u"ьий",
-  "ru-adj8": u"short",
-  "ru-adj9": u"mixed",
-  "ru-adj10": u"ый",
+  "ru-adj1": "ый",
+  "ru-adj2": "ий",
+  "ru-adj3": "ий",
+  "ru-adj4": "ой",
+  "ru-adj5": "ой",
+  "ru-adj6": "ий",
+  "ru-adj7": "ьий",
+  "ru-adj8": "short",
+  "ru-adj9": "mixed",
+  "ru-adj10": "ый",
   #"ru-adj11": (not yet supported)
-  "ru-adj12": u"ий",
-  "ru-adj13": u"ой",
+  "ru-adj12": "ий",
+  "ru-adj13": "ой",
 }
 
 def clean(value):
@@ -82,8 +82,8 @@ def clean(value):
     value = ""
   return value
 
-AC = u"\u0301"
-GR = u"\u0300"
+AC = "\u0301"
+GR = "\u0300"
 def remove_diacritics(text):
   text = text.replace(AC, "")
   text = text.replace(GR, "")
@@ -109,7 +109,7 @@ def rewrite_one_page_ru_decl_adj(page, index, text):
         t.name = "ru-adj1"
       suffix = None
       if tname() == "ru-adj3-sja":
-        suffix = u"ся"
+        suffix = "ся"
         t.name = "ru-adj3"
       elif tname() == "ru-adj5-suffix":
         suffix = "-" + getparam(t, "8")
@@ -136,19 +136,19 @@ def rewrite_one_page_ru_decl_adj(page, index, text):
           addparam(t, "1", getparam(t, "2").strip())
           addparam(t, "2", ending_for_ru_adj[tname()])
           mshort = clean(getparam(t, "3"))
-          if mshort and re.search(u"[аяоеыи]$", remove_diacritics(mshort)):
+          if mshort and re.search("[аяоеыи]$", remove_diacritics(mshort)):
             pagemsg("WARNING: short masculine %s doesn't have right ending" %
                 mshort)
           fshort = clean(getparam(t, "4"))
-          if fshort and not re.search(u"[ая]$", remove_diacritics(fshort)):
+          if fshort and not re.search("[ая]$", remove_diacritics(fshort)):
             pagemsg("WARNING: short feminine %s doesn't have right ending" %
                 fshort)
           nshort = clean(getparam(t, "5"))
-          if nshort and not re.search(u"[ое]$", remove_diacritics(nshort)):
+          if nshort and not re.search("[ое]$", remove_diacritics(nshort)):
             pagemsg("WARNING: short neuter %s doesn't have right ending" %
                 nshort)
           pshort = clean(getparam(t, "6"))
-          if pshort and not re.search(u"[ыи]$", remove_diacritics(pshort)):
+          if pshort and not re.search("[ыи]$", remove_diacritics(pshort)):
             pagemsg("WARNING: short plural %s doesn't have right ending" %
                 pshort)
           rmparam(t, "8")
@@ -199,26 +199,26 @@ def rewrite_one_page_ru_decl_noun(page, index, text):
     bare = ""
     accsg = ""
     locsg = ""
-    if tname() == u"ru-noun-ин":
+    if tname() == "ru-noun-ин":
       ustem = getrmparam(t, "1")
       stem = getrmparam(t, "2")
       full = getrmparam(t, "3")
       stem = stem or ustem
-      declclass = u"ин"
-      if stem + u"ин" == full:
+      declclass = "ин"
+      if stem + "ин" == full:
         accentclass = "1"
-      elif remove_diacritics(stem) + u"и́н" == full:
+      elif remove_diacritics(stem) + "и́н" == full:
         accentclass = "4"
       elif stem == full:
         accentclass = "1"
-        declclass = u"-е"
+        declclass = "-е"
       else:
         pagemsg("WARNING: Can't locate accent class for template: %s" %
             origtemplate)
         nochange = True
         break
       change = True
-    elif tname() == u"ru-noun-нок":
+    elif tname() == "ru-noun-нок":
       ustem = getrmparam(t, "1")
       stem = getrmparam(t, "2")
       uplural = getrmparam(t, "3")
@@ -226,27 +226,27 @@ def rewrite_one_page_ru_decl_noun(page, index, text):
       stem = stem or ustem
       plural = plural or uplural
       accentclass = "2"
-      if stem.endswith(u"ё"):
-        declclass = u"ёнок"
-        stem = re.sub(u"ё$", "", stem)
-      elif stem.endswith(u"о́"):
-        declclass = u"онок"
-        stem = re.sub(u"о́$", "", stem)
+      if stem.endswith("ё"):
+        declclass = "ёнок"
+        stem = re.sub("ё$", "", stem)
+      elif stem.endswith("о́"):
+        declclass = "онок"
+        stem = re.sub("о́$", "", stem)
       else:
         pagemsg("WARNING: Template stem ends weirdly: %s" % origtemplate)
         nochange = True
         break
-      if stem != re.sub(u"(я́|а́)$", "", plural):
+      if stem != re.sub("(я́|а́)$", "", plural):
         pagemsg("WARNING: Strange plural: %s" % origtemplate)
         nochange = True
         break
-      if (declclass == u"ёнок" and not plural.endswith(u"я́") or
-          declclass == u"онок" and not plural.endswith(u"а́")):
+      if (declclass == "ёнок" and not plural.endswith("я́") or
+          declclass == "онок" and not plural.endswith("а́")):
         pagemsg("WARNING: Unexpected plural ending for stem: %s" % origtemplate)
         nochange = True
         break
       change = True
-    elif tname() == u"ru-noun-vel-3":
+    elif tname() == "ru-noun-vel-3":
       ustem = getrmparam(t, "1")
       stem = getrmparam(t, "2")
       bare = getrmparam(t, "3")
@@ -255,7 +255,7 @@ def rewrite_one_page_ru_decl_noun(page, index, text):
       stem = stem or ustem or bare or pagename
       declclass = ""
       accentclass = "3"
-      if locpl and locpl != remove_diacritics(stem) + u"а́х":
+      if locpl and locpl != remove_diacritics(stem) + "а́х":
         pagemsg("WARNING: Unexpected locative plural %s: %s" % (locpl,
           origtemplate))
         nochange = True
@@ -321,15 +321,15 @@ def rewrite_one_page_ru_decl_noun(page, index, text):
           ustem = getrmparam(t, "1")
           stem = getrmparam(t, "2")
           stem = stem or ustem
-          unstressedi = u"и"
-          stressedi = u"и́"
+          unstressedi = "и"
+          stressedi = "и́"
           assert len(stressedi) == 2
           if stem.endswith(unstressedi):
             stem = stem[0:-1]
           elif stem.endswith(stressedi):
             stem = stem[0:-2]
           else:
-            pagemsg(u"WARNING: Stem %s doesn't end in и in %s, skipping" %
+            pagemsg("WARNING: Stem %s doesn't end in и in %s, skipping" %
                 (stem, str(t)))
             nochange = True
             break
@@ -384,11 +384,11 @@ def rewrite_one_page_ru_decl_noun(page, index, text):
   return text, comment
 
 def rewrite_ru_decl_noun(save, verbose, startFrom, upTo):
-  for cat in [u"Russian nouns"]:
+  for cat in ["Russian nouns"]:
     for index, page in blib.cat_articles(cat, startFrom, upTo):
       blib.do_edit(page, index, rewrite_one_page_ru_decl_noun, save=save, verbose=verbose)
 def rewrite_ru_decl_adj(save, verbose, startFrom, upTo):
-  for cat in [u"Russian adjectives"]:
+  for cat in ["Russian adjectives"]:
     for index, page in blib.cat_articles(cat, startFrom, upTo):
       blib.do_edit(page, index, rewrite_one_page_ru_decl_adj, save=save, verbose=verbose)
 

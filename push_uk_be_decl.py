@@ -58,8 +58,8 @@ def compare_forms(origforms, replforms, pagemsg):
       newforms = []
       for form in forms:
         newforms.append(form)
-        if form.endswith(u"й"):
-          altform = re.sub(u"й$", u"ю", form)
+        if form.endswith("й"):
+          altform = re.sub("й$", "ю", form)
           if altform not in forms:
             newforms.append(altform)
       origform = ",".join(newforms)

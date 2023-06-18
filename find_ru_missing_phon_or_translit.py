@@ -18,8 +18,8 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  if u"э" in pagetitle:
-    pagemsg(u"Skipping because has э in page title")
+  if "э" in pagetitle:
+    pagemsg("Skipping because has э in page title")
     return
 
   words = re.split("[ -]", pagetitle)
@@ -44,7 +44,7 @@ def process_text_on_page(index, pagetitle, text):
           pron = pagetitle
         found_ru_ipa.append(("nophon", pron))
         prons.append(pron)
-        if u"э" in pron:
+        if "э" in pron:
           pagemsg("WARNING: Likely missing phon=: %s" % str(t))
       pronwords = re.split("[ -]", pron)
       if len(words) != len(pronwords):
@@ -52,7 +52,7 @@ def process_text_on_page(index, pagetitle, text):
           len(words), len(pronwords), pron))
       else:
         for index, pronword in enumerate(pronwords):
-          if u"э" in pronword:
+          if "э" in pronword:
             saw_epsilon_pron[index] = True
           else:
             saw_no_epsilon_pron[index] = True
@@ -84,7 +84,7 @@ def process_text_on_page(index, pagetitle, text):
               tr = ""
             split_lemmas.append((ru, tr))
             lemmas.append(lemma)
-            if u"ɛ" in tr or re.search(u"[aeiouyáéíóúý][eé]", tr):
+            if "ɛ" in tr or re.search("[aeiouyáéíóúý][eé]", tr):
               saw_tr_with_epsilon = True
             elif tr:
               saw_tr_without_epsilon = True
@@ -95,18 +95,18 @@ def process_text_on_page(index, pagetitle, text):
 
           if saw_epsilon_pron[index] != saw_tr_with_epsilon:
             if saw_epsilon_pron[index]:
-              pagemsg(u"WARNING: Saw э in pron %s but not decl %s for word %s" % (
+              pagemsg("WARNING: Saw э in pron %s but not decl %s for word %s" % (
                 pronstr, lemmastr, word))
             else:
-              pagemsg(u"WARNING: Saw ɛ in decl %s but not pron %s for word %s" % (
+              pagemsg("WARNING: Saw ɛ in decl %s but not pron %s for word %s" % (
                 lemmastr, pronstr, word))
           saw_non_tr_with_epsilon = saw_tr_without_epsilon or saw_no_tr
           if saw_no_epsilon_pron[index] != saw_non_tr_with_epsilon:
             if saw_no_epsilon_pron[index]:
-              pagemsg(u"WARNING: Saw pron %s without э but not decl %s without ɛ for word %s"
+              pagemsg("WARNING: Saw pron %s without э but not decl %s without ɛ for word %s"
                   % (pronstr, lemmastr, word))
             else:
-              pagemsg(u"WARNING: Saw decl %s without ɛ but not pron %s without э for word %s"
+              pagemsg("WARNING: Saw decl %s without ɛ but not pron %s without э for word %s"
                   % (lemmastr, pronstr, word))
 
 parser = blib.create_argparser("Find missing phon= or transit in Russian lemmas",

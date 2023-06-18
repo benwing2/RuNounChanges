@@ -6,7 +6,7 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, msg, errmsg, errandmsg, site
 
-parser = blib.create_argparser(u"List pages, lemmas and/or non-lemmas")
+parser = blib.create_argparser("List pages, lemmas and/or non-lemmas")
 parser.add_argument("--tempfile", help="Templates and aliases to do")
 parser.add_argument("--include-refs", help="Include column for template references",
     action="store_true")

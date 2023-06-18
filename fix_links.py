@@ -33,40 +33,40 @@ import rulib
 
 import unicodedata
 
-lbracket_sub = u"\ufff1"
-rbracket_sub = u"\ufff2"
+lbracket_sub = "\ufff1"
+rbracket_sub = "\ufff2"
 
-GRAVE = u"\u0300" # grave =  ̀
-ACUTE = u"\u0301" # acute =  ́
-CIRC = u"\u0302" # circumflex =  ̂
-TILDE = u"\u0303" # tilde =  ̃
-MACRON = u"\u0304" # macron =  ̄
-BREVE = u"\u0306" # breve =  ̆
-DOTABOVE = u"\u0307" # dot above =  ̇
-DIAER = u"\u0308" # diaeresis =  ̈
-CARON = u"\u030C" # caron =  ̌
-DGRAVE = u"\u030F" # double grave
-INVBREVE = u"\u0311" # inverse breve
-DOTBELOW = u"\u0323" # dot below
-RINGBELOW = u"\u0325" # ring below
-CEDILLA = u"\u0327" # cedilla =  ̧
-OGONEK = u"\u0328" # ogonek =  ̨
-DOUBLEINVBREVE = u"\u0361" # double inverted breve
+GRAVE = "\u0300" # grave =  ̀
+ACUTE = "\u0301" # acute =  ́
+CIRC = "\u0302" # circumflex =  ̂
+TILDE = "\u0303" # tilde =  ̃
+MACRON = "\u0304" # macron =  ̄
+BREVE = "\u0306" # breve =  ̆
+DOTABOVE = "\u0307" # dot above =  ̇
+DIAER = "\u0308" # diaeresis =  ̈
+CARON = "\u030C" # caron =  ̌
+DGRAVE = "\u030F" # double grave
+INVBREVE = "\u0311" # inverse breve
+DOTBELOW = "\u0323" # dot below
+RINGBELOW = "\u0325" # ring below
+CEDILLA = "\u0327" # cedilla =  ̧
+OGONEK = "\u0328" # ogonek =  ̨
+DOUBLEINVBREVE = "\u0361" # double inverted breve
 
 def hy_remove_accents(text):
-  text = re.sub(u"[՞՜՛՟]", "", text)
-  text = re.sub(u"և", u"ե", text)
-  text = re.sub(u"<sup>յ</sup>", u"յ", text)
-  text = re.sub(u"<sup>ի</sup>", u"ի", text)
+  text = re.sub("[՞՜՛՟]", "", text)
+  text = re.sub("և", "ե", text)
+  text = re.sub("<sup>յ</sup>", "յ", text)
+  text = re.sub("<sup>ի</sup>", "ի", text)
   return text
 
 def grc_remove_accents(text):
-  text = re.sub(u"[ᾸᾹ]", u"Α", text)
-  text = re.sub(u"[ᾰᾱ]", u"α", text)
-  text = re.sub(u"[ῘῙ]", u"Ι", text)
-  text = re.sub(u"[ῐῑ]", u"ι", text)
-  text = re.sub(u"[ῨῩ]", u"Υ", text)
-  text = re.sub(u"[ῠῡ]", u"υ", text)
+  text = re.sub("[ᾸᾹ]", "Α", text)
+  text = re.sub("[ᾰᾱ]", "α", text)
+  text = re.sub("[ῘῙ]", "Ι", text)
+  text = re.sub("[ῐῑ]", "ι", text)
+  text = re.sub("[ῨῩ]", "Υ", text)
+  text = re.sub("[ῠῡ]", "υ", text)
   return text
 
 def bg_remove_accents(text):
@@ -91,7 +91,7 @@ def sl_remove_accents(text):
     replace(ACUTE, "").replace(GRAVE, "").
     replace(MACRON, "").replace(CIRC, "").
     replace(DGRAVE, "").replace(INVBREVE, "").
-    replace(DOTBELOW, "").replace(u"ə", "e").replace(u"ł", "l")
+    replace(DOTBELOW, "").replace("ə", "e").replace("ł", "l")
   )
 
 def la_remove_accents(text):
@@ -107,33 +107,33 @@ def lt_remove_accents(text):
   )
 
 def he_remove_accents(text):
-  text = re.sub(u"[\u0591-\u05BD\u05BF-\u05C5\u05C7]", "", text)
+  text = re.sub("[\u0591-\u05BD\u05BF-\u05C5\u05C7]", "", text)
   return text
 
 def ar_remove_accents(text):
-  text = re.sub(u"\u0671", u"\u0627", text)
-  text = re.sub(u"[\u064B-\u0652\u0670\u0640]", "", text)
+  text = re.sub("\u0671", "\u0627", text)
+  text = re.sub("[\u064B-\u0652\u0670\u0640]", "", text)
   return text
 
 def fa_remove_accents(text):
-  text = re.sub(u"[\u064E-\u0652]", "", text)
+  text = re.sub("[\u064E-\u0652]", "", text)
   return text
 
 def ur_remove_accents(text):
-  text = re.sub(u"[\u064B-\u0652]", "", text)
+  text = re.sub("[\u064B-\u0652]", "", text)
   return text
 
-latin_charset = u"\\- '’.,0-9A-Za-z¡-\u036FḀ-ỿ"
-cyrillic_charset = u"Ѐ-џҊ-ԧꚀ-ꚗ"
+latin_charset = "\\- '’.,0-9A-Za-z¡-\u036FḀ-ỿ"
+cyrillic_charset = "Ѐ-џҊ-ԧꚀ-ꚗ"
 # Doesn't work due to surrogate chars.
-#glagolitic_charset = u"Ⰰ-ⱞ𞀀-𞀪"
-arabic_charset = u"؀-ۿݐ-ݿࢠ-ࣿﭐ-﷽ﹰ-ﻼ"
-hebrew_charset = u"\u0590-\u05FF\uFB1D-\uFB4F"
-devanagari_charset = u"\u0900-\u097F\uA8E0-\uA8FD"
-assamese_charset = u"\u0981-\u0983\u0985-\u098c\u098f\u0990\u0993-\u09a8\u09aa-\u09af\u09b6-\u09b9\u09bc-\u09c4\u09c7-\u09ce\u09d7\u09a1\u09bc\u09a2\u09bc\u09af\u09bc\u09bc\u09e0-\u09e3\u09e6-\u09f1"
-newa_charset = u"𑐀-𑑞"
-malayalam_charset = u"\u0d02-\u0d7f"
-sinhalese_charset = u"\u0d82-\u0df4"
+#glagolitic_charset = "Ⰰ-ⱞ𞀀-𞀪"
+arabic_charset = "؀-ۿݐ-ݿࢠ-ࣿﭐ-﷽ﹰ-ﻼ"
+hebrew_charset = "\u0590-\u05FF\uFB1D-\uFB4F"
+devanagari_charset = "\u0900-\u097F\uA8E0-\uA8FD"
+assamese_charset = "\u0981-\u0983\u0985-\u098c\u098f\u0990\u0993-\u09a8\u09aa-\u09af\u09b6-\u09b9\u09bc-\u09c4\u09c7-\u09ce\u09d7\u09a1\u09bc\u09a2\u09bc\u09af\u09bc\u09bc\u09e0-\u09e3\u09e6-\u09f1"
+newa_charset = "𑐀-𑑞"
+malayalam_charset = "\u0d02-\u0d7f"
+sinhalese_charset = "\u0d82-\u0df4"
 
 # Each element is full language name, function to remove accents to normalize
 # an entry, character set range(s), and whether to ignore translit (info
@@ -142,32 +142,32 @@ sinhalese_charset = u"\u0d82-\u0df4"
 # auto-translit)
 language_codes_to_properties = {
     'af':["Afrikaans", lambda x:x, latin_charset, "latin"],
-    'am':["Amharic", lambda x:x, u"ሀ-᎙ⶀ-ⷞꬁ-ꬮ", False],
+    'am':["Amharic", lambda x:x, "ሀ-᎙ⶀ-ⷞꬁ-ꬮ", False],
     'ar':["Arabic", ar_remove_accents, arabic_charset, False],
     'as':["Assamese", lambda x:x, assamese_charset, False],
     'az':["Azerbaijani", lambda x:x, latin_charset, "latin"],
     'ba':["Bashkir", lambda x:x, cyrillic_charset, True],
     'be':["Belarusian", bg_remove_accents, cyrillic_charset, False],
     'bg':["Bulgarian", bg_remove_accents, cyrillic_charset, False],
-    'bn':["Bengali", lambda x:x, u"ঀ-ঃঅ-ঌএঐও-নপ-রললশ-হ়-ৄেৈো-ৎৗড়ঢ়য়়ৠ-ৣ০-৯", False],
-    'bo':["Tibetan", lambda x:x, u"ༀ-࿚", True],
+    'bn':["Bengali", lambda x:x, "ঀ-ঃঅ-ঌএঐও-নপ-রললশ-হ়-ৄেৈো-ৎৗড়ঢ়য়়ৠ-ৣ০-৯", False],
+    'bo':["Tibetan", lambda x:x, "ༀ-࿚", True],
     'br':["Breton", lambda x:x, latin_charset, "latin"],
     'ca':["Catalan", lambda x:x, latin_charset, "latin"],
     'ce':["Chechen", lambda x:x.replace(MACRON, ""), cyrillic_charset, True],
     'cs':["Czech", lambda x:x, latin_charset, "latin"],
-    #'cu': ["Old Church Slavonic", lambda x:x.replace(u"\u0484", ""), cyrillic_charset + glagolitic_charset, False],
+    #'cu': ["Old Church Slavonic", lambda x:x.replace("\u0484", ""), cyrillic_charset + glagolitic_charset, False],
     'cv':["Chuvash", lambda x:x, cyrillic_charset, True],
     'cy':["Welsh", lambda x:x, latin_charset, "latin"],
     'da':["Danish", lambda x:x, latin_charset, "latin"],
     'de':["German", lambda x:x, latin_charset, "latin"],
     'dlm':["Dalmatian", lambda x:x, latin_charset, "latin"],
-    'el':["Greek", lambda x:x, u"Ͱ-Ͽ", True],
+    'el':["Greek", lambda x:x, "Ͱ-Ͽ", True],
     'eo':["Esperanto", lambda x:x, latin_charset, "latin"],
     'es':["Spanish", lambda x:x, latin_charset, "latin"],
     'et':["Estonian", lambda x:x, latin_charset, "latin"],
     'eu':["Basque", lambda x:x, latin_charset, "latin"],
     'fa':["Persian", fa_remove_accents, arabic_charset, "notranslit"],
-    'fi':["Finnish", lambda x:x.replace(u"ˣ", ""), latin_charset, "latin"],
+    'fi':["Finnish", lambda x:x.replace("ˣ", ""), latin_charset, "latin"],
     'fo':["Faroese", lambda x:x, latin_charset, "latin"],
     'fr':["French", lambda x:x, latin_charset, "latin"],
     'fur':["Friulian", lambda x:x, latin_charset, "latin"],
@@ -175,25 +175,25 @@ language_codes_to_properties = {
     'ga':["Irish", lambda x:x, latin_charset, "latin"],
     'gd':["Scottish Gaelic", lambda x:x, latin_charset, "latin"],
     'gl':["Galician", lambda x:x, latin_charset, "latin"],
-    'grc':["Ancient Greek", grc_remove_accents, u"ἀ-῾Ͱ-Ͽ", True],
-    'gu':["Gujarati", lambda x:x, u"\u0A81-\u0AF9", False],
+    'grc':["Ancient Greek", grc_remove_accents, "ἀ-῾Ͱ-Ͽ", True],
+    'gu':["Gujarati", lambda x:x, "\u0A81-\u0AF9", False],
     'gv':["Manx", lambda x:x, latin_charset, "latin"],
     'he':["Hebrew", he_remove_accents, hebrew_charset, "notranslit"],
-    'hi':["Hindi", lambda x:x, u"\u0900-\u097F\uA8E0-\uA8FD", False],
+    'hi':["Hindi", lambda x:x, "\u0900-\u097F\uA8E0-\uA8FD", False],
     'hu':["Hungarian", lambda x:x, latin_charset, "latin"],
-    'hy':["Armenian", hy_remove_accents, u"Ա-֏ﬓ-ﬗ", True],
+    'hy':["Armenian", hy_remove_accents, "Ա-֏ﬓ-ﬗ", True],
     'ia':["Interlingua", lambda x:x, latin_charset, "latin"],
     'id':["Indonesian", lambda x:x, latin_charset, "latin"],
     'io':["Ido", lambda x:x, latin_charset, "latin"],
     'is':["Icelandic", lambda x:x, latin_charset, "latin"],
     'it':["Italian", lambda x:x, latin_charset, "latin"],
-    'ka':["Georgian", lambda x:x.replace(CIRC, ""), u"ა-ჿᲐ-Ჿ", True],
-    'km':["Khmer", lambda x:x, u"ក-៹᧠-᧿", False],
-    'kn':["Kannada", lambda x:x, u"ಀ-ೲ", False],
+    'ka':["Georgian", lambda x:x.replace(CIRC, ""), "ა-ჿᲐ-Ჿ", True],
+    'km':["Khmer", lambda x:x, "ក-៹᧠-᧿", False],
+    'kn':["Kannada", lambda x:x, "ಀ-ೲ", False],
     'la':["Latin", la_remove_accents, latin_charset, "latin"],
     'lb':["Luxembourgish", lambda x:x, latin_charset, "latin"],
     'lmo':["Lombard", lambda x:x, latin_charset, "latin"],
-    'lo':["Lao", lambda x:x, u"ກ-ໟ", False],
+    'lo':["Lao", lambda x:x, "ກ-ໟ", False],
     'lt':["Lithuanian", lt_remove_accents, latin_charset, "latin"],
     # 'lv': ["Latvian", ..., latin_charset, "latin"],
     'mg':["Malagasy", lambda x:x, latin_charset, "latin"],
@@ -202,15 +202,15 @@ language_codes_to_properties = {
     'mr':["Marathi", lambda x:x, devanagari_charset, False],
     'ms':["Malay", lambda x:x, latin_charset, "latin"],
     'mt':["Maltese", lambda x:x, latin_charset, "latin"],
-    'my':["Burmese", lambda x:x, u"က-႟ꩠ-ꩿꧠ-ꧾ", True],
-    'nb':[u"Norwegian Bokmål", lambda x:x, latin_charset, "latin"],
+    'my':["Burmese", lambda x:x, "က-႟ꩠ-ꩿꧠ-ꧾ", True],
+    'nb':["Norwegian Bokmål", lambda x:x, latin_charset, "latin"],
     'ne':["Nepalese", lambda x:x, devanagari_charset + newa_charset, False],
     'nl':["Dutch", lambda x:x, latin_charset, "latin"],
     'nn':["Norwegian Nynorsk", lambda x:x, latin_charset, "latin"],
     'no':["Norwegian", lambda x:x, latin_charset, "latin"],
     'oc':["Occitan", lambda x:x, latin_charset, "latin"],
-    'or':["Oriya", lambda x:x, u"\u0B01-\u0B77", False],
-    'pa':["Punjabi", lambda x:x, u"\u0A01-\u0A75", "notranslit"],
+    'or':["Oriya", lambda x:x, "\u0B01-\u0B77", False],
+    'pa':["Punjabi", lambda x:x, "\u0A01-\u0A75", "notranslit"],
     'pl':["Polish", lambda x:x, latin_charset, "latin"],
     'ps':["Pashto", lambda x:x, arabic_charset, "notranslit"],
     'pt':["Portuguese", lambda x:x, latin_charset, "latin"],
@@ -226,10 +226,10 @@ language_codes_to_properties = {
     'sq':["Albanian", lambda x:x, latin_charset, "latin"],
     'sv':["Swedish", lambda x:x, latin_charset, "latin"],
     'sw':["Swahili", lambda x:x, latin_charset, "latin"],
-    'ta':["Tamil", lambda x:x, u"\u0B82-\u0BFA", True],
-    'te':["Telugu", lambda x:x, u"\u0C00-\u0C7F", True],
+    'ta':["Tamil", lambda x:x, "\u0B82-\u0BFA", True],
+    'te':["Telugu", lambda x:x, "\u0C00-\u0C7F", True],
     'tg':["Tajik", lambda x:x.replace(ACUTE, ""), cyrillic_charset, True],
-    'th':["Thai", lambda x:x, u"ก-๛", False],
+    'th':["Thai", lambda x:x, "ก-๛", False],
     'tl':["Tagalog", lambda x:x, latin_charset, "latin"],
     'tr':["Turkish", lambda x:x, latin_charset, "latin"],
     'uk':["Ukrainian", bg_remove_accents, cyrillic_charset, False],

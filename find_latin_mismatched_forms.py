@@ -374,8 +374,8 @@ def process_text_on_page(index, pagetitle, text):
               all_valid_forms.append(form)
             if form not in all_valid_forms_with_syncopated:
               all_valid_forms_with_syncopated.append(form)
-            if pos == "verb" and re.search(u"v[eiē]", form):
-              syncopated_form = re.sub(u"^(.*)v[eiē]", r"\1", form)
+            if pos == "verb" and re.search("v[eiē]", form):
+              syncopated_form = re.sub("^(.*)v[eiē]", r"\1", form)
               if syncopated_form not in all_valid_forms_with_syncopated:
                 all_valid_forms_with_syncopated.append(syncopated_form)
         all_matchable_forms = [

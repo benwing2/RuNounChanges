@@ -51,125 +51,125 @@ import runounlib
 
 # [singular ending, plural ending, gender, requires special case (1)]
 pl_data = [
-    ["", u"ы", "m", False],
-    ["", u"и", "m", False],
-    [u"ь", u"и", "mf", False],
-    [u"й", u"и", "m", False],
-    ["", u"а", "m", True],
-    [u"а", u"ы", "f", False],
-    [u"а", u"и", "f", False],
-    [u"я", u"и", "f", False],
-    [u"о", u"а", "n", False],
-    [u"е", u"а", "n", False],
-    [u"е", u"я", "n", False],
-    [u"о", u"и", "n", True]
+    ["", "ы", "m", False],
+    ["", "и", "m", False],
+    ["ь", "и", "mf", False],
+    ["й", "и", "m", False],
+    ["", "а", "m", True],
+    ["а", "ы", "f", False],
+    ["а", "и", "f", False],
+    ["я", "и", "f", False],
+    ["о", "а", "n", False],
+    ["е", "а", "n", False],
+    ["е", "я", "n", False],
+    ["о", "и", "n", True]
 ]
 
 infer_adj_lemma = [
-    [u"ая", u"ый"],
-    [u"а́я", u"о́й"],
-    [u"яя", u"ий"],
-    [u"ое", u"ый"],
-    [u"о́е", u"о́й"],
-    [u"ее", u"ий"],
+    ["ая", "ый"],
+    ["а́я", "о́й"],
+    ["яя", "ий"],
+    ["ое", "ый"],
+    ["о́е", "о́й"],
+    ["ее", "ий"],
 ]
 
-consonant_re = u"[бдфгклмнпрствхзшщчжц]"
+consonant_re = "[бдфгклмнпрствхзшщчжц]"
 
 particles = [
   # List of prepositions and particles, from ru-pron.lua
-  u"по", u"в", u"на", u"до",
-  u"без", u"близ", u"в", u"во", u"до",
-  u"из-под", u"из-за", u"за", u"из", u"изо",
-  u"к", u"ко", u"меж", u"на", u"над", u"надо", u"о", u"об", u"обо", u"от",
-  u"по", u"под", u"подо", u"пред", u"предо", u"при", u"про", u"перед", u"передо",
-  u"через", u"с", u"со", u"у", u"не",
+  "по", "в", "на", "до",
+  "без", "близ", "в", "во", "до",
+  "из-под", "из-за", "за", "из", "изо",
+  "к", "ко", "меж", "на", "над", "надо", "о", "об", "обо", "от",
+  "по", "под", "подо", "пред", "предо", "при", "про", "перед", "передо",
+  "через", "с", "со", "у", "не",
   # Others
-  u"и", u"де"
+  "и", "де"
   ]
 
 # List of words where we use the specified declension, to deal with cases
 # where there are multiple declensions; we have to be careful here to make
 # sure more than one declension isn't actually used in different lemmas
-use_given_decl = {u"туз": u"{{ru-noun-table|b}}",
-    u"род": u"{{ru-noun-table|e}}",
-    u"лев": u"{{ru-noun-table|b||*|a=an}}",
-    u"ключ": u"{{ru-noun-table|b}}",
-    u"плата": u"{{ru-noun-table|пла́та}}",
-    u"брак": u"{{ru-noun-table}}",
+use_given_decl = {"туз": "{{ru-noun-table|b}}",
+    "род": "{{ru-noun-table|e}}",
+    "лев": "{{ru-noun-table|b||*|a=an}}",
+    "ключ": "{{ru-noun-table|b}}",
+    "плата": "{{ru-noun-table|пла́та}}",
+    "брак": "{{ru-noun-table}}",
 }
 
 use_given_page_decl = {
-    u"двоюродный дед": {u"дед":u"{{ru-noun-table|a=an}}"},
-    u"двоюродный дядя": {u"дядя":u"{{ru-noun-table|дя́дя|(2)|or|c|дя́дя|-ья|a=an}}"},
-    u"шах и мат": {u"мат":u"{{ru-noun-table}}"},
-    u"ионический ордер": {u"ордер":u"{{ru-noun-table|о́рдер|or|c||(1)}}"},
-    u"ионический орден": {u"орден":u"{{ru-noun-table|c|о́рден|(1)}}"},
-    u"коринфский ордер": {u"ордер":u"{{ru-noun-table|о́рдер|or|c||(1)}}"},
-    u"коринфский орден": {u"орден":u"{{ru-noun-table|c|о́рден|(1)}}"},
-    u"корпус турбины": {u"корпус":u"{{ru-noun-table|ко́рпус}}"},
-    u"бронирование кабины": {u"бронирование":u"{{ru-noun-table|бронирова́ние}}"},
-    u"троюродный дядя": {u"дядя":u"{{ru-noun-table|дя́дя|(2)|or|c|дя́дя|-ья|a=an}}"},
-    u"половой орган": {u"орган":u"{{ru-noun-table|о́рган}}"},
-    u"вес нетто": {u"вес":u"{{ru-noun-table|c||(1)}}"},
-    u"древесный уголь": {u"уголь":u"{{ru-noun-table|a,b|у́голь|m*}}"},
-    u"ось зла": {u"ось":u"{{ru-noun-table|f''||f|loc=на +}}"},
-    u"свет очей": {u"свет":u"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
-    u"дорожный чек": {u"чек":u"{{ru-noun-table}}"},
-    u"зелёный лук": {u"лук":u"{{ru-noun-table}}"},
-    u"воздушное судно": {u"судно":u"{{ru-noun-table|c|су́дно|(2)|суд}}"},
-    u"Пепельная среда": {u"среда":u"{{ru-noun-table|f|среда́}}"},
-    u"зелёный свет": {u"свет":u"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
-    u"окружающая среда": {u"среда":u"{{ru-noun-table|d|среда́}}"},
-    u"парусное судно": {u"судно":u"{{ru-noun-table|c|су́дно|(2)|суд}}"},
-    u"барабанный бой": {u"бой":u"{{ru-noun-table|c|loc=бою́}}"},
-    u"ордер на арест": {u"ордер":u"{{ru-noun-table|c|о́рдер|(1)}}"},
-    u"чёрная американка": {u"американка":u"{{ru-noun-table|америка́нка|*|a=an}}"},
-    u"красный свет": {u"свет":u"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
-    u"жёлтый свет": {u"свет":u"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
-    u"амарантовый цвет": {u"цвет":u"{{ru-noun-table|c||(1)|par=+}}"},
-    u"противоположный пол": {u"пол":u"{{ru-noun-table|e}}"},
-    u"звуковая волна": {u"волна":u"{{ru-noun-table|f,d|волна́}}"},
-    u"ночной клуб": {u"клуб":u"{{ru-noun-table}}"},
-    u"правоохранительные органы": {u"орган":u"{{ru-noun-table|о́рган}}"},
-    u"негласное правило": {u"правило":u"{{ru-noun-table|пра́вило}}"},
-    u"степная рысь": {u"рысь":u"{{ru-noun-table||f|a=an}}"},
-    u"ход конём": {u"ход":u"{{ru-noun-table|c|n=sg|par=+|loc=в +,на +}}"},
-    u"Ростов-на-Дону": {u"Ростов":u"{{ru-noun-table|Росто́в|n=sg}}"},
+    "двоюродный дед": {"дед":"{{ru-noun-table|a=an}}"},
+    "двоюродный дядя": {"дядя":"{{ru-noun-table|дя́дя|(2)|or|c|дя́дя|-ья|a=an}}"},
+    "шах и мат": {"мат":"{{ru-noun-table}}"},
+    "ионический ордер": {"ордер":"{{ru-noun-table|о́рдер|or|c||(1)}}"},
+    "ионический орден": {"орден":"{{ru-noun-table|c|о́рден|(1)}}"},
+    "коринфский ордер": {"ордер":"{{ru-noun-table|о́рдер|or|c||(1)}}"},
+    "коринфский орден": {"орден":"{{ru-noun-table|c|о́рден|(1)}}"},
+    "корпус турбины": {"корпус":"{{ru-noun-table|ко́рпус}}"},
+    "бронирование кабины": {"бронирование":"{{ru-noun-table|бронирова́ние}}"},
+    "троюродный дядя": {"дядя":"{{ru-noun-table|дя́дя|(2)|or|c|дя́дя|-ья|a=an}}"},
+    "половой орган": {"орган":"{{ru-noun-table|о́рган}}"},
+    "вес нетто": {"вес":"{{ru-noun-table|c||(1)}}"},
+    "древесный уголь": {"уголь":"{{ru-noun-table|a,b|у́голь|m*}}"},
+    "ось зла": {"ось":"{{ru-noun-table|f''||f|loc=на +}}"},
+    "свет очей": {"свет":"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
+    "дорожный чек": {"чек":"{{ru-noun-table}}"},
+    "зелёный лук": {"лук":"{{ru-noun-table}}"},
+    "воздушное судно": {"судно":"{{ru-noun-table|c|су́дно|(2)|суд}}"},
+    "Пепельная среда": {"среда":"{{ru-noun-table|f|среда́}}"},
+    "зелёный свет": {"свет":"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
+    "окружающая среда": {"среда":"{{ru-noun-table|d|среда́}}"},
+    "парусное судно": {"судно":"{{ru-noun-table|c|су́дно|(2)|суд}}"},
+    "барабанный бой": {"бой":"{{ru-noun-table|c|loc=бою́}}"},
+    "ордер на арест": {"ордер":"{{ru-noun-table|c|о́рдер|(1)}}"},
+    "чёрная американка": {"американка":"{{ru-noun-table|америка́нка|*|a=an}}"},
+    "красный свет": {"свет":"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
+    "жёлтый свет": {"свет":"{{ru-noun-table|par=све́ту|loc=свету́|n=sg}}"},
+    "амарантовый цвет": {"цвет":"{{ru-noun-table|c||(1)|par=+}}"},
+    "противоположный пол": {"пол":"{{ru-noun-table|e}}"},
+    "звуковая волна": {"волна":"{{ru-noun-table|f,d|волна́}}"},
+    "ночной клуб": {"клуб":"{{ru-noun-table}}"},
+    "правоохранительные органы": {"орган":"{{ru-noun-table|о́рган}}"},
+    "негласное правило": {"правило":"{{ru-noun-table|пра́вило}}"},
+    "степная рысь": {"рысь":"{{ru-noun-table||f|a=an}}"},
+    "ход конём": {"ход":"{{ru-noun-table|c|n=sg|par=+|loc=в +,на +}}"},
+    "Ростов-на-Дону": {"Ростов":"{{ru-noun-table|Росто́в|n=sg}}"},
 }
 
 allow_no_inflected_noun = [
-    u"крайний нападающий",
-    u"придыхательный согласный",
-    u"разрисованный Пикассо",
-    u"Пикассо прямоугольчатый",
-    u"сербско-хорватский",
+    "крайний нападающий",
+    "придыхательный согласный",
+    "разрисованный Пикассо",
+    "Пикассо прямоугольчатый",
+    "сербско-хорватский",
 ]
 
 is_short_adj = [
-    u"ахиллесов",
-    u"крокодилов"
+    "ахиллесов",
+    "крокодилов"
 ]
 
 is_uninflected = [
-    u"фибоначчи",
+    "фибоначчи",
 ]
 
 all_parts_declined = [
-    u"э оборотное",
-    u"апельсиновый сок",
-    u"бульбоуретральная железа",
-    u"земляной волк",
-    u"отложительный падеж",
-    u"снежный человек",
-    u"крайний нападающий",
-    u"шапка-невидимка",
+    "э оборотное",
+    "апельсиновый сок",
+    "бульбоуретральная железа",
+    "земляной волк",
+    "отложительный падеж",
+    "снежный человек",
+    "крайний нападающий",
+    "шапка-невидимка",
 ]
 
 keep_locative = [
-    u"социальная сеть",
-    u"Западный берег реки Иордан",
-    u"Западный берег"
+    "социальная сеть",
+    "Западный берег реки Иордан",
+    "Западный берег"
 ]
     
 def process_text_on_page(index, pagetitle, text):
@@ -198,7 +198,7 @@ def process_text_on_page(index, pagetitle, text):
       wordlink = "[[%s|%s]]" % (lemma, infl)
 
     if not declpage.exists():
-      if lemma in is_short_adj or re.search(u"(ий|ый|ой)$", lemma):
+      if lemma in is_short_adj or re.search("(ий|ый|ой)$", lemma):
         pagemsg("WARNING: Page doesn't exist, assuming word #%s adjectival: lemma=%s, infl=%s" %
             (wordind, lemma, infl))
         return [("1", wordlink), ("2", "+")], True, None, None
@@ -263,7 +263,7 @@ def process_text_on_page(index, pagetitle, text):
     else:
       # Multiple decl templates
       for t in decl_templates:
-        if str(t.name) == "ru-decl-adj" and re.search(u"(ий|ый|ой)$", lemma):
+        if str(t.name) == "ru-decl-adj" and re.search("(ий|ый|ой)$", lemma):
           pagemsg("WARNING: Multiple decl templates during decl lookup for word #%s, assuming adjectival: lemma=%s, infl=%s" %
             (wordind, lemma, infl))
           decl_template = t
@@ -292,7 +292,7 @@ def process_text_on_page(index, pagetitle, text):
     pagemsg("find_decl_args: Using decl template: %s" % str(decl_template))
     if str(decl_template.name) == "ru-decl-adj":
       if re.search(r"\bь\b", getparam(decl_template, "2"), re.U):
-        return [("1", wordlink), ("2", u"+ь")], True, None, None
+        return [("1", wordlink), ("2", "+ь")], True, None, None
       else:
         return [("1", wordlink), ("2", "+")], True, None, None
 
@@ -391,20 +391,20 @@ def process_text_on_page(index, pagetitle, text):
         m = re.search("(3f|[mfn])", declarg)
         if found_gender == "mf":
           if not m:
-            pagemsg(u"WARNING: For singular in -ь and plural in -и, need gender in singular and don't have it, word #%s, skipping: lemma=%s, infl=%s" %
+            pagemsg("WARNING: For singular in -ь and plural in -и, need gender in singular and don't have it, word #%s, skipping: lemma=%s, infl=%s" %
                 (wordinfl, lemma, infl))
             return None
           decl_gender = m.group(1)
           if decl_gender == "n":
-            pagemsg(u"WARNING: For singular in -ь and plural in -и, can't have neuter gender for word #%s, skipping: lemma=%s, infl=%s" %
+            pagemsg("WARNING: For singular in -ь and plural in -и, can't have neuter gender for word #%s, skipping: lemma=%s, infl=%s" %
                 (wordinfl, lemma, infl))
             return None
           elif decl_gender in ["m", "3f"]:
-            pagemsg(u"Singular in -ь and plural in -и, already found gender %s in decl for word #%s, taking no action: lemma=%s, infl=%s" %
+            pagemsg("Singular in -ь and plural in -и, already found gender %s in decl for word #%s, taking no action: lemma=%s, infl=%s" %
                 (decl_gender, wordind, lemma, infl))
           else:
             assert gender == "f"
-            pagemsg(u"Singular in -ь and plural in -и, replacing f with 3f so singular will be recognized for word #%s: lemma=%s, infl=%s" %
+            pagemsg("Singular in -ь and plural in -и, replacing f with 3f so singular will be recognized for word #%s: lemma=%s, infl=%s" %
                 (wordind, lemma, infl))
             declarg = re.sub("f", "3f", declarg, 1)
         else:
@@ -478,7 +478,7 @@ def process_text_on_page(index, pagetitle, text):
           keepparam = False
         if keepparam:
           if pname == "loc" and re.search(r"^(на|в)\b", val, re.U):
-            pagemsg(u"WARNING: на or в found in loc= for word #%s, may not work in multi-word lemma: loc=%s, lemma=%s, infl=%s" %
+            pagemsg("WARNING: на or в found in loc= for word #%s, may not work in multi-word lemma: loc=%s, lemma=%s, infl=%s" %
                 (wordind, val, lemma, infl))
           pname += str(wordind)
           params.append((pname, val))
@@ -597,7 +597,7 @@ def process_text_on_page(index, pagetitle, text):
         for inflsuffix, lemmasuffix in infer_adj_lemma:
           if re.search(inflsuffix + "$", infl):
             lemma = rulib.remove_accents(re.sub(inflsuffix + "$", lemmasuffix, infl))
-            lemma = re.sub(u"([кгхшжчщ])ый$", r"\1ий", lemma)
+            lemma = re.sub("([кгхшжчщ])ый$", r"\1ий", lemma)
             pagemsg("WARNING: Inferring adjectival lemma from inflection, please check: lemma=%s, infl=%s" %
                 (lemma, infl))
             break
@@ -639,8 +639,8 @@ def process_text_on_page(index, pagetitle, text):
           if saw_noun:
             pagemsg("WARNING: Word #%s is adjectival inflected and follows inflected noun: lemma=%s, infl=%s" %
                 (wordind, lemma, infl))
-      elif re.search(u"(ый|ий|ой)$", lemma):
-        if re.search(u"(ый|ий|о́й|[ая]́?я|[ое]́?е|[ыи]́?е|ь[яеи])$", infl):
+      elif re.search("(ый|ий|ой)$", lemma):
+        if re.search("(ый|ий|о́й|[ая]́?я|[ое]́?е|[ыи]́?е|ь[яеи])$", infl):
           is_inflected = True
           pagemsg("Assuming word #%s is adjectival, inflected: lemma=%s, infl=%s" %
               (wordind, lemma, infl))
@@ -773,8 +773,8 @@ def process_text_on_page(index, pagetitle, text):
       # Invariable
       if rulib.is_unstressed(infl):
         word = "*" + word
-      if infl == u"и":
-        pagemsg(u"WARNING: Found и, check number args")
+      if infl == "и":
+        pagemsg("WARNING: Found и, check number args")
       params.append((str(offset + 1), word))
       params.append((str(offset + 2), "$"))
       offset += 2
@@ -792,7 +792,7 @@ def process_text_on_page(index, pagetitle, text):
     pagemsg("WARNING: Found notes=, need to check: notes=<%s>" % decl_notes[0])
     params.append(("notes", decl_notes[0]))
   if not saw_noun and not pagetitle in allow_no_inflected_noun:
-    pagemsg(u"WARNING: No inflected nouns, something might be wrong (e.g. the пистоле́т-пулемёт То́мпсона problem), can't handle, skipping")
+    pagemsg("WARNING: No inflected nouns, something might be wrong (e.g. the пистоле́т-пулемёт То́мпсона problem), can't handle, skipping")
     return
 
   if overall_anim in ["i", "in", "inan"] or not overall_anim:

@@ -1048,9 +1048,9 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
       pos == "numnoun" and (found_head_template or tn == "la-num-noun") or
       pos == "sufnoun" and (found_head_template or tn == "la-suffix-noun")
     ):
-      ending_re = u"(a|ās|ē|ēs|ae|us|um|os|on|ī|is)"
+      ending_re = "(a|ās|ē|ēs|ae|us|um|os|on|ī|is)"
       if re.search(ending_re + "$", lemma):
-        inferred_stem = re.sub(u"^(.*?)%s$" % ending_re, r"\1", lemma)
+        inferred_stem = re.sub("^(.*?)%s$" % ending_re, r"\1", lemma)
       else:
         inferred_stem = lalib.infer_3rd_decl_stem(lemma)
       stem = explicit_stem or inferred_stem
@@ -1096,9 +1096,9 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
       pos == "sufadj" and (found_head_template or tn == "la-suffix-adj")
     ):
       if not found_head_template:
-        ending_re = u"(us|ī|er|ur|is|ēs)"
+        ending_re = "(us|ī|er|ur|is|ēs)"
         if re.search(ending_re + "$", lemma):
-          inferred_stem = re.sub(u"^(.*?)%s$" % ending_re, r"\1", lemma)
+          inferred_stem = re.sub("^(.*?)%s$" % ending_re, r"\1", lemma)
         else:
           inferred_stem = lalib.infer_3rd_decl_stem(lemma)
         stem = explicit_stem or inferred_stem

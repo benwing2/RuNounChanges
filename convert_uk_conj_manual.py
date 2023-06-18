@@ -6,10 +6,10 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-AC = u"\u0301"
+AC = "\u0301"
 
 def is_monosyllabic(word):
-  return len(re.sub(u"[^аеиоуяюъ]", "", word)) <= 1
+  return len(re.sub("[^аеиоуяюъ]", "", word)) <= 1
 
 def process_page(page, index, parsed):
   pagetitle = str(page.title())
@@ -43,7 +43,7 @@ def process_page(page, index, parsed):
         if pn.endswith("3"):
           to_fix.append((pn, pv))
       for pn, pv in to_fix:
-        if pv.strip() and pv.strip() not in ["-", u"—"]:
+        if pv.strip() and pv.strip() not in ["-", "—"]:
           existing = getparam(t, pn[:-1])
           if not existing:
             existing = pv
@@ -57,7 +57,7 @@ def process_page(page, index, parsed):
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Convert Ukrainian {{uk-conj-manual}} to {{uk-conj-table}}",
+parser = blib.create_argparser("Convert Ukrainian {{uk-conj-manual}} to {{uk-conj-table}}",
     include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

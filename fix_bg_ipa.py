@@ -6,15 +6,15 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname, pname
 
-AC = u"\u0301"
-GR = u"\u0300"
-SUB = u"\uFFFD"
+AC = "\u0301"
+GR = "\u0300"
+SUB = "\uFFFD"
 def decompose_bulgarian(text):
     # need to decompose grave-accented еЕиИ
-    text = text.replace(u"ѝ", u"и" + GR)
-    text = text.replace(u"Ѝ", u"И" + GR)
-    text = text.replace(u"ѐ", u"е" + GR)
-    text = text.replace(u"Ѐ", u"Е" + GR)
+    text = text.replace("ѝ", "и" + GR)
+    text = text.replace("Ѝ", "И" + GR)
+    text = text.replace("ѐ", "е" + GR)
+    text = text.replace("Ѐ", "Е" + GR)
     return text
 
 def process_page(page, index, parsed):

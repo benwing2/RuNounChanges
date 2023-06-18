@@ -7,12 +7,12 @@ import blib
 from blib import msg, errandmsg, site
 
 adj_decls = [
-  ["hard-stem stem-stressed", (u"-ий", u"-а", u"-е", u"-і")],
-  ["hard-stem ending-stressed", (u"-и́й", u"-а́", u"-е́", u"-і́")],
-  ["soft-stem", (u"-ій", u"-я", u"-є", u"-і")],
-  [u"ц-stem", (u"-ий", u"-я", u"-е", u"-і")],
-  ["vowel-stem", (u"-їй", u"-я", u"-є", u"-ї")],
-  ["possessive", (u"-", u"-а", u"-е", u"-і")],
+  ["hard-stem stem-stressed", ("-ий", "-а", "-е", "-і")],
+  ["hard-stem ending-stressed", ("-и́й", "-а́", "-е́", "-і́")],
+  ["soft-stem", ("-ій", "-я", "-є", "-і")],
+  ["ц-stem", ("-ий", "-я", "-е", "-і")],
+  ["vowel-stem", ("-їй", "-я", "-є", "-ї")],
+  ["possessive", ("-", "-а", "-е", "-і")],
 ]
 
 noun_stress_patterns = ["a", "b", "c", "d", "d'", "e", "f", "f'"]
@@ -22,7 +22,7 @@ adj_genders = noun_genders + ["plural-only"]
 noun_stem_types = ["hard", "soft", "velar-stem", "semisoft", "j-stem", "third-declension",
     "fourth-declension", "t-stem", "n-stem"]
 adj_stem_types = ["hard", "soft", "c-stem", "j-stem", "possessive", "surname"]
-vowel_alts = [u"і-е", u"і-о", u"і-ьо", u"е-і", u"о-і"]
+vowel_alts = ["і-е", "і-о", "і-ьо", "е-і", "о-і"]
 
 def create_cat(cat, catargs, extratext=None):
   global args
@@ -55,7 +55,7 @@ def create_cat(cat, catargs, extratext=None):
   if args.save:
     blib.safe_page_save(page, changelog, errandmsg)
 
-parser = blib.create_argparser(u"Create Ukrainian noun/verb/adjective categories")
+parser = blib.create_argparser("Create Ukrainian noun/verb/adjective categories")
 parser.add_argument('--overwrite', help="Overwrite categories", action="store_true")
 parser.add_argument('--pos', help="Part of speech of categories to create",
     choices=['noun', 'verb', 'adj'], required=True)
@@ -76,10 +76,10 @@ if args.pos == "noun":
   for gender in noun_genders:
     for stem_type in noun_stem_types:
       create_cat("%s %s-form ~" % (stem_type, gender), [])
-      create_cat(u"%s masculine ~ in -о" % stem_type, [])
+      create_cat("%s masculine ~ in -о" % stem_type, [])
       for stress in noun_stress_patterns:
         create_cat("%s %s-form accent-%s ~" % (stem_type, gender, stress), [])
-        create_cat(u"%s masculine accent-%s ~ in -о" % (stem_type, stress), [])
+        create_cat("%s masculine accent-%s ~ in -о" % (stem_type, stress), [])
   create_cat("adjectival ~", ["with adjectival endings."])
   for gender in adj_genders:
     for stem_type in adj_stem_types:
@@ -95,9 +95,9 @@ if args.pos == "noun":
 if args.pos == "verb":
   for class_ in range(1, 16):
     create_cat("class %s ~" % class_, [])
-  for subclass in ["1a", "2a", "2b", "3a", u"3°a", "3b", u"3°b", "3c", u"3°c",
+  for subclass in ["1a", "2a", "2b", "3a", "3°a", "3b", "3°b", "3c", "3°c",
       "4a", "4b", "4c", "5a", "5b", "5c",
-      "6a", u"6°a", "6b", u"6°b", "6c", u"6°c",
+      "6a", "6°a", "6b", "6°b", "6c", "6°c",
       "7a", "7b", "7c", "8a", "8b", "8c", "9a", "9b", "10a", "10c",
       "11a", "11b", "12a", "12b", "13b", "14a", "14b", "14c",
       "15a"

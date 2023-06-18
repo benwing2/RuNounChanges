@@ -72,7 +72,7 @@ rename_templates = {
   "syn-of": "syn of",
   "synof": "syn of",
   # language-specific
-  u"kyūjitai spelling of": "ja-kyujitai spelling of",
+  "kyūjitai spelling of": "ja-kyujitai spelling of",
   "kyujitai spelling of": "ja-kyujitai spelling of",
   "kyujitai of": "ja-kyu sp",
   "kyujitai": "ja-kyu sp",

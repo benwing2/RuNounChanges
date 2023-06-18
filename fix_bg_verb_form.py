@@ -380,7 +380,7 @@ def process_page(page, index, parsed):
     text = newtext
   return text, notes
 
-parser = blib.create_argparser(u"Convert Bulgarian verb forms to standard templates",
+parser = blib.create_argparser("Convert Bulgarian verb forms to standard templates",
     include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

@@ -27,7 +27,7 @@ def process_page(page, index):
       outtext = "exists"
   pagemsg(outtext)
 
-parser = blib.create_argparser(u"List whether pages exist", include_pagefile=True)
+parser = blib.create_argparser("List whether pages exist", include_pagefile=True)
 parser.add_argument("--lang", help="Indicate whether the page contains an entry for the specified language")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

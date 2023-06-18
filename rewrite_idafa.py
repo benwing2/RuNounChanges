@@ -86,7 +86,7 @@ def rewrite_one_page_idafa(page, index, text):
       #      if has_proper_noun:
       #        pagemsg("Not replacing idafa state 'ind' because proper noun: %s"
       #            % str(t))
-      #      elif pagetitle in [u"أقدم مهنة", u"غير طبيعي"]:
+      #      elif pagetitle in ["أقدم مهنة", "غير طبيعي"]:
       #        pagemsg("Not replacing idafa state 'ind' because it's special-cased: %s" % str(t))
       #      else:
       #        pagemsg("NOTE: Replacing idafa state 'ind' with no state restriction: %s"
@@ -129,24 +129,24 @@ def rewrite_one_page_idafa(page, index, text):
 
   actions = []
   if idafa_added:
-    actions.append(u"Replaced ʾidāfa params with idafa= param: %s" % (
+    actions.append("Replaced ʾidāfa params with idafa= param: %s" % (
         ", ".join(idafa_added)))
   if num_new_style:
-    actions.append(u"Corrected %s old-style ʾidāfa param(s) to new-style"
+    actions.append("Corrected %s old-style ʾidāfa param(s) to new-style"
         % num_new_style)
   if num_modhead_changed:
-    actions.append(u"Changed modN to modheadN")
+    actions.append("Changed modN to modheadN")
   if num_state_ind_to_ind_def:
-    actions.append(u"Converted state=ind to state=ind-def for proper noun")
+    actions.append("Converted state=ind to state=ind-def for proper noun")
   if num_basestate_ind_def:
-    actions.append(u"Converted state=def|basestate=ind to state=ind-def")
+    actions.append("Converted state=def|basestate=ind to state=ind-def")
   if actions:
     changelog = "; ".join(actions)
     pagemsg("Changelog = %s" % changelog)
     return text, changelog
   return text, ""
 
-parser = blib.create_argparser(u"Rewrite ʾidāfa params with idafa= param, and related changes",
+parser = blib.create_argparser("Rewrite ʾidāfa params with idafa= param, and related changes",
     include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

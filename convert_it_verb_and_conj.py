@@ -6,8 +6,8 @@ import pywikibot, re, sys, argparse, json, unicodedata
 import blib
 from blib import getparam, rmparam, tname, pname, msg, errandmsg, site
 
-AC = u"\u0301"
-GR = u"\u0300"
+AC = "\u0301"
+GR = "\u0300"
 
 def old_it_conj_to_new_it_conj_key(key):
   key = re.sub("pl$", "p", key)
@@ -51,7 +51,7 @@ def frob_old_values(key, values):
     reg_e_ending = "ei"
     repl_e_ending = "etti"
   elif key == "phis3s":
-    reg_e_ending = u"é"
+    reg_e_ending = "é"
     repl_e_ending = "ette"
   elif key == "phis3p":
     reg_e_ending = "erono"
@@ -182,7 +182,7 @@ def process_text_on_page(index, pagetitle, text):
       conjarg1 = headarg1
 
       # expand_text() wants a Unicode string.
-      newconjt_str = u"{{it-conj|%s}}" % conjarg1
+      newconjt_str = "{{it-conj|%s}}" % conjarg1
 
       if compare_new_and_old_templates(conjt_str, newconjt_str, pagetitle, pagemsg, errandpagemsg):
         if headtn == "it-verb-old":

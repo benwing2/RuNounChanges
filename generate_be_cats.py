@@ -13,7 +13,7 @@ adj_genders = noun_genders + ["plural-only"]
 noun_stem_types = ["hard", "soft", "velar-stem", "soft third-declension",
     "hard third-declension", "fourth-declension", "t-stem", "n-stem"]
 adj_stem_types = ["hard", "soft", "velar-stem", "possessive", "surname"]
-vowel_alts = [u"а-е", u"а-о", u"а-во", u"ы-о", u"о-ы", u"во-а"]
+vowel_alts = ["а-е", "а-о", "а-во", "ы-о", "о-ы", "во-а"]
 
 def create_cat(cat, catargs, extratext=None):
   global args
@@ -46,7 +46,7 @@ def create_cat(cat, catargs, extratext=None):
   if args.save:
     blib.safe_page_save(page, changelog, errandmsg)
 
-parser = blib.create_argparser(u"Create Belarusian noun/verb/adjective categories")
+parser = blib.create_argparser("Create Belarusian noun/verb/adjective categories")
 parser.add_argument('--overwrite', help="Overwrite categories", action="store_true")
 parser.add_argument('--pos', help="Part of speech of categories to create",
     choices=['noun', 'verb', 'adj'], required=True)
@@ -67,10 +67,10 @@ if args.pos == "noun":
   for gender in noun_genders:
     for stem_type in noun_stem_types:
       create_cat("%s %s-form ~" % (stem_type, gender), [])
-      create_cat(u"%s masculine ~ in -а" % stem_type, [])
+      create_cat("%s masculine ~ in -а" % stem_type, [])
       for stress in noun_stress_patterns:
         create_cat("%s %s-form accent-%s ~" % (stem_type, gender, stress), [])
-        create_cat(u"%s masculine accent-%s ~ in -а" % (stem_type, stress), [])
+        create_cat("%s masculine accent-%s ~ in -а" % (stem_type, stress), [])
   create_cat("adjectival ~", ["with adjectival endings."])
   for gender in adj_genders:
     for stem_type in adj_stem_types:
@@ -86,9 +86,9 @@ if args.pos == "noun":
 if args.pos == "verb":
   for class_ in range(1, 17):
     create_cat("class %s ~" % class_, [])
-  for subclass in ["1a", "2a", "2b", "3a", u"3°a", "3b", "3c",
+  for subclass in ["1a", "2a", "2b", "3a", "3°a", "3b", "3c",
       "4a", "4b", "4c", "5a", "5b", "5c",
-      "6a", u"6°a", "6b", u"6°b", "6c", u"6°c",
+      "6a", "6°a", "6b", "6°b", "6c", "6°c",
       "7a", "7b", "8a", "8b", "8c", "9a", "9b", "10a", "10c",
       "11a", "11b", "12a", "12b", "13b", "14a", "14b", "14c",
       "15a", "16a", "16b"

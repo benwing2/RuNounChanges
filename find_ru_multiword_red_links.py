@@ -144,7 +144,7 @@ def process_text_on_page(index, pagetitle, text):
     elif tn in ["ru-noun", "ru-proper noun"]:
       pagemsg("WARNING: Skipping ru-noun or ru-proper noun, can't handle yet: %s" % str(t))
 
-parser = blib.create_argparser(u"Find red links in multiword Russian lemmas",
+parser = blib.create_argparser("Find red links in multiword Russian lemmas",
     include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

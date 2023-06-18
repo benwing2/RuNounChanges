@@ -8,7 +8,7 @@ from blib import getparam, rmparam, tname, pname, msg, site
 import lalib
 from lalib import remove_macrons, remove_non_macron_accents
 
-MACRON = u"\u0304" # macron =  ̄
+MACRON = "\u0304" # macron =  ̄
 
 etym_templates = ["bor", "inh", "der", "bor+", "inh+", "der+", "uder", "ubor", "unadapted borrowing", "lbor",
     "learned borrowing", "slbor", "semi-learned borrowing"]
@@ -85,18 +85,18 @@ def verify_latin1_verb(lemma, pagemsg):
         else:
           saw_non_1 = str(t)
     if saw_non_1 and saw_1:
-      pagemsg(u"WARNING: For lemma %s, saw both class-1 verb %s and non-class-1 verb %s, not adding -āre/-ārī etymon but needs manual verification" %
+      pagemsg("WARNING: For lemma %s, saw both class-1 verb %s and non-class-1 verb %s, not adding -āre/-ārī etymon but needs manual verification" %
         (lemma, saw_1, saw_non_1))
       return False
     if saw_non_1:
-      pagemsg(u"For lemma %s, saw non-class-1 verb, not adding -āre/-ārī etymon: %s" % (lemma, saw_non_1))
+      pagemsg("For lemma %s, saw non-class-1 verb, not adding -āre/-ārī etymon: %s" % (lemma, saw_non_1))
       return False
     if saw_1:
-      pagemsg(u"For lemma %s, saw class-1 verb, adding -āre/-ārī etymon: %s" % (lemma, saw_1))
+      pagemsg("For lemma %s, saw class-1 verb, adding -āre/-ārī etymon: %s" % (lemma, saw_1))
       return True
-    pagemsg(u"For lemma %s, found page but didn't see any verb, assuming OK to add -āre/-ārī etymon" % lemma)
+    pagemsg("For lemma %s, found page but didn't see any verb, assuming OK to add -āre/-ārī etymon" % lemma)
     return True
-  pagemsg(u"For lemma %s, didn't find page, assuming OK to add -āre/-ārī etymon" % lemma)
+  pagemsg("For lemma %s, didn't find page, assuming OK to add -āre/-ārī etymon" % lemma)
   return True
 
 class Suffix(object):
@@ -110,46 +110,46 @@ class Suffix(object):
     self.verify_lemma = verify_lemma
 
 romance_suffixes_to_latin_etym_suffixes = [
-  Suffix({"es": "ada", "pt": "ada", "ca": "ada", "fr": u"ée", "it": "ata"}, u"āta", None, [u"[aā]tam$"]),
-  Suffix({"es": "ura", "pt": "ura", "ca": "ura", "fr": "ure", "it": "ura"}, u"ūra", None, [u"[uū]ram$"], latin_deny_re="aura$"),
-  Suffix({"es": "osa", "pt": "osa", "ca": "osa", "fr": "euse", "it": "osa"}, u"ōsa", None, [u"[oō]sam$"]),
+  Suffix({"es": "ada", "pt": "ada", "ca": "ada", "fr": "ée", "it": "ata"}, "āta", None, ["[aā]tam$"]),
+  Suffix({"es": "ura", "pt": "ura", "ca": "ura", "fr": "ure", "it": "ura"}, "ūra", None, ["[uū]ram$"], latin_deny_re="aura$"),
+  Suffix({"es": "osa", "pt": "osa", "ca": "osa", "fr": "euse", "it": "osa"}, "ōsa", None, ["[oō]sam$"]),
   Suffix({"es": "a", "pt": "a", "ca": "a", "fr": "e", "it": "a"}, "a", None, ["am$"]),
-  Suffix({"es": "dad", "pt": "dade", "ca": ["dat", "tat"], "fr": u"té", "it": u"tà"}, u"tās", u"tātem", [u"t[āa]tis$"]),
-  Suffix({"es": "tud", "pt": "tude", "ca": "tut", "fr": "tu", "it": u"tù"}, u"tūs", u"tūtem", [u"t[ūu]tis$"]),
-  Suffix({"es": "able", "pt": u"ável", "ca": "able", "fr": "able", "it": ["abile", "evole"]}, u"ābilis", None, [u"[āa]bilem$"]),
-  Suffix({"es": "ble", "pt": "vel", "ca": "ble", "fr": "ble", "it": ["bile", "vole"]}, u"bilis", None, ["bilem$"]),
-  Suffix({"es": "aje", "pt": "agem", "ca": "atge", "fr": "age", "it": "aggio"}, u"āticum", None),
-  Suffix({"es": "ante", "pt": "ante", "ca": "ant", "fr": "ant", "it": "ante"}, u"āns", "antem", ["antis$"]),
-  Suffix({"es": "ente", "pt": "ente", "ca": "ent", "fr": ["ant", "ent"], "it": "ente"}, u"ēns", "entem", ["entis$"]),
-  Suffix({"es": "al", "pt": "al", "ca": "al", "fr": ["al", "el"], "it": "ale"}, u"ālis", None, [u"[aā]lem$"]),
-  Suffix({"es": u"ación", "pt": u"ação", "ca": u"ació", "fr": ["ation", "aison"], "it": "azione"}, u"ātiō", u"ātiōnem", [u"[āa]ti[ōo]nis$"]),
-  Suffix({"es": u"ción", "pt": u"ção", "ca": u"ció", "fr": ["tion", "son"], "it": "zione"}, u"tiō", u"tiōnem", [u"ti[ōo]nis$"]),
-  Suffix({"es": u"ión", "pt": u"ão", "ca": u"ió", "fr": ["ion", "on"], "it": "ione"}, u"iō", u"iōnem", [u"i[ōo]nis$"]),
+  Suffix({"es": "dad", "pt": "dade", "ca": ["dat", "tat"], "fr": "té", "it": "tà"}, "tās", "tātem", ["t[āa]tis$"]),
+  Suffix({"es": "tud", "pt": "tude", "ca": "tut", "fr": "tu", "it": "tù"}, "tūs", "tūtem", ["t[ūu]tis$"]),
+  Suffix({"es": "able", "pt": "ável", "ca": "able", "fr": "able", "it": ["abile", "evole"]}, "ābilis", None, ["[āa]bilem$"]),
+  Suffix({"es": "ble", "pt": "vel", "ca": "ble", "fr": "ble", "it": ["bile", "vole"]}, "bilis", None, ["bilem$"]),
+  Suffix({"es": "aje", "pt": "agem", "ca": "atge", "fr": "age", "it": "aggio"}, "āticum", None),
+  Suffix({"es": "ante", "pt": "ante", "ca": "ant", "fr": "ant", "it": "ante"}, "āns", "antem", ["antis$"]),
+  Suffix({"es": "ente", "pt": "ente", "ca": "ent", "fr": ["ant", "ent"], "it": "ente"}, "ēns", "entem", ["entis$"]),
+  Suffix({"es": "al", "pt": "al", "ca": "al", "fr": ["al", "el"], "it": "ale"}, "ālis", None, ["[aā]lem$"]),
+  Suffix({"es": "ación", "pt": "ação", "ca": "ació", "fr": ["ation", "aison"], "it": "azione"}, "ātiō", "ātiōnem", ["[āa]ti[ōo]nis$"]),
+  Suffix({"es": "ción", "pt": "ção", "ca": "ció", "fr": ["tion", "son"], "it": "zione"}, "tiō", "tiōnem", ["ti[ōo]nis$"]),
+  Suffix({"es": "ión", "pt": "ão", "ca": "ió", "fr": ["ion", "on"], "it": "ione"}, "iō", "iōnem", ["i[ōo]nis$"]),
   # Don't include -ō -> -ōnem because it will try to canonicalize verbs in -ō.
-  Suffix({"es": ["ario", "ero"], "pt": [u"ário", "eiro"], "ca": ["ari", "er"], "fr": ["aire", "ier"], "it": ["ario", "aio"]}, u"ārium", None),
-  Suffix({"es": ["ario", "ero"], "pt": [u"ário", "eiro"], "ca": ["ari", "er"], "fr": ["aire", "ier"], "it": ["ario", "aio"]}, u"ārius", None, [u"[aā]rium$"]),
-  Suffix({"es": "atorio", "pt": u"atório", "ca": "atori", "fr": "ateur", "it": ["atorio", "atoio"]}, u"ātōrium", None),
-  Suffix({"es": "atorio", "pt": u"atório", "ca": "atori", "fr": "ateur", "it": ["atorio", "atoio"]}, u"ātōrius", None, [u"[aā]tōrium$"]),
-  Suffix({"es": "torio", "pt": u"tório", "ca": "tori", "fr": "teur", "it": ["torio", "toio"]}, u"tōrium", None),
-  Suffix({"es": "torio", "pt": u"tório", "ca": "tori", "fr": "teur", "it": ["torio", "toio"]}, u"tōrius", None, [u"tōrium$"]),
-  Suffix({"es": "sorio", "pt": u"sório", "ca": "sori", "fr": "seur", "it": ["sorio", "soio"]}, u"sōrius", None),
-  Suffix({"es": "sorio", "pt": u"sório", "ca": "sori", "fr": "seur", "it": ["sorio", "soio"]}, u"sōrius", None, [u"sōrium$"]),
-  Suffix({"es": "ado", "pt": "ado", "ca": "at", "fr": u"é", "it": "ato"}, u"ātum", None),
-  Suffix({"es": "ado", "pt": "ado", "ca": "at", "fr": u"é", "it": "ato"}, u"ātus", None, [u"[aā]tum$"]),
-  Suffix({"es": "oso", "pt": "oso", "ca": u"ós", "fr": "eux", "it": "oso"}, u"ōsum", None),
-  Suffix({"es": "oso", "pt": "oso", "ca": u"ós", "fr": "eux", "it": "oso"}, u"ōsus", None, [u"[oō]sum$"]),
+  Suffix({"es": ["ario", "ero"], "pt": ["ário", "eiro"], "ca": ["ari", "er"], "fr": ["aire", "ier"], "it": ["ario", "aio"]}, "ārium", None),
+  Suffix({"es": ["ario", "ero"], "pt": ["ário", "eiro"], "ca": ["ari", "er"], "fr": ["aire", "ier"], "it": ["ario", "aio"]}, "ārius", None, ["[aā]rium$"]),
+  Suffix({"es": "atorio", "pt": "atório", "ca": "atori", "fr": "ateur", "it": ["atorio", "atoio"]}, "ātōrium", None),
+  Suffix({"es": "atorio", "pt": "atório", "ca": "atori", "fr": "ateur", "it": ["atorio", "atoio"]}, "ātōrius", None, ["[aā]tōrium$"]),
+  Suffix({"es": "torio", "pt": "tório", "ca": "tori", "fr": "teur", "it": ["torio", "toio"]}, "tōrium", None),
+  Suffix({"es": "torio", "pt": "tório", "ca": "tori", "fr": "teur", "it": ["torio", "toio"]}, "tōrius", None, ["tōrium$"]),
+  Suffix({"es": "sorio", "pt": "sório", "ca": "sori", "fr": "seur", "it": ["sorio", "soio"]}, "sōrius", None),
+  Suffix({"es": "sorio", "pt": "sório", "ca": "sori", "fr": "seur", "it": ["sorio", "soio"]}, "sōrius", None, ["sōrium$"]),
+  Suffix({"es": "ado", "pt": "ado", "ca": "at", "fr": "é", "it": "ato"}, "ātum", None),
+  Suffix({"es": "ado", "pt": "ado", "ca": "at", "fr": "é", "it": "ato"}, "ātus", None, ["[aā]tum$"]),
+  Suffix({"es": "oso", "pt": "oso", "ca": "ós", "fr": "eux", "it": "oso"}, "ōsum", None),
+  Suffix({"es": "oso", "pt": "oso", "ca": "ós", "fr": "eux", "it": "oso"}, "ōsus", None, ["[oō]sum$"]),
   Suffix({"es": "o", "pt": "o", "it": "o"}, "um", None),
   Suffix({"es": "o", "pt": "o", "it": "o"}, "us", None, ["um$"]),
-  Suffix({"es": "ar", "pt": "ar", "ca": "ar", "it": "are"}, u"āris", None, [u"[aā]rem$"]),
-  Suffix({"es": "ar", "pt": "ar", "ca": "ar", "fr": "er", "it": "are"}, u"ō", u"āre", verify_lemma=verify_latin1_verb),
-  Suffix({"es": "ar", "pt": "ar", "ca": "ar", "fr": "er", "it": "are"}, "or", u"ārī", verify_lemma=verify_latin1_verb),
-  Suffix({"es": "ecer", "pt": "ecer"}, u"ēscō", u"ēscere"),
-  Suffix({"es": "ecer", "pt": "ecer"}, u"ēscor", u"ēscī"),
-  Suffix({"es": "er", "pt": "er", "it": "ere"}, u"eō", u"ēre"),
-  Suffix({"es": "er", "pt": "er", "it": "ere"}, "eor", u"ērī"),
-  Suffix({"es": "ador", "pt": "ador", "ca": "ador", "fr": "eur", "it": "atore"}, u"ātor", u"ātōrem", [u"[aā]tōris"]),
-  Suffix({"es": "dor", "pt": "dor", "ca": "dor", "fr": "eur", "it": "tore"}, u"tor", u"tōrem", [u"tōris"]),
-  Suffix({"es": "triz", "pt": "triz", "ca": "triu", "fr": "trice", "it": "trice"}, u"trīx", u"trīcem", [u"trīcis"]),
+  Suffix({"es": "ar", "pt": "ar", "ca": "ar", "it": "are"}, "āris", None, ["[aā]rem$"]),
+  Suffix({"es": "ar", "pt": "ar", "ca": "ar", "fr": "er", "it": "are"}, "ō", "āre", verify_lemma=verify_latin1_verb),
+  Suffix({"es": "ar", "pt": "ar", "ca": "ar", "fr": "er", "it": "are"}, "or", "ārī", verify_lemma=verify_latin1_verb),
+  Suffix({"es": "ecer", "pt": "ecer"}, "ēscō", "ēscere"),
+  Suffix({"es": "ecer", "pt": "ecer"}, "ēscor", "ēscī"),
+  Suffix({"es": "er", "pt": "er", "it": "ere"}, "eō", "ēre"),
+  Suffix({"es": "er", "pt": "er", "it": "ere"}, "eor", "ērī"),
+  Suffix({"es": "ador", "pt": "ador", "ca": "ador", "fr": "eur", "it": "atore"}, "ātor", "ātōrem", ["[aā]tōris"]),
+  Suffix({"es": "dor", "pt": "dor", "ca": "dor", "fr": "eur", "it": "tore"}, "tor", "tōrem", ["tōris"]),
+  Suffix({"es": "triz", "pt": "triz", "ca": "triu", "fr": "trice", "it": "trice"}, "trīx", "trīcem", ["trīcis"]),
   # Don't include -ĕre or -īre verbs because potentially either could produce an -ir or -ecer verb, so we wouldn't
   # be able to confidently extend '-iō' into either '-ere' or '-īre'.
 ]
@@ -183,7 +183,7 @@ latin_etymon_should_match_acc_gen_inf = "(m|is|[aei]r[ei]|i)$"
 def self_canonicalize_latin_term(term):
   term = unicodedata.normalize("NFC", re.sub("([AEIOUYaeiouy])(n[sf])", r"\1" + MACRON + r"\2", term))
   if term not in ["modo", "ego"]:
-    term = re.sub("o$", u"ō", term)
+    term = re.sub("o$", "ō", term)
   return term
 
 def process_text_on_page(index, pagetitle, text):
@@ -319,8 +319,8 @@ def process_text_on_page(index, pagetitle, text):
         return m.group(0)
       if not (
         non_lemma.endswith("is") and not lemma.endswith("is") or
-        re.search(u"[āēeī]re$", non_lemma) and re.search(u"[oō]$", lemma) or
-        non_lemma.endswith(u"ī") and lemma.endswith("or")
+        re.search("[āēeī]re$", non_lemma) and re.search("[oō]$", lemma) or
+        non_lemma.endswith("ī") and lemma.endswith("or")
       ):
         pagemsg("For lemma %s, putative non-lemma %s doesn't appear to be corresponding non-lemma: %s" %
           (lemma, non_lemma, m.group(0)))

@@ -44,12 +44,12 @@ def fix_new_page(page, index, parsed):
     tn = tname(t)
     if tn == "ar-verb-form":
       form = getparam(t, "1")
-      if form.endswith(u"ا"):
+      if form.endswith("ا"):
         continue
-      elif not form.endswith(u"و") and not form.endswith(u"وْ"):
+      elif not form.endswith("و") and not form.endswith("وْ"):
         pagemsg("WARNING: Form doesn't end in waw or alif: %s" % origt)
         continue
-      form = form + u"ا"
+      form = form + "ا"
       t.add("1", form)
       notes.append("add missing final alif to form in {{ar-verb-form}}")
     newt = str(t)
@@ -85,7 +85,7 @@ def process_page(page, index, parsed):
   notes = []
 
   pagemsg("Processing")
-  if not pagetitle.endswith(u"و"):
+  if not pagetitle.endswith("و"):
     pagemsg("Page title doesn't end with waw, skipping")
     return
   if not page.exists():
@@ -173,7 +173,7 @@ def process_page(page, index, parsed):
         continue
       if tn == "ar-verb-form":
         form = getparam(t, "1")
-        if not form.endswith(u"و") and form.endswith(u"وْ"):
+        if not form.endswith("و") and form.endswith("وْ"):
           pagemsg("WARNING: ar-verb-form form doesn't end with waw in %s with recognized {{inflection of}} tags, skipping: %s" % (header, str(t)))
           return False
         continue
@@ -261,7 +261,7 @@ def process_page(page, index, parsed):
 
   if not text:
     # We can move the whole page
-    new_pagetitle = pagetitle + u"ا"
+    new_pagetitle = pagetitle + "ا"
     new_page = pywikibot.Page(site, new_pagetitle)
     if new_page.exists():
       pagemsg("New page %s already exists, can't rename" % new_pagetitle)
@@ -282,7 +282,7 @@ def process_page(page, index, parsed):
   else:
     return text, notes
 
-parser = blib.create_argparser(u"Fix misspelling in Arabic 2nd/3rd masc pl non-past subj/juss forms",
+parser = blib.create_argparser("Fix misspelling in Arabic 2nd/3rd masc pl non-past subj/juss forms",
   include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

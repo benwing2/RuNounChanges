@@ -115,16 +115,16 @@ def do_canon_param(obj, translit_module):
       canonforeign, canonlatin, match_canon_partial_failure_error, partial_success = translit_module.tr_matching(obj, foreign, latin, err=True, msgfun=pagemsg)
       if match_canon_partial_failure_error:
         if partial_success:
-          match_canon_error = u"Partially unable to match-canon %s (%s) with multiple translits: %s" % (foreign, latin, match_canon_partial_failure_error)
+          match_canon_error = "Partially unable to match-canon %s (%s) with multiple translits: %s" % (foreign, latin, match_canon_partial_failure_error)
           total_num_succeeded += 1
         else:
-          match_canon_error = u"Unable to match-canon %s (%s) with multiple translits: %s" % (foreign, latin, match_canon_partial_failure_error)
+          match_canon_error = "Unable to match-canon %s (%s) with multiple translits: %s" % (foreign, latin, match_canon_partial_failure_error)
         total_num_failed += 1
       else:
         match_canon = True
         total_num_succeeded += 1
     except RuntimeError as e:
-      match_canon_error = u"Unable to match-canon %s (%s): %s" % (foreign, latin, e)
+      match_canon_error = "Unable to match-canon %s (%s): %s" % (foreign, latin, e)
       if show_backtrace:
         errmsg("WARNING: %s: %s" % (match_canon_error, str(obj.t)))
         traceback.print_exc()
@@ -188,9 +188,9 @@ def do_canon_param(obj, translit_module):
         msgs.append("stray space")
       if re.search("[A-Za-z]", nfd_form(rdforeign)):
         msgs.append("Latin")
-      if u"\u00A0" in rdforeign:
+      if "\u00A0" in rdforeign:
         msgs.append("NBSP")
-      if re.search(u"[\u200E\u200F]", rdforeign):
+      if re.search("[\u200E\u200F]", rdforeign):
         msgs.append("L2R/R2L")
       if hasattr(translit_module, 'foreign_diff_msgs'):
         msg.extend(translit_module.foreign_diff_msgs(rdforeign, rdcanonforeign)

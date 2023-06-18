@@ -34,7 +34,7 @@ def ko_l(t, note):
     # algorithm to disambiguate them.
     # FIXME: This needs changing for Python 3.
     val = getparam(t, param)
-    if re.search(u"[가-힣㐀-䶵一-鿌\uF900-\uFADF𠀀-𯨟]", val):
+    if re.search("[가-힣㐀-䶵一-鿌\uF900-\uFADF𠀀-𯨟]", val):
       note("ko", val)
 
 def ja_l(t, note):
@@ -117,7 +117,7 @@ def process_text_on_page(index, pagetitle, pagetext):
   for t in blib.parse_text(pagetext).filter_templates():
     pass
 
-parser = blib.create_argparser(u"Find red links", include_pagefile=True, include_stdin=True)
+parser = blib.create_argparser("Find red links", include_pagefile=True, include_stdin=True)
 parser.add_argument("--existing-pages", help="Gzipped file containing existing pages by language",
   required=True)
 args = parser.parse_args()

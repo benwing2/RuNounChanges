@@ -96,7 +96,7 @@ def process_text_on_page(index, pagetitle, text, cats_to_add, japanese_sort_keys
 parser = blib.create_argparser("Add categories", include_pagefile=True, include_stdin=True)
 parser.add_argument("--direcfile", help="File containing pages and topic categories to add, e.g. 'Rus ||| cs:Male people|Nationalities,sh:Male people|Nationalities'",
     required=True)
-parser.add_argument("--japanese-sort-keys", help=u"File containing Japanese sort keys, e.g. '風俗嬢 ||| ふうぞくじょう'")
+parser.add_argument("--japanese-sort-keys", help="File containing Japanese sort keys, e.g. '風俗嬢 ||| ふうぞくじょう'")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

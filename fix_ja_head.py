@@ -102,7 +102,7 @@ def process_page(index, page, romaji_to_keep):
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Convert Japanese headwords from old-style to new-style",
+parser = blib.create_argparser("Convert Japanese headwords from old-style to new-style",
   include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

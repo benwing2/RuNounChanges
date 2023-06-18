@@ -78,13 +78,13 @@ def process_page(page, index, parsed):
         # implement autodetection of the types we care about (N, I, pure)
         if "N" not in subtypes and "-I" not in subtypes:
           if (base.endswith("is") and base[:-2] == stem2 or
-              base.islower() and base.endswith(u"ēs") and base[:-2] == stem2):
+              base.islower() and base.endswith("ēs") and base[:-2] == stem2):
             subtypes += ["I"]
         if ("-N" not in subtypes and "M" not in subtypes and "F" not in subtypes and
             "-I" not in subtypes and "-pure" not in subtypes):
           if (base.endswith("e") and base[:-1] == stem2 or
-              base.endswith("al") and base[:-2] + u"āl" == stem2 or
-              base.endswith("ar") and base[:-2] + u"ār" == stem2):
+              base.endswith("al") and base[:-2] + "āl" == stem2 or
+              base.endswith("ar") and base[:-2] + "ār" == stem2):
             subtypes += ["N", "I", "pure"]
         if ("-N" not in subtypes and "M" not in subtypes and "F" not in subtypes):
           if (base.endswith("us") and base[:-2] + "or" == stem2 or
@@ -104,7 +104,7 @@ def process_page(page, index, parsed):
           newlemma = stem2 + "a"
           subtypes = [x for x in subtypes if x != "N"]
         else:
-          newlemma = stem2 + u"ēs"
+          newlemma = stem2 + "ēs"
         subtypes = [x for x in subtypes if x != "-I"]
         newspec = ".".join([decl] + subtypes)
         t.add("1", "%s<%s>" % (newlemma, newspec))

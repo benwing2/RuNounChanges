@@ -25,7 +25,7 @@ def process_page(page, index):
         if not pywikibot.Page(site, refpage).exists():
           pagemsg("Page [[%s]] does not exist" % refpage)
 
-parser = blib.create_argparser(u"Find red links in pages in Category:R:vep:UVVV with red link",
+parser = blib.create_argparser("Find red links in pages in Category:R:vep:UVVV with red link",
   include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

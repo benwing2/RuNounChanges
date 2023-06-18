@@ -53,13 +53,13 @@ def process_text_on_page(index, pagetitle, text):
         lemma = re.sub("<.*?>$", "", getp("1"))
         if lemma.endswith("ar"):
           stem = lemma[:-1] + "d"
-        elif re.search(u"[eií]r$", lemma):
+        elif re.search("[eií]r$", lemma):
           stem = lemma[:-2]
           if re.search("[aeiou]$", stem) and not re.search("[gq]u$", stem):
-            stem += u"íd"
+            stem += "íd"
           else:
             stem += "id"
-        elif re.search(u"[oô]r$", lemma):
+        elif re.search("[oô]r$", lemma):
           stem = lemma[:-2] + "ost"
         else:
           pagemsg("WARNING: Unrecognized lemma: %s" % lemma)

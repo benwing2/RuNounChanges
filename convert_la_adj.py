@@ -16,9 +16,9 @@ def la_adj_1_and_2_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle,
   set_stem1 = False
   if stem1.endswith("(e)r"):
     if num == "pl":
-      stem2 = stem1[:-4] + ("rae" if g == "F" else u"rī")
+      stem2 = stem1[:-4] + ("rae" if g == "F" else "rī")
     elif g in ["F", "N"]:
-      stem2 = stem1[:-4] + ("ra" if g == "F" else u"rum")
+      stem2 = stem1[:-4] + ("ra" if g == "F" else "rum")
     else:
       stem2 = stem1[:-4] + "r"
       stem1 = stem1[:-4] + "er"
@@ -30,7 +30,7 @@ def la_adj_1_and_2_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle,
           pagetitle)
     if macronless_stem1 == pagetitle:
       if num == "pl":
-        stem1 += ("ae" if g == "F" else u"ī")
+        stem1 += ("ae" if g == "F" else "ī")
       elif g in ["F", "N"]:
         stem1 += ("a" if g == "F" else "um")
       set_stem1 = True
@@ -44,7 +44,7 @@ def la_adj_1_and_2_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle,
       stem1 += "ic"
       types = [x for x in types if x != "ic"]
     elif num == "pl":
-      stem1 += ("ae" if g == "F" else u"ī")
+      stem1 += ("ae" if g == "F" else "ī")
     else:
       stem1 += ("a" if g == "F" else "um" if g == "N" else "us")
   types = ["lig" if x == "ea" else x for x in types]
@@ -64,9 +64,9 @@ def la_adj_2_2_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, pag
         stem2)
     stem2 = ""
   if num == "pl":
-    stem1 += "a" if g == "N" else u"ī"
+    stem1 += "a" if g == "N" else "ī"
   else:
-    stem1 += "um" if g == "N" else u"us"
+    stem1 += "um" if g == "N" else "us"
   return stem1, stem2, decl, types
 
 def la_adj_3rd_1E_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, pagemsg):
@@ -83,7 +83,7 @@ def la_adj_3rd_1E_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, 
   elif stem1.endswith("er"):
     # Just 3 is detected as 3-3
     decl = "3-1"
-  elif re.search(u"(us|a|um|ī|ae|ur|os|ē|on)$", stem1) or stem1 == "hic":
+  elif re.search("(us|a|um|ī|ae|ur|os|ē|on)$", stem1) or stem1 == "hic":
     decl = "3"
   else:
     decl = ""
@@ -135,7 +135,7 @@ def la_adj_3rd_comp_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle
 def la_adj_3rd_part_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, pagemsg):
   if num == "pl":
     types = types + ["pl"]
-  if not re.search(u"[āē]ns$", stem1):
+  if not re.search("[āē]ns$", stem1):
     pagemsg("WARNING: strange stem1=%s present with decl=3-P" % stem1)
   if stem2 and not stem2.endswith("eunt"):
     pagemsg("WARNING: strange stem2=%s present with decl=3-P" % stem2)
@@ -145,7 +145,7 @@ def la_adj_irreg_subtype(stem1, stem2, decl, types, num, g, is_adj, pagetitle, p
   if num == "pl":
     types = types + ["pl"]
   if stem1 == "qui":
-    stem1 = u"quī"
+    stem1 = "quī"
   # duo, ambō converted by hand
   return stem1, stem2, decl, types
 

@@ -3,8 +3,8 @@
 
 import re, sys
 
-AC = u"\u0301"
-GR = u"\u0300" # grave =  ̀
+AC = "\u0301"
+GR = "\u0300" # grave =  ̀
 
 # non-primary accents (i.e. excluding acute) that indicate pronunciation
 # (not counting diaeresis, which indicates a completely different vowel,
@@ -21,31 +21,31 @@ stress_accents = AC + GR
 # regex for any optional accent(s)
 opt_accent = "[" + accents + "]*"
 
-composed_grave_vowel = u"ѐЀѝЍ"
-vowel = u"аеиоуіїяєюАЕИОУІЇЯЄЮ" + composed_grave_vowel
+composed_grave_vowel = "ѐЀѝЍ"
+vowel = "аеиоуіїяєюАЕИОУІЇЯЄЮ" + composed_grave_vowel
 vowel_c = "[" + vowel + "]"
 non_vowel_c = "[^" + vowel + "]"
-cons_except_hushing_or_ts = u"бдфгґйклмнпрствхзь'БДФГҐЙКЛМНПРСТВХЗЬ"
+cons_except_hushing_or_ts = "бдфгґйклмнпрствхзь'БДФГҐЙКЛМНПРСТВХЗЬ"
 cons_except_hushing_or_ts_c = "[" + cons_except_hushing_or_ts + "]"
-hushing = u"чшжщЧШЖЩ"
+hushing = "чшжщЧШЖЩ"
 hushing_c = "[" + hushing + "]"
-hushing_or_ts = hushing + u"цЦ"
+hushing_or_ts = hushing + "цЦ"
 hushing_or_ts_c = "[" + hushing_or_ts + "]"
 cons = cons_except_hushing_or_ts + hushing_or_ts
 cons_c = "[" + cons + "]"
 # Cyrillic velar consonants
-velar = u"кгґхКГҐХ"
+velar = "кгґхКГҐХ"
 velar_c = "[" + velar + "]"
 # uppercase Cyrillic consonants
-uppercase = u"АЕИОУІЇЯЄЮБЦДФГҐЧЙКЛМНПРСТВШХЗЖЬЩ"
+uppercase = "АЕИОУІЇЯЄЮБЦДФГҐЧЙКЛМНПРСТВШХЗЖЬЩ"
 uppercase_c = "[" + uppercase + "]"
 
 grave_deaccenter = {
     GR:"", # grave accent
-    u"ѐ":u"е", # composed Cyrillic chars w/grave accent
-    u"Ѐ":u"Е",
-    u"ѝ":u"и",
-    u"Ѝ":u"И",
+    "ѐ":"е", # composed Cyrillic chars w/grave accent
+    "Ѐ":"Е",
+    "ѝ":"и",
+    "Ѝ":"И",
 }
 
 deaccenter = grave_deaccenter.copy()
@@ -53,16 +53,16 @@ deaccenter[AC] = "" # acute accent
 
 def remove_grave_accents(word):
   # remove grave accents
-  return re.sub("([" + GR + u"ѐЀѝЍ])", lambda m: grave_deaccenter[m.group(1)], word)
+  return re.sub("([" + GR + "ѐЀѝЍ])", lambda m: grave_deaccenter[m.group(1)], word)
 
 def remove_accents(word):
   # remove pronunciation accents
-  return re.sub("([" + pron_accents + u"ѐЀѝЍ])",
+  return re.sub("([" + pron_accents + "ѐЀѝЍ])",
     lambda m: deaccenter[m.group(1)], word)
 
 def remove_non_primary_accents(word):
   # remove all pronunciation accents except acute
-  return re.sub("([" + non_primary_pron_accents + u"ѐЀѝЍ])",
+  return re.sub("([" + non_primary_pron_accents + "ѐЀѝЍ])",
     lambda m: deaccenter[m.group(1)], word)
 
 def is_unstressed(word):
@@ -128,42 +128,42 @@ def is_mixed_stressed(word, possible_endings=[]):
   return is_multi_stressed(word) and is_end_stressed(word, possible_endings)
 
 def iotate(stem):
-  stem = re.sub(u"с[кт]$", u"щ", stem)
-  stem = re.sub(u"з[дгґ]$", u"ждж", stem)
-  stem = re.sub(u"к?т$", u"ч", stem)
-  stem = re.sub(u"зк$", u"жч", stem)
-  stem = re.sub(u"[кц]$", u"ч", stem)
-  stem = re.sub(u"[сх]$", u"ш", stem)
-  stem = re.sub(u"[гз]$", u"ж", stem)
-  stem = re.sub(u"д$", u"дж", stem)
-  stem = re.sub(u"([бвмпф])$", r"\1л", stem)
+  stem = re.sub("с[кт]$", "щ", stem)
+  stem = re.sub("з[дгґ]$", "ждж", stem)
+  stem = re.sub("к?т$", "ч", stem)
+  stem = re.sub("зк$", "жч", stem)
+  stem = re.sub("[кц]$", "ч", stem)
+  stem = re.sub("[сх]$", "ш", stem)
+  stem = re.sub("[гз]$", "ж", stem)
+  stem = re.sub("д$", "дж", stem)
+  stem = re.sub("([бвмпф])$", r"\1л", stem)
   return stem
 
 def reduce(word):
-  m = re.search(u"^(.*)([оОеЕєЄіІ])́?(" + cons_c + "+)$", word)
+  m = re.search("^(.*)([оОеЕєЄіІ])́?(" + cons_c + "+)$", word)
   if not m:
     return None
   pre, letter, post = m.groups()
-  if letter in [u"о", u"О"]:
+  if letter in ["о", "О"]:
     # FIXME, what about when the accent is on the removed letter?
-    if post in [u"й", u"Й"]:
+    if post in ["й", "Й"]:
       # FIXME, is this correct?
       return None
     letter = ""
   else:
     is_upper = re.search(uppercase_c, post)
-    if letter in [u"є", u"Є"]:
+    if letter in ["є", "Є"]:
       # англі́єц -> англі́йц-
-      letter = is_upper and u"Й" or u"й"
-    elif post in [u"й", u"Й"]:
+      letter = is_upper and "Й" or "й"
+    elif post in ["й", "Й"]:
       # солове́й -> солов'-
       letter = "'"
       post = ""
     elif ((re.search(velar_c + "$", post) and re.search(cons_except_hushing_or_ts_c + "$", pre)) or
-      (re.search(u"[^йЙ" + velar + "]$", post) and re.search(u"[лЛ]$", pre))):
+      (re.search("[^йЙ" + velar + "]$", post) and re.search("[лЛ]$", pre))):
       # FIXME, is this correct? This logic comes from ru-common.lua. The second clause that
       # adds ь after л is needed but I'm not sure about the first one.
-      letter = is_upper and u"Ь" or u"ь"
+      letter = is_upper and "Ь" or "ь"
     else:
       letter = ""
   return pre + letter + post
@@ -178,22 +178,22 @@ def dereduce(stem, epenthetic_stress):
     return None
   pre, letter, post = m.groups()
   is_upper = re.search(uppercase_c, post)
-  if re.search(velar_c, letter) or re.search(velar_c, post) or re.search(u"[вВ]", post):
-    epvowel = is_upper and u"О" or u"о"
-  elif re.search(u"['ьЬ]", post):
+  if re.search(velar_c, letter) or re.search(velar_c, post) or re.search("[вВ]", post):
+    epvowel = is_upper and "О" or "о"
+  elif re.search("['ьЬ]", post):
     # сім'я́ -> gen pl сіме́й
     # ескадри́лья -> gen pl ескадри́лей
-    epvowel = re.search(uppercase_c, letter) and u"Е" or u"е"
+    epvowel = re.search(uppercase_c, letter) and "Е" or "е"
     post = ""
-  elif re.search(u"[йЙ]", letter):
+  elif re.search("[йЙ]", letter):
     # яйце́ -> gen pl я́єць
-    epvowel = is_upper and u"Є" or u"є"
+    epvowel = is_upper and "Є" or "є"
     letter = ""
   else:
-    if re.search(u"[ьЬ]", letter):
+    if re.search("[ьЬ]", letter):
       # кільце́ -> gen pl кі́лець
       letter = ""
-    epvowel = is_upper and u"Е" or u"е"
+    epvowel = is_upper and "Е" or "е"
   if epenthetic_stress:
     epvowel = epvowel + AC
   return pre + letter + epvowel + post

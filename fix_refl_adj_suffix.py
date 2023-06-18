@@ -15,7 +15,7 @@ def process_page(page, index, parsed):
 
   pagemsg("Processing")
 
-  if not pagetitle.endswith(u"ся"):
+  if not pagetitle.endswith("ся"):
     return
 
   text = str(page.text)
@@ -24,20 +24,20 @@ def process_page(page, index, parsed):
   parsed = blib.parse(page)
   for t in parsed.filter_templates():
     origt = str(t)
-    if str(t.name) in ["ru-decl-adj", "ru-adj-old"] and getparam(t, "suffix") == u"ся":
+    if str(t.name) in ["ru-decl-adj", "ru-adj-old"] and getparam(t, "suffix") == "ся":
       lemma = getparam(t, "1")
-      lemma = re.sub(",", u"ся,", lemma)
-      lemma = re.sub("$", u"ся", lemma)
+      lemma = re.sub(",", "ся,", lemma)
+      lemma = re.sub("$", "ся", lemma)
       t.add("1", lemma)
       rmparam(t, "suffix")
-      notes.append(u"move suffix=ся to lemma")
+      notes.append("move suffix=ся to lemma")
     newt = str(t)
     if origt != newt:
       pagemsg("Replaced %s with %s" % (origt, newt))
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Rewrite reflexive adjectival participle declensions involving suffix=ся to put suffix in the lemma",
+parser = blib.create_argparser("Rewrite reflexive adjectival participle declensions involving suffix=ся to put suffix in the lemma",
   include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

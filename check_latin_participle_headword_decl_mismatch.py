@@ -8,7 +8,7 @@ from blib import getparam, rmparam, tname, msg, errmsg, site
 
 import lalib
 
-parser = blib.create_argparser(u"Check for mismatch between participle headword and decl")
+parser = blib.create_argparser("Check for mismatch between participle headword and decl")
 parser.add_argument("--direcfile", help="Output from find_template.participles.*.",
     required=True)
 args = parser.parse_args()

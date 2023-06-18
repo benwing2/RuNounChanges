@@ -8,7 +8,7 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-parser = blib.create_argparser(u"Find red links")
+parser = blib.create_argparser("Find red links")
 parser.add_argument("--pagefile", help="File containing pages to check")
 parser.add_argument("--lang", help="Language of terms")
 parser.add_argument("--field", help="Field containing terms", type=int, default=1)
@@ -25,7 +25,7 @@ words_freq = {}
 
 for i, line in blib.iter_items_from_file(args.pagefile, start, end):
   pagename = re.split(r"\s", line)[args.field - 1]
-  m = re.search(u"[^-'Ѐ-џҊ-ԧꚀ-ꚗ]", pagename)
+  m = re.search("[^-'Ѐ-џҊ-ԧꚀ-ꚗ]", pagename)
   if m:
     outtext = "skipped due to non-Cyrillic characters"
   else:

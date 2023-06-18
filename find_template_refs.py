@@ -37,9 +37,9 @@ def process_page(page, index):
 parser = blib.create_argparser("Find templates transcluding a given page",
   include_pagefile=True)
 parser.add_argument("--redirects-only",
-    help=u"""Only output redirects.""", action='store_true')
+    help="""Only output redirects.""", action='store_true')
 parser.add_argument("--table-of-uses", action='store_true',
-    help=u"""Output in table_of_uses.py input format.""")
+    help="""Output in table_of_uses.py input format.""")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

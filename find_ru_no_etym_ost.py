@@ -19,11 +19,11 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  if not re.search(u"[иы]й$", pagetitle):
-    pagemsg(u"Skipping adjective not in -ый or -ий")
+  if not re.search("[иы]й$", pagetitle):
+    pagemsg("Skipping adjective not in -ый or -ий")
     return
 
-  noun = re.sub(u"[иы]й$", u"ость", pagetitle)
+  noun = re.sub("[иы]й$", "ость", pagetitle)
   if noun not in nouns:
     return
 
@@ -53,12 +53,12 @@ def process_text_on_page(index, pagetitle, text):
         continue
       tr = getparam(t, "tr")
       if tr:
-        msg(u"%s %s+tr1=%s+-ость no-etym" % (noun, heads[0], tr))
+        msg("%s %s+tr1=%s+-ость no-etym" % (noun, heads[0], tr))
       else:
-        msg(u"%s %s+-ость no-etym" % (noun, heads[0]))
+        msg("%s %s+-ость no-etym" % (noun, heads[0]))
 
 # Pages specified using --pages or --pagefile may have accents, which will be stripped.
-parser = blib.create_argparser(u"Try to construct etymologies of nouns in -ость from adjectives",
+parser = blib.create_argparser("Try to construct etymologies of nouns in -ость from adjectives",
     include_pagefile=True, include_stdin=True, canonicalize_pagename=rulib.remove_accents)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

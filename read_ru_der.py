@@ -144,7 +144,7 @@ def process_text_on_page(index, pagetitle, pagetext):
       else:
         pagemsg("WARNING: Couldn't find derived terms on page")
   
-parser = blib.create_argparser(u"Read derived terms from Russian term and convert to input format for infer_ru_derverb_prefixes.py", include_pagefile=True, include_stdin=True)
+parser = blib.create_argparser("Read derived terms from Russian term and convert to input format for infer_ru_derverb_prefixes.py", include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

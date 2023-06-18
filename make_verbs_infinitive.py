@@ -107,18 +107,18 @@ def process_page(page, index, parsed):
       for arg_set in arg_sets:
         # This complex spec matches matches 3°a, 3oa, 4a1a, 6c1a,
         # 1a6a, 6a1as13, 6a1as14, etc.
-        m = re.search(u"^([0-9]+[°o0-9abc]*[abc]s?1?[34]?)", arg_set[0])
+        m = re.search("^([0-9]+[°o0-9abc]*[abc]s?1?[34]?)", arg_set[0])
         if not m:
-          m = re.search(u"^(irreg-?[абцдеѣфгчийклмнопярстувшхызёюжэщьъ%-]*)", arg_set[0])
+          m = re.search("^(irreg-?[абцдеѣфгчийклмнопярстувшхызёюжэщьъ%-]*)", arg_set[0])
           if not m:
             errpagemsg("Unrecognized conjugation type: %s" % arg_set[0])
             continue
-        conj_type = m.group(1).replace("o", u"°")
+        conj_type = m.group(1).replace("o", "°")
         inf, tr = rulib.split_russian_tr(arg_set[1])
         if refl:
-          new_style = re.search(u"([тч]ься|ти́?сь)$", inf)
+          new_style = re.search("([тч]ься|ти́?сь)$", inf)
         else:
-          new_style = re.search(u"([тч]ь|ти́?)$" if conj_type.startswith("7") or conj_type.startswith("irreg") else u"[тч]ь$", inf)
+          new_style = re.search("([тч]ь|ти́?)$" if conj_type.startswith("7") or conj_type.startswith("irreg") else "[тч]ь$", inf)
         if new_style:
           if arg_set[0].startswith("irreg-"):
             arg_set[0] = re.sub("^irreg-.*?(/.*|$)", r"irreg\1", arg_set[0])
@@ -128,168 +128,168 @@ def process_page(page, index, parsed):
           if not re.search("^[124]", conj_type):
             assert not tr
           if conj_type in ["1a", "2a", "2b"]:
-            inf += u"ть"
+            inf += "ть"
             if tr:
-              tr += u"tʹ"
-          elif conj_type in ["3a", u"3°a"]:
-            inf += u"нуть"
-          elif conj_type in ["3b", u"3c"]:
-            inf += u"у́ть"
+              tr += "tʹ"
+          elif conj_type in ["3a", "3°a"]:
+            inf += "нуть"
+          elif conj_type in ["3b", "3c"]:
+            inf += "у́ть"
           elif conj_type == "4a":
-            inf += u"ить"
+            inf += "ить"
             if tr:
-              tr += u"itʹ"
+              tr += "itʹ"
           elif conj_type in ["4b", "4c"]:
             inf, tr = rulib.make_unstressed(inf, rulib.decompose(tr))
-            inf += u"ить"
+            inf += "ить"
             if tr:
-              tr += u"ítʹ"
+              tr += "ítʹ"
           elif conj_type == "4a1a":
-            inf = re.sub(u"[ая]$", "", inf) + u"ить"
+            inf = re.sub("[ая]$", "", inf) + "ить"
             if tr:
-              tr = re.sub("j?a$", "", tr) + u"itʹ"
+              tr = re.sub("j?a$", "", tr) + "itʹ"
           elif conj_type == "5a":
-            inf = arg_set[2] + u"ть" if arg_set[2] else arg_set[1] + u"еть"
-            normal_pres_stem = re.sub(u"[еая]ть$", "", inf)
+            inf = arg_set[2] + "ть" if arg_set[2] else arg_set[1] + "еть"
+            normal_pres_stem = re.sub("[еая]ть$", "", inf)
             if normal_pres_stem == arg_set[1]:
               arg_set[2] = ""
             else:
               arg_set[2] = arg_set[1]
           elif conj_type == "5b":
-            inf = arg_set[2] + u"ть"
-            normal_pres_stem = re.sub(u"[еая]́ть$", "", inf)
+            inf = arg_set[2] + "ть"
+            normal_pres_stem = re.sub("[еая]́ть$", "", inf)
             if normal_pres_stem == arg_set[1]:
               arg_set[2] = ""
             else:
               arg_set[2] = arg_set[1]
           elif conj_type == "5c":
-            inf = arg_set[2] + u"ть"
+            inf = arg_set[2] + "ть"
             normal_pres_stem = rulib.make_ending_stressed_ru(
-              re.sub(u"[еая]́ть$", "", inf))
+              re.sub("[еая]́ть$", "", inf))
             if normal_pres_stem == arg_set[1]:
               arg_set[2] = ""
             else:
               arg_set[2] = arg_set[1]
-          elif re.search(u"^6°?a", conj_type) or conj_type == "1a6a":
+          elif re.search("^6°?a", conj_type) or conj_type == "1a6a":
             assert not arg_set[3]
             if arg_set[2]:
-              inf = arg_set[2] + u"ть"
+              inf = arg_set[2] + "ть"
               arg_set[2] = ""
               normal_pres_stem = rulib.make_ending_stressed_ru(
-                re.sub(u"а́ть$", "", inf))
+                re.sub("а́ть$", "", inf))
               assert arg_set[1] == normal_pres_stem
             elif is_vowel_stem(inf):
-              inf += u"ять"
+              inf += "ять"
             else:
-              inf += u"ать"
+              inf += "ать"
             if getparam(t, "pres_stem"):
               arg_set[2] = getparam(t, "pres_stem")
               rm_pres_stem = True
-          elif re.search(u"^6°?b", conj_type):
+          elif re.search("^6°?b", conj_type):
             if is_vowel_stem(inf):
-              inf += u"я́ть"
+              inf += "я́ть"
             else:
-              inf += u"а́ть"
+              inf += "а́ть"
             # arg_set[2] (present stem) remains
-          elif re.search(u"^6°?c", conj_type):
-            inf = rulib.make_unstressed_once_ru(inf) + u"а́ть"
+          elif re.search("^6°?c", conj_type):
+            inf = rulib.make_unstressed_once_ru(inf) + "а́ть"
           elif conj_type in ["7a", "7b"]:
             pass # nothing needed to do
           elif conj_type in ["8a", "8b"]:
             inf = arg_set[2]
             arg_set[2] = arg_set[1]
           elif conj_type == "9a":
-            inf += u"еть"
+            inf += "еть"
             # arg_set[2] (present stem) remains
           elif conj_type == "9b":
-            inf = rulib.make_unstressed_once_ru(inf) + u"е́ть"
+            inf = rulib.make_unstressed_once_ru(inf) + "е́ть"
             # arg_set[2] (present stem) remains
             # arg_set[3] (optional past participle stem) remains
           elif conj_type == "10a":
-            inf += u"оть"
+            inf += "оть"
           elif conj_type == "10c":
-            inf += u"ть"
-            if rulib.make_unstressed_once_ru(arg_set[2]) == re.sub(u"о́$", "", arg_set[1]):
+            inf += "ть"
+            if rulib.make_unstressed_once_ru(arg_set[2]) == re.sub("о́$", "", arg_set[1]):
               arg_set[2] = ""
           elif conj_type == "11a":
-            inf += u"ить"
+            inf += "ить"
           elif conj_type == "11b":
-            inf += u"и́ть"
+            inf += "и́ть"
             if arg_set[2] == arg_set[1]:
               arg_set[2] = ""
           elif conj_type == "12a":
-            inf += u"ть"
+            inf += "ть"
             if arg_set[2] == arg_set[1]:
               arg_set[2] = ""
           elif conj_type == "12b":
-            inf += u"ть"
+            inf += "ть"
             if rulib.make_ending_stressed_ru(arg_set[2]) == arg_set[1]:
               arg_set[2] = ""
           elif conj_type == "13b":
-            inf += u"ть"
-            assert re.sub(u"ва́ть$", "", inf) == arg_set[2]
+            inf += "ть"
+            assert re.sub("ва́ть$", "", inf) == arg_set[2]
             arg_set[2] = ""
           elif conj_type in ["14a", "14b", "14c"]:
-            inf += u"ть"
+            inf += "ть"
             # arg_set[2] (present stem) remains
           elif conj_type in ["15a", "16a", "16b"]:
-            inf += u"ть"
-          elif conj_type == u"irreg-минуть":
-            inf = u"мину́ть"
-          elif conj_type == u"irreg-живописать-миновать":
-            inf += u"ть"
+            inf += "ть"
+          elif conj_type == "irreg-минуть":
+            inf = "мину́ть"
+          elif conj_type == "irreg-живописать-миновать":
+            inf += "ть"
             arg_set[2] = ""
-          elif conj_type == u"irreg-слыхать-видать":
-            inf += u"ть"
-          elif conj_type == u"irreg-стелить-стлать":
-            inf = arg_set[2] + inf + u"ть"
-            arg_set[2] = ""
-            arg_set[3] = ""
-          elif conj_type == u"irreg-ссать-сцать":
-            assert arg_set[2] == re.sub(u"а́$", "", inf)
-            inf = arg_set[3] + inf + u"ть"
+          elif conj_type == "irreg-слыхать-видать":
+            inf += "ть"
+          elif conj_type == "irreg-стелить-стлать":
+            inf = arg_set[2] + inf + "ть"
             arg_set[2] = ""
             arg_set[3] = ""
-          elif conj_type in [u"irreg-сыпать", u"irreg-ехать", u"irreg-ѣхать"]:
+          elif conj_type == "irreg-ссать-сцать":
+            assert arg_set[2] == re.sub("а́$", "", inf)
+            inf = arg_set[3] + inf + "ть"
+            arg_set[2] = ""
+            arg_set[3] = ""
+          elif conj_type in ["irreg-сыпать", "irreg-ехать", "irreg-ѣхать"]:
             infstem = re.sub("^irreg-", "", conj_type)
-            if arg_set[1] != u"вы́":
+            if arg_set[1] != "вы́":
               infstem = rulib.make_beginning_stressed_ru(infstem)
             inf = arg_set[1] + infstem
-          elif conj_type == u"irreg-обязывать":
-            if arg_set[1] == u"вы́":
-              inf = u"вы́обязывать"
+          elif conj_type == "irreg-обязывать":
+            if arg_set[1] == "вы́":
+              inf = "вы́обязывать"
             else:
-              inf = arg_set[1] + u"обя́зывать"
-          elif conj_type == u"irreg-зиждиться":
-            if arg_set[1] == u"вы́":
-              inf = u"вы́зиждить"
+              inf = arg_set[1] + "обя́зывать"
+          elif conj_type == "irreg-зиждиться":
+            if arg_set[1] == "вы́":
+              inf = "вы́зиждить"
             else:
-              inf = arg_set[1] + u"зи́ждить"
-          elif conj_type == u"irreg-идти":
+              inf = arg_set[1] + "зи́ждить"
+          elif conj_type == "irreg-идти":
             if not arg_set[1]:
-              inf = u"идти́"
-            elif arg_set[1] == u"вы́":
-              inf = u"вы́йти"
+              inf = "идти́"
+            elif arg_set[1] == "вы́":
+              inf = "вы́йти"
             else:
-              inf = arg_set[1] + u"йти́"
+              inf = arg_set[1] + "йти́"
           elif re.search("^irreg-", conj_type):
             infstem = re.sub("^irreg-", "", conj_type)
-            if arg_set[1] != u"вы́":
+            if arg_set[1] != "вы́":
               infstem = rulib.make_ending_stressed_ru(infstem)
             inf = arg_set[1] + infstem
           else:
             error("Unknown conjugation type " + conj_type)
           if inf:
             if refl:
-              if re.search(u"[тч]ь$", inf):
-                inf += u"ся"
+              if re.search("[тч]ь$", inf):
+                inf += "ся"
                 if tr:
                   tr += "sja"
               else:
-                assert re.search(u"и́?$", inf)
-                inf += u"сь"
+                assert re.search("и́?$", inf)
+                inf += "сь"
                 if tr:
-                  tr += u"sʹ"
+                  tr += "sʹ"
             arg_set[1] = rulib.paste_russian_tr(rulib.remove_monosyllabic_accents(inf),
              rulib.remove_tr_monosyllabic_accents(tr))
 

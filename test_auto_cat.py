@@ -13,7 +13,7 @@ def process_page(page, index):
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
-  result = expand_text(u"{{auto cat}}")
+  result = expand_text("{{auto cat}}")
   if not result:
     return
   pagemsg("Returned: <%s>" % result)

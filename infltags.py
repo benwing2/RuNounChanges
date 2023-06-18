@@ -114,7 +114,7 @@ def construct_abbreviated_template(tn, lang, lemma):
 #     to compare tags but not to convert all tags to their canonical form.
 # These tables should be passed to combine_adjacent_tags_into_multipart().
 def fetch_tag_tables(preferred_tag_variants=set()):
-  jsonstr = site.expand_text(u"{{#invoke:User:Benwing2/form of|dump_form_of_data}}")
+  jsonstr = site.expand_text("{{#invoke:User:Benwing2/form of|dump_form_of_data}}")
   jsondata = json.loads(jsonstr)
   tag_to_dimension_table = {}
   tag_to_canonical_form_table = {}

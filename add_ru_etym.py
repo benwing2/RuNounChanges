@@ -192,7 +192,7 @@ def process_line(index, line, add_passive_of, override_etym, save, verbose):
       sections[i] = "".join(subsections)
       if add_passive_of:
         active_term = rulib.remove_monosyllabic_accents(
-          re.sub(u"с[яь]$", "", accented_term))
+          re.sub("с[яь]$", "", accented_term))
         sections[i] = re.sub(r"(^(#.*\n)+)",
           r"\1# {{passive of|lang=ru|%s}}\n" % active_term,
           sections[i], 1, re.M)

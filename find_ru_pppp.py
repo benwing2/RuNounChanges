@@ -37,7 +37,7 @@ def process_page(index, page, save, verbose):
             val = re.sub("//.*", "", val)
             pagemsg("Found perfective past passive participle: %s" % val)
 
-parser = blib.create_argparser(u"Find Russian perfective verbs with explicit past passive participles")
+parser = blib.create_argparser("Find Russian perfective verbs with explicit past passive participles")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

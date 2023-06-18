@@ -53,7 +53,7 @@ def process_page(page, index, parsed):
 
   return parsed, notes
 
-parser = blib.create_argparser(u"Convert {{R:SAOL}}, {{R:SO}}, {{R:SAOB online}} to {{R:svenska.se}}",
+parser = blib.create_argparser("Convert {{R:SAOL}}, {{R:SO}}, {{R:SAOB online}} to {{R:svenska.se}}",
   include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

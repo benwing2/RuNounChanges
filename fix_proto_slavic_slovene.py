@@ -8,39 +8,39 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-GRAVE     = u"\u0300"
-ACUTE     = u"\u0301"
-CIRC      = u"\u0302"
-TILDE     = u"\u0303"
-MACRON    = u"\u0304"
-BREVE     = u"\u0306"
-DOTABOVE  = u"\u0307"
-DIAER     = u"\u0308"
-CARON     = u"\u030C"
-DGRAVE    = u"\u030F"
-INVBREVE  = u"\u0311"
-DOTBELOW  = u"\u0323"
-RINGBELOW = u"\u0325"
-CEDILLA   = u"\u0327"
-OGONEK    = u"\u0328"
+GRAVE     = "\u0300"
+ACUTE     = "\u0301"
+CIRC      = "\u0302"
+TILDE     = "\u0303"
+MACRON    = "\u0304"
+BREVE     = "\u0306"
+DOTABOVE  = "\u0307"
+DIAER     = "\u0308"
+CARON     = "\u030C"
+DGRAVE    = "\u030F"
+INVBREVE  = "\u0311"
+DOTBELOW  = "\u0323"
+RINGBELOW = "\u0325"
+CEDILLA   = "\u0327"
+OGONEK    = "\u0328"
 
-skip_pages = [u"Reconstruction:Proto-Slavic/mělь",
-    u"Reconstruction:Proto-Slavic/pazъ"]
+skip_pages = ["Reconstruction:Proto-Slavic/mělь",
+    "Reconstruction:Proto-Slavic/pazъ"]
 
 def remove_slovene_accents(lemma):
-  lemma = re.sub(u"[ÁÀÂȂȀ]", "A", lemma)
-  lemma = re.sub(u"[áàâȃȁ]", "a", lemma)
-  lemma = re.sub(u"[ÉÈÊȆȄỆẸĘ]",  "E", lemma)
-  lemma = re.sub(u"[éèêȇȅệẹęə]",  "e", lemma)
-  lemma = re.sub(u"[ÍÌÎȊȈ]", "I", lemma)
-  lemma = re.sub(u"[íìîȋȉ]", "i", lemma)
-  lemma = re.sub(u"[ÓÒÔȎȌỘỌǪ]", "O", lemma)
-  lemma = re.sub(u"[óòôȏȍộọǫ]", "o", lemma)
-  lemma = re.sub(u"[ŔȒȐ]", "R", lemma)
-  lemma = re.sub(u"[ŕȓȑ]", "r", lemma)
-  lemma = re.sub(u"[ÚÙÛȖȔ]", "U", lemma)
-  lemma = re.sub(u"[úùûȗȕ]", "u", lemma)
-  lemma = re.sub(u"ł", "l", lemma)
+  lemma = re.sub("[ÁÀÂȂȀ]", "A", lemma)
+  lemma = re.sub("[áàâȃȁ]", "a", lemma)
+  lemma = re.sub("[ÉÈÊȆȄỆẸĘ]",  "E", lemma)
+  lemma = re.sub("[éèêȇȅệẹęə]",  "e", lemma)
+  lemma = re.sub("[ÍÌÎȊȈ]", "I", lemma)
+  lemma = re.sub("[íìîȋȉ]", "i", lemma)
+  lemma = re.sub("[ÓÒÔȎȌỘỌǪ]", "O", lemma)
+  lemma = re.sub("[óòôȏȍộọǫ]", "o", lemma)
+  lemma = re.sub("[ŔȒȐ]", "R", lemma)
+  lemma = re.sub("[ŕȓȑ]", "r", lemma)
+  lemma = re.sub("[ÚÙÛȖȔ]", "U", lemma)
+  lemma = re.sub("[úùûȗȕ]", "u", lemma)
+  lemma = re.sub("ł", "l", lemma)
   lemma = re.sub(GRAVE, "", lemma)
   lemma = re.sub(ACUTE, "", lemma)
   lemma = re.sub(DGRAVE, "", lemma)
@@ -202,7 +202,7 @@ def process_page(page, index, parsed):
 
   return str(parsed).replace("{{l-REPLACEME|", "{{l|"), notes
 
-parser = blib.create_argparser(u"Convert Slovene links in Proto-Slavic pages to tonal form",
+parser = blib.create_argparser("Convert Slovene links in Proto-Slavic pages to tonal form",
   include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

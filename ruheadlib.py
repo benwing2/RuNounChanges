@@ -22,8 +22,8 @@ ru_lemma_poses = ["adjective", "adverb", "circumfix", "conjunction",
 # Non-Russian-specified templates speciying inflections of a lemma.
 inflection_templates = ["inflection of", "comparative of", "superlative of"]
 # Alt-ё templates for specifying terms spelled with е in place of ё.
-alt_yo_templates = [u"ru-noun-alt-ё", u"ru-verb-alt-ё", u"ru-adj-alt-ё",
-  u"ru-proper noun-alt-ё", u"ru-pos-alt-ё"]
+alt_yo_templates = ["ru-noun-alt-ё", "ru-verb-alt-ё", "ru-adj-alt-ё",
+  "ru-proper noun-alt-ё", "ru-pos-alt-ё"]
 
 # Cache of information found during page lookup of a term, to avoid duplicative
 # page lookups (which are expensive as the server only allows about 6 of them
@@ -52,68 +52,68 @@ semi_verbose = False # Set by --semi-verbose or --verbose
 # a lemma.
 manually_specified_inflections = {
   # Also a particle meaning "nearly"
-  u"было": [u"бы́ло", u"быть"],
+  "было": ["бы́ло", "быть"],
   # Also genitive plural of ка́ка
-  u"как": [u"как", True],
+  "как": ["как", True],
   # Also genitive plural of та́ка
-  u"так": [u"так", True],
+  "так": ["так", True],
   # Also genitive plural of ту́та
-  u"тут": [u"тут", True],
+  "тут": ["тут", True],
   # Also 2nd singular imperative of тереть
-  u"три": [u"три", True],
+  "три": ["три", True],
   # Also 2nd singular imperative of пя́тить
-  u"пять": [u"пять", True],
+  "пять": ["пять", True],
   # Also dated present adverbial participle of длить
-  u"для": [u"для", True],
+  "для": ["для", True],
   # Also listed as inflection of быть
-  u"нет": [u"нет", True],
+  "нет": ["нет", True],
   # Also an interjection
-  u"это": [u"э́то", u"этот"],
+  "это": ["э́то", "этот"],
   # Abbrevations of -либо
-  u"кто-л": [u"кто́-либо", True],
-  u"кого-л": [u"кого́-либо", u"кто-либо"],
-  u"кому-л": [u"кому́-либо", u"кто-либо"],
-  u"кем-л": [u"ке́м-либо", u"кто-либо"],
-  u"ком-л": [u"ко́м-либо", u"кто-либо"],
-  u"что-л": [u"что́-либо", True],
-  u"чего-л": [u"чего́-либо", u"что-либо"],
-  u"чему-л": [u"чему́-либо", u"что-либо"],
-  u"чем-л": [u"че́м-либо", u"что-либо"],
-  u"чём-л": [u"чём-либо", u"что-либо"],
-  u"чей-л": [u"че́й-либо", True],
-  u"чьё-л": [u"чьё-либо", u"чеи-либо"],
-  u"чья-л": [u"чья́-либо", u"чеи-либо"],
-  u"чьи-л": [u"чьи́-либо", u"чеи-либо"],
-  u"чьего-л": [u"чьего́-либо", u"чеи-либо"],
-  u"чьей-л": [u"чье́й-либо", u"чеи-либо"],
-  u"чьих-л": [u"чьи́х-либо", u"чеи-либо"],
-  u"чьему-л": [u"чьему́-либо", u"чеи-либо"],
-  u"чьим-л": [u"чьи́м-либо", u"чеи-либо"],
-  u"чью-л": [u"чью́-либо", u"чеи-либо"],
-  u"чьею-л": [u"чье́ю-либо", u"чеи-либо"],
-  u"чьими-л": [u"чьи́ми-либо", u"чеи-либо"],
-  u"чьём-л": [u"чьём-либо", u"чеи-либо"],
-  u"куда-л": [u"куда́-либо", True],
-  u"какой-л": [u"како́й-либо", True],
-  u"какое-л": [u"како́е-либо", u"какой-либо"],
-  u"какая-л": [u"кака́я-либо", u"какой-либо"],
-  u"какие-л": [u"каки́е-либо", u"какой-либо"],
-  u"какого-л": [u"како́го-либо", u"какой-либо"],
-  u"каких-л": [u"каки́х-либо", u"какой-либо"],
-  u"какому-л": [u"како́му-либо", u"какой-либо"],
-  u"каким-л": [u"каки́м-либо", u"какой-либо"],
-  u"какую-л": [u"каку́ю-либо", u"какой-либо"],
-  u"какою-л": [u"како́ю-либо", u"какой-либо"],
-  u"какими-л": [u"каки́ми-либо", u"какой-либо"],
-  u"каком-л": [u"како́м-либо", u"какой-либо"],
+  "кто-л": ["кто́-либо", True],
+  "кого-л": ["кого́-либо", "кто-либо"],
+  "кому-л": ["кому́-либо", "кто-либо"],
+  "кем-л": ["ке́м-либо", "кто-либо"],
+  "ком-л": ["ко́м-либо", "кто-либо"],
+  "что-л": ["что́-либо", True],
+  "чего-л": ["чего́-либо", "что-либо"],
+  "чему-л": ["чему́-либо", "что-либо"],
+  "чем-л": ["че́м-либо", "что-либо"],
+  "чём-л": ["чём-либо", "что-либо"],
+  "чей-л": ["че́й-либо", True],
+  "чьё-л": ["чьё-либо", "чеи-либо"],
+  "чья-л": ["чья́-либо", "чеи-либо"],
+  "чьи-л": ["чьи́-либо", "чеи-либо"],
+  "чьего-л": ["чьего́-либо", "чеи-либо"],
+  "чьей-л": ["чье́й-либо", "чеи-либо"],
+  "чьих-л": ["чьи́х-либо", "чеи-либо"],
+  "чьему-л": ["чьему́-либо", "чеи-либо"],
+  "чьим-л": ["чьи́м-либо", "чеи-либо"],
+  "чью-л": ["чью́-либо", "чеи-либо"],
+  "чьею-л": ["чье́ю-либо", "чеи-либо"],
+  "чьими-л": ["чьи́ми-либо", "чеи-либо"],
+  "чьём-л": ["чьём-либо", "чеи-либо"],
+  "куда-л": ["куда́-либо", True],
+  "какой-л": ["како́й-либо", True],
+  "какое-л": ["како́е-либо", "какой-либо"],
+  "какая-л": ["кака́я-либо", "какой-либо"],
+  "какие-л": ["каки́е-либо", "какой-либо"],
+  "какого-л": ["како́го-либо", "какой-либо"],
+  "каких-л": ["каки́х-либо", "какой-либо"],
+  "какому-л": ["како́му-либо", "какой-либо"],
+  "каким-л": ["каки́м-либо", "какой-либо"],
+  "какую-л": ["каку́ю-либо", "какой-либо"],
+  "какою-л": ["како́ю-либо", "какой-либо"],
+  "какими-л": ["каки́ми-либо", "какой-либо"],
+  "каком-л": ["како́м-либо", "какой-либо"],
 }
 
 terms_to_ignore = {
-  u"бела", # On page белый, we have old short genitive бе́ла; if we don't ignore
+  "бела", # On page белый, we have old short genitive бе́ла; if we don't ignore
            # the page, we get a translit from the term бел
-  u"белу", # On page свет, we have old short dative бе́лу; if we don't ignore
+  "белу", # On page свет, we have old short dative бе́лу; if we don't ignore
            # the page, we get a translit from the term бел
-  u"и.о.", # Otherwise we get и.о́.
+  "и.о.", # Otherwise we get и.о́.
 }
 
 # Given Cyrillic and translit, remove any accents if the text consists of a
@@ -332,7 +332,7 @@ def lookup_heads_and_inflections(pagename, pagemsg):
         if str(t.name) in alt_yo_templates:
           yo_pages.add(getparam(t, "1"))
       if len(yo_pages) > 1:
-        pagemsg(u"WARNING: lookup_heads_and_inflections: Found multiple alt-ё templates for different lemmas: %s" %
+        pagemsg("WARNING: lookup_heads_and_inflections: Found multiple alt-ё templates for different lemmas: %s" %
           ",".join(yo_pages))
       elif len(yo_pages) == 0:
         pagemsg("WARNING: lookup_heads_and_inflections: Found no lemmas or inflections of lemmas for %s" % pagename)

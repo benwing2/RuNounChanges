@@ -6,18 +6,18 @@ import pywikibot, re, sys, argparse, unicodedata
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname, pname, rsub_repeatedly
 
-AC = u"\u0301" # acute =  ́
-GR = u"\u0300" # grave =  ̀
-CFLEX = u"\u0302" # circumflex =  ̂
-TILDE = u"\u0303" # tilde =  ̃
-DIA = u"\u0308" # diaeresis =  ̈
+AC = "\u0301" # acute =  ́
+GR = "\u0300" # grave =  ̀
+CFLEX = "\u0302" # circumflex =  ̂
+TILDE = "\u0303" # tilde =  ̃
+DIA = "\u0308" # diaeresis =  ̈
 
-SYLDIV = u"\uFFF0" # used to represent a user-specific syllable divider (.) so we won't change it
+SYLDIV = "\uFFF0" # used to represent a user-specific syllable divider (.) so we won't change it
 accent = AC + GR + CFLEX
 accent_c = "[" + accent + "]"
 stress = AC + GR
 stress_c = "[" + AC + GR + "]"
-ipa_stress = u"ˈˌ"
+ipa_stress = "ˈˌ"
 ipa_stress_c = "[" + ipa_stress + "]"
 separator = accent + ipa_stress + r"# \-." + SYLDIV
 separator_c = "[" + separator + "]"

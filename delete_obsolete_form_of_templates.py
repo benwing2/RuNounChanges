@@ -6,7 +6,7 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-parser = blib.create_argparser(u"Delete obsolete form-of templates and documentation pages")
+parser = blib.create_argparser("Delete obsolete form-of templates and documentation pages")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

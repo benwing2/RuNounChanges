@@ -6,10 +6,10 @@ import rulib
 from collections import OrderedDict
 
 parser = argparse.ArgumentParser(description="Output short adjectives in Wiktionary, ordered by frequency.")
-parser.add_argument("--freq-adjs", help=u"""Adjectives ordered by frequency, without accents or ё.""",
+parser.add_argument("--freq-adjs", help="""Adjectives ordered by frequency, without accents or ё.""",
     required=True)
 parser.add_argument("--wiktionary-short-adjs",
-    help=u"""Adjectives in Wiktionary with short forms, in alphabetical order.
+    help="""Adjectives in Wiktionary with short forms, in alphabetical order.
 Should be accented and with ё.""", required=True)
 args = parser.parse_args()
 

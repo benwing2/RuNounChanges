@@ -7,8 +7,8 @@ import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
 def base_default_verb_forms(verb):
-  vowel = u"aeiouáéíóúàèìòùâêîôûäëïöüæœø"
-  ulvowel = vowel + u"AEIOUÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÄËÏÖÜÆŒØ"
+  vowel = "aeiouáéíóúàèìòùâêîôûäëïöüæœø"
+  ulvowel = vowel + "AEIOUÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÄËÏÖÜÆŒØ"
   
   if re.search("([sxz]|[cs]h)$", verb):
     s_form = verb + "es"

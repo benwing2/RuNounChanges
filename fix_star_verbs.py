@@ -38,7 +38,7 @@ def process_page(page, index, parsed):
         t.add("4", "")
       else:
         rmparam(t, "4")
-      if re.search(u"^(во|взо|изо|обо|ото|подо|разо|со)", param4):
+      if re.search("^(во|взо|изо|обо|ото|подо|разо|со)", param4):
         param2 = re.sub("^([0-9]+)", r"\1*", param2)
         t.add("2", param2)
         notes.append("Replaced manual pres/futr stem with * variant")
@@ -91,7 +91,7 @@ def process_page(page, index, parsed):
 
   return parsed, notes
 
-parser = blib.create_argparser(u"Add * to 9b and 11b verbs as needed")
+parser = blib.create_argparser("Add * to 9b and 11b verbs as needed")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

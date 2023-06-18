@@ -20,7 +20,7 @@ def split_noun_decl_arg_sets(decl_template, pagemsg):
   # a list of per-word objects, one per word in the declension (separated
   # by "_", "-" or "join:..."), where each per-word object is a list of
   # arg sets (separated by "or"), one per alternative declension of the word,
-  # where each arg set is a list of arguments, e.g. ["b", u"поро́к", "*"].
+  # where each arg set is a list of arguments, e.g. ["b", "поро́к", "*"].
   # We take care to handle cases where there is no lemma (it would default
   # to the page name).
   #
@@ -39,7 +39,7 @@ def split_noun_decl_arg_sets(decl_template, pagemsg):
   # Now gather the numbered arguments into arg sets, gather the arg sets into
   # groups of arg sets (one group per word), and gather the info for all
   # words. An arg set is a list of arguments describing a declension,
-  # e.g. ["b", u"поро́к", "*"]. There may be multiple arg sets per word;
+  # e.g. ["b", "поро́к", "*"]. There may be multiple arg sets per word;
   # in particular, if a word has a compound declension consisting of two
   # or more declensions separated by "or". Code taken from ru-noun.lua,
   # modified to include at least two elements in each arg set.
@@ -127,7 +127,7 @@ def check_old_noun_headword_forms(headword_template, args, subpagetitle, pagemsg
           if not (w1 & w2):
             return None
       return True
-    form1 = [fixup_link(re.sub(u"ё́", u"ё", x)) for x in form1]
+    form1 = [fixup_link(re.sub("ё́", "ё", x)) for x in form1]
     form2 = re.split(",", form2)
     if laxer_comparison or not form1_lemma:
       # Ignore manual translit in decl forms when comparing non-lemma forms;
@@ -196,7 +196,7 @@ def check_old_noun_headword_forms(headword_template, args, subpagetitle, pagemsg
     return None
 
   for case in cases_to_check:
-    raw_case = re.sub(u"△", "", blib.remove_links(args[case + "_raw"]))
+    raw_case = re.sub("△", "", blib.remove_links(args[case + "_raw"]))
     if args[case] != raw_case:
       pagemsg("WARNING: Raw case %s=%s contains footnote symbol" % (
         case, args[case + "_raw"]))
@@ -285,7 +285,7 @@ def convert_zdecl_to_ru_noun_table(decl_z_template, subpagetitle, pagemsg,
   zlemma = getp("1")
   zgender_anim = getp("2")
   zstress = getp("3")
-  zspecial = re.sub(u"ё", u";ё", getp("4"))
+  zspecial = re.sub("ё", ";ё", getp("4"))
   m = re.search(r"^([mfn])-(an|in|inan)$", zgender_anim)
   if not m:
     pagemsg("WARNING: Unable to recognize z-decl gender/anim spec, skipping: %s" %
@@ -298,13 +298,13 @@ def convert_zdecl_to_ru_noun_table(decl_z_template, subpagetitle, pagemsg,
     return None
 
   # Remove unnecessary gender
-  need_gender = (re.search(u"[иы]́?$", zlemma) or
-      zgender == "n" and re.search(u"[яа]́?$", zlemma) or
-      zgender == "m" and re.search(u"[яа]́?$", zlemma) and "(1)" in zspecial or
-      zlemma.endswith(u"ь"))
+  need_gender = (re.search("[иы]́?$", zlemma) or
+      zgender == "n" and re.search("[яа]́?$", zlemma) or
+      zgender == "m" and re.search("[яа]́?$", zlemma) and "(1)" in zspecial or
+      zlemma.endswith("ь"))
   if not need_gender:
-    normal_gender = (re.search(u"[оеё]́?$", zlemma) and "n" or
-        re.search(u"[ая]́?$", zlemma) and "f" or "m")
+    normal_gender = (re.search("[оеё]́?$", zlemma) and "n" or
+        re.search("[ая]́?$", zlemma) and "f" or "m")
     if normal_gender != zgender:
       pagemsg("WARNING: Gender mismatch, normal gender=%s, explicit gender=%s, keeping gender" %
           (normal_gender, zgender))
@@ -324,7 +324,7 @@ def convert_zdecl_to_ru_noun_table(decl_z_template, subpagetitle, pagemsg,
     return defstr
   if rulib.is_nonsyllabic(stressed_lemma):
     default_stress = check_defstress("b", "nonsyllabic lemma")
-  elif re.search(u"([аяоеыи]́|ё́?)$", stressed_lemma):
+  elif re.search("([аяоеыи]́|ё́?)$", stressed_lemma):
     default_stress = check_defstress("b", "ending-accented lemma")
   # No need for special-casing for ёнок or а́нин, as they are considered
   # accent a by ru-decl-noun-z
@@ -337,7 +337,7 @@ def convert_zdecl_to_ru_noun_table(decl_z_template, subpagetitle, pagemsg,
 
   # Remove unnecessary lemma
   if rulib.try_to_stress(subpagetitle) == stressed_lemma:
-    pagemsg(u"Removing lemma %s because identical to subpagetitle %s (modulo monosyllabic stress differences): %s" %
+    pagemsg("Removing lemma %s because identical to subpagetitle %s (modulo monosyllabic stress differences): %s" %
         (zlemma, subpagetitle, zdecl))
     zlemma = ""
 
@@ -413,12 +413,12 @@ def convert_zdecl_to_ru_noun_table(decl_z_template, subpagetitle, pagemsg,
     decl_template.add(newparam, newval)
   loc = getp("loc")
   if loc:
-    if loc == u"в":
-      newloc = u"в +"
-    elif loc == u"на":
-      newloc = u"на +"
+    if loc == "в":
+      newloc = "в +"
+    elif loc == "на":
+      newloc = "на +"
     else:
-      newloc = u"в/на +"
+      newloc = "в/на +"
     pagemsg("Preserving z-decl locative loc=%s (canonicalized from loc=%s): %s" %
         (newloc, loc, zdecl))
     decl_template.add("loc", newloc)

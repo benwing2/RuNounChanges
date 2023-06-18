@@ -425,7 +425,7 @@ place_types_to_codes = {
   "district": "dist",
   "division": "div",
   "department": "dept",
-  u"département": "dept",
+  "département": "dept",
   "island": "isl",
   "municipality": "mun",
   "parish": "par",
@@ -776,7 +776,7 @@ countries = {
   "Saint Vincent and the Grenadines",
   "Samoa",
   "San Marino",
-  u"São Tomé and Príncipe",
+  "São Tomé and Príncipe",
   "Saudi Arabia",
   "Senegal",
   "Serbia",
@@ -969,14 +969,14 @@ japanese_prefectures = {
   "Gunma",
   "Hiroshima",
   "Hokkaido",
-  u"Hyōgo",
+  "Hyōgo",
   "Ibaraki",
   "Ishikawa",
   "Iwate",
   "Kagawa",
   "Kagoshima",
   "Kanagawa",
-  u"Kōchi",
+  "Kōchi",
   "Kumamoto",
   "Kyoto",
   "Mie",
@@ -986,7 +986,7 @@ japanese_prefectures = {
   "Nagasaki",
   "Nara",
   "Niigata",
-  u"Ōita",
+  "Ōita",
   "Okayama",
   "Okinawa",
   "Osaka",
@@ -1006,7 +1006,7 @@ japanese_prefectures = {
 }
 
 german_states = {
-  u"Baden-Württemberg",
+  "Baden-Württemberg",
   "Bavaria",
   "Berlin",
   "Brandenburg",
@@ -1032,7 +1032,7 @@ german_states_with_aliases = {x: x for x in german_states}
 german_states_with_aliases.update(aliased_german_states)
 
 norwegian_counties = {
-  u"Østfold",
+  "Østfold",
   "Akershus",
   "Oslo",
   "Hedmark",
@@ -1045,11 +1045,11 @@ norwegian_counties = {
   "Rogaland",
   "Hordaland",
   "Sogn og Fjordane",
-  u"Møre og Romsdal",
+  "Møre og Romsdal",
   "Nordland",
   "Troms",
   "Finnmark",
-  u"Trøndelag",
+  "Trøndelag",
 }
 
 finnish_regions = {
@@ -1066,12 +1066,12 @@ finnish_regions = {
   "Central Ostrobothnia",
   "Pirkanmaa",
   "Satakunta",
-  u"Päijänne Tavastia",
+  "Päijänne Tavastia",
   "Tavastia Proper",
   "Kymenlaakso",
   "Uusimaa",
   "Southwest Finland",
-  u"Åland Islands",
+  "Åland Islands",
 }
 
 aliased_finnish_regions = {
@@ -1079,9 +1079,9 @@ aliased_finnish_regions = {
   "Southern Ostrobothnia": "South Ostrobothnia",
   "North Savo": "Northern Savonia",
   "South Savo": "Southern Savonia",
-  u"Päijät-Häme": u"Päijänne Tavastia",
-  u"Kanta-Häme": "Tavastia Proper",
-  u"Åland": u"Åland Islands",
+  "Päijät-Häme": "Päijänne Tavastia",
+  "Kanta-Häme": "Tavastia Proper",
+  "Åland": "Åland Islands",
 }
 
 finnish_regions_with_aliases = {x: x for x in finnish_regions}
@@ -1436,7 +1436,7 @@ spanish_autonomous_communities = {
   "Basque Country",
   "Canary Islands",
   "Cantabria",
-  u"Castile and León",
+  "Castile and León",
   "Castilla-La Mancha",
   "Catalonia",
   "Community of Madrid",
@@ -1572,7 +1572,7 @@ misc_places = {
   "Tbilisi": "city",
   "Zaragoza": "city", # check this
   "Townsville": "city",
-  u"São Paulo": "city",
+  "São Paulo": "city",
   "Winnipeg": "city",
   "Aleppo": "city",
   "Miami": "city",
@@ -1584,7 +1584,7 @@ misc_places = {
   "Barcelona": "city",
   "Providence": "city",
   "St. Louis": "city",
-  u"Cádiz": "city",
+  "Cádiz": "city",
   "Budapest": "city",
   "Kaohsiung": "city",
   "Nashville": "city",
@@ -1610,7 +1610,7 @@ misc_places = {
   "Portsmouth": "city",
   "Leicester": "city",
   "Sheffield": "city",
-  u"Córdoba": "city",
+  "Córdoba": "city",
   "Suizhou": "city",
   "Prague": "city",
   "Cairns": "city",
@@ -1658,7 +1658,7 @@ misc_places = {
   "Epirus": "r",
   "Samnium": "r",
   "South Gloucestershire": "unitary authority",
-  u"Ariège": "dept",
+  "Ariège": "dept",
   "Lofoten": "dist",
   "Vicenza": "city",
   "Gwynedd": "co",
@@ -1686,7 +1686,7 @@ misc_places = {
   "Cyclades": "arch",
   "Puglia": "r",
   # Chalcidice: ambiguously peninsula, modern regional unit of Greece
-  u"Pallars Jussà": "co",
+  "Pallars Jussà": "co",
   "Dodecanese": "arch",
   "Chersonesus": "colony",
   "Abkhazia": "c",
@@ -1742,7 +1742,7 @@ def output_stats(num_counts):
 
 # Compute the list of all uppercase Unicode characters, see
 # https://stackoverflow.com/questions/36187349/python-regex-for-unicode-capitalized-words
-pLu = u'[{}]'.format(u"".join([unichr(i) for i in range(sys.maxunicode) if unichr(i).isupper()]))
+pLu = u'[{}]'.format("".join([unichr(i) for i in range(sys.maxunicode) if unichr(i).isupper()]))
 proper_noun_word_regex = r"(?u)%s[\w'.-]*" % pLu
 # The following regex requires that the first word of a county/parish/borough name be capitalized
 # and contain only letters, hyphens (Stratford-on-Avon), apostrophes (King's Lynn) and periods
@@ -1841,7 +1841,7 @@ def inner_parse_holonym(holonym, all_holonyms):
   # France
   if m:
     return "dept/%s" % m.group(1)
-  m = re.search(u"^(%s) +(?:department|département) +of +France$" % proper_noun_regex, holonym)
+  m = re.search("^(%s) +(?:department|département) +of +France$" % proper_noun_regex, holonym)
   if m:
     return ["dept/%s" % m.group(1), "c/France"]
   # Germany

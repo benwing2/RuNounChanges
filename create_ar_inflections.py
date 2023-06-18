@@ -561,7 +561,7 @@ def create_inflection_entry(save, index, inflection, infltr, lemma, lemmatr,
           else:
             form = form_classes_to_number[form]
           if not lemma:
-            lemma = u"يييييييييييييييي"
+            lemma = "يييييييييييييييي"
           return (form, lemma)
 
         # Sort the groups of subsections under ===Etymology N=== headers.
@@ -1458,25 +1458,25 @@ def create_noun_plural(save, index, inflection, infltr, lemma, lemmatr,
     lemma = do_remove_i3rab("singular", reorder_shadda(lemma))
     inflection = do_remove_i3rab("plural", reorder_shadda(inflection))
     if inflection.endswith(UUN) and len(inflection) <= 6:
-      pagemsg(u"Short -ūn plural, not treating as personal plural")
+      pagemsg("Short -ūn plural, not treating as personal plural")
     elif inflection.endswith(UUN) or inflection.endswith(UUNA):
       if personal:
-        pagemsg(u"Long -ūn plural, treating as personal")
+        pagemsg("Long -ūn plural, treating as personal")
       else:
-        pagemsg(u"Long -ūn plural, would treat as personal")
+        pagemsg("Long -ūn plural, would treat as personal")
       if singgender == "m-pr":
         pass
       elif singgender in ["", "m"]:
         singgender = "m-pr" if personal else "m"
       else:
-        pagemsg(u"WARNING: Long -ūn plural but strange gender %s" % singgender)
+        pagemsg("WARNING: Long -ūn plural but strange gender %s" % singgender)
     elif (singgender == "m" and not lemma.endswith(TAM) and
         fem_pl_noun(lemma) == inflection):
       if personal:
-        pagemsg(u"Masculine noun with -āt plural, treating as non-personal")
+        pagemsg("Masculine noun with -āt plural, treating as non-personal")
         singgender = "m-np"
       else:
-        pagemsg(u"Masculine noun with -āt plural, would treat as non-personal")
+        pagemsg("Masculine noun with -āt plural, would treat as non-personal")
     if not singgender:
       gender = ["p"]
     else:
@@ -1545,7 +1545,7 @@ def create_noun_feminine(save, index, inflection, infltr, lemma, lemmatr,
       fpl = re.sub(AH + "$", AAT, inflection)
       plparams.append(("pl", fpl))
       if infltr:
-        fpltr = re.sub("a$", u"āt", infltr)
+        fpltr = re.sub("a$", "āt", infltr)
         plparams.append(("pltr", fpltr))
 
   # Now construct gender and inflection params
@@ -1571,15 +1571,15 @@ def create_adj_feminine(save, index, inflection, infltr, lemma, lemmatr,
 def should_match_head(heads, inflindex, originfl, originfltr, is_plural):
   headnv = remove_diacritics(heads[0][0])
   # Special cases
-  if headnv == u"مدية":
+  if headnv == "مدية":
     if inflindex < len(heads):
       return inflindex
     else:
       return 0
-  if headnv in [u"بنية"]:
+  if headnv in ["بنية"]:
     assert inflindex < len(heads)
     return inflindex
-  if headnv in [u"عرس"]:
+  if headnv in ["عرس"]:
     return None
   for i in range(len(heads)):
     head, headtr = heads[i]
@@ -1614,7 +1614,7 @@ def create_inflection_entries(save, pos, tempname, param, startFrom, upTo,
     inflectfn = default_inflection
   if type(tempname) is not list:
     tempname = [tempname]
-  for cat in [u"Arabic %ss" % pos.lower()]:
+  for cat in ["Arabic %ss" % pos.lower()]:
     for index, page in blib.cat_articles(cat, startFrom, upTo):
       for template in blib.parse(page).filter_templates():
         if template.name in tempname:
@@ -1696,7 +1696,7 @@ def create_inflection_entries(save, pos, tempname, param, startFrom, upTo,
 # param.
 def sound_pl_inflection(infl, infltr, lemma, lemmatr, template, param):
   if infl == "+" or (not infl and param == "pl"):
-    return (lemma + UUN, lemmatr and lemmatr + u"ūn" or "")
+    return (lemma + UUN, lemmatr and lemmatr + "ūn" or "")
   return (infl, infltr)
 
 # Inflection function for -in plurals when a value of + indicates the sound
@@ -1707,7 +1707,7 @@ def in_pl_inflection(infl, infltr, lemma, lemmatr, template, param):
     if lemma.endswith(IN):
       lemma = re.sub(IN + "$", "", lemma)
       lemmatr = re.sub("in$", "", lemmatr)
-    return (lemma + UUN, lemmatr and lemmatr + u"ūn" or "")
+    return (lemma + UUN, lemmatr and lemmatr + "ūn" or "")
   return (infl, infltr)
 
 # Inflection function for -an plurals when we default pl= to the sound
@@ -1719,7 +1719,7 @@ def an_pl_inflection(infl, infltr, lemma, lemmatr, template, param):
     if lemma.endswith(AN + AMAQ):
       lemma = re.sub(AN + AMAQ + "$", "", lemma)
       lemmatr = re.sub("an$", "", lemmatr)
-    return (lemma + AWN, lemmatr and lemmatr + u"awn" or "")
+    return (lemma + AWN, lemmatr and lemmatr + "awn" or "")
   return (infl, infltr)
 
 def pl_inflection(infl, infltr, lemma, lemmatr, template, param):
@@ -1744,12 +1744,12 @@ def fem_inflection(infl, infltr, lemma, lemmatr, template, param):
       if lemma.endswith(AN + AMAQ):
         lemma = re.sub(AN + AMAQ + "$", "", lemma)
         lemmatr = re.sub("an$", "", lemmatr)
-        return (lemma + AAH, lemmatr and lemmatr + u"āh" or "")
+        return (lemma + AAH, lemmatr and lemmatr + "āh" or "")
       if lemma.endswith(IN):
         lemma = re.sub(IN + "$", "", lemma)
         lemmatr = re.sub("in$", "", lemmatr)
-        return (lemma + IYAH, lemmatr and lemmatr + u"iya" or "")
-      return (lemma + AH, lemmatr and lemmatr + u"a" or "")
+        return (lemma + IYAH, lemmatr and lemmatr + "iya" or "")
+      return (lemma + AH, lemmatr and lemmatr + "a" or "")
     return (infl, infltr)
   else:
     return (infl, infltr)
@@ -1851,7 +1851,7 @@ def create_verbal_nouns(save, startFrom, upTo):
             vnvalue = get_part_prop(page, template, "ar-verb-part-all|vn")
           else:
             continue
-        vns = re.split(u"[,،]", vnvalue)
+        vns = re.split("[,،]", vnvalue)
         for vn in vns:
           create_verbal_noun(save, index, vn, form, page, template, uncertain)
 

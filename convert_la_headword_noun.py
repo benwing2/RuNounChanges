@@ -71,13 +71,13 @@ def compare_headword_decl_forms(id_slot, headword_forms, decl_slots, noun_props,
   corrected_headword_forms = [lengthen_ns_nf(x) for x in headword_forms]
   corrected_decl_forms = [lengthen_ns_nf(x) for x in decl_forms]
   if adjust_for_e_ae_gen:
-    corrected_headword_forms = [re.sub(u"ē$", "ae", x) for x in headword_forms]
+    corrected_headword_forms = [re.sub("ē$", "ae", x) for x in headword_forms]
   if adjust_for_missing_gen_forms:
     # Nouns in -ius and -ium are commonly missing the shortened genitive
     # variants. Don't get tripped up by that.
-    ii_decl_forms = [x for x in corrected_decl_forms if x.endswith(u"iī")]
+    ii_decl_forms = [x for x in corrected_decl_forms if x.endswith("iī")]
     for ii_decl_form in ii_decl_forms:
-      i_decl_form = re.sub(u"iī$", u"ī", ii_decl_form)
+      i_decl_form = re.sub("iī$", "ī", ii_decl_form)
       if i_decl_form in corrected_decl_forms and i_decl_form not in corrected_headword_forms:
         corrected_headword_forms.append(i_decl_form)
   if set(corrected_headword_forms) != set(corrected_decl_forms):

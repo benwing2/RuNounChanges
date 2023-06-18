@@ -35,23 +35,23 @@ def canonicalize_tr(tr):
   tr = tr.lower()
   def remove_extraneous_nasalization(m):
     nasal_to_non_nasal = {
-      u"ã": "a",
-      u"ẽ": "e",
-      u"ĩ": "i",
-      u"õ": "o",
-      u"ũ": "u",
+      "ã": "a",
+      "ẽ": "e",
+      "ĩ": "i",
+      "õ": "o",
+      "ũ": "u",
     }
     nasal_vowel, rest = m.groups()
     return nasal_to_non_nasal[nasal_vowel] + rest
-  tr = re.sub(u"([ãẽĩõũ])([nṅṇñm][^ aeiouāīūĕŏěǒãẽĩõũ])", remove_extraneous_nasalization, tr)
-  tr = tr.replace(u"â", u"ā")
-  tr = tr.replace(u"ê", u"e")
-  tr = tr.replace(u"î", u"ī")
-  tr = tr.replace(u"ô", u"o")
-  tr = tr.replace(u"û", u"ū")
-  tr = tr.replace(u"ō", "o")
-  tr = tr.replace(u"ē", "e")
-  tr = tr.replace(u"'", "")
+  tr = re.sub("([ãẽĩõũ])([nṅṇñm][^ aeiouāīūĕŏěǒãẽĩõũ])", remove_extraneous_nasalization, tr)
+  tr = tr.replace("â", "ā")
+  tr = tr.replace("ê", "e")
+  tr = tr.replace("î", "ī")
+  tr = tr.replace("ô", "o")
+  tr = tr.replace("û", "ū")
+  tr = tr.replace("ō", "o")
+  tr = tr.replace("ē", "e")
+  tr = tr.replace("'", "")
   return tr
 
 
@@ -138,8 +138,8 @@ def process_text_on_page(index, pagetitle, text):
           continue
         respelling_tr = [x.replace(".", "") for x in respelling_tr]
         for phon_respelling in phon_respellings:
-          if u"॰" in phon_respelling:
-            pagemsg(u"WARNING: Saw ॰ in phon_respelling %s in %s" % (
+          if "॰" in phon_respelling:
+            pagemsg("WARNING: Saw ॰ in phon_respelling %s in %s" % (
               phon_respelling, str(t)))
         if head_template_tr and not phon_respellings:
           pagemsg("WARNING: Missing phonetic respelling in %s, headtr=%s, autotr=%s" % (

@@ -26,7 +26,7 @@ def process_text_on_page(index, pagetitle, text):
     tn = tname(t)
 
     def feminize_noun(noun):
-      if noun.endswith(u"ão"):
+      if noun.endswith("ão"):
         return noun[:-2] + "ona"
       if noun.endswith("dor"):
         return noun + "a"

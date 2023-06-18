@@ -6,21 +6,21 @@ import pywikibot, re, sys, argparse, unicodedata
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname, pname, rsub_repeatedly
 
-AC = u"\u0301" # acute =  ́
-GR = u"\u0300" # grave =  ̀
-CFLEX = u"\u0302" # circumflex =  ̂
-TILDE = u"\u0303" # tilde =  ̃
-DIA = u"\u0308" # diaeresis =  ̈
+AC = "\u0301" # acute =  ́
+GR = "\u0300" # grave =  ̀
+CFLEX = "\u0302" # circumflex =  ̂
+TILDE = "\u0303" # tilde =  ̃
+DIA = "\u0308" # diaeresis =  ̈
 
-SYLDIV = u"\uFFF0" # used to represent a user-specific syllable divider (.) so we won't change it
-vowel = u"aeiouüyAEIOUÜY"
+SYLDIV = "\uFFF0" # used to represent a user-specific syllable divider (.) so we won't change it
+vowel = "aeiouüyAEIOUÜY"
 V = "[" + vowel + "]" # vowel class
 W = "[jw]" # glide
 accent = AC + GR + CFLEX
 accent_c = "[" + accent + "]"
 stress = AC + GR
 stress_c = "[" + AC + GR + "]"
-ipa_stress = u"ˈˌ"
+ipa_stress = "ˈˌ"
 ipa_stress_c = "[" + ipa_stress + "]"
 separator = accent + ipa_stress + r"# \-." + SYLDIV # hyphen included for syllabifying from spelling
 separator_c = "[" + separator + "]"
@@ -30,26 +30,26 @@ C_NOT_H = "[^" + vowel + separator + "h]" # consonant class not including h
 def decompose(text):
   # decompose everything but ñ and ü
   text = unicodedata.normalize("NFD", text)
-  text = text.replace("n" + TILDE, u"ñ")
-  text = text.replace("N" + TILDE, u"Ñ")
-  text = text.replace("u" + DIA, u"ü")
-  text = text.replace("U" + DIA, u"Ü")
+  text = text.replace("n" + TILDE, "ñ")
+  text = text.replace("N" + TILDE, "Ñ")
+  text = text.replace("u" + DIA, "ü")
+  text = text.replace("U" + DIA, "Ü")
   return text
 
 def syllabify_from_spelling(text):
   text = decompose(text)
-  TEMP_I = u"\uFFF1"
-  TEMP_U = u"\uFFF2"
-  TEMP_Y_CONS = u"\uFFF3"
-  TEMP_CH = u"\uFFF4"
-  TEMP_LL = u"\uFFF5"
-  TEMP_RR = u"\uFFF6"
-  TEMP_QU = u"\uFFF7"
-  TEMP_QU_CAPS = u"\uFFF8"
-  TEMP_GU = u"\uFFF9"
-  TEMP_GU_CAPS = u"\uFFFA"
-  TEMP_SH = u"\uFFFB"
-  TEMP_DESH = u"\uFFFC"
+  TEMP_I = "\uFFF1"
+  TEMP_U = "\uFFF2"
+  TEMP_Y_CONS = "\uFFF3"
+  TEMP_CH = "\uFFF4"
+  TEMP_LL = "\uFFF5"
+  TEMP_RR = "\uFFF6"
+  TEMP_QU = "\uFFF7"
+  TEMP_QU_CAPS = "\uFFF8"
+  TEMP_GU = "\uFFF9"
+  TEMP_GU_CAPS = "\uFFFA"
+  TEMP_SH = "\uFFFB"
+  TEMP_DESH = "\uFFFC"
   # Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
   text = text.replace(".", SYLDIV)
   text = re.sub("y(" + V + ")", TEMP_Y_CONS + r"\1", text)
@@ -79,7 +79,7 @@ def syllabify_from_spelling(text):
   # Puerto Rico + most of Spain divide tl as t.l. Mexico and the Canary Islands have .tl. Unclear what other regions
   # do. Here we choose to go with .tl. See https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf
   # and https://www.spanishdict.com/guide/spanish-syllables-and-syllabification-rules.
-  cluster_r = u"rɾ"
+  cluster_r = "rɾ"
   text = re.sub(r"([pbfvkctg])\.([l" + cluster_r + "])", r".\1\2", text)
   text = re.sub(r"d\.([" + cluster_r + "])", r".d\1", text)
   text = text.replace("d.r", ".dr")
@@ -89,8 +89,8 @@ def syllabify_from_spelling(text):
   # Any aeo, or stressed iuüy, should be syllabically divided from a following aeo or stressed iuüy.
   text = rsub_repeatedly("([aeoAEO]" + accent_c + "*)(h?[aeo])", r"\1.\2", text)
   text = rsub_repeatedly("([aeoAEO]" + accent_c + "*)(h?" + V + stress_c + ")", r"\1.\2", text)
-  text = re.sub(u"([iuüyIUÜY]" + stress_c + ")(h?[aeo])", r"\1.\2", text)
-  text = rsub_repeatedly(u"([iuüyIUÜY]" + stress_c + ")(h?" + V + stress_c + ")", r"\1.\2", text)
+  text = re.sub("([iuüyIUÜY]" + stress_c + ")(h?[aeo])", r"\1.\2", text)
+  text = rsub_repeatedly("([iuüyIUÜY]" + stress_c + ")(h?" + V + stress_c + ")", r"\1.\2", text)
   text = rsub_repeatedly("([iI]" + accent_c + "*)(h?i)", r"\1.\2", text)
   text = rsub_repeatedly("([uU]" + accent_c + "*)(h?u)", r"\1.\2", text)
   text = text.replace(SYLDIV, ".")
@@ -141,8 +141,8 @@ def get_num_syl_from_phonemic(phonemic):
   words = re.split(" +", phonemic)
   for i, word in enumerate(words):
     # IPA stress marks are syllable divisions if between characters; otherwise just remove.
-    word = re.sub(u"(.)[ˌˈ](.)", r"\1.\2", word)
-    word = re.sub(u"[ˌˈ]", "", word)
+    word = re.sub("(.)[ˌˈ](.)", r"\1.\2", word)
+    word = re.sub("[ˌˈ]", "", word)
     words[i] = word
   # There should be a syllable boundary between words.
   phonemic = ".".join(words)
@@ -154,7 +154,7 @@ def get_num_syl_from_phonemic(phonemic):
 def convert_phonemic_to_rhyme(phonemic):
   # NOTE: This works because the phonemic vowels are just [aeiou] possibly with diacritics that are separate
   # Unicode chars. If we want to handle things like ɛ or ɔ we need to add them to `vowel`.
-  return re.sub("^[^" + vowel + "]*", "", re.sub(u".*[ˌˈ]", "", phonemic)).replace(".", "").replace(u"t͡ʃ", u"tʃ")
+  return re.sub("^[^" + vowel + "]*", "", re.sub(".*[ˌˈ]", "", phonemic)).replace(".", "").replace("t͡ʃ", "tʃ")
 
 
 def process_text_on_page(index, pagetitle, text):
@@ -363,7 +363,7 @@ def process_text_on_page(index, pagetitle, text):
               nsyl = None
             for style in styles:
               if style not in rhyme_pronuns:
-                pronun = expand_text(u"{{#invoke:es-pronunc|IPA_string|%s|style=%s}}" % (bare_arg, style))
+                pronun = expand_text("{{#invoke:es-pronunc|IPA_string|%s|style=%s}}" % (bare_arg, style))
                 if not pronun:
                   must_continue = True
                   break
@@ -504,8 +504,8 @@ def process_text_on_page(index, pagetitle, text):
                   homophones[int(pn) - 1] = pv
               else: # no break
                 def normalize_homophone_qualifier(q):
-                  q = re.sub(u"(non-Castilian|non-Iberian|seseo and ceceo|seseo|Latin-America|in dialects without distinción|in dialects without distinction between S and Z|non-\[*distinción\]*)", "Latin America", q)
-                  q = re.sub(u"((?:in dialects with )?\[*yeísmo\]*)", u"[[yeísmo]]", q)
+                  q = re.sub("(non-Castilian|non-Iberian|seseo and ceceo|seseo|Latin-America|in dialects without distinción|in dialects without distinction between S and Z|non-\[*distinción\]*)", "Latin America", q)
+                  q = re.sub("((?:in dialects with )?\[*yeísmo\]*)", "[[yeísmo]]", q)
                   q = re.sub(" dialects", "", q)
                   return q
                 hmp_args = []

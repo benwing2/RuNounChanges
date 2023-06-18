@@ -86,7 +86,7 @@ def process_page(page, index):
           possible_adjs.append(stem)
         elif stem.endswith("r"):
           possible_adjs.append(stem[:-1] + "er")
-        if adv.endswith(u"iē"):
+        if adv.endswith("iē"):
           possible_adjs.append(stem + "ius")
         for possible_adj in possible_adjs:
           investigate_possible_adj(index, possible_adj, adv, adv_defns)

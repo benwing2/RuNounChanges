@@ -604,7 +604,7 @@ templates_by_cap_and_period = [
   ("liv-conjugation of", "lcnodot", False),
   ("liv-inflection of", "lcnodot", False),
   ("liv-participle of", "lcnodot", False),
-  (u"lt-būdinys", "ignoreddot", "verified"),
+  ("lt-būdinys", "ignoreddot", "verified"),
   ("lt-budinys", "ignoreddot", "verified"),
   # The following instances need to be fixed up:
   # Page 3 sapnuojąs: WARNING: Found form-of template with post-text: # {{lt-dalyvis-1|pres|a|sapnuoti}} [[dreaming]]
@@ -1775,12 +1775,12 @@ fa_specs = [
         "imp-to": ["2s", "imp"],
         "u": ["3s", "imp"],
         "imp-u": ["3s", "imp"],
-        u"mâ": ["1p", "imp"],
-        u"imp-mâ": ["1p", "imp"],
-        u"šomâ": ["2p", "imp"],
-        u"imp-šomâ": ["2p", "imp"],
-        u"ânhâ": ["3p", "imp"],
-        u"imp-ânhâ": ["3p", "imp"],
+        "mâ": ["1p", "imp"],
+        "imp-mâ": ["1p", "imp"],
+        "šomâ": ["2p", "imp"],
+        "imp-šomâ": ["2p", "imp"],
+        "ânhâ": ["3p", "imp"],
+        "imp-ânhâ": ["3p", "imp"],
         "r": ["root", "form"],
         "prstem": ["pres", "stem", "form"],
         "pstem": ["past", "stem", "form"],
@@ -2115,20 +2115,20 @@ hu_specs = [
         "tt": "past",
         "ott": "past",
         "ett": "past",
-        u"ött": "past",
-        u"ó": "pres",
-        u"ő": "pres",
-        u"andó": "fut",
-        u"endő": "fut",
+        "ött": "past",
+        "ó": "pres",
+        "ő": "pres",
+        "andó": "fut",
+        "endő": "fut",
         "va": "adv",
         "ve": "adv",
-        u"ván": "adv",
-        u"vén": "adv",
+        "ván": "adv",
+        "vén": "adv",
         "ta": "verbal",
         "te": "verbal",
         "otta": "verbal",
         "ette": "verbal",
-        u"ötte": "verbal",
+        "ötte": "verbal",
       }),
     ]),
     ("copy", "t"),
@@ -2533,7 +2533,7 @@ lt_adj_case_table = {
 lt_specs = [
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
-  (u"lt-būdinys", (
+  ("lt-būdinys", (
     "participle of",
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
@@ -2545,7 +2545,7 @@ lt_specs = [
     ]),
   )),
 
-  ("lt-budinys", u"lt-būdinys"),
+  ("lt-budinys", "lt-būdinys"),
 
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
@@ -3248,15 +3248,15 @@ pt_specs = [
     ("set", "1", [
       "pt",
       lambda t, pagemsg:
-        getparam(t, "1") + ("o" if getparam(t, "2") in ["a", "os", "as"] else u"º"),
+        getparam(t, "1") + ("o" if getparam(t, "2") in ["a", "os", "as"] else "º"),
       "",
       ("lookup", "2", {
         "a": ["f", "s"],
         "os": ["m", "p"],
         "as": ["f", "p"],
-        u"ª": ["f", "s"],
-        u"ºs": ["m", "p"],
-        u"ªs": ["f", "p"],
+        "ª": ["f", "s"],
+        "ºs": ["m", "p"],
+        "ªs": ["f", "p"],
       }),
     ]),
     ("set", "p", "onum"),
@@ -3910,8 +3910,8 @@ tg_specs = [
         "imp-vay": ["3s", "imp"],
         "mo": ["1p", "imp"],
         "imp-mo": ["1p", "imp"],
-        u"šomo": ["2p", "imp"],
-        u"imp-šomo": ["2p", "imp"],
+        "šomo": ["2p", "imp"],
+        "imp-šomo": ["2p", "imp"],
         "onho": ["3p", "imp"],
         "imp-onho": ["3p", "imp"],
         "r": ["root", "form"],

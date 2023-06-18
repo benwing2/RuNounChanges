@@ -7,7 +7,7 @@ from pywikibot.data.api import APIError
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site
 
-parser = blib.create_argparser(u"Delete obsolete pages")
+parser = blib.create_argparser("Delete obsolete pages")
 parser.add_argument('--pagefile', help="Pages to delete", required=True)
 parser.add_argument('--delete-docs', help="Delete documentation pages of templates", action="store_true")
 parser.add_argument('--comment', help="Comment to use when deleting")

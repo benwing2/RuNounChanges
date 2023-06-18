@@ -12,19 +12,19 @@ from collections import defaultdict
 
 chinese_low_surrogates = (
   "[" +
-  # The following should be the SIP: U+20000 (D840+DC00) to U+2EBEF (D87A+DFEF): #u"𠀀-𮯯"
+  # The following should be the SIP: U+20000 (D840+DC00) to U+2EBEF (D87A+DFEF): #"𠀀-𮯯"
   # We include a bit more than needed to get everything.
-  u"\uD840-\uD87A"+
-  # The following should be the ExtG: U+30000 (D880+DC00) to U+3134F (D884+DF4F): u"𰀀-𱍏"
+  "\uD840-\uD87A"+
+  # The following should be the ExtG: U+30000 (D880+DC00) to U+3134F (D884+DF4F): "𰀀-𱍏"
   # We include a bit more than needed to get everything.
-  u"\uD880-\uD884"+
+  "\uD880-\uD884"+
   "]"
 )
 
 chinese_misc_ideographic_symbols_and_punctuation = (
-  #u"𖿢𖿣𖿰𖿱" i.e. u"\U+00016FE2\U+00016FE3\U+00016FF0\U+00016FF1"
+  #"𖿢𖿣𖿰𖿱" i.e. "\U+00016FE2\U+00016FE3\U+00016FF0\U+00016FF1"
   # i.e. D81B+DFE2 + D81B+DFE3 + D81B+DFF0 + D81B+DFF1
-  u"\uD81B[\uDFE2\uDFE3\uDFF0\uDFF1]"
+  "\uD81B[\uDFE2\uDFE3\uDFF0\uDFF1]"
 )
 
 # In the following, we skip the ranges and characters that require surrogates in UTF16 because
@@ -32,16 +32,16 @@ chinese_misc_ideographic_symbols_and_punctuation = (
 # individual surrogates (yuck). When we switch to Python 3, this issue should go away.
 chinese_ranges = (
   "[" + 
-  u"\u4E00-\u9FFF"+ # u"一-鿿"
-  u"\u3400-\u4DBF"+ # u"㐀-䶿" # ExtA
-  #u"\U00020000-\U0002EBEF"+ # u"𠀀-𮯯" # SIP 
-  #u"\U00030000-\U0003134F"+ # u"𰀀-𱍏" # ExtG
-  u"﨎﨏﨑﨓﨔﨟﨡﨣﨤﨧﨨﨩"+
-  u"\u2E80-\u2EFF"+ # u"⺀-⻿" # Radicals Supplement
-  u"\u3000-\u303F"+ # u"　-〿" # CJK Symbols and Punctuation
-  #u"𖿢𖿣𖿰𖿱"+ # Ideographic Symbols and Punctuation
-  u"\u31C0-\u31EF"+ # u"㇀-㇯" # Strokes
-  u"\u337B-\u337F\u32FF"+ # u"㍻-㍿㋿" # 組文字
+  "\u4E00-\u9FFF"+ # "一-鿿"
+  "\u3400-\u4DBF"+ # "㐀-䶿" # ExtA
+  #"\U00020000-\U0002EBEF"+ # "𠀀-𮯯" # SIP 
+  #"\U00030000-\U0003134F"+ # "𰀀-𱍏" # ExtG
+  "﨎﨏﨑﨓﨔﨟﨡﨣﨤﨧﨨﨩"+
+  "\u2E80-\u2EFF"+ # "⺀-⻿" # Radicals Supplement
+  "\u3000-\u303F"+ # "　-〿" # CJK Symbols and Punctuation
+  #"𖿢𖿣𖿰𖿱"+ # Ideographic Symbols and Punctuation
+  "\u31C0-\u31EF"+ # "㇀-㇯" # Strokes
+  "\u337B-\u337F\u32FF"+ # "㍻-㍿㋿" # 組文字
   "]"
 )
 
@@ -432,7 +432,7 @@ def process_text_on_page(index, pagetitle, text):
       # Acehnese on [[ma]] (hence apostrophes should not be ignored), and ǃKung (not with an exclamation point but
       # U+01C3) comes after Zulu (hence non-ASCII letters should not be ignored). For now I've decided to convert to
       # decomposed form and remove all combining diacritics (which are generally in the range U+0300 to U+036F).
-      return re.sub(u"[\u0300-\u036F]", "", unicodedata.normalize("NFD", langname)).lower()
+      return re.sub("[\u0300-\u036F]", "", unicodedata.normalize("NFD", langname)).lower()
   sorted_sections = sorted(sections_for_sorting, key=lambda sec: langname_key(sec[0]))
   if sorted_sections != sections_for_sorting:
     msg("Page %s %s: %s" % (index, pagetitle, "WARNING: Language sections misordered, reordering"))

@@ -6,10 +6,10 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-AA = u"\u093e"
-M = u"\u0901"
-N = u"\u0902"
-IND_AA = u"आ"
+AA = "\u093e"
+M = "\u0901"
+N = "\u0902"
+IND_AA = "आ"
 
 def hi_adj_is_indeclinable(t, pagetitle):
   if tname(t) == "hi-adj":

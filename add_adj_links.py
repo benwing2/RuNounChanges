@@ -27,7 +27,7 @@ def process_page(page, index, parsed):
 
     if str(t.name) in ["ru-IPA"]:
       pron = getparam(t, "1") or getparam(t, "phon")
-      if not re.search(u"[̀ѐЀѝЍ]", pron):
+      if not re.search("[̀ѐЀѝЍ]", pron):
         pagemsg("WARNING: No secondary accent in pron %s" % pron)
 
     if str(t.name) in ["ru-adj"]:
@@ -35,12 +35,12 @@ def process_page(page, index, parsed):
       if head and "[[" not in head:
         def add_links(m):
           prefix = m.group(1)
-          if re.search(u"[гкх]о$", prefix):
-            first = prefix[:-1] + u"ий"
+          if re.search("[гкх]о$", prefix):
+            first = prefix[:-1] + "ий"
           else:
-            first = prefix[:-1] + u"ый"
-          return u"[[%s|%s]]-[[%s]]" % (rulib.remove_accents(first), prefix, m.group(2))
-        t.add("1", re.sub(u"^(.*?о)-([^-]*)$", add_links, head))
+            first = prefix[:-1] + "ый"
+          return "[[%s|%s]]-[[%s]]" % (rulib.remove_accents(first), prefix, m.group(2))
+        t.add("1", re.sub("^(.*?о)-([^-]*)$", add_links, head))
       notes.append("add links to two-part adjective")
     newt = str(t)
     if origt != newt:

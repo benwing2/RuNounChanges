@@ -6,9 +6,9 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname
 
-AA = u"\u093e"
-M = u"\u0901"
-IND_AA = u"आ"
+AA = "\u093e"
+M = "\u0901"
+IND_AA = "आ"
 
 pos_to_headword_template = {
   "be": {
@@ -69,7 +69,7 @@ def uk_lemma_is_indeclinable(t, pagetitle, pagemsg):
     if getparam(t, "3") == "-":
       return True
     headword = getparam(t, "1")
-    if headword and headword == getparam(t, "3") and (not re.search(u"я́?$", headword) or not getparam(t, "2").startswith("n")):
+    if headword and headword == getparam(t, "3") and (not re.search("я́?$", headword) or not getparam(t, "2").startswith("n")):
       pagemsg("WARNING: Indeclinable noun not marked as such: %s" % str(t))
       return True
   if tname(t) == "uk-adj" and getparam(t, "indecl"):
@@ -107,7 +107,7 @@ pos_to_nonlemma_template = {
   "be": None,
   "bg": "(bg-verbal noun|bg-verbal noun form|bg-part|bg-part form)",
   "cs": None,
-  "ru": u"(ru-noun form|ru-.*alt-ё|ru-verb-cform)",
+  "ru": "(ru-noun form|ru-.*alt-ё|ru-verb-cform)",
   "uk": None,
   "hi": "(hi-verb-form|hi-noun-form|hi-adj-form)",
 }

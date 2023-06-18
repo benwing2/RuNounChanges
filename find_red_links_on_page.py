@@ -73,7 +73,7 @@ def process_page(page, index, templates):
       else:
         pagemsg("%s [[%s|%s]] %s" % (langname, pagenm, term, outtext))
 
-parser = blib.create_argparser(u"Find red/yellow links", include_pagefile=True)
+parser = blib.create_argparser("Find red/yellow links", include_pagefile=True)
 parser.add_argument("--templates", help="Comma-separated list of templates to check", required=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

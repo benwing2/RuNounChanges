@@ -106,27 +106,27 @@ def trymatch(t, args, pagemsg):
 
 def detect_stem(stem, decl):
   if decl == "":
-    m = re.search(u"^(.*)([ыио]́?й)$", stem)
+    m = re.search("^(.*)([ыио]́?й)$", stem)
     if not m:
       return stem, decl
     stem = m.group(1)
     decl = make_unstressed_once_ru(m.group(2))
     if re.search("[" + velar + sib + "]$", stem):
-      decl = u"ый"
+      decl = "ый"
     return stem, decl
   return stem, decl
 
 def combine_stem(stem, decl):
-  if decl == u"ий":
+  if decl == "ий":
     return stem + decl, ""
-  if decl == u"ый":
+  if decl == "ый":
     if re.search("[" + velar + sib + "]$", stem):
-      decl = u"ий"
+      decl = "ий"
     return stem + decl, ""
-  if decl == u"ой":
-    return make_unstressed_once_ru(stem) + u"о́й", ""
-  if decl == u"ьий":
-    return stem + u"ий", u"ь"
+  if decl == "ой":
+    return make_unstressed_once_ru(stem) + "о́й", ""
+  if decl == "ьий":
+    return stem + "ий", "ь"
   return stem, decl
 
 def infer_decl(t, pagemsg):
@@ -182,7 +182,7 @@ def infer_decl(t, pagemsg):
       pagemsg("WARNING: Unable to detect stem type for stem=%s" % stem)
       return None
     stem = newstem
-  if decl == "short" or decl == "mixed" or decl == u"ьий":
+  if decl == "short" or decl == "mixed" or decl == "ьий":
     if f or n or p:
       pagemsg("WARNING: Short forms found when not allowed: f=%s, n=%s, p=%s" % (f or "blank", n or "blank", p or "blank"))
       return None
@@ -212,22 +212,22 @@ def infer_decl(t, pagemsg):
   fend = re.search(AC + "$", f)
   nend = re.search(AC + "$", n)
   pend = re.search(AC + "$", p)
-  mm = re.search(u"^(.*)[ая]́?$", sf)
+  mm = re.search("^(.*)[ая]́?$", sf)
   if not mm:
     pagemsg("WARNING: Unable to recognize feminine ending: %s" % sf)
     return None
   fstem = mm.group(1)
-  mm = re.search(u"^(.*)[оеё]́?$", sn)
+  mm = re.search("^(.*)[оеё]́?$", sn)
   if not mm:
     pagemsg("WARNING: Unable to recognize neuter ending: %s" % sn)
     return None
   nstem = mm.group(1)
-  mm = re.search(u"^(.*)[ыи]́?$", sp)
+  mm = re.search("^(.*)[ыи]́?$", sp)
   if not mm:
     pagemsg("WARNING: Unable to recognize plural ending: %s" % sp)
     return None
   pstem = mm.group(1)
-  mm = re.search(u"^(.*?)[ъьй]?$", m)
+  mm = re.search("^(.*?)[ъьй]?$", m)
   assert mm
   mstem = mm.group(1)
   short_stem = stem
@@ -245,7 +245,7 @@ def infer_decl(t, pagemsg):
   short_stem = try_to_stress(short_stem)
   if stem == short_stem:
     short_stem = ""
-  elif short_stem + u"н" == stem and re.search(u"нн[иы]й$", stem + decl):
+  elif short_stem + "н" == stem and re.search("нн[иы]й$", stem + decl):
     pagemsg("Found special (2): short stem %s, long stem %s" % (short_stem, stem))
     specials = ["(2)"]
     short_stem = ""
@@ -254,7 +254,7 @@ def infer_decl(t, pagemsg):
         (short_stem, stem))
   real_short_stem = short_stem or stem
   if specials != ["(2)"] and mstem != real_short_stem:
-    if mstem + u"н" == real_short_stem and re.search(u"нн$", real_short_stem):
+    if mstem + "н" == real_short_stem and re.search("нн$", real_short_stem):
       pagemsg("Found special (1): short stem %s, masculine stem %s" % (
         real_short_stem, mstem))
       specials = ["(1)"]
@@ -263,7 +263,7 @@ def infer_decl(t, pagemsg):
       pass
     elif not m:
       pagemsg("Missing short masculine singular")
-      if real_short_stem.endswith(u"нн"):
+      if real_short_stem.endswith("нн"):
         specials = ["(1)"]
       explicit_msg = "-"
     else:
@@ -373,25 +373,25 @@ def infer_one_page_decls(page, index, text):
     return None, None
 
 test_templates = [
-  u"""{{ru-decl-adj|высо́к|ий|высо́к|высоко́,высо́ко|высока́|высоки́,высо́ки}}""",
-  u"""{{ru-decl-adj|дли́нн|ый|дли́нен|длинно́|длинна́|длинны́}}""",
-  u"""{{ru-decl-adj|ма́леньк|ий|мал|мало́|мала́|малы́}}""",
-  u"""{{ru-decl-adj|хоро́шеньк|ий}}""",
-  u"""{{ru-decl-adj|хоро́ш|ий|хоро́ш|хорошо́|хороша́|хороши́}}""",
-  u"""{{ru-decl-adj|бе́л|ый|бе́л|бе́ло,бело́|бела́|бе́лы,белы́}}""",
-  u"""{{ru-decl-adj|чёрн|ый|чёрен|черно́|черна́|черны́}}""",
-  u"""{{ru-decl-adj|кра́тк|ий|кра́ток|кра́тко|кратка́|кра́тки}}""",
-  u"""{{ru-decl-adj|промы́шленн|ый|промы́шленен|промы́шленно|промы́шленна|промы́шленны}}""",
-  u"""{{ru-decl-adj|си́н|ий|синь|си́не|синя́|си́ни}}""",
-  u"""{{ru-decl-adj|дорог|ой|до́рог|до́рого|дорога́|до́роги}}""",
-  u"""{{ru-decl-adj|вы́спренний||вы́спрен|вы́спренне|вы́спрення|вы́спренни}}""",
-  u"""{{ru-decl-adj|чёткий||чёток|чётко|четка́,чётка|чётки}}""",
-  u"""{{ru-decl-adj|искушённый||искушён|искушено́|искушена́|искушени́}}""",
-  u"""{{ru-decl-adj|дешёвый||дёшев|дёшево|дешева́|дёшевы}}""",
+  """{{ru-decl-adj|высо́к|ий|высо́к|высоко́,высо́ко|высока́|высоки́,высо́ки}}""",
+  """{{ru-decl-adj|дли́нн|ый|дли́нен|длинно́|длинна́|длинны́}}""",
+  """{{ru-decl-adj|ма́леньк|ий|мал|мало́|мала́|малы́}}""",
+  """{{ru-decl-adj|хоро́шеньк|ий}}""",
+  """{{ru-decl-adj|хоро́ш|ий|хоро́ш|хорошо́|хороша́|хороши́}}""",
+  """{{ru-decl-adj|бе́л|ый|бе́л|бе́ло,бело́|бела́|бе́лы,белы́}}""",
+  """{{ru-decl-adj|чёрн|ый|чёрен|черно́|черна́|черны́}}""",
+  """{{ru-decl-adj|кра́тк|ий|кра́ток|кра́тко|кратка́|кра́тки}}""",
+  """{{ru-decl-adj|промы́шленн|ый|промы́шленен|промы́шленно|промы́шленна|промы́шленны}}""",
+  """{{ru-decl-adj|си́н|ий|синь|си́не|синя́|си́ни}}""",
+  """{{ru-decl-adj|дорог|ой|до́рог|до́рого|дорога́|до́роги}}""",
+  """{{ru-decl-adj|вы́спренний||вы́спрен|вы́спренне|вы́спрення|вы́спренни}}""",
+  """{{ru-decl-adj|чёткий||чёток|чётко|четка́,чётка|чётки}}""",
+  """{{ru-decl-adj|искушённый||искушён|искушено́|искушена́|искушени́}}""",
+  """{{ru-decl-adj|дешёвый||дёшев|дёшево|дешева́|дёшевы}}""",
   # Note: The following will be inferred as b* but will fail because the
   # expected masc sing would be темён. Zaliznyak has a triangle marked by
   # the masc sing.
-  u"""{{ru-decl-adj|тёмный||тёмен|темно́|темна́|темны́}}""",
+  """{{ru-decl-adj|тёмный||тёмен|темно́|темна́|темны́}}""",
   ]
 def test_infer():
   class Page:

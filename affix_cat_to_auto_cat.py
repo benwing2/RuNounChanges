@@ -8,7 +8,7 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
 
 blib.getData()
 
-possible_hyphens = u"-־ـ\u200c"
+possible_hyphens = "-־ـ\u200c"
 def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))

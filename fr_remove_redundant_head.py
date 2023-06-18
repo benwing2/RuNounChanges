@@ -19,7 +19,7 @@ fr_head_only_templates = ["fr-noun", "fr-proper noun", "fr-proper-noun",
 
 fr_head_templates = fr_head_or_1_templates + fr_head_only_templates
 
-exclude_punc_chars = u"-־׳״'.·*[]"
+exclude_punc_chars = "-־׳״'.·*[]"
 punc_chars = "".join("\\" + unichr(i) for i in range(sys.maxunicode)
     if unicodedata.category(unichr(i)).startswith('P') and
     unichr(i) not in exclude_punc_chars)
@@ -45,8 +45,8 @@ def process_page(page, index, parsed):
   text = str(page.text)
 
   def check_bad_head(text, arg):
-    canontext = re.sub(u"[׳’]", "'", blib.remove_links(text))
-    canonpagetitle = re.sub(u"[׳’]", "'", pagetitle)
+    canontext = re.sub("[׳’]", "'", blib.remove_links(text))
+    canonpagetitle = re.sub("[׳’]", "'", pagetitle)
     if canontext != canonpagetitle:
       pagemsg("WARNING: Canonicalized %s=%s not same as canonicalized page title %s (orig %s=%s)" %
           (arg, canontext, canonpagetitle, arg, text))

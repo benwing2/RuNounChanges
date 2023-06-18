@@ -47,7 +47,7 @@ while True:
     altyoparts = do_split(":", els[1])
     if len(altyoparts) != 3:
       error("Expected verb and aspect with altyo:")
-    yoline = u"{{ru-verb-alt-ё|%s|%s}}" % (altyoparts[1], altyoparts[2])
+    yoline = "{{ru-verb-alt-ё|%s|%s}}" % (altyoparts[1], altyoparts[2])
     msg("""%s
 
 ==Russian==
@@ -56,7 +56,7 @@ while True:
 %s
 
 
-""" % (rulib.remove_accents(altyoparts[1]).replace(u"ё", u"е"), yoline))
+""" % (rulib.remove_accents(altyoparts[1]).replace("ё", "е"), yoline))
     continue
 
   # Replace _ with space, but not in the conjugation, where param names
@@ -70,10 +70,10 @@ while True:
   declverb = verb
   if "//" in verb:
     verb, translit = do_split("//", verb)
-  assert re.search(u"(ть(ся)?|ти́?(сь)?|чь(ся)?)$", verb)
+  assert re.search("(ть(ся)?|ти́?(сь)?|чь(ся)?)$", verb)
   trtext = translit and "|tr=" + translit or ""
   check_stress(verb)
-  isrefl = re.search(u"(ся|сь)$", verb)
+  isrefl = re.search("(ся|сь)$", verb)
   if etym == "?":
     error("Etymology consists of bare question mark")
   elif etym == "-":
@@ -115,7 +115,7 @@ while True:
         etym = re.sub(r"^<<", "", etym)
       if etym == "r":
         assert isrefl
-        etymtext = re.sub(u"^(.*?)(ся|сь)$", r"{{affix|ru|\1|-\2}}", verb)
+        etymtext = re.sub("^(.*?)(ся|сь)$", r"{{affix|ru|\1|-\2}}", verb)
       else:
         m = re.search(r"^([a-zA-Z.-]+):(.*)", etym)
         if m:
@@ -142,8 +142,8 @@ while True:
         "impf" if headword_aspect == "pf" or corverb.startswith("*") else "pf",
         "" if corverbno == 1 else str(corverbno), re.sub(r"^\*", "", corverb))
     corverbno += 1
-  verbbase = re.sub(u"(ся|сь)$", "", verb)
-  trverbbase = translit and re.sub(u"(sja|sʹ)$", "", translit)
+  verbbase = re.sub("(ся|сь)$", "", verb)
+  trverbbase = translit and re.sub("(sja|sʹ)$", "", translit)
   passivetext = ("# {{passive of|lang=ru|%s%s}}\n" % (verbbase,
     trverbbase and "|tr=%s" % trverbbase or "") if etym == "r" else "")
 
@@ -285,23 +285,23 @@ while True:
               corverb_impf_override = any(corverb for corverb in corverbs
                   if corverb.startswith("*"))
               if isrefl:
-                refverb = re.sub(u"с[ья]$", "", verb) + gender_arg
+                refverb = re.sub("с[ья]$", "", verb) + gender_arg
                 correfverbs = []
                 for corverb in corverbs:
                   correfverbs.append("%s|g=%s" % (
-                    re.sub(u"с[ья]$", "", re.sub(r"^\*", "", corverb)),
+                    re.sub("с[ья]$", "", re.sub(r"^\*", "", corverb)),
                     "impf" if headword_aspect == "pf" or
                       corverb.startswith("*") else "pf"))
               else:
-                refverb = (re.search(u"и́?$", verb) and verb + u"сь" or
-                    rulib.try_to_stress(verb) + u"ся") + gender_arg
+                refverb = (re.search("и́?$", verb) and verb + "сь" or
+                    rulib.try_to_stress(verb) + "ся") + gender_arg
                 correfverbs = []
                 for corverb in corverbs:
                   impf_override = corverb.startswith("*")
                   corverb = re.sub(r"^\*", "", corverb)
                   correfverbs.append("%s|g=%s" % (
-                      (re.search(u"и́?$", corverb) and corverb + u"сь" or
-                        rulib.try_to_stress(corverb) + u"ся"),
+                      (re.search("и́?$", corverb) and corverb + "сь" or
+                        rulib.try_to_stress(corverb) + "ся"),
                       "impf" if headword_aspect == "pf" or impf_override
                         else "pf"))
               if headword_aspect == "pf" or corverb_impf_override:

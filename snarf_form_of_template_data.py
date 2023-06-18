@@ -57,7 +57,7 @@ def process_text_on_page(index, pagetitle, text):
     pagemsg("WARNING: Didn't see [[Module:form of/templates]] invocation")
     return
   aliases = []
-  for i, subpage in blib.references(pagetitle, namespaces=[u"Template"], only_template_inclusion=False, filter_redirects=True):
+  for i, subpage in blib.references(pagetitle, namespaces=["Template"], only_template_inclusion=False, filter_redirects=True):
     alias = str(subpage.title())
     num_refs = len(list(blib.references(alias, namespaces=[0])))
     pagemsg("Found alias '%s', num_refs=%s" % (alias, num_refs))

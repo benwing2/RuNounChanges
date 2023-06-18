@@ -131,22 +131,22 @@ def process_text_on_page(index, pagetitle, text):
         pron = re.sub("^/(.*)/$", r"\1", pron)
         pron = re.sub(r"^\[(.*)\]$", r"\1", pron)
         pron = pron.strip()
-        pron = pron.replace("r", u"ʁ")
+        pron = pron.replace("r", "ʁ")
         # account for various common errors in Dawnraybot's generated pronunciations:
         # #1
-        if pagetitle.endswith("rez") and pron.endswith(u"ʁɔe"):
-          pron = re.sub(u"ʁɔe$", u"ʁe", pron)
+        if pagetitle.endswith("rez") and pron.endswith("ʁɔe"):
+          pron = re.sub("ʁɔe$", "ʁe", pron)
         # #2
-        if re.search("ai(s|t|ent)$", pagetitle) and pron.endswith(u"e"):
-          pron = re.sub(u"e$", u"ɛ", pron)
+        if re.search("ai(s|t|ent)$", pagetitle) and pron.endswith("e"):
+          pron = re.sub("e$", "ɛ", pron)
         # #3
-        if pos_val == "v" and pagetitle.endswith("ai") and pron.endswith(u"ɛ"):
-          pron = re.sub(u"ɛ$", u"e", pron)
+        if pos_val == "v" and pagetitle.endswith("ai") and pron.endswith("ɛ"):
+          pron = re.sub("ɛ$", "e", pron)
         if "." not in pron:
           autopron = autopron.replace(".", "")
-        if autopron.endswith(u"ɑ") and pron.endswith("a"):
+        if autopron.endswith("ɑ") and pron.endswith("a"):
           autopron = autopron[:-1] + "a"
-        if re.search(r"ɑ[mt]$", autopron) and re.search(u"a[mt]$", pron):
+        if re.search(r"ɑ[mt]$", autopron) and re.search("a[mt]$", pron):
           autopron = re.sub(r"ɑ([mt])$", r"a\1", autopron)
         for i in range(2):
           # {{fr-IPA}} deletes schwa in the sequence V.Cə.CV esp. in the
@@ -158,15 +158,15 @@ def process_text_on_page(index, pagetitle, text):
           pron = re.sub(r"([aɑɛeiɔouyœøɑ̃ɛ̃ɔ̃])\.([szfvtdpbkɡ])ə\.(ʁ[aɑɛeiɔouyœøɑ̃ɛ̃ɔ̃])", r"\1.\2\3", pron)
         # {{fr-IPA}} converts sequences of Crj and Clj to Cri.j and Cli.j,
         # which is correct, but Dawnraybot doesn't do that.
-        pron = re.sub(u"([szfvtdpbkɡ][ʁl])j", r"\1i.j", pron)
+        pron = re.sub("([szfvtdpbkɡ][ʁl])j", r"\1i.j", pron)
         allow_mismatch = False
         if pron != autopron:
           tempcall = "{{fr-IPA%s}}" % pos_arg
-          if pron.replace(u"ɑ", "a") == autopron.replace(u"ɑ", "a"):
-            pagemsg(u"WARNING: Would replace %s with %s but auto-generated pron %s disagrees with %s in ɑ vs. a only: line <%s>" % (
+          if pron.replace("ɑ", "a") == autopron.replace("ɑ", "a"):
+            pagemsg("WARNING: Would replace %s with %s but auto-generated pron %s disagrees with %s in ɑ vs. a only: line <%s>" % (
               str(t), tempcall, autopron, pron, line))
-          elif re.sub(u"ɛ(.)", r"e\1", pron) == re.sub(u"ɛ(.)", r"e\1", autopron):
-            pagemsg(u"WARNING: Would replace %s with %s but auto-generated pron %s disagrees with %s in ɛ vs. e only: line <%s>" % (
+          elif re.sub("ɛ(.)", r"e\1", pron) == re.sub("ɛ(.)", r"e\1", autopron):
+            pagemsg("WARNING: Would replace %s with %s but auto-generated pron %s disagrees with %s in ɛ vs. e only: line <%s>" % (
               str(t), tempcall, autopron, pron, line))
           elif pron.replace(".", "") == autopron.replace(".", ""):
             pagemsg("WARNING: Would replace %s with %s but auto-generated pron %s disagrees with %s in syllable division only: line <%s>" % (

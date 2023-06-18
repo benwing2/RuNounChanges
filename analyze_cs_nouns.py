@@ -9,32 +9,32 @@ from blib import getparam, rmparam, msg, site, tname
 import cslib as cs
 
 def is_undefined(word):
-  return word in ["", "-", u"-", u"—"]
+  return word in ["", "-", "-", "—"]
 
 noun_endings = {
-  "gen_sg": ["a", "u", "e", u"ě", "y", "i", u"í"],
-  "dat_sg": ["u", "ovi", "i", u"í", "e", u"ě"],
-  "voc_sg": ["e", u"ě", "u", "i", "o", u"í", ""],
-  "loc_sg": ["u", "ovi", "e", u"ě", "i", u"í"],
-  "ins_sg": ["em", u"ěm", "ou", u"ím", u"í"],
-  "nom_pl": ["i", "y", u"é", u"ové", "e", u"ě", "a", u"í"],
-  "gen_pl": [u"ů", u"í", ""],
-  "dat_pl": [u"ům", u"ím", u"ám", "em", u"ěm"],
-  "loc_pl": ["ech", u"ěch", u"ích", u"ách"],
-  "ins_pl": [u"ími", "ami", "emi", u"ěmi", "mi", "y", "i", "ama"],
+  "gen_sg": ["a", "u", "e", "ě", "y", "i", "í"],
+  "dat_sg": ["u", "ovi", "i", "í", "e", "ě"],
+  "voc_sg": ["e", "ě", "u", "i", "o", "í", ""],
+  "loc_sg": ["u", "ovi", "e", "ě", "i", "í"],
+  "ins_sg": ["em", "ěm", "ou", "ím", "í"],
+  "nom_pl": ["i", "y", "é", "ové", "e", "ě", "a", "í"],
+  "gen_pl": ["ů", "í", ""],
+  "dat_pl": ["ům", "ím", "ám", "em", "ěm"],
+  "loc_pl": ["ech", "ěch", "ích", "ách"],
+  "ins_pl": ["ími", "ami", "emi", "ěmi", "mi", "y", "i", "ama"],
 }
 
 adj_endings = {
-  "gen_sg": [u"ého", u"é", u"ího", u"í"],
-  "dat_sg": [u"ému", u"é", u"ímu", u"í"],
-  "voc_sg": [u"ý", u"á", u"é", u"í"],
-  "loc_sg": [u"ém", u"é", u"ím", u"í"],
-  "ins_sg": [u"ým", "ou", u"ím", u"í"],
-  "nom_pl": [u"í", u"é", u"á"],
-  "gen_pl": [u"ých", u"ích"],
-  "dat_pl": [u"ým", u"ím"],
-  "loc_pl": [u"ých", u"ích"],
-  "ins_pl": [u"ými", u"ími"],
+  "gen_sg": ["ého", "é", "ího", "í"],
+  "dat_sg": ["ému", "é", "ímu", "í"],
+  "voc_sg": ["ý", "á", "é", "í"],
+  "loc_sg": ["ém", "é", "ím", "í"],
+  "ins_sg": ["ým", "ou", "ím", "í"],
+  "nom_pl": ["í", "é", "á"],
+  "gen_pl": ["ých", "ích"],
+  "dat_pl": ["ým", "ím"],
+  "loc_pl": ["ých", "ích"],
+  "ins_pl": ["ými", "ími"],
 }
 
 slot_to_param = {
@@ -139,7 +139,7 @@ def process_text_on_page(index, pagetitle, text):
 
     def endings_same(endings1, endings2):
       def replace_e(val):
-        return re.sub(u"^ě", "e", val)
+        return re.sub("^ě", "e", val)
       endings1 = set(replace_e(e) for e in endings1)
       endings2 = set(replace_e(e) for e in endings2)
       return endings1 == endings2
@@ -173,7 +173,7 @@ def process_text_on_page(index, pagetitle, text):
         # [monosyllabic words: Dánové, Irové, králové, mágové, Rusové, sokové, synové, špehové, zběhové, zeťové, manové, danové
         # but Žid → Židé, Čech → Češi).] -- There are too many exceptions to this to make a special rule. It is better to use
         # the overall default of -i and require that cases with -ove, -ove/-i, -i/-ove, etc. use overrides.
-        # cs.is_monosyllabic(lemma) and [u"ové"] or
+        # cs.is_monosyllabic(lemma) and ["ové"] or
         # terms in -cek/-ček; order of -ové vs. -i sometimes varies:
         # [[fracek]] (ové/i), [[klacek]] (i/ové), [[macek]] (ové/i), [[nácek]] (i/ové), [[prcek]] (ové/i), [[racek]] (ové/i);
         # [[bazilišek]] (i/ové), [[černoušek]] (i/ové), [[drahoušek]] (ové/i), [[fanoušek]] (i/ové), [[františek]] (an/inan,
@@ -181,7 +181,7 @@ def process_text_on_page(index, pagetitle, text):
         # [[prášek]] (i/ové), [[šašek]] (i/ové).
         # make sure to check `stems` as we don't want to include non-reducible words in -cek/-ček/-šek (but do want to include
         # [[quarterback]], with -i/-ové)
-        reducible and re.search("^" + cs.lowercase_c + u".*[cčš]ek$", lemma) and ["i", u"ové"] or
+        reducible and re.search("^" + cs.lowercase_c + ".*[cčš]ek$", lemma) and ["i", "ové"] or
         # barmani, gentlemani, jazzmani, kameramani, narkomani, ombudsmani, pivotmani, rekordmani, showmani, supermani, toxikomani
         re.search("^" + cs.lowercase_c + ".*man$", lemma) and ["i"] or
         # terms ending in -an after a palatal or a consonant that doesn't change when palatalized, i.e. labial or l (but -man
@@ -189,42 +189,42 @@ def process_text_on_page(index, pagetitle, text):
         # občan → občané, ostrovan → ostrované, Pražan → Pražané, Slovan → Slované, svatebčan → svatebčané, venkovan → venkované,
         # Australan → Australané; some late formations pluralize this way but don't have a palatal consonant preceding the -an,
         # e.g. [[pohan]], [[Oděsan]]; these need manual overrides
-        re.search(u"[ňďťščžřj" + cs.labial + "l]an$", lemma) and [u"é", "i"] or # most now can also take -i
+        re.search("[ňďťščžřj" + cs.labial + "l]an$", lemma) and ["é", "i"] or # most now can also take -i
         # proper names: Baťové, Novákové, Petrové, Tomášové, Vláďové; but exclude demonyms
-        re.search("^" + cs.uppercase_c, lemma) and not re.search("ec$", lemma) and [u"ové"] or
+        re.search("^" + cs.uppercase_c, lemma) and not re.search("ec$", lemma) and ["ové"] or
         # demonyms: [[Albánec]], [[Gruzínec]], [[Izraelec]], [[Korejec]], [[Libyjec]], [[Litevec]], [[Němec]], [[Portugalec]]
         re.search("^" + cs.uppercase_c + ".*ec$", lemma) and ["i"] or
         # From here on down, we're dealing only with lowercase terms.
         # buditelé, budovatelé, čekatelé, činitelé, hostitelé, jmenovatelé, pisatelé, ručitelé, velitelé, živitelé
-        re.search(".*tel$", lemma) and [u"é"] or
+        re.search(".*tel$", lemma) and ["é"] or
         # husita → husité, izraelita → izraelité, jezuita → jezuité, kosmopolita → kosmopolité, táborita → táborité
         # fašista → fašisté, filatelista → filatelisté, fotbalista → fotbalisté, kapitalista → kapitalisté,
         # marxista → marxisté, šachista → šachisté, terorista → teroristé. NOTE: most these words actually appear in
         # the IJP tables with -é/-i, so we go accordingly.
-        re.search(".*is?ta$", lemma) and [u"é", "i"] or
+        re.search(".*is?ta$", lemma) and ["é", "i"] or
         # gymnasta → gymnasté, fantasta → fantasté; also chiliasta, orgiasta, scholiasta, entuziasta, dynasta, ochlasta,
         # sarkasta, vymasta; NOTE: Only 'gymnasta' actually given with just -é; 'fantasta' with -ové/-é, 'dynasta' and
         # 'ochlasta' with just -ové, vymasta not in IJP (no plural given in SSJC), and the rest with -é/-i. So we go
         # accordingly.
-        re.search(".*asta$", lemma) and [u"é", "i"] or
+        re.search(".*asta$", lemma) and ["é", "i"] or
         # remaining masculines in -a (which may not go through this code at all);
         # nouns in -j: čaroděj → čarodějové, lokaj → lokajové, patricij → patricijové, plebej → plebejové, šohaj → šohajové, žokej → žokejové
         # nouns in -l: apoštol → apoštolové, břídil → břídilové, fňukal → fňukalové, hýřil → hýřilové, kutil → kutilové,
         #   loudal → loudalové, mazal → mazalové, škrabal → škrabalové, škudlil → škudlilové, vyvrhel → vyvrhelové, žvanil → žvanilové
         #   (we excluded those in -tel above)
-        re.search(".*[jla]$", lemma) and [u"ové"] or
+        re.search(".*[jla]$", lemma) and ["ové"] or
         # archeolog → archeologové, biolog → biologové, geolog → geologové, meteorolog → meteorologové
-        re.search(".*log$", lemma) and [u"ové"] or
+        re.search(".*log$", lemma) and ["ové"] or
         # dramaturg → dramaturgové, chirurg → chirurgové
-        re.search(".*urg$", lemma) and [u"ové"] or
+        re.search(".*urg$", lemma) and ["ové"] or
         # fotograf → fotografové, geograf → geografové, lexikograf → lexikografové
-        re.search(".*graf$", lemma) and [u"ové"] or
+        re.search(".*graf$", lemma) and ["ové"] or
         # bibliofil → bibliofilové, germanofil → germanofilové
-        re.search(".*fil$", lemma) and [u"ové"] or
+        re.search(".*fil$", lemma) and ["ové"] or
         # rusofob → rusofobové
-        re.search(".*fob$", lemma) and [u"ové"] or
+        re.search(".*fob$", lemma) and ["ové"] or
         # gronom → agronomové, ekonom → ekonomové
-        re.search(".*nom$", lemma) and [u"ové"] or
+        re.search(".*nom$", lemma) and ["ové"] or
         ["i"]
       )
 
@@ -233,7 +233,7 @@ def process_text_on_page(index, pagetitle, text):
       gender = inferred_decl[0]
       # Nouns in vowels other than -a/o as well as masculine nouns ending in all vowels don't have null endings so not
       # reducible. Note, we are never called on adjectival nouns.
-      if re.search(u"[iyuíeě]$", lemma) or gender == "m" and re.search("[ao]$", lemma) or ".tstem" in inferred_decl:
+      if re.search("[iyuíeě]$", lemma) or gender == "m" and re.search("[ao]$", lemma) or ".tstem" in inferred_decl:
         return False
         
       m = re.search("^(.*" + cs.cons_c + ")$", lemma)
@@ -248,7 +248,7 @@ def process_text_on_page(index, pagetitle, text):
         stem = m.group(1)
         if gender == "m" and re.search("e[ck]$", stem) and not cs.is_monosyllabic(stem):
           return True
-        elif gender == "f" and re.search(u"eň$", stem):
+        elif gender == "f" and re.search("eň$", stem):
           # [[pochodeň]] "torch", [[píseň]] "leather", [[žeň]] "harvest"; not [[reveň]] "rhubarb" or [[dřeň]] "pulp",
           # which need an override.
           return True
@@ -302,7 +302,7 @@ def process_text_on_page(index, pagetitle, text):
       gen_pl = gen_pl and truncate_extra_forms(gen_pl)
       reducible = None
       vowelalt = ""
-      m = re.search(u"^(.*)([aeoěí])$", nom_sg)
+      m = re.search("^(.*)([aeoěí])$", nom_sg)
       if m:
         if inferred_decl.startswith("m"):
           # Virile in -a or -e aren't reducible and have non-null genitive plural ending
@@ -322,7 +322,7 @@ def process_text_on_page(index, pagetitle, text):
           nonvowel_stem = gen_pl
           if nonvowel_stem == vowel_stem:
             reducible = False
-          elif nonvowel_stem == orig_vowel_stem + u"í":
+          elif nonvowel_stem == orig_vowel_stem + "í":
             # soft feminines, etc.
             reducible = False
           else:
@@ -330,8 +330,8 @@ def process_text_on_page(index, pagetitle, text):
             if dereduced_stem and dereduced_stem == nonvowel_stem:
               reducible = True
             else:
-              vowelalts = ["quant", u"quant-ě"]
-              vowelalt_to_spec = {"quant": "#", u"quant-ě": u"#ě"}
+              vowelalts = ["quant", "quant-ě"]
+              vowelalt_to_spec = {"quant": "#", "quant-ě": "#ě"}
               for vowelalt in vowelalts:
                 if cs.apply_vowel_alternation(vowelalt, vowel_stem) == nonvowel_stem:
                   altspec = vowelalt_to_spec[vowelalt]
@@ -374,7 +374,7 @@ def process_text_on_page(index, pagetitle, text):
         nonvowel_stem = nom_sg
         if "foreign" in inferred_decl:
           nonvowel_stem = re.sub("([ueo]s|um|on)$", "", nonvowel_stem)
-        m = re.search(u"^(.*)([aueěyií])$", gen_sg)
+        m = re.search("^(.*)([aueěyií])$", gen_sg)
         if not m:
           pagemsg("WARNING: Unrecognized genitive singular ending: %s" % gen_sg)
           return None, None
@@ -392,9 +392,9 @@ def process_text_on_page(index, pagetitle, text):
         elif cs.apply_vowel_alternation("quant", nonvowel_stem) == vowel_stem:
           reducible = False
           altspec = "#"
-        elif cs.apply_vowel_alternation(u"quant-ě", nonvowel_stem) == vowel_stem:
+        elif cs.apply_vowel_alternation("quant-ě", nonvowel_stem) == vowel_stem:
           reducible = False
-          altspec = u"#ě"
+          altspec = "#ě"
         else:
           pagemsg("WARNING: Unable to determine relationship between nom_sg %s and gen_sg %s" %
             (nom_sg, gen_sg))
@@ -430,12 +430,12 @@ def process_text_on_page(index, pagetitle, text):
       elif lemma.endswith("a"):
         if fetch("acc_sg") == fetch("nom_sg"):
           decl = "n.foreign"
-        elif fetch("dat_pl").endswith(u"ům"):
+        elif fetch("dat_pl").endswith("ům"):
            decl = "m.an"
         else:
           decl = "f"
-      elif re.search(u"[eě]$", lemma):
-        if re.search(u"[eě]m$", fetch("ins_sg")):
+      elif re.search("[eě]$", lemma):
+        if re.search("[eě]m$", fetch("ins_sg")):
           if fetch("nom_pl").endswith("i"):
             decl = "m.an"
           elif fetch("nom_pl").endswith("ata"):
@@ -444,27 +444,27 @@ def process_text_on_page(index, pagetitle, text):
             decl = "n"
         else:
           decl = "f"
-      elif lemma.endswith(u"í"):
-        if fetch("gen_sg").endswith(u"ího"):
-          if fetch("acc_sg").endswith(u"ího"):
+      elif lemma.endswith("í"):
+        if fetch("gen_sg").endswith("ího"):
+          if fetch("acc_sg").endswith("ího"):
             decl = "m.an.+"
           else:
             decl = "n.+"
-        elif fetch("ins_sg").endswith(u"í"):
+        elif fetch("ins_sg").endswith("í"):
           decl = "f.+"
         else:
           decl = "n"
-      elif lemma.endswith(u"ý"):
+      elif lemma.endswith("ý"):
         if fetch("acc_sg") == fetch("gen_sg"):
           decl = "m.an.+"
         else:
           decl = "m.+"
-      elif lemma.endswith(u"á"):
+      elif lemma.endswith("á"):
         decl = "f.+"
-      elif lemma.endswith(u"é"):
+      elif lemma.endswith("é"):
         decl = "n.+"
       elif re.search(cs.cons_c + "$", lemma):
-        if fetch("ins_sg").endswith(u"í"):
+        if fetch("ins_sg").endswith("í"):
           if fetch("gen_sg").endswith("i"):
             decl = "f.istem"
           else:
@@ -495,7 +495,7 @@ def process_text_on_page(index, pagetitle, text):
             is_soft = (not sgonly and "i" in ins_pl_endings) or "e" in gen_sg_endings
             is_hard = (not sgonly and "y" in ins_pl_endings) or "a" in gen_sg_endings or "u" in gen_sg_endings
             softhard = "mixed" if is_soft and is_hard else "soft" if is_soft else "hard"
-            default_softhard = "soft" if re.search(u"[cčjřšžťďň]$", lemma) or lemma.endswith("tel") else "hard"
+            default_softhard = "soft" if re.search("[cčjřšžťďň]$", lemma) or lemma.endswith("tel") else "hard"
             if fetch("acc_sg") == fetch("gen_sg"):
               animate = True
               decl = "m.an"
@@ -525,14 +525,14 @@ def process_text_on_page(index, pagetitle, text):
         # [[Beroun]], [[Brandýs]], [[Náchod]], [[Tábor]] and foreign [[Betlém]] "Bethlehem", [[Egypt]],
         # [[Jeruzalém]] "Jerusalem", [[Milán]] "Milan", [[Řím]] "Rome", [[Rýn]] "Rhine". Also some transferred from
         # common nouns e.g. ([[Nový]]) [[Kostel]], ([[Starý]]) [[Rybník]].
-        toponym_gen_a = toponym and (re.search(u"[íý]n$", lemma) or re.search("[oe]v$", lemma))
+        toponym_gen_a = toponym and (re.search("[íý]n$", lemma) or re.search("[oe]v$", lemma))
         # Toponyms in -ík (Mělník, Braník, Rakovník, Lipník) seem to fluctuate between gen -a and -u. Also some in
         # ‑štejn, ‑berg, ‑perk, ‑burk, ‑purk (Rabštejn, Heidelberg, Kašperk, Hamburk, Prešpurk) and some others:
         # Zbiroh, Kamýk, Příbor, Zábřeh, Žebrák, Praděd.
-        toponym_gen_a_u = toponym and re.search(u"ík$", lemma)
+        toponym_gen_a_u = toponym and re.search("ík$", lemma)
         # Toponyms that take -a in the genitive singular tend to take -ě in the locative singular; so do those in
         # -štejn (Rabštejn), -hrad (Petrohrad), -grad (Volgograd).
-        toponym_loc_e = toponym and (toponym_gen_a or re.search(u"štejn$", lemma) or re.search("[gh]rad$", lemma))
+        toponym_loc_e = toponym and (toponym_gen_a or re.search("štejn$", lemma) or re.search("[gh]rad$", lemma))
         # Toponyms in -ík seem to fluctuate between loc -ě and -u.
         toponym_loc_e_u = toponym_gen_a_u
         # Inanimate gen_s in -a other than toponyms in -ín/-ýn/-ev/-ov (e.g. [[zákon]] "law", [[oběd]] "lunch", [[kostel]] "church",
@@ -543,7 +543,7 @@ def process_text_on_page(index, pagetitle, text):
         expected_dat_sg_ending = not animate and ["u"] or ["ovi", "u"]
         # Inanimates with loc_s in -e/ě other than certain toponyms (see above) need to give this manually, using <locě>, but
         # it will trigger the second palatalization automatically.
-        expected_loc_sg_ending = toponym_loc_e and [u"ě"] or toponym_loc_e_u and [u"ě", "u"] or expected_dat_sg_ending
+        expected_loc_sg_ending = toponym_loc_e and ["ě"] or toponym_loc_e_u and ["ě", "u"] or expected_dat_sg_ending
         # Velar-stem animates with voc_s in -e (e.g. [[Bůh]] "God", voc_s 'Bože'; [[člověk]] "person", voc_s 'člověče')
         # need to give this manually using <voce>; it will trigger the first palatalization automatically.
         expected_voc_sg_ending = ["u"] if velar else ["e"]
@@ -555,8 +555,8 @@ def process_text_on_page(index, pagetitle, text):
         if not endings_same(loc_sg_endings, expected_loc_sg_ending):
           overrides.append("loc" + join_endings(loc_sg_endings))
         if not sgonly:
-          expected_loc_pl_ending = ([u"ích", u"ách"] if re.search(u"[cč]ek$", lemma) and reducible and not animate
-              else [u"ích"] if velar else ["ech"])
+          expected_loc_pl_ending = (["ích", "ách"] if re.search("[cč]ek$", lemma) and reducible and not animate
+              else ["ích"] if velar else ["ech"])
           if animate:
             expected_nom_pl_ending = default_nom_pl_animate_masc(lemma, reducible)
           else:
@@ -576,15 +576,15 @@ def process_text_on_page(index, pagetitle, text):
           # [[kolo]] "wheel", [[křeslo]] "armchair", [[máslo]] "butter", [[peklo]] "hell", [[sklo]] "glass",
           # [[světlo]] "light", [[tělo]] "body"; but [[číslo]] "number' with -e/-u; [[zlo]] "evil" and [[kouzlo]] "spell"
           # with -u/-e).
-          re.search("dlo$", lemma) and [u"ě", "u"] or
-          re.search("lo$", lemma) and [u"ě"] or
+          re.search("dlo$", lemma) and ["ě", "u"] or
+          re.search("lo$", lemma) and ["ě"] or
           (re.search("[sc]tvo$", lemma) or re.search("ivo$", lemma)) and ["u"] or
           # Per IJP: Borrowed words and abstracts take -u (e.g. [[banjo]]/[[bendžo]]/[[benžo]] "banjo", [[depo]] "depot",
           # [[chladno]] "cold", [[mokro]] "damp, dampness", [[právo]] "law, right", [[šeru]] "twilight?",
           # [[temno]] "dark, darkness", [[tempo]] "rate, tempo", [[ticho]] "quiet, silence", [[vedro]] "heat") and others
           # often take -ě/-u. Formerly we defaulted to -ě/-u but it seems better to default to just -u, similarly to hard
           # masculines.
-          # [u"ě", "u"]
+          # ["ě", "u"]
           "u"
         )
         if not endings_same(loc_sg_endings, expected_loc_sg_ending):

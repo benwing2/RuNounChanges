@@ -8,7 +8,7 @@ from blib import getparam, rmparam, msg, site, tname
 
 import uklib as uk
 
-AC = u"\u0301"
+AC = "\u0301"
 
 def param_is_end_stressed(param, possible_endings=[]):
   values = [uk.add_monosyllabic_stress(word) for word in re.split(", *", param)]
@@ -24,7 +24,7 @@ def param_is_end_stressed(param, possible_endings=[]):
   return False
 
 def is_undefined(word):
-  return word in ["", "-", u"-", u"—"]
+  return word in ["", "-", "-", "—"]
 
 stress_patterns = [
   ("a", {"inssg": False, "accsg": None, "nompl": False, "locpl": False}),
@@ -37,14 +37,14 @@ stress_patterns = [
   ("f'", {"inssg": True, "accsg": False, "nompl": False, "locpl": True}),
 ]
 
-genitive_singular_endings = [u"а", u"я", u"у", u"ю", u"і", u"ї", u"и"]
-dative_singular_endings = [u"у", u"ю", u"ові", u"еві", u"єві", u"і", u"ї"]
-instrumental_singular_endings = [u"ом", u"ем", u"єм", u"ям", u"ою", u"ею", u"єю", u"ю"]
-locative_singular_endings = [u"у", u"ю", u"ові", u"еві", u"єві", u"і", u"ї"]
-vocative_singular_endings = [u"е", u"є", u"у", u"ю", u"о", u"я"]
-nominative_plural_endings = [u"і", u"ї", u"и", u"а", u"я", u"е"]
-genitive_plural_endings = [u"ей", u"єй", u"ів", u"їв", u"ь", ""]
-instrumental_plural_endings = [u"ами", u"ями", u"ьми"]
+genitive_singular_endings = ["а", "я", "у", "ю", "і", "ї", "и"]
+dative_singular_endings = ["у", "ю", "ові", "еві", "єві", "і", "ї"]
+instrumental_singular_endings = ["ом", "ем", "єм", "ям", "ою", "ею", "єю", "ю"]
+locative_singular_endings = ["у", "ю", "ові", "еві", "єві", "і", "ї"]
+vocative_singular_endings = ["е", "є", "у", "ю", "о", "я"]
+nominative_plural_endings = ["і", "ї", "и", "а", "я", "е"]
+genitive_plural_endings = ["ей", "єй", "ів", "їв", "ь", ""]
+instrumental_plural_endings = ["ами", "ями", "ьми"]
 
 def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
@@ -145,7 +145,7 @@ def process_text_on_page(index, pagetitle, text):
             pagemsg("WARNING: Param %s=%s has missing stress: %s" % (
               (str(i), val, str(t))))
     def ins_sg_note(ins_sg):
-      if re.search(u"[чшжщфвбмпь]$", heads[0]) and gender == "f":
+      if re.search("[чшжщфвбмпь]$", heads[0]) and gender == "f":
         return "ins_sg=%s " % canon(ins_sg)
       else:
         return ""
@@ -169,13 +169,13 @@ def process_text_on_page(index, pagetitle, text):
         return "unknown"
 
     def infer_gender(lemma):
-      if re.search(u"[ое]́?$", lemma) or re.search(r"(.)\1я́?$", lemma) or re.search(u"'я́?$", lemma):
+      if re.search("[ое]́?$", lemma) or re.search(r"(.)\1я́?$", lemma) or re.search("'я́?$", lemma):
         return "N"
-      elif re.search(u"[ая]́?$", lemma) or re.search(u"ість$", lemma):
+      elif re.search("[ая]́?$", lemma) or re.search("ість$", lemma):
         return "F"
-      elif re.search(u"(тель|[еє]́?ць)$", lemma):
+      elif re.search("(тель|[еє]́?ць)$", lemma):
         return "M"
-      elif re.search(u"ь$", lemma):
+      elif re.search("ь$", lemma):
         return None
       elif re.search(uk.cons_c + "$", lemma):
         return "M"
@@ -184,25 +184,25 @@ def process_text_on_page(index, pagetitle, text):
         return None
 
     def default_stress(lemma, gender, reducible):
-      if re.search(u"я́$", lemma) and gender == "N":
+      if re.search("я́$", lemma) and gender == "N":
         return "b"
       elif re.search(AC + "$", lemma):
         return "d"
-      elif reducible and re.search(u"[еоєі]́" + uk.cons_c + u"ь?$", lemma):
+      elif reducible and re.search("[еоєі]́" + uk.cons_c + "ь?$", lemma):
         return "b"
       else:
         return "a"
 
     def apply_vowel_alternation(stem, ialt):
       if ialt == "io":
-        modstem = re.sub(u"(.*[лЛ])і(́?" + uk.cons_c + "*)$", r"\1ьо\2", stem)
+        modstem = re.sub("(.*[лЛ])і(́?" + uk.cons_c + "*)$", r"\1ьо\2", stem)
         if modstem == stem:
-          modstem = re.sub(u"(.*)і(́?" + uk.cons_c + "*)$", r"\1о\2", stem)
+          modstem = re.sub("(.*)і(́?" + uk.cons_c + "*)$", r"\1о\2", stem)
       elif ialt == "ie":
-        modstem = re.sub(u"(.*)і(́?" + uk.cons_c + "*)$", r"\1е\2", stem)
+        modstem = re.sub("(.*)і(́?" + uk.cons_c + "*)$", r"\1е\2", stem)
       else:
         assert ialt == "i"
-        modstem = re.sub(u"ь?[ое](́?" + uk.cons_c + "*)$", r"і\1", stem)
+        modstem = re.sub("ь?[ое](́?" + uk.cons_c + "*)$", r"і\1", stem)
       if modstem == stem:
         return None
       return modstem
@@ -211,14 +211,14 @@ def process_text_on_page(index, pagetitle, text):
       nom_sg = uk.remove_accents(truncate_extra_forms(nom_sg))
       gen_sg = uk.remove_accents(truncate_extra_forms(gen_sg))
       gen_pl = gen_pl and uk.remove_accents(truncate_extra_forms(gen_pl))
-      m = re.search(u"^(.*)[аяео]$", nom_sg)
+      m = re.search("^(.*)[аяео]$", nom_sg)
       if m:
         vowel_stem = m.group(1)
         if re.search(uk.vowel_c + "$", vowel_stem):
-          vowel_stem += u"й"
+          vowel_stem += "й"
         if not gen_pl:
           return "same"
-        nonvowel_stem = re.sub(u"ь$", "", gen_pl)
+        nonvowel_stem = re.sub("ь$", "", gen_pl)
         # Special handling for e.g. зна́чення gen pl зна́чень
         if vowel_stem == nonvowel_stem or vowel_stem == nonvowel_stem + nonvowel_stem[-1]:
           return "same"
@@ -232,10 +232,10 @@ def process_text_on_page(index, pagetitle, text):
             (nom_sg, gen_pl))
           return None
       else:
-        nonvowel_stem = re.sub(u"ь$", "", nom_sg)
-        vowel_stem = re.sub(u"[аяуюиії]$", "", gen_sg)
+        nonvowel_stem = re.sub("ь$", "", nom_sg)
+        vowel_stem = re.sub("[аяуюиії]$", "", gen_sg)
         if re.search(uk.vowel_c + "$", vowel_stem):
-          vowel_stem += u"й"
+          vowel_stem += "й"
         if vowel_stem == nonvowel_stem:
           return "same"
         if uk.reduce(nonvowel_stem) == vowel_stem:
@@ -365,9 +365,9 @@ def process_text_on_page(index, pagetitle, text):
       if alternation in ["i", "ie", "io"]:
         parts.append(alternation)
       if gender == "M":
-        if re.search(u"у́?$", gen_sg):
+        if re.search("у́?$", gen_sg):
           parts.append("genu")
-        elif re.search(u"ю́?$", gen_sg):
+        elif re.search("ю́?$", gen_sg):
           parts.append("genju")
       pagemsg("Inferred declension %s<%s>" % (lemma, ".".join(parts)))
 
@@ -397,7 +397,7 @@ def process_text_on_page(index, pagetitle, text):
       lemma = heads[0]
       seen_patterns = []
       for pattern, accents in stress_patterns:
-        if pattern not in ["a", "d" if re.search(u"[аяео]́?$", lemma) else "b", "d'"]:
+        if pattern not in ["a", "d" if re.search("[аяео]́?$", lemma) else "b", "d'"]:
           continue
         if (matches(ins_sg_end_stressed, accents["inssg"]) and
             matches(acc_sg_end_stressed, accents["accsg"])):
@@ -440,9 +440,9 @@ def process_text_on_page(index, pagetitle, text):
       if alternation in ["i", "ie", "io"]:
         parts.append(alternation)
       if gender == "M" and re.search("^" + uk.uppercase_c, lemma):
-        if re.search(u"у́?$", gen_sg):
+        if re.search("у́?$", gen_sg):
           parts.append("genu")
-        elif re.search(u"ю́?$", gen_sg):
+        elif re.search("ю́?$", gen_sg):
           parts.append("genju")
       pagemsg("Inferred declension %s<%s>" % (lemma, ".".join(parts)))
 

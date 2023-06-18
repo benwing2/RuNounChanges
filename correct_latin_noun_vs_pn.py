@@ -151,7 +151,7 @@ def process_page(page, index):
     blib.do_edit(pywikibot.Page(site, lalib.remove_macrons(form)), index,
         handler, save=args.save, verbose=args.verbose, diff=args.diff)
 
-parser = blib.create_argparser(u"Correct headers/headwords to reflect changes from noun to proper noun (and occasionally vice-versa)",
+parser = blib.create_argparser("Correct headers/headwords to reflect changes from noun to proper noun (and occasionally vice-versa)",
     include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

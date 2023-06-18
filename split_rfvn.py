@@ -6,7 +6,7 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-cjk_chars = u"[\u1100-\u11FF\u2E80-\uA4FF\uAC00-\uD7FF\uFF00-\uFFEF]|[\uD840-\uD8BF]."
+cjk_chars = "[\u1100-\u11FF\u2E80-\uA4FF\uAC00-\uD7FF\uFF00-\uFFEF]|[\uD840-\uD8BF]."
 cjk_regex = "(%s|-notice-(zh|ja|ko)-)" % cjk_chars
 
 def process_text_on_page(index, pagetitle, text):

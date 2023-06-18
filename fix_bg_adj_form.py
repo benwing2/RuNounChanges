@@ -162,7 +162,7 @@ def process_page(page, index, parsed):
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Convert Bulgarian adjective forms to standard templates",
+parser = blib.create_argparser("Convert Bulgarian adjective forms to standard templates",
     include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

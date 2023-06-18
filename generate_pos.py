@@ -176,7 +176,7 @@ def generate_defn(defns, pos, lang):
           prefix = "{{bg-reflexive%s}} " % "|".join([""] + labels[1:])
           saw_refl = True
         elif lang == "bg" and labels[0] == "reflsi":
-          prefix = u"{{bg-reflexive-си%s}} " % "|".join([""] + labels[1:])
+          prefix = "{{bg-reflexive-си%s}} " % "|".join([""] + labels[1:])
           saw_refl = True
         else:
           prefix = "{{lb|%s|%s}} " % (lang, "|".join(labels))

@@ -198,7 +198,7 @@ def process_page(index, page, title_with_syllable_divs=None):
   sections[j] = secbody + sectail
   return "".join(sections), notes
 
-parser = blib.create_argparser(u"Transfer accent from {{it-stress}} to {{hyph|it}} and remove {{it-stress}}, or replace {{it-stress}} with synthesized {{hyph|it}}")
+parser = blib.create_argparser("Transfer accent from {{it-stress}} to {{hyph|it}} and remove {{it-stress}}, or replace {{it-stress}} with synthesized {{hyph|it}}")
 parser.add_argument("--stressfile", help="List of pages with stress.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

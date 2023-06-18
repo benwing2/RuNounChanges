@@ -41,21 +41,21 @@ accentless = {
 }
 
 skip_pages = [
-    u"^б/у$",
-    u"^в/о$",
-    u"^г-ж",
-    u"^г-н",
-    u"^е$",
-    u"^и$",
+    "^б/у$",
+    "^в/о$",
+    "^г-ж",
+    "^г-н",
+    "^е$",
+    "^и$",
     # FIXME! Script wrongly removes the stressed form in the next three;
     # it should notice that the word is normally unstressed and not do this;
     # for the first one, should also notice that it's actually two words
-    u"^м-да$",
-    u"^на$",
-    u"^не$",
-    u"^промеж$", # has unstressed multisyllabic form
-    u"^ы$",
-    u"^я$"
+    "^м-да$",
+    "^на$",
+    "^не$",
+    "^промеж$", # has unstressed multisyllabic form
+    "^ы$",
+    "^я$"
 ]
 
 # Pages where we allow unaccented multisyllabic words in the pronunciation.
@@ -63,7 +63,7 @@ skip_pages = [
 # rewrite it in manual_pronun_mapping to have ‿ in на́‿душу, which gets
 # treated as a single word for unaccented-checking.
 allow_unaccented = [
-    u"^бальзам.* на душу"
+    "^бальзам.* на душу"
 ]
 
 applied_manual_pronun_mappings = set()
@@ -83,7 +83,7 @@ applied_manual_pronun_mappings = set()
 # {{a|Moscow}}). The entries included are those that won't be handled right;
 # for single words with secondary accents, these are typically for the
 # non-lemma forms that don't have the same stress as the headword (e.g.
-# (u"^авиакорпус", u"а̀виакорпус") handles plurals like а̀виакорпусы́,
+# ("^авиакорпус", "а̀виакорпус") handles plurals like а̀виакорпусы́,
 # а̀виакорпусо́в vs. headword авиако́рпус.
 #
 # To find new cases to add, look for the message
@@ -101,7 +101,7 @@ def ensure_two_trailing_nl(text):
   return re.sub(r"\n*$", r"\n\n", text)
 
 def contains_latin(text):
-  return re.search(u"[0-9a-zščžáéíóúýàèìòùỳɛě]", text.lower())
+  return re.search("[0-9a-zščžáéíóúýàèìòùỳɛě]", text.lower())
 
 def contains_non_cyrillic_non_latin(text):
   # 0300 = grave, 0301 = acute, 0302 = circumflex, 0308 = diaeresis,
@@ -218,7 +218,7 @@ def get_headword_pronuns(parsed, pagetitle, pagemsg, expand_text):
     if com.is_nonsyllabic(pronun):
       pagemsg("WARNING: Pronunciation is non-syllabic, skipping: %s" % pronun)
       return None
-    if re.search("[" + com.uppercase + u"ЀЍ][" + AC + GR + "]?[" + com.uppercase + u"ЀЍ]", pronun):
+    if re.search("[" + com.uppercase + "ЀЍ][" + AC + GR + "]?[" + com.uppercase + "ЀЍ]", pronun):
       pagemsg("WARNING: Pronunciation may be an acronym, please check: %s" % pronun)
 
   # Canonicalize headword pronuns. If a single monosyllabic word, add accent
@@ -272,7 +272,7 @@ def pronun_matches(hpron, foundpron, pagemsg):
   foundpron = foundpron.lower()
   hpron = hpron.lower()
   if hpron == foundpron:
-    pagemsg(u"Matching headword pronun %s to found pronun %s after lowercasing (and removing grave accents)" %
+    pagemsg("Matching headword pronun %s to found pronun %s after lowercasing (and removing grave accents)" %
       (orighpron, origfoundpron))
     return True
 
@@ -388,9 +388,9 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
 
   def get_reduced_stem(nom):
     # The stem for reduce_stem() should preserve -й
-    stem_for_reduce = re.sub(u"[аяеоёьыі]́?$", "", nom)
+    stem_for_reduce = re.sub("[аяеоёьыі]́?$", "", nom)
     epenthetic_vowel = nom.endswith(AC)
-    if re.search(u"[аяеоёьыі]́?$", nom):
+    if re.search("[аяеоёьыі]́?$", nom):
       reduced_stem = com.dereduce(stem_for_reduce, epenthetic_vowel)
     else:
       reduced_stem = com.reduce(stem_for_reduce)
@@ -424,9 +424,9 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
         stems.append((stem, foundpronunstems))
     # Do noun stem
     noun_ending_regex = (
-      u"[аяеоёьыій]́?$" if args.lang == "be" else
-      u"[аяеоьиіїй]́?$" if args.lang == "uk" else
-      u"[аяеоьий]́?$"
+      "[аяеоёьыій]́?$" if args.lang == "be" else
+      "[аяеоьиіїй]́?$" if args.lang == "uk" else
+      "[аяеоьий]́?$"
     )
     append_stem_foundstems(re.sub(noun_ending_regex, "", hpron),
       frob_foundprons(foundprons, lambda x:re.sub(noun_ending_regex, "", x)))
@@ -436,8 +436,8 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
     # Also check for adjectival stem
     if args.lang != "bg": # Adjectives look like nouns in Bulgarian
       adj_ending_regex = (
-        u"([ыі]́?|[ая]́?я|[аоя]́?е|[ыі]́?я)$" if args.lang == "be" else
-        u"([иії]́?й|[аяеєі]́)$"
+        "([ыі]́?|[ая]́?я|[аоя]́?е|[ыі]́?я)$" if args.lang == "be" else
+        "([иії]́?й|[аяеєі]́)$"
       )
       adjstem = re.sub(adj_ending_regex, "", hpron)
       if adjstem != hpron:
@@ -458,9 +458,9 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
     # Also check for verbal stem; peel off parts that don't occur in all
     # forms of the verb
     verb_ending_regex = (
-      u"(ава́?|ну́?|[аеыіяо]́?)ц(ь|ца)?$" if args.lang == "be" else
-      u"(ува́?|ну́?|[аеиіїяо]́?)т[иь](ся)?$" if args.lang == "uk" else
-      u"([мая]́?)( с[еи])?$")
+      "(ава́?|ну́?|[аеыіяо]́?)ц(ь|ца)?$" if args.lang == "be" else
+      "(ува́?|ну́?|[аеиіїяо]́?)т[иь](ся)?$" if args.lang == "uk" else
+      "([мая]́?)( с[еи])?$")
     verbstem = re.sub(verb_ending_regex, "", hpron)
     if verbstem != hpron:
       foundpronstems = frob_foundprons(foundprons,
@@ -613,7 +613,7 @@ def process_section(section, indentlevel, headword_pronuns,
     orig_pronun = pronun
 
     def canonicalize_annotation(ann):
-       return com.remove_grave_accents(re.sub("[" + GR + u"‿]", "", ann))
+       return com.remove_grave_accents(re.sub("[" + GR + "‿]", "", ann))
 
     def append_pronun_line(pronun, pre="", post=""):
       if len(annotations_set) > 1:
@@ -666,7 +666,7 @@ def process_section(section, indentlevel, headword_pronuns,
 
       if (
          com.is_monosyllabic(pronun) and re.sub(AC, "", pronun) == pagetitle or
-         re.search(u"ё", pronun) and pronun == pagetitle):
+         re.search("ё", pronun) and pronun == pagetitle):
         pronun = "* %s{{%s%s}}%s\n" % (pre, pron_temp_name, headword_annparam,
             post)
       else:
@@ -750,7 +750,7 @@ def process_section(section, indentlevel, headword_pronuns,
     pagemsg("WARNING: Found the word 'initialism', please check")
 
   def canonicalize_pronun(pron, paramname):
-    newpron = re.sub(u"ё́", u"ё", pron)
+    newpron = re.sub("ё́", "ё", pron)
     newpron = re.sub(AC + "+", AC, newpron)
     ournotes = []
     if newpron != pron:
@@ -792,8 +792,8 @@ def process_section(section, indentlevel, headword_pronuns,
         notes.append("remove 1= because monosyllabic and same as pagetitle modulo accents (%s)" %
             pron_temp_name)
         rmparam(t, "1")
-      elif re.search(u"ё", arg1) and arg1 == pagetitle:
-        notes.append(u"remove 1= because same as pagetitle and has ё (%s)" %
+      elif re.search("ё", arg1) and arg1 == pagetitle:
+        notes.append("remove 1= because same as pagetitle and has ё (%s)" %
             pron_temp_name)
         rmparam(t, "1")
       else:

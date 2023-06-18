@@ -58,28 +58,28 @@ import pywikibot, re, sys, argparse, unicodedata
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname, pname, rsub_repeatedly
 
-AC = u"\u0301" # acute =  ́
-GR = u"\u0300" # grave =  ̀
-CFLEX = u"\u0302" # circumflex =  ̂
-TILDE = u"\u0303" # tilde =  ̃
-DIA = u"\u0308" # diaeresis =  ̈
-TIE = u"\u0361" # tie =  ͡
-DOTOVER = u"\u0307" # dot over =  ̇ = signal unstressed word
-DOTUNDER = u"\u0323" # dot under =  ̣ = unstressed vowel with quality marker
-LINEUNDER = u"\u0331" # line under =  ̱ = secondary-stressed vowel with quality marker
-SYLDIV = u"\uFFF0" # used to represent a user-specific syllable divider (.) so we won't change it
-WORDDIV = u"\uFFF1" # used to represent a user-specific word divider (.) so we won't change it
+AC = "\u0301" # acute =  ́
+GR = "\u0300" # grave =  ̀
+CFLEX = "\u0302" # circumflex =  ̂
+TILDE = "\u0303" # tilde =  ̃
+DIA = "\u0308" # diaeresis =  ̈
+TIE = "\u0361" # tie =  ͡
+DOTOVER = "\u0307" # dot over =  ̇ = signal unstressed word
+DOTUNDER = "\u0323" # dot under =  ̣ = unstressed vowel with quality marker
+LINEUNDER = "\u0331" # line under =  ̱ = secondary-stressed vowel with quality marker
+SYLDIV = "\uFFF0" # used to represent a user-specific syllable divider (.) so we won't change it
+WORDDIV = "\uFFF1" # used to represent a user-specific word divider (.) so we won't change it
 accent = AC + GR + CFLEX + DOTOVER + DOTUNDER + LINEUNDER
 accent_c = "[" + accent + "]"
 stress = AC + GR
 stress_c = "[" + AC + GR + "]"
-ipa_stress = u"ˈˌ"
+ipa_stress = "ˈˌ"
 ipa_stress_c = "[" + ipa_stress + "]"
 separator_not_tie = accent + ipa_stress + r"# \-." + SYLDIV + WORDDIV
-separator = separator_not_tie + u"‿⁀'"
+separator = separator_not_tie + "‿⁀'"
 separator_c = "[" + separator + "]"
-vowel = u"aeiouyöüAEIOUYÖÜ"
-vowel_not_i = u"aeouyöüAEOUYÖÜ"
+vowel = "aeiouyöüAEIOUYÖÜ"
+vowel_not_i = "aeouyöüAEOUYÖÜ"
 V = "[" + vowel + "]" # vowel class
 V_NOT_I = "[" + vowel_not_i + "]" # vowel class not including i
 NV = "[^" + vowel + "]" # non-vowel class
@@ -87,74 +87,74 @@ C = "[^" + vowel + separator + "]" # consonant class including h
 C_OR_TIE = "[^" + vowel + separator_not_tie + "]" # consonant class including h and tie (‿⁀')
 C_NOT_H = "[^" + vowel + separator + "h]" # consonant class not including h
 C_NOT_SRZ = "[^" + vowel + separator + "srz]" # consonant class not including s/r/z
-pron_sign = u"#!*°"
+pron_sign = "#!*°"
 pron_sign_c = "[" + pron_sign + "]"
 
-acute_to_grave = {u"á": u"à", u"í": u"ì", u"ú": u"ù", u"Á": u"À", u"Í": u"Ì", u"Ú": u"Ù"}
+acute_to_grave = {"á": "à", "í": "ì", "ú": "ù", "Á": "À", "Í": "Ì", "Ú": "Ù"}
 
 recognized_suffixes = [
   # -(m)ente, -(m)ento
   ("ment([eo])", r"mént\1"), # must precede -ente/o below
   ("ent([eo])", r"ènt\1"), # must follow -mente/o above
   # verbs
-  ("izzare", u"iddzàre"), # must precede -are below
-  ("izzarsi", u"iddzàrsi"), # must precede -arsi below
+  ("izzare", "iddzàre"), # must precede -are below
+  ("izzarsi", "iddzàrsi"), # must precede -arsi below
   ("([ai])re", r"\1" + GR + "re"), # must follow -izzare above
   ("([ai])rsi", r"\1" + GR + "rsi"), # must follow -izzarsi above
   # nouns
-  ("izzatore", u"iddzatóre"), # must precede -tore below
+  ("izzatore", "iddzatóre"), # must precede -tore below
   ("([st])ore", r"\1óre"), # must follow -izzatore above
-  ("izzatrice", u"iddzatrìce"), # must precede -trice below
-  ("trice", u"trìce"), # must follow -izzatrice above
-  ("izzazione", u"iddzatsióne"), # must precede -zione below
-  ("zione", u"tsióne"), # must precede -one below and follow -izzazione above
-  ("one", u"óne"), # must follow -zione above
-  ("acchio", u"àcchio"),
+  ("izzatrice", "iddzatrìce"), # must precede -trice below
+  ("trice", "trìce"), # must follow -izzatrice above
+  ("izzazione", "iddzatsióne"), # must precede -zione below
+  ("zione", "tsióne"), # must precede -one below and follow -izzazione above
+  ("one", "óne"), # must follow -zione above
+  ("acchio", "àcchio"),
   ("acci([ao])", r"àcci\1"),
   ("([aiu])ggine", r"\1" + GR + "ggine"),
-  ("aggio", u"àggio"),
+  ("aggio", "àggio"),
   ("([ai])gli([ao])", r"\1" + GR + r"gli\2"),
   ("ai([ao])", r"ài\1"),
   ("([ae])nza", r"\1" + GR + "ntsa"),
-  ("ario", u"àrio"),
+  ("ario", "àrio"),
   ("([st])orio", r"\1òrio"),
   ("astr([ao])", r"àstr\1"),
   ("ell([ao])", r"èll\1"),
-  ("etta", u"étta"),
+  ("etta", "étta"),
   # do not include -etto, both ètto and étto are common
-  ("ezza", u"éttsa"),
-  ("ficio", u"fìcio"),
+  ("ezza", "éttsa"),
+  ("ficio", "fìcio"),
   ("ier([ao])", r"ièr\1"),
-  ("ifero", u"ìfero"),
-  ("ismo", u"ìsmo"),
-  ("ista", u"ìsta"),
+  ("ifero", "ìfero"),
+  ("ismo", "ìsmo"),
+  ("ista", "ìsta"),
   ("izi([ao])", r"ìtsi\1"),
-  ("logia", u"logìa"),
+  ("logia", "logìa"),
   # do not include -otto, both òtto and ótto are common
-  ("tudine", u"tùdine"),
-  ("ura", u"ùra"),
+  ("tudine", "tùdine"),
+  ("ura", "ùra"),
   ("([^aeo])uro", r"\1ùro"),
   # adjectives
-  ("izzante", u"iddzànte"), # must precede -ante below
-  ("ante", u"ànte"), # must follow -izzante above
-  ("izzando", u"iddzàndo"), # must precede -ando below
+  ("izzante", "iddzànte"), # must precede -ante below
+  ("ante", "ànte"), # must follow -izzante above
+  ("izzando", "iddzàndo"), # must precede -ando below
   ("([ae])ndo", r"\1" + GR + "ndo"), # must follow -izzando above
   ("([ai])bile", r"\1" + GR + "bile"),
-  ("ale", u"àle"),
+  ("ale", "àle"),
   ("([aeiou])nico", r"\1" + GR + "nico"),
   ("([ai])stic([ao])", r"\1" + GR + r"stic\2"),
   # exceptions to the following: àbato, àcato, acròbata, àgata, apòstata, àstato, cìato, fégato, omeòpata,
   # sàb(b)ato, others?
   ("at([ao])", r"àt\1"),
   ("([ae])tic([ao])", r"\1" + GR + r"tic\2"),
-  ("ense", u"ènse"),
+  ("ense", "ènse"),
   ("esc([ao])", r"ésc\1"),
-  ("evole", u"évole"),
+  ("evole", "évole"),
   # FIXME: Systematic exceptions to the following in 3rd plural present tense verb forms
   ("ian([ao])", r"iàn\1"),
   ("iv([ao])", r"ìv\1"),
-  ("oide", u"òide"),
-  ("oso", u"óso"),
+  ("oide", "òide"),
+  ("oso", "óso"),
 ]
 
 unstressed_words = {
@@ -181,10 +181,10 @@ unstressed_words = {
 def decompose(text):
   # decompose everything but ö and ü
   text = unicodedata.normalize("NFD", text)
-  text = text.replace("o" + DIA, u"ö")
-  text = text.replace("O" + DIA, u"Ö")
-  text = text.replace("u" + DIA, u"ü")
-  text = text.replace("U" + DIA, u"Ü")
+  text = text.replace("o" + DIA, "ö")
+  text = text.replace("O" + DIA, "Ö")
+  text = text.replace("u" + DIA, "ü")
+  text = text.replace("U" + DIA, "Ü")
   text = re.sub("([" + LINEUNDER + DOTUNDER + DOTOVER + "])(" + stress_c + ")", r"\2\1", text)
   return text
 
@@ -200,7 +200,7 @@ def split_but_rejoin_affixes(text):
   end
   # First replace hyphens separating words with a special character. Remaining hyphens denote affixes and don't
   # get split. After splitting, replace the special character with a hyphen again.
-  TEMP_HYPH = u"\uFFF0"
+  TEMP_HYPH = "\uFFF0"
   text = rsub_repeatedly(r"([^\s])-([^\s])", r"\1" + TEMP_HYPH + r"\2", text)
   words = re.split(r"([\s" + TEMP_HYPH + "]+)", text)
   return ["-" if word == TEMP_HYPH else word for word in words]
@@ -236,7 +236,7 @@ def remove_non_final_accents(text):
 def remove_final_monosyllabic_accents(text):
   words = split_but_rejoin_affixes(decompose(text))
   # There should be no accents in separators.
-  words = [re.sub(u"^([^" + vowel + "]*[" + vowel + "])" + accent_c + "$", r"\1", word) for word in words]
+  words = [re.sub("^([^" + vowel + "]*[" + vowel + "])" + accent_c + "$", r"\1", word) for word in words]
   return recompose("".join(words))
 
 def syllabify_from_spelling(text):
@@ -247,14 +247,14 @@ def syllabify_from_spelling(text):
     if (i % 2) == 1: # a separator
       words[i] = WORDDIV
   text = "".join(words)
-  TEMP_I = u"\uFFF2"
-  TEMP_I_CAPS = u"\uFFF3"
-  TEMP_U = u"\uFFF4"
-  TEMP_U_CAPS = u"\uFFF5"
-  TEMP_Y = u"\uFFF6"
-  TEMP_Y_CAPS = u"\uFFF7"
-  TEMP_G = u"\uFFF8"
-  TEMP_G_CAPS = u"\uFFF9"
+  TEMP_I = "\uFFF2"
+  TEMP_I_CAPS = "\uFFF3"
+  TEMP_U = "\uFFF4"
+  TEMP_U_CAPS = "\uFFF5"
+  TEMP_Y = "\uFFF6"
+  TEMP_Y_CAPS = "\uFFF7"
+  TEMP_G = "\uFFF8"
+  TEMP_G_CAPS = "\uFFF9"
   # Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
   text = text.replace(".", SYLDIV)
   # We propagate underscore this far specifically so we can distinguish g_n ([[wagneriano]]) from gn.
@@ -318,14 +318,14 @@ def syllabify_from_spelling(text):
   # Any aeoö, or stressed iuüy, should be syllabically divided from a following aeoö or stressed iuüy.
   # A stressed vowel might be followed by another accent such as LINEUNDER (which we put after the acute/grave in
   # decompose()).
-  text = rsub_repeatedly(u"([aeoöAEOÖ]" + accent_c + u"*'?)([hH]?'?[aeoöAEOÖ])", r"\1.\2", text)
-  text = rsub_repeatedly(u"([aeoöAEOÖ]" + accent_c + "*'?)([hH]?'?" + V + stress_c + ")", r"\1.\2", text)
-  text = re.sub(u"([iuüyIUÜY]" + stress_c + accent_c + u"*'?)([hH]?'?[aeoöAEOÖ])", r"\1.\2", text)
-  text = rsub_repeatedly(u"([iuüyIUÜY]" + stress_c + accent_c + "*'?)([hH]?'?" + V + stress_c + ")", r"\1.\2", text)
+  text = rsub_repeatedly("([aeoöAEOÖ]" + accent_c + "*'?)([hH]?'?[aeoöAEOÖ])", r"\1.\2", text)
+  text = rsub_repeatedly("([aeoöAEOÖ]" + accent_c + "*'?)([hH]?'?" + V + stress_c + ")", r"\1.\2", text)
+  text = re.sub("([iuüyIUÜY]" + stress_c + accent_c + "*'?)([hH]?'?[aeoöAEOÖ])", r"\1.\2", text)
+  text = rsub_repeatedly("([iuüyIUÜY]" + stress_c + accent_c + "*'?)([hH]?'?" + V + stress_c + ")", r"\1.\2", text)
   # We divide ii as i.i ([[sii]]), but not iy or yi, which should hopefully cause [[kefiyyah]] to be handled
   # correctly as ke.fiy.yah. Only example with Cyi is [[dandyismo]], which may be exceptional.
   text = rsub_repeatedly("([iI]" + accent_c + "*'?)([hH]?'?[iI])", r"\1.\2", text)
-  text = rsub_repeatedly(u"([uüUÜ]" + accent_c + u"*'?)([hH]?'?[uüUÜ])", r"\1.\2", text)
+  text = rsub_repeatedly("([uüUÜ]" + accent_c + "*'?)([hH]?'?[uüUÜ])", r"\1.\2", text)
   text = text.replace(SYLDIV, ".")
   text = text.replace(TEMP_I, "i")
   text = text.replace(TEMP_I_CAPS, "I")
@@ -351,7 +351,7 @@ def adjust_initial_capital(arg, pagetitle, pagemsg, origline):
     new_arg_words = []
     for arg_word, pagetitle_word in zip(arg_words, pagetitle_words):
       new_arg_word = arg_word
-      m = re.search(u"^(" + pron_sign_c + "*)(.*)$", arg_word)
+      m = re.search("^(" + pron_sign_c + "*)(.*)$", arg_word)
       arg_word_prefix, arg_word = m.groups()
       if len(arg_word) > 0 and len(pagetitle_word) > 0 and arg_word[0] != pagetitle_word[0]:
         if arg_word[0].upper() == pagetitle_word[0] or remove_accents(arg_word[0]).upper() == pagetitle_word[0]:
@@ -371,7 +371,7 @@ def normalize_bare_arg(arg, pagetitle, pagemsg):
   if arg == "+":
     arg = pagetitle
   abbrev_text = None
-  m = re.search(u"^(" + pron_sign_c + "*)(.*?)(" + pron_sign_c + "*)$", arg)
+  m = re.search("^(" + pron_sign_c + "*)(.*?)(" + pron_sign_c + "*)$", arg)
   arg_prefix, arg, arg_suffix = m.groups()
   if re.search(r"^\^[àéèìóòù]$", arg):
     if re.search("[ %-]", pagetitle):
@@ -384,7 +384,7 @@ def normalize_bare_arg(arg, pagetitle, pagemsg):
   for i, word in enumerate(words):
     if i % 2 == 1: # a separator
       continue
-    m = re.search(u"^(" + pron_sign_c + "*)(.*?)(" + pron_sign_c + "*)$", word)
+    m = re.search("^(" + pron_sign_c + "*)(.*?)(" + pron_sign_c + "*)$", word)
     word_prefix, word, word_suffix = m.groups()
     def err(msg):
       pagemsg("WARNING: " + msg + ": " + words[i])
@@ -455,7 +455,7 @@ def normalize_bare_arg(arg, pagetitle, pagemsg):
           if m:
             before, vow, after = m.groups()
             if vow in ["e", "o", "E", "O"]:
-              err(u"When stressed vowel is e or o, it must be marked é/è or ó/ò to indicate quality")
+              err("When stressed vowel is e or o, it must be marked é/è or ó/ò to indicate quality")
               return None
             word = before + vow + GR + after
 
@@ -561,10 +561,10 @@ def process_text_on_page(index, pagetitle, text):
           if ipat is None:
             must_continue = True
             break
-          bare_args = blib.fetch_param_chain(ipat, "1") or [u"+"]
-          bare_args = [u"+" if arg == pagetitle else arg for arg in bare_args]
+          bare_args = blib.fetch_param_chain(ipat, "1") or ["+"]
+          bare_args = ["+" if arg == pagetitle else arg for arg in bare_args]
           bare_args = [adjust_initial_capital(arg, pagetitle, pagemsg, origline) for arg in bare_args]
-          bare_args = [re.sub(u"([áíúÁÍÚ])", lambda m: acute_to_grave[m.group(1)], arg) for arg in bare_args]
+          bare_args = [re.sub("([áíúÁÍÚ])", lambda m: acute_to_grave[m.group(1)], arg) for arg in bare_args]
           normalized_bare_args = [
             normalize_bare_arg(arg, pagetitle, lambda msg: pagemsg("%s: %s" % (msg, origline)))
             for arg in bare_args
@@ -693,12 +693,12 @@ def process_text_on_page(index, pagetitle, text):
         rhyme_error = False
         rhyme_pronuns = []
         for bare_arg in normalized_bare_args:
-          pronun = expand_text(u"{{#invoke:it-pronunciation|to_phonemic_bot|%s}}" % re.sub(pron_sign_c, "", bare_arg))
+          pronun = expand_text("{{#invoke:it-pronunciation|to_phonemic_bot|%s}}" % re.sub(pron_sign_c, "", bare_arg))
           if not pronun:
             rhyme_error = True
             break
           rhyme_pronun = (
-            re.sub(u"^[^aeiouɛɔ]*", "", re.sub(u".*[ˌˈ]", "", pronun)).replace(TIE, "")
+            re.sub("^[^aeiouɛɔ]*", "", re.sub(".*[ˌˈ]", "", pronun)).replace(TIE, "")
             .replace(".", ""))
           if rhyme_pronun not in rhyme_pronuns:
             rhyme_pronuns.append(rhyme_pronun)
@@ -747,8 +747,8 @@ def process_text_on_page(index, pagetitle, text):
             if must_break:
               break
             for rhyme, this_num_syl in rhymes:
-              normalized_rhyme = re.sub(u"([aeɛoɔu])i", r"\1j", rhyme).replace("sm", "zm")
-              normalized_rhyme = re.sub(u"a[uu̯](" + C + ")", r"aw\1", normalized_rhyme)
+              normalized_rhyme = re.sub("([aeɛoɔu])i", r"\1j", rhyme).replace("sm", "zm")
+              normalized_rhyme = re.sub("a[uu̯](" + C + ")", r"aw\1", normalized_rhyme)
               this_num_syl = this_num_syl or num_syl
               if this_num_syl and not args_for_hyph and not hyph_lines:
                 pagemsg("WARNING: Explicit number of syllables %s given for explicit rhyme %s and no default or explicit hyphenation: %s"
@@ -826,11 +826,11 @@ def process_text_on_page(index, pagetitle, text):
             if hyphs:
               specified_hyphenations = [".".join(syls) for syls in hyphs]
               specified_hyphenations = [
-                re.sub(u"([áíúÁÍÚ])", lambda m: acute_to_grave[m.group(1)], hyph) for hyph in specified_hyphenations]
+                re.sub("([áíúÁÍÚ])", lambda m: acute_to_grave[m.group(1)], hyph) for hyph in specified_hyphenations]
               specified_hyphenations = [re.sub("''+", "", hyph) for hyph in specified_hyphenations]
               specified_hyphenations = [
                 adjust_initial_capital(hyph, pagetitle, pagemsg, hyph_line) for hyph in specified_hyphenations]
-              specified_hyphenations = [re.sub(u"î([ -]|$)", r"i\1", hyph) for hyph in specified_hyphenations]
+              specified_hyphenations = [re.sub("î([ -]|$)", r"i\1", hyph) for hyph in specified_hyphenations]
               hyphenations = [syllabify_from_spelling(arg) for arg in args_for_hyph]
               if set(specified_hyphenations) < set(hyphenations):
                 pagemsg("Removing explicit hyphenation(s) %s that are a subset of auto-hyphenation(s) %s: %s" %

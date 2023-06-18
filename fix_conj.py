@@ -28,7 +28,7 @@ def process_page(page, index, parsed):
       conjtype = m.group(1)
       varargno = None
       variant = None
-      if conjtype in ["3oa", "4a", "4b", "4c", "6a", "6c", "11a", "16a", "16b", u"irreg-дать", u"irreg-клясть", u"irreg-быть"]:
+      if conjtype in ["3oa", "4a", "4b", "4c", "6a", "6c", "11a", "16a", "16b", "irreg-дать", "irreg-клясть", "irreg-быть"]:
         varargno = 3
       elif conjtype in ["5a", "5b", "5c", "6b", "9a", "9b", "11b", "14a", "14b", "14c"]:
         varargno = 4
@@ -62,7 +62,7 @@ def process_page(page, index, parsed):
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Convert ru-conj-* to ru-conj and move variant",
+parser = blib.create_argparser("Convert ru-conj-* to ru-conj and move variant",
   include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

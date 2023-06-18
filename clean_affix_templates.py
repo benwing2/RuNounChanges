@@ -14,10 +14,10 @@ compound_templates = ["com", "compound"]
 templates_to_convert = prefix_templates + suffix_templates + confix_templates + compound_templates + ["affix"]
 
 hyphens = {
-  "ar": u"ـ",
-  "fa": u"ـ",
-  "he": u"־",
-  "yi": u"־",
+  "ar": "ـ",
+  "fa": "ـ",
+  "he": "־",
+  "yi": "־",
 }
 
 def process_text_on_page(index, pagetitle, text):

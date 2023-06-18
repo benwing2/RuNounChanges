@@ -48,10 +48,10 @@ lang_to_langname = {
 }
 
 # Hindi vowel diacritics; don't display nicely on their own
-M = u"\u0901"
-N = u"\u0902"
-I = u"\u093f"
-AA = u"\u093e"
+M = "\u0901"
+N = "\u0902"
+I = "\u093f"
+AA = "\u093e"
 
 def get_indentation_level(header):
   return len(re.sub("[^=].*", "", header, 0, re.S))
@@ -122,10 +122,10 @@ def process_text_on_page(index, pagetitle, text, pos):
             if not found_hi_head_needing_manual:
               if hi_head_gender not in ["m", "f"]:
                 found_hi_head_needing_manual = "Gender %s unrecognized or required manual evaluation" % hi_head_gender
-              elif hi_head_gender == "m" and re.search("[" + AA + u"आ][" + M + N + "]?$", newhead):
-                found_hi_head_needing_manual = u"Masculine head %s ends in -ā or -ā̃, needs manual evaluation" % newhead
-              elif hi_head_gender == "f" and re.search(I + u"या" + "[" + M + N + "]?$", newhead):
-                found_hi_head_needing_manual = u"Feminine head %s ends in -iyā or -iyā̃, needs manual evaluation" % newhead
+              elif hi_head_gender == "m" and re.search("[" + AA + "आ][" + M + N + "]?$", newhead):
+                found_hi_head_needing_manual = "Masculine head %s ends in -ā or -ā̃, needs manual evaluation" % newhead
+              elif hi_head_gender == "f" and re.search(I + "या" + "[" + M + N + "]?$", newhead):
+                found_hi_head_needing_manual = "Feminine head %s ends in -iyā or -iyā̃, needs manual evaluation" % newhead
           else:
             newhead = getparam(t, "1")
         elif tn == "head" and getparam(t, "1") == args.lang and getparam(t, "2") in [pos, "%ss" % pos]:

@@ -33,7 +33,7 @@ def process_page(page, index, parsed):
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Remove accents from 1= in {{wikipedia|...}}",
+parser = blib.create_argparser("Remove accents from 1= in {{wikipedia|...}}",
   include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

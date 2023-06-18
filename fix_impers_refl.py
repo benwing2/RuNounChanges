@@ -35,7 +35,7 @@ def process_page(page, index, parsed):
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Change verb type *-impers-refl to *-refl-impers",
+parser = blib.create_argparser("Change verb type *-impers-refl to *-refl-impers",
   include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

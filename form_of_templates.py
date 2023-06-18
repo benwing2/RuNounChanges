@@ -4,7 +4,7 @@
 from blib import msg
 
 language_specific_alt_form_of_templates = [
-  u"be-Taraškievica",
+  "be-Taraškievica",
   "bg-pre-reform",
   # FIXME: remove from lang-independent category
   "ceb-superseded spelling of",
@@ -67,7 +67,7 @@ language_specific_form_of_templates = [
   "pt-pronoun-with-l",
   "pt-pronoun-with-n",
   "ro-adj-form of", "ro-form-adj",
-  u"ru-alt-ё",
+  "ru-alt-ё",
   "ru-abbrev of",
   "ru-acronym of",
   "ru-clipping of",

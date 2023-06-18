@@ -9,24 +9,24 @@ from blib import remove_links, msg
 
 # FIXME:
 #
-# 1. Check case of u"ᾱῦ", whether the PERIS shouldn't be on first vowel.
+# 1. Check case of "ᾱῦ", whether the PERIS shouldn't be on first vowel.
 #    Similarly with ACUTE (and GRAVE?).
 # 2. Also check case of Latin Hāídēs. What should it be?
 
 # Accented characters
-GRAVE = u"\u0300"      # grave accent = varia
-ACUTE = u"\u0301"      # acute accent = oxia, tonos
-CIRC = u"\u0302"       # circumflex accent
-MAC = u"\u0304"        # macron
-BREVE = u"\u0306"      # breve = vrachy
-DIA = u"\u0308"        # diaeresis = dialytika
-CAR = u"\u030C"        # caron = haček
-SMBR = u"\u0313"       # smooth breathing = comma above = psili
-ROBR = u"\u0314"       # rough breathing = reversed comma above = dasia
-PERIS = u"\u0342"      # perispomeni (circumflex accent)
-KORO = u"\u0343"       # koronis (is this used? looks like comma above/psili)
-DIATON = u"\u0344"     # dialytika tonos = diaeresis + acute, should not occur
-IOBE = u"\u0345"       # iota below = ypogegrammeni
+GRAVE = "\u0300"      # grave accent = varia
+ACUTE = "\u0301"      # acute accent = oxia, tonos
+CIRC = "\u0302"       # circumflex accent
+MAC = "\u0304"        # macron
+BREVE = "\u0306"      # breve = vrachy
+DIA = "\u0308"        # diaeresis = dialytika
+CAR = "\u030C"        # caron = haček
+SMBR = "\u0313"       # smooth breathing = comma above = psili
+ROBR = "\u0314"       # rough breathing = reversed comma above = dasia
+PERIS = "\u0342"      # perispomeni (circumflex accent)
+KORO = "\u0343"       # koronis (is this used? looks like comma above/psili)
+DIATON = "\u0344"     # dialytika tonos = diaeresis + acute, should not occur
+IOBE = "\u0345"       # iota below = ypogegrammeni
 
 GR_ACC = ("[" + GRAVE + ACUTE + MAC + BREVE + DIA + SMBR + ROBR +
         PERIS + KORO + DIATON + IOBE + "]")
@@ -69,44 +69,44 @@ def nfd_form(txt):
 
 tt = {
     # Plain vowels
-    u"α":"a", u"Α":"A",
-    u"ε":"e", u"Ε":"E",
-    u"η":"e"+MAC, u"Η":"E"+MAC,
-    u"ι":"i", u"Ι":"I",
-    u"ο":"o", u"Ο":"O",
-    u"ω":"o"+MAC, u"Ω":"O"+MAC,
-    u"υ":"u", u"Υ":"U",
+    "α":"a", "Α":"A",
+    "ε":"e", "Ε":"E",
+    "η":"e"+MAC, "Η":"E"+MAC,
+    "ι":"i", "Ι":"I",
+    "ο":"o", "Ο":"O",
+    "ω":"o"+MAC, "Ω":"O"+MAC,
+    "υ":"u", "Υ":"U",
 
     # Iotated vowels
-    u"ᾳ":"a"+MAC+"i", u"ᾼ":"A"+MAC+"i",
-    u"ῃ":"e"+MAC+"i", u"ῌ":"E"+MAC+"i",
-    u"ῳ":"o"+MAC+"i", u"ῼ":"O"+MAC+"i",
+    "ᾳ":"a"+MAC+"i", "ᾼ":"A"+MAC+"i",
+    "ῃ":"e"+MAC+"i", "ῌ":"E"+MAC+"i",
+    "ῳ":"o"+MAC+"i", "ῼ":"O"+MAC+"i",
 
     # Consonants
-    u"β":u"b", u"Β":u"B",
-    u"γ":u"g", u"Γ":u"G",
-    u"δ":u"d", u"Δ":u"D",
-    u"ζ":u"z", u"Ζ":u"Z",
-    u"θ":u"th", u"Θ":u"Th",
-    u"κ":u"k", u"Κ":u"K",
-    u"λ":u"l", u"Λ":u"L",
-    u"μ":u"m", u"Μ":u"M",
-    u"ν":u"n", u"Ν":u"N",
-    u"ξ":u"ks", u"Ξ":u"Ks",
-    u"π":u"p", u"Π":u"P",
-    u"ρ":u"r", u"Ρ":u"R",
-    u"σ":u"s", u"ς":u"s", u"Σ":u"S",
-    u"τ":u"t", u"Τ":u"T",
-    u"φ":u"ph", u"Φ":u"Ph",
-    u"χ":u"kh", u"Χ":u"Kh",
-    u"ψ":u"ps", u"Ψ":u"Ps",
+    "β":"b", "Β":"B",
+    "γ":"g", "Γ":"G",
+    "δ":"d", "Δ":"D",
+    "ζ":"z", "Ζ":"Z",
+    "θ":"th", "Θ":"Th",
+    "κ":"k", "Κ":"K",
+    "λ":"l", "Λ":"L",
+    "μ":"m", "Μ":"M",
+    "ν":"n", "Ν":"N",
+    "ξ":"ks", "Ξ":"Ks",
+    "π":"p", "Π":"P",
+    "ρ":"r", "Ρ":"R",
+    "σ":"s", "ς":"s", "Σ":"S",
+    "τ":"t", "Τ":"T",
+    "φ":"ph", "Φ":"Ph",
+    "χ":"kh", "Χ":"Kh",
+    "ψ":"ps", "Ψ":"Ps",
 
     # Archaic letters
-    u"ϝ":u"w", u"Ϝ":u"W",
-    u"ϻ":u"s"+ACUTE, u"Ϻ":u"S"+ACUTE,
-    u"ϙ":u"q", u"Ϙ":u"Q",
-    u"ϡ":u"s"+CAR, u"Ϡ":u"S"+CAR,
-    u"\u0377":u"v", u"\u0376":u"V",
+    "ϝ":"w", "Ϝ":"W",
+    "ϻ":"s"+ACUTE, "Ϻ":"S"+ACUTE,
+    "ϙ":"q", "Ϙ":"Q",
+    "ϡ":"s"+CAR, "Ϡ":"S"+CAR,
+    "\u0377":"v", "\u0376":"V",
 
     GRAVE:GRAVE,
     ACUTE:ACUTE,
@@ -121,17 +121,17 @@ tt = {
     IOBE:"i", #should not occur
 }
 
-greek_lowercase_vowels_raw = u"αεηιοωυᾳῃῳ"
+greek_lowercase_vowels_raw = "αεηιοωυᾳῃῳ"
 greek_lowercase_vowels = "[" + greek_lowercase_vowels_raw + "]"
-greek_uppercase_vowels_raw = u"ΑΕΗΙΟΩΥᾼῌῼ"
+greek_uppercase_vowels_raw = "ΑΕΗΙΟΩΥᾼῌῼ"
 greek_uppercase_vowels = "[" + greek_uppercase_vowels_raw + "]"
 greek_vowels = ("[" + greek_lowercase_vowels_raw + greek_uppercase_vowels_raw
         + "]")
 # vowels that can be the first part of a diphthong
-greek_diphthong_first_vowels = u"[αεηοωΑΕΗΟΩ]"
-iotate_vowel = {u"α":u"ᾳ", u"Α":u"ᾼ",
-                u"η":u"ῃ", u"Ε":u"ῌ",
-                u"ω":u"ῳ", u"Ω":u"ῼ",}
+greek_diphthong_first_vowels = "[αεηοωΑΕΗΟΩ]"
+iotate_vowel = {"α":"ᾳ", "Α":"ᾼ",
+                "η":"ῃ", "Ε":"ῌ",
+                "ω":"ῳ", "Ω":"ῼ",}
 
 # Transliterates text, which should be a single word or phrase. It should
 # include stress marks, which are then preserved in the transliteration.
@@ -139,8 +139,8 @@ def tr(text, lang=None, sc=None, msgfun=msg):
     text = remove_links(text)
     text = tr_canonicalize_greek(text)
 
-    text = rsub(text, u"γ([γκξχ])", r"n\1")
-    text = rsub(text, u"ρρ", "rrh")
+    text = rsub(text, "γ([γκξχ])", r"n\1")
+    text = rsub(text, "ρρ", "rrh")
 
     text = rsub(text, '.', tt)
 
@@ -155,7 +155,7 @@ def tr(text, lang=None, sc=None, msgfun=msg):
 
 #########       Transliterate with Greek to guide       #########
 
-multi_single_quote_subst = u"\ufff1"
+multi_single_quote_subst = "\ufff1"
 
 # This dict maps Greek characters to all the Latin characters that
 # might correspond to them. The entries can be a string (equivalent
@@ -181,49 +181,49 @@ multi_single_quote_subst = u"\ufff1"
 tt_to_greek_matching = {
     # Plain vowels; allow uppercase Greek to match lowercase Latin to
     # handle vowels with rough breathing
-    u"α":"a", u"Α":["A","a"],
-    u"ε":"e", u"Ε":["E","e"],
-    u"η":"e"+MAC, u"Η":["E"+MAC,"e"+MAC],
-    u"ι":"i", u"Ι":["I","i"],
-    u"ο":"o", u"Ο":["O","o"],
-    u"ω":"o"+MAC, u"Ω":["O"+MAC,"o"+MAC],
-    u"υ":"u", u"Υ":["U","u"],
+    "α":"a", "Α":["A","a"],
+    "ε":"e", "Ε":["E","e"],
+    "η":"e"+MAC, "Η":["E"+MAC,"e"+MAC],
+    "ι":"i", "Ι":["I","i"],
+    "ο":"o", "Ο":["O","o"],
+    "ω":"o"+MAC, "Ω":["O"+MAC,"o"+MAC],
+    "υ":"u", "Υ":["U","u"],
 
     # Iotated vowels
-    u"ᾳ":"a"+MAC+"i", u"ᾼ":["A"+MAC+"i","a"+MAC+"i"],
-    u"ῃ":"e"+MAC+"i", u"ῌ":["E"+MAC+"i","e"+MAC+"i"],
-    u"ῳ":"o"+MAC+"i", u"ῼ":["O"+MAC+"i","o"+MAC+"i"],
+    "ᾳ":"a"+MAC+"i", "ᾼ":["A"+MAC+"i","a"+MAC+"i"],
+    "ῃ":"e"+MAC+"i", "ῌ":["E"+MAC+"i","e"+MAC+"i"],
+    "ῳ":"o"+MAC+"i", "ῼ":["O"+MAC+"i","o"+MAC+"i"],
 
     # Consonants
-    u"β":[u"b",u"β"], u"Β":[u"B",u"Β"], # second B is Greek
+    "β":["b","β"], "Β":["B","Β"], # second B is Greek
     # This will match n anywhere against γ and canonicalize to g, which
     # is probably OK because in post-processing we convert gk/gg to nk/ng.
-    u"γ":[u"g",u"n",u"ŋ",u"γ"], u"Γ":[u"G",u"Γ"],
-    u"δ":[u"d",u"δ"], u"Δ":[u"D",u"Δ"],
+    "γ":["g","n","ŋ","γ"], "Γ":["G","Γ"],
+    "δ":["d","δ"], "Δ":["D","Δ"],
     # Handling of ζ/Ζ opposite zd/Zd is special-cased in
     # check_unmatching_rh_zd().
-    u"ζ":u"z", u"Ζ":u"Z",
-    u"θ":[u"th",u"θ"], u"Θ":[u"Th",u"Θ"],
-    u"κ":[u"k",u"κ"], u"Κ":u"K",
-    u"λ":u"l", u"Λ":u"L",
-    u"μ":u"m", u"Μ":u"M",
-    u"ν":u"n", u"Ν":u"N",
-    u"ξ":[u"ks",u"x",u"ξ"], u"Ξ":[u"Ks",u"X",u"Ξ"],
-    u"π":u"p", u"Π":u"P",
+    "ζ":"z", "Ζ":"Z",
+    "θ":["th","θ"], "Θ":["Th","Θ"],
+    "κ":["k","κ"], "Κ":"K",
+    "λ":"l", "Λ":"L",
+    "μ":"m", "Μ":"M",
+    "ν":"n", "Ν":"N",
+    "ξ":["ks","x","ξ"], "Ξ":["Ks","X","Ξ"],
+    "π":"p", "Π":"P",
     # Handling of ρρ opposite rrh is special-cased in check_unmatching_rh_zd().
-    u"ρ":u"r", u"Ρ":u"R",
-    u"σ":u"s", u"ς":u"s", u"Σ":u"S",
-    u"τ":u"t", u"Τ":u"T",
-    u"φ":[u"ph",u"φ"], u"Φ":[u"Ph",u"Φ"],
-    u"χ":[u"kh",u"χ",u"ch"], u"Χ":[u"Kh",u"Χ"],
-    u"ψ":[u"ps",u"ψ"], u"Ψ":[u"Ps",u"Ψ"],
+    "ρ":"r", "Ρ":"R",
+    "σ":"s", "ς":"s", "Σ":"S",
+    "τ":"t", "Τ":"T",
+    "φ":["ph","φ"], "Φ":["Ph","Φ"],
+    "χ":["kh","χ","ch"], "Χ":["Kh","Χ"],
+    "ψ":["ps","ψ"], "Ψ":["Ps","Ψ"],
 
     # Archaic letters
-    u"ϝ":u"w", u"Ϝ":u"W",
-    u"ϻ":u"s"+ACUTE, u"Ϻ":u"S"+ACUTE,
-    u"ϙ":u"q", u"Ϙ":u"Q",
-    u"ϡ":u"s"+CAR, u"Ϡ":u"S"+CAR,
-    u"\u0377":u"v", u"\u0376":u"V",
+    "ϝ":"w", "Ϝ":"W",
+    "ϻ":"s"+ACUTE, "Ϻ":"S"+ACUTE,
+    "ϙ":"q", "Ϙ":"Q",
+    "ϡ":"s"+CAR, "Ϡ":"S"+CAR,
+    "\u0377":"v", "\u0376":"V",
 
     GRAVE:[GRAVE,""],
     ACUTE:[ACUTE,""],
@@ -238,26 +238,26 @@ tt_to_greek_matching = {
     #IOBE:"i", #should not occur
 
     # numerals
-    u"1":u"1", u"2":u"2", u"3":u"3", u"4":u"4", u"5":u"5",
-    u"6":u"6", u"7":u"7", u"8":u"8", u"9":u"9", u"0":u"0",
+    "1":"1", "2":"2", "3":"3", "4":"4", "5":"5",
+    "6":"6", "7":"7", "8":"8", "9":"9", "0":"0",
     # punctuation (leave on separate lines)
-    u"?":u"?", # question mark
-    u",":u",", # comma
-    u";":u";", # semicolon
-    u".":u".", # period
-    u"!":u"!", # exclamation point
-    u"-":u"-", # hyphen/dash
-    u"'":u"'", # single quote, for bold/italic
-    u" ":u" ",
-    u"[":u"",
-    u"]":u"",
+    "?":"?", # question mark
+    ",":",", # comma
+    ";":";", # semicolon
+    ".":".", # period
+    "!":"!", # exclamation point
+    "-":"-", # hyphen/dash
+    "'":"'", # single quote, for bold/italic
+    " ":" ",
+    "[":"",
+    "]":"",
 }
 
-word_interrupting_chars = u"-[]"
+word_interrupting_chars = "-[]"
 
 build_canonicalize_latin = {}
 # x X y Y not on list -- canoned to ks Ks u U
-for ch in u"abcdefghijklmnopqrstuvwzABCDEFGHIJKLMNOPQRSTUVWZ":
+for ch in "abcdefghijklmnopqrstuvwzABCDEFGHIJKLMNOPQRSTUVWZ":
     build_canonicalize_latin[ch] = "multiple"
 build_canonicalize_latin[""] = "multiple"
 
@@ -308,9 +308,9 @@ tt_to_greek_unmatching = {
 # and is used to do extra canonicalizations.
 def pre_canonicalize_latin(text, greek=None):
     # remove L2R, R2L markers
-    text = rsub(text, u"[\u200E\u200F]", "")
+    text = rsub(text, "[\u200E\u200F]", "")
     # remove embedded comments
-    text = rsub(text, u"<!--.*?-->", "")
+    text = rsub(text, "<!--.*?-->", "")
     # remove embedded IPAchar templates
     text = rsub(text, r"\{\{IPAchar\|(.*?)\}\}", r"\1")
     # lowercase and remove leading/trailing spaces
@@ -336,7 +336,7 @@ def tr_canonicalize_latin(text):
 
 def post_canonicalize_latin(text):
     # Move macron and breve to beginning after vowel.
-    text = rsub(text, u"([aeiouAEIOU])(" + LA_ACC_NO_MB + "*)(" +
+    text = rsub(text, "([aeiouAEIOU])(" + LA_ACC_NO_MB + "*)(" +
             MBS + ")", r"\1\3\2")
     # Convert rr to rrh
     text = rsub(text, "rr($|[^h])", r"rrh\1")
@@ -367,7 +367,7 @@ def canonicalize_latin_greek(latin, greek, msgfun=msg):
         def quote_subst(m):
             return m.group(0).replace("'", multi_single_quote_subst)
         latin = re.sub(r"''+", quote_subst, latin)
-        latin = rsub(latin, u".", tt_canonicalize_latin)
+        latin = rsub(latin, ".", tt_canonicalize_latin)
         latin = latin.replace(multi_single_quote_subst, "'")
         latin = post_canonicalize_latin(latin)
     return (latin, greek)
@@ -389,7 +389,7 @@ def tr_canonicalize_greek(text):
     # diphthong must be υ or ι and no following diaeresis. Only do it at
     # beginning of word.
     text = rsub(text, r"(^|[ \[\]|])(" + greek_diphthong_first_vowels + MBSOPT +
-            u"[υι])(" + RS + ")(?!" + GR_ACC_NO_DIA + "*" + DIA + ")",
+            "[υι])(" + RS + ")(?!" + GR_ACC_NO_DIA + "*" + DIA + ")",
             r"\1\3\2")
     # Put rough/smooth breathing before vowel; rough breathing comes first in
     # order with multiple accents, except macron or breve. Only do it at
@@ -399,7 +399,7 @@ def tr_canonicalize_greek(text):
     # Recombine iotated vowels; iotated accent comes last in order.
     # We do this because iotated vowels have special Latin mappings that
     # aren't just sum-of-parts (i.e. with an extra macron in the case of αΑ).
-    text = rsub(text, u"([αΑηΗωΩ])(" + GR_ACC_NO_IOBE + "*)" + IOBE,
+    text = rsub(text, "([αΑηΗωΩ])(" + GR_ACC_NO_IOBE + "*)" + IOBE,
             lambda m:iotate_vowel[m.group(1)] + m.group(2))
     return text
 
@@ -408,7 +408,7 @@ def tr_canonicalize_greek(text):
 # between the two steps.
 def pre_pre_canonicalize_greek(text):
     # remove L2R, R2L markers
-    text = rsub(text, u"[\u200E\u200F]", "")
+    text = rsub(text, "[\u200E\u200F]", "")
     # remove leading/trailing spaces
     text = text.strip()
     # canonicalize interior whitespace
@@ -417,7 +417,7 @@ def pre_pre_canonicalize_greek(text):
     # Do some compatibility transformations since we no longer do the
     # NFKC/NFKD transformations due to them changing Greek 1FBD (koronis) into
     # 0020 SPACE + 0313 COMBINING COMMA ABOVE.
-    text = text.replace(u"\u00B5", u"μ")
+    text = text.replace("\u00B5", "μ")
 
     text = tr_canonicalize_greek(text)
 
@@ -428,20 +428,20 @@ def pre_canonicalize_greek(text):
 
 def post_canonicalize_greek(text, msgfun=msg):
     # Move macron and breve to beginning after vowel.
-    text = rsub(text, u"(" + greek_vowels + ")(" + GR_ACC_NO_MB + "*)(" +
+    text = rsub(text, "(" + greek_vowels + ")(" + GR_ACC_NO_MB + "*)(" +
             MBS + ")", r"\1\3\2")
     # Don't do this; the Greek should already have an iotated vowel.
     # In any case, complications arise with acute accents in the Latin and
     # Greek (should we have pā́i against παί?).
     ## Canonicalize Greek ᾱι to ᾳ. Same for uppercase. But not if ι is followed
     ## by diaeresis. IOBE goes at end of accents.
-    #text = rsub(text, u"([Αα])" + MAC + "(" + GR_ACC + u"*)ι(?!" +
+    #text = rsub(text, "([Αα])" + MAC + "(" + GR_ACC + "*)ι(?!" +
     #        GR_ACC_NO_DIA + "*" + DIA + ")", r"\1\2" + IOBE)
     # Don't do this; it's not always appropriate (e.g. with suffixes);
     # instead issue a warning.
     # If no rough breathing before beginning-of-word vowel, add a smooth
     # breathing sign.
-    newtext = rsub(text, u"(^|[ \[\]|])(" + greek_vowels + ")",
+    newtext = rsub(text, "(^|[ \[\]|])(" + greek_vowels + ")",
             r"\1" + SMBR + r"\2")
     if newtext != text:
         msgfun("WARNING: Text %s may be missing a smooth-breathing sign" %
@@ -451,7 +451,7 @@ def post_canonicalize_greek(text, msgfun=msg):
     # diphthong must be υ or ι and no following diaeresis. Only do it at
     # beginning of word.
     text = rsub(text, r"(^|[ \[\]|])(" + RS + ")(" +
-            greek_diphthong_first_vowels + MBSOPT + u"[υι])(?!" + GR_ACC_NO_DIA
+            greek_diphthong_first_vowels + MBSOPT + "[υι])(?!" + GR_ACC_NO_DIA
             + "*" + DIA + ")", r"\1\3\2")
     # Put rough/smooth breathing after vowel; rough breathing comes first in
     # order with multiple accents, except macron or breve. Only do it at
@@ -459,9 +459,9 @@ def post_canonicalize_greek(text, msgfun=msg):
     text = rsub(text, r"(^|[ \[\]|])(" + RS + ")(" + greek_vowels +
             MBSOPT + ")", r"\1\3\2")
     # Eliminate breve over short vowel
-    text = rsub(text, u"([οεΟΕ])" + BREVE, r"\1")
+    text = rsub(text, "([οεΟΕ])" + BREVE, r"\1")
     # Eliminate macron over long vowel
-    text = rsub(text, u"([ηωΗΩᾳᾼῃῌῳῼ])" + MAC, r"\1")
+    text = rsub(text, "([ηωΗΩᾳᾼῃῌῳῼ])" + MAC, r"\1")
     # Finally, convert to composed form. Do at very end.
     text = nfc_form(text)
     return text
@@ -500,13 +500,13 @@ def tr_matching(greek, latin, err=False, msgfun=msg):
     def is_bow(pos=None):
         if pos is None:
             pos = gind[0]
-        return pos == 0 or gr[pos - 1] in [u" ", u"[", u"|", u"-"]
+        return pos == 0 or gr[pos - 1] in [" ", "[", "|", "-"]
 
     # True if we are at the last character in a word.
     def is_eow(pos=None):
         if pos is None:
             pos = gind[0]
-        return pos == glen - 1 or gr[pos + 1] in [u" ", u"]", u"|", u"-"]
+        return pos == glen - 1 or gr[pos + 1] in [" ", "]", "|", "-"]
 
     def get_matches(delete_blank_matches=False):
         ac = gr[gind[0]]
@@ -639,12 +639,12 @@ def tr_matching(greek, latin, err=False, msgfun=msg):
         # because canonical "r" is a subsequence of "rh".
         if not (lind[0] < llen and gind[0] > 0):
             return False
-        if la[lind[0]] == "h" and gr[gind[0] - 1] == u"ρ":
+        if la[lind[0]] == "h" and gr[gind[0] - 1] == "ρ":
             lres.append("h")
             lind[0] += 1
             return True
         # Exact same thing here for zd/Zd corresponding to ζ/Ζ.
-        if la[lind[0]] == "d" and gr[gind[0] - 1] in [u"ζ", u"Ζ"]:
+        if la[lind[0]] == "d" and gr[gind[0] - 1] in ["ζ", "Ζ"]:
             lres.append("d")
             lind[0] += 1
             return True
@@ -697,9 +697,9 @@ def tr_matching(greek, latin, err=False, msgfun=msg):
     return greek, latin
 
 def remove_diacritics(text):
-    text = rsub(text, u"[ᾸᾹᾰᾱῘῙῐῑῨῩῠῡ]",
-            {u"Ᾰ":u"Α", u"Ᾱ":u"Α", u"ᾰ":u"α", u"ᾱ":u"α", u"Ῐ":u"Ι", u"Ῑ":u"Ι",
-             u"ῐ":u"ι", u"ῑ":u"ι", u"Ῠ":u"Υ", u"Ῡ":u"Υ", u"ῠ":u"υ", u"ῡ":u"υ"})
+    text = rsub(text, "[ᾸᾹᾰᾱῘῙῐῑῨῩῠῡ]",
+            {"Ᾰ":"Α", "Ᾱ":"Α", "ᾰ":"α", "ᾱ":"α", "Ῐ":"Ι", "Ῑ":"Ι",
+             "ῐ":"ι", "ῑ":"ι", "Ῠ":"Υ", "Ῡ":"Υ", "ῠ":"υ", "ῡ":"υ"})
     text = rsub(text, ONE_MB, "")
     text = nfc_form(text)
     return text
@@ -716,7 +716,7 @@ def test(latin, greek, should_outcome, expectedgreek=None):
     try:
         result = tr_matching(greek, latin, True)
     except RuntimeError as e:
-        print(u"%s" % e)
+        print("%s" % e)
         result = False
     if result == False:
         print("tr_matching(%s, %s) = %s" % (greek, latin, result))
@@ -751,67 +751,67 @@ def run_tests():
     num_failed = 0
 
     # Test inferring accents in both Cyrillic and Latin
-    test(u"Khristoû", u"Χριστοῦ", "matched")
-    test(u"Khrīstoû", u"Χριστοῦ", "matched", u"Χρῑστοῦ")
-    test(u"Khristoû", u"Χρῑστοῦ", "matched")
-    test(u"Khrīstoû", u"Χρῑστοῦ", "matched")
-    test(u"hioû", u"ἱοῦ", "matched")
-    test(u"huioû", u"υἱοῦ", "matched")
-    test(u"huiou", u"υἱοῦ", "matched")
-    test(u"huiôu", u"υἱοῦ", "matched")
-    #test(u"pāi", u"παι", "matched", u"πᾳ")
-    #test(u"pā́i", u"παί", "matched", u"πᾴ")
-    #test(u"pāï", u"παϊ", "matched", u"πᾱϊ")
-    #test(u"pā́ï", u"πάϊ", "matched", u"πᾱ́ϊ")
+    test("Khristoû", "Χριστοῦ", "matched")
+    test("Khrīstoû", "Χριστοῦ", "matched", "Χρῑστοῦ")
+    test("Khristoû", "Χρῑστοῦ", "matched")
+    test("Khrīstoû", "Χρῑστοῦ", "matched")
+    test("hioû", "ἱοῦ", "matched")
+    test("huioû", "υἱοῦ", "matched")
+    test("huiou", "υἱοῦ", "matched")
+    test("huiôu", "υἱοῦ", "matched")
+    #test("pāi", "παι", "matched", "πᾳ")
+    #test("pā́i", "παί", "matched", "πᾴ")
+    #test("pāï", "παϊ", "matched", "πᾱϊ")
+    #test("pā́ï", "πάϊ", "matched", "πᾱ́ϊ")
     # Should add smooth breathing
-    test(u"ā̂u", u"αῦ", "matched", u"ᾱὖ") # FIXME!! Check this
+    test("ā̂u", "αῦ", "matched", "ᾱὖ") # FIXME!! Check this
 
-    test(u"huiôu", u"ὑϊοῦ", "matched")
+    test("huiôu", "ὑϊοῦ", "matched")
 
     # Various real tests from the long-vowel warnings
-    test(u"krīnō", u"κρίνω", "matched", u"κρῑ́νω")
+    test("krīnō", "κρίνω", "matched", "κρῑ́νω")
     # Should add smooth breathing
-    test(u"aŋkýlā", u"αγκύλα", "matched", u"ἀγκύλᾱ")
-    test(u"baptīzō", u"βαπτίζω", "matched", u"βαπτῑ́ζω")
-    test(u"stūlos", u"στῦλος", "matched")
-    test(u"hūlē", u"ὕλη", "matched", u"ῡ̔́λη")
-    test(u"Hamilkās", u"Ἀμίλκας", "failed")
-    test(u"Dānīēl", u"Δανιήλ", "matched", u"Δᾱνῑήλ")
-    test(u"hēmerā", u"ἡμέρα", "matched", u"ἡμέρᾱ")
-    test(u"sbénnūmi", u"σβέννυμι", "matched", u"σβέννῡμι")
-    test(u"Īberniā", u"Ἱβερνία", "matched", u"Ῑ̔βερνίᾱ")
+    test("aŋkýlā", "αγκύλα", "matched", "ἀγκύλᾱ")
+    test("baptīzō", "βαπτίζω", "matched", "βαπτῑ́ζω")
+    test("stūlos", "στῦλος", "matched")
+    test("hūlē", "ὕλη", "matched", "ῡ̔́λη")
+    test("Hamilkās", "Ἀμίλκας", "failed")
+    test("Dānīēl", "Δανιήλ", "matched", "Δᾱνῑήλ")
+    test("hēmerā", "ἡμέρα", "matched", "ἡμέρᾱ")
+    test("sbénnūmi", "σβέννυμι", "matched", "σβέννῡμι")
+    test("Īberniā", "Ἱβερνία", "matched", "Ῑ̔βερνίᾱ")
     # FIXME: Produces Hāídēs. What should it produce?
-    test(u"Hāidēs", u"ᾍδης", "matched")
-    test(u"blā́ks", u"βλάξ", "matched", u"βλᾱ́ξ")
-    test(u"blā́x", u"βλάξ", "matched", u"βλᾱ́ξ")
+    test("Hāidēs", "ᾍδης", "matched")
+    test("blā́ks", "βλάξ", "matched", "βλᾱ́ξ")
+    test("blā́x", "βλάξ", "matched", "βλᾱ́ξ")
     # FIXME: Think about this. We currently transliterate Greek breve with
     # nothing, so the translit of the Greek won't match the Latin.
-    test(u"krūŏn", u"κρύον", "unmatched", u"κρῡ́ον")
-    test(u"āthlon", u"ἆθλον", "matched")
-    test(u"rhādix", u"ῥάδιξ", "matched", u"ῥᾱ́διξ")
-    test(u"Murrhā", u"Μύῤῥα", "matched", u"Μύῤῥᾱ")
+    test("krūŏn", "κρύον", "unmatched", "κρῡ́ον")
+    test("āthlon", "ἆθλον", "matched")
+    test("rhādix", "ῥάδιξ", "matched", "ῥᾱ́διξ")
+    test("Murrhā", "Μύῤῥα", "matched", "Μύῤῥᾱ")
     # Smooth breathing not at beginning of word; should not be moved
-    test(u"tautologiā", u"ταὐτολογία", "matched", u"ταὐτολογίᾱ")
+    test("tautologiā", "ταὐτολογία", "matched", "ταὐτολογίᾱ")
     # # Things that should fail
-    test(u"stúlos", u"στῦλος", "failed")
-    test(u"stilos", u"στῦλος", "failed")
+    test("stúlos", "στῦλος", "failed")
+    test("stilos", "στῦλος", "failed")
 
     # Test handling of embedded links, including unmatched macron
     # directly before right bracket on Greek side
-    test(u"pala bolu", u"παλα [[βολα|βολυ]]", "matched")
-    test(u"pala bolū", u"παλα [[βολα|βολυ]]", "matched", u"παλα [[βολα|βολῡ]]")
-    test(u"bolu pala", u"[[βολα|βολυ]] παλα", "matched")
-    test(u"bolū pala", u"[[βολα|βολυ]] παλα", "matched", u"[[βολα|βολῡ]] παλα")
-    test(u"bolupala", u"[[βολα|βολυ]]παλα", "matched")
-    test(u"pala bolu", u"παλα [[βολυ]]", "matched")
-    test(u"pala bolū", u"παλα [[βολυ]]", "matched", u"παλα [[βολῡ]]")
-    test(u"bolu pala", u"[[βολυ]] παλα", "matched")
-    test(u"bolū pala", u"[[βολυ]] παλα", "matched", u"[[βολῡ]] παλα")
-    test(u"bolūpala", u"[[βολυ]]παλα", "matched", u"[[βολῡ]]παλα")
+    test("pala bolu", "παλα [[βολα|βολυ]]", "matched")
+    test("pala bolū", "παλα [[βολα|βολυ]]", "matched", "παλα [[βολα|βολῡ]]")
+    test("bolu pala", "[[βολα|βολυ]] παλα", "matched")
+    test("bolū pala", "[[βολα|βολυ]] παλα", "matched", "[[βολα|βολῡ]] παλα")
+    test("bolupala", "[[βολα|βολυ]]παλα", "matched")
+    test("pala bolu", "παλα [[βολυ]]", "matched")
+    test("pala bolū", "παλα [[βολυ]]", "matched", "παλα [[βολῡ]]")
+    test("bolu pala", "[[βολυ]] παλα", "matched")
+    test("bolū pala", "[[βολυ]] παλα", "matched", "[[βολῡ]] παλα")
+    test("bolūpala", "[[βολυ]]παλα", "matched", "[[βολῡ]]παλα")
 
     # # Single quotes in Greek
-    test(u"bolu '''pala'''", u"βολυ '''παλα'''", "matched")
-    test(u"bolu '''palā'''", u"βολυ '''παλα'''", "matched", u"βολυ '''παλᾱ'''")
+    test("bolu '''pala'''", "βολυ '''παλα'''", "matched")
+    test("bolu '''palā'''", "βολυ '''παλα'''", "matched", "βολυ '''παλᾱ'''")
 
     # Final results
     print("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))

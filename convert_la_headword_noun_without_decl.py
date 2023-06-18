@@ -101,14 +101,14 @@ def process_page(page, index, parsed):
         elif gen1.endswith("ium"):
           if lemma.endswith("ia"):
             param1 = "%s<3.pl>" % lemma
-          elif lemma.endswith(u"ēs"):
+          elif lemma.endswith("ēs"):
             param1 = "%s<3.I.pl>" % lemma
           else:
             pagemsg("WARNING: Unrecognized lemma %s with decl 3 genitive -ium, skipping: %s" % (
               lemma, render_headword()))
             continue
         elif gen1.endswith("um"):
-          if lemma.endswith("a") or lemma.endswith(u"ēs"):
+          if lemma.endswith("a") or lemma.endswith("ēs"):
             param1 = "%s<3.pl>" % lemma
           else:
             pagemsg("WARNING: Unrecognized lemma %s with decl 3 genitive -um, skipping: %s" % (

@@ -135,24 +135,24 @@ la_infl_of_templates = {
 }
 
 third_decl_stem_patterns = [
-  (u"tūdō", u"tūdin"),
+  ("tūdō", "tūdin"),
   ("is", ""),
-  (u"ēs", ""),
-  (u"āns", "ant"),
-  (u"ēns", "ent"),
-  (u"ōns", "ont"),
+  ("ēs", ""),
+  ("āns", "ant"),
+  ("ēns", "ent"),
+  ("ōns", "ont"),
   ("ceps", "cipit"),
   ("us", "or"),
   ("ex", "ic"),
   ("ma", "mat"),
   ("e", ""),
-  ("al", u"āl"),
-  ("ar", u"ār"),
+  ("al", "āl"),
+  ("ar", "ār"),
   ("men", "min"),
   ("er", "r"),
-  ("or", u"ōr"),
-  (u"gō", "gin"),
-  (u"ō", u"ōn"),
+  ("or", "ōr"),
+  ("gō", "gin"),
+  ("ō", "ōn"),
   ("ps", "p"),
   ("bs", "b"),
   ("s", "t"),
@@ -171,10 +171,10 @@ adv_stem_patterns = [
   ("nter", "nt"),
   "ter",
   "er",
-  u"iē",
-  u"ē",
+  "iē",
+  "ē",
   "im",
-  u"ō",
+  "ō",
   "e",
 ]
 
@@ -264,8 +264,8 @@ def generate_verb_forms(template, errandpagemsg, expand_text, return_raw=False,
     augmented_forms = []
     for form in forms:
       augmented_forms.append(form)
-      if re.search(u"(vi(stī|stis)|vērunt|ver(am|ās|at|āmus|ātis|ant|ō|im|[iī]s|it|[iī]mus|[iī]tis|int)|viss(e|em|ēs|et|ēmus|ētis|ent))$", form):
-        augmented_forms.append(re.sub(u"^(.*)v[ieē]", r"\1", form))
+      if re.search("(vi(stī|stis)|vērunt|ver(am|ās|at|āmus|ātis|ant|ō|im|[iī]s|it|[iī]mus|[iī]tis|int)|viss(e|em|ēs|et|ēmus|ētis|ent))$", form):
+        augmented_forms.append(re.sub("^(.*)v[ieē]", r"\1", form))
     return ",".join(augmented_forms)
   if add_sync_forms:
     args = {k: augment_with_sync_forms(v) for k, v in args.iteritems()}
@@ -287,14 +287,14 @@ def generate_infl_forms(pos, template, errandpagemsg, expand_text,
     errandpagemsg("WARNING: Bad pos=%s, expected noun/verb/adj/nounadj/numadj/part" % pos)
     return None
 
-uppercase = u"A-ZĀĒĪŌŪȲĂĔĬŎŬÄËÏÖÜŸ"
-lowercase = u"a-zāēīōūȳăĕĭŏŭäëïöüÿ"
-vowel = u"aeiouyAEIOUYāēīōūȳăĕĭŏŭäëïöüÿĀĒĪŌŪȲĂĔĬŎŬÄËÏÖÜŸ"
+uppercase = "A-ZĀĒĪŌŪȲĂĔĬŎŬÄËÏÖÜŸ"
+lowercase = "a-zāēīōūȳăĕĭŏŭäëïöüÿ"
+vowel = "aeiouyAEIOUYāēīōūȳăĕĭŏŭäëïöüÿĀĒĪŌŪȲĂĔĬŎŬÄËÏÖÜŸ"
 
-MACRON = u"\u0304" # macron =  ̄
-BREVE = u"\u0306" # breve =  ̆
-DOUBLE_INV_BREVE = u"\u0361" # double inverted breve
-DIAER = u"\u0308" # diaeresis =  ̈
+MACRON = "\u0304" # macron =  ̄
+BREVE = "\u0306" # breve =  ̆
+DOUBLE_INV_BREVE = "\u0361" # double inverted breve
+DIAER = "\u0308" # diaeresis =  ̈
 
 combining_accents = [MACRON, BREVE, DOUBLE_INV_BREVE, DIAER]
 combining_accent_str = "".join(combining_accents)

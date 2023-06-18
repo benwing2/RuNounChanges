@@ -32,7 +32,7 @@ def process_page(page, index, parsed):
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Remove {{lang|ru|...}} from passage= in quote-*",
+parser = blib.create_argparser("Remove {{lang|ru|...}} from passage= in quote-*",
   include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

@@ -12,11 +12,11 @@ from blib import getparam, rmparam, tname, msg, site
 import rulib
 import runounlib
 
-GR = u"\u0300" # grave =  ̀
+GR = "\u0300" # grave =  ̀
 
 ru_normal_head_templates = ["ru-noun", "ru-proper noun", "ru-verb", "ru-adj",
   "ru-adv", "ru-phrase", "ru-noun form", "ru-diacritical mark",
-  u"ru-noun-alt-ё", u"ru-adj-alt-ё", u"ru-verb-alt-ё"]
+  "ru-noun-alt-ё", "ru-adj-alt-ё", "ru-verb-alt-ё"]
 
 overall_head_count = {}
 cat_head_count = {}

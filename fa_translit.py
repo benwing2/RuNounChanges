@@ -131,33 +131,33 @@ def nfkc_form(txt):
 def nfc_form(txt):
   return unicodedata.normalize("NFC", str(txt))
 
-ZWNJ = u"\u200c" # zero-width non-joiner
-ZWJ = u"\u200d" # zero-width joiner
-AC = u"\u0301" # acute accent
-GR = u"\u0300" # grave accent
-#LRM = u"\u200e" # left-to-right mark
-#RLM = u"\u200f" # right-to-left mark
+ZWNJ = "\u200c" # zero-width non-joiner
+ZWJ = "\u200d" # zero-width joiner
+AC = "\u0301" # acute accent
+GR = "\u0300" # grave accent
+#LRM = "\u200e" # left-to-right mark
+#RLM = "\u200f" # right-to-left mark
 
-sun_letters = u"تثدذرزسشصضطظلن"
+sun_letters = "تثدذرزسشصضطظلن"
 # Characters signifying the beginning of a word of part of a compound, meant to go inside [] in a regex.
 boc_chars = r" \[|" + ZWNJ
 # FIXME, do we still want ə here?
-vowel_chars = u"aeiouâêîôûə"
-cons_chars = u"bcdfghjklmnpqrstvwxyzščžğ"
+vowel_chars = "aeiouâêîôûə"
+cons_chars = "bcdfghjklmnpqrstvwxyzščžğ"
 
-consonants_needing_vowels = u"بتثجحخدذرزسشصضطظعغفقكلمنهپچڤگڨڧأإؤئءةﷲ"
+consonants_needing_vowels = "بتثجحخدذرزسشصضطظعغفقكلمنهپچڤگڨڧأإؤئءةﷲ"
 # consonants on the right side; includes alif madda
-rconsonants = consonants_needing_vowels + u"ویآ"
+rconsonants = consonants_needing_vowels + "ویآ"
 # consonants on the left side; does not include alif madda
-lconsonants = consonants_needing_vowels + u"وی"
-punctuation = (u"؟،؛" # Arabic semicolon, comma, question mark
-  + u"ـ" # tatweel
+lconsonants = consonants_needing_vowels + "وی"
+punctuation = ("؟،؛" # Arabic semicolon, comma, question mark
+  + "ـ" # tatweel
   + ".!'" # period, exclamation point, single quote for bold/italic
 )
-word_final_punctuation = (u"؟،؛" # Arabic semicolon, comma, question mark
+word_final_punctuation = ("؟،؛" # Arabic semicolon, comma, question mark
   + ".,!?:;)"
 )
-numbers = u"۱۲۳۴۵۶۷۸۹۰"
+numbers = "۱۲۳۴۵۶۷۸۹۰"
 
 
 # Transliterate the word(s) in TEXT. LANG (the language) and SC (the script)
@@ -175,14 +175,14 @@ def tr(text, lang=None, sc=None, force_translate=False, msgfun=msg):
 
 #########     Transliterate with unvocalized Arabic to guide     #########
 
-silent_alif_subst = u"\ufff1"
-silent_alif_maqsuura_subst = u"\ufff2"
-multi_single_quote_subst = u"\ufff3"
-assimilating_l_subst = u"\ufff4"
-double_l_subst = u"\ufff5"
-dagger_alif_subst = u"\ufff6"
+silent_alif_subst = "\ufff1"
+silent_alif_maqsuura_subst = "\ufff2"
+multi_single_quote_subst = "\ufff3"
+assimilating_l_subst = "\ufff4"
+double_l_subst = "\ufff5"
+dagger_alif_subst = "\ufff6"
 
-hamza_match = ["'",u"ʾ",u"ʼ",u"´",("`",),u"ʔ",u"’",(u"‘",),u"ˀ",(u"ʕ",),(u"ʿ",),"2"]
+hamza_match = ["'","ʾ","ʼ","´",("`",),"ʔ","’",("‘",),"ˀ",("ʕ",),("ʿ",),"2"]
 hamza_match_or_empty = hamza_match + [""]
 hamza_match_chars = [x[0] if isinstance(x, (list, tuple)) else x for x in hamza_match]
 
@@ -247,7 +247,7 @@ class State(object):
       # also when we output a hyphen even if not in the input ...
       self.lind[0] > 0 and self.la[self.lind[0] - 1] == "-" or len(self.lres) > 0 and self.lres[-1] == "-")
       # ... unless we just saw a tatweel, which cannot be the end of a compound part
-      and not (pos > 0 and self.ar[pos - 1] == u"ـ"))
+      and not (pos > 0 and self.ar[pos - 1] == "ـ"))
 
   # True if we are at the last character in a word.
   def is_eow(self, pos=None):
@@ -269,37 +269,37 @@ class State(object):
 # which won't match at all because the أ will match nothing directly after
 # the Latin "s", and then the ʾ will never be matched.
 tt_to_arabic_matching_bow = { #beginning of word
-  u"ا":"",
+  "ا":"",
   # These don't occur word-initially in Persian
-  #u"أ":hamza_match_or_empty,
-  #u"إ":hamza_match_or_empty,
-  u"آ":[u"â"], #ʾalif madda = \u0622
+  #"أ":hamza_match_or_empty,
+  #"إ":hamza_match_or_empty,
+  "آ":["â"], #ʾalif madda = \u0622
 }
 
 tt_to_arabic_matching_boc = { #beginning of later part of a compound
-  u"ا":[
-    u"\uFFFE", # shouldn't match; just a placeholder; all possible matches follow
+  "ا":[
+    "\uFFFE", # shouldn't match; just a placeholder; all possible matches follow
     LatinMatch("a", canon_to="a", append=A),
     LatinMatch("o", canon_to="o", append=U),
     LatinMatch("u", canon_to=lambda st: "u" if st.classical else "o", append=U,
       # don't consume u in او
-      when=lambda st: st.nextar() != u"و"),
+      when=lambda st: st.nextar() != "و"),
     LatinMatch("e", canon_to="e", append=I),
     LatinMatch("i", canon_to=lambda st: "i" if st.classical else "e", append=I,
       # don't consume i in ای
-      when=lambda st: st.nextar() != u"ی"),
+      when=lambda st: st.nextar() != "ی"),
     ["'"],
     [""]
   ],
   # These don't occur word-initially in Persian
-  #u"أ":hamza_match_or_empty,
-  #u"إ":hamza_match_or_empty,
-  u"آ":[u"â"], #ʾalif madda = \u0622
+  #"أ":hamza_match_or_empty,
+  #"إ":hamza_match_or_empty,
+  "آ":["â"], #ʾalif madda = \u0622
 }
 
 # Special-case matching at end of word.
 tt_to_arabic_matching_eow = { # end of word
-  u"ه": ["h", [""]],
+  "ه": ["h", [""]],
   ZWNJ:"",
   # These don't occur word-finally in Persian
   #UN:["un",""], # dammatân
@@ -324,62 +324,62 @@ tt_to_arabic_matching_eow = { # end of word
 
 tt_to_arabic_matching = {
   # consonants
-  u"ب":["b",["p"]],
-  u"پ":"p",
-  u"ت":["t",u"ṯ"],
-  u"ث":["s",u"ṯ",u"ŧ",u"θ","th",u"s̱",u"s̄"],
-  u"ج":["j",u"ǧ",u"ğ",u"ǰ","dj",u"dǧ",u"dğ",u"dǰ",u"dž",u"dʒ",u"ʒ",u"ž","g","c"],
+  "ب":["b",["p"]],
+  "پ":"p",
+  "ت":["t","ṯ"],
+  "ث":["s","ṯ","ŧ","θ","th","s̱","s̄"],
+  "ج":["j","ǧ","ğ","ǰ","dj","dǧ","dğ","dǰ","dž","dʒ","ʒ","ž","g","c"],
   # Allow what would normally be capital H, but we lowercase all text
   # before processing.
   # I feel a bit uncomfortable allowing kh to match against ح like this,
   # but generally I trust the Arabic more.
-  u"ح":["h",u"ḥ",u"ħ",u"ẖ",u"ḩ","7",("kh",)],
+  "ح":["h","ḥ","ħ","ẖ","ḩ","7",("kh",)],
   # I feel a bit uncomfortable allowing ḥ to match against خ like this,
   # but generally I trust the Arabic more.
-  u"خ":["x",u"k͟h",u"ḵ","kh",u"ḫ",u"ḳ",u"ẖ",u"χ",(u"ḥ",),"h"],
-  u"چ":[u"č","ch","c",u"ĉ",u"ç"],
-  u"د":"d",
-  u"ذ":["z",u"d͟h",u"ḏ",u"đ",u"ð","dh",u"ḍ",u"ẕ",u"δ","d"],
-  u"ر":"r",
-  u"ز":["z",u"ẕ"],
-  u"ژ":[u"ž",u"z͟h","zh",u"ʒ","z"],
+  "خ":["x","k͟h","ḵ","kh","ḫ","ḳ","ẖ","χ",("ḥ",),"h"],
+  "چ":["č","ch","c","ĉ","ç"],
+  "د":"d",
+  "ذ":["z","d͟h","ḏ","đ","ð","dh","ḍ","ẕ","δ","d"],
+  "ر":"r",
+  "ز":["z","ẕ"],
+  "ژ":["ž","z͟h","zh","ʒ","z"],
   # I feel a bit uncomfortable allowing emphatic variants of s to match
   # against س like this, but generally I trust the Arabic more.
-  u"س":["s",(u"ṣ",),(u"sʿ",),(u"sˤ",),(u"sˁ",),(u"sʕ",),(u"ʂ",),(u"ṡ",)],
-  u"ش":[u"š",u"s͟h","sh",u"ʃ",u"ŝ",u"ş",u"ś","s"],
-  u"ص":["s",u"ṣ",u"sʿ",u"sˤ",u"sˁ",u"sʕ",u"ʂ",u"ṡ"],
-  u"ض":["z",u"ḍ",u"dʿ",u"dˤ"u"dˁ",u"dʕ",u"ẓ",u"ż",u"ẕ",u"ɖ",u"ḋ","d"],
-  u"ط":["t",u"ṭ",u"tʿ",u"tˤ",u"tˁ",u"tʕ",u"ṫ",u"ţ",u"ŧ",u"ʈ",u"t̤"],
-  u"ظ":["z",u"ẓ",u"ðʿ",u"ðˤ",u"ðˁ",u"ðʕ",u"ð̣",u"đʿ",u"đˤ",u"đˁ",u"đʕ",u"đ̣",
-    u"ż",u"z̧",u"ʐ","dh"],
-  u"ع":["'", u"ʿ",u"ʕ","`",u"‘",u"ʻ","3",u"ˤ",u"ˁ",(u"ʾ",),u"῾",(u"’",),""],
-  u"غ":[u"ğ",u"ḡ",u"ġ","gh",["g"],("`",),"q",u"g͟h",u"γ",u"ǧ",u"ɣ",u"ĝ"],
-  u"ف":["f",["v"]],
+  "س":["s",("ṣ",),("sʿ",),("sˤ",),("sˁ",),("sʕ",),("ʂ",),("ṡ",)],
+  "ش":["š","s͟h","sh","ʃ","ŝ","ş","ś","s"],
+  "ص":["s","ṣ","sʿ","sˤ","sˁ","sʕ","ʂ","ṡ"],
+  "ض":["z","ḍ","dʿ","dˤ","dˁ","dʕ","ẓ","ż","ẕ","ɖ","ḋ","d"],
+  "ط":["t","ṭ","tʿ","tˤ","tˁ","tʕ","ṫ","ţ","ŧ","ʈ","t̤"],
+  "ظ":["z","ẓ","ðʿ","ðˤ","ðˁ","ðʕ","ð̣","đʿ","đˤ","đˁ","đʕ","đ̣",
+    "ż","z̧","ʐ","dh"],
+  "ع":["'", "ʿ","ʕ","`","‘","ʻ","3","ˤ","ˁ",("ʾ",),"῾",("’",),""],
+  "غ":["ğ","ḡ","ġ","gh",["g"],("`",),"q","g͟h","γ","ǧ","ɣ","ĝ"],
+  "ف":["f",["v"]],
   # I feel a bit uncomfortable allowing k to match against q like this,
   # but generally I trust the Arabic more
-  u"ق":["q",u"ḳ",["g"],"gh",u"g͟h","k",u"ğ",u"γ"],
-  u"ك":["k",["g"]],
-  u"ک":["k",["g"]],
-  u"گ":"g",
-  u"ل":"l",
-  u"م":"m",
-  u"ن":["n", LatinMatch("m", canon_to="n", when=lambda st: st.nextla() == "b")],
-  u"ه":[
+  "ق":["q","ḳ",["g"],"gh","g͟h","k","ğ","γ"],
+  "ك":["k",["g"]],
+  "ک":["k",["g"]],
+  "گ":"g",
+  "ل":"l",
+  "م":"m",
+  "ن":["n", LatinMatch("m", canon_to="n", when=lambda st: st.nextla() == "b")],
+  "ه":[
     "h",
     # We canonicalize single-char ۀ to two-char هٔ, which is HEH + HAMZA ABOVE. This should map to y, so we check that
     # the following char is HAMZA ABOVE and then map that char to the empty string.
-    LatinMatch("y", canon_to="y", when=lambda st: st.nextar() == u"\u0654")
+    LatinMatch("y", canon_to="y", when=lambda st: st.nextar() == "\u0654")
   ],
-  u"\u0654": [
-    u"\uFFFE", # shouldn't match; just a placeholder; all possible matches follow
+  "\u0654": [
+    "\uFFFE", # shouldn't match; just a placeholder; all possible matches follow
     # See above; this normally occurs after HEH and we want it skipped.
     LatinMatch("", canon_to="", handle_empty_match_early=True)
   ],
   # This char shouldn't actually occur since we canonicalize it to two-char هٔ; see above.
-  u"ۀ":"y",
+  "ۀ":"y",
   # [We have special handling for the following in the canonicalized Latin,
   # so that we have -a but -âh and -at-.] -- I think this is no longer true.
-  u"ة":["h",["t"],["(t)"],""],
+  "ة":["h",["t"],["(t)"],""],
 
   # control characters
   # We handle hyphen against ZWNJ specially in check_against_hyphen() and other_arabic_chars, but we still need the
@@ -388,56 +388,56 @@ tt_to_arabic_matching = {
   #ZWJ:["-"],#,""], # ZWJ (zero-width joiner)
 
   # rare letters
-  u"ڤ":"v",
-  u"ڨ":"g",
-  u"ڧ":"q",
+  "ڤ":"v",
+  "ڨ":"g",
+  "ڧ":"q",
 
   # variants of alif
   # Note, the following ensures that short a against ا gets canonicalized to â, except in اً = -an.
-  u"ا":[u"â",LatinMatch("a", canon_to=lambda st: "a" if st.nextar() == AN else u"â")], # ʾalif = \u0627
+  "ا":["â",LatinMatch("a", canon_to=lambda st: "a" if st.nextar() == AN else "â")], # ʾalif = \u0627
   silent_alif_subst:[[""]],
   silent_alif_maqsuura_subst:[[""]],
-  u"آ":[ # alif madda = \u0622
-    u"\uFFFE", # shouldn't match; just a placeholder; all possible matches follow
-    LatinMatch(u"â", canon_to=u"-â"),
-    LatinMatch(u"'â", canon_to=u"-â")
+  "آ":[ # alif madda = \u0622
+    "\uFFFE", # shouldn't match; just a placeholder; all possible matches follow
+    LatinMatch("â", canon_to="-â"),
+    LatinMatch("'â", canon_to="-â")
   ],
-  u"ٱ":[[""]], # hamzatu l-waṣl = \u0671
-  u"\u0670":u"â", # alif xanjariyya = dagger alif (Koranic diacritic)
+  "ٱ":[[""]], # hamzatu l-waṣl = \u0671
+  "\u0670":"â", # alif xanjariyya = dagger alif (Koranic diacritic)
   # The following shouldn't occur because we canonicalize it to FARSI YEH.
-  u"ى":u"â", # alif maqsuura = \u0649
+  "ى":"â", # alif maqsuura = \u0649
 
   # semivowels
   # Note, w before a vowel not after k/g/x is post-canonicalized to v.
-  u"و":["v",["w"],LatinMatch("ow", canon_to="ow", insert=U),
+  "و":["v",["w"],LatinMatch("ow", canon_to="ow", insert=U),
       # not currently needed as we pre-canonicalize ou to ow
       #LatinMatch("ou", canon_to="ow",insert=U),
       LatinMatch("ov", canon_to="ov",insert=U),
-      ["u"],[u"ô"],["o"],
-      LatinMatch(u"û", canon_to=lambda st: u"û" if st.classical else "u"),
+      ["u"],["ô"],["o"],
+      LatinMatch("û", canon_to=lambda st: "û" if st.classical else "u"),
       # allow for silent و in خوا
-      LatinMatch("", canon_to="", when=lambda st: st.prevar() == u"خ" and st.nextar() == u"ا",
+      LatinMatch("", canon_to="", when=lambda st: st.prevar() == "خ" and st.nextar() == "ا",
         handle_empty_match_early=True)],
   # Adding j here creates problems with e.g. an-nijir vs. النیجر
-  u"ی":[["y"],["iy"],["ey"],
+  "ی":[["y"],["iy"],["ey"],
       # FARSI YEH sometimes replaces alif maqsuura in words from Arabic:
       # tr(مصلی, mosallâ); tr(خنثی, xonsâ); tr(موسی, musâ); tr(عیسی, 'isâ); tr(حتی, hattâ)
       # very occasionally word-internally: tr(علیرغم, 'alârağm-e)
-      [u"â"],
+      ["â"],
       # not currently needed as we pre-canonicalize ei to ey 
       #LatinMatch("ei", canon_to="ey",insert=I),
       LatinMatch("ey", canon_to="ey",insert=I),
-      ["i"],[u"ê"], # no e; short e opposite ی doesn't normally occur
-      LatinMatch(u"î", canon_to=lambda st: u"î" if st.classical else "i"),
+      ["i"],["ê"], # no e; short e opposite ی doesn't normally occur
+      LatinMatch("î", canon_to=lambda st: "î" if st.classical else "i"),
       #"j",
   ],
 
   # hamzated letters
-  u"أ":hamza_match_or_empty,
-  u"إ":hamza_match_or_empty,
-  u"ؤ":hamza_match_or_empty,
-  u"ئ":hamza_match_or_empty,
-  u"ء":hamza_match_or_empty,
+  "أ":hamza_match_or_empty,
+  "إ":hamza_match_or_empty,
+  "ؤ":hamza_match_or_empty,
+  "ئ":hamza_match_or_empty,
+  "ء":hamza_match_or_empty,
 
   # short vowels, shadda and sukuun
   AN:"n", # fathatan
@@ -446,29 +446,29 @@ tt_to_arabic_matching = {
   #IN:"in", # kasratan
   A:["a", # fatha
     # In the sequence fatha + alif e.g. مَال, the fatha will be unmatched.
-    LatinMatch("", canon_to="", when=lambda st: st.nextar() == u"ا", handle_empty_match_early=True),
+    LatinMatch("", canon_to="", when=lambda st: st.nextar() == "ا", handle_empty_match_early=True),
   ],
   U:[["o"], LatinMatch("u", canon_to=lambda st:"u" if st.classical else "o")], # damma
-  I:[["e"], LatinMatch("i", canon_to=lambda st:"i" if st.classical or st.nextar() == u"ی" else "e")], # kasra
+  I:[["e"], LatinMatch("i", canon_to=lambda st:"i" if st.classical or st.nextar() == "ی" else "e")], # kasra
   SH:SH, # shadda - handled specially when matching Latin shadda
   double_l_subst:SH, # handled specially when matching shadda in Latin
   SK:"", #sukuun - no vowel
 
   # ligatures
-  u"ﻻ":u"lâ",
-  u"ﷲ":u"llâh",
-  u"ـ":"", # tatweel, no sound
+  "ﻻ":"lâ",
+  "ﷲ":"llâh",
+  "ـ":"", # tatweel, no sound
 
   # numerals
-  u"۱":"1", u"۲":"2", u"۳":"3", u"۴":"4", u"۵":"5",
-  u"۶":"6", u"۷":"7", u"۸":"8", u"۹":"9", u"۰":"0",
+  "۱":"1", "۲":"2", "۳":"3", "۴":"4", "۵":"5",
+  "۶":"6", "۷":"7", "۸":"8", "۹":"9", "۰":"0",
 
   # punctuation (leave on separate lines)
-  u"؟":"?", # Arabic question mark
-  u"،":",", # Arabic comma
-  u"٬":",", # some weird comma
-  u"٫":",", # thousands separator???
-  u"؛":";", # Arabic semicolon
+  "؟":"?", # Arabic question mark
+  "،":",", # Arabic comma
+  "٬":",", # some weird comma
+  "٫":",", # thousands separator???
+  "؛":";", # Arabic semicolon
   ",":",", # comma seems to occasionally occur
   ".":".", # period
   # These occur matching in {{...}} in both Arabic and translit. We match period just above.
@@ -488,20 +488,20 @@ tt_to_arabic_matching = {
   "*":"*",
   # Occurs especially after گفت 'goft' "he/she said".
   ":":":",
-  u"«":'"',
-  u"»":'"',
+  "«":'"',
+  "»":'"',
   '"':'"',
-  u"—":u"—", # U+2014
-  u"−":u"—", # U+2212 -> U+2014; occurs at least once
+  "—":"—", # U+2014
+  "−":"—", # U+2212 -> U+2014; occurs at least once
   # The following are unnecessary because we handle them specially in
   # check_against_hyphen() and other_arabic_chars.
   #"-":"-",
-  #u"–":"-",
+  #"–":"-",
 }
 
 # exclude consonants like h ʿ ʕ ʕ that can occur second in a two-charcter
-# sequence, because of cases like u"múdhhil" vs. u"مذهل"
-latin_consonants_no_double_after_cons = u"bcdfgjklmnpqrstvwxyzʾʔḍḥḳḷṃṇṛṣṭṿẉỵẓḃċḋḟġḣṁṅṗṙṡṫẇẋẏżčǧȟǰňřšžḇḏẖḵḻṉṟṯẕḡs̄z̄çḑģḩķļņŗşţz̧ćǵḱĺḿńṕŕśẃźďľťƀđǥħłŧƶğḫʃɖʈt̤ð"
+# sequence, because of cases like "múdhhil" vs. "مذهل"
+latin_consonants_no_double_after_cons = "bcdfgjklmnpqrstvwxyzʾʔḍḥḳḷṃṇṛṣṭṿẉỵẓḃċḋḟġḣṁṅṗṙṡṫẇẋẏżčǧȟǰňřšžḇḏẖḵḻṉṟṯẕḡs̄z̄çḑģḩķļņŗşţz̧ćǵḱĺḿńṕŕśẃźďľťƀđǥħłŧƶğḫʃɖʈt̤ð"
 latin_consonants_no_double_after_cons_re = "[%s]" % (
     latin_consonants_no_double_after_cons)
 
@@ -511,9 +511,9 @@ latin_consonants_no_double_after_cons_re = "[%s]" % (
 # get_matches() about this so it doesn't throw an "Encountered non-Arabic"
 # error, but instead just returns an empty list of matches so match() will
 # properly fail.
-other_arabic_chars = [ZWJ, ZWNJ, "-", u"–", "<"]
+other_arabic_chars = [ZWJ, ZWNJ, "-", "–", "<"]
 
-word_interrupting_chars = u"ـ[]"
+word_interrupting_chars = "ـ[]"
 
 build_canonicalize_latin = {}
 for ch in "abcdefghijklmnopqrstuvwxyz3":
@@ -592,11 +592,11 @@ for alt in build_canonicalize_latin:
 # unmatching Arabic characters.
 # FIXME: Doesn't seem to make sense for Persian.
 #tt_skip_unmatching = {
-#  "a":[u"ا"],
-#  "u":[u"و"],
-#  "o":[u"و"],
-#  "i":[u"ی"],
-#  "e":[u"ی"],
+#  "a":["ا"],
+#  "u":["و"],
+#  "o":["و"],
+#  "i":["ی"],
+#  "e":["ی"],
 #}
 
 # A list of Latin characters that are allowed to be unmatched in the Arabic. The value is the corresponding Arabic
@@ -606,15 +606,15 @@ tt_latin_to_unmatched_arabic = {
   "a":A,
   "o":U,
   # not if we're opposite ا; this occurs at boc with او
-  "u":(U, lambda st: "u" if st.classical else "o", lambda st: st.thisar() != u"ا"),
+  "u":(U, lambda st: "u" if st.classical else "o", lambda st: st.thisar() != "ا"),
   "e":I,
   # not if we're opposite ا; this occurs at boc with ای
-  "i":(I, lambda st: "i" if st.classical else "e", lambda st: st.thisar() != u"ا"),
+  "i":(I, lambda st: "i" if st.classical else "e", lambda st: st.thisar() != "ا"),
   # corrrect unmatched â to a, but not in اله- or الله.
-  u"â":(A, "a", lambda st: not (
-    st.thisar() == u"ه" and st.prevar() == u"ل" and st.prevar(2) == u"ا" and st.prevar(3) in [None, " "]
+  "â":(A, "a", lambda st: not (
+    st.thisar() == "ه" and st.prevar() == "ل" and st.prevar(2) == "ا" and st.prevar(3) in [None, " "]
   ) and not (
-    st.thisar() == u"ه" and st.prevar() == double_l_subst and st.prevar(2) == u"ل" and st.prevar(3) == u"ا"
+    st.thisar() == "ه" and st.prevar() == double_l_subst and st.prevar(2) == "ل" and st.prevar(3) == "ا"
   )),
   # Shadda because we pre-canonicalize doubled Latin letters to include a shadda.
   SH:SH,
@@ -654,7 +654,7 @@ def pre_canonicalize_latin(text, arabic=None, classical=False, msgfun=msg):
   # Map to canonical composed form, eliminate presentation variants etc.
   text = nfkc_form(text)
   # remove L2R, R2L markers
-  text = rsub(text, u"[\u200E\u200F]", "")
+  text = rsub(text, "[\u200E\u200F]", "")
   # remove embedded comments
   text = rsub(text, "<!--.*?-->", "")
   # remove embedded IPAchar templates
@@ -666,36 +666,36 @@ def pre_canonicalize_latin(text, arabic=None, classical=False, msgfun=msg):
   text = rsub(text, " +", " ")
   # convert macrons to circumflexed vowels
   text = rsub(text, ".",
-    {u"ā":u"â", u"ē":u"ê", u"ī":u"î", u"ō":u"ô", u"ū":u"û"})
+    {"ā":"â", "ē":"ê", "ī":"î", "ō":"ô", "ū":"û"})
   # FIXME: Still needed with Persian text?
   # eliminate ' after space or - and before non-vowel, indicating elided /a/
   # text = rsub(text, r"([ -])'([^'" + vowel_chars + "])", r"\1\2")
   # eliminate accents
   text = rsub(text, ".",
-    {u"á":"a", u"é":"e", u"í":"i", u"ó":"o", u"ú":"u",
-     u"à":"a", u"è":"e", u"ì":"i", u"ò":"o", u"ù":"u",
-     u"ḗ":u"ê", u"ṓ":u"ô", # only these two vowels have a single Unicode char for macron+acute
-     u"ấ":u"â"})
+    {"á":"a", "é":"e", "í":"i", "ó":"o", "ú":"u",
+     "à":"a", "è":"e", "ì":"i", "ò":"o", "ù":"u",
+     "ḗ":"ê", "ṓ":"ô", # only these two vowels have a single Unicode char for macron+acute
+     "ấ":"â"})
   if not classical:
     # Dialectally, ĭ ö or the like may occur in translit.
     text = rsub(text, ".",
-      {u"ă":"a", u"ĕ":"e", u"ĭ":"i", u"ŏ":"o", u"ŭ":"u",
-       u"ä":"a", u"ë":"e", u"ï":"i", u"ö":"o", u"ü":"u",
+      {"ă":"a", "ĕ":"e", "ĭ":"i", "ŏ":"o", "ŭ":"u",
+       "ä":"a", "ë":"e", "ï":"i", "ö":"o", "ü":"u",
       })
   # Eliminate miscellaneous acute/grave (e.g. if over ā ī ū)
   text = text.replace(AC, "")
   text = text.replace(GR, "")
   # canonicalize weird vowels
-  text = text.replace(u"ɪ", "i")
-  text = text.replace(u"ɑ", "a")
-  if not classical and (not arabic or u"ە" not in arabic):
+  text = text.replace("ɪ", "i")
+  text = text.replace("ɑ", "a")
+  if not classical and (not arabic or "ە" not in arabic):
     # Don't do this if ARABIC LETTER AE occurs (in Sistani text).
-    text = text.replace(u"æ", "a")
-  text = text.replace(u"а", "a") # Cyrillic a
+    text = text.replace("æ", "a")
+  text = text.replace("а", "a") # Cyrillic a
   # eliminate doubled vowels = long vowels
-  text = rsub(text, r"([aeiou])\1", {"a":u"â", "e":u"ê", "i":u"î", "o":u"ô", "u":u"û"})
+  text = rsub(text, r"([aeiou])\1", {"a":"â", "e":"ê", "i":"î", "o":"ô", "u":"û"})
   # eliminate vowels followed by colon = long vowels
-  text = rsub(text, u"([aeiou])[:ː]", {"a":u"â", "e":u"ê", "i":u"î", "o":u"ô", "u":u"û"})
+  text = rsub(text, "([aeiou])[:ː]", {"a":"â", "e":"ê", "i":"î", "o":"ô", "u":"û"})
 
   # FIXME: We probably don't want this.
   # eliminate - or ' separating t-h, t'h, etc. in transliteration style
@@ -712,7 +712,7 @@ def pre_canonicalize_latin(text, arabic=None, classical=False, msgfun=msg):
 
   # FIXME the following seem unnecessary.
   # misc substitutions
-  #text = rsub(text, u"ẗ$", "")
+  #text = rsub(text, "ẗ$", "")
   ## cases like fi 'l-ḡad(i) -> eventually fi l-ḡad
   #text = rsub(text, r"\([aiu]\)($|[ |\[\]])", r"\1")
   #text = rsub(text, r"\(tun\)$", "")
@@ -720,20 +720,20 @@ def pre_canonicalize_latin(text, arabic=None, classical=False, msgfun=msg):
 
   #### vowel/diphthong canonicalizations
   # FIXME: review with Anatoli
-  text = rsub(text, u"([aeoə])u", r"\1w")
-  text = rsub(text, u"([aeoə])i", r"\1y")
+  text = rsub(text, "([aeoə])u", r"\1w")
+  text = rsub(text, "([aeoə])i", r"\1y")
 
   # FIXME: the following are probably wrong or unnecessary
   ## Convert -iy- not followed by a vowel or y to long -î-
-  #text = rsub(text, u"iy($|[^y" + vowel_chars + "])", r"î\1")
+  #text = rsub(text, "iy($|[^y" + vowel_chars + "])", r"î\1")
   ## Same for -uw- -> -û-
-  #text = rsub(text, u"uw($|[^w" + vowel_chars + "])", r"û\1")
+  #text = rsub(text, "uw($|[^w" + vowel_chars + "])", r"û\1")
   ## Insert y between i and a
-  #text = rsub(text, u"([iî])([aâ])", r"\1y\2")
+  #text = rsub(text, "([iî])([aâ])", r"\1y\2")
   ## Insert w between u and a
-  #text = rsub(text, u"([uû])([aâ])", r"\1w\2")
-  #text = rsub(text, u"îy", "iyy")
-  #text = rsub(text, u"ûw", "uww")
+  #text = rsub(text, "([uû])([aâ])", r"\1w\2")
+  #text = rsub(text, "îy", "iyy")
+  #text = rsub(text, "ûw", "uww")
   ## Reduce cases of three characters in a row (e.g. from îyy -> iyyy -> iyy);
   ## but not ''', which stands for boldface, or ..., which is legitimate
   #text = rsub(text, r"([^'.])\1\1", r"\1\1")
@@ -744,7 +744,7 @@ def pre_canonicalize_latin(text, arabic=None, classical=False, msgfun=msg):
   ##  latin_consonants_no_double_after_cons_re), r"\1\2", text, 0, re.U)
   ## Remove double consonant preceding another consonant but special-case
   ## a known example that shouldn't be touched.
-  #if text != u"dunḡḡwân":
+  #if text != "dunḡḡwân":
   #  text = re.sub(r"([^\W" + vowel_chars + r"])\1(%s)" % (
   #    latin_consonants_no_double_after_cons_re), r"\1\2", text, 0, re.U)
 
@@ -756,20 +756,20 @@ def pre_canonicalize_latin(text, arabic=None, classical=False, msgfun=msg):
   #  # removed from Arabic in pre-canonicalization). But not if the
   #  # Arabic has a space in it (may be legitimate, in Koranic quotes or
   #  # whatever).
-  #  if arabic.endswith(u"\u064C") and " " not in arabic:
+  #  if arabic.endswith("\u064C") and " " not in arabic:
   #    newtext = rsub(text, "un$", "")
   #    if newtext != text:
   #      msgfun("Removing final -un from Latin %s" % text)
   #      text = newtext
   #    # Now remove -un from the Arabic.
-  #    arabic = rsub(arabic, u"\u064C$", "")
+  #    arabic = rsub(arabic, "\u064C$", "")
   #  # If Arabic ends with tâʾ marbûṭa, canonicalize some Latin endings
   #  # right now. Only do this at the end of the text, not at the end
   #  # of each word, since an Arabic word in the middle might be in the
   #  # construct state.
-  #  if arabic.endswith(u"اة"):
-  #    text = rsub(text, r"â(\(t\)|t)$", u"âh")
-  #  elif arabic.endswith(u"ة"):
+  #  if arabic.endswith("اة"):
+  #    text = rsub(text, r"â(\(t\)|t)$", "âh")
+  #  elif arabic.endswith("ة"):
   #    text = rsub(text, r"[ae](\(t\)|t)$", "a")
   #  # Do certain end-of-word changes on each word, comparing corresponding
   #  # Latin and Arabic words ...
@@ -782,37 +782,37 @@ def pre_canonicalize_latin(text, arabic=None, classical=False, msgfun=msg):
   #      lword = latinwords[i]
   #      # If Arabic word ends with long alif or alif maqsuura, not
   #      # preceded by fathatan, convert short -a to long -â.
-  #      if (re.search(u"[اى]$", aword) and not
-  #          re.search(AN + u"[اى]$", aword)):
-  #        lword = rsub(lword, r"a$", u"â")
+  #      if (re.search("[اى]$", aword) and not
+  #          re.search(AN + "[اى]$", aword)):
+  #        lword = rsub(lword, r"a$", "â")
   #      # If Arabic word ends in -yy, convert Latin -i/-î to -iyy
   #      # If the Arabic actually ends in -ayy or similar, this should
   #      # have no effect because in any vowel+i combination, we
   #      # changed i->y
-  #      if re.search(u"يّ$", aword):
-  #        lword = rsub(lword, u"[iî]$", "iyy")
+  #      if re.search("يّ$", aword):
+  #        lword = rsub(lword, "[iî]$", "iyy")
   #      # If Arabic word ends in -y preceded by sukuun, assume
   #      # correct and convert final Latin -i/î to -y.
-  #      if re.search(SK + u"ی$", aword):
-  #        lword = rsub(lword, u"[iî]$", "y")
+  #      if re.search(SK + "ی$", aword):
+  #        lword = rsub(lword, "[iî]$", "y")
   #      # Otherwise, if Arabic word ends in -y, convert Latin -i to -î
   #      # WARNING: Many of these should legitimately be converted
   #      # to -iyy or perhaps (sukuun+)-y both in Arabic and Latin, but
   #      # it's impossible for us to know this.
-  #      elif re.search(u"ی$", aword):
-  #        lword = rsub(lword, "i$", u"î")
+  #      elif re.search("ی$", aword):
+  #        lword = rsub(lword, "i$", "î")
   #      # Except same logic, but for u/w vs. i/y
-  #      if re.search(u"وّ$", aword):
-  #        lword = rsub(lword, u"[uû]$", "uww")
-  #      if re.search(SK + u"و$", aword):
-  #        lword = rsub(lword, u"[uû]$", "w")
-  #      elif re.search(u"و$", aword):
-  #        lword = rsub(lword, "u$", u"û")
+  #      if re.search("وّ$", aword):
+  #        lword = rsub(lword, "[uû]$", "uww")
+  #      if re.search(SK + "و$", aword):
+  #        lword = rsub(lword, "[uû]$", "w")
+  #      elif re.search("و$", aword):
+  #        lword = rsub(lword, "u$", "û")
   #      # Echo a final exclamation point in the Latin
   #      if re.search("!$", aword) and not re.search("!$", lword):
   #        lword += "!"
   #      # Same for a final question mark
-  #      if re.search(u"؟$", aword) and not re.search("\?$", lword):
+  #      if re.search("؟$", aword) and not re.search("\?$", lword):
   #        lword += "?"
   #      latinwords[i] = lword
   #    text = " ".join(latinwords)
@@ -827,9 +827,9 @@ def post_canonicalize_latin(text, classical=False, msgfun=msg):
       return retval
 
   # Convert shadda back to double letter. Do this first to avoid interfering with the following checks.
-  text = rsub(text, u"(.)" + SH, r"\1\1")
+  text = rsub(text, "(.)" + SH, r"\1\1")
   # Word-final -eyâ -> -iyâ.
-  text = rsub(text, u"eyâ([" + word_final_punctuation + r" |\]]|'''|$|-)", r"iyâ\1")
+  text = rsub(text, "eyâ([" + word_final_punctuation + r" |\]]|'''|$|-)", r"iyâ\1")
   if not classical:
     # Don't do this in dialectal Persian, e.g. [[بوا]] {{fa-noun|tr=buâ, bwâ, bowâ}}.
     # w before a vowel becomes v except in kw-, xw-, gw-, where we leave it alone
@@ -863,7 +863,7 @@ def canonicalize_latin_foreign(obj, latin, arabic, msgfun=msg):
       return m.group(0).replace("'", multi_single_quote_subst)
     latin = re.sub(r"''+", quote_subst, latin)
     latin = rsub(latin, ".", tt_canonicalize_latin)
-    latin_chars = u"[a-zA-Zâêîôûčḍḏḡḥḵṣšṭṯẓžʿʾ]"
+    latin_chars = "[a-zA-Zâêîôûčḍḏḡḥḵṣšṭṯẓžʿʾ]"
     # Convert 3 to ʿ if next to a letter or letter symbol. This tries
     # to avoid converting 3 in numbers.
     latin = rsub(latin, "(%s)3" % latin_chars, r"\1ʿ")
@@ -875,22 +875,22 @@ def canonicalize_latin_foreign(obj, latin, arabic, msgfun=msg):
 # Special-casing for punctuation-space and diacritic-only text; don't
 # pre-canonicalize.
 def dont_pre_canonicalize_arabic(text):
-  if u"\u2008" in text:
+  if "\u2008" in text:
     return True
   rdtext = remove_diacritics(text)
   if len(rdtext) == 0:
     return True
-  if rdtext == u"ـ":
+  if rdtext == "ـ":
     return True
   return False
 
 def run_on_non_template_code(text, fun, pagemsg):
   # Embedded templates. Don't touch the stuff inside the embedded part.
-  pagemsg(u"Embedded templates in param value, not frobbing template runs: %s" % text)
+  pagemsg("Embedded templates in param value, not frobbing template runs: %s" % text)
   try:
     runs = blib.parse_balanced_segment_run(text, "{", "}")
   except blib.ParseException as e:
-    pagemsg(u"WARNING: ParseException parsing braces in param value: %s: %s" % (text, e))
+    pagemsg("WARNING: ParseException parsing braces in param value: %s: %s" % (text, e))
     runs = None
   if runs is not None:
     for i, run in enumerate(runs):
@@ -916,12 +916,12 @@ def pre_pre_canonicalize_arabic(text, msgfun=msg):
   # Map to canonical composed form, eliminate presentation variants.
   # But don't do it if word ligatures are present or length-1 words with
   # presentation variants, because we want to leave those alone.
-  if (not re.search(u"[\uFDF0-\uFDFF]", text)
-      and not re.search(u"(^|[\\W])[\uFB50-\uFDCF\uFE70-\uFEFF]($|[\\W])",
+  if (not re.search("[\uFDF0-\uFDFF]", text)
+      and not re.search("(^|[\\W])[\uFB50-\uFDCF\uFE70-\uFEFF]($|[\\W])",
         text, re.U)):
     text = nfkc_form(text)
   # remove L2R, R2L markers
-  text = rsub(text, u"[\u200E\u200F]", "")
+  text = rsub(text, "[\u200E\u200F]", "")
   # reduce multiple ZWNJ's to one
   text = rsub(text, ZWNJ + "+", ZWNJ)
   # remove leading/trailing spaces; don't strip newlines at the edges, which might be intentional, e.g. in a multiline
@@ -930,53 +930,53 @@ def pre_pre_canonicalize_arabic(text, msgfun=msg):
   # canonicalize interior spaces (leave newlines alone)
   text = rsub(text, " +", " ")
   # replace Arabic, etc. characters with corresponding Farsi characters
-  text = text.replace(u"ي", u"ی") # FARSI YEH
-  text = text.replace(u"ك", u"ک") # ARABIC LETTER KEHEH (06A9)
+  text = text.replace("ي", "ی") # FARSI YEH
+  text = text.replace("ك", "ک") # ARABIC LETTER KEHEH (06A9)
   # Replace alif maqsuura with FARSI YEH
-  text = text.replace(u"ى", u"ی")
+  text = text.replace("ى", "ی")
   # Replace Eastern Arabic numerals with Persian numerals.
   text = rsub(text, ".", {
-    u"١": u"۱",
-    u"٢": u"۲",
-    u"٣": u"۳",
-    u"٤": u"۴",
-    u"٥": u"۵",
-    u"٦": u"۶",
-    u"٦": u"۷",
-    u"٧": u"۸",
-    u"٨": u"۹",
-    u"٠": u"۰",
+    "١": "۱",
+    "٢": "۲",
+    "٣": "۳",
+    "٤": "۴",
+    "٥": "۵",
+    "٦": "۶",
+    "٦": "۷",
+    "٧": "۸",
+    "٨": "۹",
+    "٠": "۰",
   })
   # Replace one-char ۀ with two-character هٔ.
-  text = text.replace(u"ۀ", u"هٔ")
+  text = text.replace("ۀ", "هٔ")
   # Replace HEH GOAL ہ with regular heh ه.
-  text = text.replace(u"ہ", u"ه")
+  text = text.replace("ہ", "ه")
   # [Replace ARABIC LETTER AE ە with regular heh ه; it's a mistake based on visual similarity.]
   # --Found intentionally in Sistani text.
-  #text = text.replace(u"ە", u"ه")
+  #text = text.replace("ە", "ه")
   # Another weird letter like ه: ARABIC LETTER HEH DOACHASHMEE
-  text = text.replace(u"ھ", u"ه")
+  text = text.replace("ھ", "ه")
 
   # Underscore weirdly appears at the beginning of several suffixes, where it should be tatweel.
-  text = rsub(text, "^_", u"ـ")
+  text = rsub(text, "^_", "ـ")
   # Don't do this for Persian unless we really want to vocalize this way.
   # convert llh for allâh into ll+shadda+dagger-alif+h
-  #text = rsub(text, u"لله", u"للّٰه")
+  #text = rsub(text, "لله", "للّٰه")
   # msg("text enter: %s" % text)
   # shadda+short-vowel (including tanwin vowels, i.e. -an -in -un) gets
   # replaced with short-vowel+shadda during NFC normalisation, which
   # MediaWiki does for all Unicode strings; however, it makes the
   # transliteration process inconvenient, so undo it.
   text = rsub(text,
-    u"([\u064B\u064C\u064D\u064E\u064F\u0650\u0670])" + SH, SH + r"\1")
+    "([\u064B\u064C\u064D\u064E\u064F\u0650\u0670])" + SH, SH + r"\1")
   # tāʾ marbūṭa should always be preceded by fatha, alif, alif madda or
   # dagger alif; infer fatha if not. This fatha will force a match to an "a"
   # in the Latin, so we can safely have tāʾ marbūṭa itself match "h", "t"
   # or "", making it work correctly with alif + tâʾ marbūṭa where
   # e.g. اة = ā and still correctly allow e.g. رة = ra but disallow رة = r.
   # FIXME: tāʾ marbūṭa doesn't exist in Farsi.
-  #text = rsub(text, u"([^\u064E\u0627\u0622\u0670])\u0629",
-  #  u"\\1\u064E\u0629")
+  #text = rsub(text, "([^\u064E\u0627\u0622\u0670])\u0629",
+  #  "\\1\u064E\u0629")
   # some Arabic text has a shadda after the initial consonant; remove it
   newtext = rsub(text, r"(^|[ |\[\]])(.)" + SH, r"\1\2")
   if text != newtext:
@@ -1015,15 +1015,15 @@ def pre_canonicalize_arabic(text, safe=False, msgfun=msg):
     return text
   if not safe:
     # word-initial al + consonant + shadda: remove shadda
-    text = rsub(text, u"(^|\\s|\[\[|\|)(\u0627\u064E?\u0644[" + lconsonants + u"])" + SH, r"\1\2")
+    text = rsub(text, "(^|\\s|\[\[|\|)(\u0627\u064E?\u0644[" + lconsonants + "])" + SH, r"\1\2")
     # same for hamzat al-waṣl + l + consonant + shadda, anywhere
-    text = rsub(text, u"(\u0671\u064E?\u0644[" + lconsonants + u"])" + SH, r"\1")
+    text = rsub(text, "(\u0671\u064E?\u0644[" + lconsonants + "])" + SH, r"\1")
     # word-initial al + l + dagger-alif + h (allâh): convert second l
     # to double_l_subst; will match shadda in Latin allâh during
     # tr_matching(), will be converted back during post-canonicalization
-    text = rsub(text, u"(^|\\s|\[\[|\|)(\u0627\u064E?\u0644)\u0644(\u0670?ه)", r"\1\2" + double_l_subst + r"\3")
+    text = rsub(text, "(^|\\s|\[\[|\|)(\u0627\u064E?\u0644)\u0644(\u0670?ه)", r"\1\2" + double_l_subst + r"\3")
     # same for hamzat al-waṣl + l + l + dagger-alif + h occurring anywhere.
-    text = rsub(text, u"(\u0671\u064E?\u0644)\u0644(\u0670?ه)", r"\1" + double_l_subst + "\2")
+    text = rsub(text, "(\u0671\u064E?\u0644)\u0644(\u0670?ه)", r"\1" + double_l_subst + "\2")
     # Don't do this as we don't currently handle it in the main body of the code and it causes issues for lots of
     # words, e.g. tr_matching(السالوادور, elsâlvâdor), tr_matching(الدنگ, aldang), tr_matching(التهاب, eltehâb).
     # There are placed where Arabic ال does occur, e.g. tr_matching(حفظ الصحه, hefz ol-seha) [which we should
@@ -1033,10 +1033,10 @@ def pre_canonicalize_arabic(text, safe=False, msgfun=msg):
     ## word-initial al + sun letter: convert l to assimilating_l_subst; will
     ## convert back during post-canonicalization; during tr_matching(),
     ## assimilating_l_subst will match the appropriate character, or "l"
-    #text = rsub(text, u"(^|\\s|\[\[|\|)(\u0627\u064E?)\u0644([" +
+    #text = rsub(text, "(^|\\s|\[\[|\|)(\u0627\u064E?)\u0644([" +
     #    sun_letters + "])", r"\1\2" + assimilating_l_subst + r"\3")
     ## same for hamzat al-waṣl + l + sun letter occurring anywhere.
-    #text = rsub(text, u"(\u0671\u064E?)\u0644([" + sun_letters + "])",
+    #text = rsub(text, "(\u0671\u064E?)\u0644([" + sun_letters + "])",
     #  r"\1" + assimilating_l_subst + r"\2")
   return text
 
@@ -1050,10 +1050,10 @@ def post_canonicalize_arabic(text, safe=False, msgfun=msg):
   if dont_pre_canonicalize_arabic(text):
     return text
   if not safe:
-    text = rsub(text, silent_alif_subst, u"ا")
-    text = rsub(text, silent_alif_maqsuura_subst, u"ى")
-    text = rsub(text, assimilating_l_subst, u"ل")
-    text = rsub(text, double_l_subst, u"ل")
+    text = rsub(text, silent_alif_subst, "ا")
+    text = rsub(text, silent_alif_maqsuura_subst, "ى")
+    text = rsub(text, assimilating_l_subst, "ل")
+    text = rsub(text, double_l_subst, "ل")
     text = rsub(text, A + "?" + dagger_alif_subst, DAGGER_ALIF)
 
     # FIXME: Unlikely we want this for Persian.
@@ -1074,14 +1074,14 @@ def post_canonicalize_arabic(text, safe=False, msgfun=msg):
     #text = ''.join(splitparts)
 
   # remove sukuun after damma + wâw
-  text = rsub(text, u"\u064F\u0648" + SK, u"\u064F\u0648")
+  text = rsub(text, "\u064F\u0648" + SK, "\u064F\u0648")
   # remove sukuun after kasra + yâ'
-  text = rsub(text, u"\u0650\u064A" + SK, u"\u0650\u064A")
+  text = rsub(text, "\u0650\u064A" + SK, "\u0650\u064A")
   # initial al + consonant + sukuun + sun letter: convert to shadda
-  text = rsub(text, u"(^|\\s|\[\[|\|)(\u0627\u064E?\u0644)" + SK + "([" + sun_letters + "])",
+  text = rsub(text, "(^|\\s|\[\[|\|)(\u0627\u064E?\u0644)" + SK + "([" + sun_letters + "])",
      r"\1\2\3" + SH)
   # same for hamzat al-waṣl + l + consonant + sukuun + sun letters anywhere
-  text = rsub(text, u"(\u0671\u064E?\u0644)" + SK + "([" + sun_letters + "])",
+  text = rsub(text, "(\u0671\u064E?\u0644)" + SK + "([" + sun_letters + "])",
      r"\1\2" + SH)
   # Undo shadda+short-vowel reversal in pre_pre_canonicalize_arabic.
   # Not strictly necessary as MediaWiki will automatically do this
@@ -1089,15 +1089,15 @@ def post_canonicalize_arabic(text, safe=False, msgfun=msg):
   # save a page with a shadda in it. Don't undo shadda+dagger-alif because
   # that sequence may not get reversed to begin with.
   text = rsub(text,
-    SH + u"([\u064B\u064C\u064D\u064E\u064F\u0650])", r"\1" + SH)
+    SH + "([\u064B\u064C\u064D\u064E\u064F\u0650])", r"\1" + SH)
   return text
 
 def split_multiple_translits(latin, foreign):
   # Check for multiple translits opposite a single Arabic-script term.
   # If processing for changing, we need to paste the results back together.
-  if "," in latin and not re.search(u"[,،]", foreign):
+  if "," in latin and not re.search("[,،]", foreign):
     return re.split(r",\s*", latin)
-  elif ";" in latin and not re.search(u"[;؛]", foreign):
+  elif ";" in latin and not re.search("[;؛]", foreign):
     return re.split(r";\s*", latin)
   elif "~" in latin and "~" not in foreign:
     return re.split(r"\s*~\s*", latin)
@@ -1142,7 +1142,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
         latins[i] = this_latin_res
         match_canon_partial_success = True
       except RuntimeError as e:
-        match_canon_error = u"%s" % e
+        match_canon_error = "%s" % e
         match_canon_errors.append(match_canon_error)
         pagemsg("NOTE: %s" % match_canon_error)
         # If we can't match, fall back on cross-canonicalization.
@@ -1278,7 +1278,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
       if not allow_empty_latin and not match and not handle_empty_match_early:
         # Allow if we're dealing with ع and ئ between vowels. This allows us to infer ' between vowels when it's not
         # present, instead of adding the apostrophe after both vowels.
-        if ac not in [u"ع", u"ئ"]:
+        if ac not in ["ع", "ئ"]:
           continue
         prevla = st.prevla()
         thisla = st.thisla()
@@ -1304,11 +1304,11 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
         if preserve_latin:
           for cp in match:
             lres.append(cp)
-        elif ac == u"ة":
+        elif ac == "ة":
           if not st.is_eow():
             lres.append("t")
-          elif aind[0] > 0 and (ar[aind[0] - 1] == u"ا" or
-              ar[aind[0] - 1] == u"آ"):
+          elif aind[0] > 0 and (ar[aind[0] - 1] == "ا" or
+              ar[aind[0] - 1] == "آ"):
             lres.append("h")
           # else do nothing
         else:
@@ -1456,7 +1456,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
     if lind[0] < llen and la[lind[0]] == "-":
       if aind[0] >= alen:
         lres.append("-")
-      elif ar[aind[0]] in ["-", u"–", ZWJ, ZWNJ]:
+      elif ar[aind[0]] in ["-", "–", ZWJ, ZWNJ]:
         lres.append("-")
         res.append(ar[aind[0]])
         aind[0] += 1
@@ -1490,21 +1490,21 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
 
   # Check for plain alif matching hamza and canonicalize.
   #def check_bow_alif():
-  #  if not (st.is_bow() and aind[0] < alen and ar[aind[0]] == u"ا"):
+  #  if not (st.is_bow() and aind[0] < alen and ar[aind[0]] == "ا"):
   #    return False
   #  # Check for hamza + vowel.
   #  if not (lind[0] < llen - 1 and la[lind[0]] in hamza_match_chars and
   #      la[lind[0] + 1] in vowel_chars):
   #    return False
   #  if la[lind[0] + 1] in "ei":
-  #    canonalif = u"إ"
+  #    canonalif = "إ"
   #  else:
-  #    canonalif = u"أ"
+  #    canonalif = "أ"
   #  msgfun("Canonicalized alif to %s in %s (%s)" % (
   #    canonalif, origarabic, origlatin))
   #  res.append(canonalif)
   #  aind[0] += 1
-  #  lres.append(u"'")
+  #  lres.append("'")
   #  lind[0] += 1
   #  return True
 
@@ -1521,7 +1521,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
       return True
     # Infer fathatan before EOW alif/alif maqsuura
     if (aind[0] < alen and st.is_eow() and
-        ar[aind[0]] in u"اى" and lind[0] < llen - 1 and
+        ar[aind[0]] in "اى" and lind[0] < llen - 1 and
         la[lind[0]] == "a" and la[lind[0] + 1] == "n"):
       res.append(AN)
       res.append(ar[aind[0]])
@@ -1639,7 +1639,7 @@ def test_with_obj(obj, latin, arabic, should_outcome, should_latin=None):
   try:
     result = tr_matching(obj, arabic, latin, err=True)
   except RuntimeError as e:
-    msg(u"%s" % e)
+    msg("%s" % e)
     result = False
   outcome = None
   if result == False:
@@ -1692,12 +1692,12 @@ def run_tests():
   global num_succeeded, num_failed
   num_succeeded = 0
   num_failed = 0
-  test(u"loğat-nâme", u"لغت‌نامه", "matched", u"loğat-nâme")
-  test("farhang", u"فرهنگ", "matched", "farhang")
-  test(u"vâže-nâme", u"واژه‌نامه", "matched", u"vâže-nâme")
-  test(u"chamedan", u"چمدان", "matched", u"čamedân")
-  test(u"žu’an", u"ژوئن‌", "matched", "žu'an")
-  test("bima'ni", u"بی‌معنی", "matched", "bi-ma'ni")
+  test("loğat-nâme", "لغت‌نامه", "matched", "loğat-nâme")
+  test("farhang", "فرهنگ", "matched", "farhang")
+  test("vâže-nâme", "واژه‌نامه", "matched", "vâže-nâme")
+  test("chamedan", "چمدان", "matched", "čamedân")
+  test("žu’an", "ژوئن‌", "matched", "žu'an")
+  test("bima'ni", "بی‌معنی", "matched", "bi-ma'ni")
   test("yekšanbe", "یک‌شنبه", "matched", "yek-šanbe")
   test("elm-e ešteqâq", "علم اشتقاق", "matched", "'elm-e ešteqâq")
   test("āb", "آب", "matched", "âb")
@@ -1794,238 +1794,238 @@ def run_tests():
 
 
 
-  test(u"qâmus", u"قاموس", "matched")
-  test("katab", u"كتب", "matched")
-  test("kattab", u"كتب", "matched")
-  test(u"kátab", u"كتب", "matched")
-  test("katab", u"كتبٌ", "matched")
-  test("kat", u"كتب", "failed") # should fail
-  test("katabaq", u"كتب", "failed") # should fail
-  test("dakhala", u"دخل", "matched")
-  test("al-dakhala", u"الدخل", "matched")
-  test("ad-dakhala", u"الدخل", "matched")
-  test("al-la:zim", u"اللازم", "matched")
-  test("al-bait", u"البیت", "matched")
-  test("wa-dakhala", u"ودخل", "unmatched")
+  test("qâmus", "قاموس", "matched")
+  test("katab", "كتب", "matched")
+  test("kattab", "كتب", "matched")
+  test("kátab", "كتب", "matched")
+  test("katab", "كتبٌ", "matched")
+  test("kat", "كتب", "failed") # should fail
+  test("katabaq", "كتب", "failed") # should fail
+  test("dakhala", "دخل", "matched")
+  test("al-dakhala", "الدخل", "matched")
+  test("ad-dakhala", "الدخل", "matched")
+  test("al-la:zim", "اللازم", "matched")
+  test("al-bait", "البیت", "matched")
+  test("wa-dakhala", "ودخل", "unmatched")
   # The Arabic of the following consists of wâw + fatha + ZWJ + dâl + ḵâʾ + lâm.
-  test("wa-dakhala", u"وَ‍دخل", "matched")
+  test("wa-dakhala", "وَ‍دخل", "matched")
   # The Arabic of the following two consists of wâw + ZWJ + dâl + ḵâʾ + lâm.
-  test("wa-dakhala", u"و‍دخل", "matched")
-  test("wa-dakhala", u"و-دخل", "matched")
-  test("wadakhala", u"و‍دخل", "failed") # should fail, ZWJ must match hyphen
-  test("wadakhala", u"ودخل", "matched")
+  test("wa-dakhala", "و‍دخل", "matched")
+  test("wa-dakhala", "و-دخل", "matched")
+  test("wadakhala", "و‍دخل", "failed") # should fail, ZWJ must match hyphen
+  test("wadakhala", "ودخل", "matched")
   # Six different ways of spelling a long û.
-  test("duuba", u"دوبة", "matched")
-  test(u"dúuba", u"دوبة", "matched")
-  test("duwba", u"دوبة", "matched")
-  test("du:ba", u"دوبة", "matched")
-  test(u"dûba", u"دوبة", "matched")
-  test(u"dū́ba", u"دوبة", "matched")
+  test("duuba", "دوبة", "matched")
+  test("dúuba", "دوبة", "matched")
+  test("duwba", "دوبة", "matched")
+  test("du:ba", "دوبة", "matched")
+  test("dûba", "دوبة", "matched")
+  test("dū́ba", "دوبة", "matched")
   # w definitely as a consonant, should be preserved
-  test("duwaba", u"دوبة", "matched")
+  test("duwaba", "دوبة", "matched")
 
   # Similar but for î and y
-  test("diiba", u"دیبة", "matched")
-  test(u"díiba", u"دیبة", "matched")
-  test("diyba", u"دیبة", "matched")
-  test("di:ba", u"دیبة", "matched")
-  test(u"dîba", u"دیبة", "matched")
-  test(u"dī́ba", u"دیبة", "matched")
-  test("diyaba", u"دیبة", "matched")
+  test("diiba", "دیبة", "matched")
+  test("díiba", "دیبة", "matched")
+  test("diyba", "دیبة", "matched")
+  test("di:ba", "دیبة", "matched")
+  test("dîba", "دیبة", "matched")
+  test("dī́ba", "دیبة", "matched")
+  test("diyaba", "دیبة", "matched")
 
   # Test o's and e's
-  test(u"dôba", u"دوبة", "unmatched")
-  test(u"dôba", u"دُوبة", "unmatched")
-  test(u"telefôn", u"تلفون", "unmatched")
+  test("dôba", "دوبة", "unmatched")
+  test("dôba", "دُوبة", "unmatched")
+  test("telefôn", "تلفون", "unmatched")
 
   # Test handling of tâʾ marbûṭa
   # test of "duuba" already done above.
-  test("duubah", u"دوبة", "matched") # should be reduced to -a
-  test("duubaa", u"دوباة", "matched") # should become -âh
-  test("duubaah", u"دوباة", "matched") # should become -âh
-  test("mir'aah", u"مرآة", "matched") # should become -âh
+  test("duubah", "دوبة", "matched") # should be reduced to -a
+  test("duubaa", "دوباة", "matched") # should become -âh
+  test("duubaah", "دوباة", "matched") # should become -âh
+  test("mir'aah", "مرآة", "matched") # should become -âh
 
   # Test the definite article and its rendering in Arabic
-  test("al-duuba", u"اَلدّوبة", "matched")
-  test("al-duuba", u"الدّوبة", "matched")
-  test("al-duuba", u"الدوبة", "matched")
-  test("ad-duuba", u"اَلدّوبة", "matched")
-  test("ad-duuba", u"الدّوبة", "matched")
-  test("ad-duuba", u"الدوبة", "matched")
-  test("al-kuuba", u"اَلْكوبة", "matched")
-  test("al-kuuba", u"الكوبة", "matched")
-  test("baitu l-kuuba", u"بیت الكوبة", "matched")
-  test("baitu al-kuuba", u"بیت الكوبة", "matched")
-  test("baitu d-duuba", u"بیت الدوبة", "matched")
-  test("baitu ad-duuba", u"بیت الدوبة", "matched")
-  test("baitu l-duuba", u"بیت الدوبة", "matched")
-  test("baitu al-duuba", u"بیت الدوبة", "matched")
-  test("bait al-duuba", u"بیت الدوبة", "matched")
-  test("bait al-Duuba", u"بیت الدوبة", "matched")
-  test("bait al-kuuba", u"بیت الكوبة", "matched")
-  test("baitu l-kuuba", u"بیت ٱلكوبة", "matched")
+  test("al-duuba", "اَلدّوبة", "matched")
+  test("al-duuba", "الدّوبة", "matched")
+  test("al-duuba", "الدوبة", "matched")
+  test("ad-duuba", "اَلدّوبة", "matched")
+  test("ad-duuba", "الدّوبة", "matched")
+  test("ad-duuba", "الدوبة", "matched")
+  test("al-kuuba", "اَلْكوبة", "matched")
+  test("al-kuuba", "الكوبة", "matched")
+  test("baitu l-kuuba", "بیت الكوبة", "matched")
+  test("baitu al-kuuba", "بیت الكوبة", "matched")
+  test("baitu d-duuba", "بیت الدوبة", "matched")
+  test("baitu ad-duuba", "بیت الدوبة", "matched")
+  test("baitu l-duuba", "بیت الدوبة", "matched")
+  test("baitu al-duuba", "بیت الدوبة", "matched")
+  test("bait al-duuba", "بیت الدوبة", "matched")
+  test("bait al-Duuba", "بیت الدوبة", "matched")
+  test("bait al-kuuba", "بیت الكوبة", "matched")
+  test("baitu l-kuuba", "بیت ٱلكوبة", "matched")
 
-  test(u"ʼáwʻada", u"أوعد", "matched")
-  test(u"'áwʻada", u"أوعد", "matched")
+  test("ʼáwʻada", "أوعد", "matched")
+  test("'áwʻada", "أوعد", "matched")
   # The following should be self-canonicalized differently.
-  test(u"`áwʻada", u"أوعد", "matched")
+  test("`áwʻada", "أوعد", "matched")
 
   # Test handling of tâʾ marbûṭa when non-final
-  test("ghurfatu l-kuuba", u"غرفة الكوبة", "matched")
-  test("ghurfatun al-kuuba", u"غرفةٌ الكوبة", "matched")
-  test("al-ghurfatu l-kuuba", u"الغرفة الكوبة", "matched")
-  test("ghurfat al-kuuba", u"غرفة الكوبة", "unmatched")
-  test("ghurfa l-kuuba", u"غرفة الكوبة", "unmatched")
-  test("ghurfa(t) al-kuuba", u"غرفة الكوبة", "matched")
-  test("ghurfatu l-kuuba", u"غرفة ٱلكوبة", "matched")
-  test("ghurfa l-kuuba", u"غرفة ٱلكوبة", "unmatched")
-  test("ghurfa", u"غرفةٌ", "matched")
+  test("ghurfatu l-kuuba", "غرفة الكوبة", "matched")
+  test("ghurfatun al-kuuba", "غرفةٌ الكوبة", "matched")
+  test("al-ghurfatu l-kuuba", "الغرفة الكوبة", "matched")
+  test("ghurfat al-kuuba", "غرفة الكوبة", "unmatched")
+  test("ghurfa l-kuuba", "غرفة الكوبة", "unmatched")
+  test("ghurfa(t) al-kuuba", "غرفة الكوبة", "matched")
+  test("ghurfatu l-kuuba", "غرفة ٱلكوبة", "matched")
+  test("ghurfa l-kuuba", "غرفة ٱلكوبة", "unmatched")
+  test("ghurfa", "غرفةٌ", "matched")
 
   # Test handling of tâʾ marbûṭa when final
-  test("ghurfat", u"غرفةٌ", "matched")
-  test("ghurfa(t)", u"غرفةٌ", "matched")
-  test("ghurfa(tun)", u"غرفةٌ", "matched")
-  test("ghurfat(un)", u"غرفةٌ", "matched")
+  test("ghurfat", "غرفةٌ", "matched")
+  test("ghurfa(t)", "غرفةٌ", "matched")
+  test("ghurfa(tun)", "غرفةٌ", "matched")
+  test("ghurfat(un)", "غرفةٌ", "matched")
 
   # Test handling of embedded links
-  test(u"’âlati l-fam", u"[[آلة]] [[فم|الفم]]", "matched")
-  test(u"arqâm hindiyya", u"[[أرقام]] [[هندیة]]", "matched")
-  test(u"arqâm hindiyya", u"[[رقم|أرقام]] [[هندیة]]", "matched")
-  test(u"arqâm hindiyya", u"[[رقم|أرقام]] [[هندی|هندیة]]", "matched")
-  test(u"ʾufuq al-ħadaŧ", u"[[أفق]] [[حادثة|الحدث]]", "matched")
+  test("’âlati l-fam", "[[آلة]] [[فم|الفم]]", "matched")
+  test("arqâm hindiyya", "[[أرقام]] [[هندیة]]", "matched")
+  test("arqâm hindiyya", "[[رقم|أرقام]] [[هندیة]]", "matched")
+  test("arqâm hindiyya", "[[رقم|أرقام]] [[هندی|هندیة]]", "matched")
+  test("ʾufuq al-ħadaŧ", "[[أفق]] [[حادثة|الحدث]]", "matched")
 
   # Test transliteration that omits initial hamza (should be inferrable)
-  test(u"aṣdiqaa'", u"أَصدقاء", "matched")
-  test(u"aṣdiqā́'", u"أَصدقاء", "matched")
+  test("aṣdiqaa'", "أَصدقاء", "matched")
+  test("aṣdiqā́'", "أَصدقاء", "matched")
   # Test random hamzas
-  test(u"'aṣdiqā́'", u"أَصدقاء", "matched")
+  test("'aṣdiqā́'", "أَصدقاء", "matched")
   # Test capital letters for emphatics
-  test("aSdiqaa'", u"أَصدقاء", "matched")
+  test("aSdiqaa'", "أَصدقاء", "matched")
   # Test final otiose alif maqsuura after fathatan
-  test("hudan", u"هُدًى", "matched")
+  test("hudan", "هُدًى", "matched")
   # Test opposite with fathatan after alif otiose alif maqsuura
-  test("zinan", u"زنىً", "matched")
+  test("zinan", "زنىً", "matched")
 
   # Check that final short vowel is canonicalized to a long vowel in the
   # presence of a corresponding Latin long vowel.
-  test("'animi", u"أنمی", "matched")
+  test("'animi", "أنمی", "matched")
   # Also check for 'l indicating assimilation.
-  test("fi 'l-marra", u"فی المرة", "matched")
+  test("fi 'l-marra", "فی المرة", "matched")
 
   # Test cases where short Latin vowel corresponds to Long Arabic vowel
-  test("diba", u"دیبة", "unmatched")
-  test("tamariid", u"تمارید", "unmatched")
-  test("tamuriid", u"تمارید", "failed")
+  test("diba", "دیبة", "unmatched")
+  test("tamariid", "تمارید", "unmatched")
+  test("tamuriid", "تمارید", "failed")
 
   # Single quotes in Arabic
-  test("man '''huwa'''", u"من '''هو'''", "matched")
+  test("man '''huwa'''", "من '''هو'''", "matched")
 
   # Alif madda
-  test("'aabaa'", u"آباء", "matched")
-  test("mir'aah", u"مرآة", "matched")
+  test("'aabaa'", "آباء", "matched")
+  test("mir'aah", "مرآة", "matched")
 
   # Test case where close bracket occurs at end of word and an unmatched
   # vowel or shadda needs to be before it.
-  test("fuuliyy", u"[[فولی]]", "matched")
-  test("fuula", u"[[فول]]", "matched")
-  test("wa-'uxt", u"[[و]][[أخت]]", "unmatched")
+  test("fuuliyy", "[[فولی]]", "matched")
+  test("fuula", "[[فول]]", "matched")
+  test("wa-'uxt", "[[و]][[أخت]]", "unmatched")
   # Here we test when an open bracket occurs in the middle of a word and
   # an unmatched vowel or shadda needs to be before it.
-  test("wa-'uxt", u"و[[أخت]]", "unmatched")
+  test("wa-'uxt", "و[[أخت]]", "unmatched")
 
   # Test hamza against non-hamza
-  test("'uxt", u"اخت", "matched")
-  test("uxt", u"أخت", "matched")
-  test("'ixt", u"اخت", "matched")
-  test("ixt", u"أخت", "matched") # FIXME: Should be "failed" or should correct hamza
+  test("'uxt", "اخت", "matched")
+  test("uxt", "أخت", "matched")
+  test("'ixt", "اخت", "matched")
+  test("ixt", "أخت", "matched") # FIXME: Should be "failed" or should correct hamza
 
   # Test alif after al-
-  test(u"al-intifaaḍa", u"[[الانتفاضة]]", "matched")
-  test("al-'uxt", u"الاخت", "matched")
+  test("al-intifaaḍa", "[[الانتفاضة]]", "matched")
+  test("al-'uxt", "الاخت", "matched")
 
   # Test adding ! or ؟
-  test("fan", u"فن!", "matched")
-  test("fan!", u"فن!", "matched")
-  test("fan", u"فن؟", "matched")
-  test("fan?", u"فن؟", "matched")
+  test("fan", "فن!", "matched")
+  test("fan!", "فن!", "matched")
+  test("fan", "فن؟", "matched")
+  test("fan?", "فن؟", "matched")
 
   # Test inferring fathatan
-  test("hudan", u"هُدى", "matched")
-  test("qafan", u"قفا", "matched")
-  test("qafan qafan", u"قفا قفا", "matched")
+  test("hudan", "هُدى", "matched")
+  test("qafan", "قفا", "matched")
+  test("qafan qafan", "قفا قفا", "matched")
 
   # Case where shadda and -un are opposite each other; need to handle
   # shadda first.
-  test(u"qiṭṭ", u"قِطٌ", "matched")
+  test("qiṭṭ", "قِطٌ", "matched")
 
   # 3 consonants in a row
-  test(u"Kûlûmbîyâ", u"كولومبیا", "matched")
-  test("fustra", u"فسترة", "matched")
+  test("Kûlûmbîyâ", "كولومبیا", "matched")
+  test("fustra", "فسترة", "matched")
 
   # Allâh
-  test(u"allâh", u"الله", "matched")
+  test("allâh", "الله", "matched")
 
   # Test dagger alif, alif maqsuura
-  test(u"raḥmân", u"رَحْمٰن", "matched")
-  test(u"fusḥâ", u"فسحى", "matched")
-  test(u"fusḥâ", u"فُسْحَى", "matched")
-  test(u"'âxir", u"آخر", "matched")
+  test("raḥmân", "رَحْمٰن", "matched")
+  test("fusḥâ", "فسحى", "matched")
+  test("fusḥâ", "فُسْحَى", "matched")
+  test("'âxir", "آخر", "matched")
 
   # Real-world tests
-  test(u"’ijrâ’iy", u"إجْرائِيّ", "matched")
-  test(u"wuḍûʕ", u"وضوء", "matched")
-  test(u"al-luḡa al-ʾingilîziyya", u"اَلْلُّغَة الْإنْجِلِیزِيّة", "unmatched")
-  test(u"šamsíyya", u"شّمسيّة", "matched")
-  test(u"Sirbiyâ wa-l-Jabal al-Aswad", u"صربیا والجبل الأسود", "unmatched")
-  test(u"al-’imaraat", u"الإمارات", "unmatched")
+  test("’ijrâ’iy", "إجْرائِيّ", "matched")
+  test("wuḍûʕ", "وضوء", "matched")
+  test("al-luḡa al-ʾingilîziyya", "اَلْلُّغَة الْإنْجِلِیزِيّة", "unmatched")
+  test("šamsíyya", "شّمسيّة", "matched")
+  test("Sirbiyâ wa-l-Jabal al-Aswad", "صربیا والجبل الأسود", "unmatched")
+  test("al-’imaraat", "الإمارات", "unmatched")
   # FIXME: Should we canonicalize to al-?
-  test("al'aan(a)", u"الآن", "unmatched")
-  test(u"yûnânîyya", u"یونانیة", "matched")
-  test("hindiy-'uruubiy", u"هندی-أوروبی", "unmatched")
-  test(u"moldôva", u"مولدوفا", "unmatched")
-  test(u"darà", u"درى", "matched")
-  test("waraa2", u"وراء", "matched")
-  test("takhaddaa", u"تحدى", "matched")
-  test(u"qaránful", u"ﻗﺮﻧﻔﻞ", "matched")
+  test("al'aan(a)", "الآن", "unmatched")
+  test("yûnânîyya", "یونانیة", "matched")
+  test("hindiy-'uruubiy", "هندی-أوروبی", "unmatched")
+  test("moldôva", "مولدوفا", "unmatched")
+  test("darà", "درى", "matched")
+  test("waraa2", "وراء", "matched")
+  test("takhaddaa", "تحدى", "matched")
+  test("qaránful", "ﻗﺮﻧﻔﻞ", "matched")
   # Can't easily handle this one because ال matches against -r- in the
   # middle of a word.
-  # test(u"al-sâʿa wa-'r-rubʿ", u"الساعة والربع", "matched")
-  test(u"taḥṭîṭ", u"تخطیط", "matched")
-  test(u"hâḏihi", u"هذه", "matched")
-  test(u"ħaláːt", u"حَالاَتٌ", "unmatched")
-  test(u"raqṣ šarkiyy", u"رقص شرقی", "matched")
-  test(u"ibn ʾaḵ", u"[[اِبْنُ]] [[أَخٍ]]", "matched")
-  test(u"al-wuṣṭâ", u"الوسطى", "matched")
-  test(u"fáħmu-l-xášab", u"فحم الخشب", "matched")
-  test(u"gaṡor", u"قَصُر", "unmatched")
+  # test("al-sâʿa wa-'r-rubʿ", "الساعة والربع", "matched")
+  test("taḥṭîṭ", "تخطیط", "matched")
+  test("hâḏihi", "هذه", "matched")
+  test("ħaláːt", "حَالاَتٌ", "unmatched")
+  test("raqṣ šarkiyy", "رقص شرقی", "matched")
+  test("ibn ʾaḵ", "[[اِبْنُ]] [[أَخٍ]]", "matched")
+  test("al-wuṣṭâ", "الوسطى", "matched")
+  test("fáħmu-l-xášab", "فحم الخشب", "matched")
+  test("gaṡor", "قَصُر", "unmatched")
   # Getting this to work makes it hard to get e.g. nijir vs. نیجر to work.
-  # test(u"sijâq", u"سِيَاق", "matched")
-  test("winipiigh", u"وینیبیغ", "unmatched")
-  test(u"ʿaḏrâʿ", u"عذراء", "matched")
-  test(u"ʂaʈħ", u"سطْح", "matched")
-  test(u"dʒa'", u"جاء", "unmatched")
+  # test("sijâq", "سِيَاق", "matched")
+  test("winipiigh", "وینیبیغ", "unmatched")
+  test("ʿaḏrâʿ", "عذراء", "matched")
+  test("ʂaʈħ", "سطْح", "matched")
+  test("dʒa'", "جاء", "unmatched")
   #will split when done through canon_arabic.py, but not here
-  #test(u"ʿíndak/ʿíndak", u"عندك", "matched") # should split
-  test(u"fi 'l-ḡad(i)", u"فی الغد", "matched")
-  test(u"ḩaythu", u"حَیثُ", "matched")
-  test(u"’iʐhâr", u"إظهار", "matched")
-  test(u"taħli:l riya:dˤiy", u"تَحْلِیلْ رِيَاضِی", "matched")
-  test(u"al-'ingilizíyya al-'amrikíyya", u"الإنجلیزیة الأمریكیة", "unmatched")
-  test(u"ḵаwḵa", u"خوخة", "matched") # this has a Cyrillic character in it
-  test(u"’eħsâs", u"احساس", "unmatched")
+  #test("ʿíndak/ʿíndak", "عندك", "matched") # should split
+  test("fi 'l-ḡad(i)", "فی الغد", "matched")
+  test("ḩaythu", "حَیثُ", "matched")
+  test("’iʐhâr", "إظهار", "matched")
+  test("taħli:l riya:dˤiy", "تَحْلِیلْ رِيَاضِی", "matched")
+  test("al-'ingilizíyya al-'amrikíyya", "الإنجلیزیة الأمریكیة", "unmatched")
+  test("ḵаwḵa", "خوخة", "matched") # this has a Cyrillic character in it
+  test("’eħsâs", "احساس", "unmatched")
   # Up through page 848 "sense"
-  test("wayd-jaylz", u"وید–جیلز", "matched")
-  test(u"finjáːn šæːy", u"فِنْجَان شَای", "matched")
-  test(u"múdhhil", u"مذهل", "matched")
-  test(u"ixtiâr", u"اختیار", "matched")
-  test(u"miṯll", u"مثل", "matched")
-  test(u"li-wajhi llâh", u"لِوَجْهِ اللهِ", "unmatched")
+  test("wayd-jaylz", "وید–جیلز", "matched")
+  test("finjáːn šæːy", "فِنْجَان شَای", "matched")
+  test("múdhhil", "مذهل", "matched")
+  test("ixtiâr", "اختیار", "matched")
+  test("miṯll", "مثل", "matched")
+  test("li-wajhi llâh", "لِوَجْهِ اللهِ", "unmatched")
 
   # FIXME's: assimilating_l_subst only matches against canonical sun
   # letters, not against non-canonical ones like θ. We can fix that
   # by adding all the non-canonical ones to ttsun1[], or maybe just
   # matching anything that's not a vowel.
-  #test(u"tišrînu θ-θâni", u"تِشرینُ الثّانِی", "matched")
+  #test("tišrînu θ-θâni", "تِشرینُ الثّانِی", "matched")
 
   # Final results
   msg("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))

@@ -54,7 +54,7 @@ def process_text_on_page(index, pagetitle, text):
       notes.append("replace {{cs-decl-adj-poss}} with {{cs-adecl}}")
     elif tn == "cs-decl-adj-soft":
       par1 = getp("1")
-      if pagetitle != par1 + u"í":
+      if pagetitle != par1 + "í":
         pagemsg("WARNING: Weird 1=%s in %s" % (par1, str(t)))
         continue
       rmparam(t, "1")
@@ -62,7 +62,7 @@ def process_text_on_page(index, pagetitle, text):
       notes.append("replace {{cs-decl-adj-soft}} with {{cs-adecl}}")
     elif tn == "cs-decl-adj-hard":
       par1 = getp("1")
-      if pagetitle != par1 + u"ý":
+      if pagetitle != par1 + "ý":
         pagemsg("WARNING: Weird 1=%s in %s" % (par1, str(t)))
         continue
       par2 = getp("2")
@@ -72,20 +72,20 @@ def process_text_on_page(index, pagetitle, text):
           continue
         par3 = getp("3")
         if par1.endswith("sk"):
-          pal2 = par1[:-2] + u"št"
+          pal2 = par1[:-2] + "št"
         elif par1.endswith("ck"):
-          pal2 = par1[:-2] + u"čt"
+          pal2 = par1[:-2] + "čt"
         elif par1.endswith("k"):
           pal2 = par1[:-1] + "c"
         elif par1.endswith("ch"):
-          pal2 = par1[:-2] + u"š"
+          pal2 = par1[:-2] + "š"
         elif par1.endswith("h"):
           pal2 = par1[:-1] + "z"
         elif par1.endswith("r"):
-          pal2 = par1[:-1] + u"ř"
+          pal2 = par1[:-1] + "ř"
         else:
           pal2 = par1
-        should_par3 = pal2 + u"í"
+        should_par3 = pal2 + "í"
         if par3 != should_par3:
           pagemsg("WARNING: 3=%s should equal %s but doesn't: %s" % (par3, should_par3, str(t)))
           continue

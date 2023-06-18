@@ -10,7 +10,7 @@ blib.getData()
 
 # List of punctuation or spacing characters that are found inside of words.
 # Used to exclude characters from the regex above.
-wordPunc = u"-־׳״'.·*’་•:"
+wordPunc = "-־׳״'.·*’་•:"
 notWordPunc = "([^" + wordPunc + "]+)"
 
 punc_chars = "".join("\\" + unichr(i) for i in range(sys.maxunicode)

@@ -425,14 +425,14 @@ def process_line(line, pagename, etymnum, pronuns, pronuns_at_top):
         conj = conj[2:]
       conjparts = conj.split(".")
       is_impers = "impers" in conjparts
-      non_refl_verb = re.sub(u" с[еи]$", "", term[0])
+      non_refl_verb = re.sub(" с[еи]$", "", term[0])
       if conjparts[0] in ["1", "2"]:
         if is_impers:
-          if not re.search(u"[еи]́?$", non_refl_verb):
-            error(u"Impersonal conjugation 1/2 verb %s should end in -е or -и" % term[0])
+          if not re.search("[еи]́?$", non_refl_verb):
+            error("Impersonal conjugation 1/2 verb %s should end in -е or -и" % term[0])
         else:
-          if not re.search(u"[ая]́?$", non_refl_verb):
-            error(u"Conjugation 1/2 verb %s should end in -а or -я" % term[0])
+          if not re.search("[ая]́?$", non_refl_verb):
+            error("Conjugation 1/2 verb %s should end in -а or -я" % term[0])
         conjclass = "%s.%s." % (conjparts[0], conjparts[1])
         restconjparts = conjparts[2:]
       elif conjparts[0] == "irreg":
@@ -440,15 +440,15 @@ def process_line(line, pagename, etymnum, pronuns, pronuns_at_top):
         restconjparts = conjparts[1:]
       else:
         if is_impers:
-          if not re.search(u"[ая]$", non_refl_verb):
-            error(u"Impersonal conjugation 3 verb %s should end in -а or -я" % term[0])
+          if not re.search("[ая]$", non_refl_verb):
+            error("Impersonal conjugation 3 verb %s should end in -а or -я" % term[0])
         else:
-          if not re.search(u"[ая]м$", non_refl_verb):
-            error(u"Conjugation 3 verb %s should end in -ам or -ям" % term[0])
+          if not re.search("[ая]м$", non_refl_verb):
+            error("Conjugation 3 verb %s should end in -ам or -ям" % term[0])
         conjclass = ""
         restconjparts = conjparts
       has_transitivity = "tr" in restconjparts or "intr" in restconjparts
-      is_reflexive = re.search(u" (се|си)$", term[0])
+      is_reflexive = re.search(" (се|си)$", term[0])
       if (is_reflexive or reflexiveonly) and has_transitivity:
         error("Reflexive verb %s can't be specified as transitive or intransitive: %s" % (term[0], conj))
       elif not (is_reflexive or reflexiveonly) and not has_transitivity:
@@ -459,34 +459,34 @@ def process_line(line, pagename, etymnum, pronuns, pronuns_at_top):
       if not reflexiveonly:
         conjlines.append("{{bg-conj|%s<%s>}}" % (term[0], conj))
       oui = addlprops.get("oui", [])
-      if ("(refl)" in defns or "(reflexive)" in defns or term[0] + u" се" in oui) and not is_reflexive:
+      if ("(refl)" in defns or "(reflexive)" in defns or term[0] + " се" in oui) and not is_reflexive:
         reflconj = re.sub(r"\.(tr|intr)", "", conj)
-        conjlines.append(u"{{bg-conj|%s се<%s>}}" % (term[0], reflconj))
-      if ("(reflsi)" in defns or term[0] + u" си" in oui) and not is_reflexive:
+        conjlines.append("{{bg-conj|%s се<%s>}}" % (term[0], reflconj))
+      if ("(reflsi)" in defns or term[0] + " си" in oui) and not is_reflexive:
         reflconj = re.sub(r"\.(tr|intr)", "", conj)
-        conjlines.append(u"{{bg-conj|%s си<%s>}}" % (term[0], reflconj))
+        conjlines.append("{{bg-conj|%s си<%s>}}" % (term[0], reflconj))
       conjtext = "\n".join(conjlines)
 
     elif lang == "uk":
       # Ukrainian verb handling
       conjparts = conj.split(".")
-      if not re.search(u"ти(с[яь])?$", term[0]):
+      if not re.search("ти(с[яь])?$", term[0]):
         error("Term %s is supposed to be a verb but doesn't end that way" % term[0])
-      non_refl_verb = re.sub(u"с[яь]$", "", term[0])
-      if (conjparts[0] == "1a" and not re.search(u"[аяі]́?ти$", non_refl_verb) or
-          conjparts[0] in ["2a", "2b"] and not re.search(u"[ую]ва́?ти$", non_refl_verb) or
-          conjparts[0] == "3a" and not re.search(u"нути$", non_refl_verb) or
-          conjparts[0] in ["3b", "3c"] and not re.search(u"ну́ти$", non_refl_verb) or
-          conjparts[0] == "4a" and not re.search(u"[иї]ти$", non_refl_verb) or
-          conjparts[0] in ["4b", "4c"] and not re.search(u"[иї]́ти$", non_refl_verb) or
-          conjparts[0] in ["5a", "6a"] and not re.search(u"[аія]ти$", non_refl_verb) or
-          conjparts[0] in ["5b", "5c", "6b", "6c"] and not re.search(u"[аія]́ти$", non_refl_verb)):
+      non_refl_verb = re.sub("с[яь]$", "", term[0])
+      if (conjparts[0] == "1a" and not re.search("[аяі]́?ти$", non_refl_verb) or
+          conjparts[0] in ["2a", "2b"] and not re.search("[ую]ва́?ти$", non_refl_verb) or
+          conjparts[0] == "3a" and not re.search("нути$", non_refl_verb) or
+          conjparts[0] in ["3b", "3c"] and not re.search("ну́ти$", non_refl_verb) or
+          conjparts[0] == "4a" and not re.search("[иї]ти$", non_refl_verb) or
+          conjparts[0] in ["4b", "4c"] and not re.search("[иї]́ти$", non_refl_verb) or
+          conjparts[0] in ["5a", "6a"] and not re.search("[аія]ти$", non_refl_verb) or
+          conjparts[0] in ["5b", "5c", "6b", "6c"] and not re.search("[аія]́ти$", non_refl_verb)):
           error("Unrecognized ending for conjugation %s verb %s" % (conjparts[0], term[0]))
-          if not re.search(u"[ая]м$", non_refl_verb):
-            error(u"Conjugation 3 verb %s should end in -ам or -ям" % term[0])
+          if not re.search("[ая]м$", non_refl_verb):
+            error("Conjugation 3 verb %s should end in -ам or -ям" % term[0])
       has_transitivity = "tr" in conjparts or "intr" in conjparts
       has_ppp_spec = "ppp" in conjparts or "-ppp" in conjparts
-      is_reflexive = re.search(u"с[яь]$", term[0])
+      is_reflexive = re.search("с[яь]$", term[0])
       if is_reflexive and has_transitivity:
         error("Reflexive verb %s can't be specified as transitive or intransitive: %s" % (term[0], conj))
       elif not is_reflexive and not has_transitivity:
@@ -509,7 +509,7 @@ def process_line(line, pagename, etymnum, pronuns, pronuns_at_top):
       if " " in term[0]:
         error("Can't handle spaces in term: %s" % term[0])
       # Portuguese verb handling
-      is_reflexive = re.search(u"-se$", term[0])
+      is_reflexive = re.search("-se$", term[0])
       if conj == "<>":
         conj = ""
         hconjtext = ""
@@ -552,9 +552,9 @@ def process_line(line, pagename, etymnum, pronuns, pronuns_at_top):
           gender = "n"
         elif "/n:pl" in decl:
           gender = "p"
-        elif re.search(u"[ая]́?$", term[0]):
+        elif re.search("[ая]́?$", term[0]):
           gender = "f"
-        elif re.search(u"[еоиую]́?$", term[0]):
+        elif re.search("[еоиую]́?$", term[0]):
           gender = "n"
         else:
           gender = "m"
@@ -612,10 +612,10 @@ def process_line(line, pagename, etymnum, pronuns, pronuns_at_top):
 
   for t in term:
     if lang == "bg":
-      if pos == "adj" and not is_invar_gender and re.search(u"[аеоуяю]́?$", t):
-        error(u"Term %s is supposed to be an adjective but ends in vowel other than -и" % t)
+      if pos == "adj" and not is_invar_gender and re.search("[аеоуяю]́?$", t):
+        error("Term %s is supposed to be an adjective but ends in vowel other than -и" % t)
     elif lang == "uk":
-      if pos == "adj" and not is_invar_gender and not re.search(u"[оіїє]́?в$|[иії]́?[нй]$", t):
+      if pos == "adj" and not is_invar_gender and not re.search("[оіїє]́?в$|[иії]́?[нй]$", t):
         error("Term %s is supposed to be an adjective but doesn't end in adjectival ending" % t)
     if lang != "pt":
       if pos == "adj" and not is_invar_gender and re.search("r\|(m|f|adj|g)", hdecltext):
@@ -772,7 +772,7 @@ def process_line(line, pagename, etymnum, pronuns, pronuns_at_top):
     elif sartype == "ref":
       assert vals
       for val in do_split(",", vals):
-        if lang == "pt" and val in [u"Infopédia", "Priberam", "Michaelis", "Aulete", "Dicio"]:
+        if lang == "pt" and val in ["Infopédia", "Priberam", "Michaelis", "Aulete", "Dicio"]:
           reftext += "* {{R:pt:%s}}\n" % val
         else:
           reftext += "* {{%s}}\n" % val

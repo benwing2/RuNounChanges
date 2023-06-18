@@ -27,7 +27,7 @@ def process_page(page, index, template):
 
 parser = blib.create_argparser("Find templates without any parts")
 parser.add_argument("--templates",
-    help=u"""Comma-separated list of names of template to check for.""")
+    help="""Comma-separated list of names of template to check for.""")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

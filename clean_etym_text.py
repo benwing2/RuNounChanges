@@ -25,7 +25,7 @@ def process_text_on_page(index, pagetitle, text):
   if newtext != text:
     notes.append("replace 3+ newlines with 2")
     text = newtext
-  newtext = re.sub(u"[ \t\u00A0]+\n", "\n", text)
+  newtext = re.sub("[ \t\u00A0]+\n", "\n", text)
   if newtext != text:
     notes.append("remove extraneous spaces at end of line")
     text = newtext
@@ -41,7 +41,7 @@ def process_text_on_page(index, pagetitle, text):
       fromtext = m.group(1).rstrip()
       removed_br = m.group(2)
       notes.append("remove extraneous final %s" % removed_br)
-    if not re.search(r"([.?!:]|etc\.|</\s*[Rr]ef[a-z]*>|</\s*hiero>|-->|\[http[^\[\]]*\]|<[Rr]ef[^<>]*/>|<br\s*/?>|<br [^<>]*>|\{\{(cln|catlangname|C|c|top|topic|topics|catlangcode|rfv-etym|etystub|rfe|rfe-lite|rfref|root|dercat|defdate|etydate|C\.|hanja-[a-z]+|ja-rendaku2|rendaku2|ja-renj[oō]|renj[oō]|ja-from-kaminidan|ja-etym-renyokei|attn|attention|lena|Pigafetta|hu-langref|U:hu:postpositional-adjective|ru-cform-impfv-length|htetylz|ko-etym-[a-zA-Z-]*|tl-irregular-verb|sv-verb-form-pastpart|progreso|nonlemma|ref|pedia)(?:\|(?:[^{}]|\{\{[^{}]*\}\})*)?\}\}|\{\{ar-root[^{}]*\|notext=1[^{}]*\}\}|\[\[(?:Category|CAT):[^\[\]]*\]\]|\.[" + '"' + ur"’”'»„›)]+)$", fromtext):
+    if not re.search(r"([.?!:]|etc\.|</\s*[Rr]ef[a-z]*>|</\s*hiero>|-->|\[http[^\[\]]*\]|<[Rr]ef[^<>]*/>|<br\s*/?>|<br [^<>]*>|\{\{(cln|catlangname|C|c|top|topic|topics|catlangcode|rfv-etym|etystub|rfe|rfe-lite|rfref|root|dercat|defdate|etydate|C\.|hanja-[a-z]+|ja-rendaku2|rendaku2|ja-renj[oō]|renj[oō]|ja-from-kaminidan|ja-etym-renyokei|attn|attention|lena|Pigafetta|hu-langref|U:hu:postpositional-adjective|ru-cform-impfv-length|htetylz|ko-etym-[a-zA-Z-]*|tl-irregular-verb|sv-verb-form-pastpart|progreso|nonlemma|ref|pedia)(?:\|(?:[^{}]|\{\{[^{}]*\}\})*)?\}\}|\{\{ar-root[^{}]*\|notext=1[^{}]*\}\}|\[\[(?:Category|CAT):[^\[\]]*\]\]|\.[" + '"' + r"’”'»„›)]+)$", fromtext):
       mm = re.search(r"\{\{([^{}|]*)(?:\|(?:[^{}]|\{\{[^{}]*\}\})*)?\}\}$", fromtext)
       if mm:
         lastcat = mm.group(1)

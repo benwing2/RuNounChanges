@@ -11,8 +11,8 @@ from blib import getparam, rmparam, msg, site
 
 ru_normal_head_templates = ["ru-noun", "ru-proper noun", "ru-verb", "ru-adj",
   "ru-adv", "ru-phrase", "ru-noun form", "ru-diacritical mark"]
-ru_special_head_templates = ["ru-noun+", "ru-proper noun+", u"ru-noun-alt-ё",
-  u"ru-proper noun-alt-ё", u"ru-adj-alt-ё", u"ru-verb-alt-ё", u"ru-pos-alt-ё"]
+ru_special_head_templates = ["ru-noun+", "ru-proper noun+", "ru-noun-alt-ё",
+  "ru-proper noun-alt-ё", "ru-adj-alt-ё", "ru-verb-alt-ё", "ru-pos-alt-ё"]
 ru_head_templates = ru_normal_head_templates + ru_special_head_templates
 ru_heads_to_warn_about = ["abbreviation", "acronym", "initialism", "idiom",
     "phrase", "adverb", "adjective", "verb", "noun", "proper noun"]

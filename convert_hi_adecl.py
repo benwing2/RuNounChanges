@@ -6,9 +6,9 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-AA = u"\u093e"
-M = u"\u0901"
-IND_AA = u"आ"
+AA = "\u093e"
+M = "\u0901"
+IND_AA = "आ"
 
 def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
@@ -43,7 +43,7 @@ def process_text_on_page(index, pagetitle, text):
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Convert old Hindi adjective declension templates to new ones",
+parser = blib.create_argparser("Convert old Hindi adjective declension templates to new ones",
     include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

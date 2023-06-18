@@ -44,7 +44,7 @@ def process_page(index, page, save, verbose):
   if not found_inflection_of:
     pagemsg("WARNING: No 'inflection of': %s" % deflines)
 
-parser = blib.create_argparser(u"Find badly formatted Russian verb forms")
+parser = blib.create_argparser("Find badly formatted Russian verb forms")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

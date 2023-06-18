@@ -6,8 +6,8 @@ import unicodedata
 import blib
 from collections import OrderedDict
 
-AC = u"\u0301" # acute =  ́
-GR = u"\u0300" # grave =  ̀
+AC = "\u0301" # acute =  ́
+GR = "\u0300" # grave =  ̀
 
 # non-primary accents (i.e. excluding acute) that indicate pronunciation
 # (not counting diaeresis, which indicates a completely different vowel,
@@ -24,8 +24,8 @@ stress_accents = AC + GR
 # regex for any optional accent(s)
 opt_accent = "[" + accents + "]*"
 
-composed_grave_vowel = u"ѐЀѝЍ"
-vowel = u"аеиоуяюъѣАЕИОУЯЮЪѢ" + composed_grave_vowel
+composed_grave_vowel = "ѐЀѝЍ"
+vowel = "аеиоуяюъѣАЕИОУЯЮЪѢ" + composed_grave_vowel
 
 def decompose_acute_grave(text):
   # Decompose sequences of character + acute or grave, but compose all other
@@ -46,7 +46,7 @@ def recompose(text):
   return unicodedata.normalize("NFC", text)
 
 def assert_decomposed(text):
-  assert not re.search(u"[áéíóúýàèìòùỳäëïöüÿÁÉÍÓÚÝÀÈÌÒÙỲÄËÏÖÜŸ]", text)
+  assert not re.search("[áéíóúýàèìòùỳäëïöüÿÁÉÍÓÚÝÀÈÌÒÙỲÄËÏÖÜŸ]", text)
 
 def xlit_text(text, pagemsg, verbose=False):
   def expand_text(tempcall):
@@ -75,20 +75,20 @@ def needs_accents(text, split_dash=False):
   return False
 
 def is_unaccented(word):
-  return not re.search("[" + stress_accents + u"ѐЀѝЍ]", word)
+  return not re.search("[" + stress_accents + "ѐЀѝЍ]", word)
 
 def number_of_accents(text):
-  return len(re.sub("[^" + accents + u"ѐЀѝЍ]", "", text))
+  return len(re.sub("[^" + accents + "ѐЀѝЍ]", "", text))
 
 def is_beginning_stressed(word):
-  return re.search("^[^" + vowel + "]*[" + vowel + u"]́", word)
+  return re.search("^[^" + vowel + "]*[" + vowel + "]́", word)
 
 def is_nonsyllabic(word):
   return not re.search("[" + vowel + "]", word)
 
 # Includes non-syllabic stems such as зл-
 def is_monosyllabic(word):
-  word = re.sub(u"ъ$", "", word)
+  word = re.sub("ъ$", "", word)
   return not re.search("[" + vowel + "].*[" + vowel + "]", word)
 
 def ends_with_vowel(word):
@@ -96,10 +96,10 @@ def ends_with_vowel(word):
 
 grave_deaccenter = {
     GR:"", # grave accent
-    u"ѐ":u"е", # composed Cyrillic chars w/grave accent
-    u"Ѐ":u"Е",
-    u"ѝ":u"и",
-    u"Ѝ":u"И",
+    "ѐ":"е", # composed Cyrillic chars w/grave accent
+    "Ѐ":"Е",
+    "ѝ":"и",
+    "Ѝ":"И",
 }
 
 deaccenter = grave_deaccenter.copy()
@@ -107,7 +107,7 @@ deaccenter[AC] = "" # acute accent
 
 def remove_accents(word):
   # remove pronunciation accents
-  return re.sub("([" + pron_accents + u"ѐЀѝЍ])",
+  return re.sub("([" + pron_accents + "ѐЀѝЍ])",
     lambda m: deaccenter[m.group(1)], word)
 
 def remove_monosyllabic_accents(word):
@@ -120,7 +120,7 @@ def remove_monosyllabic_accents(word):
 
 def remove_non_primary_accents(word):
   # remove all pronunciation accents except acute
-  return re.sub("([" + non_primary_pron_accents + u"ѐЀѝЍ])",
+  return re.sub("([" + non_primary_pron_accents + "ѐЀѝЍ])",
     lambda m: deaccenter[m.group(1)], word)
 
 def find_defns(text):

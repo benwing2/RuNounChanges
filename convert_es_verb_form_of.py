@@ -182,7 +182,7 @@ def process_text_on_page(index, pagetitle, pagetext):
     tn = tname(t)
     if tn == "es-compound of":
       inf = getp("1") + getp("2")
-      if not re.search(u"(ar|er|ir|ír)(se)?$", inf):
+      if not re.search("(ar|er|ir|ír)(se)?$", inf):
         pagemsg("WARNING: Strange infinitive in {{es-compound of}}, skipping: %s" % origt)
         continue
       conjs, bad_reason = lookup_conjugation(inf, pagemsg, errandpagemsg)
@@ -226,7 +226,7 @@ def process_text_on_page(index, pagetitle, pagetext):
 
   return pagetext, notes
   
-parser = blib.create_argparser(u"Convert {{es-verb form of}} and {{es-compound of}} to new format", include_pagefile=True, include_stdin=True)
+parser = blib.create_argparser("Convert {{es-verb form of}} and {{es-compound of}} to new format", include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 

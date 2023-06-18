@@ -56,7 +56,7 @@ def check_if_lemma_and_ending_match_pagetitle(lemma, ending, pagetitle, allow_um
     m = re.search("^(.*?)(au|[aou])([^aeiouy]+)$", lemma)
     if m:
       # Umlautable adjectives: nass -> nässeren, gesund -> gesünderen, geraum -> geräumeren
-      umlauts = {"a": u"ä", "o": u"ö", "u": u"ü", "au": u"äu"}
+      umlauts = {"a": "ä", "o": "ö", "u": "ü", "au": "äu"}
       umlauted_lemma = m.group(1) + umlauts[m.group(2)] + m.group(3)
       if umlauted_lemma + ending == pagetitle:
         no_explicit = True

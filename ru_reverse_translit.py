@@ -8,40 +8,40 @@ import re, sys
 import rulib
 
 latin_to_russian_tab_1_char = {
-  u"A":u"А", u"B":u"Б", u"V":u"В", u"G":u"Г", u"D":u"Д",
-  u"Ž":u"Ж", u"Z":u"З", u"I":u"И", u"J":u"Й",
-  u"K":u"К", u"L":u"Л", u"M":u"М", u"N":u"Н", u"O":u"О",
-  u"P":u"П", u"R":u"Р", u"S":u"С", u"T":u"Т", u"U":u"У", u"F":u"Ф",
-  u"X":u"Х", u"C":u"Ц", u"Č":u"Ч", u"Š":u"Ш",
-  u"ʺ":u"Ъ", u"Y":u"Ы", u"ʹ":u"Ь", u"E":u"Э", u"Ɛ":u"Э",
-  u"a":u"а", u"b":u"б", u"v":u"в", u"g":u"г", u"d":u"д",
-  u"ž":u"ж", u"z":u"з", u"i":u"и", u"j":u"й",
-  u"k":u"к", u"l":u"л", u"m":u"м", u"n":u"н", u"o":u"о",
-  u"p":u"п", u"r":u"р", u"s":u"с", u"t":u"т", u"u":u"у", u"f":u"ф",
-  u"x":u"х", u"c":u"ц", u"č":u"ч", u"š":u"ш",
-  u"ʺ":u"ъ", u"y":u"ы", u"ʹ":u"ь", u"e":u"э", u"ɛ":u"э",
+  "A":"А", "B":"Б", "V":"В", "G":"Г", "D":"Д",
+  "Ž":"Ж", "Z":"З", "I":"И", "J":"Й",
+  "K":"К", "L":"Л", "M":"М", "N":"Н", "O":"О",
+  "P":"П", "R":"Р", "S":"С", "T":"Т", "U":"У", "F":"Ф",
+  "X":"Х", "C":"Ц", "Č":"Ч", "Š":"Ш",
+  "ʺ":"Ъ", "Y":"Ы", "ʹ":"Ь", "E":"Э", "Ɛ":"Э",
+  "a":"а", "b":"б", "v":"в", "g":"г", "d":"д",
+  "ž":"ж", "z":"з", "i":"и", "j":"й",
+  "k":"к", "l":"л", "m":"м", "n":"н", "o":"о",
+  "p":"п", "r":"р", "s":"с", "t":"т", "u":"у", "f":"ф",
+  "x":"х", "c":"ц", "č":"ч", "š":"ш",
+  "ʺ":"ъ", "y":"ы", "ʹ":"ь", "e":"э", "ɛ":"э",
   # Russian style quotes
-  u"“":u"«", u"”":u"»",
+  "“":"«", "”":"»",
   # archaic, pre-1918 letters
   # can't do the following
-  # u"I":u"І", u"i":u"і", u"F":u"Ѳ", u"f":u"ѳ", u"I":u"Ѵ", u"i":u"ѵ",
-  u"Ě":u"Ѣ", u"ě":u"ѣ",
+  # "I":"І", "i":"і", "F":"Ѳ", "f":"ѳ", "I":"Ѵ", "i":"ѵ",
+  "Ě":"Ѣ", "ě":"ѣ",
 }
 
 latin_to_russian_tab_2_char = {
-  u"Je":u"Е", u"Ju":u"Ю", u"Ja":u"Я",
-  # These are special-cased because of decomposition: u"Jó":u"Ё", u"jó":u"ё",
-  u"je":u"е", u"ju":u"ю", u"ja":u"я",
-  u"Jě":u"Ѣ", u"jě":u"ѣ",
-  u"šč":u"щ", u"Šč":u"Щ",
+  "Je":"Е", "Ju":"Ю", "Ja":"Я",
+  # These are special-cased because of decomposition: "Jó":"Ё", "jó":"ё",
+  "je":"е", "ju":"ю", "ja":"я",
+  "Jě":"Ѣ", "jě":"ѣ",
+  "šč":"щ", "Šč":"Щ",
 }
 
 # FIXME! Doesn't work with ɣ, which gets included in this character set
 non_consonants = "[" + rulib.vowel + rulib.tr_vowel + r"ЪЬъьʹʺ\W]"
 consonants = "[^" + rulib.vowel + rulib.tr_vowel + r"ЪЬъьʹʺ\W]"
 
-AC = u"\u0301"
-GR = u"\u0300"
+AC = "\u0301"
+GR = "\u0300"
 
 def rsub(text, fr, to):
   if type(to) is dict:
@@ -68,9 +68,9 @@ def reverse_translit(text, cyrillic=None):
   # Not necessary, hard sign should already be present:
   # Need to add hard sign between consonant and j
   # text = rsub(text, "(" + consonants + ")j", r"\1ʺj")
-  text = rsub(text, u"jo" + AC, u"ё")
-  text = rsub(text, u"Jo" + AC, u"Ё")
-  text = rsub(text, u"[JjŠš].", latin_to_russian_tab_2_char)
+  text = rsub(text, "jo" + AC, "ё")
+  text = rsub(text, "Jo" + AC, "Ё")
+  text = rsub(text, "[JjŠš].", latin_to_russian_tab_2_char)
   # Reverse-transliterating е and э:
   #   je -> Cyrillic е (handled by latin_to_russian_tab_2_char)
   #   ɛ -> Cyrillic э (handled by latin_to_russian_tab_1_char)
@@ -79,7 +79,7 @@ def reverse_translit(text, cyrillic=None):
   #   other e -> Cyrillic э (handled by latin_to_russian_tab_1_char)
   text = rsub(text, r"(^|\s)-e", r"\1-е")
   text = rsub(text, "(" + consonants + r"['\(\)]*)e", r"\1е")
-  text = rsub(text, u".", latin_to_russian_tab_1_char)
+  text = rsub(text, ".", latin_to_russian_tab_1_char)
   # If Cyrillic passed in, try to convert -во in output back to -го when
   # appropriate
   if cyrillic:
@@ -87,8 +87,8 @@ def reverse_translit(text, cyrillic=None):
     cyrwords = re.split(r"([\s,-]+)", cyrillic)
     if len(textwords) == len(cyrwords):
       for i in range(len(textwords)):
-        if re.search(u"го́?$", cyrwords[i]) and re.search(u"во́?$", textwords[i]):
-          textwords[i] = re.sub(u"в(о́?)$", r"г\1", textwords[i])
+        if re.search("го́?$", cyrwords[i]) and re.search("во́?$", textwords[i]):
+          textwords[i] = re.sub("в(о́?)$", r"г\1", textwords[i])
       return "".join(textwords)
 
   return text
@@ -103,7 +103,7 @@ def test(latin, russian):
   try:
     result = reverse_translit(latin)
   except RuntimeError as e:
-    print(u"%s" % e)
+    print("%s" % e)
     result = False
   if result == False or result != russian:
     print("reverse_translit(%s) = %s, FAILED (expected %s)" %
@@ -119,41 +119,41 @@ def run_tests():
   num_succeeded = 0
   num_failed = 0
 
-  test("zontik", u"зонтик")
-  test(u"zóntik", u"зо́нтик")
+  test("zontik", "зонтик")
+  test("zóntik", "зо́нтик")
 
   # Test with Cyrillic e
-  test(u"jebepʹje jebe", u"ебепье ебе")
-  test("jebe jebe", u"ебе ебе")
-  test("Jebe Jebe", u"Ебе Ебе")
-  test("ebe ebe", u"эбе эбе")
-  test("Ebe Ebe", u"Эбе Эбе")
-  test(u"ébe ébe", u"э́бе э́бе")
-  test(u"Ébe Ébe", u"Э́бе Э́бе")
-  test(u"jéje jéje", u"е́е е́е")
-  test(u"je" + AC + "je je" + AC + "je", u"е́е е́е")
-  test(u"-ec", u"-ец")
-  test(u"-éc", u"-е́ц")
-  test(u"foo -ec", u"фоо -ец")
-  test(u"foo -éc", u"фоо -е́ц")
-  test(u"b'''ez", u"б'''ез")
-  test(u"amerikán(ec)", u"америка́н(ец)")
+  test("jebepʹje jebe", "ебепье ебе")
+  test("jebe jebe", "ебе ебе")
+  test("Jebe Jebe", "Ебе Ебе")
+  test("ebe ebe", "эбе эбе")
+  test("Ebe Ebe", "Эбе Эбе")
+  test("ébe ébe", "э́бе э́бе")
+  test("Ébe Ébe", "Э́бе Э́бе")
+  test("jéje jéje", "е́е е́е")
+  test("je" + AC + "je je" + AC + "je", "е́е е́е")
+  test("-ec", "-ец")
+  test("-éc", "-е́ц")
+  test("foo -ec", "фоо -ец")
+  test("foo -éc", "фоо -е́ц")
+  test("b'''ez", "б'''ез")
+  test("amerikán(ec)", "америка́н(ец)")
 
   # Test with jo
-  test(u"ketjó", u"кетё")
-  test(u"kétjo", u"ке́тйо")
+  test("ketjó", "кетё")
+  test("kétjo", "ке́тйо")
 
-  test(u"Igor", u"Игор")
-  test(u"rajónʺ", u"раёнъ")
-  test(u"bljad", u"бляд")
-  test(u"sobólʹ", u"собо́ль")
-  test(u"časóvnja", u"часо́вня")
-  test(u"ekzistencializm", u"экзистенциализм")
-  test(u"ješčó", u"ещо́")
-  test(u"prýšik", u"пры́шик")
-  test(u"óstrov Rejunʹjón", u"о́стров Реюньён")
-  test(u"staromodnyj", u"старомодный")
-  test(u"brunɛ́jec", u"брунэ́ец")
+  test("Igor", "Игор")
+  test("rajónʺ", "раёнъ")
+  test("bljad", "бляд")
+  test("sobólʹ", "собо́ль")
+  test("časóvnja", "часо́вня")
+  test("ekzistencializm", "экзистенциализм")
+  test("ješčó", "ещо́")
+  test("prýšik", "пры́шик")
+  test("óstrov Rejunʹjón", "о́стров Реюньён")
+  test("staromodnyj", "старомодный")
+  test("brunɛ́jec", "брунэ́ец")
 
   # Final results
   print("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))

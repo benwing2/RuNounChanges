@@ -46,9 +46,9 @@ def process_page(index, page, phon, softphon, variant, verbose, lemmas):
   elif variant == "=":
     expected = [phon, softphon]
     altexpected = [softphon, phon]
-  elif variant == u"+е":
+  elif variant == "+е":
     expected = [softphon, phon]
-  elif variant == u"+э":
+  elif variant == "+э":
     expected = [phon, softphon]
   else:
     pagemsg("WARNING: Bad variant %s, skipping" % variant)
@@ -68,8 +68,8 @@ def process_page(index, page, phon, softphon, variant, verbose, lemmas):
       pagemsg("WARNING: Mismatched pronunciation, found %s, expected %s"
           % (",".join(prons), ",".join(expected)))
     
-parser = blib.create_argparser(u"Check for words in enwikt that should have hard е")
-parser.add_argument('--direcfile', help=u"File containing words from ruwikt page Приложение:Русские_слова_с_твёрдым_парным_согласным_перед_Е specifying words that should have hard е")
+parser = blib.create_argparser("Check for words in enwikt that should have hard е")
+parser.add_argument('--direcfile', help="File containing words from ruwikt page Приложение:Русские_слова_с_твёрдым_парным_согласным_перед_Е specifying words that should have hard е")
 parser.add_argument('--lemmafile', help="File containing lemmas, needed to check for non-lemmas that look like lemmas")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
@@ -89,9 +89,9 @@ for i, line in blib.iter_items_from_file(args.direcfile, start, end):
       msg("Page %s ???: WARNING: Can't parse line: %s" % (i, line))
     else:
       phon = m.group(2)
-      phon = re.sub(r"\{\{red\|е\}\}", u"э", phon)
-      phon = re.sub(r"\{\{red\|е́\}\}", u"э́", phon)
-      phon = re.sub(r"\{\{red\|ѐ\}\}", u"э̀", phon)
+      phon = re.sub(r"\{\{red\|е\}\}", "э", phon)
+      phon = re.sub(r"\{\{red\|е́\}\}", "э́", phon)
+      phon = re.sub(r"\{\{red\|ѐ\}\}", "э̀", phon)
       softphon = m.group(2)
       softphon = re.sub(r"\{\{red\|(.*?)\}\}", r"\1", softphon)
       process_page(i, pywikibot.Page(site, m.group(1)), phon, softphon,

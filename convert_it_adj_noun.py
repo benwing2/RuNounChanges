@@ -39,13 +39,13 @@ prepositions = {
 }
 
 no_split_apostrophe_words = {
-  u"c'è",
+  "c'è",
   "c'era",
   "c'erano",
 }
 
 
-TEMPCHAR = u"\uFFF1"
+TEMPCHAR = "\uFFF1"
 
 #old_adj_template = "it-adj-old"
 old_adj_template = "it-adj"

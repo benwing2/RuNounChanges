@@ -6,19 +6,19 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-vowels = u"aeiouyäöüAEIOUYÄÖÜ"
-capletters = u"A-ZÄÖÜ"
+vowels = "aeiouyäöüAEIOUYÄÖÜ"
+capletters = "A-ZÄÖÜ"
 CAP = "[" + capletters + "]"
 V = "[" + vowels + "]"
 NV = "[^" + vowels + "]"
 
 umlaut = {
-  "a": u"ä",
-  "A": u"Ä",
-  "o": u"ö",
-  "O": u"Ö",
-  "u": u"ü",
-  "U": u"Ü",
+  "a": "ä",
+  "A": "Ä",
+  "o": "ö",
+  "O": "Ö",
+  "u": "ü",
+  "U": "Ü",
 }
 
 decl_templates = {"de-decl-noun-m", "de-decl-noun-f", "de-decl-noun-n", "de-decl-noun-pl"}
@@ -101,7 +101,7 @@ def get_default_gen(lemma, gender, is_weak=False):
   elif re.search(NV + "us$", lemma):
     # [[Euphemismus]], [[Exitus]], [[Exodus]], etc.
     return ""
-  elif re.search(u"[sßxz]$", lemma):
+  elif re.search("[sßxz]$", lemma):
     return "es"
   else:
     return "s"
@@ -345,12 +345,12 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
       return
     ss = list(set(sses)) == [True]
   if ss:
-    if not pagetitle.endswith(u"ß"):
-      pagemsg(u"WARNING: Bad ss=1 setting for pagetitle not ending in -ß: %s" % declts_to_unicode(declts))
+    if not pagetitle.endswith("ß"):
+      pagemsg("WARNING: Bad ss=1 setting for pagetitle not ending in -ß: %s" % declts_to_unicode(declts))
       return
     # If ss specified, pretend pagetitle ends in -ss, as it does in post-1996 spelling. Later on we add .ss to the
     # headword and declension specs.
-    pagetitle = re.sub(u"ß$", "ss", pagetitle)
+    pagetitle = re.sub("ß$", "ss", pagetitle)
 
   adjectival = any(tname(t).startswith("de-decl-adj+noun") for t in declts)
   genders = blib.fetch_param_chain(headt, "1", "g")
@@ -485,7 +485,7 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
           adj_lemma = adj.lower()
         else:
           adj_lemma = adj
-        if adj_lemma in ["erst", "zweit", "dritt", "viert", u"fünft", "sechst", "siebent", "acht", "neunt", "zehnt"]:
+        if adj_lemma in ["erst", "zweit", "dritt", "viert", "fünft", "sechst", "siebent", "acht", "neunt", "zehnt"]:
           adj_lemma += "e"
         adj_form = adj + adj_ending
         if adj_form.startswith(adj_lemma):

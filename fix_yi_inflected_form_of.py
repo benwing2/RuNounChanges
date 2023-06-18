@@ -7,11 +7,11 @@ import blib
 from blib import getparam, rmparam, msg, site, tname
 
 reversed_finals = {
-  u"ך": u"כ",
-  u"ם": u"מ",
-  u"ן": u"נ",
-  u"ף": u"פֿ",
-  u"ץ": u"צ",
+  "ך": "כ",
+  "ם": "מ",
+  "ן": "נ",
+  "ף": "פֿ",
+  "ץ": "צ",
 }
 
 positive_ending_tags = {
@@ -72,9 +72,9 @@ def process_text_on_page(pagetitle, index, text):
         continue
 
       lemmas_to_try = [make_non_final(lemma)]
-      if lemma.endswith(u"ן"):
-        lemmas_to_try.append(lemma[:-1] + u"ענ")
-      if lemma.endswith(u"ע"):
+      if lemma.endswith("ן"):
+        lemmas_to_try.append(lemma[:-1] + "ענ")
+      if lemma.endswith("ע"):
         # lemma with a schwa
         lemmas_to_try.append(lemma[:-1])
 

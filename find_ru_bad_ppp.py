@@ -56,20 +56,20 @@ import rulib
 
 # FIXME, not used
 def iotate(word):
-  if re.search(u"[бвфпм]$", word):
-    return [word + u"л"]
-  if re.search(u"[зг]$", word):
-    return [re.sub(u"[зг]$", u"ж", word)]
-  if re.search(u"[сш]$", word):
-    return [re.sub(u"[сш]$", u"ш", word)]
-  if re.search(u"с[тк]$", word):
-    return [re.sub(u"с[тк]$", u"щ", word)]
-  if re.search(u"д$", word):
-    return [re.sub(u"д$", u"ж", word), re.sub(u"д$", u"жд", word)]
-  if re.search(u"т$", word):
-    return [re.sub(u"т$", u"ч", word), re.sub(u"т$", u"щ", word)]
-  if re.search(u"к$", word):
-    return [re.sub(u"к$", u"ч", word)]
+  if re.search("[бвфпм]$", word):
+    return [word + "л"]
+  if re.search("[зг]$", word):
+    return [re.sub("[зг]$", "ж", word)]
+  if re.search("[сш]$", word):
+    return [re.sub("[сш]$", "ш", word)]
+  if re.search("с[тк]$", word):
+    return [re.sub("с[тк]$", "щ", word)]
+  if re.search("д$", word):
+    return [re.sub("д$", "ж", word), re.sub("д$", "жд", word)]
+  if re.search("т$", word):
+    return [re.sub("т$", "ч", word), re.sub("т$", "щ", word)]
+  if re.search("к$", word):
+    return [re.sub("к$", "ч", word)]
   return [word]
 
 # Form the past passive participle from the verb type, infinitive and
@@ -83,28 +83,28 @@ def form_ppp(conjtype, pagetitle, args):
     if not re.search("^[0-9]+", conjtype):
       return None
     conjtype = int(re.sub("^([0-9]+).*", r"\1", conjtype))
-    if ((pagetitle.endswith(u"ать") or pagetitle.endswith(u"ять")) and
+    if ((pagetitle.endswith("ать") or pagetitle.endswith("ять")) and
         conjtype != 14):
-      return re.sub(u"ть$", u"нный", pagetitle)
-    if pagetitle.endswith(u"еть") and conjtype == 1:
-      return re.sub(u"ть$", u"нный", pagetitle)
+      return re.sub("ть$", "нный", pagetitle)
+    if pagetitle.endswith("еть") and conjtype == 1:
+      return re.sub("ть$", "нный", pagetitle)
     if conjtype in [4, 5]:
       sg1 = args["pres_1sg"] if "pres_1sg" in args else args["futr_1sg"]
       if not sg1 or sg1 == "-":
         return None
       sg1 = first_entry(sg1)
-      assert re.search(u"[ую]́?$", sg1)
-      return re.sub(u"[ую]́?$", u"енный", sg1)
+      assert re.search("[ую]́?$", sg1)
+      return re.sub("[ую]́?$", "енный", sg1)
     if conjtype in [7, 8]:
       sg3 = args["pres_3sg"] if "pres_3sg" in args else args["futr_3sg"]
       sg3 = first_entry(sg3)
-      assert re.search(u"[её]́?т$", sg3)
-      return re.sub(u"[её]́?т$", u"енный", sg3)
+      assert re.search("[её]́?т$", sg3)
+      return re.sub("[её]́?т$", "енный", sg3)
     if conjtype in [3, 10]:
-      return re.sub(u"ть$", u"тый", pagetitle)
+      return re.sub("ть$", "тый", pagetitle)
     assert conjtype in [9, 11, 12, 14, 15, 16]
     pastm = first_entry(args["past_m"])
-    return re.sub(u"л?$", u"тый", pastm)
+    return re.sub("л?$", "тый", pastm)
 
   retval = form_ppp_1(conjtype, pagetitle, args)
   if retval:
@@ -160,13 +160,13 @@ def process_page(page, index, do_fix):
                 % form)
             warned = True
             fix_form = True
-          if form.endswith(u"нный"):
-            if pagetitle.endswith(u"ать"):
-              good_ending = u"анный"
-            elif pagetitle.endswith(u"ять"):
-              good_ending = u"янный"
+          if form.endswith("нный"):
+            if pagetitle.endswith("ать"):
+              good_ending = "анный"
+            elif pagetitle.endswith("ять"):
+              good_ending = "янный"
             else:
-              good_ending = u"енный"
+              good_ending = "енный"
             if not unstressed_form.endswith(good_ending):
               pagemsg("WARNING: Past passive participle doesn't end right, probably for wrong aspect: %s"
                   % form)
@@ -203,7 +203,7 @@ def process_page(page, index, do_fix):
 
   return str(parsed), notes
 
-parser = blib.create_argparser(u"Find Russian terms with bad past passive participles",
+parser = blib.create_argparser("Find Russian terms with bad past passive participles",
   include_pagefile=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

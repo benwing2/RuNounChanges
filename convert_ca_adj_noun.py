@@ -29,10 +29,10 @@ prepositions = [
   "sobre ",
 ]
 
-TEMPCHAR = u"\uFFF1"
+TEMPCHAR = "\uFFF1"
 
 unaccented_vowel = "aeiou"
-accented_vowel = u"àèéíòóú"
+accented_vowel = "àèéíòóú"
 vowel = unaccented_vowel + accented_vowel
 
 V = "[" + vowel + "]"
@@ -48,11 +48,11 @@ deny_list = {
 
 # Used when forming the feminine of adjectives in -i. Those with the stressed vowel 'e' or 'o' always seem to have è, ò.
 accent_vowel = {
-  "a": u"à",
-  "e": u"è",
-  "i": u"í",
-  "o": u"ò",
-  "u": u"ù",
+  "a": "à",
+  "e": "è",
+  "i": "í",
+  "o": "ò",
+  "u": "ù",
 }
 
 # Remove accents from any of the vowels in a word.
@@ -61,25 +61,25 @@ accent_vowel = {
 def remove_accents(word):
   def repl(m):
     preceding, vowel = m.groups()
-    if vowel == u"í":
+    if vowel == "í":
       if re.search("^[gq]u$", preceding):
         return preceding + "i"
       elif re.search("[aeiou]$", preceding):
-        return preceding + u"ï"
+        return preceding + "ï"
 
     # Decompose the accented vowel to an unaccented vowel (a, e, i, o, u)
     # plus an acute or grave; return the unaccented vowel.
     return preceding + unicodedata.normalize("NFD", vowel)[0]
 
-  return re.sub(u"(.?.?)([àèéíòóú])", repl, word)
+  return re.sub("(.?.?)([àèéíòóú])", repl, word)
 
 # Applies alternation of the final consonant of a stem, converting the form
 # used before a back vowel into the form used before a front vowel.
 def back_to_front(stem):
-  stem = re.sub("qu$", u"qü", stem)
+  stem = re.sub("qu$", "qü", stem)
   stem = re.sub("c$", "qu", stem)
-  stem = re.sub(u"ç$", "c", stem)
-  stem = re.sub("gu$", u"gü", stem)
+  stem = re.sub("ç$", "c", stem)
+  stem = re.sub("gu$", "gü", stem)
   stem = re.sub("g$", "gu", stem)
   stem = re.sub("j$", "g", stem)
   return stem
@@ -87,12 +87,12 @@ def back_to_front(stem):
 # Applies alternation of the final consonant of a stem, converting the form
 # used before a front vowel into the form used before a back vowel.
 def front_to_back(stem):
-  stem = re.sub("c$", u"ç", stem)
+  stem = re.sub("c$", "ç", stem)
   stem = re.sub("qu$", "c", stem)
-  stem = re.sub(u"qü$", "qu", stem)
+  stem = re.sub("qü$", "qu", stem)
   stem = re.sub("g$", "j", stem)
   stem = re.sub("gu$", "g", stem)
-  stem = re.sub(u"gü$", "gu", stem)
+  stem = re.sub("gü$", "gu", stem)
   return stem
 
 def make_feminine(base, special=None):
@@ -113,7 +113,7 @@ def make_feminine(base, special=None):
     # -ent in a multisyllabic word (not [[lent]]; some other words in -lent have feminine in -a but not all)
     re.search(V + "[^ ]*[ae]nt$", base) or
     # Words in -aç, -iç, -oç (not [[descalç]], [[dolç]], [[agredolç]]; [[balbuç]] has -a and needs manual handling)
-    re.search(V + u"ç$", base) or
+    re.search(V + "ç$", base) or
     # Words in -il including when non-stressed ([[hàbil]], [[dèbil]], [[mòbil]], [[fàcil]], [[símil]], [[tàmil]],
     # etc.); but not words in -òfil, -èfil, etc.
     re.search("[^f]il$", base)):
@@ -153,7 +153,7 @@ def make_feminine(base, special=None):
   # multisyllabic -at/-it/-ut (also -ït/-üt) with stress on the final vowel -> -ada/-ida/-uda
   mod_base = re.sub("([gq])u(" + UV + ")", r"\1w\2", base) # hack so we don't treat the u in qu/gu as a vowel
   if (re.search(V + "[^ ]*[aiu]t$", mod_base) and not re.search(AV + "[^ ]*[aiu]t$", mod_base) and
-      not re.search("[aeo][iu]t$", mod_base)) or re.search(u"[ïü]t$", mod_base):
+      not re.search("[aeo][iu]t$", mod_base)) or re.search("[ïü]t$", mod_base):
     return base[:-1] + "da"
 
   return base + "a"
@@ -177,7 +177,7 @@ def make_plural(base, gender, special=None):
     if re.search(AV + "s$", base):
       return [remove_accents(base) + "os"]
 
-    if re.search(u"[sçxz]$", base):
+    if re.search("[sçxz]$", base):
       return [base + "os"]
 
     if base.endswith("sc") or re.search("[sx]t$", base):
@@ -467,7 +467,7 @@ def process_text_on_page(index, pagetitle, text):
           continue
 
         deffpl = None
-        if fem_like_lemma and " " not in lemma and re.search(u"[çx]$", lemma):
+        if fem_like_lemma and " " not in lemma and re.search("[çx]$", lemma):
           # Adjectives ending in -ç or -x behave as mf-type in the singular, but
           # regular type in the plural.
           deffpl = make_plural(lemma + "a", "f")

@@ -24,7 +24,7 @@ def process_page(index, page, direc, delete_bad, verbose):
   text = str(page.text)
   parsed = blib.parse(page)
   notes = []
-  direc = direc.replace("3oa", u"3°a")
+  direc = direc.replace("3oa", "3°a")
   for t in parsed.filter_templates():
     origt = str(t)
     if str(t.name) in ["ru-conj"]:

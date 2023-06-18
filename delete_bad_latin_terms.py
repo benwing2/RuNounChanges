@@ -93,7 +93,7 @@ def delete_term(index, term, expected_head_templates, save, verbose):
 
   return text, notes
 
-parser = blib.create_argparser(u"Delete bad Latin terms", include_pagefile=True)
+parser = blib.create_argparser("Delete bad Latin terms", include_pagefile=True)
 parser.add_argument('--headtemp', required=True, help="Name(s) of expected headword template(s).")
 parser.add_argument('--output-pages-to-delete', help="File to write pages to delete.")
 args = parser.parse_args()

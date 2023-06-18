@@ -6,7 +6,7 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-parser = blib.create_argparser(u"List pages, lemmas and/or non-lemmas", include_pagefile=True)
+parser = blib.create_argparser("List pages, lemmas and/or non-lemmas", include_pagefile=True)
 parser.add_argument('--namespace', help="List all pages in namespace")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

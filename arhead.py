@@ -20,5 +20,5 @@ def fix(page, index, text):
  
 startFrom, upTo = blib.parse_args()
  
-for index, page in blib.references(u"Template:tracking/ar-head/head", startFrom, upTo):
+for index, page in blib.references("Template:tracking/ar-head/head", startFrom, upTo):
   blib.do_edit(page, index, fix)

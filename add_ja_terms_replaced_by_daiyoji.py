@@ -15,7 +15,7 @@ def process_text_on_page(index, pagetitle, text):
 
   pagemsg("Processing")
 
-  m = re.search(u"^Category:(Japanese|Okinawan) terms with (.*) replaced by daiyōji (.*)$", pagetitle)
+  m = re.search("^Category:(Japanese|Okinawan) terms with (.*) replaced by daiyōji (.*)$", pagetitle)
   if not m:
     pagemsg("Skipped")
     return
@@ -53,9 +53,9 @@ def process_text_on_page(index, pagetitle, text):
       return False
     chars_in_contents_title = [x for x in contents_title]
     for i, ch in enumerate(chars_in_contents_title):
-      if ch == u"々": # kanji repeat char
+      if ch == "々": # kanji repeat char
         if i == 0:
-          pagemsg_with_contents(u"Repeat char 々 found at beginning of contents title")
+          pagemsg_with_contents("Repeat char 々 found at beginning of contents title")
           must_continue = True
           break
         else:
@@ -125,7 +125,7 @@ def process_text_on_page(index, pagetitle, text):
     pagemsg("WARNING: Can't find reading %s by looking through category contents" % reading)
 
 
-parser = blib.create_argparser(u"Create 'Japanese terms with FOO replaced by daiyōji BAR' categories",
+parser = blib.create_argparser("Create 'Japanese terms with FOO replaced by daiyōji BAR' categories",
   include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)

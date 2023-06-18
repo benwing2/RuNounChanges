@@ -61,7 +61,7 @@ def process_text_on_page(index, pagetitle, text):
             if not pron_phonemic:
               add(pron)
               continue
-            single_vowel_spec = re.sub(u"[^àèéìòúù]", "", pron)
+            single_vowel_spec = re.sub("[^àèéìòúù]", "", pron)
             if len(single_vowel_spec) == 1:
               single_vowel_pron_phonemic = getpron(single_vowel_spec)
               if single_vowel_pron_phonemic == pron_phonemic:
