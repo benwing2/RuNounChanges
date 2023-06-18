@@ -762,7 +762,7 @@ def split_arg(arg, canonicalize=None):
     return pagename
   return [process(x) for x in re.split(r",(?=[^ ])", arg)]
 
-def yield_items_from_file(canonicalize=None, include_original_lineno=False, preserve_blank_lines=False):
+def yield_items_from_file(filename, canonicalize=None, include_original_lineno=False, preserve_blank_lines=False):
   lineno = 0
   for line in open(filename, "r", encoding="utf-8"):
     lineno += 1
