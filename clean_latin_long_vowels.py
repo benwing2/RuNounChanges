@@ -363,7 +363,7 @@
 
 # Clean up use of macrons in Latin lemmas.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname

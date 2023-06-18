@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import re, sys, codecs, argparse, unicodedata
+import re, sys, argparse, unicodedata
 from collections import defaultdict
 
 from blib import msg
@@ -23,7 +23,7 @@ def remove_stress(term):
 
 def lineout(outfd, txt):
   if outfd:
-    outfd.write(txt.encode("utf-8") + "\n")
+    outfd.write(txt + "\n")
   else:
     msg(txt)
 

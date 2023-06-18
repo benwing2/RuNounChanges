@@ -137,7 +137,7 @@ def trymatch(forms, args, pagemsg, multiword=False):
   return ok
 
 def synthesize_singular(nompl, prepl, gender, pagemsg):
-  m = re.search(ur"^(.*)([ыи])(́?)е$", nompl)
+  m = re.search(r"^(.*)([ыи])(́?)е$", nompl)
   if m:
     stem = m.group(1)
     ty = (re.search(u"[кгx]$", stem) and "velar" or
@@ -163,12 +163,12 @@ def synthesize_singular(nompl, prepl, gender, pagemsg):
           stem + u"ая" if gender == "f" else stem + u"ое")
     return [sg]
 
-  m = re.search(ur"^(.*)[аяыи]́?$", nompl)
+  m = re.search(r"^(.*)[аяыи]́?$", nompl)
   if not m:
     pagemsg("WARNING: Strange nom plural %s" % nompl)
     return []
   stem = try_to_stress(m.group(1))
-  soft = re.search(ur"яхъ?$", prepl)
+  soft = re.search(r"яхъ?$", prepl)
   if soft and gender == "f":
     return [add_soft_sign(stem), stem + u"я"]
   return [stem + u"а" if gender == "f" else
@@ -241,13 +241,13 @@ def infer_decl(t, noungender, linked_headwords, pagemsg):
       form = blib.remove_links(form)
       if case == "pre_sg" or case == "pre_pl":
         # eliminate leading preposition
-        form = re.sub(ur"^о(б|бо)?\s+", "", form)
+        form = re.sub(r"^о(б|бо)?\s+", "", form)
       # eliminate <br />, typically separating alternants
       form = re.sub(r"\s*<br\s*/>\s*", "", form)
       # eliminate spaces around commas
       form = re.sub(r"\s*,\s*", ",", form)
       # eliminate stress mark on ё
-      form = re.sub(ur"ё́", u"ё", form)
+      form = re.sub(r"ё́", u"ё", form)
       if "," in form:
         pagemsg("WARNING: Comma in form, may not handle correctly: %s=%s" %
             (case, form))
@@ -492,7 +492,7 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, multiword, 
     plstem = None
 
     ########## Check for feminine or neuter
-    m = re.search(ur"^(.*)([аяеоё])(́?)$", nomsg)
+    m = re.search(r"^(.*)([аяеоё])(́?)$", nomsg)
     if m:
       pagemsg("Nom sg %s refers to feminine 1st decl or neuter 2nd decl" % nomsg)
       # We use to call try_to_stress() here on the stem but that fails if
@@ -505,9 +505,9 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, multiword, 
         stress = "stem"
 
       for numrestrict, regex, formcase in [
-          ("sg", ur"^(.*)[аяыи]́?$", "nom_pl"), # accent patterns d, f
-          ("pl", ur"^(.*)[уюоеё]́?$", "acc_sg"), # accent patterns d', f'
-          ("sg", ur"^(.*)([ая]́?х)$", "pre_pl"), # necessary???
+          ("sg", r"^(.*)[аяыи]́?$", "nom_pl"), # accent patterns d, f
+          ("pl", r"^(.*)[уюоеё]́?$", "acc_sg"), # accent patterns d', f'
+          ("sg", r"^(.*)([ая]́?х)$", "pre_pl"), # necessary???
         ]:
         if numonly != numrestrict:
           # Try to find a stressed version of the stem using the form case
@@ -599,13 +599,13 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, multiword, 
 
     ########## Check for masculine
     else:
-      m = re.search(ur"^(.*?)([йь]?)$", nomsg)
+      m = re.search(r"^(.*?)([йь]?)$", nomsg)
       if m:
         nomsgstem = m.group(1)
         ending = m.group(2)
         stem = nomsgstem
         if numonly != "pl":
-          m = re.search(ur"^(.*)([аяи])(́?)$", gensg)
+          m = re.search(r"^(.*)([аяи])(́?)$", gensg)
           if not m:
             pagemsg("WARNING: Don't recognize gen sg ending in form %s" % gensg)
             if ending == u"ь":
@@ -616,7 +616,7 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, multiword, 
             stem = m.group(1)
             # Try to find a stressed version of the stem
             if is_unstressed(stem):
-              mm = re.search(ur"^(.*)[аяыи]́?$", nompl)
+              mm = re.search(r"^(.*)[аяыи]́?$", nompl)
               if not mm:
                 pagemsg("WARNING: Don't recognize nom pl ending in form %s" % nompl)
               else:
@@ -684,7 +684,7 @@ def infer_word(forms, noungender, linked_headwords, number, numonly, multiword, 
 
     # Find stress pattern possibilities
     if numonly != "sg":
-      m = re.search(ur"[аяыи](́?)$", nompl)
+      m = re.search(r"[аяыи](́?)$", nompl)
       if m:
         plstress = m.group(1) and "ending" or "stem"
     if numonly == "sg":

@@ -4,7 +4,7 @@
 import blib
 from blib import getparam, rmparam, msg, errmsg, errandmsg, site
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 import rulib
 
 def process_page(index, page, contents, verbose, comment):
@@ -144,7 +144,7 @@ if __name__ == "__main__":
     pages = set()
 
   if args.direcfile:
-    lines = codecs.open(args.direcfile, "r", encoding="utf-8")
+    lines = open(args.direcfile, "r", encoding="utf-8")
 
     index_pagename_text_comment = blib.yield_text_from_find_regex(lines, args.verbose)
     for _, (index, pagename, text, comment) in blib.iter_items(index_pagename_text_comment,

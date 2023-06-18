@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import re, codecs, unicodedata
+import re, unicodedata
 
 import blib, pywikibot
 from blib import msg, getparam, addparam
@@ -416,7 +416,7 @@ if __name__ == "__main__":
   startFrom, upTo = blib.parse_start_end(params.start, params.end)
   pages_to_do = []
   if params.page_file:
-    for line in codecs.open(params.page_file, "r", encoding="utf-8"):
+    for line in open(params.page_file, "r", encoding="utf-8"):
       line = line.strip()
       if params.cattype == "pages":
         pages_to_do.append(line)

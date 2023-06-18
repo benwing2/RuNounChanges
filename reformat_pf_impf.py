@@ -3,7 +3,7 @@
 
 # Reformat corresponding (im)perfective specs using {{pf}} or {{impf}}
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, errmsg, site
@@ -66,11 +66,11 @@ def process_page(page, index, parsed):
           pagemsg("WARNING: Unable to parse verb spec %s, treating as raw" % verb)
           newverbs.append(verb + qual)
         return "\n#: {{%s|ru|%s}}\n" % (pfimpf, "|".join(newverbs))
-      sections[j] = re.sub(ur", *\{\{g\|(pf|impf)\}\} *[-–—:] * (.*)\n",
+      sections[j] = re.sub(r", *\{\{g\|(pf|impf)\}\} *[-–—:] * (.*)\n",
           generate_new_format_corverb, sections[j])
       # Repeatedly move {{pf}}/{{impf}} after usexes
       while True:
-        replacement = re.sub(ur"\n(#: \{\{(?:pf|impf)\|.*?\}\}.*\n)(#\*?: \{\{ux.*?\}\}.*\n)",
+        replacement = re.sub(r"\n(#: \{\{(?:pf|impf)\|.*?\}\}.*\n)(#\*?: \{\{ux.*?\}\}.*\n)",
             r"\n\2\1", sections[j])
         if replacement == sections[j]:
           break

@@ -22,7 +22,7 @@
 # * Replace uses of {{temp|reference-us-patent}} (a redirect) with {{temp|quote-us-patent}}.
 # * Replace uses of {{temp|reference-video}} (a redirect) with {{temp|quote-video}}.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 import mwparserfromhell as mw
 
 import blib

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse, time
+import pywikibot, re, sys, argparse, time
 import traceback
 import unicodedata
 
@@ -528,9 +528,9 @@ else:
 for current, index in blib.iter_pages(pages, startFrom, upTo,
     key=lambda x:str(x)):
   if params.offline:
-    print "========== Text for #%s: ==========" % current
-    print ""
-    print generate_page(current).encode('utf-8')
-    print ""
+    print("========== Text for #%s: ==========" % current)
+    print("")
+    print(generate_page(current))
+    print("")
   else:
     process_page(index, current, params.save, params.verbose, params)

@@ -13,7 +13,7 @@
 #
 # If 'RQ:Browne Errors' occurs without raw passage text following, we just replace with 'RQ:Browne Pseudodoxia Epidemica'.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site, tname, pname

@@ -33,11 +33,6 @@ GR = u"\u0300"
 ACGR = "[" + AC + GR + "]"
 ACGROPT = "[" + AC + GR + "]?"
 
-def uniprint(x):
-  print x.encode('utf-8')
-def uniout(x):
-  print x.encode('utf-8'),
-
 def rsub(text, fr, to):
     if type(to) is dict:
         def rsub_replace(m):
@@ -85,12 +80,12 @@ def tr(text, lang=None, sc=None, msgfun=msg):
     text = tr_canonicalize_russian(text)
 
     # Remove word-final hard sign
-    text = rsub(text, u"[Ъъ]($|[- \]])", ur"\1")
+    text = rsub(text, u"[Ъъ]($|[- \]])", r"\1")
 
     # ё after a "hushing" consonant becomes ó (ё is mostly stressed)
-    text = rsub(text, u"([жшчщЖШЧЩ])ё", ur"\1ó")
+    text = rsub(text, u"([жшчщЖШЧЩ])ё", r"\1ó")
     # ю after ж and ш becomes u (e.g. брошюра, жюри)
-    text = rsub(text, u"([жшЖШ])ю", ur"\1u")
+    text = rsub(text, u"([жшЖШ])ю", r"\1u")
 
     # е after a vowel, at the beginning of a word or after non-word char
     # becomes je
@@ -598,7 +593,7 @@ def post_canonicalize_latin(text, msgfun=msg):
     # convert capital_e_subst to either Je (not after cons) or E (after cons),
     # and small_e_subst to je or e; similarly, maybe map Ě to Jě, ě to jě.
     # Do before recomposing accented letters.
-    non_cons = ur"(^|[aeiouyěɛAEIOUYĚƐʹʺ\W%s%s]%s)" % (
+    non_cons = r"(^|[aeiouyěɛAEIOUYĚƐʹʺ\W%s%s]%s)" % (
             capital_e_subst, small_e_subst, ACGROPT)
     # repeat to handle sequences of EEEEE... or eeeee....
     for i in range(2):
@@ -707,7 +702,7 @@ def post_canonicalize_russian(text, msgfun=msg):
 
 def debprint(x):
     if debug_tr_matching:
-        uniprint(x)
+        print(x)
 
 # Vocalize Russian based on transliterated Latin, and canonicalize the
 # transliteration based on the Russian.  This works by matching the Latin
@@ -1026,34 +1021,33 @@ def test(latin, russian, should_outcome, expectedrussian=None):
     try:
         result = tr_matching(russian, latin, True)
     except RuntimeError as e:
-        uniprint(u"%s" % e)
+        print(u"%s" % e)
         result = False
     if result == False:
-        uniprint("tr_matching(%s, %s) = %s" % (russian, latin, result))
+        print("tr_matching(%s, %s) = %s" % (russian, latin, result))
         outcome = "failed"
         canonrussian = expectedrussian
     else:
         canonrussian, canonlatin = result
         trlatin = tr(canonrussian)
-        uniout("tr_matching(%s, %s) = %s %s," %
-                (russian, latin, canonrussian, canonlatin))
+        print("tr_matching(%s, %s) = %s %s, " % (russian, latin, canonrussian, canonlatin), end="")
         if trlatin == canonlatin:
-            uniprint("tr() MATCHED")
+            print("tr() MATCHED")
             outcome = "matched"
         else:
-            uniprint("tr() UNMATCHED (= %s)" % trlatin)
+            print("tr() UNMATCHED (= %s)" % trlatin)
             outcome = "unmatched"
     if canonrussian != expectedrussian:
-        uniprint("Canon Russian FAILED, expected %s got %s"% (
+        print("Canon Russian FAILED, expected %s got %s"% (
             expectedrussian, canonrussian))
     canonlatin, _ = canonicalize_latin_russian(latin, None)
-    uniprint("canonicalize_latin(%s) = %s" %
+    print("canonicalize_latin(%s) = %s" %
             (latin, canonlatin))
     if outcome == should_outcome and canonrussian == expectedrussian:
-        uniprint("TEST SUCCEEDED.")
+        print("TEST SUCCEEDED.")
         num_succeeded += 1
     else:
-        uniprint("TEST FAILED.")
+        print("TEST FAILED.")
         num_failed += 1
 
 def run_tests():
@@ -1220,10 +1214,7 @@ def run_tests():
     test(u"(fan)", u"фан", "failed")
 
     # Final results
-    uniprint("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))
+    print("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))
 
 if __name__ == "__main__":
     run_tests()
-
-# For Vim, so we get 4-space indent
-# vim: set sw=4:

@@ -3,7 +3,7 @@
 
 # Replace title= with work= in cite-web, if work= doesn't already exist.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site

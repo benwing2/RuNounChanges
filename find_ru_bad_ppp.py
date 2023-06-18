@@ -47,7 +47,7 @@
 # the masculine singular past (minus final -л if it's present). Stress is
 # as in the masculine singular past.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site
@@ -149,7 +149,7 @@ def process_page(page, index, do_fix):
           origform = form
           form = re.sub("//.*", "", form)
           fix_form = False
-          if not re.search(ur"([аяеё]́?нный|тый)$", form):
+          if not re.search(r"([аяеё]́?нный|тый)$", form):
             pagemsg("WARNING: Past passive participle doesn't end correctly: %s" % form)
             fix_form = True
           unstressed_page = rulib.make_unstressed_ru(pagetitle)

@@ -3,7 +3,7 @@
 
 # Find places where accent b is likely missing in Russian noun declensions.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site, tname
@@ -15,7 +15,7 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  if not re.search(ur"(ник|ок)([ -]|$)", pagetitle):
+  if not re.search(r"(ник|ок)([ -]|$)", pagetitle):
     return
 
   parsed = blib.parse_text(text)
@@ -23,9 +23,9 @@ def process_text_on_page(index, pagetitle, text):
     tn = tname(t)
     if tn == "ru-noun-table":
       ut = str(t)
-      if re.search(ur"ни́к(\||$)", ut) and "|b" not in ut:
+      if re.search(r"ни́к(\||$)", ut) and "|b" not in ut:
         pagemsg("WARNING: Likely missing accent b: %s" % ut)
-      if re.search(ur"о́к(\||$)", ut) and "*" in ut and "|b" not in ut:
+      if re.search(r"о́к(\||$)", ut) and "*" in ut and "|b" not in ut:
         pagemsg("WARNING: Likely missing accent b: %s" % ut)
 
 parser = blib.create_argparser("Find places where accent b is likely missing in Russian noun declensions",

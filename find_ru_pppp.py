@@ -3,7 +3,7 @@
 
 # Find Russian perfective verbs with explicit past passive participles
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

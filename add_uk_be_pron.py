@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 import difflib
 import unicodedata
 from collections import Counter
@@ -111,7 +111,7 @@ def contains_non_cyrillic_non_latin(text):
   # significance as phonological characters. FIXME: We allow Latin h as a
   # substitute for ɣ, we should allow it here and not have it trigger
   # contains_latin() by itself.
-  return re.sub(ur"[\u0300\u0301\u0302\u0308\u0307\u0323 \-,.?!()_/‿ɣɕʑЀ-ԧꚀ-ꚗ'a-zščžáéíóúýàèìòùỳɛě]", "", text.lower()) != ""
+  return re.sub(r"[\u0300\u0301\u0302\u0308\u0307\u0323 \-,.?!()_/‿ɣɕʑЀ-ԧꚀ-ꚗ'a-zščžáéíóúýàèìòùỳɛě]", "", text.lower()) != ""
 
 def canonicalize_monosyllabic_pronun(pronun):
   # Do nothing if there are multiple words

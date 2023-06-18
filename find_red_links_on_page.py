@@ -5,7 +5,7 @@
 # on a set of pages.
 
 import unicodedata
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site, tname

@@ -704,11 +704,11 @@ def pre_canonicalize_latin(text, arabic=None, classical=False, msgfun=msg):
 
   # FIXME the following seem unnecessary.
   # substitute geminated digraphs, possibly with a hyphen in the middle
-  #text = rsub(text, "dh(-?)dh", ur"ḏ\1ḏ")
-  #text = rsub(text, "sh(-?)sh", ur"š\1š")
-  #text = rsub(text, "th(-?)th", ur"ṯ\1ṯ")
-  #text = rsub(text, "kh(-?)kh", ur"ḵ\1ḵ")
-  #text = rsub(text, "gh(-?)gh", ur"ḡ\1ḡ")
+  #text = rsub(text, "dh(-?)dh", r"ḏ\1ḏ")
+  #text = rsub(text, "sh(-?)sh", r"š\1š")
+  #text = rsub(text, "th(-?)th", r"ṯ\1ṯ")
+  #text = rsub(text, "kh(-?)kh", r"ḵ\1ḵ")
+  #text = rsub(text, "gh(-?)gh", r"ḡ\1ḡ")
 
   # FIXME the following seem unnecessary.
   # misc substitutions
@@ -725,9 +725,9 @@ def pre_canonicalize_latin(text, arabic=None, classical=False, msgfun=msg):
 
   # FIXME: the following are probably wrong or unnecessary
   ## Convert -iy- not followed by a vowel or y to long -î-
-  #text = rsub(text, u"iy($|[^y" + vowel_chars + "])", ur"î\1")
+  #text = rsub(text, u"iy($|[^y" + vowel_chars + "])", r"î\1")
   ## Same for -uw- -> -û-
-  #text = rsub(text, u"uw($|[^w" + vowel_chars + "])", ur"û\1")
+  #text = rsub(text, u"uw($|[^w" + vowel_chars + "])", r"û\1")
   ## Insert y between i and a
   #text = rsub(text, u"([iî])([aâ])", r"\1y\2")
   ## Insert w between u and a
@@ -740,12 +740,12 @@ def pre_canonicalize_latin(text, arabic=None, classical=False, msgfun=msg):
   ## Remove double consonant following another consonant, but only at
   ## word boundaries, since that's the only time when these cases seem to
   ## legitimately occur
-  #text = re.sub(ur"([^\W" + vowel_chars + r"])(%s)\2\b" % (
+  #text = re.sub(r"([^\W" + vowel_chars + r"])(%s)\2\b" % (
   ##  latin_consonants_no_double_after_cons_re), r"\1\2", text, 0, re.U)
   ## Remove double consonant preceding another consonant but special-case
   ## a known example that shouldn't be touched.
   #if text != u"dunḡḡwân":
-  #  text = re.sub(ur"([^\W" + vowel_chars + r"])\1(%s)" % (
+  #  text = re.sub(r"([^\W" + vowel_chars + r"])\1(%s)" % (
   #    latin_consonants_no_double_after_cons_re), r"\1\2", text, 0, re.U)
 
   # FIXME: Probably unnecessary, needs reviewing.
@@ -768,7 +768,7 @@ def pre_canonicalize_latin(text, arabic=None, classical=False, msgfun=msg):
   #  # of each word, since an Arabic word in the middle might be in the
   #  # construct state.
   #  if arabic.endswith(u"اة"):
-  #    text = rsub(text, ur"â(\(t\)|t)$", u"âh")
+  #    text = rsub(text, r"â(\(t\)|t)$", u"âh")
   #  elif arabic.endswith(u"ة"):
   #    text = rsub(text, r"[ae](\(t\)|t)$", "a")
   #  # Do certain end-of-word changes on each word, comparing corresponding
@@ -829,7 +829,7 @@ def post_canonicalize_latin(text, classical=False, msgfun=msg):
   # Convert shadda back to double letter. Do this first to avoid interfering with the following checks.
   text = rsub(text, u"(.)" + SH, r"\1\1")
   # Word-final -eyâ -> -iyâ.
-  text = rsub(text, u"eyâ([" + word_final_punctuation + r" |\]]|'''|$|-)", ur"iyâ\1")
+  text = rsub(text, u"eyâ([" + word_final_punctuation + r" |\]]|'''|$|-)", r"iyâ\1")
   if not classical:
     # Don't do this in dialectal Persian, e.g. [[بوا]] {{fa-noun|tr=buâ, bwâ, bowâ}}.
     # w before a vowel becomes v except in kw-, xw-, gw-, where we leave it alone
@@ -866,8 +866,8 @@ def canonicalize_latin_foreign(obj, latin, arabic, msgfun=msg):
     latin_chars = u"[a-zA-Zâêîôûčḍḏḡḥḵṣšṭṯẓžʿʾ]"
     # Convert 3 to ʿ if next to a letter or letter symbol. This tries
     # to avoid converting 3 in numbers.
-    latin = rsub(latin, "(%s)3" % latin_chars, ur"\1ʿ")
-    latin = rsub(latin, "3(%s)" % latin_chars, ur"ʿ\1")
+    latin = rsub(latin, "(%s)3" % latin_chars, r"\1ʿ")
+    latin = rsub(latin, "3(%s)" % latin_chars, r"ʿ\1")
     latin = latin.replace(multi_single_quote_subst, "'")
     latin = post_canonicalize_latin(latin, classical=classical, msgfun=msgfun)
   return (latin, arabic)
@@ -978,7 +978,7 @@ def pre_pre_canonicalize_arabic(text, msgfun=msg):
   #text = rsub(text, u"([^\u064E\u0627\u0622\u0670])\u0629",
   #  u"\\1\u064E\u0629")
   # some Arabic text has a shadda after the initial consonant; remove it
-  newtext = rsub(text, ur"(^|[ |\[\]])(.)" + SH, r"\1\2")
+  newtext = rsub(text, r"(^|[ |\[\]])(.)" + SH, r"\1\2")
   if text != newtext:
     if " " in newtext:
       # Shadda after initial consonant can legitimately occur in
@@ -1163,7 +1163,7 @@ def tr_matching(obj, arabic, latin, err=False, msgfun=msg, no_vocalize=None):
   arabic = pre_canonicalize_arabic(arabic, msgfun=msgfun)
   # convert double consonant after non-cons to consonant + shadda,
   # but not multiple quotes, periods, braces or brackets
-  latin = re.sub(ur"(^|[\W" + vowel_chars + r"])([^'.{}\[\]])\2", r"\1\2" + SH,
+  latin = re.sub(r"(^|[\W" + vowel_chars + r"])([^'.{}\[\]])\2", r"\1\2" + SH,
       latin, 0, re.U)
 
   ar = [] # exploded Arabic characters

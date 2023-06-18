@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
@@ -266,9 +266,9 @@ def process_text_on_page(index, pagetitle, pagetext):
   for i in range(len(sections)):
     if args.do_all_sections or re.match("^===*Descendants=*==\n", sections[i]):
       text = sections[i]
-      #text = re.sub(ur"^(\*+:?)( *(?:→ *)?)(Serbo-Croat(?:ian):|\{\{desc(?:\|.*?)?\|sh(?:\|.*?)?\|-(?:\|.*?)?\}\})((?:\n\1[*:] *(?:Latin|Roman|Cyrillic): *(?:\[\[[^\[\]\n]*?\]\]|\{\{[lm]\|sh\|[^{}\n]*?\}\}))+)",
+      #text = re.sub(r"^(\*+:?)( *(?:→ *)?)(Serbo-Croat(?:ian):|\{\{desc(?:\|.*?)?\|sh(?:\|.*?)?\|-(?:\|.*?)?\}\})((?:\n\1[*:] *(?:Latin|Roman|Cyrillic): *(?:\[\[[^\[\]\n]*?\]\]|\{\{[lm]\|sh\|[^{}\n]*?\}\}))+)",
       #   replace_serbo_croatian_with_desc, text, 0, re.M)
-      text = re.sub(ur"^(\*+ *(?:→ *)?)(\{\{desc\|[^{}\n]*\}\})((?:, *(?:\{\{[lm]\|[^{}|\n]*?\|[^{}\n]*?\}\}|\[\[[^\[\]\n]*?\]\]))+)",
+      text = re.sub(r"^(\*+ *(?:→ *)?)(\{\{desc\|[^{}\n]*\}\})((?:, *(?:\{\{[lm]\|[^{}|\n]*?\|[^{}\n]*?\}\}|\[\[[^\[\]\n]*?\]\]))+)",
          replace_with_desc, text, 0, re.M)
       sections[i] = text
 

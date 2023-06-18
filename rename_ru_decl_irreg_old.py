@@ -11,7 +11,7 @@
 # {{temp|ru-noun-old}} -> {{temp|ru-noun-table|old=1}}
 # {{temp|ru-adj-old}} -> {{temp|ru-decl-adj|old=1}}
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, tname, msg, site

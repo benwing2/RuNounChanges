@@ -3,7 +3,7 @@
 
 # Fix up noun forms, using {{ru-noun form}} instead of {{head|ru|noun form}}
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

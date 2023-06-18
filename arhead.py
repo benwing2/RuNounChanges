@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
  
-import blib, pywikibot, re, string, sys, codecs
+import blib, pywikibot, re, string, sys
 from blib import addparam
 import arabiclib
  

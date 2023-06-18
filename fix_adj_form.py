@@ -4,7 +4,7 @@
 # Fix up short adjective forms when possible, canonicalizing existing
 # 'inflection of' and converting raw inflection to 'inflection of'
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

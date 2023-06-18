@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site
@@ -188,19 +188,19 @@ def process_cmu_pronun(index, word, pronun):
     ipa_sounds.append(ipa)
   ipa_word = "".join(ipa_sounds)
   # ɚ before vowel -> əɹ
-  ipa_word = rsub_repeatedly(u"ɚ(" + accent_c + "?" + vowel_c + ")", ur"əɹ\1",
+  ipa_word = rsub_repeatedly(u"ɚ(" + accent_c + "?" + vowel_c + ")", r"əɹ\1",
       ipa_word)
   # ɚ after vowel -> əɹ
-  ipa_word = rsub_repeatedly("(" + vowel_c + u")ɚ", ur"\1əɹ",
+  ipa_word = rsub_repeatedly("(" + vowel_c + u")ɚ", r"\1əɹ",
       ipa_word)
   # ɝ before vowel -> ɜɹ
-  ipa_word = rsub_repeatedly(u"ɝ(" + accent_c + "?" + vowel_c + ")", ur"ɜɹ\1",
+  ipa_word = rsub_repeatedly(u"ɝ(" + accent_c + "?" + vowel_c + ")", r"ɜɹ\1",
       ipa_word)
   # əl after consonant not before vowel -> l̩
   ipa_word = rsub_repeatedly("(" + consonant_c + u")əl($|" + consonant_c + ")",
-      ur"\1l̩\2", ipa_word)
+      r"\1l̩\2", ipa_word)
   # ən after alveolar and not before vowel -> n̩
-  ipa_word = rsub_repeatedly(u"([tdszln])ən($|" + consonant_c + ")", ur"\1n̩\2",
+  ipa_word = rsub_repeatedly(u"([tdszln])ən($|" + consonant_c + ")", r"\1n̩\2",
       ipa_word)
   # Move stress before any initial consonant cluster
   ipa_word = re.sub("^(" + consonant_c + u"+)(" + accent_c + ")", r"\2\1",
@@ -257,8 +257,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 if args.cmu:
   pagedirecs = []
-  lines = [x.strip() for x in codecs.open(args.cmu, "r", "iso8859-1") if not
-      x.startswith(";;;")]
+  lines = [x.strip() for x in open(args.cmu, "r", encoding="iso8859-1") if not x.startswith(";;;")]
   joined_lines = []
   prev_word = None
   seen_pronuns = []
@@ -283,7 +282,7 @@ if args.cmu:
     msg("#%3s %s" % (i, onset))
 
 if args.moby:
-  lines = [x.strip() for x in codecs.open(args.moby, "r", "mac_roman")]
+  lines = [x.strip() for x in open(args.moby, "r", encoding="mac_roman")]
   for i, line in blib.iter_items(lines, start, end):
     word, pronun = re.split(" ", line)
     process_moby_line(i, word, pronun)

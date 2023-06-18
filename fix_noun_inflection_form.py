@@ -6,7 +6,7 @@
 # abbreviations, put lang=ru first, remove blank form codes, and rearrange
 # form codes like s|gen to be gen|s.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

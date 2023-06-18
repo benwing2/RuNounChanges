@@ -3,7 +3,7 @@
 
 # Convert "literally X" expressions in the definition of a proverb into etymologies.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

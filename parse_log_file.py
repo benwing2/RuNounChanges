@@ -33,7 +33,7 @@
 # well as all the FROM templates (FOO, BAR and BAZ), since any of them may
 # occur as the FROM template in one of the lines to be processed.
 
-import re, codecs, argparse
+import re, argparse
 
 import blib
 from blib import msg
@@ -100,7 +100,7 @@ def yield_page_lines(fn):
     for i in range(frm+1, to):
       page_lines[i] = fix_page_line(page_lines[i])
 
-  for line in codecs.open(fn, "r", encoding="utf-8"):
+  for line in open(fn, "r", encoding="utf-8"):
     line = line.strip()
     # Add a colon after Processing to match other lines
     m = re.match(r"^(Page [^{}]*: )Processing (\{\{.*?\}\})$", line)

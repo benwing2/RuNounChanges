@@ -4,7 +4,7 @@
 # Delete erroneously created forms given the declensions that led to those
 # forms being created.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

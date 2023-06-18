@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse, json, unicodedata
+import pywikibot, re, sys, argparse, json, unicodedata
 
 import blib
 from blib import getparam, rmparam, tname, pname, msg, errandmsg, site
@@ -247,6 +247,6 @@ msg("The following pages need to be deleted:")
 for page in output_pages_to_delete:
   msg(page)
 if args.output_pages_to_delete:
-  with codecs.open(args.output_pages_to_delete, "w", "utf-8") as fp:
+  with open(args.output_pages_to_delete, "w", encoding="utf-8") as fp:
     for page in output_pages_to_delete:
-      print >> fp, page
+      print(page, file=fp)

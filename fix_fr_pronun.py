@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
@@ -146,16 +146,16 @@ def process_text_on_page(index, pagetitle, text):
           autopron = autopron.replace(".", "")
         if autopron.endswith(u"ɑ") and pron.endswith("a"):
           autopron = autopron[:-1] + "a"
-        if re.search(ur"ɑ[mt]$", autopron) and re.search(u"a[mt]$", pron):
-          autopron = re.sub(ur"ɑ([mt])$", r"a\1", autopron)
+        if re.search(r"ɑ[mt]$", autopron) and re.search(u"a[mt]$", pron):
+          autopron = re.sub(r"ɑ([mt])$", r"a\1", autopron)
         for i in range(2):
           # {{fr-IPA}} deletes schwa in the sequence V.Cə.CV esp. in the
           # sequence V.Cə.ʁV in verbs, whereas the bot-generated pronunciation
           # doesn't. We have separate cases depending on the identity of C,
           # which may go before or after the syllable break. Do it twice in
           # case it occurs twice in a row in a single word.
-          pron = re.sub(ur"([aɑɛeiɔouyœøɑ̃ɛ̃ɔ̃])\.([jlmnɲwʃʒ])ə\.(ʁ[aɑɛeiɔouyœøɑ̃ɛ̃ɔ̃])", r"\1\2.\3", pron)
-          pron = re.sub(ur"([aɑɛeiɔouyœøɑ̃ɛ̃ɔ̃])\.([szfvtdpbkɡ])ə\.(ʁ[aɑɛeiɔouyœøɑ̃ɛ̃ɔ̃])", r"\1.\2\3", pron)
+          pron = re.sub(r"([aɑɛeiɔouyœøɑ̃ɛ̃ɔ̃])\.([jlmnɲwʃʒ])ə\.(ʁ[aɑɛeiɔouyœøɑ̃ɛ̃ɔ̃])", r"\1\2.\3", pron)
+          pron = re.sub(r"([aɑɛeiɔouyœøɑ̃ɛ̃ɔ̃])\.([szfvtdpbkɡ])ə\.(ʁ[aɑɛeiɔouyœøɑ̃ɛ̃ɔ̃])", r"\1.\2\3", pron)
         # {{fr-IPA}} converts sequences of Crj and Clj to Cri.j and Cli.j,
         # which is correct, but Dawnraybot doesn't do that.
         pron = re.sub(u"([szfvtdpbkɡ][ʁl])j", r"\1i.j", pron)

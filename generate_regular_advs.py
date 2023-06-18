@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import re, sys, codecs, argparse
+import re, sys, argparse
 import fileinput
 
 from blib import msg, errmsg

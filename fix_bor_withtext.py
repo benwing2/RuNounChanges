@@ -5,7 +5,7 @@
 # at beginning of line or sentence, possibly after a bullet or number
 # sign.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

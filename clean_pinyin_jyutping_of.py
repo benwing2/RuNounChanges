@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
@@ -28,6 +28,7 @@ def process_text_on_page(index, pagetitle, text):
   parsed = blib.parse_text(text)
 
   def dispchar(ch):
+    # FIXME, might need fixing for Python 3
     return "%s (%s)" % (ch, ch.encode("unicode_escape"))
 
   def check_simplified_matches_traditional(trad, simp, langcode, langname, prefix):

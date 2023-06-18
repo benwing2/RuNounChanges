@@ -3,7 +3,7 @@
 
 # Go through all the French terms we can find and remove sort=.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

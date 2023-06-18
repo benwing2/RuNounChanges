@@ -9,4 +9,4 @@ for line in fileinput.input():
   prefix, rest = line.strip().split("\t")
   groups[prefix] += [rest]
 for prefix, rests in sorted(list(groups.iteritems())):
-  print "| %s || %s || %s" % (len(rests), prefix, " / ".join("[[:Category:%s|%s]]" % (x, x) for x in rests))
+  print("| %s || %s || %s" % (len(rests), prefix, " / ".join("[[:Category:%s|%s]]" % (x, x) for x in rests)))

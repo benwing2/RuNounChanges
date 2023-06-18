@@ -10,7 +10,7 @@
 # 2. Add debug code to print out full current and new text of page so I can
 #    verify that nothing bad is happening.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

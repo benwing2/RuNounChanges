@@ -5,7 +5,7 @@
 # or a prefix as a term in {{prefixusex}} or a suffix as a term in {{suffixusex}}. We only fix lang=;
 # the other case is rare and we fix it manually.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site, tname

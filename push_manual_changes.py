@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import re, codecs
+import re
 
 import blib, pywikibot
 from blib import msg, getparam, addparam

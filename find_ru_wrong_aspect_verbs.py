@@ -5,7 +5,7 @@
 # aspect(s) in ru-conj-*. Maybe fix them by copying the aspect from ru-verb
 # to ru-conj-*.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

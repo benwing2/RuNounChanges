@@ -3,7 +3,7 @@
 
 # Convert ru-adv to ru-compararative for comparatives.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

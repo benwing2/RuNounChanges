@@ -11,7 +11,7 @@
 # 3. If rom= is present and the page isn't in
 #    [[:Category:Japanese terms with romaji needing attention]], remove rom=.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

@@ -53,7 +53,7 @@
 #        words. (DONE)
 # FIXME: Support <hmp:> for homophones. (DONE)
 
-import pywikibot, re, sys, codecs, argparse, unicodedata
+import pywikibot, re, sys, argparse, unicodedata
 
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname, pname, rsub_repeatedly
@@ -94,8 +94,8 @@ acute_to_grave = {u"á": u"à", u"í": u"ì", u"ú": u"ù", u"Á": u"À", u"Í":
 
 recognized_suffixes = [
   # -(m)ente, -(m)ento
-  ("ment([eo])", ur"mént\1"), # must precede -ente/o below
-  ("ent([eo])", ur"ènt\1"), # must follow -mente/o above
+  ("ment([eo])", r"mént\1"), # must precede -ente/o below
+  ("ent([eo])", r"ènt\1"), # must follow -mente/o above
   # verbs
   ("izzare", u"iddzàre"), # must precede -are below
   ("izzarsi", u"iddzàrsi"), # must precede -arsi below
@@ -103,37 +103,37 @@ recognized_suffixes = [
   ("([ai])rsi", r"\1" + GR + "rsi"), # must follow -izzarsi above
   # nouns
   ("izzatore", u"iddzatóre"), # must precede -tore below
-  ("([st])ore", ur"\1óre"), # must follow -izzatore above
+  ("([st])ore", r"\1óre"), # must follow -izzatore above
   ("izzatrice", u"iddzatrìce"), # must precede -trice below
   ("trice", u"trìce"), # must follow -izzatrice above
   ("izzazione", u"iddzatsióne"), # must precede -zione below
   ("zione", u"tsióne"), # must precede -one below and follow -izzazione above
   ("one", u"óne"), # must follow -zione above
   ("acchio", u"àcchio"),
-  ("acci([ao])", ur"àcci\1"),
+  ("acci([ao])", r"àcci\1"),
   ("([aiu])ggine", r"\1" + GR + "ggine"),
   ("aggio", u"àggio"),
   ("([ai])gli([ao])", r"\1" + GR + r"gli\2"),
-  ("ai([ao])", ur"ài\1"),
+  ("ai([ao])", r"ài\1"),
   ("([ae])nza", r"\1" + GR + "ntsa"),
   ("ario", u"àrio"),
-  ("([st])orio", ur"\1òrio"),
-  ("astr([ao])", ur"àstr\1"),
-  ("ell([ao])", ur"èll\1"),
+  ("([st])orio", r"\1òrio"),
+  ("astr([ao])", r"àstr\1"),
+  ("ell([ao])", r"èll\1"),
   ("etta", u"étta"),
   # do not include -etto, both ètto and étto are common
   ("ezza", u"éttsa"),
   ("ficio", u"fìcio"),
-  ("ier([ao])", ur"ièr\1"),
+  ("ier([ao])", r"ièr\1"),
   ("ifero", u"ìfero"),
   ("ismo", u"ìsmo"),
   ("ista", u"ìsta"),
-  ("izi([ao])", ur"ìtsi\1"),
+  ("izi([ao])", r"ìtsi\1"),
   ("logia", u"logìa"),
   # do not include -otto, both òtto and ótto are common
   ("tudine", u"tùdine"),
   ("ura", u"ùra"),
-  ("([^aeo])uro", ur"\1ùro"),
+  ("([^aeo])uro", r"\1ùro"),
   # adjectives
   ("izzante", u"iddzànte"), # must precede -ante below
   ("ante", u"ànte"), # must follow -izzante above
@@ -145,14 +145,14 @@ recognized_suffixes = [
   ("([ai])stic([ao])", r"\1" + GR + r"stic\2"),
   # exceptions to the following: àbato, àcato, acròbata, àgata, apòstata, àstato, cìato, fégato, omeòpata,
   # sàb(b)ato, others?
-  ("at([ao])", ur"àt\1"),
+  ("at([ao])", r"àt\1"),
   ("([ae])tic([ao])", r"\1" + GR + r"tic\2"),
   ("ense", u"ènse"),
-  ("esc([ao])", ur"ésc\1"),
+  ("esc([ao])", r"ésc\1"),
   ("evole", u"évole"),
   # FIXME: Systematic exceptions to the following in 3rd plural present tense verb forms
-  ("ian([ao])", ur"iàn\1"),
-  ("iv([ao])", ur"ìv\1"),
+  ("ian([ao])", r"iàn\1"),
+  ("iv([ao])", r"ìv\1"),
   ("oide", u"òide"),
   ("oso", u"óso"),
 ]
@@ -373,7 +373,7 @@ def normalize_bare_arg(arg, pagetitle, pagemsg):
   abbrev_text = None
   m = re.search(u"^(" + pron_sign_c + "*)(.*?)(" + pron_sign_c + "*)$", arg)
   arg_prefix, arg, arg_suffix = m.groups()
-  if re.search(ur"^\^[àéèìóòù]$", arg):
+  if re.search(r"^\^[àéèìóòù]$", arg):
     if re.search("[ %-]", pagetitle):
       pagemsg("WARNING: With abbreviated vowel spec %s, the page name should be a single word: %s" % (arg, pagetitle))
       return None

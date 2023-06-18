@@ -7,7 +7,7 @@
 # look for unpaired verbs, since paired verbs generally don't have
 # PPP's.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site
@@ -76,8 +76,7 @@ args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 if args.fix_pagefile:
-  fixdireclines = [
-    x.strip() for x in codecs.open(args.fix_pagefile, "r", "utf-8")]
+  fixdireclines = [x.strip() for x in open(args.fix_pagefile, "r", encoding="utf-8")]
   fixdirecs = {}
   fixpages = []
   for line in fixdireclines:

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site, tname
@@ -103,7 +103,7 @@ def process_text_on_page(index, pagetitle, text):
       retval = []
       for v in vals:
         # Remove final footnote symbols are per [[Module:table tools]]
-        v = re.sub(ur"[*~@#$%^&+0-9_\u00A1-\u00BF\u00D7\u00F7\u2010-\u2027\u2030-\u205E\u2070-\u20CF\u2100-\u2B5F\u2E00-\u2E3F]*$", "", v)
+        v = re.sub(r"[*~@#$%^&+0-9_\u00A1-\u00BF\u00D7\u00F7\u2010-\u2027\u2030-\u205E\u2070-\u20CF\u2100-\u2B5F\u2E00-\u2E3F]*$", "", v)
         retval.append(uk.add_monosyllabic_stress(v))
       return ", ".join(retval)
 
@@ -169,7 +169,7 @@ def process_text_on_page(index, pagetitle, text):
         return "unknown"
 
     def infer_gender(lemma):
-      if re.search(u"[ое]́?$", lemma) or re.search(ur"(.)\1я́?$", lemma) or re.search(u"'я́?$", lemma):
+      if re.search(u"[ое]́?$", lemma) or re.search(r"(.)\1я́?$", lemma) or re.search(u"'я́?$", lemma):
         return "N"
       elif re.search(u"[ая]́?$", lemma) or re.search(u"ість$", lemma):
         return "F"
@@ -195,14 +195,14 @@ def process_text_on_page(index, pagetitle, text):
 
     def apply_vowel_alternation(stem, ialt):
       if ialt == "io":
-        modstem = re.sub(u"(.*[лЛ])і(́?" + uk.cons_c + "*)$", ur"\1ьо\2", stem)
+        modstem = re.sub(u"(.*[лЛ])і(́?" + uk.cons_c + "*)$", r"\1ьо\2", stem)
         if modstem == stem:
-          modstem = re.sub(u"(.*)і(́?" + uk.cons_c + "*)$", ur"\1о\2", stem)
+          modstem = re.sub(u"(.*)і(́?" + uk.cons_c + "*)$", r"\1о\2", stem)
       elif ialt == "ie":
-        modstem = re.sub(u"(.*)і(́?" + uk.cons_c + "*)$", ur"\1е\2", stem)
+        modstem = re.sub(u"(.*)і(́?" + uk.cons_c + "*)$", r"\1е\2", stem)
       else:
         assert ialt == "i"
-        modstem = re.sub(u"ь?[ое](́?" + uk.cons_c + "*)$", ur"і\1", stem)
+        modstem = re.sub(u"ь?[ое](́?" + uk.cons_c + "*)$", r"і\1", stem)
       if modstem == stem:
         return None
       return modstem

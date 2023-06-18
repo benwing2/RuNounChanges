@@ -146,7 +146,7 @@
 # code that infers adjective forms, since -аго/-яго is a possible genitive, and some
 # of the endings have an extra -ъ on them, and there's an extra fem/neut plural -ыя/-ія.
 
-import re, codecs
+import re
 
 import blib, pywikibot
 from blib import msg, getparam, addparam
@@ -926,7 +926,7 @@ def find_accented_1(term, termtr, verbose, pagetitle, pagemsg, template,
     # convert to [[BAZ|FOO]] or [[BAZ BAT|FOO BAR]] if necessary).
     inner_add_brackets = (
         False if lemma or add_brackets == "outer" else add_brackets)
-    split_regex = ur"('''.*?'''|\[\[.*?\]\]|[^()\[\]{} \u00A0\n—,.…?!:;/\"«»„“”<>]+)"
+    split_regex = r"('''.*?'''|\[\[.*?\]\]|[^()\[\]{} \u00A0\n—,.…?!:;/\"«»„“”<>]+)"
     words = re.split(split_regex, term)
     trwords = (re.split(split_regex, termtr)
       if termtr else [])

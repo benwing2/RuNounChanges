@@ -4,7 +4,7 @@
 # Convert Russian usage examples that are manually formatted using {{lang}}
 # or links to use {{uxi|ru}} or {{ux|ru}}
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site
@@ -105,11 +105,11 @@ def process_page(page, index, parsed):
         # we have bold (''') around the first Russian word and italics ('')
         # around the translation; in the opposite order, the bold will get
         # treated as italics
-        sections[j] = re.sub(ur"^(#:[:*]*?)\*? \{\{%s\|ru\|([^\n{}]*?)\}\}(?: |\&nbsp;)(—|\&mdash;|≈)(?: |\&nbsp;)''(.*?)''$" % tempname, single_line_usex_lang_l_m, sections[j], 0, re.M)
+        sections[j] = re.sub(r"^(#:[:*]*?)\*? \{\{%s\|ru\|([^\n{}]*?)\}\}(?: |\&nbsp;)(—|\&mdash;|≈)(?: |\&nbsp;)''(.*?)''$" % tempname, single_line_usex_lang_l_m, sections[j], 0, re.M)
         # Version with ''...'' around the whole thing
-        sections[j] = re.sub(ur"^(#:[:*]*?)\*? ''\{\{%s\|ru\|([^\n{}]*?)\}\}(?: |\&nbsp;)(—|\&mdash;|≈)(?: |\&nbsp;)(.*?)''$" % tempname, single_line_usex_lang_l_m, sections[j], 0, re.M)
+        sections[j] = re.sub(r"^(#:[:*]*?)\*? ''\{\{%s\|ru\|([^\n{}]*?)\}\}(?: |\&nbsp;)(—|\&mdash;|≈)(?: |\&nbsp;)(.*?)''$" % tempname, single_line_usex_lang_l_m, sections[j], 0, re.M)
         # Version without ''...''
-        sections[j] = re.sub(ur"^(#:[:*]*?)\*? \{\{%s\|ru\|([^\n{}]*?)\}\}(?: |\&nbsp;)(—|\&mdash;|≈)(?: |\&nbsp;)(.*?)$" % tempname, single_line_usex_lang_l_m, sections[j], 0, re.M)
+        sections[j] = re.sub(r"^(#:[:*]*?)\*? \{\{%s\|ru\|([^\n{}]*?)\}\}(?: |\&nbsp;)(—|\&mdash;|≈)(?: |\&nbsp;)(.*?)$" % tempname, single_line_usex_lang_l_m, sections[j], 0, re.M)
 
       # Try to convert single-line usex that is raw, maybe allowing braces
       # in the right side
@@ -133,14 +133,14 @@ def process_page(page, index, parsed):
         # we have bold (''') around the first Russian word and italics ('')
         # around the translation; in the opposite order, the bold will get
         # treated as italics
-        sections[j] = re.sub(ur"^(#:[:*]*?)\*? ((?:[^{}\n]|\{\{(?:l|m|lang)\|ru\|.*?\}\})*)(?: |\&nbsp;)(—|-|\&mdash;|≈)(?: |\&nbsp;)''([^%s\n]*?)''$" % maybe_exclude_braces, single_line_usex_raw, sections[j], 0, re.M)
+        sections[j] = re.sub(r"^(#:[:*]*?)\*? ((?:[^{}\n]|\{\{(?:l|m|lang)\|ru\|.*?\}\})*)(?: |\&nbsp;)(—|-|\&mdash;|≈)(?: |\&nbsp;)''([^%s\n]*?)''$" % maybe_exclude_braces, single_line_usex_raw, sections[j], 0, re.M)
         # Version with ''...'' around the whole thing; the expression after
         # the '' is a disjunctive lookahead expression and says "(two single
         # quotes) either followed by 3 more quotes (combination bold+italic)
         # or not followed by any quote (to exclude bold = ''')
-        sections[j] = re.sub(ur"^(#:[:*]*?)\*? ''(?:(?!')|(?='''))((?:[^{}\n]|\{\{(?:l|m|lang)\|ru\|.*?\}\})*)(?: |\&nbsp;)(—|-|\&mdash;|≈)(?: |\&nbsp;)([^%s\n]*?)''$" % maybe_exclude_braces, single_line_usex_raw, sections[j], 0, re.M)
+        sections[j] = re.sub(r"^(#:[:*]*?)\*? ''(?:(?!')|(?='''))((?:[^{}\n]|\{\{(?:l|m|lang)\|ru\|.*?\}\})*)(?: |\&nbsp;)(—|-|\&mdash;|≈)(?: |\&nbsp;)([^%s\n]*?)''$" % maybe_exclude_braces, single_line_usex_raw, sections[j], 0, re.M)
         # Version without ''...''
-        sections[j] = re.sub(ur"^(#:[:*]*?)\*? ((?:[^{}\n]|\{\{(?:l|m|lang)\|ru\|.*?\}\})*)(?: |\&nbsp;)(—|-|\&mdash;|≈)(?: |\&nbsp;|≈)([^%s\n]*?)$" % maybe_exclude_braces, single_line_usex_raw, sections[j], 0, re.M)
+        sections[j] = re.sub(r"^(#:[:*]*?)\*? ((?:[^{}\n]|\{\{(?:l|m|lang)\|ru\|.*?\}\})*)(?: |\&nbsp;)(—|-|\&mdash;|≈)(?: |\&nbsp;|≈)([^%s\n]*?)$" % maybe_exclude_braces, single_line_usex_raw, sections[j], 0, re.M)
 
   return "".join(sections), notes
 

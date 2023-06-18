@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
@@ -113,8 +113,8 @@ def ipa_to_respelling(ipa):
   ipa = ipa.replace(u"o̯", "o")
   ipa = ipa.replace(u"i̯", "j")
   ipa = ipa.replace(u"u̯", "w")
-  ipa = sub_repeatedly(ur"([iu])\.?([aeiouàèéìòóù])", r"\1*\2", ipa)
-  ipa = sub_repeatedly(ur"([aeiouàèéìòóù])\.?([iu])", r"\1*\2", ipa)
+  ipa = sub_repeatedly(r"([iu])\.?([aeiouàèéìòóù])", r"\1*\2", ipa)
+  ipa = sub_repeatedly(r"([aeiouàèéìòóù])\.?([iu])", r"\1*\2", ipa)
   ipa = ipa.replace(".", "").replace("*", ".")
   ipa = ipa.replace(u"dʒdʒ", u"ddʒ")
   ipa = ipa.replace("dzdz", u"ddz")
@@ -140,7 +140,7 @@ def ipa_to_respelling(ipa):
   ipa = ipa.replace(u"tʃ", u"[tʃ]")
   ipa = re.sub(u"ʃ+([eièéì])", r"sc\1", ipa)
   ipa = re.sub(u"ʃ+([aàoòóuù])", r"sci\1", ipa)
-  ipa = re.sub(ur"ʃ+(?!\])", "sh", ipa) # don't change [tʃ] generated above
+  ipa = re.sub(r"ʃ+(?!\])", "sh", ipa) # don't change [tʃ] generated above
   ipa = re.sub(u"ʎ+([iì])", r"gl\1", ipa)
   ipa = re.sub(u"ʎ+([aàeèéoòóuù])", r"gli\1", ipa)
   ipa = sub_repeatedly(u"([aeiouàèéìòóù][\u0323\u0331]?)s([aeiouàèéìòóù])", r"\1[s]\2", ipa)

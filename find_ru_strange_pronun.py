@@ -5,7 +5,7 @@
 # pronunciation missing a * at the beginning or a pronunciation with
 # some additional text surrounding it.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

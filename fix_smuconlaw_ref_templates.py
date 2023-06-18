@@ -4,7 +4,7 @@
 # Replace title= with entry= in a couple of reference templates, and strip
 # final periods from entry= in the same templates.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site

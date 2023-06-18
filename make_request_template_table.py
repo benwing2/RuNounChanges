@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from blib import getparam, rmparam, msg, errmsg, site
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import request_templates
 

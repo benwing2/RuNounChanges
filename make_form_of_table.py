@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from blib import msg
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import form_of_templates
 
@@ -35,7 +35,7 @@ if not args.direcfile:
 else:
   msg('{|class="wikitable"')
   msg("! Template !! Category !! Takes inflection tags !! Initial capital !! Final period !! Supports from=, from2=, ... || Supports p=/POS=")
-  for line in codecs.open(args.direcfile, "r", "utf-8"):
+  for line in open(args.direcfile, "r", encoding="utf-8"):
     direcs = line.rstrip('\n').split(',')
     template = direcs[0]
     withtags = False

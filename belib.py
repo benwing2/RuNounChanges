@@ -141,7 +141,7 @@ def iotate(stem):
   stem = re.sub(u"[сх]$", u"ш", stem)
   stem = re.sub(u"[гґз]$", u"ж", stem)
   stem = re.sub(u"дз?$", u"дж", stem)
-  stem = re.sub(u"([бўмпф])$", ur"\1л", stem)
+  stem = re.sub(u"([бўмпф])$", r"\1л", stem)
   stem = re.sub(u"в$", u"ўл", stem)
   return stem
 

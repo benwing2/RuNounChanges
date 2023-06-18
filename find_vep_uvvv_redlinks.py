@@ -5,7 +5,7 @@
 # for {{R:vep:UVVV}} templates, and check the pages in those templates to
 # see if they exist.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

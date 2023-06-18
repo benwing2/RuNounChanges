@@ -4,7 +4,7 @@
 import blib
 from blib import getparam, rmparam, msg, errmsg, errandmsg, site
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 def process_page(index, page, contents, lang, verbose, comment):
   pagetitle = str(page.title())

@@ -3,7 +3,7 @@
 
 # Rearrange {{was wotd}} to go after ==English==.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

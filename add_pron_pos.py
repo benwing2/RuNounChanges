@@ -15,7 +15,7 @@
 # 6. (DONE) Allow control of processing lemmas or non-lemmas.
 # 7. (MOSTLY DONE) Proper handling of multiword non-lemmas.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 from collections import Counter
 
 import blib
@@ -30,7 +30,7 @@ pages_pos = {}
 # does. Do not include ‿ in the split characters because the module doesn't
 # split on that symbol.
 def split_words(pagename, capture_delims):
-  pagename = re.sub(ur"\s*([,–—])\s*", r" \1 ", pagename)
+  pagename = re.sub(r"\s*([,–—])\s*", r" \1 ", pagename)
   return re.split(u"([ -]+)" if capture_delims else u"[ -]+",
       re.sub("[!?]$", "", pagename))
 
@@ -570,8 +570,8 @@ def process_text_on_page(index, pagetitle, text):
                       notes.append(u"unstressed -а after unpaired cons -> -е")
                     else:
                       assert False, "Something wrong, strange ending, logic not correct: section %s, phon=%s (word #%s)" % (k//2, phonword, wordno)
-                    newphonword = re.sub(u"(?:[ияыа]|е̂)(" + rulib.DOTABOVE + "?)$", ur"е\1", phonword)
-                    newphonword = re.sub(u"(?:[ИЯЫА]|Е̂)(" + rulib.DOTABOVE + "?)$", ur"Е\1", newphonword)
+                    newphonword = re.sub(u"(?:[ияыа]|е̂)(" + rulib.DOTABOVE + "?)$", r"е\1", phonword)
+                    newphonword = re.sub(u"(?:[ИЯЫА]|Е̂)(" + rulib.DOTABOVE + "?)$", r"Е\1", newphonword)
                     pagemsg("Modified phon=%s (word #%s) to %s in section %s: %s" % (
                       phonword, wordno, newphonword, k//2, str(t)))
                     phonwords[i] = newphonword

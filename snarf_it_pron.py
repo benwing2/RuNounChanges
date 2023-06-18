@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 import unicodedata
 
 import blib
@@ -21,8 +21,8 @@ non_vowel_c = "[^" + unaccented_vowel + accented_vowel + "]"
 
 recognized_suffixes = [
   # -(m)ente, -(m)ento
-  ("ment([eo])", ur"mént\1"), # must precede -ente/o below
-  ("ent([eo])", ur"ènt\1"), # must follow -mente/o above
+  ("ment([eo])", r"mént\1"), # must precede -ente/o below
+  ("ent([eo])", r"ènt\1"), # must follow -mente/o above
   # verbs
   ("izzare", u"iddzàre"), # must precede -are below
   ("izzarsi", u"iddzàrsi"), # must precede -arsi below
@@ -30,37 +30,37 @@ recognized_suffixes = [
   ("([ai])rsi", r"\1" + GR + "rsi"), # must follow -izzarsi above
   # nouns
   ("izzatore", u"iddzatóre"), # must precede -tore below
-  ("([st])ore", ur"\1óre"), # must follow -izzatore above
+  ("([st])ore", r"\1óre"), # must follow -izzatore above
   ("izzatrice", u"iddzatrìce"), # must precede -trice below
   ("trice", u"trìce"), # must follow -izzatrice above
   ("izzazione", u"iddzatsióne"), # must precede -zione below
   ("zione", u"tsióne"), # must precede -one below and follow -izzazione above
   ("one", u"óne"), # must follow -zione above
   ("acchio", u"àcchio"),
-  ("acci([ao])", ur"àcci\1"),
+  ("acci([ao])", r"àcci\1"),
   ("([aiu])ggine", r"\1" + GR + "ggine"),
   ("aggio", u"àggio"),
   ("([ai])gli([ao])", r"\1" + GR + r"gli\2"),
-  ("ai([ao])", ur"ài\1"),
+  ("ai([ao])", r"ài\1"),
   ("([ae])nza", r"\1" + GR + "ntsa"),
   ("ario", u"àrio"),
-  ("([st])orio", ur"\1òrio"),
-  ("astr([ao])", ur"àstr\1"),
-  ("ell([ao])", ur"èll\1"),
+  ("([st])orio", r"\1òrio"),
+  ("astr([ao])", r"àstr\1"),
+  ("ell([ao])", r"èll\1"),
   ("etta", u"étta"),
   # do not include -etto, both ètto and étto are common
   ("ezza", u"éttsa"),
   ("ficio", u"fìcio"),
-  ("ier([ao])", ur"ièr\1"),
+  ("ier([ao])", r"ièr\1"),
   ("ifero", u"ìfero"),
   ("ismo", u"ìsmo"),
   ("ista", u"ìsta"),
-  ("izi([ao])", ur"ìtsi\1"),
+  ("izi([ao])", r"ìtsi\1"),
   ("logia", u"logìa"),
   # do not include -otto, both òtto and ótto are common
   ("tudine", u"tùdine"),
   ("ura", u"ùra"),
-  ("([^aeo])uro", ur"\1ùro"),
+  ("([^aeo])uro", r"\1ùro"),
   # adjectives
   ("izzante", u"iddzànte"), # must precede -ante below
   ("ante", u"ànte"), # must follow -izzante above
@@ -72,14 +72,14 @@ recognized_suffixes = [
   ("([ai])stic([ao])", r"\1" + GR + r"stic\2"),
   # exceptions to the following: àbato, àcato, acròbata, àgata, apòstata, àstato, cìato, fégato, omeòpata,
   # sàb(b)ato, others?
-  ("at([ao])", ur"àt\1"),
+  ("at([ao])", r"àt\1"),
   ("([ae])tic([ao])", r"\1" + GR + r"tic\2"),
   ("ense", u"ènse"),
-  ("esc([ao])", ur"ésc\1"),
+  ("esc([ao])", r"ésc\1"),
   ("evole", u"évole"),
   # FIXME: Systematic exceptions to the following in 3rd plural present tense verb forms
-  ("ian([ao])", ur"iàn\1"),
-  ("iv([ao])", ur"ìv\1"),
+  ("ian([ao])", r"iàn\1"),
+  ("iv([ao])", r"ìv\1"),
   ("oide", u"òide"),
   ("oso", u"óso"),
 ]

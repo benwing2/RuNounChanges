@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import argparse, codecs
+import argparse
 import blib
 
 parser = blib.create_argparser("Create input file for running find_misformatted_sections.py on multiple languages")

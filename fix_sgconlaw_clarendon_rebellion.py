@@ -10,7 +10,7 @@
 #
 ##* {{RQ:Clarendon History|passage=They discerned a body of five '''cornets''' of horse very full, standing in very good order to receive them.}}
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, tname, msg, errmsg, site

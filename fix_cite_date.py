@@ -4,7 +4,7 @@
 # Replace dates of the form "1 January, 2012" with "1 January 2012"
 # (remove the comma) in quotation/citation templates.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 import mwparserfromhell as mw
 
 import blib

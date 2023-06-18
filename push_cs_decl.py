@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import re, argparse, codecs, json
+import re, argparse, json
 import traceback, sys
 import pywikibot
 import blib

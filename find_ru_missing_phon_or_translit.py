@@ -4,7 +4,7 @@
 # Go through Russian lemmas looking for pages with missing phon= or missing translit.
 # Currently we just look for э in the ru-IPA call but not in the page title.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site, tname

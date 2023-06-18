@@ -295,7 +295,7 @@
 # 98. Warn if both acc|p and {an,in}|acc|p occur in the same tag set or ideally
 #     in the same set of defn lines; same with acc|s and {an,in}|acc|s
 
-import pywikibot, re, sys, codecs, argparse, time
+import pywikibot, re, sys, argparse, time
 import traceback
 import unicodedata
 
@@ -3137,8 +3137,8 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                   #  # masc. This is tricky with words like ребёнок and мальчонок
                   #  # that have two plurals, one in -и and one in -ата/ята.
                   #  if ("nom_pl" in split_args and
-                  #      re.search(ur"[яа]́?та(,|$)", split_args["nom_pl"]) and
-                  #      re.search(ur"[яа]т(|а|ам|ами|ах)$", formval_no_accents)):
+                  #      re.search(r"[яа]́?та(,|$)", split_args["nom_pl"]) and
+                  #      re.search(r"[яа]т(|а|ам|ами|ах)$", formval_no_accents)):
                   #    form_gender = [re.sub(r"\bm\b", "n", g) for g in form_gender]
 
                   if formname == "past_pasv_part" and form_gender == ["impf"]:
@@ -3285,7 +3285,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                       past_f_end_stressed=past_f_end_stressed)
 
 def skip_future_periphrastic(formname, ru, tr):
-  return re.search(ur"^(бу́ду|бу́дешь|бу́дет|бу́дем|бу́дете|бу́дут) ", ru)
+  return re.search(r"^(бу́ду|бу́дешь|бу́дет|бу́дем|бу́дете|бу́дут) ", ru)
 
 def get_verb_gender(t, formname, args):
   gender = re.sub("-.*", "", getparam(t, "1"))

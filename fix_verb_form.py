@@ -4,7 +4,7 @@
 # Fix up raw verb forms when possible, canonicalize existing 'conjugation of'
 # to 'inflection of'
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

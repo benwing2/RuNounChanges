@@ -3,7 +3,7 @@
 
 # Correct use of U+02C1 pharyngealization mark to U+02E4.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, tname, msg, site

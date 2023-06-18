@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 from collections import defaultdict
 
 import blib
@@ -793,7 +793,7 @@ def process_text_on_page(index, pagetitle, text):
   def convert_raw_section(text, section_langcode, infer_langcode):
     def parse_gloss_from_posttext(posttext):
       gloss = ""
-      mmm = re.search(ur" *\([‘'\"]([^‘'\"(){}]*)[’'\"]\)\.?(.*?)$",
+      mmm = re.search(r" *\([‘'\"]([^‘'\"(){}]*)[’'\"]\)\.?(.*?)$",
           posttext)
       if mmm:
         gloss, posttext = mmm.groups()
@@ -1355,7 +1355,7 @@ if args.convert_raw:
   blib.getData()
 
 def fetch_page_titles_and_text(textfile):
-  with codecs.open(textfile, "r", "utf-8") as fp:
+  with open(textfile, "r", encoding="utf-8") as fp:
     text = fp.read()
   if '\001' in text:
     pages = text.split('\001')
@@ -1384,9 +1384,9 @@ if not args.no_use_form_of_data:
   for tag in form_of_combinable_tags_by_dimension:
     good_tags.add(tag)
   #for tag, dim in form_of_combinable_tags_by_dimension.iteritems():
-  #  print "form_of_combinable_tags_by_dimension[%s] = %s" % (tag, dim)
+  #  print("form_of_combinable_tags_by_dimension[%s] = %s" % (tag, dim))
   #for tag, canontag in form_of_tag_to_canonical_form.iteritems():
-  #  print "form_of_tag_to_canonical_form[%s] = %s" % (tag, canontag)
+  #  print("form_of_tag_to_canonical_form[%s] = %s" % (tag, canontag))
 
 if args.textfile:
   titles_and_text = fetch_page_titles_and_text(args.textfile)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse, json, unicodedata
+import pywikibot, re, sys, argparse, json, unicodedata
 
 import blib
 from blib import getparam, rmparam, tname, pname, msg, errandmsg, site

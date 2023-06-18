@@ -6,7 +6,7 @@
 # ways: As we encounter each redlink (but only the first time encountered),
 # and sorted by number of occurrences.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 import traceback
 
 import blib

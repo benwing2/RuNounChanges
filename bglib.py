@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import re
@@ -26,11 +26,6 @@ opt_accent = "[" + accents + "]*"
 
 composed_grave_vowel = u"ѐЀѝЍ"
 vowel = u"аеиоуяюъѣАЕИОУЯЮЪѢ" + composed_grave_vowel
-
-def uniprint(x):
-  print x.encode('utf-8')
-def uniout(x):
-  print x.encode('utf-8'),
 
 def decompose_acute_grave(text):
   # Decompose sequences of character + acute or grave, but compose all other

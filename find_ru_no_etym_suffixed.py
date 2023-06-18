@@ -4,7 +4,7 @@
 # Try to construct etymologies of adjectives and nouns with various suffixes
 # from nouns and verbs.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname

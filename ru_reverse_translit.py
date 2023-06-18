@@ -4,7 +4,7 @@
 # This is used to reverse-convert transliterated Latin back to Russian,
 # so we can generate phon= for ru-IPA calls from the transliteration.
 
-import re, sys, codecs
+import re, sys
 import rulib
 
 latin_to_russian_tab_1_char = {
@@ -37,16 +37,11 @@ latin_to_russian_tab_2_char = {
 }
 
 # FIXME! Doesn't work with ɣ, which gets included in this character set
-non_consonants = "[" + rulib.vowel + rulib.tr_vowel + ur"ЪЬъьʹʺ\W]"
-consonants = "[^" + rulib.vowel + rulib.tr_vowel + ur"ЪЬъьʹʺ\W]"
+non_consonants = "[" + rulib.vowel + rulib.tr_vowel + r"ЪЬъьʹʺ\W]"
+consonants = "[^" + rulib.vowel + rulib.tr_vowel + r"ЪЬъьʹʺ\W]"
 
 AC = u"\u0301"
 GR = u"\u0300"
-
-def uniprint(x):
-  print x.encode('utf-8')
-def uniout(x):
-  print x.encode('utf-8'),
 
 def rsub(text, fr, to):
   if type(to) is dict:
@@ -72,7 +67,7 @@ def reverse_translit(text, cyrillic=None):
   text = rulib.decompose_acute_grave(text)
   # Not necessary, hard sign should already be present:
   # Need to add hard sign between consonant and j
-  # text = rsub(text, "(" + consonants + ")j", ur"\1ʺj")
+  # text = rsub(text, "(" + consonants + ")j", r"\1ʺj")
   text = rsub(text, u"jo" + AC, u"ё")
   text = rsub(text, u"Jo" + AC, u"Ё")
   text = rsub(text, u"[JjŠš].", latin_to_russian_tab_2_char)
@@ -82,8 +77,8 @@ def reverse_translit(text, cyrillic=None):
   #   -e at beginning of word -> Cyrillic е
   #   e after consonant + one or more of '() -> Cyrillic е
   #   other e -> Cyrillic э (handled by latin_to_russian_tab_1_char)
-  text = rsub(text, r"(^|\s)-e", ur"\1-е")
-  text = rsub(text, "(" + consonants + r"['\(\)]*)e", ur"\1е")
+  text = rsub(text, r"(^|\s)-e", r"\1-е")
+  text = rsub(text, "(" + consonants + r"['\(\)]*)e", r"\1е")
   text = rsub(text, u".", latin_to_russian_tab_1_char)
   # If Cyrillic passed in, try to convert -во in output back to -го when
   # appropriate
@@ -93,7 +88,7 @@ def reverse_translit(text, cyrillic=None):
     if len(textwords) == len(cyrwords):
       for i in range(len(textwords)):
         if re.search(u"го́?$", cyrwords[i]) and re.search(u"во́?$", textwords[i]):
-          textwords[i] = re.sub(u"в(о́?)$", ur"г\1", textwords[i])
+          textwords[i] = re.sub(u"в(о́?)$", r"г\1", textwords[i])
       return "".join(textwords)
 
   return text
@@ -108,14 +103,14 @@ def test(latin, russian):
   try:
     result = reverse_translit(latin)
   except RuntimeError as e:
-    uniprint(u"%s" % e)
+    print(u"%s" % e)
     result = False
   if result == False or result != russian:
-    uniprint("reverse_translit(%s) = %s, FAILED (expected %s)" %
+    print("reverse_translit(%s) = %s, FAILED (expected %s)" %
         (latin, result, russian))
     num_failed += 1
   else:
-    uniprint("reverse_translit(%s) = %s, SUCCEEDED" %
+    print("reverse_translit(%s) = %s, SUCCEEDED" %
         (latin, result))
     num_succeeded += 1
 
@@ -161,7 +156,7 @@ def run_tests():
   test(u"brunɛ́jec", u"брунэ́ец")
 
   # Final results
-  uniprint("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))
+  print("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))
 
 if __name__ == "__main__":
     run_tests()

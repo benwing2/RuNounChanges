@@ -3,7 +3,7 @@
 
 # Go through all the French terms we can find and remove redundant head=.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 import unicodedata
 
 import blib

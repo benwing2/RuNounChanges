@@ -41,7 +41,7 @@
 # 11. (DONE) Adding declension to proper nouns, should use n=sg if proper noun
 #    is singular-only
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site
@@ -291,7 +291,7 @@ def process_text_on_page(index, pagetitle, text):
 
     pagemsg("find_decl_args: Using decl template: %s" % str(decl_template))
     if str(decl_template.name) == "ru-decl-adj":
-      if re.search(ur"\bь\b", getparam(decl_template, "2"), re.U):
+      if re.search(r"\bь\b", getparam(decl_template, "2"), re.U):
         return [("1", wordlink), ("2", u"+ь")], True, None, None
       else:
         return [("1", wordlink), ("2", "+")], True, None, None
@@ -477,7 +477,7 @@ def process_text_on_page(index, pagetitle, text):
             wordind, val, lemma, infl))
           keepparam = False
         if keepparam:
-          if pname == "loc" and re.search(ur"^(на|в)\b", val, re.U):
+          if pname == "loc" and re.search(r"^(на|в)\b", val, re.U):
             pagemsg(u"WARNING: на or в found in loc= for word #%s, may not work in multi-word lemma: loc=%s, lemma=%s, infl=%s" %
                 (wordind, val, lemma, infl))
           pname += str(wordind)

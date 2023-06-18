@@ -3,7 +3,7 @@
 
 # Add 'to' to Russian verb defns when missing.
 
-import blib, re, codecs
+import blib, re
 import pywikibot
 
 import blib

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site
@@ -18,10 +18,10 @@ def process_page(page, index, parsed):
   text = str(page.text)
   newtext = text
 
-  newtext = re.sub(ur"\{\{ru-noun form\|[^|=]*\|([^|=]*)\|tr=.*?\}\}\n\n# \{\{alternative (?:form|spelling) of\|(.*?)\|lang=ru\}\}\n\n\[\[Category:Russian spellings with е instead of ё\]\]",
-      ur"{{ru-pos-alt-ё|\2|noun form|g=\1}}", newtext)
-  newtext = re.sub(ur"\{\{head\|ru\|([^|=]*)\|.*?g=(.*?)(?:\|.*?)?\}\}\n\n# \{\{alternative (?:form|spelling) of\|(.*?)\|lang=ru\}\}\n\n\[\[Category:Russian spellings with е instead of ё\]\]",
-      ur"{{ru-pos-alt-ё|\3|\1|g=\2}}", newtext)
+  newtext = re.sub(r"\{\{ru-noun form\|[^|=]*\|([^|=]*)\|tr=.*?\}\}\n\n# \{\{alternative (?:form|spelling) of\|(.*?)\|lang=ru\}\}\n\n\[\[Category:Russian spellings with е instead of ё\]\]",
+      r"{{ru-pos-alt-ё|\2|noun form|g=\1}}", newtext)
+  newtext = re.sub(r"\{\{head\|ru\|([^|=]*)\|.*?g=(.*?)(?:\|.*?)?\}\}\n\n# \{\{alternative (?:form|spelling) of\|(.*?)\|lang=ru\}\}\n\n\[\[Category:Russian spellings with е instead of ё\]\]",
+      r"{{ru-pos-alt-ё|\3|\1|g=\2}}", newtext)
 
   if newtext == text and u"[[Category:Russian spellings with е instead of ё]]" in text:
     pagemsg(u"WARNING: Unable to match manual alt-ё form")

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import re, sys, codecs, argparse
+import re, sys, argparse
 
 from blib import msg, errmsg
 import rulib
@@ -21,4 +21,4 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
     else:
       lemmas.add(rulib.remove_accents(m.group(1)))
 for lemma in sorted(lemmas):
-  print lemma.encode('utf-8')
+  print(lemma)

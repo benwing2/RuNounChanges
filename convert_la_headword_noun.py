@@ -4,7 +4,7 @@
 # Convert la-noun old form (specifying nominative, genitive, gender and
 # declension) to new form (same as la-ndecl).
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname
@@ -17,18 +17,18 @@ def safe_split(text, delim):
   return text.split(delim)
 
 def lengthen_ns_nf(text):
-  text = re.sub("an([sf])", ur"ān\1", text)
-  text = re.sub("en([sf])", ur"ēn\1", text)
-  text = re.sub("in([sf])", ur"īn\1", text)
-  text = re.sub("on([sf])", ur"ōn\1", text)
-  text = re.sub("un([sf])", ur"ūn\1", text)
-  text = re.sub("yn([sf])", ur"ȳn\1", text)
-  text = re.sub("An([sf])", ur"Ān\1", text)
-  text = re.sub("En([sf])", ur"Ēn\1", text)
-  text = re.sub("In([sf])", ur"Īn\1", text)
-  text = re.sub("On([sf])", ur"Ōn\1", text)
-  text = re.sub("Un([sf])", ur"Ūn\1", text)
-  text = re.sub("Yn([sf])", ur"Ȳn\1", text)
+  text = re.sub("an([sf])", r"ān\1", text)
+  text = re.sub("en([sf])", r"ēn\1", text)
+  text = re.sub("in([sf])", r"īn\1", text)
+  text = re.sub("on([sf])", r"ōn\1", text)
+  text = re.sub("un([sf])", r"ūn\1", text)
+  text = re.sub("yn([sf])", r"ȳn\1", text)
+  text = re.sub("An([sf])", r"Ān\1", text)
+  text = re.sub("En([sf])", r"Ēn\1", text)
+  text = re.sub("In([sf])", r"Īn\1", text)
+  text = re.sub("On([sf])", r"Ōn\1", text)
+  text = re.sub("Un([sf])", r"Ūn\1", text)
+  text = re.sub("Yn([sf])", r"Ȳn\1", text)
   return text
 
 noun_decl_to_decl_type = {

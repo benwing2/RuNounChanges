@@ -128,10 +128,10 @@ def remove_translit(params, startFrom, upTo):
           # We don't need to do accented chars because they are normalized into
           # char with macron + combining accent; the only combined macro/accent
           # single chars are ḗ and ṓ
-          elif is_grc and re.search(ur"[āīūĀĪŪ]", val):
+          elif is_grc and re.search(r"[āīūĀĪŪ]", val):
             pagemsg("WARNING: grc and value %s=%s has long a/i/u in it, not removing: %s" %
                 (param, val, str(t)))
-          elif is_grc and re.search(ur"[ăĭŭĂĬŬ]", val):
+          elif is_grc and re.search(r"[ăĭŭĂĬŬ]", val):
             pagemsg("WARNING: grc and value %s=%s has a/i/u with breve in it, not removing: %s" %
                 (param, val, str(t)))
           else:

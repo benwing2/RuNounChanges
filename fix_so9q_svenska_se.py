@@ -6,7 +6,7 @@
 # {{R:SO}} → {{R:svenska.se|so}}
 # {{R:SAOB online}} → {{R:svenska.se|saob}}
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, tname, msg, site

@@ -11,7 +11,7 @@
 #
 # #* {{RQ:Bacon Sylva Sylvarum|passage=The [[cion]] [[overrule]]th the '''stock''' quite.}}
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site, tname

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import re
@@ -6,17 +6,17 @@ import unicodedata
 import blib
 from collections import OrderedDict
 
-AC = u"\u0301" # acute =  ́
-GR = u"\u0300" # grave =  ̀
-CFLEX = u"\u0302" # circumflex =  ̂
-DOTABOVE = u"\u0307" # dot above =  ̇
-DOTBELOW = u"\u0323" # dot below =  ̣
-DI = u"\u0308" # diaeresis =  ̈
-DUBGR = u"\u030F" # double grave =  ̏
-CARON = u"\u030C" # caron =  ̌
+AC = "\u0301" # acute =  ́
+GR = "\u0300" # grave =  ̀
+CFLEX = "\u0302" # circumflex =  ̂
+DOTABOVE = "\u0307" # dot above =  ̇
+DOTBELOW = "\u0323" # dot below =  ̣
+DI = "\u0308" # diaeresis =  ̈
+DUBGR = "\u030F" # double grave =  ̏
+CARON = "\u030C" # caron =  ̌
 
-PSEUDOVOWEL = u"\uFFF1" # pseudovowel placeholder
-PSEUDOCONS = u"\uFFF2" # pseudoconsonant placeholder
+PSEUDOVOWEL = "\uFFF1" # pseudovowel placeholder
+PSEUDOCONS = "\uFFF2" # pseudoconsonant placeholder
 
 # non-primary accents (i.e. excluding acute) that indicate pronunciation
 # (not counting diaeresis, which indicates a completely different vowel,
@@ -33,28 +33,23 @@ stress_accents = AC + GR + CFLEX + DI + DUBGR
 # regex for any optional accent(s)
 opt_accent = "[" + accents + "]*"
 
-composed_grave_vowel = u"ѐЀѝЍ"
-vowel_no_jo = u"аеиоуяэыюіѣѵүАЕИОУЯЭЫЮІѢѴҮ" + composed_grave_vowel #omit ёЁ
-vowel = vowel_no_jo + u"ёЁ"
-cons_except_sib_c = u"бдфгйклмнпрствхзьъБДФГЙКЛМНПРСТВХЗЬЪ"
-sib = u"шщчжШЩЧЖ"
-sib_c = sib + u"цЦ"
+composed_grave_vowel = "ѐЀѝЍ"
+vowel_no_jo = "аеиоуяэыюіѣѵүАЕИОУЯЭЫЮІѢѴҮ" + composed_grave_vowel #omit ёЁ
+vowel = vowel_no_jo + "ёЁ"
+cons_except_sib_c = "бдфгйклмнпрствхзьъБДФГЙКЛМНПРСТВХЗЬЪ"
+sib = "шщчжШЩЧЖ"
+sib_c = sib + "цЦ"
 cons = cons_except_sib_c + sib_c
-velar = u"кгхКГХ"
-uppercase = u"АЕИОУЯЭЫЁЮІѢѴБДФГЙКЛМНПРСТВХЗЬЪШЩЧЖЦ"
-tr_vowel = u"aeěɛiouyAEĚƐIOUY"
+velar = "кгхКГХ"
+uppercase = "АЕИОУЯЭЫЁЮІѢѴБДФГЙКЛМНПРСТВХЗЬЪШЩЧЖЦ"
+tr_vowel = "aeěɛiouyAEĚƐIOUY"
 # any consonant in transliteration, omitting soft/hard sign
-tr_cons_no_sign = u"bcčdfghjklmnpqrsštvwxzžBCČDFGHJKLMNPQRSŠTVWXZŽ" + PSEUDOCONS
+tr_cons_no_sign = "bcčdfghjklmnpqrsštvwxzžBCČDFGHJKLMNPQRSŠTVWXZŽ" + PSEUDOCONS
 # any consonant in transliteration, including soft/hard sign
-tr_cons = tr_cons_no_sign + u"ʹʺ"
+tr_cons = tr_cons_no_sign + "ʹʺ"
 # regex for any consonant in transliteration, including soft/hard sign,
 # optionally followed by any accent
 tr_cons_acc_re = "[" + tr_cons + "]" + opt_accent
-
-def uniprint(x):
-  print x.encode('utf-8')
-def uniout(x):
-  print x.encode('utf-8'),
 
 def decompose_acute_grave(text):
   # Decompose sequences of character + acute or grave, but compose all other
@@ -75,7 +70,7 @@ def recompose(text):
   return unicodedata.normalize("NFC", text)
 
 def assert_decomposed(text):
-  assert not re.search(u"[áéíóúýàèìòùỳäëïöüÿÁÉÍÓÚÝÀÈÌÒÙỲÄËÏÖÜŸ]", text)
+  assert not re.search("[áéíóúýàèìòùỳäëïöüÿÁÉÍÓÚÝÀÈÌÒÙỲÄËÏÖÜŸ]", text)
 
 def xlit_text(text, pagemsg, verbose=False):
   def expand_text(tempcall):
@@ -106,12 +101,12 @@ def needs_accents(text, split_dash=False):
 def is_stressed(word):
   # A word that has ё in it is inherently stressed.
   # diaeresis occurs in сѣ̈дла plural of сѣдло́
-  return re.search(u"[́̈ёЁ]", word)
+  return re.search("[́̈ёЁ]", word)
 
 def is_tr_stressed(word):
   if not word:
     return False
-  return re.search(u"[́̈]", unicodedata.normalize("NFD", word))
+  return re.search("[́̈]", unicodedata.normalize("NFD", word))
 
 def is_unstressed(word):
   return not is_stressed(word)
@@ -120,41 +115,41 @@ def is_tr_unstressed(word):
   return not is_tr_stressed(word)
 
 def is_unaccented(word):
-  return not re.search("[" + stress_accents + u"ёЁѐЀѝЍ]", word)
+  return not re.search("[" + stress_accents + "ёЁѐЀѝЍ]", word)
 
 def is_tr_unaccented(word):
   return not re.search("[" + stress_accents + "]", unicodedata.normalize("NFD", word))
 
 def is_ending_stressed(word):
-  return (re.search(u"[ёЁ][^" + vowel + "]*$", word) or
-    re.search("[" + vowel + u"][́̈][^" + vowel + "]*$", word))
+  return (re.search("[ёЁ][^" + vowel + "]*$", word) or
+    re.search("[" + vowel + "][́̈][^" + vowel + "]*$", word))
 
 # True if any word in text has two or more stresses; don't count words like
 # платёжеспосо́бность or трёхле́тний, where the first ё isn't accented
 def is_multi_stressed(text):
-  text = re.sub(u"[ёЁ]", u"е" + DI, text)
+  text = re.sub("[ёЁ]", "е" + DI, text)
   words = re.split(r"[\s-]", text)
   for word in words:
     # Look for true accent (not diaeresis) + any another accent, in the
     # same word
-    if re.search("[" + vowel + u"][́].*[" + vowel + u"][́̈]", word):
+    if re.search("[" + vowel + "][́].*[" + vowel + "][́̈]", word):
       return True
   return False
 
 def number_of_accents(text):
-  return len(re.sub("[^" + accents + u"ёЁѐЀѝЍ]", "", text))
+  return len(re.sub("[^" + accents + "ёЁѐЀѝЍ]", "", text))
 
 def is_beginning_stressed(word):
-  return (re.search("^[^" + vowel + u"]*[ёЁ]", word) or
-    re.search("^[^" + vowel + "]*[" + vowel + u"]́", word))
+  return (re.search("^[^" + vowel + "]*[ёЁ]", word) or
+    re.search("^[^" + vowel + "]*[" + vowel + "]́", word))
 
 def is_nonsyllabic(word):
   return not re.search("[" + vowel + "]", word)
 
 # Includes non-syllabic stems such as льд-
 def is_monosyllabic(word):
-  vowel_or_hard_sign = vowel + u"ъЪ" # in case we're called for Bulgarian
-  word = re.sub(u"ъ$", "", word)
+  vowel_or_hard_sign = vowel + "ъЪ" # in case we're called for Bulgarian
+  word = re.sub("ъ$", "", word)
   return not re.search("[" + vowel_or_hard_sign + "].*[" + vowel_or_hard_sign + "]", word)
 
 # Includes non-syllabic stems such as lʹd-
@@ -169,10 +164,10 @@ def ends_with_vowel(word):
 
 grave_deaccenter = {
     GR:"", # grave accent
-    u"ѐ":u"е", # composed Cyrillic chars w/grave accent
-    u"Ѐ":u"Е",
-    u"ѝ":u"и",
-    u"Ѝ":u"И",
+    "ѐ":"е", # composed Cyrillic chars w/grave accent
+    "Ѐ":"Е",
+    "ѝ":"и",
+    "Ѝ":"И",
 }
 
 deaccenter = grave_deaccenter.copy()
@@ -181,18 +176,18 @@ deaccenter[DI] = "" # diaeresis
 
 def remove_grave_accents(word):
   # remove grave accents
-  return re.sub("([" + GR + u"ѐЀѝЍ])", lambda m: grave_deaccenter[m.group(1)], word)
+  return re.sub("([" + GR + "ѐЀѝЍ])", lambda m: grave_deaccenter[m.group(1)], word)
 
 def remove_accents(word):
   # remove pronunciation accents (not diaeresis)
-  return re.sub("([" + pron_accents + u"ѐЀѝЍ])",
+  return re.sub("([" + pron_accents + "ѐЀѝЍ])",
     lambda m: deaccenter[m.group(1)], word)
 
 def remove_tr_accents(word):
   # remove pronunciation accents from translit (not diaeresis)
   if not word:
     return word
-  return unicodedata.normalize("NFC", re.sub(u"[" + pron_accents + "]", "",
+  return unicodedata.normalize("NFC", re.sub("[" + pron_accents + "]", "",
     unicodedata.normalize("NFD", word)))
 
 def remove_monosyllabic_accents(word):
@@ -215,14 +210,14 @@ def remove_tr_monosyllabic_accents(word):
 
 def remove_non_primary_accents(word):
   # remove all pronunciation accents except acute
-  return re.sub("([" + non_primary_pron_accents + u"ѐЀѝЍ])",
+  return re.sub("([" + non_primary_pron_accents + "ѐЀѝЍ])",
     lambda m: deaccenter[m.group(1)], word)
 
 def remove_tr_non_primary_accents(word):
   # remove all pronunciation accents except acute from translit
   if not word:
     return word
-  return unicodedata.normalize("NFC", re.sub(u"[" + non_primary_pron_accents + "]", "",
+  return unicodedata.normalize("NFC", re.sub("[" + non_primary_pron_accents + "]", "",
     unicodedata.normalize("NFD", word)))
 
 # Subfunction of split_syllables(). On input we get sections of text
@@ -280,19 +275,19 @@ def split_hyphens(ru, tr):
 # a sibilant, ju to u after hard sibilant.
 # NOTE: Translit must already be decomposed! See comment at top.
 def j_correction(tr):
-  tr = re.sub("([" + tr_cons_no_sign + "]" + opt_accent + u")[Jj]([EeĚě])", r"\1\2", tr)
-  tr = re.sub(u"([žščŽŠČ])[Jj]([Oo])", r"\1\2", tr)
-  tr = re.sub(u"([žšŽŠ])[Jj]([Uu])", r"\1\2", tr)
+  tr = re.sub("([" + tr_cons_no_sign + "]" + opt_accent + ")[Jj]([EeĚě])", r"\1\2", tr)
+  tr = re.sub("([žščŽŠČ])[Jj]([Oo])", r"\1\2", tr)
+  tr = re.sub("([žšŽŠ])[Jj]([Uu])", r"\1\2", tr)
   return tr
 
 destresser = deaccenter.copy()
-destresser[u"ё"] = u"е"
-destresser[u"Ё"] = u"Е"
+destresser["ё"] = "е"
+destresser["Ё"] = "Е"
 
 def make_unstressed_ru(ru):
   # The following regexp has grave+acute+diaeresis after the bracket
   #
-  return re.sub(u"([̀́̈ёЁѐЀѝЍ])", lambda m: destresser[m.group(1)], ru)
+  return re.sub("([̀́̈ёЁѐЀѝЍ])", lambda m: destresser[m.group(1)], ru)
 
 # Remove all stress marks (acute, grave, diaeresis).
 # NOTE: Translit must already be decomposed! See comment at top.
@@ -303,7 +298,7 @@ def make_unstressed(ru, tr=None):
   # into syllables and only converting Latin o to e opposite a ё.
   rusyl, trsyl = split_syllables(ru, tr)
   for i in range(len(rusyl)):
-    if re.search(u"[ёЁ]", rusyl[i]):
+    if re.search("[ёЁ]", rusyl[i]):
       trsyl[i] = trsyl[i].replace("o", "e").replace("O", "E")
     rusyl[i] = make_unstressed_ru(rusyl[i])
     # the following should still work as it will affect accents only
@@ -312,7 +307,7 @@ def make_unstressed(ru, tr=None):
   return "".join(rusyl), j_correction("".join(trsyl))
 
 def remove_jo_ru(word):
-  return re.sub(u"([̈ёЁ])", destresser, word)
+  return re.sub("([̈ёЁ])", destresser, word)
 
 # Remove diaeresis stress marks only.
 # NOTE: Translit must already be decomposed! See comment at top.
@@ -323,7 +318,7 @@ def remove_jo(ru, tr=None):
   # into syllables and only converting Latin o to e opposite a ё.
   rusyl, trsyl = split_syllables(ru, tr)
   for i in range(len(rusyl)):
-    if re.search(u"[ёЁ]", rusyl[i]):
+    if re.search("[ёЁ]", rusyl[i]):
       trsyl[i] = trsyl[i].replace("o", "e").replace("O", "E")
     rusyl[i] = remove_jo_ru(rusyl[i])
     # the following should still work as it will affect accents only
@@ -333,7 +328,7 @@ def remove_jo(ru, tr=None):
 
 def make_unstressed_once_ru(word):
   # leave graves alone
-  return re.sub(u"([́̈ёЁ])([^́̈ёЁ]*)$", lambda m: destresser[m.group(1)] + m.group(2), word, 1)
+  return re.sub("([́̈ёЁ])([^́̈ёЁ]*)$", lambda m: destresser[m.group(1)] + m.group(2), word, 1)
 
 def map_last_hyphenated_component(fn, ru, tr):
   if "-" in ru:
@@ -362,7 +357,7 @@ def make_unstressed_once_after_hyphen_split(ru, tr=None, noconcat=False):
   for i in range(len(rusyl) - 1, -1, -1):
     stressed = is_stressed(rusyl[i])
     if stressed:
-      if re.search(u"[ёЁ]", rusyl[i]):
+      if re.search("[ёЁ]", rusyl[i]):
         trsyl[i] = trsyl[i].replace("o", "e").replace("O", "E")
       rusyl[i] = make_unstressed_once_ru(rusyl[i])
       # the following should still work as it will affect accents only
@@ -384,7 +379,7 @@ def make_unstressed_once(ru, tr=None):
 
 def make_unstressed_once_at_beginning_ru(word):
   # leave graves alone
-  return re.sub(u"^([^́̈ёЁ]*)([́̈ёЁ])", lambda m: m.group(1) + destresser[m.group(2)], word, 1)
+  return re.sub("^([^́̈ёЁ]*)([́̈ёЁ])", lambda m: m.group(1) + destresser[m.group(2)], word, 1)
 
 # Make first stressed syllable (acute or diaeresis) unstressed; leave
 # graves alone; if NOCONCAT, return individual syllables.
@@ -398,7 +393,7 @@ def make_unstressed_once_at_beginning(ru, tr=None, noconcat=False):
   for i in range(len(rusyl)):
     stressed = is_stressed(rusyl[i])
     if stressed:
-      if re.search(u"[ёЁ]", rusyl[i]):
+      if re.search("[ёЁ]", rusyl[i]):
         trsyl[i] = trsyl[i].replace("o", "e").replace("O", "E")
       rusyl[i] = make_unstressed_once_at_beginning_ru(rusyl[i])
       # the following should still work as it will affect accents only
@@ -414,7 +409,7 @@ def make_unstressed_once_at_beginning(ru, tr=None, noconcat=False):
 # in such a case, remove the grave.
 # NOTE: Translit must already be decomposed! See comment at top.
 def correct_grave_acute_clash(word, tr=None):
-  word = re.sub(u"([̀ѐЀѝЍ])́", lambda m: grave_deaccenter[m.group(1)] + AC, word)
+  word = re.sub("([̀ѐЀѝЍ])́", lambda m: grave_deaccenter[m.group(1)] + AC, word)
   word = word.replace(AC + GR, AC)
   if not tr:
     return word, None
@@ -430,7 +425,7 @@ def make_ending_stressed_ru(word):
   # Destress the last stressed syllable
   word = make_unstressed_once_ru(word)
   # Add an acute to the last syllable
-  word = re.sub("([" + vowel_no_jo + "])([^" + vowel + "]*)$", ur"\1́\2", word)
+  word = re.sub("([" + vowel_no_jo + "])([^" + vowel + "]*)$", r"\1́\2", word)
   # If that caused an acute and grave next to each other, remove the grave
   return correct_grave_acute_clash(word)[0]
 
@@ -472,7 +467,7 @@ def make_beginning_stressed_ru(word):
   # Destress the first stressed syllable
   word = make_unstressed_once_at_beginning_ru(word)
   # Add an acute to the first syllable
-  word = re.sub("^([^" + vowel + "]*)([" + vowel_no_jo + "])", ur"\1\2́", word)
+  word = re.sub("^([^" + vowel + "]*)([" + vowel_no_jo + "])", r"\1\2́", word)
   # If that caused an acute and grave next to each other, remove the grave
   return correct_grave_acute_clash(word)[0]
 
@@ -509,29 +504,29 @@ def tr_try_to_stress(word):
     # FIXME, won't work, make_ending_stressed() needs to take both ru and tr, see Lua
     #return make_tr_ending_stressed(word)
     return unicodedata.normalize("NFC",
-        re.sub("([" + tr_vowel + "])([^" +  + "]*)$", ur"\1́\2", word))
+        re.sub("([" + tr_vowel + "])([^" +  + "]*)$", r"\1́\2", word))
   else:
     return word
 
 def reduce_stem(stem):
-    m = re.search(u"^(.*)([оОеЕёЁ])́?([" + cons + "]+)$", stem)
+    m = re.search("^(.*)([оОеЕёЁ])́?([" + cons + "]+)$", stem)
     if not m:
       return None
     pre, letter, post = m.groups()
-    if letter in u"оО":
-      if post in u"йЙ":
+    if letter in "оО":
+      if post in "йЙ":
         return None # FIXME, is this correct?
       letter = ""
     else:
       is_upper = post in uppercase
-      if re.search("[" + vowel + u"]́?$", pre):
-        letter = is_upper and u"Й" or u"й"
-      elif post in u"йЙ":
-        letter = is_upper and u"Ь" or u"ь"
+      if re.search("[" + vowel + "]́?$", pre):
+        letter = is_upper and "Й" or "й"
+      elif post in "йЙ":
+        letter = is_upper and "Ь" or "ь"
         post = ""
       elif ((post in velar and pre in cons_except_sib_c) or
-          (post not in u"йЙ" + velar and re.search(u"[лЛ]$", pre))):
-        letter = is_upper and u"Ь" or u"ь"
+          (post not in "йЙ" + velar and re.search("[лЛ]$", pre))):
+        letter = is_upper and "Ь" or "ь"
       else:
         letter = ""
     stem = pre + letter + post
@@ -545,23 +540,23 @@ def dereduce_stem(stem, epenthetic_stress):
     return None
   pre, letter, post = m.groups()
   is_upper = post in uppercase
-  if letter in u"ьйЬЙ":
+  if letter in "ьйЬЙ":
     letter = ""
-    if post in u"цЦ" or not epenthetic_stress:
-      epvowel = is_upper and u"Е" or u"е"
+    if post in "цЦ" or not epenthetic_stress:
+      epvowel = is_upper and "Е" or "е"
     else:
-      epvowel = is_upper and u"Ё" or u"ё"
+      epvowel = is_upper and "Ё" or "ё"
   elif letter in cons_except_sib_c and post in velar or letter in velar:
-    epvowel = is_upper and u"О" or u"о"
-  elif post in u"цЦ":
-    epvowel = is_upper and u"Е" or u"е"
+    epvowel = is_upper and "О" or "о"
+  elif post in "цЦ":
+    epvowel = is_upper and "Е" or "е"
   elif epenthetic_stress:
     if letter in sib:
-      epvowel = is_upper and u"О́" or u"о́"
+      epvowel = is_upper and "О́" or "о́"
     else:
-      epvowel = is_upper and u"Ё" or u"ё"
+      epvowel = is_upper and "Ё" or "ё"
   else:
-    epvowel = is_upper and u"Е" or u"е"
+    epvowel = is_upper and "Е" or "е"
   stem = pre + letter + epvowel + post
   if epenthetic_stress:
     stem = make_ending_stressed(stem)
@@ -569,15 +564,15 @@ def dereduce_stem(stem, epenthetic_stress):
 
 def add_soft_sign(stem):
   if re.search("[" + vowel + "]$", stem):
-    return stem + u"й"
+    return stem + "й"
   else:
-    return stem + u"ь"
+    return stem + "ь"
 
 def add_hard_neuter(stem):
   if re.search("[" + sib_c + "]$", stem):
-    return stem + u"е"
+    return stem + "е"
   else:
-    return stem + u"о"
+    return stem + "о"
 
 def split_russian_tr(arg):
   if "//" in arg:
@@ -660,9 +655,9 @@ def check_for_alt_yo_terms(text, pagemsg):
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
     tname = str(t.name)
-    if tname in [u"ru-adj-alt-ё", u"ru-noun-alt-ё", u"ru-proper noun-alt-ё",
-        u"ru-verb-alt-ё", u"ru-pos-alt-ё"]:
-      pagemsg(u"Skipping alt-ё term")
+    if tname in ["ru-adj-alt-ё", "ru-noun-alt-ё", "ru-proper noun-alt-ё",
+        "ru-verb-alt-ё", "ru-pos-alt-ё"]:
+      pagemsg("Skipping alt-ё term")
       return True
   return False
 
@@ -682,11 +677,11 @@ def test(actual, expected_ru, expected_tr):
     actual_ru = actual
     actual_tr = None
   if actual_ru == expected_ru and actual_tr == expected_tr:
-    uniprint("(%s, %s) == (%s, %s): TEST SUCCEEDED." %
+    print("(%s, %s) == (%s, %s): TEST SUCCEEDED." %
         (actual_ru, actual_tr, expected_ru, expected_tr))
     num_succeeded += 1
   else:
-    uniprint("(%s, %s) != (%s, %s): TEST FAILED." %
+    print("(%s, %s) != (%s, %s): TEST FAILED." %
         (actual_ru, actual_tr, expected_ru, expected_tr))
     num_failed += 1
 
@@ -695,53 +690,53 @@ def run_tests():
   num_succeeded = 0
   num_failed = 0
 
-  test(make_unstressed(u"де́лать"), u"делать", None)
-  test(make_unstressed(u"де́лать", decompose(u"délat")), u"делать", "delat")
-  test(make_unstressed(u"де́ла́ть"), u"делать", None)
-  test(make_unstressed(u"де́ла́ть", decompose(u"délát")), u"делать", "delat")
-  test(make_unstressed(u"дёлать"), u"делать", None)
-  test(make_unstressed(u"дёлать", decompose(u"djólat")), u"делать", "delat")
-  test(make_unstressed(u"дйо́лать"), u"дйолать", None)
-  test(make_unstressed(u"дйо́лать", decompose(u"djólat")), u"дйолать", "djolat")
-  test(make_unstressed_once(u"де́лать"), u"делать", None)
-  test(make_unstressed_once(u"де́лать", decompose(u"délat")), u"делать", "delat")
-  test(make_unstressed_once(u"дела́ть"), u"делать", None)
-  test(make_unstressed_once(u"дела́ть", decompose(u"delát")), u"делать", "delat")
-  test(make_unstressed_once(u"де́ла́ть"), u"де́лать", None)
-  test(make_unstressed_once(u"де́ла́ть", decompose(u"délát")), u"де́лать", decompose(u"délat"))
-  test(make_unstressed_once(u"дёлать"), u"делать", None)
-  test(make_unstressed_once(u"дёлать", decompose(u"djólat")), u"делать", "delat")
-  test(make_unstressed_once(u"дйо́лать"), u"дйолать", None)
-  test(make_unstressed_once(u"дйо́лать", decompose(u"djólat")), u"дйолать", "djolat")
-  test(make_unstressed_once(u"ко́е-как"), u"ко́е-как", None)
-  test(make_unstressed_once(u"ко́е-как", decompose(u"kóe-kak")), u"ко́е-как", decompose(u"kóe-kak"))
-  test(make_unstressed_once_at_beginning(u"де́лать"), u"делать", None)
-  test(make_unstressed_once_at_beginning(u"де́лать", decompose(u"délat")), u"делать", "delat")
-  test(make_unstressed_once_at_beginning(u"дела́ть"), u"делать", None)
-  test(make_unstressed_once_at_beginning(u"дела́ть", decompose(u"delát")), u"делать", "delat")
-  test(make_unstressed_once_at_beginning(u"де́ла́ть"), u"дела́ть", None)
-  test(make_unstressed_once_at_beginning(u"де́ла́ть", decompose(u"délát")), u"дела́ть", decompose(u"delát"))
-  test(make_unstressed_once_at_beginning(u"дёлать"), u"делать", None)
-  test(make_unstressed_once_at_beginning(u"дёлать", decompose(u"djólat")), u"делать", "delat")
-  test(make_unstressed_once_at_beginning(u"дйо́лать"), u"дйолать", None)
-  test(make_unstressed_once_at_beginning(u"дйо́лать", decompose(u"djólat")), u"дйолать", "djolat")
-  test(make_ending_stressed(u"де́лать"), u"дела́ть", None)
-  test(make_ending_stressed(u"де́лать", decompose(u"délat")), u"дела́ть", decompose(u"delát"))
-  test(make_ending_stressed(u"де́ла́ть"), u"де́ла́ть", None)
-  test(make_ending_stressed(u"де́ла́ть", decompose(u"délát")), u"де́ла́ть", decompose(u"délát"))
-  test(make_ending_stressed(u"да̀ла́лать"), u"да̀лала́ть", None)
-  test(make_ending_stressed(u"да̀ла́лать", decompose(u"dàlálat")), u"да̀лала́ть", decompose(u"dàlalát"))
-  test(make_ending_stressed(u"ко́е-как"), u"ко́е-ка́к", None)
-  test(make_ending_stressed(u"ко́е-как", decompose(u"kóe-kak")), u"ко́е-ка́к", decompose(u"kóe-kák"))
-  test(make_beginning_stressed(u"дела́ть"), u"де́лать", None)
-  test(make_beginning_stressed(u"дела́ть", decompose(u"delát")), u"де́лать", decompose(u"délat"))
-  test(make_beginning_stressed(u"де́ла́ть"), u"де́ла́ть", None)
-  test(make_beginning_stressed(u"де́ла́ть", decompose(u"délát")), u"де́ла́ть", decompose(u"délát"))
-  test(make_beginning_stressed(u"да̀ла́ть"), u"да́лать", None)
-  test(make_beginning_stressed(u"да̀ла́ть", decompose(u"dàlát")), u"да́лать", decompose(u"dálat"))
+  test(make_unstressed("де́лать"), "делать", None)
+  test(make_unstressed("де́лать", decompose("délat")), "делать", "delat")
+  test(make_unstressed("де́ла́ть"), "делать", None)
+  test(make_unstressed("де́ла́ть", decompose("délát")), "делать", "delat")
+  test(make_unstressed("дёлать"), "делать", None)
+  test(make_unstressed("дёлать", decompose("djólat")), "делать", "delat")
+  test(make_unstressed("дйо́лать"), "дйолать", None)
+  test(make_unstressed("дйо́лать", decompose("djólat")), "дйолать", "djolat")
+  test(make_unstressed_once("де́лать"), "делать", None)
+  test(make_unstressed_once("де́лать", decompose("délat")), "делать", "delat")
+  test(make_unstressed_once("дела́ть"), "делать", None)
+  test(make_unstressed_once("дела́ть", decompose("delát")), "делать", "delat")
+  test(make_unstressed_once("де́ла́ть"), "де́лать", None)
+  test(make_unstressed_once("де́ла́ть", decompose("délát")), "де́лать", decompose("délat"))
+  test(make_unstressed_once("дёлать"), "делать", None)
+  test(make_unstressed_once("дёлать", decompose("djólat")), "делать", "delat")
+  test(make_unstressed_once("дйо́лать"), "дйолать", None)
+  test(make_unstressed_once("дйо́лать", decompose("djólat")), "дйолать", "djolat")
+  test(make_unstressed_once("ко́е-как"), "ко́е-как", None)
+  test(make_unstressed_once("ко́е-как", decompose("kóe-kak")), "ко́е-как", decompose("kóe-kak"))
+  test(make_unstressed_once_at_beginning("де́лать"), "делать", None)
+  test(make_unstressed_once_at_beginning("де́лать", decompose("délat")), "делать", "delat")
+  test(make_unstressed_once_at_beginning("дела́ть"), "делать", None)
+  test(make_unstressed_once_at_beginning("дела́ть", decompose("delát")), "делать", "delat")
+  test(make_unstressed_once_at_beginning("де́ла́ть"), "дела́ть", None)
+  test(make_unstressed_once_at_beginning("де́ла́ть", decompose("délát")), "дела́ть", decompose("delát"))
+  test(make_unstressed_once_at_beginning("дёлать"), "делать", None)
+  test(make_unstressed_once_at_beginning("дёлать", decompose("djólat")), "делать", "delat")
+  test(make_unstressed_once_at_beginning("дйо́лать"), "дйолать", None)
+  test(make_unstressed_once_at_beginning("дйо́лать", decompose("djólat")), "дйолать", "djolat")
+  test(make_ending_stressed("де́лать"), "дела́ть", None)
+  test(make_ending_stressed("де́лать", decompose("délat")), "дела́ть", decompose("delát"))
+  test(make_ending_stressed("де́ла́ть"), "де́ла́ть", None)
+  test(make_ending_stressed("де́ла́ть", decompose("délát")), "де́ла́ть", decompose("délát"))
+  test(make_ending_stressed("да̀ла́лать"), "да̀лала́ть", None)
+  test(make_ending_stressed("да̀ла́лать", decompose("dàlálat")), "да̀лала́ть", decompose("dàlalát"))
+  test(make_ending_stressed("ко́е-как"), "ко́е-ка́к", None)
+  test(make_ending_stressed("ко́е-как", decompose("kóe-kak")), "ко́е-ка́к", decompose("kóe-kák"))
+  test(make_beginning_stressed("дела́ть"), "де́лать", None)
+  test(make_beginning_stressed("дела́ть", decompose("delát")), "де́лать", decompose("délat"))
+  test(make_beginning_stressed("де́ла́ть"), "де́ла́ть", None)
+  test(make_beginning_stressed("де́ла́ть", decompose("délát")), "де́ла́ть", decompose("délát"))
+  test(make_beginning_stressed("да̀ла́ть"), "да́лать", None)
+  test(make_beginning_stressed("да̀ла́ть", decompose("dàlát")), "да́лать", decompose("dálat"))
 
   # Final results
-  uniprint("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))
+  print("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))
 
 if __name__ == "__main__":
     run_tests()

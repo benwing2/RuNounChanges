@@ -3,7 +3,7 @@
 
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 parser = blib.create_argparser("Generate form-of documentation pages.")
 parser.add_argument('--direcfile', help="File containing directives.", required=True)

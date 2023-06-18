@@ -47,7 +47,7 @@
 # the masculine singular past (minus final -л if it's present). Stress is
 # as in the masculine singular past.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname
@@ -238,8 +238,8 @@ def process_text_on_page(index, pagetitle, text):
         verbal_adj_suffix = suffix_start + u"тельный"
       agent_noun = re.sub(u"ный$", "", verbal_adj)
       agent_noun_suffix = re.sub(u"ный$", "", verbal_adj_suffix)
-      stressed_verbal_noun_suffix = re.sub(u"^([аяеи])", ur"\1́", verbal_noun_suffix)
-      stressed_verbal_adj_suffix = re.sub(u"^([аяеи])", ur"\1́", verbal_adj_suffix)
+      stressed_verbal_noun_suffix = re.sub(u"^([аяеи])", r"\1́", verbal_noun_suffix)
+      stressed_verbal_adj_suffix = re.sub(u"^([аяеи])", r"\1́", verbal_adj_suffix)
       stressed_agent_noun_suffix = re.sub(u"ный$", "", stressed_verbal_adj_suffix)
       if conjtype.startswith("7"):
         stem = getparam(t, "4")

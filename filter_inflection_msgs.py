@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import re, sys, codecs, argparse
+import re, sys, argparse
 
 from blib import msg, errmsg
 import rulib
@@ -24,4 +24,4 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
 for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
   m = re.search("^Page ([0-9]+) ", line)
   if not m or m.group(1) in pagenos:
-    print line.encode("utf-8")
+    print(line)

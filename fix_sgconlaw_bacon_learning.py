@@ -10,7 +10,7 @@
 #
 ##* {{RQ:Bacon Learning|passage='''Policying''' of cities.}}
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, errmsg, site

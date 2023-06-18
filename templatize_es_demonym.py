@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
@@ -54,13 +54,13 @@ def process_text_on_page(index, pagetitle, text):
       dont_append_country = False
 
       placetype = ""
-      mm = re.search(ur"^the (%s(?: (?:and|or) %s)*) of (.*?)$" % (placetype_re, placetype_re), raw_toponym)
+      mm = re.search(r"^the (%s(?: (?:and|or) %s)*) of (.*?)$" % (placetype_re, placetype_re), raw_toponym)
       if mm:
         placetype, raw_toponym = mm.groups()
         placetype = "<qq:%s>" % placetype
 
       country_or_state = ""
-      toponym_word_re = u"(?:[A-ZÁÉÍÓÚÝÑ][a-záéíóúýñ]*|de)"
+      toponym_word_re = "(?:[A-ZÁÉÍÓÚÝÑ][a-záéíóúýñ]*|de)"
       toponym_re = "%s(?: %s)*" % (toponym_word_re, toponym_word_re)
       possibly_bracketed_toponym_re = r"(?:%s|\[\[%s\]\])" % (toponym_re, toponym_re)
       toponym_and_country_state_re = r"^(.*?)(?:,| in) (%s(?:, %s)*)$" % (possibly_bracketed_toponym_re, possibly_bracketed_toponym_re)
@@ -138,7 +138,7 @@ def process_text_on_page(index, pagetitle, text):
           toponym = raw_toponym
 
       if not toponym:
-        mm = re.search(ur"^\[*%s\]*$" % toponym_re, raw_toponym)
+        mm = re.search(r"^\[*%s\]*$" % toponym_re, raw_toponym)
         if mm:
           rawest_toponym = raw_toponym
           dont_add = True

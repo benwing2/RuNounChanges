@@ -3,7 +3,7 @@
 
 # Find pages that need definitions among a set list (e.g. most frequent words).
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

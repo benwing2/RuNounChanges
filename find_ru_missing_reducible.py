@@ -3,7 +3,7 @@
 
 # Find places where a reducible * notation is likely missing in Russian nouns.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site, tname
@@ -15,7 +15,7 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  if not re.search(ur"(ник|ок|ка)([ -]|$)", pagetitle):
+  if not re.search(r"(ник|ок|ка)([ -]|$)", pagetitle):
     return
 
   cons = u"[бцдфгчйклмнпрствшхзжщ]"

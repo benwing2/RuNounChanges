@@ -9,7 +9,7 @@
 # 1. When swapping participles with nouns/adjectives, don't do it for
 #    adverbial participles
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

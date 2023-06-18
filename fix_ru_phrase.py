@@ -3,7 +3,7 @@
 
 # Fix ru-phrase templates to use 1= instead of head=.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

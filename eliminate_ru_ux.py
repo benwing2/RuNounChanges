@@ -6,7 +6,7 @@
 # special-purpose params noadj=, noshto=, adj= or shto= is present (the
 # latter two are obsolete).
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

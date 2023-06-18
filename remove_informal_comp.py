@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site
@@ -23,7 +23,7 @@ def process_page(page, index, parsed):
       newcomps = []
       for comp in comps:
         if re.search(u"е́?й$", comp):
-          regcomp = re.sub(u"(е́?)й$", ur"\1е", comp)
+          regcomp = re.sub(u"(е́?)й$", r"\1е", comp)
           if regcomp in newcomps:
             pagemsg("Skipping informal form %s" % comp)
             notes.append("remove informal comparative %s" % comp)

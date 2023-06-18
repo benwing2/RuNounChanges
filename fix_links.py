@@ -22,7 +22,7 @@
 # is more careful to avoid converting raw links that are probably not to
 # French vocabulary words (e.g. to numbers or symbols).
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site, rsub_repeatedly
@@ -298,7 +298,7 @@ def process_text_on_page(index, pagetitle, text):
 
   # Split off templates, tables, in each case allowing one nested template;
   # also split off comments and stuff after dashes and between quotes.
-  template_table_split_re = ur'''(\{\{(?:[^{}]|\{\{[^{}]*\}\})*\}\}|\{\|(?:[^{}]|\{\{[^{}]*\}\})*\|\}|<!--.*-->| +(?:[-–—=]|&[mn]dash;) +[^\n]*|\(?(?<!')''[^'\n]*?''\)?|"[^"\n]*?"|“[^\n]*?”|‘[^\n]*?’)'''
+  template_table_split_re = r'''(\{\{(?:[^{}]|\{\{[^{}]*\}\})*\}\}|\{\|(?:[^{}]|\{\{[^{}]*\}\})*\|\}|<!--.*-->| +(?:[-–—=]|&[mn]dash;) +[^\n]*|\(?(?<!')''[^'\n]*?''\)?|"[^"\n]*?"|“[^\n]*?”|‘[^\n]*?’)'''
 
   def do_section(sectext, thislangname):
     if thislangname in thislangnames:

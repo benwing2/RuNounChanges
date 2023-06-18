@@ -92,7 +92,7 @@ def create_declension(page, index, save, pos, tempname, decltempname, sgnum,
 
   # Remove definite article al- from transliterated text
   def remove_al_tr(text):
-    return (sub_if(ur"^a?([sšṣtṯṭdḏḍzžẓnrḷ])-\1", r"\1", text) or
+    return (sub_if(r"^a?([sšṣtṯṭdḏḍzžẓnrḷ])-\1", r"\1", text) or
         sub_if("^a?l-", "", text) or
         text)
 

@@ -3,7 +3,7 @@
 
 # Go through all Russian lemmas looking for headwords with secondary stress in them.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 import unicodedata
 
 import blib

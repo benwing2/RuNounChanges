@@ -3,7 +3,7 @@
 
 # Move text outside of certain RQ: templates inside the templates.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site

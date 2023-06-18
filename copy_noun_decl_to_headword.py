@@ -4,7 +4,7 @@
 # Copy the declension in ru-noun-table to ru-noun+, preserving any m=, f=,
 # g=, etc. in the latter.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

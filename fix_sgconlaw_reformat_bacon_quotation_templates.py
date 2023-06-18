@@ -13,7 +13,7 @@
 #
 # If 'RQ:Bacon Of The True Greatness' occurs without raw passage text following, we just replace with 'RQ:Bacon Essayes|chapter=Of the True Greatness of Kingdoms and Estates'.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site, tname

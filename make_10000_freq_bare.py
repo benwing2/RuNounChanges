@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import re, codecs, argparse
+import re, argparse
 from blib import msg
 import blib
 import rulib
@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser(description="Make bare and list versions of 10,
 parser.add_argument('--file', help="File containing original list.")
 args = parser.parse_args()
 
-for line in codecs.open(args.file, "r", "utf-8"):
+for line in open(args.file, "r", encoding="utf-8"):
   line = line.strip()
   line = re.sub(" .*", "", line)
   line = rulib.remove_accents(line)

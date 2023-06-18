@@ -3,7 +3,7 @@
 
 # Go through a dump finding links to nonexistent pages.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse, codecs
 
 import blib
 from blib import getparam, rmparam, msg, site
@@ -32,6 +32,7 @@ def ko_l(t, note):
     # Yuck yuck yuck! The following is from [[Module:ko]], which allows
     # Hanja, Hangul, translit and gloss params in any order and has a complex
     # algorithm to disambiguate them.
+    # FIXME: This needs changing for Python 3.
     val = getparam(t, param)
     if re.search(u"[가-힣㐀-䶵一-鿌\uF900-\uFADF𠀀-𯨟]", val):
       note("ko", val)

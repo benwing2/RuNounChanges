@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse, time
+import pywikibot, re, sys, argparse, time
 
 import blib
 from blib import getparam, addparam, rmparam, set_template_name, msg, errandmsg, site, tname, remove_links
@@ -2060,7 +2060,7 @@ def add_bracketing(defn):
   return " ".join(["[[%s]]" % word for word in defn.split(" ")])
 
 def parse_elative_defn(spec):
-  m = re.match(ur"(.*?) ([\u0600-\u07FF]+)(?: .*?)? from (.*?) from (.*?)(?: ref (.*?))?$", spec)
+  m = re.match(r"(.*?) ([\u0600-\u07FF]+)(?: .*?)? from (.*?) from (.*?)(?: ref (.*?))?$", spec)
   if not m:
     msg("Unable to match spec: %s" % spec)
   else:

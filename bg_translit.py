@@ -56,11 +56,11 @@ def tr(text, lang=None, sc=None, msgfun=msg):
     text = tr_canonicalize_bulgarian(text)
 
     # Remove word-final hard sign
-    text = rsub(text, "[Ъъ]($|[- \]])", ur"\1")
+    text = rsub(text, "[Ъъ]($|[- \]])", r"\1")
 
     # ьо becomes jo, Ьо becomes Jo
-    text = rsub(text, "ь(?=[Оо])", ur"j")
-    text = rsub(text, "Ь(?=[Оо])", ur"J")
+    text = rsub(text, "ь(?=[Оо])", r"j")
+    text = rsub(text, "Ь(?=[Оо])", r"J")
     text = rsub(text, '.', tt)
 
     # compose accented characters
@@ -940,7 +940,7 @@ def test(latin, bulgarian, should_outcome, expectedbulgarian=None):
     else:
         canonbulgarian, canonlatin = result
         trlatin = tr(canonbulgarian)
-        print("tr_matching(%s, %s) = %s %s," % (bulgarian, latin, canonbulgarian, canonlatin), end='')
+        print("tr_matching(%s, %s) = %s %s, " % (bulgarian, latin, canonbulgarian, canonlatin), end="")
         if trlatin == canonlatin:
             print("tr() MATCHED")
             outcome = "matched"
@@ -954,10 +954,10 @@ def test(latin, bulgarian, should_outcome, expectedbulgarian=None):
     print("canonicalize_latin(%s) = %s" %
             (latin, canonlatin))
     if outcome == should_outcome and canonbulgarian == expectedbulgarian:
-        uniprint("TEST SUCCEEDED.")
+        print("TEST SUCCEEDED.")
         num_succeeded += 1
     else:
-        uniprint("TEST FAILED.")
+        print("TEST FAILED.")
         num_failed += 1
 
 def run_tests():
@@ -1110,7 +1110,7 @@ def run_tests():
     test("(fan)", "фан", "failed")
 
     # Final results
-    uniprint("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))
+    print("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))
 
 if __name__ == "__main__":
     run_tests()

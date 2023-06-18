@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import blib, re, codecs
+import blib, re
 import pywikibot
 from arabiclib import reorder_shadda
 

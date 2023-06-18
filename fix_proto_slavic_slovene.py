@@ -3,7 +3,7 @@
 
 # This script modifies Proto-Slavic pages containing links to Slovene words
 # to contain the tonal version of the word by looking it up in the entry.
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

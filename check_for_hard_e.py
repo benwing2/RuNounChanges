@@ -4,7 +4,7 @@
 # Given the file from ruwikt of words where е is pronounced hard, check
 # the words in enwikt to see their pronunciations.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site
@@ -84,15 +84,15 @@ for i, line in blib.iter_items_from_file(args.direcfile, start, end):
   if not line.startswith("*"):
     msg("Page %s ???: Ignoring line: %s" % (i, line))
   else:
-    m = re.search(ur"^\*\[\[([^\[\]|]*?)\|([^\[\]]*?)\]\]( \{(=|\+э|\+е)\}\??)?$", line)
+    m = re.search(r"^\*\[\[([^\[\]|]*?)\|([^\[\]]*?)\]\]( \{(=|\+э|\+е)\}\??)?$", line)
     if not m:
       msg("Page %s ???: WARNING: Can't parse line: %s" % (i, line))
     else:
       phon = m.group(2)
-      phon = re.sub(ur"\{\{red\|е\}\}", u"э", phon)
-      phon = re.sub(ur"\{\{red\|е́\}\}", u"э́", phon)
-      phon = re.sub(ur"\{\{red\|ѐ\}\}", u"э̀", phon)
+      phon = re.sub(r"\{\{red\|е\}\}", u"э", phon)
+      phon = re.sub(r"\{\{red\|е́\}\}", u"э́", phon)
+      phon = re.sub(r"\{\{red\|ѐ\}\}", u"э̀", phon)
       softphon = m.group(2)
-      softphon = re.sub(ur"\{\{red\|(.*?)\}\}", r"\1", softphon)
+      softphon = re.sub(r"\{\{red\|(.*?)\}\}", r"\1", softphon)
       process_page(i, pywikibot.Page(site, m.group(1)), phon, softphon,
           m.group(4), args.verbose, lemmas)

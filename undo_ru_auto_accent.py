@@ -6,7 +6,7 @@
 # direct quotations; this is approximated by undoing instances of ux, usex,
 # and lang. This will affect many things that are usage examples but not
 # quotations; we will have to sort this out manually.
-import re, codecs
+import re
 
 import blib, pywikibot
 from blib import msg, getparam, addparam

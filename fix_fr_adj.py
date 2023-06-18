@@ -3,7 +3,7 @@
 
 # Remove unnecessary fr-adj parameters.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

@@ -43,11 +43,6 @@ MBSOPT = ONE_MB + "*"
 RS = "[" + ROBR + SMBR + "]"
 RSOPT = RS + "?"
 
-def uniprint(x):
-  print x.encode('utf-8')
-def uniout(x):
-  print x.encode('utf-8'),
-
 def rsub(text, fr, to):
     if type(to) is dict:
         def rsub_replace(m):
@@ -484,7 +479,7 @@ def tr_matching(greek, latin, err=False, msgfun=msg):
     origlatin = latin
     def debprint(x):
         if debug_tr_matching:
-            uniprint(x)
+            print(x)
     greek = pre_pre_canonicalize_greek(greek)
     latin = pre_canonicalize_latin(latin, greek)
     greek = pre_canonicalize_greek(greek)
@@ -721,34 +716,33 @@ def test(latin, greek, should_outcome, expectedgreek=None):
     try:
         result = tr_matching(greek, latin, True)
     except RuntimeError as e:
-        uniprint(u"%s" % e)
+        print(u"%s" % e)
         result = False
     if result == False:
-        uniprint("tr_matching(%s, %s) = %s" % (greek, latin, result))
+        print("tr_matching(%s, %s) = %s" % (greek, latin, result))
         outcome = "failed"
         canongreek = expectedgreek
     else:
         canongreek, canonlatin = result
         trlatin = tr(canongreek)
-        uniout("tr_matching(%s, %s) = %s %s," %
-                (greek, latin, canongreek, canonlatin))
+        print("tr_matching(%s, %s) = %s %s, " % (greek, latin, canongreek, canonlatin), end="")
         if trlatin == canonlatin:
-            uniprint("tr() MATCHED")
+            print("tr() MATCHED")
             outcome = "matched"
         else:
-            uniprint("tr() UNMATCHED (= %s)" % trlatin)
+            print("tr() UNMATCHED (= %s)" % trlatin)
             outcome = "unmatched"
     if canongreek != expectedgreek:
-        uniprint("Canon Greek FAILED, expected %s got %s"% (
+        print("Canon Greek FAILED, expected %s got %s"% (
             expectedgreek, canongreek))
     canonlatin, _ = canonicalize_latin_greek(latin, None)
-    uniprint("canonicalize_latin(%s) = %s" %
+    print("canonicalize_latin(%s) = %s" %
             (latin, canonlatin))
     if outcome == should_outcome and canongreek == expectedgreek:
-        uniprint("TEST SUCCEEDED.")
+        print("TEST SUCCEEDED.")
         num_succeeded += 1
     else:
-        uniprint("TEST FAILED.")
+        print("TEST FAILED.")
         num_failed += 1
 
 def run_tests():
@@ -820,10 +814,7 @@ def run_tests():
     test(u"bolu '''palā'''", u"βολυ '''παλα'''", "matched", u"βολυ '''παλᾱ'''")
 
     # Final results
-    uniprint("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))
+    print("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))
 
 if __name__ == "__main__":
     run_tests()
-
-# For Vim, so we get 4-space indent
-# vim: set sw=4:

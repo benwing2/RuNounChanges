@@ -3,7 +3,7 @@
 
 # Use past_adv_part_short=- instead of past_adv_part_short=
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site

@@ -3,7 +3,7 @@
 
 # Author: Benwing; bits and pieces taken from code written by CodeCat/Rua for MewBot
 
-import pywikibot, mwparserfromhell, re, string, sys, codecs, urllib, datetime, json, argparse, time
+import pywikibot, mwparserfromhell, re, string, sys, urllib, datetime, json, argparse, time
 from arabiclib import reorder_shadda
 from collections import defaultdict
 import xml.sax
@@ -139,15 +139,12 @@ def remove_redundant_links(text):
   return re.sub(r"^\[\[([^\[\]|]*)\]\]$", r"\1", text)
 
 def msg(text):
-  #pywikibot.output(text.encode('utf-8'), toStdout = True)
   print(text)
 
 def msgn(text):
-  #pywikibot.output(text.encode('utf-8'), toStdout = True)
   print(text, end='')
 
 def errmsg(text):
-  #pywikibot.output(text.encode('utf-8'))
   print(text, file=sys.stderr)
 
 def errmsgn(text):

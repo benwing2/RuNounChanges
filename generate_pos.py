@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import re
@@ -15,25 +15,25 @@ class Peeker:
       try:
         self.next_lines.append(next(self.lineiter))
       except StopIteration:
-        # print "peek_next_line(%s): return None" % n
+        # print("peek_next_line(%s): return None" % n)
         return None
-    # print "peek_next_line(%s): return %s" % (n, self.next_lines[n])
+    # print("peek_next_line(%s): return %s" % (n, self.next_lines[n]))
     return self.next_lines[n]
 
   def get_next_line(self):
     if len(self.next_lines) > 0:
       retval = self.next_lines[0]
       del self.next_lines[0]
-      # print "get_next_line(): return cached %s" % retval
+      # print("get_next_line(): return cached %s" % retval)
       self.lineno += 1
       return retval
     try:
       retval = next(self.lineiter)
-      # print "get_next_line(): return new %s" % retval
+      # print("get_next_line(): return new %s" % retval)
       self.lineno += 1
       return retval
     except StopIteration:
-      # print "get_next_line(): return None"
+      # print("get_next_line(): return None")
       return None
 
 def generate_multiline_defn(peeker):

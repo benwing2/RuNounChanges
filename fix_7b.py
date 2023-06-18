@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site
@@ -51,7 +51,7 @@ def process_page(index, page, direc):
         if npp:
           presstem = rulib.make_ending_stressed_ru(presstem)
         else:
-          presstem = re.sub(u"е́?([^аэыоуяеиёю]*)$", ur"ё\1", presstem)
+          presstem = re.sub(u"е́?([^аэыоуяеиёю]*)$", r"ё\1", presstem)
       else:
         presstem = rulib.make_ending_stressed_ru(presstem)
       pap = getparam(t, "past_actv_part")

@@ -11,7 +11,7 @@
 #  
 # #* {{RQ:Dryden Aureng-zebe|passage=We are both love's captives, but with fates so '''cross''', / One must be happy by the other's loss.}}
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site

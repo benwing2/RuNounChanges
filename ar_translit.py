@@ -26,11 +26,6 @@ from blib import remove_links, msg
 # to allow manual changes to be saved rapidly (using a not-yet-written script,
 # presumably modeled on undo_greek_removal.py).
 
-def uniprint(x):
-  print x.encode('utf-8')
-def uniout(x):
-  print x.encode('utf-8'),
-
 def rsub(text, fr, to):
   if type(to) is dict:
     def rsub_replace(m):
@@ -134,9 +129,9 @@ numbers = u"١٢٣٤٥٦٧٨٩٠"
 before_diacritic_checking_subs = [
   ########### transformations prior to checking for diacritics ##############
   # remove the first part of [[foo|bar]] links
-  [ur"\[\[[^]]*\|", u""],
+  [r"\[\[[^]]*\|", u""],
   # remove brackets in [[foo]] links
-  [ur"[\[\]]", u""],
+  [r"[\[\]]", u""],
   # convert llh for allāh into ll+shadda+dagger-alif+h
   [u"لله", u"للّٰه"],
   # shadda+short-vowel (including tanwīn vowels, i.e. -an -in -un) gets
@@ -636,11 +631,11 @@ def pre_canonicalize_latin(text, arabic=None, msgfun=msg):
   # that uses th to indicate ث
   text = rsub(text, u"([dtgkcs])[-']h", u"\\1h")
   # substitute geminated digraphs, possibly with a hyphen in the middle
-  text = rsub(text, u"dh(-?)dh", ur"ḏ\1ḏ")
-  text = rsub(text, u"sh(-?)sh", ur"š\1š")
-  text = rsub(text, u"th(-?)th", ur"ṯ\1ṯ")
-  text = rsub(text, u"kh(-?)kh", ur"ḵ\1ḵ")
-  text = rsub(text, u"gh(-?)gh", ur"ḡ\1ḡ")
+  text = rsub(text, u"dh(-?)dh", r"ḏ\1ḏ")
+  text = rsub(text, u"sh(-?)sh", r"š\1š")
+  text = rsub(text, u"th(-?)th", r"ṯ\1ṯ")
+  text = rsub(text, u"kh(-?)kh", r"ḵ\1ḵ")
+  text = rsub(text, u"gh(-?)gh", r"ḡ\1ḡ")
   # misc substitutions
   text = rsub(text, u"ẗ$", "")
   # cases like fi 'l-ḡad(i) -> eventually fi l-ḡad
@@ -651,9 +646,9 @@ def pre_canonicalize_latin(text, arabic=None, msgfun=msg):
   text = rsub(text, u"([aeiouəāēīōū])u", r"\1w")
   text = rsub(text, u"([aeiouəāēīōū])i", r"\1y")
   # Convert -iy- not followed by a vowel or y to long -ī-
-  text = rsub(text, u"iy($|[^aeiouəyāēīōū])", ur"ī\1")
+  text = rsub(text, u"iy($|[^aeiouəyāēīōū])", r"ī\1")
   # Same for -uw- -> -ū-
-  text = rsub(text, u"uw($|[^aeiouəwāēīōū])", ur"ū\1")
+  text = rsub(text, u"uw($|[^aeiouəwāēīōū])", r"ū\1")
   # Insert y between i and a
   text = rsub(text, u"([iī])([aā])", r"\1y\2")
   # Insert w between u and a
@@ -666,12 +661,12 @@ def pre_canonicalize_latin(text, arabic=None, msgfun=msg):
   # Remove double consonant following another consonant, but only at
   # word boundaries, since that's the only time when these cases seem to
   # legitimately occur
-  text = re.sub(ur"([^aeiouəāēīōū\W])(%s)\2\b" % (
+  text = re.sub(r"([^aeiouəāēīōū\W])(%s)\2\b" % (
     latin_consonants_no_double_after_cons_re), r"\1\2", text, 0, re.U)
   # Remove double consonant preceding another consonant but special-case
   # a known example that shouldn't be touched.
   if text != u"dunḡḡwān":
-    text = re.sub(ur"([^aeiouəāēīōū\W])\1(%s)" % (
+    text = re.sub(r"([^aeiouəāēīōū\W])\1(%s)" % (
       latin_consonants_no_double_after_cons_re), r"\1\2", text, 0, re.U)
   if arabic:
     # Remove links from Arabic to simplify the following code
@@ -692,7 +687,7 @@ def pre_canonicalize_latin(text, arabic=None, msgfun=msg):
     # of each word, since an Arabic word in the middle might be in the
     # construct state.
     if arabic.endswith(u"اة"):
-      text = rsub(text, ur"ā(\(t\)|t)$", u"āh")
+      text = rsub(text, r"ā(\(t\)|t)$", u"āh")
     elif arabic.endswith(u"ة"):
       text = rsub(text, r"[ae](\(t\)|t)$", "a")
     # Do certain end-of-word changes on each word, comparing corresponding
@@ -828,7 +823,7 @@ def pre_pre_canonicalize_arabic(text, msgfun=msg):
   text = text.replace(u"ک", u"ك") # ARABIC LETTER KEHEH (06A9)
   # convert llh for allāh into ll+shadda+dagger-alif+h
   text = rsub(text, u"لله", u"للّٰه")
-  # uniprint("text enter: %s" % text)
+  # print("text enter: %s" % text)
   # shadda+short-vowel (including tanwīn vowels, i.e. -an -in -un) gets
   # replaced with short-vowel+shadda during NFC normalisation, which
   # MediaWiki does for all Unicode strings; however, it makes the
@@ -843,7 +838,7 @@ def pre_pre_canonicalize_arabic(text, msgfun=msg):
   text = rsub(text, u"([^\u064E\u0627\u0622\u0670])\u0629",
     u"\\1\u064E\u0629")
   # some Arabic text has a shadda after the initial consonant; remove it
-  newtext = rsub(text, ur"(^|[ |\[\]])(.)" + SH, r"\1\2")
+  newtext = rsub(text, r"(^|[ |\[\]])(.)" + SH, r"\1\2")
   if text != newtext:
     if " " in newtext:
       # Shadda after initial consonant can legitimately occur in
@@ -980,13 +975,13 @@ def tr_matching(arabic, latin, err=False, msgfun=msg):
   origlatin = latin
   def debprint(x):
     if debug_tr_matching:
-      uniprint(x)
+      print(x)
   arabic = pre_pre_canonicalize_arabic(arabic, msgfun=msgfun)
   latin = pre_canonicalize_latin(latin, arabic, msgfun=msgfun)
   arabic = pre_canonicalize_arabic(arabic, msgfun=msgfun)
   # convert double consonant after non-cons to consonant + shadda,
   # but not multiple quotes or multiple periods
-  latin = re.sub(ur"(^|[aeiouəāēīōū\W])([^'.])\2", u"\\1\\2\u0651",
+  latin = re.sub(r"(^|[aeiouəāēīōū\W])([^'.])\2", u"\\1\\2\u0651",
       latin, 0, re.U)
 
   ar = [] # exploded Arabic characters
@@ -1435,30 +1430,29 @@ def test(latin, arabic, should_outcome):
   try:
     result = tr_matching(arabic, latin, True)
   except RuntimeError as e:
-    uniprint(u"%s" % e)
+    print(u"%s" % e)
     result = False
   if result == False:
-    uniprint("tr_matching(%s, %s) = %s" % (arabic, latin, result))
+    print("tr_matching(%s, %s) = %s" % (arabic, latin, result))
     outcome = "failed"
   else:
     canonarabic, canonlatin = result
     trlatin = tr(canonarabic)
-    uniout("tr_matching(%s, %s) = %s %s," %
-        (arabic, latin, canonarabic, canonlatin))
+    print("tr_matching(%s, %s) = %s %s, " % (arabic, latin, canonarabic, canonlatin), end="")
     if trlatin == canonlatin:
-      uniprint("tr() MATCHED")
+      print("tr() MATCHED")
       outcome = "matched"
     else:
-      uniprint("tr() UNMATCHED (= %s)" % trlatin)
+      print("tr() UNMATCHED (= %s)" % trlatin)
       outcome = "unmatched"
   canonlatin, _ = canonicalize_latin_arabic(latin, None)
-  uniprint("canonicalize_latin(%s) = %s" %
+  print("canonicalize_latin(%s) = %s" %
       (latin, canonlatin))
   if outcome == should_outcome:
-    uniprint("TEST SUCCEEDED.")
+    print("TEST SUCCEEDED.")
     num_succeeded += 1
   else:
-    uniprint("TEST FAILED.")
+    print("TEST FAILED.")
     num_failed += 1
 
 def run_tests():
@@ -1698,10 +1692,7 @@ def run_tests():
   #test(u"tišrīnu θ-θāni", u"تِشرينُ الثّانِي", "matched")
 
   # Final results
-  uniprint("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))
+  print("RESULTS: %s SUCCEEDED, %s FAILED." % (num_succeeded, num_failed))
 
 if __name__ == "__main__":
   run_tests()
-
-# For Vim, so we get 4-space indent
-# vim: set sw=4:

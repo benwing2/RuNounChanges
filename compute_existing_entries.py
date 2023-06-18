@@ -17,7 +17,7 @@
     
 # Go through a dump finding all entries by language.
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, errmsg, site

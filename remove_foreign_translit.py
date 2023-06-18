@@ -4,7 +4,7 @@
 # This program removes redundant translit from links and similar templates,
 # and also removes redundant sc= values from those same links.
 
-import re, unicodedata, codecs
+import re, unicodedata
 
 import blib, pywikibot
 from blib import msg, getparam, addparam, rmparam

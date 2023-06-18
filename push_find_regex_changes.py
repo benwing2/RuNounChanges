@@ -4,7 +4,7 @@
 import blib
 from blib import getparam, rmparam, msg, errmsg, errandmsg, site
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, argparse
 import unicodedata
 
 def process_page(index, page, contents, prev_comment, origcontents, verbose, arg_comment,
