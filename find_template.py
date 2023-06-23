@@ -17,7 +17,7 @@ def process_text_on_page(index, pagetitle, text, templates, paramspecs, negate, 
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  if not args.stdin:
+  if args.verbose and not args.stdin:
     pagemsg("Processing")
   notes = []
 
@@ -89,7 +89,7 @@ def process_text_on_page(index, pagetitle, text, templates, paramspecs, negate, 
                     (countparam, tn, temptext))
                 lines_output += 1
               counted_param_values[countparam][None] += 1
-  if lines_output > 0:
+  if args.verbose and lines_output > 0:
     pagemsg("Output %s lines" % lines_output)
 
 parser = blib.create_argparser("Find templates with specified params",
