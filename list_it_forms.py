@@ -21,7 +21,7 @@ def list_forms(template, errandpagemsg, expand_text):
   # Remove non-final accents
   infinitive = re.sub("[" + AC + GR + "](.)", r"\1", infinitive)
   infinitive = unicodedata.normalize("NFC", infinitive)
-  for key, values in forms.iteritems():
+  for key, values in forms.items():
     for v in values:
       linktext = []
       displaytext = []

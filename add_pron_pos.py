@@ -645,6 +645,6 @@ if args.posfile:
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
   default_cats=["Russian lemmas", "Russian non-lemma forms"])
 
-for page, pos in pages_pos.iteritems():
+for page, pos in pages_pos.items():
   msg("Page 000 %s: WARNING: Override for non-existent page, pos=%s" % (
     page, pos))

@@ -149,7 +149,7 @@ for index, pagename, decl, ignore_slots in yield_decls():
       retval.append(v["form"])
     return ",".join(retval)
   predforms = {
-    k: blib.remove_links(flatten_values(v)) for k, v in result["forms"].iteritems()
+    k: blib.remove_links(flatten_values(v)) for k, v in result["forms"].items()
   }
   lemma = predforms["nom_s"] if "nom_s" in predforms else predforms["nom_p"]
   real_pagename = re.sub(",.*", "", blib.remove_links(lemma))

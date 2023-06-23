@@ -119,7 +119,7 @@ def fetch_tag_tables(preferred_tag_variants=set()):
   tag_to_dimension_table = {}
   tag_to_canonical_form_table = {}
   def process_data(data):
-    for tag, tagdata in data["tags"].iteritems():
+    for tag, tagdata in data["tags"].items():
       if "tag_type" in tagdata:
         tag_to_dimension_table[tag] = tagdata["tag_type"]
       if "shortcuts" in tagdata and len(tagdata["shortcuts"]) > 0:
@@ -133,7 +133,7 @@ def fetch_tag_tables(preferred_tag_variants=set()):
         for variant in all_variants:
           tag_to_canonical_form_table[variant] = canon_variant
 
-    for shortcut, tag in data["shortcuts"].iteritems():
+    for shortcut, tag in data["shortcuts"].items():
       # shortcuts contain entries like "mfn" -> "m//f//n" and "2p" -> ["2", "p"]
       if isinstance(tag, basestring) and tag in data["tags"]:
         tag_to_dimension_table[shortcut] = data["tags"][tag]["tag_type"]

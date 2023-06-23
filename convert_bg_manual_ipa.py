@@ -84,7 +84,7 @@ voiced_to_unvoiced = {
 }
 voiced_obstruent = "бвгджз"
 
-unvoiced_to_voiced = {y: x for x, y in voiced_to_unvoiced.iteritems()}
+unvoiced_to_voiced = {y: x for x, y in voiced_to_unvoiced.items()}
 unvoiced_obstruent = "пфктшсхчщц"
 
 prefixes = ["без", "въз", "възпроиз", "из", "наиз", "поиз", "превъз", "произ", "раз"]

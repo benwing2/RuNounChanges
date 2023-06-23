@@ -14,18 +14,18 @@ positive_ending_tags = {
   'em': ['str|dat|m//n|s'],
 }
 comparative_ending_tags = {
-  'er' + key: [tag + '|comd' for tag in value] for key, value in positive_ending_tags.iteritems()
+  'er' + key: [tag + '|comd' for tag in value] for key, value in positive_ending_tags.items()
 }
 # for mehr, besser besucht, etc.
 special_comparative_ending_tags = {
-  key: [tag + '|comd' for tag in value] for key, value in positive_ending_tags.iteritems()
+  key: [tag + '|comd' for tag in value] for key, value in positive_ending_tags.items()
 }
 superlative_ending_tags = {
-  'st' + key: [tag + '|supd' for tag in value] for key, value in positive_ending_tags.iteritems()
+  'st' + key: [tag + '|supd' for tag in value] for key, value in positive_ending_tags.items()
 }
 # for größt, bestbesucht, etc.
 special_superlative_ending_tags = {
-  key: [tag + '|supd' for tag in value] for key, value in positive_ending_tags.iteritems()
+  key: [tag + '|supd' for tag in value] for key, value in positive_ending_tags.items()
 }
 
 rename_templates_with_lang = [
@@ -161,7 +161,7 @@ def process_text_on_page(index, pagetitle, text):
 
       endings_to_try = []
       for ending_sets in ending_sets_to_try:
-        for ending, tag_sets in ending_sets.iteritems():
+        for ending, tag_sets in ending_sets.items():
           if pagetitle.endswith(ending):
             endings_to_try.append((ending, tag_sets))
       if len(endings_to_try) == 0:

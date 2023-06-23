@@ -26,7 +26,7 @@ blib.getLanguageData()
 
 appendix_constructed_langnames = set()
 
-for code, lang in blib.languages_byCode.iteritems():
+for code, lang in blib.languages_byCode.items():
   if lang.get("type", "") == "appendix-constructed":
     appendix_constructed_langnames.add(lang["canonicalName"])
 

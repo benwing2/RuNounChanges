@@ -29,7 +29,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 blib.do_pagefile_cats_refs(args, start, end, process_page)
 
 for i in range(1, args.max_prefix_length + 1):
-  max_prefixes = sorted(list(prefixes_by_length[i].iteritems()), key=lambda x: -len(x[1]))
+  max_prefixes = sorted(list(prefixes_by_length[i].items()), key=lambda x: -len(x[1]))
   msg("Prefix length = %s" % i)
   msg("------------------- begin -----------------------")
   for prefix, titles in max_prefixes:

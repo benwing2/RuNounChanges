@@ -194,7 +194,7 @@ la_noun_decl_suffix_to_decltype = {
 }
 
 noun_decl_and_subtype_to_props = {}
-for key, val in la_noun_decl_suffix_to_decltype.iteritems():
+for key, val in la_noun_decl_suffix_to_decltype.items():
   if val is None:
     continue
   declspec, stem_suffix, pl_suffix, to_auto = val
@@ -256,7 +256,7 @@ def generate_old_noun_forms(template, errandpagemsg, expand_text, return_raw=Fal
     return None
   args = blib.split_generate_args(result)
   if not include_linked:
-    args = {k: v for k, v in args.iteritems() if not k.startswith("linked_")}
+    args = {k: v for k, v in args.items() if not k.startswith("linked_")}
   return args
 
 def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg):

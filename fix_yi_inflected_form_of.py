@@ -82,7 +82,7 @@ def process_text_on_page(pagetitle, index, text):
 
       endings_to_try = []
       for ending_sets in ending_sets_to_try:
-        for ending, tag_sets in ending_sets.iteritems():
+        for ending, tag_sets in ending_sets.items():
           if pagetitle.endswith(ending):
             endings_to_try.append((ending, tag_sets))
       if len(endings_to_try) == 0:

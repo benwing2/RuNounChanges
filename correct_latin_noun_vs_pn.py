@@ -132,7 +132,7 @@ def process_page(page, index):
   tempargs = blib.split_generate_args(result)
   forms_seen = set()
   slots_and_forms_to_process = []
-  for slot, formarg in tempargs.iteritems():
+  for slot, formarg in tempargs.items():
     forms = formarg.split(",")
     for form in forms:
       if "[" in form or "|" in form:

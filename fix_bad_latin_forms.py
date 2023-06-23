@@ -96,7 +96,7 @@ def process_page(index, pos, lemma, subs, infl, save, verbose):
 
   forms_to_delete = []
 
-  for key, form in args.iteritems():
+  for key, form in args.items():
     forms_to_delete.extend(form.split(","))
 
   for formind, form in blib.iter_items(forms_to_delete):

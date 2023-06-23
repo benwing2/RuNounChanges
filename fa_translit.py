@@ -532,7 +532,7 @@ def sort_tt_to_arabic_matching(table):
         el = el.match
       return len(el)
     return (canon, sorted(entries, key=lambda el: -element_length(el)))
-  return {k: canonicalize_entry(v) for k, v in table.iteritems()}
+  return {k: canonicalize_entry(v) for k, v in table.items()}
 
 tt_to_arabic_matching = sort_tt_to_arabic_matching(tt_to_arabic_matching)
 tt_to_arabic_matching_bow = sort_tt_to_arabic_matching(tt_to_arabic_matching_bow)
@@ -541,7 +541,7 @@ tt_to_arabic_matching_eow = sort_tt_to_arabic_matching(tt_to_arabic_matching_eow
 
 # Make sure we don't canonicalize any canonical letter to any other one;
 # e.g. could happen with ʾ, an alternative for ʿ.
-for key, (canon, alts) in tt_to_arabic_matching.iteritems():
+for key, (canon, alts) in tt_to_arabic_matching.items():
   if isinstance(canon, tuple):
     # FIXME: Is this correct?
     pass
@@ -556,7 +556,7 @@ for key, (canon, alts) in tt_to_arabic_matching.iteritems():
   else:
     build_canonicalize_latin[canon] = "multiple"
 
-for key, (canon, alts) in tt_to_arabic_matching.iteritems():
+for key, (canon, alts) in tt_to_arabic_matching.items():
   if isinstance(canon, list):
     # FIXME: What about if canon is tuple?
     continue

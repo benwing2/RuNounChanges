@@ -631,7 +631,7 @@ def group_translits(formvals, pagemsg, verbose=False):
   formvals = []
   # If there is more than one translit, then generate the
   # translit for any missing translit and join by commas
-  for russian, translits in formvals_by_russian.iteritems():
+  for russian, translits in formvals_by_russian.items():
     if len(translits) == 1:
       formvals.append((russian, translits[0]))
     else:

@@ -86,7 +86,7 @@ def delete_participle_1(page, index, lemma, formind, formval, pos, preserve_diae
   if args is None:
     return None, None
   single_forms_to_delete = []
-  for key, form in args.iteritems():
+  for key, form in args.items():
     single_forms_to_delete.extend(form.split(","))
   for formformind, formformval in blib.iter_items(single_forms_to_delete):
     delete_form(index, formval, formformind, formformval, "partform", True,
@@ -469,7 +469,7 @@ def process_page(index, lemma, pos, infl, slots, pages_to_delete, preserve_diaer
   lemma_no_macrons = remove_macrons(lemma)
 
   def add_bad_forms(bad_slot_fun):
-    for slot, formspec in args.iteritems():
+    for slot, formspec in args.items():
       if bad_slot_fun(slot):
         tag_sets_to_delete.append(lalib.slot_to_tag_set(slot))
         forms_to_delete.append((slot, formspec))
@@ -486,7 +486,7 @@ def process_page(index, lemma, pos, infl, slots, pages_to_delete, preserve_diaer
       tag_sets_to_delete.append(lalib.slot_to_tag_set(slot))
       forms_to_delete.append((slot, args[slot]))
     elif slot == "allbutlemma":
-      for sl, formspec in args.iteritems():
+      for sl, formspec in args.items():
         forms = formspec.split(",")
         forms = [form for form in forms if lemma_no_macrons != remove_macrons(form)]
         if forms:

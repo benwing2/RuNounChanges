@@ -162,7 +162,7 @@ la_adj_decl_suffix_to_decltype = {
 }
 
 adj_decl_and_subtype_to_props = {}
-for key, val in la_adj_decl_suffix_to_decltype.iteritems():
+for key, val in la_adj_decl_suffix_to_decltype.items():
   decl, compute_props = val
   adj_decl_and_subtype_to_props[decl] = [key, compute_props]
 
@@ -217,10 +217,10 @@ def generate_old_adj_forms(template, errandpagemsg, expand_text, return_raw=Fals
     return None
   args = blib.split_generate_args(result)
   if not include_linked:
-    args = {k: v for k, v in args.iteritems() if not k.startswith("linked_")}
+    args = {k: v for k, v in args.items() if not k.startswith("linked_")}
   # Add missing feminine forms if needed
   augmented_args = {}
-  for key, form in args.iteritems():
+  for key, form in args.items():
     augmented_args[key] = form
     if key.endswith("_m"):
       equiv_fem = key[:-2] + "_f"

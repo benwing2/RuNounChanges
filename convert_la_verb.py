@@ -149,7 +149,7 @@ def generate_old_verb_forms(template, errandpagemsg, expand_text, return_raw=Fal
     return None
   args = blib.split_generate_args(result)
   if not include_linked:
-    args = {k: v for k, v in args.iteritems() if not k.startswith("linked_")}
+    args = {k: v for k, v in args.items() if not k.startswith("linked_")}
   return args
 
 old_la_verb_conj_templates = {

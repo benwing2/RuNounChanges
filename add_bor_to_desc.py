@@ -180,8 +180,8 @@ start, end = blib.parse_start_end(args.start, args.end)
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)
 
 msg("Pairs of langs (PARENT -> CHILD) with |bor=1 added:")
-for (thislang, prevlang), count in sorted(bor_pairs.iteritems(), key=lambda x:-x[1]):
+for (thislang, prevlang), count in sorted(bor_pairs.items(), key=lambda x:-x[1]):
   msg("%s -> %s\t%s\t(already %s)" % (prevlang, thislang, count, already_bor_would_bor_pairs[(thislang, prevlang)]))
 msg("Pairs of langs (PARENT -> CHILD) with |bor=1 already added and would add:")
-for (thislang, prevlang), count in sorted(already_bor_would_bor_pairs.iteritems(), key=lambda x:-x[1]):
+for (thislang, prevlang), count in sorted(already_bor_would_bor_pairs.items(), key=lambda x:-x[1]):
   msg("%s -> %s\t%s" % (prevlang, thislang, count))

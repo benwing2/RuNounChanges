@@ -52,7 +52,7 @@ def generate_old_verb_forms(template, errandpagemsg, expand_text):
 
   def process_nested_forms(key, values):
     if type(values) is dict:
-      for k, v in values.iteritems():
+      for k, v in values.items():
         if key:
           process_nested_forms(key + "_" + k, v)
         else:
@@ -85,7 +85,7 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
     args = generate_old_verb_forms(origt, errandpagemsg, expand_text)
     if args:
       args["infinitive"] = pagetitle
-    args = {k: sort_multiple(v).replace("&#32;", " ") for k, v in args.iteritems()}
+    args = {k: sort_multiple(v).replace("&#32;", " ") for k, v in args.items()}
     return args
 
   def generate_new_forms():
@@ -107,10 +107,10 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
           retval.append(v["form"])
       return ",".join(retval)
     args = {
-      k: blib.remove_links(unicodedata.normalize("NFC", flatten_values(v))) for k, v in args.iteritems()
+      k: blib.remove_links(unicodedata.normalize("NFC", flatten_values(v))) for k, v in args.items()
       if not re.search("^(neg_|infinitive_|gerund_)", k)
     }
-    args = {k: sort_multiple(v) for k, v in args.iteritems()}
+    args = {k: sort_multiple(v) for k, v in args.items()}
     return args
 
   return blib.compare_new_and_old_template_forms(origt, newt, generate_old_forms,

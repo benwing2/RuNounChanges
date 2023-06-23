@@ -236,16 +236,16 @@ number_properties = [
 ]
 indexed_number_properties = {prop: index for index, prop in enumerate(number_properties)}
 
-for index, (langcode, numprops_by_num) in enumerate(numbers.iteritems()):
+for index, (langcode, numprops_by_num) in enumerate(numbers.items()):
   msg("Page %s Module:number list/data/%s: -------- begin text ---------" % (index, langcode))
   msg("""local export = {numbers = {}}
 
 local numbers = export.numbers
 """)
-  for num, numprops in sorted(numprops_by_num.iteritems(), key=lambda x: (len(x[0]), x[0])):
+  for num, numprops in sorted(numprops_by_num.items(), key=lambda x: (len(x[0]), x[0])):
     msg("")
     msg("numbers[%s] = {" % (num if len(num) < 16 else '"%s"' % num))
-    for prop, values in sorted(numprops.iteritems(),
+    for prop, values in sorted(numprops.items(),
         key=lambda x: (indexed_number_properties.get(x[0], len(number_properties)), x[0])):
       msg("\t%s = %s," % (prop, "{%s}" % ", ".join('"%s"' % print_valtr(x) for x in values) if type(values) is list
         else '"%s"' % print_valtr(values)))

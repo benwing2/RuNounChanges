@@ -376,7 +376,7 @@ def process_text_on_page(pageindex, pagetitle, text):
 
         # Add inline synonyms
         must_continue = False
-        for synno, syns in syns_by_number.iteritems():
+        for synno, syns in syns_by_number.items():
           index = reindexed_defns[synno]
           new_defn = add_syns_to_defn(syns, defns[index], False)
           if new_defn is None:
@@ -493,7 +493,7 @@ def process_text_on_page(pageindex, pagetitle, text):
 
         # Add inline synonyms
         must_continue = False
-        for tag, (syns, lineno) in syns_by_tag.iteritems():
+        for tag, (syns, lineno) in syns_by_tag.items():
           if tag in tag_to_defn:
             index = tag_to_defn[tag]
             new_defn = add_syns_to_defn(syns, defns[index], bad)

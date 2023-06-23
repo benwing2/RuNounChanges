@@ -95,11 +95,11 @@ def add_name_with_code(name, code, iscanon, isetym):
     else:
       language_name_to_code[name] = ([(code, iscanon)], None, None)
 
-for code, desc in blib.languages_byCode.iteritems():
+for code, desc in blib.languages_byCode.items():
   add_name_with_code(desc["canonicalName"], code, True, False)
   for othername in desc["otherNames"]:
     add_name_with_code(othername, code, False, False)
-for code, desc in blib.etym_languages_byCode.iteritems():
+for code, desc in blib.etym_languages_byCode.items():
   add_name_with_code(desc["canonicalName"], code, True, True)
   for othername in desc["otherNames"]:
     add_name_with_code(othername, code, False, True)

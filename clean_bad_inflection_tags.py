@@ -529,12 +529,12 @@ dimensions_to_tags = {
 
 # Map from tag to dimension it's in, for combining across |and|
 combinable_tags_by_dimension = {
-  tag: dim for dim, tagdict in dimensions_to_tags.iteritems() for tag in tagdict
+  tag: dim for dim, tagdict in dimensions_to_tags.items() for tag in tagdict
 }
 
 # Map from tag to its canonical form, for combining across |and|
 tag_to_canonical_form = {
-  tag: canontag for dim, tagdict in dimensions_to_tags.iteritems() for tag, canontag in tagdict.iteritems()
+  tag: canontag for dim, tagdict in dimensions_to_tags.items() for tag, canontag in tagdict.items()
 }
 
 # Map from names of dimensions to map from tag to canonical form,
@@ -547,12 +547,12 @@ dimensions_to_tags_across_semicolon["voice"] = voices
 
 # Map from tag to dimension it's in, for combining across |;|
 combinable_tags_by_dimension_across_semicolon = {
-  tag: dim for dim, tagdict in dimensions_to_tags_across_semicolon.iteritems() for tag in tagdict
+  tag: dim for dim, tagdict in dimensions_to_tags_across_semicolon.items() for tag in tagdict
 }
 
 # Map from tag to its canonical form, for combining across |;|
 tag_to_canonical_form_across_semicolon = {
-  tag: canontag for dim, tagdict in dimensions_to_tags_across_semicolon.iteritems() for tag, canontag in tagdict.iteritems()
+  tag: canontag for dim, tagdict in dimensions_to_tags_across_semicolon.items() for tag, canontag in tagdict.items()
 }
 
 tag_to_canonical_form_table = None
@@ -646,17 +646,17 @@ def record_stats_on_tag_set(tag_set):
 
 def output_stats_on_tag_set():
   msg("Num tag sets seen = %s" % num_tag_sets)
-  for key, val in sorted(multipart_tag_stats_by_num_axes.iteritems(),
+  for key, val in sorted(multipart_tag_stats_by_num_axes.items(),
       key=lambda x:-x[1]):
     msg("Num tag sets with %s multipart tags = %6s (%.2f%%)" %
         (key, val, val * 100.0 / num_tag_sets))
   msg("Tag sets by ordered dimensions of multipart tags:")
-  for key, val in sorted(detailed_multipart_tag_stats.iteritems(),
+  for key, val in sorted(detailed_multipart_tag_stats.items(),
       key=lambda x:-x[1]):
     msg("%-40s = %6s (%.2f%%)" %
         (", ".join(key), val, val * 100.0 / num_tag_sets))
   msg("Tag sets by unordered dimensions of multipart tags:")
-  for key, val in sorted(detailed_multipart_tag_stats_as_set.iteritems(),
+  for key, val in sorted(detailed_multipart_tag_stats_as_set.items(),
       key=lambda x:-x[1]):
     msg("%-40s = %6s (%.2f%%)" %
         (", ".join(sorted(list(key))), val, val * 100.0 / num_tag_sets))
@@ -1383,9 +1383,9 @@ if not args.no_use_form_of_data:
   )
   for tag in form_of_combinable_tags_by_dimension:
     good_tags.add(tag)
-  #for tag, dim in form_of_combinable_tags_by_dimension.iteritems():
+  #for tag, dim in form_of_combinable_tags_by_dimension.items():
   #  print("form_of_combinable_tags_by_dimension[%s] = %s" % (tag, dim))
-  #for tag, canontag in form_of_tag_to_canonical_form.iteritems():
+  #for tag, canontag in form_of_tag_to_canonical_form.items():
   #  print("form_of_tag_to_canonical_form[%s] = %s" % (tag, canontag))
 
 if args.textfile:
@@ -1408,7 +1408,7 @@ msg("Fraction of templates with bad tags = %s / %s = %.2f%%" % (
 ))
 
 def print_table(table):
-  for key, val in sorted(table.iteritems(), key=lambda x: -x[1]):
+  for key, val in sorted(table.items(), key=lambda x: -x[1]):
     msg("%s = %s" % (key, val))
 
 msg("Bad tags:")

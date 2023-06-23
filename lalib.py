@@ -207,10 +207,10 @@ def generate_adj_forms(template, errandpagemsg, expand_text, return_raw=False,
     return None
   args = blib.split_generate_args(result)
   if not include_linked:
-    args = {k: v for k, v in args.iteritems() if not k.startswith("linked_")}
+    args = {k: v for k, v in args.items() if not k.startswith("linked_")}
   # Add missing feminine forms if needed
   augmented_args = {}
-  for key, form in args.iteritems():
+  for key, form in args.items():
     augmented_args[key] = form
     if key.endswith("_m"):
       equiv_fem = key[:-2] + "_f"
@@ -235,7 +235,7 @@ def generate_noun_forms(template, errandpagemsg, expand_text, return_raw=False,
     return None
   args = blib.split_generate_args(result)
   if not include_linked:
-    args = {k: v for k, v in args.iteritems() if not k.startswith("linked_")}
+    args = {k: v for k, v in args.items() if not k.startswith("linked_")}
   return args
 
 def generate_verb_forms(template, errandpagemsg, expand_text, return_raw=False,
@@ -258,7 +258,7 @@ def generate_verb_forms(template, errandpagemsg, expand_text, return_raw=False,
     return None
   args = blib.split_generate_args(result)
   if not include_linked:
-    args = {k: v for k, v in args.iteritems() if not k.startswith("linked_")}
+    args = {k: v for k, v in args.items() if not k.startswith("linked_")}
   def augment_with_sync_forms(forms):
     forms = forms.split(",")
     augmented_forms = []
@@ -268,7 +268,7 @@ def generate_verb_forms(template, errandpagemsg, expand_text, return_raw=False,
         augmented_forms.append(re.sub("^(.*)v[ieē]", r"\1", form))
     return ",".join(augmented_forms)
   if add_sync_forms:
-    args = {k: augment_with_sync_forms(v) for k, v in args.iteritems()}
+    args = {k: augment_with_sync_forms(v) for k, v in args.items()}
   return args
 
 def generate_infl_forms(pos, template, errandpagemsg, expand_text,

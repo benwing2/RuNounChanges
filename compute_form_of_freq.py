@@ -50,5 +50,5 @@ if args.textfile:
     pagetitle, pagetext = split_vals
     process_text_on_page(pagetitle, index, pagetext)
 
-  for form, count in sorted(list(form_of_forms.iteritems()), key=lambda x: -x[1]):
+  for form, count in sorted(list(form_of_forms.items()), key=lambda x: -x[1]):
     msg("%-50s = %s" % (form, count))

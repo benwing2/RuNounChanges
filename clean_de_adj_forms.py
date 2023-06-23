@@ -14,20 +14,20 @@ positive_ending_tags = {
   "em": ["str|dat|m//n|s"],
 }
 comparative_ending_tags = {
-  "er" + key: [tag + "|comd" for tag in value] for key, value in positive_ending_tags.iteritems()
+  "er" + key: [tag + "|comd" for tag in value] for key, value in positive_ending_tags.items()
 }
 superlative_ending_tags = {
-  "st" + key: [tag + "|supd" for tag in value] for key, value in positive_ending_tags.iteritems()
+  "st" + key: [tag + "|supd" for tag in value] for key, value in positive_ending_tags.items()
 }
 
 tags_to_ending = {
-  "|;|".join(tags): ending for ending, tags in positive_ending_tags.iteritems()
+  "|;|".join(tags): ending for ending, tags in positive_ending_tags.items()
 }
 tags_to_ending.update({
-  "|;|".join(tags): ending for ending, tags in comparative_ending_tags.iteritems()
+  "|;|".join(tags): ending for ending, tags in comparative_ending_tags.items()
 }) 
 tags_to_ending.update({
-  "|;|".join(tags): ending for ending, tags in superlative_ending_tags.iteritems()
+  "|;|".join(tags): ending for ending, tags in superlative_ending_tags.items()
 }) 
 
 def check_if_lemma_and_ending_match_pagetitle(lemma, ending, pagetitle, allow_umlaut):

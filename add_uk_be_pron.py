@@ -412,12 +412,12 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
   # Remove the common case where there's only one found pronunciation and it's
   # the same as the head pronunciation (and there's no pre-text or post-text
   # that we need to propagate).
-  matches = dict((hpron,foundprons) for hpron,foundprons in matches.iteritems()
+  matches = dict((hpron,foundprons) for hpron,foundprons in matches.items()
       if not (len(foundprons) == 1 and hpron == foundprons[0].pron and
         not foundprons[0].pre and not foundprons[0].post))
   matches_stems = {}
 
-  for hpron, foundprons in matches.iteritems():
+  for hpron, foundprons in matches.items():
     stems = []
     def append_stem_foundstems(stem, foundpronunstems):
       if stem and foundpronunstems:
@@ -479,7 +479,7 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
 
   # Check to see if the mappings have different numbers of acute accents and
   # warn if so, esp. if one mapping has acute accents and the other doesn't
-  for hpron, stem_foundprons in matches_stems.iteritems():
+  for hpron, stem_foundprons in matches_stems.items():
     for stem, foundprons in stem_foundprons:
       stemaccents = stem.count(AC)
       for foundpron in foundprons:
@@ -570,7 +570,7 @@ def lookup_pronun_mapping(parsed, pagemsg):
       pronunmapping is None else "(empty)" if not pronunmapping else ",".join(
         "%s->(%s)" % (hpron, ",".join("%s:%s" % (stem, "/".join(str(x) for x in foundprons))
           for stem, foundprons in stem_foundprons))
-        for hpron, stem_foundprons in pronunmapping.iteritems()),
+        for hpron, stem_foundprons in pronunmapping.items()),
       cached and " (cached)" or ""))
     if pronunmapping:
       all_pronunmappings.update(pronunmapping)
@@ -699,7 +699,7 @@ def process_section(section, indentlevel, headword_pronuns,
     # If there is an automatically-derived headword->pronun mapping (e.g.
     # in case of secondary stress or phon=), try to apply it.
     if not subbed_pronun and pronunmapping:
-      for hpron, stem_foundprons in pronunmapping.iteritems():
+      for hpron, stem_foundprons in pronunmapping.items():
         outerbreak = False
         for stem, foundpronstems in stem_foundprons:
           assert stem
@@ -727,7 +727,7 @@ def process_section(section, indentlevel, headword_pronuns,
       return None
 
   if pronunmapping and not manually_subbed_pronun:
-    for hpron, stem_foundprons in pronunmapping.iteritems():
+    for hpron, stem_foundprons in pronunmapping.items():
       if hpron not in matched_hpron:
         pagemsg("WARNING: Unable to match mapping %s->(%s) in non-lemma form(s)"
           % (hpron, ",".join("%s:%s" % (stem, "/".join(str(x) for x in foundprons))
@@ -1007,7 +1007,7 @@ def process_page_text(index, text, pagetitle):
             joined_foundpronuns = ",".join(foundpronuns)
             # Combine headword pronuns while preserving order. To do this,
             # we sort by numbered etymology sections and then flatten.
-            combined_headword_pronuns = remove_list_duplicates([y for k,v in sorted(etym_headword_pronuns.iteritems(), key=lambda x:x[0]) for y in (v or [])])
+            combined_headword_pronuns = remove_list_duplicates([y for k,v in sorted(etym_headword_pronuns.items(), key=lambda x:x[0]) for y in (v or [])])
             joined_headword_pronuns = ",".join(combined_headword_pronuns)
             if not (set(foundpronuns) <= set(combined_headword_pronuns)):
               pagemsg("WARNING: When trying to delete pronunciation section, existing pronunciation %s not subset of headword-derived pronunciation %s, unable to delete" %

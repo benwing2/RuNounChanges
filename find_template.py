@@ -160,7 +160,7 @@ for template in templates:
       msg("For template %s, param %s, saw the following values:" %
         (template, countparam))
       for pname, count in sorted(
-        counted_param_values[countparam].iteritems(), key=lambda x:-x[1]
+        counted_param_values[countparam].items(), key=lambda x:-x[1]
       ):
         msg("%s = %s" % ("(unseen)" if pname is None else pname, count))
     else:

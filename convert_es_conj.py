@@ -139,7 +139,7 @@ def generate_old_verb_forms(template, errandpagemsg, expand_text, include_combin
     return None
   args = {}
   forms = json.loads(result)
-  for k, v in forms.iteritems():
+  for k, v in forms.items():
     for form_template in v:
       t = list(blib.parse_text(form_template).filter_templates())[0]
       def getp(param):
@@ -214,7 +214,7 @@ def generate_old_verb_forms(template, errandpagemsg, expand_text, include_combin
       errandpagemsg("WARNING: Error generating forms, skipping")
       return None
     forms = json.loads(result)
-    for k, v in forms.iteritems():
+    for k, v in forms.items():
       clitic, slot, base_form = v
       if slot == "imp_i2s":
         slot = "imp_2s"
@@ -265,7 +265,7 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
     args = generate_old_verb_forms(origt, errandpagemsg, expand_text, include_combined)
     if args:
       args["infinitive"] = pagetitle
-    args = {k: sort_multiple(v) for k, v in args.iteritems()}
+    args = {k: sort_multiple(v) for k, v in args.items()}
     return args
 
   def generate_new_forms():
@@ -274,8 +274,8 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
     if not new_result:
       return None
     args = blib.split_generate_args(new_result)
-    args = {k: v for k, v in args.iteritems() if not k.startswith("neg_") and k != "infinitive_linked"}
-    args = {k: sort_multiple(v) for k, v in args.iteritems()}
+    args = {k: v for k, v in args.items() if not k.startswith("neg_") and k != "infinitive_linked"}
+    args = {k: sort_multiple(v) for k, v in args.items()}
     return args
 
   return blib.compare_new_and_old_template_forms(origt, newt, generate_old_forms,

@@ -174,8 +174,8 @@ tens = { #10:Number("١٠", "ten", "عَشَرَة", "عَشْر"),
          90:Number("٩٠", "ninety", "تِسْعُون")}
 
 def iter_numerals():
-  for tenval, ten in sorted(tens.iteritems(), key=lambda x:x[0]):
-    for digval, dig in sorted(digits.iteritems(), key=lambda x:x[0]):
+  for tenval, ten in sorted(tens.items(), key=lambda x:x[0]):
+    for digval, dig in sorted(digits.items(), key=lambda x:x[0]):
       if digval != 10:
         yield (tenval, ten, digval, dig)
 
@@ -468,7 +468,7 @@ def create_teen_ordinal_non_lemma(digval, dig):
 def create_number_list_data():
   msg("local export = {numbers = {}}")
   # Do 1-10
-  for digval, dig in sorted(digits.iteritems(), key=lambda x:x[0]):
+  for digval, dig in sorted(digits.items(), key=lambda x:x[0]):
     msg("""
 export.numbers[%s] = {
 	numeral = "%s",
@@ -488,7 +488,7 @@ export.numbers[%s] = {
 	other = "%s",""" % dig.numadj)
     msg("""}""")
   # Do 11-19
-  for digval, dig in sorted(digits.iteritems(), key=lambda x:x[0]):
+  for digval, dig in sorted(digits.items(), key=lambda x:x[0]):
     if digval != 10:
       msg("""
 export.numbers[%s] = {
@@ -497,7 +497,7 @@ export.numbers[%s] = {
 	ordinal = %s",
 }""" % (digval + 10, dig.eastarabnum, dig.cardteen, dig.ordteen))
   # Do 20-99
-  for tenval, ten in sorted(tens.iteritems(), key=lambda x:x[0]):
+  for tenval, ten in sorted(tens.items(), key=lambda x:x[0]):
     # Do 20, 30, 40, ..., 90
     msg("""
 export.numbers[%s] = {
@@ -506,7 +506,7 @@ export.numbers[%s] = {
 	ordinal = "%s",
 }""" % (tenval, ten.eastarabnum, ten.nom, ten.nom))
     # Do 21-29, 31-39, 41-49, ..., 91-99
-    for digval, dig in sorted(digits.iteritems(), key=lambda x:x[0]):
+    for digval, dig in sorted(digits.items(), key=lambda x:x[0]):
       if digval != 10:
         msg("""
 export.numbers[%s] = {
@@ -517,7 +517,7 @@ export.numbers[%s] = {
         dig.nom + " وَ" + ten.nom, dig.nomtr + " wa-" + ten.nomtr,
         dig.ordlemma + " وَ" + ten.nom, dig.ordlemmatr + " wa-" + ten.nomtr))
   # Do 100, 200, 300, ..., 900
-  for digval, dig in sorted(digits.iteritems(), key=lambda x:x[0]):
+  for digval, dig in sorted(digits.items(), key=lambda x:x[0]):
     if digval != 10:
       msg("""
 export.numbers[%s] = {
@@ -525,7 +525,7 @@ export.numbers[%s] = {
 	cardinal = {{"%s", "%s"}},
 }""" % (digval * 100, dig.eastarabnum, dig.hundred, dig.hundredtr))
   # Do 1000, 2000, 3000, ..., 10000
-  for digval, dig in sorted(digits.iteritems(), key=lambda x:x[0]):
+  for digval, dig in sorted(digits.items(), key=lambda x:x[0]):
     msg("""
 export.numbers[%s] = {
       numeral = "%s٠٠٠",
@@ -556,7 +556,7 @@ def iter_pages(createfn):
     yield createfn(tenval, ten, digval, dig)
 
 def iter_pages_units(createfn, include_ten=False, skip_one=False):
-  for digval, dig in sorted(digits.iteritems(), key=lambda x:x[0]):
+  for digval, dig in sorted(digits.items(), key=lambda x:x[0]):
     if (digval != 10 or include_ten) and (digval != 1 or not skip_one):
       yield createfn(digval, dig)
 

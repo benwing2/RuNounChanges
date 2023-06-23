@@ -74,7 +74,7 @@ def generate_old_verb_forms(template, errandpagemsg, expand_text, return_raw=Fal
     return None
   forms = json.loads(forms)
   newforms = {}
-  for k, v in forms.iteritems():
+  for k, v in forms.items():
     k = old_it_conj_to_new_it_conj_key(k)
     if k:
       newv = frob_old_values(k, v)
@@ -100,7 +100,7 @@ def generate_new_verb_forms(template, errandpagemsg, expand_text, return_raw=Fal
     return None
   forms = json.loads(forms)["forms"]
   newforms = {}
-  for k, v in forms.iteritems():
+  for k, v in forms.items():
     if k.startswith("negimp"):
       continue
     newforms[k] = frob_new_values(v)

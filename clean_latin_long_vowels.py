@@ -506,7 +506,7 @@ def frob_chain_exact(t, param, newval, pagemsg, notes, comment, split_slashes=Fa
 
 def find_tag_sets_for_form(args, form):
   tag_sets = []
-  for slot, formspec in args.iteritems():
+  for slot, formspec in args.items():
     forms = formspec.split(",")
     if form in forms:
       tag_sets.append(lalib.slot_to_tag_set(slot))
@@ -758,7 +758,7 @@ def process_all_forms(args, index, lemma, pos, progargs):
     return
 
   single_forms_to_process = []
-  for key, form in args.iteritems():
+  for key, form in args.items():
     for single_form in form.split(","):
       single_forms_to_process.append((key, single_form))
 
@@ -1232,7 +1232,7 @@ def do_process_lemma(index, page, pos, explicit_infl, lemmaspec, lemma, explicit
           return None, None
 
         single_forms_to_process = []
-        for key, form in args.iteritems():
+        for key, form in args.items():
           for single_form in form.split(","):
             single_forms_to_process.append((key, single_form))
 

@@ -121,7 +121,7 @@ for index, line in blib.iter_items_from_file(args.direcfile):
     pages_to_process.append(pagetitle)
 
 deduped_cats_to_add = {}
-for pagetitle, cats_by_lang_list in cats_to_add.iteritems():
+for pagetitle, cats_by_lang_list in cats_to_add.items():
   cats_by_lang = {}
   for lang, cats in cats_by_lang_list:
     if lang not in cats_by_lang:
@@ -129,7 +129,7 @@ for pagetitle, cats_by_lang_list in cats_to_add.iteritems():
     for cat in cats:
       if cat not in cats_by_lang[lang]:
         cats_by_lang[lang].append(cat)
-  deduped_cats_to_add[pagetitle] = list(cats_by_lang.iteritems())
+  deduped_cats_to_add[pagetitle] = list(cats_by_lang.items())
 
 japanese_sort_keys = {}
 if args.japanese_sort_keys:

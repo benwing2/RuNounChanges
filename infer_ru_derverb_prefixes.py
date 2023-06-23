@@ -385,7 +385,7 @@ def do_line_group(group, is_last_group, fn, outfd, suffix_lines, extra_suffixes,
   if pass_ == 0:
     # We try to process lines with previously unrecognized suffixes using the suffixes seen so far.
     extra_suffixes = set()
-    for (pf_suffixes, impf_suffixes), prefixes in prefixes_by_suffixes.iteritems():
+    for (pf_suffixes, impf_suffixes), prefixes in prefixes_by_suffixes.items():
       if pf_suffixes:
         for pf_suffix, brackets, mods in split_verbs(pf_suffixes):
           extra_suffixes |= set(augment_suffix(pf_suffix))
@@ -396,7 +396,7 @@ def do_line_group(group, is_last_group, fn, outfd, suffix_lines, extra_suffixes,
 
   # Combine unstressed suffixes with stressed equivalents to handle вы́-, повы́-, etc.
   keys_to_delete = []
-  for (pf_suffixes, impf_suffixes), prefixes in prefixes_by_suffixes.iteritems():
+  for (pf_suffixes, impf_suffixes), prefixes in prefixes_by_suffixes.items():
     orig_pf_suffixes = pf_suffixes
     pf_suffixes = split_verbs(pf_suffixes)
     pf_suffixes = [
@@ -420,7 +420,7 @@ def do_line_group(group, is_last_group, fn, outfd, suffix_lines, extra_suffixes,
       # leave as-is
       return
     potential_full_suffixes = []
-    for (full_pf_suffixes, full_impf_suffixes), full_prefixes in prefixes_by_suffixes.iteritems():
+    for (full_pf_suffixes, full_impf_suffixes), full_prefixes in prefixes_by_suffixes.items():
       full_other_aspect_suffixes = full_pf_suffixes if aspect == "impf" else full_impf_suffixes
       if full_other_aspect_suffixes and (
         non_empty_suffixes == (full_impf_suffixes if aspect == "impf" else full_pf_suffixes)
@@ -447,7 +447,7 @@ def do_line_group(group, is_last_group, fn, outfd, suffix_lines, extra_suffixes,
       non_empty_suffixes if aspect == "impf" else ""
     ))
 
-  for (pf_suffixes, impf_suffixes), prefixes in prefixes_by_suffixes.iteritems():
+  for (pf_suffixes, impf_suffixes), prefixes in prefixes_by_suffixes.items():
     if pf_suffixes == "":
       handle_empty_pf_or_impf(impf_suffixes, prefixes, "impf")
     elif impf_suffixes == "":
@@ -465,7 +465,7 @@ def do_line_group(group, is_last_group, fn, outfd, suffix_lines, extra_suffixes,
   def sort_key_for_sorting(x):
     (pf_suffixes, impf_suffixes), prefixes = x
     return (rulib.remove_accents(pf_suffixes), pf_suffixes, rulib.remove_accents(impf_suffixes), impf_suffixes)
-  for (pf_suffixes, impf_suffixes), prefixes in sorted(prefixes_by_suffixes.iteritems(),
+  for (pf_suffixes, impf_suffixes), prefixes in sorted(prefixes_by_suffixes.items(),
       key=sort_key_for_sorting if args.sort else lambda x: ordering_dict[x[0]]):
     if len(prefixes) == 1 and "." in prefixes[0]:
       msg_and_check(convert_prefix_and_suffixes_to_full(prefixes[0], split_verbs(pf_suffixes), split_verbs(impf_suffixes)))

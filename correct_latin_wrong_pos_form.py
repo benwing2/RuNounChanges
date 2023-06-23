@@ -130,7 +130,7 @@ def process_page(page, index):
       inflargs = lalib.generate_infl_forms(pos, str(inflt), errandpagemsg, expand_text)
       forms_seen = set()
       slots_and_forms_to_process = []
-      for slot, formarg in inflargs.iteritems():
+      for slot, formarg in inflargs.items():
         forms = formarg.split(",")
         for form in forms:
           if "[" in form or "|" in form:
