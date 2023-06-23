@@ -7,7 +7,7 @@ import blib
 from blib import getparam, rmparam, msg, site, tname, pname
 
 def process_text_on_page(index, pagetitle, text, templates, new_names, params_to_add, params_to_prepend,
-    params_to_insert, params_to_remove, params_to_rename, filters, comment):
+    params_to_insert, params_to_remove, params_to_rename, filters, recognized_params, comment):
   if not any(template in text for template in templates):
     return
   if not re.search(r"\{\{\s*(%s)" % "|".join(templates), text):
@@ -81,6 +81,29 @@ def process_text_on_page(index, pagetitle, text, templates, new_names, params_to
         continue
       if must_continue:
         continue
+
+      must_continue = False
+      if recognized_params:
+        for param in t.params:
+          pn = pname(param)
+          recognized = None
+          for recognized_param in recognized_params:
+            if recognized_param == "-":
+              recognized = False
+              break
+            elif re.search("^" + recognized_param + "$", pn):
+              recognized = True
+              break
+            # else try next recognized param
+          else: # no break
+            recognized = False
+          if not recognized:
+            pagemsg("Skipping %s because of unrecognized param %s=%s" % (origt, pn, str(param.value)))
+            must_continue = True
+            break
+      if must_continue:
+        continue
+
       for old_param, new_param in params_to_rename:
         if t.has(old_param):
           t.add(new_param, getparam(t, old_param), before=old_param, preserve_spacing=False)
@@ -187,6 +210,7 @@ pa.add_argument("--insert", help="Insert numeric PARAM=VALUE|VALUE|..., moving g
     action="append")
 pa.add_argument("--filter", help="Only take action on templates matching the filter, which should be either PARAM meaning the parameter must exist and be non-empty; !PARAM meaning the parameter must not exist or must be empty; PARAM=VALUE meaning the parameter must have the given value; PARAM!=VALUE meaning the parameter must not have the given value; PARAM~REGEXP meaning the parameter's value must match the given regular expression (unanchored); or PARAM!~REGEXP meaning the parameter's value must not match the given regular expression (unanchored). Can be specified multiple times and all must match. Note that all parameter values have whitespace stripped from both ends before comparison. VALUE and REGEXP can have {{PAGENAME}} in them to substitute the page title; when substituting into a regular expression, the page title is properly escaped.",
     action="append")
+pa.add_argument("--recognized-params", help="Comma-separated list of regexps matching recognized params. Use - to indicate no recognized params. If the template contains any unrecognized params, a warning will be displayed and no action taken. Regexps are auto-anchored on both ends.")
 pa.add_argument("-c", "--comment", help="Comment to use in place of auto-generated ones.")
 args = pa.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
@@ -229,6 +253,7 @@ new_names = handle_single_param("new_name", lambda val: val.split(","))
 if new_names and len(new_names) != len(templates):
   raise ValueError("Saw %s template(s) '%s' but %s new name(s) '%s'; both must agree in number" %
     (len(templates), ",".join(templates), len(new_names), ",".join(new_names)))
+recognized_params = handle_single_param("recognized_params", lambda val: val.split(","))
 
 from_ = handle_list_param("from_")
 to = handle_list_param("to")
@@ -251,7 +276,7 @@ params_to_rename = zip(from_, to)
 
 def do_process_text_on_page(index, pagetitle, text):
   return process_text_on_page(index, pagetitle, text, templates, new_names, params_to_add, params_to_prepend,
-    params_to_insert, params_to_remove, params_to_rename, filters, comment)
+    params_to_insert, params_to_remove, params_to_rename, filters, recognized_params, comment)
 
 blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, edit=True, stdin=True,
   default_refs=["Template:%s" % template for template in templates])
