@@ -25,7 +25,7 @@ local function format_list_items(list, args)
 		elseif args.lang and not term_already_linked(item) then
 			item = m_links.full_link {lang = args.lang, term = item, sc = args.sc} 
 		end
-		
+
 		list = list:node(html("li")
 			:wikitext(item)
 		)
@@ -47,13 +47,13 @@ function export.create_list(args)
 	local column_count = args.column_count or 1
 	local toggle_category = args.toggle_category or "derived terms"
 	local header = args.header
-	
+
 	if header and args.format_header then
 		header = html("div")
 			:addClass("term-list-header")
 			:wikitext(header)
 	end
-	
+
 	if args.alphabetize then
 		local function keyfunc(item)
 			if type(item) == "table" then
@@ -63,10 +63,10 @@ function export.create_list(args)
 		end
 		require("Module:collation").sort(args.content, args.lang, keyfunc)
 	end
-	
+
 	local list = html("ul")
 	list = format_list_items(list, args)
-	
+
 	local output = html("div")
 		:addClass(class)
 		:addClass("term-list")
@@ -113,7 +113,7 @@ end
 local param_mods = {"t", "alt", "tr", "ts", "pos", "lit", "id", "sc", "g", "q", "qq"}
 local param_mod_set = m_table.listToSet(param_mods)
 
-function export.display_from(column_args, list_args, frame)
+function export.display_from(frame_args, parent_args, frame)
 	local iparams = {
 		["class"] = {},
 		-- Default for auto-collapse. Overridable by template |collapse= param.
@@ -135,16 +135,27 @@ function export.display_from(column_args, list_args, frame)
 		["toggle_category"] = {},
 	}
 
-	local frame_args = require("Module:parameters").process(column_args, iparams, nil, "columns", "display_from")
+	local iargs = require("Module:parameters").process(frame_args, iparams, nil, "columns", "display_from")
 
-	local compat = frame_args["lang"] or list_args["lang"]
+	local compat = iargs["lang"] or parent_args["lang"]
 	local lang_param = compat and "lang" or 1
-	local columns_param = compat and 1 or 2
-	local first_content_param = columns_param + (frame_args["columns"] and 0 or 1)
+	local columns_param, first_content_param
+
+	-- New-style #columns specification is through parameter n= so we can transition to the situation where
+	-- omitting it results in auto-determination. Old-style #columns specification is through the first numbered
+	-- parameter after the lang parameter.
+	if parent_args["n"] then
+		columns_param = "n"
+		first_content_param = compat and 1 or 2
+	else
+		columns_param = compat and 1 or 2
+		first_content_param = columns_param + (iargs["columns"] and 0 or 1)
+	end
+	local deprecated
 
 	local params = {
-		[lang_param] = not frame_args["lang"] and {required = true, default = "und"} or nil,
-		[columns_param] = not frame_args["columns"] and {required = true, default = 2} or nil,
+		[lang_param] = not iargs["lang"] and {required = true, default = "und"} or nil,
+		[columns_param] = not iargs["columns"] and {required = true, default = 2} or nil,
 		[first_content_param] = {list = true},
 
 		["title"] = {},
@@ -152,23 +163,23 @@ function export.display_from(column_args, list_args, frame)
 		["sort"] = {type = "boolean"},
 		["sc"] = {},
 	}
-	
+
 	if lang_param == "lang" then
 		deprecated = true
 	end
-	
-	local args = require("Module:parameters").process(list_args, params, nil, "columns", "display_from")
-	
-	local lang = frame_args["lang"] or args[lang_param]
-	lang = m_languages.getByCode(lang, lang_param)
+
+	local args = require("Module:parameters").process(parent_args, params, nil, "columns", "display_from")
+
+	local langcode = iargs["lang"] or args[lang_param]
+	local lang = m_languages.getByCode(langcode, lang_param)
 
 	local sc = args["sc"] and require("Module:scripts").getByCode(sc, "sc") or nil
 
-	local sort = frame_args["sort"]
+	local sort = iargs["sort"]
 	if args["sort"] ~= nil then
 		sort = args["sort"]
 	end
-	local collapse = frame_args["collapse"]
+	local collapse = iargs["collapse"]
 	if args["collapse"] ~= nil then
 		collapse = args["collapse"]
 	end
@@ -177,18 +188,20 @@ function export.display_from(column_args, list_args, frame)
 	for i, item in ipairs(args[first_content_param]) do
 		-- Parse off an initial language code (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). Don't parse if there's a spac
 		-- after the colon (happens e.g. if the user uses {{desc|...}} inside of {{col}}, grrr ...).
-		local termlang, actual_term = item:match("^([A-Za-z._-]+):([^ ].*)$")
+		local termlangcode, actual_term = item:match("^([A-Za-z._-]+):([^ ].*)$")
+		local termlang
 		-- Make sure that only real language codes are handled as language links, so as to not catch interwiki
 		-- or namespaces links.
-		if termlang and (
-			mw.loadData("Module:languages/code to canonical name")[termlang] or
-			mw.loadData("Module:etymology languages/code to canonical name")[termlang]
+		if termlangcode and (
+			mw.loadData("Module:languages/code to canonical name")[termlangcode] or
+			mw.loadData("Module:etymology languages/code to canonical name")[termlangcode]
 		) then
 			-- -1 since i is one-based
-			termlang = m_languages.getByCode(termlang, first_content_param + i - 1, "allow etym")
+			termlang = m_languages.getByCode(termlangcode, first_content_param + i - 1, "allow etym")
 			item = actual_term
 		else
 			termlang = lang
+			termlancode = nil
 		end
 		local termobj = {term = {lang = termlang, sc = sc}}
 
@@ -247,17 +260,25 @@ function export.display_from(column_args, list_args, frame)
 		else
 			termobj.term.term = item
 		end
+		-- If a separate language code was given for the term, display the language name as a right qualifier.
+		-- Otherwise it may not be obvious that the term is in a separate language (e.g. if the main language is 'zh'
+		-- and the term language is a Chinese lect such as Min Nan). But don't do this for Translingual terms, which
+		-- are often added to the list of English and other-language terms.
+		if termlangcode and termlangcode ~= langcode and termlangcode ~= "mul" then
+			termobj.qq = {termlang:getCanonicalName(), termobj.qq}
+		end
+
 		args[first_content_param][i] = termobj
 	end
 
-	local ret = export.create_list { column_count = frame_args["columns"] or args[columns_param],
+	local ret = export.create_list { column_count = iargs["columns"] or args[columns_param],
 		content = args[first_content_param],
 		alphabetize = sort,
 		header = args["title"], background_color = "#F8F8FF",
 		collapse = collapse,
-		toggle_category = frame_args["toggle_category"],
-		class = frame_args["class"], lang = lang, sc = sc, format_header = true }
-	
+		toggle_category = iargs["toggle_category"],
+		class = iargs["class"], lang = lang, sc = sc, format_header = true }
+
 	return deprecated and frame:expandTemplate{title = "check deprecated lang param usage", args = {ret, lang = args[lang_param]}} or ret
 end
 
