@@ -1,16 +1,20 @@
 local export = {}
 
+local html = mw.html.create
 local m_links = require("Module:links")
 local m_languages = require("Module:languages")
 local m_table = require("Module:table")
 
 
-local function format_list_items(items, lang, sc)
-	local result = {}
-
-	for _, item in ipairs(items) do
+local function format_list_items(list, args)
+	local function term_already_linked(term)
+		-- FIXME: "<span" is an ugly hack to prevent double-linking of terms already run through {{l|...}}:
+		-- [[Thread:User talk:CodeCat/MewBot adding lang to column templates]]
+		return term:find("<span")
+	end
+	for _, item in ipairs(args.content) do
 		if type(item) == "table" then
-			local link = m_links.full_link(item.term)
+			local link = term_already_linked(item.term.term) and item.term.term or m_links.full_link(item.term)
 			if item.q then
 				link = require("Module:qualifier").format_qualifier(item.q) .. " " .. link
 			end
@@ -18,25 +22,17 @@ local function format_list_items(items, lang, sc)
 				link = link .. " " .. require("Module:qualifier").format_qualifier(item.qq)
 			end
 			item = link
-		-- XXX: "<span" is an ugly hack: [[Thread:User talk:CodeCat/MewBot adding lang to column templates]]
-		elseif lang and not string.find(item, "<span") then
-			item = m_links.full_link {lang = lang, term = item, sc = sc} 
+		elseif args.lang and not term_already_linked(item) then
+			item = m_links.full_link {lang = args.lang, term = item, sc = args.sc} 
 		end
-
-		table.insert(result, '\n* ' .. item)
+		
+		list = list:node(html("li")
+			:wikitext(item)
+		)
 	end
 
-	return table.concat(result)
+	return list
 end
-
-local collapse_header =
-	[[<div class="list-switcher" data-toggle-category="{{{toggle_category}}}">]]
-local column_header = [[<div class="{{{class}}} term-list ul-column-count" ]]
-	.. [[data-column-count="{{{column_count}}}" ]]
-	.. [[style="background-color: {{{background_color}}};">]]
-local button = [[<div class="list-switcher-element" ]]
-	.. [[data-showtext="&nbsp;show more ▼&nbsp;" ]]
-	.. [[data-hidetext="&nbsp;show less ▲&nbsp;" style="display: none;">&nbsp;</div>]]
 
 function export.create_list(args)
 	-- Fields in args that are used:
@@ -47,43 +43,54 @@ function export.create_list(args)
 		error("expected table, got " .. type(args))
 	end
 
-	args.class = args.class or "derivedterms"
-	args.column_count = args.column_count or 1
-	args.toggle_category = args.toggle_category or "derived terms"
-
-	local output = {}
-
-	if args.header then
-		if args.format_header then
-			args.header = '<div class="term-list-header">' .. args.header .. "</div>"
+	local class = args.class or "derivedterms"
+	local column_count = args.column_count or 1
+	local toggle_category = args.toggle_category or "derived terms"
+	local header = args.header
+	
+	if header and args.format_header then
+		header = html("div")
+			:addClass("term-list-header")
+			:wikitext(header)
+	end
+	
+	if args.alphabetize then
+		local function keyfunc(item)
+			if type(item) == "table" then
+				item = item.term.term
+			end
+			return item
 		end
-		table.insert(output, args.header)
-	end
-	if args.collapse then
-		table.insert(output, (collapse_header:gsub('{{{(.-)}}}', args)))
-	end
-	table.insert(output, (column_header:gsub('{{{(.-)}}}', args)))
-
-    if args.alphabetize then
-    	local function keyfunc(item)
-    		if type(item) == "table" then
-    			item = item.term.term
-    		end
-    		-- Remove all HTML so mixtures of raw terms and {{l|...}} sort
-    		-- correctly.
-    		item = item:gsub("<.->", "")
-    		return item
-    	end
 		require("Module:collation").sort(args.content, args.lang, keyfunc)
 	end
-	table.insert(output, format_list_items(args.content, args.lang, args.sc))
+	
+	local list = html("ul")
+	list = format_list_items(list, args)
+	
+	local output = html("div")
+		:addClass(class)
+		:addClass("term-list")
+		:addClass("ul-column-count")
+		:attr("data-column-count", column_count)
+		:css("background-color", args.background_color)
+		:node(list)
 
-	table.insert(output, '</div>')
 	if args.collapse then
-		table.insert(output, button .. '</div>')
+		local nbsp = mw.ustring.char(0xA0)
+		output = html("div")
+			:node(output)
+			:addClass("list-switcher")
+			:attr("data-toggle-category", toggle_category)
+			:node(html("div")
+				:addClass("list-switcher-element")
+				:attr("data-showtext", nbsp .. "show more ▼" .. nbsp)
+				:attr("data-hidetext", nbsp .. "show less ▲" .. nbsp)
+				:css("display", "none")
+				:wikitext(nbsp)
+			)
 	end
 
-	return table.concat(output)
+	return tostring(header or "") .. tostring(output)
 end
 
 
@@ -106,7 +113,7 @@ end
 local param_mods = {"t", "alt", "tr", "ts", "pos", "lit", "id", "sc", "g", "q", "qq"}
 local param_mod_set = m_table.listToSet(param_mods)
 
-function export.display_from(column_args, list_args)
+function export.display_from(column_args, list_args, frame)
 	local iparams = {
 		["class"] = {},
 		-- Default for auto-collapse. Overridable by template |collapse= param.
@@ -128,7 +135,7 @@ function export.display_from(column_args, list_args)
 		["toggle_category"] = {},
 	}
 
-	local frame_args = require("Module:parameters").process(column_args, iparams)
+	local frame_args = require("Module:parameters").process(column_args, iparams, nil, "columns", "display_from")
 
 	local compat = frame_args["lang"] or list_args["lang"]
 	local lang_param = compat and "lang" or 1
@@ -145,9 +152,13 @@ function export.display_from(column_args, list_args)
 		["sort"] = {type = "boolean"},
 		["sc"] = {},
 	}
-
-	local args = require("Module:parameters").process(list_args, params)
-
+	
+	if lang_param == "lang" then
+		deprecated = true
+	end
+	
+	local args = require("Module:parameters").process(list_args, params, nil, "columns", "display_from")
+	
 	local lang = frame_args["lang"] or args[lang_param]
 	lang = m_languages.getByCode(lang, lang_param)
 
@@ -164,9 +175,15 @@ function export.display_from(column_args, list_args)
 
 	local put
 	for i, item in ipairs(args[first_content_param]) do
-		-- Parse off an initial language code (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]').
-		local termlang, actual_term = item:match("^([A-Za-z0-9._-]+):(.*)$")
-		if termlang and termlang ~= "w" then -- special handling for w:... links to Wikipedia
+		-- Parse off an initial language code (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). Don't parse if there's a spac
+		-- after the colon (happens e.g. if the user uses {{desc|...}} inside of {{col}}, grrr ...).
+		local termlang, actual_term = item:match("^([A-Za-z._-]+):([^ ].*)$")
+		-- Make sure that only real language codes are handled as language links, so as to not catch interwiki
+		-- or namespaces links.
+		if termlang and (
+			mw.loadData("Module:languages/code to canonical name")[termlang] or
+			mw.loadData("Module:etymology languages/code to canonical name")[termlang]
+		) then
 			-- -1 since i is one-based
 			termlang = m_languages.getByCode(termlang, first_content_param + i - 1, "allow etym")
 			item = actual_term
@@ -206,7 +223,7 @@ function export.display_from(column_args, list_args)
 				end
 				if param_mod_set[prefix] then
 					local obj_to_set
-					if prefix == "q" then
+					if prefix == "q" or prefix == "qq" then
 						obj_to_set = termobj
 					else
 						obj_to_set = termobj.term
@@ -233,92 +250,19 @@ function export.display_from(column_args, list_args)
 		args[first_content_param][i] = termobj
 	end
 
-	return export.create_list { column_count = frame_args["columns"] or args[columns_param],
+	local ret = export.create_list { column_count = frame_args["columns"] or args[columns_param],
 		content = args[first_content_param],
 		alphabetize = sort,
 		header = args["title"], background_color = "#F8F8FF",
 		collapse = collapse,
 		toggle_category = frame_args["toggle_category"],
 		class = frame_args["class"], lang = lang, sc = sc, format_header = true }
+	
+	return deprecated and frame:expandTemplate{title = "check deprecated lang param usage", args = {ret, lang = args[lang_param]}} or ret
 end
 
 function export.display(frame)
-	return export.display_from(frame.args, frame:getParent().args)
-end
-
--- A version of col which substs any automatically generated forms in order to save memory (e.g. for Chinese).
-function export.generated_forms(frame)
-	local column_args, list_args = frame.args, frame:getParent().args
-
-	local iparams = {
-		["columns"] = {type = "number"},
-		["name"] = {required = true},
-		["toggle_category"] = {},
-	}
-
-	local frame_args = require("Module:parameters").process(column_args, iparams)
-
-	local first_content_param = 2 + (frame_args["columns"] and 0 or 1)
-
-	frame_args["name"] = frame_args["columns"] and frame_args["name"] .. frame_args["columns"] or frame_args["name"]
-
-	local params = {
-		[1] = {required = true, default = "und"},
-		[2] = not frame_args["columns"] and {required = true, default = 2} or nil,
-		[first_content_param] = {list = true},
-
-		["title"] = {},
-		["collapse"] = {type = "boolean"},
-		["sort"] = {type = "boolean"},
-		["sc"] = {},
-	}
-
-	local args = require("Module:parameters").process(list_args, params)
-
-	local lang = args[1]
-	lang = m_languages.getByCode(lang, lang_param)
-
-	args["sc"] = args["sc"] or ""
-	if sc and sc ~= "" then
-		sc = require "Module:scripts".getByCode(sc)
-			or error("|sc= does not contain a valid script code")
-	end
-
-	args[2] = args[2] or ""
-	args["title"] = args["title"] or ""
-	args["collapse"] = args["collapse"] or ""
-	args["sort"] = args["sort"] or ""
-
-	local items = {}
-	for i, item in ipairs(args[first_content_param]) do
-		if item:find("<") and not item:find("^[^<]*<[a-z]*[^a-z:]") then
-			item = item:gsub("^([^<]*)(<[a-z]*[a-z:])", function(m1, m2)
-					return table.concat(lang:generateForms(m1), "//")
-			end)
-		else
-			item = table.concat(lang:generateForms(item), "//")
-		end
-		table.insert(items, item)
-	end
-
-	for k, arg in pairs(args) do
-		if type(arg) == "string" then
-			if arg ~= "" then
-				if type(k) == "string" then
-					args[k] = k .. "=" .. args[k] .. "|"
-				else
-					args[k] = args[k] .. "|"
-				end
-			end
-		elseif type(arg) == "boolean" then
-			args[k] = k .. "=1|"
-		end
-	end
-
-	local prefix = "{{" .. frame_args["name"] .. "|" .. args[1] .. args["sc"]
-	prefix = not frame_args["columns"] and prefix .. args[2] or prefix
-
-	return prefix ..  args["title"] ..  args["collapse"] ..  args["sort"] ..  table.concat(items, "|") .. "}}"
+	return export.display_from(frame.args, frame:getParent().args, frame)
 end
 
 return export
