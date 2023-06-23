@@ -4484,10 +4484,10 @@ def process_text_on_page(index, pagetitle, text):
       try:
         new_name, new_params, comment = expand_spec(template_spec, t, pagemsg)
       except BadTemplateValue as e:
-        pagemsg("WARNING: %s: %s" % (str(e.message), origt))
+        pagemsg("WARNING: %s: %s" % (str(e), origt))
         continue
       except BadRewriteSpec as e:
-        errandmsg("INTERNAL ERROR: %s: Processing template %s" % (str(e.message), origt))
+        errandmsg("INTERNAL ERROR: %s: Processing template %s" % (str(e), origt))
         pagemsg("Spec being processed:")
         pprint.pprint(template_spec)
         traceback.print_exc()
