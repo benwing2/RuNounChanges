@@ -9,6 +9,7 @@ local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 
 local m_links = require("Module:links")
+local m_table = require("Module:table")
 local headword_module = "Module:headword"
 local romut_module = "Module:romance utilities"
 local com = require("Module:es-common")
