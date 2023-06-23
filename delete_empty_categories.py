@@ -4,7 +4,7 @@
 import blib, re
 from blib import msg, errmsg, site
 import pywikibot
-from pywikibot.data.api import APIError
+from pywikibot.exceptions import APIError
 
 def delete_page(page, comment, errandpagemsg):
   for i in range(11):
