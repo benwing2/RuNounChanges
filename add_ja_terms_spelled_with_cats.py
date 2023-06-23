@@ -129,7 +129,7 @@ def process_text_on_page(index, pagetitle, text):
           pagemsg_with_contents("WARNING: Saw %s chars in contents title but %s readings %s, skipping: %s" % (
             len(kanji_in_contents_title), len(readings), ",".join(readings), str(t)))
           continue
-        yomi = getparam(t, "yomi")
+        yomi = getparam(t, "yomi") or getparam(t, "y")
         if not yomi:
           pagemsg_with_contents("WARNING: No yomi, skipping: %s" % str(t))
           continue
