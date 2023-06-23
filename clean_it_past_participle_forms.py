@@ -270,7 +270,7 @@ should be
 ====Participle====
 {{head|it|past participle form|g=f-p}}
 
-# {{feminine plural of|it|abbadare}}
+# {{feminine plural of|it|abbadato}}
 
 
 9. [[abbaluginata]]:
