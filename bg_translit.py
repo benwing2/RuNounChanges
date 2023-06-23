@@ -103,8 +103,8 @@ bulgarian_to_latin_lookalikes_cap = {
         "І":"I", "К":"K",
         "А́":"Á", "Е́":"É", "О́":"Ó", "І́":"Í",
     }
-bulgarian_to_latin_lookalikes = dict(bulgarian_to_latin_lookalikes_lc.items() +
-        bulgarian_to_latin_lookalikes_cap.items())
+bulgarian_to_latin_lookalikes = dict(list(bulgarian_to_latin_lookalikes_lc.items()) +
+        list(bulgarian_to_latin_lookalikes_cap.items()))
 # When converting Latin to Bulgarian, only do lowercase so we don't do phrases
 # like X, C++, витамин C, сульфат железа(II), etc.
 latin_to_bulgarian_lookalikes = dict(
@@ -328,10 +328,10 @@ tt_to_bulgarian_matching_4char = {
 }
 
 tt_to_bulgarian_matching_all_char = dict(
-        tt_to_bulgarian_matching.items() +
-        tt_to_bulgarian_matching_2char.items() +
-        tt_to_bulgarian_matching_3char.items() +
-        tt_to_bulgarian_matching_4char.items())
+        list(tt_to_bulgarian_matching.items()) +
+        list(tt_to_bulgarian_matching_2char.items()) +
+        list(tt_to_bulgarian_matching_3char.items()) +
+        list(tt_to_bulgarian_matching_4char.items()))
 
 build_canonicalize_latin = {}
 for ch in dont_self_canonicalize:

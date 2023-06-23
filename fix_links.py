@@ -239,12 +239,12 @@ language_codes_to_properties = {
 }
 
 #auto_languages = {}
-#for code, desc in blib.languages_byCode.iteritems():
+#for code, desc in blib.languages_byCode.items():
 #  canonical_
 
 language_names_to_properties = {
   langprops[0]: [langcode] + langprops[1:]
-  for langcode, langprops in language_codes_to_properties.iteritems()
+  for langcode, langprops in language_codes_to_properties.items()
 }
 
 def do_remove_diacritics(text, patterns, remove_diacritics):

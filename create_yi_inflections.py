@@ -1489,7 +1489,7 @@ def create_forms(lemmas_to_process, lemmas_to_overwrite,
               else:
                 formvals_by_pagename[formval_no_accents] = [(formvalyi, formvaltr)]
             # Process groups of inflections
-            formvals_by_pagename_items = formvals_by_pagename.items()
+            formvals_by_pagename_items = list(formvals_by_pagename.items())
             if len(formvals_by_pagename_items) > 1:
               pagemsg("create_forms: For form %s, found multiple page names %s" % (
                 formname, ",".join("%s" % formval_no_accents for formval_no_accents, inflections in formvals_by_pagename_items)))

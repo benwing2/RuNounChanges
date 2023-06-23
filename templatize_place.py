@@ -1978,7 +1978,7 @@ def strip_wikicode(text, record_links_dict, pagemsg):
 
 def restore_links(text, record_links_dict, pagemsg, wikipedia_only=False):
   # Put back original links. Abort if anything goes wrong (e.g. two replacements when one expected).
-  for repl, orig in record_links_dict.iteritems():
+  for repl, orig in record_links_dict.items():
     if repl in text and (not wikipedia_only or re.search(r"^\{\{w\||\[\[w:", orig)):
       text, did_replace = blib.replace_in_text(text, repl, orig, pagemsg, abort_if_warning=True)
       if not did_replace:
