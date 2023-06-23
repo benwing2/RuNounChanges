@@ -4192,7 +4192,7 @@ def initialize_templates_to_rename_map(do_all, do_specified):
   templates_to_actually_do_set = set(templates_to_actually_do)
 
   for template, spec in templates_to_rename_specs:
-    if isinstance(spec, basestring):
+    if isinstance(spec, str):
       templates_to_rename_map[template] = templates_to_rename_map[spec]
     else:
       templates_to_rename_map[template] = spec
@@ -4208,7 +4208,7 @@ def expand_set_value(value, t, pagemsg):
           (str(t), err, value))
   if callable(value):
     return expand_set_value(value(t, pagemsg), t, pagemsg)
-  if isinstance(value, basestring):
+  if isinstance(value, str):
     return value
   if isinstance(value, list):
     return flatten_list([expand_set_value(x, t, pagemsg) for x in value])
@@ -4287,12 +4287,12 @@ def expand_spec(spec, t, pagemsg):
       check(len(subspec) == 3, "wrong length %s of subspec %s, != 3" %
           (len(subspec), subspec))
       _, param, newval = subspec
-      check(isinstance(param, basestring),
-          "wrong type %s of %s, not basestring" % (type(param), param))
+      check(isinstance(param, str),
+          "wrong type %s of %s, not str" % (type(param), param))
       newval = expand_set_value(newval, t, pagemsg)
       if newval is None:
         pass
-      elif isinstance(newval, basestring):
+      elif isinstance(newval, str):
         expanded_specs.append((param, newval))
       else:
         check(type(newval) is list, "wrong type %s of %s, not list" % (type(newval), newval))
@@ -4407,7 +4407,7 @@ def expand_spec(spec, t, pagemsg):
         pbase, pind = m.groups()
         excludeme = False
         for ename in exclude_params:
-          if isinstance(ename, basestring):
+          if isinstance(ename, str):
             if ename == pname:
               excludeme = True
               break
@@ -4416,8 +4416,8 @@ def expand_spec(spec, t, pagemsg):
             check(len(ename) == 2, "wrong length %s of ename %s, != 2" %
                 (len(ename), ename))
             check(ename[0] == "list", 'ename[0] should == "list" but == %s' % ename[0])
-            check(isinstance(ename[1], basestring),
-                "wrong type %s of %s, not basestring" % (type(ename[1]), ename[1]))
+            check(isinstance(ename[1], str),
+                "wrong type %s of %s, not str" % (type(ename[1]), ename[1]))
             m = re.search("^(.*?)([0-9]*)$", ename)
             ebase, eind = m.groups()
             if not eind:
@@ -4437,8 +4437,8 @@ def expand_spec(spec, t, pagemsg):
           (len(subspec), subspec))
       _, comment = subspec
       comment = expand_set_value(comment, t, pagemsg)
-      check(isinstance(comment, basestring),
-          "wrong type %s of %s, not basestring" % (type(comment), comment))
+      check(isinstance(comment, str),
+          "wrong type %s of %s, not str" % (type(comment), comment))
       comment = comment.replace("__TEMPNAME__", oldname).replace("__NEWNAME__", newname)
 
     else:

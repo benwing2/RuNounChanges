@@ -526,7 +526,7 @@ build_canonicalize_latin[""] = "multiple"
 # e.g. could happen with ʾ, an alternative for ʿ.
 for arabic in tt_to_arabic_matching:
   alts = tt_to_arabic_matching[arabic]
-  if isinstance(alts, basestring):
+  if isinstance(alts, str):
     build_canonicalize_latin[alts] = "multiple"
   else:
     canon = alts[0]
@@ -539,7 +539,7 @@ for arabic in tt_to_arabic_matching:
 
 for arabic in tt_to_arabic_matching:
   alts = tt_to_arabic_matching[arabic]
-  if isinstance(alts, basestring):
+  if isinstance(alts, str):
     continue
   canon = alts[0]
   if isinstance(canon, list):

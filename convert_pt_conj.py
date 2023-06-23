@@ -31,7 +31,7 @@ def convert_old_slot_name(slot, values):
   slot = re.sub("^impe_negt_", "neg_imp_", slot)
   if "_obsolete" in slot:
     slot = slot.replace("_obsolete", "")
-    if isinstance(values, basestring):
+    if isinstance(values, str):
       values += "[superseded]"
     else:
       assert type(values) == list
@@ -62,7 +62,7 @@ def generate_old_verb_forms(template, errandpagemsg, expand_text):
       if type(newval) is list:
         newval = ",".join(newval)
       else:
-        assert isinstance(newval, basestring)
+        assert isinstance(newval, str)
       if newkey is not None:
         existing = args.get(newkey, "")
         args[newkey] = existing + "," + newval if existing else newval

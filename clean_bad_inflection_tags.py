@@ -736,14 +736,14 @@ def canonicalize_tag_1(tag, shorten, pagemsg, add_to_bad_tags_split_canon=False)
     else:
       split_tags = tag.split("/")
     canon_split_tags = [canonicalize_tag(t, shorten, pagemsg) for t in split_tags]
-    if all(isinstance(t, basestring) for t in canon_split_tags):
+    if all(isinstance(t, str) for t in canon_split_tags):
       return "//".join(canon_split_tags)
     else:
       pagemsg("WARNING: Found slash in tag and wasn't able to canonicalize completely: %s" % tag)
   if ":" in tag and "/" not in tag:
     split_tags = tag.split(":")
     canon_split_tags = [canonicalize_tag(t, shorten, pagemsg) for t in split_tags]
-    if all(isinstance(t, basestring) for t in canon_split_tags):
+    if all(isinstance(t, str) for t in canon_split_tags):
       return ":".join(canon_split_tags)
     else:
       pagemsg("WARNING: Found colon in tag and wasn't able to canonicalize completely: %s" % tag)

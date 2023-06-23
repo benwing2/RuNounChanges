@@ -411,7 +411,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 mockup = args.mockup
 
 def ignore_page(page):
-  if not isinstance(page, basestring):
+  if not isinstance(page, str):
     page = str(page.title())
   if re.search(r"^(Appendix|Appendix talk|User|User talk|Talk):", page):
     return True

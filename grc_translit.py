@@ -265,7 +265,7 @@ build_canonicalize_latin[""] = "multiple"
 # e.g. could happen with ʾ, an alternative for ʿ.
 for greek in tt_to_greek_matching:
     alts = tt_to_greek_matching[greek]
-    if isinstance(alts, basestring):
+    if isinstance(alts, str):
         build_canonicalize_latin[alts] = "multiple"
     else:
         canon = alts[0]
@@ -278,7 +278,7 @@ for greek in tt_to_greek_matching:
 
 for greek in tt_to_greek_matching:
     alts = tt_to_greek_matching[greek]
-    if isinstance(alts, basestring):
+    if isinstance(alts, str):
         continue
     canon = alts[0]
     if isinstance(canon, list):

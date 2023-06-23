@@ -1078,7 +1078,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
     new_defn_template = "{{%s%s|%s%s%s}}" % (
       deftemp[0], "|ru" if deftemp_needs_lang else "",
       lemma, "|tr=%s" % lemmatr if lemmatr else "",
-      deftemp_param if isinstance(deftemp_param, basestring) else "||" + "|".join(deftemp_param))
+      deftemp_param if isinstance(deftemp_param, str) else "||" + "|".join(deftemp_param))
 
     # 5. Synthesize declension template if needed.
     if is_adjectival_participle:
@@ -1847,7 +1847,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                         param_is_head=False, issue_warnings=issue_warnings))):
                   defn_templates_for_inserting_in_same_section.append(t)
                   defn_templates_for_inserting_in_same_template.append(t)
-                  if isinstance(deftemp_param, basestring):
+                  if isinstance(deftemp_param, str):
                     defn_templates_for_already_present_entry.append((t, False, 0))
                   else:
                     result, tag_set_no = compare_inflections(t, deftemp_param,
@@ -2015,7 +2015,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   if (deftemp_allows_multiple_tag_sets and
                       len(defn_templates_for_inserting_in_same_template) > 0 and
                       # FIXME, when is deftemp_param a string?
-                      not isinstance(deftemp_param, basestring)):
+                      not isinstance(deftemp_param, str)):
                     defn_template_to_modify = defn_templates_for_inserting_in_same_template[-1]
                     check_fix_defn_params(defn_template_to_modify, -1, deftemp_param)
                     pagemsg("Insert new tag set into existing {{%s}}" % (

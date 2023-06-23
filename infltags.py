@@ -135,7 +135,7 @@ def fetch_tag_tables(preferred_tag_variants=set()):
 
     for shortcut, tag in data["shortcuts"].items():
       # shortcuts contain entries like "mfn" -> "m//f//n" and "2p" -> ["2", "p"]
-      if isinstance(tag, basestring) and tag in data["tags"]:
+      if isinstance(tag, str) and tag in data["tags"]:
         tag_to_dimension_table[shortcut] = data["tags"][tag]["tag_type"]
 
   process_data(jsondata["data"])

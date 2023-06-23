@@ -365,7 +365,7 @@ def make_tuple(x):
 
 tt_to_russian_matching = {}
 for k,v in tt_to_russian_matching_uppercase.items():
-    if isinstance(v, basestring):
+    if isinstance(v, str):
         v = [v]
     # Surround lower->upper matching with a one-entry tuple so they
     # don't trigger "multiple" in build_canonicalize_latin()
@@ -861,13 +861,13 @@ def tr_matching(russian, latin, err=False, msgfun=msg):
                 else:
                     assert len(m) == 3
                     m, subst, substrussian = m
-            assert isinstance(subst, basestring)
-            assert isinstance(substrussian, basestring)
+            assert isinstance(subst, str)
+            assert isinstance(substrussian, str)
             # A one-element tuple is a signal for use in self-canonicalization,
             # not here.
             if type(m) is tuple:
                 m = m[0]
-            assert isinstance(m, basestring)
+            assert isinstance(m, str)
             l = lind[0]
             matched = True
             debprint("m: %s, subst: %s" % (m, subst))

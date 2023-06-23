@@ -13,7 +13,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 if args.namespace:
   for i, page in blib.iter_items(site.allpages(
-    start=start if isinstance(start, basestring) else '!', namespace=args.namespace,
+    start=start if isinstance(start, str) else '!', namespace=args.namespace,
     filterredir=False), start, end):
       msg("Page %s %s: Processing" % (i, str(page.title())))
 else:

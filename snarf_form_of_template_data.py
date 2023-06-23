@@ -70,7 +70,7 @@ def process_text_on_page(index, pagetitle, text):
   def valuestr(value):
     if type(value) is bool:
       return str(value)
-    elif isinstance(value, basestring):
+    elif isinstance(value, str):
       return '"%s"' % value.replace('"', r'\"')
     else:
       return "[%s]" % ", ".join(valuestr(x) for x in value)

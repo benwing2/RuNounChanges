@@ -59,13 +59,13 @@ def vocalize_param(pagetitle, index, template, param, paramtr):
 def vocalize_param_chain(pagetitle, index, template, param):
   paramschanged = []
   result = vocalize_param(pagetitle, index, template, param, param + "tr")
-  if isinstance(result, basestring):
+  if isinstance(result, str):
     paramschanged.append(param)
   i = 2
   while result:
     thisparam = param + str(i)
     result = vocalize_param(pagetitle, index, template, thisparam, thisparam + "tr")
-    if isinstance(result, basestring):
+    if isinstance(result, str):
       paramschanged.append(thisparam)
     i += 1
   return paramschanged
@@ -107,7 +107,7 @@ def vocalize_head(pagetitle, index, template):
 
     # Try to vocalize 1=
     result = vocalize_param(pagetitle, index, template, "1", "tr")
-    if isinstance(result, basestring):
+    if isinstance(result, str):
       paramschanged.append("1")
 
     # If 1= not found, try vocalizing the page title and make it the 1= value
@@ -133,7 +133,7 @@ def vocalize_head(pagetitle, index, template):
   while result:
     thisparam = "head" + str(i)
     result = vocalize_param(pagetitle, index, template, thisparam, "tr" + str(i))
-    if isinstance(result, basestring):
+    if isinstance(result, str):
       paramschanged.append(thisparam)
     i += 1
   return paramschanged
@@ -180,7 +180,7 @@ def vocalize_headwords(save, verbose, startFrom, upTo):
 def vocalize_links(save, verbose, cattype, startFrom, upTo):
   def process_param(pagetitle, index, pagetext, template, tlang, param, paramtr):
     result = vocalize_param(pagetitle, index, template, param, paramtr)
-    if isinstance(result, basestring):
+    if isinstance(result, str):
       result = ["%s (%s)" % (result, template.name)]
     return result
   def join_actions(actions):
