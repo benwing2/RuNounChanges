@@ -40,8 +40,6 @@ from misc_templates_to_rewrite import misc_templates_to_rewrite
 # nl-adj form of (? would need lang-specific tag for "Predicative/adverbial form", has posttext= if comp-of= or sup-of=) (4559)
 # nn-verb-form of (? maybe? uses a module) (1046)
 # pt-pron def (? not only a form-of template) (24)
-# pt-verb-form-of (? maybe? uses a module) (94585)
-# pt-verb form of (? very complicated; takes a region param that can/should be moved out) (29193)
 # sce-verb form of (? maybe? uses a module) (1)
 # sw-adj form of (? might be tough) (291)
 # tr-possessive form of (? includes posttext) (35)
