@@ -4,6 +4,7 @@ local force_cat = false -- for testing
 
 local m_form_of = require("Module:form of")
 local m_form_of_pos = require("Module:form of/pos")
+local m_params = require("Module:parameters")
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
@@ -33,7 +34,7 @@ but in addition it does the following:
 	processing (hence numeric arguments should be numbers, not strings)
 	and the values should be boolean true.
 ]=]--
-local function process_parent_args(template, parent_args, params, defaults, ignorespecs, tracked_params)
+local function process_parent_args(template, parent_args, params, defaults, ignorespecs, tracked_params, function_name)
 	if #defaults > 0 or #ignorespecs > 0 then
 		local new_parent_args = {}
 		for _, default in ipairs(defaults) do
@@ -93,7 +94,7 @@ local function process_parent_args(template, parent_args, params, defaults, igno
 		parent_args = new_parent_args
 	end
 
-	local args = require("Module:parameters").process(parent_args, params)
+	local args = m_params.process(parent_args, params, nil, "form of/templates", function_name)
 
 	-- Tracking for certain user-specified params. This is generally used for
 	-- parameters that we accept but ignore, so that we can eventually remove
@@ -216,7 +217,7 @@ local function get_terminfos_and_categories(iargs, args, term_param, compat, mul
 
 	local function add_term_tracking_categories(term)
 		-- add tracking category if term is same as page title
-		if term and mw.title.getCurrentTitle().text == lang:makeEntryName(term) then
+		if term and mw.title.getCurrentTitle().text == (lang:makeEntryName(term)) then
 			table.insert(categories, "Forms linking to themselves")
 		end
 		-- maybe add tracking category if primary entry doesn't exist (this is an
@@ -442,7 +443,7 @@ function export.form_of_t(frame)
 		["noprimaryentrycat"] = {},
 	}
 	
-	local iargs = require("Module:parameters").process(frame.args, iparams)
+	local iargs = m_params.process(frame.args, iparams, nil, "form of/templates", "form_of_t")
 	local parent_args = frame:getParent().args
 
 	local term_param = iargs["term_param"]
@@ -491,7 +492,7 @@ function export.form_of_t(frame)
 	end
 
 	local args = process_parent_args("form-of-t", parent_args, params, iargs["def"],
-		iargs["ignore"], ignored_params)
+		iargs["ignore"], ignored_params, "form_of_t")
 	
 	local text = args["notext"] and "" or iargs[1]
 	if args["cap"] or iargs["withcap"] and not args["nocap"] then
@@ -540,7 +541,7 @@ end
 --[=[
 Function that implements form-of templates that are defined by specific tagged
 inflections (typically a template referring to a non-lemma inflection,
-such as {{genitive plural of}}). This works exactly like form_of_t() except
+such as {{infl of||||gen|p}}). This works exactly like form_of_t() except
 that the "form of" text displayed before the link is based off of a
 pre-specified set of inflection tags (which will be appropriately linked to
 the glossary) instead of arbitrary text. From the user's perspective, there
@@ -589,7 +590,7 @@ function export.tagged_form_of_t(frame)
 		["noprimaryentrycat"] = {},
 	}
 	
-	local iargs = require("Module:parameters").process(frame.args, iparams)
+	local iargs = m_params.process(frame.args, iparams, nil, "form of/templates", "tagged_form_of_t")
 	local parent_args = frame:getParent().args
 
 	local term_param = iargs["term_param"]
@@ -638,7 +639,7 @@ function export.tagged_form_of_t(frame)
 	end
 
 	local args = process_parent_args("tagged-form-of-t", parent_args,
-		params, iargs["def"], iargs["ignore"], ignored_params)
+		params, iargs["def"], iargs["ignore"], ignored_params, "tagged_form_of_t")
 	
 	return construct_tagged_form_of_text(iargs, args, term_param, compat, multiple_lemmas,
 		split_inflection_tags(iargs[1], iargs["split_tags"]), "and")
@@ -705,7 +706,7 @@ function export.inflection_of_t(frame)
 		["noprimaryentrycat"] = {},
 	}
 
-	local iargs = require("Module:parameters").process(frame.args, iparams)
+	local iargs = m_params.process(frame.args, iparams, nil, "form of/templates", "inflection_of_t")
 	local parent_args = frame:getParent().args
 
 	local term_param = iargs["term_param"]
@@ -761,7 +762,7 @@ function export.inflection_of_t(frame)
 	end
 
 	local args = process_parent_args("inflection-of-t", parent_args,
-		params, iargs["def"], iargs["ignore"], ignored_params)
+		params, iargs["def"], iargs["ignore"], ignored_params, "inflection_of_t")
 	
 	local infls
 	if not next(iargs["preinfl"]) and not next(iargs["postinfl"]) then
@@ -794,7 +795,7 @@ function export.normalize_pos(frame)
 		[1] = {},
 		["default"] = {},
 	}
-	local iargs = require("Module:parameters").process(frame.args, iparams)
+	local iargs = m_params.process(frame.args, iparams, nil, "form of/templates", "normalize_pos")
 	if not iargs[1] and not iargs["default"] then
 		error("Either 1= or default= must be given in the invocation args")
 	end
