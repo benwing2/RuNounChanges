@@ -175,7 +175,7 @@ end
 -- similar TEMPLATE. The tracking category linked to is
 -- [[Template:tracking/inflection of/PAGE]].
 local function infl_track(page)
-	require("Module:debug").track("inflection of/" ..
+	require("Module:debug/track")("inflection of/" ..
 		-- avoid including links in pages (may cause error)
 		page:gsub("%[", "("):gsub("%]", ")"):gsub("|", "!"))
 end
@@ -530,6 +530,28 @@ function export.split_tags_into_tag_sets_and_expand_two_level_multipart_tags(tag
 	return resulting_tag_sets
 end
 
+
+--[=[
+This function isn't currently used anywhere so we comment it out to save space. Uncomment it if you need it.
+
+-- Combine the tag sets in a tag set group into a simple tag set, with logical tag sets separated by semicolons.
+-- This is the opposite of split_tags_into_tag_sets().
+function export.combine_tag_set_group(tag_set_group)
+	if #tag_set_group == 1 then
+		return tag_set_group[1]
+	end
+	local tags = {}
+	for _, tag_set in ipairs(tag_set_group) do
+		if #tags > 0 then
+			table.insert(tags, ";")
+		end
+		for _, tag in ipairs(tag_set) do
+			table.insert(tags, tag)
+		end
+	end
+	return tags
+end
+]=]
 
 function export.normalize_pos(pos)
 	return m_pos[pos] or pos
