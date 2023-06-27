@@ -14,7 +14,15 @@ local rgsplit = mw.text.gsplit
 -- [[Template:tracking/form-of/TEMPLATE/PAGE]]. If TEMPLATE is omitted, the tracking category is of the form
 -- [[Template:tracking/form-of/PAGE]].
 local function track(page, template)
-	require("Module:debug").track("form-of/" .. (template and template .. "/" or "") .. page)
+	require("Module:debug/track")("form-of/" .. (template and template .. "/" or "") .. page)
+end
+
+
+-- Equivalent to list.extend(new_items) in Python. Appends items in `new_items` (a list) to `list`.
+local function extend_list(list, new_items)
+	for _, item in ipairs(new_items) do
+		table.insert(list, item)
+	end
 end
 
 
@@ -268,7 +276,7 @@ local function get_terminfos_and_categories(iargs, args, term_param, compat, mul
 		terminfos = {}
 		-- FIXME! Previously there was only one term parameter but multiple genders. For compatibility, if we see only
 		-- one term but multiple genders, allow this and convert the genders to the new format, for further
-		-- processing. Also such usages so we can convert them.
+		-- processing. Also track such usages so we can convert them.
 		if args[term_param].maxindex <= 1 and args["g"].maxindex > 1 then
 			local genders = {}
 			for i = 1, args["g"].maxindex do
@@ -352,9 +360,7 @@ local function construct_form_of_text(iargs, args, term_param, compat, multiple_
 	local lang, terminfos, categories = get_terminfos_and_categories(iargs, args, term_param, compat, multiple_lemmas)
 
 	local form_of_text, lang_cats = do_form_of(lang, terminfos)
-	for _, cat in ipairs(lang_cats) do
-		table.insert(categories, cat)
-	end
+	extend_list(categories, lang_cats)
 	local text = form_of_text .. (
 		args["nodot"] and "" or args["dot"] or iargs["withdot"] and "." or ""
 	)
@@ -713,11 +719,12 @@ function export.inflection_of_t(frame)
 	
 	local compat = iargs["lang"] or parent_args["lang"]
 	term_param = term_param or compat and 1 or 2
+	local tagsind = term_param + 2
 
 	local params = {
 		-- Numbered params
 		[compat and "lang" or 1] = {required = not iargs["lang"]},
-		[term_param + 2] = {list = true,
+		[tagsind] = {list = true,
 			-- at least one inflection tag is required unless preinfl or
 			-- postinfl tags are given
 			required = #iargs["preinfl"] == 0 and #iargs["postinfl"] == 0},
@@ -766,17 +773,35 @@ function export.inflection_of_t(frame)
 	
 	local infls
 	if not next(iargs["preinfl"]) and not next(iargs["postinfl"]) then
-		infls = args[term_param + 2]
+		-- If no preinfl or postinfl tags, just use the user-specified tags directly.
+		infls = args[tagsind]
 	else
+		-- Otherwise, we need to prepend the preinfl tags and postpend the postinfl tags. If there's only one tag set
+		-- (no semicolon), it's easier. Since this is common, we optimize for it.
 		infls = {}
-		for _, infl in ipairs(split_inflection_tags(iargs["preinfl"], iargs["split_tags"])) do
-			table.insert(infls, infl)
+		local saw_semicolon = false
+		for _, infl in ipairs(args[tagsind]) do
+			if infl == ";" then
+				saw_semicolon = true
+				break
+			end
 		end
-		for _, infl in ipairs(args[term_param + 2]) do
-			table.insert(infls, infl)
-		end
-		for _, infl in ipairs(split_inflection_tags(iargs["postinfl"], iargs["split_tags"])) do
-			table.insert(infls, infl)
+		local split_preinfl = split_inflection_tags(iargs["preinfl"], iargs["split_tags"])
+		local split_postinfl = split_inflection_tags(iargs["postinfl"], iargs["split_tags"])
+		if not saw_semicolon then
+			extend_list(infls, split_preinfl)
+			extend_list(infls, args[tagsind])
+			extend_list(infls, split_postinfl)
+		else
+			local groups = m_form_of.split_tags_into_tag_sets(args[tagsind])
+			for _, group in ipairs(groups) do
+				if #infls > 0 then
+					table.insert(infls, ";")
+				end
+				extend_list(infls, split_preinfl)
+				extend_list(infls, group)
+				extend_list(infls, split_postinfl)
+			end
 		end
 	end
 
