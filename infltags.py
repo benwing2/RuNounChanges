@@ -153,6 +153,7 @@ def combine_adjacent_inflection_of_calls(text, notes, pagemsg, verbose=False):
         prev_lemma = None
         prev_alt = None
         prev_tr = None
+        prev_enclitic = None
         prev_gloss = None
         prev_tags = None
         prev_misc_params = None
@@ -163,18 +164,21 @@ def combine_adjacent_inflection_of_calls(text, notes, pagemsg, verbose=False):
           assert len(templates) > 0
           t = templates[0]
           assert tname(t) == template
+          def getp(param):
+            return getparam(t, param)
           if t.has("lang"):
-            this_lang = getparam(t, "lang")
-            this_lemma = getparam(t, "1")
-            this_alt = getparam(t, "2")
+            this_lang = getp("lang")
+            this_lemma = getp("1")
+            this_alt = getp("2")
             first_tag = 3
           else:
-            this_lang = getparam(t, "1")
-            this_lemma = getparam(t, "2")
-            this_alt = getparam(t, "3")
+            this_lang = getp("1")
+            this_lemma = getp("2")
+            this_alt = getp("3")
             first_tag = 4
-          this_tr = getparam(t, "tr")
-          this_gloss = getparam(t, "t") or getparam(t, "gloss")
+          this_tr = getp("tr")
+          this_enclitic = getp("enclitic")
+          this_gloss = getp("t") or getp("gloss")
           this_misc_params = []
           this_tags = []
           for param in t.params:
@@ -187,9 +191,8 @@ def combine_adjacent_inflection_of_calls(text, notes, pagemsg, verbose=False):
                   this_tags.append(pval)
             elif pname not in ["lang", "tr", "alt", "t", "gloss"]:
               this_misc_params.append((pname, pval, param.showkey))
-          if (prev_lang == this_lang and prev_lemma == this_lemma and
-              prev_alt == this_alt and prev_tr == this_tr and
-              prev_gloss == this_gloss and prev_misc_params == this_misc_params):
+          if (prev_lang == this_lang and prev_lemma == this_lemma and prev_alt == this_alt and prev_tr == this_tr and
+              prev_enclitic == this_enclitic and prev_gloss == this_gloss and prev_misc_params == this_misc_params):
             # Can combine prev with this.
             this_tags = prev_tags + [";"] + this_tags
             notes.append("combine adjacent calls to %s" % construct_abbreviated_template(template, this_lang, this_lemma))
@@ -210,6 +213,9 @@ def combine_adjacent_inflection_of_calls(text, notes, pagemsg, verbose=False):
             for tag in this_tags:
               t.add(str(next_tag_param), tag)
               next_tag_param += 1
+            this_enclitic = remove_comment_continuations(this_enclitic)
+            if this_enclitic:
+              t.add("enclitic", this_enclitic)
             this_gloss = remove_comment_continuations(this_gloss)
             if this_gloss:
               t.add("t", this_gloss)
@@ -232,6 +238,8 @@ def combine_adjacent_inflection_of_calls(text, notes, pagemsg, verbose=False):
               difftype = "alt display texts"
             elif prev_tr != this_tr:
               difftype = "transliterations"
+            elif prev_enclitic != this_enclitic:
+              difftype = "enclitics"
             elif prev_gloss != this_gloss:
               difftype = "glosses"
             else:
@@ -246,6 +254,7 @@ def combine_adjacent_inflection_of_calls(text, notes, pagemsg, verbose=False):
           prev_lemma = this_lemma
           prev_alt = this_alt
           prev_tr = this_tr
+          prev_enclitic = this_enclitic
           prev_gloss = this_gloss
           prev_tags = this_tags
           prev_misc_params = this_misc_params
