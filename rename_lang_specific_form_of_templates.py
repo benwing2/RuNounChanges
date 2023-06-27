@@ -6,6 +6,8 @@ import traceback, pprint
 
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname
+from mwparserfromhell.nodes import Template
+from dataclasses import dataclass
 
 import infltags
 
@@ -108,11 +110,11 @@ round_1_templates = [
 ]
 
 round_2_templates = [
-  "bg-adj form of",
-  "bg-noun form of",
-  "blk-past of",
-  "br-noun-plural",
-  "ca-adj form of",
+  "bg-adj form of", # deleted
+  "bg-noun form of", # deleted
+  "blk-past of", # deleted
+  "br-noun-plural", # 172 uses; can delete
+  "ca-adj form of", # deleted
   "ca-form of",
   "chm-inflection of",
   "de-form-adj",
@@ -170,7 +172,7 @@ round_2_templates = [
   "sco-simple past of",
   "sco-third-person singular of",
   "sga-verbnec of",
-  "sl-participle of",
+  "sl-participle of", # deleted
   "sv-adj-form-abs-def",
   "sv-adj-form-abs-def+pl",
   "sv-adj-form-abs-def-m",
@@ -980,9 +982,9 @@ def romance_adj_form_of(lang):
     ]),
   )
 
-def ca_form_of(t, pagemsg):
-  if getparam(t, "1") in ["alt form", "alt sp", "alt spel", "alt spell"]:
-    if getparam(t, "1") == "alt form":
+def ca_form_of(data):
+  if data.getp("1") in ["alt form", "alt sp", "alt spel", "alt spell"]:
+    if data.getp("1") == "alt form":
       template = "alt form"
     else:
       template = "alt sp"
@@ -999,7 +1001,7 @@ def ca_form_of(t, pagemsg):
     )
   else:
     return (
-      "inflection of",
+      "infl of",
       # nocap= ignored; doesn't include val= or val2=
       ("error-if", ("present-except", ["1", "2", "3", "nocap", "sort"])),
       ("set", "1", [
@@ -1194,7 +1196,7 @@ de_specs = [
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "de",
-      lambda t, pagemsg: "[[%s]] [[du]]" % getparam(t, "1")
+      lambda data: "[[%s]] [[du]]" % data.getp("1")
     ]),
   )),
 
@@ -1364,7 +1366,7 @@ el_specs = [
   # NOTE: Has automatic, non-controllable initial caps that we're ignoring.
   # No final period.
   ("el-form-of-adv", (
-    lambda t, pagemsg:
+    lambda data:
       ("comparative of",
         ("comment", "rename {{__TEMPNAME__|deg=comp}} to {{comparative of|el|...|POS=adverb}}"),
         ("error-if", ("present-except", ["deg", "1", "alt", "gloss"])),
@@ -1375,8 +1377,8 @@ el_specs = [
           ("copy", "gloss"),
         ]),
         ("set", "POS", "adverb"),
-      ) if getparam(t, "deg") == "comp" else
-      ("inflection of",
+      ) if data.getp("deg") == "comp" else
+      ("infl of",
         ("comment", "rename {{__TEMPNAME__|deg=sup}} to {{inflection of|el|...|asupd}}"),
         ("error-if", ("present-except", ["deg", "1", "alt", "gloss"])),
         ("error-if", ("neq", "deg", "sup")),
@@ -1394,7 +1396,7 @@ el_specs = [
   # NOTE: Has automatic, non-controllable initial caps and controllable
   # final period (using nodot). Both ignored.
   ("el-form-of-nounadj", (
-    "inflection of",
+    "infl of",
     ("error-if", ("present-except", ["1", "c", "n", "g", "d", "t", "nodot"])),
     ("set", "1", [
       "el",
@@ -1632,7 +1634,7 @@ et_specs = [
   # Both ignored.
   ("et-nom form of", (
     # May be rewritten later to 'noun form of', etc.
-    "inflection of",
+    "infl of",
     # pos= is commonly present but ignored by the template. But it
     # contains useful information so we convert it to p=, which will also
     # help with rewriting.
@@ -1732,8 +1734,8 @@ et_specs = [
   )),
 ]
 
-def fa_tg_adj_form_of(t, pagemsg, lang):
-  param1 = getparam(t, "1")
+def fa_tg_adj_form_of(data, lang):
+  param1 = data.getp("1")
   if param1 == "c":
     template_name = "comparative of"
   elif param1 == "s":
@@ -1752,7 +1754,7 @@ def fa_tg_adj_form_of(t, pagemsg, lang):
   )
 
 fa_specs = [
-  ("fa-adj form of", lambda t, pagemsg: fa_tg_adj_form_of(t, pagemsg, "fa")),
+  ("fa-adj form of", lambda data: fa_tg_adj_form_of(data, "fa")),
 
   ("fa-adj-form", "fa-adj form of"),
 
@@ -1787,6 +1789,13 @@ fa_specs = [
     ("copy", "t"),
   )),
 ]
+
+def fetch_fi_suffixes(data):
+  suffixes = blib.fetch_param_chain(data.t, "suffix")
+  if suffixes:
+    return ",".join(suffixes)
+  else:
+    return []
 
 fi_specs = [
   # Has default initial caps and final period (controllable by nocap/nodot).
@@ -1845,6 +1854,120 @@ fi_specs = [
         True: "conn",
       }),
     ]),
+  )),
+
+  ("fi-form of", (
+    # The template code ignores nocat=.
+    "infl of",
+    ("error-if", ("present-except", [
+      "1", "2", "t", "pr", "case", "pl", "tense", "mood", "suffix", "suffix2", "suffix3"
+    ])),
+    ("set", "1", [
+      "fi",
+      ("copy", "1"),
+      "",
+      ("lookup", "2", {
+        "-": "form",
+        "": [],
+      }),
+      ("lookup", "pr", {
+        "1": "1",
+        "1p": "1",
+        "first person": "1",
+        "first-person": "1",
+        "2": "2",
+        "2p": "2",
+        "second person": "2",
+        "second-person": "2",
+        "3": "3",
+        "3p": "3",
+        "third person": "3",
+        "third-person": "3",
+        "passive": ("lookup", "tense", {
+          "connegative": [],
+          "present connegative": [],
+          "past connegative": [],
+          True: "pass",
+        }),
+        "impersonal": ("lookup", "tense", {
+          "connegative": [],
+          "present connegative": [],
+          "past connegative": [],
+          True: "pass",
+        }),
+        "": [],
+      }),
+      ("lookup", "case", {
+        "nominative": "nom",
+        "genitive": "gen",
+        "accusative": "acc",
+        "partitive": "par",
+        "inessive": "ine",
+        "illative": "ill",
+        "elative": "ela",
+        "adessive": "ade",
+        "allative": "all",
+        "ablative": "abl",
+        "essive": "ess",
+        "translative": "tra",
+        "instructive": "ist",
+        "abessive": "abe",
+        "comitative": "com",
+        "": [],
+      }),
+      ("lookup", "pl", {
+        "s": "s",
+        "singular": "s",
+        "p": "p",
+        "plural": "p",
+        "singular and plural": "s//p",
+        "": [],
+      }),
+      ("lookup", "tense", {
+        "": [],
+        "connegative": [],
+        "present": "pres",
+        "present connegative": "pres",
+        "imperfect": "past",
+        "past": "past",
+        "past connegative": "past",
+      }),
+      ("lookup", "tense", {
+        "connegative": ("lookup", "pr", {
+          "passive": "pass",
+          "impersonal": "pass",
+          True: "act",
+        }),
+        "present connegative": ("lookup", "pr", {
+          "passive": "pass",
+          "impersonal": "pass",
+          True: "act",
+        }),
+        "past connegative": ("lookup", "pr", {
+          "passive": "pass",
+          "impersonal": "pass",
+          True: "act",
+        }),
+        True: [],
+      }),
+      ("lookup", "mood", {
+        "": [],
+        "indicative": "ind",
+        "conditional": "cond",
+        "imperative": "imp",
+        "potential": "potn",
+        "optative": "opt",
+        "eventive": "eventive",
+      }),
+      ("lookup", "tense", {
+        "connegative": "conn",
+        "present connegative": "conn",
+        "past connegative": "conn",
+        True: [],
+      }),
+    ]),
+    ("set", "enclitic", fetch_fi_suffixes),
+    ("copy", "t"),
   )),
 ]
 
@@ -2080,7 +2203,7 @@ hu_grammar_table = {
 hu_specs = [
   ("hu-inflection of", (
     # May be rewritten later to 'noun form of', etc.
-    "inflection of",
+    "infl of",
     # Template currently ignores both nocat= and pos=
     ("error-if", ("present-except", ["1", "2", "3", "4", "tr", "nocat", "pos"])),
     ("set", "1", [
@@ -2189,22 +2312,6 @@ hy_specs = [
   )),
 ]
 
-ie_specs = [
-  ("ie-past and pp of", (
-    "verb form of",
-    ("error-if", ("present-except", ["1"])),
-    ("set", "1", [
-      "ie",
-      ("copy", "1"),
-      "",
-      "past",
-      "and",
-      "pass",
-      "part",
-    ]),
-  )),
-]
-
 is_specs = [
   ("is-conjugation of", (
     "verb form of",
@@ -2226,7 +2333,7 @@ is_specs = [
   )),
 
   ("is-inflection of", (
-    "inflection of",
+    "infl of",
     # lang= occurs at least once, and is ignored.
     ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6", "lang"])),
     ("set", "1", [
@@ -2390,6 +2497,50 @@ ku_specs = [
   ku_headword("ku-suffix", "suffix"),
 ]
 
+def copy_la_head_if_not_pagetitle(data):
+  head = data.getp("1")
+  if data.getp("head2") or data.getp("head3") or data.getp("head4"):
+    return head
+  if head != data.pagetitle:
+    return head
+  return []
+
+def la_headword(template, pos):
+  return (template,
+    ("head",
+      ("comment", "rename {{__TEMPNAME__}} to {{head|la|%s}}" % pos),
+      ("error-if", ("present-except", ["1", "head2", "head3", "head4", "g", "g1", "g2", "g3", "g4", "id"])),
+      ("set", "1", [
+        "la",
+        pos,
+      ]),
+      ("set", "head", copy_la_head_if_not_pagetitle),
+      ("copy", "head2"),
+      ("copy", "head3"),
+      ("copy", "head4"),
+      ("copy", "g"),
+      ("copy", "g1", "g"),
+      ("copy", "g2"),
+      ("copy", "g3"),
+      ("copy", "g4"),
+      ("copy", "id"),
+    )
+  )
+
+la_specs = [
+  la_headword("la-adj-form", "adjective form"),
+  la_headword("la-adj form", "adjective form"),
+  la_headword("la-det-form", "determiner form"),
+  la_headword("la-gerund-form", "gerund form"),
+  la_headword("la-noun-form", "noun form"),
+  la_headword("la-num-form", "numeral form"),
+  la_headword("la-part-form", "participle form"),
+  la_headword("la-pronoun-form", "pronoun form"),
+  la_headword("la-proper noun-form", "proper noun form"),
+  la_headword("la-suffix-form", "suffix form"),
+  la_headword("la-verb-form", "verb form"),
+]
+
 liv_specs = [
   ("liv-conjugation of", (
     "verb form of",
@@ -2422,7 +2573,7 @@ liv_specs = [
   )),
 
   ("liv-inflection of", (
-    "inflection of",
+    "infl of",
     # 4 is ignored by the template but specifies the part of speech
     # and used to be used for categorization. We preserve it as it
     # might be useful in the future and it helps with rewriting.
@@ -2457,7 +2608,7 @@ liv_specs = [
 
   ("liv-participle of", (
     # May be rewritten later to 'participle of'.
-    "inflection of",
+    "infl of",
     ("error-if", ("present-except", ["1", "2", "3", "4", "5"])),
     ("set", "1", [
       "liv",
@@ -2581,7 +2732,7 @@ lt_specs = [
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
   ("lt-dalyvis-2", (
-    "inflection of",
+    "infl of",
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "lt",
@@ -2608,8 +2759,13 @@ lt_specs = [
         "yes": "pron",
         "": [],
       }),
+      # Template has the order 1, 2, 3. It looks better to have case before gender, and we need the
+      # comparative/superlative last or we get "comparative degree ablative feminine singular", which IMO
+      # looks bad.
+      ("lookup", "3", lt_adj_case_table),
+      ("lookup", "2", lt_adj_gender_number_table),
       ("lookup", "1", {
-        # Template includes "positive" explicitly but
+        # Template includes "positive" explicitly but generally we don't include it, so omit it here.
         "a": [], # positive degree
         "abs": [], # positive degree
         "p": [], # positive degree
@@ -2621,9 +2777,6 @@ lt_specs = [
         "sup": "supd",
         "": [],
       }),
-      # Template has the order 2, 3.
-      ("lookup", "3", lt_adj_case_table),
-      ("lookup", "2", lt_adj_gender_number_table),
     ]),
   )),
 
@@ -2681,7 +2834,7 @@ lt_specs = [
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
   ("lt-form-part", (
-    "inflection of",
+    "infl of",
     ("error-if", ("present-except", ["pro", "1", "2", "3"])),
     ("set", "1", [
       "lt",
@@ -2704,7 +2857,7 @@ lt_specs = [
   # Doesn't have initial caps. Categorizes into 'pronoun forms', which
   # should be handled by the headword.
   ("lt-form-pronoun", (
-    "inflection of",
+    "infl of",
     # Template handles class= and displays pre-text, but it never occurs.
     ("error-if", ("present-except", ["1", "2", "3", "4"])),
     ("set", "1", [
@@ -2862,7 +3015,7 @@ lv_grammar_table = {
 
 lv_specs = [
   ("lv-comparative of", (
-    "inflection of",
+    "infl of",
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "lv",
@@ -2883,7 +3036,7 @@ lv_specs = [
   )),
 
   ("lv-definite of", (
-    "inflection of",
+    "infl of",
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "lv",
@@ -2895,7 +3048,7 @@ lv_specs = [
 
   ("lv-inflection of", (
     # May be rewritten later to 'noun form of', etc.
-    "inflection of",
+    "infl of",
     # lang= occurs at least once, and is ignored.
     ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6", "lang"])),
     ("set", "1", [
@@ -2907,21 +3060,22 @@ lv_specs = [
       ("lookup", "4", lv_grammar_table),
       ("lookup", "5", lv_grammar_table),
     ]),
-    ("set", "p",
-      ("lookup", "6", {
-        "proper": "pn",
-        "adj": "adj",
-        "num": "num",
-        "v": "v",
-        "vpart": "part",
-        "pro": "pro",
-        "": [],
-      }),
-    ),
+    # not necessary; no longer categorizes
+    #("set", "p",
+    #  ("lookup", "6", {
+    #    "proper": "pn",
+    #    "adj": "adj",
+    #    "num": "num",
+    #    "v": "v",
+    #    "vpart": "part",
+    #    "pro": "pro",
+    #    "": [],
+    #  }),
+    #),
   )),
 
   ("lv-negative of", (
-    "inflection of",
+    "infl of",
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "lv",
@@ -3001,7 +3155,7 @@ mt_specs = [
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
   ("mt-prep-form", (
-    "inflection of",
+    "infl of",
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "mt",
@@ -3103,7 +3257,7 @@ osx_specs = [
   # NOTE: Has default initial caps (controllable through nocap) that we
   # are ignoring. Doesn't have final period. Only 22 uses.
   ("osx-nom form of", (
-    "inflection of",
+    "infl of",
     ("error-if", ("present-except", ["1", "2", "c", "n", "g", "w", "nocap"])),
     ("set", "1", [
       "osx",
@@ -3148,7 +3302,7 @@ pt_specs = [
   # NOTE: Has default initial caps (controllable through nocap) that we
   # are ignoring. Doesn't have final period. Only 11 uses.
   ("pt-adv form of", (
-    lambda t, pagemsg: (
+    lambda data: (
       "comparative of",
       ("error-if", ("present-except", ["1", "2", "nocap"])),
       ("set", "1", [
@@ -3156,7 +3310,7 @@ pt_specs = [
         ("copy", "1"),
       ]),
       ("set", "p", "adv"),
-    ) if getparam(t, "2") == "comp" else (
+    ) if data.getp("2") == "comp" else (
       "superlative of",
       ("error-if", ("present-except", ["1", "2", "nocap"])),
       ("set", "1", [
@@ -3164,7 +3318,7 @@ pt_specs = [
         ("copy", "1"),
       ]),
       ("set", "p", "adv"),
-    ) if getparam(t, "2") == "sup" else (
+    ) if data.getp("2") == "sup" else (
       "feminine of",
       ("error-if", ("present-except", ["1", "2", "nocap"])),
       ("set", "1", [
@@ -3178,7 +3332,7 @@ pt_specs = [
   # Has default initial caps and final period (controllable by nocap/nodot).
   # Both ignored.
   ("pt-article form of", (
-    "inflection of",
+    "infl of",
     ("error-if", ("present-except", ["1", "2", "3", "nocap", "nodot"])),
     ("set", "1", [
       "pt",
@@ -3241,12 +3395,12 @@ pt_specs = [
   # NOTE: Has automatic, non-controllable initial caps and final period.
   # Both ignored.
   ("pt-ordinal form", (
-    "inflection of",
+    "infl of",
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "pt",
-      lambda t, pagemsg:
-        getparam(t, "1") + ("o" if getparam(t, "2") in ["a", "os", "as"] else "º"),
+      lambda data:
+        data.getp("1") + ("o" if data.getp("2") in ["a", "os", "as"] else "º"),
       "",
       ("lookup", "2", {
         "a": ["f", "s"],
@@ -3266,7 +3420,7 @@ pt_specs = [
 # NOTE: Has automatic, non-controllable final period that we're ignoring.
 # Doesn't have initial caps. Categorizes into 'noun forms', which should be
 # handled by the headword.
-def ro_form_noun(t, pagemsg):
+def ro_form_noun(data):
   number_table = {
     "s": "s",
     "p": "p",
@@ -3285,7 +3439,7 @@ def ro_form_noun(t, pagemsg):
     "nadg": "nom//acc//gen//dat",
   }
 
-  if getparam(t, "1") in ["i", "d", ""]:
+  if data.getp("1") in ["i", "d", ""]:
     return (
       "noun form of",
       # lang= occurs at least once, and is ignored.
@@ -3436,10 +3590,10 @@ roa_opt_specs = [
 
 # FIXME: There should be a directive saying: append to the list,
 # starting at the lowest nonexistent element.
-def ru_get_nonblank_tags(t, pagemsg):
+def ru_get_nonblank_tags(data):
   tags = []
   for param in ["3", "4", "5", "6"]:
-    val = getparam(t, param)
+    val = data.getp(param)
     if val:
       tags.append(val)
   return tags
@@ -3494,7 +3648,7 @@ sa_specs = [
   ("sa-freq", "sa-frequentative of"),
 
   ("sa-root form of", (
-    "inflection of",
+    "infl of",
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "sa",
@@ -3533,7 +3687,7 @@ sco_specs = [
 
 sga_specs = [
   ("sga-verbnec of", (
-    "inflection of",
+    "infl of",
     ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "sga",
@@ -3583,7 +3737,7 @@ sh_specs = [
   # NOTE: Categorizes into "proper noun forms", but this should be handled by
   # the headword. Otherwise identical to {{sh-form-noun}}.
   ("sh-form-proper-noun", (
-    "inflection of",
+    "infl of",
     # ignore sc=Cyrl.
     ("error-if", ("present-except", ["1", "2", "3", "sc"])),
     ("set", "1", [
@@ -3602,7 +3756,7 @@ sh_specs = [
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
   ("sh-verb form of", (
-    lambda t, pagemsg:
+    lambda data:
       ("verbal noun of",
         ("comment", "rename {{__TEMPNAME__|vn}} to {{verbal noun of|sh}}"),
         # ignore sc=Cyrl.
@@ -3612,7 +3766,7 @@ sh_specs = [
           "sh",
           ("copy", "3")
         ])
-      ) if getparam(t, "1") == "vn" else
+      ) if data.getp("1") == "vn" else
       ("verb form of",
         # ignore sc=Cyrl.
         ("error-if", ("present-except", ["1", "2", "3", "4", "sc"])),
@@ -3652,8 +3806,8 @@ sh_specs = [
   ("sh-verb-form-of", "sh-verb form of"),
 ]
 
-def sl_check_1_is_m(t, pagemsg, should_return):
-  if getparam(t, "1") == "m":
+def sl_check_1_is_m(data, should_return):
+  if data.getp("1") == "m":
     return should_return
   else:
     raise BadTemplateValue("Expected 1=m with output of %s" %
@@ -3676,13 +3830,13 @@ sl_specs = [
         "a": "acc",
         "l": "loc",
         "i": "ins",
-        "nd": lambda t, pagemsg: sl_check_1_is_m(t, pagemsg, ["def", "nom"]),
-        "dn": lambda t, pagemsg: sl_check_1_is_m(t, pagemsg, ["def", "nom"]),
-        "ad": lambda t, pagemsg: sl_check_1_is_m(t, pagemsg, ["def", "acc"]),
-        "da": lambda t, pagemsg: sl_check_1_is_m(t, pagemsg, ["def", "acc"]),
-        "ai": lambda t, pagemsg: sl_check_1_is_m(t, pagemsg, ["indef", "acc"]),
-        "ia": lambda t, pagemsg: sl_check_1_is_m(t, pagemsg, ["indef", "acc"]),
-        "aa": lambda t, pagemsg: sl_check_1_is_m(t, pagemsg, ["an", "acc"]),
+        "nd": lambda data: sl_check_1_is_m(data, ["def", "nom"]),
+        "dn": lambda data: sl_check_1_is_m(data, ["def", "nom"]),
+        "ad": lambda data: sl_check_1_is_m(data, ["def", "acc"]),
+        "da": lambda data: sl_check_1_is_m(data, ["def", "acc"]),
+        "ai": lambda data: sl_check_1_is_m(data, ["indef", "acc"]),
+        "ia": lambda data: sl_check_1_is_m(data, ["indef", "acc"]),
+        "aa": lambda data: sl_check_1_is_m(data, ["an", "acc"]),
       }),
       ("lookup", "1", {
         "m": "m",
@@ -3763,7 +3917,7 @@ sl_specs = [
   # Doesn't have initial caps.
   ("sl-participle of", (
     # May be rewritten later to 'participle of', etc.
-    "inflection of",
+    "infl of",
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "sl",
@@ -3808,9 +3962,9 @@ sv_specs = [
   # caps. No final period for the noun forms.
   # First five templates include the word "absolute" that we omit.
   ("sv-adj-form-abs-def", sv_adj_form(["def"])),
-  ("sv-adj-form-abs-def+pl", sv_adj_form(["s", "def", "and", "p"])),
-  ("sv-adj-form-abs-def-m", sv_adj_form(["def", "natm"])),
-  ("sv-adj-form-abs-indef-n", sv_adj_form(["indef", "n"])),
+  ("sv-adj-form-abs-def+pl", sv_adj_form(["def", "s", ";", "p"])),
+  ("sv-adj-form-abs-def-m", sv_adj_form(["def", "natm", "s"])),
+  ("sv-adj-form-abs-indef-n", sv_adj_form(["indef", "n", "s"])),
   ("sv-adj-form-abs-pl", sv_adj_form(["p"])),
   ("sv-adj-form-comp", (
     "comparative of",
@@ -3823,7 +3977,7 @@ sv_specs = [
   # Template says "superlative attributive".
   ("sv-adj-form-sup-attr", sv_adj_form(["attr", "supd"])),
   # Template says "superlative attributive singular masculine".
-  ("sv-adj-form-sup-attr-m", sv_adj_form(["m", "s", "attr", "supd"])),
+  ("sv-adj-form-sup-attr-m", sv_adj_form(["attr", "natm", "s", "supd"])),
   # Template says "superlative predicative".
   ("sv-adj-form-sup-pred", sv_adj_form(["pred", "supd"])),
   ("sv-adv-form-comp", (
@@ -3852,7 +4006,7 @@ sv_specs = [
   ("sv-noun-form-indef-gen-pl", sv_noun_form(["indef", "gen", "p"])),
   ("sv-noun-form-indef-pl", sv_noun_form(["indef", "p"])),
   ("sv-proper-noun-gen", (
-    "inflection of",
+    "infl of",
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "sv",
@@ -3860,7 +4014,6 @@ sv_specs = [
       ("copy", "2"),
       "gen",
     ]),
-    ("set", "p", "pn"),
   )),
   ("sv-verb-form-imp", sv_verb_form(["imp"])),
   # Template says "infinitive passive".
@@ -3886,7 +4039,7 @@ sv_specs = [
 ]
 
 tg_specs = [
-  ("tg-adj form of", lambda t, pagemsg: fa_tg_adj_form_of(t, pagemsg, "tg")),
+  ("tg-adj form of", lambda data: fa_tg_adj_form_of(data, "tg")),
 
   ("tg-adj-form", "tg-adj form of"),
 
@@ -3974,7 +4127,7 @@ tr_grammar_table = {
 
 tr_specs = [
   ("tr-inflection of", (
-    "inflection of",
+    "infl of",
     ("error-if", ("present-except", ["1", "2", "3"])),
     ("set", "1", [
       "tr",
@@ -4055,12 +4208,12 @@ templates_to_rename_specs = (
   hi_specs +
   hu_specs +
   hy_specs +
-  ie_specs +
   is_specs +
   it_specs +
   ja_specs +
   ka_specs +
   ku_specs +
+  la_specs +
   liv_specs +
   lt_specs +
   lv_specs +
@@ -4088,11 +4241,12 @@ templates_to_rename_specs = (
   []
 )
 
-def rewrite_to_foo_form_of(t, pagemsg, comment):
+def rewrite_to_foo_form_of(data, comment):
+  t = data.t
   origt = str(t)
   tn = tname(t)
-  if tn == "inflection of":
-    pos = getparam(t, "p")
+  if tn in ["inflection of", "infl of"]:
+    pos = data.getp("p")
     if pos in ["n", "noun"]:
       rmparam(t, "p")
       blib.set_template_name(t, "noun form of")
@@ -4109,18 +4263,27 @@ def rewrite_to_foo_form_of(t, pagemsg, comment):
     pagemsg("rewrite_to_foo_form_of: Replaced %s with %s" %
       (origt, str(t)))
 
-  return t, comment
+  return comment
 
-def rewrite_to_participle_of(t, pagemsg, comment):
+def rewrite_to_participle_of(data, comment):
+  t = data.t
   origt = str(t)
   tn = tname(t)
-  if tn in ["inflection of", "verb form of"]:
+  if tn in ["inflection of", "infl of", "verb form of"]:
     max_numbered = 0
     for param in t.params:
       pname = str(param.name).strip()
       if re.search("^[0-9]$", pname) and int(pname) > max_numbered:
         max_numbered = int(pname)
-    if getparam(t, str(max_numbered)) == "part":
+    if max_numbered == 2 and data.getp("1") == "pres" and data.getp("2") == "part":
+      rmparam(t, "2")
+      rmparam(t, "1")
+      blib.set_template_name(t, "present participle of")
+    elif max_numbered == 2 and data.getp("1") == "past" and data.getp("2") == "part":
+      rmparam(t, "2")
+      rmparam(t, "1")
+      blib.set_template_name(t, "past participle of")
+    elif data.getp(str(max_numbered)) == "part":
       rmparam(t, str(max_numbered))
       blib.set_template_name(t, "participle of")
   newtn = tname(t)
@@ -4131,20 +4294,21 @@ def rewrite_to_participle_of(t, pagemsg, comment):
     pagemsg("rewrite_to_participle_of: Replaced %s with %s" %
       (origt, str(t)))
 
-  return t, comment
+  return comment
 
-def rewrite_person_number_of(t, pagemsg, comment):
+def rewrite_person_number_of(data, comment):
+  t = data.t
   origt = str(t)
   tn = tname(t)
-  if tn in ["inflection of", "verb form of", "noun form of", "adj form of",
+  if tn in ["inflection of", "infl of", "verb form of", "noun form of", "adj form of",
       "participle of"]:
     first_rewrite_param = None
     first_rewrite_val = None
     for param in t.params:
       pname = str(param.name).strip()
       if re.search("^[0-9]$", pname) and int(pname) > 1:
-        pval = getparam(t, pname)
-        prevval = getparam(t, str(int(pname) - 1))
+        pval = data.getp(pname)
+        prevval = data.getp(str(int(pname) - 1))
         if pval in ["s", "d", "p"] and prevval in ["1", "2", "3"]:
           first_rewrite_param = int(pname) - 1
           first_rewrite_val = prevval + pval
@@ -4173,7 +4337,7 @@ def rewrite_person_number_of(t, pagemsg, comment):
     pagemsg("rewrite_person_number_of: Replaced %s with %s" %
       (origt, str(t)))
 
-  return t, comment
+  return comment
 
 post_rewrite_hooks = [
   rewrite_to_foo_form_of,
@@ -4201,17 +4365,28 @@ def initialize_templates_to_rename_map(do_all, do_specified):
 def flatten_list(value):
   return [y for x in value for y in (x if type(x) is list else [x])]
 
-def expand_set_value(value, t, pagemsg):
+@dataclass
+class TemplateData:
+  index: int
+  pagetitle: str
+  t: Template
+  pagemsg: callable
+
+  def getp(self, param):
+    return getparam(self.t, param)
+
+def expand_set_value(value, data):
+  t = data.t
   def check(cond, err):
     if not cond:
       raise BadRewriteSpec("Error expanding set value for template %s: %s; value=%s" %
           (str(t), err, value))
   if callable(value):
-    return expand_set_value(value(t, pagemsg), t, pagemsg)
+    return expand_set_value(value(data), data)
   if isinstance(value, str):
     return value
   if isinstance(value, list):
-    return flatten_list([expand_set_value(x, t, pagemsg) for x in value])
+    return flatten_list([expand_set_value(x, data) for x in value])
   check(isinstance(value, tuple),
       "wrong type %s of %s, not tuple" % (type(value), value))
   check(len(value) >= 1, "empty value")
@@ -4230,21 +4405,22 @@ def expand_set_value(value, t, pagemsg):
     table = value[2]
     check(type(table) is dict, "wrong type %s of %s, not dict" % (type(table), table))
     if lookval in table:
-      return expand_set_value(table[lookval], t, pagemsg)
+      return expand_set_value(table[lookval], data)
     elif True in table:
-      return expand_set_value(table[True], t, pagemsg)
+      return expand_set_value(table[True], data)
     else:
       raise BadTemplateValue("Unrecognized value %s=%s" % (value[1], lookval))
   else:
     check(False, "Unrecognized directive %s" % direc)
 
-def expand_spec(spec, t, pagemsg):
+def expand_spec(spec, data):
+  t = data.t
   def check(cond, err):
     if not cond:
       raise BadRewriteSpec("Error expanding spec for template %s: %s; spec=%s" %
           (str(t), err, spec))
   if callable(spec):
-    return expand_spec(spec(t, pagemsg), t, pagemsg)
+    return expand_spec(spec(data), data)
   check(type(spec) is tuple, "wrong type %s of %s, not tuple" % (type(spec), spec))
   check(len(spec) >= 1, "empty spec")
   oldname = tname(t)
@@ -4289,7 +4465,7 @@ def expand_spec(spec, t, pagemsg):
       _, param, newval = subspec
       check(isinstance(param, str),
           "wrong type %s of %s, not str" % (type(param), param))
-      newval = expand_set_value(newval, t, pagemsg)
+      newval = expand_set_value(newval, data)
       if newval is None:
         pass
       elif isinstance(newval, str):
@@ -4436,7 +4612,7 @@ def expand_spec(spec, t, pagemsg):
       check(len(subspec) == 2, "wrong length %s of subspec %s, != 2" %
           (len(subspec), subspec))
       _, comment = subspec
-      comment = expand_set_value(comment, t, pagemsg)
+      comment = expand_set_value(comment, data)
       check(isinstance(comment, str),
           "wrong type %s of %s, not str" % (type(comment), comment))
       comment = comment.replace("__TEMPNAME__", oldname).replace("__NEWNAME__", newname)
@@ -4480,9 +4656,10 @@ def process_text_on_page(index, pagetitle, text):
     origt = str(t)
     tn = tname(t)
     if tn in templates_to_actually_do_set:
+      data = TemplateData(index, pagetitle, t, pagemsg)
       template_spec = templates_to_rename_map[tn]
       try:
-        new_name, new_params, comment = expand_spec(template_spec, t, pagemsg)
+        new_name, new_params, comment = expand_spec(template_spec, data)
       except BadTemplateValue as e:
         pagemsg("WARNING: %s: %s" % (str(e), origt))
         continue
@@ -4506,7 +4683,7 @@ def process_text_on_page(index, pagetitle, text):
 
       # Now apply post-rewrite hooks
       for hook in post_rewrite_hooks:
-        t, comment = hook(t, pagemsg, comment)
+        comment = hook(data, comment)
 
       notes.append(comment)
 
@@ -4516,7 +4693,7 @@ def process_text_on_page(index, pagetitle, text):
   text = str(parsed)
 
   if args.lang_for_combine_inflection_of:
-    retval = blib.find_modifiable_lang_section(text, args.lang_for_combine_inflection_of, pagemsg)
+    retval = blib.find_modifiable_lang_section(text, None if args.partial_page else args.lang_for_combine_inflection_of, pagemsg)
     if retval is None:
       pagemsg("WARNING: Couldn't find %s section" % args.lang_for_combine_inflection_of)
       return text, notes
@@ -4588,12 +4765,13 @@ def process_page_for_check_ignore(page, index, template, ignore_type):
 
 parser = blib.create_argparser("Rename various lang-specific form-of templates to more general variants",
     include_pagefile=True, include_stdin=True)
-parser.add_argument('--do-all', help="Do all templates instead of default list",
+parser.add_argument("--do-all", help="Do all templates instead of default list",
     action="store_true")
-parser.add_argument('--do-specified', help="Do specified comma-separated templates instead of default list")
-parser.add_argument('--check-ignores', help="Check whether there may be problems ignoring intial cap or final dot", action="store_true")
-parser.add_argument('--lang-for-combine-inflection-of', help="Language name of section whose {{inflection of}} calls will be combined")
-parser.add_argument('--check-ignores-include-ucdot', help="Whether checking ignore issues, include type 'ucdot' to see whether it can be converted to 'lcnodot'", action="store_true")
+parser.add_argument("--do-specified", help="Do specified comma-separated templates instead of default list")
+parser.add_argument("--check-ignores", help="Check whether there may be problems ignoring intial cap or final dot", action="store_true")
+parser.add_argument("--lang-for-combine-inflection-of", help="Language name of section whose {{inflection of}} calls will be combined")
+parser.add_argument("--check-ignores-include-ucdot", help="Whether checking ignore issues, include type 'ucdot' to see whether it can be converted to 'lcnodot'", action="store_true")
+parser.add_argument("--partial-page", action="store_true", help="Input was generated with 'find_regex.py --lang LANG' and has no ==LANG== header.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
