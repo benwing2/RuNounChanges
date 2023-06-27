@@ -294,6 +294,7 @@
 # 97. Standardize using include_pagefile=True.
 # 98. Warn if both acc|p and {an,in}|acc|p occur in the same tag set or ideally
 #     in the same set of defn lines; same with acc|s and {an,in}|acc|s
+# 99. Use {{participle of|ru}} instead of {{ru-participle of}}.
 
 import pywikibot, re, sys, argparse, time
 import traceback
@@ -765,7 +766,7 @@ pages_already_erased = set()
 # "|foo=bar" (or e.g. "|foo=bar|baz=bat" for more than one parameter).
 #
 # DEFTEMP is the definitional template that points to the base form (e.g.
-# "inflection of" or "ru-participle of"). DEFTEMP can be a list of such
+# "inflection of" or "participle of"). DEFTEMP can be a list of such
 # templates (e.g. ["inflection of", "infl of"]), which will all be
 # recognized; the first list item will be used when generating new entries.
 # DEFTEMP_PARAM is a parameter or parameters to add to the created DEFTEMP
@@ -774,8 +775,7 @@ pages_already_erased = set()
 # whether the definition template specified by DEFTEMP needs to have a
 # 'lang'/'1' parameter with value 'ru'. DEFTEMP_ALLOWS_MULTIPLE_TAG_SETS
 # indicates whether multiple tag sets can be inserted into the definitional
-# template (True for {{inflection of}}, currently false for
-# {{ru-participle of}}).
+# template (True for {{infl of}} and {{participle of}}).
 #
 # GENDER should be a list of genders to use in adding or updating gender
 # (assumed to be parameter g= in HEADTEMP if it's a "head|" headword template,
@@ -1640,7 +1640,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 return False
 
               # Replace the form-code parameters of tag set TAG_SET_NO
-              # in "inflection of" (or "ru-participle of") with those
+              # in "infl of" (or "participle of") with those
               # in INFLS, putting the non-form-code parameters in the
               # right places. If TAG_SET_NO is -1, add to the end.
               # if TAG_SET_NO == "all", replace all tag sets.
@@ -3248,10 +3248,27 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                     if pos == "verb" and "part" in inflset:
                       inflset = tuple(x for x in inflset if x != "part")
                       header_pos = "Participle"
-                      deftemp = "ru-participle of"
-                      deftemp_needs_lang = False
-                      deftemp_allows_multiple_tag_sets = False
-                      our_headtemp = "head|ru|participle"
+                      deftemp = "participle of"
+                      deftemp_needs_lang = True
+                      deftemp_allows_multiple_tag_sets = True
+                      if "pres" in inflset:
+                        headtemp_tense = "present"
+                      else:
+                        if "past" not in inflset:
+                          pagemsg("WARNING: Something wrong, neither 'pres' nor 'past' in participle inflset: %s"
+                            % (",".join(inflset)))
+                        headtemp_tense = "past"
+                      if "act" in inflset:
+                        headtemp_voice = "active"
+                      if "adv" in inflset:
+                        headtemp_voice = "adverbial"
+                      else:
+                        if "pass" not in inflset:
+                          pagemsg("WARNING: Something wrong, none of 'act', 'past' or 'adv' in participle inflset: %s"
+                            % (",".join(inflset)))
+                        headtemp_voice = "passive"
+                      headtemp_pos = "%s %s participle" % (headtemp_tense, headtemp_voice)
+                      our_headtemp = "head|ru|%s" % headtemp_pos
                       if "past_f" in split_args:
                         saw_end_stressed_past_f = False
                         saw_non_end_stressed_past_f = False
@@ -3268,7 +3285,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                         past_f_end_stressed = saw_end_stressed_past_f
                     else:
                       header_pos = pos.capitalize()
-                      deftemp = ["inflection of", "infl of"]
+                      deftemp = ["infl of", "inflection of"]
                       deftemp_needs_lang = True
                       deftemp_allows_multiple_tag_sets = True
                       our_headtemp = headtemp
@@ -3527,7 +3544,7 @@ startFrom, upTo = blib.parse_start_end(params.start, params.end)
 if params.lemmafile:
   lemmas_to_process = list(blib.yield_items_from_file(params.lemmafile))
 elif params.lemmas:
-  lemmas_to_process = blib.split_utf8_arg(params.lemmas)
+  lemmas_to_process = blib.split_arg(params.lemmas)
 else:
   lemmas_to_process = []
 if params.overwrite_lemmas:
