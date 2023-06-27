@@ -6,8 +6,6 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-import uklib
-
 def process_page(page, index, parsed):
   pagetitle = str(page.title())
   def pagemsg(txt):
