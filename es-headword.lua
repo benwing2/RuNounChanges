@@ -603,8 +603,6 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 				for _, defp in ipairs(default_pls) do
 					table.insert(plurals, defp)
 				end
-			elseif pl == "#" then
-				table.insert(plurals, lemma)
 			elseif pl:find("^%+") then
 				pl = require(romut_module).get_special_indicator(pl)
 				local default_pls = com.make_plural(lemma, pl)
@@ -612,7 +610,7 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 					table.insert(plurals, defp)
 				end
 			else
-				table.insert(plurals, pl)
+				table.insert(plurals, replace_hash_with_lemma(pl, lemma))
 			end
 		end
 
@@ -676,8 +674,8 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 			if mf == "+" then
 				-- Generate default feminine.
 				mf = inflect(lemma)
-			elseif mf == "#" then
-				mf = lemma
+			else
+				mf = replace_hash_with_lemma(mf, lemma)
 			end
 			local special = require(romut_module).get_special_indicator(mf)
 			if special then
@@ -722,8 +720,6 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 					-- defpl is already a table
 					table.insert(new_mfpls, defpl)
 				end
-			elseif mfpl == "#" then
-				table.insert(new_mfpls, {term = lemma, accel = accel})
 			elseif mfpl:find("^%+") then
 				mfpl = require(romut_module).get_special_indicator(mfpl)
 				for _, mf in ipairs(singulars) do
@@ -733,7 +729,7 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 					end
 				end
 			else
-				table.insert(new_mfpls, {term = mfpl, accel = accel})
+				table.insert(new_mfpls, {term = replace_hash_with_lemma(mfpl, lemma), accel = accel})
 			end
 		end
 		return new_mfpls
