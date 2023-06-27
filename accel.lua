@@ -339,7 +339,7 @@ function export.combine_tag_sets_into_multipart(tags)
 			-- Now, we do two passes. The first pass only combines adjacent
 			-- tag sets, while the second pass combines nonadjacent tag sets.
 			-- Copy tag_set_group, since we destructively modify the list.
-			local tag_sets = m_table.shallowClone(tag_set_group)
+			local tag_sets = m_table.shallowcopy(tag_set_group)
 			local combine_passes
 			if combine_style == "adjacent-first" then
 				combine_passes = {"adjacent", "all"}
@@ -893,7 +893,7 @@ function export.generate(frame)
 		target                 = {list = true, allow_holes = true},
 	}
 
-	local args = require("Module:parameters").process(frame.args, fparams)
+	local args = require("Module:parameters").process(frame.args, fparams, nil, "accel", "generate")
 
 	-- Try to use a language-specific module, if one exists.
 	local success, lang_module = pcall(require, "Module:accel/" .. args.lang)
