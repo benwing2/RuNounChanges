@@ -1426,6 +1426,7 @@ def elapsed_time():
 languages = None
 languages_byCode = None
 languages_byCanonicalName = None
+languages_byAlias = None
 
 families = None
 families_byCode = None
@@ -1438,6 +1439,7 @@ scripts_byCanonicalName = None
 etym_languages = None
 etym_languages_byCode = None
 etym_languages_byCanonicalName = None
+etym_languages_byAlias = None
 
 wm_languages = None
 wm_languages_byCode = None
@@ -1458,17 +1460,21 @@ def json_loads(data):
     raise
 
 def getLanguageData():
-  global languages, languages_byCode, languages_byCanonicalName
+  global languages, languages_byCode, languages_byCanonicalName, languages_byAlias
 
   jsondata = site.expand_text("{{#invoke:User:MewBot|getLanguageData}}")
   languages = json_loads(jsondata)
   languages_byCode = {}
   languages_byCanonicalName = {}
+  languages_byAlias = defaultdict(list)
 
   for lang in languages:
     languages_byCode[lang["code"]] = lang
     languages_byCanonicalName[lang["canonicalName"]] = lang
-
+    if "aliases" in lang:
+      for alias in lang["aliases"]:
+        assert(type(alias) is str)
+        languages_byAlias[alias].append(lang)
 
 def getFamilyData():
   global families, families_byCode, families_byCanonicalName
@@ -1495,15 +1501,21 @@ def getScriptData():
 
 
 def getEtymLanguageData():
-  global etym_languages, etym_languages_byCode, etym_languages_byCanonicalName
+  global etym_languages, etym_languages_byCode, etym_languages_byCanonicalName, etym_languages_byAlias
 
   etym_languages = json_loads(site.expand_text("{{#invoke:User:MewBot|getEtymLanguageData}}"))
   etym_languages_byCode = {}
   etym_languages_byCanonicalName = {}
+  etym_languages_byAlias = defaultdict(list)
 
   for etyl in etym_languages:
     etym_languages_byCode[etyl["code"]] = etyl
     etym_languages_byCanonicalName[etyl["canonicalName"]] = etyl
+    if "aliases" in etyl:
+      for alias in etyl["aliases"]:
+        assert(type(alias) is str)
+        etym_languages_byAlias[alias].append(etyl)
+
 
 def try_repeatedly(fun, errandpagemsg, operation="save", bad_value_ret=None, max_tries=2, sleep_time=5):
   num_tries = 0
