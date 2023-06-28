@@ -205,8 +205,7 @@ end
 -- This is a subfunction of construct_form_of_text().
 local function get_terminfos_and_categories(iargs, args, term_param, compat, multiple_lemmas)
 	local lang = args[compat and "lang" or 1] or iargs["lang"] or "und"
-	lang = require("Module:languages").getByCode(lang) or
-		require("Module:languages").err(lang, compat and "lang" or 1)
+	lang = require("Module:languages").getByCode(lang, compat and "lang" or 1)
 
 	-- Determine categories for the page, including tracking categories
 
@@ -531,6 +530,7 @@ local function construct_tagged_form_of_text(iargs, args, term_param, compat, mu
 			local lang_cats =
 				args["nocat"] and {} or m_form_of.fetch_lang_categories(lang, tags, terminfos, args["p"])
 			return m_form_of.tagged_inflections {
+				lang = lang,
 				tags = tags,
 				terminfos = terminfos,
 				terminfo_face = "term",
@@ -545,16 +545,12 @@ end
 
 
 --[=[
-Function that implements form-of templates that are defined by specific tagged
-inflections (typically a template referring to a non-lemma inflection,
-such as {{infl of||||gen|p}}). This works exactly like form_of_t() except
-that the "form of" text displayed before the link is based off of a
-pre-specified set of inflection tags (which will be appropriately linked to
-the glossary) instead of arbitrary text. From the user's perspective, there
-is no difference between templates implemented using form_of_t() and
-tagged_form_of_t(); they accept exactly the same parameters and work the same.
-See also inflection_of_t() below, which is intended for templates with
-user-specified inflection tags.
+Function that implements form-of templates that are defined by specific tagged inflections (typically a template
+referring to a non-lemma inflection, such as {{plural of}}). This works exactly like form_of_t() except that the
+"form of" text displayed before the link is based off of a pre-specified set of inflection tags (which will be
+appropriately linked to the glossary) instead of arbitrary text. From the user's perspective, there is no difference
+between templates implemented using form_of_t() and tagged_form_of_t(); they accept exactly the same parameters and
+work the same. See also inflection_of_t() below, which is intended for templates with user-specified inflection tags.
 
 Invocation params:
 
