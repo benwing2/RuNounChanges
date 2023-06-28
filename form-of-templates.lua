@@ -194,16 +194,16 @@ end
 
 -- Given processed invocation arguments IARGS and processed parent arguments ARGS, as well as TERM_PARAM (the parent
 -- argument specifying the first main entry/lemma) and COMPAT (true if the language code is found in args["lang"]
--- instead of args[1]), return LANG, TERMINFOS, CATEGORIES, where
+-- instead of args[1]), return LANG, LEMMAS, CATEGORIES, where
 -- * LANG is the language code;
--- * TERMINFOS is a sequence of terminfo structures specifying the main entries/lemmas, as passed to full_link in
+-- * LEMMAS is a sequence of lemma objects specifying the main entries/lemmas, as passed to full_link in
 --   [[Module:links]];
 -- * CATEGORIES is the categories to add the page to (consisting of any categories specified in the invocation or
 --   parent args and any tracking categories, but not any additional lang-specific categories that may be added by
 --   {{inflection of}} or similar templates).
 --
 -- This is a subfunction of construct_form_of_text().
-local function get_terminfos_and_categories(iargs, args, term_param, compat, multiple_lemmas)
+local function get_lemmas_and_categories(iargs, args, term_param, compat, multiple_lemmas)
 	local lang = args[compat and "lang" or 1] or iargs["lang"] or "und"
 	lang = require("Module:languages").getByCode(lang, compat and "lang" or 1)
 
@@ -235,12 +235,12 @@ local function get_terminfos_and_categories(iargs, args, term_param, compat, mul
 		end
 	end
 
-	local terminfos
+	local lemmas
 
 	if iargs["nolink"] then
-		terminfos = nil
+		lemmas = nil
 	elseif iargs["linktext"] then
-		terminfos = iargs["linktext"]
+		lemmas = iargs["linktext"]
 	elseif not multiple_lemmas then
 		local term = args[term_param]
 
@@ -258,7 +258,7 @@ local function get_terminfos_and_categories(iargs, args, term_param, compat, mul
 		
 		sc = sc and require("Module:scripts").getByCode(sc, "sc") or nil
 
-		local terminfo = {
+		local lemma_obj = {
 			lang = lang,
 			sc = sc,
 			term = term,
@@ -267,12 +267,12 @@ local function get_terminfos_and_categories(iargs, args, term_param, compat, mul
 		}
 		for _, param in ipairs(link_params) do
 			if param ~= "sc" and param ~= "term" and param ~= "g" and param ~= "gloss" and param ~= "t" then
-				terminfo[param] = args[param]
+				lemma_obj[param] = args[param]
 			end
 		end
-		terminfos = {terminfo}
+		lemmas = {lemma_obj}
 	else
-		terminfos = {}
+		lemmas = {}
 		-- FIXME! Previously there was only one term parameter but multiple genders. For compatibility, if we see only
 		-- one term but multiple genders, allow this and convert the genders to the new format, for further
 		-- processing. Also track such usages so we can convert them.
@@ -313,7 +313,7 @@ local function get_terminfos_and_categories(iargs, args, term_param, compat, mul
 			
 			sc = sc and require("Module:scripts").getByCode(sc, "sc" .. (i == 1 and "" or i)) or nil
 
-			local terminfo = {
+			local lemma_obj = {
 				lang = lang,
 				sc = sc,
 				term = term,
@@ -322,15 +322,15 @@ local function get_terminfos_and_categories(iargs, args, term_param, compat, mul
 			}
 			for _, param in ipairs(link_params) do
 				if param ~= "sc" and param ~= "term" and param ~= "g" and param ~= "gloss" and param ~= "t" then
-					terminfo[param] = args[param][i]
+					lemma_obj[param] = args[param][i]
 				end
 			end
 
-			table.insert(terminfos, terminfo)
+			table.insert(lemmas, lemma_obj)
 		end
 	end
 	
-	return lang, terminfos, categories
+	return lang, lemmas, categories
 end
 
 
@@ -344,7 +344,7 @@ end
 -- DO_FORM_OF takes two arguments:
 --
 -- (1) The object describing the language;
--- (2) the terminfo objects. Normally, this is a sequence of tables of the form ultimately passed to full_link in
+-- (2) the lemma objects. Normally, this is a sequence of tables of the form ultimately passed to full_link in
 --     [[Module:links]] (which, among other things, also includes the language object inside of it), but if the
 --     invocation argument linktext= is given, it will be a string consisting of that text, and if the invocation
 --     argument nolink= is given, it will be nil.
@@ -356,9 +356,9 @@ end
 -- (2) Any extra categories to add the page to (other than those that can be derived from parameters specified to the
 --     invocation or parent arguments, which will automatically be added to the page).
 local function construct_form_of_text(iargs, args, term_param, compat, multiple_lemmas, do_form_of)
-	local lang, terminfos, categories = get_terminfos_and_categories(iargs, args, term_param, compat, multiple_lemmas)
+	local lang, lemmas, categories = get_lemmas_and_categories(iargs, args, term_param, compat, multiple_lemmas)
 
-	local form_of_text, lang_cats = do_form_of(lang, terminfos)
+	local form_of_text, lang_cats = do_form_of(lang, lemmas)
 	extend_list(categories, lang_cats)
 	local text = form_of_text .. (
 		args["nodot"] and "" or args["dot"] or iargs["withdot"] and "." or ""
@@ -505,9 +505,9 @@ function export.form_of_t(frame)
 	end
 
 	return construct_form_of_text(iargs, args, term_param, compat, multiple_lemmas,
-		function(lang, terminfos)
-			return m_form_of.format_form_of {text = text, terminfos = terminfos,
-				terminfo_face = "term", posttext = iargs["posttext"]}, {}
+		function(lang, lemmas)
+			return m_form_of.format_form_of {text = text, lemmas = lemmas,
+				lemma_face = "term", posttext = iargs["posttext"]}, {}
 		end
 	)
 end
@@ -526,14 +526,14 @@ end
 -- values are "and", "slash", "en-dash".
 local function construct_tagged_form_of_text(iargs, args, term_param, compat, multiple_lemmas, tags, joiner)
 	return construct_form_of_text(iargs, args, term_param, compat, multiple_lemmas,
-		function(lang, terminfos)
+		function(lang, lemmas)
 			local lang_cats =
-				args["nocat"] and {} or m_form_of.fetch_lang_categories(lang, tags, terminfos, args["p"])
+				args["nocat"] and {} or m_form_of.fetch_lang_categories(lang, tags, lemmas, args["p"])
 			return m_form_of.tagged_inflections {
 				lang = lang,
 				tags = tags,
-				terminfos = terminfos,
-				terminfo_face = "term",
+				lemmas = lemmas,
+				lemma_face = "term",
 				notext = args["notext"],
 				capfirst = args["cap"] or iargs["withcap"] and not args["nocap"],
 				posttext = iargs["posttext"],
