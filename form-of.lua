@@ -10,6 +10,10 @@ local rsplit = mw.text.split
 
 local export = {}
 
+local langs_with_lang_specific_tags = {
+	["sw"] = true,
+}
+
 --[=[
 
 This module implements the underlying processing of {{form of}},
@@ -120,6 +124,16 @@ local function rsub(term, foo, bar)
 end
 
 
+-- Add tracking category for PAGE when called from {{inflection of}} or
+-- similar TEMPLATE. The tracking category linked to is
+-- [[Template:tracking/inflection of/PAGE]].
+local function infl_track(page)
+	require("Module:debug/track")("inflection of/" ..
+		-- avoid including links in pages (may cause error)
+		page:gsub("%[", "("):gsub("%]", ")"):gsub("|", "!"))
+end
+
+
 local function wrap_in_span(text, classes)
 	return ("<span class='%s'>%s</span>"):format(classes, text)
 end
@@ -136,6 +150,7 @@ function export.format_form_of(data)
 	end
 	local terminfos = data.terminfos
 	if data.terminfo then
+		infl_track("terminfo-used")
 		if type(data.terminfo) == "string" then
 			terminfos = data.terminfo
 		else
@@ -171,61 +186,63 @@ function export.format_form_of(data)
 end
 
 
--- Add tracking category for PAGE when called from {{inflection of}} or
--- similar TEMPLATE. The tracking category linked to is
--- [[Template:tracking/inflection of/PAGE]].
-local function infl_track(page)
-	require("Module:debug/track")("inflection of/" ..
-		-- avoid including links in pages (may cause error)
-		page:gsub("%[", "("):gsub("%]", ")"):gsub("|", "!"))
-end
-
-
 local function is_link_or_html(tag)
 	return tag:find("[[", nil, true) or tag:find("|", nil, true) or
 		tag:find("<", nil, true)
 end
 
 
--- Look up a tag (either a shortcut of any sort of a canonical long-form tag)
--- and return its expansion. The expansion will be a string unless the
--- shortcut is a list-tag shortcut such as "1s"; in that case, the expansion
--- will be a list. The caller must handle both cases. Only one level of
--- expansion happens; hence, "acc" expands to "accusative", "1s" expands to
--- {"1", "s"} (not to {"first", "singular"}) and "123" expands to "1//2//3".
--- The expansion will be the same as the passed-in tag in the following
--- circumstances:
+-- Look up a tag (either a shortcut of any sort of a canonical long-form tag) and return its expansion. The expansion
+-- will be a string unless the shortcut is a list-tag shortcut such as "1s"; in that case, the expansion will be a
+-- list. The caller must handle both cases. Only one level of expansion happens; hence, "acc" expands to "accusative",
+-- "1s" expands to {"1", "s"} (not to {"first", "singular"}) and "123" expands to "1//2//3". The expansion will be the
+-- same as the passed-in tag in the following circumstances:
 --
 -- 1. The tag is ";" (this is special-cased, and no lookup is done).
--- 2. The tag is a multipart tag such as "nom//acc" (this is special-cased,
---    and no lookup is done).
--- 3. The tag contains a raw link (this is special-cased, and no lookup is
---    done).
+-- 2. The tag is a multipart tag such as "nom//acc" (this is special-cased, and no lookup is done).
+-- 3. The tag contains a raw link (this is special-cased, and no lookup is done).
 -- 4. The tag contains HTML (this is special-cased, and no lookup is done).
 -- 5. The tag is already a canonical long-form tag.
 -- 6. The tag is unrecognized.
 --
--- This function first looks up in [[Module:form of/data]] (which includes
--- more common tags) and then (only if the tag is not recognized as a
--- shortcut or canonical tag, and is not of types 1-4 above) in
--- [[Module:form of/data2]].
+-- This function first looks up in the lang-specific data module [[Module:form of/lang-data/LANGCODE]], then in
+-- [[Module:form of/data]] (which includes more common non-lang-specific tags) and finally (only if the tag is not
+-- recognized as a shortcut or canonical tag, and is not of types 1-4 above) in [[Module:form of/data2]].
 --
--- If the expansion is a string and is different from the tag, track it if
--- DO_TRACK is true.
-function export.lookup_shortcut(tag, do_track)
+-- If the expansion is a string and is different from the tag, track it if DO_TRACK is true.
+function export.lookup_shortcut(tag, lang, do_track)
+	if not lang then
+		infl_track("lookup-shortcut-no-lang")
+	end
 	-- If there is HTML or a link in the tag, return it directly; don't try
 	-- to look it up, which will fail.
 	if tag == ";" or tag:find("//", nil, true) or is_link_or_html(tag) then
 		return tag
 	end
-	local m_data = mw.loadData("Module:form of/data")
-	-- If this is a canonical long-form tag, just return it, and don't
-	-- check for shortcuts (which will cause [[Module:form of/data2]] to be
-	-- loaded).
-	if m_data.tags[tag] then
-		return tag
+	local expansion
+	local langcode = lang and lang:getCode()
+	if langcode and langs_with_lang_specific_tags[langcode] then
+		local langdata_ok, langdata = pcall(function() return mw.loadData("Module:form of/lang-data/" .. langcode) end)
+		if langdata_ok then
+			-- If this is a canonical long-form tag, just return it, and don't check for shortcuts. This is an
+			-- optimization; see below.
+			if langdata.tags[tag] then
+				return tag
+			end
+			expansion = langdata.shortcuts[tag]
+		end
 	end
-	local expansion = m_data.shortcuts[tag]
+	if not expansion then
+		local m_data = mw.loadData("Module:form of/data")
+		-- If this is a canonical long-form tag, just return it, and don't check for shortcuts (which will cause
+		-- [[Module:form of/data2]] to be loaded, because there won't be a shortcut entry  in [[Module:form of/data]] --
+		-- or, for that matter, in [[Module:form of/data2]]). This is an optimization; the code will still work without it,
+		-- but use up more memory.
+		if m_data.tags[tag] then
+			return tag
+		end
+		expansion = m_data.shortcuts[tag]
+	end
 	if not expansion then
 		local m_data2 = mw.loadData("Module:form of/data2")
 		expansion = m_data2.shortcuts[tag]
@@ -241,11 +258,21 @@ function export.lookup_shortcut(tag, do_track)
 end
 
 
--- Look up a normalized/canonicalized tag and return the data object
--- associated with it. If the tag isn't found, return nil. This first looks up
--- in [[Module:form of/data]] (which includes more common tags) and then in
+-- Look up a normalized/canonicalized tag and return the data object associated with it. If the tag isn't found, return
+-- nil. This first looks up in the lang-specific data module [[Module:form of/lang-data/LANGCODE]], then in
+-- [[Module:form of/data]] (which includes more common non-lang-specific tags) and then finally in
 -- [[Module:form of/data2]].
-function export.lookup_tag(tag)
+function export.lookup_tag(tag, lang)
+	if not lang then
+		infl_track("lookup-tag-no-lang")
+	end
+	local langcode = lang and lang:getCode()
+	if langcode and langs_with_lang_specific_tags[langcode] then
+		local langdata_ok, langdata = pcall(function() return mw.loadData("Module:form of/lang-data/" .. langcode) end)
+		if langdata_ok and langdata.tags[tag] then
+			return langdata.tags[tag]
+		end
+	end
 	local m_data = mw.loadData("Module:form of/data")
 	local tagobj = m_data.tags[tag]
 	if tagobj then
@@ -262,13 +289,13 @@ end
 
 -- Normalize a single tag, which may be a shortcut but should not be a
 -- multipart tag, a multipart-tag shortcut or a list-tag shortcut.
-local function normalize_single_tag(tag, do_track)
-	local expansion = export.lookup_shortcut(tag, do_track)
+local function normalize_single_tag(tag, lang, do_track)
+	local expansion = export.lookup_shortcut(tag, lang, do_track)
 	if type(expansion) ~= "string" then
 		error("Tag '" .. tag .. "' is a list-tag shortcut, which is not allowed here")
 	end
 	tag = expansion
-	if not export.lookup_tag(tag) and do_track then
+	if not export.lookup_tag(tag, lang) and do_track then
 		-- If after all expansions and normalizations we don't recognize
 		-- the canonical tag, track it.
 		infl_track("unknown")
@@ -284,7 +311,7 @@ end
 -- RECOMBINE_TAGS isn't given, the return value may be a list of tags;
 -- otherwise, it will always be a string, and multiple tags will be
 -- represented as canonical-form tags joined by ":".
-local function normalize_multipart_component(tag, recombine_tags, do_track)
+local function normalize_multipart_component(tag, lang, recombine_tags, do_track)
 	-- If there is HTML or a link in the tag, don't try to split on colon.
 	-- A colon may legitimately occur in either one, and we don't want
 	-- these things parsed. Note that we don't do this check before splitting
@@ -297,12 +324,12 @@ local function normalize_multipart_component(tag, recombine_tags, do_track)
 	if #components == 1 then
 		-- We allow list-tag shortcuts inside of multipart tags, e.g.
 		-- '1s//3p'. Check for this now.
-		tag = export.lookup_shortcut(tag, do_track)
+		tag = export.lookup_shortcut(tag, lang, do_track)
 		if type(tag) == "table" then
 			-- We found a list-tag shortcut; treat as if colon-separated.
 			components = tag
 		else
-			return normalize_single_tag(tag, do_track)
+			return normalize_single_tag(tag, lang, do_track)
 		end
 	end
 	local normtags = {}
@@ -312,7 +339,7 @@ local function normalize_multipart_component(tag, recombine_tags, do_track)
 			-- raw tags.
 			infl_track("tag/" .. component)
 		end
-		table.insert(normtags, normalize_single_tag(component, do_track))
+		table.insert(normtags, normalize_single_tag(component, lang, do_track))
 	end
 
 	if recombine_tags then
@@ -328,7 +355,7 @@ end
 -- lists in the case of two-level multipart tags; otherwise, it will always
 -- be a string, and multipart tags will be represented as canonical-form tags
 -- joined by "//" and/or ":".
-local function normalize_tag(tag, recombine_multitags, do_track)
+local function normalize_tag(tag, lang, recombine_multitags, do_track)
 	-- We don't check for links or HTML before splitting on //, which we
 	-- don't expect to occur in links or HTML. Doing it this way allows for
 	-- a tag like '{{lb|grc|Epic}}//{{lb|grc|Ionic}}' to function correctly
@@ -343,7 +370,7 @@ local function normalize_tag(tag, recombine_multitags, do_track)
 	end
 	local split_tags = rsplit(tag, "//", true)
 	if #split_tags == 1 then
-		local retval = normalize_multipart_component(tag, recombine_multitags,
+		local retval = normalize_multipart_component(tag, lang, recombine_multitags,
 			do_track)
 		if type(retval) == "table" then
 			-- The user gave a tag like '1:s', i.e. with colon but without
@@ -359,7 +386,7 @@ local function normalize_tag(tag, recombine_multitags, do_track)
 			-- If the tag was a multipart tag, track each of individual raw tags.
 			infl_track("tag/" .. single_tag)
 		end
-		table.insert(normtags, normalize_multipart_component(single_tag,
+		table.insert(normtags, normalize_multipart_component(single_tag, lang,
 			recombine_multitags, do_track))
 	end
 	if recombine_multitags then
@@ -383,7 +410,7 @@ end
 --   {{"first-person", "singular"}, {"third-person", "plural"}}.
 -- If RECOMBINE_TAGS is given, multipart tags will be represented in string
 -- form, i.e. as canonical-form tags joined by "//" and/or ":".
-function export.normalize_tags(tags, recombine_multitags, do_track)
+function export.normalize_tags(tags, lang, recombine_multitags, do_track)
 	-- We track usage of shortcuts, normalized forms and (in the case of
 	-- multipart tags or list tags) intermediate forms. For example,
 	-- if the tags 1s|mn|gen|indefinite are passed in, we track the following:
@@ -402,6 +429,9 @@ function export.normalize_tags(tags, recombine_multitags, do_track)
 	-- [[Template:tracking/inflection of/tag/genitive]]
 	-- [[Template:tracking/inflection of/tag/indefinite]]
 	local ntags = {}
+	if not lang then
+		infl_track("normalize-tags-no-lang")
+	end
 	for _, tag in ipairs(tags) do
 		if do_track then
 			-- Track the raw tag.
@@ -409,7 +439,7 @@ function export.normalize_tags(tags, recombine_multitags, do_track)
 		end
 		-- Expand the tag, which may generate a new tag (either a
 		-- fully canonicalized tag, a multipart tag, or a list of tags).
-		tag = export.lookup_shortcut(tag, do_track)
+		tag = export.lookup_shortcut(tag, lang, do_track)
 		if type(tag) == "table" then
 			for _, t in ipairs(tag) do
 				if do_track then
@@ -417,11 +447,11 @@ function export.normalize_tags(tags, recombine_multitags, do_track)
 					-- those.
 					infl_track("tag/" .. t)
 				end
-				table.insert(ntags, normalize_tag(t, recombine_multitags,
+				table.insert(ntags, normalize_tag(t, lang, recombine_multitags,
 					do_track))
 			end
 		else
-			table.insert(ntags, normalize_tag(tag, recombine_multitags,
+			table.insert(ntags, normalize_tag(tag, lang, recombine_multitags,
 				do_track))
 		end
 	end
@@ -561,8 +591,8 @@ end
 -- Return the display form of a single canonical-form tag. The value
 -- passed in must be a string (i.e. it cannot be a list describing a
 -- multipart tag). To handle multipart tags, use get_tag_display_form().
-local function get_single_tag_display_form(normtag)
-	local data = export.lookup_tag(normtag)
+local function get_single_tag_display_form(normtag, lang)
+	local data = export.lookup_tag(normtag, lang)
 
 	-- If the tag has a special display form, use it
 	if data and data.display then
@@ -593,9 +623,12 @@ end
 -- "slash" ("foo/bar"), "en-dash" ("foo–bar") or nil, which uses the
 -- global default found in multipart_join_strategy() in
 -- [[Module:form of/functions]].
-function export.get_tag_display_form(tagspec, joiner)
+function export.get_tag_display_form(tagspec, lang, joiner)
+	if not lang then
+		infl_track("get-tag-display-form-no-lang")
+	end
 	if type(tagspec) == "string" then
-		return get_single_tag_display_form(tagspec)
+		return get_single_tag_display_form(tagspec, lang)
 	end
 	-- We have a multipart tag. See if there's a display handler to
 	-- display them specially.
@@ -609,7 +642,7 @@ function export.get_tag_display_form(tagspec, joiner)
 	local displayed_tags = {}
 	for _, first_level_tag in ipairs(tagspec) do
 		if type(first_level_tag) == "string" then
-			table.insert(displayed_tags, get_single_tag_display_form(first_level_tag))
+			table.insert(displayed_tags, get_single_tag_display_form(first_level_tag, lang))
 		else
 			-- A first-level element of a two-level multipart tag.
 			-- Currently we just separate the individual components
@@ -617,7 +650,7 @@ function export.get_tag_display_form(tagspec, joiner)
 			-- an underscore, colon, parens or braces.
 			local components = {}
 			for _, component in ipairs(first_level_tag) do
-				table.insert(components, get_single_tag_display_form(component))
+				table.insert(components, get_single_tag_display_form(component, lang))
 			end
 			table.insert(displayed_tags, table.concat(components, " "))
 		end
@@ -649,7 +682,7 @@ function export.fetch_lang_categories(lang, tags, terminfos, POS)
 
 	local categories = {}
 
-	local normalized_tags = export.normalize_tags(tags)
+	local normalized_tags = export.normalize_tags(tags, lang)
 	local split_tag_sets = export.split_tags_into_tag_sets_and_expand_two_level_multipart_tags(normalized_tags)
 	POS = export.normalize_pos(POS)
 
@@ -698,7 +731,7 @@ function export.fetch_lang_categories(lang, tags, terminfos, POS)
 		-- string (i.e. not a multipart tag), this boils down to list containment, but it gets more
 		-- complex when multipart tags are present.
 		local function tag_set_matches_spec_tag(spec_tag)
-			spec_tag = normalize_tag(spec_tag)
+			spec_tag = normalize_tag(spec_tag, lang)
 			for _, tag_set_tag in ipairs(tag_set) do
 				if tag_set_tag_matches_spec_tag(tag_set_tag, spec_tag) then
 					return true
@@ -734,7 +767,7 @@ function export.fetch_lang_categories(lang, tags, terminfos, POS)
 				end
 				return false, 3
 			elseif predicate == "tags=" then
-				local normalized_spec_tags = export.normalize_tags(spec[2])
+				local normalized_spec_tags = export.normalize_tags(spec[2], lang)
 				-- Allow tags to be in different orders, and multipart tags to
 				-- be in different orders. To handle this, we first check that
 				-- both tag set tags and spec tags have the same length. If so,
@@ -871,14 +904,43 @@ function export.fetch_lang_categories(lang, tags, terminfos, POS)
 end
 
 
+--[=[
+Implementation of templates that display inflection tags, such as the general {{inflection of}}, semi-specific variants
+such as {{participle of}}, and specific variants such as {{past participle of}}. `data` contains all the information
+controlling the display, with the following fields:
+
+`.lang`: Language to use when looking up language-specific inflection tags.
+`.tags`: List of non-canonicalized inflection tags. This may come directly from the user (as in {{inflection of}}),
+         come partly from the user (as in {{participle of}}, which adds the tag 'part' to user-specified inflection
+		 tags), or be entirely specified by the template.
+`.terminfos`: List of "terminfo" objects describing the lemma(s) of which the term in question is a non-lemma form.
+              These are passed directly to full_link() in [[Module:links]]. Each object should have at minimum a
+			  `.lang` field containing the language of the lemma and a `.term` field containing the lemma itself.
+			  Each object is formatted using full_link() and then if there are more than one, they are joined using
+			  serialCommaJoin() in [[Module:table]]. Alternatively, `.terminfos` can be a string, which is displayed
+			  directly. NOTE: For compatibility purposes, in place of `.terminfos`, a single terminfo object can be
+			  stored in `.terminfo`. FIXME: Remove this.
+`.terminfo_face`: "Face" to use when displaying the terminfo objects. Usually should be set to "term".
+`.notext`: Disable display of all tag text and "inflection of" text. (FIXME: Not implemented correctly.)
+`.capfirst`: Capitalize the first word displayed.
+`.text_classes`: CSS classes used to wrap the tag text and lemma links. Default is "form-of-definition use-with-mention"
+                 for the tag text, "form-of-definition-link" for the lemma links. (FIXME: Should separate out the
+				 lemma links into their own field.)
+`.posttext`: Additional text to display after the lemma links.
+`.joiner`: Override the joiner (normally a slash) used to join multipart tags.
+]=]
 function export.tagged_inflections(data)
 	if not data.tags then
 		error("First argument must now be a table of arguments")
 	end
+	if not data.lang then
+		infl_track("tagged-inflections-no-lang")
+	end
+	local cur_infl = {}
 	local cur_infl = {}
 	local inflections = {}
 
-	local ntags = export.normalize_tags(data.tags, nil, "do-track")
+	local ntags = export.normalize_tags(data.tags, data.lang, nil, "do-track")
 
 	for i, tagspec in ipairs(ntags) do
 		if tagspec == ";" then
@@ -888,7 +950,7 @@ function export.tagged_inflections(data)
 
 			cur_infl = {}
 		else
-			local to_insert = export.get_tag_display_form(tagspec, data.joiner)
+			local to_insert = export.get_tag_display_form(tagspec, data.lang, data.joiner)
 			-- Maybe insert a space before inserting the display form
 			-- of the tag. We insert a space if
 			-- (a) we're not the first tag; and
@@ -913,9 +975,9 @@ function export.tagged_inflections(data)
 			-- avoid the need for the == 1 check.
 			if #cur_infl > 0 then
 				local most_recent_tagobj = ulen(cur_infl[#cur_infl]) == 1 and
-					export.lookup_tag(cur_infl[#cur_infl])
+					export.lookup_tag(cur_infl[#cur_infl], data.lang)
 				local to_insert_tagobj = ulen(to_insert) == 1 and
-					export.lookup_tag(to_insert)
+					export.lookup_tag(to_insert, data.lang)
 				if (
 					(not most_recent_tagobj or
 					 not most_recent_tagobj.no_space_on_right) and
@@ -951,7 +1013,10 @@ function export.tagged_inflections(data)
 	end
 end
 
-function export.to_Wikidata_IDs(tags, skip_tags_without_ids)
+function export.to_Wikidata_IDs(tags, lang, skip_tags_without_ids)
+	if not lang then
+		infl_track("to-wikidata-ids-no-lang")
+	end
 	if type(tags) == "string" then
 		tags = mw.text.split(tags, "|", true)
 	end
@@ -965,7 +1030,7 @@ function export.to_Wikidata_IDs(tags, skip_tags_without_ids)
 			return nil
 		end
 
-		local data = export.lookup_tag(tag)
+		local data = export.lookup_tag(tag, lang)
 
 		if not data or not data.wikidata then
 			if not skip_tags_without_ids then
@@ -978,7 +1043,7 @@ function export.to_Wikidata_IDs(tags, skip_tags_without_ids)
 		end
 	end
 
-	for i, tag in ipairs(export.normalize_tags(tags)) do
+	for i, tag in ipairs(export.normalize_tags(tags, lang)) do
 		if type(tag) == "table" then
 			local ids = {}
 			for _, onetag in ipairs(tag) do
