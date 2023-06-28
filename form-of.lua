@@ -145,34 +145,46 @@ function export.format_form_of(data)
 	end
 	-- FIXME: Change the callers to send in .terminfos instead of .terminfo and remove
 	-- the following compatibility code.
+	local lemma_face
+	local lemmas
 	if data.terminfo and data.terminfos then
 		error("Internal error: Can't specify both .terminfo and .terminfos")
 	end
-	local terminfos = data.terminfos
-	if data.terminfo then
+	if data.lemmas and data.terminfos then
+		error("Internal error: Can't specify both .lemmas and .terminfos")
+	end
+	if data.lemmas then
+		lemmas = data.lemmas
+		lemma_face = data.lemma_face
+	elseif data.terminfos then
+		infl_track("terminfos-used")
+		lemmas = data.terminfos
+		lemma_face = data.terminfo_face
+	elseif data.terminfo then
 		infl_track("terminfo-used")
 		if type(data.terminfo) == "string" then
-			terminfos = data.terminfo
+			lemmas = data.terminfo
 		else
-			terminfos = {data.terminfo}
+			lemmas = {data.terminfo}
 		end
+		lemma_face = data.terminfo_face
 	end
 	local text_classes = data.text_classes or "form-of-definition use-with-mention"
-	local terminfo_classes = data.text_classes or "form-of-definition-link"
+	local lemma_classes = data.text_classes or "form-of-definition-link"
 	local parts = {}
 	table.insert(parts, "<span class='" .. text_classes .. "'>")
 	table.insert(parts, data.text)
-	if data.text ~= "" and terminfos then
+	if data.text ~= "" and lemmas then
 		table.insert(parts, " ")
 	end
-	if terminfos then
-		if type(terminfos) == "string" then
-			table.insert(parts, wrap_in_span(terminfos, terminfo_classes))
+	if lemmas then
+		if type(lemmas) == "string" then
+			table.insert(parts, wrap_in_span(lemmas, lemma_classes))
 		else
 			local formatted_terms = {}
-			for _, terminfo in ipairs(terminfos) do
+			for _, lemma in ipairs(lemmas) do
 				table.insert(formatted_terms, wrap_in_span(
-					m_links.full_link(terminfo, data.terminfo_face, false), terminfo_classes
+					m_links.full_link(lemma, lemma_face, false), lemma_classes
 				))
 			end
 			table.insert(parts, m_table.serialCommaJoin(formatted_terms))
@@ -676,8 +688,8 @@ end
 -- Compute and return the appropriate categories for the tags in `tags` (user-specified tags,
 -- which may consist of multiple tag sets separated by semicolons) and the language in `lang`.
 -- This checks both language-specific and language-agnostic category specs in [[Module:form of/cats]].
--- `POS` is the user-specified part of speech, if any, and `terminfos` is currently unused.
-function export.fetch_lang_categories(lang, tags, terminfos, POS)
+-- `POS` is the user-specified part of speech, if any, and `lemmas` is currently unused.
+function export.fetch_lang_categories(lang, tags, lemmas, POS)
 	local m_cats = mw.loadData("Module:form of/cats")
 
 	local categories = {}
@@ -913,14 +925,15 @@ controlling the display, with the following fields:
 `.tags`: List of non-canonicalized inflection tags. This may come directly from the user (as in {{inflection of}}),
          come partly from the user (as in {{participle of}}, which adds the tag 'part' to user-specified inflection
 		 tags), or be entirely specified by the template.
-`.terminfos`: List of "terminfo" objects describing the lemma(s) of which the term in question is a non-lemma form.
-              These are passed directly to full_link() in [[Module:links]]. Each object should have at minimum a
-			  `.lang` field containing the language of the lemma and a `.term` field containing the lemma itself.
-			  Each object is formatted using full_link() and then if there are more than one, they are joined using
-			  serialCommaJoin() in [[Module:table]]. Alternatively, `.terminfos` can be a string, which is displayed
-			  directly. NOTE: For compatibility purposes, in place of `.terminfos`, a single terminfo object can be
-			  stored in `.terminfo`. FIXME: Remove this.
-`.terminfo_face`: "Face" to use when displaying the terminfo objects. Usually should be set to "term".
+`.lemmas`: List of objects describing the lemma(s) of which the term in question is a non-lemma form. These are passed
+           directly to full_link() in [[Module:links]]. Each object should have at minimum a `.lang` field containing
+           the language of the lemma and a `.term` field containing the lemma itself. Each object is formatted using
+           full_link() and then if there are more than one, they are joined using serialCommaJoin() in [[Module:table]].
+           Alternatively, `.lemmas` can be a string, which is displayed directly. NOTE: For compatibility purposes, in
+           place of `.lemmas`, the field `.terminfos` can be used in the same format as `.lemmas`, or a single lemma
+           object can be stored in `.terminfo`. FIXME: Remove this.
+`.lemma_face`: "Face" to use when displaying the lemma objects. Usually should be set to "term". NOTE: If lemmas are
+               stored in `.terminfos` or `.terminfo`, the corresponding face is found in `.terminfo_face`.
 `.notext`: Disable display of all tag text and "inflection of" text. (FIXME: Not implemented correctly.)
 `.capfirst`: Capitalize the first word displayed.
 `.text_classes`: CSS classes used to wrap the tag text and lemma links. Default is "form-of-definition use-with-mention"
@@ -997,7 +1010,7 @@ function export.tagged_inflections(data)
 
 	local format_data = m_table.shallowcopy(data)
 
-	local of_text = (data.terminfos or data.terminfo) and " of" or ""
+	local of_text = (data.lemmas or data.terminfos or data.terminfo) and " of" or ""
 	if #inflections == 1 then
 		format_data.text =
 			data.notext and "" or ((data.capfirst and require("Module:string utilities").ucfirst(inflections[1]) or inflections[1])
