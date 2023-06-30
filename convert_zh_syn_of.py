@@ -70,7 +70,7 @@ def process_text_on_page(index, pagetitle, text):
           t.add("nocap", nocap)
         replt= str(t)
         if dot:
-          replt+= dot
+          replt += dot
         repltuple = (origt, replt)
         if repltuple not in replacements:
           replacements.append(repltuple)
