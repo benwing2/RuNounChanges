@@ -171,63 +171,42 @@ that, if p= isn't specified, or has a value other than "part" or
 -- is specified using {{inflection of|LANG|...|aug}} rather than
 -- {{augmentative of|LANG}}.
 cats["und"] = {
-	{"tags=", {"aug"}, "augmentative <<p=n>>s"},
-	{"tags=", {"dim"}, "diminutive <<p=n>>s"},
-	{"or", {"tags=", {"end"}},
-		{"or", {"tags=", {"end", "form"}}, {"tags=", {"end", "dim"}}},
-		"endearing <<p=n>>s"},
-	{"tags=", {"pej"}, "derogatory terms"},
-	{"tags=", {"comd"}, "comparative <<p=a>>s"},
-	{"tags=", {"supd"}, "superlative <<p=a>>s"},
-	{"tags=", {"equd"}, "<<p=a>> equative forms"},
-	{"tags=", {"caus"}, "causative <<p=v>>s"},
-	{"tags=", {"freq"}, "frequentative <<p=v>>s"},
-	{"tags=", {"iter"}, "iterative <<p=v>>s"},
-	{"tags=", {"refl"}, "reflexive <<p=v>>s"},
-	{"or", {"tags=", {"impfv"}}, {"tags=", {"impfv", "form"}}, "imperfective <<p=v>>s"},
-	{"or", {"tags=", {"pfv"}}, {"tags=", {"pfv", "form"}}, "perfective <<p=v>>s"},
-	{"tags=", {"nomzn"}, "nominalized adjectives"},
-	{"tags=", {"ger"}, "gerunds"},
-	{"tags=", {"vnoun"}, "verbal nouns"},
-	{"tags=", {"pass"}, "<<p=v>> passive forms"},
-	{"tags=", {"past", "act", "part"}, "past active participles"},
-	{"tags=", {"past", "pass", "part"}, "past passive participles"},
-	{"tags=", {"past", "part"}, "past participles"},
-	{"tags=", {"pres", "act", "part"}, "present active participles"},
-	{"tags=", {"pres", "pass", "part"}, "present passive participles"},
-	{"tags=", {"pres", "part"}, "present participles"},
-	{"tags=", {"perf", "part"}, "perfect participles"},
+	-- Disable all of these for now as they are somewhat controversial.
+	--{"tags=", {"aug"}, "augmentative <<p=n>>s"},
+	--{"tags=", {"dim"}, "diminutive <<p=n>>s"},
+	--{"or", {"tags=", {"end"}},
+	--	{"or", {"tags=", {"end", "form"}}, {"tags=", {"end", "dim"}}},
+	--	"endearing <<p=n>>s"},
+	--{"tags=", {"pej"}, "derogatory terms"},
+	--{"tags=", {"comd"}, "comparative <<p=a>>s"},
+	--{"tags=", {"supd"}, "superlative <<p=a>>s"},
+	--{"tags=", {"equd"}, "<<p=a>> equative forms"},
+	--{"tags=", {"caus"}, "causative <<p=v>>s"},
+	--{"tags=", {"freq"}, "frequentative <<p=v>>s"},
+	--{"tags=", {"iter"}, "iterative <<p=v>>s"},
+	--{"tags=", {"refl"}, "reflexive <<p=v>>s"},
+	--{"or", {"tags=", {"impfv"}}, {"tags=", {"impfv", "form"}}, "imperfective <<p=v>>s"},
+	--{"or", {"tags=", {"pfv"}}, {"tags=", {"pfv", "form"}}, "perfective <<p=v>>s"},
+	--{"tags=", {"nomzn"}, "nominalized adjectives"},
+	--{"tags=", {"ger"}, "gerunds"},
+	--{"tags=", {"vnoun"}, "verbal nouns"},
+	--{"tags=", {"pass"}, "<<p=v>> passive forms"},
+	-- [[User:Rua]] objects to these categories
+	-- {"tags=", {"past", "act", "part"}, "past active participles"},
+	-- {"tags=", {"past", "pass", "part"}, "past passive participles"},
+	-- {"tags=", {"past", "part"}, "past participles"},
+	-- {"tags=", {"pres", "act", "part"}, "present active participles"},
+	-- {"tags=", {"pres", "pass", "part"}, "present passive participles"},
+	-- {"tags=", {"pres", "part"}, "present participles"},
+	-- {"tags=", {"perf", "part"}, "perfect participles"},
 }
 
-cats["art-blk"] = {
-	{"has", "past",
-		{"multi", "verb simple past forms", "past participles"},
-	}
+cats["az"] = {
+	{"hasall", {"subject", "past", "participle"}, "subject past participles"},
+	{"hasall", {"broken", "plural"}, "broken noun plural forms"},
 }
 
 cats["bg"] = {
-	{"p=", "a",
-		{"multi",
-			{"has", "m", "adjective masculine forms"},
-			{"has", "f", "adjective feminine forms"},
-			{"has", "n", "adjective neuter forms"},
-			{"has", "p", "adjective plural forms"},
-			{"has", "extended", "adjective vocative forms"},
-			{"has", "def", "adjective definite forms"},
-			{"has", "indef", "adjective indefinite forms"},
-		}
-	},
-	{"p=", "n",
-		{"multi",
-			{"has", "indef", "noun indefinite forms"},
-			{"has", "def", "noun definite forms"},
-			{"has", "voc", "noun vocative forms"},
-			{"has", "count",
-				{"multi", "noun count forms", "noun plural forms"},
-			},
-			{"has", "p", "noun plural forms"},
-		}
-	},
 	{"cond",
 		{"hasall", {"adv", "part"}, "adverbial participles"},
 		{"has", "part",
@@ -264,21 +243,7 @@ cats["br"] = {
 	},
 }
 
--- Applies to ca, es, it, pt
-local romance_adjective_categorization =
-	{"p=", "a",
-		{"multi",
-			{"has", "f", "adjective feminine forms"},
-			{"has", "p", "adjective plural forms"},
-			{"has", "aug", "adjective augmentative forms"},
-			{"has", "dim", "adjective diminutive forms"},
-			{"has", "comd", "adjective comparative forms"},
-			{"has", "supd", "adjective superlative forms"},
-		}
-	}
-
 cats["ca"] = {
-	romance_adjective_categorization,
 	{"has", "part",
 		{"cond",
 			-- FIXME, not clear if we need all of these conditions;
@@ -291,16 +256,8 @@ cats["ca"] = {
 }
 
 cats["de"] = {
-	{"p=", "adv",
-		{"multi",
-			{"has", "comd", "adverb comparative forms"},
-			{"has", "supd", "adverb superlative forms"},
-		},
-		{"multi",
-			{"has", "comd", "adjective comparative forms"},
-			{"has", "supd", "adjective superlative forms"},
-		},
-	},
+	{"hasall", {"pres", "part"}, "present participles"},
+	{"hasall", {"past", "part"}, "past participles"},
 }
 
 cats["el"] = {
@@ -314,25 +271,43 @@ cats["el"] = {
 }
 
 cats["enm"] = {
-	{"hasall", {"1", "s", "pres", "ind"}, "first-person singular forms"},
-	{"hasall", {"2", "s", "pres", "ind"}, "second-person singular forms"},
-	{"hasall", {"3", "s", "pres", "ind"}, "third-person singular forms"},
+	{"not", {"hasany", {"sub", "imp"}}, 
+		{"multi",
+			{"hasall", {"1", "s", "pres"}, "first-person singular forms"},
+			{"hasall", {"2", "s", "pres"}, "second-person singular forms"},
+			{"hasall", {"3", "s", "pres"}, "third-person singular forms"},
+			{"hasall", {"1//3", "s", "past"}, "first/third-person singular past forms"},
+			{"hasall", {"2", "s", "past"}, "second-person singular past forms"},
+			{"hasall", {"p", "pres"}, "plural forms"},
+		},
+	},
 	{"hasall", {"p", "pres", "ind"}, "plural forms"},
-	{"hasall", {"13", "s", "past", "ind"}, "first/third-person singular past forms"},
-	{"hasall", {"2", "s", "past", "ind"}, "second-person singular past forms"},
-	{"hasall", {"p", "past", "ind"}, "plural past forms"},
-	{"hasall", {"s", "pres", "sub"}, "singular subjunctive forms"},
 	{"hasall", {"p", "pres", "sub"}, "plural subjunctive forms"},
-	{"hasall", {"s", "sub", "past"}, "singular subjunctive past forms"},
-	{"hasall", {"p", "sub", "past"}, "plural subjunctive past forms"},
-}
-
-cats["es"] = {
-	romance_adjective_categorization
+	{"hasall", {"p", "past"}, "plural past forms"},
+	{"hasall", {"s", "pres", "sub"}, "singular subjunctive forms"},
+	{"hasall", {"s", "past", "sub"}, "singular past subjunctive forms"},
+	{"hasall", {"s", "imp"}, "singular imperative forms"},
+	{"hasall", {"p", "imp"}, "plural imperative forms"},
+	{"hasall", {"pres", "part"}, "present participles"},
+	{"hasall", {"past", "part"}, "past participles"},
 }
 
 cats["et"] = {
 	{"has", "part", "participles"},
+}
+
+cats["fi"] = {
+	{"has", "inf",
+		{"cond",
+			{"hasall", {"long", "first"}, "long first infinitives"},
+			{"hasall", {"second", "act"}, "active second infinitives"},
+			{"hasall", {"second", "pass"}, "passive second infinitives"},
+			{"hasall", {"third", "act"}, "active third infinitives"},
+			{"hasall", {"third", "pass"}, "passive third infinitives"},
+			{"has", "fourth", "fourth infinitives"},
+			{"has", "fifth", "fifth infinitives"},
+		}
+	},
 }
 
 cats["got"] = {
@@ -345,10 +320,7 @@ cats["hu"] = {
 	{"hasall", {"pres", "part"}, "present participles"},
 	{"hasall", {"fut", "part"}, "future participles"},
 	{"hasall", {"adv", "part"}, "adverbial participles"},
-}
-
-cats["it"] = {
-	romance_adjective_categorization
+	{"hasall", {"verbal", "part"}, "verbal participles"},
 }
 
 cats["ja"] = {
@@ -360,24 +332,12 @@ cats["ja"] = {
 	},
 }
 
-cats["ku"] = {
+cats["kmr"] = {
 	{"hasall", {"pres", "part"}, "present participles"},
 	{"hasall", {"past", "part"}, "past participles"},
 }
 
 cats["liv"] = {
-	{"hasany", {"1", "2", "3"},
-		{"cond",
-			{"hasall", {"pres", "ind"}, "verb forms (present indicative)"},
-			{"hasall", {"past", "ind"}, "verb forms (past indicative)"},
-			{"hasall", {"imp", "neg"}, "verb forms (imperative negative)"},
-			{"has", "imp", "verb forms (imperative)"},
-			{"has", "neg", "verb forms (negative)"},
-			{"has", "cond", "verb forms (conditional)"},
-			{"has", "juss", "verb forms (jussive)"},
-			{"has", "quot", "verb forms (quotative)"},
-		}
-	},
 	{"has", "part",
 		{"cond",
 			{"hasall", {"pres", "act"}, "present active participles"},
@@ -450,33 +410,35 @@ cats["lv"] = {
 	},
 }
 
-cats["pt"] = {
-	romance_adjective_categorization,
-	{"p=", "n",
-		{"multi",
-			{"has", "f", "noun feminine forms"},
-			{"has", "p", "noun plural forms"},
-			{"has", "aug", "noun augmentative forms"},
-			{"has", "dim", "noun diminutive forms"},
-		}
+cats["mk"] = {
+	{"has", "vnoun", 
+		{"multi", "verbal nouns", "verb forms"},
 	},
-}
-
-cats["ru"] = {
 	{"has", "part",
 		{"multi",
 			"participles",
 			"verb forms",
 			{"cond",
-				{"hasall", {"pres", "act"}, "present active participles"},
-				{"hasall", {"pres", "pass"}, "present passive participles"},
-				{"hasall", {"pres", "adv"}, "present adverbial participles"},
-				{"hasall", {"past", "act"}, "past active participles"},
-				{"hasall", {"past", "pass"}, "past passive participles"},
-				{"hasall", {"past", "adv"}, "past adverbial participles"},
+				{"hasall", {"adj", "part"}, "adjectival participles"},
+				{"hasall", {"adv", "part"}, "adverbial participles"},
+				{"hasall", {"perf", "part"}, "perfect participles"},
+				{"hasall", {"aor", "act", "part"}, "aorist l-participles"},
+				{"hasall", {"impf", "act", "part"}, "imperfect l-participles"},
 			},
 		}
 	},
+	{"has", "lptcp",
+		{"multi",
+			{"has", "aor", "aorist l-participles"},
+			{"has", "impf", "imperfect l-participles"},
+			{"hasall", {"m", "s"}, "participles", "participle forms"},
+		},
+	},
+	{"hasall", {"col", "pl"}, "collective plurals"},
+}
+
+cats["pl"] = {
+	{"has", "short", "short adjective forms"},
 }
 
 cats["sa"] = {
@@ -500,16 +462,25 @@ cats["sco"] = {
 	{"hasall", {"3", "s", "pres", "ind"}, "third-person singular forms"},
 }
 
-cats["sl"] = {
-	{"has", "part", "participles"},
-	{"hasany", {"sup", "ger"}, "verbal nouns"},
-}
-
 cats["sv"] = {
 	{"hasall", {"past", "part"}, "past participles"},
 }
 
-return cats
+cats["uk"] = {
+   	{"has", "part",
+   		{"multi",
+   			"participles",
+   			"verb forms",
+   			{"cond",
+   				{"hasall", {"pres", "act"}, "present active participles"},
+   				{"hasall", {"pres", "pass"}, "present passive participles"},
+   				{"hasall", {"pres", "adv"}, "present adverbial participles"},
+   				{"hasall", {"past", "act"}, "past active participles"},
+   				{"hasall", {"past", "pass"}, "past passive participles"},
+   				{"hasall", {"past", "adv"}, "past adverbial participles"},
+   			},
+   		}
+   	},
+}
 
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:
+return cats
