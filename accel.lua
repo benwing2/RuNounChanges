@@ -88,7 +88,7 @@ function export.default_entry(params)
 			genderspec = table.concat(genders)
 		end
 		local parts = {}
-		table.insert(parts, "{{head|" .. params.lang .. "|" .. pos)
+		table.insert(parts, "{{head|" .. params.lang:getCode() .. "|" .. pos)
 		for i, target in ipairs(params.targets) do
 			local paramnum = i == 1 and "" or tostring(i)
 			if target.term ~= params.target_pagename then
@@ -104,7 +104,7 @@ function export.default_entry(params)
 
 	local function make_def(tempname, extra_params)
 		local parts = {}
-		table.insert(parts, "{{" .. tempname .. "|" .. params.lang)
+		table.insert(parts, "{{" .. tempname .. "|" .. params.lang:getCode())
 		for i, origin in ipairs(params.origins) do
 			local termparam, trparam
 			if i == 1 then
@@ -126,8 +126,8 @@ function export.default_entry(params)
 	local function no_rule_error(params)
 		-- FIXME, verify the 2 below (number of stack frames to pop off); may be wrong now that we moved this function
 		-- underneath default_entry().
-		return error(('No rule for "%s" in language "%s".')
-			:format(params.form, params.lang), 2)
+		return error(('No rule for "%s" in language "%s" ("%s").')
+			:format(params.form, params.lang:getCode(), params.lang:getCanonicalName()), 2)
 	end
 
 	local entry = {
@@ -199,10 +199,10 @@ end
 
 -- Canonicalize multipart shortcuts (e.g. "123" -> "1//2//3") and
 -- list shortcuts (e.g. "1s" -> {"1", "s"}); leave others alone.
-local function canonicalize_multipart_and_list_shortcuts(tags)
+local function canonicalize_multipart_and_list_shortcuts(tags, lang)
 	local result = {}
 	for _, tag in ipairs(tags) do
-		local expansion = require("Module:form of").lookup_shortcut(tag)
+		local expansion = require("Module:form of").lookup_shortcut(tag, lang)
 		if type(expansion) == "string" and not expansion:find("//", nil, true) then
 			expansion = tag
 		end
@@ -225,9 +225,9 @@ end
 -- If given a two-level multipart tag such as "1:sg//3:pl", the resulting
 -- return value will be {"first:singular", "third:plural"}, or {"1:s", "3:p"}
 -- if MAP_TO_CANONICAL_SHORTCUT is given.
-local function split_and_normalize_tag(tag, map_to_canonical_shortcut)
+local function split_and_normalize_tag(tag, lang, map_to_canonical_shortcut)
 	local m_form_of = require("Module:form of")
-	local normalized = m_form_of.normalize_tags({tag}, true)
+	local normalized = m_form_of.normalize_tags({tag}, lang, true)
 	assert(#normalized == 1, "Something is wrong, encountered list tag " .. tag .. ", which should have been canonicalized earlier")
 	tag = normalized[1]
 	if tag:find("://") then
@@ -240,12 +240,12 @@ local function split_and_normalize_tag(tag, map_to_canonical_shortcut)
 				if tags[i]:find(":") then
 					local split_tags = rsplit(tags[i], ":")
 					for j=1,#split_tags do
-						local tagobj = m_form_of.lookup_tag(split_tags[j])
+						local tagobj = m_form_of.lookup_tag(split_tags[j], lang)
 						split_tags[j] = tagobj and tagobj.shortcuts and tagobj.shortcuts[1] or split_tags[j]
 					end
 					tags[i] = table.concat(split_tags, ":")
 				else
-					local tagobj = m_form_of.lookup_tag(tags[i])
+					local tagobj = m_form_of.lookup_tag(tags[i], lang)
 					tags[i] = tagobj and tagobj.shortcuts and tagobj.shortcuts[1] or tags[i]
 				end
 			end
@@ -257,8 +257,8 @@ end
 -- Given a normalized tag, return its tag type, or "unknown" if a tag type
 -- cannot be located (either the tag isn't recognized or for some reason
 -- it doesn't specify a tag type).
-local function get_normalized_tag_type(tag)
-	local tagobj = require("Module:form of").lookup_tag(tag)
+local function get_normalized_tag_type(tag, lang)
+	local tagobj = require("Module:form of").lookup_tag(tag, lang)
 	return tagobj and tagobj.tag_type or "unknown"
 end
 
@@ -270,7 +270,7 @@ end
 -- {{inflection of|la|canus||dat|m|p|;|dat|f|p|;|dat|n|p|;|abl|m|p|;|abl|f|p|;|abl|n|p}}
 --
 -- {{inflection of|la|canus||dat//abl|m//f//n|p}}
-function export.combine_tag_sets_into_multipart(tags)
+function export.combine_tag_sets_into_multipart(tags, lang)
 	-- First, as an optimization, make sure there are multiple tag sets.
 	-- Otherwise, do nothing.
 	local found_semicolon = false
@@ -287,7 +287,7 @@ function export.combine_tag_sets_into_multipart(tags)
 	-- Repeat until no changes can be made.
 	while true do
 		-- First, canonicalize 1s etc. into 1|s
-		local canonicalized_tags = canonicalize_multipart_and_list_shortcuts(tags)
+		local canonicalized_tags = canonicalize_multipart_and_list_shortcuts(tags, lang)
 		local old_canonicalized_tags = canonicalized_tags
 
 		-- Then split into tag sets.
@@ -370,8 +370,8 @@ function export.combine_tag_sets_into_multipart(tags)
 							local mismatch_ind = nil
 							local innermost_broken = false
 							for i=1,#tag_set do
-								local tag1 = split_and_normalize_tag(cur_tag_set[i])
-								local tag2 = split_and_normalize_tag(tag_set[i])
+								local tag1 = split_and_normalize_tag(cur_tag_set[i], lang)
+								local tag2 = split_and_normalize_tag(tag_set[i], lang)
 								if not m_table.deepEquals(m_table.listToSet(tag1),
 									m_table.listToSet(tag2)) then
 									if mismatch_ind then
@@ -380,10 +380,10 @@ function export.combine_tag_sets_into_multipart(tags)
 									end
 									local combined_dims = {}
 									for _, tag in ipairs(tag1) do
-										combined_dims[get_normalized_tag_type(tag)] = true
+										combined_dims[get_normalized_tag_type(tag, lang)] = true
 									end
 									for _, tag in ipairs(tag2) do
-										combined_dims[get_normalized_tag_type(tag)] = true
+										combined_dims[get_normalized_tag_type(tag, lang)] = true
 									end
 									if m_table.size(combined_dims) == 1 and not combined_dims["unknown"] then
 										mismatch_ind = i
@@ -404,16 +404,16 @@ function export.combine_tag_sets_into_multipart(tags)
 									-- Combine tag sets at mismatch_ind, using the canonical shortcuts.
 									tag1 = cur_tag_set[mismatch_ind]
 									tag2 = tag_set[mismatch_ind]
-									tag1 = split_and_normalize_tag(tag1, true)
-									tag2 = split_and_normalize_tag(tag2, true)
+									tag1 = split_and_normalize_tag(tag1, lang, true)
+									tag2 = split_and_normalize_tag(tag2, lang, true)
 									local combined_tag = table.concat(m_table.append(tag1, tag2), "//")
 									local new_tag_set = {}
 									for i=1,#cur_tag_set do
 										if i == mismatch_ind then
 											table.insert(new_tag_set, combined_tag)
 										else
-											local cur_canon_tag = split_and_normalize_tag(cur_tag_set[i])
-											local canon_tag = split_and_normalize_tag(tag_set[i])
+											local cur_canon_tag = split_and_normalize_tag(cur_tag_set[i], lang)
+											local canon_tag = split_and_normalize_tag(tag_set[i], lang)
 											assert(m_table.deepEquals(m_table.listToSet(cur_canon_tag),
 												m_table.listToSet(canon_tag)))
 											table.insert(new_tag_set, cur_tag_set[i])
@@ -495,7 +495,14 @@ end
 
 -- Test function, callable externally.
 function export.test_combine_tag_sets_into_multipart(frame)
-	local combined_tags = export.combine_tag_sets_into_multipart(frame.args)
+	local iparams = {
+		[1] = {list = true, required = true},
+		lang = {required = true},
+	}
+
+	local args = require("Module:parameters").process(frame.args, iparams)
+	local lang = require("Module:languages").getByCode(args.lang, true)
+	local combined_tags = export.combine_tag_sets_into_multipart(args[1], lang)
 	return table.concat(combined_tags, "|")
 end
 
@@ -733,7 +740,7 @@ local function merge_entries(entries_obj)
 			end
 
 			-- Now combine tag sets.
-			tags = export.combine_tag_sets_into_multipart(tags)
+			tags = export.combine_tag_sets_into_multipart(tags, entries_obj.lang)
 
 			-- Put the template back together.
 			local combined_params = {}
@@ -821,7 +828,6 @@ end
 
 
 local function entries_to_text(entries_obj)
-	lang = require("Module:languages").getByCode(entries_obj.lang, "lang")
 	for i, entry in ipairs(entries_obj.entries) do
 		if entry.override then
 			entry = "\n" ..(entry.override or "")
@@ -841,7 +847,7 @@ local function entries_to_text(entries_obj)
 		end
 		entries_obj.entries[i] = entry
 	end
-	return "==" .. lang:getCanonicalName() .. "==" ..
+	return "==" .. entries_obj.lang:getCanonicalName() .. "==" ..
 		(entries_obj.etymology and "\n\n===Etymology===\n" .. entries_obj.etymology or "") ..
 		(entries_obj.pronunciation and "\n\n===Pronunciation===\n" .. entries_obj.pronunciation or "") ..
 		table.concat(entries_obj.entries)
@@ -894,6 +900,7 @@ function export.generate(frame)
 	}
 
 	local args = require("Module:parameters").process(frame.args, fparams, nil, "accel", "generate")
+	local lang = require("Module:languages").getByCode(args.lang, "lang")
 
 	-- Try to use a language-specific module, if one exists.
 	local success, lang_module = pcall(require, "Module:accel/" .. args.lang)
@@ -906,7 +913,7 @@ function export.generate(frame)
 	local params_list = {}
 	for i = 1, args.num do
 		local params = {
-			lang = args.lang,
+			lang = lang,
 			origin_pagename = args.origin_pagename,
 			target_pagename = args.target_pagename,
 
@@ -954,7 +961,7 @@ function export.generate(frame)
 
 	local entries_obj = {
 		entries = entries,
-		lang = args.lang,
+		lang = lang,
 		lang_module = lang_module,
 		seen_origins = seen_origins,
 		seen_targets = seen_targets,
