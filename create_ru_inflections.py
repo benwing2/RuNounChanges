@@ -3260,11 +3260,11 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                         headtemp_tense = "past"
                       if "act" in inflset:
                         headtemp_voice = "active"
-                      if "adv" in inflset:
+                      elif "adv" in inflset:
                         headtemp_voice = "adverbial"
                       else:
                         if "pass" not in inflset:
-                          pagemsg("WARNING: Something wrong, none of 'act', 'past' or 'adv' in participle inflset: %s"
+                          pagemsg("WARNING: Something wrong, none of 'act', 'pass' or 'adv' in participle inflset: %s"
                             % (",".join(inflset)))
                         headtemp_voice = "passive"
                       headtemp_pos = "%s %s participle" % (headtemp_tense, headtemp_voice)
