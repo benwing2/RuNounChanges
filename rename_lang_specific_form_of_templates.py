@@ -138,7 +138,7 @@ round_2_templates = [
   "et-verb form of",
   "fa-adj form of",
   "fa-adj-form",
-  "fi-verb form of",
+  "fi-verb form of", # deprecated
   "got-verb form of",
   "hi-form-verb",
   "hu-inflection of",
@@ -1327,7 +1327,6 @@ de_specs = [
         True: [
           # Template has the order 2, 3, 4, 5. We reorder to consistently
           # use the order person, number, dependent, tense/mood.
-          # FIXME: Verify this works.
           ("lookup", "2", {
             "1": "1",
             "2": "2",
@@ -1374,7 +1373,7 @@ el_specs = [
           "el",
           ("copy", "1"),
           ("copy", "alt"),
-          ("copy", "gloss"),
+          ("copy", "gloss", "t"),
         ]),
         ("set", "POS", "adverb"),
       ) if data.getp("deg") == "comp" else
@@ -1810,25 +1809,24 @@ fi_specs = [
       "",
       # Template has the order pn, tm. We intersperse them to maintain the
       # consistent order person, number, tense, voice, mood.
-      # FIXME: Verify this works.
       ("lookup", "pn", {
-        "1s": "1s",
-        "2s": "2s",
-        "3s": "3s",
-        "1p": "1p",
-        "2p": "2p",
-        "3p": "3p",
+        "1s": ["1", "s"],
+        "2s": ["2", "s"],
+        "3s": ["3", "s"],
+        "1p": ["1", "p"],
+        "2p": ["2", "p"],
+        "3p": ["3", "p"],
         "p": "p",
         "pasv": [],
         "pass": [],
         "": [], # especially in conjunction with connegative
       }),
       ("lookup", "tm", {
-        "pres": ["pres"],
-        "past": ["past"],
-        "cond": [],
-        "impr": [],
-        "potn": [],
+        "pres": "pres",
+        "cond": "pres",
+        "impr": "pres",
+        "potn": "pres",
+        "past": "past",
       }),
       ("lookup", "pn", {
         "1s": [],
@@ -1848,6 +1846,7 @@ fi_specs = [
         "cond": "cond",
         "impr": "imp",
         "potn": "potn",
+        "opta": "opt",
       }),
       ("lookup", "c", {
         "": [],
@@ -1857,10 +1856,11 @@ fi_specs = [
   )),
 
   ("fi-form of", (
-    # The template code ignores nocat=.
     "infl of",
     ("error-if", ("present-except", [
-      "1", "2", "t", "pr", "case", "pl", "tense", "mood", "suffix", "suffix2", "suffix3"
+      # silently ignore nodot=, lang=, which are also ignored by the template
+      "1", "2", "t", "gloss", "pr", "case", "pl", "tense", "mood", "suffix", "suffix2", "suffix3", "nodot",
+      "lang",
     ])),
     ("set", "1", [
       "fi",
@@ -1968,6 +1968,120 @@ fi_specs = [
     ]),
     ("set", "enclitic", fetch_fi_suffixes),
     ("copy", "t"),
+    ("copy", "gloss", "t"),
+  )),
+
+  ("fi-infinitive of", (
+    "infl of",
+    # silently ignore nodot=, which is also ignored by the template
+    ("error-if", ("present-except", ["1", "c", "n", "t", "suffix", "gloss", "nocat", "nodot"])),
+    ("set", "1", [
+      "fi",
+      ("copy", "1"),
+      "",
+      ("lookup", "c", {
+        "": [],
+        "nom": "nom",
+        "gen": "gen",
+        "par": "par",
+        "acc": "acc",
+        "ine": "ine",
+        "ela": "ela",
+        "ill": "ill",
+        "ade": "ade",
+        "abl": "abl",
+        "all": "all",
+        "ess": "ess",
+        "tra": "tra",
+        "ins": "ist", # intentional
+        "ist": "ist",
+        "abe": "abe",
+        "com": "com",
+      }),
+      ("lookup", "n", {
+        "": [],
+        "s": "s",
+        "sg": "s",
+        "singular": "s",
+        "p": "p",
+        "pl": "p",
+        "plural": "p",
+      }),
+      ("lookup", "c", {
+        "": [],
+        True: "of",
+      }),
+      ("lookup", "t", {
+        "1": "first",
+        "1l": ["long", "first"],
+        "2a": ["second", "act"],
+        "2p": ["second", "pass"],
+        "3a": ["third", "act"],
+        "3p": ["third", "pass"],
+        "4": "fourth",
+        "5": "fifth",
+      }),
+      "inf",
+    ]),
+    ("set", "enclitic", fetch_fi_suffixes),
+    ("copy", "gloss", "t"),
+    ("copy", "nocat"),
+  )),
+
+  ("fi-participle of", (
+    "infl of",
+    # silently ignore nocat=, nodot= and lang=, which are also ignored by the template
+    ("error-if", ("present-except", ["1", "case", "plural", "pl", "t", "suffix", "gloss", "nocat", "nodot", "lang"])),
+    ("set", "1", [
+      "fi",
+      ("copy", "1"),
+      "",
+      ("lookup", "case", {
+        "": [],
+        "nominative": "nom",
+        "genitive": "gen",
+        "partitive": "par",
+        "accusative": "acc",
+        "inessive": "ine",
+        "elative": "ela",
+        "illative": "ill",
+        "adessive": "ade",
+        "ablative": "abl",
+        "allative": "all",
+        "essive": "ess",
+        "translative": "tra",
+        "instructive": "ist",
+        "abessive": "abe",
+        "comitative": "com",
+      }),
+      ("lookup", "case", {
+        "": [],
+        True: ("lookup", "pl", {
+          "singular": "s",
+          "plural": "p",
+          "": ("lookup", "plural", {
+            "": "s",
+            True: "p",
+          }),
+        }),
+      }),
+      ("lookup", "case", {
+        "": [],
+        True: "of",
+      }),
+      ("lookup", "t", {
+        "pres": ["pres", "act", "part"],
+        "pres_pasv": ["pres", "pass", "part"],
+        "pres_pass": ["pres", "pass", "part"],
+        "past": ["past", "act", "part"],
+        "past_pasv": ["past", "pass", "part"],
+        "past_pass": ["past", "pass", "part"],
+        "agnt": "agentpart",
+        "nega": ["negative", "part"],
+      }),
+    ]),
+    ("set", "enclitic", fetch_fi_suffixes),
+    ("copy", "gloss", "t"),
   )),
 ]
 
@@ -4260,12 +4374,12 @@ def rewrite_to_foo_form_of(data, comment):
   if newtn != tn:
     comment = re.sub(r"(to|with \{\{)%s([|\}])" % tn, r"\1%s\2" % newtn, comment)
   if str(t) != origt:
-    pagemsg("rewrite_to_foo_form_of: Replaced %s with %s" %
+    data.pagemsg("rewrite_to_foo_form_of: Replaced %s with %s" %
       (origt, str(t)))
 
   return comment
 
-def rewrite_to_participle_of(data, comment):
+def rewrite_to_pres_past_participle_of(data, comment):
   t = data.t
   origt = str(t)
   tn = tname(t)
@@ -4275,15 +4389,39 @@ def rewrite_to_participle_of(data, comment):
       pname = str(param.name).strip()
       if re.search("^[0-9]$", pname) and int(pname) > max_numbered:
         max_numbered = int(pname)
-    if max_numbered == 2 and data.getp("1") == "pres" and data.getp("2") == "part":
-      rmparam(t, "2")
-      rmparam(t, "1")
+    if max_numbered == 5 and data.getp("4") == "pres" and data.getp("5") == "part":
+      rmparam(t, "4")
+      rmparam(t, "5")
+      if not getparam(t, "3"):
+        rmparam(t, "3")
       blib.set_template_name(t, "present participle of")
-    elif max_numbered == 2 and data.getp("1") == "past" and data.getp("2") == "part":
-      rmparam(t, "2")
-      rmparam(t, "1")
+    elif max_numbered == 5 and data.getp("4") == "past" and data.getp("5") == "part":
+      rmparam(t, "4")
+      rmparam(t, "5")
+      if not getparam(t, "3"):
+        rmparam(t, "3")
       blib.set_template_name(t, "past participle of")
-    elif data.getp(str(max_numbered)) == "part":
+  newtn = tname(t)
+  if newtn != tn:
+    comment = re.sub(r"(to|with \{\{)%s([|\}])" % tn, r"\1%s\2" % newtn, comment)
+
+  if str(t) != origt:
+    data.pagemsg("rewrite_to_pres_past_participle_of: Replaced %s with %s" %
+      (origt, str(t)))
+
+  return comment
+
+def rewrite_to_general_participle_of(data, comment):
+  t = data.t
+  origt = str(t)
+  tn = tname(t)
+  if tn in ["inflection of", "infl of", "verb form of"]:
+    max_numbered = 0
+    for param in t.params:
+      pname = str(param.name).strip()
+      if re.search("^[0-9]$", pname) and int(pname) > max_numbered:
+        max_numbered = int(pname)
+    if data.getp(str(max_numbered)) == "part":
       rmparam(t, str(max_numbered))
       blib.set_template_name(t, "participle of")
   newtn = tname(t)
@@ -4291,7 +4429,7 @@ def rewrite_to_participle_of(data, comment):
     comment = re.sub(r"(to|with \{\{)%s([|\}])" % tn, r"\1%s\2" % newtn, comment)
 
   if str(t) != origt:
-    pagemsg("rewrite_to_participle_of: Replaced %s with %s" %
+    data.pagemsg("rewrite_to_general_participle_of: Replaced %s with %s" %
       (origt, str(t)))
 
   return comment
@@ -4334,14 +4472,15 @@ def rewrite_person_number_of(data, comment):
         t.add(pname, pval, showkey=showkey, preserve_spacing=False)
 
   if str(t) != origt:
-    pagemsg("rewrite_person_number_of: Replaced %s with %s" %
+    data.pagemsg("rewrite_person_number_of: Replaced %s with %s" %
       (origt, str(t)))
 
   return comment
 
 post_rewrite_hooks = [
   rewrite_to_foo_form_of,
-  rewrite_to_participle_of,
+  rewrite_to_pres_past_participle_of,
+  #rewrite_to_general_participle_of,
   #rewrite_person_number_of,
 ]
 
@@ -4425,6 +4564,8 @@ def expand_spec(spec, data):
   check(len(spec) >= 1, "empty spec")
   oldname = tname(t)
   newname = spec[0]
+  if callable(newname):
+    newname = newname(data)
   expanded_specs = []
   comment = None
   for subspec in spec[1:]:
