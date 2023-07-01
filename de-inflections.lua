@@ -163,9 +163,9 @@ function export.show_adj_form(frame)
 		term = args[1],
 	}
 
-	local categories = m_form_of.fetch_lang_categories(lang, tags, lemma_obj, "adjective")
-	return m_form_of.tagged_inflections({ lang = lang, tags = tags, lemmas = {lemma_obj}, lemma_face = "term" }) .. 
-		require("Module:utilities").format_categories(categories, lang, args["sort"])
+	return m_form_of.tagged_inflections {
+		lang = lang, tags = tags, lemmas = {lemma_obj}, lemma_face = "term", POS = "adjective", sort = args.sort
+	}
 end
 
 

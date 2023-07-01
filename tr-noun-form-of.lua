@@ -126,9 +126,9 @@ function export.show(frame)
 	
 	tags = forms[nonlemma]
 	if tags then
-		local categories = m_form_of.fetch_lang_categories(lang, tags, lemma_obj, "noun")
-		return m_form_of.tagged_inflections({ lang = lang, tags = tags, lemmas = {lemma_obj}, lemma_face = "term" }) ..
-			require("Module:utilities").format_categories(categories, lang) -- , args["sort"] needed?
+		return m_form_of.tagged_inflections {
+			lang = lang, tags = tags, lemmas = {lemma_obj}, lemma_face = "term", POS = "noun"
+		}
 	else
 		error("unknown noun form")
 	end

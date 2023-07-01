@@ -66,11 +66,10 @@ local function generate_inflection_of(tags, lemma)
 	if has_multiple_tag_sets then
 		tags = require("Module:accel").combine_tag_sets_into_multipart(tags, lang)
 	end
-	local categories = m_form_of.fetch_lang_categories(lang, tags, lemma_obj, "verb")
-	local cat_text = #categories > 0 and require("Module:utilities").format_categories(categories, lang) or ""
 	return m_form_of.tagged_inflections({
-		lang = lang, tags = tags, lemmas = {lemma_obj}, lemma_face = "term", posttext = posttext
-	}) .. cat_text
+		lang = lang, tags = tags, lemmas = {lemma_obj}, lemma_face = "term", posttext = posttext,
+		POS = "verb"
+	})
 end
 
 function export.verb_form_of(frame)
