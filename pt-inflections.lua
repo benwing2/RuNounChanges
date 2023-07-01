@@ -26,32 +26,31 @@ local function track(page)
 	return true
 end
 
-local function generate_one_inflection_of_type(tags, lemma, labels, args)
-	local has_multiple_tag_sets = #tags > 1
+local function generate_one_inflection_of_type(tag_sets, lemma, args)
+	local has_multiple_tag_sets = #tag_sets > 1
 
 	-- If only one tag, extract out the "combined with ..." text and move into posttext=, which goes after the lemma.
 	-- FIXME: No support for clitic combinations currently for Portuguese, although maybe we should add it.
 	local posttext
-	if #tags == 1 then
-		local tag_set_without_posttext
-		tag_set_without_posttext, posttext = tags[1]:match("^(.*)|(combined with .*)$")
-		if tag_set_without_posttext then
-			tags[1] = tag_set_without_posttext
-			posttext = " " .. posttext
+	if #tag_sets == 1 then
+		local tags = tag_sets[1].tags
+		local last_tag = tags[#tags]
+		if last_tag:match("^combined with .*$") then
+			-- NOTE: table.remove() side-effects the list by removing and returning the last item.
+			posttext = " " .. table.remove(tags)
 		end
 	end
-
-	tags = table.concat(tags, "|;|")
-	tags = rsplit(tags, "|")
 
 	local function hack_clitics(text)
 		return text:gsub("%[%[(.-)%]%]", function(pronoun) return m_links.full_link({term = pronoun, lang = lang}, "term") end)
 	end
 
 	-- Hack to convert raw-linked pronouns e.g. in 'combined with [[te]]' to Portuguese-linked pronouns.
-	for i, tag in ipairs(tags) do
-		if tag:find("%[%[") then
-			tags[i] = hack_clitics(tag)
+	for _, tag_set in ipairs(tag_sets) do
+		for i, tag in ipairs(tag_set.tags) do
+			if tag:find("%[%[") then
+				tag_set.tags[i] = hack_clitics(tag)
+			end
 		end
 	end
 	posttext = posttext and hack_clitics(posttext) or nil
@@ -65,16 +64,14 @@ local function generate_one_inflection_of_type(tags, lemma, labels, args)
 		id = args.id,
 	}
 
-	local label_text = labels ~= "" and mw.getCurrentFrame():preprocess("{{lb|pt|" .. labels .. "}} ") or ""
 	if has_multiple_tag_sets then
 		tags = require("Module:accel").combine_tag_sets_into_multipart(tags, lang)
 	end
-	local categories = m_form_of.fetch_lang_categories(lang, tags, lemma_obj, "verb")
-	local cat_text = #categories > 0 and require("Module:utilities").format_categories(categories, lang) or ""
 	return {
-		infl = m_form_of.tagged_inflections({
-			lang = lang, tags = tags, lemmas = {lemma_obj}, lemma_face = "term", posttext = posttext
-		}) .. cat_text,
+		infl = m_form_of.tagged_inflections {
+			lang = lang, tags = tags, lemmas = {lemma_obj}, lemma_face = "term", posttext = posttext,
+			POS = "verb",
+		},
 		label = label_text,
 	}
 end
@@ -111,9 +108,9 @@ local function generate_inflection_of(tags_with_labels, lemma, args)
 	end
 	
 	-- Do it the easy way.
-	local tags = {}
-	for _, tag in ipairs(tags_with_labels) do
-		m_table.insertIfNot(tags, tag.tag)
+	for _, tag_set in ipairs(tags_with_labels) do
+		tag_set.tags = rsplit(tags.tag, "|")
+		tag_set.tag = nil
 	end
 	return {generate_one_inflection_of_type(tags, lemma, table.concat(seen_labels, "|"), args)}
 end

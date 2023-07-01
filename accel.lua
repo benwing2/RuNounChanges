@@ -176,27 +176,6 @@ function export.default_entry(params)
 	return entry
 end
 
--- Given a list of tags, split into tag sets (separated by semicolons in
--- the initial list of tags).
-local function split_tags_into_tag_sets(tags)
-	local tag_set_group = {}
-	local cur_tag_set = {}
-	for _, tag in ipairs(tags) do
-		if tag == ";" then
-			if #cur_tag_set > 0 then
-				table.insert(tag_set_group, cur_tag_set)
-			end
-			cur_tag_set = {}
-		else
-			table.insert(cur_tag_set, tag)
-		end
-	end
-	if #cur_tag_set > 0 then
-		table.insert(tag_set_group, cur_tag_set)
-	end
-	return tag_set_group
-end
-
 -- Canonicalize multipart shortcuts (e.g. "123" -> "1//2//3") and
 -- list shortcuts (e.g. "1s" -> {"1", "s"}); leave others alone.
 local function canonicalize_multipart_and_list_shortcuts(tags, lang)
@@ -207,9 +186,7 @@ local function canonicalize_multipart_and_list_shortcuts(tags, lang)
 			expansion = tag
 		end
 		if type(expansion) == "table" then
-			for _, t in ipairs(expansion) do
-				table.insert(result, t)
-			end
+			m_table.extendList(result, expansion)
 		else
 			table.insert(result, expansion)
 		end
@@ -262,26 +239,57 @@ local function get_normalized_tag_type(tag, lang)
 	return tagobj and tagobj.tag_type or "unknown"
 end
 
--- Combine multiple semicolon-separated tag sets into multipart tags if
--- possible. We combine tag sets that differ in only one tag in a given
--- dimension, and repeat this until no changes in case we can reduce along
--- multiple dimensions, e.g.
---
--- {{inflection of|la|canus||dat|m|p|;|dat|f|p|;|dat|n|p|;|abl|m|p|;|abl|f|p|;|abl|n|p}}
---
--- {{inflection of|la|canus||dat//abl|m//f//n|p}}
-function export.combine_tag_sets_into_multipart(tags, lang)
-	-- First, as an optimization, make sure there are multiple tag sets.
-	-- Otherwise, do nothing.
-	local found_semicolon = false
-	for _, tag in ipairs(tags) do
-		if tag == ";" then
-			found_semicolon = true
-			break
-		end
+--[=[
+Combine multiple semicolon-separated tag sets into multipart tags if possible. We combine tag sets that differ in
+only one tag in a given dimension, and repeat this until no changes in case we can reduce along multiple dimensions,
+e.g.
+
+{{inflection of|la|canus||dat|m|p|;|dat|f|p|;|dat|n|p|;|abl|m|p|;|abl|f|p|;|abl|n|p}}
+
+{{inflection of|la|canus||dat//abl|m//f//n|p}}
+
+`tag_sets` is a list of objects of the form {tags = {"TAG", "TAG", ...}, labels = {"LABEL", "LABEL", ...}}, i.e. of the
+same format as `data.tag_sets` as passed to tagged_inflections() in [[Module:form of]]. Also accepted is an "old-style"
+list of strings, one element per tag, with tag sets separated by a semicolon, the same as in {{infl of}}.
+
+The return value is in the same format as was passed into `tag_sets`. If an old-style tag list was passed in, and
+labels are present, they are attached to the last tag in a tag set using an inline modifier.
+]=]
+
+function export.combine_tag_sets_into_multipart(tag_sets, lang)
+	if type(tag_sets) ~= "table" then
+		error("`tag_sets` should be a table but is a(n) `" .. type(tag_sets) .. "`")
 	end
-	if not found_semicolon then
-		return tags
+	if not tag_sets[1] then
+		error("Expected at least one item in `tag_sets`")
+	end
+	local old_style_tags = false
+	if type(tag_sets[1]) == "string" then
+		old_style_tags = true
+	end
+
+	-- First, as an optimization, make sure there are multiple tag sets. Otherwise, do nothing.
+	if old_style_tags then
+		local found_semicolon = false
+		for _, tag in ipairs(tag_sets) do
+			if tag == ";" then
+				found_semicolon = true
+				break
+			end
+		end
+		if not found_semicolon then
+			return tag_sets
+		end
+	elseif #tag_sets == 1 then
+		return tag_sets
+	end
+
+	-- If old-style tags (list of strings), convert to list of tag set objects.
+	if old_style_tags then
+		tag_sets = require("Module:form of").split_tags_into_tag_sets(tag_sets)
+		for i, tag_set in ipairs(tag_sets) do
+			tag_sets[i] = export.parse_tag_set_properties(tag_set)
+		end
 	end
 
 	-- Repeat until no changes can be made.
@@ -291,7 +299,7 @@ function export.combine_tag_sets_into_multipart(tags, lang)
 		local old_canonicalized_tags = canonicalized_tags
 
 		-- Then split into tag sets.
-		local tag_set_group = split_tags_into_tag_sets(canonicalized_tags)
+		local tag_set_group = require("Module:form of").split_tags_into_tag_sets(canonicalized_tags)
 
 		-- Try combining in two different styles ("adjacent-first" =
 		-- do two passes, where the first pass only combines adjacent
@@ -743,16 +751,7 @@ local function merge_entries(entries_obj)
 			tags = export.combine_tag_sets_into_multipart(tags, entries_obj.lang)
 
 			-- Put the template back together.
-			local combined_params = {}
-			for _, param in ipairs(pre_tag_params) do
-				table.insert(combined_params, param)
-			end
-			for _, param in ipairs(tags) do
-				table.insert(combined_params, param)
-			end
-			for _, param in ipairs(post_tag_params) do
-				table.insert(combined_params, param)
-			end
+			local combined_params = m_table.append(pre_tag_params, tags, post_tag_params)
 			entry.def = "{{inflection of|" .. table.concat(combined_params, "|") .. "}}"
 		end
 	end
