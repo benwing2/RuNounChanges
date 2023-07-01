@@ -437,6 +437,17 @@ cats["mk"] = {
 	{"hasall", {"col", "pl"}, "collective plurals"},
 }
 
+cats["nl"] = {
+	{"or",
+		{"tags=", {"pl", "imp"}},
+		{"has", "sub"},
+		{"multi",
+			"archaic verb forms",
+			{labels = {"Dutch archaic verb form"}},
+		},
+	},
+}
+
 cats["pl"] = {
 	{"has", "short", "short adjective forms"},
 }
