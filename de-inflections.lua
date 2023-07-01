@@ -158,13 +158,13 @@ function export.show_adj_form(frame)
 
 	tags = rsplit(table.concat(tags, "|;|"), "|")
 
-	local terminfo = {
+	local lemma_obj = {
 		lang = lang,
 		term = args[1],
 	}
 
-	local categories = m_form_of.fetch_lang_categories(lang, tags, terminfo, "adjective")
-	return m_form_of.tagged_inflections({ tags = tags, terminfo = terminfo, terminfo_face = "term" }) .. 
+	local categories = m_form_of.fetch_lang_categories(lang, tags, lemma_obj, "adjective")
+	return m_form_of.tagged_inflections({ lang = lang, tags = tags, lemmas = {lemma_obj}, lemma_face = "term" }) .. 
 		require("Module:utilities").format_categories(categories, lang, args["sort"])
 end
 

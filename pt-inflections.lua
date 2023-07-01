@@ -56,7 +56,7 @@ local function generate_one_inflection_of_type(tags, lemma, labels, args)
 	end
 	posttext = posttext and hack_clitics(posttext) or nil
 
-	local terminfo = {
+	local lemma_obj = {
 		lang = lang,
 		term = lemma,
 		gloss = args.t,
@@ -67,13 +67,13 @@ local function generate_one_inflection_of_type(tags, lemma, labels, args)
 
 	local label_text = labels ~= "" and mw.getCurrentFrame():preprocess("{{lb|pt|" .. labels .. "}} ") or ""
 	if has_multiple_tag_sets then
-		tags = require("Module:accel").combine_tag_sets_into_multipart(tags)
+		tags = require("Module:accel").combine_tag_sets_into_multipart(tags, lang)
 	end
-	local categories = m_form_of.fetch_lang_categories(lang, tags, terminfo, "verb")
+	local categories = m_form_of.fetch_lang_categories(lang, tags, lemma_obj, "verb")
 	local cat_text = #categories > 0 and require("Module:utilities").format_categories(categories, lang) or ""
 	return {
 		infl = m_form_of.tagged_inflections({
-			tags = tags, terminfo = terminfo, terminfo_face = "term", posttext = posttext
+			lang = lang, tags = tags, lemmas = {lemma_obj}, lemma_face = "term", posttext = posttext
 		}) .. cat_text,
 		label = label_text,
 	}
@@ -124,11 +124,11 @@ local function extract_labels(formobj)
 	local footnotes = formobj.footnotes
 	if not not form:find(m_pt_verb.VAR_BR) or footnotes and m_table.contains(footnotes, "[Brazil]") or
 		footnotes and m_table.contains(footnotes, "[Brazil only]") then
-		table.insert(labels, "Brazil")
+		table.insert(labels, "Brazilian Portuguese verb form")
 	end
 	if not not form:find(m_pt_verb.VAR_PT) or footnotes and m_table.contains(footnotes, "[Portugal]") or
 		footnotes and m_table.contains(footnotes, "[Portugal only]") then
-		table.insert(labels, "Portugal")
+		table.insert(labels, "European Portuguese verb form")
 	end
 	if not not form:find(m_pt_verb.VAR_SUPERSEDED) or footnotes and m_table.contains(footnotes, "[superseded]") then
 		table.insert(labels, "superseded")

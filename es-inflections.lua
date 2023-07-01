@@ -58,18 +58,18 @@ local function generate_inflection_of(tags, lemma)
 	end
 	posttext = posttext and hack_clitics(posttext) or nil
 
-	local terminfo = {
+	local lemma_obj = {
 		lang = lang,
 		term = lemma,
 	}
 
 	if has_multiple_tag_sets then
-		tags = require("Module:accel").combine_tag_sets_into_multipart(tags)
+		tags = require("Module:accel").combine_tag_sets_into_multipart(tags, lang)
 	end
-	local categories = m_form_of.fetch_lang_categories(lang, tags, terminfo, "verb")
+	local categories = m_form_of.fetch_lang_categories(lang, tags, lemma_obj, "verb")
 	local cat_text = #categories > 0 and require("Module:utilities").format_categories(categories, lang) or ""
 	return m_form_of.tagged_inflections({
-		tags = tags, terminfo = terminfo, terminfo_face = "term", posttext = posttext
+		lang = lang, tags = tags, lemmas = {lemma_obj}, lemma_face = "term", posttext = posttext
 	}) .. cat_text
 end
 
