@@ -1,6 +1,5 @@
 local export = {}
 
---local m_links = require("Module:links") unused
 local m_utilities_format_categories = require("Module:utilities").format_categories
 local m_lang_specific_data = mw.loadData("Module:labels/data/lang")
 
@@ -74,65 +73,82 @@ local function show_categories(data, lang, script, sort_key, script2, sort_key2,
 			m_utilities_format_categories(categories2, lang, sort_key2, nil, force_cat)
 end
 
-function export.get_label_info(label, lang, already_seen, script, script2, sort_key, sort_key2, nocat, term_mode)
+function export.get_label_info(data, lang, already_seen, script, script2, sort_key, sort_key2, nocat, term_mode)
+	if not data.label then
+		-- old-style multi-arg
+		track("get-label-info-old-style")
+		data = {
+			label = data,
+			lang = lang,
+			already_seen = already_seen,
+			script = script,
+			script2 = script2,
+			sort = sort_key,
+			sort2 = sort_key2,
+			nocat = nocat,
+			term_mode = term_mode
+		}
+	end
+
 	local ret = {}
+	local label = data.label
 	local deprecated = false
 	local categories = ""
 	local alias
-	local data
+	local labdata
 	local submodule
 
 	-- get language-specific labels from data module
-	local langcode = lang:getCode()
+	local langcode = data.lang:getCode()
 	
 	if langcode and m_lang_specific_data.langs_with_lang_specific_modules[langcode] then
 		-- prefer per-language label in order to pick subvariety labels over regional ones
 		submodule = mw.loadData("Module:labels/data/lang/" .. langcode)
-		data = submodule[label]
+		labdata = submodule[label]
 	end
-	if not data then
+	if not labdata then
 		submodule = mw.loadData("Module:labels/data")
-		data = submodule[label]
+		labdata = submodule[label]
 	end
-	if not data then
+	if not labdata then
 		submodule = mw.loadData("Module:labels/data/regional")
-		data = submodule[label]
+		labdata = submodule[label]
 	end
-	if not data then
+	if not labdata then
 		submodule = mw.loadData("Module:labels/data/topical")
-		data = submodule[label]
+		labdata = submodule[label]
 	end
-	data = data or {}
+	labdata = labdata or {}
 
-	if data.deprecated then
+	if labdata.deprecated then
 		deprecated = true
 	end
-	if type(data) == "string" or data.alias_of then
+	if type(labdata) == "string" or labdata.alias_of then
 		alias = label
-		label = data.alias_of or data
-		data = submodule[label] or {}
+		label = labdata.alias_of or labdata
+		labdata = submodule[label] or {}
 	end
-	if data.deprecated then
+	if labdata.deprecated then
 		deprecated = true
 	end
 
-	if data.track then
+	if labdata.track then
 		require("Module:debug").track("labels/label/" .. label)
 	end
 	
-	if data.special_display then
+	if labdata.special_display then
 		local function add_language_name(str)
 			if str == "canonical_name" then
-				return lang:getCanonicalName()
+				return data.lang:getCanonicalName()
 			else
 				return ""
 			end
 		end
 		
-		label = require("Module:string utilities").gsub(data.special_display, "<(.-)>", add_language_name)
+		label = require("Module:string utilities").gsub(labdata.special_display, "<(.-)>", add_language_name)
 	else
 		--[[
-			If data.glossary or data.Wikipedia are set to true, there is a glossary definition
+			If labdata.glossary or labdata.Wikipedia are set to true, there is a glossary definition
 			with an anchor identical to the label, or a Wikipedia article with a title
 			identical to the label.
 				For example, the code
@@ -142,36 +158,36 @@ function export.get_label_info(label, lang, already_seen, script, script2, sort_
 				indicates that there is a glossary entry for "formal".
 				
 			
-			Otherwise, data.glossary and data.Wikipedia specify the title or the anchor.
+			Otherwise, labdata.glossary and labdata.Wikipedia specify the title or the anchor.
 		]]
-		if data.glossary then
-			local glossary_entry = type(data.glossary) == "string" and data.glossary or label
-			label = "[[Appendix:Glossary#" .. glossary_entry .. "|" .. ( data.display or label ) .. "]]"
-		elseif data.Wikipedia then
-			local Wikipedia_entry = type(data.Wikipedia) == "string" and data.Wikipedia or label
-			label = "[[w:" .. Wikipedia_entry .. "|" .. ( data.display or label ) .. "]]"
+		if labdata.glossary then
+			local glossary_entry = type(labdata.glossary) == "string" and labdata.glossary or label
+			label = "[[Appendix:Glossary#" .. glossary_entry .. "|" .. ( labdata.display or label ) .. "]]"
+		elseif labdata.Wikipedia then
+			local Wikipedia_entry = type(labdata.Wikipedia) == "string" and labdata.Wikipedia or label
+			label = "[[w:" .. Wikipedia_entry .. "|" .. ( labdata.display or label ) .. "]]"
 		else
-			label = data.display or label
+			label = labdata.display or label
 		end
 	end
 	
 	if deprecated then
 		label = '<span class="deprecated-label">' .. label .. '</span>'
-		if not nocat then
-			categories = categories .. m_utilities_format_categories({ "Entries with deprecated labels" }, lang, sort_key, nil, force_cat)
+		if not data.nocat then
+			categories = categories .. m_utilities_format_categories({ "Entries with deprecated labels" }, data.lang, data.sort, nil, force_cat)
 		end
 	end
 	
 	local label_for_already_seen =
-		(data.topical_categories or data.regional_categories
-		or data.plain_categories or data.pos_categories
-		or data.sense_categories) and label
+		(labdata.topical_categories or labdata.regional_categories
+		or labdata.plain_categories or labdata.pos_categories
+		or labdata.sense_categories) and label
 		or nil
 	
 	-- Track label text. If label text was previously used, don't show it,
 	-- but include the categories.
 	-- For an example, see [[hypocretin]].
-	if already_seen[label_for_already_seen] then
+	if data.already_seen[label_for_already_seen] then
 		ret.label = ""
 	else
 		if label:find("{") then
@@ -183,20 +199,34 @@ function export.get_label_info(label, lang, already_seen, script, script2, sort_
 	if nocat then
 		ret.categories = ""
 	else
-		ret.categories = categories .. show_categories(data, lang, script, sort_key, script2, sort_key2, term_mode)
+		ret.categories = categories .. show_categories(labdata, data.lang, data.script, data.sort, data.script2, data.sort2, data.term_mode)
 	end
 
-	ret.data = data
+	ret.data = labdata
 
 	if label_for_already_seen then
-		already_seen[label_for_already_seen] = true
+		data.already_seen[label_for_already_seen] = true
 	end
 
 	return ret
 end
 	
 
-function export.show_labels(labels, lang, script, script2, sort_key, sort_key2, nocat, term_mode)
+function export.show_labels(data, lang, script, script2, sort_key, sort_key2, nocat, term_mode)
+	if not data.labels then
+		-- old-style multi-arg
+		data = {
+			labels = data,
+			lang = lang,
+			script = script,
+			script2 = script2,
+			sort = sort_key,
+			sort2 = sort_key2,
+			nocat = nocat,
+			term_mode = term_mode
+		}
+	end
+	local labels = data.labels
 	if not labels[1] then
 		if mw.title.getCurrentTitle().nsText == "Template" then
 			labels = {"example"}
