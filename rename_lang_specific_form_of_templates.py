@@ -113,11 +113,10 @@ round_2_templates = [
   "bg-adj form of", # deleted
   "bg-noun form of", # deleted
   "blk-past of", # deleted
-  "br-noun-plural", # 172 uses; can delete
+  "br-noun-plural", # deleted
   "ca-adj form of", # deleted
-  "ca-form of",
-  "chm-inflection of",
-  "de-form-adj",
+  "ca-form of", # 95 uses, can delete after handling {{ca-val}} uses
+  "de-form-adj", # deleted
   "el-form-of-verb",
   "el-verb form of",
   "en-simple past of",
@@ -162,6 +161,7 @@ round_2_templates = [
   "lv-negative of",
   "lv-reflexive of",
   "lv-superlative of",
+  "mhr-inflection of",
   "pt-adj form of",
   "pt-noun form of",
   "sa-desiderative of",
@@ -277,7 +277,6 @@ templates_by_cap_and_period = [
   ("ca-adj form of", "ignoreducdot", "verified"),
   ("ca-form of", "lcnodot", False),
   ("ca-verb form of", "lcnodot", False),
-  ("chm-inflection of", "lcnodot", False),
   ("cu-form of", "ignoreducdot", "verified"),
   ("da-pl-genitive", "lcnodot", False),
   ("de-du contraction", "ignoreduc", "verified"),
@@ -629,6 +628,7 @@ templates_by_cap_and_period = [
   ("lv-reflexive of", "lcnodot", False),
   ("lv-superlative of", "lcnodot", False),
   ("lv-verbal noun of", "lcnodot", False),
+  ("mhr-inflection of", "lcnodot", False),
   ("mr-form-adj", "ignoreddot", "verified"),
   ("mt-prep-form", "ignoreddot", "verified"),
   ("nb-noun-form-def-gen", "lcnodot", False),
@@ -935,13 +935,12 @@ br_specs = [
   # NOTE: Has automatic, non-controllable initial caps and final period.
   # Both ignored.
   ("br-noun-plural", (
-    "noun form of",
+    "plural of",
     ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "br",
       ("copy", "1"),
       ("copy", "2"),
-      "p",
     ]),
   )),
 ]
@@ -1080,69 +1079,6 @@ ca_specs = [
         "cond": "cond",
         "ptc": "part",
       }),
-    ]),
-  )),
-]
-
-chm_grammar_table = {
-  "nom": "nom",
-  "acc": "acc",
-  "dat": "dat",
-  "gen": "gen",
-  "com": "com",
-  "cmp": "comc",
-  "ine": "ine",
-  "sil": ["short", "ill"],
-  "lil": ["long", "ill"],
-  "lat": "lat",
-  "1st": "1",
-  "2nd": "2",
-  "3rd": "3",
-  "1s": "1s",
-  "2s": "2s",
-  "3s": "3s",
-  "1p": "1p",
-  "2p": "2p",
-  "3p": "3p",
-  "0": [],
-  "s": "s",
-  "p": "p",
-  "pos": "possd",
-  "prs": "pres",
-  "pst": "past",
-  "fut": "fut",
-  "ind": "ind",
-  "imp": "imp",
-  "psv": "pass",
-  "act": "act",
-  "": [],
-}
-
-
-chm_specs = [
-  # NOTE: If 2!=nom, categorizes into one of:
-  # -- 6==adj -> adjective forms
-  # -- 6==num -> numeral forms
-  # -- 6==v -> verb forms
-  # -- 6==vpart -> participle forms
-  # -- 6==pro -> pronoun forms
-  # -- 6==proper -> proper noun forms
-  # -- 6==<anything else> -> noun forms
-  # This should be handled by the headword. In practice, it seems this
-  # template is only ever used for noun forms.
-  ("chm-inflection of", (
-    "noun form of",
-    ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6"])),
-    ("set", "1", [
-      "chm",
-      ("copy", "1"),
-      "",
-      # Original template inserts "non-possessed" whenever not a
-      # possessive form.
-      ("lookup", "2", chm_grammar_table),
-      ("lookup", "3", chm_grammar_table),
-      ("lookup", "4", chm_grammar_table),
-      ("lookup", "5", chm_grammar_table),
     ]),
   )),
 ]
@@ -3265,6 +3201,69 @@ mr_specs = [
   )),
 ]
 
+mhr_grammar_table = {
+  "nom": "nom",
+  "acc": "acc",
+  "dat": "dat",
+  "gen": "gen",
+  "com": "com",
+  "cmp": "comc",
+  "ine": "ine",
+  "sil": ["short", "ill"],
+  "lil": ["long", "ill"],
+  "lat": "lat",
+  "1st": "1",
+  "2nd": "2",
+  "3rd": "3",
+  "1s": "1s",
+  "2s": "2s",
+  "3s": "3s",
+  "1p": "1p",
+  "2p": "2p",
+  "3p": "3p",
+  "0": [],
+  "s": "s",
+  "p": "p",
+  "pos": "possd",
+  "prs": "pres",
+  "pst": "past",
+  "fut": "fut",
+  "ind": "ind",
+  "imp": "imp",
+  "psv": "pass",
+  "act": "act",
+  "": [],
+}
+
+
+mhr_specs = [
+  # NOTE: If 2!=nom, categorizes into one of:
+  # -- 6==adj -> adjective forms
+  # -- 6==num -> numeral forms
+  # -- 6==v -> verb forms
+  # -- 6==vpart -> participle forms
+  # -- 6==pro -> pronoun forms
+  # -- 6==proper -> proper noun forms
+  # -- 6==<anything else> -> noun forms
+  # This should be handled by the headword. In practice, it seems this
+  # template is only ever used for noun forms.
+  ("mhr-inflection of", (
+    "noun form of",
+    ("error-if", ("present-except", ["1", "2", "3", "4", "5", "6"])),
+    ("set", "1", [
+      "mhr",
+      ("copy", "1"),
+      "",
+      # Original template inserts "non-possessed" whenever not a
+      # possessive form.
+      ("lookup", "2", mhr_grammar_table),
+      ("lookup", "3", mhr_grammar_table),
+      ("lookup", "4", mhr_grammar_table),
+      ("lookup", "5", mhr_grammar_table),
+    ]),
+  )),
+]
+
 mt_specs = [
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
   # Doesn't have initial caps.
@@ -4306,7 +4305,6 @@ templates_to_rename_specs = (
   bg_specs +
   br_specs +
   ca_specs +
-  chm_specs +
   cu_specs +
   da_specs +
   de_specs +
@@ -4331,6 +4329,7 @@ templates_to_rename_specs = (
   liv_specs +
   lt_specs +
   lv_specs +
+  mhr_specs +
   mr_specs +
   mt_specs +
   nb_specs +
