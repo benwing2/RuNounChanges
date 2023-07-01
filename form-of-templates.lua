@@ -1,8 +1,8 @@
 local export = {}
 
-local force_cat = false -- for testing
+local force_cat = false -- for testing; set to true to display categories even on non-mainspace pages
 
-local m_form_of = require("Module:form of")
+local m_form_of = require("Module:User:Benwing2/form of")
 local m_form_of_pos = require("Module:form of/pos")
 local m_params = require("Module:parameters")
 local put_module = "Module:parse utilities"
@@ -604,19 +604,22 @@ display; currently accepted values are "and", "slash", "en-dash".
 local function construct_tagged_form_of_text(iargs, args, term_param, compat, multiple_lemmas, tags, joiner)
 	return construct_form_of_text(iargs, args, term_param, compat, multiple_lemmas,
 		function(lemma_data)
-			local lang_cats =
-				args["nocat"] and {} or m_form_of.fetch_lang_categories(lemma_data.lang, tags, lemma_data.lemmas, args["p"])
+			-- NOTE: tagged_inflections returns two values, so we do too.
 			return m_form_of.tagged_inflections {
 				lang = lemma_data.lang,
 				tags = tags,
 				lemmas = lemma_data.lemmas,
 				enclitics = lemma_data.enclitics,
 				lemma_face = "term",
+				POS = args["p"],
+				-- Set no_format_categories because we do it ourselves in construct_form_of_text().
+				no_format_categories = true,
+				nocat = args["nocat"],
 				notext = args["notext"],
 				capfirst = args["cap"] or iargs["withcap"] and not args["nocap"],
 				posttext = iargs["posttext"],
-				joiner = joiner
-			}, lang_cats
+				joiner = joiner,
+			}
 		end
 	)
 end
