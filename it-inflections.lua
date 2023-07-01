@@ -73,12 +73,12 @@ local function generate_inflection_of(tags, lemmas)
 	tags = table.concat(tags, "|;|")
 	tags = rsplit(tags, "|")
 
-	local terminfos = {}
+	local lemma_objs = {}
 	for _, lemma in ipairs(lemmas) do
 		local quals, refs = expand_footnotes_and_references(lemma.footnotes)
 		-- FIXME: Qualifiers and references in the lemma in {{inflection of}} not yet supported, but include them
 		-- anyway if/when we end up supporting them.
-		table.insert(terminfos, {
+		table.insert(lemma_objs, {
 			lang = lang,
 			term = lemma.form,
 			q = quals,
@@ -87,13 +87,11 @@ local function generate_inflection_of(tags, lemmas)
 	end
 
 	if has_multiple_tag_sets then
-		tags = require("Module:accel").combine_tag_sets_into_multipart(tags)
+		tags = require("Module:accel").combine_tag_sets_into_multipart(tags, lang)
 	end
-	local categories = m_form_of.fetch_lang_categories(lang, tags, terminfos, "verb")
-	local cat_text = #categories > 0 and require("Module:utilities").format_categories(categories, lang) or ""
 	return m_form_of.tagged_inflections {
-		tags = tags, terminfos = terminfos, terminfo_face = "term",
-	} .. cat_text
+		lang = lang, tags = tags, lemmas = lemma_objs, lemma_face = "term", POS = "verb"
+	}
 end
 
 
