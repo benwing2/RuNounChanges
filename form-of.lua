@@ -111,7 +111,7 @@ end
 -- Add tracking category for PAGE when called from {{inflection of}} or
 -- similar TEMPLATE. The tracking category linked to is
 -- [[Template:tracking/inflection of/PAGE]].
-local function infl_track(page)
+local function track(page)
 	require("Module:debug/track")("inflection of/" ..
 		-- avoid including links in pages (may cause error)
 		page:gsub("%[", "("):gsub("%]", ")"):gsub("|", "!"))
@@ -282,7 +282,7 @@ function export.lookup_shortcut(tag, lang, do_track)
 	end
 	-- Maybe track the expansion if it's not the same as the raw tag.
 	if do_track and expansion ~= tag and type(expansion) == "string" then
-		infl_track("tag/" .. tag)
+		track("tag/" .. tag)
 	end
 	return expansion
 end
@@ -325,8 +325,8 @@ local function normalize_single_tag(tag, lang, do_track)
 	if not export.lookup_tag(tag, lang) and do_track then
 		-- If after all expansions and normalizations we don't recognize
 		-- the canonical tag, track it.
-		infl_track("unknown")
-		infl_track("unknown/" .. tag)
+		track("unknown")
+		track("unknown/" .. tag)
 	end
 	return tag
 end
@@ -353,6 +353,8 @@ local function normalize_multipart_component(tag, lang, recombine_tags, do_track
 		-- '1s//3p'. Check for this now.
 		tag = export.lookup_shortcut(tag, lang, do_track)
 		if type(tag) == "table" then
+			-- Temporary tracking as we will disallow this.
+			track("list-tag-inside-of-multipart")
 			-- We found a list-tag shortcut; treat as if colon-separated.
 			components = tag
 		else
@@ -360,11 +362,13 @@ local function normalize_multipart_component(tag, lang, recombine_tags, do_track
 		end
 	end
 	local normtags = {}
+	-- Temporary tracking as we will disallow this.
+	track("two-level-multipart")
 	for _, component in ipairs(components) do
 		if do_track then
 			-- There are multiple components; track each of the individual
 			-- raw tags.
-			infl_track("tag/" .. component)
+			track("tag/" .. component)
 		end
 		table.insert(normtags, normalize_single_tag(component, lang, do_track))
 	end
@@ -411,7 +415,7 @@ local function normalize_tag(tag, lang, recombine_multitags, do_track)
 	for _, single_tag in ipairs(split_tags) do
 		if do_track then
 			-- If the tag was a multipart tag, track each of individual raw tags.
-			infl_track("tag/" .. single_tag)
+			track("tag/" .. single_tag)
 		end
 		table.insert(normtags, normalize_multipart_component(single_tag, lang,
 			recombine_multitags, do_track))
@@ -459,7 +463,7 @@ function export.normalize_tags(tags, lang, recombine_multitags, do_track)
 	for _, tag in ipairs(tags) do
 		if do_track then
 			-- Track the raw tag.
-			infl_track("tag/" .. tag)
+			track("tag/" .. tag)
 		end
 		-- Expand the tag, which may generate a new tag (either a
 		-- fully canonicalized tag, a multipart tag, or a list of tags).
@@ -469,7 +473,7 @@ function export.normalize_tags(tags, lang, recombine_multitags, do_track)
 				if do_track then
 					-- If the tag expands to a list of raw tags, track each of
 					-- those.
-					infl_track("tag/" .. t)
+					track("tag/" .. t)
 				end
 				table.insert(ntags, normalize_tag(t, lang, recombine_multitags,
 					do_track))
