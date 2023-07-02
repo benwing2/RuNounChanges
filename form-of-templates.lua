@@ -3,7 +3,6 @@ local export = {}
 local force_cat = false -- for testing; set to true to display categories even on non-mainspace pages
 
 local m_form_of = require("Module:form of")
-local m_form_of_pos = require("Module:form of/pos")
 local m_params = require("Module:parameters")
 local put_module = "Module:parse utilities"
 local rfind = mw.ustring.find
@@ -167,7 +166,7 @@ local clitic_param_mods = {
 }
 
 
-local function parse_clitics(paramname, val, lang)
+local function parse_clitics_or_base_lemmas(paramname, val, lang)
 	local function generate_obj(term)
 		return {lang = lang, term = term}
 	end
@@ -182,7 +181,11 @@ local function parse_clitics(paramname, val, lang)
 			splitchar = ",",
 		})
 	else
-        retval = rsplit(val, ",")
+        if val:find(",%s") then
+            retval = require(put_module).split_on_comma(val)
+        else
+            retval = rsplit(val, ",")
+		end
 		for i, split in ipairs(retval) do
 			retval[i] = generate_obj(split)
 		end
@@ -249,6 +252,30 @@ local function add_link_params(parent_args, params, term_param, no_numbered_glos
 end
 
 
+local function add_base_lemma_params(parent_args, iargs, params, compat)
+	-- Need to do what [[Module:parameters]] does to string arguments from parent_args as we're running this
+	-- before calling [[Module:parameters]] on parent_args.
+	local function ine(arg)
+		if not arg then
+			return nil
+		end
+		arg = mw.text.trim(arg)
+		return arg ~= "" and arg or nil
+	end
+
+	local langcode = ine(parent_args[compat and "lang" or 1]) or iargs["lang"] or "und"
+	if m_form_of.langs_with_lang_specific_tags[langcode] then
+		local langdata = mw.loadData(m_form_of.form_of_lang_data_module_prefix .. langcode)
+		if langdata.base_lemma_params then
+			for _, param in ipairs(langdata.base_lemma_params) do
+				params[param.param] = {}
+			end
+			return langdata.base_lemma_params
+		end
+	end
+end
+
+
 --[=[
 Given processed invocation arguments IARGS and processed parent arguments ARGS, as well as TERM_PARAM (the parent
 argument specifying the first main entry/lemma), COMPAT (true if the language code is found in args["lang"] instead of
@@ -258,6 +285,7 @@ structure), return an object as follows:
 	lang = LANG,
 	lemmas = {LEMMA_OBJ, LEMMA_OBJ, ...},
 	enclitics = {ENCLITIC_OBJ, ENCLITIC_OBJ, ...},
+	base_lemmas = {BASE_LEMMA_OBJ, BASE_LEMMA_OBJ, ...},
 	categories = {"CATEGORY", "CATEGORY", ...},
 }
 
@@ -268,13 +296,21 @@ where
   however, if the invocation argument linktext= is given, it will be a string consisting of that text, and if the
   invocation argument nolink= is given, it will be nil;
 * ENCLITICS is nil or a sequence of objects specifying the enclitics, as passed to full_link in [[Module:links]];
+* BASE_LEMMA_OBJ is a sequence of objects specifying the base lemma(s), which are used when the lemma is itself a
+  form of another lemma (the base lemma), e.g. a comparative, superlative or participle; each object is of the form
+  { paramobj = PARAM_OBJ, lemmas = {LEMMA_OBJ, LEMMA_OBJ, ...} } where PARAM_OBJ describes the properties of the
+  base lemma parameter (i.e. the relationship between the intermediate and base lemmas) and LEMMA_OBJ is of the same
+  format of ENCLITIC_OBJ, i.e. an object suitable to be passed to full_link in [[Module:links]]; PARAM_OBJ is of the
+  format { param = "PARAM", tags = {"TAG", "TAG", ...} } where PARAM is the name of the parameter to {{inflection of}}
+  etc. that holds the base lemma(s) of the specified relationship and the tags describe the relationship, such as
+  {"comd"} or {"past", "part"};
 * CATEGORIES is the categories to add the page to (consisting of any categories specified in the invocation or
   parent args and any tracking categories, but not any additional lang-specific categories that may be added by
   {{inflection of}} or similar templates).
 
 This is a subfunction of construct_form_of_text().
 ]=]
-local function get_lemmas_and_categories(iargs, args, term_param, compat, multiple_lemmas)
+local function get_lemmas_and_categories(iargs, args, term_param, compat, multiple_lemmas, base_lemma_params)
 	local lang = args[compat and "lang" or 1] or iargs["lang"] or "und"
 	lang = require("Module:languages").getByCode(lang, compat and "lang" or 1)
 
@@ -404,13 +440,26 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, multip
 
 	local enclitics
 	if args.enclitic then
-		enclitics = parse_clitics("enclitic", args.enclitic, lang)
+		enclitics = parse_clitics_or_base_lemmas("enclitic", args.enclitic, lang)
+	end
+	local base_lemmas = {}
+	if base_lemma_params then
+		for _, base_lemma_param_obj in ipairs(base_lemma_params) do
+			local param = base_lemma_param_obj.param
+			if args[param] then
+				table.insert(base_lemmas, {
+					paramobj = base_lemma_param_obj,
+					lemmas = parse_clitics_or_base_lemmas(param, args[param], lang),
+				})
+			end
+		end
 	end
 
 	return {
 		lang = lang,
 		lemmas = lemmas,
 		enclitics = enclitics,
+		base_lemmas = base_lemmas,
 		categories = categories,
 	}
 end
@@ -424,7 +473,7 @@ end
 -- or parent args, and then whole thing will be appropriately formatted.
 --
 -- DO_FORM_OF takes one argument, the return value of get_lemmas_and_categories() (an object describing the lemmas,
--- clitics and categories fetched).
+-- clitics, base lemmas and categories fetched).
 --
 -- DO_FORM_OF should return two arguments:
 --
@@ -432,8 +481,8 @@ end
 --     period/dot.
 -- (2) Any extra categories to add the page to (other than those that can be derived from parameters specified to the
 --     invocation or parent arguments, which will automatically be added to the page).
-local function construct_form_of_text(iargs, args, term_param, compat, multiple_lemmas, do_form_of)
-	local lemma_data = get_lemmas_and_categories(iargs, args, term_param, compat, multiple_lemmas)
+local function construct_form_of_text(iargs, args, term_param, compat, multiple_lemmas, base_lemma_params, do_form_of)
+	local lemma_data = get_lemmas_and_categories(iargs, args, term_param, compat, multiple_lemmas, base_lemma_params)
 
 	local form_of_text, lang_cats = do_form_of(lemma_data)
 	extend_list(lemma_data.categories, lang_cats)
@@ -553,9 +602,10 @@ function export.form_of_t(frame)
 		["nodot"] = {type = "boolean"},
 	}
 
-	local multiple_lemmas
+	local multiple_lemmas, base_lemma_params
 	if not iargs["nolink"] and not iargs["linktext"] then
 		multiple_lemmas = add_link_params(parent_args, params, term_param)
+		base_lemma_params = add_base_lemma_params(parent_args, iargs, params, compat)
 	end
 
 	if next(iargs["cat"]) then
@@ -583,10 +633,10 @@ function export.form_of_t(frame)
 		text = require("Module:string utilities").ucfirst(text)
 	end
 
-	return construct_form_of_text(iargs, args, term_param, compat, multiple_lemmas,
+	return construct_form_of_text(iargs, args, term_param, compat, multiple_lemmas, base_lemma_params,
 		function(lemma_data)
-			return m_form_of.format_form_of {text = text, lemmas = lemma_data.lemmas,
-				enclitics = lemma_data.enclitics, lemma_face = "term", posttext = iargs["posttext"]}, {}
+			return m_form_of.format_form_of {text = text, lemmas = lemma_data.lemmas, enclitics = lemma_data.enclitics,
+				base_lemmas = lemma_data.base_lemmas, lemma_face = "term", posttext = iargs["posttext"]}, {}
 		end
 	)
 end
@@ -598,11 +648,12 @@ This is a wrapper around construct_form_of_text() and takes the following argume
 IARGS, processed parent arguments ARGS, TERM_PARAM (the parent argument specifying the main entry), COMPAT (true if the
 language code is found in args["lang"] instead of args[1]), and TAGS, the list of (non-canonicalized) inflection tags.
 It returns that actual definition-line text including terminating period/full-stop, formatted categories, etc. and
-should be directly returned as the template function's return value. JOINER is the strategy to join multipart tags for
-display; currently accepted values are "and", "slash", "en-dash".
+should be directly returned as the template function's return value. JOINER is the optional strategy to join multipart
+tags for display; currently accepted values are "and", "slash", "en-dash"; defaults to "slash".
 ]=]
-local function construct_tagged_form_of_text(iargs, args, term_param, compat, multiple_lemmas, tags, joiner)
-	return construct_form_of_text(iargs, args, term_param, compat, multiple_lemmas,
+local function construct_tagged_form_of_text(iargs, args, term_param, compat, multiple_lemmas, base_lemma_params, tags,
+	joiner)
+	return construct_form_of_text(iargs, args, term_param, compat, multiple_lemmas, base_lemma_params,
 		function(lemma_data)
 			-- NOTE: tagged_inflections returns two values, so we do too.
 			return m_form_of.tagged_inflections {
@@ -610,6 +661,7 @@ local function construct_tagged_form_of_text(iargs, args, term_param, compat, mu
 				tags = tags,
 				lemmas = lemma_data.lemmas,
 				enclitics = lemma_data.enclitics,
+				base_lemmas = lemma_data.base_lemmas,
 				lemma_face = "term",
 				POS = args["p"],
 				-- Set no_format_categories because we do it ourselves in construct_form_of_text().
@@ -704,9 +756,10 @@ function export.tagged_form_of_t(frame)
 		["nodot"] = {type = "boolean"},
 	}
 
-	local multiple_lemmas
+	local multiple_lemmas, base_lemma_params
 	if not iargs["nolink"] and not iargs["linktext"] then
 		multiple_lemmas = add_link_params(parent_args, params, term_param)
+		base_lemma_params = add_base_lemma_params(parent_args, iargs, params, compat)
 	end
 
 	local ignored_params = {}
@@ -725,8 +778,8 @@ function export.tagged_form_of_t(frame)
 	local args = process_parent_args("tagged-form-of-t", parent_args,
 		params, iargs["def"], iargs["ignore"], ignored_params, "tagged_form_of_t")
 
-	return construct_tagged_form_of_text(iargs, args, term_param, compat, multiple_lemmas,
-		split_inflection_tags(iargs[1], iargs["split_tags"]), "and")
+	return construct_tagged_form_of_text(iargs, args, term_param, compat, multiple_lemmas, base_lemma_params,
+		split_inflection_tags(iargs[1], iargs["split_tags"]))
 end
 
 --[=[
@@ -829,9 +882,10 @@ function export.inflection_of_t(frame)
 		["joiner"] = {},
 	}
 
-	local multiple_lemmas
+	local multiple_lemmas, base_lemma_params
 	if not iargs["nolink"] and not iargs["linktext"] then
 		multiple_lemmas = add_link_params(parent_args, params, term_param, "no-numbered-gloss")
+		base_lemma_params = add_base_lemma_params(parent_args, iargs, params, compat)
 	end
 
 	local ignored_params = {}
@@ -884,8 +938,8 @@ function export.inflection_of_t(frame)
 		end
 	end
 
-	return construct_tagged_form_of_text(iargs, args, term_param, compat, multiple_lemmas, infls,
-		parent_args["joiner"])
+	return construct_tagged_form_of_text(iargs, args, term_param, compat, multiple_lemmas, base_lemma_params,
+		infls, parent_args["joiner"])
 end
 
 --[=[
@@ -903,7 +957,10 @@ function export.normalize_pos(frame)
 	if not iargs[1] and not iargs["default"] then
 		error("Either 1= or default= must be given in the invocation args")
 	end
-	return m_form_of_pos[iargs[1]] or iargs[1] or iargs["default"]
+	if not iargs[1] then
+		return iargs["default"]
+	end
+	return mw.loadData(m_form_of.form_of_pos_module)[iargs[1]] or iargs[1]
 end
 
 return export
