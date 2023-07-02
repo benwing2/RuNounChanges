@@ -2,7 +2,7 @@ local export = {}
 
 local force_cat = false -- for testing; set to true to display categories even on non-mainspace pages
 
-local m_form_of = require("Module:User:Benwing2/form of")
+local m_form_of = require("Module:form of")
 local m_form_of_pos = require("Module:form of/pos")
 local m_params = require("Module:parameters")
 local put_module = "Module:parse utilities"
