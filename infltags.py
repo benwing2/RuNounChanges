@@ -315,7 +315,7 @@ def extract_tags_and_nontag_params_from_inflection_of(t, notes):
 # {{inflection of|la|canus||dat//abl|m//f//n|p}}
 def combine_adjacent_tags_into_multipart(tn, lang, lemma, tags, tag_to_dimension_table,
   pagemsg, warn, multipart_list_tag_to_parts=multipart_list_tag_to_parts,
-  tag_to_canonical_form_table={},
+  tag_to_canonical_form_table={}, dont_combine_tags=None
 ):
   notes = []
   origtags = tags
@@ -433,7 +433,18 @@ def combine_adjacent_tags_into_multipart(tn, lang, lemma, tags, tag_to_dimension
                   tag2 = tag_set[mismatch_ind]
                   tag1 = split_and_canonicalize_tag(tag1)
                   tag2 = split_and_canonicalize_tag(tag2)
-                  combined_tag = "//".join(tag1 + tag2)
+                  tag1_tag2 = tag1 + tag2
+                  combined_tag = "//".join(tag1_tag2)
+                  if dont_combine_tags:
+                    must_continue = False
+                    for tag in tag1_tag2:
+                      if tag in dont_combine_tags:
+                        warn("Would combine tag sets %s and %s on %s but %s is in dont_combine_tags" % (
+                          "|".join(cur_tag_set), "|".join(tag_set), combined_tag, tag))
+                        must_continue = True
+                        break
+                    if must_continue:
+                      continue
                   new_tag_set = []
                   for i in range(len(cur_tag_set)):
                     if i == mismatch_ind:
