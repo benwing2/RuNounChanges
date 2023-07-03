@@ -280,6 +280,8 @@ end
 
 -- Replace comma with a temporary char in comma + whitespace.
 function export.escape_comma_whitespace(run, tempcomma)
+	tempcomma = tempcomma or u(0xFFF0)
+
 	if run:find(",%s") then
 		run = run:gsub(",(%s)", tempcomma .. "%1") -- assign to temp to discard second return value
 		return run, true
@@ -290,8 +292,10 @@ end
 
 
 -- Undo the replacement of comma with a temporary char.
-function export.unescape_comma_whitespace(run)
-	run = val:gsub(tempcomma, ",") -- assign to temp to discard second return value
+function export.unescape_comma_whitespace(run, tempcomma)
+	tempcomma = tempcomma or u(0xFFF0)
+
+	run = run:gsub(tempcomma, ",") -- assign to temp to discard second return value
 	return run
 end
 
@@ -306,7 +310,12 @@ function export.split_alternating_runs_on_comma(run, tempcomma)
 		return export.escape_comma_whitespace(seg, tempcomma)
 	end
 
-	return export.split_alternating_runs_escaping(run, ",", false, escape_comma_whitespace, export.unescape_comma_whitespace)
+	-- Undo replacement of comma with a temporary char in comma + whitespace.
+	local function unescape_comma_whitespace(seg)
+		return export.unescape_comma_whitespace(seg, tempcomma)
+	end
+
+	return export.split_alternating_runs_escaping(run, ",", false, escape_comma_whitespace, unescape_comma_whitespace)
 end
 
 
@@ -345,7 +354,12 @@ function export.split_on_comma(text, tempcomma)
 		return export.escape_comma_whitespace(run, tempcomma)
 	end
 
-	return export.split_escaping(text, ",", false, escape_comma_whitespace, export.unescape_comma_whitespace)
+	-- Undo replacement of comma with a temporary char in comma + whitespace.
+	local function unescape_comma_whitespace(run)
+		return export.unescape_comma_whitespace(run, tempcomma)
+	end
+
+	return export.split_escaping(text, ",", false, escape_comma_whitespace, unescape_comma_whitespace)
 end
 
 
