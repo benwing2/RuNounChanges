@@ -245,25 +245,16 @@ zh_templates_1000_and_over = [
 #templates_to_actually_do = round_1_templates
 templates_to_actually_do = zh_templates_under_1000
 
-# List of templates and their behavior w.r.t. initial caps
-# final period. One of the following:
+# List of templates and their behavior w.r.t. initial caps and/or final period. One of the following:
 #
-# 1. "lcnodot": Original template doesn't have initial caps
-#    or final period; nor does the replacement.
-# 2. "ucdot": Original template has initial caps and final
-#    period (possibly controllable, mostly not); our
-#    replacement also has initial caps and final period,
-#    controllable.
-# 3. "ignoreduc": Original template has initial caps (usually
-#    automatic, very occasionally controllable) but no final
-#    period; our replacement doesn't have initial caps. Need
-#    to verify that this works.
-# 4. "ignoreddot": Original template has final period (usually
-#    automatic, very occasionally controllable) but no initial
-#    caps; our replacement doesn't have final period. Need
-#    to verify that this works.
-# 5. "ignoreducdot": Original template has final period (usually
-#    automatic, very occasionally controllable) and initial
+# 1. "lcnodot": Original template doesn't have initial caps or final period; nor does the replacement.
+# 2. "ucdot": Original template has initial caps and final period (possibly controllable, mostly not); our replacement
+#    also has initial caps and final period, controllable.
+# 3. "ignoreduc": Original template has initial caps (usually automatic, very occasionally controllable) but no final
+#    period; our replacement doesn't have initial caps. Need to verify that this works.
+# 4. "ignoreddot": Original template has final period (usually automatic, very occasionally controllable) but no initial
+#    caps; our replacement doesn't have final period. Need to verify that this works.
+# 5. "ignoreducdot": Original template has final period (usually automatic, very occasionally controllable) and initial
 #    caps; our replacement doesn't have either.
 templates_by_cap_and_period = [
   ("blk-past of", "lcnodot", False),
@@ -581,6 +572,7 @@ templates_by_cap_and_period = [
   # The following instances need to be fixed up:
   # Page 944 𐌺𐌿𐌽𐌸𐍃: WARNING: Found form-of template with pre-text: # [[known]]. {{got-verb form of|𐌺𐌿𐌽𐌽𐌰𐌽|t=past|m=ptc}}
   ("got-verb form of", "ignoreducdot", "verified"),
+  ("got-nom form of", "ignoreducdot", False),
   # The following instances need to be fixed up:
   # Page 18 तेरी: WARNING: Found form-of template with post-text: # {{hi-form-adj||fs|तेरा}} {{hi-form-adj||fp|तेरा}}
   # Page 19 तेरे: WARNING: Found form-of template with post-text: # {{hi-form-adj|i|ms|तेरा}} {{hi-form-adj|v|ms|तेरा}} {{hi-form-adj||mp|तेरा}}
@@ -2049,8 +2041,7 @@ gmq_bot_specs = [
 ]
 
 got_specs = [
-  # Has default initial caps and final period (controllable by nocap/nodot).
-  # Both ignored.
+  # Has default initial caps and final period (controllable by nocap/nodot). Both ignored.
   ("got-verb form of", (
     "verb form of",
     # lang= occurs at least once, and is ignored.
@@ -2100,6 +2091,62 @@ got_specs = [
         "indimp": "ind//imp",
       }),
     ]),
+  )),
+
+  # Has default initial caps and final period (controllable by nocap/nodot). Both ignored.
+  ("got-nom form of", (
+    "infl of",
+    ("error-if", ("present-except", [
+      # lang= occurs at least once, and is ignored.
+      "1", "c", "n", "g", "w", "t", "tr", "comp-of", "sup-of", "presptc-of", "pastptc-of", "nocap", "nodot", "lang"
+    ])),
+    ("set", "1", [
+      "got",
+      ("copy", "1"),
+    ]),
+    ("copy", "tr"),
+    ("set", "3", [
+      "",
+      ("lookup", "w", {
+        "w": "wk",
+        "s": "str",
+        "": [],
+      }),
+      ("lookup", "c", {
+        "nom": "nom",
+        "nomvoc": "nom//voc",
+        "nomacc": "nom//acc",
+        "nomaccvoc": "nom//acc//voc",
+        "acc": "acc",
+        "accvoc": "acc//voc",
+        "gen": "gen",
+        "dat": "dat",
+        "datvoc": "dat//voc",
+        "accdat": "acc//dat",
+        "accdatvoc": "acc//dat//voc",
+      }),
+      ("lookup", "g", {
+        "m": "m",
+        "f": "f",
+        "n": "n",
+        "mf": "m//f",
+        "mn": "m//n",
+        "mfn": "m//f//n",
+        "": [],
+      }),
+      ("lookup", "n", {
+        "sg": "s",
+        "s": "s", # error per template, but occurs
+        "du": "d",
+        "pl": "p",
+        "p": "p", # error per template, but occurs
+        "": [],
+      }),
+    ]),
+    ("copy", "comp-of"),
+    ("copy", "sup-of"),
+    ("copy", "presptc-of", "prespart-of"),
+    ("copy", "pastptc-of", "pastpart-of"),
   )),
 ]
 
@@ -3323,6 +3370,89 @@ nb_specs = [
   )),
 ]
 
+nl_verb_form_of_p = ("lookup", "p", {
+  "1": "1",
+  "2": "2",
+  "2-u": "2-u",
+  "2-gij": "2-gij",
+  "3": "3",
+  "12": "12",
+  "13": "13",
+  "23": "23",
+  "123": "123",
+  "": [],
+})
+nl_verb_form_of_n = ("lookup", "n", {
+  "sg": "s",
+  "pl": "p",
+  "": [],
+})
+nl_verb_form_of_sub = ("lookup", "sub", {
+  "": [],
+  True: "dep",
+})
+nl_verb_form_of_t = ("lookup", "t", {
+  "pres": "pres",
+  "past": "past",
+  "": [],
+})
+
+nl_specs = [
+  ("nl-noun form of",
+    lambda data: (
+      "plural of" if data.getp("1") == "pl" else "diminutive of",
+      ("error-if", ("present-except", ["1", "2", "3"])),
+      ("set", "1", [
+        "nl",
+        ("copy", "2"),
+      ]),
+      ("copy", "3", "t"),
+    ) if data.getp("1") in ["pl", "dim"] else (
+      "infl of",
+      ("error-if", ("present-except", ["1", "2", "3"])),
+      ("set", "1", [
+        "nl",
+        ("copy", "2"),
+        "",
+        ("copy", "1"),
+        "s",
+      ]),
+      ("copy", "3", "t"),
+    )
+  ),
+  ("nl-verb form of", (
+    "infl of",
+    # nodot= is ignored by the template but occurs.
+    ("error-if", ("present-except", ["1", "2", "p", "n", "t", "m", "sub", "nodot"])),
+    ("set", "1", [
+      "nl",
+      ("copy", "1"),
+      "",
+      nl_verb_form_of_p,
+      nl_verb_form_of_n,
+      nl_verb_form_of_sub,
+      nl_verb_form_of_t,
+      ("lookup", "m", {
+        "imp": "imp",
+        "ptc": "part",
+        "subj": "sub",
+        "ind": "ind",
+        # If ind+sub is specified, we want to split this into two tag sets because the second tag set has a label
+        # "dated or formal" associated with it.
+        "ind+subj": ["ind", ";",
+          nl_verb_form_of_p,
+          nl_verb_form_of_n,
+          nl_verb_form_of_sub,
+          nl_verb_form_of_t,
+          "sub",
+        ],
+        "": "ind",
+      }),
+    ]),
+    ("copy", "2", "t"),
+  )),
+]
+
 ofs_specs = [
   # NOTE: Has default initial caps (controllable through nocap) that we
   # are ignoring. Doesn't have final period. Only 5 uses.
@@ -4333,6 +4463,7 @@ templates_to_rename_specs = (
   mr_specs +
   mt_specs +
   nb_specs +
+  nl_specs +
   ofs_specs +
   osx_specs +
   pt_specs +
@@ -4778,7 +4909,6 @@ def expand_spec(spec, data):
   return newname, expanded_specs, comment
 
 def process_text_on_page(index, pagetitle, text):
-  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -4838,6 +4968,7 @@ def process_text_on_page(index, pagetitle, text):
       pagemsg("WARNING: Couldn't find %s section" % args.lang_for_combine_inflection_of)
       return text, notes
     sections, j, secbody, sectail, has_non_lang = retval
+    dont_combine_tags = args.dont_combine_tags.split(",") if args.dont_combine_tags else None
     secbody = infltags.combine_adjacent_inflection_of_calls(secbody, notes, pagemsg, verbose=args.verbose)
     parsed = blib.parse_text(secbody)
     for t in parsed.filter_templates():
@@ -4851,7 +4982,7 @@ def process_text_on_page(index, pagetitle, text):
           pagemsg("WARNING: %s" % text)
         tags, this_notes = infltags.combine_adjacent_tags_into_multipart(
           tn, lang, term, tags, tag_to_dimension_table, pagemsg, warn,
-          tag_to_canonical_form_table=tag_to_canonical_form_table
+          tag_to_canonical_form_table=tag_to_canonical_form_table, dont_combine_tags=dont_combine_tags
         )
         notes.extend(this_notes)
         infltags.put_back_new_inflection_of_params(t, notes, tags, params, lang, term, tr, alt,
@@ -4864,27 +4995,25 @@ def process_text_on_page(index, pagetitle, text):
 
   return text, notes
 
-def process_page_for_check_ignore(page, index, template, ignore_type):
-  pagetitle = str(page.title())
+def process_text_on_page_for_check_ignore(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
     errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
+  notes = []
 
   # We do want to change user pages with these templates on them.
   if blib.page_should_be_ignored(pagetitle, allow_user_pages=True):
     pagemsg("WARNING: Page has a prefix or suffix indicating it should not be touched, skipping")
-    return None, None
-
-  text = str(page.text)
+    return
 
   parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    if tn == template:
+    if tn in templates_to_process_for_check_ignore:
       foundit = False
       for m in re.finditer(r"^(.*?)%s(.*?)$" % re.escape(str(t)), text, re.M):
         foundit = True
@@ -4910,6 +5039,7 @@ parser.add_argument("--do-all", help="Do all templates instead of default list",
 parser.add_argument("--do-specified", help="Do specified comma-separated templates instead of default list")
 parser.add_argument("--check-ignores", help="Check whether there may be problems ignoring intial cap or final dot", action="store_true")
 parser.add_argument("--lang-for-combine-inflection-of", help="Language name of section whose {{inflection of}} calls will be combined")
+parser.add_argument("--dont-combine-tags", help="Comma-separated list of tags not to combine with other tags")
 parser.add_argument("--check-ignores-include-ucdot", help="Whether checking ignore issues, include type 'ucdot' to see whether it can be converted to 'lcnodot'", action="store_true")
 parser.add_argument("--partial-page", action="store_true", help="Input was generated with 'find_regex.py --lang LANG' and has no ==LANG== header.")
 args = parser.parse_args()
@@ -4917,10 +5047,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 initialize_templates_to_rename_map(args.do_all, args.do_specified)
 if args.check_ignores:
-  for template in templates_to_actually_do:
-    if template not in templates_by_cap_and_period_map:
-      errandmsg("WARNING: The following template is not in templates_by_cap_and_period_map, and will be skipped: Template:%s" %
-          template)
+  templates_to_process_for_check_ignore = {}
   for template in templates_to_actually_do:
     if template not in templates_by_cap_and_period_map:
       errandmsg("WARNING: Template:%s not in templates_by_cap_and_period_map, not sure its ignoring behavior, skipping" %
@@ -4934,9 +5061,10 @@ if args.check_ignores:
       ):
         errandmsg("Processing references to Template:%s [ignore_type=%s]" %
             (template, ignore_type))
-        for i, page in blib.references("Template:%s" % template, start, end):
-          process_page_for_check_ignore(page, i, template,
-              ignore_type)
+        templates_to_process_for_check_ignore[template] = ignore_type
+
+  blib.do_pagefile_cats_refs(args, start, end, process_text_on_page_for_check_ignore, edit=True, stdin=True,
+     default_refs=["Template:%s" % template for template in templates_to_process_for_check_ignore])
 
 else:
   blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
