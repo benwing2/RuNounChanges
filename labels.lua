@@ -11,83 +11,50 @@ local function track(page)
 	require("Module:debug/track")("labels/" .. page)
 end
 
-local function show_categories(data, lang, script, sort_key, script2, sort_key2, term_mode)
+local function show_categories(labdata, lang, sort, term_mode)
 	local categories = {}
 	local categories2 = {}
 
-	if script then
-		track("show-categories-script")
-	end
-	if sort_key then
-		track("show-categories-sort-key")
-	end
-	if script2 then
-		track("show-categories-script2")
-	end
-	if sort_key2 then
-		track("show-categories-sort-key2")
-	end
 	local lang_code = lang:getCode()
 	local canonical_name = lang:getCanonicalName()
 	
-	local topical_categories = data.topical_categories or {}
-	local sense_categories = data.sense_categories or {}
-	local pos_categories = data.pos_categories or {}
-	local regional_categories = data.regional_categories or {}
-	local plain_categories = data.plain_categories or {}
+	local topical_categories = labdata.topical_categories or {}
+	local sense_categories = labdata.sense_categories or {}
+	local pos_categories = labdata.pos_categories or {}
+	local regional_categories = labdata.regional_categories or {}
+	local plain_categories = labdata.plain_categories or {}
 
 	local function insert_cat(cat)
 		table.insert(categories, cat)
-		
-		if script then
-			table.insert(categories, cat .. " in " .. script .. " script")
-		end
-		
-		if script2 then
-			table.insert(categories2, cat .. " in " .. script2 .. " script")
-		end
 	end
 
-	for i, cat in ipairs(topical_categories) do
+	for _, cat in ipairs(topical_categories) do
 		insert_cat(lang_code .. ":" .. cat)
 	end
 	
-	for i, cat in ipairs(sense_categories) do
+	for _, cat in ipairs(sense_categories) do
 		cat = (term_mode and cat .. " terms" ) or "terms with " .. cat .. " senses"
 		insert_cat(canonical_name .. " " .. cat)
 	end
 
-	for i, cat in ipairs(pos_categories) do
+	for _, cat in ipairs(pos_categories) do
 		insert_cat(canonical_name .. " " .. cat)
 	end
 	
-	for i, cat in ipairs(regional_categories) do
+	for _, cat in ipairs(regional_categories) do
 		insert_cat(cat .. " " .. canonical_name)
 	end
 	
-	for i, cat in ipairs(plain_categories) do
+	for _, cat in ipairs(plain_categories) do
 		insert_cat(cat)
 	end
 	
-	return	m_utilities_format_categories(categories, lang, sort_key, nil, force_cat) ..
-			m_utilities_format_categories(categories2, lang, sort_key2, nil, force_cat)
+	return m_utilities_format_categories(categories, lang, sort, nil, force_cat)
 end
 
-function export.get_label_info(data, lang, already_seen, script, script2, sort_key, sort_key2, nocat, term_mode)
+function export.get_label_info(data)
 	if not data.label then
-		-- old-style multi-arg
-		track("get-label-info-old-style")
-		data = {
-			label = data,
-			lang = lang,
-			already_seen = already_seen,
-			script = script,
-			script2 = script2,
-			sort = sort_key,
-			sort2 = sort_key2,
-			nocat = nocat,
-			term_mode = term_mode
-		}
+		error("`data` must now be an object containing the params")
 	end
 
 	local ret = {}
@@ -199,7 +166,7 @@ function export.get_label_info(data, lang, already_seen, script, script2, sort_k
 	if nocat then
 		ret.categories = ""
 	else
-		ret.categories = categories .. show_categories(labdata, data.lang, data.script, data.sort, data.script2, data.sort2, data.term_mode)
+		ret.categories = categories .. show_categories(labdata, data.lang, data.sort, data.term_mode)
 	end
 
 	ret.data = labdata
@@ -212,19 +179,9 @@ function export.get_label_info(data, lang, already_seen, script, script2, sort_k
 end
 	
 
-function export.show_labels(data, lang, script, script2, sort_key, sort_key2, nocat, term_mode)
+function export.show_labels(data)
 	if not data.labels then
-		-- old-style multi-arg
-		data = {
-			labels = data,
-			lang = lang,
-			script = script,
-			script2 = script2,
-			sort = sort_key,
-			sort2 = sort_key2,
-			nocat = nocat,
-			term_mode = term_mode
-		}
+		error("`data` must now be an object containing the params")
 	end
 	local labels = data.labels
 	if not labels[1] then
@@ -241,7 +198,7 @@ function export.show_labels(data, lang, script, script2, sort_key, sort_key2, no
 	local omit_preSpace = false
 	local omit_postSpace = true
 	
-	local already_seen = {}
+	data.already_seen = {}
 	
 	for i, label in ipairs(labels) do
 		omit_preComma = omit_postComma
@@ -249,8 +206,9 @@ function export.show_labels(data, lang, script, script2, sort_key, sort_key2, no
 		omit_preSpace = omit_postSpace
 		omit_postSpace = false
 
-		local ret = export.get_label_info(label, lang, already_seen, script, script2, sort_key, sort_key2, nocat, term_mode)
-		
+		data.label = label
+		local ret = export.get_label_info(data)
+
 		local omit_comma = omit_preComma or ret.data.omit_preComma
 		omit_postComma = ret.data.omit_postComma
 		local omit_space = omit_preSpace or ret.data.omit_preSpace
