@@ -5,6 +5,7 @@ local force_cat = false -- for testing; set to true to display categories even o
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local put_module = "Module:parse utilities"
+local labels_module = "Module:labels"
 export.form_of_pos_module = "Module:form of/pos"
 export.form_of_functions_module = "Module:form of/functions"
 export.form_of_cats_module = "Module:form of/cats"
@@ -1067,6 +1068,7 @@ controlling the display, with the following fields:
 `.nocat`: Suppress computation of categories (even if `.no_format_categories` is not given).
 `.notext`: Disable display of all tag text and "inflection of" text. (FIXME: Maybe not implemented correctly.)
 `.capfirst`: Capitalize the first word displayed.
+`.pretext`: Additional text to display before the inflection tags, but after any top-level labels.
 `.posttext`: Additional text to display after the lemma links.
 `.text_classes`: CSS classes used to wrap the tag text and lemma links. Default is "form-of-definition use-with-mention"
 				 for the tag text, "form-of-definition-link" for the lemma links. (FIXME: Should separate out the
@@ -1190,8 +1192,8 @@ function export.tagged_inflections(data)
 
 	local function format_labels(labels, notext)
 		if labels and #labels > 0 then
-			return require("Module:labels").show_labels { labels = labels, lang = data.lang, sort = data.sort, nocat = data.nocat } ..
-				(notext and "" or " ")
+			return require(labels_module).show_labels { labels = labels, lang = data.lang, sort = data.sort, nocat = data.nocat } ..
+				(notext and (data.pretext or "") == "" and "" or " ")
 		else
 			return ""
 		end
@@ -1203,11 +1205,11 @@ function export.tagged_inflections(data)
 		if need_per_tag_set_labels then
 			error("Internal error: need_per_tag_set_labels should not be set with one inflection")
 		end
-		format_data.text = format_labels(overall_labels, data.notext) .. (data.notext and "" or
+		format_data.text = format_labels(overall_labels, data.notext) .. (data.pretext or "") .. (data.notext and "" or
 			((data.capfirst and require("Module:string utilities").ucfirst(inflections[1].infl_text) or inflections[1].infl_text) .. of_text))
 		formatted_text = export.format_form_of(format_data)
 	else
-		format_data.text = format_labels(overall_labels, data.notext) .. (data.notext and "" or
+		format_data.text = format_labels(overall_labels, data.notext) .. (data.pretext or "") .. (data.notext and "" or
 			((data.capfirst and "Inflection" or "inflection") .. of_text))
 		format_data.posttext = (data.posttext or "") .. ":"
 		local link = export.format_form_of(format_data)
