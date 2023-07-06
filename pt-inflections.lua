@@ -13,6 +13,7 @@ local m_links = require("Module:links")
 local m_table = require("Module:table")
 local m_form_of = require("Module:form of")
 local m_pt_verb = require("Module:pt-verb")
+local accel_module = "Module:accel"
 
 local lang = require("Module:languages").getByCode("pt")
 
@@ -26,7 +27,11 @@ local function track(page)
 	return true
 end
 
-local function generate_one_inflection_of_type(tag_sets, lemma, args)
+local function generate_inflection_of(tag_sets, lemma, pretext, args)
+	for _, tag_set in ipairs(tag_sets) do
+		tag_set.tags = rsplit(tag_set.tag, "|")
+		tag_set.tag = nil
+	end
 	local has_multiple_tag_sets = #tag_sets > 1
 
 	-- If only one tag, extract out the "combined with ..." text and move into posttext=, which goes after the lemma.
@@ -65,54 +70,12 @@ local function generate_one_inflection_of_type(tag_sets, lemma, args)
 	}
 
 	if has_multiple_tag_sets then
-		tags = require("Module:accel").combine_tag_sets_into_multipart(tags, lang)
+		tag_sets = require(accel_module).combine_tag_sets_into_multipart(tag_sets, lang, "verb")
 	end
-	return {
-		infl = m_form_of.tagged_inflections {
-			lang = lang, tags = tags, lemmas = {lemma_obj}, lemma_face = "term", posttext = posttext,
-			POS = "verb",
-		},
-		label = label_text,
+	return m_form_of.tagged_inflections {
+		lang = lang, tag_sets = tag_sets, lemmas = {lemma_obj}, lemma_face = "term", pretext = pretext,
+		posttext = posttext, POS = "verb",
 	}
-end
-
-local function generate_inflection_of(tags_with_labels, lemma, args)
-	-- Check if different tags have different labels. If so, need to separate tags by label.
-	local seen_labels
-	local multiple_labels
-	for _, tag in ipairs(tags_with_labels) do
-		if not seen_labels then
-			seen_labels = tag.labels
-		elseif not m_table.deepEqualsList(tag.labels, seen_labels) then
-			multiple_labels = true
-			break
-		end
-	end
-	if multiple_labels then
-		local tags_by_labels = {}
-		local list_of_labels = {}
-		for _, tag in ipairs(tags_with_labels) do
-			local labels = table.concat(tag.labels, "|")
-			if tags_by_labels[labels] then
-				m_table.insertIfNot(tags_by_labels[labels], tag.tag)
-			else
-				tags_by_labels[labels] = {tag.tag}
-				table.insert(list_of_labels, labels)
-			end
-		end
-		local retval = {}
-		for _, labels in ipairs(list_of_labels) do
-			table.insert(retval, generate_one_inflection_of_type(tags_by_labels[labels], lemma, labels, args))
-		end
-		return retval
-	end
-	
-	-- Do it the easy way.
-	for _, tag_set in ipairs(tags_with_labels) do
-		tag_set.tags = rsplit(tags.tag, "|")
-		tag_set.tag = nil
-	end
-	return {generate_one_inflection_of_type(tags, lemma, table.concat(seen_labels, "|"), args)}
 end
 
 local function extract_labels(formobj)
@@ -200,12 +163,7 @@ function export.verb_form_of(frame)
 		check_slot_restrictions_against_slots_seen()
 	end
 	if #tags > 0 then
-		local infls = generate_inflection_of(tags, lemma, alternant_multiword_spec.args)
-		local parts = {}
-		for _, infl in ipairs(infls) do
-			table.insert(parts, infl.label .. infl.infl)
-		end
-		return table.concat(parts, "\n# ")
+		return generate_inflection_of(tags, lemma, nil, alternant_multiword_spec.args)
 	end
 
 	-- If we don't find any matches, we try again, looking for non-reflexive forms of reflexive-only verbs.
@@ -269,10 +227,9 @@ function export.verb_form_of(frame)
 				if refl_form_to_tags.form == lemma then
 					table.insert(parts, only_used_in)
 				else
-					local infls = generate_inflection_of(refl_form_to_tags.tags, lemma, alternant_multiword_spec.args)
-					for _, infl in ipairs(infls) do
-						table.insert(parts, ("%s%s, %s"):format(infl.label, only_used_in, infl.infl))
-					end
+					local infl = generate_inflection_of(refl_form_to_tags.tags, lemma, only_used_in .. ", ",
+						alternant_multiword_spec.args)
+					table.insert(parts, infl)
 				end
 			end
 			return table.concat(parts, "\n# ")
