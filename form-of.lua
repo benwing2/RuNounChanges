@@ -18,7 +18,10 @@ local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 
 export.langs_with_lang_specific_tags = {
+	["en"] = true,
+	["got"] = true,
 	["nl"] = true,
+	["pi"] = true,
 	["sw"] = true,
 }
 
@@ -66,10 +69,11 @@ The following terminology is used in conjunction with {{inflection of}}:
   'comparative degree', so the tag was named 'comparative case' to avoid clashing. A similar situation occurs with
   'adverbial case' vs. the grammar tag 'adverbial' (as in 'adverbial participle').
 * A TAG SET is an ordered list of tags, which together express a single inflection, for example, '1|s|pres|ind', which
-  can be expanded to canonical-form tags as 'first-person|singular|present|indicative'. Multiple tag sets can be
-  specified in a single call to {{inflection of}} by separating the individual tag sets with a semicolon, e.g.
+  can be expanded to canonical-form tags as 'first-person|singular|present|indicative'.
+* A CONJOINED TAG SET is a tag set that consists of multiple individual tag sets separated by a semicolon, e.g.
   '1|s|pres|ind|;|2|s|imp', which specifies two tag sets, '1|s|pres|ind' as above and '2|s|imp' (in canonical form,
-  'second-person|singular|imperative').
+  'second-person|singular|imperative'). Multiple tag sets specified in a single call to {{inflection of}} are specified
+  in this fashion. Conjoined tag sets can also occur in list-tag shortcuts.
 * A MULTIPART TAG is a tag that embeds multiple tags within it, such as 'f//n' or 'nom//acc//voc'. These are used in
   the case of [[syncretism]], when the same form applies to multiple inflections. Examples are the Spanish present
   subjunctive, where the first-person and third-person singular have the same form (e.g. [[siga]] from [[seguir]] "to
@@ -85,12 +89,16 @@ The following terminology is used in conjunction with {{inflection of}}:
   ''first-person singular and third-person plural'', e.g. for use with the form [[μέλλον]] of the verb [[μέλλω]]
   "to intend", which uses the tag set '1:s//3:p|impf|actv|indc|unaugmented' to express the syncretism between the first
   singular and third plural forms of the imperfect active indicative unaugmented conjugation. Two-level multipart tags
-  should be used sparingly; if in doubt, list out the inflections separately.
-* A MULTIPART TAG SHORTCUT is a shortcut that expands into a multipart tag, for example '123', which expands to the
+  should be used sparingly; if in doubt, list out the inflections separately. [FIXME: Make two-level multipart tags
+  obsolete.]
+* A MULTIPART SHORTCUT is a shortcut that expands into a multipart tag, for example '123', which expands to the
   multipart tag '1//2//3'. Only the most common such combinations exist as shortcuts.
-* A LIST TAG SHORTCUT is a special type of shortcut that expands to a list of tags instead of a single tag. For
-  example, the shortcut '1s' expands to '1|s' (first-person singular). Only the most common such combinations exist as
-  shortcuts.
+* A LIST SHORTCUT is a special type of shortcut that expands to a list of tags instead of a single tag. For example,
+  the shortcut '1s' expands to '1|s' (first-person singular). Only the most common such combinations exist as shortcuts.
+* A CONJOINED SHORTCUT is a special type of list shortcut that consists of a conjoined tag set (multiple logical tag
+  sets). For example, the English language-specific shortcut 'ed-form' expands to 'spast|;|past|part', expressing the
+  common syncretism between simple past and past participle in English (and in this case, 'spast' is itself a list
+  shortcut that expands to 'simple|past').
 ]=]
 
 -- version of rsubn() that discards all but the first return value
@@ -100,11 +108,46 @@ local function rsub(term, foo, bar)
 end
 
 
--- Equivalent to list.extend(new_items) in Python. Appends items in `new_items` (a list) to `list`.
-local function extend_list(list, new_items)
-	for _, item in ipairs(new_items) do
-		table.insert(list, item)
+local function normalize_index(list, index)
+	if index < 0 then
+		return #list + index + 1
 	end
+	return index
+end
+
+
+-- Return true if the list `tags1`, treated as a set, is a subset of the list `tags2`, also
+-- treated as a set.
+local function is_subset(tags1, tags2)
+	tags1 = m_table.listToSet(tags1)
+	tags2 = m_table.listToSet(tags2)
+	for tag, _ in pairs(tags1) do
+		if not tags2[tag] then
+			return false
+		end
+	end
+	return true
+end
+
+
+local function slice(list, i, j)
+	--checkType("slice", 1, list, "table")
+	--checkType("slice", 2, i, "number", true)
+	--checkType("slice", 3, j, "number", true)
+	if i == nil then
+		i = 1
+	else
+		i = normalize_index(list, i)
+	end
+	j = normalize_index(list, j or -1)
+
+	local retval = {}
+	local k = 0
+	for index = i, j do
+		k = k + 1
+		retval[k] = list[index]
+	end
+	return retval
 end
 
 
@@ -180,8 +223,8 @@ function export.format_form_of(data)
 		end
 	end
 	if data.enclitics and #data.enclitics > 0 then
-		-- The outer parens need to be outside of the text_classes span so they show in upright instead of italic, or they
-		-- will clash with upright parens generated by link annotations such as transliterations and pos=.
+		-- The outer parens need to be outside of the text_classes span so they show in upright instead of italic, or
+		-- they will clash with upright parens generated by link annotations such as transliterations and pos=.
 		ins("</span>")
 		local formatted_terms = {}
 		for _, enclitic in ipairs(data.enclitics) do
@@ -265,9 +308,9 @@ function export.lookup_shortcut(tag, lang, do_track)
 	if not expansion then
 		local m_data = mw.loadData(export.form_of_data_module)
 		-- If this is a canonical long-form tag, just return it, and don't check for shortcuts (which will cause
-		-- [[Module:form of/data2]] to be loaded, because there won't be a shortcut entry  in [[Module:form of/data]] --
-		-- or, for that matter, in [[Module:form of/data2]]). This is an optimization; the code will still work without it,
-		-- but use up more memory.
+		-- [[Module:form of/data2]] to be loaded, because there won't be a shortcut entry in [[Module:form of/data]] --
+		-- or, for that matter, in [[Module:form of/data2]]). This is an optimization; the code will still work without
+		-- it, but will use up more memory.
 		if m_data.tags[tag] then
 			return tag
 		end
@@ -314,17 +357,16 @@ function export.lookup_tag(tag, lang)
 end
 
 
--- Normalize a single tag, which may be a shortcut but should not be a
--- multipart tag, a multipart-tag shortcut or a list-tag shortcut.
+-- Normalize a single tag, which may be a shortcut but should not be a multipart tag, a multipart shortcut or a list
+-- shortcut.
 local function normalize_single_tag(tag, lang, do_track)
 	local expansion = export.lookup_shortcut(tag, lang, do_track)
 	if type(expansion) ~= "string" then
-		error("Tag '" .. tag .. "' is a list-tag shortcut, which is not allowed here")
+		error("Tag '" .. tag .. "' is a list shortcut, which is not allowed here")
 	end
 	tag = expansion
 	if not export.lookup_tag(tag, lang) and do_track then
-		-- If after all expansions and normalizations we don't recognize
-		-- the canonical tag, track it.
+		-- If after all expansions and normalizations we don't recognize the canonical tag, track it.
 		track("unknown")
 		track("unknown/" .. tag)
 	end
@@ -332,18 +374,15 @@ local function normalize_single_tag(tag, lang, do_track)
 end
 
 
--- Normalize a component of a multipart tag. This should not have any // in it,
--- but may join multiple individual tags with a colon, and may be a single
--- list-tag shortcut, which is treated as if colon-separated. If
--- RECOMBINE_TAGS isn't given, the return value may be a list of tags;
--- otherwise, it will always be a string, and multiple tags will be
--- represented as canonical-form tags joined by ":".
-local function normalize_multipart_component(tag, lang, recombine_tags, do_track)
-	-- If there is HTML or a link in the tag, don't try to split on colon.
-	-- A colon may legitimately occur in either one, and we don't want
-	-- these things parsed. Note that we don't do this check before splitting
-	-- on //, which we don't expect to occur in links or HTML; see comment
-	-- in normalize_tag().
+--[=[
+Normalize a component of a multipart tag. This should not have any // in it, but may join multiple individual tags with
+a colon, and may be a single list-tag shortcut, which is treated as if colon-separated. The return value may be a list
+of tags.
+]=]
+local function normalize_multipart_component(tag, lang, do_track)
+	-- If there is HTML or a link in the tag, don't try to split on colon. A colon may legitimately occur in either one,
+	-- and we don't want these things parsed. Note that we don't do this check before splitting on //, which we don't
+	-- expect to occur in links or HTML; see comment in normalize_tag().
 	if is_link_or_html(tag) then
 		return tag
 	end
@@ -373,40 +412,29 @@ local function normalize_multipart_component(tag, lang, recombine_tags, do_track
 		table.insert(normtags, normalize_single_tag(component, lang, do_track))
 	end
 
-	if recombine_tags then
-		return table.concat(normtags, ":")
-	else
-		return normtags
-	end
+	return normtags
 end
 
 
--- Normalize a single tag. If RECOMBINE_TAGS isn't given, the return value
--- may be a list (in the case of multipart tags), which will contain nested
--- lists in the case of two-level multipart tags; otherwise, it will always
--- be a string, and multipart tags will be represented as canonical-form tags
--- joined by "//" and/or ":".
-local function normalize_tag(tag, lang, recombine_multitags, do_track)
-	-- We don't check for links or HTML before splitting on //, which we
-	-- don't expect to occur in links or HTML. Doing it this way allows for
-	-- a tag like '{{lb|grc|Epic}}//{{lb|grc|Ionic}}' to function correctly
-	-- (the template calls will be expanded before we process the tag, and
-	-- will contain links and HTML). The only check we do is for a URL,
-	-- which shouldn't normally occur, but might if the user tries to put
-	-- an external link into the tag. URL's with // normally have the
-	-- sequence ://, which should never normally occur when // and : are
-	-- used in their normal ways.
+--[=[
+Normalize a single tag. The return value may be a list (in the case of multipart tags), which will contain nested lists
+in the case of two-level multipart tags.
+]=]
+local function normalize_tag(tag, lang, do_track)
+	-- We don't check for links or HTML before splitting on //, which we don't expect to occur in links or HTML. Doing
+	-- it this way allows for a tag like '{{lb|grc|Epic}}//{{lb|grc|Ionic}}' to function correctly (the template calls
+	-- will be expanded before we process the tag, and will contain links and HTML). The only check we do is for a URL,
+	-- which shouldn't normally occur, but might if the user tries to put an external link into the tag. URL's with //
+	-- normally have the sequence ://, which should never normally occur when // and : are used in their normal ways.
 	if tag:find("://", nil, true) then
 		return tag
 	end
 	local split_tags = rsplit(tag, "//", true)
 	if #split_tags == 1 then
-		local retval = normalize_multipart_component(tag, lang, recombine_multitags,
-			do_track)
+		local retval = normalize_multipart_component(tag, lang, do_track)
 		if type(retval) == "table" then
-			-- The user gave a tag like '1:s', i.e. with colon but without
-			-- //. Allow this, but we need to return a nested list. Note,
-			-- this will never happen when RECOMBINE_TAGS is given.
+			-- The user gave a tag like '1:s', i.e. with colon but without //. Allow this, but we need to return a
+			-- nested list.
 			return {retval}
 		end
 		return retval
@@ -417,34 +445,35 @@ local function normalize_tag(tag, lang, recombine_multitags, do_track)
 			-- If the tag was a multipart tag, track each of individual raw tags.
 			track("tag/" .. single_tag)
 		end
-		table.insert(normtags, normalize_multipart_component(single_tag, lang,
-			recombine_multitags, do_track))
+		table.insert(normtags, normalize_multipart_component(single_tag, lang, do_track))
 	end
-	if recombine_multitags then
-		return table.concat(normtags, "//")
-	else
-		return normtags
-	end
+	return normtags
 end
 
 
--- Normalize a tag set (a list of tags) into a list of canonical-form tags
--- (which -- may be larger due to the possibility of list-tag shortcuts).
--- If RECOMBINE_TAGS isn't given, the return list may itself contains lists;
--- in particular, multipart tags will be represented as lists. Specifically,
--- the list will consist of the elements of the multipart tag, which will
--- either be canonical-form strings or (in the case of two-level multipart
--- tags) nested lists of canonical-form strings. For example, the multipart
--- tag ''nom//acc//voc'' will expand to
---   {"nominative", "accusative", "vocative"}
--- and the two-level multipart tag ''1:s//3:p'' will expand to
---   {{"first-person", "singular"}, {"third-person", "plural"}}.
--- If RECOMBINE_TAGS is given, multipart tags will be represented in string
--- form, i.e. as canonical-form tags joined by "//" and/or ":".
-function export.normalize_tags(tags, lang, recombine_multitags, do_track)
-	-- We track usage of shortcuts, normalized forms and (in the case of
-	-- multipart tags or list tags) intermediate forms. For example,
-	-- if the tags 1s|mn|gen|indefinite are passed in, we track the following:
+--[=[
+Normalize a tag set (a list of tags) into its canonical-form tags. The return value is a list of normalized tag sets
+(a list because of there may be conjoined shortcuts among the input tags). A normalized tag set is a list of tag
+elements, where each element is either a string (the canonical form of a tag), a list of such strings (in the case of
+multipart tags) or a list of lists of such strings (in the case of two-level multipart tags). For example, the multipart
+tag "nom//acc//voc" will be represented in canonical form as {"nominative", "accusative", "vocative"}, and the
+two-level multipart tag "1:s//3:p" will be represented as {{"first-person", "singular"}, {"third-person", "plural"}}.
+
+Example 1:
+
+normalize_tag_set({"nom//acc//voc", "n", "p"}) = {{{"nominative", "accusative", "vocative"}, "masculine", "plural"}}
+
+Example 2:
+
+normalize_tag_set({"ed-form"}, ENGLISH) = {{"simple", "past"}, {"past", "participle"}}
+
+Example 3:
+
+normalize_tag_set({"archaic", "ed-form"}, ENGLISH) = {{"archaic", "simple", "past"}, {"archaic", "past", "participle"}}
+]=]
+function export.normalize_tag_set(tag_set, lang, do_track)
+	-- We track usage of shortcuts, normalized forms and (in the case of multipart tags or list tags) intermediate
+	-- forms. For example, if the tags 1s|mn|gen|indefinite are passed in, we track the following:
 	-- [[Template:tracking/inflection of/tag/1s]]
 	-- [[Template:tracking/inflection of/tag/1]]
 	-- [[Template:tracking/inflection of/tag/s]]
@@ -459,43 +488,112 @@ function export.normalize_tags(tags, lang, recombine_multitags, do_track)
 	-- [[Template:tracking/inflection of/tag/gen]]
 	-- [[Template:tracking/inflection of/tag/genitive]]
 	-- [[Template:tracking/inflection of/tag/indefinite]]
-	local ntags = {}
-	for _, tag in ipairs(tags) do
+	local output_tag_set = {}
+	local saw_semicolon = false
+
+	for _, tag in ipairs(tag_set) do
 		if do_track then
 			-- Track the raw tag.
 			track("tag/" .. tag)
 		end
-		-- Expand the tag, which may generate a new tag (either a
-		-- fully canonicalized tag, a multipart tag, or a list of tags).
+		-- Expand the tag, which may generate a new tag (either a fully canonicalized tag, a multipart tag, or a list
+		-- of tags).
 		tag = export.lookup_shortcut(tag, lang, do_track)
 		if type(tag) == "table" then
+			saw_semicolon = m_table.contains(tag, ";")
+			if saw_semicolon then
+				-- If we saw a conjoined shortcut, we need to use a more general algorithm that can expand a single
+				-- tag set into multiple.
+				break
+			end
+
 			for _, t in ipairs(tag) do
 				if do_track then
-					-- If the tag expands to a list of raw tags, track each of
-					-- those.
+					-- If the tag expands to a list of raw tags, track each of those.
 					track("tag/" .. t)
 				end
-				table.insert(ntags, normalize_tag(t, lang, recombine_multitags,
-					do_track))
+				table.insert(output_tag_set, normalize_tag(t, lang, do_track))
 			end
 		else
-			table.insert(ntags, normalize_tag(tag, lang, recombine_multitags,
-				do_track))
+			table.insert(output_tag_set, normalize_tag(tag, lang, do_track))
 		end
 	end
-	return ntags
+
+	if not saw_semicolon then
+		return {output_tag_set}
+	end
+
+	-- Use a more general algorithm that handles conjoined shortcuts.
+	local output_tag_set = {}
+	for i, tag in ipairs(tag_set) do
+		if do_track then
+			-- Track the raw tag.
+			track("tag/" .. tag)
+		end
+		-- Expand the tag, which may generate a new tag (either a fully canonicalized tag, a multipart tag, or a list
+		-- of tags).
+		tag = export.lookup_shortcut(tag, lang, do_track)
+		if type(tag) == "table" then
+			local output_tag_sets = {}
+			local shortcut_tag_sets = export.split_tag_set(tag)
+			local normalized_shortcut_tag_sets = {}
+			for _, shortcut_tag_set in ipairs(shortcut_tag_sets) do
+				m_table.extendList(normalized_shortcut_tag_sets,
+					export.normalize_tag_set(shortcut_tag_set, lang, do_track))
+			end
+			local after_tags = slice(tag_set, i + 1)
+			local normalized_after_tags_sets = export.normalize_tag_set(after_tags, lang, do_track)
+			for _, normalized_shortcut_tag_set in ipairs(normalized_shortcut_tag_sets) do
+				for _, normalized_after_tags_set in ipairs(normalized_after_tags_sets) do
+					table.insert(output_tag_sets, m_table.append(output_tag_set, normalized_shortcut_tag_set,
+						normalized_after_tags_set))
+				end
+			end
+			return output_tag_sets
+		else
+			table.insert(output_tag_set, normalize_tag(tag, lang, do_track))
+		end
+	end
+
+	error("Internal error: Should not get here")
+end
+
+
+function export.combine_multipart_tags(tag_set)
+	for i, tag in ipairs(tag_set) do
+		if type(tag) == "table" then
+			for j, subtag in ipairs(tag) do
+				if type(subtag) == "table" then
+					tag[j] = table.concat(subtag, ":")
+				end
+			end
+			tag_set[i] = table.concat(tag, "//")
+		end
+	end
+
+	return tag_set
+end
+
+
+function export.normalize_tags(tags, lang, recombine_multitags, do_track)
+	local tag_sets = export.normalize_tag_set(tags, lang, do_track)
+	if recombine_multitags then
+		for i, tag_set in ipairs(tag_sets) do
+			tag_sets[i] = export.combine_multipart_tags(tag_set)
+		end
+		return export.combine_tag_sets(tag_sets)
+	end
+	return tag_sets
 end
 
 
 -- Split a tag set containing two-level multipart tags into one or more tag sets not containing such tags.
 -- Single-level multipart tags are left alone. (If we need to, a slight modification of the following code
 -- will also split single-level multipart tags.) This assumes that multipart tags are represented as lists
--- and two-level multipart tags are represented as lists of lists, as is output by normalize_tags().
+-- and two-level multipart tags are represented as lists of lists, as is output by normalize_tag_set().
 -- NOTE: We have to be careful to properly handle imbalanced two-level multipart tags such as
 -- <code>def:s//p</code> (or the reverse, <code>s//def:p</code>).
 function export.split_two_level_multipart_tag_set(tag_set)
-	-- This would be a whole lot easier in Python, with built-in support for
-	-- slicing and array concatenation.
 	for i, tag in ipairs(tag_set) do
 		if type(tag) == "table" then
 			-- We saw a multipart tag. Check if any of the parts are two-level.
@@ -509,38 +607,24 @@ function export.split_two_level_multipart_tag_set(tag_set)
 			if saw_two_level_tag then
 				-- We found a two-level multipart tag.
 				-- (1) Extract the preceding tags.
-				local pre_tags = {}
-				for j=1,i-1 do
-					table.insert(pre_tags, tag_set[j])
-				end
+				local pre_tags = slice(tag_set, 1, i - 1)
 				-- (2) Extract the following tags.
-				local post_tags = {}
-				for j=i+1,#tag_set do
-					table.insert(post_tags, tag_set[j])
-				end
+				local post_tags = slice(tag_set, i + 1)
 				-- (3) Loop over each tag set alternant in the two-level multipart tag.
 				-- For each alternant, form the tag set consisting of pre_tags + alternant + post_tags,
 				-- and recursively split that tag set.
 				local resulting_tag_sets = {}
 				for _, first_level_tag_set in ipairs(tag) do
 					local expanded_tag_set = {}
-					for _, pre_tag in ipairs(pre_tags) do
-						table.insert(expanded_tag_set, pre_tag)
-					end
+					m_table.extendList(expanded_tag_set, pre_tags)
 					-- The second level may have a string or a list.
 					if type(first_level_tag_set) == "table" then
-						for _, second_level_tag in ipairs(first_level_tag_set) do
-							table.insert(expanded_tag_set, second_level_tag)
-						end
+						m_table.extendList(expanded_tag_set, first_level_tag_set)
 					else
 						table.insert(expanded_tag_set, first_level_tag_set)
 					end
-					for _, post_tag in ipairs(post_tags) do
-						table.insert(expanded_tag_set, post_tag)
-					end
-					for _, split_tag_set in ipairs(export.split_two_level_multipart_tag_set(expanded_tag_set)) do
-						table.insert(resulting_tag_sets, split_tag_set)
-					end
+					m_table.extendList(expanded_tag_set, post_tags)
+					m_table.extendList(resulting_tag_sets, export.split_two_level_multipart_tag_set(expanded_tag_set))
 				end
 				return resulting_tag_sets
 			end
@@ -551,14 +635,14 @@ function export.split_two_level_multipart_tag_set(tag_set)
 end
 
 
--- Given a list of tags, split into tag sets (separated by semicolons in the initial list of tags).
-function export.split_tags_into_tag_sets(tags)
-	local tag_set_group = {}
+-- Split a tag set that may consist of multiple semicolon-separated tag sets into the component tag sets.
+function export.split_tag_set(tag_set)
+	local split_tag_sets = {}
 	local cur_tag_set = {}
-	for _, tag in ipairs(tags) do
+	for _, tag in ipairs(tag_set) do
 		if tag == ";" then
 			if #cur_tag_set > 0 then
-				table.insert(tag_set_group, cur_tag_set)
+				table.insert(split_tag_sets, cur_tag_set)
 			end
 			cur_tag_set = {}
 		else
@@ -566,9 +650,30 @@ function export.split_tags_into_tag_sets(tags)
 		end
 	end
 	if #cur_tag_set > 0 then
-		table.insert(tag_set_group, cur_tag_set)
+		table.insert(split_tag_sets, cur_tag_set)
 	end
-	return tag_set_group
+	return split_tag_sets
+end
+
+export.split_tags_into_tag_sets = export.split_tag_set
+
+
+--[=[
+-- Combine multiple tag sets in a tag set group into a simple tag set, with logical tag sets separated by semicolons.
+-- This is the opposite of split_tag_set().
+]=]
+function export.combine_tag_sets(tag_sets)
+	if #tag_sets == 1 then
+		return tag_sets[1]
+	end
+	local combined_tag_set = {}
+	for _, tag_set in ipairs(tag_sets) do
+		if #combined_tag_set > 0 then
+			table.insert(combined_tag_set, ";")
+		end
+		m_table.extendList(combined_tag_set, tag_set)
+	end
+	return tags
 end
 
 
@@ -606,45 +711,6 @@ function export.parse_tag_set_properties(tag_set)
 	end
 end
 
-
--- Given a list of tags, split into tag sets (separated by semicolons in the initial list of tags).
--- Then, potentially split each tag set into multiple tag sets if there are any two-level multipart
--- tags in those tag sets.
-local function split_tags_into_tag_sets_and_expand_two_level_multipart_tags(tags)
-	-- First, split into tag sets.
-	local tag_sets = export.split_tags_into_tag_sets(tags)
-	-- Now split any two-level multipart tags.
-	local resulting_tag_sets = {}
-	for _, tag_set in ipairs(tag_sets) do
-		for _, resulting_tag_set in ipairs(export.split_two_level_multipart_tag_set(tag_set)) do
-			table.insert(resulting_tag_sets, resulting_tag_set)
-		end
-	end
-	return resulting_tag_sets
-end
-
-
---[=[
-This function isn't currently used anywhere so we comment it out to save space. Uncomment it if you need it.
-
--- Combine the tag sets in a tag set group into a simple tag set, with logical tag sets separated by semicolons.
--- This is the opposite of split_tags_into_tag_sets().
-function export.combine_tag_set_group(tag_set_group)
-	if #tag_set_group == 1 then
-		return tag_set_group[1]
-	end
-	local tags = {}
-	for _, tag_set in ipairs(tag_set_group) do
-		if #tags > 0 then
-			table.insert(tags, ";")
-		end
-		for _, tag in ipairs(tag_set) do
-			table.insert(tags, tag)
-		end
-	end
-	return tags
-end
-]=]
 
 function export.normalize_pos(pos)
 	if not pos then
@@ -722,35 +788,25 @@ function export.get_tag_display_form(tagspec, lang, joiner)
 end
 
 
--- Return true if the list `tags1`, treated as a set, is a subset of the list `tags2`, also
--- treated as a set.
-local function is_subset(tags1, tags2)
-	tags1 = m_table.listToSet(tags1)
-	tags2 = m_table.listToSet(tags2)
-	for tag, _ in pairs(tags1) do
-		if not tags2[tag] then
-			return false
-		end
-	end
-	return true
-end
-
-
-local function fetch_lang_categories_and_labels(lang, tags, POS, already_normalized)
+--[=[
+Given a normalized tag set (i.e. as output by normalize_tag_set(); all tags are in canonical form, multipart tags are
+represented as lists, and two-level multipart tags as lists of lists), fetch the associated categories and labels.
+Return two values, a list of categories and a list of labels. `lang` is the language of term represented by the tag set,
+and `POS` is the user-provided part of speech (which may be nil).
+]=]
+function export.fetch_categories_and_labels(normalized_tag_set, lang, POS)
 	local m_cats = mw.loadData(export.form_of_cats_module)
 	local categories = {}
 	local labels = {}
 
-	local normalized_tags = already_normalized and tags or export.normalize_tags(tags, lang)
 	POS = export.normalize_pos(POS)
-	-- Now split any two-level multipart tags.
-	local split_tag_sets = {}
-	for _, tag_set in ipairs(export.split_two_level_multipart_tag_set(normalized_tags)) do
+	-- First split any two-level multipart tags into multiple sets, to make our life easier.
+	for _, tag_set in ipairs(export.split_two_level_multipart_tag_set(normalized_tag_set)) do
 		local function make_function_table()
 			return {
+				tag_set=normalized_tag_set,
 				lang=lang,
-				tags=normalized_tags,
-				p=POS
+				POS=POS
 			}
 		end
 
@@ -824,14 +880,30 @@ local function fetch_lang_categories_and_labels(lang, tags, POS, already_normali
 				end
 				return false, 3
 			elseif predicate == "tags=" then
-				local normalized_spec_tags = export.normalize_tags(spec[2], lang)
-				-- Allow tags to be in different orders, and multipart tags to
-				-- be in different orders. To handle this, we first check that
-				-- both tag set tags and spec tags have the same length. If so,
-				-- we sort the multipart tags in the tag set tags and spec tags,
-				-- and then check that all tags in the spec tags are in the
-				-- tag set tags.
-				if #tag_set ~= #normalized_spec_tags then
+				local normalized_spec_tag_sets = export.normalize_tag_set(spec[2], lang)
+				if #normalized_spec_tag_sets > 1 then
+					error("Internal error: No support for conjoined shortcuts in category/label specs in "
+						.. "[[Module:form of/cats]] when processing spec tag set " .. table.concat(spec[2], "|"))
+				end
+				local normalized_spec_tag_set = normalized_spec_tag_sets[1]
+				-- Check for and disallow two-level multipart tags in the specs. FIXME: Remove this when we remove
+				-- support for two-level multipart tags.
+				for _, tag in ipairs(normalized_spec_tag_set) do
+					if type(tag) == "table" then
+						for _, subtag in ipairs(tag) do
+							if type(subtag) == "table" then
+								error("Internal error: No support for two-level multipart tags in category/label specs"
+									.. "[[Module:form of/cats]] when processing spec tag set "
+									.. table.concat(spec[2], "|"))
+							end
+						end
+					end
+				end
+				-- Allow tags to be in different orders, and multipart tags to be in different orders. To handle this,
+				-- we first check that both tag set tags and spec tags have the same length. If so, we sort the
+				-- multipart tags in the tag set tags and spec tags, and then check that all tags in the spec tags are
+				-- in the tag set tags.
+				if #tag_set ~= #normalized_spec_tag_set then
 					return false, 3
 				end
 				local tag_set_tags = m_table.deepcopy(tag_set)
@@ -839,12 +911,12 @@ local function fetch_lang_categories_and_labels(lang, tags, POS, already_normali
 					if type(tag_set_tags[i]) == "table" then
 						table.sort(tag_set_tags[i])
 					end
-					if type(normalized_spec_tags[i]) == "table" then
-						table.sort(normalized_spec_tags[i])
+					if type(normalized_spec_tag_set[i]) == "table" then
+						table.sort(normalized_spec_tag_set[i])
 					end
 				end
 				for i=1,#tag_set_tags do
-					if not m_table.contains(tag_set_tags, normalized_spec_tags[i]) then
+					if not m_table.contains(tag_set_tags, normalized_spec_tag_set[i]) then
 						return false, 3
 					end
 				end
@@ -1036,7 +1108,7 @@ function export.tagged_inflections(data)
 	end
 	local tag_sets = data.tag_sets
 	if not tag_sets then
-		tag_sets = export.split_tags_into_tag_sets(data.tags)
+		tag_sets = export.split_tag_set(data.tags)
 		for i, tag_set in ipairs(tag_sets) do
 			tag_sets[i] = export.parse_tag_set_properties(tag_set)
 		end
@@ -1045,53 +1117,55 @@ function export.tagged_inflections(data)
 	local inflections = {}
 	local categories = {}
 	for _, tag_set in ipairs(tag_sets) do
-		local cur_infl = {}
-		local ntags = export.normalize_tags(tag_set.tags, data.lang, nil, "do-track")
+		local normalized_tag_sets = export.normalize_tag_set(tag_set.tags, data.lang, "do-track")
 
-		local this_categories, this_labels = fetch_lang_categories_and_labels(data.lang, ntags, data.POS,
-			"already normalized")
-		if not data.nocat then
-			extend_list(categories, this_categories)
-		end
+		for _, normalized_tag_set in ipairs(normalized_tag_sets) do
+			local cur_infl = {}
+			local this_categories, this_labels = export.fetch_categories_and_labels(normalized_tag_set, data.lang,
+				data.POS)
+			if not data.nocat then
+				m_table.extendList(categories, this_categories)
+			end
 
-		for _, tagspec in ipairs(ntags) do
-			local to_insert = export.get_tag_display_form(tagspec, data.lang, data.joiner)
-			-- Maybe insert a space before inserting the display form of the tag. We insert a space if
-			-- (a) we're not the first tag; and
-			-- (b) the tag we're about to insert doesn't have the "no_space_on_left" property; and
-			-- (c) the preceding tag doesn't have the "no_space_on_right" property.
-			-- NOTE: We depend here on the fact that
-			-- (1) all tags with either of the above properties set have the same display form as canonical form, and
-			-- (2) all tags with either of the above properties set are single-character tags.
-			-- The second property is an optimization to avoid looking up display forms resulting from multipart tags,
-			-- which won't be found and which will trigger loading of [[Module:form of/data2]]. If multichar punctuation
-			-- is added in the future, it's ok to change the == 1 below to <= 2 or <= 3.
-			--
-			-- If the first property above fails to hold in the future, we need to track the canonical form of each tag
-			-- (including the previous one) as well as the display form. This would also avoid the need for the == 1
-			-- check.
-			if #cur_infl > 0 then
-				local most_recent_tagobj = ulen(cur_infl[#cur_infl]) == 1 and
-					export.lookup_tag(cur_infl[#cur_infl], data.lang)
-				local to_insert_tagobj = ulen(to_insert) == 1 and
-					export.lookup_tag(to_insert, data.lang)
-				if (
-					(not most_recent_tagobj or
-					 not most_recent_tagobj.no_space_on_right) and
-					(not to_insert_tagobj or
-					 not to_insert_tagobj.no_space_on_left)
-				) then
-					table.insert(cur_infl, " ")
+			for _, tagspec in ipairs(normalized_tag_set) do
+				local to_insert = export.get_tag_display_form(tagspec, data.lang, data.joiner)
+				-- Maybe insert a space before inserting the display form of the tag. We insert a space if
+				-- (a) we're not the first tag; and
+				-- (b) the tag we're about to insert doesn't have the "no_space_on_left" property; and
+				-- (c) the preceding tag doesn't have the "no_space_on_right" property.
+				-- NOTE: We depend here on the fact that
+				-- (1) all tags with either of the above properties set have the same display form as canonical form, and
+				-- (2) all tags with either of the above properties set are single-character tags.
+				-- The second property is an optimization to avoid looking up display forms resulting from multipart tags,
+				-- which won't be found and which will trigger loading of [[Module:form of/data2]]. If multichar punctuation
+				-- is added in the future, it's ok to change the == 1 below to <= 2 or <= 3.
+				--
+				-- If the first property above fails to hold in the future, we need to track the canonical form of each tag
+				-- (including the previous one) as well as the display form. This would also avoid the need for the == 1
+				-- check.
+				if #cur_infl > 0 then
+					local most_recent_tagobj = ulen(cur_infl[#cur_infl]) == 1 and
+						export.lookup_tag(cur_infl[#cur_infl], data.lang)
+					local to_insert_tagobj = ulen(to_insert) == 1 and
+						export.lookup_tag(to_insert, data.lang)
+					if (
+						(not most_recent_tagobj or
+						 not most_recent_tagobj.no_space_on_right) and
+						(not to_insert_tagobj or
+						 not to_insert_tagobj.no_space_on_left)
+					) then
+						table.insert(cur_infl, " ")
+					end
 				end
+				table.insert(cur_infl, to_insert)
 			end
-			table.insert(cur_infl, to_insert)
-		end
 
-		if #cur_infl > 0 then
-			if tag_set.labels then
-				this_labels = m_table.append(tag_set.labels, this_labels)
+			if #cur_infl > 0 then
+				if tag_set.labels then
+					this_labels = m_table.append(tag_set.labels, this_labels)
+				end
+				table.insert(inflections, {infl_text = table.concat(cur_infl), labels = this_labels})
 			end
-			table.insert(inflections, {infl_text = table.concat(cur_infl), labels = this_labels})
 		end
 	end
 
@@ -1156,20 +1230,12 @@ function export.tagged_inflections(data)
 end
 
 
-function export.to_Wikidata_IDs(tags, lang, skip_tags_without_ids)
-	if type(tags) == "string" then
-		tags = mw.text.split(tags, "|", true)
-	end
-
+-- Given a tag set, return a flattened list all Wikidata ID's of all tags in the tag set.
+-- FIXME: Only used in a debugging function in [[Module:se-verbs]]; move there.
+function export.to_Wikidata_IDs(tag_set, lang, skip_tags_without_ids)
 	local ret = {}
 
 	local function get_wikidata_id(tag)
-		if tag == ";" and not skip_tags_without_ids then
-			error("Semicolon is not supported for Wikidata IDs")
-		else
-			return nil
-		end
-
 		local data = export.lookup_tag(tag, lang)
 
 		if not data or not data.wikidata then
@@ -1183,15 +1249,23 @@ function export.to_Wikidata_IDs(tags, lang, skip_tags_without_ids)
 		end
 	end
 
-	for i, tag in ipairs(export.normalize_tags(tags, lang)) do
-		if type(tag) == "table" then
-			local ids = {}
-			for _, onetag in ipairs(tag) do
-				table.insert(ids, get_wikidata_id(onetag))
+	local normalized_tag_sets = export.normalize_tag_set(tag_set, lang)
+	for _, tag_set in ipairs(normalized_tag_sets) do
+		for _, tag in ipairs(tag_set) do
+			if type(tag) == "table" then
+				for _, subtag in ipairs(tag) do
+					if type(subtag) == "table" then
+						-- two-level multipart tag; FIXME: delete support for this
+						for _, subsubtag in ipairs(subtag) do
+							table.insert(ret, get_wikidata_id(subsubtag))
+						end
+					else
+						table.insert(ret, get_wikidata_id(subtag))
+					end
+				end
+			else
+				table.insert(ret, get_wikidata_id(tag))
 			end
-			table.insert(ret, ids)
-		else
-			table.insert(ret, get_wikidata_id(tag))
 		end
 	end
 
