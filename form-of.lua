@@ -9,7 +9,7 @@ local labels_module = "Module:labels"
 export.form_of_pos_module = "Module:form of/pos"
 export.form_of_functions_module = "Module:form of/functions"
 export.form_of_cats_module = "Module:form of/cats"
-export.form_of_lang_data_module_prefix = "Module:User:Benwing2/form of/lang-data/"
+export.form_of_lang_data_module_prefix = "Module:form of/lang-data/"
 export.form_of_data_module = "Module:form of/data"
 export.form_of_data2_module = "Module:form of/data2"
 
@@ -116,9 +116,8 @@ local function normalize_index(list, index)
 	return index
 end
 
-
--- Return true if the list `tags1`, treated as a set, is a subset of the list `tags2`, also
--- treated as a set.
+-- FIXME, consider moving to [[Module:table]]
+-- Return true if the list `tags1`, treated as a set, is a subset of the list `tags2`, also treated as a set.
 local function is_subset(tags1, tags2)
 	tags1 = m_table.listToSet(tags1)
 	tags2 = m_table.listToSet(tags2)
@@ -131,6 +130,7 @@ local function is_subset(tags1, tags2)
 end
 
 
+-- FIXME, move to [[Module:table]]
 local function slice(list, i, j)
 	--checkType("slice", 1, list, "table")
 	--checkType("slice", 2, i, "number", true)
