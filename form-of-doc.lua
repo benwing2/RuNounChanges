@@ -60,6 +60,7 @@ function export.introdoc(args)
 		table.insert(exlangnames, lang_name(exlang, "exlang"))
 	end
 	parts = {}
+	table.insert(parts, mw.getCurrentFrame():expandTemplate{title="Lua", args={"Module:form of/templates"}})
 	table.insert(parts, "This template creates a definition line for ")
 	table.insert(parts, args.pldesc or rsub(template_name(), " of$", "") .. "s")
 	table.insert(parts, " ")
@@ -101,7 +102,12 @@ By default, this template displays its output with an initial capital letter. Th
 	end
 	table.insert(parts, [===[
 
-This template is '''not''' meant to be used in etymology sections.
+This template is '''not''' meant to be used in etymology sections.]===])
+	if args.etymtemp then
+		table.insert(parts, " For those sections, use <code>{{[[Template:" .. args.etymtemp .. "|" .. args.etymtemp .. "]]}}</code> instead.")
+	end
+	table.insert(parts, [===[
+
 
 Note that users can customize how the output of this template displays by modifying their monobook.css files. See [[:Category:Form-of templates|“Form of” templates]] for details.
 ]===])
@@ -129,7 +135,7 @@ end
 
 function export.paramdoc(args)
 	local parts = {}
-
+	
 	local function param_and_doc(params, list, required, doc)
 		table.insert(parts, "; ")
 		table.insert(parts, param(params, list, required))
@@ -152,6 +158,10 @@ function export.paramdoc(args)
 		param_and_doc("3", false, false, "The text to be shown in the link to the term. If empty or omitted, the term specified by the second parameter will be used. This parameter is normally not necessary, and should not be used solely to indicate diacritics; instead, put the diacritics in the second parameter.")
 	end
 	table.insert(parts, "''Named parameters:''\n")
+	if args.etymtemp == 'contraction' then
+		param_and_doc("mandatory", false, false, "If <code>|mandatory=1</code>, indicates that the contraction is mandatory.")
+		param_and_doc("optional", false, false, "If <code>|optional=1</code>, indicates that the contraction is optional.")
+	end
 	param_and_doc({"t", args.lang and "3" or "4"}, false, false, "A gloss or short translation of the term linked to. <small>The parameter <code>|gloss=</code> is a deprecated synonym; please do not use.</small>")
 	param_and_doc("tr", false, false, "Transliteration for non-Latin-script terms, if different from the automatically-generated one.")
 	param_and_doc("ts", false, false, "Transcription for non-Latin-script terms whose transliteration is markedly different from the actual pronunciation. Should not be used for IPA pronunciations.")
@@ -222,7 +232,7 @@ function export.infldoc(args)
 	args.pldesc = args.sgdesc
 	args.sgdescof = args.sgdescof or args.sgdesc .. " of"
 	args.primaryentrytext = args.primaryentrytext or "of a primary entry"
-	return export.fulldoc(args)
+	return export.fulldoc(args)	
 end
 
 local tag_type_to_description = {
@@ -353,14 +363,14 @@ function export.tagtable()
 		if group_tab then
 			table.insert(parts, "|-")
 			table.insert(parts, '! colspan="3" style="text-align: center; background: #dddddd;" | ' ..
-				(tag_type_to_description[tag_type] or m_form_of.ucfirst(tag_type)) .. " (more common)")
+				(tag_type_to_description[tag_type] or strutils.ucfirst(tag_type)) .. " (more common)")
 			insert_group(group_tab)
 		end
 		group_tab = data2_tab[tag_type]
 		if group_tab then
 			table.insert(parts, "|-")
 			table.insert(parts, '! colspan="3" style="text-align: center; background: #dddddd;" | ' ..
-				(tag_type_to_description[tag_type] or m_form_of.ucfirst(tag_type)) .. " (less common)")
+				(tag_type_to_description[tag_type] or strutils.ucfirst(tag_type)) .. " (less common)")
 			insert_group(group_tab)
 		end
 	end
@@ -426,12 +436,13 @@ function export.cattable()
 	local cats_by_lang = {}
 	local function find_categories(catstruct)
 		local cats = {}
-
+		
 		local function process_spec(spec)
 			if type(spec) == "string" then
 				table.insert(cats, spec)
 				return
-			elseif not spec or spec == true then
+			elseif not spec or spec == true or spec.labels then
+				-- Ignore labels, etc.
 				return
 			elseif type(spec) ~= "table" then
 				error("Wrong type of condition " .. spec .. ": " .. type(spec))
@@ -461,7 +472,7 @@ function export.cattable()
 				error("Unrecognized predicate: " .. predicate)
 			end
 		end
-
+		
 		for _, spec in ipairs(catstruct) do
 			process_spec(spec)
 		end
@@ -473,7 +484,7 @@ function export.cattable()
 		table.insert(cats_by_lang, {lang, cats})
 	end
 	table.sort(cats_by_lang, sort_by_first)
-
+	
 	local lang_independent_cat_index = nil
 	for i, langcats in ipairs(cats_by_lang) do
 		local lang = langcats[1]
@@ -486,8 +497,8 @@ function export.cattable()
 		local lang_independent_cats = table.remove(cats_by_lang, lang_independent_cat_index)
 		table.insert(cats_by_lang, 1, lang_independent_cats)
 	end
-
-	local parts = {}
+	
+	local parts = {}	
 	table.insert(parts, '{|class="wikitable"')
 
 	for i, langcats in ipairs(cats_by_lang) do
@@ -500,7 +511,7 @@ function export.cattable()
 			if langcode == "und" then
 				table.insert(parts, '! style="text-align: center; background: #dddddd;" | Language-independent')
 			else
-				local lang = m_languages.getByCode(langcode) or error("Unrecognized language code: " .. langcocde)
+				local lang = m_languages.getByCode(langcode) or error("Unrecognized language code: " .. langcode)
 				table.insert(parts, '! style="text-align: center; background: #dddddd;" | ' .. lang:getCanonicalName())
 			end
 			for _, cat in ipairs(cats) do
