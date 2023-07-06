@@ -1,9 +1,12 @@
 local export = {}
 
 local rsplit = mw.text.split
+local u = mw.ustring.char
+local MARK_CONJOINED_SHORTCUT = u(0xFFF0)
 local split_term_regex = "%*~!"
 
 local m_table = require("Module:table")
+local form_of_module = "Module:User:Benwing2/form of"
 
 --[=[
 The purpose of the acceleration code is to auto-generate pages for non-lemma forms (inflections) of a given lemma.
@@ -176,17 +179,24 @@ function export.default_entry(params)
 	return entry
 end
 
--- Canonicalize multipart shortcuts (e.g. "123" -> "1//2//3") and
--- list shortcuts (e.g. "1s" -> {"1", "s"}); leave others alone.
+-- Canonicalize multipart shortcuts (e.g. "123" -> "1//2//3") and non-conjoined list shortcuts (e.g. "1s" ->
+-- {"1", "s"}); leave others alone, including conjoined shortcuts. The purpose of canonicalizing list shortcuts is so
+-- that e.g. we can combine '1s|pres|ind' with '2|s|pres|ind'. However, conjoined shortcuts like "e-form" ->
+-- {"pl", ";", "def", "s", "attr"} would require significantly more logic to handle correctly, and it's highly unlikely
+-- we could find another similar enough tag to combine with (if it even makes sense to do so at all).
 local function canonicalize_multipart_and_list_shortcuts(tags, lang)
 	local result = {}
 	for _, tag in ipairs(tags) do
-		local expansion = require("Module:form of").lookup_shortcut(tag, lang)
+		local expansion = require(form_of_module).lookup_shortcut(tag, lang)
 		if type(expansion) == "string" and not expansion:find("//", nil, true) then
 			expansion = tag
 		end
 		if type(expansion) == "table" then
-			m_table.extendList(result, expansion)
+			if m_table.contains(expansion, ";") then
+				table.insert(result, tag)
+			else
+				m_table.extendList(result, expansion)
+			end
 		else
 			table.insert(result, expansion)
 		end
@@ -194,48 +204,64 @@ local function canonicalize_multipart_and_list_shortcuts(tags, lang)
 	return result
 end
 
--- Split a multipart tag into component tags, normalize each component, and
--- return the resulting list. If MAP_TO_CANONICAL_SHORTCUT is given,
--- attempt to map each normalized component tag to its "canonical shortcut",
--- i.e. the first shortcut listed among its shortcuts.
+-- Split a multipart tag into component tags, normalize each component, and return the resulting list. If
+-- MAP_TO_CANONICAL_SHORTCUT is given, attempt to map each normalized component tag to its "canonical shortcut", i.e.
+-- the first shortcut listed among its shortcuts.
 --
--- If given a two-level multipart tag such as "1:sg//3:pl", the resulting
--- return value will be {"first:singular", "third:plural"}, or {"1:s", "3:p"}
--- if MAP_TO_CANONICAL_SHORTCUT is given.
+-- If given a two-level multipart tag such as "1:sg//3:pl", the resulting return value will be {"first:singular",
+-- "third:plural"}, or {"1:s", "3:p"} if MAP_TO_CANONICAL_SHORTCUT is given.
 local function split_and_normalize_tag(tag, lang, map_to_canonical_shortcut)
-	local m_form_of = require("Module:form of")
-	local normalized = m_form_of.normalize_tags({tag}, lang, true)
-	assert(#normalized == 1, "Something is wrong, encountered list tag " .. tag .. ", which should have been canonicalized earlier")
-	tag = normalized[1]
-	if tag:find("://") then
-		-- HTML URL???
-		return {tag}
-	else
-		local tags = rsplit(tag, "//")
-		if map_to_canonical_shortcut then
-			for i=1,#tags do
-				if tags[i]:find(":") then
-					local split_tags = rsplit(tags[i], ":")
-					for j=1,#split_tags do
-						local tagobj = m_form_of.lookup_tag(split_tags[j], lang)
-						split_tags[j] = tagobj and tagobj.shortcuts and tagobj.shortcuts[1] or split_tags[j]
-					end
-					tags[i] = table.concat(split_tags, ":")
-				else
-					local tagobj = m_form_of.lookup_tag(tags[i], lang)
-					tags[i] = tagobj and tagobj.shortcuts and tagobj.shortcuts[1] or tags[i]
+	local m_form_of = require(form_of_module)
+	local normalized = m_form_of.normalize_tag_set({tag}, lang)
+	if #normalized > 1 then
+		-- Tag is a conjoined shortcut. We leave these in their non-canonicalized form; see comment above
+		-- canonicalize_multipart_and_list_shortcuts(). But we mark them with a special character so we know that
+		-- they are non-normalized conjoined shortcuts, and later remove the mark.
+		return {tag .. MARK_CONJOINED_SHORTCUT}
+	end
+	normalized = normalized[1]
+	assert(#normalized == 1, "Internal error: Encountered list tag " .. tag .. ", which should have been canonicalized earlier")
+	local multipart = normalized[1]
+	if type(multipart) == "string" then
+		multipart = {multipart}
+	end
+	if map_to_canonical_shortcut then
+		for i, mpart in ipairs(multipart) do
+			if type(mpart) == "table" then
+				-- two-level multipart
+				for j, single_tag in ipairs(mpart) do
+					local tagobj = m_form_of.lookup_tag(single_tag, lang)
+					mpart[j] = tagobj and tagobj.shortcuts and tagobj.shortcuts[1] or single_tag
 				end
+				multipart[i] = table.concat(mpart, ":")
+			else
+				local tagobj = m_form_of.lookup_tag(mpart, lang)
+				multipart[i] = tagobj and tagobj.shortcuts and tagobj.shortcuts[1] or mpart
 			end
 		end
-		return tags
+	else
+		for i, mpart in ipairs(multipart) do
+			if type(mpart) == "table" then
+				-- two-level multipart
+				multipart[i] = table.concat(mpart, ":")
+			end
+		end
 	end
+	return multipart
 end
 
 -- Given a normalized tag, return its tag type, or "unknown" if a tag type
 -- cannot be located (either the tag isn't recognized or for some reason
 -- it doesn't specify a tag type).
 local function get_normalized_tag_type(tag, lang)
-	local tagobj = require("Module:form of").lookup_tag(tag, lang)
+	-- Make sure to return 'unknown' for non-normalized conjoined shortcuts as well as URL's and parts of two-level
+	-- multipart tags (both of the latter two have colons in them). NOTE: In practice, the presence of the
+	-- MARK_CONJOINED_SHORTCUT means we won't find a normalized tag having the same name even if one would exist in the
+	-- absence of this mark, so this is more of an optimization.
+	if tag:find(MARK_CONJOINED_SHORTCUT) or tag:find(":") then
+		return "unknown"
+	end
+	local tagobj = require(form_of_module).lookup_tag(tag, lang)
 	return tagobj and tagobj.tag_type or "unknown"
 end
 
@@ -256,7 +282,7 @@ The return value is in the same format as was passed into `tag_sets`. If an old-
 labels are present, they are attached to the last tag in a tag set using an inline modifier.
 ]=]
 
-function export.combine_tag_sets_into_multipart(tag_sets, lang)
+function export.combine_tag_sets_into_multipart(tag_sets, lang, POS)
 	if type(tag_sets) ~= "table" then
 		error("`tag_sets` should be a table but is a(n) `" .. type(tag_sets) .. "`")
 	end
@@ -284,28 +310,40 @@ function export.combine_tag_sets_into_multipart(tag_sets, lang)
 		return tag_sets
 	end
 
+	local m_form_of = require(form_of_module)
+
 	-- If old-style tags (list of strings), convert to list of tag set objects.
 	if old_style_tags then
-		tag_sets = require("Module:form of").split_tags_into_tag_sets(tag_sets)
+		tag_sets = m_form_of.split_tags_into_tag_sets(tag_sets)
 		for i, tag_set in ipairs(tag_sets) do
-			tag_sets[i] = export.parse_tag_set_properties(tag_set)
+			tag_sets[i] = m_form_of.parse_tag_set_properties(tag_set)
 		end
+	else
+		-- Otherwise, make a copy as we may modify the list in-place.
+		tag_sets = m_table.deepcopy(tag_sets)
 	end
 
 	-- Repeat until no changes can be made.
 	while true do
-		-- First, canonicalize 1s etc. into 1|s
-		local canonicalized_tags = canonicalize_multipart_and_list_shortcuts(tags, lang)
-		local old_canonicalized_tags = canonicalized_tags
+		-- First, determine the auto-generated label for each tag set and append to any user-specified labels.
+		-- Best to do this on the raw tag sets, before canonicalize_multipart_and_list_shortcuts(). Then canonicalize
+		-- 1s etc. into 1|s.
+		for i, tag_set in ipairs(tag_sets) do
+			tag_set.labels_with_auto = m_table.deepcopy(tag_set.labels or {})
+			local normalized_tag_sets = m_form_of.normalize_tag_set(tag_set.tags, lang)
+			for _, normalized_tag_set in ipairs(normalized_tag_sets) do
+				local this_categories, this_labels = m_form_of.fetch_categories_and_labels(normalized_tag_set, lang, POS)
+				m_table.extendList(tag_set.labels_with_auto, this_labels)
+			end
+			tag_set.tags = canonicalize_multipart_and_list_shortcuts(tag_set.tags, lang)
+		end
 
-		-- Then split into tag sets.
-		local tag_set_group = require("Module:form of").split_tags_into_tag_sets(canonicalized_tags)
+		local canonicalized_tag_sets = tag_sets
+		local old_canonicalized_tag_sets = canonicalized_tag_sets
 
-		-- Try combining in two different styles ("adjacent-first" =
-		-- do two passes, where the first pass only combines adjacent
-		-- tag sets, while the second pass combines nonadjacent tag sets;
-		-- "all-first" = do one pass combining nonadjacent tag sets).
-		-- Sometimes one is better, sometimes the other.
+		-- Try combining in two different styles ("adjacent-first" = do two passes, where the first pass only combines
+		-- adjacent tag sets, while the second pass combines nonadjacent tag sets; "all-first" = do one pass combining
+		-- nonadjacent tag sets). Sometimes one is better, sometimes the other.
 		--
 		-- An example where adjacent-first is better:
 		--
@@ -335,19 +373,16 @@ function export.combine_tag_sets_into_multipart(tag_sets, lang)
 		--
 		-- {{inflection of|grc|βουλόμενος||n|nom//voc|s|;|m//n|acc|s}}
 		--
-		-- To handle this conundrum, we try both, and look to see which one
-		-- results in fewer "combinations" (where a tag with // in it counts
-		-- as a combination). If both are different but have the same # of
-		-- combinations, we prefer adjacent-first, we seems generally a better
-		-- approach.
+		-- To handle this conundrum, we try both, and look to see which one results in fewer "combinations" (where a
+		-- tag with // in it counts as a combination). If both are different but have the same # of combinations, we
+		-- prefer adjacent-first, we seems generally a better approach.
 
-		local tag_set_group_by_style = {}
+		local tag_sets_by_style = {}
 
 		for _, combine_style in ipairs({"adjacent-first", "all-first"}) do
-			-- Now, we do two passes. The first pass only combines adjacent
-			-- tag sets, while the second pass combines nonadjacent tag sets.
-			-- Copy tag_set_group, since we destructively modify the list.
-			local tag_sets = m_table.shallowcopy(tag_set_group)
+			-- Now, we do two passes. The first pass only combines adjacent tag sets, while the second pass combines
+			-- nonadjacent tag sets. Copy canonicalized_tag_sets, since we destructively modify the list.
+			local this_tag_sets = m_table.deepcopy(canonicalized_tag_sets)
 			local combine_passes
 			if combine_style == "adjacent-first" then
 				combine_passes = {"adjacent", "all"}
@@ -356,7 +391,7 @@ function export.combine_tag_sets_into_multipart(tag_sets, lang)
 			end
 			for _, combine_pass in ipairs(combine_passes) do
 				local tag_ind = 1
-				while tag_ind <= #tag_sets do
+				while tag_ind <= #this_tag_sets do
 					local from, to
 					if combine_pass == "adjacent" then
 						if tag_ind == 1 then
@@ -371,17 +406,17 @@ function export.combine_tag_sets_into_multipart(tag_sets, lang)
 						to = tag_ind - 1
 					end
 					local inner_broken = false
-					for prev_tag_ind=from,to do
-						local cur_tag_set = tag_sets[prev_tag_ind]
-						local tag_set = tag_sets[tag_ind]
-						if #cur_tag_set == #tag_set then
+					for prev_tag_ind = from, to do
+						local cur_tag_set = this_tag_sets[prev_tag_ind]
+						local tag_set = this_tag_sets[tag_ind]
+						if #cur_tag_set.tags == #tag_set.tags and
+							m_table.deepEquals(cur_tag_set.labels_with_auto, tag_set.labels_with_auto) then
 							local mismatch_ind = nil
 							local innermost_broken = false
-							for i=1,#tag_set do
-								local tag1 = split_and_normalize_tag(cur_tag_set[i], lang)
-								local tag2 = split_and_normalize_tag(tag_set[i], lang)
-								if not m_table.deepEquals(m_table.listToSet(tag1),
-									m_table.listToSet(tag2)) then
+							for i = 1, #tag_set.tags do
+								local tag1 = split_and_normalize_tag(cur_tag_set.tags[i], lang)
+								local tag2 = split_and_normalize_tag(tag_set.tags[i], lang)
+								if not m_table.deepEquals(m_table.listToSet(tag1), m_table.listToSet(tag2)) then
 									if mismatch_ind then
 										innermost_broken = true
 										break
@@ -405,30 +440,33 @@ function export.combine_tag_sets_into_multipart(tag_sets, lang)
 								-- No break, we either match perfectly or are combinable
 								if not mismatch_ind then
 									-- Two identical tag sets
-									table.remove(tag_sets, tag_ind)
+									table.remove(this_tag_sets, tag_ind)
 									inner_broken = true
 									break
 								else
 									-- Combine tag sets at mismatch_ind, using the canonical shortcuts.
-									tag1 = cur_tag_set[mismatch_ind]
-									tag2 = tag_set[mismatch_ind]
+									tag1 = cur_tag_set.tags[mismatch_ind]
+									tag2 = tag_set.tags[mismatch_ind]
 									tag1 = split_and_normalize_tag(tag1, lang, true)
 									tag2 = split_and_normalize_tag(tag2, lang, true)
-									local combined_tag = table.concat(m_table.append(tag1, tag2), "//")
+									-- Combine the normalized tags and remove the special MARK_CONJOINED_SHORTCUT mark
+									-- on conjoined shortcuts so we have normal tags again.
+									local combined_tag =
+										table.concat(m_table.append(tag1, tag2), "//"):gsub(MARK_CONJOINED_SHORTCUT, "")
 									local new_tag_set = {}
-									for i=1,#cur_tag_set do
+									for i = 1, #cur_tag_set.tags do
 										if i == mismatch_ind then
 											table.insert(new_tag_set, combined_tag)
 										else
-											local cur_canon_tag = split_and_normalize_tag(cur_tag_set[i], lang)
-											local canon_tag = split_and_normalize_tag(tag_set[i], lang)
+											local cur_canon_tag = split_and_normalize_tag(cur_tag_set.tags[i], lang)
+											local canon_tag = split_and_normalize_tag(tag_set.tags[i], lang)
 											assert(m_table.deepEquals(m_table.listToSet(cur_canon_tag),
 												m_table.listToSet(canon_tag)))
-											table.insert(new_tag_set, cur_tag_set[i])
+											table.insert(new_tag_set, cur_tag_set.tags[i])
 										end
 									end
-									tag_sets[prev_tag_ind] = new_tag_set
-									table.remove(tag_sets, tag_ind)
+									this_tag_sets[prev_tag_ind].tags = new_tag_set
+									table.remove(this_tag_sets, tag_ind)
 									inner_broken = true
 									break
 								end
@@ -436,28 +474,24 @@ function export.combine_tag_sets_into_multipart(tag_sets, lang)
 						end
 					end
 					if not inner_broken then
-						-- No break from inner for-loop. Break from that loop indicates
-						-- that we found that the current tag set can be combined with
-						-- a preceding tag set, did the combination and deleted the
-						-- current tag set. The next iteration then processes the same
-						-- numbered tag set again (which is actually the following tag
-						-- set, because we deleted the tag set before it). No break
-						-- indicates that we couldn't combine the current tag set with
-						-- any preceding tag set, and need to advance to the next one.
+						-- No break from inner for-loop. Break from that loop indicates that we found that the current
+						-- tag set can be combined with a preceding tag set, did the combination and deleted the
+						-- current tag set. The next iteration then processes the same numbered tag set again (which is
+						-- actually the following tag set, because we deleted the tag set before it). No break
+						-- indicates that we couldn't combine the current tag set with any preceding tag set, and need
+						-- to advance to the next one.
 						tag_ind = tag_ind + 1
 					end
 				end
 			end
-			tag_set_group_by_style[combine_style] = tag_sets
+			tag_sets_by_style[combine_style] = this_tag_sets
 		end
 
-		local tag_set_group
-
-		if not m_table.deepEqualsList(tag_set_group_by_style["adjacent-first"], tag_set_group_by_style["all-first"]) then
+		if not m_table.deepEquals(tag_sets_by_style["adjacent-first"], tag_sets_by_style["all-first"]) then
 			local function num_combinations(group)
 				local num_combos = 0
 				for _, tag_set in ipairs(group) do
-					for _, tag in ipairs(tag_set) do
+					for _, tag in ipairs(tag_set.tags) do
 						if tag:find("//") then
 							num_combos = num_combos + 1
 						end
@@ -466,39 +500,47 @@ function export.combine_tag_sets_into_multipart(tag_sets, lang)
 				return num_combos
 			end
 
-			local num_adjacent_first_combos = num_combinations(tag_set_group_by_style["adjacent-first"])
-			local num_all_first_combos = num_combinations(tag_set_group_by_style["all-first"])
+			local num_adjacent_first_combos = num_combinations(tag_sets_by_style["adjacent-first"])
+			local num_all_first_combos = num_combinations(tag_sets_by_style["all-first"])
 			if num_adjacent_first_combos < num_all_first_combos then
-				tag_set_group = tag_set_group_by_style["adjacent-first"]
+				tag_sets = tag_sets_by_style["adjacent-first"]
 			elseif num_all_first_combos < num_adjacent_first_combos then
-				tag_set_group = tag_set_group_by_style["all-first"]
+				tag_sets = tag_sets_by_style["all-first"]
 			else
-				tag_set_group = tag_set_group_by_style["adjacent-first"]
+				tag_sets = tag_sets_by_style["adjacent-first"]
 			end
 		else
 			-- Both are the same, pick either one
-			tag_set_group = tag_set_group_by_style["adjacent-first"]
+			tag_sets = tag_sets_by_style["adjacent-first"]
 		end
 
-		canonicalized_tags = {}
-		for _, tag_set in ipairs(tag_set_group) do
-			if #canonicalized_tags > 0 then
-				table.insert(canonicalized_tags, ";")
-			end
-			for _, tag in ipairs(tag_set) do
-				table.insert(canonicalized_tags, tag)
-			end
-		end
-		if m_table.deepEqualsList(canonicalized_tags, old_canonicalized_tags) then
+		if m_table.deepEquals(tag_sets, old_canonicalized_tag_sets) then
 			break
 		end
 		-- FIXME, we should consider reversing the transformation 1s -> 1|s,
 		-- but it's complicated to figure out when the transformation occurred;
 		-- not really important as both are equivalent
-		tags = canonicalized_tags
 	end
 
-	return tags
+	if old_style_tags then
+		local retval = {}
+		for _, tag_set in ipairs(tag_sets) do
+			if tag_set.labels and #tag_set.labels > 0 then
+				tag_set.tags[#tag_set.tags] =
+					tag_set.tags[#tag_set.tags] .. "<lb:" .. table.concat(tag_set.labels, ",") .. ">"
+			end
+			if #retval > 0 then
+				table.insert(retval, ";")
+			end
+			m_table.extendList(retval, tag_set.tags)
+		end
+		return retval
+	else
+		for _, tag_set in ipairs(tag_sets) do
+			tag_sets.labels_with_auto = nil
+		end
+		return tag_sets
+	end
 end
 
 -- Test function, callable externally.
