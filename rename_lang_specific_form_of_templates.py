@@ -572,7 +572,7 @@ templates_by_cap_and_period = [
   # The following instances need to be fixed up:
   # Page 944 𐌺𐌿𐌽𐌸𐍃: WARNING: Found form-of template with pre-text: # [[known]]. {{got-verb form of|𐌺𐌿𐌽𐌽𐌰𐌽|t=past|m=ptc}}
   ("got-verb form of", "ignoreducdot", "verified"),
-  ("got-nom form of", "ignoreducdot", False),
+  ("got-nom form of", "ignoreducdot", "verified"),
   # The following instances need to be fixed up:
   # Page 18 तेरी: WARNING: Found form-of template with post-text: # {{hi-form-adj||fs|तेरा}} {{hi-form-adj||fp|तेरा}}
   # Page 19 तेरे: WARNING: Found form-of template with post-text: # {{hi-form-adj|i|ms|तेरा}} {{hi-form-adj|v|ms|तेरा}} {{hi-form-adj||mp|तेरा}}
@@ -626,6 +626,7 @@ templates_by_cap_and_period = [
   ("nb-noun-form-def-gen", "lcnodot", False),
   ("nb-noun-form-def-gen-pl", "lcnodot", False),
   ("nb-noun-form-indef-gen-pl", "lcnodot", False),
+  ("nl-adj form of", "ignoreduc", False),
   ("ofs-nom form of", "ignoreduc", "verified"),
   ("osx-nom form of", "ignoreduc", "verified"),
   # The following instances need to be fixed up:
@@ -3451,6 +3452,29 @@ nl_specs = [
     ]),
     ("copy", "2", "t"),
   )),
+  ("nl-adj form of",
+    lambda data: (
+      "comparative of" if data.getp("1") == "comp" else "superlative of",
+      ("error-if", ("present-except", ["1", "2", "3"])),
+      ("set", "1", [
+        "nl",
+        ("copy", "2"),
+      ]),
+      ("copy", "3", "t"),
+    ) if data.getp("1") in ["comp", "sup"] else (
+      "infl of",
+      ("error-if", ("present-except", ["1", "2", "3", "comp-of", "sup-of"])),
+      ("set", "1", [
+        "nl",
+        ("copy", "2"),
+        "",
+        ("copy", "1"),
+      ]),
+      ("copy", "3", "t"),
+      ("copy", "comp-of"),
+      ("copy", "sup-of"),
+    )
+  ),
 ]
 
 ofs_specs = [
@@ -4180,10 +4204,10 @@ sl_specs = [
   ("sl-verb form of", "sl-form-verb"),
 ]
 
-def sv_form(template, parts):
+def sv_form(template, parts, with_plural_of=False):
   return (
     template,
-    ("error-if", ("present-except", ["1", "2"])),
+    ("error-if", ("present-except", ["1", "2", "dot"] + (["plural of"] if with_plural_of else []))),
     ("set", "1", [
       "sv",
       ("copy", "1"),
@@ -4198,6 +4222,8 @@ def sv_noun_form(parts):
   return sv_form("noun form of", parts)
 def sv_verb_form(parts):
   return sv_form("verb form of", parts)
+def sv_verb_form_with_plural(parts):
+  return sv_form("verb form of", parts, with_plural_of=True)
 
 sv_specs = [
   # NOTE: All of the following adjective, adverb and verb forms have automatic,
@@ -4258,20 +4284,33 @@ sv_specs = [
       "gen",
     ]),
   )),
-  ("sv-verb-form-imp", sv_verb_form(["imp"])),
+  ("sv-verb-form-imp", lambda data: (
+    sv_verb_form_with_plural(["1", "p", "imp"]) if data.getp("plural of") and data.pagetitle.endswith("m")
+    else sv_verb_form_with_plural(["2", "p", "imp"]) if data.getp("plural of")
+    else sv_verb_form(["imp"]))),
   # Template says "infinitive passive".
   ("sv-verb-form-inf-pass", sv_verb_form(["pass", "inf"])),
   # Contrary to what we said above, this one in particular has the final
   # period controllable by |dot=, which can override it. Pretty sure it
   # never occurs.
-  ("sv-verb-form-past", sv_verb_form(["past"])),
-  ("sv-verb-form-past-pass", sv_verb_form(["past", "pass"])),
+  ("sv-verb-form-past", lambda data: (
+    sv_verb_form_with_plural(["1", "p", "past", "ind"]) if data.getp("plural of") and data.pagetitle.endswith("m")
+    else sv_verb_form_with_plural(["2", "p", "past", "ind"]) if data.getp("plural of") and data.pagetitle.endswith("n")
+    else sv_verb_form_with_plural(["p", "past", "ind"]) if data.getp("plural of")
+    else sv_verb_form(["past", "ind"]))),
+  ("sv-verb-form-past-pass", lambda data: (
+    sv_verb_form_with_plural(["p", "past", "pass", "ind"]) if data.getp("plural of")
+    else sv_verb_form(["past", "pass", "ind"]))),
   # Contrary to what we said above, this one in particular also has the final
   # period controllable by |dot=, which can override it. Pretty sure it
   # never occurs.
   ("sv-verb-form-pastpart", sv_verb_form(["past", "part"])),
-  ("sv-verb-form-pre", sv_verb_form(["pres"])),
-  ("sv-verb-form-pre-pass", sv_verb_form(["pres", "pass"])),
+  ("sv-verb-form-pre", lambda data: (
+    sv_verb_form_with_plural(["1", "p", "pres", "ind"]) if data.getp("plural of") and data.pagetitle.endswith("m")
+    else sv_verb_form_with_plural(["2", "p", "pres", "ind"]) if data.getp("plural of") and data.pagetitle.endswith("n")
+    else sv_verb_form_with_plural(["p", "pres", "ind"]) if data.getp("plural of")
+    else sv_verb_form(["pres", "ind"]))),
+  ("sv-verb-form-pre-pass", sv_verb_form(["pres", "pass", "ind"])),
   # Contrary to what we said above, this one in particular doesn't have a
   # final period.
   ("sv-verb-form-prepart", sv_verb_form(["pres", "part"])),
