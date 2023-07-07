@@ -435,7 +435,27 @@ function export.lang_specific_tables()
 		local lang = m_languages.getByCode(langcode, true)
 		local data_module = mw.loadData(m_form_of.form_of_lang_data_module_prefix .. langcode)
 
-		-- First do inflection tags.
+		-- First do base-lemma params.
+		local base_lemma_param_table
+		-- Can't just call #data_module.base_lemma_params as this comes from loadData().
+		if data_module.base_lemma_params and data_module.base_lemma_params[1] then
+			local base_lemma_param_parts = {}
+			local function ins(text)
+				table.insert(base_lemma_param_parts, text)
+			end
+			ins('{|class="wikitable"')
+			ins("! Parameter !! Display form")
+			for _, base_lemma_param in ipairs(data_module.base_lemma_params) do
+				ins("|-")
+				ins(("| <code>%s</code> || %s"):format(base_lemma_param.param,
+					get_display_form(base_lemma_param.tags, lang)))
+			end
+			ins("|}")
+			base_lemma_param_table = table.concat(base_lemma_param_parts, "\n")
+		end
+
+
+		-- Then do inflection tags.
 		local data_tab = organize_tag_data(data_module)
 		local tag_parts = {}
 		local function ins(text)
@@ -494,13 +514,17 @@ function export.lang_specific_tables()
 			non_alias_shortcut_table = table.concat(non_alias_shortcut_parts, "\n")
 		end
 
-		if tag_table or non_alias_shortcut_table then
+		if base_lemma_param_table or tag_table or non_alias_shortcut_table then
 			local langname = lang:getCanonicalName()
 			local lang_parts = {}
 			local function ins(text)
 				table.insert(lang_parts, text)
 			end
 			ins("===" .. langname .. "===")
+			if base_lemma_param_table then
+				ins(("%s-specific base lemma parameters:"):format(langname))
+				ins(base_lemma_param_table)
+			end
 			if tag_table then
 				ins(("%s-specific inflection tags:"):format(langname))
 				ins(tag_table)
