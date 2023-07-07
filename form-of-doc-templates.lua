@@ -19,6 +19,7 @@ local function create_introdoc_params()
 		["primaryentrytext"] = {},
 		["cat"] = {list = true},
 		["addlintrotext"] = {},
+		["etymtemp"] = {},
 		["withdot"] = {type = "boolean"},
 		["withcap"] = {type = "boolean"},
 	}
@@ -95,6 +96,10 @@ end
 
 function export.postable_t(frame)
 	return m_form_of_doc.postable()
+end
+
+function export.cattable_t(frame)
+	return m_form_of_doc.cattable()
 end
 
 return export
