@@ -12,6 +12,8 @@ local export = {}
 local m_template_link = require("Module:template link")
 local m_languages = require("Module:languages")
 local m_table = require("Module:table")
+local form_of_module = "Module:form of"
+local m_form_of = require(form_of_module)
 local strutils = require("Module:string utilities")
 
 local usub = mw.ustring.sub
@@ -26,7 +28,7 @@ local function rsub(term, foo, bar)
 end
 
 local function lang_name(langcode, param)
-	local lang = m_languages.getByCode(langcode) or m_languages.err(langcode, param)
+	local lang = m_languages.getByCode(langcode, param)
 	return lang:getCanonicalName()
 end
 
@@ -60,7 +62,7 @@ function export.introdoc(args)
 		table.insert(exlangnames, lang_name(exlang, "exlang"))
 	end
 	parts = {}
-	table.insert(parts, mw.getCurrentFrame():expandTemplate{title="Lua", args={"Module:form of/templates"}})
+	table.insert(parts, mw.getCurrentFrame():expandTemplate{title="Lua", args={form_of_module .. "/templates"}})
 	table.insert(parts, "This template creates a definition line for ")
 	table.insert(parts, args.pldesc or rsub(template_name(), " of$", "") .. "s")
 	table.insert(parts, " ")
@@ -135,7 +137,7 @@ end
 
 function export.paramdoc(args)
 	local parts = {}
-	
+
 	local function param_and_doc(params, list, required, doc)
 		table.insert(parts, "; ")
 		table.insert(parts, param(params, list, required))
@@ -226,13 +228,13 @@ function export.fulldoc(args)
 end
 
 function export.infldoc(args)
-	args = require("Module:table").shallowcopy(args)
+	args = m_table.shallowcopy(args)
 	args.sgdesc = args.sgdesc or (args.art or "the") .. " " ..
 		rsub(template_name(), " of$", "") .. (args.form and " " .. args.form or "")
 	args.pldesc = args.sgdesc
 	args.sgdescof = args.sgdescof or args.sgdesc .. " of"
 	args.primaryentrytext = args.primaryentrytext or "of a primary entry"
-	return export.fulldoc(args)	
+	return export.fulldoc(args)
 end
 
 local tag_type_to_description = {
@@ -268,71 +270,67 @@ local tag_type_order = {
 	"other",
 }
 
+local function tag_type_desc(tag_type)
+	return tag_type_to_description[tag_type] or strutils.ucfirst(tag_type)
+end
+
 local function sort_by_first(namedata1, namedata2)
 	return namedata1[1] < namedata2[1]
 end
 
-function export.tagtable()
-	m_data = mw.loadData("Module:form of/data")
-	m_data2 = mw.loadData("Module:form of/data2")
-	m_form_of = require("Module:form of")
+local function get_display_form(tag_set, lang)
+	local norm_tag_sets = m_form_of.normalize_tag_set(tag_set, lang)
+	if #norm_tag_sets == 1 then
+		return m_form_of.get_tag_set_display_form(norm_tag_sets[1], lang)
+	end
+	-- If we have a conjoined shortcut that expands to multiple tag sets, display them using a numbered list.
+	-- In order to do that inside a table we need a newline before the list.
+	local display_forms = {}
+	for _, norm_tag_set in ipairs(norm_tag_sets) do
+		table.insert(display_forms, "\n# " .. m_form_of.get_tag_set_display_form(norm_tag_set, lang))
+	end
+	return table.concat(display_forms)
+end
 
-	local function organize_data(data_module)
-		local tab = {}
-		for name, data in pairs(data_module.tags) do
-			if not data.tag_type then
-				-- Throw an error because hopefully it will get noticed and fixed.
-				-- If we just skip it, it may never get fixed.
-				error("Tag '" .. name .. "' has no tag_type")
-			end
-			if not tab[data.tag_type] then
-				tab[data.tag_type] = {}
-			end
-			table.insert(tab[data.tag_type], {name, data})
+local function organize_tag_data(data_module)
+	local tab = {}
+	for name, data in pairs(data_module.tags) do
+		if not data.tag_type then
+			-- Throw an error because hopefully it will get noticed and fixed. If we just skip it, it may never get
+			-- fixed.
+			error("Tag '" .. name .. "' has no tag_type")
 		end
-		local tag_type_order_set = require("Module:table").listToSet(tag_type_order)
-		for tag_type, tags_of_type in pairs(tab) do
-			if not tag_type_order_set[tag_type] then
-				-- See justification above for throwing an error.
-				error("Tag type '" .. tag_type .. "' not listed in tag_type_order")
-			end
-			table.sort(tags_of_type, sort_by_first)
+		if not tab[data.tag_type] then
+			tab[data.tag_type] = {}
 		end
-		local multitag_shortcuts = {}
-		local list_shortcuts = {}
-		local function get_display_form(tags)
-			local normtags = m_form_of.normalize_tags(tags)
-			local display_forms = {}
-			for _, normtag in ipairs(normtags) do
-				table.insert(display_forms, m_form_of.get_tag_display_form(normtag))
-			end
-			return table.concat(display_forms, " ")
+		table.insert(tab[data.tag_type], {name, data})
+	end
+	local tag_type_order_set = m_table.listToSet(tag_type_order)
+	for tag_type, tags_of_type in pairs(tab) do
+		if not tag_type_order_set[tag_type] then
+			-- See justification above for throwing an error.
+			error("Tag type '" .. tag_type .. "' not listed in tag_type_order")
 		end
-
-		for shortcut, full in pairs(data_module.shortcuts) do
-			if type(full) == "table" then
-				table.insert(list_shortcuts, {shortcut, get_display_form(full)})
-			elseif full:find("//") then
-				table.insert(multitag_shortcuts, {shortcut, get_display_form({full})})
-			end
-		end
-
-		table.sort(list_shortcuts, sort_by_first)
-		table.sort(multitag_shortcuts, sort_by_first)
-
-		return tab, multitag_shortcuts, list_shortcuts
+		table.sort(tags_of_type, sort_by_first)
 	end
 
-	local data_tab, data_multitag_shortcuts, data_list_shortcuts = organize_data(m_data)
-	local data2_tab, data2_multitag_shortcuts, data2_list_shortcuts = organize_data(m_data2)
+	return tab
+end
+
+function export.tagtable()
+	local data_tab = organize_tag_data(mw.loadData(m_form_of.form_of_data_module))
+	local data2_tab = organize_tag_data(mw.loadData(m_form_of.form_of_data2_module))
 
 	local parts = {}
+
+	local function ins(text)
+		table.insert(parts, text)
+	end
 
 	local function insert_group(group)
 		for _, namedata in ipairs(group) do
 			local sparts = {}
-			local name = namedata[1]
-			local data = namedata[2]
+			local name, data = unpack(namedata)
 			table.insert(sparts, "| <code>" .. name .. "</code> || ")
 			if data.shortcuts then
 				local ssparts = {}
@@ -342,64 +340,202 @@ function export.tagtable()
 				table.insert(sparts, table.concat(ssparts, ", ") .. " ")
 			end
 			table.insert(sparts, "|| " .. m_form_of.get_tag_display_form(name))
-			table.insert(parts, "|-")
-			table.insert(parts, table.concat(sparts))
+			ins("|-")
+			ins(table.concat(sparts))
 		end
 	end
 
-	local function insert_shortcut_group(shortcuts)
-		for _, namedisp in ipairs(shortcuts) do
-			local name = namedisp[1]
-			local disp = namedisp[2]
-			table.insert(parts, "|-")
-			table.insert(parts, "| || <code>" .. name .. "</code> || " .. disp)
-		end
-	end
-
-	table.insert(parts, '{|class="wikitable"')
-	table.insert(parts, "! Canonical tag !! Shortcut(s) !! Display form")
+	ins('{|class="wikitable"')
+	ins("! Canonical tag !! Shortcut(s) !! Display form")
 	for _, tag_type in ipairs(tag_type_order) do
 		local group_tab = data_tab[tag_type]
 		if group_tab then
-			table.insert(parts, "|-")
-			table.insert(parts, '! colspan="3" style="text-align: center; background: #dddddd;" | ' ..
-				(tag_type_to_description[tag_type] or strutils.ucfirst(tag_type)) .. " (more common)")
+			ins("|-")
+			ins('! colspan="3" style="text-align: center; background: #dddddd;" | ' ..  tag_type_desc(tag_type) ..
+				" (more common)")
 			insert_group(group_tab)
 		end
 		group_tab = data2_tab[tag_type]
 		if group_tab then
-			table.insert(parts, "|-")
-			table.insert(parts, '! colspan="3" style="text-align: center; background: #dddddd;" | ' ..
-				(tag_type_to_description[tag_type] or strutils.ucfirst(tag_type)) .. " (less common)")
+			ins("|-")
+			ins('! colspan="3" style="text-align: center; background: #dddddd;" | ' ..  tag_type_desc(tag_type) ..
+				" (less common)")
 			insert_group(group_tab)
 		end
 	end
-	if #data_multitag_shortcuts > 0 then
-		table.insert(parts, "|-")
-		table.insert(parts, '! colspan="3" style="text-align: center; background: #dddddd;" | Multitag shortcuts (more common)')
-		insert_shortcut_group(data_multitag_shortcuts)
+	ins("|}")
+
+	return table.concat(parts, "\n")
+end
+
+local function organize_non_alias_shortcut_data(data_module, lang)
+	local non_alias_shortcuts = {}
+	for shortcut, full in pairs(data_module.shortcuts) do
+		if type(full) == "table" or m_form_of.is_link_or_html(full) or full:find("//") or full:find(":") then
+			table.insert(non_alias_shortcuts, {shortcut, full, get_display_form({shortcut}, lang)})
+		end
 	end
-	if #data2_multitag_shortcuts > 0 then
-		table.insert(parts, "|-")
-		table.insert(parts, '! colspan="3" style="text-align: center; background: #dddddd;" | Multitag shortcuts (less common)')
-		insert_shortcut_group(data2_multitag_shortcuts)
+
+	table.sort(non_alias_shortcuts, sort_by_first)
+
+	return non_alias_shortcuts
+end
+
+function export.non_alias_shortcut_table()
+	local non_alias_shortcuts = organize_non_alias_shortcut_data(mw.loadData(m_form_of.form_of_data_module))
+	local non_alias_shortcuts2 = organize_non_alias_shortcut_data(mw.loadData(m_form_of.form_of_data2_module))
+
+	local parts = {}
+
+	local function ins(text)
+		table.insert(parts, text)
 	end
-	if #data_list_shortcuts > 0 then
-		table.insert(parts, "|-")
-		table.insert(parts, '! colspan="3" style="text-align: center; background: #dddddd;" | List shortcuts (more common)')
-		insert_shortcut_group(data_list_shortcuts)
+
+	local function insert_shortcut_group(shortcuts)
+		for _, spec in ipairs(shortcuts) do
+			local shortcut, full, display = unpack(spec)
+			ins("|-")
+			if type(full) == "table" then
+				-- Grrr. table.concat() doesn't work on a table that comes from loadData(); use shallowcopy() to convert to
+				-- regular table.
+				full = "{" .. table.concat(m_table.shallowcopy(full), " ") .. "}"
+			end
+			ins(("| <code>%s</code> || <code>%s</code> || %s"):format(shortcut, full, display))
+		end
 	end
-	if #data2_list_shortcuts > 0 then
-		table.insert(parts, "|-")
-		table.insert(parts, '! colspan="3" style="text-align: center; background: #dddddd;" | List shortcuts (less common)')
-		insert_shortcut_group(data2_list_shortcuts)
+
+	ins('{|class="wikitable"')
+	ins("! Shortcut !! Expansion !! Display form")
+	if #non_alias_shortcuts > 0 then
+		ins("|-")
+		ins('! colspan="3" style="text-align: center; background: #dddddd;" | More common:')
+		insert_shortcut_group(non_alias_shortcuts)
 	end
-	table.insert(parts, "|}")
+	if #non_alias_shortcuts2 > 0 then
+		ins("|-")
+		ins('! colspan="3" style="text-align: center; background: #dddddd;" | Less common:')
+		insert_shortcut_group(non_alias_shortcuts2)
+	end
+	ins("|}")
+
+	return table.concat(parts, "\n")
+end
+
+
+function export.lang_specific_tables()
+	local parts = {}
+
+	local function ins(text)
+		table.insert(parts, text)
+	end
+
+	local data_by_lang = {}
+
+	for langcode, _ in pairs(m_form_of.langs_with_lang_specific_tags) do
+		local lang = m_languages.getByCode(langcode, true)
+		local data_module = mw.loadData(m_form_of.form_of_lang_data_module_prefix .. langcode)
+
+		-- First do inflection tags.
+		local data_tab = organize_tag_data(data_module)
+		local tag_parts = {}
+		local function ins(text)
+			table.insert(tag_parts, text)
+		end
+		ins('{|class="wikitable"')
+		ins("! Canonical tag !! Shortcut(s) !! Tag type !! Display form")
+		local saw_any_tag = false
+		for _, tag_type in ipairs(tag_type_order) do
+			local group_tab = data_tab[tag_type]
+			if group_tab then
+				for _, namedata in ipairs(group_tab) do
+					local sparts = {}
+					local name, data = unpack(namedata)
+					table.insert(sparts, "| <code>" .. name .. "</code> || ")
+					if data.shortcuts then
+						local ssparts = {}
+						for _, shortcut in ipairs(data.shortcuts) do
+							table.insert(ssparts, "<code>" .. shortcut .. "</code>")
+						end
+						table.insert(sparts, table.concat(ssparts, ", ") .. " ")
+					end
+					table.insert(sparts, "|| " .. tag_type_desc(tag_type) .. " || " ..
+						m_form_of.get_tag_display_form(name, lang))
+					ins("|-")
+					ins(table.concat(sparts))
+					saw_any_tag = true
+				end
+			end
+		end
+		ins("|}")
+
+		local tag_table = saw_any_tag and table.concat(tag_parts, "\n") or nil
+
+		-- Then do non-alias shortcuts.
+		local non_alias_shortcut_table
+		local non_alias_shortcuts = organize_non_alias_shortcut_data(data_module, lang)
+		if #non_alias_shortcuts > 0 then
+			local non_alias_shortcut_parts = {}
+			local function ins(text)
+				table.insert(non_alias_shortcut_parts, text)
+			end
+			ins('{|class="wikitable"')
+			ins("! Shortcut !! Expansion !! Display form")
+			for _, spec in ipairs(non_alias_shortcuts) do
+				local shortcut, full, display = unpack(spec)
+				ins("|-")
+				if type(full) == "table" then
+					-- Grrr. table.concat() doesn't work on a table that comes from loadData(); use shallowcopy() to
+					-- convert to regular table.
+					full = "{" .. table.concat(m_table.shallowcopy(full), " ") .. "}"
+				end
+				ins(("| <code>%s</code> || <code>%s</code> || %s"):format(shortcut, full, display))
+			end
+			ins("|}")
+			non_alias_shortcut_table = table.concat(non_alias_shortcut_parts, "\n")
+		end
+
+		if tag_table or non_alias_shortcut_table then
+			local langname = lang:getCanonicalName()
+			local lang_parts = {}
+			local function ins(text)
+				table.insert(lang_parts, text)
+			end
+			ins("===" .. langname .. "===")
+			if tag_table then
+				ins(("%s-specific inflection tags:"):format(langname))
+				ins(tag_table)
+			end
+			if non_alias_shortcut_table then
+				ins(("%s-specific non-alias shortcuts:"):format(langname))
+				ins(non_alias_shortcut_table)
+			end
+			table.insert(data_by_lang, {langname, table.concat(lang_parts, "\n")})
+		end
+	end
+
+	local function sort_by_first_english_first(langdata1, langdata2)
+		if langdata1[1] == "English" then
+			-- English is "less than" (goes before) all other languages
+			return true
+		elseif langdata2[1] == "English" then
+			-- All other languages are not "less than" (do not go before) English
+			return false
+		else
+			return langdata1[1] < langdata2[1]
+		end
+	end
+
+	table.sort(data_by_lang, sort_by_first_english_first)
+
+	local parts = {}
+	for _, lang_and_data in ipairs(data_by_lang) do
+		table.insert(parts, lang_and_data[2])
+	end
 	return table.concat(parts, "\n")
 end
 
 function export.postable()
-	m_pos = mw.loadData("Module:form of/pos")
+	m_pos = mw.loadData(m_form_of.form_of_pos_module)
 	local shortcut_tab = {}
 	for shortcut, full in pairs(m_pos) do
 		if not shortcut_tab[full] then
@@ -432,11 +568,11 @@ function export.postable()
 end
 
 function export.cattable()
-	local m_cats = mw.loadData("Module:form of/cats")
+	local m_cats = mw.loadData(m_form_of.form_of_cats_module)
 	local cats_by_lang = {}
 	local function find_categories(catstruct)
 		local cats = {}
-		
+
 		local function process_spec(spec)
 			if type(spec) == "string" then
 				table.insert(cats, spec)
@@ -472,7 +608,7 @@ function export.cattable()
 				error("Unrecognized predicate: " .. predicate)
 			end
 		end
-		
+
 		for _, spec in ipairs(catstruct) do
 			process_spec(spec)
 		end
@@ -484,7 +620,7 @@ function export.cattable()
 		table.insert(cats_by_lang, {lang, cats})
 	end
 	table.sort(cats_by_lang, sort_by_first)
-	
+
 	local lang_independent_cat_index = nil
 	for i, langcats in ipairs(cats_by_lang) do
 		local lang = langcats[1]
@@ -497,7 +633,7 @@ function export.cattable()
 		local lang_independent_cats = table.remove(cats_by_lang, lang_independent_cat_index)
 		table.insert(cats_by_lang, 1, lang_independent_cats)
 	end
-	
+
 	local parts = {}	
 	table.insert(parts, '{|class="wikitable"')
 
@@ -525,6 +661,3 @@ function export.cattable()
 end
 
 return export
-
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:
