@@ -114,7 +114,7 @@ function export.get_label_info(data)
 		
 		label = require("Module:string utilities").gsub(labdata.special_display, "<(.-)>", add_language_name)
 	else
-		--[[
+		--[=[
 			If labdata.glossary or labdata.Wikipedia are set to true, there is a glossary definition
 			with an anchor identical to the label, or a Wikipedia article with a title
 			identical to the label.
@@ -123,13 +123,17 @@ function export.get_label_info(data)
 						glossary = true,
 					}
 				indicates that there is a glossary entry for "formal".
-				
-			
-			Otherwise, labdata.glossary and labdata.Wikipedia specify the title or the anchor.
-		]]
+
+			Otherwise:
+			* labdata.glossary specifies the anchor in [[Appendix:Glossary]].
+			* labdata.Wiktionary specifies an arbitrary Wiktionary page or page + anchor (e.g. a separate Appendix entry).
+			* labdata.Wikipedia specifies an arbitrary Wikipedia article.
+		]=]
 		if labdata.glossary then
 			local glossary_entry = type(labdata.glossary) == "string" and labdata.glossary or label
 			label = "[[Appendix:Glossary#" .. glossary_entry .. "|" .. ( labdata.display or label ) .. "]]"
+		elseif labdata.Wiktionary then
+			label = "[[" .. labdata.Wiktionary .. "|" .. ( labdata.display or label ) .. "]]"
 		elseif labdata.Wikipedia then
 			local Wikipedia_entry = type(labdata.Wikipedia) == "string" and labdata.Wikipedia or label
 			label = "[[w:" .. Wikipedia_entry .. "|" .. ( labdata.display or label ) .. "]]"
@@ -163,7 +167,7 @@ function export.get_label_info(data)
 		ret.label = label
 	end
 	
-	if nocat then
+	if data.nocat then
 		ret.categories = ""
 	else
 		ret.categories = categories .. show_categories(labdata, data.lang, data.sort, data.term_mode)
