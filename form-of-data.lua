@@ -133,6 +133,20 @@ tags["plural"] = {
 	wikidata = "Q146786",
 }
 
+tags["single-possession"] = {
+	tag_type = "number",
+	glossary = "singular number",
+	shortcuts = {"spos"},
+	wikidata = "Q110786", -- Singular
+}
+
+tags["multiple-possession"] = {
+	tag_type = "number",
+	glossary = "plural number",
+	shortcuts = {"mpos"},
+	wikidata = "Q146786", -- Plural
+}
+
 shortcuts["1s"] = {"1", "s"}
 shortcuts["2s"] = {"2", "s"}
 shortcuts["3s"] = {"3", "s"}
@@ -213,9 +227,8 @@ tags["inanimate"] = {
 
 tags["personal"] = {
 	tag_type = "animacy",
-	glossary = "animacy",
-	glossary_type = "wp",
 	shortcuts = {"pr", "pers"},
+	wikidata = "Q63302102",
 }
 
 
@@ -241,6 +254,13 @@ tags["future"] = {
 	wikidata = "Q501405",
 }
 
+tags["future perfect"] = {
+	tag_type = "tense-aspect",
+	glossary = "future perfect",
+	shortcuts = {"futp", "fperf"},
+	wikidata = "Q1234617",
+}
+
 tags["non-past"] = {
 	tag_type = "tense-aspect",
 	glossary = "non-past tense",
@@ -258,7 +278,6 @@ tags["progressive"] = {
 tags["preterite"] = {
 	tag_type = "tense-aspect",
 	glossary = "preterite",
-	glossary_type = "wp",
 	shortcuts = {"pret"},
 	wikidata = "Q442485",
 }
@@ -279,7 +298,6 @@ tags["imperfect"] = {
 tags["pluperfect"] = {
 	tag_type = "tense-aspect",
 	glossary = "pluperfect",
-	glossary_type = "wp",
 	shortcuts = {"plup", "pluperf"},
 	wikidata = "Q623742",
 }
@@ -293,9 +311,8 @@ tags["aorist"] = {
 
 tags["past historic"] = {
 	tag_type = "tense-aspect",
-	glossary = "past historic",
-	glossary_type = "wp",
 	shortcuts = {"phis"},
+	wikidata = "Q442485",  -- Preterite
 }
 
 tags["imperfective"] = {
@@ -348,10 +365,18 @@ tags["conditional"] = {
 	wikidata = "Q625581",
 }
 
+tags["modal"] = {
+	tag_type = "mood",
+	glossary = "modality (linguistics)",
+	glossary_type = "wp",
+	shortcuts = {"mod"},
+	wikidata = "Q1243600",
+}
+
 tags["optative"] = {
 	tag_type = "mood",
 	glossary = "optative mood",
-	shortcuts = {"opt", "opta"},
+	shortcuts = {"opta", "opt"},
 	wikidata = "Q527205",
 }
 
@@ -360,6 +385,14 @@ tags["jussive"] = {
 	glossary = "jussive mood",
 	shortcuts = {"juss"},
 	wikidata = "Q462367",
+}
+
+tags["hortative"] = {
+	tag_type = "mood",
+	glossary = "hortative",
+	glossary_type = "wp",
+	shortcuts = {"hort"},
+	wikidata = "Q5906629",
 }
 
 
@@ -446,7 +479,8 @@ tags["infinitive"] = {
 	wikidata = "Q179230",
 }
 
--- A form found in Portuguese and Galician
+-- A form found in Portuguese and Galician, as well as in Hungarian
+-- This is probably unnecessary and can be replaced with the regular "infinitive" tag. A personal infinitive is not a separate infinitive from the plain infinitive, just an inflection of the infinitive.
 tags["personal infinitive"] = {
 	glossary = "Portuguese verb conjugation",
 	glossary_type = "wp",
@@ -480,6 +514,12 @@ tags["supine"] = {
 	glossary = "supine",
 	shortcuts = {"sup"},
 	wikidata = "Q548470",
+}
+
+tags["transgressive"] = {
+	tag_type = "non-finite",
+	glossary = "transgressive",
+	wikidata = "Q904896",
 }
 
 
@@ -554,6 +594,7 @@ tags["vocative"] = {
 tags["construct"] = {
 	tag_type = "state",
 	glossary = "construct state",
+	display = "construct state",
 	shortcuts = {"cons", "construct state"},
 	wikidata = "Q1641446",
 }
@@ -570,6 +611,35 @@ tags["indefinite"] = {
 	glossary = "indefinite",
 	shortcuts = {"indef", "indf", "indefinite state"},
 	wikidata = "Q53997857",
+}
+
+tags["possessive"] = {
+	tag_type = "state",
+	glossary = "possessive",
+	glossary_type = "wp",
+	shortcuts = {"poss"},
+	wikidata = "Q2105891",
+}
+
+tags["strong"] = {
+	tag_type = "state",
+	glossary = "indefinite",
+	shortcuts = {"str"},
+	wikidata = "Q53997857", -- Indefinite
+}
+
+tags["weak"] = {
+	tag_type = "state",
+	glossary = "definite",
+	shortcuts = {"wk"},
+	wikidata = "Q53997851", -- Definite
+}
+
+tags["mixed"] = {
+	tag_type = "state",
+	glossary = "mixed",
+	shortcuts = {"mix"},
+	wikidata = "Q63302161",
 }
 
 tags["attributive"] = {
@@ -619,29 +689,6 @@ tags["superlative degree"] = {
 
 ----------------------- Inflectional class -----------------------
 
-tags["strong"] = {
-	tag_type = "class",
-	glossary = "strong declension",
-	glossary_type = "wikt",
-	shortcuts = {"str"},
-	wikidata = "Q3481903",
-}
-
-tags["weak"] = {
-	tag_type = "class",
-	glossary = "weak declension",
-	glossary_type = "wikt",
-	shortcuts = {"wk"},
-	wikidata = "Q7977953",
-}
-
-tags["mixed"] = {
-	tag_type = "class",
-	glossary = "mixed declension",
-	glossary_type = "wikt",
-	shortcuts = {"mix"},
-}
-
 tags["pronominal"] = {
 	tag_type = "class",
 	glossary = "pronominal",
@@ -661,7 +708,6 @@ tags["pronominal"] = {
 tags["augmentative"] = {
 	tag_type = "attitude",
 	glossary = "augmentative",
-	glossary_type = "wp",
 	shortcuts = {"aug"},
 	wikidata = "Q1358239",
 }
@@ -669,29 +715,30 @@ tags["augmentative"] = {
 tags["diminutive"] = {
 	tag_type = "attitude",
 	glossary = "diminutive",
-	glossary_type = "wp",
 	shortcuts = {"dim"},
 	wikidata = "Q108709",
 }
 
 tags["pejorative"] = {
 	tag_type = "attitude",
-	glossary = "pejorative suffix",
-	glossary_type = "wp",
+	glossary = "pejorative",
 	shortcuts = {"pej"},
-	wikidata = "Q2067740", -- entry for "pejorative suffix"
-	--wikidata = "Q545779", -- Also possible: entry for "pejorative"
+	wikidata = "Q545779",
 }
 
 
 ----------------------- Sound changes -----------------------
 
 tags["contracted"] = {
-	glossary = "contraction (grammar)",
-	glossary_type = "wp",
 	tag_type = "sound change",
+	shortcuts = {"contr"},
+	wikidata = "Q126473",
 }
 
+tags["uncontracted"] = {
+	tag_type = "sound change",
+	shortcuts = {"uncontr"},
+}
 
 ----------------------- Misc grammar -----------------------
 
@@ -727,73 +774,42 @@ tags["adverbial"] = {
 
 tags["negative"] = {
 	tag_type = "grammar",
+	shortcuts = {"neg"},
 	glossary = "affirmation and negation",
 	glossary_type = "wp",
-	shortcuts = {"neg"},
-}
-
-tags["possessive"] = {
-	tag_type = "non-finite",
-	glossary = "possessive",
-	glossary_type = "wp",
-	shortcuts = {"poss"},
-	wikidata = "Q2105891",
-}
-
-tags["single-possession"] = {
-	tag_type = "grammar",
-	-- FIXME glossary
-	shortcuts = {"spos"},
-}
-
-tags["multiple-possession"] = {
-	tag_type = "grammar",
-	-- FIXME glossary
-	shortcuts = {"mpos"},
+	wikidata = "Q63302088",
 }
 
 tags["nominalized"] = {
 	tag_type = "grammar",
-	glossary = "nominalized adjective",
-	glossary_type = "wp",
 	shortcuts = {"nomz"},
 	wikidata = "Q4683152", -- entry for "nominalized adjective"
 }
 
 tags["nominalization"] = {
 	tag_type = "grammar",
-	glossary = "nominalization",
-	glossary_type = "wp",
 	shortcuts = {"nomzn"},
 	wikidata = "Q1500667",
 }
 
 tags["root"] = {
 	tag_type = "grammar",
-	glossary = "root (linguistics)",
-	glossary_type = "wp",
 	wikidata = "Q111029",
 }
 
 tags["stem"] = {
 	tag_type = "grammar",
-	glossary = "word stem",
-	glossary_type = "wp",
 	wikidata = "Q210523",
 }
 
 tags["dependent"] = {
 	tag_type = "grammar",
-	glossary = "dependent clause",
-	glossary_type = "wp",
 	shortcuts = {"dep"},
 	wikidata = "Q1122094", -- entry for "dependent clause"
 }
 
 tags["independent"] = {
 	tag_type = "grammar",
-	glossary = "independent clause",
-	glossary_type = "wp",
 	shortcuts = {"indep"},
 	wikidata = "Q1419215", -- entry for "independent clause"
 }
@@ -871,6 +887,3 @@ for name, data in pairs(tags) do
 end
 
 return {tags = tags, shortcuts = shortcuts}
-
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:

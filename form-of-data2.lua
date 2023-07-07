@@ -12,27 +12,55 @@ local shortcuts = {}
 
 ----------------------- Person -----------------------
 
+tags["fourth-person"] = {
+	tag_type = "person",
+	glossary = "fourth person",
+	glossary_type = "wikt",
+	shortcuts = {"4"},
+	wikidata = "Q3348541",
+}
+
+tags["second-person-object form"] = {
+	tag_type = "person",
+	glossary = "second-person-object form",
+	shortcuts = {"2o"},
+}
 
 ----------------------- Number -----------------------
 
-tags["trial"] = {
+tags["associative plural"] = {
 	tag_type = "number",
-	glossary = "trial number",
-	shortcuts = {"tri"},
-	wikidata = "Q2142560",
+	glossary = "associative plural",
+	glossary_type = "wikt",
+	shortcuts = {"ass p", "ass pl", "assoc p", "assoc pl"},
 }
 
-tags["paucal"] = {
+tags["collective"] = {
 	tag_type = "number",
-	glossary = "paucal number",
-	shortcuts = {"pau"},
-	wikidata = "Q489410",
+	glossary = "collective number",
+	shortcuts = {"col"},
+	wikidata = "Q694268",
+}
+
+tags["collective-possession"] = {
+	tag_type = "number",
+	glossary = "collective number",
+	shortcuts = {"cpos", "colpos"},
 }
 
 tags["distributive paucal"] = {
 	tag_type = "number",
-	glossary = "distributive paucal number",
+	glossary = "distributive paucal",
+	glossary_type = "wikt",
 	shortcuts = {"dpau"},
+}
+
+tags["paucal"] = {
+	tag_type = "number",
+	glossary = "paucal",
+	glossary_type = "wikt",
+	shortcuts = {"pau"},
+	wikidata = "Q489410",
 }
 
 tags["singulative"] = {
@@ -42,11 +70,19 @@ tags["singulative"] = {
 	wikidata = "Q1450795",
 }
 
-tags["collective"] = {
+tags["transnumeral"] = {
 	tag_type = "number",
-	glossary = "collective number",
-	shortcuts = {"col"},
-	wikidata = "Q694268",
+	display = "singular or plural",
+	glossary = "transnumeral",
+	shortcuts = {"trn"},
+	wikidata = "Q113631596",
+}
+
+tags["trial"] = {
+	tag_type = "number",
+	glossary = "trial number",
+	shortcuts = {"tri"},
+	wikidata = "Q2142560",
 }
 
 
@@ -70,28 +106,11 @@ tags["virile"] = {
 
 ----------------------- Tense/aspect -----------------------
 
-tags["habitual"] = {
+tags["abtemporal"] = {
 	tag_type = "tense-aspect",
-	glossary = "habitual aspect",
-	glossary_type = "wp",
-	shortcuts = {"hab"},
-	wikidata = "Q5636904",
-}
-
-tags["continuous"] = {
-	tag_type = "tense-aspect",
-	glossary = "continuous aspect",
-	glossary_type = "wp",
-	shortcuts = {"cont"},
-	wikidata = "Q12721117",
-}
-
-tags["semelfactive"] = {
-	tag_type = "tense-aspect",
-	glossary = "semelfactive",
-	glossary_type = "wp",
-	shortcuts = {"semf"},
-	wikidata = "Q7449203",
+	glossary = "abtemporal",
+	glossary_type = "wikt",
+	shortcuts = {"abtemp"},
 }
 
 tags["anterior"] = {
@@ -101,43 +120,12 @@ tags["anterior"] = {
 	shortcuts = {"ant"},
 }
 
-tags["posterior"] = {
+tags["cessative"] = {
 	tag_type = "tense-aspect",
-	glossary = "relative and absolute tense",
+	glossary = "cessative",
 	glossary_type = "wp",
-	shortcuts = {"post"},
-}
-
-tags["frequentative"] = {
-	tag_type = "tense-aspect",
-	glossary = "frequentative",
-	glossary_type = "wp",
-	shortcuts = {"freq"},
-	wikidata = "Q467562",
-}
-
-tags["iterative"] = {
-	tag_type = "tense-aspect",
-	glossary = "iterative aspect",
-	glossary_type = "wp",
-	shortcuts = {"iter"},
-	wikidata = "Q2866772",
-}
-
--- Type of participle in Hindi; also called agentive or agentive-prospective
-tags["prospective"] = {
-	tag_type = "tense-aspect",
-	glossary = "prospective aspect",
-	glossary_type = "wp",
-	shortcuts = {"pros"},
-}
-
--- Aspect in Tagalog
-tags["contemplative"] = {
-	tag_type = "tense-aspect",
-	glossary = "Tagalog grammar#Aspect",
-	glossary_type = "wp",
-	shortcuts = {"contem"},
+	shortcuts = {"cess"},
+	wikidata = "Q17027342",
 }
 
 -- Aspect in Tagalog; presumably similar to the perfect tense/aspect but
@@ -149,6 +137,162 @@ tags["complete"] = {
 	shortcuts = {"compl"},
 }
 
+tags["concomitant"] = {
+	tag_type = "tense-aspect",
+	glossary = "concomitant",
+	glossary_type = "wikt",
+	shortcuts = {"concom"},
+}
+
+tags["confirmative"] = {
+	tag_type = "tense-aspect",
+	glossary = "confirmative",
+	glossary_type = "wikt",
+	shortcuts = {"conf"},
+}
+
+-- Aspect in Tagalog
+tags["contemplative"] = {
+	tag_type = "tense-aspect",
+	glossary = "Tagalog grammar#Aspect",
+	glossary_type = "wp",
+	shortcuts = {"contem"},
+}
+
+tags["contemporal"] = {
+	tag_type = "tense-aspect",
+	glossary = "contemporal",
+	glossary_type = "wikt",
+	shortcuts = {"contemp"},
+}
+
+tags["continuative"] = {
+	tag_type = "tense-aspect",
+	glossary = "continuative",
+	glossary_type = "wp",
+	wikidata = "Q28130104",
+}
+
+tags["continuous"] = {
+	tag_type = "tense-aspect",
+	glossary = "continuous aspect",
+	glossary_type = "wp",
+	shortcuts = {"cont"},
+	wikidata = "Q12721117",
+}
+
+tags["delimitative"] = {
+	tag_type = "tense-aspect",
+	glossary = "Delimitative aspect",
+	glossary_type = "wp",
+	shortcuts = {"delim"},
+	wikidata = "Q5316270",
+}
+
+tags["durative"] = {
+	tag_type = "tense-aspect",
+	glossary = "Durative",
+	glossary_type = "wp",
+	shortcuts = {"dur"},
+}
+
+tags["futuritive"] = {
+	tag_type = "tense-aspect",
+	glossary = "futuritive",
+	glossary_type = "wp",
+	shortcuts = {"futv", "futrv"},
+}
+
+tags["frequentative"] = {
+	tag_type = "tense-aspect",
+	glossary = "frequentative",
+	glossary_type = "wp",
+	shortcuts = {"freq"},
+	wikidata = "Q467562",
+}
+
+tags["habitual"] = {
+	tag_type = "tense-aspect",
+	glossary = "habitual aspect",
+	glossary_type = "wp",
+	shortcuts = {"hab"},
+	wikidata = "Q5636904",
+}
+
+-- same as the habitual; used in Mongolian linguistics
+tags["habitive"] = {
+	tag_type = "tense-aspect",
+	glossary = "habitive",
+	glossary_type = "wp",
+	shortcuts = {"habv"},
+}
+
+tags["immediative"] = {
+	tag_type = "tense-aspect",
+	glossary = "immediative",
+	glossary_type = "wikt",
+	shortcuts = {"imm", "immed"},
+}
+
+tags["incidental"] = {
+	tag_type = "tense-aspect",
+	glossary = "incidental",
+	glossary_type = "wikt",
+	shortcuts = {"incid"},
+}
+
+tags["iterative"] = {
+	tag_type = "tense-aspect",
+	glossary = "iterative aspect",
+	glossary_type = "wp",
+	shortcuts = {"iter"},
+	wikidata = "Q2866772",
+}
+
+tags["momentane"] = {
+	tag_type = "tense-aspect",
+	glossary = "momentane",
+	glossary_type = "wp",
+	wikidata = "Q6897160",
+}
+
+tags["momentaneous"] = {
+	tag_type = "tense-aspect",
+	glossary = "momentaneous",
+	glossary_type = "wikt",
+	shortcuts = {"mom"},
+	wikidata = "Q115110791",
+}
+
+tags["posterior"] = {
+	tag_type = "tense-aspect",
+	glossary = "relative and absolute tense",
+	glossary_type = "wp",
+	shortcuts = {"post"},
+}
+
+tags["preconditional"] = {
+	tag_type = "tense-aspect",
+	glossary = "preconditional",
+	glossary_type = "wikt",
+	shortcuts = {"precond"},
+}
+
+-- Type of participle in Hindi; also called agentive or agentive-prospective
+tags["prospective"] = {
+	tag_type = "tense-aspect",
+	glossary = "prospective aspect",
+	glossary_type = "wp",
+	shortcuts = {"pros"},
+}
+
+tags["purposive"] = {
+	tag_type = "tense-aspect",
+	glossary = "purposive",
+	glossary_type = "wikt",
+	shortcuts = {"purp"},
+}
+
 -- Aspect in Tagalog; presumably similar to the perfect tense/aspect but
 -- not necessarily similar enough to use the same Wikidata ID
 tags["recently complete"] = {
@@ -158,15 +302,53 @@ tags["recently complete"] = {
 	shortcuts = {"rcompl"},
 }
 
+tags["resultative"] = {
+	tag_type = "tense-aspect",
+	glossary = "resultative",
+	glossary_type = "wp",
+	shortcuts = {"res"},
+	wikidata = "Q7316356",
+}
+
+tags["semelfactive"] = {
+	tag_type = "tense-aspect",
+	glossary = "semelfactive",
+	glossary_type = "wp",
+	shortcuts = {"semf"},
+	wikidata = "Q7449203",
+}
+
+tags["serial"] = {
+	tag_type = "tense-aspect",
+	glossary = "serial",
+	glossary_type = "wikt",
+	shortcuts = {"ser"},
+}
+
+tags["successive"] = {
+	tag_type = "tense-aspect",
+	glossary = "successive",
+	glossary_type = "wikt",
+	shortcuts = {"succ"},
+}
+
+-- be careful not to clash with terminative case tag
+tags["terminative aspect"] = {
+	tag_type = "tense-aspect",
+	display = "terminative",
+	glossary = "Cessative aspect",
+	glossary_type = "wp",
+	shortcuts = {"term"},
+}
 
 ----------------------- Mood -----------------------
 
-tags["potential"] = {
+tags["benedictive"] = {
 	tag_type = "mood",
-	glossary = "potential mood",
+	glossary = "benedictive",
 	glossary_type = "wp",
-	shortcuts = {"potn"},
-	wikidata = "Q2296856",
+	shortcuts = {"bened"},
+	wikidata = "Q4887358",
 }
 
 tags["cohortative"] = {
@@ -176,23 +358,31 @@ tags["cohortative"] = {
 	shortcuts = {"coho", "cohort"},
 }
 
-tags["energetic"] = {
+tags["concessive"] = {
 	tag_type = "mood",
-	glossary = "energetic mood",
-	glossary_type = "wp",
-	shortcuts = {"ener"},
+	glossary = "concessive",
+	glossary_type = "wikt",
+	shortcuts = {"conc"},
 }
 
-tags["volitive"] = {
+tags["contrafactual"] = {
 	tag_type = "mood",
-	glossary = "volitive mood",
-	glossary_type = "wp",
-	shortcuts = {"voli"},
-	wikidata = "Q10716592",
+	glossary = "contrafactual",
+	glossary_type = "wikt",
+	shortcuts = {"cfact"},
+	wikidata = "Q110323459"
 }
 
--- It's not clear that this is exactly a mood, but I'm not sure where
--- else to group it
+-- Same as the contrafactual, but terminology depends on language.
+tags["counterfactual"] = {
+	tag_type = "mood",
+	glossary = "counterfactual",
+	glossary_type = "wp",
+	shortcuts = {"counterf"},
+	-- the following is for "counterfactual conditional"
+	wikidata = "Q1783264",
+}
+
 tags["desiderative"] = {
 	tag_type = "mood",
 	glossary = "desiderative",
@@ -201,24 +391,19 @@ tags["desiderative"] = {
 	wikidata = "Q1200631",
 }
 
--- It's not clear that this is exactly a mood, but I'm not sure where
--- else to group it
-tags["intensive"] = {
+tags["dubitative"] = {
 	tag_type = "mood",
-	glossary = "intensive",
+	glossary = "dubitative mood",
 	glossary_type = "wp",
-	shortcuts = {"inten"},
-	-- the following is for "intensive word form"
-	wikidata = "Q10965321",
+	shortcuts = {"dub"},
+	wikidata = "Q1263049",
 }
 
--- Exists at least in Estonian
-tags["quotative"] = {
+tags["energetic"] = {
 	tag_type = "mood",
-	glossary = "quotative evidential mood",
+	glossary = "energetic mood",
 	glossary_type = "wp",
-	shortcuts = {"quot"},
-	-- wikidata = "Q7272884", this is for "quotative" morphemes, not the same
+	shortcuts = {"ener"},
 }
 
 tags["inferential"] = {
@@ -232,6 +417,86 @@ tags["inferential"] = {
 	wikidata = "Q3332616",
 }
 
+-- It's not clear that this is exactly a mood, but I'm not sure where
+-- else to group it
+tags["intensive"] = {
+	tag_type = "mood",
+	glossary = "intensive",
+	glossary_type = "wp",
+	shortcuts = {"inten"},
+	-- the following is for "intensive word form"
+	wikidata = "Q10965321",
+}
+
+tags["intentional"] = {
+	tag_type = "mood",
+	glossary = "intentional",
+	glossary_type = "wikt",
+	shortcuts = {"intent"},
+}
+
+tags["interrogative"] = {
+	tag_type = "mood",
+	glossary = "interrogative",
+	glossary_type = "wp",
+	shortcuts = {"interr", "interrog"},
+	wikidata = "Q12021746",
+}
+
+tags["necessitative"] = {
+	tag_type = "mood",
+	glossary = "necessitative",
+	glossary_type = "wikt",
+	shortcuts = {"nec"},
+}
+
+tags["permissive"] = {
+	tag_type = "mood",
+	glossary = "permissive mood",
+	glossary_type = "wp",
+	shortcuts = {"perm"},
+	wikidata = "Q4351483",
+}
+
+tags["potential"] = {
+	tag_type = "mood",
+	glossary = "potential mood",
+	glossary_type = "wp",
+	shortcuts = {"potn"},
+	wikidata = "Q2296856",
+}
+
+tags["precative"] = {
+	tag_type = "mood",
+	glossary = "precative",
+	glossary_type = "wikt",
+	shortcuts = {"prec"},
+}
+
+tags["prescriptive"] = {
+	tag_type = "mood",
+	glossary = "prescriptive",
+	glossary_type = "wikt",
+	shortcuts = {"prescr"},
+}
+
+tags["presumptive"] = {
+	tag_type = "mood",
+	glossary = "presumptive mood",
+	glossary_type = "wp",
+	shortcuts = {"presump"},
+	wikidata = "Q25463575",
+}
+
+-- Exists at least in Estonian
+tags["quotative"] = {
+	tag_type = "mood",
+	glossary = "quotative evidential mood",
+	glossary_type = "wp",
+	shortcuts = {"quot"},
+	-- wikidata = "Q7272884", this is for "quotative" morphemes, not the same
+}
+
 tags["renarrative"] = {
 	tag_type = "mood",
 	glossary = "renarrative mood",
@@ -241,6 +506,21 @@ tags["renarrative"] = {
 	-- same; but per [[w:Bulgarian verbs#Evidentials]], they are different,
 	-- and Bulgarian has both.
 	wikidata = "Q3332616",
+}
+
+tags["volitive"] = {
+	tag_type = "mood",
+	glossary = "volitive mood",
+	glossary_type = "wp",
+	shortcuts = {"voli"},
+	wikidata = "Q10716592",
+}
+
+tags["voluntative"] = {
+	tag_type = "mood",
+	glossary = "voluntative",
+	glossary_type = "wikt",
+	shortcuts = {"voln", "volun"},
 }
 
 
@@ -262,6 +542,22 @@ tags["applicative"] = {
 	wikidata = "Q621634",
 }
 
+tags["cooperative"] = { -- ("all together") used in Mongolian
+	tag_type = "voice-valence",
+	glossary = "cooperative voice",
+	glossary_type = "wikt",
+	shortcuts = {"coop"},
+	wikidata = "Q114033228",
+}
+
+tags["pluritative"] = { -- ("many together") used in Mongolian
+	tag_type = "voice-valence",
+	glossary = "pluritative voice",
+	glossary_type = "wikt",
+	shortcuts = {"plur"},
+	wikidata = "Q114033289",
+}
+
 tags["reciprocal"] = {
 	tag_type = "voice-valence",
 	glossary = "reciprocal (grammar)",
@@ -280,6 +576,14 @@ tags["autonomous"] = {
 
 
 ----------------------- Non-finite -----------------------
+
+-- be careful not to clash with agentive case tag
+tags["agentive"] = {
+	tag_type = "non-finite",
+	glossary = "Agent noun",
+	glossary_type = "wp",
+	shortcuts = {"ag", "agent"},
+}
 
 -- Latin etc.
 tags["gerundive"] = {
@@ -335,17 +639,40 @@ tags["pusdalyvis"] = {
 	glossary_type = "wikt",
 }
 
+tags["l-participle"] = {
+	tag_type = "non-finite",
+	glossary = "participle",
+	shortcuts = {"l-ptcp", "lptcp"},
+	wikidata = "Q814722",  -- "participle"
+}
+
+-- Finnish agent participle
+tags["agent participle"] = {
+	tag_type = "non-finite",
+	glossary = "Finnish grammar#Agent participle",
+	glossary_type = "wp",
+	shortcuts = {"agentpart"},
+}
+
+-- Hungarian participle
+tags["verbal participle"] = {
+	tag_type = "non-finite",
+	glossary = "verbal participle",
+	glossary_type = "wikt",
+	wikidata = "Q2361676", -- attributive verb, aka verbal participle
+}
+
 tags["converb"] = {
 	tag_type = "non-finite",
 	glossary = "converb",
-	glossary_type = "wikt",
+	glossary_type = "wp",
+	shortcuts = {"conv"},
 	wikidata = "Q149761",
 }
 
 tags["connegative"] = {
 	tag_type = "non-finite",
 	glossary = "connegative",
-	glossary_type = "wp",
 	shortcuts = {"conn", "conneg"},
 	wikidata = "Q5161718",
 }
@@ -358,6 +685,14 @@ tags["conjunctive"] = {
 	glossary = "serial verb construction",
 	glossary_type = "wp",
 	shortcuts = {"conj"},
+}
+
+tags["absolutive verb form"] = {
+	tag_type = "non-finite",
+	display = "absolutive",
+	glossary = "absolutive#Noun",
+	glossary_type = "wikt",
+	shortcuts = {"absvf"},
 }
 
 -- FIXME! Should this be a mood?
@@ -406,8 +741,19 @@ tags["adverbial case"] = {
 	shortcuts = {"advc"},
 }
 
+-- be careful not to clash with agentive non-finite tag
+tags["agentive case"] = {
+	tag_type = "case",
+	display = "agentive",
+	glossary = "agentive case",
+	glossary_type = "wp",
+	shortcuts = {"agc"},
+}
+
 tags["allative"] = {
 	tag_type = "case",
+	glossary = "allative case",
+	glossary_type = "wikt",
 	shortcuts = {"all"},
 	wikidata = "Q655020",
 }
@@ -485,6 +831,14 @@ tags["direct"] = {
 	wikidata = "Q1751855",
 }
 
+tags["directive"] = {
+	tag_type = "case",
+	glossary = "directive case",
+	glossary_type = "wikt",
+	shortcuts = {"dirc"},
+	wikidata = "Q56526905",
+}
+
 tags["distributive"] = {
 	tag_type = "case",
 	glossary = "distributive case",
@@ -505,6 +859,15 @@ tags["ergative"] = {
 	glossary = "ergative case",
 	shortcuts = {"erg"},
 	wikidata = "Q324305",
+}
+
+-- be careful not to clash with equative degree tag
+tags["equative"] = {
+	tag_type = "case",
+	glossary = "equative case",
+	glossary_type = "wp",
+	shortcuts = {"equc"},
+	wikidata = "Q3177653"
 }
 
 tags["essive-formal"] = {
@@ -571,6 +934,14 @@ tags["instructive"] = {
 	wikidata = "Q1665275",
 }
 
+tags["lative"] = {
+	tag_type = "case",
+	glossary = "lative case",
+	glossary_type = "wp",
+	shortcuts = {"lat"},
+	wikidata = "Q260425",
+}
+
 tags["limitative"] = {
 	tag_type = "case",
 	glossary = "list of grammatical cases",
@@ -604,8 +975,16 @@ tags["partitive"] = {
 	tag_type = "case",
 	glossary = "partitive case",
 	glossary_type = "wp",
-	shortcuts = {"par", "ptv"},
+	shortcuts = {"ptv", "par"},
 	wikidata = "Q857325",
+}
+--certain languages use this term for the abessive
+tags["privative"] = {
+	tag_type = "case",
+	glossary = "privative case",
+	glossary_type = "wp",
+	shortcuts = {"priv"},
+	wikidata = "Q319822",
 }
 
 tags["prolative"] = {
@@ -658,11 +1037,13 @@ tags["temporal"] = {
 	wikidata = "Q3235219",
 }
 
-tags["terminative"] = {
+-- be careful not to clash with terminative aspect tag
+tags["terminative case"] = {
 	tag_type = "case",
+	display = "terminative",
 	glossary = "terminative case",
 	glossary_type = "wp",
-	shortcuts = {"ter", "term"},
+	shortcuts = {"ter"},
 	wikidata = "Q747019",
 }
 
@@ -676,6 +1057,34 @@ tags["translative"] = {
 
 
 ----------------------- State -----------------------
+
+tags["independent genitive"] = {
+	tag_type = "state",
+	glossary = "independent genitive",
+	glossary_type = "wikt",
+	shortcuts = {"indgen"},
+}
+
+tags["possessor"] = {
+	tag_type = "state",
+	glossary = "possessor",
+	glossary_type = "wikt",
+	shortcuts = {"posr", "possr"},
+}
+
+tags["reflexive possessive"] = {
+	tag_type = "state",
+	glossary = "reflexive possessive",
+	glossary_type = "wikt",
+	shortcuts = {"reflposs", "refl poss"},
+}
+
+tags["substantive"] = {
+	tag_type = "state",
+	glossary = "substantive",
+	shortcuts = {"subs", "subst"},
+}
+
 
 ----------------------- Degrees of comparison -----------------------
 
@@ -700,12 +1109,18 @@ tags["elative degree"] = {
 	wikidata = "Q1555419",
 }
 
+-- be careful not to clash with equative case tag
 tags["equative degree"] = {
 	tag_type = "comparison",
 	glossary = "equative",
 	glossary_type = "wp",
-	shortcuts = {"equd", "equative"},
+	shortcuts = {"equd"},
 	wikidata = "Q5384239",
+}
+
+tags["excessive degree"] = {
+	tag_type = "comparison",
+	shortcuts = {"excd"},
 }
 
 
@@ -738,7 +1153,6 @@ tags["formal"] = {
 	tag_type = "register",
 	glossary = "register (sociolinguistics)",
 	glossary_type = "wp",
-	shortcuts = {"form"},
 }
 
 tags["informal"] = {
@@ -853,18 +1267,32 @@ tags["obviative"] = {
 
 ----------------------- Inflectional class -----------------------
 
-tags["prototonic"] = {
-	tag_type = "class",
-	glossary = "dependent and independent verb forms",
+tags["absolute"] = {
+	tag_type = "grammar",
+	glossary = "absolute",
+	glossary_type = "wikt",
+	shortcuts = {"abs"},
+}
+
+tags["conjunct"] = {
+	tag_type = "grammar",
+	glossary = "conjunct",
 	glossary_type = "wp",
-	shortcuts = {"prot"},
+	shortcuts = {"conjt"},
 }
 
 tags["deuterotonic"] = {
-	tag_type = "class",
+	tag_type = "grammar",
 	glossary = "dependent and independent verb forms",
 	glossary_type = "wp",
 	shortcuts = {"deut"},
+}
+
+tags["prototonic"] = {
+	tag_type = "grammar",
+	glossary = "dependent and independent verb forms",
+	glossary_type = "wp",
+	shortcuts = {"prot"},
 }
 
 
@@ -880,17 +1308,68 @@ tags["endearing"] = {
 	wikidata = "Q1130279", -- entry for "hypocorism"
 }
 
+tags["moderative"] = {
+	tag_type = "attitude",
+	glossary = "moderative",
+	glossary_type = "wikt",
+	shortcuts = {"moder"},
+}
+
 
 ----------------------- Sound changes -----------------------
 
------------------------ Misc grammar -----------------------
-
-tags["absolute"] = {
-	tag_type = "grammar",
-	glossary = "absolute",
-	glossary_type = "wikt",
-	shortcuts = {"abs"},
+tags["alliterative"] = {
+    tag_type = "sound change",
+    glossary = "Alliteration",
+    glossary_type = "wp",
+    wikidata = "Q484495",
 }
+
+tags["back"] = {
+    tag_type = "sound change",
+    glossary = "Back vowel",
+    glossary_type = "wp",
+    wikidata = "Q853589",
+}
+
+tags["front"] = {
+    tag_type = "sound change",
+    glossary = "Front vowel",
+    glossary_type = "wp",
+    wikidata = "Q5505949",
+}
+
+tags["rounded"] = {
+    tag_type = "sound change",
+    glossary = "Roundedness",
+    glossary_type = "wp",
+    shortcuts = {"round"},
+}
+
+tags["sigmatic"] = {
+    tag_type = "sound change",
+    glossary = "sigmatic",
+    glossary_type = "wikt",
+    shortcuts = {"sigm"},
+}
+
+tags["unrounded"] = {
+    tag_type = "sound change",
+    glossary = "Roundedness",
+    glossary_type = "wp",
+    shortcuts = {"unround"},
+}
+
+tags["vowel harmonic"] = {
+    tag_type = "sound change",
+    glossary = "vowel harmony",
+    glossary_type = "wp",
+    shortcuts = {"vharm"},
+	wikidata = "Q147137",
+}
+
+
+----------------------- Misc grammar -----------------------
 
 tags["relative"] = {
 	tag_type = "grammar",
@@ -899,11 +1378,18 @@ tags["relative"] = {
 	shortcuts = {"rel"},
 }
 
-tags["conjunct"] = {
+tags["direct relative"] = {
 	tag_type = "grammar",
-	glossary = "conjunct",
+	glossary = "Relative_clause#Celtic_languages",
 	glossary_type = "wp",
-	shortcuts = {"conjt"},
+	shortcuts = {"dirrel"},
+}
+
+tags["indirect relative"] = {
+	tag_type = "grammar",
+	glossary = "Relative_clause#Celtic_languages",
+	glossary_type = "wp",
+	shortcuts = {"indrel"},
 }
 
 tags["synthetic"] = {
@@ -1076,12 +1562,31 @@ tags["tense"] = {
 	wikidata = "Q177691",
 }
 
+tags["tenseless"] = {
+	tag_type = "grammar",
+	glossary = "tenseless",
+	glossary_type = "wikt",
+}
+
 tags["aspect"] = {
 	tag_type = "grammar",
 	glossary = "aspect",
 	shortcuts = {"asp"},
 	wikidata = "Q208084",
 }
+
+tags["augmented"] = {
+	tag_type = "grammar",
+	glossary = "augment",
+	wikidata = "Q760437",
+}
+
+tags["unaugmented"] = {
+	tag_type = "grammar",
+	glossary = "augment",
+	wikidata = "Q760437",
+}
+
 
 ----------------------- Other tags -----------------------
 
@@ -1096,6 +1601,8 @@ tags["—"] = { -- Unicode em-dash
 	no_space_on_left = true,
 	no_space_on_right = true,
 }
+
+
 
 
 ----------------------- Create the shortcuts list -----------------------
