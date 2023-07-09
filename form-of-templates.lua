@@ -1,7 +1,5 @@
 local export = {}
 
-local force_cat = false -- for testing; set to true to display categories even on non-mainspace pages
-
 local m_form_of = require("Module:form of")
 local m_params = require("Module:parameters")
 local put_module = "Module:parse utilities"
@@ -213,6 +211,7 @@ local function add_link_params(parent_args, params, term_param, no_numbered_glos
 			local base, num = k:match("^([a-z]+)([0-9]+)$")
 			if base and link_param_set[base] then
 				multiple_lemmas = true
+				track("multiple-lemmas")
 				break
 			end
 		end
@@ -493,7 +492,7 @@ local function construct_form_of_text(iargs, args, term_param, compat, multiple_
 		return text
 	end
 	return text .. require("Module:utilities").format_categories(lemma_data.categories, lemma_data.lang, args["sort"],
-		nil, force_cat)
+		nil, m_form_of.force_cat)
 end
 
 
