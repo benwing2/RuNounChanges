@@ -1483,33 +1483,30 @@ el_specs = [
   ("el-verb form of", "el-form-of-verb"),
 ]
 
-en_specs = [
-  ("en-simple past of", (
-    "verb form of",
-    ("error-if", ("present-except", ["1", "2"])),
-    ("set", "1", [
-      "en",
-      ("copy", "1"),
-      ("copy", "2"),
-      "spast"
-    ]),
-  )),
-
-  # NOTE: Has automatic, non-controllable initial caps that we're ignoring.
-  # Doesn't have final period.
-  ("en-third-person singular of", (
-    "verb form of",
+def en_verb_form(parts):
+  return (
+    "infl of", # no need for 'verb form of', I think; we can categorize without it
     # lang= occurs at least once, and is ignored.
-    ("error-if", ("present-except", ["1", "2", "lang"])),
+    # nodot= occurs a few times and is ignored.
+    ("error-if", ("present-except", ["1", "2", "t", "id", "lang", "nodot"])),
     ("set", "1", [
       "en",
       ("copy", "1"),
       ("copy", "2"),
-      ["3s", "spres", "ind"],
+      parts,
     ]),
-  )),
+    ("copy", "t"), # occurs although ignored by template
+    ("copy", "id"), # occurs although ignored by template
+  )
 
-  ("en-third person singular of", "en-third-person singular of"),
+en_specs = [
+  ("en-archaic second-person singular of",  en_verb_form(["st-form"])),
+  ("en-archaic second-person singular past of",  en_verb_form(["st-past-form"])),
+  ("en-archaic third-person singular of",  en_verb_form(["th-form"])),
+  ("en-third-person singular of",  en_verb_form(["s-verb-form"])),
+  ("en-simple past of",  en_verb_form(["spast"])),
+  ("en-past of",  en_verb_form(["ed-form"])),
+  ("en-ing form of",  en_verb_form(["ing-form"])),
 ]
 
 def enm_verb_form(parts):
@@ -4556,6 +4553,51 @@ zh_specs = [
   zh_headword("zh-verb", "verb"),
 ]
 
+def non_lang_specific_tagged_form_of(tags, ignore_nocat=True):
+  return tuple([
+    "infl of",
+    ("comment", "rename {{__TEMPNAME__}} to {{infl of|...|%s}}" % "|".join(tags)),
+    # ignore nodot=, nocap=; ignore nocat= in most circumstances
+    ("error-if", ("present-except", ["1", "2", "3", "4", "sc", "tr", "g", "t", "gloss", "pos", "cap", "nodot", "nocap",
+                                     "nocat"])),
+    ("set", "1", [
+      ("copy", "1"),
+      ("copy", "2"),
+    ]),
+    ("copy", "tr"),
+    ("copy", "g"),
+    ("set", "3", [
+      ("copy", "3"),
+      tags,
+    ]),
+    ("copy", "sc"),
+    ("copy", "t"),
+    ("copy", "4", "t"),
+    ("copy", "gloss", "t"),
+    ("copy", "pos"),
+    ("copy", "cap"),
+  ] + ([("copy", "nocat")] if not ignore_nocat else [])
+  )
+
+misc_non_lang_specific_specs = [
+  ("attributive form of", non_lang_specific_tagged_form_of(["attr", "form"])),
+  ("definite singular of", non_lang_specific_tagged_form_of(["def", "s"])),
+  ("definite plural of", non_lang_specific_tagged_form_of(["def", "p"])),
+  ("dual of", non_lang_specific_tagged_form_of(["d"])),
+  ("elative of", non_lang_specific_tagged_form_of(["elad"])),
+  ("equative of", non_lang_specific_tagged_form_of(["equd"], ignore_nocat=False)),
+  ("imperative of", non_lang_specific_tagged_form_of(["imp"])),
+  ("indefinite plural of", non_lang_specific_tagged_form_of(["indef", "p"])),
+  ("passive of", non_lang_specific_tagged_form_of(["pass"])),
+  ("passive past tense of", non_lang_specific_tagged_form_of(["pass", "past"])),
+  ("past tense of", non_lang_specific_tagged_form_of(["past"])),
+  ("present tense of", non_lang_specific_tagged_form_of(["pres"])),
+  ("singulative of", non_lang_specific_tagged_form_of(["sgl"])),
+  ("superlative attributive of", non_lang_specific_tagged_form_of(["attr", "supd"])),
+  ("superlative predicative of", non_lang_specific_tagged_form_of(["pred", "supd"])),
+  ("supine of", non_lang_specific_tagged_form_of(["sup"])),
+]
+
 templates_to_rename_specs = (
   art_blk_specs +
   bg_specs +
@@ -4609,6 +4651,7 @@ templates_to_rename_specs = (
   ur_specs +
   misc_templates_to_rewrite +
   zh_specs +
+  misc_non_lang_specific_specs +
   []
 )
 
