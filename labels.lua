@@ -1,7 +1,8 @@
 local export = {}
 
-local m_utilities_format_categories = require("Module:utilities").format_categories
 local m_lang_specific_data = mw.loadData("Module:labels/data/lang")
+local table_module = "Module:table"
+local utilities_module = "Module:utilities"
 
 -- for testing
 local force_cat = false
@@ -11,9 +12,8 @@ local function track(page)
 	require("Module:debug/track")("labels/" .. page)
 end
 
-local function show_categories(labdata, lang, sort, term_mode)
+local function fetch_categories(labdata, lang, term_mode)
 	local categories = {}
-	local categories2 = {}
 
 	local lang_code = lang:getCode()
 	local canonical_name = lang:getCanonicalName()
@@ -48,8 +48,8 @@ local function show_categories(labdata, lang, sort, term_mode)
 	for _, cat in ipairs(plain_categories) do
 		insert_cat(cat)
 	end
-	
-	return m_utilities_format_categories(categories, lang, sort, nil, force_cat)
+
+	return cat
 end
 
 function export.get_label_info(data)
@@ -57,10 +57,9 @@ function export.get_label_info(data)
 		error("`data` must now be an object containing the params")
 	end
 
-	local ret = {}
+	local ret = {categories = {}}
 	local label = data.label
 	local deprecated = false
-	local categories = ""
 	local alias
 	local labdata
 	local submodule
@@ -141,11 +140,12 @@ function export.get_label_info(data)
 			label = labdata.display or label
 		end
 	end
-	
+
+	ret.deprecated = deprecated
 	if deprecated then
 		label = '<span class="deprecated-label">' .. label .. '</span>'
 		if not data.nocat then
-			categories = categories .. m_utilities_format_categories({ "Entries with deprecated labels" }, data.lang, data.sort, nil, force_cat)
+			table.insert(ret.categories, "Entries with deprecated labels")
 		end
 	end
 	
@@ -155,8 +155,7 @@ function export.get_label_info(data)
 		or labdata.sense_categories) and label
 		or nil
 	
-	-- Track label text. If label text was previously used, don't show it,
-	-- but include the categories.
+	-- Track label text. If label text was previously used, don't show it, but include the categories.
 	-- For an example, see [[hypocretin]].
 	if data.already_seen[label_for_already_seen] then
 		ret.label = ""
@@ -166,11 +165,20 @@ function export.get_label_info(data)
 		end
 		ret.label = label
 	end
-	
+
 	if data.nocat then
-		ret.categories = ""
+		data.formatted_categories = ""
 	else
-		ret.categories = categories .. show_categories(labdata, data.lang, data.sort, data.term_mode)
+		local cats = fetch_categories(labdata, data.lang, data.term_mode)
+		for _, cat in ipairs(cats) do
+			table.insert(ret.categories, cat)
+		end
+		if #ret.categories == 0 then
+			data.formatted_categories = ""
+		else
+			data.formatted_categories = require(utilities_module).format_categories(ret.categories, data.lang,
+				data.sort, nil, force_cat)
+		end
 	end
 
 	ret.data = labdata
@@ -225,7 +233,7 @@ function export.show_labels(data)
 					(omit_space and "" or "&#32;") ..
 					ret.label
 		end
-		labels[i] = label .. ret.categories
+		labels[i] = label .. ret.formatted_categories
 	end
 	
 	return
@@ -236,12 +244,12 @@ end
 
 -- Helper function for the data modules.
 function export.alias(labels, key, aliases)
-	require("Module:table").alias(labels, key, aliases)
+	require(table_module).alias(labels, key, aliases)
 end
 
 -- Used to finalize the data into the form that is actually returned.
 function export.finalize_data(labels)
-	local shallowcopy = require("Module:table").shallowcopy
+	local shallowcopy = require(table_module).shallowcopy
 	local aliases = {}
 	for label, data in pairs(labels) do
 		if type(data) == "table" then
