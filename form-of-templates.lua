@@ -24,6 +24,11 @@ local function extend_list(list, new_items)
 end
 
 
+local function get_script(sc, param_for_error)
+	return sc and require("Module:scripts").getByCode(arg, param_for_error) or nil
+end
+
+
 --[=[
 Process parent arguments. This is similar to the following:
 	require("Module:parameters").process(parent_args, params)
@@ -133,7 +138,7 @@ local function split_inflection_tags(tagspecs, split_regex)
 end
 
 
-local clitic_param_mods = {
+local lemma_param_mods = {
 	t = {
 		-- We need to store the <t:...> inline modifier into the "gloss" key of the parsed part, because that is what
 		-- [[Module:links]] expects.
@@ -158,13 +163,13 @@ local clitic_param_mods = {
 	pos = {},
 	sc = {
 		convert = function(arg, parse_err)
-			return require("Module:scripts").getByCode(arg, parse_err)
+			return get_script(arg, parse_err)
 		end,
 	}
 }
 
 
-local function parse_clitics_or_base_lemmas(paramname, val, lang)
+local function parse_lemmas(paramname, val, lang)
 	local function generate_obj(term)
 		return {lang = lang, term = term}
 	end
@@ -174,7 +179,7 @@ local function parse_clitics_or_base_lemmas(paramname, val, lang)
 	if val:find("<") then
 		retval = require(put_module).parse_inline_modifiers(val, {
 			paramname = paramname,
-			param_mods = clitic_param_mods,
+			param_mods = lemma_param_mods,
 			generate_obj = generate_obj,
 			splitchar = ",",
 		})
@@ -361,23 +366,28 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, multip
 
 		add_term_tracking_categories(term)
 
-		local sc = args["sc"] or iargs["sc"]
+		lemmas = parse_lemmas(term_param, term, lang)
 
-		sc = sc and require("Module:scripts").getByCode(sc, "sc") or nil
+		-- sc= but not invocation arg sc= should override inline modifier sc=.
+		local sc
+		if args["sc"] then
+			lemmas[1].sc = get_script(args["sc"], "sc")
+		elseif not lemma_objs[1].sc and iargs["sc"] then
+			lemmas[1].sc = get_script(iargs["sc"], "sc")
+		end
 
-		local lemma_obj = {
-			lang = lang,
-			sc = sc,
-			term = term,
-			genders = args["g"],
-			gloss = args["t"],
-		}
+		if #args["g"] > 0 then
+			lemmas[1].genders = args["g"]
+		end
+		if args["t"] then
+			lemmas[1].gloss = args["t"]
+		end
 		for _, param in ipairs(link_params) do
-			if param ~= "sc" and param ~= "term" and param ~= "g" and param ~= "gloss" and param ~= "t" then
-				lemma_obj[param] = args[param]
+			if param ~= "sc" and param ~= "term" and param ~= "g" and param ~= "gloss" and param ~= "t" and
+				args[param] then
+				lemmas[1][param] = args[param]
 			end
 		end
-		lemmas = {lemma_obj}
 	else
 		lemmas = {}
 		-- FIXME! Previously there was only one term parameter but multiple genders. For compatibility, if we see only
@@ -417,8 +427,7 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, multip
 			add_term_tracking_categories(term)
 
 			local sc = args["sc"][i] or iargs["sc"]
-
-			sc = sc and require("Module:scripts").getByCode(sc, "sc" .. (i == 1 and "" or i)) or nil
+			sc = get_script(sc, "sc" .. (i == 1 and "" or i))
 
 			local lemma_obj = {
 				lang = lang,
@@ -437,9 +446,12 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, multip
 		end
 	end
 
+	-- Check for new-style inline modifiers.
+	local lemma_term = args[term_param]
+
 	local enclitics
 	if args.enclitic then
-		enclitics = parse_clitics_or_base_lemmas("enclitic", args.enclitic, lang)
+		enclitics = parse_lemmas("enclitic", args.enclitic, lang)
 	end
 	local base_lemmas = {}
 	if base_lemma_params then
@@ -448,7 +460,7 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, multip
 			if args[param] then
 				table.insert(base_lemmas, {
 					paramobj = base_lemma_param_obj,
-					lemmas = parse_clitics_or_base_lemmas(param, args[param], lang),
+					lemmas = parse_lemmas(param, args[param], lang),
 				})
 			end
 		end

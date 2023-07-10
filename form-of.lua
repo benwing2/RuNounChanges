@@ -58,15 +58,15 @@ The following terminology is used in conjunction with {{inflection of}}:
 
 * A TAG is a single grammatical item, as specified in a single numbered parameter of {{inflection of}}. Examples are
   'masculine', 'nominative', or 'first-person'. Tags may be abbreviated, e.g. 'm' for 'masculine', 'nom' for
-  'nominative', or '1' for 'first-person'. Such abbreviations are called SHORTCUTS, and some tags have multiple
-  equivalent shortcuts (e.g. 'p' or 'pl' for 'plural'). The full, non-abbreviated form of a tag is called its CANONICAL
+  'nominative', or '1' for 'first-person'. Such abbreviations are called ALIASES, and some tags have multiple
+  equivalent aliases (e.g. 'p' or 'pl' for 'plural'). The full, non-abbreviated form of a tag is called its CANONICAL
   FORM.
 * The DISPLAY FORM of a tag is the way it's displayed to the user. Usually the displayed text of the tag is the same as
   its canonical form, and it normally functions as a link to a glossary entry explaining the tag. Usually the link is
   to an entry in [[Appendix:Glossary]], but sometimes the tag is linked to an individual dictionary entry or to a
   Wikipedia entry. Occasionally, the display text differs from the canonical form of the tag. An example is the tag
   'comparative case', which has the display text read as simply 'comparative'. Normally, tags referring to cases don't
-  have the word "case" in them, but in this case the tag 'comparative' was already used as a shortcut for the tag
+  have the word "case" in them, but in this case the tag 'comparative' was already used as an alias for the tag
   'comparative degree', so the tag was named 'comparative case' to avoid clashing. A similar situation occurs with
   'adverbial case' vs. the grammar tag 'adverbial' (as in 'adverbial participle').
 * A TAG SET is an ordered list of tags, which together express a single inflection, for example, '1|s|pres|ind', which
@@ -92,6 +92,8 @@ The following terminology is used in conjunction with {{inflection of}}:
   singular and third plural forms of the imperfect active indicative unaugmented conjugation. Two-level multipart tags
   should be used sparingly; if in doubt, list out the inflections separately. [FIXME: Make two-level multipart tags
   obsolete.]
+* A SHORTCUT is a tag that expands to any type of tag described above, or to any type of tag set described above.
+  Aliases are a particular type of shortcut whose expansion is a single non-multipart tag.
 * A MULTIPART SHORTCUT is a shortcut that expands into a multipart tag, for example '123', which expands to the
   multipart tag '1//2//3'. Only the most common such combinations exist as shortcuts.
 * A LIST SHORTCUT is a special type of shortcut that expands to a list of tags instead of a single tag. For example,
@@ -265,9 +267,8 @@ function export.format_form_of(data)
 end
 
 
-local function is_link_or_html(tag)
-	return tag:find("[[", nil, true) or tag:find("|", nil, true) or
-		tag:find("<", nil, true)
+function export.is_link_or_html(tag)
+	return tag:find("[[", nil, true) or tag:find("|", nil, true) or tag:find("<", nil, true)
 end
 
 
@@ -292,7 +293,7 @@ end
 function export.lookup_shortcut(tag, lang, do_track)
 	-- If there is HTML or a link in the tag, return it directly; don't try
 	-- to look it up, which will fail.
-	if tag == ";" or tag:find("//", nil, true) or is_link_or_html(tag) then
+	if tag == ";" or tag:find("//", nil, true) or export.is_link_or_html(tag) then
 		return tag
 	end
 	local expansion
@@ -384,7 +385,7 @@ local function normalize_multipart_component(tag, lang, do_track)
 	-- If there is HTML or a link in the tag, don't try to split on colon. A colon may legitimately occur in either one,
 	-- and we don't want these things parsed. Note that we don't do this check before splitting on //, which we don't
 	-- expect to occur in links or HTML; see comment in normalize_tag().
-	if is_link_or_html(tag) then
+	if export.is_link_or_html(tag) then
 		return tag
 	end
 	local components = rsplit(tag, ":", true)
@@ -746,22 +747,20 @@ local function get_single_tag_display_form(normtag, lang)
 end
 
 
--- Turn a canonicalized tag spec (which describes a single, possibly
--- multipart tag) into the displayed form. The tag spec may be a string
--- (a canonical-form tag), or a list of canonical-form tags (in the
--- case of a simple multipart tag), or a list of mixed canonical-form
--- tags and lists of such tags (in the case of a two-level multipart tag).
--- JOINER indicates how to join the parts of a multipart tag, and can
--- be either "and" ("foo and bar", or "foo, bar and baz" for 3 or more),
--- "slash" ("foo/bar"), "en-dash" ("foo–bar") or nil, which uses the
--- global default found in multipart_join_strategy() in
--- [[Module:form of/functions]].
+--[=[
+Turn a canonicalized tag spec (which describes a single, possibly multipart tag) into the displayed form. The tag spec
+may be a string (a canonical-form tag); a list of canonical-form tags (in the case of a simple multipart tag); or a
+list of mixed canonical-form tags and lists of such tags (in the case of a two-level multipart tag). `joiner` indicates
+how to join the parts of a multipart tag, and can be either "and" ("foo and bar", or "foo, bar and -- baz" for 3 or
+more), "slash" ("foo/bar"), "en-dash" ("foo–bar") or nil, which uses the global default found in
+multipart_join_strategy() in [[Module:form of/functions]]. (NOTE: The global default is "slash" and this seems unlikely
+to change.)
+]=]
 function export.get_tag_display_form(tagspec, lang, joiner)
 	if type(tagspec) == "string" then
 		return get_single_tag_display_form(tagspec, lang)
 	end
-	-- We have a multipart tag. See if there's a display handler to
-	-- display them specially.
+	-- We have a multipart tag. See if there's a display handler to display them specially.
 	for _, handler in ipairs(require(export.form_of_functions_module).display_handlers) do
 		local displayval = handler(tagspec, joiner)
 		if displayval then
@@ -774,10 +773,8 @@ function export.get_tag_display_form(tagspec, lang, joiner)
 		if type(first_level_tag) == "string" then
 			table.insert(displayed_tags, get_single_tag_display_form(first_level_tag, lang))
 		else
-			-- A first-level element of a two-level multipart tag.
-			-- Currently we just separate the individual components
-			-- with spaces, but other ways are possible, e.g. using
-			-- an underscore, colon, parens or braces.
+			-- A first-level element of a two-level multipart tag. Currently we just separate the individual components
+			-- with spaces, but other ways are possible, e.g. using an underscore, colon, parens or braces.
 			local components = {}
 			for _, component in ipairs(first_level_tag) do
 				table.insert(components, get_single_tag_display_form(component, lang))
@@ -786,6 +783,46 @@ function export.get_tag_display_form(tagspec, lang, joiner)
 		end
 	end
 	return require(export.form_of_functions_module).join_multiparts(displayed_tags, joiner)
+end
+
+
+--[=[
+Given a normalized tag set (i.e. as output by normalize_tag_set(); all tags are in canonical form, multipart tags are
+represented as lists, and two-level multipart tags as lists of lists), convert to displayed form (a string). See
+get_tag_display_form() for the meaning of `joiner`.
+]=]
+function export.get_tag_set_display_form(normalized_tag_set, lang, joiner)
+	local parts = {}
+
+	for _, tagspec in ipairs(normalized_tag_set) do
+		local to_insert = export.get_tag_display_form(tagspec, lang, joiner)
+		-- Maybe insert a space before inserting the display form of the tag. We insert a space if
+		-- (a) we're not the first tag; and
+		-- (b) the tag we're about to insert doesn't have the "no_space_on_left" property; and
+		-- (c) the preceding tag doesn't have the "no_space_on_right" property.
+		-- NOTE: We depend here on the fact that
+		-- (1) all tags with either of the above properties set have the same display form as canonical form, and
+		-- (2) all tags with either of the above properties set are single-character tags.
+		-- The second property is an optimization to avoid looking up display forms resulting from multipart tags,
+		-- which won't be found and which will trigger loading of [[Module:form of/data2]]. If multichar punctuation is
+		-- added in the future, it's ok to change the == 1 below to <= 2 or <= 3.
+		--
+		-- If the first property above fails to hold in the future, we need to track the canonical form of each tag
+		-- (including the previous one) as well as the display form. This would also avoid the need for the == 1 check.
+		if #parts > 0 then
+			local most_recent_tagobj = ulen(parts[#parts]) == 1 and export.lookup_tag(parts[#parts], lang)
+			local to_insert_tagobj = ulen(to_insert) == 1 and export.lookup_tag(to_insert, lang)
+			if (
+				(not most_recent_tagobj or not most_recent_tagobj.no_space_on_right) and
+				(not to_insert_tagobj or not to_insert_tagobj.no_space_on_left)
+			) then
+				table.insert(parts, " ")
+			end
+		end
+		table.insert(parts, to_insert)
+	end
+
+	return table.concat(parts)
 end
 
 
@@ -1128,40 +1165,7 @@ function export.tagged_inflections(data)
 			if not data.nocat then
 				m_table.extendList(categories, this_categories)
 			end
-
-			for _, tagspec in ipairs(normalized_tag_set) do
-				local to_insert = export.get_tag_display_form(tagspec, data.lang, data.joiner)
-				-- Maybe insert a space before inserting the display form of the tag. We insert a space if
-				-- (a) we're not the first tag; and
-				-- (b) the tag we're about to insert doesn't have the "no_space_on_left" property; and
-				-- (c) the preceding tag doesn't have the "no_space_on_right" property.
-				-- NOTE: We depend here on the fact that
-				-- (1) all tags with either of the above properties set have the same display form as canonical form, and
-				-- (2) all tags with either of the above properties set are single-character tags.
-				-- The second property is an optimization to avoid looking up display forms resulting from multipart tags,
-				-- which won't be found and which will trigger loading of [[Module:form of/data2]]. If multichar punctuation
-				-- is added in the future, it's ok to change the == 1 below to <= 2 or <= 3.
-				--
-				-- If the first property above fails to hold in the future, we need to track the canonical form of each tag
-				-- (including the previous one) as well as the display form. This would also avoid the need for the == 1
-				-- check.
-				if #cur_infl > 0 then
-					local most_recent_tagobj = ulen(cur_infl[#cur_infl]) == 1 and
-						export.lookup_tag(cur_infl[#cur_infl], data.lang)
-					local to_insert_tagobj = ulen(to_insert) == 1 and
-						export.lookup_tag(to_insert, data.lang)
-					if (
-						(not most_recent_tagobj or
-						 not most_recent_tagobj.no_space_on_right) and
-						(not to_insert_tagobj or
-						 not to_insert_tagobj.no_space_on_left)
-					) then
-						table.insert(cur_infl, " ")
-					end
-				end
-				table.insert(cur_infl, to_insert)
-			end
-
+			local cur_infl = export.get_tag_set_display_form(normalized_tag_set, data.lang, data.joiner)
 			if #cur_infl > 0 then
 				if tag_set.labels then
 					this_labels = m_table.append(tag_set.labels, this_labels)

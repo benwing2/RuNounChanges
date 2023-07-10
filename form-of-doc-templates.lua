@@ -94,15 +94,24 @@ function export.tagtable_t(frame)
 	return m_form_of_doc.tagtable()
 end
 
+function export.non_alias_shortcut_table_t(frame)
+	return m_form_of_doc.non_alias_shortcut_table()
+end
+
+function export.lang_specific_tables_t(frame)
+	return m_form_of_doc.lang_specific_tables()
+end
+
 function export.postable_t(frame)
 	return m_form_of_doc.postable()
 end
 
-function export.cattable_t(frame)
-	return m_form_of_doc.cattable()
+function export.lang_independent_category_table_t(frame)
+	return m_form_of_doc.lang_independent_category_table()
+end
+
+function export.lang_independent_label_table_t(frame)
+	return m_form_of_doc.lang_independent_label_table()
 end
 
 return export
-
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:

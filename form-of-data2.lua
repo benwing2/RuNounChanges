@@ -1612,9 +1612,9 @@ for name, data in pairs(tags) do
 		for _, shortcut in ipairs(data.shortcuts) do
 			-- If the shortcut is already in the list, then there is a duplicate.
 			if shortcuts[shortcut] then
-				error("The shortcut \"" .. shortcut .. "\" (for the grammar tag \"" .. name .. "\") conflicts with an existing shortcut for the tag \"" .. shortcuts[shortcut] .. "\".")
+				error("The shortcut \"" .. shortcut .. "\" (for the inflection tag \"" .. name .. "\") conflicts with an existing shortcut for the tag \"" .. shortcuts[shortcut] .. "\".")
 			elseif tags[shortcut] then
-				error("The shortcut \"" .. shortcut .. "\" (for the grammar tag \"" .. name .. "\") conflicts with an existing tag with that name.")
+				error("The shortcut \"" .. shortcut .. "\" (for the inflection tag \"" .. name .. "\") conflicts with an existing tag with that name.")
 			end
 			
 			shortcuts[shortcut] = name
@@ -1623,6 +1623,3 @@ for name, data in pairs(tags) do
 end
 
 return {tags = tags, shortcuts = shortcuts}
-
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:

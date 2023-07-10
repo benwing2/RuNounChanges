@@ -14,6 +14,7 @@ local m_languages = require("Module:languages")
 local m_table = require("Module:table")
 local form_of_module = "Module:form of"
 local m_form_of = require(form_of_module)
+local labels_module = "Module:labels"
 local strutils = require("Module:string utilities")
 
 local usub = mw.ustring.sub
@@ -21,20 +22,24 @@ local uupper = mw.ustring.upper
 local rfind = mw.ustring.find
 local rsubn = mw.ustring.gsub
 
+
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
 	return retval
 end
 
+
 local function lang_name(langcode, param)
 	local lang = m_languages.getByCode(langcode, param)
 	return lang:getCanonicalName()
 end
 
+
 local function ucfirst(text)
 	return uupper(usub(text, 1, 1)) .. usub(text, 2)
 end
+
 
 local function template_name(preserve_lang_code)
 	-- Fetch the template name, minus the '/documentation' suffix that may follow
@@ -54,6 +59,7 @@ local function template_name(preserve_lang_code)
 	end
 	return tempname
 end
+
 
 function export.introdoc(args)
 	local langname = args.lang and lang_name(args.lang, "lang")
@@ -116,6 +122,7 @@ Note that users can customize how the output of this template displays by modify
 	return table.concat(parts)
 end
 
+
 local function param(params, list, required)
 	local paramparts = {}
 	if type(params) ~= "table" then
@@ -134,6 +141,7 @@ local function param(params, list, required)
 	local reqtext = required and "'''(required)'''" or "''(optional)''"
 	return table.concat(paramparts, " or ") .. " " .. reqtext
 end
+
 
 function export.paramdoc(args)
 	local parts = {}
@@ -182,6 +190,7 @@ function export.paramdoc(args)
 	return table.concat(parts)
 end
 
+
 function export.usagedoc(args)
 	local exlangs = {}
 	for _, exlang in ipairs(args.exlang) do
@@ -219,6 +228,7 @@ where <code><var><langcode></var></code> is the [[Wiktionary:Languages|language 
 	end
 end
 
+
 function export.fulldoc(args)
 	local docsubpage = mw.getCurrentFrame():expandTemplate{title="documentation subpage", args={}}
 	local shortcuts = #args.shortcut > 0 and require("Module:shortcut box").show(args.shortcut) or ""
@@ -226,6 +236,7 @@ function export.fulldoc(args)
 	local usagedoc = export.usagedoc(args)
 	return docsubpage .. "\n" .. shortcuts .. introdoc .. "\n" .. usagedoc
 end
+
 
 function export.infldoc(args)
 	args = m_table.shallowcopy(args)
@@ -237,6 +248,7 @@ function export.infldoc(args)
 	return export.fulldoc(args)
 end
 
+
 local tag_type_to_description = {
 	-- If not listed, we just capitalize the first letter
 	["tense-aspect"] = "Tense/aspect",
@@ -247,6 +259,7 @@ local tag_type_to_description = {
 	["grammar"] = "Misc grammar",
 	["other"] = "Other tags",
 }
+
 
 local tag_type_order = {
 	"person",
@@ -270,13 +283,16 @@ local tag_type_order = {
 	"other",
 }
 
+
 local function tag_type_desc(tag_type)
 	return tag_type_to_description[tag_type] or strutils.ucfirst(tag_type)
 end
 
+
 local function sort_by_first(namedata1, namedata2)
 	return namedata1[1] < namedata2[1]
 end
+
 
 local function get_display_form(tag_set, lang)
 	local norm_tag_sets = m_form_of.normalize_tag_set(tag_set, lang)
@@ -422,7 +438,120 @@ function export.non_alias_shortcut_table()
 end
 
 
+local function find_categories_and_labels(catstruct)
+	local cats = {}
+	local labels = {}
+
+	local function process_spec(spec)
+		if type(spec) == "string" then
+			table.insert(cats, spec)
+			return
+		elseif not spec or spec == true then
+			-- Ignore labels, etc.
+			return
+		elseif type(spec) ~= "table" then
+			error("Wrong type of condition " .. spec .. ": " .. type(spec))
+		elseif spec.labels then
+			m_table.extendList(labels, spec.labels)
+			return
+		end
+		local predicate = spec[1]
+		if predicate == "multi" or predicate == "cond" then
+			-- WARNING! #spec doesn't work for objects loaded from loadData()
+			for i, sp in ipairs(spec) do
+				if i > 1 then
+					process_spec(sp)
+				end
+			end
+		elseif predicate == "pexists" then
+			process_spec(spec[2])
+			process_spec(spec[3])
+		elseif predicate == "has" or predicate == "hasall" or predicate == "hasany" or
+			predicate == "tags=" or predicate == "p=" or predicate == "pany" or
+			predicate == "not" then
+			process_spec(spec[3])
+			process_spec(spec[4])
+		elseif predicate == "and" or predicate == "or" then
+			process_spec(spec[3])
+			process_spec(spec[4])
+		elseif predicate == "call" then
+			return
+		else
+			error("Unrecognized predicate: " .. predicate)
+		end
+	end
+
+	for _, spec in ipairs(catstruct) do
+		process_spec(spec)
+	end
+	return cats, labels
+end
+
+
+local function construct_category_table(cats)
+	local category_parts = {}
+	local function ins(text)
+		table.insert(category_parts, text)
+	end
+	ins('{|class="wikitable"')
+	ins("! Category")
+	for _, cat in ipairs(cats) do
+		ins("|-")
+		ins("| <code>" .. cat .. "</code>")
+	end
+	ins("|}")
+	return table.concat(category_parts, "")
+end
+
+
+local function construct_category_table(cats)
+	local category_parts = {}
+	local function ins(text)
+		table.insert(category_parts, text)
+	end
+	ins('{|class="wikitable"')
+	ins("! Category")
+	for _, cat in ipairs(cats) do
+		ins("|-")
+		ins("| <code>" .. cat .. "</code>")
+	end
+	ins("|}")
+	return table.concat(category_parts, "")
+end
+
+
+local function construct_label_table(labels, replace_und)
+	local label_parts = {}
+	local function ins(text)
+		table.insert(label_parts, text)
+	end
+	ins('{|class="wikitable"')
+	ins("! Label !! Display form !! Associated categories")
+	for _, label in ipairs(labels) do
+		ins("|-")
+		local label_data = require(labels_module).get_label_info {
+			label = label,
+			lang = lang,
+			already_seen = {},
+		}
+		local coded_categories = {}
+		for _, cat in ipairs(label_data.categories) do
+			if replace_und then
+				cat = cat:gsub("^und:", "LANGCODE:")
+				cat = cat:gsub("^Undetermined ", "LANG ")
+			end
+			table.insert(coded_categories, "<code>" .. cat .. "</code>")
+		end
+		ins(("| <code>%s</code> || %s || %s"):format(label, label_data.label,
+			table.concat(coded_categories, ",")))
+	end
+	ins("|}")
+	return table.concat(label_parts, "")
+end
+
+
 function export.lang_specific_tables()
+	local m_cats = mw.loadData(m_form_of.form_of_cats_module)
 	local parts = {}
 
 	local function ins(text)
@@ -431,7 +560,14 @@ function export.lang_specific_tables()
 
 	local data_by_lang = {}
 
-	for langcode, _ in pairs(m_form_of.langs_with_lang_specific_tags) do
+	local langs_with_lang_specific_data = mw.clone(m_form_of.langs_with_lang_specific_tags)
+	for langcode, _ in pairs(m_cats) do
+		if langcode ~= "und" then
+			langs_with_lang_specific_data[langcode] = true
+		end
+	end
+
+	for langcode, _ in pairs(langs_with_lang_specific_data) do
 		local lang = m_languages.getByCode(langcode, true)
 		local data_module = mw.loadData(m_form_of.form_of_lang_data_module_prefix .. langcode)
 
@@ -514,7 +650,20 @@ function export.lang_specific_tables()
 			non_alias_shortcut_table = table.concat(non_alias_shortcut_parts, "\n")
 		end
 
-		if base_lemma_param_table or tag_table or non_alias_shortcut_table then
+		-- Then do categories and labels.
+		local category_table, label_table
+		if m_cats[langcode] then
+			local cats, labels = find_categories_and_labels(m_cats[langcode])
+			if #cats > 0 then
+				category_table = construct_category_table(cats)
+			end
+			if #labels > 0 then
+				label_table = construct_label_table(labels) 
+			end
+		end
+
+		-- Concatenate all the tables together, with appropriate explanatory text.
+		if base_lemma_param_table or tag_table or non_alias_shortcut_table or category_table or label_table then
 			local langname = lang:getCanonicalName()
 			local lang_parts = {}
 			local function ins(text)
@@ -532,6 +681,16 @@ function export.lang_specific_tables()
 			if non_alias_shortcut_table then
 				ins(("%s-specific non-alias shortcuts:"):format(langname))
 				ins(non_alias_shortcut_table)
+			end
+			if category_table then
+				ins(("%s-specific categories (the exact conditions under which these are added are described in [[Module:form of/cats]]):"):
+					format(langname))
+				ins(category_table)
+			end
+			if label_table then
+				ins(("%s-specific labels (the exact conditions under which these are added are described in [[Module:form of/cats]]):"):
+					format(langname))
+				ins(label_table)
 			end
 			table.insert(data_by_lang, {langname, table.concat(lang_parts, "\n")})
 		end
@@ -557,6 +716,7 @@ function export.lang_specific_tables()
 	end
 	return table.concat(parts, "\n")
 end
+
 
 function export.postable()
 	m_pos = mw.loadData(m_form_of.form_of_pos_module)
@@ -591,97 +751,29 @@ function export.postable()
 	return table.concat(parts, "\n")
 end
 
-function export.cattable()
+
+function export.lang_independent_category_table()
 	local m_cats = mw.loadData(m_form_of.form_of_cats_module)
-	local cats_by_lang = {}
-	local function find_categories(catstruct)
-		local cats = {}
-
-		local function process_spec(spec)
-			if type(spec) == "string" then
-				table.insert(cats, spec)
-				return
-			elseif not spec or spec == true or spec.labels then
-				-- Ignore labels, etc.
-				return
-			elseif type(spec) ~= "table" then
-				error("Wrong type of condition " .. spec .. ": " .. type(spec))
-			end
-			local predicate = spec[1]
-			if predicate == "multi" or predicate == "cond" then
-				-- WARNING! #spec doesn't work for objects loaded from loadData()
-				for i, sp in ipairs(spec) do
-					if i > 1 then
-						process_spec(sp)
-					end
-				end
-			elseif predicate == "pexists" then
-				process_spec(spec[2])
-				process_spec(spec[3])
-			elseif predicate == "has" or predicate == "hasall" or predicate == "hasany" or
-				predicate == "tags=" or predicate == "p=" or predicate == "pany" or
-				predicate == "not" then
-				process_spec(spec[3])
-				process_spec(spec[4])
-			elseif predicate == "and" or predicate == "or" then
-				process_spec(spec[3])
-				process_spec(spec[4])
-			elseif predicate == "call" then
-				return
-			else
-				error("Unrecognized predicate: " .. predicate)
-			end
-		end
-
-		for _, spec in ipairs(catstruct) do
-			process_spec(spec)
-		end
-		return cats
-	end
-
-	for lang, catspecs in pairs(m_cats) do
-		local cats = find_categories(catspecs)
-		table.insert(cats_by_lang, {lang, cats})
-	end
-	table.sort(cats_by_lang, sort_by_first)
-
-	local lang_independent_cat_index = nil
-	for i, langcats in ipairs(cats_by_lang) do
-		local lang = langcats[1]
-		if lang == "und" then
-			lang_independent_cat_index = i
-			break
-		end
-	end
-	if lang_independent_cat_index then
-		local lang_independent_cats = table.remove(cats_by_lang, lang_independent_cat_index)
-		table.insert(cats_by_lang, 1, lang_independent_cats)
-	end
-
-	local parts = {}	
-	table.insert(parts, '{|class="wikitable"')
-
-	for i, langcats in ipairs(cats_by_lang) do
-		local langcode = langcats[1]
-		local cats = langcats[2]
+	if m_cats["und"] then
+		local cats, labels = find_categories_and_labels(m_cats[langcode])
 		if #cats > 0 then
-			if i > 1 then
-				table.insert(parts, "|-")
-			end
-			if langcode == "und" then
-				table.insert(parts, '! style="text-align: center; background: #dddddd;" | Language-independent')
-			else
-				local lang = m_languages.getByCode(langcode) or error("Unrecognized language code: " .. langcode)
-				table.insert(parts, '! style="text-align: center; background: #dddddd;" | ' .. lang:getCanonicalName())
-			end
-			for _, cat in ipairs(cats) do
-				table.insert(parts, "|-")
-				table.insert(parts, "| <code>" .. cat .. "</code>")
-			end
+			return construct_category_table(cats)
 		end
 	end
-	table.insert(parts, "|}")
-	return table.concat(parts, "\n")
+	return "(no language-independent categories currently)"
 end
+
+
+function export.lang_independent_label_table()
+	local m_cats = mw.loadData(m_form_of.form_of_cats_module)
+	if m_cats["und"] then
+		local cats, labels = find_categories_and_labels(m_cats[langcode])
+		if #labels > 0 then
+			return construct_label_table(labels, "replace und")
+		end
+	end
+	return "(no language-independent labels currently)"
+end
+
 
 return export
