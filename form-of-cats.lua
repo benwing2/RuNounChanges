@@ -2,18 +2,15 @@ local cats = {}
 
 --[=[
 
-This contains categorization specs for specific languages and for all languages.
-The particular categories listed are listed without the preceding canonical
-language name, which will automatically be prepended, and the text "<<p>>"
-in a category will be replaced with the user-specified part of speech.
+This contains categorization and labeling specs for specific languages and for all languages. The particular categories
+listed are listed without the preceding canonical language name, which will automatically be prepended, and the text
+"<<p>>" in a category will be replaced with the user-specified part of speech.
 
-The value of an entry in the cats[] table is a list of specifications to apply
-to inflections in a specific language (except that the entry for "und" applies
-to all languages). Each specification indicates the conditions under which a
-given category is applied. Each specification is processed independently; if
-multiple specifications apply, all the resulting categories will be added to
-the page. (This is equivalent to wrapping the specifications in a
-{"multi", ...} clause; see below.)
+The value of an entry in the cats[] table is a list of specifications to apply to inflections in a specific language
+(except that the entry for "und" applies to all languages). Each specification indicates the conditions under which a
+given category or label is applied. Each such top-level specification is processed independently; if multiple
+specifications apply, all the resulting categories and labels will be added to the page. (This is equivalent to
+wrapping the specifications in a {"multi", ...} clause; see below.)
 
 A specification is one of:
 
@@ -21,62 +18,62 @@ A specification is one of:
 
 	Always apply that category.
 
-(2) A list {"has", TAG, SPEC} or {"has", TAG, SPEC, ELSESPEC}:
+(2) A table of the form {labels = {"LABEL", "LABEL", ...}}.
 
-	TAG is an inflection tag, and can either be the full form or any
-	abbreviation; if that tag is present among the user-supplied tags, SPEC is
-	applied, otherwise ELSESPEC is applied if present. SPEC and ELSESPEC are
-	specifications just as at the top level; i.e. they can be strings, nested
-	conditions, etc.
+	Always apply that label. NOTE: There is no current facility provided for specifying the equivalent of nocat=1
+	in a label spec, although it should be easy to add. You can get the effect of this by creating a language-specific
+	label that displays how you want but doesn't categorize.
 
-(2) A list {"hasall", TAGS, SPEC} or {"hasall", TAGS, SPEC, ELSESPEC}:
+(3) A list {"has", TAG, SPEC} or {"has", TAG, SPEC, ELSESPEC}:
 
-	Similar to {"has", ...} but only activates if all of the tags in TAGS
-	(a list) are present among the user-supplied tags (in any order, and
-	other tags may be present, including between the tags in TAGS).
+	TAG is an inflection tag, and can either be the full form or any abbreviation; if that tag is present among the
+	user-supplied tags, SPEC is applied, otherwise ELSESPEC is applied if present. SPEC and ELSESPEC are specifications
+	just as at the top level; i.e. they can be strings, nested conditions, etc.
 
-(3) A list {"hasany", TAGS, SPEC} or {"hasany", TAGS, SPEC, ELSESPEC}:
+(4) A list {"hasall", TAGS, SPEC} or {"hasall", TAGS, SPEC, ELSESPEC}:
 
-	Similar to {"has", ...} but activates if any of the tags in TAGS
-	(a list) are present among the user-supplied tags.
+	Similar to {"has", ...} but only activates if all of the tags in TAGS (a list) are present among the user-supplied
+	tags (in any order, and other tags may be present, including between the tags in TAGS).
 
-(4) A list {"tags=", TAGS, SPEC} or {"tags=", TAGS, SPEC, ELSESPEC}:
+(5) A list {"hasany", TAGS, SPEC} or {"hasany", TAGS, SPEC, ELSESPEC}:
 
-	Similar to {"hasall", ...} but activates only if the
-	user-supplied tags exactly match the tags in TAGS, including
-	the order. (But, as above, any tag abbreviation can be given
-	in TAGS, and will match any equivalent abbreviation or full
-	form.)
+	Similar to {"has", ...} but activates if any of the tags in TAGS (a list) are present among the user-supplied tags.
 
-(5) A list {"p=", VALUE, SPEC} or {"p=", VALUE, SPEC, ELSESPEC}:
+(6) A list {"tags=", TAGS, SPEC} or {"tags=", TAGS, SPEC, ELSESPEC}:
+
+	Similar to {"hasall", ...} but activates only if the user-supplied tags exactly match the tags in TAGS, including
+	the order. (But, as above, any tag abbreviation can be given in TAGS, and will match any equivalent abbreviation or
+	full form.)
+
+(7) A list {"p=", VALUE, SPEC} or {"p=", VALUE, SPEC, ELSESPEC}:
 
 	Similar to {"has", ...} but activates if the value supplied for the p=
 	or POS= parameters is the specified value (which can be either the full
 	form or any abbreviation).
 
-(6) A list {"pany", VALUES, SPEC} or {"pany", VALUES, SPEC, ELSESPEC}:
+(8) A list {"pany", VALUES, SPEC} or {"pany", VALUES, SPEC, ELSESPEC}:
 
 	Similar to {"p=", ...} but activates if the value supplied for the p=
 	or POS= parameters is any of the specified values (which can be either
 	the full forms or any abbreviation).
 
-(7) A list {"pexists", SPEC} or {"pexists", SPEC, ELSESPEC}:
+(9) A list {"pexists", SPEC} or {"pexists", SPEC, ELSESPEC}:
 
 	Activates if any value was specified for the p= or POS= parameters.
 
-(8) A list {"cond", SPEC1, SPEC2, ...}:
+(10) A list {"cond", SPEC1, SPEC2, ...}:
 
-	If SPEC1 applies, it will be applied; otherwise, if SPEC2 applies, it
-	will be applied; etc. This stops processing specifications as soon as it
-	finds one that applies.
+	 If SPEC1 applies, it will be applied; otherwise, if SPEC2 applies, it
+	 will be applied; etc. This stops processing specifications as soon as it
+	 finds one that applies.
 
-(9) A list {"multi", SPEC1, SPEC2, ...}:
+(11) A list {"multi", SPEC1, SPEC2, ...}:
 
-	If SPEC1 applies, it will be applied; in addition, if SPEC2 applies, it
-	will also be applied; etc. Unlike {"cond", ...}, this continues
-	processing specifications even if a previous one has applied.
+	 If SPEC1 applies, it will be applied; in addition, if SPEC2 applies, it
+	 will also be applied; etc. Unlike {"cond", ...}, this continues
+	 processing specifications even if a previous one has applied.
 
-(10) A list {"not", CONDITION, SPEC} or {"not", CONDITION, SPEC, ELSESPEC}:
+(12) A list {"not", CONDITION, SPEC} or {"not", CONDITION, SPEC, ELSESPEC}:
 
 	 If CONDITION does *NOT* apply, SPEC will be applied, otherwise ELSESPEC
 	 will be applied if present. CONDITION is one of:
@@ -93,22 +90,22 @@ A specification is one of:
 	 -- {"or", CONDITION1, CONDITION2}
 	 -- {"call", FUNCTION} where FUNCTION is a string naming a function listed
 	    in cat_functions in [[Module:form of/functions]], which is passed a
-	    single argument (see (10) below) and should return true or false.
+	    single argument (see (15) below) and should return true or false.
 
 	 That is, conditions are similar to if-else SPECS but without any
 	 specifications given.
 
-(11) A list {"and", CONDITION1, CONDITION2, SPEC} or {"and", CONDITION1, CONDITION2, SPEC, ELSESPEC}:
+(13) A list {"and", CONDITION1, CONDITION2, SPEC} or {"and", CONDITION1, CONDITION2, SPEC, ELSESPEC}:
 
 	 If CONDITION1 and CONDITION2 both apply, SPEC will be applied, otherwise
 	 ELSESPEC will be applied if present. CONDITION is as above for "not".
 
-(12) A list {"or", CONDITION1, CONDITION2, SPEC} or {"or", CONDITION1, CONDITION2, SPEC, ELSESPEC}:
+(14) A list {"or", CONDITION1, CONDITION2, SPEC} or {"or", CONDITION1, CONDITION2, SPEC, ELSESPEC}:
 
 	 If either CONDITION1 or CONDITION2 apply, SPEC will be applied, otherwise
 	 ELSESPEC will be applied if present. CONDITION is as above for "not".
 
-(13) A list {"call", FUNCTION}:
+(15) A list {"call", FUNCTION}:
 
 	 FUNCTION is the name of a function listed in cat_functions in
 	 [[Module:form of/functions]], which is passed a single argument, a table
