@@ -119,94 +119,95 @@ round_2_templates = [
   "de-form-adj", # deleted
   "el-form-of-verb",
   "el-verb form of",
-  "en-simple past of",
-  "enm-first-person singular of",
-  "enm-first/third-person singular past of",
-  "enm-inflected form of",
-  "enm-plural of",
-  "enm-plural past of",
-  "enm-plural subjunctive of",
-  "enm-plural subjunctive past of",
-  "enm-second-person singular of",
-  "enm-second-person singular past of",
-  "enm-singular subjunctive of",
-  "enm-singular subjunctive past of",
-  "enm-third-person singular of",
-  "es-adj form of",
-  "et-participle of",
-  "et-verb form of",
-  "fa-adj form of",
-  "fa-adj-form",
+  "en-simple past of", # in RFDO
+  "enm-first-person singular of", # deleted
+  "enm-first/third-person singular past of", # deleted
+  "enm-inflected form of", # deleted
+  "enm-plural of", # deleted
+  "enm-plural past of", # deleted
+  "enm-plural subjunctive of", # deleted
+  "enm-plural subjunctive past of", # deleted
+  "enm-second-person singular of", # deleted
+  "enm-second-person singular past of", # deleted
+  "enm-singular subjunctive of", # deleted
+  "enm-singular subjunctive past of", # deleted
+  "enm-third-person singular of", # deleted
+  "es-adj form of", # deprecated
+  "et-participle of", # 13 uses
+  "et-verb form of", # ~ 180 uses
+  "fa-adj form of", # deleted
+  "fa-adj-form", # deleted
   "fi-verb form of", # deprecated
-  "got-verb form of",
-  "hi-form-verb",
-  "hu-inflection of",
-  "hu-participle",
-  "it-adj form of",
-  "ja-past of verb",
-  "ja-te form of verb",
-  "liv-conjugation of",
-  "liv-participle of",
-  "lt-būdinys",
-  "lt-budinys",
-  "lt-dalyvis-1",
-  "lt-dalyvis",
-  "lt-dalyvis-2",
-  "lt-form-adj",
-  "lt-form-part",
-  "lt-form-pronoun",
-  "lt-padalyvis",
-  "lt-pusdalyvis",
-  "lv-comparative of",
-  "lv-negative of",
-  "lv-reflexive of",
-  "lv-superlative of",
-  "mhr-inflection of",
-  "pt-adj form of",
-  "pt-noun form of",
-  "sa-desiderative of",
-  "sa-desi",
-  "sa-frequentative of",
-  "sa-freq",
-  "sa-root form of",
-  "sco-simple past of",
-  "sco-third-person singular of",
-  "sga-verbnec of",
+  "got-verb form of", # deprecated
+  "hi-form-verb", # deleted
+  "hu-inflection of", # deprecated
+  "hu-participle", # deprecated
+  "it-adj form of", # deprecated
+  "ja-past of verb", # 17 uses
+  "ja-te form of verb", # 5 uses
+  "liv-conjugation of", # deleted
+  "liv-participle of", # 61 uses
+  "lt-būdinys", # deleted
+  "lt-budinys", # deleted
+  "lt-dalyvis-1", # deleted
+  "lt-dalyvis", # deprecated
+  "lt-dalyvis-2", # deleted
+  "lt-form-adj", # deprecated
+  "lt-form-part", # deprecated
+  "lt-form-pronoun", # deleted
+  "lt-padalyvis", # deleted
+  "lt-pusdalyvis", # deleted
+  "lv-comparative of", # deprecated
+  "lv-negative of", # deleted
+  "lv-reflexive of", # deleted
+  "lv-superlative of", # deleted
+  "mhr-inflection of", # 280 uses
+  "pt-adj form of", # deprecated
+  "pt-noun form of", # deprecated
+  "sa-desiderative of", # 7 uses
+  "sa-desi", # redirect to 'sa-desiderative of'
+  "sa-frequentative of", # 4 uses
+  "sa-freq",# redirect to 'sa-frequentative of'
+  "sa-root form of", # deleted
+  "sco-simple past of", # 20 uses
+  "sco-past of", # 86 uses
+  "sco-third-person singular of", # 95 uses
+  "sga-verbnec of", # 9 uses
   "sl-participle of", # deleted
-  "sv-adj-form-abs-def",
-  "sv-adj-form-abs-def+pl",
-  "sv-adj-form-abs-def-m",
-  "sv-adj-form-abs-indef-n",
-  "sv-adj-form-abs-pl",
-  "sv-adj-form-comp",
-  "sv-adj-form-sup-attr",
-  "sv-adj-form-sup-attr-m",
-  "sv-adj-form-sup-pred",
-  "sv-adv-form-comp",
-  "sv-adv-form-sup",
-  "sv-noun-form-def",
-  "sv-noun-form-def-gen",
-  "sv-noun-form-def-gen-pl",
-  "sv-noun-form-def-pl",
-  "sv-noun-form-indef-gen",
-  "sv-noun-form-indef-gen-pl",
-  "sv-noun-form-indef-pl",
-  "sv-proper-noun-gen",
-  "sv-verb-form-imp",
-  "sv-verb-form-inf-pass",
-  "sv-verb-form-past",
-  "sv-verb-form-past-pass",
-  "sv-verb-form-pastpart",
-  "sv-verb-form-pre",
-  "sv-verb-form-pre-pass",
-  "sv-verb-form-prepart",
-  "sv-verb-form-subjunctive",
-  "sv-verb-form-sup",
-  "sv-verb-form-sup-pass",
-  "tg-adj form of",
-  "tg-adj-form",
-  "tl-verb form of",
-  "tr-inflection of",
+  "sv-adj-form-abs-def", # deleted
+  "sv-adj-form-abs-def+pl", # deprecated
+  "sv-adj-form-abs-def-m", # deprecated
+  "sv-adj-form-abs-indef-n", # deprecated
+  "sv-adj-form-abs-pl", # deleted
+  "sv-adj-form-comp", # deleted
+  "sv-adj-form-sup-attr", # deleted
+  "sv-adj-form-sup-attr-m", # deleted
+  "sv-adj-form-sup-pred", # deleted
+  "sv-adv-form-comp", # deleted
+  "sv-adv-form-sup", # deleted
+  "sv-noun-form-def", # deprecated
+  "sv-noun-form-def-gen", # deprecated
+  "sv-noun-form-def-gen-pl", # deprecated
+  "sv-noun-form-def-pl", # deprecated
+  "sv-noun-form-indef-gen", # deprecated
+  "sv-noun-form-indef-gen-pl", # deprecated
+  "sv-noun-form-indef-pl", # deprecated
+  "sv-proper-noun-gen", # deleted
+  "sv-verb-form-imp", # deprecated
+  "sv-verb-form-inf-pass", # deprecated
+  "sv-verb-form-past", # deprecated
+  "sv-verb-form-past-pass", # deprecated
+  "sv-verb-form-pastpart", # deprecated
+  "sv-verb-form-pre", # deprecated
+  "sv-verb-form-pre-pass", # deprecated
+  "sv-verb-form-prepart", # deprecated
+  "sv-verb-form-subjunctive", # deleted
+  "sv-verb-form-sup", # deprecated
+  "sv-verb-form-sup-pass", # deprecated
+  "tg-adj form of", # deleted
+  "tg-adj-form", # deleted
+  "tl-verb form of", # deleted
+  "tr-inflection of", # deleted
 ]
 
 zh_templates_under_1000 = [
@@ -2948,7 +2949,6 @@ lt_specs = [
       ("lookup", "2", lt_adj_case_table),
       ("lookup", "1", lt_adj_gender_number_table),
     ]),
-    ("set", "p", "part"),
   )),
 
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
@@ -2997,7 +2997,6 @@ lt_specs = [
         "": [],
       }),
     ]),
-    ("set", "p", "pron"),
   )),
 
   # NOTE: Has automatic, non-controllable final period that we're ignoring.
@@ -3112,9 +3111,28 @@ lv_grammar_table = {
 }
 
 lv_specs = [
+  ("lv-adv form of", (
+    "infl of",
+    # lang= and extrawidth= occur at least once each, and are ignored.
+    ("error-if", ("present-except", ["1", "2", "lang", "extrawidth"])),
+    ("set", "1", [
+      "lv",
+      ("copy", "1"),
+      "",
+      "adv",
+      "form"
+    ]),
+    ("set", "p",
+      ("lookup", "2", {
+        "vpart": "part",
+        "": [],
+      }),
+    ),
+  )),
+
   ("lv-comparative of", (
     "infl of",
-    ("error-if", ("present-except", ["1", "2", "3"])),
+    ("error-if", ("present-except", ["1", "2"])),
     ("set", "1", [
       "lv",
       ("copy", "1"),
@@ -3125,12 +3143,6 @@ lv_specs = [
       }),
       "comd",
     ]),
-    ("set", "p",
-      ("lookup", "3", {
-        "vpart": "part",
-        "": [],
-      })
-    ),
   )),
 
   ("lv-definite of", (
@@ -3183,6 +3195,31 @@ lv_specs = [
     ]),
   )),
 
+  ("lv-participle of", (
+    "participle of",
+    # lang= occurs at least once, and is ignored.
+    ("error-if", ("present-except", ["1", "2", "3", "4", "5"])),
+    ("set", "1", [
+      "lv",
+      ("copy", "1"),
+      "",
+      ("lookup", "4", {
+        "adv": "adv",
+        "def": "def",
+        "indef": "indef",
+        "": "indef",
+      }),
+      ("lookup", "5", {
+        "obj": "objper",
+        "inv": "invar",
+        "var": "var",
+        "": [],
+      }),
+      ("lookup", "2", lv_grammar_table),
+      ("lookup", "3", lv_grammar_table),
+    ]),
+  )),
+
   ("lv-reflexive of", (
     "reflexive of",
     ("error-if", ("present-except", ["1"])),
@@ -3194,17 +3231,11 @@ lv_specs = [
 
   ("lv-superlative of", (
     "superlative of",
-    ("error-if", ("present-except", ["1", "2"])),
+    ("error-if", ("present-except", ["1"])),
     ("set", "1", [
       "lv",
       ("copy", "1"),
     ]),
-    ("set", "p",
-      ("lookup", "2", {
-        "vpart": "part",
-        "": [],
-      })
-    ),
   )),
 
   ("lv-verbal noun of", (
@@ -3468,13 +3499,69 @@ nl_specs = [
         "nl",
         ("copy", "2"),
         "",
-        ("copy", "1"),
+        ("lookup", "1", {
+          "infl": "infl",
+          "pred": "pred",
+          "part": "par",
+        }),
       ]),
       ("copy", "3", "t"),
       ("copy", "comp-of"),
       ("copy", "sup-of"),
     )
   ),
+]
+
+def get_nn_verb_form_of_lemmas(data):
+  lemmas = []
+  no_end = data.getp("no_end")
+  if no_end:
+    lemmas.append(no_end)
+  no_end2 = data.getp("no_end2")
+  if no_end2:
+    lemmas.append(no_end2)
+  arg2 = data.getp("2")
+  if arg2:
+    lemmas.append(arg2 + "a")
+  arg3 = data.getp("3")
+  if arg3:
+    lemmas.append(arg3 + "a")
+  return ",".join(lemmas)
+
+nn_specs = [
+  ("nn-verb-form of", (
+    "infl of",
+    # lang= occurs at least once, and is ignored.
+    ("error-if", ("present-except", ["1", "2", "3", "no_end", "no_end2", "lang"])),
+    ("set", "1", [
+      "nn",
+      get_nn_verb_form_of_lemmas,
+      "",
+      ("lookup", "1", {
+        "past tense": "past",
+        "past": "past",
+        "simple past": "past",
+        "present tense": "pres",
+        "present": "pres",
+        "imperative": "imp",
+        "imperativ": "imp",
+        "present tense and imperative": ["pres", ";", "imp"],
+        "past participle": ["past", "part"],
+        "indefinite singular past participle": ["past", "part"],
+        "definite singular past participle": ["def", "s", "past", "part"],
+        "neuter past participle": ["indef", "n", "s", "past", "part"],
+        "plural past participle": ["p", "past", "part"],
+        "plural and definite singular past participle": ["p", "past", "part", ";", "def", "s", "past", "part"],
+        "past participle definite singular and plural": ["p", "past", "part", ";", "def", "s", "past", "part"],
+        "masculine and feminine past participle": ["past", "part"],
+        "masculine, feminine and neuter past participle": ["past", "part"],
+        "present participle": ["pres", "part"],
+        "passive infinitive": ["pass", "inf"],
+        "passive": ["pass", "inf"],
+        "supine": ["sup"],
+      }),
+    ]),
+  )),
 ]
 
 ofs_specs = [
@@ -4503,6 +4590,7 @@ templates_to_rename_specs = (
   mt_specs +
   nb_specs +
   nl_specs +
+  nn_specs +
   ofs_specs +
   osx_specs +
   pt_specs +
