@@ -22,7 +22,7 @@ function export.multipart_join_strategy()
 	-- "and": Join with "and", using commas for 3 or more items
 	-- "en-dash": Join with – (en-dash)
 	-- "slash": Join with / (slash)
-	return "and"
+	return "slash"
 end
 
 local function wrap_in_inflection_of_sep(text)
