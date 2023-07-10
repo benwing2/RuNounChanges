@@ -270,6 +270,18 @@ cats["el"] = {
 	},
 }
 
+cats["en"] = {
+	{"cond",
+		-- The display of these labels and their categorization is controlled by [[Module:labels/data/lang/en]].
+		-- This label will categorize into [[:Category:English archaic third-person singular forms]].
+		{"has", "3-th", {labels = {"archaic third singular"}}},
+		-- This label will categorize into [[:Category:English second-person singular forms]].
+		{"hasall", {"2-st", "pres"}, {labels = {"archaic second singular present"}}},
+		-- This label will categorize into [[:Category:English second-person singular past tense forms]].
+		{"hasall", {"2-st", "past"}, {labels = {"archaic second singular past"}}},
+	},
+}
+
 cats["enm"] = {
 	{"not", {"hasany", {"sub", "imp"}}, 
 		{"multi",
@@ -355,7 +367,7 @@ cats["liv"] = {
 }
 
 cats["lt"] = {
-	{"p=", "part",
+	{"has", "part",
 		{"cond",
 			-- Three types of adverbial participles.
 			{"has", "budinys", "būdinys participles"},
@@ -368,10 +380,6 @@ cats["lt"] = {
 				"nom", "gen", "dat", "acc", "ins", "loc", "voc",
 				"m", "f", "s", "p"
 			}}, "dalyvis participles"},
-			-- Otherwise, it's a participle form, pronominal if "pron"
-			-- is present, else non-pronominal.
-			{"has", "pron", "pronominal dalyvis participle forms"},
-			"dalyvis participle forms"
 		}
 	},
 	{"p=", "a",
@@ -389,25 +397,23 @@ cats["lt"] = {
 }
 
 cats["lv"] = {
+	{"tags=", {"adv", "form"}, "adverbial forms of <<p=a>>s"},
 	{"has", "neg", "negative verb forms"},
 	{"has", "comd",
-		{"p=", "part",
-			{"has", "def",
-				"definite comparative participles",
-				"comparative participles"
-			},
-			{"has", "def",
-				"definite comparative adjectives",
-				"comparative adjectives",
-			},
-		}
+		{"has", "def",
+			"definite comparative adjectives",
+			"comparative adjectives",
+		},
 	},
-	{"has", "supd",
-		{"p=", "part",
-			"superlative participles",
-			"superlative adjectives",
-		}
-	},
+	{"has", "supd",	"superlative adjectives"},
+   	{"has", "part",
+   		{"cond",
+   			{"hasall", {"pres", "act"}, "present active participles"},
+   			{"hasall", {"pres", "pass"}, "present passive participles"},
+   			{"hasall", {"past", "act"}, "past active participles"},
+   			{"hasall", {"past", "pass"}, "past passive participles"},
+   		},
+   	},
 }
 
 cats["mk"] = {
@@ -438,14 +444,10 @@ cats["mk"] = {
 }
 
 cats["nl"] = {
-	{"or",
-		{"tags=", {"pl", "imp"}},
-		{"has", "sub"},
-		{"multi",
-			"archaic verb forms",
-			{labels = {"Dutch archaic verb form"}},
-		},
-	},
+	{"tags=", {"pl", "imp"}, {labels = {"plural imperative"}}},
+	{"has", "sub", {labels = {"subjunctive"}}},
+	-- The label will categorize into [[:Category:Dutch noun case forms]]. See [[Module:labels/data/lang/nl]].
+	{"hasany", {"acc", "dat", "gen"}, {labels = {"archaic case form"}}}
 }
 
 cats["pl"] = {
@@ -474,7 +476,22 @@ cats["sco"] = {
 }
 
 cats["sv"] = {
-	{"hasall", {"past", "part"}, "past participles"},
+	{"cond",
+		-- The display of these labels is controlled by [[Module:labels/data/lang/sv]].
+		{"hasall", {"past", "sub"}, {labels = {"past subjunctive"}}},
+		{"hasall", {"pres", "sub"}, {labels = {"present subjunctive"}}},
+		-- If it just has 'sub' (subjunctive), not labeled as present or past, treat it like the past subjunctive, whose label
+		-- is "weaker" than the present subjunctive (dated vs. archaic).
+		{"has", "sub", {labels = {"past subjunctive"}}},
+		{"hasall", {"1", "p", "pres"}, {labels = {"1st plural present indicative"}}},
+		{"hasall", {"2", "p", "pres"}, {labels = {"2nd plural present indicative"}}},
+		{"hasall", {"p", "pres"}, {labels = {"plural present indicative"}}},
+		{"hasall", {"1", "p", "past"}, {labels = {"1st plural past indicative"}}},
+		{"hasall", {"2", "p", "past"}, {labels = {"2nd plural past indicative"}}},
+		{"hasall", {"p", "past"}, {labels = {"plural past indicative"}}},
+		{"hasall", {"1", "p", "imp"}, {labels = {"1st plural imperative"}}},
+		{"hasall", {"p", "imp"}, {labels = {"2nd plural imperative"}}},
+	},
 }
 
 cats["uk"] = {
