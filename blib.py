@@ -1530,10 +1530,10 @@ def try_repeatedly(fun, errandpagemsg, operation="save", bad_value_ret=None, max
       return fun()
     except KeyboardInterrupt as e:
       raise
-    except pywikibot.exceptions.InvalidTitle as e:
+    except pywikibot.exceptions.InvalidTitleError as e:
       log_exception("Invalid title", e, skipping=True)
       return bad_value_ret
-    except (pywikibot.LockedPage, pywikibot.NoUsername) as e:
+    except (pywikibot.exceptions.LockedPageError, pywikibot.exceptions.NoUsernameError) as e:
       log_exception("Page is protected", e, skipping=True)
       return bad_value_ret
     # Instead, retry, which will save the page.
