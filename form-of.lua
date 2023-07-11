@@ -1,6 +1,6 @@
 local export = {}
 
-local force_cat = false -- for testing; set to true to display categories even on non-mainspace pages
+export.force_cat = false -- for testing; set to true to display categories even on non-mainspace pages
 
 local m_links = require("Module:links")
 local m_table = require("Module:table")
@@ -21,6 +21,8 @@ local rsplit = mw.text.split
 export.langs_with_lang_specific_tags = {
 	["en"] = true,
 	["got"] = true,
+	["lt"] = true,
+	["lv"] = true,
 	["nl"] = true,
 	["pi"] = true,
 	["sw"] = true,
@@ -1170,7 +1172,7 @@ function export.tagged_inflections(data)
 				if tag_set.labels then
 					this_labels = m_table.append(tag_set.labels, this_labels)
 				end
-				table.insert(inflections, {infl_text = table.concat(cur_infl), labels = this_labels})
+				table.insert(inflections, {infl_text = cur_infl, labels = this_labels})
 			end
 		end
 	end
