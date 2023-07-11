@@ -6,7 +6,7 @@ local MARK_CONJOINED_SHORTCUT = u(0xFFF0)
 local split_term_regex = "%*~!"
 
 local m_table = require("Module:table")
-local form_of_module = "Module:User:Benwing2/form of"
+local form_of_module = "Module:form of"
 
 --[=[
 The purpose of the acceleration code is to auto-generate pages for non-lemma forms (inflections) of a given lemma.
