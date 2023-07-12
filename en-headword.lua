@@ -1,10 +1,12 @@
-local m_links = require("Module:links")
-
 local export = {}
 local pos_functions = {}
 
+local force_cat = false -- for testing; if true, categories appear in non-mainspace pages
+
+local m_links = require("Module:links")
+
 local lang = require("Module:languages").getByCode("en")
-local PAGENAME = mw.loadData("Module:headword/data").pagename -- Accounts for unsupported titles.
+local langname = lang:getCanonicalName()
 
 local function glossary_link(entry, text)
 	text = text or entry
@@ -12,95 +14,103 @@ local function glossary_link(entry, text)
 end
 
 local function track(page)
-	require("Module:debug").track("en-headword/" .. page)
+	require("Module:debug/track")("en-headword/" .. page)
 	return true
 end
 
 -- The main entry point.
 -- This is the only function that can be invoked from a template.
 function export.show(frame)
-	
+
 	local poscat = frame.args[1] or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
-	
+
 	local params = {
 		["head"] = {list = true},
-		["suff"] = {type = "boolean"},
+		["id"] = {},
+		["json"] = {type = "boolean"},
 		["sort"] = {},
+		["nolinkhead"] = {type = "boolean"},
 		["nomultiwordcat"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing
 	}
-	
+
 	local pos_data = pos_functions[poscat]
 	if pos_data then
 		for key, val in pairs(pos_data.params) do
 			params[key] = val
 		end
 	end
-	
-	local args, unknown_args = require("Module:parameters").process(frame:getParent().args, params, pos_data.return_unknown, "en-headword", "show")
-	
-	if unknown_args and next(unknown_args) then
-		track("unknown args")
-		track("unknown args/POS/" .. tostring(poscat))
-		for parameter, value in pairs(unknown_args) do
-			track("unknown args/param/" .. tostring(parameter))
-			mw.log("unknown parameter in [[Module:headword]]: |" .. tostring(parameter) .. "=" .. tostring(value))
+
+	local args = require("Module:parameters").process(frame:getParent().args, params, nil, "en-headword", "show")
+
+	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename -- Accounts for unsupported titles.
+
+	local user_specified_heads = args.head
+	local heads = user_specified_heads
+	if args.nolinkhead or args.pagename then
+		if #heads == 0 then
+			heads = {pagename}
 		end
 	end
-	
+
 	local data = {
-		lang = lang, pos_category = poscat, categories = {}, heads = args.head, inflections = {}, nomultiwordcat = args.nomultiwordcat,
-		sort_key = args.sort
+		lang = lang,
+		pos_category = poscat,
+		categories = {},
+		heads = heads,
+		user_specified_heads = user_specified_heads,
+		no_redundant_head_cat = #user_specified_heads == 0,
+		inflections = {},
+		nomultiwordcat = args.nomultiwordcat,
+		sort_key = args.sort,
+		pagename = pagename,
+		id = args.id,
+		force_cat_output = force_cat,
 	}
 
-	if #data.heads == 0 and args.pagename then
-		table.insert(data.heads, args.pagename)
-		-- Don't insert into [[:Category:English terms with redundant head parameter]] since the head= isn't coming from the
-		-- user.
-		data.no_redundant_head_cat = true
+	local is_suffix = false
+	if pagename:find("^%-") and poscat ~= "suffix forms" then
+		is_suffix = true
+		data.pos_category = "suffixes"
+		local singular_poscat = require("Module:string utilities").singularize(poscat)
+		table.insert(data.categories, langname .. " " .. singular_poscat .. "-forming suffixes")
+		table.insert(data.inflections, {label = singular_poscat .. "-forming suffix"})
 	end
 
-	if args["suff"] then
-		data.pos_category = "suffixes"
-		
-		if poscat == "adjectives" or poscat == "adverbs" or poscat == "nouns" or poscat == "verbs" then
-			table.insert(data.categories, ("%s %s-forming suffixes")
-				:format(lang:getCanonicalName(), poscat:gsub("s$", "")))
-		else
-			error("No category exists for suffixes forming " .. poscat .. ".")
-		end
-	end
-	
 	if pos_data then
-		pos_data.func(args, data)
+		pos_data.func(args, data, is_suffix)
 	end
-	
+
 	local extra_categories = {}
-	local pagename = args.pagename or PAGENAME
 	if pagename:find("[Qq][^Uu]") or pagename:find("[Qq]$") then
-		table.insert(data.categories, lang:getCanonicalName() .. " words containing Q not followed by U")
+		table.insert(data.categories, langname .. " words containing Q not followed by U")
 	end
 	if pagename:find("([A-Za-z])%1%1") then
-		table.insert(data.categories, lang:getCanonicalName() .. " words containing three consecutive instances of the same letter")
+		table.insert(data.categories, langname .. " words containing three consecutive instances of the same letter")
 	end
 	if pagename:find("([A-Za-z])%1%1%1") then
-		table.insert(data.categories, lang:getCanonicalName() .. " words containing four consecutive instances of the same letter")
+		table.insert(data.categories, langname .. " words containing four consecutive instances of the same letter")
 	end
 	-- mw.ustring.toNFD performs decomposition, so letters that decompose
 	-- to an ASCII vowel and a diacritic, such as é, are counted as vowels and
 	-- do not need to be included in the pattern.
 	if not mw.ustring.find(mw.ustring.lower(mw.ustring.toNFD(pagename)), "[aeiouyæœø]") then
-		table.insert(data.categories, lang:getCanonicalName() .. " words without vowels")
+		table.insert(data.categories, langname .. " words without vowels")
 	end
 	if pagename:find("yre$") then
-		table.insert(data.categories, lang:getCanonicalName() .. ' words ending in "-yre"')
+		table.insert(data.categories, langname .. ' words ending in "-yre"')
 	end
 	if not pagename:find(" ") and mw.ustring.len(pagename) >= 25 then
-		table.insert(extra_categories, "Long " .. lang:getCanonicalName() .. ' words')
+		table.insert(extra_categories, "Long " .. langname .. ' words')
 	end
 	if pagename:find("^[^aeiou ]*a[^aeiou ]*e[^aeiou ]*i[^aeiou ]*o[^aeiou ]*u[^aeiou ]*$") then
-		table.insert(data.categories, lang:getCanonicalName() .. ' words that use all vowels in alphabetical order')
+		table.insert(data.categories, langname .. ' words that use all vowels in alphabetical order')
 	end
+
+	if args.json then
+		return require("Module:JSON").toJSON(data)
+	end
+
 	return require("Module:headword").full_headword(data)
 		.. (#extra_categories > 0
 			and require("Module:utilities").format_categories(extra_categories, lang, args.sort)
@@ -108,17 +118,17 @@ function export.show(frame)
 end
 
 -- This function does the common work between adjectives and adverbs
-local function make_comparatives(params, data, pagename)
+local function make_comparatives(params, data)
 	local comp_parts = {label = glossary_link("comparative"), accel = {form = "comparative"}}
 	local sup_parts = {label = glossary_link("superlative"), accel = {form = "superlative"}}
-	
+
 	if #params == 0 then
 		table.insert(params, {"more"})
 	end
-	
+
 	-- To form the stem, replace -(e)y with -i and remove a final -e.
-	local stem = pagename:gsub("([^aeiou])e?y$", "%1i"):gsub("e$", "")
-	
+	local stem = data.pagename:gsub("([^aeiou])e?y$", "%1i"):gsub("e$", "")
+
 	-- Go over each parameter given and create a comparative and superlative form
 	for i, val in ipairs(params) do
 		local comp = val[1]
@@ -126,13 +136,13 @@ local function make_comparatives(params, data, pagename)
 		local sup = val[3]
 		local sup_qual = val[4]
 		local comp_part, sup_part
-		
-		if comp == "more" and pagename ~= "many" and pagename ~= "much" then
-			comp_part = "[[more]] " .. pagename
-			sup_part = "[[most]] " .. pagename
-		elseif comp == "further" and pagename ~= "far" then
-			comp_part = "[[further]] " .. pagename
-			sup_part = "[[furthest]] " .. pagename
+
+		if comp == "more" and data.pagename ~= "many" and data.pagename ~= "much" then
+			comp_part = "[[more]] " .. data.pagename
+			sup_part = "[[most]] " .. data.pagename
+		elseif comp == "further" and data.pagename ~= "far" then
+			comp_part = "[[further]] " .. data.pagename
+			sup_part = "[[furthest]] " .. data.pagename
 		elseif comp == "er" then
 			comp_part = stem .. "er"
 			sup_part = stem .. "est"
@@ -154,7 +164,7 @@ local function make_comparatives(params, data, pagename)
 					error("The superlative of \"" .. comp .. "\" cannot be generated automatically. Please provide it with the \"sup" .. (i == 1 and "" or i) .. "=\" parameter.")
 				end
 			end
-			
+
 			comp_part = comp
 			sup_part = sup
 		end
@@ -166,7 +176,7 @@ local function make_comparatives(params, data, pagename)
 			table.insert(sup_parts, {term = sup_part, q = {sup_qual}})
 		end
 	end
-	
+
 	table.insert(data.inflections, comp_parts)
 	table.insert(data.inflections, sup_parts)
 end
@@ -179,11 +189,10 @@ pos_functions["adjectives"] = {
 		["sup_qual"] = {list = "sup=_qual", allow_holes = true},
 		},
 	func = function(args, data)
-		local pagename = args.pagename or PAGENAME
 		local shift = 0
 		local is_not_comparable = false
 		local is_comparative_only = false
-		
+
 		-- If the first parameter is ?, then don't show anything, just return.
 		if args[1][1] == "?" then
 			return
@@ -196,21 +205,21 @@ pos_functions["adjectives"] = {
 			shift = 1
 			is_comparative_only = true
 		end
-		
+
 		-- Gather all the comparative and superlative parameters.
 		local params = {}
-		
+
 		for i = 1, args[1].maxindex - shift do
 			local comp = args[1][i + shift]
 			local comp_qual = args["comp_qual"][i + shift]
 			local sup = args["sup"][i]
 			local sup_qual = args["sup_qual"][i + shift]
-			
+
 			if comp or sup then
 				table.insert(params, {comp, comp_qual, sup, sup_qual})
 			end
 		end
-		
+
 		if shift == 1 then
 			-- If the first parameter is "-" but there are no parameters,
 			-- then show "not comparable" only and return.
@@ -219,21 +228,21 @@ pos_functions["adjectives"] = {
 			if #params == 0 then
 				if is_not_comparable then
 					table.insert(data.inflections, {label = "not " .. glossary_link("comparable")})
-					table.insert(data.categories, lang:getCanonicalName() .. " uncomparable adjectives")
+					table.insert(data.categories, langname .. " uncomparable adjectives")
 					return
 				end
 				if is_comparative_only then
 					table.insert(data.inflections, {label = glossary_link("comparative") .. " form only"})
-					table.insert(data.categories, lang:getCanonicalName() .. " comparative-only adjectives")
+					table.insert(data.categories, langname .. " comparative-only adjectives")
 					return
 				end
 			else
 				table.insert(data.inflections, {label = "not generally " .. glossary_link("comparable")})
 			end
 		end
-		
+
 		-- Process the parameters
-		make_comparatives(params, data, pagename)
+		make_comparatives(params, data)
 	end
 }
 
@@ -245,9 +254,8 @@ pos_functions["adverbs"] = {
 		["sup_qual"] = {list = "sup=_qual", allow_holes = true},
 		},
 	func = function(args, data)
-		local pagename = args.pagename or PAGENAME
 		local shift = 0
-		
+
 		-- If the first parameter is ?, then don't show anything, just return.
 		if args[1][1] == "?" then
 			return
@@ -255,36 +263,36 @@ pos_functions["adverbs"] = {
 		elseif args[1][1] == "-" then
 			shift = 1
 		end
-		
+
 		-- Gather all the comparative and superlative parameters.
 		local params = {}
-		
+
 		for i = 1, args[1].maxindex - shift do
 			local comp = args[1][i + shift]
 			local comp_qual = args["comp_qual"][i + shift]
 			local sup = args["sup"][i]
 			local sup_qual = args["sup_qual"][i + shift]
-			
+
 			if comp or sup then
 				table.insert(params, {comp, comp_qual, sup, sup_qual})
 			end
 		end
-		
+
 		if shift == 1 then
 			-- If the first parameter is "-" but there are no parameters,
 			-- then show "not comparable" only and return. If there are parameters,
 			-- then show "not generally comparable" before the forms.
 			if #params == 0 then
 				table.insert(data.inflections, {label = "not " .. glossary_link("comparable")})
-				table.insert(data.categories, lang:getCanonicalName() .. " uncomparable adverbs")
+				table.insert(data.categories, langname .. " uncomparable adverbs")
 				return
 			else
 				table.insert(data.inflections, {label = "not generally " .. glossary_link("comparable")})
 			end
 		end
-		
+
 		-- Process the parameters
-		make_comparatives(params, data, pagename)
+		make_comparatives(params, data)
 	end
 }
 
@@ -292,9 +300,7 @@ pos_functions["conjunctions"] = {
 	params = {
 		[1] = { alias_of = "head" },
 	},
-	return_unknown = true,
-	func = function (args, data)
-		
+	func = function(args, data)
 	end,
 }
 
@@ -302,9 +308,7 @@ pos_functions["interjections"] = {
 	params = {
 		[1] = { alias_of = "head" },
 	},
-	return_unknown = true,
-	func = function (args, data)
-		
+	func = function(args, data)
 	end,
 }
 
@@ -344,16 +348,16 @@ pos_functions["nouns"] = {
 		["pl=qual"] = { list = true, allow_holes = true },
 		},
 	func = function(args, data)
-		local pagename = args.pagename or PAGENAME
+		local pagename = data.pagename
 		-- Gather all the plural parameters from the numbered parameters.
 		local plurals = {}
-		
+
 		for i = 1, args[1].maxindex do
 			local pl = args[1][i]
-			
+
 			if pl then
 				local qual = args["plqual"][i]
-				
+
 				if qual then
 					table.insert(plurals, {term = pl, q = {qual}})
 				else
@@ -361,17 +365,17 @@ pos_functions["nouns"] = {
 				end
 			end
 		end
-		
+
 		local need_default_plural = true
 		if plurals[1] == "-" then
 			-- Uncountable noun; may occasionally have a plural
 			table.remove(plurals, 1)  -- Remove the "-"
-			table.insert(data.categories, lang:getCanonicalName() .. " uncountable nouns")
-			
+			table.insert(data.categories, langname .. " uncountable nouns")
+
 			-- If plural forms were given explicitly, then show "usually"
 			if #plurals > 0 then
 				table.insert(data.inflections, {label = "usually " .. glossary_link("uncountable")})
-				table.insert(data.categories, lang:getCanonicalName() .. " countable nouns")
+				table.insert(data.categories, langname .. " countable nouns")
 			else
 				table.insert(data.inflections, {label = glossary_link("uncountable")})
 			end
@@ -380,23 +384,23 @@ pos_functions["nouns"] = {
 			-- Mixed countable/uncountable noun, always has a plural
 			table.remove(plurals, 1)  -- Remove the "~"
 			table.insert(data.inflections, {label = glossary_link("countable") .. " and " .. glossary_link("uncountable")})
-			table.insert(data.categories, lang:getCanonicalName() .. " uncountable nouns")
-			table.insert(data.categories, lang:getCanonicalName() .. " countable nouns")
-			
+			table.insert(data.categories, langname .. " uncountable nouns")
+			table.insert(data.categories, langname .. " countable nouns")
+
 			-- If no plural was given, add a default one now
 			if #plurals == 0 then
 				plurals = {default_plural(pagename)}
 			end
 		else
 			-- The default (countable noun), always has a plural
-			table.insert(data.categories, lang:getCanonicalName() .. " countable nouns")
+			table.insert(data.categories, langname .. " countable nouns")
 		end
 		-- Plural is unknown
 		if plurals[1] == "?" then
 			table.remove(plurals, 1)  -- Remove the "?"
 			-- Not desired; see [[Wiktionary:Tea_room/2021/August#"Plural unknown or uncertain"]]
 			-- table.insert(data.inflections, {label = "plural unknown or uncertain"})
-			table.insert(data.categories, lang:getCanonicalName() .. " nouns with unknown or uncertain plurals")
+			table.insert(data.categories, langname .. " nouns with unknown or uncertain plurals")
 			if #plurals > 0 then
 				error("Can't specify explicit plurals along with '?' for unknown/uncertain plural")
 			end
@@ -406,7 +410,7 @@ pos_functions["nouns"] = {
 		if plurals[1] == "!" then
 			table.remove(plurals, 1)  -- Remove the "!"
 			table.insert(data.inflections, {label = "plural not attested"})
-			table.insert(data.categories, lang:getCanonicalName() .. " nouns with unattested plurals")
+			table.insert(data.categories, langname .. " nouns with unattested plurals")
 			if #plurals > 0 then
 				error("Can't specify explicit plurals along with '!' for unattested plural")
 			end
@@ -421,10 +425,10 @@ pos_functions["nouns"] = {
 				return
 			end
 		end
-		
+
 		-- There are plural forms to show, so show them
 		local pl_parts = {label = "plural", accel = {form = "p"}}
-		
+
 		local function check_ies(pl, stem)
 			local newplural, nummatches = stem:gsub("([^aeiou])y$","%1ies")
 			return nummatches > 0 and pl == newplural
@@ -450,15 +454,15 @@ pos_functions["nouns"] = {
 				if not stem:find(" ") and not (check_pl == stem .. "s" or check_pl == stem .. "es" or check_ies(check_pl, stem)) then
 					irregular = true
 					if check_pl == stem then
-						table.insert(data.categories, lang:getCanonicalName() .. " indeclinable nouns")
+						table.insert(data.categories, langname .. " indeclinable nouns")
 					end
 				end
 			end
 		end
 		if irregular then
-			table.insert(data.categories, lang:getCanonicalName() .. " nouns with irregular plurals")
+			table.insert(data.categories, langname .. " nouns with irregular plurals")
 		end
-		
+
 		table.insert(data.inflections, pl_parts)
 	end
 }
@@ -468,58 +472,58 @@ pos_functions["proper nouns"] = {
 		[1] = {list = true},
 		},
 	func = function(args, data)
-		local pagename = args.pagename or PAGENAME
+		local pagename = data.pagename
 		local plurals = args[1]
-		
+
 		-- Decide what to do next...
 		local mode = nil
-		
+
 		if plurals[1] == "?" or plurals[1] == "!" or plurals[1] == "-" or plurals[1] == "~" then
 			mode = plurals[1]
 			table.remove(plurals, 1)  -- Remove the mode parameter
 		end
-		
+
 		-- Plural is unknown
 		if mode == "?" then
-			table.insert(data.categories, lang:getCanonicalName() .. " proper nouns with unknown or uncertain plurals")
+			table.insert(data.categories, langname .. " proper nouns with unknown or uncertain plurals")
 			return
 		-- Plural is not attested
 		elseif mode == "!" then
 			table.insert(data.inflections, {label = "plural not attested"})
-			table.insert(data.categories, lang:getCanonicalName() .. " proper nouns with unattested plurals")
+			table.insert(data.categories, langname .. " proper nouns with unattested plurals")
 			return
 		-- Uncountable noun; may occasionally have a plural
 		elseif mode == "-" then
 			-- If plural forms were given explicitly, then show "usually"
 			if #plurals > 0 then
 				table.insert(data.inflections, {label = "usually " .. glossary_link("uncountable")})
-				table.insert(data.categories, lang:getCanonicalName() .. " countable proper nouns")
+				table.insert(data.categories, langname .. " countable proper nouns")
 			else
 				table.insert(data.inflections, {label = glossary_link("uncountable")})
 			end
 		-- Mixed countable/uncountable noun, always has a plural
 		elseif mode == "~" then
 			table.insert(data.inflections, {label = glossary_link("countable") .. " and " .. glossary_link("uncountable")})
-			table.insert(data.categories, lang:getCanonicalName() .. " countable proper nouns")
-			
+			table.insert(data.categories, langname .. " countable proper nouns")
+
 			-- If no plural was given, add a default one now
 			if #plurals == 0 then
 				plurals = {"s"}
 			end
 		elseif #plurals > 0 then
-			table.insert(data.categories, lang:getCanonicalName() .. " countable proper nouns")
+			table.insert(data.categories, langname .. " countable proper nouns")
 		end
-		
+
 		-- If there are no plurals to show, return now
 		if #plurals == 0 then
 			return
 		end
-		
+
 		-- There are plural forms to show, so show them
 		local pl_parts = {label = "plural", accel = {form = "p"}}
-		
+
 		local stem = pagename
-		
+
 		for i, pl in ipairs(plurals) do
 			if pl == "s" then
 				table.insert(pl_parts, stem .. "s")
@@ -528,9 +532,9 @@ pos_functions["proper nouns"] = {
 			else
 				table.insert(pl_parts, pl)
 			end
-	
+
 		end
-		
+
 		table.insert(data.inflections, pl_parts)
 	end
 }
@@ -637,10 +641,10 @@ pos_functions["verbs"] = {
 		local par2 = args[2][1]
 		local par3 = args[3][1]
 		local par4 = args[4][1]
-		
+
 		local pres_3sgs, pres_ptcs, pasts, past_ptcs
 
-		local pagename = args.pagename or PAGENAME
+		local pagename = data.pagename
 
 		------------------------------------------- UTILITY FUNCTIONS #1 ------------------------------------------
 
@@ -714,7 +718,7 @@ pos_functions["verbs"] = {
 				return sub_tilde(form)
 			end
 		end
-		
+
 		local function canonicalize_ing_form(form)
 			if form == "+" then
 				return new_default_ing
@@ -728,7 +732,7 @@ pos_functions["verbs"] = {
 				return sub_tilde(form)
 			end
 		end
-			
+
 		local function canonicalize_ed_form(form)
 			if form == "+" then
 				return new_default_ed
@@ -790,7 +794,7 @@ pos_functions["verbs"] = {
 						return {{}}
 					end
 					local specs = {}
-					
+
 					local colon_separated_groups = iut.split_alternating_runs(comma_separated_group, ":")
 					for _, colon_separated_group in ipairs(colon_separated_groups) do
 						local form = colon_separated_group[1]
@@ -1046,7 +1050,7 @@ pos_functions["verbs"] = {
 				-- Present 3rd singular
 				for i = 2, maxindex do
 					local override_form = canonicalize(overrides[i])
-		
+
 					if override_form then
 						-- If there is an override such as past_ptc2=..., only use the qualifier specified
 						-- using an override (past_ptc2_qual=...), if any; it doesn't make sense to combine
@@ -1073,7 +1077,7 @@ pos_functions["verbs"] = {
 			pasts, args[3], args.past_qual, canonicalize_ed_form)
 		local past_ptc_infls = collect_forms("past participle", "past|ptcp",
 			past_ptcs, args[4], args.past_ptc_qual, canonicalize_ed_form)
-		
+
 		-- Are the past forms identical to the past participle forms? If so, we use a single
 		-- combined "simple past and past participle" label on the past tense forms.
 		-- We check for two conditions: Either no past participle forms were given at all, or
@@ -1126,11 +1130,11 @@ pos_functions["verbs"] = {
 				end
 			end
 		end
-		
+
 		-- Insert the forms
 		table.insert(data.inflections, pres_3sg_infls)
 		table.insert(data.inflections, pres_ptc_infls)
-		
+
 		if not past_ptcs_given or identical then
 			if past_ptcs[1].form == "-" then
 				past_infls.label = "no simple past or past participle"
