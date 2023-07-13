@@ -138,7 +138,7 @@ local function split_inflection_tags(tagspecs, split_regex)
 end
 
 
-local lemma_param_mods = {
+local term_param_mods = {
 	t = {
 		-- We need to store the <t:...> inline modifier into the "gloss" key of the parsed part, because that is what
 		-- [[Module:links]] expects.
@@ -169,22 +169,30 @@ local lemma_param_mods = {
 }
 
 
-local function parse_lemmas(paramname, val, lang)
+local function parse_terms_with_inline_modifiers(paramname, val, lang)
 	local function generate_obj(term)
 		return {lang = lang, term = term}
 	end
 
 	local retval
-	-- Check for inline modifier, e.g. מרים<tr:Miryem>.
-	if val:find("<") then
+	-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>, <br/> or
+	-- similar in it, caused by wrapping an argument in {{l|...}}, {{af|...}} or similar. Basically, all tags of
+	-- the sort we parse here should consist of a less-than sign, plus letters, plus a colon, e.g. <tr:...>, so if
+	-- we see a tag on the outer level that isn't in this format, we don't try to parse it. The restriction to the
+	-- outer level is to allow generated HTML inside of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
+	if val:find("<") and not val:find("^[^<]*<[a-z]*[^a-z:]") then
 		retval = require(put_module).parse_inline_modifiers(val, {
 			paramname = paramname,
-			param_mods = lemma_param_mods,
+			param_mods = term_param_mods,
 			generate_obj = generate_obj,
 			splitchar = ",",
 		})
 	else
-        if val:find(",%s") then
+        if val:find(",<") then
+        	-- this happens when there's an embedded {{,}} template, as in [[MMR]], [[TMA]], [[DEI]], where an initialism
+        	-- expands to multiple terms; easiest not to try and parse the lemma spec as multiple lemmas
+        	retval = {val}
+        elseif val:find(",%s") then
             retval = require(put_module).split_on_comma(val)
         else
             retval = rsplit(val, ",")
@@ -217,6 +225,7 @@ local function add_link_params(parent_args, params, term_param, no_numbered_glos
 			if base and link_param_set[base] then
 				multiple_lemmas = true
 				track("multiple-lemmas")
+				error("Support for the separate-parameter style of multiple lemmas in form-of templates is going away; use a comma-separated lemma param with inline modifiers")
 				break
 			end
 		end
@@ -366,18 +375,26 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, multip
 
 		add_term_tracking_categories(term)
 
-		lemmas = parse_lemmas(term_param, term, lang)
+		if term then
+			lemmas = parse_terms_with_inline_modifiers(term_param, term, lang)
+		else
+			lemmas = {{ lang = lang }}
+		end
 
 		-- sc= but not invocation arg sc= should override inline modifier sc=.
 		local sc
 		if args["sc"] then
 			lemmas[1].sc = get_script(args["sc"], "sc")
-		elseif not lemma_objs[1].sc and iargs["sc"] then
+		elseif not lemmas[1].sc and iargs["sc"] then
 			lemmas[1].sc = get_script(iargs["sc"], "sc")
 		end
 
 		if #args["g"] > 0 then
-			lemmas[1].genders = args["g"]
+			local genders = {}
+			for _, g in ipairs(args["g"]) do
+				extend_list(genders, rsplit(g, ","))
+			end
+			lemmas[1].genders = genders
 		end
 		if args["t"] then
 			lemmas[1].gloss = args["t"]
@@ -446,12 +463,9 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, multip
 		end
 	end
 
-	-- Check for new-style inline modifiers.
-	local lemma_term = args[term_param]
-
 	local enclitics
 	if args.enclitic then
-		enclitics = parse_lemmas("enclitic", args.enclitic, lang)
+		enclitics = parse_terms_with_inline_modifiers("enclitic", args.enclitic, lang)
 	end
 	local base_lemmas = {}
 	if base_lemma_params then
@@ -460,7 +474,7 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, multip
 			if args[param] then
 				table.insert(base_lemmas, {
 					paramobj = base_lemma_param_obj,
-					lemmas = parse_lemmas(param, args[param], lang),
+					lemmas = parse_terms_with_inline_modifiers(param, args[param], lang),
 				})
 			end
 		end
@@ -611,6 +625,7 @@ function export.form_of_t(frame)
 		-- invocation args. Before doing that, need to remove all uses of
 		-- nodot= in other circumstances.
 		["nodot"] = {type = "boolean"},
+		["pagename"] = {}, -- for testing, etc.
 	}
 
 	local multiple_lemmas, base_lemma_params
@@ -675,6 +690,7 @@ local function construct_tagged_form_of_text(iargs, args, term_param, compat, mu
 				base_lemmas = lemma_data.base_lemmas,
 				lemma_face = "term",
 				POS = args["p"],
+				pagename = args["pagename"],
 				-- Set no_format_categories because we do it ourselves in construct_form_of_text().
 				no_format_categories = true,
 				nocat = args["nocat"],
@@ -765,6 +781,7 @@ function export.tagged_form_of_t(frame)
 		-- invocation args. Before doing that, need to remove all uses of
 		-- nodot= in other circumstances.
 		["nodot"] = {type = "boolean"},
+		["pagename"] = {}, -- for testing, etc.
 	}
 
 	local multiple_lemmas, base_lemma_params
@@ -891,6 +908,7 @@ function export.inflection_of_t(frame)
 		-- Temporary, allows multipart joiner to be controlled on a template-by-template
 		-- basis
 		["joiner"] = {},
+		["pagename"] = {}, -- for testing, etc.
 	}
 
 	local multiple_lemmas, base_lemma_params
