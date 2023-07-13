@@ -439,7 +439,7 @@ local function process_compound_type(typ, nocap, notext, has_parts)
 		end
 		local cat = typdata.cat
 		local oftext = typdata.oftext or " of"
-	
+
 		if not notext then
 			table.insert(text_sections, text)
 			if has_parts then
@@ -583,12 +583,12 @@ function export.show_surface_analysis(lang, sc, parts, pos, sort_key, typ, nocap
 	if #categories == 0 then
 		error("The parameters did not include any affixes, and the term is not a compound. Please provide at least one affix.")
 	end
-	
+
 	local text = "by " .. glossary_link("surface analysis") .. ", "
 	if not nocap then
 		text = require("Module:string utilities").ucfirst(text)
 	end
-	
+
 	table.insert(text_sections, 1, text)
 	table.insert(text_sections, export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat))
 	return table.concat(text_sections)
