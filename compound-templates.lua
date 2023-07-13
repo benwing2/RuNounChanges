@@ -114,7 +114,7 @@ local function fetch_script(sc, param)
 end
 
 
--- Parse raw arguments in `args`. If `hack_params` is specified, it should be a one-argument function that is called
+-- Parse raw arguments in `args`. If `extra_params` is specified, it should be a one-argument function that is called
 -- on the `params` structure before parsing; its purpose is to specify additional allowed parameters or possibly disable
 -- parameters. If `has_source` is given, there is a source-language parameter following 1= (which becomes the
 -- "destination" language parameter) and preceding the terms. This is currently used for {{pseudo-loan}}. The
@@ -124,7 +124,7 @@ end
 -- language object corresponding to the language code specified in 1=; SCRIPT_OBJ is the script object corresponding to
 -- sc= (if given, otherwise nil); and SOURCE_LANG_OBJ is the language object corresponding to the source-language code
 -- specified in 2= if `has_source` is specified (otherwise nil).
-local function parse_args(args, hack_params, has_source)
+local function parse_args(args, extra_params, has_source)
 	if args.lang then
 		error("The |lang= parameter is not used by this template. Place the language code in parameter 1 instead.")
 	end
@@ -138,8 +138,6 @@ local function parse_args(args, hack_params, has_source)
 		["sc"] = {},
 		["pos"] = {},
 		["sort"] = {},
-		["nocat"] = {type = "boolean"},
-		["force_cat"] = {type = "boolean"},
 	}
 
 	local source_index
@@ -162,8 +160,8 @@ local function parse_args(args, hack_params, has_source)
 		end
 	end
 
-	if hack_params then
-		hack_params(params)
+	if extra_params then
+		extra_params(params)
 	end
 
 	args = require("Module:parameters").process(args, params)
@@ -185,16 +183,12 @@ end
 local function get_parsed_part(template, args, term_index, i)
 	local part = {}
 	local term = args[term_index][i]
-
-	if lang then
-		lang = m_languages.getByCode(lang, "lang" .. i, "allow etym")
-	end
 	
 	if not (term or args["alt"][i] or args["tr"][i] or args["ts"][i]) then
 		require("Module:debug/track")(template .. "/no term or alt or tr")
 		return nil
 	end
-
+	
 	-- Parse all the term-specific parameters and store in `part`.
 	for param_mod, param_mod_spec in pairs(param_mods) do
 		local dest = param_mod_spec.item_dest or param_mod
@@ -207,8 +201,9 @@ local function get_parsed_part(template, args, term_index, i)
 			part[dest] = arg
 		end
 	end
-
-	-- Parse off an initial language code (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]').
+	
+	-- Remove and remember an initial exclamation point from the term, and parse off an initial language code (e.g.
+	-- 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]').
 	if term then
 		local termlang, actual_term = term:match("^([A-Za-z0-9._-]+):(.*)$")
 		if termlang and termlang ~= "w" then -- special handling for w:... links to Wikipedia
@@ -224,7 +219,7 @@ local function get_parsed_part(template, args, term_index, i)
 		part.lang = part.lang or termlang
 		part.term = term
 	end
-
+	
 	-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>, <br/> or
 	-- similar in it, caused by wrapping an argument in {{l|...}}, {{af|...}} or similar. Basically, all tags of
 	-- the sort we parse here should consist of a less-than sign, plus letters, plus a colon, e.g. <tr:...>, so if
@@ -267,7 +262,7 @@ local function get_parsed_part(template, args, term_index, i)
 			part[dest] = arg
 		end
 	end
-
+	
 	return part
 end
 
@@ -311,18 +306,20 @@ end
 
 
 function export.affix(frame)
-	local function hack_params(params)
+	local function extra_params(params)
 		params["type"] = {}
 		params["nocap"] = {type = "boolean"}
 		params["notext"] = {type = "boolean"}
+		params["nocat"] = {type = "boolean"}
+		params["force_cat"] = {type = "boolean"}
 	end
-
-	local args, term_index, lang, sc = parse_args(frame:getParent().args, hack_params)
-
+	
+	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
+	
 	if args["type"] and not m_compound.compound_types[args["type"]] then
 		error("Unrecognized compound type: '" .. args["type"] .. "'")
 	end
-
+	
 	local parts = get_parsed_parts("affix", args, term_index)
 	
 	-- There must be at least one part to display. If there are gaps, a term
@@ -339,20 +336,21 @@ function export.affix(frame)
 		args["type"], args["nocap"], args["notext"], args["nocat"], args["lit"], args["force_cat"])
 end
 
-
 function export.compound(frame)
-	local function hack_params(params)
+	local function extra_params(params)
 		params["type"] = {}
 		params["nocap"] = {type = "boolean"}
 		params["notext"] = {type = "boolean"}
+		params["nocat"] = {type = "boolean"}
+		params["force_cat"] = {type = "boolean"}
 	end
-
-	local args, term_index, lang, sc = parse_args(frame:getParent().args, hack_params)
-
+	
+	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
+	
 	if args["type"] and not m_compound.compound_types[args["type"]] then
 		error("Unrecognized compound type: '" .. args["type"] .. "'")
 	end
-
+	
 	local parts = get_parsed_parts("compound", args, term_index)
 	
 	-- There must be at least one part to display. If there are gaps, a term
@@ -371,23 +369,25 @@ end
 
 
 function export.compound_like(frame)
-	local function hack_params(params)
+	local function extra_params(params)
 		params["pos"] = nil
 		params["nocap"] = {type = "boolean"}
 		params["notext"] = {type = "boolean"}
+		params["nocat"] = {type = "boolean"}
+		params["force_cat"] = {type = "boolean"}
 	end
-
-	local args, term_index, lang, sc = parse_args(frame:getParent().args, hack_params)
-
+	
+	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
+	
 	local template = frame.args["template"]
 	local nocat = args["nocat"]
 	local notext = args["notext"]
 	local text = not notext and frame.args["text"]
 	local oftext = not notext and (frame.args["oftext"] or text and "of")
 	local cat = not nocat and frame.args["cat"]
-
+	
 	local parts = get_parsed_parts(template, args, term_index)
-
+	
 	if not next(parts) then
 		if mw.title.getCurrentTitle().nsText == "Template" then
 			parts = { {term = "first"}, {term = "second"} }
@@ -398,9 +398,86 @@ function export.compound_like(frame)
 end
 
 
-function export.circumfix(frame)
-	local args, term_index, lang, sc = parse_args(frame:getParent().args)
+function export.surface_analysis(frame)
+	local function ine(arg)
+		-- Since we're operating before calling [[Module:parameters]], we need to imitate how that module processes arguments,
+		-- including trimming since numbered arguments don't have automatic whitespace trimming.
+		if not arg then
+			return arg
+		end
+		arg = mw.text.trim(arg)
+		if arg == "" then
+			arg = nil
+		end
+		return arg
+	end
 
+	local parent_args = frame:getParent().args
+	local etymtext
+	local arg1 = ine(parent_args[1])
+	if not arg1 then
+		-- Allow omitted first argument to just display "By surface analysis".
+		etymtext = ""
+	elseif arg1:find("^%+") then
+		-- If the first argument (normally a language code) is prefixed with a +, it's a template name.
+		local template_name = arg1:sub(2)
+		local new_args = {}
+		for i, v in pairs(parent_args) do
+			if type(i) == "number" then
+				if i > 1 then
+					new_args[i - 1] = v
+				end
+			else
+				new_args[i] = v
+			end
+		end
+		new_args.nocap = true
+		etymtext = ", " .. frame:expandTemplate { title = template_name, args = new_args }
+	end
+	
+	if etymtext then
+		return (ine(parent_args.nocap) and "b" or "B") .. "y [[Appendix:Glossary#surface analysis|surface analysis]]" .. etymtext
+	end
+
+	local function extra_params(params)
+		params["type"] = {}
+		params["nocap"] = {type = "boolean"}
+		params["notext"] = {type = "boolean"}
+		params["nocat"] = {type = "boolean"}
+		params["force_cat"] = {type = "boolean"}
+	end
+	
+	local args, term_index, lang, sc = parse_args(parent_args, extra_params)
+	
+	if args["type"] and not m_compound.compound_types[args["type"]] then
+		error("Unrecognized compound type: '" .. args["type"] .. "'")
+	end
+	
+	local parts = get_parsed_parts("surface analysis", args, term_index)
+	
+	-- There must be at least one part to display. If there are gaps, a term
+	-- request will be shown.
+	if not next(parts) then
+		if mw.title.getCurrentTitle().nsText == "Template" then
+			parts = { {term = "first"}, {term = "second"} }
+		else
+			error("You must provide at least one part.")
+		end
+	end
+	
+	return m_compound.show_surface_analysis(lang, sc, parts, args["pos"], args["sort"],
+		args["type"], args["nocap"], args["notext"], args["nocat"], args["lit"], args["force_cat"])
+end
+
+
+function export.circumfix(frame)
+	local function extra_params(params)
+		params["nocat"] = {type = "boolean"}
+		params["force_cat"] = {type = "boolean"}
+	end
+	
+	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
+	
 	local parts = get_parsed_parts("circumfix", args, term_index, 3)
 	local prefix = parts[1]
 	local base = parts[2]
@@ -416,14 +493,19 @@ function export.circumfix(frame)
 			error("You must specify a prefix part, a base term and a suffix part.")
 		end
 	end
-		
+	
 	return m_compound.show_circumfix(lang, sc, prefix, base, suffix, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 
 function export.confix(frame)
-	local args, term_index, lang, sc = parse_args(frame:getParent().args)
-
+	local function extra_params(params)
+		params["nocat"] = {type = "boolean"}
+		params["force_cat"] = {type = "boolean"}
+	end
+	
+	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
+	
 	local parts = get_parsed_parts("confix", args, term_index, 3)
 	local prefix = parts[1]
 	local base = #parts >= 3 and parts[2] or nil
@@ -438,20 +520,22 @@ function export.confix(frame)
 			error("You must specify a prefix part, an optional base term and a suffix part.")
 		end
 	end
-		
+	
 	return m_compound.show_confix(lang, sc, prefix, base, suffix, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 
 function export.pseudo_loan(frame)
-	local function hack_params(params)
+	local function extra_params(params)
 		params["pos"] = nil
 		params["nocap"] = {type = "boolean"}
 		params["notext"] = {type = "boolean"}
+		params["nocat"] = {type = "boolean"}
+		params["force_cat"] = {type = "boolean"}
 	end
-
-	local args, term_index, lang, sc, source = parse_args(frame:getParent().args, hack_params, "has source")
-
+	
+	local args, term_index, lang, sc, source = parse_args(frame:getParent().args, extra_params, "has source")
+	
 	local parts = get_parsed_parts("pseudo-loan", args, term_index)
 	
 	return require("Module:compound/pseudo-loan").show_pseudo_loan(lang, source, sc, parts, args["sort"],
@@ -460,8 +544,13 @@ end
 
 
 function export.infix(frame)
-	local args, term_index, lang, sc = parse_args(frame:getParent().args)
-
+	local function extra_params(params)
+		params["nocat"] = {type = "boolean"}
+		params["force_cat"] = {type = "boolean"}
+	end
+	
+	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
+	
 	local parts = get_parsed_parts("infix", args, term_index, 2)
 	local base = parts[1]
 	local infix = parts[2]
@@ -481,8 +570,13 @@ end
 
 
 function export.prefix(frame)
-	local args, term_index, lang, sc = parse_args(frame:getParent().args)
-
+	local function extra_params(params)
+		params["nocat"] = {type = "boolean"}
+		params["force_cat"] = {type = "boolean"}
+	end
+	
+	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
+	
 	local prefixes = get_parsed_parts("prefix", args, term_index)
 	local base = nil
 	
@@ -490,7 +584,7 @@ function export.prefix(frame)
 		base = prefixes[#prefixes]
 		prefixes[#prefixes] = nil
 	end
-
+	
 	-- Just to make sure someone didn't use the template in a silly way
 	if #prefixes == 0 then
 		if mw.title.getCurrentTitle().nsText == "Template" then
@@ -506,8 +600,13 @@ end
 
 
 function export.suffix(frame)
-	local args, term_index, lang, sc = parse_args(frame:getParent().args)
-
+	local function extra_params(params)
+		params["nocat"] = {type = "boolean"}
+		params["force_cat"] = {type = "boolean"}
+	end
+	
+	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
+	
 	local base = get_parsed_part("suffix", args, term_index, 1)
 	local suffixes = get_parsed_parts("suffix", args, term_index, nil, 2)
 	
@@ -532,7 +631,7 @@ function export.derivsee(frame)
 		["mode"] = {},
 	}
 	local iargs = require("Module:parameters").process(frame.args, iparams)
-
+	
 	local params = {
 		["head"] = {},
 		["id"] = {},
@@ -570,12 +669,10 @@ function export.derivsee(frame)
 	
 	if not term then
 		local SUBPAGE = mw.title.getCurrentTitle().subpageText
-		if lang:getType() == "reconstructed" then
+		if lang:hasType("reconstructed") or mw.title.getCurrentTitle().nsText == "Reconstruction" then
 			term = "*" .. SUBPAGE
-		elseif lang:getType() == "appendix-constructed" then
+		elseif lang:hasType("appendix-constructed") then
 			term = SUBPAGE
-		elseif mw.title.getCurrentTitle().nsText == "Reconstruction" then
-			term = "*" .. SUBPAGE
 		else
 			term = SUBPAGE
 		end
@@ -592,7 +689,7 @@ function export.derivsee(frame)
 				}
 			}
 	end
-
+	
 	local category = nil
 	local langname = lang:getCanonicalName()
 	if (derivtype == "compound" and pos == nil) then

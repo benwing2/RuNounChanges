@@ -1,6 +1,6 @@
 local m_links = require("Module:links")
 local m_utilities = require("Module:utilities")
-local m_lang = require("Module:languages")
+local m_table = require("Module:table")
 
 local export = {}
 
@@ -238,11 +238,11 @@ end
 
 local function make_entry_name_no_links(lang, term)
 	-- Remove links and call lang:makeEntryName(term).
-	return (m_lang.getNonEtymological(lang):makeEntryName(m_links.remove_links(term)))
+	return (lang:makeEntryName(m_links.remove_links(term)))
 end
 
 function export.link_term(terminfo, display_term, lang, sc, sort_key, force_cat, nocat)
-	local terminfo_new = require("Module:table").shallowcopy(terminfo)
+	local terminfo_new = m_table.shallowcopy(terminfo)
 	local result
 
 	terminfo_new.term = display_term
@@ -278,15 +278,14 @@ local function get_template_and_display_hyphens(text, lang, sc)
 	if sc then
 		scode = sc:getCode()
 	else
-		lang = m_lang.getNonEtymological(lang)
-		-- If we don't call shallowClone here, #possible_scripts always == 0.
+		-- If we don't call shallowcopy here, #possible_scripts always == 0.
 		-- Something weird to do with the metatable that's set on the table,
 		-- coming from loadData.
-		local possible_scripts = require("Module:table").shallowClone(lang:getScriptCodes())
+		local possible_scripts = m_table.shallowcopy(lang:getScriptCodes())
 		if #possible_scripts == 0 then
 			-- This shouldn't happen; if the language has no script codes,
 			-- the list {"None"} should be returned.
-			error("Something is majorly wrong! Language " .. lang:getCanonicalName() .. " has no script codes.")
+			error("Something is majorly wrong! Language " .. lang:getNonEtymologicalName() .. " has no script codes.")
 		end
 		if #possible_scripts == 1 then
 			-- 2. If the language has only one possible script, use it.
@@ -409,10 +408,10 @@ function export.concat_parts(lang, parts_formatted, categories, nocat, sort_key,
 	else
 		for i, cat in ipairs(categories) do
 			if type(cat) == "table" then
-				categories[i] = m_utilities.format_categories({lang:getCanonicalName() .. " " .. cat.cat}, lang,
+				categories[i] = m_utilities.format_categories({lang:getNonEtymologicalName() .. " " .. cat.cat}, lang,
 					cat.sort_key, cat.sort_base, force_cat or debug_force_cat)
 			else
-				categories[i] = m_utilities.format_categories({lang:getCanonicalName() .. " " .. cat}, lang,
+				categories[i] = m_utilities.format_categories({lang:getNonEtymologicalName() .. " " .. cat}, lang,
 					sort_key, nil, force_cat or debug_force_cat)
 			end
 		end
@@ -439,12 +438,11 @@ local function process_compound_type(typ, nocap, notext, has_parts)
 			text = require("Module:string utilities").ucfirst(text)
 		end
 		local cat = typdata.cat
-		local oftext = typdata.oftext or "of"
+		local oftext = typdata.oftext or " of"
 	
 		if not notext then
 			table.insert(text_sections, text)
 			if has_parts then
-				table.insert(text_sections, " ")
 				table.insert(text_sections, oftext)
 				table.insert(text_sections, " ")
 			end
@@ -523,6 +521,78 @@ function export.show_affixes(lang, sc, parts, pos, sort_key, typ, nocap, notext,
 	return table.concat(text_sections)
 end
 
+function export.show_surface_analysis(lang, sc, parts, pos, sort_key, typ, nocap, notext, nocat, lit, force_cat)
+	pos = pos or default_pos
+
+	pos = pluralize(pos)
+
+	local text_sections, categories = process_compound_type(typ, true, notext, #parts > 0)
+
+	-- Process each part
+	local parts_formatted = {}
+	local whole_words = 0
+
+	for i, part in ipairs_with_gaps(parts) do
+		part = part or {}
+		local part_lang = part.lang or lang
+		local part_sc = part.sc or sc
+
+		-- Is it an affix, and if so, what type of affix?
+		local affix_type, display_term = get_affix_type(part_lang, part_sc, part.term)
+
+		-- Make a link for the part
+		-- If display_term is an empty string, either a bare ^ was specified or an empty term was used along with inline
+		-- modifiers. The intention in either case is not to link the term.
+		table.insert(parts_formatted, export.link_term(part, display_term ~= "" and display_term or nil, lang, sc, sort_key,
+			force_cat, nocat))
+
+		if affix_type then
+			-- Make a sort key
+			-- For the first part, use the second part as the sort key
+			local part_sort_base = nil
+			local part_sort = part.sort or sort_key
+
+			if i == 1 and parts[2] and parts[2].term then
+				local part2_lang = parts[2].lang or lang
+				local part2_sc = parts[2].sc or sc
+				local part2_affix_type, part2_display_term = get_affix_type(part2_lang, part2_sc, parts[2].term)
+				part_sort_base = make_entry_name_no_links(part2_lang, part2_display_term)
+			end
+
+			if affix_type == "infix" then affix_type = "interfix" end
+
+			if part.pos and rfind(part.pos, "patronym") then
+				table.insert(categories, {cat="patronymics", sort_key=part_sort, sort_base=part_sort_base})
+			end
+
+			if pos ~= "terms" and part.pos and rfind(part.pos, "diminutive") then
+				table.insert(categories, {cat="diminutive " .. pos, sort_key=part_sort, sort_base=part_sort_base})
+			end
+
+			table.insert(categories, {cat=pos .. " " .. affix_type .. "ed with " .. make_entry_name_no_links(part_lang, display_term) .. (part.id and " (" .. part.id .. ")" or ""), sort_key=part_sort, sort_base=part_sort_base})
+		else
+			whole_words = whole_words + 1
+
+			if whole_words == 2 then
+				table.insert(categories, "compound " .. pos)
+			end
+		end
+	end
+
+	-- If there are no categories, then there were no actual affixes, only a single regular term.
+	if #categories == 0 then
+		error("The parameters did not include any affixes, and the term is not a compound. Please provide at least one affix.")
+	end
+	
+	local text = "by " .. glossary_link("surface analysis") .. ", "
+	if not nocap then
+		text = require("Module:string utilities").ucfirst(text)
+	end
+	
+	table.insert(text_sections, 1, text)
+	table.insert(text_sections, export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat))
+	return table.concat(text_sections)
+end
 
 function export.show_compound(lang, sc, parts, pos, sort_key, typ, nocap, notext, nocat, lit, force_cat)
 	pos = pos or default_pos
@@ -549,7 +619,7 @@ function export.show_compound(lang, sc, parts, pos, sort_key, typ, nocap, notext
 		else
 			display_term = part.term
 			if affix_type then
-				track { affix_type, affix_type .. "/lang/" .. lang:getCode() }
+				track { affix_type, affix_type .. "/lang/" .. lang:getNonEtymologicalCode() }
 			else
 				whole_words = whole_words + 1
 			end
@@ -621,7 +691,7 @@ local function track_wrong_affix_type(template, part, lang, sc, expected_affix_t
 				template,
 				template .. "/" .. part_name,
 				template .. "/" .. part_name .. "/" .. (affix_type or "none"),
-				template .. "/" .. part_name .. "/" .. (affix_type or "none") .. "/lang/" .. lang:getCode()
+				template .. "/" .. part_name .. "/" .. (affix_type or "none") .. "/lang/" .. lang:getNonEtymologicalCode()
 			}
 		end
 	end
@@ -838,9 +908,8 @@ end
 -- are the same and the appropriate hyphen is already present, we leave it, else we strip off the template hyphen if
 -- present and add the display hyphen.
 function export.make_affix(term, lang, sc, affix_type)
-	if not (affix_type == "prefix" or affix_type == "suffix" or
-		affix_type == "circumfix" or affix_type == "infix" or
-		affix_type == "interfix" or affix_type == "transfix") then
+	if not (affix_type == "prefix" or affix_type == "suffix" or affix_type == "circumfix" or affix_type == "infix" or
+		affix_type == "interfix") then
 		error("Internal error: Invalid affix type " .. (affix_type or "(nil)"))
 	end
 
@@ -853,7 +922,7 @@ function export.make_affix(term, lang, sc, affix_type)
 		return usub(term, 2)
 	end
 
-	if affix_type == "circumfix" or affix_type == "transfix" then
+	if affix_type == "circumfix" then
 		return term
 	elseif affix_type == "interfix" then
 		affix_type = "infix"
