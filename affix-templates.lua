@@ -1,6 +1,6 @@
 local export = {}
 
-local m_compound = require("Module:compound")
+local m_affix = require("Module:affix")
 local m_languages = require("Module:languages")
 local put -- initialized once, when needed, to require("Module:parse utilities")
 
@@ -14,7 +14,7 @@ local rsplit = mw.text.split
 --                  when specified as a separate parameter (e.g. {type = "boolean"} for a Boolean parameter, or
 --                  {alias_of = "t"} for the "gloss" parameter, which is aliased to "t"), on top of the default, which
 --                  is {list = true, allow_holes = true, require_index = true}.
--- * `convert`: An optional function to convert the raw argument into the form passed to [[Module:compound]].
+-- * `convert`: An optional function to convert the raw argument into the form passed to [[Module:affix]].
 --              This function takes four parameters: (1) `arg` (the raw argument); (2) `inline` (true if we're
 --              processing an inline modifier, false otherwise); (3) `term_index` (the actual index of the first term);
 --              (4) `i` (the logical index of the term being processed, starting from 1).
@@ -27,7 +27,7 @@ local rsplit = mw.text.split
 local param_mods = {
 	t = {
 		-- We need to store the t1=/t2= param and the <t:...> inline modifier into the "gloss" key of the parsed part,
-		-- because that is what [[Module:compound]] expects.
+		-- because that is what [[Module:affix]] expects.
 		item_dest = "gloss",
 	},
 	gloss = {
@@ -38,7 +38,7 @@ local param_mods = {
 	ts = {},
 	g = {
 		-- We need to store the g1=/g2= param and the <g:...> inline modifier into the "genders" key of the parsed part,
-		-- because that is what [[Module:compound]] expects.
+		-- because that is what [[Module:affix]] expects.
 		item_dest = "genders",
 		convert = function(arg, inline, term_index, i)
 			return rsplit(arg, ",")
@@ -290,7 +290,7 @@ local function get_parsed_parts(template, args, term_index, max_terms_allowed, s
 					arg = k .. v.maxindex
 				end
 				error(("In [[Template:%s|%s]], at most %s terms can be specified but argument %s specified, corresponding to term #%s")
-					:format(template, template, maxindex, arg, v.maxindex))
+					:format(template, template, max_terms_allowed, arg, v.maxindex))
 			end
 			maxmaxindex = v.maxindex
 		end
@@ -316,7 +316,7 @@ function export.affix(frame)
 
 	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
 
-	if args["type"] and not m_compound.compound_types[args["type"]] then
+	if args["type"] and not m_affix.compound_types[args["type"]] then
 		error("Unrecognized compound type: '" .. args["type"] .. "'")
 	end
 
@@ -332,7 +332,7 @@ function export.affix(frame)
 		end
 	end
 
-	return m_compound.show_affixes(lang, sc, parts, args["pos"], args["sort"],
+	return m_affix.show_affixes(lang, sc, parts, args["pos"], args["sort"],
 		args["type"], args["nocap"], args["notext"], args["nocat"], args["lit"], args["force_cat"])
 end
 
@@ -347,7 +347,7 @@ function export.compound(frame)
 
 	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
 
-	if args["type"] and not m_compound.compound_types[args["type"]] then
+	if args["type"] and not m_affix.compound_types[args["type"]] then
 		error("Unrecognized compound type: '" .. args["type"] .. "'")
 	end
 
@@ -363,7 +363,7 @@ function export.compound(frame)
 		end
 	end
 
-	return m_compound.show_compound(lang, sc, parts, args["pos"], args["sort"],
+	return m_affix.show_compound(lang, sc, parts, args["pos"], args["sort"],
 		args["type"], args["nocap"], args["notext"], args["nocat"], args["lit"], args["force_cat"])
 end
 
@@ -394,7 +394,7 @@ function export.compound_like(frame)
 		end
 	end
 
-	return m_compound.show_compound_like(lang, sc, parts, args["sort"], text, oftext, cat, args["nocat"], args["lit"], args["force_cat"])
+	return m_affix.show_compound_like(lang, sc, parts, args["sort"], text, oftext, cat, args["nocat"], args["lit"], args["force_cat"])
 end
 
 
@@ -449,7 +449,7 @@ function export.surface_analysis(frame)
 
 	local args, term_index, lang, sc = parse_args(parent_args, extra_params)
 
-	if args["type"] and not m_compound.compound_types[args["type"]] then
+	if args["type"] and not m_affix.compound_types[args["type"]] then
 		error("Unrecognized compound type: '" .. args["type"] .. "'")
 	end
 
@@ -465,7 +465,7 @@ function export.surface_analysis(frame)
 		end
 	end
 
-	return m_compound.show_surface_analysis(lang, sc, parts, args["pos"], args["sort"],
+	return m_affix.show_surface_analysis(lang, sc, parts, args["pos"], args["sort"],
 		args["type"], args["nocap"], args["notext"], args["nocat"], args["lit"], args["force_cat"])
 end
 
@@ -494,7 +494,7 @@ function export.circumfix(frame)
 		end
 	end
 
-	return m_compound.show_circumfix(lang, sc, prefix, base, suffix, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
+	return m_affix.show_circumfix(lang, sc, prefix, base, suffix, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 
@@ -521,7 +521,7 @@ function export.confix(frame)
 		end
 	end
 
-	return m_compound.show_confix(lang, sc, prefix, base, suffix, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
+	return m_affix.show_confix(lang, sc, prefix, base, suffix, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 
@@ -538,7 +538,7 @@ function export.pseudo_loan(frame)
 
 	local parts = get_parsed_parts("pseudo-loan", args, term_index)
 
-	return require("Module:compound/pseudo-loan").show_pseudo_loan(lang, source, sc, parts, args["sort"],
+	return require("Module:affix/pseudo-loan").show_pseudo_loan(lang, source, sc, parts, args["sort"],
 		args["nocap"], args["notext"], args["nocat"], args["lit"], args["force_cat"])
 end
 
@@ -565,7 +565,7 @@ function export.infix(frame)
 		end
 	end
 
-	return m_compound.show_infix(lang, sc, base, infix, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
+	return m_affix.show_infix(lang, sc, base, infix, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 
@@ -595,7 +595,7 @@ function export.prefix(frame)
 		end
 	end
 
-	return m_compound.show_prefixes(lang, sc, prefixes, base, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
+	return m_affix.show_prefixes(lang, sc, prefixes, base, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 
@@ -620,7 +620,7 @@ function export.suffix(frame)
 		end
 	end
 
-	return m_compound.show_suffixes(lang, sc, base, suffixes, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
+	return m_affix.show_suffixes(lang, sc, base, suffixes, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 
