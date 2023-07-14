@@ -63,10 +63,7 @@ Irregular verbs already implemented:
 
 --]]
 
-local m_headword = require("Module:headword")
-local m_utilities = require("Module:utilities")
 local m_links = require("Module:links")
-local ar_translit = require("Module:ar-translit")
 local ar_utilities = require("Module:ar-utilities")
 local ar_nominals = require("Module:ar-nominals")
 
@@ -214,16 +211,16 @@ function rsub(term, foo, bar)
 	return retval
 end
 
-local function links(text, face)
+local function links(text, face, id)
 	if text == "" or text == "?" or text == "&mdash;" or text == "—" then --mdash
 		return text
 	else
-		return m_links.full_link(text, nil, lang, nil, face, nil, {tr = "-"}, false)
+		return m_links.full_link({lang = lang, term = text, tr = "-", id = id}, face)
 	end
 end
 
 local function tag_text(text, tag, class)
-	return m_links.full_link(nil, text, lang, nil, nil, nil, {tr = "-"}, false)
+	return m_links.full_link({lang = lang, alt = text, tr = "-"})
 end
 
 function track(page)
@@ -336,7 +333,7 @@ local function saal_radicals(rad1, rad2, rad3)
 	return rad1 == "س" and rad2 == HAMZA and rad3 == "ل"
 end
 
--- Form-I verb حيّ or حيي and form-X verb استحيا or استحى or يستحّى
+-- Form-I verb حيّ or حيي and form-X verb استحيا or استحى
 local function hayy_radicals(rad1, rad2, rad3)
 	return rad1 == "ح" and rad2 == Y and rad3 == Y
 end
@@ -441,10 +438,10 @@ end
 -- endings for non-past indicative
 local indic_endings = make_nonpast_endings(
 	U,
-	I .. "ينَ",
-	A .. "انِ",
-	U .. "ونَ",
-	SK .. "نَ"
+	II .. NA,
+	AANI,
+	UU .. NA,
+	SK .. NA
 )
 
 -- make the endings for non-past subjunctive/jussive, given the vowel diacritic
@@ -452,10 +449,10 @@ local indic_endings = make_nonpast_endings(
 local function make_subj_juss_endings(dia_null)
 	return make_nonpast_endings(
 	dia_null,
-	I .. "ي",
-	A .. "ا",
-	U .. "و",
-	SK .. "نَ"
+	II,
+	AA,
+	UU .. ALIF,
+	SK .. NA
 	)
 end
 
@@ -475,10 +472,10 @@ local juss_endings_alt_i = make_subj_juss_endings(I)
 -- AAMAQ are global variables.
 local indic_endings_aa = make_nonpast_endings(
 	AAMAQ,
-	AYSK .. "نَ",
-	AY .. A .. "انِ",
-	AWSK .. "نَ",
-	AYSK .. "نَ"
+	AYSK .. NA,
+	AY .. AANI,
+	AWSK .. NA,
+	AYSK .. NA
 )
 
 -- make endings for final-weak non-past indicative in -ī or -ū; IIUU is
@@ -486,10 +483,10 @@ local indic_endings_aa = make_nonpast_endings(
 local function make_indic_endings_ii_uu(iiuu)
 	return make_nonpast_endings(
 	iiuu,
-	II .. "نَ",
-	iiuu .. A .. "انِ",
-	UU .. "نَ",
-	iiuu .. "نَ"
+	II .. NA,
+	iiuu .. AANI,
+	UU .. NA,
+	iiuu .. NA
 	)
 end
 
@@ -506,7 +503,7 @@ local subj_endings_aa = make_nonpast_endings(
 	AYSK,
 	AY .. AA,
 	AWSK .. ALIF,
-	AYSK .. "نَ"
+	AYSK .. NA
 )
 
 -- make endings for final-weak non-past subjunctive in -ī or -ū. IIUU is
@@ -517,7 +514,7 @@ local function make_subj_endings_ii_uu(iiuu)
 	II,
 	iiuu .. AA,
 	UU .. ALIF,
-	iiuu .. "نَ"
+	iiuu .. NA
 	)
 end
 
@@ -533,7 +530,7 @@ local juss_endings_aa = make_nonpast_endings(
 	AYSK,
 	AY .. AA,
 	AWSK .. ALIF,
-	AYSK .. "نَ"
+	AYSK .. NA
 )
 
 -- Make endings for final-weak non-past jussive in -ī or -ū. IU is short i or u,
@@ -545,7 +542,7 @@ local function make_juss_endings_ii_uu(iu, iiuu)
 	II,
 	iiuu .. AA,
 	UU .. ALIF,
-	iiuu .. "نَ"
+	iiuu .. NA
 	)
 end
 
@@ -636,7 +633,7 @@ function export.show(frame)
 	end
 
 	return make_table(data, title, form, intrans) ..
-		m_utilities.format_categories(data.categories, lang)
+		require("Module:utilities").format_categories(data.categories, lang)
 end
 
 -- Version of main entry point meant for calling from the debug console.
@@ -659,7 +656,8 @@ function export.show2(parargs, args)
 end
 
 -- Implement {{ar-verb}}.
--- TODO: Move this into [[Module:ar-headword]]
+-- FIXME: Move this into [[Module:ar-headword]]. Standardize parameter handling with [[Module:parameters]]. Use standard
+-- functionality in [[Module:head]].
 function export.headword(frame)
 	local origargs, args = get_frame_args(frame)
 
@@ -675,27 +673,30 @@ function export.headword(frame)
 		arabic_3sm_perf, latin_3sm_perf = get_spans(data.forms["3sm-perf"])
 		arabic_3sm_imperf, latin_3sm_imperf = get_spans(data.forms["3sm-impf"])
 	end
-
-	local PAGENAME = mw.title.getCurrentTitle().text
+	
+	title = mw.title.getCurrentTitle()
+	NAMESPACE = title.nsText
+	PAGENAME = ( NAMESPACE == "Appendix" and title.subpageText ) or title.text
+	
 	-- set to PAGENAME if left empty
-	local head, tr
+	local heads, trs
 	if use_params and form ~= "I" then
 		table.insert(data.headword_categories, "Arabic augmented verbs with parameter override")
 	end
 	if use_params and args["head"] then
-		head = {args["head"], args["head2"], args["head3"]}
-		tr = {args["tr"], args["tr2"], args["tr3"]}
+		heads = {args["head"], args["head2"], args["head3"]}
+		trs = {args["tr"], args["tr2"], args["tr3"]}
 		if form == "I" then
 			table.insert(data.headword_categories, "Arabic form-I verbs with headword perfect determined through param, not past vowel")
 		end
 	elseif use_params and args["tr"] then
-		head = PAGENAME
-		tr = args["tr"]
+		heads = {}
+		trs = {args["tr"]}
 		if form == "I" then
 			table.insert(data.headword_categories, "Arabic form-I verbs with headword perfect determined through param, not past vowel")
 		end
 	elseif form == "I" and #past_vowel == 0 then
-		head = PAGENAME
+		heads = {}
 		table.insert(data.headword_categories, "Arabic form-I verbs with missing past vowel in headword")
 	else
 		-- Massive hack to get the order correct. It gets reversed for some
@@ -705,17 +706,20 @@ function export.headword(frame)
 		for _, ar in ipairs(arabic_3sm_perf) do
 			table.insert(headrev, 1, ar)
 		end
-		head = table.concat(headrev, " <small style=\"color: #888\">or</small> ")
-		tr = table.concat(latin_3sm_perf, " <small style=\"color: #888\">or</small> ")
+		heads = {table.concat(headrev, " <small style=\"color: #888\">or</small> ")}
+		trs = {table.concat(latin_3sm_perf, " <small style=\"color: #888\">or</small> ")}
 	end
 
 	local form_text = ' <span class="gender">[[Appendix:Arabic verbs#Form ' .. form .. '|<abbr title="Verb form ' ..
 	  form .. '">' .. form .. '</abbr>]]</span>'
 
+	local noimpf = yesno(args["noimpf"], false)
 	local impf_arabic, impf_tr
-	if use_params and args["impf"] then
+	if use_params and noimpf then
+		impf_arabic = {}
+	elseif use_params and args["impf"] then
 		impf_arabic = args["impfhead"] or args["impf"]
-		impf_tr = args["impftr"] or ar_translit.tr(impf_arabic, nil, nil, nil)
+		impf_tr = args["impftr"] or (lang:transliterate(impf_arabic))
 		impf_arabic = {impf_arabic}
 		if form == "I" then
 			table.insert(data.headword_categories, "Arabic form-I verbs with headword imperfect determined through param, not non-past vowel")
@@ -744,9 +748,9 @@ function export.headword(frame)
 	end
 
 	return
-		m_headword.full_headword(lang, nil, head, tr, nil, nil, {"Arabic verbs"}, args["sort"]) ..
-		form_text .. impf_text ..
-		m_utilities.format_categories(data.headword_categories, lang)
+		require("Module:headword").full_headword({lang = lang, pos_category = "verbs", categories = data.headword_categories,
+			heads = heads, translits = trs, sort_key = args["sort"]}) ..
+		form_text .. impf_text
 end
 
 -- Version of headword entry point meant for calling from the debug console.
@@ -1057,7 +1061,7 @@ function export.verb_forms(frame)
 				local linktext = {}
 				local splitheads = rsplit(props["verb"], "[,،]")
 				for _, head in ipairs(splitheads) do
-					table.insert(linktext, m_links.full_link(head, nil, lang, nil, nil, nil, {gloss = ine(props["verb-gloss"])}, false))
+					table.insert(linktext, m_links.full_link({lang = lang, term = head, gloss = ine(props["verb-gloss"])}))
 				end
 				text = text .. table.concat(linktext, ", ")
 				table.insert(textarr, text)
@@ -1069,7 +1073,7 @@ function export.verb_forms(frame)
 						local linktext = {}
 						local splitheads = rsplit(props[deriv], "[,،]")
 						for _, head in ipairs(splitheads) do
-							table.insert(linktext, m_links.full_link(head, nil, lang, nil, nil, nil, {gloss = ine(props[deriv .. "-gloss"])}, false))
+							table.insert(linktext, m_links.full_link({lang = lang, term = head, gloss = ine(props[deriv .. "-gloss"])}))
 						end
 						text = text .. table.concat(linktext, ", ")
 						table.insert(textarr, text)
@@ -1101,7 +1105,9 @@ end
 function conjugate(args, argind)
 	local data = {forms = {}, categories = {}, headword_categories = {}}
 
-	PAGENAME = mw.title.getCurrentTitle().text
+	title = mw.title.getCurrentTitle()
+	NAMESPACE = title.nsText
+	PAGENAME = ( NAMESPACE == "Appendix" and title.subpageText ) or title.text
 
 	local conj_type = args[argind] or
 		error("Form (conjugation type) has not been specified. " ..
@@ -1336,6 +1342,11 @@ function conjugate(args, argind)
 	end
 	data.passive = passive
 
+	data.noimp = yesno(args["noimp"], false)
+	if data.noimp then
+		table.insert(data.categories, "Arabic verbs lacking imperative forms")
+	end
+
 	-- Initialize categories related to form and weakness.
 	initialize_categories(data,	form, weakness, rad1, rad2, rad3, rad4)
 
@@ -1452,15 +1463,15 @@ function export.infer_radicals(headword, form)
 		local letter = letters[index]
 		if type(must) == "string" then
 			if letter == nil then
-				error("Letter " .. index .. " is nil")
+				error("Letter " .. index .. " is nil", 2)
 			end
 			if letter ~= must then
 				error("For form " .. form .. ", letter " .. index ..
-					" must be " .. must .. ", not " .. letter)
+					" must be " .. must .. ", not " .. letter, 2)
 			end
 		elseif not contains(must, letter) then
 			error("For form " .. form .. ", radical " .. index ..
-				" must be one of " .. table.concat(must, " ") .. ", not " .. letter)
+				" must be one of " .. table.concat(must, " ") .. ", not " .. letter, 2)
 		end
 	end
 
@@ -1914,17 +1925,17 @@ function initialize_categories(data, form, weakness, rad1, rad2, rad3, rad4)
 	end
 
 	if data.passive == "only" then
-		table.insert(data.categories, "Arabic passive-only verbs")
+		table.insert(data.categories, "Arabic passive verbs")
 		table.insert(data.categories, "Arabic verbs with full passive")
 	elseif data.passive == "only-impers" then
-		table.insert(data.categories, "Arabic passive-only verbs")
+		table.insert(data.categories, "Arabic passive verbs")
 		table.insert(data.categories, "Arabic verbs with impersonal passive")
 	elseif data.passive == "impers" then
 		table.insert(data.categories, "Arabic verbs with impersonal passive")
 	elseif data.passive then
 		table.insert(data.categories, "Arabic verbs with full passive")
 	else
-		table.insert(data.categories, "Arabic verbs with no passive")
+		table.insert(data.categories, "Arabic verbs lacking passive forms")
 	end
 end
 
@@ -2694,13 +2705,12 @@ end
 -- by RAD3 = nil.
 function make_form_x_sound_final_weak_verb(data, args, rad1, rad2, rad3)
 	make_high5_form_sound_final_weak_verb(data, args, S, T, rad1, rad2, rad3, "X")
-	-- check for irregular verb اِسْتَحْيَا (also اِسْتَحَى or اِسْتَحَّى)
+	-- check for irregular verb اِسْتَحْيَا (also اِسْتَحَى)
 	if hayy_radicals(rad1, rad2, rad3 or Y) then
 		data.irregular = true
 		-- Add alternative entries to the verbal paradigms. Any duplicates are
 		-- removed in get_spans().
 		make_high_form_sound_final_weak_verb(data, args, S .. SK .. T, rad1, rad3, "X")
-		make_high_form_sound_final_weak_verb(data, args, S .. SK .. T, rad1 .. SH, rad3, "X")
 	end
 end
 
@@ -2956,6 +2966,9 @@ end
 -- instead of 13.
 function inflect_tense_impr(data, stems, endings)
 	local pnums = {"2sm", "2sf", "2d", "2pm", "2pf"}
+	if data.noimp then
+		endings = {{}, {}, {}, {}, {}}
+	end
 	inflect_tense_1(data, "impr", "", stems, endings, pnums)
 end
 
@@ -2965,10 +2978,9 @@ function insert_part(data, name, value)
 	if data.forms[name] == nil then
 		data.forms[name] = {}
 	end
+	
 	if type(value) == "table" then
-		for _, entry in ipairs(value) do
-			table.insert(data.forms[name], entry)
-		end
+		data.forms[name] = value
 	else
 		table.insert(data.forms[name], value)
 	end
@@ -2980,6 +2992,16 @@ function insert_verbal_noun(data, args, vn)
 	local vns = args["vn"] and rsplit(args["vn"], "[,،]") or vn
 	if type(vns) ~= "table" then
 		vns = {vns}
+	end
+	
+	vns.ids = {}
+	
+	for i = 1, #vns do
+		local id = args["vn-id" .. i]
+		
+		if id then
+			vns.ids[i] = id
+		end
 	end
 
 	-------------------- Begin verbal-noun i3rab tracking code ---------------
@@ -3046,6 +3068,9 @@ function insert_verbal_noun(data, args, vn)
 			entry = reorder_shadda(entry)
 			entry = rsub(entry, UNU .. "?$", "")
 			table.insert(vns_no_i3rab, entry)
+		end
+		if vns.ids then
+			vns_no_i3rab.ids = vns.ids
 		end
 		insert_part(data, "vn", vns_no_i3rab)
 	else
@@ -3521,7 +3546,7 @@ function get_spans(part)
 		if entry ~= "—" and entry ~= "?" then
 			-- multiple Arabic entries may map to the same Latin entry
 			-- (happens particularly with variant ways of spelling hamza)
-			insert_if_not(latin_spans, ar_translit.tr(entry, nil, nil, nil))
+			insert_if_not(latin_spans, (lang:transliterate(entry)))
 		end
 	end
 	return arabic_spans, latin_spans
@@ -3566,13 +3591,23 @@ function make_table(data, title, form, intrans)
 
 	-- Format and add transliterations to all parts
 	for key, part in pairs(forms) do
-		-- check for nil, empty array, size-one array holding a dash or ?
-		if part and #part > 0 then
+		-- check for empty array, size-one array holding a dash or ?
+		if #part > 0 then
 			local arabic_spans, latin_spans = get_spans(part)
 			-- convert Arabic terms to links
 			for i, entry in ipairs(arabic_spans) do
-				arabic_spans[i] = links(entry)
+				local id
+				if part.ids then
+					id = part.ids[i]
+				end
+				
+				arabic_spans[i] = links(entry, nil, id)
 			end
+			
+			for i, translit in ipairs(latin_spans) do
+				latin_spans[i] = require("Module:script utilities").tag_translit(translit, lang, "default")
+			end
+			
 			-- concatenate spans
 			forms[key] = '<div style="display: inline-block">' .. table.concat(arabic_spans, " <small style=\"color: #888\">or</small> ") .. "</div>" .. "<br/>" ..
 				"<span style=\"color: #888\">" .. table.concat(latin_spans, " <small>or</small> ") .. "</span>"
@@ -3588,13 +3623,13 @@ function make_table(data, title, form, intrans)
 		end
 	end
 
-	local text = [=[<div class="NavFrame" style="width:100%">
+	local text = [=[<div class="NavFrame ar-conj">
 <div class="NavHead" style="height:2.5em">]=] .. title  .. [=[</div>
 <div class="NavContent">
 
-{| border="1" color="#cdcdcd" style="border-collapse:collapse; border:1px solid #555555; background:#fdfdfd; width:100%; text-align:center" class="inflection-table"
+{| class="inflection-table"
 |-
-! colspan="6" style="background:#dedede" | verbal noun]=] .. (num_vns > 1 and "s" or "") .. "<br />" .. tag_text(num_vns > 1 and "المَصَادِر" or "المَصْدَر") .. [=[
+! colspan="6" class="nonfinite-header" | verbal noun]=] .. (num_vns > 1 and "s" or "") .. "<br />" .. tag_text(num_vns > 1 and "الْمَصَادِر" or "الْمَصْدَر") .. [=[
 
 | colspan="7" | {{{vn}}}
 ]=]
@@ -3602,7 +3637,7 @@ function make_table(data, title, form, intrans)
 	if data.passive ~= "only" and data.passive ~= "only-impers" then
 		text = text .. [=[
 |-
-! colspan="6" style="background:#dedede" | active participle<br />{{{اِسْم الفَاعِل}}}
+! colspan="6" class="nonfinite-header" | active participle<br />{{{اِسْم الْفَاعِل}}}
 | colspan="7" | {{{ap}}}
 ]=]
 	end
@@ -3610,7 +3645,7 @@ function make_table(data, title, form, intrans)
 	if data.passive then
 		text = text .. [=[
 |-
-! colspan="6" style="background:#dedede" | passive participle<br />{{{اِسْم المَفْعُول}}}
+! colspan="6" class="nonfinite-header" | passive participle<br />{{{اِسْم الْمَفْعُول}}}
 | colspan="7" | {{{pp}}}
 ]=]
 	end
@@ -3618,27 +3653,27 @@ function make_table(data, title, form, intrans)
 	if data.passive ~= "only" and data.passive ~= "only-impers" then
 		text = text .. [=[
 |-
-! colspan="12" style="background:#bcbcbc" | active voice<br />{{{الفِعْل المَعْلُوم}}}
+! colspan="12" class="voice-header" | active voice<br />{{{الْفِعْل الْمَعْلُوم}}}
 |-
-! colspan="2" style="background:#cdcdcd" | 
-! colspan="3" style="background:#cdcdcd" | singular<br />{{{المُفْرَد}}}
-! rowspan="12" style="background:#cdcdcd;width:.5em" | 
-! colspan="2" style="background:#cdcdcd" | dual<br />{{{المُثَنَّى}}}
-! rowspan="12" style="background:#cdcdcd;width:.5em" | 
-! colspan="3" style="background:#cdcdcd" | plural<br />{{{الجَمْع}}}
+! colspan="2" class="empty-header" | 
+! colspan="3" class="number-header" | singular<br />{{{الْمُفْرَد}}}
+! rowspan="12" class="divider" | 
+! colspan="2" class="number-header" | dual<br />{{{الْمُثَنَّى}}}
+! rowspan="12" class="divider" | 
+! colspan="3" class="number-header" | plural<br />{{{الْجَمْع}}}
 |-
-! colspan="2" style="background:#cdcdcd" | 
-! style="background:#cdcdcd" | 1<sup>st</sup> person<br />{{{المُتَكَلِّم}}}
-! style="background:#cdcdcd" | 2<sup>nd</sup> person<br />{{{المُخَاطَب}}}
-! style="background:#cdcdcd" | 3<sup>rd</sup> person<br />{{{الغَائِب}}}
-! style="background:#cdcdcd" | 2<sup>nd</sup> person<br />{{{المُخَاطَب}}}
-! style="background:#cdcdcd" | 3<sup>rd</sup> person<br />{{{الغَائِب}}}
-! style="background:#cdcdcd" | 1<sup>st</sup> person<br />{{{المُتَكَلِّم}}}
-! style="background:#cdcdcd" | 2<sup>nd</sup> person<br />{{{المُخَاطَب}}}
-! style="background:#cdcdcd" | 3<sup>rd</sup> person<br />{{{الغَائِب}}}
+! colspan="2" class="empty-header" | 
+! class="person-header" | 1<sup>st</sup> person<br />{{{الْمُتَكَلِّم}}}
+! class="person-header" | 2<sup>nd</sup> person<br />{{{الْمُخَاطَب}}}
+! class="person-header" | 3<sup>rd</sup> person<br />{{{الْغَائِب}}}
+! class="person-header" | 2<sup>nd</sup> person<br />{{{الْمُخَاطَب}}}
+! class="person-header" | 3<sup>rd</sup> person<br />{{{الْغَائِب}}}
+! class="person-header" | 1<sup>st</sup> person<br />{{{الْمُتَكَلِّم}}}
+! class="person-header" | 2<sup>nd</sup> person<br />{{{الْمُخَاطَب}}}
+! class="person-header" | 3<sup>rd</sup> person<br />{{{الْغَائِب}}}
 |-
-! rowspan="2" style="background:#cdcdcd" | past (perfect) indicative<br />{{{المَاضِي}}}
-! style="background:#dedede" | ''m''
+! rowspan="2" class="tam-header" | past (perfect) indicative<br />{{{الْمَاضِي}}}
+! class="gender-header" | m
 | rowspan="2" | {{{1s-perf}}}
 | {{{2sm-perf}}}
 | {{{3sm-perf}}}
@@ -3648,15 +3683,15 @@ function make_table(data, title, form, intrans)
 | {{{2pm-perf}}}
 | {{{3pm-perf}}}
 |-
-! style="background:#dedede" | ''f''
+! class="gender-header" | f
 | {{{2sf-perf}}}
 | {{{3sf-perf}}}
 | {{{3df-perf}}}
 | {{{2pf-perf}}}
 | {{{3pf-perf}}}
 |-
-! rowspan="2" style="background:#cdcdcd" | non-past (imperfect) indicative<br />{{{المُضَارِع}}}
-! style="background:#dedede" | ''m''
+! rowspan="2" class="tam-header" | non-past (imperfect) indicative<br />{{{الْمُضَارِع الْمَرْفُوع}}}
+! class="gender-header" | m
 | rowspan="2" | {{{1s-impf}}}
 | {{{2sm-impf}}}
 | {{{3sm-impf}}}
@@ -3666,15 +3701,15 @@ function make_table(data, title, form, intrans)
 | {{{2pm-impf}}}
 | {{{3pm-impf}}}
 |-
-! style="background:#dedede" | ''f''
+! class="gender-header" | f
 | {{{2sf-impf}}}
 | {{{3sf-impf}}}
 | {{{3df-impf}}}
 | {{{2pf-impf}}}
 | {{{3pf-impf}}}
 |-
-! rowspan="2" style="background:#cdcdcd" | subjunctive<br />{{{المُضَارِع المَنْصُوب}}}
-! style="background:#dedede" | ''m''
+! rowspan="2" class="tam-header" | subjunctive<br />{{{الْمُضَارِع الْمَنْصُوب}}}
+! class="gender-header" | m
 | rowspan="2" | {{{1s-subj}}}
 | {{{2sm-subj}}}
 | {{{3sm-subj}}}
@@ -3684,15 +3719,15 @@ function make_table(data, title, form, intrans)
 | {{{2pm-subj}}}
 | {{{3pm-subj}}}
 |-
-! style="background:#dedede" | ''f''
+! class="gender-header" | f
 | {{{2sf-subj}}}
 | {{{3sf-subj}}}
 | {{{3df-subj}}}
 | {{{2pf-subj}}}
 | {{{3pf-subj}}}
 |-
-! rowspan="2" style="background:#cdcdcd" | jussive<br />{{{المُضَارِع المَجْزُوم}}}
-! style="background:#dedede" | ''m''
+! rowspan="2" class="tam-header" | jussive<br />{{{الْمُضَارِع الْمَجْزُوم}}}
+! class="gender-header" | m
 | rowspan="2" | {{{1s-juss}}}
 | {{{2sm-juss}}}
 | {{{3sm-juss}}}
@@ -3702,15 +3737,15 @@ function make_table(data, title, form, intrans)
 | {{{2pm-juss}}}
 | {{{3pm-juss}}}
 |-
-! style="background:#dedede" | ''f''
+! class="gender-header" | f
 | {{{2sf-juss}}}
 | {{{3sf-juss}}}
 | {{{3df-juss}}}
 | {{{2pf-juss}}}
 | {{{3pf-juss}}}
 |-
-! rowspan="2" style="background:#cdcdcd" | imperative<br />{{{الأَمْر}}}
-! style="background:#dedede" | ''m''
+! rowspan="2" class="tam-header" | imperative<br />{{{الْأَمْر}}}
+! class="gender-header" | m
 | rowspan="2" | 
 | {{{2sm-impr}}}
 | rowspan="2" | 
@@ -3720,7 +3755,7 @@ function make_table(data, title, form, intrans)
 | {{{2pm-impr}}}
 | rowspan="2" | 
 |-
-! style="background:#dedede" | ''f''
+! class="gender-header" | f
 | {{{2sf-impr}}}
 | {{{2pf-impr}}}
 ]=]
@@ -3729,27 +3764,27 @@ function make_table(data, title, form, intrans)
 	if data.passive == "impers" or data.passive == "only-impers" then
 		text = text .. [=[
 |-
-! colspan="12" style="background:#bcbcbc" | passive voice<br />{{{الفِعْل المَجْهُول}}}
+! colspan="12" class="voice-header" | passive voice<br />{{{الْفِعْل الْمَجْهُول}}}
 |-
-| colspan="2" style="background:#cdcdcd" | 
-! colspan="3" style="background:#cdcdcd" | singular<br />{{{المُفْرَد}}}
-| rowspan="10" style="background:#cdcdcd;width:.5em" | 
-! colspan="2" style="background:#cdcdcd" | dual<br />{{{المُثَنَّى}}}
-| rowspan="10" style="background:#cdcdcd;width:.5em" | 
-! colspan="3" style="background:#cdcdcd" | plural<br />{{{الجَمْع}}}
+| colspan="2" class="empty-header" | 
+! colspan="3" class="number-header" | singular<br />{{{الْمُفْرَد}}}
+| rowspan="10" class="divider" | 
+! colspan="2" class="number-header" | dual<br />{{{الْمُثَنَّى}}}
+| rowspan="10" class="divider" | 
+! colspan="3" class="number-header" | plural<br />{{{الْجَمْع}}}
 |-
-| colspan="2" style="background:#cdcdcd" | 
-! style="background:#cdcdcd" | 1<sup>st</sup> person<br />{{{المُتَكَلِّم}}}
-! style="background:#cdcdcd" | 2<sup>nd</sup> person<br />{{{المُخَاطَب}}}
-! style="background:#cdcdcd" | 3<sup>rd</sup> person<br />{{{الغَائِب}}}
-! style="background:#cdcdcd" | 2<sup>nd</sup> person<br />{{{المُخَاطَب}}}
-! style="background:#cdcdcd" | 3<sup>rd</sup> person<br />{{{الغَائِب}}}
-! style="background:#cdcdcd" | 1<sup>st</sup> person<br />{{{المُتَكَلِّم}}}
-! style="background:#cdcdcd" | 2<sup>nd</sup> person<br />{{{المُخَاطَب}}}
-! style="background:#cdcdcd" | 3<sup>rd</sup> person<br />{{{الغَائِب}}}
+| colspan="2" class="empty-header" | 
+! class="person-header" | 1<sup>st</sup> person<br />{{{الْمُتَكَلِّم}}}
+! class="person-header" | 2<sup>nd</sup> person<br />{{{الْمُخَاطَب}}}
+! class="person-header" | 3<sup>rd</sup> person<br />{{{الْغَائِب}}}
+! class="person-header" | 2<sup>nd</sup> person<br />{{{الْمُخَاطَب}}}
+! class="person-header" | 3<sup>rd</sup> person<br />{{{الْغَائِب}}}
+! class="person-header" | 1<sup>st</sup> person<br />{{{الْمُتَكَلِّم}}}
+! class="person-header" | 2<sup>nd</sup> person<br />{{{الْمُخَاطَب}}}
+! class="person-header" | 3<sup>rd</sup> person<br />{{{الْغَائِب}}}
 |-
-! rowspan="2" style="background:#cdcdcd" | past (perfect) indicative<br />{{{المَاضِي}}}
-! style="background:#dedede" | ''m''
+! rowspan="2" class="tam-header" | past (perfect) indicative<br />{{{الْمَاضِي}}}
+! class="gender-header" | m
 | rowspan="2" | &mdash;
 | &mdash;
 | {{{3sm-ps-perf}}}
@@ -3759,15 +3794,15 @@ function make_table(data, title, form, intrans)
 | &mdash;
 | &mdash;
 |-
-! style="background:#dedede" | ''f''
+! class="gender-header" | f
 | &mdash;
 | &mdash;
 | &mdash;
 | &mdash;
 | &mdash;
 |-
-! rowspan="2" style="background:#cdcdcd" | non-past (imperfect) indicative<br />{{{المُضَارِع}}}
-! style="background:#dedede" | ''m''
+! rowspan="2" class="tam-header" | non-past (imperfect) indicative<br />{{{الْمُضَارِع الْمَرْفُوع}}}
+! class="gender-header" | m
 | rowspan="2" | &mdash;
 | &mdash;
 | {{{3sm-ps-impf}}}
@@ -3777,15 +3812,15 @@ function make_table(data, title, form, intrans)
 | &mdash;
 | &mdash;
 |-
-! style="background:#dedede" | ''f''
+! class="gender-header" | f
 | &mdash;
 | &mdash;
 | &mdash;
 | &mdash;
 | &mdash;
 |-
-! rowspan="2" style="background:#cdcdcd" | subjunctive<br />{{{المُضَارِع المَنْصُوب}}}
-! style="background:#dedede" | ''m''
+! rowspan="2" class="tam-header" | subjunctive<br />{{{الْمُضَارِع الْمَنْصُوب}}}
+! class="gender-header" | m
 | rowspan="2" | &mdash;
 | &mdash;
 | {{{3sm-ps-subj}}}
@@ -3795,15 +3830,15 @@ function make_table(data, title, form, intrans)
 | &mdash;
 | &mdash;
 |-
-! style="background:#dedede" | ''f''
+! class="gender-header" | f
 | &mdash;
 | &mdash;
 | &mdash;
 | &mdash;
 | &mdash;
 |-
-! rowspan="2" style="background:#cdcdcd" | jussive<br />{{{المُضَارِع المَجْزُوم}}}
-! style="background:#dedede" | ''m''
+! rowspan="2" class="tam-header" | jussive<br />{{{الْمُضَارِع الْمَجْزُوم}}}
+! class="gender-header" | m
 | rowspan="2" | &mdash;
 | &mdash;
 | {{{3sm-ps-juss}}}
@@ -3813,7 +3848,7 @@ function make_table(data, title, form, intrans)
 | &mdash;
 | &mdash;
 |-
-! style="background:#dedede" | ''f''
+! class="gender-header" | f
 | &mdash;
 | &mdash;
 | &mdash;
@@ -3824,27 +3859,27 @@ function make_table(data, title, form, intrans)
 	elseif data.passive then
 		text = text .. [=[
 |-
-! colspan="12" style="background:#bcbcbc" | passive voice<br />{{{الفِعْل المَجْهُول}}}
+! colspan="12" class="voice-header" | passive voice<br />{{{الْفِعْل الْمَجْهُول}}}
 |-
-| colspan="2" style="background:#cdcdcd" | 
-! colspan="3" style="background:#cdcdcd" | singular<br />{{{المُفْرَد}}}
-| rowspan="10" style="background:#cdcdcd;width:.5em" | 
-! colspan="2" style="background:#cdcdcd" | dual<br />{{{المُثَنَّى}}}
-| rowspan="10" style="background:#cdcdcd;width:.5em" | 
-! colspan="3" style="background:#cdcdcd" | plural<br />{{{الجَمْع}}}
+| colspan="2" class="empty-header" | 
+! colspan="3" class="number-header" | singular<br />{{{الْمُفْرَد}}}
+| rowspan="10" class="divider" | 
+! colspan="2" class="number-header" | dual<br />{{{الْمُثَنَّى}}}
+| rowspan="10" class="divider" | 
+! colspan="3" class="number-header" | plural<br />{{{الْجَمْع}}}
 |-
-| colspan="2" style="background:#cdcdcd" | 
-! style="background:#cdcdcd" | 1<sup>st</sup> person<br />{{{المُتَكَلِّم}}}
-! style="background:#cdcdcd" | 2<sup>nd</sup> person<br />{{{المُخَاطَب}}}
-! style="background:#cdcdcd" | 3<sup>rd</sup> person<br />{{{الغَائِب}}}
-! style="background:#cdcdcd" | 2<sup>nd</sup> person<br />{{{المُخَاطَب}}}
-! style="background:#cdcdcd" | 3<sup>rd</sup> person<br />{{{الغَائِب}}}
-! style="background:#cdcdcd" | 1<sup>st</sup> person<br />{{{المُتَكَلِّم}}}
-! style="background:#cdcdcd" | 2<sup>nd</sup> person<br />{{{المُخَاطَب}}}
-! style="background:#cdcdcd" | 3<sup>rd</sup> person<br />{{{الغَائِب}}}
+| colspan="2" class="empty-header" | 
+! class="person-header" | 1<sup>st</sup> person<br />{{{الْمُتَكَلِّم}}}
+! class="person-header" | 2<sup>nd</sup> person<br />{{{الْمُخَاطَب}}}
+! class="person-header" | 3<sup>rd</sup> person<br />{{{الْغَائِب}}}
+! class="person-header" | 2<sup>nd</sup> person<br />{{{الْمُخَاطَب}}}
+! class="person-header" | 3<sup>rd</sup> person<br />{{{الْغَائِب}}}
+! class="person-header" | 1<sup>st</sup> person<br />{{{الْمُتَكَلِّم}}}
+! class="person-header" | 2<sup>nd</sup> person<br />{{{الْمُخَاطَب}}}
+! class="person-header" | 3<sup>rd</sup> person<br />{{{الْغَائِب}}}
 |-
-! rowspan="2" style="background:#cdcdcd" | past (perfect) indicative<br />{{{المَاضِي}}}
-! style="background:#dedede" | ''m''
+! rowspan="2" class="tam-header" | past (perfect) indicative<br />{{{الْمَاضِي}}}
+! class="gender-header" | m
 | rowspan="2" | {{{1s-ps-perf}}}
 | {{{2sm-ps-perf}}}
 | {{{3sm-ps-perf}}}
@@ -3854,15 +3889,15 @@ function make_table(data, title, form, intrans)
 | {{{2pm-ps-perf}}}
 | {{{3pm-ps-perf}}}
 |-
-! style="background:#dedede" | ''f''
+! class="gender-header" | f
 | {{{2sf-ps-perf}}}
 | {{{3sf-ps-perf}}}
 | {{{3df-ps-perf}}}
 | {{{2pf-ps-perf}}}
 | {{{3pf-ps-perf}}}
 |-
-! rowspan="2" style="background:#cdcdcd" | non-past (imperfect) indicative<br />{{{المُضَارِع}}}
-! style="background:#dedede" | ''m''
+! rowspan="2" class="tam-header" | non-past (imperfect) indicative<br />{{{الْمُضَارِع الْمَرْفُوع}}}
+! class="gender-header" | m
 | rowspan="2" | {{{1s-ps-impf}}}
 | {{{2sm-ps-impf}}}
 | {{{3sm-ps-impf}}}
@@ -3872,15 +3907,15 @@ function make_table(data, title, form, intrans)
 | {{{2pm-ps-impf}}}
 | {{{3pm-ps-impf}}}
 |-
-! style="background:#dedede" | ''f''
+! class="gender-header" | f
 | {{{2sf-ps-impf}}}
 | {{{3sf-ps-impf}}}
 | {{{3df-ps-impf}}}
 | {{{2pf-ps-impf}}}
 | {{{3pf-ps-impf}}}
 |-
-! rowspan="2" style="background:#cdcdcd" | subjunctive<br />{{{المُضَارِع المَنْصُوب}}}
-! style="background:#dedede" | ''m''
+! rowspan="2" class="tam-header" | subjunctive<br />{{{الْمُضَارِع الْمَنْصُوب}}}
+! class="gender-header" | m
 | rowspan="2" | {{{1s-ps-subj}}}
 | {{{2sm-ps-subj}}}
 | {{{3sm-ps-subj}}}
@@ -3890,15 +3925,15 @@ function make_table(data, title, form, intrans)
 | {{{2pm-ps-subj}}}
 | {{{3pm-ps-subj}}}
 |-
-! style="background:#dedede" | ''f''
+! class="gender-header" | f
 | {{{2sf-ps-subj}}}
 | {{{3sf-ps-subj}}}
 | {{{3df-ps-subj}}}
 | {{{2pf-ps-subj}}}
 | {{{3pf-ps-subj}}}
 |-
-! rowspan="2" style="background:#cdcdcd" | jussive<br />{{{المُضَارِع المَجْزُوم}}}
-! style="background:#dedede" | ''m''
+! rowspan="2" class="tam-header" | jussive<br />{{{الْمُضَارِع الْمَجْزُوم}}}
+! class="gender-header" | m
 | rowspan="2" | {{{1s-ps-juss}}}
 | {{{2sm-ps-juss}}}
 | {{{3sm-ps-juss}}}
@@ -3908,7 +3943,7 @@ function make_table(data, title, form, intrans)
 | {{{2pm-ps-juss}}}
 | {{{3pm-ps-juss}}}
 |-
-! style="background:#dedede" | ''f''
+! class="gender-header" | f
 | {{{2sf-ps-juss}}}
 | {{{3sf-ps-juss}}}
 | {{{3df-ps-juss}}}
@@ -3935,6 +3970,9 @@ function make_table(data, title, form, intrans)
 	end
 
 	return rsub(text, "{{{([^{}]+)}}}", repl)
+		.. mw.getCurrentFrame():extensionTag{
+			name = "templatestyles", args = { src = "Template:ar-conj/style.css" }
+		}
 end
 
 return export
