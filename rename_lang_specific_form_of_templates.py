@@ -1488,15 +1488,17 @@ def en_verb_form(parts):
     "infl of", # no need for 'verb form of', I think; we can categorize without it
     # lang= occurs at least once, and is ignored.
     # nodot= occurs a few times and is ignored.
-    ("error-if", ("present-except", ["1", "2", "t", "id", "lang", "nodot"])),
+    ("error-if", ("present-except", ["1", "2", "3", "t", "gloss", "id", "lang", "nodot"])),
     ("set", "1", [
       "en",
       ("copy", "1"),
       ("copy", "2"),
       parts,
     ]),
-    ("copy", "t"), # occurs although ignored by template
-    ("copy", "id"), # occurs although ignored by template
+    ("copy", "t"),
+    ("copy", "gloss", "t"),
+    ("copy", "3", "t"),
+    ("copy", "id"),
   )
 
 en_specs = [
@@ -4553,10 +4555,10 @@ zh_specs = [
   zh_headword("zh-verb", "verb"),
 ]
 
-def non_lang_specific_tagged_form_of(tags, ignore_nocat=True):
+def non_lang_specific_tagged_form_of(tags, tempname="infl of", ignore_nocat=True):
   return tuple([
-    "infl of",
-    ("comment", "rename {{__TEMPNAME__}} to {{infl of|...|%s}}" % "|".join(tags)),
+    tempname,
+    ("comment", "rename {{__TEMPNAME__}} to {{%s|...|%s}}" % (tempname, "|".join(tags))),
     # ignore nodot=, nocap=; ignore nocat= in most circumstances
     ("error-if", ("present-except", ["1", "2", "3", "4", "sc", "tr", "g", "t", "gloss", "pos", "cap", "nodot", "nocap",
                                      "nocat"])),
@@ -4579,6 +4581,9 @@ def non_lang_specific_tagged_form_of(tags, ignore_nocat=True):
   ] + ([("copy", "nocat")] if not ignore_nocat else [])
   )
 
+def non_lang_specific_participle_tagged_form_of(tags, ignore_nocat=True):
+  return non_lang_specific_tagged_form_of(tags, "participle of", ignore_nocat=ignore_nocat)
+
 misc_non_lang_specific_specs = [
   ("attributive form of", non_lang_specific_tagged_form_of(["attr", "form"])),
   ("definite singular of", non_lang_specific_tagged_form_of(["def", "s"])),
@@ -4596,6 +4601,15 @@ misc_non_lang_specific_specs = [
   ("superlative attributive of", non_lang_specific_tagged_form_of(["attr", "supd"])),
   ("superlative predicative of", non_lang_specific_tagged_form_of(["pred", "supd"])),
   ("supine of", non_lang_specific_tagged_form_of(["sup"])),
+]
+
+participle_non_lang_specific_specs = [
+  ("future participle of", non_lang_specific_participle_tagged_form_of(["fut"])),
+  ("perfect participle of", non_lang_specific_participle_tagged_form_of(["perf"])),
+  ("present active participle of", non_lang_specific_participle_tagged_form_of(["pres", "act"])),
+  ("past active participle of", non_lang_specific_participle_tagged_form_of(["past", "act"])),
+  ("past passive participle of", non_lang_specific_participle_tagged_form_of(["past", "pass"])),
+  ("future passive participle of", non_lang_specific_participle_tagged_form_of(["fut", "pass"])),
 ]
 
 templates_to_rename_specs = (
@@ -4652,6 +4666,7 @@ templates_to_rename_specs = (
   misc_templates_to_rewrite +
   zh_specs +
   misc_non_lang_specific_specs +
+  participle_non_lang_specific_specs +
   []
 )
 
