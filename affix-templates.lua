@@ -124,14 +124,13 @@ end
 -- language object corresponding to the language code specified in 1=; SCRIPT_OBJ is the script object corresponding to
 -- sc= (if given, otherwise nil); and SOURCE_LANG_OBJ is the language object corresponding to the source-language code
 -- specified in 2= if `has_source` is specified (otherwise nil).
-local function parse_args(args, extra_params, has_source)
+local function parse_args(args, extra_params, has_source, ilangcode)
 	if args.lang then
 		error("The |lang= parameter is not used by this template. Place the language code in parameter 1 instead.")
 	end
 
-	local term_index = 2 + (has_source and 1 or 0)
+	local term_index = (ilangcode and 1 or 2) + (has_source and 1 or 0)
 	local params = {
-		[1] = {required = true, default = "und"},
 		[term_index] = {list = true, allow_holes = true},
 
 		["lit"] = {},
@@ -139,6 +138,10 @@ local function parse_args(args, extra_params, has_source)
 		["pos"] = {},
 		["sort"] = {},
 	}
+
+	if not ilangcode then
+		params[1] = {required = true, default = "und"}
+	end
 
 	local source_index
 	if has_source then
@@ -165,7 +168,12 @@ local function parse_args(args, extra_params, has_source)
 	end
 
 	args = require("Module:parameters").process(args, params)
-	local lang = m_languages.getByCode(args[1], 1)
+	local lang
+	if ilangcode then
+		lang = m_languages.getByCode(ilangcode, true)
+	else
+		lang = m_languages.getByCode(args[1], 1)
+	end
 	local source
 	if has_source then
 		source = m_languages.getByCode(args[source_index], source_index, "allow etym")
@@ -369,6 +377,17 @@ end
 
 
 function export.compound_like(frame)
+	local iparams = {
+		["lang"] = {},
+		["template"] = {},
+		["text"] = {},
+		["oftext"] = {},
+		["cat"] = {},
+	}
+
+	local iargs = require("Module:parameters").process(frame.args, iparams, nil, "affix/templates", "compound_like")
+	local parent_args = frame:getParent().args
+
 	local function extra_params(params)
 		params["pos"] = nil
 		params["nocap"] = {type = "boolean"}
@@ -377,14 +396,14 @@ function export.compound_like(frame)
 		params["force_cat"] = {type = "boolean"}
 	end
 
-	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
+	local args, term_index, lang, sc = parse_args(parent_args, extra_params, nil, iargs.lang)
 
-	local template = frame.args["template"]
+	local template = iargs["template"]
 	local nocat = args["nocat"]
 	local notext = args["notext"]
-	local text = not notext and frame.args["text"]
-	local oftext = not notext and (frame.args["oftext"] or text and "of")
-	local cat = not nocat and frame.args["cat"]
+	local text = not notext and iargs["text"]
+	local oftext = not notext and (iargs["oftext"] or text and "of")
+	local cat = not nocat and iargs["cat"]
 
 	local parts = get_parsed_parts(template, args, term_index)
 
