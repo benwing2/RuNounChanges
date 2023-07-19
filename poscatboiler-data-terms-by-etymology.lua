@@ -20,6 +20,7 @@ labels["terms by etymology"] = {
 
 labels["AABB-type reduplications"] = {
 	description = "{{{langname}}} terms that underwent [[reduplication]] in an AABB pattern.",
+	breadcrumb = "AABB-type",
 	parents = {"reduplications"},
 }
 
@@ -47,12 +48,12 @@ labels["bahuvrihi compounds"] = {
 }
 
 labels["blends"] = {
-	description = "{{{langname}}} words formed by combinations of other words.",
+	description = "{{{langname}}} terms formed by combinations of other words.",
 	parents = {"terms by etymology"},
 }
 
 labels["borrowed terms"] = {
-	description = "{{{langname}}} terms that are loanwords, i.e. words that were directly incorporated from another language.",
+	description = "{{{langname}}} terms that are loanwords, i.e. terms that were directly incorporated from another language.",
 	parents = {"terms by etymology"},
 }
 
@@ -105,35 +106,23 @@ labels["compound terms"] = {
 	parents = {"terms by etymology"},
 }
 
--- FIXME, remove after renaming categories
-labels["compound words"] = {
-	description = "{{{langname}}} words composed of two or more stems.",
-	parents = {"terms by etymology"},
-}
-
 labels["coordinated pairs"] = {
 	description = "Terms in {{{langname}}} consisting of a pair of terms joined by a [[coordinating conjunction]].",
 	parents = {"terms by etymology"},
 }
 
 labels["coordinated triples"] = {
-	-- Avoid saying "a coordinating conjunction" or "coordinating conjunctions"
-	-- because there can be one or more conjunctions.
-	description = "Terms in {{{langname}}} consisting of three terms joined by [[coordinating conjunction]].",
+	description = "Terms in {{{langname}}} consisting of three terms joined by one or more [[coordinating conjunction]]s.",
 	parents = {"terms by etymology"},
 }
 
 labels["coordinated quadruples"] = {
-	-- Avoid saying "a coordinating conjunction" or "coordinating conjunctions"
-	-- because there can be one or more conjunctions.
-	description = "Terms in {{{langname}}} consisting of four terms joined by [[coordinating conjunction]].",
+	description = "Terms in {{{langname}}} consisting of four terms joined by one or more [[coordinating conjunction]]s.",
 	parents = {"terms by etymology"},
 }
 
 labels["coordinated quintuples"] = {
-	-- Avoid saying "a coordinating conjunction" or "coordinating conjunctions"
-	-- because there can be one or more conjunctions.
-	description = "Terms in {{{langname}}} consisting of five terms joined by [[coordinating conjunction]].",
+	description = "Terms in {{{langname}}} consisting of five terms joined by one or more [[coordinating conjunction]]s.",
 	parents = {"terms by etymology"},
 }
 
@@ -172,12 +161,14 @@ labels["endocentric compounds"] = {
 labels["endocentric noun-noun compounds"] = {
 	description = "{{{langname}}} terms composed of two or more stems, one of which is the [[w:head (linguistics)|head]] of that compound.",
 	umbrella_parents = "Types of compound terms by language",
+	breadcrumb = "noun-noun",
 	parents = {"endocentric compounds", "compound terms"},
 }
 
 labels["endocentric verb-noun compounds"] = {
 	description = "{{{langname}}} compounds in which the first element is a verbal stem, the second a nominal stem and the head of the compound.",
 	umbrella_parents = "Types of compound terms by language",
+	breadcrumb = "verb-noun",
 	parents = {"endocentric compounds", "verb-noun compounds"},
 }
 
@@ -195,6 +186,7 @@ labels["exocentric compounds"] = {
 labels["exocentric verb-noun compounds"] = {
 	description = "{{{langname}}} compounds in which the first element is a transitive verb, the second a noun functioning as its direct object, and whose referent is the person or thing doing the action.",
 	umbrella_parents = "Types of compound terms by language",
+	breadcrumb = "verb-noun",
 	parents = {"exocentric compounds", "verb-noun compounds"},
 }
 
@@ -214,8 +206,8 @@ labels["karmadharaya compounds"] = {
 	parents = {"tatpurusa compounds"},
 }
 
-labels["haplological forms"] = {
-	description = "{{{langname}}} terms that underwent [[haplology]]: thus, their origin involved a loss or omission of a repeated sequence of sounds.",
+labels["haplological words"] = {
+	description = "{{{langname}}} words that underwent [[haplology]]: thus, their origin involved a loss or omission of a repeated sequence of sounds.",
 	parents = {"terms by etymology"},
 }
 
@@ -243,11 +235,12 @@ labels["internationalisms"] = {
 labels["itaretara dvandva compounds"] = {
 	description = "{{{langname}}} terms composed of two or more stems whose stems could be connected by an 'and'.",
 	umbrella_parents = "Types of compound terms by language",
+	breadcrumb = "itaretara",
 	parents = {"dvandva compounds"},
 }
 
 labels["legal doublets"] = {
-	description = "{{{langname}}} legal [[doublet]]s &ndash; a legal doublet is a standardized phrase commonly use in legal documents, proceedings etc which includes two words that are near synonyms.",
+	description = "{{{langname}}} legal [[doublet]]s &ndash; a legal doublet is a standardized phrase commonly use in legal documents, proceedings etc. which includes two words that are near synonyms.",
 	parents = {"coordinated pairs"},
 }
 
@@ -321,21 +314,25 @@ labels["reconstructed terms"] = {
 
 labels["reduplicated coordinated pairs"] = {
 	description = "{{{langname}}} reduplicated coordinated pairs.",
+	breadcrumb = "reduplicated",
 	parents = {"coordinated pairs", "reduplications"},
 }
 
 labels["reduplicated coordinated triples"] = {
 	description = "{{{langname}}} reduplicated coordinated triples.",
+	breadcrumb = "reduplicated",
 	parents = {"coordinated triples", "reduplications"},
 }
 
 labels["reduplicated coordinated quadruples"] = {
 	description = "{{{langname}}} reduplicated coordinated quadruples.",
+	breadcrumb = "reduplicated",
 	parents = {"coordinated quadruples", "reduplications"},
 }
 
 labels["reduplicated coordinated quintuples"] = {
 	description = "{{{langname}}} reduplicated coordinated quintuples.",
+	breadcrumb = "reduplicated",
 	parents = {"coordinated quintuples", "reduplications"},
 }
 
@@ -362,6 +359,7 @@ labels["roots"] = {
 
 labels["roots by shape"] = {
 	description = "{{{langname}}} roots categorized by their shape.",
+	breadcrumb = "by shape",
 	parents = {{name = "roots", sort = "shape"}},
 }
 
@@ -374,6 +372,7 @@ labels["Sanskritic formations"] = {
 labels["samahara dvandva compounds"] = {
 	description = "{{{langname}}} terms composed of two or more stems whose stems could be connected by an 'and'.",
 	umbrella_parents = "Types of compound terms by language",
+	breadcrumb = "samahara",
 	parents = {"dvandva compounds"},
 }
 
@@ -446,12 +445,15 @@ labels["terms by root"] = {
 
 labels["terms derived from fiction"] = {
 	description = "{{{langname}}} terms that originate from works of [[fiction]].",
+	breadcrumb = "fiction",
 	parents = {"terms attributed to a specific source"},
 }
 
 for _, source_desc_display_topic_parents_and_sort in ipairs({
 	{"Dickensian works", "the works of [[w:Charles Dickens|Charles Dickens]]", nil, {"Charles Dickens"}},
 	{"DC Comics", "[[w:DC Comics|DC Comics]]"},
+	{"Doraemon", "[[w:Fujiko F. Fujio|Fujiko F. Fujio]]'s ''[[w:Doraemon|Doraemon]]''", "''Doraemon''"},
+	{"Dragon Ball", "[[w:Akira Toriyama|Akira Toriyama]]'s ''[[w:Dragon Ball|Dragon Ball]]''", "''Dragon Ball''"},
 	{"Duckburg and Mouseton", "[[w:The Walt Disney Company|Disney]]'s [[w:Duck universe|Duckburg]] and [[w:Mickey Mouse universe|Mouseton]] universe", nil, {"Disney"}},
 	{"Harry Potter", "the ''[[w:Harry Potter|Harry Potter]]'' series", "''Harry Potter''", {"Harry Potter"}},
 	{"Nineteen Eighty-Four", "[[w:George Orwell|George Orwell]]'s ''[[w:Nineteen Eighty-Four|Nineteen Eighty-Four]]''", "''Nineteen Eighty-Four''"},
@@ -463,6 +465,7 @@ for _, source_desc_display_topic_parents_and_sort in ipairs({
 	local source, desc, display, topic_parents, sort = unpack(source_desc_display_topic_parents_and_sort)
 	labels["terms derived from " .. source] = {
 		description = "{{{langname}}} terms that originate from " .. desc .. ".",
+		breadcrumb = source,
 	}
 	if sort then
 		labels["terms derived from " .. source]["parents"] = {{name = "terms derived from fiction", sort = sort}}
@@ -479,6 +482,7 @@ end
 
 labels["terms derived from Greek mythology"] = {
 	description = "{{{langname}}} terms derived from Greek mythology which have acquired an idiomatic meaning.",
+	breadcrumb = "Greek mythology",
 	parents = {"terms attributed to a specific source"},
 }
 
@@ -494,11 +498,13 @@ labels["terms derived from other languages"] = {
 
 labels["terms derived from the Bible"] = {
 	description = "{{{langname}}} terms that originate from the [[Bible]].",
+	breadcrumb = {name = "the Bible", nocap = true},
 	parents = {"terms attributed to a specific source"},
 }
 
 labels["terms derived from Aesop's Fables"] = {
 	description = "{{{langname}}} terms that originate from [[Aesop]]'s Fables.",
+	breadcrumb = "Aesop's Fables",
 	parents = {"terms attributed to a specific source"},
 }
 
@@ -514,11 +520,13 @@ labels["terms making reference to character shapes"] = {
 
 labels["terms derived from sport"] = {
 	description = "{{{langname}}} terms that originate from sport.",
+	breadcrumb = "sport",
 	parents = {"terms attributed to a specific source"},
 }
 
 labels["terms derived from baseball"] = {
 	description = "{{{langname}}} terms that originate from baseball.",
+	breadcrumb = "baseball",
 	parents = {"terms derived from sport"},
 }
 
@@ -566,9 +574,22 @@ labels["univerbations"] = {
 }
 
 labels["verb-noun compounds"] = {
-	description = "{{{langname}}} compounds in which the first element is a transitive verb, the second a noun functioning as its direct object, and whose referent is the person or thing doing the action.",
+	description = "{{{langname}}} compounds in which the first element is a transitive verb, the second a noun functioning as its direct object, and whose referent is the person or thing doing the action, or an adjective describing such a person or thing.",
 	umbrella_parents = "Types of compound terms by language",
-	parents = {"compound nouns"},
+	parents = {"verb-object compounds"},
+}
+
+labels["verb-object compounds"] = {
+	description = "{{{langname}}} compounds in which the first element is a transitive verb, the second a term (usually but not always a noun) functioning as its (normally direct) object, and whose referent is the person or thing doing the action, or an adjective describing such a person or thing.",
+	additional = "Examples in English are {{m|en|pickpocket|lit=someone who picks pockets}} and {{m|en|catch-all|lit=something that catches everything}}.",
+	umbrella_parents = "Types of compound terms by language",
+	parents = {"compound terms"},
+}
+
+labels["verb-verb compounds"] = {
+	description = "{{{langname}}} compounds composed of two or more verbs in apposition, often either synonyms or antonyms, and whose referent refers to the result of performing those actions.",
+	umbrella_parents = "Types of compound terms by language",
+	parents = {"compound terms"},
 }
 
 labels["vrddhi derivatives"] = {
@@ -597,14 +618,6 @@ labels["words derived through metathesis"] = {
 for _, fixtype in ipairs({"circumfix", "infix", "interfix", "prefix", "suffix",}) do
 	labels["terms by " .. fixtype] = {
 		description = "{{{langname}}} terms categorized by their " .. fixtype .. "es.",
-		parents = {{name = "terms by etymology", sort = fixtype}, fixtype .. "es"},
-	}
-end
-
--- FIXME: Delete the following after we have renamed all categories.
-for _, fixtype in ipairs({"circumfix", "infix", "interfix", "prefix", "suffix",}) do
-	labels["words by " .. fixtype] = {
-		description = "{{{langname}}} words categorized by their " .. fixtype .. "es.",
 		parents = {{name = "terms by etymology", sort = fixtype}, fixtype .. "es"},
 	}
 end
@@ -691,17 +704,6 @@ raw_categories["Types of compound terms by language"] = {
 	},
 }
 
--- FIXME, delete after renaming the categories
-raw_categories["Types of compound words by language"] = {
-	description = "Umbrella categories covering topics related to types of compound words.",
-	additional = "{{{umbrella_meta_msg}}}",
-	parents = {
-		"Umbrella metacategories",
-		{name = "compound words", is_label = true, sort = " "},
-		{name = "Terms by etymology subcategories by language", sort = " "},
-	},
-}
-
 
 -----------------------------------------------------------------------------
 --                                                                         --
@@ -744,10 +746,10 @@ table.insert(handlers, function(data)
 		local source = require("Module:languages").getByCanonicalName(source_name, true, "allow etym langs")
 
 		local parents = {
-			{ name = "terms by " .. source_name .. " " .. term_type, sort = source:makeSortKey(term) }
+			{ name = "terms by " .. source_name .. " " .. term_type, sort = (source:makeSortKey(term)) }
 		}
 		local umbrella_parents = {
-			{ name = "Terms derived from " .. source_name .. " " .. term_type .. "s", sort = source:makeSortKey(term) }
+			{ name = "Terms derived from " .. source_name .. " " .. term_type .. "s", sort = (source:makeSortKey(term)) }
 		}
 		if id then
 			table.insert(parents, { name = "terms derived from the " .. source_name .. " " .. term_type .. " " .. term, sort = " "})
@@ -914,10 +916,10 @@ table.insert(handlers, function(data)
 		local source = require("Module:languages").getByCanonicalName(source_name, true, "allow etym langs")
 
 		local parents = {
-			{ name = "terms by " .. source_name .. " " .. term_type, sort = source:makeSortKey(term) }
+			{ name = "terms by " .. source_name .. " " .. term_type, sort = (source:makeSortKey(term)) }
 		}
 		local umbrella_parents = {
-			{ name = "Terms derived from " .. source_name .. " " .. term_type .. "s", sort = source:makeSortKey(term) }
+			{ name = "Terms derived from " .. source_name .. " " .. term_type .. "s", sort = (source:makeSortKey(term)) }
 		}
 		if id then
 			table.insert(parents, { name = "terms derived from the " .. source_name .. " " .. term_type .. " " .. term, sort = " "})
@@ -1070,44 +1072,51 @@ table.insert(handlers, function(data)
 		-- Compute description.
 		local desc = "{{{langname}}} terms that originate from " .. source_desc .. "."
 		local additional
-		if source:getType() == "family" then
+		if source:hasType("family") then
 			additional = "This category should, ideally, contain only other categories. Entries can be categorized here, too, when the proper subcategory is unclear. " ..
 				"If you know the exact language from which an entry categorized here is derived, please edit its respective entry."
 		end
 		
 		-- Compute parents.
-		local derived_from_subvariety_of_self = false
+		local derived_from_variety_of_self = false
 		local parent
 		local sortkey = source:getDisplayForm()
-		if source:getType() == "etymology language" then
-			local parcode = source:getParentCode()
-			if parcode and parcode ~= "qfa-iso" and parcode ~= "qfa-not" and parcode ~= "qfa-und" then
-				if data.lang and parcode == data.lang:getCode() then
-					derived_from_subvariety_of_self = true
-					parent = data.lang:getFamily():getDisplayForm()
-				else
-					-- Etymology language parent may be regular language, etymology language,
-					-- or family
-					parent = require("Module:languages").getByCode(parcode, true,
-						"allow etym langs", "allow families"):getDisplayForm()
-				end
+		if source:hasType("etymology-only") then
+			-- By default, `parent` is the source's parent.
+			parent = source:getParent()
+			-- Check if the source is a variety (or subvariety) of the language.
+			if data.lang and source:hasParent(data.lang) then
+				derived_from_variety_of_self = true
 			end
-		else -- regular language or family
+			-- If the language is the direct parent of the source or the parent is "und", then we use the family of the source as `parent` instead.
+			if data.lang and (parent:getCode() == data.lang:getCode() or parent:getCode() == "und") then
+				parent = source:getFamily()
+			end
+		-- Regular language or family.
+		else
 			local fam = source:getFamily()
-			if fam and fam:getCode() ~= "qfa-iso" and fam:getCode() ~= "qfa-not" then
-				parent = fam:getDisplayForm()
+			if fam then
+				parent = fam
 			end
+		end
+		-- If `parent` does not exist, is the same as `source`, or would be "isolate languages" or "not a family", then we discard it.
+		if (not parent) or parent:getCode() == source:getCode() or parent:getCode() == "qfa-iso" or parent:getCode() == "qfa-not" then
+			parent = nil
+			derived_from_variety_of_self = false
+		-- Otherwise, get the display form.
+		else
+			parent = parent:getDisplayForm()
 		end
 		parent = parent and "terms derived from " .. parent or "terms derived from other languages"
 		local parents = {{name = parent, sort = sortkey}}
-		if derived_from_subvariety_of_self then
+		if derived_from_variety_of_self then
 			table.insert(parents, "Category:Categories for terms in a language derived from a term in a subvariety of that language")
 		end
 
 		-- Compute umbrella parents.
 		local umbrella_parents = {
-			source:getType() == "family" and {name = source:getCategoryName(), raw = true, sort = " "} or
-			source:getType() == "etymology language" and {name = "Category:" .. source:getCategoryName(), sort = "terms derived from"} or
+			source:hasType("family") and {name = source:getCategoryName(), raw = true, sort = " "} or
+			source:hasType("etymology-only") and {name = "Category:" .. source:getCategoryName(), sort = "terms derived from"} or
 			{name = source:getCategoryName(), raw = true, sort = "terms derived from"}
 		}
 
@@ -1129,7 +1138,7 @@ end)
 local function get_source_and_source_desc(source_name)
 	local source = require("Module:languages").getByCanonicalName(source_name, true, "allow etym langs", "allow families")
 	local source_desc = source:makeCategoryLink()
-	if source:getType() == "family" then
+	if source:hasType("family") then
 		source_desc = "unknown " .. source_desc
 	end
 	return source, source_desc
@@ -1215,13 +1224,13 @@ end
 --
 local borrowing_specs = {
 	["learned borrowings"] = {
-		from_source_desc = "terms that are learned [[loanword]]s from SOURCE, that is, words that were directly incorporated from SOURCE instead of through normal language contact.",
-		umbrella_desc = "terms that are learned [[loanword]]s, that is, words that were directly incorporated from another language instead of through normal language contact.",
+		from_source_desc = "terms that are learned [[loanword]]s from SOURCE, that is, terms that were directly incorporated from SOURCE instead of through normal language contact.",
+		umbrella_desc = "terms that are learned [[loanword]]s, that is, terms that were directly incorporated from another language instead of through normal language contact.",
 		uses_subtype_handler = true,
 	},
 	["semi-learned borrowings"] = {
-		from_source_desc = "terms that are [[semi-learned borrowing|semi-learned]] [[loanword]]s from SOURCE, that is, words borrowed from SOURCE (a [[classical language]]) into the target language (a modern language) and partly reshaped based on later [[sound change]]s or by analogy with [[inherit]]ed words in the language.",
-		umbrella_desc = "terms that are [[semi-learned borrowing|semi-learned]] [[loanword]]s, that is, words borrowed from a [[classical language]] into a modern language and partly reshaped based on later [[sound change]]s or by analogy with [[inherit]]ed words in the language.",
+		from_source_desc = "terms that are [[semi-learned borrowing|semi-learned]] [[loanword]]s from SOURCE, that is, terms borrowed from SOURCE (a [[classical language]]) into the target language (a modern language) and partly reshaped based on later [[sound change]]s or by analogy with [[inherit]]ed terms in the language.",
+		umbrella_desc = "terms that are [[semi-learned borrowing|semi-learned]] [[loanword]]s, that is, terms borrowed from a [[classical language]] into a modern language and partly reshaped based on later [[sound change]]s or by analogy with [[inherit]]ed terms in the language.",
 		uses_subtype_handler = true,
 	},
 	["orthographic borrowings"]	= {
@@ -1322,35 +1331,44 @@ table.insert(handlers, function(data)
 			["sc"] = {},
 			["sort"] = {},
 			["tr"] = {},
+			["ts"] = {},
 		}
-		local args = require("Module:parameters").process(data.args, params)
+		local args = require("Module:parameters").process(data.args, params, nil, "category tree/poscatboiler/data/terms by etymology")
 		local sc = data.sc or args.sc and require("Module:scripts").getByCode(args.sc, "sc") or nil
-		local m_compound = require("Module:compound")
-		term = m_compound.make_affix(term, data.lang, sc, affixtype)
-		alt = m_compound.make_affix(args.alt, data.lang, sc, affixtype)
-		local tr = m_compound.make_affix(args.tr, data.lang, require("Module:scripts").getByCode("Latn"), affixtype)
+		local m_affix = require("Module:affix")
+		-- Call make_affix to add display hyphens if they're not already present.
+		local affix_term = m_affix.make_affix(term, data.lang, sc, affixtype)
+		local affix_alt = m_affix.make_affix(args.alt, data.lang, sc, affixtype)
+		local affix_tr = m_affix.make_affix(args.tr, data.lang, require("Module:scripts").getByCode("Latn"), affixtype)
+		local affix_ts = m_affix.make_affix(args.ts, data.lang, require("Module:scripts").getByCode("Latn"), affixtype)
 		local m_script_utilities = require("Module:script utilities")
 		local id_text = id and " (" .. id .. ")" or ""
 
 		-- Compute parents.
 		local parents = {}
-		-- FIXME, remove the conditions on "words" when we've renamed the categories
 		if id then
-			if pos == "terms" or pos == "words" then
+			if pos == "words" then
+				-- don't allow formerly-named categories with "words"
+				return nil
+			end
+			if pos == "terms" then
 				table.insert(parents, {name = labelpref .. term, sort = id, args = args})
 			else
 				table.insert(parents, {name = "terms " .. affixtype .. "ed with " .. term_and_id, sort = id .. ", " .. pos, args = args})
 				table.insert(parents, {name = labelpref .. term, sort = id, args = args})
 			end
-		elseif pos ~= "terms" and pos ~= "words" then
+		elseif pos == "words" then
+			-- don't allow formerly-named categories with "words"
+			return nil
+		elseif pos ~= "terms" then
 			table.insert(parents, {name = "terms " .. affixtype .. "ed with " .. term, sort = pos, args = args})
 		end
-		table.insert(parents, {name = (pos == "words" and "words by " or "terms by ") .. affixtype, sort = data.lang:makeSortKey(data.lang:makeEntryName(args.sort or term))})
+		table.insert(parents, {name = "terms by " .. affixtype, sort = (data.lang:makeSortKey((data.lang:makeEntryName(args.sort or term))))})
 
 		return {
 			description = "{{{langname}}} " .. pos .. " " .. desc[affixtype] .. " " .. require("Module:links").full_link({
-				lang = data.lang, term = term, alt = alt, sc = sc, id = id, tr = tr}, "term") .. ".",
-			breadcrumb = (pos == "terms" or pos == "words") and m_script_utilities.tag_text(alt or term, data.lang, sc, "term") .. id_text or pos,
+				lang = data.lang, term = affix_term, alt = alt, sc = sc, id = id, tr = affix_tr, ts = affix_ts}, "term") .. ".",
+			breadcrumb = pos == "terms" and m_script_utilities.tag_text(alt or affix_term, data.lang, sc, "term") .. id_text or pos,
 			displaytitle = "{{{langname}}} " .. labelpref .. m_script_utilities.tag_text(term, data.lang, sc, "term") .. id_text,
 			parents = parents,
 			umbrella = false,
