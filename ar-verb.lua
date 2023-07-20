@@ -1,3 +1,13 @@
+local export = {}
+
+local m_links = require("Module:links")
+local m_table = require("Module:table")
+local ar_utilities = require("Module:ar-utilities")
+local ar_nominals = require("Module:ar-nominals")
+
+local lang = require("Module:languages").getByCode("ar")
+local yesno = require("Module:yesno")
+
 --[[
 
 Author: User:Benwing, from early version by User:Atitarev, User:ZxxZxxZ
@@ -63,13 +73,7 @@ Irregular verbs already implemented:
 
 --]]
 
-local m_links = require("Module:links")
-local ar_utilities = require("Module:ar-utilities")
-local ar_nominals = require("Module:ar-nominals")
-
-local lang = require("Module:languages").getByCode("ar")
 local curtitle = mw.title.getCurrentTitle().fullText
-local yesno = require("Module:yesno")
 
 local rfind = mw.ustring.find
 local rsubn = mw.ustring.gsub
@@ -81,8 +85,6 @@ local u = mw.ustring.char
 
 -- don't display i3rab in nominal forms (verbal nouns, participles)
 local no_nominal_i3rab = true
-
-local export = {}
 
 -- Within this module, conjugations are the functions that do the actual
 -- conjugating by creating the parts of a basic verb.
@@ -163,52 +165,9 @@ local MU    = M .. U
 --                                Utility functions                          --
 -------------------------------------------------------------------------------
 
--- "if not empty" -- convert empty strings to nil; also strip quotes around
--- strings, to allow embedded spaces to be included
-local function ine(x)
-	if x == nil then
-		return nil
-	elseif rfind(x, '^".*"$') then
-		local ret = rmatch(x, '^"(.*)"$')
-		return ret
-	elseif rfind(x, "^'.*'$") then
-		local ret = rmatch(x, "^'(.*)'$")
-		return ret
-	elseif x == "" then
-		return nil
-	else
-		return x
-	end
-end
-
--- true if array contains item
-local function contains(tab, item)
-	for _, value in pairs(tab) do
-		if value == item then
-			return true
-		end
-	end
-	return false
-end
-
--- append array to array
-local function append_array(tab, items)
-	for _, item in ipairs(items) do
-		table.insert(tab, item)
-	end
-end
-
--- append to array if element not already present
-local function insert_if_not(tab, item)
-	if not contains(tab, item) then
-		table.insert(tab, item)
-	end
-end
-
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
-	local retval = rsubn(term, foo, bar)
-	return retval
+	return (rsubn(term, foo, bar))
 end
 
 local function links(text, face, id)
@@ -224,7 +183,7 @@ local function tag_text(text, tag, class)
 end
 
 local function track(page)
-	require("Module:debug").track("ar-verb/" .. page)
+	require("Module:debug/track")("ar-verb/" .. page)
 	return true
 end
 
@@ -282,7 +241,7 @@ local function form_probably_impersonal_passive(form)
 end
 
 local function form_probably_no_passive(form, weakness, past_vowel, nonpast_vowel)
-	return form == "I" and weakness ~= "hollow" and contains(past_vowel, "u") or
+	return form == "I" and weakness ~= "hollow" and m_table.contains(past_vowel, "u") or
 		form == "VII" or form == "IX" or form == "XI" or form == "XII" or
 		form == "XIII" or form == "XIV" or form == "XV" or form == "IIq" or
 		form == "IIIq" or form == "IVq"
@@ -655,8 +614,7 @@ local function inflect_tense_1(data, tense, prefixes, stems, endings, pnums)
 			-- partly irregular inflections
 			if prefix ~= "-" and stem ~= "-" then
 				local part = prefix .. stem .. ending
-				if ine(part) and part ~= "-"
-						-- and (not data.impers or pnums[i] == "3sg")
+				if part ~= "" and part ~= "-" -- and (not data.impers or pnums[i] == "3sg")
 						then
 					table.insert(data.forms[pnums[i] .. "-" .. tense], part)
 				end
@@ -2315,15 +2273,11 @@ local function weakness_from_radicals(form, rad1, rad2, rad3, rad4)
 	return weakness
 end
 
--- Guts of conjugation functions. Shared between {{temp|ar-conj}} and
--- {{temp|ar-verb}}, among others. ARGS is the frame parent arguments,
--- as returned by get_frame_args() (i.e. with arguments passed through ine()).
--- ARGIND is the numbered argument holding the verb form (either 1 or 2);
--- if form is I, the next two arguments are the past and non-past vowels;
--- afterwards are the (optional) radicals. Return five values:
--- DATA, FORM, WEAKNESS, PAST_VOWEL, NONPAST_VOWEL. The last two are
--- arrays of vowels (each one 'a', 'i' or 'u'), since there may be more
--- than one, or none in the case of non-form-I verbs.
+-- Guts of conjugation functions. Shared between {{temp|ar-conj}} and {{temp|ar-verb}}, among others. ARGS is the
+-- arguments after processing by [[Module:parameters]]. ARGIND is the numbered argument holding the verb form (either 1
+-- or 2); if form is I, the next two arguments are the past and non-past vowels; afterwards are the (optional) radicals.
+-- Return five values: DATA, FORM, WEAKNESS, PAST_VOWEL, NONPAST_VOWEL. The last two are arrays of vowels (each one 'a',
+-- 'i' or 'u'), since there may be more than one, or none in the case of non-form-I verbs.
 local function conjugate(args, argind)
 	local data = {forms = {}, categories = {}, headword_categories = {}}
 
@@ -2421,9 +2375,9 @@ local function conjugate(args, argind)
 		-- Do this check here rather than in infer_radicals() so that we don't
 		-- get an error if the appropriate radical is given but not others.
 		if form == "I" and (rad2 == "w" or rad2 == "y") then
-			if contains(nonpast_vowel, "i") then
+			if m_table.contains(nonpast_vowel, "i") then
 				rad2 = Y
-			elseif contains(nonpast_vowel, "u") then
+			elseif m_table.contains(nonpast_vowel, "u") then
 				rad2 = W
 			else
 				error("Unable to guess middle radical of hollow form I verb; " ..
@@ -2705,7 +2659,7 @@ local function get_spans(part)
 	-- omitting duplicates
 	for _, entry in ipairs(part) do
 		for _, e in ipairs(postprocess_term(entry)) do
-			insert_if_not(part_nondup, e)
+			m_table.insertIfNot(part_nondup, e)
 		end
 	end
 	-- convert each individual entry into Arabic and Latin span
@@ -2716,7 +2670,7 @@ local function get_spans(part)
 		if entry ~= "—" and entry ~= "?" then
 			-- multiple Arabic entries may map to the same Latin entry
 			-- (happens particularly with variant ways of spelling hamza)
-			insert_if_not(latin_spans, (lang:transliterate(entry)))
+			m_table.insertIfNot(latin_spans, (lang:transliterate(entry)))
 		end
 	end
 	return arabic_spans, latin_spans
@@ -2724,7 +2678,6 @@ end
 
 -- Make the conjugation table. Called from export.show().
 local function make_table(data, title, form, intrans)
-
 	local forms = data.forms
 	local arabic_spans_3sm_perf, _
 	if data.passive == "only" or data.passive == "only-impers" then
@@ -3149,23 +3102,35 @@ end
 --                              External entry points                        --
 -------------------------------------------------------------------------------
 
-local function get_args(args)
-	local origargs = args
-	local args = {}
-	-- Convert empty arguments to nil, and "" or '' arguments to empty
-	for k, v in pairs(origargs) do
-		args[k] = ine(v)
-	end
-	return origargs, args
+local function add_conjugation_args(params, firstarg)
+	params[firstarg] = {}
+	params[firstarg + 1] = {}
+	params[firstarg + 2] = {}
+	params[firstarg + 3] = {}
+	params[firstarg + 4] = {}
+	params[firstarg + 5] = {}
+	params["I"] = {}
+	params["II"] = {}
+	params["III"] = {}
+	params["IV"] = {}
+	params["vn"] = {}
+	params["vn-id"] = {list = true, allow_holes = true, require_index = true}
+	params["passive"] = {}
+	params["variant"] = {}
+	params["noimp"] = {type = "boolean"}
 end
 
-local function get_frame_args(frame)
-	return get_args(frame:getParent().args)
-end
 
 -- Implement {{ar-conj}}.
 function export.show(frame)
-	local origargs, args = get_frame_args(frame)
+	local parargs = frame:getParent().args
+
+	local params = {
+		["intrans"] = {},
+	}
+	add_conjugation_args(params, 1)
+
+	local args = require("Module:parameters").process(parargs, params)
 
 	local data, form, weakness, past_vowel, nonpast_vowel = conjugate(args, 1)
 
@@ -3229,7 +3194,22 @@ end
 -- FIXME: Move this into [[Module:ar-headword]]. Standardize parameter handling with [[Module:parameters]]. Use standard
 -- functionality in [[Module:head]].
 function export.headword(frame)
-	local origargs, args = get_frame_args(frame)
+	local parargs = frame:getParent().args
+
+	local params = {
+		["head"] = {list = true, disallow_holes = true},
+		["tr"] = {list = true, allow_holes = true},
+		["useparam"] = {},
+		["noimpf"] = {type = "boolean"},
+		["impf"] = {},
+		["impfhead"] = {},
+		["impftr"] = {},
+		["id"] = {},
+		["sort"] = {},
+	}
+	add_conjugation_args(params, 1)
+
+	local args = require("Module:parameters").process(parargs, params)
 
 	local data, form, weakness, past_vowel, nonpast_vowel = conjugate(args, 1)
 	local use_params = form == "I" or args["useparam"]
@@ -3253,15 +3233,9 @@ function export.headword(frame)
 	if use_params and form ~= "I" then
 		table.insert(data.headword_categories, "Arabic augmented verbs with parameter override")
 	end
-	if use_params and args["head"] then
-		heads = {args["head"], args["head2"], args["head3"]}
-		trs = {args["tr"], args["tr2"], args["tr3"]}
-		if form == "I" then
-			table.insert(data.headword_categories, "Arabic form-I verbs with headword perfect determined through param, not past vowel")
-		end
-	elseif use_params and args["tr"] then
-		heads = {}
-		trs = {args["tr"]}
+	if use_params and (#args["head"] > 0 or args["tr"].maxindex > 0) then
+		heads = args["head"]
+		trs = args["tr"]
 		if form == "I" then
 			table.insert(data.headword_categories, "Arabic form-I verbs with headword perfect determined through param, not past vowel")
 		end
@@ -3283,7 +3257,7 @@ function export.headword(frame)
 	local form_text = ' <span class="gender">[[Appendix:Arabic verbs#Form ' .. form .. '|<abbr title="Verb form ' ..
 	  form .. '">' .. form .. '</abbr>]]</span>'
 
-	local noimpf = yesno(args["noimpf"], false)
+	local noimpf = args["noimpf"]
 	local impf_arabic, impf_tr
 	if use_params and noimpf then
 		impf_arabic = {}
@@ -3319,7 +3293,7 @@ function export.headword(frame)
 
 	return
 		require("Module:headword").full_headword({lang = lang, pos_category = "verbs", categories = data.headword_categories,
-			heads = heads, translits = trs, sort_key = args["sort"]}) ..
+			heads = heads, translits = trs, sort_key = args["sort"], id = args["id"]}) ..
 		form_text .. impf_text
 end
 
@@ -3330,8 +3304,11 @@ function export.headword2(parargs, args)
 end
 
 -- Implementation of export.past3sm() and export.past3sm_all().
-local function past3sm(frameargs, doall)
-	local origargs, args = get_args(frameargs)
+local function past3sm(parargs, doall)
+	local params = {}
+	add_conjugation_args(params, 1)
+
+	local args = require("Module:parameters").process(parargs, params)
 
 	local data, form, weakness, past_vowel, nonpast_vowel =	conjugate(args, 1)
 
@@ -3384,8 +3361,14 @@ function export.past3sm_all2(parargs, args)
 end
 
 -- Implementation of export.verb_part() and export.verb_part_all().
-local function verb_part(frameargs, doall)
-	local origargs, args = get_args(frameargs)
+local function verb_part(parargs, doall)
+	local params = {
+		[1] = {},
+	}
+	add_conjugation_args(params, 2)
+
+	local args = require("Module:parameters").process(parargs, params)
+
 	local part = args[1]
 	local data, form, weakness, past_vowel, nonpast_vowel =	conjugate(args, 2)
 	local arabic, latin = get_spans(data.forms[part])
@@ -3428,8 +3411,13 @@ function export.verb_part_all2(parargs, args)
 end
 
 -- Return a property of the conjugation other than a verb part.
-local function verb_prop(frameargs)
-	local origargs, args = get_args(frameargs)
+local function verb_prop(parargs)
+	local params = {
+		[1] = {},
+	}
+	add_conjugation_args(params, 2)
+
+	local args = require("Module:parameters").process(parargs, params)
 
 	local prop = args[1]
 	local data, form, weakness, past_vowel, nonpast_vowel = conjugate(args, 2)
@@ -3492,7 +3480,31 @@ function export.verb_prop2(parargs, args)
 end
 
 function export.verb_forms(frame)
-	local origargs, args = get_frame_args(frame)
+	local parargs = frame:getParent().args
+	local params = {
+		[1] = {},
+		[2] = {},
+		[3] = {},
+		[4] = {},
+		[5] = {},
+	}
+	for _, form in ipairs(allowed_forms) do
+		-- FIXME: We go up to 5 here. The code supports unlimited variants but it's unlikely we will ever see more than
+		-- 2.
+		for index = 1, 5 do
+			local prefix = index == 1 and form or form .. index
+			params[prefix .. "-pv"] = {}
+			for _, extn in ipairs { "", "-vn", "-ap", "-pp" } do
+				params[prefix .. extn] = {}
+				params[prefix .. extn .. "-head"] = {}
+				-- FIXME: No -tr?
+				params[prefix .. extn .. "-gloss"] = {}
+			end
+		end
+	end
+
+	local args = require("Module:parameters").process(parargs, params)
+
 	local i = 1
 	local past_vowel_re = "^[aui,]*$"
 	local combined_root = nil
@@ -3603,7 +3615,7 @@ function export.verb_forms(frame)
 					table.insert(args, props["pv"]) -- past vowel
 					table.insert(args, "")
 				end
-				append_array(args, split_root)
+				m_table.extendList(args, split_root)
 			end
 			if props["verb"] == true then
 				args = {}
@@ -3631,7 +3643,7 @@ function export.verb_forms(frame)
 				local linktext = {}
 				local splitheads = rsplit(props["verb"], "[,،]")
 				for _, head in ipairs(splitheads) do
-					table.insert(linktext, m_links.full_link({lang = lang, term = head, gloss = ine(props["verb-gloss"])}))
+					table.insert(linktext, m_links.full_link({lang = lang, term = head, gloss = props["verb-gloss"]}))
 				end
 				text = text .. table.concat(linktext, ", ")
 				table.insert(textarr, text)
@@ -3643,7 +3655,7 @@ function export.verb_forms(frame)
 						local linktext = {}
 						local splitheads = rsplit(props[deriv], "[,،]")
 						for _, head in ipairs(splitheads) do
-							table.insert(linktext, m_links.full_link({lang = lang, term = head, gloss = ine(props[deriv .. "-gloss"])}))
+							table.insert(linktext, m_links.full_link({lang = lang, term = head, gloss = props[deriv .. "-gloss"]}))
 						end
 						text = text .. table.concat(linktext, ", ")
 						table.insert(textarr, text)
@@ -3690,7 +3702,7 @@ function export.infer_radicals(headword, form)
 				error("For form " .. form .. ", letter " .. index ..
 					" must be " .. must .. ", not " .. letter, 2)
 			end
-		elseif not contains(must, letter) then
+		elseif not m_table.contains(must, letter) then
 			error("For form " .. form .. ", radical " .. index ..
 				" must be one of " .. table.concat(must, " ") .. ", not " .. letter, 2)
 		end
