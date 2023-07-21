@@ -1337,10 +1337,10 @@ table.insert(handlers, function(data)
 		local sc = data.sc or args.sc and require("Module:scripts").getByCode(args.sc, "sc") or nil
 		local m_affix = require("Module:affix")
 		-- Call make_affix to add display hyphens if they're not already present.
-		local affix_term = m_affix.make_affix(term, data.lang, sc, affixtype)
-		local affix_alt = m_affix.make_affix(args.alt, data.lang, sc, affixtype)
-		local affix_tr = m_affix.make_affix(args.tr, data.lang, require("Module:scripts").getByCode("Latn"), affixtype)
-		local affix_ts = m_affix.make_affix(args.ts, data.lang, require("Module:scripts").getByCode("Latn"), affixtype)
+		local _, display_term, lookup_term = m_affix.make_affix(term, data.lang, sc, affixtype, nil, true)
+		local _, display_alt = m_affix.make_affix(args.alt, data.lang, sc, affixtype)
+		local _, display_tr = m_affix.make_affix(args.tr, data.lang, require("Module:scripts").getByCode("Latn"), affixtype)
+		local _, display_ts = m_affix.make_affix(args.ts, data.lang, require("Module:scripts").getByCode("Latn"), affixtype)
 		local m_script_utilities = require("Module:script utilities")
 		local id_text = id and " (" .. id .. ")" or ""
 
@@ -1365,9 +1365,34 @@ table.insert(handlers, function(data)
 		end
 		table.insert(parents, {name = "terms by " .. affixtype, sort = (data.lang:makeSortKey((data.lang:makeEntryName(args.sort or term))))})
 
+		-- If other affixes are mapped to this one, show them.
+		local additional
+
+		if data.lang then
+			local langcode = data.lang:getCode()
+			if m_affix.langs_with_lang_specific_data[langcode] then
+				local langdata = mw.loadData(m_affix.affix_lang_data_module_prefix .. langcode)
+				local variants = {}
+				if langdata.affix_mappings then
+					for variant, canonical in pairs(langdata.affix_mappings) do
+						-- Above, we converted the stripped link term as we received it to the lookup form, so we
+						-- can look up the variants that are mapped to this term. Once we find them, map them to
+						-- display form.
+						if canonical == lookup_term then
+							local _, display_variant = m_affix.make_affix(variant, data.lang, sc, affixtype)
+							table.insert(variants, "{{m|" .. langcode .. "|" .. display_variant .. "}}")
+						end
+					end
+					additional = ("This category also includes terms %sed with %s."):format(affixtype,
+						require("Module:table").serialCommaJoin(variants))
+				end
+			end
+		end
+
 		return {
 			description = "{{{langname}}} " .. pos .. " " .. desc[affixtype] .. " " .. require("Module:links").full_link({
-				lang = data.lang, term = affix_term, alt = alt, sc = sc, id = id, tr = affix_tr, ts = affix_ts}, "term") .. ".",
+				lang = data.lang, term = display_term, alt = display_alt, sc = sc, id = id, tr = display_tr, ts = display_ts}, "term") .. ".",
+			additional = additional,
 			breadcrumb = pos == "terms" and m_script_utilities.tag_text(alt or affix_term, data.lang, sc, "term") .. id_text or pos,
 			displaytitle = "{{{langname}}} " .. labelpref .. m_script_utilities.tag_text(term, data.lang, sc, "term") .. id_text,
 			parents = parents,
