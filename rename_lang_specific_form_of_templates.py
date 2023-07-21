@@ -1487,8 +1487,8 @@ def en_verb_form(parts):
   return (
     "infl of", # no need for 'verb form of', I think; we can categorize without it
     # lang= occurs at least once, and is ignored.
-    # nodot= occurs a few times and is ignored.
-    ("error-if", ("present-except", ["1", "2", "3", "t", "gloss", "id", "lang", "nodot"])),
+    # nodot= and nocat= occur a few times and are ignored.
+    ("error-if", ("present-except", ["1", "2", "3", "t", "gloss", "id", "lang", "nodot", "nocat"])),
     ("set", "1", [
       "en",
       ("copy", "1"),
@@ -4555,6 +4555,35 @@ zh_specs = [
   zh_headword("zh-verb", "verb"),
 ]
 
+def various_lang_phrase(langcode):
+  return (
+    "head",
+    ("comment", "rename {{__TEMPNAME__}} to {{head|%s|phrase}}" % (langcode)),
+    # ignore ts=; present occasionally in {{bn-phrase}}
+    ("error-if", ("present-except", ["1", "head", "tr", "ts", "sort"])),
+    ("set", "1", [
+      langcode,
+      "phrase",
+    ]),
+    ("copy", "head"),
+    ("copy", "1", "head"),
+    ("copy", "tr"),
+    ("copy", "sort"),
+  )
+
+various_lang_phrase_specs = [
+  ("en-phrase", various_lang_phrase("en")),
+  ("es-phrase", various_lang_phrase("es")),
+  ("eo-phrase", various_lang_phrase("eo")),
+  ("de-phrase", various_lang_phrase("de")),
+  ("nl-phrase", various_lang_phrase("nl")),
+  ("bn-phrase", various_lang_phrase("bn")),
+  ("fi-phrase", various_lang_phrase("fi")),
+  ("tr-phrase", various_lang_phrase("tr")),
+  ("da-phrase", various_lang_phrase("da")),
+  ("lv-phrase", various_lang_phrase("lv")),
+]
+
 def non_lang_specific_tagged_form_of(tags, tempname="infl of", ignore_nocat=True):
   return tuple([
     tempname,
@@ -4665,6 +4694,7 @@ templates_to_rename_specs = (
   ur_specs +
   misc_templates_to_rewrite +
   zh_specs +
+  various_lang_phrase_specs +
   misc_non_lang_specific_specs +
   participle_non_lang_specific_specs +
   []
