@@ -188,14 +188,14 @@ local function parse_terms_with_inline_modifiers(paramname, val, lang)
 			splitchar = ",",
 		})
 	else
-        if val:find(",<") then
-        	-- this happens when there's an embedded {{,}} template, as in [[MMR]], [[TMA]], [[DEI]], where an initialism
-        	-- expands to multiple terms; easiest not to try and parse the lemma spec as multiple lemmas
-        	retval = {val}
-        elseif val:find(",%s") then
-            retval = require(put_module).split_on_comma(val)
-        else
-            retval = rsplit(val, ",")
+		if val:find(",<") then
+			-- this happens when there's an embedded {{,}} template, as in [[MMR]], [[TMA]], [[DEI]], where an initialism
+			-- expands to multiple terms; easiest not to try and parse the lemma spec as multiple lemmas
+			retval = {val}
+		elseif val:find(",%s") then
+			retval = require(put_module).split_on_comma(val)
+		else
+			retval = rsplit(val, ",")
 		end
 		for i, split in ipairs(retval) do
 			retval[i] = generate_obj(split)
@@ -217,16 +217,12 @@ end
 -- entry itself; TERM_PARAM + 1 will be the display text, and TERM_PARAM + 2
 -- will be the gloss, unless NO_NUMBERED_GLOSS is given.
 local function add_link_params(parent_args, params, term_param, no_numbered_gloss)
-	-- See if any params for the second or higher term exist.
-	local multiple_lemmas = false
 	for k, v in pairs(parent_args) do
 		if type(k) == "string" then
 			local base, num = k:match("^([a-z]+)([0-9]+)$")
 			if base and link_param_set[base] then
-				multiple_lemmas = true
 				track("multiple-lemmas")
 				error("Support for the separate-parameter style of multiple lemmas in form-of templates is going away; use a comma-separated lemma param with inline modifiers")
-				break
 			end
 		end
 	end
@@ -235,33 +231,17 @@ local function add_link_params(parent_args, params, term_param, no_numbered_glos
 	if not no_numbered_gloss then
 		params[term_param + 2] = {alias_of = "t"}
 	end
-	if not multiple_lemmas then
-		-- Numbered params controlling link display
-		params[term_param] = {}
+	-- Numbered params controlling link display
+	params[term_param] = {}
 
-		-- Named params controlling link display
-		params["gloss"] = {alias_of = "t"}
-		params["g"] = {list = true}
-		for _, param in ipairs(link_params) do
-			if param ~= "gloss" and param ~= "g" and param ~= "term" then
-				params[param] = {}
-			end
-		end
-	else
-		-- Numbered params controlling link display
-		params[term_param] = { list = "term", allow_holes = true }
-
-		-- Named params controlling link display
-		params["gloss"] = { alias_of = "t", list = true, allow_holes = true }
-		local list_spec = { list = true, allow_holes = true }
-		for _, param in ipairs(link_params) do
-			if param ~= "gloss" and param ~= "term" then
-				params[param] = list_spec
-			end
+	-- Named params controlling link display
+	params["gloss"] = {alias_of = "t"}
+	params["g"] = {list = true}
+	for _, param in ipairs(link_params) do
+		if param ~= "gloss" and param ~= "g" and param ~= "term" then
+			params[param] = {}
 		end
 	end
-
-	return multiple_lemmas
 end
 
 
@@ -291,9 +271,8 @@ end
 
 --[=[
 Given processed invocation arguments IARGS and processed parent arguments ARGS, as well as TERM_PARAM (the parent
-argument specifying the first main entry/lemma), COMPAT (true if the language code is found in args["lang"] instead of
-args[1]) and MULTIPLE_LEMMAS (true if there is more than one lemma, meaning that ARGS uses a different and more general
-structure), return an object as follows:
+argument specifying the first main entry/lemma) and COMPAT (true if the language code is found in args["lang"] instead
+of args[1]), return an object as follows:
 {
 	lang = LANG,
 	lemmas = {LEMMA_OBJ, LEMMA_OBJ, ...},
@@ -323,7 +302,7 @@ where
 
 This is a subfunction of construct_form_of_text().
 ]=]
-local function get_lemmas_and_categories(iargs, args, term_param, compat, multiple_lemmas, base_lemma_params)
+local function get_lemmas_and_categories(iargs, args, term_param, compat, base_lemma_params)
 	local lang = args[compat and "lang" or 1] or iargs["lang"] or "und"
 	lang = require("Module:languages").getByCode(lang, compat and "lang" or 1)
 
@@ -361,7 +340,7 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, multip
 		lemmas = nil
 	elseif iargs["linktext"] then
 		lemmas = iargs["linktext"]
-	elseif not multiple_lemmas then
+	else
 		-- Only one lemma. We use a simpler structure in `args` to save memory.
 		local term = args[term_param]
 
@@ -404,62 +383,6 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, multip
 				args[param] then
 				lemmas[1][param] = args[param]
 			end
-		end
-	else
-		lemmas = {}
-		-- FIXME! Previously there was only one term parameter but multiple genders. For compatibility, if we see only
-		-- one term but multiple genders, allow this and convert the genders to the new format, for further
-		-- processing. Also track such usages so we can convert them.
-		if args[term_param].maxindex <= 1 and args["g"].maxindex > 1 then
-			local genders = {}
-			for i = 1, args["g"].maxindex do
-				if args["g"][i] then
-					table.insert(genders, args["g"][i])
-				end
-			end
-			args["g"] = {table.concat(genders, ",")}
-			args["g"].maxindex = 1
-			track("one-term-multiple-genders")
-		end
-
-		-- Find the maximum index among any of the list parameters.
-		local maxmaxindex = 0
-		for k, v in pairs(args) do
-			if type(v) == "table" and v.maxindex and v.maxindex > maxmaxindex then
-				maxmaxindex = v.maxindex
-			end
-		end
-
-		for i = 1, maxmaxindex do
-			local term = args[term_param][i]
-
-			if not term and not args["alt"][i] and not args["tr"][i] and not args["ts"][i] then
-				if i == 1 and mw.title.getCurrentTitle().nsText == "Template" then
-					term = "term"
-				else
-					error("No linked-to term specified; either specify term, alt, translit or transcription")
-				end
-			end
-
-			add_term_tracking_categories(term)
-
-			local sc = args["sc"][i] or iargs["sc"]
-			sc = get_script(sc, "sc" .. (i == 1 and "" or i))
-
-			local lemma_obj = {
-				lang = lang,
-				sc = sc,
-				term = term,
-				genders = args["g"][i] and rsplit(args["g"][i], ",") or {},
-				gloss = args["t"][i],
-			}
-			for _, param in ipairs(link_params) do
-				if param ~= "sc" and param ~= "term" and param ~= "g" and param ~= "gloss" and param ~= "t" then
-					lemma_obj[param] = args[param][i]
-				end
-			end
-
-			table.insert(lemmas, lemma_obj)
 		end
 	end
 
@@ -506,8 +429,8 @@ end
 --     period/dot.
 -- (2) Any extra categories to add the page to (other than those that can be derived from parameters specified to the
 --     invocation or parent arguments, which will automatically be added to the page).
-local function construct_form_of_text(iargs, args, term_param, compat, multiple_lemmas, base_lemma_params, do_form_of)
-	local lemma_data = get_lemmas_and_categories(iargs, args, term_param, compat, multiple_lemmas, base_lemma_params)
+local function construct_form_of_text(iargs, args, term_param, compat, base_lemma_params, do_form_of)
+	local lemma_data = get_lemmas_and_categories(iargs, args, term_param, compat, base_lemma_params)
 
 	local form_of_text, lang_cats = do_form_of(lemma_data)
 	extend_list(lemma_data.categories, lang_cats)
@@ -628,9 +551,9 @@ function export.form_of_t(frame)
 		["pagename"] = {}, -- for testing, etc.
 	}
 
-	local multiple_lemmas, base_lemma_params
+	local base_lemma_params
 	if not iargs["nolink"] and not iargs["linktext"] then
-		multiple_lemmas = add_link_params(parent_args, params, term_param)
+		add_link_params(parent_args, params, term_param)
 		base_lemma_params = add_base_lemma_params(parent_args, iargs, params, compat)
 	end
 
@@ -659,7 +582,7 @@ function export.form_of_t(frame)
 		text = require("Module:string utilities").ucfirst(text)
 	end
 
-	return construct_form_of_text(iargs, args, term_param, compat, multiple_lemmas, base_lemma_params,
+	return construct_form_of_text(iargs, args, term_param, compat, base_lemma_params,
 		function(lemma_data)
 			return m_form_of.format_form_of {text = text, lemmas = lemma_data.lemmas, enclitics = lemma_data.enclitics,
 				base_lemmas = lemma_data.base_lemmas, lemma_face = "term", posttext = iargs["posttext"]}, {}
@@ -677,9 +600,8 @@ It returns that actual definition-line text including terminating period/full-st
 should be directly returned as the template function's return value. JOINER is the optional strategy to join multipart
 tags for display; currently accepted values are "and", "slash", "en-dash"; defaults to "slash".
 ]=]
-local function construct_tagged_form_of_text(iargs, args, term_param, compat, multiple_lemmas, base_lemma_params, tags,
-	joiner)
-	return construct_form_of_text(iargs, args, term_param, compat, multiple_lemmas, base_lemma_params,
+local function construct_tagged_form_of_text(iargs, args, term_param, compat, base_lemma_params, tags, joiner)
+	return construct_form_of_text(iargs, args, term_param, compat, base_lemma_params,
 		function(lemma_data)
 			-- NOTE: tagged_inflections returns two values, so we do too.
 			return m_form_of.tagged_inflections {
@@ -784,9 +706,9 @@ function export.tagged_form_of_t(frame)
 		["pagename"] = {}, -- for testing, etc.
 	}
 
-	local multiple_lemmas, base_lemma_params
+	local base_lemma_params
 	if not iargs["nolink"] and not iargs["linktext"] then
-		multiple_lemmas = add_link_params(parent_args, params, term_param)
+		add_link_params(parent_args, params, term_param)
 		base_lemma_params = add_base_lemma_params(parent_args, iargs, params, compat)
 	end
 
@@ -806,7 +728,7 @@ function export.tagged_form_of_t(frame)
 	local args = process_parent_args("tagged-form-of-t", parent_args,
 		params, iargs["def"], iargs["ignore"], ignored_params, "tagged_form_of_t")
 
-	return construct_tagged_form_of_text(iargs, args, term_param, compat, multiple_lemmas, base_lemma_params,
+	return construct_tagged_form_of_text(iargs, args, term_param, compat, base_lemma_params,
 		split_inflection_tags(iargs[1], iargs["split_tags"]))
 end
 
@@ -911,9 +833,9 @@ function export.inflection_of_t(frame)
 		["pagename"] = {}, -- for testing, etc.
 	}
 
-	local multiple_lemmas, base_lemma_params
+	local base_lemma_params
 	if not iargs["nolink"] and not iargs["linktext"] then
-		multiple_lemmas = add_link_params(parent_args, params, term_param, "no-numbered-gloss")
+		add_link_params(parent_args, params, term_param, "no-numbered-gloss")
 		base_lemma_params = add_base_lemma_params(parent_args, iargs, params, compat)
 	end
 
@@ -967,8 +889,8 @@ function export.inflection_of_t(frame)
 		end
 	end
 
-	return construct_tagged_form_of_text(iargs, args, term_param, compat, multiple_lemmas, base_lemma_params,
-		infls, parent_args["joiner"])
+	return construct_tagged_form_of_text(iargs, args, term_param, compat, base_lemma_params, infls,
+		parent_args["joiner"])
 end
 
 --[=[
