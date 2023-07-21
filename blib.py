@@ -1536,6 +1536,9 @@ def try_repeatedly(fun, errandpagemsg, operation="save", bad_value_ret=None, max
     except (pywikibot.exceptions.LockedPageError, pywikibot.exceptions.NoUsernameError) as e:
       log_exception("Page is protected", e, skipping=True)
       return bad_value_ret
+    except pywikibot.exceptions.AbuseFilterDisallowedError as e:
+      log_exception("Abuse filter: Disallowed", e, skipping=True)
+      return bad_value_ret
     # Instead, retry, which will save the page.
     #except pywikibot.exceptions.PageSaveRelatedError as e:
     #  log_exception("Unable to save (abuse filter?)", e, skipping=True)
