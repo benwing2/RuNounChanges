@@ -340,8 +340,11 @@ function export.affix(frame)
 		end
 	end
 
-	return m_affix.show_affixes(lang, sc, parts, args["pos"], args["sort"],
-		args["type"], args["nocap"], args["notext"], args["nocat"], args["lit"], args["force_cat"])
+	return m_affix.show_affixes {
+		lang = lang, sc = sc, parts = parts, pos = args["pos"], sort_key = args["sort"], type = args["type"],
+		nocap = args["nocap"], notext = args["notext"], nocat = args["nocat"], lit = args["lit"],
+		force_cat = args["force_cat"]
+	}
 end
 
 function export.compound(frame)
@@ -371,8 +374,11 @@ function export.compound(frame)
 		end
 	end
 
-	return m_affix.show_compound(lang, sc, parts, args["pos"], args["sort"],
-		args["type"], args["nocap"], args["notext"], args["nocat"], args["lit"], args["force_cat"])
+	return m_affix.show_compound {
+		lang = lang, sc = sc, parts, pos = args["pos"], sort_key = args["sort"], type = args["type"],
+		nocap = args["nocap"], notext = args["notext"], nocat = args["nocat"], lit = args["lit"],
+		force_cat = args["force_cat"]
+	}
 end
 
 
@@ -413,7 +419,10 @@ function export.compound_like(frame)
 		end
 	end
 
-	return m_affix.show_compound_like(lang, sc, parts, args["sort"], text, oftext, cat, args["nocat"], args["lit"], args["force_cat"])
+	return m_affix.show_compound_like {
+		lang = lang, sc = sc, parts = parts, sort_key = args["sort"], text = text, oftext = oftext, cat = cat,
+		nocat = args["nocat"], lit = args["lit"], force_cat = args["force_cat"]
+	}
 end
 
 
@@ -484,8 +493,11 @@ function export.surface_analysis(frame)
 		end
 	end
 
-	return m_affix.show_surface_analysis(lang, sc, parts, args["pos"], args["sort"],
-		args["type"], args["nocap"], args["notext"], args["nocat"], args["lit"], args["force_cat"])
+	return m_affix.show_surface_analysis {
+		lang = lang, sc = sc, parts = parts, pos = args["pos"], sort_key = args["sort"], type = args["type"],
+		nocap = args["nocap"], notext = args["notext"], nocat = args["nocat"], lit = args["lit"],
+		force_cat = args["force_cat"]
+	}
 end
 
 
@@ -513,7 +525,10 @@ function export.circumfix(frame)
 		end
 	end
 
-	return m_affix.show_circumfix(lang, sc, prefix, base, suffix, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
+	return m_affix.show_circumfix {
+		lang = lang, sc = sc, prefix = prefix, base = base, suffix = suffix, pos = args["pos"], sort_key = args["sort"],
+		nocat = args["nocat"], lit = args["lit"], force_cat = args["force_cat"]
+	}
 end
 
 
@@ -540,7 +555,10 @@ function export.confix(frame)
 		end
 	end
 
-	return m_affix.show_confix(lang, sc, prefix, base, suffix, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
+	return m_affix.show_confix {
+		lang = lang, sc = sc, prefix = prefix, base = base, suffix = suffix, pos = args["pos"], sort_key = args["sort"],
+		nocat = args["nocat"], lit = args["lit"], force_cat = args["force_cat"]
+	}
 end
 
 
@@ -557,8 +575,10 @@ function export.pseudo_loan(frame)
 
 	local parts = get_parsed_parts("pseudo-loan", args, term_index)
 
-	return require("Module:affix/pseudo-loan").show_pseudo_loan(lang, source, sc, parts, args["sort"],
-		args["nocap"], args["notext"], args["nocat"], args["lit"], args["force_cat"])
+	return require("Module:affix/pseudo-loan").show_pseudo_loan {
+		lang = lang, source = source, sc = sc, parts = parts, sort_key = args["sort"], nocap = args["nocap"],
+		notext = args["notext"], nocat = args["nocat"], lit = args["lit"], force_cat = args["force_cat"]
+	}
 end
 
 
@@ -584,7 +604,10 @@ function export.infix(frame)
 		end
 	end
 
-	return m_affix.show_infix(lang, sc, base, infix, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
+	return m_affix.show_infix {
+		lang = lang, sc = sc, base = base, infix = infix, pos = args["pos"], sort_key = args["sort"],
+		nocat = args["nocat"], lit = args["lit"], force_cat = args["force_cat"]
+	}
 end
 
 
@@ -614,7 +637,10 @@ function export.prefix(frame)
 		end
 	end
 
-	return m_affix.show_prefixes(lang, sc, prefixes, base, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
+	return m_affix.show_prefixes {
+		lang = lang, sc = sc, prefixes = prefixes, base = base, pos = args["pos"], sort_key = args["sort"],
+		nocat = args["nocat"], lit = args["lit"], force_cat = args["force_cat"]
+	}
 end
 
 
@@ -639,7 +665,10 @@ function export.suffix(frame)
 		end
 	end
 
-	return m_affix.show_suffixes(lang, sc, base, suffixes, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
+	return m_affix.show_suffixes {
+		lang = lang, sc = sc, base = base, suffixes = suffixes, pos = args["pos"], sort_key = args["sort"],
+		nocat = args["nocat"], lit = args["lit"], force_cat = args["force_cat"]
+	}
 end
 
 

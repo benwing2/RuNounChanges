@@ -22,62 +22,110 @@ local langs_with_lang_specific_data = {
 local default_pos = "term"
 
 --[=[
-ABOUT TEMPLATE, DISPLAY, LINK AND CATEGORY AFFIXES:
+About different types of hyphens ("template", "display" and "lookup"):
+----------------------------------------------------------------------
+
+* The "template hyphen" is the per-script hyphen character that is used in template calls to indicate that a term is an
+  affix. This is always a single Unicode char, but there may be multiple possible hyphens for a given script. Normally
+  this is just the regular hyphen character "-", but for some non-Latin-script languages (currently only right-to-left
+  languages), it is different.
+
+* The "display hyphen" is the string (which might be an empty string) that is added onto a term as displayed and linked,
+  to indicate that a term is an affix. Currently this is always either the same as the template hyphen or an empty
+  string, but the code below is written generally enough to handle arbitrary display hyphens. Specifically:
+
+  (1) For East Asian languages, the display hyphen is always blank.
+  (2) For Arabic-script languages, either tatweel (ـ) or ZWNJ (zero-width non-joiner) are allowed as template hyphens,
+ 	  where ZWNJ is supported primarily for Farsi, because some suffixes have non-joining behavior. The display hyphen
+	  corresponding to tatweel is also tatweel, but the display hyphen corresponding to ZWNJ is blank (tatweel is also
+	  the default display hyphen, for calls to {{prefix}}/{{suffix}}/etc. that don't include an explicit hyphen).
+
+* The "lookup hyphen" is the hyphen that is used when looking up language-specific affix mappings. (These mappings are
+  discussed in more detail below when discussing link affixes.) It depends only on the script of the affix in question.
+  Most scripts (including East Asian scripts) use a regular hyphen "-" as the lookup hyphen, but Hebrew and Arabic
+  have their own lookup hyphens (respectively maqqef and tatweel). Note that for Arabic in particular, there are
+  three possible template hyphens that are recognized (tatweel, ZWNJ and regular hyphen), but mappings must use tatweel.
+
+
+About different types of affixes ("template", "display", "link", "lookup" and "category"):
+------------------------------------------------------------------------------------------
 
 * A "template affix" is an affix in its source form as it appears in a template call. Generally, a template affix has
-  an attached template hyphen (see below -- usually a regular hyphen character, but sometimes a different character in
-  right-to-left scripts) to indicate that it is an affix and indicate what type of affix it is (prefix, suffix or
-  interfix/infix), but some of the older-style templates such as {{tl|suffix}}, {{tl|prefix}}, {{tl|confix}}, etc.
-  have "positional" affixes where the presence of the affix in a certain position (e.g. the second or third parameter)
-  indicates that it is a certain type of affix, whether or not it has an attached template hyphen.
+  an attached template hyphen (see above) to indicate that it is an affix and indicate what type of affix it is
+  (prefix, suffix, interfix/infix or circumfix), but some of the older-style templates such as {{tl|suffix}},
+  {{tl|prefix}}, {{tl|confix}}, etc. have "positional" affixes where the presence of the affix in a certain position
+  (e.g. the second or third parameter) indicates that it is a certain type of affix, whether or not it has an attached
+  template hyphen.
 * A "display affix" is the corresponding affix as it is actually displayed to the user. The display affix may differ
   from the template affix for various reasons:
-  (1) The display affix may be specified explicitly using the |altN= parameter or a piped link of the form e.g.
-      [[-kas|-käs]] (here indicating that the affix should display as '-käs' but be linked as '-kas'). Here, the
-	  template affix is arguably the entire piped link, while the display affix is '-käs'.
-  (2) Even in the absence of |altN= parameters and piped links, certain languages have differences between the
-      "template hyphen" specified in the template (which always needs to be specified somehow or other in templates
-	  like {{affix}}, to indicate that the term is an affix and what type of affix it is)
-
-ABOUT TEMPLATE AND DISPLAY HYPHENS:
-
-The "template hyphen" is the per-script hyphen character that is used in template calls to indicate that a term is an
-affix. This is always a single Unicode char, but there may be multiple possible hyphens for a given script. Normally
-this is just the regular hyphen character "-", but for some non-Latin-script languages (currently only right-to-left
-languages), it is different.
-
-The "display hyphen" is the string (which might be an empty string) that is added onto a term as displayed and linked,
-to indicate that a term is an affix. Currently this is always either the same as the template hyphen or an empty string,
-but the code below is written generally enough to handle arbitrary display hyphens. Specifically:
-
-(1) For East Asian languages, the display hyphen is always blank.
-(2) For Arabic-script languages, either tatweel (ـ) or ZWNJ (zero-width non-joiner) are allowed as template hyphens,
-	where ZWNJ is supported primarily for Farsi, because some suffixes have non-joining behavior. The display hyphen
-	corresponding to tatweel is also tatweel, but the display hyphen corresponding to ZWNJ is blank (tatweel is also
-	the default display hyphen, for calls to {{prefix}}/{{suffix}}/etc. that don't include an explicit hyphen).
+  (1) The display affix may be specified explicitly using the |altN= parameter, the <alt:...> inline modifier or a
+	  piped link of the form e.g. [[-kas|-käs]] (here indicating that the affix should display as '-käs' but be linked
+	  as '-kas'). Here, the template affix is arguably the entire piped link, while the display affix is '-käs'.
+  (2) Even in the absence of |altN= parameters, <alt:...> inline modifiers and piped links, certain languages have
+	  differences between the "template hyphen" specified in the template (which always needs to be specified somehow
+	  or other in templates like {{affix}}, to indicate that the term is an affix and what type of affix it is) and the
+	  display hyphen (see above), with corresponding differences between template and display affixes.
+* A "link affix" is the affix that is linked to when the affix is shown to the user. The link affix is usually the same
+  as the display affix, but will differ in one of three circumstances:
+  (1) The display and link affixes are explicitly made different using |altN= parameters, <alt:...> inline modifiers or
+	  piped links, as described above under "display affix".
+  (2) For certain languages, certain affixes are mapped to canonical form using language-specific mappings. For example,
+      in Finnish, the adjective-forming suffix [[-kas]] appears as [[-käs]] after front vowels, but logically both
+	  forms are the same suffix and should be linked and categorized the same. Similarly, in Latin, the negative and
+	  intensive prefixes spelled [[in-]] (etymologically two distinct prefixes) appear variously as [[il-]], [[im-]] or
+	  [[ir-]] before certain consonants. Mappings are supplied in [[Module:affix/lang-data/LANGCODE]] to convert
+	  Finnish [[-käs]] to [[-kas]] for linking and categorization purposes. Note that the affixes in the mappings use
+	  "lookup hyphens" to indicate the different types of affixes, which is usually the same as the template hyphen but
+	  differs for Arabic scripts, because there are multiple possible template hyphens recognized but only one lookup
+	  hyphen (tatweel). The form of the affix as used to look up in the mapping tables is called the "lookup affix";
+	  see below.
+  (3) The link affix is passed through the language's makeEntryName() function, which may strip certain diacritics:
+      e.g. macrons in Latin and Old English (indicating length); acute and grave accents in Russian and various other
+	  Slavic languages (indicating stress); vowel diacritics in most Arabic-script languages; and also tatweel in some
+	  Arabic-script languages (currently, for example, Persian, Arabic and Urdu strip tatweel, but Ottoman Turkish does
+	  not).
+* A "lookup affix" is the form of the affix as it is looked up in the language-specific lookup mappings described above
+  under link affixes. There are actually two lookup stages:
+  (1) First, the affix is looked up in a modified display form (specifically, the same as the display affix but using
+      lookup hyphens). Note that this lookup does not occur if an explicit display form is given using |altN= or an
+	  <alt:...> inline modifier, or if the template affix contains a piped or embedded link.
+  (2) If no entry is found, the affix is then looked up in a modified link form (specifically, the modified display
+      form passed through the language's makeEntryName() function, which strips out certain diacritics, but with the
+	  lookup hyphen re-added if it was stripped out, as in the case of tatweel in many Arabic-script languages).
+  The reason for this double lookup procedure is to allow for mappings that are sensitive to the extra diacritics, but
+  also allow for mappings that are not sensitive in this fashion (e.g. Russian [[-ливый]] occurs both stressed and
+  unstressed, but is the same prefix either way).
+* A "category affix" is the affix as it appears in categories such as [[:Category:Finnish terms suffixed with -kas]].
+  The category affix is currently always the same as the link affix.
 ]=]
 
--- Per-script template hyphens. The template hyphen is what appears in the {{affix}}/{{prefix}}/{{suffix}}/etc.
--- template (in the wikicode). See below.
---
--- They key below is a script code, after removing a hyphen and anything preceding. Hence, script codes like 'fa-Arab'
--- and 'ur-Arab' will match 'Arab'.
---
--- The value below is a string consisting of one or more hyphen characters. If there is more than one character, the
--- default hyphen must come last and a non-default function must be specified for the script in display_hyphens[] so
--- the correct display hyphen will be specified when no template hyphen is given (in {{suffix}}/{{prefix}}/etc.).
---
--- Script detection is normally done when linking, but we need to do it earlier. However, under most circumstances we
--- don't need to do script detection. Specifically, we only need to do script detection for a given language if
---
--- (a) the language has multiple scripts; and
--- (b) at least one of those scripts is listed below or in display_hyphens.
+-----------------------------------------------------------------------------------------
+--                               Template and display hyphens                          --
+-----------------------------------------------------------------------------------------
+
+--[=[
+Per-script template hyphens. The template hyphen is what appears in the {{affix}}/{{prefix}}/{{suffix}}/etc. template
+(in the wikicode). See above.
+
+They key below is a script code, after removing a hyphen and anything preceding. Hence, script codes like 'fa-Arab'
+and 'ur-Arab' will match 'Arab'.
+
+The value below is a string consisting of one or more hyphen characters. If there is more than one character, the
+default hyphen must come last and a non-default function must be specified for the script in display_hyphens[] so
+the correct display hyphen will be specified when no template hyphen is given (in {{suffix}}/{{prefix}}/etc.).
+
+Script detection is normally done when linking, but we need to do it earlier. However, under most circumstances we
+don't need to do script detection. Specifically, we only need to do script detection for a given language if
+
+(a) the language has multiple scripts; and
+(b) at least one of those scripts is listed below or in display_hyphens.
+]=]
 
 local ZWNJ = u(0x200C) -- zero-width non-joiner
 local template_hyphens = {
-	["Hebr"] = "־",
+	["Hebr"] = "־", -- Hebrew-specific hyphen termed "maqqef"
 	-- This covers all Arabic scripts. See above.
-	["Arab"] = "ـ" .. ZWNJ .. "-",
+	["Arab"] = "ـ" .. ZWNJ .. "-", -- tatweel + zero-width non-joiner + regular hyphen
 	-- FIXME! What about the following right-to-left scripts?
 	-- Adlm (Adlam)
 	-- Armi (Imperial Aramaic)
@@ -114,7 +162,7 @@ local lookup_hyphens = {
 	["Arab"] = "ـ",
 }
 
--- Default display-hyphen funct
+-- Default display-hyphen function.
 local function default_display_hyphen(script, hyph)
 	if not hyph then
 		return template_hyphens[script] or "-"
@@ -152,23 +200,9 @@ local display_hyphens = {
 	["Thai"] = no_display_hyphen,
 }
 
-local function glossary_link(entry, text)
-	text = text or entry
-	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
-end
-
-
-local function track(page)
-	if type(page) == "table" then
-		for i, pg in ipairs(page) do
-			page[i] = "affix/" .. pg
-		end
-	else
-		page = "affix/" .. page
-	end
-	require("Module:debug/track")(page)
-end
-
+-----------------------------------------------------------------------------------------
+--                                      Compound types                                 --
+-----------------------------------------------------------------------------------------
 
 local function make_compound_type(typ, alttext)
 	return {
@@ -223,6 +257,104 @@ export.compound_types = {
 }
 
 
+local function process_compound_type(typ, nocap, notext, has_parts)
+	local text_sections = {}
+	local categories = {}
+
+	if typ then
+		local typdata = export.compound_types[typ]
+		if type(typdata) == "string" then
+			typdata = export.compound_types[typdata]
+		end
+		if not typdata then
+			error("Internal error: Unrecognized type '" .. typ .. "'")
+		end
+		local text = typdata.text
+		if not nocap then
+			text = require("Module:string utilities").ucfirst(text)
+		end
+		local cat = typdata.cat
+		local oftext = typdata.oftext or " of"
+
+		if not notext then
+			table.insert(text_sections, text)
+			if has_parts then
+				table.insert(text_sections, oftext)
+				table.insert(text_sections, " ")
+			end
+		end
+		table.insert(categories, cat)
+	end
+
+	return text_sections, categories
+end
+
+
+-----------------------------------------------------------------------------------------
+--                                     Utility functions                               --
+-----------------------------------------------------------------------------------------
+
+local function glossary_link(entry, text)
+	text = text or entry
+	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
+end
+
+
+local function track(page)
+	if type(page) == "table" then
+		for i, pg in ipairs(page) do
+			page[i] = "affix/" .. pg
+		end
+	else
+		page = "affix/" .. page
+	end
+	require("Module:debug/track")(page)
+end
+
+
+-- Iterate an array up to the greatest integer index found.
+local function ipairs_with_gaps(t)
+	local indices = require("Module:table").numKeys(t)
+	local max_index = #indices > 0 and math.max(unpack(indices)) or 0
+	local i = 0
+	return function()
+		while i < max_index do
+			i = i + 1
+			return i, t[i]
+		end
+	end
+end
+
+export.ipairs_with_gaps = ipairs_with_gaps
+
+
+--[=[
+Concatenate formatted parts together with any overall lit= spec plus categories, which are formatted by prepending the
+language name. The value of an entry in CATEGORIES can be either a string (which is formatted using SORT_KEY) or a
+table of the form {cat=CATEGORY, sort_key=SORT_KEY, sort_base=SORT_BASE}, specifying the sort key and sort base to use
+when formatting the category. If NOCAT is given, no categories are added.
+]=]
+function export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
+	local cattext
+	if nocat then
+		cattext = ""
+	else
+		for i, cat in ipairs(categories) do
+			if type(cat) == "table" then
+				categories[i] = m_utilities.format_categories({lang:getNonEtymologicalName() .. " " .. cat.cat}, lang,
+					cat.sort_key, cat.sort_base, force_cat or debug_force_cat)
+			else
+				categories[i] = m_utilities.format_categories({lang:getNonEtymologicalName() .. " " .. cat}, lang,
+					sort_key, nil, force_cat or debug_force_cat)
+			end
+		end
+		cattext = table.concat(categories)
+	end
+	return table.concat(parts_formatted, " +&lrm; ") .. (lit and ", literally " .. m_links.mark(lit, "gloss") or "") ..
+		cattext
+end
+
+
 local function pluralize(pos)
 	if pos ~= "nouns" and usub(pos, -5) ~= "verbs" and usub(pos, -4) ~= "ives" then
 		if pos:find("[sx]$") then
@@ -234,42 +366,50 @@ local function pluralize(pos)
 	return pos
 end
 
+
 local function make_entry_name_no_links(lang, term)
 	-- Remove links and call lang:makeEntryName(term).
 	return (lang:makeEntryName(m_links.remove_links(term)))
 end
 
--- /
-function export.link_term(terminfo, display_term, lang, sc, sort_key, force_cat, nocat)
-	local terminfo_new = m_table.shallowcopy(terminfo)
+
+--[=[
+WARNING: This destructively writes into `terminfo`.
+]=]
+function export.link_term(terminfo, lang, sc, sort_key, force_cat, nocat)
 	local result
 
-	terminfo_new.term = display_term
-	terminfo_new.sc = terminfo_new.sc or sc
-	if terminfo_new.lang then
-		result = require("Module:etymology").format_derived(lang, terminfo_new, sort_key, nocat,
+	terminfo.sc = terminfo.sc or sc
+	if terminfo.lang then
+		result = require("Module:etymology").format_derived(lang, terminfo, sort_key, nocat,
 			force_cat or debug_force_cat)
 	else
-		terminfo_new.lang = lang
-		result = m_links.full_link(terminfo_new, "term", false)
+		terminfo.lang = lang
+		result = m_links.full_link(terminfo, "term", false)
 	end
 
-	if terminfo_new.q then
+	if terminfo.q then
 		track("q-after-result")
-		result = result .. " " .. require("Module:qualifier").format_qualifier(terminfo_new.q)
+		result = result .. " " .. require("Module:qualifier").format_qualifier(terminfo.q)
 	end
 
-	if terminfo_new.qq then
-		result = result .. " " .. require("Module:qualifier").format_qualifier(terminfo_new.qq)
+	if terminfo.qq then
+		result = result .. " " .. require("Module:qualifier").format_qualifier(terminfo.qq)
 	end
 
 	return result
 end
 
+
 local function canonicalize_script_code(scode)
 	-- Convert fa-Arab, ur-Arab etc. to Arab.
 	return (scode:gsub("^.*%-", ""))
 end
+
+
+-----------------------------------------------------------------------------------------
+--                                  Affix-handling functions                           --
+-----------------------------------------------------------------------------------------
 
 -- Figure out the appropriate script for the given affix and language (unless the script is explicitly passed in), and
 -- return the values of template_hyphens[], display_hyphens[] and lookup_hyphens[] for that script, substituting
@@ -320,230 +460,269 @@ local function detect_script_and_hyphens(text, lang, sc)
 end
 
 
-local function lookup_affix_mapping(affix, lang)
-	local langcode = lang:getCode()
-	if langs_with_lang_specific_data[langcode] then
-		local langdata = mw.loadData(affix_lang_data_module_prefix .. langcode)
-		-- If this is a canonical long-form tag, just return it, and don't check for shortcuts. This is an
-		-- optimization; see below.
-		if langdata.affix_mappings then
-			local mapping = langdata.affix_mappings[affix]
-			if mapping then
-				return mapping
-			end
+--[=[
+Given a template affix `term` and an affix type `affix_type`, change the relevant template hyphen(s) in the affix to
+the display or lookup hyphen specified in `new_hyphen`, or add them if they are missing. `new_hyphen` can be a string,
+specifying a fixed hyphen, or a function of two arguments (the script code `scode` and the discovered template hyphen,
+or nil of no relevant template hyphen is present). `thyph_re` is a Lua pattern (which must be enclosed in parens) that
+matches the possible template hyphens. Note that not all template hyphens present in the affix are changed, but only
+the "relevant" ones (e.g. for a prefix, a relevant template hyphen is one coming at the end of the affix).
+]=]
+local function reconstruct_term_per_hyphens(term, affix_type, scode, thyph_re, new_hyphen)
+	local function get_hyphen(hyph)
+		if type(new_hyphen) == "string" then
+			return new_hyphen
 		end
+		return new_hyphen(scode, hyph)
 	end
 
-	return affix[tag]
+	if not affix_type then
+		return term
+	elseif affix_type == "circumfix" then
+		local before, before_hyphen, after_hyphen, after = rmatch(term, "^(.*)" .. thyph_re .. " " .. thyph_re
+			.. "(.*)$")
+		if not before or ulen(term) <= 3 then
+			-- Unlike with other types of affixes, don't try to add hyphens in the middle of the term to convert it to
+			-- a circumfix. Also, if the term is just hyphen + space + hyphen, return it.
+			return term
+		end
+		return before .. get_hyphen(scode, before_hyphen) .. " " .. get_hyphen(scode, after_hyphen) .. after
+	elseif affix_type == "infix" or affix_type == "interfix" then
+		local before_hyphen, middle, after_hyphen = rmatch(term, "^" .. thyph_re .. "(.*)" .. thyph_re .. "$")
+		if before_hyphen and ulen(term) <= 1 then
+			-- If the term is just a hyphen, return it.
+			return term
+		end
+		return get_hyphen(scode, before_hyphen) .. (middle or term) .. get_hyphen(scode, after_hyphen)
+	elseif affix_type == "prefix" then
+		local middle, after_hyphen = rmatch(term, "^(.*)" .. thyph_re .. "$")
+		if middle and ulen(term) <= 1 then
+			-- If the term is just a hyphen, return it.
+			return term
+		end
+		return (middle or term) .. get_hyphen(scode, after_hyphen)
+	elseif affix_type == "suffix" then
+		local before_hyphen, middle = rmatch(term, "^" .. thyph_re .. "(.*)$")
+		if before_hyphen and ulen(term) <= 1 then
+			-- If the term is just a hyphen, return it.
+			return term
+		end
+		return get_hyphen(scode, before_hyphen) .. (middle or term)
+	else
+		error(("Internal error: Unrecognized affix type '%s'"):format(affix_type))
+	end
 end
 
 
--- Find the type of affix ("prefix", "infix", "suffix", "circumfix" or nil for non-affix). Return the affix type and
--- the displayed/linked equivalent of the part (normally the same as the part but will be different for some East Asian
--- languages that use a regular hyphen as an affix-signaling hyphen but have no display hyphen).
-local function parse_term_for_affixes(term, lang, sc)
+local function lookup_affix_mapping(affix, affix_type, lang, scode, thyph_re, lookup_hyph)
+	local function do_lookup(affix)
+		local langcode = lang:getCode()
+		local lookup_affix = reconstruct_term_per_hyphens(affix, affix_type, scode, thyph_re, lookup_hyph)
+		if langs_with_lang_specific_data[langcode] then
+			local langdata = mw.loadData(affix_lang_data_module_prefix .. langcode)
+			-- If this is a canonical long-form tag, just return it, and don't check for shortcuts. This is an
+			-- optimization; see below.
+			if langdata.affix_mappings then
+				local mapping = langdata.affix_mappings[lookup_affix]
+				if mapping then
+					return mapping
+				end
+			end
+		end
+
+		return nil
+	end
+
+	if affix:find("%[%[") then
+		return affix
+	end
+
+	-- Double parens because makeEntryName() returns multiple values. Yuck.
+	return do_lookup(affix) or do_lookup((lang:makeEntryName(affix))) or affix
+end
+
+
+--[=[
+For a given template term in a given language (see the definition of "template affix" near the top of the file),
+possibly in an explicitly specified script `sc` (but usually nil), return the term's affix type ("prefix", "infix",
+"suffix", "circumfix" or nil for non-affix) along with the corresponding link and display affixes (see definitions
+near the top of the file). Three values are returned: `affix_type`, `link_term`, `display_term`. The affix type can
+be passed in instead of autodetected (pass in 'false' if the term is not an affix); in this case, the template term
+need not have any attached hyphens, and the appropriate hyphens will be added in the appropriate places. If
+`do_affix_mapping` is specified, look up the affix in the lang-specific affix mappings, as described in the comment at
+the top of the file; otherwise, the link and display terms will always be the same. (They will be the same in any case
+if the template term has a bracketed link in it or is not an affix.)
+]=]
+local function parse_term_for_affixes(term, lang, sc, affix_type, do_affix_mapping)
 	if not term then
 		return nil, nil, nil
 	end
 
 	if term:find("^%^") then
-		-- If term begins with ^, it's not an affix no matter what.
-		-- Strip off the ^ and return "no affix".
+		-- If term begins with ^, it's not an affix no matter what. Strip off the ^ and return "no affix".
 		term = usub(term, 2)
 		return nil, term, term
 	end
 
-	local scode, thyph, dhyph, lhyph = detect_script_and_hyphens(term, lang, sc)
-	thyph = "([" .. thyph .. "])"
-	local hyphen_space_hyphen = thyph .. " " .. thyph
-
-	-- Remove an asterisk if the morpheme is reconstructed and add it in the end.
+	-- Remove an asterisk if the morpheme is reconstructed and add it back at the end.
 	local reconstructed = ""
 	if term:find("^%*") then 
 		reconstructed = "*"
 		term = term:gsub("^%*", "")
 	end
 
-	local beginning_hyphen = rmatch(term, "^" .. thyph .. ".*$")
-	local ending_hyphen = rmatch(term, "^.*" .. thyph .. "$")
+	local scode, thyph, dhyph, lhyph = detect_script_and_hyphens(term, lang, sc)
+	thyph = "([" .. thyph .. "])"
 
-	local affix_type = nil
-	if rfind(term, hyphen_space_hyphen) then
-		affix_type = "circumfix"
-	elseif beginning_hyphen and ending_hyphen then
-		affix_type = "infix"
-	elseif ending_hyphen then
-		affix_type = "prefix"
-	elseif beginning_hyphen then
-		affix_type = "suffix"
-	end
-
-	local beginning_dhyph = dhyph(scode, beginning_hyphen)
-	local ending_dhyph = dhyph(scode, ending_hyphen)
-
-	local function reconstruct_term_per_hyphens(term, beginning_new_hyphen, ending_new_hyphen)
-		if affix_type == "circumfix" then
-			if (beginning_hyphen ~= beginning_new_hyphen or ending_hyphen ~= ending_new_hyphen) and ulen(term) > 3 then
-				local before, after = rmatch(term, "^(.*)" .. hyphen_space_hyphen .. "(.*)$")
-
-		affix_type = "circumfix"
-		-- FIXME! Change to display hyphens?
-	elseif beginning_hyphen and ending_hyphen then
-		affix_type = "infix"
-		-- Don't do anything if the term is a single hyphen.
-		-- This is probably correct.
-		if (beginning_hyphen ~= beginning_dhyph or
-			ending_hyphen ~= ending_dhyph) and ulen(term) > 1 then
-			term = beginning_dhyph .. rsub(term, "^.(.-).$", "%1") .. ending_dhyph
-		end
-	elseif ending_hyphen then
-		affix_type = "prefix"
-		if ending_hyphen ~= ending_dhyph then
-			term = rsub(term, "^(.-).$", "%1") .. ending_dhyph
-		end
-	elseif beginning_hyphen then
-		affix_type = "suffix"
-		if beginning_hyphen ~= beginning_dhyph then
-			term = beginning_dhyph .. usub(term, 2)
+	if affix_type == nil then
+		if rfind(term, thyph .. " " .. thyph) then
+			affix_type = "circumfix"
+		else
+			local has_beginning_hyphen = rfind(term, "^" .. thyph)
+			local has_ending_hyphen = rfind(term, thyph .. "$")
+			if has_beginning_hyphen and has_ending_hyphen then
+				affix_type = "infix"
+			elseif has_ending_hyphen then
+				affix_type = "prefix"
+			elseif has_beginning_hyphen then
+				affix_type = "suffix"
+			end
 		end
 	end
 
-	term = reconstructed .. term
-	return affix_type, term
+	local link_term, display_term
+	if affix_type then
+		display_term = reconstruct_term_per_hyphens(term, affix_type, scode, thyph, dhyph)
+		if do_affix_mapping then
+			link_term = lookup_affix_mapping(term, affix_type, lang, scode, thyph, lhyph)
+		else
+			link_term = display_term
+		end
+	else
+		link_term = term
+		display_term = term
+	end
+
+	link_term = reconstructed .. link_term
+	display_term = reconstructed .. display_term
+
+	return affix_type, link_term, display_term
 end
 
 export.get_affix_type = parse_term_for_affixes
 
 
--- Iterate an array up to the greatest integer index found.
-local function ipairs_with_gaps(t)
-	local indices = require("Module:table").numKeys(t)
-	local max_index = #indices > 0 and math.max(unpack(indices)) or 0
-	local i = 0
-	return function()
-		while i < max_index do
-			i = i + 1
-			return i, t[i]
-		end
+
+-- Add a hyphen to a term in the appropriate place, based on the specified affix type. For example, if `affix_type` ==
+-- "prefix", we'll add a hyphen onto the end if it's not already there. In general, if the template and display hyphens
+-- are the same and the appropriate hyphen is already present, we leave it, else we strip off the template hyphen if
+-- present and add the display hyphen.
+function export.make_affix(term, lang, sc, affix_type, do_affix_mapping)
+	if not (affix_type == "prefix" or affix_type == "suffix" or affix_type == "circumfix" or affix_type == "infix" or
+		affix_type == "interfix") then
+		error("Internal error: Invalid affix type " .. (affix_type or "(nil)"))
 	end
-end
 
-export.ipairs_with_gaps = ipairs_with_gaps
-
-
--- Concatenate formatted parts together with any overall lit= spec plus categories, which are formatted
--- by prepending the language name. The value of an entry in CATEGORIES can be either a string
--- (which is formatted using SORT_KEY) or a table of the form {cat=CATEGORY, sort_key=SORT_KEY, sort_base=SORT_BASE},
--- specifying the sort key and sort base to use when formatting the category. If NOCAT is given, no
--- categories are added.
-function export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
-	local cattext
-	if nocat then
-		cattext = ""
-	else
-		for i, cat in ipairs(categories) do
-			if type(cat) == "table" then
-				categories[i] = m_utilities.format_categories({lang:getNonEtymologicalName() .. " " .. cat.cat}, lang,
-					cat.sort_key, cat.sort_base, force_cat or debug_force_cat)
-			else
-				categories[i] = m_utilities.format_categories({lang:getNonEtymologicalName() .. " " .. cat}, lang,
-					sort_key, nil, force_cat or debug_force_cat)
-			end
-		end
-		cattext = table.concat(categories)
-	end
-	return table.concat(parts_formatted, " +&lrm; ") .. (lit and ", literally " .. m_links.mark(lit, "gloss") or "") .. cattext
+	local _, link_term, display_term = parse_term_for_affixes(term, lang, sc, affix_type, do_affix_mapping)
+	return link_term, display_term
 end
 
 
-local function process_compound_type(typ, nocap, notext, has_parts)
-	local text_sections = {}
-	local categories = {}
+-----------------------------------------------------------------------------------------
+--                                     Main entry points                               --
+-----------------------------------------------------------------------------------------
 
-	if typ then
-		local typdata = export.compound_types[typ]
-		if type(typdata) == "string" then
-			typdata = export.compound_types[typdata]
-		end
-		if not typdata then
-			error("Internal error: Unrecognized type '" .. typ .. "'")
-		end
-		local text = typdata.text
-		if not nocap then
-			text = require("Module:string utilities").ucfirst(text)
-		end
-		local cat = typdata.cat
-		local oftext = typdata.oftext or " of"
+--[=[
+Implementation of {{affix}} and {{surface analysis}}. `data` contains all the information describing the affixes to be
+displayed, and contains the following:
 
-		if not notext then
-			table.insert(text_sections, text)
-			if has_parts then
-				table.insert(text_sections, oftext)
-				table.insert(text_sections, " ")
-			end
-		end
-		table.insert(categories, cat)
-	end
+`.lang`: Overall language object (REQUIRED). Different from term-specific language objects (see `.parts` below).
+`.sc`: Overall script object (usually omitted). Different from term-specific script objects.
+`.parts`: List of objects describing the affixes to show (REQUIRED). The general format of each object is as would be
+		  passed to full_link(), except that the `.lang` field should be missing unless the term is of a language
+		  different from the overall `.lang` value (in such a case, the language name is shown along with the term and
+		  an additional "derived from" category is added). WARNING: The data in `.parts` will be destructively modified.
+`.pos`: Overall part of speech (used in categories, defaults to "terms"). Different from term-specific part of speech.
+`.sort_key`: Overall sort key. Normally omitted except e.g. in Japanese.
+`.type`: Type of compound, if the parts in `.parts` describe a compound. Strictly optional, and if supplied, the
+		compound type is displayed before the parts (normally capitalized, unless `.nocap` is given).
+`.nocap`: Don't capitalize the first letter of text displayed before the parts (relevant only if `.type` or
+		  `.surface_analysis` is given).
+`.notext`: Don't display any text before the parts (relevant only if `.type` or `.surface_analysis` is given).
+`.nocat`: Disable all categorization.
+`.lit`: Overall literal definition. Different from term-specific literal definitions.
+`.force_cat`: Always display categories, even on userspace pages.
+`.surface_analysis`: Implement {{surface analysis}}; adds "By surface analysis, " before the parts.
 
-	return text_sections, categories
-end
+WARNING: This destructively modifies both `data` and the individual structures within `.parts`.
+]=]
+function export.show_affix(data)
+	data.pos = data.pos or default_pos
 
+	data.pos = pluralize(data.pos)
 
-function export.show_affixes(lang, sc, parts, pos, sort_key, typ, nocap, notext, nocat, lit, force_cat,
-	surface_analysis)
-	pos = pos or default_pos
-
-	pos = pluralize(pos)
-
-	local text_sections, categories = process_compound_type(typ, surface_analysis or nocap, notext, #parts > 0)
+	local text_sections, categories = process_compound_type(data.type, data.surface_analysis or data.nocap, data.notext,
+		#data.parts > 0)
 
 	-- Process each part
 	local parts_formatted = {}
 	local whole_words = 0
 
-	for i, part in ipairs_with_gaps(parts) do
+	for i, part in ipairs_with_gaps(data.parts) do
 		part = part or {}
-		local part_lang = part.lang or lang
-		local part_sc = part.sc or sc
+		local part_lang = part.lang or data.lang
+		local part_sc = part.sc or data.sc
 
-		-- Is it an affix, and if so, what type of affix?
-		local affix_type, link_term, display_term = parse_term_for_affixes(part.term, part_lang, part_sc)
+		-- Determine affix type and get link and display terms (see text at top of file).
+		local affix_type, link_term, display_term = parse_term_for_affixes(part.term, part_lang, part_sc, nil,
+			not part.alt)
 
-		-- Make a link for the part
 		-- If link_term is an empty string, either a bare ^ was specified or an empty term was used along with inline
 		-- modifiers. The intention in either case is not to link the term.
-		table.insert(parts_formatted, export.link_term(part, link_term ~= "" and link_term or nil, lang, sc, sort_key,
-			force_cat, nocat))
+		part.term = link_term ~= "" and link_term or nil
+		part.alt = part.alt or display_term
+
+		-- Make a link for the part
+		table.insert(parts_formatted, export.link_term(part, data.lang, data.sc, data.sort_key, data.force_cat,
+			data.nocat))
 
 		if affix_type then
-			-- Make a sort key
-			-- For the first part, use the second part as the sort key
+			-- We cannot distinguish interfixes from infixes by appearance. Prefer interfixes; infixes will need to
+			-- use {{infix}}.
+			if affix_type == "infix" then affix_type = "interfix" end
+
+			-- Make a sort key. For the first part, use the second part as the sort key; the intention is that if the
+			-- term has a prefix, sorting by the prefix won't be very useful so we sort by what follows, which is
+			-- presumably the root.
 			local part_sort_base = nil
-			local part_sort = part.sort or sort_key
+			local part_sort = part.sort or data.sort_key
 
 			if i == 1 and parts[2] and parts[2].term then
-				local part2_lang = parts[2].lang or lang
-				local part2_sc = parts[2].sc or sc
-				local part2_affix_type, part2_display_term = parse_term_for_affixes(part2_lang, part2_sc, parts[2].term)
-				part_sort_base = make_entry_name_no_links(part2_lang, part2_display_term)
+				local part2_lang = parts[2].lang or data.lang
+				local part2_sc = parts[2].sc or data.sc
+				local part2_affix_type, part2_link_term, part2_display_term = parse_term_for_affixes(parts[2].term,
+					part2_lang, part2_sc, nil, not parts[2].alt)
+				part_sort_base = make_entry_name_no_links(part2_lang, part2_link_term)
 			end
-
-			if affix_type == "infix" then affix_type = "interfix" end
 
 			if part.pos and rfind(part.pos, "patronym") then
 				table.insert(categories, {cat="patronymics", sort_key=part_sort, sort_base=part_sort_base})
 			end
 
-			if pos ~= "terms" and part.pos and rfind(part.pos, "diminutive") then
-				table.insert(categories, {cat="diminutive " .. pos, sort_key=part_sort, sort_base=part_sort_base})
+			if data.pos ~= "terms" and part.pos and rfind(part.pos, "diminutive") then
+				table.insert(categories, {cat="diminutive " .. data.pos, sort_key=part_sort, sort_base=part_sort_base})
 			end
 
-			table.insert(categories, {cat=pos .. " " .. affix_type .. "ed with " .. make_entry_name_no_links(part_lang, display_term) .. (part.id and " (" .. part.id .. ")" or ""), sort_key=part_sort, sort_base=part_sort_base})
+			if link_term and link_term ~= "" then
+				table.insert(categories, {cat=data.pos .. " " .. affix_type .. "ed with " ..
+					make_entry_name_no_links(part_lang, link_term) .. (part.id and " (" .. part.id .. ")" or ""),
+					sort_key=part_sort, sort_base=part_sort_base})
+			end
 		else
 			whole_words = whole_words + 1
 
 			if whole_words == 2 then
-				table.insert(categories, "compound " .. pos)
+				table.insert(categories, "compound " .. data.pos)
 			end
 		end
 	end
@@ -553,57 +732,72 @@ function export.show_affixes(lang, sc, parts, pos, sort_key, typ, nocap, notext,
 		error("The parameters did not include any affixes, and the term is not a compound. Please provide at least one affix.")
 	end
 
-	if surface_analysis then
+	if data.surface_analysis then
 		local text = "by " .. glossary_link("surface analysis") .. ", "
-		if not nocap then
+		if not data.nocap then
 			text = require("Module:string utilities").ucfirst(text)
 		end
 
 		table.insert(text_sections, 1, text)
 	end
 
-	table.insert(text_sections, export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat))
+	table.insert(text_sections, export.concat_parts(data.lang, parts_formatted, categories, data.nocat, data.sort_key,
+		data.lit, data.force_cat))
 	return table.concat(text_sections)
 end
 
 
-function export.show_surface_analysis(lang, sc, parts, pos, sort_key, typ, nocap, notext, nocat, lit, force_cat)
-	return export.show_affixes(lang, sc, parts, pos, sort_key, typ, nocap, notext, nocat, lit, force_cat,
-		"surface analysis")
+function export.show_surface_analysis(data)
+	data.surface_analysis = true
+	return export.show_affixes(data)
 end
 
 
-function export.show_compound(lang, sc, parts, pos, sort_key, typ, nocap, notext, nocat, lit, force_cat)
-	pos = pos or default_pos
+--[=[
+Implementation of {{compound}}.
 
-	pos = pluralize(pos)
+WARNING: This destructively modifies both `data` and the individual structures within `.parts`.
+]=]
+function export.show_compound(data)
+	data.pos = data.pos or default_pos
 
-	local text_sections, categories = process_compound_type(typ, nocap, notext, #parts > 0)
+	data.pos = pluralize(data.pos)
+
+	local text_sections, categories = process_compound_type(data.type, data.nocap, data.notext, #data.parts > 0)
 
 	local parts_formatted = {}
-	table.insert(categories, "compound " .. pos)
+	table.insert(categories, "compound " .. data.pos)
 
 	-- Make links out of all the parts
 	local whole_words = 0
-	for i, part in ipairs(parts) do
-		local part_lang = part.lang or lang
-		local part_sc = part.sc or sc
-		local affix_type, display_term = parse_term_for_affixes(part_lang, part_sc, part.term)
+	for i, part in ipairs(data.parts) do
+		local part_lang = part.lang or data.lang
+		local part_sc = part.sc or data.sc
+		-- Determine affix type and get link and display terms (see text at top of file).
+		local affix_type, link_term, display_term = parse_term_for_affixes(part.term, part_lang, part_sc, nil,
+			not part.alt)
 
-		-- If the term is an infix, recognize it as such (which means e.g. that we will display the term without hyphens for
-		-- East Asian languages). Otherwise, ignore the fact that it looks like an affix and display as specified in the
-		-- template (but pay attention to the detected affix type for certain tracking purposes)
+		-- If the term is an infix, recognize it as such (which means e.g. that we will display the term without
+		-- hyphens for East Asian languages). Otherwise, ignore the fact that it looks like an affix and display as
+		-- specified in the template (but pay attention to the detected affix type for certain tracking purposes).
 		if affix_type == "infix" then
-			table.insert(categories, {cat=pos .. " interfixed with " .. make_entry_name_no_links(part_lang, display_term), sort_key=part.sort or sort_key})
+			-- If link_term is an empty string, either a bare ^ was specified or an empty term was used along with
+			-- inline modifiers. The intention in either case is not to link the term.
+			if link_term and link_term ~= "" then
+				table.insert(categories, {cat=data.pos .. " interfixed with " .. make_entry_name_no_links(part_lang,
+					link_term), sort_key=part.sort or data.sort_key})
+			end
+			part.term = link_term ~= "" and link_term or nil
+			part.alt = part.alt or display_term
 		else
-			display_term = part.term
 			if affix_type then
-				track { affix_type, affix_type .. "/lang/" .. lang:getNonEtymologicalCode() }
+				track { affix_type, affix_type .. "/lang/" .. data.lang:getNonEtymologicalCode() }
 			else
 				whole_words = whole_words + 1
 			end
 		end
-		table.insert(parts_formatted, export.link_term(part, display_term, lang, sc, sort_key, force_cat, nocat))
+		table.insert(parts_formatted, export.link_term(part, data.lang, data.sc, data.sort_key, data.force_cat,
+			data.nocat))
 	end
 
 	if whole_words == 1 then
@@ -612,50 +806,66 @@ function export.show_compound(lang, sc, parts, pos, sort_key, typ, nocap, notext
 		track("looks like confix")
 	end
 
-	table.insert(text_sections, export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat))
+	table.insert(text_sections, export.concat_parts(data.lang, parts_formatted, categories, data.nocat, data.sort_key,
+		data.lit, data.force_cat))
 	return table.concat(text_sections)
 end
 
 
-function export.show_compound_like(lang, sc, parts, sort_key, text, oftext, cat, nocat, lit, force_cat)
+--[=[
+Implementation of {{blend}}, {{univerbation}} and similar "compound-like" templates.
+
+WARNING: This destructively modifies both `data` and the individual structures within `.parts`.
+]=]
+function export.show_compound_like(data)
 	local parts_formatted = {}
 	local categories = {}
 
-	if cat then
-		table.insert(categories, cat)
+	if data.cat then
+		table.insert(categories, data.cat)
 	end
 
 	-- Make links out of all the parts
-	for i, part in ipairs(parts) do
-		table.insert(parts_formatted, export.link_term(part, part.term, lang, sc, sort_key, force_cat, nocat))
+	for i, part in ipairs(data.parts) do
+		table.insert(parts_formatted, export.link_term(part, data.lang, data.sc, data.sort_key, data.force_cat,
+			data.nocat))
 	end
 
 	local text_sections = {}
-	if text then
-		table.insert(text_sections, text)
+	if data.text then
+		table.insert(text_sections, data.text)
 	end
-	if #parts > 0 and oftext then
+	if #data.parts > 0 and data.oftext then
 		table.insert(text_sections, " ")
-		table.insert(text_sections, oftext)
+		table.insert(text_sections, data.oftext)
 		table.insert(text_sections, " ")
 	end
-	table.insert(text_sections, export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat))
+	table.insert(text_sections, export.concat_parts(data.lang, parts_formatted, categories, data.nocat, data.sort_key,
+		data.lit, data.force_cat))
 	return table.concat(text_sections)
 end
 
 
--- Make a given part into an affix of a specific type. For example, if the desired affix type
--- is "suffix", this will (in general) add a hyphen onto the beginning of the term, alt, tr and ts
--- components of the part if not already present. The hyphen that's added is the "display hyphen"
--- (see above) and may be language-specific. In the case of East Asian languages, the display
--- hyphen is an empty string whereas the template hyphen is the regular hyphen, meaning that any
--- regular hyphen at the beginning of the part will be effectively removed.
+--[=[
+Make a given part into an affix of a specific type, and apply any relevant affix mappings. For example, if the desired
+affix type is "suffix", this will (in general) add a hyphen onto the beginning of the term, alt, tr and ts components
+of the part if not already present. The hyphen that's added is the "display hyphen" (see above) and may be
+script-specific. In the case of East Asian scripts, the display hyphen is an empty string whereas the template hyphen
+is the regular hyphen, meaning that any regular hyphen at the beginning of the part will be effectively removed. Note
+that this also applies any language-specific affix mappings, so that e.g. if the language is Finnish and the user
+specified [[-käs]] in the affix and didn't specify an .alt value, `part.term` will contain [[-kas]] and `part.alt` will
+contain [[-käs]].
+
+WARNING: This destructively modifies `part`.
+]=]
 local function make_part_affix(part, lang, sc, affix_type)
 	local part_lang = part.lang or lang
 	local part_sc = part.sc or sc
 
-	part.term = export.make_affix(part.term, part_lang, part_sc, affix_type)
-	part.alt = export.make_affix(part.alt, part_lang, part_sc, affix_type)
+	local link_term, display_term = export.make_affix(part.term, part_lang, part_sc, affix_type, not part.alt)
+	part.term = link_term
+	-- When we don't specify do_affix_mapping, link and display terms (first and second retvals) are the same.
+	part.alt = part.alt and export.make_affix(part.alt, part_lang, part_sc, affix_type) or display_term
 	local Latn = require("Module:scripts").getByCode("Latn")
 	part.tr = export.make_affix(part.tr, part_lang, Latn, affix_type)
 	part.ts = export.make_affix(part.ts, part_lang, Latn, affix_type)
@@ -664,13 +874,15 @@ end
 
 local function track_wrong_affix_type(template, part, lang, sc, expected_affix_type, part_name)
 	if part then
-		local affix_type = parse_term_for_affixes(part.lang or lang, part.sc or sc, part.term)
+		local affix_type = parse_term_for_affixes(part.term, part.lang or lang, part.sc or sc)
 		if affix_type ~= expected_affix_type then
+			part_name = part_name or expected_affix_type or "base"
 			require("Module:debug/track") {
 				template,
 				template .. "/" .. part_name,
 				template .. "/" .. part_name .. "/" .. (affix_type or "none"),
-				template .. "/" .. part_name .. "/" .. (affix_type or "none") .. "/lang/" .. lang:getNonEtymologicalCode()
+				template .. "/" .. part_name .. "/" .. (affix_type or "none") .. "/lang/" ..
+					lang:getNonEtymologicalCode()
 			}
 		end
 	end
@@ -680,7 +892,8 @@ end
 local function insert_affix_category(categories, lang, pos, affix_type, part, sort_key, sort_base)
 	if part.term then
 		local part_lang = part.lang or lang
-		local cat = pos .. " " .. affix_type .. "ed with " .. make_entry_name_no_links(part_lang, part.term) .. (part.id and " (" .. part.id .. ")" or "")
+		local cat = pos .. " " .. affix_type .. "ed with " .. make_entry_name_no_links(part_lang, part.term) ..
+			(part.id and " (" .. part.id .. ")" or "")
 		if sort_key or sort_base then
 			table.insert(categories, {cat=cat, sort_key=sort_key, sort_base=sort_base})
 		else
@@ -690,187 +903,235 @@ local function insert_affix_category(categories, lang, pos, affix_type, part, so
 end
 
 
-function export.show_circumfix(lang, sc, prefix, base, suffix, pos, sort_key, nocat, lit, force_cat)
+--[=[
+Implementation of {{circumfix}}.
+
+WARNING: This destructively modifies both `data` and `.prefix`, `.base` and `.suffix`.
+]=]
+function export.show_circumfix(data)
 	local categories = {}
-	pos = pos or default_pos
+	data.pos = data.pos or default_pos
 
-	pos = pluralize(pos)
+	data.pos = pluralize(data.pos)
 
-	-- Hyphenate the affixes
-	make_part_affix(prefix, lang, sc, "prefix")
-	make_part_affix(suffix, lang, sc, "suffix")
+	-- Hyphenate the affixes and apply any affix mappings.
+	make_part_affix(data.prefix, data.lang, data.sc, "prefix")
+	make_part_affix(data.suffix, data.lang, data.sc, "suffix")
 
-	track_wrong_affix_type("circumfix", prefix, lang, sc, "prefix", "prefix")
-	track_wrong_affix_type("circumfix", base, lang, sc, nil, "base")
-	track_wrong_affix_type("circumfix", suffix, lang, sc, "suffix", "suffix")
+	track_wrong_affix_type("circumfix", data.prefix, data.lang, data.sc, "prefix")
+	track_wrong_affix_type("circumfix", data.base, data.lang, data.sc, nil)
+	track_wrong_affix_type("circumfix", data.suffix, data.lang, data.sc, "suffix")
 
-	-- Create circumfix term
+	-- Create circumfix term.
 	local circumfix = nil
 
-	if prefix.term and suffix.term then
-		circumfix = prefix.term .. " " .. suffix.term
-		prefix.alt = prefix.alt or prefix.term
-		suffix.alt = suffix.alt or suffix.term
-		prefix.term = circumfix
-		suffix.term = circumfix
+	if data.prefix.term and data.suffix.term then
+		circumfix = data.prefix.term .. " " .. data.suffix.term
+		data.prefix.alt = data.prefix.alt or data.prefix.term
+		data.suffix.alt = data.suffix.alt or data.suffix.term
+		data.prefix.term = circumfix
+		data.suffix.term = circumfix
 	end
 
-	-- Make links out of all the parts
+	-- Make links out of all the parts.
 	local parts_formatted = {}
 	local sort_base
-	if base.term then
-		sort_base = make_entry_name_no_links(base.lang or lang, base.term)
+	if data.base.term then
+		sort_base = make_entry_name_no_links(data.base.lang or data.lang, data.base.term)
 	end
 
-	table.insert(parts_formatted, export.link_term(prefix, prefix.term, lang, sc, sort_key, force_cat, nocat))
-	table.insert(parts_formatted, export.link_term(base, base.term, lang, sc, sort_key, force_cat, nocat))
-	table.insert(parts_formatted, export.link_term(suffix, suffix.term, lang, sc, sort_key, force_cat, nocat))
+	table.insert(parts_formatted, export.link_term(data.prefix, data.lang, data.sc, data.sort_key, data.force_cat,
+		data.nocat))
+	table.insert(parts_formatted, export.link_term(data.base, data.lang, data.sc, data.sort_key, data.force_cat,
+		data.nocat))
+	table.insert(parts_formatted, export.link_term(data.suffix, data.lang, data.sc, data.sort_key, data.force_cat,
+		data.nocat))
 
-	-- Insert the categories
-	table.insert(categories, {cat=pos .. " circumfixed with " .. make_entry_name_no_links(prefix.lang or lang, circumfix), sort_key=sort_key, sort_base=sort_base})
+	-- Insert the categories.
+	table.insert(categories, {cat=data.pos .. " circumfixed with " .. make_entry_name_no_links(data.prefix.lang or
+		data.lang, circumfix), sort_key=data.sort_key, sort_base=sort_base})
 
-	return export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
+	return export.concat_parts(data.lang, parts_formatted, categories, data.nocat, data.sort_key, data.lit,
+		data.force_cat)
 end
 
 
-function export.show_confix(lang, sc, prefix, base, suffix, pos, sort_key, nocat, lit, force_cat)
-	pos = pos or default_pos
+--[=[
+Implementation of {{confix}}.
 
-	pos = pluralize(pos)
+WARNING: This destructively modifies both `data` and `.prefix`, `.base` and `.suffix`.
+]=]
+function export.show_confix(data)
+	data.pos = data.pos or default_pos
 
-	-- Hyphenate the affixes
-	make_part_affix(prefix, lang, sc, "prefix")
-	make_part_affix(suffix, lang, sc, "suffix")
+	data.pos = pluralize(data.pos)
 
-	track_wrong_affix_type("confix", prefix, lang, sc, "prefix", "prefix")
-	track_wrong_affix_type("confix", base, lang, sc, nil, "base")
-	track_wrong_affix_type("confix", suffix, lang, sc, "suffix", "suffix")
+	-- Hyphenate the affixes and apply any affix mappings.
+	make_part_affix(data.prefix, data.lang, data.sc, "prefix")
+	make_part_affix(data.suffix, data.lang, data.sc, "suffix")
 
-	-- Make links out of all the parts
+	track_wrong_affix_type("confix", data.prefix, data.lang, data.sc, "prefix")
+	track_wrong_affix_type("confix", data.base, data.lang, data.sc, nil)
+	track_wrong_affix_type("confix", data.suffix, data.lang, data.sc, "suffix")
+
+	-- Make links out of all the parts.
 	local parts_formatted = {}
 	local prefix_sort_base
-	if base and base.term then
-		prefix_sort_base = make_entry_name_no_links(base.lang or lang, base.term)
-	elseif suffix.term then
-		prefix_sort_base = make_entry_name_no_links(suffix.lang or lang, suffix.term)
+	if data.base and data.base.term then
+		prefix_sort_base = make_entry_name_no_links(data.base.lang or data.lang, data.base.term)
+	elseif data.suffix.term then
+		prefix_sort_base = make_entry_name_no_links(data.suffix.lang or data.lang, data.suffix.term)
 	end
+
+	-- Insert the categories and parts.
 	local categories = {}
 
-	table.insert(parts_formatted, export.link_term(prefix, prefix.term, lang, sc, sort_key, force_cat, nocat))
-	insert_affix_category(categories, lang, pos, "prefix", prefix, sort_key, prefix_sort_base)
+	table.insert(parts_formatted, export.link_term(data.prefix, data.lang, data.sc, data.sort_key, data.force_cat,
+		data.nocat))
+	insert_affix_category(categories, data.lang, data.pos, "prefix", data.prefix, data.sort_key, prefix_sort_base)
 
-	if base then
-		table.insert(parts_formatted, export.link_term(base, base.term, lang, sc, sort_key, force_cat, nocat))
+	if data.base then
+		table.insert(parts_formatted, export.link_term(data.base, data.lang, data.sc, data.sort_key, data.force_cat,
+			data.nocat))
 	end
 
-	table.insert(parts_formatted, export.link_term(suffix, suffix.term, lang, sc, sort_key, force_cat, nocat))
-	insert_affix_category(categories, lang, pos, "suffix", suffix)
+	table.insert(parts_formatted, export.link_term(data.suffix, data.lang, data.sc, data.sort_key, data.force_cat,
+		data.nocat))
+	-- FIXME, should we be specifying a sort base here?
+	insert_affix_category(categories, data.lang, data.pos, "suffix", data.suffix)
 
-	return export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
+	return export.concat_parts(data.lang, parts_formatted, categories, data.nocat, data.sort_key, data.lit,
+		data.force_cat)
 end
 
 
-function export.show_infix(lang, sc, base, infix, pos, sort_key, nocat, lit, force_cat)
+--[=[
+Implementation of {{infix}}.
+
+WARNING: This destructively modifies both `data` and `.base` and `.infix`.
+]=]
+function export.show_infix(data)
 	local categories = {}
-	pos = pos or default_pos
+	data.pos = data.pos or default_pos
 
-	pos = pluralize(pos)
+	data.pos = pluralize(data.pos)
 
-	-- Hyphenate the affixes
-	make_part_affix(infix, lang, sc, "infix")
+	-- Hyphenate the affixes and apply any affix mappings.
+	make_part_affix(data.infix, data.lang, data.sc, "infix")
 
-	track_wrong_affix_type("infix", base, lang, sc, nil, "base")
-	track_wrong_affix_type("infix", infix, lang, sc, "infix", "infix")
+	track_wrong_affix_type("infix", data.base, data.lang, data.sc, nil)
+	track_wrong_affix_type("infix", data.infix, data.lang, data.sc, "infix")
 
-	-- Make links out of all the parts
+	-- Make links out of all the parts.
 	local parts_formatted = {}
 
-	table.insert(parts_formatted, export.link_term(base, base.term, lang, sc, sort_key, force_cat, nocat))
-	table.insert(parts_formatted, export.link_term(infix, infix.term, lang, sc, sort_key, force_cat, nocat))
+	table.insert(parts_formatted, export.link_term(data.base, data.lang, data.sc, data.sort_key, data.force_cat,
+		data.nocat))
+	table.insert(parts_formatted, export.link_term(data.infix, data.lang, data.sc, data.sort_key, data.force_cat,
+		data.nocat))
 
-	-- Insert the categories
-	insert_affix_category(categories, lang, pos, "infix", infix)
+	-- Insert the categories.
+	-- FIXME, should we be specifying a sort base here?
+	insert_affix_category(categories, data.lang, data.pos, "infix", data.infix)
 
-	return export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
+	return export.concat_parts(data.lang, parts_formatted, categories, data.nocat, data.sort_key, data.lit,
+		data.force_cat)
 end
 
 
-function export.show_prefixes(lang, sc, prefixes, base, pos, sort_key, nocat, lit, force_cat)
-	pos = pos or default_pos
+--[=[
+Implementation of {{prefix}}.
 
-	pos = pluralize(pos)
+WARNING: This destructively modifies both `data` and the structures within `.prefixes`, as well as `.base`.
+]=]
+function export.show_prefix(data)
+	data.pos = data.pos or default_pos
 
-	-- Hyphenate the affixes
-	for i, prefix in ipairs(prefixes) do
-		make_part_affix(prefix, lang, sc, "prefix")
+	data.pos = pluralize(data.pos)
+
+	-- Hyphenate the affixes and apply any affix mappings.
+	for i, prefix in ipairs(data.prefixes) do
+		make_part_affix(prefix, data.lang, data.sc, "prefix")
 	end
 
-	for i, prefix in ipairs(prefixes) do
-		track_wrong_affix_type("prefix", prefix, lang, sc, "prefix", "prefix")
+	for i, prefix in ipairs(data.prefixes) do
+		track_wrong_affix_type("prefix", prefix, data.lang, data.sc, "prefix")
 	end
 
-	track_wrong_affix_type("prefix", base, lang, sc, nil, "base")
+	track_wrong_affix_type("prefix", data.base, data.lang, data.sc, nil)
 
-	-- Make links out of all the parts
+	-- Make links out of all the parts.
 	local parts_formatted = {}
 	local first_sort_base = nil
 	local categories = {}
 
-	if prefixes[2] then
-		first_sort_base = make_entry_name_no_links(prefixes[2].lang or lang, prefixes[2].term)
-	elseif base then
-		first_sort_base = make_entry_name_no_links(base.lang or lang, base.term)
+	if data.prefixes[2] then
+		first_sort_base = make_entry_name_no_links(data.prefixes[2].lang or data.lang, data.prefixes[2].term)
+	elseif data.base then
+		first_sort_base = make_entry_name_no_links(data.base.lang or data.lang, data.base.term)
 	end
 
-	for i, prefix in ipairs(prefixes) do
-		table.insert(parts_formatted, export.link_term(prefix, prefix.term, lang, sc, sort_key, force_cat, nocat))
-		insert_affix_category(categories, lang, pos, "prefix", prefix, sort_key, i == 1 and first_sort_base or nil)
+	for i, prefix in ipairs(data.prefixes) do
+		table.insert(parts_formatted, export.link_term(prefix, data.lang, data.sc, data.sort_key, data.force_cat,
+			data.nocat))
+		insert_affix_category(categories, data.lang, data.pos, "prefix", prefix, data.sort_key, i == 1 and
+			first_sort_base or nil)
 	end
 
-	if base then
-		table.insert(parts_formatted, export.link_term(base, base.term, lang, sc, sort_key, force_cat, nocat))
+	if data.base then
+		table.insert(parts_formatted, export.link_term(data.base, data.lang, data.sc, data.sort_key, data.force_cat,
+			data.nocat))
 	else
 		table.insert(parts_formatted, "")
 	end
 
-	return export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
+	return export.concat_parts(data.lang, parts_formatted, categories, data.nocat, data.sort_key, data.lit,
+		data.force_cat)
 end
 
 
-function export.show_suffixes(lang, sc, base, suffixes, pos, sort_key, nocat, lit, force_cat)
+--[=[
+Implementation of {{suffix}}.
+
+WARNING: This destructively modifies both `data` and the structures within `.suffixes`, as well as `.base`.
+]=]
+function export.show_suffix(data)
 	local categories = {}
-	pos = pos or default_pos
+	data.pos = data.pos or default_pos
 
-	pos = pluralize(pos)
+	data.pos = pluralize(data.pos)
 
-	-- Hyphenate the affixes
-	for i, suffix in ipairs(suffixes) do
-		make_part_affix(suffix, lang, sc, "suffix")
+	-- Hyphenate the affixes and apply any affix mappings.
+	for i, suffix in ipairs(data.suffixes) do
+		make_part_affix(suffix, data.lang, data.sc, "suffix")
 	end
 
-	track_wrong_affix_type("suffix", base, lang, sc, nil, "base")
+	track_wrong_affix_type("suffix", data.base, data.lang, data.sc, nil)
 
-	for i, suffix in ipairs(suffixes) do
-		track_wrong_affix_type("suffix", suffix, lang, sc, "suffix", "suffix")
+	for i, suffix in ipairs(data.suffixes) do
+		track_wrong_affix_type("suffix", suffix, data.lang, data.sc, "suffix")
 	end
 
-	-- Make links out of all the parts
+	-- Make links out of all the parts.
 	local parts_formatted = {}
 
-	if base then
-		table.insert(parts_formatted, export.link_term(base, base.term, lang, sc, sort_key, force_cat, nocat))
+	if data.base then
+		table.insert(parts_formatted, export.link_term(data.base, data.lang, data.sc, data.sort_key, data.force_cat,
+			data.nocat))
 	else
 		table.insert(parts_formatted, "")
 	end
 
-	for i, suffix in ipairs(suffixes) do
-		table.insert(parts_formatted, export.link_term(suffix, suffix.term, lang, sc, sort_key, force_cat, nocat))
+	for i, suffix in ipairs(data.suffixes) do
+		table.insert(parts_formatted, export.link_term(suffix, data.lang, data.sc, data.sort_key, data.force_cat,
+			data.nocat))
 	end
 
-	-- Insert the categories
-	for i, suffix in ipairs(suffixes) do
+	-- Insert the categories.
+	for i, suffix in ipairs(data.suffixes) do
 		if suffix.term then
-			insert_affix_category(categories, lang, pos, "suffix", suffix)
+			-- FIXME, should we be specifying a sort base here?
+			insert_affix_category(categories, data.lang, data.pos, "suffix", suffix)
 		end
 
 		if suffix.pos and rfind(suffix.pos, "patronym") then
@@ -878,81 +1139,8 @@ function export.show_suffixes(lang, sc, base, suffixes, pos, sort_key, nocat, li
 		end
 	end
 
-	return export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
-end
-
-
--- Add a hyphen to a term in the appropriate place, based on the specified affix type. For example, if `affix_type` ==
--- "prefix", we'll add a hyphen onto the end if it's not already there. In general, if the template and display hyphens
--- are the same and the appropriate hyphen is already present, we leave it, else we strip off the template hyphen if
--- present and add the display hyphen.
-function export.make_affix(term, lang, sc, affix_type)
-	if not (affix_type == "prefix" or affix_type == "suffix" or affix_type == "circumfix" or affix_type == "infix" or
-		affix_type == "interfix") then
-		error("Internal error: Invalid affix type " .. (affix_type or "(nil)"))
-	end
-
-	if not term then
-		return nil
-	end
-
-	-- If the term begins with ^, leave it exactly as-is except for removing the ^.
-	if usub(term, 1, 1) == "^" then
-		return usub(term, 2)
-	end
-
-	if affix_type == "circumfix" then
-		return term
-	elseif affix_type == "interfix" then
-		affix_type = "infix"
-	end
-
-	local scode, thyph, dhyph = detect_script_and_hyphens(term, lang, sc)
-	thyph = "([" .. thyph .. "])"
-
-	-- Remove an asterisk if the morpheme is reconstructed and add it in the end.
-	local reconstructed = ""
-	if term:find("^%*") then 
-		reconstructed = "*"
-		term = term:gsub("^%*", "")
-	end
-
-	local beginning_hyphen = rmatch(term, "^" .. thyph .. ".*$")
-	local ending_hyphen = rmatch(term, "^.*" .. thyph .. "$")
-	local beginning_dhyph = dhyph(scode, beginning_hyphen)
-	local ending_dhyph = dhyph(scode, ending_hyphen)
-
-	if affix_type == "suffix" then
-		if beginning_hyphen and beginning_hyphen == beginning_dhyph then
-			-- leave term alone
-		else
-			local term_no_hyphen = beginning_hyphen and usub(term, 2) or term
-			term = beginning_dhyph .. term_no_hyphen
-		end
-	elseif affix_type == "prefix" then
-		if ending_hyphen and ending_hyphen == ending_dhyph then
-			-- leave term alone
-		else
-			local term_no_hyphen = ending_hyphen and rsub(term, "^(.-).$", "%1") or term
-			term = term_no_hyphen .. ending_dhyph
-		end
-	elseif affix_type == "infix" then
-		if (beginning_hyphen and ending_hyphen and
-			beginning_hyphen == beginning_dhyph and
-			ending_hyphen == ending_dhyph) then
-			-- leave term alone
-		elseif term == beginning_hyphen or term == ending_hyphen then
-			-- term is a single hyphen; should probably leave alone
-		else
-			local term_no_hyphen = beginning_hyphen and usub(term, 2) or term
-			term_no_hyphen = ending_hyphen and rsub(term_no_hyphen, "^(.-).$", "%1") or term_no_hyphen
-			term = beginning_dhyph .. term_no_hyphen .. ending_dhyph
-		end
-	else
-		error("Internal error: Bad affix type " .. affix_type)
-	end
-
-	return reconstructed .. term
+	return export.concat_parts(data.lang, parts_formatted, categories, data.nocat, data.sort_key, data.lit,
+		data.force_cat)
 end
 
 return export
