@@ -834,7 +834,7 @@ represented as lists, and two-level multipart tags as lists of lists), fetch the
 Return two values, a list of categories and a list of labels. `lang` is the language of term represented by the tag set,
 and `POS` is the user-provided part of speech (which may be nil).
 ]=]
-function export.fetch_categories_and_labels(normalized_tag_set, lang, POS)
+function export.fetch_categories_and_labels(normalized_tag_set, lang, POS, pagename, lemmas)
 	local m_cats = mw.loadData(export.form_of_cats_module)
 	local categories = {}
 	local labels = {}
@@ -842,12 +842,41 @@ function export.fetch_categories_and_labels(normalized_tag_set, lang, POS)
 	POS = export.normalize_pos(POS)
 	-- First split any two-level multipart tags into multiple sets, to make our life easier.
 	for _, tag_set in ipairs(export.split_two_level_multipart_tag_set(normalized_tag_set)) do
-		local function make_function_table()
-			return {
-				tag_set=normalized_tag_set,
-				lang=lang,
-				POS=POS
+		-- Call a named function, either from the lang-specific data in [[Module:form of/lang-specific/LANGCODE]] or
+		-- in [[Module:form of/cats]].
+		local function call_named_function(name, funtype)
+			local data = {
+				pagename = pagename or mw.title.getCurrentTitle().subpageText,
+				lemmas = lemmas,
+				tag_set = normalized_tag_set,
+				lang = lang,
+				POS = POS
 			}
+			-- First try lang-specific.
+			local langcode = lang and lang:getCode()
+			local lang_specific_module
+			if langcode and export.langs_with_lang_specific_tags[langcode] then
+				lang_specific_module = export.form_of_lang_data_module_prefix .. langcode
+				local langdata = mw.loadData(lang_specific_module)
+				if langdata.cat_functions then
+					local fn = langdata.cat_functions[name]
+					if fn then
+						return fn(data)
+					end
+				end
+			end
+			local fn = require(export.form_of_functions_module).cat_functions[name]
+			if fn then
+				return fn(data)
+			end
+			local lang_specific_part
+			if lang_specific_module then
+				lang_specific_part = ("[[%s]] or "):format(lang_specific_module)
+			else
+				lang_specific_part = ""
+			end
+			error(("No %s function named '%s' in %s[[%s]]"):format(funtype, name, lang_specific_part,
+				export.form_of_functions_module))
 		end
 
 		-- Given a tag from the current tag set (which may be a list in case of a multipart tag),
@@ -987,12 +1016,8 @@ function export.fetch_categories_and_labels(normalized_tag_set, lang, POS)
 					condval = check_condition(spec[3])
 				end
 				return condval, 4
-			elseif predication == "call" then
-				local fn = require(export.form_of_functions_module).cat_functions[spec[2]]
-				if not fn then
-					error("No condition function named '" .. spec[2] .. "'")
-				end
-				return fn(make_function_table()), 3
+			elseif predicate == "call" then
+				return fn(call_named_function(spec[2], "condition")), 3
 			else
 				error("Unrecognized predicate: " .. predicate)
 			end
@@ -1040,11 +1065,7 @@ function export.fetch_categories_and_labels(normalized_tag_set, lang, POS)
 				end
 				return false
 			elseif predicate == "call" then
-				local fn = require(export.form_of_functions_module).cat_functions[spec[2]]
-				if not fn then
-					error("No spec function named '" .. spec[2] .. "'")
-				end
-				return process_spec(fn(make_function_table()))
+				return process_spec(call_named_function(spec[2], "spec"))
 			else
 				local condval, ifspec = check_condition(spec)
 				if condval then
@@ -1101,6 +1122,7 @@ controlling the display, with the following fields:
 		   no lemma links are shown and the connecting "of" is also omitted.
 `.lemma_face`: (RECOMMENDED) "Face" to use when displaying the lemma objects. Usually should be set to "term".
 `.POS`: (RECOMMENDED) Categorizing part-of-speech tag. Comes from the p= or POS= argument of {{inflection of}}.
+`.pagename`: Page name of "current" page or nil to use the actual page title; for testing purposes.
 `.enclitics`: List of enclitics to display after the lemmas, in parens.
 `.no_format_categories`: If true, don't format the categories derived from the inflection tags; just return them.
 `.sort`: Sort key for formatted categories. Ignored when .no_format_categories = true.
@@ -1163,7 +1185,7 @@ function export.tagged_inflections(data)
 		for _, normalized_tag_set in ipairs(normalized_tag_sets) do
 			local cur_infl = {}
 			local this_categories, this_labels = export.fetch_categories_and_labels(normalized_tag_set, data.lang,
-				data.POS)
+				data.POS, data.pagename, type(data.lemmas) == "table" and data.lemmas or nil)
 			if not data.nocat then
 				m_table.extendList(categories, this_categories)
 			end
