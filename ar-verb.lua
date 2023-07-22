@@ -4054,51 +4054,56 @@ function export.infer_participle_vocalization(headword, form, weakness, is_activ
 		end
 	end
 
-	local function check_weakness(values, allow_missing)
+	local function check_weakness(values, allow_missing, invert_condition)
 		local function make_possible_weaknesses()
 			for i, val in ipairs(values) do
 				values[i] = "'" .. val .. "'"
 			end
 			return m_table.serialCommaJoin(values, {conj = "or"})
 		end
+		if allow_missing and invert_condition then
+			error("Internal error: Can't specify both allow_missing and invert_condition")
+		end
 		if not weakness then
-			if allow_missing then
+			if allow_missing or invert_condition then
 				return
 			else
 				err(("weakness is unspecified but must be %s"):format(make_possible_weaknesses()))
 			end
-		elseif not m_table.contains(values, weakness) then
-			err(("weakness '%s' must be %s"):format(weakness, make_possible_weaknesses()))
+		else
+			local matches = m_table.contains(values, weakness)
+			if invert_condition and matches then
+				err(("weakness '%s' must not be %s"):format(weakness, make_possible_weaknesses()))
+			elseif not invert_condition and not matches then
+				err(("weakness '%s' must be %s"):format(weakness, make_possible_weaknesses()))
+			end
 		end
 	end
 
 	local quadlit = rmatch(form, "q$")
 
-	local function do_final_weak_only_mu_participle(sound_prefix, expected_length)
-		check(1, M)
-		if len == expected_length - 1 then
-			-- active final-weak
-			if not is_active then
-				err(("length-%s participle only allowed for active participles"):format(len))
+	local vocalized
+
+	local function handle_possibly_final_weak(sound_prefix, expected_length)
+		check_len(expected_length, expected_length)
+		if ch[expected_length] == AMAQ then
+			-- passive final-weak
+			if is_active then
+				err("participle in -ِى only allowed for passive participles")
 			end
-			vocalized = sound_prefix .. IN
+			check_weakness({"final-weak", "assimilated+final-weak"}, "allow missing")
+			vocalized = sound_prefix .. AN .. AMAQ
 		else
-			check_len(expected_length, expected_length)
-			if ch[expected_length] = AMAQ then
-				-- passive final-weak
-				if is_active then
-					err("participle in -ِى only allowed for passive participles")
-				end
-				vocalized = sound_prefix .. AN .. AMAQ
-			else
-				-- all others behave as if sound
-				vocalized = sound_prefix .. (is_active and I or A) .. ch[expected_length]
-			end
+			-- all others behave as if sound
+			check_weakness({"final-weak", "assimilated+final-weak"}, nil, "invert condition")
+			vocalized = sound_prefix .. (is_active and I or A) .. ch[expected_length]
 		end
 	end
 
-	-- find first radical, start of second/third radicals, check for required letters
-	local vocalized
+	if not (form == "I" and is_active) then
+		-- all participles except form I active begin in م-.
+		check(1, M)
+	end
 	if form == "I" then
 		if is_active then
 			check(2, ALIF)
@@ -4128,7 +4133,6 @@ function export.infer_participle_vocalization(headword, form, weakness, is_activ
 				vocalized = sound_prefix .. I .. ch[4]
 			end
 		else
-			check(1, M)
 			-- assimilated verbs: regular, e.g. مَوْزُون "weighed"
 			-- geminate verbs: regular, e.g. مَبْلُول "moistened"
 			-- third-hamzated verbs: مَبْرُوء
@@ -4163,12 +4167,55 @@ function export.infer_participle_vocalization(headword, form, weakness, is_activ
 				end
 			end
 		end
-	elseif form == "II" then
-		do_final_weak_only_mu_participle(MU .. ch[2] .. A .. ch[3] .. SH, 4)
-	elseif form == "III" then
-		check(3, ALIF)
-		do_final_weak_only_mu_participle(MU .. ch[2] .. AA .. ch[4], 5)
-	elseif form == "IV" then
+	elseif form == "II" or form == "V" then
+		local sound_prefix, expected_length
+		if form == "V" then
+			check(2, T)
+			sound_prefix = MU .. T .. A .. ch[3] .. A .. ch[4] .. SH
+			expected_length = 5
+		else
+			sound_prefix = MU .. ch[2] .. A .. ch[3] .. SH
+			expected_length = 4
+		end
+		if len == expected_length - 1 then
+			-- active final-weak
+			if not is_active then
+				err(("length-%s participle only allowed for active participles"):format(len))
+			end
+			check_weakness({"final-weak", "assimilated+final-weak"}, "allow missing")
+			vocalized = sound_prefix .. IN
+		else
+			handle_possibly_final_weak(sound_prefix, expected_length)
+		end
+	elseif form == "III" or form == "VI" then
+		local sound_prefix, expected_length
+		if form == "VI" then
+			check(2, T)
+			check(4, ALIF)
+			sound_prefix = MU .. T .. A .. ch[3] .. AA .. ch[5]
+			expected_length = 6
+		else
+			sound_prefix = MU .. ch[2] .. AA .. ch[4]
+			expected_length = 5
+		end
+		if len == expected_length - 1 then
+			-- active final-weak or active or passive geminate
+			if is_active then
+				check_weakness({"geminate", "final-weak", "assimilated+final-weak"})
+				if weakness == "geminate" then
+					vocalized = sound_prefix .. SH
+				else
+					vocalized = sound_prefix .. IN
+				end
+			else
+				check_weakness({"geminate"}, "allow missing")
+				vocalized = sound_prefix .. SH
+			end
+		else
+			handle_possibly_final_weak(sound_prefix, expected_length)
+		end
+	elseif form == "IV" or form == "X" then
+		-- form IV:
 		-- sound: مُرْسِخ (active, "entrenching"), مُرْسَخ (passive, "entrenched")
 		-- first-hamzated (like sound): مُؤْيِس (active, "causing to despair"), مُؤْيَس (passive, "caused to despair")
 		-- final-weak: مُكْرٍ (active, "renting out"), مُكْرًى (passive, "rented out")
@@ -4178,18 +4225,141 @@ function export.infer_participle_vocalization(headword, form, weakness, is_activ
 		-- geminate: مُمِدّ (active, "granting, helping"), مُمَدّ (passive, "granted, helped")
 		-- hollow: مُزِيل (active, "eliminating"), مُزَال (passive, "eliminated")
 		-- hollow + final-weak: مُعْيٍ (active, "tiring"), مُعْيًى (passive, "tired")
-		check(1, M)
-		local sound_prefi
-		if ch[2] == W then
-			-- assimilated
-			sound_prefix = 
-		check(3, ALIF)
-		do_sound_only_mu_participle(MU .. ch[2] .. AA .. ch[4], 5)
+		local sound_prefix, expected_length
+		if form == "X" then
+			check(2, S)
+			check(3, T)
+			sound_prefix = MU .. S .. SK .. T .. A .. ch[4]
+			expected_length = 6
+		else
+			sound_prefix = MU .. ch[2]
+			expected_length = 4
+		end
 
-		rad1 = ch[1]
-		check(2, {ALIF, W}) -- W occurs in passive-only verbs
-		radstart = 3
-	elseif form == "IV" then
+		if len == expected_length and ch[len - 1] == Y and ch[len] ~= AMAQ then
+			-- active hollow
+			if not is_active then
+				err("this shape only allowed for active participles")
+			end
+			check_weakness({"hollow"}, "allow missing")
+			vocalized = sound_prefix .. II .. ch[len]
+		elseif len == expected_length and ch[len - 1] == ALIF then
+			-- passive hollow
+			if not is_passive then
+				err("this shape only allowed for passive participles")
+			end
+			check_weakness({"hollow"}, "allow missing")
+			vocalized = sound_prefix .. AA .. ch[len]
+		elseif len == expected_length - 1 then
+			-- active final-weak or active or passive geminate
+			if is_active then
+				check_weakness({"geminate", "final-weak", "assimilated+final-weak"})
+				if weakness == "geminate" then
+					vocalized = sound_prefix .. I .. ch[len] .. SH
+				elseif form == "IV" and ch[2] == W then
+					-- assimilated final-weak
+					vocalized = sound_prefix .. ch[len] .. IN
+				else
+					vocalized = sound_prefix .. SK .. ch[len] .. IN
+				end
+			else
+				check_weakness({"geminate"}, "allow missing")
+				vocalized = sound_prefix .. A .. ch[len] .. SH
+			end
+		else
+			if form == "IV" and ch[2] == W then
+				-- assimilated, possibly final-weak
+				sound_prefix = sound_prefix .. ch[len - 1]
+			else
+				sound_prefix = sound_prefix .. SK .. ch[len - 1]
+			end
+			handle_possibly_final_weak(sound_prefix, expected_length)
+		end
+	elseif form == "VII" or form == "VIII" then
+		-- form VII (passive participles are fairly rare but do exist):
+		-- sound: مُنْكَتِب (active "subscribing"), مُنْكَتَب (passive "subscribed")
+		-- geminate: مُنْضَمّ (both active "joining, containing" and passive "joined, contained")
+		-- final-weak: مُنْطَلٍ (active "fooling (someone)"), مُنْطَلًى (passive "fooled")
+		-- final-weak with medial wāw: مُنْطَوٍ (active "involving"), مُنْطَوًى (passive "involved")
+		-- hollow: مُنْقَاد (both active "complying with" and passive "complied with")
+		--
+		-- for form VIII, the same variants exist but things are complicated by assimilations involving the template T.
+		-- sound third-hamzated no assimilation: مُبْتَدِئ (active "beginning"), مُبْتَدَأ (passive "begun")
+		-- geminate no assimilation: مُبْتَزّ (both active "robbing" and passive "robbed")
+		-- final-weak no assimilation: مُبْتَنٍ (active "building"), مُبْتَنًى (passive "built")
+		-- final-weak with medial wāw no assimilation: مُحْتَوٍ (active "containing"), مُحْتَوًى (passive "contained")
+		-- hollow no assimilation: مُخْتَار (both active "choosing" and passive "chosen")
+		--
+		-- sound with total assimilation: مُتَّبِع (active "following"), مُتَّبَع (passive "followed")
+		-- sound with total assimilation, assimilating wāw: مُتَّعِد (active "threatening"), مُتَّعَد (passive "threatened")
+		-- sound with total assimilation, irregularly assimilating hamza: مُتَّخِذ (active "taking"), مُتَّخَذ (passive "taken")
+		-- sound with total assimilation (to ḏāl, producing dāl): مُدَّخِر (active "reserving"), مُدَّخَر (passive "reserved")
+		-- sound with total assimilation (to ḏāl): مُذَّكِر (active "remembering"), مُذَّكَر (passive "remembered")
+		-- sound with total assimilation (to ṭāʔ): مُطَّرِح (active "discarding"), مُطَّرَح (passive "discarded")
+		-- sound with total assimilation (to ẓāʔ): مُظَّلِم (active "tolerating"), مُظَّلَم (passive "tolerated")
+		-- final-weak with total assimilation, assimilating wāw: مُتَّقٍ (active "guarding against"), مُتَّقًى (passive "guarded against")
+		-- final-weak with total assimilation (to ṯāʔ): مُثَّنٍ (active "undulating"), مُثَّنًى (passive "undulated")
+		-- final-weak with total assimilation (to dāl): مُدَّعٍ (active "claiming"), مُدَّعًى (passive "claimed")
+		-- sound with partial assimilation (to zayn): مُزْدَهِر (active "thriving"), مُزْدَهَر (passive "thrived")
+		-- sound with medial wāw with partial assimilation (to zayn): مُزْدَوِج (active "appearing twice")
+		-- sound with partial assimilation (to ṣād): مُصْطَبِح (active "illuminating"), مُصْطَبَح (passive, "illuminated")
+		-- sound with partial assimilation (to ḍād): مُضْطَرِب (active "to be disturbed"; no passive)
+		-- geminate with partial assimilation (to ṣād): مُصْطَبّ (both active "effusing" and passive "effused")
+		-- geminate with partial assimilation (to ḍād): مُضْطَرّ (both active "forcing" and passive "forced")
+		-- final-weak with partial assimilation (to ṣād): مُصْطَلٍ (active "warming"), مُصْطَلًى (passive "warmed")
+		-- hollow with partial assimilation (to zayn): مُزْدَاد (both active "increasing" and passive "increased")
+		-- hollow with partial assimilation (to ṣad): مُصْطَاد (both active "hunting" and passive "hunted")
+
+		local sound_prefix, expected_length
+		if form == "X" then
+			check(2, S)
+			check(3, T)
+			sound_prefix = MU .. S .. SK .. T .. A .. ch[4]
+			expected_length = 6
+		else
+			sound_prefix = MU .. ch[2]
+			expected_length = 4
+		end
+
+		if len == expected_length and ch[len - 1] == Y and ch[len] ~= AMAQ then
+			-- active hollow
+			if not is_active then
+				err("this shape only allowed for active participles")
+			end
+			check_weakness({"hollow"}, "allow missing")
+			vocalized = sound_prefix .. II .. ch[len]
+		elseif len == expected_length and ch[len - 1] == ALIF then
+			-- passive hollow
+			if not is_passive then
+				err("this shape only allowed for passive participles")
+			end
+			check_weakness({"hollow"}, "allow missing")
+			vocalized = sound_prefix .. AA .. ch[len]
+		elseif len == expected_length - 1 then
+			-- active final-weak or active or passive geminate
+			if is_active then
+				check_weakness({"geminate", "final-weak", "assimilated+final-weak"})
+				if weakness == "geminate" then
+					vocalized = sound_prefix .. I .. ch[len] .. SH
+				elseif form == "IV" and ch[2] == W then
+					-- assimilated final-weak
+					vocalized = sound_prefix .. ch[len] .. IN
+				else
+					vocalized = sound_prefix .. SK .. ch[len] .. IN
+				end
+			else
+				check_weakness({"geminate"}, "allow missing")
+				vocalized = sound_prefix .. A .. ch[len] .. SH
+			end
+		else
+			if form == "IV" and ch[2] == W then
+				-- assimilated, possibly final-weak
+				sound_prefix = sound_prefix .. ch[len - 1]
+			else
+				sound_prefix = sound_prefix .. SK .. ch[len - 1]
+			end
+			handle_possibly_final_weak(sound_prefix, expected_length)
+		end
 		-- this would be alif-madda but we replaced it with hamza-alif above.
 		if ch[1] == HAMZA and ch[2] == ALIF then
 			rad1 = HAMZA
