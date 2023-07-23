@@ -68,23 +68,40 @@ def process_text_on_page(index, pagename, text):
           pagemsg("WARNING: Unrecognized langcode %s in {{ttbc}}: %s" % (langcode, line))
           return m.group(0)
         line = re.sub(r"\{\{ttbc\|([^{}|=]*)\}\}", replace_ttbc, line)
-        m = re.search(r"^\*\*( *\w[^:{}]*?: *\{\{.*)$", line)
+        langname_regex = "(?:'Are'are|\w[^:;{}]*?)"
+        m = re.search(r"^([:*]+ *)(%s)(;?)((?: *\{\{.*)?)$" % langname_regex, line)
         if m:
-          line = "*:" + m.group(1)
-          notes.append("replace ** with *: in translation section")
-        m = re.search(r"^(\*:* *)(\w[^:{}]*?)( *\{\{.*)$", line)
-        if m:
-          init, potential_lang, rest = m.groups()
-          if potential_lang in blib.languages_byCanonicalName:
-            pagemsg("Adding missing colon after language %s: %s" % (potential_lang, line))
+          init, potential_lang, semicolon, rest = m.groups()
+          if potential_lang in blib.languages_byCanonicalName or potential_lang in blib.etym_languages_byCanonicalName:
+            if semicolon:
+              pagemsg("Replace semicolon with colon after language %s: %s" % (potential_lang, line))
+            else:
+              pagemsg("Adding missing colon after language %s: %s" % (potential_lang, line))
             line = init + potential_lang + ":" + rest
-            notes.append("add missing colon after language name '%s' in translation section" % (potential_lang))
+            if semicolon:
+              notes.append("replace semicolon with colon after language name '%s' in translation section" % (potential_lang))
+            else:
+              notes.append("add missing colon after language name '%s' in translation section" % (potential_lang))
+        m = re.search(r"^([:*]\*)( *%s: *\{\{.*)$" % langname_regex, line)
+        if m:
+          init_star, rest = m.groups()
+          line = "*:" + rest
+          notes.append("replace %s with *: in translation section" % init_star)
         m = re.search(r"^\* *: *([^:]*):(.*)$", line)
         if m:
           indented_lang, rest = m.groups()
-          if indented_lang in ["Acehnese", "Ambonese Malay", "Baba Malay", "Balinese", "Banda", "Banjarese", "Batavian", "Buginese", "Brunei", "Brunei Malay", "Ende", "Indonesian", "Jambi Malay", "Javanese", "Kelantan-Pattani Malay", "Madurese", "Makasar", "Minangkabau", "Nias", "Sarawak Malay", "Sarawakian", "Sikule", "Simeulue", "Singkil", "Sundanese", "Terengganu Malay"]:
+          if indented_lang in ["Acehnese", "Ambonese Malay", "Baba Malay", "Balinese", "Banda", "Banjarese", "Batavian", "Buginese", "Brunei", "Brunei Malay", "Ende", "Indonesia", "Indonesian", "Jambi Malay", "Javanese", "Kelantan-Pattani Malay", "Madurese", "Makasar", "Minangkabau", "Nias", "Sarawak Malay", "Sarawakian", "Sikule", "Simeulue", "Singkil", "Sundanese", "Terengganu Malay"]:
             # Javanese variants: Central Javanese, Western Javanese, Kaili, Krama, Ngoko, Old Javanese
             pagemsg("Found %s translation indented under %s, unindenting: %s" % (indented_lang, prev_lang, line))
+            indented_lang_map = {
+              "Brunei": "Brunei Malay",
+              "Indonesia": "Indonesian",
+            }
+            new_indented_lang = indented_lang_map.get(indented_lang, indented_lang)
+            if new_indented_lang != indented_lang:
+              pagemsg("Replacing non-canonical indented language %s with %s" % (indented_lang, new_indented_lang))
+              notes.append("replace non-canonical indented language %s with %s" % (indented_lang, new_indented_lang))
+              indented_lang = new_indented_lang
             line = "* %s:%s" % (indented_lang, rest)
             translation_lines.append((indented_lang, lineind, line))
             notes.append("unindent translation for %s under %s" % (indented_lang, prev_lang))
@@ -93,7 +110,7 @@ def process_text_on_page(index, pagename, text):
               pagemsg("WARNING: Found unhandled indented language %s under %s: %s" % (indented_lang, prev_lang, line))
             translation_lines.append((prev_lang, lineind, line))
         else:
-          m = re.search(r"^\* *(\w[^:]*):(.*)$", line)
+          m = re.search(r"^\* *(%s):(.*)$" % langname_regex, line)
           if not m:
             pagemsg("WARNING: Unrecognized line in translation section: %s" % line)
             translation_lines.append((prev_lang, lineind, line))
@@ -103,6 +120,10 @@ def process_text_on_page(index, pagename, text):
             translation_lines.append((lang, lineind, line))
     else:
       new_lines.append(line)
+
+  if in_translation_section:
+    pagemsg("WARNING: Page ended in a translation section, something wrong, skipping")
+    return
 
   text = "\n".join(new_lines)
 
