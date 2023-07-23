@@ -4008,7 +4008,7 @@ function export.infer_participle_vocalization(headword, form, weakness, is_activ
 
 	-- Extract the headword letters into an array.
 	for i = 1, len do
-		table.insert(ch, usub(headword, i, i))
+		table.insert(chars, usub(headword, i, i))
 	end
 
 	local function form_intro_error_msg()
@@ -4042,7 +4042,7 @@ function export.infer_participle_vocalization(headword, form, weakness, is_activ
 			if type(must) == "string" then
 				return must
 			else
-				return m_table.serialCommaJoin(must, {conj = "or"})
+				return m_table.serialCommaJoin(must, {conj = "or", dontTag = true})
 			end
 		end
 		if letter == nil then
@@ -4065,7 +4065,7 @@ function export.infer_participle_vocalization(headword, form, weakness, is_activ
 			for i, val in ipairs(values) do
 				values[i] = "'" .. val .. "'"
 			end
-			return m_table.serialCommaJoin(values, {conj = "or"})
+			return m_table.serialCommaJoin(values, {conj = "or", dontTag = true})
 		end
 		if allow_missing and invert_condition then
 			error("Internal error: Can't specify both allow_missing and invert_condition")
@@ -4156,10 +4156,10 @@ function export.infer_participle_vocalization(headword, form, weakness, is_activ
 				check_len(4, 4)
 				if c(4) == W then
 					-- final-weak third-wāw
-					vocalized = sound_prefix .. U .. W .. SK
+					vocalized = sound_prefix .. U .. W .. SH
 				elseif c(4) == Y then
 					-- final-weak third-yāʾ
-					vocalized = sound_prefix .. I .. Y .. SK
+					vocalized = sound_prefix .. I .. Y .. SH
 				else
 					-- hollow
 					check(3, {W, Y})
@@ -4256,7 +4256,7 @@ function export.infer_participle_vocalization(headword, form, weakness, is_activ
 			vocalized = sound_prefix .. II .. c(len)
 		elseif len == expected_length and c(len - 1) == ALIF then
 			-- passive hollow
-			if not is_passive then
+			if is_active then
 				err("this shape only allowed for passive participles")
 			end
 			check_weakness({"hollow"}, "allow missing")
@@ -4368,7 +4368,7 @@ function export.infer_participle_vocalization(headword, form, weakness, is_activ
 		end
 	elseif form == "IX" then
 		check_len(4, 4)
-		vocalized = MU .. ch[2] .. SK .. ch[3] .. A .. ch[4] .. SH
+		vocalized = MU .. c(2) .. SK .. c(3) .. A .. c(4) .. SH
 	elseif form == "IIIq" or form == "IVq" or form == "XI" or form == "XII" or form == "XIII" or form == "XIV" or
 		form == "XV" then
 		error("Unsupported form " .. form)
