@@ -285,8 +285,31 @@ end
 -- nouns, which have different gender from the base form(s).)
 local function handle_infl(args, data, argpref, label, generate_default)
 	local newinfls = getargs(args, argpref)
-	if #newinfls == 0 then
-		newinfls = generate_default(args, data)
+	if #newinfls == 0 and generate_default then
+		newinfls = {{term = "+"}}
+	end
+	if generate_default then
+		local saw_plus = false
+		for _, newinfl in ipairs(newinfls) do
+			if newinfl.term == "+" then
+				saw_plus = true
+				break
+			end
+		end
+		if saw_plus then
+			local newnewinfls = {}
+			for _, newinfl in ipairs(newinfls) do
+				if newinfl.term == "+" then
+					local definfls = generate_default(args, data)
+					for _, definfl in ipairs(definfls) do
+						table.insert(newnewinfls, definfl)
+					end
+				else
+					table.insert(newnewinfls, newinfl)
+				end
+			end
+			newinfls = newnewinfls
+		end
 	end
 	if #newinfls > 0 then
 		newinfls.label = label
@@ -450,7 +473,7 @@ local function make_nisba_default(ending, endingtr)
 		end
 		local forms = {}
 		for i = 1, #heads do
-			local tr = data.translits
+			local tr = data.translits[i]
 			table.insert(forms, {term = heads[i] .. ending, translit = tr and tr .. endingtr or nil})
 		end
 		return forms
@@ -463,7 +486,7 @@ local nisba_adj_inflections = {
 	{pref = "d", label = "masculine dual"},
 	{pref = "fd", label = "feminine dual"},
 	{pref = "cpl", label = "common plural"},
-	{pref = "pl", label = "masculine plural", generate_default = make_nisba_default(U .. "ون", "ūn")},
+	{pref = "pl", label = "masculine plural", generate_default = make_nisba_default(U .. "ونَ", "ūna")},
 	{pref = "fpl", label = "feminine plural", generate_default = make_nisba_default(A .. "ات", "āt")},
 }
 
@@ -472,6 +495,7 @@ pos_functions["nisba adjectives"] = {
 		return create_infl_list_params(nisba_adj_inflections)
 	end)(),
 	func = function(args, data)
+		data.pos_category = "adjectives"
 		handle_infl_list_args(args, data, nisba_adj_inflections)
 	end
 }
