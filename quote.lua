@@ -60,6 +60,7 @@ local rsubn = mw.ustring.gsub
 local rmatch = mw.ustring.match
 local rfind = mw.ustring.find
 local rsplit = mw.text.split
+local ulen = mw.ustring.len
 
 local test_new_code = false
 local test_new_code_with_errors = false
@@ -80,8 +81,24 @@ local function isbn(text)
 end
 
 local function issn(text)
-	return "[[w:International Standard Serial Number|ISSN]] [https://www.worldcat.org/issn/" .. text .. " " .. text .. "]" ..
+	return "[https://www.worldcat.org/issn/" .. text .. " →ISSN]" ..
 		require("Module:check isxn").check_issn(text, "&nbsp;<span class=\"error\" style=\"font-size:88%\">Invalid&nbsp;ISSN</span>[[Category:Pages with ISSN errors]]")
+end
+
+local function lccn(text)
+	local origtext = text
+	text = rsub(text, " ", "")
+	if rfind(text, "%-") then
+		-- old-style LCCN; reformat per request by [[User:The Editor's Apprentice]]
+		local prefix, part1, part2 = rmatch(text, "^(.-)([0-9]+)%-([0-9]+)$")
+		if prefix then
+			if ulen(part2) < 6 then
+				part2 = ("0"):rep(6 - ulen(part2)) .. part2
+			end
+			text = prefix .. part1 .. part2
+		end
+	end
+	return "[https://lccn.loc.gov/" .. mw.uri.encode(text) .. " →LCCN]"
 end
 
 local function format_date(text)
@@ -154,8 +171,17 @@ local function clone_args(frame, include_direct, include_parent)
 	return args
 end
 
+local function check_url(param, value)
+	if value and value:find(" ") and not value:find("%[") then
+		error(("URL not allowed to contain a space, but saw %s=%s"):format(param, value))
+	end
+	return value
+end
+
 -- Implementation of {{quote-meta/source}}.
 function export.source(args)
+	local tracking_categories = {}
+
 	local argslang = args.lang or args[1]
 	if not argslang then
 		-- For the moment, only trigger an error on mainspace pages and
@@ -197,11 +223,9 @@ function export.source(args)
 	if args.author or args.last or args.quotee then
 		for i=1,5 do
 			local suf = i == 1 and "" or i
-			-- Return the argument named PARAM, possibly with a suffix added
-			-- (e.g. 2 for author2, 3 for last3). The suffix is either ""
-			-- (an empty string) for the first set of params (author, last,
-			-- first, etc.) or a number for further sets of params (author2,
-			-- last2, first2, etc.).
+			-- Return the argument named PARAM, possibly with a suffix added (e.g. 2 for author2, 3 for last3). The suffix is
+			-- either "" (an empty string) for the first set of params (author, last, first, etc.) or a number for further sets
+			-- of params (author2, last2, first2, etc.).
 			local function a(param)
 				return args[param .. suf]
 			end
@@ -275,6 +299,8 @@ function export.source(args)
 	local function has_newversion()
 		return args.newversion or args.location2 or has_new_title_or_author()
 	end
+	
+	local archivedate_error
 
 	-- This handles everything after displaying the author, starting with the
 	-- chapter and ending with page, column and then other=. It is currently
@@ -285,29 +311,33 @@ function export.source(args)
 	-- `sep` is the separator to display before the first item we add; see
 	-- add_with_sep() below.
 	local function postauthor(suf, sep)
-		-- Return the argument named PARAM, possibly with a suffix added
-		-- (e.g. 2 for chapter2). The suffix is either "" (an empty string)
-		-- for the first set of params (chapter, title, translator, etc.)
-		-- or a number for further sets of params (chapter2, title2,
-		-- translator2, etc.).
+		-- Return the argument named PARAM, possibly with a suffix added (e.g. 2 for author2, 3 for last3). The suffix is
+		-- either "" (an empty string) for the first set of params (chapter, title, translator, etc.) or a number for further
+		-- sets of params (chapter2, title2, translator2, etc.).
 		local function a(param)
 			return args[param .. suf]
 		end
-		if a("chapter") then
-			if require("Module:number-utilities").get_number(a("chapter")) then
+		-- Identical to a(param) except that it verifies that no space is present. Should be used for URL's.
+		local function aurl(param)
+			return check_url(param, a(param))
+		end
+		local chap = a("chapter")
+		if chap then
+			local cleaned_chap = chap:gsub("<sup>[^<>]*</sup>", ""):gsub("[*+#]", "")
+			if require("Module:number-utilities").get_number(cleaned_chap) then
 				-- Arabic chapter number
 				add(" chapter ")
-				if a("chapterurl") then
-					add("[" .. a("chapterurl") .. " " .. a("chapter") .. "]")
+				if aurl("chapterurl") then
+					add("[" .. aurl("chapterurl") .. " " .. chap .. "]")
 				else
-					add(a("chapter"))
+					add(chap)
 				end
-			elseif rfind(a("chapter"), "^[mdclxviMDCLXVI]+$") and require("Module:roman numerals").roman_to_arabic(a("chapter"), true) then
+			elseif rfind(cleaned_chap, "^[mdclxviMDCLXVI]+$") and require("Module:roman numerals").roman_to_arabic(cleaned_chap, true) then
 				-- Roman chapter number
 				add(" chapter ")
-				local uchapter = mw.ustring.upper(a("chapter"))
-				if a("chapterurl") then
-					add("[" .. a("chapterurl") .. " " .. uchapter .. "]")
+				local uchapter = mw.ustring.upper(chap)
+				if aurl("chapterurl") then
+					add("[" .. aurl("chapterurl") .. " " .. uchapter .. "]")
 				else
 					add(uchapter)
 				end
@@ -315,10 +345,10 @@ function export.source(args)
 				-- Must be a chapter name
 				add(" “")
 				local toinsert
-				if a("chapterurl") then
-					toinsert = "[" .. a("chapterurl") .. " " .. a("chapter") .. "]"
+				if aurl("chapterurl") then
+					toinsert = "[" .. aurl("chapterurl") .. " " .. chap .. "]"
 				else
-					toinsert = a("chapter")
+					toinsert = chap
 				end
 				add(require("Module:italics").unitalicize_brackets(toinsert))
 				if a("trans-chapter") then
@@ -380,9 +410,18 @@ function export.source(args)
 			end
 		end
 		
-		if a("archiveurl") or a("url") then
-			add("&lrm;<sup>[" .. (a("archiveurl") or a("url")) .. "]</sup>")
+		if aurl("archiveurl") or aurl("url") then
+			add("&lrm;<sup>[" .. (aurl("archiveurl") or aurl("url")) .. "]</sup>")
 			sep = ", "
+		end
+
+		if aurl("urls") then
+			add("&lrm;<sup>" .. aurl("urls") .. "</sup>")
+			sep = ", "
+		end
+
+		if a("edition") then
+			add_with_sep(a("edition") .. " edition")
 		end
 
 		if a("volume") then
@@ -436,10 +475,8 @@ function export.source(args)
 		if a("others") then
 			add_with_sep(a("others"))
 		end
-		if a("edition") then
-			add_with_sep(a("edition") .. " edition")
-		end
 		if a("quoted_in") then
+			table.insert(tracking_categories, "Quotations using quoted-in parameter")
 			add_with_sep("quoted in " .. a("quoted_in"))
 		end
 
@@ -472,13 +509,11 @@ function export.source(args)
 		-- can dispense with add_with_sep() and always insert the comma.
 		
 		if a("bibcode") then
-			add(", <small>[[w:Bibcode|Bibcode]]:&nbsp;[https://adsabs.harvard.edu/abs/"
-				.. mw.uri.encode(a("bibcode")) .. " " .. a("bibcode") .. "]</small>")
+			add(", <small>[https://adsabs.harvard.edu/abs/" .. mw.uri.encode(a("bibcode")) .. " →Bibcode]</small>")
 		end
 		if a("doi") then
-			add(", <small>[[w:Digital object identifier|DOI]]:<span class=\"neverexpand\">[https://doi.org/"
-				.. mw.uri.encode(a("doi") or a("doilabel") or "")
-				.. " " .. tag_nowiki(a("doi")) .. "]</span></small>")
+			add(", <small><span class=\"neverexpand\">[https://doi.org/"
+				.. mw.uri.encode(a("doi") or a("doilabel") or "") .. " →DOI]</span></small>")
 		end
 		if a("isbn") then
 			add(", <small>" .. isbn(a("isbn")) .. "</small>")
@@ -487,39 +522,33 @@ function export.source(args)
 			add(", <small>" .. issn(a("issn")) .. "</small>")
 		end
 		if a("jstor") then
-			add(", <small>[[w:JSTOR|JSTOR]] [https://www.jstor.org/stable/" ..
-				mw.uri.encode(a("jstor")) .. " " .. a("jstor") .. "]</small>")
+			add(", <small>[https://www.jstor.org/stable/" .. mw.uri.encode(a("jstor")) .. " →JSTOR]</small>")
 		end
 		if a("lccn") then
-			add(", <small>[[w:Library of Congress Control Number|LCCN]] [https://lccn.loc.gov/" ..
-				mw.uri.encode(a("lccn")) .. " " .. a("lccn") .. "]</small>")
+			add(", <small>" .. lccn(a("lccn")) .. "</small>")
 		end
 		if a("oclc") then
-			add(", <small>[[w:OCLC|OCLC]] [https://worldcat.org/oclc/" ..
-				mw.uri.encode(a("oclc")) .. " " .. a("oclc") .. "]</small>")
+			add(", <small>[https://www.worldcat.org/title/" .. mw.uri.encode(a("oclc")) .. " →OCLC]</small>")
 		end
 		if a("ol") then
-			add(", <small>[[w:Open Library|OL]] [https://openlibrary.org/works/OL" ..
-				mw.uri.encode(a("ol")) .. "/ " .. a("ol") .. "]</small>")
+			add(", <small>[https://openlibrary.org/works/OL" .. mw.uri.encode(a("ol")) .. "/ " .. "→OL]</small>")
 		end
 		if a("pmid") then
-			add(", <small>[[w:PubMed Identifier|PMID]] [https://www.ncbi.nlm.nih.gov/pubmed/" ..
-				mw.uri.encode(a("pmid")) .. " " .. a("pmid") .. "]</small>")
+			add(", <small>[https://www.ncbi.nlm.nih.gov/pubmed/" .. mw.uri.encode(a("pmid")) .. " →PMID]</small>")
 		end
 		if a("ssrn") then
-			add(", <small>[[w:Social Science Research Network|SSRN]] [https://ssrn.com/abstract=" ..
-				mw.uri.encode(a("ssrn")) .. " " .. a("ssrn") .. "]</small>")
+			add(", <small>[https://ssrn.com/abstract=" .. mw.uri.encode(a("ssrn")) .. " →SSRN]</small>")
 		end
 		if a("id") then
 			add(", <small>" .. a("id") .. "</small>")
 		end
-		if a("archiveurl") then
+		if aurl("archiveurl") then
 			add(", archived from ")
-			local url = a("url")
+			local url = aurl("url")
 			if not url then
 				-- attempt to infer original URL from archive URL; this works at
 				-- least for Wayback Machine (web.archive.org) URL's
-				url = rmatch(a("archiveurl"), "/(https?:.*)$")
+				url = rmatch(aurl("archiveurl"), "/(https?:.*)$")
 				if not url then
 					error("When archiveurl" .. suf .. "= is specified, url" .. suf .. "= must also be included")
 				end
@@ -527,13 +556,20 @@ function export.source(args)
 			add("[" .. url .. " the original] on ")
 			if a("archivedate") then
 				add(format_date(a("archivedate")))
+			elseif (string.sub(a("archiveurl"), 1, 28) == "https://web.archive.org/web/") then
+				-- If the archive is from the Wayback Machine, then it already contains the date
+				-- Get the date and format into ISO 8601
+				local wayback_date = string.sub(a("archiveurl"), 29, 29+7)
+				wayback_date = string.sub(wayback_date, 1, 4) .. "-" .. string.sub(wayback_date, 5, 6) .. "-" .. string.sub(wayback_date, 7, 8)
+				add(format_date(wayback_date))
 			else
 				error("When archiveurl" .. suf .. "= is specified, archivedate" .. suf .. "= must also be included")
+				archivedate_error = true
 			end
 		end
 		if a("accessdate") then
 			--Otherwise do not display here, as already used as a fallback for missing date= or year= earlier.
-			if a("date") or a("nodate") or a("year") then
+			if (a("date") or a("nodate") or a("year")) and not a("archivedate") then
 				add(", retrieved " .. format_date(a("accessdate")))
 			end
 		end
@@ -547,7 +583,7 @@ function export.source(args)
 			add(" (" .. format_date(a("laydate")) .. ")")
 		end
 		if a("section") then
-			add(", " .. (a("sectionurl") and "[" .. a("sectionurl") .. " " .. a("section") .. "]" or a("section")))
+			add(", " .. (aurl("sectionurl") and "[" .. aurl("sectionurl") .. " " .. a("section") .. "]" or a("section")))
 		end
 		if a("line") then
 			add(", line " .. a("line"))
@@ -558,11 +594,13 @@ function export.source(args)
 			local function page_or_pages()
 				if a("pages") then
 					return "pages " .. a("pages")
+				elseif a("page") == "unnumbered" then
+					return "unnumbered page"
 				else
 					return "page " .. a("page")
 				end
 			end
-			add(", " .. (a("pageurl") and "[" .. a("pageurl") .. " " .. page_or_pages() .. "]" or page_or_pages()))
+			add(", " .. (aurl("pageurl") and "[" .. aurl("pageurl") .. " " .. page_or_pages() .. "]" or page_or_pages()))
 		end
 		if a("column") or a("columns") then
 			local function column_or_columns()
@@ -572,7 +610,7 @@ function export.source(args)
 					return "column " .. a("column")
 				end
 			end
-			add(", " .. (a("columnurl") and "[" .. a("columnurl") .. " " .. column_or_columns() .. "]" or column_or_columns()))
+			add(", " .. (aurl("columnurl") and "[" .. aurl("columnurl") .. " " .. column_or_columns() .. "]" or column_or_columns()))
 		end
 		if a("other") then
 			add(", " .. a("other"))
@@ -653,13 +691,12 @@ function export.source(args)
 	-- 3. [[Category:Quotations using nocat parameter]], if nocat= is given.
 	--    Added to the same pages as for [[Category:Quotations with missing lang parameter]].
 	-- 4. [[Category:Quotations using archiveurl without archivedate]],
-	--    if archiveurl= is specified but not archivedate=. Added to the same
+	--    if archivedate= is missing and cannot be inferred. Added to the same
 	--    pages as for [[Category:Quotations with missing lang parameter]].
 	-- 5. [[Category:Quotation templates using both date and year]], if both
 	--    date= and year= are specified. Added to the same pages as for
 	--    [[Category:Quotations with missing lang parameter]].
 	
-	local tracking_categories = {}
 	local categories = {}
 	local NAMESPACE = mw.title.getCurrentTitle().nsText
 
@@ -680,7 +717,7 @@ function export.source(args)
 	else
 		table.insert(tracking_categories, "Quotations with missing lang parameter")
 	end
-	if args.archiveurl and not args.archivedate then
+	if archivedate_error then
 		table.insert(tracking_categories, "Quotations using archiveurl without archivedate")
 	end
 	if args.date and args.year then
@@ -733,27 +770,54 @@ function export.call_quote_template(frame)
 		["allowparams"] = {list = true},
 		["propagateparams"] = {list = true},
 	}
-	local iargs, other_direct_args = require("Module:parameters").process(frame.args, iparams, "return unknown")
+	local iargs, other_direct_args = require("Module:parameters").process(frame.args, iparams, "return unknown", "quote", "call_quote_template")
 	local direct_args = {}
 	for pname, param in pairs(other_direct_args) do
 		direct_args[pname] = ine(param)
 	end
 
+	local function process_paramref(paramref)
+		if not paramref then
+			return {}
+		end
+		local params = rsplit(paramref, "%s*,%s*")
+		for i, param in ipairs(params) do
+			if rfind(param, "^[0-9]+$") then
+				param = tonumber(param)
+			end
+			params[i] = param
+		end
+		return params
+	end
+	
+	local function fetch_param(source, params)
+		for _, param in ipairs(params) do
+			if source[param] then
+				return source[param]
+			end
+		end
+		return nil
+	end
+	
 	local params = {
 		["text"] = {},
 		["passage"] = {},
-		["page"] = {},
-		["pages"] = {},
 		["footer"] = {},
 		["brackets"] = {},
 	}
-	if iargs.textparam then
-		params[iargs.textparam] = {}
+	local textparams = process_paramref(iargs.textparam)
+	for _, param in ipairs(textparams) do
+		params[param] = {}
 	end
-	if iargs.pageparam then
-		params[iargs.pageparam] = {}
+	local pageparams = process_paramref(iargs.pageparam)
+	if #pageparams > 0 then
+		params["page"] = {}
+		params["pages"] = {}
+		for _, param in ipairs(pageparams) do
+			params[param] = {}
+		end
 	end
-	
+
 	local parent_args = frame:getParent().args
 	local allow_all = false
 	for _, allowspec in ipairs(iargs.allowparams) do
@@ -777,23 +841,27 @@ function export.call_quote_template(frame)
 
 	local params_to_propagate = {}
 	for _, propagate_spec in ipairs(iargs.propagateparams) do
-		for _, param in ipairs(rsplit(propagate_spec, "%s*,%s*")) do
+		for _, param in ipairs(process_paramref(propagate_spec)) do
 			table.insert(params_to_propagate, param)
 			params[param] = {}
 		end
 	end
 
-	local args = require("Module:parameters").process(parent_args, params, allow_all)
+	local args = require("Module:parameters").process(parent_args, params, allow_all, "quote", "call_quote_template")
 	parent_args = require("Module:table").shallowcopy(parent_args)
 
-	other_direct_args.passage = args.text or args.passage or iargs.textparam and args[iargs.textparam] or nil
-	other_direct_args.page = args.page or iargs.pageparam and args[iargs.pageparam] or nil
-	other_direct_args.pages = args.pages
+	if textparams[1] ~= "-" then
+		other_direct_args.passage = args.text or args.passage or fetch_param(args, textparams)
+	end
+	if #pageparams > 0 and pageparams[1] ~= "-" then
+		other_direct_args.page = fetch_param(args, pageparams) or args.page or nil
+		other_direct_args.pages = args.pages
+	end
 	if args.footer then
 		other_direct_args.footer = frame:expandTemplate { title = "small", args = {args.footer} }
 	end
 	other_direct_args.brackets = args.brackets
-	if not other_direct_args.authorlink then
+	if not other_direct_args.authorlink and not other_direct_args.author:find("[%[<]") then
 		other_direct_args.authorlink = other_direct_args.author
 	end
 	for _, param in ipairs(params_to_propagate) do
@@ -813,8 +881,8 @@ local paramdoc_param_replacements = {
 * <<params>> – the passage to be quoted.]=],
 	},
 	page = {
-		param_with_synonym = '<<synonym>> or {{para|page}}, or {{para|pages}}'
-		param_no_synonym = '{{para|page}} or {{para|pages}}'
+		param_with_synonym = '<<synonym>> or {{para|page}}, or {{para|pages}}',
+		param_no_synonym = '{{para|page}} or {{para|pages}}',
 		text = [=[
 * <<params>> – '''mandatory in some cases''': the page number(s) quoted from. When quoting a range of pages, note the following:
 ** Separate the first and last pages of the range with an [[en dash]], like this: {{para|pages|10–11}}.
@@ -850,8 +918,8 @@ local paramdoc_param_replacements = {
 	},
 	trailing_params = {
 		text = [=[
-* {{para|footer}} – a comment about the passage quoted.
-* {{para|brackets}} – use {{para|brackets|on}} to surround a quotation with [[bracket]]s. This indicates that the quotation either contains a mere mention of a term (for example, "some people find the word '''''manoeuvre''''' hard to spell") rather than an actual use of it (for example, "we need to '''manoeuvre''' carefully to avoid causing upset"), or does not provide an actual instance of a term but provides information about related terms.]=],
+* {{para|footer}} – a comment on the passage quoted.
+* {{para|brackets}} – use {{para|brackets|on}} to surround a quotation with [[bracket]]s. This indicates that the quotation either contains a mere mention of a term (for example, “some people find the word '''''manoeuvre''''' hard to spell”) rather than an actual use of it (for example, “we need to '''manoeuvre''' carefully to avoid causing upset”), or does not provide an actual instance of a term but provides information about related terms.]=],
 	}
 }
 
@@ -861,7 +929,7 @@ function export.paramdoc(frame)
 	}
 
 	local parargs = frame:getParent().args
-	local args = require("Module:parameters").process(parargs, params)
+	local args = require("Module:parameters").process(parargs, params, nil, "quote", "paramdoc")
 
 	local text = args[1]
 
@@ -876,7 +944,7 @@ function export.paramdoc(frame)
 			return frame:preprocess(rsub(text_to_sub, "<<params>>", subbed_paramtext))
 		end
 		text = rsub(text, "<<" .. param .. ">>", function() return sub_param() end)
-		text = rsub(text, "<<" .. param .. ":(.*)>>", sub_param)
+		text = rsub(text, "<<" .. param .. ":(.-)>>", sub_param)
 	end
 
 	local function fetch_text(param_to_replace, key)
