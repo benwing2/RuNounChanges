@@ -4,57 +4,14 @@
 	Author: Benwing2; conversion into Lua of {{quote-meta/source}} template,
 	written by Sgconlaw with some help from Erutuon and Benwing2.
 
-	You should replace a call to {{quote-meta/source|...}} with
-	{{#invoke:quote|source_t|...}}, except that you only
-	need to pass in arguments that aren't direct pass-throughs. For example,
-	{{quote-book}} invoked {{quote-meta/source}} like this:
-	
-	{{quote-meta/source
-    | last           = {{{last|}}}
-    | first          = {{{first|}}}
-    | author         = {{{author|{{{2|}}}}}}
-    | authorlink     = {{{authorlink|}}}
-    | last2          = {{{last2|}}}
-    | first2         = {{{first2|}}}
-    | author2        = {{{author2|}}}
-    | authorlink2    = {{{authorlink2|}}}
-	...
-    | author5        = {{{author5|}}}
-    | authorlink5    = {{{authorlink5|}}}
-    | coauthors      = {{{coauthors|}}}
-    | quotee         = {{{quotee|}}}
-    | quoted_in      = {{{quoted_in|}}}
-    | chapter        = {{{chapter|{{{entry|}}}}}}
-    | chapterurl     = {{{chapterurl|{{{entryurl|}}}}}}
-    | trans-chapter  = {{{trans-chapter|{{{trans-entry|}}}}}}
-    | translator     = {{{trans|{{{translator|{{{translators|}}}}}}}}}
-    | editor         = {{{editor|}}}
-    | editors        = {{{editors|}}}
-    ...
-    }}
-    
-    This can be reduced to a call to the module like this:
-    
-	{{#invoke:quote|source_t
-    | author         = {{{author|{{{2|}}}}}}
-    | chapter        = {{{chapter|{{{entry|}}}}}}
-    | chapterurl     = {{{chapterurl|{{{entryurl|}}}}}}
-    | trans-chapter  = {{{trans-chapter|{{{trans-entry|}}}}}}
-    | translator     = {{{trans|{{{translator|{{{translators|}}}}}}}}}
-    ...
-    }}
-
-	None of the arguments that are simple passthroughs need to be passed in,
-	because the source_t() function reads both the arguments passed to it *and*
-	the arguments passed to the parent template, with the former overriding the
-	latter.
-
-	The module code should work like the template code, except that in a few
-	situations I fixed apparent bugs in the template code in the process of
-	porting.
+	The main interface is quote_t(). Note that the source display is handled by source(), which reads both the arguments passed to it *and*
+	the arguments passed to the parent template, with the former overriding the latter.
 ]=]
 
 local export = {}
+
+local usex_module = "Module:usex"
+local languages_module = "Module:languages"
 
 local rsubn = mw.ustring.gsub
 local rmatch = mw.ustring.match
@@ -113,7 +70,7 @@ local function format_langs(langs)
 	local langcodes = rsplit(langs, ",")
 	local langnames = {}
 	for _, langcode in ipairs(langcodes) do
-		local lang = require("Module:languages").getByCode(langcode) or require("Module:languages").err(langcode, 1)
+		local lang = require(languages_module).getByCode(langcode, 1)
 		table.insert(langnames, lang:getCanonicalName())
 	end
 	if #langnames == 1 then
@@ -154,17 +111,19 @@ local function ine(arg)
 end
 
 -- Clone frame's and parent's args while also assigning nil to empty strings.
-local function clone_args(frame, include_direct, include_parent)
+local function clone_args(direct_args, parent_args, include_direct, include_parent)
 	local args = {}
-	-- If both include_parent and include_direct are given, processing the former must come first so that
-	-- direct args override parent args.
+
+	-- If both include_parent and include_direct are given, processing the former must come first so that direct args
+	-- override parent args. Note that if a direct arg is specified but is blank, it will still override the parent
+	-- arg (with nil).
 	if include_parent then
-		for pname, param in pairs(frame:getParent().args) do
+		for pname, param in pairs(parent_args) do
 			args[pname] = ine(param)
 		end
 	end
 	if include_direct then
-		for pname, param in pairs(frame.args) do
+		for pname, param in pairs(direct_args) do
 			args[pname] = ine(param)
 		end
 	end
@@ -194,7 +153,7 @@ function export.source(args)
 		local NAMESPACE = mw.title.getCurrentTitle().nsText
 
 		if NAMESPACE ~= "Template" and not require("Module:usex/templates").page_should_be_ignored(FULLPAGENAME) then
-			require("Module:languages").err(nil, 1)
+			require(languages_module).err(nil, 1)
 		end
 	end
 
@@ -698,14 +657,10 @@ function export.source(args)
 	--    [[Category:Quotations with missing lang parameter]].
 	
 	local categories = {}
-	local NAMESPACE = mw.title.getCurrentTitle().nsText
 
 	local langcode = args.termlang or argslang or "und"
 	langcode = rsplit(langcode, ",")[1]
-	local lang = require("Module:languages").getByCode(langcode)
-	if not lang and NAMESPACE ~= "Template" then
-		error("The language code \"" .. langcode .. "\" is not valid.")
-	end
+	local lang = require(languages_module).getByCode(langcode, true)
 
 	if args.nocat then
 		table.insert(tracking_categories, "Quotations using nocat parameter")
@@ -731,9 +686,12 @@ function export.source(args)
 			not require("Module:usex/templates").page_should_be_ignored(FULLPAGENAME)))
 end
 
+
 -- External interface, meant to be called from a template.
+-- FIXME: Remove this in favor of using quote_t.
 function export.source_t(frame)
-	local args = clone_args(frame, "include direct", "include parent")
+	local parent_args = frame:getParent().args
+	local args = clone_args(frame.args, parent_args, "include direct", "include parent")
 	local newret = export.source(args)
 	if test_new_code then
 		local oldret = frame:expandTemplate{title="quote-meta/source", args=args}
@@ -760,6 +718,103 @@ function export.source_t(frame)
 	end
 	return newret
 end
+
+
+-- External interface, meant to be called from a template. Replaces {{quote-meta}} and meant to be the primary
+-- interface for {{quote-*}} templates.
+function export.quote_t(frame)
+	local iparams = {
+		["text_fallback"] = {},
+		["t_fallback"] = {},
+	}
+	local iargs, other_direct_args = require("Module:parameters").process(frame.args, iparams, "return unknown", "quote", "quote_t_direct")
+
+	local params = {
+		[1] = {required = true, default = "und"},
+		["lang"] = {alias_of = 1},
+		["indent"] = {},
+		["i1"] = {alias_of = "indent"},
+		["text"] = {},
+		["passage"] = {alias_of = "text"},
+		["t"] = {},
+		["translation"] = {alias_of = "t"},
+		["gloss"] = {alias_of = "t"},
+		["norm"] = {},
+		["normalization"] = {alias_of = "norm"},
+		["tr"] = {},
+		["transliteration"] = {alias_of = "tr"},
+		["ts"] = {},
+		["transcription"] = {alias_of = "ts"},
+		["brackets"] = {type = "boolean"},
+		["nocat"] = {type = "boolean"},
+		["subst"] = {},
+		["footer"] = {},
+		["lit"] = {},
+	}
+	local parent_args = frame:getParent().args
+	local deprecated = parent_args.lang
+	local args, other_parent_args = require("Module:parameters").process(parent_args, params, "return unknown", "quote", "quote_t_parent")
+
+	local source_args = clone_args(other_direct_args, other_parent_args, "include direct", "include parent")
+	source_args[1] = args[1]
+	source_args.nocat = args.nocat
+
+	local function process_fallback(val, fallback_params)
+		if val then
+			return val
+		end
+		if fallback_params then
+			fallback_params = rsplit(fallback_params, ",")
+			for _, fallback_param in ipairs(fallback_params) do
+				if args[fallback_param] then
+					return args[fallback_param]
+				end
+			end
+		end
+		return nil
+	end
+
+	args.text = process_fallback(args.text, iargs.text_fallback)
+	args.t = process_fallback(args.t, iargs.t_fallback)
+
+	local parts = {}
+	local function ins(text)
+		table.insert(parts, text)
+	end
+
+	if args.indent then
+		ins(args.indent)
+		ins(" ")
+	end
+	ins('<div class="citation-whole"><span class="cited-source">')
+	ins(export.source(source_args))
+	ins("</span><dl><dd>")
+	-- if any quote-related args are present, display the actual quote; otherwise, display nothing
+	if args.text or args.t or args.tr or args.ts or args.norm then
+		local langcodes = rsplit(args[1], ",")
+		local usex_data = {
+			lang = require(languages_module).getByCode(langcodes[1], 1),
+			usex = args.text,
+			translation = args.t,
+			normalization = args.norm,
+			transliteration = args.tr,
+			transcription = args.ts,
+			brackets = args.brackets,
+			qualifiers = {},
+			substs = args.subst,
+			lit = args.lit,
+			footer = args.footer,
+			-- pass true here because source() already adds 'LANG terms with quotations'
+			nocat = true,
+			quote = "quote-meta",
+		}
+		ins(require(usex_module).format_usex(usex_data))
+	end
+	ins("</dd></dl></div>")
+	local retval = table.concat(parts)
+	return deprecated and frame:expandTemplate{title = "check deprecated lang param usage", args = {retval, lang = args[1]}} or retval
+end
+
 
 -- External interface, meant to be called from a template.
 function export.call_quote_template(frame)
