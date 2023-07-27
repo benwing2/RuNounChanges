@@ -723,41 +723,16 @@ end
 -- External interface, meant to be called from a template. Replaces {{quote-meta}} and meant to be the primary
 -- interface for {{quote-*}} templates.
 function export.quote_t(frame)
-	local iparams = {
-		["text_fallback"] = {},
-		["t_fallback"] = {},
-	}
-	local iargs, other_direct_args = require("Module:parameters").process(frame.args, iparams, "return unknown", "quote", "quote_t_direct")
-
-	local params = {
-		[1] = {required = true, default = "und"},
-		["lang"] = {alias_of = 1},
-		["indent"] = {},
-		["i1"] = {alias_of = "indent"},
-		["text"] = {},
-		["passage"] = {alias_of = "text"},
-		["t"] = {},
-		["translation"] = {alias_of = "t"},
-		["gloss"] = {alias_of = "t"},
-		["norm"] = {},
-		["normalization"] = {alias_of = "norm"},
-		["tr"] = {},
-		["transliteration"] = {alias_of = "tr"},
-		["ts"] = {},
-		["transcription"] = {alias_of = "ts"},
-		["brackets"] = {type = "boolean"},
-		["nocat"] = {type = "boolean"},
-		["subst"] = {},
-		["footer"] = {},
-		["lit"] = {},
-	}
 	local parent_args = frame:getParent().args
-	local deprecated = parent_args.lang
-	local args, other_parent_args = require("Module:parameters").process(parent_args, params, "return unknown", "quote", "quote_t_parent")
+	local args = clone_args(frame.args, parent_args, "include direct", "include parent")
+	local deprecated = args.lang
 
-	local source_args = clone_args(other_direct_args, other_parent_args, "include direct", "include parent")
-	source_args[1] = args[1]
-	source_args.nocat = args.nocat
+	if args.nocat then
+		args.nocat = require("Module:yesno")(args.nocat)
+	end
+	if args.brackets then
+		args.brackets = require("Module:yesno")(args.brackets)
+	end
 
 	local function process_fallback(val, fallback_params)
 		if val then
@@ -766,6 +741,8 @@ function export.quote_t(frame)
 		if fallback_params then
 			fallback_params = rsplit(fallback_params, ",")
 			for _, fallback_param in ipairs(fallback_params) do
+				-- If the param is a number, we need to convert to an integer before indexing.
+				fallback_param = tonumber(fallback_param) or fallback_param
 				if args[fallback_param] then
 					return args[fallback_param]
 				end
@@ -774,31 +751,37 @@ function export.quote_t(frame)
 		return nil
 	end
 
-	args.text = process_fallback(args.text, iargs.text_fallback)
-	args.t = process_fallback(args.t, iargs.t_fallback)
+	local text = process_fallback(args.text or args.passage, args.text_fallback)
+	local gloss = process_fallback(args.t or args.gloss or args.translation, args.t_fallback)
 
 	local parts = {}
 	local function ins(text)
 		table.insert(parts, text)
 	end
 
-	if args.indent then
-		ins(args.indent)
+	local indent = args.i1 or args.indent
+	if indent then
+		ins(indent)
 		ins(" ")
 	end
 	ins('<div class="citation-whole"><span class="cited-source">')
-	ins(export.source(source_args))
+	ins(export.source(args))
 	ins("</span><dl><dd>")
 	-- if any quote-related args are present, display the actual quote; otherwise, display nothing
-	if args.text or args.t or args.tr or args.ts or args.norm then
-		local langcodes = rsplit(args[1], ",")
+	local tr = args.tr or args.transliteration
+	local ts = args.ts or args.transcription
+	local norm = args.norm or args.normalization
+	if text or gloss or tr or ts or norm then
+		local langcodes = args[1] or args.lang
+		local langcode = langcodes and rsplit(langcodes, ",")[1] or nil
+
 		local usex_data = {
-			lang = require(languages_module).getByCode(langcodes[1], 1),
-			usex = args.text,
-			translation = args.t,
-			normalization = args.norm,
-			transliteration = args.tr,
-			transcription = args.ts,
+			lang = require(languages_module).getByCode(langcode, 1),
+			usex = text,
+			translation = gloss,
+			normalization = norm,
+			transliteration = tr,
+			transcription = ts,
 			brackets = args.brackets,
 			qualifiers = {},
 			substs = args.subst,
@@ -812,7 +795,7 @@ function export.quote_t(frame)
 	end
 	ins("</dd></dl></div>")
 	local retval = table.concat(parts)
-	return deprecated and frame:expandTemplate{title = "check deprecated lang param usage", args = {retval, lang = args[1]}} or retval
+	return deprecated and frame:expandTemplate{title = "check deprecated lang param usage", args = {retval, lang = args.lang}} or retval
 end
 
 
