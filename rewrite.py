@@ -17,7 +17,7 @@ def process_page(page, index, refrom, reto, pagetitle_sub, comment, lang_only,
   origtext = text
   if do_reorder_shadda:
     text = reorder_shadda(text)
-  zipped_fromto = zip(refrom, reto)
+  zipped_fromto = list(zip(refrom, reto))
   def replace_text(text):
     for fromval, toval in zipped_fromto:
       if pagetitle_sub:

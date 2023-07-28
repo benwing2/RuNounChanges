@@ -122,8 +122,7 @@ def process_text_on_page(index, pagetitle, pagetext):
             msg("----")
           else:
             msg("Page %s %s: --------- begin text -----------" % (index, pagetitle))
-          combined = zip(pfs, impfs)
-          for pf, impf in combined:
+          for pf, impf in zip(pfs, impfs):
             msg("%s %s" % (pf.replace(" ", "_"), impf.replace(" ", "_")))
           preceding = True
       pfs = []

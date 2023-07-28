@@ -324,7 +324,7 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
         return None
       pagemsg("NOTE: No stem in headt=%s, using pagetitle" % str(headt))
       actual_stems = [pagetitle]
-    stemspecs, analyzed_stems = zip(*[analyze_stem(default_stem, stem, pagemsg) for stem in actual_stems])
+    stemspecs, analyzed_stems = list(zip(*[analyze_stem(default_stem, stem, pagemsg) for stem in actual_stems]))
     if stemspecs == ("+",):
       stemspec = ""
     else:

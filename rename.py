@@ -12,7 +12,7 @@ def rename_page(index, page, totitle, comment, refrom, reto):
   def errandpagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
     errmsg("Page %s %s: %s" % (index, pagetitle, txt))
-  zipped_fromto = zip(refrom, reto)
+  zipped_fromto = list(zip(refrom, reto))
   def replace_text(text):
     for fromval, toval in zipped_fromto:
       text = re.sub(fromval, toval, text)
