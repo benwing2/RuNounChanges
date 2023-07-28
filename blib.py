@@ -1039,14 +1039,15 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--ref-namespaces", help="List of namespace(s) to restrict --refs to.")
     parser.add_argument("--filter-pages", help="Regex to use to filter page names.")
     parser.add_argument("--filter-pages-not", help="Regex to use to filter page names; only includes pages not matching this regex.")
-    parser.add_argument("--find-regex", help="Output as by find_regex.py.", action="store_true")
+    parser.add_argument("--find-regex-output", help="Output as by find_regex.py.", action="store_true")
     parser.add_argument("--no-output", help="In conjunction with --find-regex, don't output processed text.", action="store_true")
     parser.add_argument("--skip-ignorable-pages", help="Skip 'ignorable' pages (talk pages, user pages, etc.).", action="store_true")
     # Not implemented yet.
     #parser.add_argument("--parallel", help="Do in parallel.", action="store_true")
     #parser.add_argument("--num-workers", help="Number of workers for use with --parallel.", type=int, default=5)
   if include_stdin:
-    parser.add_argument("--stdin", help="Read dump from stdin.", action="store_true")
+    parser.add_argument("--find-regex", help="Read find_regex.py output from stdin.", action="store_true")
+    parser.add_argument("--stdin", help="Read XML dump from stdin.", action="store_true")
     parser.add_argument("--only-lang", help="Only process the section of a page for this language (a canonical language name).")
   return parser
 
@@ -1077,7 +1078,7 @@ def parse_start_end(startprefix, endprefix):
 def args_has_non_default_pages(args):
   return not not (args.pages or args.pagefile or args.pages_from_find_regex or args.pages_from_previous_output
       or args.cats or args.refs or args.specials or args.contribs or args.prefix_pages
-      or args.pages_and_refs)
+      or args.pages_and_refs or args.namespaces)
 
 # Process a run of pages, with the set of pages specified in various possible ways, e.g. from --pagefile, --cats,
 # --refs, or (if --stdin is given) from a Wiktionary dump or find_regex.py output read from stdin. PROCESS is called
@@ -1274,7 +1275,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
         else:
           return process(page, index)
 
-    if args.find_regex:
+    if args.find_regex_output:
       # We are reading from Wiktionary but asked to output in find_regex format.
       retval = do_process_page(page, index)
       pagetext = safe_page_text(page, errandpagemsg)
@@ -1285,7 +1286,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
     else:
       do_process_page(page, index)
 
-  if stdin and args.stdin:
+  if stdin and (args.stdin or args.find_regex):
     pages_to_filter = None
     if args.pages:
       pages_to_filter = set(split_arg(args.pages, canonicalize=canonicalize_pagename))
