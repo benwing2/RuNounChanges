@@ -4171,7 +4171,8 @@ function export.infer_participle_vocalization(headword, form, weakness, is_activ
 				end
 			end
 		end
-	elseif form == "II" or form == "V" or form == "Iq" or form == "IIq" then
+	elseif form == "II" or form == "V" or form == "XII" or form == "XIII" or form == "Iq" or form == "IIq" or
+		form == "IIIq" then
 		local sound_prefix, expected_length
 		if form == "II" then
 			sound_prefix = MU .. c(2) .. A .. c(3) .. SH
@@ -4180,6 +4181,20 @@ function export.infer_participle_vocalization(headword, form, weakness, is_activ
 			check(2, T)
 			sound_prefix = MU .. T .. A .. c(3) .. A .. c(4) .. SH
 			expected_length = 5
+		elseif form == "XII" then
+			-- e.g. [[احدودب]] "to be or become convex or humpbacked", مُحْدَوْدِب (active);
+			-- [[اثنونى]] "to be bent; to be doubled up", مُثْنَوْنٍ (active)
+			check(4, W)
+			if c(3) ~= c(5) then
+				err(("third letter %s should be the same as the fifth letter %s"):format(c(3), c(5)))
+			end
+			sound_prefix = MU .. c(2) .. SK .. c(3) .. A .. W .. SK .. c(5)
+			expected_length = 6
+		elseif form == "XIII" then
+			-- e.g. [[اخروط]] "to get entangled; to extend", مُخْرَوِّط (active), مُخْرَوَّط (passive)
+			check(4, W)
+			sound_prefix = MU .. c(2) .. SK .. c(3) .. A .. W .. SH
+			expected_length = 5
 		elseif form == "Iq" then
 			sound_prefix = MU .. c(2) .. A .. c(3) .. SK .. c(4)
 			expected_length = 5
@@ -4187,6 +4202,13 @@ function export.infer_participle_vocalization(headword, form, weakness, is_activ
 			check(2, T)
 			sound_prefix = MU .. T .. A .. c(3) .. A .. c(4) .. SK .. c(5)
 			expected_length = 6
+		elseif form == "IIIq" then
+			-- e.g. [[اخرنطم]] "to be proud and angry"
+			check(4, T)
+			sound_prefix = MU .. c(2) .. SK .. c(3) .. A .. N .. SK .. c(5)
+			expected_length = 6
+		else
+			error("Internal error: Unhandled form " .. form)
 		end
 		if len == expected_length - 1 then
 			-- active final-weak
@@ -4369,9 +4391,24 @@ function export.infer_participle_vocalization(headword, form, weakness, is_activ
 	elseif form == "IX" then
 		check_len(4, 4)
 		vocalized = MU .. c(2) .. SK .. c(3) .. A .. c(4) .. SH
-	elseif form == "IIIq" or form == "IVq" or form == "XI" or form == "XII" or form == "XIII" or form == "XIV" or
-		form == "XV" then
-		error("Unsupported form " .. form)
+	elseif form == "IVq" then
+		-- e.g. [[اذلعب]] "to scamper away", مُذْلَعِبّ (active), مُذْلَعَبّ (passive);
+		-- [[اطمأن]] "to remain quietly; to be certain", مُطْمَئِنّ (active), مُطْمَأَنّ (passive)
+		check_len(5, 5)
+		local sound_prefix = MU .. c(2) .. SK .. c(3) .. A .. c(4)
+		if is_active then
+			vocalized = sound_prefix .. I .. c(5) .. SH
+		else
+			vocalized = sound_prefix .. A .. c(5) .. SH
+		end
+	elseif form == "XI" then
+		check_len(5, 5)
+		check(4, ALIF)
+		vocalized = MU .. c(2) .. SK .. c(3) .. AA .. c(5) .. SH
+		-- e.g. [[احمار]] "to turn red, to blush", مُحْمَارّ (active)
+	elseif form == "XIV" or form == "XV" then
+		-- FIXME: Implement. No examples in Wiktionary currently; need to look up in a grammar.
+		error("Support for form " .. form .. " not implemented yet")
 	else
 		error("Don't recognize form " .. form)
 	end
