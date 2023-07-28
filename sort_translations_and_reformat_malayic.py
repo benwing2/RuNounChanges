@@ -8,8 +8,8 @@ from blib import getparam, rmparam, msg, errmsg, site, tname
 
 blib.getData()
 
-def nfd(text):
-  return unicodedata.normalize("NFD", text)
+def normalize_lang(text):
+  return re.sub("[\u0300-\u036F]", "", unicodedata.normalize("NFD", text)).lower()
 
 def process_text_on_page(index, pagename, text):
   def pagemsg(txt):
@@ -37,7 +37,7 @@ def process_text_on_page(index, pagename, text):
         pagemsg("WARNING: Found {{trans-bottom}} not in a translation section")
       else:
         if not opening_trans_line.startswith("{{checktrans"):
-          translation_lines = [(nfd(lang), lineind, line) for lang, lineind, line in translation_lines]
+          translation_lines = [(normalize_lang(lang), lineind, line) for lang, lineind, line in translation_lines]
           new_translation_lines = sorted(translation_lines)
           if translation_lines != new_translation_lines:
             translation_lines = new_translation_lines
@@ -87,27 +87,42 @@ def process_text_on_page(index, pagename, text):
           init_star, rest = m.groups()
           line = "*:" + rest
           notes.append("replace %s with *: in translation section" % init_star)
-        m = re.search(r"^\* *: *([^:]*):(.*)$", line)
+        m = re.search(r"^(\* *: *)([^:]*)(:.*)$", line)
         if m:
-          indented_lang, rest = m.groups()
-          if indented_lang in ["Acehnese", "Ambonese Malay", "Baba Malay", "Balinese", "Banda", "Banjarese", "Batavian", "Buginese", "Brunei", "Brunei Malay", "Ende", "Indonesia", "Indonesian", "Jambi Malay", "Javanese", "Kelantan-Pattani Malay", "Madurese", "Makasar", "Minangkabau", "Nias", "Sarawak Malay", "Sarawakian", "Sikule", "Simeulue", "Singkil", "Sundanese", "Terengganu Malay"]:
+          init_star, indented_lang, rest = m.groups()
+          if indented_lang in ["Acehnese", "Ambonese Malay", "Baba Malay", "Balinese", "Banda", "Banjarese", "Buginese", "Brunei", "Brunei Malay", "Ende", "Indonesia", "Indonesian", "Jambi Malay", "Javanese", "Kelantan-Pattani Malay", "Madurese", "Makasar", "Minangkabau", "Nias", "Sarawak Malay", "Sarawakian", "Sikule", "Simeulue", "Singkil", "Sundanese", "Terengganu Malay"]:
             # Javanese variants: Central Javanese, Western Javanese, Kaili, Krama, Ngoko, Old Javanese
             pagemsg("Found %s translation indented under %s, unindenting: %s" % (indented_lang, prev_lang, line))
             indented_lang_map = {
               "Brunei": "Brunei Malay",
+              "Kelantan-Pattani Malay": "Pattani Malay",
               "Indonesia": "Indonesian",
+              "Sarawakian": "Sarawak Malay",
+              "Singkil": "Alas-Kluet Batak",
             }
             new_indented_lang = indented_lang_map.get(indented_lang, indented_lang)
             if new_indented_lang != indented_lang:
               pagemsg("Replacing non-canonical indented language %s with %s" % (indented_lang, new_indented_lang))
               notes.append("replace non-canonical indented language %s with %s" % (indented_lang, new_indented_lang))
               indented_lang = new_indented_lang
-            line = "* %s:%s" % (indented_lang, rest)
+            line = "* %s%s" % (indented_lang, rest)
             translation_lines.append((indented_lang, lineind, line))
             notes.append("unindent translation for %s under %s" % (indented_lang, prev_lang))
           else:
-            if indented_lang not in ["Carakan", "Roman", "Jawi", "Rumi", "Arabic", "Latin"] and prev_lang in ["Indonesian", "Javanese", "Malay"]:
-              pagemsg("WARNING: Found unhandled indented language %s under %s: %s" % (indented_lang, prev_lang, line))
+            if prev_lang in ["Indonesian", "Javanese", "Malay", "Sundanese"]:
+              indented_script_map = {
+                "Arabic": "Jawi",
+                "Roman": "Rumi",
+                "Latin": "Rumi",
+              }
+              new_indented_lang = indented_script_map.get(indented_lang, indented_lang)
+              if new_indented_lang != indented_lang:
+                pagemsg("Replacing non-canonical indented script %s with %s" % (indented_lang, new_indented_lang))
+                notes.append("replace non-canonical indented script %s with %s" % (indented_lang, new_indented_lang))
+                indented_lang = new_indented_lang
+                line = "%s%s%s" % (init_star, indented_lang, rest)
+              if indented_lang not in ["Carakan", "Jawi", "Rumi"]:
+                pagemsg("WARNING: Found unhandled indented language %s under %s: %s" % (indented_lang, prev_lang, line))
             translation_lines.append((prev_lang, lineind, line))
         else:
           m = re.search(r"^\* *(%s):(.*)$" % langname_regex, line)
