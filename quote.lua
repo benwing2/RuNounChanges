@@ -862,12 +862,18 @@ function export.quote_t(frame)
 	local args = clone_args(frame.args, parent_args, "include direct", "include parent")
 	local deprecated = args.lang
 
-	if args.nocat then
-		args.nocat = require("Module:yesno")(args.nocat)
+	local function yesno(val)
+		if not val then
+			return false
+		end
+		if val == "on" then
+			return true
+		end
+		return require("Module:yesno")(val)
 	end
-	if args.brackets then
-		args.brackets = require("Module:yesno")(args.brackets)
-	end
+
+	args.nocat = yesno(args.nocat)
+	args.brackets = yesno(args.brackets)
 
 	local function process_fallback(val, fallback_params)
 		if val then
