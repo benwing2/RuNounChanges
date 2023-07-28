@@ -10,8 +10,12 @@
 
 local export = {}
 
-local usex_module = "Module:usex"
+local usex_module = "Module:User:Benwing2/usex"
+local links_module = "Module:links"
 local languages_module = "Module:languages"
+local scripts_module = "Module:scripts"
+local script_utilities_module = "Module:script utilities"
+local italics_module = "Module:italics"
 
 local rsubn = mw.ustring.gsub
 local rmatch = mw.ustring.match
@@ -91,6 +95,121 @@ local function format_langs(langs)
 	end
 end
 
+local function parse_text_with_lang(text, paramname, a, get_full_paramname)
+	local actual_text
+	local textlangcode = a(paramname, "-lang")
+	local full_paramname = get_full_paramname(paramname, "-lang")
+	if not textlangcode then
+		textlangcode, actual_text = text:match("^([a-z][a-z-]+):([^ ].*)$")
+		full_paramname = get_full_paramname(paramname)
+	end
+	if not textlangcode then
+		-- Special hack for Latin variants, which can have nonstandard etym codes, e.g. VL., LL.
+		textlangcode, actual_text = text:match("^([A-Z]L%.):([^ ].*)$")
+		full_paramname = get_full_paramname(paramname)
+	end
+	actual_text = actual_text or text
+	local textlang
+	if textlangcode then
+		textlang = require(languages_module).getByCode(textlangcode, full_paramname, "allow etym")
+	end
+	local tr = a(paramname, "-tr")
+	local ts = a(paramname, "-ts")
+	local gloss = a(paramname, "-t") or a(paramname, "-gloss") or a("trans-" .. paramname)
+	local sc = a(paramname, "-sc")
+	if sc then
+		sc = require(scripts_module).getByCode(sc, get_full_paramname(paramname, "-sc"))
+	end
+
+	return {
+		text = actual_text,
+		lang = textlang,
+		sc = sc,
+		tr = tr,
+		ts = ts,
+		gloss = gloss,
+	}
+end
+
+local function display_text(textobj, tag_text, tag_gloss)
+	local text = textobj.text
+	local lang = textobj.lang
+	local sc = textobj.sc or lang and lang:findBestScript(text) or
+		require(scripts_module).findBestScriptWithoutLang(text)
+	lang = lang or require(languages_module).getByCode("und", true)
+
+	local tr
+	if textobj.tr == "-" then
+		tr = nil
+	else
+		local manual_tr = not not textobj.tr
+		if manual_tr then
+			tr = textobj.tr
+		elseif not sc:getCode():find("Latn") then -- Latn, Latnx or a lang-specific variant
+			tr = (lang:transliterate(require(links_module).remove_links(text), sc))
+		end
+		-- Should we link to the transliteration of languages with lang:link_tr()? Probably not because `text` is not
+		-- likely to be a term that has an entry.
+		tr = tr and require(script_utilities_module).tag_translit(tr, lang, "usex") or nil
+	end
+
+	if ts then
+		ts = "/" .. require(script_utilities_module).tag_transcription(ts, lang, "usex") .. "/"
+	end
+
+	local gloss = textobj.gloss
+
+	local parts = {}
+	local function ins(txt)
+		table.insert(parts, txt)
+	end
+
+	text = require(links_module).embedded_language_links(
+		{
+			term = text,
+			lang = lang,
+			sc = sc
+		},
+		false
+	)
+	if lang:getCode() ~= "und" or sc:getCode() ~= "Latn" then
+		text = require(script_utilities_module).tag_text(text, lang, sc)
+	end
+	text = require(italics_module).unitalicize_brackets(text)
+	if tag_text then
+		text = tag_text(text)
+	end
+	ins(text)
+
+	if tr or ts or gloss then
+		ins(" &#91;") -- left bracket; use HTML char ref to make sure we don't run into issues if the next char is a bracket
+		if tr then
+			ins(tr)
+		end
+		if ts then
+			if tr then
+				ins(" ")
+			end
+			ins(ts)
+		end
+		if gloss then
+			if tr or ts then
+				ins(", ")
+			end
+			gloss = '<span class="e-translation">' .. gloss .. "</span>"
+			gloss = require(italics_module).unitalicize_brackets(gloss)
+			if tag_gloss then
+				gloss = tag_gloss(gloss)
+			end
+			ins(gloss)
+		end
+		ins("&#93;") -- right bracket; see above
+	end
+
+	return table.concat(parts)
+end
+
+
 -- Fancy version of ine() (if-not-empty). Converts empty string to nil,
 -- but also strips leading/trailing space and then single or double quotes,
 -- to allow for embedded spaces. (NOTE: Commented out quote processing, in case they are needed in args.)
@@ -167,7 +286,7 @@ function export.source(args)
 	local function add(text)
 		table.insert(output, text)
 	end
-	if args.brackets == "on" then
+	if args.brackets then
 		add("[")
 	end
 	add(require("Module:time").quote_impl(args))
@@ -179,54 +298,87 @@ function export.source(args)
 		add(" [" .. args.origyear .. "]")
 	end
 	
+	-- Return the argument named PARAM, possibly with an index added (e.g. 2 for author2, 3 for last3) and possibly with
+	-- a suffix added after that. The index is either "" (an empty string) for the first set of params (author, last,
+	-- first, chapter, title, tlr, etc.) or a number for further sets of params (author2, last2, first2, chapter2,
+	-- title2, tlr2, etc.). The suffix is for subproperties of a given piece of text (e.g. gloss, transliteration,
+	-- script, etc.).
+	local function make_get_full_paramname(ind)
+		return function(param, suf)
+			local paramind = param .. ind
+			if suf then
+				return paramind .. suf
+			else
+				return paramind
+			end
+		end
+	end
+	local get_full_paramname -- assigned below
+	local function a(param, suf)
+		return args[get_full_paramname(param, suf)]
+	end
+	local function gloss(param)
+		return a(param, "-t") or a(param, "-gloss") or a("trans-" .. param)
+	end
+
 	if args.author or args.last or args.quotee then
 		for i=1,5 do
-			local suf = i == 1 and "" or i
-			-- Return the argument named PARAM, possibly with a suffix added (e.g. 2 for author2, 3 for last3). The suffix is
-			-- either "" (an empty string) for the first set of params (author, last, first, etc.) or a number for further sets
-			-- of params (author2, last2, first2, etc.).
-			local function a(param)
-				return args[param .. suf]
-			end
-			if a("author") or a("last") then
+			local ind = i == 1 and "" or i
+			get_full_paramname = make_get_full_paramname(ind)
+			local author = a("author")
+			local last = a("last")
+			local first = a("first")
+			if author or last then
 				-- If first author, output a comma unless {{{nodate}}} used.
 				if i == 1 and not args.nodate then
 					add(", ")
 				end
 				-- If not first author, output a semicolon to separate from preceding authors.
 				add(i == 1 and " " or "&#59; ") -- &#59; = semicolon
-				if a("authorlink") then
-					add("[[w:" .. a("authorlink") .. "|")
-				end
-				if a("author") then
-					add(a("author"))
-				elseif a("last") then
-					add(a("last"))
-					if a("first") then
-						add(", " .. a("first"))
+				local function make_author_with_url(txt, authorlink)
+					if authorlink then
+						return "[[w:" .. authorlink .. "|" .. txt .. "]]"
+					else
+						return txt
 					end
 				end
-				if a("authorlink") then
-					add("]]")
-				end
-				if a("trans-author") or a("trans-last") then
-					add(" &#91;")
-					if a("trans-authorlink") then
-						add("[[w:" .. a("trans-authorlink") .. "|")
+				local authorlink = a("authorlink")
+				local authorlink_gloss = gloss("authorlink")
+				if author then
+					local authorobj = parse_text_with_lang(author, "author", a, get_full_paramname)
+					authorobj.text = make_author_with_url(authorobj.text, authorlink)
+					if authorobj.gloss and authorlink_gloss then
+						authorobj.gloss = make_author_with_url(authorobj.gloss, authorlink_gloss)
 					end
-					if a("trans-author") then
-						add(a("trans-author"))
-					elseif a("trans-last") then
-						add(a("trans-last"))
-						if a("trans-first") then
-							add(", ")
-							add(a("trans-first"))
+					add(display_text(authorobj))
+				else
+					-- Author separated into last name, first name. We don't currently support non-Latin-script
+					-- authors separated this way and probably never will.
+					local last = a("last")
+					local first = a("first")
+					if first then
+						author = last .. ", " .. first
+					else
+						author = last
+					end
+					author = make_author_with_url(author, authorlink)
+					local last_gloss = gloss("last")
+					local author_gloss
+					if last_gloss then
+						local first_gloss = gloss("first")
+						if first_gloss then
+							author_gloss = last_gloss .. ", " .. first_gloss
+						else
+							author_gloss = last_gloss
 						end
+						author_gloss = make_author_with_url(author_gloss, authorlink_gloss)
 					end
-					if a("trans-authorlink") then
-						add("]]")
+					add(author)
+					if author_gloss then
+						add(" &#91;")
+						add(author_gloss)
+						add("&#93;")
 					end
-					add("&#93;")
 				end
 			end
 		end
@@ -247,7 +399,7 @@ function export.source(args)
 
 	local function has_new_title_or_ancillary_author()
 		return args.chapter2 or args.title2 or
-			args.trans2 or args.translator2 or args.translators2 or
+			args.tlr2 or args.trans2 or args.translator2 or args.translators2 or
 			args.mainauthor2 or args.editor2 or args.editors2
 	end
 
@@ -261,21 +413,13 @@ function export.source(args)
 	
 	local archivedate_error
 
-	-- This handles everything after displaying the author, starting with the
-	-- chapter and ending with page, column and then other=. It is currently
-	-- called twice: Once to handle the main portion of the citation, and once
-	-- to handle a "newversion" citation. `suf` is either "" for the main portion
-	-- or a number (currently only 2) for a "newversion" citation. In a few
-	-- places we conditionalize on `suf` to take actions depending on its value.
-	-- `sep` is the separator to display before the first item we add; see
-	-- add_with_sep() below.
-	local function postauthor(suf, sep)
-		-- Return the argument named PARAM, possibly with a suffix added (e.g. 2 for author2, 3 for last3). The suffix is
-		-- either "" (an empty string) for the first set of params (chapter, title, translator, etc.) or a number for further
-		-- sets of params (chapter2, title2, translator2, etc.).
-		local function a(param)
-			return args[param .. suf]
-		end
+	-- This handles everything after displaying the author, starting with the chapter and ending with page, column and
+	-- then other=. It is currently called twice: Once to handle the main portion of the citation, and once to handle a
+	-- "newversion" citation. `ind` is either "" for the main portion or a number (currently only 2) for a "newversion"
+	-- citation. In a few places we conditionalize on `ind` to take actions depending on its value. `sep` is the
+	-- separator to display before the first item we add; see add_with_sep() below.
+	local function postauthor(ind, sep)
+		get_full_paramname = make_get_full_paramname(ind)
 		-- Identical to a(param) except that it verifies that no space is present. Should be used for URL's.
 		local function aurl(param)
 			return check_url(param, a(param))
@@ -283,36 +427,29 @@ function export.source(args)
 		local chap = a("chapter")
 		if chap then
 			local cleaned_chap = chap:gsub("<sup>[^<>]*</sup>", ""):gsub("[*+#]", "")
+			local chapterurl = aurl("chapterurl")
+			local function make_chapter_with_url(chap)
+				if chapterurl then
+					return "[" .. chapterurl .. " " .. chap .. "]"
+				else
+					return chap
+				end
+			end
+
 			if require("Module:number-utilities").get_number(cleaned_chap) then
 				-- Arabic chapter number
 				add(" chapter ")
-				if aurl("chapterurl") then
-					add("[" .. aurl("chapterurl") .. " " .. chap .. "]")
-				else
-					add(chap)
-				end
+				add(make_chapter_with_url(chap))
 			elseif rfind(cleaned_chap, "^[mdclxviMDCLXVI]+$") and require("Module:roman numerals").roman_to_arabic(cleaned_chap, true) then
 				-- Roman chapter number
 				add(" chapter ")
-				local uchapter = mw.ustring.upper(chap)
-				if aurl("chapterurl") then
-					add("[" .. aurl("chapterurl") .. " " .. uchapter .. "]")
-				else
-					add(uchapter)
-				end
+				add(make_chapter_with_url(mw.ustring.upper(chap)))
 			else
 				-- Must be a chapter name
 				add(" “")
-				local toinsert
-				if aurl("chapterurl") then
-					toinsert = "[" .. aurl("chapterurl") .. " " .. chap .. "]"
-				else
-					toinsert = chap
-				end
-				add(require("Module:italics").unitalicize_brackets(toinsert))
-				if a("trans-chapter") then
-					add(" &#91;" .. require("Module:italics").unitalicize_brackets(a("trans-chapter")) .. "&#93;")
-				end
+				local chapterobj = parse_text_with_lang(chap, "chapter", a, get_full_paramname)
+				chapterobj.text = make_chapter_with_url(chapterobj.text)
+				add(display_text(chapterobj))
 				add("”")
 			end
 			if not a("notitle") then
@@ -320,7 +457,7 @@ function export.source(args)
 			end
 		end
 
-		local translator = a("trans") or a("translator") or a("translators")
+		local translator = a("tlr") or a("trans") or a("translator") or a("translators")
 		if a("mainauthor") then
 			add(a("mainauthor") .. ((translator or a("editor") or a("editors")) and "&#59; " or ","))
 		end
@@ -335,25 +472,23 @@ function export.source(args)
 			add(a("editors") .. ", editors,")
 		end
 
-		-- If we're in the "newversion" code (suf ~= ""), and there's no title
-		-- and no URL, then the first time we add anything after the title,
-		-- we don't want to add a separating comma because the preceding text
-		-- will say "republished " or "republished as " or "translated as " or
-		-- similar. In all other cases, we do want to add a separating comma.
-		-- We handle this using a `sep` variable whose value will generally
-		-- either be "" or ", ". The add_with_sep(text) function adds the `sep`
-		-- variable and then `text`, and then resets `sep` to ", " so the next
-		-- time around we do add a comma to separate `text` from the preceding
-		-- piece of text.
+		-- If we're in the "newversion" code (ind ~= ""), and there's no title and no URL, then the first time we add
+		-- anything after the title, we don't want to add a separating comma because the preceding text will say
+		-- "republished " or "republished as " or "translated as " or similar. In all other cases, we do want to add a
+		-- separating comma. We handle this using a `sep` variable whose value will generally either be "" or ", ". The
+		-- add_with_sep(text) function adds the `sep` variable and then `text`, and then resets `sep` to ", " so the
+		-- next time around we do add a comma to separate `text` from the preceding piece of text.
 		local function add_with_sep(text)
 			add(sep .. text)
 			sep = ", "
 		end
-		if a("title") then
-			add(" <cite>" .. require("Module:italics").unitalicize_brackets(a("title")) .. "</cite>")
-			if a("trans-title") then
-				add(" &#91;<cite>" .. require("Module:italics").unitalicize_brackets(a("trans-title")) .. "</cite>&#93;")
+		local title = a("title")
+		if title then
+			local titleobj = parse_text_with_lang(title, "title", a, get_full_paramname)
+			local function tag_with_cite(txt)
+				return "<cite>" .. txt .. "</cite>"
 			end
+			add(display_text(titleobj, tag_with_cite, tag_with_cite))
 			if a("series") then
 				add(" (" .. a("series"))
 				if a("seriesvolume") then
@@ -362,7 +497,7 @@ function export.source(args)
 				add(")")
 			end
 			sep = ", "
-		elseif suf == "" then
+		elseif ind == "" then
 			sep = ", "
 			if not a("notitle") then
 				add(maintenance_line("Please provide the book title or journal name"))
@@ -402,7 +537,7 @@ function export.source(args)
 		-- no pre-text or post-text is displayed.
 		local function langhandler(pretext, posttext)
 			local argslang
-			if suf == "" then
+			if ind == "" then
 				argslang = args.lang or args[1]
 			else
 				argslang = a("lang")
@@ -411,7 +546,7 @@ function export.source(args)
 				return pretext .. "in " .. format_langs(a("worklang")) .. posttext
 			elseif argslang and a("termlang") and argslang ~= a("termlang") then
 				return pretext .. "in " .. format_langs(argslang) .. posttext
-			elseif not argslang and suf == "" then
+			elseif not argslang and ind == "" then
 				return pretext .. maintenance_line("Please specify the language of the quote") .. posttext
 			end
 			return ""
@@ -460,7 +595,7 @@ function export.source(args)
 			add_with_sep("published " .. a("year_published"))
 		end
 
-		if suf ~= "" and has_newversion() then
+		if ind ~= "" and has_newversion() then
 			add_with_sep(a("date") or a("year") or maintenance_line("Please provide a date or year"))
 		end
 		
@@ -509,7 +644,7 @@ function export.source(args)
 				-- least for Wayback Machine (web.archive.org) URL's
 				url = rmatch(aurl("archiveurl"), "/(https?:.*)$")
 				if not url then
-					error("When archiveurl" .. suf .. "= is specified, url" .. suf .. "= must also be included")
+					error("When archiveurl" .. ind .. "= is specified, url" .. ind .. "= must also be included")
 				end
 			end
 			add("[" .. url .. " the original] on ")
@@ -522,7 +657,7 @@ function export.source(args)
 				wayback_date = string.sub(wayback_date, 1, 4) .. "-" .. string.sub(wayback_date, 5, 6) .. "-" .. string.sub(wayback_date, 7, 8)
 				add(format_date(wayback_date))
 			else
-				error("When archiveurl" .. suf .. "= is specified, archivedate" .. suf .. "= must also be included")
+				error("When archiveurl" .. ind .. "= is specified, archivedate" .. ind .. "= must also be included")
 				archivedate_error = true
 			end
 		end
