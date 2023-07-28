@@ -106,9 +106,13 @@ def process_text_on_page(index, pagetitle, text, templates, new_names, params_to
 
       for old_param, new_param in params_to_rename:
         if t.has(old_param):
-          t.add(new_param, getparam(t, old_param), before=old_param, preserve_spacing=False)
-          rmparam(t, old_param)
-          notes.append("rename %s= to %s= in {{%s}}" % (old_param, new_param, tn))
+          if t.has(new_param):
+            pagemsg("WARNING: When renaming %s=%s to %s=, already has %s=%s" % (
+              old_param, getp(old_param), new_param, new_param, getp(new_param)))
+          else:
+            t.add(new_param, getparam(t, old_param), before=old_param, preserve_spacing=False)
+            rmparam(t, old_param)
+            notes.append("rename %s= to %s= in {{%s}}" % (old_param, new_param, tn))
       for param in params_to_remove:
         if t.has(param):
           rmparam(t, param)
@@ -225,11 +229,11 @@ def handle_single_param(paramname, process=None):
   else:
     return None
 
-def handle_list_param(paramname, process=None):
+def handle_list_param(paramname, split_on_comma=False):
   argval = getattr(args, paramname)
   rawvals = list(argval) if argval else []
-  if process:
-    return [process(x) for x in rawvals]
+  if split_on_comma:
+    return [splitval for arg in rawvals for splitval in arg.split(",")]
   else:
     return rawvals
 
@@ -255,8 +259,8 @@ if new_names and len(new_names) != len(templates):
     (len(templates), ",".join(templates), len(new_names), ",".join(new_names)))
 recognized_params = handle_single_param("recognized_params", lambda val: val.split(","))
 
-from_ = handle_list_param("from_")
-to = handle_list_param("to")
+from_ = handle_list_param("from_", split_on_comma=True)
+to = handle_list_param("to", split_on_comma=True)
 
 params_to_add = handle_params_to_add("add")
 params_to_prepend = handle_params_to_add("prepend")
@@ -265,14 +269,14 @@ def process_insert_parts(param, value):
     raise ValueError("Parameter %s to --insert must be numeric" % param)
   return (int(param), value.split("|"))
 params_to_insert = handle_params_to_add("insert", process_insert_parts)
-params_to_remove = handle_list_param("remove")
+params_to_remove = handle_list_param("remove", split_on_comma=True)
 filters = handle_list_param("filter")
 comment = handle_single_param("comment")
 
 if len(from_) != len(to):
   raise ValueError("Same number of --from and --to arguments must be specified")
 
-params_to_rename = zip(from_, to)
+params_to_rename = list(zip(from_, to))
 
 def do_process_text_on_page(index, pagetitle, text):
   return process_text_on_page(index, pagetitle, text, templates, new_names, params_to_add, params_to_prepend,
