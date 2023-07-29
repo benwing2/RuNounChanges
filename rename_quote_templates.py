@@ -10,6 +10,7 @@ import mwparserfromhell as mw
 
 import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site, tname, pname
+from collections import defaultdict
 
 quote_templates = [
   "quote-av",
@@ -30,33 +31,43 @@ recognized_named_params_list = [
   "accessdate", "accessdaymonth", "accessmonthday", "accessmonth", "accessyear", "actor", "album", "archivedate",
   "archiveurl", "article", "artist", "at", "author", "authorlabel", "authorlink", "authors", "autodate", "bibcode",
   "blog", "book", "brackets", "by", "chapter", "chapterurl", "city", "coauthors", "column", "columns", "columnurl",
-  "column_end", "column_start", "composer", "date", "debate", "director", "directors", "DOI", "doi", "edition",
-  "editor", "editors", "email", "entry", "entryurl", "episode", "first", "footer", "format", "genre", "googleid",
-  "group", "house", "id", "indent", "ISBN", "isbn", "ISSN", "issn", "issue", "journal", "jstor", "lang", "last",
-  "laydate", "laysource", "laysummary", "LCCN", "lccn", "line", "lines", "lit", "location", "lyricist",
-  "lyrics-translator", "magazine", "mainauthor", "medium", "month", "network", "newsgroup", "newspaper", "newversion",
-  "nocat", "nodate", "note", "notitle", "number", "OCLC", "oclc", "ol", "origdate", "original", "origmonth", "origyear",
-  "other", "others", "page", "pages", "pageref", "pageurl", "page_end", "page_start", "passage", "periodical", "PMID",
-  "pmid", "publisher", "quote", "quoted_in", "quotee", "report", "role", "scene", "season", "section", "sectionurl",
-  "series", "seriesvolume", "site", "sort", "speaker", "ssrn", "start_date", "start_year", "subst", "t", "termlang",
-  "text", "time", "title", "titleurl", "tr", "trans", "trans-album", "trans-chapter", "trans-entry", "trans-episode",
-  "trans-journal", "trans-title", "trans-work", "transcription", "translation", "translator", "translators",
-  "transliteration", "ts", "type", "url", "urls", "url-access", "url-status", "version", "volume", "volume_plain",
-  "work", "worklang", "writer", "writers", "year", "year_published", "2ndauthor", "2ndauthorlink", "2ndfirst", "2ndlast"
+  "column_end", "column_start", "composer", "date", "debate", "developer", "director", "directors", "DOI", "doi",
+  "edition", "editor", "editors", "email", "entry", "entryurl", "episode", "first", "footer", "format", "genre",
+  "googleid", "group", "house", "id", "indent", "ISBN", "isbn", "ISSN", "issn", "issue", "inventor", "journal", "jstor",
+  "lang", "last", "laydate", "laysource", "laysummary", "LCCN", "lccn", "level", "line", "lines", "list", "lit",
+  "location", "lyricist", "lyrics-translator", "magazine", "mainauthor", "medium", "month", "network", "newsgroup",
+  "newspaper", "newversion", "nocat", "nodate", "note", "notitle", "number", "OCLC", "oclc", "OL", "ol", "origdate",
+  "original", "origmonth", "origyear", "other", "others", "page", "pages", "pageref", "pageurl", "page_end",
+  "page_start", "passage", "people", "periodical", "platform", "PMID", "pmid", "publisher", "quote", "quoted_in",
+  "quotee", "report", "revision", "role", "roles", "scene", "season", "section", "sectionurl", "series", "seriesvolume",
+  "site", "sort", "speaker", "ssrn", "start_date", "start_year", "subst", "t", "termlang", "text", "time", "title",
+  "titleurl", "tr", "trans", "trans-album", "trans-chapter", "trans-entry", "trans-episode", "trans-journal",
+  "trans-title", "trans-work", "transcription", "translation", "translator", "translators", "transliteration", "ts",
+  "type", "url", "urls", "url-access", "url-status", "version", "vol", "volume", "volume_plain", "work", "worklang",
+  "writer", "writers", "year", "year_published", "2ndauthor", "2ndauthorlink", "2ndfirst", "2ndlast"
 ]
 
-recognized_named_params = set(p for param in recognized_named_params_list for p in [param, param + "2"])
+def make_all_param_set(params):
+  return set(p for param in params for p in [param, param + "2", param + "3", param + "4", param + "5"])
+
+recognized_named_params = make_all_param_set(recognized_named_params_list)
+count_recognized_named_params = defaultdict(int)
+
 
 unrecognized_named_params_list = [
   "archive-date", "archive_date", "archiv-datum", "access", "access-date", "accessed", "archiveorg", "archive-url",
-  "asin", "author1", "digitized", "fulltext", "i2", "isbn10", "meeting", "new version", "newsfeed", "oldurl",
+  "asin", "author1", "digitized", "edition_plain", "fulltext", "i2", "isbn10", "meeting", "new version", "newsfeed", "oldurl",
   "originalpassage", "p", "paragraph", "part", "pos", "producer", "publish-date", "rfc", "retrieved", "stanza", "via",
   "website",
   # misspellings:
-  "Chapter", "colunm", "Id", "IISBN", "isn", "Jnewsgroup", "oage", "Page", "pge", "Section", "tirle", "year_publsihed",
+  "Chapter", "colunm", "Id", "IISBN", "isn", "Jnewsgroup", "oage", "Page", "pge", "Section", "tirle", "ur", "year_publsihed",
 ]
 
-unrecognized_named_params = set(p for param in unrecognized_named_params_list for p in [param, param + "2"])
+unrecognized_named_params = make_all_param_set(unrecognized_named_params_list)
+count_unrecognized_named_params = defaultdict(int)
+
+count_numbered_params = defaultdict(int)
+count_unhandled_params = defaultdict(int)
 
 def process_text_on_page(index, pagetitle, text):
   global args
@@ -127,6 +138,26 @@ def process_text_on_page(index, pagetitle, text):
               t.get(fr).name = to
             pagemsg("%s: %s -> %s" % (tn, fr, to))
 
+    def escape_newline(val):
+      return val.replace("\n", r"\n")
+
+    if tn in quote_templates:
+      for param in t.params:
+        pn = pname(param)
+        pv = str(param.value)
+        if re.search("^[0-9]+$", pn):
+          count_numbered_params[pn] += 1
+        elif pn in recognized_named_params:
+          count_recognized_named_params[pn] += 1
+        elif pn in unrecognized_named_params:
+          count_unrecognized_named_params[pn] += 1
+        else:
+          pagemsg("WARNING: Saw unhandled param %s=%s: %s" % (pn, escape_newline(pv), escape_newline(str(t))))
+          count_unhandled_params[pn] += 1
+
+    if args.no_rename:
+      continue
+
     if tn in ["quote-magazine", "quote-news"]:
       blib.set_template_name(t, "quote-journal")
       notes.append("%s -> quote-journal" % tn)
@@ -135,9 +166,6 @@ def process_text_on_page(index, pagetitle, text):
       blib.set_template_name(t, "RQ:Don Quixote")
       notes.append("quote-Don Quixote -> RQ:Don Quixote")
       changed = True
-
-    def escape_newline(val):
-      return val.replace("\n", r"\n")
 
     must_continue = False
     if tn in quote_templates:
@@ -341,10 +369,29 @@ def process_text_on_page(index, pagetitle, text):
 
   return str(parsed), notes
 
-parser = blib.create_argparser("quote-poem -> quote-book with changed params; quote-magazine/quote-news -> quote-journal; quote-Don Quixote -> RQ:Don Quixote",
+parser = blib.create_argparser("rename {{quote-*}} params",
   include_pagefile=True, include_stdin=True)
+parser.add_argument("--no-rename", action="store_true", help="Don't rename params, just count them")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
+old_default_refs=["Template:quote-poem", "Template:quote-magazine", "Template:quote-news", "Template:quote-Don Quixote"]
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
-  default_refs=["Template:quote-poem", "Template:quote-magazine", "Template:quote-news", "Template:quote-Don Quixote"])
+  default_refs=["Template:%s" % template for template in quote_templates])
+
+def output_count(countdict):
+  for pn, count in sorted(countdict.items(), key=lambda x: (-x[1], x[0])):
+    msg("%-30s = %s" % (pn, count))
+
+msg("Numbered params:")
+msg("------------------------------------")
+output_count(count_numbered_params)
+msg("Recognized named params:")
+msg("------------------------------------")
+output_count(count_recognized_named_params)
+msg("Known but unrecognized named params:")
+msg("------------------------------------")
+output_count(count_unrecognized_named_params)
+msg("Unhandled params:")
+msg("------------------------------------")
+output_count(count_unhandled_params)
