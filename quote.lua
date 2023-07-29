@@ -10,12 +10,27 @@
 
 local export = {}
 
-local usex_module = "Module:User:Benwing2/usex"
-local links_module = "Module:links"
-local languages_module = "Module:languages"
-local scripts_module = "Module:scripts"
-local script_utilities_module = "Module:script utilities"
+local test_new_code = false
+local test_new_code_with_errors = false
+
+-- Named constants for all modules used, to make it easier to swap out sandbox versions.
+local check_isxn_module = "Module:check isxn"
+local debug_track_module = "Module:debug/track"
 local italics_module = "Module:italics"
+local languages_module = "Module:languages"
+local links_module = "Module:links"
+local number_utilities_module = "Module:number-utilities"
+local parameters_module = "Module:parameters"
+local parse_utilities_module = "Module:parse utilities"
+local roman_numerals_module = "Module:roman numerals"
+local script_utilities_module = "Module:script utilities"
+local scripts_module = "Module:scripts"
+local table_module = "Module:table"
+local time_module = "Module:time"
+local usex_module = "Module:User:Benwing2/usex"
+local usex_templates_module = "Module:User:Benwing2/usex/templates"
+local utilities_module = "Module:utilities"
+local yesno_module = "Module:yesno"
 
 local rsubn = mw.ustring.gsub
 local rmatch = mw.ustring.match
@@ -23,8 +38,10 @@ local rfind = mw.ustring.find
 local rsplit = mw.text.split
 local ulen = mw.ustring.len
 
-local test_new_code = false
-local test_new_code_with_errors = false
+-- Use HTML entities here to avoid parsing issues (esp. with brackets)
+local SEMICOLON_SPACE = "&#59; "
+local SPACE_LBRAC = " &#91;"
+local RBRAC = " &#93;"
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -38,12 +55,12 @@ end
 
 local function isbn(text)
 	return "[[Special:BookSources/" .. text .. "|→ISBN]]" ..
-		require("Module:check isxn").check_isbn(text, "&nbsp;<span class=\"error\" style=\"font-size:88%\">Invalid&nbsp;ISBN</span>[[Category:Pages with ISBN errors]]")
+		require(check_isxn_module).check_isbn(text, "&nbsp;<span class=\"error\" style=\"font-size:88%\">Invalid&nbsp;ISBN</span>[[Category:Pages with ISBN errors]]")
 end
 
 local function issn(text)
 	return "[https://www.worldcat.org/issn/" .. text .. " →ISSN]" ..
-		require("Module:check isxn").check_issn(text, "&nbsp;<span class=\"error\" style=\"font-size:88%\">Invalid&nbsp;ISSN</span>[[Category:Pages with ISSN errors]]")
+		require(check_isxn_module).check_issn(text, "&nbsp;<span class=\"error\" style=\"font-size:88%\">Invalid&nbsp;ISSN</span>[[Category:Pages with ISSN errors]]")
 end
 
 local function lccn(text)
@@ -70,119 +87,177 @@ local function tag_nowiki(text)
 	return mw.getCurrentFrame():callParserFunction{name="#tag", args={"nowiki", text}}
 end
 
-local function format_langs(langs)
-	local langcodes = rsplit(langs, ",")
-	local langnames = {}
-	for _, langcode in ipairs(langcodes) do
-		local lang = require(languages_module).getByCode(langcode, 1)
-		table.insert(langnames, lang:getCanonicalName())
+-- Convert a comma-separated list of language codes to a comma-separated list of language names. `paramname` is the
+-- name of the parameter from which the list of language codes was fetched.
+local function format_langs(langs, paramname)
+	langs = rsplit(langs, ",")
+	for i, langcode in ipairs(langs) do
+		local lang = require(languages_module).getByCode(langcode, paramname)
+		langs[i] = lang:getCanonicalName()
 	end
-	if #langnames == 1 then
-		return langnames[1]
-	elseif #langnames == 2 then
-		return langnames[1] .. " and " .. langnames[2]
+	if #langs == 1 then
+		return langs[1]
 	else
-		local retval = {}
-		for i, langname in ipairs(langnames) do
-			table.insert(retval, langname)
-			if i <= #langnames - 2 then
-				table.insert(retval, ", ")
-			elseif i == #langnames - 1 then
-				table.insert(retval, "<span class=\"serial-comma\">,</span><span class=\"serial-and\"> and</span> ")
-			end
-		end
-		return table.concat(retval, "")
+		return require(table_module).serialCommaJoin(langs)
 	end
 end
 
-local function parse_text_with_lang(text, paramname, a, get_full_paramname)
-	local actual_text
-	local textlangcode = a(paramname, "-lang")
-	local full_paramname = get_full_paramname(paramname, "-lang")
-	if not textlangcode then
-		textlangcode, actual_text = text:match("^([a-z][a-z-]+):([^ ].*)$")
-		full_paramname = get_full_paramname(paramname)
-	end
-	if not textlangcode then
-		-- Special hack for Latin variants, which can have nonstandard etym codes, e.g. VL., LL.
-		textlangcode, actual_text = text:match("^([A-Z]L%.):([^ ].*)$")
-		full_paramname = get_full_paramname(paramname)
-	end
-	actual_text = actual_text or text
-	local textlang
-	if textlangcode then
-		textlang = require(languages_module).getByCode(textlangcode, full_paramname, "allow etym")
-	end
-	local tr = a(paramname, "-tr")
-	local ts = a(paramname, "-ts")
-	local gloss = a(paramname, "-t") or a(paramname, "-gloss") or a("trans-" .. paramname)
-	local sc = a(paramname, "-sc")
-	if sc then
-		sc = require(scripts_module).getByCode(sc, get_full_paramname(paramname, "-sc"))
-	end
-
-	return {
-		text = actual_text,
-		lang = textlang,
-		sc = sc,
-		tr = tr,
-		ts = ts,
-		gloss = gloss,
+local param_mods = {
+	t = {
+		-- <t:...> and <gloss:...> are aliases.
+		item_dest = "gloss",
+	},
+	gloss = {},
+	tr = {},
+	ts = {},
+	sc = {
+		convert = function(arg, parse_err)
+			return require(scripts_module).getByCode(arg, parse_err)
+		end,
 	}
+}
+
+-- Parse a text property that may be in a foreign language or script. `val` is the value of the parameter and
+-- `paramname` is the name of the parameter from which the value was retrieved. `explicit_gloss`, if specified and
+-- non-nil, overrides any gloss specified using the <t:...> or <gloss:...> inline modifier.
+--
+-- If `val` is nil, the return value of this function is nil. Otherwise it is parsed for a language prefix (e.g.
+-- 'ar:مُؤَلِّف') and inline modifiers (e.g. 'ar:مُؤَلِّف<t:Author>'), and the return value is an object with the following
+-- fields:
+--   `text`: The text after stripping off any language prefix and inline modifiers.
+--   `lang`: The language object corresponding to the language prefix, if specified, or nil if no language prefix is
+--           given.
+--   `sc`: The script object corresponding to the <sc:...> modifier, if given; otherwise nil.
+--   `tr`: The transliteration corresponding to the <tr:...> modifier, if given; otherwise nil.
+--   `ts`: The transcription corresponding to the <ts:...> modifier, if given; otherwise nil.
+--   `gloss`: The gloss/translation corresponding to the `explicit_gloss` parameter (if given and non-nil), otherwise
+--            the <t:...> or <gloss:...> modifiers if given, otherwise nil.
+--
+-- Note that as a special case, if `val` contains HTML tags at the top level (e.g. '<span class="Arab">...</span>', as
+-- might be generated by specifying {{lang|ar|مُؤَلِّف}}), no language prefix or inline modifiers are parsed, and the return
+-- value has the `noscript` field set to true, which tells display_text() not to try to identify the script of the text
+-- and CSS-tag the text accordingly, but to leave the text untagged.
+--
+-- This object can be passed to display_text() to construct a string displaying the text (appropriately script-tagged,
+-- unless `noscript` is set, as described above) and modifiers.
+local function parse_text_with_lang(val, paramname, explicit_gloss)
+	if not val then
+		return nil
+	end
+	-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>, <br/> or
+	-- similar in it, caused by wrapping an argument in {{l|...}}, {{lang|...}} or similar. Basically, all tags of the
+	-- sort we parse here should consist of a less-than sign, plus letters, plus a colon, e.g. <tr:...>, so if we see a
+	-- tag on the outer level that isn't in this format, we don't try to parse it. The restriction to the outer level is
+	-- to allow generated HTML inside of e.g. qualifier modifiers, such as foo<q:similar to {{m|fr|bar}}> (if we end up
+	-- supporting such modifiers). If we find a parameter value with top-level HTML in it, add 'noscript = true' to
+	-- indicate that we should not try to do script inference and tagging. (Otherwise, e.g. if you specify
+	-- {{lang|ar|مُؤَلِّف}} as the author, you'll get an extra big font coming from the fact that {{lang|...}} wraps the
+	-- Arabic text in CSS that increases the size from the default, and then we do script detection and again wrap the
+	-- text in the same CSS, which increases the size even more.)
+	if val:find("^[^<]*<[a-z]*[^a-z:]") then
+		return {text = val, noscript = true}
+	end
+
+	local function generate_obj(text, parse_err_or_paramname)
+		local obj = {}
+		if text:find(":[^ ]") then
+			local actual_text, textlang = require(parse_utilities_module).parse_term_with_lang(text, parse_err_or_paramname)
+			obj.text = actual_text
+			obj.lang = textlang
+		else
+			obj.text = text
+		end
+		return obj
+	end
+
+	local obj
+	if val:find("<") then
+		-- Check for inline modifier.
+		obj = require(parse_utilities_module).parse_inline_modifiers(val, {
+			paramname = paramname,
+			param_mods = param_mods,
+			generate_obj = generate_obj,
+		})
+	else
+		obj = generate_obj(val)
+	end
+
+	if explicit_gloss then
+		obj.gloss = explicit_gloss
+	end
+
+	return obj
 end
 
+-- Display a text property that may be in a foreign language or script, along with annotations. This is conceptually
+-- similar to the full_link() function in [[Module:links]], but displays the annotations in a different format that is
+-- more appropriate for bibliographic entries. The display looks like this:
+--
+-- TEXT [TRANSLIT /TRANSCRIPTION/, GLOSS]
+--
+-- `textobj` is as returned by `parse_text_with_lang`. `tag_text`, if supplied, is a function of one argument to further
+-- wrap the text after it has been processed and CSS-tagged appropriately, directly before insertion. `tag_gloss` is a
+-- similar function for the gloss.
 local function display_text(textobj, tag_text, tag_gloss)
+	if not textobj then
+		return nil
+	end
 	local text = textobj.text
-	local lang = textobj.lang
-	local sc = textobj.sc or lang and lang:findBestScript(text) or
-		require(scripts_module).findBestScriptWithoutLang(text)
-	lang = lang or require(languages_module).getByCode("und", true)
+	local tr, ts, gloss = textobj.tr, textobj.ts, textobj.gloss
 
-	local tr
-	if textobj.tr == "-" then
-		tr = nil
-	else
-		local manual_tr = not not textobj.tr
-		if manual_tr then
-			tr = textobj.tr
-		elseif not sc:getCode():find("Latn") then -- Latn, Latnx or a lang-specific variant
+	-- See above for `noscript`, meaning HTML was found in the text value, probably generated using {{lang|...}}.
+	-- {{lang}} already script-tags the text and processes embedded language links, so we don't want to do it again (in
+	-- fact, the code below within the if-clause is similar to what {{lang}} does). In such a case, an explicit language
+	-- won't be available and findBestScriptWithoutLang() may not be accurate, so we can't do automatic transliteration.
+	if not textobj.noscript then
+		local lang = textobj.lang
+		local sc = textobj.sc or lang and lang:findBestScript(text) or
+			require(scripts_module).findBestScriptWithoutLang(text)
+		lang = lang or require(languages_module).getByCode("und", true)
+
+		if tr == "-" then
+			tr = nil
+		elseif not tr and not sc:getCode():find("Latn") then -- Latn, Latnx or a lang-specific variant
+			-- might return nil
 			tr = (lang:transliterate(require(links_module).remove_links(text), sc))
 		end
-		-- Should we link to the transliteration of languages with lang:link_tr()? Probably not because `text` is not
-		-- likely to be a term that has an entry.
-		tr = tr and require(script_utilities_module).tag_translit(tr, lang, "usex") or nil
+
+		text = require(links_module).embedded_language_links(
+			{
+				term = text,
+				lang = lang,
+				sc = sc
+			},
+			false
+		)
+		if lang:getCode() ~= "und" or sc:getCode() ~= "Latn" then
+			text = require(script_utilities_module).tag_text(text, lang, sc)
+		end
+
+		if tr then
+			-- Should we link to the transliteration of languages with lang:link_tr()? Probably not because `text` is not
+			-- likely to be a term that has an entry.
+			tr = require(script_utilities_module).tag_translit(tr, lang, "usex")
+		end
+		if ts then
+			ts = require(script_utilities_module).tag_transcription(ts, lang, "usex")
+		end
 	end
 
-	if ts then
-		ts = "/" .. require(script_utilities_module).tag_transcription(ts, lang, "usex") .. "/"
+	text = require(italics_module).unitalicize_brackets(text)
+	if tag_text then
+		text = tag_text(text)
 	end
-
-	local gloss = textobj.gloss
 
 	local parts = {}
 	local function ins(txt)
 		table.insert(parts, txt)
 	end
 
-	text = require(links_module).embedded_language_links(
-		{
-			term = text,
-			lang = lang,
-			sc = sc
-		},
-		false
-	)
-	if lang:getCode() ~= "und" or sc:getCode() ~= "Latn" then
-		text = require(script_utilities_module).tag_text(text, lang, sc)
-	end
-	text = require(italics_module).unitalicize_brackets(text)
-	if tag_text then
-		text = tag_text(text)
-	end
 	ins(text)
 
 	if tr or ts or gloss then
-		ins(" &#91;") -- left bracket; use HTML char ref to make sure we don't run into issues if the next char is a bracket
+		ins(SPACE_LBRAC)
 		if tr then
 			ins(tr)
 		end
@@ -190,7 +265,7 @@ local function display_text(textobj, tag_text, tag_gloss)
 			if tr then
 				ins(" ")
 			end
-			ins(ts)
+			ins("/" .. ts .. "/")
 		end
 		if gloss then
 			if tr or ts then
@@ -203,29 +278,18 @@ local function display_text(textobj, tag_text, tag_gloss)
 			end
 			ins(gloss)
 		end
-		ins("&#93;") -- right bracket; see above
+		ins(RBRAC)
 	end
 
 	return table.concat(parts)
 end
 
 
--- Fancy version of ine() (if-not-empty). Converts empty string to nil,
--- but also strips leading/trailing space and then single or double quotes,
--- to allow for embedded spaces. (NOTE: Commented out quote processing, in case they are needed in args.)
--- FIXME! Copied directly from ru-noun. Move to utility package.
+-- Fancy version of ine() (if-not-empty). Converts empty string to nil, but also strips leading/trailing space.
 local function ine(arg)
 	if not arg then return nil end
-	arg = rsub(arg, "^%s*(.-)%s*$", "%1")
+	arg = mw.text.trim(arg)
 	if arg == "" then return nil end
-	--local inside_quotes = rmatch(arg, '^"(.*)"$')
-	--if inside_quotes then
-	--	return inside_quotes
-	--end
-	--inside_quotes = rmatch(arg, "^'(.*)'$")
-	--if inside_quotes then
-	--	return inside_quotes
-	--end
 	return arg
 end
 
@@ -256,7 +320,8 @@ local function check_url(param, value)
 	return value
 end
 
--- Implementation of {{quote-meta/source}}.
+-- Display the source line of the quote, above the actual quote text. This contains the majority of the logic of this
+-- module (formerly contained in {{quote-meta/source}}).
 function export.source(args)
 	local tracking_categories = {}
 
@@ -271,7 +336,7 @@ function export.source(args)
 		local FULLPAGENAME = mw.title.getCurrentTitle().fullText
 		local NAMESPACE = mw.title.getCurrentTitle().nsText
 
-		if NAMESPACE ~= "Template" and not require("Module:usex/templates").page_should_be_ignored(FULLPAGENAME) then
+		if NAMESPACE ~= "Template" and not require(usex_templates_module).page_should_be_ignored(FULLPAGENAME) then
 			require(languages_module).err(nil, 1)
 		end
 	end
@@ -289,7 +354,7 @@ function export.source(args)
 	if args.brackets then
 		add("[")
 	end
-	add(require("Module:time").quote_impl(args))
+	add(require(time_module).quote_impl(args))
 	if args.origdate then
 		add(" [" .. args.origdate .. "]")
 	elseif args.origyear and args.origmonth then
@@ -298,34 +363,66 @@ function export.source(args)
 		add(" [" .. args.origyear .. "]")
 	end
 	
-	-- Return the argument named PARAM, possibly with an index added (e.g. 2 for author2, 3 for last3) and possibly with
-	-- a suffix added after that. The index is either "" (an empty string) for the first set of params (author, last,
-	-- first, chapter, title, tlr, etc.) or a number for further sets of params (author2, last2, first2, chapter2,
-	-- title2, tlr2, etc.). The suffix is for subproperties of a given piece of text (e.g. gloss, transliteration,
-	-- script, etc.).
+	-- Return a function that generates the actual parameter name associated with a base param (e.g. "author", "last").
+	-- The actual parameter name may have an index added (an empty string for the first set of params, e.g. author=,
+	-- last=, or a numeric index for further sets of params, e.g. author2=, last2=, etc.).
 	local function make_get_full_paramname(ind)
-		return function(param, suf)
-			local paramind = param .. ind
-			if suf then
-				return paramind .. suf
-			else
-				return paramind
-			end
+		return function(param)
+			return param .. ind
 		end
 	end
-	local get_full_paramname -- assigned below
-	local function a(param, suf)
-		return args[get_full_paramname(param, suf)]
+	-- Function to fetch the actual parameter name associated with a base param (see make_get_full_paramname() above).
+	-- Assigned at various times below by calling make_get_full_paramname(). We do it this way so that we can have
+	-- wrapper functions that access params and define them only oncec.
+	local get_full_paramname
+	-- Fetch the value of a parameter given the base param name (which may have a numeric index added).
+	local function a(param)
+		return args[get_full_paramname(param)]
 	end
-	local function gloss(param)
-		return a(param, "-t") or a(param, "-gloss") or a("trans-" .. param)
+	-- Return two values: the value of a parameter given the base param name (which may have a numeric index added),
+	-- and the actual parameter name. The base parameter can be a list of such base params, which are checked in turn.
+	local function a_with_name(param)
+		if type(param) == "table" then
+			for _, par in ipairs(param) do
+				local val, name = a_with_name(par)
+				if val then
+					return val, name
+				end
+			end
+			return nil
+		end
+		local fullname = get_full_paramname(param)
+		return args[fullname], fullname
+	end
+
+	-- Convenience function to fetch a parameter that may be in a foreign language or text (and may consequently have
+	-- a language prefix and/or inline modifiers), parse the modifiers and convert the result into a displayed string.
+	-- This is a wrapper around parse_text_with_lang() and display_text(). `param` is the base parameter name (see
+	-- a_with_name()), `tag_text` is an optional function to tag the parameter text after all other processing (e.g.
+	-- wrap in <cite>...</cite> tags), and `tag_gloss` is a similar function for the parameter translation/gloss.
+	local function parse_and_display_text(param, tag_text, tag_gloss)
+		local paramval, paramname = a_with_name(param)
+		local obj = parse_text_with_lang(paramval, paramname)
+		return display_text(obj, tag_text, tag_gloss)
 	end
 
 	if args.author or args.last or args.quotee then
-		for i=1,5 do
+		-- Find maximum indexed author or last name.
+		local maxind = 0
+		for arg, _ in pairs(args) do
+			local argbase, argind = rmatch(arg, "^([a-z]+)([0-9]*)$")
+			if argbase == "author" or argbase == "last" then
+				argind = argind == "" and 1 or tonumber(argind)
+				if argind > maxind then
+					maxind = argind
+				end
+			end
+		end
+
+		for i = 1, maxind do
 			local ind = i == 1 and "" or i
 			get_full_paramname = make_get_full_paramname(ind)
-			local author = a("author")
+			local author, author_param = a_with_name("author")
 			local last = a("last")
 			local first = a("first")
 			if author or last then
@@ -334,7 +431,7 @@ function export.source(args)
 					add(", ")
 				end
 				-- If not first author, output a semicolon to separate from preceding authors.
-				add(i == 1 and " " or "&#59; ") -- &#59; = semicolon
+				add(i == 1 and " " or SEMICOLON_SPACE)
 				local function make_author_with_url(txt, authorlink)
 					if authorlink then
 						return "[[w:" .. authorlink .. "|" .. txt .. "]]"
@@ -343,9 +440,9 @@ function export.source(args)
 					end
 				end
 				local authorlink = a("authorlink")
-				local authorlink_gloss = gloss("authorlink")
+				local authorlink_gloss = a("trans-authorlink")
 				if author then
-					local authorobj = parse_text_with_lang(author, "author", a, get_full_paramname)
+					local authorobj = parse_text_with_lang(author, author_param, a("trans-author"))
 					authorobj.text = make_author_with_url(authorobj.text, authorlink)
 					if authorobj.gloss and authorlink_gloss then
 						authorobj.gloss = make_author_with_url(authorobj.gloss, authorlink_gloss)
@@ -354,7 +451,6 @@ function export.source(args)
 				else
 					-- Author separated into last name, first name. We don't currently support non-Latin-script
 					-- authors separated this way and probably never will.
-					local last = a("last")
 					local first = a("first")
 					if first then
 						author = last .. ", " .. first
@@ -362,10 +458,10 @@ function export.source(args)
 						author = last
 					end
 					author = make_author_with_url(author, authorlink)
-					local last_gloss = gloss("last")
+					local last_gloss = a("trans-last")
 					local author_gloss
 					if last_gloss then
-						local first_gloss = gloss("first")
+						local first_gloss = a("trans-first")
 						if first_gloss then
 							author_gloss = last_gloss .. ", " .. first_gloss
 						else
@@ -375,18 +471,23 @@ function export.source(args)
 					end
 					add(author)
 					if author_gloss then
-						add(" &#91;")
+						add(SPACE_LBRAC)
 						add(author_gloss)
-						add("&#93;")
+						add(RBRAC)
 					end
 				end
 			end
 		end
-		if args.coauthors then
-			add("&#59; " .. args.coauthors)
-		end
-		if args.quotee then
-			add(", quoting " .. args.quotee)
+		if args.coauthors or args.quotee then
+			-- Need to set this. It's accessed (indirectly) by parse_and_display_text(), and will have the wrong value
+			-- as a result of the 1, maxind loop above.
+			get_full_paramname = make_get_full_paramname("")
+			if args.coauthors then
+				add(SEMICOLON_SPACE .. parse_and_display_text("coauthors"))
+			end
+			if args.quotee then
+				add(", quoting " .. parse_and_display_text("quotee"))
+			end
 		end
 	elseif args.year or args.date or args.start_year or args.start_date then
 		--If no author stated but date provided, add a comma.
@@ -411,8 +512,6 @@ function export.source(args)
 		return args.newversion or args.location2 or has_new_title_or_author()
 	end
 	
-	local archivedate_error
-
 	-- This handles everything after displaying the author, starting with the chapter and ending with page, column and
 	-- then other=. It is currently called twice: Once to handle the main portion of the citation, and once to handle a
 	-- "newversion" citation. `ind` is either "" for the main portion or a number (currently only 2) for a "newversion"
@@ -424,7 +523,13 @@ function export.source(args)
 		local function aurl(param)
 			return check_url(param, a(param))
 		end
-		local chap = a("chapter")
+
+		local chapter_tlr = parse_and_display_text("chapter_tlr")
+		if chapter_tlr then
+			add(chapter_tlr .. ", transl., ")
+		end
+		
+		local chap, chap_param = a_with_name("chapter")
 		if chap then
 			local cleaned_chap = chap:gsub("<sup>[^<>]*</sup>", ""):gsub("[*+#]", "")
 			local chapterurl = aurl("chapterurl")
@@ -436,18 +541,18 @@ function export.source(args)
 				end
 			end
 
-			if require("Module:number-utilities").get_number(cleaned_chap) then
+			if require(number_utilities_module).get_number(cleaned_chap) then
 				-- Arabic chapter number
 				add(" chapter ")
 				add(make_chapter_with_url(chap))
-			elseif rfind(cleaned_chap, "^[mdclxviMDCLXVI]+$") and require("Module:roman numerals").roman_to_arabic(cleaned_chap, true) then
+			elseif rfind(cleaned_chap, "^[mdclxviMDCLXVI]+$") and require(roman_numerals_module).roman_to_arabic(cleaned_chap, true) then
 				-- Roman chapter number
 				add(" chapter ")
 				add(make_chapter_with_url(mw.ustring.upper(chap)))
 			else
 				-- Must be a chapter name
 				add(" “")
-				local chapterobj = parse_text_with_lang(chap, "chapter", a, get_full_paramname)
+				local chapterobj = parse_text_with_lang(chap, chap_param, a("trans-chapter"))
 				chapterobj.text = make_chapter_with_url(chapterobj.text)
 				add(display_text(chapterobj))
 				add("”")
@@ -457,19 +562,26 @@ function export.source(args)
 			end
 		end
 
-		local translator = a("tlr") or a("trans") or a("translator") or a("translators")
+		local tlr, tlr_param = a_with_name({"tlr", "trans", "translator", "translators"})
+		local editor = parse_and_display_text("editor")
+		local editors = parse_and_display_text("editors")
+		if editor and editors then
+			error(("Can't specify both editor%s= and editors%s="):format(ind, ind))
+		end
 		if a("mainauthor") then
-			add(a("mainauthor") .. ((translator or a("editor") or a("editors")) and "&#59; " or ","))
+			add(parse_and_display_text("mainauthor") .. ((tlr or editor or editors) and SEMICOLON_SPACE or ","))
 		end
 		
-		if translator then
-			add(translator .. ", transl." .. ((a("editor") or a("editors")) and "&#59; " or ","))
+		if tlr then
+			local tlr_obj = parse_text_with_lang(tlr, tlr_param)
+			tlr = display_text(tlr_obj)
+			add(tlr .. ", transl." .. ((editor or editors) and SEMICOLON_SPACE or ","))
 		end
 		
-		if a("editor") then
-			add(a("editor") .. ", editor,")
-		elseif a("editors") then
-			add(a("editors") .. ", editors,")
+		if editor then
+			add(editor .. ", editor,")
+		elseif editors then
+			add(editors .. ", editors,")
 		end
 
 		-- If we're in the "newversion" code (ind ~= ""), and there's no title and no URL, then the first time we add
@@ -482,17 +594,19 @@ function export.source(args)
 			add(sep .. text)
 			sep = ", "
 		end
-		local title = a("title")
+		local function tag_with_cite(txt)
+			return "<cite>" .. txt .. "</cite>"
+		end
+		local title, title_param = a_with_name("title")
 		if title then
-			local titleobj = parse_text_with_lang(title, "title", a, get_full_paramname)
-			local function tag_with_cite(txt)
-				return "<cite>" .. txt .. "</cite>"
-			end
+			local titleobj = parse_text_with_lang(title, title_param, a("trans-title"))
+			add(" ")
 			add(display_text(titleobj, tag_with_cite, tag_with_cite))
-			if a("series") then
-				add(" (" .. a("series"))
+			local series = parse_and_display_text("series")
+			if series then
+				add(" (" .. series)
 				if a("seriesvolume") then
-					add("&#59; " .. a("seriesvolume"))
+					add(SEMICOLON_SPACE .. a("seriesvolume"))
 				end
 				add(")")
 			end
@@ -514,8 +628,9 @@ function export.source(args)
 			sep = ", "
 		end
 
-		if a("edition") then
-			add_with_sep(a("edition") .. " edition")
+		local edition = parse_and_display_text("edition")
+		if edition then
+			add_with_sep(edition .. " edition")
 		end
 
 		if a("volume") then
@@ -528,24 +643,24 @@ function export.source(args)
 			add_with_sep("number " .. a("issue"))
 		end
 
-		-- This function handles the display of annotations like "(in French)"
-		-- or "(in German; quote in Nauruan)". It takes two params PRETEXT and
-		-- POSTTEXT to display before and after the annotation, respectively.
-		-- These are used to insert the surrounding parens, commas, etc.
-		-- They are necessary because we don't always display the annotation
-		-- (in fact it's usually not displayed), and when there's no annotation,
-		-- no pre-text or post-text is displayed.
+		-- This function handles the display of annotations like "(in French)" or "(in German; quote in Nauruan)". It
+		-- takes two params PRETEXT and POSTTEXT to display before and after the annotation, respectively. These are
+		-- used to insert the surrounding parens, commas, etc. They are necessary because we don't always display the
+		-- annotation (in fact it's usually not displayed), and when there's no annotation, no pre-text or post-text is
+		-- displayed.
 		local function langhandler(pretext, posttext)
-			local argslang
+			local argslang, argslang_param
 			if ind == "" then
 				argslang = args.lang or args[1]
+				argslang_param = 1
 			else
-				argslang = a("lang")
+				argslang, argslang_param = a_with_name("lang")
 			end
-			if a("worklang") then
-				return pretext .. "in " .. format_langs(a("worklang")) .. posttext
+			local worklang, worklang_param = a_with_name("worklang")
+			if worklang then
+				return pretext .. "in " .. format_langs(worklang, worklang_param) .. posttext
 			elseif argslang and a("termlang") and argslang ~= a("termlang") then
-				return pretext .. "in " .. format_langs(argslang) .. posttext
+				return pretext .. "in " .. format_langs(argslang, argslang_param) .. posttext
 			elseif not argslang and ind == "" then
 				return pretext .. maintenance_line("Please specify the language of the quote") .. posttext
 			end
@@ -567,28 +682,29 @@ function export.source(args)
 		end
 
 		if a("others") then
-			add_with_sep(a("others"))
+			add_with_sep(parse_and_display_text("others"))
 		end
-		if a("quoted_in") then
+		local quoted_in = parse_and_display_text("quoted_in", tag_with_cite, tag_with_cite)
+		if quoted_in then
+			add_with_sep("quoted in " .. quoted_in)
 			table.insert(tracking_categories, "Quotations using quoted-in parameter")
-			add_with_sep("quoted in " .. a("quoted_in"))
 		end
 
+		local city_or_location = parse_and_display_text("city") or parse_and_display_text("location")
 		if a("publisher") then
-			if a("city") or a("location") then
-				add_with_sep((a("city") or a("location")) .. "&#58;") -- colon
+			if city_or_location then
+				add_with_sep(city_or_location .. "&#58;") -- colon
 				sep = " "
 			end
-			add_with_sep(a("publisher"))
-		elseif a("city") or a("location") then
-			add_with_sep(a("city") or a("location"))
+			add_with_sep(parse_and_display_text("publisher"))
+		elseif city_or_location then
+			add_with_sep(city_or_location)
 		end
 
-		if a("original") then
-			add_with_sep((a("type") or "translation") .. " of <cite>" .. a("original")
-				.. "</cite>" .. (a("by") and " by " .. a("by") or ""))
-		elseif a("by") then
-			add_with_sep((a("type") or "translation") .. " of original by " .. a("by"))
+		local original = parse_and_display_text("original", tag_with_cite, tag_with_cite)
+		local by = parse_and_display_text("by")
+		if original or by then
+			add_with_sep((a("type") or "translation") .. " of " .. (original or "original") .. (by and " by " .. by or ""))
 		end
 
 		if a("year_published") then
@@ -658,7 +774,6 @@ function export.source(args)
 				add(format_date(wayback_date))
 			else
 				error("When archiveurl" .. ind .. "= is specified, archivedate" .. ind .. "= must also be included")
-				archivedate_error = true
 			end
 		end
 		if a("accessdate") then
@@ -670,14 +785,21 @@ function export.source(args)
 		if a("laysummary") then
 			add(", [" .. a("laysummary") .. " lay summary]")
 			if a("laysource") then
-				add("&nbsp;–&nbsp;''" .. a("laysource") .. "''")
+				-- FIXME: What is laysource? Can it be foreign language text?
+				add("&nbsp;–&nbsp;''" .. parse_and_display_text("laysource") .. "''")
 			end
 		end
 		if a("laydate") then
 			add(" (" .. format_date(a("laydate")) .. ")")
 		end
-		if a("section") then
-			add(", " .. (aurl("sectionurl") and "[" .. aurl("sectionurl") .. " " .. a("section") .. "]" or a("section")))
+		local section, section_param = a_with_name("section")
+		if section then
+			local sectionurl = aurl("sectionurl")
+			local sectionobj = parse_text_with_lang(section, section_param)
+			if sectionurl then
+				sectionobj.text = "[" .. sectionurl .. " " .. sectionobj.text .. "]"
+			end
+			add(", " .. display_text(sectionobj))
 		end
 		if a("line") then
 			add(", line " .. a("line"))
@@ -706,8 +828,10 @@ function export.source(args)
 			end
 			add(", " .. (aurl("columnurl") and "[" .. aurl("columnurl") .. " " .. column_or_columns() .. "]" or column_or_columns()))
 		end
-		if a("other") then
-			add(", " .. a("other"))
+		-- FIXME: Does this make sense? What is other=?
+		local other = parse_and_display_text("other")
+		if other then
+			add(", " .. other)
 		end
 	end
 
@@ -719,8 +843,8 @@ function export.source(args)
 	-- If there's a "newversion" section, add the new-version text.
 	if has_newversion() then
 		--Test for new version of work.
-		add("&#59; ") -- semicolon
-		if args.newversion then
+		add(SEMICOLON_SPACE)
+		if args.newversion then -- newversion= is intended for English text, e.g. "quoted in" or "republished as".
 			add(args.newversion)
 		elseif not args.edition2 then
 			if has_new_title_or_author() then
@@ -738,20 +862,33 @@ function export.source(args)
 	-- Add the author(s).
 	if args["2ndauthor"] or args["2ndlast"] then
 		add(" ")
-		if args["2ndauthorlink"] then
-			add("[[w:" .. args["2ndauthorlink"] .. "|")
-		end
-		if args["2ndauthor"] then
-			add(args["2ndauthor"])
-		elseif args["2ndlast"] then
-			add(args["2ndlast"])
-			if args["2ndfirst"] then
-				add(", " .. args["2ndfirst"])
+		local authorlink = args["2ndauthorlink"]
+		local function make_author_with_url(txt)
+			if authorlink then
+				return "[[w:" .. authorlink .. "|" .. txt .. "]]"
+			else
+				return txt
 			end
 		end
-		if args["2ndauthorlink"] then
-			add("]]")
+		local author = args["2ndauthor"]
+		if author then
+			local authorobj = parse_text_with_lang(author, "2ndauthor")
+			authorobj.text = make_author_with_url(authorobj.text)
+			add(display_text(authorobj))
+		else
+			local last = args["2ndlast"]
+			local first = args["2ndfirst"]
+			-- Author separated into last name, first name. We don't currently support non-Latin-script
+			-- authors separated this way and probably never will.
+			if first then
+				author = last .. ", " .. first
+			else
+				author = last
+			end
+			author = make_author_with_url(author)
+			add(author)
 		end
+
 		-- FIXME, we should use sep = ", " here too and fix up the handling
 		-- of chapter/mainauthor/etc. in postauthor() to use add_with_sep().
 		if has_new_title_or_ancillary_author() then
@@ -784,12 +921,6 @@ function export.source(args)
 	--    Beer Parlour).
 	-- 3. [[Category:Quotations using nocat parameter]], if nocat= is given.
 	--    Added to the same pages as for [[Category:Quotations with missing lang parameter]].
-	-- 4. [[Category:Quotations using archiveurl without archivedate]],
-	--    if archivedate= is missing and cannot be inferred. Added to the same
-	--    pages as for [[Category:Quotations with missing lang parameter]].
-	-- 5. [[Category:Quotation templates using both date and year]], if both
-	--    date= and year= are specified. Added to the same pages as for
-	--    [[Category:Quotations with missing lang parameter]].
 	
 	local categories = {}
 
@@ -807,18 +938,12 @@ function export.source(args)
 	else
 		table.insert(tracking_categories, "Quotations with missing lang parameter")
 	end
-	if archivedate_error then
-		table.insert(tracking_categories, "Quotations using archiveurl without archivedate")
-	end
-	if args.date and args.year then
-		table.insert(tracking_categories, "Quotation templates using both date and year")
-	end
 
 	local FULLPAGENAME = mw.title.getCurrentTitle().fullText
 	return output_text .. (not lang and "" or
-		require("Module:utilities").format_categories(categories, lang) ..
-		require("Module:utilities").format_categories(tracking_categories, lang, nil, nil,
-			not require("Module:usex/templates").page_should_be_ignored(FULLPAGENAME)))
+		require(utilities_module).format_categories(categories, lang) ..
+		require(utilities_module).format_categories(tracking_categories, lang, nil, nil,
+			not require(usex_templates_module).page_should_be_ignored(FULLPAGENAME)))
 end
 
 
@@ -839,12 +964,12 @@ function export.source_t(frame)
 		local canon_newret = canon(newret)
 		local canon_oldret = canon(oldret)
 		if canon_newret ~= canon_oldret then
-			require("Module:debug").track("quote-source/diff")
+			require(debug_track_module)("quote-source/diff")
 			if test_new_code_with_errors then
 				error("different: <<" .. canon_oldret .. ">> vs <<" .. canon_newret .. ">>")
 			end
 		else
-			require("Module:debug").track("quote-source/same")
+			require(debug_track_module)("quote-source/same")
 			if test_new_code_with_errors then
 				error("same")
 			end
@@ -869,7 +994,7 @@ function export.quote_t(frame)
 		if val == "on" then
 			return true
 		end
-		return require("Module:yesno")(val)
+		return require(yesno_module)(val)
 	end
 
 	args.nocat = yesno(args.nocat)
@@ -949,7 +1074,7 @@ function export.call_quote_template(frame)
 		["allowparams"] = {list = true},
 		["propagateparams"] = {list = true},
 	}
-	local iargs, other_direct_args = require("Module:parameters").process(frame.args, iparams, "return unknown", "quote", "call_quote_template")
+	local iargs, other_direct_args = require(parameters_module).process(frame.args, iparams, "return unknown", "quote", "call_quote_template")
 	local direct_args = {}
 	for pname, param in pairs(other_direct_args) do
 		direct_args[pname] = ine(param)
@@ -1026,8 +1151,8 @@ function export.call_quote_template(frame)
 		end
 	end
 
-	local args = require("Module:parameters").process(parent_args, params, allow_all, "quote", "call_quote_template")
-	parent_args = require("Module:table").shallowcopy(parent_args)
+	local args = require(parameters_module).process(parent_args, params, allow_all, "quote", "call_quote_template")
+	parent_args = require(table_module).shallowcopy(parent_args)
 
 	if textparams[1] ~= "-" then
 		other_direct_args.passage = args.text or args.passage or fetch_param(args, textparams)
@@ -1108,7 +1233,7 @@ function export.paramdoc(frame)
 	}
 
 	local parargs = frame:getParent().args
-	local args = require("Module:parameters").process(parargs, params, nil, "quote", "paramdoc")
+	local args = require(parameters_module).process(parargs, params, nil, "quote", "paramdoc")
 
 	local text = args[1]
 
