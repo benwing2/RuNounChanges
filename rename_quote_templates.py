@@ -1,60 +1,79 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# Replace quote-poem -> quote-book and change params.
-# Replace quote-magazine and quote-news -> quote-journal.
-# Replace quote-Don Quixote -> RQ:Don Quixote.
-
 import pywikibot, re, sys, argparse
-import mwparserfromhell as mw
 
 import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site, tname, pname
 from collections import defaultdict
 
-quote_templates = [
-  "quote-av",
-  "quote-book",
-  "quote-hansard",
-  "quote-journal",
-  "quote-mailing list",
-  "quote-newsgroup",
-  "quote-song",
-  "quote-text",
-  "quote-us-patent",
-  "quote-video game",
-  "quote-web",
-  "quote-wikipedia",
+quote_templates_by_highest_numbered_param = {
+  "quote-av": 9,
+  "quote-book": 8,
+  "quote-hansard": 10,
+  "quote-journal": 9,
+  "quote-mailing list": 8,
+  "quote-newsgroup": 8,
+  "quote-song": 8,
+  "quote-text": 8,
+  "quote-us-patent": 8,
+  "quote-video game": 8,
+  "quote-web": 8,
+  "quote-wikipedia": 1,
+}
+
+quote_templates = set(quote_templates_by_highest_numbered_param.keys())
+
+recognized_named_params_1_to_n_list = [
+  "author", "last", "first", "authorlink", "trans-author", "trans-last", "trans-first", "trans-authorlink"
+]
+
+recognized_named_params_1_to_2_list = [
+  "chapter", "chapterurl", "trans-chapter", "notitle", "trans", "translator", "translators", "editor", "editors",
+  "mainauthor", "title", "trans-title", "series", "seriesvolume", "archiveurl", "url", "urls", "edition", "volume",
+  "volume_plain", "issue", "lang", "worklang", "termlang", "genre", "format", "others", "quoted_in", "city", "location",
+  "publisher", "original", "by", "type", "year_published", "date", "year", "bibcode", "doi", "isbn", "issn", "jstor",
+  "lccn", "oclc", "ol", "pmid", "ssrn", "id", "archivedate", "accessdate", "nodate", "laysummary", "laysource",
+  "laydate", "section", "sectionurl", "line", "lines", "page", "pages", "pageurl", "column", "columns", "columnurl",
+  "other",
 ]
 
 recognized_named_params_list = [
-  "accessdate", "accessdaymonth", "accessmonthday", "accessmonth", "accessyear", "actor", "album", "archivedate",
-  "archiveurl", "article", "artist", "at", "author", "authorlabel", "authorlink", "authors", "autodate", "bibcode",
-  "blog", "book", "brackets", "by", "chapter", "chapterurl", "city", "coauthors", "column", "columns", "columnurl",
-  "column_end", "column_start", "composer", "date", "debate", "developer", "director", "directors", "DOI", "doi",
-  "edition", "editor", "editors", "email", "entry", "entryurl", "episode", "first", "footer", "format", "genre",
-  "googleid", "group", "house", "id", "indent", "ISBN", "isbn", "ISSN", "issn", "issue", "inventor", "journal", "jstor",
-  "lang", "last", "laydate", "laysource", "laysummary", "LCCN", "lccn", "level", "line", "lines", "list", "lit",
-  "location", "lyricist", "lyrics-translator", "magazine", "mainauthor", "medium", "month", "network", "newsgroup",
-  "newspaper", "newversion", "nocat", "nodate", "note", "notitle", "number", "OCLC", "oclc", "OL", "ol", "origdate",
-  "original", "origmonth", "origyear", "other", "others", "page", "pages", "pageref", "pageurl", "page_end",
-  "page_start", "passage", "people", "periodical", "platform", "PMID", "pmid", "publisher", "quote", "quoted_in",
-  "quotee", "report", "revision", "role", "roles", "scene", "season", "section", "sectionurl", "series", "seriesvolume",
-  "site", "sort", "speaker", "ssrn", "start_date", "start_year", "subst", "t", "termlang", "text", "time", "title",
-  "titleurl", "tr", "trans", "trans-album", "trans-chapter", "trans-entry", "trans-episode", "trans-journal",
-  "trans-title", "trans-work", "transcription", "translation", "translator", "translators", "transliteration", "ts",
-  "type", "url", "urls", "url-access", "url-status", "version", "vol", "volume", "volume_plain", "work", "worklang",
-  "writer", "writers", "year", "year_published", "2ndauthor", "2ndauthorlink", "2ndfirst", "2ndlast"
+  "accessdaymonth", "accessmonthday", "accessmonth", "accessyear", "actor", "album",
+  "article", "artist", "at", "authorlabel", "authors", "autodate",
+  "blog", "book", "brackets", "coauthors",
+  "column_end", "column_start", "composer", "debate", "developer", "director", "directors", "DOI",
+  "email", "entry", "entryurl", "episode", "footer",
+  "googleid", "group", "house", "indent", "ISBN", "ISSN", "issue", "inventor", "journal",
+  "LCCN", "level", "list", "lit",
+  "lyricist", "lyrics-translator", "magazine", "medium", "month", "network", "newsgroup",
+  "newspaper", "newversion", "nocat", "note", "number", "OCLC", "OL", "origdate",
+  "origmonth", "origyear", "pageref", "page_end",
+  "page_start", "passage", "people", "periodical", "platform", "PMID", "quote",
+  "quotee", "report", "revision", "role", "roles", "scene", "season",
+  "site", "sort", "speaker", "start_date", "start_year", "subst", "t", "text", "time",
+  "titleurl", "tr", "trans", "trans-album", "trans-entry", "trans-episode", "trans-journal",
+  "trans-work", "transcription", "translation", "transliteration", "ts",
+  "url-access", "url-status", "version", "vol", "work",
+  "writer", "writers", "2ndauthor", "2ndauthorlink", "2ndfirst", "2ndlast"
 ]
 
-def make_all_param_set(params):
-  return set(p for param in params for p in [param, param + "2", param + "3", param + "4", param + "5"])
+def make_all_param_set(params, highest_ind):
+  return set(param + ("" if ind == 1 else str(ind)) for param in params for ind in range(1, highest_ind + 1))
 
-recognized_named_params = make_all_param_set(recognized_named_params_list)
+recognized_named_params = (
+  make_all_param_set(recognized_named_params_1_to_n_list, 30) |
+  make_all_param_set(recognized_named_params_1_to_2_list, 2) |
+  set(recognized_named_params_list)
+)
+
+recognized_named_params_list_longest_to_shortest = sorted(list(recognized_named_params), key=lambda x:-len(x))
+recognized_named_params_re = "(%s)" % "|".join(recognized_named_params_list_longest_to_shortest)
+
 count_recognized_named_params = defaultdict(int)
 
 
-unrecognized_named_params_list = [
+unrecognized_after_url_named_params_list = [
   "archive-date", "archive_date", "archiv-datum", "access", "access-date", "accessed", "archiveorg", "archive-url",
   "asin", "author1", "digitized", "edition_plain", "fulltext", "i2", "isbn10", "meeting", "new version", "newsfeed", "oldurl",
   "originalpassage", "p", "paragraph", "part", "pos", "producer", "publish-date", "rfc", "retrieved", "stanza", "via",
@@ -62,9 +81,7 @@ unrecognized_named_params_list = [
   # misspellings:
   "Chapter", "colunm", "Id", "IISBN", "isn", "Jnewsgroup", "oage", "Page", "pge", "Section", "tirle", "ur", "year_publsihed",
 ]
-
-unrecognized_named_params = make_all_param_set(unrecognized_named_params_list)
-count_unrecognized_named_params = defaultdict(int)
+unrecognized_after_url_named_params = set(unrecognized_after_url_named_params_list)
 
 count_numbered_params = defaultdict(int)
 count_unhandled_params = defaultdict(int)
@@ -88,7 +105,11 @@ def process_text_on_page(index, pagetitle, text):
     origt = str(t)
     changed = False
 
-    def move_params(params, frob_from=None):
+    def escape_newline(val):
+      return val.replace("\n", r"\n")
+
+    def move_params(params, frob_from=None, no_notes=False):
+      this_notes = []
       tparams = []
       for param in t.params:
         tparams.append((str(param.name), str(param.value), param.showkey))
@@ -98,6 +119,7 @@ def process_text_on_page(index, pagetitle, text):
           if not oldval.strip():
             rmparam(t, fr)
             pagemsg("%s: Removing blank param %s" % (tn, fr))
+            this_notes.append("remove blank %s= from {{%s}}" % (fr, tn))
             continue
           if frob_from:
             newval = frob_from(oldval)
@@ -127,7 +149,9 @@ def process_text_on_page(index, pagetitle, text):
               tfr = t.get(fr)
               tfr.name = to
               tfr.value = newval
-            pagemsg("%s: %s=%s -> %s=%s" % (tn, fr, oldval.replace("\n", r"\n"), to, newval.replace("\n", r"\n")))
+            pagemsg("%s: %s=%s -> %s=%s" % (tn, fr, escape_newline(oldval), to, escape_newline(newval)))
+            this_notes.append("move %s=%s to %s=%s in {{%s}}"
+              % (fr, escape_newline(oldval), to, escape_newline(newval), tn))
           else:
             rmparam(t, to) # in case of blank param
             # See comment above.
@@ -137,232 +161,349 @@ def process_text_on_page(index, pagetitle, text):
             else:
               t.get(fr).name = to
             pagemsg("%s: %s -> %s" % (tn, fr, to))
-
-    def escape_newline(val):
-      return val.replace("\n", r"\n")
+            this_notes.append("rename %s= -> %s= in {{%s}}" % (fr, to, tn))
+      if not no_notes:
+        notes.extend(this_notes)
 
     if tn in quote_templates:
       for param in t.params:
         pn = pname(param)
         pv = str(param.value)
         if re.search("^[0-9]+$", pn):
-          count_numbered_params[pn] += 1
+          pnnum = int(pn)
+          if pnnum <= quote_templates_by_highest_numbered_param[tn]:
+            count_numbered_params[pn] += 1
+            if pn != "1":
+              pvs = pv.strip()
+              m = re.search("^%s" % recognized_named_params_re, pvs)
+              if m:
+                beginparam = m.group(1)
+                if len(beginparam) >= 4:
+                  if re.search("^%s([A-Za-z0-9]| [^ A-Z0-9])" % beginparam, pvs):
+                    pagemsg("WARNING: Probable missing equal sign in %s=%s: %s" % (pn, escape_newline(pv), escape_newline(str(t))))
+              # Too many false positives, not enough real hits
+              #m = re.search("%s$" % recognized_named_params_re, pvs)
+              #if m:
+              #  endparam = m.group(1)
+              #  if len(endparam) >= 6:
+              #    if re.search("([A-Za-z0-9]|[^ a-z] )%s$" % endparam, pvs):
+              #      pagemsg("WARNING: Probable missing equal sign in %s=%s: %s" % (pn, escape_newline(pv), escape_newline(str(t))))
+          else:
+            pagemsg("WARNING: Saw unhandled param %s=%s: %s" % (pn, escape_newline(pv), escape_newline(str(t))))
+            count_unhandled_params["%s:%s" % (pn, tn)] += 1
         elif pn in recognized_named_params:
           count_recognized_named_params[pn] += 1
-        elif pn in unrecognized_named_params:
-          count_unrecognized_named_params[pn] += 1
         else:
           pagemsg("WARNING: Saw unhandled param %s=%s: %s" % (pn, escape_newline(pv), escape_newline(str(t))))
           count_unhandled_params[pn] += 1
 
-    if args.no_rename:
-      continue
+    if args.do_old_renames:
+      if tn in ["quote-magazine", "quote-news"]:
+        blib.set_template_name(t, "quote-journal")
+        notes.append("%s -> quote-journal" % tn)
+        changed = True
+      if tn in ["quote-Don Quixote"]:
+        blib.set_template_name(t, "RQ:Don Quixote")
+        notes.append("quote-Don Quixote -> RQ:Don Quixote")
+        changed = True
+      if tn == "quote-poem":
+        move_params([
+          ("title", "chapter"),
+          ("poem", "chapter"),
+          ("work", "title"),
+          ("7", "t"),
+          ("6", "text"),
+          ("5", "url"),
+          ("4", "title"),
+          ("3", "chapter"),
+        ], no_notes=True)
+        blib.set_template_name(t, "quote-book")
+        changed = origt != str(t)
+        if changed:
+          notes.append("quote-poem -> quote-book with fixed params")
 
-    if tn in ["quote-magazine", "quote-news"]:
-      blib.set_template_name(t, "quote-journal")
-      notes.append("%s -> quote-journal" % tn)
-      changed = True
-    if tn in ["quote-Don Quixote"]:
-      blib.set_template_name(t, "RQ:Don Quixote")
-      notes.append("quote-Don Quixote -> RQ:Don Quixote")
-      changed = True
+    if args.rename_bad_params:
+      if tn in quote_templates:
+        params_to_move = [
+          ("access-date", "accessdate"),
+          ("acessdate", "accessdate"),
+          ("accessed", "accessdate"),
+          ("archive-date", "archivedate"),
+          ("archive_date", "archivedate"),
+          ("archive-url", "archiveurl"),
+          ("auhtor", "author"),
+          ("auther", "author"),
+          ("Author", "author"),
+          ("author1", "author"),
+          ("author-link", "authorlink"),
+          ("authorlink1", "authorlink"),
+          ("authorklink", "authorlink"),
+          ("autorlink", "authorlink"),
+          ("autor", "author"),
+          ("first1", "first"),
+          ("last1", "last"),
+          ("chaper", "chapter"),
+          ("chapter-trans", "trans-chapter"),
+          ("coauthor", "coauthors"),
+          ("co-author", "coauthors"),
+          ("co-authors", "coauthors"),
+          ("Date", "date"),
+          ("editon", "edition"),
+          ("Edition", "edition"),
+          ("editor1", "editor"),
+          ("edtior", "editor"),
+          ("edtiors", "editors"),
+          ("IBSN", "ISBN"),
+          ("ibsn", "isbn"),
+          ("ISBN2", "isbn2"),
+          ("OCLC2", "oclc2"),
+          ("Issue", "issue"),
+          ("issuse", "issue"),
+          #("link", "url"), # do manually
+          ("Location", "location"),
+          ("Location2", "location2"),
+          ("locaion", "location"),
+          ("locaton", "location"),
+          ("l0ocaton", "location"),
+          ("Month", "month"),
+          ("new version", "newversion"),
+          ("orig-year", "origyear"),
+          ("orig_year", "origyear"),
+          ("oage", "page"),
+          ("p", "page"),
+          ("Page", "page"),
+          ("pag", "page"),
+          ("pagae", "page"),
+          ("pge", "page"),
+          ("pagurl", "pageurl"),
+          ("page_url", "pageurl"),
+          ("place", "location"),
+          ("Publisher", "publisher"),
+          ("pu7blisher", "publisher"),
+          ("Publisher2", "publisher2"),
+          ("SBN", "ISBN"),
+          ("Section", "section"),
+          ("Title", "title"),
+          ("tile", "title"),
+          ("ttle", "title"),
+          ("title-trans", "trans-title"),
+          ("translater", "translator"),
+          ("URL", "url"),
+          ("Volume", "volume"),
+          ("Year", "year"),
+          ("year_publisher", "year_published"),
+        ]
+        move_params(params_to_move)
+        params_to_remove = [
+          "indent2"
+        ]
+        params_to_remove_if_blank = [
+          "archiveorg"
+        ]
+        params_not_yet_handled = [
+          "via",
+          "rfc",
+          "track",
+          "pagetitle",
+          "part",
+          "editor-first", # combine into editor=
+          "editor-last",
+          "editor1-first", # combine into editor=
+          "editor1-last",
+          "editor2-first", # combine into editor2=
+          "editor2-last",
+          "editor-first2", # combine into editor2=
+          "editor-last2",
+          "q",
+          "volumes", # leave as is
+          "issues", # leave as is
+          "numbers", # leave as is
+        ]
 
-    must_continue = False
-    if tn in quote_templates:
-      last_url_like = None
-      last_url_like_value = None
-      for param in t.params:
-        pn = pname(param)
-        pv = str(param.value)
-        if pn in unrecognized_named_params:
-          pagemsg("WARNING: Saw bad (unrecognized or misspelled) param %s=%s: %s" % (
-            pn, escape_newline(pv), escape_newline(str(t))))
-        if ((re.search("^[0-9]+$", pn) or pn not in recognized_named_params) and pn not in unrecognized_named_params
-            and pv.strip() and last_url_like and not (pn in ["6", "7"] and re.search("^[0-9]+$", pv))):
-          pagemsg("WARNING: Possible unescaped vertical bar, saw %s=%s after %s=%s: %s" % (
-            pn, escape_newline(pv), last_url_like, escape_newline(last_url_like_value), escape_newline(str(t))))
-          must_continue = True
-          break
-        if "://" in pv: # re.search("^(url|section)[0-9]*$", pn):
-          last_url_like = pn
-          last_url_like_value = pv
-        else:
-          last_url_like = None
-          last_url_like_value = None
-    if must_continue:
-      continue
-
-    if tn in quote_templates:
-      params_to_move = [("trans", "tlr")]
-      for trans_param in ["title", "chapter", "journal", "work", "album", "author", "entry", "episode",
-                          "lyricist", "section", "series", "section", "newspaper"]:
-        params_to_move.append(("trans-%s" % trans_param, "%s-t" % trans_param))
-        params_to_move.append(("trans-%s2" % trans_param, "%s2-t" % trans_param))
-        params_to_move.append(("trans-%s3" % trans_param, "%s3-t" % trans_param))
+    if args.rename_translator:
+      if tn in quote_templates:
+        params_to_move = [("trans", "tlr")]
+        #for trans_param in ["title", "chapter", "journal", "work", "album", "author", "entry", "episode",
+        #                    "lyricist", "section", "series", "section", "newspaper"]:
+        #  params_to_move.append(("trans-%s" % trans_param, "%s-t" % trans_param))
+        #  params_to_move.append(("trans-%s2" % trans_param, "%s2-t" % trans_param))
+        #  params_to_move.append(("trans-%s3" % trans_param, "%s3-t" % trans_param))
         move_params(params_to_move)
 
-    if tn == "quote-poem":
-      move_params([
-        ("title", "chapter"),
-        ("poem", "chapter"),
-        ("work", "title"),
-        ("7", "t"),
-        ("6", "text"),
-        ("5", "url"),
-        ("4", "title"),
-        ("3", "chapter"),
-      ])
-      blib.set_template_name(t, "quote-book")
-      changed = origt != str(t)
-      if changed:
-        notes.append("quote-poem -> quote-book with fixed params")
-    if tn == "quote-av":
-      move_params([
-        ("9", "t"),
-        ("8", "text"),
-        ("7", "time"),
-        ("6", "number"),
-        ("5", "season"),
-        ("4", "title"),
-        ("3", "actor"),
-        ("2", "year"),
-      ])
-      changed = origt != str(t)
-      if changed:
-        notes.append("rename numbered params in {{quote-av}} to named params and remove blank ones")
-    if tn == "quote-book":
-      move_params([
-        ("8", "t"),
-        ("7", "text"),
-        ("6", "page"),
-        ("5", "url"),
-        ("4", "title"),
-        ("3", "author"),
-        ("2", "year"),
-      ])
-      changed = origt != str(t)
-      if changed:
-        notes.append("rename numbered params in {{quote-book}} to named params and remove blank ones")
-    if tn == "quote-hansard":
-      move_params([
-        ("10", "t"),
-        ("9", "text"),
-        ("8", "column"),
-        ("7", "page"),
-        ("6", "url"),
-        ("5", "report"),
-        ("4", "debate"),
-        ("3", "speaker"),
-        ("2", "year"),
-      ])
-      changed = origt != str(t)
-      if changed:
-        notes.append("rename numbered params in {{quote-hansard}} to named params and remove blank ones")
-    if tn == "quote-journal":
-      move_params([
-        ("9", "t"),
-        ("8", "text"),
-        ("7", "page"),
-        ("6", "url"),
-        ("5", "journal"),
-        ("4", "title"),
-        ("3", "author"),
-        ("2", "year"),
-      ])
-      changed = origt != str(t)
-      if changed:
-        notes.append("rename numbered params in {{quote-journal}} to named params and remove blank ones")
-    if tn == "quote-mailing list":
-      move_params([
-        ("8", "t"),
-        ("7", "text"),
-        ("6", "url"),
-        ("5", "list"),
-        ("4", "title"),
-        ("3", "author"),
-        ("2", "date"),
-      ])
-      changed = origt != str(t)
-      if changed:
-        notes.append("rename numbered params in {{quote-mailing list}} to named params and remove blank ones")
-    if tn == "quote-newsgroup":
-      move_params([
-        ("8", "t"),
-        ("7", "text"),
-        ("6", "url"),
-        ("5", "newsgroup"),
-        ("4", "title"),
-        ("3", "author"),
-        ("2", "date"),
-      ])
-      changed = origt != str(t)
-      if changed:
-        notes.append("rename numbered params in {{quote-newsgroup}} to named params and remove blank ones")
-    if tn == "quote-song":
-      move_params([
-        ("8", "t"),
-        ("7", "text"),
-        ("6", "url"),
-        ("5", "album"),
-        ("4", "title"),
-        ("3", "author"),
-        ("2", "year"),
-      ])
-      changed = origt != str(t)
-      if changed:
-        notes.append("rename numbered params in {{quote-song}} to named params and remove blank ones")
-    if tn == "quote-text":
-      move_params([
-        ("8", "t"),
-        ("7", "text"),
-        ("6", "page"),
-        ("5", "url"),
-        ("4", "title"),
-        ("3", "author"),
-        ("2", "year"),
-      ])
-      changed = origt != str(t)
-      if changed:
-        notes.append("rename numbered params in {{quote-text}} to named params and remove blank ones")
-    if tn == "quote-us-patent":
-      move_params([
-        ("8", "t"),
-        ("7", "text"),
-        ("6", "page"),
-        ("5", "number"),
-        ("4", "title"),
-        ("3", "author"),
-        ("2", "year"),
-      ])
-      changed = origt != str(t)
-      if changed:
-        notes.append("rename numbered params in {{quote-us-patent}} to named params and remove blank ones")
-    if tn == "quote-video game":
-      move_params([
-        ("8", "t"),
-        ("7", "text"),
-        ("6", "level"),
-        ("5", "platform"),
-        ("4", "title"),
-        ("3", "author"),
-        ("2", "date"),
-      ])
-      changed = origt != str(t)
-      if changed:
-        notes.append("rename numbered params in {{quote-video game}} to named params and remove blank ones")
-    if tn == "quote-web":
-      move_params([
-        ("8", "t"),
-        ("7", "text"),
-        ("6", "url"),
-        ("5", "work"),
-        ("4", "title"),
-        ("3", "author"),
-        ("2", "date"),
-      ])
-      changed = origt != str(t)
-      if changed:
-        notes.append("rename numbered params in {{quote-web}} to named params and remove blank ones")
+    if args.rename_numbered_params:
+      must_continue = False
+      if tn in quote_templates:
+        last_url_like = None
+        last_url_like_value = None
+        for param in t.params:
+          pn = pname(param)
+          pv = str(param.value)
+          if pn in unrecognized_after_url_named_params:
+            pagemsg("WARNING: Saw bad (unrecognized or misspelled) param %s=%s: %s" % (
+              pn, escape_newline(pv), escape_newline(str(t))))
+          if ((re.search("^[0-9]+$", pn) or pn not in recognized_named_params)
+              and pn not in unrecognized_after_url_named_params
+              and pv.strip() and last_url_like and not (pn in ["6", "7"] and re.search("^[0-9]+$", pv))):
+            pagemsg("WARNING: Possible unescaped vertical bar, saw %s=%s after %s=%s: %s" % (
+              pn, escape_newline(pv), last_url_like, escape_newline(last_url_like_value), escape_newline(str(t))))
+            must_continue = True
+            break
+          if "://" in pv: # re.search("^(url|section)[0-9]*$", pn):
+            last_url_like = pn
+            last_url_like_value = pv
+          else:
+            last_url_like = None
+            last_url_like_value = None
+      if must_continue:
+        continue
+
+      if tn == "quote-av":
+        move_params([
+          ("9", "t"),
+          ("8", "text"),
+          ("7", "time"),
+          ("6", "number"),
+          ("5", "season"),
+          ("4", "title"),
+          ("3", "actor"),
+          ("2", "year"),
+        ], no_notes=True)
+        changed = origt != str(t)
+        if changed:
+          notes.append("rename numbered params in {{quote-av}} to named params and remove blank ones")
+      if tn == "quote-book":
+        move_params([
+          ("8", "t"),
+          ("7", "text"),
+          ("6", "page"),
+          ("5", "url"),
+          ("4", "title"),
+          ("3", "author"),
+          ("2", "year"),
+        ], no_notes=True)
+        changed = origt != str(t)
+        if changed:
+          notes.append("rename numbered params in {{quote-book}} to named params and remove blank ones")
+      if tn == "quote-hansard":
+        move_params([
+          ("10", "t"),
+          ("9", "text"),
+          ("8", "column"),
+          ("7", "page"),
+          ("6", "url"),
+          ("5", "report"),
+          ("4", "debate"),
+          ("3", "speaker"),
+          ("2", "year"),
+        ], no_notes=True)
+        changed = origt != str(t)
+        if changed:
+          notes.append("rename numbered params in {{quote-hansard}} to named params and remove blank ones")
+      if tn == "quote-journal":
+        move_params([
+          ("9", "t"),
+          ("8", "text"),
+          ("7", "page"),
+          ("6", "url"),
+          ("5", "journal"),
+          ("4", "title"),
+          ("3", "author"),
+          ("2", "year"),
+        ], no_notes=True)
+        changed = origt != str(t)
+        if changed:
+          notes.append("rename numbered params in {{quote-journal}} to named params and remove blank ones")
+      if tn == "quote-mailing list":
+        move_params([
+          ("8", "t"),
+          ("7", "text"),
+          ("6", "url"),
+          ("5", "list"),
+          ("4", "title"),
+          ("3", "author"),
+          ("2", "date"),
+        ], no_notes=True)
+        changed = origt != str(t)
+        if changed:
+          notes.append("rename numbered params in {{quote-mailing list}} to named params and remove blank ones")
+      if tn == "quote-newsgroup":
+        move_params([
+          ("8", "t"),
+          ("7", "text"),
+          ("6", "url"),
+          ("5", "newsgroup"),
+          ("4", "title"),
+          ("3", "author"),
+          ("2", "date"),
+        ], no_notes=True)
+        changed = origt != str(t)
+        if changed:
+          notes.append("rename numbered params in {{quote-newsgroup}} to named params and remove blank ones")
+      if tn == "quote-song":
+        move_params([
+          ("8", "t"),
+          ("7", "text"),
+          ("6", "url"),
+          ("5", "album"),
+          ("4", "title"),
+          ("3", "author"),
+          ("2", "year"),
+        ], no_notes=True)
+        changed = origt != str(t)
+        if changed:
+          notes.append("rename numbered params in {{quote-song}} to named params and remove blank ones")
+      if tn == "quote-text":
+        move_params([
+          ("8", "t"),
+          ("7", "text"),
+          ("6", "page"),
+          ("5", "url"),
+          ("4", "title"),
+          ("3", "author"),
+          ("2", "year"),
+        ], no_notes=True)
+        changed = origt != str(t)
+        if changed:
+          notes.append("rename numbered params in {{quote-text}} to named params and remove blank ones")
+      if tn == "quote-us-patent":
+        move_params([
+          ("8", "t"),
+          ("7", "text"),
+          ("6", "page"),
+          ("5", "number"),
+          ("4", "title"),
+          ("3", "author"),
+          ("2", "year"),
+        ], no_notes=True)
+        changed = origt != str(t)
+        if changed:
+          notes.append("rename numbered params in {{quote-us-patent}} to named params and remove blank ones")
+      if tn == "quote-video game":
+        move_params([
+          ("8", "t"),
+          ("7", "text"),
+          ("6", "level"),
+          ("5", "platform"),
+          ("4", "title"),
+          ("3", "author"),
+          ("2", "date"),
+        ], no_notes=True)
+        changed = origt != str(t)
+        if changed:
+          notes.append("rename numbered params in {{quote-video game}} to named params and remove blank ones")
+      if tn == "quote-web":
+        move_params([
+          ("8", "t"),
+          ("7", "text"),
+          ("6", "url"),
+          ("5", "work"),
+          ("4", "title"),
+          ("3", "author"),
+          ("2", "date"),
+        ], no_notes=True)
+        changed = origt != str(t)
+        if changed:
+          notes.append("rename numbered params in {{quote-web}} to named params and remove blank ones")
 
     if changed:
       pagemsg("Replaced %s with %s" % (origt, str(t)))
@@ -371,7 +512,10 @@ def process_text_on_page(index, pagetitle, text):
 
 parser = blib.create_argparser("rename {{quote-*}} params",
   include_pagefile=True, include_stdin=True)
-parser.add_argument("--no-rename", action="store_true", help="Don't rename params, just count them")
+parser.add_argument("--rename-translator", action="store_true", help="Rename translators")
+parser.add_argument("--rename-numbered-params", action="store_true", help="Rename numbered params")
+parser.add_argument("--rename-bad-params", action="store_true", help="Rename bad (misspelled, etc.) params")
+parser.add_argument("--do-old-renames", action="store_true", help="Do old (non-quote-template) renames")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -386,12 +530,16 @@ def output_count(countdict):
 msg("Numbered params:")
 msg("------------------------------------")
 output_count(count_numbered_params)
+msg("")
 msg("Recognized named params:")
 msg("------------------------------------")
 output_count(count_recognized_named_params)
-msg("Known but unrecognized named params:")
-msg("------------------------------------")
-output_count(count_unrecognized_named_params)
-msg("Unhandled params:")
+msg("")
+msg("Unhandled params (by count):")
 msg("------------------------------------")
 output_count(count_unhandled_params)
+msg("")
+msg("Unhandled params(by name):")
+msg("------------------------------------")
+for pn, count in sorted(count_unhandled_params.items()):
+  msg("%-30s = %s" % (pn, count))
