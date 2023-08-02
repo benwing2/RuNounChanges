@@ -154,7 +154,9 @@ local function parse_text_with_lang(val, paramname, explicit_gloss)
 	-- {{lang|ar|مُؤَلِّف}} as the author, you'll get an extra big font coming from the fact that {{lang|...}} wraps the
 	-- Arabic text in CSS that increases the size from the default, and then we do script detection and again wrap the
 	-- text in the same CSS, which increases the size even more.)
-	if val:find("^[^<]*<[a-z]*[^a-z:]") then
+	--
+	-- Also exclude things that look like URL's from being parsed as having language code prefixes.
+	if val:find("^[^<]*<[a-z]*[^a-z:]") or val:find("^[a-z]+://") then
 		return {text = val, noscript = true}
 	end
 
@@ -179,7 +181,7 @@ local function parse_text_with_lang(val, paramname, explicit_gloss)
 			generate_obj = generate_obj,
 		})
 	else
-		obj = generate_obj(val)
+		obj = generate_obj(val, paramname)
 	end
 
 	if explicit_gloss then
@@ -667,27 +669,47 @@ function export.source(args)
 				return nil
 			end
 			-- Merge page= and pages= and treat alike because people often mix them up in both directions.
-			local val = sgval or plval
 			local numspec
 			if plainval then
 				numspec = plainval
-			elseif val == "unnumbered" then
-				numspec = "unnumbered " .. singular_desc
 			else
-				-- in case of negative page numbers (do they exist?), don't treat as multiple pages
-				local check_val = val:gsub("^%-", "")
-				-- Check for hyphen, en-dash, em-dash, comma, semicolon, and Arabic-script equivalents
-				if rfind(check_val, "[-–—,;،؛]") or check_val:find(" and ") then
-					numspec = singular_desc .. "s " .. val
+				local val = sgval or plval
+				if val == "unnumbered" then
+					numspec = "unnumbered " .. singular_desc
 				else
-					numspec = singular_desc .. " " .. val
+					local plural_desc = singular_desc .. "s"
+					local desc
+					if val:find("^!") then
+						val = val:gsub("^!", "")
+						desc = sgval and singular_desc or plural_desc
+					else
+						local check_val = val
+						if check_val:find("%[") then
+							check_val = require(links_module).remove_links(check_val)
+						end
+						-- in case of negative page numbers (do they exist?), don't treat as multiple pages
+						check_val = check_val:gsub("^%-", "")
+						-- replace HTML entity en-dashes and em-dashes with their literal codes
+						check_val = check_val:gsub("&ndash;", "–")
+						check_val = check_val:gsub("&#8211;", "–")
+						check_val = check_val:gsub("&mdash;", "—")
+						check_val = check_val:gsub("&#8212;", "—")
+						-- Check for en-dash or em-dash, or two numbers (possibly with stuff after like 12a-15b)
+						-- separated by a hyphen or comma.
+						if rfind(check_val, "[–—]") or check_val:find(" and ") or rfind(check_val, "[0-9]+[^ ]* *[,%-] *[0-9]+") then
+							desc = plural_desc
+						else
+							desc = singular_desc
+						end
+					end
+					numspec = desc .. " " .. val
 				end
-			end
-			local url = a(paramname .. "url")
-			if url then
-				return "[" .. url .. " " .. numspec .. "]"
-			else
-				return numspec
+				local url = a(paramname .. "url")
+				if url then
+					return "[" .. url .. " " .. numspec .. "]"
+				else
+					return numspec
+				end
 			end
 		end
 
