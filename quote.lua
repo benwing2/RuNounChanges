@@ -675,7 +675,7 @@ function export.source(args)
 				numspec = "unnumbered " .. singular_desc
 			else
 				-- in case of negative page numbers (do they exist?), don't treat as multiple pages
-				local check_val = sgval:gsub("^%-", "")
+				local check_val = val:gsub("^%-", "")
 				-- Check for hyphen, en-dash, em-dash, comma, semicolon, and Arabic-script equivalents
 				if rfind(check_val, "[-–—,;،؛]") or check_val:find(" and ") then
 					numspec = singular_desc .. "s " .. val
@@ -1080,7 +1080,7 @@ function export.quote_t(frame)
 	local ts = args.ts or args.transcription
 	local norm = args.norm or args.normalization
 	local sc = args.sc and require(scripts_module).getByCode(args.sc, "sc") or nil
-	local normsc = args.normsc and require(scripts_module).getByCode(args.normsc, "normsc") or sc
+	local normsc = args.normsc == "auto" and args.normsc or args.normsc and require(scripts_module).getByCode(args.normsc, "normsc") or nil
 	if text or gloss or tr or ts or norm then
 		local langcodes = args[1] or args.lang
 		local langcode = langcodes and rsplit(langcodes, ",")[1] or nil
