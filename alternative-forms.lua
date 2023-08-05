@@ -103,7 +103,7 @@ end
 
 -- Main function for displaying alternative forms. Extracted out from the template-callable function so this can be
 -- called by other modules (in particular, [[Module:descendants tree]]).
-function export.display_alternative_forms(parent_args, pagename, include_dialect_tags)
+function export.display_alternative_forms(parent_args, pagename, include_dialect_tags, allow_self_link)
 	local list_with_holes = { list = true, allow_holes = true }
 	local params = {
 		[1] = { required = true, default = "und" },
@@ -268,7 +268,7 @@ function export.display_alternative_forms(parent_args, pagename, include_dialect
 				end
 
 				-- If the to-be-linked term is the same as the pagename, display it unlinked.
-				if termobj.term.term and lang:makeEntryName(termobj.term.term) == pagename then
+				if not allow_self_link and termobj.term.term and (lang:makeEntryName(termobj.term.term)) == pagename then
 					track("term is pagename")
 					termobj.term.alt = termobj.term.alt or termobj.term.term
 					termobj.term.term = nil
@@ -301,7 +301,7 @@ function export.display_alternative_forms(parent_args, pagename, include_dialect
 	-- Format all the items, including joiners, pre-qualifiers and post-qualifiers.
 	for i, item in ipairs(items) do
 		local preq_text = item.q and require("Module:qualifier").format_qualifier(item.q) .. " " or ""
-		items[i] = item.joiner .. preq_text .. m_links.full_link(item.term)
+		items[i] = item.joiner .. preq_text .. m_links.full_link(item.term, nil, allow_self_link)
 			.. (item.qq and " " .. require("Module:qualifier").format_qualifier(item.qq) or "")
 	end
 
@@ -312,7 +312,7 @@ function export.display_alternative_forms(parent_args, pagename, include_dialect
 		if #dialects > 0 then
 			local dialect_label
 			if lang:hasTranslit() then
-				dialect_label = " &ndash; ''" .. table.concat(dialects, ", ") .. "''"
+				dialect_label = " &mdash; ''" .. table.concat(dialects, ", ") .. "''"
 			else
 				dialect_label = " (''" .. table.concat(dialects, ", ") .. "'')"
 			end
