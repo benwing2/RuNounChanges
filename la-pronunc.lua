@@ -385,6 +385,11 @@ local vowels_string = short_vowels_string .. long_vowels_string
 local vowels_c = "[" .. vowels_string .. "]"
 local non_vowels_c = "[^" .. vowels_string .. "]"
 
+local function track(page)
+	require("Module:debug/track")("la-pronunc/" .. page)
+	return true
+end
+
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
@@ -596,12 +601,12 @@ local function split_syllables(remainder)
 		local coda = get_coda(syll)
 		
 		if not (onset == "" or onsets[onset]) then
-			require("Module:debug").track("la-pronunc/bad onset")
+			track("bad onset")
 			--error("onset error:[" .. onset .. "]")
 		end
 		
 		if not (coda == "" or codas[coda]) then
-			require("Module:debug").track("la-pronunc/bad coda")
+			track("bad coda")
 			--error("coda error:[" .. coda .. "]")
 		end
 	end
@@ -937,16 +942,31 @@ end
 function export.show_full(frame)
 	local params = {
 		[1] = {default = mw.title.getCurrentTitle().nsText == 'Template' and 'īnspīrāre' or mw.title.getCurrentTitle().text},
-		classical = {type = 'boolean', default = true},
-		cl = {type = 'boolean', alias_of = 'classical', default = true},
-		ecclesiastical = {type = 'boolean', default = true},
-		eccl = {type = 'boolean', alias_of = 'ecclesiastical', default = true},
-		vul = {type = 'boolean', default = false},
+		classical = {type = "boolean", default = true},
+		cl = {type = "boolean", alias_of = "classical", default = true},
+		ecclesiastical = {type = "boolean", default = true},
+		eccl = {type = "boolean", alias_of = "ecclesiastical", default = true},
+		vul = {type = "boolean", default = false},
 		ann = {},
 		accent = {list = true},
 		indent = {}
 	}
-	local args = require("Module:parameters").process(frame:getParent().args, params)
+	local parent_args = frame:getParent().args
+	local function unrecognized_boolean(val)
+		return val and val ~= "" and val ~= "1" and val ~= "0" and val ~= "yes" and val ~= "no" and
+			val ~= "true" and val ~= "false" and val ~= "y" and val ~= "n" and val ~= "on" and
+			val ~= "+" and val ~= "-"
+	end
+
+	-- temporary tracking for strange boolean values
+	for _, arg in ipairs {"classical", "cl", "ecclesiastical", "eccl", "vul"} do
+		if unrecognized_boolean(parent_args[arg]) then
+			track("unrecognized-boolean")
+			track("unrecognized-boolean/" .. arg)
+		end
+	end
+
+	local args = require("Module:parameters").process(parent_args, params)
 	local text = args[1]
 	local categories = {}
 	local accent = args.accent
