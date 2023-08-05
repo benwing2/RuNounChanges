@@ -14,7 +14,7 @@ end
 
 local function get_content_after_senseid(content, entry_name, lang, id)
 	local m_templateparser = require("Module:templateparser")
-	local code = lang:getCode()
+	local code = lang:getNonEtymologicalCode()
 	local t_start = nil
 	local t_end = nil
 	for name, args, _, index in m_templateparser.findTemplates(content) do
@@ -52,13 +52,13 @@ local function get_content_after_senseid(content, entry_name, lang, id)
 	return content:sub(t_start, t_end)
 end
 
-function export.getAlternativeForms(lang, term, id)
-	local entry_name = require("Module:links").getLinkPage(term, lang)
+function export.getAlternativeForms(lang, sc, term, id)
+	local entry_name = require("Module:links").getLinkPage(term, lang, sc)
 	local page = mw.title.new(entry_name)
 	local content = page:getContent()
 
 	local function alt_form_error(reason)
-		preview_error("alternative forms", entry_name, lang:getCanonicalName(), reason)
+		preview_error("alternative forms", entry_name, lang:getNonEtymologicalName(), reason)
 	end
 	
 	if not content then
@@ -69,7 +69,7 @@ function export.getAlternativeForms(lang, term, id)
 	end
 	
 	local _, index = string.find(content,
-		"==[ \t]*" .. require("Module:string").pattern_escape(lang:getCanonicalName()) .. "[ \t]*==")
+		"==[ \t]*" .. require("Module:string").pattern_escape(lang:getNonEtymologicalName()) .. "[ \t]*==")
 	
 	if not index then
 		-- FIXME, should be an error
@@ -93,7 +93,7 @@ function export.getAlternativeForms(lang, term, id)
 		return ""
 	end
 
-	local langCodeRegex = require("Module:string").pattern_escape(lang:getCode())
+	local langCodeRegex = require("Module:string").pattern_escape(lang:getNonEtymologicalCode())
 	index = string.find(content, "{{alte?r?|" .. langCodeRegex .. "|[^|}]+", index)
 	if (not index) or (next_lang and next_lang < index) then
 		-- FIXME, should be an error
@@ -111,9 +111,9 @@ function export.getAlternativeForms(lang, term, id)
 	local altforms = require("Module:alternative forms")
 
 	for name, args, _, index in require("Module:templateparser").findTemplates(alternative_forms_section) do
-		if (name == "alt" or name == "alter") and args[1] == lang:getCode() then
+		if (name == "alt" or name == "alter") and args[1] == lang:getNonEtymologicalCode() then
 			saw_alter = true
-			local formatted_altforms = altforms.display_alternative_forms(args, entry_name, false)
+			local formatted_altforms = altforms.display_alternative_forms(args, entry_name, false, "allow self link")
 			table.insert(terms_list, formatted_altforms)
 		end
 	end
@@ -129,14 +129,14 @@ function export.getAlternativeForms(lang, term, id)
 	return ", " .. table.concat(terms_list, "; ")
 end
 
-function export.getDescendants(lang, term, id, noerror)
-	local entry_name = require("Module:links").getLinkPage(term, lang)
+function export.getDescendants(lang, sc, term, id, noerror)
+	local entry_name = require("Module:links").getLinkPage(term, lang, sc)
 	local page = mw.title.new(entry_name)
 	local content = page:getContent()
 	local namespace = mw.title.getCurrentTitle().nsText
 
 	local function desc_error(reason)
-		preview_error("descendants", entry_name, lang:getCanonicalName(), reason)
+		preview_error("descendants", entry_name, lang:getNonEtymologicalName(), reason)
 	end
 
 	if not content then
@@ -146,23 +146,25 @@ function export.getDescendants(lang, term, id, noerror)
 		return ""
 	end
 	
-	-- Ignore columns and blank lines
-	content = string.gsub(content, "{{top%d}}%s", "")
-	content = string.gsub(content, "{{mid%d}}%s", "")
-	content = string.gsub(content, "{{bottom}}%s", "")
-	content = string.gsub(content, "\n?{{(desc?%-%l+)|?[^}]*}}",
-		function (template_name)
-			if template_name == "desc-top" or template_name == "desc-bottom" or template_name == "des-top" or template_name == "des-mid" or template_name == "des-bottom" then
-				return ""
-			end
-		end)
-	content = string.gsub(content, "\n%s*\n", "\n")
+	-- Ignore HTML comments, columns and blank lines.
+	content = content
+		:gsub("<!%-%-.-%-%->", "")
+		:gsub("{{top%d}}%s", "")
+		:gsub("{{mid%d}}%s", "")
+		:gsub("{{bottom}}%s", "")
+		:gsub("\n?{{(desc?%-%l+)|?[^}]*}}",
+			function (template_name)
+				if template_name == "desc-top" or template_name == "desc-bottom" or template_name == "des-top" or template_name == "des-mid" or template_name == "des-bottom" then
+					return ""
+				end
+			end)
+		:gsub("\n%s*\n", "\n")
 	
 	local _, index = string.find(content,
-		"%f[^\n%z]==[ \t]*" .. lang:getCanonicalName() .. "[ \t]*==", nil, true)
+		"%f[^\n%z]==[ \t]*" .. lang:getNonEtymologicalName() .. "[ \t]*==", nil, true)
 	if not index then
 		_, index = string.find(content, "%f[^\n%z]==[ \t]*"
-				.. require("Module:utilities").pattern_escape(lang:getCanonicalName())
+				.. require("Module:utilities").pattern_escape(lang:getNonEtymologicalName())
 				.. "[ \t]*==", nil, false)
 	end
 	if not index then
@@ -185,8 +187,8 @@ function export.getDescendants(lang, term, id, noerror)
 			return "<small class=\"error previewonly\">(" ..
 				"Please either change this template to {{desc}} " ..
 				"or insert a ====Descendants==== section in [[" ..
-				entry_name .. "#" .. lang:getCanonicalName() .. "]])</small>" ..
-				"[[Category:" .. lang:getCanonicalName() .. " descendants to be fixed in desctree]]"
+				entry_name .. "#" .. lang:getNonEtymologicalName() .. "]])</small>" ..
+				"[[Category:" .. lang:getNonEtymologicalName() .. " descendants to be fixed in desctree]]"
 		else
 			error("No Descendants section was found in the entry [[" .. entry_name .. "]].")
 		end
@@ -196,21 +198,20 @@ function export.getDescendants(lang, term, id, noerror)
 			return "<small class=\"error previewonly\">(" ..
 				"Please either change this template to {{desc}} " ..
 				"or insert a ====Descendants==== section in [[" ..
-				entry_name .. "#" .. lang:getCanonicalName() .. "]])</small>" ..
-				"[[Category:" .. lang:getCanonicalName() .. " descendants to be fixed in desctree]]"
+				entry_name .. "#" .. lang:getNonEtymologicalName() .. "]])</small>" ..
+				"[[Category:" .. lang:getNonEtymologicalName() .. " descendants to be fixed in desctree]]"
 		else
 			error("No Descendants section was found in the entry [[" .. entry_name
-					.. "]] under the header for " .. lang:getCanonicalName() .. ".")
+					.. "]] under the header for " .. lang:getNonEtymologicalName() .. ".")
 		end
 	end
 	
 	-- Skip past final equals sign.
 	index = index + 1
 	
-	-- Skip past spaces or tabs or HTML comments.
+	-- Skip past spaces or tabs.
 	while true do
 		local new_index = string.match(content, "^[ \t]+()", index)
-			or string.match(content, "^<!%-%-.-%-%->()", index)
 		if not new_index then
 			break
 		end
