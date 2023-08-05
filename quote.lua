@@ -305,6 +305,49 @@ local function ine(arg)
 	return arg
 end
 
+local trackparams = {
+	laysummary = true,
+	laysummary2 = true,
+	laydate = true,
+	laydate2 = true,
+	laysource = true,
+	laysource2 = true,
+	other = true,
+	inventor = true,
+	directors = true,
+	roles = true,
+	authors = true,
+	lang = true,
+	["url-access"] = true,
+	["url-status"] = true,
+	accessyear = true,
+	accessmonth = true,
+	accessdaymonth = true,
+	accessmonthday = true,
+	city = true,
+	city2 = true,
+	list = true,
+	["trans-entry"] = true,
+	entry = true,
+	entryurl = true,
+	indent = true,
+	i1 = true,
+	pageref = true,
+	book = true,
+	vol = true,
+	quote = true,
+	periodical = true,
+	writer = true,
+	writers = true,
+	people = true,
+	blog = true,
+	note = true,
+	translators = true,
+	translators2 = true,
+	trans = true,
+	["lyrics-translator"] = true,
+}
+
 -- Clone and combine frame's and parent's args while also assigning nil to empty strings.
 local function clone_args(direct_args, parent_args, include_direct, include_parent)
 	local args = {}
@@ -314,6 +357,9 @@ local function clone_args(direct_args, parent_args, include_direct, include_pare
 	-- arg (with nil).
 	if include_parent then
 		for pname, param in pairs(parent_args) do
+			if trackparams[pname] then
+				track(pname)
+			end
 			args[pname] = ine(param)
 		end
 	end
@@ -410,11 +456,13 @@ function export.source(args)
 
 	-- Convenience function to fetch a parameter that may be in a foreign language or text (and may consequently have
 	-- a language prefix and/or inline modifiers), parse the modifiers and convert the result into a formatted string.
-	-- This is the same as parse_and_format_text() below but also returns the param name as the second return value.
+	-- This is the same as parse_and_format_text() below but also returns the param name as the second return value
+	-- and the raw param value (as directly specified by the user, after stripping off inline modifiers and language
+	-- prefix) as the third return value.
 	local function parse_and_format_text_with_name(param, tag_text, tag_gloss)
 		local paramval, paramname = a_with_name(param)
 		local obj = parse_text_with_lang(paramval, paramname)
-		return format_text(obj, tag_text, tag_gloss), paramname
+		return format_text(obj, tag_text, tag_gloss), paramname, obj and obj.text or nil
 	end
 
 	-- Convenience function to fetch a parameter that may be in a foreign language or text (and may consequently have
@@ -664,8 +712,10 @@ function export.source(args)
 		-- it is linked to the specified URL. Note that any of the specs can be foreign text, e.g. foreign numbers
 		-- (including with optional inline modifiers), and such text is handled appropriately.
 		local function format_numeric_param(paramname, singular_desc)
-			local sgval, sgname = parse_and_format_text_with_name(paramname)
-			local plval, plname = parse_and_format_text_with_name(paramname .. "s")
+			local sgval, sgname = a_with_name(paramname)
+			local sgobj = parse_text_with_lang(sgval, paramname)
+			local plval, plname = a_with_name(paramname .. "s")
+			local plobj = parse_text_with_lang(plval, paramname .. "s")
 			local plainval, plainname = parse_and_format_text_with_name(paramname .. "_plain")
 			local howmany = (sgval and 1 or 0) + (plval and 1 or 0) + (plainval and 1 or 0)
 			if howmany > 1 then
@@ -679,7 +729,7 @@ function export.source(args)
 			if plainval then
 				numspec = plainval
 			else
-				local val = sgval or plval
+				local val = sgobj and sgobj.text or plobj.text
 				if val == "unnumbered" then
 					numspec = "unnumbered " .. singular_desc
 				else
@@ -692,6 +742,8 @@ function export.source(args)
 						local check_val = val
 						if check_val:find("%[") then
 							check_val = require(links_module).remove_links(check_val)
+							-- convert URL's of the form [URL DISPLAY] to the displayed value
+							check_val = check_val:gsub("%[[^ %[%]]* ([^%[%]]*)%]", "%1")
 						end
 						-- in case of negative page numbers (do they exist?), don't treat as multiple pages
 						check_val = check_val:gsub("^%-", "")
@@ -708,14 +760,17 @@ function export.source(args)
 							desc = singular_desc
 						end
 					end
+					local obj = sgobj or plobj
+					obj.text = val
+					val = format_text(obj)
 					numspec = desc .. " " .. val
 				end
-				local url = a(paramname .. "url")
-				if url then
-					return "[" .. url .. " " .. numspec .. "]"
-				else
-					return numspec
-				end
+			end
+			local url = a(paramname .. "url")
+			if url then
+				return "[" .. url .. " " .. numspec .. "]"
+			else
+				return numspec
 			end
 		end
 
@@ -776,15 +831,15 @@ function export.source(args)
 			table.insert(tracking_categories, "Quotations using quoted-in parameter")
 		end
 
-		local city_or_location = parse_and_format_text("city") or parse_and_format_text("location")
+		local location = parse_and_format_text("location")
 		if a("publisher") then
-			if city_or_location then
-				add_with_sep(city_or_location .. "&#58;") -- colon
+			if location then
+				add_with_sep(location .. "&#58;") -- colon
 				sep = " "
 			end
 			add_with_sep(parse_and_format_text("publisher"))
-		elseif city_or_location then
-			add_with_sep(city_or_location)
+		elseif location then
+			add_with_sep(location)
 		end
 
 		local original = parse_and_format_text("original", tag_with_cite, tag_with_cite)
@@ -868,19 +923,7 @@ function export.source(args)
 				add(", retrieved " .. format_date(a("accessdate")))
 			end
 		end
-		if a("laysummary") then
-			track("laysummary")
-			add(", [" .. a("laysummary") .. " lay summary]")
-			if a("laysource") then
-				track("laysource")
-				-- FIXME: What is laysource? Can it be foreign language text?
-				add("&nbsp;–&nbsp;''" .. parse_and_format_text("laysource") .. "''")
-			end
-		end
-		if a("laydate") then
-			track("laydate")
-			add(" (" .. format_date(a("laydate")) .. ")")
-		end
+
 		local section, section_param = a_with_name("section")
 		if section then
 			local sectionurl = aurl("sectionurl")
@@ -889,6 +932,16 @@ function export.source(args)
 				sectionobj.text = "[" .. sectionurl .. " " .. sectionobj.text .. "]"
 			end
 			add(", " .. format_text(sectionobj))
+		end
+
+		local note = parse_and_format_text("note")
+		if note then
+			add(", " .. note)
+		end
+
+		local note_plain = parse_and_format_text("note_plain")
+		if note_plain then
+			add(" " .. note_plain)
 		end
 
 		-- Wrapper around format_numeric_param that inserts the formatted text with optional preceding text.
@@ -905,7 +958,6 @@ function export.source(args)
 		-- FIXME: Does this make sense? What is other=?
 		local other = parse_and_format_text("other")
 		if other then
-			track("other")
 			add(", " .. other)
 		end
 	end
@@ -1099,11 +1151,6 @@ function export.quote_t(frame)
 		table.insert(parts, text)
 	end
 
-	local indent = args.i1 or args.indent
-	if indent then
-		ins(indent)
-		ins(" ")
-	end
 	ins('<div class="citation-whole"><span class="cited-source">')
 	ins(export.source(args))
 	ins("</span><dl><dd>")
