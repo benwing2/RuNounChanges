@@ -26,7 +26,6 @@ local roman_numerals_module = "Module:roman numerals"
 local script_utilities_module = "Module:script utilities"
 local scripts_module = "Module:scripts"
 local table_module = "Module:table"
-local time_module = "Module:time"
 local usex_module = "Module:usex"
 local usex_templates_module = "Module:usex/templates"
 local utilities_module = "Module:utilities"
@@ -37,6 +36,7 @@ local rmatch = mw.ustring.match
 local rfind = mw.ustring.find
 local rsplit = mw.text.split
 local ulen = mw.ustring.len
+local usub = mw.ustring.sub
 
 -- Use HTML entities here to avoid parsing issues (esp. with brackets)
 local SEMICOLON_SPACE = "&#59; "
@@ -225,14 +225,14 @@ local function format_text(textobj, tag_text, tag_gloss)
 		-- as will be the case with simple ASCII values.
 		if lang or sc or tr or ts then
 			lang = lang or require(languages_module).getByCode("und", true)
-	
+
 			if tr == "-" then
 				tr = nil
 			elseif not tr and sc and not sc:getCode():find("Latn") then -- Latn, Latnx or a lang-specific variant
 				-- might return nil
 				tr = (lang:transliterate(require(links_module).remove_links(text), sc))
 			end
-	
+
 			text = require(links_module).embedded_language_links(
 				{
 					term = text,
@@ -244,7 +244,7 @@ local function format_text(textobj, tag_text, tag_gloss)
 			if lang:getCode() ~= "und" or sc:getCode() ~= "Latn" then
 				text = require(script_utilities_module).tag_text(text, lang, sc)
 			end
-	
+
 			if tr then
 				-- Should we link to the transliteration of languages with lang:link_tr()? Probably not because `text` is not
 				-- likely to be a term that has an entry.
@@ -378,6 +378,171 @@ local function check_url(param, value)
 	return value
 end
 
+local function format_date_with_code(code, timestamp)
+	local language = mw.getContentLanguage()
+	local ok, date = pcall(language.formatDate, language, code, timestamp)
+	if ok then
+		return date
+	else
+		-- All the formats used in format_date_args() are fine, so the timestamp must be at fault.
+		error("Timestamp '" .. tostring(timestamp) .. "' could not be parsed; "
+			.. "see the [[mw:Help:Extension:ParserFunctions##time|documentation for the #time parser function]]).")
+	end
+end
+
+local abbrs = {
+	["a."] = { anchor = "a.", full = "ante", },
+	["c."] = { anchor = "c.", full = "circa", },
+	["p."] = { anchor = "p.", full = "post", },
+}
+
+local function process_ante_circa_post(date)
+	local prefix = usub(date, 1, 2)
+	local abbr = abbrs[prefix]
+	local abbr_prefix = ""
+
+	if abbr then
+		abbr_prefix = "''[[Appendix:Glossary#" .. abbr.anchor .. '|<abbr title="' .. abbr.full .. '">' ..
+			abbr.anchor .. "</abbr>]]'' "
+		-- [[Special:WhatLinksHere/Template:tracking/quote/abbr]]
+		track("quote/abbr")
+
+		-- Remove lowercase letter, period, and space from beginning of date parameter.
+		date = rsub(date, "^%l%.%s*", "")
+	end
+
+	return abbr_prefix, date
+end
+
+
+-- The formatDate method of the mw.language object behaves like the {{#time:}}
+-- parser function, which doesn't accept the formats
+-- "monthday monthname, year" or "year monthname monthday",
+-- but outputs garbage when it receives them, behavior inherited from PHP.
+-- {{#formatdate:}} magic word is more forgiving.
+-- Fix dates so that, for instance, the |date= parameter of
+-- {{quote-journal}} (which uses this module) and the |accessdate=
+-- parameter (which uses {{#formatdate:}}) accept similar date formats.
+-- [[mw:Extension:Scribunto/Lua_reference_manual#mw.language:formatDate]]
+-- [[mw:Help:Extension:ParserFunctions##time]]
+-- [[mw:Help:Magic_words#Formatting]]
+local function fix_date(date)
+	if tonumber(date) ~= nil then
+		error("|date= parameter should contain a full date: year, month, day of month. Use |year= parameter for year.")
+	elseif date and date:find "%s*%a+,%s*%d+%s*$" then
+		error("|date= parameter should contain a full date: year, month, day of month. "
+			.. "Use |month= and |year= parameters for month and year.")
+	end
+	if date then
+		date = rsub(date, "(%d+ %a+),", "%1")
+		date = rsub(date, "^(%d%d%d%d) (%a+ %d%d?)$", "%2 %1")
+		return date
+	end
+end
+
+-- Format the arguments that specify the date of the quotation. These include the following:
+-- `date`: The date. If `start_date` is given, this is the end date.
+-- `start_date`: The start date, to specify a range.
+-- `start_year`: Year of start of range, if `start_date` isn't given.
+-- `year`, `month`: Year and month of quotation date or end of range, if `date` isn't given.
+-- `accessdate`: Date a website was accessed; processed if no other date was given.
+-- `nodate`: Indicate that no date is present; otherwise a maintenance line will be displayed if there is no date.
+local function format_date_args(args)
+	local output = {}
+	local namespace = mw.title.getCurrentTitle().nsText
+
+	local start_date, date = fix_date(args.start_date), fix_date(args.date)
+
+	local function insert(text)
+		table.insert(output, text)
+	end
+
+	local function format_bold_date(date)
+		-- This formats like "'''2023''' August 3".
+		return format_date_with_code("'''Y''' F j", date)
+	end
+
+	local year = args.year
+
+	if year then
+		local abbr_prefix
+		abbr_prefix, year = process_ante_circa_post(year)
+		insert(abbr_prefix)
+
+		if start_date then
+			if format_date_with_code("Y", start_date) == year then
+				if format_date_with_code("F", start_date) == args.month then
+					insert(format_bold_date(start_date) .. "–" .. date)
+				else
+					insert(format_bold_date(start_date) .. " – " .. args.month .. " " .. date)
+				end
+			end
+		else
+			local function boldface_if_not_already(year)
+				if year:find("'''") then
+					return year
+				else
+					return "'''" .. year .. "'''"
+				end
+			end
+
+			if args.month then
+				if args.start_year then
+					insert(boldface_if_not_already(args.start_year) .. "&nbsp;– ")
+				end
+
+				insert(boldface_if_not_already(year) .. " " .. args.month)
+
+				if date then
+					insert(" " .. date)
+				end
+			else
+				if args.start_year then
+					insert(boldface_if_not_already(args.start_year) .. "–")
+				end
+
+				insert(boldface_if_not_already(year))
+			end
+		end
+	else
+		if date then
+			if start_date then
+				local start_date_prefix = format_bold_date(start_date) .. "–"
+				if format_date_with_code("Y", start_date) == format_date_with_code("Y", date) then
+					if format_date_with_code("n", start_date) == format_date_with_code("n", date) then
+						-- Year and month are same; display only day of `date`.
+						insert(start_date_prefix .. format_date_with_code("j", date))
+					else
+						-- Year is the same; display only month and day of `date`.
+						insert(start_date_prefix .. format_date_with_code("F j", date))
+					end
+				else
+					-- All different; display both `start_date` and `date` in full.
+					insert(start_date_prefix .. format_bold_date(date))
+				end
+			else
+				insert(format_bold_date(date))
+			end
+		else
+			if not args.nodate then
+				if args.accessdate then
+					insert(format_bold_date(args.accessdate) .. " (last accessed)")
+				else
+					if namespace ~= "Template" then
+						insert(
+							maintenance_line("Can we [[:Category:Requests for date|date]] this quote?") ..
+							"[[Category:Requests for date]]"
+						)
+					end
+				end
+			end
+		end
+	end
+
+	return table.concat(output)
+end
+
+
 -- Display the source line of the quote, above the actual quote text. This contains the majority of the logic of this
 -- module (formerly contained in {{quote-meta/source}}).
 function export.source(args)
@@ -412,15 +577,18 @@ function export.source(args)
 	if args.brackets then
 		add("[")
 	end
-	add(require(time_module).quote_impl(args))
+	add(format_date_args(args))
 	if args.origdate then
-		add(" [" .. args.origdate .. "]")
+		local abbr_prefix, origdate = process_ante_circa_post(args.origdate)
+		add(" [" .. abbr_prefix .. origdate .. "]")
 	elseif args.origyear and args.origmonth then
-		add(" [" .. args.origmonth .. " " .. args.origyear .. "]")
+		local abbr_prefix, origyear = process_ante_circa_post(args.origyear)
+		add(" [" .. abbr_prefix .. args.origmonth .. " " .. origyear .. "]")
 	elseif args.origyear then
-		add(" [" .. args.origyear .. "]")
+		local abbr_prefix, origyear = process_ante_circa_post(args.origyear)
+		add(" [" .. abbr_prefix .. origyear .. "]")
 	end
-	
+
 	-- Return a function that generates the actual parameter name associated with a base param (e.g. "author", "last").
 	-- The actual parameter name may have an index added (an empty string for the first set of params, e.g. author=,
 	-- last=, or a numeric index for further sets of params, e.g. author2=, last2=, etc.).
@@ -568,7 +736,7 @@ function export.source(args)
 
 	local function has_new_title_or_ancillary_author()
 		return args.chapter2 or args.title2 or
-			args.tlr2 or args.trans2 or args.translator2 or args.translators2 or
+			args.tlr2 or args.translator2 or args.translators2 or
 			args.mainauthor2 or args.editor2 or args.editors2
 	end
 
@@ -579,7 +747,7 @@ function export.source(args)
 	local function has_newversion()
 		return args.newversion or args.location2 or has_new_title_or_author()
 	end
-	
+
 	-- This handles everything after displaying the author, starting with the chapter and ending with page, column and
 	-- then other=. It is currently called twice: Once to handle the main portion of the citation, and once to handle a
 	-- "newversion" citation. `ind` is either "" for the main portion or a number (currently only 2) for a "newversion"
@@ -596,7 +764,7 @@ function export.source(args)
 		if chapter_tlr then
 			add(chapter_tlr .. ", transl., ")
 		end
-		
+
 		local chap, chap_param = a_with_name("chapter")
 		if chap then
 			local cleaned_chap = chap:gsub("<sup>[^<>]*</sup>", ""):gsub("[*+#]", "")
@@ -630,7 +798,7 @@ function export.source(args)
 			end
 		end
 
-		local tlr = parse_and_format_text({"tlr", "trans", "translator", "translators"})
+		local tlr = parse_and_format_text({"tlr", "translator", "translators"})
 		local editor, editorname = parse_and_format_text_with_name("editor")
 		local editors, editorsname = parse_and_format_text_with_name("editors")
 		if editor and editors then
@@ -639,11 +807,11 @@ function export.source(args)
 		if a("mainauthor") then
 			add(parse_and_format_text("mainauthor") .. ((tlr or editor or editors) and SEMICOLON_SPACE or ","))
 		end
-		
+
 		if tlr then
 			add(tlr .. ", transl." .. ((editor or editors) and SEMICOLON_SPACE or ","))
 		end
-		
+
 		if editor then
 			add(editor .. ", editor,")
 		elseif editors then
@@ -683,7 +851,7 @@ function export.source(args)
 				add(maintenance_line("Please provide the book title or journal name"))
 			end
 		end
-		
+
 		if aurl("archiveurl") or aurl("url") then
 			add("&lrm;<sup>[" .. (aurl("archiveurl") or aurl("url")) .. "]</sup>")
 			sep = ", "
@@ -697,6 +865,11 @@ function export.source(args)
 		local edition = parse_and_format_text("edition")
 		if edition then
 			add_with_sep(edition .. " edition")
+		end
+
+		local edition_plain = parse_and_format_text("edition_plain")
+		if edition_plain then
+			add_with_sep(" " .. edition_plain)
 		end
 
 		-- Display a numeric param such as page=, volume=, column=. For each `paramname`, four params are actually
@@ -778,7 +951,7 @@ function export.source(args)
 		if volume then
 			add_with_sep(volume)
 		end
-		
+
 		local issue = format_numeric_param("issue", "number")
 		if issue then
 			add_with_sep(issue)
@@ -849,13 +1022,20 @@ function export.source(args)
 		end
 
 		if a("year_published") then
-			add_with_sep("published " .. a("year_published"))
+			local abbr_prefix, bare_year = process_ante_circa_post(a("year_published"))
+			add_with_sep("published " .. abbr_prefix .. bare_year)
 		end
 
 		if ind ~= "" and has_newversion() then
-			add_with_sep(a("date") or a("year") or maintenance_line("Please provide a date or year"))
+			local new_date_or_year = a("date") or a("year")
+			if new_date_or_year then
+				local abbr_prefix, bare_date_or_year = process_ante_circa_post(new_date_or_year)
+				add_with_sep(abbr_prefix .. bare_date_or_year)
+			else
+				add_with_sep(maintenance_line("Please provide a date or year"))
+			end
 		end
-		
+
 		-- From here on out, there should always be a preceding item, so we
 		-- can dispense with add_with_sep() and always insert the comma.
 
@@ -966,7 +1146,7 @@ function export.source(args)
 	postauthor("", "")
 
 	local sep
-	
+
 	-- If there's a "newversion" section, add the new-version text.
 	if has_newversion() then
 		--Test for new version of work.
@@ -1047,7 +1227,7 @@ function export.source(args)
 	--    Beer Parlour).
 	-- 3. [[Category:Quotations using nocat parameter]], if nocat= is given.
 	--    Added to the same pages as for [[Category:Quotations with missing lang parameter]].
-	
+
 	local categories = {}
 
 	local langcode = args.termlang or argslang or "und"
@@ -1219,7 +1399,7 @@ function export.call_quote_template(frame)
 		end
 		return params
 	end
-	
+
 	local function fetch_param(source, params)
 		for _, param in ipairs(params) do
 			if source[param] then
@@ -1228,7 +1408,7 @@ function export.call_quote_template(frame)
 		end
 		return nil
 	end
-	
+
 	local params = {
 		["text"] = {},
 		["passage"] = {},
