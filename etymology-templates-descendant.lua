@@ -61,7 +61,7 @@ end
 local param_term_mods = {"alt", "g", "id", "lit", "pos", "sc", "t", "tr", "ts"}
 local param_term_mod_set = listToSet(param_term_mods)
 -- Boolean params indicating whether a descendant term (or all terms) are particular sorts of borrowings.
-local bortypes = {"inh", "bor", "lbor", "slb", "translit", "der", "clq", "pclq", "sml", "unc"}
+local bortypes = {"inh", "bor", "lbor", "slb", "obor", "translit", "der", "clq", "pclq", "sml", "unc"}
 local bortype_set = listToSet(bortypes)
 -- Aliases of clq=.
 local calque_aliases = {"cal", "calq", "calque"}
@@ -156,13 +156,6 @@ local function desc_or_desc_tree(frame, desc_tree)
 			.. "a single term. To do that, put both genders in g=, comma-separated.")
 	end
 
-	-- FIXME: Remove this after a few days.
-	if parent_args.q or parent_args.q1 or parent_args.q2 or parent_args.q3 or parent_args.q4 or parent_args.q5
-		or parent_args.q6 or parent_args.q7 or parent_args.q8 or parent_args.q9 then
-		track("q")
-		error("Please use qq= not q=. q= will be switching to put the qualifier *before* the term, not after.")
-	end
-
 	local args = require("Module:parameters").process(parent_args, params)
 
 	if args.sandbox then
@@ -170,19 +163,20 @@ local function desc_or_desc_tree(frame, desc_tree)
 			error("The sandbox module, Module:descendants tree/sandbox, should not be used in entries.")
 		end
 	end
-
+	
+	local lang = args[1]
+	local terms = args[2]
+	local alts = args["alt"]
+	
 	local m_desctree
-	if desc_tree or args["alts"] then
+	if desc_tree or alts then
 		if args.sandbox or require("Module:yesno")(frame.args.sandbox, false) then
 			m_desctree = require("Module:descendants tree/sandbox")
 		else
 			m_desctree = require("Module:descendants tree")
 		end
 	end
-
-	local lang = args[1]
-	local terms = args[2]
-
+	
 	if mw.title.getCurrentTitle().nsText == "Template" then
 		lang = lang or "en"
 		if #terms == 0 then
@@ -193,29 +187,24 @@ local function desc_or_desc_tree(frame, desc_tree)
 
 	local m_languages = require("Module:languages")
 	lang = m_languages.getByCode(lang, 1, "allow etym")
-	local entryLang = m_languages.getNonEtymological(lang)
-
-	if not desc_tree and entryLang:getType() == "family" then
-		error("Cannot use language family code in [[Template:desc]].")
-	end
-
-	if lang:getCode() ~= entryLang:getCode() then
+	
+	if lang:getCode() ~= lang:getNonEtymologicalCode() then
 		-- [[Special:WhatLinksHere/Template:tracking/descendant/etymological]]
 		track("etymological")
 		track("etymological/" .. lang:getCode())
 	end
 
-	local languageName = lang:getCanonicalName()
+	local languageName = lang:getDisplayForm()
 
 	local label
 
 	if args["sclb"] then
 		local sc = args["sc"][1] and require("Module:scripts").getByCode(args["sc"][1], "sc")
-		local term = terms[1]
 		if sc then
-			label = sc:getCanonicalName()
+			label = sc:getDisplayForm()
 		else
-			label = require("Module:scripts").findBestScript(term, lang):getCanonicalName()
+			local term, alt = terms[1], alts[1]
+			label = lang:findBestScript(term or alt):getDisplayForm()
 		end
 	else
 		label = languageName
@@ -262,6 +251,8 @@ local function desc_or_desc_tree(frame, desc_tree)
 			arrow = add_tooltip("→", "learned borrowing")
 		elseif val("slb") then
 			arrow = add_tooltip("→", "semi-learned borrowing")
+		elseif val("obor") then
+			arrow = add_tooltip("→", "orthographic borrowing")
 		elseif args["translit"] then
 			arrow = add_tooltip("→", "transliteration")
 		elseif val("clq") then
@@ -377,7 +368,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 			local link
 
 			local termobj =	{
-				lang = entryLang,
+				lang = lang,
 			}
 			-- Initialize `termobj` with indexed modifier params such as t1, t2, etc. and alt1, alt2, etc. Inline
 			-- modifiers specified using the <...> notation override these.
@@ -451,21 +442,21 @@ local function desc_or_desc_tree(frame, desc_tree)
 					end
 					error(msg .. ": " .. (i + 1) .. "=" .. table.concat(parts, ","))
 				end
-				for _, run in ipairs(comma_separated_runs) do
+				for j, run in ipairs(comma_separated_runs) do
 					reinit_termobj(run[1])
 					local seen_mods = {}
-					for j = 2, #run - 1, 2 do
-						if run[j + 1] ~= "" then
-							parse_err("Extraneous text '" .. run[j + 1] .. "' after modifier")
+					for k = 2, #run - 1, 2 do
+						if run[k + 1] ~= "" then
+							parse_err("Extraneous text '" .. run[k + 1] .. "' after modifier")
 						end
-						local modtext = run[j]:match("^<(.*)>$")
+						local modtext = run[k]:match("^<(.*)>$")
 						if not modtext then
 							parse_err("Internal error: Modifier '" .. modtext .. "' isn't surrounded by angle brackets")
 						end
 						local prefix, arg = modtext:match("^([a-z]+):(.*)$")
 						if prefix then
 							if seen_mods[prefix] then
-								parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[j])
+								parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[k])
 							end
 							seen_mods[prefix] = true
 							if prefix == "t" or prefix == "gloss" then
@@ -477,15 +468,15 @@ local function desc_or_desc_tree(frame, desc_tree)
 							elseif param_term_mod_set[prefix] then
 								termobj[prefix] = arg
 							elseif misc_list_param_set[prefix] then
-								if j < #run - 1 then
-									parse_err("Modifier " .. run[j] .. " should come after the last term")
+								if j < #comma_separated_runs then
+									parse_err("Modifier " .. run[k] .. " should come after the last term")
 								end
 								args["part" .. prefix][ind] = arg
 							else
-								parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. run[j])
+								parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. run[k])
 							end
-						elseif j < #run - 1 then
-							parse_err("Modifier " .. run[j] .. " should come after the last term")
+						elseif j < #comma_separated_runs then
+							parse_err("Modifier " .. run[k] .. " should come after the last term")
 						else
 							if seen_mods[modtext] then
 								parse_err("Modifier '" .. modtext .. "' occurs twice")
@@ -534,7 +525,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 				-- This is what I ([[User:Benwing2]]) had in Nov 2020 when I first implemented this.
 				-- Since then, [[User:Fytcha]] added `true` as the fourth param.
 				-- descendants[ind] = m_desctree.getDescendants(entryLang, term, id, maxmaxindex > 1)
-				descendants[ind] = m_desctree.getDescendants(entryLang, term, id, true)
+				descendants[ind] = m_desctree.getDescendants(lang, sc, term, id, true)
 				if descendants[ind] then
 					saw_descendants = true
 				end
@@ -545,7 +536,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 			if term and (desc_tree and not args["noalts"] or not desc_tree and args["alts"]) then
 				-- [[Special:WhatLinksHere/Template:tracking/descendant/alts]]
 				track("alts")
-				alts = m_desctree.getAlternativeForms(entryLang, term, id)
+				alts = m_desctree.getAlternativeForms(lang, sc, term, id)
 			else
 				alts = ""
 			end
@@ -568,13 +559,13 @@ local function desc_or_desc_tree(frame, desc_tree)
 			error("[[Template:desctree]] invoked but no terms to retrieve descendants from")
 		elseif #seen_terms == 1 then
 			error("No Descendants section was found in the entry [[" .. seen_terms[1] ..
-				"]] under the header for " .. entryLang:getCanonicalName() .. ".")
+				"]] under the header for " .. lang:getNonEtymologicalName() .. ".")
 		else
 			for i, term in ipairs(seen_terms) do
 				seen_terms[i] = "[[" .. term .. "]]"
 			end
 			error("No Descendants section was found in any of the entries " ..
-				table.concat(seen_terms, ", ") .. " under the header for " .. entryLang:getCanonicalName() .. ".")
+				table.concat(seen_terms, ", ") .. " under the header for " .. lang:getNonEtymologicalName() .. ".")
 		end
 	end
 
