@@ -85,6 +85,9 @@ function export.getAlternativeForms(lang, sc, term, id)
 	
 	local _, next_lang = string.find(content, "\n==[^=\n]+==", index, false)
 	local _, index = string.find(content, "\n(====?=?)[ \t]*Alternative forms[ \t]*%1", index, false)
+	if not index then
+		_, index = string.find(content, "\n(====?=?)[ \t]*Alternative reconstructions[ \t]*%1", index, false)
+	end
 
 	if not index then
 		-- FIXME, should be an error
@@ -113,7 +116,7 @@ function export.getAlternativeForms(lang, sc, term, id)
 	for name, args, _, index in require("Module:templateparser").findTemplates(alternative_forms_section) do
 		if (name == "alt" or name == "alter") and args[1] == lang:getNonEtymologicalCode() then
 			saw_alter = true
-			local formatted_altforms = altforms.display_alternative_forms(args, entry_name, false, "allow self link")
+			local formatted_altforms = altforms.display_alternative_forms(args, entry_name, "show dialect tags after terms", "allow self link")
 			table.insert(terms_list, formatted_altforms)
 		end
 	end
