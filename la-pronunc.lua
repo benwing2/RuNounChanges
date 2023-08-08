@@ -939,14 +939,24 @@ local function make_row(phoneticizations, dials)
 	return m_a.show(dials) .. ' ' .. table.concat(full_pronuns, ' or ')
 end
 
+local function convert_boolean(val)
+	if val == "1" or val == "yes" or val == "true" or val == "y" or val == "on" or val == "+" then
+		return true
+	elseif val == "0" or val == "no" or val == "false" or val == "n" or val == "off" or val == "-" then
+		return false
+	else
+		return val
+	end
+end
+
 function export.show_full(frame)
 	local params = {
-		[1] = {default = mw.title.getCurrentTitle().nsText == 'Template' and 'īnspīrāre' or mw.title.getCurrentTitle().text},
-		classical = {type = "boolean", default = true},
-		cl = {type = "boolean", alias_of = "classical", default = true},
-		ecclesiastical = {type = "boolean", default = true},
-		eccl = {type = "boolean", alias_of = "ecclesiastical", default = true},
-		vul = {type = "boolean", default = false},
+		[1] = {default = mw.title.getCurrentTitle().nsText == "Template" and "īnspīrāre" or mw.title.getCurrentTitle().text},
+		classical = {},
+		cl = {alias_of = "classical"},
+		ecclesiastical = {},
+		eccl = {alias_of = "ecclesiastical"},
+		vul = {},
 		ann = {},
 		accent = {list = true},
 		indent = {}
