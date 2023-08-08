@@ -1597,7 +1597,7 @@ class ParseException(Exception):
 # between textual runs not containing the open/close characters and runs beginning and ending with the open/close
 # characters. For example,
 #
-# parse_balanced_segment_run("foo(x(1)), bar(2)", "(", ")") = {"foo", "(x(1))", ", bar", "(2)", ""}.
+# parse_balanced_segment_run("foo(x(1)), bar(2)", "(", ")") = ["foo", "(x(1))", ", bar", "(2)", ""]
 def parse_balanced_segment_run(segment_run, op, cl):
   break_on_op_cl = re.split("([\\" + op + "\\" + cl + "])", segment_run)
   text_and_specs = []
@@ -1623,6 +1623,58 @@ def parse_balanced_segment_run(segment_run, op, cl):
       text_and_specs.append(seg)
   if level > 0:
     raise ParseException("Unmatched " + op + " sign: '" + segment_run + "'")
+  return text_and_specs
+
+
+# Like parse_balanced_segment_run() but accepts multiple sets of delimiters. For example,
+#
+# parse_multi_delimiter_balanced_segment_run("foo[bar(baz[bat])], quux<glorp>", [("[", "]"), ("(", ")"), ("<", ">")]) =
+#   ["foo", "[bar(baz[bat])]", ", quux", "<glorp>", ""]
+def parse_multi_delimiter_balanced_segment_run(segment_run, delimiter_pairs):
+  open_to_close_map = {}
+  open_close_items = []
+  open_items = []
+  for (open, close) in delimiter_pairs:
+    open_to_close_map[open] = close
+    open_close_items.append(open)
+    open_close_items.append(close)
+    open_items.append(open)
+  open_close_pattern = "(" + "|".join(open_close_items) + ")"
+  open_pattern = "(" + "|".join(open_items) + ")"
+  break_on_open_close = re.split(open_close_pattern, segment_run)
+  text_and_specs = []
+  level = 0
+  seg_group = []
+  open_at_level_zero = None
+  for i, seg in enumerate(break_on_open_close):
+    if i % 2 == 1:
+      seg_group.append(seg)
+      if level == 0:
+        if not re.search(open_pattern, seg):
+          raise ParseException("Unmatched close sign " + seg + ": '" + segment_run + "'")
+        assert open_at_level_zero is None
+        for (open, close) in delimiter_pairs:
+          if re.search(open, seg):
+            open_at_level_zero = open
+            break
+        else: # no break
+          assert False, "Internal error: Segment %s didn't match any open regex" % seg
+        level += 1
+      elif re.search(open_at_level_zero, seg):
+        level += 1
+      elif re.search(open_to_close_map[open_at_level_zero], seg):
+        level -= 1
+        assert level >= 0
+        if level == 0:
+          text_and_specs.append("".join(seg_group))
+          seg_group = []
+          open_at_level_zero = None
+    elif level > 0:
+      seg_group.append(seg)
+    else:
+      text_and_specs.append(seg)
+  if level > 0:
+    raise ParseException("Unmatched open sign " + open_at_level_zero + ": '" + segment_run + "'")
   return text_and_specs
 
 
