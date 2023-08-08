@@ -374,6 +374,13 @@ function export.escape_wikicode(term)
 end
 
 
+function export.make_parse_err(arg_gloss)
+	return function(msg, stack_frames_to_ignore)
+		error(export.escape_wikicode(("%s: %s"):format(msg, arg_gloss)), stack_frames_to_ignore)
+	end
+end
+
+
 -- Parse a term that may have a language code preceding it (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). Return
 -- two arguments, the term minus the language code and the language object corresponding to the language code.
 -- Etymology-only languages are allowed. This function also correctly handles Wikipedia prefixes (e.g. 'w:Abatemarco'
@@ -381,12 +388,15 @@ end
 -- prefix. `parse_err` should be a function of one or two arguments to display an error (the second argument is the
 -- number of stack frames to ignore when calling error(); if you declare your error function with only one argument,
 -- things will still work fine).
-function export.parse_term_with_lang(term, parse_err)
-	-- Parse off an initial language code (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). Also handle Wikipedia prefixes
+function export.parse_term_with_lang(term, parse_err_or_paramname)
+	parse_err = type(parse_err_or_paramname) == "function" and parse_err_or_paramname or
+		parse_err_or_paramname and export.make_parse_err(("%s=%s"):format(parse_err_or_paramname, term)) or
+		export.make_parse_err(term)
+	-- Parse off an initial language code (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). First check for Wikipedia prefixes
 	-- ('w:Abatemarco' or 'w:it:Colle Val d'Elsa').
-	local termlang, actual_term = term:match("^([A-Za-z0-9._-]+):(.*)$")
+	local termlang, actual_term = term:match("^w:([^ ].*)$")
 	if termlang == "w" then
-		local foreign_wikipedia, foreign_term = actual_term:match("^([A-Za-z0-9._-]+):(.*)$")
+		local foreign_wikipedia, foreign_term = actual_term:match("^([a-z][a-z][a-z-]*):([^ ].*)$")
 		if foreign_wikipedia then
 			termlang = termlang .. ":" .. foreign_wikipedia
 			actual_term = foreign_term
@@ -396,9 +406,19 @@ function export.parse_term_with_lang(term, parse_err)
 		end
 		term = ("[[%s:%s|%s]]"):format(termlang, actual_term, actual_term)
 		termlang = nil
-	elseif termlang then
-		termlang = require("Module:languages").getByCode(termlang, parse_err, "allow etym")
-		term = actual_term
+	else
+		-- Wiktionary language codes have at least two lowercase letters followed possibly by lowercase letters and/or
+		-- hyphens (there are more restrictions but this is close enough). Also check for nonstandard Latin etymology
+		-- language codes (e.g. VL. or LL.). (There used to be more nonstandard codes but they have all been eliminated.)
+		termlang, actual_term = term:match("^([a-z][a-z][a-z-]*):([^ ].*)$")
+		if not termlang then
+			-- Special hack for Latin variants, which can have nonstandard etym codes, e.g. VL., LL.
+			termlang, actual_term = term:match("^([A-Z]L%.):([^ ].*)$")
+		end
+		if termlang then
+			termlang = require("Module:languages").getByCode(termlang, parse_err, "allow etym")
+			term = actual_term
+		end
 	end
 
 	return term, termlang
@@ -490,13 +510,7 @@ function export.parse_inline_modifiers(arg, props)
 		end
 	end
 
-	local parse_err = props.parse_err
-	if not parse_err then
-		parse_err = function(msg, stack_frames_to_ignore)
-			error(export.escape_wikicode(("%s: %s"):format(msg, get_arg_gloss())), stack_frames_to_ignore)
-		end
-	end
-
+	local parse_err = props.parse_err or export.make_parse_err(get_arg_gloss())
 	local segments = export.parse_balanced_segment_run(arg, "<", ">")
 
 	local function parse_group(group)
@@ -519,9 +533,8 @@ function export.parse_inline_modifiers(arg, props)
 					require("Module:table").serialCommaJoin(valid_prefixes, {dontTag = true}))
 			end
 			if props.param_mods[prefix] then
-				local function prefix_parse_err(msg, stack_frames_to_ignore)
-					error(export.escape_wikicode(("%s: modifier prefix '%s' in %s"):format(msg, prefix, get_arg_gloss())), stack_frames_to_ignore)
-				end
+				local prefix_parse_err =
+					export.make_parse_err(("modifier prefix '%s' in %s in %s"):format(prefix, group[k], get_arg_gloss()))
 				local key = props.param_mods[prefix].item_dest or prefix
 				local convert = props.param_mods[prefix].convert
 				local converted
@@ -533,7 +546,7 @@ function export.parse_inline_modifiers(arg, props)
 				local store = props.param_mods[prefix].store
 				if not store then
 					if dest_obj[key] then
-						parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. group[k])
+						prefix_parse_err("Prefix occurs twice")
 					end
 					dest_obj[key] = converted
 				elseif store == "insert" then
@@ -572,8 +585,8 @@ function export.parse_inline_modifiers(arg, props)
 				for i, valid_prefix in ipairs(valid_prefixes) do
 					valid_prefixes[i] = "'" .. valid_prefix .. "'"
 				end
-				parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. group[k]
-					.. ", should be " .. require("Module:table").serialCommaJoin(valid_prefixes, {dontTag = true}))
+				prefix_parse_err("Unrecognized prefix, should be one of " ..
+					require("Module:table").serialCommaJoin(valid_prefixes, {dontTag = true}))
 			end
 		end
 		return dest_obj
