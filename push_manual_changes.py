@@ -12,6 +12,7 @@ site = pywikibot.Site()
 max_truncate_len = 80
 
 def truncate(text):
+  text = text.replace("\n", r"\n") # escape newlines
   if len(text) < max_truncate_len:
     return text
   return text[0:max_truncate_len] + "..."
@@ -110,10 +111,15 @@ def push_one_manual_change(pagetitle, index, text, curr_template, repl_template)
         pagemsg("WARNING: Something wrong, length mismatch during replacement: Expected length change=%s, actual=%s, ratio=%.2f, curr=%s, repl=%s"
             % (repl_curr_diff, newtext_text_diff, ratio, curr_template,
               repl_template))
-    changelog = "replace <%s> with <%s> (%s)" % (truncate(curr_template),
-        truncate(repl_template), args.comment)
+    changelog = args.full_comment or "replace <%s> with <%s> (%s)" % (truncate(curr_template),
+        truncate(repl_template), args.annotation)
     pagemsg("Change log = %s" % changelog)
   return newtext, changelog
+
+def undo_slash_newline(txt):
+  if not args.undo_slash_newline:
+    return txt
+  return txt.replace(r"\n", "\n")
 
 def push_manual_changes(save, verbose, diff, template_changes, start, end):
   for index, (pagename, repl_template, curr_template) in blib.iter_items(template_changes, get_name = lambda x: x[0]):
@@ -123,7 +129,8 @@ def push_manual_changes(save, verbose, diff, template_changes, start, end):
         index, pagename))
     else:
       def do_push_one_manual_change(page, index, text):
-        return push_one_manual_change(str(page.title()), index, text, curr_template, repl_template)
+        return push_one_manual_change(str(page.title()), index, text, undo_slash_newline(curr_template),
+                                      undo_slash_newline(repl_template))
       blib.do_edit(page, index, do_push_one_manual_change, save=save,
           verbose=verbose, diff=diff)
 
@@ -143,10 +150,12 @@ def process_text_on_page_pushing_manual_changes(index, pagetitle, text):
 
 params = blib.create_argparser("Push manual changes to Wiktionary",
   include_pagefile=True, include_stdin=True)
-params.add_argument("--direcfile", help="File containing templates to change, as output by parse_log_file.py",
+params.add_argument("--direcfile", help="File containing templates to change, as output by various scripts with --from-to",
     required=True)
-params.add_argument("--comment", default="manually",
-    help="Comment in change log message used to indicate source of changes (default 'manually')")
+params.add_argument("--undo-slash-newline", action="store_true", help=r"Undo replacement of newlines with \n")
+params.add_argument("--annotation", default="manually",
+    help="Comment in change log message used to indicate source of changes, in addition to a message about what exactly changed (default 'manually')")
+params.add_argument("--full-comment", help="Full comment of change log message")
 
 args = params.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
