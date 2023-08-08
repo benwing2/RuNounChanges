@@ -41,7 +41,9 @@ def process_text_on_page(index, pagetitle, text, regex, invert, verbose,
 
   if text_to_search:
     found_match = False
-    if all_matches:
+    if regex is None:
+      found_match = True
+    elif all_matches:
       for m in re.finditer(regex, text_to_search, re.M):
         found_match = True
         output_match(m)
@@ -78,18 +80,19 @@ def search_pages(args, regex, invert, input_from_diff, start, end, lang_only):
 if __name__ == "__main__":
   parser = blib.create_argparser("Search on pages", include_pagefile=True,
     include_stdin=True)
-  parser.add_argument("-e", "--regex", help="Regular expression to search for.",
-      required=True)
+  parser.add_argument("-e", "--regex", help="Regular expression to search for.")
   parser.add_argument("--not", dest="not_", help="Only output if regex not found.",
       action="store_true")
   parser.add_argument('--input-from-diff', help="Use the specified file as input, a previous output of a job run with --diff.")
   parser.add_argument('--all', help="Include all matches.", action="store_true")
   parser.add_argument('--from-to', help="Output in from-to format, for ease in pushing changes.", action="store_true")
-  parser.add_argument('--text', help="Include surrounding text.", action="store_true")
+  parser.add_argument('--text', help="Include full text of page or language section.", action="store_true")
   parser.add_argument('--lang-only', help="Only search the specified language section.")
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
+  if not args.regex and not args.text:
+    raise ValueError("-e (--regex) must be given unless --text is given")
   if args.not_ and args.all:
     raise ValueError("Can't combine --not with --all")
   search_pages(args, args.regex, args.not_, args.input_from_diff, start, end, args.lang_only)
