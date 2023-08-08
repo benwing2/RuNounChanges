@@ -7,19 +7,42 @@ import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site, tname, pname
 from collections import defaultdict
 
+TEMP_AMP = "\uFFF0"
+TEMP_LT = "\uFFF1"
+TEMP_GT = "\uFFF2"
+TEMP_LBRAC = "\uFFF3"
+TEMP_RBRAC = "\uFFF4"
+TEMP_NBSP = "\uFFF5"
+
+html_entity_to_replacement = [
+  ("&amp;", TEMP_AMP),
+  ("&lt;", TEMP_LT),
+  ("&gt;", TEMP_GT),
+  ("&#91;", TEMP_LBRAC),
+  ("&#93;", TEMP_RBRAC),
+  ("&nbsp;", TEMP_NBSP),
+]
+
+replacement_to_html_entity = {y: x for x, y in html_entity_to_replacement}
+
 quote_templates_by_highest_numbered_param = {
-  "quote-av": 9,
+  "quote-av": 1,
   "quote-book": 8,
-  "quote-hansard": 10,
+  "quote-hansard": 1,
   "quote-journal": 9,
-  "quote-mailing list": 8,
-  "quote-newsgroup": 8,
-  "quote-song": 8,
-  "quote-text": 8,
-  "quote-us-patent": 8,
-  "quote-video game": 8,
-  "quote-web": 8,
+  "quote-mailing list": 1,
+  "quote-newsgroup": 1,
+  "quote-song": 1,
+  "quote-text": 1,
+  "quote-us-patent": 1,
+  "quote-video game": 1,
+  "quote-web": 1,
   "quote-wikipedia": 1,
+}
+
+quote_templates_by_page_param = {
+  "quote-book": "6",
+  "quote-journal": "7",
 }
 
 quote_templates = set(quote_templates_by_highest_numbered_param.keys())
@@ -29,49 +52,93 @@ recognized_named_params_1_to_n_list = [
 ]
 
 recognized_named_params_1_to_2_list = [
-  "chapter", "chapterurl", "trans-chapter", "notitle", "trans", "translator", "translators", "editor", "editors",
-  "mainauthor", "title", "trans-title", "series", "seriesvolume", "archiveurl", "url", "urls", "edition", "volume",
-  "volume_plain", "issue", "lang", "worklang", "termlang", "genre", "format", "others", "quoted_in", "city", "location",
-  "publisher", "original", "by", "type", "year_published", "date", "year", "bibcode", "doi", "isbn", "issn", "jstor",
-  "lccn", "oclc", "ol", "pmid", "ssrn", "id", "archivedate", "accessdate", "nodate", "laysummary", "laysource",
-  "laydate", "section", "sectionurl", "line", "lines", "page", "pages", "pageurl", "column", "columns", "columnurl",
-  "other",
+  "chapter", "chapterurl", "trans-chapter", "chapter_tlr", "notitle", "tlr", "translator", "translators", "editor",
+  "editors", "mainauthor", "title", "trans-title", "series", "seriesvolume", "archiveurl", "url", "urls", "edition",
+  "edition_plain",
+  "volume", "volumes", "volume_plain", "volumeurl", "issue", "issues", "issue_plain", "issueurl", "lang", "worklang",
+  "termlang", "genre", "format", "others", "quoted_in", "location", "publisher", "original", "by", "type",
+  "date_published", "year_published", "month_published", "date", "year", "month", "start_date", "start_year", "start_month",
+  "bibcode", "DOI", "doi", "ISBN", "isbn", "ISSN", "issn", "JSTOR", "jstor", "LCCN",
+  "lccn", "OCLC", "oclc", "OL", "ol", "PMID", "pmid", "SSRN", "ssrn", "id", "archivedate", "accessdate", "nodate",
+  "section", "sectionurl", "trans-section", "note", "note_plain", "line", "lines", "line_plain", "lineurl",
+  "page", "pages", "page_plain", "pageurl", "column", "columns", "column_plain", "columnurl", "other",
 ]
 
-recognized_named_params_list = [
-  "accessdaymonth", "accessmonthday", "accessmonth", "accessyear", "actor", "album",
-  "article", "artist", "at", "authorlabel", "authors", "autodate",
-  "blog", "book", "brackets", "coauthors",
-  "column_end", "column_start", "composer", "debate", "developer", "director", "directors", "DOI",
-  "email", "entry", "entryurl", "episode", "footer",
-  "googleid", "group", "house", "indent", "ISBN", "ISSN", "issue", "inventor", "journal",
-  "LCCN", "level", "list", "lit",
-  "lyricist", "lyrics-translator", "magazine", "medium", "month", "network", "newsgroup",
-  "newspaper", "newversion", "nocat", "note", "number", "OCLC", "OL", "origdate",
-  "origmonth", "origyear", "pageref", "page_end",
-  "page_start", "passage", "people", "periodical", "platform", "PMID", "quote",
-  "quotee", "report", "revision", "role", "roles", "scene", "season",
-  "site", "sort", "speaker", "start_date", "start_year", "subst", "t", "text", "time",
-  "titleurl", "tr", "trans", "trans-album", "trans-entry", "trans-episode", "trans-journal",
-  "trans-work", "transcription", "translation", "transliteration", "ts",
-  "url-access", "url-status", "version", "vol", "work",
-  "writer", "writers", "2ndauthor", "2ndauthorlink", "2ndfirst", "2ndlast"
+recognized_named_single_params_everywhere_list = [
+  "brackets", "coauthors",
+  "footer",
+  "lit",
+  "newversion", "nocat", "norm", "origdate", "origmonth", "origyear", "passage",
+  "quotee", "sort", "subst", "t", "text", "time",
+  "tr", "transcription", "translation", "transliteration", "ts",
+  "2ndauthor", "2ndauthorlink", "2ndfirst", "2ndlast"
 ]
 
-def make_all_param_set(params, highest_ind):
-  return set(param + ("" if ind == 1 else str(ind)) for param in params for ind in range(1, highest_ind + 1))
+recognized_named_single_params_by_template = {
+  "quote-av": ["writer", "writers", "director", "directors", "episode", "trans-episode", "format", "medium", "season",
+                "number", "network", "role", "roles", "speaker", "actor", "time", "at"],
+  "quote-book": ["entry", "entryurl", "trans-entry", "number"],
+  "quote-hansard": ["speaker", "debate", "report", "house", "page_start", "page_end", "column_start", "column_end"],
+  "quote-journal": ["titleurl", "journal", "magazine", "newspaper", "work", "trans-journal", "trans-magazine", "trans-newspaper",
+                    "trans-work", "number"],
+  "quote-mailing list": ["email", "list", "googleid", "group", "newsgroup"],
+  "quote-newsgroup": ["email", "googleid", "group", "newsgroup"],
+  "quote-song": ["authorlabel", "lyricist", "lyrics-translator", "composer", "album", "work", "trans-album",
+                 "artist"],
+  "quote-us-patent": ["inventor", "number"],
+  "quote-video game": ["developer", "version", "platform", "scene", "level"],
+  "quote-web": ["site", "work", "trans-site", "trans-work"],
+  "quote-wikipedia": ["article", "revision"],
+}
 
-recognized_named_params = (
-  make_all_param_set(recognized_named_params_1_to_n_list, 30) |
-  make_all_param_set(recognized_named_params_1_to_2_list, 2) |
-  set(recognized_named_params_list)
+recognized_named_single_per_template_params = defaultdict(list)
+recognized_named_single_per_template_params_set = set()
+for template, params in recognized_named_single_params_by_template.items():
+  for param in params:
+    recognized_named_single_per_template_params[param].append(template)
+    recognized_named_single_per_template_params_set.add(param)
+recognized_named_single_per_template_params_list = list(recognized_named_single_per_template_params_set)
+
+msg(recognized_named_single_per_template_params)
+
+formerly_recognized_named_params_list = [
+  # removed from [[Module:quote]]
+  "city", "trans", "laysummary", "laysource", "laydate", "doilabel", "authors", "indent", "i1",
+  # removed from {{trans-*}}
+  "blog", "periodical", "quote", "people", "vol",
+  # wrongly included
+  "book", "pageref", "accessdaymonth", "accessmonthday", "accessmonth", "accessyear", "autodate",
+  "url-access", "url-status",
+]
+
+def make_all_param(params, highest_ind):
+  return [param + ("" if ind == 1 else str(ind)) for param in params for ind in range(1, highest_ind + 1)]
+
+recognized_named_params_everywhere_list = (
+  make_all_param(recognized_named_params_1_to_n_list, 30) +
+  make_all_param(recognized_named_params_1_to_2_list, 2) +
+  recognized_named_single_params_everywhere_list
 )
+recognized_named_params_list = (
+  recognized_named_params_everywhere_list +
+  recognized_named_single_per_template_params_list
+)
+recognized_named_params_everywhere = set(recognized_named_params_everywhere_list)
+recognized_named_params = set(recognized_named_params_list)
 
-recognized_named_params_list_longest_to_shortest = sorted(list(recognized_named_params), key=lambda x:-len(x))
+recognized_named_params_list_longest_to_shortest = sorted(recognized_named_params_list, key=lambda x:-len(x))
 recognized_named_params_re = "(%s)" % "|".join(recognized_named_params_list_longest_to_shortest)
+recognized_named_params_list_4_or_more = [x for x in recognized_named_params_list if len(x) >= 4]
+recognized_named_params_list_1_to_3 = [x for x in recognized_named_params_list if len(x) < 4]
+recognized_named_params_re_4_or_more = "(%s)" % "|".join(recognized_named_params_list_4_or_more)
+recognized_named_params_re_1_to_3 = "(%s)" % "|".join(recognized_named_params_list_1_to_3)
 
 count_recognized_named_params = defaultdict(int)
+count_recognized_named_params_by_template = defaultdict(int)
+count_numbered_params = defaultdict(int)
+count_numbered_params_by_template = defaultdict(int)
 
+count_templates = defaultdict(int)
 
 unrecognized_after_url_named_params_list = [
   "archive-date", "archive_date", "archiv-datum", "access", "access-date", "accessed", "archiveorg", "archive-url",
@@ -83,8 +150,8 @@ unrecognized_after_url_named_params_list = [
 ]
 unrecognized_after_url_named_params = set(unrecognized_after_url_named_params_list)
 
-count_numbered_params = defaultdict(int)
 count_unhandled_params = defaultdict(int)
+count_unhandled_params_by_template = defaultdict(int)
 
 def process_text_on_page(index, pagetitle, text):
   global args
@@ -98,15 +165,25 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
+  templates_to_rename_numbered_params = (
+    set(args.templates_to_rename_numbered_params.split(","))
+    if args.templates_to_rename_numbered_params else
+    None
+  )
   parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
     tn = tname(t)
     origt = str(t)
     changed = False
+    def getp(param):
+      return getparam(t, param)
 
     def escape_newline(val):
       return val.replace("\n", r"\n")
+
+    def from_to(txt):
+      pagemsg("%s: <from> %s <to> %s <end>" % (txt, escape_newline(str(t)), escape_newline(str(t))))
 
     def move_params(params, frob_from=None, no_notes=False):
       this_notes = []
@@ -115,7 +192,7 @@ def process_text_on_page(index, pagetitle, text):
         tparams.append((str(param.name), str(param.value), param.showkey))
       for fr, to in params:
         if t.has(fr):
-          oldval = getparam(t, fr)
+          oldval = getp(fr)
           if not oldval.strip():
             rmparam(t, fr)
             pagemsg("%s: Removing blank param %s" % (tn, fr))
@@ -128,7 +205,7 @@ def process_text_on_page(index, pagetitle, text):
           else:
             newval = oldval
 
-          existing_val = getparam(t, to).strip()
+          existing_val = getp(to).strip()
           if existing_val:
               pagemsg("WARNING: Would replace %s=%s -> %s= but %s=%s is already present: %s"
                   % (fr, oldval.strip(), to, to, existing_val, str(t)))
@@ -166,36 +243,205 @@ def process_text_on_page(index, pagetitle, text):
         notes.extend(this_notes)
 
     if tn in quote_templates:
-      for param in t.params:
-        pn = pname(param)
-        pv = str(param.value)
-        if re.search("^[0-9]+$", pn):
-          pnnum = int(pn)
-          if pnnum <= quote_templates_by_highest_numbered_param[tn]:
-            count_numbered_params[pn] += 1
-            if pn != "1":
-              pvs = pv.strip()
-              m = re.search("^%s" % recognized_named_params_re, pvs)
-              if m:
-                beginparam = m.group(1)
-                if len(beginparam) >= 4:
-                  if re.search("^%s([A-Za-z0-9]| [^ A-Z0-9])" % beginparam, pvs):
-                    pagemsg("WARNING: Probable missing equal sign in %s=%s: %s" % (pn, escape_newline(pv), escape_newline(str(t))))
-              # Too many false positives, not enough real hits
-              #m = re.search("%s$" % recognized_named_params_re, pvs)
-              #if m:
-              #  endparam = m.group(1)
-              #  if len(endparam) >= 6:
-              #    if re.search("([A-Za-z0-9]|[^ a-z] )%s$" % endparam, pvs):
-              #      pagemsg("WARNING: Probable missing equal sign in %s=%s: %s" % (pn, escape_newline(pv), escape_newline(str(t))))
+      if args.check_unhandled_params:
+        count_templates[tn] += 1
+        for param in t.params:
+          pn = pname(param)
+          pv = str(param.value)
+          if re.search("^[0-9]+$", pn):
+            pnnum = int(pn)
+            if pnnum <= quote_templates_by_highest_numbered_param[tn]:
+              count_numbered_params[pn] += 1
+              count_numbered_params_by_template["%s:%s" % (pn, tn)] += 1
+              if pn != "1":
+                pvs = pv.strip()
+                m = re.search("^%s" % recognized_named_params_re, pvs)
+                if m:
+                  beginparam = m.group(1)
+                  if len(beginparam) >= 4:
+                    if re.search("^%s([A-Za-z0-9]| [^ A-Z0-9])" % beginparam, pvs):
+                      from_to("WARNING: Probable missing equal sign in %s=%s" % (pn, escape_newline(pv)))
+                # Too many false positives, not enough real hits
+                #m = re.search("%s$" % recognized_named_params_re, pvs)
+                #if m:
+                #  endparam = m.group(1)
+                #  if len(endparam) >= 6:
+                #    if re.search("([A-Za-z0-9]|[^ a-z] )%s$" % endparam, pvs):
+                #      pagemsg("WARNING: Probable missing equal sign in %s=%s: %s" % (pn, escape_newline(pv), escape_newline(str(t))))
+            else:
+              from_to("WARNING: Saw unhandled param %s=%s" % (pn, escape_newline(pv)))
+              count_unhandled_params["%s:%s" % (pn, tn)] += 1
+          elif pn in recognized_named_params_everywhere or (
+            pn in recognized_named_single_per_template_params and tn in recognized_named_single_per_template_params[pn]
+          ):
+            count_recognized_named_params[pn] += 1
+            count_recognized_named_params_by_template["%s:%s" % (pn, tn)] += 1
           else:
-            pagemsg("WARNING: Saw unhandled param %s=%s: %s" % (pn, escape_newline(pv), escape_newline(str(t))))
-            count_unhandled_params["%s:%s" % (pn, tn)] += 1
-        elif pn in recognized_named_params:
-          count_recognized_named_params[pn] += 1
-        else:
-          pagemsg("WARNING: Saw unhandled param %s=%s: %s" % (pn, escape_newline(pv), escape_newline(str(t))))
-          count_unhandled_params[pn] += 1
+            from_to("WARNING: Saw unhandled param %s=%s" % (pn, escape_newline(pv)))
+            count_unhandled_params[pn] += 1
+            count_unhandled_params_by_template["%s:%s" % (pn, tn)] += 1
+          # Ignore nested templates e.g. {{w|Simone Caby|lang=fr}} and {{gbooks|q=draws|id=HV4jKhjzMVYC|pg=27}}
+          check_pv = re.sub(r"\{\{([^{}]|\{\{[^{}]*\}\})*\}\}", "", pv)
+          # Ignore HTML comments
+          check_pv = re.sub("<!--.*?-->", "", check_pv, 0, re.S)
+          # Ignore HTML like <span class="explain" title="The correct word should be 'kerana'">
+          check_pv = re.sub("<(span|div|ref|abbr|source) .*?>", "", check_pv)
+          # Don't consider URL's when looking for misplaced equal signs; for short params like id=, ts=, t=, make sure
+          # there's not a preceding lowercase letter, or we will trigger on
+          # "passage=You are being '''rage farmed'''. Your angry quote tweet = the goal." (due to t=) and
+          # "title=Lights = manufacturers moving to non-replaceable batteries" (due to ts=)
+          if "://" not in check_pv and (
+            re.search("(^|[^a-z])%s *=" % recognized_named_params_re_1_to_3, check_pv) or
+            re.search("%s *=" % recognized_named_params_re_4_or_more, check_pv)
+          ):
+            from_to("WARNING: Possible misplaced equal sign in %s=%s" % (pn, escape_newline(pv)))
+
+      if args.check_compound_pages:
+        page = getp("page") or tn in quote_templates_by_page_param and getp(quote_templates_by_page_param[tn]) or ""
+        page = page.strip()
+        if page:
+          page = blib.remove_links(page)
+          if re.search("[0-9]+-[0-9]+", page):
+            from_to("Saw possible compound page '%s'" % escape_newline(page))
+
+      if args.check_author_splitting:
+        author = getp("author").strip()
+        if author:
+          escaped_author = escape_newline(author)
+          processed_author = author
+          for entity, replacement in html_entity_to_replacement:
+            processed_author = processed_author.replace(entity, replacement)
+          # Eliminate L2R, R2L marks
+          processed_author = processed_author.replace("\u200E", "").replace("\u200F", "")
+          try:
+            author_runs = blib.parse_multi_delimiter_balanced_segment_run(processed_author,
+              [(r"[\[%s]" % TEMP_LBRAC, r"[\]%s]" % TEMP_RBRAC), (r"\(", r"\)"), (r"\{", r"\}"),
+               (r"[<%s]" % TEMP_LT, r"[>%s]" % TEMP_GT)])
+          except blib.ParseException as e:
+            pagemsg("WARNING: Splitting author=%s: Exception when parsing: %s" % (escaped_author, e))
+          else:
+            saw_semicolon = False
+            saw_comma = False
+            split_msg = None
+            for i, run in enumerate(author_runs):
+              if i % 2 == 0:
+                if re.search(r";\s+", run):
+                  saw_semicolon = True
+                if re.search(r",\s+", run):
+                  saw_comma = True
+
+            if saw_semicolon:
+              split_msg = "semicolon"
+            elif saw_comma:
+              split_msg = "comma"
+            for i, run in enumerate(author_runs):
+              if i % 2 == 0:
+                run = re.sub(r"([,;])\s+(and|&|%s)\s+" % TEMP_AMP, r"\1 ", run)
+                def replace_and(m):
+                  nonlocal saw_semicolon, split_msg
+                  if saw_semicolon:
+                    return "; "
+                  elif saw_comma:
+                    return ", "
+                  else:
+                    saw_semicolon = True
+                    split_msg = "'and'"
+                    return "; "
+                run = re.sub(r"\s+(and|&|%s)\s+" % TEMP_AMP, replace_and, run)
+                author_runs[i] = run
+
+            split_re = None
+            if saw_semicolon:
+              split_re = r"\s*;\s+"
+            elif saw_comma:
+              split_re = r"\s*,\s+"
+            if split_re:
+              msgpref = "Splitting (on %s), author=%s" % (split_msg, escaped_author)
+              split_runs = blib.split_alternating_runs(author_runs, split_re, preserve_splitchar=True)
+              authors = []
+              wont_split = False
+              for i, split_run in enumerate(split_runs):
+                if i % 2 == 0:
+                  run = "".join(split_run).strip()
+                  if re.search(r"^(I+|IV|V|VI+|(Jr|Sr|Esq|Jun|Sen)\.?|(M|J|D|Ph|PH|Ll|LL)[. ]*D[. ]*|[BM][. ]*[AS][. ]*)$", run):
+                    if i == 0:
+                      pagemsg("%s: Saw suffix '%s' without main form, won't split" % (msgpref, run))
+                      wont_split = True
+                      break
+                    else:
+                      authors[-1] += "".join(split_runs[i - 1]) + "".join(split_runs[i])
+                      continue
+                  if not run:
+                    pagemsg("%s: Saw empty run, won't split" % msgpref)
+                    wont_split = True
+                    break
+                  if run[0].islower():
+                    pagemsg("%s: Saw run '%s' beginning with lowercase, won't split" % (
+                      msgpref, run))
+                    wont_split = True
+                    break
+                  if not run[0].isupper() and not re.search(r"^[{\[]", run):
+                    pagemsg("%s: Saw run '%s' not beginning with uppercase, link or template, won't split" % (
+                      msgpref, run))
+                    wont_split = True
+                    break
+                  if not re.search(r"\s", run) and not re.search(r"^\{\{w\|", run) and not re.search(r"^\[\[w:", run):
+                    # Normally, a run without a space indicates a LAST, FIRST situation or an organization; but allow
+                    # runs like {{w|Morrissey}}, {{w|Beyoncé}}, {{w|Jagger–Richards}}, {{w|busbee}}; also allow
+                    # [[w:Yas|Yas]], [[w:O.S.T.R.|O.S.T.R.]], [[w:Virgil|Virgill]]
+                    pagemsg("%s: Saw run '%s' without space, won't split" % (msgpref, run))
+                    wont_split = True
+                    break
+                  for j, runpart in enumerate(split_run):
+                    if j % 2 == 0 and ":" in runpart: # not in templates, links or the like
+                      pagemsg("%s: Saw run '%s' with colon in runpart '%s' (index %s), won't split"
+                        % (msgpref, run, runpart, j))
+                      wont_split = True
+                      break
+                  if wont_split:
+                    break
+                  space_split_runs = blib.split_alternating_runs(split_run, r"\s+")
+                  recombined_space_split_runs = []
+                  for split_runpart in space_split_runs:
+                    recombined_space_split_runs.append("".join(split_runpart))
+                  for j, word in enumerate(recombined_space_split_runs):
+                    if (word[0].islower() and not word.startswith("d'") and not word.startswith("al-") and not
+                        re.search("^([dl][aeo]s?|v[oa]n|te|de[lnr]|du|à)$", word)):
+                      pagemsg("%s: Saw run '%s' with non-allow-listed lowercase word '%s' (index %s) in it, won't split" %
+                        (msgpref, run, word, j))
+                      wont_split = True
+                      break
+                  if wont_split:
+                    break
+                  deny_list_words = [
+                    "United", "States", "American", "Britain", "British", "Australia", "Australian", "Zealand",
+                    "National", "International", "Limited", "Ltd", "Company", "Inc", "Society", "Association", "Assn",
+                    "Center", "School", "Laboratory", "Office", "Ministry", "Proceedings"
+                  ]
+                  for deny_list_word in deny_list_words:
+                    if re.search(r"\b%s\b" % deny_list_word, run):
+                      pagemsg("%s: Saw run '%s' with deny-listed word '%s', won't split" % (msgpref, run, deny_list_word))
+                      wont_split = True
+                      break
+                  if wont_split:
+                    break
+                  authors.append(run)
+              if not wont_split:
+                def undo_html_entity_replacement(txt):
+                  for html, replacement in html_entity_to_replacement:
+                    txt = txt.replace(replacement, html)
+                  return txt
+                split_authors = " // ".join(undo_html_entity_replacement(auth) for auth in authors)
+                author2 = getp("author2").strip()
+                last2 = getp("last2").strip()
+                if len(authors) > 1 and (author2 or last2):
+                  if author2:
+                    msgauth2 = "author2=%s" % author2
+                  else:
+                    msgauth2 = "last2=%s" % last2
+                  pagemsg("WARNING: %s: Would normally split into %s, but saw %s" % (msgpref, split_authors, msgauth2))
+                else:
+                  pagemsg("%s: Would split into %s" % (msgpref, split_authors))
 
     if args.do_old_renames:
       if tn in ["quote-magazine", "quote-news"]:
@@ -320,17 +566,24 @@ def process_text_on_page(index, pagetitle, text):
           "numbers", # leave as is
         ]
 
-    if args.rename_translator:
+    if args.rename_params_to_eliminate:
       if tn in quote_templates:
-        params_to_move = [("trans", "tlr")]
-        #for trans_param in ["title", "chapter", "journal", "work", "album", "author", "entry", "episode",
-        #                    "lyricist", "section", "series", "section", "newspaper"]:
-        #  params_to_move.append(("trans-%s" % trans_param, "%s-t" % trans_param))
-        #  params_to_move.append(("trans-%s2" % trans_param, "%s2-t" % trans_param))
-        #  params_to_move.append(("trans-%s3" % trans_param, "%s3-t" % trans_param))
+        #params_to_move = [
+        #  ("city", "location"),
+        #  ("city2", "location2"),
+        #  ("vol", "volume"),
+        #  ("quote", "text"),
+        #  ("periodical", "journal"),
+        #  ("people", "actor"),
+        #  ("blog", "site"),
+        #  ("trans", "tlr")
+        #]
+        params_to_move = [
+          ("authors", "author"),
+        ]
         move_params(params_to_move)
 
-    if args.rename_numbered_params:
+    if args.templates_to_rename_numbered_params and tn in args.templates_to_rename_numbered_params:
       must_continue = False
       if tn in quote_templates:
         last_url_like = None
@@ -338,15 +591,12 @@ def process_text_on_page(index, pagetitle, text):
         for param in t.params:
           pn = pname(param)
           pv = str(param.value)
-          if pn in unrecognized_after_url_named_params:
-            pagemsg("WARNING: Saw bad (unrecognized or misspelled) param %s=%s: %s" % (
-              pn, escape_newline(pv), escape_newline(str(t))))
           if ((re.search("^[0-9]+$", pn) or pn not in recognized_named_params)
               and pn not in unrecognized_after_url_named_params
               and pv.strip() and last_url_like and not (pn in ["6", "7"] and re.search("^[0-9]+$", pv))):
             pagemsg("WARNING: Possible unescaped vertical bar, saw %s=%s after %s=%s: %s" % (
               pn, escape_newline(pv), last_url_like, escape_newline(last_url_like_value), escape_newline(str(t))))
-            must_continue = True
+            #must_continue = True
             break
           if "://" in pv: # re.search("^(url|section)[0-9]*$", pn):
             last_url_like = pn
@@ -506,14 +756,17 @@ def process_text_on_page(index, pagetitle, text):
           notes.append("rename numbered params in {{quote-web}} to named params and remove blank ones")
 
     if changed:
-      pagemsg("Replaced %s with %s" % (origt, str(t)))
+      pagemsg("Replaced %s with %s" % (escape_newline(origt), escape_newline(str(t))))
 
   return str(parsed), notes
 
 parser = blib.create_argparser("rename {{quote-*}} params",
   include_pagefile=True, include_stdin=True)
-parser.add_argument("--rename-translator", action="store_true", help="Rename translators")
-parser.add_argument("--rename-numbered-params", action="store_true", help="Rename numbered params")
+parser.add_argument("--check-unhandled-params", action="store_true", help="Check for unhandled params")
+parser.add_argument("--check-compound-pages", action="store_true", help="Check for possible compound pages like page=12-81")
+parser.add_argument("--check-author-splitting", action="store_true", help="Try to split cases where multiple authors given in author=")
+parser.add_argument("--rename-params-to-eliminate", action="store_true", help="Rename params that will be eliminated")
+parser.add_argument("--templates-to-rename-numbered-params", help="Comma-separated list of templates for which to rename numbered params")
 parser.add_argument("--rename-bad-params", action="store_true", help="Rename bad (misspelled, etc.) params")
 parser.add_argument("--do-old-renames", action="store_true", help="Do old (non-quote-template) renames")
 args = parser.parse_args()
@@ -523,23 +776,50 @@ old_default_refs=["Template:quote-poem", "Template:quote-magazine", "Template:qu
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
   default_refs=["Template:%s" % template for template in quote_templates])
 
-def output_count(countdict):
-  for pn, count in sorted(countdict.items(), key=lambda x: (-x[1], x[0])):
-    msg("%-30s = %s" % (pn, count))
+if args.check_unhandled_params:
+  def output_count(countdict):
+    for pn, count in sorted(countdict.items(), key=lambda x: (-x[1], x[0])):
+      msg("%-30s = %s" % (pn, count))
+  def output_count_by_name(countdict):
+    for pn, count in sorted(countdict.items()):
+      msg("%-30s = %s" % (pn, count))
 
-msg("Numbered params:")
-msg("------------------------------------")
-output_count(count_numbered_params)
-msg("")
-msg("Recognized named params:")
-msg("------------------------------------")
-output_count(count_recognized_named_params)
-msg("")
-msg("Unhandled params (by count):")
-msg("------------------------------------")
-output_count(count_unhandled_params)
-msg("")
-msg("Unhandled params(by name):")
-msg("------------------------------------")
-for pn, count in sorted(count_unhandled_params.items()):
-  msg("%-30s = %s" % (pn, count))
+  msg("Templates:")
+  msg("------------------------------------")
+  output_count(count_templates)
+  msg("")
+  msg("Numbered params:")
+  msg("------------------------------------")
+  output_count(count_numbered_params)
+  msg("")
+  msg("Numbered params by template (by count):")
+  msg("---------------------------------------")
+  output_count(count_numbered_params_by_template)
+  msg("")
+  msg("Numbered params by template (by name):")
+  msg("--------------------------------------")
+  output_count_by_name(count_numbered_params_by_template)
+  msg("")
+  msg("Recognized named params:")
+  msg("------------------------------------")
+  output_count(count_recognized_named_params)
+  msg("")
+  msg("Recognized named params by template (by count):")
+  msg("-----------------------------------------------")
+  output_count(count_recognized_named_params_by_template)
+  msg("")
+  msg("Recognized named params by template (by name):")
+  msg("-----------------------------------------------")
+  output_count_by_name(count_recognized_named_params_by_template)
+  msg("")
+  msg("Unhandled params (by count):")
+  msg("------------------------------------")
+  output_count(count_unhandled_params)
+  msg("")
+  msg("Unhandled params(by name):")
+  msg("------------------------------------")
+  output_count_by_name(count_unhandled_params)
+  msg("")
+  msg("Unhandled params by template (by name):")
+  msg("---------------------------------------")
+  output_count_by_name(count_unhandled_params_by_template)
