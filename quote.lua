@@ -838,7 +838,16 @@ function export.source(args)
 	-- no value specified for the main parameter, otherwise the formatted value.
 	local function format_chapterlike(param, numeric_prefix, textual_prefix, textual_suffix)
 		local chap, chap_param = a_with_name(param)
+		local chap_num, chap_num_param = a_with_name(param .. "_number")
+		local chap_plain, chap_plain_param = a_with_name(param .. "_plain")
 		if not chap then
+			if chap_num then
+				error(("Cannot specify |%s= without |%s=; put the numeric value in |%s= directly"):
+					format(chap_num_param, chap_param, chap_param))
+			end
+			if chap_plain then
+				return parse_and_format_text(chap_plain)
+			end
 			return nil
 		end
 
@@ -852,18 +861,29 @@ function export.source(args)
 			end
 		end
 
+		local formatted
+
 		if require(number_utilities_module).get_number(cleaned_chap) then
 			-- Arabic chapter number
-			return numeric_prefix .. make_chapter_with_url(chap)
+			formatted = numeric_prefix .. make_chapter_with_url(chap)
 		elseif rfind(cleaned_chap, "^[mdclxviMDCLXVI]+$") and require(roman_numerals_module).roman_to_arabic(cleaned_chap, true) then
 			-- Roman chapter number
-			return numeric_prefix .. make_chapter_with_url(make_chapter_with_url(mw.ustring.upper(chap)))
+			formatted = numeric_prefix .. make_chapter_with_url(make_chapter_with_url(mw.ustring.upper(chap)))
 		else
 			-- Must be a chapter name
 			local chapterobj = parse_text_with_lang(chap, chap_param, a("trans-" .. param))
 			chapterobj.text = make_chapter_with_url(chapterobj.text)
-			return (textual_prefix or "") .. format_text(chapterobj) .. (textual_suffix or "")
+			formatted = (textual_prefix or "") .. format_text(chapterobj) .. (textual_suffix or "")
 		end
+
+		if chap_num then
+			formatted = formatted .. " (" .. numeric_prefix .. chap_num .. ")"
+		end
+		if chap_plain then
+			formatted = formatted .. " (" .. parse_and_format_text(chap_plain) .. ")"
+		end
+
+		return formatted
 	end
 
 	-- This handles everything after displaying the author, starting with the chapter and ending with page, column and
