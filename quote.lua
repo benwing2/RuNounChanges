@@ -839,14 +839,14 @@ function export.source(args)
 	local function format_chapterlike(param, numeric_prefix, textual_prefix, textual_suffix)
 		local chap, chap_param = a_with_name(param)
 		local chap_num, chap_num_param = a_with_name(param .. "_number")
-		local chap_plain, chap_plain_param = a_with_name(param .. "_plain")
+		local chap_plain = parse_and_format_text(param .. "_plain")
 		if not chap then
 			if chap_num then
 				error(("Cannot specify |%s= without |%s=; put the numeric value in |%s= directly"):
 					format(chap_num_param, chap_param, chap_param))
 			end
 			if chap_plain then
-				return parse_and_format_text(chap_plain)
+				return chap_plain
 			end
 			return nil
 		end
@@ -868,7 +868,7 @@ function export.source(args)
 			formatted = numeric_prefix .. make_chapter_with_url(chap)
 		elseif rfind(cleaned_chap, "^[mdclxviMDCLXVI]+$") and require(roman_numerals_module).roman_to_arabic(cleaned_chap, true) then
 			-- Roman chapter number
-			formatted = numeric_prefix .. make_chapter_with_url(make_chapter_with_url(mw.ustring.upper(chap)))
+			formatted = numeric_prefix .. make_chapter_with_url(mw.ustring.upper(chap))
 		else
 			-- Must be a chapter name
 			local chapterobj = parse_text_with_lang(chap, chap_param, a("trans-" .. param))
@@ -880,7 +880,7 @@ function export.source(args)
 			formatted = formatted .. " (" .. numeric_prefix .. chap_num .. ")"
 		end
 		if chap_plain then
-			formatted = formatted .. " (" .. parse_and_format_text(chap_plain) .. ")"
+			formatted = formatted .. " (" .. chap_plain .. ")"
 		end
 
 		return formatted
