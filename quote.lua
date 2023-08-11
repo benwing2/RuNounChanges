@@ -625,6 +625,11 @@ local function format_date_args(a, get_full_paramname, parampref, paramsuf, bold
 end
 
 
+local function tag_with_cite(txt)
+	return "<cite>" .. txt .. "</cite>"
+end
+
+
 -- Display the source line of the quote, above the actual quote text. This contains the majority of the logic of this
 -- module (formerly contained in {{quote-meta/source}}).
 function export.source(args)
@@ -834,19 +839,42 @@ function export.source(args)
 	-- Handle chapter=, section=, etc. `param` is the base name of the parameter in question, e.g. "chapter" or
 	-- "section". If numeric (either Arabic or Roman), add `numeric_prefix`; otherwise, parse as textual (allowing for
 	-- language prefixes, inline modifiers, etc.), prefix with `textual_prefix` (if given) and suffix with
-	-- `textual_suffix` (if given). Also checks for and handles e.g. chapterurl= and trans-chapter=. Returns nil if
-	-- no value specified for the main parameter, otherwise the formatted value.
+	-- `textual_suffix` (if given). Also checks for and handles the following (assuming param == "chapter"):
+	-- * chapterurl=: URL of the chapter.
+	-- * trans-chapter=: Chapter translation (can be given using an inline modifier <t:...>).
+	-- * chapter_number=: Chapter number, when chapter= is also given (otherwise put the chapter number in chapter=).
+	-- * chapter_plain=: Plain version of the chapter number; the "chapter " prefix isn't added.
+	-- * chapter_series=: Series that the chapter is within (used e.g. for journal articles part of a series).
+	-- * chapter_seriesvolume=: Volume of the series (compare seriesvolume=).
+	--
+	-- Returns nil if no value specified for the main parameter, otherwise the formatted value.
 	local function format_chapterlike(param, numeric_prefix, textual_prefix, textual_suffix)
 		local chap, chap_param = a_with_name(param)
 		local chap_num, chap_num_param = a_with_name(param .. "_number")
-		local chap_plain = parse_and_format_text(param .. "_plain")
+		local chap_plain, chap_plain_param = parse_and_format_text_with_name(param .. "_plain")
+		if chap_num and chap_plain then
+			error(("Specify only one of |%s= or %s="):format(chap_num_param, chap_plain_param))
+		end
+		local chap_series, chap_series_param =
+			parse_and_format_text_with_name(param .. "_series", tag_with_cite, tag_with_cite)
+		local chap_seriesvolume, chap_seriesvolume_param = parse_and_format_text_with_name(param .. "_seriesvolume")
+		if chap_series then
+			chap_series = ", " .. chap_series
+		end
+		if chap_seriesvolume then
+			if not chap_series then
+				error(("Cannot specify |%s= without %s="):format(chap_series_param, chap_seriesvolume_param))
+			end
+			chap_series = chap_series .. " (" .. chap_seriesvolume .. ")"
+		end
+
 		if not chap then
 			if chap_num then
 				error(("Cannot specify |%s= without |%s=; put the numeric value in |%s= directly"):
 					format(chap_num_param, chap_param, chap_param))
 			end
 			if chap_plain then
-				return chap_plain
+				return chap_plain .. (chap_series or "")
 			end
 			return nil
 		end
@@ -876,11 +904,12 @@ function export.source(args)
 			formatted = (textual_prefix or "") .. format_text(chapterobj) .. (textual_suffix or "")
 		end
 
-		if chap_num then
-			formatted = formatted .. " (" .. numeric_prefix .. chap_num .. ")"
+		if chap_num or chap_plain then
+			-- NOTE: Up above we throw an error if both chap_num and chap_plain are specified.
+			formatted = formatted .. " (" .. (chap_plain or numeric_prefix .. chap_num) .. ")"
 		end
-		if chap_plain then
-			formatted = formatted .. " (" .. chap_plain .. ")"
+		if chap_series then
+			formatted = formatted .. chap_series
 		end
 
 		return formatted
@@ -938,9 +967,6 @@ function export.source(args)
 			add(sep .. text)
 			sep = ", "
 		end
-		local function tag_with_cite(txt)
-			return "<cite>" .. txt .. "</cite>"
-		end
 		local title, title_param = a_with_name("title")
 		if title then
 			local titleobj = parse_text_with_lang(title, title_param, a("trans-title"))
@@ -949,8 +975,9 @@ function export.source(args)
 			local series = parse_and_format_text("series")
 			if series then
 				add(" (" .. series)
-				if a("seriesvolume") then
-					add(SEMICOLON_SPACE .. a("seriesvolume"))
+				local seriesvolume = parse_and_format_text("seriesvolume")
+				if seriesvolume then
+					add(SEMICOLON_SPACE .. seriesvolume)
 				end
 				add(")")
 			end
