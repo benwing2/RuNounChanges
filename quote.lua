@@ -1063,8 +1063,9 @@ function export.source(args)
 						check_val = check_val:gsub("&mdash;", "—")
 						check_val = check_val:gsub("&#8212;", "—")
 						-- Check for en-dash or em-dash, or two numbers (possibly with stuff after like 12a-15b)
-						-- separated by a hyphen or comma.
-						if rfind(check_val, "[–—]") or check_val:find(" and ") or rfind(check_val, "[0-9]+[^ ]* *[,%-] *[0-9]+") then
+						-- separated by a hyphen or by comma a followed by a space (to avoid firing on thousands separators).
+						if rfind(check_val, "[–—]") or check_val:find(" and ") or rfind(check_val, "[0-9]+[^ ]* *%- *[0-9]+")
+							or rfind(check_val, "[0-9]+[^ ]* *, +[0-9]+")  then
 							desc = plural_desc
 						else
 							desc = singular_desc
@@ -1152,6 +1153,10 @@ function export.source(args)
 			add_with_sep(location)
 		end
 
+		if a("source") then
+			add_with_sep("sourced from " .. parse_and_format_text("source"))
+		end
+
 		local original = parse_and_format_text("original", tag_with_cite, tag_with_cite)
 		local by = parse_and_format_text("by")
 		if original or by then
@@ -1160,8 +1165,11 @@ function export.source(args)
 
 		-- Fetch date_published=/year_published=/month_published= and format appropriately.
 		local formatted_date_published = format_date_args(a, get_full_paramname, "", "_published")
+		local platform = parse_and_format_text("platform")
 		if formatted_date_published then
-			add_with_sep("published " .. formatted_date_published)
+			add_with_sep("published " .. formatted_date_published .. (platform and " via " .. platform or ""))
+		elseif platform then
+			add_with_sep("via " .. platform)
 		end
 
 		if ind ~= "" and has_newversion() then
