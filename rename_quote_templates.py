@@ -336,44 +336,107 @@ def process_text_on_page(index, pagetitle, text):
             pagemsg("WARNING: Splitting %s=%s: Exception when parsing: %s" % (authparam, author, e))
             return False
 
-        # Try to move a translator from author= to tlr=.
+        def undo_html_entity_replacement(txt):
+          for html, replacement in html_entity_to_replacement:
+            txt = txt.replace(replacement, html)
+          return txt
+
+        # Try to move a translator or editor from author=, mainauthor= or coauthors= to tlr= or editor=.
         moved_tlr_msg = False
-        author = getp("author").strip()
-        m = re.search(r"(^.*), *transl(\.|ator)$", author)
-        if m:
-          for tlrparam in ["tlr", "translator", "translators"]:
-            current_tlr = getp(tlrparam).strip()
-            if current_tlr:
-              pagemsg("WARNING: Moving translators in author=%s, already saw %s=%s, can't move"
-                % (author, tlrparam, current_tlr))
+        moved_author_param = None
+        moved_tlr_dest_param = None
+        for dest_param in ["tlr", "editor"]:
+          if dest_param == "tlr":
+            basic_strip_re = r"transl?(\.|ator)"
+            strip_re = r"(, *%s| *\(%s\))$" % (basic_strip_re, basic_strip_re)
+            params_to_check = ["tlr", "translator", "translators"]
+            desc = "translators"
+          else:
+            basic_strip_re = r"ed(\.|itor)"
+            strip_re = r"(, *%s| *\(%s\))$" % (basic_strip_re, basic_strip_re)
+            params_to_check = ["editor", "editors"]
+            desc = "editors"
+          must_break = False
+          for author_param in ["author", "mainauthor", "coauthors"]:
+            author = getp(author_param).strip()
+            m = re.search(r"^(.*?)" + strip_re, author)
+            if m:
+              for tlrparam in params_to_check:
+                current_tlr = getp(tlrparam).strip()
+                if current_tlr:
+                  pagemsg("WARNING: Moving %s in %s=%s, already saw %s=%s, can't move"
+                    % (desc, author_param, author, tlrparam, current_tlr))
+                  break
+              else: # no break
+                tlr = m.group(1)
+                tlr_runs = normalize_and_split_on_balanced_delims(tlr, author_param)
+                saw_semicolon = False
+                saw_comma = False
+                split_msg = "semicolon" # default when no delimiter
+                for i, run in enumerate(tlr_runs):
+                  if i % 2 == 0:
+                    if re.search(r";\s+", run):
+                      saw_semicolon = True
+                    if re.search(r",\s+", run):
+                      saw_comma = True
+                if saw_comma and not saw_semicolon:
+                  pagemsg("WARNING: Moving %s in %s=%s, saw comma and no semicolon, not sure how to partition authors from %s"
+                    % (desc, author_param, author, desc))
+                elif not saw_semicolon:
+                  new_tlrs = tlr
+                  new_authors = None
+                  moved_author_param = author_param
+                  moved_tlr_dest_param = dest_param
+                  moved_tlr_msg = "Moving %s=%s to %s=%s" % (author_param, author, dest_param, tlr)
+                else:
+                  # Extract translator(s) after last semicolon
+                  split_runs = blib.split_alternating_runs(tlr_runs, r"\s*;\s+", preserve_splitchar=True)
+                  new_tlrs = undo_html_entity_replacement("".join(split_runs[-1]))
+                  new_authors = undo_html_entity_replacement("".join("".join(split_run) for split_run in split_runs[:-2]))
+                  moved_author_param = author_param
+                  moved_tlr_dest_param = dest_param
+                  moved_tlr_msg = "Splitting %s=%s into %s=%s and %s=%s" % (
+                    author_param, author, author_param, new_authors, dest_param, new_tlrs
+                  )
+              must_break = True
               break
-          else: # no break
-            tlr = m.group(1)
-            tlr_runs = normalize_and_split_on_balanced_delims(tlr, "author")
-            saw_semicolon = False
-            saw_comma = False
-            split_msg = "semicolon" # default when no delimiter
-            for i, run in enumerate(tlr_runs):
-              if i % 2 == 0:
-                if re.search(r";\s+", run):
-                  saw_semicolon = True
-                if re.search(r",\s+", run):
-                  saw_comma = True
-            if saw_comma and not saw_semicolon:
-              pagemsg("WARNING: Moving translators in author=%s, saw comma and no semicolon, not sure how to partition authors from translators"
-                % (author))
-            elif not saw_semicolon:
-              new_tlrs = tlr
-              new_authors = None
-              moved_tlr_msg = "Moving author=%s to tlr=%s" % (author, tlr)
-            else:
-              # Extract translator(s) after last semicolon
-              split_runs = blib.split_alternating_runs(tlr_runs, r"\s*;\s+", preserve_splitchar=True)
-              new_tlrs = "".join(split_runs[-1])
-              new_authors = "".join("".join(split_run) for split_run in split_runs[:-2])
-              moved_tlr_msg = "Splitting author=%s into author=%s and tlr=%s" % (author, new_authors, new_tlrs)
+          if must_break:
+            break
 
         def do_author_param(author, authparam):
+          origauthor = author
+
+          # Normalize 'et al' and variants at the end of the author. Do this before anything else becasue otherwise
+          # we will get thrown off by the variant '& al' (converting '&' -> 'and') and by brackets (which will be
+          # invisible to our algorithm, due to the call to blib.parse_multi_delimiter_balanced_segment_run()).
+          # Handle pretentious people who write 'et alii', 'et alia', 'et alios'.
+          et_al_author = re.sub(r"['\[]*(?:&|\bet\.*) al(?:i(?:a|i|os))?['.\]]*$", "et al.", author)
+          if et_al_author != author:
+            pagemsg("Splitting %s=%s: Normalized 'et al' variant to '%s'" % (authparam, author, et_al_author))
+            author = et_al_author
+
+          serial_comma_author = re.sub(r"\{\{,\}\}", ",", author)
+          if serial_comma_author != author:
+            pagemsg("Splitting %s=%s: Normalized serial comma to '%s'" % (authparam, author, serial_comma_author))
+            author = serial_comma_author
+
+          missing_space_comma_author = re.sub(",([A-Z])", r", \1", author)
+          if missing_space_comma_author != author:
+            pagemsg("Splitting %s=%s: Normalized missing space after comma to '%s'"
+              % (authparam, author, missing_space_comma_author))
+            author = missing_space_comma_author
+
+          ampersand_comma_author = re.sub(r" &,", " &", author)
+          if ampersand_comma_author != author:
+            pagemsg("Splitting %s=%s: Normalized ampersand-comma to '%s'" % (authparam, author, ampersand_comma_author))
+            author = ampersand_comma_author
+
+          missing_space_ampersand_author = re.sub(" &([A-Z])", r" & \1", author)
+          if missing_space_ampersand_author != author:
+            pagemsg("Splitting %s=%s: Normalized missing space after ampersand to '%s'"
+              % (authparam, author, missing_space_ampersand_author))
+            author = missing_space_ampersand_author
+
           author_runs = normalize_and_split_on_balanced_delims(author, authparam)
           if author_runs is False:
             return False
@@ -412,7 +475,7 @@ def process_text_on_page(index, pagetitle, text):
               run = re.sub(r"\s+([Aa]nd|&|%s)\s+" % TEMP_AMP, replace_and, run)
               author_runs[i] = run
 
-          msgpref = "Splitting (on %s), %s=%s" % (split_msg, authparam, author)
+          msgpref = "Splitting (on %s), %s=%s" % (split_msg, authparam, origauthor)
 
           if saw_semicolon:
             split_re = r"\s*;\s+"
@@ -426,11 +489,10 @@ def process_text_on_page(index, pagetitle, text):
 
           # Handle "et al" and variants.
           if "et al" in author_runs[-1]:
-            # Handle pretentious people who write 'et alii' or 'et alia'.
-            et_al_re = "'*et al(?:i[ai])?['.]*"
+            et_al_re = r"et al\." # since we normalized all variants above
             if not re.search(et_al_re + "$", author_runs[-1]):
               # 'et al' followed by something
-              pagemsg("WARNING: %s: Saw 'et al' followed by junk, won't split: %s" % (msgpref, author_runs[-1]))
+              pagemsg("WARNING: %s: Saw 'et al.' followed by junk, won't split: %s" % (msgpref, author_runs[-1]))
               return False
             m = re.search("^(.*?)(" + et_al_re + ")$", author_runs[-1])
             assert m
@@ -500,7 +562,7 @@ def process_text_on_page(index, pagetitle, text):
                   recombined_space_split_runs.append("".join(split_runpart))
                 for j, word in enumerate(recombined_space_split_runs):
                   if (word[0].islower() and not re.search("^d['’]", word) and not word.startswith("al-") and not
-                      re.search("^([dl][aeo]s?|v[oa]n|ten?|de[lnr]|di|du|à|y)$", word)):
+                      re.search("^([dl][aeo]s?|v[oa]n|vom|te[rn]?|de[lnr]|di|du|à|y)$", word)):
                     pagemsg("%s: Saw run '%s' with non-allow-listed lowercase word '%s' (index %s) in it, won't split" %
                       (msgpref, run, word, j))
                     wont_split = True
@@ -522,10 +584,6 @@ def process_text_on_page(index, pagetitle, text):
               authors.append(run)
           if wont_split:
             return False
-          def undo_html_entity_replacement(txt):
-            for html, replacement in html_entity_to_replacement:
-              txt = txt.replace(replacement, html)
-            return txt
           split_authors = " // ".join(undo_html_entity_replacement(auth) for auth in authors)
           semicolon_joined_authors = "; ".join(undo_html_entity_replacement(auth) for auth in authors)
 
@@ -540,7 +598,7 @@ def process_text_on_page(index, pagetitle, text):
               pagemsg("WARNING: %s: Would normally split into %s, but saw %s" % (msgpref, split_authors, msgauth2))
               return False
 
-          if author == semicolon_joined_authors:
+          if origauthor == semicolon_joined_authors:
             pagemsg("%s: Would normally split into %s, but rejoined value is same as current"
                     % (msgpref, split_authors))
             return False
@@ -553,9 +611,9 @@ def process_text_on_page(index, pagetitle, text):
                           "translators2", "quotee2", "chapter_tlr2", "by2"] + (
                             ["3"] if tn in ["quote-book", "quote-journal"] else []
                           ):
-          if authparam == "author" and moved_tlr_msg:
+          if authparam == moved_author_param and moved_tlr_msg:
             author = new_authors
-          elif authparam == "tlr" and moved_tlr_msg:
+          elif authparam == moved_tlr_dest_param and moved_tlr_msg:
             author = new_tlrs
           else:
             author = getp(authparam).strip()
@@ -570,12 +628,12 @@ def process_text_on_page(index, pagetitle, text):
         if moved_tlr_msg:
           splitmsgs.append(moved_tlr_msg)
           if new_authors:
-            following_author = blib.find_following_param(newt, "author")
-            newt.add("tlr", new_tlrs, before=following_author)
-            newt.add("author", new_authors)
+            following_author = blib.find_following_param(newt, moved_author_param)
+            newt.add(moved_tlr_dest_param, new_tlrs, before=following_author)
+            newt.add(moved_author_param, new_authors)
           else:
-            newt.add("tlr", new_tlrs, before="author")
-            rmparam(newt, "author")
+            newt.add(moved_tlr_dest_param, new_tlrs, before=moved_author_param)
+            rmparam(newt, moved_author_param)
         if splits:
           for authparam, new_paramval, splitmsg in splits:
             newt.add(authparam, new_paramval)
