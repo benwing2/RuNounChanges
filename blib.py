@@ -139,6 +139,13 @@ def remove_redundant_links(text):
   # remove redundant link surrounding entire text
   return re.sub(r"^\[\[([^\[\]|]*)\]\]$", r"\1", text)
 
+def escape_newline(text):
+  text = re.sub(r"\\([\\n])", lambda m: r"\\\\" if m.group(1) == "\\" else r"\\n", text)
+  return text.replace("\n", r"\n")
+
+def undo_escape_newline(text):
+  return re.sub(r"\\([\\n])", lambda m: "\\" if m.group(1) == "\\" else "\n", text)
+
 def msg(text):
   print(text)
 
