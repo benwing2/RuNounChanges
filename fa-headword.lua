@@ -164,6 +164,13 @@ pos_functions["adjectives"] = {
 		local infls = {}
 		for i, form in ipairs(args.comp) do
 			if form == "+" then
+				for _, headobj in ipairs(data.heads) do
+					local term = headobj.term .. export.ZWNJ(headobj.term) .. "ت" .. A .. "ر"
+					local tr = 
+					translit = data.tr and data.tr .. "-tar" or nil,
+					accel = {form = "compararative"},
+
+				table.ins
 
 			table.insert(infls, {term = form, translit = args.comptr[i]})
 		end
