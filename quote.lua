@@ -757,7 +757,7 @@ function export.source(args)
 					add(", ")
 				end
 				-- If not first author, output a semicolon to separate from preceding authors.
-				add(i == 1 and " " or ", ")
+				add(i == 1 and " " or SEMICOLON_SPACE)
 				local function make_author_with_url(txt, authorlink)
 					if authorlink then
 						return "[[w:" .. authorlink .. "|" .. txt .. "]]"
@@ -809,7 +809,7 @@ function export.source(args)
 			-- as a result of the 1, maxind loop above.
 			get_full_paramname = make_get_full_paramname("")
 			if args.coauthors then
-				add(", " .. parse_and_format_text("coauthors"))
+				add(SEMICOLON_SPACE .. parse_and_format_text("coauthors"))
 			end
 			if args.quotee then
 				add(", quoting " .. parse_and_format_text("quotee"))
