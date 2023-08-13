@@ -532,9 +532,9 @@ function export.parse_inline_modifiers(arg, props)
 				parse_err("Modifier " .. group[k] .. " lacks a prefix, should begin with one of " ..
 					require("Module:table").serialCommaJoin(valid_prefixes, {dontTag = true}))
 			end
+			local prefix_parse_err =
+				export.make_parse_err(("modifier prefix '%s' in %s in %s"):format(prefix, group[k], get_arg_gloss()))
 			if props.param_mods[prefix] then
-				local prefix_parse_err =
-					export.make_parse_err(("modifier prefix '%s' in %s in %s"):format(prefix, group[k], get_arg_gloss()))
 				local key = props.param_mods[prefix].item_dest or prefix
 				local convert = props.param_mods[prefix].convert
 				local converted
