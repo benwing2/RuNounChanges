@@ -757,7 +757,7 @@ function export.source(args)
 					add(", ")
 				end
 				-- If not first author, output a semicolon to separate from preceding authors.
-				add(i == 1 and " " or SEMICOLON_SPACE)
+				add(i == 1 and " " or ", ")
 				local function make_author_with_url(txt, authorlink)
 					if authorlink then
 						return "[[w:" .. authorlink .. "|" .. txt .. "]]"
@@ -775,11 +775,11 @@ function export.source(args)
 					end
 					add(format_text(authorobj))
 				else
-					-- Author separated into last name, first name. We don't currently support non-Latin-script
+					-- Author separated into first name + last name. We don't currently support non-Latin-script
 					-- authors separated this way and probably never will.
 					local first = a("first")
 					if first then
-						author = last .. ", " .. first
+						author = first .. " " .. last
 					else
 						author = last
 					end
@@ -789,7 +789,7 @@ function export.source(args)
 					if last_gloss then
 						local first_gloss = a("trans-first")
 						if first_gloss then
-							author_gloss = last_gloss .. ", " .. first_gloss
+							author_gloss = first_gloss .. " " .. last_gloss
 						else
 							author_gloss = last_gloss
 						end
@@ -809,7 +809,7 @@ function export.source(args)
 			-- as a result of the 1, maxind loop above.
 			get_full_paramname = make_get_full_paramname("")
 			if args.coauthors then
-				add(SEMICOLON_SPACE .. parse_and_format_text("coauthors"))
+				add(", " .. parse_and_format_text("coauthors"))
 			end
 			if args.quotee then
 				add(", quoting " .. parse_and_format_text("quotee"))
@@ -1210,6 +1210,7 @@ function export.source(args)
 		add_identifier({"OCLC", "oclc"}, "[https://www.worldcat.org/title/", " →OCLC]")
 		add_identifier({"OL", "ol"}, "[https://openlibrary.org/works/OL", "/ →OL]")
 		add_identifier({"PMID", "pmid"}, "[https://www.ncbi.nlm.nih.gov/pubmed/", " →PMID]")
+		add_identifier({"PMCID", "pmcid"}, "[https://www.ncbi.nlm.nih.gov/pmc/articles/", "/ →PMCID]")
 		add_identifier({"SSRN", "ssrn"}, "[https://ssrn.com/abstract=", " →SSRN]")
 		local id = a("id")
 		if id then
@@ -1324,10 +1325,10 @@ function export.source(args)
 		else
 			local last = args["2ndlast"]
 			local first = args["2ndfirst"]
-			-- Author separated into last name, first name. We don't currently support non-Latin-script
+			-- Author separated into first name + last name. We don't currently support non-Latin-script
 			-- authors separated this way and probably never will.
 			if first then
-				author = last .. ", " .. first
+				author = first .. " " .. last
 			else
 				author = last
 			end
