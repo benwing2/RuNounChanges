@@ -419,6 +419,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 			-- restriction to the outer level is to allow generated HTML inside of e.g. qualifier tags, such as
 			-- foo<q:similar to {{m|fr|bar}}>.
 			if term and term:find("<") and not term:find("<[a-z]*[^a-z:>]") then
+				-- FIXME: We should fix parse_inline_modifiers() to support the use cases below and use it.
 				if not put then
 					put = require("Module:parse utilities")
 				end
