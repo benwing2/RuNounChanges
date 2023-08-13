@@ -86,14 +86,12 @@ def push_one_manual_change(pagetitle, index, text, curr_template, repl_template)
   changelog = ""
   if newtext == text:
     if not found_repl_template:
-      pagemsg("WARNING: Unable to locate current template: %s"
-          % curr_template)
+      pagemsg("WARNING: Unable to locate current template: %s (would replace with %s)" % (curr_template, repl_template))
     else:
       pagemsg("Replacement template already found, taking no action")
   else:
     if found_repl_template:
-      pagemsg("WARNING: Made change, but replacement template %s already present!" %
-          repl_template)
+      pagemsg("WARNING: Made change, but replacement template %s already present!" % repl_template)
     repl_curr_diff = len(repl_template) - len(curr_template)
     newtext_text_diff = len(newtext) - len(text)
     if newtext_text_diff == repl_curr_diff:
@@ -119,7 +117,7 @@ def push_one_manual_change(pagetitle, index, text, curr_template, repl_template)
 def undo_slash_newline(txt):
   if not args.undo_slash_newline:
     return txt
-  return txt.replace(r"\n", "\n")
+  return blib.undo_escape_newline(txt)
 
 def push_manual_changes(save, verbose, diff, template_changes, start, end):
   for index, (pagename, repl_template, curr_template) in blib.iter_items(template_changes, get_name = lambda x: x[0]):
