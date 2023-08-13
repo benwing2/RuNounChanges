@@ -497,6 +497,73 @@ local quote_book_mods = {
 }
 
 
+-- Format a param spec as found in the first element of a param description.
+local function format_param_spec(paramspec)
+	if type(paramspec) ~= "table" then
+		paramspec = {paramspec}
+	end
+
+	local function format_one_param(param)
+		if paramspec.boolean then
+			return ("<code>|%s=1</code>"):format(param)
+		else
+			return ("<code>|%s=</code>"):format(param)
+		end
+	end
+
+	local function format_all_params_no_list(suffix)
+		local formatted = {}
+		for _, p in ipairs(paramspec) do
+			table.insert(formatted, format_one_param(p .. suffix))
+		end
+		return m_table.serialCommaJoin(formatted, {conj = paramspec.useand and "and" or "or"})
+	end
+
+	local function format_all_params()
+		if paramspec.list then
+			local formatted = {}
+			table.insert(formatted, format_all_params_no_list(""))
+			table.insert(formatted, format_all_params_no_list("2"))
+			table.insert(formatted, format_all_params_no_list("3"))
+			table.insert(formatted, "etc.")
+			return table.concat(formatted, "; ")
+		else
+			return format_all_params_no_list("")
+		end
+	end
+
+	local formatted_params
+	if paramspec.literal then
+		formatted_params = paramspec[1]
+	else
+		formatted_params = format_all_params()
+	end
+
+	local reqtext = paramspec.required and " '''(required)'''" or ""
+	return formatted_params .. reqtext
+end
+
+
+local function format_parameter(paramdesc)
+	local formatted_param = format_param_spec(paramdesc[1])
+	local desc = paramdesc[2]
+	-- Join continuation lines. Do it twice in case of a single-character line (admittedly rare).
+	desc = rsub(desc, "([^\n])\n[ \t]*([^ \t\n#*])", "%1 %2")
+	desc = rsub(desc, "([^\n])\n[ \t]*([^ \t\n#*])", "%1 %2")
+	-- Remove whitespace before list elements.
+	desc = rsub(desc, "\n[ \t]*([#*])", "\n%1")
+	desc = rsub(desc, "^[ \t]*([#*])", "%1")
+
+
+
+
+local function display_parameter_group(group)
+	local parts = {}
+	local function ins(txt)
+		table.insert(parts, txt)
+	end
+end
+
 local function template_name(preserve_lang_code)
 	-- Fetch the template name, minus the '/documentation' suffix that may follow
 	-- and without any language-specific prefixes (e.g. 'el-' or 'bsl-ine-pro-')
@@ -576,26 +643,6 @@ This template is '''not''' meant to be used in etymology sections.]===])
 Note that users can customize how the output of this template displays by modifying their monobook.css files. See [[:Category:Form-of templates|“Form of” templates]] for details.
 ]===])
 	return table.concat(parts)
-end
-
-
-local function param(params, list, required)
-	local paramparts = {}
-	if type(params) ~= "table" then
-		params = {params}
-	end
-	for _, p in ipairs(params) do
-		local listparts = {}
-		table.insert(listparts, "<code>|" .. p .. "=</code>")
-		if list then
-			table.insert(listparts, ", <code>|" .. p .. "2=</code>")
-			table.insert(listparts, ", <code>|" .. p .. "3=</code>")
-			table.insert(listparts, ", etc.")
-		end
-		table.insert(paramparts, table.concat(listparts))
-	end
-	local reqtext = required and "'''(required)'''" or "''(optional)''"
-	return table.concat(paramparts, " or ") .. " " .. reqtext
 end
 
 
