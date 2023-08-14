@@ -1633,9 +1633,10 @@ def parse_balanced_segment_run(segment_run, op, cl):
   return text_and_specs
 
 
-# Like parse_balanced_segment_run() but accepts multiple sets of delimiters. For example,
+# Like parse_balanced_segment_run() but accepts multiple sets of delimiters, and individual delimiters are specified
+# via regexes. For example,
 #
-# parse_multi_delimiter_balanced_segment_run("foo[bar(baz[bat])], quux<glorp>", [("[", "]"), ("(", ")"), ("<", ">")]) =
+# parse_multi_delimiter_balanced_segment_run("foo[bar(baz[bat])], quux<glorp>", [(r"\[", r"\]"), (r"\(", r"\)"), ("<", ">")]) =
 #   ["foo", "[bar(baz[bat])]", ", quux", "<glorp>", ""]
 def parse_multi_delimiter_balanced_segment_run(segment_run, delimiter_pairs):
   open_to_close_map = {}
