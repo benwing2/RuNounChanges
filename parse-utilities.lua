@@ -97,38 +97,73 @@ end
 ]=]
 
 
--- Like parse_balanced_segment_run() but accepts multiple sets of delimiters. For example,
---
--- parse_multi_delimiter_balanced_segment_run("foo[bar(baz[bat])], quux<glorp>", {{"[", "]"}, {"(", ")"}, {"<", ">"}}) =
---		{"foo", "[bar(baz[bat])]", ", quux", "<glorp>", ""}.
-function export.parse_multi_delimiter_balanced_segment_run(segment_run, delimiter_pairs)
+--[=[
+Like parse_balanced_segment_run() but accepts multiple sets of delimiters. For example,
+
+parse_multi_delimiter_balanced_segment_run("foo[bar(baz[bat])], quux<glorp>", {{"[", "]"}, {"(", ")"}, {"<", ">"}}) =
+	{"foo", "[bar(baz[bat])]", ", quux", "<glorp>", ""}.
+
+Each element in the list of delimiter pairs is a string specifying an equivalence class of possible delimiter
+characters. You can use this, for example, to allow either "[" or "&#91;" to be treated equivalently, with either one
+closed by either "]" or "&#93;". To do this, first replace "&#91;" and "&#93;" with single Unicode characters such as
+U+FFF0 and U+FFF1, and then specify a two-character string containing "[" and U+FFF0 as the opening delimiter, and a
+two-character string containing "]" and U+FFF1 as the corresponding closing delimiter.
+
+If `no_error_on_unmatched` is given and an error is found during parsing, a string is returned containing the error
+message instead of throwing an error.
+]=]
+function export.parse_multi_delimiter_balanced_segment_run(segment_run, delimiter_pairs, no_error_on_unmatched)
+	local escaped_delimiter_pairs = {}
 	local open_to_close_map = {}
 	local open_close_items = {}
+	local open_items = {}
 	for _, open_close in ipairs(delimiter_pairs) do
 		local open, close = unpack(open_close)
+		open = rsub(open, "([%[%]%%%%-])", "%%%1")
+		close = rsub(close, "([%[%]%%%%-])", "%%%1")
+		table.insert(open_close_items, open)
+		table.insert(open_close_items, close)
+		table.insert(open_items, open)
+		open = "[" .. open .. "]"
+		close = "[" .. close .. "]"
 		open_to_close_map[open] = close
-		table.insert(open_close_items, "%" .. open)
-		table.insert(open_close_items, "%" .. close)
+		table.insert(escaped_delimiter_pairs, {open, close})
 	end
 	local open_close_pattern = "([" .. table.concat(open_close_items) .. "])"
+	local open_pattern = "([" .. table.concat(open_items) .. "])"
 	local break_on_open_close = m_string_utilities.capturing_split(segment_run, open_close_pattern)
 	local text_and_specs = {}
 	local level = 0
 	local seg_group = {}
 	local open_at_level_zero
+
 	for i, seg in ipairs(break_on_open_close) do
 		if i % 2 == 0 then
 			table.insert(seg_group, seg)
 			if level == 0 then
-				if not open_to_close_map[seg] then
-					error("Unmatched " .. seg .. " sign: '" .. segment_run .. "'")
+				if not rfind(seg, open_pattern) then
+					local errmsg = "Unmatched close sign " .. seg .. ": '" .. segment_run .. "'"
+					if no_error_on_unmatched then
+						return errmsg
+					else
+						error(errmsg)
+					end
 				end
 				assert(open_at_level_zero == nil)
-				open_at_level_zero = seg
+				for _, open_close in ipairs(escaped_delimiter_pairs) do
+					local open, close = unpack(open_close)
+					if rfind(seg, open) then
+						open_at_level_zero = open
+			            break
+					end
+				end
+				if open_at_level_zero == nil then
+					error(("Internal error: Segment %s didn't match any open regex"):format(seg))
+				end
 				level = level + 1
-			elseif seg == open_at_level_zero then
+			elseif rfind(seg, open_at_level_zero) then
 				level = level + 1
-			elseif seg == open_to_close_map[open_at_level_zero] then
+			elseif rfind(seg, open_to_close_map[open_at_level_zero]) then
 				level = level - 1
 				assert(level >= 0)
 				if level == 0 then
@@ -144,7 +179,12 @@ function export.parse_multi_delimiter_balanced_segment_run(segment_run, delimite
 		end
 	end
 	if level > 0 then
-		error("Unmatched " .. open_at_level_zero .. " sign: '" .. segment_run .. "'")
+		local errmsg = "Unmatched open sign " .. open_at_level_zero .. ": '" .. segment_run .. "'"
+		if no_error_on_unmatched then
+			return errmsg
+		else
+			error(errmsg)
+		end
 	end
 	return text_and_specs
 end
