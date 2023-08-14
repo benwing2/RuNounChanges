@@ -10,9 +10,6 @@
 
 local export = {}
 
-local test_new_code = false
-local test_new_code_with_errors = false
-
 -- Named constants for all modules used, to make it easier to swap out sandbox versions.
 local check_isxn_module = "Module:check isxn"
 local debug_track_module = "Module:debug/track"
@@ -35,6 +32,7 @@ local rsubn = mw.ustring.gsub
 local rmatch = mw.ustring.match
 local rfind = mw.ustring.find
 local rsplit = mw.text.split
+local rgsplit = mw.text.gsplit
 local ulen = mw.ustring.len
 local usub = mw.ustring.sub
 
@@ -349,33 +347,76 @@ local trackparams = {
 }
 
 -- Clone and combine frame's and parent's args while also assigning nil to empty strings.
-local function clone_args(direct_args, parent_args, include_direct, include_parent)
+local function clone_args(direct_args, parent_args)
 	local args = {}
 
-	-- If both include_parent and include_direct are given, processing the former must come first so that direct args
-	-- override parent args. Note that if a direct arg is specified but is blank, it will still override the parent
-	-- arg (with nil).
-	if include_parent then
-		for pname, param in pairs(parent_args) do
-			if trackparams[pname] then
-				track(pname)
-			end
-			args[pname] = ine(param)
+	-- Processing parent args must come first so that direct args override parent args. Note that if a direct arg is
+	-- specified but is blank, it will still override the parent arg (with nil).
+	for pname, param in pairs(parent_args) do
+		if trackparams[pname] then
+			track(pname)
 		end
+		args[pname] = ine(param)
 	end
-	if include_direct then
-		for pname, param in pairs(direct_args) do
-			args[pname] = ine(param)
-		end
+	for pname, param in pairs(direct_args) do
+		args[pname] = ine(param)
 	end
-	return args
-end
 
-local function check_url(param, value)
-	if value and value:find(" ") and not value:find("%[") then
-		error(("URL not allowed to contain a space, but saw %s=%s"):format(param, value))
+	-- Process aliases. The value of `alias` is a list of semicolon-separated specs, each of which is of the form
+	-- DEST:SOURCE,SOURCE,... where DEST is the canonical name of a parameter and SOURCE refers to an alias. Whitespace
+	-- is allowed between all delimiters. The order of aliases may be important. Ffor example, for {{quote-journal}},
+	-- title= contains the article name and is an alias of underlying chapter=, while journal= or work= contains the
+	-- journal name and is an alias of underlying title=. As a result, the title -> chapter alias must be specified
+	-- before the journal/work -> title alias.
+	--
+	-- Whenever we copy a value from argument SOURCE to argument DEST, we record an entry for the pair in alias_map, so
+	-- that when we would display an error message about DEST, we display SOURCE instead.
+	local aliases = ine(direct_args.alias)
+	local alias_map = {}
+	if aliases then
+		-- Allow and discard a trailing semicolon, to make managing multiple aliases easier.
+		aliases = rsub(aliases, "%s*;$", "")
+		for alias_spec in rgsplit(aliases, "%s*;%s*") do
+			local alias_spec_parts = rsplit(alias_spec, "%s*:%s*")
+			if #alias_spec_parts ~= 2 then
+				error(("Alias spec '%s' should have one colon in it"):format(alias_spec))
+			end
+			local dest, sources = unpack(alias_spec_parts)
+			sources = rsplit(sources, "%s*,%s*")
+			saw_source = nil
+			for _, source in ipairs(sources) do
+				if args[source] then
+					if saw_source == nil then
+						saw_source = source
+					else
+						error(("|%s= and |%s= are aliases; cannot specify a value for both"):format(saw_source, source))
+					end
+				end
+			end
+			if saw_source then
+				if args[dest] then
+					error(("|%s= is an alias of |%s=; cannot specify a value for both"):format(saw_source, dest))
+				end
+				args[dest] = args[saw_source]
+				-- Wipe out the original after copying. This important in case of a param that has general significance
+				-- but has been redefined (e.g. {{quote-av}} redefines number= for the episode number, and
+				-- {{quote-journal}} redefines title= for the chapter= (article). It's also important once we implement
+				-- unhandled parameter checking.
+				args[saw_source] = nil
+				alias_map[dest] = saw_source
+			end
+		end
 	end
-	return value
+
+	-- Process ignores. The value of `ignore` is a comma-separated list of parameter names to ignore.
+	local ignores = ine(direct_args.ignore)
+	if ignores then
+		for ignore in rgsplit(ignores, "%s*,%s*") do
+			args[ignore] = nil
+		end
+	end
+
+	return args, alias_map
 end
 
 local function format_date_with_code(code, timestamp)
@@ -461,6 +502,8 @@ end
 -- source(). These are used to fetch parameters and get their full names. Note that this may cause all arguments to
 -- have an index added to them (|date2=, |year2=, |month2=, etc.).
 --
+-- `alias_map` is as in source() and is used to map canonical arguments to their aliases when aliases were used.
+--
 -- If `bold_year` is given, displayed years are boldfaced unless boldface is present in the parameter value.
 --
 -- If `maintenance_line_no_date` is specified, it should be a string that will be returned if no date is found (i.e.
@@ -470,7 +513,8 @@ end
 -- Returns two values: the formatted date and a boolean indicating whether to add a maintenance category
 -- [[:Category:Requests for date in LANG entries]]. The return value can be nil if `maintenance_line_no_date` is not
 -- given (in which case the scond return value will always be nil).
-local function format_date_args(a, get_full_paramname, parampref, paramsuf, bold_year, maintenance_line_no_date)
+local function format_date_args(a, get_full_paramname, alias_map, parampref, paramsuf, bold_year,
+	maintenance_line_no_date)
 	local output = {}
 
 	parampref = parampref or ""
@@ -479,7 +523,8 @@ local function format_date_args(a, get_full_paramname, parampref, paramsuf, bold
 		return a(parampref .. param .. paramsuf)
 	end
 	local function pname(param)
-		return get_full_paramname(parampref .. param .. paramsuf)
+		local fullname = get_full_paramname(parampref .. param .. paramsuf)
+		return alias_map[fullname] or fullname
 	end
 
 	local function ins(text)
@@ -632,7 +677,7 @@ end
 
 -- Display the source line of the quote, above the actual quote text. This contains the majority of the logic of this
 -- module (formerly contained in {{quote-meta/source}}).
-function export.source(args)
+function export.source(args, alias_map)
 	local tracking_categories = {}
 
 	local argslang = args.lang or args[1]
@@ -649,6 +694,12 @@ function export.source(args)
 		if NAMESPACE ~= "Template" and not require(usex_templates_module).page_should_be_ignored(FULLPAGENAME) then
 			require(languages_module).err(nil, 1)
 		end
+	end
+
+	-- Given a canonical param, convert it to the original parameter specified by the user (which may have been an
+	-- alias).
+	local function alias(param)
+		return alias_map[param] or param
 	end
 
 	local output = {}
@@ -674,7 +725,9 @@ function export.source(args)
 	-- wrapper functions that access params and define them only oncec.
 	local get_full_paramname
 	-- Return two values: the value of a parameter given the base param name (which may have a numeric index added),
-	-- and the actual parameter name. The base parameter can be a list of such base params, which are checked in turn.
+	-- and the parameter name from which the value was fetched (which may be an alias, i.e. you can't necessarily fetch
+	-- the parameter value from args[] given this name). The base parameter can be a list of such base params, which
+	-- are checked in turn.
 	local function a_with_name(param)
 		if type(param) == "table" then
 			for _, par in ipairs(param) do
@@ -686,7 +739,7 @@ function export.source(args)
 			return nil
 		end
 		local fullname = get_full_paramname(param)
-		return args[fullname], fullname
+		return args[fullname], alias(fullname)
 	end
 	-- Fetch the value of a parameter given the base param name (which may have a numeric index added). The base
 	-- parameter can be a list of such base params, which are checked in turn.
@@ -694,9 +747,17 @@ function export.source(args)
 		return (a_with_name(param))
 	end
 
+	-- Identical to a_with_name(param) except that it verifies that no space is present. Should be used for URL's.
+	local function aurl_with_name(param)
+		local value, fullname = a_with_name(param)
+		if value and value:find(" ") and not value:find("%[") then
+			error(("URL not allowed to contain a space, but saw |%s=%s"):format(fullname, value))
+		end
+		return value, fullname
+	end
 	-- Identical to a(param) except that it verifies that no space is present. Should be used for URL's.
 	local function aurl(param)
-		return check_url(param, a(param))
+		return (aurl_with_name(param))
 	end
 
 	-- Convenience function to fetch a parameter that may be in a foreign language or text (and may consequently have
@@ -722,12 +783,12 @@ function export.source(args)
 	-- Set this now so a() works just below.
 	get_full_paramname = make_get_full_paramname("")
 
-	local formatted_date, need_date = format_date_args(a, get_full_paramname, nil, nil, "bold year",
+	local formatted_date, need_date = format_date_args(a, get_full_paramname, alias_map, nil, nil, "bold year",
 		"Can we [[:Category:Requests for date|date]] this quote?")
 	add(formatted_date)
 
 	-- Fetch origdate=/origyear=/origmonth= and format appropriately.
-	local formatted_origdate = format_date_args(a, get_full_paramname, "orig")
+	local formatted_origdate = format_date_args(a, get_full_paramname, alias_map, "orig")
 	if formatted_origdate then
 		add(SPACE_LBRAC .. formatted_origdate .. RBRAC)
 	end
@@ -938,10 +999,10 @@ function export.source(args)
 		end
 
 		local tlr = parse_and_format_text({"tlr", "translator", "translators"})
-		local editor, editorname = parse_and_format_text_with_name("editor")
-		local editors, editorsname = parse_and_format_text_with_name("editors")
+		local editor, editor_param = parse_and_format_text_with_name("editor")
+		local editors, editors_param = parse_and_format_text_with_name("editors")
 		if editor and editors then
-			error(("Can't specify both %s= and %s="):format(editorname, editorsname))
+			error(("Can't specify both |%s= and |%s="):format(editor_param, editors_param))
 		end
 		if a("mainauthor") then
 			add(parse_and_format_text("mainauthor") .. ((tlr or editor or editors) and SEMICOLON_SPACE or ","))
@@ -989,13 +1050,15 @@ function export.source(args)
 			end
 		end
 
-		if aurl("archiveurl") or aurl("url") then
-			add("&lrm;<sup>[" .. (aurl("archiveurl") or aurl("url")) .. "]</sup>")
+		local url = aurl("archiveurl") or aurl("url")
+		if url then
+			add("&lrm;<sup>[" .. url .. "]</sup>")
 			sep = ", "
 		end
 
-		if aurl("urls") then
-			add("&lrm;<sup>" .. aurl("urls") .. "</sup>")
+		local urls = aurl("urls")
+		if urls then
+			add("&lrm;<sup>" .. urls .. "</sup>")
 			sep = ", "
 		end
 
@@ -1022,14 +1085,24 @@ function export.source(args)
 		-- it is linked to the specified URL. Note that any of the specs can be foreign text, e.g. foreign numbers
 		-- (including with optional inline modifiers), and such text is handled appropriately.
 		local function format_numeric_param(paramname, singular_desc)
-			local sgval, sgname = a_with_name(paramname)
+			local sgval, sg_param = a_with_name(paramname)
 			local sgobj = parse_text_with_lang(sgval, paramname)
-			local plval, plname = a_with_name(paramname .. "s")
+			local plval, pl_param = a_with_name(paramname .. "s")
 			local plobj = parse_text_with_lang(plval, paramname .. "s")
-			local plainval, plainname = parse_and_format_text_with_name(paramname .. "_plain")
+			local plainval, plain_param = parse_and_format_text_with_name(paramname .. "_plain")
 			local howmany = (sgval and 1 or 0) + (plval and 1 or 0) + (plainval and 1 or 0)
 			if howmany > 1 then
-				error(("Can't specify more than one of %s"):format(require(table_module).sparseConcat({sgname, plname, plainname}, ", ")))
+				local params_specified = {}
+				local function insparam(param)
+					if param then
+						table.insert(params_specified, ("|%s="):format(param))
+					end
+				end
+				insparam(sg_param)
+				insparam(pl_param)
+				insparam(plain_param)
+				error(("Can't specify more than one of %s"):format(
+					require(table_module).serialCommaJoin(params_specified, {dontTag = true})))
 			end
 			if howmany == 0 then
 				return nil
@@ -1164,7 +1237,7 @@ function export.source(args)
 		end
 
 		-- Fetch date_published=/year_published=/month_published= and format appropriately.
-		local formatted_date_published = format_date_args(a, get_full_paramname, "", "_published")
+		local formatted_date_published = format_date_args(a, get_full_paramname, alias_map, "", "_published")
 		local platform = parse_and_format_text("platform")
 		if formatted_date_published then
 			add_with_sep("published " .. formatted_date_published .. (platform and " via " .. platform or ""))
@@ -1173,7 +1246,7 @@ function export.source(args)
 		end
 
 		if ind ~= "" and has_newversion() then
-			local formatted_new_date, this_need_date = format_date_args(a, get_full_paramname, "", "", nil, 
+			local formatted_new_date, this_need_date = format_date_args(a, get_full_paramname, alias_map, "", "", nil, 
 				"Please provide a date or year")
 			need_date = need_date or this_need_date
 			add_with_sep(formatted_new_date)
@@ -1217,28 +1290,32 @@ function export.source(args)
 			small(id)
 		end
 
-		if aurl("archiveurl") then
+		local archiveurl, archiveurl_param = aurl_with_name("archiveurl")
+		if archiveurl then
 			add(", archived from ")
-			local url = aurl("url")
+			local url, url_param = aurl_with_name("url")
 			if not url then
 				-- attempt to infer original URL from archive URL; this works at
 				-- least for Wayback Machine (web.archive.org) URL's
-				url = rmatch(aurl("archiveurl"), "/(https?:.*)$")
+				url = rmatch(archiveurl, "/(https?:.*)$")
 				if not url then
-					error("When archiveurl" .. ind .. "= is specified, url" .. ind .. "= must also be included")
+					error(("When |%s= is specified, |%s= must also be included"):format(archiveurl_param, url_param))
 				end
 			end
 			add("[" .. url .. " the original] on ")
-			if a("archivedate") then
-				add(format_date(a("archivedate")))
-			elseif (string.sub(a("archiveurl"), 1, 28) == "https://web.archive.org/web/") then
+			local archivedate, archivedate_param = aurl_with_name("archivedate")
+			if archivedate then
+				add(format_date(archivedate))
+			elseif (string.sub(archiveurl, 1, 28) == "https://web.archive.org/web/") then
 				-- If the archive is from the Wayback Machine, then it already contains the date
 				-- Get the date and format into ISO 8601
-				local wayback_date = string.sub(a("archiveurl"), 29, 29+7)
-				wayback_date = string.sub(wayback_date, 1, 4) .. "-" .. string.sub(wayback_date, 5, 6) .. "-" .. string.sub(wayback_date, 7, 8)
+				local wayback_date = string.sub(archiveurl, 29, 29+7)
+				wayback_date = string.sub(wayback_date, 1, 4) .. "-" .. string.sub(wayback_date, 5, 6) .. "-" ..
+					string.sub(wayback_date, 7, 8)
 				add(format_date(wayback_date))
 			else
-				error("When archiveurl" .. ind .. "= is specified, archivedate" .. ind .. "= must also be included")
+				error(("When |%s= is specified, |%s= must also be included"):format(
+					archiveurl_param, archivedate_param))
 			end
 		end
 		if a("accessdate") then
@@ -1397,32 +1474,8 @@ end
 -- FIXME: Remove this in favor of using quote_t.
 function export.source_t(frame)
 	local parent_args = frame:getParent().args
-	local args = clone_args(frame.args, parent_args, "include direct", "include parent")
-	local newret = export.source(args)
-	if test_new_code then
-		local oldret = frame:expandTemplate{title="quote-meta/source", args=args}
-		local function canon(text)
-			text = rsub(rsub(text, "&#32;", " "), " ", "{SPACE}")
-			text = rsub(rsub(text, "%[", "{LBRAC}"), "%]", "{RBRAC}")
-			text = rsub(text, "`UNIQ%-%-nowiki%-[0-9A-F]+%-QINU`", "`UNIQ--nowiki-{REPLACED}-QINU`")
-			return text
-		end
-		local canon_newret = canon(newret)
-		local canon_oldret = canon(oldret)
-		if canon_newret ~= canon_oldret then
-			track("quote-source/diff")
-			if test_new_code_with_errors then
-				error("different: <<" .. canon_oldret .. ">> vs <<" .. canon_newret .. ">>")
-			end
-		else
-			track("quote-source/same")
-			if test_new_code_with_errors then
-				error("same")
-			end
-		end
-		return oldret
-	end
-	return newret
+	local args, alias_map = clone_args(frame.args, parent_args)
+	return export.source(args, alias_map)
 end
 
 
@@ -1430,7 +1483,7 @@ end
 -- interface for {{quote-*}} templates.
 function export.quote_t(frame)
 	local parent_args = frame:getParent().args
-	local args = clone_args(frame.args, parent_args, "include direct", "include parent")
+	local args, alias_map = clone_args(frame.args, parent_args)
 	local deprecated = args.lang
 
 	local function yesno(val)
