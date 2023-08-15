@@ -22,6 +22,7 @@ local parse_utilities_module = "Module:parse utilities"
 local roman_numerals_module = "Module:roman numerals"
 local script_utilities_module = "Module:script utilities"
 local scripts_module = "Module:scripts"
+local string_utilities_module = "Module:string utilities"
 local table_module = "Module:table"
 local usex_module = "Module:usex"
 local usex_templates_module = "Module:usex/templates"
@@ -346,7 +347,7 @@ local trackparams = {
 	["lyrics-translator"] = true,
 }
 
--- Clone and combine frame's and parent's args while also assigning nil to empty strings.
+-- Clone and combine frame's and parent's args while also assigning nil to empty strings. Handle aliases and ignores.
 local function clone_args(direct_args, parent_args)
 	local args = {}
 
@@ -358,8 +359,16 @@ local function clone_args(direct_args, parent_args)
 		end
 		args[pname] = ine(param)
 	end
-	for pname, param in pairs(direct_args) do
-		args[pname] = ine(param)
+
+	-- Process ignores. The value of `ignore` is a comma-separated list of parameter names to ignore (erase). We need to
+	-- do this before aliases due to {{quote-song}}, which sets chapter= to the value of title= in the direct params and
+	-- sets title= to the value of album= using an alias. If we do the ignores after aliases, we get an error during alias
+	-- processing, saying that title= and its alias album= are both present.
+	local ignores = ine(direct_args.ignore)
+	if ignores then
+		for ignore in rgsplit(ignores, "%s*,%s*") do
+			args[ignore] = nil
+		end
 	end
 
 	-- Process aliases. The value of `alias` is a list of semicolon-separated specs, each of which is of the form
@@ -371,6 +380,9 @@ local function clone_args(direct_args, parent_args)
 	--
 	-- Whenever we copy a value from argument SOURCE to argument DEST, we record an entry for the pair in alias_map, so
 	-- that when we would display an error message about DEST, we display SOURCE instead.
+	--
+	-- Do alias processing (and ignore and error_if processing) before processing direct_args so that e.g. we can set up
+	-- an alias of title -> chapter and then set title= to something else in the direct args ({{quote-hansard}} does this).
 	local aliases = ine(direct_args.alias)
 	local alias_map = {}
 	if aliases then
@@ -408,12 +420,19 @@ local function clone_args(direct_args, parent_args)
 		end
 	end
 
-	-- Process ignores. The value of `ignore` is a comma-separated list of parameter names to ignore.
-	local ignores = ine(direct_args.ignore)
-	if ignores then
-		for ignore in rgsplit(ignores, "%s*,%s*") do
-			args[ignore] = nil
+	-- Process error_if. The value of `error_if` is a comma-separated list of parameter names to throw an error if seen
+	-- in parent_args (they are params we overwrite in the direct args).
+	local error_ifs = ine(direct_args.error_if)
+	if error_ifs then
+		for error_if in rgsplit(error_ifs, "%s*,%s*") do
+			if ine(parent_args[error_if]) then
+				error(("Cannot specify a value |%s=%s as it would be overwritten or ignored"):format(error_if, ine(parent_args[error_if])))
+			end
 		end
+	end
+
+	for pname, param in pairs(direct_args) do
+		args[pname] = ine(param)
 	end
 
 	return args, alias_map
@@ -672,6 +691,16 @@ end
 
 local function tag_with_cite(txt)
 	return "<cite>" .. txt .. "</cite>"
+end
+
+
+local function pluralize(txt)
+	-- Try to shortcut loading [[Module:string utilities]].
+	if txt:find("[sxzhy%]]$") then
+		return require(string_utilities_module).pluralize(txt)
+	else
+		return txt .. "s"
+	end
 end
 
 
@@ -1087,8 +1116,9 @@ function export.source(args, alias_map)
 		local function format_numeric_param(paramname, singular_desc)
 			local sgval, sg_param = a_with_name(paramname)
 			local sgobj = parse_text_with_lang(sgval, paramname)
-			local plval, pl_param = a_with_name(paramname .. "s")
-			local plobj = parse_text_with_lang(plval, paramname .. "s")
+			local plparamname = paramname .. "s"
+			local plval, pl_param = a_with_name(plparamname)
+			local plobj = parse_text_with_lang(plval, plparamname)
 			local plainval, plain_param = parse_and_format_text_with_name(paramname .. "_plain")
 			local howmany = (sgval and 1 or 0) + (plval and 1 or 0) + (plainval and 1 or 0)
 			if howmany > 1 then
@@ -1116,11 +1146,14 @@ function export.source(args, alias_map)
 				if val == "unnumbered" then
 					numspec = "unnumbered " .. singular_desc
 				else
-					local plural_desc = singular_desc .. "s"
+					local function get_plural_desc()
+						-- Only call when needed to potentially avoid a module load.
+						return pluralize(singular_desc)
+					end
 					local desc
 					if val:find("^!") then
 						val = val:gsub("^!", "")
-						desc = sgval and singular_desc or plural_desc
+						desc = sgval and singular_desc or get_plural_desc()
 					else
 						local check_val = val
 						if check_val:find("%[") then
@@ -1139,7 +1172,7 @@ function export.source(args, alias_map)
 						-- separated by a hyphen or by comma a followed by a space (to avoid firing on thousands separators).
 						if rfind(check_val, "[–—]") or check_val:find(" and ") or rfind(check_val, "[0-9]+[^ ]* *%- *[0-9]+")
 							or rfind(check_val, "[0-9]+[^ ]* *, +[0-9]+")  then
-							desc = plural_desc
+							desc = get_plural_desc()
 						else
 							desc = singular_desc
 						end
@@ -1158,14 +1191,20 @@ function export.source(args, alias_map)
 			end
 		end
 
-		local volume = format_numeric_param("volume", "volume")
+		local volume = format_numeric_param("volume", a("volume_prefix") or "volume")
 		if volume then
 			add_with_sep(volume)
 		end
 
-		local issue = format_numeric_param("issue", "number")
+		local issue = format_numeric_param("issue", a("issue_prefix") or "number")
 		if issue then
 			add_with_sep(issue)
+		end
+
+		-- number= is an alias for issue= (except in {{quote-av}}, where it is the episode number)
+		local number = format_numeric_param("number", a("number_prefix") or "number")
+		if number then
+			add_with_sep(number)
 		end
 
 		-- This function handles the display of annotations like "(in French)" or "(in German; quote in Nauruan)". It
@@ -1303,7 +1342,7 @@ function export.source(args, alias_map)
 				end
 			end
 			add("[" .. url .. " the original] on ")
-			local archivedate, archivedate_param = aurl_with_name("archivedate")
+			local archivedate, archivedate_param = a_with_name("archivedate")
 			if archivedate then
 				add(format_date(archivedate))
 			elseif (string.sub(archiveurl, 1, 28) == "https://web.archive.org/web/") then
@@ -1349,9 +1388,9 @@ function export.source(args, alias_map)
 			end
 		end
 
-		handle_numeric_param("line", "line", ", ")
-		handle_numeric_param("page", "page", ", ")
-		handle_numeric_param("column", "column", ", ")
+		handle_numeric_param("line", a("line_prefix") or "line", ", ")
+		handle_numeric_param("page", a("page_prefix") or "page", ", ")
+		handle_numeric_param("column", a("column_prefix") or "column", ", ")
 		-- FIXME: Does this make sense? What is other=?
 		local other = parse_and_format_text("other")
 		if other then
@@ -1490,34 +1529,14 @@ function export.quote_t(frame)
 		if not val then
 			return false
 		end
-		if val == "on" then
-			return true
-		end
 		return require(yesno_module)(val)
 	end
 
 	args.nocat = yesno(args.nocat)
 	args.brackets = yesno(args.brackets)
 
-	local function process_fallback(val, fallback_params)
-		if val then
-			return val
-		end
-		if fallback_params then
-			fallback_params = rsplit(fallback_params, ",")
-			for _, fallback_param in ipairs(fallback_params) do
-				-- If the param is a number, we need to convert to an integer before indexing.
-				fallback_param = tonumber(fallback_param) or fallback_param
-				if args[fallback_param] then
-					return args[fallback_param]
-				end
-			end
-		end
-		return nil
-	end
-
-	local text = process_fallback(args.text or args.passage, args.text_fallback)
-	local gloss = process_fallback(args.t or args.gloss or args.translation, args.t_fallback)
+	local text = args.text or args.passage
+	local gloss = args.t or args.gloss or args.translation
 
 	local parts = {}
 	local function ins(text)
@@ -1525,7 +1544,7 @@ function export.quote_t(frame)
 	end
 
 	ins('<div class="citation-whole"><span class="cited-source">')
-	ins(export.source(args))
+	ins(export.source(args, alias_map))
 	ins("</span><dl><dd>")
 	-- If any quote-related args are present, display the actual quote; otherwise, display nothing.
 	local tr = args.tr or args.transliteration
