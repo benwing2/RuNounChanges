@@ -304,48 +304,6 @@ local function ine(arg)
 	return arg
 end
 
-local trackparams = {
-	laysummary = true,
-	laysummary2 = true,
-	laydate = true,
-	laydate2 = true,
-	laysource = true,
-	laysource2 = true,
-	other = true,
-	inventor = true,
-	directors = true,
-	roles = true,
-	authors = true,
-	lang = true,
-	["url-access"] = true,
-	["url-status"] = true,
-	accessyear = true,
-	accessmonth = true,
-	accessdaymonth = true,
-	accessmonthday = true,
-	city = true,
-	city2 = true,
-	list = true,
-	["trans-entry"] = true,
-	entry = true,
-	entryurl = true,
-	indent = true,
-	i1 = true,
-	pageref = true,
-	book = true,
-	vol = true,
-	quote = true,
-	periodical = true,
-	writer = true,
-	writers = true,
-	people = true,
-	blog = true,
-	note = true,
-	translators = true,
-	translators2 = true,
-	trans = true,
-	["lyrics-translator"] = true,
-}
 
 -- Clone and combine frame's and parent's args while also assigning nil to empty strings. Handle aliases and ignores.
 local function clone_args(direct_args, parent_args)
@@ -354,9 +312,8 @@ local function clone_args(direct_args, parent_args)
 	-- Processing parent args must come first so that direct args override parent args. Note that if a direct arg is
 	-- specified but is blank, it will still override the parent arg (with nil).
 	for pname, param in pairs(parent_args) do
-		if trackparams[pname] then
-			track(pname)
-		end
+		-- [[Special:WhatLinksHere/Template:tracking/quote/param/PARAM]]
+		track("param/" .. pname)
 		args[pname] = ine(param)
 	end
 
@@ -492,9 +449,6 @@ local function process_ante_circa_post(date)
 	if abbr then
 		abbr_prefix = "''[[Appendix:Glossary#" .. abbr.anchor .. '|<abbr title="' .. abbr.full .. '">' ..
 			abbr.anchor .. "</abbr>]]'' "
-		-- [[Special:WhatLinksHere/Template:tracking/quote/abbr]]
-		track("quote/abbr")
-
 		-- Remove lowercase letter, period, and space from beginning of date parameter.
 		date = rsub(date, "^%l%.%s*", "")
 	end
