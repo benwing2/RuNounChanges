@@ -84,21 +84,28 @@ recognized_named_single_params_everywhere_list = [
 ]
 
 recognized_named_single_params_by_template = {
-  "quote-av": ["writer", "writers", "director", "directors", "episode", "trans-episode", "format", "medium", "season",
-                "number", "network", "role", "roles", "speaker", "actor", "time", "at"],
-  "quote-book": ["entry", "entryurl", "trans-entry"],
+  "quote-av": ["writer", "writers", "director", "directors",
+               "episode", "trans-episode", "episode_series", "episode_seriesvolume", "episode_plain", "episode_number",
+               "format", "medium", "season", "seasons", "season_plain",
+                "network", "role", "roles", "speaker", "actor", "time", "at"],
+  "quote-book": ["entry", "entryurl", "trans-entry", "entry_series", "entry_seriesvolume", "entry_plain",
+                 "entry_number"],
   "quote-hansard": ["speaker", "debate", "report", "house"],
-  "quote-journal": ["titleurl", "title_number", "title_plain", "title_series", "title_seriesvolume", "trans-title",
+  "quote-journal": ["article", "titleurl", "articleurl", "article_tlr", "trans-article", "article_series",
+                    "article_seriesvolume", "article_number", "title_plain", "article_plain",
                     "journal", "magazine", "newspaper", "work", "trans-journal", "trans-magazine", "trans-newspaper",
                     "trans-work", "newsagency"],
-  "quote-mailing list": ["email", "list", "googleid", "group", "newsgroup"],
+  "quote-mailing list": ["email", "list", "googleid", "group", "newsgroup",
+    "titleurl", "title_series", "title_seriesvolume", "title_plain"],
   "quote-newsgroup": ["email", "googleid", "group", "newsgroup"],
-  "quote-song": ["authorlabel", "lyricist", "lyrics-translator", "composer", "album", "work", "trans-album",
+  "quote-song": ["authorlabel", "lyricist", "lyrics-translator", "composer", "titleurl", "title_series",
+                 "title_seriesvolume", "album", "work", "trans-album", "trans-work",
                  "artist", "track", "time", "at"],
   "quote-us-patent": ["inventor", "patent_type", "patent"],
   "quote-video game": ["developer", "version", "system", "scene", "level"],
-  "quote-web": ["site", "work", "trans-site", "trans-work"],
-  "quote-wikipedia": ["article", "revision"],
+  "quote-web": ["titleurl", "title_series", "title_seriesvolume", "title_number", "title_plain",
+                "site", "work", "trans-site", "trans-work"],
+  "quote-wikipedia": ["article", "revision", "trans-article", "article_series", "article_seriesvolume"],
 }
 
 recognized_named_single_per_template_params = defaultdict(list)
@@ -160,6 +167,81 @@ unrecognized_after_url_named_params = set(unrecognized_after_url_named_params_li
 
 count_unhandled_params = defaultdict(int)
 count_unhandled_params_by_template = defaultdict(int)
+
+params_with_inline_modifiers_1_to_n_list = ["author"]
+params_with_inline_modifiers_1_to_2_list = [
+  "chapter", "chapter_plain", "chapter_series", "chapter_seriesvolume", "chapter_tlr", 
+  "section", "section_plain", "section_series", "section_seriesvolume",
+  "tlr", "translator", "translators", "editor", "editors", "mainauthor",
+  "title", "series", "seriesvolume", "edition", "edition_plain",
+  "volume", "volumes", "volume_plain",
+  "issue", "issues", "issue_plain",
+  "number", "numbers", "number_plain",
+  "line", "lines", "line_plain",
+  "page", "pages", "page_plain",
+  "column", "columns", "column_plain",
+  "others", "quoted_in", "location", "publisher", "source", "original", "by", "platform", "note", "note_plain",
+  "other",
+]
+
+params_with_inline_modifiers_single_everywhere_list = [
+  "coauthors", "quotee", "2ndauthor",
+]
+
+params_with_inline_modifiers_by_template = {
+  "quote-av": [
+    # not director, directors, role, roles, speaker or actor because they are prefixed by text (FIXME)
+    "writer", "writers", "episode", "episode_series", "episode_seriesvolume", "episode_plain",
+    "season", "seasons", "season_plain", "network",
+  ],
+  "quote-book": ["entry", "entry_series", "entry_seriesvolume", "entry_plain", "entry_number", "3", "4", "6"],
+  "quote-hansard": ["speaker", "debate", "report", "house"],
+  "quote-journal": ["article", "article_tlr", "article_series", "article_seriesvolume",
+                    "title_plain", "article_plain",
+                    "journal", "magazine", "newspaper", "work", "newsagency", "3", "4", "5", "7"],
+  "quote-mailing list": [
+    # not email, group, list, id because they are prefixed by text (FIXME)
+    "title_series", "title_seriesvolume", "title_plain"
+  ],
+  "quote-newsgroup": [
+    # not email, group, newsgroup, id because they are prefixed by text (FIXME)
+  ],
+  "quote-song": [
+    # not lyricist, lyrics-translator, composer, artist because they are prefixed by text (FIXME)
+    "title_series", "title_seriesvolume", "album", "work" 
+  ],
+  "quote-us-patent": ["inventor"],
+  "quote-video game": [
+    # not version, scene, level because they are prefixed by text (FIXME)
+    "developer", "system"],
+  "quote-web": ["title_series", "title_seriesvolume", "title_plain", "site", "work"],
+  "quote-wikipedia": ["article", "article_series", "article_seriesvolume"],
+}
+
+inline_modifiers_per_template_params = defaultdict(list)
+inline_modifiers_per_template_params_set = set()
+for template, params in params_with_inline_modifiers_by_template.items():
+  for param in params:
+    inline_modifiers_per_template_params[param].append(template)
+    inline_modifiers_per_template_params_set.add(param)
+inline_modifiers_per_template_params_list = list(inline_modifiers_per_template_params_set)
+
+params_with_inline_modifiers_everywhere_list = (
+  make_all_param(params_with_inline_modifiers_1_to_n_list, 30) +
+  make_all_param(params_with_inline_modifiers_1_to_2_list, 2) +
+  params_with_inline_modifiers_single_everywhere_list
+)
+params_with_inline_modifiers_list = (
+  params_with_inline_modifiers_everywhere_list +
+  inline_modifiers_per_template_params_list
+)
+params_with_inline_modifiers_everywhere = set(params_with_inline_modifiers_everywhere_list)
+params_with_inline_modifiers = set(params_with_inline_modifiers_list)
+
+count_lang_stripped_params = defaultdict(int)
+count_lang_stripped_params_by_template = defaultdict(int)
+count_unstrippable_params = defaultdict(int)
+count_unstrippable_params_by_template = defaultdict(int)
 
 def process_text_on_page(index, pagetitle, text):
   global args
@@ -780,6 +862,72 @@ def process_text_on_page(index, pagetitle, text):
         ]
         move_params(params_to_move)
 
+    if args.remove_lang_wrapping:
+      if tn in quote_templates:
+        for param in t.params:
+          pn = pname(param)
+          pv = str(param.value)
+          if pn in params_with_inline_modifiers_everywhere or (
+            pn in inline_modifiers_per_template_params and tn in inline_modifiers_per_template_params[pn]
+          ):
+            if re.search(r"\{\{lang\|[^|]*\|[^{}|=]*\}\}", pv):
+              m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\}$", pv.strip())
+              if m:
+                newval = "%s:%s" % (m.group(1), m.group(2))
+                t.add(pn, newval)
+                pagemsg("Strip lang wrapping %s=%s to %s: %s" % (pn, pv, newval, origt))
+                notes.append("convert {{lang}} wrapping in %s= in {{%s}} to %s:..." % (pn, tn, m.group(1)))
+                count_lang_stripped_params[pn] += 1
+                count_lang_stripped_params_by_template["%s:%s" % (pn, tn)] += 1
+              else:
+                m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\} \[(.*)\]$", pv.strip())
+                if m:
+                  lang, foreign, gloss = m.groups()
+                if not m:
+                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\} \((.*)\)$", pv.strip())
+                  if m:
+                    lang, foreign, gloss = m.groups()
+                if not m:
+                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\} &#0?91;(.*)&#0?93;$", pv.strip())
+                  if m:
+                    lang, foreign, gloss = m.groups()
+                if not m:
+                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\} [-–—=] (.*)$", pv.strip())
+                  if m:
+                    lang, foreign, gloss = m.groups()
+                if not m:
+                  m = re.search(r"^([^{}]+) \(\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\)$", pv.strip())
+                  if m:
+                    gloss, lang, foreign = m.groups()
+                if not m:
+                  m = re.search(r"^([^{}]+) \[\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\]$", pv.strip())
+                  if m:
+                    gloss, lang, foreign = m.groups()
+                if m:
+                  m = re.search("^''(.*)''$", gloss)
+                  if m:
+                    gloss = m.group(1)
+                  cleaned_gloss = re.sub("\{\{[^{}]*\}\}", "", gloss)
+                  if (lang == "ar" and (re.search("[ʾʿāīūṣṭẓḍḥǧġṯḵḏĀĪŪṢṬẒḌḤǦĠŠṮḴḎʔʕ]", cleaned_gloss) or
+                                        re.search("\b[Aa]l-", cleaned_gloss)) or
+                      lang == "fa" and (re.search("[âÂ]", cleaned_gloss) or re.search("-e\b", cleaned_gloss))):
+                    pagemsg("Assuming gloss '%s' is transliteration in %s=%s: %s" % (gloss, pn, pv, origt))
+                    newval = "%s:%s<tr:%s>" % (lang, foreign, gloss)
+                    t.add(pn, newval)
+                    pagemsg("Strip lang wrapping with transliteration %s=%s to %s: %s" % (pn, pv, newval, origt))
+                    notes.append("convert {{lang}} wrapping in %s= in {{%s}} to %s:...<tr:...>" % (pn, tn, lang))
+                  else:
+                    newval = "%s:%s<t:%s>" % (lang, foreign, gloss)
+                    t.add(pn, newval)
+                    pagemsg("Strip lang wrapping with translation %s=%s to %s: %s" % (pn, pv, newval, origt))
+                    notes.append("convert {{lang}} wrapping in %s= in {{%s}} to %s:...<t:...>" % (pn, tn, lang))
+                  count_lang_stripped_params[pn] += 1
+                  count_lang_stripped_params_by_template["%s:%s" % (pn, tn)] += 1
+                else:
+                  pagemsg("WARNING: Unable to strip lang wrapping in %s=%s: %s" % (pn, pv, origt))
+                  count_unstrippable_params[pn] += 1
+                  count_unstrippable_params_by_template["%s:%s" % (pn, tn)] += 1
+
     if args.templates_to_rename_numbered_params and tn in args.templates_to_rename_numbered_params:
       must_continue = False
       if tn in quote_templates:
@@ -962,6 +1110,7 @@ parser = blib.create_argparser("rename {{quote-*}} params",
 parser.add_argument("--check-unhandled-params", action="store_true", help="Check for unhandled params")
 parser.add_argument("--check-compound-pages", action="store_true", help="Check for possible compound pages like page=12-81")
 parser.add_argument("--check-author-splitting", action="store_true", help="Try to split cases where multiple authors given in author= and similar params")
+parser.add_argument("--remove-lang-wrapping", action="store_true", help="Remove {{lang|...}} wrapping in params")
 parser.add_argument("--from-to", action="store_true", help="Output all quote templates in from-to format")
 parser.add_argument("--rename-params-to-eliminate", action="store_true", help="Rename params that will be eliminated")
 parser.add_argument("--templates-to-rename-numbered-params", help="Comma-separated list of templates for which to rename numbered params")
@@ -974,14 +1123,14 @@ old_default_refs=["Template:quote-poem", "Template:quote-magazine", "Template:qu
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
   default_refs=["Template:%s" % template for template in quote_templates])
 
-if args.check_unhandled_params:
-  def output_count(countdict):
-    for pn, count in sorted(countdict.items(), key=lambda x: (-x[1], x[0])):
-      msg("%-30s = %s" % (pn, count))
-  def output_count_by_name(countdict):
-    for pn, count in sorted(countdict.items()):
-      msg("%-30s = %s" % (pn, count))
+def output_count(countdict):
+  for pn, count in sorted(countdict.items(), key=lambda x: (-x[1], x[0])):
+    msg("%-30s = %s" % (pn, count))
+def output_count_by_name(countdict):
+  for pn, count in sorted(countdict.items()):
+    msg("%-30s = %s" % (pn, count))
 
+if args.check_unhandled_params:
   msg("Templates:")
   msg("------------------------------------")
   output_count(count_templates)
@@ -1021,3 +1170,20 @@ if args.check_unhandled_params:
   msg("Unhandled params by template (by name):")
   msg("---------------------------------------")
   output_count_by_name(count_unhandled_params_by_template)
+
+if args.remove_lang_wrapping:
+  msg("Params processed by --remove-lang-wrapping:")
+  msg("-------------------------------------------")
+  output_count(count_lang_stripped_params)
+  msg("")
+  msg("Params processed by --remove-lang-wrapping (by template):")
+  msg("---------------------------------------------------------")
+  output_count(count_lang_stripped_params_by_template)
+  msg("")
+  msg("Params unprocessable by --remove-lang-wrapping:")
+  msg("-----------------------------------------------")
+  output_count(count_unstrippable_params)
+  msg("")
+  msg("Params unprocessable by --remove-lang-wrapping (by template):")
+  msg("-------------------------------------------------------------")
+  output_count(count_unstrippable_params_by_template)
