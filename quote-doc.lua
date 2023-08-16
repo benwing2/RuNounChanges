@@ -1,21 +1,14 @@
 --[=[
-	This module contains functions to implement {{form of/*doc}} templates.
-	The module contains the actual implementation, meant to be called from other
-	Lua code. See [[Module:form of doc/templates]] for the function meant to be
-	called directly from templates.
+	This module contains functions to generate documentation for {{quote-*}} templates. The module contains the actual
+	implementation, meant to be called from other Lua code. See [[Module:quote doc/templates]] for the function meant
+	to be called directly from templates.
 
 	Author: Benwing2
 ]=]
 
 local export = {}
 
-local m_template_link = require("Module:template link")
-local m_languages = require("Module:languages")
 local m_table = require("Module:table")
-local form_of_module = "Module:form of"
-local m_form_of = require(form_of_module)
-local labels_module = "Module:labels"
-local strutils = require("Module:string utilities")
 
 local rfind = mw.ustring.find
 local rsplit = mw.text.split
@@ -47,7 +40,7 @@ each group is a list, structured as follows:
 3. All following elements describe individual parameters.
 
 An individual parameter description is as follows:
-1. The first element is the parameter name or names. If a string, it specifies the only possible name of the parameter, 
+1. The first element is the parameter name or names. If a string, it specifies the only possible name of the parameter,
    and is equivalent to a single-element list containing the parameter name. Use a list of strings to specify multiple
    aliases with the same meaning, e.g. {"tlr", "translator", "translators"}. You can also specify a list of logically
    related parameters, where all parameters are described using a single description. In such a case, specify
@@ -87,6 +80,78 @@ An individual parameter description is as follows:
 
 local function generate_params(ty)
 	return {
+	{"Quoted text parameters",
+	[=[The following parameters describe the quoted text itself. All other groups of parameters control the citation
+	line. The parameters in this group can be omitted if the quoted text is displayed separately (e.g. in certain East
+	Asian languages, which have their own templates to display the quoted text, such as {{tl|ja-x}} for Japanese,
+	{{tl|zh-x}} for Chinese, {{tl|ko-x}} for Korean, {{tl|th-x}} for Thai and {{tl|km-x}} for Khmer). Even in that case,
+	however, {{para|1}} must still be supplied to indicate the language of the quotation.]=],
+	{{"1", required = true}, [=[A comma-separated list of language codes indicating the language(s) of the quoted text;
+	for a list of the codes, see [[Wiktionary:List of languages]]. If the language is other than English, the template
+	will indicate this fact by displaying "(in [''language''])" (for one language), or "(in [''language''] and
+	[''language''])" (for two languages), or "(in [''language''], [''language''] ... and [''language''])" (for three or
+	more languages). The entry page will also be added to a category in the form <code>Category:LANGUAGE terms with
+	quotations</code> for the first listed language (unless {{para|termlang}} is specified, in which case that language
+	is used for the category, or {{para|nocat|1}} is specified, in which case the page will not be added to any
+	category). The first listed language also determines the font to use and the appropriate transliteration to display,
+	if the text is in a non-Latin script.
+
+	Use {{para|worklang}} to specify the language(s) that the <<collection>> itself is written in: see below.
+
+	<small>The parameter {{para|lang}} is a deprecated synonym for this parameter; please do not use. If this is used,
+	all numbered parameters move down by one.</small>]=]},
+	{{"text", "passage"}, [=[The text being quoted. Use boldface to highlight the term being defined, like this:
+	"{{code||<nowiki>'''humanities'''</nowiki>}}".]=]},
+	{"worklang", [=[A comma-separated list of language codes indicating the language(s) that the book is written in, if
+	different from the quoted text; for a list of the codes, see [[Wiktionary:List of languages]].]=]},
+	{"termlang", [=[A language code indicating the language of the term being illustrated, if different from the quoted
+	text; for a list of the codes, see [[Wiktionary:List of languages]]. If specified, this language is the one used
+	when adding the page to a category of the form <code>Category:LANGUAGE terms with quotations</code>; otherwise, the
+	first listed language specified using {{para|1}} is used. Only specify this parameter if the language of the
+	quotation is different from the term's language, e.g. a Middle English quotation used to illustrate a modern
+	English term or an English definition of a Vietnamese term in a Vietnamese-English dictionary.]=]},
+	{{"brackets", boolean = true}, [=[Surround a quotation with [[bracket]]s. This indicates that the quotation either
+	contains a mere mention of a term (for example, "some people find the word '''''manoeuvre''''' hard to spell")
+	rather than an actual use of it (for example, "we need to '''manoeuvre''' carefully to avoid causing upset"), or
+	does not provide an actual instance of a term but provides information about related terms.]=]},
+	{{"t", "translation"}, [=[If the quoted text is not in English, this parameter can be used to provide an English
+	[[translation]] of it.]=]},
+	{"lit", [=[If the quoted text is not in English and the translation supplied using {{para|t}} or
+	{{para|translation}} is idiomatic, this parameter can be used to provide a [[literal]] English [[translation]].]=]},
+	{"footer", [=[This parameter can be used to specify arbitrary text to insert in a separate line at the bottom, to
+	specify a comment, footnote, etc.]=]},
+	{{"norm", "normalization"}, [=[If the quoted text is written using nonstandard spelling, this parameter supplies
+	the normalized (standardized) version of the quoted text. This applies especially to older quotations. For example,
+	for Old Polish, this parameter could supply a version based on modern Polish spelling conventions, and for Russian
+	text prior to the 1917 spelling reform, this could supply the reformed spelling.]=]},
+	{{"tr", "transliteration"}, [=[If the quoted text uses a different {{w|writing system}} from the {{w|Latin
+	alphabet}} (the usual alphabet used in English), this parameter can be used to provide a [[transliteration]] of it
+	into the Latin alphabet. Note that many languages provide an automatic transliteration if this argument is not
+	specified. If a normalized version of the quoted text is supplied using {{para|norm}}, the transliteration will be
+	based on this version if possible (falling back to the actual quoted text if the transliteration of the normalized
+	text fails or if the normalization is supplied in Latin script and the original in a non-Latin script).]=]},
+	{"subst", [=[Phonetic substitutions to be applied to handle irregular transliterations in certain languages with a
+	non-Latin writing system and automatic transliteration (e.g. Russian and Yiddish). If specified, should be one or
+	more substitution expressions separated by commas, where each substitution expression is of the form
+	<code>FROM//TO</code> (<code>FROM/TO</code> is also accepted), where <code>FROM</code> specifies the source text in
+	the source script (e.g. Cyrillic or Hebrew) and <code>TO</code> is the corresponding replacement text, also in the
+	source script. The intent is to respell irregularly-pronounced words phonetically prior to transliteration, so that
+	the transliteration reflects the pronunciation rather than the spelling. The substitutions are applied in order.
+	Note that Lua patterns can be used in <code>FROM</code> and <code>TO</code> in lieu of literal text; see [[WT:LUA]].
+	See also {{temp|ux}} for an example of using {{para|subst}} (the usage is identical to that template). If
+	{{para|norm}} is used to provide a normalized version of the quoted text, the substitutions will also apply to this
+	version when transliterating it.]=]},
+	{{"ts", "transcription"}, [=[Phonetic transcription of the quoted text, if in a non-Latin script where the
+	transliteration is markedly different from the actual pronunciation (e.g. Akkadian, Ancient Egyption and Tibetan).
+	This should not be used merely to supply the IPA pronunciation of the text.]=]},
+	{"sc", [=[The script code of the quoted text, if not in the Latin script. See [[Wiktionary:Scripts]] for more
+	information. It is rarely necessary to specify this as the script is autodetected based on the quoted text.]=]},
+	{"normsc", [=[The script code of the normalized text in {{para|norm}}, if not in the Latin script. If unspecified,
+	and a value was given in {{para|sc}}, this value will be used to determine the script of the normalized text;
+	otherwise (or if {{para|normsc|auto}} was specified), the script of the normalized text will be autodetected based
+	on that text.]=]},
+	},
+
 	{"Date-related parameters",
 	{"date", [=[The date that the <<work>> was published. Use either {{para|year}} (and optionally {{para|month}}), or
 	{{para|date}}, not both. The value of {{para|date}} must be an actual date, with or without the day, rather than
@@ -357,73 +422,6 @@ local function generate_params(ty)
 	<code>Category:LANGUAGE terms with quotations</code>. This should not normally be done.]=]},
 	},
 
-	{"Quoted text parameters",
-	{{"1", required = true}, [=[A comma-separated list of language codes indicating the language(s) of the quoted text;
-	for a list of the codes, see [[Wiktionary:List of languages]]. If the language is other than English, the template
-	will indicate this fact by displaying "(in [''language''])" (for one language), or "(in [''language''] and
-	[''language''])" (for two languages), or "(in [''language''], [''language''] ... and [''language''])" (for three or
-	more languages). The entry page will also be added to a category in the form <code>Category:LANGUAGE terms with
-	quotations</code> for the first listed language (unless {{para|termlang}} is specified, in which case that language
-	is used for the category, or {{para|nocat|1}} is specified, in which case the page will not be added to any
-	category). The first listed language also determines the font to use and the appropriate transliteration to display,
-	if the text is in a non-Latin script.
-
-	Use {{para|worklang}} to specify the language(s) that the <<collection>> itself is written in: see below.
-
-	<small>The parameter {{para|lang}} is a deprecated synonym for this parameter; please do not use. If this is used,
-	all numbered parameters move down by one.</small>]=]},
-	{{"text", "passage"}, [=[The text being quoted. Use boldface to highlight the term being defined, like this:
-	"{{code||<nowiki>'''humanities'''</nowiki>}}".]=]},
-	{"worklang", [=[A comma-separated list of language codes indicating the language(s) that the book is written in, if
-	different from the quoted text; for a list of the codes, see [[Wiktionary:List of languages]].]=]},
-	{"termlang", [=[A language code indicating the language of the term being illustrated, if different from the quoted
-	text; for a list of the codes, see [[Wiktionary:List of languages]]. If specified, this language is the one used
-	when adding the page to a category of the form <code>Category:LANGUAGE terms with quotations</code>; otherwise, the
-	first listed language specified using {{para|1}} is used. Only specify this parameter if the language of the
-	quotation is different from the term's language, e.g. a Middle English quotation used to illustrate a modern
-	English term or an English definition of a Vietnamese term in a Vietnamese-English dictionary.]=]},
-	{{"brackets", boolean = true}, [=[Surround a quotation with [[bracket]]s. This indicates that the quotation either
-	contains a mere mention of a term (for example, "some people find the word '''''manoeuvre''''' hard to spell")
-	rather than an actual use of it (for example, "we need to '''manoeuvre''' carefully to avoid causing upset"), or
-	does not provide an actual instance of a term but provides information about related terms.]=]},
-	{{"t", "translation"}, [=[If the quoted text is not in English, this parameter can be used to provide an English
-	[[translation]] of it.]=]},
-	{"lit", [=[If the quoted text is not in English and the translation supplied using {{para|t}} or
-	{{para|translation}} is idiomatic, this parameter can be used to provide a [[literal]] English [[translation]].]=]},
-	{"footer", [=[This parameter can be used to specify arbitrary text to insert in a separate line at the bottom, to
-	specify a comment, footnote, etc.]=]},
-	{{"norm", "normalization"}, [=[If the quoted text is written using nonstandard spelling, this parameter supplies
-	the normalized (standardized) version of the quoted text. This applies especially to older quotations. For example,
-	for Old Polish, this parameter could supply a version based on modern Polish spelling conventions, and for Russian
-	text prior to the 1917 spelling reform, this could supply the reformed spelling.]=]},
-	{{"tr", "transliteration"}, [=[If the quoted text uses a different {{w|writing system}} from the {{w|Latin
-	alphabet}} (the usual alphabet used in English), this parameter can be used to provide a [[transliteration]] of it
-	into the Latin alphabet. Note that many languages provide an automatic transliteration if this argument is not
-	specified. If a normalized version of the quoted text is supplied using {{para|norm}}, the transliteration will be
-	based on this version if possible (falling back to the actual quoted text if the transliteration of the normalized
-	text fails or if the normalization is supplied in Latin script and the original in a non-Latin script).]=]},
-	{"subst", [=[Phonetic substitutions to be applied to handle irregular transliterations in certain languages with a
-	non-Latin writing system and automatic transliteration (e.g. Russian and Yiddish). If specified, should be one or
-	more substitution expressions separated by commas, where each substitution expression is of the form
-	<code>FROM//TO</code> (<code>FROM/TO</code> is also accepted), where <code>FROM</code> specifies the source text in
-	the source script (e.g. Cyrillic or Hebrew) and <code>TO</code> is the corresponding replacement text, also in the
-	source script. The intent is to respell irregularly-pronounced words phonetically prior to transliteration, so that
-	the transliteration reflects the pronunciation rather than the spelling. The substitutions are applied in order.
-	Note that Lua patterns can be used in <code>FROM</code> and <code>TO</code> in lieu of literal text; see [[WT:LUA]].
-	See also {{temp|ux}} for an example of using {{para|subst}} (the usage is identical to that template). If
-	{{para|norm}} is used to provide a normalized version of the quoted text, the substitutions will also apply to this
-	version when transliterating it.]=]},
-	{{"ts", "transcription"}, [=[Phonetic transcription of the quoted text, if in a non-Latin script where the
-	transliteration is markedly different from the actual pronunciation (e.g. Akkadian, Ancient Egyption and Tibetan).
-	This should not be used merely to supply the IPA pronunciation of the text.]=]},
-	{"sc", [=[The script code of the quoted text, if not in the Latin script. See [[Wiktionary:Scripts]] for more
-	information. It is rarely necessary to specify this as the script is autodetected based on the quoted text.]=]},
-	{"normsc", [=[The script code of the normalized text in {{para|norm}}, if not in the Latin script. If unspecified,
-	and a value was given in {{para|sc}}, this value will be used to determine the script of the normalized text;
-	otherwise (or if {{para|normsc|auto}} was specified), the script of the normalized text will be autodetected based
-	on that text.]=]},
-	},
-
 	{"New version of <<work:a>>",
 	[=[The following parameters can be used to indicate a new version of the <<work>>, such as a reprint, a new edition, or
 	some other republished version. The general means of doing this is as follows:
@@ -512,21 +510,23 @@ local quote_mods = {
 	{"#substitute", work = "article", collection = "journal", issue = "journal issue"},
 	{"year", addalias = "2"},
 	{"author", addalias = "3"},
-	{"title", addalias = "5"},
+	{"title", replace_params = {"journal", "magazine", "newspaper", "work", "5"}},
+	{"trans-title", replace_params = {"trans-journal", "trans-magazine", "trans-newspaper", "trans-work"}},
 	{"url", addalias = "6"},
 	{"page", addalias = "7"},
 	{"text", addalias = "8"},
 	{"translation", addalias = "9"},
+	{"source", addalias = "newsagency"},
 	{"#replace_group", "Chapter-related parameters", {"Article-related parameters",
-		{{"title", "4"}, [=[The title of the journal article quoted, which will be enclosed in “curly quotation marks”.]=]},
-		{"title_plain", [=[The title of the article, which will be displayed as-is. Include any desired quotation marks
+		{{"title", "article", "4", suggested = true}, [=[The title of the journal article quoted, which will be enclosed in “curly quotation marks”.]=]},
+		{{"title_plain", "article_plain"}, [=[The title of the article, which will be displayed as-is. Include any desired quotation marks
 		and other words. If both {{para|title}} and {{para|title_plain}} are given, the value of {{para|title_plain}}
 		is shown after the title, in parentheses. This is useful e.g. to indicate an article number or other
 		identifier.]=]},
-		{"titleurl", [=[The [[w:Universal Resource Locator|URL]] or web address of an external webpage to link to the
+		{{"titleurl", "article_url"}, [=[The [[w:Universal Resource Locator|URL]] or web address of an external webpage to link to the
 		article. Note that it is generally preferred to use {{para|pageurl}} to link directly to the page of the quoted
 		text, if possible. ''Do not link to any website that has content in breach of [[w:copyright|copyright]]''.]=]},
-		{"trans-title", [=[If the journal article is not in English, this parameter can be used to provide an English
+		{{"trans-title", "trans-article"}, [=[If the journal article is not in English, this parameter can be used to provide an English
 		translation of the title, as an alternative to specifying the translation using an inline modifier (see
 		below).]=]},
 		{"article_tlr", [=[The translator of the article, if separate from the overall translator of the journal
@@ -542,7 +542,34 @@ local quote_mods = {
 }
 
 
-local function canonicalize_param_group(group)
+local function canonicalize_paramspec(paramspec, add_non_generic)
+	-- Canonicalize a top-level string param to a list.
+	if type(paramspec) == "string" then
+		paramspec = {paramspec}
+	end
+	for j, paramset in ipairs(paramspec) do
+		-- Canonicalize a second-level string param to a list.
+		if type(paramset) ~= "table" or paramset.param then
+			paramset = {paramset}
+			paramspec[j] = paramset
+		end
+		for k, param in ipairs(paramset) do
+			-- Canonicalize a single param to object form.
+			if type(param) == "string" then
+				param = {param = param}
+				if add_non_generic and param.non_generic == nil then
+					param.non_generic = true
+				end
+				paramset[k] = param
+			end
+		end
+	end
+
+	return paramspec
+end
+
+
+local function canonicalize_param_group(group, add_non_generic)
 	local ind = 2
 	if type(group[2]) == "string" then
 		ind = ind + 1
@@ -551,26 +578,28 @@ local function canonicalize_param_group(group)
 	for i = ind, #group do
 		-- Canonicalize the parameter spec to the maximally-expressed form for easier processing.
 		local paramspec, desc = unpack(group[i])
-		-- Canonicalize a top-level string param to a list.
-		if type(paramspec) == "string" then
-			paramspec = {paramspec}
-			group[i][1] = paramspec
+		group[i][1] = canonicalize_paramspec(paramspec, add_non_generic)
+	end
+end
+
+
+local function canonicalize_param_list(params, add_non_generic)
+	-- Canonicalize an addalias= spec to a list for easier processing.
+	if type(params) ~= "table" or params.param then
+		params = {params}
+	end
+	for i, p in ipairs(params) do
+		-- Canonicalize.
+		if type(p) == "string" then
+			p = {param = p}
+			params[i] = p
 		end
-		for j, paramset in ipairs(paramspec) do
-			-- Canonicalize a second-level string param to a list.
-			if type(paramset) ~= "table" or paramset.param then
-				paramset = {paramset}
-				paramspec[j] = paramset
-			end
-			for k, param in ipairs(paramset) do
-				-- Canonicalize a single param to object form.
-				if type(param) == "string" then
-					param = {param = param}
-					paramset[k] = param
-				end
-			end
+		if add_non_generic and p.non_generic == nil then
+			p.non_generic = true
 		end
 	end
+
+	return params
 end
 
 
@@ -581,41 +610,12 @@ local function apply_mods(params, mods)
 	-- First, convert the modifications to a dictionary for easy lookup as we traverse the existing parameters.
 	for _, mod in ipairs(mods) do
 		local param = mod[1]
-		mod[1] = nil
 		if param == "#substitute" then
+			mod[1] = nil
 			subvals = mod
-		elseif param == "#replace_group" then
-			local _, existing_group_name, new_group = unpack(mod)
-			canonicalize_param_group(new_group)
-
-			local ind = 2
-			if type(new_group[2]) == "string" then
-				ind = ind + 1
-			end
-
-			for i = ind, #new_group do
-				local paramspec, desc = unpack(group[i])
-				for j, paramset in ipairs(paramspec) do
-					for k, param in ipairs(paramset) do
-						if param.non_generic == nil then
-							param.non_generic = true
-						end
-					end
-				end
-			end
-
-			local replaced = false
-			for i, group in ipairs(params) do
-				if group[1] == existing_group_name then
-					params[i] = new_group
-					replaced = true
-					break
-				end
-			end
-			if not replaced then
-				error(("Internal error: Unable to locate existing group '%s'"):format(existing_group_name))
-			end
-		else
+		elseif param ~= "#replace_group" then
+			-- Need to do replace_group after aliases because replace_group might introduce new params that we don't want aliases
+			-- to touch (e.g. |title= in {{quote-journal}}).
 			mod_table[param] = mod
 		end
 	end
@@ -640,19 +640,9 @@ local function apply_mods(params, mods)
 					local mod = mod_table[param.param]
 					if mod then
 						if mod.addalias then
-							local to_add = mod.addalias
 							-- Canonicalize an addalias= spec to a list for easier processing.
-							if type(to_add) ~= "table" or to_add.param then
-								to_add = {to_add}
-							end
+							local to_add = canonicalize_param_list(mod.addalias, "add non-generic")
 							for _, ta in ipairs(to_add) do
-								-- Canonicalize.
-								if type(ta) == "string" then
-									ta = {param = ta}
-								end
-								if ta.non_generic == nil then
-									ta.non_generic = true
-								end
 								if paramspec.useand then
 									-- Top level refers to logically-related params so alias goes at second level.
 									table.insert(paramspec[j], ta)
@@ -661,14 +651,56 @@ local function apply_mods(params, mods)
 								end
 							end
 						end
+
+						if mod.replace_params then
+							group[i][1] = canonicalize_paramspec(mod.replace_params, "add non-generic")
+						end
+
 						if mod.append_desc then
 							group[i][2] = group[i][2] .. " " .. mod.append_desc
 						end
+
 						if mod.replace_desc then
 							group[i][2] = mod.replace_desc
 						end
 					end
 				end
+			end
+		end
+	end
+
+	for _, mod in ipairs(mods) do
+		local param = mod[1]
+		if param == "#replace_group" then
+			local _, existing_group_name, new_group = unpack(mod)
+			canonicalize_param_group(new_group)
+
+			local ind = 2
+			if type(new_group[2]) == "string" then
+				ind = ind + 1
+			end
+
+			for i = ind, #new_group do
+				local paramspec, desc = unpack(new_group[i])
+				for j, paramset in ipairs(paramspec) do
+					for k, param in ipairs(paramset) do
+						if param.non_generic == nil then
+							param.non_generic = true
+						end
+					end
+				end
+			end
+
+			local replaced = false
+			for i, group in ipairs(params) do
+				if group[1] == existing_group_name then
+					params[i] = new_group
+					replaced = true
+					break
+				end
+			end
+			if not replaced then
+				error(("Internal error: Unable to locate existing group '%s'"):format(existing_group_name))
 			end
 		end
 	end
