@@ -266,7 +266,6 @@ def process_text_on_page(index, pagetitle, text):
   for t in parsed.filter_templates():
     tn = tname(t)
     origt = str(t)
-    changed = False
     def getp(param):
       return getparam(t, param)
 
@@ -730,11 +729,9 @@ def process_text_on_page(index, pagetitle, text):
       if tn in ["quote-magazine", "quote-news"]:
         blib.set_template_name(t, "quote-journal")
         notes.append("%s -> quote-journal" % tn)
-        changed = True
       if tn in ["quote-Don Quixote"]:
         blib.set_template_name(t, "RQ:Don Quixote")
         notes.append("quote-Don Quixote -> RQ:Don Quixote")
-        changed = True
       if tn == "quote-poem":
         move_params([
           ("title", "chapter"),
@@ -747,8 +744,7 @@ def process_text_on_page(index, pagetitle, text):
           ("3", "chapter"),
         ], no_notes=True)
         blib.set_template_name(t, "quote-book")
-        changed = origt != str(t)
-        if changed:
+        if origt != str(t):
           notes.append("quote-poem -> quote-book with fixed params")
 
     if args.rename_bad_params:
@@ -880,39 +876,57 @@ def process_text_on_page(index, pagetitle, text):
                 count_lang_stripped_params[pn] += 1
                 count_lang_stripped_params_by_template["%s:%s" % (pn, tn)] += 1
               else:
-                m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\} \[(.*)\]$", pv.strip())
-                if m:
-                  lang, foreign, gloss = m.groups()
+                gloss = None
+                tr = None
                 if not m:
-                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\} \((.*)\)$", pv.strip())
+                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\s+\[(.*)\]$", pv.strip())
+                  if m and m.group(3).startswith("http"):
+                    m = None
                   if m:
                     lang, foreign, gloss = m.groups()
                 if not m:
-                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\} &#0?91;(.*)&#0?93;$", pv.strip())
+                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\s+\((.*)\)$", pv.strip())
                   if m:
                     lang, foreign, gloss = m.groups()
                 if not m:
-                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\} [-–—=] (.*)$", pv.strip())
+                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\s+&#0?91;(.*)&#0?93;$", pv.strip())
                   if m:
                     lang, foreign, gloss = m.groups()
                 if not m:
-                  m = re.search(r"^([^{}]+) \(\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\)$", pv.strip())
+                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\s+[-–—=]\s+(.*)$", pv.strip())
+                  if m:
+                    lang, foreign, gloss = m.groups()
+                if not m:
+                  m = re.search(r"^([^{}]+?)\s+\(\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\)$", pv.strip())
                   if m:
                     gloss, lang, foreign = m.groups()
                 if not m:
-                  m = re.search(r"^([^{}]+) \[\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\]$", pv.strip())
+                  m = re.search(r"^''([^{}]+?)''\s+\[?\{\{lang\|(ko)\|([^{}|=]*)\}\}\]?$", pv.strip())
+                  if m:
+                    tr, lang, foreign = m.groups()
+                if not m:
+                  m = re.search(r"^([^{}]+?)\s+\[\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\]$", pv.strip())
                   if m:
                     gloss, lang, foreign = m.groups()
-                if m:
-                  m = re.search("^''(.*)''$", gloss)
-                  if m:
-                    gloss = m.group(1)
-                  cleaned_gloss = re.sub("\{\{[^{}]*\}\}", "", gloss)
-                  if (lang == "ar" and (re.search("[ʾʿāīūṣṭẓḍḥǧġṯḵḏĀĪŪṢṬẒḌḤǦĠŠṮḴḎʔʕ]", cleaned_gloss) or
-                                        re.search("\b[Aa]l-", cleaned_gloss)) or
-                      lang == "fa" and (re.search("[âÂ]", cleaned_gloss) or re.search("-e\b", cleaned_gloss))):
-                    pagemsg("Assuming gloss '%s' is transliteration in %s=%s: %s" % (gloss, pn, pv, origt))
-                    newval = "%s:%s<tr:%s>" % (lang, foreign, gloss)
+                if gloss or tr:
+                  if gloss:
+                    m = re.search("^''(.*)''$", gloss)
+                    if m:
+                      gloss = m.group(1)
+                  if tr:
+                    m = re.search("^''(.*)''$", tr)
+                    if m:
+                      tr = m.group(1)
+                  if gloss:
+                    cleaned_gloss = re.sub("\{\{[^{}]*\}\}", "", gloss)
+                    if (lang in ["ar", "ur", "fa", "pa"] and (re.search("([ʾʿāīūṣṭẓḍḥǧġṯḵḏśĀĪŪṢṬẒḌḤǦĠŠṮḴḎŚʔʕ]|t̤|n̲|T̤|N̲)", cleaned_gloss) or
+                                          re.search("\bal-", cleaned_gloss)) or
+                        lang == "fa" and (re.search("[âÂčČ]", cleaned_gloss) or re.search("-e\b", cleaned_gloss))):
+                      pagemsg("Assuming gloss '%s' is transliteration in %s=%s: %s" % (gloss, pn, pv, origt))
+                      tr = gloss
+                      gloss = None
+                  if tr:
+                    newval = "%s:%s<tr:%s>" % (lang, foreign, tr)
                     t.add(pn, newval)
                     pagemsg("Strip lang wrapping with transliteration %s=%s to %s: %s" % (pn, pv, newval, origt))
                     notes.append("convert {{lang}} wrapping in %s= in {{%s}} to %s:...<tr:...>" % (pn, tn, lang))
@@ -963,8 +977,7 @@ def process_text_on_page(index, pagetitle, text):
           ("3", "actor"),
           ("2", "year"),
         ], no_notes=True)
-        changed = origt != str(t)
-        if changed:
+        if origt != str(t):
           notes.append("rename numbered params in {{quote-av}} to named params and remove blank ones")
       if tn == "quote-book":
         move_params([
@@ -976,8 +989,7 @@ def process_text_on_page(index, pagetitle, text):
           ("3", ["author", "first", "last"]),
           ("2", ["year", "date"]),
         ], no_notes=True)
-        changed = origt != str(t)
-        if changed:
+        if origt != str(t):
           notes.append("rename numbered params in {{quote-book}} to named params and remove blank ones")
       if tn == "quote-hansard":
         move_params([
@@ -991,8 +1003,7 @@ def process_text_on_page(index, pagetitle, text):
           ("3", "speaker"),
           ("2", "year"),
         ], no_notes=True)
-        changed = origt != str(t)
-        if changed:
+        if origt != str(t):
           notes.append("rename numbered params in {{quote-hansard}} to named params and remove blank ones")
       if tn == "quote-journal":
         move_params([
@@ -1005,8 +1016,7 @@ def process_text_on_page(index, pagetitle, text):
           ("3", ["author", "first", "last"]),
           ("2", ["year", "date"]),
         ], no_notes=True)
-        changed = origt != str(t)
-        if changed:
+        if origt != str(t):
           notes.append("rename numbered params in {{quote-journal}} to named params and remove blank ones")
       if tn == "quote-mailing list":
         move_params([
@@ -1018,8 +1028,7 @@ def process_text_on_page(index, pagetitle, text):
           ("3", "author"),
           ("2", "date"),
         ], no_notes=True)
-        changed = origt != str(t)
-        if changed:
+        if origt != str(t):
           notes.append("rename numbered params in {{quote-mailing list}} to named params and remove blank ones")
       if tn == "quote-newsgroup":
         move_params([
@@ -1031,8 +1040,7 @@ def process_text_on_page(index, pagetitle, text):
           ("3", "author"),
           ("2", "date"),
         ], no_notes=True)
-        changed = origt != str(t)
-        if changed:
+        if origt != str(t):
           notes.append("rename numbered params in {{quote-newsgroup}} to named params and remove blank ones")
       if tn == "quote-song":
         move_params([
@@ -1044,8 +1052,7 @@ def process_text_on_page(index, pagetitle, text):
           ("3", "author"),
           ("2", "year"),
         ], no_notes=True)
-        changed = origt != str(t)
-        if changed:
+        if origt != str(t):
           notes.append("rename numbered params in {{quote-song}} to named params and remove blank ones")
       if tn == "quote-text":
         move_params([
@@ -1057,8 +1064,7 @@ def process_text_on_page(index, pagetitle, text):
           ("3", "author"),
           ("2", "year"),
         ], no_notes=True)
-        changed = origt != str(t)
-        if changed:
+        if origt != str(t):
           notes.append("rename numbered params in {{quote-text}} to named params and remove blank ones")
       if tn == "quote-us-patent":
         move_params([
@@ -1070,8 +1076,7 @@ def process_text_on_page(index, pagetitle, text):
           ("3", "author"),
           ("2", "year"),
         ], no_notes=True)
-        changed = origt != str(t)
-        if changed:
+        if origt != str(t):
           notes.append("rename numbered params in {{quote-us-patent}} to named params and remove blank ones")
       if tn == "quote-video game":
         move_params([
@@ -1083,8 +1088,7 @@ def process_text_on_page(index, pagetitle, text):
           ("3", "author"),
           ("2", "date"),
         ], no_notes=True)
-        changed = origt != str(t)
-        if changed:
+        if origt != str(t):
           notes.append("rename numbered params in {{quote-video game}} to named params and remove blank ones")
       if tn == "quote-web":
         move_params([
@@ -1096,12 +1100,16 @@ def process_text_on_page(index, pagetitle, text):
           ("3", "author"),
           ("2", "date"),
         ], no_notes=True)
-        changed = origt != str(t)
-        if changed:
+        if origt != str(t):
           notes.append("rename numbered params in {{quote-web}} to named params and remove blank ones")
 
-    if changed:
-      pagemsg("Replaced %s with %s" % (origt, str(t)))
+    if tn in quote_templates:
+      if args.from_to:
+        from_to("Saw {{%s}}" % tn)
+
+    if origt != str(t):
+      comment = "; ".join(blib.group_notes(notes))
+      pagemsg("Replaced <from> %s <to> %s <end> <comment> %s <endcom>" % (origt, str(t), comment))
 
   return str(parsed), notes
 
@@ -1112,6 +1120,7 @@ parser.add_argument("--check-compound-pages", action="store_true", help="Check f
 parser.add_argument("--check-author-splitting", action="store_true", help="Try to split cases where multiple authors given in author= and similar params")
 parser.add_argument("--remove-lang-wrapping", action="store_true", help="Remove {{lang|...}} wrapping in params")
 parser.add_argument("--from-to", action="store_true", help="Output all quote templates in from-to format")
+parser.add_argument("--from-to-modified", action="store_true", help="Output modified quote templates in from-to format")
 parser.add_argument("--rename-params-to-eliminate", action="store_true", help="Rename params that will be eliminated")
 parser.add_argument("--templates-to-rename-numbered-params", help="Comma-separated list of templates for which to rename numbered params")
 parser.add_argument("--rename-bad-params", action="store_true", help="Rename bad (misspelled, etc.) params")
