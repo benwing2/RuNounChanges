@@ -18,7 +18,7 @@ local languages_module = "Module:languages"
 local links_module = "Module:links"
 local number_utilities_module = "Module:number-utilities"
 local parameters_module = "Module:parameters"
-local parse_utilities_module = "Module:parse utilities"
+local parse_utilities_module = "Module:User:Benwing2/parse utilities"
 local roman_numerals_module = "Module:roman numerals"
 local script_utilities_module = "Module:script utilities"
 local scripts_module = "Module:scripts"
@@ -107,12 +107,12 @@ local function tag_nowiki(text)
 	return mw.getCurrentFrame():callParserFunction{name="#tag", args={"nowiki", text}}
 end
 
--- Convert a comma-separated list of language codes to a comma-separated list of language names. `paramname` is the
+-- Convert a comma-separated list of language codes to a comma-separated list of language names. `fullname` is the
 -- name of the parameter from which the list of language codes was fetched.
-local function format_langs(langs, paramname)
+local function format_langs(langs, fullname)
 	langs = rsplit(langs, ",")
 	for i, langcode in ipairs(langs) do
-		local lang = require(languages_module).getByCode(langcode, paramname)
+		local lang = require(languages_module).getByCode(langcode, fullname)
 		langs[i] = lang:getCanonicalName()
 	end
 	if #langs == 1 then
@@ -155,7 +155,7 @@ local param_mods = {
 
 --[=[
 Parse a textual property that may be in a foreign language or script and may be annotated with a language prefix and/or
-inline modifiers. `val` is the value of the parameter and `paramname` is the name of the parameter from which the value
+inline modifiers. `val` is the value of the parameter and `fullname` is the name of the parameter from which the value
 was retrieved. `explicit_gloss`, if specified and non-nil, overrides any gloss specified using the <t:...> or
 <gloss:...> inline modifier.
 
@@ -179,7 +179,7 @@ the text and CSS-tag the text accordingly, but to leave the text untagged.
 This object can be passed to format_annotated_text() to format a string displaying the text (appropriately
 script-tagged, unless `noscript` is set, as described above) and modifiers.
 ]=]
-local function parse_annotated_text(val, paramname, explicit_gloss)
+local function parse_annotated_text(val, fullname, explicit_gloss)
 	if not val then
 		return nil
 	end
@@ -197,7 +197,8 @@ local function parse_annotated_text(val, paramname, explicit_gloss)
 	local function generate_obj(text, parse_err_or_paramname)
 		local obj = {}
 		if text:find(":[^ ]") then
-			local actual_text, textlang = require(parse_utilities_module).parse_term_with_lang(text, parse_err_or_paramname)
+			local actual_text, textlang = require(parse_utilities_module).parse_term_with_lang(text,
+				parse_err_or_paramname)
 			obj.text = actual_text
 			obj.lang = textlang
 		else
@@ -210,12 +211,12 @@ local function parse_annotated_text(val, paramname, explicit_gloss)
 	if val:find("<") then
 		-- Check for inline modifier.
 		obj = require(parse_utilities_module).parse_inline_modifiers(val, {
-			paramname = paramname,
+			paramname = fullname,
 			param_mods = param_mods,
 			generate_obj = generate_obj,
 		})
 	else
-		obj = generate_obj(val, paramname)
+		obj = generate_obj(val, fullname)
 	end
 
 	if explicit_gloss then
@@ -263,14 +264,17 @@ In general we want to treat &#91; like an opening bracket and &#93; like a closi
 mismatched:
 * author=Anonymous &#91;{{w|Karl Maria Kertbeny}}]
 
-Here, `val` is the value of the parameter and `paramname` is the name of the parameter from which the value was
+Here, `val` is the value of the parameter and `fullname` is the name of the parameter from which the value was
 retrieved. `explicit_gloss`, if specified and non-nil, overrides any gloss specified using the <t:...> or <gloss:...>
-inline modifier, and `explicit_gloss_paramname` is the name of the parameter from which this value was retrieved. (If
+inline modifier, and `explicit_gloss_fullname` is the name of the parameter from which this value was retrieved. (If
 `explicit_gloss` is specified and multiple values were seen, an error results.)
 
 Return value is a list of objects of the same sort as returned by parse_annotated_text().
 ]=]
-local function parse_multivalued_annotated_text(val, paramname, explicit_gloss, explicit_gloss_paramname)
+local function parse_multivalued_annotated_text(val, fullname, explicit_gloss, explicit_gloss_fullname)
+	if not val then
+		return nil
+	end
 	-- NOTE: In the code that follows, we use `entity` most of the time to refer to one of the semicolon-separated
 	-- values in the multivalued param. Entities are most commonly people (typically authors, editors, translators or
 	-- the like), but may be the names of publishers, locations, or other entities. "Entity" can also refer to HTML
@@ -293,13 +297,13 @@ local function parse_multivalued_annotated_text(val, paramname, explicit_gloss, 
 		else
 			obj.text = text
 		end
-		obj.text = obj.text
+		obj.text = undo_html_entity_replacement(obj.text)
 		return obj
 	end
 
 	-- Optimization #1: No semicolons or angle brackets (indicating inline modifiers).
 	if not val:find("[<;]") then
-		return {generate_obj(val, paramname)}
+		return {generate_obj(val, fullname)}
 	end
 
 	-- Optimization #2: Semicolons but no angle brackets (indicating inline modifiers), braces, brackets, or parens (any
@@ -308,7 +312,7 @@ local function parse_multivalued_annotated_text(val, paramname, explicit_gloss, 
 	if not val:find("[<>%[%](){}&]") then
 		local entity_objs = {}
 		for entity in rgsplit(val, "%s*;%s*") do
-			table.insert(entity_objs, generate_obj(entity, paramname))
+			table.insert(entity_objs, generate_obj(entity, fullname))
 		end
 		return entity_objs
 	end
@@ -362,20 +366,21 @@ local function parse_multivalued_annotated_text(val, paramname, explicit_gloss, 
 			if #entity_group > 1 then
 				-- Check for inline modifier.
 				obj = put.parse_inline_modifiers_from_segments(entity_group, oneval, {
-					paramname = paramname,
+					paramname = fullname,
 					param_mods = param_mods,
 					generate_obj = generate_obj,
 				})
 			else
-				obj = generate_obj(entity_group[1], paramname)
+				obj = generate_obj(entity_group[1], fullname)
 			end
+			table.insert(entity_objs, obj)
 		end
 	end
 
 	if explicit_gloss then
 		if #entity_objs > 1 then
 			error(("Can't specify |%s= along with multiple semicolon-separated entities in |%s=; use the <t:...> "
-				"inline modifier attached to the individual entities"):format(explicit_gloss_paramname, paramname))
+				.. "inline modifier attached to the individual entities"):format(explicit_gloss_fullname, fullname))
 		end
 		entity_objs[1].gloss = explicit_gloss
 	end
@@ -384,15 +389,17 @@ local function parse_multivalued_annotated_text(val, paramname, explicit_gloss, 
 end
 
 
--- Format a text property that may be in a foreign language or script, along with annotations. This is conceptually
--- similar to the full_link() function in [[Module:links]], but displays the annotations in a different format that is
--- more appropriate for bibliographic entries. The output looks like this:
---
--- TEXT [TRANSLIT /TRANSCRIPTION/, GLOSS]
---
--- `textobj` is as returned by `parse_annotated_text`. `tag_text`, if supplied, is a function of one argument to further
--- wrap the text after it has been processed and CSS-tagged appropriately, directly before insertion. `tag_gloss` is a
--- similar function for the gloss.
+--[=[
+Format a text property that may be in a foreign language or script, along with annotations. This is conceptually
+similar to the full_link() function in [[Module:links]], but displays the annotations in a different format that is
+more appropriate for bibliographic entries. The output looks like this:
+
+TEXT [TRANSLIT /TRANSCRIPTION/, GLOSS]
+
+`textobj` is as returned by parse_annotated_text(). `tag_text`, if supplied, is a function of one argument to further
+wrap the text after it has been processed and CSS-tagged appropriately, directly before insertion. `tag_gloss` is a
+similar function for the gloss.
+]=]
 local function format_annotated_text(textobj, tag_text, tag_gloss)
 	if not textobj then
 		return nil
@@ -485,7 +492,18 @@ local function format_annotated_text(textobj, tag_text, tag_gloss)
 end
 
 
+--[=[
+Format a multivalued text property that may be in a foreign language or script, along with annotations. This is the
+multivalued analog to format_annotated_text(), and formats each individual entity using format_annotated_text(),
+joining the results with `delimiter` (which defaults to SEMICOLON_SPACE [FIXME: this will change to comma-space]).
+
+`textobjs` is as returned by parse_multivalued_annotated_text(). `tag_text` and `tag_gloss` are as in
+format_annotated_text().
+]=]
 local function format_multivalued_annotated_text(textobjs, delimiter, tag_text, tag_gloss)
+	if not textobjs then
+		return nil
+	end
 	if #textobjs == 1 then
 		return format_annotated_text(textobjs[1], tag_text, tag_gloss)
 	end
@@ -493,7 +511,7 @@ local function format_multivalued_annotated_text(textobjs, delimiter, tag_text, 
 	for _, textobj in ipairs(textobjs) do
 		table.insert(parts, format_annotated_text(textobj, tag_text, tag_gloss))
 	end
-	return table.concat(parts, delimiter)
+	return table.concat(parts, delimiter or SEMICOLON_SPACE)
 end
 
 
@@ -911,7 +929,7 @@ function export.source(args, alias_map)
 	-- Return two values: the value of a parameter given the base param name (which may have a numeric index added),
 	-- and the parameter name from which the value was fetched (which may be an alias, i.e. you can't necessarily fetch
 	-- the parameter value from args[] given this name). The base parameter can be a list of such base params, which
-	-- are checked in turn.
+	-- are checked in turn, or nil, in which case nil is returned.
 	local function a_with_name(param)
 		if type(param) == "table" then
 			for _, par in ipairs(param) do
@@ -922,11 +940,14 @@ function export.source(args, alias_map)
 			end
 			return nil
 		end
+		if not param then
+			return nil
+		end
 		local fullname = get_full_paramname(param)
 		return args[fullname], alias(fullname)
 	end
 	-- Fetch the value of a parameter given the base param name (which may have a numeric index added). The base
-	-- parameter can be a list of such base params, which are checked in turn.
+	-- parameter can be a list of such base params, which are checked in turn, or nil, in which case nil is returned.
 	local function a(param)
 		return (a_with_name(param))
 	end
@@ -946,12 +967,12 @@ function export.source(args, alias_map)
 
 	-- Convenience function to fetch a parameter that may be in a foreign language or text (and may consequently have
 	-- a language prefix and/or inline modifiers), parse the annotations and convert the result into a formatted string.
-	-- This is the same as parse_and_format_annotated_text() below but also returns the param name as the second return
-	-- value.
+	-- This is the same as parse_and_format_annotated_text() below but also returns the full param name as the second
+	-- return value.
 	local function parse_and_format_annotated_text_with_name(param, tag_text, tag_gloss)
-		local paramval, paramname = a_with_name(param)
-		local obj = parse_annotated_text(paramval, paramname)
-		return format_annotated_text(obj, tag_text, tag_gloss), paramname
+		local val, fullname = a_with_name(param)
+		local obj = parse_annotated_text(val, fullname)
+		return format_annotated_text(obj, tag_text, tag_gloss), fullname
 	end
 
 	-- Convenience function to fetch a parameter that may be in a foreign language or text (and may consequently have
@@ -963,24 +984,101 @@ function export.source(args, alias_map)
 		return (parse_and_format_annotated_text_with_name(param, tag_text, tag_gloss))
 	end
 
-	-- Convenience function to fetch a parameter that may be in a foreign language or text (and may consequently have
-	-- a language prefix and/or inline modifiers), parse the modifiers and convert the result into a formatted string.
-	-- This is the same as parse_and_format_annotated_text() below but also returns the param name as the second return value
-	-- and the raw param value (as directly specified by the user, after stripping off inline modifiers and language
-	-- prefix) as the third return value.
+	-- Convenience function to fetch a multivalued parameter that may be in a foreign language or text (and may
+	-- consequently have a language prefix and/or inline modifiers), parse the modifiers and convert the result into a
+	-- formatted string. This is the multivalued analog to parse_and_format_annotated_text_with_name() and returns two
+	-- values, the formatted string and the name of the parameter fetched. `delimiter` is as in
+	-- format_multivalued_annotated_text().
 	local function parse_and_format_multivalued_annotated_text_with_name(param, delimiter, tag_text, tag_gloss)
 		local paramval, paramname = a_with_name(param)
 		local objs = parse_multivalued_annotated_text(paramval, paramname)
 		return format_multivalued_annotated_text(objs, delimiter, tag_text, tag_gloss), paramname
 	end
 
-	-- Convenience function to fetch a parameter that may be in a foreign language or text (and may consequently have
-	-- a language prefix and/or inline modifiers), parse the modifiers and convert the result into a formatted string.
-	-- This is a wrapper around parse_annotated_text() and format_annotated_text(). `param` is the base parameter name (see
-	-- a_with_name()), `tag_text` is an optional function to tag the parameter text after all other processing (e.g.
-	-- wrap in <cite>...</cite> tags), and `tag_gloss` is a similar function for the parameter translation/gloss.
+	-- Convenience function to fetch a multivalued parameter that may be in a foreign language or text (and may
+	-- consequently have a language prefix and/or inline modifiers), parse the modifiers and convert the result into a
+	-- formatted string. This is the multivalued analog to parse_and_format_annotated_text(). `delimiter` is as in
+	-- format_multivalued_annotated_text().
 	local function parse_and_format_multivalued_annotated_text(param, delimiter, tag_text, tag_gloss)
 		return (parse_and_format_multivalued_annotated_text_with_name(param, delimiter, tag_text, tag_gloss))
+	end
+
+	-- Add a formatted author (whose values may be specified using `author_param` or, for compatibility purposes, split
+	-- among various parameters):
+	-- * `author_param` is the base parameter name of the author param (e.g. "author" or "2ndauthor");
+	-- * `trans_author_param` is the corresponding base name holding the gloss/translation (e.g. "trans-author"), or
+	--   nil if no such parameter exists;
+	-- * `authorlink` is the base parameter name holding the Wikipedia link of the author(s) in `author_param`;
+	-- * `trans_authorlink_param` is the base parameter name holding the Wikipedia link of the gloss/translation of
+	--   the author's name (e.g. "trans-authorlink"), or nil if no such parameter exists;
+	-- * `first_param` is the base parameter name holding the first name of the author;
+	-- * `trans_first_param` is the corresponding base name holding the gloss/translation of the first name (e.g.
+	--   "trans-first"), or nil if no such parameter exists;
+	-- * `last_param` is the base parameter name holding the last name of the author;
+	-- * `trans_last_param` is the corresponding base name holding the gloss/translation of the last name (e.g.
+	--   "trans-last"), or nil if no such parameter exists.
+	local function add_author(author_param, trans_author_param, authorlink_param, trans_authorlink_param,
+		first_param, trans_first_param, last_param, trans_last_param)
+		local author, author_fullname = a_with_name(author_param)
+		local function make_author_with_url(txt, authorlink)
+			if authorlink then
+				return "[[w:" .. authorlink .. "|" .. txt .. "]]"
+			else
+				return txt
+			end
+		end
+		local authorlink = a(authorlink_param)
+		local authorlink_gloss, authorlink_gloss_fullname = a_with_name(trans_authorlink_param)
+		local trans_author, trans_author_fullname = a_with_name(trans_author_param)
+		if author then
+			local authorobjs = parse_multivalued_annotated_text(author, author_fullname, trans_author,
+				trans_author_fullname)
+			if #authorobjs == 1 then
+				authorobjs[1].text = make_author_with_url(authorobjs[1].text, authorlink)
+				if authorobjs[1].gloss and authorlink_gloss then
+					authorobjs[1].gloss = make_author_with_url(authorobjs[1].gloss, authorlink_gloss)
+				end
+				add(format_multivalued_annotated_text(authorobjs))
+			elseif authorlink_gloss then
+				error(("Can't specify |%s= along with multiple semicolon-separated entities in |%s=; use the "
+					.. "<t:...> inline modifier attached to the individual entities and put the link directly "
+					.. "in the value of the inline modifier"):format(authorlink_gloss_fullname, author_fullname))
+			else
+				-- Allow an authorlink with multiple authors, e.g. for use with |author=Max Mills; Harvey Mills
+				-- with |authorlink=Max and Harvey. For this we have to generate the entire text and link it
+				-- all.
+				local formatted_text = format_multivalued_annotated_text(authorobjs)
+				add(make_author_with_url(formatted_text, authorlink))
+			end
+		else
+			-- Author separated into first name + last name. We don't currently support non-Latin-script
+			-- authors separated this way and probably never will.
+			local last = a(last_param)
+			local first = a(first_param)
+			if first then
+				author = first .. " " .. last
+			else
+				author = last
+			end
+			author = make_author_with_url(author, authorlink)
+			local last_gloss = a(trans_last_param)
+			local author_gloss
+			if last_gloss then
+				local first_gloss = a(trans_first_param)
+				if first_gloss then
+					author_gloss = first_gloss .. " " .. last_gloss
+				else
+					author_gloss = last_gloss
+				end
+				author_gloss = make_author_with_url(author_gloss, authorlink_gloss)
+			end
+			add(author)
+			if author_gloss then
+				add(SPACE_LBRAC)
+				add(author_gloss)
+				add(RBRAC)
+			end
+		end
 	end
 
 	-- Set this now so a() works just below.
@@ -1015,68 +1113,27 @@ function export.source(args, alias_map)
 			local author, author_param = a_with_name("author")
 			local last = a("last")
 			local first = a("first")
-			if author or last then
+			if a("author") or a("last") then
 				-- If first author, output a comma unless {{{nodate}}} used.
 				if i == 1 and not args.nodate then
 					add(", ")
 				end
 				-- If not first author, output a semicolon to separate from preceding authors.
 				add(i == 1 and " " or SEMICOLON_SPACE)
-				local function make_author_with_url(txt, authorlink)
-					if authorlink then
-						return "[[w:" .. authorlink .. "|" .. txt .. "]]"
-					else
-						return txt
-					end
-				end
-				local authorlink = a("authorlink")
-				local authorlink_gloss = a("trans-authorlink")
-				if author then
-					local authorobj = parse_annotated_text(author, author_param, a("trans-author"))
-					authorobj.text = make_author_with_url(authorobj.text, authorlink)
-					if authorobj.gloss and authorlink_gloss then
-						authorobj.gloss = make_author_with_url(authorobj.gloss, authorlink_gloss)
-					end
-					add(format_annotated_text(authorobj))
-				else
-					-- Author separated into first name + last name. We don't currently support non-Latin-script
-					-- authors separated this way and probably never will.
-					local first = a("first")
-					if first then
-						author = first .. " " .. last
-					else
-						author = last
-					end
-					author = make_author_with_url(author, authorlink)
-					local last_gloss = a("trans-last")
-					local author_gloss
-					if last_gloss then
-						local first_gloss = a("trans-first")
-						if first_gloss then
-							author_gloss = first_gloss .. " " .. last_gloss
-						else
-							author_gloss = last_gloss
-						end
-						author_gloss = make_author_with_url(author_gloss, authorlink_gloss)
-					end
-					add(author)
-					if author_gloss then
-						add(SPACE_LBRAC)
-						add(author_gloss)
-						add(RBRAC)
-					end
-				end
+
+				add_author("author", "trans-author", "authorlink", "trans-authorlink", "first", "trans-first",
+					"last", "trans-last")
 			end
 		end
 		if args.coauthors or args.quotee then
-			-- Need to set this. It's accessed (indirectly) by parse_and_format_annotated_text(), and will have the wrong value
-			-- as a result of the 1, maxind loop above.
+			-- Need to set this. It's accessed (indirectly) by parse_and_format_multivalued_annotated_text(), and will
+			-- have the wrong value as a result of the `i = 1, maxind` loop above.
 			get_full_paramname = make_get_full_paramname("")
 			if args.coauthors then
-				add(SEMICOLON_SPACE .. parse_and_format_annotated_text("coauthors"))
+				add(SEMICOLON_SPACE .. parse_and_format_multivalued_annotated_text("coauthors"))
 			end
 			if args.quotee then
-				add(", quoting " .. parse_and_format_annotated_text("quotee"))
+				add(", quoting " .. parse_and_format_multivalued_annotated_text("quotee"))
 			end
 		end
 		add(",")
@@ -1121,7 +1178,8 @@ function export.source(args, alias_map)
 		end
 		local chap_series, chap_series_param =
 			parse_and_format_annotated_text_with_name(param .. "_series", tag_with_cite, tag_with_cite)
-		local chap_seriesvolume, chap_seriesvolume_param = parse_and_format_annotated_text_with_name(param .. "_seriesvolume")
+		local chap_seriesvolume, chap_seriesvolume_param =
+			parse_and_format_annotated_text_with_name(param .. "_seriesvolume")
 		if chap_series then
 			chap_series = ", " .. chap_series
 		end
@@ -1187,7 +1245,7 @@ function export.source(args, alias_map)
 	local function postauthor(ind, sep)
 		get_full_paramname = make_get_full_paramname(ind)
 
-		local chapter_tlr = parse_and_format_annotated_text("chapter_tlr")
+		local chapter_tlr = parse_and_format_multivalued_annotated_text("chapter_tlr")
 		if chapter_tlr then
 			add(chapter_tlr .. ", transl., ")
 		end
@@ -1201,14 +1259,15 @@ function export.source(args, alias_map)
 			end
 		end
 
-		local tlr = parse_and_format_annotated_text({"tlr", "translator", "translators"})
-		local editor, editor_param = parse_and_format_annotated_text_with_name("editor")
-		local editors, editors_param = parse_and_format_annotated_text_with_name("editors")
+		local tlr = parse_and_format_multivalued_annotated_text({"tlr", "translator", "translators"})
+		local editor, editor_param = parse_and_format_multivalued_annotated_text_with_name("editor")
+		local editors, editors_param = parse_and_format_multivalued_annotated_text_with_name("editors")
 		if editor and editors then
 			error(("Can't specify both |%s= and |%s="):format(editor_param, editors_param))
 		end
 		if a("mainauthor") then
-			add(parse_and_format_annotated_text("mainauthor") .. ((tlr or editor or editors) and SEMICOLON_SPACE or ","))
+			add(parse_and_format_multivalued_annotated_text("mainauthor") ..
+				((tlr or editor or editors) and SEMICOLON_SPACE or ","))
 		end
 
 		if tlr then
@@ -1428,30 +1487,30 @@ function export.source(args, alias_map)
 			table.insert(tracking_categories, "Quotations using quoted-in parameter")
 		end
 
-		local location = parse_and_format_annotated_text("location")
+		local location = parse_and_format_multivalued_annotated_text("location")
 		if a("publisher") then
 			if location then
 				add_with_sep(location .. "&#58;") -- colon
 				sep = " "
 			end
-			add_with_sep(parse_and_format_annotated_text("publisher"))
+			add_with_sep(parse_and_format_multivalued_annotated_text("publisher"))
 		elseif location then
 			add_with_sep(location)
 		end
 
 		if a("source") then
-			add_with_sep("sourced from " .. parse_and_format_annotated_text("source"))
+			add_with_sep("sourced from " .. parse_and_format_multivalued_annotated_text("source"))
 		end
 
 		local original = parse_and_format_annotated_text("original", tag_with_cite, tag_with_cite)
-		local by = parse_and_format_annotated_text("by")
+		local by = parse_and_format_multivalued_annotated_text("by")
 		if original or by then
 			add_with_sep((a("type") or "translation") .. " of " .. (original or "original") .. (by and " by " .. by or ""))
 		end
 
 		-- Fetch date_published=/year_published=/month_published= and format appropriately.
 		local formatted_date_published = format_date_args(a, get_full_paramname, alias_map, "", "_published")
-		local platform = parse_and_format_annotated_text("platform")
+		local platform = parse_and_format_multivalued_annotated_text("platform")
 		if formatted_date_published then
 			add_with_sep("published " .. formatted_date_published .. (platform and " via " .. platform or ""))
 		elseif platform then
@@ -1599,32 +1658,10 @@ function export.source(args, alias_map)
 	-- Add the author(s).
 	if args["2ndauthor"] or args["2ndlast"] then
 		add(" ")
-		local authorlink = args["2ndauthorlink"]
-		local function make_author_with_url(txt)
-			if authorlink then
-				return "[[w:" .. authorlink .. "|" .. txt .. "]]"
-			else
-				return txt
-			end
-		end
-		local author = args["2ndauthor"]
-		if author then
-			local authorobj = parse_annotated_text(author, "2ndauthor")
-			authorobj.text = make_author_with_url(authorobj.text)
-			add(format_annotated_text(authorobj))
-		else
-			local last = args["2ndlast"]
-			local first = args["2ndfirst"]
-			-- Author separated into first name + last name. We don't currently support non-Latin-script
-			-- authors separated this way and probably never will.
-			if first then
-				author = first .. " " .. last
-			else
-				author = last
-			end
-			author = make_author_with_url(author)
-			add(author)
-		end
+		-- Set this to have no index, since it may have been set with an index in postauthor() and is used in
+		-- add_author().
+		get_full_paramname = make_get_full_paramname("")
+		add_author("2ndauthor", nil, "2ndauthorlink", nil, "2ndfirst", nil, "2ndlast", nil)
 
 		-- FIXME, we should use sep = ", " here too and fix up the handling
 		-- of chapter/mainauthor/etc. in postauthor() to use add_with_sep().
