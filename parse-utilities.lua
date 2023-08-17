@@ -432,35 +432,38 @@ function export.parse_term_with_lang(term, parse_err_or_paramname)
 	parse_err = type(parse_err_or_paramname) == "function" and parse_err_or_paramname or
 		parse_err_or_paramname and export.make_parse_err(("%s=%s"):format(parse_err_or_paramname, term)) or
 		export.make_parse_err(term)
-	-- Parse off an initial language code (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). First check for Wikipedia prefixes
-	-- ('w:Abatemarco' or 'w:it:Colle Val d'Elsa').
-	local termlang, actual_term = term:match("^w:([^ ].*)$")
-	if termlang == "w" then
-		local foreign_wikipedia, foreign_term = actual_term:match("^([a-z][a-z][a-z-]*):([^ ].*)$")
-		if foreign_wikipedia then
-			termlang = termlang .. ":" .. foreign_wikipedia
-			actual_term = foreign_term
-		end
+	-- Parse off an initial language code (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). First check for Wikipedia
+	-- prefixes ('w:Abatemarco' or 'w:it:Colle Val d'Elsa' or 'lw:zh:邹衡'). Wikipedia language codes follow a similar
+	-- format to Wiktionary language codes (see below).
+	local termlang, foreign_wikipedia, actual_term = term:match("^(l?w):([a-z][a-z][a-z-]*):([^ ].*)$")
+	if not termlang then
+		termlang, actual_term = term:match("^(w):([^ ].*)$")
+	end
+	if termlang then
+		local wikipedia_prefix = foreign_wikipedia and "w:" .. foreign_wikipedia or "w"
 		if actual_term:find("[%[%]]") then
 			parse_err("Cannot have brackets following a Wikipedia (w:...) link; place the Wikipedia link inside the brackets")
 		end
-		term = ("[[%s:%s|%s]]"):format(termlang, actual_term, actual_term)
-		termlang = nil
-	else
-		-- Wiktionary language codes have at least two lowercase letters followed possibly by lowercase letters and/or
-		-- hyphens (there are more restrictions but this is close enough). Also check for nonstandard Latin etymology
-		-- language codes (e.g. VL. or LL.). (There used to be more nonstandard codes but they have all been eliminated.)
-		termlang, actual_term = term:match("^([a-z][a-z][a-z-]*):([^ ].*)$")
-		if not termlang then
-			-- Special hack for Latin variants, which can have nonstandard etym codes, e.g. VL., LL.
-			termlang, actual_term = term:match("^([A-Z]L%.):([^ ].*)$")
-		end
-		if termlang then
-			termlang = require("Module:languages").getByCode(termlang, parse_err, "allow etym")
-			term = actual_term
+		term = ("[[%s:%s|%s]]"):format(wikipedia_prefix, actual_term, actual_term)
+		if termlang == "lw" then
+			return term, require("Module:languages").getByCode(foreign_wikipedia, parse_err, "allow etym")
+		else
+			return term, nil
 		end
 	end
 
+	-- Wiktionary language codes have at least two lowercase letters followed possibly by lowercase letters and/or
+	-- hyphens (there are more restrictions but this is close enough). Also check for nonstandard Latin etymology
+	-- language codes (e.g. VL. or LL.). (There used to be more nonstandard codes but they have all been eliminated.)
+	termlang, actual_term = term:match("^([a-z][a-z][a-z-]*):([^ ].*)$")
+	if not termlang then
+		-- Special hack for Latin variants, which can have nonstandard etym codes, e.g. VL., LL.
+		termlang, actual_term = term:match("^([A-Z]L%.):([^ ].*)$")
+	end
+	if termlang then
+		termlang = require("Module:languages").getByCode(termlang, parse_err, "allow etym")
+		term = actual_term
+	end
 	return term, termlang
 end
 
