@@ -879,13 +879,13 @@ def process_text_on_page(index, pagetitle, text):
                 gloss = None
                 tr = None
                 if not m:
-                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\s+\[(.*)\]$", pv.strip())
+                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\s+\[([^\[\]]*)\]$", pv.strip())
                   if m and m.group(3).startswith("http"):
                     m = None
                   if m:
                     lang, foreign, gloss = m.groups()
                 if not m:
-                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\s+\((.*)\)$", pv.strip())
+                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\s+\(([^()]*)\)$", pv.strip())
                   if m:
                     lang, foreign, gloss = m.groups()
                 if not m:
