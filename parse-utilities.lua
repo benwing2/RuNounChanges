@@ -536,6 +536,28 @@ In the table values:
   value of the conversion function for this key generates a fresh list each time.
 ]=]
 function export.parse_inline_modifiers(arg, props)
+	local segments = export.parse_balanced_segment_run(arg, "<", ">")
+
+	if not props.splitchar then
+		return export.parse_inline_modifiers_from_segments(segments, arg, props)
+	else
+		local retval = {}
+		local separated_groups = export.split_alternating_runs_escaping(segments, props.splitchar,
+			props.preserve_splitchar, props.escape_fun or export.escape_comma_whitespace,
+			props.unescape_fun or export.unescape_comma_whitespace)
+		for j = 1, #separated_groups, (props.preserve_splitchar and 2 or 1) do
+			local parsed = export.parse_inline_modifiers_from_segments(separated_groups[j], arg, props)
+			if props.preserve_splitchar and j > 1 then
+				parsed[props.separator_key or "separator"] = separated_groups[j - 1][1]
+			end
+			table.insert(retval, parsed)
+		end
+		return retval
+	end
+end
+
+
+function export.parse_inline_modifiers_from_segments(group, arg, props)
 	local function get_valid_prefixes()
 		local valid_prefixes = {}
 		for param_mod, _ in pairs(props.param_mods) do
@@ -554,103 +576,82 @@ function export.parse_inline_modifiers(arg, props)
 	end
 
 	local parse_err = props.parse_err or export.make_parse_err(get_arg_gloss())
-	local segments = export.parse_balanced_segment_run(arg, "<", ">")
-
-	local function parse_group(group)
-		local dest_obj = props.generate_obj(group[1], parse_err)
-		for k = 2, #group - 1, 2 do
-			if group[k + 1] ~= "" then
-				parse_err("Extraneous text '" .. group[k + 1] .. "' after modifier")
+	local dest_obj = props.generate_obj(group[1], parse_err)
+	for k = 2, #group - 1, 2 do
+		if group[k + 1] ~= "" then
+			parse_err("Extraneous text '" .. group[k + 1] .. "' after modifier")
+		end
+		local modtext = group[k]:match("^<(.*)>$")
+		if not modtext then
+			parse_err("Internal error: Modifier '" .. group[k] .. "' isn't surrounded by angle brackets")
+		end
+		local prefix, val = modtext:match("^([a-zA-Z0-9+_-]+):(.*)$")
+		if not prefix then
+			local valid_prefixes = get_valid_prefixes()
+			for i, valid_prefix in ipairs(valid_prefixes) do
+				valid_prefixes[i] = "'" .. valid_prefix .. ":'"
 			end
-			local modtext = group[k]:match("^<(.*)>$")
-			if not modtext then
-				parse_err("Internal error: Modifier '" .. group[k] .. "' isn't surrounded by angle brackets")
+			parse_err("Modifier " .. group[k] .. " lacks a prefix, should begin with one of " ..
+				require("Module:table").serialCommaJoin(valid_prefixes, {dontTag = true}))
+		end
+		local prefix_parse_err =
+			export.make_parse_err(("modifier prefix '%s' in %s in %s"):format(prefix, group[k], get_arg_gloss()))
+		if props.param_mods[prefix] then
+			local key = props.param_mods[prefix].item_dest or prefix
+			local convert = props.param_mods[prefix].convert
+			local converted
+			if convert then
+				converted = convert(val, prefix_parse_err)
+			else
+				converted = val
 			end
-			local prefix, val = modtext:match("^([a-zA-Z0-9+_-]+):(.*)$")
-			if not prefix then
-				local valid_prefixes = get_valid_prefixes()
-				for i, valid_prefix in ipairs(valid_prefixes) do
-					valid_prefixes[i] = "'" .. valid_prefix .. ":'"
+			local store = props.param_mods[prefix].store
+			if not store then
+				if dest_obj[key] then
+					prefix_parse_err("Prefix occurs twice")
 				end
-				parse_err("Modifier " .. group[k] .. " lacks a prefix, should begin with one of " ..
-					require("Module:table").serialCommaJoin(valid_prefixes, {dontTag = true}))
-			end
-			local prefix_parse_err =
-				export.make_parse_err(("modifier prefix '%s' in %s in %s"):format(prefix, group[k], get_arg_gloss()))
-			if props.param_mods[prefix] then
-				local key = props.param_mods[prefix].item_dest or prefix
-				local convert = props.param_mods[prefix].convert
-				local converted
-				if convert then
-					converted = convert(val, prefix_parse_err)
+				dest_obj[key] = converted
+			elseif store == "insert" then
+				if not dest_obj[key] then
+					dest_obj[key] = {converted}
 				else
-					converted = val
+					table.insert(dest_obj[key], converted)
 				end
-				local store = props.param_mods[prefix].store
-				if not store then
-					if dest_obj[key] then
-						prefix_parse_err("Prefix occurs twice")
-					end
-					dest_obj[key] = converted
-				elseif store == "insert" then
-					if not dest_obj[key] then
-						dest_obj[key] = {converted}
-					else
-						table.insert(dest_obj[key], converted)
-					end
-				elseif store == "insertIfNot" then
-					if not dest_obj[key] then
-						dest_obj[key] = {converted}
-					else
-						require("Module:table").insertIfNot(dest_obj[key], converted)
-					end
-				elseif store == "insert-flattened" then
-					if not dest_obj[key] then
-						dest_obj[key] = obj
-					else
-						for _, obj in ipairs(converted) do
-							table.insert(dest_obj[key], obj)
-						end
-					end
-				elseif store == "insertIfNot-flattened" then
-					if not dest_obj[key] then
-						dest_obj[key] = obj
-					else
-						for _, obj in ipairs(converted) do
-							require("Module:table").insertIfNot(dest_obj[key], obj)
-						end
-					end
+			elseif store == "insertIfNot" then
+				if not dest_obj[key] then
+					dest_obj[key] = {converted}
 				else
-					store(dest_obj, key, converted, prefix_parse_err)
+					require("Module:table").insertIfNot(dest_obj[key], converted)
+				end
+			elseif store == "insert-flattened" then
+				if not dest_obj[key] then
+					dest_obj[key] = obj
+				else
+					for _, obj in ipairs(converted) do
+						table.insert(dest_obj[key], obj)
+					end
+				end
+			elseif store == "insertIfNot-flattened" then
+				if not dest_obj[key] then
+					dest_obj[key] = obj
+				else
+					for _, obj in ipairs(converted) do
+						require("Module:table").insertIfNot(dest_obj[key], obj)
+					end
 				end
 			else
-				local valid_prefixes = get_valid_prefixes()
-				for i, valid_prefix in ipairs(valid_prefixes) do
-					valid_prefixes[i] = "'" .. valid_prefix .. "'"
-				end
-				prefix_parse_err("Unrecognized prefix, should be one of " ..
-					require("Module:table").serialCommaJoin(valid_prefixes, {dontTag = true}))
+				store(dest_obj, key, converted, prefix_parse_err)
 			end
-		end
-		return dest_obj
-	end
-
-	if not props.splitchar then
-		return parse_group(segments)
-	else
-		local retval = {}
-		local separated_groups = export.split_alternating_runs_escaping(segments, props.splitchar,
-			props.preserve_splitchar, props.escape_fun or export.escape_comma_whitespace,
-			props.unescape_fun or export.unescape_comma_whitespace)
-		for j = 1, #separated_groups, (props.preserve_splitchar and 2 or 1) do
-			local parsed = parse_group(separated_groups[j])
-			if props.preserve_splitchar and j > 1 then
-				parsed[props.separator_key or "separator"] = separated_groups[j - 1][1]
+		else
+			local valid_prefixes = get_valid_prefixes()
+			for i, valid_prefix in ipairs(valid_prefixes) do
+				valid_prefixes[i] = "'" .. valid_prefix .. "'"
 			end
-			table.insert(retval, parsed)
+			prefix_parse_err("Unrecognized prefix, should be one of " ..
+				require("Module:table").serialCommaJoin(valid_prefixes, {dontTag = true}))
 		end
-		return retval
 	end
+	return dest_obj
 end
 
 
