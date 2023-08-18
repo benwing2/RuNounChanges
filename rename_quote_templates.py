@@ -7,23 +7,19 @@ import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site, tname, pname
 from collections import defaultdict
 
-TEMP_AMP = "\uFFF0"
 TEMP_LT = "\uFFF1"
 TEMP_GT = "\uFFF2"
 TEMP_LBRAC = "\uFFF3"
 TEMP_RBRAC = "\uFFF4"
-TEMP_NBSP = "\uFFF5"
+TEMP_AMP = "\uFFF5"
+TEMP_SEMICOLON = "\uFFF6"
 
 html_entity_to_replacement = [
-  ("&amp;", TEMP_AMP),
-  ("&lt;", TEMP_LT),
-  ("&gt;", TEMP_GT),
-  ("&#91;", TEMP_LBRAC),
-  ("&#93;", TEMP_RBRAC),
-  ("&nbsp;", TEMP_NBSP),
+  ("&lt;", "&lt;", TEMP_LT),
+  ("&gt;", "&gt;", TEMP_GT),
+  ("&#91;", "&#0*91;", TEMP_LBRAC),
+  ("&#93;", "&#0*93;", TEMP_RBRAC),
 ]
-
-replacement_to_html_entity = {y: x for x, y in html_entity_to_replacement}
 
 quote_templates_by_highest_numbered_param = {
   "quote-av": 1,
@@ -264,6 +260,7 @@ def process_text_on_page(index, pagetitle, text):
   parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
+    this_template_notes = []
     tn = tname(t)
     origt = str(t)
     def getp(param):
@@ -333,7 +330,7 @@ def process_text_on_page(index, pagetitle, text):
             pagemsg("%s: %s -> %s" % (tn, fr, to))
             this_notes.append("rename %s= -> %s= in {{%s}}" % (fr, to, tn))
       if not no_notes:
-        notes.extend(this_notes)
+        this_template_notes.extend(this_notes)
 
     if tn in quote_templates:
       if args.from_to:
@@ -408,8 +405,15 @@ def process_text_on_page(index, pagetitle, text):
 
         def normalize_and_split_on_balanced_delims(author, authparam):
           processed_author = author
-          for entity, replacement in html_entity_to_replacement:
-            processed_author = processed_author.replace(entity, replacement)
+          for entity, entity_re, replacement in html_entity_to_replacement:
+            processed_author = re.sub(entity_re, replacement, processed_author)
+          # HTML entities per https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references must be
+          # either decimal numeric (&#8209;), hexadecimal numeric (&#x200E;) or named (&Aring;, &frac34;, etc.). In
+          # all three cases, we replace the ampersand and semicolon with special characters so they won't get
+          # interpreted as delimiters.
+          processed_author = re.sub("&(#[0-9]+);", TEMP_AMP + r"\1" + TEMP_SEMICOLON, processed_author)
+          processed_author = re.sub("&(#x[0-9a-fA-F]+);", TEMP_AMP + r"\1" + TEMP_SEMICOLON, processed_author)
+          processed_author = re.sub("&([0-9a-zA-Z_]+);", TEMP_AMP + r"\1" + TEMP_SEMICOLON, processed_author)
           # Eliminate L2R, R2L marks
           processed_author = processed_author.replace("\u200E", "").replace("\u200F", "")
           try:
@@ -421,8 +425,10 @@ def process_text_on_page(index, pagetitle, text):
             return False
 
         def undo_html_entity_replacement(txt):
-          for html, replacement in html_entity_to_replacement:
-            txt = txt.replace(replacement, html)
+          txt = text.replace(TEMP_AMP, "&")
+          txt = text.replace(TEMP_SEMICOLON, ";")
+          for entity, entity_re, replacement in html_entity_to_replacement:
+            txt = txt.replace(replacement, entity)
           return txt
 
         # Try to move a translator or editor from author=, mainauthor= or coauthors= to tlr= or editor=.
@@ -694,7 +700,15 @@ def process_text_on_page(index, pagetitle, text):
                           "quotee", "chapter_tlr", "by", "2ndauthor", "mainauthor2", "tlr2", "translator2",
                           "translators2", "quotee2", "chapter_tlr2", "by2"] + (
                             ["3"] if tn in ["quote-book", "quote-journal"] else []
-                          ):
+                          ) + (
+                            ["writer", "writers"] if tn == "quote-av" else []
+                          ) + (
+                            ["speaker"] if tn == "quote-hansard" else []
+                          ) + (
+                            ["inventor"] if tn == "quote-us-patent" else []
+                          ) + (
+                            ["developer"] if tn == "quote-video game" else []
+                            ):
           if authparam == moved_author_param and moved_tlr_msg:
             author = new_authors
           elif authparam == moved_tlr_dest_param and moved_tlr_msg:
@@ -728,10 +742,10 @@ def process_text_on_page(index, pagetitle, text):
     if args.do_old_renames:
       if tn in ["quote-magazine", "quote-news"]:
         blib.set_template_name(t, "quote-journal")
-        notes.append("%s -> quote-journal" % tn)
+        this_template_notes.append("%s -> quote-journal" % tn)
       if tn in ["quote-Don Quixote"]:
         blib.set_template_name(t, "RQ:Don Quixote")
-        notes.append("quote-Don Quixote -> RQ:Don Quixote")
+        this_template_notes.append("quote-Don Quixote -> RQ:Don Quixote")
       if tn == "quote-poem":
         move_params([
           ("title", "chapter"),
@@ -745,7 +759,7 @@ def process_text_on_page(index, pagetitle, text):
         ], no_notes=True)
         blib.set_template_name(t, "quote-book")
         if origt != str(t):
-          notes.append("quote-poem -> quote-book with fixed params")
+          this_template_notes.append("quote-poem -> quote-book with fixed params")
 
     if args.rename_bad_params:
       if tn in quote_templates:
@@ -872,7 +886,7 @@ def process_text_on_page(index, pagetitle, text):
                 newval = "%s:%s" % (m.group(1), m.group(2))
                 t.add(pn, newval)
                 pagemsg("Strip lang wrapping %s=%s to %s: %s" % (pn, pv, newval, origt))
-                notes.append("convert {{lang}} wrapping in %s= in {{%s}} to %s:..." % (pn, tn, m.group(1)))
+                this_template_notes.append("convert {{lang}} wrapping in %s= in {{%s}} to %s:..." % (pn, tn, m.group(1)))
                 count_lang_stripped_params[pn] += 1
                 count_lang_stripped_params_by_template["%s:%s" % (pn, tn)] += 1
               else:
@@ -929,12 +943,12 @@ def process_text_on_page(index, pagetitle, text):
                     newval = "%s:%s<tr:%s>" % (lang, foreign, tr)
                     t.add(pn, newval)
                     pagemsg("Strip lang wrapping with transliteration %s=%s to %s: %s" % (pn, pv, newval, origt))
-                    notes.append("convert {{lang}} wrapping in %s= in {{%s}} to %s:...<tr:...>" % (pn, tn, lang))
+                    this_template_notes.append("convert {{lang}} wrapping in %s= in {{%s}} to %s:...<tr:...>" % (pn, tn, lang))
                   else:
                     newval = "%s:%s<t:%s>" % (lang, foreign, gloss)
                     t.add(pn, newval)
                     pagemsg("Strip lang wrapping with translation %s=%s to %s: %s" % (pn, pv, newval, origt))
-                    notes.append("convert {{lang}} wrapping in %s= in {{%s}} to %s:...<t:...>" % (pn, tn, lang))
+                    this_template_notes.append("convert {{lang}} wrapping in %s= in {{%s}} to %s:...<t:...>" % (pn, tn, lang))
                   count_lang_stripped_params[pn] += 1
                   count_lang_stripped_params_by_template["%s:%s" % (pn, tn)] += 1
                 else:
@@ -978,7 +992,7 @@ def process_text_on_page(index, pagetitle, text):
           ("2", "year"),
         ], no_notes=True)
         if origt != str(t):
-          notes.append("rename numbered params in {{quote-av}} to named params and remove blank ones")
+          this_template_notes.append("rename numbered params in {{quote-av}} to named params and remove blank ones")
       if tn == "quote-book":
         move_params([
           ("8", ["t", "translation"]),
@@ -990,7 +1004,7 @@ def process_text_on_page(index, pagetitle, text):
           ("2", ["year", "date"]),
         ], no_notes=True)
         if origt != str(t):
-          notes.append("rename numbered params in {{quote-book}} to named params and remove blank ones")
+          this_template_notes.append("rename numbered params in {{quote-book}} to named params and remove blank ones")
       if tn == "quote-hansard":
         move_params([
           ("10", "t"),
@@ -1004,7 +1018,7 @@ def process_text_on_page(index, pagetitle, text):
           ("2", "year"),
         ], no_notes=True)
         if origt != str(t):
-          notes.append("rename numbered params in {{quote-hansard}} to named params and remove blank ones")
+          this_template_notes.append("rename numbered params in {{quote-hansard}} to named params and remove blank ones")
       if tn == "quote-journal":
         move_params([
           ("9", ["t", "translation"]),
@@ -1017,7 +1031,7 @@ def process_text_on_page(index, pagetitle, text):
           ("2", ["year", "date"]),
         ], no_notes=True)
         if origt != str(t):
-          notes.append("rename numbered params in {{quote-journal}} to named params and remove blank ones")
+          this_template_notes.append("rename numbered params in {{quote-journal}} to named params and remove blank ones")
       if tn == "quote-mailing list":
         move_params([
           ("8", "t"),
@@ -1029,7 +1043,7 @@ def process_text_on_page(index, pagetitle, text):
           ("2", "date"),
         ], no_notes=True)
         if origt != str(t):
-          notes.append("rename numbered params in {{quote-mailing list}} to named params and remove blank ones")
+          this_template_notes.append("rename numbered params in {{quote-mailing list}} to named params and remove blank ones")
       if tn == "quote-newsgroup":
         move_params([
           ("8", "t"),
@@ -1041,7 +1055,7 @@ def process_text_on_page(index, pagetitle, text):
           ("2", "date"),
         ], no_notes=True)
         if origt != str(t):
-          notes.append("rename numbered params in {{quote-newsgroup}} to named params and remove blank ones")
+          this_template_notes.append("rename numbered params in {{quote-newsgroup}} to named params and remove blank ones")
       if tn == "quote-song":
         move_params([
           ("8", "t"),
@@ -1053,7 +1067,7 @@ def process_text_on_page(index, pagetitle, text):
           ("2", "year"),
         ], no_notes=True)
         if origt != str(t):
-          notes.append("rename numbered params in {{quote-song}} to named params and remove blank ones")
+          this_template_notes.append("rename numbered params in {{quote-song}} to named params and remove blank ones")
       if tn == "quote-text":
         move_params([
           ("8", "t"),
@@ -1065,7 +1079,7 @@ def process_text_on_page(index, pagetitle, text):
           ("2", "year"),
         ], no_notes=True)
         if origt != str(t):
-          notes.append("rename numbered params in {{quote-text}} to named params and remove blank ones")
+          this_template_notes.append("rename numbered params in {{quote-text}} to named params and remove blank ones")
       if tn == "quote-us-patent":
         move_params([
           ("8", "t"),
@@ -1077,7 +1091,7 @@ def process_text_on_page(index, pagetitle, text):
           ("2", "year"),
         ], no_notes=True)
         if origt != str(t):
-          notes.append("rename numbered params in {{quote-us-patent}} to named params and remove blank ones")
+          this_template_notes.append("rename numbered params in {{quote-us-patent}} to named params and remove blank ones")
       if tn == "quote-video game":
         move_params([
           ("8", "t"),
@@ -1089,7 +1103,7 @@ def process_text_on_page(index, pagetitle, text):
           ("2", "date"),
         ], no_notes=True)
         if origt != str(t):
-          notes.append("rename numbered params in {{quote-video game}} to named params and remove blank ones")
+          this_template_notes.append("rename numbered params in {{quote-video game}} to named params and remove blank ones")
       if tn == "quote-web":
         move_params([
           ("8", "t"),
@@ -1101,15 +1115,17 @@ def process_text_on_page(index, pagetitle, text):
           ("2", "date"),
         ], no_notes=True)
         if origt != str(t):
-          notes.append("rename numbered params in {{quote-web}} to named params and remove blank ones")
+          this_template_notes.append("rename numbered params in {{quote-web}} to named params and remove blank ones")
 
     if tn in quote_templates:
       if args.from_to:
         from_to("Saw {{%s}}" % tn)
 
     if origt != str(t):
-      comment = "; ".join(blib.group_notes(notes))
+      comment = "; ".join(blib.group_notes(this_template_notes))
       pagemsg("Replaced <from> %s <to> %s <end> <comment> %s <endcom>" % (origt, str(t), comment))
+
+    notes.extend(this_template_notes)
 
   return str(parsed), notes
 
@@ -1120,7 +1136,6 @@ parser.add_argument("--check-compound-pages", action="store_true", help="Check f
 parser.add_argument("--check-author-splitting", action="store_true", help="Try to split cases where multiple authors given in author= and similar params")
 parser.add_argument("--remove-lang-wrapping", action="store_true", help="Remove {{lang|...}} wrapping in params")
 parser.add_argument("--from-to", action="store_true", help="Output all quote templates in from-to format")
-parser.add_argument("--from-to-modified", action="store_true", help="Output modified quote templates in from-to format")
 parser.add_argument("--rename-params-to-eliminate", action="store_true", help="Rename params that will be eliminated")
 parser.add_argument("--templates-to-rename-numbered-params", help="Comma-separated list of templates for which to rename numbered params")
 parser.add_argument("--rename-bad-params", action="store_true", help="Rename bad (misspelled, etc.) params")
