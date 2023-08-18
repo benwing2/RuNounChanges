@@ -483,7 +483,7 @@ local function format_annotated_text(textobj, tag_text, tag_gloss)
 	if textobj.q then
 		ins(require(qualifier_module).format_qualifier(textobj.q) .. " ")
 	end
-	
+
 	ins(text)
 
 	if tr or ts or gloss then
@@ -514,7 +514,7 @@ local function format_annotated_text(textobj, tag_text, tag_gloss)
 	if textobj.qq then
 		ins(" " .. require(qualifier_module).format_qualifier(textobj.qq))
 	end
-	
+
 	return table.concat(parts)
 end
 
@@ -641,52 +641,15 @@ local function clone_args(direct_args, parent_args)
 	return args, alias_map
 end
 
-local function format_date_with_code(code, timestamp)
-	local language = mw.getContentLanguage()
-	local ok, date = pcall(language.formatDate, language, code, timestamp)
-	if ok then
-		return date
-	else
-		-- All the formats used in format_date_args() are fine, so the timestamp must be at fault.
-		error("Timestamp '" .. tostring(timestamp) .. "' could not be parsed; "
-			.. "see the [[mw:Help:Extension:ParserFunctions##time|documentation for the #time parser function]]).")
-	end
-end
-
--- Try to figure out if the given timestamp has the day of the month explicitly given. We use the following algorithm:
--- 1. Format as year-month-day; if the day is not 1, the day was explicitly given, since if only the year/month are
---    given, the day shows up as 1.
--- 2. If the day shows up as 1 and there isn't a 1 or 01 in the timestamp, the day wasn't explicitly given.
--- 3. Otherwise, if there are three separate numbers (e.g. 2022-07-01), or two separate numbers plus a capitalized
---    letter (taken as an English month, e.g. 2022 July 1), the day was explicitly given, otherwise not.
-local function date_has_day_specified(timestamp)
-	local day = format_date_with_code("j", timestamp)
-	if day ~= "1" then
-		return true
-	end
-	local english_month = timestamp:find("[A-Z]")
-	local canon_timestamp = mw.text.trim((timestamp:gsub("[^0-9]+", " ")))
-	local seen_nums = rsplit(canon_timestamp, " ")
-	local saw_one = false
-	for _, num in ipairs(seen_nums) do
-		if num == "1" or num == "01" then
-			saw_one = true
-			break
-		end
-	end
-	if not saw_one then
-		return false
-	end
-	return #seen_nums >= 3 or english_month and #seen_nums >= 2
-end
-
-
 local abbrs = {
 	["a."] = { anchor = "a.", full = "ante", },
 	["c."] = { anchor = "c.", full = "circa", },
 	["p."] = { anchor = "p.", full = "post", },
 }
 
+-- Process prefixes 'a.' (ante), 'c.' (circa) and 'p.' (post) at the beginning of an arbitrary date or year spec.
+-- Returns two values, the formatted version of the prefix and the date spec minus the prefix. If no prefix is found,
+-- returns an empty string and the full date.
 local function process_ante_circa_post(date)
 	local prefix = usub(date, 1, 2)
 	local abbr = abbrs[prefix]
@@ -730,8 +693,8 @@ end
 -- neither |nodate= is given to indicate that there is no date, or |accessdate= is given).
 --
 -- Returns two values: the formatted date and a boolean indicating whether to add a maintenance category
--- [[:Category:Requests for date in LANG entries]]. The return value can be nil if `maintenance_line_no_date` is not
--- given (in which case the scond return value will always be nil).
+-- [[:Category:Requests for date in LANG entries]]. The first return value will be nil if nothing is to be added
+-- (in which case the scond return value will always be nil).
 local function format_date_args(a, get_full_paramname, alias_map, parampref, paramsuf, bold_year,
 	maintenance_line_no_date)
 	local output = {}
@@ -750,17 +713,67 @@ local function format_date_args(a, get_full_paramname, alias_map, parampref, par
 		table.insert(output, text)
 	end
 
-	local function format_bold_date(date, explicit_day)
-		local month_day_code = explicit_day and "F j" or "F"
-		if bold_year then
-			-- This formats like "'''2023''' August 3" (or "'''2023''' August" if day not explicitly given).
-			return format_date_with_code("'''Y''' " .. month_day_code, date)
+	-- Format `timestamp` (a timestamp referencing a date) according to the spec in `code`. `param` is the base name of
+	-- the parameter from which the timestamp was fetched, for error messages.
+	local function format_date_with_code(code, timestamp, param)
+		local language = mw.getContentLanguage()
+		local ok, date = pcall(language.formatDate, language, code, timestamp)
+		if ok then
+			return date
 		else
-			-- This formats like "2023 August 3" (or "2023 August" if day not explicitly given).
-			return format_date_with_code("Y " .. month_day_code, date)
+			-- All the formats used in format_date_args() are fine, so the timestamp must be at fault.
+			error(("Timestamp |%s=%s (possibly canonicalized from its original format) could not be parsed; see the "
+				.. "[[mw:Help:Extension:ParserFunctions##time|documentation for the #time parser function]]"
+				):format(pname(param), tostring(timestamp)))
 		end
 	end
 
+	-- Try to figure out if the given timestamp has the day of the month explicitly given. We use the following
+	-- algorithm:
+	-- 1. Format as year-month-day; if the day is not 1, the day was explicitly given, since if only the year/month are
+	--    given, the day shows up as 1.
+	-- 2. If the day shows up as 1 and there isn't a 1 or 01 in the timestamp, the day wasn't explicitly given.
+	-- 3. Otherwise, if there are three separate numbers (e.g. 2022-07-01), or two separate numbers plus a capitalized
+	--    letter (taken as an English month, e.g. 2022 July 1), the day was explicitly given, otherwise not.
+	--
+	-- `param` is the base name of the parameter from which the timestamp was fetched.
+	local function date_has_day_specified(timestamp, param)
+		local day = format_date_with_code("j", timestamp, param)
+		if day ~= "1" then
+			return true
+		end
+		local english_month = timestamp:find("[A-Z]")
+		local canon_timestamp = mw.text.trim((timestamp:gsub("[^0-9]+", " ")))
+		local seen_nums = rsplit(canon_timestamp, " ")
+		local saw_one = false
+		for _, num in ipairs(seen_nums) do
+			if num == "1" or num == "01" then
+				saw_one = true
+				break
+			end
+		end
+		if not saw_one then
+			return false
+		end
+		return #seen_nums >= 3 or english_month and #seen_nums >= 2
+	end
+
+
+	-- Format a date with boldfaced year, as e.g. '''2023''' August 3. `explicit_day_given` indicates whether to include
+	-- the day; if false, the return value will be e.g. '''2023''' August. `date_param` is the base name of the param
+	-- from which the date was fetched, for error messages.
+	local function format_bold_date(date, explicit_day_given, date_param)
+		local month_day_code = explicit_day_given and "F j" or "F"
+		if bold_year then
+			-- This formats like "'''2023''' August 3" (or "'''2023''' August" if day not explicitly given).
+			return format_date_with_code("'''Y''' " .. month_day_code, date, date_param)
+		else
+			-- This formats like "2023 August 3" (or "2023 August" if day not explicitly given).
+			return format_date_with_code("Y " .. month_day_code, date, date_param)
+		end
+	end
+
+	-- Boldface a year spec if it's not already boldface.
 	local function boldface_if_not_already(year)
 		if not bold_year or year:find("'''") then
 			return year
@@ -778,13 +791,15 @@ local function format_date_args(a, get_full_paramname, alias_map, parampref, par
 	-- * [[mw:Extension:Scribunto/Lua_reference_manual#mw.language:formatDate]]
 	-- * [[mw:Help:Extension:ParserFunctions##time]]
 	-- * [[mw:Help:Magic_words#Formatting]]
-	local function fix_date(date)
+	-- `date` is the date spec from the user, which is assumed to come from a parameter whose base name ends in "date";
+	-- `parampref` is the prefix added to "date" to get the parameter name.
+	local function fix_date(date, param_pref)
 		if tonumber(date) ~= nil then
 			error(("|%s= should contain a full date (year, month, day of month); use |%s= for year"):
-				format(pname("date"), pname("year")))
+				format(pname(param_pref .. "date"), pname(param_pref .. "year")))
 		elseif date and date:find "%s*%a+,%s*%d+%s*$" then
 			error(("|%s= should contain a full date (year, month, day of month); use |%s=, |%s= for month and year"):
-				format(pname("date"), pname("month"), pname("year")))
+				format(pname(param_pref .. "date"), pname(param_pref .. "month"), pname(param_pref .. "year")))
 		end
 		if date then
 			date = rsub(date, "(%d+ %a+),", "%1")
@@ -793,7 +808,7 @@ local function format_date_args(a, get_full_paramname, alias_map, parampref, par
 		end
 	end
 
-	local start_date, date = fix_date(getp("start_date")), fix_date(getp("date"))
+	local start_date, date = fix_date(getp("start_date"), "start_"), fix_date(getp("date"), "")
 	local year = getp("year")
 	local month = getp("month")
 	local start_year = getp("start_year")
@@ -821,12 +836,16 @@ local function format_date_args(a, get_full_paramname, alias_map, parampref, par
 
 	local dash = "&nbsp;– "
 
-	local day_explicitly_given = date and date_has_day_specified(date)
-	local start_day_explicitly_given = start_date and date_has_day_specified(start_date)
+	local day_explicitly_given = date and date_has_day_specified(date, "date")
+	local start_day_explicitly_given = start_date and date_has_day_specified(start_date, "start_date")
 
-	local function format_date_or_year_month(date, year, month, explicit_day)
+	-- Format a date with boldfaced year, as e.g. '''2023''' August 3 (if `explicit_day_given` specified) or
+	-- '''2023''' August (if `explicit_day_given` not specified). If no date specified, fall back to formatting based
+	-- on the year and (optionally) month params given in `year` and `month`, boldfacing the year if not already.
+	-- `date_param` is the base name of the param from which the date was fetched, for error messages.
+	local function format_date_or_year_month(date, year, month, explicit_day_given, date_param)
 		if date then
-			return format_bold_date(date, explicit_day)
+			return format_bold_date(date, explicit_day_given, date_param)
 		else
 			return boldface_if_not_already(year) .. (month and " " .. month or "")
 		end
@@ -839,18 +858,19 @@ local function format_date_args(a, get_full_paramname, alias_map, parampref, par
 	end
 
 	if start_date or start_year then
-		ins(format_date_or_year_month(start_date, start_year, start_month, start_day_explicitly_given))
-		local cur_year = year or format_date_with_code("Y", date)
-		local cur_month = month or date and format_date_with_code("F", date) or nil
-		local cur_day = date and day_explicitly_given and format_date_with_code("j", date) or nil
-		local beg_year = start_year or format_date_with_code("Y", start_date)
-		local beg_month = start_month or start_date and format_date_with_code("F", start_date) or nil
-		local beg_day = start_date and start_day_explicitly_given and format_date_with_code("j", start_date) or nil
+		ins(format_date_or_year_month(start_date, start_year, start_month, start_day_explicitly_given, "start_date"))
+		local cur_year = year or format_date_with_code("Y", date, "date")
+		local cur_month = month or date and format_date_with_code("F", date, "date") or nil
+		local cur_day = date and day_explicitly_given and format_date_with_code("j", date, "date") or nil
+		local beg_year = start_year or format_date_with_code("Y", start_date, "start_date")
+		local beg_month = start_month or start_date and format_date_with_code("F", start_date, "start_date") or nil
+		local beg_day = start_date and start_day_explicitly_given and
+			format_date_with_code("j", start_date, "start_date") or nil
 
 		if cur_year ~= beg_year then
 			-- Different years; insert current date in full.
 			ins(dash)
-			ins(format_date_or_year_month(date, year, month))
+			ins(format_date_or_year_month(date, year, month, day_explicitly_given, "date"))
 		elseif cur_month and cur_month ~= beg_month then
 			-- Same year but different months; insert current month and (if available) current day.
 			ins(dash)
@@ -867,25 +887,25 @@ local function format_date_args(a, get_full_paramname, alias_map, parampref, par
 			-- day not available. Do nothing. FIXME: Should we throw an error?
 		end
 	elseif date or year then
-		ins(format_date_or_year_month(date, year, month, day_explicitly_given))
+		ins(format_date_or_year_month(date, year, month, day_explicitly_given, "date"))
 	elseif not maintenance_line_no_date then
 		-- Not main quote date. Return nil, caller will handle.
 		return nil, nil
 	elseif not getp("nodate") then
 		local accessdate = getp("accessdate")
 		if accessdate then
-			local explicit_day = date_has_day_specified(accessdate)
-			ins(format_bold_date(accessdate, explicit_day) .. " (last accessed)")
+			local explicit_day_given = date_has_day_specified(accessdate)
+			ins(format_bold_date(accessdate, explicit_day_given, "accessdate") .. " (last accessed)")
 		else
 			if mw.title.getCurrentTitle().nsText ~= "Template" then
 				return maintenance_line(maintenance_line_no_date), true
 			else
-				return "", nil
+				return nil, nil
 			end
 		end
 	end
 
-	return table.concat(output), nil
+	return ine(table.concat(output)), nil
 end
 
 
@@ -960,9 +980,9 @@ function export.source(args, alias_map)
 	local function a_with_name(param)
 		if type(param) == "table" then
 			for _, par in ipairs(param) do
-				local val, name = a_with_name(par)
+				local val, fullname = a_with_name(par)
 				if val then
-					return val, name
+					return val, fullname
 				end
 			end
 			return nil
@@ -1014,12 +1034,12 @@ function export.source(args, alias_map)
 	-- Convenience function to fetch a multivalued parameter that may be in a foreign language or text (and may
 	-- consequently have a language prefix and/or inline modifiers), parse the modifiers and convert the result into a
 	-- formatted string. This is the multivalued analog to parse_and_format_annotated_text_with_name() and returns two
-	-- values, the formatted string and the name of the parameter fetched. `delimiter` is as in
+	-- values, the formatted string and the full name of the parameter fetched. `delimiter` is as in
 	-- format_multivalued_annotated_text().
 	local function parse_and_format_multivalued_annotated_text_with_name(param, delimiter, tag_text, tag_gloss)
-		local paramval, paramname = a_with_name(param)
-		local objs = parse_multivalued_annotated_text(paramval, paramname)
-		return format_multivalued_annotated_text(objs, delimiter, tag_text, tag_gloss), paramname
+		local val, fullname = a_with_name(param)
+		local objs = parse_multivalued_annotated_text(val, fullname)
+		return format_multivalued_annotated_text(objs, delimiter, tag_text, tag_gloss), fullname
 	end
 
 	-- Convenience function to fetch a multivalued parameter that may be in a foreign language or text (and may
@@ -1111,13 +1131,18 @@ function export.source(args, alias_map)
 	-- Set this now so a() works just below.
 	get_full_paramname = make_get_full_paramname("")
 
+	local need_comma = false
 	local formatted_date, need_date = format_date_args(a, get_full_paramname, alias_map, nil, nil, "bold year",
 		"Can we [[:Category:Requests for date|date]] this quote?")
-	add(formatted_date)
+	if formatted_date then
+		need_comma = true
+		add(formatted_date)
+	end
 
 	-- Fetch origdate=/origyear=/origmonth= and format appropriately.
 	local formatted_origdate = format_date_args(a, get_full_paramname, alias_map, "orig")
 	if formatted_origdate then
+		need_comma = true
 		add(SPACE_LBRAC .. formatted_origdate .. RBRAC)
 	end
 
@@ -1134,22 +1159,19 @@ function export.source(args, alias_map)
 			end
 		end
 
+		local output_author = false
 		for i = 1, maxind do
 			local ind = i == 1 and "" or i
 			get_full_paramname = make_get_full_paramname(ind)
-			local author, author_param = a_with_name("author")
-			local last = a("last")
-			local first = a("first")
 			if a("author") or a("last") then
-				-- If first author, output a comma unless {{{nodate}}} used.
-				if i == 1 and not args.nodate then
+				-- If first author, output a comma if needed.
+				if need_comma then
 					add(", ")
 				end
-				-- If not first author, output a semicolon to separate from preceding authors.
-				add(i == 1 and " " or SEMICOLON_SPACE)
-
 				add_author("author", "trans-author", "authorlink", "trans-authorlink", "first", "trans-first",
 					"last", "trans-last")
+				output_author = true
+				need_comma = true
 			end
 		end
 		if args.coauthors or args.quotee then
@@ -1197,22 +1219,22 @@ function export.source(args, alias_map)
 	--
 	-- Returns nil if no value specified for the main parameter, otherwise the formatted value.
 	local function format_chapterlike(param, numeric_prefix, textual_prefix, textual_suffix)
-		local chap, chap_param = a_with_name(param)
-		local chap_num, chap_num_param = a_with_name(param .. "_number")
-		local chap_plain, chap_plain_param = parse_and_format_annotated_text_with_name(param .. "_plain")
+		local chap, chap_fullname = a_with_name(param)
+		local chap_num, chap_num_fullname = a_with_name(param .. "_number")
+		local chap_plain, chap_plain_fullname = parse_and_format_annotated_text_with_name(param .. "_plain")
 		if chap_num and chap_plain then
-			error(("Specify only one of |%s= or %s="):format(chap_num_param, chap_plain_param))
+			error(("Specify only one of |%s= or %s="):format(chap_num_fullname, chap_plain_fullname))
 		end
-		local chap_series, chap_series_param =
+		local chap_series, chap_series_fullname =
 			parse_and_format_annotated_text_with_name(param .. "_series", tag_with_cite, tag_with_cite)
-		local chap_seriesvolume, chap_seriesvolume_param =
+		local chap_seriesvolume, chap_seriesvolume_fullname =
 			parse_and_format_annotated_text_with_name(param .. "_seriesvolume")
 		if chap_series then
 			chap_series = ", " .. chap_series
 		end
 		if chap_seriesvolume then
 			if not chap_series then
-				error(("Cannot specify |%s= without %s="):format(chap_series_param, chap_seriesvolume_param))
+				error(("Cannot specify |%s= without %s="):format(chap_series_fullname, chap_seriesvolume_fullname))
 			end
 			chap_series = chap_series .. " (" .. chap_seriesvolume .. ")"
 		end
@@ -1220,7 +1242,7 @@ function export.source(args, alias_map)
 		if not chap then
 			if chap_num then
 				error(("Cannot specify |%s= without |%s=; put the numeric value in |%s= directly"):
-					format(chap_num_param, chap_param, chap_param))
+					format(chap_num_fullname, chap_fullname, chap_fullname))
 			end
 			if chap_plain then
 				return chap_plain .. (chap_series or "")
@@ -1248,7 +1270,7 @@ function export.source(args, alias_map)
 			formatted = numeric_prefix .. make_chapter_with_url(mw.ustring.upper(chap))
 		else
 			-- Must be a chapter name
-			local chapterobj = parse_annotated_text(chap, chap_param, a("trans-" .. param))
+			local chapterobj = parse_annotated_text(chap, chap_fullname, a("trans-" .. param))
 			chapterobj.text = make_chapter_with_url(chapterobj.text)
 			formatted = (textual_prefix or "") .. format_annotated_text(chapterobj) .. (textual_suffix or "")
 		end
@@ -1287,10 +1309,10 @@ function export.source(args, alias_map)
 		end
 
 		local tlr = parse_and_format_multivalued_annotated_text({"tlr", "translator", "translators"})
-		local editor, editor_param = parse_and_format_multivalued_annotated_text_with_name("editor")
-		local editors, editors_param = parse_and_format_multivalued_annotated_text_with_name("editors")
+		local editor, editor_fullname = parse_and_format_multivalued_annotated_text_with_name("editor")
+		local editors, editors_fullname = parse_and_format_multivalued_annotated_text_with_name("editors")
 		if editor and editors then
-			error(("Can't specify both |%s= and |%s="):format(editor_param, editors_param))
+			error(("Can't specify both |%s= and |%s="):format(editor_fullname, editors_fullname))
 		end
 		if a("mainauthor") then
 			add(parse_and_format_multivalued_annotated_text("mainauthor") ..
@@ -1317,9 +1339,9 @@ function export.source(args, alias_map)
 			add(sep .. text)
 			sep = ", "
 		end
-		local title, title_param = a_with_name("title")
+		local title, title_fullname = a_with_name("title")
 		if title then
-			local titleobj = parse_annotated_text(title, title_param, a("trans-title"))
+			local titleobj = parse_annotated_text(title, title_fullname, a("trans-title"))
 			add(" ")
 			add(format_annotated_text(titleobj, tag_with_cite, tag_with_cite))
 			local series = parse_and_format_annotated_text("series")
@@ -1374,12 +1396,12 @@ function export.source(args, alias_map)
 		-- it is linked to the specified URL. Note that any of the specs can be foreign text, e.g. foreign numbers
 		-- (including with optional inline modifiers), and such text is handled appropriately.
 		local function format_numeric_param(paramname, singular_desc)
-			local sgval, sg_param = a_with_name(paramname)
+			local sgval, sg_fullname = a_with_name(paramname)
 			local sgobj = parse_annotated_text(sgval, paramname)
 			local plparamname = paramname .. "s"
-			local plval, pl_param = a_with_name(plparamname)
+			local plval, pl_fullname = a_with_name(plparamname)
 			local plobj = parse_annotated_text(plval, plparamname)
-			local plainval, plain_param = parse_and_format_annotated_text_with_name(paramname .. "_plain")
+			local plainval, plain_fullname = parse_and_format_annotated_text_with_name(paramname .. "_plain")
 			local howmany = (sgval and 1 or 0) + (plval and 1 or 0) + (plainval and 1 or 0)
 			if howmany > 1 then
 				local params_specified = {}
@@ -1388,9 +1410,9 @@ function export.source(args, alias_map)
 						table.insert(params_specified, ("|%s="):format(param))
 					end
 				end
-				insparam(sg_param)
-				insparam(pl_param)
-				insparam(plain_param)
+				insparam(sg_fullname)
+				insparam(pl_fullname)
+				insparam(plain_fullname)
 				error(("Can't specify more than one of %s"):format(
 					require(table_module).serialCommaJoin(params_specified, {dontTag = true})))
 			end
@@ -1473,18 +1495,18 @@ function export.source(args, alias_map)
 		-- annotation (in fact it's usually not displayed), and when there's no annotation, no pre-text or post-text is
 		-- displayed.
 		local function langhandler(pretext, posttext)
-			local argslang, argslang_param
+			local argslang, argslang_fullname
 			if ind == "" then
 				argslang = args.lang or args[1]
-				argslang_param = 1
+				argslang_fullname = 1
 			else
-				argslang, argslang_param = a_with_name("lang")
+				argslang, argslang_fullname = a_with_name("lang")
 			end
-			local worklang, worklang_param = a_with_name("worklang")
+			local worklang, worklang_fullname = a_with_name("worklang")
 			if worklang then
-				return pretext .. "in " .. format_langs(worklang, worklang_param) .. posttext
+				return pretext .. "in " .. format_langs(worklang, worklang_fullname) .. posttext
 			elseif argslang and a("termlang") and argslang ~= a("termlang") then
-				return pretext .. "in " .. format_langs(argslang, argslang_param) .. posttext
+				return pretext .. "in " .. format_langs(argslang, argslang_fullname) .. posttext
 			elseif not argslang and ind == "" then
 				return pretext .. maintenance_line("Please specify the language of the quote") .. posttext
 			end
@@ -1548,7 +1570,9 @@ function export.source(args, alias_map)
 			local formatted_new_date, this_need_date = format_date_args(a, get_full_paramname, alias_map, "", "", nil, 
 				"Please provide a date or year")
 			need_date = need_date or this_need_date
-			add_with_sep(formatted_new_date)
+			if formatted_new_date then
+				add_with_sep(formatted_new_date)
+			end
 		end
 
 		-- From here on out, there should always be a preceding item, so we
@@ -1589,20 +1613,21 @@ function export.source(args, alias_map)
 			small(id)
 		end
 
-		local archiveurl, archiveurl_param = aurl_with_name("archiveurl")
+		local archiveurl, archiveurl_fullname = aurl_with_name("archiveurl")
 		if archiveurl then
 			add(", archived from ")
-			local url, url_param = aurl_with_name("url")
+			local url, url_fullname = aurl_with_name("url")
 			if not url then
 				-- attempt to infer original URL from archive URL; this works at
 				-- least for Wayback Machine (web.archive.org) URL's
 				url = rmatch(archiveurl, "/(https?:.*)$")
 				if not url then
-					error(("When |%s= is specified, |%s= must also be included"):format(archiveurl_param, url_param))
+					error(("When |%s= is specified, |%s= must also be included"):format(archiveurl_fullname,
+						url_fullname))
 				end
 			end
 			add("[" .. url .. " the original] on ")
-			local archivedate, archivedate_param = a_with_name("archivedate")
+			local archivedate, archivedate_fullname = a_with_name("archivedate")
 			if archivedate then
 				add(format_date(archivedate))
 			elseif (string.sub(archiveurl, 1, 28) == "https://web.archive.org/web/") then
@@ -1614,7 +1639,7 @@ function export.source(args, alias_map)
 				add(format_date(wayback_date))
 			else
 				error(("When |%s= is specified, |%s= must also be included"):format(
-					archiveurl_param, archivedate_param))
+					archiveurl_fullname, archivedate_fullname))
 			end
 		end
 		if a("accessdate") then
