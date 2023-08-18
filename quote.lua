@@ -18,7 +18,8 @@ local languages_module = "Module:languages"
 local links_module = "Module:links"
 local number_utilities_module = "Module:number-utilities"
 local parameters_module = "Module:parameters"
-local parse_utilities_module = "Module:User:Benwing2/parse utilities"
+local parse_utilities_module = "Module:parse utilities"
+local qualifier_module = "Module:qualifier"
 local roman_numerals_module = "Module:roman numerals"
 local script_utilities_module = "Module:script utilities"
 local scripts_module = "Module:scripts"
@@ -150,7 +151,9 @@ local param_mods = {
 		convert = function(arg, parse_err)
 			return require(scripts_module).getByCode(arg, parse_err)
 		end,
-	}
+	},
+	q = {},
+	qq = {},
 }
 
 --[=[
@@ -303,7 +306,11 @@ local function parse_multivalued_annotated_text(val, fullname, explicit_gloss, e
 
 	-- Optimization #1: No semicolons or angle brackets (indicating inline modifiers).
 	if not val:find("[<;]") then
-		return {generate_obj(val, fullname)}
+		if val_should_not_be_parsed_for_annotations(val) then
+			return {{text = val, noscript = true}}
+		else
+			return {generate_obj(val, fullname)}
+		end
 	end
 
 	-- Optimization #2: Semicolons but no angle brackets (indicating inline modifiers), braces, brackets, or parens (any
@@ -312,7 +319,11 @@ local function parse_multivalued_annotated_text(val, fullname, explicit_gloss, e
 	if not val:find("[<>%[%](){}&]") then
 		local entity_objs = {}
 		for entity in rgsplit(val, "%s*;%s*") do
-			table.insert(entity_objs, generate_obj(entity, fullname))
+			if val_should_not_be_parsed_for_annotations(entity) then
+				table.insert(entity_objs, {{text = entity, noscript = true}})
+			else
+				table.insert(entity_objs, generate_obj(entity, fullname))
+			end
 		end
 		return entity_objs
 	end
@@ -335,7 +346,15 @@ local function parse_multivalued_annotated_text(val, fullname, explicit_gloss, e
 	-- Parse balanced segment runs, treating HTML entities for left and right bracket and left and right angle bracket
 	-- as matching literal versions of the same characters.
 	local entity_runs = put.parse_multi_delimiter_balanced_segment_run(val,
-		{{"[" .. TEMP_LBRAC, "]" .. TEMP_RBRAC}, {"(", ")"}, {"{", "}"}, {"<" .. TEMP_LT, ">" .. TEMP_GT}})
+		{{"[" .. TEMP_LBRAC, "]" .. TEMP_RBRAC}, {"(", ")"}, {"{", "}"}, {"<" .. TEMP_LT, ">" .. TEMP_GT}},
+		true)
+	if type(entity_runs) == "string" then
+		-- Parse error due to unbalanced delimiters. Don't throw an error here; instead, don't attempt to parse off
+		-- any annotations, but return the value directly, maybe allowing script tagging (not allowing it if it appears
+		-- the text is already script-tagged).
+		return {{text = undo_html_entity_replacement(val),
+			noscript = not not val_should_not_be_parsed_for_annotations(val)}}
+	end
 
 	-- Split on semicolon, possibly surrounded by whitespace.
 	local separated_groups = put.split_alternating_runs(entity_runs, "%s*;%s*")
@@ -461,6 +480,10 @@ local function format_annotated_text(textobj, tag_text, tag_gloss)
 		table.insert(parts, txt)
 	end
 
+	if textobj.q then
+		ins(require(qualifier_module).format_qualifier(textobj.q) .. " ")
+	end
+	
 	ins(text)
 
 	if tr or ts or gloss then
@@ -488,6 +511,10 @@ local function format_annotated_text(textobj, tag_text, tag_gloss)
 		ins(RBRAC)
 	end
 
+	if textobj.qq then
+		ins(" " .. require(qualifier_module).format_qualifier(textobj.qq))
+	end
+	
 	return table.concat(parts)
 end
 
