@@ -605,6 +605,9 @@ local function clone_args(direct_args, parent_args)
 			sources = rsplit(sources, "%s*,%s*")
 			saw_source = nil
 			for _, source in ipairs(sources) do
+				if rfind(source, "^[0-9]+$") then
+					source = tonumber(source)
+				end
 				if args[source] then
 					if saw_source == nil then
 						saw_source = source
@@ -1393,14 +1396,17 @@ function export.source(args, alias_map)
 		end
 		local function verify_title_supplied(url_name)
 			if not title then
-				error(("If |%s= is given, |%s= must also be supplied"):format(url_name, title_fullname))
+				-- There are too many cases of this to throw an error at this time.
+				-- error(("If |%s= is given, |%s= must also be supplied"):format(url_name, title_fullname))
 			end
 		end
 		if urls then
 			verify_title_supplied(urls_fullname)
+			sep = nil
 			add("&lrm;<sup>" .. urls .. "</sup>")
 		elseif url or archiveurl then
 			verify_title_supplied(url and url_fullname or archiveurl_fullname)
+			sep = nil
 			add("&lrm;<sup>[" .. (url or archiveurl) .. "]</sup>")
 		end
 
@@ -1537,7 +1543,7 @@ function export.source(args, alias_map)
 		end
 
 		-- Now handle the display of language annotations like "(in French)" or
-		-- "(quote in Nauruan; overall work in German)".
+		-- "(quotation in Nauruan; overall work in German)".
 		local quotelang = args.lang or args[1]
 		local quotelang_fullname = 1
 		if not quotelang then
@@ -1562,7 +1568,7 @@ function export.source(args, alias_map)
 				end
 			else
 				if quotelang ~= termlang then
-					table.insert(annotations, "quote in " .. format_langs(quotelang, quotelang_fullname))
+					table.insert(annotations, "quotation in " .. format_langs(quotelang, quotelang_fullname))
 				end
 				table.insert(annotations, "overall work in " .. format_langs(worklang, worklang_fullname))
 			end
