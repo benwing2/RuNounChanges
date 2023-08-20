@@ -522,7 +522,8 @@ end
 --[=[
 Format a multivalued text property that may be in a foreign language or script, along with annotations. This is the
 multivalued analog to format_annotated_text(), and formats each individual entity using format_annotated_text(),
-joining the results with `delimiter` (which defaults to SEMICOLON_SPACE [FIXME: this will change to comma-space]).
+joining the results with `delimiter`, which defaults to ", ". It `delimiter` is "and" or "or", join the results using
+serialCommaJoin() in [[Module:table]] with the specified conjunction.
 
 `textobjs` is as returned by parse_multivalued_annotated_text(). `tag_text` and `tag_gloss` are as in
 format_annotated_text().
@@ -538,7 +539,11 @@ local function format_multivalued_annotated_text(textobjs, delimiter, tag_text, 
 	for _, textobj in ipairs(textobjs) do
 		table.insert(parts, format_annotated_text(textobj, tag_text, tag_gloss))
 	end
-	return table.concat(parts, delimiter or SEMICOLON_SPACE)
+	if delimiter == "and" or delimiter == "or" then
+		return require(table_module).serialCommaJoin(parts, {conj = delimiter})
+	else
+		return table.concat(parts, delimiter or ", ")
+	end
 end
 
 
@@ -952,11 +957,28 @@ function export.source(args, alias_map)
 	end
 
 	local output = {}
-	-- Add text to the output. The text goes into a list, and we concatenate
-	-- all the list components together at the end.
+	local sep
+
+	-- Add text to the output. The text goes into a list, and we concatenate all the list components together at the
+	-- end. To make it easier to handle comma-separated items, we keep track (in `sep`) of the separator (if any) that
+	-- needs to be inserted before the next item added. For example, if we're in the "newversion" code (ind ~= ""), and
+	-- there's no title and no URL, then the first time we add anything after the title, we don't want to add a
+	-- separating comma because the preceding text will say "republished " or "republished as " or "translated as " or
+	-- similar. In all- other cases, we do want to add a separating comma. The bare add() function reset the separator
+	-- to be nothing, while the add_with_sep() function resets the separator to be the value of `next_sep` (defaulting
+	-- to ", "), so the next time around we do add a comma to separate `text` from the preceding piece of text.
 	local function add(text)
+		if sep then
+			table.insert(output, sep)
+		end
 		table.insert(output, text)
+		sep = nil
 	end
+	local function add_with_sep(text, next_sep)
+		add(text)
+		sep = next_sep or ", "
+	end
+
 	if args.brackets then
 		add("[")
 	end
@@ -1050,6 +1072,10 @@ function export.source(args, alias_map)
 		return (parse_and_format_multivalued_annotated_text_with_name(param, delimiter, tag_text, tag_gloss))
 	end
 
+	-- This determines whether to display "Mary Bloggs, transl." (if there's no author preceding) or "translated by
+	-- Mary Bloggs" (if there's an author preceding).
+	local author_outputted = false
+
 	-- Add a formatted author (whose values may be specified using `author_param` or, for compatibility purposes, split
 	-- among various parameters):
 	-- * `author_param` is the base parameter name of the author param (e.g. "author" or "2ndauthor");
@@ -1126,6 +1152,8 @@ function export.source(args, alias_map)
 				add(RBRAC)
 			end
 		end
+
+		author_outputted = true
 	end
 
 	-- Set this now so a() works just below.
@@ -1146,60 +1174,66 @@ function export.source(args, alias_map)
 		add(SPACE_LBRAC .. formatted_origdate .. RBRAC)
 	end
 
-	if args.author or args.last or args.quotee then
-		-- Find maximum indexed author or last name.
-		local maxind = 0
-		for arg, _ in pairs(args) do
-			local argbase, argind = rmatch(arg, "^([a-z]+)([0-9]*)$")
-			if argbase == "author" or argbase == "last" then
-				argind = argind == "" and 1 or tonumber(argind)
-				if argind > maxind then
-					maxind = argind
-				end
-			end
-		end
-
-		local output_author = false
-		for i = 1, maxind do
-			local ind = i == 1 and "" or i
-			get_full_paramname = make_get_full_paramname(ind)
-			if a("author") or a("last") then
-				-- If first author, output a comma if needed.
-				if need_comma then
-					add(", ")
-				end
-				add_author("author", "trans-author", "authorlink", "trans-authorlink", "first", "trans-first",
-					"last", "trans-last")
-				output_author = true
-				need_comma = true
-			end
-		end
-		if args.coauthors or args.quotee then
-			-- Need to set this. It's accessed (indirectly) by parse_and_format_multivalued_annotated_text(), and will
-			-- have the wrong value as a result of the `i = 1, maxind` loop above.
-			get_full_paramname = make_get_full_paramname("")
-			if args.coauthors then
-				add(SEMICOLON_SPACE .. parse_and_format_multivalued_annotated_text("coauthors"))
-			end
-			if args.quotee then
-				add(", quoting " .. parse_and_format_multivalued_annotated_text("quotee"))
-			end
-		end
-		add(",")
-	elseif args.year or args.date or args.start_year or args.start_date then
-		--If no author stated but date provided, add a comma.
-		add(",")
+	if need_comma then
+		sep = ", "
 	end
-	add(" ")
+
+	-- Find maximum indexed author or last name.
+	local maxind = 0
+	for arg, _ in pairs(args) do
+		local argbase, argind = rmatch(arg, "^([a-z]+)([0-9]*)$")
+		if argbase == "author" or argbase == "last" then
+			argind = argind == "" and 1 or tonumber(argind)
+			if argind > maxind then
+				maxind = argind
+			end
+		end
+	end
+
+	for i = 1, maxind do
+		local ind = i == 1 and "" or i
+		get_full_paramname = make_get_full_paramname(ind)
+		if a("author") or a("last") then
+			-- If first author, output a comma if needed.
+			add_author("author", "trans-author", "authorlink", "trans-authorlink", "first", "trans-first",
+				"last", "trans-last")
+			sep = ", "
+		end
+	end
+
+	local function add_authorlike(param, prefix_with_preceding_authors, suffix_without_preceding_authors)
+		local delimiter = author_outputted and "and" or ", "
+		local entities = parse_and_format_multivalued_annotated_text(param, delimiter)
+		if not entities then
+			return
+		end
+		if author_outputted then
+			add_with_sep(prefix_with_preceding_authors .. entities)
+		else
+			add_with_sep(entities .. suffix_without_preceding_authors)
+		end
+		author_outputted = true
+	end
+
+	-- Need to set this for coauthors and quotee. It's accessed (indirectly) by
+	-- parse_and_format_multivalued_annotated_text() and add_authorlike() just below, and will have the wrong value
+	-- as a result of the `i = 1, maxind` loop above.
+	get_full_paramname = make_get_full_paramname("")
+	-- FIXME, how does specifying coauthors= differ from just specifying multiple authors?
+	local coauthors = parse_and_format_multivalued_annotated_text("coauthors")
+	if coauthors then
+		add_with_sep(coauthors)
+		author_outputted = true
+	end
+	add_authorlike("quotee", "quoting ", ", quotee")
 
 	local function has_new_title_or_ancillary_author()
-		return args.chapter2 or args.title2 or
-			args.tlr2 or args.translator2 or args.translators2 or
-			args.mainauthor2 or args.editor2 or args.editors2
 	end
 
 	local function has_new_title_or_author()
-		return args["2ndauthor"] or args["2ndlast"] or has_new_title_or_ancillary_author()
+		return args["2ndauthor"] or args["2ndlast"] or args.chapter2 or args.title2 or
+			args.tlr2 or args.translator2 or args.translators2 or
+			args.mainauthor2 or args.editor2 or args.editors2
 	end
 
 	local function has_newversion()
@@ -1291,58 +1325,48 @@ function export.source(args, alias_map)
 	-- "newversion" citation. `ind` is either "" for the main portion or a number (currently only 2) for a "newversion"
 	-- citation. In a few places we conditionalize on `ind` to take actions depending on its value. `sep` is the
 	-- separator to display before the first item we add; see add_with_sep() below.
-	local function postauthor(ind, sep)
+	local function postauthor(ind)
 		get_full_paramname = make_get_full_paramname(ind)
 
 		local chapter_tlr = parse_and_format_multivalued_annotated_text("chapter_tlr")
 		if chapter_tlr then
-			add(chapter_tlr .. ", transl., ")
+			if author_outputted then
+				add_with_sep("translated by " .. chapter_tlr)
+			else
+				add_with_sep(chapter_tlr .. ", transl.")
+			end
+			author_outputted = true
 		end
 
 		local formatted_chapter = format_chapterlike("chapter", "chapter ", "“", "”")
 		if formatted_chapter then
-			add(" ")
-			add(formatted_chapter)
+			add_with_sep(formatted_chapter)
 			if not a("notitle") then
-				add(", in ")
+				add("in ")
+				author_outputted = false
 			end
 		end
 
-		local tlr = parse_and_format_multivalued_annotated_text({"tlr", "translator", "translators"})
-		local editor, editor_fullname = parse_and_format_multivalued_annotated_text_with_name("editor")
-		local editors, editors_fullname = parse_and_format_multivalued_annotated_text_with_name("editors")
+		local mainauthor = parse_and_format_multivalued_annotated_text("mainauthor")
+		if mainauthor then
+			add_with_sep(mainauthor)
+			author_outputted = true
+		end
+
+		add_authorlike({"tlr", "translator", "translators"}, "translated by ", ", transl.")
+
+		local editor, editor_fullname = a_with_name("editor")
+		local editors, editors_fullname = a_with_name("editors")
 		if editor and editors then
 			error(("Can't specify both |%s= and |%s="):format(editor_fullname, editors_fullname))
 		end
-		if a("mainauthor") then
-			add(parse_and_format_multivalued_annotated_text("mainauthor") ..
-				((tlr or editor or editors) and SEMICOLON_SPACE or ","))
-		end
+		add_authorlike("editor", "edited by ", ", editor")
+		add_authorlike("editors", "edited by ", ", editors")
 
-		if tlr then
-			add(tlr .. ", transl." .. ((editor or editors) and SEMICOLON_SPACE or ","))
-		end
-
-		if editor then
-			add(editor .. ", editor,")
-		elseif editors then
-			add(editors .. ", editors,")
-		end
-
-		-- If we're in the "newversion" code (ind ~= ""), and there's no title and no URL, then the first time we add
-		-- anything after the title, we don't want to add a separating comma because the preceding text will say
-		-- "republished " or "republished as " or "translated as " or similar. In all other cases, we do want to add a
-		-- separating comma. We handle this using a `sep` variable whose value will generally either be "" or ", ". The
-		-- add_with_sep(text) function adds the `sep` variable and then `text`, and then resets `sep` to ", " so the
-		-- next time around we do add a comma to separate `text` from the preceding piece of text.
-		local function add_with_sep(text)
-			add(sep .. text)
-			sep = ", "
-		end
 		local title, title_fullname = a_with_name("title")
+		local need_comma = false
 		if title then
 			local titleobj = parse_annotated_text(title, title_fullname, a("trans-title"))
-			add(" ")
 			add(format_annotated_text(titleobj, tag_with_cite, tag_with_cite))
 			local series = parse_and_format_annotated_text("series")
 			if series then
@@ -1353,34 +1377,47 @@ function export.source(args, alias_map)
 				end
 				add(")")
 			end
-			sep = ", "
+			need_comma = true
 		elseif ind == "" then
-			sep = ", "
 			if not a("notitle") then
 				add(maintenance_line("Please provide the book title or journal name"))
+				need_comma = true
 			end
 		end
 
-		local url = aurl("archiveurl") or aurl("url")
-		if url then
-			add("&lrm;<sup>[" .. url .. "]</sup>")
-			sep = ", "
+		local archiveurl, archiveurl_fullname = aurl_with_name("archiveurl")
+		local url, url_fullname = aurl_with_name("url")
+		local urls, urls_fullname = aurl_with_name("urls")
+		if url and urls then
+			error(("Supply only one of |%s= and |%s="):format(url_fullname, urls_fullname))
 		end
-
-		local urls = aurl("urls")
+		local function verify_title_supplied(url_name)
+			if not title then
+				error(("If |%s= is given, |%s= must also be supplied"):format(url_name, title_fullname))
+			end
+		end
 		if urls then
+			verify_title_supplied(urls_fullname)
 			add("&lrm;<sup>" .. urls .. "</sup>")
+		elseif url or archiveurl then
+			verify_title_supplied(url and url_fullname or archiveurl_fullname)
+			add("&lrm;<sup>[" .. (url or archiveurl) .. "]</sup>")
+		end
+
+		if need_comma then
 			sep = ", "
 		end
 
-		local edition = parse_and_format_annotated_text("edition")
+		local edition, edition_fullname = parse_and_format_annotated_text_with_name("edition")
+		local edition_plain, edition_plain_fullname = parse_and_format_annotated_text_with_name("edition_plain")
+		if edition and edition_plain then
+			error(("Supply only one of |%s= and |%s="):format(edition_fullname, edition_plain_fullname))
+		end
 		if edition then
 			add_with_sep(edition .. " edition")
 		end
-
-		local edition_plain = parse_and_format_annotated_text("edition_plain")
 		if edition_plain then
-			add_with_sep(" " .. edition_plain)
+			add_with_sep(edition_plain)
 		end
 
 		-- Display a numeric param such as page=, volume=, column=. For each `paramname`, four params are actually
@@ -1489,46 +1526,56 @@ function export.source(args, alias_map)
 			add_with_sep(number)
 		end
 
-		-- This function handles the display of annotations like "(in French)" or "(in German; quote in Nauruan)". It
-		-- takes two params PRETEXT and POSTTEXT to display before and after the annotation, respectively. These are
-		-- used to insert the surrounding parens, commas, etc. They are necessary because we don't always display the
-		-- annotation (in fact it's usually not displayed), and when there's no annotation, no pre-text or post-text is
-		-- displayed.
-		local function langhandler(pretext, posttext)
-			local argslang, argslang_fullname
+		local annotations = {}
+		local genre = a("genre")
+		if genre then
+			table.insert(annotations, genre)
+		end
+		local format = a("format")
+		if format then
+			table.insert(annotations, format)
+		end
+
+		-- Now handle the display of language annotations like "(in French)" or
+		-- "(quote in Nauruan; overall work in German)".
+		local quotelang = args.lang or args[1]
+		local quotelang_fullname = 1
+		if not quotelang then
 			if ind == "" then
-				argslang = args.lang or args[1]
-				argslang_fullname = 1
+				-- This can only happen for certain non-mainspace pages, e.g. Talk pages; otherwise an error is thrown
+				-- above.
+				table.insert(annotations, maintenance_line("Please specify the language of the quote using |1="))
 			else
-				argslang, argslang_fullname = a_with_name("lang")
+				-- do nothing in newversion= portion
 			end
-			local worklang, worklang_fullname = a_with_name("worklang")
-			if worklang then
-				return pretext .. "in " .. format_langs(worklang, worklang_fullname) .. posttext
-			elseif argslang and a("termlang") and argslang ~= a("termlang") then
-				return pretext .. "in " .. format_langs(argslang, argslang_fullname) .. posttext
-			elseif not argslang and ind == "" then
-				return pretext .. maintenance_line("Please specify the language of the quote") .. posttext
-			end
-			return ""
-		end
-
-		if a("genre") then
-			add(" (" .. a("genre") .. (a("format") and ", " .. a("format") or "") .. langhandler(", ", "") .. ")")
-			sep = ", "
-		elseif a("format") then
-			add(" (" .. a("format") .. langhandler(", ", "") .. ")")
-			sep = ", "
 		else
-			local to_insert = langhandler(" (", ")")
-			if to_insert ~= "" then
-				sep = ", "
-				add(to_insert)
+			local worklang, worklang_fullname = a_with_name("worklang")
+			local termlang, termlang_fullname = a_with_name("termlang")
+			worklang = worklang or quotelang
+			termlang = termlang or quotelang
+
+			if worklang == quotelang then
+				if worklang == termlang then
+					-- do nothing
+				else
+					table.insert(annotations, "in " .. format_langs(quotelang, quotelang_fullname))
+				end
+			else
+				if quotelang ~= termlang then
+					table.insert(annotations, "quote in " .. format_langs(quotelang, quotelang_fullname))
+				end
+				table.insert(annotations, "overall work in " .. format_langs(worklang, worklang_fullname))
 			end
 		end
 
-		if a("others") then
-			add_with_sep(parse_and_format_annotated_text("others"))
+		if #annotations > 0 then
+			sep = nil
+			add_with_sep(" (" .. table.concat(annotations, SEMICOLON_SPACE) .. ")")
+		end
+
+		local others = parse_and_format_annotated_text("others")
+		if others then
+			add_with_sep(others)
 		end
 		local quoted_in = parse_and_format_annotated_text("quoted_in", tag_with_cite, tag_with_cite)
 		if quoted_in then
@@ -1537,29 +1584,31 @@ function export.source(args, alias_map)
 		end
 
 		local location = parse_and_format_multivalued_annotated_text("location")
-		if a("publisher") then
+		local publisher = parse_and_format_multivalued_annotated_text("publisher", "and")
+		if publisher then
 			if location then
-				add_with_sep(location .. "&#58;") -- colon
-				sep = " "
+				add_with_sep(location) -- colon
+				sep = "&#58; " -- colon
 			end
-			add_with_sep(parse_and_format_multivalued_annotated_text("publisher"))
+			add_with_sep(publisher)
 		elseif location then
 			add_with_sep(location)
 		end
 
-		if a("source") then
-			add_with_sep("sourced from " .. parse_and_format_multivalued_annotated_text("source"))
+		local source = parse_and_format_multivalued_annotated_text("source", "and")
+		if source then
+			add_with_sep("sourced from " .. source)
 		end
 
 		local original = parse_and_format_annotated_text("original", tag_with_cite, tag_with_cite)
-		local by = parse_and_format_multivalued_annotated_text("by")
+		local by = parse_and_format_multivalued_annotated_text("by", "and")
 		if original or by then
 			add_with_sep((a("type") or "translation") .. " of " .. (original or "original") .. (by and " by " .. by or ""))
 		end
 
 		-- Fetch date_published=/year_published=/month_published= and format appropriately.
 		local formatted_date_published = format_date_args(a, get_full_paramname, alias_map, "", "_published")
-		local platform = parse_and_format_multivalued_annotated_text("platform")
+		local platform = parse_and_format_multivalued_annotated_text("platform", "and")
 		if formatted_date_published then
 			add_with_sep("published " .. formatted_date_published .. (platform and " via " .. platform or ""))
 		elseif platform then
@@ -1577,6 +1626,7 @@ function export.source(args, alias_map)
 
 		-- From here on out, there should always be a preceding item, so we
 		-- can dispense with add_with_sep() and always insert the comma.
+		sep = nil
 
 		local function small(txt)
 			add(", <small>")
@@ -1684,12 +1734,13 @@ function export.source(args, alias_map)
 	end
 
 	-- Display all the text that comes after the author, for the main portion.
-	postauthor("", "")
+	postauthor("")
 
-	local sep
+	author_outputted = false
 
 	-- If there's a "newversion" section, add the new-version text.
 	if has_newversion() then
+		sep = nil
 		--Test for new version of work.
 		add(SEMICOLON_SPACE)
 		if args.newversion then -- newversion= is intended for English text, e.g. "quoted in" or "republished as".
@@ -1707,28 +1758,22 @@ function export.source(args, alias_map)
 		sep = ", "
 	end
 
-	-- Add the author(s).
+	-- Add the newversion author(s).
 	if args["2ndauthor"] or args["2ndlast"] then
-		add(" ")
 		-- Set this to have no index, since it may have been set with an index in postauthor() and is used in
 		-- add_author().
 		get_full_paramname = make_get_full_paramname("")
 		add_author("2ndauthor", nil, "2ndauthorlink", nil, "2ndfirst", nil, "2ndlast", nil)
-
-		-- FIXME, we should use sep = ", " here too and fix up the handling
-		-- of chapter/mainauthor/etc. in postauthor() to use add_with_sep().
-		if has_new_title_or_ancillary_author() then
-			add(", ")
-			sep = ""
-		else
-			sep = ", "
-		end
+		sep = ", "
 	end
 
 	-- Display all the text that comes after the author, for the "newversion" section.
-	postauthor(2, sep)
+	postauthor(2)
 
-	add(":")
+	if not args.nocolon then
+		sep = nil
+		add(":")
+	end
 
 	-- Concatenate output portions to form output text.
 	local output_text = table.concat(output)
