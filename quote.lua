@@ -539,6 +539,17 @@ local function format_multivalued_annotated_text(textobjs, delimiter, tag_text, 
 	for _, textobj in ipairs(textobjs) do
 		table.insert(parts, format_annotated_text(textobj, tag_text, tag_gloss))
 	end
+	if rfind(parts[#parts], "^'*et al[.']*$") then
+		-- Special handling for 'et al.'
+		parts[#parts] = "''et al.''"
+		if #parts == 2 then
+			return table.concat(parts, " ")
+		end
+		if delimiter == "and" or delimiter == "or" then
+			delimiter = ", "
+		end
+		return table.concat(parts, delimiter)
+	end
 	if delimiter == "and" or delimiter == "or" then
 		return require(table_module).serialCommaJoin(parts, {conj = delimiter})
 	else
