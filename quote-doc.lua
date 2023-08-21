@@ -29,6 +29,68 @@ local function preprocess(desc)
 	return desc
 end
 
+
+local param_intro_text = [=[
+The following sections describe the possible parameters. There are many parameters, so they are divided into groups.
+All but the first group control the citation line (the initial line before the actual text of the quotation). The first
+group controls the quotation lines (the lines displaying the text of the quote and optionally the translation,
+transliteration, normalization, etc.).
+
+Some parameters, such as titles, authors, publishers, etc. can contain foreign text. These parameters can have
+associated ''annotations'', consisting of a language code prefix such as <code>ar:</code> for Arabic, <code>zh:</code>
+for Chinese or <code>ru:</code> for Russian, and/or ''inline modifiers'' following the text. An example containing both
+is <code>ru:Баллада о королевском бутерброде<t:Ballad of the King's Bread></code>, which displays as
+"{{lang|ru|Баллада о королевском бутерброде}} [''Ballada o korolevskom buterbrode, Ballad of the King's Bread'']".
+The language code helps ensure that the appropriate font is used when displaying the text (although script detection
+happens even in the absence of such codes), and causes automatic transliteration to occur when possible, and the inline
+modifiers specify translations, manual transliterations and the like.
+
+In addition, certain parameters can contain multiple semicolon-separated ''entities'' (authors, publishers, etc.). This
+applies in general to all parameters containing people (authors, translators, editors, etc.), as well as certain other
+parameters, as marked below. In such parameters, each entity can have annotations in the form of a language code and/or
+inline modifiers, as above. An example is <code>zh:張福運<t:Chang Fu-yun>; zh:張景文<t:Chang Ching-wen></code>,
+specifying two Chinese-language names, each with a rendering into Latin script. In general, such parameters are ''not''
+displayed with semicolons separating the entities, but more commonly with commas and/or the word ''and''; this depends
+on the particular parameter and its position in the citation. The semicolons are simply used in the input to separate
+the entities; commas aren't used because names can contain embedded commas, such as "<code>Sammy Davis, Jr.</code>" or
+"<code>Roger Taney, Chief Justice</code>". Note that semicolons occurring inside of parentheses or square brackets are
+not treated as delimiters; hence, a parameter value such as <code>George Orwell [pseudonym; Eric Blair]</code>
+specifies one entity, not two. Similarly, HTML entities like <code>&amp;oacute;</code> with trailing semicolons are
+recognized as such and not treated as delimiters.
+
+For parameters that specify people (e.g. {{para|author}}, {{para|tlr}}/{{para|translator}}, {{para|editor}}), write
+<code>et al.</code>after a semicolon as if it were a normal person. The underlying code will handle this specially,
+displaying it in italics and omitting a preceding comma or ''and'' as appropriate.
+
+The following inline modifiers are recognized:]=]
+
+local function generate_inline_modifiers(ty)
+	return {
+	{"t", [=[The translation of the parameter or entity in question. Displayed in square brackets following the
+	parameter or entity value. For authors or other entities referring to people, it is preferred to use the
+	<code><t:...></code> parameter to specify the "common" or non-scientific spelling of the name, and optionally to
+	use the <code><tr:...></code> parameter to specify the scientific transliteration. For example, the Russian name
+	{{m|ru||Пётр Чайко́вский|tr=-}} might be translated as {{w|Pyotr Tchaikovsky}} but transliterated as
+	''Pjotr Čajkóvskij''. Include Wikipedia links as necessary using {{tl|w}} or directly using
+	{{code||[[w:LINK|NAME]]}}.]=]},
+	{"gloss", [=[Alias for <code><t:...></code>. Generally, <code><t:...></code> is preferred.]=]},
+	{"tr", [=[Transliteration of the parameter or entity in question, if not in Latin script. See <code><t:...></code>
+	above for when to use transliterations vs. translations for names of people. If a language code prefix is given and
+	the text is in a non-Latin script, an automatic transliteration will be provided if the language supports it and
+	this modifier is not given. In that case, use <code><tr:-></code> to suppress the automatic transliteration.]=]},
+	{"ts", [=[Transcription of the parameter or entity in question, if not in Latin script and in a language where
+	the transliteration is markedly different from the actual pronunciation (e.g. Akkadian or Tibetan). Do not use this
+	merely to supply an IPA pronunciation. If supplied, this is shown between slashes, e.g.
+	<code>[<var>transliteration</var> /<var>transcription</var>/, <var>translation</var>]</code>.]=]},
+	{"sc", [=[Script code of the text of the parameter or entity, if not in a Latn script. See [[Wiktionary:Scripts]].
+	It is rarely necessary to specify this, as the script code is autodetected based on the text (usually
+	correctly).]=]},
+	{"q", [=[Left qualifier for the parameter or entity, shown before it like this: {{q|left qualifier}}.]=]},
+	{"qq", [=[Right qualifier for the parameter or entity, shown after it like this: {{q|right qualifier}}.]=]},
+}
+end
+
+
 --[===[
 Descriptions of individual parameters for the citation portion of the quotation (i.e. the first line). Because there
 are so many parameters, we divide them into groups. The value of the following is a list of parameter groups, where
@@ -64,6 +126,11 @@ An individual parameter description is as follows:
 
    Other named fields are possible:
    * <code>useand = true</code>: Join the parameters using "and" instead of "or"; see above.
+   * <code>annotated = true</code>: Indicate that the parameter(s) can be annotated with a language prefix and/or
+     inline modifiers.
+   * <code>multientity = true</code>: Indicate that the parameter(s) can consist of multiple semicolon-separated
+     entities (such as authors, translators, editors, publishers or locations), each of which can be annotated with a
+	 language prefix and/or inline modifiers.
    * <code>boolean = true</code>: The parameter(s) are boolean-valued, and will be shown as e.g. {{para|nodate|1}}
      instead of just e.g. {{para|date}}.
    * <code>required = true</code>: The parameter(s) are required, which will be shown as e.g. {{para|title|req=1}}
@@ -86,53 +153,64 @@ local function generate_params(ty)
 	Asian languages, which have their own templates to display the quoted text, such as {{tl|ja-x}} for Japanese,
 	{{tl|zh-x}} for Chinese, {{tl|ko-x}} for Korean, {{tl|th-x}} for Thai and {{tl|km-x}} for Khmer). Even in that case,
 	however, {{para|1}} must still be supplied to indicate the language of the quotation.]=],
-	{{"1", required = true}, [=[A comma-separated list of language codes indicating the language(s) of the quoted text;
-	for a list of the codes, see [[Wiktionary:List of languages]]. If the language is other than English, the template
-	will indicate this fact by displaying "(in [''language''])" (for one language), or "(in [''language''] and
-	[''language''])" (for two languages), or "(in [''language''], [''language''] ... and [''language''])" (for three or
-	more languages). The entry page will also be added to a category in the form <code>Category:LANGUAGE terms with
-	quotations</code> for the first listed language (unless {{para|termlang}} is specified, in which case that language
-	is used for the category, or {{para|nocat|1}} is specified, in which case the page will not be added to any
-	category). The first listed language also determines the font to use and the appropriate transliteration to display,
-	if the text is in a non-Latin script.
+	{{"1", required = true},
+	[=[A comma-separated list of language codes indicating the language(s) of the quoted text; for a list of the codes,
+	see [[Wiktionary:List of languages]]. If the language is other than English, the template will indicate this fact
+	by displaying "(in [''language''])" (for one language), or "(in [''language''] and [''language''])" (for two
+	languages), or "(in [''language''], [''language''] ... and [''language''])" (for three or more languages). The entry
+	page will also be added to a category in the form <code>Category:LANGUAGE terms with quotations</code> for the first
+	listed language (unless {{para|termlang}} is specified, in which case that language is used for the category, or
+	{{para|nocat|1}} is specified, in which case the page will not be added to any category). The first listed language
+	also determines the font to use and the appropriate transliteration to display, if the text is in a non-Latin
+	script.
 
 	Use {{para|worklang}} to specify the language(s) that the <<collection>> itself is written in: see below.
 
 	<small>The parameter {{para|lang}} is a deprecated synonym for this parameter; please do not use. If this is used,
 	all numbered parameters move down by one.</small>]=]},
-	{{"text", "passage"}, [=[The text being quoted. Use boldface to highlight the term being defined, like this:
+	{{"text", "passage"},
+	[=[The text being quoted. Use boldface to highlight the term being defined, like this:
 	"{{code||<nowiki>'''humanities'''</nowiki>}}".]=]},
-	{"worklang", [=[A comma-separated list of language codes indicating the language(s) that the book is written in, if
-	different from the quoted text; for a list of the codes, see [[Wiktionary:List of languages]].]=]},
-	{"termlang", [=[A language code indicating the language of the term being illustrated, if different from the quoted
-	text; for a list of the codes, see [[Wiktionary:List of languages]]. If specified, this language is the one used
-	when adding the page to a category of the form <code>Category:LANGUAGE terms with quotations</code>; otherwise, the
-	first listed language specified using {{para|1}} is used. Only specify this parameter if the language of the
-	quotation is different from the term's language, e.g. a Middle English quotation used to illustrate a modern
-	English term or an English definition of a Vietnamese term in a Vietnamese-English dictionary.]=]},
-	{{"brackets", boolean = true}, [=[Surround a quotation with [[bracket]]s. This indicates that the quotation either
-	contains a mere mention of a term (for example, "some people find the word '''''manoeuvre''''' hard to spell")
-	rather than an actual use of it (for example, "we need to '''manoeuvre''' carefully to avoid causing upset"), or
-	does not provide an actual instance of a term but provides information about related terms.]=]},
-	{{"t", "translation"}, [=[If the quoted text is not in English, this parameter can be used to provide an English
-	[[translation]] of it.]=]},
-	{"lit", [=[If the quoted text is not in English and the translation supplied using {{para|t}} or
-	{{para|translation}} is idiomatic, this parameter can be used to provide a [[literal]] English [[translation]].]=]},
-	{"footer", [=[This parameter can be used to specify arbitrary text to insert in a separate line at the bottom, to
-	specify a comment, footnote, etc.]=]},
-	{{"norm", "normalization"}, [=[If the quoted text is written using nonstandard spelling, this parameter supplies
-	the normalized (standardized) version of the quoted text. This applies especially to older quotations. For example,
-	for Old Polish, this parameter could supply a version based on modern Polish spelling conventions, and for Russian
-	text prior to the 1917 spelling reform, this could supply the reformed spelling.]=]},
-	{{"tr", "transliteration"}, [=[If the quoted text uses a different {{w|writing system}} from the {{w|Latin
-	alphabet}} (the usual alphabet used in English), this parameter can be used to provide a [[transliteration]] of it
-	into the Latin alphabet. Note that many languages provide an automatic transliteration if this argument is not
-	specified. If a normalized version of the quoted text is supplied using {{para|norm}}, the transliteration will be
-	based on this version if possible (falling back to the actual quoted text if the transliteration of the normalized
-	text fails or if the normalization is supplied in Latin script and the original in a non-Latin script).]=]},
-	{"subst", [=[Phonetic substitutions to be applied to handle irregular transliterations in certain languages with a
-	non-Latin writing system and automatic transliteration (e.g. Russian and Yiddish). If specified, should be one or
-	more substitution expressions separated by commas, where each substitution expression is of the form
+	{"worklang",
+	[=[A comma-separated list of language codes indicating the language(s) that the book is written in, if different
+	from the quoted text; for a list of the codes, see [[Wiktionary:List of languages]].]=]},
+	{"termlang",
+	[=[A language code indicating the language of the term being illustrated, if different from the quoted text; for a
+	list of the codes, see [[Wiktionary:List of languages]]. If specified, this language is the one used when adding
+	the page to a category of the form <code>Category:LANGUAGE terms with quotations</code>; otherwise, the first listed
+	language specified using {{para|1}} is used. Only specify this parameter if the language of the quotation is
+	different from the term's language, e.g. a Middle English quotation used to illustrate a modern English term or an
+	English definition of a Vietnamese term in a Vietnamese-English dictionary.]=]},
+	{{"brackets", boolean = true},
+	[=[Surround a quotation with [[bracket]]s. This indicates that the quotation either contains a mere mention of a
+	term (for example, "some people find the word '''''manoeuvre''''' hard to spell") rather than an actual use of it
+	(for example, "we need to '''manoeuvre''' carefully to avoid causing upset"), or does not provide an actual instance
+	of a term but provides information about related terms.]=]},
+	{{"t", "translation"},
+	[=[If the quoted text is not in English, this parameter can be used to provide an English [[translation]] of
+	it.]=]},
+	{"lit",
+	[=[If the quoted text is not in English and the translation supplied using {{para|t}} or {{para|translation}} is
+	idiomatic, this parameter can be used to provide a [[literal]] English [[translation]].]=]},
+	{"footer",
+	[=[This parameter can be used to specify arbitrary text to insert in a separate line at the bottom, to specify a
+	comment, footnote, etc.]=]},
+	{{"norm", "normalization"},
+	[=[If the quoted text is written using nonstandard spelling, this parameter supplies the normalized (standardized)
+	version of the quoted text. This applies especially to older quotations. For example, for Old Polish, this parameter
+	could supply a version based on modern Polish spelling conventions, and for Russian text prior to the 1917 spelling
+	reform, this could supply the reformed spelling.]=]},
+	{{"tr", "transliteration"},
+	[=[If the quoted text uses a different {{w|writing system}} from the {{w|Latin alphabet}} (the usual alphabet used
+	in English), this parameter can be used to provide a [[transliteration]] of it into the Latin alphabet. Note that
+	many languages provide an automatic transliteration if this argument is not specified. If a normalized version of
+	the quoted text is supplied using {{para|norm}}, the transliteration will be based on this version if possible
+	(falling back to the actual quoted text if the transliteration of the normalized text fails or if the normalization
+	is supplied in Latin script and the original in a non-Latin script).]=]},
+	{"subst",
+	[=[Phonetic substitutions to be applied to handle irregular transliterations in certain languages with a non-Latin
+	writing system and automatic transliteration (e.g. Russian and Yiddish). If specified, should be one or more
+	substitution expressions separated by commas, where each substitution expression is of the form
 	<code>FROM//TO</code> (<code>FROM/TO</code> is also accepted), where <code>FROM</code> specifies the source text in
 	the source script (e.g. Cyrillic or Hebrew) and <code>TO</code> is the corresponding replacement text, also in the
 	source script. The intent is to respell irregularly-pronounced words phonetically prior to transliteration, so that
@@ -141,19 +219,22 @@ local function generate_params(ty)
 	See also {{temp|ux}} for an example of using {{para|subst}} (the usage is identical to that template). If
 	{{para|norm}} is used to provide a normalized version of the quoted text, the substitutions will also apply to this
 	version when transliterating it.]=]},
-	{{"ts", "transcription"}, [=[Phonetic transcription of the quoted text, if in a non-Latin script where the
-	transliteration is markedly different from the actual pronunciation (e.g. Akkadian, Ancient Egyption and Tibetan).
-	This should not be used merely to supply the IPA pronunciation of the text.]=]},
-	{"sc", [=[The script code of the quoted text, if not in the Latin script. See [[Wiktionary:Scripts]] for more
-	information. It is rarely necessary to specify this as the script is autodetected based on the quoted text.]=]},
-	{"normsc", [=[The script code of the normalized text in {{para|norm}}, if not in the Latin script. If unspecified,
-	and a value was given in {{para|sc}}, this value will be used to determine the script of the normalized text;
-	otherwise (or if {{para|normsc|auto}} was specified), the script of the normalized text will be autodetected based
-	on that text.]=]},
+	{{"ts", "transcription"},
+	[=[Phonetic transcription of the quoted text, if in a non-Latin script where the transliteration is markedly
+	different from the actual pronunciation (e.g. Akkadian, Ancient Egyption and Tibetan). This should not be used
+	merely to supply the IPA pronunciation of the text.]=]},
+	{"sc",
+	[=[The script code of the quoted text, if not in the Latin script. See [[Wiktionary:Scripts]] for more information.
+	It is rarely necessary to specify this as the script is autodetected based on the quoted text.]=]},
+	{"normsc",
+	[=[The script code of the normalized text in {{para|norm}}, if not in the Latin script. If unspecified, and a value
+	was given in {{para|sc}}, this value will be used to determine the script of the normalized text; otherwise (or if
+	{{para|normsc|auto}} was specified), the script of the normalized text will be autodetected based on that text.]=]},
 	},
 
 	{"Date-related parameters",
-	{"date", [=[The date that the <<work>> was published. Use either {{para|year}} (and optionally {{para|month}}), or
+	{"date",
+	[=[The date that the <<work>> was published. Use either {{para|year}} (and optionally {{para|month}}), or
 	{{para|date}}, not both. The value of {{para|date}} must be an actual date, with or without the day, rather than
 	arbitrary text. Various formats are allowed; it is recommended that you either write in YYYY-MM-DD format, e.g.
 	<code>2023-08-11</code>, or spell out the month, e.g. <code>2023 August 11</code> (permutations of the latter are
@@ -161,233 +242,295 @@ local function generate_params(ty)
 	will attempt to display the date with only the month and year. Regardless of the input format, the output will be
 	displayed in the format <code>'''2023''' August 11</code>, or <code>'''2023''' August</code> if the day was
 	omitted.]=]},
-	{{"year", "month", useand = true}, [=[The year and (optionally) the month that the <<work>> was published. The values
-	of these parameters are not parsed, and arbitrary text can be given if necessary. If the year is preceded by
-	<code>c.</code>, e.g. <code>c. 1665</code>, it indicates that the publication year was {{glink|c.|circa}} (around)
-	the specified year; similarly <code>a.</code> indicates a publication year {{glink|a.|ante}} (before) the specified
-	year, and <code>p.</code> indicates a publication year {{glink|p.|post}} (after) the specified year. The year will
-	be displayed boldface unless there is boldface already in the value of the {{para|year}} parameter, and the month
+	{{"year", "month", useand = true},
+	[=[The year and (optionally) the month that the <<work>> was published. The values of these parameters are not
+	parsed, and arbitrary text can be given if necessary. If the year is preceded by <code>c.</code>, e.g.
+	<code>c. 1665</code>, it indicates that the publication year was {{glink|c.|circa}} (around) the specified year;
+	similarly <code>a.</code> indicates a publication year {{glink|a.|ante}} (before) the specified year, and
+	<code>p.</code> indicates a publication year {{glink|p.|post}} (after) the specified year. The year will be
+	displayed boldface unless there is boldface already in the value of the {{para|year}} parameter, and the month
 	(if given) will follow. If neither date nor year/month is given, the template displays the message
 	"(Can we [[:Category:Requests for date|date]] this quote?)" and adds the page to the category
 	[[:Category:Requests for date in LANG entries]], using the language specified in {{para|1}}. The message and
 	category addition can be suppressed using {{para|nodate|1}}, but it is recommended that you try to provide a date
 	or approximate date rather than do so. The category addition alone can be suppressed using {{para|nocat|1}}, but
 	this is not normally recommended.]=]},
-	{"start_date", [=[If the publication spanned a range of dates, place the starting date in {{para|start_date}} (or
+	{"start_date",
+	[=[If the publication spanned a range of dates, place the starting date in {{para|start_date}} (or
 	{{para|start_year}}/{{para|start_month}}) and the ending date in {{para|date}} (or {{para|year}}/{{para|month}}).
 	The format of {{para|start_date}} is as for {{para|date}}. If the dates have the same year but different month and
 	day, the year will only be displayed once, and likewise if only the days differ. Use only one of {{para|start_date}}
 	or {{para|start_year}}/{{para|start_month}}, not both.]=]},
-	{{"start_year", "start_month", useand = true}, [=[Alternatively, specify a range by placing the start year and
-	month in {{para|start_year}} and (optionally) {{para|start_month}}. These can contain arbitrary text, as with
-	{{para|year}} and {{para|month}}. To indicate that publication is around, before or after a specified range, place
-	the appropriate indicator (<code>c.</code>, <code>a.</code> or <code>p.</code>) before the {{para|year}} value,
-	not before the {{para|start_year}} value.]=]},
-	{{"nodate", boolean = true}, [=[Specify {{para|nodate|1}} if the <<work>> is undated and no date (even approximate) can
-	reasonably be determined. This suppresses the maintenance line that is normally displayed if no date is given. Do
-	not use this just because you don't know the date; instead, leave out the date and let the maintenance line be
-	displayed and the page be added to the appropriate maintenance category, so that someone else can help.]=],},
+	{{"start_year", "start_month", useand = true},
+	[=[Alternatively, specify a range by placing the start year and month in {{para|start_year}} and (optionally)
+	{{para|start_month}}. These can contain arbitrary text, as with {{para|year}} and {{para|month}}. To indicate that
+	publication is around, before or after a specified range, place the appropriate indicator (<code>c.</code>,
+	<code>a.</code> or <code>p.</code>) before the {{para|year}} value, not before the {{para|start_year}} value.]=]},
+	{{"nodate", boolean = true},
+	[=[Specify {{para|nodate|1}} if the <<work>> is undated and no date (even approximate) can reasonably be determined.
+	This suppresses the maintenance line that is normally displayed if no date is given. Do not use this just because
+	you don't know the date; instead, leave out the date and let the maintenance line be displayed and the page be added
+	to the appropriate maintenance category, so that someone else can help.]=],},
 	},
 
 	{"Author-related parameters",
-	{{"author", list = true}, [=[The name(s) of the author(s) of the <<work>> quoted. Separate multiple authors with
-	semicolons, or use the additional parameters {{para|author2}}, {{para|author3}}, etc. Alternatively, use
-	{{para|last}} and {{para|first}} (for the first name, and middle names or initials), along with
-	{{para|last2}}/{{para|first2}} for additional authors. Do not use both at once.]=]},
-	{{"last", "first", useand = true, list = true}, [=[The first (plus middle names or initials) and last name(s) of
-	the author(s) of the <<work>> quoted. Use {{para|last2}}/{{para|first2}}, {{para|last3}}/{{para|first3}}, etc. for
-	additional authors. It is preferred to use {{para|author}} over {{para|last}}/{{para|first}}, especially for names
-	of foreign language speakers, where it may not be easy to segment into first and last names. Note that these
-	parameters do not support inline modifiers and do not do automatic script detection; hence they can only be used
-	for Latin-script names.]=]},
-	{{"authorlink", list = true}, [=[The name of an [https://en.wikipedia.org English Wikipedia] article about the
-	author, which will be linked to the name(s) specified using {{para|author}} or {{para|last}}/{{para|first}}.
-	Additional articles can be linked to other authors' names using the parameters {{para|authorlink2}},
-	{{para|authorlink3}}, etc. Do not add the prefix <code>:en:</code> or <code>w:</code>.
+	{{"author", list = true, multientity = true},
+	[=[The name(s) of the author(s) of the <<work>> quoted. Separate multiple authors with semicolons, or use the
+	additional parameters {{para|author2}}, {{para|author3}}, etc. Alternatively, use {{para|last}} and {{para|first}}
+	(for the first name, and middle names or initials), along with {{para|last2}}/{{para|first2}} for additional
+	authors. Do not use both at once.]=]},
+	{{"last", "first", useand = true, list = true},
+	[=[The first (plus middle names or initials) and last name(s) of the author(s) of the <<work>> quoted. Use
+	{{para|last2}}/{{para|first2}}, {{para|last3}}/{{para|first3}}, etc. for additional authors. It is preferred to use
+	{{para|author}} over {{para|last}}/{{para|first}}, especially for names of foreign language speakers, where it may
+	not be easy to segment into first and last names. Note that these parameters do not support inline modifiers or
+	prefixed language codes, and do not do automatic script detection; hence they can only be used for Latin-script
+	names.]=]},
+	{{"authorlink", list = true},
+	[=[The name of an [https://en.wikipedia.org English Wikipedia] article about the author, which will be linked to the
+	name(s) specified using {{para|author}} or {{para|last}}/{{para|first}}. Additional articles can be linked to other
+	authors' names using the parameters {{para|authorlink2}}, {{para|authorlink3}}, etc. Do not add the prefix
+	<code>:en:</code> or <code>w:</code>.
 
 	Alternatively, link each person's name directly, like this:
 	{{para|author|<nowiki>[[w:Kathleen Taylor (biologist)|Kathleen Taylor]]</nowiki>}} or
 	{{para|author|<nowiki>{{w|Samuel Johnson}}</nowiki>}}.]=]},
-	{"coauthors", "The names of the coauthor(s) of the <<work>>. Separate multiple names with semicolons."},
-	{"mainauthor", [=[If you wish to indicate who a part of <<work:a>> such as a foreword or introduction was written by,
-	use {{para|author}} to do so, and use {{para|mainauthor}} to indicate the author(s) of the main part of the <<work>>.
+	{{"coauthors", multientity = true},
+	"The names of the coauthor(s) of the <<work>>. Separate multiple names with semicolons."},
+	{{"mainauthor", multientity = true},
+	[=[If you wish to indicate who a part of <<work:a>> such as a foreword or introduction was written by, use
+	{{para|author}} to do so, and use {{para|mainauthor}} to indicate the author(s) of the main part of the <<work>>.
 	Separate multiple authors with semicolons.]=]},
-	{{"tlr", "translator", "translators"}, [=[The name(s) of the translator(s) of the <<collection>>. Separate multiple names
-	with semicolons.]=]},
-	{{"editor", "editors"}, [=[The name(s) of the editor(s) of the <<collection>>. Separate multiple names with semicolons.]=],},
-	{"quotee", [=[The name of the person being quoted, if the whole text quoted is a quotation of someone other than
-	the author.]=]},
+	{{"tlr", "translator", "translators", multientity = true},
+	[=[The name(s) of the translator(s) of the <<collection>>. Separate multiple names with semicolons.]=]},
+	{{"editor", multientity = true},
+	[=[The name(s) of the editor(s) of the <<collection>>. Separate multiple names with semicolons.]=],},
+	{{"editors", multientity = true},
+	[=[The name(s) of the editor(s) of the <<collection>>. Separate multiple names with semicolons. The only difference
+	between this and {{para|editor}} comes when (a) only a single name is given (i.e. there is no semicolon delimiter),
+	and (b) there is no author(s), coauthor(s) or translator(s) specified. In this particular situation,
+	{{para|editor|Mary Bloggs}} will show "<code>Mary Bloggs, editor</code>" after the given name and
+	{{para|editors|Mary Bloggs}} will show "<code>Mary Bloggs, editors</code>" after the given name (which is incorrect
+	in this instance, but would make sense if e.g. {{para|editors|the Bloggs Sisters}} were given). If there are
+	multiple semicolon-separated names, both parameters will use the plural form "editors": e.g.
+	{{para|editor|John Doe; Mary Bloggs}} will show as "<code>John Doe, Mary Bloggs, editors</code>". If there are
+	preceding author(s), coauthor(s) or translator(s), a different format will be used to more clearly distinguish
+	the editor(s) from the author(s) and translator(s): "<code>edited by John Doe and Mary Bloggs</code>".]=]},
+	{{"quotee", multientity = true},
+	[=[The name of the person being quoted, if the whole text quoted is a quotation of someone other than the
+	author.]=]},
 	},
 
 	{"Title-related parameters",
-	{{"title", required = true}, [=[The title of the <<collection>>.]=]},
-	{"trans-title", [=[If the title of the <<collection>> is not in English, this parameter can be used to provide an English
+	{{"title", annotated = true, required = true},
+	[=[The title of the <<collection>>.]=]},
+	{"trans-title",
+	[=[If the title of the <<collection>> is not in English, this parameter can be used to provide an English
 	translation of the title, as an alternative to specifying the translation using an inline modifier (see below).]=]},
-	{{"series", "seriesvolume", useand = true}, [=[The {{w|book series|series}} that the <<collection>> belongs to, and the
-	volume number of the <<collection>> within the series.]=]},
-	{"url", [=[The URL or web address of an external website containing the full text of the <<work>>. ''Do not link to
-	any website that has content in breach of copyright''.]=]},
-	{"urls", [=[Freeform text, intended for multiple URLs. Unlike {{para|url}}, the editor must supply the URL brackets
+	{{"series", annotated = true},
+	[=[The {{w|book series|series}} that the <<collection>> belongs to.]=]},
+	{{"seriesvolume", annotated = true},
+	[=[The volume number of the <<collection>> within the series that it belongs]=]},
+	{"url",
+	[=[The URL or web address of an external website containing the full text of the <<work>>. ''Do not link to any
+	website that has content in breach of copyright''.]=]},
+	{"urls",
+	[=[Freeform text, intended for multiple URLs. Unlike {{para|url}}, the editor must supply the URL brackets
 	<code>[]</code>.]=]},
 	},
 
 	{"Chapter-related parameters",
-	{"chapter", [=[The chapter of the <<collection>> quoted. You can either specify a chapter number in Arabic or Roman
+	{{"chapter", annotated = true},
+	[=[The chapter of the <<collection>> quoted. You can either specify a chapter number in Arabic or Roman
 	numerals (for example, {{para|chapter|7}} or {{para|chapter|VII}}) or a chapter title (for example,
 	{{para|chapter|Introduction}}). A chapter given in Arabic or Roman numerals will be preceded by the word "chapter",
 	while a chapter title will be enclosed in “curly quotation marks”.]=]},
-	{"chapter_number", [=[If the name of the chapter was supplied in {{para|chapter}}, use {{para|chapter_number}} to
-	provide the corresponding chapter number, which will be shown in parentheses after the word "chapter", e.g.
+	{{"chapter_number", annotated = true},
+	[=[If the name of the chapter was supplied in {{para|chapter}}, use {{para|chapter_number}} to provide the
+	corresponding chapter number, which will be shown in parentheses after the word "chapter", e.g.
 	<code>“Experiments” (chapter 4)</code>.]=]},
-	{"chapter_plain", [=[The full value of the chapter, which will be displayed as-is. Include the word "chapter" and
-	any desired quotation marks. If both {{para|chapter}} and {{para|chapter_plain}} are given, the value of
-	{{para|chapter_plain}} is shown after the chapter, in parentheses. This is useful if chapters in this <<collection>>
-	have are given a term other than "chapter".]=]},
-	{"chapterurl", [=[The [[w:Universal Resource Locator|URL]] or web address of an external webpage to link to the
-	chapter. Note that it is generally preferred to use {{para|pageurl}} to link directly to the page of the quoted
-	text, if possible. ''Do not link to any website that has content in breach of [[w:copyright|copyright]]''.]=]},
-	{"trans-chapter", [=[If the chapter of the <<collection>> is not in English, this parameter can be used to provide an
-	English translation of the chapter title, as an alternative to specifying the translation using an inline modifier
-	(see below).]=]},
-	{"chapter_tlr", [=[The translator of the chapter, if separate from the overall translator of the <<collection>>
-	(specified using {{para|tlr}} or {{para|translator}}).]=]},
-	{{"chapter_series", "chapter_seriesvolume", useand = true}, [=[If this chapter is part of a series of similar
-	chapters, {{para|chapter_series}} can be used to specify the name of the series, and {{para|chapter_seriesvolume}}
-	can be used to specify the index of the series, if it exists. Compare the {{para|series}} and {{para|seriesvolume}}
-	parameters for the <<collection>> as a whole. These parameters are used especially in conjunction with recurring
-	columns in a newspaper or similar. In {{tl|quote-journal}}, the {{para|chapter}} parameter is called {{para|title}}
-	and is used to specify the name of a journal, magazine or newspaper article, and the {{para|chapter_series}}
-	parameter is called {{para|article_series}} and is used to specify the name of the column or article series that the
-	article is part of.]=]},
+	{{"chapter_plain", annotated = true},
+	[=[The full value of the chapter, which will be displayed as-is. Include the word "chapter" and any desired
+	quotation marks. If both {{para|chapter}} and {{para|chapter_plain}} are given, the value of {{para|chapter_plain}}
+	is shown after the chapter, in parentheses. This is useful if chapters in this <<collection>> have are given a term
+	other than "chapter".]=]},
+	{"chapterurl",
+	[=[The [[w:Universal Resource Locator|URL]] or web address of an external webpage to link to the chapter. Note that
+	it is generally preferred to use {{para|pageurl}} to link directly to the page of the quoted text, if possible.
+	''Do not link to any website that has content in breach of [[w:copyright|copyright]]''.]=]},
+	{"trans-chapter",
+	[=[If the chapter of the <<collection>> is not in English, this parameter can be used to provide an English
+	translation of the chapter title, as an alternative to specifying the translation using an inline modifier (see
+	below).]=]},
+	{{"chapter_tlr", multientity = true},
+	[=[The translator of the chapter, if separate from the overall translator of the <<collection>> (specified using
+	{{para|tlr}} or {{para|translator}}).]=]},
+	{{"chapter_series", "chapter_seriesvolume", useand = true, annotated = true},
+	[=[If this chapter is part of a series of similar chapters, {{para|chapter_series}} can be used to specify the name
+	of the series, and {{para|chapter_seriesvolume}} can be used to specify the index of the series, if it exists.
+	Compare the {{para|series}} and {{para|seriesvolume}} parameters for the <<collection>> as a whole. These parameters
+	are used especially in conjunction with recurring columns in a newspaper or similar. In {{tl|quote-journal}}, the
+	{{para|chapter}} parameter is called {{para|title}} or {{para|article}} and is used to specify the name of a
+	journal, magazine or newspaper article, and the {{para|chapter_series}} parameter is called {{para|article_series}}
+	and is used to specify the name of the column or article series that the article is part of.]=]},
 	},
 
 	{"Section-related parameters",
-	{"section", [=[Use this parameter to identify a (usually numbered) portion of <<work:a>>, as an alternative or
+	{{"section", annotated = true},
+	[=[Use this parameter to identify a (usually numbered) portion of <<work:a>>, as an alternative or
 	complement to specifying a chapter. For example, in a play, use {{para|section|act II, scene iv}}, and in a
 	technical journal article, use {{para|section|4}}. If the value of this parameter looks like a Roman or Arabic
 	numeral, it will be prefixed with the word "section", otherwise displayed as-is (compare the similar handling of
 	{{para|chapter}}).]=]},
-	{"section_number", [=[If the name of a section was supplied in {{para|section}}, use {{para|section_number}} to
-	provide the corresponding section number, which will be shown in parentheses after the word "section", e.g.
+	{{"section_number", annotated = true},
+	[=[If the name of a section was supplied in {{para|section}}, use {{para|section_number}} to provide the
+	corresponding section number, which will be shown in parentheses after the word "section", e.g.
 	<code>Experiments (section 4)</code>.]=]},
-	{"section_plain", [=[The full value of the section, which will be displayed as-is; compare {{para|chapter_plain}}.
-	(This is provided only for completeness, and is not generally useful, since the value of {{para|section}} is also
-	displayed as-is if it doesn't look like a number.)]=]},
-	{"sectionurl", [=[The [[w:Universal Resource Locator|URL]] or web address of an external webpage to link to the
-	section. ''Do not link to any website that has content in breach of [[w:copyright|copyright]]''.]=]},
-	{"trans-section", [=[If the section of the <<work>> is not in English, this parameter can be used to provide an English
+	{{"section_plain", annotated = true},
+	[=[The full value of the section, which will be displayed as-is; compare {{para|chapter_plain}}. (This is provided
+	only for completeness, and is not generally useful, since the value of {{para|section}} is also displayed as-is if
+	it doesn't look like a number.)]=]},
+	{"sectionurl",
+	[=[The [[w:Universal Resource Locator|URL]] or web address of an external webpage to link to the section. ''Do not
+	link to any website that has content in breach of [[w:copyright|copyright]]''.]=]},
+	{"trans-section",
+	[=[If the section of the <<work>> is not in English, this parameter can be used to provide an English
 	translation of the section, as an alternative to specifying the translation using an inline modifier (see
 	below).]=]},
-	{{"section_series", "section_seriesvolume", useand = true}, [=[If this section is part of a series of similar
-	sections, {{para|section_series}} can be used to specify the name of the series, and {{para|section_seriesvolume}}
-	can be used to specify the index of the series, if it exists. Compare the {{para|series}} and {{para|seriesvolume}}
-	parameters for the <<collection>> as a whole, and the {{para|chapter_series}} and {{para|chapter_seriesvolume}} parameters
-	for a chapter.]=]},
+	{{"section_series", "section_seriesvolume", useand = true, annotated = true},
+	[=[If this section is part of a series of similar sections, {{para|section_series}} can be used to specify the name
+	of the series, and {{para|section_seriesvolume}} can be used to specify the index of the series, if it exists.
+	Compare the {{para|series}} and {{para|seriesvolume}} parameters for the <<collection>> as a whole, and the
+	{{para|chapter_series}} and {{para|chapter_seriesvolume}} parameters for a chapter.]=]},
 	},
 
 	{"Page- and line-related parameters",
-	{{"page", "pages"}, [=[The page number or range of page numbers of the <<work>>. Use an en dash (–) to separate the
-	page numbers in the range. Under normal circumstances, {{para|page}} and {{para|pages}} are aliases of each other,
-	and the code autodetects whether to display singular "page" or plural "pages" before the supplied number or range.
-	The autodetection code displays the "pages" if it finds an en-dash (–), an em-dash (—), a hyphen between numbers,
+	{{"page", "pages", annotated = true},
+	[=[The page number or range of page numbers of the <<work>>. Use an en dash (–) to separate the page numbers in the
+	range. Under normal circumstances, {{para|page}} and {{para|pages}} are aliases of each other, and the code
+	autodetects whether to display singular "page" or plural "pages" before the supplied number or range. The
+	autodetection code displays the "pages" if it finds an en-dash (–), an em-dash (—), a hyphen between numbers,
 	or a comma followed by a space and between numbers (the space is necessary, so that numbers like <code>1,478</code>
 	with a thousands separator don't get treated as multiple pages). To suppress the autodetection (for example, some
 	books have hyphenated page numbers like <code>3-16</code>), precede the value with an exclamation point
 	(<code>!</code>); if this is given, the name of the parameter determines whether to display "page" or "pages".
 	Alternatively, use {{para|page_plain}}. As a special case, the value <code>unnumbered</code> causes
 	<code>unnumbered page</code> to display.]=]},
-	{"page_plain", [=[Free text specifying the page or pages of the quoted text, e.g. <code>folio 8</code> or
-	<code>back cover</code>. Use only one of {{para|page}}, {{para|pages}} and {{para|page_plain}}.]=]},
-	{"pageurl", [=[The URL or web address of the webpage containing the page(s) of the <<work>> referred to. The page
-	number(s) will be linked to this webpage.]=]},
-	{{"line", "lines"}, [=[The line number(s) of the quoted text, e.g. <code>47</code> or <code>151–154</code>. These
-	parameters work identically to {{para|page}} and {{para|pages}}, respectively. Line numbers are often used in
-	plays, poems and certain technical works.]=]},
-	{"line_plain", [=[Free text specifying the line number(s) of the quoted text, e.g. <code>verses 44–45</code> or
+	{{"page_plain", annotated = true},
+	[=[Free text specifying the page or pages of the quoted text, e.g. <code>folio 8</code> or <code>back cover</code>.
+	Use only one of {{para|page}}, {{para|pages}} and {{para|page_plain}}.]=]},
+	{"pageurl",
+	[=[The URL or web address of the webpage containing the page(s) of the <<work>> referred to. The page number(s) will
+	be linked to this webpage.]=]},
+	{{"line", "lines", annotated = true},
+	[=[The line number(s) of the quoted text, e.g. <code>47</code> or <code>151–154</code>. These parameters work
+	identically to {{para|page}} and {{para|pages}}, respectively. Line numbers are often used in plays, poems and
+	certain technical works.]=]},
+	{{"line_plain", annotated = true},
+	[=[Free text specifying the line number(s) of the quoted text, e.g. <code>verses 44–45</code> or
 	<code>footnote 3</code>. Use only one of {{para|line}}, {{para|lines}} and {{para|line_plain}}.]=]},
 	{"lineurl", [=[The URL or web address of the webpage containing the line(s) of the <<work>> referred to. The line
 	number(s) will be linked to this webpage.]=]},
-	{{"column", "columns", "column_plain", "columnurl", useand = true}, [=[The column number(s) of the quoted text.
-	These parameters <<work>> identically to {{para|page}}, {{para|pages}}, {{para|page_plain}} and {{para|pageurl}},
-	respectively.]=]},
+	{{"column", "columns", "column_plain", useand = true, annotated = true},
+	[=[The column number(s) of the quoted text. These parameters work identically to {{para|page}}, {{para|pages}} and
+	{{para|page_plain}}, respectively.]=]},
+	{"columnurl",
+	[=[The URL of the column number(s) of the quoted text. This parameter works identically to {{para|pageurl}}.]=]},
 	},
 
 	{"Publication-related parameters",
-	{"publisher", [=[The name of one or more publishers of the <<collection>>. If more than one publisher is stated, separate the
+	{{"publisher", multientity = true},
+	[=[The name of one or more publishers of the <<collection>>. If more than one publisher is stated, separate the
 	names with semicolons.]=]},
-	{"location", [=[The location where the <<collection>> was published. If more than one location is stated, separate the
+	{{"location", multientity = true},
+	[=[The location where the <<collection>> was published. If more than one location is stated, separate the
 	locations with semicolons, like this: <code>London; New York, N.Y.</code>.]=]},
-	{"edition", [=[The edition of the <<collection>> quoted, for example, <code>2nd</code> or <code>3rd corrected and revised</code>.
-	This text will be followed by the word "edition" (use {{para|edition_plain}} to avoid this). If quoting from the
-	first edition of the <<collection>>, it is usually not necessary to specify this fact.]=]},
-	{"edition_plain", [=[Free text specifying the edition of the <<collection>> quoted, e.g. <code>3rd printing</code> or
+	{{"edition", annotated = true},
+	[=[The edition of the <<collection>> quoted, for example, <code>2nd</code> or <code>3rd corrected and
+	revised</code>. This text will be followed by the word "edition" (use {{para|edition_plain}} to avoid this). If
+	quoting from the first edition of the <<collection>>, it is usually not necessary to specify this fact.]=]},
+	{{"edition_plain", annotated = true},
+	[=[Free text specifying the edition of the <<collection>> quoted, e.g. <code>3rd printing</code> or
 	<code>5th edition, digitized</code> or <code>version 3.72</code>.]=]},
-	{{"year_published", "month_published", useand = true}, [=[If {{para|year}} is used to state the year when the
-	original version of the <<issue>> was published, {{para|year_published}} can be used to state the year in which the
-	version quoted from was published, for example, "<code>|year=1665|year_published=2005</code>".
-	{{para|month_published}} can optionally be used to specify the month of publication. The year published is preceded
-	by the word "published". These parameters are handled in an identical fashion to {{para|year}} and {{para|month}}
-	(except that the year isn't displayed boldface by default). This means, for example, that the prefixes
-	<code>c.</code>, <code>a.</code> and <code>p.</code> are recognized to specify that the publication happened
-	circa/before/after a specified date.]=]},
-	{"date_published", [=[The date that the version of the <<issue>> quoted from was published. Use either
-	{{para|year_published}} (and optionally {{para|month_published}}), or {{para|date_published}}, not both. As with
-	{{para|date}}, the value of {{para|date_published}} must be an actual date, with or without the day, rather than
-	arbitrary text. The same formats are recognized as for {{para|date}}.]=]},
-	{{"start_year_published", "start_month_published", useand = true}, [=[If the publication of the version quoted from
-	spanned a range of dates, specify the starting year (and optionally month) using these parameters and place the
-	ending date in {{para|year_published}}/{{para|month_published}} (or {{para|date_published}}). This works identically
-	to {{para|start_year}}/{{para|start_month}}. It is rarely necessary to use these parameters.]=]},
-	{"start_date_published", [=[Start date of the publication of the version quoted from, as an alternative to
-	specifying {{para|start_year_published}}/{{para|start_month_published}}. This works like {{para|start_date}}. It is
+	{{"year_published", "month_published", useand = true},
+	[=[If {{para|year}} is used to state the year when the original version of the <<issue>> was published,
+	{{para|year_published}} can be used to state the year in which the version quoted from was published, for example,
+	"<code>|year=1665|year_published=2005</code>". {{para|month_published}} can optionally be used to specify the month
+	of publication. The year published is preceded by the word "published". These parameters are handled in an
+	identical fashion to {{para|year}} and {{para|month}} (except that the year isn't displayed boldface by default).
+	This means, for example, that the prefixes <code>c.</code>, <code>a.</code> and <code>p.</code> are recognized to
+	specify that the publication happened circa/before/after a specified date.]=]},
+	{"date_published",
+	[=[The date that the version of the <<issue>> quoted from was published. Use either {{para|year_published}} (and
+	optionally {{para|month_published}}), or {{para|date_published}}, not both. As with {{para|date}}, the value of
+	{{para|date_published}} must be an actual date, with or without the day, rather than arbitrary text. The same
+	formats are recognized as for {{para|date}}.]=]},
+	{{"start_year_published", "start_month_published", useand = true},
+	[=[If the publication of the version quoted from spanned a range of dates, specify the starting year (and optionally
+	month) using these parameters and place the ending date in {{para|year_published}}/{{para|month_published}} (or
+	{{para|date_published}}). This works identically to {{para|start_year}}/{{para|start_month}}. It is rarely necessary
+	to use these parameters.]=]},
+	{"start_date_published",
+	[=[Start date of the publication of the version quoted from, as an alternative to specifying
+	{{para|start_year_published}}/{{para|start_month_published}}. This works like {{para|start_date}}. It is
 	rarely necessary to specify this parameter.]=]},
-	{{"origyear", "origmonth", useand = true}, [=[The year when the <<work>> was originally published, if the <<work>> quoted
-	from is a new version of <<work:a>> (not merely a new printing). For example, if quoting from a modern edition of
-	Shakespeare or Milton, put the date of the modern edition in {{para|year}}/{{para|month}} or {{para|date}} and the
-	date of the original edition in {{para|origyear}}/{{para|origmonth}} or {{para|origdate}}. {{para|origmonth}} can
-	optionally be used to supply the original month of publication, or a full date can be given using {{para|origdate}}.
-	Use either {{para|origyear}}/{{para|origmonth}} or {{para|origdate}}, not both. These parameters are handled in an
+	{{"origyear", "origmonth", useand = true},
+	[=[The year when the <<work>> was originally published, if the <<work>> quoted from is a new version of <<work:a>>
+	(not merely a new printing). For example, if quoting from a modern edition of Shakespeare or Milton, put the date of
+	the modern edition in {{para|year}}/{{para|month}} or {{para|date}} and the date of the original edition in
+	{{para|origyear}}/{{para|origmonth}} or {{para|origdate}}. {{para|origmonth}} can optionally be used to supply the
+	original month of publication, or a full date can be given using {{para|origdate}}. Use either
+	{{para|origyear}}/{{para|origmonth}} or {{para|origdate}}, not both. These parameters are handled in an
 	identical fashion to {{para|year}} and {{para|month}} (except that the year isn't displayed boldface by default).
 	This means, for example, that the prefixes <code>c.</code>, <code>a.</code> and <code>p.</code> are recognized to
 	specify that the original publication happened circa/before/after a specified date.]=]},
-	{"origdate", [=[The date that the original version of the <<work>> quoted from was published. Use either
-	{{para|origyear}} (and optionally {{para|origmonth}}), or {{para|origdate}}, not both. As with {{para|date}}, the
-	value of {{para|origdate}} must be an actual date, with or without the day, rather than arbitrary text. The same
-	formats are recognized as for {{para|date}}.]=]},
-	{{"origstart_year", "origstart_month", "origstart_date", useand = true}, [=[The start year/month or date of the
-	original version of publication, if the publication happened over a range.  Use either {{para|origstart_year}} (and
-	optionally {{para|origstart_month}}), or {{para|origstart_date}}, not both. These <<work>> just like
-	{{para|start_year}}, {{para|start_month}} and {{para|start_date}}, and very rarely need to be specified.]=]},
-	{"platform", [=[The platform on which the <<work>> has been published. This is intended for content aggregation
-	platforms such as {{w|YouTube}}, {{w|Issuu}} and {{w|Magzter}}. This displays as "via PLATFORM".]=]},
-	{"source", [=[The source of the content of the <<work>>. This is intended e.g. for news agencies such as the
-	{{w|Associated Press}}, {{w|Reuters}} and {{w|Agence France-Presse}} (AFP) (and is named {{para|newsagency}} in
+	{"origdate",
+	[=[The date that the original version of the <<work>> quoted from was published. Use either {{para|origyear}} (and
+	optionally {{para|origmonth}}), or {{para|origdate}}, not both. As with {{para|date}}, the value of
+	{{para|origdate}} must be an actual date, with or without the day, rather than arbitrary text. The same formats are
+	recognized as for {{para|date}}.]=]},
+	{{"origstart_year", "origstart_month", "origstart_date", useand = true},
+	[=[The start year/month or date of the original version of publication, if the publication happened over a range.
+	Use either {{para|origstart_year}} (and optionally {{para|origstart_month}}), or {{para|origstart_date}}, not both.
+	These work just like {{para|start_year}}, {{para|start_month}} and {{para|start_date}}, and very rarely need to be
+	specified.]=]},
+	{{"platform", multientity = true},
+	[=[The platform on which the <<work>> has been published. This is intended for content aggregation platforms such
+	as {{w|YouTube}}, {{w|Issuu}} and {{w|Magzter}}. This displays as "via PLATFORM".]=]},
+	{{"source", multientity = true},
+	[=[The source of the content of the <<work>>. This is intended e.g. for news agencies such as the {{w|Associated
+	Press}}, {{w|Reuters}} and {{w|Agence France-Presse}} (AFP) (and is named {{para|newsagency}} in
 	{{tl|quote-journal}} for this reason). This displays as "sourced from SOURCE".]=]},
 	},
 
 	{"Volume-related parameters",
-	{{"volume", "volumes"}, [=[The volume number(s) of the <<collection>>. This displays as "volume VOLUME", or "volumes VOLUMES"
-	if a range of numbers is given. Whether to display "volume" or "volumes" is autodetected, exactly as for
-	{{para|page}} and {{para|pages}}; use <code>!</code> at the beginning of the value to suppress this and respect the
-	parameter name. Use {{para|volume_plain}} if you wish to suppress the word "volume" appearing in front of the volume
-	number.]=]},
-	{"volume_plain", [=[Free text specifying the volume number(s) of the <<collection>>, e.g. <code>book II</code>. Use only one
-	of {{para|volume}}, {{para|volumes}} and {{para|volume_plain}}.]=]},
-	{"volumeurl", [=[The URL or web address of the webpage corresponding to the volume containing the quoted text, if
-	the <<collection>> has multiple volumes with different URL's. The volume number(s) will be linked to this webpage.]=]},
-	{{{"issue", "number"}, {"issues", "numbers"}, {"issue_plain", "number_plain"}, {"issueurl", "numberurl"}, useand = true},
-	[=[The issue number(s) of the quoted text. These parameters work identically to {{para|page}}, {{para|pages}},
-	{{para|page_plain}} and {{para|pageurl}}, respectively, except that the displayed text contains the term "number"
-	or "numbers" rather than "issue" or "issues", as might be expected. Examples of the use of {{para|issue_plain}} are
-	<code>book 2</code> (if the <<collection>> is divided into volumes and volumes are divided into books) or
-	<code>Sonderheft 1</code> (where ''Sonderheft'' means "special issue" in German).]=]},
+	{{"volume", "volumes", annotated = true},
+	[=[The volume number(s) of the <<collection>>. This displays as "volume VOLUME", or "volumes VOLUMES" if a range of
+	numbers is given. Whether to display "volume" or "volumes" is autodetected, exactly as for {{para|page}} and
+	{{para|pages}}; use <code>!</code> at the beginning of the value to suppress this and respect the parameter name.
+	Use {{para|volume_plain}} if you wish to suppress the word "volume" appearing in front of the volume number.]=]},
+	{{"volume_plain", annotated = true},
+	[=[Free text specifying the volume number(s) of the <<collection>>, e.g. <code>book II</code>. Use only one of
+	{{para|volume}}, {{para|volumes}} and {{para|volume_plain}}.]=]},
+	{"volumeurl",
+	[=[The URL or web address of the webpage corresponding to the volume containing the quoted text, if the
+	<<collection>> has multiple volumes with different URL's. The volume number(s) will be linked to this webpage.]=]},
+	{{{"issue", "number"}, {"issues", "numbers"}, {"issue_plain", "number_plain"}, useand = true, annotated = true},
+	[=[The issue number(s) of the quoted text. These parameters work identically to {{para|page}}, {{para|pages}} and
+	{{para|page_plain}}, respectively, except that the displayed text contains the term "number" or "numbers"
+	(regardless of whether the {{para|issue}} or {{para|number}} series of parameters are used; they are aliases).
+	Examples of the use of {{para|issue_plain}} are <code>book 2</code> (if the <<collection>> is divided into volumes
+	and volumes are divided into books) or <code>Sonderheft 1</code> (where ''Sonderheft'' means "special issue" in
+	German).]=]},
+	{{{"issueurl", "numberurl"}, useand = true},
+	[=[The URL of the issue number(s) of the quoted text. This parameter works identically to {{para|volumeurl}}.]=]},
 	},
 
 	{"ID-related parameters",
 	{{"doi", "DOI"}, [=[The [[w:Digital object identifier|digital object identifier]] (DOI) of the <<work>>.]=]},
 	{{"isbn", "ISBN"}, [=[The [[w:International Standard Book Number|International Standard Book Number]] (ISBN) of
 	the <<collection>>. 13-digit ISBN's are preferred over 10-digit ones.]=]},
-	{{"issn", "ISSN"}, [=[w:International Standard Serial Number|International Standard Serial Number]] (ISSN) of the
+	{{"issn", "ISSN"}, [=[The [[w:International Standard Serial Number|International Standard Serial Number]] (ISSN) of the
 	<<collection>>.]=]},
 	{{"jstor", "JSTOR"}, [=[The [[w:JSTOR|JSTOR]] number of the <<work>>.]=]},
 	{{"lccn", "LCCN"}, [=[The [[w:Library of Congress Control Number|Library of Congress Control Number]] (LCCN) of
@@ -436,7 +579,8 @@ local function generate_params(ty)
 	Some special-case parameters are supplied as an alternative to specifying a new version this way. For example, the
 	{{para|original}} and {{para|by}} parameters can be used when quoting a translated version of <<work:a>>; see
 	below.]=],
-	{"newversion", [=[The template assumes that a new version of the <<work>> is referred to if {{para|newversion}} or
+	{"newversion",
+	[=[The template assumes that a new version of the <<work>> is referred to if {{para|newversion}} or
 	{{para|location2}} are given, or if the parameters specifying the author of the new version are given
 	({{para|2ndauthor}} or {{para|2ndlast}}), or if any other parameter indicating the title or author of the new
 	version is given (any of {{para|chapter2}}, {{para|title2}}, {{para|tlr2}}, {{para|translator2}},
@@ -445,24 +589,27 @@ local function generate_params(ty)
 	* If only the place of publication, publisher and date of publication are stated, it indicates "republished".
 	* If an edition is stated, no text is displayed.
 	Use {{para|newversion}} to override this behaviour, for example, by indicating "quoted in" or "reprinted as".]=]},
-	{"2ndauthor", [=[The author of the new version. Separate multiple authors with a semicolon. Alternatively, use
-	{{para|2ndlast}} and {{para|2ndfirst}}.]=]},
-	{{"2ndlast", "2ndfirst", useand = true}, [=[The first (plus middle names or initials) and last name(s) of the
-	author of the new version. It is preferred to use {{para|2ndauthor}} over {{para|2ndlast}}/{{para|2ndfirst}}, for
-	multiple reasons:
+	{{"2ndauthor", multientity = true},
+	[=[The author of the new version. Separate multiple authors with a semicolon. Alternatively, use {{para|2ndlast}}
+	and {{para|2ndfirst}}.]=]},
+	{{"2ndlast", "2ndfirst", useand = true},
+	[=[The first (plus middle names or initials) and last name(s) of the author of the new version. It is preferred to
+	use {{para|2ndauthor}} over {{para|2ndlast}}/{{para|2ndfirst}}, for multiple reasons:
 	# The names of foreign language speakers may not be easy to segment into first and last names.
 	# Only one author can be specified using {{para|2ndlast}}/{{para|2ndfirst}}, whereas multiple semicolon-separated
 	authors can be given using {{para|2ndauthor}}.
 	# Inline modifiers are not supported for {{para|2ndlast}} and {{para|2ndfirst}} and script detection is not done,
 	meaning that only Latin-script author names are supported.]=]},
-	{"2ndauthorlink", [=[The name of an [https://en.wikipedia.org English Wikipedia] article about the author, which
-	will be linked to the name(s) specified using {{para|2ndauthor}} or {{para|2ndlast}}/{{para|2ndfirst}}. Do not add
-	the prefix <code>:en:</code> or <code>w:</code>. Alternatively, link each person's name directly, like this:
+	{"2ndauthorlink",
+	[=[The name of an [https://en.wikipedia.org English Wikipedia] article about the author, which will be linked to the
+	name(s) specified using {{para|2ndauthor}} or {{para|2ndlast}}/{{para|2ndfirst}}. Do not add the prefix
+	<code>:en:</code> or <code>w:</code>. Alternatively, link each person's name directly, like this:
 	{{para|2ndauthor|<nowiki>[[w:Kathleen Taylor (biologist)|Kathleen Taylor]]</nowiki>}}.]=]},
-	{{"{{para|title2}}, {{para|editor2}}, {{para|location2}}, ''etc.''", literal = true}, [=[Most of the parameters
-	listed above can be applied to a new version of the <<work>> by adding "<code>2</code>" after the parameter name. It is
-	recommended that at a minimum the imprint information of the new version of the <<work>> should be provided using
-	{{para|location2}}, {{para|publisher2}}, and {{para|date2}} or {{para|year2}}.]=]},
+	{{"{{para|title2}}, {{para|editor2}}, {{para|location2}}, ''etc.''", literal = true, multientity = true},
+	[=[Most of the parameters listed above can be applied to a new version of the <<work>> by adding "<code>2</code>"
+	after the parameter name. It is recommended that at a minimum the imprint information of the new version of the
+	<<work>> should be provided using {{para|location2}}, {{para|publisher2}}, and {{para|date2}} or
+	{{para|year2}}.]=]},
 	},
 
 	{"Alternative special-case ways of specifying a new version of <<work:a>>",
@@ -470,12 +617,22 @@ local function generate_params(ty)
 	translation, or a case where part of one <<work>> is quoted in another. If you find that these parameters are
 	insufficient for specifying all the information about both works, do not try to shoehorn the extra information in.
 	Instead, use the method described above using {{para|newversion}} and {{para|2ndauthor}}, {{para|title2}}, etc.]=],
-	{{"type", "original", "by", useand = true}, [=[If you are citing a {{w|derivative work}} such as a translation, use
-	{{para|type}} to state the type of derivative work, {{para|original}} to state the title of the original work, and
-	{{para|by}} to state the author of the original work. If {{para|type}} is not indicated, the template assumes that
-	the derivative work is a translation.]=]},
-	{"quoted_in", [=[If the quoted text is from book A which states that the text is from another book B, do the
-	following:
+	{{"original", annotated = true},
+	[=[If you are citing a {{w|derivative work}} such as a translation, use {{para|original}} to state the title of the
+	original work, {{para|by}} to state the author of the original work and {{para|type}} to state the type of
+	derivative work. Either {{para|original}} or {{para|by}} must be given for this method to be applicable. If all
+	three are given, the code displays "<code><var>type</var> of <var>original</var> by <var>by</var></code>". If
+	{{para|original}} is omitted, the literal text "<code>original</code>" is used. If {{para|type}} is omitted,
+	the literal text "<code>translation</code>" is used. If {{para|by}} is omitted, the "by <var>by</var>" clause is
+	left out.]=]},
+	{{"by", multientity = true},
+	[=[If you are citing a {{w|derivative work}} such as a translation, use {{para|by}} to state the author(s) of the
+	original work. See {{para|original}} above.]=]},
+	{"type",
+	[=[If you are citing a {{w|derivative work}} such as a translation, use {{para|type}} to state the type of
+	derivative work. See {{para|original}} above.]=]},
+	{{"quoted_in", annotated = true},
+	[=[If the quoted text is from book A which states that the text is from another book B, do the following:
 	* Use {{para|title}}, {{para|edition}}, and {{para|others}} to provide information about book B. (As an example,
 	{{para|others}} can be used like this: "{{para|others=1893, page 72}}".)
 	* Use {{para|quoted_in}} (for the title of book A), {{para|location}}, {{para|publisher}}, {{para|year}},
@@ -827,12 +984,58 @@ local function format_parameter_group(group, subvals, level)
 	end
 	ins('{| class="wikitable"')
 	ins("! Parameter")
+	ins("! Can be annotated")
+	ins("! Can contain multiple semicolon-separated entities")
 	ins("! Remarks")
 	for i = ind, #group do
 		local paramspec, desc = unpack(group[i])
 		ins('|- style="vertical-align: top"')
 		ins('| style="text-align: center" | ' .. format_param_spec(paramspec))
-		ins('| ' .. process_continued_string(desc, subvals))
+		ins('| style="text-align: center" | ' .. ((paramspec.annotated or paramspec.multientity) and "'''Yes'''" or "No"))
+		ins('| style="text-align: center" | ' .. (paramspec.multientity and "'''Yes'''" or "No"))
+		ins("| " .. process_continued_string(desc, subvals))
+	end
+	ins("|}")
+	return table.concat(parts, "\n")
+end
+
+
+local function format_inline_modifiers(mods)
+	local parts = {}
+	local function ins(txt)
+		table.insert(parts, txt)
+	end
+	ins('{| class="wikitable"')
+	ins("! Modifier")
+	ins("! Remarks")
+	for _, modspec in ipairs(mods) do
+		local modifier, desc = unpack(modspec)
+		ins('|- style="vertical-align: top"')
+		ins('| style="text-align: center" | <code>' .. modifier .. "</code>")
+		ins("| " .. process_continued_string(desc, {}))
+	end
+	ins("|}")
+	return table.concat(parts, "\n")
+end
+
+
+local function format_introduction(mods)
+	local parts = {}
+	local function ins(txt)
+		table.insert(parts, txt)
+	end
+
+	ins("===Introduction===")
+	ins(process_continued_string(param_intro_text, {}))
+	ins("")
+	ins('{| class="wikitable"')
+	ins("! Modifier")
+	ins("! Remarks")
+	for _, modspec in ipairs(generate_inline_modifiers(template)) do
+		local modifier, desc = unpack(modspec)
+		ins('|- style="vertical-align: top"')
+		ins('| style="text-align: center" | <code>' .. modifier .. "</code>")
+		ins("| " .. process_continued_string(desc, {}))
 	end
 	ins("|}")
 	return table.concat(parts, "\n")
@@ -850,7 +1053,7 @@ function export.show_doc(template)
 	end
 	local subvals = apply_mods(params, mods)
 
-	local parts = {}
+	local parts = { format_introduction(template) }
 	for _, group in ipairs(params) do
 		table.insert(parts, format_parameter_group(group, subvals, 3))
 	end
