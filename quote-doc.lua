@@ -667,16 +667,17 @@ local quote_mods = {
 	{"#substitute", work = "article", collection = "journal", issue = "journal issue"},
 	{"year", addalias = "2"},
 	{"author", addalias = "3"},
-	{"title", replace_params = {"journal", "magazine", "newspaper", "work", "5"}},
+	{"title", replace_params = {"journal", "magazine", "newspaper", "work", "5", annotated = true}},
 	{"trans-title", replace_params = {"trans-journal", "trans-magazine", "trans-newspaper", "trans-work"}},
 	{"url", addalias = "6"},
 	{"page", addalias = "7"},
 	{"text", addalias = "8"},
 	{"translation", addalias = "9"},
 	{"source", addalias = "newsagency"},
+	{"#replace_group_name", "Title-related parameters", "Journal-related parameters"},
 	{"#replace_group", "Chapter-related parameters", {"Article-related parameters",
-		{{"title", "article", "4", suggested = true}, [=[The title of the journal article quoted, which will be enclosed in “curly quotation marks”.]=]},
-		{{"title_plain", "article_plain"}, [=[The title of the article, which will be displayed as-is. Include any desired quotation marks
+		{{"title", "article", "4", annotated = true, required = true}, [=[The title of the journal article quoted, which will be enclosed in “curly quotation marks”.]=]},
+		{{"title_plain", "article_plain", annotated = true}, [=[The title of the article, which will be displayed as-is. Include any desired quotation marks
 		and other words. If both {{para|title}} and {{para|title_plain}} are given, the value of {{para|title_plain}}
 		is shown after the title, in parentheses. This is useful e.g. to indicate an article number or other
 		identifier.]=]},
@@ -686,9 +687,9 @@ local quote_mods = {
 		{{"trans-title", "trans-article"}, [=[If the journal article is not in English, this parameter can be used to provide an English
 		translation of the title, as an alternative to specifying the translation using an inline modifier (see
 		below).]=]},
-		{"article_tlr", [=[The translator of the article, if separate from the overall translator of the journal
+		{{"article_tlr", multientity = true}, [=[The translator of the article, if separate from the overall translator of the journal
 		(specified using {{para|tlr}} or {{para|translator}}).]=]},
-		{{"article_series", "article_seriesvolume", useand = true}, [=[If this article is part of a series of similar
+		{{"article_series", "article_seriesvolume", annotated = true, useand = true}, [=[If this article is part of a series of similar
 		articles, {{para|article_series}} can be used to specify the name of the series, and
 		{{para|article_seriesvolume}} can be used to specify the index of the series, if it exists. Compare the
 		{{para|series}} and {{para|seriesvolume}} parameters for the journal as a whole. These parameters can be used,
@@ -874,7 +875,7 @@ local function format_param_spec(paramspec)
 
 	local function format_one_param(param, non_generic)
 		if non_generic then
-			param = "<u>" .. param .. "</u>"
+			param = "<b>" .. param .. "</b>"
 		end
 		if paramspec.boolean then
 			return ("<code>|%s=1</code>"):format(param)
