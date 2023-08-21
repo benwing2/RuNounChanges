@@ -7,6 +7,7 @@ import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site, tname, pname
 from collections import defaultdict
 
+TEMP_BOLDFACE = "\uFFF0"
 TEMP_LT = "\uFFF1"
 TEMP_GT = "\uFFF2"
 TEMP_LBRAC = "\uFFF3"
@@ -333,9 +334,6 @@ def process_text_on_page(index, pagetitle, text):
         this_template_notes.extend(this_notes)
 
     if tn in quote_templates:
-      if args.from_to:
-        from_to("Saw {{%s}}" % tn)
-
       if args.check_unhandled_params:
         count_templates[tn] += 1
         for param in t.params:
@@ -402,6 +400,7 @@ def process_text_on_page(index, pagetitle, text):
 
       if args.check_author_splitting:
         splitmsgs = []
+        this_notes = []
 
         def normalize_and_split_on_balanced_delims(author, authparam):
           processed_author = author
@@ -425,14 +424,15 @@ def process_text_on_page(index, pagetitle, text):
             return False
 
         def undo_html_entity_replacement(txt):
-          txt = text.replace(TEMP_AMP, "&")
-          txt = text.replace(TEMP_SEMICOLON, ";")
+          txt = txt.replace(TEMP_AMP, "&")
+          txt = txt.replace(TEMP_SEMICOLON, ";")
           for entity, entity_re, replacement in html_entity_to_replacement:
             txt = txt.replace(replacement, entity)
           return txt
 
         # Try to move a translator or editor from author=, mainauthor= or coauthors= to tlr= or editor=.
         moved_tlr_msg = False
+        moved_tlr_notes_msg = False
         moved_author_param = None
         moved_tlr_dest_param = None
         for dest_param in ["tlr", "editor"]:
@@ -478,6 +478,7 @@ def process_text_on_page(index, pagetitle, text):
                   moved_author_param = author_param
                   moved_tlr_dest_param = dest_param
                   moved_tlr_msg = "Moving %s=%s to %s=%s" % (author_param, author, dest_param, tlr)
+                  moved_tlr_notes_msg = "move %s=%s to %s=%s in %s" % (author_param, author, dest_param, tlr, tn)
                 else:
                   # Extract translator(s) after last semicolon
                   split_runs = blib.split_alternating_runs(tlr_runs, r"\s*;\s+", preserve_splitchar=True)
@@ -487,6 +488,9 @@ def process_text_on_page(index, pagetitle, text):
                   moved_tlr_dest_param = dest_param
                   moved_tlr_msg = "Splitting %s=%s into %s=%s and %s=%s" % (
                     author_param, author, author_param, new_authors, dest_param, new_tlrs
+                  )
+                  moved_tlr_notes_msg = "split %s=%s into %s=%s and %s=%s in {{%s}}" % (
+                    author_param, author, author_param, new_authors, dest_param, new_tlrs, tn
                   )
               must_break = True
               break
@@ -582,8 +586,7 @@ def process_text_on_page(index, pagetitle, text):
             et_al_re = r"et al\." # since we normalized all variants above
             if not re.search(et_al_re + "$", author_runs[-1]):
               # 'et al' followed by something
-              pagemsg("WARNING: %s: Saw 'et al.' followed by junk, won't split: %s" % (msgpref, author_runs[-1]))
-              return False
+              return "WARNING: %s: Saw 'et al.' followed by junk, won't split: %s" % (msgpref, author_runs[-1])
             m = re.search("^(.*?)(" + et_al_re + ")$", author_runs[-1])
             assert m
             orig_last_run = author_runs[-1]
@@ -603,49 +606,34 @@ def process_text_on_page(index, pagetitle, text):
 
           split_runs = blib.split_alternating_runs(author_runs, split_re, preserve_splitchar=True)
           authors = []
-          wont_split = False
           for i, split_run in enumerate(split_runs):
             if i % 2 == 0:
               run = "".join(split_run).strip()
               if re.search(r"^(I+|IV|V|VI+|(Jr|Sr|Esq|Jun|Sen)\.?|(M|J|D|Ph|PH|Ll|LL)[. ]*D[. ]*|[BM][. ]*[AS][. ]*)$", run):
                 if i == 0:
-                  pagemsg("%s: Saw suffix '%s' without main form, won't split" % (msgpref, run))
-                  wont_split = True
-                  break
+                  return "%s: Saw suffix '%s' without main form, won't split" % (msgpref, run)
                 else:
                   authors[-1] += "".join(split_runs[i - 1]) + "".join(split_runs[i])
                   continue
               if not run:
-                pagemsg("%s: Saw empty run, won't split" % msgpref)
-                wont_split = True
-                break
+                return "%s: Saw empty run, won't split" % msgpref
               if run != "et al.":
                 # "et al" variants handled specially above and canonicalized to "et al."
                 if run[0].islower():
-                  pagemsg("%s: Saw run '%s' beginning with lowercase, won't split" % (
-                    msgpref, run))
-                  wont_split = True
-                  break
+                  return "%s: Saw run '%s' beginning with lowercase, won't split" % (msgpref, run)
                 if not run[0].isupper() and not re.search(r"^[{\[]", run):
-                  pagemsg("%s: Saw run '%s' not beginning with uppercase, link or template, won't split" % (
-                    msgpref, run))
-                  wont_split = True
-                  break
-                if not re.search(r"\s", run) and not re.search(r"^\{\{w\|", run) and not re.search(r"^\[\[w:", run):
+                  return "%s: Saw run '%s' not beginning with uppercase, link or template, won't split" % (msgpref, run)
+                if (not re.search(r"\s", run) and not re.search(r"^\{\{w\|.*\}\}$", run)
+                    and not re.search(r"^\[\[w:.*\]\]$", run) and not re.search(r"^\{\{lang\|.*\}\}$", run)):
                   # Normally, a run without a space indicates a LAST, FIRST situation or an organization; but allow
                   # runs like {{w|Morrissey}}, {{w|Beyoncé}}, {{w|Jagger–Richards}}, {{w|busbee}}; also allow
-                  # [[w:Yas|Yas]], [[w:O.S.T.R.|O.S.T.R.]], [[w:Virgil|Virgill]]
-                  pagemsg("%s: Saw run '%s' without space, won't split" % (msgpref, run))
-                  wont_split = True
-                  break
+                  # [[w:Yas|Yas]], [[w:O.S.T.R.|O.S.T.R.]], [[w:Virgil|Virgill]] and {{lang|jje|양창용}},
+                  # {{lang|zh|黄俊英}}
+                  return "%s: Saw run '%s' without space, won't split" % (msgpref, run)
                 for j, runpart in enumerate(split_run):
                   if j % 2 == 0 and ":" in runpart: # not in templates, links or the like
-                    pagemsg("%s: Saw run '%s' with colon in runpart '%s' (index %s), won't split"
-                      % (msgpref, run, runpart, j))
-                    wont_split = True
-                    break
-                if wont_split:
-                  break
+                    return "%s: Saw run '%s' with colon in runpart '%s' (index %s), won't split" % (
+                        msgpref, run, runpart, j)
                 space_split_runs = blib.split_alternating_runs(split_run, r"\s+")
                 recombined_space_split_runs = []
                 for split_runpart in space_split_runs:
@@ -653,12 +641,8 @@ def process_text_on_page(index, pagetitle, text):
                 for j, word in enumerate(recombined_space_split_runs):
                   if (word[0].islower() and not re.search("^d['’]", word) and not word.startswith("al-") and not
                       re.search("^([dl][aeo]s?|v[oa]n|vom|te[rn]?|de[lnr]|di|du|à|y)$", word)):
-                    pagemsg("%s: Saw run '%s' with non-allow-listed lowercase word '%s' (index %s) in it, won't split" %
-                      (msgpref, run, word, j))
-                    wont_split = True
-                    break
-                if wont_split:
-                  break
+                    return ("%s: Saw run '%s' with non-allow-listed lowercase word '%s' (index %s) in it, won't split"
+                      % (msgpref, run, word, j))
                 deny_list_words = [
                   "United", "States", "American", "Britain", "British", "Australia", "Australian", "Zealand",
                   "National", "International", "Limited", "Ltd", "Company", "Inc", "Society", "Association", "Assn",
@@ -666,14 +650,8 @@ def process_text_on_page(index, pagetitle, text):
                 ]
                 for deny_list_word in deny_list_words:
                   if re.search(r"\b%s\b" % deny_list_word, run):
-                    pagemsg("%s: Saw run '%s' with deny-listed word '%s', won't split" % (msgpref, run, deny_list_word))
-                    wont_split = True
-                    break
-                if wont_split:
-                  break
+                    return "%s: Saw run '%s' with deny-listed word '%s', won't split" % (msgpref, run, deny_list_word)
               authors.append(run)
-          if wont_split:
-            return False
           split_authors = " // ".join(undo_html_entity_replacement(auth) for auth in authors)
           semicolon_joined_authors = "; ".join(undo_html_entity_replacement(auth) for auth in authors)
 
@@ -685,15 +663,16 @@ def process_text_on_page(index, pagetitle, text):
                 msgauth2 = "author2=%s" % author2
               else:
                 msgauth2 = "last2=%s" % last2
-              pagemsg("WARNING: %s: Would normally split into %s, but saw %s" % (msgpref, split_authors, msgauth2))
-              return False
+              return "WARNING: %s: Would normally split into %s, but saw %s" % (msgpref, split_authors, msgauth2)
 
           if origauthor == semicolon_joined_authors:
-            pagemsg("%s: Would normally split into %s, but rejoined value is same as current"
-                    % (msgpref, split_authors))
-            return False
+            return "%s: Would normally split into %s, but rejoined value is same as current" % (msgpref, split_authors)
 
-          return "%s: Would split into %s" % (msgpref, split_authors), semicolon_joined_authors
+          num_entities = len(authors)
+          notes_msg = "split (on %s) %s= into %s entit%s in {{%s}} and join with semicolons" % (
+            split_msg, authparam, num_entities, "ies" if num_entities > 1 else "y", tn
+          )
+          return "%s: Would split into %s" % (msgpref, split_authors), notes_msg, semicolon_joined_authors
 
         splits = []
         for authparam in ["author", "coauthors", "mainauthor", "tlr", "translator", "translators", "editor", "editors",
@@ -719,12 +698,15 @@ def process_text_on_page(index, pagetitle, text):
             continue
           authret = do_author_param(author, authparam)
           if authret is not False:
-            splitmsg, new_paramval = authret
-            splits.append((authparam, new_paramval, splitmsg))
+            if type(authret) is str:
+              splits.append((authparam, False, authret, False))
+            else:
+              splitmsg, notes_msg, new_paramval = authret
+              splits.append((authparam, new_paramval, splitmsg, notes_msg))
         newt = list(blib.parse_text(str(t)).filter_templates())[0]
-        splitmsgs = []
         if moved_tlr_msg:
           splitmsgs.append(moved_tlr_msg)
+          this_notes.append(moved_tlr_notes_msg)
           if new_authors:
             following_author = blib.find_following_param(newt, moved_author_param)
             newt.add(moved_tlr_dest_param, new_tlrs, before=following_author)
@@ -733,11 +715,18 @@ def process_text_on_page(index, pagetitle, text):
             newt.add(moved_tlr_dest_param, new_tlrs, before=moved_author_param)
             rmparam(newt, moved_author_param)
         if splits:
-          for authparam, new_paramval, splitmsg in splits:
-            newt.add(authparam, new_paramval)
+          for authparam, new_paramval, splitmsg, notes_msg in splits:
+            if new_paramval is not False:
+              newt.add(authparam, new_paramval)
             splitmsgs.append(splitmsg)
+            if notes_msg is not False:
+              this_notes.append(notes_msg)
+            else:
+              this_notes.append("manually fixed author-splitting issue in {{%s}}" % tn)
         if splitmsgs:
-          pagemsg("%s: <from> %s <to> %s <end>" % (" || ".join(splitmsgs), origt, str(newt)))
+          pagemsg("%s: <from> %s <to> %s <end> <comment> %s <endcom>" % (
+            " || ".join(splitmsgs), origt, str(newt), "; ".join(blib.group_notes(this_notes))))
+        this_template_notes.extend(this_notes)
 
     if args.do_old_renames:
       if tn in ["quote-magazine", "quote-news"]:
@@ -956,6 +945,48 @@ def process_text_on_page(index, pagetitle, text):
                   count_unstrippable_params[pn] += 1
                   count_unstrippable_params_by_template["%s:%s" % (pn, tn)] += 1
 
+    if args.fix_year_boldfacing:
+      if tn in quote_templates:
+        for param in t.params:
+          pn = pname(param)
+          pv = str(param.value).strip()
+          if pn in ["year", "year2"]:
+            if "'''" not in pv:
+              continue
+            m = re.search("^'''([^']*)'''$", pv)
+            if m:
+              pagemsg("Removing extraneous boldface in %s=%s: %s" % (pn, pv, origt))
+              t.add(pn, m.group(1))
+              this_template_notes.append("remove extraneous boldface in %s=%s in {{%s}}" % (pn, pv.strip(), tn))
+              continue
+            if pv.startswith("'''"):
+              pagemsg("%s=%s already begins with boldface, assuming already fixed: %s" % (pn, pv, origt))
+              continue
+            modified_pv = pv.replace("'''", TEMP_BOLDFACE)
+            num_boldface = len(list(x for x in modified_pv if x == TEMP_BOLDFACE))
+            if num_boldface % 2 != 0:
+              pagemsg("WARNING: Odd numbers of boldface in %s=%s, not fixing: %s" % (pn, pv, origt))
+              continue
+            newpv = "'''" + pv + "'''"
+            newpv = re.sub("'''(&#8203;|\u200B)'''$", "", newpv)
+            pagemsg("Replacing %s=%s with %s: %s" % (pn, pv, newpv, origt))
+            t.add(pn, newpv)
+            this_template_notes.append("correct boldface in %s=%s -> %s in {{%s}}" % (pn, pv, newpv, tn))
+
+    if args.check_bad_year:
+      if tn in quote_templates:
+        for param in t.params:
+          pn = pname(param)
+          pv = str(param.value).strip()
+          if pv and (
+            pn in ["year", "start_year", "origyear", "year published"] or
+            pn == "2" and tn in ["quote-book", "quote-journal"]
+          ):
+            cleaned_pv = re.sub("<sup>(.*?)</sup>", r"\1", pv)
+            if (not re.search("[0-9][0-9][0-9]", cleaned_pv) and not re.search("[0-9]+(st|nd|rd|th)", cleaned_pv)
+                and not re.search(r"[0-9] (BC|BCE|AD|CE|\{\{(BC|BCE|AD|CE|B\.C\.|B\.C\.E\.|A\.D\.|C\.E\.)\}\})", cleaned_pv)):
+              from_to("WARNING: Probable bad value in %s=%s" % (pn, pv))
+
     if args.templates_to_rename_numbered_params and tn in args.templates_to_rename_numbered_params:
       must_continue = False
       if tn in quote_templates:
@@ -1135,6 +1166,8 @@ parser.add_argument("--check-unhandled-params", action="store_true", help="Check
 parser.add_argument("--check-compound-pages", action="store_true", help="Check for possible compound pages like page=12-81")
 parser.add_argument("--check-author-splitting", action="store_true", help="Try to split cases where multiple authors given in author= and similar params")
 parser.add_argument("--remove-lang-wrapping", action="store_true", help="Remove {{lang|...}} wrapping in params")
+parser.add_argument("--fix-year-boldfacing", action="store_true", help="Fix boldfacing in year= parameters")
+parser.add_argument("--check-bad-year", action="store_true", help="Check for bad values in year= and similar params")
 parser.add_argument("--from-to", action="store_true", help="Output all quote templates in from-to format")
 parser.add_argument("--rename-params-to-eliminate", action="store_true", help="Rename params that will be eliminated")
 parser.add_argument("--templates-to-rename-numbered-params", help="Comma-separated list of templates for which to rename numbered params")
