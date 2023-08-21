@@ -913,7 +913,7 @@ local function format_date_args(a, get_full_paramname, alias_map, parampref, par
 	elseif not getp("nodate") then
 		local accessdate = getp("accessdate")
 		if accessdate then
-			local explicit_day_given = date_has_day_specified(accessdate)
+			local explicit_day_given = date_has_day_specified(accessdate, "accessdate")
 			ins(format_bold_date(accessdate, explicit_day_given, "accessdate") .. " (last accessed)")
 		else
 			if mw.title.getCurrentTitle().nsText ~= "Template" then
@@ -1215,13 +1215,35 @@ function export.source(args, alias_map)
 		end
 	end
 
-	local function add_authorlike(param, prefix_with_preceding_authors, suffix_without_preceding_authors)
+	local function add_authorlike(param, prefix_with_preceding_authors, suffix_without_preceding_authors,
+		anonymous_suffix)
 		local delimiter = author_outputted and "and" or ", "
 		local entities = parse_and_format_multivalued_annotated_text(param, delimiter)
 		if not entities then
 			return
 		end
-		if author_outputted then
+		if rfind(entities, "^[Aa]nonymous") or rfind(entities, "^[Aa]non%.?$") then
+			-- If tlr=anonymous or similar given, display as "anonymous translator" or similar. If a specific
+			-- anonymous suffix not given, try to derive the anonymous suffix from the non-preceding-author suffix.
+			if not anonymous_suffix then
+				local cleaned_suffix = suffix_without_preceding_authors:gsub("&#32;", " "):gsub("&nbsp;", " ")
+					:gsub("&#160;", " "):gsub("&#91;", "["):gsub("&#93;", "]")
+				cleaned_suffix = mw.text.trim(cleaned_suffix)
+				if not anonymous_suffix then
+					anonymous_suffix = " " .. cleaned_suffix:match("^, (.*)$")
+				end
+				if not anonymous_suffix then
+					anonymous_suffix = " " .. cleaned_suffix:match("^%((.*)%)$")
+				end
+				if not anonymous_suffix then
+					anonymous_suffix = " " .. cleaned_suffix:match("^%[(.*)%]$")
+				end
+				if not anonymous_suffix then
+					anonymous_suffix = suffix_without_preceding_authors
+				end
+			end
+			add_with_sep("anonymous" .. anonymous_suffix)
+		elseif author_outputted then
 			add_with_sep(prefix_with_preceding_authors .. entities)
 		else
 			add_with_sep(entities .. suffix_without_preceding_authors)
@@ -1342,15 +1364,7 @@ function export.source(args, alias_map)
 	local function postauthor(ind)
 		get_full_paramname = make_get_full_paramname(ind)
 
-		local chapter_tlr = parse_and_format_multivalued_annotated_text("chapter_tlr")
-		if chapter_tlr then
-			if author_outputted then
-				add_with_sep("translated by " .. chapter_tlr)
-			else
-				add_with_sep(chapter_tlr .. ", transl.")
-			end
-			author_outputted = true
-		end
+		add_authorlike("chapter_tlr", "translated by ", ", trans.", " translator")
 
 		local formatted_chapter = format_chapterlike("chapter", "chapter ", "“", "”")
 		if formatted_chapter then
@@ -1367,7 +1381,7 @@ function export.source(args, alias_map)
 			author_outputted = true
 		end
 
-		add_authorlike({"tlr", "translator", "translators"}, "translated by ", ", transl.")
+		add_authorlike({"tlr", "translator", "translators"}, "translated by ", ", transl.", " translator")
 
 		local editor, editor_fullname = a_with_name("editor")
 		local editors, editors_fullname = a_with_name("editors")
