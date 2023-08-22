@@ -29,9 +29,14 @@ local function preprocess(desc)
 	return desc
 end
 
-
-local param_intro_text = [=[
+local function generate_param_intro_text(ty)
+	return [=[
 The following sections describe the possible parameters. There are many parameters, so they are divided into groups.
+All parameters are optional except those marked '''(required)''' (which cause an error to be thrown if omitted) and
+those marked '''(semi-required)''' (which result in a maintenance message if omitted). Parameters that are
+'''boldfaced''' are specific to {{tl|]=] .. ty .. [=[}} and aren't shared with other {{tl|quote-*}} templates, or have
+a significantly different interpretation.
+
 All but the first group control the citation line (the initial line before the actual text of the quotation). The first
 group controls the quotation lines (the lines displaying the text of the quote and optionally the translation,
 transliteration, normalization, etc.).
@@ -63,6 +68,7 @@ For parameters that specify people (e.g. {{para|author}}, {{para|tlr}}/{{para|tr
 displaying it in italics and omitting a preceding comma or ''and'' as appropriate.
 
 The following inline modifiers are recognized:]=]
+end
 
 local function generate_inline_modifiers(ty)
 	return {
@@ -120,7 +126,7 @@ An individual parameter description is as follows:
      referring to logically related parameters.
    * {{"chapter_series", {param = "entry_series", non_generic = true}},
       {"chapter_seriesvolume", {param = "entry_seriesvolume", non_generic = true}},
-	  useand = true} displays as "|chapter_series=/<u>|entry_series=</u> and |chapter_seriesvolume=/<u>|entry_seriesvolume=</u>",
+	  useand = true} displays as "|chapter_series=/<b>|entry_series=</b> and |chapter_seriesvolume=/<b>|entry_seriesvolume=</b>",
 	 referring to alias sets of logically related parameters, some of which are non-generic (in this case, the
 	 {{para|entry_*}} params are {{tl|quote-book}}-specific aliases).
 
@@ -674,26 +680,30 @@ local quote_mods = {
 	{"text", addalias = "8"},
 	{"translation", addalias = "9"},
 	{"source", addalias = "newsagency"},
-	{"#replace_group_name", "Title-related parameters", "Journal-related parameters"},
 	{"#replace_group", "Chapter-related parameters", {"Article-related parameters",
-		{{"title", "article", "4", annotated = true, required = true}, [=[The title of the journal article quoted, which will be enclosed in “curly quotation marks”.]=]},
-		{{"title_plain", "article_plain", annotated = true}, [=[The title of the article, which will be displayed as-is. Include any desired quotation marks
+		{{"title", "article", "4", annotated = true, semi_required = true},
+		[=[The title of the journal article quoted, which will be enclosed in “curly quotation marks”.]=]},
+		{{"title_plain", "article_plain", annotated = true},
+		[=[The title of the article, which will be displayed as-is. Include any desired quotation marks
 		and other words. If both {{para|title}} and {{para|title_plain}} are given, the value of {{para|title_plain}}
 		is shown after the title, in parentheses. This is useful e.g. to indicate an article number or other
 		identifier.]=]},
-		{{"titleurl", "article_url"}, [=[The [[w:Universal Resource Locator|URL]] or web address of an external webpage to link to the
+		{{"titleurl", "article_url"},
+		[=[The [[w:Universal Resource Locator|URL]] or web address of an external webpage to link to the
 		article. Note that it is generally preferred to use {{para|pageurl}} to link directly to the page of the quoted
 		text, if possible. ''Do not link to any website that has content in breach of [[w:copyright|copyright]]''.]=]},
-		{{"trans-title", "trans-article"}, [=[If the journal article is not in English, this parameter can be used to provide an English
+		{{"trans-title", "trans-article"},
+		[=[If the journal article is not in English, this parameter can be used to provide an English
 		translation of the title, as an alternative to specifying the translation using an inline modifier (see
 		below).]=]},
-		{{"article_tlr", multientity = true}, [=[The translator of the article, if separate from the overall translator of the journal
+		{{"article_tlr", multientity = true},
+		[=[The translator of the article, if separate from the overall translator of the journal
 		(specified using {{para|tlr}} or {{para|translator}}).]=]},
-		{{"article_series", "article_seriesvolume", annotated = true, useand = true}, [=[If this article is part of a series of similar
-		articles, {{para|article_series}} can be used to specify the name of the series, and
-		{{para|article_seriesvolume}} can be used to specify the index of the series, if it exists. Compare the
-		{{para|series}} and {{para|seriesvolume}} parameters for the journal as a whole. These parameters can be used,
-		for example, for recurring columns in a newspaper.]=]},
+		{{"article_series", "article_seriesvolume", annotated = true, useand = true},
+		[=[If this article is part of a series of similar articles, {{para|article_series}} can be used to specify the
+		name of the series, and {{para|article_seriesvolume}} can be used to specify the index of the series, if it
+		exists. Compare the {{para|series}} and {{para|seriesvolume}} parameters for the journal as a whole. These
+		parameters can be used,	for example, for recurring columns in a newspaper.]=]},
 		}
 	},
 	},
@@ -1020,14 +1030,15 @@ local function format_inline_modifiers(mods)
 end
 
 
-local function format_introduction(mods)
+local function format_introduction(template)
 	local parts = {}
 	local function ins(txt)
 		table.insert(parts, txt)
 	end
 
+	
 	ins("===Introduction===")
-	ins(process_continued_string(param_intro_text, {}))
+	ins(process_continued_string(generate_param_intro_text(template), {}))
 	ins("")
 	ins('{| class="wikitable"')
 	ins("! Modifier")
