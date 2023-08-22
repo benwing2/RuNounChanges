@@ -200,10 +200,11 @@ function export.format_usex(data)
 		-- add trreq category if translation is unspecified and language is not english, translingual or undetermined
 		if quote then
 			table.insert(categories, "Requests for translations of " .. lang:getCanonicalName() .. " quotations")
+			translation = "<small>(please [[WT:Quotations#Adding translations to quotations|add an English translation]] of this " .. example_type .. ")</small>"
 		else
 			table.insert(categories, "Requests for translations of " .. lang:getCanonicalName() .. " usage examples")
+			translation = "<small>(please add an English translation of this " .. example_type .. ")</small>"
 		end
-		translation = "<small>(please add an English translation of this " .. example_type .. ")</small>"
 	end
 
 	local function do_language_and_script_tagging(usex, lang, sc, css_class)
