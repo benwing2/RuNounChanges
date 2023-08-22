@@ -227,7 +227,7 @@ local function generate_params(ty)
 	version when transliterating it.]=]},
 	{{"ts", "transcription"},
 	[=[Phonetic transcription of the quoted text, if in a non-Latin script where the transliteration is markedly
-	different from the actual pronunciation (e.g. Akkadian, Ancient Egyption and Tibetan). This should not be used
+	different from the actual pronunciation (e.g. Akkadian, Ancient Egyptian and Tibetan). This should not be used
 	merely to supply the IPA pronunciation of the text.]=]},
 	{"sc",
 	[=[The script code of the quoted text, if not in the Latin script. See [[Wiktionary:Scripts]] for more information.
@@ -1036,7 +1036,7 @@ local function format_introduction(template)
 		table.insert(parts, txt)
 	end
 
-	
+
 	ins("===Introduction===")
 	ins(process_continued_string(generate_param_intro_text(template), {}))
 	ins("")
