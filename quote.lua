@@ -13,6 +13,7 @@ local export = {}
 -- Named constants for all modules used, to make it easier to swap out sandbox versions.
 local check_isxn_module = "Module:check isxn"
 local debug_track_module = "Module:debug/track"
+local dialect_tags_module = "Module:dialect tags"
 local italics_module = "Module:italics"
 local languages_module = "Module:languages"
 local links_module = "Module:links"
@@ -106,6 +107,23 @@ end
 
 local function tag_nowiki(text)
 	return mw.getCurrentFrame():callParserFunction{name="#tag", args={"nowiki", text}}
+end
+
+local function split_on_comma(term)
+	if term:find(",%s") then
+		return require(put_module).split_on_comma(term)
+	else
+		return rsplit(term, ",")
+	end
+end
+
+-- Convert a raw tag= param (or nil) to a list of formatted dialect tags; unrecognized tags are passed through
+-- unchanged. Return nil if nil passed in.
+local function tags_to_dialects(lang, tags)
+	if not tags then
+		return nil
+	end
+	return require(dialect_tags_module).make_dialects(split_on_comma(tags), lang)
 end
 
 -- Convert a comma-separated list of language codes to a comma-separated list of language names. `fullname` is the
@@ -1894,11 +1912,14 @@ function export.quote_t(frame)
 	if text or gloss or tr or ts or norm then
 		local langcodes = args[1] or args.lang
 		local langcode = langcodes and rsplit(langcodes, ",")[1] or nil
+		-- Pass "und" here rather than cause an error; there will be an error on mainspace, Citations, etc. pages
+		-- in any case in source() if the language is omitted.
+		local lang = require(languages_module).getByCode(langcode or "und", 1)
 
 		local usex_data = {
 			-- Pass "und" here rather than cause an error; there will be an error on mainspace, Citations, etc. pages
 			-- in any case in source() if the language is omitted.
-			lang = require(languages_module).getByCode(langcode or "und", 1),
+			lang = lang,
 			usex = text,
 			sc = sc,
 			translation = gloss,
@@ -1910,6 +1931,7 @@ function export.quote_t(frame)
 			substs = args.subst,
 			lit = args.lit,
 			footer = args.footer,
+			qq = tags_to_dialects(lang, args.tag),
 			-- pass true here because source() already adds 'LANG terms with quotations'
 			nocat = true,
 			quote = "quote-meta",
