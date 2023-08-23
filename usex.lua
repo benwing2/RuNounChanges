@@ -4,7 +4,7 @@ local translit_data = mw.loadData("Module:transliteration/data")
 local needs_translit = translit_data[1]
 
 -- microformat2 classes, see https://phabricator.wikimedia.org/T138709
-local class = {
+local css_classes = {
 	container_ux = 'h-usage-example',
 	container_quotation = 'h-quotation',
 	example = 'e-example',
@@ -71,8 +71,10 @@ Takes a single object `data`, containining the following fields:
             them. Multiple substs are comma-separated and individual substs are of the form FROM//TO where FROM is a
 			Lua pattern and TO is a Lua replacement spec. (FROM/TO is also recognized if no // is present in the
 			substitution.)
-* `qualifiers`: If specified, a list of right qualifiers to display after the usex/quotation text. (FIXME: We should
-                split into left and right qualifiers.)
+* `q`: If specified, a list of left qualifiers to display before the usex/quotation text.
+* `qq`: If specified, a list of right qualifiers to display after the usex/quotation text.
+* `qualifiers`: If specified, a list of right qualifiers to display after the usex/quotation text, for compatibility
+                purposes.
 * `ref`: Reference text to display directly after the qualifiers. (FIXME: Instead, this should be actual references.)
 * `source`: Source of the quotation, displayed in parens after the quotation text.
 * `footer`: Footer displaying miscellaneous information, shown after the quotation. (Typically this should be in a
@@ -88,13 +90,19 @@ Takes a single object `data`, containining the following fields:
 function export.format_usex(data)
 	local namespace = mw.title.getCurrentTitle().nsText
 
-	local lang, sc, usex, translation, transliteration, transcription, noenum,
-		inline, ref, quote, lit, substs, qualifiers, source, nocat, brackets, footer,
-		sortkey, added_class =
-			data.lang, data.sc, data.usex, data.translation, data.transliteration,
-			data.transcription, data.noenum, data.inline, data.ref, data.quote,
-			data.lit, data.substs, data.qualifiers, data.source, data.nocat,
-			data.brackets, data.footer, data.sortkey, data.class
+	local lang = data.lang
+	local sc = data.sc
+	local usex = data.usex
+	local translation = data.translation
+	local transliteration = data.transliteration
+	local transcription = data.transcription
+	local quote = data.quote
+	local lit = data.lit
+	local substs = data.substs
+	local source = data.source
+	local brackets = data.brackets
+	local footer = data.footer
+	local sortkey = data.sortkey
 	local normalization = data.normalization
 	local normsc = data.normsc
 
@@ -105,15 +113,15 @@ function export.format_usex(data)
 	]]
 	
 	if lit then
-		lit = "(literally, “" .. span(class.literally, lit) .. "”)"
+		lit = "(literally, “" .. span(css_classes.literally, lit) .. "”)"
 	end
 
 	if source then
-		source = "(" .. span(class.source, source) .. ")"
+		source = "(" .. span(css_classes.source, source) .. ")"
 	end
 
 	if footer then
-		footer = span(class.footer, footer)
+		footer = span(css_classes.footer, footer)
 	end
 	
 	local example_type = quote and "quote" or "usage example" -- used in error messages
@@ -195,7 +203,7 @@ function export.format_usex(data)
 		translation = nil
 		table.insert(categories, "Omitted translation in the main namespace")
 	elseif translation then
-		translation = span(class.translation, translation)
+		translation = span(css_classes.translation, translation)
 	elseif lang:getCode() ~= "en" and lang:getCode() ~= "mul" and lang:getCode() ~= "und" then
 		-- add trreq category if translation is unspecified and language is not english, translingual or undetermined
 		if quote then
@@ -227,10 +235,10 @@ function export.format_usex(data)
 
 	if usex then
 		usex = do_language_and_script_tagging(usex, lang, sc,
-			quote == "quote-meta" and class.quotation_with_citation or
-			quote and class.quotation or class.example)
+			quote == "quote-meta" and css_classes.quotation_with_citation or
+			quote and css_classes.quotation or css_classes.example)
 		
-		if not nocat and namespace == "" or namespace == "Reconstruction" then
+		if not data.nocat and namespace == "" or namespace == "Reconstruction" then
 			table.insert(categories, lang:getCanonicalName() ..
 				(quote and " terms with quotations" or " terms with usage examples"))
 		end
@@ -247,21 +255,32 @@ function export.format_usex(data)
 		-- Use brackets in HTML entity format just to make sure we don't interfere with links; add brackets before
 		-- script tagging so that if the script tagging increases the font size, the brackets get increased too.
 		normalization = "&#91;" .. normalization .. "&#93;"
-		normalization = do_language_and_script_tagging(normalization, lang, normsc, class.normalization)
+		normalization = do_language_and_script_tagging(normalization, lang, normsc, css_classes.normalization)
 	end
 
 	local result = {}
 	
-	table.insert(result, usex)
-	
-	if qualifiers and #qualifiers > 0 then
+
+	if data.qualifiers then
 		track("qualifier")
-		table.insert(result, " " .. require("Module:qualifier").format_qualifier(qualifiers))
 	end
+
+	local leftq = data.q
+	if leftq and #leftq > 0 then
+		table.insert(result, require("Module:qualifier").format_qualifier(leftq) .. " ")
+	end
+	table.insert(result, usex)
+	local rightq = data.qq or data.qualifiers
+	if rightq and #rightq > 0 then
+		table.insert(result, " " .. require("Module:qualifier").format_qualifier(rightq))
+	end
+
+	if data.ref and data.ref ~= "" then
+		track("ref")
+	end
+	table.insert(result, data.ref)
 	
-	table.insert(result, ref)
-	
-	if inline then
+	if data.inline then
 		if normalization then
 			table.insert(result, " " .. normalization)
 		end
@@ -290,7 +309,7 @@ function export.format_usex(data)
 			table.insert(result, " " .. footer)
 		end
 
-		if brackets then
+		if data.brackets then
 			table.insert(result, "]")
 		end
 	elseif transliteration or translation or transcription or normalization or lit or source or footer then
@@ -347,7 +366,7 @@ function export.format_usex(data)
 			closing_tag = closing_extra_indent
 		end
 
-		if brackets then
+		if data.brackets then
 			table.insert(result, "]")
 		end
 		
@@ -355,19 +374,19 @@ function export.format_usex(data)
 
 		table.insert(result, "</dl>")
 	else
-		if brackets then
+		if data.brackets then
 			table.insert(result, "]")
 		end
 	end
 	
 	result = table.concat(result)
-	local class = quote and class.container_quotation or class.container_ux
-	if added_class then
-		class = class .. " " .. added_class
+	local class = quote and css_classes.container_quotation or css_classes.container_ux
+	if data.class then
+		class = class .. " " .. data.class
 	end
-	result = (inline and span or div)(class, result)
+	result = (data.inline and span or div)(class, result)
 	result = result .. require("Module:utilities").format_categories(categories, lang, sortkey)
-	if noenum then
+	if data.noenum then
 		result = "\n: " .. result
 	end
 	return result
