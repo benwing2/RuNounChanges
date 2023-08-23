@@ -1651,8 +1651,40 @@ function export.source(args, alias_map)
 
 		local original = parse_and_format_annotated_text("original", tag_with_cite, tag_with_cite)
 		local by = parse_and_format_multivalued_annotated_text("by", "and")
+		local origtype = a("type") or "translation"
 		if original or by then
-			add_with_sep((a("type") or "translation") .. " of " .. (original or "original") .. (by and " by " .. by or ""))
+			add_with_sep(origtype .. " of " .. (original or "original") .. (by and " by " .. by or ""))
+		end
+
+		-- Handle origlang=, origworklang=. How we handle them depends on whether the original title or author are explicitly
+		-- given.
+		local origlang, origlang_fullname = a_with_name("origlang")
+		local origworklang, origworklang_fullname = a_with_name("origworklang")
+		local origlangtext, origworklangtext
+		if origlang then
+			origlangtext = "in " .. format_langs(origlang, origlang_fullname)
+		end
+		if origworklang then
+			origworklangtext = "overall work in " .. format_langs(origworklang, origworklang_fullname)
+		end
+		if origlang or origworklang then
+			if original or by then
+				local orig_annotations = {}
+				if origlangtext then
+					table.insert(orig_annotations, origlangtext)
+				end
+				if origworklangtext then
+					table.insert(orig_annotations, origworklangtext)
+				end
+				sep = nil
+				add_with_sep(" (" .. table.concat(orig_annotations, SEMICOLON_SPACE) .. ")")
+			else
+				add_with_sep(origtype .. " of original" .. (origlangtext and " " .. origlangtext))
+				if origworklangtext then
+					sep = nil
+					add_with_sep(" (" .. origworklangtext .. ")")
+				end
+			end
 		end
 
 		-- Fetch date_published=/year_published=/month_published= and format appropriately.
