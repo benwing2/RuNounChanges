@@ -2126,7 +2126,7 @@ function export.quote_t(frame)
 		origtextlang, origtext = args.origtext:match("^([a-z][a-z][a-z-]*):([^ ].*)$")
 		if not origtextlang then
 			-- Special hack for Latin variants, which can have nonstandard etym codes, e.g. VL., LL.
-			origtextlang, origtext = term:match("^([A-Z]L%.):([^ ].*)$")
+			origtextlang, origtext = args.origtext:match("^([A-Z]L%.):([^ ].*)$")
 		end
 		if not origtextlang then
 			error("origtext= should begin with a language code prefix")
