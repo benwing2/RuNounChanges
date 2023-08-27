@@ -71,7 +71,10 @@ local function div(class, text) return wrap('div', class, text) end
 Process parameters for usex text (either the primary text or the original text) and associated annotations. On input,
 the following fields are recognized in `data` (all are optional except as marked):
 
-* `lang`: Language object of text (REQUIRED).
+* `lang`: Language object of text; may be an etymology language (REQUIRED).
+* `termlang`: The language object of the term being illustrated, which may be different from the language of the main
+              text and should never be based off of the original text. Used for categories. May be an etymology
+			  language (REQUIRED).
 * `usex`: Text of usex/quotation.
 * `sc`: Script object of text.
 * `tr`: Manual transliteration.
@@ -83,8 +86,7 @@ the following fields are recognized in `data` (all are optional except as marked
   {{tl|usex}}). If it has the specific value "quote-meta", this is a quotation with citation (invoked from
   {{tl|quote-*}}). This controls the CSS class used to display the quotation, as well as the face used to tag the usex
   (which in turn results in the usex being upright text if a quotation, and italic text if a usage example).
-* `pagename`: Pagename of the page, minus the namespace component (REQUIRED).
-* `namespace`: Namespace of the page (REQUIRED).
+* `title`: Title object of the current page (REQUIRED).
 * `q`: List of left qualifiers.
 * `qq`: List of right qualifiers.
 * `ref`: String to display directly after any right qualifier, with no space. (FIXME: Should be converted into
@@ -101,6 +103,7 @@ On output, return an object with four fields:
 ]=]
 local function process_usex_text(data)
 	local lang = data.lang
+	local termlang = data.termlang
 	local usex = data.usex
 	local sc = data.sc
 	local tr = data.tr
@@ -178,7 +181,7 @@ local function process_usex_text(data)
 
 		-- If there is still no transliteration, then add a cleanup category.
 		if not tr and needs_translit[langcode] then
-			table.insert(categories, "Requests for transliteration of " .. lang:getCanonicalName() .. " terms")
+			table.insert(categories, "Requests for transliteration of " .. termlang:getCanonicalName() .. " terms")
 		end
 	end
 	if tr then
@@ -214,13 +217,22 @@ local function process_usex_text(data)
 		
 		if not nocat then
 			-- Only add [[Citations:foo]] to [[:Category:LANG terms with quotations]] if [[foo]] exists.
-			if namespace ~= "Citations" or mw.title.new(pagename).exists then
-				table.insert(categories, lang:getCanonicalName() .. " terms with " .. example_type .. "s")
+			local ok_to_add_cat
+			if title.nsText ~= "Citations" then
+				ok_to_add_cat = true
+			else
+				local mainspace_title = mw.title.new(title.text)
+				if mainspace_title and mainspace_title.exists then
+					ok_to_add_cat = true
+				end
+			end
+			if ok_to_add_cat then
+				table.insert(categories, termlang:getCanonicalName() .. " terms with " .. example_type .. "s")
 			end
 		end
 	else
 		if tr then
-			table.insert(categories, "Requests for native script in " .. lang:getCanonicalName() ..
+			table.insert(categories, "Requests for native script in " .. termlang:getCanonicalName() ..
 				example_type .. "s")
 		end
 		
@@ -268,6 +280,8 @@ Takes a single object `data`, containining the following fields:
 
 * `usex`: The text of the usex or quotation to format. Semi-mandatory (a maintenance line is displayed if missing).
 * `lang`: The language object of the text. Mandatory. May be an etymology language.
+* `termlang`: The language object of the term, which may be different from the language of the text. Defaults to `lang`.
+              Used for categories. May be an etymology language.
 * `sc`: The script object of the text. Autodetected if not given.
 * `quote`: If specified, this is a quotation rather than a usex (uses a different CSS class that affects formatting).
 * `inline`: If specified, format the usex or quotation inline (on one line).
@@ -327,6 +341,7 @@ Takes a single object `data`, containining the following fields:
 
 function export.format_usex(data)
 	local lang = data.lang
+	local termlang = data.termlang or lang
 	local translation = data.translation
 	local quote = data.quote
 	local lit = data.lit
@@ -334,14 +349,22 @@ function export.format_usex(data)
 	local brackets = data.brackets
 	local footer = data.footer
 	local sortkey = data.sortkey
-	local curtitle = mw.title.getCurrentTitle()
 	-- Here we don't want to use the subpage text because we check [[Citations:foo]] against [[foo]] and if there's
 	-- a slash in what follows 'Citations:', we want to check against the full page with the slash.
 	local pagename = data.pagename or curtitle.text
-	local namespace = curtitle.nsText
+
+	local title
+	if data.pagename then -- for testing, doc pages, etc.
+		title = mw.title.new(data.pagename)
+		if not title then
+			error(("Bad value for `data.pagename`: '%s'"):format(data.pagename))
+		end
+	else
+		title = mw.title.getCurrentTitle()
+	end
 
 	--[[
-	if namespace == "Reconstruction" or lang:hasType("reconstructed") then
+	if title.nsText == "Reconstruction" or lang:hasType("reconstructed") then
 		error("Reconstructed languages and reconstructed terms cannot have usage examples, as we have no record of their use.")
 	end
 	]]
@@ -363,6 +386,7 @@ function export.format_usex(data)
 
 	local usex_obj = process_usex_text {
 		lang = data.lang,
+		termlang = termlang,
 		usex = data.usex,
 		sc = data.sc,
 		tr = data.transliteration,
@@ -371,8 +395,7 @@ function export.format_usex(data)
 		normsc = data.normsc,
 		subst = data.subst,
 		quote = data.quote,
-		pagename = pagename,
-		namespace = namespace,
+		title = title,
 		q = data.q,
 		qq = data.qq,
 		ref = data.ref,
@@ -383,6 +406,9 @@ function export.format_usex(data)
 
 	local orig_obj = data.orig and process_usex_text {
 		lang = data.origlang,
+		-- Any categories derived from the original text should use the language of the main text or the term inside it,
+		-- not the language of the original text.
+		termlang = termlang,
 		usex = data.orig,
 		sc = data.origsc,
 		tr = data.origtr,
@@ -391,8 +417,7 @@ function export.format_usex(data)
 		normsc = data.orignormsc,
 		subst = data.origsubst,
 		quote = data.quote,
-		pagename = pagename,
-		namespace = namespace,
+		title = title,
 		q = data.origq,
 		qq = data.origqq,
 		ref = data.origref,
@@ -403,15 +428,17 @@ function export.format_usex(data)
 
 	if translation == "-" then
 		translation = nil
-		table.insert(categories, ("%s %ss with omitted translation"):format(lang:getNonEtymologicalName(), example_type))
+		table.insert(categories, ("%s %ss with omitted translation"):format(termlang:getNonEtymologicalName(),
+			example_type))
 	elseif translation then
 		translation = span(css_classes.translation, translation)
 	else
-		local langcode = lang:getNonEtymologicalCode()
+		local langcode = termlang:getNonEtymologicalCode()
 		if langcode ~= "en" and langcode ~= "mul" and langcode ~= "und" then
 			-- add trreq category if translation is unspecified and language is not english, translingual or
 			-- undetermined
-			table.insert(categories, ("Requests for translations of %s %ss"):format(lang:getCanonicalName(), example_type))
+			table.insert(categories, ("Requests for translations of %s %ss"):format(termlang:getCanonicalName(),
+				example_type))
 			if quote then
 				translation = "<small>(please [[WT:Quotations#Adding translations to quotations|add an English translation]] of this "
 					.. example_type .. ")</small>"
