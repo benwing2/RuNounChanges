@@ -1321,9 +1321,11 @@ function export.source(args, alias_map)
 	end
 
 	local function add_authorlike(param, prefix_with_preceding_authors, suffix_without_preceding_authors,
-		anonymous_suffix)
+		suffix_if_multiple, anonymous_suffix)
 		local delimiter = author_outputted and "and" or ", "
-		local entities = parse_and_format_multivalued_annotated_text(param, delimiter)
+		local val, fullname = a_with_name(param)
+		local objs = parse_multivalued_annotated_text(val, fullname)
+		local entities = format_multivalued_annotated_text(objs, delimiter)
 		if not entities then
 			return
 		end
@@ -1350,6 +1352,8 @@ function export.source(args, alias_map)
 			add_with_sep("anonymous" .. anonymous_suffix)
 		elseif author_outputted then
 			add_with_sep(prefix_with_preceding_authors .. entities)
+		elseif suffix_if_multiple and #objs > 1 then
+			add_with_sep(entities .. suffix_if_multiple)
 		else
 			add_with_sep(entities .. suffix_without_preceding_authors)
 		end
@@ -1366,7 +1370,7 @@ function export.source(args, alias_map)
 		add_with_sep(coauthors)
 		author_outputted = true
 	end
-	add_authorlike("quotee", "quoting ", ", quotee")
+	add_authorlike("quotee", "quoting ", ", quotee", ", quotees")
 
 	local function has_new_title_or_ancillary_author()
 	end
@@ -1374,7 +1378,8 @@ function export.source(args, alias_map)
 	local function has_new_title_or_author()
 		return args["2ndauthor"] or args["2ndlast"] or args.chapter2 or args.title2 or
 			args.tlr2 or args.translator2 or args.translators2 or
-			args.mainauthor2 or args.editor2 or args.editors2
+			args.mainauthor2 or args.editor2 or args.editors2 or args.compiler2 or args.compilers2 or
+			args.director2 or args.directors2
 	end
 
 	local function has_newversion()
@@ -1469,7 +1474,7 @@ function export.source(args, alias_map)
 	local function postauthor(ind)
 		get_full_paramname = make_get_full_paramname(ind)
 
-		add_authorlike("chapter_tlr", "translated by ", ", transl.", " translator")
+		add_authorlike("chapter_tlr", "translated by ", ", transl.", nil, " translator")
 
 		local formatted_chapter = format_chapterlike("chapter", "chapter ", "“", "”")
 		if formatted_chapter then
@@ -1486,15 +1491,28 @@ function export.source(args, alias_map)
 			author_outputted = true
 		end
 
-		add_authorlike({"tlr", "translator", "translators"}, "translated by ", ", transl.", " translator")
+		add_authorlike({"tlr", "translator", "translators"}, "translated by ", ", transl.", nil, " translator")
 
-		local editor, editor_fullname = a_with_name("editor")
-		local editors, editors_fullname = a_with_name("editors")
-		if editor and editors then
-			error(("Can't specify both |%s= and |%s="):format(editor_fullname, editors_fullname))
+		local function process_and_add_authorlike(noun, verbed)
+			local sgparam = noun
+			local plparam = noun .. "s"
+			local sgval, sgval_fullname = a_with_name(sgparam)
+			local plval, plval_fullname = a_with_name(plparam)
+			if sgval and plval then
+				error(("Can't specify both |%s= and |%s="):format(sgval_fullname, plval_fullname))
+			end
+			if sgval or plval then
+				local verbed_by = verbed .. " by "
+				local comma_sgnoun = ", " .. noun
+				local comma_plnoun = ", " .. noun .. "s"
+				add_authorlike(sgparam, verbed_by, comma_sgnoun, comma_plnoun)
+				add_authorlike(plparam, verbed_by, comma_plnoun)
+			end
 		end
-		add_authorlike("editor", "edited by ", ", editor")
-		add_authorlike("editors", "edited by ", ", editors")
+
+		process_and_add_authorlike("editor", "edited")
+		process_and_add_authorlike("compiler", "compiled")
+		process_and_add_authorlike("director", "directed")
 
 		local title, title_fullname = a_with_name("title")
 		local need_comma = false
@@ -1771,7 +1789,7 @@ function export.source(args, alias_map)
 				sep = nil
 				add_with_sep(" (" .. table.concat(orig_annotations, SEMICOLON_SPACE) .. ")")
 			else
-				add_with_sep(origtype .. " of original" .. (origlangtext and " " .. origlangtext))
+				add_with_sep(origtype .. " of original" .. (origlangtext and " " .. origlangtext or ""))
 				if origworklangtext then
 					sep = nil
 					add_with_sep(" (" .. origworklangtext .. ")")
