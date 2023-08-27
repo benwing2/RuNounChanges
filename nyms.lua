@@ -2,6 +2,8 @@ local export = {}
 
 local m_languages = require("Module:languages")
 local m_links = require("Module:links")
+local put_module = "Module:parse utilities"
+local dialect_tags_module = "Module:dialect tags"
 local rsplit = mw.text.split
 
 local function wrap_span(text, lang, sc)
@@ -15,13 +17,15 @@ for _, param_mod in ipairs(param_mods) do
 	param_mod_set[param_mod] = true
 end
 
-local m_dialect_tags
-local function memoize_require_dialect_tags()
-	if not m_dialect_tags then
-		m_dialect_tags = require("Module:dialect tags")
+
+local function split_on_comma(term)
+	if term:find(",%s") then
+		return require(put_module).split_on_comma(term)
+	else
+		return rsplit(term, ",")
 	end
-	return m_dialect_tags
 end
+
 
 -- Convert a raw tag= param (or nil) to a list of formatted dialect tags; unrecognized tags are passed through
 -- unchanged. Return nil if nil passed in.
@@ -29,8 +33,7 @@ local function tags_to_dialects(lang, tags)
 	if not tags then
 		return nil
 	end
-	local m_dialect_tags = memoize_require_dialect_tags()
-	return m_dialect_tags.make_dialects(m_dialect_tags.split_on_comma(tags), lang)
+	return require(dialect_tags_module).make_dialects(split_on_comma(tags), lang)
 end
 
 local function get_thesaurus_text(lang, args, maxindex)
@@ -45,7 +48,7 @@ local function get_thesaurus_text(lang, args, maxindex)
 		end
 		local link
 		local term = args[2][maxindex]:sub(11) -- remove Thesaurus: from beginning
-		local sc = require("Module:scripts").findBestScript(term, lang):getCode()
+		local sc = lang:findBestScript(term):getCode()
 		local fragment = term:find("#")
 		if fragment then
 			link = "[[" .. args[2][maxindex] .. "|Thesaurus:" .. wrap_span(term:sub(1, fragment-1), lang:getCode(), sc) .. "]]"
@@ -78,11 +81,12 @@ function export.nyms(frame)
 	params.tag = {}
 	params.parttag = {list = "tag", allow_holes = true, require_index = true}
 
-	local args = require("Module:parameters").process(frame:getParent().args, params)
+	local args = require("Module:parameters").process(frame:getParent().args, params, nil, "nyms", "nyms")
 	
 	local nym_type = frame.args[1]
 	local nym_type_class = string.gsub(nym_type, "%s", "-")
-	local lang = m_languages.getByCode(args[1], 1)
+	local langcode = args[1]
+	local lang = m_languages.getByCode(langcode, 1)
 	
 	local maxindex = math.max(args[2].maxindex, args["alt"].maxindex, args["tr"].maxindex)
 	local thesaurus, link_maxindex = get_thesaurus_text(lang, args, maxindex)
@@ -99,13 +103,33 @@ function export.nyms(frame)
 		end
 		if item ~= ";" then
 			syn = syn + 1
+			-- Parse off an initial language code (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). Don't parse if there's a space
+			-- after the colon (happens e.g. if the user uses {{desc|...}} inside of {{col}}; not clear it applies to nyms).
+			local termlangcode, actual_term
+			if item then
+				termlangcode, actual_term = item:match("^([A-Za-z._-]+):([^ ].*)$")
+			end
+			local termlang
+			-- Make sure that only real language codes are handled as language links, so as to not catch interwiki
+			-- or namespaces links.
+			if termlangcode and (
+				mw.loadData("Module:languages/code to canonical name")[termlangcode] or
+				mw.loadData("Module:etymology languages/code to canonical name")[termlangcode]
+			) then
+				-- -1 since i is one-based
+				termlang = m_languages.getByCode(termlangcode, 2 + i - 1, "allow etym")
+				item = actual_term
+			else
+				termlang = lang
+				termlangcode = nil
+			end
 			local termobj = {
 				joiner = i > 1 and (args[2][i - 1] == ";" and "; " or ", ") or "",
 				q = args["q"][syn],
 				qq = args["qq"][syn],
 				tag = args["parttag"][syn],
 				term = {
-					lang = lang, term = item, id = args["id"][syn],
+					lang = termlang, term = item, id = args["id"][syn],
 					sc = args["sc"][syn] and require("Module:scripts").getByCode(args["sc"][syn], "sc" .. syn) or nil,
 					alt = args["alt"][syn], tr = args["tr"][syn], ts = args["ts"][syn],
 					gloss = args["t"][syn], lit = args["lit"][syn], pos = args["pos"][syn],
@@ -121,7 +145,7 @@ function export.nyms(frame)
 			-- of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
 			if item and item:find("<") and not item:find("^[^<]*<[a-z]*[^a-z:]") then
 				if not put then
-					put = require("Module:parse utilities")
+					put = require(put_module)
 				end
 				local run = put.parse_balanced_segment_run(item, "<", ">")
 				local function parse_err(msg)
@@ -169,7 +193,14 @@ function export.nyms(frame)
 				-- FIXME: Why is this here and when is it used?
 				use_semicolon = true
 			end
-			table.insert(items, termobj)
+			-- If a separate language code was given for the term, display the language name as a right qualifier.
+			-- Otherwise it may not be obvious that the term is in a separate language (e.g. if the main language is 'zh'
+			-- and the term language is a Chinese lect such as Min Nan). But don't do this for Translingual terms, which
+			-- are often added to the list of English and other-language terms.
+			if termlangcode and termlangcode ~= langcode and termlangcode ~= "mul" then
+				termobj.qq = {termlang:getCanonicalName(), termobj.qq}
+			end
+		table.insert(items, termobj)
 		end
 	end
 
@@ -182,23 +213,19 @@ function export.nyms(frame)
 	end
 
 	for i, item in ipairs(items) do
-		local preq_text
-		if item.q or item.tag then
-			local preq = tags_to_dialects(lang, item.tag)
-			if item.q then
-				preq = preq or {}
-				table.insert(preq, item.q)
+		local tag_text = ""
+		if item.tag then
+			local tags = tags_to_dialects(lang, item.tag)
+			if tags then
+				tag_text = " " .. require("Module:qualifier").format_qualifier(tags, "[", "]")
 			end
-			preq_text = require("Module:qualifier").format_qualifier(preq) .. " "
-		else
-			preq_text = ""
 		end
-		items[i] = item.joiner .. preq_text .. m_links.full_link(item.term)
-			.. (item.qq and " " .. require("Module:qualifier").format_qualifier(item.qq) or "")
+		items[i] = item.joiner .. (item.q and require("Module:qualifier").format_qualifier(item.q) .. " " or "") .. m_links.full_link(item.term)
+			.. (item.qq and " " .. require("Module:qualifier").format_qualifier(item.qq) or "") .. tag_text
 	end
 
 	local dialects = tags_to_dialects(lang, args.tag)
-	local tag_postq = dialects and " " .. memoize_require_dialect_tags().post_format_dialects(dialects) or ""
+	local tag_postq = dialects and " " .. require(dialect_tags_module).post_format_dialects(dialects) or ""
 	return "<span class=\"nyms " .. nym_type_class .. "\"><span class=\"defdate\">" .. 
 		mw.getContentLanguage():ucfirst(nym_type) .. ((#items > 1 or thesaurus ~= "") and "s" or "") ..
 		":</span> " .. table.concat(items) .. tag_postq .. thesaurus .. "</span>"
