@@ -2,6 +2,7 @@ local export = {}
 
 local m_string_utilities = require("Module:string utilities")
 
+local rfind = mw.ustring.find
 local rsplit = mw.text.split
 local u = mw.ustring.char
 local rsubn = mw.ustring.gsub
