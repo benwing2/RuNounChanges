@@ -117,6 +117,13 @@ local function split_on_comma(term)
 	end
 end
 
+local function yesno(val, default)
+	if not val then
+		return default
+	end
+	return require(yesno_module)(val, default)
+end
+
 -- Convert a raw tag= param (or nil) to a list of formatted dialect tags; unrecognized tags are passed through
 -- unchanged. Return nil if nil passed in.
 local function tags_to_dialects(lang, tags)
@@ -1195,6 +1202,10 @@ function export.source(args, alias_map)
 	-- Mary Bloggs" (if there's an author preceding).
 	local author_outputted = false
 
+	local function is_anonymous(val)
+		return rfind(val, "^[Aa]nonymous$") or rfind(val, "^[Aa]non%.?$")
+	end
+
 	-- Add a formatted author (whose values may be specified using `author_param` or, for compatibility purposes, split
 	-- among various parameters):
 	-- * `author_param` is the base parameter name of the author param (e.g. "author" or "2ndauthor");
@@ -1226,6 +1237,9 @@ function export.source(args, alias_map)
 			local authorobjs = parse_multivalued_annotated_text(author, author_fullname, trans_author,
 				trans_author_fullname)
 			if #authorobjs == 1 then
+				if is_anonymous(authorobjs[1].text) then
+					authorobjs[1].text = "anonymous author"
+				end
 				authorobjs[1].text = make_author_with_url(authorobjs[1].text, authorlink)
 				if authorobjs[1].gloss and authorlink_gloss then
 					authorobjs[1].gloss = make_author_with_url(authorobjs[1].gloss, authorlink_gloss)
@@ -1275,6 +1289,14 @@ function export.source(args, alias_map)
 		author_outputted = true
 	end
 
+	local function add_authorlabel()
+		local default_authorlabel = a("default-authorlabel")
+		if default_authorlabel and yesno(a("authorlabel"), true) then
+			sep = nil
+			add_with_sep(" " .. default_authorlabel)
+		end
+	end
+
 	-- Set this now so a() works just below.
 	get_full_paramname = make_get_full_paramname("")
 
@@ -1320,6 +1342,10 @@ function export.source(args, alias_map)
 		end
 	end
 
+	if author_outputted then
+		add_authorlabel()
+	end
+
 	local function add_authorlike(param, prefix_with_preceding_authors, suffix_without_preceding_authors,
 		suffix_if_multiple, anonymous_suffix)
 		local delimiter = author_outputted and "and" or ", "
@@ -1329,7 +1355,7 @@ function export.source(args, alias_map)
 		if not entities then
 			return
 		end
-		if rfind(entities, "^[Aa]nonymous") or rfind(entities, "^[Aa]non%.?$") then
+		if is_anonymous(entities) then
 			-- If tlr=anonymous or similar given, display as "anonymous translator" or similar. If a specific
 			-- anonymous suffix not given, try to derive the anonymous suffix from the non-preceding-author suffix.
 			if not anonymous_suffix then
@@ -1350,7 +1376,7 @@ function export.source(args, alias_map)
 				end
 			end
 			add_with_sep("anonymous" .. anonymous_suffix)
-		elseif author_outputted then
+		elseif prefix_with_preceding_authors and (author_outputted or not suffix_without_preceding_authors) then
 			add_with_sep(prefix_with_preceding_authors .. entities)
 		elseif suffix_if_multiple and #objs > 1 then
 			add_with_sep(entities .. suffix_if_multiple)
@@ -1493,7 +1519,7 @@ function export.source(args, alias_map)
 
 		add_authorlike({"tlr", "translator", "translators"}, "translated by ", ", transl.", nil, " translator")
 
-		local function process_and_add_authorlike(noun, verbed)
+		local function add_sg_and_pl_authorlike(noun, verbed)
 			local sgparam = noun
 			local plparam = noun .. "s"
 			local sgval, sgval_fullname = a_with_name(sgparam)
@@ -1510,9 +1536,13 @@ function export.source(args, alias_map)
 			end
 		end
 
-		process_and_add_authorlike("editor", "edited")
-		process_and_add_authorlike("compiler", "compiled")
-		process_and_add_authorlike("director", "directed")
+		add_sg_and_pl_authorlike("editor", "edited")
+		add_sg_and_pl_authorlike("compiler", "compiled")
+		add_sg_and_pl_authorlike("director", "directed")
+
+		add_authorlike("lyricist", nil, " (lyrics)", nil, " lyricist")
+		add_authorlike("lyrics-translator", nil, " (translation)", nil, " lyrics translator")
+		add_authorlike("composer", nil, " (music)", nil, " composer")
 
 		local title, title_fullname = a_with_name("title")
 		local need_comma = false
@@ -1548,14 +1578,14 @@ function export.source(args, alias_map)
 				-- error(("If |%s= is given, |%s= must also be supplied"):format(url_name, title_fullname))
 			end
 		end
-		if urls then
+		if archiveurl or url then
+			verify_title_supplied(archiveurl and archiveurl_fullname or url_fullname)
+			sep = nil
+			add("&lrm;<sup>[" .. (archiveurl or url) .. "]</sup>")
+		elseif urls then
 			verify_title_supplied(urls_fullname)
 			sep = nil
 			add("&lrm;<sup>" .. urls .. "</sup>")
-		elseif url or archiveurl then
-			verify_title_supplied(url and url_fullname or archiveurl_fullname)
-			sep = nil
-			add("&lrm;<sup>[" .. (url or archiveurl) .. "]</sup>")
 		end
 
 		if need_comma then
@@ -1689,6 +1719,10 @@ function export.source(args, alias_map)
 		if format then
 			table.insert(annotations, format)
 		end
+		local medium = a("medium")
+		if medium then
+			table.insert(annotations, medium)
+		end
 
 		-- Now handle the display of language annotations like "(in French)" or
 		-- "(quotation in Nauruan; overall work in German)".
@@ -1730,6 +1764,25 @@ function export.source(args, alias_map)
 		if #annotations > 0 then
 			sep = nil
 			add_with_sep(" (" .. table.concat(annotations, SEMICOLON_SPACE) .. ")")
+		end
+
+		local artist = parse_and_format_multivalued_annotated_text("artist", "and")
+		if artist then
+			add_with_sep("performed by " .. artist)
+		end
+	
+		local role = parse_and_format_multivalued_annotated_text({"role", "roles", "speaker"}, "and")
+		local actor_val, actor_fullname = a_with_name("actor")
+		local actor_objs = parse_multivalued_annotated_text(actor_val, actor_fullname)
+		local actor = format_multivalued_annotated_text(actor_objs, "and")
+		if role then
+			add_with_sep("spoken by " .. role)
+			if actor then
+				sep = nil
+				add_with_sep(" (" .. actor .. ")")
+			end
+		elseif actor then
+			add_with_sep(actor .. " (" .. (#actor_objs > 1 and "actors" or "actor") .. ")")
 		end
 
 		local others = parse_and_format_annotated_text("others")
@@ -1956,6 +2009,7 @@ function export.source(args, alias_map)
 		get_full_paramname = make_get_full_paramname("")
 		add_author("2ndauthor", nil, "2ndauthorlink", nil, "2ndfirst", nil, "2ndlast", nil)
 		sep = ", "
+		add_authorlabel()
 	end
 
 	-- Display all the text that comes after the author, for the "newversion" section.
@@ -2040,13 +2094,6 @@ function export.quote_t(frame)
 	local parent_args = frame:getParent().args
 	local args, alias_map = clone_args(frame.args, parent_args)
 	local deprecated = args.lang
-
-	local function yesno(val)
-		if not val then
-			return false
-		end
-		return require(yesno_module)(val)
-	end
 
 	args.nocat = yesno(args.nocat)
 	args.brackets = yesno(args.brackets)
