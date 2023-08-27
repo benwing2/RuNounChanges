@@ -75,9 +75,9 @@ recognized_named_single_params_everywhere_list = [
   "footer",
   "lit",
   "newversion", "nocat", "norm", "sc", "normsc", "origdate", "origmonth", "origyear", "passage",
-  "quotee", "sort", "subst", "t", "text", "time",
-  "tr", "transcription", "translation", "transliteration", "ts",
-  "2ndauthor", "2ndauthorlink", "2ndfirst", "2ndlast"
+  "quotee", "sort", "subst", "t", "text",
+  "tr", "transcription", "translation", "transliteration", "ts", "tag",
+  "2ndauthor", "2ndauthorlink", "2ndfirst", "2ndlast", "nocolon"
 ]
 
 recognized_named_single_params_by_template = {
@@ -100,7 +100,7 @@ recognized_named_single_params_by_template = {
                  "artist", "track", "time", "at"],
   "quote-us-patent": ["inventor", "patent_type", "patent"],
   "quote-video game": ["developer", "version", "system", "scene", "level"],
-  "quote-web": ["titleurl", "title_series", "title_seriesvolume", "title_number", "title_plain",
+  "quote-web": ["titleurl", "webpage_series", "webpage_seriesvolume", "title_number", "title_plain",
                 "site", "work", "trans-site", "trans-work"],
   "quote-wikipedia": ["article", "revision", "trans-article", "article_series", "article_seriesvolume"],
 }
@@ -473,12 +473,26 @@ def process_text_on_page(index, pagetitle, text):
                   pagemsg("WARNING: Moving %s in %s=%s, saw comma and no semicolon, not sure how to partition authors from %s"
                     % (desc, author_param, author, desc))
                 elif not saw_semicolon:
+                  if author_param == "author" and getp("authorlink"):
+                    authorlink = getp("authorlink")
+                    if "{{" in tlr or "[[" in tlr:
+                      pagemsg("WARNING: Would move %s in %s=%s, but saw authorlink=%s and brackets or braces in %s"
+                              % (desc, author_param, author, authorlink, desc))
+                      must_break = True
+                      break
+                    elif tlr == authorlink:
+                      tlr = "{{w|%s}}" % tlr
+                    else:
+                      tlr = "{{w|%s|%s}}" % (authorlink, tlr)
                   new_tlrs = tlr
                   new_authors = None
                   moved_author_param = author_param
                   moved_tlr_dest_param = dest_param
                   moved_tlr_msg = "Moving %s=%s to %s=%s" % (author_param, author, dest_param, tlr)
                   moved_tlr_notes_msg = "move %s=%s to %s=%s in %s" % (author_param, author, dest_param, tlr, tn)
+                elif author_param == "author" and getp("authorlink"):
+                  pagemsg("WARNING: Would split %s off of %s=%s, but saw authorlink=%s"
+                          % (desc, author_param, author, getp("authorlink")))
                 else:
                   # Extract translator(s) after last semicolon
                   split_runs = blib.split_alternating_runs(tlr_runs, r"\s*;\s+", preserve_splitchar=True)
@@ -497,9 +511,15 @@ def process_text_on_page(index, pagetitle, text):
           if must_break:
             break
 
-        def do_author_param(author, authparam):
+        def do_author_param(author, authparam, rearrange_only=False):
           origauthor = author
 
+          suffix_re = r"(I+|IV|V|VI+|(Jr|Sr|Esq|Jun|Sen)\.?|(M|J|D|Ph|PH|Ll|LL)[. ]*D[. ]*|[BM][. ]*[AS][. ]*)"
+          deny_list_words = [
+            "United", "States", "American", "Britain", "British", "Australia", "Australian", "Zealand",
+            "National", "International", "Limited", "Ltd", "Company", "Inc", "Society", "Association", "Assn",
+            "Center", "School", "Laboratory", "Office", "Ministry", "Proceedings", "Contributor"
+          ]
           # Normalize 'et al' and variants at the end of the author. Do this before anything else becasue otherwise
           # we will get thrown off by the variant '& al' (converting '&' -> 'and') and by brackets (which will be
           # invisible to our algorithm, due to the call to blib.parse_multi_delimiter_balanced_segment_run()).
@@ -581,6 +601,30 @@ def process_text_on_page(index, pagetitle, text):
             split_re = r"\s*;\s+"
             delimiter = ";"
 
+          # Try to rearrange LAST, FIRST into FIRST LAST in a single author
+          if delimiter == "," and len(author_runs) == 1:
+            m = re.search("^((?:[A-Z][^ ,]*)(?: [A-Z][^ ,]*){0,2}), ([A-Z][^ ]*)$", author_runs[0])
+            if not m:
+              m = re.search("^([A-Z][^ ]*), ((?:[A-Z][^ ,]*)(?: [A-Z][^ ,]*){0,2})$", author_runs[0])
+            if m:
+              if re.search(", *" + suffix_re + "$", author_runs[0]):
+                pagemsg("%s: Saw suffix in name, won't try to rearrange" % msgpref)
+              else:
+                for deny_list_word in deny_list_words:
+                  if re.search(r"\b%s\b" % deny_list_word, author_runs[0]):
+                    pagemsg("%s: Saw deny-listed word '%s', won't try to rearrange" % (msgpref, deny_list_word))
+                    break
+                else: # no break
+                  rearranged_author = undo_html_entity_replacement(m.group(2) + " " + m.group(1))
+                  pagemsg("%s: Rearranged '%s' to '%s' (VERIFY)" % (msgpref, author_runs[0], rearranged_author))
+                  notes_msg = "rearrange LAST, FIRST in %s= in {{%s}} into FIRST LAST" % (authparam, tn)
+                  return ("%s: Would rearrange into %s (VERIFY)" % (msgpref, rearranged_author), notes_msg,
+                          rearranged_author)
+
+          if rearrange_only:
+            pagemsg("%s: `rearrange_only` set, not splitting" % msgpref)
+            return False
+
           # Handle "et al" and variants.
           if "et al" in author_runs[-1]:
             et_al_re = r"et al\." # since we normalized all variants above
@@ -609,7 +653,7 @@ def process_text_on_page(index, pagetitle, text):
           for i, split_run in enumerate(split_runs):
             if i % 2 == 0:
               run = "".join(split_run).strip()
-              if re.search(r"^(I+|IV|V|VI+|(Jr|Sr|Esq|Jun|Sen)\.?|(M|J|D|Ph|PH|Ll|LL)[. ]*D[. ]*|[BM][. ]*[AS][. ]*)$", run):
+              if re.search("^%s$" % suffix_re, run):
                 if i == 0:
                   return "%s: Saw suffix '%s' without main form, won't split" % (msgpref, run)
                 else:
@@ -643,11 +687,6 @@ def process_text_on_page(index, pagetitle, text):
                       re.search("^([dl][aeo]s?|v[oa]n|vom|te[rn]?|de[lnr]|di|du|à|y)$", word)):
                     return ("%s: Saw run '%s' with non-allow-listed lowercase word '%s' (index %s) in it, won't split"
                       % (msgpref, run, word, j))
-                deny_list_words = [
-                  "United", "States", "American", "Britain", "British", "Australia", "Australian", "Zealand",
-                  "National", "International", "Limited", "Ltd", "Company", "Inc", "Society", "Association", "Assn",
-                  "Center", "School", "Laboratory", "Office", "Ministry", "Proceedings"
-                ]
                 for deny_list_word in deny_list_words:
                   if re.search(r"\b%s\b" % deny_list_word, run):
                     return "%s: Saw run '%s' with deny-listed word '%s', won't split" % (msgpref, run, deny_list_word)
@@ -675,6 +714,8 @@ def process_text_on_page(index, pagetitle, text):
           return "%s: Would split into %s" % (msgpref, split_authors), notes_msg, semicolon_joined_authors
 
         splits = []
+        higher_author_params = ["author%s" % i for i in range(2, 31)]
+
         for authparam in ["author", "coauthors", "mainauthor", "tlr", "translator", "translators", "editor", "editors",
                           "quotee", "chapter_tlr", "by", "2ndauthor", "mainauthor2", "tlr2", "translator2",
                           "translators2", "quotee2", "chapter_tlr2", "by2"] + (
@@ -687,7 +728,7 @@ def process_text_on_page(index, pagetitle, text):
                             ["inventor"] if tn == "quote-us-patent" else []
                           ) + (
                             ["developer"] if tn == "quote-video game" else []
-                            ):
+                          ) + higher_author_params:
           if authparam == moved_author_param and moved_tlr_msg:
             author = new_authors
           elif authparam == moved_tlr_dest_param and moved_tlr_msg:
@@ -696,7 +737,7 @@ def process_text_on_page(index, pagetitle, text):
             author = getp(authparam).strip()
           if not author:
             continue
-          authret = do_author_param(author, authparam)
+          authret = do_author_param(author, authparam, rearrange_only=authparam in higher_author_params)
           if authret is not False:
             if type(authret) is str:
               splits.append((authparam, False, authret, False))
