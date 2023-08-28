@@ -51,18 +51,17 @@ recognized_named_params_1_to_n_list = [
 recognized_named_params_1_to_2_list = [
   "chapter", "chapterurl", "chapter_number", "chapter_plain", "chapter_series", "chapter_seriesvolume", "trans-chapter",
   "chapter_tlr", "notitle",
-  "tlr", "translator", "translators", "editor",
-  "editors", "mainauthor", "title", "trans-title", "series", "seriesvolume", "archiveurl", "url", "urls", "edition",
-  "edition_plain",
+  "tlr", "translator", "translators", "editor", "editors", "mainauthor", "compiler", "compilers",
+  "title", "trans-title", "series", "seriesvolume", "archiveurl", "url", "urls", "edition", "edition_plain",
   "volume", "volumes", "volume_plain", "volumeurl",
   "issue", "issues", "issue_plain", "issueurl",
   "number", "numbers", "number_plain", "numberurl",
-  "lang", "worklang",
-  "termlang", "genre", "format", "others", "quoted_in", "location", "publisher", "original", "by", "type",
+  "lang", "worklang", "termlang", "origlang", "origworklang", "origtext",
+  "genre", "format", "others", "quoted_in", "location", "publisher", "original", "by", "type",
   "date_published", "year_published", "month_published", "date", "year", "month",
   "start_date", "start_year", "start_month",
-  "bibcode", "DOI", "doi", "ISBN", "isbn", "ISSN", "issn", "JSTOR", "jstor", "LCCN",
-  "lccn", "OCLC", "oclc", "OL", "ol", "PMID", "pmid", "SSRN", "ssrn", "id", "archivedate", "accessdate", "nodate",
+  "bibcode", "DOI", "doi", "ISBN", "isbn", "ISSN", "issn", "JSTOR", "jstor", "LCCN", "lccn", "OCLC", "oclc",
+  "OL", "ol", "PMID", "pmid", "PMCID", "pmcid", "SSRN", "ssrn", "id", "archivedate", "accessdate", "nodate",
   "section", "sectionurl", "section_number", "section_plain", "section_series", "section_seriesvolume", "trans-section",
   "note", "note_plain",
   "line", "lines", "line_plain", "lineurl",
@@ -169,7 +168,9 @@ params_with_inline_modifiers_1_to_n_list = ["author"]
 params_with_inline_modifiers_1_to_2_list = [
   "chapter", "chapter_plain", "chapter_series", "chapter_seriesvolume", "chapter_tlr", 
   "section", "section_plain", "section_series", "section_seriesvolume",
-  "tlr", "translator", "translators", "editor", "editors", "mainauthor",
+  "tlr", "translator", "translators", "editor", "editors", "mainauthor", "compiler", "compilers",
+  "director", "directors", "lyricist", "lyrics-translator", "composer", "role", "roles", "speaker", "actor", "artist",
+  "tlr", "translator", "translators", "editor", "editors", "mainauthor", "compiler", "compilers",
   "title", "series", "seriesvolume", "edition", "edition_plain",
   "volume", "volumes", "volume_plain",
   "issue", "issues", "issue_plain",
@@ -187,7 +188,6 @@ params_with_inline_modifiers_single_everywhere_list = [
 
 params_with_inline_modifiers_by_template = {
   "quote-av": [
-    # not director, directors, role, roles, speaker or actor because they are prefixed by text (FIXME)
     "writer", "writers", "episode", "episode_series", "episode_seriesvolume", "episode_plain",
     "season", "seasons", "season_plain", "network",
   ],
@@ -204,7 +204,6 @@ params_with_inline_modifiers_by_template = {
     # not email, group, newsgroup, id because they are prefixed by text (FIXME)
   ],
   "quote-song": [
-    # not lyricist, lyrics-translator, composer, artist because they are prefixed by text (FIXME)
     "title_series", "title_seriesvolume", "album", "work" 
   ],
   "quote-us-patent": ["inventor"],
@@ -435,19 +434,32 @@ def process_text_on_page(index, pagetitle, text):
         moved_tlr_notes_msg = False
         moved_author_param = None
         moved_tlr_dest_param = None
-        for dest_param in ["tlr", "editor"]:
+        for dest_param in ["tlr", "editor", "compiler", "director"]:
           if dest_param == "tlr":
             basic_strip_re = r"transl?(\.|ator)"
             strip_re = r"(, *%s| *\(%s\))$" % (basic_strip_re, basic_strip_re)
             params_to_check = ["tlr", "translator", "translators"]
             desc = "translators"
-          else:
+          elif dest_param == "editor":
             basic_strip_re = r"ed(\.|itor)"
             strip_re = r"(, *%s| *\(%s\))$" % (basic_strip_re, basic_strip_re)
             params_to_check = ["editor", "editors"]
             desc = "editors"
+          elif dest_param == "compiler":
+            basic_strip_re = "compiler"
+            strip_re = r"(, *%s| *\(%s\))$" % (basic_strip_re, basic_strip_re)
+            params_to_check = ["compiler", "compilers"]
+            desc = "compilers"
+          elif dest_param == "director":
+            basic_strip_re = "director"
+            strip_re = r"(, *%s| *\(%s\))$" % (basic_strip_re, basic_strip_re)
+            params_to_check = ["director", "directors"]
+            desc = "directors"
+          else:
+            assert False, "Unrecognized dest param '%s'" % dest_param
           must_break = False
-          for author_param in ["author", "mainauthor", "coauthors"]:
+          for author_param in ["author", "author2", "author3", "author4", "author5", "author6", "author7", "author8",
+                               "author9", "author10", "mainauthor", "coauthors"]:
             author = getp(author_param).strip()
             m = re.search(r"^(.*?)" + strip_re, author)
             if m:
@@ -473,11 +485,11 @@ def process_text_on_page(index, pagetitle, text):
                   pagemsg("WARNING: Moving %s in %s=%s, saw comma and no semicolon, not sure how to partition authors from %s"
                     % (desc, author_param, author, desc))
                 elif not saw_semicolon:
-                  if author_param == "author" and getp("authorlink"):
-                    authorlink = getp("authorlink")
+                  if author_param.startswith("author") and getp("authorlink" + author_param[6:]):
+                    authorlink = getp("authorlink" + author_param[6:])
                     if "{{" in tlr or "[[" in tlr:
-                      pagemsg("WARNING: Would move %s in %s=%s, but saw authorlink=%s and brackets or braces in %s"
-                              % (desc, author_param, author, authorlink, desc))
+                      pagemsg("WARNING: Would move %s in %s=%s, but saw authorlink%s=%s and brackets or braces in %s"
+                              % (desc, author_param, author, author_param[6:], authorlink, desc))
                       must_break = True
                       break
                     elif tlr == authorlink:
@@ -490,9 +502,9 @@ def process_text_on_page(index, pagetitle, text):
                   moved_tlr_dest_param = dest_param
                   moved_tlr_msg = "Moving %s=%s to %s=%s" % (author_param, author, dest_param, tlr)
                   moved_tlr_notes_msg = "move %s=%s to %s=%s in %s" % (author_param, author, dest_param, tlr, tn)
-                elif author_param == "author" and getp("authorlink"):
-                  pagemsg("WARNING: Would split %s off of %s=%s, but saw authorlink=%s"
-                          % (desc, author_param, author, getp("authorlink")))
+                elif author_param.startswith("author") and getp("authorlink" + author_param[6:]):
+                  pagemsg("WARNING: Would split %s off of %s=%s, but saw authorlink%s=%s"
+                          % (desc, author_param, author, author_param[6:], getp("authorlink")))
                 else:
                   # Extract translator(s) after last semicolon
                   split_runs = blib.split_alternating_runs(tlr_runs, r"\s*;\s+", preserve_splitchar=True)
@@ -910,6 +922,67 @@ def process_text_on_page(index, pagetitle, text):
           if pn in params_with_inline_modifiers_everywhere or (
             pn in inline_modifiers_per_template_params and tn in inline_modifiers_per_template_params[pn]
           ):
+            langcode = None
+            m = re.search(r"^\[\[(?:w|wikipedia):([a-z][a-z-]+):([^\[\]|{}<>;]*)\]\]$", pv)
+            if not m:
+              m = re.search(r"^\[\[(?:w|wikipedia):([a-z][a-z-]+):([^\[\]|{}<>;]*)\|\2\]\]$", pv)
+            if m:
+              langcode, dest = m.groups()
+              newval = "w:%s:%s" % (langcode, dest)
+              t.add(pn, newval)
+              pagemsg("Convert raw foreign Wikipedia link %s=%s to %s: %s" % (pn, pv, newval, origt))
+              this_template_notes.append("convert raw foreign Wikipedia link in %s= in {{%s}} to w:%s:..."
+                % (pn, tn, langcode))
+              continue
+
+            m = re.search(r"^\[\[(?:w|wikipedia):([^\[\]|{}<>;]*)\]\]$", pv)
+            if not m:
+              m = re.search(r"^\[\[(?:w|wikipedia):([^\[\]|{}<>;]*)\|\1\]\]$", pv)
+            if m:
+              dest = m.group(1)
+              newval = "w:%s" % dest
+              t.add(pn, newval)
+              pagemsg("Convert raw Wikipedia link %s=%s to %s: %s" % (pn, pv, newval, origt))
+              this_template_notes.append("convert raw Wikipedia link in %s= in {{%s}} to w:..."
+                % (pn, tn))
+              continue
+
+            m = re.search(r"^\{\{w\|([^\[\]|{}<>;]*)\}\}$", pv)
+            if m:
+              dest = m.group(1)
+              newval = "w:%s" % dest
+              t.add(pn, newval)
+              pagemsg("Convert templatized Wikipedia link %s=%s to %s: %s" % (pn, pv, newval, origt))
+              this_template_notes.append("convert templatized Wikipedia link in %s= in {{%s}} to w:..."
+                % (pn, tn))
+              continue
+
+            langcode = None
+            m = re.search(r"^\{\{w\|lang=([a-z][a-z-]+)\|([^\[\]|{}<>;]*)\}\}$", pv)
+            if m:
+              langcode, dest = m.groups()
+            else:
+              m = re.search(r"^\{\{w\|([^\[\]|{}<>;]*)\|lang=([a-z][a-z-]+)\}\}$", pv)
+              if m:
+                dest, langcode = m.groups()
+            if langcode:
+              newval = "w:%s:%s" % (langcode, dest)
+              t.add(pn, newval)
+              pagemsg("Convert templatized foreign Wikipedia link %s=%s to %s: %s" % (pn, pv, newval, origt))
+              this_template_notes.append("convert templatized foreign Wikipedia link in %s= in {{%s}} to w:%s:..."
+                % (pn, tn, langcode))
+              continue
+
+            m = re.search(r"^\{\{lw\|([a-z][a-z-]+)\|([^\[\]|{}<>;]*)\}\}$", pv)
+            if m:
+              langcode, dest = m.groups()
+              newval = "lw:%s:%s" % (langcode, dest)
+              t.add(pn, newval)
+              pagemsg("Convert {{lw|...}} foreign Wikipedia link %s=%s to %s: %s" % (pn, pv, newval, origt))
+              this_template_notes.append("convert {{lw|...}} foreign Wikipedia link in %s= in {{%s}} to lw:%s:..."
+                % (pn, tn, langcode))
+              continue
+
             if re.search(r"\{\{lang\|[^|]*\|[^{}|=]*\}\}", pv):
               m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\}$", pv.strip())
               if m:
