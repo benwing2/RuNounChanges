@@ -1500,7 +1500,7 @@ function export.source(args, alias_map)
 			author_outputted = true
 		end
 
-		add_authorlike({"tlr", "translator", "translators"}, "translated by ", ", transl.", nil, " translator")
+		add_authorlike("tlr", "translated by ", ", transl.", nil, " translator")
 
 		local function add_sg_and_pl_authorlike(noun, verbed)
 			local sgparam = noun
@@ -1754,7 +1754,7 @@ function export.source(args, alias_map)
 			add_with_sep("performed by " .. artist)
 		end
 	
-		local role = parse_and_format_multivalued_annotated_text({"role", "roles", "speaker"}, "and")
+		local role = parse_and_format_multivalued_annotated_text("role", "and")
 		local actor_val, actor_fullname = a_with_name("actor")
 		local actor_objs = parse_multivalued_annotated_text(actor_val, actor_fullname)
 		local actor = format_multivalued_annotated_text(actor_objs, "and")
@@ -1797,7 +1797,7 @@ function export.source(args, alias_map)
 
 		local original = parse_and_format_annotated_text("original", tag_with_cite, tag_with_cite)
 		local by = parse_and_format_multivalued_annotated_text("by", "and")
-		local origtype = a("type") or "translation"
+		local origtype = a("version") or "translation"
 		if original or by then
 			add_with_sep(origtype .. " of " .. (original or "original") .. (by and " by " .. by or ""))
 		end
@@ -1875,16 +1875,16 @@ function export.source(args, alias_map)
 		end
 
 		add_identifier("bibcode", "[https://adsabs.harvard.edu/abs/", " →Bibcode]")
-		add_identifier({"DOI", "doi"}, "<span class=\"neverexpand\">[https://doi.org/", " →DOI]</span>")
-		add_identifier({"ISBN", "isbn"}, "", "", isbn)
-		add_identifier({"ISSN", "issn"}, "", "", issn)
-		add_identifier({"JSTOR", "jstor"}, "[https://www.jstor.org/stable/", " →JSTOR]")
-		add_identifier({"LCCN", "lccn"}, "", "", lccn)
-		add_identifier({"OCLC", "oclc"}, "[https://www.worldcat.org/title/", " →OCLC]")
-		add_identifier({"OL", "ol"}, "[https://openlibrary.org/works/OL", "/ →OL]")
-		add_identifier({"PMID", "pmid"}, "[https://www.ncbi.nlm.nih.gov/pubmed/", " →PMID]")
-		add_identifier({"PMCID", "pmcid"}, "[https://www.ncbi.nlm.nih.gov/pmc/articles/", "/ →PMCID]")
-		add_identifier({"SSRN", "ssrn"}, "[https://ssrn.com/abstract=", " →SSRN]")
+		add_identifier("doi", "<span class=\"neverexpand\">[https://doi.org/", " →DOI]</span>")
+		add_identifier("isbn", "", "", isbn)
+		add_identifier("issn", "", "", issn)
+		add_identifier("jstor", "[https://www.jstor.org/stable/", " →JSTOR]")
+		add_identifier("lccn", "", "", lccn)
+		add_identifier("oclc", "[https://www.worldcat.org/title/", " →OCLC]")
+		add_identifier("ol", "[https://openlibrary.org/works/OL", "/ →OL]")
+		add_identifier("pmid", "[https://www.ncbi.nlm.nih.gov/pubmed/", " →PMID]")
+		add_identifier("pmcid", "[https://www.ncbi.nlm.nih.gov/pmc/articles/", "/ →PMCID]")
+		add_identifier("ssrn", "[https://ssrn.com/abstract=", " →SSRN]")
 		local id = a("id")
 		if id then
 			small(id)
@@ -2125,7 +2125,7 @@ function export.quote_t(frame)
 		origtag = {},
 	}
 
-	-- Then the list params that have FOOn versions.
+	-- Then the list params (which have FOOn versions).
 	local list_spec = {list = true, allow_holes = true}
 	for _, list_param in ipairs {
 		"author", "last", "first", "authorlink", "trans-author", "trans-last", "trans-first", "trans-authorlink"
@@ -2133,14 +2133,12 @@ function export.quote_t(frame)
 		params[list_param] = list_spec
 	end
 
-	-- Then the newversion params that have FOO2 versions.
+	-- Then the newversion params (which have FOO2 versions).
 	for _, param12 in ipairs {
 		-- author-like params; author params themselves are either list params (author=, last=, etc.) or single params
 		-- (2ndauthor=, 2ndlast=, etc.)
-		"tlr", "translator", "translators",
-		"editor", "editors", "mainauthor", "compiler", "compilers", "director", "directors",
-		"lyricist", "lyrics-translator", "composer",
-		"role", "roles", "speaker", "actor", "artist",
+		"tlr", "editor", "editors", "mainauthor", "compiler", "compilers", "director", "directors",
+		"lyricist", "lyrics-translator", "composer", "role", "actor", "artist",
 
 		-- author control params
 		"default-authorlabel",
@@ -2167,8 +2165,7 @@ function export.quote_t(frame)
 		"worklang", "termlang", "origlang", "origworklang",
 
 		-- ID params
-		"bibcode", "DOI", "doi", "ISBN", "isbn", "ISSN", "issn", "JSTOR", "jstor", "LCCN", "lccn", "OCLC", "oclc",
-		"OL", "ol", "PMID", "pmid", "PMCID", "pmcid", "SSRN", "ssrn", "id",
+		"bibcode", "doi", "isbn", "issn", "jstor", "lccn", "oclc", "ol", "pmid", "pmcid", "ssrn", "id",
 
 		-- misc date params; most date params handled below
 		"archivedate", "accessdate", "nodate",
@@ -2177,12 +2174,35 @@ function export.quote_t(frame)
 
 		-- other params
 		"genre", "format", "medium", "others", "quoted_in", "location", "publisher",
-		"original", "by", "type",
+		"original", "by", "version",
 		"note", "note_plain",
 		"other", "source", "platform",
 	} do
 		params[param12] = {}
 		params[param12 .. "2"] = {}
+	end
+
+	-- Then the aliases of newversion params (which have FOO2 versions).
+	for _, param12_aliased in ipairs {
+		{"version", "type"},
+		{"role", "roles"},
+		{"role", "speaker"},
+		{"tlr", "translator"},
+		{"tlr", "translators"},
+		{"doi", "DOI"},
+		{"isbn", "ISBN"},
+		{"issn", "ISSN"},
+		{"jstor", "JSTOR"},
+		{"lccn", "LCCN"},
+		{"oclc", "OCLC"},
+		{"ol", "OL"},
+		{"pmid", "PMID"},
+		{"pmcid", "PMCID"},
+		{"ssrn", "SSRN"},
+	} do
+		local canon, alias = unpack(param12_aliased)
+		params[alias] = {alias_of = canon}
+		params[alias .. "2"] = {alias_of = canon .. "2"}
 	end
 
 	-- Then the date params.
