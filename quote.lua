@@ -111,7 +111,7 @@ end
 
 local function split_on_comma(term)
 	if term:find(",%s") then
-		return require(put_module).split_on_comma(term)
+		return require(parse_utilities_module).split_on_comma(term)
 	else
 		return rsplit(term, ",")
 	end
@@ -764,9 +764,12 @@ local function clone_args(direct_args, parent_args)
 			end
 		end
 	end
-
+	
 	for pname, param in pairs(direct_args) do
-		args[pname] = ine(param)
+		-- ignore control params
+		if pname ~= "ignore" and pname ~= "alias" and pname ~= "error_if" then
+			args[pname] = ine(param)
+		end
 	end
 
 	return args, alias_map
@@ -1220,9 +1223,8 @@ function export.source(args, alias_map)
 	-- * `last_param` is the base parameter name holding the last name of the author;
 	-- * `trans_last_param` is the corresponding base name holding the gloss/translation of the last name (e.g.
 	--   "trans-last"), or nil if no such parameter exists.
-	local function add_author(author_param, trans_author_param, authorlink_param, trans_authorlink_param,
-		first_param, trans_first_param, last_param, trans_last_param)
-		local author, author_fullname = a_with_name(author_param)
+	local function add_author(author, author_fullname, trans_author, trans_author_fullname,
+		authorlink, trans_authorlink, trans_authorlink_fullname, first, trans_first, last, trans_last)
 		local function make_author_with_url(txt, authorlink)
 			if authorlink then
 				return "[[w:" .. authorlink .. "|" .. txt .. "]]"
@@ -1230,9 +1232,6 @@ function export.source(args, alias_map)
 				return txt
 			end
 		end
-		local authorlink = a(authorlink_param)
-		local authorlink_gloss, authorlink_gloss_fullname = a_with_name(trans_authorlink_param)
-		local trans_author, trans_author_fullname = a_with_name(trans_author_param)
 		if author then
 			local authorobjs = parse_multivalued_annotated_text(author, author_fullname, trans_author,
 				trans_author_fullname)
@@ -1241,14 +1240,14 @@ function export.source(args, alias_map)
 					authorobjs[1].text = "anonymous author"
 				end
 				authorobjs[1].text = make_author_with_url(authorobjs[1].text, authorlink)
-				if authorobjs[1].gloss and authorlink_gloss then
-					authorobjs[1].gloss = make_author_with_url(authorobjs[1].gloss, authorlink_gloss)
+				if authorobjs[1].gloss and trans_authorlink then
+					authorobjs[1].gloss = make_author_with_url(authorobjs[1].gloss, trans_authorlink)
 				end
 				add(format_multivalued_annotated_text(authorobjs))
-			elseif authorlink_gloss then
+			elseif trans_authorlink then
 				error(("Can't specify |%s= along with multiple semicolon-separated entities in |%s=; use the "
 					.. "<t:...> inline modifier attached to the individual entities and put the link directly "
-					.. "in the value of the inline modifier"):format(authorlink_gloss_fullname, author_fullname))
+					.. "in the value of the inline modifier"):format(trans_authorlink_fullname, author_fullname))
 			else
 				-- Allow an authorlink with multiple authors, e.g. for use with |author=Max Mills; Harvey Mills
 				-- with |authorlink=Max and Harvey. For this we have to generate the entire text and link it
@@ -1259,29 +1258,25 @@ function export.source(args, alias_map)
 		else
 			-- Author separated into first name + last name. We don't currently support non-Latin-script
 			-- authors separated this way and probably never will.
-			local last = a(last_param)
-			local first = a(first_param)
 			if first then
 				author = first .. " " .. last
 			else
 				author = last
 			end
 			author = make_author_with_url(author, authorlink)
-			local last_gloss = a(trans_last_param)
-			local author_gloss
-			if last_gloss then
-				local first_gloss = a(trans_first_param)
-				if first_gloss then
-					author_gloss = first_gloss .. " " .. last_gloss
+			local trans_author
+			if trans_last then
+				if trans_first then
+					trans_author = trans_first .. " " .. trans_last
 				else
-					author_gloss = last_gloss
+					trans_author = trans_last
 				end
-				author_gloss = make_author_with_url(author_gloss, authorlink_gloss)
+				trans_author = make_author_with_url(trans_author, trans_authorlink)
 			end
 			add(author)
-			if author_gloss then
+			if trans_author then
 				add(SPACE_LBRAC)
-				add(author_gloss)
+				add(trans_author)
 				add(RBRAC)
 			end
 		end
@@ -1320,24 +1315,16 @@ function export.source(args, alias_map)
 	end
 
 	-- Find maximum indexed author or last name.
-	local maxind = 0
-	for arg, _ in pairs(args) do
-		local argbase, argind = rmatch(arg, "^([a-z]+)([0-9]*)$")
-		if argbase == "author" or argbase == "last" then
-			argind = argind == "" and 1 or tonumber(argind)
-			if argind > maxind then
-				maxind = argind
-			end
-		end
-	end
+	local maxind = math.max(args.author.maxindex, args.last.maxindex)
 
 	for i = 1, maxind do
 		local ind = i == 1 and "" or i
-		get_full_paramname = make_get_full_paramname(ind)
-		if a("author") or a("last") then
-			-- If first author, output a comma if needed.
-			add_author("author", "trans-author", "authorlink", "trans-authorlink", "first", "trans-first",
-				"last", "trans-last")
+		local author = args.author[i]
+		local last = args.last[i]
+		if args.author[i] or args.last[i] then
+			add_author(args.author[i], "author" .. ind, args["trans-author"][i], "trans-author" .. ind,
+				args.authorlink[i], args["trans-authorlink"][i], "trans-authorlink" .. ind,
+				args.first[i], args["trans-first"][i], args.last[i], args["trans-last"][i])
 			sep = ", "
 		end
 	end
@@ -1386,10 +1373,6 @@ function export.source(args, alias_map)
 		author_outputted = true
 	end
 
-	-- Need to set this for coauthors and quotee. It's accessed (indirectly) by
-	-- parse_and_format_multivalued_annotated_text() and add_authorlike() just below, and will have the wrong value
-	-- as a result of the `i = 1, maxind` loop above.
-	get_full_paramname = make_get_full_paramname("")
 	-- FIXME, how does specifying coauthors= differ from just specifying multiple authors?
 	local coauthors = parse_and_format_multivalued_annotated_text("coauthors")
 	if coauthors then
@@ -2004,11 +1987,11 @@ function export.source(args, alias_map)
 
 	-- Add the newversion author(s).
 	if args["2ndauthor"] or args["2ndlast"] then
-		-- Set this to have no index, since it may have been set with an index in postauthor() and is used in
-		-- add_author().
-		get_full_paramname = make_get_full_paramname("")
-		add_author("2ndauthor", nil, "2ndauthorlink", nil, "2ndfirst", nil, "2ndlast", nil)
+		add_author(args["2ndauthor"], "2ndauthor", nil, nil, args["2ndauthorlink"], nil, nil,
+			args["2ndfirst"], nil, args["2ndlast"], nil)
 		sep = ", "
+		-- Needed for param fetching in add_authorlabel().
+		get_full_paramname = make_get_full_paramname("2")
 		add_authorlabel()
 	end
 
@@ -2073,9 +2056,9 @@ function export.source(args, alias_map)
 
 	local FULLPAGENAME = mw.title.getCurrentTitle().fullText
 	return output_text .. (not lang and "" or
-		(#categories > 0 and require(utilities_module).format_categories(categories, lang) or "") ..
-		(#tracking_categories > 0 and require(utilities_module).format_categories(tracking_categories, lang, nil, nil,
-			not require(usex_templates_module).page_should_be_ignored(FULLPAGENAME)) or ""))
+		(#categories > 0 and require(utilities_module).format_categories(categories, lang, args.sort) or "") ..
+		(#tracking_categories > 0 and require(utilities_module).format_categories(tracking_categories, lang, args.sort,
+			nil, not require(usex_templates_module).page_should_be_ignored(FULLPAGENAME)) or ""))
 end
 
 
@@ -2091,15 +2074,135 @@ end
 -- External interface, meant to be called from a template. Replaces {{quote-meta}} and meant to be the primary
 -- interface for {{quote-*}} templates.
 function export.quote_t(frame)
+	-- FIXME: We are processing arguments twice, once in clone_args() and then again in [[Module:parameters]]. This is
+	-- wasteful of memory.
 	local parent_args = frame:getParent().args
-	local args, alias_map = clone_args(frame.args, parent_args)
-	local deprecated = args.lang
+	local cloned_args, alias_map = clone_args(frame.args, parent_args)
+	local deprecated = parent_args.lang
 
-	args.nocat = yesno(args.nocat)
-	args.brackets = yesno(args.brackets)
+	-- First, the "single" params that don't have FOO2 or FOOn versions.
+	local params = {
+		[deprecated and "lang" or 1] = {required = true, default = "und"},
+		coauthors = {},
+		quotee = {},
+		newversion = {},
+		["2ndauthor"] = {},
+		["2ndauthorlink"] = {},
+		["2ndfirst"] = {},
+		["2ndlast"] = {},
+		nocat = {type = "boolean"},
+		nocolon = {type = "boolean"},
+		lang2 = {},
 
-	local text = args.text or args.passage
-	local gloss = args.t or args.gloss or args.translation
+		-- quote params
+		text = {},
+		passage = {alias_of = "text"},
+		tr = {},
+		transliteration = {alias_of = "tr"},
+		ts = {},
+		transcription = {alias_of = "ts"},
+		norm = {},
+		normalization = {alias_of = "norm"},
+		sc = {},
+		normsc = {},
+		sort = {},
+		subst = {},
+		footer = {},
+		lit = {},
+		t = {},
+		translation = {alias_of = "t"},
+		gloss = {alias_of = "t"},
+		tag = {},
+		brackets = {type = "boolean"},
+		-- original quote params
+		origtext = {},
+		origtr = {},
+		origts = {},
+		orignorm = {},
+		origsc = {},
+		orignormsc = {},
+		origsubst = {},
+		origtag = {},
+	}
+
+	-- Then the list params that have FOOn versions.
+	local list_spec = {list = true, allow_holes = true}
+	for _, list_param in ipairs {
+		"author", "last", "first", "authorlink", "trans-author", "trans-last", "trans-first", "trans-authorlink"
+	} do
+		params[list_param] = list_spec
+	end
+
+	-- Then the newversion params that have FOO2 versions.
+	for _, param12 in ipairs {
+		-- author-like params; author params themselves are either list params (author=, last=, etc.) or single params
+		-- (2ndauthor=, 2ndlast=, etc.)
+		"tlr", "translator", "translators",
+		"editor", "editors", "mainauthor", "compiler", "compilers", "director", "directors",
+		"lyricist", "lyrics-translator", "composer",
+		"role", "roles", "speaker", "actor", "artist",
+
+		-- author control params
+		"default-authorlabel",
+		"authorlabel",
+
+		-- title
+		"title", "trans-title", "series", "seriesvolume", "notitle",
+
+		-- chapter
+		"chapter", "chapterurl", "chapter_number", "chapter_plain", "chapter_series", "chapter_seriesvolume",
+		"trans-chapter", "chapter_tlr",
+
+		-- section
+		"section", "sectionurl", "section_number", "section_plain", "section_series", "section_seriesvolume",
+		"trans-section",
+
+		-- URL
+		"url", "urls", "archiveurl",
+
+		-- edition
+		"edition", "edition_plain",
+
+		-- language params
+		"worklang", "termlang", "origlang", "origworklang",
+
+		-- ID params
+		"bibcode", "DOI", "doi", "ISBN", "isbn", "ISSN", "issn", "JSTOR", "jstor", "LCCN", "lccn", "OCLC", "oclc",
+		"OL", "ol", "PMID", "pmid", "PMCID", "pmcid", "SSRN", "ssrn", "id",
+
+		-- misc date params; most date params handled below
+		"archivedate", "accessdate", "nodate",
+
+		-- numeric params handled below
+
+		-- other params
+		"genre", "format", "medium", "others", "quoted_in", "location", "publisher",
+		"original", "by", "type",
+		"note", "note_plain",
+		"other", "source", "platform",
+	} do
+		params[param12] = {}
+		params[param12 .. "2"] = {}
+	end
+
+	-- Then the date params.
+	for _, datelike in ipairs { {"", ""}, {"orig", ""}, {"", "_published"} } do
+		local pref, suf = unpack(datelike)
+		for _, arg in ipairs { "date", "year", "month", "start_date", "start_year", "start_month" } do
+			params[pref .. arg .. suf] = {}
+			params[pref .. arg .. suf .. "2"] = {}
+		end
+	end
+
+	-- Then the numeric params.
+	for _, numeric in ipairs { "volume", "issue", "number", "line", "page", "column" } do
+		for _, suf in ipairs { "", "s", "_plain", "url", "_prefix" } do
+			params[numeric .. suf] = {}
+			params[numeric .. suf .. "2"] = {}
+		end
+	end
+	
+	local args = require(parameters_module).process(cloned_args, params, nil, "quote", "quote_t")
 
 	local parts = {}
 	local function ins(text)
@@ -2109,9 +2212,12 @@ function export.quote_t(frame)
 	ins('<div class="citation-whole"><span class="cited-source">')
 	ins(export.source(args, alias_map))
 	ins("</span><dl><dd>")
-	local tr = args.tr or args.transliteration
-	local ts = args.ts or args.transcription
-	local norm = args.norm or args.normalization
+
+	local text = args.text
+	local gloss = args.t
+	local tr = args.tr
+	local ts = args.ts
+	local norm = args.norm
 	local sc = args.sc and require(scripts_module).getByCode(args.sc, "sc") or nil
 	local normsc = args.normsc == "auto" and args.normsc or
 		args.normsc and require(scripts_module).getByCode(args.normsc, "normsc") or nil
@@ -2136,7 +2242,7 @@ function export.quote_t(frame)
 		orignormsc = args.orignormsc == "auto" and args.orignormsc or
 			args.orignormsc and require(scripts_module).getByCode(args.orignormsc, "orignormsc") or nil
 	else
-		for _, noparam in ipairs { "origtr", "origts", "origsc", "orignorm", "orignormsc", "origsubst", "origref" } do
+		for _, noparam in ipairs { "origtr", "origts", "origsc", "orignorm", "orignormsc", "origsubst", "origtag" } do
 			if args[noparam] then
 				error(("Cannot specify %s= without origtext="):format(noparam))
 			end
@@ -2174,7 +2280,7 @@ function export.quote_t(frame)
 			origtr = args.origtr,
 			origts = args.origts,
 			origsubst = args.origsubst,
-			origref = args.origref,
+			origqq = tags_to_dialects(lang, args.origtag),
 		}
 		ins(require(usex_module).format_usex(usex_data))
 	end
