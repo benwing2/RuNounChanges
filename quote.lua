@@ -679,102 +679,6 @@ local function ine(arg)
 end
 
 
--- Clone and combine frame's and parent's args while also assigning nil to empty strings. Handle aliases and ignores.
-local function clone_args(direct_args, parent_args)
-	local args = {}
-
-	-- Processing parent args must come first so that direct args override parent args. Note that if a direct arg is
-	-- specified but is blank, it will still override the parent arg (with nil).
-	for pname, param in pairs(parent_args) do
-		-- [[Special:WhatLinksHere/Template:tracking/quote/param/PARAM]]
-		track("param/" .. pname)
-		args[pname] = ine(param)
-	end
-
-	-- Process ignores. The value of `ignore` is a comma-separated list of parameter names to ignore (erase). We need to
-	-- do this before aliases due to {{quote-song}}, which sets chapter= to the value of title= in the direct params and
-	-- sets title= to the value of album= using an alias. If we do the ignores after aliases, we get an error during alias
-	-- processing, saying that title= and its alias album= are both present.
-	local ignores = ine(direct_args.ignore)
-	if ignores then
-		for ignore in rgsplit(ignores, "%s*,%s*") do
-			args[ignore] = nil
-		end
-	end
-
-	-- Process aliases. The value of `alias` is a list of semicolon-separated specs, each of which is of the form
-	-- DEST:SOURCE,SOURCE,... where DEST is the canonical name of a parameter and SOURCE refers to an alias. Whitespace
-	-- is allowed between all delimiters. The order of aliases may be important. Ffor example, for {{quote-journal}},
-	-- title= contains the article name and is an alias of underlying chapter=, while journal= or work= contains the
-	-- journal name and is an alias of underlying title=. As a result, the title -> chapter alias must be specified
-	-- before the journal/work -> title alias.
-	--
-	-- Whenever we copy a value from argument SOURCE to argument DEST, we record an entry for the pair in alias_map, so
-	-- that when we would display an error message about DEST, we display SOURCE instead.
-	--
-	-- Do alias processing (and ignore and error_if processing) before processing direct_args so that e.g. we can set up
-	-- an alias of title -> chapter and then set title= to something else in the direct args ({{quote-hansard}} does this).
-	local aliases = ine(direct_args.alias)
-	local alias_map = {}
-	if aliases then
-		-- Allow and discard a trailing semicolon, to make managing multiple aliases easier.
-		aliases = rsub(aliases, "%s*;$", "")
-		for alias_spec in rgsplit(aliases, "%s*;%s*") do
-			local alias_spec_parts = rsplit(alias_spec, "%s*:%s*")
-			if #alias_spec_parts ~= 2 then
-				error(("Alias spec '%s' should have one colon in it"):format(alias_spec))
-			end
-			local dest, sources = unpack(alias_spec_parts)
-			sources = rsplit(sources, "%s*,%s*")
-			saw_source = nil
-			for _, source in ipairs(sources) do
-				if rfind(source, "^[0-9]+$") then
-					source = tonumber(source)
-				end
-				if args[source] then
-					if saw_source == nil then
-						saw_source = source
-					else
-						error(("|%s= and |%s= are aliases; cannot specify a value for both"):format(saw_source, source))
-					end
-				end
-			end
-			if saw_source then
-				if args[dest] then
-					error(("|%s= is an alias of |%s=; cannot specify a value for both"):format(saw_source, dest))
-				end
-				args[dest] = args[saw_source]
-				-- Wipe out the original after copying. This important in case of a param that has general significance
-				-- but has been redefined (e.g. {{quote-av}} redefines number= for the episode number, and
-				-- {{quote-journal}} redefines title= for the chapter= (article). It's also important once we implement
-				-- unhandled parameter checking.
-				args[saw_source] = nil
-				alias_map[dest] = saw_source
-			end
-		end
-	end
-
-	-- Process error_if. The value of `error_if` is a comma-separated list of parameter names to throw an error if seen
-	-- in parent_args (they are params we overwrite in the direct args).
-	local error_ifs = ine(direct_args.error_if)
-	if error_ifs then
-		for error_if in rgsplit(error_ifs, "%s*,%s*") do
-			if ine(parent_args[error_if]) then
-				error(("Cannot specify a value |%s=%s as it would be overwritten or ignored"):format(error_if, ine(parent_args[error_if])))
-			end
-		end
-	end
-	
-	for pname, param in pairs(direct_args) do
-		-- ignore control params
-		if pname ~= "ignore" and pname ~= "alias" and pname ~= "error_if" then
-			args[pname] = ine(param)
-		end
-	end
-
-	return args, alias_map
-end
-
 local abbrs = {
 	["a."] = { anchor = "a.", full = "ante", },
 	["c."] = { anchor = "c.", full = "circa", },
@@ -2062,14 +1966,214 @@ function export.source(args, alias_map)
 end
 
 
--- External interface, meant to be called from a template.
--- FIXME: Remove this in favor of using quote_t.
-function export.source_t(frame)
-	local parent_args = frame:getParent().args
-	local args, alias_map = clone_args(frame.args, parent_args)
-	return export.source(args, alias_map)
+-- Alias specs for type= and type2=. Each spec is `{canon, aliases, with_newversion}` where `canon` is the canonical
+-- parameter (with "2" added if type2= is being handled), `aliases` is a comma-separated string of aliases (with "2"
+-- added if type2= is being handled, except for numeric params), and `with_newversion` indicates whether we should
+-- process this spec if type2= is being handled.
+local type_alias_specs = {
+	book = {
+		{"author", "3"},
+		{"chapter", "entry", true},
+		{"chapterurl", "entryurl", true},
+		{"trans-chapter", "trans-entry", true},
+		{"chapter_series", "entry_series", true},
+		{"chapter_seriesvolume", "entry_seriesvolume", true},
+		{"chapter_number", "entry_number", true},
+		{"chapter_plain", "entry_plain", true},
+		{"title", "4"},
+		{"url", "5"},
+		{"year", "2"},
+		{"page", "6"},
+		{"text", "7"},
+		{"t", "8"},
+	},
+	journal = {
+		{"year", "2"},
+		{"author", "3"},
+		{"chapter", "title,article,4", true},
+		{"chapterurl", "titleurl,articleurl", true},
+		{"trans-chapter", "trans-title,trans-article", true},
+		{"chapter_tlr", "article_tlr", true},
+		{"chapter_series", "article_series", true},
+		{"chapter_seriesvolume", "article_seriesvolume", true},
+		{"chapter_number", "article_number", true},
+		{"chapter_plain", "title_plain,article_plain", true},
+		{"title", "journal,magazine,newspaper,work,5", true},
+		{"trans-title", "trans-journal,trans-magazine,trans-newspaper,trans-work", true},
+		{"url", "6"},
+		{"page", "7"},
+		{"source", "newsagency", true},
+		{"text", "8"},
+		{"t", "9"},
+	},
+}
+
+
+-- Process interally-handled aliases related to type= or type2=. `args` is a table of arguments; `typ` is the value of
+-- type= or type2=; newversion=true if we're dealing with type2=; alias_map is used to keep track of alias mappings
+-- seen.
+local function process_type_aliases(args, typ, newversion, alias_map)
+	local ind = newversion and "2" or ""
+	local deprecated = ine(args.lang)
+	if not type_alias_specs[typ] then
+		local possible_values = {}
+		for possible, _ in pairs(type_alias_specs) do
+			table.insert(possible_values, possible)
+		end
+		table.sort(possible_values)
+		error(("Unrecognized value '%s' for type%s=; possible values are %s"):format(
+			typ, ind, table.concat(possible_values, ",")))
+	end
+
+	for _, alias_spec in ipairs(type_alias_specs[typ]) do
+		local canon, aliases, with_newversion = unpack(alias_spec)
+		if with_newversion or not newversion then
+			canon = canon .. ind
+			aliases = rsplit(aliases, ",")
+			local saw_alias = nil
+			for _, alias in ipairs(aliases) do
+				if rfind(alias, "^[0-9]+$") then
+					alias = tonumber(alias)
+					if deprecated then
+						alias = alias - 1
+					end
+				else
+					alias = alias .. ind
+				end
+				if args[alias] then
+					if saw_alias == nil then
+						saw_alias = alias
+					else
+						error(("|%s= and |%s= are aliases; cannot specify a value for both"):format(saw_alias, alias))
+					end
+				end
+			end
+			if saw_alias and (not newversion or type(saw_alias) == "string") then
+				if args[canon] then
+					error(("|%s= is an alias of |%s=; cannot specify a value for both"):format(saw_alias, canon))
+				end
+				args[canon] = args[saw_alias]
+				-- Wipe out the original after copying. This important in case of a param that has general significance
+				-- but has been redefined (e.g. {{quote-av}} redefines number= for the episode number, and
+				-- {{quote-journal}} redefines title= for the chapter= (article). It's also important due to unhandled
+				-- parameter checking.
+				args[saw_alias] = nil
+				alias_map[canon] = saw_alias
+			end
+		end
+	end
 end
 
+
+-- Clone and combine frame's and parent's args while also assigning nil to empty strings. Handle aliases and ignores.
+local function clone_args(direct_args, parent_args)
+	local args = {}
+
+	-- Processing parent args must come first so that direct args override parent args. Note that if a direct arg is
+	-- specified but is blank, it will still override the parent arg (with nil).
+	for pname, param in pairs(parent_args) do
+		-- [[Special:WhatLinksHere/Template:tracking/quote/param/PARAM]]
+		track("param/" .. pname)
+		args[pname] = ine(param)
+	end
+
+	-- Process ignores. The value of `ignore` is a comma-separated list of parameter names to ignore (erase). We need to
+	-- do this before aliases due to {{quote-song}}, which sets chapter= to the value of title= in the direct params and
+	-- sets title= to the value of album= using an alias. If we do the ignores after aliases, we get an error during alias
+	-- processing, saying that title= and its alias album= are both present.
+	local ignores = ine(direct_args.ignore)
+	if ignores then
+		for ignore in rgsplit(ignores, "%s*,%s*") do
+			args[ignore] = nil
+		end
+	end
+
+	local alias_map = {}
+
+	-- Process internally-specified aliases using type= or type2=.
+	local typ = args.type or direct_args.type
+	if typ then
+		process_type_aliases(args, typ, false, alias_map)
+	end
+	local typ2 = args.type2 or direct_args.type2
+	if typ2 then
+		process_type_aliases(args, typ2, true, alias_map)
+	end
+
+	-- Process externally-specified aliases. The value of `alias` is a list of semicolon-separated specs, each of which
+	-- is of the form DEST:SOURCE,SOURCE,... where DEST is the canonical name of a parameter and SOURCE refers to an
+	-- alias. Whitespace is allowed between all delimiters. The order of aliases may be important. For example, for
+	-- {{quote-journal}}, title= contains the article name and is an alias of underlying chapter=, while journal= or
+	-- work= contains the journal name and is an alias of underlying title=. As a result, the title -> chapter alias
+	-- must be specified before the journal/work -> title alias.
+	--
+	-- Whenever we copy a value from argument SOURCE to argument DEST, we record an entry for the pair in alias_map, so
+	-- that when we would display an error message about DEST, we display SOURCE instead.
+	--
+	-- Do alias processing (and ignore and error_if processing) before processing direct_args so that e.g. we can set up
+	-- an alias of title -> chapter and then set title= to something else in the direct args ({{quote-hansard}} does
+	-- this).
+	--
+	-- FIXME: Delete this once we've converted all alias processing to internal.
+	local aliases = ine(direct_args.alias)
+	if aliases then
+		-- Allow and discard a trailing semicolon, to make managing multiple aliases easier.
+		aliases = rsub(aliases, "%s*;$", "")
+		for alias_spec in rgsplit(aliases, "%s*;%s*") do
+			local alias_spec_parts = rsplit(alias_spec, "%s*:%s*")
+			if #alias_spec_parts ~= 2 then
+				error(("Alias spec '%s' should have one colon in it"):format(alias_spec))
+			end
+			local dest, sources = unpack(alias_spec_parts)
+			sources = rsplit(sources, "%s*,%s*")
+			local saw_source = nil
+			for _, source in ipairs(sources) do
+				if rfind(source, "^[0-9]+$") then
+					source = tonumber(source)
+				end
+				if args[source] then
+					if saw_source == nil then
+						saw_source = source
+					else
+						error(("|%s= and |%s= are aliases; cannot specify a value for both"):format(saw_source, source))
+					end
+				end
+			end
+			if saw_source then
+				if args[dest] then
+					error(("|%s= is an alias of |%s=; cannot specify a value for both"):format(saw_source, dest))
+				end
+				args[dest] = args[saw_source]
+				-- Wipe out the original after copying. This important in case of a param that has general significance
+				-- but has been redefined (e.g. {{quote-av}} redefines number= for the episode number, and
+				-- {{quote-journal}} redefines title= for the chapter= (article). It's also important due to unhandled
+				-- parameter checking.
+				args[saw_source] = nil
+				alias_map[dest] = saw_source
+			end
+		end
+	end
+
+	-- Process error_if. The value of `error_if` is a comma-separated list of parameter names to throw an error if seen
+	-- in parent_args (they are params we overwrite in the direct args).
+	local error_ifs = ine(direct_args.error_if)
+	if error_ifs then
+		for error_if in rgsplit(error_ifs, "%s*,%s*") do
+			if ine(parent_args[error_if]) then
+				error(("Cannot specify a value |%s=%s as it would be overwritten or ignored"):format(error_if, ine(parent_args[error_if])))
+			end
+		end
+	end
+	
+	for pname, param in pairs(direct_args) do
+		-- ignore control params
+		if pname ~= "ignore" and pname ~= "alias" and pname ~= "error_if" then
+			args[pname] = ine(param)
+		end
+	end
+
+	return args, alias_map
+end
 
 -- External interface, meant to be called from a template. Replaces {{quote-meta}} and meant to be the primary
 -- interface for {{quote-*}} templates.
@@ -2078,7 +2182,7 @@ function export.quote_t(frame)
 	-- wasteful of memory.
 	local parent_args = frame:getParent().args
 	local cloned_args, alias_map = clone_args(frame.args, parent_args)
-	local deprecated = parent_args.lang
+	local deprecated = ine(parent_args.lang)
 
 	-- First, the "single" params that don't have FOO2 or FOOn versions.
 	local params = {
@@ -2173,7 +2277,7 @@ function export.quote_t(frame)
 		-- numeric params handled below
 
 		-- other params
-		"genre", "format", "medium", "others", "quoted_in", "location", "publisher",
+		"type", "genre", "format", "medium", "others", "quoted_in", "location", "publisher",
 		"original", "by", "version",
 		"note", "note_plain",
 		"other", "source", "platform",
@@ -2184,7 +2288,6 @@ function export.quote_t(frame)
 
 	-- Then the aliases of newversion params (which have FOO2 versions).
 	for _, param12_aliased in ipairs {
-		{"version", "type"},
 		{"role", "roles"},
 		{"role", "speaker"},
 		{"tlr", "translator"},
