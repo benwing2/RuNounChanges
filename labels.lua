@@ -49,7 +49,7 @@ local function fetch_categories(labdata, lang, term_mode)
 		insert_cat(cat)
 	end
 
-	return cat
+	return categories
 end
 
 function export.get_label_info(data)
@@ -167,16 +167,16 @@ function export.get_label_info(data)
 	end
 
 	if data.nocat then
-		data.formatted_categories = ""
+		ret.formatted_categories = ""
 	else
 		local cats = fetch_categories(labdata, data.lang, data.term_mode)
 		for _, cat in ipairs(cats) do
 			table.insert(ret.categories, cat)
 		end
 		if #ret.categories == 0 then
-			data.formatted_categories = ""
+			ret.formatted_categories = ""
 		else
-			data.formatted_categories = require(utilities_module).format_categories(ret.categories, data.lang,
+			ret.formatted_categories = require(utilities_module).format_categories(ret.categories, data.lang,
 				data.sort, nil, force_cat)
 		end
 	end
@@ -257,6 +257,9 @@ function export.finalize_data(labels)
 				data.display = data.display or label
 				for _, alias in ipairs(data.aliases) do
 					aliases[alias] = data
+				end
+				if data.Wikipedia == true or data.glossary == true then
+					data.alias_of = label
 				end
 				data.aliases = nil
 			end
