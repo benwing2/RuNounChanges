@@ -180,6 +180,7 @@ local param_mods = {
 		item_dest = "gloss",
 	},
 	gloss = {},
+	alt = {},
 	tr = {},
 	ts = {},
 	sc = {
@@ -267,17 +268,16 @@ local function parse_annotated_text(val, fullname, explicit_gloss)
 	-- default, and then we do script detection and again wrap the text in the same CSS, which increases the size even
 	-- more.)
 	if val_should_not_be_parsed_for_annotations(val) then
-		return {text = val, noscript = true}
+		return {text = val, link = val, noscript = true}
 	end
 	local function generate_obj(text, parse_err_or_paramname)
 		local obj = {}
-		if text:find(":[^ ]") then
-			local actual_text, textlang = require(parse_utilities_module).parse_term_with_lang(text,
+		if text:find(":[^ ]") or text:find("%[%[") then
+			obj.text, obj.lang, obj.link, obj.display = require(parse_utilities_module).parse_term_with_lang(text,
 				parse_err_or_paramname)
-			obj.text = actual_text
-			obj.lang = textlang
 		else
 			obj.text = text
+			obj.link = text
 		end
 		return obj
 	end
@@ -362,26 +362,29 @@ local function parse_multivalued_annotated_text(val, fullname, explicit_gloss, e
 	-- inline modifiers and other brackets may protect a semicolon from being interpreted as a delimiter);
 	-- (b) ampersands (which may indicate HTML entities, which protect a semicolon from being interpreted as a
 	-- delimiter); and (c) colons not followed by a space (which may indicate a language prefix).
-	local function generate_obj(text, parse_err_or_paramname)
+	local function generate_obj(text, parse_err_or_paramname, no_undo_html_entity_replacement)
 		local obj = {}
-		if text:find(":[^ ]") then
-			local actual_text, textlang = require(parse_utilities_module).parse_term_with_lang(text,
+		if text:find(":[^ ]") or text:find("%[%[") then
+			obj.text, obj.lang, obj.link, obj.display = require(parse_utilities_module).parse_term_with_lang(text,
 				parse_err_or_paramname)
-			obj.text = actual_text
-			obj.lang = textlang
 		else
 			obj.text = text
+			obj.link = text
 		end
-		obj.text = undo_html_entity_replacement(obj.text)
+		if not no_undo_html_entity_replacement then
+			obj.text = undo_html_entity_replacement(obj.text)
+			obj.link = undo_html_entity_replacement(obj.link)
+			obj.display = obj.display and undo_html_entity_replacement(obj.display) or nil
+		end
 		return obj
 	end
 
 	-- Optimization #1: No semicolons or angle brackets (indicating inline modifiers).
 	if not val:find("[<;]") then
 		if val_should_not_be_parsed_for_annotations(val) then
-			return {{text = val, noscript = true}}
+			return {{text = val, link = val, noscript = true}}
 		else
-			return {generate_obj(val, fullname)}
+			return {generate_obj(val, fullname, "no undo html entity replacement")}
 		end
 	end
 
@@ -392,9 +395,9 @@ local function parse_multivalued_annotated_text(val, fullname, explicit_gloss, e
 		local entity_objs = {}
 		for entity in rgsplit(val, "%s*;%s*") do
 			if val_should_not_be_parsed_for_annotations(entity) then
-				table.insert(entity_objs, {{text = entity, noscript = true}})
+				table.insert(entity_objs, {text = entity, link = entity, noscript = true})
 			else
-				table.insert(entity_objs, generate_obj(entity, fullname))
+				table.insert(entity_objs, generate_obj(entity, fullname, "no undo html entity replacement"))
 			end
 		end
 		return entity_objs
@@ -421,11 +424,11 @@ local function parse_multivalued_annotated_text(val, fullname, explicit_gloss, e
 		{{"[" .. TEMP_LBRAC, "]" .. TEMP_RBRAC}, {"(", ")"}, {"{", "}"}, {"<" .. TEMP_LT, ">" .. TEMP_GT}},
 		true)
 	if type(entity_runs) == "string" then
+		local undo_val = undo_html_entity_replacement(val)
 		-- Parse error due to unbalanced delimiters. Don't throw an error here; instead, don't attempt to parse off
 		-- any annotations, but return the value directly, maybe allowing script tagging (not allowing it if it appears
 		-- the text is already script-tagged).
-		return {{text = undo_html_entity_replacement(val),
-			noscript = not not val_should_not_be_parsed_for_annotations(val)}}
+		return {{text = undo_val, link = undo_val, noscript = not not val_should_not_be_parsed_for_annotations(val)}}
 	end
 
 	-- Split on semicolon, possibly surrounded by whitespace.
@@ -451,7 +454,7 @@ local function parse_multivalued_annotated_text(val, fullname, explicit_gloss, e
 		-- caused by wrapping an argument in {{l|...}}, {{lang|...}} or similar. Also exclude URL's from being parsed
 		-- as having language code prefixes. This works analogously to parse_annotated_text(); see there for more.
 		if val_should_not_be_parsed_for_annotations(oneval) then
-			table.insert(entity_objs, {text = oneval, noscript = true})
+			table.insert(entity_objs, {text = oneval, link = oneval, noscript = true})
 		else
 			local obj
 			if #entity_group > 1 then
@@ -495,8 +498,16 @@ local function format_annotated_text(textobj, tag_text, tag_gloss)
 	if not textobj then
 		return nil
 	end
-	local text = textobj.text
-	local tr, ts, f, gloss = textobj.tr, textobj.ts, textobj.f, textobj.gloss
+	local text, link, display = textobj.text, textobj.link, textobj.display
+	local tr, ts, f, gloss, alt = textobj.tr, textobj.ts, textobj.f, textobj.gloss, textobj.alt
+
+	if alt then
+		if link:find("%[%[") or link:find("%]%]") then
+			errmsg = ("Can't currently handled embedded links in '%s', with <alt:...> text '%s'"):format(link, alt)
+			error(require(parse_utilities_module).escape_wikicode(errmsg))
+		end
+		text = ("[[%s|%s]]"):format(link, alt)
+	end
 
 	-- See above for `noscript`, meaning HTML was found in the text value, probably generated using {{lang|...}}.
 	-- {{lang}} already script-tags the text and processes embedded language links, so we don't want to do it again (in
@@ -1156,9 +1167,12 @@ function export.source(args, alias_map)
 			if #authorobjs == 1 then
 				if is_anonymous(authorobjs[1].text) then
 					authorobjs[1].text = "anonymous author"
+					authorobjs[1].link = "anonymous author"
 				end
 				if authorlink then
 					authorobjs[1].text = make_author_with_url(authorobjs[1].text, "|" .. author_fullname,
+						authorlink, "|" .. authorlink_fullname)
+					authorobjs[1].link = make_author_with_url(authorobjs[1].link, "|" .. author_fullname,
 						authorlink, "|" .. authorlink_fullname)
 				end
 				if authorobjs[1].gloss and trans_authorlink then
@@ -1407,6 +1421,7 @@ function export.source(args, alias_map)
 			-- Must be a chapter name
 			local chapterobj = parse_annotated_text(chap, chap_fullname, a("trans-" .. param))
 			chapterobj.text = make_chapter_with_url(chapterobj.text)
+			chapterobj.link = make_chapter_with_url(chapterobj.link)
 			formatted = (textual_prefix or "") .. format_annotated_text(chapterobj) .. (textual_suffix or "")
 		end
 
@@ -1611,6 +1626,9 @@ function export.source(args, alias_map)
 					end
 					local obj = sgobj or plobj
 					obj.text = val
+					if obj.link:find("^!") then
+						obj.link = obj.link:gsub("^!", "")
+					end
 					val = format_annotated_text(obj)
 					numspec = desc .. " " .. val
 				end
