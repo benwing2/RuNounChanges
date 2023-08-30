@@ -112,14 +112,13 @@ local function process_usex_text(data)
 	local normsc = data.normsc
 	local subst = data.subst
 	local quote = data.quote
-	local pagename = data.pagename
-	local namespace = data.namespace
 	local leftq = data.q
 	local rightq = data.qq
 	local ref = data.ref
 	local nocat = data.nocat
 	local categories = data.categories
 	local example_type = data.example_type
+	local title = data.title
 
 	if normsc == "auto" then
 		normsc = nil
@@ -221,6 +220,9 @@ local function process_usex_text(data)
 			if title.nsText ~= "Citations" then
 				ok_to_add_cat = true
 			else
+				-- Here we don't want to use the subpage text because we check [[Citations:foo]] against [[foo]] and
+				-- if there's a slash in what follows 'Citations:', we want to check against the full page with the
+				-- slash.
 				local mainspace_title = mw.title.new(title.text)
 				if mainspace_title and mainspace_title.exists then
 					ok_to_add_cat = true
@@ -336,7 +338,6 @@ Takes a single object `data`, containining the following fields:
 * `brackets`: If specified, show a bracket at the end (used with brackets= in {{tl|quote-*}} templates, which show the
               bracket at the beginning, to indicate a mention rather than a use).
 * `class`: Additional CSS class surrounding the entire formatted text.
-* `noenum`: If specified, add a newline and colon before the formatted output.
 ]==]
 
 function export.format_usex(data)
@@ -349,9 +350,6 @@ function export.format_usex(data)
 	local brackets = data.brackets
 	local footer = data.footer
 	local sortkey = data.sortkey
-	-- Here we don't want to use the subpage text because we check [[Citations:foo]] against [[foo]] and if there's
-	-- a slash in what follows 'Citations:', we want to check against the full page with the slash.
-	local pagename = data.pagename or curtitle.text
 
 	local title
 	if data.pagename then -- for testing, doc pages, etc.
@@ -385,7 +383,7 @@ function export.format_usex(data)
 	local categories = {}
 
 	local usex_obj = process_usex_text {
-		lang = data.lang,
+		lang = lang,
 		termlang = termlang,
 		usex = data.usex,
 		sc = data.sc,
@@ -433,8 +431,9 @@ function export.format_usex(data)
 	elseif translation then
 		translation = span(css_classes.translation, translation)
 	else
-		local langcode = termlang:getNonEtymologicalCode()
-		if langcode ~= "en" and langcode ~= "mul" and langcode ~= "und" then
+		local langcode = lang:getNonEtymologicalCode()
+		local origlangcode = data.origlang and data.origlang:getNonEtymologicalCode()
+		if langcode ~= "en" and langcode ~= "mul" and langcode ~= "und" and origlangcode ~= "en" then
 			-- add trreq category if translation is unspecified and language is not english, translingual or
 			-- undetermined
 			table.insert(categories, ("Requests for translations of %s %ss"):format(termlang:getCanonicalName(),
@@ -475,7 +474,7 @@ function export.format_usex(data)
 
 		if orig_obj then
 			ins(" (")
-			ins(original_text .. orig_obj.usex)
+			ins("[" .. original_text .. orig_obj.usex .. "]")
 			insert_annotations(orig_obj)
 			ins(")")
 		end
@@ -504,7 +503,7 @@ function export.format_usex(data)
 	else
 		local any_usex_annotations = usex_obj.tr or usex_obj.ts or usex_obj.norm or translation or lit
 		local any_orig_annotations = orig_obj and (orig_obj.tr or orig_obj.ts or orig_obj.norm)
-		if any_usex_annotations or any_orig_annotations or source or footer then
+		if any_usex_annotations or orig_obj or source or footer then
 			ins("<dl>")
 
 			local function insert_dd(text)
@@ -523,7 +522,7 @@ function export.format_usex(data)
 			insert_dd(usex_obj.ts)
 
 			if orig_obj then
-				insert_dd(original_text .. orig_obj.usex)
+				insert_dd("[" .. original_text .. orig_obj.usex .. "]")
 				if any_orig_annotations then
 					ins("<dd><dl>")
 					insert_dd(orig_obj.norm)
@@ -563,12 +562,7 @@ function export.format_usex(data)
 		class = class .. " " .. data.class
 	end
 	result = (data.inline and span or div)(class, result)
-	result = result .. require("Module:utilities").format_categories(categories, lang, sortkey)
-	if data.noenum then
-		track("noenum")
-		result = "\n: " .. result
-	end
-	return result
+	return result .. require("Module:utilities").format_categories(categories, lang, sortkey)
 end
 
 return export
