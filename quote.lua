@@ -195,24 +195,22 @@ local param_mods = {
 				prefix = ""
 				val = arg
 			end
-			if prefix == "" then
-				return {
-					val = val
-				}
-			end
-			local qualspec, sc = rmatch(prefix, "^(.*)/(.-)$")
+			local tags, sc = rmatch(prefix, "^(.*)/(.-)$")
 			if sc then
 				sc = require(scripts_module).getByCode(sc, parse_err)
 			else
-				qualspec = prefix
+				tags = prefix
 			end
-			local quals = split_on_comma(qualspec)
-			for i, qual in ipairs(quals) do
-				local obj = require(languages_module).getByCode(qual, nil, "allow etym")
-				if not obj then
-					obj = require(scripts_module).getByCode(qual)
+			local quals
+			if tags ~= "" then
+				quals = split_on_comma(tags)
+				for i, qual in ipairs(quals) do
+					local obj = require(languages_module).getByCode(qual, nil, "allow etym")
+					if not obj then
+						obj = require(scripts_module).getByCode(qual)
+					end
+					quals[i] = obj or qual
 				end
-				quals[i] = obj or qual
 			end
 			return {
 				quals = quals,
@@ -591,7 +589,7 @@ local function format_annotated_text(textobj, tag_text, tag_gloss)
 				if not sc and ff.quals then
 					local qual = ff.quals[1]
 					if type(qual) == "string" then
-						sc = require(scripts_module).findBestScriptWithoutLang(ff.val)
+						-- do nothing; we'll do script detection farther down
 					elseif qual:hasType("script") then
 						sc = qual
 					else -- language
@@ -600,6 +598,7 @@ local function format_annotated_text(textobj, tag_text, tag_gloss)
 					end
 				end
 				lang = lang or require(languages_module).getByCode("und", true)
+				sc = sc or require(scripts_module).findBestScriptWithoutLang(ff.val)
 				local val = require(links_module).embedded_language_links(
 					{
 						term = ff.val,
@@ -608,6 +607,9 @@ local function format_annotated_text(textobj, tag_text, tag_gloss)
 					},
 					false
 				)
+				if lang:getCode() ~= "und" or sc:getCode() ~= "Latn" then
+					val = require(script_utilities_module).tag_text(val, lang, sc)
+				end
 				local qual_prefix
 				if ff.quals then
 					for i, qual in ipairs(ff.quals) do
