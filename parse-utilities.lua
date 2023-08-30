@@ -422,15 +422,45 @@ function export.make_parse_err(arg_gloss)
 end
 
 
+-- Parse a term that may include a link '[[LINK]]' or a two-part link '[[LINK|DISPLAY]]'. FIXME: Doesn't currently
+-- handle embedded links like '[[FOO]] [[BAR]]' or [[FOO|BAR]] [[BAZ]]' or '[[FOO]]s'; if they are detected, it returns
+-- the term unchanged and `nil` for the display form.
+local function parse_bracketed_term(term, parse_err)
+	local inside = term:match("^%[%[(.*)%]%]$")
+	if inside then
+		if inside:find("%[%[") or inside:find("%]%]") then
+			-- embedded links, e.g. '[[FOO]] [[BAR]]'; FIXME: we should process them properly
+			return term, nil
+		end
+		local parts = rsplit(inside, "|")
+		if #parts > 2 then
+			parse_err("Saw more than two parts inside a bracketed link")
+		end
+		return unpack(parts)
+	end
+	return term, nil
+end
+
+
 -- Parse a term that may have a language code preceding it (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). Return
 -- two arguments, the term minus the language code and the language object corresponding to the language code.
 -- Etymology-only languages are allowed. This function also correctly handles Wikipedia prefixes (e.g. 'w:Abatemarco'
--- or 'w:it:Colle Val d'Elsa') and converts them into two-part links, with the display form not including the Wikipedia
--- prefix. `parse_err` should be a function of one or two arguments to display an error (the second argument is the
--- number of stack frames to ignore when calling error(); if you declare your error function with only one argument,
--- things will still work fine).
-function export.parse_term_with_lang(term, parse_err_or_paramname)
-	parse_err = type(parse_err_or_paramname) == "function" and parse_err_or_paramname or
+-- or 'w:it:Colle Val d'Elsa' or 'lw:ru:Филарет') and converts them into two-part links, with the display form not
+-- including the Wikipedia prefix unless it was explicitly specified using a two-part link as in
+-- 'lw:ru:[[Филарет (Дроздов)|Митрополи́т Филаре́т]]'. The difference between 'w:' ("Wikipedia") and 'lw:' ("Wikipedia
+-- link") is that the latter requires a language code and returns the corresponding language object. Returns four
+-- objects, `term`, `language_code`, `link` and `display`, where if a two-part link is given or needs to be generated
+-- (as is the case with Wikipedia prefixes), it is separated into link and display forms (otherwise `link` is the same
+-- as `term` and `display` is nil). (NOTE: Embedded links are not correctly handled currently. If an embedded link is
+-- detected, the whole term is returned as the link part, and the display part is nil. If you construct your own link
+-- from the link and display parts, you must check for this.)
+--
+-- `parse_err_or_paramname` is an optional function of one or two arguments to display an error, or a string naming a
+-- parameter to display in the error message. If omitted, a function is generated based off of `term`. (The second
+-- argument to the function is the number of stack frames to ignore when calling error(); if you declare your error
+-- function with only one argument, things will still work fine).
+function export.parse_term_with_lang(term, parse_err_or_paramname, return_parts)
+	local parse_err = type(parse_err_or_paramname) == "function" and parse_err_or_paramname or
 		parse_err_or_paramname and export.make_parse_err(("%s=%s"):format(parse_err_or_paramname, term)) or
 		export.make_parse_err(term)
 	-- Parse off an initial language code (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). First check for Wikipedia
@@ -441,16 +471,16 @@ function export.parse_term_with_lang(term, parse_err_or_paramname)
 		termlang, actual_term = term:match("^(w):([^ ].*)$")
 	end
 	if termlang then
-		local wikipedia_prefix = foreign_wikipedia and "w:" .. foreign_wikipedia or "w"
-		if actual_term:find("[%[%]]") then
-			parse_err("Cannot have brackets following a Wikipedia (w:...) link; place the Wikipedia link inside the brackets")
+		local wikipedia_prefix = foreign_wikipedia and "w:" .. foreign_wikipedia .. ":" or "w:"
+		local link, display = parse_bracketed_term(actual_term, parse_err)
+		if link:find("%[%[") or display and display:find("%[%[") then
+			-- FIXME, this should be handlable with the right parsing code
+			parse_err("Cannot have embedded brackets following a Wikipedia (w:... or lw:...) link; expand the term to a fully bracketed term w:[[LINK|DISPLAY]] or similar")
 		end
-		term = ("[[%s:%s|%s]]"):format(wikipedia_prefix, actual_term, actual_term)
-		if termlang == "lw" then
-			return term, require("Module:languages").getByCode(foreign_wikipedia, parse_err, "allow etym")
-		else
-			return term, nil
-		end
+		local lang = termlang == "lw" and require("Module:languages").getByCode(foreign_wikipedia, parse_err,
+			"allow etym") or nil
+		local prefixed_link = wikipedia_prefix .. link
+		return ("[[%s|%s]]"):format(prefixed_link, display or link), lang, prefixed_link, display
 	end
 
 	-- Wiktionary language codes have at least two lowercase letters followed possibly by lowercase letters and/or
@@ -465,7 +495,8 @@ function export.parse_term_with_lang(term, parse_err_or_paramname)
 		termlang = require("Module:languages").getByCode(termlang, parse_err, "allow etym")
 		term = actual_term
 	end
-	return term, termlang
+	local link, display = parse_bracketed_term(term)
+	return term, termlang, link, display
 end
 
 
