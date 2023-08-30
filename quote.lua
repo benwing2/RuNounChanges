@@ -1113,24 +1113,38 @@ function export.source(args, alias_map)
 		return rfind(val, "^[Aa]nonymous$") or rfind(val, "^[Aa]non%.?$")
 	end
 
-	-- Add a formatted author (whose values may be specified using `author_param` or, for compatibility purposes, split
+	-- Add a formatted author (whose values may be specified using `author` or, for compatibility purposes, split
 	-- among various parameters):
-	-- * `author_param` is the base parameter name of the author param (e.g. "author" or "2ndauthor");
-	-- * `trans_author_param` is the corresponding base name holding the gloss/translation (e.g. "trans-author"), or
-	--   nil if no such parameter exists;
-	-- * `authorlink` is the base parameter name holding the Wikipedia link of the author(s) in `author_param`;
-	-- * `trans_authorlink_param` is the base parameter name holding the Wikipedia link of the gloss/translation of
-	--   the author's name (e.g. "trans-authorlink"), or nil if no such parameter exists;
-	-- * `first_param` is the base parameter name holding the first name of the author;
-	-- * `trans_first_param` is the corresponding base name holding the gloss/translation of the first name (e.g.
-	--   "trans-first"), or nil if no such parameter exists;
-	-- * `last_param` is the base parameter name holding the last name of the author;
-	-- * `trans_last_param` is the corresponding base name holding the gloss/translation of the last name (e.g.
-	--   "trans-last"), or nil if no such parameter exists.
-	local function add_author(author, author_fullname, trans_author, trans_author_fullname,
-		authorlink, trans_authorlink, trans_authorlink_fullname, first, trans_first, last, trans_last)
-		local function make_author_with_url(txt, authorlink)
+	-- * `author` is the value of the author param (e.g. "author", "author2" or "2ndauthor"), and `author_fullname` is
+	--   the full parameter name holding that value;
+	-- * `trans_author` is the optional value of the param holding the gloss/translation of the author, and
+	--   `trans_author_fullname` is the full parameter name holding that value (or nil for no such parameter);
+	-- * `authorlink` is the value of the authorlink param, which holds the Wikipedia link of the author(s) in `author`,
+	--    and `authorlink_fullname` is the full parameter name holding that value;
+	-- * `trans_authorlink` is the optional value of the param holding the Wikipedia link of the gloss/translation of
+	--    the author, and `trans_authorlink_fullname` is the full parameter name holding that value (or nil for no such
+	--    parameter);
+	-- * `first` is the value of the parameter holding the first name of the author, and `first_fullname` is the full
+	--    parameter name holding that value;
+	-- * `trans_first` is the value of the corresponding parameter holding the gloss/translation of the first name
+	--    (e.g. "trans-first"), and `trans_first_fullname` is the full parameter name holding that value (or nil for
+	--    no such parameter);
+	-- * `last` is the value of the parameter holding the last name of the author, and `last_fullname` is the full
+	--    parameter name holding that value;
+	-- * `trans_last` is the value of the corresponding parameter holding the gloss/translation of the last name
+	--    (e.g. "trans-last"), and `trans_last_fullname` is the full parameter name holding that value (or nil for
+	--    no such parameter).
+	local function add_author(author, author_fullname, trans_author, trans_author_fullname, authorlink,
+		authorlink_fullname, trans_authorlink, trans_authorlink_fullname, first, first_fullname, trans_first,
+		trans_first_fullname, last, last_fullname, trans_last, trans_last_fullname)
+		local function make_author_with_url(txt, txtparam, authorlink, authorlink_param)
 			if authorlink then
+				if authorlink:find("%[%[") then
+					error(("Can't specify links in |%s=%s"):format(authorlink_param, authorlink))
+				end
+				if txt:find("%[%[") then
+					error(("Can't specify links in %s=%s"):format(txtparam, txt))
+				end
 				return "[[w:" .. authorlink .. "|" .. txt .. "]]"
 			else
 				return txt
@@ -1143,9 +1157,13 @@ function export.source(args, alias_map)
 				if is_anonymous(authorobjs[1].text) then
 					authorobjs[1].text = "anonymous author"
 				end
-				authorobjs[1].text = make_author_with_url(authorobjs[1].text, authorlink)
+				if authorlink then
+					authorobjs[1].text = make_author_with_url(authorobjs[1].text, "|" .. author_fullname,
+						authorlink, "|" .. authorlink_fullname)
+				end
 				if authorobjs[1].gloss and trans_authorlink then
-					authorobjs[1].gloss = make_author_with_url(authorobjs[1].gloss, trans_authorlink)
+					authorobjs[1].gloss = make_author_with_url(authorobjs[1].gloss,
+						("<t:...> in |%s"):format(author_fullname), trans_authorlink, "|" .. trans_author_fullname)
 				end
 				add(format_multivalued_annotated_text(authorobjs))
 			elseif trans_authorlink then
@@ -1157,7 +1175,11 @@ function export.source(args, alias_map)
 				-- with |authorlink=Max and Harvey. For this we have to generate the entire text and link it
 				-- all.
 				local formatted_text = format_multivalued_annotated_text(authorobjs)
-				add(make_author_with_url(formatted_text, authorlink))
+				if authorlink then
+					formatted_text = make_author_with_url(formatted_text, "|" .. author_fullname, authorlink,
+						"|" .. authorlink_fullname)
+				end
+				add(formatted_text)
 			end
 		else
 			-- Author separated into first name + last name. We don't currently support non-Latin-script
@@ -1167,7 +1189,10 @@ function export.source(args, alias_map)
 			else
 				author = last
 			end
-			author = make_author_with_url(author, authorlink)
+			if authorlink then
+				local authorparam = first and ("|%s |%s"):format(first_fullname, last_fullname) or "|" .. last_fullname
+				author = make_author_with_url(author, authorparam, authorlink, authorlink_fullname)
+			end
 			local trans_author
 			if trans_last then
 				if trans_first then
@@ -1175,7 +1200,12 @@ function export.source(args, alias_map)
 				else
 					trans_author = trans_last
 				end
-				trans_author = make_author_with_url(trans_author, trans_authorlink)
+				if trans_authorlink then
+					local trans_authorparam = trans_first and
+						("|%s |%s"):format(trans_first_fullname, trans_last_fullname) or "|" .. trans_last_fullname
+					trans_author = make_author_with_url(trans_author, trans_authorparam, trans_authorlink,
+						trans_authorlink_fullname)
+				end
 			end
 			add(author)
 			if trans_author then
@@ -1220,6 +1250,11 @@ function export.source(args, alias_map)
 
 	-- Find maximum indexed author or last name.
 	local maxind = math.max(args.author.maxindex, args.last.maxindex)
+	-- Include max index of ancillary params so we get an error message about their use without the primary params.
+	local ancillary_params = { "trans-author", "authorlink", "trans-authorlink", "first", "trans-first", "trans-last" }
+	for _, ancillary in ipairs(ancillary_params) do
+		maxind = math.max(maxind, args[ancillary].maxindex)
+	end
 
 	for i = 1, maxind do
 		local ind = i == 1 and "" or i
@@ -1227,9 +1262,16 @@ function export.source(args, alias_map)
 		local last = args.last[i]
 		if args.author[i] or args.last[i] then
 			add_author(args.author[i], "author" .. ind, args["trans-author"][i], "trans-author" .. ind,
-				args.authorlink[i], args["trans-authorlink"][i], "trans-authorlink" .. ind,
-				args.first[i], args["trans-first"][i], args.last[i], args["trans-last"][i])
+				args.authorlink[i], "authorlink" .. ind, args["trans-authorlink"][i], "trans-authorlink" .. ind,
+				args.first[i], "first" .. ind, args["trans-first"][i], "trans-first" .. ind,
+				args.last[i], "last" .. ind, args["trans-last"][i], "trans-last" .. ind)
 			sep = ", "
+		else
+			for _, cant_have in ipairs(ancillary_params) do
+				if args[cant_have][i] then
+					error(("Can't have |%s%s= without |author%s= or |last%s="):format(cant_have, ind, ind, ind))
+				end
+			end
 		end
 	end
 
@@ -1891,12 +1933,18 @@ function export.source(args, alias_map)
 
 	-- Add the newversion author(s).
 	if args["2ndauthor"] or args["2ndlast"] then
-		add_author(args["2ndauthor"], "2ndauthor", nil, nil, args["2ndauthorlink"], nil, nil,
-			args["2ndfirst"], nil, args["2ndlast"], nil)
+		add_author(args["2ndauthor"], "2ndauthor", nil, nil, args["2ndauthorlink"], "2ndauthorlink", nil, nil,
+			args["2ndfirst"], "2ndfirst", nil, nil, args["2ndlast"], "2ndlast", nil, nil)
 		sep = ", "
 		-- Needed for param fetching in add_authorlabel().
 		get_full_paramname = make_get_full_paramname("2")
 		add_authorlabel()
+	else
+		for _, cant_have in ipairs { "2ndauthorlink", "2ndfirst" } do
+			if args[cant_have] then
+				error(("Can't have |%s= without |2ndauthor= or |2ndlast="):format(cant_have))
+			end
+		end
 	end
 
 	-- Display all the text that comes after the author, for the "newversion" section.
