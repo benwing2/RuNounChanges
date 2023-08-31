@@ -2,7 +2,7 @@ local export = {}
 
 local m_languages = require("Module:languages")
 local table_module = "Module:table"
-local usex_module = "Module:User:Benwing2/usex"
+local usex_module = "Module:usex"
 
 local rsplit = mw.text.split
 local rfind = mw.ustring.find
@@ -68,7 +68,6 @@ function export.usex_t(frame)
 
 		-- Formatting parameters
 		["inline"] = {type = "boolean"},
-		["noenum"] = {type = "boolean"},
 		["brackets"] = {type = "boolean"},
 
 		-- Categorization parameters
@@ -85,6 +84,7 @@ function export.usex_t(frame)
 
 	local args = require("Module:parameters").process(frame:getParent().args, params)
 
+	local langparam = compat and "lang" or 1
 	local lang = m_languages.getByCode(args[langparam] or "und", langparam, "allow etym")
 	local sc = args.sc
 	sc = sc and require("Module:scripts").getByCode(sc, "sc") or nil
@@ -136,7 +136,6 @@ function export.usex_t(frame)
 		transliteration = args.tr,
 		transcription = args.ts,
 		normalization = args.norm,
-		noenum = args.noenum,
 		inline = args.inline or iargs.inline,
 		ref = args.ref,
 		quote = iargs.quote,
