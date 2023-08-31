@@ -73,8 +73,10 @@ the following fields are recognized in `data` (all are optional except as marked
 
 * `lang`: Language object of text; may be an etymology language (REQUIRED).
 * `termlang`: The language object of the term being illustrated, which may be different from the language of the main
-              text and should never be based off of the original text. Used for categories. May be an etymology
-			  language (REQUIRED).
+			  quotation text and should always be based off of the main text, not the original text. Used for
+			  categories. May be an etymology language (REQUIRED).
+* `quotelang`: The language object of the main quotation, which should always be based off of the main quotation text,
+			   not the original text. Used for categories. May be an etymology language (REQUIRED).
 * `usex`: Text of usex/quotation.
 * `sc`: Script object of text.
 * `tr`: Manual transliteration.
@@ -104,6 +106,7 @@ On output, return an object with four fields:
 local function process_usex_text(data)
 	local lang = data.lang
 	local termlang = data.termlang
+	local quotelang = data.quotelang
 	local usex = data.usex
 	local sc = data.sc
 	local tr = data.tr
@@ -180,7 +183,8 @@ local function process_usex_text(data)
 
 		-- If there is still no transliteration, then add a cleanup category.
 		if not tr and needs_translit[langcode] then
-			table.insert(categories, "Requests for transliteration of " .. termlang:getCanonicalName() .. " terms")
+			table.insert(categories, ("Requests for transliteration of %s %ss"):format(quotelang:getCanonicalName(),
+				example_type))
 		end
 	end
 	if tr then
@@ -229,13 +233,15 @@ local function process_usex_text(data)
 				end
 			end
 			if ok_to_add_cat then
-				table.insert(categories, termlang:getCanonicalName() .. " terms with " .. example_type .. "s")
+				-- Categories beginning with the language name should use non-etymology-only languages as that's what the poscat
+				-- system requires, but 'Requests for' categories can use etymology-only languages.
+				table.insert(categories, ("%s terms with %ss"):format(termlang:getNonEtymologicalName(), example_type))
 			end
 		end
 	else
 		if tr then
-			table.insert(categories, "Requests for native script in " .. termlang:getCanonicalName() ..
-				example_type .. "s")
+			table.insert(categories, ("Requests for native script in %s %ss"):format(quotelang:getCanonicalName(),
+				example_type))
 		end
 		
 		-- TODO: Trigger some kind of error here
@@ -385,6 +391,7 @@ function export.format_usex(data)
 	local usex_obj = process_usex_text {
 		lang = lang,
 		termlang = termlang,
+		quotelang = lang,
 		usex = data.usex,
 		sc = data.sc,
 		tr = data.transliteration,
@@ -407,6 +414,7 @@ function export.format_usex(data)
 		-- Any categories derived from the original text should use the language of the main text or the term inside it,
 		-- not the language of the original text.
 		termlang = termlang,
+		quotelang = lang,
 		usex = data.orig,
 		sc = data.origsc,
 		tr = data.origtr,
@@ -426,7 +434,7 @@ function export.format_usex(data)
 
 	if translation == "-" then
 		translation = nil
-		table.insert(categories, ("%s %ss with omitted translation"):format(termlang:getNonEtymologicalName(),
+		table.insert(categories, ("%s %ss with omitted translation"):format(lang:getNonEtymologicalName(),
 			example_type))
 	elseif translation then
 		translation = span(css_classes.translation, translation)
@@ -436,7 +444,7 @@ function export.format_usex(data)
 		if langcode ~= "en" and langcode ~= "mul" and langcode ~= "und" and origlangcode ~= "en" then
 			-- add trreq category if translation is unspecified and language is not english, translingual or
 			-- undetermined
-			table.insert(categories, ("Requests for translations of %s %ss"):format(termlang:getCanonicalName(),
+			table.insert(categories, ("Requests for translations of %s %ss"):format(lang:getCanonicalName(),
 				example_type))
 			if quote then
 				translation = "<small>(please [[WT:Quotations#Adding translations to quotations|add an English translation]] of this "
