@@ -13,6 +13,10 @@ local m_table = require("Module:table")
 local rfind = mw.ustring.find
 local rsplit = mw.text.split
 local rsubn = mw.ustring.gsub
+local u = mw.ustring.char
+
+local TEMP_DOUBLE_LBRACE = u(0xFFF0)
+local TEMP_DOUBLE_RBRACE = u(0xFFF1)
 
 
 -- version of rsubn() that discards all but the first return value
@@ -80,6 +84,8 @@ local function generate_inline_modifiers(ty)
 	''Pjotr Čajkóvskij''. Include Wikipedia links as necessary using {{tl|w}} or directly using
 	{{code||[[w:LINK|NAME]]}}.]=]},
 	{"gloss", [=[Alias for <code><t:...></code>. Generally, <code><t:...></code> is preferred.]=]},
+	{"alt", [=[Display form of the parameter or entity in question. Generally this isn't necessary, as you can always
+	use a two-part link such as {{code||[[Dennis Robertson (economist)|D.H. Robertson]]}}.]=]},
 	{"tr", [=[Transliteration of the parameter or entity in question, if not in Latin script. See <code><t:...></code>
 	above for when to use transliterations vs. translations for names of people. If a language code prefix is given and
 	the text is in a non-Latin script, an automatic transliteration will be provided if the language supports it and
@@ -87,10 +93,37 @@ local function generate_inline_modifiers(ty)
 	{"ts", [=[Transcription of the parameter or entity in question, if not in Latin script and in a language where
 	the transliteration is markedly different from the actual pronunciation (e.g. Akkadian or Tibetan). Do not use this
 	merely to supply an IPA pronunciation. If supplied, this is shown between slashes, e.g.
-	<code>[<var>transliteration</var> /<var>transcription</var>/, <var>translation</var>]</code>.]=]},
+	<code>[``transliteration`` /``transcription``/, ``translation``]/code>.]=]},
 	{"sc", [=[Script code of the text of the parameter or entity, if not in a Latn script. See [[Wiktionary:Scripts]].
 	It is rarely necessary to specify this, as the script code is autodetected based on the text (usually
 	correctly).]=]},
+	{"f", [=["Foreign" version of the parameter or entity, i.e. the version in a different script from that of the
+	value itself. This comes in several variants:
+	# {<f:``foreign``>}: The simplest variant. The foreign text will have language-independent script detection
+	  applied to it and will be shown as-is, inside brackets before the translation. It is generally not recommended to
+	  use this format as the significance of the text may not be clear; use the variant below with a tag.
+	# {<f:/``script``:``foreign``>}: Same as previous except that a script code is explicitly given, in case the
+	  autodetection doesn't work right.
+	# {<f:``tag``:``foreign``>}: Include a tag to be displayed before the foreign text. The tag can be a language
+	  code (including etymology languages), a script code, or arbitrary text. If it is recognized as a language code,
+	  the canonical name of the language will be displayed as the tag and the language will be used to do script
+	  detection of the foreign text, based on the allowable scripts of the language. If the tag is recognized as a
+	  script code, it will be used as the foreign text's script when displaying the text, and the script's canonical
+	  name will be displayed as the tag. Otherwise, the tag can be arbitrary text (e.g. a transliteration system such
+	  as `Pinyin`), and will be displayed as-is, with language-independent script detection done on the foreign text.
+	# {<f:``tag``/``script``:``foreign``>}: Same as previous except that a script code is explicitly given, in case
+	  autodetection doesn't work right.
+	# {<f:``tag``,``tag``,...:``foreign``>}: Include multiple tags for a given foreign text. All tags are displayed
+	  slash-separated as described above, but only the first tag given is used for script detection.
+	# {<f:``tag``,``tag``,.../``script``:``foreign``>}: Same as previous except that a script code is explicitly given,
+	  in case autodetection doesn't work right.
+
+	Unlike with other inline modifiers, the {<f:...>} modifier can be specified multiple times to indicate different
+	foreign renderings of a given entity. An example where this is useful is the following:
+	* {Liou Kia-hway<f:Hant:劉家槐><f:Pinyin:Liú Jiāhuái>}
+
+	Here, we specify the author's name as given in the source, followed by the original Chinese-language version as
+	well as a standardized Pinyin version.]=]},
 	{"q", [=[Left qualifier for the parameter or entity, shown before it like this: {{q|left qualifier}}.]=]},
 	{"qq", [=[Right qualifier for the parameter or entity, shown after it like this: {{q|right qualifier}}.]=]},
 }
@@ -248,7 +281,7 @@ local function generate_params(ty)
 	will attempt to display the date with only the month and year. Regardless of the input format, the output will be
 	displayed in the format <code>'''2023''' August 11</code>, or <code>'''2023''' August</code> if the day was
 	omitted.]=]},
-	{{"year", "month", useand = true},
+	{{"year", "month", annotated = true, useand = true},
 	[=[The year and (optionally) the month that the <<work>> was published. The values of these parameters are not
 	parsed, and arbitrary text can be given if necessary. If the year is preceded by <code>c.</code>, e.g.
 	<code>c. 1665</code>, it indicates that the publication year was {{glink|c.|circa}} (around) the specified year;
@@ -267,7 +300,7 @@ local function generate_params(ty)
 	The format of {{para|start_date}} is as for {{para|date}}. If the dates have the same year but different month and
 	day, the year will only be displayed once, and likewise if only the days differ. Use only one of {{para|start_date}}
 	or {{para|start_year}}/{{para|start_month}}, not both.]=]},
-	{{"start_year", "start_month", useand = true},
+	{{"start_year", "start_month", annotated = true, useand = true},
 	[=[Alternatively, specify a range by placing the start year and month in {{para|start_year}} and (optionally)
 	{{para|start_month}}. These can contain arbitrary text, as with {{para|year}} and {{para|month}}. To indicate that
 	publication is around, before or after a specified range, place the appropriate indicator (<code>c.</code>,
@@ -458,7 +491,7 @@ local function generate_params(ty)
 	{{"edition_plain", annotated = true},
 	[=[Free text specifying the edition of the <<collection>> quoted, e.g. <code>3rd printing</code> or
 	<code>5th edition, digitized</code> or <code>version 3.72</code>.]=]},
-	{{"year_published", "month_published", useand = true},
+	{{"year_published", "month_published", annotated = true, useand = true},
 	[=[If {{para|year}} is used to state the year when the original version of the <<issue>> was published,
 	{{para|year_published}} can be used to state the year in which the version quoted from was published, for example,
 	"<code>|year=1665|year_published=2005</code>". {{para|month_published}} can optionally be used to specify the month
@@ -471,7 +504,7 @@ local function generate_params(ty)
 	optionally {{para|month_published}}), or {{para|date_published}}, not both. As with {{para|date}}, the value of
 	{{para|date_published}} must be an actual date, with or without the day, rather than arbitrary text. The same
 	formats are recognized as for {{para|date}}.]=]},
-	{{"start_year_published", "start_month_published", useand = true},
+	{{"start_year_published", "start_month_published", annotated = true, useand = true},
 	[=[If the publication of the version quoted from spanned a range of dates, specify the starting year (and optionally
 	month) using these parameters and place the ending date in {{para|year_published}}/{{para|month_published}} (or
 	{{para|date_published}}). This works identically to {{para|start_year}}/{{para|start_month}}. It is rarely necessary
@@ -480,7 +513,7 @@ local function generate_params(ty)
 	[=[Start date of the publication of the version quoted from, as an alternative to specifying
 	{{para|start_year_published}}/{{para|start_month_published}}. This works like {{para|start_date}}. It is
 	rarely necessary to specify this parameter.]=]},
-	{{"origyear", "origmonth", useand = true},
+	{{"origyear", "origmonth", annotated = true, useand = true},
 	[=[The year when the <<work>> was originally published, if the <<work>> quoted from is a new version of <<work:a>>
 	(not merely a new printing). For example, if quoting from a modern edition of Shakespeare or Milton, put the date of
 	the modern edition in {{para|year}}/{{para|month}} or {{para|date}} and the date of the original edition in
@@ -495,11 +528,13 @@ local function generate_params(ty)
 	optionally {{para|origmonth}}), or {{para|origdate}}, not both. As with {{para|date}}, the value of
 	{{para|origdate}} must be an actual date, with or without the day, rather than arbitrary text. The same formats are
 	recognized as for {{para|date}}.]=]},
-	{{"origstart_year", "origstart_month", "origstart_date", useand = true},
-	[=[The start year/month or date of the original version of publication, if the publication happened over a range.
-	Use either {{para|origstart_year}} (and optionally {{para|origstart_month}}), or {{para|origstart_date}}, not both.
-	These work just like {{para|start_year}}, {{para|start_month}} and {{para|start_date}}, and very rarely need to be
-	specified.]=]},
+	{{"origstart_year", "origstart_month", annotated = true, useand = true},
+	[=[The start year/month of the original version of publication, if the publication happened over a range. Use
+	either {{para|origstart_year}} (and optionally {{para|origstart_month}}), or {{para|origstart_date}}, not both.
+	These work just like {{para|start_year}} and {{para|start_month}}, and very rarely need to be specified.]=]},
+	{"origstart_date",
+	[=[The start date of the original version of publication, if the publication happened over a range. This works just
+	like {{para|start_date}}, and very rarely needs to be specified.]=]},
 	{{"platform", multientity = true},
 	[=[The platform on which the <<work>> has been published. This is intended for content aggregation platforms such
 	as {{w|YouTube}}, {{w|Issuu}} and {{w|Magzter}}. This displays as "via PLATFORM".]=]},
@@ -625,17 +660,17 @@ local function generate_params(ty)
 	Instead, use the method described above using {{para|newversion}} and {{para|2ndauthor}}, {{para|title2}}, etc.]=],
 	{{"original", annotated = true},
 	[=[If you are citing a {{w|derivative work}} such as a translation, use {{para|original}} to state the title of the
-	original work, {{para|by}} to state the author of the original work and {{para|type}} to state the type of
+	original work, {{para|by}} to state the author of the original work and {{para|version}} to state the type of
 	derivative work. Either {{para|original}} or {{para|by}} must be given for this method to be applicable. If all
-	three are given, the code displays "<code><var>type</var> of <var>original</var> by <var>by</var></code>". If
-	{{para|original}} is omitted, the literal text "<code>original</code>" is used. If {{para|type}} is omitted,
+	three are given, the code displays "<code><var>version</var> of <var>original</var> by <var>by</var></code>". If
+	{{para|original}} is omitted, the literal text "<code>original</code>" is used. If {{para|version}} is omitted,
 	the literal text "<code>translation</code>" is used. If {{para|by}} is omitted, the "by <var>by</var>" clause is
 	left out.]=]},
 	{{"by", multientity = true},
 	[=[If you are citing a {{w|derivative work}} such as a translation, use {{para|by}} to state the author(s) of the
 	original work. See {{para|original}} above.]=]},
-	{"type",
-	[=[If you are citing a {{w|derivative work}} such as a translation, use {{para|type}} to state the type of
+	{"version",
+	[=[If you are citing a {{w|derivative work}} such as a translation, use {{para|version}} to state the type of
 	derivative work. See {{para|original}} above.]=]},
 	{{"quoted_in", annotated = true},
 	[=[If the quoted text is from book A which states that the text is from another book B, do the following:
@@ -944,12 +979,21 @@ end
 
 
 local function process_continued_string(desc, subvals)
+	desc = rsub(desc, "{{", TEMP_DOUBLE_LBRACE)
+	desc = rsub(desc, "}}", TEMP_DOUBLE_RBRACE)
 	-- Join continuation lines. Do it twice in case of a single-character line (admittedly rare).
 	desc = rsub(desc, "([^\n])\n[ \t]*([^ \t\n#*])", "%1 %2")
 	desc = rsub(desc, "([^\n])\n[ \t]*([^ \t\n#*])", "%1 %2")
 	-- Remove whitespace before list elements.
 	desc = rsub(desc, "\n[ \t]*([#*])", "\n%1")
 	desc = rsub(desc, "^[ \t]*([#*])", "%1")
+	 -- placeholder variable names between double backquotes
+	desc = rsub(desc, "``([A-Za-z0-9_%-]+)``", "<var>%1</var>")
+	-- variable/parameter names between backquotes
+	desc = rsub(desc, "`([A-Za-z0-9_%-]+)`", '<code class="n">%1</code>')
+	desc = rsub(desc, "%b{}", function(m0) -- {} blocks
+			return "<code>" .. m0:sub(2, -2) .. "</code>"
+		end)
 	desc = rsub(desc, "<<([^><]+)>>", function(item)
 		local parts = rsplit(item, ":")
 		item = parts[1]
@@ -977,7 +1021,10 @@ local function process_continued_string(desc, subvals)
 		end
 		return item
 	end)
-	return preprocess(desc)
+	desc = rsub(desc, TEMP_DOUBLE_LBRACE, "{{")
+	desc = rsub(desc, TEMP_DOUBLE_RBRACE, "}}")
+	desc = preprocess(desc)
+	return desc
 end
 
 
