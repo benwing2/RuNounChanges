@@ -233,9 +233,11 @@ was retrieved. `explicit_gloss`, if specified and non-nil, overrides any gloss s
 If `val` is nil, the return value of this function is nil. Otherwise it is parsed for a language prefix (e.g.
 'ar:مُؤَلِّف') and inline modifiers (e.g. 'ar:مُؤَلِّف<t:Author>'), and the return value is an object with the following
 fields:
-  `text`: The text after stripping off any language prefix and inline modifiers.
   `lang`: The language object corresponding to the language prefix, if specified, or nil if no language prefix is
           given.
+  `text`: The text after stripping off any language prefix and inline modifiers.
+  `link`: The link part of the text if it consists of a two-part link; otherwise, same as `text`.
+  `alt`: Display text specified using the <alt:...> modifier, if given; otherwise, nil.
   `sc`: The script object corresponding to the <sc:...> modifier, if given; otherwise nil.
   `tr`: The transliteration corresponding to the <tr:...> modifier, if given; otherwise nil.
   `ts`: The transcription corresponding to the <ts:...> modifier, if given; otherwise nil.
@@ -271,7 +273,7 @@ local function parse_annotated_text(val, fullname, explicit_gloss)
 	local function generate_obj(text, parse_err_or_paramname)
 		local obj = {}
 		if text:find(":[^ ]") or text:find("%[%[") then
-			obj.text, obj.lang, obj.link, obj.display = require(parse_utilities_module).parse_term_with_lang(text,
+			obj.text, obj.lang, obj.link = require(parse_utilities_module).parse_term_with_lang(text,
 				parse_err_or_paramname)
 		else
 			obj.text = text
@@ -363,7 +365,7 @@ local function parse_multivalued_annotated_text(val, fullname, explicit_gloss, e
 	local function generate_obj(text, parse_err_or_paramname, no_undo_html_entity_replacement)
 		local obj = {}
 		if text:find(":[^ ]") or text:find("%[%[") then
-			obj.text, obj.lang, obj.link, obj.display = require(parse_utilities_module).parse_term_with_lang(text,
+			obj.text, obj.lang, obj.link = require(parse_utilities_module).parse_term_with_lang(text,
 				parse_err_or_paramname)
 		else
 			obj.text = text
@@ -372,13 +374,22 @@ local function parse_multivalued_annotated_text(val, fullname, explicit_gloss, e
 		if not no_undo_html_entity_replacement then
 			obj.text = undo_html_entity_replacement(obj.text)
 			obj.link = undo_html_entity_replacement(obj.link)
-			obj.display = obj.display and undo_html_entity_replacement(obj.display) or nil
 		end
 		return obj
 	end
 
-	-- Optimization #1: No semicolons or angle brackets (indicating inline modifiers).
-	if not val:find("[<;]") then
+	local splitchar, english_delim
+	if val:find("^,") then
+		splitchar = ","
+		english_delim = "comma"
+		val = val:gsub("^,", "")
+	else
+		splitchar = ";"
+		english_delim = "semicolon"
+	end
+
+	-- Optimization #1: No semicolons/commas or angle brackets (indicating inline modifiers).
+	if not val:find("[<" .. splitchar .. "]") then
 		if val_should_not_be_parsed_for_annotations(val) then
 			return {{text = val, link = val, noscript = true}}
 		else
@@ -386,12 +397,13 @@ local function parse_multivalued_annotated_text(val, fullname, explicit_gloss, e
 		end
 	end
 
-	-- Optimization #2: Semicolons but no angle brackets (indicating inline modifiers), braces, brackets, or parens (any
-	-- of which would protect the semicolon from interpretation as a delimiter), and no ampersand (which might indicate
-	-- an HTML entity with a terminating semicolon, which should not be interpreted as a delimiter).
+	-- Optimization #2: Semicolons/commas but no angle brackets (indicating inline modifiers), braces, brackets, or
+	-- parens (any of which would protect the semicolon/comma from interpretation as a delimiter), and no ampersand
+	-- (which might indicate an HTML entity with a terminating semicolon, which should not be interpreted as a
+	-- delimiter).
 	if not val:find("[<>%[%](){}&]") then
 		local entity_objs = {}
-		for entity in rgsplit(val, "%s*;%s*") do
+		for entity in rgsplit(val, "%s*" .. splitchar .. "%s*") do
 			if val_should_not_be_parsed_for_annotations(entity) then
 				table.insert(entity_objs, {text = entity, link = entity, noscript = true})
 			else
@@ -429,8 +441,8 @@ local function parse_multivalued_annotated_text(val, fullname, explicit_gloss, e
 		return {{text = undo_val, link = undo_val, noscript = not not val_should_not_be_parsed_for_annotations(val)}}
 	end
 
-	-- Split on semicolon, possibly surrounded by whitespace.
-	local separated_groups = put.split_alternating_runs(entity_runs, "%s*;%s*")
+	-- Split on semicolon (or comma), possibly surrounded by whitespace.
+	local separated_groups = put.split_alternating_runs(entity_runs, "%s*" .. splitchar .. "%s*")
 
 	-- Process each value.
 	local entity_objs = {}
@@ -471,8 +483,9 @@ local function parse_multivalued_annotated_text(val, fullname, explicit_gloss, e
 
 	if explicit_gloss then
 		if #entity_objs > 1 then
-			error(("Can't specify |%s= along with multiple semicolon-separated entities in |%s=; use the <t:...> "
-				.. "inline modifier attached to the individual entities"):format(explicit_gloss_fullname, fullname))
+			error(("Can't specify |%s= along with multiple %s-separated entities in |%s=; use the <t:...> "
+				.. "inline modifier attached to the individual entities"):format(
+				explicit_gloss_fullname, english_delim, fullname))
 		end
 		entity_objs[1].gloss = explicit_gloss
 	end
@@ -496,7 +509,7 @@ local function format_annotated_text(textobj, tag_text, tag_gloss)
 	if not textobj then
 		return nil
 	end
-	local text, link, display = textobj.text, textobj.link, textobj.display
+	local text, link = textobj.text, textobj.link
 	local tr, ts, f, gloss, alt = textobj.tr, textobj.ts, textobj.f, textobj.gloss, textobj.alt
 
 	if alt then
@@ -824,16 +837,6 @@ local function format_date_args(a, get_full_paramname, alias_map, parampref, par
 		end
 	end
 
-	-- Boldface a year spec if it's not already boldface.
-	local function boldface_if_not_already(year)
-		if not bold_year or year:find("'''") then
-			return year
-		else
-			return "'''" .. year .. "'''"
-		end
-	end
-
-
 	-- The formatDate method of the mw.language object behaves like the {{#time:}} parser function, which doesn't
 	-- accept the formats "monthday monthname, year" or "year monthname monthday", but outputs garbage when it receives
 	-- them, behavior inherited from PHP. {{#formatdate:}} magic word is more forgiving. Fix dates so that, for
@@ -892,40 +895,55 @@ local function format_date_args(a, get_full_paramname, alias_map, parampref, par
 
 	-- Format a date with boldfaced year, as e.g. '''2023''' August 3 (if `explicit_day_given` specified) or
 	-- '''2023''' August (if `explicit_day_given` not specified). If no date specified, fall back to formatting based
-	-- on the year and (optionally) month params given in `year` and `month`, boldfacing the year if not already.
+	-- on the year and (optionally) month params given in `yearobj` and `monthobj`, boldfacing the year if not already.
 	-- `date_param` is the base name of the param from which the date was fetched, for error messages.
-	local function format_date_or_year_month(date, year, month, explicit_day_given, date_param)
+	local function format_date_or_year_month(date, yearobj, monthobj, explicit_day_given, date_param)
 		if date then
 			return format_bold_date(date, explicit_day_given, date_param)
 		else
-			return boldface_if_not_already(year) .. (month and " " .. month or "")
+			-- Boldface a year spec if it's not already boldface.
+			if bold_year and not yearobj.text:find("'''") then
+				yearobj.text = "'''" .. yearobj.text .. "'''"
+				if yearobj.alt then
+					yearobj.alt = "'''" .. yearobj.alt .. "'''"
+				end
+			end
+			return format_annotated_text(yearobj) .. (monthobj and " " .. format_annotated_text(monthobj) or "")
 		end
 	end
 
-	if year then
+	local yearobj = parse_annotated_text(year, pname("year"))
+	local monthobj = parse_annotated_text(month, pname("month"))
+	local start_yearobj = parse_annotated_text(start_year, pname("start_year"))
+	local start_monthobj = parse_annotated_text(start_month, pname("start_month"))
+
+	if yearobj then
 		local abbr_prefix
-		abbr_prefix, year = process_ante_circa_post(year)
+		abbr_prefix, yearobj.text = process_ante_circa_post(yearobj.text)
+		_, yearobj.link = process_ante_circa_post(yearobj.link)
 		ins(abbr_prefix)
 	end
 
 	if start_date or start_year then
-		ins(format_date_or_year_month(start_date, start_year, start_month, start_day_explicitly_given, "start_date"))
-		local cur_year = year or format_date_with_code("Y", date, "date")
-		local cur_month = month or date and format_date_with_code("F", date, "date") or nil
+		ins(format_date_or_year_month(start_date, start_yearobj, start_monthobj, start_day_explicitly_given,
+			"start_date"))
+		local cur_year = yearobj and yearobj.text or format_date_with_code("Y", date, "date")
+		local cur_month = monthobj and monthobj.text or date and format_date_with_code("F", date, "date") or nil
 		local cur_day = date and day_explicitly_given and format_date_with_code("j", date, "date") or nil
-		local beg_year = start_year or format_date_with_code("Y", start_date, "start_date")
-		local beg_month = start_month or start_date and format_date_with_code("F", start_date, "start_date") or nil
+		local beg_year = start_yearobj and start_yearobj.text or format_date_with_code("Y", start_date, "start_date")
+		local beg_month = start_monthobj and start_monthobj.text or
+			start_date and format_date_with_code("F", start_date, "start_date") or nil
 		local beg_day = start_date and start_day_explicitly_given and
 			format_date_with_code("j", start_date, "start_date") or nil
 
 		if cur_year ~= beg_year then
 			-- Different years; insert current date in full.
 			ins(dash)
-			ins(format_date_or_year_month(date, year, month, day_explicitly_given, "date"))
+			ins(format_date_or_year_month(date, yearobj, monthobj, day_explicitly_given, "date"))
 		elseif cur_month and cur_month ~= beg_month then
 			-- Same year but different months; insert current month and (if available) current day.
 			ins(dash)
-			ins(cur_month)
+			ins(monthobj and format_annotated_text(monthobj) or cur_month)
 			if cur_day then
 				ins(" " .. cur_day)
 			end
@@ -937,8 +955,8 @@ local function format_date_args(a, get_full_paramname, alias_map, parampref, par
 			-- Same year, month and day; or same year and month, and day not available; or same year, and month and
 			-- day not available. Do nothing. FIXME: Should we throw an error?
 		end
-	elseif date or year then
-		ins(format_date_or_year_month(date, year, month, day_explicitly_given, "date"))
+	elseif date or yearobj then
+		ins(format_date_or_year_month(date, yearobj, monthobj, day_explicitly_given, "date"))
 	elseif not maintenance_line_no_date then
 		-- Not main quote date. Return nil, caller will handle.
 		return nil, nil
@@ -2458,7 +2476,7 @@ function export.quote_t(frame)
 			transliteration = tr,
 			transcription = ts,
 			brackets = args.brackets,
-			substs = args.subst,
+			subst = args.subst,
 			lit = args.lit,
 			footer = args.footer,
 			qq = tags_to_dialects(lang, args.tag),
