@@ -54,6 +54,52 @@ The language code helps ensure that the appropriate font is used when displaying
 happens even in the absence of such codes), and causes automatic transliteration to occur when possible, and the inline
 modifiers specify translations, manual transliterations and the like.
 
+The following special codes are recognized in place of language codes:
+* {w:``link``}: Link to the English Wikipedia, e.g. {w:William Shakespeare}. This displays as {``link``}. This is
+  equivalent to writing e.g. {{tl|w|William Shakespeare}}, which can also be used.
+* {w:``lang``:``link``}: Link to another-language Wikipedia, e.g. {w:fr:Jeanne d'Arc}. This displays as {``link``}.
+  This is equivalent to writing e.g. {{tl|w|2=lang=fr|3=Jeanne d'Arc}}, which can also be used.
+* {lw:``lang``:``link``}: Link to another-language Wikipedia and format {``link``} according to the language code
+  specified using {``lang``}, e.g. {lw:zh:毛泽东} (the Chinese written form of {{w|Mao Zedong}}). This requires that
+  {``lang``} is a language code with the same meaning in both Wikipedia and Wiktionary (which applies to most Wikipedia
+  language codes, but not to e.g. {hr} for the Croatian Wikipedia and {sr} for the Serbian Wikipedia, and not to
+  certain more obscure languages). This is equivalent to writing e.g. {zh:&#123;&#123;w|lang=zh|毛泽东}}}. This will do
+  language-specific script detection and formatting and tag the displayed form with the appropriate per-language CSS
+  class. If automatic transliteration is enabled for the specified language, that transliteration will be displayed
+  unless another transliteration is supplied using {<tr:...>} or transliteration display is disabled using {<tr:->}.
+  Note that using e.g. {lw:ru:Лев Толстой} (the Russian written form of {{w|Leo Tolstoy}}) is somewhat similar to
+  writing {{tl|lw|ru|Лев Толстой}} (hence the similarity of the prefix to the template name), but the latter will
+  display transliterations the way that {{tl|l}} displays them (in parens rather than brackets), and using {{tl|lw}}
+  prevents the use of any inline modifiers, as it formats into HTML.
+* {lw:``lang``:&#91;&#91;``link``|``display``&#93;&#93;}: Link using {``link``} to another-language Wikipedia but
+  display as {``display``}, formatting the display according to the language code specified using {``lang``}. This
+  works like {lw:...} above but lets you specify the link and display differently, e.g.
+  {lw:ru:&#91;&#91;Маркс, Карл|Карл Ге́нрих Маркс&#93;&#93;}, where the display form is the Russian written form of
+  {{w|Karl Marx|Karl Heinrich Marx}} and the link form is how the name appears canonically in the Russian Wikipedia
+  entry (with last name first).
+* {w:&#91;&#91;``link``|``display``&#93;&#93;} and {w:``lang``:&#91;&#91;``link``|``display``&#93;&#93;}: Link to the
+  English or another-language Wikipedia, specifying the link independently of the display form. These are less useful
+  than the {lw:...} equivalent because you can also specify the Wikipedia link directly using e.g.
+  {{code||[[w:William Shakespeare|W(illiam) Shakespeare]]}} or {{code||[[w:fr:Jeanne d'Arc|Joan of Arc]]}} with the
+  same number of keystrokes.
+* {s:``link``}: Link to the English Wikisource page for ``link``, e.g. {s:The Rainbow Trail} (a novel by
+  {{w|Zane Grey}}).
+* {s:``lang``:``link``}: Link to another-language Wikisource. This is conceptually similar to {w:``lang``:``link``}
+  for Wikipedia.
+* {ls:``lang``:``link``}: Link to another-language Wikisource and format {``link``} according to the language code
+  specified using {``lang``}. This is conceptually similar to {lw:``lang``:``link``} for Wikipedia.
+* {ls:``lang``:&#91;&#91;``link``|``display``&#93;&#93;}: Link using {``link``} to another-language Wikisource but
+  display as {``display``}, formatting the display according to the language code specified using {``lang``}, e.g.
+  {ls:ko:&#91;&#91;조선_독립의_서#一._槪論|조선 독립의 서&#93;&#93;} (a document about an independent Korea during the
+  Japanese occupation). This is conceptually similar to {lw:``lang``:&#91;&#91;``link``|``display``&#93;&#93;} for
+  Wikipedia.
+* {s:&#91;&#91;``link``|``display``&#93;&#93;} and {s:``lang``:&#91;&#91;``link``|``display``&#93;&#93;}: Link to the
+  English or another-language Wikisource, specifying the link independently of the display form. These are less useful
+  than the {ls:...} equivalent because you can also specify the Wikisource link directly using e.g.
+  {{code||[[s:The Tempest (Shakespeare)|The Tempest]]}} or
+  {{code||[[s:fr:Fables de La Fontaine (édition originale)|Fables de La Fontaine]]}} using the same number of
+  keystrokes.
+
 In addition, certain parameters can contain multiple semicolon-separated ''entities'' (authors, publishers, etc.). This
 applies in general to all parameters containing people (authors, translators, editors, etc.), as well as certain other
 parameters, as marked below. In such parameters, each entity can have annotations in the form of a language code and/or
@@ -62,14 +108,20 @@ specifying two Chinese-language names, each with a rendering into Latin script. 
 displayed with semicolons separating the entities, but more commonly with commas and/or the word ''and''; this depends
 on the particular parameter and its position in the citation. The semicolons are simply used in the input to separate
 the entities; commas aren't used because names can contain embedded commas, such as "<code>Sammy Davis, Jr.</code>" or
-"<code>Roger Taney, Chief Justice</code>". Note that semicolons occurring inside of parentheses or square brackets are
-not treated as delimiters; hence, a parameter value such as <code>George Orwell [pseudonym; Eric Blair]</code>
-specifies one entity, not two. Similarly, HTML entities like <code>&amp;oacute;</code> with trailing semicolons are
-recognized as such and not treated as delimiters.
+"<code>Alfred, Lord Tennyson</code>". Note that semicolons occurring inside of parentheses or square brackets are not
+treated as delimiters; hence, a parameter value such as <code>George Orwell [pseudonym; Eric Blair]</code> specifies one
+entity, not two. Similarly, HTML entities like <code>&amp;oacute;</code> with trailing semicolons are recognized as such
+and not treated as delimiters.
 
 For parameters that specify people (e.g. {{para|author}}, {{para|tlr}}/{{para|translator}}, {{para|editor}}), write
 <code>et al.</code>after a semicolon as if it were a normal person. The underlying code will handle this specially,
-displaying it in italics and omitting a preceding comma or ''and'' as appropriate.
+displaying it in italics and omitting the delimiter that would normally be displayed beforehand.
+
+As a special exception to separating entities with semicolons, if you put a comma as the first character of a
+multi-entity parameter, it will ignore the comma and split the remainder on commas instead of on semicolons. For
+example, <code>,Joe Bloggs, Mary Worth, et al.</code> is equivalent to <code>Joe Bloggs; Mary Worth; et al.</code>. It
+is not generally recommended to use this format, but it can be helpful when copy-pasting a long, comma-separated string
+of authors, e.g. from Google Scholar.
 
 The following inline modifiers are recognized:]=]
 end
