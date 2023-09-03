@@ -445,15 +445,19 @@ end
 -- Parse a term that may have a language code preceding it (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). Return
 -- two arguments, the term minus the language code and the language object corresponding to the language code.
 -- Etymology-only languages are allowed. This function also correctly handles Wikipedia prefixes (e.g. 'w:Abatemarco'
--- or 'w:it:Colle Val d'Elsa' or 'lw:ru:Филарет') and converts them into two-part links, with the display form not
--- including the Wikipedia prefix unless it was explicitly specified using a two-part link as in
--- 'lw:ru:[[Филарет (Дроздов)|Митрополи́т Филаре́т]]'. The difference between 'w:' ("Wikipedia") and 'lw:' ("Wikipedia
--- link") is that the latter requires a language code and returns the corresponding language object. Returns four
--- objects, `term`, `language_code`, `link` and `display`, where if a two-part link is given or needs to be generated
--- (as is the case with Wikipedia prefixes), it is separated into link and display forms (otherwise `link` is the same
--- as `term` and `display` is nil). (NOTE: Embedded links are not correctly handled currently. If an embedded link is
--- detected, the whole term is returned as the link part, and the display part is nil. If you construct your own link
--- from the link and display parts, you must check for this.)
+-- or 'w:it:Colle Val d'Elsa' or 'lw:ru:Филарет') and Wikisource prefixes (e.g. 's:Twelve O'Clock' or
+-- 's:[[Walden/Chapter XVIII|Walden]]' or 's:fr:Perceval ou le conte du Graal' or 's:ro:[[Domnul Vucea|Mr. Vucea]]' or
+-- 'ls:ko:이상적 부인' or 'ls:ko:[[조선 독립의 서#一. 槪論|조선 독립의 서]]') and converts them into two-part links,
+-- with the display form not including the Wikipedia or Wikisource prefix unless it was explicitly specified using a
+-- two-part link as in 'lw:ru:[[Филарет (Дроздов)|Митрополи́т Филаре́т]]' or
+-- 'ls:ko:[[조선 독립의 서#一. 槪論|조선 독립의 서]]'. The difference between 'w:' ("Wikipedia") and 'lw:' ("Wikipedia
+-- link") is that the latter requires a language code and returns the corresponding language object; same for the
+-- difference between 's:' ("Wikisource") and 'ls:' ("Wikisource link"). Returns four objects, `term`, `language_code`,
+-- `link` and `display`, where if a two-part link is given or needs to be generated (as is the case with Wikipedia and
+-- Wikisource prefixes), it is separated into link and display forms (otherwise `link` is the same as `term` and
+-- `display` is nil). (NOTE: Embedded links are not correctly handled currently. If an embedded link is detected, the
+-- whole term is returned as the link part, and the display part is nil. If you construct your own link from the link
+-- and display parts, you must check for this.)
 --
 -- `parse_err_or_paramname` is an optional function of one or two arguments to display an error, or a string naming a
 -- parameter to display in the error message. If omitted, a function is generated based off of `term`. (The second
@@ -464,22 +468,24 @@ function export.parse_term_with_lang(term, parse_err_or_paramname, return_parts)
 		parse_err_or_paramname and export.make_parse_err(("%s=%s"):format(parse_err_or_paramname, term)) or
 		export.make_parse_err(term)
 	-- Parse off an initial language code (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). First check for Wikipedia
-	-- prefixes ('w:Abatemarco' or 'w:it:Colle Val d'Elsa' or 'lw:zh:邹衡'). Wikipedia language codes follow a similar
+	-- prefixes ('w:Abatemarco' or 'w:it:Colle Val d'Elsa' or 'lw:zh:邹衡') and Wikisource prefixes
+	-- ('s:ro:[[Domnul Vucea|Mr. Vucea]]' or 'ls:ko:이상적 부인'). Wikipedia/Wikisource language codes follow a similar
 	-- format to Wiktionary language codes (see below).
-	local termlang, foreign_wikipedia, actual_term = term:match("^(l?w):([a-z][a-z][a-z-]*):([^ ].*)$")
+	local termlang, foreign_wiki, actual_term = term:match("^(l?[ws]):([a-z][a-z][a-z-]*):([^ ].*)$")
 	if not termlang then
-		termlang, actual_term = term:match("^(w):([^ ].*)$")
+		termlang, actual_term = term:match("^([ws]):([^ ].*)$")
 	end
 	if termlang then
-		local wikipedia_prefix = foreign_wikipedia and "w:" .. foreign_wikipedia .. ":" or "w:"
+		local wiki_links = termlang:find("^l")
+		local base_wiki_prefix = termlang:find("w$") and "w:" or "s:"
+		local wiki_prefix = base_wiki_prefix .. (foreign_wiki and foreign_wiki .. ":" or "")
 		local link, display = parse_bracketed_term(actual_term, parse_err)
 		if link:find("%[%[") or display and display:find("%[%[") then
 			-- FIXME, this should be handlable with the right parsing code
 			parse_err("Cannot have embedded brackets following a Wikipedia (w:... or lw:...) link; expand the term to a fully bracketed term w:[[LINK|DISPLAY]] or similar")
 		end
-		local lang = termlang == "lw" and require("Module:languages").getByCode(foreign_wikipedia, parse_err,
-			"allow etym") or nil
-		local prefixed_link = wikipedia_prefix .. link
+		local lang = wiki_links and require("Module:languages").getByCode(foreign_wiki, parse_err, "allow etym") or nil
+		local prefixed_link = wiki_prefix .. link
 		return ("[[%s|%s]]"):format(prefixed_link, display or link), lang, prefixed_link, display
 	end
 
@@ -495,7 +501,7 @@ function export.parse_term_with_lang(term, parse_err_or_paramname, return_parts)
 		termlang = require("Module:languages").getByCode(termlang, parse_err, "allow etym")
 		term = actual_term
 	end
-	local link, display = parse_bracketed_term(term)
+	local link, display = parse_bracketed_term(term, parse_err)
 	return term, termlang, link, display
 end
 
