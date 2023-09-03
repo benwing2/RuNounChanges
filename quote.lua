@@ -183,6 +183,7 @@ local param_mods = {
 	alt = {},
 	tr = {},
 	ts = {},
+	subst = {},
 	sc = {
 		convert = function(arg, parse_err)
 			return require(scripts_module).getByCode(arg, parse_err)
@@ -238,6 +239,7 @@ fields:
   `text`: The text after stripping off any language prefix and inline modifiers.
   `link`: The link part of the text if it consists of a two-part link; otherwise, same as `text`.
   `alt`: Display text specified using the <alt:...> modifier, if given; otherwise, nil.
+  `subst`: Substitutions used to generate the transliteration, in the same format as the subst= parameter.
   `sc`: The script object corresponding to the <sc:...> modifier, if given; otherwise nil.
   `tr`: The transliteration corresponding to the <tr:...> modifier, if given; otherwise nil.
   `ts`: The transcription corresponding to the <ts:...> modifier, if given; otherwise nil.
@@ -510,7 +512,7 @@ local function format_annotated_text(textobj, tag_text, tag_gloss)
 		return nil
 	end
 	local text, link = textobj.text, textobj.link
-	local tr, ts, f, gloss, alt = textobj.tr, textobj.ts, textobj.f, textobj.gloss, textobj.alt
+	local subst, tr, ts, f, gloss, alt = textobj.subst, textobj.tr, textobj.ts, textobj.f, textobj.gloss, textobj.alt
 
 	if alt then
 		if link:find("%[%[") or link:find("%]%]") then
@@ -538,7 +540,14 @@ local function format_annotated_text(textobj, tag_text, tag_gloss)
 				tr = nil
 			elseif not tr and sc and not sc:getCode():find("Latn") then -- Latn, Latnx or a lang-specific variant
 				-- might return nil
-				tr = (lang:transliterate(require(links_module).remove_links(text), sc))
+				local text_for_tr = text
+				if subst then
+					text_for_tr = require(usex_module).apply_subst(text_for_tr, subst)
+				else
+					text_for_tr = require(links_module).remove_links(text)
+				end
+
+				tr = (lang:transliterate(text_for_tr, sc))
 			end
 
 			text = require(links_module).embedded_language_links(
