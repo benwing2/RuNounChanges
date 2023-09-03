@@ -60,7 +60,6 @@ function export.get_label_info(data)
 	local ret = {categories = {}}
 	local label = data.label
 	local deprecated = false
-	local alias
 	local labdata
 	local submodule
 
@@ -77,6 +76,10 @@ function export.get_label_info(data)
 		labdata = submodule[label]
 	end
 	if not labdata then
+		submodule = mw.loadData("Module:labels/data/qualifiers")
+		labdata = submodule[label]
+	end
+	if not labdata then
 		submodule = mw.loadData("Module:labels/data/regional")
 		labdata = submodule[label]
 	end
@@ -90,7 +93,6 @@ function export.get_label_info(data)
 		deprecated = true
 	end
 	if type(labdata) == "string" or labdata.alias_of then
-		alias = label
 		label = labdata.alias_of or labdata
 		labdata = submodule[label] or {}
 	end
