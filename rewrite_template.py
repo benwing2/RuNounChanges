@@ -255,8 +255,11 @@ def handle_params_to_add(paramname, process_parts=None):
 templates = handle_single_param("template", lambda val: val.split(","))
 new_names = handle_single_param("new_name", lambda val: val.split(","))
 if new_names and len(new_names) != len(templates):
-  raise ValueError("Saw %s template(s) '%s' but %s new name(s) '%s'; both must agree in number" %
-    (len(templates), ",".join(templates), len(new_names), ",".join(new_names)))
+  if len(new_names) == 1:
+    new_names = new_names * len(templates)
+  else:
+    raise ValueError("Saw %s template(s) '%s' but %s new name(s) '%s'; both must agree in number or there must be only one new name" %
+      (len(templates), ",".join(templates), len(new_names), ",".join(new_names)))
 recognized_params = handle_single_param("recognized_params", lambda val: val.split(","))
 
 from_ = handle_list_param("from_", split_on_comma=True)
