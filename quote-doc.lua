@@ -142,6 +142,10 @@ local function generate_inline_modifiers(ty)
 	above for when to use transliterations vs. translations for names of people. If a language code prefix is given and
 	the text is in a non-Latin script, an automatic transliteration will be provided if the language supports it and
 	this modifier is not given. In that case, use <code><tr:-></code> to suppress the automatic transliteration.]=]},
+	{"subst", [=[Substitution expression(s) used to ensure correct transliteration, in lieu of specifying manual
+	transliteration. This modifier works identically to the {{para|subst}} parameter but applies to the entity in
+	question rather than the overall text of the quotation. See the {{tl|quote-book}} examples for examples of how to
+	use this.]=]},
 	{"ts", [=[Transcription of the parameter or entity in question, if not in Latin script and in a language where
 	the transliteration is markedly different from the actual pronunciation (e.g. Akkadian or Tibetan). Do not use this
 	merely to supply an IPA pronunciation. If supplied, this is shown between slashes, e.g.
@@ -307,9 +311,10 @@ local function generate_params(ty)
 	source script. The intent is to respell irregularly-pronounced words phonetically prior to transliteration, so that
 	the transliteration reflects the pronunciation rather than the spelling. The substitutions are applied in order.
 	Note that Lua patterns can be used in <code>FROM</code> and <code>TO</code> in lieu of literal text; see [[WT:LUA]].
-	See also {{temp|ux}} for an example of using {{para|subst}} (the usage is identical to that template). If
-	{{para|norm}} is used to provide a normalized version of the quoted text, the substitutions will also apply to this
-	version when transliterating it.]=]},
+	See the {{tl|quote-book}} examples for examples of how to use this parameter. Additional examples can be found in
+	the documentation to {{tl|ux}}; the usage is identical to that template. If {{para|norm}} is used to provide a
+	normalized version of the quoted text, the substitutions will also apply to this version when transliterating
+	it.]=]},
 	{{"ts", "transcription"},
 	[=[Phonetic transcription of the quoted text, if in a non-Latin script where the transliteration is markedly
 	different from the actual pronunciation (e.g. Akkadian, Ancient Egyptian and Tibetan). This should not be used
