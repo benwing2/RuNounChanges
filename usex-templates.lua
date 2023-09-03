@@ -30,6 +30,7 @@ function export.usex_t(frame)
 		-- Usex/quotation text parameters
 		[1] = {required = true},
 		[2] = {},
+		["termlang"] = {},
 		["tr"] = {},
 		["transliteration"] = {alias_of = "tr"},
 		["ts"] = {},
@@ -101,9 +102,16 @@ function export.usex_t(frame)
 		track("q")
 	end
 
+	local termlang
+	if args.termlang then
+		termlang = m_languages.getByCode(args.termlang, "termlang", "allow etym")
+		table.insert(args.qq, 1, "in " .. lang:getCanonicalName())
+	end
+
 	local origlang, origsc, orignormsc
 	if args.orig then
 		origlang = m_languages.getByCode(args.origlang, "origlang", "allow etym")
+		table.insert(args.origqq, 1, "in " .. origlang:getCanonicalName())
 		origsc = args.origsc
 		origsc = origsc and require("Module:scripts").getByCode(origsc, "origsc") or nil
 		orignormsc = args.orignormsc
@@ -163,34 +171,8 @@ function export.usex_t(frame)
 		origqq = args.origqq,
 		origref = args.origref,
 	}
-	
+
 	return require(usex_module).format_usex(data)
-end
-
--- Convert a comma-separated list of language codes to a comma-separated list of language names. Meant to be called
--- from a template. Template argument 1 is the language codes. Optional template argument param= is the name of the
--- parameter from which the list of language codes was fetched, defaulting to 1.
---
--- FIXME: Remove this once we get rid of {{quote-meta}}.
-function export.format_langs(frame)
-	local langs = frame.args[1]
-	local paramname = frame.args.param or 1
-	langs = rsplit(langs, ",")
-	for i, langcode in ipairs(langs) do
-		local lang = m_languages.getByCode(langcode, paramname)
-		langs[i] = lang:getCanonicalName()
-	end
-	if #langs == 1 then
-		return langs[1]
-	else
-		return require(table_module).serialCommaJoin(langs)
-	end
-end
-
--- Given a comma-separated list of language codes, return the first one.
-function export.first_lang(frame)
-	local langcodes = rsplit(frame.args[1], ",")
-	return langcodes[1]
 end
 
 local ignore_prefixes = {"User:", "Talk:",
