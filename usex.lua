@@ -67,6 +67,34 @@ end
 local function span(class, text) return wrap('span', class, text) end
 local function div(class, text) return wrap('div', class, text) end
 
+[=[
+Apply the substitutions in `subst` (from the <code>|subst=</code> parameter or similar) to the example or quotation in
+`usex` after removing links, returning the resulting text. `track`, if supplied, is a function of one argument that is
+used to insert tracking categories: one for any call to this function, another if a single / is used in the `subst`
+argument.
+]=]
+function export.apply_subst(usex, subst, track)
+	local subbed_usex = require(links_module).remove_links(usex)
+	local function do_track(page)
+		track and track(page)
+		return true
+	end
+
+	if subst then
+		-- [[Special:WhatLinksHere/Template:tracking/usex/subst]]
+		do_track("subst")
+		
+		subst = rsplit(subst, ",")
+		for _, subpair in ipairs(subst) do
+			-- [[Special:WhatLinksHere/Template:tracking/usex/subst-single-slash]]
+			local subsplit = rsplit(subpair, rfind(subpair, "//") and "//" or do_track("subst-single-slash") and "/")
+			subbed_usex = rsub(subbed_usex, subsplit[1], subsplit[2])
+		end
+	end
+
+	return subbed_usex
+end
+
 --[=[
 Process parameters for usex text (either the primary text or the original text) and associated annotations. On input,
 the following fields are recognized in `data` (all are optional except as marked):
@@ -136,24 +164,6 @@ local function process_usex_text(data)
 		normsc = lang:findBestScript(norm)
 	end
 
-	local function apply_substs(usex)
-		local subbed_usex = require(links_module).remove_links(usex)
-
-		if subst then
-			-- [[Special:WhatLinksHere/Template:tracking/usex/subst]]
-			track("subst")
-			
-			local subst = rsplit(subst, ",")
-			for _, subpair in ipairs(subst) do
-				-- [[Special:WhatLinksHere/Template:tracking/usex/subst-single-slash]]
-				local subsplit = rsplit(subpair, rfind(subpair, "//") and "//" or track("subst-single-slash") and "/")
-				subbed_usex = rsub(subbed_usex, subsplit[1], subsplit[2])
-			end
-		end
-
-		return subbed_usex
-	end
-
 	local langcode = lang:getNonEtymologicalCode()
 
 	-- tr=- means omit transliteration altogether
@@ -164,13 +174,13 @@ local function process_usex_text(data)
 		if not tr then
 			-- First, try transliterating the normalization, if supplied.
 			if norm and normsc and not normsc:getCode():find("Latn") then -- Latn, Latnx or a lang-specific variant
-				local subbed_norm = apply_substs(norm)
+				local subbed_norm = export.apply_subst(norm, subst, track)
 				tr = (lang:transliterate(subbed_norm, normsc))
 			end
 			-- If no normalization, or the normalization is in a Latin script, or the transliteration of the
 			-- normalization failed, fall back to transliterating the usex.
 			if not tr then
-				local subbed_usex = apply_substs(usex)
+				local subbed_usex = export.apply_subst(usex, subst, track)
 				tr = (lang:transliterate(subbed_usex, sc))
 			end
 			
