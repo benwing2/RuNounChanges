@@ -80,10 +80,10 @@ recognized_named_single_params_everywhere_list = [
 ]
 
 recognized_named_single_params_by_template = {
-  "quote-av": ["writer", "writers", "director", "directors",
+  "quote-av": ["writer", "writers",
                "episode", "trans-episode", "episode_series", "episode_seriesvolume", "episode_plain", "episode_number",
                "format", "medium", "season", "seasons", "season_plain",
-                "network", "role", "roles", "speaker", "actor", "time", "at"],
+                "network", "time", "at"],
   "quote-book": ["entry", "entryurl", "trans-entry", "entry_series", "entry_seriesvolume", "entry_plain",
                  "entry_number"],
   "quote-hansard": ["speaker", "debate", "report", "house"],
@@ -94,9 +94,8 @@ recognized_named_single_params_by_template = {
   "quote-mailing list": ["email", "list", "googleid", "group", "newsgroup",
     "titleurl", "title_series", "title_seriesvolume", "title_plain"],
   "quote-newsgroup": ["email", "googleid", "group", "newsgroup"],
-  "quote-song": ["authorlabel", "lyricist", "lyrics-translator", "composer", "titleurl", "title_series",
-                 "title_seriesvolume", "album", "work", "trans-album", "trans-work",
-                 "artist", "track", "time", "at"],
+  "quote-song": ["authorlabel", "titleurl", "title_series", "title_seriesvolume", "album", "work", "trans-album",
+                 "trans-work", "track", "time", "at"],
   "quote-us-patent": ["inventor", "patent_type", "patent"],
   "quote-video game": ["developer", "version", "system", "scene", "level"],
   "quote-web": ["titleurl", "webpage_series", "webpage_seriesvolume", "title_number", "title_plain",
@@ -122,8 +121,11 @@ formerly_recognized_named_params_list = [
   "url-access", "url-status",
 ]
 
+def make_one_all_param(param, highest_ind):
+  return [param + ("" if ind == 1 else str(ind)) for ind in range(1, highest_ind + 1)]
+
 def make_all_param(params, highest_ind):
-  return [param + ("" if ind == 1 else str(ind)) for param in params for ind in range(1, highest_ind + 1)]
+  return [p for param in params for p in make_one_all_param(param, highest_ind)]
 
 recognized_named_params_everywhere_list = (
   make_all_param(recognized_named_params_1_to_n_list, 30) +
@@ -164,13 +166,35 @@ unrecognized_after_url_named_params = set(unrecognized_after_url_named_params_li
 count_unhandled_params = defaultdict(int)
 count_unhandled_params_by_template = defaultdict(int)
 
-params_with_inline_modifiers_1_to_n_list = ["author"]
+inline_modifier_param_to_type = {}
+
+def process_inline_modifier_list(lst, maxind):
+  retval = []
+  for item in lst:
+    if type(item) is list:
+      item = item[0]
+      to_set = "multi-authorlike"
+    elif type(item) is tuple:
+      item = item[0]
+      to_set = "multi-nonauthorlike"
+    else:
+      to_set = "nonmulti"
+    retval.append(item)
+    for it in make_one_all_param(item, maxind):
+      inline_modifier_param_to_type[it] = to_set
+  return retval
+
+# Below, params surrounded by extra brackets means they are author-like and can take multiple semicolon-separated
+# entities. Those that are surrounded by extra parens (making them a single-element tuple) are non-author-like but can
+# take multiple semicolon-separated entities.
+params_with_inline_modifiers_1_to_n_list = [["author"]]
+params_with_inline_modifiers_1_to_n_list = process_inline_modifier_list(params_with_inline_modifiers_1_to_n_list, 30)
 params_with_inline_modifiers_1_to_2_list = [
-  "chapter", "chapter_plain", "chapter_series", "chapter_seriesvolume", "chapter_tlr", 
+  "chapter", "chapter_plain", "chapter_series", "chapter_seriesvolume", ["chapter_tlr"], 
   "section", "section_plain", "section_series", "section_seriesvolume",
-  "tlr", "translator", "translators", "editor", "editors", "mainauthor", "compiler", "compilers",
-  "director", "directors", "lyricist", "lyrics-translator", "composer", "role", "roles", "speaker", "actor", "artist",
-  "tlr", "translator", "translators", "editor", "editors", "mainauthor", "compiler", "compilers",
+  ["tlr"], ["translator"], ["translators"], ["editor"], ["editors"], ["mainauthor"], ["compiler"], ["compilers"],
+  ["director"], ["directors"], ["lyricist"], ["lyrics-translator"], ["composer"],
+  ["role"], ["roles"], ["speaker"], ["actor"], ["artist"],
   "title", "series", "seriesvolume", "edition", "edition_plain",
   "volume", "volumes", "volume_plain",
   "issue", "issues", "issue_plain",
@@ -178,22 +202,26 @@ params_with_inline_modifiers_1_to_2_list = [
   "line", "lines", "line_plain",
   "page", "pages", "page_plain",
   "column", "columns", "column_plain",
-  "others", "quoted_in", "location", "publisher", "source", "original", "by", "platform", "note", "note_plain",
-  "other",
+  "quoted_in", ("location",), ("publisher",), ("source",), "original", ["by"], ("platform",),
+  "note", "note_plain", "other", "others",
 ]
+params_with_inline_modifiers_1_to_2_list = process_inline_modifier_list(params_with_inline_modifiers_1_to_2_list, 2)
 
 params_with_inline_modifiers_single_everywhere_list = [
-  "coauthors", "quotee", "2ndauthor",
+  ["coauthors"], ["quotee"], ["2ndauthor"],
 ]
+params_with_inline_modifiers_single_everywhere_list = (
+  process_inline_modifier_list(params_with_inline_modifiers_single_everywhere_list, 1)
+)
 
 params_with_inline_modifiers_by_template = {
   "quote-av": [
-    "writer", "writers", "episode", "episode_series", "episode_seriesvolume", "episode_plain",
-    "season", "seasons", "season_plain", "network",
+    ["writer"], ["writers"], "episode", "episode_series", "episode_seriesvolume", "episode_plain",
+    "season", "seasons", "season_plain", ("network",),
   ],
   "quote-book": ["entry", "entry_series", "entry_seriesvolume", "entry_plain", "entry_number", "3", "4", "6"],
-  "quote-hansard": ["speaker", "debate", "report", "house"],
-  "quote-journal": ["article", "article_tlr", "article_series", "article_seriesvolume",
+  "quote-hansard": ["debate", "report", "house"],
+  "quote-journal": ["article", ["article_tlr"], "article_series", "article_seriesvolume",
                     "title_plain", "article_plain",
                     "journal", "magazine", "newspaper", "work", "newsagency", "3", "4", "5", "7"],
   "quote-mailing list": [
@@ -206,12 +234,15 @@ params_with_inline_modifiers_by_template = {
   "quote-song": [
     "title_series", "title_seriesvolume", "album", "work" 
   ],
-  "quote-us-patent": ["inventor"],
+  "quote-us-patent": [["inventor"]],
   "quote-video game": [
     # not version, scene, level because they are prefixed by text (FIXME)
-    "developer", "system"],
+    ["developer"], "system"],
   "quote-web": ["title_series", "title_seriesvolume", "title_plain", "site", "work"],
   "quote-wikipedia": ["article", "article_series", "article_seriesvolume"],
+}
+params_with_inline_modifiers_by_template = {
+  template: process_inline_modifier_list(lst, 1) for template, lst in params_with_inline_modifiers_by_template.items()
 }
 
 inline_modifiers_per_template_params = defaultdict(list)
@@ -234,10 +265,44 @@ params_with_inline_modifiers_list = (
 params_with_inline_modifiers_everywhere = set(params_with_inline_modifiers_everywhere_list)
 params_with_inline_modifiers = set(params_with_inline_modifiers_list)
 
-count_lang_stripped_params = defaultdict(int)
-count_lang_stripped_params_by_template = defaultdict(int)
+count_raw_wikipedia_stripped_langs = defaultdict(int)
+count_templated_wikipedia_stripped_langs = defaultdict(int)
+count_lw_wikipedia_stripped_langs = defaultdict(int)
+count_wikisource_stripped_langs = defaultdict(int)
+count_lang_stripped_langs = defaultdict(int)
+
+count_stripped_params = defaultdict(int)
+count_stripped_params_by_template = defaultdict(int)
 count_unstrippable_params = defaultdict(int)
 count_unstrippable_params_by_template = defaultdict(int)
+
+def normalize_and_split_on_balanced_delims(author, authparam, pagemsg):
+  processed_author = author
+  for entity, entity_re, replacement in html_entity_to_replacement:
+    processed_author = re.sub(entity_re, replacement, processed_author)
+  # HTML entities per https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references must be
+  # either decimal numeric (&#8209;), hexadecimal numeric (&#x200E;) or named (&Aring;, &frac34;, etc.). In
+  # all three cases, we replace the ampersand and semicolon with special characters so they won't get
+  # interpreted as delimiters.
+  processed_author = re.sub("&(#[0-9]+);", TEMP_AMP + r"\1" + TEMP_SEMICOLON, processed_author)
+  processed_author = re.sub("&(#x[0-9a-fA-F]+);", TEMP_AMP + r"\1" + TEMP_SEMICOLON, processed_author)
+  processed_author = re.sub("&([0-9a-zA-Z_]+);", TEMP_AMP + r"\1" + TEMP_SEMICOLON, processed_author)
+  # Eliminate L2R, R2L marks
+  processed_author = processed_author.replace("\u200E", "").replace("\u200F", "")
+  try:
+    return blib.parse_multi_delimiter_balanced_segment_run(processed_author,
+      [(r"[\[%s]" % TEMP_LBRAC, r"[\]%s]" % TEMP_RBRAC), (r"\(", r"\)"), (r"\{", r"\}"),
+       (r"[<%s]" % TEMP_LT, r"[>%s]" % TEMP_GT)])
+  except blib.ParseException as e:
+    pagemsg("WARNING: Splitting %s=%s: Exception when parsing: %s" % (authparam, author, e))
+    return False
+
+def undo_html_entity_replacement(txt):
+  txt = txt.replace(TEMP_AMP, "&")
+  txt = txt.replace(TEMP_SEMICOLON, ";")
+  for entity, entity_re, replacement in html_entity_to_replacement:
+    txt = txt.replace(replacement, entity)
+  return txt
 
 def process_text_on_page(index, pagetitle, text):
   global args
@@ -261,13 +326,16 @@ def process_text_on_page(index, pagetitle, text):
 
   for t in parsed.filter_templates():
     this_template_notes = []
+    this_template_verify = False
     tn = tname(t)
     origt = str(t)
     def getp(param):
       return getparam(t, param)
+    def sgetp(param):
+      return getparam(t, param).strip()
 
-    def from_to(txt):
-      pagemsg("%s: <from> %s <to> %s <end>" % (txt, origt, origt))
+    def from_to(txt, newt=None):
+      pagemsg("%s: <from> %s <to> %s <end>" % (txt, origt, newt or origt))
 
     def move_params(params, frob_from=None, no_notes=False):
       this_notes = []
@@ -397,37 +465,9 @@ def process_text_on_page(index, pagetitle, text):
           if re.search("[0-9]+-[0-9]+", page):
             from_to("Saw possible compound page '%s'" % page)
 
-      if args.check_author_splitting:
+      if args.split_authors:
         splitmsgs = []
         this_notes = []
-
-        def normalize_and_split_on_balanced_delims(author, authparam):
-          processed_author = author
-          for entity, entity_re, replacement in html_entity_to_replacement:
-            processed_author = re.sub(entity_re, replacement, processed_author)
-          # HTML entities per https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references must be
-          # either decimal numeric (&#8209;), hexadecimal numeric (&#x200E;) or named (&Aring;, &frac34;, etc.). In
-          # all three cases, we replace the ampersand and semicolon with special characters so they won't get
-          # interpreted as delimiters.
-          processed_author = re.sub("&(#[0-9]+);", TEMP_AMP + r"\1" + TEMP_SEMICOLON, processed_author)
-          processed_author = re.sub("&(#x[0-9a-fA-F]+);", TEMP_AMP + r"\1" + TEMP_SEMICOLON, processed_author)
-          processed_author = re.sub("&([0-9a-zA-Z_]+);", TEMP_AMP + r"\1" + TEMP_SEMICOLON, processed_author)
-          # Eliminate L2R, R2L marks
-          processed_author = processed_author.replace("\u200E", "").replace("\u200F", "")
-          try:
-            return blib.parse_multi_delimiter_balanced_segment_run(processed_author,
-              [(r"[\[%s]" % TEMP_LBRAC, r"[\]%s]" % TEMP_RBRAC), (r"\(", r"\)"), (r"\{", r"\}"),
-               (r"[<%s]" % TEMP_LT, r"[>%s]" % TEMP_GT)])
-          except blib.ParseException as e:
-            pagemsg("WARNING: Splitting %s=%s: Exception when parsing: %s" % (authparam, author, e))
-            return False
-
-        def undo_html_entity_replacement(txt):
-          txt = txt.replace(TEMP_AMP, "&")
-          txt = txt.replace(TEMP_SEMICOLON, ";")
-          for entity, entity_re, replacement in html_entity_to_replacement:
-            txt = txt.replace(replacement, entity)
-          return txt
 
         # Try to move a translator or editor from author=, mainauthor= or coauthors= to tlr= or editor=.
         moved_tlr_msg = False
@@ -471,7 +511,7 @@ def process_text_on_page(index, pagetitle, text):
                   break
               else: # no break
                 tlr = m.group(1)
-                tlr_runs = normalize_and_split_on_balanced_delims(tlr, author_param)
+                tlr_runs = normalize_and_split_on_balanced_delims(tlr, author_param, pagemsg)
                 saw_semicolon = False
                 saw_comma = False
                 split_msg = "semicolon" # default when no delimiter
@@ -563,7 +603,7 @@ def process_text_on_page(index, pagetitle, text):
               % (authparam, author, missing_space_ampersand_author))
             author = missing_space_ampersand_author
 
-          author_runs = normalize_and_split_on_balanced_delims(author, authparam)
+          author_runs = normalize_and_split_on_balanced_delims(author, authparam, pagemsg)
           if author_runs is False:
             return False
 
@@ -717,7 +757,8 @@ def process_text_on_page(index, pagetitle, text):
               return "WARNING: %s: Would normally split into %s, but saw %s" % (msgpref, split_authors, msgauth2)
 
           if origauthor == semicolon_joined_authors:
-            return "%s: Would normally split into %s, but rejoined value is same as current" % (msgpref, split_authors)
+            pagemsg("%s: Would normally split into %s, but rejoined value is same as current" % (msgpref, split_authors))
+            return False
 
           num_entities = len(authors)
           notes_msg = "split (on %s) %s= into %s entit%s in {{%s}} and join with semicolons" % (
@@ -729,13 +770,13 @@ def process_text_on_page(index, pagetitle, text):
         higher_author_params = ["author%s" % i for i in range(2, 31)]
 
         for authparam in ["author", "coauthors", "mainauthor", "tlr", "translator", "translators", "editor", "editors",
+                          "compiler", "compilers", "director", "directors", "lyricist", "lyrics-translator", "composer",
+                          "artist", "role", "roles", "speaker", "actor",
                           "quotee", "chapter_tlr", "by", "2ndauthor", "mainauthor2", "tlr2", "translator2",
                           "translators2", "quotee2", "chapter_tlr2", "by2"] + (
                             ["3"] if tn in ["quote-book", "quote-journal"] else []
                           ) + (
                             ["writer", "writers"] if tn == "quote-av" else []
-                          ) + (
-                            ["speaker"] if tn == "quote-hansard" else []
                           ) + (
                             ["inventor"] if tn == "quote-us-patent" else []
                           ) + (
@@ -780,6 +821,140 @@ def process_text_on_page(index, pagetitle, text):
           pagemsg("%s: <from> %s <to> %s <end> <comment> %s <endcom>" % (
             " || ".join(splitmsgs), origt, str(newt), "; ".join(blib.group_notes(this_notes))))
         this_template_notes.extend(this_notes)
+
+      if args.combine_authors:
+        authors = []
+        def make_link(txt, link, in_gloss=False):
+          if link:
+            m = re.search("^([a-z][a-z][a-z-]*):([^ ].*)$", link)
+            if m:
+              foreign, link = m.groups()
+              foreign_divider = ":"
+            else:
+              foreign = ""
+              foreign_divider = ""
+            if link == txt:
+              if in_gloss:
+                if foreign:
+                  return "{{w|lang=%s|%s}}" % (foreign, link)
+                else:
+                  return "{{w|%s}}" % link
+              return "w:%s%s%s" % (foreign, foreign_divider, link)
+            else:
+              return "[[w:%s%s%s|%s]]" % (foreign, foreign_divider, link, txt)
+          else:
+            return txt
+        maxind = 0
+        for param in t.params:
+          pn = pname(param)
+          m = re.search("^(?:author|last)([0-9]*)$", pn)
+          if m:
+            maxind = max(maxind, int(m.group(1)) if m.group(1) else 1)
+        for i in range(1, maxind + 1):
+          ind = "" if i == 1 else str(i)
+          author = sgetp("author" + ind)
+          trans_author = sgetp("trans-author" + ind)
+          authorlink = sgetp("authorlink" + ind)
+          trans_authorlink = sgetp("trans-authorlink" + ind)
+          last = sgetp("last" + ind)
+          trans_last = sgetp("trans-last" + ind)
+          first = sgetp("first" + ind)
+          trans_first = sgetp("trans-first" + ind)
+          if author and last:
+            from_to("WARNING: Saw both author%s=%s and last%s=%s" % (ind, author, ind, last), str(t))
+          if author:
+            if "<" in author and (trans_author or authorlink or trans_authorlink):
+              extra_vals = []
+              if trans_author:
+                extra_vals.append("trans-author%s=%s" % (ind, trans_author))
+              if authorlink:
+                extra_vals.append("authorlink%s=%s" % (ind, authorlink))
+              if trans_authorlink:
+                extra_vals.append("trans-authorlink%s=%s" % (ind, trans_authorlink))
+              from_to("WARNING: Saw inline modifier in author%s=%s along with %s" % (ind, author, ",".join(extra_vals)),
+                      str(t))
+              break
+            else:
+              author = make_link(author, authorlink)
+              if trans_author:
+                trans_author = make_link(trans_author, trans_authorlink, in_gloss=True)
+                author += "<t:%s>" % trans_author
+              authors.append(author)
+          elif last:
+            if first:
+              author = "%s %s" % (first, last)
+            else:
+              author = last
+            author = make_link(author, authorlink)
+            if trans_last:
+              if trans_first:
+                trans_author = "%s %s" % (trans_first, trans_last)
+              else:
+                trans_author = trans_last
+              trans_author = make_link(trans_author, trans_authorlink, in_gloss=True)
+              author += "<t:%s>" % trans_author
+            authors.append(author)
+
+        else: # no break
+          authors = "; ".join(authors)
+          t_right_now = str(t)
+          if authors:
+            if t.has("author"):
+              t.add("author", authors)
+            elif t.has("last"):
+              t.add("author", authors, before="last")
+            else:
+              from_to("WARNING: Didn't see either author= or last=, not sure where to put new author=%s" % authors,
+                      str(t))
+              t.add("author", authors)
+          for i in range(1, maxind + 1):
+            ind = "" if i == 1 else str(i)
+            if i != 1:
+              rmparam(t, "author" + ind)
+            rmparam(t, "authorlink" + ind)
+            rmparam(t, "trans-author" + ind)
+            rmparam(t, "trans-authorlink" + ind)
+            rmparam(t, "last" + ind)
+            rmparam(t, "trans-last" + ind)
+            rmparam(t, "first" + ind)
+            rmparam(t, "trans-first" + ind)
+          if str(t) != t_right_now:
+            this_template_notes.append("consolidate author=/author2=/first=/last=/etc. into author= in {{%s}}" % tn)
+
+        author = sgetp("2ndauthor")
+        authorlink = sgetp("2ndauthorlink")
+        last = sgetp("2ndlast")
+        first = sgetp("2ndfirst")
+        if author and last:
+          from_to("WARNING: Saw both 2ndauthor=%s and 2ndlast=%s" % (author, last), str(t))
+        if author:
+          if "<" in author and authorlink:
+            from_to("WARNING: Saw inline modifier in 2ndauthor=%s along with 2ndauthorlink=%s" % (author, authorlink),
+                    str(t))
+            continue
+          else:
+            author = make_link(author, authorlink)
+        elif last:
+          if first:
+            author = "%s %s" % (first, last)
+          else:
+            author = last
+          author = make_link(author, authorlink)
+        if author:
+          t_right_now = str(t)
+          if t.has("2ndauthor"):
+            t.add("2ndauthor", author)
+          elif t.has("2ndlast"):
+            t.add("2ndauthor", author, before="2ndlast")
+          else:
+            from_to("WARNING: Didn't see either 2ndauthor= or 2ndlast=, not sure where to put new 2ndauthor=%s"
+                    % author, str(t))
+            t.add("2ndauthor", author)
+          rmparam(t, "2ndauthorlink")
+          rmparam(t, "2ndlast")
+          rmparam(t, "2ndfirst")
+          if str(t) != t_right_now:
+            this_template_notes.append("consolidate 2ndauthor=/2ndfirst=/2ndlast=/etc. into 2ndauthor= in {{%s}}" % tn)
 
     if args.do_old_renames:
       if tn in ["quote-magazine", "quote-news"]:
@@ -914,150 +1089,240 @@ def process_text_on_page(index, pagetitle, text):
         ]
         move_params(params_to_move)
 
-    if args.remove_lang_wrapping:
+    if args.remove_wrapping:
       if tn in quote_templates:
+        def convert_lang_like(pn, pv):
+          langcode = None
+          langcode_with_spaces_re = " *([a-z][a-z][a-z-]*) *"
+          # Disallow embedded templates (braces), param separators (vertical bar, equal sign), angle brackets (will be
+          # interpreted as inline modifier delimiters in the result), semicolons (will be interpreted as delimiters in
+          # the result), colons (will be interpreted as language-separator delimiters).
+          allowable_char_re = r"[^|{}<>;:=]"
+          allowable_char_param_with_spaces_re = " *(%s*?) *" % allowable_char_re
+          # Same as above but also disallow brackets; necessary when parsing bracketed links.
+          allowable_char_no_brackets_re = r"[^\[\]|{}<>;:=]"
+          allowable_char_no_brackets_param_with_spaces_re = " *(%s*?) *" % allowable_char_re
+          # Same as above but also disallow brackets and parens, which are interpreted as Ruby chars; we only want to
+          # strip Ruby marking when there are no actual Ruby chars.
+          allowable_ruby_char_re = r"[^\[\]()|{}<>;:=]"
+          allowable_ruby_char_param_with_spaces_re = " *(%s*?) *" % allowable_ruby_char_re
+
+          m = re.search(r"^\[\[ *(?:w|wikipedia) *:(?:%s:)?%s\]\]$" %
+                        (langcode_with_spaces_re, allowable_char_no_brackets_param_with_spaces_re), pv)
+          if not m:
+            m = re.search(r"^\[\[ *(?:w|wikipedia) *:(?:%s:)?%s\| *\2 *\]\]$" %
+                          (langcode_with_spaces_re, allowable_char_no_brackets_param_with_spaces_re), pv)
+          if m:
+            langcode, dest = m.groups()
+            if langcode:
+              newval = "w:%s:%s" % (langcode, dest)
+              count_raw_wikipedia_stripped_langs[langcode] += 1
+              pagemsg("Convert raw foreign Wikipedia link %s=%s to %s: %s" % (pn, pv, newval, origt))
+              return newval, "convert raw foreign Wikipedia link in %s= in {{%s}} to w:%s:..." % (pn, tn, langcode), False
+            else:
+              newval = "w:%s" % dest
+              count_raw_wikipedia_stripped_langs["-"] += 1
+              pagemsg("Convert raw Wikipedia link %s=%s to %s: %s" % (pn, pv, newval, origt))
+              return newval, "convert raw Wikipedia link in %s= in {{%s}} to w:..." % (pn, tn), False
+
+          m = re.search(r"^\[\[ *(?:s|wikisource) *:(?:%s:)?%s\]\]$" %
+                        (langcode_with_spaces_re, allowable_char_no_brackets_param_with_spaces_re), pv)
+          if not m:
+            m = re.search(r"^\[\[ *(?:s|wikisource) *:(?:%s:)?%s\| *\2 *\]\]$" %
+                          (langcode_with_spaces_re, allowable_char_no_brackets_param_with_spaces_re), pv)
+          if m:
+            langcode, dest = m.groups()
+            if langcode:
+              newval = "s:%s:%s" % (langcode, dest)
+              count_wikisource_stripped_langs[langcode] += 1
+              pagemsg("Convert raw foreign Wikisource link %s=%s to %s: %s" % (pn, pv, newval, origt))
+              return newval, "convert raw foreign Wikisource link in %s= in {{%s}} to w:%s:..." % (pn, tn, langcode), False
+            else:
+              newval = "s:%s" % dest
+              count_wikisource_stripped_langs["-"] += 1
+              pagemsg("Convert raw Wikisource link %s=%s to %s: %s" % (pn, pv, newval, origt))
+              return newval, "convert raw Wikisource link in %s= in {{%s}} to w:..." % (pn, tn), False
+
+          m = re.search(r"^\{\{ *w *\|%s\}\}$" % allowable_char_param_with_spaces_re, pv)
+          if m:
+            dest = m.group(1)
+            newval = "w:%s" % dest
+            count_templated_wikipedia_stripped_langs["-"] += 1
+            pagemsg("Convert templatized Wikipedia link %s=%s to %s: %s" % (pn, pv, newval, origt))
+            return newval, "convert templatized Wikipedia link in %s= in {{%s}} to w:..." % (pn, tn), False
+
+          langcode = None
+          m = re.search(r"^\{\{ *w *\| *lang *=%s\|%s\}\}$" %
+                        (langcode_with_spaces_re, allowable_char_param_with_spaces_re), pv)
+          if m:
+            langcode, dest = m.groups()
+          else:
+            m = re.search(r"^\{\{ *w *\|%s\| *lang *=%s\}\}$" %
+                          (langcode_with_spaces_re, allowable_char_param_with_spaces_re), pv)
+            if m:
+              dest, langcode = m.groups()
+          if langcode:
+            newval = "w:%s:%s" % (langcode, dest)
+            count_templated_wikipedia_stripped_langs[langcode] += 1
+            pagemsg("Convert templatized foreign Wikipedia link %s=%s to %s: %s" % (pn, pv, newval, origt))
+            return newval, "convert templatized foreign Wikipedia link in %s= in {{%s}} to w:%s:..." % (
+                pn, tn, langcode), False
+
+          m = re.search(r"^\{\{ *lw *\|%s\|%s\}\}$" %
+                        (langcode_with_spaces_re, allowable_char_param_with_spaces_re), pv)
+          if m:
+            langcode, dest = m.groups()
+            newval = "lw:%s:%s" % (langcode, dest)
+            count_lw_wikipedia_stripped_langs[langcode] += 1
+            pagemsg("Convert {{lw|...}} foreign Wikipedia link %s=%s to %s: %s" % (pn, pv, newval, origt))
+            return newval, "convert {{lw|...}} foreign Wikipedia link in %s= in {{%s}} to lw:%s:..." % (
+                pn, tn, langcode), False
+
+          # Make sure no Ruby text (using ()[] typically), no embedded templates or extra params, and no angle brackets
+          # or embedded semicolons (which will cause problems in the resulting parameter value, as they may get
+          # interpreted as delimiters)
+          m = re.search(r"^\{\{ *(?:lj|jaru) *\|%s\}\}$" % allowable_ruby_char_param_with_spaces_re, pv)
+          if m:
+            newval = "ja:%s" % m.group(1)
+            count_lw_wikipedia_stripped_langs["lj"] += 1
+            pagemsg("Convert {{lj|...}} Japanese pseudo-Ruby link %s=%s to %s: %s" % (pn, pv, newval, origt))
+            return newval, "convert {{lj|...}} Japanese pseudo-Ruby link in %s= in {{%s}} to ja:..." % (pn, tn), False
+
+          # Same checks as above for {{lj}}
+          m = re.search(r"^\{\{ *(?:wj|jarw) *\|%s\}\}$" % allowable_ruby_char_param_with_spaces_re, pv)
+          if m:
+            newval = "lw:ja:%s" % m.group(1)
+            count_lw_wikipedia_stripped_langs["wj"] += 1
+            pagemsg("Convert {{wj|...}} Japanese Wikipedia pseudo-Ruby link %s=%s to %s: %s" % (pn, pv, newval, origt))
+            return newval, "convert {{lj|...}} Japanese Wikipedia pseudo-Ruby link in %s= in {{%s}} to ja:..." % (
+              pn, tn), False
+
+          if re.search(r"\{\{ *lang *\|%s\|%s\}\}" % (
+            langcode_with_spaces_re, allowable_char_param_with_spaces_re), pv):
+            m = re.search(r"^\{\{ *lang *\|%s\|%s\}\}$" % (
+             langcode_with_spaces_re, allowable_char_param_with_spaces_re), pv.strip())
+            if m:
+              langcode, dest = m.groups()
+              newval = "%s:%s" % (langcode, dest)
+              count_lang_stripped_langs[langcode] += 1
+              pagemsg("Strip lang wrapping %s=%s to %s: %s" % (pn, pv, newval, origt))
+              return newval, "convert {{lang}} wrapping in %s= in {{%s}} to %s:..." % (pn, tn, langcode), False
+            elif args.remove_unsafe_wrapping:
+              gloss = None
+              tr = None
+              if not m:
+                m = re.search(r"^\{\{ *lang *\|%s\|%s\}\}\s+\[ *([^\[\]]*?) *\]$" % (
+                  langcode_with_spaces_re, allowable_char_param_with_spaces_re), pv.strip())
+                if m and m.group(3).startswith("http"):
+                  m = None
+                if m:
+                  lang, foreign, gloss = m.groups()
+              if not m:
+                m = re.search(r"^\{\{ *lang *\|%s\|%s\}\}\s+\( *([^()]*?) *\)$" % (
+                  langcode_with_spaces_re, allowable_char_param_with_spaces_re), pv.strip())
+                if m:
+                  lang, foreign, gloss = m.groups()
+              if not m:
+                m = re.search(r"^\{\{ *lang *\|%s\|%s\}\}\s+&#0?91; *(.*?) *&#0?93;$" % (
+                  langcode_with_spaces_re, allowable_char_param_with_spaces_re), pv.strip())
+                if m:
+                  lang, foreign, gloss = m.groups()
+              if not m:
+                m = re.search(r"^\{\{ *lang *\|%s\|%s\}\}\s+[-–—=]\s+(.*?)$" % (
+                  langcode_with_spaces_re, allowable_char_param_with_spaces_re), pv.strip())
+                if m:
+                  lang, foreign, gloss = m.groups()
+              if not m:
+                m = re.search(r"^([^{}]+?)\s+\( *\{\{ *lang *\|%s\|%s\}\} *\)$" % (
+                  langcode_with_spaces_re, allowable_char_param_with_spaces_re), pv.strip())
+                if m:
+                  gloss, lang, foreign = m.groups()
+              if not m:
+                m = re.search(r"^'' *([^{}]+?) *''\s+\[? *\{\{ *lang *\| *(ko) *\|%s\}\} *\]?$" % (
+                  allowable_char_param_with_spaces_re), pv.strip())
+                if m:
+                  tr, lang, foreign = m.groups()
+              if not m:
+                m = re.search(r"^([^{}]+?)\s+\[ *\{\{ *lang *\|%s\|%s\}\} *\]$" % (
+                  langcode_with_spaces_re, allowable_char_param_with_spaces_re), pv.strip())
+                if m:
+                  gloss, lang, foreign = m.groups()
+              if gloss or tr:
+                if gloss:
+                  m = re.search("^'' *(.*?) *''$", gloss)
+                  if m:
+                    gloss = m.group(1)
+                if tr:
+                  m = re.search("^'' *(.*?) *''$", tr)
+                  if m:
+                    tr = m.group(1)
+                if gloss:
+                  cleaned_gloss = re.sub("\{\{ *[^{}]*? *\}\}", "", gloss)
+                  if (lang in ["ar", "ur", "fa", "pa"] and (re.search("([ʾʿāīūṣṭẓḍḥǧġṯḵḏśĀĪŪṢṬẒḌḤǦĠŠṮḴḎŚʔʕ]|t̤|n̲|T̤|N̲)",
+                                                                      cleaned_gloss) or
+                                        re.search("\bal-", cleaned_gloss)) or
+                      lang == "fa" and (re.search("[âÂčČ]", cleaned_gloss) or re.search("-e\b", cleaned_gloss))):
+                    pagemsg("Assuming gloss '%s' is transliteration in %s=%s: %s" % (gloss, pn, pv, origt))
+                    tr = gloss
+                    gloss = None
+                if tr:
+                  newval = "%s:%s<tr:%s>" % (lang, foreign, tr)
+                  t.add(pn, newval)
+                  pagemsg("Strip lang wrapping with transliteration %s=%s to %s (VERIFY): %s" % (pn, pv, newval, origt))
+                  retmsg = "convert {{lang}} wrapping in %s= in {{%s}} to %s:...<tr:...>" % (pn, tn, lang)
+                else:
+                  newval = "%s:%s<t:%s>" % (lang, foreign, gloss)
+                  t.add(pn, newval)
+                  pagemsg("Strip lang wrapping with translation %s=%s to %s (VERIFY): %s" % (pn, pv, newval, origt))
+                  retmsg = "convert {{lang}} wrapping in %s= in {{%s}} to %s:...<t:...>" % (pn, tn, lang)
+                return newval, retmsg, True
+              else:
+                pagemsg("WARNING: Unable to strip lang wrapping in %s=%s: %s" % (pn, pv, origt))
+                count_unstrippable_params[pn] += 1
+                count_unstrippable_params_by_template["%s:%s" % (pn, tn)] += 1
+          return None, None, False
+
         for param in t.params:
           pn = pname(param)
-          pv = str(param.value)
+          pv = str(param.value).strip()
           if pn in params_with_inline_modifiers_everywhere or (
             pn in inline_modifiers_per_template_params and tn in inline_modifiers_per_template_params[pn]
           ):
-            langcode = None
-            m = re.search(r"^\[\[(?:w|wikipedia):([a-z][a-z-]+):([^\[\]|{}<>;]*)\]\]$", pv)
-            if not m:
-              m = re.search(r"^\[\[(?:w|wikipedia):([a-z][a-z-]+):([^\[\]|{}<>;]*)\|\2\]\]$", pv)
-            if m:
-              langcode, dest = m.groups()
-              newval = "w:%s:%s" % (langcode, dest)
-              t.add(pn, newval)
-              pagemsg("Convert raw foreign Wikipedia link %s=%s to %s: %s" % (pn, pv, newval, origt))
-              this_template_notes.append("convert raw foreign Wikipedia link in %s= in {{%s}} to w:%s:..."
-                % (pn, tn, langcode))
-              continue
-
-            m = re.search(r"^\[\[(?:w|wikipedia):([^\[\]|{}<>;]*)\]\]$", pv)
-            if not m:
-              m = re.search(r"^\[\[(?:w|wikipedia):([^\[\]|{}<>;]*)\|\1\]\]$", pv)
-            if m:
-              dest = m.group(1)
-              newval = "w:%s" % dest
-              t.add(pn, newval)
-              pagemsg("Convert raw Wikipedia link %s=%s to %s: %s" % (pn, pv, newval, origt))
-              this_template_notes.append("convert raw Wikipedia link in %s= in {{%s}} to w:..."
-                % (pn, tn))
-              continue
-
-            m = re.search(r"^\{\{w\|([^\[\]|{}<>;]*)\}\}$", pv)
-            if m:
-              dest = m.group(1)
-              newval = "w:%s" % dest
-              t.add(pn, newval)
-              pagemsg("Convert templatized Wikipedia link %s=%s to %s: %s" % (pn, pv, newval, origt))
-              this_template_notes.append("convert templatized Wikipedia link in %s= in {{%s}} to w:..."
-                % (pn, tn))
-              continue
-
-            langcode = None
-            m = re.search(r"^\{\{w\|lang=([a-z][a-z-]+)\|([^\[\]|{}<>;]*)\}\}$", pv)
-            if m:
-              langcode, dest = m.groups()
-            else:
-              m = re.search(r"^\{\{w\|([^\[\]|{}<>;]*)\|lang=([a-z][a-z-]+)\}\}$", pv)
-              if m:
-                dest, langcode = m.groups()
-            if langcode:
-              newval = "w:%s:%s" % (langcode, dest)
-              t.add(pn, newval)
-              pagemsg("Convert templatized foreign Wikipedia link %s=%s to %s: %s" % (pn, pv, newval, origt))
-              this_template_notes.append("convert templatized foreign Wikipedia link in %s= in {{%s}} to w:%s:..."
-                % (pn, tn, langcode))
-              continue
-
-            m = re.search(r"^\{\{lw\|([a-z][a-z-]+)\|([^\[\]|{}<>;]*)\}\}$", pv)
-            if m:
-              langcode, dest = m.groups()
-              newval = "lw:%s:%s" % (langcode, dest)
-              t.add(pn, newval)
-              pagemsg("Convert {{lw|...}} foreign Wikipedia link %s=%s to %s: %s" % (pn, pv, newval, origt))
-              this_template_notes.append("convert {{lw|...}} foreign Wikipedia link in %s= in {{%s}} to lw:%s:..."
-                % (pn, tn, langcode))
-              continue
-
-            if re.search(r"\{\{lang\|[^|]*\|[^{}|=]*\}\}", pv):
-              m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\}$", pv.strip())
-              if m:
-                newval = "%s:%s" % (m.group(1), m.group(2))
+            pnprop = inline_modifier_param_to_type[pn]
+            if pnprop == "nonmulti":
+              newval, retmsg, this_verify = convert_lang_like(pn, pv)
+              this_template_verify = this_template_verify or this_verify
+              if newval is not None:
+                count_stripped_params[pn] += 1
+                count_stripped_params_by_template["%s:%s" % (pn, tn)] += 1
                 t.add(pn, newval)
-                pagemsg("Strip lang wrapping %s=%s to %s: %s" % (pn, pv, newval, origt))
-                this_template_notes.append("convert {{lang}} wrapping in %s= in {{%s}} to %s:..." % (pn, tn, m.group(1)))
-                count_lang_stripped_params[pn] += 1
-                count_lang_stripped_params_by_template["%s:%s" % (pn, tn)] += 1
-              else:
-                gloss = None
-                tr = None
-                if not m:
-                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\s+\[([^\[\]]*)\]$", pv.strip())
-                  if m and m.group(3).startswith("http"):
-                    m = None
-                  if m:
-                    lang, foreign, gloss = m.groups()
-                if not m:
-                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\s+\(([^()]*)\)$", pv.strip())
-                  if m:
-                    lang, foreign, gloss = m.groups()
-                if not m:
-                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\s+&#0?91;(.*)&#0?93;$", pv.strip())
-                  if m:
-                    lang, foreign, gloss = m.groups()
-                if not m:
-                  m = re.search(r"^\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\s+[-–—=]\s+(.*)$", pv.strip())
-                  if m:
-                    lang, foreign, gloss = m.groups()
-                if not m:
-                  m = re.search(r"^([^{}]+?)\s+\(\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\)$", pv.strip())
-                  if m:
-                    gloss, lang, foreign = m.groups()
-                if not m:
-                  m = re.search(r"^''([^{}]+?)''\s+\[?\{\{lang\|(ko)\|([^{}|=]*)\}\}\]?$", pv.strip())
-                  if m:
-                    tr, lang, foreign = m.groups()
-                if not m:
-                  m = re.search(r"^([^{}]+?)\s+\[\{\{lang\|([^|]*)\|([^{}|=]*)\}\}\]$", pv.strip())
-                  if m:
-                    gloss, lang, foreign = m.groups()
-                if gloss or tr:
-                  if gloss:
-                    m = re.search("^''(.*)''$", gloss)
-                    if m:
-                      gloss = m.group(1)
-                  if tr:
-                    m = re.search("^''(.*)''$", tr)
-                    if m:
-                      tr = m.group(1)
-                  if gloss:
-                    cleaned_gloss = re.sub("\{\{[^{}]*\}\}", "", gloss)
-                    if (lang in ["ar", "ur", "fa", "pa"] and (re.search("([ʾʿāīūṣṭẓḍḥǧġṯḵḏśĀĪŪṢṬẒḌḤǦĠŠṮḴḎŚʔʕ]|t̤|n̲|T̤|N̲)", cleaned_gloss) or
-                                          re.search("\bal-", cleaned_gloss)) or
-                        lang == "fa" and (re.search("[âÂčČ]", cleaned_gloss) or re.search("-e\b", cleaned_gloss))):
-                      pagemsg("Assuming gloss '%s' is transliteration in %s=%s: %s" % (gloss, pn, pv, origt))
-                      tr = gloss
-                      gloss = None
-                  if tr:
-                    newval = "%s:%s<tr:%s>" % (lang, foreign, tr)
-                    t.add(pn, newval)
-                    pagemsg("Strip lang wrapping with transliteration %s=%s to %s: %s" % (pn, pv, newval, origt))
-                    this_template_notes.append("convert {{lang}} wrapping in %s= in {{%s}} to %s:...<tr:...>" % (pn, tn, lang))
-                  else:
-                    newval = "%s:%s<t:%s>" % (lang, foreign, gloss)
-                    t.add(pn, newval)
-                    pagemsg("Strip lang wrapping with translation %s=%s to %s: %s" % (pn, pv, newval, origt))
-                    this_template_notes.append("convert {{lang}} wrapping in %s= in {{%s}} to %s:...<t:...>" % (pn, tn, lang))
-                  count_lang_stripped_params[pn] += 1
-                  count_lang_stripped_params_by_template["%s:%s" % (pn, tn)] += 1
+                this_template_notes.append(retmsg)
+            else:
+              runs = normalize_and_split_on_balanced_delims(pv, pn, pagemsg)
+              if runs is False:
+                continue
+              split_runs = blib.split_alternating_runs(runs, "; +")
+              processed_vals = []
+              did_process = False
+              for i, split_run in enumerate(split_runs):
+                run = "".join(split_run).strip()
+                pnind = "%s:%s" % (pn, i + 1)
+                newval, retmsg, this_verify = convert_lang_like(pnind, run)
+                this_template_verify = this_template_verify or this_verify
+                if newval is None:
+                  newval = run
                 else:
-                  pagemsg("WARNING: Unable to strip lang wrapping in %s=%s: %s" % (pn, pv, origt))
-                  count_unstrippable_params[pn] += 1
-                  count_unstrippable_params_by_template["%s:%s" % (pn, tn)] += 1
+                  count_stripped_params[pnind] += 1
+                  count_stripped_params_by_template["%s:%s" % (pnind, tn)] += 1
+                  did_process = True
+                  this_template_notes.append(retmsg)
+                processed_vals.append(newval)
+              if did_process:
+                newval = "; ".join(processed_vals)
+                count_stripped_params[pn] += 1
+                count_stripped_params_by_template["%s:%s" % (pn, tn)] += 1
+                t.add(pn, newval)
+                pagemsg("Replaced %s=<%s> with <%s> in {{%s}}" % (pn, pv, newval, tn))
 
     if args.fix_year_boldfacing:
       if tn in quote_templates:
@@ -1268,7 +1533,8 @@ def process_text_on_page(index, pagetitle, text):
 
     if origt != str(t):
       comment = "; ".join(blib.group_notes(this_template_notes))
-      pagemsg("Replaced <from> %s <to> %s <end> <comment> %s <endcom>" % (origt, str(t), comment))
+      verify = " (VERIFY)" if this_template_verify else ""
+      pagemsg("Replaced%s <from> %s <to> %s <end> <comment> %s <endcom>" % (verify, origt, str(t), comment))
 
     notes.extend(this_template_notes)
 
@@ -1278,8 +1544,10 @@ parser = blib.create_argparser("rename {{quote-*}} params",
   include_pagefile=True, include_stdin=True)
 parser.add_argument("--check-unhandled-params", action="store_true", help="Check for unhandled params")
 parser.add_argument("--check-compound-pages", action="store_true", help="Check for possible compound pages like page=12-81")
-parser.add_argument("--check-author-splitting", action="store_true", help="Try to split cases where multiple authors given in author= and similar params")
-parser.add_argument("--remove-lang-wrapping", action="store_true", help="Remove {{lang|...}} wrapping in params")
+parser.add_argument("--split-authors", action="store_true", help="Try to split cases where multiple authors given in author= and similar params")
+parser.add_argument("--combine-authors", action="store_true", help="Combine multiple author fields and first/last fields into a single param")
+parser.add_argument("--remove-wrapping", action="store_true", help="Remove {{lang|...}} and other wrapping in params")
+parser.add_argument("--remove-unsafe-wrapping", action="store_true", help="Remove unsafe {{lang|...}} wrapping in params")
 parser.add_argument("--fix-year-boldfacing", action="store_true", help="Fix boldfacing in year= parameters")
 parser.add_argument("--check-bad-year", action="store_true", help="Check for bad values in year= and similar params")
 parser.add_argument("--from-to", action="store_true", help="Output all quote templates in from-to format")
@@ -1342,19 +1610,39 @@ if args.check_unhandled_params:
   msg("---------------------------------------")
   output_count_by_name(count_unhandled_params_by_template)
 
-if args.remove_lang_wrapping:
-  msg("Params processed by --remove-lang-wrapping:")
-  msg("-------------------------------------------")
-  output_count(count_lang_stripped_params)
+if args.remove_wrapping:
+  msg("Raw Wikipedia langs processed by --remove-wrapping:")
+  msg("---------------------------------------------------")
+  output_count(count_raw_wikipedia_stripped_langs)
   msg("")
-  msg("Params processed by --remove-lang-wrapping (by template):")
+  msg("Templated Wikipedia langs processed by --remove-wrapping:")
   msg("---------------------------------------------------------")
-  output_count(count_lang_stripped_params_by_template)
+  output_count(count_templated_wikipedia_stripped_langs)
   msg("")
-  msg("Params unprocessable by --remove-lang-wrapping:")
+  msg("{{lw}} Wikipedia langs processed by --remove-wrapping:")
+  msg("------------------------------------------------------")
+  output_count(count_lw_wikipedia_stripped_langs)
+  msg("")
+  msg("Raw Wikisource langs processed by --remove-wrapping:")
+  msg("----------------------------------------------------")
+  output_count(count_wikisource_stripped_langs)
+  msg("")
+  msg("{{lang}} langs processed by --remove-wrapping:")
+  msg("----------------------------------------------")
+  output_count(count_lang_stripped_langs)
+  msg("")
+  msg("Params processed by --remove-wrapping:")
+  msg("-------------------------------------------")
+  output_count(count_stripped_params)
+  msg("")
+  msg("Params processed by --remove-wrapping (by template):")
+  msg("---------------------------------------------------------")
+  output_count(count_stripped_params_by_template)
+  msg("")
+  msg("Params unprocessable by --remove-wrapping:")
   msg("-----------------------------------------------")
   output_count(count_unstrippable_params)
   msg("")
-  msg("Params unprocessable by --remove-lang-wrapping (by template):")
+  msg("Params unprocessable by --remove-wrapping (by template):")
   msg("-------------------------------------------------------------")
   output_count(count_unstrippable_params_by_template)
