@@ -200,19 +200,23 @@ def getrmparam(template, param):
 def bool_param_is_true(param):
   return param and param not in ["0", "no", "n", "false"]
 
+def parse_template_name(name):
+  m = re.search("\A(\s*)(.*?)(\s*(?:<!--.*?-->)?\s*)\Z", name, re.S)
+  return m.groups()
+
 def tname(template):
-  return str(template.name).strip()
+  before, name, after = parse_template_name(str(template.name))
+  return name
 
 def pname(param):
-  return str(param.name).strip()
+  before, name, after = parse_template_name(str(param.name))
+  return name
 
 def set_template_name(template, name, origname=None):
   if not origname:
     origname = str(template.name)
-  if origname.endswith("\n"):
-    template.name = name + "\n"
-  else:
-    template.name = name
+  before, namepart, after = parse_template_name(origname)
+  template.name = before + name + after
 
 def do_assert(cond, msg=None):
   if msg:
