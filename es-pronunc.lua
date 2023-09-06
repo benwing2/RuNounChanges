@@ -25,8 +25,7 @@ FIXME:
 8. Propagate qualifiers on individual pronun terms to rhymes and hyph.
 9. Support raw phonemic/phonetic pronunciations. [DONE]
 10. Support overall audio. [DONE]
-11. Keep th/ph/kh/gh/tz ([[Ertzaintza]]) together when syllabifying (but not bh due to [[subhumano]], [[subhistoria]], etc.
-    and not dh due to [[adherir]], [[autoadhesivo]] and many others). [DONE]
+11. Keep th/ph/kh/gh/tz ([[Ertzaintza]]) together when syllabifying (but not bh due to [[subhumano]], [[subhistoria]], etc.). [DONE]
 12. Support <q:...> and <qq:...> on audio. [DONE]
 13. Support <a:...> and <aa:...> (using {{a|...}}, left and right) on terms, rhymes, hyphenation, homophones and
     audio. [DONE]
@@ -178,7 +177,7 @@ end
 
 local function split_on_comma(term)
 	if term:find(",%s") then
-		return require("Module:dialect tags").split_on_comma(term)
+		return require(put_module).split_on_comma(term)
 	else
 		return rsplit(term, ",")
 	end
@@ -228,10 +227,8 @@ local function syllabify_from_spelling_or_pronun(text, is_spelling)
 	-- Don't divide Cl or Cr where C is a stop or fricative, except for dl.
 	text = rsub(text, "([pbfvkctg])%.([l" .. cluster_r .. "])", ".%1%2")
 	text = text:gsub("d%.([" .. cluster_r .. "])", ".d%1")
-	-- Don't divide ch, sh, ph, th, kh or gh. Do allow bh to be divided ([[subhumano]], [[subhúmedo]], etc.), also dh
-	-- ([[adherir]], [[autoadhesivo]] and many others). Words where dh should not be divided ([[gandhismo]],
-	-- [[cadherina]], etc.) need manual syllabification.
-	text = rsub(text, "([csptkg])%.h", ".%1h")
+	-- Don't divide ch, sh, ph, th, dh, fh, kh or gh. Do allow bh to be divided ([[subhumano]], [[subhúmedo]], etc.).
+	text = rsub(text, "([csptdfkg])%.h", ".%1h")
 	-- Don't divide ll or rr.
 	text = rsub(text, "([lr])%.%1", ".%1%1")
 	-- Don't divide tz ([[Ertzaintza]], [[quetzal]], [[hertziano]] and other words of Basque, Nahuatl and German
@@ -1059,7 +1056,7 @@ local function generate_pronun(args)
 				pronunciations[first_pronun].q = qs
 			end
 			if pronun.a then
-				pronunciations[first_pronun].a = a
+				pronunciations[first_pronun].a = pronun.a
 			end
 			if j > 1 then
 				pronunciations[first_pronun].separator = ", "
@@ -1322,7 +1319,7 @@ local function dodialect_specified_rhymes(rhymes, hyphs, parsed_respellings, rhy
 end
 
 
-local function parse_pron_modifiers(arg, put, parse_err, generate_obj, param_mods, no_split_on_comma)
+local function parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods, no_split_on_comma)
 	local retval = {}
 
 	if arg:find("<") then
@@ -1393,7 +1390,7 @@ local function parse_pron_modifiers(arg, put, parse_err, generate_obj, param_mod
 			table.insert(retval, obj)
 		end
 	elseif no_split_on_comma then
-		return generate_obj(arg)
+		table.insert(retval, generate_obj(arg))
 	else
 		for _, term in ipairs(split_on_comma(arg)) do
 			table.insert(retval, generate_obj(term))
@@ -1424,7 +1421,7 @@ local function parse_rhyme(arg, put, parse_err)
 		},
 	}
 
-	return parse_pron_modifiers(arg, put, parse_err, generate_obj, param_mods)
+	return parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods)
 end
 
 
@@ -1432,7 +1429,7 @@ local function parse_hyph(arg, put, parse_err)
 	-- None other than qualifiers
 	local param_mods = {}
 
-	return parse_pron_modifiers(arg, put, parse_err, generate_hyph_obj, param_mods)
+	return parse_pron_modifier(arg, put, parse_err, generate_hyph_obj, param_mods)
 end
 
 
@@ -1461,7 +1458,7 @@ local function parse_homophone(arg, put, parse_err)
 		},
 	}
 
-	return parse_pron_modifiers(arg, put, parse_err, generate_obj, param_mods)
+	return parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods)
 end
 
 
@@ -1486,7 +1483,7 @@ local function parse_audio(arg, put, parse_err)
 
 	-- Don't split on comma because some filenames have embedded commas not followed by a space
 	-- (typically followed by an underscore).
-	return parse_pron_modifiers(arg, put, parse_err, generate_audio_obj, param_mods, "no split on comma")
+	return parse_pron_modifier(arg, put, parse_err, generate_audio_obj, param_mods, "no split on comma")
 end
 
 
@@ -1520,7 +1517,7 @@ function export.show_pr(frame)
 	if args.audio then
 		overall_audio = {}
 		for _, audio in ipairs(args.audio) do
-			local parsed_audio = parse_audio(audio, nil, function(msg) overall_parse_err(msg, "audio", audio))
+			local parsed_audio = parse_audio(audio, nil, function(msg) overall_parse_err(msg, "audio", audio) end)
 			if #parsed_audio > 1 then
 				error("Internal error: Saw more than one object returned from parse_audio")
 			end
@@ -1539,21 +1536,6 @@ function export.show_pr(frame)
 			end
 
 			local param_mods = {
-				ref = {
-					store = "insert",
-				},
-				q = {
-					store = "insert",
-				},
-				qq = {
-					store = "insert",
-				},
-				a = {
-					store = "insert",
-				},
-				aa = {
-					store = "insert",
-				},
 				pre = {},
 				post = {},
 				style = {},
@@ -1566,19 +1548,23 @@ function export.show_pr(frame)
 					end,
 				},
 				rhyme = {
-					store = "insert-flattened",
+					insert = true,
+					flatten = true,
 					convert = function(arg) return parse_rhyme(arg, put, parse_err) end,
 				},
 				hyph = {
-					store = "insert-flattened",
+					insert = true,
+					flatten = true,
 					convert = function(arg) return parse_hyph(arg, put, parse_err) end,
 				},
 				hmp = {
-					store = "insert-flattened",
+					insert = true,
+					flatten = true,
 					convert = function(arg) return parse_homophone(arg, put, parse_err) end,
 				},
 				audio = {
-					store = "insert-flattened",
+					insert = true,
+					flatten = true,
 					convert = function(arg) return parse_audio(arg, put, parse_err) end,
 				},
 			}
@@ -1910,7 +1896,7 @@ function export.show_pr(frame)
 	end
 
 	local function format_hyphenations(hyphs, num_bullets)
-		local hyphtext = require("Module:hyphenation").format_hyphenations { lang = lang, hyphs = hyphs }
+		local hyphtext = require("Module:hyphenation").format_hyphenations { lang = lang, hyphs = hyphs, caption = "Syllabification" }
 		return string.rep("*", num_bullets) .. " " .. hyphtext
 	end
 
@@ -1935,10 +1921,14 @@ function export.show_pr(frame)
 	local function format_audio(audios, num_bullets)
 		local ret = {}
 		for i, audio in ipairs(audios) do
-			-- FIXME! There should be a module for this.
-			local text = frame:expandTemplate {
-				title = "audio", args = {"es", audio.file, audio.gloss }
-			}
+			local text = require("Module:audio").format_audios (
+				{
+				  lang = lang,
+				  audios = {{file = audio.file, qualifiers = nil }, },
+				  caption = audio.gloss
+				}
+			)
+			
 			if audio.q and audio.q[1] or audio.qq and audio.qq[1]
 				or audio.a and audio.a[1] or audio.aa and audio.aa[1] then
 				text = require("Module:pron qualifier").format_qualifiers(audio, text)
