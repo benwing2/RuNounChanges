@@ -818,8 +818,9 @@ function export.IPA(frame)
 			}
 		else
 			ret = ret.."Syllabification: <small>[please specify syllabification manually]</small>"
-			-- TODO: categorise.
-			-- ..'[[Category:'..arg_lang..'-pronunciation_without_hyphenation]]'
+			if mw.title.getCurrentTitle().nsText == "" then
+				ret = ("%s[[Category:%s-pronunciation_without_hyphenation]]"):format(ret, arg_lang)
+			end
 		end
 	end
 
