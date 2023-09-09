@@ -787,16 +787,16 @@ local function generate_params(ty)
 	Instead, use the method described above using {{para|newversion}} and {{para|2ndauthor}}, {{para|title2}}, etc.]=],
 	{{"original", annotated = true},
 	[=[If you are citing a {{w|derivative work}} such as a translation, use {{para|original}} to state the title of the
-	original work, {{para|by}} to state the author of the original work and {{para|version}} to state the type of
+	original work, {{para|by}} to state the author of the original work and {{para|deriv}} to state the type of
 	derivative work. Either {{para|original}} or {{para|by}} must be given for this method to be applicable. If all
-	three are given, the code displays "{``version`` of ``original`` by ``by``}". If {{para|original}} is omitted, the
-	literal text "{original}" is used. If {{para|version}} is omitted, the literal text "{translation}" is used. If
+	three are given, the code displays "{``deriv`` of ``original`` by ``by``}". If {{para|original}} is omitted, the
+	literal text "{original}" is used. If {{para|deriv}} is omitted, the literal text "{translation}" is used. If
 	{{para|by}} is omitted, the "by {``by``}" clause is left out.]=]},
 	{{"by", multientity = true},
 	[=[If you are citing a {{w|derivative work}} such as a translation, use {{para|by}} to state the author(s) of the
 	original work. See {{para|original}} above.]=]},
-	{"version",
-	[=[If you are citing a {{w|derivative work}} such as a translation, use {{para|version}} to state the type of
+	{"deriv",
+	[=[If you are citing a {{w|derivative work}} such as a translation, use {{para|deriv}} to state the type of
 	derivative work. See {{para|original}} above.]=]},
 	{{"quoted_in", annotated = true},
 	[=[If the quoted text is from book A which states that the text is from another book B, do the following:
