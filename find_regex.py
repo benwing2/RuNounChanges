@@ -10,28 +10,35 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_text_on_page(index, pagetitle, text, regex, invert, verbose,
-    include_text, all_matches, lang_only, from_to):
+    include_text, all_matches, lang, from_to):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   if verbose:
     pagemsg("Processing")
 
-  if not lang_only:
+  if not lang:
     text_to_search = text
   else:
-    text_to_search = None
-    foundlang = False
-    sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
+    text_to_search = []
+    langs = set(re.split(",(?!= )", lang))
+    seen_langs = set()
+    sections = re.split("(^==[^=]*==\s*\n)", text, 0, re.M)
 
     for j in range(2, len(sections), 2):
-      if sections[j-1] == "==%s==\n" % lang_only:
-        if foundlang:
-          pagemsg("WARNING: Found multiple %s sections, skipping page" % lang_only)
-          return
-        foundlang = True
-        text_to_search = sections[j]
-        break
+      m = re.search("^==\s*(.*?)\s*==$", sections[j - 1].strip())
+      if m:
+        seclang = m.group(1)
+        if seclang in langs:
+          if seclang in seen_langs:
+            pagemsg("WARNING: Found multiple %s sections, skipping page" % seclang)
+            return
+          seen_langs.add(seclang)
+          if len(langs) == 1:
+            text_to_search = [sections[j]]
+            break
+          text_to_search.append(sections[j - 1] + sections[j])
+    text_to_search = "".join(text_to_search)
 
   def output_match(m):
     if from_to:
@@ -61,11 +68,11 @@ def process_text_on_page(index, pagetitle, text, regex, invert, verbose,
       if found_match == (not invert):
         pagemsg("-------- begin text --------\n%s-------- end text --------" % text_to_search)
 
-def search_pages(args, regex, invert, input_from_diff, start, end, lang_only):
+def search_pages(args, regex, invert, input_from_diff, start, end, lang):
 
   def do_process_text_on_page(index, title, text):
     process_text_on_page(index, title, text, regex, invert, args.verbose,
-        args.text, args.all, lang_only, args.from_to)
+        args.text, args.all, lang, args.from_to)
 
   if input_from_diff:
     lines = open(input_from_diff, "r", encoding="utf-8")
@@ -87,7 +94,7 @@ if __name__ == "__main__":
   parser.add_argument('--all', help="Include all matches.", action="store_true")
   parser.add_argument('--from-to', help="Output in from-to format, for ease in pushing changes.", action="store_true")
   parser.add_argument('--text', help="Include full text of page or language section.", action="store_true")
-  parser.add_argument('--lang-only', help="Only search the specified language section.")
+  parser.add_argument('--lang', help="Only search the specified language section(s) (comma-separated).")
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
@@ -95,4 +102,4 @@ if __name__ == "__main__":
     raise ValueError("-e (--regex) must be given unless --text is given")
   if args.not_ and args.all:
     raise ValueError("Can't combine --not with --all")
-  search_pages(args, args.regex, args.not_, args.input_from_diff, start, end, args.lang_only)
+  search_pages(args, args.regex, args.not_, args.input_from_diff, start, end, args.lang)
