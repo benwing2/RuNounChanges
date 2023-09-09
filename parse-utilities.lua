@@ -442,27 +442,29 @@ local function parse_bracketed_term(term, parse_err)
 end
 
 
--- Parse a term that may have a language code preceding it (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). Return
--- two arguments, the term minus the language code and the language object corresponding to the language code.
--- Etymology-only languages are allowed. This function also correctly handles Wikipedia prefixes (e.g. 'w:Abatemarco'
--- or 'w:it:Colle Val d'Elsa' or 'lw:ru:Филарет') and Wikisource prefixes (e.g. 's:Twelve O'Clock' or
--- 's:[[Walden/Chapter XVIII|Walden]]' or 's:fr:Perceval ou le conte du Graal' or 's:ro:[[Domnul Vucea|Mr. Vucea]]' or
--- 'ls:ko:이상적 부인' or 'ls:ko:[[조선 독립의 서#一. 槪論|조선 독립의 서]]') and converts them into two-part links,
--- with the display form not including the Wikipedia or Wikisource prefix unless it was explicitly specified using a
--- two-part link as in 'lw:ru:[[Филарет (Дроздов)|Митрополи́т Филаре́т]]' or
--- 'ls:ko:[[조선 독립의 서#一. 槪論|조선 독립의 서]]'. The difference between 'w:' ("Wikipedia") and 'lw:' ("Wikipedia
--- link") is that the latter requires a language code and returns the corresponding language object; same for the
--- difference between 's:' ("Wikisource") and 'ls:' ("Wikisource link"). Returns four objects, `term`, `language_code`,
--- `link` and `display`, where if a two-part link is given or needs to be generated (as is the case with Wikipedia and
--- Wikisource prefixes), it is separated into link and display forms (otherwise `link` is the same as `term` and
--- `display` is nil). (NOTE: Embedded links are not correctly handled currently. If an embedded link is detected, the
--- whole term is returned as the link part, and the display part is nil. If you construct your own link from the link
--- and display parts, you must check for this.)
---
--- `parse_err_or_paramname` is an optional function of one or two arguments to display an error, or a string naming a
--- parameter to display in the error message. If omitted, a function is generated based off of `term`. (The second
--- argument to the function is the number of stack frames to ignore when calling error(); if you declare your error
--- function with only one argument, things will still work fine).
+--[==[
+Parse a term that may have a language code preceding it (e.g. {la:minūtia} or @{grc:[[σκῶρ|σκατός]]}). Return
+two arguments, the term minus the language code and the language object corresponding to the language code.
+Etymology-only languages are allowed. This function also correctly handles Wikipedia prefixes (e.g. 'w:Abatemarco'
+or 'w:it:Colle Val d'Elsa' or 'lw:ru:Филарет') and Wikisource prefixes (e.g. 's:Twelve O'Clock' or
+'s:[[Walden/Chapter XVIII|Walden]]' or 's:fr:Perceval ou le conte du Graal' or 's:ro:[[Domnul Vucea|Mr. Vucea]]' or
+'ls:ko:이상적 부인' or 'ls:ko:[[조선 독립의 서#一. 槪論|조선 독립의 서]]') and converts them into two-part links,
+with the display form not including the Wikipedia or Wikisource prefix unless it was explicitly specified using a
+two-part link as in 'lw:ru:[[Филарет (Дроздов)|Митрополи́т Филаре́т]]' or
+'ls:ko:[[조선 독립의 서#一. 槪論|조선 독립의 서]]'. The difference between 'w:' ("Wikipedia") and 'lw:' ("Wikipedia
+link") is that the latter requires a language code and returns the corresponding language object; same for the
+difference between 's:' ("Wikisource") and 'ls:' ("Wikisource link"). Returns four objects, `term`, `language_code`,
+`link` and `display`, where if a two-part link is given or needs to be generated (as is the case with Wikipedia and
+Wikisource prefixes), it is separated into link and display forms (otherwise `link` is the same as `term` and
+`display` is nil). (NOTE: Embedded links are not correctly handled currently. If an embedded link is detected, the
+whole term is returned as the link part, and the display part is nil. If you construct your own link from the link
+and display parts, you must check for this.)
+
+`parse_err_or_paramname` is an optional function of one or two arguments to display an error, or a string naming a
+parameter to display in the error message. If omitted, a function is generated based off of `term`. (The second
+argument to the function is the number of stack frames to ignore when calling error(); if you declare your error
+function with only one argument, things will still work fine).
+]==]
 function export.parse_term_with_lang(term, parse_err_or_paramname, return_parts)
 	local parse_err = type(parse_err_or_paramname) == "function" and parse_err_or_paramname or
 		parse_err_or_paramname and export.make_parse_err(("%s=%s"):format(parse_err_or_paramname, term)) or
@@ -506,40 +508,47 @@ function export.parse_term_with_lang(term, parse_err_or_paramname, return_parts)
 end
 
 
---[=[
-Parse a term that may have inline modifiers attached (e.g. 'rifiuti<q:plural-only>' or
-'rinfusa<t:bulk cargo><lit:resupplying><qq:more common in the plural {{m|it|rinfuse}}>').
-  * `arg` is the term to parse.
-  * `props` is an object holding further properties controlling how to parse the term:
-	 * `paramname` is the name of the parameter where `arg` comes from, or nil if this isn't available (it is used only
-	   in error messages).
-	 * `param_mods` is a table describing the allowed inline modifiers (see below).
-	 * `generate_obj` is a function of one or two arguments that should parse the argument minus the inline modifiers
-	   and return a corresponding parsed  object (into which the inline modifiers will be rewritten). If declared with
-	   one argument, that will be the raw value to parse; if declared with two arguments, the second argument will be
-	   the `parse_err` function (see below).
-	 * `parse_err` is an optional function of one argument (an error message) and should display the error message,
-	   along with any desired contextual text (e.g. the argument name and value that triggered the error). If omitted,
-	   a default function will be generated which displays the error along with the original value of `arg` (passed
-	   through escape_wikicode() above to ensure that Wikicode (such as links) is displayed literally).
-	 * `splitchar` is a Lua pattern. If specified, `arg` can consist of multiple delimiter-separated terms, each of
-	   which may be followed by inline modifiers, and the return value will be a list of parsed objects instead of a
-	   single object. Note that splitting on delimiters will not happen in certain protected sequences (by default
-	   comma+whitespace; see below). The algorithm to split on delimiters is sensitive to inline modifier syntax and
-	   will not be confused by delimiters inside of inline modifiers, which do not trigger splitting (whether or not
-	   contained within protected sequences).
-	 * `preserve_splitchar`, if specified, causes the actual delimiter matched by `splitchar` to be returned in the
-	   parsed object describing the element that comes after the delimiter. The delimiter is stored in a key whose
-	   name is controlled by `separator_key`, which defaults to "separator".
-	 * `separator_key` controls the key into which the actual delimiter is written when `preserve_splitchar` is used.
-	   See above.
-	 * `escape_fun` and `unescape_fun` are as in split_escaping() and split_alternating_runs_escaping() above and
-	   control the protected sequences that won't be split. By default, `escape_comma_whitespace` and
-	   `unescape_comma_whitespace` are used, so that comma+whitespace sequences won't be split.
+--[==[
+Parse a term that may have inline modifiers attached (e.g. {rifiuti<q:plural-only>} or
+@{rinfusa<t:bulk cargo><lit:resupplying><qq:more common in the plural {{m|it|rinfuse}}>}).
+* `arg` is the term to parse.
+* `props` is an object holding further properties controlling how to parse the term (only `param_mods` and
+  `generate_obj` are required):
+** `paramname` is the name of the parameter where `arg` comes from, or nil if this isn't available (it is used only in
+   error messages).
+** `param_mods` is a table describing the allowed inline modifiers (see below).
+** `generate_obj` is a function of one or two arguments that should parse the argument minus the inline modifiers and
+   return a corresponding parsed object (into which the inline modifiers will be rewritten). If declared with one
+   argument, that will be the raw value to parse; if declared with two arguments, the second argument will be the
+   `parse_err` function (see below).
+** `parse_err` is an optional function of one argument (an error message) and should display the error message, along
+   with any desired contextual text (e.g. the argument name and value that triggered the error). If omitted, a default
+   function will be generated which displays the error along with the original value of `arg` (passed through
+   {escape_wikicode()} above to ensure that Wikicode (such as links) is displayed literally).
+** `splitchar` is a Lua pattern. If specified, `arg` can consist of multiple delimiter-separated terms, each of which
+   may be followed by inline modifiers, and the return value will be a list of parsed objects instead of a single
+   object. Note that splitting on delimiters will not happen in certain protected sequences (by default
+   comma+whitespace; see below). The algorithm to split on delimiters is sensitive to inline modifier syntax and will
+   not be confused by delimiters inside of inline modifiers, which do not trigger splitting (whether or not contained
+   within protected sequences).
+** `outer_container`, if specified, is used when multiple delimiter-separated terms are possible, and is the object
+   into which the list of per-term objects is stored (into the `terms` field) and into which any modifiers that are
+   given the `overall` property (see below) will be stored. If given, this value will be returned as the value of
+   {parse_inline_modifiers()}. If `outer_container` is not given, {parse_inline_modifiers()} will return the list of
+   per-term objects directly, and no modifier may have an `overall` property.
+** `preserve_splitchar`, if specified, causes the actual delimiter matched by `splitchar` to be returned in the
+   parsed object describing the element that comes after the delimiter. The delimiter is stored in a key whose
+   name is controlled by `separator_key`, which defaults to "separator".
+** `separator_key` controls the key into which the actual delimiter is written when `preserve_splitchar` is used.
+   See above.
+** `escape_fun` and `unescape_fun` are as in split_escaping() and split_alternating_runs_escaping() above and
+   control the protected sequences that won't be split. By default, `escape_comma_whitespace` and
+   `unescape_comma_whitespace` are used, so that comma+whitespace sequences won't be split.
 
 `param_mods` is a table describing allowed modifiers. The keys of the table are modifier prefixes and the values are
 tables describing how to parse and store the associated modifier values. Here is a typical example:
 
+<pre>
 local param_mods = {
 	t = {
 		item_dest = "gloss",
@@ -556,46 +565,120 @@ local param_mods = {
 		end,
 	},
 }
+</pre>
 
 In the table values:
 * `item_dest` specifies the destination key to store the object into (if not the same as the modifier key itself).
-* `convert` is a function of one or two arguments (the modifier value and optionally the `parse_err` function as passed
+* `convert` is a function of one or two arguments (the modifier value and optionally the {parse_err} function as passed
   in or generated), and should parse and convert the value into the appropriate object. If omitted, the string value is
   stored unchanged.
 * `store` describes how to store the converted modifier value into the parsed object. If omitted, the converted value
-  is simply written into the parsed object under the appropriate key (but an error is generated if the key already has
-  a value). If `store` == "insert", the converted value is appended to the key's value using table.insert();
-  if the key has no value, it is first converted to an empty list. `store` == "insertIfNot" is similar but appends the
-  value using insertIfNot() in [[Module:table]]. If `store == "insert-flattened", the converted value is assumed to be
-  a list and the objects are appended one-by-one into the key's existing value using table.insert(). `store` ==
-  "insertIfNot-flattened" is similar but appends using insertIfNot() in [[Module:table]]. WARNING: When using
-  "insert-flattened" and "insertIfNot-flattened", if there is no existing value for the key, the converted value is
-  just stored directly. This means that future appends will side-effect that value, so make sure that the return
-  value of the conversion function for this key generates a fresh list each time.
-]=]
+  is simply written into the parsed object under the appropriate key; but an error is generated if the key already has
+  a value. (This means that multiple occurrences of a given modifier are allowed if `store` is given, but not
+  otherwise.) `store` can be one of the following:
+** {"insert"}: the converted value is appended to the key's value using {table.insert()}; if the key has no value, it
+   is first converted to an empty list;
+** {"insertIfNot"}: is similar but appends the value using {insertIfNot()} in [[Module:table]];
+** {"insert-flattened"}, the converted value is assumed to be a list and the objects are appended one-by-one into the
+   key's existing value using {table.insert()};
+** {"insertIfNot-flattened"} is similar but appends using {insertIfNot()} in [[Module:table]]; (WARNING: When using
+   {"insert-flattened"} and {"insertIfNot-flattened"}, if there is no existing value for the key, the converted value is
+   just stored directly. This means that future appends will side-effect that value, so make sure that the return value
+   of the conversion function for this key generates a fresh list each time.)
+** a function of one argument, an object with the following properties:
+*** `dest`: the object to write the value into;
+*** `key`: the field where the value should be written;
+*** `converted`: the (converted) value to write;
+*** `raw_val`: the raw, user-specified value (a string);
+*** `parse_err`: a function of one argument (an error string), which signals an error, and includes extra context in
+    the message about the modifier in question, the angle-bracket spec that includes the modifier in it, the overall
+	value, and (if `paramname` was given) the parameter holding the overall value.
+* `overall` only applies if `splitchar` is given. In this case, the modifier applies to the entire argument rather than
+   to an individual term in the argument, and must occur after the last item separated by `splitchar`, instead of being
+   allowed to occur after any of them. The modifier will be stored into the outer container object, which must exist
+   (i.e. `outer_container` must have been given).
+
+The return value of {parse_inline_modifiers()} depends on whether `splitchar` and `outer_container` have been given. If
+neither is given, the return value is the object returned by `generate_obj`. If `splitchar` but not `outer_container` is
+given, the return value is a list of per-term objects, each of which is generated by `generate_obj`. If both `splitchar`
+and `outer_container` are given, the return value is the value of `outer_container` and the per-term objects are stored
+into the `terms` field of this object.
+]==]
 function export.parse_inline_modifiers(arg, props)
 	local segments = export.parse_balanced_segment_run(arg, "<", ">")
 
+	local function verify_no_overall()
+		for mod, mod_props in pairs(props.param_mods) do
+			if mod_props.overall then
+				error("Internal caller error: Can't specify `overall` for a modifier in `param_mods` unless `outer_container` property is given")
+			end
+		end
+	end
+
 	if not props.splitchar then
-		return export.parse_inline_modifiers_from_segments(segments, arg, props)
+		if props.outer_container then
+			error("Internal caller error: Can't specify `outer_container` property unless `splitchar` is given")
+		end
+		verify_no_overall()
+		return export.parse_inline_modifiers_from_segments {
+			group = segments,
+			group_index = nil,
+			separated_groups = nil,
+			arg = arg,
+			props = props
+		}
 	else
-		local retval = {}
+		local terms = {}
+		if props.outer_container then
+			props.outer_container.terms = terms
+		else
+			verify_no_overall()
+		end
 		local separated_groups = export.split_alternating_runs_escaping(segments, props.splitchar,
 			props.preserve_splitchar, props.escape_fun or export.escape_comma_whitespace,
 			props.unescape_fun or export.unescape_comma_whitespace)
 		for j = 1, #separated_groups, (props.preserve_splitchar and 2 or 1) do
-			local parsed = export.parse_inline_modifiers_from_segments(separated_groups[j], arg, props)
+			local parsed = export.parse_inline_modifiers_from_segments {
+				group = separated_groups[j],
+				group_index = j,
+				separated_groups = separated_groups,
+				arg = arg,
+				props = props
+			}
 			if props.preserve_splitchar and j > 1 then
 				parsed[props.separator_key or "separator"] = separated_groups[j - 1][1]
 			end
-			table.insert(retval, parsed)
+			table.insert(terms, parsed)
 		end
-		return retval
+		if props.outer_container then
+			return props.outer_container
+		else
+			return terms
+		end
 	end
 end
 
 
-function export.parse_inline_modifiers_from_segments(group, arg, props)
+--[==[
+Parse a single term that may have inline modifiers attached. This is a helper function of {parse_inline_modifiers()} but
+is exported separately in case the caller needs to make their own call to {parse_balanced_segment_run()} (as in
+[[Module:quote]], which splits on several matched delimiters simultaneously). It takes only a single argument, `data`,
+which is an object with the following fields:
+* `group`: A list of segments as output by {parse_balanced_segment_run()} (see the overall comment at the top of
+  [[Module:parse utilities]]), or one of the lists returned by calling {split_alternating_runs()}.
+* `separated_groups`: The list of groups (each of which is of the form of `group`) describing all the terms in the
+  argument parsed by {parse_inline_modifiers()}, or {nil} if this isn't applicable (i.e. multiple terms aren't allowed
+  in the argument).
+* `group_index`: The index into `separated_groups` where `group` can be found, or {nil} if not applicable.
+* `arg`: The original user-specified argument being parsed; used only for error messages.
+* `props`: The `props` argument to {parse_inline_modifiers()}.
+
+The return value is the object created by `generate_obj`, with properties filled in describing the modifiers of the
+term in question.
+]==]
+function export.parse_inline_modifiers_from_segments(data)
+	local props = data.props
+	local group = data.group
 	local function get_valid_prefixes()
 		local valid_prefixes = {}
 		for param_mod, _ in pairs(props.param_mods) do
@@ -607,14 +690,14 @@ function export.parse_inline_modifiers_from_segments(group, arg, props)
 
 	local function get_arg_gloss()
 		if props.paramname then
-			return ("%s=%s"):format(props.paramname, arg)
+			return ("%s=%s"):format(props.paramname, data.arg)
 		else
-			return arg
+			return data.arg
 		end
 	end
 
 	local parse_err = props.parse_err or export.make_parse_err(get_arg_gloss())
-	local dest_obj = props.generate_obj(group[1], parse_err)
+	local term_obj = props.generate_obj(group[1], parse_err)
 	for k = 2, #group - 1, 2 do
 		if group[k + 1] ~= "" then
 			parse_err("Extraneous text '" .. group[k + 1] .. "' after modifier")
@@ -635,8 +718,26 @@ function export.parse_inline_modifiers_from_segments(group, arg, props)
 		local prefix_parse_err =
 			export.make_parse_err(("modifier prefix '%s' in %s in %s"):format(prefix, group[k], get_arg_gloss()))
 		if props.param_mods[prefix] then
-			local key = props.param_mods[prefix].item_dest or prefix
-			local convert = props.param_mods[prefix].convert
+			local mod_props = props.param_mods[prefix]
+			local key = mod_props.item_dest or prefix
+			local convert = mod_props.convert
+			local dest
+			if mod_props.overall then
+				if not data.separated_groups then
+					prefix_parse_err("Internal error: `data.separated_groups` not given when `overall` is seen")
+				end
+				if not props.outer_container then
+					-- This should have been caught earlier during validation in parse_inline_modifiers().
+					prefix_parse_err("Internal error: `props.outer_container` not given when `overall` is seen")
+				end
+				if data.group_index ~= #data.separated_groups then
+					prefix_parse_err("Prefix should occur after the last comma-separated term")
+				end
+				dest = props.outer_container
+			else
+				dest = term_obj
+			end
+
 			local converted
 			if convert then
 				converted = convert(val, prefix_parse_err)
@@ -645,40 +746,51 @@ function export.parse_inline_modifiers_from_segments(group, arg, props)
 			end
 			local store = props.param_mods[prefix].store
 			if not store then
-				if dest_obj[key] then
+				if dest[key] then
 					prefix_parse_err("Prefix occurs twice")
 				end
-				dest_obj[key] = converted
+				dest[key] = converted
 			elseif store == "insert" then
-				if not dest_obj[key] then
-					dest_obj[key] = {converted}
+				if not dest[key] then
+					dest[key] = {converted}
 				else
-					table.insert(dest_obj[key], converted)
+					table.insert(dest[key], converted)
 				end
 			elseif store == "insertIfNot" then
-				if not dest_obj[key] then
-					dest_obj[key] = {converted}
+				if not dest[key] then
+					dest[key] = {converted}
 				else
-					require("Module:table").insertIfNot(dest_obj[key], converted)
+					require("Module:table").insertIfNot(dest[key], converted)
 				end
 			elseif store == "insert-flattened" then
-				if not dest_obj[key] then
-					dest_obj[key] = obj
+				if not dest[key] then
+					dest[key] = obj
 				else
 					for _, obj in ipairs(converted) do
-						table.insert(dest_obj[key], obj)
+						table.insert(dest[key], obj)
 					end
 				end
 			elseif store == "insertIfNot-flattened" then
-				if not dest_obj[key] then
-					dest_obj[key] = obj
+				if not dest[key] then
+					dest[key] = obj
 				else
 					for _, obj in ipairs(converted) do
-						require("Module:table").insertIfNot(dest_obj[key], obj)
+						require("Module:table").insertIfNot(dest[key], obj)
 					end
 				end
+			elseif type(store) == "string" then
+				prefix_parse_err(("Internal caller error: Unrecognized value '%s' for `store` property"):format(store))
+			elseif type(store) ~= "function" then
+				prefix_parse_err(("Internal caller error: Unrecognized type for `store` property %s"):format(
+					mw.dumpObject(store)))
 			else
-				store(dest_obj, key, converted, prefix_parse_err)
+				store {
+					dest = dest,
+					key = key,
+					converted = converted,
+					raw = val,
+					parse_err = prefix_parse_err
+				}
 			end
 		else
 			local valid_prefixes = get_valid_prefixes()
@@ -689,7 +801,7 @@ function export.parse_inline_modifiers_from_segments(group, arg, props)
 				require("Module:table").serialCommaJoin(valid_prefixes, {dontTag = true}))
 		end
 	end
-	return dest_obj
+	return term_obj
 end
 
 
