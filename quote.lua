@@ -17,7 +17,7 @@ local dialect_tags_module = "Module:dialect tags"
 local italics_module = "Module:italics"
 local languages_module = "Module:languages"
 local links_module = "Module:links"
-local number_utilities_module = "Module:number-utilities"
+local number_utilities_module = "Module:number utilities"
 local parameters_module = "Module:parameters"
 local parse_utilities_module = "Module:parse utilities"
 local qualifier_module = "Module:qualifier"
@@ -950,16 +950,20 @@ local function format_date_args(a, get_full_paramname, alias_map, parampref, par
 			ins(dash)
 			ins(format_date_or_year_month(date, yearobj, monthobj, day_explicitly_given, "date"))
 		elseif cur_month and cur_month ~= beg_month then
+			local month_ins = monthobj and format_annotated_text(monthobj) or cur_month
 			-- Same year but different months; insert current month and (if available) current day.
-			ins(dash)
-			ins(monthobj and format_annotated_text(monthobj) or cur_month)
 			if cur_day then
+				ins(dash)
+				ins(month_ins)
 				ins(" " .. cur_day)
+			else
+				ins("–")
+				ins(month_ins)
 			end
 		elseif cur_day and cur_day ~= beg_day then
 			-- Same year and month but different days; insert current day.
-			ins(dash)
-			ins(" " .. cur_day)
+			ins("–")
+			ins(cur_day)
 		else
 			-- Same year, month and day; or same year and month, and day not available; or same year, and month and
 			-- day not available. Do nothing. FIXME: Should we throw an error?
@@ -1052,10 +1056,6 @@ function export.source(args, alias_map)
 		sep = next_sep or ", "
 	end
 
-	if args.brackets then
-		add("[")
-	end
-
 	-- Return a function that generates the actual parameter name associated with a base param (e.g. "author", "last").
 	-- The actual parameter name may have an index added (an empty string for the first set of params, e.g. author=,
 	-- last=, or a numeric index for further sets of params, e.g. author2=, last2=, etc.).
@@ -1134,7 +1134,8 @@ function export.source(args, alias_map)
 	local function parse_and_format_multivalued_annotated_text_with_name(param, delimiter, tag_text, tag_gloss)
 		local val, fullname = a_with_name(param)
 		local objs = parse_multivalued_annotated_text(val, fullname)
-		return format_multivalued_annotated_text(objs, delimiter, tag_text, tag_gloss), fullname
+		local num_objs = objs and #objs or 0
+		return format_multivalued_annotated_text(objs, delimiter, tag_text, tag_gloss), fullname, num_objs
 	end
 
 	-- Convenience function to fetch a multivalued parameter that may be in a foreign language or text (and may
@@ -1190,10 +1191,13 @@ function export.source(args, alias_map)
 				return txt
 			end
 		end
+
+		local num_authorobjs
 		if author then
 			local authorobjs = parse_multivalued_annotated_text(author, author_fullname, trans_author,
 				trans_author_fullname)
-			if #authorobjs == 1 then
+			num_authorobjs = #authorobjs
+			if num_authorobjs == 1 then
 				if is_anonymous(authorobjs[1].text) then
 					authorobjs[1].text = "anonymous author"
 					authorobjs[1].link = "anonymous author"
@@ -1225,6 +1229,7 @@ function export.source(args, alias_map)
 				add(formatted_text)
 			end
 		else
+			num_authorobjs = 1
 			-- Author separated into first name + last name. We don't currently support non-Latin-script
 			-- authors separated this way and probably never will.
 			if first then
@@ -1259,75 +1264,14 @@ function export.source(args, alias_map)
 		end
 
 		author_outputted = true
-	end
 
-	local function add_authorlabel()
-		local default_authorlabel = a("default-authorlabel")
-		if default_authorlabel and yesno(a("authorlabel"), true) then
-			sep = nil
-			add_with_sep(" " .. default_authorlabel)
-		end
-	end
-
-	-- Set this now so a() works just below.
-	get_full_paramname = make_get_full_paramname("")
-
-	local need_comma = false
-	local formatted_date, need_date = format_date_args(a, get_full_paramname, alias_map, nil, nil, "bold year",
-		"Can we [[:Category:Requests for date|date]] this quote?")
-	if formatted_date then
-		need_comma = true
-		add(formatted_date)
-	end
-
-	-- Fetch origdate=/origyear=/origmonth= and format appropriately.
-	local formatted_origdate = format_date_args(a, get_full_paramname, alias_map, "orig")
-	if formatted_origdate then
-		need_comma = true
-		add(SPACE_LBRAC .. formatted_origdate .. RBRAC)
-	end
-
-	if need_comma then
-		sep = ", "
-	end
-
-	-- Find maximum indexed author or last name.
-	local maxind = math.max(args.author.maxindex, args.last.maxindex)
-	-- Include max index of ancillary params so we get an error message about their use without the primary params.
-	local ancillary_params = { "trans-author", "authorlink", "trans-authorlink", "first", "trans-first", "trans-last" }
-	for _, ancillary in ipairs(ancillary_params) do
-		maxind = math.max(maxind, args[ancillary].maxindex)
-	end
-
-	for i = 1, maxind do
-		local ind = i == 1 and "" or i
-		local author = args.author[i]
-		local last = args.last[i]
-		if args.author[i] or args.last[i] then
-			add_author(args.author[i], "author" .. ind, args["trans-author"][i], "trans-author" .. ind,
-				args.authorlink[i], "authorlink" .. ind, args["trans-authorlink"][i], "trans-authorlink" .. ind,
-				args.first[i], "first" .. ind, args["trans-first"][i], "trans-first" .. ind,
-				args.last[i], "last" .. ind, args["trans-last"][i], "trans-last" .. ind)
-			sep = ", "
-		else
-			for _, cant_have in ipairs(ancillary_params) do
-				if args[cant_have][i] then
-					error(("Can't have |%s%s= without |author%s= or |last%s="):format(cant_have, ind, ind, ind))
-				end
-			end
-		end
-	end
-
-	if author_outputted then
-		add_authorlabel()
+		return num_authorobjs
 	end
 
 	local function add_authorlike(param, prefix_with_preceding_authors, suffix_without_preceding_authors,
 		suffix_if_multiple, anonymous_suffix)
 		local delimiter = author_outputted and "and" or ", "
-		local val, fullname = a_with_name(param)
-		local objs = parse_multivalued_annotated_text(val, fullname)
-		local entities = format_multivalued_annotated_text(objs, delimiter)
+		local entities, _, num_entities = parse_and_format_multivalued_annotated_text_with_name(param, delimiter)
 		if not entities then
 			return
 		end
@@ -1354,7 +1298,7 @@ function export.source(args, alias_map)
 			add_with_sep("anonymous" .. anonymous_suffix)
 		elseif prefix_with_preceding_authors and (author_outputted or not suffix_without_preceding_authors) then
 			add_with_sep(prefix_with_preceding_authors .. entities)
-		elseif suffix_if_multiple and #objs > 1 then
+		elseif suffix_if_multiple and num_entities > 1 then
 			add_with_sep(entities .. suffix_if_multiple)
 		else
 			add_with_sep(entities .. suffix_without_preceding_authors)
@@ -1362,21 +1306,17 @@ function export.source(args, alias_map)
 		author_outputted = true
 	end
 
-	-- FIXME, how does specifying coauthors= differ from just specifying multiple authors?
-	local coauthors = parse_and_format_multivalued_annotated_text("coauthors")
-	if coauthors then
-		add_with_sep(coauthors)
-		author_outputted = true
-	end
-	add_authorlike("quotee", "quoting ", ", quotee", ", quotees")
-
-	local function has_new_title_or_ancillary_author()
+	local function add_authorlabel()
+		local default_authorlabel = a("default-authorlabel")
+		if default_authorlabel and yesno(a("authorlabel"), true) then
+			sep = nil
+			add_with_sep(" " .. default_authorlabel)
+		end
 	end
 
 	local function has_new_title_or_author()
 		return args["2ndauthor"] or args["2ndlast"] or args.chapter2 or args.title2 or
-			args.tlr2 or args.translator2 or args.translators2 or
-			args.mainauthor2 or args.editor2 or args.editors2 or args.compiler2 or args.compilers2 or
+			args.tlr2 or args.mainauthor2 or args.editor2 or args.editors2 or args.compiler2 or args.compilers2 or
 			args.director2 or args.directors2
 	end
 
@@ -1465,13 +1405,88 @@ function export.source(args, alias_map)
 		return formatted
 	end
 
-	-- This handles everything after displaying the author, starting with the chapter and ending with page, column and
-	-- then other=. It is currently called twice: Once to handle the main portion of the citation, and once to handle a
-	-- "newversion" citation. `ind` is either "" for the main portion or a number (currently only 2) for a "newversion"
-	-- citation. In a few places we conditionalize on `ind` to take actions depending on its value. `sep` is the
-	-- separator to display before the first item we add; see add_with_sep() below.
-	local function postauthor(ind)
+	------------------- Now we start outputting text ----------------------
+
+	-- Set this now so a() works just below.
+	get_full_paramname = make_get_full_paramname("")
+
+	if args.brackets then
+		add("[")
+	end
+
+	local need_comma = false
+	local formatted_date, need_date = format_date_args(a, get_full_paramname, alias_map, nil, nil, "bold year",
+		"Can we [[:Category:Requests for date|date]] this quote?")
+	if formatted_date then
+		need_comma = true
+		add(formatted_date)
+	end
+
+	-- Fetch origdate=/origyear=/origmonth= and format appropriately.
+	local formatted_origdate = format_date_args(a, get_full_paramname, alias_map, "orig")
+	if formatted_origdate then
+		need_comma = true
+		add(SPACE_LBRAC .. formatted_origdate .. RBRAC)
+	end
+
+	if need_comma then
+		sep = ", "
+	end
+
+	-- Find maximum indexed author or last name.
+	local maxind = math.max(args.author.maxindex, args.last.maxindex)
+	-- Include max index of ancillary params so we get an error message about their use without the primary params.
+	local ancillary_params = { "trans-author", "authorlink", "trans-authorlink", "first", "trans-first", "trans-last" }
+	for _, ancillary in ipairs(ancillary_params) do
+		maxind = math.max(maxind, args[ancillary].maxindex)
+	end
+
+	local num_authors = 0
+	for i = 1, maxind do
+		local ind = i == 1 and "" or i
+		local author = args.author[i]
+		local last = args.last[i]
+		if args.author[i] or args.last[i] then
+			local this_num_authors = add_author(args.author[i], "author" .. ind, args["trans-author"][i],
+				"trans-author" .. ind, args.authorlink[i], "authorlink" .. ind, args["trans-authorlink"][i],
+				"trans-authorlink" .. ind, args.first[i], "first" .. ind, args["trans-first"][i], "trans-first" .. ind,
+				args.last[i], "last" .. ind, args["trans-last"][i], "trans-last" .. ind)
+			num_authors = num_authors + this_num_authors
+			sep = ", "
+		else
+			for _, cant_have in ipairs(ancillary_params) do
+				if args[cant_have][i] then
+					error(("Can't have |%s%s= without |author%s= or |last%s="):format(cant_have, ind, ind, ind))
+				end
+			end
+		end
+	end
+
+	-- This handles everything after displaying the author, starting with the chapter and ending with page, column,
+	-- line and then other=. It is currently called twice: Once to handle the main portion of the citation, and once to
+	-- handle a "newversion" citation. `ind` is either "" for the main portion or a number (currently only 2) for a
+	-- "newversion" citation. In a few places we conditionalize on `ind` to take actions depending on its value.
+	local function postauthor(ind, num_authors)
 		get_full_paramname = make_get_full_paramname(ind)
+
+		if author_outputted then
+			add_authorlabel()
+		end
+
+		local coauthors = parse_and_format_multivalued_annotated_text("coauthors", "and")
+		if coauthors then
+			local with_prefix = ""
+			if author_outputted then
+				with_prefix = "with "
+				if num_authors == 1 then
+					sep = " "
+				end
+			end
+			add_with_sep(with_prefix .. coauthors)
+			author_outputted = true
+		end
+
+		add_authorlike("quotee", "quoting ", ", quotee", ", quotees")
 
 		add_authorlike("chapter_tlr", "translated by ", ", transl.", nil, " translator")
 
@@ -1746,6 +1761,12 @@ function export.source(args, alias_map)
 		if artist then
 			add_with_sep("performed by " .. artist)
 		end
+
+		local feat = parse_and_format_multivalued_annotated_text("feat", "and")
+		if feat then
+			sep = " "
+			add_with_sep("ft. " .. feat)
+		end
 	
 		local role = parse_and_format_multivalued_annotated_text("role", "and")
 		local actor_val, actor_fullname = a_with_name("actor")
@@ -1790,7 +1811,7 @@ function export.source(args, alias_map)
 
 		local original = parse_and_format_annotated_text("original", tag_with_cite, tag_with_cite)
 		local by = parse_and_format_multivalued_annotated_text("by", "and")
-		local origtype = a("version") or "translation"
+		local origtype = a("deriv") or "translation"
 		if original or by then
 			add_with_sep(origtype .. " of " .. (original or "original") .. (by and " by " .. by or ""))
 		end
@@ -1925,6 +1946,20 @@ function export.source(args, alias_map)
 			add(formatted_section)
 		end
 
+		-- video game stuff
+		local system = parse_and_format_annotated_text("system")
+		if system then
+			add(", " .. system)
+		end
+		local scene = parse_and_format_annotated_text("scene")
+		if scene then
+			add(", scene: " .. scene)
+		end
+		local level = parse_and_format_annotated_text("level")
+		if level then
+			add(", level/area: " .. level)
+		end
+
 		local note = parse_and_format_annotated_text("note")
 		if note then
 			add(", " .. note)
@@ -1943,9 +1978,9 @@ function export.source(args, alias_map)
 			end
 		end
 
-		handle_numeric_param("line", a("line_prefix") or "line", ", ")
 		handle_numeric_param("page", a("page_prefix") or "page", ", ")
 		handle_numeric_param("column", a("column_prefix") or "column", ", ")
+		handle_numeric_param("line", a("line_prefix") or "line", ", ")
 		-- FIXME: Does this make sense? What is other=?
 		local other = parse_and_format_annotated_text("other")
 		if other then
@@ -1954,7 +1989,7 @@ function export.source(args, alias_map)
 	end
 
 	-- Display all the text that comes after the author, for the main portion.
-	postauthor("")
+	postauthor("", num_authors)
 
 	author_outputted = false
 
@@ -1980,12 +2015,9 @@ function export.source(args, alias_map)
 
 	-- Add the newversion author(s).
 	if args["2ndauthor"] or args["2ndlast"] then
-		add_author(args["2ndauthor"], "2ndauthor", nil, nil, args["2ndauthorlink"], "2ndauthorlink", nil, nil,
-			args["2ndfirst"], "2ndfirst", nil, nil, args["2ndlast"], "2ndlast", nil, nil)
+		num_authors = add_author(args["2ndauthor"], "2ndauthor", nil, nil, args["2ndauthorlink"], "2ndauthorlink", nil,
+			nil, args["2ndfirst"], "2ndfirst", nil, nil, args["2ndlast"], "2ndlast", nil, nil)
 		sep = ", "
-		-- Needed for param fetching in add_authorlabel().
-		get_full_paramname = make_get_full_paramname("2")
-		add_authorlabel()
 	else
 		for _, cant_have in ipairs { "2ndauthorlink", "2ndfirst" } do
 			if args[cant_have] then
@@ -1995,7 +2027,7 @@ function export.source(args, alias_map)
 	end
 
 	-- Display all the text that comes after the author, for the "newversion" section.
-	postauthor(2)
+	postauthor(2, num_authors)
 
 	if not args.nocolon then
 		sep = nil
@@ -2282,8 +2314,6 @@ function export.quote_t(frame)
 	-- First, the "single" params that don't have FOO2 or FOOn versions.
 	local params = {
 		[deprecated and "lang" or 1] = {required = true, default = "und"},
-		coauthors = {},
-		quotee = {},
 		newversion = {},
 		["2ndauthor"] = {},
 		["2ndauthorlink"] = {},
@@ -2336,8 +2366,8 @@ function export.quote_t(frame)
 	for _, param12 in ipairs {
 		-- author-like params; author params themselves are either list params (author=, last=, etc.) or single params
 		-- (2ndauthor=, 2ndlast=, etc.)
-		"tlr", "editor", "editors", "mainauthor", "compiler", "compilers", "director", "directors",
-		"lyricist", "lyrics-translator", "composer", "role", "actor", "artist",
+		"coauthors", "quotee", "tlr", "editor", "editors", "mainauthor", "compiler", "compilers", "director", "directors",
+		"lyricist", "lyrics-translator", "composer", "role", "actor", "artist", "feat",
 
 		-- author control params
 		"default-authorlabel",
@@ -2353,6 +2383,9 @@ function export.quote_t(frame)
 		-- section
 		"section", "sectionurl", "section_number", "section_plain", "section_series", "section_seriesvolume",
 		"trans-section",
+
+		-- other video-game params
+		"system", "scene", "level",
 
 		-- URL
 		"url", "urls", "archiveurl",
@@ -2373,7 +2406,7 @@ function export.quote_t(frame)
 
 		-- other params
 		"type", "genre", "format", "medium", "others", "quoted_in", "location", "publisher",
-		"original", "by", "version",
+		"original", "by", "deriv",
 		"note", "note_plain",
 		"other", "source", "platform",
 	} do
