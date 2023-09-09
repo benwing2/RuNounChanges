@@ -471,11 +471,15 @@ local function parse_multivalued_annotated_text(val, fullname, explicit_gloss, e
 			local obj
 			if #entity_group > 1 then
 				-- Check for inline modifier.
-				obj = put.parse_inline_modifiers_from_segments(entity_group, oneval, {
-					paramname = fullname,
-					param_mods = param_mods,
-					generate_obj = generate_obj,
-				})
+				obj = put.parse_inline_modifiers_from_segments {
+					group = entity_group,
+					arg = oneval,
+					props = {
+						paramname = fullname,
+						param_mods = param_mods,
+						generate_obj = generate_obj,
+					}
+				}
 			else
 				obj = generate_obj(entity_group[1], fullname)
 			end
