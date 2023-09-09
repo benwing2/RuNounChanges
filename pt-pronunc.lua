@@ -45,8 +45,8 @@ Author: Benwing
 	It appears that iCi -> eCi should apply in [[dicionário]], meaning if we apply it at the end, we have to distinguish
 	between glides from original i and glides from e or y.
 23. In Portugal and Brazil, stressed o in hiatus should automatically be ô (voo, Samoa, Alagoas, perdoe, abençoe). [DONE]
-24. In Portugal, stressed closed ô in hiatus (whether written explicitly as e.g. vôo, Côa or generated automatically)
-	should show as e.g. /ˈbo.ɐ/, (regional) /ˈbo.wɐ/. [DONE] [FIXME: Verify syllable division in second.]
+24. In Northern Portugal, stressed closed ô in hiatus (whether written explicitly as e.g. vôo, Côa or generated automatically)
+	should show as e.g. /ˈbo.(w)ɐ/. [DONE] [FIXME: Verify syllable division.]
 25. Recognize -zinha like -zinho, -mente. Just use hyphen (-) to handle these. We don't recognize -zão, -zona, -zito,
 	-zita because of too many false positives; you can just write the hyphen explicitly before the suffix as needed.
 	Cf. among our current vocabulary we have 10 -zão augmentatives (animalzão, aviãozão, cipozão, cuzão, homenzão,
@@ -67,7 +67,7 @@ Author: Benwing
 	= open pronun, except in the following circumstances, where it defaults to circumflex: (1) in the diphthongs
 	ei/eu/oi/ou; (2) in a nasal vowel. [DONE]
 32. Portugal final -e should show as optional (ɨ) unless there is a vowel-initial word following, in which case it
-	should not be displayed at all. [DONE]
+	should not be displayed at all. [NOT DONE]
 33. Syllabification: "Improper" clusters of non-sibiliant-obstruent + obstruent (pt, bt, bd, dk, kt; ps, bs, bv, bʒ, tz,
 	dv, ks; ft), non-sibiliant-obstruent + nasal (pn, bn, tm, tn, dm, dn, gm, gn), nasal + nasal (mn) are syllabified in
 	Portugal as .pt, .bv, .mn, etc. Note ʃ.t, ʃ.p, ʃ.k, etc. But in Brazil, all of these divide between the consonants
@@ -124,10 +124,12 @@ Author: Benwing
 78. -êm should be like -ém in Brazil but -ẽiem in Portugal. [DONE]
 79. -õem should be like -õe in Brazil but -õeem in Portugal. [DONE]
 80. -le in Portugal should split into two pronuns, one with vowel for -e, one without. [DONE]
+81. Initial 'e' in Portugal after des^ should be /i/. [DONE]
 ]=]
 
 --[=[
 Issues concerning South Brazil pronunciation:
+(Rather than an unified South Brazil pronunciation, it's better to transform it in Rio Grande do Sul/Gaúcho pronunciation)
 
 1. Should all 'ẽ' (not just word-final) be rendered as [ẽj̃]? We have several existing examples, e.g.
    /de.zẽ.ba.ˈla.do/|/de.zẽj̃.ba.ˈla.do/ for [[desembalado]], /ˌde.zẽj̃.has.ˈkɐ̃.so/ for [[desenrascanço]],
@@ -219,8 +221,7 @@ local NV_NOT_SPACING_CFLEX = "[^" .. vowel .. "%^]"
 local high_front_vocalic = "iIƗÌy"
 local front_vocalic = "eɛɨẼ" .. high_front_vocalic
 local FRONTV = "[" .. front_vocalic .. "]"
--- W stands for regional /w/ between stressed /o/ and a following vowel in hiatus ([[voo]], [[boa]], [[perdoe]]).
-local glide = "ywW"
+local glide = "yw"
 local W = "[" .. glide .. "]" -- glide
 local ipa_stress = "ˈˌ"
 local ipa_stress_c = "[" .. ipa_stress .. "]"
@@ -310,6 +311,7 @@ local unstressed_full_vowel_words_brazil = require("Module:table").listToSet({
 	"la", "las", "na", "nas",
 	"da", "das", -- basic prepositions + combinations with articles; [[na]], [[nas]] above already
 	-- coordinating conjunctions; [[mas]] above already
+	"para", "pra", -- preposition; for the verb form use "pára" instead
 })
 
 -- Unstressed words without vowel reduction.
@@ -338,11 +340,11 @@ local unstressed_pronunciation_substitution = {
 }
 
 -- Dialects and subdialects:
-export.all_styles = {"gbr", "rio", "sp", "sbr", "gpt", "cpt", "spt"}
+export.all_styles = {"gbr", "rio", "sp", "sbr", "gpt", "cpt", "spt", "npt"}
 export.all_style_groups = {
 	all = export.all_styles,
 	br = {"gbr", "rio", "sp", "sbr"},
-	pt = {"gpt", "cpt", "spt"},
+	pt = {"gpt", "cpt", "spt", "npt"},
 }
 
 local style_to_style_group = {}
@@ -363,11 +365,12 @@ export.all_style_descs = {
 	gbr = "[[w:Brazilian_Portuguese|Brazil]]", -- "general" Brazil
 	rio = "[[w:Carioca#Sociolect|Rio de Janeiro]]", -- Carioca accent
 	sp = "[[w:Paulistano_dialect|São Paulo]]", -- Paulistano accent
-	sbr = "Southern Brazil", -- (not added yet)
+	sbr = "Southern Brazil",
 	gpt = "[[w:European_Portuguese|Portugal]]", -- "general" Portugal
 	-- lisbon = "Lisbon", -- (not added yet)
-	cpt = "Central Portugal", -- Central Portugal outside of Lisbon
-	spt = "Southern Portugal"
+	cpt = "[[w:Estremenho dialect|Central Portugal]]", -- Central Portugal outside of Lisbon
+	spt = "Southern Portugal", -- Dialects of Alentejo and Algarve (West Algarve is a distinct subdialect)
+	npt = "[[w:Northern Portuguese|Northern Portugal]]" -- Northern Portugal dialects (Porto/Minho and Transmontano are subdialects)
 }
 
 
@@ -475,9 +478,8 @@ end
 -- postprocessed into multiple outputs (and in addition some other final postprocessing needs to happen, e.g. to get
 -- stress marks in the right place). The function `IPA` is available be called externally.
 local function one_term_ipa(text, style, phonetic, err)
-	-- NOTE: In the code below we assume all styles are either Brazil or Portugal, and hence we can check for Portugal
-	-- using `if not brazil`. If we ever add a non-Brazil non-Portugal style, we will have to revisit the code below.
 	local brazil = m_table.contains(export.all_style_groups.br, style)
+	local portugal = m_table.contains(export.all_style_groups.pt, style)
 
 	-- Initial x -> /ʃ/: [[xérox]], [[xilofone]], [[xadrez]], etc.
 	text = rsub(text, "(" .. word_or_component_sep_c .. ")x", "%1ʃ")
@@ -514,11 +516,22 @@ local function one_term_ipa(text, style, phonetic, err)
 
 	-- combinations with h; needs to precede handling of c and s, and needs to precede syllabification so that
 	-- the consonant isn't divided from the following h.
+	if style == "npt" then
+		-- In Northern Portugal the affricate tch is kept 
+		text = rsub(text, "ch", "tʃ")
+	end
+	-- Else
 	text = rsub(text, "([scln])h", {["s"]="ʃ", ["c"]="ʃ", ["n"]="ɲ", ["l"]="ʎ" })
 
 	-- remove initial <h>
 	text = rsub(text, "(" .. word_or_component_sep_c .. ")h([^" .. accent .. "])", "%1%2")
-
+	
+	-- Betacism
+	if style == "npt" then
+		-- In Northern Portugal, <v> is realized as <b>  
+		text = rsub(text, "v", "b")
+	end
+	
 	-- c, g, q
 	-- This should precede syllabification especially so that the latter isn't confused by gu, qu, gü, qü
 	-- also, c -> ç before front vowel ensures that cc e.g. in [[cóccix]], [[occitano]] isn't reduced to single c.
@@ -604,7 +617,7 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- check for the latter situation.
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C_OR_SYL_TRANSP .. "-)(" .. C .. H_GLIDE_OR_SYL_TRANSP .. "*" .. V .. ")", "%1.%2")
 	text = rsub(text, "([pbtdkgfv]" .. H_OR_SYL_TRANSP .. "*)%.([lr])", ".%1%2")
-	if not brazil then
+	if portugal then
 		-- "Improper" clusters of non-sibiliant-obstruent + obstruent (pt, bt, bd, dk, kt; ps, bs, bv, bʒ, tz, dv, ks;
 		-- ft), non-sibiliant-obstruent + nasal (pn, bn, tm, tn, dm, dn, gm, gn), nasal + nasal (mn) are syllabified in
 		-- Portugal as .pt, .bv, .mn, etc. Note ʃ.t, ʃ.p, ʃ.k, etc. But in Brazil, all of these divide between the
@@ -810,7 +823,7 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- Nasal vowel handling.
 	-- Final unstressed -am (in third-person plural verbs) pronounced like unstressed -ão.
 	text = rsub(text, "Am#", "A" .. TILDE .. "O#")
-	if not brazil then
+	if portugal then
 		-- In Portugal, final -n is really /n/, and preceding unstressed e/o are open ([[cólon]], [[crípton]], [[éon]];
 		-- [[glúten]], [[hífen]], [[pólen]]).
 		text = rsub(text, "n#", "N#")
@@ -833,8 +846,13 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "(" .. V .. quality_c .. "*" .. stress_c .. "*)[mn]", "%1" .. TILDE)
 	-- Non-high vowel without quality mark + tilde needs to get the circumflex (possibly fed by the previous change).
 	text = rsub(text, "([AEO])(" .. stress_c .. "*)" .. TILDE, "%1" .. CFLEX .. "%2" .. TILDE)
+	
 	-- Primary-stressed vowel without quality mark + m/n/nh across syllable boundary gets a circumflex, cf. [[cama]],
-	-- [[ano]], [[banho]].
+	-- [[ano]], [[banho]] (excluding Northern Portugal)
+	if style == "npt" then
+		-- Northern Portugal keeps the open "a" vowels
+		text = rsub(text, "(A)(ˈ%.[mnɲMN])", "%1" .. AC .. "%2")
+	end
 	text = rsub(text, "(" .. V .. ")(ˈ%.[mnɲMN])", "%1" .. CFLEX .. "%2")
 	if brazil then
 		if style ~= "sbr" then -- Seems this happens less or not at all in South Brazil.
@@ -923,11 +941,11 @@ local function one_term_ipa(text, style, phonetic, err)
 		end)
 		-- Unstressed 'ie' -> /jɛ/
 		text = rsub(text, "yE([^" .. accent .. "])", "yɛ%1")
-		-- Initial unmarked unstressed non-nasal e- + -sC- -> temporary symbol I (later changed to /(i)/, except after
-		-- a vowel, in which case it is deleted). Note that /s/ directly after a vowel must be a coda /s/ because
-		-- otherwise there would be a syllable boundary marker.
+		-- Initial unmarked unstressed non-nasal e- + -sC- (seemingly also after des-, see Infopédia [[desestagnar]]) ->
+		-- temporary symbol I (later changed to /(i)/, except after a vowel, in which case it is deleted). Note that /s/
+		-- directly after a vowel must be a coda /s/ because otherwise there would be a syllable boundary marker.
 		text = rsub(text, "#Es", "#Is")
-		-- Initial unmarked unstressed non-nasal e- -> /i/.
+		-- Initial unmarked unstressed non-nasal e- -> /i/, including after des-.
 		text = rsub(text, "#E([^" .. accent .. "])", "#i%1")
 		-- Initial unmarked unstressed non-nasal o- -> /ɔ/ if another vowel follows (not 'o', 'os' by themselves).
 		text = rsub(text, "(#O)(.-#)", function(o, rest)
@@ -957,9 +975,9 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "([AEO]" .. quality_c .. ")", vowel_quality)
 	-- Stressed o in hiatus ([[voo]], [[boa]], [[perdoe]], etc.) is closed /o/.
 	text = rsub(text, "O(ˈ%." .. V .. ")", "o%1")
-	-- Stressed closed /o/ in Portugal in hiatus regionally has a following /w/. Indicate using W.
-	if not brazil then
-		text = rsub(text, "(oˈ%.)(" .. V .. ")", "%1W%2")
+	-- Stressed closed /o/ in Northern Portugal in hiatus has a following optional /w/.
+	if style=="npt" then
+		text = rsub(text, "(oˈ%.)(" .. V .. ")", "%1(w)%2")
 	end
 	-- Any remaining E or O (always without quality marker) is an error.
 	if rfind(text, "[EO]") then
@@ -1058,7 +1076,13 @@ local function one_term_ipa(text, style, phonetic, err)
 		text = rsub(text, "R", "ʁ")
 	end
 	
-	-- Diphthong <ei>
+	-- Nasal Diphthong <ẽi>
+	if portugal then
+	-- In Portugal, always lower e -> ɐ before j when nasalized.
+		text = rsub(text, "e(" .. accent_c .. TILDE .. "*%.?y)", "ɐ%1")
+	end
+	
+	-- Diphthong <ei> (if unchanged, it shall yield /ej/; this should be the case for African pronunciations)
 	if brazil then
 		-- In Brazil, add optional /j/ in <eir>, <eij>, <eig> and <eix> (as in [[cadeira]], [[beijo]], [[manteiga]] and
 		-- [[peixe]]).
@@ -1071,17 +1095,27 @@ local function one_term_ipa(text, style, phonetic, err)
 		-- (Benwing2)
 		-- text = rsub(text, "(a" .. accent_c .. "*)i(%.ʃ)", "%1(j)%2")
 	elseif style == "spt"  then
-		-- In South of Portugal, <ei>, <ou> monophthongizes to <e>, <o>
+		-- In Southern Portugal, <ei> monophthongizes to <e>
 		text = rsub(text, "(e" .. accent_c .. "*)i", "%1")
-		text = rsub(text, "(o" .. accent_c .. "*)u", "%1")
 	elseif style == "gpt" then
 		-- In general Portugal, lower e/ɛ -> ɐ before i in <ei>/<ɛi>.
 		text = rsub(text, "[eɛ](" .. accent_c .. "*i)", "ɐ%1")
-		-- In general Portugal, lower e -> ɐ before j, including when nasalized.
+		-- In general Portugal, lower e -> ɐ before j
 		text = rsub(text, "e(" .. accent_c .. "*%.?y)", "ɐ%1")
 		-- In general Portugal, lower e -> ɐ(j) before other palatals.
-		text = rsub(text, "e(" .. stress_c .. "*)(%.?[ʒʃɲʎ](" .. V .. "))", phonetic and "ɐ%1(ɪ̯)%2" or "ɐ%1(j)%2")
+		text = rsub(text, "e(" .. stress_c .. "*)(%.?[ʒʃɲʎ](" .. V .. "))", "ɐ%1(j)%2")
 	end
+
+	-- Diphthong <ou> (if unchanged, it shall yield /o(w)/)
+	if style == "spt" then
+		-- In Southern Portugal, <ou> always monophthongizes to <o>
+		text = rsub(text, "(o" .. accent_c .. "*)u", "%1")
+	elseif style == "npt" then
+		-- In Northern Portugal (and Galicia), <ou> is kept
+	text = rsub(text, "(o" .. accent_c .. "*)u", "%1w")
+	end
+	-- Else optional /w/ in <ou>
+	text = rsub(text, "(o" .. accent_c .. "*)u", "%1(w)")
 
 	-- Stop consonants.
 	if brazil then
@@ -1103,14 +1137,13 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- Glides and l. ou -> o(w) must precede coda l -> w in Brazil, because <ol> /ow/ cannot be reduced to /o/.
 	-- ou -> o(w) before conversion of remaining diphthongs to vowel-glide combinations so <ow> can be used to
 	-- indicate a non-reducible glide.
-	-- Optional /w/ in <ou>.
-	text = rsub(text, "(o" .. accent_c .. "*)u", "%1(w)")
+	
 	-- Handle coda /l/.
 	if brazil then
 		-- Coda l -> /w/ in Brazil.
 		text = rsub(text, "l(" .. C .. "*[.#])", "w%1")
 	elseif phonetic then
-		-- Coda l -> [ɫ] in Portugal.
+		-- Coda l -> [ɫ] in Portugal (and Rio Grande do Sul, according to Cunha-Cintra)
 		text = rsub(text, "l(" .. C .. "*[.#])", "ɫ%1")
 	end
 	text = rsub(text, "y", "j")
@@ -1138,13 +1171,15 @@ local function one_term_ipa(text, style, phonetic, err)
 		text = rsub(text, "([^#])ɲ", "%1j" .. TILDE)
 	end
 
-	if not brazil then
+	--if Portugal then
 		-- Suppress final -ɨ before a vowel, and make optional utterance-finally.
-		text = rsub(text, "ɨ#[ %-]#(" .. V .. ")", "‿%1")
-		text = rsub(text, "ɨ##", "(ɨ)##")
+	--	text = rsub(text, "ɨ#[ %-]#(" .. V .. ")", "‿%1")
+	--	text = rsub(text, "ɨ##", "(ɨ)##")
 		-- (ɨ) after l when suppressed should convert to coda ɫ, so split it later into two pronuns.
-		text = rsub(text, "l%(ɨ%)##", "L##")
-	end
+	--	text = rsub(text, "l%(ɨ%)##", "L##")
+		-- (ɨ) after r when suppressed should also convert to coda
+	--	text = rsub(text, "ɾ%(ɨ%)##", "R##")
+	--end
 
 	text = rsub(text, "g", "ɡ") -- U+0261 LATIN SMALL LETTER SCRIPT G
 	text = rsub(text, "[ʧʤ]", {["ʧ"] = "t͡ʃ", ["ʤ"] = "d͡ʒ"})
@@ -1165,9 +1200,8 @@ end
 -- the other "natural pronunciation". User-specified qualifiers are added at the end by the caller of IPA(), and
 -- prepended to the auto-generated qualifiers.
 function export.IPA(text, style)
-	-- NOTE: In the code below we assume all styles are either Brazil or Portugal, and hence we can check for Portugal
-	-- using `if not brazil`. If we ever add a non-Brazil non-Portugal style, we will have to revisit the code below.
 	local brazil = m_table.contains(export.all_style_groups.br, style)
+	local portugal = m_table.contains(export.all_style_groups.pt, style)
 
 	local origtext = text
 
@@ -1289,8 +1323,12 @@ function export.IPA(text, style)
 		-- ê*/ô* -> é/ó and é*/ó* -> ê/ô (reverse accents)
 		text = rsub(text, "([eo])([" .. AC .. CFLEX .. "])%*", function(eo, acc)
 			return eo .. (acc == CFLEX and AC or CFLEX) end)
+
+		-- Treat vowel after des- as word-initial, as in Brazil.		
+		text = rsub(text, "(" .. word_or_component_sep_c .. ")des%^+", "%1des++")
 		-- Remove i*, i^ and i^^ not followed by a vowel (i.e. Brazilian epenthetic i), but not i^ and i^^ followed or
 		-- preceded by a vowel (which has a totally different meaning, i.e. i or y in Brazil).
+		-- Also remove all remaining ^.
 		text = rsub(text, "i%^+(" .. V .. ")", "i%1")
 		text = rsub(text, "(" .. V .. ")i%^+", "%1i")
 		text = rsub(text, "i?[*%^]+", "")
@@ -1423,14 +1461,14 @@ function export.IPA(text, style)
 			-- Convert Ú resulting from stressed final '-io(s)'.
 			flatmap_and_sub_post("%.Ú", ".u", nil, {"w", "ʊ̯"}, nil)
 		else -- Portugal
-			flatmap_and_sub_post("W", "", nil, "w", {"regional"})
 			flatmap_and_sub_post("ʃ(" .. wordsep_c .. "*)s",
 					"ʃ%1s", {"careful pronunciation"}, "%1ʃ", {"natural pronunciation"})
 			flatmap_and_sub_post("ʒ(" .. wordsep_c .. "*)z",
 					"ʒ%1z", {"careful pronunciation"}, "%1ʒ", {"natural pronunciation"})
 			flatmap_and_sub_post("Ɔ", "o", nil, "ɔ", nil)
-			-- Split (ɨ) after l into two pronuns, one with ɨ and the other without it (with one fewer syllables and coda [ɫ]).
-			flatmap_and_sub_post("%.([^.# ]-)L#", ".%1lɨ#", nil, {"%1l#", "%1ɫ#"}, nil)
+			-- Split (ɨ) after l or r into two pronuns, one with ɨ and the other without it (with one fewer syllables and coda).
+			--flatmap_and_sub_post("%.([^.# ]-)L#", ".%1lɨ#", nil, {"%1l#", "%1ɫ#"}, nil)
+			--flatmap_and_sub_post("%.([^.# ]-)R#", ".%1ɾɨ#", nil, {"%1ɾ#", "%1ɾ#"}, nil)
 		end
 		flatmap_and_sub_post("([ÌÙ])%.",
 			function(iu) return iu == "Ì" and "i." or "u." end, nil,
@@ -1693,10 +1731,11 @@ function export.express_styles(inputs, args_style, pagename)
 	local gbr_sbr_different = diff("gbr", "sbr")
 	local gpt_cpt_different = diff("gpt", "cpt")
 	local gpt_spt_different = diff("gpt", "spt")
+	local gpt_npt_different = diff("gpt", "npt")
 	local gbr_gpt_different = diff("gbr", "gpt") -- general differences between BP and EP
 	
 	if not gbr_sp_different and not gbr_rio_different and gbr_sbr_different and
-		not gpt_cpt_different and not gpt_spt_different and
+		not gpt_cpt_different and not gpt_spt_different and not gpt_npt_different and
 		not gbr_gpt_different then
 		-- All the same
 		express_style(export.all_styles)
@@ -1715,12 +1754,16 @@ function export.express_styles(inputs, args_style, pagename)
 		
 		-- Within Portugal
 		express_style("gpt")
+		if gpt_npt_different then
+			express_style("npt", 2)
+		end
 		if gpt_cpt_different then
 			express_style("cpt", 2)
 		end
 		if gpt_spt_different then
 			express_style("spt", 2)
 		end
+
 	end
 	return expressed_styles
 end
