@@ -31,6 +31,7 @@ FIXME:
     audio. [DONE]
 14. Support # instead of ; as separator between audio file and gloss and make sure it works if gloss has embedded # or
     ;. [DONE]
+15. Use parse_inline_modifiers() in [[Module:parse utilities]]. [DONE]
 ]=]
 
 --[=[
@@ -1319,76 +1320,21 @@ local function dodialect_specified_rhymes(rhymes, hyphs, parsed_respellings, rhy
 end
 
 
-local function parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods, no_split_on_comma)
+local function parse_pron_modifier(arg, parse_err, generate_obj, param_mods, no_split_on_comma)
 	local retval = {}
 
 	if arg:find("<") then
-		if not put then
-			put = require(put_module)
-		end
-
-		local function get_valid_prefixes()
-			local valid_prefixes = {}
-			for param_mod, _ in pairs(param_mods) do
-				table.insert(valid_prefixes, param_mod)
-			end
-			table.insert(valid_prefixes, "q")
-			table.insert(valid_prefixes, "qq")
-			table.insert(valid_prefixes, "a")
-			table.insert(valid_prefixes, "aa")
-			table.sort(valid_prefixes)
-			return valid_prefixes
-		end
-
-		local segments = put.parse_balanced_segment_run(arg, "<", ">")
-		local comma_separated_groups =
-			no_split_on_comma and {segments} or put.split_alternating_runs_on_comma(segments)
-		for _, group in ipairs(comma_separated_groups) do
-			local obj = generate_obj(group[1])
-			for j = 2, #group - 1, 2 do
-				if group[j + 1] ~= "" then
-					parse_err("Extraneous text '" .. group[j + 1] .. "' after modifier")
-				end
-				local modtext = group[j]:match("^<(.*)>$")
-				if not modtext then
-					parse_err("Internal error: Modifier '" .. group[j] .. "' isn't surrounded by angle brackets")
-				end
-				local prefix, val = modtext:match("^([a-z]+):(.*)$")
-				if not prefix then
-					local valid_prefixes = get_valid_prefixes()
-					for i, valid_prefix in ipairs(valid_prefixes) do
-						valid_prefixes[i] = "'" .. valid_prefix .. ":'"
-					end
-					parse_err("Modifier " .. group[j] .. " lacks a prefix, should begin with one of " ..
-						m_table.serialCommaJoin(valid_prefixes))
-				end
-				if prefix == "q" or prefix == "qq" or prefix == "a" or prefix == "aa" then
-					if not obj[prefix] then
-						obj[prefix] = {}
-					end
-					table.insert(obj[prefix], val)
-				elseif param_mods[prefix] then
-					local key = param_mods[prefix].item_dest or prefix
-					if obj[key] then
-						parse_err("Modifier '" .. prefix .. "' specified more than once")
-					end
-					local convert = param_mods[prefix].convert
-					if convert then
-						obj[key] = convert(val)
-					else
-						obj[key] = val
-					end
-				else
-					local valid_prefixes = get_valid_prefixes()
-					for i, valid_prefix in ipairs(valid_prefixes) do
-						valid_prefixes[i] = "'" .. valid_prefix .. "'"
-					end
-					parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. group[j]
-						.. ", should be " .. m_table.serialCommaJoin(valid_prefixes))
-				end
-			end
-			table.insert(retval, obj)
-		end
+		local insert = { store = "insert" }
+		param_mods.q = insert
+		param_mods.qq = insert
+		param_mods.a = insert
+		param_mods.aa = insert
+		return require(put_module).parse_inline_modifiers(arg, {
+			param_mods = param_mods,
+			generate_obj = generate_obj,
+			parse_err = parse_err,
+			splitchar = not no_split_on_comma and "," or nil,
+		})
 	elseif no_split_on_comma then
 		table.insert(retval, generate_obj(arg))
 	else
@@ -1401,14 +1347,14 @@ local function parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods
 end
 
 
-local function parse_rhyme(arg, put, parse_err)
+local function parse_rhyme(arg, parse_err)
 	local function generate_obj(term)
 		return {rhyme = term}
 	end
 	local param_mods = {
 		s = {
 			item_dest = "num_syl",
-			convert = function(arg)
+			convert = function(arg, parse_err),
 				local nsyls = rsplit(arg, ",")
 				for i, nsyl in ipairs(nsyls) do
 					if not nsyl:find("^[0-9]+$") then
@@ -1421,19 +1367,19 @@ local function parse_rhyme(arg, put, parse_err)
 		},
 	}
 
-	return parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods)
+	return parse_pron_modifier(arg, parse_err, generate_obj, param_mods)
 end
 
 
-local function parse_hyph(arg, put, parse_err)
+local function parse_hyph(arg, parse_err)
 	-- None other than qualifiers
 	local param_mods = {}
 
-	return parse_pron_modifier(arg, put, parse_err, generate_hyph_obj, param_mods)
+	return parse_pron_modifier(arg, parse_err, generate_hyph_obj, param_mods)
 end
 
 
-local function parse_homophone(arg, put, parse_err)
+local function parse_homophone(arg, parse_err)
 	local function generate_obj(term)
 		return {term = term}
 	end
@@ -1458,7 +1404,7 @@ local function parse_homophone(arg, put, parse_err)
 		},
 	}
 
-	return parse_pron_modifier(arg, put, parse_err, generate_obj, param_mods)
+	return parse_pron_modifier(arg, parse_err, generate_obj, param_mods)
 end
 
 
@@ -1477,13 +1423,13 @@ local function generate_audio_obj(arg)
 end
 
 
-local function parse_audio(arg, put, parse_err)
+local function parse_audio(arg, parse_err)
 	-- None other than qualifiers
 	local param_mods = {}
 
 	-- Don't split on comma because some filenames have embedded commas not followed by a space
 	-- (typically followed by an underscore).
-	return parse_pron_modifier(arg, put, parse_err, generate_audio_obj, param_mods, "no split on comma")
+	return parse_pron_modifier(arg, parse_err, generate_audio_obj, param_mods, "no split on comma")
 end
 
 
@@ -1524,23 +1470,15 @@ function export.show_pr(frame)
 			table.insert(overall_audio, parsed_audio[1])
 		end
 	end
-	local put
-
 	for i, respelling in ipairs(respellings) do
-		local function parse_err(msg)
-			error(msg .. ": " .. i .. "= " .. respelling)
-		end
 		if respelling:find("<") then
-			if not put then
-				put = require(put_module)
-			end
-
 			local param_mods = {
-				pre = {},
-				post = {},
-				style = {},
+				pre = { overall = true },
+				post = { overall = true },
+				style = { overall = true },
 				bullets = {
-					convert = function(arg)
+					overall = true,
+					convert = function(arg, parse_err)
 						if not arg:find("^[0-9]+$") then
 							parse_err("Modifier 'bullets' should have a number as argument, but saw '" .. arg .. "'")
 						end
@@ -1548,109 +1486,52 @@ function export.show_pr(frame)
 					end,
 				},
 				rhyme = {
-					insert = true,
-					flatten = true,
-					convert = function(arg) return parse_rhyme(arg, put, parse_err) end,
+					overall = true,
+					store = "insert-flattened",
+					convert = parse_rhyme,
 				},
 				hyph = {
-					insert = true,
-					flatten = true,
-					convert = function(arg) return parse_hyph(arg, put, parse_err) end,
+					overall = true,
+					store = "insert-flattened",
+					convert = parse_hyph,
 				},
 				hmp = {
-					insert = true,
-					flatten = true,
-					convert = function(arg) return parse_homophone(arg, put, parse_err) end,
+					overall = true,
+					store = "insert-flattened",
+					convert = parse_homophone,
 				},
 				audio = {
-					insert = true,
-					flatten = true,
-					convert = function(arg) return parse_audio(arg, put, parse_err) end,
+					overall = true,
+					store = "insert-flattened",
+					convert = parse_audio,
 				},
+				ref = { store = "insert" },
+				q = { store = "insert" },
+				qq = { store = "insert" },
+				a = { store = "insert" },
+				aa = { store = "insert" },
 			}
 
-			local function get_valid_prefixes()
-				local valid_prefixes = {}
-				for param_mod, _ in pairs(param_mods) do
-					table.insert(valid_prefixes, param_mod)
-				end
-				table.insert(valid_prefixes, "ref")
-				table.insert(valid_prefixes, "q")
-				table.insert(valid_prefixes, "qq")
-				table.insert(valid_prefixes, "a")
-				table.insert(valid_prefixes, "aa")
-				table.sort(valid_prefixes)
-				return valid_prefixes
-			end
-
-			local segments = put.parse_balanced_segment_run(respelling, "<", ">")
-			local comma_separated_groups = put.split_alternating_runs_on_comma(segments, ",")
-			local parsed = {terms = {}, audio = {}, rhyme = {}, hyph = {}, hmp = {}}
-			for j, group in ipairs(comma_separated_groups) do
-				local termobj = parse_respelling(group[1], pagename, parse_err)
-				for k = 2, #group - 1, 2 do
-					if group[k + 1] ~= "" then
-						parse_err("Extraneous text '" .. group[k + 1] .. "' after modifier")
-					end
-					local modtext = group[k]:match("^<(.*)>$")
-					if not modtext then
-						parse_err("Internal error: Modifier '" .. group[k] .. "' isn't surrounded by angle brackets")
-					end
-					local prefix, arg = modtext:match("^([a-z]+):(.*)$")
-					if not prefix then
-						local valid_prefixes = get_valid_prefixes()
-						for i, valid_prefix in ipairs(valid_prefixes) do
-							valid_prefixes[i] = "'" .. valid_prefix .. ":'"
-						end
-						parse_err("Modifier " .. group[k] .. " lacks a prefix, should begin with one of " ..
-							m_table.serialCommaJoin(valid_prefixes))
-					end
-					if prefix == "ref" or prefix == "q" or prefix == "qq" or prefix == "a" or prefix == "aa" then
-						if not termobj[prefix] then
-							termobj[prefix] = {}
-						end
-						table.insert(termobj[prefix], arg)
-					elseif param_mods[prefix] then
-						if j < #comma_separated_groups then
-							parse_err("Modifier '" .. prefix .. "' should occur after the last comma-separated term")
-						end
-						if not param_mods[prefix].insert and parsed[prefix] then
-							parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. group[k])
-						end
-						local converted
-						if param_mods[prefix].convert then
-							converted = param_mods[prefix].convert(arg)
-						else
-							converted = arg
-						end
-						if param_mods[prefix].insert then
-							if param_mods[prefix].flatten then
-								for _, obj in ipairs(converted) do
-									table.insert(parsed[prefix], obj)
-								end
-							else
-								table.insert(parsed[prefix], converted)
-							end
-						else
-							parsed[prefix] = converted
-						end
-					else
-						local valid_prefixes = get_valid_prefixes()
-						for i, valid_prefix in ipairs(valid_prefixes) do
-							valid_prefixes[i] = "'" .. valid_prefix .. "'"
-						end
-						parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. group[k]
-							.. ", should be " .. m_table.serialCommaJoin(valid_prefixes))
-					end
-				end
-				table.insert(parsed.terms, termobj)
-			end
+			local parsed = require(put_module).parse_inline_modifiers(respelling, {
+				paramname = i,
+				param_mods = param_mods,
+				generate_obj = function(term, parse_err)
+					return parse_respelling(term, pagename, parse_err)
+				end,
+				splitchar = ",",
+				outer_container = {
+					audio = {}, rhyme = {}, hyph = {}, hmp = {}
+				}
+			})
 			if not parsed.bullets then
 				parsed.bullets = 1
 			end
 			table.insert(parsed_respellings, parsed)
 		else
 			local termobjs = {}
+			local function parse_err(msg)
+				error(msg .. ": " .. i .. "= " .. respelling)
+			end
 			for _, term in ipairs(split_on_comma(respelling)) do
 				table.insert(termobjs, parse_respelling(term, pagename, parse_err))
 			end
