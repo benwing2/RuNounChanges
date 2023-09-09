@@ -7,9 +7,7 @@ from blib import getparam, rmparam, msg, errmsg, errandmsg, site
 import pywikibot, re, sys, argparse
 import unicodedata
 
-def process_page(index, page, contents, prev_comment, origcontents, verbose, arg_comment,
-    lang_only, allow_page_creation):
-  pagetitle = str(page.title())
+def process_text_on_page(index, pagetitle, curtext, contents, prev_comment, origcontents):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
@@ -18,7 +16,7 @@ def process_page(index, page, contents, prev_comment, origcontents, verbose, arg
   if contents == origcontents:
     pagemsg("Skipping contents because no change")
     return
-  if verbose:
+  if args.verbose:
     pagemsg("For [[%s]]:" % pagetitle)
     pagemsg("------- begin text --------")
     # Strip final newline because msg() adds one.
@@ -27,71 +25,85 @@ def process_page(index, page, contents, prev_comment, origcontents, verbose, arg
       contents_minus_newline = contents_minus_newline[-1]
     msg(contents_minus_newline)
     msg("------- end text --------")
-  page_exists = page.exists() and origcontents is not None
+  page_exists = curtext and origcontents is not None
   if not page_exists:
-    if lang_only or not allow_page_creation:
-      errandpagemsg("WARNING: Trying to create page when --lang-only or not --allow-page-creation")
+    if args.lang_only or args.subset_of_langs or not args.allow_page_creation:
+      errandpagemsg("WARNING: Trying to create page when --lang-only, --subset-of-langs or not --allow-page-creation")
       return
   else:
-    if lang_only:
-      foundlang = False
-      sec_to_search = 0
-      sections = re.split("(^==[^=]*==\n)", page.text, 0, re.M)
+    if args.lang_only or args.subset_of_langs:
+      sections, sections_by_lang = blib.split_text_into_sections(curtext, pagemsg)
 
-      for j in range(2, len(sections), 2):
-        if sections[j-1] == "==%s==\n" % lang_only:
-          if foundlang:
-            errandpagemsg("WARNING: Found multiple %s sections, skipping page" % lang_only)
+      def replace_lang_section(lang, newsectext, origsectext):
+        if lang not in sections_by_lang:
+          errandpagemsg("WARNING: Couldn't find %s section, skipping page" % lang)
+          return False
+        langsec = sections_by_lang[lang]
+        cursectext = unicodedata.normalize("NFC", sections[langsec])
+        # If we're editing the last language of the page, there won't be a newline in the page text but there's always
+        # one in the find_regex content, so we have to add one to make the comparisons work. It won't matter if we add
+        # an extra newline at the end of the page because it will be stripped by MediaWiki.
+        if not cursectext.endswith("\n"):
+          cursectext += "\n"
+        supposed_cursectext = unicodedata.normalize("NFC", origsectext)
+        if cursectext != supposed_cursectext:
+          if cursectext == newsectext:
+            pagemsg("%s section has already been changed to new text, not saving" % lang)
+          else:
+            errandpagemsg("WARNING: %s text has changed from supposed original text, not saving" % lang)
+          return False
+        sections[langsec] = newsectext
+        return True
+
+      if args.lang_only:
+        changed = replace_lang_section(args.lang_only, contents, origcontents)
+        if not changed:
+          return
+      else:
+        origcontents_sections, origcontents_sections_by_lang = blib.split_text_into_sections(origcontents, pagemsg)
+        contents_sections, contents_sections_by_lang = blib.split_text_into_sections(contents, pagemsg)
+        if origcontents_sections_by_lang != contents_sections_by_lang:
+          errandpagemsg("WARNING: Languages differ or have been rearranged between original and replacement text, not saving")
+          return
+        for lang, langsec in origcontents_sections_by_lang.items():
+          lang_origcontents = origcontents_sections[langsec]
+          lang_contents = contents_sections[langsec]
+          if lang_origcontents == lang_contents:
+            pagemsg("Skipping contents for %s because no change" % lang)
+          elif not replace_lang_section(lang, lang_contents, lang_origcontents):
             return
-          foundlang = True
-          sec_to_search = j
-      if not sec_to_search:
-        errandpagemsg("WARNING: Couldn't find %s section, skipping page" % lang_only)
-        return
-      curtext = unicodedata.normalize("NFC", sections[sec_to_search])
-      # If we're editing the last language of the page, there won't be a newline in the page text but there's always
-      # one in the find_regex content, so we have to add one to make the comparisons work. It won't matter if we add
-      # an extra newline at the end of the page because it will be stripped by MediaWiki.
-      if not curtext.endswith("\n"):
-        curtext += "\n"
-      supposed_curtext = unicodedata.normalize("NFC", origcontents)
-      if curtext != supposed_curtext:
-        if curtext == contents:
-          pagemsg("Section has already been changed to new text, not saving")
-        else:
-          errandpagemsg("WARNING: Text has changed from supposed original text, not saving")
-        return
-      sections[sec_to_search] = contents
       contents = "".join(sections)
     else:
-      curtext = unicodedata.normalize("NFC", page.text)
+      nfc_curtext = unicodedata.normalize("NFC", curtext)
       # MediaWiki strips newlines from the end of the page so we need to do the same for comparison.
-      supposed_curtext = unicodedata.normalize("NFC", origcontents.rstrip("\n"))
-      if curtext != supposed_curtext:
-        if curtext == contents.rstrip("\n"):
+      supposed_nfc_curtext = unicodedata.normalize("NFC", origcontents.rstrip("\n"))
+      if nfc_curtext != supposed_nfc_curtext:
+        if nfc_curtext == contents.rstrip("\n"):
           pagemsg("Page has already been changed to new text, not saving")
         else:
           errandpagemsg("WARNING: Text has changed from supposed original text, not saving")
         return
-  if not prev_comment and not arg_comment:
+  if not prev_comment and not args.comment:
     errandpagemsg("WARNING: Trying to save page and neither previous comment not --comment available")
     return
   if not prev_comment:
-    comment = arg_comment
+    comment = args.comment
   elif not arg_comment:
     comment = prev_comment
   else:
-    comment = "%s; %s" % (prev_comment, arg_comment)
+    comment = "%s; %s" % (prev_comment, args.comment)
   return contents.rstrip("\n"), comment
 
 if __name__ == "__main__":
   parser = blib.create_argparser("Push changes made to find_regex.py output files",
-    include_pagefile=True)
+    include_pagefile=True, include_stdin=True)
   parser.add_argument("--direcfile", help="File containing directives.")
   parser.add_argument("--origfile", help="File containing unchanged directives.")
   parser.add_argument("--comment", help="Comment to use (in addition to any existing comment).")
   parser.add_argument("--lang-only", help="Change applies only to the specified language section.")
-  parser.add_argument("--allow-page-creation", help="Allow page creation.", action="store_true")
+  parser.add_argument("--subset-of-langs", action="store_true",
+    help="find_regex.py output contains a subset of all languages on the page.")
+  parser.add_argument("--allow-page-creation", action="store_true", help="Allow page creation.")
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
@@ -109,8 +121,7 @@ if __name__ == "__main__":
     for index, pagetitle, text, comment in blib.yield_text_from_find_regex(lines, args.verbose):
       newpages[pagetitle] = (text, comment)
 
-    def do_process_page(page, index, parsed):
-      pagetitle = str(page.title())
+    def do_process_text_on_page(index, pagetitle, curtext):
       def pagemsg(txt):
         msg("Page %s %s: %s" % (index, pagetitle, txt))
       origcontents = origpages.get(pagetitle, None)
@@ -121,9 +132,8 @@ if __name__ == "__main__":
       if origcontents == newtext:
         pagemsg("Skipping contents because no change")
         return
-      return process_page(index, page, newtext, comment, origcontents,
-        args.verbose, args.comment, args.lang_only, args.allow_page_creation)
-    blib.do_pagefile_cats_refs(args, start, end, do_process_page, edit=True)
+      return process_text_on_page(index, pagetitle, curtext, newtext, comment, origcontents)
+    blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, edit=True, stdin=True)
 
   else:
     index_pagetitle_text_comment = blib.yield_text_from_find_regex(lines, args.verbose)
@@ -134,7 +144,6 @@ if __name__ == "__main__":
         msg("Page %s %s: Skipping contents because no change" % (index, pagetitle))
       else:
         def do_process_page(page, index, parsed):
-          return process_page(index, page, newtext, comment, origcontents,
-              args.verbose, args.comment, args.lang_only, args.allow_page_creation)
+          return process_text_on_page(index, str(page.title()), page.text, newtext, comment, origcontents)
         blib.do_edit(pywikibot.Page(site, pagetitle), index, do_process_page,
             save=args.save, verbose=args.verbose, diff=args.diff)
