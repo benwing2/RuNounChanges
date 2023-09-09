@@ -15,9 +15,8 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  section = blib.find_lang_section_from_text(pagetext, "Russian", pagemsg)
+  section = blib.find_lang_section(pagetext, "Russian", pagemsg)
   if not section:
-    pagemsg("Couldn't find Russian section for %s" % pagetitle)
     return
 
   if rulib.check_for_alt_yo_terms(section, pagemsg):

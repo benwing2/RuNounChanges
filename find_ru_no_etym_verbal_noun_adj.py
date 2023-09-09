@@ -73,7 +73,7 @@ def iotate(word):
   return [word]
 
 def find_noun(pagename, pagemsg, errandpagemsg, expand_text):
-  section = blib.find_lang_section(pagename, "Russian", pagemsg, errandpagemsg)
+  section = blib.find_lang_section_from_page(pagename, "Russian", pagemsg, errandpagemsg)
   if not section:
     return None
   if "==Etymology" in section:
@@ -102,7 +102,7 @@ def find_noun(pagename, pagemsg, errandpagemsg, expand_text):
   return nouns[0]
 
 def find_adj(pagename, pagemsg, errandpagemsg, expand_text):
-  section = blib.find_lang_section(pagename, "Russian", pagemsg, errandpagemsg)
+  section = blib.find_lang_section_from_page(pagename, "Russian", pagemsg, errandpagemsg)
   if not section:
     return None
   if "==Etymology" in section:

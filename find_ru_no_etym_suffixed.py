@@ -168,7 +168,7 @@ def process_text_on_page(index, pagetitle, text):
 
   for possible_derived, suffix in possible:
     if possible_derived in derived_lemmas:
-      derived_section = blib.find_lang_section(possible_derived, "Russian", pagemsg, errandpagemsg)
+      derived_section = blib.find_lang_section_from_page(possible_derived, "Russian", pagemsg, errandpagemsg)
       if not derived_section:
         errandpagemsg("WARNING: Couldn't find Russian section for derived term %s" %
             possible_derived)
@@ -224,7 +224,7 @@ def process_text_on_page(index, pagetitle, text):
         if any("//" in lemma for lemma in base_lemmas):
           warnings.append("translit-in-lemma")
 
-        base_section = blib.find_lang_section_from_text(text, "Russian", pagemsg)
+        base_section = blib.find_lang_section(text, "Russian", pagemsg)
         if not base_section:
           errandpagemsg("WARNING: Couldn't find Russian section for base")
           return

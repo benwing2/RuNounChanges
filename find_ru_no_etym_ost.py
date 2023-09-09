@@ -44,9 +44,8 @@ def process_text_on_page(index, pagetitle, text):
       if not noun_text:
         pagemsg("Page %s doesn't exist or is empty" % noun)
         continue
-      nounsection = blib.find_lang_section_from_text(noun_text, "Russian", pagemsg)
+      nounsection = blib.find_lang_section(noun_text, "Russian", pagemsg)
       if not nounsection:
-        pagemsg("Couldn't find Russian section for %s" % noun)
         continue
       if "==Etymology" in nounsection:
         pagemsg("Noun %s already has etymology" % noun)

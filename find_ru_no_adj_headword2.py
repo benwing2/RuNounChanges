@@ -11,7 +11,7 @@ def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  russiansec = blib.find_lang_section_from_text(text, "Russian", pagemsg)
+  russiansec = blib.find_lang_section(text, "Russian", pagemsg)
   if russiansec is None:
     return
 

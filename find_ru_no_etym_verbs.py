@@ -11,7 +11,7 @@ import rulib
 lemmas = []
 
 def is_transitive_verb(pagename, pagemsg, errandpagemsg):
-  verb_section = blib.find_lang_section(pagename, "Russian", pagemsg, errandpagemsg)
+  verb_section = blib.find_lang_section_from_page(pagename, "Russian", pagemsg, errandpagemsg)
   if not verb_section:
     errandpagemsg("WARNING: Couldn't find Russian section for verb %s" % pagename)
     return False
@@ -35,7 +35,7 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  section = blib.find_lang_section_from_text(pagetext, "Russian", pagemsg)
+  section = blib.find_lang_section(pagetext, "Russian", pagemsg)
   if not section:
     errandpagemsg("WARNING: Couldn't find Russian section")
     return
@@ -149,7 +149,7 @@ def process_text_on_page(index, pagetitle, text):
       errandpagemsg("WARNING: Couldn't find definitions for derived term %s" %
           ",".join(derived_terms))
       continue
-    base_section = blib.find_lang_section(base_terms_no_accent[0], "Russian", pagemsg, errandpagemsg)
+    base_section = blib.find_lang_section_from_page(base_terms_no_accent[0], "Russian", pagemsg, errandpagemsg)
     if not base_section:
       errandpagemsg("WARNING: Couldn't find Russian section for base term %s" %
           base_terms_no_accent[0])

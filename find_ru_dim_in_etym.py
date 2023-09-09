@@ -15,9 +15,8 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  russian = blib.find_lang_section_from_text(text, "Russian", pagemsg)
+  russian = blib.find_lang_section(text, "Russian", pagemsg)
   if not russian:
-    pagemsg("Couldn't find Russian section for %s" % pagetitle)
     return
 
   subsections = re.split("(^===+[^=\n]+===+\n)", russian, 0, re.M)

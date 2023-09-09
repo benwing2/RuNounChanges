@@ -1209,27 +1209,15 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
     return False
 
   def find_lang_section_for_only_lang(text, lang, pagemsg):
-    sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
+    sections, sections_by_lang = split_text_into_sections(text, pagemsg)
 
-    lang_j = -1
-    for j in range(2, len(sections), 2):
-      if sections[j-1] == "==" + lang + "==\n":
-        if lang_j >= 0:
-          pagemsg("WARNING: Found two %s sections, skipping" % lang)
-          return None
-        lang_j = j
-    if lang_j < 0:
-      pagemsg("Can't find %s section, skipping" % lang)
+    if lang not in sections_by_lang:
+      pagemsg("WARNING: Can't find %s section, skipping" % lang)
       return None
-    j = lang_j
-
-    # Extract off trailing separator
-    mm = re.match(r"^(.*?)(\n*--+\n*)$", sections[j], re.S)
-    if mm:
-      secbody, sectail = mm.group(1), mm.group(2)
     else:
-      secbody = sections[j]
-      sectail = ""
+      j = sections_by_lang[lang]
+
+    secbody, sectail = split_trailing_separator(sections[j])
 
     return sections, j, secbody, sectail
 
@@ -2551,7 +2539,7 @@ def output_process_links_template_counts(templates_seen, templates_changed):
   for template, count in sorted(templates_changed.items(), key=lambda x:-x[1]):
     msg("  %s = %s" % (template, count))
 
-def find_lang_section(pagename, lang, pagemsg, errandpagemsg):
+def find_lang_section_from_page(pagename, lang, pagemsg, errandpagemsg):
   page = pywikibot.Page(site, pagename)
   if not safe_page_exists(page, errandpagemsg):
     pagemsg("Page %s doesn't exist" % pagename)
@@ -2559,69 +2547,7 @@ def find_lang_section(pagename, lang, pagemsg, errandpagemsg):
 
   pagetext = str(page.text)
 
-  return find_lang_section_from_text(pagetext, lang, pagemsg)
-
-# Find the section for the language `lang` in `text` (the text of the page), returning values so that the
-# language-specific text can be modified and then the page as a whole put back together in preparation for saving.
-# Return None if the language can't be found; otherwise, return a tuple of five values:
-#   `sections`, `j`, `secbody`, `sectail`, `has_non_lang`
-# `sections` contains the per-language sections, where `j` points to the section containing the language in
-# question. The text of this section has been split into `secbody` and `sectail`, where `sectail` contains
-# any trailing categories and separator, and `secbody` contains the remainder of the section text. `has_non_lang`
-# is True if any sections for other languages are encountered.
-#
-# The code to call this function should look like this:
-#
-#    retval = blib.find_modifiable_lang_section(text, langname, pagemsg)
-#    if retval is None:
-#      return
-#    sections, j, secbody, sectail, has_non_lang = retval
-#
-# After modifying `secbody` as appropriate, reconstruct the page text as follows:
-#
-#    sections[j] = secbody + sectail
-#    text = "".join(sections)
-#
-# If `lang` is None, the passed-in `text` is assumed to already contain only the text of the appropriate language
-# (as, for example, if find_regex.py is run with the '--lang LANGNAME' option set). The function won't look for
-# a language-specific section but will still separate off trailing categories and separators.
-#
-# If `force_final_nls` is given, `secbody` will be modified so that it always ends in two newlines, and the
-# actual newlines (if any) at the end of `secbody` will be included at the beginning of `sectail`. This
-# simplifies doing things like rearranging subsections or adding subsections to the end. In this case, to
-# reconstruct the page text, use the following:
-#
-#    sections[j] = secbody.rstrip("\n") + sectail
-#    text = "".join(sections)
-def find_modifiable_lang_section(text, lang, pagemsg, force_final_nls=False):
-  sections = re.split("(^==[^=\n]+==\n)", text, 0, re.M)
-
-  has_non_lang = False
-
-  if lang is None:
-    sections = [text]
-    j = 0
-  else:
-    lang_j = -1
-    for j in range(2, len(sections), 2):
-      if sections[j-1] != "==" + lang + "==\n":
-        has_non_lang = True
-      else:
-        if lang_j >= 0:
-          pagemsg("WARNING: Found two %s sections, skipping" % lang)
-          return None
-        lang_j = j
-    if lang_j < 0:
-      pagemsg("Can't find %s section, skipping" % lang)
-      return None
-    j = lang_j
-
-  secbody, sectail = split_trailing_separator_and_categories(sections[j])
-
-  if force_final_nls:
-    secbody, sectail = force_two_newlines_in_secbody(secbody, sectail)
-
-  return sections, j, secbody, sectail, has_non_lang
+  return find_lang_section(pagetext, lang, pagemsg)
 
 def split_trailing_separator(sectext):
   mm = re.match(r"^(.*?\n)(\n*--+\n*)$", sectext, re.S)
@@ -2656,30 +2582,83 @@ def force_two_newlines_in_secbody(secbody, sectail):
   sectail = secbody_finalnl + sectail
   return secbody, sectail
 
-def split_text_into_sections(pagetext, lang):
+def split_text_into_sections(pagetext, pagemsg):
   # Split into sections
-  splitsections = re.split("(^==[^=\n]+==\n)", pagetext, 0, re.M)
-  # Extract off pagehead and recombine section headers with following text
-  pagehead = splitsections[0]
-  sections = []
-  for i in range(1, len(splitsections)):
-    if (i % 2) == 1:
-      sections.append("")
-    sections[-1] += splitsections[i]
-  return pagehead, sections
-
-def find_lang_section_from_text(pagetext, lang, pagemsg):
-  pagehead, sections = split_text_into_sections(pagetext, lang)
-
-  # Go through each section in turn, looking for existing language section
-  for i in range(len(sections)):
-    m = re.match("^==([^=\n]+)==$", sections[i], re.M)
+  sections = re.split(r"(^==[^=\n]+==\s*\n)", pagetext, 0, re.M)
+  sections_by_lang = {}
+  for j in range(2, len(sections), 2):
+    m = re.search(r"\A==\s*(.*?)\s*==\s*\n\Z", sections[j - 1])
     if not m:
-      pagemsg("Can't find language name in text: [[%s]]" % (sections[i]))
-    elif m.group(1) == lang:
-      return sections[i]
+      pagemsg("WARNING: Internal error: Can't match section header: %s" % (sections[j - 1].rstrip("\n")))
+    else:
+      seclang = m.group(1)
+      if seclang in sections_by_lang:
+        pagemsg("WARNING: Found two %s sections, skipping second one" % seclang)
+      else:
+        sections_by_lang[seclang] = j
+  return sections, sections_by_lang
 
-  return None
+# Find the section for the language `lang` in `text` (the text of the page), returning values so that the
+# language-specific text can be modified and then the page as a whole put back together in preparation for saving.
+# Return None if the language can't be found; otherwise, return a tuple of five values:
+#   `sections`, `j`, `secbody`, `sectail`, `has_non_lang`
+# `sections` contains the per-language sections, where `j` points to the section containing the language in
+# question. The text of this section has been split into `secbody` and `sectail`, where `sectail` contains
+# any trailing categories and separator, and `secbody` contains the remainder of the section text. `has_non_lang`
+# is True if any sections for other languages are encountered.
+#
+# The code to call this function should look like this:
+#
+#    retval = blib.find_modifiable_lang_section(text, langname, pagemsg)
+#    if retval is None:
+#      return
+#    sections, j, secbody, sectail, has_non_lang = retval
+#
+# After modifying `secbody` as appropriate, reconstruct the page text as follows:
+#
+#    sections[j] = secbody + sectail
+#    text = "".join(sections)
+#
+# If `lang` is None, the passed-in `text` is assumed to already contain only the text of the appropriate language
+# (as, for example, if find_regex.py is run with the '--lang LANGNAME' option set). The function won't look for
+# a language-specific section but will still separate off trailing categories and separators.
+#
+# If `force_final_nls` is given, `secbody` will be modified so that it always ends in two newlines, and the
+# actual newlines (if any) at the end of `secbody` will be included at the beginning of `sectail`. This
+# simplifies doing things like rearranging subsections or adding subsections to the end. In this case, to
+# reconstruct the page text, use the following:
+#
+#    sections[j] = secbody.rstrip("\n") + sectail
+#    text = "".join(sections)
+def find_modifiable_lang_section(text, lang, pagemsg, force_final_nls=False):
+  sections, sections_by_lang = split_text_into_sections(text, pagemsg)
+
+  has_non_lang = False
+
+  if lang is None:
+    sections = [text]
+    j = 0
+  elif lang not in sections_by_lang:
+    pagemsg("WARNING: Can't find %s section, skipping" % lang)
+    return None
+  else:
+    j = sections_by_lang[lang]
+    has_non_lang = len(sections_by_lang) > 1
+
+  secbody, sectail = split_trailing_separator_and_categories(sections[j])
+
+  if force_final_nls:
+    secbody, sectail = force_two_newlines_in_secbody(secbody, sectail)
+
+  return sections, j, secbody, sectail, has_non_lang
+
+def find_lang_section(pagetext, lang, pagemsg):
+  splitsections, sections_by_lang = split_text_into_sections(pagetext, pagemsg)
+
+  if lang not in sections_by_lang:
+    pagemsg("WARNING: Can't find %s section, skipping" % lang)
+    return None
+  return splitsections[sections_by_lang[lang]]
 
 def replace_in_text(text, curr, repl, pagemsg, count=-1, no_found_repl_check=False,
     abort_if_warning=False, is_re=False):
