@@ -97,10 +97,12 @@ local function get_valid_prefixes()
 	return valid_prefixes
 end
 
--- Main function for fetching alternative forms. Extracted out from the template-callable function so this can be
--- called by other modules (in particular, [[Module:descendants tree]]). `allow_self_link` causes terms the same as the
--- pagename to be shown normally; otherwise they are displayed unlinked.
-function export.get_alternative_forms(parent_args, pagename, allow_self_link)
+-- Main function for displaying alternative forms. Extracted out from the template-callable function so this can be
+-- called by other modules (in particular, [[Module:descendants tree]]). `show_dialect_tags_after_terms` (used by
+-- [[Module:descendants tree]]) causes dialect tags to be placed in brackets after each term rather than at the end
+-- using an em-dash. `allow_self_link` causes terms the same as the pagename to be shown normally; otherwise they are
+-- displayed unlinked.
+function export.display_alternative_forms(parent_args, pagename, show_dialect_tags_after_terms, allow_self_link)
 	local list_with_holes = { list = true, allow_holes = true }
 	local params = {
 		[1] = { required = true, default = "und" },
@@ -264,18 +266,12 @@ function export.get_alternative_forms(parent_args, pagename, allow_self_link)
 
 	local dialects = export.make_dialects(rawDialects, lang)
 
-	return items, dialects
-end
-
-
-local function display_alternative_forms(parent_args, pagename, allow_self_link)
-	local items, dialects = export.get_alternative_forms(parent_args, pagename, allow_self_link)
-
 	-- Format all the items, including joiners, pre-qualifiers, post-qualifiers and (if `show_dialect_tags_after_terms`
 	-- is given) dialect tags.
 	for i, item in ipairs(items) do
 		items[i] = item.joiner .. m_links.full_link(item, nil, allow_self_link, "show qualifiers")
-		if show_dialect_tags_after_terms and #dialects > 0 then
+		-- Temporarily turn this off till we can fix it correctly.
+		if false then -- show_dialect_tags_after_terms and #dialects > 0 then
 			items[i] = items[i] .. " " .. require("Module:qualifier").format_qualifier(dialects, "[", "]")
 		end
 	end
@@ -300,15 +296,13 @@ local function display_alternative_forms(parent_args, pagename, allow_self_link)
 	return table.concat(items)
 end
 
-
 -- Template-callable function for displaying alternative forms.
 function export.create(frame)
 	local parent_args = frame:getParent().args
 	local title = mw.title.getCurrentTitle()
 	local PAGENAME = title.text
-	return display_alternative_forms(parent_args, title, false)
+	return export.display_alternative_forms(parent_args, title)
 end
-
 
 function export.categorize(frame)
 	local content = {}
