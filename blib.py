@@ -1093,9 +1093,14 @@ def args_has_non_default_pages(args):
 
 # Process a run of pages, with the set of pages specified in various possible ways, e.g. from --pagefile, --cats,
 # --refs, or (if --stdin is given) from a Wiktionary dump or find_regex.py output read from stdin. PROCESS is called
-# to process the page, and has different calling conventions depending on the EDIT and STDIN flags:
+# to process the page, and has different calling conventions depending on the EDIT, STDIN and INCLUDE_COMMENT flags:
 #
-# If stdin=True, PROCESS should be defined like this:
+# If stdin=True and include_comment=True, PROCESS should be defined like this:
+#
+# def process_text_on_page(index, pagetitle, text, comment):
+#   ...
+#
+# If stdin=True and include_comment=False, PROCESS should be defined like this:
 #
 # def process_text_on_page(index, pagetitle, text):
 #   ...
@@ -1136,8 +1141,8 @@ def args_has_non_default_pages(args):
 #
 # If canonicalize_pagename is given, it should be a function of one argument, which is called on pagenames specified
 # on the command line using --pages or read from a file using --pagefile.
-def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_cats=[],
-    default_refs=[], edit=False, stdin=False, only_lang=None,
+def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_cats=[],
+    default_refs=[], edit=False, stdin=False, only_lang=None, include_comment=False,
     filter_pages=None, ref_namespaces=None, canonicalize_pagename=None, skip_ignorable_pages=False):
   args_namespaces = args.namespaces and args.namespaces.split(",") or []
   args_namespaces = [0 if x == "-" else int(x) if re.search("^[0-9]+$", x) else x for x in args_namespaces]
@@ -1221,18 +1226,22 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
 
     return sections, j, secbody, sectail
 
-  def do_process_text_on_page(index, pagetitle, text, pagemsg):
+  def do_process_text_on_page(index, pagetitle, text, prev_comment, pagemsg):
     def errandpagemsg(txt):
       errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
+    def call_process(text_to_call):
+      if include_comment:
+        return process(index, pagetitle, text_to_call, prev_comment)
+      else:
+        return process(index, pagetitle, text_to_call)
     if page_should_be_filtered_out(pagetitle, errandpagemsg):
-      return None, None
+      return None
     if args.only_lang:
       retval = find_lang_section_for_only_lang(text, args.only_lang, pagemsg)
       if retval is None:
         return None
       sections, j, secbody, sectail = retval
-      if edit:
-        retval = process(index, pagetitle, secbody)
+      retval = call_process(secbody)
       if retval is None:
         return None
       newsecbody, comment = retval
@@ -1240,8 +1249,8 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
       return "".join(sections), comment
     else:
       if only_lang and "==%s==" % only_lang not in text:
-        return None, None
-      return process(index, pagetitle, text)
+        return None
+      return call_process(text)
 
   # Process a page read from Wiktionary using Pywikibot (as opposed to a page read from stdin, either from find_regex
   # output or from a dump file). `no_check_seen` means to not check the `seen` set to see whether a page has already
@@ -1263,7 +1272,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
     def do_process_page(page, index, parsed=None):
       if stdin:
         pagetext = safe_page_text(page, errandpagemsg)
-        return do_process_text_on_page(index, pagetitle, pagetext, pagemsg)
+        return do_process_text_on_page(index, pagetitle, pagetext, None, pagemsg)
       else:
         if only_lang:
           pagetext = safe_page_text(page, errandpagemsg)
@@ -1295,7 +1304,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
         pages_to_filter = new_pages_to_filter
       else:
         pages_to_filter |= new_pages_to_filter
-    def do_process_stdin_text_on_page(index, pagetitle, text):
+    def do_process_stdin_text_on_page(index, pagetitle, text, prev_comment):
       if pages_to_filter is not None and pagetitle not in pages_to_filter:
         return None
       def errandpagemsg(txt):
@@ -1305,12 +1314,12 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
       else:
         def pagemsg(txt):
           msg("Page %s %s: %s" % (index, pagetitle, txt))
-        return do_process_text_on_page(index, pagetitle, text, pagemsg)
+        return do_process_text_on_page(index, pagetitle, text, prev_comment, pagemsg)
     if args.find_regex:
       index_pagetitle_text_comment = yield_text_from_find_regex(sys.stdin, args.verbose)
       for _, (index, pagetitle, text, prev_comment) in iter_items(index_pagetitle_text_comment, start, end,
           get_name=lambda x:x[1], get_index=lambda x:x[0]):
-        retval = do_process_stdin_text_on_page(index, pagetitle, text)
+        retval = do_process_stdin_text_on_page(index, pagetitle, text, prev_comment)
         def pagemsg(txt):
           msg("Page %s %s: %s" % (index, pagetitle, txt))
         if prev_comment:
@@ -1318,7 +1327,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
         do_handle_stdin_retval(retval, text, prev_comment, pagemsg, is_find_regex=True)
     else:
       def do_process_stdin_dump_text_on_page(index, pagetitle, text):
-        retval = do_process_stdin_text_on_page(index, pagetitle, text)
+        retval = do_process_stdin_text_on_page(index, pagetitle, text, None)
         def pagemsg(txt):
           msg("Page %s %s: %s" % (index, pagetitle, txt))
         do_handle_stdin_retval(retval, text, None, pagemsg, is_find_regex=False)
@@ -2584,10 +2593,10 @@ def force_two_newlines_in_secbody(secbody, sectail):
 
 def split_text_into_sections(pagetext, pagemsg):
   # Split into sections
-  sections = re.split(r"(^==[^=\n]+==\s*\n)", pagetext, 0, re.M)
+  sections = re.split(r"(^==[^=\n]+==[ \t]*\n)", pagetext, 0, re.M)
   sections_by_lang = {}
   for j in range(2, len(sections), 2):
-    m = re.search(r"\A==\s*(.*?)\s*==\s*\n\Z", sections[j - 1])
+    m = re.search(r"\A==[ \t]*(.*?)[ \t]*==[ \t]*\n\Z", sections[j - 1])
     if not m:
       pagemsg("WARNING: Internal error: Can't match section header: %s" % (sections[j - 1].rstrip("\n")))
     else:
@@ -2597,6 +2606,26 @@ def split_text_into_sections(pagetext, pagemsg):
       else:
         sections_by_lang[seclang] = j
   return sections, sections_by_lang
+
+def split_text_into_subsections(secbody, pagemsg):
+  subsections = re.split(r"(^==+[^=\n]+==+[ \t]*\n)", secbody, 0, re.M)
+  subsections_by_header = defaultdict(list)
+  subsection_levels = {}
+  for j in range(2, len(subsections), 2):
+    m = re.search(r"\A(==+)[ \t]*(.*?)[ \t]*(==+)[ \t]*\n\Z", subsections[j - 1])
+    if not m:
+      pagemsg("WARNING: Internal error: Can't match subsection header: %s" % (subsections[j - 1].rstrip("\n")))
+    else:
+      left_equals, header, right_equals = m.groups()
+      if left_equals != right_equals:
+        pagemsg("WARNING: Found %s equalsigns on the left but %s equal signs on the right, assuming smaller one: %s"
+          % (left_equals, right_equals, subsections[j - 1].rstrip("\n")))
+        num_equals = min(left_equals, right_equals)
+      else:
+        num_equals = left_equals
+      subsection_levels[j] = num_equals
+      subsections_by_header[header].append(j)
+  return subsections, subsections_by_header, subsection_levels
 
 # Find the section for the language `lang` in `text` (the text of the page), returning values so that the
 # language-specific text can be modified and then the page as a whole put back together in preparation for saving.
