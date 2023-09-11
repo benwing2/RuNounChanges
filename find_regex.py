@@ -9,7 +9,7 @@ import pywikibot
 import blib
 from blib import getparam, rmparam, msg, site
 
-def process_text_on_page(index, pagetitle, text, regex, invert, verbose,
+def process_text_on_page(index, pagetitle, text, prev_comment, regex, invert, verbose,
     include_text, all_matches, lang, from_to):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -22,22 +22,14 @@ def process_text_on_page(index, pagetitle, text, regex, invert, verbose,
   else:
     text_to_search = []
     langs = set(re.split(",(?!= )", lang))
-    seen_langs = set()
-    sections = re.split("(^==[^=]*==\s*\n)", text, 0, re.M)
+    sections, sections_by_lang = blib.split_text_into_sections(text, pagemsg)
 
-    for j in range(2, len(sections), 2):
-      m = re.search("^==\s*(.*?)\s*==$", sections[j - 1].strip())
-      if m:
-        seclang = m.group(1)
-        if seclang in langs:
-          if seclang in seen_langs:
-            pagemsg("WARNING: Found multiple %s sections, skipping page" % seclang)
-            return
-          seen_langs.add(seclang)
-          if len(langs) == 1:
-            text_to_search = [sections[j]]
-            break
-          text_to_search.append(sections[j - 1] + sections[j])
+    for seclang, secind in sections_by_lang.items():
+      if seclang in langs:
+        if len(langs) == 1:
+          text_to_search = [sections[secind]]
+          break
+        text_to_search.append(sections[secind - 1] + sections[secind])
     text_to_search = "".join(text_to_search)
 
   def output_match(m):
@@ -66,12 +58,14 @@ def process_text_on_page(index, pagetitle, text, regex, invert, verbose,
       if not text_to_search.endswith("\n"):
         text_to_search += "\n"
       if found_match == (not invert):
+        if prev_comment:
+          pagemsg("Skipped, no changes; previous comment = %s" % prev_comment)
         pagemsg("-------- begin text --------\n%s-------- end text --------" % text_to_search)
 
 def search_pages(args, regex, invert, input_from_diff, start, end, lang):
 
-  def do_process_text_on_page(index, title, text):
-    process_text_on_page(index, title, text, regex, invert, args.verbose,
+  def do_process_text_on_page(index, title, text, prev_comment):
+    process_text_on_page(index, title, text, prev_comment, regex, invert, args.verbose,
         args.text, args.all, lang, args.from_to)
 
   if input_from_diff:
@@ -79,10 +73,10 @@ def search_pages(args, regex, invert, input_from_diff, start, end, lang):
     index_pagename_and_text = blib.yield_text_from_diff(lines, args.verbose)
     for _, (index, pagename, text) in blib.iter_items(index_pagename_and_text, start, end,
         get_name=lambda x:x[1], get_index=lambda x:x[0]):
-      do_process_text_on_page(index, pagename, text)
+      do_process_text_on_page(index, pagename, text, None)
     return
 
-  blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, stdin=True)
+  blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, stdin=True, include_comment=True)
 
 if __name__ == "__main__":
   parser = blib.create_argparser("Search on pages", include_pagefile=True,
