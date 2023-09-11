@@ -134,7 +134,37 @@ local function phonemic(txt, do_hyph, lang, is_prep, period)
 
 			-- syllabify common prefixes as separate
 			local prefixes = {
-				"do", "wy", "za", "aktyno", "akusto", "akwa", "anarcho", "andro", "anemo", "antropo", "arachno", "archeo", "archi", "arcy", "areo", "arytmo", "audio", "awio", "balneo", "biblio", "brachy", "broncho", "ceno", "centro", "centy", "chalko", "chiro", "chloro", "chole", "chondro", "choreo", "chromato", "chrysto", "cyber", "cyklo", "cztero", "ćwierć", "daktylo", "decy", "deka", "dendro", "dermato", "diafano", "dwu", "dynamo", "egzo", "ekstra", "elektro", "encefalo", "endo", "entero", "entomo", "ergo", "erytro", "etno", "farmako", "femto", "ferro", "fizjo", "flebo", "franko", "ftyzjo", "galakto", "galwano", "germano", "geronto", "giganto", "giga", "gineko", "giro", "gliko", "gloso", "glotto", "grafo", "granulo", "grawi", "haplo", "helio", "hemato", "hepta", "hetero", "hiper", "histo", "hydro", "info", "inter", "jedno", "kardio", "kortyko", "kosmo", "krypto", "kseno", "logo", "magneto", "między", "niby", "nie", "nowo", "około", "oksy", "onto", "ornito", "para", "pierwo", "pięcio", "pneumo", "poli", "ponad", "post", "poza", "proto", "pseudo", "psycho", "radio", "samo", "sfigmo", "sklero", "staro", "stereo", "tele", "tetra", "wice", "zoo", "żyro", "am[bf]i", "ang[il]o", "ant[ey]", "a?steno", "[be]lasto", "chro[mn]o", "cys?to", "de[rs]mo", "h?ekto", "[gn]eo", "hi[ge]ro", "kontra?", "me[gt]a", "mi[nl]i", "a[efg]ro", "[pt]rzy", "przed?", "wielk?o", "mi?elo", "eur[oy]", "ne[ku]ro", "allo", "astro", "atto", "brio", "heksa", "all?o", "at[mt]o", "a[rs]tro", "br?io", "heksa?", "pato", "ba[tr][oy]", "izo", "myzo", "m[ai]kro", "mi[mzk]o", "chemo", "gono", "kilo", "lipo", "nano", "kilk[ou]", "hem[io]", "home?o", "fi[lt]o", "ma[łn]o", "h[ioy]lo", "hip[ns]?o", "[fm]o[nt]o",
+				"[be]lasto", "[fm]o[nt]o", "[gn]eo", "[pt]rzy",
+				"a?steno", "a[efg]ro", "a[rs]tro", "aktyno", "akusto", "akwa", "all?o", "allo", "am[bf]i", "anarcho",
+				"andro", "anemo", "ang[il]o", "ant[ey]", "antropo", "arachno", "archeo", "archi", "arcy", "areo",
+				"arytmo", "astro", "at[mt]o", "atto", "audio", "awio",
+				"ba[tr][oy]", "balneo", "biblio", "br?io", "brachy", "brio", "broncho",
+				"ceno", "centro", "centy", "chalko", "chemo", "chiro", "chloro", "chole", "chondro", "choreo",
+				"chro[mn]o", "chromato", "chrysto", "cyber", "cyklo", "cys?to", "cztero",
+				"daktylo", "de[rs]mo", "decy", "deka", "dendro", "dermato", "diafano", "do", "dwu", "dynamo",
+				"egzo", "ekstra", "elektro", "encefalo", "endo", "entero", "entomo", "ergo", "erytro", "etno",
+				"eur[oy]",
+				"farmako", "femto", "ferro", "fi[lt]o", "fizjo", "flebo", "franko", "ftyzjo",
+				"galakto", "galwano", "germano", "geronto", "giga", "giganto", "gineko", "giro", "gliko", "gloso",
+				"glotto", "gono", "grafo", "granulo", "grawi",
+				"h?ekto", "h[ioy]lo", "haplo", "heksa", "heksa?", "helio", "hem[io]", "hemato", "hepta", "hetero",
+				"hi[ge]ro", "hip[ns]?o", "hiper", "histo", "home?o", "hydro",
+				"info", "inter", "izo",
+				"jedno",
+				"kardio", "kilk[ou]", "kilo", "kontra?", "kortyko", "kosmo", "krypto", "kseno",
+				"lipo", "logo",
+				"m[ai]kro", "ma[łn]o", "magneto", "me[gt]a", "mi?elo", "mi[mzk]o", "mi[nl]i", "między", "myzo",
+				"nano", "ne[ku]ro", "niby", "nie", "nowo",
+				"około", "oksy", "onto", "ornito",
+				"para", "pato", "pierwo", "pięcio", "pneumo", "poli", "ponad", "post", "poza", "proto", "przed?",
+				"pseudo", "psycho",
+				"radio",
+				"samo", "sfigmo", "sklero", "staro", "stereo",
+				"tele", "tetra",
+				"wice", "wielk?o", "wy",
+				"za", "zoo",
+				"ćwierć",
+				"żyro",
 				-- <na-, po-, o-, u-> would hit too many false positives
 			}
 			for _, v in ipairs(prefixes) do
@@ -214,7 +244,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period)
 			-- list_i loops as above but doesn't count dots
 			-- array_i loops through the indices at which the capital letters are
 			local str_i, list_i, array_i = 1, 1, 1
-			function h_sub(x, y) return usub(hyph, x, y) end
+			local function h_sub(x, y) return usub(hyph, x, y) end
 			while array_i <= #uppercase_indices do
 				if h_sub(str_i, str_i) ~= "." then
 					if list_i == uppercase_indices[array_i] then
@@ -683,10 +713,8 @@ function export.IPA(frame)
 
 	local arg_lang = frame.args.lang
 
-	local process_args = {
-
+	local params = {
 		[1] = { list = true },
-
 		["qual"] = { list = true, allow_holes = true },
 		["q"] = { list = true, allow_holes = true, alias_of = "qual" },
 		["hyphs"] = {}, ["h"] = { alias_of = "hyphs" },
@@ -694,23 +722,22 @@ function export.IPA(frame)
 		["audios"] = {}, ["a"] = { alias_of = "audios" },
 		["homophones"] = {}, ["hh"] = { alias_of = "homophones" },
 		["ref"] = { list = true, allow_holes = true },
-
-		["title"] = {}, -- for debugging or demonstration only
+		["pagename"] = {}, -- for debugging or demonstration only
 
 	}
 
 	if arg_lang == "pl" then
-		process_args["mp"] = { list = true }
-		process_args["mp_qual"] = { list = true, allow_holes = true }
-		process_args["mp_q"] = { list = true, allow_holes = true, alias_of = "mp_qual" }
-		process_args["mp_period"] = {}
-		process_args["mp_ref"] = { list = true, allow_holes = true }
+		params["mp"] = { list = true }
+		params["mp_qual"] = { list = true, allow_holes = true }
+		params["mp_q"] = { list = true, allow_holes = true, alias_of = "mp_qual" }
+		params["mp_period"] = {}
+		params["mp_ref"] = { list = true, allow_holes = true }
 	end
 
 	local args = require("Module:parameters").process(frame:getParent().args, process_args)
 
 	local terms = args[1]
-	local title = args.title or mw.title.getCurrentTitle().text
+	local title = args.pagename or mw.title.getCurrentTitle().text
 
 	if #terms == 0 then
 		terms = { "#" }
@@ -843,6 +870,559 @@ function export.IPA(frame)
 	end
 
 	return ret
+end
+
+
+local function parse_pron_modifier(arg, parse_err, generate_obj, param_mods, splitchar)
+	local retval = {}
+
+	if arg:find("<") then
+		local insert = { store = "insert" }
+		param_mods.q = insert
+		param_mods.qq = insert
+		param_mods.a = insert
+		param_mods.aa = insert
+		return require(put_module).parse_inline_modifiers(arg, {
+			param_mods = param_mods,
+			generate_obj = generate_obj,
+			parse_err = parse_err,
+			splitchar = splitchar or ",",
+		})
+	else
+		local split_args
+		if not splitchar then
+			split_args = split_on_comma(arg)
+		else
+			split_args = rsplit(arg, splitchar)
+		end
+		for _, term in ipairs(split_args) do
+			table.insert(retval, generate_obj(term))
+		end
+	end
+
+	return retval
+end
+
+
+local function parse_rhyme(arg, parse_err)
+	local function generate_obj(term)
+		return {rhyme = term}
+	end
+	local param_mods = {
+		s = {
+			item_dest = "num_syl",
+			convert = function(arg, parse_err),
+				local nsyls = rsplit(arg, ",")
+				for i, nsyl in ipairs(nsyls) do
+					if not nsyl:find("^[0-9]+$") then
+						parse_err("Number of syllables '" .. nsyl .. "' should be numeric")
+					end
+					nsyls[i] = tonumber(nsyl)
+				end
+				return nsyls
+			end,
+		},
+	}
+
+	return parse_pron_modifier(arg, parse_err, generate_obj, param_mods)
+end
+
+
+local function parse_hyph(arg, parse_err)
+	-- None other than qualifiers
+	local param_mods = {}
+
+	return parse_pron_modifier(arg, parse_err, generate_hyph_obj, param_mods)
+end
+
+
+local function parse_homophone(arg, parse_err)
+	local function generate_obj(term)
+		return {term = term}
+	end
+	local param_mods = {
+		t = {
+			-- We need to store the <t:...> inline modifier into the "gloss" key of the parsed term,
+			-- because that is what [[Module:links]] (called from [[Module:homophones]]) expects.
+			item_dest = "gloss",
+		},
+		gloss = {},
+		pos = {},
+		alt = {},
+		lit = {},
+		id = {},
+		g = {
+			-- We need to store the <g:...> inline modifier into the "genders" key of the parsed term,
+			-- because that is what [[Module:links]] (called from [[Module:homophones]]) expects.
+			item_dest = "genders",
+			convert = function(arg)
+				return rsplit(arg, ",")
+			end,
+		},
+	}
+
+	return parse_pron_modifier(arg, parse_err, generate_obj, param_mods)
+end
+
+
+local function generate_audio_obj(arg)
+	local file, gloss
+	file, gloss = arg:match("^(.-)%s*#%s*(.*)$")
+	if not file then
+		file = arg
+		gloss = "Audio"
+	end
+	return {file = file, gloss = gloss}
+end
+
+
+local function parse_audio(arg, parse_err)
+	-- None other than qualifiers
+	local param_mods = {}
+
+	-- Don't split on comma because some filenames have embedded commas not followed by a space
+	-- (typically followed by an underscore).
+	return parse_pron_modifier(arg, parse_err, generate_audio_obj, param_mods, ";")
+end
+
+
+-- External entry point for {{pl-pr}}, {{szl-pr}}.
+function export.show_pr(frame)
+	local params = {
+		[1] = {list = true},
+		["rhyme"] = {},
+		["hyph"] = {},
+		["hmp"] = {},
+		["audio"] = {},
+		["pagename"] = {},
+	}
+	local parargs = frame:getParent().args
+	local args = require("Module:parameters").process(parargs, params)
+	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
+
+	-- Parse the arguments.
+	local respellings = #args[1] > 0 and args[1] or {"+"}
+	local parsed_respellings = {}
+	local function overall_parse_err(msg, arg, val)
+		error(msg .. ": " .. arg .. "= " .. val)
+	end
+	local overall_rhyme = args.rhyme and
+		parse_rhyme(args.rhyme, function(msg) overall_parse_err(msg, "rhyme", args.rhyme) end) or nil
+	local overall_hyph = args.hyph and
+		parse_hyph(args.hyph, function(msg) overall_parse_err(msg, "hyph", args.hyph) end) or nil
+	local overall_hmp = args.hmp and
+		parse_homophone(args.hmp, function(msg) overall_parse_err(msg, "hmp", args.hmp) end) or nil
+	local overall_audio = args.audio and
+		parse_audio(args.audio, function(msg) overall_parse_err(msg, "audio", args.audio) end) or nil
+	for i, respelling in ipairs(respellings) do
+		if respelling:find("<") then
+			local param_mods = {
+				pre = { overall = true },
+				post = { overall = true },
+				style = { overall = true },
+				bullets = {
+					overall = true,
+					convert = function(arg, parse_err)
+						if not arg:find("^[0-9]+$") then
+							parse_err("Modifier 'bullets' should have a number as argument, but saw '" .. arg .. "'")
+						end
+						return tonumber(arg)
+					end,
+				},
+				rhyme = {
+					overall = true,
+					store = "insert-flattened",
+					convert = parse_rhyme,
+				},
+				hyph = {
+					overall = true,
+					store = "insert-flattened",
+					convert = parse_hyph,
+				},
+				hmp = {
+					overall = true,
+					store = "insert-flattened",
+					convert = parse_homophone,
+				},
+				audio = {
+					overall = true,
+					store = "insert-flattened",
+					convert = parse_audio,
+				},
+				ref = { store = "insert" },
+				q = { store = "insert" },
+				qq = { store = "insert" },
+				a = { store = "insert" },
+				aa = { store = "insert" },
+			}
+
+			local parsed = require(put_module).parse_inline_modifiers(respelling, {
+				paramname = i,
+				param_mods = param_mods,
+				generate_obj = function(term, parse_err)
+					return parse_respelling(term, pagename, parse_err)
+				end,
+				splitchar = ",",
+				outer_container = {
+					audio = {}, rhyme = {}, hyph = {}, hmp = {}
+				}
+			})
+			if not parsed.bullets then
+				parsed.bullets = 1
+			end
+			table.insert(parsed_respellings, parsed)
+		else
+			local termobjs = {}
+			local function parse_err(msg)
+				error(msg .. ": " .. i .. "= " .. respelling)
+			end
+			for _, term in ipairs(split_on_comma(respelling)) do
+				table.insert(termobjs, parse_respelling(term, pagename, parse_err))
+			end
+			table.insert(parsed_respellings, {
+				terms = termobjs,
+				audio = {},
+				rhyme = {},
+				hyph = {},
+				hmp = {},
+				bullets = 1,
+			})
+		end
+	end
+
+	if overall_hyph then
+		local hyphs = {}
+		for _, hyph in ipairs(overall_hyph) do
+			if hyph.syllabification == "+" then
+				hyph.syllabification = syllabify_from_spelling(pagename)
+				hyph.hyph = split_syllabified_spelling(hyph.syllabification)
+			elseif hyph.syllabification == "-" then
+				overall_hyph = {}
+				break
+			end
+		end
+	end
+
+	-- Loop over individual respellings, processing each.
+	for _, parsed in ipairs(parsed_respellings) do
+		parsed.pronun = generate_pronun(parsed)
+		local no_auto_rhyme = false
+		for _, term in ipairs(parsed.terms) do
+			if term.raw then
+				if not should_generate_rhyme_from_ipa(term.raw_phonemic or term.raw_phonetic) then
+					no_auto_rhyme = true
+					break
+				end
+			elseif not should_generate_rhyme_from_respelling(term.term) then
+				no_auto_rhyme = true
+				break
+			end
+		end
+
+		if #parsed.hyph == 0 then
+			if not overall_hyph and all_words_have_vowels(pagename) then
+				for _, term in ipairs(parsed.terms) do
+					if not term.raw then
+						local syllabification = syllabify_from_spelling(term.term)
+						local aligned_syll = align_syllabification_to_spelling(syllabification, pagename)
+						if aligned_syll then
+							m_table.insertIfNot(parsed.hyph, generate_hyph_obj(aligned_syll))
+						end
+					end
+				end
+			end
+		else
+			for _, hyph in ipairs(parsed.hyph) do
+				if hyph.syllabification == "+" then
+					hyph.syllabification = syllabify_from_spelling(pagename)
+					hyph.hyph = split_syllabified_spelling(hyph.syllabification)
+				elseif hyph.syllabification == "-" then
+					parsed.hyph = {}
+					break
+				end
+			end
+		end
+
+		-- Generate the rhymes.
+		local function dodialect_rhymes_from_pronun(rhyme_ret, dialect)
+			rhyme_ret.pronun[dialect] = {}
+			-- It's possible the pronunciation for a passed-in dialect was never generated. This happens e.g. with
+			-- {{es-pr|cebolla<style:seseo>}}. The initial call to generate_pronun() fails to generate a pronunciation
+			-- for the dialect 'distinction-yeismo' because the pronunciation of 'cebolla' differs between distincion
+			-- and seseo and so the seseo style restriction rules out generation of pronunciation for distincion
+			-- dialects (other than 'distincion-lleismo', which always gets generated so as to determine on which axes
+			-- the dialects differ). However, when generating the rhyme, it is based only on -olla, whose pronunciation
+			-- does not differ between distincion and seseo, but does differ between lleismo and yeismo, so it needs to
+			-- generate a yeismo-specific rhyme, and 'distincion-yeismo' is the representative dialect for yeismo in the
+			-- situation where distincion and seseo do not have distinct results (based on the following line in
+			-- express_all_styles()):
+			--   express_style(false, "most of Spain and Latin America", "distincion-yeismo", "distincion-seseo-yeismo")
+			-- In this case we need to generate the missing overall pronunciation ourselves since we need it to generate
+			-- the dialect-specific rhyme pronunciation.
+			if not parsed.pronun.pronun[dialect] then
+				dodialect_pronun(parsed, parsed.pronun, dialect)
+			end
+			for _, pronun in ipairs(parsed.pronun.pronun[dialect]) do
+				-- We should have already excluded multiword terms and terms without vowels from rhyme generation (see
+				-- `no_auto_rhyme` below). But make sure to check that pronun.phonemic exists (it may not if raw
+				-- phonetic-only pronun is given).
+				if pronun.phonemic then
+					-- Count number of syllables by looking at syllable boundaries (including stress marks).
+					local num_syl = get_num_syl_from_phonemic(pronun.phonemic)
+					-- Get the rhyme by truncating everything up through the last stress mark + any following
+					-- consonants, and remove syllable boundary markers.
+					local rhyme = convert_phonemic_to_rhyme(pronun.phonemic)
+					local saw_already = false
+					for _, existing in ipairs(rhyme_ret.pronun[dialect]) do
+						if existing.rhyme == rhyme then
+							saw_already = true
+							-- We already saw this rhyme but possibly with a different number of syllables,
+							-- e.g. if the user specified two pronunciations 'biología' (4 syllables) and
+							-- 'bi.ología' (5 syllables), both of which have the same rhyme /ia/.
+							m_table.insertIfNot(existing.num_syl, num_syl)
+							break
+						end
+					end
+					if not saw_already then
+						local rhyme_diffs = nil
+						if dialect == "distincion-lleismo" then
+							rhyme_diffs = {}
+							if rhyme:find("θ") then
+								rhyme_diffs.distincion_different = true
+							end
+							if rhyme:find("ʎ") then
+								rhyme_diffs.lleismo_different = true
+							end
+							if rfind(rhyme, "[ʎɟ]") then
+								rhyme_diffs.sheismo_different = true
+								rhyme_diffs.need_rioplat = true
+							end
+						end
+						table.insert(rhyme_ret.pronun[dialect], {
+							rhyme = rhyme,
+							num_syl = {num_syl},
+							differences = rhyme_diffs,
+						})
+					end
+				end
+			end
+		end
+
+		if #parsed.rhyme == 0 then
+			if overall_rhyme or no_auto_rhyme then
+				parsed.rhyme = nil
+			else
+				parsed.rhyme = express_all_styles(parsed.style, dodialect_rhymes_from_pronun)
+			end
+		else
+			local no_rhyme = false
+			for _, rhyme in ipairs(parsed.rhyme) do
+				if rhyme.rhyme == "-" then
+					no_rhyme = true
+					break
+				end
+			end
+			if no_rhyme then
+				parsed.rhyme = nil
+			else
+				local function this_dodialect(rhyme_ret, dialect)
+					return dodialect_specified_rhymes(parsed.rhyme, parsed.hyph, {parsed}, rhyme_ret, dialect)
+				end
+				parsed.rhyme = express_all_styles(parsed.style, this_dodialect)
+			end
+		end
+	end
+
+	if overall_rhyme then
+		local no_overall_rhyme = false
+		for _, orhyme in ipairs(overall_rhyme) do
+			if orhyme.rhyme == "-" then
+				no_overall_rhyme = true
+				break
+			end
+		end
+		if no_overall_rhyme then
+			overall_rhyme = nil
+		else
+			local all_hyphs
+			if overall_hyph then
+				all_hyphs = overall_hyph
+			else
+				all_hyphs = {}
+				for _, parsed in ipairs(parsed_respellings) do
+					for _, hyph in ipairs(parsed.hyph) do
+						m_table.insertIfNot(all_hyphs, hyph)
+					end
+				end
+			end
+			local function dodialect_overall_rhyme(rhyme_ret, dialect)
+				return dodialect_specified_rhymes(overall_rhyme, all_hyphs, parsed_respellings, rhyme_ret, dialect)
+			end
+			overall_rhyme = express_all_styles(parsed.style, dodialect_overall_rhyme)
+		end
+	end
+
+	-- If all sets of pronunciations have the same rhymes, display them only once at the bottom.
+	-- Otherwise, display rhymes beneath each set, indented.
+	local first_rhyme_ret
+	local all_rhyme_sets_eq = true
+	for j, parsed in ipairs(parsed_respellings) do
+		if j == 1 then
+			first_rhyme_ret = parsed.rhyme
+		elseif not m_table.deepEquals(first_rhyme_ret, parsed.rhyme) then
+			all_rhyme_sets_eq = false
+			break
+		end
+	end
+
+	local function format_rhyme(rhyme_ret, num_bullets)
+		local function format_rhyme_style(tag, expressed_style, is_first)
+			local pronunciations = {}
+			local rhymes = {}
+			for _, pronun in ipairs(expressed_style.pronun) do
+				table.insert(rhymes, pronun)
+			end
+			local data = {
+				lang = lang,
+				rhymes = rhymes,
+				qualifiers = tag and {tag} or nil,
+				force_cat = force_cat,
+			}
+			local bullet = string.rep("*", num_bullets) .. " "
+			local formatted = bullet .. require("Module:rhymes").format_rhymes(data)
+			local formatted_for_len_parts = {}
+			table.insert(formatted_for_len_parts, bullet .. "Rhymes: " .. (tag and "(" .. tag .. ") " or ""))
+			for j, pronun in ipairs(expressed_style.pronun) do
+				if j > 1 then
+					table.insert(formatted_for_len_parts, ", ")
+				end
+				if pronun.qualifiers then
+					table.insert(formatted_for_len_parts, "(" .. table.concat(pronun.qualifiers, ", ") .. ") ")
+				end
+				table.insert(formatted_for_len_parts, "-" .. pronun.rhyme)
+			end
+			return formatted, textual_len(table.concat(formatted_for_len_parts))
+		end
+
+		return format_all_styles(rhyme_ret.expressed_styles, format_rhyme_style)
+	end
+
+	-- If all sets of pronunciations have the same hyphenations, display them only once at the bottom.
+	-- Otherwise, display hyphenations beneath each set, indented.
+	local first_hyphs
+	local all_hyph_sets_eq = true
+	for j, parsed in ipairs(parsed_respellings) do
+		if j == 1 then
+			first_hyphs = parsed.hyph
+		elseif not m_table.deepEquals(first_hyphs, parsed.hyph) then
+			all_hyph_sets_eq = false
+			break
+		end
+	end
+
+	local function format_hyphenations(hyphs, num_bullets)
+		local hyphtext = require("Module:hyphenation").format_hyphenations { lang = lang, hyphs = hyphs, caption = "Syllabification" }
+		return string.rep("*", num_bullets) .. " " .. hyphtext
+	end
+
+	-- If all sets of pronunciations have the same homophones, display them only once at the bottom.
+	-- Otherwise, display homophones beneath each set, indented.
+	local first_hmps
+	local all_hmp_sets_eq = true
+	for j, parsed in ipairs(parsed_respellings) do
+		if j == 1 then
+			first_hmps = parsed.hmp
+		elseif not m_table.deepEquals(first_hmps, parsed.hmp) then
+			all_hmp_sets_eq = false
+			break
+		end
+	end
+
+	local function format_homophones(hmps, num_bullets)
+		local hmptext = require("Module:homophones").format_homophones { lang = lang, homophones = hmps }
+		return string.rep("*", num_bullets) .. " " .. hmptext
+	end
+
+	local function format_audio(audios, num_bullets)
+		local ret = {}
+		for i, audio in ipairs(audios) do
+			local text = require("Module:audio").format_audios (
+				{
+				  lang = lang,
+				  audios = {{file = audio.file, qualifiers = nil }, },
+				  caption = audio.gloss
+				}
+			)
+			
+			if audio.q and audio.q[1] or audio.qq and audio.qq[1]
+				or audio.a and audio.a[1] or audio.aa and audio.aa[1] then
+				text = require("Module:pron qualifier").format_qualifiers(audio, text)
+			end
+			table.insert(ret, string.rep("*", num_bullets) .. " " .. text)
+		end
+		return table.concat(ret, "\n")
+	end
+
+	local textparts = {}
+	local min_num_bullets = 9999
+	for j, parsed in ipairs(parsed_respellings) do
+		if parsed.bullets < min_num_bullets then
+			min_num_bullets = parsed.bullets
+		end
+		if j > 1 then
+			table.insert(textparts, "\n")
+		end
+		table.insert(textparts, parsed.pronun.text)
+		if #parsed.audio > 0 then
+			table.insert(textparts, "\n")
+			-- If only one pronunciation set, add the audio with the same number of bullets, otherwise
+			-- indent audio by one more bullet.
+			table.insert(textparts, format_audio(parsed.audio,
+				#parsed_respellings == 1 and parsed.bullets or parsed.bullets + 1))
+		end
+		if not all_rhyme_sets_eq and parsed.rhyme then
+			table.insert(textparts, "\n")
+			table.insert(textparts, format_rhyme(parsed.rhyme, parsed.bullets + 1))
+		end
+		if not all_hyph_sets_eq and #parsed.hyph > 0 then
+			table.insert(textparts, "\n")
+			table.insert(textparts, format_hyphenations(parsed.hyph, parsed.bullets + 1))
+		end
+		if not all_hmp_sets_eq and #parsed.hmp > 0 then
+			table.insert(textparts, "\n")
+			table.insert(textparts, format_homophones(parsed.hmp, parsed.bullets + 1))
+		end
+	end
+	if overall_audio and #overall_audio > 0 then
+		table.insert(textparts, "\n")
+		table.insert(textparts, format_audio(overall_audio, min_num_bullets))
+	end
+	if all_rhyme_sets_eq and first_rhyme_ret then
+		table.insert(textparts, "\n")
+		table.insert(textparts, format_rhyme(first_rhyme_ret, min_num_bullets))
+	end
+	if overall_rhyme then
+		table.insert(textparts, "\n")
+		table.insert(textparts, format_rhyme(overall_rhyme, min_num_bullets))
+	end
+	if all_hyph_sets_eq and #first_hyphs > 0 then
+		table.insert(textparts, "\n")
+		table.insert(textparts, format_hyphenations(first_hyphs, min_num_bullets))
+	end
+	if overall_hyph and #overall_hyph > 0 then
+		table.insert(textparts, "\n")
+		table.insert(textparts, format_hyphenations(overall_hyph, min_num_bullets))
+	end
+	if all_hmp_sets_eq and #first_hmps > 0 then
+		table.insert(textparts, "\n")
+		table.insert(textparts, format_homophones(first_hmps, min_num_bullets))
+	end
+	if overall_hmp and #overall_hmp > 0 then
+		table.insert(textparts, "\n")
+		table.insert(textparts, format_homophones(overall_hmp, min_num_bullets))
+	end
+
+	return table.concat(textparts)
 end
 
 return export
