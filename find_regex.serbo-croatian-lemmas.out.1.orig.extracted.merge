@@ -1,8 +1,9 @@
-Beginning at Sun Sep 10 20:22:51 2023
+Beginning at Sun Sep 10 20:14:59 2023
+Page 5853 filc: Skipped, no changes; previous comment = standardize templatized topical categories for lang=sh using {{C}}
 Page 5853 filc: -------- begin text --------
 
 ===Etymology===
-From {{bor|sh|de|Filz}}.
+{{bor+|sh|de|Filz}}.
 
 ===Pronunciation===
 * {{sh-IPA|fȉlc}}
@@ -27,12 +28,12 @@ From {{bor|sh|de|Filz}}.
 ===References===
 * {{R:sh:HJP|fFphWxU%3D}}
 
-{{topics|sh|Fabrics}}
+{{C|sh|Fabrics}}
 -------- end text --------
 Page 28608 vučica: -------- begin text --------
 
 ===Etymology===
-From {{inh|sh|sla-pro|*vьlčica}}, from {{inh|sh|ine-bsl-pro|*wilkī́ˀ}}, from {{inh|sh|ine-pro|*wl̥kʷíh₂s}}.
+{{inh+|sh|sla-pro|*vьlčica}}.
 
 ===Pronunciation===
 * {{sh-IPA|vùčica}}
@@ -62,7 +63,7 @@ From {{inh|sh|sla-pro|*vьlčica}}, from {{inh|sh|ine-bsl-pro|*wilkī́ˀ}}, fro
 Page 33088 вучица: -------- begin text --------
 
 ===Etymology===
-From {{inh|sh|sla-pro|*vьlčica}}, from {{inh|sh|ine-bsl-pro|*wilkī́ˀ}}, from {{inh|sh|ine-pro|*wl̥kʷíh₂s}}.
+{{inh+|sh|sla-pro|*vьlčica}}.
 
 ===Pronunciation===
 * {{sh-IPA|ву̀чица}}
@@ -74,7 +75,7 @@ From {{inh|sh|sla-pro|*vьlčica}}, from {{inh|sh|ine-bsl-pro|*wilkī́ˀ}}, fro
 # [[she-wolf]]
 
 ====Declension====
-{{sh-decl-noun|sc=Cyrl
+{{sh-decl-noun
 |вучица|вучице
 |вучице|вучица
 |вучици|вучицама
@@ -89,6 +90,7 @@ From {{inh|sh|sla-pro|*vьlčica}}, from {{inh|sh|ine-bsl-pro|*wilkī́ˀ}}, fro
 
 {{C|sh|Canids|Female animals}}
 -------- end text --------
+Page 33747 дагња: Skipped, no changes; previous comment = standardize templatized topical categories for lang=sh using {{C}}
 Page 33747 дагња: -------- begin text --------
 
 ===Etymology===
@@ -104,7 +106,7 @@ From {{inh|sh|sla-pro|*dьgna}}, from {{inh|sh|ine-pro|*dʰeygʷ-}}.
 # [[mussel]]
 
 ====Declension====
-{{sh-decl-noun|sc=Cyrl
+{{sh-decl-noun
 |да̏гња|дагње
 |дагње|да̏га̄ња̄ / да̏гњӣ
 |дагњи|дагњама
@@ -114,12 +116,12 @@ From {{inh|sh|sla-pro|*dьgna}}, from {{inh|sh|ine-pro|*dʰeygʷ-}}.
 |дагњом|дагњама
 }}
 
-{{c|sh|Bivalves|Seafood}}
+{{C|sh|Bivalves|Seafood}}
 -------- end text --------
 Page 35865 збогом: -------- begin text --------
 
 ===Etymology===
-{{m|sh|sc=Cyrl|с||with}} + {{m|sh|sc=Cyrl|бог|богом|God}}
+{{m|sh|с||with}} + {{m|sh|бог|богом|God}}
 
 ===Pronunciation===
 * {{IPA|sh|/zbôɡom/}}
@@ -135,10 +137,11 @@ Page 35865 збогом: -------- begin text --------
 ====See also====
 * {{l|sh|здраво}}
 -------- end text --------
+Page 38241 књига: Skipped, no changes; previous comment = templatize topical categories for lang=sh using {{C}}; templatize langname categories for lang=sh using {{cln}}
 Page 38241 књига: -------- begin text --------
 
 ===Etymology===
-From {{inh|sh|sla-pro|*kъňiga}}.
+{{inh+|sh|sla-pro|*kъňiga}}.
 
 ===Pronunciation===
 * {{IPA|sh|/kɲîɡa/}}
@@ -155,7 +158,7 @@ From {{inh|sh|sla-pro|*kъňiga}}.
 #: {{syn|sh|писмо}}
 
 ====Declension====
-{{sh-decl-noun|sc=Cyrl
+{{sh-decl-noun
 |књи̏га|књиге
 |књиге|књи̑га̄
 |књи̏зи|књигама
@@ -167,22 +170,23 @@ From {{inh|sh|sla-pro|*kъňiga}}.
 
 ====Derived terms====
 {{top2}}
-* {{l|sh|sc=Cyrl|књи̏же̄вно̄ст}}
-* {{l|sh|sc=Cyrl|књи̏жити}}
-* {{l|sh|sc=Cyrl|књи̏шкӣ}}
-* {{l|sh|sc=Cyrl|књи̏жица}}
-* {{l|sh|sc=Cyrl|књѝжара}}
-* {{l|sh|sc=Cyrl|књи́жница}}
-* {{l|sh|sc=Cyrl|књижу̀рина}}
-* {{l|sh|sc=Cyrl|књижу́љак}}
+* {{l|sh|књи̏же̄вно̄ст}}
+* {{l|sh|књи̏жити}}
+* {{l|sh|књи̏шкӣ}}
+* {{l|sh|књи̏жица}}
+* {{l|sh|књѝжара}}
+* {{l|sh|књи́жница}}
+* {{l|sh|књижу̀рина}}
+* {{l|sh|књижу́љак}}
 {{bottom}}
 
 ===References===
 * {{R:sh:HJP|elxuURk%3D}}
 
-[[Category:Serbo-Croatian terms with quotations]]
-[[Category:sh:Books]]
+{{cln|sh|terms with quotations}}
+{{C|sh|Books}}
 -------- end text --------
+Page 41909 наш: Skipped, no changes; previous comment = replace templated link to English term(s) in defns with raw link(s) (5); templatize langname categories for lang=sh using {{cln}}
 Page 41909 наш: -------- begin text --------
 
 ===Etymology===
@@ -195,8 +199,8 @@ From {{inh|be|sla-pro|*našь}}.
 {{sh-pronoun|head=на̏ш}}
 
 # [[our]], [[ours]]
-# {{lb|sh|colloquial}} {{l|en|local}}, {{l|en|domestic}} (produced locally as opposed to abroad)
-# {{lb|sh|colloquial}} {{l|en|our}}, {{l|en|local}}, {{l|en|domestic}} (person or thing of local origin)
+# {{lb|sh|colloquial}} [[local]], [[domestic]] (produced locally as opposed to abroad)
+# {{lb|sh|colloquial}} [[our]], [[local]], [[domestic]] (person or thing of local origin)
 
 ====Declension====
 {{sh-naš}}
@@ -204,13 +208,13 @@ From {{inh|be|sla-pro|*našь}}.
 ====See also====
 * {{l|sh|ми}}
 
-[[Category:Serbo-Croatian possessive pronouns]]
+{{cln|sh|possessive pronouns}}
 
 -------- end text --------
 Page 42794 нов: -------- begin text --------
 
 ===Etymology===
-From {{inh|sh|sla-pro|*nòvъ}}, from {{inh|sh|ine-bsl-pro|*náwas}}, from {{inh|sh|ine-pro|*néwos}}.
+{{inh+|sh|sla-pro|*nòvъ}}, from {{inh|sh|ine-pro|*néwos}}.
 
 ===Pronunciation===
 * {{IPA|sh|/nôʋ/}}
@@ -227,10 +231,11 @@ From {{inh|sh|sla-pro|*nòvъ}}, from {{inh|sh|ine-bsl-pro|*náwas}}, from {{inh
 ====Declension====
 {{sh-adj-full|нов|о|новиј|е|sc=Cyrl}}
 -------- end text --------
+Page 43153 обрва: Skipped, no changes; previous comment = templatize topical categories for lang=sh using {{C}}; combine templatized topical categories for lang=sh using {{C}}
 Page 43153 обрва: -------- begin text --------
 
 ===Etymology===
-From {{inh|sh|sla-pro|*bry}}, from {{inh|sh|ine-bsl-pro|*brū́ˀs}}, from {{inh|sh|ine-pro|*h₃bʰrúHs}}.
+{{inh+|sh|sla-pro|*bry}}.
 
 ===Pronunciation===
 * {{IPA|sh|/ôbrʋa/}}
@@ -242,7 +247,7 @@ From {{inh|sh|sla-pro|*bry}}, from {{inh|sh|ine-bsl-pro|*brū́ˀs}}, from {{inh
 # [[eyebrow]]
 
 ====Declension====
-{{sh-decl-noun|sc=Cyrl
+{{sh-decl-noun
 |обрва|обрве
 |обрве|обрва
 |обрви|обрвама
@@ -255,13 +260,12 @@ From {{inh|sh|sla-pro|*bry}}, from {{inh|sh|ine-bsl-pro|*brū́ˀs}}, from {{inh
 ===References===
 * {{R:sh:HJP|eFtnUBE%3D}}
 
-[[Category:sh:Face]]
-[[Category:sh:Hair]]
+{{C|sh|Face|Hair}}
 -------- end text --------
 Page 44796 питати: -------- begin text --------
 
 ===Etymology 1===
-From {{inh|sh|sla-pro|*pȳtàti||to ask, examine}}.
+{{inh+|sh|sla-pro|*pȳtàti||to ask, examine}}.
 
 ====Pronunciation====
 * {{IPA|sh|/pǐːtati/}}
@@ -310,19 +314,19 @@ From {{inh|sh|sla-pro|*pȳtàti||to ask, examine}}.
 
 =====Derived terms=====
 {{top2}}
-* {{l|sh|sc=Cyrl|допи́тати}}
-* {{l|sh|sc=Cyrl|испи́тати}}
-* {{l|sh|sc=Cyrl|преиспи́тати}}
-* {{l|sh|sc=Cyrl|припи́тати}}
-* {{l|sh|sc=Cyrl|приупи́тати}}
-* {{l|sh|sc=Cyrl|пропи́тати}}
-* {{l|sh|sc=Cyrl|упи́тати}}
-* {{l|sh|sc=Cyrl|запи́тати}}
+* {{l|sh|допи́тати}}
+* {{l|sh|испи́тати}}
+* {{l|sh|преиспи́тати}}
+* {{l|sh|припи́тати}}
+* {{l|sh|приупи́тати}}
+* {{l|sh|пропи́тати}}
+* {{l|sh|упи́тати}}
+* {{l|sh|запи́тати}}
 {{bottom}}
 
 ===Etymology 2===
 {{root|sh|ine-pro|*peyt-}}
-From {{inh|sh|sla-pro|*pitàti||to feed}}.
+{{inh+|sh|sla-pro|*pitàti||to feed}}.
 
 ====Pronunciation====
 * {{IPA|sh|/pîtati/}}
@@ -371,17 +375,18 @@ From {{inh|sh|sla-pro|*pitàti||to feed}}.
 }}
 
 -------- end text --------
+Page 44826 пјесна: Skipped, no changes; previous comment = convert {{l|sh}} to {{alt|sh}} (5); merge separate leading qualifiers into {{alt|sh}} (3); clean up params in {{alt|sh}} (3)
 Page 44826 пјесна: -------- begin text --------
 
 ===Alternative forms===
-* {{q|Ekavian}}: {{l|sh|пе̏сна}}
-* {{q|Ikavian}}: {{l|sh|писна}}
-* {{l|sh|пје̏сма}}
-* {{l|sh|пје̏сан}}
-* {{q|pre-reform spelling}}: {{l|sh|пєсна}}
+* {{alt|sh|пе̏сна||Ekavian}}
+* {{alt|sh|писна||Ikavian}}
+* {{alt|sh|пје̏сма}}
+* {{alt|sh|пје̏сан}}
+* {{alt|sh|пєсна||pre-reform spelling}}
 
 ===Etymology===
-From {{inh|sh|sla-pro|*pěsnь}}.
+{{inh+|sh|sla-pro|*pěsnь}}.
 
 ===Pronunciation===
 * {{IPA|sh|/pjêsna/}}
@@ -397,7 +402,7 @@ From {{inh|sh|sla-pro|*pěsnь}}.
 |translation=Užice '''Song'''<br>All night I could not fall asleep,<br>Listening to the circle-dance and '''songs'''.}}
 
 ====Declension====
-{{sh-decl-noun|sc=Cyrl
+{{sh-decl-noun
 |пје̏сна|пјесне
 |пјесне|пје̏са̄на̄
 |пјесни|пјеснама
@@ -422,7 +427,7 @@ From {{inh|sh|sla-pro|*poklonъ}}.
 # [[gift]], [[present]]
 
 ====Declension====
-{{sh-decl-noun|sc=Cyrl
+{{sh-decl-noun
 |по̀клон|по̀клони
 |по̀клона|по̀кло̄на̄
 |по̀клону|по̀клонима
@@ -433,7 +438,7 @@ From {{inh|sh|sla-pro|*poklonъ}}.
 }}
 
 ====Synonyms====
-* {{l|sh|sc=Cyrl|да̑р}}
+* {{l|sh|да̑р}}
 
 ===References===
 * {{R:sh:HJP|f1lkWhg%3D}}
@@ -441,7 +446,7 @@ From {{inh|sh|sla-pro|*poklonъ}}.
 Page 51090 танак: -------- begin text --------
 
 ===Etymology===
-From {{inh|sh|sla-pro|*tьnъkъ}}, from {{inh|sh|ine-pro|*ténh₂us}}.
+{{inh+|sh|sla-pro|*tьnъkъ}}.
 
 ===Pronunciation===
 * {{IPA|sh|/tânak/}}
@@ -462,7 +467,7 @@ From {{inh|sh|sla-pro|*tьnъkъ}}, from {{inh|sh|ine-pro|*ténh₂us}}.
 {{sh-adj-full|sc=Cyrl|танк|о|тањ|е}}
 
 ====Coordinate terms====
-* {{l|sh|sc=Cyrl|мр̏шав|gloss=thin, slender (of a person)}}
+* {{l|sh|мр̏шав|gloss=thin, slender (of a person)}}
 
 ===References===
 * {{R:sh:HJP|d1ZuXBY%3D}}
@@ -471,7 +476,7 @@ Page 52093 ћосав: -------- begin text --------
 {{was fwotd|sh|2012|November|22}}
 
 ===Etymology===
-From {{der|sh|ota|كوسه|tr=köse|sc=ota-Arab}}, from {{der|sh|fa|کوسه|tr=kuse||shark}}.
+From {{der|sh|ota|كوسه|tr=köse}}, from {{der|sh|fa|کوسه|tr=kuse||shark}}.
 
 ===Pronunciation===
 * {{sh-IPA|ћо̏сав}}
@@ -488,24 +493,24 @@ From {{der|sh|ota|كوسه|tr=köse|sc=ota-Arab}}, from {{der|sh|fa|کوسه|tr=
 {{sh-adj-defindef|sc=Cyrl|ћосав}}
 
 ====Synonyms====
-* {{l|sh|sc=Cyrl|голо̀брад}}
+* {{l|sh|голо̀брад}}
 
 ====Antonyms====
-* {{l|sh|sc=Cyrl|бра̀дат}}
+* {{l|sh|бра̀дат}}
 
 ====Related terms====
-* {{l|sh|sc=Cyrl|ћо̏савац}}
-* {{l|sh|sc=Cyrl|ћо̏саво̄ст}}
+* {{l|sh|ћо̏савац}}
+* {{l|sh|ћо̏саво̄ст}}
 
 ===See also===
-* {{l|sh|sc=Cyrl|бра́да}}
-* {{l|sh|sc=Cyrl|бр̏кови}}
-* {{l|sh|sc=Cyrl|голо̀брадац}}
+* {{l|sh|бра́да}}
+* {{l|sh|бр̏кови}}
+* {{l|sh|голо̀брадац}}
 -------- end text --------
 Page 52510 уман: -------- begin text --------
 
 ===Etymology===
-From {{inh|sh|sla-pro|*umьnъ}}.
+{{inh+|sh|sla-pro|*umьnъ}}.
 
 ===Pronunciation===
 * {{IPA|sh|/ûːman/}}
@@ -523,10 +528,11 @@ From {{inh|sh|sla-pro|*umьnъ}}.
 ===References===
 * {{R:sh:HJP|f19jWxh%2F}}
 -------- end text --------
+Page 54027 чарн: Skipped, no changes; previous comment = convert synonyms in Serbo-Croatian subsection 5 to inline synonyms in subsection 4 based on synonyms with only one definition
 Page 54027 чарн: -------- begin text --------
 
 ===Etymology===
-From {{inh|sh|sla-pro|*čьrnъ}}.
+{{inh+|sh|sla-pro|*čьrnъ}}.
 
 ===Pronunciation===
 * {{IPA|sh|/t͡ʃarn/}}
@@ -535,11 +541,9 @@ From {{inh|sh|sla-pro|*čьrnъ}}.
 {{sh-adj}}
 
 # {{lb|sh|Kajkavian|or|obsolete}} {{alternative form of|sh|црн|цр̑н}}
+#: {{syn|sh|цр̑н}}
 #* '''1891''', recorded by Vuk Stefanović Karadžić, ''Srpske narodne pjesme'':
 #*: {{quote|sh|...коњ до коња, јунак до јунака, <br/> бојна копља као '''чарна''' гора, <br/> све барјаци као и облаци,...|tr=konj do konja, junak do junaka, <br/> bojna koplja kao '''čarna''' gora, <br/> sve barjaci kao i oblaci,...|t=...horse to horse, hero to hero, <br/> battle lances like a '''black''' mountain, <br/> all banners, too, like the clouds...}}
-
-====Synonyms====
-* {{l|sh|цр̑н}}
 
 ====Related terms====
 * {{l|sh|ча̑рнӣ}}
@@ -562,7 +566,7 @@ Page 54424 швракопис: -------- begin text --------
 #*: {{quote|sh|С неверицом је посматрао мој '''швракопис''', једино наследство од моје миле учитељице.|tr=S nevericom je posmatrao moj '''švrakopis''', jedino nasledstvo od moje mile učiteljice.|t=He watched in disbelief my '''cacography''', the sole legacy from my dear teacher.}}
 
 ====Declension====
-{{sh-decl-noun|sc=Cyrl
+{{sh-decl-noun
 |швракопис|швракописи
 |швракописа|швракописа
 |швракопису|швракописима
@@ -572,5 +576,5 @@ Page 54424 швракопис: -------- begin text --------
 |швракописом|швракописима
 }}
 -------- end text --------
-Elapsed time: 0 mins 2.21 secs
-Ending at Sun Sep 10 20:22:53 2023
+Elapsed time: 0 mins 0.83 secs
+Ending at Sun Sep 10 20:15:00 2023
