@@ -54,9 +54,8 @@ end
 --                  {alias_of = "t"} for the "gloss" parameter, which is aliased to "t"), on top of the default, which
 --                  is {list = true, allow_holes = true}.
 -- * `convert`: An optional function to convert the raw argument into the form passed to [[Module:links]].
---              This function takes three parameters: (1) `arg` (the raw argument); (2) `inline` (true if we're
---              processing an inline modifier, false otherwise); (4) `termno` (the logical index of the term being
---              processed, starting from 1).
+--              This function takes two parameters: (1) `arg` (the raw argument); (2) `parse_err` (a function used to
+--              throw an error in case of a parse error).
 -- * `item_dest`: The name of the key used when storing the parameter's value into the processed `term` or `termobj`
 --                object. Normally the same as the parameter's name. Different in the case of "t", where we store the
 --                gloss in "gloss", and "g", where we store the genders in "genders".
@@ -76,7 +75,7 @@ local param_mods = {
 		-- We need to store the g1=/g2= param and the <g:...> inline modifier into the "genders" key of the parsed term,
 		-- because that is what [[Module:links]] expects.
 		item_dest = "genders",
-		convert = function(arg, inline, termno)
+		convert = function(arg, parse_err)
 			return rsplit(arg, ",")
 		end,
 	},
@@ -86,6 +85,19 @@ local param_mods = {
 	qq = {},
 	lit = {},
 	pos = {},
+	sc = {
+		-- sc1=, sc2=, ... are different from sc=; the former apply to individual arguments while the latter applies to
+		-- all arguments. To handle this in separate parameters, we need to set the key in the `params` object passed to
+		-- [[Module:parameters]] to something else (in this case "partsc") and set `list = "sc"` and
+		-- `require_index = true` in the value of the `params` object. This causes [[Module:parameters]] to fetch
+		-- parameters named sc1=, sc2= etc. but store them into "partsc", while sc= is stored into "sc".
+		param_key = "partsc",
+		require_index = true,
+		extra_specs = {list = "sc"},
+		convert = function(arg, parse_err)
+			return require("Module:scripts").getByCode(arg, parse_err)
+		end,
+	},
 }
 
 local function get_valid_prefixes()
@@ -112,14 +124,18 @@ function export.display_alternative_forms(parent_args, pagename, show_dialect_ta
 
 	-- Add parameters for each term modifier.
 	for param_mod, param_mod_spec in pairs(param_mods) do
+		local param_key = param_mod_spec.param_key or param_mod
 		if not param_mod_spec.extra_specs then
-			params[param_mod] = list_with_holes
+			params[param_key] = list_with_holes
 		else
 			local param_spec = mw.clone(list_with_holes)
 			for k, v in pairs(param_mod_spec.extra_specs) do
 				param_spec[k] = v
 			end
-			params[param_mod] = param_spec
+			if param_mod_spec.require_index then
+				param_spec.require_index = true
+			end
+			params[param_key] = param_spec
 		end
 	end
 
@@ -185,7 +201,7 @@ function export.display_alternative_forms(parent_args, pagename, show_dialect_ta
 
 			-- If any of the params used for formatting this term is present, create a term and add it to the list.
 			if any_param_at_index then
-				-- Initialize the `termobj` object and the `term` object passed to full_link() in [[Module:links]].
+				-- Initialize the `termobj` object passed to full_link() in [[Module:links]].
 				local termobj = {
 					joiner = i > 1 and (args[2][i - 1] == ";" and "; " or ", ") or "",
 					lang = lang,
@@ -193,13 +209,20 @@ function export.display_alternative_forms(parent_args, pagename, show_dialect_ta
 					term = term,
 				}
 
-				-- Parse all the term-specific parameters and store in `term` or `termobj`.
+				-- Parse all the term-specific parameters and store in `termobj`.
 				for param_mod, param_mod_spec in pairs(param_mods) do
 					local dest = param_mod_spec.item_dest or param_mod
-					local arg = args[param_mod][termno]
+					local param_key = param_mod_spec.param_key or param_mod
+					local arg = args[param_key][termno]
 					if arg then
 						if param_mod_spec.convert then
-							arg = param_mod_spec.convert(arg, false, termno)
+							local function parse_err(msg, stack_frames_to_ignore)
+								error(("%s: %s%s=%s"):format(msg, param_mod,
+									(termno > 1 or param_mod_spec.require_index) and termno or "", arg),
+									stack_frames_to_ignore
+								)
+							end
+							arg = param_mod_spec.convert(arg, parse_err)
 						end
 						termobj[dest] = arg
 					end
