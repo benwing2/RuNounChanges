@@ -88,7 +88,7 @@ def process_text_on_page(index, pagetitle, curtext, contents, prev_comment, orig
     return
   if not prev_comment:
     comment = args.comment
-  elif not arg_comment:
+  elif not args.comment:
     comment = prev_comment
   else:
     comment = "%s; %s" % (prev_comment, args.comment)
