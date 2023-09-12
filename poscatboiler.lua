@@ -1,6 +1,8 @@
 local export = {}
 
-local label_data = require("Module:category tree/poscatboiler/data")
+local lang_independent_data = require("Module:category tree/poscatboiler/data")
+local lang_specific_module = "Module:category tree/poscatboiler/data/lang-specific"
+local lang_specific_module_prefix = lang_specific_module .. "/"
 
 -- Category object
 
@@ -17,7 +19,7 @@ function Category.new_main(frame)
 		["raw"] = {type = "boolean"},
 	}
 
-	local args, remaining_args = require("Module:parameters").process(frame:getParent().args, params, true)
+	local args, remaining_args = require("Module:parameters").process(frame:getParent().args, params, true, "category tree/poscatboiler")
 	self._info = {code = args[1], label = args[2], sc = args[3], raw = args.raw, args = remaining_args}
 
 	self:initCommon()
@@ -71,16 +73,16 @@ function Category:initCommon()
 	local args_handled = false
 	if self._info.raw then
 		-- Check if the category exists
-		local raw_categories = label_data["RAW_CATEGORIES"]
+		local raw_categories = lang_independent_data["RAW_CATEGORIES"]
 		self._data = raw_categories[self._info.label]
 
 		if self._data then
 			if self._data.lang then
-				self._lang = require("Module:languages").getByCode(self._data.lang, true)
+				self._lang = require("Module:languages").getByCode(self._data.lang, true, nil, nil, true)
 				self._info.code = self._lang:getCode()
 			end
 			if self._data.sc then
-				self._sc = require("Module:scripts").getByCode(self._data.sc, true)
+				self._sc = require("Module:scripts").getByCode(self._data.sc, true, nil, true)
 				self._info.sc = self._sc:getCode()
 			end
 		else
@@ -90,7 +92,7 @@ function Category:initCommon()
 				args = self._info.args or {},
 				called_from_inside = self._info.called_from_inside,
 			}
-			for _, handler in ipairs(label_data["RAW_HANDLERS"]) do
+			for _, handler in ipairs(lang_independent_data["RAW_HANDLERS"]) do
 				self._data, args_handled = handler.handler(data)
 				if self._data then
 					self._data.module = self._data.module or handler.module
@@ -102,14 +104,14 @@ function Category:initCommon()
 					if type(self._data.lang) ~= "string" then
 						error("Received non-string value " .. mw.dumpObject(self._data.lang) .. " for self._data.lang, label \"" .. self._info.label .. "\"" .. self:get_originating_info() .. ".")
 					end
-					self._lang = require("Module:languages").getByCode(self._data.lang, true)
+					self._lang = require("Module:languages").getByCode(self._data.lang, true, nil, nil, true)
 					self._info.code = self._lang:getCode()
 				end
 				if self._data.sc then
 					if type(self._data.sc) ~= "string" then
 						error("Received non-string value " .. mw.dumpObject(self._data.sc) .. " for self._data.sc, label \"" .. self._info.label .. "\"" .. self:get_originating_info() .. ".")
 					end
-					self._sc = require("Module:scripts").getByCode(self._data.sc, true)
+					self._sc = require("Module:scripts").getByCode(self._data.sc, true, nil, true)
 					self._info.sc = self._sc:getCode()
 				end
 			end
@@ -117,22 +119,62 @@ function Category:initCommon()
 	else
 		-- Already parsed into language + label
 		if self._info.code then
-			self._lang = require("Module:languages").getByCode(self._info.code, 1)
+			self._lang = require("Module:languages").getByCode(self._info.code, 1, nil, nil, true)
 		else
 			self._lang = nil
 		end
 
 		if self._info.sc then
-			self._sc = require("Module:scripts").getByCode(self._info.sc) or error("The script code \"" .. self._info.sc .. "\" is not valid.")
+			self._sc = require("Module:scripts").getByCode(self._info.sc, true, nil, true) or error("The script code \"" .. self._info.sc .. "\" is not valid.")
 		else
 			self._sc = nil
 		end
 
-		-- Check if the label exists
-		local labels = label_data["LABELS"]
-		self._data = labels[self._info.label]
+		-- First, check lang-specific labels and handlers if this is not an umbrella category.
+		if self._lang then
+			local langcode = self._lang:getCode()
+			local langs_with_modules = mw.loadData(lang_specific_module)
+			if langs_with_modules[langcode] then
+				local module = lang_specific_module_prefix .. self._lang:getCode()
+				local labels_and_handlers = require(module)
+				if labels_and_handlers.LABELS then
+					self._data = labels_and_handlers.LABELS[self._info.label]
+					if self._data then
+						if self._data.umbrella == nil and self._data.umbrella_parents == nil then
+							self._data.umbrella = false
+						end
+						self._data.module = self._data.module or module
+					end
+				end
+				if not self._data and labels_and_handlers.HANDLERS then
+					for _, handler in ipairs(labels_and_handlers.HANDLERS) do
+						local data = {
+							label = self._info.label,
+							lang = self._lang,
+							sc = self._sc,
+							args = self._info.args or {},
+							called_from_inside = self._info.called_from_inside,
+						}
+						self._data, args_handled = handler(data)
+						if self._data then
+							if self._data.umbrella == nil and self._data.umbrella_parents == nil then
+								self._data.umbrella = false
+							end
+							self._data.module = self._data.module or module
+							break
+						end
+					end
+				end
+			end
+		end
 
-		-- Go through handlers
+		-- Then check lang-independent labels.
+		if not self._data then
+			local labels = lang_independent_data["LABELS"]
+			self._data = labels[self._info.label]
+		end
+
+		-- Then check lang-independent handlers.
 		if not self._data then
 			local data = {
 				label = self._info.label,
@@ -141,7 +183,7 @@ function Category:initCommon()
 				args = self._info.args or {},
 				called_from_inside = self._info.called_from_inside,
 			}
-			for _, handler in ipairs(label_data["HANDLERS"]) do
+			for _, handler in ipairs(lang_independent_data["HANDLERS"]) do
 				self._data, args_handled = handler.handler(data)
 				if self._data then
 					self._data.module = self._data.module or handler.module
@@ -439,7 +481,7 @@ function Category:getDescription(isChild)
 		if self._sc then
 			return self:getCategoryName() .. "."
 		else
-			local desc = self.convert_spec_to_string(self._data.description)
+			local desc = self:convert_spec_to_string(self._data.description)
 
 			if not isChild and desc and self._data.additional then
 				desc = desc .. "\n\n" .. self._data.additional
@@ -567,11 +609,12 @@ end
 
 function Category:getParents()
 	local is_umbrella = not self._lang and not self._info.raw
+	local retval
 	if self._sc then
 		local parent1 = self:make_new({code = self._info.code, label = "terms in " .. self._sc:getCanonicalName() .. " script"})
 		local parent2 = self:make_new({code = self._info.code, label = self._info.label, raw = self._info.raw, args = self._info.args})
 
-		return {
+		retval = {
 			{name = parent1, sort = self._sc:getCanonicalName()},
 			{name = parent2, sort = self._sc:getCanonicalName()},
 		}
@@ -583,8 +626,23 @@ function Category:getParents()
 			parents = self._data.parents
 		end
 
-		return self:canonicalize_parents_children(parents)
+		retval = self:canonicalize_parents_children(parents)
 	end
+
+	if not retval then
+		return nil
+	end
+
+	local self_cat = self:getCategoryName()
+	for _, parent in ipairs(retval) do
+		local parent_cat = parent.name.getCategoryName and parent.name:getCategoryName()
+		if self_cat == parent_cat then
+			error(("Internal error: Infinite loop would occur, as parent category '%s' is the same as the child category"):
+				format(self_cat))
+		end
+	end
+		
+	return retval
 end
 
 
@@ -682,12 +740,12 @@ function Category:getCatfixInfo()
 		end
 		local lang, sc
 		if self._data.catfix then
-			lang = require("Module:languages").getByCode(self:substitute_template_specs(self._data.catfix), true)
+			lang = require("Module:languages").getByCode(self:substitute_template_specs(self._data.catfix), true, nil, nil, true)
 		else
 			lang = self._lang
 		end
 		if self._data.catfix_sc then
-			sc = require("Module:scripts").getByCode(self:substitute_template_specs(self._data.catfix_sc), true)
+			sc = require("Module:scripts").getByCode(self:substitute_template_specs(self._data.catfix_sc), true, nil, true)
 		else
 			sc = self._sc
 		end
@@ -696,10 +754,10 @@ function Category:getCatfixInfo()
 		if not self._data.umbrella or not self._data.umbrella.catfix then
 			return nil
 		end
-		local lang = require("Module:languages").getByCode(self:substitute_template_specs(self._data.umbrella.catfix), true)
+		local lang = require("Module:languages").getByCode(self:substitute_template_specs(self._data.umbrella.catfix), true, nil, nil, true)
 		local sc = self:substitute_template_specs(self._data.umbrella.catfix_sc)
 		if sc then
-			sc = require("Module:scripts").getByCode(sc, true)
+			sc = require("Module:scripts").getByCode(sc, true, nil, true)
 		end
 		return lang, sc
 	end
