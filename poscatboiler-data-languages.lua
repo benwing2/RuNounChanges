@@ -724,6 +724,191 @@ table.insert(raw_handlers, function(data)
 end)
 
 
+-- Fancy version of ine() (if-not-empty). Converts empty string to nil, but also strips leading/trailing space.
+local function ine(arg)
+	if not arg then return nil end
+	arg = mw.text.trim(arg)
+	if arg == "" then return nil end
+	return arg
+end
+
+
+-- Modeled after splitLabelLang() in [[Module:auto cat]]. Try to split off a maximally long language (full or
+-- etymology-only) on the right, and return the resulting language object and the region preceding it. We need to
+-- check the maximally long language because of cases like 'English' vs 'Middle English' and 'Chinese Pidgin English';
+-- [[:Category:Late Middle English]] should split as 'Late' and 'Middle English', not as 'Late Middle' and 'English'.
+local function split_region_lang(pagename)
+	local getByCanonicalName = require("Module:languages").getByCanonicalName
+	local canonicalName
+	local lang
+	local region
+	
+	-- Try the entire title as a language; if not, chop off a word on the left and repeat.
+	local words = mw.text.split(pagename, " ")
+	for i = 1, #words do
+		canonicalName = table.concat(words, " ", i, #words)
+		lang = getByCanonicalName(canonicalName, nil, "allow etym")
+		if lang then
+			if i == 1 then
+				region = nil
+			else
+				region = table.concat(words, " ", 1, i - 1)
+			end
+			break
+		end
+	end
+
+	return lang, region
+end
+
+
+-- Handle dialect categories such as [[:Category:New Zealand English]], [[:Category:Late Middle English]],
+-- [[:Category:Arbëresh Albanian]] or arbitrarily-named categories like [[:Category:Provençal]]. We currently require
+-- that dialect=1 is specified to the call to {{auto cat}} to avoid overfiring.
+table.insert(raw_handlers, function(data)
+	if data.called_from_inside then
+		-- If called from inside we won't have any params available and want to handle basic categories for
+		-- etymology-only languages so e.g. [[:Category:Arbëresh Albanian]] can have [[:Category:Tosk Albanian]] as its
+		-- parent.
+		local lang, breadcrumb = split_region_lang(data.category)
+		if lang then
+			return {
+				-- FIXME, allow etymological codes here
+				lang = lang:getNonEtymologicalCode(),
+				description = "Foo",
+				parents = {"Regional " .. lang:getNonEtymologicalName()},
+				breadcrumb = breadcrumb or lang:getCanonicalName(),
+				umbrella = false,
+				can_be_empty = true,
+			}, true
+		else
+			return nil
+		end
+	end
+
+	if not ine(data.args.dialect) then
+		return nil
+	end
+
+	local params = {
+		[4] = {},
+		dialect = {type = "boolean"},
+		lang = {},
+		verb = {},
+		prep = {},
+		def = {},
+		-- FIXME: Not implemented. When is this useful?
+		nodef = {type = "boolean"},
+		nolink = {type = "boolean"},
+		cat = {list = true},
+		nodefcat = {type = "boolean"},
+		wp = {},
+		wplang = {},
+		breadcrumb = {},
+		pagename = {}, -- for testing or demonstration
+	}
+	local args = require("Module:parameters").process(data.args, params)
+	-- FIXME, are we called from inside? If so we may need to scrape the arguments.
+
+	local lang, breadcrumb, regiondesc, langname
+	local region
+	local pagename = args.pagename or data.category
+	if not args.lang then
+		lang, breadcrumb = split_region_lang(pagename)
+		langname = lang:getCanonicalName()
+		if not lang then
+			error(("lang= not given and unable to parse language from category '%s'"):format(pagename))
+		end
+		regiondesc = args[4] or breadcrumb
+		-- If the langname and pagename are the same (happens only with etym-only languages), the parent category is set below
+		-- to the non-etym parent, so the breadcrumb should show the language name.
+		breadcrumb = breadcrumb or langname
+	else
+		lang = m_languages.getByCode(args.lang, "lang", "allow etym")
+		langname = lang:getCanonicalName()
+		if pagename == langname then
+			breadcrumb = langname
+			-- regiondesc should stay nil
+		else
+			breadcrumb = pagename:match("^(.*) " .. require("Module:pattern utilities").pattern_escape(langname) .. "$")
+			regiondesc = breadcrumb
+		end
+	end
+	if args[4] then
+		regiondesc = args[4]
+	elseif not regiondesc then
+		error(("1= (region) not given and unable to infer region from category '%s' given language name '%s'"):
+			format(pagename, langname))
+	end
+	breadcrumb = args.breadcrumb or breadcrumb or require("Module:links").remove_links(regiondesc)
+
+	local intro
+	if args.wp then
+		if args.wplang then
+			intro = ("{{wp|%s|lang=%s}}"):format(args.wp, args.wplang)
+		elseif args.wp == "1" then
+			intro = "{{wp}}"
+		else
+			intro = ("{{wp|%s}}"):format(args.wp)
+		end
+	end
+
+	local additional
+	local parents = {}
+	local default_parent
+	local langname_for_desc = langname
+	local etymcodes = {}
+	local function make_code(code)
+		return ("<code>%s</code>"):format(code)
+	end
+	if lang:hasType("etymology-only") then
+		if langname == pagename then
+			local parent_name = lang:getNonEtymologicalName()
+			default_parent = "Regional " .. parent_name
+			langname_for_desc = parent_name
+		end
+		local langcode = lang:getCode()
+		table.insert(etymcodes, make_code(langcode))
+		-- Find all alias codes for the etymology-only language.
+		-- FIXME: There should be a better/easier way of doing this.
+		local ety_code_to_name = mw.loadData("Module:etymology languages/code to canonical name")
+		for code, canon_name in pairs(ety_code_to_name) do
+			if canon_name == langname and code ~= langcode then
+				table.insert(etymcodes, make_code(code))
+			end
+		end
+		additional = ("[[Module:etymology_languages/data|Etymology-only language]] code: %s"):format(
+			m_table.serialCommaJoin(etymcodes, {conj = "or"}))
+	else
+		default_parent = "Regional " .. langname
+	end
+
+	local description = args.def or ("Terms or senses in %s as %s %s %s."):format(
+		langname_for_desc, args.verb or "spoken", args.prep or "in",
+		args.nolink and regiondesc or ("{{l|en|%s}}"):format(regiondesc)
+	)
+
+	if not args.nodefcat then
+		table.insert(parents, default_parent)
+	end
+	for _, cat in ipairs(args.cat) do
+		table.insert(parents, cat)
+	end
+
+	return {
+		-- FIXME, allow etymological codes here
+		lang = lang:getNonEtymologicalCode(),
+		intro = intro,
+		description = description,
+		additional = additional,
+		parents = parents,
+		breadcrumb = {name = breadcrumb, nocap = true},
+		umbrella = false,
+		can_be_empty = true,
+	}, true
+end)
+
+
 -- Handle categories such as [[:Category:English-based creole or pidgin languages]].
 table.insert(raw_handlers, function(data)
 	local langname = data.category:match("(.*)%-based creole or pidgin languages$")
