@@ -9,14 +9,28 @@ local force_cat = false
 
 -- Add tracking category for PAGE. The tracking category linked to is [[Template:tracking/labels/PAGE]].
 local function track(page)
-	require("Module:debug/track")("labels/" .. page)
+	require("Module:debug/track")("labels/" ..
+		-- avoid including links in pages (may cause error)
+		page:gsub("%[", "("):gsub("%]", ")"):gsub("|", "!"))
+	return true
 end
 
+-- Track a label:
+-- [[Special:WhatLinksHere/Template:tracking/labels/label/LABEL]]
+-- [[Special:WhatLinksHere/Template:tracking/labels/label/LABEL/LANGCODE]]
+local function track_label(label, langcode)
+	label = "label/" .. label
+	track(label)
+	if langcode then
+		track(label .. "/" .. langcode)
+	end
+end
+	
 local function fetch_categories(labdata, lang, term_mode)
 	local categories = {}
 
-	local lang_code = lang:getCode()
-	local canonical_name = lang:getCanonicalName()
+	local langcode = lang:getNonEtymologicalCode()
+	local canonical_name = lang:getNonEtymologicalName()
 	
 	local topical_categories = labdata.topical_categories or {}
 	local sense_categories = labdata.sense_categories or {}
@@ -29,7 +43,7 @@ local function fetch_categories(labdata, lang, term_mode)
 	end
 
 	for _, cat in ipairs(topical_categories) do
-		insert_cat(lang_code .. ":" .. cat)
+		insert_cat(langcode .. ":" .. cat)
 	end
 	
 	for _, cat in ipairs(sense_categories) do
@@ -63,9 +77,10 @@ function export.get_label_info(data)
 	local labdata
 	local submodule
 
+	-- Track the label so we can figure out where individual labels are used. 
 	-- get language-specific labels from data module
-	local langcode = data.lang:getCode()
-	
+	local langcode = data.lang:getNonEtymologicalCode()
+
 	if langcode and m_lang_specific_data.langs_with_lang_specific_modules[langcode] then
 		-- prefer per-language label in order to pick subvariety labels over regional ones
 		submodule = mw.loadData("Module:labels/data/lang/" .. langcode)
@@ -101,13 +116,14 @@ function export.get_label_info(data)
 	end
 
 	if labdata.track then
-		require("Module:debug").track("labels/label/" .. label)
+		-- Track label (after converting aliases to canonical form). It is too expensive to track all labels.
+		track_label(label, langcode)
 	end
-	
+
 	if labdata.special_display then
 		local function add_language_name(str)
 			if str == "canonical_name" then
-				return data.lang:getCanonicalName()
+				return data.lang:getNonEtymologicalName()
 			else
 				return ""
 			end
