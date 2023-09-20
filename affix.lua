@@ -75,7 +75,7 @@ About different types of affixes ("template", "display", "link", "lookup" and "c
   (1) The display and link affixes are explicitly made different using |altN= parameters, <alt:...> inline modifiers or
 	  piped links, as described above under "display affix".
   (2) For certain languages, certain affixes are mapped to canonical form using language-specific mappings. For example,
-      in Finnish, the adjective-forming suffix [[-kas]] appears as [[-käs]] after front vowels, but logically both
+	  in Finnish, the adjective-forming suffix [[-kas]] appears as [[-käs]] after front vowels, but logically both
 	  forms are the same suffix and should be linked and categorized the same. Similarly, in Latin, the negative and
 	  intensive prefixes spelled [[in-]] (etymologically two distinct prefixes) appear variously as [[il-]], [[im-]] or
 	  [[ir-]] before certain consonants. Mappings are supplied in [[Module:affix/lang-data/LANGCODE]] to convert
@@ -92,10 +92,10 @@ About different types of affixes ("template", "display", "link", "lookup" and "c
 * A "lookup affix" is the form of the affix as it is looked up in the language-specific lookup mappings described above
   under link affixes. There are actually two lookup stages:
   (1) First, the affix is looked up in a modified display form (specifically, the same as the display affix but using
-      lookup hyphens). Note that this lookup does not occur if an explicit display form is given using |altN= or an
+	  lookup hyphens). Note that this lookup does not occur if an explicit display form is given using |altN= or an
 	  <alt:...> inline modifier, or if the template affix contains a piped or embedded link.
   (2) If no entry is found, the affix is then looked up in a modified link form (specifically, the modified display
-      form passed through the language's makeEntryName() function, which strips out certain diacritics, but with the
+	  form passed through the language's makeEntryName() function, which strips out certain diacritics, but with the
 	  lookup hyphen re-added if it was stripped out, as in the case of tatweel in many Arabic-script languages).
   The reason for this double lookup procedure is to allow for mappings that are sensitive to the extra diacritics, but
   also allow for mappings that are not sensitive in this fashion (e.g. Russian [[-ливый]] occurs both stressed and
@@ -256,6 +256,14 @@ local function make_non_glossary_compound_type(typ, alttext)
 end
 
 
+local function make_raw_compound_type(typ, alttext)
+	return {
+		text = glossary_link(typ, alttext),
+		cat = require("Module:string utilities").pluralize(typ),
+	}
+end
+
+
 export.compound_types = {
 	["alliterative"] = make_non_glossary_compound_type("alliterative"),
 	["allit"] = "alliterative",
@@ -279,6 +287,8 @@ export.compound_types = {
 	["karmadharaya"] = make_compound_type("karmadharaya", "karmadhāraya"),
 	["karma"] = "karmadharaya",
 	["kd"] = "karmadharaya",
+	["kenning"] = make_raw_compound_type("kenning"),
+	["ken"] = "kenning",
 	["rhyming"] = make_non_glossary_compound_type("rhyming"),
 	["rhy"] = "rhyming",
 	["synonymous"] = make_non_glossary_compound_type("synonymous"),
@@ -576,7 +586,7 @@ local function reconstruct_term_per_hyphens(term, affix_type, scode, thyph_re, n
 end
 
 
-local function lookup_affix_mapping(affix, affix_type, lang, scode, thyph_re, lookup_hyph)
+local function lookup_affix_mapping(affix, affix_type, lang, scode, thyph_re, lookup_hyph, affix_id)
 	local function do_lookup(affix)
 		local langcode = lang:getCode()
 		-- Ensure that the affix uses lookup hyphens regardless of whether it used a different type of hyphens before
@@ -587,7 +597,14 @@ local function lookup_affix_mapping(affix, affix_type, lang, scode, thyph_re, lo
 			if langdata.affix_mappings then
 				local mapping = langdata.affix_mappings[lookup_affix]
 				if mapping then
-					return mapping
+					if type(mapping) == "table" then
+						mapping = mapping[affix_id or false]
+						if mapping then
+							return mapping
+						end
+					else
+						return mapping
+					end
 				end
 			end
 		end
@@ -620,7 +637,7 @@ in the appropriate places; otherwise, it is the same as the display term. (This 
 [[Module:category tree/poscatboiler/data/terms by etymology]] to convert link affixes into lookup affixes so that they
 can be looked up in the affix mapping tables.)
 ]=]
-function export.parse_term_for_affixes(term, lang, sc, affix_type, do_affix_mapping, return_lookup_affix)
+function export.parse_term_for_affixes(term, lang, sc, affix_type, do_affix_mapping, return_lookup_affix, affix_id)
 	if not term then
 		return nil, nil, nil, nil
 	end
@@ -633,7 +650,7 @@ function export.parse_term_for_affixes(term, lang, sc, affix_type, do_affix_mapp
 
 	-- Remove an asterisk if the morpheme is reconstructed and add it back at the end.
 	local reconstructed = ""
-	if term:find("^%*") then 
+	if term:find("^%*") then
 		reconstructed = "*"
 		term = term:gsub("^%*", "")
 	end
@@ -661,7 +678,7 @@ function export.parse_term_for_affixes(term, lang, sc, affix_type, do_affix_mapp
 	if affix_type then
 		display_term = reconstruct_term_per_hyphens(term, affix_type, scode, thyph, dhyph)
 		if do_affix_mapping then
-			link_term = lookup_affix_mapping(term, affix_type, lang, scode, thyph, lhyph)
+			link_term = lookup_affix_mapping(term, affix_type, lang, scode, thyph, lhyph, affix_id)
 			-- The return value of lookup_affix_mapping() may be an affix mapping with lookup hyphens if a mapping
 			-- was found, otherwise nil if a mapping was not found. We need to convert to display hyphens in
 			-- either case, but in the latter case we can reuse the display term, which has already been converted.
@@ -701,14 +718,14 @@ in that place. For example, if `affix_type` == "prefix", we'll add a hyphen onto
 is of the wrong type). Three values are returned: the link term, display term and lookup term. This function is a thin
 wrapper around `parse_term_for_affixes`; see the comments above that function for more information.
 ]=]
-function export.make_affix(term, lang, sc, affix_type, do_affix_mapping, return_lookup_affix)
+function export.make_affix(term, lang, sc, affix_type, do_affix_mapping, return_lookup_affix, affix_id)
 	if not (affix_type == "prefix" or affix_type == "suffix" or affix_type == "circumfix" or affix_type == "infix" or
 		affix_type == "interfix") then
 		error("Internal error: Invalid affix type " .. (affix_type or "(nil)"))
 	end
 
 	local _, link_term, display_term, lookup_term = export.parse_term_for_affixes(term, lang, sc, affix_type,
-		do_affix_mapping, return_lookup_affix)
+		do_affix_mapping, return_lookup_affix, affix_id)
 	return link_term, display_term, lookup_term
 end
 
@@ -766,7 +783,7 @@ function export.show_affix(data)
 
 		-- Determine affix type and get link and display terms (see text at top of file).
 		local affix_type, link_term, display_term = export.parse_term_for_affixes(part.term, part.lang, part.sc, nil,
-			not part.alt)
+			not part.alt, nil, part.id)
 
 		-- If link_term is an empty string, either a bare ^ was specified or an empty term was used along with inline
 		-- modifiers. The intention in either case is not to link the term.
@@ -791,7 +808,7 @@ function export.show_affix(data)
 			if i == 1 and data.parts[2] and data.parts[2].term then
 				local part2 = data.parts[2]
 				local part2_affix_type, part2_link_term, part2_display_term = export.parse_term_for_affixes(
-					part2.term, part2.lang, part2.sc, nil, not part2.alt)
+					part2.term, part2.lang, part2.sc, nil, not part2.alt, nil, part.id)
 				part_sort_base = make_entry_name_no_links(part2.lang, part2_link_term)
 			end
 
@@ -866,7 +883,7 @@ function export.show_compound(data)
 		canonicalize_part(part, data.lang, data.sc)
 		-- Determine affix type and get link and display terms (see text at top of file).
 		local affix_type, link_term, display_term = export.parse_term_for_affixes(part.term, part.lang, part.sc,
-			nil, not part.alt)
+			nil, not part.alt, nil, part.id)
 
 		-- If the term is an infix, recognize it as such (which means e.g. that we will display the term without
 		-- hyphens for East Asian languages). Otherwise, ignore the fact that it looks like an affix and display as
@@ -957,7 +974,7 @@ WARNING: This destructively modifies `part`.
 ]=]
 local function make_part_into_affix(part, lang, sc, affix_type)
 	canonicalize_part(part, lang, sc)
-	local link_term, display_term = export.make_affix(part.term, part.lang, part.sc, affix_type, not part.alt)
+	local link_term, display_term = export.make_affix(part.term, part.lang, part.sc, affix_type, not part.alt, nil, part.id)
 	part.term = link_term
 	-- When we don't specify `do_affix_mapping` to make_affix(), link and display terms (first and second retvals of
 	-- make_affix()) are the same.
