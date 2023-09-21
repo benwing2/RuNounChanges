@@ -26,41 +26,59 @@ local function track_label(label, langcode)
 	end
 end
 	
-local function fetch_categories(labdata, lang, term_mode)
+local function fetch_categories(label, labdata, lang, term_mode)
 	local categories = {}
 
 	local langcode = lang:getNonEtymologicalCode()
 	local canonical_name = lang:getNonEtymologicalName()
-	
-	local topical_categories = labdata.topical_categories or {}
-	local sense_categories = labdata.sense_categories or {}
-	local pos_categories = labdata.pos_categories or {}
-	local regional_categories = labdata.regional_categories or {}
-	local plain_categories = labdata.plain_categories or {}
+
+	local empty_list = {}
+	local function canonicalize_categories(cats)
+		if not cats then
+			return empty_list
+		end
+		if type(cats) ~= "table" then
+			return {cats}
+		end
+		return cats
+	end
+
+	local topical_categories = canonicalize_categories(labdata.topical_categories)
+	local sense_categories = canonicalize_categories(labdata.sense_categories)
+	local pos_categories = canonicalize_categories(labdata.pos_categories)
+	local regional_categories = canonicalize_categories(labdata.regional_categories)
+	local plain_categories = canonicalize_categories(labdata.plain_categories)
 
 	local function insert_cat(cat)
 		table.insert(categories, cat)
 	end
 
+	local function ucfirst(txt)
+		return mw.getContentLanguage():ucfirst(txt)
+	end
+
 	for _, cat in ipairs(topical_categories) do
-		insert_cat(langcode .. ":" .. cat)
+		insert_cat(langcode .. ":" .. (cat == true and ucfirst(label) or cat))
 	end
 	
 	for _, cat in ipairs(sense_categories) do
+		if cat == true then
+			cat = label
+		end
 		cat = (term_mode and cat .. " terms" ) or "terms with " .. cat .. " senses"
 		insert_cat(canonical_name .. " " .. cat)
 	end
 
 	for _, cat in ipairs(pos_categories) do
-		insert_cat(canonical_name .. " " .. cat)
+		insert_cat(canonical_name .. " " .. (cat == true and label or cat))
 	end
 	
 	for _, cat in ipairs(regional_categories) do
-		insert_cat(cat .. " " .. canonical_name)
+		insert_cat((cat == true and ucfirst(label) or cat) .. " " .. canonical_name)
 	end
 	
 	for _, cat in ipairs(plain_categories) do
-		insert_cat(cat)
+		insert_cat(cat == true and ucfirst(label) or cat)
 	end
 
 	return categories
@@ -120,6 +138,8 @@ function export.get_label_info(data)
 		track_label(label, langcode)
 	end
 
+	local displayed_label
+
 	if labdata.special_display then
 		local function add_language_name(str)
 			if str == "canonical_name" then
@@ -129,7 +149,7 @@ function export.get_label_info(data)
 			end
 		end
 		
-		label = require("Module:string utilities").gsub(labdata.special_display, "<(.-)>", add_language_name)
+		displayed_label = require("Module:string utilities").gsub(labdata.special_display, "<(.-)>", add_language_name)
 	else
 		--[=[
 			If labdata.glossary or labdata.Wikipedia are set to true, there is a glossary definition
@@ -146,22 +166,23 @@ function export.get_label_info(data)
 			* labdata.Wiktionary specifies an arbitrary Wiktionary page or page + anchor (e.g. a separate Appendix entry).
 			* labdata.Wikipedia specifies an arbitrary Wikipedia article.
 		]=]
+		local display = labdata.display or label
 		if labdata.glossary then
 			local glossary_entry = type(labdata.glossary) == "string" and labdata.glossary or label
-			label = "[[Appendix:Glossary#" .. glossary_entry .. "|" .. ( labdata.display or label ) .. "]]"
+			displayed_label = "[[Appendix:Glossary#" .. glossary_entry .. "|" .. display .. "]]"
 		elseif labdata.Wiktionary then
-			label = "[[" .. labdata.Wiktionary .. "|" .. ( labdata.display or label ) .. "]]"
+			displayed_label = "[[" .. labdata.Wiktionary .. "|" .. display .. "]]"
 		elseif labdata.Wikipedia then
 			local Wikipedia_entry = type(labdata.Wikipedia) == "string" and labdata.Wikipedia or label
-			label = "[[w:" .. Wikipedia_entry .. "|" .. ( labdata.display or label ) .. "]]"
+			displayed_label = "[[w:" .. Wikipedia_entry .. "|" .. display .. "]]"
 		else
-			label = labdata.display or label
+			displayed_label = display
 		end
 	end
 
 	ret.deprecated = deprecated
 	if deprecated then
-		label = '<span class="deprecated-label">' .. label .. '</span>'
+		displayed_label = '<span class="deprecated-label">' .. displayed_label .. '</span>'
 		if not data.nocat then
 			table.insert(ret.categories, "Entries with deprecated labels")
 		end
@@ -170,7 +191,7 @@ function export.get_label_info(data)
 	local label_for_already_seen =
 		(labdata.topical_categories or labdata.regional_categories
 		or labdata.plain_categories or labdata.pos_categories
-		or labdata.sense_categories) and label
+		or labdata.sense_categories) and displayed_label
 		or nil
 	
 	-- Track label text. If label text was previously used, don't show it, but include the categories.
@@ -178,16 +199,16 @@ function export.get_label_info(data)
 	if data.already_seen[label_for_already_seen] then
 		ret.label = ""
 	else
-		if label:find("{") then
-			label = mw.getCurrentFrame():preprocess(label)
+		if displayed_label:find("{") then
+			displayed_label = mw.getCurrentFrame():preprocess(displayed_label)
 		end
-		ret.label = label
+		ret.label = displayed_label
 	end
 
 	if data.nocat then
 		ret.formatted_categories = ""
 	else
-		local cats = fetch_categories(labdata, data.lang, data.term_mode)
+		local cats = fetch_categories(label, labdata, data.lang, data.term_mode)
 		for _, cat in ipairs(cats) do
 			table.insert(ret.categories, cat)
 		end
@@ -272,18 +293,13 @@ function export.finalize_data(labels)
 	for label, data in pairs(labels) do
 		if type(data) == "table" then
 			if data.aliases then
-				data.display = data.display or label
 				for _, alias in ipairs(data.aliases) do
-					aliases[alias] = data
-				end
-				if data.Wikipedia == true or data.glossary == true then
-					data.alias_of = label
+					aliases[alias] = label
 				end
 				data.aliases = nil
 			end
 			if data.deprecated_aliases then
 				local data2 = shallowcopy(data)
-				data2.display = data2.display or label
 				data2.deprecated = true
 				for _, alias in ipairs(data2.deprecated_aliases) do
 					aliases[alias] = data2
