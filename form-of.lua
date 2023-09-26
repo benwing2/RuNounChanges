@@ -856,8 +856,8 @@ function export.fetch_categories_and_labels(normalized_tag_set, lang, POS, pagen
 			local langcode = lang and lang:getCode()
 			local lang_specific_module
 			if langcode and export.langs_with_lang_specific_tags[langcode] then
-				lang_specific_module = export.form_of_lang_data_module_prefix .. langcode
-				local langdata = mw.loadData(lang_specific_module)
+				lang_specific_module = export.form_of_lang_data_module_prefix .. langcode .. "/functions"
+				local langdata = require(lang_specific_module)
 				if langdata.cat_functions then
 					local fn = langdata.cat_functions[name]
 					if fn then
@@ -1252,7 +1252,7 @@ function export.tagged_inflections(data)
 	if not data.no_format_categories then
 		if #categories > 0 then
 			formatted_text = formatted_text .. require("Module:utilities").format_categories(categories, data.lang,
-				data.sort, nil, force_cat)
+				data.sort, nil, export.force_cat)
 		end
 		return formatted_text
 	end
