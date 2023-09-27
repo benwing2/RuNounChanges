@@ -41,9 +41,20 @@ local function ucfirst(text)
 end
 
 
+function link_box(content)
+	return "<div class=\"noprint plainlinks\" style=\"float: right; clear: both; margin: 0 0 .5em 1em; background: #f9f9f9; border: 1px #aaaaaa solid; margin-top: -1px; padding: 5px; font-weight: bold; font-size: small;\">"
+		.. content .. "</div>"
+end
+
+
+function show_editlink(page)
+	return link_box("[" .. tostring(mw.uri.fullUrl(page, "action=edit")) .. " Edit]")
+end
+
+
 local function template_name(preserve_lang_code)
 	-- Fetch the template name, minus the '/documentation' suffix that may follow
-	-- and without any language-specific prefixes (e.g. 'el-' or 'bsl-ine-pro-')
+	-- and without any language-specific prefixes (e.g. 'el-' or 'ine-bsl-pro-')
 	-- (unless `preserve_lang_code` is given).
 	local PAGENAME =  mw.title.getCurrentTitle().text
 	local tempname = rsub(PAGENAME, "/documentation$", "")
@@ -68,7 +79,7 @@ function export.introdoc(args)
 		table.insert(exlangnames, lang_name(exlang, "exlang"))
 	end
 	parts = {}
-	table.insert(parts, mw.getCurrentFrame():expandTemplate{title="Lua", args={form_of_module .. "/templates"}})
+	table.insert(parts, mw.getCurrentFrame():expandTemplate {title="uses lua", args={form_of_module .. "/templates"}})
 	table.insert(parts, "This template creates a definition line for ")
 	table.insert(parts, args.pldesc or rsub(template_name(), " of$", "") .. "s")
 	table.insert(parts, " ")
@@ -500,27 +511,11 @@ local function construct_category_table(cats)
 		ins("| <code>" .. cat .. "</code>")
 	end
 	ins("|}")
-	return table.concat(category_parts, "")
+	return table.concat(category_parts, "\n")
 end
 
 
-local function construct_category_table(cats)
-	local category_parts = {}
-	local function ins(text)
-		table.insert(category_parts, text)
-	end
-	ins('{|class="wikitable"')
-	ins("! Category")
-	for _, cat in ipairs(cats) do
-		ins("|-")
-		ins("| <code>" .. cat .. "</code>")
-	end
-	ins("|}")
-	return table.concat(category_parts, "")
-end
-
-
-local function construct_label_table(labels, replace_und)
+local function construct_label_table(labels, lang, replace_und)
 	local label_parts = {}
 	local function ins(text)
 		table.insert(label_parts, text)
@@ -546,7 +541,7 @@ local function construct_label_table(labels, replace_und)
 			table.concat(coded_categories, ",")))
 	end
 	ins("|}")
-	return table.concat(label_parts, "")
+	return table.concat(label_parts, "\n")
 end
 
 
@@ -569,12 +564,13 @@ function export.lang_specific_tables()
 
 	for langcode, _ in pairs(langs_with_lang_specific_data) do
 		local lang = m_languages.getByCode(langcode, true)
-		local data_module = mw.loadData(m_form_of.form_of_lang_data_module_prefix .. langcode)
+		local data_module_name = m_form_of.form_of_lang_data_module_prefix .. langcode
+		local data_module = m_form_of.langs_with_lang_specific_tags[langcode] and mw.loadData(data_module_name) or nil
 
 		-- First do base-lemma params.
 		local base_lemma_param_table
 		-- Can't just call #data_module.base_lemma_params as this comes from loadData().
-		if data_module.base_lemma_params and data_module.base_lemma_params[1] then
+		if data_module and data_module.base_lemma_params and data_module.base_lemma_params[1] then
 			local base_lemma_param_parts = {}
 			local function ins(text)
 				table.insert(base_lemma_param_parts, text)
@@ -592,7 +588,7 @@ function export.lang_specific_tables()
 
 
 		-- Then do inflection tags.
-		local data_tab = organize_tag_data(data_module)
+		local data_tab = data_module and organize_tag_data(data_module) or {}
 		local tag_parts = {}
 		local function ins(text)
 			table.insert(tag_parts, text)
@@ -628,7 +624,7 @@ function export.lang_specific_tables()
 
 		-- Then do non-alias shortcuts.
 		local non_alias_shortcut_table
-		local non_alias_shortcuts = organize_non_alias_shortcut_data(data_module, lang)
+		local non_alias_shortcuts = data_module and organize_non_alias_shortcut_data(data_module, lang) or {}
 		if #non_alias_shortcuts > 0 then
 			local non_alias_shortcut_parts = {}
 			local function ins(text)
@@ -658,7 +654,7 @@ function export.lang_specific_tables()
 				category_table = construct_category_table(cats)
 			end
 			if #labels > 0 then
-				label_table = construct_label_table(labels) 
+				label_table = construct_label_table(labels, lang)
 			end
 		end
 
@@ -670,6 +666,7 @@ function export.lang_specific_tables()
 				table.insert(lang_parts, text)
 			end
 			ins("===" .. langname .. "===")
+			ins(show_editlink(data_module_name))
 			if base_lemma_param_table then
 				ins(("%s-specific base lemma parameters:"):format(langname))
 				ins(base_lemma_param_table)
@@ -755,7 +752,7 @@ end
 function export.lang_independent_category_table()
 	local m_cats = mw.loadData(m_form_of.form_of_cats_module)
 	if m_cats["und"] then
-		local cats, labels = find_categories_and_labels(m_cats[langcode])
+		local cats, labels = find_categories_and_labels(m_cats["und"])
 		if #cats > 0 then
 			return construct_category_table(cats)
 		end
@@ -767,9 +764,9 @@ end
 function export.lang_independent_label_table()
 	local m_cats = mw.loadData(m_form_of.form_of_cats_module)
 	if m_cats["und"] then
-		local cats, labels = find_categories_and_labels(m_cats[langcode])
+		local cats, labels = find_categories_and_labels(m_cats["und"])
 		if #labels > 0 then
-			return construct_label_table(labels, "replace und")
+			return construct_label_table(labels, m_languages.getByCode("und", true), "replace und")
 		end
 	end
 	return "(no language-independent labels currently)"
