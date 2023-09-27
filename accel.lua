@@ -38,11 +38,11 @@ The way it works is approximately as follows:
        call that module to customize the entry.
    (4) Merge duplicate entries. This not only looks for completely duplicated entries but tries to merge entries that
        differ only in the definition. In general, this will result in multiple definition lines under a single entry,
-	   but definition lines that consist of calls to {{inflection of}} will be further merged. For example, for the
+	   but definition lines that consist of calls to {{infl of}} will be further merged. For example, for the
 	   example above with ''bona'' and ''bonā'', the five inflections of ''bona'' will be merged into a single entry
-	   with a single call to {{inflection of}} that looks something like this:
-	   # {{inflection of|la|bonus||nom//voc|f|s|;|nom//acc//voc|n|p}}
-	   In other words, not only are the inflections combined into a single call to {{inflection of}}, but inflections
+	   with a single call to {{infl of}} that looks something like this:
+	   # {{infl of|la|bonus||nom//voc|f|s|;|nom//acc//voc|n|p}}
+	   In other words, not only are the inflections combined into a single call to {{infl of}}, but inflections
 	   with partly shared tags are further merged.
    (5) Generate the Pronunciation and Etymology sections that go at the top, above all the entries. This is done either
        by calling custom generate functions in the language-specific accelerator submodule, or (if those aren't given)
@@ -138,7 +138,7 @@ function export.default_entry(params)
 		pronunc = nil,
 		pos_header = mw.getContentLanguage():ucfirst(params.pos),
 		head = make_head(params.pos .. " form"),
-		def = make_def("inflection of", "||" .. params.form),
+		def = make_def("infl of", "||" .. params.form),
 		inflection = nil,
 		declension = nil,
 		conjugation = nil,
@@ -169,6 +169,12 @@ function export.default_entry(params)
 	elseif params.form == "f" and params.pos == "noun" then
 		entry.head = make_head(params.pos, "f")
 		entry.def = make_def("female equivalent of")
+	elseif (params.form == "past|part" or params.form == "past|ptcp") and params.pos == "verb" then
+		entry.pos_header = "Participle"
+		entry.head = make_head("past participle")
+	elseif (params.form == "pres|part" or params.form == "pres|ptcp") and params.pos == "verb" then
+		entry.pos_header = "Participle"
+		entry.head = make_head("present participle")
 	elseif (params.form == "abstract noun" or params.form == "verbal noun") and params.pos == "noun" then
 		entry.head = make_head(params.pos)
 		entry.def = make_def(params.form .. " of")
@@ -270,9 +276,9 @@ Combine multiple semicolon-separated tag sets into multipart tags if possible. W
 only one tag in a given dimension, and repeat this until no changes in case we can reduce along multiple dimensions,
 e.g.
 
-{{inflection of|la|canus||dat|m|p|;|dat|f|p|;|dat|n|p|;|abl|m|p|;|abl|f|p|;|abl|n|p}}
+{{infl of|la|canus||dat|m|p|;|dat|f|p|;|dat|n|p|;|abl|m|p|;|abl|f|p|;|abl|n|p}}
 
-{{inflection of|la|canus||dat//abl|m//f//n|p}}
+{{infl of|la|canus||dat//abl|m//f//n|p}}
 
 `tag_sets` is a list of objects of the form {tags = {"TAG", "TAG", ...}, labels = {"LABEL", "LABEL", ...}}, i.e. of the
 same format as `data.tag_sets` as passed to tagged_inflections() in [[Module:form of]]. Also accepted is an "old-style"
@@ -347,31 +353,31 @@ function export.combine_tag_sets_into_multipart(tag_sets, lang, POS)
 		--
 		-- An example where adjacent-first is better:
 		--
-		-- {{inflection of|la|medius||m|acc|s|;|n|nom|s|;|n|acc|s|;|n|voc|s}}
+		-- {{infl of|la|medius||m|acc|s|;|n|nom|s|;|n|acc|s|;|n|voc|s}}
 		--
 		-- all-first results in
 		--
-		-- {{inflection of|la|medius||m//n|acc|s|;|n|nom//voc|s}}
+		-- {{infl of|la|medius||m//n|acc|s|;|n|nom//voc|s}}
 		--
 		-- which isn't ideal.
 		--
 		-- If we do adjacent-first, we get
 		--
-		-- {{inflection of|la|medius||m|acc|s|;|n|nom//acc//voc|s}}
+		-- {{infl of|la|medius||m|acc|s|;|n|nom//acc//voc|s}}
 		--
 		-- which is much better.
 		--
 		-- The opposite happens in
 		--
-		-- {{inflection of|grc|βουλόμενος||n|nom|s|;|m|acc|s|;|n|acc|s|;|n|voc|s}}
+		-- {{infl of|grc|βουλόμενος||n|nom|s|;|m|acc|s|;|n|acc|s|;|n|voc|s}}
 		--
 		-- where all-first results in
 		--
-		-- {{inflection of|grc|βουλόμενος||n|nom//acc//voc|s|;|m|acc|s}}
+		-- {{infl of|grc|βουλόμενος||n|nom//acc//voc|s|;|m|acc|s}}
 		--
 		-- which is better than the result from adjacent-first, which is
 		--
-		-- {{inflection of|grc|βουλόμενος||n|nom//voc|s|;|m//n|acc|s}}
+		-- {{infl of|grc|βουλόμενος||n|nom//voc|s|;|m//n|acc|s}}
 		--
 		-- To handle this conundrum, we try both, and look to see which one results in fewer "combinations" (where a
 		-- tag with // in it counts as a combination). If both are different but have the same # of combinations, we
@@ -594,53 +600,56 @@ end
 
 -- Merge multiple entries into one if they differ only in the definition, with all other
 -- properties the same. The combined entry has multiple definition lines. We then do
--- further frobbing of {{inflection of}} lines:
+-- further frobbing of {{infl of}} lines:
 --
 -- 1. Convert lang= param to param 1 (there shouldn't be any remaining cases of accelerator
---    modules generating {{inflection of}} templates with lang=, but we do this just in case).
--- 2. Combine adjacent {{inflection of}} lines that differ only in the tags, e.g.:
+--    modules generating {{infl of}} templates with lang=, but we do this just in case).
+-- 2. Combine adjacent {{infl of}} lines that differ only in the tags, e.g.:
 --
---    # {{inflection of|la|bonus||nom|m|s}}
---    # {{inflection of|la|bonus||nom|n|s}}
---    # {{inflection of|la|bonus||acc|n|s}}
---    # {{inflection of|la|bonus||voc|n|s}}
+--    # {{infl of|la|bonus||nom|m|s}}
+--    # {{infl of|la|bonus||nom|n|s}}
+--    # {{infl of|la|bonus||acc|n|s}}
+--    # {{infl of|la|bonus||voc|n|s}}
 --
 --    becomes
 --
---    # {{inflection of|la|bonus||nom|m|s|;|nom|n|s|;|acc|n|s|;|voc|n|s}}
+--    # {{infl of|la|bonus||nom|m|s|;|nom|n|s|;|acc|n|s|;|voc|n|s}}
 --
--- 3. Further group {{inflection of}} lines with multiple tag sets (as may be generated b y
+-- 3. Further group {{infl of}} lines with multiple tag sets (as may be generated b y
 --    the previous step) using multipart tags, e.g. for the Latin entry ''bonum'',
 --
---    # {{inflection of|la|bonus||nom|m|s|;|nom|n|s|;|acc|n|s|;|voc|n|s}}
+--    # {{infl of|la|bonus||nom|m|s|;|nom|n|s|;|acc|n|s|;|voc|n|s}}
 --
 --    becomes
 --
---    # {{inflection of|la|bonus||nom|m|s|;|nom//acc//voc|n|s}}
+--    # {{infl of|la|bonus||nom|m|s|;|nom//acc//voc|n|s}}
 --
 --    This grouping can group across multiple dimensions, e.g. for the Latin entry ''bonīs'',
 --
---    # {{inflection of|la|bonus||dat|m|p|;|dat|f|p|;|dat|n|p|;|abl|m|p|;|abl|f|p|;|abl|n|p}}
+--    # {{infl of|la|bonus||dat|m|p|;|dat|f|p|;|dat|n|p|;|abl|m|p|;|abl|f|p|;|abl|n|p}}
 --
 --    becomes
 --
---    # {{inflection of|la|bonus||dat//abl|m//f//n|p}}
+--    # {{infl of|la|bonus||dat//abl|m//f//n|p}}
 --
 --    Another complex real-world example, for the Old English weak adjective form ''dēorenan'':
 --
---    # {{inflection of|ang|dēoren||wk|acc|m|sg|;|wk|acc|f|sg|;|wk|gen|m|sg|;|wk|gen|f|sg|;|wk|gen|n|sg|;|wk|dat|m|sg|;|wk|dat|f|sg|;|wk|dat|n|sg|;|wk|ins|m|sg|;|wk|ins|f|sg|;|wk|ins|n|sg|;|wk|nom|m|pl|;|wk|nom|f|pl|;|wk|nom|n|pl|;|wk|acc|m|pl|;|wk|acc|f|pl|;|wk|acc|n|pl}}
+--    # {{infl of|ang|dēoren||wk|acc|m|sg|;|wk|acc|f|sg|;|wk|gen|m|sg|;|wk|gen|f|sg|;|wk|gen|n|sg|;|wk|dat|m|sg|;|wk|dat|f|sg|;|wk|dat|n|sg|;|wk|ins|m|sg|;|wk|ins|f|sg|;|wk|ins|n|sg|;|wk|nom|m|pl|;|wk|nom|f|pl|;|wk|nom|n|pl|;|wk|acc|m|pl|;|wk|acc|f|pl|;|wk|acc|n|pl}}
 --
 --    becomes
 --
---    # {{inflection of|ang|dēoren||wk|acc|m//f|sg|;|wk|gen//dat//ins|m//f//n|sg|;|wk|nom//acc|m//f//n|pl}}
+--    # {{infl of|ang|dēoren||wk|acc|m//f|sg|;|wk|gen//dat//ins|m//f//n|sg|;|wk|nom//acc|m//f//n|pl}}
 --
 --    Here, 17 separate tag sets are combined down into 3.
 local function merge_entries(entries_obj)
 	local entries_new = {}
 
-	-- First rewrite {{inflection of|...|lang=LANG}} to {{inflection of|LANG|...}}
+	-- First rewrite {{infl of|...|lang=LANG}} to {{infl of|LANG|...}}
 	for _, entry in ipairs(entries_obj.entries) do
-		local params = entry.def:match("^{{inflection of|([^{}]+)}}$")
+		local params = entry.def:match("^{{infl of|([^{}]+)}}$")
+		if not params then
+			params = entry.def:match("^{{inflection of|([^{}]+)}}$")
+		end
 		if params then
 			params = rsplit(params, "|", true)
 			local new_params = {}
@@ -652,7 +661,7 @@ local function merge_entries(entries_obj)
 					table.insert(new_params, param)
 				end
 			end
-			entry.def = "{{inflection of|" .. table.concat(new_params, "|") .. "}}"
+			entry.def = "{{infl of|" .. table.concat(new_params, "|") .. "}}"
 		end
 	end
 
@@ -685,20 +694,26 @@ local function merge_entries(entries_obj)
 		end
 	end
 
-	-- Combine the definitions for each entries, merging all {{inflection of}} calls
+	-- Combine the definitions for each entries, merging all {{infl of}} calls
 	-- into one such call with multiple tag sets.
 	for _, entry in ipairs(entries_new) do
 		local existing_defs = {}
 		for _, new_def in ipairs(entry.defs) do
 			local did_merge = false
-			local new_params = new_def:match("^{{inflection of|([^{}]+)}}$")
+			local new_params = new_def:match("^{{infl of|([^{}]+)}}$")
+			if not new_params then
+				new_params = entry.def:match("^{{inflection of|([^{}]+)}}$")
+			end
 			if new_params then
-				-- The new definition is {{inflection of}}. See if there is an
-				-- {{inflection of}} among the definitions seen so far.
+				-- The new definition is {{infl of}}. See if there is an
+				-- {{infl of}} among the definitions seen so far.
 				for i, existing_def in ipairs(existing_defs) do
-					local existing_params = existing_def:match("^{{inflection of|([^{}]+)}}$")
+					local existing_params = existing_def:match("^{{infl of|([^{}]+)}}$")
+					if not existing_params then
+						existing_params = existing_def:match("^{{inflection of|([^{}]+)}}$")
+					end
 					if existing_params then
-						-- Merge the existing and new {{inflection of}} calls.
+						-- Merge the existing and new {{infl of}} calls.
 						-- Find the last unnamed parameter of the first template.
 						existing_params = rsplit(existing_params, "|", true)
 						local last_numbered_index
@@ -729,7 +744,7 @@ local function merge_entries(entries_obj)
 
 						-- Add the new parameters after the existing ones
 						existing_params[last_numbered_index] = existing_params[last_numbered_index] .. "|;|" .. table.concat(tags, "|")
-						existing_defs[i] = "{{inflection of|" .. table.concat(existing_params, "|") .. "}}"
+						existing_defs[i] = "{{infl of|" .. table.concat(existing_params, "|") .. "}}"
 						did_merge = true
 						break
 					end
@@ -744,10 +759,12 @@ local function merge_entries(entries_obj)
 		entry.def = table.concat(existing_defs, "\n# ")
 	end
 
-	-- Now combine tag sets inside a multiple-tag-set {{inflection of}} call
+	-- Now combine tag sets inside a multiple-tag-set {{infl of}} call
 	for i, entry in ipairs(entries_new) do
-		local infl_of_params = entry.def:match("^{{inflection of|([^{}]+)}}$")
-
+		local infl_of_params = entry.def:match("^{{infl of|([^{}]+)}}$")
+		if not infl_of_params then
+			infl_of_params = entry.def:match("^{{inflection of|([^{}]+)}}$")
+		end
 		if infl_of_params then
 			infl_of_params = rsplit(infl_of_params, "|", true)
 
@@ -794,7 +811,7 @@ local function merge_entries(entries_obj)
 
 			-- Put the template back together.
 			local combined_params = m_table.append(pre_tag_params, tags, post_tag_params)
-			entry.def = "{{inflection of|" .. table.concat(combined_params, "|") .. "}}"
+			entry.def = "{{infl of|" .. table.concat(combined_params, "|") .. "}}"
 		end
 	end
 
