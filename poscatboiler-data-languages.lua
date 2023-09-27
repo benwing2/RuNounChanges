@@ -19,8 +19,10 @@ local function track(page)
 end
 
 -- This handles language categories of the form e.g. [[Category:French language]] and
--- [[:Category:British Sign Language]] and regional variant categories of the form
--- e.g. [[Category:Regional French]].
+-- [[:Category:British Sign Language]]; variant umbrella categories of the form e.g.
+-- [[:Category:Varieties of English]]; regional variant umbrella categories of the form
+-- e.g. [[Category:Regional French]]; and dialectal variant categories such as
+-- [[Category:American English]] and [[:Category:Provençal]].
 
 
 -----------------------------------------------------------------------------
@@ -30,11 +32,20 @@ end
 -----------------------------------------------------------------------------
 
 
-raw_categories["Regionalisms"] = {
-	description = "Categories that group terms in regional varieties of various languages.",
-	additional = "{{{umbrella_msg}}}",
+raw_categories["Language varieties"] = {
+	description = "Categories that group terms in varieties of various languages (regional, temporal, sociolectal, etc.).",
+	additional = "{{{umbrella_meta_msg}}}",
 	parents = {
 		"Fundamental",
+	},
+}
+
+raw_categories["Regionalisms"] = {
+	description = "Categories that group terms in regional varieties of various languages.",
+	additional = "{{{umbrella_meta_msg}}}",
+	parents = {
+		"Fundamental",
+		"Language varieties",
 	},
 }
 
@@ -80,6 +91,10 @@ end
 
 local function ucfirst(text)
 	return mw.getContentLanguage():ucfirst(text)
+end
+
+local function lcfirst(text)
+	return mw.getContentLanguage():lcfirst(text)
 end
 
 local function linkbox(lang, setwiki, setwikt, setsister, entryname)
@@ -653,7 +668,7 @@ local function get_children(lang)
 
 	table.insert(ret, {name = "terms derived from {{{langname}}}", is_label = true, lang = false})
 	table.insert(ret, {module = "topic cat", args = {code = "{{{langcode}}}", label = "all topics"}, sort = "all topics"})
-	table.insert(ret, {name = "Regional {{{langname}}}"})
+	table.insert(ret, {name = "Varieties of {{{langname}}}"})
 	table.insert(ret, {name = "Requests concerning {{{langname}}}"})
 	table.insert(ret, {name = "Category:Rhymes:{{{langname}}}", description = "Lists of {{{langname}}} words by their rhymes."})
 	table.insert(ret, {name = "Category:User {{{langcode}}}", description = "Wiktionary users categorized by fluency levels in {{{langname}}}."})
@@ -718,6 +733,26 @@ table.insert(raw_handlers, function(data)
 end)
 
 
+-- Handle categories such as [[:Category:Varieties of French]] and [[:Category:Varieties of Ancient Greek]].
+table.insert(raw_handlers, function(data)
+	local langname = data.category:match("^Varieties of (.*)$")
+	if langname then
+		local lang = require("Module:languages").getByCanonicalName(langname)
+		if lang then
+			return {
+				lang = lang:getCode(),
+				description = "Categories containing terms in varieties of " .. lang:makeCategoryLink() .. " (regional, temporal, sociolectal, etc.).",
+				parents = {
+					"{{{langcat}}}",
+					{name = "Language varieties", sort = langname},
+				},
+				breadcrumb = "Varieties",
+			}
+		end
+	end
+end)
+
+
 -- Handle categories such as [[:Category:Regional French]] and [[:Category:Regional Ancient Greek]].
 table.insert(raw_handlers, function(data)
 	local langname = data.category:match("^Regional (.*)$")
@@ -729,7 +764,7 @@ table.insert(raw_handlers, function(data)
 				description = "Categories containing terms in regional varieties of " .. lang:makeCategoryLink() .. ".",
 				additional = "This category sometimes also directly contains terms that are uncategorized regionalisms: such terms should be recategorized by the particular regional variety they belong to, or categorized as dialectal.",
 				parents = {
-					"{{{langcat}}}",
+					"Varieties of {{{langname}}}",
 					{name = "Regionalisms", sort = langname},
 				},
 				breadcrumb = "Regional",
@@ -762,7 +797,7 @@ local function infer_region_from_lang(lang, pagename)
 	-- language. Another such case is with [[:Category:Ionic Greek]], whose parent is 'Ancient Greek'.
 	local langname = lang:getCanonicalName()
 	local lang_to_check = lang
-	if langname == pagename then
+	if ucfirst(langname) == pagename then
 		lang_to_check = lang_to_check:getParent()
 	end
 	-- First check against the language name and progressively smaller suffixes; then repeat for any parents (of etymology
@@ -801,7 +836,12 @@ local function split_region_lang(pagename)
 	local words = mw.text.split(pagename, " ")
 	for i = 1, #words do
 		canonical_name = table.concat(words, " ", i, #words)
-		lang = getByCanonicalName(canonical_name, nil, "allow etym")
+		lang = getByCanonicalName(canonical_name, nil, "allow etym", "allow family")
+		if not lang then
+			-- Some languages have lowercase-initial names e.g. 'the BMAC substrate', but the category begins with an
+			-- uppercase letter.
+			lang = getByCanonicalName(lcfirst(canonical_name), nil, "allow etym", "allow family")
+		end
 		if lang then
 			if i == 1 then
 				region = nil
@@ -821,6 +861,22 @@ local function split_region_lang(pagename)
 end
 
 
+local function scrape_category_for_auto_cat_args(cat)
+	local cat_page = mw.title.new("Category:" .. cat)
+	if cat_page then
+		local contents = cat_page:getContent()
+		if contents then
+			for name, args, _, _ in require("Module:templateparser").findTemplates(contents) do
+				if name == "auto cat" or name == "autocat" then
+					return args
+				end
+			end
+		end
+	end
+	return nil
+end
+
+
 -- To avoid the need to scrape every category, we keep a list of those categories that satisfy the following:
 -- (a) They are a dialect category;
 -- (b) They occur as the parent category of some other dialect category;
@@ -831,6 +887,8 @@ end
 local dialect_parent_cats_to_scrape = m_table.listToSet {
 	"Assyrian",
 	"Babylonian",
+	"Limburgan-Ripuarian transitional dialects",
+	"North Sea Germanic",
 	"Ripuarian Franconian",
 }
 
@@ -846,19 +904,31 @@ local dialect_parent_cats_to_scrape = m_table.listToSet {
 -- relax the code below to operate on all raw categories (not necessarily a good idea), or we rename the
 -- nonstandardly-named categories (e.g. in the case above, to [[:Category:Issime Walser German]], since Walser German
 -- is a recognized etymology-only language).
-table.insert(raw_handlers, function(data)
-	local raw_args
+local function dialect_handler(category, raw_args, called_from_inside)
+	-- Get the full language to return in the settings.
+	local function get_returnable_lang(lang)
+		if lang:hasType("family") then
+			return "und"
+		else
+			return lang:getNonEtymologicalCode()
+		end
+	end
 
 	-- Return the default parent cat for the given language and category. If the language and category are the same, we're
 	-- dealing with the overall cat for an etymology-only language, so use the category of the parent language; otherwise
 	-- we're dealing with a subcategory of a regular or etymology-only language (e.g. [[:Category:Issime Walser]], a
 	-- subcategory of [[:Category:Walser German]]), so use the language's category itself. If the resulting language is an
-	-- etymology-only language, the parent category is that language's category, which is named the same as the
-	-- etymology-only language; otherwise, use "Regional LANG" as the category unless `noreg` is given, in which case we
-	-- use "LANG language" as the category.
+	-- etymology-only language or a family, the parent category is that language or family's category, which for
+	-- etymology-only languages is named the same as the etymology-only language, and for families is named "FAMILY
+	-- languages"; otherwise, use "Regional LANG" as the category unless `noreg` is given, in which case we use
+	-- "Varieties of LANG".
 	local function get_default_parent_cat(lang, pagename, noreg)
+		if lang:getCode():find("^qsb%-") then
+			-- substrate
+			return "Substrate languages"
+		end
 		local lang_for_cat
-		if lang:getCanonicalName() == pagename then
+		if ucfirst(lang:getCanonicalName()) == pagename then
 			lang_for_cat = lang:getParent()
 			if not lang_for_cat then
 				error(("Category '%s' has a name the same as a full language; you probably need to explicitly specify a different language using |lang="):format(pagename))
@@ -866,17 +936,62 @@ table.insert(raw_handlers, function(data)
 		else
 			lang_for_cat = lang
 		end
-		local lang_for_cat_name = lang_for_cat:getCanonicalName()
-		if lang_for_cat:hasType("etymology-only") then
-			return lang_for_cat_name
+		if lang_for_cat:hasType("etymology-only") or lang_for_cat:hasType("family") then
+			return lang_for_cat:getCategoryName()
 		elseif noreg then
-			return lang_for_cat_name .. " language"
+			return "Varieties of " .. lang_for_cat:getCanonicalName()
 		else
-			return "Regional " .. lang_for_cat_name
+			return "Regional " .. lang_for_cat:getCanonicalName()
 		end
 	end
 
-	if data.called_from_inside then
+	-- Try to figure out if this variety is extinct or reconstructed, if type= not given.
+	local function determine_lect_type(lang, default_parent)
+		if category:find("^Proto%-") or lang:getCanonicalName():find("^Proto%-") or lang:hasType("reconstructed") then
+			-- Is it reconstructed?
+			return "reconstructed"
+		end
+		if lang:getCode():find("^qsb%-") then
+			return "unattested"
+		end
+		if lang:hasType("family") then
+			-- FIXME: Correct? I think this can only happen with etymology-only languages with families as parents,
+			-- which are substrate or other extinct languages.
+			return "extinct"
+		end
+		if lang:hasType("full") then
+			-- If a full language, scrape the {{auto cat}} call and check for extinct=1.
+			local parent_args = scrape_category_for_auto_cat_args(lang:getCategoryName())
+			if parent_args and ine(parent_args.extinct) and require("Module:yesno")(parent_args.extinct, false) then
+				return "extinct"
+			end
+		end
+		-- Otherwise, call the dialect handler recursively for the parent category. This is correct e.g. for
+		-- things like subvarieties of Classical Persian, where the lang itself (Persian) isn't extinct but the
+		-- parent category refers to an extinct variety. If the dialect handler fails to return a type, it's because
+		-- the parent category doesn't exist or isn't defined using {{auto cat}}, and doesn't have a language as a
+		-- suffix. In that case, if we're dealing with an etymology-only language, check the parent language. Finally,
+		-- fall back to returning "extant" if all else fails.
+		local parent_type
+		if default_parent then
+			_, parent_type = dialect_handler(default_parent, nil, true)
+		end
+		if parent_type then
+			return parent_type
+		end
+		local parent_lang = lang:getParent()
+		if parent_lang then
+			return determine_lect_type(parent_lang, nil)
+		end
+		return "extant"
+	end
+
+	if called_from_inside then
+		-- Avoid infinite loops from wrongly processing non-lect categories.
+		if category:find("^Regional ") or category:find("^Varieties of ") or category:find("^Rhymes:") then
+			return nil
+		end
+
 		-- If called from inside we won't have any params available. See comment above about this. We scrape the category
 		-- page's call to {{auto cat}} to get the appropriate params, and if that fails, we currently fall back to defaults
 		-- based on the name of the category. Since the call from inside is only to get the parent category and breadcrumb,
@@ -885,44 +1000,35 @@ table.insert(raw_handlers, function(data)
 		-- default values, we will produce the right parent for [[:Category:Central Yoruba]] but not for
 		-- [[:Category:Ekiti Yoruba]], where the default parent would be [[:Category:Regional Yoruba]] instead of the correct
 		-- [[:Category:Central Yoruba]].
-		local lang, breadcrumb = split_region_lang(data.category)
-		if lang or dialect_parent_cats_to_scrape[data.category] then
-			local cat_page = mw.title.new("Category:" .. data.category)
-			if cat_page then
-				local contents = cat_page:getContent()
-				if contents then
-					for name, args, _, _ in require("Module:templateparser").findTemplates(contents) do
-						if name == "auto cat" or name == "autocat" then
-							raw_args = args
-							break
-						end
-					end
-				end
-			end
+		local lang, breadcrumb = split_region_lang(category)
+		if lang or dialect_parent_cats_to_scrape[category] then
+			raw_args = scrape_category_for_auto_cat_args(category)
 			if not raw_args then
 				if not lang then
-					-- We were instructed to scrape by virtue of `dialect_parent_cats_to_scrape`, but couldn't scrape anything.
+					-- We were instructed to scrape by virtue of `dialect_parent_cats_to_scrape`, but couldn't scrape
+					-- anything.
 					return nil
 				end
-				-- If we can't parse the scraped {{auto cat}} spec, return default values. This helps e.g. in converting from the
-				-- old {{dialectboiler}} template and generally when adding new varieties.
+				-- If we can't parse the scraped {{auto cat}} spec, return default values. This helps e.g. in converting
+				-- from the old {{dialectboiler}} template and generally when adding new varieties.
 				track("dialect")
+				local default_parent = get_default_parent_cat(lang, category)
 				return {
 					-- FIXME, allow etymological codes here
-					lang = lang:getNonEtymologicalCode(),
+					lang = get_returnable_lang(lang),
 					description = "Foo",
-					parents = get_default_parent_cat(lang, data.category),
+					parents = {default_parent},
 					breadcrumb = breadcrumb or lang:getCanonicalName(),
 					umbrella = false,
 					can_be_empty = true,
-				}, true
+				}, determine_lect_type(lang, default_parent)
 			end
 		else
 			return nil
 		end
 	end
 
-	if not data.called_from_inside and not ine(data.args.dialect) then
+	if not called_from_inside and not ine(raw_args.dialect) then
 		return nil
 	end
 
@@ -936,8 +1042,8 @@ table.insert(raw_handlers, function(data)
 		fulldef = {},
 		addl = {},
 		nolink = {type = "boolean"},
-		noreg = {type = "boolean"}, -- don't make the default parent be "Regional LANG"; instead, "LANG language"
-		extinct = {type = "boolean"},
+		noreg = {type = "boolean"}, -- don't make the default parent be "Regional LANG"; instead, "Varieties of LANG"
+		type = {}, -- "extinct", "extant", "reconstructed", "unattested", "constructed"
 		cat = {},
 		othercat = {}, -- comma-separated
 		country = {}, -- comma-separated
@@ -945,15 +1051,17 @@ table.insert(raw_handlers, function(data)
 		breadcrumb = {},
 		pagename = {}, -- for testing or demonstration
 	}
-	if not data.called_from_inside then
-		raw_args = data.args
-	end
 
 	local args = require("Module:parameters").process(raw_args, params)
 
+	local allowed_type_values = {"extinct", "extant", "reconstructed", "unattested", "constructed"}
+	if args.type and not m_table.contains(allowed_type_values, args.type) then
+		error(("Unrecognized value '%s' for type=; should be one of %s"):format(
+			args.type, table.concat(allowed_type_values, ", ")))
+	end
 	local lang, breadcrumb, regiondesc, langname
 	local region
-	local pagename = args.pagename or data.category
+	local pagename = args.pagename or category
 	if not args.lang then
 		lang, breadcrumb = split_region_lang(pagename)
 		if not lang then
@@ -964,7 +1072,7 @@ table.insert(raw_handlers, function(data)
 	else
 		lang = m_languages.getByCode(args.lang, "lang", "allow etym")
 		langname = lang:getCanonicalName()
-		if pagename == langname then
+		if pagename == ucfirst(langname) then
 			-- breadcrumb and regiondesc should stay nil; breadcrumb will get pagename as a default, and the lack of regiondesc
 			-- will cause an error to be thrown unless the user gave it explicitly or specified def=
 		else
@@ -1018,7 +1126,7 @@ table.insert(raw_handlers, function(data)
 			end
 		end
 		intro = table.concat(intro_parts)
-	elseif pagename == langname then
+	elseif pagename == ucfirst(langname) then
 		local article = lang:getWikipediaArticle("no category fallback")
 		if article then
 			if article == pagename then
@@ -1030,9 +1138,6 @@ table.insert(raw_handlers, function(data)
 	end
 
 	local additional
-	if args.extinct then
-		additional = "This language variety is [[extinct language|extinct]]."
-	end
 
 	local parents = {}
 	local langname_for_desc
@@ -1040,7 +1145,7 @@ table.insert(raw_handlers, function(data)
 	local function make_code(code)
 		return ("<code>%s</code>"):format(code)
 	end
-	if lang:hasType("etymology-only") and langname == pagename then
+	if lang:hasType("etymology-only") and ucfirst(langname) == pagename then
 		langname_for_desc = lang:getParentName()
 		local langcode = lang:getCode()
 		table.insert(etymcodes, make_code(langcode))
@@ -1104,7 +1209,7 @@ table.insert(raw_handlers, function(data)
 
 	local description = args.fulldef and args.fulldef .. "." or args.def and ("Terms or senses in %s."):format(args.def) or
 		("Terms or senses in %s as %s%s %s."):format(
-			langname_for_desc, args.verb or args.extinct and "formerly spoken" or "spoken",
+			langname_for_desc, args.verb or "spoken",
 			args.prep == "-" and "" or " " .. (args.prep or "in"), regiondesc)
 
 	default_parent = args.cat or get_default_parent_cat(lang, pagename, args.noreg)
@@ -1128,14 +1233,37 @@ table.insert(raw_handlers, function(data)
 			end
 		end
 	end
-	if args.extinct then
+
+	-- Try to figure out if this variety is extinct or reconstructed, if type= not given.
+	local lect_type = args.type
+	if not lect_type then
+		lect_type = determine_lect_type(lang, default_parent)
+	end
+	local function prefix_addl(addl_text)
+		if additional then
+			additional = addl_text .. "\n\n" .. additional
+		else
+			additional = addl_text
+		end
+	end
+	if lect_type == "extinct" then
+		prefix_addl("This language variety is [[extinct language|extinct]].")
 		table.insert(parents, "Category:All extinct languages")
+	elseif lect_type == "reconstructed" then
+		prefix_addl("This language variety is [[reconstructed language|reconstructed]].")
+		table.insert(parents, "Category:Reconstructed languages")
+	elseif lect_type == "unattested" then
+		prefix_addl("This language variety is {{w|unattested language|unattested}}.")
+		table.insert(parents, "Category:Unattested languages")
+	elseif lect_type == "constructed" then
+		prefix_addl("This language variety is [[constructed language|constructed]].")
+		table.insert(parents, "Category:Constructed languages")
 	end
 
 	track("dialect")
 	return {
 		-- FIXME, allow etymological codes here
-		lang = lang:getNonEtymologicalCode(),
+		lang = get_returnable_lang(lang),
 		intro = intro,
 		description = description,
 		additional = additional,
@@ -1143,7 +1271,14 @@ table.insert(raw_handlers, function(data)
 		breadcrumb = {name = breadcrumb, nocap = true},
 		umbrella = false,
 		can_be_empty = true,
-	}, true
+	}, lect_type
+end
+
+
+-- Actual handler for dialect categories. See dialect_handler() above.
+table.insert(raw_handlers, function(data)
+	local settings, _ = dialect_handler(data.category, data.args, data.called_from_inside)
+	return settings, not not settings
 end)
 
 
