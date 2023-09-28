@@ -345,28 +345,6 @@ function Category:substitute_template_specs_in_args(args)
 end
 
 
-function Category:getDisplay(isChild)
-	if self._data["display"] then
-		if self._info.code then
-			return self._info.code .. ":" .. self._data["display"]:gsub("^%l", string.upper)
-		else
-			return self._data["display"]
-		end
-	end
-	return nil
-end
-
-function Category:getDisplay2(isChild)
-	if self._data["display"] then
-		return self._data["display"]:gsub("^%l", string.upper)
-	end
-	return nil
-end
-
-function Category:getSort(isChild)
-	return self._data["sort"]
-end
-
 function Category:getDescription(isChild)
 	-- Allows different text in the list of a category's children
 	local isChild = isChild == "child"
@@ -404,12 +382,11 @@ function Category:getDescription(isChild)
 			desc = self._info.label
 		end
 
-		local display = self._data["display"] or mw.getContentLanguage():ucfirst(self._info.label)
 		return
 			"This category concerns the topic: " .. desc .. ".\n\n" ..
 			"It contains no dictionary entries, only other categories. The subcategories are of two sorts:\n\n" ..
-			"* Subcategories named like “aa:" .. display .. "” (with a prefixed language code) are categories of terms in specific languages. " ..
-			"You may be interested especially in [[:Category:" .. en:getCategoryName() .. "|Category:en:" .. display .. "]], for English terms.\n" ..
+			"* Subcategories named like “aa:" .. mw.getContentLanguage():ucfirst(self._info.label) .. "” (with a prefixed language code) are categories of terms in specific languages. " ..
+			"You may be interested especially in [[:Category:" .. en:getCategoryName() .. "]], for English terms.\n" ..
 			"* Subcategories of this one named without the prefixed language code are further categories just like this one, but devoted to finer topics."
 	end
 end
