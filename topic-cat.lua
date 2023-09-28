@@ -394,9 +394,10 @@ end
 
 function Category:getParents()
 	local parents = self._data["parents"]
-	
-	if not self._lang and ( self._info.label == "all topics" or self._info.label == "all sets" ) then
-		return {{ name = "Category:Fundamental", sort = self._info.label:gsub("all ", "") }}
+	local label = self._info.label
+
+	if not self._lang and ( label == "all topics" or label == "all sets" ) then
+		return {{ name = "Category:Fundamental", sort = label:gsub("all ", "") }}
 	end
 	
 	if not parents or #parents == 0 then
@@ -406,7 +407,7 @@ function Category:getParents()
 	local ret = {}
 	local is_set = false
 	
-	if self._info.label == "all sets" then
+	if label == "all sets" then
 		is_set = true
 	end
 	
@@ -418,7 +419,21 @@ function Category:getParents()
 		end
 		
 		if not parent.sort then
-			parent.sort = self._info.label
+			-- When defaulting sort key to label, strip 'The ' (e.g. in 'The Matrix', 'The Hunger Games')
+			-- and 'A ' (e.g. in 'A Song of Ice and Fire', 'A Christmas Carol') from label.
+			local stripped_sort = label:match("^[Tt]he (.*)$")
+			if stripped_sort then
+				parent.sort = stripped_sort
+			end
+			if not stripped_sort then
+				stripped_sort = label:match("^[Aa] (.*)$")
+				if stripped_sort then
+					parent.sort = stripped_sort
+				end
+			end
+			if not stripped_sort then
+				parent.sort = label
+			end
 		end
 		
 		if self._lang then
@@ -453,7 +468,7 @@ function Category:getParents()
 				-- A reference to a category using another category tree module.
 				if not parent.args then
 					error("Missing .args in parent table with module=\"" .. parent.module .. "\" for '" ..
-						self._info.label .. "' topic entry in module '" .. (self._data.module or "unknown") .. "'")
+						label .. "' topic entry in module '" .. (self._data.module or "unknown") .. "'")
 				end
 				parent.name = require("Module:category tree/" .. parent.module).new(self:substitute_template_specs_in_args(parent.args))
 			else
@@ -464,10 +479,10 @@ function Category:getParents()
 		table.insert(ret, parent)
 	end
 	
-	if not is_set and self._info.label ~= "list of topics" and self._info.label ~= "list of sets" then
+	if not is_set and label ~= "list of topics" and label ~= "list of sets" then
 		local pinfo = mw.clone(self._info)
 		pinfo.label = "list of topics"
-		table.insert(ret, {name = Category.new(pinfo), sort = (not self._lang and " " or "") .. self._info.label})
+		table.insert(ret, {name = Category.new(pinfo), sort = (not self._lang and " " or "") .. label})
 	end
 	
 	return ret
