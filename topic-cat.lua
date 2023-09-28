@@ -2,6 +2,8 @@ local export = {}
 
 local label_data = require("Module:category tree/topic cat/data")
 
+local rsplit = mw.text.split
+
 -- Category object
 
 local Category = {}
@@ -220,30 +222,89 @@ function Category:substitute_template_specs(desc)
 		elseif uclc == "lc" then
 			label = mw.getContentLanguage():lcfirst(label)
 		end
-		local singular_label, singular_label_title
+
+		local function term_exists(term)
+			local title = mw.title.new(term)
+			return title and title.exists
+		end
+
+		local singular_label
 		if not no_singularize then
 			singular_label = require("Module:string utilities").singularize(label)
-			singular_label_title = mw.title.new(singular_label)
+		end
+
+		local function gsub_desc(to)
+			return (desc:gsub(label_sub, require("Module:pattern utilities").replacement_escape(to)))
 		end
 
 		if wikify then
 			if singular_label then
-				desc = desc:gsub(label_sub, "[[w:" .. singular_label .. "|" .. label .. "]]")
+				return gsub_desc("[[w:" .. singular_label .. "|" .. label .. "]]")
 			else
-				desc = desc:gsub(label_sub, "[[w:" .. label .. "|" .. label .. "]]")
-			end
-		elseif singular_label_title and singular_label_title.exists then
-			desc = desc:gsub(label_sub, "[[" .. singular_label .. "|" .. label .. "]]")
-		else
-			-- 'happiness' etc. that look like plurals but aren't
-			local plural_label_title = mw.title.new(label)
-			if plural_label_title and plural_label_title.exists then 
-				desc = desc:gsub(label_sub, "[[" .. label .. "]]")
-			else
-				desc = desc:gsub(label_sub, label)
+				return gsub_desc("[[w:" .. label .. "|" .. label .. "]]")
 			end
 		end
-		return desc
+
+		-- First try to singularize the label as a whole, unless 'no singularize' was given. If the result exists,
+		-- return it.
+		if singular_label and term_exists(singular_label) then
+			return gsub_desc("[[" .. singular_label .. "|" .. label .. "]]")
+		elseif term_exists(label) then
+			-- Then check if the original label as a whole exists, and return if so.
+			return gsub_desc("[[" .. label .. "]]")
+		else
+			-- Otherwise, if the label is multiword, split into words and try the link each one, singularizing the last
+			-- one unless 'no singularize' was given.
+			local split_label
+			if label:find(" ") then
+				if not no_singularize then
+					split_label = rsplit(label, " ")
+					for i, word in ipairs(split_label) do
+						if i == #split_label then
+							local singular_word = require("Module:string utilities").singularize(word)
+							if term_exists(singular_word) then
+								split_label[i] = "[[" .. singular_word .. "|" .. word .. "]]"
+							else
+								split_label = nil
+								break
+							end
+						else
+							if term_exists(word) then
+								split_label[i] = "[[" .. word .. "]]"
+							else
+								split_label = nil
+								break
+							end
+						end
+					end
+					if split_label then
+						split_label = table.concat(split_label, " ")
+					end
+				end
+
+				-- If we weren't able to link individual words with the last word singularized, link all words as-is.
+				if not split_label then
+					split_label = rsplit(label, " ")
+					for i, word in ipairs(split_label) do
+						if term_exists(word) then
+							split_label[i] = "[[" .. word .. "]]"
+						else
+							split_label = nil
+							break
+						end
+					end
+					if split_label then
+						split_label = table.concat(split_label, " ")
+					end
+				end
+			end
+
+			if split_label then
+				return gsub_desc(split_label)
+			else
+				return gsub_desc(label)
+			end
+		end
 	end
 
 	for _, spec in ipairs {
@@ -258,7 +319,7 @@ function Category:substitute_template_specs(desc)
 	} do
 		local label_sub, uclc, no_singularize, wikify = unpack(spec)
 		if desc:find(label_sub) then
-			handle_label(label_sub, uclc, no_singularize, wikify)
+			desc = handle_label(label_sub, uclc, no_singularize, wikify)
 		end
 	end
 
