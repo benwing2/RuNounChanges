@@ -3,11 +3,13 @@ local export = {}
 local lang_independent_data = require("Module:category tree/poscatboiler/data")
 local lang_specific_module = "Module:category tree/poscatboiler/data/lang-specific"
 local lang_specific_module_prefix = lang_specific_module .. "/"
+local auto_cat_module = "Module:auto cat"
 
 -- Category object
 
 local Category = {}
 Category.__index = Category
+
 
 function Category.new_main(frame)
 	local self = setmetatable({}, Category)
@@ -20,7 +22,8 @@ function Category.new_main(frame)
 	}
 
 	local args, remaining_args = require("Module:parameters").process(frame:getParent().args, params, true, "category tree/poscatboiler")
-	self._info = {code = args[1], label = args[2], sc = args[3], raw = args.raw, args = remaining_args}
+	self._info = {code = args[1], label = args[2], sc = args[3], raw = args.raw,
+		args = require(auto_cat_module).copy_args({}, remaining_args, -3)}
 
 	self:initCommon()
 
@@ -39,8 +42,8 @@ function Category:get_originating_info()
 	end
 	return originating_info
 end
-	
-	
+
+
 function Category.new(info)
 	for key, val in pairs(info) do
 		if not (key == "code" or key == "label" or key == "sc" or key == "raw" or key == "args"
@@ -99,7 +102,7 @@ function Category:initCommon()
 					break
 				end
 			end
-			if self._data then	
+			if self._data then
 				if self._data.lang then
 					if type(self._data.lang) ~= "string" then
 						error("Received non-string value " .. mw.dumpObject(self._data.lang) .. " for self._data.lang, label \"" .. self._info.label .. "\"" .. self:get_originating_info() .. ".")
@@ -641,7 +644,7 @@ function Category:getParents()
 				format(self_cat))
 		end
 	end
-		
+
 	return retval
 end
 
