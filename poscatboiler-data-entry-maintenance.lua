@@ -30,13 +30,27 @@ labels["entries without References or Further reading header"] = {
 	hidden = true,
 }
 
-labels["entries with outdated source"] = {
-	description = "{{{langname}}} entries that have been partly or fully imported from an outdated source.",
+labels["entries that don't exist"] = {
+	description = "{{{langname}}} terms that do not meet the [[Wiktionary:Criteria for inclusion|criteria for inclusion]] (CFI). They are added to the category with the template {{temp|no entry|{{{langcode}}}}}.",
 	parents = {"entry maintenance"},
 }
 
-labels["entries that don't exist"] = {
-	description = "{{{langname}}} terms that do not meet the [[Wiktionary:Criteria for inclusion|criteria for inclusion]] (CFI). They are added to the category with the template {{temp|no entry|{{{langcode}}}}}.",
+labels["entries with language name categories using raw markup"] = {
+	description = "{{{langname}}} entries that have been placed in a language name category using raw wiki markup (i.e. <code><nowiki>[[Category:{{{langname}}} ...]]</nowiki></code>). They should be added using {{tl|cln|{{{langcode}}}|...}} instead.",
+	parents = {"entry maintenance"},
+	can_be_empty = true,
+	hidden = true,
+}
+
+labels["entries with topic categories using raw markup"] = {
+	description = "{{{langname}}} entries that have been placed in a topic category using raw wiki markup (i.e. <code><nowiki>[[Category:{{{langcode}}}:...]]</nowiki></code>). They should be added using {{tl|C|{{{langcode}}}|...}} instead.",
+	parents = {"entry maintenance"},
+	can_be_empty = true,
+	hidden = true,
+}
+
+labels["entries with outdated source"] = {
+	description = "{{{langname}}} entries that have been partly or fully imported from an outdated source.",
 	parents = {"entry maintenance"},
 }
 
@@ -147,6 +161,15 @@ labels["requests for English equivalent term"] = {
 	hidden = true,
 }
 
+for _, quot_type in ipairs { "quotations", "usage examples" } do
+	labels[quot_type .. " with omitted translation"] = {
+		description = "{{{langname}}} " .. quot_type .. " where a translation would normally be required but the translation has explicitly been omitted by specifying <code>-</code>. The translation should be supplied instead.",
+		parents = {"entry maintenance"},
+		can_be_empty = true,
+		hidden = true,
+	}
+end
+
 for _, pos in ipairs({"nouns", "proper nouns", "verbs", "adjectives", "adverbs", "participles", "determiners", "pronouns", "numerals", "suffixes", "contractions"}) do
 	labels[pos .. " with red links in their headword lines"] = {
 		description = "{{{langname}}} " .. pos .. " that contain red links (i.e. uncreated forms) in their headword lines.",
@@ -218,18 +241,18 @@ raw_categories["Request subcategories by language"] = {
 	},
 }
 
-raw_categories["Requests for quotation by source"] = {
+raw_categories["Requests for quotations by source"] = {
 	description = "Categories with requests for quotation, broken out by the source of the quotation.",
 	additional = "Some abbreviated names of sources are explained at [[Wiktionary:Abbreviated Authorities in Webster]].",
-	parents = {{name = "Requests for quotation", sort = "source"}},
+	parents = {{name = "Requests for quotations", sort = "source"}},
 	breadcrumb = "By source",
 }
 
-raw_categories["Requests for quotation"] = {
+raw_categories["Requests for quotations"] = {
 	-- FIXME
 	description = "Words are added to this category by the inclusion in their entries of {{temp|rfv-quote}}.",
-	parents = {{name = "Requests", sort = "quotation"}},
-	breadcrumb = "Quotation",
+	parents = {{name = "Requests", sort = "quotations"}},
+	breadcrumb = "Quotations",
 }
 
 raw_categories["Requests for date by source"] = {
@@ -239,16 +262,11 @@ raw_categories["Requests for date by source"] = {
 }
 
 raw_categories["Requests for date"] = {
-	-- FIXME, break date requests by language and make not-hidden
 	description = "Requests for a date to be added to a quotation.",
 	additional = "To add an article to this category, use {{temp|rfdate}} or {{temp|rfdatek}} to include the author. " ..
-	"Please remove the template from the article once the date has been provided. Articles are also added automatically by " ..
-	"templates such as {{temp|quote-book}} if the year= parameter is not provided. Providing the parameter in each case on " ..
-	"the page automatically removes the article from this category. See [[Wiktionary:Quotations]] for information about " ..
-	"formatting dates and quotations.",
+	"Please remove the template from the article once the date has been provided.",
 	parents = {{name = "Requests", sort = "date"}},
 	breadcrumb = "Date",
-	hidden = true,
 }
 
 raw_categories["Entries using missing taxonomic names"] = {
@@ -277,8 +295,12 @@ raw_categories["Entries using missing taxonomic names"] = {
 -- If there is a `language_name` propery, it specifies the language name (and will typically be a reference to a
 -- capturing group from the `regex` property); if not specified, it defaults to "{{{1}}}" unless the `nolang` property
 -- is set, in which case there is no language name derivable from the category name. The language name must be the
--- canonical name of a recognized language, or an error is thrown. Based on the language name, the `language_code` and
--- `language_object` properties are automatically filled in. 
+-- canonical name of a recognized regular language, or an error is thrown; however, if the `etym_lang_only`
+-- property is set, the language name must be the canonical name of an etymology-only language, or the category spec
+-- entry will be skipped. Based on the language name, the `language_code` and `language_object` properties are
+-- automatically filled in. If `language_name` is an etymology-only language, additional properties
+-- `parent_language_name`, `parent_language_code` and `parent_language_object` are set for the parent regular language
+-- of the etymology-only language.
 --
 -- If the `regex` values of multiple category specs match, the first one takes precedence.
 --
@@ -288,8 +310,9 @@ raw_categories["Entries using missing taxonomic names"] = {
 -- `regex`: See above.
 -- `1`, `2`, `3`, ...: See above.
 -- `language_name`, `language_code`, `language_object`: See above.
+-- `parent_language_name`, `parent_language_code`, `parent_language_object`: See above.
 -- `nolang`: See above.
--- `allow_etym_lang`: Language names can be etymology-only languages.
+-- `etym_lang_only`: Language names must be etymology-only languages. See above.
 -- `description`: Override the description (normally taken directly from the pagename).
 -- `template_name`: Name of template which generates this category.
 -- `template_sample_call`: Syntax for calling the template. Defaults to "{{{template_name}}}|{{{language_code}}}".
@@ -474,6 +497,20 @@ local requests_categories = {
 		template_name = "rfquote",
 	},
 	{
+		-- This handles etymology languages.
+		regex = "^Requests for translations into (.+)$",
+		etym_lang_only = true,
+		parents = {
+			{name = "Requests for translations into {{{parent_language_name}}}", sort = "{{{1}}}"},
+			{name = "Requests concerning {{{language_name}}}", sort = "translations"},
+		},
+		umbrella = false,
+		breadcrumb = "{{{1}}}",
+		template_name = "t-needed",
+		catfix = "en",
+	},
+	{
+		-- This handles regular languages.
 		regex = "^Requests for translations into (.+)$",
 		umbrella = "Requests for translations by language",
 		template_name = "t-needed",
@@ -495,7 +532,7 @@ local requests_categories = {
 		template_name = "t-needed",
 		template_sample_call = "{{t-needed|{{{language_code}}}|quote=1}}",
 		template_actual_sample_call = "{{t-needed|{{{language_code}}}|quote=1|nocat=1}}",
-		additional_template_description = "The {{temp|quote}} and {{temp|Q}} templates automatically add the page to this category if the example is in a foreign language and the translation is missing."
+		additional_template_description = "The {{temp|quote}}, {{temp|quote-*}} and {{temp|Q}} templates automatically add the page to this category if the example is in a foreign language and the translation is missing."
 	},
 	{
 		regex = "^Requests for review of (.+) translations$",
@@ -513,6 +550,28 @@ local requests_categories = {
 		additional_template_description = "The {{temp|head}} template, and the large number of language-specific variants of it, automatically add " ..
 		"the page to this category if the example is in a foreign language and no transliteration can be generated (particularly in languages without " ..
 		"automated transliteration, such as Hebrew and Persian).",
+	},
+	{
+		regex = "^Requests for transliteration of (.+) usage examples$",
+		umbrella = "Requests for transliteration of usage examples by language",
+		template_name = "rftranslit",
+		template_sample_call = "{{rftranslit|{{{language_code}}}|usex=1}}",
+		template_actual_sample_call = "{{rftranslit|{{{language_code}}}|usex=1|nocat=1}}",
+		catfix = false,
+		additional_template_description = "The {{temp|ux}} and {{temp|uxi}} templates automatically add the page to this category if the example " ..
+		"is in a foreign language and no transliteration can be generated (particularly in languages without automated transliteration, such as " ..
+		"Hebrew and Persian).",
+	},
+	{
+		regex = "^Requests for transliteration of (.+) quotations$",
+		umbrella = "Requests for transliteration of quotations by language",
+		template_name = "rftranslit",
+		template_sample_call = "{{rftranslit|{{{language_code}}}|quote=1}}",
+		template_actual_sample_call = "{{rftranslit|{{{language_code}}}|quote=1|nocat=1}}",
+		catfix = false,
+		additional_template_description = "The {{temp|quote}} and {{temp|quote-*}} templates automatically add the page to this category if the quotation " ..
+		"is in a foreign language and no transliteration can be generated (particularly in languages without automated transliteration, such as " ..
+		"Hebrew and Persian).",
 	},
 	{
 		-- This handles etymology languages.
@@ -548,6 +607,35 @@ local requests_categories = {
 		additional_template_description = "The {{temp|ux}} and {{temp|uxi}} templates automatically add the page to this category if the example itself is missing but the translation is supplied."
 	},
 	{
+		regex = "^Requests for native script in (.+) quotations$",
+		umbrella = "Requests for native script in quotations by language",
+		template_name = "rfscript",
+		template_sample_call = "{{rfscript|{{{language_code}}}|quote=1}}",
+		template_actual_sample_call = "{{rfscript|{{{language_code}}}|quote=1|nocat=1}}",
+		catfix = false,
+		additional_template_description = "The {{temp|quote}} and {{temp|quote-*}} templates automatically add the page to this category if the quotation itself is missing but the translation is supplied."
+	},
+	{
+		-- This handles etymology languages.
+		regex = "^Requests for (.+) script for (.+) terms$",
+		language_name = "{{{2}}}",
+		etym_lang_only = true,
+		parents = {
+			{name = "Requests for native script for {{{language_name}}} terms", sort = "{{{1}}} script"},
+			{name = "Requests for {{{1}}} script for {{{parent_language_name}}} terms", sort = "{{{language_name}}}"},
+			{name = "Requests concerning {{{language_name}}}", sort = "{{{1}}} script"},
+		},
+		umbrella = false,
+		breadcrumb = "{{{1}}} script",
+		template_name = "rfscript",
+		script_code = "<<{{#invoke:scripts/templates|getByCanonicalName|{{{1}}}}}>>",
+		template_sample_call = "{{rfscript|{{{language_code}}}|sc={{{script_code}}}}}",
+		template_actual_sample_call = "{{rfscript|{{{language_code}}}|sc={{{script_code}}}|nocat=1}}",
+		catfix = false,
+		additional_template_description = "Many templates such as {{temp|l}}, {{temp|m}} and {{temp|t}} automatically place the page in this category when they are missing the term but have been provided with a transliteration."
+	},
+	{
+		-- This handles regular languages.
 		regex = "^Requests for (.+) script for (.+) terms$",
 		language_name = "{{{2}}}",
 		parents = {{name = "Requests for native script for {{{language_name}}} terms", sort = "{{{1}}} script"}},
@@ -637,14 +725,23 @@ This category is hidden.]=],
 		umbrella = "Requests for attention in etymologies by language",
 	},
 	{
-		regex = "^Requests for quotation/(.+)$",
+		regex = "^Requests for quotations/(.+)$",
 		description = "Requests for a quotation or for quotations from {{{1}}}.",
-		parents = {{name = "Requests for quotation by source", sort = "{{{1}}}"}},
+		parents = {{name = "Requests for quotations by source", sort = "{{{1}}}"}},
 		breadcrumb = "{{{1}}}",
 		nolang = true,
 		template_name = "rfquotek",
 		template_sample_call = "{{rfquotek|LANGCODE|{{{1}}}}}",
 		template_example_output = "\n(where LANGCODE is the language code of the entry)\n\nIt results in the message below:\n\n{{rfquotek|und|{{{1}}}}}",
+	},
+	{
+		regex = "^Requests for date in (.+) entries$",
+		umbrella = "Requests for date by language",
+		template_name = "rfdate",
+		additional_template_description = "The quotation templates, such as {{temp|quote-book}} and {{temp|quote-journal}}, " ..
+		"automatically add the page to this category if neither {{para|date}} nor {{para|year}} is provided. Providing the " ..
+		"parameter in each case on the page automatically removes the article from this category. See " ..
+		"[[Wiktionary:Quotations]] for information about formatting dates and quotations.",
 	},
 	{
 		regex = "^Requests for date/(.+)$",
@@ -735,6 +832,11 @@ table.insert(raw_handlers, function(data)
 				end
 				items.parent_language_code = items.parent_language_object:getCode()
 				items.parent_language_name = items.parent_language_object:getCanonicalName()
+				-- Reject weird cases where the parent language has the same name as the child etymology language. In that case,
+				-- we'll get an infinite parent-category loop. This actually happens, e.g. with Rudbari and Bashkardi.
+				if items.parent_language_name == items.language_name then
+					return nil
+				end
 			else
 				items.language_object = require("Module:languages").getByCanonicalName(items.language_name, true)
 				items.language_code = items.language_object:getCode()
