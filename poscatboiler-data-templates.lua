@@ -37,6 +37,7 @@ labels["definition templates"] = {
 
 labels["entry templates"] = {
 	description = "Templates used to help in the creation of {{{langname}}} entries.",
+	umbrella_parents = {"Templates subcategories by language", "Entry templates"},
 	parents = {"templates"},
 }
 
@@ -107,7 +108,7 @@ labels["quotation templates"] = {
 }
 
 labels["reference templates"] = {
-	intro = function(data)
+	topright = function(data)
 		if data.lang and data.lang:getCode() == "ine-pro" then
 			return "{{shortcut|WT:RTINE}}"
 		end
@@ -151,10 +152,210 @@ end
 
 
 raw_categories["Templates"] = {
-	intro = "{{shortcut|WT:T}}",
+	topright = "{{shortcut|WT:T}}",
 	description = "An organizing category intended for all templates in use on Wiktionary.",
 	additional = "''See also: [[Wiktionary:Templates]], [[meta:Help:Template]]''",
 	parents = {"Wiktionary"},
+}
+
+raw_categories["Administration templates"] = {
+	description = "Templates used in the administration of Wiktionary.",
+	additional = "They are only used outside of mainspace and are distinct from [[:Category:Maintenance templates|maintenance templates]], which are used in maintaining entries.",
+	breadcrumb = "Administration",
+	parents = {"Templates"},
+}
+
+raw_categories["Archive templates"] = {
+	description = "Templates used on archived or otherwise inactive pages.",
+	breadcrumb = "Archive",
+	parents = {"Administration templates"},
+}
+
+raw_categories["Checkuser templates"] = {
+	description = "Templates related to [[Wiktionary:Requests for checkuser|checkuser requests]].",
+	breadcrumb = "Checkuser",
+	parents = {"Administration templates"},
+}
+
+raw_categories["Editnotices"] = {
+	description = "Templates used to display notices in edit mode.",
+	parents = {"Administration templates"},
+}
+
+raw_categories["Appendix templates"] = {
+	description = "Templates used in appendices or to link to appendices.",
+	breadcrumb = "Appendix",
+	parents = {"Templates", "Category:Appendices"},
+}
+
+raw_categories["Swadesh list templates"] = {
+	description = "Templates used on pages that contain [[w:Swadesh list]]s.",
+	breadcrumb = "Swadesh list",
+	parents = {"Appendix templates"},
+}
+
+raw_categories["Auto-table templates"] = {
+	description = "Templates used to generate word tables (like [[Template:table:seasons]]).",
+	additional = "See also [[:Category:Auto-table templates by language]].",
+	breadcrumb = "Auto-table",
+	parents = {"Templates"},
+}
+
+raw_categories["Categorization templates"] = {
+	preceding = "{{also|:Category:Category modules}}",
+	description = "Templates used to categorize terms or entries.",
+	additional = "([[:Category:Category templates]], on the other hand, contains templates used in the category namespace.)",
+	breadcrumb = "Categorization",
+	parents = {"Templates"},
+}
+
+raw_categories["Category templates"] = {
+	description = "Templates used in the category namespace.",
+	additional = "([[:Category:Categorization templates]], on the other hand, contains templates used to categorize pages.)",
+	breadcrumb = "Category",
+	parents = {"Templates"},
+}
+
+raw_categories["Category boilerplate templates"] = {
+	description = "Templates used to generate the text of category pages.",
+	breadcrumb = "Category boilerplate",
+	parents = {"Category templates"},
+}
+
+raw_categories["TOC templates"] = {
+	description = "Templates used to generate a list of linked letters to navigate the pages listed in categories.",
+	breadcrumb = "TOC",
+	parents = {"Category templates"},
+}
+
+raw_categories["Character insertion templates"] = {
+	description = "Templates that provide easier ways to type characters that are not found in most keyboard layouts.",
+	breadcrumb = "Character insertion",
+	parents = {"Templates"},
+}
+
+-- Skipped: Concordance templates
+
+raw_categories["Control flow templates"] = {
+	description = "Templates to aid in control-flow constructs, which the template language is normally limited in.",
+	breadcrumb = "Control flow",
+	parents = {"Templates"},
+}
+
+raw_categories["Dictionary templates"] = {
+	description = "Templates that are used primarily to create dictionary entries.",
+	additional = "These are the pages to which [[WT:EL]] applies, i.e. the main and Reconstruction namespace.",
+	breadcrumb = "Dictionary",
+	parents = {"Templates"},
+}
+
+raw_categories["Audio templates"] = {
+	description = "Templates used to play or request audio files.",
+	breadcrumb = "Audio",
+	parents = {"Dictionary templates"},
+}
+
+raw_categories["Character info templates"] = {
+	description = "Templates that utilize {{temp|character info}}.",
+	breadcrumb = "Character info",
+	parents = {"Dictionary templates"},
+}
+
+raw_categories["Chess templates"] = {
+	description = "Templates that display chess diagrams.",
+	breadcrumb = "Chess",
+	parents = {"Dictionary templates"},
+}
+
+raw_categories["Citation templates"] = {
+	preceding = "{{ombox|type=speedy|text=Some templates may be marked '''FOR TESTING ONLY'''. Do not use these in entries, if requested on the template page itself. Take a look at the template page before using it.}}",
+	description = "Templates used to generate citations and quotations.",
+	additional = [=[
+{{citation templates}}
+
+==See also==
+* [[Wiktionary:Quotations]]
+* [[:Category:Reference templates]] for specific templates to well-known and widely used sources.]=],
+	breadcrumb = "Citation",
+	parents = {"Dictionary templates"},
+}
+
+raw_categories["Dating templates"] = {
+	description = "Templates for displaying dates.",
+	breadcrumb = "Dating",
+	parents = {"Dictionary templates"},
+}
+
+raw_categories["Definition templates"] = {
+	description = "Templates used in the [[Wiktionary:Glossary#definition line|definition line]] to help in creating definitions.",
+	breadcrumb = "Definition",
+	parents = {"Dictionary templates"},
+}
+
+raw_categories["Form-of templates"] = {
+	description = "Templates used in defining inflections or variants of a given lemma.",
+	breadcrumb = "Form-of",
+	parents = {"Dictionary templates"},
+}
+
+raw_categories["Grammar form-of templates"] = {
+	description = "Templates used in defining terms that stand in a particular grammatical relation to a given lemma.",
+	breadcrumb = "Grammar",
+	parents = {"Form-of templates"},
+}
+
+raw_categories["Conjugation form-of templates"] = {
+	description = "Templates used in defining terms that represent particular verb forms (e.g. past participle) of given lemma.",
+	breadcrumb = "Conjugation",
+	parents = {"Grammar form-of templates"},
+}
+
+raw_categories["Declension form-of templates"] = {
+	description = "Templates used in defining terms that represent particular noun or adjective forms (e.g. masculine plural) of given lemma.",
+	breadcrumb = "Declension",
+	parents = {"Grammar form-of templates"},
+}
+
+raw_categories["Name templates"] = {
+	description = "Templates used in the [[Wiktionary:Glossary#definition line|definition line]] to help in creating definitions for names.",
+	breadcrumb = "Name",
+	parents = {"Definition templates"},
+}
+
+raw_categories["Object usage templates"] = {
+	description = "Templates used in the [[Wiktionary:Glossary#definition line|definition line]] to show case and adposition usage for verb objects and similar constructs.",
+	breadcrumb = "Object usage",
+	parents = {"Definition templates"},
+}
+
+raw_categories["Entry templates"] = {
+	description = "Templates used to help the creation of new entries.",
+	breadcrumb = "Entry",
+	parents = {"Dictionary templates"},
+}
+
+raw_categories["Etymology templates"] = {
+	description = "Templates used in etymology sections to define the etymology of a term.",
+	breadcrumb = "Etymology",
+	parents = {"Dictionary templates"},
+}
+
+raw_categories["Foreign derivation templates"] = {
+	description = "Templates used in etymology sections to indicate derivation from a different language than the language of the current entry.",
+	breadcrumb = "Foreign derivation",
+	parents = {"Etymology templates"},
+}
+
+raw_categories["Morphology templates"] = {
+	description = "Templates used in etymology sections to specify the morphology of a term.",
+	breadcrumb = "Morphology",
+	parents = {"Etymology templates"},
+}
+
+raw_categories["Language-specific morphology templates"] = {
+	description = "Specialized morphology templates used in the etymology sections of terms in particular languages.",
+	breadcrumb = "Language-specific",
+	parents = {"Morphology templates"},
 }
 
 raw_categories["Non-production templates and modules"] = {
