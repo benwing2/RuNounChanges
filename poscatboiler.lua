@@ -233,15 +233,20 @@ end
 
 
 function Category:substitute_template_specs(desc)
-	if not desc then
-		return desc
-	end
 	-- This may end up happening twice but that's OK as the function is idempotent.
 	desc = self:convert_spec_to_string(desc)
 
+	if not desc then
+		return desc
+	end
+
 	desc = desc:gsub("{{PAGENAME}}", mw.title.getCurrentTitle().text)
-	desc = desc:gsub("{{{umbrella_msg}}}", "This is an umbrella category. It contains no dictionary entries, but only other, language-specific categories, which in turn contain relevant terms in a given language.")
-	desc = desc:gsub("{{{umbrella_meta_msg}}}", 'This is an umbrella metacategory, covering a general area such as "lemmas", "names" or "terms by etymology". It contains no dictionary entries, but holds only umbrella ("by language") categories covering specific subtopics, which in turn contain language-specific categories holding terms in a given language for that same topic.')
+	desc = desc:gsub("{{{umbrella_msg}}}", "This is an umbrella category. It contains no dictionary entries, but " ..
+		"only other, language-specific categories, which in turn contain relevant terms in a given language.")
+	desc = desc:gsub("{{{umbrella_meta_msg}}}", "This is an umbrella metacategory, covering a general area such as " ..
+		'"lemmas", "names" or "terms by etymology". It contains no dictionary entries, but holds only umbrella ' ..
+		'("by language") categories covering specific subtopics, which in turn contain language-specific categories ' ..
+		"holding terms in a given language for that same topic.")
 	if self._lang then
 		desc = desc:gsub("{{{langname}}}", self._lang:getCanonicalName())
 		desc = desc:gsub("{{{langcode}}}", self._lang:getCode())
@@ -447,19 +452,30 @@ function Category:getCategoryName()
 end
 
 
-function Category:getIntro()
+function Category:getTopright()
 	if self._lang or self._info.raw then
-		return self:substitute_template_specs(self._data.intro)
+		return self:substitute_template_specs(self._data.topright)
 	else
-		return self._data.umbrella and self:substitute_template_specs(self._data.umbrella.intro)
+		return self._data.umbrella and self:substitute_template_specs(self._data.umbrella.topright)
 	end
 end
 
 
 local function remove_lang_params(desc)
-	desc = desc:gsub("{{{langname}}} ", "")
+	-- Simply remove a language name/code/category from the beginning of the string, but replace the language name
+	-- in the middle of the string with either "specific languages" or "specific-language" depending on whether the
+	-- language name appears to be an attributive qualifier of another noun or to stand by itself. This may be wrong,
+	-- in which case the category in question should supply its own umbrella description.
+	desc = desc:gsub("^{{{langname}}} ", "")
+	desc = desc:gsub("^{{{langcode}}} ", "")
+	desc = desc:gsub("^{{{langcat}}} ", "")
+	desc = desc:gsub("^{{{langlink}}} ", "")
+	desc = desc:gsub("{{{langname}}} %(", "specific languages (")
+	desc = desc:gsub("{{{langname}}}([.,])", "specific languages%1")
+	desc = desc:gsub("{{{langname}}} ", "specific-language ")
 	desc = desc:gsub("{{{langcode}}} ", "")
 	desc = desc:gsub("{{{langcat}}} ", "")
+	desc = desc:gsub("{{{langlink}}} ", "")
 	return desc
 end
 
@@ -486,8 +502,13 @@ function Category:getDescription(isChild)
 		else
 			local desc = self:convert_spec_to_string(self._data.description)
 
-			if not isChild and desc and self._data.additional then
-				desc = desc .. "\n\n" .. self._data.additional
+			if not isChild and desc then
+				if self._data.preceding then
+					desc = self._data.preceding .. "\n\n" .. desc
+				end
+				if self._data.additional then
+					desc = desc .. "\n\n" .. self._data.additional
+				end
 			end
 
 			return self:substitute_template_specs(desc)
@@ -503,7 +524,9 @@ function Category:getDescription(isChild)
 			desc = self:convert_spec_to_string(self._data.description)
 			if desc then
 				desc = remove_lang_params(desc)
-				desc = mw.getContentLanguage():lcfirst(desc)
+				-- Use the following in preference to mw.getContentLanguage():lcfirst(), which will only lowercase the first
+				-- character, whereas the following will correctly handle links at the beginning of the text.
+				desc = require("Module:string utilities").lcfirst(desc)
 				desc = desc:gsub("%.$", "")
 				desc = "Categories with " .. desc .. "."
 			end
@@ -512,9 +535,13 @@ function Category:getDescription(isChild)
 			desc = "Categories with " .. self._info.label .. " in various specific languages."
 		end
 		if not isChild then
-			local additional = self:convert_spec_to_string(
-				self._data.umbrella and self._data.umbrella.additional or not has_umbrella_desc and self._data.additional
-			)
+			local preceding = self:convert_spec_to_string(self._data.umbrella and self._data.umbrella.preceding or
+				not has_umbrella_desc and self._data.preceding)
+			local additional = self:convert_spec_to_string(self._data.umbrella and self._data.umbrella.additional or
+				not has_umbrella_desc and self._data.additional)
+			if preceding then
+				desc = remove_lang_params(preceding) .. "\n\n" .. desc
+			end
 			if additional then
 				desc = desc .. "\n\n" .. remove_lang_params(additional)
 			end
@@ -649,22 +676,6 @@ function Category:getParents()
 end
 
 
-function Category:getTopicParents()
-	if self._data["topic_parents"] then
-		local topic_parents = {}
-		for _, topic_parent in ipairs(self._data["topic_parents"]) do
-			if self._lang then
-				table.insert(topic_parents, self._lang:getCode() .. ":" .. topic_parent)
-			else
-				table.insert(topic_parents, topic_parent)
-			end
-		end
-		return topic_parents
-	end
-	return nil
-end
-
-
 function Category:getChildren()
 	local is_umbrella = not self._lang and not self._info.raw
 	local children = self._data.children
@@ -771,33 +782,6 @@ function Category:getTOCTemplateName()
 	local lang, sc = self:getCatfixInfo()
 	local code = lang and lang:getCode() or "en"
 	return "Template:" .. code .. "-" .. (self._data.toctemplateprefix or "") .. "categoryTOC"
-end
-
-
-function Category:getDisplay()
-	if self._data["display"] then
-		if self._lang then
-			return self._lang:getCanonicalName() .. " " .. self._data["display"]
-		else
-			return mw.getContentLanguage():ucfirst(self._data["display"]) .. " by language"
-		end
-	end
-	return nil
-end
-
-function Category:getDisplay2()
-	if self._data["display"] then
-		if self._lang then
-			return mw.getContentLanguage():ucfirst(self._data["display"])
-		else
-			return mw.getContentLanguage():ucfirst(self._data["display"]) .. " by language"
-		end
-	end
-	return nil
-end
-
-function Category:getSort()
-	return self._data["sort"]
 end
 
 
