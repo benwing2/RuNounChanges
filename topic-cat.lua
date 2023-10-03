@@ -96,7 +96,7 @@ end
 function Category:getBreadcrumbName()
 	local ret
 
-	if self._lang or self._info.raw then
+	if self._lang then
 		ret = self._data.breadcrumb
 	else
 		-- FIXME, copied from [[Module:category tree/poscatboiler]]. No support for specific umbrella info yet.
@@ -208,6 +208,18 @@ function Category:substitute_template_specs(desc)
 		return desc
 	end
 	desc = desc:gsub("{{PAGENAME}}", mw.title.getCurrentTitle().text)
+
+	if desc:find("{{{umbrella_msg}}}") then
+		local eninfo = mw.clone(self._info)
+		eninfo.code = "en"
+		local en = Category.new(eninfo)
+		desc = desc:gsub("{{{umbrella_msg}}}", "This category contains no dictionary entries, only other categories. The subcategories are of two sorts:\n\n" ..
+			"* Subcategories named like \"aa:" .. mw.getContentLanguage():ucfirst(self._info.label) ..
+			"\" (with a prefixed language code) are categories of terms in specific languages. " ..
+			"You may be interested especially in [[:Category:" .. en:getCategoryName() .. "]], for English terms.\n" ..
+			"* Subcategories of this one named without the prefixed language code are further categories just like this one, but devoted to finer topics."
+		)
+	end
 	if self._lang then
 		desc = desc:gsub("{{{langname}}}", self._lang:getCanonicalName())
 		desc = desc:gsub("{{{langcode}}}", self._lang:getCode())
@@ -345,49 +357,94 @@ function Category:substitute_template_specs_in_args(args)
 end
 
 
+function Category:getTopright()
+	if self._lang then
+		return self:substitute_template_specs(self._data.topright)
+	else
+		return self._data.umbrella and self:substitute_template_specs(self._data.umbrella.topright)
+	end
+end
+
+
+local function remove_lang_params(desc)
+	desc = desc:gsub("^{{{langname}}} ", "")
+	desc = desc:gsub("{{{langcode}}}:", "")
+	desc = desc:gsub("^{{{langcode}}} ", "")
+	desc = desc:gsub("^{{{langcat}}} ", "")
+	return desc
+end
+
+
 function Category:getDescription(isChild)
 	-- Allows different text in the list of a category's children
 	local isChild = isChild == "child"
 
+	local function display_title(displaytitle, lang)
+		if type(displaytitle) == "string" then
+			displaytitle = self:substitute_template_specs(displaytitle)
+		else
+			displaytitle = displaytitle(self:getCategoryName(), lang)
+		end
+		mw.getCurrentFrame():callParserFunction("DISPLAYTITLE", "Category:" .. displaytitle)
+	end
+
 	if self._lang then
-		local desc = self._data["description"]
+		if not isChild and self._data.displaytitle then
+			display_title(self._data.displaytitle, self._lang)
+		end
+
+		local desc = self._data.description
 
 		desc = replace_special_descriptions(desc)
-		if desc then
-			if not isChild and self._data.additional then
+		if not isChild and desc then
+			if self._data.preceding then
+				desc = self._data.preceding .. "\n\n" .. desc
+			end
+			if self._data.additional then
 				desc = desc .. "\n\n" .. self._data.additional
 			end
-
-			return self:substitute_template_specs(desc)
 		end
+
+		return self:substitute_template_specs(desc)
 	else
-		if not self._lang and ( self._info.label == "all topics" or self._info.label == "all sets" ) then
+		if self._info.label == "all topics" or self._info.label == "all sets" then
 			return "This category applies to content and not to meta material about the Wiki."
 		end
 
-		local eninfo = mw.clone(self._info)
-		eninfo.code = "en"
-		local en = Category.new(eninfo)
-
-		local desc = self._data["umbrella_description"] or self._data["description"]
-		desc = replace_special_descriptions(desc)
-		if desc then
-			desc = desc:gsub("^{{{langname}}} ", "")
-			desc = desc:gsub("{{{langcode}}}:", "")
-			desc = desc:gsub("^{{{langcode}}} ", "")
-			desc = desc:gsub("^{{{langcat}}} ", "")
-			desc = desc:gsub("%.$", "")
-			desc = self:substitute_template_specs(desc)
-		else
-			desc = self._info.label
+		if not isChild and self._data.umbrella and self._data.umbrella.displaytitle then
+			display_title(self._data.umbrella.displaytitle, nil)
 		end
 
-		return
-			"This category concerns the topic: " .. desc .. ".\n\n" ..
-			"It contains no dictionary entries, only other categories. The subcategories are of two sorts:\n\n" ..
-			"* Subcategories named like “aa:" .. mw.getContentLanguage():ucfirst(self._info.label) .. "” (with a prefixed language code) are categories of terms in specific languages. " ..
-			"You may be interested especially in [[:Category:" .. en:getCategoryName() .. "]], for English terms.\n" ..
-			"* Subcategories of this one named without the prefixed language code are further categories just like this one, but devoted to finer topics."
+		local desc = self._data.umbrella and self._data.umbrella.description or self._data.umbrella_description
+		local has_umbrella_desc = not not desc
+		if not desc then
+			 desc = self._data.description
+			 if desc then
+		 		desc = replace_special_descriptions(desc)
+				desc = remove_lang_params(desc)
+				desc = desc:gsub("%.$", "")
+				desc = "This category concerns the topic: " .. desc .. "."
+			 end
+		end
+		if not desc then
+			desc = "Categories concerning " .. self._info.label .. " in various specific languages."
+		end
+
+		if not isChild then
+			local preceding = self._data.umbrella and self._data.umbrella.preceding or
+				not has_umbrella_desc and self._data.preceding
+			local additional = self._data.umbrella and self._data.umbrella.additional or
+				not has_umbrella_desc and self._data.additional
+			if preceding then
+				desc = remove_lang_params(preceding) .. "\n\n" .. desc
+			end
+			if additional then
+				desc = desc .. "\n\n" .. remove_lang_params(additional)
+			end
+			desc = desc .. "\n\n{{{umbrella_msg}}}"
+		end
+		desc = self:substitute_template_specs(desc)
+		return desc
 	end
 end
 
