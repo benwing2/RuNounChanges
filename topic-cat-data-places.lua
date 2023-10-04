@@ -7,7 +7,7 @@ local m_strutils = require("Module:string utilities")
 --[=[
 
 This module contains specifications that are used to create labels that allow {{auto cat}} and
-{{topic cat}} to create the appropriate definitions for topic categories for places (e.g.
+{{topic cat}} to create the appropriate definitions for topic categories for places (e.g.re
 'en:Waterfalls', 'de:Hokkaido', 'es:Cities in France', 'pt:Municipalities of Tocantins, Brazil',
 etc.). Note that this module doesn't actually create the categories; that must be done manually,
 with the text "{{auto cat}}" as the definition of the category. (This process should automatically
@@ -30,37 +30,54 @@ labels["places"] = {
 	parents = {"names", "list of sets"},
 }
 
+-- Generate bare labels in 'label' for all political subdivisions.
+-- Do this before handling 'general_labels' so the latter can override if necessary.
+for subdiv, desc in pairs(m_shared.political_subdivisions) do
+	labels[subdiv] = {
+		description = "{{{langname}}} names of " .. desc .. ".",
+		parents = {"political subdivisions", "list of sets"},
+	}
+end
 
--- general labels
-
--- Each entry is {LABEL, DESCRIPTION, PARENTS}.
+-- General labels. These are intended for places of all sorts that are not qualified
+-- by a holonym (e.g. it does not include 'regions in Africa'). These also do not need
+-- to include any political subdivisions listed in 'political_subdivisions' in
+-- [[Module:place-data/shared]]. Each entry is {LABEL, DESCRIPTION, PARENTS, WPCAT, COMMONSCAT}.
+-- PARENTS should not include "list of sets", which is added automatically.
+-- OTHERPROPS is optional and is a table of 'additional', 'preceding', 'topright', 'umbrella', etc. fields.
 local general_labels = {
 	{"airports", "[[airport]]s", {"places"}},
+	{"ancient settlements", "former [[city|cities]], [[town]]s and [[village]]s that existed in [[antiquity]]", {"historical settlements"}},
 	{"atolls", "[[atoll]]s", {"islands"}},
 	{"bays", "[[bay]]s", {"places", "water"}},
 	{"beaches", "[[beach]]es", {"places", "water"}},
+	{"bodies of water", "[[body of water|bodies of water]]", {"landforms", "water"}},
 	{"boroughs", "[[borough]]s", {"polities"}},
 	{"capital cities", "[[capital]] [[city|cities]]: the [[seat of government|seats of government]] for a country or [[political]] [[subdivision]] of a country", {"cities"}},
 	{"census-designated places", "[[census-designated place]]s", {"places"}},
 	{"cities", "[[city|cities]]", {"polities"}},
-	{"city-states", "[[sovereign]] [[microstate]]s consisting of a single [[city]] and dependent [[territory|territories]]", {"polities"}},
+	{"city-states", "[[sovereign]] [[microstate]]s consisting of a single [[city]] and [[w:dependent territory|dependent territories]]", {"polities"}},
 	{"communities", "[[community|communities]] of all sizes", {"polities"}},
-	{"continents", "the [[continents]] of the world", {"places"}},
+	{"continents", "the [[continent]]s of the world", {"places"}},
 	{"countries", "[[country|countries]]", {"polities"}},
-	{"dependencies", "[[dependency|dependencies]]", {"polities"}},
+	{"dependent territories", "[[w:dependent territory|dependent territories]]", {"polities"}},
 	{"deserts", "[[desert]]s", {"places"}},
 	{"forests", "[[forest]]s", {"places"}},
-	{"ghost towns", "[[ghost town]]s", {"places"}},
+	{"ghost towns", "[[ghost town]]s", {"historical settlements"}},
 	{"gulfs", "[[gulf]]s", {"places", "water"}},
 	{"headlands", "[[headland]]s", {"places"}},
 	{"historical and traditional regions", "regions that have no administrative significance", {"places"}},
+	{"historical capitals", "former [[capital]] [[city|cities]] and [[town]]s", {"historical settlements"}},
+	{"historical dependent territories", "[[w:dependent territory|dependent territories]] (colonies, dependencies, protectorates, etc.) that no longer exist", {"dependent territories"}},
 	{"historical political subdivisions", "[[political]] [[subdivision]]s (states, provinces, counties, etc.) that no longer exist", {"polities"}},
 	{"historical polities", "[[polity|polities]] (countries, kingdoms, empires, etc.) that no longer exist", {"polities"}},
+	{"historical settlements", "[[city|cities]], [[town]]s and [[village]]s that no longer exist or have been merged or reclassified", {"historical polities"}},
 	{"hills", "[[hill]]s", {"places"}},
 	{"islands", "[[island]]s", {"places"}},
 	{"kibbutzim", "[[kibbutz]]im", {"places"}},
-	{"lakes", "[[lake]]s", {"places", "water"}},
-	{"landforms", "[[landform]]s", {"Earth"}},
+	{"lakes", "[[lake]]s", {"places", "bodies of water"}},
+	{"landforms", "[[landform]]s", {"places", "Earth"}},
+	{"micronations", "[[micronation]]s", {"places"}},
 	{"mountain passes", "[[mountain pass]]es", {"places"}},
 	{"mountains", "[[mountain]]s", {"places"}},
 	{"moors", "[[moor]]s", {"places"}},
@@ -72,11 +89,9 @@ local general_labels = {
 	{"plateaus", "[[plateau]]s", {"places"}},
 	{"political subdivisions", "[[political]] [[subdivision]]s, such as [[province]]s, [[state]]s or [[region]]s", {"polities"}},
 	{"polities", "[[polity|polities]] or [[political]] [[division]]s", {"places"}},
-	{"provinces", "[[province]]s", {"political subdivisions"}},
-	{"rivers", "[[river]]s", {"places", "water"}},
-	{"rural municipalities", "[[w:rural municipality|rural municipalities]]", {"political subdivisions"}},
-	{"seas", "[[sea]]s", {"places", "water"}},
-	{"straits", "[[strait]]s", {"places", "water"}},
+	{"rivers", "[[river]]s", {"places", "bodies of water"}},
+	{"seas", "[[sea]]s", {"places", "bodies of water"}},
+	{"straits", "[[strait]]s", {"places", "bodies of water"}},
 	{"subdistricts", "[[subdistrict]]s", {"polities"}},
 	{"suburbs", "[[suburb]]s of a [[city]]", {"places"}},
 	{"towns", "[[town]]s", {"polities"}},
@@ -84,22 +99,27 @@ local general_labels = {
 	{"unincorporated communities", "[[unincorporated]] [[community|communities]]", {"places"}},
 	{"valleys", "[[valley]]s", {"places", "water"}},
 	{"villages", "[[village]]s", {"polities"}},
+	{"volcanoes", "[[volcano]]es", {"landforms"}},
 	{"waterfalls", "[[waterfall]]s", {"landforms", "water"}},
+	{"wetlands", "[[wetland]]s", {"places", "bodies of water"}},
 }
 
+-- Generate bare labels in 'label' for all "general labels" (see above).
 for _, label_spec in ipairs(general_labels) do
-	local label, desc, parents = unpack(label_spec)
+	local label, desc, parents, commonscat, wpcat = unpack(label_spec)
 	table.insert(parents, "list of sets")
 	labels[label] = {
 		description = "{{{langname}}} names of " .. desc .. ".",
 		parents = parents,
+		commonscat = commonscat == nil and true or commonscat,
+		wpcat = wpcat == nil and true or wpcat,
 	}
 end
 
 labels["city nicknames"] = {
 	-- special-cased description
 	description = "{{{langname}}} informal alternative names for [[city|cities]] (e.g., [[Big Apple]] for [[New York City]]).",
-	parents = {"cities", "list of sets"},
+	parents = {"cities", "nicknames", "list of sets"},
 }
 
 labels["exonyms"] = {
@@ -108,7 +128,7 @@ labels["exonyms"] = {
 	parents = {"places", "list of sets"},
 }
 
--- Generate bare labels in 'label' for all polities.
+-- Generate bare labels in 'label' for all polities (countries, states, etc.).
 for _, group in ipairs(m_shared.polities) do
 	for key, value in pairs(group.data) do
 		group.bare_label_setter(labels, group, key, value)
@@ -190,12 +210,18 @@ table.insert(handlers, function(label)
 			local placedata = group.data[place]
 			if placedata then
 				placedata = group.value_transformer(group, place, placedata)
-				local spelling_matches = true
+				local allow_cat = true
 				if place_type == "neighborhoods" and placedata.british_spelling or
 					place_type == "neighbourhoods" and not placedata.british_spelling then
-					spelling_matches = false
+					allow_cat = false
 				end
-				if spelling_matches and not placedata.nocities then
+				if placedata.is_former_place and place_type ~= "places" then
+					allow_cat = false
+				end
+				if placedata.is_city and not m_shared.generic_place_types_for_cities[place_type] then
+					allow_cat = false
+				end
+				if allow_cat then
 					local parent
 					if placedata.containing_polity then
 						parent = place_type .. " in " .. placedata.containing_polity
@@ -267,6 +293,28 @@ table.insert(handlers, function(label)
 	end
 end)
 
+-- Handler for "political subdivisions of the Philippines" and other "political subdivisions of X" categories.
+table.insert(handlers, function(label)
+	label = lcfirst(label)
+	local place = label:match("^political subdivisions of (.*)$")
+	if place then
+		for _, group in ipairs(m_shared.polities) do
+			local placedata = group.data[place]
+			if placedata then
+				placedata = group.value_transformer(group, place, placedata)
+				local bare_place, linked_place = m_shared.construct_bare_and_linked_version(place)
+				local keydesc = placedata.keydesc or linked_place
+				local desc = "{{{langname}}} names of [[political]] [[subdivision]]s of " .. keydesc .. "."
+				return {
+					description = desc,
+					breadcrumb = "political subdivisions",
+					parents = {bare_place, {name = "political subdivisions", sort = bare_place}, "list of sets"},
+				}
+			end
+		end
+	end
+end)
+
 -- Handler for "provinces of the Philippines", "counties of Wales", "municipalities of Tocantins, Brazil", etc.
 -- Places that begin with "the" are recognized and handled specially.
 table.insert(handlers, function(label)
@@ -313,11 +361,15 @@ table.insert(handlers, function(label)
 					if divcat == "poldiv" then
 						return {
 							description = desc,
-							parents = {{name = poldiv_parent or "political subdivisions", sort = bare_place}, bare_place, "list of sets"},
+							breadcrumb = place_type,
+							parents = poldiv_parent and
+								{{name = poldiv_parent, sort = bare_place}, bare_place, "list of sets"} or
+								{"political subdivisions of " .. place, {name = place_type, sort = bare_place}, "list of sets"},
 						}
 					else
 						return {
 							description = desc,
+							breadcrumb = place_type,
 							parents = {bare_place, "list of sets"},
 						}
 					end
@@ -438,11 +490,11 @@ labels["regions in Europe"] = {
 for _, continent in ipairs({"Africa", "Asia", "Central America", "Europe", "North America", "Oceania", "South America"}) do
 	labels["countries in " .. continent] = {
 		description = "{{{langname}}} names of [[country|countries]] in [[" .. continent .. "]].",
-		parents = {{name = "countries", sort = continent}, continent, "list of sets"},
+		parents = {{name = "countries", sort = " "}, continent, "list of sets"},
 	}
 	labels["rivers in " .. continent] = {
 		description = "{{{langname}}} names of [[river]]s in [[" .. continent .. "]].",
-		parents = {{name = "rivers", sort = continent}, continent, "list of sets"},
+		parents = {{name = "rivers", sort = " "}, continent, "list of sets"},
 	}
 end
 
@@ -451,6 +503,12 @@ end
 labels["autonomous communities of Spain"] = {
 	-- special-cased description
 	description = "{{{langname}}} names of the [[w:Autonomous communities of Spain|autonomous communities of Spain]].",
+	parents = {{name = "political subdivisions", sort = "Spain"}, "Spain", "list of sets"},
+}
+
+labels["autonomous cities of Spain"] = {
+	-- special-cased description
+	description = "{{{langname}}} names of the [[w:Autonomous communities of Spain#Autonomous_cities|autonomous cities of Spain]].",
 	parents = {{name = "political subdivisions", sort = "Spain"}, "Spain", "list of sets"},
 }
 
@@ -497,17 +555,37 @@ labels["census-designated places in the United States"] = {
 -- counties
 
 labels["counties of Northern Ireland"] = {
-	description = "{{{langname}}} names of the counties of [[Northern Ireland]]",
+	description = "{{{langname}}} names of the counties of [[Northern Ireland]].",
 	-- has two parents: "political subdivisions" and "counties of Ireland"
 	parents = {{name = "political subdivisions", sort = "Northern Ireland"}, {name = "counties of Ireland", sort = "Northern Ireland"}, "Northern Ireland", "list of sets"},
 }
 
+-- nomes
+
+labels["nomes of Ancient Egypt"] = {
+	-- special-cased description
+	description = "{{{langname}}} names of the nomes of [[Ancient Egypt]].",
+	parents = {{name = "political subdivisions", sort = "Egypt"}, "Ancient Egypt", "list of sets"},
+}
+
 -- regions and "regional units"
+
+labels["regions of Albania"] = {
+	-- special-cased description
+	description = "{{{langname}}} names of the regions (peripheries) of [[Albania]].",
+	parents = {{name = "political subdivisions", sort = "Albania"}, "Albania", "list of sets"},
+}
 
 labels["regions of Greece"] = {
 	-- special-cased description
-	description = "{{{langname}}} names of the regions (peripheries) of [[Greece]]",
+	description = "{{{langname}}} names of the regions (peripheries) of [[Greece]].",
 	parents = {{name = "political subdivisions", sort = "Greece"}, "Greece", "list of sets"},
+}
+
+labels["regions of North Macedonia"] = {
+	-- special-cased description
+	description = "{{{langname}}} names of the regions (peripheries) of [[North Macedonia]].",
+	parents = {{name = "political subdivisions", sort = "North Macedonia"}, "North Macedonia", "list of sets"},
 }
 
 -- subdistricts and subprefectures
