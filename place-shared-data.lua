@@ -30,6 +30,7 @@ export.political_subdivisions = {
 	["cercles"] = "[[cercle]]s",
 	["civil parishes"] = "[[civil parish]]es",
 	["collectivities"] = "[[collectivity|collectivities]]",
+	["communes"] = "[[commune|communes]]",
 	["constituencies"] = "[[constituency|constituencies]]",
 	["constituent countries"] = "[[constituent]] [[country|countries]]",
 	["council areas"] = "[[council area]]s",
@@ -240,12 +241,12 @@ export.countries = {
 	["Angola"] = {parents = {"Africa"}, poldiv = {"provinces", "municipalities"}},
 	["Antigua and Barbuda"] = {parents = {"North America"}, poldiv = {"provinces"}, british_spelling = true},
 	["Argentina"] = {parents = {"South America"}, poldiv = {"provinces", "departments", "municipalities"}},
-	["Armenia"] = {parents = {"Europe", "Asia"}, poldiv = {"regions", "provinces"}, british_spelling = true},
+	["Armenia"] = {parents = {"Europe", "Asia"}, poldiv = {"provinces", "districts"}, british_spelling = true},
 	-- Both a country and continent
 	["Australia"] = {parents = {"Earth", "Oceania"}, poldiv = {"states", "territories", "local government areas"}, british_spelling = true},
 	["Austria"] = {parents = {"Europe"}, poldiv = {"states", "districts", "municipalities"}, british_spelling = true},
 	["Azerbaijan"] = {parents = {"Europe", "Asia"}, poldiv = {"districts", "municipalities"}, british_spelling = true},
-	["the Bahamas"] = {parents = {"North America"}, poldiv = {"districts"}, british_spelling = true},
+	["the Bahamas"] = {parents = {"North America"}, poldiv = {"districts"}, british_spelling = true, wp = "The Bahamas"},
 	["Bahrain"] = {parents = {"Asia"}, poldiv = {"governorates"}},
 	["Bangladesh"] = {parents = {"Asia"}, poldiv = {"divisions", "districts", "municipalities"}, british_spelling = true},
 	["Barbados"] = {parents = {"North America"}, poldiv = {"parishes"}, british_spelling = true},
@@ -270,7 +271,7 @@ export.countries = {
 	["Cape Verde"] = {parents = {"Africa"}, poldiv = {"municipalities", "parishes"}},
 	["the Central African Republic"] = {parents = {"Africa"}, poldiv = {"prefectures", "subprefectures"}},
 	["Chad"] = {parents = {"Africa"}, poldiv = {"regions", "departments"}},
-	["Chile"] = {parents = {"South America"}, poldiv = {"regions", "provinces"}},
+	["Chile"] = {parents = {"South America"}, poldiv = {"regions", "provinces", "communes"}},
 	["China"] = {parents = {"Asia"}, poldiv = {"provinces", "autonomous regions",
 		"special administrative regions", "prefectures", "counties", "districts", "municipalities"},
 		miscdiv = {"regions"}},
@@ -280,7 +281,7 @@ export.countries = {
 	["Croatia"] = {parents = {"Europe"}, poldiv = {"counties", "municipalities"}, british_spelling = true},
 	["Cuba"] = {parents = {"North America"}, poldiv = {"provinces", "municipalities"}},
 	["Cyprus"] = {parents = {"Europe", "Asia"}, poldiv = {"districts"}, british_spelling = true},
-	["the Czech Republic"] = {parents = {"Europe"}, poldiv = {"regions", "districts"}, british_spelling = true},
+	["the Czech Republic"] = {parents = {"Europe"}, poldiv = {"regions", "districts", "municipalities"}, british_spelling = true},
 	["the Democratic Republic of the Congo"] = {parents = {"Africa"}, poldiv = {"provinces", "territories"}},
 	["Denmark"] = {parents = {"Europe"}, poldiv = {"regions", "municipalities", "dependent territories"}, british_spelling = true},
 	["Djibouti"] = {parents = {"Africa"}, poldiv = {"regions", "districts"}},
@@ -294,14 +295,15 @@ export.countries = {
 	["Equatorial Guinea"] = {parents = {"Africa"}, poldiv = {"provinces"}},
 	["Eritrea"] = {parents = {"Africa"}, poldiv = {"regions", "subregions"}},
 	["Estonia"] = {parents = {"Europe"}, poldiv = {"counties", "municipalities"}, british_spelling = true},
+	["Eswatini"] = {parents = {"Africa"}, british_spelling = true},
 	["Ethiopia"] = {parents = {"Africa"}, poldiv = {"regions", "zones"}},
 	["the Federated States of Micronesia"] = {parents = {"Micronesia"}, poldiv = {"states"}},
 	["Fiji"] = {parents = {"Melanesia"}, poldiv = {"divisions", "provinces"}, british_spelling = true},
 	["Finland"] = {parents = {"Europe"}, poldiv = {"regions", "municipalities"}, british_spelling = true},
-	["France"] = {parents = {"Europe"}, poldiv = {"regions", "departments", "collectivities", "municipalities",
+	["France"] = {parents = {"Europe"}, poldiv = {"regions", "departments", "collectivities", "communes", "municipalities",
 		"dependent territories", "territories"}, miscdiv = {"provinces"}, british_spelling = true},
 	["Gabon"] = {parents = {"Africa"}, poldiv = {"provinces", "departments"}},
-	["the Gambia"] = {parents = {"Africa"}, poldiv = {"divisions", "districts"}, british_spelling = true},
+	["the Gambia"] = {parents = {"Africa"}, poldiv = {"divisions", "districts"}, british_spelling = true, wp = "The Gambia"},
 	["Georgia"] = {parents = {"Europe", "Asia"}, poldiv = {"regions", "districts"}, keydesc = "the country of [[Georgia]], in [[Eurasia]]", british_spelling = true},
 	["Germany"] = {parents = {"Europe"}, poldiv = {"states", "municipalities", "districts"}, british_spelling = true},
 	["Ghana"] = {parents = {"Africa"}, poldiv = {"regions", "districts"}, british_spelling = true},
@@ -406,12 +408,11 @@ export.countries = {
 	["Somalia"] = {parents = {"Africa"}, poldiv = {"regions", "districts"}},
 	["South Africa"] = {parents = {"Africa"}, poldiv = {"provinces", "districts"}, british_spelling = true},
 	["South Korea"] = {parents = {"Asia", "Korea"}, poldiv = {"provinces", "counties", "districts"}},
-	["South Sudan"] = {parents = {"Africa"}, poldiv = {"regions", "states"}, british_spelling = true},
+	["South Sudan"] = {parents = {"Africa"}, poldiv = {"regions", "states", "counties"}, british_spelling = true},
 	["Spain"] = {parents = {"Europe"}, poldiv = {"autonomous communities", "provinces", "municipalities"}, british_spelling = true},
 	["Sri Lanka"] = {parents = {"Asia"}, poldiv = {"provinces", "districts"}, british_spelling = true},
 	["Sudan"] = {parents = {"Africa"}, poldiv = {"states", "districts"}, british_spelling = true},
 	["Suriname"] = {parents = {"South America"}, poldiv = {"districts"}},
-	["Swaziland"] = {parents = {"Africa"}, british_spelling = true},
 	["Sweden"] = {parents = {"Europe"}, poldiv = {"provinces", "counties", "municipalities"}, british_spelling = true},
 	["Switzerland"] = {parents = {"Europe"}, poldiv = {"cantons", "municipalities", "districts"}, british_spelling = true},
 	["Syria"] = {parents = {"Asia"}, poldiv = {"governorates", "districts"}},
@@ -481,7 +482,8 @@ export.pseudo_countries = {
 	-- Australian external territory
 	["Christmas Island"] = {divtype = {"external territory", "territory"}, parents = {"Australia", "Asia"}, british_spelling = true},
 	-- Australian external territory; also called the Keeling Islands or (officially) the Cocos (Keeling) Islands
-	["the Cocos Islands"] = {divtype = {"external territory", "territory"}, parents = {"Australia", "Asia"}, british_spelling = true},
+	["the Cocos Islands"] = {divtype = {"external territory", "territory"}, parents = {"Australia", "Asia"}, british_spelling = true,
+		wp = "Cocos (Keeling) Islands" },
 	-- self-governing but in free association with New Zealand
 	["the Cook Islands"] = {divtype = {"country"}, parents = {"Polynesia", "New Zealand"}, british_spelling = true},
 	-- constituent country of the Netherlands
@@ -546,7 +548,9 @@ export.pseudo_countries = {
 	-- British Overseas Territory
 	["South Georgia"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "Atlantic Ocean"}, british_spelling = true},
 	-- British Overseas Territory
-	["the South Sandwich Islands"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "Atlantic Ocean"}, british_spelling = true},
+	["the South Sandwich Islands"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "Atlantic Ocean"}, british_spelling = true,
+		wp = true, wpcat = "South Georgia and the South Sandwich Islands"
+	},
 	-- dependent territory of New Zealnd
 	["Tokelau"] = {divtype = {"dependent territory", "territory"}, parents = {"New Zealand", "Polynesia"}, british_spelling = true},
 	-- de-facto independent state, internationally recognized as part of Moldova
@@ -578,6 +582,7 @@ export.former_countries = {
 }
 
 export.australian_states_and_territories = {
+	["the Australian Capital Territory"] = {divtype = "territory"},
 	["New South Wales"] = {},
 	["the Northern Territory"] = {divtype = "territory"},
 	["Queensland"] = {},
@@ -1894,9 +1899,11 @@ export.cities = {
 			["Zürich"] = {"Switzerland"},
 			["Zurich"] = {alias_of="Zürich"},
 			["Istanbul"] = {"Turkey"},
-			["Kiev"] = {"Ukraine"},
+			["Kyiv"] = {"Ukraine"},
+			["Kiev"] = {alias_of="Kyiv"},
 			["Kharkiv"] = {"Ukraine"},
 			["Odessa"] = {"Ukraine"},
+			["Odesa"] = {alias_of="Odessa"},
 		},
 	},
 }
@@ -1933,9 +1940,27 @@ local function simple_polity_bare_label_setter()
 	return function(labels, group, key, value)
 		local bare_key, linked_key = export.construct_bare_and_linked_version(key)
 		local keydesc = value.keydesc or linked_key
+		-- wp= defaults to true (Wikipedia article matches bare key = label)
+		local wp = value.wp
+		if wp == nil then
+			wp = true
+		end
+		-- wpcat= defaults to wp= (if Wikipedia article has its own name, Wikipedia category and Commons category generally follow)
+		local wpcat = value.wpcat
+		if wpcat == nil then
+			wpcat = wp
+		end
+		-- commonscat= defaults to wpcat= (if Wikipedia category has its own name, Commons category generally follows)
+		local commonscat = value.commonscat
+		if commonscat == nil then
+			commonscat = wpcat
+		end
 		labels[bare_key] = {
 			description = value.bare_label_desc or "{{{langname}}} terms related to the people, culture, or territory of " .. keydesc .. ".",
 			parents = value.parents,
+			wp = wp,
+			wpcat = wpcat,
+			commonscat = commonscat,
 		}
 	end
 end
