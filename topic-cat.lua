@@ -11,7 +11,7 @@ Category.__index = Category
 
 function Category.new_main(frame)
 	local self = setmetatable({}, Category)
-	
+
 	local params = {
 		[1] = {},
 		[2] = {required = true},
@@ -93,14 +93,31 @@ function Category:getInfo()
 end
 
 
+function Category:format_displaytitle(include_lang_prefix)
+	local displaytitle = self._data.displaytitle
+	if not displaytitle then
+		return nil
+	end
+	if type(displaytitle) == "string" then
+		if include_lang_prefix and self._lang then
+			displaytitle = ("%s:%s"):format(self._lang:getCode(), displaytitle)
+		end
+	else
+		displaytitle = displaytitle(self._info.label, lang, include_lang_prefix)
+	end
+
+	return displaytitle
+end
+
+
 function Category:getBreadcrumbName()
 	local ret
 
 	if self._lang then
-		ret = self._data.breadcrumb
+		ret = self._data.breadcrumb or self:format_displaytitle(false)
 	else
-		-- FIXME, copied from [[Module:category tree/poscatboiler]]. No support for specific umbrella info yet.
-		ret = self._data.umbrella and self._data.umbrella.breadcrumb
+		ret = self._data.umbrella and self._data.umbrella.breadcrumb or
+			self._data.breadcrumb or self:format_displaytitle(false)
 	end
 	if not ret then
 		ret = self._info.label
@@ -214,7 +231,7 @@ function Category:substitute_template_specs(desc)
 		eninfo.code = "en"
 		local en = Category.new(eninfo)
 		desc = desc:gsub("{{{umbrella_msg}}}", "This category contains no dictionary entries, only other categories. The subcategories are of two sorts:\n\n" ..
-			"* Subcategories named like \"aa:" .. mw.getContentLanguage():ucfirst(self._info.label) ..
+			"* Subcategories named like \"aa:" .. mw.getContentLanguage():ucfirst(self._info.label) .. 
 			"\" (with a prefixed language code) are categories of terms in specific languages. " ..
 			"You may be interested especially in [[:Category:" .. en:getCategoryName() .. "]], for English terms.\n" ..
 			"* Subcategories of this one named without the prefixed language code are further categories just like this one, but devoted to finer topics."
@@ -358,10 +375,38 @@ end
 
 
 function Category:getTopright()
+	local def_topright_parts = {}
+	local function process_box(val, pattern)
+		if not val then
+			return
+		end
+		local defval = mw.getContentLanguage():ucfirst(self._info.label)
+		if type(val) ~= "table" then
+			val = {val}
+		end
+		for _, v in ipairs(val) do
+			if v == true then
+				table.insert(def_topright_parts, pattern:format(defval))
+			else
+				table.insert(def_topright_parts, pattern:format(v))
+			end
+		end
+	end
+
+	process_box(self._data.wp, "{{wikipedia|%s}}")
+	process_box(self._data.wpcat, "{{wikipedia|category=%s}}")
+	process_box(self._data.commonscat, "{{commonscat|%s}}")
+
+	local def_topright
+	if #def_topright_parts > 0 then
+		def_topright = table.concat(def_topright_parts, "\n")
+	end
+
 	if self._lang then
-		return self:substitute_template_specs(self._data.topright)
+		return self:substitute_template_specs(self._data.topright or def_topright)
 	else
-		return self._data.umbrella and self:substitute_template_specs(self._data.umbrella.topright)
+		return self._data.umbrella and self:substitute_template_specs(self._data.umbrella.topright) or
+			self:substitute_template_specs(def_topright)
 	end
 end
 
@@ -379,20 +424,19 @@ function Category:getDescription(isChild)
 	-- Allows different text in the list of a category's children
 	local isChild = isChild == "child"
 
-	local function display_title(displaytitle, lang)
-		if type(displaytitle) == "string" then
+	local function display_title()
+		local displaytitle = self:format_displaytitle("include lang prefix")
+		if displaytitle then
 			displaytitle = self:substitute_template_specs(displaytitle)
-		else
-			displaytitle = displaytitle(self:getCategoryName(), lang)
+			mw.getCurrentFrame():callParserFunction("DISPLAYTITLE", "Category:" .. displaytitle)
 		end
-		mw.getCurrentFrame():callParserFunction("DISPLAYTITLE", "Category:" .. displaytitle)
+	end
+
+	if not isChild and self._data.displaytitle then
+		display_title()
 	end
 
 	if self._lang then
-		if not isChild and self._data.displaytitle then
-			display_title(self._data.displaytitle, self._lang)
-		end
-
 		local desc = self._data.description
 
 		desc = replace_special_descriptions(desc)
@@ -409,10 +453,6 @@ function Category:getDescription(isChild)
 	else
 		if self._info.label == "all topics" or self._info.label == "all sets" then
 			return "This category applies to content and not to meta material about the Wiki."
-		end
-
-		if not isChild and self._data.umbrella and self._data.umbrella.displaytitle then
-			display_title(self._data.umbrella.displaytitle, nil)
 		end
 
 		local desc = self._data.umbrella and self._data.umbrella.description or self._data.umbrella_description
