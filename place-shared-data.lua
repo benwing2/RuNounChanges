@@ -1517,6 +1517,17 @@ export.new_york_boroughs = {
 export.cities = {
 	{
 		default_divtype = "state",
+		containing_polities = {"Australia", divtype="country"},
+		data = {
+			["Sydney"] = {"New South Wales"},
+			["Melbourne"] = {"Victoria"},
+			["Brisbane"] = {"Queensland"},
+			["Perth"] = {"Western Australia"},
+			["Adelaide"] = {"South Australia"},
+		},
+	},
+	{
+		default_divtype = "state",
 		containing_polities = {"Brazil", divtype="country"},
 		data = {
 			-- This only lists cities, not metro areas, over 1,000,000 inhabitants.
@@ -1524,7 +1535,7 @@ export.cities = {
 			["Rio de Janeiro"] = {"Rio de Janeiro"},
 			["Brasília"] = {"Distrito Federal"},
 			["Brasilia"] = {alias_of="Brasília"},
-			["Salvador"] = {"Bahia"},
+			["Salvador"] = {"Bahia", wp="%c, %d", commonscat="%c (%d)"},
 			["Fortaleza"] = {"Ceará"},
 			["Belo Horizonte"] = {"Minas Gerais"},
 			["Manaus"] = {"Amazonas"},
@@ -1551,8 +1562,8 @@ export.cities = {
 			["Ottawa"] = {"Ontario"},
 			["Winnipeg"] = {"Manitoba"},
 			["Quebec City"] = {"Quebec"},
-			["Hamilton"] = {"Ontario"},
-			["Kitchener"] = {"Ontario"},
+			["Hamilton"] = {"Ontario", wp="%c, %d"},
+			["Kitchener"] = {"Ontario", wp="%c, %d"},
 		},
 	},
 	{
@@ -1696,18 +1707,18 @@ export.cities = {
 			["Fukuoka"] = {"Fukuoka"}, -- 1,581,527
 			["Kobe"] = {"Hyōgo"}, -- 1,530,847
 			["Kyoto"] = {"Kyoto"}, -- 1,474,570
-			["Kawasaki"] = {"Kanagawa"}, -- 1,373,630
-			["Saitama"] = {"Saitama"}, -- 1,192,418
+			["Kawasaki"] = {"Kanagawa", wp="%c, %d"}, -- 1,373,630
+			["Saitama"] = {"Saitama", wp="%c (city)", commonscat="%c, %d"}, -- 1,192,418
 			["Hiroshima"] = {"Hiroshima"}, -- 1,163,806
 			["Sendai"] = {"Miyagi"}, -- 1,029,552
 			-- the remaining cities are considered "central cities" in a 1,000,000+ metro area
 			-- (sometimes there is more than one central city in the area).
 			["Kitakyushu"] = {"Fukuoka"}, -- 986,998
-			["Chiba"] = {"Chiba"}, -- 938,695
+			["Chiba"] = {"Chiba", wp="%c (city)", commonscat="%c, %d"}, -- 938,695
 			["Sakai"] = {"Osaka"}, -- 835,333
-			["Niigata"] = {"Niigata"}, -- 813,053
+			["Niigata"] = {"Niigata", wp="%c (city)", commonscat="%c, %d"}, -- 813,053
 			["Hamamatsu"] = {"Shizuoka"}, -- 811,431
-			["Shizuoka"] = {"Shizuoka"}, -- 710,944
+			["Shizuoka"] = {"Shizuoka", wp="%c (city)", commonscat="%c, %d"}, -- 710,944
 			["Sagamihara"] = {"Kanagawa"}, -- 706,342
 			["Okayama"] = {"Okayama"}, -- 701,293
 			["Kumamoto"] = {"Kumamoto"}, -- 670,348
@@ -1737,7 +1748,7 @@ export.cities = {
 			["Rostov-na-Donu"] = {alias_of="Rostov-on-Don"},
 			["Krasnoyarsk"] = {"Krasnoyarsk Krai", divtype="krai"},
 			["Voronezh"] = {"Voronezh Oblast"},
-			["Perm"] = {"Perm Krai", divtype="krai"},
+			["Perm"] = {"Perm Krai", divtype="krai", wp="Perm, Russia"},
 			["Volgograd"] = {"Volgograd Oblast"},
 			["Krasnodar"] = {"Krasnodar Krai", divtype="krai"},
 		},
@@ -1772,58 +1783,59 @@ export.cities = {
 			["Edinburgh"] = {{"the City of Edinburgh", divtype="council area"}, {"Scotland", divtype="constituent country"}},
 			-- under 1,000,000 people but principal areas of Wales; requested by [[User:Donnanz]]
 			["Swansea"] = {{"Wales", divtype="constituent country"}},
-			["Newport"] = {{"Wales", divtype="constituent country"}},
+			["Newport"] = {{"Wales", divtype="constituent country"}, wp="Newport, Wales"},
 		},
 	},
 	-- cities in the US
 	{
 		default_divtype = "state",
 		containing_polities = {"the United States", divtype="country"},
+		wp = "%c, %d",
 		data = {
 			-- top 50 CSA's by population, with the top and sometimes 2nd or 3rd city listed
-			["New York City"] = {"New York"},
+			["New York City"] = {"New York", wp="%c"},
 			["Newark"] = {"New Jersey"},
-			["Los Angeles"] = {"California"},
+			["Los Angeles"] = {"California", wp="%c"},
 			["Long Beach"] = {"California"},
 			["Riverside"] = {"California"},
-			["Chicago"] = {"Illinois"},
-			["Washington, D.C."] = {},
-			["Baltimore"] = {"Maryland"},
+			["Chicago"] = {"Illinois", wp="%c"},
+			["Washington, D.C."] = {wp="%c"},
+			["Baltimore"] = {"Maryland", wp="%c"},
 			["San Jose"] = {"California"},
-			["San Francisco"] = {"California"},
+			["San Francisco"] = {"California", wp="%c"},
 			["Oakland"] = {"California"},
-			["Boston"] = {"Massachusetts"},
+			["Boston"] = {"Massachusetts", wp="%c"},
 			["Providence"] = {"Rhode Island"},
-			["Dallas"] = {"Texas"},
+			["Dallas"] = {"Texas", wp="%c", commonscat="%c, %d"},
 			["Fort Worth"] = {"Texas"},
-			["Philadelphia"] = {"Pennsylvania"},
-			["Houston"] = {"Texas"},
-			["Miami"] = {"Florida"},
-			["Atlanta"] = {"Georgia"},
-			["Detroit"] = {"Michigan"},
-			["Phoenix"] = {"Arizona"},
+			["Philadelphia"] = {"Pennsylvania", wp="%c"},
+			["Houston"] = {"Texas", wp="%c"},
+			["Miami"] = {"Florida", wp="%c", commonscat="%c, %d"},
+			["Atlanta"] = {"Georgia", wp="%c"},
+			["Detroit"] = {"Michigan", wp="%c"},
+			["Phoenix"] = {"Arizona", wp="%c", commonscat="%c, %d"},
 			["Mesa"] = {"Arizona"},
-			["Seattle"] = {"Washington"},
+			["Seattle"] = {"Washington", wp="%c"},
 			["Orlando"] = {"Florida"},
-			["Minneapolis"] = {"Minnesota"},
-			["Cleveland"] = {"Ohio"},
-			["Denver"] = {"Colorado"},
-			["San Diego"] = {"California"},
+			["Minneapolis"] = {"Minnesota", wp="%c"},
+			["Cleveland"] = {"Ohio", wp="%c", commonscat="%c, %d"},
+			["Denver"] = {"Colorado", wp="%c", commonscat="%c, %d"},
+			["San Diego"] = {"California", wp="%c", commonscat="%c, %d"},
 			["Portland"] = {"Oregon"},
 			["Tampa"] = {"Florida"},
-			["St. Louis"] = {"Missouri"},
+			["St. Louis"] = {"Missouri", wp="%c", commonscat="%c, %d"},
 			["Charlotte"] = {"North Carolina"},
 			["Sacramento"] = {"California"},
-			["Pittsburgh"] = {"Pennsylvania"},
-			["Salt Lake City"] = {"Utah"},
-			["San Antonio"] = {"Texas"},
+			["Pittsburgh"] = {"Pennsylvania", wp="%c"},
+			["Salt Lake City"] = {"Utah", wp="%c"},
+			["San Antonio"] = {"Texas", wp="%c", commonscat="%c, %d"},
 			["Columbus"] = {"Ohio"},
-			["Kansas City"] = {"Missouri"},
-			["Indianapolis"] = {"Indiana"},
-			["Las Vegas"] = {"Nevada"},
-			["Cincinnati"] = {"Ohio"},
+			["Kansas City"] = {"Missouri", wp="%c metropolitan area", commonscat="%c, %d"},
+			["Indianapolis"] = {"Indiana", wp="%c"},
+			["Las Vegas"] = {"Nevada", wp="%c"},
+			["Cincinnati"] = {"Ohio", wp="%c", commonscat="%c, %d"},
 			["Austin"] = {"Texas"},
-			["Milwaukee"] = {"Wisconsin"},
+			["Milwaukee"] = {"Wisconsin", wp="%c", commonscat="%c, %d"},
 			["Raleigh"] = {"North Carolina"},
 			["Nashville"] = {"Tennessee"},
 			["Virginia Beach"] = {"Virginia"},
@@ -1831,11 +1843,11 @@ export.cities = {
 			["Greensboro"] = {"North Carolina"},
 			["Winston-Salem"] = {"North Carolina"},
 			["Jacksonville"] = {"Florida"},
-			["New Orleans"] = {"Louisiana"},
+			["New Orleans"] = {"Louisiana", wp="%c"},
 			["Louisville"] = {"Kentucky"},
 			["Greenville"] = {"South Carolina"},
 			["Hartford"] = {"Connecticut"},
-			["Oklahoma City"] = {"Oklahoma"},
+			["Oklahoma City"] = {"Oklahoma", wp="%c"},
 			["Grand Rapids"] = {"Michigan"},
 			["Memphis"] = {"Tennessee"},
 			["Birmingham"] = {"Alabama"},
@@ -1858,6 +1870,7 @@ export.cities = {
 		default_divtype = "country",
 		containing_polities = {},
 		data = {
+			["Yerevan"] = {"Armenia"},
 			["Vienna"] = {"Austria"},
 			["Minsk"] = {"Belarus"},
 			["Brussels"] = {"Belgium"},
@@ -1865,6 +1878,7 @@ export.cities = {
 			["Sofia"] = {"Bulgaria"},
 			["Zagreb"] = {"Croatia"},
 			["Prague"] = {"the Czech Republic"},
+			["Olomouc"] = {"the Czech Republic"},
 			["Copenhagen"] = {"Denmark"},
 			["Helsinki"] = {{"Uusimaa", divtype="region"}, {"Finland"}},
 			["Athens"] = {"Greece"},
@@ -1872,6 +1886,7 @@ export.cities = {
 			["Budapest"] = {"Hungary"},
 			-- FIXME, per Wikipedia "County Dublin" is now the "Dublin Region"
 			["Dublin"] = {{"Dublin", divtype="county"}, {"Ireland"}},
+			["Venice"] = {{"Veneto", divtype="region"}, {"Italy"}},
 			["Rome"] = {{"Lazio", divtype="region"}, {"Italy"}},
 			["Milan"] = {{"Lombardy", divtype="region"}, {"Italy"}},
 			["Naples"] = {{"Campania", divtype="region"}, {"Italy"}},
@@ -1895,6 +1910,7 @@ export.cities = {
 			["Porto"] = {"Portugal"},
 			["Bucharest"] = {"Romania"},
 			["Belgrade"] = {"Serbia"},
+			["Seoul"] = {"South Korea"},
 			["Stockholm"] = {"Sweden"},
 			["Zürich"] = {"Switzerland"},
 			["Zurich"] = {alias_of="Zürich"},
@@ -1902,7 +1918,7 @@ export.cities = {
 			["Kyiv"] = {"Ukraine"},
 			["Kiev"] = {alias_of="Kyiv"},
 			["Kharkiv"] = {"Ukraine"},
-			["Odessa"] = {"Ukraine"},
+			["Odessa"] = {"Ukraine", wp="Odesa"},
 			["Odesa"] = {alias_of="Odessa"},
 		},
 	},
