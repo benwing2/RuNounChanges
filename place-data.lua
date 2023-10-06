@@ -100,6 +100,7 @@ export.placetype_aliases = {
 	["home-rule municipality"] = "home rule municipality",
 	["sprovcity"] = "subprovincial city",
 	["sub-provincial city"] = "subprovincial city",
+	["sub-provincial district"] = "subprovincial district",
 	["sprefcity"] = "sub-prefectural city",
 	["sub-prefecture-level city"] = "sub-prefectural city",
 	["nonmetropolitan county"] = "non-metropolitan county",
@@ -258,6 +259,7 @@ export.placetype_links = {
 	["borough seat"] = true,
 	["branch"] = true,
 	["burgh"] = true,
+	["caliphate"] = true,
 	["canton"] = true,
 	["cape"] = true,
 	["capital"] = true,
@@ -293,8 +295,8 @@ export.placetype_links = {
 	["county borough"] = true,
 	["county seat"] = true,
 	["county town"] = true,
-	["crown dependency"] = "w",
-	["Crown dependency"] = "w",
+	["crown dependency"] = true,
+	["Crown dependency"] = true,
 	["department"] = true,
 	["department capital"] = "[[department]] [[capital]]",
 	["dependency"] = true,
@@ -311,6 +313,7 @@ export.placetype_links = {
 	["division"] = true,
 	["dormant volcano"] = true,
 	["duchy"] = true,
+	["emirate"] = true,
 	["empire"] = true,
 	["enclave"] = true,
 	["exclave"] = true,
@@ -328,9 +331,12 @@ export.placetype_links = {
 	["frazione"] = "w", -- Italy
 	["French prefecture"] = "[[w:Prefectures in France|prefecture]]",
 	["geographical region"] = "w",
+	["geopolitical zone"] = true, -- Nigeria
 	["ghost town"] = true,
 	["glen"] = true,
 	["governorate"] = true,
+	["greater administrative region"] = "w", -- China (historical)
+	["gromada"] = "w", -- Poland (historical)
 	["gulf"] = true,
 	["hamlet"] = true,
 	["harbor city"] = "[[harbor]] [[city]]",
@@ -346,6 +352,7 @@ export.placetype_links = {
 	["home rule city"] = "w",
 	["home rule municipality"] = "w",
 	["housing estate"] = true,
+	["hromada"] = "w", -- Ukraine
 	["independent city"] = true,
 	["independent town"] = "[[independent city|independent town]]",
 	["Indian reservation"] = "w", -- United States
@@ -354,8 +361,10 @@ export.placetype_links = {
 	["inner city area"] = "[[inner city]] area",
 	["island country"] = "w",
 	["island municipality"] = "w",
+	["islet"] = "w",
 	["Israeli settlement"] = "w",
 	["judicial capital"] = "w",
+	["khanate"] = true,
 	["kibbutz"] = true,
 	["krai"] = true,
 	["league"] = true,
@@ -392,6 +401,7 @@ export.placetype_links = {
 	["municipality with city status"] = "[[municipality]] with [[w:city status|city status]]",
 	["national capital"] = "w",
 	["national park"] = true,
+	["new town"] = true,
 	["non-city capital"] = "[[capital]]",
 	["non-metropolitan county"] = "w",
 	["non-metropolitan district"] = "w",
@@ -414,6 +424,7 @@ export.placetype_links = {
 	["protectorate"] = true,
 	["province"] = true,
 	["provincial capital"] = true,
+	["new area"] = "[[w:new areas|new area]]", -- China (type of economic development zone)
 	["raion"] = true,
 	["regency"] = true,
 	["regional capital"] = "[[regional]] [[capital]]",
@@ -429,6 +440,7 @@ export.placetype_links = {
 	["royal borough"] = "w",
 	["royal burgh"] = true,
 	["royal capital"] = "w",
+	["rural committee"] = "w", -- Hong Kong
 	["rural community"] = "w",
 	["rural municipality"] = "w",
 	["rural township"] = "[[w:rural township (Taiwan)|rural township]]", -- Taiwan
@@ -448,6 +460,7 @@ export.placetype_links = {
 	["special ward"] = true,
 	["spit"] = true,
 	["state capital"] = true,
+	["state-level new area"] = "w",
 	["state park"] = true,
 	["statutory city"] = "w",
 	["statutory town"] = "w",
@@ -458,6 +471,7 @@ export.placetype_links = {
 	["subprefecture"] = true,
 	["subprovince"] = true,
 	["subprovincial city"] = "w",
+	["subprovincial district"] = "w",
 	["sub-prefectural city"] = "w",
 	["subregion"] = true,
 	["suburb"] = true,
@@ -541,6 +555,7 @@ export.placetype_equivs = {
 	["bishopric"] = "polity",
 	["built-up area"] = "area",
 	["burgh"] = "borough",
+	["caliphate"] = "polity",
 	["cape"] = "peninsula",
 	["capital"] = "capital city",
 	["caplc"] = "capital city",
@@ -552,6 +567,7 @@ export.placetype_equivs = {
 	["charter community"] = "village",
 	["colony"] = "dependent territory",
 	["commandery"] = "historical political subdivision",
+	["commune"] = "municipality",
 	["community"] = "village",
 	["comune"] = "municipality",
 	["confederacy"] = "confederation",
@@ -570,6 +586,7 @@ export.placetype_equivs = {
 	["district headquarters"] = "administrative centre",
 	["dormant volcano"] = "volcano",
 	["duchy"] = "polity",
+	["emirate"] = "polity",
 	["empire"] = "polity",
 	["external territory"] = "dependent territory",
 	["federal territory"] = "territory",
@@ -598,6 +615,7 @@ export.placetype_equivs = {
 	["historical bailiwick"] = "historical polity",
 	["historical barangay"] = "historical political subdivision",
 	["historical bishopric"] = "historical polity",
+	["historical caliphate"] = "historical polity",
 	["historical city"] = "historical settlement",
 	["historical civilisation"] = "historical polity",
 	["historical civilization"] = "historical polity",
@@ -614,9 +632,11 @@ export.placetype_equivs = {
 	["historical district"] = "historical political subdivision",
 	["historical division"] = "historical political subdivision",
 	["historical duchy"] = "historical polity",
+	["historical emirate"] = "historical polity",
 	["historical empire"] = "historical polity",
 	["historical governorate"] = "historical political subdivision",
 	["historical hamlet"] = "historical settlement",
+	["historical khanate"] = "historical polity",
 	["historical kingdom"] = "historical polity",
 	["historical krai"] = "historical political subdivision",
 	["historical maritime republic"] = "historical polity",
@@ -651,7 +671,9 @@ export.placetype_equivs = {
 	["inner city area"] = "neighborhood",
 	["island country"] = "country",
 	["island municipality"] = "municipality",
+	["islet"] = "island",
 	["judicial capital"] = "capital city",
+	["khanate"] = "polity",
 	["kingdom"] = "polity",
 	["league"] = "confederation",
 	["legislative capital"] = "capital city",
@@ -749,22 +771,23 @@ export.placename_display_aliases = {
 		["Washington DC"] = "Washington, D.C.",
 	},
 	["country"] = {
+		["Republic of Armenia"] = "Armenia",
+		["Bosnia and Hercegovina"] = "Bosnia and Herzegovina",
+		["Czechia"] = "Czech Republic",
+		["Swaziland"] = "Eswatini",
+		["Republic of Ireland"] = "Ireland",
+		["Côte d'Ivoire"] = "Ivory Coast",
+		["Macedonia"] = "North Macedonia",
+		["Republic of North Macedonia"] = "North Macedonia",
+		["Republic of Macedonia"] = "North Macedonia",
+		["UAE"] = "United Arab Emirates",
+		["UK"] = "United Kingdom",
 		["US"] = "United States",
 		["U.S."] = "United States",
 		["USA"] = "United States",
 		["U.S.A."] = "United States",
 		["United States of America"] = "United States",
-		["UK"] = "United Kingdom",
-		["UAE"] = "United Arab Emirates",
-		["Macedonia"] = "North Macedonia",
-		["Republic of North Macedonia"] = "North Macedonia",
-		["Republic of Macedonia"] = "North Macedonia",
-		["Republic of Ireland"] = "Ireland",
-		["Republic of Armenia"] = "Armenia",
-		["Côte d'Ivoire"] = "Ivory Coast",
-		["Czechia"] = "Czech Republic",
 		["Vatican"] = "Vatican City",
-		["Bosnia and Hercegovina"] = "Bosnia and Herzegovina",
 	},
 	["region"] = {
 		["Northern Ostrobothnia"] = "North Ostrobothnia",
@@ -827,6 +850,7 @@ export.placename_cat_aliases = {
 		["Noord-Brabant"] = "North Brabant",
 		["Noord-Holland"] = "North Holland",
 		["Zuid-Holland"] = "South Holland",
+		["Fuchien"] = "Fujian",
 	},
 	["republic"] = {
 		-- Only needs to include cases that aren't just shortened versions of the
@@ -881,6 +905,7 @@ export.placename_article = {
 		["Caribbean"] = "the",
 		["Caucasus"] = "the",
 		["Middle East"] = "the",
+		["New Territories"] = "the",
 		["North Caucasus"] = "the",
 		["South Caucasus"] = "the",
 		["West Bank"] = "the",
@@ -966,11 +991,15 @@ export.cat_implications = {
 		["Southern Europe"] = {"continent/Europe"},
 		["Northern Europe"] = {"continent/Europe"},
 		["Southeast Europe"] = {"continent/Europe"},
+		["Southeastern Europe"] = {"continent/Europe"},
 		["North Caucasus"] = {"continent/Europe"},
 		["South Caucasus"] = {"continent/Asia"},
 		["South Asia"] = {"continent/Asia"},
+		["Southern Asia"] = {"continent/Asia"},
 		["East Asia"] = {"continent/Asia"},
+		["Eastern Asia"] = {"continent/Asia"},
 		["Central Asia"] = {"continent/Asia"},
+		["West Asia"] = {"continent/Asia"},
 		["Western Asia"] = {"continent/Asia"},
 		["Southeast Asia"] = {"continent/Asia"},
 		["Asia Minor"] = {"continent/Asia"},
@@ -1822,6 +1851,16 @@ export.cat_data = {
 		preposition = "of",
 	},
 
+	["commune"] = {
+		preposition = "of",
+
+		["country/Chile"] = {
+			["province"] = {"Communes of +++, Chile", "Communes of Chile"},
+			["country"] = {true},
+		},
+	
+	},
+
 	["community development block"] = {
 		affix_type = "suf",
 		no_affix_strings = "block",
@@ -1914,6 +1953,7 @@ export.cat_data = {
 	["county town"] = {
 		article = "the",
 		preposition = "of",
+		fallback = "town",
 	},
 
 	["department"] = {
@@ -2020,6 +2060,11 @@ export.cat_data = {
 		},
 	},
 
+	["geopolitical zone"] = {
+		-- Nigeria
+		preposition = "of",
+	},
+
 	["ghost town"] = {
 		cat_handler = function(holonym_placetype, holonym_placename, place_spec)
 			local function check_for_recognized(divlist, default_divtype, placename_to_key)
@@ -2051,6 +2096,17 @@ export.cat_data = {
 	["governorate"] = {
 		preposition = "of",
 		affix_type = "suf",
+	},
+
+	["greater administrative region"] = {
+		-- China (historical subdivision)
+		preposition = "of",
+	},
+
+	["gromada"] = {
+		-- Poland (historical subdivision)
+		preposition = "of",
+		affix_type = "Pref",
 	},
 
 	["gulf"] = {
@@ -2132,6 +2188,11 @@ export.cat_data = {
 		},
 	},
 
+	["hromada"] = {
+		preposition = "of",
+		affix_type = "Suf",
+	},
+
 	["island"] = {
 		["default"] = {
 			["itself"] = {true},
@@ -2196,7 +2257,7 @@ export.cat_data = {
 
 	["London borough"] = {
 		preposition = "of",
-		affix_type = "suf",
+		affix_type = "pref",
 		affix = "borough",
 		fallback = "local government district",
 	},
@@ -2261,7 +2322,7 @@ export.cat_data = {
 		},
 
 		["country/Brazil"] = {
-			["state"] = {"Municipalities of +++, Brazil", "Municipalities of Brazil"},
+			["state"] = {"Municipalities of +++, Brazil"},
 			["country"] = {true},
 		},
 
@@ -2297,6 +2358,11 @@ export.cat_data = {
 			return city_type_cat_handler("neighborhood", holonym_placetype, holonym_placename,
 				"allow if holonym is city", "no containing polity")
 		end,
+	},
+
+	["new area"] = {
+		-- China (type of economic development zone)
+		preposition = "in",
 	},
 
 	["non-city capital"] = {
@@ -2399,9 +2465,8 @@ export.cat_data = {
 	},
 
 	["prefecture-level city"] = {
-		-- CHINA
+		-- China
 		cat_handler = chinese_subcity_cat_handler,
-
 		["default"] = {
 			["country"] = {"Cities in +++"},
 		},
@@ -2419,6 +2484,15 @@ export.cat_data = {
 	["raion"] = {
 		preposition = "of",
 		affix_type = "Suf",
+	},
+
+	["range"] = {
+		holonym_article = "the",
+		
+		["default"] = {
+			["itself"] = {true},
+			["continent"] = {true},
+		},
 	},
 
 	["regency"] = {
@@ -2537,6 +2611,10 @@ export.cat_data = {
 		fallback = "local government district",
 	},
 
+	["rural committee"] = {
+		affix_type = "Suf",
+	},
+
 	["rural municipality"] = {
 		preposition = "of",
 		affix_type = "Pref",
@@ -2578,6 +2656,11 @@ export.cat_data = {
 		},
 	},
 
+	["state-level new area"] = {
+		-- China
+		preposition = "in",
+	},
+
 	["strait"] = {
 		["default"] = {
 			["itself"] = {true},
@@ -2613,12 +2696,17 @@ export.cat_data = {
 	},
 
 	["subprovincial city"] = {
-		-- CHINA
+		-- China
 		cat_handler = chinese_subcity_cat_handler,
 
 		["default"] = {
 			["country"] = {"Cities in +++"},
 		},
+	},
+
+	["subprovincial district"] = {
+		-- China
+		preposition = "of",
 	},
 
 	["subregion"] = {
@@ -2714,6 +2802,13 @@ export.cat_data = {
 	["united township municipality"] = {
 		article = "a",
 		fallback = "township municipality",
+	},
+
+	["university"] = {
+		article = "a",
+		["default"] = {
+			["itself"] = {true},
+		},
 	},
 
 	["unrecognized country"] = {
