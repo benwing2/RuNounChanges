@@ -5,93 +5,94 @@ You must load this module using require(), not using mw.loadData().
 ]=]
 
 local m_table = require("Module:table")
+local topic_cat_utilities_module = "Module:User:Benwing2/category tree/topic cat/utilities"
 
 -----------------------------------------------------------------------------------
 --                              Placetype Tables                                 --
 -----------------------------------------------------------------------------------
 
--- Recognized political and misc. subdivisions. The key is the plural
--- subdivision and the value is the equivalent description, with links.
+-- Recognized political and misc. subdivisions. The key is the plural subdivision and the value is the equivalent
+-- description, with links. A value of true means to use the default linking algorithm in link_label() in
+-- [[Module:category tree/topic cat]]. A value of "w" is similar but links to Wikipedia.
 export.political_subdivisions = {
-	["administrative atolls"] = "[[administrative]] [[atoll]]s",
-	["areas"] = "[[area]]s",
-	["arrondissements"] = "[[arrondissement]]s",
-	["atolls"] = "[[atoll]]s",
-	["autonomous communities"] = "[[w:autonomous communities|autonomous communities]]",
-	["autonomous islands"] = "[[autonomous]] [[island]]s",
-	["autonomous oblasts"] = "[[autonomous oblast]]s",
-	["autonomous okrugs"] = "[[autonomous okrug]]s",
-	["autonomous regions"] = "[[autonomous]] [[region]]s",
-	["autonomous republics"] = "[[w:autonomous republic|autonomous republic]]s",
-	["boroughs"] = "[[borough]]s",
-	["borough seats"] = "[[borough seat]]s",
-	["cantons"] = "[[canton]]s",
-	["census divisions"] = "[[w:census division|census division]]s",
-	["cercles"] = "[[cercle]]s",
-	["civil parishes"] = "[[civil parish]]es",
-	["collectivities"] = "[[collectivity|collectivities]]",
-	["communes"] = "[[commune|communes]]",
-	["constituencies"] = "[[constituency|constituencies]]",
-	["constituent countries"] = "[[constituent]] [[country|countries]]",
-	["council areas"] = "[[council area]]s",
-	["counties"] = "[[county|counties]]",
-	["county boroughs"] = "[[county borough]]s",
-	["county seats"] = "[[county seat]]s",
-	["countries"] = "[[country|countries]]",
-	["delegations"] = "[[delegation]]s",
-	["departments"] = "[[department]]s",
-	["dependent territories"] = "[[w:dependent territory|dependent territories]]",
-	["districts"] = "[[district]]s",
+	["administrative atolls"] = true,
+	["areas"] = true,
+	["arrondissements"] = true,
+	["atolls"] = true,
+	["autonomous communities"] = "w",
+	["autonomous islands"] = true,
+	["autonomous oblasts"] = true,
+	["autonomous okrugs"] = true,
+	["autonomous regions"] = true,
+	["autonomous republics"] = "w",
+	["boroughs"] = true,
+	["borough seats"] = true,
+	["cantons"] = true,
+	["census divisions"] = "w",
+	["cercles"] = true,
+	["civil parishes"] = true,
+	["collectivities"] = true,
+	["communes"] = true,
+	["constituencies"] = true,
+	["constituent countries"] = true,
+	["council areas"] = true,
+	["counties"] = true,
+	["county boroughs"] = true,
+	["county seats"] = true,
+	["countries"] = true,
+	["delegations"] = true,
+	["departments"] = true,
+	["dependent territories"] = "w",
+	["districts"] = true,
 	["districts and autonomous regions"] = "[[district]]s and [[autonomous region]]s",
-	["divisions"] = "[[division]]s",
-	["emirates"] = "[[emirate]]s",
-	["entities"] = "[[entity|entities]]",
-	["ethnographic regions"] = "[[ethnographic]] [[region]]s",
-	["federal cities"] = "[[federal]] [[city|cities]]",
-	["federal territories"] = "[[federal]] [[territory|territories]]",
-	["gewogs"] = "[[gewog]]s",
-	["governorates"] = "[[governorate]]s",
-	["krais"] = "[[krai]]s",
-	["local councils"] = "[[w:local council|local council]]s",
-	["local government areas"] = "[[w:local government area|local government area]]s",
-	["metropolitan cities"] = "[[metropolitan city|metropolitan cities]]",
-	["mukims"] = "[[mukim]]s",
-	["municipal districts"] = "[[w:municipal district|municipal district]]s",
-	["municipalities"] = "[[municipality|municipalities]]",
-	["oblasts"] = "[[oblast]]s",
-	["parishes"] = "[[parish]]es",
-	["parish seats"] = "[[parish seat]]s",
-	["prefectures"] = "[[prefecture]]s",
-	["provinces"] = "[[province]]s",
-	["quarters"] = "[[quarter]]s",
-	["raions"] = "[[raion]]s",
-	["regencies"] = "[[regency|regencies]]",
-	["regional county municipalities"] = "[[w:regional county municipality|regional county municipalities]]",
-	["regional districts"] = "[[w:regional district|regional district]]s",
-	["regional municipalities"] = "[[w:regional municipality|regional municipalities]]",
-	["regions"] = "[[region]]s",
-	["regional units"] = "[[regional unit]]s",
-	["republics"] = "[[republic]]s",
-	["rural municipalities"] = "[[w:rural municipality|rural municipalities]]",
-	["self-administered divisions"] = "[[w:self-administered division|self-administered division]]s",
-	["self-administered zones"] = "[[w:self-administered zone|self-administered zone]]s",
+	["divisions"] = true,
+	["emirates"] = true,
+	["entities"] = true,
+	["ethnographic regions"] = true,
+	["federal cities"] = true,
+	["federal territories"] = true,
+	["gewogs"] = true,
+	["governorates"] = true,
+	["krais"] = true,
+	["local councils"] = "w",
+	["local government areas"] = "w",
+	["metropolitan cities"] = true,
+	["mukims"] = true,
+	["municipal districts"] = "w",
+	["municipalities"] = true,
+	["oblasts"] = true,
+	["parishes"] = true,
+	["parish seats"] = true,
+	["prefectures"] = true,
+	["provinces"] = true,
+	["quarters"] = true,
+	["raions"] = true,
+	["regencies"] = true,
+	["regional county municipalities"] = "w",
+	["regional districts"] = "w",
+	["regional municipalities"] = "w",
+	["regions"] = true,
+	["regional units"] = true,
+	["republics"] = true,
+	["rural municipalities"] = "w",
+	["self-administered divisions"] = "w",
+	["self-administered zones"] = "w",
 	["special administrative regions"] = "[[w:Special administrative regions of China|special administrative regions]]",
-	["special wards"] = "[[special ward]]s",
-	["states"] = "[[state]]s",
-	["subprefectures"] = "[[subprefecture]]s",
-	["subregions"] = "[[subregion]]s",
-	["territorial authorities"] = "[[w:territorial authority|territorial authorities]]",
-	["territories"] = "[[territory|territories]]",
-	["traditional counties"] = "[[w:traditional county|traditional counties]]",
-	["unincorporated areas"] = "[[w:unincorporated area|unincorporated area]]s",
-	["union territories"] = "[[union territory|union territories]]",
-	["voivodeships"] = "[[voivodeship]]s",
-	["zones"] = "[[zone]]s",
+	["special wards"] = true,
+	["states"] = true,
+	["subprefectures"] = true,
+	["subregions"] = true,
+	["territorial authorities"] = "w",
+	["territories"] = true,
+	["traditional counties"] = "w",
+	["unincorporated areas"] = "w",
+	["union territories"] = true,
+	["voivodeships"] = true,
+	["zones"] = true,
 }
 
--- Place types for which categories can be constructed for all the places listed
--- below other than cities. The key should be the plural place type and the value
--- should be the description.
+-- Place types for which categories can be constructed for all the places listed below other than cities. The key should
+-- be the plural place type and the value should be the description.
 export.generic_place_types = {
 	["cities"] = "cities",
 	["ghost towns"] = "[[ghost town]]s",
@@ -602,6 +603,17 @@ export.austrian_states = {
 	["Salzburg"] = {},
 	["Vorarlberg"] = {},
 	["Burgenland"] = {},
+}
+
+export.bangladeshi_divisions = {
+	["Barisal Division"] = {},
+	["Chittagong Division"] = {},
+	["Dhaka Division"] = {},
+	["Khulna Division"] = {},
+	["Mymensingh Division"] = {},
+	["Rajshahi Division"] = {},
+	["Rangpur Division"] = {},
+	["Sylhet Division"] = {},
 }
 
 export.brazilian_states = {
@@ -1940,6 +1952,20 @@ local function add_indefinite_article(label)
 	end
 end
 
+-- Format a description that can have the special value of 'true' or 'nil' (use link_label() in
+-- [[Module:category tree/topic cat]]) or "w" (use link_label(..., "wikify")). Any other value is returned as-is.
+function export.format_description(desc, label)
+	if desc == nil then
+		desc = true
+	end
+	if desc == true then
+		desc = require(topic_cat_utilities_module).link_label(label)
+	elseif desc == "w" then
+		desc = require(topic_cat_utilities_module).link_label(label, nil, "wikify")
+	end
+	return desc
+end
+
 function export.construct_bare_and_linked_version(key)
 	local bare_key = key:match("^the (.*)$")
 	local linked_key
@@ -1972,6 +1998,7 @@ local function simple_polity_bare_label_setter()
 			commonscat = wpcat
 		end
 		labels[bare_key] = {
+			type = "topic",
 			description = value.bare_label_desc or "{{{langname}}} terms related to the people, culture, or territory of " .. keydesc .. ".",
 			parents = value.parents,
 			wp = wp,
@@ -2008,6 +2035,7 @@ local function subpolity_bare_label_setter(containing_polity)
 		local bare_key, linked_key = export.construct_bare_and_linked_version(key)
 		local bare_containing_polity, linked_containing_polity = export.construct_bare_and_linked_version(containing_polity)
 		labels[bare_key] = {
+			type = "topic",
 			description = value.bare_label_desc or "{{{langname}}} terms related to the people, culture, or territory of " .. keydesc .. ".",
 			parents = value.parents or {bare_containing_polity},
 		}
@@ -2316,6 +2344,19 @@ export.polities = {
 		data = export.austrian_states,
 	},
 
+	-- divisions of Bangladesh
+	{
+		key_to_placename = chop(" Division$"),
+		placename_to_key = append(" Division"),
+		bare_label_setter = subpolity_bare_label_setter("Bangladesh"),
+		value_transformer = subpolity_value_transformer("Bangladesh"),
+		place_cat_handler = default_place_cat_handler(),
+		default_divtype = "division",
+		british_spelling = true,
+		default_poldiv = {{"districts", parent="districts of Bangladesh"}},
+		data = export.bangladeshi_divisions,
+	},
+
 	-- states of Brazil
 	{
 		key_to_placename = chop(", Brazil$"),
@@ -2432,6 +2473,7 @@ export.polities = {
 		-- just "China"?
 		bare_label_setter = function(labels, group, key, value)
 			labels[key] = {
+				type = "topic",
 				description = "{{{langname}}} terms related to [[" .. key:gsub(" Prefecture$", "") .. "]], a [[prefecture]] of [[Japan]].",
 				parents = {"Prefectures of Japan"},
 			}
@@ -2533,6 +2575,7 @@ export.polities = {
 			end
 			local bare_key, linked_key = export.construct_bare_and_linked_version(key)
 			labels[bare_key] = {
+				type = "topic",
 				description = "{{{langname}}} terms related to " .. construct_russian_federal_subject_keydesc(linked_key, divtype) .. ".",
 				parents = {ucfirst(divtype) .. "s of Russia"},
 			}
