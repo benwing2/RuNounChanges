@@ -1,8 +1,10 @@
 local export = {}
 
-local label_data = require("Module:category tree/topic cat/data")
+local label_data = require("Module:User:Benwing2/category tree/topic cat/data")
+local topic_cat_utilities_module = "Module:User:Benwing2/category tree/topic cat/utilities"
 
 local rsplit = mw.text.split
+local rgsplit = mw.text.gsplit
 
 -- Category object
 
@@ -59,8 +61,7 @@ export.new_main = Category.new_main
 
 function Category:initCommon()
 	if self._info.code then
-		self._lang = require("Module:languages").getByCode(self._info.code) or
-			error("The language code “" .. self._info.code .. "” is not valid.")
+		self._lang = require("Module:languages").getByCode(self._info.code, true)
 	end
 	
 	-- Convert label to lowercase if possible
@@ -162,51 +163,78 @@ function Category:getCategoryName()
 end
 
 
-local function replace_special_descriptions(desc)
-	-- TODO: Should probably find a better way to do this
-	local descriptionFormats = {
-		["default"]					= "{{{langname}}} terms related to {{{label_lc}}}.",
-		["default with capital"]	= "{{{langname}}} terms related to {{{label_uc}}}.",
-		["default with the"]		= "{{{langname}}} terms related to the {{{label_uc}}}.",
-		["default with the lower"]	= "{{{langname}}} terms related to the {{{label_lc}}}.",
-		["default with topic"]		= "{{{langname}}} terms related to {{{label_lc}}} topics.",
-		["default with topic capital"] = "{{{langname}}} terms related to {{{label_uc}}} topics.",
-		["default-set"]				= "{{{langname}}} terms for various {{{label_lc}}}.",
-		["default-set capital"]		= "{{{langname}}} terms for various {{{label_uc}}}.",
-	}
-
-	if descriptionFormats[desc] then
-		return descriptionFormats[desc]
+function Category:replace_special_descriptions(desc)
+	if not desc then
+		return desc
 	end
 
-	if desc then
-		local stripped_desc = desc
-		local no_singularize, wikify
-		while true do
-			local new_stripped_desc = stripped_desc:match("^(.+) no singularize$")
+	local type_to_text = {
+		topic = "related to",
+		set = "for various",
+		name = "for names of",
+		type = "for types of",
+	}
+	local special_description_formats = {
+		["default with the"] = "related to the",
+	}
+
+	local function format_partial_desc(desc)
+		local desc_parts = {}
+		local types = self._data.type or "topic"
+		for typ in rgsplit(types, "%s*,%s*") do
+			if not type_to_text[typ] then
+				error(("Invalid type '%s', should be one or more of 'topic', 'set', 'name' or 'type', comma-separated")
+					:format(types))
+			end
+			table.insert(desc_parts, type_to_text[typ] .. " " .. desc)
+			return require("Module:table").serialCommaJoin(desc_parts)
+		end
+	end
+
+	local function convert_to_full_desc(partial_desc)
+		return "{{{langname}}} terms " .. partial_desc .. "."
+	end
+
+	if desc:find("^=") then
+		desc = desc:gsub("^=", "")
+		return convert_to_full_desc(format_partial_desc(desc))
+	end
+
+	local stripped_desc = desc
+	local no_singularize, wikify
+	while true do
+		local new_stripped_desc = stripped_desc:match("^(.+) no singularize$")
+		if new_stripped_desc then
+			stripped_desc = new_stripped_desc
+			no_singularize = true
+		else
+			new_stripped_desc = stripped_desc:match("^(.+) wikify$")
 			if new_stripped_desc then
 				stripped_desc = new_stripped_desc
-				no_singularize = true
+				wikify = true
 			else
-				new_stripped_desc = stripped_desc:match("^(.+) wikify$")
-				if new_stripped_desc then
-					stripped_desc = new_stripped_desc
-					wikify = true
-				else
-					break
-				end
+				break
 			end
 		end
-		if descriptionFormats[stripped_desc] then
-			local repl_suf = "%1"
-			if wikify then
-				repl_suf = repl_suf .. "_wiki"
-			end
-			if no_singularize then
-				repl_suf = repl_suf .. "_no_sing"
-			end
-			return descriptionFormats[stripped_desc]:gsub("({{{label_[ul]c)}}}", repl_suf .."}}}")
+	end
+	if stripped_desc == "default" or special_description_formats[stripped_desc] then
+		local label_sub = "label"
+		if wikify then
+			label_sub = label_sub .. "_wiki"
 		end
+		if no_singularize then
+			label_sub = label_sub .. "_no_sing"
+		end
+		label_sub = ("{{{%s}}}"):format(label_sub)
+
+		local partial_desc
+		if special_description_formats[stripped_desc] then
+			partial_desc = special_description_formats[stripped_desc] .. " " .. label_sub
+		else
+			partial_desc = format_partial_desc(label_sub)
+		end
+
+		return convert_to_full_desc(partial_desc)
 	end
 
 	return desc
@@ -244,111 +272,23 @@ function Category:substitute_template_specs(desc)
 		desc = desc:gsub("{{{langlink}}}", self._lang:makeCategoryLink())
 	end
 
-	local function handle_label(label_sub, uclc, no_singularize, wikify)
-		local label = self._info.label
-		if uclc == "uc" then
-			label = mw.getContentLanguage():ucfirst(label)
-		elseif uclc == "lc" then
-			label = mw.getContentLanguage():lcfirst(label)
-		end
-
-		local function term_exists(term)
-			local title = mw.title.new(term)
-			return title and title.exists
-		end
-
-		local singular_label
-		if not no_singularize then
-			singular_label = require("Module:string utilities").singularize(label)
-		end
-
+	local function handle_label(label_sub, no_singularize, wikify)
 		local function gsub_desc(to)
 			return (desc:gsub(label_sub, require("Module:pattern utilities").replacement_escape(to)))
 		end
 
-		if wikify then
-			if singular_label then
-				return gsub_desc("[[w:" .. singular_label .. "|" .. label .. "]]")
-			else
-				return gsub_desc("[[w:" .. label .. "|" .. label .. "]]")
-			end
-		end
-
-		-- First try to singularize the label as a whole, unless 'no singularize' was given. If the result exists,
-		-- return it.
-		if singular_label and term_exists(singular_label) then
-			return gsub_desc("[[" .. singular_label .. "|" .. label .. "]]")
-		elseif term_exists(label) then
-			-- Then check if the original label as a whole exists, and return if so.
-			return gsub_desc("[[" .. label .. "]]")
-		else
-			-- Otherwise, if the label is multiword, split into words and try the link each one, singularizing the last
-			-- one unless 'no singularize' was given.
-			local split_label
-			if label:find(" ") then
-				if not no_singularize then
-					split_label = rsplit(label, " ")
-					for i, word in ipairs(split_label) do
-						if i == #split_label then
-							local singular_word = require("Module:string utilities").singularize(word)
-							if term_exists(singular_word) then
-								split_label[i] = "[[" .. singular_word .. "|" .. word .. "]]"
-							else
-								split_label = nil
-								break
-							end
-						else
-							if term_exists(word) then
-								split_label[i] = "[[" .. word .. "]]"
-							else
-								split_label = nil
-								break
-							end
-						end
-					end
-					if split_label then
-						split_label = table.concat(split_label, " ")
-					end
-				end
-
-				-- If we weren't able to link individual words with the last word singularized, link all words as-is.
-				if not split_label then
-					split_label = rsplit(label, " ")
-					for i, word in ipairs(split_label) do
-						if term_exists(word) then
-							split_label[i] = "[[" .. word .. "]]"
-						else
-							split_label = nil
-							break
-						end
-					end
-					if split_label then
-						split_label = table.concat(split_label, " ")
-					end
-				end
-			end
-
-			if split_label then
-				return gsub_desc(split_label)
-			else
-				return gsub_desc(label)
-			end
-		end
+		return gsub_desc(require(topic_cat_utilities_module).link_label(self._info.label, no_singularize, wikify))
 	end
 
 	for _, spec in ipairs {
-		{"{{{label_uc}}}", "uc"},
-		{"{{{label_uc_no_sing}}}", "uc", "no singularize"},
-		{"{{{label_lc}}}", "lc"},
-		{"{{{label_lc_no_sing}}}", "lc", "no singularize"},
-		{"{{{label_uc_wiki}}}", "uc", false, "wikify"},
-		{"{{{label_uc_wiki_no_sing}}}", "uc", "no singularize", "wikify"},
-		{"{{{label_lc_wiki}}}", "lc", false, "wikify"},
-		{"{{{label_lc_wiki_no_sing}}}", "lc", "no singularize", "wikify"},
+		{"{{{label}}}"},
+		{"{{{label_no_sing}}}", "no singularize"},
+		{"{{{label_wiki}}}", false, "wikify"},
+		{"{{{label_wiki_no_sing}}}", "no singularize", "wikify"},
 	} do
-		local label_sub, uclc, no_singularize, wikify = unpack(spec)
+		local label_sub, no_singularize, wikify = unpack(spec)
 		if desc:find(label_sub) then
-			desc = handle_label(label_sub, uclc, no_singularize, wikify)
+			desc = handle_label(label_sub, no_singularize, wikify)
 		end
 	end
 
@@ -439,7 +379,7 @@ function Category:getDescription(isChild)
 	if self._lang then
 		local desc = self._data.description
 
-		desc = replace_special_descriptions(desc)
+		desc = self:replace_special_descriptions(desc)
 		if not isChild and desc then
 			if self._data.preceding then
 				desc = self._data.preceding .. "\n\n" .. desc
@@ -460,7 +400,7 @@ function Category:getDescription(isChild)
 		if not desc then
 			 desc = self._data.description
 			 if desc then
-		 		desc = replace_special_descriptions(desc)
+		 		desc = self:replace_special_descriptions(desc)
 				desc = remove_lang_params(desc)
 				desc = desc:gsub("%.$", "")
 				desc = "This category concerns the topic: " .. desc .. "."
@@ -502,11 +442,6 @@ function Category:getParents()
 	end
 	
 	local ret = {}
-	local is_set = false
-	
-	if label == "all sets" then
-		is_set = true
-	end
 	
 	for key, parent in ipairs(parents) do
 		parent = mw.clone(parent)
@@ -535,8 +470,7 @@ function Category:getParents()
 		
 		if self._lang then
 			parent.sort = self:substitute_template_specs(parent.sort)
-		elseif parent.sort:find("{{{langname}}}") or parent.sort:find("{{{langcat}}}") or
-			parent.template == "langcatboiler" or parent.module then
+		elseif parent.sort:find("{{{langname}}}") or parent.sort:find("{{{langcat}}}") or parent.module then
 			return nil
 		end
 		
@@ -547,21 +481,14 @@ function Category:getParents()
 		if parent.name and parent.name:find("^Category:") then
 			if self._lang then
 				parent.name = self:substitute_template_specs(parent.name)
-			elseif parent.name:find("{{{langname}}}") or parent.name:find("{{{langcat}}}") or
-				parent.template == "langcatboiler" or parent.module then
+			elseif parent.name:find("{{{langname}}}") or parent.name:find("{{{langcat}}}") or parent.module then
 				return nil
 			end
 		else
-			if parent.name == "list of sets" then
-				is_set = true
-			end
-			
 			local pinfo = mw.clone(self._info)
 			pinfo.label = parent.name
 			
-			if parent.template then
-				parent.name = require("Module:category tree/" .. parent.template).new(pinfo)
-			elseif parent.module then
+			if parent.module then
 				-- A reference to a category using another category tree module.
 				if not parent.args then
 					error("Missing .args in parent table with module=\"" .. parent.module .. "\" for '" ..
@@ -575,11 +502,21 @@ function Category:getParents()
 		
 		table.insert(ret, parent)
 	end
-	
-	if not is_set and label ~= "list of topics" and label ~= "list of sets" then
-		local pinfo = mw.clone(self._info)
-		pinfo.label = "list of topics"
-		table.insert(ret, {name = Category.new(pinfo), sort = (not self._lang and " " or "") .. label})
+
+
+	if self._data.type ~= "toplevel" then
+		local types = self._data.type or "topic"
+		for typ in rgsplit(types, "%s*,%s*") do
+			local pinfo = mw.clone(self._info)
+			pinfo.label =
+				typ == "topic" and "list of topics" or
+				typ == "type" and "list of type categories" or
+				typ == "name" and "list of name categories" or
+				typ == "set" and "list of sets" or
+				error(("Invalid type '%s', should be one or more of 'topic', 'set', 'name' or 'type', comma-separated")
+				:format(types))
+			table.insert(ret, {name = Category.new(pinfo), sort = (not self._lang and " " or "") .. label})
+		end
 	end
 	
 	return ret
