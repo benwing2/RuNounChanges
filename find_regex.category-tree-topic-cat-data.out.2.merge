@@ -3457,8 +3457,8 @@ Page 8 Module:category tree/topic cat/data/Communication: Would save with commen
 Page 8 Module:category tree/topic cat/data/Communication: -------- begin text --------
 local labels = {}
 
-for _, lang_etc in {
-	"Arabic", {"Chinese", "the [[Chinese]] languages}, "English", "German", "Japanese", "Korean", "Okinawan",
+for _, lang_etc in ipairs {
+	"Arabic", {"Chinese", "the [[Chinese]] languages"}, "English", "German", "Japanese", "Korean", "Okinawan",
 	 "Portuguese", "Spanish", "Vietnamese"
 } do
 	if type(lang_etc) ~= "table" then
@@ -6575,11 +6575,12 @@ for _, country_parent in ipairs {
 		parent = {parent}
 	end
 	table.insert(parent, country_parent_form or country)
-	labels["history of " .. country"] = {
+	labels["history of " .. country] = {
 		type = "topic",
 		description = "default with the wikify",
 		parents = parent,
 	}
+end
 
 labels["Mughal Empire"] = {
 	type = "topic",
@@ -7929,13 +7930,13 @@ labels["letter names"] = {
 
 for _, script_etc in ipairs {
 	{"Arabic", "appendix"},
-	{"Aramaic", "w"},
 	{"Baybayin", "appendix"},
 	{"Cyrillic", "appendix"},
 	{"Devanagari", "appendix"},
 	{"Georgian", "appendix"},
 	{"Greek", "appendix"},
 	{"Hebrew", "appendix"},
+	{"Imperial Aramaic", "appendix"},
 	{"Korean", "appendix"},
 	{"Latin", "appendix"},
 	{"Ogham", "appendix"},
@@ -7943,7 +7944,7 @@ for _, script_etc in ipairs {
 	{"Runic", "w"},
 	{"Thai", "appendix"},
 } do
-	local script, linktype = unapck(script_etc)
+	local script, linktype = unpack(script_etc)
 	local link
 	if linktype == "appendix" then
 		link = ("[[Appendix:%s script|%s script]]"):format(script, script)
@@ -8328,8 +8329,8 @@ labels["colors"] = {
 }
 
 for _, color_etc in ipairs {
-	{"black"}
-	{"blue"}
+	{"black"},
+	{"blue"},
 	{"brown"},
 	{"green"},
 	{"grey", "[[grey]] ([[gray]])"},
@@ -8757,7 +8758,7 @@ labels["moons"] = {
 	parents = {"celestial bodies"},
 }
 
-for _, planet in {"Mars", "Haumea", "Jupiter", "Saturn", "Neptune", "Uranus", "Pluto"} do
+for _, planet in ipairs {"Mars", "Haumea", "Jupiter", "Saturn", "Neptune", "Uranus", "Pluto"} do
 	labels["moons of " .. planet] = {
 		type = "name",
 		description = ("=the [[moon]]s that orbit [[%s]]"):format(planet),
@@ -10055,6 +10056,7 @@ local function city_description(group, key, value)
 			if not pl_linked_divtype then
 				error("When creating city description for " .. key .. ", encountered divtype '" .. divtype .. "' not in m_shared.political_subdivisions")
 			end
+			pl_linked_divtype = m_shared.format_description(pl_linked_divtype, pl_divtype)
 			local linked_divtype = m_strutils.singularize(pl_linked_divtype)
 			table.insert(descparts, "the " .. linked_divtype .. " of ")
 		end
@@ -10314,6 +10316,7 @@ for capital_cat, placetype in pairs(m_shared.capital_cat_to_placetype) do
 	if not linkdiv then
 		error("Saw unknown place type '" .. pl_placetype .. "' in label '" .. label .. "'")
 	end
+	linkdiv = m_shared.format_description(linkdiv, pl_placetype)
 	labels[capital_cat] = {
 		type = "name",
 		description = "{{{langname}}} names of [[capital]]s of " .. linkdiv .. ".",
