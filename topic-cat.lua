@@ -1,7 +1,8 @@
 local export = {}
 
-local label_data = require("Module:User:Benwing2/category tree/topic cat/data")
-local topic_cat_utilities_module = "Module:User:Benwing2/category tree/topic cat/utilities"
+local label_data = require("Module:category tree/topic cat/data")
+local topic_cat_utilities_module = "Module:category tree/topic cat/utilities"
+local labels_ancillary_module = "Module:labels/ancillary"
 
 local rsplit = mw.text.split
 local rgsplit = mw.text.gsplit
@@ -187,8 +188,8 @@ function Category:replace_special_descriptions(desc)
 					:format(types))
 			end
 			table.insert(desc_parts, type_to_text[typ] .. " " .. desc)
-			return require("Module:table").serialCommaJoin(desc_parts)
 		end
+		return require("Module:table").serialCommaJoin(desc_parts)
 	end
 
 	local function convert_to_full_desc(partial_desc)
@@ -376,6 +377,32 @@ function Category:getDescription(isChild)
 		display_title()
 	end
 
+	local function get_labels_categorizing()
+ 		local topic_producing_labels = require(labels_ancillary_module).find_labels_for_topic(self._info.label, self._lang)
+ 		local function make_code(txt)
+ 			return ("<code>%s</code>"):format(txt)
+		end
+ 		local formatted_labels = {}
+ 		for label, aliases in pairs(topic_producing_labels) do
+ 			if #aliases == 0 then
+ 				table.insert(formatted_labels, make_code(label))
+ 			elseif #aliases == 1 then
+ 				table.insert(formatted_labels, ("%s (alias %s)"):format(make_code(label), make_code(aliases[1])))
+ 			else
+ 				table.sort(aliases)
+ 				for i, alias in ipairs(aliases) do
+ 					aliases[i] = make_code(alias)
+ 				end
+ 				table.insert(formatted_labels, ("%s (aliases %s)"):format(make_code(label), table.concat(aliases, ", ")))
+ 			end
+ 		end
+ 		if #formatted_labels > 0 then
+ 			table.sort(formatted_labels)
+ 			return ("The following label%s generate%s this category: %s."):format(
+ 				#formatted_labels == 1 and "" or "s", #formatted_labels == 1 and "s" or "", table.concat(formatted_labels, "; "))
+ 		end
+	end
+		
 	if self._lang then
 		local desc = self._data.description
 
@@ -387,7 +414,11 @@ function Category:getDescription(isChild)
 			if self._data.additional then
 				desc = desc .. "\n\n" .. self._data.additional
 			end
-		end
+			local labels_msg = get_labels_categorizing()
+			if labels_msg then
+				desc = desc .. "\n\n" .. labels_msg
+			end
+ 		end
 
 		return self:substitute_template_specs(desc)
 	else
@@ -422,6 +453,10 @@ function Category:getDescription(isChild)
 				desc = desc .. "\n\n" .. remove_lang_params(additional)
 			end
 			desc = desc .. "\n\n{{{umbrella_msg}}}"
+			local labels_msg = get_labels_categorizing()
+			if labels_msg then
+				desc = desc .. "\n\n" .. labels_msg
+			end
 		end
 		desc = self:substitute_template_specs(desc)
 		return desc
