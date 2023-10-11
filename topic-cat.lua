@@ -20,16 +20,16 @@ function Category.new_main(frame)
 		[2] = {required = true},
 		["sc"] = {},
 	}
-	
+
 	args = require("Module:parameters").process(frame:getParent().args, params, nil, "category tree/topic cat", "new_main")
 	self._info = {code = args[1], label = args[2]}
-	
+
 	self:initCommon()
-	
+
 	if not self._data then
 		return nil
 	end
-	
+
 	return self
 end
 
@@ -39,20 +39,20 @@ function Category.new(info)
 			error("The parameter “" .. key .. "” was not recognized.")
 		end
 	end
-	
+
 	local self = setmetatable({}, Category)
 	self._info = info
-	
+
 	if not self._info.label then
 		error("No label was specified.")
 	end
-	
+
 	self:initCommon()
-	
+
 	if not self._data then
 		error("The label “" .. self._info.label .. "” does not exist.")
 	end
-	
+
 	return self
 end
 
@@ -64,19 +64,19 @@ function Category:initCommon()
 	if self._info.code then
 		self._lang = require("Module:languages").getByCode(self._info.code, true)
 	end
-	
+
 	-- Convert label to lowercase if possible
 	local lowercase_label = mw.getContentLanguage():lcfirst(self._info.label)
-	
+
 	-- Check if the label exists
 	local labels = label_data["LABELS"]
 
 	if labels[lowercase_label] then
 		self._info.label = lowercase_label
 	end
-	
+
 	self._data = labels[self._info.label]
-	
+
 	-- Go through handlers
 	if not self._data then
 		for _, handler in ipairs(label_data["HANDLERS"]) do
@@ -296,7 +296,7 @@ function Category:substitute_template_specs(desc)
 	if desc:find("{") then
 		desc = mw.getCurrentFrame():preprocess(desc)
 	end
-	
+
 	return desc
 end
 
@@ -378,31 +378,9 @@ function Category:getDescription(isChild)
 	end
 
 	local function get_labels_categorizing()
- 		local topic_producing_labels = require(labels_ancillary_module).find_labels_for_topic(self._info.label, self._lang)
- 		local function make_code(txt)
- 			return ("<code>%s</code>"):format(txt)
-		end
- 		local formatted_labels = {}
- 		for label, aliases in pairs(topic_producing_labels) do
- 			if #aliases == 0 then
- 				table.insert(formatted_labels, make_code(label))
- 			elseif #aliases == 1 then
- 				table.insert(formatted_labels, ("%s (alias %s)"):format(make_code(label), make_code(aliases[1])))
- 			else
- 				table.sort(aliases)
- 				for i, alias in ipairs(aliases) do
- 					aliases[i] = make_code(alias)
- 				end
- 				table.insert(formatted_labels, ("%s (aliases %s)"):format(make_code(label), table.concat(aliases, ", ")))
- 			end
- 		end
- 		if #formatted_labels > 0 then
- 			table.sort(formatted_labels)
- 			return ("The following label%s generate%s this category: %s."):format(
- 				#formatted_labels == 1 and "" or "s", #formatted_labels == 1 and "s" or "", table.concat(formatted_labels, "; "))
- 		end
+		return require(labels_ancillary_module).get_labels_categorizing(self._info.label, "topic", self._lang)
 	end
-		
+
 	if self._lang then
 		local desc = self._data.description
 
@@ -418,7 +396,7 @@ function Category:getDescription(isChild)
 			if labels_msg then
 				desc = desc .. "\n\n" .. labels_msg
 			end
- 		end
+		end
 
 		return self:substitute_template_specs(desc)
 	else
@@ -471,20 +449,20 @@ function Category:getParents()
 	if not self._lang and ( label == "all topics" or label == "all sets" ) then
 		return {{ name = "Category:Fundamental", sort = label:gsub("all ", "") }}
 	end
-	
+
 	if not parents or #parents == 0 then
 		return nil
 	end
-	
+
 	local ret = {}
-	
+
 	for key, parent in ipairs(parents) do
 		parent = mw.clone(parent)
-		
+
 		if type(parent) ~= "table" then
 			parent = {name = parent}
 		end
-		
+
 		if not parent.sort then
 			-- When defaulting sort key to label, strip 'The ' (e.g. in 'The Matrix', 'The Hunger Games')
 			-- and 'A ' (e.g. in 'A Song of Ice and Fire', 'A Christmas Carol') from label.
@@ -502,17 +480,17 @@ function Category:getParents()
 				parent.sort = label
 			end
 		end
-		
+
 		if self._lang then
 			parent.sort = self:substitute_template_specs(parent.sort)
 		elseif parent.sort:find("{{{langname}}}") or parent.sort:find("{{{langcat}}}") or parent.module then
 			return nil
 		end
-		
+
 		if not self._lang then
 			parent.sort = " " .. parent.sort
 		end
-		
+
 		if parent.name and parent.name:find("^Category:") then
 			if self._lang then
 				parent.name = self:substitute_template_specs(parent.name)
@@ -522,7 +500,7 @@ function Category:getParents()
 		else
 			local pinfo = mw.clone(self._info)
 			pinfo.label = parent.name
-			
+
 			if parent.module then
 				-- A reference to a category using another category tree module.
 				if not parent.args then
@@ -534,7 +512,7 @@ function Category:getParents()
 				parent.name = Category.new(pinfo)
 			end
 		end
-		
+
 		table.insert(ret, parent)
 	end
 
@@ -553,7 +531,7 @@ function Category:getParents()
 			table.insert(ret, {name = Category.new(pinfo), sort = (not self._lang and " " or "") .. label})
 		end
 	end
-	
+
 	return ret
 end
 
@@ -567,7 +545,7 @@ function Category:getUmbrella()
 	if not self._lang then
 		return nil
 	end
-	
+
 	local uinfo = mw.clone(self._info)
 	uinfo.code = nil
 	return Category.new(uinfo)
