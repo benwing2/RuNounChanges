@@ -50,7 +50,7 @@ raw_categories["Regionalisms"] = {
 }
 
 raw_categories["All languages"] = {
-	intro = "{{sisterlinks|Category:Languages}}\n[[File:Languages world map-transparent background.svg|thumb|right|250px|Rough world map of language families]]",
+	topright = "{{commonscat|Languages}}\n[[File:Languages world map-transparent background.svg|thumb|right|250px|Rough world map of language families]]",
 	description = "This category contains the categories for every language on Wiktionary.",
 	additional = "Not all languages that Wiktionary recognises may have a category here yet. There are many that have " ..
 	"not yet received any attention from editors, mainly because not all Wiktionary users know about every single " ..
@@ -68,13 +68,21 @@ raw_categories["All extinct languages"] = {
 	},
 }
 
-
 raw_categories["Languages by country"] = {
-	intro = "{{commonscat|Languages by continent}}",
+	topright = "{{commonscat|Languages by continent}}",
 	description = "Categories that group languages by country.",
 	additional = "{{{umbrella_meta_msg}}}",
 	parents = {
 		"All languages",
+	},
+}
+
+raw_categories["Language isolates"] = {
+	topright = "{{wikipedia|Language isolate}}\n{{commonscat|Language isolates}}",
+	description = "Languages with no known relatives.",
+	parents = {
+		{name = "Languages by family", sort = "*Isolates"},
+		{name = "All language families", sort = "Isolates"},
 	},
 }
 
@@ -473,7 +481,7 @@ local function NavFrame(content, title)
 end
 
 
-local function get_description_intro_additional(lang, countries, extinct, setwiki, setwikt, setsister, entryname)
+local function get_description_topright_additional(lang, countries, extinct, setwiki, setwikt, setsister, entryname)
 	local nameWithLanguage = lang:getCategoryName("nocap")
 	if lang:getCode() == "und" then
 		local description =
@@ -484,7 +492,7 @@ local function get_description_intro_additional(lang, countries, extinct, setwik
 	
 	local canonicalName = lang:getCanonicalName()
 	
-	local intro = linkbox(lang, setwiki, setwikt, setsister, entryname)
+	local topright = linkbox(lang, setwiki, setwikt, setsister, entryname)
 
 	local the_prefix
 	if canonicalName:find(" Language$") then
@@ -562,7 +570,7 @@ local function get_description_intro_additional(lang, countries, extinct, setwik
 		mw.log("error while generating tree: " .. tostring(tree_of_descendants))
 	end
 
-	return description, intro, add
+	return description, topright, add
 end
 
 
@@ -718,20 +726,20 @@ table.insert(raw_handlers, function(data)
 				"Use the value UNKNOWN if the language's location is truly unknown.")
 		end
 	end
-	local description, intro, additional = "", "", ""
+	local description, topright, additional = "", "", ""
 	-- If called from inside the category tree system, it's called when generating
 	-- parents or children, and we don't need to generate the description or additional
 	-- text (which is very expensive in terms of memory because it calls [[Module:family tree]],
 	-- which calls [[Module:languages/data/all]]).
 	if not data.called_from_inside then
-		description, intro, additional = get_description_intro_additional(
+		description, topright, additional = get_description_topright_additional(
 			lang, args[1], args.extinct, args.setwiki, args.setwikt, args.setsister, args.entryname
 		)
 	end
 	return {
 		description = description,
 		lang = lang:getCode(),
-		intro = intro,
+		topright = topright,
 		additional = additional,
 		breadcrumb = lang:getCanonicalName(),
 		parents = get_parents(lang, args[1], args.extinct),
@@ -1107,9 +1115,9 @@ local function dialect_handler(category, raw_args, called_from_inside)
 	-- end in "English"; in this case we want the breadcrumb to show "Singlish".
 	breadcrumb = args.breadcrumb or breadcrumb or pagename
 
-	local intro
+	local topright
 	if args.wp then
-		local intro_parts = {}
+		local topright_parts = {}
 		for _, article in ipairs(split_on_comma(args.wp)) do
 			local foreign_wiki
 			if article:find(":[^ ]") then
@@ -1130,18 +1138,18 @@ local function dialect_handler(category, raw_args, called_from_inside)
 				end
 			end
 			if article then
-				table.insert(intro_parts, ("{{wp%s%s}}"):format(article == pagename and "" or "|" .. article,
+				table.insert(topright_parts, ("{{wp%s%s}}"):format(article == pagename and "" or "|" .. article,
 					foreign_wiki and "|lang=" .. foreign_wiki or ""))
 			end
 		end
-		intro = table.concat(intro_parts)
+		topright = table.concat(topright_parts)
 	elseif pagename == ucfirst(langname) then
 		local article = lang:getWikipediaArticle("no category fallback")
 		if article then
 			if article == pagename then
-				intro = "{{wp}}"
+				topright = "{{wp}}"
 			else
-				intro = ("{{wp|%s}}"):format(article)
+				topright = ("{{wp|%s}}"):format(article)
 			end
 		end
 	end
@@ -1273,7 +1281,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 	return {
 		-- FIXME, allow etymological codes here
 		lang = get_returnable_lang(lang),
-		intro = intro,
+		topright = topright,
 		description = description,
 		additional = additional,
 		parents = parents,
@@ -1298,18 +1306,34 @@ table.insert(raw_handlers, function(data)
 		local params = {
 			flagfile = {},
 			commonscat = {},
+			wp = {},
 		}
 
-		local intro
+		local topright
 
 		local args = require("Module:parameters").process(data.args, params)
 		if args.flagfile ~= "-" then
 			local flagfile = args.flagfile and "File:" .. args.flagfile or ("File:Flag of %s.svg"):format(country)
 			local flagfile_page = mw.title.new(flagfile)
 			if flagfile_page and flagfile_page.file.exists then
-				intro = ("[[%s|right|100px|border]]"):format(flagfile)
+				topright = ("[[%s|right|100px|border]]"):format(flagfile)
 			elseif args.flagfile then
 				error(("Explicit flagfile '%s' doesn't exist"):format(flagfile))
+			end
+		end
+
+		if args.wp then
+			local wp = require("Module:yesno")(args.wp, "+")
+			if wp == "+" or wp == true then
+				wp = data.category
+			end
+			if wp then
+				local wp_topright = ("{{wikipedia|%s}}"):format(wp)
+				if topright then
+					topright = topright .. wp_topright
+				else
+					topright = wp_topright
+				end
 			end
 		end
 
@@ -1319,17 +1343,13 @@ table.insert(raw_handlers, function(data)
 				commonscat = data.category
 			end
 			if commonscat then
-				local commons_intro_text = ("{{commonscat|%s}}"):format(commonscat)
-				if intro then
-					intro = intro .. "\n" .. commons_intro_text
+				local commons_topright = ("{{commonscat|%s}}"):format(commonscat)
+				if topright then
+					topright = topright .. commons_topright
 				else
-					intro = commons_intro_text
+					topright = commons_topright
 				end
 			end
-		end
-
-		if intro then
-			intro = intro .. "\n{{-}}"
 		end
 
 		local country_no_the = country:match("^the (.*)$")
@@ -1347,10 +1367,11 @@ table.insert(raw_handlers, function(data)
 		if country_page and country_page.exists then
 			table.insert(parents, {name = country_cat, sort = "Languages"})
 		end
+		local description = (flagdesc or "") .. ("Categories for languages of %s (including sublects)."):format(country_link)
 
 		return {
-			intro = intro,
-			description = ("Categories for languages of %s (including sublects)."):format(country_link),
+			topright = topright,
+			description = description,
 			parents = parents,
 			breadcrumb = country,
 			additional = "{{{umbrella_msg}}}",
