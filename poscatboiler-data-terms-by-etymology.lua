@@ -36,6 +36,12 @@ labels["antonymous compounds"] = {
 	parents = {"dvandva compounds", sort = "antonym"},
 }
 
+labels["apophonic reduplications"] = {
+	description = "{{{langname}}} terms that underwent [[reduplication]] with only a change in a vowel sound.",
+	breadcrumb = "apophonic",
+	parents = {"reduplications"},
+}
+
 labels["back-formations"] = {
 	description = "{{{langname}}} terms formed by reversing a supposed regular formation, removing part of an older term.",
 	parents = {"terms by etymology"},
@@ -449,35 +455,39 @@ labels["terms derived from fiction"] = {
 	parents = {"terms attributed to a specific source"},
 }
 
-for _, source_desc_display_topic_parents_and_sort in ipairs({
-	{"Dickensian works", "the works of [[w:Charles Dickens|Charles Dickens]]", nil, {"Charles Dickens"}},
-	{"DC Comics", "[[w:DC Comics|DC Comics]]"},
-	{"Doraemon", "[[w:Fujiko F. Fujio|Fujiko F. Fujio]]'s ''[[w:Doraemon|Doraemon]]''", "''Doraemon''"},
-	{"Dragon Ball", "[[w:Akira Toriyama|Akira Toriyama]]'s ''[[w:Dragon Ball|Dragon Ball]]''", "''Dragon Ball''"},
-	{"Duckburg and Mouseton", "[[w:The Walt Disney Company|Disney]]'s [[w:Duck universe|Duckburg]] and [[w:Mickey Mouse universe|Mouseton]] universe", nil, {"Disney"}},
-	{"Harry Potter", "the ''[[w:Harry Potter|Harry Potter]]'' series", "''Harry Potter''", {"Harry Potter"}},
-	{"Nineteen Eighty-Four", "[[w:George Orwell|George Orwell]]'s ''[[w:Nineteen Eighty-Four|Nineteen Eighty-Four]]''", "''Nineteen Eighty-Four''"},
-	{"Star Trek", "''[[w:Star Trek|Star Trek]]''", "''Star Trek''", {"Star Trek"}},
-	{"Star Wars", "''[[w:Star Wars|Star Wars]]''", "''Star Wars''", {"Star Wars"}},
-	{"The Simpsons", "''[[w:The Simpsons|The Simpsons]]''", "''The Simpsons''", {"The Simpsons"}, "Simpsons"},
-	{"Tolkien's legendarium", "the [[legendarium]] of [[w:J. R. R. Tolkien|J. R. R. Tolkien]]", nil, {"J. R. R. Tolkien"}},
-}) do
-	local source, desc, display, topic_parents, sort = unpack(source_desc_display_topic_parents_and_sort)
-	labels["terms derived from " .. source] = {
-		description = "{{{langname}}} terms that originate from " .. desc .. ".",
-		breadcrumb = source,
+for _, data in ipairs {
+	{source="Dickensian works", desc="the works of [[w:Charles Dickens|Charles Dickens]]", topic_parent="Charles Dickens"},
+	{source="DC Comics", desc="[[w:DC Comics|DC Comics]]"},
+	{source="Doraemon", desc="[[w:Fujiko F. Fujio|Fujiko F. Fujio]]'s ''[[w:Doraemon|Doraemon]]''", displaytitle="''Doraemon''"},
+	{source="Dragon Ball", desc="[[w:Akira Toriyama|Akira Toriyama]]'s ''[[w:Dragon Ball|Dragon Ball]]''", displaytitle="''Dragon Ball''"},
+	{source="Duckburg and Mouseton", desc="[[w:The Walt Disney Company|Disney]]'s [[w:Duck universe|Duckburg]] and [[w:Mickey Mouse universe|Mouseton]] universe",
+		topic_parent="Disney"},
+	{source="Harry Potter", desc="the ''[[w:Harry Potter|Harry Potter]]'' series", displaytitle="''Harry Potter''",
+		topic_parent="Harry Potter"},
+	{source="Nineteen Eighty-Four", desc="[[w:George Orwell|George Orwell]]'s ''[[w:Nineteen Eighty-Four|Nineteen Eighty-Four]]''",
+		displaytitle="''Nineteen Eighty-Four''"},
+	{source="Star Trek", desc="''[[w:Star Trek|Star Trek]]''", displaytitle="''Star Trek''", topic_parent="Star Trek"},
+	{source="Star Wars", desc="''[[w:Star Wars|Star Wars]]''", displaytitle="''Star Wars''", topic_parent="Star Wars"},
+	{source="The Simpsons", desc="''[[w:The Simpsons|The Simpsons]]''", displaytitle="''The Simpsons''", topic_parent="The Simpsons", sort="Simpsons"},
+	{source="Tolkien's legendarium", desc="the [[legendarium]] of [[w:J. R. R. Tolkien|J. R. R. Tolkien]]", topic_parent="J. R. R. Tolkien"},
+} do
+	local parents = {{name = "terms derived from fiction", sort = data.sort or data.source}}
+	local umbrella_parents = {"Terms by etymology subcategories by language"}
+	if data.topic_parent then
+		table.insert(parents, {module = "topic cat", args = {label = data.topic_parent, code = "{{{langcode}}}"}})
+		table.insert(umbrella_parents, {module = "topic cat", args = {label = data.topic_parent}})
+	end
+	labels["terms derived from " .. data.source] = {
+		description = "{{{langname}}} terms that originate from " .. data.desc .. ".",
+		breadcrumb = data.displaytitle or data.source,
+		parents = parents,
+		umbrella = {
+			parents = umbrella_parents,
+			displaytitle = data.displaytitle and "Terms derived from " .. data.displaytitle .. " by language" or nil,
+			breadcrumb = data.displaytitle and "Terms derived from " .. data.displaytitle,
+		},
+		displaytitle = data.displaytitle and "{{{langname}}} terms derived from " .. data.displaytitle or nil,
 	}
-	if sort then
-		labels["terms derived from " .. source]["parents"] = {{name = "terms derived from fiction", sort = sort}}
-	else
-		labels["terms derived from " .. source]["parents"] = {"terms derived from fiction"}
-	end
-	if display then
-		labels["terms derived from " .. source]["display"] = "terms derived from " .. display
-	end
-	if topic_parents then
-		labels["terms derived from " .. source]["topic_parents"] = topic_parents
-	end
 end
 
 labels["terms derived from Greek mythology"] = {
@@ -625,7 +635,7 @@ end
 
 -- Add 'umbrella_parents' key if not already present.
 for key, data in pairs(labels) do
-	if not data.umbrella_parents then
+	if not data.umbrella and not data.umbrella_parents then
 		data.umbrella_parents = "Terms by etymology subcategories by language"
 	end
 end
@@ -1378,13 +1388,27 @@ table.insert(handlers, function(data)
 						-- Above, we converted the stripped link term as we received it to the lookup form, so we
 						-- can look up the variants that are mapped to this term. Once we find them, map them to
 						-- display form.
-						if canonical == lookup_term then
+						local is_variant = false
+						if type(canonical) == "table" then
+							for _, canonical_v in pairs(canonical) do
+								if canonical_v == lookup_term then
+									is_variant = true
+									break
+								end
+							end
+						else
+							is_variant = canonical == lookup_term
+						end
+						if is_variant then
 							local _, display_variant = m_affix.make_affix(variant, data.lang, sc, affixtype)
 							table.insert(variants, "{{m|" .. langcode .. "|" .. display_variant .. "}}")
 						end
 					end
-					additional = ("This category also includes terms %sed with %s."):format(affixtype,
-						require("Module:table").serialCommaJoin(variants))
+					if #variants > 0 then
+						table.sort(variants)
+						additional = ("This category also includes terms %sed with %s."):format(affixtype,
+							require("Module:table").serialCommaJoin(variants))
+					end
 				end
 			end
 		end
@@ -1393,7 +1417,7 @@ table.insert(handlers, function(data)
 			description = "{{{langname}}} " .. pos .. " " .. desc[affixtype] .. " " .. require("Module:links").full_link({
 				lang = data.lang, term = display_term, alt = display_alt, sc = sc, id = id, tr = display_tr, ts = display_ts}, "term") .. ".",
 			additional = additional,
-			breadcrumb = pos == "terms" and m_script_utilities.tag_text(alt or affix_term, data.lang, sc, "term") .. id_text or pos,
+			breadcrumb = pos == "terms" and m_script_utilities.tag_text(display_alt or display_term, data.lang, sc, "term") .. id_text or pos,
 			displaytitle = "{{{langname}}} " .. labelpref .. m_script_utilities.tag_text(term, data.lang, sc, "term") .. id_text,
 			parents = parents,
 			umbrella = false,
