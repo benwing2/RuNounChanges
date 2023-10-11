@@ -69,6 +69,15 @@ raw_categories["All extinct languages"] = {
 }
 
 
+raw_categories["Languages by country"] = {
+	intro = "{{commonscat|Languages by continent}}",
+	description = "Categories that group languages by country.",
+	additional = "{{{umbrella_meta_msg}}}",
+	parents = {
+		"All languages",
+	},
+}
+
 
 -----------------------------------------------------------------------------
 --                                                                         --
@@ -1279,6 +1288,74 @@ end
 table.insert(raw_handlers, function(data)
 	local settings, _ = dialect_handler(data.category, data.args, data.called_from_inside)
 	return settings, not not settings
+end)
+
+
+-- Handle categories such as [[:Category:Languages of Indonesia]].
+table.insert(raw_handlers, function(data)
+	local country = data.category:match("^Languages of (.*)$")
+	if country then
+		local params = {
+			flagfile = {},
+			commonscat = {},
+		}
+
+		local intro
+
+		local args = require("Module:parameters").process(data.args, params)
+		if args.flagfile ~= "-" then
+			local flagfile = args.flagfile and "File:" .. args.flagfile or ("File:Flag of %s.svg"):format(country)
+			local flagfile_page = mw.title.new(flagfile)
+			if flagfile_page and flagfile_page.file.exists then
+				intro = ("[[%s|right|100px|border]]"):format(flagfile)
+			elseif args.flagfile then
+				error(("Explicit flagfile '%s' doesn't exist"):format(flagfile))
+			end
+		end
+
+		if args.commonscat then
+			local commonscat = require("Module:yesno")(args.commonscat, "+")
+			if commonscat == "+" or commonscat == true then
+				commonscat = data.category
+			end
+			if commonscat then
+				local commons_intro_text = ("{{commonscat|%s}}"):format(commonscat)
+				if intro then
+					intro = intro .. "\n" .. commons_intro_text
+				else
+					intro = commons_intro_text
+				end
+			end
+		end
+
+		if intro then
+			intro = intro .. "\n{{-}}"
+		end
+
+		local country_no_the = country:match("^the (.*)$")
+		local base_country = country_no_the or country
+		local country_link
+		if country_no_the then
+			country_link = ("the [[%s]]"):format(country_no_the)
+		else
+			country_link = ("[[%s]]"):format(country)
+		end
+
+		local parents = {{name = "Languages by country", sort = base_country}}
+		local country_cat = ("Category:%s"):format(base_country)
+		local country_page = mw.title.new(country_cat)
+		if country_page and country_page.exists then
+			table.insert(parents, {name = country_cat, sort = "Languages"})
+		end
+
+		return {
+			intro = intro,
+			description = ("Categories for languages of %s (including sublects)."):format(country_link),
+			parents = parents,
+			breadcrumb = country,
+			additional = "{{{umbrella_msg}}}",
+		}, true
+	end
 end)
 
 
