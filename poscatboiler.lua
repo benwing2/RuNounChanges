@@ -4,6 +4,7 @@ local lang_independent_data = require("Module:category tree/poscatboiler/data")
 local lang_specific_module = "Module:category tree/poscatboiler/data/lang-specific"
 local lang_specific_module_prefix = lang_specific_module .. "/"
 local auto_cat_module = "Module:auto cat"
+local labels_ancillary_module = "Module:labels/ancillary"
 
 -- Category object
 
@@ -492,6 +493,10 @@ function Category:getDescription(isChild)
 		mw.getCurrentFrame():callParserFunction("DISPLAYTITLE", "Category:" .. displaytitle)
 	end
 
+	local function get_labels_categorizing()
+		return require(labels_ancillary_module).get_labels_categorizing(self._info.label, "pos", self._lang)
+	end
+
 	if self._lang or self._info.raw then
 		if not isChild and self._data.displaytitle then
 			display_title(self._data.displaytitle, self._lang)
@@ -508,6 +513,10 @@ function Category:getDescription(isChild)
 				end
 				if self._data.additional then
 					desc = desc .. "\n\n" .. self._data.additional
+				end
+				local labels_msg = get_labels_categorizing()
+				if labels_msg then
+					desc = desc .. "\n\n" .. labels_msg
 				end
 			end
 
@@ -546,6 +555,10 @@ function Category:getDescription(isChild)
 				desc = desc .. "\n\n" .. remove_lang_params(additional)
 			end
 			desc = desc .. "\n\n{{{umbrella_msg}}}"
+			local labels_msg = get_labels_categorizing()
+			if labels_msg then
+				desc = desc .. "\n\n" .. labels_msg
+			end
 		end
 		desc = self:substitute_template_specs(desc)
 		return desc
