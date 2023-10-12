@@ -4,6 +4,7 @@ local raw_handlers = {}
 local m_languages = require("Module:languages")
 local m_table = require("Module:table")
 local parse_utilities_module = "Module:parse utilities"
+local labels_ancillary_module = "Module:labels/ancillary"
 local rsplit = mw.text.split
 
 local function track(page)
@@ -237,6 +238,10 @@ local dialect_parent_cats_to_scrape = m_table.listToSet {
 -- relax the code below to operate on all raw categories (not necessarily a good idea), or we rename the
 -- nonstandardly-named categories (e.g. in the case above, to [[:Category:Issime Walser German]], since Walser German
 -- is a recognized etymology-only language).
+--
+-- NOTE: We are able to handle categories for etymology-only families (currently only [[:Category:Middle Iranian]] and
+-- [[:Category:Old Iranian]]) and for etymology-only substrate languages (e.g. [[:Category:The BMAC substrate]]).
+-- There is some special "family" code for the former.
 local function dialect_handler(category, raw_args, called_from_inside)
 	-- Get the full language to return in the settings.
 	local function get_returnable_lang(lang)
@@ -320,7 +325,11 @@ local function dialect_handler(category, raw_args, called_from_inside)
 	end
 
 	if called_from_inside then
-		-- Avoid infinite loops from wrongly processing non-lect categories.
+		-- Avoid infinite loops from wrongly processing non-lect categories. We have a check around line 344 below
+		-- for categories whose {{auto cat}} doesn't say dialect=1, but we still need the following in case of
+		-- non-existent categories we're being asked to process (e.g. [[:Category:User bcc]] ->
+		-- [[:Category:Southern Balochi]] (nonexistent) -> [[:Category:Regional Baluchi]] (nonexistent), which
+		-- causes an infinite loop without the check below.
 		if category:find("^Regional ") or category:find("^Varieties of ") or category:find("^Rhymes:") then
 			return nil
 		end
@@ -336,6 +345,11 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		local lang, breadcrumb = split_region_lang(category)
 		if lang or dialect_parent_cats_to_scrape[category] then
 			raw_args = scrape_category_for_auto_cat_args(category)
+			if raw_args and not ine(raw_args.dialect) then
+				-- We are scraping something like [[:Category:American Sign Language]] that ends in a valid language but is not
+				-- a dialect.
+				return nil
+			end
 			if not raw_args then
 				if not lang then
 					-- We were instructed to scrape by virtue of `dialect_parent_cats_to_scrape`, but couldn't scrape
@@ -472,6 +486,17 @@ local function dialect_handler(category, raw_args, called_from_inside)
 
 	local additional
 
+	local function append_addl(addl_text)
+		if not addl_text then
+			return
+		end
+		if additional then
+			additional = additional .. "\n\n" .. addl_text
+		else
+			additional = addl_text
+		end
+	end
+
 	local parents = {}
 	local langname_for_desc
 	local etymcodes = {}
@@ -492,22 +517,39 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		end
 		local addl_etym_codes = ("[[Module:etymology_languages/data|Etymology-only language]] code: %s"):format(
 			m_table.serialCommaJoin(etymcodes, {conj = "or"}))
-		if additional then
-			additional = additional .. "\n\n" .. addl_etym_codes
-		else
-			additional = addl_etym_codes
-		end
+		append_addl(addl_etym_codes)
 	else
 		langname_for_desc = langname
 	end
-	
-	if args.addl then
-		if additional then
-			additional = additional .. "\n\n" .. args.addl
-		else
-			additional = args.addl
+
+	local regional_cat_labels, plain_cat_labels
+	local full_lang
+	if lang:hasType("language") then
+		full_lang = lang:getNonEtymological()
+		local regional_component = category:match("^(.-) " ..
+			require("Module:pattern utilities").pattern_escape(full_lang:getCanonicalName()) .. "$")
+		if regional_component then
+			regional_cat_labels = require(labels_ancillary_module).find_labels_for_category(regional_component,
+				"regional", full_lang)
 		end
 	end
+	plain_cat_labels = require(labels_ancillary_module).find_labels_for_category(category, "plain", full_lang)
+
+	local all_labels
+	if regional_cat_labels and plain_cat_labels then
+		all_labels = regional_cat_labels
+		for k, v in pairs(plain_cat_labels) do
+			all_labels[k] = v
+		end
+	else
+		all_labels = regional_cat_labels or plain_cat_labels
+	end
+	local labels_msg
+	if all_labels then
+		append_addl(require(labels_ancillary_module).format_labels_categorizing(all_labels, full_lang))
+	end
+
+	append_addl(args.addl)
 
 	local lang_en = m_languages.getByCode("en", true)
 
