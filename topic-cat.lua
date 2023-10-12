@@ -378,7 +378,9 @@ function Category:getDescription(isChild)
 	end
 
 	local function get_labels_categorizing()
-		return require(labels_ancillary_module).get_labels_categorizing(self._info.label, "topic", self._lang)
+		local m_labels_ancillary = require(labels_ancillary_module)
+		return m_labels_ancillary.format_labels_categorizing(
+			m_labels_ancillary.find_labels_for_category(self._info.label, "topic", self._lang), nil, self._lang)
 	end
 
 	if self._lang then
