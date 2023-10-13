@@ -894,7 +894,7 @@ table.insert(handlers, function(data)
 			additional = "This category should, ideally, contain only other categories. Entries can be categorized here, too, when the proper subcategory is unclear. " ..
 				"If you know the exact language from which an entry categorized here is derived, please edit its respective entry."
 		end
-		
+
 		-- Compute parents.
 		local derived_from_variety_of_self = false
 		local parent
@@ -1003,10 +1003,37 @@ table.insert(handlers, inherited_borrowed_handler("inherited"))
 ------------------------ Borrowing subtype handlers -------------------------
 -----------------------------------------------------------------------------
 
-local function borrowing_subtype_handler(source_name, parent_cat, desc, no_by_language)
+local function borrowing_subtype_handler(dest, source_name, parent_cat, desc, categorizing_templates, no_by_language)
 	local source, source_desc = get_source_and_source_desc(source_name)
+	local extra_templates = {}
+	local extra_template_text
+	for i, template in ipairs(categorizing_templates) do
+		if i > 1 then
+			table.insert(extra_templates, ("{{tl|%s|...}}"):format(template))
+		end
+	end
+	if #extra_templates > 0 then
+		extra_template_text = (" (or %s, using the same syntax)"):format(
+			require("Module:table").serialCommaJoin(extra_templates, {conj = "or"}))
+	else
+		extra_template_text = ""
+	end
+	local additional, umbrella_additional
+	if dest then
+		additional = ("To categorize a term into this category, use {{tl|%s|%s|%s|<var>source_term</var>}}%s, " ..
+			"where <code><var>source_term</var></code> is the source-language term that the term in question was " ..
+			"borrowed from."):format(categorizing_templates[1], dest:getCode(), source:getCode(), extra_template_text)
+	else
+		umbrella_additional = ("To categorize a term into a language-specific subcategory, use " ..
+			"{{tl|%s|<var>destcode</var>|%s|<var>source_term</var>}}%s, where <code><var>destcode</var></code> is " ..
+			"the language code of the language in question (see [[Wiktionary:List of languages]]), and " ..
+			"<code><var>source_term</var></code> is the source-language term that the term in question was " ..
+			"borrowed from."):format(categorizing_templates[1], source:getCode(), extra_template_text)
+	end
+
 	return {
 		description = "{{{langname}}} " .. desc:gsub("SOURCE", source_desc),
+		additional = additional,
 		breadcrumb = source_name,
 		parents = {
 			{ name = parent_cat, sort = source_name },
@@ -1014,6 +1041,7 @@ local function borrowing_subtype_handler(source_name, parent_cat, desc, no_by_la
 		},
 		umbrella = {
 			no_by_language = no_by_language,
+			additional = umbrella_additional,
 			parents = {
 				{ name = "terms borrowed from " .. source_name, is_label = true, sort = " " },
 				"Borrowed terms subcategories by language",
@@ -1045,27 +1073,32 @@ local borrowing_specs = {
 		from_source_desc = "terms that are learned [[loanword]]s from SOURCE, that is, terms that were directly incorporated from SOURCE instead of through normal language contact.",
 		umbrella_desc = "terms that are learned [[loanword]]s, that is, terms that were directly incorporated from another language instead of through normal language contact.",
 		uses_subtype_handler = true,
+		categorizing_templates = {"lbor", "learned borrowing"},
 	},
 	["semi-learned borrowings"] = {
 		from_source_desc = "terms that are [[semi-learned borrowing|semi-learned]] [[loanword]]s from SOURCE, that is, terms borrowed from SOURCE (a [[classical language]]) into the target language (a modern language) and partly reshaped based on later [[sound change]]s or by analogy with [[inherit]]ed terms in the language.",
 		umbrella_desc = "terms that are [[semi-learned borrowing|semi-learned]] [[loanword]]s, that is, terms borrowed from a [[classical language]] into a modern language and partly reshaped based on later [[sound change]]s or by analogy with [[inherit]]ed terms in the language.",
 		uses_subtype_handler = true,
+		categorizing_templates = {"slbor", "semi-learned borrowing"},
 	},
 	["orthographic borrowings"]	= {
 		from_source_desc = "orthographic loans from SOURCE, i.e. terms that were borrowed from SOURCE in their script forms, not their pronunciations.",
 		umbrella_desc = "orthographic loans, i.e. terms that were borrowed in their script forms, not their pronunciations.",
 		uses_subtype_handler = true,
+		categorizing_templates = {"obor", "orthographic borrowing"},
 	},
 	["unadapted borrowings"] = {
 		from_source_desc = "[[loanword]]s from SOURCE that have not been conformed to the morpho-syntactic, phonological and/or phonotactical rules of the target language.",
 		umbrella_desc = "[[loanword]]s that have not been conformed to the morpho-syntactic, phonological and/or phonotactical rules of the target language.",
 		uses_subtype_handler = true,
+		categorizing_templates = {"ubor", "unadapted borrowing"},
 	},
 	["semantic loans"] = {
 		from_source_desc = "[[Appendix:Glossary#semantic loan|semantic loans]] from SOURCE, i.e. terms one or more of whose definitions was borrowed from a term in SOURCE.",
 		umbrella_desc = "[[Appendix:Glossary#semantic loan|semantic loans]], i.e. terms one or more of whose definitions was borrowed from a term in another language.",
 		umbrella_parent = "terms by etymology",
 		no_by_language = true,
+		categorizing_templates = {"sl", "semantic loan"},
 	},
 	["partial calques"] = {
 		from_source_desc = "terms that were [[Appendix:Glossary#partial calque|partially calqued]] from SOURCE, i.e. terms formed partly by piece-by-piece translations of SOURCE terms and partly by direct borrowing.",
@@ -1073,6 +1106,7 @@ local borrowing_specs = {
 		umbrella_parent = "terms by etymology",
 		label_pattern = "^terms partially calqued from (.+)$",
 		no_by_language = true,
+		categorizing_templates = {"pcal", "pclq", "partial calque"},
 	},
 	["calques"] = {
 		from_source_desc = "terms that were [[Appendix:Glossary#calque|calqued]] from SOURCE, i.e. terms formed by piece-by-piece translations of SOURCE terms.",
@@ -1080,15 +1114,18 @@ local borrowing_specs = {
 		umbrella_parent = "terms by etymology",
 		label_pattern = "^terms calqued from (.+)$",
 		no_by_language = true,
+		categorizing_templates = {"cal", "clq", "calque"},
 	},
 	["phono-semantic matchings"] = {
 		from_source_desc = "[[Appendix:Glossary#phono-semantic matching|phono-semantic matchings]] from SOURCE, i.e. terms that were borrowed by matching the etymon phonetically and semantically.",
 		umbrella_desc = "[[Appendix:Glossary#phono-semantic matching|phono-semantic matchings]], i.e. terms that were borrowed by matching the etymon phonetically and semantically.",
 		no_by_language = true,
+		categorizing_templates = {"psm", "phono-semantic matching"},
 	},
 	["pseudo-loans"] = {
 		from_source_desc = "[[Appendix:Glossary#pseudo-loan|pseudo-loans]] from SOURCE, i.e. terms that appear to be SOURCE, but are not used or have an unrelated meaning in SOURCE itself.",
 		umbrella_desc = "[[Appendix:Glossary#pseudo-loan|pseudo-loans]], i.e. terms that appear to be derived from another language, but are not used or have an unrelated meaning in that language itself.",
+		categorizing_templates = {"pl", "pseudo-loan"},
 	},
 }
 
@@ -1101,12 +1138,13 @@ for bortype, spec in pairs(borrowing_specs) do
 	if not spec.uses_subtype_handler then
 		-- If the label pattern isn't specifically given, generate it from the `bortype`; but make sure to
 		-- escape hyphens in the pattern.
-		local label_pattern = spec.label_pattern or "^" .. bortype:gsub("%-", "%%-") .. " from (.+)$"
+		local label_pattern =
+			spec.label_pattern or "^" .. require("Module:pattern utilities").pattern_escape(bortype) .. " from (.+)$"
 		table.insert(handlers, function(data)
 			local source_name = data.label:match(label_pattern)
 			if source_name then
-				return borrowing_subtype_handler(source_name, bortype,
-					spec.from_source_desc, spec.no_by_language)
+				return borrowing_subtype_handler(data.lang, source_name, bortype, spec.from_source_desc,
+					spec.categorizing_templates, spec.no_by_language)
 			end
 		end)
 	end
@@ -1115,8 +1153,9 @@ end
 table.insert(handlers, function(data)
 	local borrowing_type, source_name = data.label:match("^(.+ borrowings) from (.+)$")
 	if borrowing_type then
-		return borrowing_subtype_handler(source_name, borrowing_type,
-			borrowing_specs[borrowing_type].from_source_desc)
+		local spec = borrowing_specs[borrowing_type]
+		return borrowing_subtype_handler(data.lang, source_name, borrowing_type, spec.from_source_desc,
+			spec.categorizing_templates, false)
 	end
 end)
 
