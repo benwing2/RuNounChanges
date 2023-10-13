@@ -24,18 +24,6 @@ labels["AABB-type reduplications"] = {
 	parents = {"reduplications"},
 }
 
-labels["alliterative compounds"] = {
-	description = "{{{langname}}} noun phrases composed of two or more stems that alliterate.",
-	umbrella_parents = "Types of compound terms by language",
-	parents = {"compound terms", "alliterative phrases"},
-}
-
-labels["antonymous compounds"] = {
-	description = "{{{langname}}} compounds in which one part is an antonym of the other.",
-	umbrella_parents = "Types of compound terms by language",
-	parents = {"dvandva compounds", sort = "antonym"},
-}
-
 labels["apophonic reduplications"] = {
 	description = "{{{langname}}} terms that underwent [[reduplication]] with only a change in a vowel sound.",
 	breadcrumb = "apophonic",
@@ -45,12 +33,6 @@ labels["apophonic reduplications"] = {
 labels["back-formations"] = {
 	description = "{{{langname}}} terms formed by reversing a supposed regular formation, removing part of an older term.",
 	parents = {"terms by etymology"},
-}
-
-labels["bahuvrihi compounds"] = {
-	description = "{{{langname}}} compounds in which the first part (A) modifies the second (B), and whose meaning follows a [[metonymic]] pattern: “<person> having a B that is A.”",
-	umbrella_parents = "Types of compound terms by language",
-	parents = {"compound terms", "exocentric compounds"},
 }
 
 labels["blends"] = {
@@ -72,44 +54,6 @@ labels["coinages"] = {
 	description = "{{{langname}}} terms coined by an identifiable person, organization or other such entity.",
 	parents = {"terms attributed to a specific source"},
 	umbrella_parents = {name = "terms attributed to a specific source", is_label = true, sort = " "},
-}
-
--- Add "compound POS" categories for various parts of speech.
-
-local compound_poses = {
-	"adjectives",
-	"adverbs",
-	"conjunctions",
-	"determiners",
-	"interjections",
-	"nouns",
-	"numerals",
-	"particles",
-	"postpositions",
-	"prefixes",
-	"prepositions",
-	"pronouns",
-	"proper nouns",
-	"suffixes",
-	"verbs",
-}
-
-for _, pos in ipairs(compound_poses) do
-	labels["compound " .. pos] = {
-		description = "{{{langname}}} " .. pos .. " composed of two or more stems.",
-		umbrella_parents = "Types of compound terms by language",
-		parents = {{name = "compound terms", sort = " "}, pos},
-	}
-end
-
-labels["compound determinatives"] = {
-	description = "{{{langname}}} determinatives composed of two or more stems.",
-	parents = {"compound terms", "determiners"},
-}
-
-labels["compound terms"] = {
-	description = "{{{langname}}} terms composed of two or more stems.",
-	parents = {"terms by etymology"},
 }
 
 labels["coordinated pairs"] = {
@@ -147,53 +91,14 @@ labels["doublets"] = {
 	parents = {"terms by etymology"},
 }
 
-labels["dvandva compounds"] = {
-	description = "{{{langname}}} terms composed of two or more stems whose stems could be connected by an 'and'.",
-	umbrella_parents = "Types of compound terms by language",
-	parents = {"compound terms"},
-}
-
 labels["elongated forms"] = {
 	description = "{{{langname}}} terms where one or more letters or sounds is repeated for emphasis or effect.",
 	parents = {"terms by etymology"},
 }
 
-labels["endocentric compounds"] = {
-	description = "{{{langname}}} terms composed of two or more stems, one of which is the [[w:head (linguistics)|head]] of that compound.",
-	umbrella_parents = "Types of compound terms by language",
-	parents = {"compound terms"},
-}
-
-labels["endocentric noun-noun compounds"] = {
-	description = "{{{langname}}} terms composed of two or more stems, one of which is the [[w:head (linguistics)|head]] of that compound.",
-	umbrella_parents = "Types of compound terms by language",
-	breadcrumb = "noun-noun",
-	parents = {"endocentric compounds", "compound terms"},
-}
-
-labels["endocentric verb-noun compounds"] = {
-	description = "{{{langname}}} compounds in which the first element is a verbal stem, the second a nominal stem and the head of the compound.",
-	umbrella_parents = "Types of compound terms by language",
-	breadcrumb = "verb-noun",
-	parents = {"endocentric compounds", "verb-noun compounds"},
-}
-
 labels["eponyms"] = {
 	description = "{{{langname}}} terms derived from names of real or fictitious people.",
 	parents = {"terms by etymology"},
-}
-
-labels["exocentric compounds"] = {
-	description = "{{{langname}}} terms composed of two or more stems, none of which is the [[w:head (linguistics)|head]] of that compound.",
-	umbrella_parents = "Types of compound terms by language",
-	parents = {"compound terms"},
-}
-
-labels["exocentric verb-noun compounds"] = {
-	description = "{{{langname}}} compounds in which the first element is a transitive verb, the second a noun functioning as its direct object, and whose referent is the person or thing doing the action.",
-	umbrella_parents = "Types of compound terms by language",
-	breadcrumb = "verb-noun",
-	parents = {"exocentric compounds", "verb-noun compounds"},
 }
 
 labels["genericized trademarks"] = {
@@ -204,12 +109,6 @@ labels["genericized trademarks"] = {
 labels["ghost words"] = {
 	description = "{{{langname}}} terms that were originally erroneous or fictitious, published in a reference work as if they were genuine as a result of typographical error, misreading, or misinterpretation, or as [[:w:Fictitious entry|fictitious entries]], jokes, or hoaxes.",
 	parents = {"terms by etymology"},
-}
-
-labels["karmadharaya compounds"] = {
-	description = "{{{langname}}} terms composed of two or more stems in which the main stem determines the case endings.",
-	umbrella_parents = "Types of compound terms by language",
-	parents = {"tatpurusa compounds"},
 }
 
 labels["haplological words"] = {
@@ -236,13 +135,6 @@ labels["internationalisms"] = {
 	description = "{{{langname}}} loanwords which also exist in many other languages with the same or similar etymology.",
 	additional = "Terms should be here preferably only if the immediate source language is not known for certain. Entries are added into this category by [[Template:internationalism]]; see it for more information.",
 	parents = {"terms by etymology"},
-}
-
-labels["itaretara dvandva compounds"] = {
-	description = "{{{langname}}} terms composed of two or more stems whose stems could be connected by an 'and'.",
-	umbrella_parents = "Types of compound terms by language",
-	breadcrumb = "itaretara",
-	parents = {"dvandva compounds"},
 }
 
 labels["legal doublets"] = {
@@ -352,12 +244,6 @@ labels["retronyms"] = {
 	parents = {"terms by etymology"},
 }
 
-labels["rhyming compounds"] = {
-	description = "{{{langname}}} noun phrases composed of two or more stems that rhyme.",
-	umbrella_parents = "Types of compound terms by language",
-	parents = {"compound terms", "rhyming phrases"},
-}
-
 labels["roots"] = {
 	description = "Basic morphemes from which {{{langname}}} words are formed.",
 	parents = {"morphemes"},
@@ -373,18 +259,6 @@ labels["Sanskritic formations"] = {
 	description = "{{{langname}}} terms coined from [[tatsama]] [[word]]s and/or [[affix]]es.",
 	umbrella_parents = "Sanskritic formations by language",
 	parents = {"terms by etymology", "terms derived from Sanskrit"},
-}
-
-labels["samahara dvandva compounds"] = {
-	description = "{{{langname}}} terms composed of two or more stems whose stems could be connected by an 'and'.",
-	umbrella_parents = "Types of compound terms by language",
-	breadcrumb = "samahara",
-	parents = {"dvandva compounds"},
-}
-
-labels["shitgibbons"] = {
-	description = "{{{langname}}} terms that consist of a single-syllable [[expletive]] followed by a two-syllable [[trochee]] that serves as a [[nominalizer]] or [[intensifier]].",
-	parents = {"endocentric compounds"},
 }
 
 labels["sound-symbolic terms"] = {
@@ -405,18 +279,6 @@ labels["spelling pronunciations"] = {
 labels["spoonerisms"] = {
 	description = "{{{langname}}} terms in which the initial sounds of component parts have been exchanged, as in \"crook and nanny\" for \"nook and cranny\".",
 	parents = {"terms by etymology"},
-}
-
-labels["synonymous compounds"] = {
-	description = "{{{langname}}} compounds in which one part is a synonym of the other.",
-	umbrella_parents = "Types of compound terms by language",
-	parents = {"dvandva compounds", sort = "synonym"},
-}
-
-labels["tatpurusa compounds"] = {
-	description = "{{{langname}}} terms composed of two or more stems",
-	umbrella_parents = "Types of compound terms by language",
-	parents = {"compound terms"},
 }
 
 labels["taxonomic eponyms"] = {
@@ -583,59 +445,15 @@ labels["univerbations"] = {
 	parents = {"terms by etymology"},
 }
 
-labels["verb-noun compounds"] = {
-	description = "{{{langname}}} compounds in which the first element is a transitive verb, the second a noun functioning as its direct object, and whose referent is the person or thing doing the action, or an adjective describing such a person or thing.",
-	umbrella_parents = "Types of compound terms by language",
-	parents = {"verb-object compounds"},
-}
-
-labels["verb-object compounds"] = {
-	description = "{{{langname}}} compounds in which the first element is a transitive verb, the second a term (usually but not always a noun) functioning as its (normally direct) object, and whose referent is the person or thing doing the action, or an adjective describing such a person or thing.",
-	additional = "Examples in English are {{m|en|pickpocket|lit=someone who picks pockets}} and {{m|en|catch-all|lit=something that catches everything}}.",
-	umbrella_parents = "Types of compound terms by language",
-	parents = {"compound terms"},
-}
-
-labels["verb-verb compounds"] = {
-	description = "{{{langname}}} compounds composed of two or more verbs in apposition, often either synonyms or antonyms, and whose referent refers to the result of performing those actions.",
-	umbrella_parents = "Types of compound terms by language",
-	parents = {"compound terms"},
-}
-
-labels["vrddhi derivatives"] = {
-	description = "{{{langname}}} terms derived from a Proto-Indo-European root by the process of [[w:vṛddhi|vṛddhi]] derivation.",
-	umbrella_parents = "Types of compound terms by language",
-	parents = {"terms by etymology"},
-}
-
-labels["vrddhi gerundives"] = {
-	description = "{{{langname}}} [[gerundive]]s derived from a Proto-Indo-European root by the process of [[w:vṛddhi|vṛddhi]] derivation.",
-	umbrella_parents = "Types of compound terms by language",
-	parents = {"vrddhi derivatives"},
-}
-
-labels["vyadhikarana compounds"] = {
-	description = "{{{langname}}} terms composed of two or more stems in which the non-main stem determines the case endings.",
-	umbrella_parents = "Types of compound terms by language",
-	parents = {"tatpurusa compounds"},
-}
-
 labels["words derived through metathesis"] = {
 	description = "{{{langname}}} words that were created through [[metathesis]] from another word.",
 	parents = {{name = "terms by etymology", sort = "metathesis"}},
 }
 
-for _, fixtype in ipairs({"circumfix", "infix", "interfix", "prefix", "suffix",}) do
-	labels["terms by " .. fixtype] = {
-		description = "{{{langname}}} terms categorized by their " .. fixtype .. "es.",
-		parents = {{name = "terms by etymology", sort = fixtype}, fixtype .. "es"},
-	}
-end
-
-
 -- Add 'umbrella_parents' key if not already present.
 for key, data in pairs(labels) do
-	if not data.umbrella and not data.umbrella_parents then
+	-- NOTE: umbrella.parents overrides umbrella_parents if both are given.
+	if not data.umbrella_parents then
 		data.umbrella_parents = "Terms by etymology subcategories by language"
 	end
 end
@@ -701,16 +519,6 @@ raw_categories["Sanskritic formations by language"] = {
 	additional = "{{{umbrella_msg}}}",
 	parents = {
 		"Terms by etymology subcategories by language",
-	},
-}
-
-raw_categories["Types of compound terms by language"] = {
-	description = "Umbrella categories covering topics related to types of compound terms.",
-	additional = "{{{umbrella_meta_msg}}}",
-	parents = {
-		"Umbrella metacategories",
-		{name = "compound terms", is_label = true, sort = " "},
-		{name = "Terms by etymology subcategories by language", sort = " "},
 	},
 }
 
@@ -1309,119 +1117,6 @@ table.insert(handlers, function(data)
 	if borrowing_type then
 		return borrowing_subtype_handler(source_name, borrowing_type,
 			borrowing_specs[borrowing_type].from_source_desc)
-	end
-end)
-
-
------------------------------------------------------------------------------
------------------------------- Affix handlers -------------------------------
------------------------------------------------------------------------------
-
-table.insert(handlers, function(data)
-	local labelpref, pos, affixtype, term_and_id = data.label:match("^(([a-z -]+) ([a-z]+fix)ed with )(.+)$")
-	if affixtype then
-		local term, id = term_and_id:match("^(.+) %(([^()]+)%)$")
-		term = term or term_and_id
-
-		-- Convert term/alt into affixes if needed
-		local desc = {
-			["prefix"]		= "beginning with the prefix",
-			["suffix"]		= "ending with the suffix",
-			["circumfix"]	= "bookended with the circumfix",
-			["infix"]		= "spliced with the infix",
-			["interfix"]	= "joined with the interfix",
-			["transfix"]	= "patterned with the transfix",
-		}
-		if not desc[affixtype] then
-			return nil
-		end
-
-		local params = {
-			["alt"] = {},
-			["sc"] = {},
-			["sort"] = {},
-			["tr"] = {},
-			["ts"] = {},
-		}
-		local args = require("Module:parameters").process(data.args, params, nil, "category tree/poscatboiler/data/terms by etymology")
-		local sc = data.sc or args.sc and require("Module:scripts").getByCode(args.sc, "sc") or nil
-		local m_affix = require("Module:affix")
-		-- Call make_affix to add display hyphens if they're not already present.
-		local _, display_term, lookup_term = m_affix.make_affix(term, data.lang, sc, affixtype, nil, true)
-		local _, display_alt = m_affix.make_affix(args.alt, data.lang, sc, affixtype)
-		local _, display_tr = m_affix.make_affix(args.tr, data.lang, require("Module:scripts").getByCode("Latn"), affixtype)
-		local _, display_ts = m_affix.make_affix(args.ts, data.lang, require("Module:scripts").getByCode("Latn"), affixtype)
-		local m_script_utilities = require("Module:script utilities")
-		local id_text = id and " (" .. id .. ")" or ""
-
-		-- Compute parents.
-		local parents = {}
-		if id then
-			if pos == "words" then
-				-- don't allow formerly-named categories with "words"
-				return nil
-			end
-			if pos == "terms" then
-				table.insert(parents, {name = labelpref .. term, sort = id, args = args})
-			else
-				table.insert(parents, {name = "terms " .. affixtype .. "ed with " .. term_and_id, sort = id .. ", " .. pos, args = args})
-				table.insert(parents, {name = labelpref .. term, sort = id, args = args})
-			end
-		elseif pos == "words" then
-			-- don't allow formerly-named categories with "words"
-			return nil
-		elseif pos ~= "terms" then
-			table.insert(parents, {name = "terms " .. affixtype .. "ed with " .. term, sort = pos, args = args})
-		end
-		table.insert(parents, {name = "terms by " .. affixtype, sort = (data.lang:makeSortKey((data.lang:makeEntryName(args.sort or term))))})
-
-		-- If other affixes are mapped to this one, show them.
-		local additional
-
-		if data.lang then
-			local langcode = data.lang:getCode()
-			if m_affix.langs_with_lang_specific_data[langcode] then
-				local langdata = mw.loadData(m_affix.affix_lang_data_module_prefix .. langcode)
-				local variants = {}
-				if langdata.affix_mappings then
-					for variant, canonical in pairs(langdata.affix_mappings) do
-						-- Above, we converted the stripped link term as we received it to the lookup form, so we
-						-- can look up the variants that are mapped to this term. Once we find them, map them to
-						-- display form.
-						local is_variant = false
-						if type(canonical) == "table" then
-							for _, canonical_v in pairs(canonical) do
-								if canonical_v == lookup_term then
-									is_variant = true
-									break
-								end
-							end
-						else
-							is_variant = canonical == lookup_term
-						end
-						if is_variant then
-							local _, display_variant = m_affix.make_affix(variant, data.lang, sc, affixtype)
-							table.insert(variants, "{{m|" .. langcode .. "|" .. display_variant .. "}}")
-						end
-					end
-					if #variants > 0 then
-						table.sort(variants)
-						additional = ("This category also includes terms %sed with %s."):format(affixtype,
-							require("Module:table").serialCommaJoin(variants))
-					end
-				end
-			end
-		end
-
-		return {
-			description = "{{{langname}}} " .. pos .. " " .. desc[affixtype] .. " " .. require("Module:links").full_link({
-				lang = data.lang, term = display_term, alt = display_alt, sc = sc, id = id, tr = display_tr, ts = display_ts}, "term") .. ".",
-			additional = additional,
-			breadcrumb = pos == "terms" and m_script_utilities.tag_text(display_alt or display_term, data.lang, sc, "term") .. id_text or pos,
-			displaytitle = "{{{langname}}} " .. labelpref .. m_script_utilities.tag_text(term, data.lang, sc, "term") .. id_text,
-			parents = parents,
-			umbrella = false,
-		}, true -- true = args handled
 	end
 end)
 
