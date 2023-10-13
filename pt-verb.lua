@@ -492,7 +492,7 @@ local built_in_conjugations = {
 			pres_sub_1s = "dê",
 			pres_sub_2s = "dês",
 			pres_sub_3s = "dê",
-			pres_sub_1p = {"demos", VAR_SUPERSEDED .. "dêmos"},
+			pres_sub_1p = {"demos", "dêmos"},
 			-- deis regular
 			pres_sub_3p = {"deem", VAR_SUPERSEDED .. "dêem"},
 			irreg = true,
@@ -777,7 +777,7 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- saber, resaber
+		-- saber, ressaber
 		match = "saber",
 		forms = {
 			pres_1s = "sei",
@@ -2075,7 +2075,22 @@ local function normalize_all_lemmas(alternant_multiword_spec, pagename)
 
 	-- (1) Add links to all before and after text. Remember the original text so we can reconstruct the verb spec later.
 	if not alternant_multiword_spec.args.noautolinktext then
-		iut.add_links_to_before_and_after_text(alternant_multiword_spec, "remember original")
+		for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
+			alternant_or_word_spec.user_specified_before_text = alternant_or_word_spec.before_text
+			alternant_or_word_spec.before_text = com.add_links(alternant_or_word_spec.before_text)
+			if alternant_or_word_spec.alternants then
+				for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+					for _, word_spec in ipairs(multiword_spec.word_specs) do
+						word_spec.user_specified_before_text = word_spec.before_text
+						word_spec.before_text = com.add_links(word_spec.before_text)
+					end
+					multiword_spec.user_specified_post_text = multiword_spec.post_text
+					multiword_spec.post_text = com.add_links(multiword_spec.post_text)
+				end
+			end
+		end
+		alternant_multiword_spec.user_specified_post_text = alternant_multiword_spec.post_text
+		alternant_multiword_spec.post_text = com.add_links(alternant_multiword_spec.post_text)
 	end
 
 	-- (2) Remove any links from the lemma, but remember the original form
@@ -2109,7 +2124,7 @@ local function normalize_all_lemmas(alternant_multiword_spec, pagename)
 			-- Add links to the lemma so the user doesn't specifically need to, since we preserve
 			-- links in multiword lemmas and include links in non-lemma forms rather than allowing
 			-- the entire form to be a link.
-			linked_lemma = iut.add_links(base.user_specified_lemma)
+			linked_lemma = com.add_links(base.user_specified_lemma)
 		end
 		base.linked_lemma = linked_lemma
 	end)
@@ -2164,11 +2179,10 @@ local function detect_indicator_spec(base)
 		base.stems[stem] = values
 	end
 	for override, values in pairs(base.user_basic_overrides) do
-		if base.alternant_multiword_spec.verb_slots_basic_map[override] then
-			base.basic_overrides[override] = values
-		else
+		if not base.alternant_multiword_spec.verb_slots_basic_map[override] then
 			error("Unrecognized override '" .. override .. "': " .. base.angle_bracket_spec)
 		end
+		base.basic_overrides[override] = values
 	end
 
 	base.prefix = base.prefix or ""
@@ -2189,7 +2203,6 @@ local function detect_indicator_spec(base)
 		end
 		base.vowel_alt = iut.convert_to_general_list_form(base.stems.vowel_alt)
 	end
-
 	-- Propagate built-in-verb indicator flags to `base` and combine with user-specified flags.
 	for indicator_flag, _ in pairs(indicator_flags) do
 		base[indicator_flag] = base[indicator_flag] or base.stems[indicator_flag]
@@ -2221,7 +2234,6 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 
 	add_slots(alternant_multiword_spec)
 
-	-- used in [[Module:pt-headword]]
 	alternant_multiword_spec.vowel_alt = {}
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		detect_indicator_spec(base)
@@ -2546,9 +2558,7 @@ local basic_table = [=[
 | style="border: 1px solid #999999; vertical-align: top;" | {fut_2p}
 | style="border: 1px solid #999999; vertical-align: top;" | {fut_3p}
 |-
-! style="border: 1px solid #999999; background:#ffffaa" colspan="7" | ''<span title="condicional / futuro do pretérito">Conditional</span>''
-|-
-! style="border: 1px solid #999999; background:#ddddaa" |
+! style="border: 1px solid #999999; background:#b0bfd4" | <span title="condicional / futuro do pretérito">Conditional</span>
 | style="border: 1px solid #999999; vertical-align: top;" | {cond_1s}
 | style="border: 1px solid #999999; vertical-align: top;" | {cond_2s}
 | style="border: 1px solid #999999; vertical-align: top;" | {cond_3s}
