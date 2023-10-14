@@ -57,6 +57,20 @@ local C = com.C -- consonant regex class
 
 local AC = u(0x0301) -- acute =  ́
 local TEMPC1 = u(0xFFF1) -- temporary character used for consonant substitutions
+local TEMP_MESOCLITIC_INSERTION_POINT = u(0xFFF2) -- temporary character used to mark the mesoclitic insertion point
+-- Variant codes and the like.
+-- NOTE: These codes should be *PREFIXED* onto stems and *SUFFIXED* onto endings. That way they won't interfere in the
+-- operation of combine_stem_ending().
+--
+-- GL_TYPE = "Galician-type", PT_TYPE = "Portuguese-type". GL_TYPE stems cannot combine with PT_TYPE endings and
+-- vice-versa.
+local GL_TYPE = u(0xFFF3)
+local PT_TYPE = u(0xFFF4)
+-- ALTVAR = Lower-frequency variants listed at the bottom of the Estraviz conjugation tables rather than in the main
+-- table. We list these in the main table but with a footnote indicating they are low-frequency alternatives, and
+-- italicize them to visually set them apart.
+local ALTVAR = u(0xFFF5)
+local GL_ALTVAR = GL_TYPE .. ALTVAR
 
 local short_pp_footnote = "[usually used with auxiliary verbs " .. link_term("ser") .. " and " .. link_term("estar") .. "]"
 local long_pp_footnote = "[usually used with auxiliary verbs " .. link_term("haver") .. " and " .. link_term("ter") .. "]"
@@ -133,7 +147,6 @@ local indicator_flags = m_table.listToSet {
 	"no_pres_stressed", "no_pres1_and_sub",
 	"only3s", "only3sp", "only3p",
 	"pp_inv", "irreg", "no_built_in", "e_ei_cat",
-	"spec_pret", "double_plup", "fourth_foot"
 }
 
 -- Initialize all the slots for which we generate forms.
@@ -285,17 +298,18 @@ for _, overridable_stem in ipairs {
 	-- Don't include pres1; use pres_1s if you need to override just that form
 	"impf",
 	"full_impf",
-	"full_impf2",
+	{"pret_conj", simple_choice({"irreg", "ar", "er", "ir"}) },
 	"pret_base",
 	"pret",
-	{"pret_conj", simple_choice({"irreg", "ar", "er", "ir"}) },
+	"gl_short_pret",
+	"pt_pret_1s",
+	"pt_pret_3s",
 	"fut",
 	"cond",
 	"pres_sub_stressed",
 	"pres_sub_unstressed",
 	{"sub_conj", simple_choice({"ar", "er"}) },
 	"plup",
-	"plup2",
 	"impf_sub",
 	"fut_sub",
 	"pers_inf",
@@ -404,25 +418,51 @@ The following stems are recognized:
 -- impf: The imperfect stem (not including the -av-/-i- stem suffix, which is determined by the conjugation). Defaults
      to the infinitive stem.
 -- full_impf: The full imperfect stem missing only the endings (-a, -as, -am, etc.). Used for verbs with irregular
-     imperfects such as [[ser]], [[ter]], [[vir]] and [[pôr]]. Overrides must be supplied for the impf_1p and impf_2p
-     due to these forms having an accent on the stem.
--- pret_base: The preterite stem (not including the -a-/-e-/-i- stem suffix). Defaults to the infinitive stem.
--- pret: The full preterite stem missing only the endings (-ste, -mos, etc.). Used for verbs with irregular preterites
-     (pret_conj == "irreg") such as [[fazer]], [[poder]], [[trazer]], etc. Overrides must be supplied for the pret_1s
-     and pret_3s. Defaults to `pret_base` + the accented conjugation vowel.
+     imperfects such as [[ser]], [[ter]], [[vir]] and [[pôr]]. Needs to include an accent on the stressed vowel, which
+	 will automatically be removed when not needed.
 -- pret_conj: Determines the set of endings used in the preterite. Should be one of "ar", "er", "ir" or "irreg".
-     Defaults to the conjugation as determined from the infinitive. When pret_conj == "irreg", stem `pret` is used,
-     otherwise `pret_base`.
+     Defaults to the conjugation as determined from the infinitive. When pret_conj == "irreg", stems `gl_pret` and
+	 `pt_pret` are used, otherwise `pret_base`.
+-- pret_base: The preterite stem (not including the -a-/-e-/-i- stem suffix). Defaults to the infinitive stem.
+	 Only used when pret_conj ~= "irreg". 
+-- gl_pret: The full preterite stem missing only the endings (-ste, -mos, etc.), used with "Galician" endings (pret_3p
+	 '-rom', plup_2p '-rades'). Needs to include the accent on the final vowel that occurs in some forms, e.g. 'figé'
+	 for [[fazer]], 'fô' for [[ser]]; the accent will automatically be removed when not needed. Only used for verbs
+	 with irregular preterites (pret_conj == "irreg") such as [[fazer]], [[poder]], [[trazer]], etc. The pret_1s and
+	 pret_3s are handled using the gl_short_pret stem instead (which is normally derived from gl_pret by deleting the
+	 final vowel). Defaults to `pret_base` + the accented conjugation vowel.
+-- gl_short_pret: The short preterite stem, used with "Galician" 1s and 3s endings (pret_1s '-em', pret_3s '-o'). Only
+	 used with irregular preterites (pret_conj == "irreg"). Normally derived from gl_pret by deleting the final vowel,
+	 and doesn't need to be given explicitly.
+-- pt_pret: The full preterite stem missing only the endings (-ste, -mos, etc.), used with "Portuguese" endings
+	 (pret_3p '-ram', plup_2p '-reis'). Needs to include the accent on the final vowel that occurs in some forms, e.g.
+	 'fizé' for [[fazer]]; the accent will automatically be removed when not needed. Only used for verbs with irregular
+	 preterites (pret_conj == "irreg"), and defaults to gl_pret, so it only needs to be specified for verbs with a
+	 different "Portuguese" stem, e.g. [[fazer]], [[dizer]]. The pret_1s and pret_3s are not handled using this stem,
+	 but must be specified explicitly using pt_pret_1s and pt_pret_3s unless overrides are supplied for pret_1s and
+	 pret_3s as a whole (e.g. for [[dar]], [[ser]], [[ver]]).
+-- pt_pret_1s: The "Portuguese" pret_1s form. In addition to this, the "Galician" pret_1s form will be included, formed
+	 from gl_short_pret by adding '-em'. Does not need to be given if an override for pret_1s is supplied.
+-- pt_pret_3s: The "Portuguese" pret_3s form. In addition to this, the "Galician" pret_3s form will be included, formed
+	 from gl_short_pret by adding '-o' (which may cause the preceding consonant to shift to preserve the sound). Does
+	 not need to be given if an override for pret_3s is supplied.
 -- fut: The future stem. Defaults to the infinitive stem + the unaccented conjugation vowel.
 -- cond: The conditional stem. Defaults to `fut`.
--- impf_sub: The imperfect subjunctive stem. Defaults to `pret`.
--- fut_sub: The future subjunctive stem. Defaults to `pret`.
--- plup: The pluperfect stem. Defaults to `pret`.
+-- gl_impf_sub: The imperfect subjunctive stem, used with "Galician" endings (impf_sub_2p '-ssedes'). Needs to include
+	 the accent on the final vowel that occurs in some forms; see `gl_pret` for more information. Defaults to `gl_pret`.
+-- pt_impf_sub: The imperfect subjunctive stem, used with "Portuguese" endings (impf_sub_2p '-sseis'). Needs to include
+	 the accent on the final vowel that occurs in some forms; see `gl_pret` for more information. Defaults to `pt_pret`.
+-- fut_sub: The future subjunctive stem. Needs to include the accent on the final vowel that occurs in some forms; see
+	 `gl_pret` for more information. Defaults to the merger of `gl_pret` and `pt_pret`.
+-- gl_plup: The pluperfect stem, used with "Galician" endings (plup_2p '-rades'). Needs to include the accent on the
+	 final vowel that occurs in some forms; see `gl_pret` for more information. Defaults to `gl_pret`.
+-- pt_plup: The pluperfect stem, used with "Portuguese" endings (plup_2p '-reis'). Needs to include the accent on the
+	 final vowel that occurs in some forms; see `gl_pret` for more information. Defaults to `pt_pret`.
 -- pers_inf: The personal infinitive stem. Defaults to the infinitive stem + the accented conjugation vowel.
--- pp: The masculine singular past participle. Default is based on the verb conjugation: infinitive stem + "ado" for
-     -ar verbs, otherwise infinitive stem + "ido".
+-- pp: The masculine singular past participle. Default is based on the verb conjugation: infinitive stem + '-ado' for
+     -ar verbs, otherwise infinitive stem + '-ido'.
 -- short_pp: The short masculine singular past participle, for verbs with such a form. No default.
--- pp_inv: True if the past participle exists only in the masculine singular.
+-- pp_inv: `true` if the past participle exists only in the masculine singular.
 ]=]
 
 local built_in_conjugations = {
@@ -468,16 +508,14 @@ local built_in_conjugations = {
 			pres_1s = "dou",
 			pres_2s = "dás",
 			pres_3s = "dá",
-			-- damos, dais regular
-			pres_3p = {"dam","dão"},
-			pret = {"dé"}, pret_conj = "irreg", pret_1s = "dei", pret_3s = "deu",
+			-- damos, dades/dais regular
+			pres_3p = {"dam", "dão"},
+			pret_conj = "irreg", gl_pret = "dé", pret_1s = "dei", pret_3s = "deu",
 			pres_sub_1s = "dê",
 			pres_sub_2s = "dês",
 			pres_sub_3s = "dê",
-			pres_sub_1p = {"demos"},
-			-- deis regular
-			pres_sub_3p = {"dem","deem"},
-			spec_pret = true,
+			-- demos, dedes/deis regular
+			pres_sub_3p = {"dem", "deem"},
 			irreg = true,
 		}
 	},
@@ -485,7 +523,7 @@ local built_in_conjugations = {
 		-- -ear (frear, nomear, semear, etc.)
 		match = "ear",
 		forms = {
-			pres_stressed = "ei",
+			pres_stressed = {"ei", VAR_ALTFORM .. "e"},
 			e_ei_cat = true,
 		}
 	},
@@ -496,22 +534,12 @@ local built_in_conjugations = {
 			pres_1s = "estou",
 			pres_2s = "estás",
 			pres_3s = "está",
-			-- FIXME, estámos is claimed as an alternative pres_1p in the old conjugation data, but I believe this is garbage
-			pres_3p = {"estám","estão"},
+			pres_3p = {"estám", "estão"},
 			pres1_and_sub = "estej", -- only for subjunctive as we override pres_1s
 			sub_conj = "er",
-			pret = {"estivé"}, pret_conj = "irreg", pret_1s = "estive", pret_3s = "esteve",
+			pret_conj = "irreg", gl_pret = "estivé", pt_pret_1s = "estive", pt_pret_3s = "esteve",
 			-- [[sobestar]], [[sobrestar]] are transitive so they have fully inflected past participles
 			pp_inv = function(base, prefix) return prefix == "" end,
-			spec_pret = true,
-			irreg = true,
-		}
-	},
-	{
-		-- It appears that only [[resfolegar]] has proparoxytone forms, not [[folegar]] or [[tresfolegar]].
-		match = "^resfolegar",
-		forms = {
-			pres_stressed = {"resfóleg", "resfoleg"},
 			irreg = true,
 		}
 	},
@@ -537,8 +565,7 @@ local built_in_conjugations = {
 		match = "caber",
 		forms = {
 			pres1_and_sub = "caib",
-			pret = {"coubé"}, pret_1s = {"coubem","coube"}, pret_3s = {"coubo","coube"}, pret_conj = "irreg",
-			spec_pret = true,
+			pret_conj = "irreg", gl_pret = "coubé", pt_pret_1s = "coube", pt_pret_3s = "coube",
 			irreg = true,
 		}
 	},
@@ -547,8 +574,8 @@ local built_in_conjugations = {
 		match = "crer",
 		forms = {
 			pres_2s = "crês", pres_3s = "crê",
-			pres_2p = "credes", pres_3p = {"crem","creem"},
-			pres1_and_sub = {"crei","cre"},
+			pres_2p = "credes", pres_3p = {"crem", "creem"},
+			pres1_and_sub = {"crei", "@cre"},
 			irreg = true,
 		}
 	},
@@ -557,12 +584,11 @@ local built_in_conjugations = {
 		match = "dizer",
 		forms = {
 			-- use 'digu' because we're in a front environment; if we use 'dig', we'll get '#dijo'
-			pres1_and_sub = "digu", pres_2s = {"dis","dizes"}, pres_3s = {"di","diz"}, pres_3p = {"dim","dizem"},
-			pret = {"dixé","dissé"}, pret_conj = "irreg", pret_1s = {"dixem","disse"}, pret_3s = {"dixo","disse"}, pp = "dito",
-			pret_2s = {"dixeste","disseste","dixeche"}, pret_3p = {"dixérom","disseram"}, impf_sub_2p = {"dixéssedes","dissésseis"}, plup_2p = {{form = "dixérades", footnotes = {"[".. link_term("dixérais") .. " exists as well]"}},"disséreis"},
+			pres1_and_sub = "digu",
+			pres_2s = {"dis", "dizes"}, pres_3s = {"di", "diz"}, pres_3p = {"dim", "dizem"},
+			pret_conj = "irreg", gl_pret = "dixé", pt_pret = "dissé", pt_pret_1s = "disse", pt_pret_3s = "disse",
+			pp = "dito",
 			fut = "dir",
-			imp_2s = {"di","diz"},
-			spec_pret = true,
 			irreg = true,
 		}
 	},
@@ -580,13 +606,15 @@ local built_in_conjugations = {
 		-- fazer, afazer, contrafazer, desfazer, liquefazer, perfazer, putrefazer, rarefazer, refazer, satisfazer, tumefazer
 		match = "fazer",
 		forms = {
-			pres1_and_sub = {"fagu","faç"}, pres_2s = {"fás","fazes"}, pres_3s = {"fai","faz"},
-			pret = {"figé","fizé"}, plup2 = {"fige","fize"}, pret_conj = "irreg", pret_1s = {"figem","fiz","fizem"}, pret_3s = {"fijo","fez","fizo"}, pp = "feito",
-			pret_2s = {"figeste","fizeste","figeche","fizeche"}, pret_3p = {"figérom","fizeram","fizérom"}, impf_sub_2p = {"figéssedes","fizésseis"},
+			-- use 'fagu' because we're in a front environment; if we use 'fag', we'll get '#fajo'
+			pres1_and_sub = {GL_TYPE .. "fagu", PT_TYPE .. "faç"},
+			pres_2s = {GL_TYPE .. "fás", PT_TYPE .. "fazes"},
+			pres_3s = {GL_TYPE .. "fai", PT_TYPE .. "faz"},
+			pres_3p = {GL_TYPE .. "fam", PT_TYPE .. "fazem"},
+			pret_conj = "irreg", pret = {GL_TYPE .. "figé", PT_TYPE .. "fizé", GL_ALTVAR .. "fizé"},
+			pt_pret_1s = "fiz", pt_pret_3s = "fez",
+			pp = "feito",
 			fut = "far",
-			pres_sub_2p = {"fagades","façais"},
-			imp_2s = {"fai","faz"},
-			spec_pret = true, double_plup = true, fourth_foot = true,
 			irreg = true,
 		}
 	},
@@ -595,12 +623,11 @@ local built_in_conjugations = {
 		forms = {
 			pres_1s = "hei",
 			pres_2s = "hás",
-			pres_3s = {"há","hai"},
-			pres_3p = {"ham","hão"},
+			pres_3s = {"há", "hai"},
+			pres_3p = {"ham", "hão"},
 			pres1_and_sub = "haj", -- only for subjunctive as we override pres_1s
-			pret = {"houvé"}, pret_conj = "irreg", pret_1s = {"houvem","houve"}, pret_3s = {"houvo","houve"},
+			pret_conj = "irreg", gl_pret = "houvé", pt_pret_1s = "houve", pt_pret_3s = "houve",
 			imp_2p = "havei",
-			spec_pret = true,
 			irreg = true,
 		}
 	},
@@ -619,8 +646,8 @@ local built_in_conjugations = {
 		match = match_against_verbs("ler", {"^", "^re", "tres"}),
 		forms = {
 			pres_2s = "lês", pres_3s = "lê",
-			pres_2p = "ledes", pres_3p = {"lem","leem"},
-			pres1_and_sub = {"lei","le"},
+			pres_2p = "ledes", pres_3p = {"lem", "leem"},
+			pres1_and_sub = {"lei", "le"},
 			irreg = true,
 		}
 	},
@@ -635,7 +662,7 @@ local built_in_conjugations = {
 		forms = {
 			pres_2s = "óis", pres_3s = "ói",
 			-- impf -ía etc., pret_1s -oí and pp -oído handled automatically in combine_stem_ending()
-			pres1_and_sub = {"oi","o"}, pres_sub_2p = {"oiades", "oais", "oiais"},
+			pres1_and_sub = {"oi", "o"}, pres_sub_2p = {"oiades", "oais", "oiais"},
 			irreg = true,
 		}
 	},
@@ -644,7 +671,7 @@ local built_in_conjugations = {
 		match = "perder",
 		forms = {
 			-- use 'perqu' because we're in a front environment; if we use 'perc', we'll get '#perço'
-			pres1_and_sub = {"perd","perqu"},
+			pres1_and_sub = {"perd", "perqu"},
 			irreg = true,
 		}
 	},
@@ -652,10 +679,10 @@ local built_in_conjugations = {
 		-- poder
 		match = "poder",
 		forms = {
-			pres1_and_sub = {"pod","poss"},
-			pret = {"pudé"}, pret_1s = {"pudem","pude"}, pret_3s = {"pudo","pôde"}, pret_conj = "irreg",
+			-- FIXME, clean up
+			pres1_and_sub = {"pod", "poss"},
+			pret_conj = "irreg", gl_pret = "pudé", pt_pret_1s = "pude", pt_pret_3s = "pôde",
 			pres_sub_2p = {"podades", "possais", "podais"},
-			spec_pret = true,
 			irreg = true,
 		}
 	},
@@ -664,9 +691,8 @@ local built_in_conjugations = {
 		match = "prazer",
 		forms = {
 			pres_3s = "praz",
-			pret = {"prouvé"}, pret_1s = {"prouvem","prouve"}, pret_3s = {"prouvo","prouve"}, pret_conj = "irreg",
+			pret_conj = "irreg", gl_pret = "prouvé", pt_pret_1s = "prouve", pt_pret_3s = "prouve",
 			only3sp = function(base, prefix) return not prefix:find("com$") end,
-			spec_pret = true,
 			irreg = true,
 		}
 	},
@@ -688,11 +714,8 @@ local built_in_conjugations = {
 		forms = {
 			pres_1s = "quero", pres_3s = "quer",
 			pres1_and_sub = "queir", -- only for subjunctive as we override pres_1s
-			pret = {"quigé","quisé"}, plup2 = {"quige","quise"}, pret_1s = {"quigem","quis"}, pret_3s = {"quijo","quis"}, pret_conj = "irreg",
-			pret_2s = {"quigeste","quiseste","quigeche"}, pret_3p = {"quigérom", "quiseram"}, impf_sub_2p = {"quigéssedes", "quisésseis"},
+			pret_conj = "irreg", gl_pret = "quigé", pt_pret = "quisé", pt_pret_1s = "quis", pt_pret_3s = "quis",
 			imp_2s = {"quer"},
-			double_plup = true,
-			spec_pret = true,
 			irreg = true,
 		}
 	},
@@ -700,8 +723,7 @@ local built_in_conjugations = {
 		match = "reaver",
 		forms = {
 			no_pres_stressed = true,
-			pret = {"reouvé"}, pret_conj = "irreg", pret_1s = "reouve", pret_3s = "reouve",
-			spec_pret = true,
+			pret_conj = "irreg", gl_pret = "reouvé", pt_pret_1s = "reouve", pt_pret_3s = "reouve",
 			irreg = true,
 		}
 	},
@@ -711,8 +733,7 @@ local built_in_conjugations = {
 		forms = {
 			pres_1s = "sei",
 			pres1_and_sub = "saib", -- only for subjunctive as we override pres_1s
-			pret = {"soubé"}, pret_1s = "soube", pret_3s = "soube", pret_conj = "irreg",
-			spec_pret = true,
+			pret_conj = "irreg", gl_pret = "soubé", pt_pret_1s = "soube", pt_pret_3s = "soube",
 			irreg = true,
 		}
 	},
@@ -734,12 +755,11 @@ local built_in_conjugations = {
 		match = "^ser",
 		forms = {
 			pres_1s = "sou", pres_2s = "és", pres_3s = "é",
-			pres_1p = "somos", pres_2p = {"sodes","sois"}, pres_3p = {"som","são"},
+			pres_1p = "somos", pres_2p = {"sodes", "sois"}, pres_3p = {"som", "são"},
 			pres1_and_sub = "sej", -- only for subjunctive as we override pres_1s
-			full_impf = "er", full_impf2 = "ér",
-			pret = {"fô"}, pret_1s = "fui", pret_3s = "foi", pret_conj = "irreg",
+			full_impf = "ér",
+			pret_conj = "irreg", gl_pret = "fô", pret_1s = {"fum", "fui"}, pret_3s = "foi",
 			imp_2s = "sê", imp_2p = "sede",
-			spec_pret = true,
 			pp_inv = true,
 			irreg = true,
 		}
@@ -748,13 +768,12 @@ local built_in_conjugations = {
 		-- We want to match abster, conter, deter, etc. but not abater, cometer, etc. No way to avoid listing each verb.
 		match = match_against_verbs("ter", {"abs", "^a", "con", "de", "entre", "man", "ob", "^re", "sus", "^"}),
 		forms = {
-			pres_2s = function(base, prefix) return prefix == "" and {"tés","tens"} or {"tés","téns"} end,
+			pres_2s = function(base, prefix) return prefix == "" and {"tés", "tens"} or {"tés", "téns"} end,
 			pres_3s = function(base, prefix) return prefix == "" and "tem" or "tém" end,
-			pres_2p = "tendes", pres_3p = {"tenhem","têm"},
+			pres_2p = "tendes", pres_3p = {"tenhem", "têm"},
 			pres1_and_sub = "tenh",
-			full_impf = "tinh", full_impf2 = "tính",
-			pret = {"tivé"}, pret_1s = {"tivem","tive"}, pret_3s = {"tivo","teve"}, pret_conj = "irreg",
-			spec_pret = true,
+			full_impf = "tính",
+			pret_conj = "irreg", gl_pret = "tivé", pt_pret_1s = "tive", pt_pret_3s = "teve",
 			irreg = true,
 		}
 	},
@@ -763,9 +782,8 @@ local built_in_conjugations = {
 		forms = {
 			-- use 'tragu' because we're in a front environment; if we use 'trag', we'll get '#trajo'
 			pres1_and_sub = "tragu", pres_3s = "traz",
-			pret = {"trouxé"}, pret_1s = {"trouxem","trouxe"}, pret_3s = {"trouxo","trouxe"}, pret_conj = "irreg",
+			pret_conj = "irreg", gl_pret = "trouxé", pt_pret_1s = "trouxe", pt_pret_3s = "trouxe",
 			fut = "trar",
-			spec_pret = true,
 			irreg = true,
 		}
 	},
@@ -779,11 +797,10 @@ local built_in_conjugations = {
 		match = match_against_verbs("ver", {"ante", "entre", "pre", "^re", "^"}),
 		forms = {
 			pres_2s = "vês", pres_3s = "vê",
-			pres_2p = "vedes", pres_3p = {"vem","veem"},
+			pres_2p = "vedes", pres_3p = {"vem", "veem"},
 			pres1_and_sub = "vej",
-			pret = {"ví"}, pret_1s = {"vim","vi"}, pret_3s = "viu", pret_conj = "irreg",
+			pret_conj = "irreg", gl_pret = "ví", pret_1s = {"vi", "vim"}, pret_3s = "viu",
 			pp = "visto",
-			spec_pret = true,
 			irreg = true,
 		}
 	},
@@ -792,7 +809,7 @@ local built_in_conjugations = {
 		match = "prover",
 		forms = {
 			pres_2s = "provês", pres_3s = "provê",
-			pres_2p = "provedes", pres_3p = {"provem","proveem"},
+			pres_2p = "provedes", pres_3p = {"provem", "proveem"},
 			pres1_and_sub = "provej",
 			irreg = true,
 		}
@@ -876,7 +893,7 @@ local built_in_conjugations = {
 		-- comedir
 		match = match_against_verbs("edir", {"m", "p"}),
 		forms = {
-			pres1_and_sub = {"id","eç"},
+			pres1_and_sub = {"id", "eç"},
 			pres_sub_2p = {"idades", "eçais"},
 			irreg = true,
 		}
@@ -895,12 +912,11 @@ local built_in_conjugations = {
 		-- ir
 		match = "^ir",
 		forms = {
-			pres_1s = "vou", pres_2s = {"vás","vais"}, pres_3s = "vai",
-			pres_1p = {"imos","vamos"}, pres_2p = "ides", pres_3p = {"vam","vão"},
+			pres_1s = "vou", pres_2s = {"vás", "vais"}, pres_3s = "vai",
+			pres_1p = {"imos", "vamos"}, pres_2p = "ides", pres_3p = {"vam", "vão"},
 			pres_sub_1s = "vá", pres_sub_2s = "vás", pres_sub_3s = "vá",
 			pres_sub_1p = "vamos", pres_sub_2p = "vades", pres_sub_3p = "vão",
-			pret = {"fô"}, pret_1s = {"fum","fui"}, pret_3s = "foi", pret_conj = "irreg",
-			spec_pret = true,
+			pret_conj = "irreg", gl_pret = "fô", pret_1s = {"fum", "fui"}, pret_3s = "foi",
 			irreg = true,
 		}
 	},
@@ -912,7 +928,7 @@ local built_in_conjugations = {
 	{
 		match = "ouvir",
 		forms = {
-			pres1_and_sub = {"ouç","oiç"}, pres_sub_2p = {"ouçades", "ouçais", "oiçais"},
+			pres1_and_sub = {"ouç", "oiç"}, pres_sub_2p = {"ouçades", "ouçais", "oiçais"},
 			irreg = true,
 		}
 	},
@@ -984,16 +1000,13 @@ local built_in_conjugations = {
 		-- We want to match advir, convir, devir, etc. but not ouvir, servir, etc. No way to avoid listing each verb.
 		match = match_against_verbs("vir", {"ad", "^a", "con", "contra", "de", "^desa", "inter", "pro", "^re", "sobre", "^"}),
 		forms = {
-			pres_2s = function(base, prefix) return prefix == "" and {"vés","vens"} or {"vés","véns"} end,
+			pres_2s = function(base, prefix) return prefix == "" and {"vés", "vens"} or {"vés", "véns"} end,
 			pres_3s = function(base, prefix) return prefix == "" and "vem" or "vém" end,
-			pres_2p = "vindes", pres_3p = {"venhem","vêm"},
+			pres_2p = "vindes", pres_3p = {"venhem", "vêm"},
 			pres1_and_sub = "venh",
-			full_impf = "vinh", full_impf2 = "vính",
-			pret = {"vinhé","vié"}, plup2 = {"vinhe","vie"}, pret_1s = "vim", pret_3s = {"véu","veio"}, pret_conj = "irreg",
-			pret_2s = {"vinheste", "vieste", "vinheche"},
+			full_impf = "vính",
+			pret_conj = "irreg", gl_pret = "vinhé", pt_pret = "vié", pret_1s = "vim", pret_3s = {"véu", "veio"},
 			pp = "vindo",
-			double_plup = true,
-			spec_pret = true,
 			irreg = true,
 		}
 	},
@@ -1008,14 +1021,11 @@ local built_in_conjugations = {
 		match = "p[oô]r",
 		forms = {
 			pres1_and_sub = "ponh",
-			pres_2s = {"pós","pões","pons"}, pres_3s = {"pom","põe"}, pres_1p = "pomos", pres_2p = "pondes", pres_3p = {"ponhem","põem","póm"},
-			full_impf = "punh", full_impf2 = "púnh",
-			pret = {"pugé","pusé"}, plup2 = {"puge","puse"}, pret_1s = {"pugem","pus"}, pret_3s = {"pujo","pôs"}, pret_conj = "irreg",
-			pret_2s = {"pugeste","puseste","pugeche"}, pret_3p = {"pugérom", "puseram"}, impf_sub_2p = {"pugéssedes", "pusésseis"},
+			pres_2s = {"pós", "pões", "pons"}, pres_3s = {"pom", "põe"}, pres_1p = "pomos", pres_2p = "pondes", pres_3p = {"ponhem", "põem", "póm"},
+			full_impf = "púnh",
+			pret_conj = "irreg", gl_pret = "pugé", pt_pret = "pusé", pt_pret_1s = "pus", pt_pret_3s = "pôs",
 			pers_inf = "po",
 			gerund = "pondo", pp = "posto",
-			spec_pret = true,
-			double_plup = true,
 			irreg = true,
 		}
 	},
@@ -1189,7 +1199,7 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, dont_includ
 	local full_stem = prefix .. stem
 	-- Include the prefix in the stem unless dont_include_prefix is given (used for the past participle stem).
 	if not dont_include_prefix then
-		stem = prefix .. stem
+		stem = full_stem
 	end
 
 	-- If the ending begins with a double asterisk, this is a signal to conditionally delete the accent on the last letter
@@ -1251,7 +1261,12 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, dont_includ
 		-- j does not go to g here; desejar -> deseje not #desege
 	end
 
-	return stem .. ending
+	local retval = stem .. ending
+	if retval:find(GL_TYPE) and retval:find(PT_TYPE) then
+		-- Reject clashes in "Galician"-type and "Portuguese"-type forms, e.g. '#vós dixéreis' or '#vós dissérades'.
+		return nil
+	end
+	return retval
 end
 
 
@@ -1315,18 +1330,20 @@ local function construct_stems(base, vowel_alt)
 	stems.pres1 = base.stems.pres1 or stems.pres1_and_sub or stems.pres_stressed
 	stems.impf = base.stems.impf or base.inf_stem
 	stems.full_impf = base.stems.full_impf
-	stems.full_impf2 = base.stems.full_impf2
 	stems.pret_base = base.stems.pret_base or base.inf_stem
-	stems.pret = base.stems.pret or iut.map_forms(iut.convert_to_general_list_form(stems.pret_base), function(form)
-		return form .. base.conj_vowel end)
 	stems.pret_conj = base.stems.pret_conj or base.conj
+	stems.pret = base.stems.pret or iut.map_forms(iut.convert_to_general_list_form(stems.pret_base),
+		function(form) return form .. base.conj_vowel end)
+	stems.gl_short_pret = base.stems.gl_short_pret or iut.map_forms(iut.convert_to_general_list_form(stems.pret),
+		function(form) return rsub(form, com.V .. "$", "") end)
+	stems.pt_pret_1s = base.stems.pt_pret_1s
+	stems.pt_pret_3s = base.stems.pt_pret_3s
 	stems.fut = base.stems.fut or base.inf_stem .. base.conj
 	stems.cond = base.stems.cond or stems.fut
 	stems.pres_sub_stressed = base.stems.pres_sub_stressed or stems.pres1
 	stems.pres_sub_unstressed = base.stems.pres_sub_unstressed or stems.pres1_and_sub or stems.pres_unstressed
 	stems.sub_conj = base.stems.sub_conj or base.conj
 	stems.plup = base.stems.plup or stems.pret
-	stems.plup2 = base.stems.plup2
 	stems.impf_sub = base.stems.impf_sub or stems.pret
 	stems.fut_sub = base.stems.fut_sub or stems.pret
 	stems.pers_inf = base.stems.pers_inf or base.inf_stem .. base.conj_vowel
@@ -1358,11 +1375,11 @@ local function add_present_indic(base)
 	end
 	local s2, s3, p1, p2, p3
 	if base.conj == "ar" then
-		s2, s3, p1, p2, p3 = "as", "a", "amos", {{form = "ades"}, {form = "ais"}}, "am"
+		s2, s3, p1, p2, p3 = "as", "a", "amos", {"ades" .. GL_TYPE, "ais" .. PT_TYPE}, "am"
 	elseif base.conj == "er" or base.conj == "or" then -- verbs in -por have the present overridden
-		s2, s3, p1, p2, p3 = "es", "e", "emos", {{form = "edes"}, {form = "eis"}}, "em"
+		s2, s3, p1, p2, p3 = "es", "e", "emos", {"edes" .. GL_TYPE, "eis" .. PT_TYPE}, "em"
 	elseif base.conj == "ir" then
-		s2, s3, p1, p2, p3 = "es", "e", "imos", {{form = "ides"}, {form = "is"}}, "em"
+		s2, s3, p1, p2, p3 = "es", "e", "imos", {"ides" .. GL_TYPE, "is" .. PT_TYPE}, "em"
 	else
 		error("Internal error: Unrecognized conjugation " .. base.conj)
 	end
@@ -1404,48 +1421,57 @@ local function add_finite_non_present(base)
 		add_single_stem_tense(base, slot, stem, s1, s2, s3, p1, p2, p3)
 	end
 
+	-- * at the beginning of the ending means to remove an accent from the last vowel of the imperfect stem.
 	if stems.full_impf then
-		-- An override needs to be supplied for the impf_1p and impf_2p due to the written accent on the stem.
-		add_tense("impf", {""}, {stems.full_impf .. "a"}, {stems.full_impf .. "as"}, {stems.full_impf .. "a"}, {stems.full_impf2 .. "amos"}, {stems.full_impf2 .. "ades", {form = stems.full_impf2 .. "eis", footnotes = {"[".. link_term(base.prefix .. stems.full_impf2 .. "ais") .. " exists as well]"}}}, {stems.full_impf .. "am"})
+		add_tense("impf", stems.full_impf, "*a", "*as", "*a", "amos",
+			{"ades" .. GL_TYPE, "eis" .. PT_TYPE, "ais" .. GL_ALTVAR}, "*am")
 	elseif base.conj == "ar" then
-		add_tense("impf", stems.impf, "ava", "avas", "ava", "ávamos", {"ávades", {form = "áveis", footnotes = {"[".. link_term(base.prefix .. stems.impf .. "ávais") .. " exists as well]"}}}, "avam")
+		add_tense("impf", stems.impf, "ava", "avas", "ava", "ávamos",
+			{"ávades" .. GL_TYPE, "áveis" .. PT_TYPE, "ávais" .. GL_ALTVAR}, "avam")
 	else
-		add_tense("impf", stems.impf, "ia", "ias", "ia", "íamos", {"íades", {form = "íeis", footnotes = {"[".. link_term(base.prefix .. stems.impf .. "íais") .. " exists as well]"}}}, "iam")
+		add_tense("impf", stems.impf, "ia", "ias", "ia", "íamos",
+			{"íades" .. GL_TYPE, "íeis" .. PT_TYPE, "íais" .. GL_ALTVAR}, "iam")
 	end
 
 	-- * at the beginning of the ending means to remove a final accent from the preterite stem.
 	if stems.pret_conj == "irreg" then
-		add_tense("pret", stems.pret, {}, {"*ste", "*che"}, {}, "*mos", "*stes", {"rom", "*ram"})
+		add_tense("pret", stems.gl_short_pret, "em" .. GL_TYPE, nil, "o" .. GL_TYPE)
+		add_tense("pret", stems.pret, nil, "*ste", nil, "*mos", "*stes", {"rom" .. GL_TYPE, "*ram" .. PT_TYPE})
+		add_tense("pret", stems.pt_pret_1s, PT_TYPE)
+		add_tense("pret", stems.pt_pret_3s, nil, nil, PT_TYPE)
 	elseif stems.pret_conj == "ar" then
-		add_tense("pret", stems.pret_base, "ei", {"aste", "ache"}, "ou", "amos", "astes", {"árom", "aram"})
+		add_tense("pret", stems.pret_base, "ei", {"aste", "ache" .. GL_ALTVAR}, "ou", "amos", "astes",
+			{"árom" .. GL_TYPE, "aram" .. PT_TYPE})
 	elseif stems.pret_conj == "er" then
-		add_tense("pret", stems.pret_base, {"im", "i"}, {"este", "eche"}, "eu", "emos", "estes", {"êrom", "eram"})
+		add_tense("pret", stems.pret_base, {"im" .. GL_TYPE, "i" .. PT_TYPE}, {"este", "eche" .. GL_ALTVAR}, "eu",
+			"emos", "estes", {"êrom" .. GL_TYPE, "eram" .. PT_TYPE})
 	else
-		add_tense("pret", stems.pret_base, {"im", "i"}, {"iste", "iche"}, "iu", "imos", "istes", {"írom", "iram"})
+		add_tense("pret", stems.pret_base, {"im" .. GL_TYPE, "i" .. PT_TYPE}, {"iste", "iche" .. GL_ALTVAR}, "iu",
+			"imos", "istes", {"írom" .. GL_TYPE, "iram" .. PT_TYPE})
 	end
 
 	-- * at the beginning of the ending means to remove a final accent from the stem.
 	-- ** is similar but is "conditional" on a consonant preceding the final vowel.
-	if base.spec_pret then
-		if base.double_plup then
-			if base.fourth_foot then
-				add_tense("plup", {""}, {stems.plup2[1] .. "ra", stems.plup2[2] .. "ra"}, {stems.plup2[1] .. "ras", stems.plup2[2] .. "ras"}, {stems.plup2[1] .. "ra", stems.plup2[2] .. "ra"}, {stems.plup[1] .. "ramos", stems.plup[2] .. "ramos"}, {{form = stems.plup[1] .. "rades", footnotes = {"[".. link_term(base.prefix .. stems.plup[1] .. "rais") .. " exists as well]"}}, {form = stems.plup[2] .. "reis", footnotes = {"[".. link_term(base.prefix .. stems.plup[2] .. "rais") .. " exists as well]"}}, stems.plup[2] .. "rades"}, {stems.plup2[1] .. "ram", stems.plup2[2] .. "ram"})
-			else
-				add_tense("plup", {""}, {stems.plup2[1] .. "ra", stems.plup2[2] .. "ra"}, {stems.plup2[1] .. "ras", stems.plup2[2] .. "ras"}, {stems.plup2[1] .. "ra", stems.plup2[2] .. "ra"}, {stems.plup[1] .. "ramos", stems.plup[2] .. "ramos"}, {{form = stems.plup[1] .. "rades", footnotes = {"[".. link_term(base.prefix .. stems.plup[1] .. "rais") .. " exists as well]"}}, stems.plup[2] .. "reis"}, {stems.plup2[1] .. "ram", stems.plup2[2] .. "ram"})
-			end
-		else
-			add_tense("plup", stems.plup, "**ra", "**ras", "**ra", "ramos", {"rades", {form = "reis", footnotes = {"[".. link_term(base.prefix .. stems.plup[1] .. "rais") .. " exists as well]"}}}, "**ram")
-		end
-	else
-		add_tense("plup", stems.plup, "**ra", "**ras", "**ra", "ramos", {"rades", {form = "reis", footnotes = {"[".. link_term(base.prefix .. stems.plup[1].form .. "rais") .. " exists as well]"}}}, "**ram")
-	end
-	add_tense("impf_sub", stems.impf_sub, "**sse", "**sses", "**sse", "ssemos", {"ssedes", "sseis"}, "**ssem")
+	add_tense("plup", stems.plup, "**ra", "**ras", "**ra", "ramos",
+		{"rades" .. GL_TYPE, "reis" .. PT_TYPE, "rais" .. GL_ALTVAR}, "**ram")
+	add_tense("impf_sub", stems.impf_sub, "**sse", "**sses", "**sse", "ssemos",
+		{"ssedes" .. GL_TYPE, "sseis" .. PT_TYPE}, "**ssem")
 	add_tense("fut_sub", stems.fut_sub, "*r", "**res", "*r", "*rmos", "*rdes", "**rem")
-	add_tense("fut", stems.fut, "ei", "ás", "á", "emos", {"edes", "eis"}, {"ám", "ão"})
-	add_tense("cond", stems.cond, "ia", "ias", "ia", "íamos", {"íades", {form = "íeis", footnotes = {"[".. link_term(base.prefix .. stems.cond .. "íais") .. " exists as well]"}}},"iam")
+	local mark = TEMP_MESOCLITIC_INSERTION_POINT
+	add_tense("fut", stems.fut,
+		{"ei" .. GL_TYPE, mark .. "ei" .. PT_TYPE}, {"ás" .. GL_TYPE, mark .. "ás" .. PT_TYPE},
+		{"á" .. GL_TYPE, mark .. "á" .. PT_TYPE}, {"emos" .. GL_TYPE, mark .. "emos" .. PT_TYPE},
+		{"edes" .. GL_TYPE, mark .. "eis" .. PT_TYPE}, {"ám" .. GL_TYPE, mark .. "ão" .. PT_TYPE}
+	)
+	add_tense("cond", stems.cond,
+		{"ia" .. GL_TYPE, mark .. "ia" .. PT_TYPE}, {"ias" .. GL_TYPE, mark .. "ias" .. PT_TYPE},
+		{"ia" .. GL_TYPE, mark .. "ia" .. PT_TYPE}, {"íamos" .. GL_TYPE, mark .. "íamos" .. PT_TYPE},
+		-- FIXME, is GL_ALTVAR correct for the mesoclitic variant of -íais?
+		{"íades" .. GL_TYPE, mark .. "íeis" .. PT_TYPE, "íais" .. GL_ALTVAR, mark .. "íais" .. GL_ALTVAR},
+		{"iam" .. GL_TYPE, mark .. "iam" .. PT_TYPE})
 	-- Different stems for different parts of the personal infinitive to correctly handle forms of [[sair]] and [[pôr]].
-	add_tense("pers_inf", base.non_prefixed_verb, "", {}, "", {}, {}, {})
-	add_tense("pers_inf", stems.pers_inf, {}, "**res", {}, "*rmos", "*rdes", "**rem")
+	add_tense("pers_inf", base.non_prefixed_verb, "", nil, "")
+	add_tense("pers_inf", stems.pers_inf, nil, "**res", nil, "*rmos", "*rdes", "**rem")
 end
 
 
