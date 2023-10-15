@@ -346,7 +346,7 @@ end
 -- run the syllabification algorithm to determine the syllable count, and if monosyllabic, remove the accent. Also used
 -- in conjunction with user-specified form overrides to add an asterisk to prevent accents from being removed.
 local function may_need_monosyllabic_accent_removed(form)
-	return rfind(form, "^%-") and rfind(form, AV) and not rfind(form, V .. C .. V)
+	return not rfind(form, "^%-") and rfind(form, AV) and not rfind(form, V .. C .. V)
 end
 
 
@@ -1383,7 +1383,7 @@ local function combine_stem_ending(base, slot, stem, ending, is_combining_ending
 end
 
 
-local function check_stems_for_suppress_prefix(stems)
+local function check_stems_for_suppress_prefix(slot, stems)
 	-- Check whether any or all stems have `suppress_prefix`.
 	local any_suppress_prefix = false
 	local any_not_suppress_prefix = false
