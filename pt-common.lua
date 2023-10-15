@@ -1,6 +1,6 @@
 local export = {}
 
-local romut_module = "Module:User:Benwing2/romance utilities"
+local romut_module = "Module:romance utilities"
 
 local rsubn = mw.ustring.gsub
 local rfind = mw.ustring.find
