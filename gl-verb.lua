@@ -73,8 +73,16 @@ Vowel alternations:
 <u>: 'u' whenever stressed (in the present singular and third plural) and throughout the whole present subjunctive.
       Otherwise 'o'. E.g. [[polir]], [[extorquir]] (the latter also <u-o>).
 <í>: The last 'i' of the stem) becomes 'í' when stressed. E.g.:
-	 * [[faiscar]] (only3sp; faísca, faíscan, faísque, faísquen' also with 'c-qu' alternation)
-	 * [[europeizar]] ('europeízo, europeíce', etc. also with 'z-c' alternation)
+	 * [[faiscar]] (only3sp; faísca, faíscan, faísque, faísquen' also with 'c-qu' alternation), [[acainzar]],
+	   [[avaiñar]], [[cainzar]], [[caiñar]], [[desenvaiñar]], [[envaiñar]], [[arremuiñar]], [[arrepuiñar]],
+	   [[arruinar]], [[cuincar]], [[cuiñar]], [[muiñar]]
+	 * verbs in -eizar and -aizar, e.g.  [[europeizar]] ('europeízo, europeíce', etc. also with 'z-c' alternation)
+	   * [[desenraizar]], [[enraizar]], [[hebraizar]], [[xudaizar]]
+	   * [[europeizar]], [[homoxeneizar]]
+	 * some verbs in -uizar:
+	   * [[enxuizar]] (enxuízo, enxuíza, enxuíce, enxuícen, also with 'z-c' alternation), [[axuizar]]
+	   * but not any in -guizar ([[arreguizar]], [[desgaleguizar]], [[empreguizar]], [[esguizar]], [[espreguizar]],
+	     [[galeguizar]]) or -quizar ([[catequizar]], [[esnaquizar]], [[xerarquizar]])
 	 * none in -aiar?
 	   * not [[abraiar]], [[achaiar]], [[alfaiar]], [[amaiar]], [[arraiar]], [[atalaiar]], [[desmaiar]], [[encaiar]],
 	     [[engraiar]], [[ensaiar]], [[espraiar]], [[faiar]], [[laiar]], [[maiar]], [[raiar]], [[salaiar]]
@@ -155,6 +163,8 @@ Vowel alternations:
      * [[reunir]] ('reúno, reúne(s), reúnem, reúna(s), reúnan')
 	 * [[esmiuzar]] ('esmiúzo, esmiúza(s), esmiúza, esmiúce(s), esmiúcen' also with 'z-c' alternation)
      * [[saudar]] ('saúdo, saúda(s), saúda, saúde(s), saúden')
+	 * [[auñar]], [[desembaular]], [[embaular]]
+	 * [[afiuzar]], [[desafiuzar]], [[desmiudar]], [[desmiuzar]], [[enviuvar]], [[esmiuzar]] but not [[triunfar]]
 	 * NOTE: It seems most or all verbs in -uar other than in -guar, -quar have stressed ú, so we make it the default
 ]=]
 
