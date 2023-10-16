@@ -32,7 +32,7 @@ local m_string_utilities = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local iut = require("Module:inflection utilities")
-local com = require("Module:gl-reinteg-common")
+local com = require("Module:gl-common")
 
 local force_cat = false -- set to true for debugging
 local check_for_red_links = false -- set to false for debugging
@@ -52,7 +52,6 @@ local V = com.V -- vowel regex class
 local AV = com.AV -- accented vowel regex class
 local C = com.C -- consonant regex class
 
-local AC = u(0x0301) -- acute =  ́
 local TEMPC1 = u(0xFFF1) -- temporary character used for consonant substitutions
 local TEMP_MESOCLITIC_INSERTION_POINT = u(0xFFF2) -- temporary character used to mark the mesoclitic insertion point
 
@@ -64,14 +63,14 @@ local long_pp_footnote = "[usually used with auxiliary verbs " .. link_term("hav
 
 Vowel alternations:
 
-<i-e>: 'i' in pres1s and the whole present subjunctive; 'e' elsewhere when stressed. Generally 'e' otherwise when
-       unstressed. E.g. [[sentir]], [[conseguir]] (the latter additionally with 'gu-g' alternation).
-<u-o>: 'u' in pres1s and the whole present subjunctive; 'o' elsewhere when stressed. Either 'o' or 'u' otherwise when
-       unstressed. E.g. [[dormir]], [[subir]].
+<i-e>: 'i' in pres1s, imp2s and the whole present subjunctive; 'e' elsewhere when stressed. Generally 'e' otherwise
+	   when unstressed. E.g. [[sentir]], [[conseguir]] (the latter additionally with 'gu-g' alternation).
+<u-o>: 'u' in pres1s, imp2s and the whole present subjunctive; 'o' elsewhere when stressed. Generally 'u' otherwise
+	   when unstressed. E.g. [[durmir]], [[subir]].
 <i>: 'i' whenever stressed (in the present singular and third plural) and throughout the whole present subjunctive.
-      Otherwise 'e'. E.g. [[progredir]], [[premir]].
+      Otherwise 'e'. E.g. [[vestir]], [[pedir]].
 <u>: 'u' whenever stressed (in the present singular and third plural) and throughout the whole present subjunctive.
-      Otherwise 'o'. E.g. [[polir]], [[extorquir]] (the latter also <u-o>).
+      Otherwise 'o'. There may be no such verbs in standard Galician.
 <í>: The last 'i' of the stem) becomes 'í' when stressed. E.g.:
 	 * [[faiscar]] (only3sp; faísca, faíscan, faísque, faísquen' also with 'c-qu' alternation), [[acainzar]],
 	   [[avaiñar]], [[cainzar]], [[caiñar]], [[desenvaiñar]], [[envaiñar]], [[arremuiñar]], [[arrepuiñar]],
@@ -165,7 +164,7 @@ Vowel alternations:
      * [[saudar]] ('saúdo, saúda(s), saúda, saúde(s), saúden')
 	 * [[auñar]], [[desembaular]], [[embaular]]
 	 * [[afiuzar]], [[desafiuzar]], [[desmiudar]], [[desmiuzar]], [[enviuvar]], [[esmiuzar]] but not [[triunfar]]
-	 * NOTE: It seems most or all verbs in -uar other than in -guar, -quar have stressed ú, so we make it the default
+	 * NOTE: It seems most or all verbs in -uar other than in -guar, -quar have stressed ú, so we make it the default.
 ]=]
 
 local vowel_alternants = m_table.listToSet({"i-e", "i", "í", "u-o", "u", "ú", "+"})
@@ -483,31 +482,25 @@ The following stems are recognized:
 -- impf: The imperfect stem (not including the -av-/-i- stem suffix, which is determined by the conjugation). Defaults
      to the infinitive stem.
 -- full_impf: The full imperfect stem missing only the endings (-a, -as, -am, etc.). Used for verbs with irregular
-     imperfects such as [[ser]], [[ter]], [[vir]] and [[pôr]]. Needs to include an accent on the stressed vowel, which
-	 will automatically be removed when not needed.
+     imperfects such as [[ser]], [[ter]], [[vir]] and [[pór]].
 -- pret_conj: Determines the set of endings used in the preterite. Should be one of "ar", "er", "ir" or "irreg".
      Defaults to the conjugation as determined from the infinitive. When pret_conj == "irreg", `pret` is used, otherwise
 	 `pret_base`.
 -- pret_base: The preterite stem (not including the -a-/-e-/-i- stem suffix). Defaults to the infinitive stem.
 	 Only used when pret_conj ~= "irreg". 
--- pret: The full preterite stem missing only the endings (-ste, -mos, etc.). Needs to include the accent on the final
-	 vowel that occurs in some forms, e.g. 'figé' for [[fazer]], 'fô' for [[ser]]; the accent will automatically be
-	 removed when not needed. Only used for verbs with irregular preterites (pret_conj == "irreg") such as [[fazer]],
-	 [[poder]], [[trazer]], etc. The pret_1s and pret_3s are handled using the gl_short_pret stem instead for
-	 "Galician"-ending forms (pret_1s '-em', pret_3s '-o') and using pt_pret_1s and pt_pret_3s for "Portuguese"-ending
-	 forms. Defaults to `pret_base` + the accented conjugation vowel.
--- short_pret: The short preterite stem, used with 1s and 3s endings (pret_1s '-em', pret_3s '-o'). Only used with
+-- pret: The full preterite stem missing only the endings (-ste, -mos, etc.), e.g. 'fige', 'fo'. Only used for verbs
+	 with irregular preterites (pret_conj == "irreg") such as [[facer]], [[poder]], [[traer]], etc. The pret_1s and
+	 pret_3s are handled using the short_pret stem instead (pret_1s '-en', pret_3s '-o'). Defaults to `pret_base` + the
+	 conjugation vowel.
+-- short_pret: The short preterite stem, used with 1s and 3s endings (pret_1s '-en', pret_3s '-o'). Only used with
 	 irregular preterites (pret_conj == "irreg"). Normally derived from pret by deleting the final vowel, and doesn't
 	 need to be given explicitly.
--- fut: The future stem. Defaults to the infinitive stem + the unaccented conjugation vowel.
+-- fut: The future stem. Defaults to the infinitive stem + the conjugation vowel.
 -- cond: The conditional stem. Defaults to `fut`.
--- impf_sub: The imperfect subjunctive stem. Needs to include the accent on the final vowel that occurs in some forms;
-	 see `pret` for more information. Defaults to `pret`.
--- fut_sub: The future subjunctive stem. Needs to include the accent on the final vowel that occurs in some forms; see
-	 `gl_pret` for more information. Defaults to the merger of `gl_pret` and `pt_pret`.
--- plup: The pluperfect stem. Needs to include the accent on the final vowel that occurs in some forms; see `pret` for
-	 more information. Defaults to `pret`.
--- pers_inf: The personal infinitive stem. Defaults to the infinitive stem + the accented conjugation vowel.
+-- impf_sub: The imperfect subjunctive stem. Defaults to `pret`.
+-- fut_sub: The future subjunctive stem. Defaults to `pret`.
+-- plup: The pluperfect stem. Defaults to `pret`.
+-- pers_inf: The personal infinitive stem. Defaults to the infinitive stem + the conjugation vowel.
 -- pp: The masculine singular past participle. Default is based on the verb conjugation: infinitive stem + '-ado' for
      -ar verbs, otherwise infinitive stem + '-ido'.
 -- short_pp: The short masculine singular past participle, for verbs with such a form. No default.
@@ -593,7 +586,7 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- verbs in -aer (caer, raer, debaer, degraer, esvaer and derivatives of traer (but not traer itself):
+		-- verbs in -aer (caer, raer, debaer, degraer, esvaer and derivatives of traer, but not traer itself:
 		-- acaer/decaer/recaer,
 		-- abstraer/atraer/contraer/descontraer/detraer/distraer/extraer/maltraer/retraer/retrotraer/subtraer)
 		match = "aer",
@@ -821,9 +814,10 @@ local built_in_conjugations = {
 
 	-- Verbs not needing entries here:
 	--
-	-- durmir, engulir, tusir, subir, acudir/sacudir, pulir, sumir/consumir/ensumir (NOT asumir/reasumir/presumir/resumir/subsumir),
-	-- fuxir/muxir/ruxir, cuspir/chuspir, urdir/desurdir, xurdir/rexurdir, xunguir/conxunguir/desxunguir, munguir,
-	-- bulir/rebulir, ulir: use <u-o>
+	-- subir (NOT rubir), acudir/sacudir (NOT escudir, aludir/eludir), urdir/desurdir, xurdir/rexurdir,
+	-- engulir, pulir, bulir/rebulir, ulir, mulir (NOT escapulir), durmir, sumir/consumir/ensumir (NOT
+	-- asumir/reasumir/presumir/resumir/subsumir), cuspir/chuspir, sufrir, tusir, xunguir/conxunguir/desxunguir,
+	-- munguir, fuxir/muxir/ruxir: use <u-o>
 	--   [NOTE: imp_2s durme, consume/sume]
 	-- sosubir/susubir: use <u-o>? (archaic, not in RAG dictionary)
 	-- abolir: use <no_pres_stressed>
@@ -832,7 +826,7 @@ local built_in_conjugations = {
 	-- espir/despir, refletir, adherir, pedir/desapedir/despedir/expedir/impedir/reexpedir, medir/comedir/descomedir,
 	-- aferir/conferir/deferir/diferir/inferir/interferir/preferir/proferir/referir/transferir,
 	-- dixerir/enxerir/suxerir, preterir, competir/repetir, advertir/divertir, vestir/investir/revestir/travestir,
-	-- agredir/transgredir: use <i>
+	-- agredir/transgredir, espelir: use <i>
 	-- mentir/desmentir, sentir/asentir/consentir/disentir/presentir/resentir, ferir (but no derivatives), servir,
 	-- seguir/conseguir/perseguir/proseguir: use <i-e>
 	--   [NOTE: imp_2s minte]
@@ -849,9 +843,6 @@ local built_in_conjugations = {
 
 	{
 		-- saír/sobresaír
-		--
-		-- verbs in -air (cair, sair, trair and derivatives: decair/descair/recair, sobres(s)air,
-		-- abstrair/atrair/contrair/distrair/extrair/protrair/retrair/subtrair)
 		match = "aír",
 		forms = {
 			pres1_and_sub = "ai",
@@ -1086,24 +1077,18 @@ local function apply_vowel_alternations(stem, alternations)
 	local alternation_stems = {}
 	local saw_pres1_and_sub = false
 	local saw_pres_stressed = false
+	local saw_imp2s_override = false
+	local origstem = stem
+	-- Treat final -gu, -qu as a consonant, so the previous vowel can alternate (e.g. conseguir -> consigo).
+	-- This means a verb in -guar can't have a u-ú alternation but I don't think there are any verbs like that.
+	stem = rsub(stem, "([gq])u$", "%1" .. TEMPC1)
 
 	-- Process alternations other than +.
 	for _, altobj in ipairs(alternations) do
 		local alt = altobj.form
-		local pres1_and_sub, pres_stressed, err
-		-- Treat final -gu, -qu as a consonant, so the previous vowel can alternate (e.g. conseguir -> consigo).
-		-- This means a verb in -guar can't have a u-ú alternation but I don't think there are any verbs like that.
-		stem = rsub(stem, "([gq])u$", "%1" .. TEMPC1)
+		local pres1_and_sub, pres_stressed, imp2s_override, err
 		if alt == "+" then
 			-- do nothing yet
-		elseif alt == "ei" then
-			local before_last_vowel = rmatch(stem, "^(.*)i$")
-			if not before_last_vowel then
-				err = "stem should end in -i"
-			else
-				pres1_and_sub = nil
-				pres_stressed = before_last_vowel .. "ei"
-			end
 		else
 			local before_last_vowel, last_vowel, after_last_vowel = rmatch(stem, "^(.*)(" .. V .. ")(.-[ui])$")
 			if not before_last_vowel then
@@ -1112,6 +1097,7 @@ local function apply_vowel_alternations(stem, alternations)
 			if alt == "i-e" then
 				if last_vowel == "e" or last_vowel == "i" then
 					pres1_and_sub = before_last_vowel .. "i" .. after_last_vowel
+					imp2s_override = pres1_and_sub
 					if last_vowel == "i" then
 						pres_stressed = before_last_vowel .. "e" .. after_last_vowel
 					end
@@ -1128,6 +1114,7 @@ local function apply_vowel_alternations(stem, alternations)
 			elseif alt == "u-o" then
 				if last_vowel == "o" or last_vowel == "u" then
 					pres1_and_sub = before_last_vowel .. "u" .. after_last_vowel
+					imp2s_override = pres1_and_sub
 					if last_vowel == "u" then
 						pres_stressed = before_last_vowel .. "o" .. after_last_vowel
 					end
@@ -1157,18 +1144,21 @@ local function apply_vowel_alternations(stem, alternations)
 				error("Internal error: Unrecognized vowel alternation '" .. alt .. "'")
 			end
 		end
-		if pres1_and_sub then
-			pres1_and_sub = {form = pres1_and_sub:gsub(TEMPC1, "u"), footnotes = altobj.footnotes}
-			saw_pres1_and_sub = true
+		local function unapply_u_mod(val)
+			if val then
+				return {form = val:gsub(TEMPC1, "u"), footnotes = altobj.footnotes}, true
+			else
+				return nil, false
+			end
 		end
-		if pres_stressed then
-			pres_stressed = {form = pres_stressed:gsub(TEMPC1, "u"), footnotes = altobj.footnotes}
-			saw_pres_stressed = true
-		end
+		pres1_and_sub, saw_pres1_and_sub = unapply_u_mod(pres1_and_sub)
+		pres_stressed, saw_pres_stressed = unapply_u_mod(pres_stressed)
+		imp2s_override, saw_imp2s_override = unapply_u_mod(imp2s_override)
 		table.insert(alternation_stems, {
 			altobj = altobj,
 			pres1_and_sub = pres1_and_sub,
 			pres_stressed = pres_stressed,
+			imp2s_override = imp2s_override,
 			err = err
 		})
 	end
@@ -1177,9 +1167,10 @@ local function apply_vowel_alternations(stem, alternations)
 	-- properly attached.
 	for _, alternation_stem in ipairs(alternation_stems) do
 		if alternation_stem.altobj.form == "+" then
-			local stemobj = {form = stem, footnotes = alternation_stem.altobj.footnotes}
+			local stemobj = {form = origstem, footnotes = alternation_stem.altobj.footnotes}
 			alternation_stem.pres1_and_sub = saw_pres1_and_sub and stemobj or nil
 			alternation_stem.pres_stressed = saw_pres_stressed and stemobj or nil
+			alternation_stem.imp2s_override = saw_imp2s_override and stemobj or nil
 		end
 	end
 
@@ -1202,7 +1193,7 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, dont_includ
 
 	-- If ending begins with i, it must get an accent after a/o/u to prevent the two merging into a diphthong:
 	-- caer -> caíches, caído; doer -> doíches, doído; concluír -> concluíches, concluído.
-	if ending:find("^i") and stem:find("[aou]$") then
+	if ending:find("^i") and stem:find("[aou]$") and not stem:find("[gq]u$") then
 		-- Special case for impf_1p/impf_2p, where the i is unstressed and changes into ï. FIXME: Maybe we should be
 		-- checking the slot value instead.
 		if ending == "iamos" or ending == "iades" then
@@ -1280,8 +1271,22 @@ local function add_single_stem_tense(base, slot_pref, stems, s1, s2, s3, p1, p2,
 end
 
 
-local function construct_stems(base, vowel_alt)
+local function construct_stems(base, vowel_alt, imp_only)
 	local stems = {}
+	if imp_only then
+		stems.imp2s_override =
+			-- If no_pres_stressed given, there should be no imp_2s.
+			not base.no_pres_stressed and (
+			base.stems.imp2s_override or
+			vowel_alt.imp2s_override or
+			nil) or nil
+		base.this_stems = stems
+		return 
+	end
+
+	local function combine(slot, stem, ending)
+		return combine_stem_ending(base, slot, base.prefix, stem, ending, "dont include prefix")
+	end
 	stems.pres_unstressed = base.stems.pres_unstressed or base.inf_stem
 	stems.pres_stressed =
 		-- If no_pres_stressed given, pres_stressed stem should be empty so no forms are generated.
@@ -1303,7 +1308,8 @@ local function construct_stems(base, vowel_alt)
 	stems.pret_base = base.stems.pret_base or base.inf_stem
 	stems.pret_conj = base.stems.pret_conj or base.conj
 	stems.pret = base.stems.pret or iut.map_forms(iut.convert_to_general_list_form(stems.pret_base),
-		function(form) return form .. base.conj_vowel end)
+		-- use combine_stem_ending esp. so we get saíra etc.
+		function(form) return combine("pret", form, base.conj_vowel) end)
 	stems.short_pret = base.stems.gl_short_pret or iut.map_forms(iut.convert_to_general_list_form(stems.pret),
 		function(form) return rsub(form, com.V .. "$", "") end)
 	stems.fut = base.stems.fut or base.inf_stem .. base.conj
@@ -1312,13 +1318,17 @@ local function construct_stems(base, vowel_alt)
 	stems.pres_sub_unstressed = base.stems.pres_sub_unstressed or stems.pres1_and_sub or stems.pres_unstressed
 	stems.sub_conj = base.stems.sub_conj or base.conj
 	stems.plup = base.stems.plup or stems.pret
+	-- Needed for plup_1p and plup_2p if there's an accent in the regular pluperfect stem (as for [[saír]]).
+	stems.plup_unstressed = iut.map_forms(iut.convert_to_general_list_form(stems.plup), com.remove_final_accent)
 	stems.impf_sub = base.stems.impf_sub or stems.pret
+	-- Needed for impf_sub_1p and impf_sub_2p. We can't just add an acute accent because there may already be one
+	-- (as for [[saír]]).
+	stems.impf_sub_antepenult_stressed = iut.map_forms(iut.convert_to_general_list_form(stems.impf_sub), com.add_final_accent)
 	stems.fut_sub = base.stems.fut_sub or stems.pret
-	stems.pers_inf = base.stems.pers_inf or base.inf_stem .. base.conj_vowel
-	stems.pp = base.stems.pp or base.conj == "ar" and
-		combine_stem_ending(base, "pp_ms", base.prefix, base.inf_stem, "ado", "dont include prefix") or
-		-- use combine_stem_ending esp. so we get roído, caído, etc.
-		combine_stem_ending(base, "pp_ms", base.prefix, base.inf_stem, "ido", "dont include prefix")
+	-- use combine_stem_ending esp. so we get saír, saírmos, etc.
+	stems.pers_inf = base.stems.pers_inf or combine("pers_inf", base.inf_stem, base.conj_vowel)
+	-- use combine_stem_ending esp. so we get roído, caído, etc.
+	stems.pp = base.stems.pp or combine("pp_ms", base.inf_stem, base.conj == "ar" and "ado" or "ido")
 	stems.pp_ms = stems.pp
 	local function masc_to_fem(form)
 		if rfind(form, "o$") then
@@ -1408,9 +1418,10 @@ local function add_finite_non_present(base)
 		add_tense("pret", stems.pret_base, "ín", "iches", "iu", "imos", "istes", "iron")
 	end
 
-	add_tense("plup", stems.plup, "ra", "ras", "ra", "ramos", "rades", "ran")
-	-- AC at the beginning of the ending causes the accent to transfer to the final vowel of the stem.
-	add_tense("impf_sub", stems.impf_sub, "se", "ses", "se", AC .. "semos", AC .. "sedes", "sen")
+	add_tense("plup", stems.plup, "ra", "ras", "ra", nil, nil, "ran")
+	add_tense("plup", stems.plup_unstressed, nil, nil, nil, "ramos", "rades", nil)
+	add_tense("impf_sub", stems.impf_sub, "se", "ses", "se", nil, nil, "sen")
+	add_tense("impf_sub", stems.impf_sub_antepenult_stressed, nil, nil, nil, "semos", "sedes", nil)
 	add_tense("fut_sub", stems.fut_sub, "r", "res", "r", "rmos", "rdes", "ren")
 	if base.refl then
 		-- FIXME!
@@ -1480,9 +1491,17 @@ local function add_non_finite_forms(base)
 end
 
 
-local function copy_forms_to_imperatives(base)
-	-- Copy pres3s to imperative since they are almost always the same.
-	insert_forms(base, "imp_2s", iut.map_forms(base.forms.pres_3s, function(form) return form end))
+local function add_imperatives(base)
+	for _, vowel_alt in ipairs(base.vowel_alt_stems) do
+		construct_stems(base, vowel_alt, "imp only")
+		local stems = base.this_stems
+		if stems.imp2s_override then
+			add3(base, "imp_2s", stems.imp2s_override, base.conj == "ar" and "a" or "e")
+		else
+			-- Copy pres3s to imperative since they are almost always the same.
+			insert_forms(base, "imp_2s", iut.map_forms(base.forms.pres_3s, function(form) return form end))
+		end
+	end
 	if not skip_slot(base, "imp_2p") then
 		-- Copy pres2p to imperative 2p minus -s since they are almost always the same.
 		-- But not if there's an override, to avoid possibly throwing an error.
@@ -1727,7 +1746,7 @@ local function conjugate_verb(base)
 	end)
 	-- This should happen after process_slot_overrides() in case a derived slot is based on an override
 	-- (as with the imp_3s of [[dar]], [[estar]]).
-	copy_forms_to_imperatives(base)
+	add_imperatives(base)
 	-- do non-reflexive positive imperative slot overrides
 	process_slot_overrides(base, function(slot)
 		return slot:find("^imp_")
@@ -2026,9 +2045,9 @@ local function detect_indicator_spec(base)
 		error("Unrecognized infinitive: " .. base.verb)
 	end
 	base.inf_stem = inf_stem
-	suffix = suffix == "ôr" and "or" or suffix
+	suffix = suffix == "ór" and "or" or suffix == "ír" and "ir" or suffix
 	base.conj = suffix
-	base.conj_vowel = suffix == "ar" and "a" or (suffix == "ir" or suffix == "ír") and "i" or "e"
+	base.conj_vowel = suffix == "ar" and "a" or suffix == "ir" and "i" or "e"
 	base.frontback = suffix == "ar" and "back" or "front"
 
 	if base.stems.vowel_alt then -- built-in verb with specified vowel alternation
