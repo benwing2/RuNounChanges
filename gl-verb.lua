@@ -3,7 +3,7 @@ local export = {}
 
 --[=[
 
-Authorship: Ben Wing <benwing2>, MedK <medk1>
+Authorship: Ben Wing <benwing2>
 
 ]=]
 
@@ -530,6 +530,7 @@ local built_in_conjugations = {
 	-- -car (brincar, buscar, pecar, trancar, etc.): automatically handled in combine_stem_ending()
 	-- -zar (alcanzar, comezar, lazar): automatically handled in combine_stem_ending()
     -- -gar (apagar, cegar, esmagar, largar, navegar, resmungar, sugar, etc.): automatically handled in combine_stem_ending()
+    -- -guar (iguar, minguar): automatically handled in combine_stem_ending()
 	--
 	-- (3) Verbs with vowel alternations: need to specify the alternation explicitly unless it always happens, in
 	--     which case it's handled automatically through an entry below.
@@ -562,6 +563,19 @@ local built_in_conjugations = {
 			pret_conj = "irreg", pret = "estive",
 			pp_inv = true, -- no [[sobestar]] or [[sobrestar]], which would be transitive
 			irreg = true,
+		}
+	},
+	{
+		-- verbs in -uar but not -guar
+		match = function(verb)
+			if verb:find("guar$") then
+				return nil
+			else
+				return match_against_verbs("uar", {""})(verb)
+			end
+		end,
+		forms = {
+			vowel_alt = "ú",
 		}
 	},
 
@@ -986,7 +1000,7 @@ local built_in_conjugations = {
 		-- constituír/destituír/instituír/prostituír/reconstituír/restituír,
 		-- construír/desobstruír/destruír/instruír/obstruír/reconstruír, derruír,
 		-- desposuír, diminuír, luír/esluír, estatuír, imbuír, inmiscuír, intuír, puír, pruír)
-		match = "uír", -- this won't match -guir verbs (e.g. [[conseguir]]) or -quir verbs (e.g. [[delinquir]])
+		match = "[uü]ír", -- this won't match -guir verbs (e.g. [[conseguir]]) or -quir verbs (e.g. [[delinquir]])
 		forms = {
 			-- all occurrences of accented í and ï in endings handled in combine_stem_ending()
 			vowel_alt = "ú",
@@ -1002,7 +1016,7 @@ local built_in_conjugations = {
 			pret_conj = "irreg", pret = "viñe", pret_1s = "vin", pret_3s = "veu",
 			pp = "vindo",
 			-- FIXME! The following is as in the RAG tables but may be a typo and should be vén for [[vir]] like pres_3s
-			imp_2s = "ven#",
+			imp_2s = "vén#",
 			irreg = true,
 		}
 	},
@@ -1017,11 +1031,14 @@ local built_in_conjugations = {
 		-- superpor, supor/presupor, traspor, xustapor
 		match = "p[oó]r",
 		forms = {
-			pres_2s = "pós#", pres_3s = "pón#", pres_3p = "pón#",
+			pres_2s = "pós#", pres_3s = "pón#", pres_1p = "pomos", pres_2p = "pondes", pres_3p = "pón#",
+			pres1_and_sub = "poñ",
 			full_impf = "puñ",
 			pret_conj = "irreg", pret = "puxe",
 			fut = "por",
 			pers_inf = "po",
+			pers_inf_1s = function(base, prefix) return prefix == "" and "pór" or "por" end,
+			pers_inf_3s = function(base, prefix) return prefix == "" and "pór" or "por" end,
 			gerund = "pondo", pp = "posto",
 			irreg = true,
 		}
@@ -1090,10 +1107,7 @@ local function apply_vowel_alternations(stem, alternations)
 		if alt == "+" then
 			-- do nothing yet
 		else
-			local before_last_vowel, last_vowel, after_last_vowel = rmatch(stem, "^(.*)(" .. V .. ")(.-[ui])$")
-			if not before_last_vowel then
-				before_last_vowel, last_vowel, after_last_vowel = rmatch(stem, "^(.*)(" .. V .. ")(.-)$")
-			end
+			local before_last_vowel, last_vowel, after_last_vowel = rmatch(stem, "^(.*)(" .. V .. ")(.-)$")
 			if alt == "i-e" then
 				if last_vowel == "e" or last_vowel == "i" then
 					pres1_and_sub = before_last_vowel .. "i" .. after_last_vowel
@@ -1135,10 +1149,10 @@ local function apply_vowel_alternations(stem, alternations)
 					err = "should have -i- as the last vowel"
 				end
 			elseif alt == "ú" then
-				if last_vowel == "u" then
+				if last_vowel == "u" or last_vowel == "ü" then
 					pres_stressed = before_last_vowel .. "ú" .. after_last_vowel
 				else
-					err = "should have -u- as the last vowel"
+					err = "should have -u- or -ü- as the last vowel"
 				end
 			else
 				error("Internal error: Unrecognized vowel alternation '" .. alt .. "'")
@@ -1193,7 +1207,7 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, dont_includ
 
 	-- If ending begins with i, it must get an accent after a/o/u to prevent the two merging into a diphthong:
 	-- caer -> caíches, caído; doer -> doíches, doído; concluír -> concluíches, concluído.
-	if ending:find("^i") and stem:find("[aou]$") and not stem:find("[gq]u$") then
+	if ending:find("^i") and stem:find("[aouü]$") and not stem:find("[gq]u$") then
 		-- Special case for impf_1p/impf_2p, where the i is unstressed and changes into ï. FIXME: Maybe we should be
 		-- checking the slot value instead.
 		if ending == "iamos" or ending == "iades" then
@@ -1207,7 +1221,7 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, dont_includ
 	-- pre-back-vowel variant, as indicated by `frontback`. We want these front-back spelling changes to happen
 	-- between stem and ending, not between prefix and stem; the prefix may not have the same "front/backness"
 	-- as the stem.
-	local is_front = rfind(ending, "^[eiéí]")
+	local is_front = rfind(ending, "^[eiéíï]")
 	if base.frontback == "front" and not is_front then
 		stem = stem:gsub("c$", "z") -- coñecer -> coñezo, vencer -> venzo, inmiscir -> inmiszo
 		stem = stem:gsub("gu$", "g") -- distinguir -> distingo, conseguir -> consigo
@@ -2208,24 +2222,26 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	local cons_alt = base.stems.cons_alt
 	if cons_alt == nil then
 		if base.conj == "ar" then
-			if base.inf_stem:find("ç$") then
-				cons_alt = "c-ç"
+			if base.inf_stem:find("z$") then
+				cons_alt = "c-z"
 			elseif base.inf_stem:find("c$") then
 				cons_alt = "c-qu"
 			elseif base.inf_stem:find("g$") then
 				cons_alt = "g-gu"
+			elseif base.inf_stem:find("gu$") then
+				cons_alt = "gu-gü"
 			end
 		else
 			if base.no_pres_stressed or base.no_pres1_and_sub then
-				cons_alt = nil -- no e.g. c-ç alternation in this case
+				cons_alt = nil -- no e.g. c-z alternation in this case
 			elseif base.inf_stem:find("c$") then
-				cons_alt = "c-ç"
+				cons_alt = "c-z"
 			elseif base.inf_stem:find("qu$") then
 				cons_alt = "c-qu"
-			elseif base.inf_stem:find("g$") then
-				cons_alt = "g-j"
 			elseif base.inf_stem:find("gu$") then
 				cons_alt = "g-gu"
+			elseif base.inf_stem:find("gü$") then
+				cons_alt = "gu-gü"
 			end
 		end
 	end
