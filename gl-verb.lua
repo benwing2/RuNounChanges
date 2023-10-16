@@ -32,7 +32,7 @@ local m_string_utilities = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local iut = require("Module:inflection utilities")
-local com = require("Module:gl-common")
+local com = require("Module:gl-reinteg-common")
 
 local force_cat = false -- set to true for debugging
 local check_for_red_links = false -- set to false for debugging
@@ -168,7 +168,7 @@ Vowel alternations:
 	 * NOTE: It seems most or all verbs in -uar other than in -guar, -quar have stressed ú, so we make it the default
 ]=]
 
-local vowel_alternants = m_table.listToSet({"i-e", "i", "í", "u-o", "u", "ú", "ei", "+"})
+local vowel_alternants = m_table.listToSet({"i-e", "i", "í", "u-o", "u", "ú", "+"})
 local vowel_alternant_to_desc = {
 	["i-e"] = "''i-e'' alternation in present singular",
 	["i"] = "''e'' becomes ''i'' when stressed",
@@ -176,7 +176,6 @@ local vowel_alternant_to_desc = {
 	["u-o"] = "''u-o'' alternation in present singular",
 	["u"] = "''o'' becomes ''u'' when stressed",
 	["ú"] = "''u'' becomes ''ú'' when stressed",
-	["ei"] = "''i'' becomes ''ei'' when stressed",
 }
 
 local vowel_alternant_to_cat = {
@@ -186,7 +185,6 @@ local vowel_alternant_to_cat = {
 	["u-o"] = "u-o alternation in present singular",
 	["u"] = "o becoming u when stressed",
 	["ú"] = "u becoming ú when stressed",
-	["ei"] = "i becoming ei when stressed",
 }
 
 local all_persons_numbers = {
@@ -307,7 +305,7 @@ local function add_slots(alternant_multiword_spec)
 	add_basic_personal_slot("imp", "imp", imp_person_number_list)
 	add_basic_personal_slot("pers_inf", "pers|inf", person_number_list)
 	-- Don't need special non-reflexive-part slots because the negative imperative is multiword, of which the
-	-- individual words are 'nom' + subjunctive.
+	-- individual words are 'non' + subjunctive.
 	add_basic_personal_slot("neg_imp", "neg|imp", neg_imp_person_number_list, "no special verb form of")
 	-- Don't need special non-reflexive-part slots because we don't want [[arrependendo]] mapping to [[arrependendo-me]]
 	-- (only [[arrependendo-se]]) or [[arrepender]] mapping to [[arrepender-me]] (only [[arrepender-se]]).
@@ -537,17 +535,15 @@ local built_in_conjugations = {
 	-- (2) Verbs with orthographic consonant alternations: handled automatically.
 	--
 	-- -car (brincar, buscar, pecar, trancar, etc.): automatically handled in combine_stem_ending()
-	-- -çar (alcançar, começar, laçar): automatically handled in combine_stem_ending()
+	-- -zar (alcanzar, comezar, lazar): automatically handled in combine_stem_ending()
     -- -gar (apagar, cegar, esmagar, largar, navegar, resmungar, sugar, etc.): automatically handled in combine_stem_ending()
 	--
 	-- (3) Verbs with vowel alternations: need to specify the alternation explicitly unless it always happens, in
 	--     which case it's handled automatically through an entry below.
 	--
-	-- esmiuçar changing to esmiúço: use <ú>
+	-- esmiuzar changing to esmiúzo: use <ú>
 	-- faiscar changing to faísco: use <í>
-	-- -iar changing to -eio (ansiar, incendiar, mediar, odiar, remediar, etc.): use <ei>
 	-- -izar changing to -ízo (ajuizar, enraizar, homogeneizar, plebeizar, etc.): use <í>
-	-- mobiliar changing to mobílio: use <í>
 	-- reusar changing to reúso: use <ú>
 	-- saudar changing to saúdo: use <ú>
 	-- tuitar/retuitar changing to (re)tuíto: use <í>
@@ -859,7 +855,7 @@ local built_in_conjugations = {
 		match = "aír",
 		forms = {
 			pres1_and_sub = "ai",
-			-- all occurrences of accented í in endings handled in combine_stem_ending()
+			-- all occurrences of accented í and ï in endings handled in combine_stem_ending()
 			irreg = true,
 		}
 	},
@@ -976,7 +972,7 @@ local built_in_conjugations = {
 	},
 	{
 		-- concluír/recluír; not excluír/incluír/ocluír
-		match = match_against_verbs("cluír", {"con", "re"})
+		match = match_against_verbs("cluír", {"con", "re"}),
 		forms = {
 			-- all occurrences of accented í and ï in endings handled in combine_stem_ending()
 			vowel_alt = "ú",
@@ -1233,7 +1229,14 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, dont_includ
 		stem = rsub(stem, "z$", "c") -- aderezar -> aderecei
 	end
 
-	return stem .. ending
+	local retval = stem .. ending
+	if retval:find("#$") then -- remove final accent if no prefix
+		retval = retval:gsub("#$", "")
+		if prefix == "" then
+			retval = com.remove_final_accent(retval)
+		end
+	end
+	return retval
 end
 
 
@@ -1650,18 +1653,18 @@ end
 
 
 local function generate_negative_imperatives(base)
-	-- Copy subjunctives to negative imperatives, preceded by "nom".
+	-- Copy subjunctives to negative imperatives, preceded by "non".
 	for _, persnum in ipairs(neg_imp_person_number_list) do
 		local from = "pres_sub_" .. persnum
 		local to = "neg_imp_" .. persnum
 		insert_forms(base, to, iut.map_forms(base.forms[from], function(form)
 			if base.alternant_multiword_spec.args.noautolinkverb then
-				return "nom " .. form
+				return "non " .. form
 			elseif form:find("%[%[") then
 				-- already linked, e.g. when reflexive
-				return "[[nom]] " .. form
+				return "[[non]] " .. form
 			else
-				return "[[nom]] [[" .. form .. "]]"
+				return "[[non]] [[" .. form .. "]]"
 			end
 		end))
 	end
@@ -1730,7 +1733,7 @@ local function conjugate_verb(base)
 		return slot:find("^imp_")
 	end)
 	-- We need to add joined reflexives, then joined and non-joined clitics, then non-joined reflexives, so we get
-	-- [[arrepende-te]] but [[nom]] [[te]] [[arrependas]].
+	-- [[arrepéndete]] but [[non]] [[te]] [[arrependas]].
 	if base.refl then
 		add_reflexive_or_fixed_clitic_to_forms(base, "do reflexive", "do joined")
 		process_slot_overrides(base, nil, "do reflexive") -- do reflexive-only slot overrides
@@ -2018,14 +2021,14 @@ local function detect_indicator_spec(base)
 
 	base.prefix = base.prefix or ""
 	base.non_prefixed_verb = base.non_prefixed_verb or base.verb
-	local inf_stem, suffix = rmatch(base.non_prefixed_verb, "^(.*)([aeioô]r)$")
+	local inf_stem, suffix = rmatch(base.non_prefixed_verb, "^(.*)([aeiíoó]r)$")
 	if not inf_stem then
 		error("Unrecognized infinitive: " .. base.verb)
 	end
 	base.inf_stem = inf_stem
 	suffix = suffix == "ôr" and "or" or suffix
 	base.conj = suffix
-	base.conj_vowel = suffix == "ar" and "á" or suffix == "ir" and "í" or "ê"
+	base.conj_vowel = suffix == "ar" and "a" or (suffix == "ir" or suffix == "ír") and "i" or "e"
 	base.frontback = suffix == "ar" and "back" or "front"
 
 	if base.stems.vowel_alt then -- built-in verb with specified vowel alternation
@@ -2308,7 +2311,7 @@ local notes_template = [=[
 
 local basic_table = [=[
 {description}<div class="NavFrame">
-<div class="NavHead" align=center>&nbsp; &nbsp; Reintegrated conjugation of {title} (See [[Appendix:Reintegrationism]])</div>
+<div class="NavHead" align=center>&nbsp; &nbsp; Conjugation of {title}</div>
 <div class="NavContent" align="left">
 {\op}| class="inflection-table" style="background:#F6F6F6; text-align: left; border: 1px solid #999999;" cellpadding="3" cellspacing="0"
 |-
@@ -2427,7 +2430,7 @@ local basic_table = [=[
 | style="border: 1px solid #999999; vertical-align: top;" | {imp_2p}
 | style="border: 1px solid #999999; vertical-align: top;" | {imp_3p}
 |-
-! style="border: 1px solid #999999; background:#d4c4b0" | <span title="imperativo negativo">Negative</span> (<<nom>>)
+! style="border: 1px solid #999999; background:#d4c4b0" | <span title="imperativo negativo">Negative</span> (<<non>>)
 | style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_2s}
 | style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_3s}
 | style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_1p}
@@ -2612,7 +2615,6 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 	local inflect_props = {
 		slot_list = alternant_multiword_spec.all_verb_slots,
 		inflect_word_spec = conjugate_verb,
-		get_variants = function(form) return rsub(form, not_var_code_c, "") end,
 		-- We add links around the generated verbal forms rather than allow the entire multiword
 		-- expression to be a link, so ensure that user-specified links get included as well.
 		include_user_specified_links = true,
