@@ -1,4 +1,4 @@
--- This module contains code for Italian headword templates.
+-- This module contains code for Galician headword templates.
 -- Templates covered are:
 -- * {{gl-noun}}, {{gl-proper noun}};
 -- * {{gl-verb}};
@@ -21,6 +21,7 @@ local m_table = require("Module:table")
 local com = require("Module:gl-common")
 local romut_module = "Module:romance utilities"
 local gl_verb_module = "Module:gl-verb"
+local gl_reinteg_verb_module = "Module:gl-reinteg-verb"
 local lang = require("Module:languages").getByCode("gl")
 local langname = lang:getCanonicalName()
 
@@ -92,13 +93,7 @@ local function check_all_missing(forms, plpos, tracking_categories)
 end
 
 
--- The main entry point.
--- This is the only function that can be invoked from a template.
-function export.show(frame)
-	local poscat = frame.args[1] or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
-
-	local parargs = frame:getParent().args
-
+local function do_headword(parargs, poscat, is_reinteg)
 	local params = {
 		["head"] = {list = true},
 		["id"] = {},
@@ -106,6 +101,7 @@ function export.show(frame)
 		["nolinkhead"] = {type = "boolean"},
 		["json"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing
+		["reinteg"] = {}, -- processed in show()
 	}
 
 	if pos_functions[poscat] then
@@ -150,6 +146,7 @@ function export.show(frame)
 		pagename = pagename,
 		id = args.id,
 		force_cat_output = force_cat,
+		is_reinteg = is_reinteg,
 	}
 
 	local is_suffix = false
@@ -164,7 +161,10 @@ function export.show(frame)
 	local tracking_categories = {}
 
 	if pos_functions[poscat] then
-		pos_functions[poscat].func(args, data, tracking_categories, frame, is_suffix)
+		pos_functions[poscat].func(args, data, tracking_categories, is_suffix)
+	end
+	if is_reinteg then
+		table.insert(data.inflections, {label = "[[Appendix:Reintegrationism|reintegrationist]] norm"})
 	end
 
 	if args.json then
@@ -173,6 +173,27 @@ function export.show(frame)
 
 	return require("Module:headword").full_headword(data)
 		.. (#tracking_categories > 0 and require("Module:utilities").format_categories(tracking_categories, lang, nil, nil, force_cat) or "")
+end
+
+
+-- The main entry point.
+-- This is the only function that can be invoked from a template.
+function export.show(frame)
+	local poscat = frame.args[1] or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
+	local is_reinteg = frame.args.reinteg and require("Module:yesno")(frame.args.reinteg, false) or false
+	local parargs = frame:getParent().args
+	local also_reinteg = parargs.reinteg and require("Module:yesno")(parargs.reinteg, false) or false
+	if is_reinteg and also_reinteg then
+		error("Can't specify reinteg= when using a reintegrationist-specific template")
+	end
+	local parts = {}
+	if also_reinteg or not is_reinteg then
+		table.insert(parts, do_headword(parargs, poscat, false))
+	end
+	if also_reinteg or is_reinteg then
+		table.insert(parts, do_headword(parargs, poscat, true))
+	end
+	return table.concat(parts, "<br />")
 end
 
 
@@ -569,14 +590,14 @@ end
 
 pos_functions["nouns"] = {
 	params = get_noun_params(),
-	func = function(args, data, tracking_categories, frame, is_suffix)
+	func = function(args, data, tracking_categories, is_suffix)
 		do_noun(args, data, tracking_categories, "noun", is_suffix)
 	end,
 }
 
 pos_functions["proper nouns"] = {
 	params = get_noun_params(),
-	func = function(args, data, tracking_categories, frame, is_suffix)
+	func = function(args, data, tracking_categories, is_suffix)
 		do_noun(args, data, tracking_categories, "proper noun", is_suffix, "is proper noun")
 	end,
 }
@@ -652,7 +673,7 @@ end
 
 pos_functions["pronouns"] = {
 	params = get_pronoun_params(),
-	func = function(args, data, tracking_categories, frame, is_suffix)
+	func = function(args, data, tracking_categories, is_suffix)
 		do_pronoun(args, data, tracking_categories, "pronoun", is_suffix)
 	end,
 }
@@ -1018,28 +1039,28 @@ end
 
 pos_functions["adjectives"] = {
 	params = get_adjective_params("base"),
-	func = function(args, data, tracking_categories, frame, is_suffix)
+	func = function(args, data, tracking_categories, is_suffix)
 		do_adjective(args, data, tracking_categories, "adjective", is_suffix)
 	end,
 }
 
 pos_functions["comparative adjectives"] = {
 	params = get_adjective_params("comp"),
-	func = function(args, data, tracking_categories, frame, is_suffix)
+	func = function(args, data, tracking_categories, is_suffix)
 		do_adjective(args, data, tracking_categories, "adjective", is_suffix)
 	end,
 }
 
 pos_functions["superlative adjectives"] = {
 	params = get_adjective_params("sup"),
-	func = function(args, data, tracking_categories, frame, is_suffix)
+	func = function(args, data, tracking_categories, is_suffix)
 		do_adjective(args, data, tracking_categories, "adjective", is_suffix, "is superlative")
 	end,
 }
 
 pos_functions["past participles"] = {
 	params = get_adjective_params("part"),
-	func = function(args, data, tracking_categories, frame, is_suffix)
+	func = function(args, data, tracking_categories, is_suffix)
 		do_adjective(args, data, tracking_categories, "participle", is_suffix)
 		data.pos_category = "past participles"
 	end,
@@ -1047,21 +1068,21 @@ pos_functions["past participles"] = {
 
 pos_functions["determiners"] = {
 	params = get_adjective_params("det"),
-	func = function(args, data, tracking_categories, frame, is_suffix)
+	func = function(args, data, tracking_categories, is_suffix)
 		do_adjective(args, data, tracking_categories, "determiner", is_suffix)
 	end,
 }
 
 pos_functions["adjective-like pronouns"] = {
 	params = get_adjective_params("pron"),
-	func = function(args, data, tracking_categories, frame, is_suffix)
+	func = function(args, data, tracking_categories, is_suffix)
 		do_adjective(args, data, tracking_categories, "pronoun", is_suffix)
 	end,
 }
 
 pos_functions["adjective-like contractions"] = {
 	params = get_adjective_params("contr"),
-	func = function(args, data, tracking_categories, frame, is_suffix)
+	func = function(args, data, tracking_categories, is_suffix)
 		do_adjective(args, data, tracking_categories, "contraction", is_suffix)
 	end,
 }
@@ -1098,21 +1119,21 @@ end
 
 pos_functions["adverbs"] = {
 	params = get_adverb_params("base"),
-	func = function(args, data, tracking_categories, frame, is_suffix)
+	func = function(args, data, tracking_categories, is_suffix)
 		do_adverb(args, data, tracking_categories, "adverb", is_suffix)
 	end,
 }
 
 pos_functions["comparative adverbs"] = {
 	params = get_adverb_params("comp"),
-	func = function(args, data, tracking_categories, frame, is_suffix)
+	func = function(args, data, tracking_categories, is_suffix)
 		do_adverb(args, data, tracking_categories, "adverb", is_suffix)
 	end,
 }
 
 pos_functions["superlative adverbs"] = {
 	params = get_adverb_params("sup"),
-	func = function(args, data, tracking_categories, frame, is_suffix)
+	func = function(args, data, tracking_categories, is_suffix)
 		do_adverb(args, data, tracking_categories, "adverb", is_suffix)
 	end,
 }
@@ -1141,7 +1162,7 @@ pos_functions["verbs"] = {
 		["attn"] = {type = "boolean"},
 		["new"] = {type = "boolean"},
 	},
-	func = function(args, data, tracking_categories, frame)
+	func = function(args, data, tracking_categories)
 		local preses, preses_3s, prets, parts, short_parts
 		local pagename = args.pagename or PAGENAME
 		local def_forms
@@ -1151,12 +1172,16 @@ pos_functions["verbs"] = {
 			return
 		end
 
-		if mw.title.getCurrentTitle().nsText == "Template" and PAGENAME == "gl-verb" and not args.pagename then
-			pagename = "carregar"
+		if mw.title.getCurrentTitle().nsText == "Template" and not args.pagename then
+			if PAGENAME == "gl-verb" then
+				pagename = "carregar"
+			elseif PAGENAME == "gl-reinteg-verb" then
+				pagename = "fazer"
+			end
 		end
 
-		local parargs = frame:getParent().args
-		local gl_verb = require(gl_verb_module)
+		local parargs = mw.getCurrentFrame():getParent().args
+		local gl_verb = require(data.is_reinteg and gl_reinteg_verb_module or gl_verb_module)
 		local alternant_multiword_spec = gl_verb.do_generate_forms(parargs, "from headword")
 		for _, cat in ipairs(alternant_multiword_spec.categories) do
 			table.insert(data.categories, cat)
@@ -1274,6 +1299,11 @@ pos_functions["verbs"] = {
 					-- Strip redundant brackets surrounding entire form. These may get generated e.g.
 					-- if we use the angle bracket notation with a single word.
 					local stripped_form = rmatch(form.form, "^%[%[([^%[%]]*)%]%]$") or form.form
+					-- The reintegrationist code uses variant codes to track "Portuguese-ending" vs. "Galician-ending"
+					-- forms and "less common" forms. Remove them now.
+					if data.is_reinteg then
+						stripped_form = gl_verb.remove_variant_codes(stripped_form)
+					end
 					-- Don't include accelerators if brackets remain in form, as the result will be wrong.
 					-- FIXME: For now, don't include accelerators. We should use the new {{gl-verb form of}} once implemented.
 					-- local this_accel = not stripped_form:find("%[%[") and accel or nil
