@@ -102,8 +102,8 @@ local prepositions = {
 	"sobre ",
 }
 
-local function call_handle_multiword(form, special, make_fun, fun_name)
-	local retval = require(romut_module).handle_multiword(form, special, make_fun, prepositions)
+local function call_handle_multiword(term, special, make_fun, fun_name)
+	local retval = require(romut_module).handle_multiword(term, special, make_fun, prepositions)
 	if retval then
 		if #retval ~= 1 then
 			error("Internal error: Should have one return value for " .. fun_name .. ": " .. table.concat(retval, ","))
@@ -115,25 +115,23 @@ end
 
 local function make_try(word)
 	return function(from, to)
-		local stem = rmatch(word, "^(.*)" .. from .. "$")
-		if stem then
-			return stem .. to
+		local newval, changed = rsubb(word, from, to)
+		if changed then
+			return newval
 		end
 		return nil
 	end
 end
 
-function export.make_plural(form, special)
-	local retval = call_handle_multiword(form, special, export.make_plural, "make_plural")
+function export.make_plural(term, special)
+	local retval = call_handle_multiword(term, special, export.make_plural, "make_plural")
 	if retval then
 		return retval
 	end
 
-	local try = make_try(form)
+	local try = make_try(term)
 
-	-- This is ported from the former [[Module:gl-plural]] except that the old code sometimes returned nil (final -ão
-	-- other than -ção and -são, final consonant other than [lrmzs]), whereas we always return a default plural
-	-- (all -ão -> ões, all final consonants other than [lrmzs] are left unchanged).
+	-- Based on https://www.lingua.gal/c/document_library/get_file?file_path=/portal-lingua/celga/celga-1/material-alumno/Manual_Aula_de_Galego_1_resumo_gramatical.pdf
 	return try("r$", "res") or
 		try("z$", "ces") or
 		try("(" .. V .. "be)l$", "%1is") or -- vowel + -bel
@@ -141,26 +139,27 @@ function export.make_plural(form, special)
 		try("^(" .. C .. "*" .. V .. C .. "*)l$", "%1es") or -- monosyllable ending in -l e.g. [[sol]] -> 'soles'
 		try("il$", "ís") or -- final stressed -il e.g. [[civil]] -> 'civís'
 		try("(" .. V .. ")l$", "%1is") or -- any other vowel + -l e.g. [[papel]] -> 'papeis'
-		try("(" V .. "[íú])s$", "%ses") or -- vowel + stressed í/ú + -s e.g. [[país]] -> 'países'
+		try("(" .. V .. "[íú])s$", "%1ses") or -- vowel + stressed í/ú + -s e.g. [[país]] -> 'países'
 		try("(" .. AV .. ")s$", -- other final accented vowel + -s e.g. [[autobús]] -> 'autobuses'
 			function(av) return remove_accent[av] .. "ses" end) or
 		try("(" .. V .. "[iu]?s)$", "%1es") or -- diphthong + final -s e.g. [[deus]] -> 'deuses'
 		try("^(C" .. "*" .. V .. "s)$", "%1es") or -- monosyllable + final -s e.g. [[fros]] -> 'froses', [[gas]] -> 'gases'
 		try("([sx])$", "%1") or -- other final -s or -x (stressed on penult or antepenult or ending in cluster), e.g.
 								-- [[mércores]], [[lapis]], [[lux]], [[unisex]], [[luns]]
-		form .. "s" -- ending in vowel, -n or other consonant e.g. [[cadeira]], [[marroquí]], [[xersei]], [[limón]],
+		term .. "s" -- ending in vowel, -n or other consonant e.g. [[cadeira]], [[marroquí]], [[xersei]], [[limón]],
 					-- [[club]], [[clip]], [[robot]], [[álbum]]
 end
 
-function export.make_feminine(form, is_noun, special)
-	local retval = call_handle_multiword(form, special, function(form) return export.make_feminine(form, is_noun) end,
+function export.make_feminine(term, is_noun, special)
+	local retval = call_handle_multiword(term, special, function(term) return export.make_feminine(term, is_noun) end,
 		"make_feminine")
 	if retval then
 		return retval
 	end
 
-	local try = make_try(form)
+	local try = make_try(term)
 
+	-- Based on https://www.lingua.gal/c/document_library/get_file?file_path=/portal-lingua/celga/celga-1/material-alumno/Manual_Aula_de_Galego_1_resumo_gramatical.pdf
 	return
 		try("o$", "a") or
 		try("º$", "ª") or -- ordinal indicator
@@ -211,23 +210,23 @@ function export.make_feminine(form, is_noun, special)
 		-- * [[anterior]]/[[posterior]]/[[inferior]]/[[júnior]]/[[maior]]/[[peor]]/[[mellor]]/etc.
 		-- * [[bicolor]]/[[multicolor]]/etc.
 		try("([dts]or)$", "%1a") or
-		form
+		term
 end
 
-function export.make_masculine(form, special)
-	local retval = call_handle_multiword(form, special, export.make_masculine, "make_masculine")
+function export.make_masculine(term, special)
+	local retval = call_handle_multiword(term, special, export.make_masculine, "make_masculine")
 	if retval then
 		return retval
 	end
 
-	local try = make_try(form)
+	local try = make_try(term)
 
 	return
 		try("([dts])ora$", "%1or") or
 		try("a$", "o") or
 		-- ordinal indicator
 		try("ª$", "º") or
-		form
+		term
 end
 
 -- Syllabify a word. This is copied and modified from [[Module:es-common]] and attempts to implements a full
