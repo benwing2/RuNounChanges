@@ -76,8 +76,6 @@ local function glossary_link(entry, text)
 	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
 end
 
-local metaphonic_label = "[[Appendix:Galician pronunciation#Metaphony|metaphonic]]"
-
 local function check_all_missing(forms, plpos, tracking_categories)
 	for _, form in ipairs(forms) do
 		if type(form) == "table" then
@@ -229,17 +227,6 @@ local function replace_hash_with_lemma(term, lemma)
 	-- Assign to a variable to discard second return value.
 	term = term:gsub("#", lemma)
 	return term
-end
-
-local function is_metaphonic(args, lemma)
-	if args.nometa then
-		return false
-	end
-	if args.meta then
-		return true
-	end
-	-- Anything in -oso with a preceding vowel (e.g. [[gostoso]], [[curioso]]) is normally metaphonic.
-	return rfind(lemma, com.V .. ".*oso$")
 end
 
 
@@ -426,7 +413,8 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 	end
 
 	local feminine_plurals = {}
-	local feminines = handle_mf(args.f, args.f_qual, com.make_feminine, feminine_plurals)
+	local feminines = handle_mf(args.f, args.f_qual, function(term, special)
+		return com.make_feminine(term, "is noun", special) end, feminine_plurals)
 	local masculine_plurals = {}
 	local masculines = handle_mf(args.m, args.m_qual, com.make_masculine, masculine_plurals)
 
@@ -554,11 +542,6 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 		table.insert(data.inflections, feminine_plurals)
 	end
 
-	if is_metaphonic(args, lemma) then
-		table.insert(data.inflections, {label = metaphonic_label})
-		table.insert(data.categories, langname .. " " .. plpos .. " with metaphony")
-	end
-
 	-- Maybe add category 'Galician nouns with irregular gender' (or similar)
 	local irreg_gender_lemma = com.rsub(lemma, " .*", "") -- only look at first word
 	if (rfind(irreg_gender_lemma, "[^ã]o$") and (gender_for_default_plural == "f" or gender_for_default_plural == "mf"
@@ -583,8 +566,6 @@ local function get_noun_params()
 		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
 		["fpl"] = {list = true},
 		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
-		["meta"] = {type = "boolean"}, -- metaphonic
-		["nometa"] = {type = "boolean"}, -- explicitly not metaphonic
 	}
 end
 
@@ -872,7 +853,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 		for i, f in ipairs(argsf) do
 			if f == "+" then
 				-- Generate default feminine.
-				f = com.make_feminine(lemma, args.sp)
+				f = com.make_feminine(lemma, false, args.sp)
 			else
 				f = replace_hash_with_lemma(f, lemma)
 			end
@@ -987,11 +968,6 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 	insert_ancillary_inflection(data, args.dim, args.dim_qual, "diminutive", plpos, tracking_categories)
 	insert_ancillary_inflection(data, args.aug, args.aug_qual, "augmentative", plpos, tracking_categories)
 
-	if is_metaphonic(args, lemma) then
-		table.insert(data.inflections, {label = metaphonic_label})
-		table.insert(data.categories, langname .. " " .. plpos .. " with metaphony")
-	end
-
 	if args.irreg and is_superlative then
 		table.insert(data.categories, langname .. " irregular superlative " .. plpos)
 	end
@@ -1009,8 +985,6 @@ local function get_adjective_params(adjtype)
 		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
 		["fpl"] = {list = true}, --feminine plural override(s)
 		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
-		["meta"] = {type = "boolean"}, -- metaphonic
-		["nometa"] = {type = "boolean"}, -- explicitly not metaphonic
 	}
 	if adjtype == "base" then
 		params["comp"] = {list = true} --comparative(s)
