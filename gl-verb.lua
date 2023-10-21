@@ -1,11 +1,15 @@
-local export = {}
-
-
 --[=[
+
+This module implements {{gl-conj}} and provides the underlying conjugation functions for {{gl-verb}}
+(whose actual formatting is done in [[Module:gl-headword]]). This module uses the standard norm for
+Galician spelling. See also [[Module:gl-reinteg-verb]], which implements the reintegrationist norm.
+
 
 Authorship: Ben Wing <benwing2>
 
 ]=]
+
+local export = {}
 
 --[=[
 
@@ -43,8 +47,8 @@ local rsplit = mw.text.split
 local rsub = com.rsub
 local u = mw.ustring.char
 
-local function link_term(term)
-	return m_links.full_link({ lang = lang, term = term }, "term")
+local function link_term(term, display)
+	return m_links.full_link({ lang = lang, term = term, alt = display }, "term")
 end
 
 
@@ -211,7 +215,7 @@ person_number_to_reflexive_pronoun = {
 local indicator_flags = m_table.listToSet {
 	"no_pres_stressed", "no_pres1_and_sub",
 	"only3s", "only3sp", "only3p", "noimp",
-	"pp_inv", "irreg", "no_built_in", "e_ei_cat",
+	"pp_inv", "irreg", "no_built_in",
 }
 
 -- Initialize all the slots for which we generate forms.
@@ -231,25 +235,24 @@ local function add_slots(alternant_multiword_spec)
 		{"pp_fp", "f|p|past|part"},
 	}
 
-	-- Special slots used to handle non-reflexive parts of reflexive verbs in {{gl-reinteg-verb form of}}. For example,
-	-- for a reflexive-only verb like [[arrepender-se]], we want to be able to use {{gl-reinteg-verb form of}} on
-	-- [[arrependa]] (which should mention that it is a part of 'me arrependa', first-person singular present
-	-- subjunctive, and 'se arrependa', third-person singular present subjunctive) or on [[arrependemos]] (which should
-	-- mention that it is a part of 'arrependemo-nos', first-person plural present indicative or preterite). Similarly,
-	-- we want to use {{gl-reinteg-verb form of}} on [[arrependendo]] (which should mention that it is a part of
-	-- 'se ... arrependendo', syntactic variant of [[arrependendo-se]], which is the gerund of [[arrepender-se]]). To
-	-- do this, we need to be able to map non-reflexive parts like [[arrependa]], [[arrependemos]], [[arrependendo]],
-	-- etc. to their reflexive equivalent(s), to the tag(s) of the equivalent(s), and, in the case of forms like
-	-- [[arrependendo]], [[arrepender]] and imperatives, to the separated syntactic variant of the verb+clitic
-	-- combination. We do this by creating slots for the non-reflexive part equivalent of each basic reflexive slot,
-	-- and for the separated syntactic-variant equivalent of each basic reflexive slot that is formed of verb+clitic.
-	-- We use slots in this way to deal with multiword lemmas. Note that we run into difficulties mapping between
-	-- reflexive verbs, non-reflexive part equivalents, and separated syntactic variants if a slot contains more than
-	-- one form. To handle this, if there are the same number of forms in two slots we're trying to match up, we assume
-	-- the forms match one-to-one; otherwise we don't match up the two slots (which means {{pt-verb form of}} won't
-	-- work in this case, but such a case is extremely rare and not worth worrying about). Alternatives that handle
-	-- this "properly" are significantly more complicated and require non-trivial modifications to
-	-- [[Module:inflection utilities]].
+	-- Special slots used to handle non-reflexive parts of reflexive verbs in {{gl-verb form of}}. For example, for a
+	-- reflexive-only verb like [[arrepentirse]], we want to be able to use {{gl-verb form of}} on [[arrepinta]] (which
+	-- should mention that it is a part of 'me arrepinta', first-person singular present subjunctive, and
+	-- 'se arrepinta', third-person singular present subjunctive) or on [[arrepentimos]] (which should mention that it
+	-- is a part of 'arrepentímonos', first-person plural present indicative or preterite). Similarly, we want to use
+	-- {{gl-verb form of}} on [[arrepentindo]] (which should mention that it is a part of 'se ... arrepentindo',
+	-- syntactic variant of [[arrepentíndose]], which is the gerund of [[arrepentirse]]). To do this, we need to be
+	-- able to map non-reflexive parts like [[arrepinta]], [[arrepentimos]], [[arrepentindo]], etc. to their reflexive
+	-- equivalent(s), to the tag(s) of the equivalent(s), and, in the case of forms like [[arrepentindo]],
+	-- [[arrepentir]] and imperatives, to the separated syntactic variant of the verb+clitic combination. We do this by
+	-- creating slots for the non-reflexive part equivalent of each basic reflexive slot, and for the separated
+	-- syntactic-variant equivalent of each basic reflexive slot that is formed of verb+clitic. We use slots in this
+	-- way to deal with multiword lemmas. Note that we run into difficulties mapping between reflexive verbs,
+	-- non-reflexive part equivalents, and separated syntactic variants if a slot contains more than one form. To
+	-- handle this, if there are the same number of forms in two slots we're trying to match up, we assume the forms
+	-- match one-to-one; otherwise we don't match up the two slots (which means {{gl-verb form of}} won't work in this
+	-- case, but such a case is extremely rare and not worth worrying about). Alternatives that handle this "properly"
+	-- are significantly more complicated and require non-trivial modifications to [[Module:inflection utilities]].
 	local need_special_verb_form_of_slots = alternant_multiword_spec.from_verb_form_of and alternant_multiword_spec.refl
 
 	if need_special_verb_form_of_slots then
@@ -280,7 +283,7 @@ local function add_slots(alternant_multiword_spec)
 	-- Add a personal slot (i.e. a slot with person/number variants) to `verb_slots_basic`.
 	local function add_basic_personal_slot(slot_prefix, tag_suffix, person_number_list, no_special_verb_form_of_slot)
 		add_personal_slot(alternant_multiword_spec.verb_slots_basic, slot_prefix, tag_suffix, person_number_list)
-		-- Add special slots for handling non-reflexive parts of reflexive verbs in {{pt-verb form of}}.
+		-- Add special slots for handling non-reflexive parts of reflexive verbs in {{gl-verb form of}}.
 		-- See comment above in `need_special_verb_form_of_slots`.
 		if need_special_verb_form_of_slots and not no_special_verb_form_of_slot then
 			for _, persnum in ipairs(person_number_list) do
@@ -585,9 +588,8 @@ local built_in_conjugations = {
 
 	-- Verbs not needing entries here:
 	--
-	-- precaver: use <no_pres_stressed>
-	-- -cer (verbs in -ecer, descer, vencer, etc.): automatically handled in combine_stem_ending()
-	-- -guer (erguer/reerguer/soerguer): automatically handled in combine_stem_ending()
+	-- -cer (verbs in -ecer, vencer, etc.): automatically handled in combine_stem_ending()
+	-- -guer (erguer/soerguer): automatically handled in combine_stem_ending()
 
 	{
 		-- must be listed before -aer
@@ -636,6 +638,11 @@ local built_in_conjugations = {
 		forms = {short_pp = "eso"},
 	},
 	{
+		-- erguer; but not soerguer
+		match = "^erguer",
+		forms = {short_pp = "ergueito"},
+	},
+	{
 		-- facer, afacer, contrafacer, desafacer, desfacer, perfacer, rarefacer, refacer, satisfacer, tumefacer
 		match = "facer",
 		forms = {
@@ -648,6 +655,7 @@ local built_in_conjugations = {
 			pp = "feito",
 			fut = "far",
 			irreg = true,
+			cons_alt = false, -- avoid claiming we have a c-z alternation
 		}
 	},
 	{
@@ -685,13 +693,29 @@ local built_in_conjugations = {
 		forms = {short_pp = "nado"},
 	},
 	{
-		-- choer/deschoer, doer/condoer, moer/remoer, proer, roer/corroer
+		-- moer, but not remoer
+		match = "^moer",
+		forms = {
+			-- all occurrences of accented í and ï in endings handled in combine_stem_ending()
+			pres1_and_sub = "oi",
+			short_pp = "mudo", -- the main table says 'mundo' but the page for [[mundo]] says 'mudo' is "máis recomendable"
+			irreg = true,
+		}
+	},
+	{
+		-- choer/deschoer, doer/condoer, remoer, proer, roer/corroer
 		match = "oer",
 		forms = {
 			-- all occurrences of accented í and ï in endings handled in combine_stem_ending()
 			pres1_and_sub = "oi",
 			irreg = true,
 		}
+	},
+	{
+		-- coller, toller and derivatives (acoller, desacoller, desencoller, encoller, entrecoller, escoller, recoller;
+		-- destoller, entretoller)
+		match = "oller",
+		forms = {short_pp = "olleito"},
 	},
 	{
 		-- poder
@@ -735,6 +759,11 @@ local built_in_conjugations = {
 		}
 	},
 	{
+		-- romper; but not corromper, interromper, irromper or prorromper
+		match = "^romper",
+		forms = {short_pp = "roto"},
+	},
+	{
 		-- saber, ressaber
 		match = "saber",
 		forms = {
@@ -749,7 +778,6 @@ local built_in_conjugations = {
 		match = "solver",
 		forms = {short_pp = "solto"},
 	},
-
 	{
 		-- suspender; but not others in -pender
 		match = "suspender",
@@ -758,7 +786,7 @@ local built_in_conjugations = {
 	{
 		match = "^ser",
 		forms = {
-			pres_1s = "son", pres_2s = "és", pres_3s = "é",
+			pres_1s = "son", pres_2s = "es", pres_3s = "é",
 			pres_1p = "somos", pres_2p = "sodes", pres_3p = "son",
 			pres1_and_sub = "sex", -- only for subjunctive as we override pres_1s
 			full_impf = "er",
@@ -846,7 +874,7 @@ local built_in_conjugations = {
 	--   [NOTE: imp_2s minte]
 	-- denegrir: use <i.only3sp>
 	-- prohibir/coibir: regular
-	-- cumprir: regular
+	-- cumprir: use <no_built_in> in the meaning "fulfill"
 	-- reunir: use <ú>
 	-- argüír/redargüír: use <ú>?
 	--
@@ -877,8 +905,17 @@ local built_in_conjugations = {
 	},
 	{
 		-- cubrir/descubrir/encubrir/recubrir/redescubrir
-		match = "cobrir",
+		match = "cubrir",
 		forms = {vowel_alt = "u-o", pp = "coberto"},
+	},
+	{
+		-- cumprir (only in the meaning "to be necessary"; otherwise use <no_built_in>)
+		match = "^cumprir",
+		forms = {
+			-- We could create a <u-ó> just for this verb but that seems overkill unless another such verb appears
+			pres_stressed = "cómpr",
+			pres1_and_sub = "cumpr",
+		},
 	},
 	{
 		-- dicir, bendicir, contradicir, desdicir, maldicir, predicir
@@ -895,6 +932,7 @@ local built_in_conjugations = {
 			pp = "dito",
 			fut = "dir",
 			irreg = true,
+			cons_alt = false, -- avoid claiming we have a c-z alternation
 		}
 	},
 	{
@@ -1634,7 +1672,7 @@ local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joi
 			else
 				local slot_has_suffixed_clitic = not slot:find("_sub")
 				-- Maybe generate non-reflexive parts and separated syntactic variants for use in
-				-- {{gl-reinteg-verb form of}}. See comment in add_slots() above `need_special_verb_form_of_slots`.
+				-- {{gl-verb form of}}. See comment in add_slots() above `need_special_verb_form_of_slots`.
 				-- Check for do_joined so we only run this code once.
 				if do_reflexive and do_joined and base.alternant_multiword_spec.from_verb_form_of and
 					-- Skip personal variants of infinitives and gerunds so we don't think [[arrependendo]] is a
@@ -1670,7 +1708,7 @@ end
 
 
 local function handle_infinitive_linked(base)
-	-- Compute linked versions of potential lemma slots, for use in {{pt-verb}}.
+	-- Compute linked versions of potential lemma slots, for use in {{gl-verb}}.
 	-- We substitute the original lemma (before removing links) for forms that
 	-- are the same as the lemma, if the original lemma has links.
 	for _, slot in ipairs({"infinitive"}) do
@@ -2203,10 +2241,7 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		insert_cat("reflexive verbs")
 	end
 
-	if base.e_ei_cat then
-		insert_ann("vowel_alt", "''e'' becomes ''ei'' when stressed")
-		insert_cat("verbs with e becoming ei when stressed")
-	elseif not base.vowel_alt then
+	if not base.vowel_alt then
 		insert_ann("vowel_alt", "non-alternating")
 	else
 		for _, alt in ipairs(base.vowel_alt) do
@@ -2355,18 +2390,18 @@ local basic_table = [=[
 ! style="border: 1px solid #999999; background:#D0D0D0" colspan="3" | Plural
 |-
 ! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | First-person<br />(<<eu>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Second-person<br />(<<ti>> / <<tu>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Third-person<br />(<<ele>> / <<ela>> / <<você>>)
+! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Second-person<br />(<<ti>>)
+! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Third-person<br />(<<el>> / <<ela>> / <<vostede|Vde.>>)
 ! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | First-person<br />(<<nós>>)
 ! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Second-person<br />(<<vós>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Third-person<br />(<<eles>> / <<elas>> / <<vocês>>)
+! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Third-person<br />(<<eles>> / <<elas>> / <<vostedes|Vdes.>>)
 |-
-! style="border: 1px solid #999999; background:#c498ff" colspan="7" | ''<span title="infinitivo">Infinitive</span>''
+! style="border: 1px solid #999999; background:#e2c0c0" colspan="7" | ''<span title="infinitivo">Infinitive</span>''
 |-
-! style="border: 1px solid #999999; background:#a478df" | '''<span title="infinitivo impessoal">Impersonal</span>'''
+! style="border: 1px solid #999999; background:#f3d1d1" | '''<span title="infinitivo impersoal">Impersonal</span>'''
 | style="border: 1px solid #999999; vertical-align: top;" colspan="6" | {infinitive}
 |-
-! style="border: 1px solid #999999; background:#a478df" | '''<span title="infinitivo flexionado">Personal</span>'''
+! style="border: 1px solid #999999; background:#f3d1d1" | '''<span title="infinitivo conxugado">Personal</span>'''
 | style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_1s}
 | style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_2s}
 | style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_3s}
@@ -2374,9 +2409,9 @@ local basic_table = [=[
 | style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_2p}
 | style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_3p}
 |-
-! style="border: 1px solid #999999; background:#98ffc4" colspan="7" | ''<span title="gerúndio">Gerund</span>''
+! style="border: 1px solid #999999; background:#dddda0" colspan="7" | ''<span title="xerundio">Gerund</span>''
 |-
-| style="border: 1px solid #999999; background:#78dfa4" |
+| style="border: 1px solid #999999; background:#eeeeb1" |
 | style="border: 1px solid #999999; vertical-align: top;" colspan="6" | {gerund}
 |-{pp_clause}
 ! style="border: 1px solid #999999; background:#d0dff4" colspan="7" | ''<span title="indicativo">Indicative</span>''
@@ -2389,7 +2424,7 @@ local basic_table = [=[
 | style="border: 1px solid #999999; vertical-align: top;" | {pres_2p}
 | style="border: 1px solid #999999; vertical-align: top;" | {pres_3p}
 |-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="pretérito imperfeito">Imperfect</span>
+! style="border: 1px solid #999999; background:#b0bfd4" | <span title="pretérito imperfecto">Imperfect</span>
 | style="border: 1px solid #999999; vertical-align: top;" | {impf_1s}
 | style="border: 1px solid #999999; vertical-align: top;" | {impf_2s}
 | style="border: 1px solid #999999; vertical-align: top;" | {impf_3s}
@@ -2397,7 +2432,7 @@ local basic_table = [=[
 | style="border: 1px solid #999999; vertical-align: top;" | {impf_2p}
 | style="border: 1px solid #999999; vertical-align: top;" | {impf_3p}
 |-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="pretérito perfeito">Preterite</span>
+! style="border: 1px solid #999999; background:#b0bfd4" | <span title="pretérito perfecto">Preterite</span>
 | style="border: 1px solid #999999; vertical-align: top;" | {pret_1s}
 | style="border: 1px solid #999999; vertical-align: top;" | {pret_2s}
 | style="border: 1px solid #999999; vertical-align: top;" | {pret_3s}
@@ -2405,7 +2440,7 @@ local basic_table = [=[
 | style="border: 1px solid #999999; vertical-align: top;" | {pret_2p}
 | style="border: 1px solid #999999; vertical-align: top;" | {pret_3p}
 |-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="pretérito mais-que-perfeito simples">Pluperfect</span>
+! style="border: 1px solid #999999; background:#b0bfd4" | <span title="pretérito pluscuamperfecto">Pluperfect</span>
 | style="border: 1px solid #999999; vertical-align: top;" | {plup_1s}
 | style="border: 1px solid #999999; vertical-align: top;" | {plup_2s}
 | style="border: 1px solid #999999; vertical-align: top;" | {plup_3s}
@@ -2429,9 +2464,9 @@ local basic_table = [=[
 | style="border: 1px solid #999999; vertical-align: top;" | {cond_2p}
 | style="border: 1px solid #999999; vertical-align: top;" | {cond_3p}
 |-
-! style="border: 1px solid #999999; background:#d0f4d0" colspan="7" | ''<span title="conjuntivo">Subjunctive</span>''
+! style="border: 1px solid #999999; background:#d0f4d0" colspan="7" | ''<span title="subxuntivo">Subjunctive</span>''
 |-
-! style="border: 1px solid #999999; background:#b0d4b0" | <span title=" presente do conjuntivo">Present</span>
+! style="border: 1px solid #999999; background:#b0d4b0" | <span title=" presente do subxuntivo">Present</span>
 | style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_1s}
 | style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_2s}
 | style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_3s}
@@ -2439,7 +2474,7 @@ local basic_table = [=[
 | style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_2p}
 | style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_3p}
 |-
-! style="border: 1px solid #999999; background:#b0d4b0" | <span title="pretérito imperfeito do conjuntivo">Imperfect</span>
+! style="border: 1px solid #999999; background:#b0d4b0" | <span title="pretérito imperfecto do subxuntivo">Imperfect</span>
 | style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_1s}
 | style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_2s}
 | style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_3s}
@@ -2447,7 +2482,7 @@ local basic_table = [=[
 | style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_2p}
 | style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_3p}
 |-
-! style="border: 1px solid #999999; background:#b0d4b0" | <span title="futuro do conjuntivo">Future</span>
+! style="border: 1px solid #999999; background:#b0d4b0" | <span title="futuro do subxuntivo">Future</span>
 | style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_1s}
 | style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_2s}
 | style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_3s}
@@ -2476,36 +2511,36 @@ local basic_table = [=[
 
 local double_pp_template = [=[
 
-! style="border: 1px solid #999999; background:#ffc498" colspan="7" | ''<span title="particípio irregular">Short past participle</span>''
+! style="border: 1px solid #999999; background:#e2e4c0" colspan="7" | ''<span title="participio irregular">Short past participle</span>''
 |-
-! style="border: 1px solid #999999; background:#dfa478" | Masculine
+! style="border: 1px solid #999999; background:#f3f5d1" | Masculine
 | style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {short_pp_ms}
 | style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {short_pp_mp}
 |-
-! style="border: 1px solid #999999; background:#dfa478" | Feminine
+! style="border: 1px solid #999999; background:#f3f5d1" | Feminine
 | style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {short_pp_fs}
 | style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {short_pp_fp}
 |-
-! style="border: 1px solid #999999; background:#ffc498" colspan="7" | ''<span title="particípio regular">Long past participle</span>''
+! style="border: 1px solid #999999; background:#e2e4c0" colspan="7" | ''<span title="participio regular">Long past participle</span>''
 |-
-! style="border: 1px solid #999999; background:#dfa478" | Masculine
+! style="border: 1px solid #999999; background:#f3f5d1" | Masculine
 | style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_ms}
 | style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_mp}
 |-
-! style="border: 1px solid #999999; background:#dfa478" | Feminine
+! style="border: 1px solid #999999; background:#f3f5d1" | Feminine
 | style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fs}
 | style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fp}
 |-]=]
 
 local single_pp_template = [=[
 
-! style="border: 1px solid #999999; background:#ffc498" colspan="7" | ''<span title="particípio passado">Past participle</span>''
+! style="border: 1px solid #999999; background:#e2e4c0" colspan="7" | ''<span title="participio pasado">Past participle</span>''
 |-
-! style="border: 1px solid #999999; background:#dfa478" | Masculine
+! style="border: 1px solid #999999; background:#f3f5d1" | Masculine
 | style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_ms}
 | style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_mp}
 |-
-! style="border: 1px solid #999999; background:#dfa478" | Feminine
+! style="border: 1px solid #999999; background:#f3f5d1" | Feminine
 | style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fs}
 | style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fp}
 |-]=]
@@ -2525,7 +2560,8 @@ local function make_table(alternant_multiword_spec)
 	-- has_short_pp is computed in show_forms().
 	local pp_template = alternant_multiword_spec.has_short_pp and double_pp_template or single_pp_template
 	forms.pp_clause = m_string_utilities.format(pp_template, forms)
-	local table_with_pronouns = rsub(basic_table, "<<(.-)>>", link_term)
+	local table_with_pronouns = rsub(basic_table, "<<([^<>|]-)|([^<>|]-)>>", link_term)
+	local table_with_pronouns = rsub(table_with_pronouns, "<<(.-)>>", link_term)
 	return m_string_utilities.format(table_with_pronouns, forms)
 end
 
@@ -2541,6 +2577,7 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 		["noautolinkverb"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing/documentation pages
 		["json"] = {type = "boolean"}, -- for bot use
+		["reinteg"] = {}, -- ignored here; see [[Module:gl-headword]]
 	}
 
 	if from_headword then
@@ -2573,20 +2610,22 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 	end
 
 	-- Determine the verb spec we're being asked to generate the conjugation of. This may be taken from the
-	-- current page title or the value of |pagename=; but not when called from {{pt-verb form of}}, where the
+	-- current page title or the value of |pagename=; but not when called from {{gl-verb form of}}, where the
 	-- page title is a non-lemma form. Note that the verb spec may omit the infinitive; e.g. it may be "<i-e>".
 	-- For this reason, we use the value of `pagename` computed here down below, when calling normalize_all_lemmas().
 	local pagename = not from_verb_form_of and args.pagename or from_headword and args.head[1] or PAGENAME
 	local arg1 = args[1]
 	if not arg1 then
-		if (pagename == "gl-verb form of" and in_template_space()) or (pagename == "Sandbox" or pagename == "gl-reinteg-conj") then
+		if (pagename == "gl-conj" or pagename == "gl-verb") and in_template_space() then
+			arg1 = "paliar<í,+>"
+		elseif pagename == "gl-verb form of" and in_template_space() then
 			arg1 = "amar"
 		else
 			arg1 = pagename
 		end
 	end
 
-	-- When called from {{pt-verb form of}}, determine the non-lemma form whose inflections we're being asked to
+	-- When called from {{gl-verb form of}}, determine the non-lemma form whose inflections we're being asked to
 	-- determine. This normally comes from the page title or the value of |pagename=.
 	local verb_form_of_form
 	if from_verb_form_of then
@@ -2668,7 +2707,7 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 end
 
 
--- Entry point for {{pt-conj}}. Template-callable function to parse and conjugate a verb given
+-- Entry point for {{gl-conj}}. Template-callable function to parse and conjugate a verb given
 -- user-specified arguments and generate a displayable table of the conjugated forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
