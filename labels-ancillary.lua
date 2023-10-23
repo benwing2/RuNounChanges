@@ -7,11 +7,13 @@ local labels_module = "Module:labels"
 
 -- Find the labels matching category `cat` of type `cat_type` (currently supported values are "topic" for topic
 -- categories, e.g. 'en:Water'; "pos" for POS categories, e.g. 'English attenuative verbs'; "regional" for regional
--- categories, e.g. 'Ghanaian English; and "plain" for plain categories, e.g. 'Issime Walser') for language `lang`
+-- categories, e.g. 'Ghanaian English; "sense" for sense categories, e.g. 'English obsolete terms' or
+-- 'English terms with obsolete senses'; and "plain" for plain categories, e.g. 'Issime Walser') for language `lang`
 -- (which may be nil for umbrella or plain categories). The format of `cat` depends on `cat_type`, but in general is
 -- the portion of the category minus the language prefix or suffix. For topic categories it should be e.g. "water" or
 -- "Water" (either form works); for POS categories it should be e.g. "attenuative verbs"; for regional categories it
--- should be e.g. "Ghanaian"; and for plain categories it should be e.g. "Issime Walser" (the actual category name).
+-- should be e.g. "Ghanaian"; for sense categories it should be e.g. "obsolete"; and for plain categories it should be
+-- e.g. "Issime Walser" (the actual category name).
 function export.find_labels_for_category(cat, cat_type, lang)
 	local function ucfirst(txt)
 		return mw.getContentLanguage():ucfirst(txt)
@@ -26,14 +28,16 @@ function export.find_labels_for_category(cat, cat_type, lang)
 		elseif cat_type == "pos" then
 			return cat == "lemmas"
 		elseif cat_type == "regional" then
-			return "British English" -- an arbitrary known regional category
+			return "British" -- an arbitrary known regional category
+		elseif cat_type == "sense" then
+			return "obsolete" -- an arbitrary known sense category
 		else
 			return "Issime Walser" -- an arbitrary known plain category
 		end
 	end
 
 	local function labcat_matches(labcat)
-		if cat_type ~= "pos" then
+		if cat_type ~= "pos" and cat_type ~= "sense" then
 			return ucfirst(labcat) == cat
 		else
 			return labcat == cat
@@ -47,6 +51,8 @@ function export.find_labels_for_category(cat, cat_type, lang)
 			return labdata.pos_categories
 		elseif cat_type == "regional" then
 			return labdata.regional_categories
+		elseif cat_type == "sense" then
+			return labdata.sense_categories
 		else
 			return labdata.plain_categories
 		end
@@ -128,46 +134,62 @@ function export.find_labels_for_category(cat, cat_type, lang)
 end
 
 -- Format the labels that categorize into some category for display in the text for that category. `lang` is the
--- language of the category, or nil. Returns nil if there are no labels.
-function export.format_labels_categorizing(labels, lang)
+-- language of the category, or nil. `labels` are the labels that categorize when invoked using {{lb}}, while
+-- `tlb_labels` are the labels that categorize when invoked using {{tlb}}. Returns nil if there are no labels.
+function export.format_labels_categorizing(labels, tlb_labels, lang)
 	local function make_code(txt)
 		return ("<code>%s</code>"):format(txt)
 	end
-	local formatted_labels = {}
-	for label, aliases in pairs(labels) do
-		if #aliases == 0 then
-			table.insert(formatted_labels, make_code(label))
-		elseif #aliases == 1 then
-			table.insert(formatted_labels, ("%s (alias %s)"):format(make_code(label), make_code(aliases[1])))
-		else
-			table.sort(aliases)
-			for i, alias in ipairs(aliases) do
-				aliases[i] = make_code(alias)
+	local function generate_label_set_text(labels, use_tlb, include_in_addition)
+		local formatted_labels = {}
+		local has_aliases = false
+		for label, aliases in pairs(labels) do
+			if #aliases == 0 then
+				table.insert(formatted_labels, make_code(label))
+			elseif #aliases == 1 then
+				table.insert(formatted_labels, ("%s (alias %s)"):format(make_code(label), make_code(aliases[1])))
+				has_aliases = true
+			else
+				table.sort(aliases)
+				for i, alias in ipairs(aliases) do
+					aliases[i] = make_code(alias)
+				end
+				table.insert(formatted_labels, ("%s (aliases %s)"):format(make_code(label), table.concat(aliases, ", ")))
+				has_aliases = true
 			end
-			table.insert(formatted_labels, ("%s (aliases %s)"):format(make_code(label), table.concat(aliases, ", ")))
+		end
+		template = use_tlb and "tlb" or "lb"
+		if #formatted_labels > 0 then
+			table.sort(formatted_labels)
+			local intro_wording = include_in_addition and "In addition, the" or "The"
+			local retval = ("%s following label%s generate%s this category: %s."):format(
+				intro_wording, #formatted_labels == 1 and "" or "s", #formatted_labels == 1 and "s" or "",
+				table.concat(formatted_labels, "; "))
+			local this_label_text
+			if #formatted_labels == 1 and not has_aliases then
+				this_label_text = "this label"
+			else
+				this_label_text = "one of these labels"
+			end
+			if lang then
+				retval = retval .. (" To generate this category using %s, use {{tl|%s|%s|<var>label</var>}}."):format(
+					this_label_text, template, lang:getCode())
+			else
+				retval = retval .. (" To generate this category using %s, use {{tl|%s|<var>langcode</var>|<var>label</var>}}, " ..
+					"where <code><var>langcode</var></code> is the appropriate language code for the language in question " ..
+					"(see [[Wiktionary:List of languages]])."):format(this_label_text, template)
+			end
+			return retval
 		end
 	end
-	if #formatted_labels > 0 then
-		table.sort(formatted_labels)
-		local retval = ("The following label%s generate%s this category: %s."):format(
-			#formatted_labels == 1 and "" or "s", #formatted_labels == 1 and "s" or "",
-			table.concat(formatted_labels, "; "))
-		if lang then
-			retval = retval .. (" To generate this category using a label, use {{tl|lb|%s|<var>label</var>}}."):format(
-				lang:getCode())
-		else
-			retval = retval .. " To generate this category using a label, use {{tl|lb|<var>langcode</var>|<var>label</var>}}, " ..
-				"where <code><var>langcode</var></code> is the appropriate language code for the language in question " ..
-				"(see [[Wiktionary:List of languages]])."
-		end
-		return retval
-	end
-end
 
--- Generate a message indicating what labels categorize into the specified category `cat` of type `cat_type`, for
--- language `lang` (a language object, may be nil). Parameters are the same as for find_labels_for_category() above.
-function export.get_labels_categorizing(cat, cat_type, lang)
-	return export.format_labels_categorizing(export.find_labels_for_category(cat, cat_type, lang), lang)
+	local labels_text = generate_label_set_text(labels)
+	local tlb_labels_text = generate_label_set_text(tlb_labels, "use tlb", labels_text and "include in addition")
+	if labels_text and tlb_labels_text then
+		return ("%s\n\n%s"):format(labels_text, tlb_labels_text)
+	else
+		return labels_text or tlb_labels_text
+	end
 end
 
 return export
