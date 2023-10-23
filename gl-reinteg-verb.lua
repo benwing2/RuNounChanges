@@ -1,11 +1,17 @@
-local export = {}
-
-
 --[=[
+
+This module implements {{gl-reinteg-conj}} and provides the underlying conjugation functions for {{gl-reinteg-verb}},
+as well as for {{gl-verb}} when invoked with |reinteg=1. The actual formatting of both {{gl-reinteg-verb}} and
+{{gl-verb}} happens in [[Module:gl-headword]]. This module uses the [[Appendix:Reintegrationism|reintegrationst]] norm
+for Galician spelling. See also [[Module:gl-verb]], which implements the standard norm.
+
 
 Authorship: Ben Wing <benwing2>, MedK <medk1>
 
 ]=]
+
+local export = {}
+
 
 --[=[
 
@@ -60,20 +66,28 @@ local TEMP_MESOCLITIC_INSERTION_POINT = u(0xFFF2) -- temporary character used to
 -- operation of combine_stem_ending().
 --
 -- GL_TYPE = "Galician-type", PT_TYPE = "Portuguese-type". GL_TYPE stems cannot combine with PT_TYPE endings and
--- vice-versa.
+-- vice-versa. GL_ONLY_TYPE = "Galician-only type"; GL_ONLY_TYPE stems can only combine with endings specifically
+-- marked as GL_TYPE.
 local GL_TYPE = u(0xFFF3)
-local PT_TYPE = u(0xFFF4)
--- ALTVAR = Lower-frequency variants listed at the bottom of the Estraviz conjugation tables rather than in the main
--- table. We list these in the main table but with a footnote indicating they are low-frequency alternatives, and
+local GL_ONLY_TYPE = u(0xFFF4)
+local PT_TYPE = u(0xFFF5)
+-- ALTVAR = Less-recommended variants listed at the bottom of the Estraviz conjugation tables rather than in the main
+-- table. We list these in the main table but with a footnote indicating they are less-recommended alternatives, and
 -- italicize them to visually set them apart.
-local ALTVAR = u(0xFFF5)
+local ALTVAR = u(0xFFF6)
 local GL_ALTVAR = GL_TYPE .. ALTVAR
-local all_var_codes = GL_TYPE .. PT_TYPE .. ALTVAR
-local var_codes_no_altvar = GL_TYPE .. PT_TYPE
+local GL_ONLY_ALTVAR = GL_ONLY_TYPE .. ALTVAR
+local var_codes_no_altvar = GL_TYPE .. GL_ONLY_TYPE .. PT_TYPE
+local all_var_codes = var_codes_no_altvar .. ALTVAR
 local var_code_c = "[" .. all_var_codes .. "]"
 local var_code_no_altvar_c = "[" .. var_codes_no_altvar .. "]"
 local not_var_code_c = "[^" .. all_var_codes .. "]"
 
+-- Export variant codes for use in [[Module:pt-gl-inflections]].
+export.GL_TYPE = GL_TYPE
+export.GL_ONLY_TYPE = GL_ONLY_TYPE
+export.PT_TYPE = PT_TYPE
+export.ALTVAR = ALTVAR
 
 local short_pp_footnote = "[usually used with auxiliary verbs " .. link_term("ser") .. " and " .. link_term("estar") .. "]"
 local long_pp_footnote = "[usually used with auxiliary verbs " .. link_term("haver") .. " and " .. link_term("ter") .. "]"
@@ -192,7 +206,7 @@ local function add_slots(alternant_multiword_spec)
 	-- We use slots in this way to deal with multiword lemmas. Note that we run into difficulties mapping between
 	-- reflexive verbs, non-reflexive part equivalents, and separated syntactic variants if a slot contains more than
 	-- one form. To handle this, if there are the same number of forms in two slots we're trying to match up, we assume
-	-- the forms match one-to-one; otherwise we don't match up the two slots (which means {{pt-verb form of}} won't
+	-- the forms match one-to-one; otherwise we don't match up the two slots (which means {{gl-reinteg-verb form of}} won't
 	-- work in this case, but such a case is extremely rare and not worth worrying about). Alternatives that handle
 	-- this "properly" are significantly more complicated and require non-trivial modifications to
 	-- [[Module:inflection utilities]].
@@ -226,7 +240,7 @@ local function add_slots(alternant_multiword_spec)
 	-- Add a personal slot (i.e. a slot with person/number variants) to `verb_slots_basic`.
 	local function add_basic_personal_slot(slot_prefix, tag_suffix, person_number_list, no_special_verb_form_of_slot)
 		add_personal_slot(alternant_multiword_spec.verb_slots_basic, slot_prefix, tag_suffix, person_number_list)
-		-- Add special slots for handling non-reflexive parts of reflexive verbs in {{pt-verb form of}}.
+		-- Add special slots for handling non-reflexive parts of reflexive verbs in {{gl-reinteg-verb form of}}.
 		-- See comment above in `need_special_verb_form_of_slots`.
 		if need_special_verb_form_of_slots and not no_special_verb_form_of_slot then
 			for _, persnum in ipairs(person_number_list) do
@@ -615,7 +629,7 @@ local built_in_conjugations = {
 			pres_2s = {GL_TYPE .. "fás", PT_TYPE .. "fazes"},
 			pres_3s = {GL_TYPE .. "fai", PT_TYPE .. "faz"},
 			pres_3p = {GL_TYPE .. "fam", PT_TYPE .. "fazem"},
-			pret_conj = "irreg", pret = {GL_TYPE .. "figé", PT_TYPE .. "fizé", GL_ALTVAR .. "fizé"},
+			pret_conj = "irreg", pret = {GL_TYPE .. "figé", PT_TYPE .. "fizé", GL_ONLY_ALTVAR .. "fizé"},
 			pt_pret_1s = "fiz", pt_pret_3s = "fez",
 			pp = "feito",
 			fut = "far",
@@ -801,7 +815,10 @@ local built_in_conjugations = {
 	{
 		-- valer, desvaler, equivaler
 		match = "valer",
-		forms = {pres1_and_sub = "valh"},
+		forms = {
+			pres1_and_sub = "valh",
+			irreg = true,
+		}
 	},
 	{
 		-- We want to match antever etc. but not absolver, atrever etc. No way to avoid listing each verb.
@@ -1250,8 +1267,13 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, dont_includ
 	-- *   pret: roí (but not roim)
 	-- *   impf: all forms (roí-)
 	-- *   pp: roído
-	if ending:find("^i") and full_stem:find("[aeiou]$") and not full_stem:find("[gq]u$") and ending ~= "ir" and
-		ending ~= "iu" and ending ~= "im" and ending ~= "indo" and not ending:find("^ir[md]") then
+
+	-- Don't let variant codes derail the following checks. Note that variant codes are properly added to the end of
+	-- the ending, so checks against the beginning of the ending work even in their presence, but not checks against
+	-- the full ending.
+	local cleaned_ending = export.remove_variant_codes(ending)	
+	if cleaned_ending:find("^i") and full_stem:find("[aeiou]$") and not full_stem:find("[gq]u$") and
+		not cleaned_ending:find("^i[rum]$") and cleaned_ending ~= "indo" and not cleaned_ending:find("^ir[md]") then
 		ending = ending:gsub("^i", "í")
 	end
 
@@ -1277,7 +1299,7 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, dont_includ
 	end
 
 	local retval = stem .. ending
-	if retval:find(GL_TYPE) and retval:find(PT_TYPE) then
+	if retval:find(GL_TYPE) and retval:find(PT_TYPE) or retval:find(GL_ONLY_TYPE) and not retval:find(GL_TYPE) then
 		-- Reject clashes in "Galician"-type and "Portuguese"-type forms, e.g. '#vós dixéreis' or '#vós dissérades'.
 		return nil
 	end
@@ -1451,7 +1473,8 @@ local function add_finite_non_present(base)
 	-- * at the beginning of the ending means to remove a final accent from the preterite stem.
 	if stems.pret_conj == "irreg" then
 		add_tense("pret", stems.gl_short_pret, "em" .. GL_TYPE, nil, "o" .. GL_TYPE)
-		add_tense("pret", stems.pret, nil, "*ste", nil, "*mos", "*stes", {"rom" .. GL_TYPE, "*ram" .. PT_TYPE})
+		add_tense("pret", stems.pret, nil, {"*ste", "*che" .. GL_ALTVAR}, nil, "*mos", "*stes",
+			{"rom" .. GL_TYPE, "*ram" .. PT_TYPE})
 		add_tense("pret", stems.pt_pret_1s, PT_TYPE)
 		add_tense("pret", stems.pt_pret_3s, nil, nil, PT_TYPE)
 	elseif stems.pret_conj == "ar" then
@@ -1519,14 +1542,14 @@ local function add_non_finite_forms(base)
 	-- Also insert "gerund + reflexive pronoun" combinations if we're handling a reflexive verb. We insert exactly the same
 	-- form as for the bare gerund; later on in add_reflexive_or_fixed_clitic_to_forms(), we add the appropriate clitic
 	-- pronouns. It's important not to do this for non-reflexive verbs, because in that case, the clitic pronouns won't be
-	-- added, and {{pt-verb form of}} will wrongly consider all these combinations as possible inflections of the bare
+	-- added, and {{gl-reinteg-verb form of}} will wrongly consider all these combinations as possible inflections of the bare
 	-- gerund. Thanks to [[User:JeffDoozan]] for this bug fix.
     if base.refl then
 		for _, persnum in ipairs(person_number_list) do
 			addit("gerund_" .. persnum, stems.pres_unstressed, ger_ending)
 		end
 	end
-	-- Skip the long/short past participle footnotes if called from {{pt-verb}} so they don't show in the headword.
+	-- Skip the long/short past participle footnotes if called from {{gl-reinteg-verb}} so they don't show in the headword.
 	local long_pp_footnotes =
 		stems.short_pp_ms and not base.alternant_multiword_spec.from_headword and {long_pp_footnote} or nil
 	addit("pp_ms", stems.pp_ms, "", long_pp_footnotes)
@@ -1705,7 +1728,7 @@ end
 
 
 local function handle_infinitive_linked(base)
-	-- Compute linked versions of potential lemma slots, for use in {{pt-verb}}.
+	-- Compute linked versions of potential lemma slots, for use in {{gl-reinteg-verb}}.
 	-- We substitute the original lemma (before removing links) for forms that
 	-- are the same as the lemma, if the original lemma has links.
 	for _, slot in ipairs({"infinitive"}) do
@@ -1781,11 +1804,11 @@ local function remove_mesoclitic_insertion_points(base)
 end
 
 
--- If called from {{gl-reinteg-verb}}, remove lower-frequency variants; otherwise add a footnote indicating they are
--- less common, and sort them last.
+-- If called from {{gl-reinteg-verb}}, remove less-recommended variants; otherwise add a footnote indicating they are
+-- less recommended, and sort them last.
 local function process_altvar_forms(base)
 	for slot, forms in pairs(base.forms) do
-		-- As an optimization, check if there are any low-frequency forms and don't do anything if not.
+		-- As an optimization, check if there are any less-recommended forms and don't do anything if not.
 		local saw_altvar = false
 		for _, form in ipairs(forms) do
 			if form.form:find(ALTVAR) then
@@ -1812,7 +1835,7 @@ local function process_altvar_forms(base)
 				end
 				for _, formobj in ipairs(existing_forms) do
 					if formobj.form:find(ALTVAR) then
-						formobj.footnotes = iut.combine_footnotes(formobj.footnotes, {"[less common]"})
+						formobj.footnotes = iut.combine_footnotes(formobj.footnotes, {"[less recommended]"})
 						iut.insert_form(base.forms, slot, formobj)
 					end
 				end
@@ -1975,7 +1998,7 @@ end
 
 
 -- Reconstruct the overall verb spec from the output of iut.parse_inflected_text(), so we can use it in
--- [[Module:accel/pt]].
+-- [[Module:accel/gl]].
 function export.reconstruct_verb_spec(alternant_multiword_spec)
 	local parts = {}
 
@@ -2165,7 +2188,7 @@ end
 
 
 local function detect_all_indicator_specs(alternant_multiword_spec)
-	-- Propagate some settings up; some are used internally, others by [[Module:pt-headword]].
+	-- Propagate some settings up; some are used internally, others by [[Module:gl-headword]].
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		-- Internal indicator flags. Do these before calling detect_indicator_spec() because add_slots() uses them.
 		for  _, prop in ipairs { "refl", "clitic" } do
@@ -2396,12 +2419,12 @@ local function show_forms(alternant_multiword_spec)
 			return nil
 		end
 		if accel_obj then
-			accel_obj.form = "verb-form-" .. reconstructed_verb_spec
+			accel_obj.form = "reinteg-verb-form-" .. reconstructed_verb_spec
 		end
 		return accel_obj
 	end
 
-	-- Italicize lower-frequency forms.
+	-- Italicize less-recommended forms.
 	local function generate_link(slot, form, origentry, accel_obj)
 		if origentry:find(ALTVAR) then
 			origentry = rsub(origentry, ALTVAR, "")
@@ -2626,6 +2649,7 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 		["noautolinkverb"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing/documentation pages
 		["json"] = {type = "boolean"}, -- for bot use
+		["reinteg"] = {}, -- ignored here; see [[Module:gl-headword]]
 	}
 
 	if from_headword then
@@ -2658,26 +2682,28 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 	end
 
 	-- Determine the verb spec we're being asked to generate the conjugation of. This may be taken from the
-	-- current page title or the value of |pagename=; but not when called from {{pt-verb form of}}, where the
+	-- current page title or the value of |pagename=; but not when called from {{gl-reinteg-verb form of}}, where the
 	-- page title is a non-lemma form. Note that the verb spec may omit the infinitive; e.g. it may be "<i-e>".
 	-- For this reason, we use the value of `pagename` computed here down below, when calling normalize_all_lemmas().
 	local pagename = not from_verb_form_of and args.pagename or from_headword and args.head[1] or PAGENAME
 	local arg1 = args[1]
 	if not arg1 then
-		if (pagename == "gl-verb form of" and in_template_space()) or (pagename == "Sandbox" or pagename == "gl-reinteg-conj") then
+		if (pagename == "gl-reinteg-conj" or pagename == "gl-reinteg-verb") and in_template_space() then
+			arg1 = "fazer"
+		elseif pagename == "gl-reinteg-verb form of" and in_template_space() then
 			arg1 = "amar"
 		else
 			arg1 = pagename
 		end
 	end
 
-	-- When called from {{pt-verb form of}}, determine the non-lemma form whose inflections we're being asked to
+	-- When called from {{gl-reinteg-verb form of}}, determine the non-lemma form whose inflections we're being asked to
 	-- determine. This normally comes from the page title or the value of |pagename=.
 	local verb_form_of_form
 	if from_verb_form_of then
 		verb_form_of_form = args.pagename
 		if not verb_form_of_form then
-			if PAGENAME == "gl-verb form of" and in_template_space() then
+			if PAGENAME == "gl-reinteg-verb form of" and in_template_space() then
 				verb_form_of_form = "ame"
 			else
 				verb_form_of_form = PAGENAME
@@ -2757,7 +2783,7 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 end
 
 
--- Entry point for {{pt-conj}}. Template-callable function to parse and conjugate a verb given
+-- Entry point for {{gl-reinteg-conj}}. Template-callable function to parse and conjugate a verb given
 -- user-specified arguments and generate a displayable table of the conjugated forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
