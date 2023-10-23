@@ -3,14 +3,80 @@ local export = {}
 local label_data = require("Module:category tree/topic cat/data")
 local topic_cat_utilities_module = "Module:category tree/topic cat/utilities"
 local labels_ancillary_module = "Module:labels/ancillary"
+local pattern_utilities_module = "Module:pattern utilities"
 
 local rsplit = mw.text.split
-local rgsplit = mw.text.gsplit
 
 -- Category object
 
 local Category = {}
 Category.__index = Category
+
+
+local type_data = {
+	["related-to"] = {
+		desc = "terms related to",
+		additional = "'''NOTE''': This is a \"related-to\" category. It should contain terms directly related to " ..
+		"{{{topic}}}. Please do not include terms that merely have a tangential connection to {{{topic}}}. " ..
+		"Be aware that terms for types or instances of this topic often go in a separate category.",
+	},
+	set = {
+		desc = "terms for types or instances of",
+		additional = "'''NOTE''': This is a set category. It should contain terms for {{{topic}}}, not merely " ..
+		"terms related to {{{topic}}}. It may contain more general terms (e.g. types of {{{topic}}}) or more " ..
+		"specific terms (e.g. names of specific {{{topic}}}), although there may be related categories "..
+		"specifically for these types of terms.",
+	},
+	name = {
+		desc = "names of specific",
+		additional = "'''NOTE''': This is a name category. It should contain names of specific {{{topic}}}, not " ..
+		"merely terms related to {{{topic}}}, and should also not contain general terms for types of {{{topic}}}.",
+	},
+	type = {
+		desc = "terms for types of",
+		additional = "'''NOTE''': This is a type category. It should contain terms for types of {{{topic}}}, not " ..
+		"merely terms related to {{{topic}}}, and should also not contain names of specific {{{topic}}}.",
+	},
+	grouping = {
+		desc = "categories concerning more specific variants of",
+		additional = "'''NOTE''': This is a grouping category. It should not directly contain any terms, but " ..
+		"only subcategories. If there are any terms directly in this category, please move them to a subcategory.",
+	},
+	toplevel = {
+		desc = "UNUSED", -- all categories of this type hardcode their description
+		additional = "'''NOTE''': This is a top-level list category. It should not directly contain any terms, but " ..
+		"only a {{{topic}}}.",
+	},
+}
+
+local function invalid_type(types)
+	local valid_types = {}
+	for typ, _ in pairs(type_data) do
+		table.insert(valid_types, ("'%s'"):format(typ))
+	end
+	error(("Invalid type '%s', should be one or more of %s, comma-separated")
+		:format(types, require("Module:table").serialCommaJoin(valid_types, {dontTag = true})))
+end
+
+local function split_types(types)
+	types = types or "related-to"
+	local splitvals = rsplit(types, "%s*,%s*")
+	for i, typ in ipairs(splitvals) do
+		-- FIXME: Temporary
+		if typ == "topic" then
+			typ = "related-to"
+		end
+		if not type_data[typ] then
+			invalid_type(types)
+		end
+		splitvals[i] = typ
+	end
+	return splitvals
+end
+
+local function gsub_escaping_replacement(str, from, to)
+	return (str:gsub(from, require(pattern_utilities_module).replacement_escape(to)))
+end
 
 function Category.new_main(frame)
 	local self = setmetatable({}, Category)
@@ -164,81 +230,69 @@ function Category:getCategoryName()
 end
 
 
+function Category:process_default(desc)
+	local stripped_desc = desc
+	local no_singularize, wikify, add_the
+	while true do
+		local new_stripped_desc = stripped_desc:match("^(.+) no singularize$")
+		if new_stripped_desc then
+			no_singularize = true
+		end
+		if not new_stripped_desc then
+			new_stripped_desc = stripped_desc:match("^(.+) wikify$")
+			if new_stripped_desc then
+				wikify = true
+			end
+		end
+		if not new_stripped_desc then
+			new_stripped_desc = stripped_desc:match("^(.+) with the$")
+			if new_stripped_desc then
+				add_the = true
+			end
+		end
+		if new_stripped_desc then
+			stripped_desc = new_stripped_desc
+		else
+			break
+		end
+	end
+	if stripped_desc == "default" then
+		return true, no_singularize, wikify, add_the
+	else
+		return false
+	end
+end
+
+
 function Category:replace_special_descriptions(desc)
 	if not desc then
 		return desc
 	end
 
-	local type_to_text = {
-		topic = "related to",
-		set = "for various",
-		name = "for names of",
-		type = "for types of",
-	}
-	local special_description_formats = {
-		["default with the"] = "related to the",
-	}
-
-	local function format_partial_desc(desc)
+	local function format_desc(desc)
 		local desc_parts = {}
-		local types = self._data.type or "topic"
-		for typ in rgsplit(types, "%s*,%s*") do
-			if not type_to_text[typ] then
-				error(("Invalid type '%s', should be one or more of 'topic', 'set', 'name' or 'type', comma-separated")
-					:format(types))
-			end
-			table.insert(desc_parts, type_to_text[typ] .. " " .. desc)
+		local types = split_types(self._data.type)
+		for _, typ in ipairs(types) do
+			table.insert(desc_parts, type_data[typ].desc .. " " .. desc)
 		end
-		return require("Module:table").serialCommaJoin(desc_parts)
-	end
-
-	local function convert_to_full_desc(partial_desc)
-		return "{{{langname}}} terms " .. partial_desc .. "."
+		return "{{{langname}}} " .. require("Module:table").serialCommaJoin(desc_parts) .. "."
 	end
 
 	if desc:find("^=") then
 		desc = desc:gsub("^=", "")
-		return convert_to_full_desc(format_partial_desc(desc))
+		return format_desc(desc)
 	end
 
-	local stripped_desc = desc
-	local no_singularize, wikify
-	while true do
-		local new_stripped_desc = stripped_desc:match("^(.+) no singularize$")
-		if new_stripped_desc then
-			stripped_desc = new_stripped_desc
-			no_singularize = true
-		else
-			new_stripped_desc = stripped_desc:match("^(.+) wikify$")
-			if new_stripped_desc then
-				stripped_desc = new_stripped_desc
-				wikify = true
-			else
-				break
-			end
+	local is_default, no_singularize, wikify, add_the = self:process_default(desc)
+	if is_default then
+		local linked_label = require(topic_cat_utilities_module).link_label(self._info.label, no_singularize, wikify)
+		if add_the then
+			linked_label = "the " .. linked_label
 		end
+		return format_desc(linked_label)
+	else
+		return desc
 	end
-	if stripped_desc == "default" or special_description_formats[stripped_desc] then
-		local label_sub = "label"
-		if wikify then
-			label_sub = label_sub .. "_wiki"
-		end
-		if no_singularize then
-			label_sub = label_sub .. "_no_sing"
-		end
-		label_sub = ("{{{%s}}}"):format(label_sub)
-
-		local partial_desc
-		if special_description_formats[stripped_desc] then
-			partial_desc = special_description_formats[stripped_desc] .. " " .. label_sub
-		else
-			partial_desc = format_partial_desc(label_sub)
-		end
-
-		return convert_to_full_desc(partial_desc)
-	end
-
-	return desc
 end
 
 
@@ -253,7 +307,7 @@ function Category:substitute_template_specs(desc)
 	if type(desc) ~= "string" then
 		return desc
 	end
-	desc = desc:gsub("{{PAGENAME}}", mw.title.getCurrentTitle().text)
+	desc = gsub_escaping_replacement(desc, "{{PAGENAME}}", mw.title.getCurrentTitle().text)
 
 	if desc:find("{{{umbrella_msg}}}") then
 		local eninfo = mw.clone(self._info)
@@ -267,30 +321,46 @@ function Category:substitute_template_specs(desc)
 		)
 	end
 	if self._lang then
-		desc = desc:gsub("{{{langname}}}", self._lang:getCanonicalName())
-		desc = desc:gsub("{{{langcode}}}", self._lang:getCode())
-		desc = desc:gsub("{{{langcat}}}", self._lang:getCategoryName())
-		desc = desc:gsub("{{{langlink}}}", self._lang:makeCategoryLink())
+		desc = gsub_escaping_replacement(desc, "{{{langname}}}", self._lang:getCanonicalName())
+		desc = gsub_escaping_replacement(desc, "{{{langcode}}}", self._lang:getCode())
+		desc = gsub_escaping_replacement(desc, "{{{langcat}}}", self._lang:getCategoryName())
+		desc = gsub_escaping_replacement(desc, "{{{langlink}}}", self._lang:makeCategoryLink())
 	end
 
-	local function handle_label(label_sub, no_singularize, wikify)
-		local function gsub_desc(to)
-			return (desc:gsub(label_sub, require("Module:pattern utilities").replacement_escape(to)))
+	if desc:find("{{{topic}}}") then
+		local function process_default_add_the(topic)
+			local is_default, no_singularize, wikify, add_the = self:process_default(topic)
+			if is_default then
+				topic = self._info.label
+				if add_the then
+					topic = "the " .. topic
+				end
+			end
+			return topic, is_default
 		end
 
-		return gsub_desc(require(topic_cat_utilities_module).link_label(self._info.label, no_singularize, wikify))
-	end
-
-	for _, spec in ipairs {
-		{"{{{label}}}"},
-		{"{{{label_no_sing}}}", "no singularize"},
-		{"{{{label_wiki}}}", false, "wikify"},
-		{"{{{label_wiki_no_sing}}}", "no singularize", "wikify"},
-	} do
-		local label_sub, no_singularize, wikify = unpack(spec)
-		if desc:find(label_sub) then
-			desc = handle_label(label_sub, no_singularize, wikify)
+		-- Compute the value for {{{topic}}}. If the user specified `topic`, use it. (If we're an umbrella category,
+		-- allow a separate value for `umbrella.topic`, falling back to `topic`.) Otherwise, see if the description
+		-- was specified as 'default' or a variant; if so, parse it to determine whether to add "the" to the label.
+		-- Otherwise, just use the label directly.
+		local topic = not self._lang and self._data.umbrella and self._data.umbrella.topic or self._data.topic
+		if topic then
+			topic, _ = process_default_add_the(topic)
+		else
+			local desc
+			if not self._lang then
+				desc = self._data.umbrella and self._data.umbrella.description or self._data.umbrella_description
+			end
+			desc = desc or self._data.description
+			local defaulted_desc, is_default = process_default_add_the(desc)
+			if is_default then
+				topic = desc
+			else
+				topic = self._info.label
+			end
 		end
+
+		desc = gsub_escaping_replacement(desc, "{{{topic}}}", topic)
 	end
 
 	if desc:find("{") then
@@ -383,6 +453,24 @@ function Category:getDescription(isChild)
 			m_labels_ancillary.find_labels_for_category(self._info.label, "topic", self._lang), nil, self._lang)
 	end
 
+	local function get_additional_msg()
+		local types = split_types(self._data.type)
+		if #types > 1 then
+			local parts = {}
+			local function ins(txt)
+				table.insert(parts, txt)
+			end
+			ins("'''NOTE''': This is a multi-type category. It may contain terms of any of the following types:")
+			for i, typ in ipairs(types) do
+				ins(("* %s {{{topic}}}%s"):format(type_data[typ].desc, i == #types and "." or ";"))
+			end
+			ins("'''WARNING''': Such categories are strongly dispreferred and should be split into separate per-type categories.")
+			return table.concat(parts, "\n")
+		else
+			return type_data[types[1]].additional
+		end
+	end
+
 	if self._lang then
 		local desc = self._data.description
 
@@ -394,6 +482,7 @@ function Category:getDescription(isChild)
 			if self._data.additional then
 				desc = desc .. "\n\n" .. self._data.additional
 			end
+			desc = desc .. "\n\n" .. get_additional_msg()
 			local labels_msg = get_labels_categorizing()
 			if labels_msg then
 				desc = desc .. "\n\n" .. labels_msg
@@ -433,6 +522,7 @@ function Category:getDescription(isChild)
 				desc = desc .. "\n\n" .. remove_lang_params(additional)
 			end
 			desc = desc .. "\n\n{{{umbrella_msg}}}"
+			desc = desc .. "\n\n" .. get_additional_msg()
 			local labels_msg = get_labels_categorizing()
 			if labels_msg then
 				desc = desc .. "\n\n" .. labels_msg
@@ -520,16 +610,10 @@ function Category:getParents()
 
 
 	if self._data.type ~= "toplevel" then
-		local types = self._data.type or "topic"
-		for typ in rgsplit(types, "%s*,%s*") do
+		local types = split_types(self._data.type)
+		for _, typ in ipairs(types) do
 			local pinfo = mw.clone(self._info)
-			pinfo.label =
-				typ == "topic" and "list of topics" or
-				typ == "type" and "list of type categories" or
-				typ == "name" and "list of name categories" or
-				typ == "set" and "list of sets" or
-				error(("Invalid type '%s', should be one or more of 'topic', 'set', 'name' or 'type', comma-separated")
-				:format(types))
+			pinfo.label = ("list of %s categories"):format(typ)
 			table.insert(ret, {name = Category.new(pinfo), sort = (not self._lang and " " or "") .. label})
 		end
 	end
