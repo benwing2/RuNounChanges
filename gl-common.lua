@@ -95,7 +95,7 @@ local prepositions = {
 	"pr[óá]s? ",
 	-- others
 	"at[aé] ",
-	"como ",
+	"com[oa] ",
 	"entre ",
 	"sen ",
 	"so ",
@@ -135,8 +135,8 @@ function export.make_plural(term, special)
 	return try("r$", "res") or
 		try("z$", "ces") or
 		try("(" .. V .. "be)l$", "%1is") or -- vowel + -bel
-		try("(" .. AV .. ".*" .. V .. ")l$", "%1es") or -- non-final stress + -l e.g. [[túnel]] -> 'túneles'
-		try("^(" .. C .. "*" .. V .. C .. "*)l$", "%1es") or -- monosyllable ending in -l e.g. [[sol]] -> 'soles'
+		try("(" .. AV .. ".*" .. V .. "l)$", "%1es") or -- non-final stress + -l e.g. [[túnel]] -> 'túneles'
+		try("^(" .. C .. "*" .. V .. C .. "*l)$", "%1es") or -- monosyllable ending in -l e.g. [[sol]] -> 'soles'
 		try("il$", "ís") or -- final stressed -il e.g. [[civil]] -> 'civís'
 		try("(" .. V .. ")l$", "%1is") or -- any other vowel + -l e.g. [[papel]] -> 'papeis'
 		try("(" .. V .. "[íú])s$", "%1ses") or -- vowel + stressed í/ú + -s e.g. [[país]] -> 'países'
@@ -164,7 +164,7 @@ function export.make_feminine(term, is_noun, special)
 		try("o$", "a") or
 		try("º$", "ª") or -- ordinal indicator
 		try("^(" .. C .. "*)u$", "%1úa") or -- [[nu]] -> núa, [[cru]] -> crúa
-		try("^eu$", "ía") or -- [[sandeu]] -> sandía, [[xudeu]] -> xudía
+		try("eu$", "ía") or -- [[sandeu]] -> sandía, [[xudeu]] -> xudía
 		-- many nouns and adjectives in -án:
 		-- [[afgán]], [[alazán]], [[aldeán]], [[alemán]], [[ancián]], [[aresán]], [[arnoián]], [[arousán]], [[artesán]],
 		-- [[arzuán]], [[barregán]], [[bergantiñán]], [[bosquimán]], [[buxán]], [[caldelán]], [[camariñán]],
