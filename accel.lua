@@ -232,17 +232,23 @@ local function split_and_normalize_tag(tag, lang, map_to_canonical_shortcut)
 		multipart = {multipart}
 	end
 	if map_to_canonical_shortcut then
+		local function get_canonical_shortcut(tag, lang)
+			local tagobj = m_form_of.lookup_tag(tag, lang)
+			local tag_shortcuts = tagobj and tagobj[m_form_of.SHORTCUTS]
+			if tag_shortcuts and type(tag_shortcuts) == "table" then
+				tag_shortcuts = tag_shortcuts[1]
+			end
+			return tag_shortcuts or tag
+		end
 		for i, mpart in ipairs(multipart) do
 			if type(mpart) == "table" then
 				-- two-level multipart
 				for j, single_tag in ipairs(mpart) do
-					local tagobj = m_form_of.lookup_tag(single_tag, lang)
-					mpart[j] = tagobj and tagobj.shortcuts and tagobj.shortcuts[1] or single_tag
+					mpart[j] = get_canonical_shortcut(single_tag, lang)
 				end
 				multipart[i] = table.concat(mpart, ":")
 			else
-				local tagobj = m_form_of.lookup_tag(mpart, lang)
-				multipart[i] = tagobj and tagobj.shortcuts and tagobj.shortcuts[1] or mpart
+				multipart[i] = get_canonical_shortcut(mpart, lang)
 			end
 		end
 	else
@@ -267,8 +273,9 @@ local function get_normalized_tag_type(tag, lang)
 	if tag:find(MARK_CONJOINED_SHORTCUT) or tag:find(":") then
 		return "unknown"
 	end
-	local tagobj = require(form_of_module).lookup_tag(tag, lang)
-	return tagobj and tagobj.tag_type or "unknown"
+	local m_form_of = require(form_of_module)
+	local tagobj = m_form_of.lookup_tag(tag, lang)
+	return tagobj and tagobj[m_form_of.TAG_TYPE] or "unknown"
 end
 
 --[=[
