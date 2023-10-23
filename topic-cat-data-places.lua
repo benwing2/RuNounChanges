@@ -192,9 +192,35 @@ for _, group in ipairs(m_shared.cities) do
 				end
 			end
 
+			-- wp= defaults to group-level wp=, then to true (Wikipedia article matches bare key = label)
+			local wp = value.wp
+			if wp == nil then
+				wp = group.wp or true
+			end
+			-- wpcat= defaults to wp= (if Wikipedia article has its own name, Wikipedia category and Commons category generally follow)
+			local wpcat = value.wpcat
+			if wpcat == nil then
+				wpcat = wp
+			end
+			-- commonscat= defaults to wpcat= (if Wikipedia category has its own name, Commons category generally follows)
+			local commonscat = value.commonscat
+			if commonscat == nil then
+				commonscat = wpcat
+			end
+
+			local function format_boxval(val)
+				if type(val) == "string" then
+					val = val:gsub("%c", key):gsub("%d", label_parent)
+				end
+				return val
+			end
+
 			labels[key] = {
 				description = desc,
 				parents = key_parents,
+				wp = format_boxval(wp),
+				wpcat = format_boxval(wpcat),
+				commonscat = format_boxval(commonscat),
 			}
 		end
 	end
