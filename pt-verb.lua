@@ -2791,7 +2791,15 @@ end
 -- user-specified arguments and generate a displayable table of the conjugated forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
-	local alternant_multiword_spec = export.do_generate_forms(parent_args, "pt-conj")
+	local params = {
+		[1] = {},
+		["noautolinktext"] = {type = "boolean"},
+		["noautolinkverb"] = {type = "boolean"},
+		["pagename"] = {}, -- for testing/documentation pages
+		["json"] = {type = "boolean"}, -- for bot use
+	}
+	local args = require("Module:parameters").process(parent_args, params)
+	local alternant_multiword_spec = export.do_generate_forms(args, "pt-conj")
 	if type(alternant_multiword_spec) == "string" then
 		-- JSON return value
 		return alternant_multiword_spec
