@@ -1,10 +1,10 @@
 local export = {}
 
 -- Used in multiple places; create a variable for ease in testing.
-local poscatboiler_submodule = "poscatboiler"
+local poscatboiler_template = "poscatboiler"
 
 
-local function splitLabelLang(titleObject)
+local function split_label_lang(titleObject)
 	local getByCanonicalName = require("Module:languages").getByCanonicalName
 	local canonicalName
 	local lang
@@ -27,8 +27,16 @@ local function splitLabelLang(titleObject)
 end
 
 
--- Add the arguments in `source` to those in `receiver`, offsetting numeric arguments by `offset`.
-local function add_args(receiver, source, offset)
+--[==[
+Copy the arguments in `source` to those in `receiver`, offsetting numeric arguments by `offset`.
+
+Handlers that invoke {{tl|poscatboiler}} use this to pass user-specified arguments to {{tl|poscatboiler}} along with
+arguments specifying the category and its type. Specifically, {{tl|poscatboiler}} requires arguments specified in 1=
+(the language name embedded in the category), 2= (the category name minus the language name and any suffixed script),
+3= (the script code of categories of the form [[:Category:Pali nouns in Devanagari script]]) and raw= (true for raw
+categories). User-specified numeric parameters are passed in 4= and above hence `offset` will normally be 3.
+]==]
+function export.copy_args(receiver, source, offset)
 	for k, v in pairs(source) do
 		if type(k) == "number" then
 			receiver[k + offset] = v
@@ -40,11 +48,9 @@ local function add_args(receiver, source, offset)
 end
 
 
--- List of handler functions that try to match the page name.
--- A handler should return a table of template title plus arguments
--- that is passed to frame:expandTemplate.
--- If a handler does not recognise the page name, it should return nil.
--- Note that the order of functions matters!
+-- List of handler functions that try to match the page name. A handler should return a table of template title plus
+-- arguments to be passed to frame:expandTemplate(). If a handler does not recognize the page name, it should return
+-- nil. Note that the order of functions matters!
 
 local handlers = {}
 
@@ -61,6 +67,28 @@ add_handler(function(titleObject)
 	
 	local code, label = titleObject.text:match("^([a-z-]+):(.+)$")
 	return {title = "topic cat", args = {code, label}}
+end)
+
+
+-- Fancy version of ine() (if-not-empty). Converts empty string to nil, but also strips leading/trailing space.
+function export.ine(arg)
+	if not arg then return nil end
+	arg = mw.text.trim(arg)
+	if arg == "" then return nil end
+	return arg
+end
+
+
+-- Dialect categories e.g. for [[:Category:New Zealand English]] or [[:Category:Issime Walser]]
+add_handler(function(titleObject, args)
+	if export.ine(args.dialect) then
+		local args = export.copy_args({nil, titleObject.text}, args, 3)
+		args.raw = true
+		return {
+			title = poscatboiler_template,
+			args = args,
+		}, true
+	end
 end)
 
 
@@ -104,16 +132,17 @@ end)
 
 -- poscatboiler lang-specific
 add_handler(function(titleObject, args)
-	local label, lang = splitLabelLang(titleObject)
+	local label, lang = split_label_lang(titleObject)
 	if lang then
 		local baseLabel, script = label:match("(.+) in (.-) script$")
 		if script and baseLabel ~= "terms" then
 			local scriptObj = require("Module:scripts").getByCanonicalName(script)
 			if scriptObj then
-				return {title = poscatboiler_submodule, args = add_args({lang:getCode(), baseLabel, scriptObj:getCode()}, args, 3)}, true
+				return {title = poscatboiler_template, args =
+					export.copy_args({lang:getCode(), baseLabel, scriptObj:getCode()}, args, 3)}, true
 			end
 		end
-		return {title = poscatboiler_submodule, args = add_args({lang:getCode(), label}, args, 3)}, true
+		return {title = poscatboiler_template, args = export.copy_args({lang:getCode(), label}, args, 3)}, true
 	end
 end)
 
@@ -123,8 +152,8 @@ add_handler(function(titleObject, args)
 	local label = titleObject.text:match("(.+) by language$")
 	if label then
 		return {
-			title = poscatboiler_submodule,
-			args = add_args({nil, mw.getContentLanguage():lcfirst(label)}, args, 3)
+			title = poscatboiler_template,
+			args = export.copy_args({nil, mw.getContentLanguage():lcfirst(label)}, args, 3)
 		}, true
 	end
 end)
@@ -138,10 +167,10 @@ end)
 
 -- poscatboiler raw handlers
 add_handler(function(titleObject, args)
-	local args = add_args({nil, titleObject.text}, args, 3)
+	local args = export.copy_args({nil, titleObject.text}, args, 3)
 	args.raw = true
 	return {
-		title = poscatboiler_submodule,
+		title = poscatboiler_template,
 		args = args,
 	}, true
 end)
@@ -149,9 +178,9 @@ end)
 
 -- poscatboiler umbrella handlers without 'by language'
 add_handler(function(titleObject, args)
-	local args = add_args({nil, mw.getContentLanguage():lcfirst(titleObject.text)}, args, 3)
+	local args = export.copy_args({nil, mw.getContentLanguage():lcfirst(titleObject.text)}, args, 3)
 	return {
-		title = poscatboiler_submodule,
+		title = poscatboiler_template,
 		args = args,
 	}, true
 end)
