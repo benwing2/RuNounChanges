@@ -586,6 +586,33 @@ local function reconstruct_term_per_hyphens(term, affix_type, scode, thyph_re, n
 end
 
 
+--[=[
+Look up a mapping from a given affix variant to the canonical form used in categories and links. The lookup tables are
+language-specific according to `lang`, and may be ID-specific according to `affix_id`. The affixes as they appear in the
+lookup tables (both the variant and the canonical form) are in "lookup affix" format (approximately speaking, they use a
+regular hyphen for most scripts, but a tatweel for Arabic-script entries and a maqqef for Hebrew-script entries), but
+the passed-in `affix` param is in "template affix" format (which differs from the lookup affix for Arabic-script
+entries, because more types of hyphens are allowed in template affixes; see the comments at the top of the file). The
+remaining parameters to this function are used to convert from template affixes to lookup affixes; see the
+reconstruct_term_per_hyphens() function above.
+
+If the affix contains brackets, no lookup is done. Otherwise, a two-stage process is used, first looking up the affix
+directly and then stripping diacritics and looking it up again. The reason for this is documented above in the comments
+at the top of the file (specifically, the comments describing lookup affixes).
+
+The value of a mapping can either be a string (do the mapping regardless of affix ID) or a table indexed by affix ID
+(where the special value `false` indicates no affix ID). The values of entries in this table can also be strings, or
+tables with keys `affix` and `id` (again, use `false` to indicate no ID). This allows an affix mapping to map from one
+ID to another (for example, this is used in English to map the [[an-]] prefix with no ID to the [[a-]] prefix with the
+ID 'not').
+
+The Given a template affix `term` and an affix type `affix_type`, change the relevant template hyphen(s) in the affix to
+the display or lookup hyphen specified in `new_hyphen`, or add them if they are missing. `new_hyphen` can be a string,
+specifying a fixed hyphen, or a function of two arguments (the script code `scode` and the discovered template hyphen,
+or nil of no relevant template hyphen is present). `thyph_re` is a Lua pattern (which must be enclosed in parens) that
+matches the possible template hyphens. Note that not all template hyphens present in the affix are changed, but only
+the "relevant" ones (e.g. for a prefix, a relevant template hyphen is one coming at the end of the affix).
+]=]
 local function lookup_affix_mapping(affix, affix_type, lang, scode, thyph_re, lookup_hyph, affix_id)
 	local function do_lookup(affix)
 		local langcode = lang:getCode()
@@ -724,9 +751,9 @@ function export.make_affix(term, lang, sc, affix_type, do_affix_mapping, return_
 		error("Internal error: Invalid affix type " .. (affix_type or "(nil)"))
 	end
 
-	local _, link_term, display_term, lookup_term = export.parse_term_for_affixes(term, lang, sc, affix_type,
+	local _, link_term, display_term, lookup_term, new_id = export.parse_term_for_affixes(term, lang, sc, affix_type,
 		do_affix_mapping, return_lookup_affix, affix_id)
-	return link_term, display_term, lookup_term
+	return link_term, display_term, lookup_term, new_id
 end
 
 
@@ -974,7 +1001,8 @@ WARNING: This destructively modifies `part`.
 ]=]
 local function make_part_into_affix(part, lang, sc, affix_type)
 	canonicalize_part(part, lang, sc)
-	local link_term, display_term = export.make_affix(part.term, part.lang, part.sc, affix_type, not part.alt, nil, part.id)
+	local link_term, display_term, _, new_id = export.make_affix(part.term, part.lang, part.sc, affix_type,
+		not part.alt, nil, part.id)
 	part.term = link_term
 	-- When we don't specify `do_affix_mapping` to make_affix(), link and display terms (first and second retvals of
 	-- make_affix()) are the same.
