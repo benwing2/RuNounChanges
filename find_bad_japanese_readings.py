@@ -17,8 +17,8 @@ def process_page(page, index):
     reading = re.sub(".*with.* reading ", "", cat)
     reading = re.sub("-.*", "", reading)
     reason = None
-    if len(reading) > 5:
-      reason = ">5 chars"
+    if len(reading) >= 5:
+      reason = ">=5 chars"
     elif reading.endswith("さま"):
       reason = "ends with さま"
     elif re.search("[をゑゐ]|[かがはばぱさざただなまやら]う", reading):
