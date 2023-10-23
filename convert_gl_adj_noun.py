@@ -43,7 +43,7 @@ prepositions = [
   "pr[óá]s? ",
   # others
   "at[aé] ",
-  "como ",
+  "com[oa] ",
   "entre ",
   "sen ",
   "so ",
@@ -74,7 +74,7 @@ def make_feminine(term, is_noun, special=None):
     tr("o$", "a") or
     tr("º$", "ª") or # ordinal indicator
     tr("^(" + C + "*)u$", r"\1úa") or # [[nu]] -> núa, [[cru]] -> crúa
-    tr("^eu$", "ía") or # [[sandeu]] -> sandía, [[xudeu]] -> xudía
+    tr("eu$", "ía") or # [[sandeu]] -> sandía, [[xudeu]] -> xudía
     # many nouns and adjectives in -án:
     # [[afgán]], [[alazán]], [[aldeán]], [[alemán]], [[ancián]], [[aresán]], [[arnoián]], [[arousán]], [[artesán]],
     # [[arzuán]], [[barregán]], [[bergantiñán]], [[bosquimán]], [[buxán]], [[caldelán]], [[camariñán]],
@@ -123,6 +123,57 @@ def make_feminine(term, is_noun, special=None):
     term
   )
 
+def old_make_plural(lemma):
+  def is_accented(x):
+    return re.search("[áéíóúâêô]", x)
+  OLDV = "[aeiouãáéíóêôú]"
+  def has_multiple_vowels(x):
+    return re.search(OLDV + ".*" + OLDV, x)
+  def is_vowel(x):
+    return re.search(OLDV, x)
+  old_remove_accent = {
+    "á":"a", "é":"e", "í":"i", "ó":"o", "ú":"u",
+    "â":"a", "ê":"e", "ô":"o",
+  }
+  if " " in lemma or "-" in lemma:
+    return None
+  if lemma.endswith("bel"):
+    return lemma[:-3] + "beis"
+  if lemma.endswith("l"):
+    if has_multiple_vowels(lemma) and not is_accented(lemma[:-2]):
+      if lemma.endswith("il"):
+        return lemma[:-2] + "ís"
+      else:
+        return lemma[:-1] + "is"
+    else:
+      return lemma + "es"
+  if lemma.endswith("m"):
+    return lemma[:-1] + "ns"
+  if lemma.endswith("z"):
+    return lemma[:-1] + "ces"
+  if lemma.endswith("r"):
+    return lemma + "es"
+  if re.search("[çs]ão$", lemma):
+    return lemma[:-2] + "ões"
+  if re.search("ão$", lemma):
+    return None
+  if lemma.endswith("x"):
+    return lemma
+  if is_vowel(lemma[-1]) or lemma.endswith("n"):
+    return lemma + "s"
+  if lemma.endswith("s"):
+    penult = lemma[-2]
+    if not is_vowel(penult):
+      return lemma
+    antepenult = lemma[-3]
+    if is_vowel(antepenult):
+      return lemma + "es"
+    if is_accented(penult):
+      return lemma[:-2] + remove_accent[penult] + "ses"
+    else:
+      return lemma
+  return None
+
 def make_plural(term, special=None):
   retval = romance_utils.handle_multiword(term, special, make_plural, prepositions)
   if retval:
@@ -138,8 +189,8 @@ def make_plural(term, special=None):
     tr("r$", "res") or
     tr("z$", "ces") or
     tr("(" + V + "be)l$", r"\1is") or # vowel + -bel
-    tr("(" + AV + ".*" + V + ")l$", r"\1es") or # non-final stress + -l e.g. [[túnel]] -> 'túneles'
-    tr("^(" + C + "*" + V + C + "*)l$", r"\1es") or # monosyllable ending in -l e.g. [[sol]] -> 'soles'
+    tr("(" + AV + ".*" + V + "l)$", r"\1es") or # non-final stress + -l e.g. [[túnel]] -> 'túneles'
+    tr("^(" + C + "*" + V + C + "*l)$", r"\1es") or # monosyllable ending in -l e.g. [[sol]] -> 'soles'
     tr("il$", "ís") or # final stressed -il e.g. [[civil]] -> 'civís'
     tr("(" + V + ")l$", r"\1is") or # any other vowel + -l e.g. [[papel]] -> 'papeis'
     tr("(" + V + "[íú])s$", r"\1ses") or # vowel + stressed í/ú + -s e.g. [[país]] -> 'países'
@@ -160,7 +211,7 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  if "gl-adj" not in text and "gl-noun" not in text:
+  if "gl-adj-old" not in text and "gl-noun-old" not in text:
     return
 
   if ":" in pagetitle:
@@ -188,45 +239,32 @@ def process_text_on_page(index, pagetitle, text):
 
     ############# Remove redundant params
 
-    if tn == "gl-noun" and args.do_nouns:
-      origt = str(t)
+    if tn == "gl-noun-old" and args.do_nouns:
+      must_continue = False
+      for tt in parsed.filter_templates():
+        ttn = tname(tt)
+        if ttn == "gl-reinteg sp":
+          pagemsg("WARNING: Saw reintegrationist noun, skipping: head=%s, defn=%s" % (str(t), str(tt)))
+          must_continue = True
+          break
+      if must_continue:
+        continue
+    
       subnotes = []
+      origt = str(t)
 
-      sg = getp("sg")
-      if sg:
-        t.add("head", sg)
-        rmparam(t, "sg")
-        subnotes.append("move sg= to head=")
-      head = getp("head")
-      lemma = pagetitle
+      head = getp("sg") or getp("head")
+      lemma = blib.remove_links(head or pagetitle)
 
       def replace_lemma_with_hash(term):
         if term.startswith(lemma):
           replaced_term = "#" + term[len(lemma):]
-          pagemsg("Replacing lemma-containing term '%s' with '%s'" % (term, replaced_term))
           subnotes.append("replace lemma-containing term '%s' with '%s'" % (term, replaced_term))
           term = replaced_term
         return term
 
-      saw_qual = False
-      for param in t.params:
-        pn = pname(param)
-        pv = str(param.value)
-        if re.search("_qual$", pn):
-          pagemsg("WARNING: Saw _qual parameter, can't handle: %s=%s" % (pn, pv))
-          saw_qual = True
-          break
-      if saw_qual:
-        continue
-
-      gs = blib.fetch_param_chain(t, "1", "g")
-      if len(gs) > 1:
-        pagemsg("WARNING: Saw multiple genders, can't handle: %s" % str(t))
-        continue
-      if not gs:
-        pagemsg("WARNING: No genders, can't handle: %s" % str(t))
-        continue
-      g = gs[0]
+      def warn_when_exiting(txt):
+        pagemsg("WARNING: %s: %s" % (txt, str(t)))
 
       autohead = romance_utils.add_links_to_multiword_term(lemma, splithyph=False)
       if autohead == head:
@@ -234,98 +272,107 @@ def process_text_on_page(index, pagetitle, text):
         subnotes.append("remove redundant head '%s'" % head)
         head = None
 
-      is_plural = g.endswith("-p")
+      unc = getp("unc")
+      g = getp("1")
+      g2 = getp("g2")
 
-      pls = [getp("2")] + blib.fetch_param_chain(t, "pl")
-      pls = [pl for pl in pls if pl]
-      orig_pls = pls
+      if not g:
+        warn_when_exiting("No gender, can't convert")
+        continue
+
+      if getp("unc"):
+        warn_when_exiting("Saw unc=, can't convert")
+        continue
+
+      if g in ["morf", "c"]:
+        g = "mf"
+
+      is_plural = "p" in g or "p" in "g2"
+
+      if is_plural and (not g.endswith("-p") or (g2 and not g2.endswith("-p"))):
+        warn_when_exiting("Both singular and plural, can't convert")
+        continue
 
       if not is_plural:
-        while True:
-          if not pls:
+        pl = getp("2") or getp("pl")
+        orig_pl = pl
+        if not pl:
+          old_defpl = old_make_plural(lemma)
+          if old_defpl is None:
+            warn_when_exiting("No plurals and can't generate default plural, skipping")
+            continue
+          pl = old_defpl
+        pl2 = getp("pl2")
+        pl3 = getp("pl3")
+        if not pl2 and pl3:
+          warn_when_exiting("Saw gap in plurals, can't handle, skipping")
+          continue
+
+        pls = [pl, pl2, pl3]
+        pls = [x for x in pls if x]
+        orig_pls = [orig_pl, pl2, pl3]
+        orig_pls = [x for x in orig_pls if x]
+        pls = [lemma + x if x in ["s", "es"] else x for x in pls]
+
+        if unc:
+          pls = ["-"] + pls
+
+        defpl = make_plural(lemma)
+        if not defpl:
+          continue
+        pls_with_def = ["+" if pl == defpl else pl for pl in pls]
+
+        actual_special = None
+        for special in romance_utils.all_specials:
+          special_pl = make_plural(lemma, special)
+          if special_pl is None:
+            continue
+          if pls == [special_pl]:
+            pagemsg("Found special=%s with special_pl=%s" % (special, special_pl))
+            actual_special = special
             break
 
-          if g not in ["m", "f", "mf", "mfbysense"]:
-            pagemsg("WARNING: Saw unrecognized gender '%s', can't handle: %s" % (g, str(t)))
-            break
-
-          g_for_plural = "f" if g == "f" else "m"
-          new_pls = []
-          defpl = do_make_plural(lemma)
-          if defpl is None:
-            pagemsg("Can't generate default plural, skipping: %s" % str(t))
-            break
-          if len(defpl) > 1:
-            if set(pls) == set(defpl):
-              new_pls = ["+"]
-            elif set(pls) < set(defpl):
-              pagemsg("WARNING: pls=%s subset of defpls=%s, replacing with default" % (",".join(pls), ",".join(defpl)))
-              new_pls = ["+"]
-            else:
-              new_pls = pls
+        if pls_with_def == ["+"]:
+          if orig_pls:
+            subnotes.append("remove redundant plural '%s'" % orig_pls[0])
+          pls = []
+        elif actual_special:
+          if orig_pls:
+            subnotes.append("replace plural '%s' with '+%s'" % (orig_pls[0], actual_special))
           else:
-            for pl in pls:
-              if pl == defpl[0]:
-                new_pls.append("+")
-              else:
-                new_pls.append(pl)
+            subnotes.append("replace default plural '%s' with '+%s'" % (pls[0], actual_special))
+          pls = ["+" + actual_special]
+        elif pls_with_def != pls:
+          # orig_pls should always have an entry and pls_with_def should have its length > 1
+          subnotes.append("replace default plural '%s' with '+'" % defpl)
+          pls = pls_with_def
 
-          if new_pls == ["+"]:
-            redundant_msg = "redundant plural%s %s" % ("s" if len(pls) > 1 else "", ",".join("'%s'" % pl for pl in pls))
-            pagemsg("Removing %s" % redundant_msg)
-            subnotes.append("remove %s" % redundant_msg)
-            pls = []
-          elif new_pls != pls:
-            for old_pl, new_pl in zip(pls, new_pls):
-              if old_pl != new_pl:
-                assert old_pl == defpl[0]
-                assert new_pl == "+"
-                pagemsg("Replacing default plural '%s' with '+'" % defpl)
-                subnotes.append("replace default plural '%s' with '+'" % defpl)
-            pls = new_pls
-
-          for special in romance_utils.all_specials:
-            special_pl = do_make_plural(lemma, special)
-            if special_pl is None:
-              continue
-            new_pls = []
-            if len(special_pl) > 1:
-              if set(pls) == set(special_pl):
-                pagemsg("Found special=%s with special_pl=%s" % (special, ",".join(special_pl)))
-                new_pls = ["+%s" % special]
-              elif set(pls) < set(special_pl):
-                pagemsg("WARNING: pls=%s subset of special_pl=%s, replacing with +%s" %
-                  (",".join(pls), ",".join(special_pl), special))
-                new_pls = ["+%s" % special]
-            else:
-              new_pls = []
-              for pl in pls:
-                if pl == special_pl[0]:
-                  pagemsg("Found special=%s with special_pl=%s" % (special, ",".join(special_pl)))
-                  pagemsg("Replacing plural '%s' with '+%s'" % (pl, special))
-                  subnotes.append("replace plural '%s' with '+%s'" % (pl, special))
-                  new_pls.append("+%s" % special)
-                else:
-                  new_pls.append(pl)
-              if new_pls == pls:
-                new_pls = []
-            if new_pls:
-              pls = new_pls
-              break
-
-          pls = [replace_lemma_with_hash(pl) for pl in pls]
-
-          break
+        pls = [replace_lemma_with_hash(pl) for pl in pls]
 
       def handle_mf(g, g_full, make_mf):
-        mfs = [getp(g)]
+        mf = getp(g)
+        mf2 = getp(g + "2")
+        if not mf and mf2:
+          warn_when_exiting("Saw gap in %ss, can't handle, skipping" % g_full)
+          return None
+        mfs = [mf, mf2]
         mfs = [mf for mf in mfs if mf]
+
+        if not is_plural:
+          mfpl = getp(g + "pl")
+          mfpl2 = getp(g + "pl2")
+          if not mfpl and mfpl2:
+            warn_when_exiting("Saw gap in %s plurals, can't handle, skipping" % g_full)
+            return None
+          mfpls = [mfpl, mfpl2]
+          mfpls = [mfpl for mfpl in mfpls if mfpl]
 
         if mfs:
           defmf = make_mf(lemma, True)
           if mfs == [defmf]:
-            subnotes.append("replace %s=%s with '+'" % (g, mfs[0]))
-            return ["+"]
+            if is_plural or (not mfpls or mfpls == [make_plural(defmf)]):
+              subnotes.append("replace %s=%s with '+'" % (g, mfs[0]))
+              return ["+"], []
           actual_special = None
           for special in romance_utils.all_specials:
             special_mf = make_mf(lemma, True, special)
@@ -336,45 +383,117 @@ def process_text_on_page(index, pagetitle, text):
               actual_special = special
               break
           if actual_special:
-            subnotes.append("replace explicit %s '%s' with special indicator '+%s'" %
-                (g_full, ",".join(mfs), actual_special))
-            return ["+%s" % actual_special]
-        return [replace_lemma_with_hash(mf) for mf in mfs]
+            if is_plural:
+              pass
+            elif not mfpls:
+              pagemsg("WARNING: Explicit %s=%s matches special=%s but no %s plural, allowing" % (
+                g, ",".join(mfs), actual_special, g_full))
+            else:
+              special_mfpl = make_plural(special_mf, actual_special)
+              if special_mfpl:
+                if mfpls == [special_mfpl]:
+                  pagemsg("Found %s=%s and special=%s, %spls=%s matches special_%spl" % (
+                    g, ",".join(mfs), actual_special, g, ",".join(mfpls), g))
+                else:
+                  pagemsg("WARNING: for %s=%s and special=%s, %spls=%s doesn't match special_%spl=%s, allowing" % (
+                    g, ",".join(mfs), actual_special, g, ",".join(mfpls), g, special_mfpl))
+                  actual_special = None
+            if actual_special:
+              subnotes.append("replace explicit %s '%s' with special indicator '+%s' and remove explicit %s plural" %
+                  (g_full, ",".join(mfs), actual_special, g_full))
+              mfs = ["+%s" % actual_special]
+              mfpls = []
+          if not actual_special:
+            defmf = make_mf(lemma, True)
+            mfs_with_def = ["+" if x == defmf else x for x in mfs]
+            if mfs_with_def != mfs:
+              subnotes.append("replace default %s '%s' with '+'" % (g_full, defmf))
+              mfs = mfs_with_def
+            if not is_plural and mfpls:
+              defpl = [make_plural(x) for x in mfs]
+              ok = False
+              if set(defpl) == set(mfpls):
+                ok = True
+              elif len(defpl) > 1 and set(mfpls) < set(defpl):
+                pagemsg("WARNING: for %s=%s, %spl=%s subset of default pl %s, allowing" % (
+                  g, ",".join(mfs), g, ",".join(mfpls), ",".join(defpl)))
+                ok = True
+              if ok:
+                pagemsg("Found %s=%s, %spl=%s matches default pl" % (g, ",".join(mfs), g, ",".join(mfpls)))
+                subnotes.append("remove redundant explicit %s plural '%s'" % (g_full, ",".join(mfpls)))
+                mfpls = []
+              else:
+                for special in romance_utils.all_specials:
+                  defpl = [make_plural(x, special) for x in mfs]
+                  if set(defpl) == set(mfpls):
+                    pagemsg("Found %s=%s, %spl=%s matches special=%s" % (
+                      g, ",".join(mfs), g, ",".join(mfpls), special))
+                    subnotes.append("replace explicit %s plural '%s' with special indicator '+%s'" %
+                        (g_full, ",".join(mfpls), special))
+                    mfpls = ["+%s" % special]
+        mfs = [replace_lemma_with_hash(mf) for mf in mfs]
+        return mfs, mfpls if not is_plural else []
 
       retval = handle_mf("f", "feminine", make_feminine)
       if retval is None:
         continue
-      fs = retval
+      fs, fpls = retval
+      #retval = handle_mf("m", "masculine", make_masculine)
+      #if retval is None:
+      #  continue
+      #ms, mpls = retval
 
-      has_pl = t.has("pl")
-      blank_2_or_pl = not orig_pls and (t.has("2") or t.has("pl"))
-      blib.remove_param_chain(t, "pl")
+      must_continue = False
+      for param in t.params:
+        pn = pname(param)
+        pv = str(param.value)
+        if pn not in ["sg", "head", "1", "2", "f", "f2", "fpl", "fpl2", "g2", "pl", "pl2", "pl3", "unc"]:
+          warn_when_exiting("Saw unrecognized param %s=%s" % (pn, pv))
+          must_continue = True
+          break
+      if must_continue:
+        continue
+
+      del t.params[:]
+      blib.set_template_name(t, "gl-noun")
+      t.add("1", g)
+      if g2:
+        t.add("g2", g2)
+      def add_vals(vals, prefix, first=None):
+        first = first or prefix
+        for i, val in enumerate(vals):
+          if i == 0:
+            param = first
+          else:
+            param = "%s%s" % (prefix, i + 1)
+          t.add(param, val)
+
       if not is_plural:
-        if pls and has_pl:
-          subnotes.append("move plural in pl= to 2=")
-        elif blank_2_or_pl:
-          subnotes.append("remove blank plural in 2= and/or pl=")
-        blib.set_param_chain(t, pls, "2", "pl", preserve_spacing=False)
-      blib.set_param_chain(t, fs, "f", preserve_spacing=False)
+        add_vals(pls, "pl", "2")
+      add_vals(fs, "f")
+      if not is_plural:
+        add_vals(fpls, "fpl")
+      #add_vals(ms, "m")
+      #if not is_plural:
+      #  add_vals(mpls, "mpl")
 
-      if head is None:
-        rmparam(t, "head")
-      elif head and head == pagetitle:
-        subnotes.append("convert head= without brackets to nolinkhead=1")
-        rmparam(t, "head")
-        t.add("nolinkhead", "1")
+      if head:
+        if head == lemma:
+          t.add("nolinkhead", "1")
+        else:
+          t.add("head", head)
 
       if origt != str(t):
         pagemsg("Replaced %s with %s" % (origt, str(t)))
-        notes.append("clean up {{gl-noun}} (%s)" % "; ".join(blib.group_notes(subnotes)))
+        notes.append("convert {{gl-noun-old}} to {{gl-noun}} with new syntax%s" %
+            (" (%s)" % ", ".join(subnotes) if subnotes else ""))
       else:
         pagemsg("No changes to %s" % str(t))
 
-    if tn == "gl-adj" and args.do_adjs:
+    if tn == "gl-adj-old" and args.do_adjs:
       origt = str(t)
       subnotes = []
 
-      head = getp("head")
       lemma = pagetitle
 
       def replace_lemma_with_hash(term):
@@ -385,155 +504,136 @@ def process_text_on_page(index, pagetitle, text):
           term = replaced_term
         return term
 
-      saw_unhandlable = False
+      lemma = pagetitle
+      m = getp("masculine") or getp("m")
+      if m:
+        pagemsg("WARNING: Saw m=%s, probable non-lemma form, skipping" % m)
+        continue
+
+      f = getp("feminine") or getp("f")
+      origf = not not f
+      f = f or lemma
+      fullf = f
+      mpl = getp("masculine plural") or getp("mpl") or getp("pl")
+      origmpl = not not (getp("masculine plural") or getp("mpl"))
+      origpl = not not getp("pl")
+      mpl = mpl or (getp("masculine") or getp("m") or lemma) + "s"
+      fullmpl = mpl
+      fpl = getp("feminine plural") or getp("fpl") or getp("pl")
+      origfpl = not not (getp("feminine plural") or getp("fpl"))
+      fpl = fpl or (getp("feminine") or getp("f") or lemma) + "s"
+      fullfpl = fpl
+
+      deff = make_feminine(lemma, False)
+      defmpl = make_plural(lemma)
+      deffpl = make_plural(f)
+      msg("lemma=%s, deff=%s, defmpl=%s, deffpl=%s" % (lemma, deff, defmpl, deffpl))
+      inv = False
+
+      if f == lemma and mpl == lemma and fpl == lemma:
+        inv = True
+        subnotes.append("convert to inv=1")
+      else:
+        if f == deff:
+          if origf:
+            redundant_msg = "redundant feminine '%s'" % f
+            pagemsg("Removing %s" % redundant_msg)
+            subnotes.append("remove %s" % redundant_msg)
+          f = "+"
+        else:
+          f = replace_lemma_with_hash(f)
+
+        if mpl == defmpl:
+          if origmpl:
+            redundant_msg = "redundant masculine plural '%s'" % mpl
+          elif origpl:
+            redundant_msg = "redundant plural '%s'" % mpl
+          else:
+            redundant_msg = None
+          if redundant_msg:
+            pagemsg("Removing %s" % redundant_msg)
+            subnotes.append("remove %s" % redundant_msg)
+          mpl = "+"
+        else:
+          mpl = replace_lemma_with_hash(mpl)
+        if fpl == deffpl:
+          if origfpl:
+            redundant_msg = "redundant feminine plural '%s'" % fpl 
+            pagemsg("Removing %s" % redundant_msg)
+            subnotes.append("remove %s" % redundant_msg)
+          fpl = "+"
+        else:
+          fpl = replace_lemma_with_hash(fpl)
+
+        actual_special = None
+        for special in romance_utils.all_specials:
+          deff = make_feminine(lemma, False, special)
+          if deff is None:
+            continue
+          defmpl = make_plural(lemma, special)
+          deffpl = make_plural(deff, special)
+          if fullf == deff and fullmpl == defmpl and fullfpl == deffpl:
+            actual_special = special
+            break
+
+      must_continue = False
       for param in t.params:
         pn = pname(param)
         pv = str(param.value)
-        if pn == "sp" or pn.startswith("fpl") or pn.endswith("_qual"):
-          pagemsg("WARNING: Saw sp=, fpl* or *_qual parameter, can't handle: %s=%s: %s" % (pn, pv, str(t)))
-          saw_unhandlable = True
+        if pn not in ["sg", "1", "f", "mpl", "pl", "fpl"]:
+          pagemsg("WARNING: Saw unrecognized param %s=%s in %s" % (pn, pv, str(t)))
+          must_continue = True
           break
-        if (pn == "1" or pn.startswith("f") or pn.startswith("pl") or pn.startswith("mpl")) and (pv == "+" or pv.startswith("#")):
-          pagemsg("Saw + or #, skipping: %s=%s: %s" % (pn, pv, str(t)))
-          saw_unhandlable = True
-          break
+      if must_continue:
+        continue
 
-      fs = blib.fetch_param_chain(t, "1", "f")
-      origfs = fs
-      if fs == ["inv"] or fs == ["ind"]:
-        pagemsg("Saw invariable adjective, skipping: %s" % str(t))
-        saw_unhandlable = True
+      sg = getp("sg")
+      del t.params[:]
+      blib.set_template_name(t, "gl-adj")
 
-      if not saw_unhandlable:
-        deff = make_feminine(lemma, False)
-        if fs == ["mf"]:
-          fs = [lemma]
-        if not fs:
-          fs = [deff]
-
-        fem_like_lemma = fs == [lemma]
-
-        pls = blib.fetch_param_chain(t, "pl")
-        origpls = pls
-        mpls = blib.fetch_param_chain(t, "mpl")
-        origmpls = mpls
-
-        defmpl = do_make_plural(lemma)
-        if defmpl is None:
-          continue
-
-        deffpl = [x for f in fs for x in do_make_plural(f)]
-
-        new_fs = []
-        this_subnotes = []
-        if origfs:
-          for f in fs:
-            if f == deff:
-              pagemsg("Replacing feminine '%s' with '+'" % f)
-              this_subnotes.append("replace feminine '%s' with '+'" % f)
-              new_fs.append("+")
-            else:
-              new_fs.append(replace_lemma_with_hash(f))
-          if new_fs == ["+"]:
-            redundant_msg = "redundant feminine%s %s" % ("s" if len(origfs) > 1 else "", ",".join("'%s'" % f for f in origfs))
-            pagemsg("Removing %s" % redundant_msg)
-            subnotes.append("remove %s" % redundant_msg)
-            fs = []
-          elif fem_like_lemma:
-            fs = ["mf"]
-            if fs != origfs:
-              notes.append("convert feminine same as lemma to 'mf'")
-          else:
-            fs = new_fs
-            subnotes.extend(this_subnotes)
-        else:
-          fs = []
-     
-        new_mpls = []
-
-        if mpls:
-          this_subnotes = []
-          if len(defmpl) > 1:
-            if set(mpls) == set(defmpl):
-              new_mpls = ["+"]
-            elif set(mpls) < set(defmpl):
-              pagemsg("WARNING: mpls=%s subset of defmpl=%s, replacing with +" %
-                (",".join(mpls), ",".join(defmpl)))
-              new_mpls = ["+"]
-          else:
-            for mpl in mpls:
-              if mpl == defmpl[0]:
-                pagemsg("Replacing masculine plural '%s' with '+'" % mpl)
-                this_subnotes.append("replace masculine plural '%s' with '+'" % mpl)
-                new_mpls.append("+")
-              else:
-                new_mpls.append(replace_lemma_with_hash(mpl))
-          if new_mpls == ["+"]:
-            redundant_msg = "redundant masculine plural%s %s" % ("s" if len(mpls) > 1 else "", ",".join("'%s'" % mpl for mpl in mpls))
-            pagemsg("Removing %s" % redundant_msg)
-            subnotes.append("remove %s" % redundant_msg)
-            mpls = []
-          else:
-            mpls = new_mpls
-            subnotes.extend(this_subnotes)
-
-        new_pls = []
-
-        if pls and defmpl == deffpl:
-          this_subnotes = []
-          if len(defmpl) > 1:
-            if set(pls) == set(defmpl):
-              new_pls = ["+"]
-            elif set(pls) < set(defmpl):
-              pagemsg("WARNING: pls=%s subset of defmpl=%s, replacing with +" %
-                (",".join(pls), ",".join(defmpl)))
-              new_pls = ["+"]
-          else:
-            for pl in pls:
-              if pl == defmpl[0]:
-                pagemsg("Replacing plural '%s' with '+'" % pl)
-                this_subnotes.append("replace plural '%s' with '+'" % pl)
-                new_pls.append("+")
-              else:
-                new_pls.append(replace_lemma_with_hash(pl))
-          if new_pls == ["+"]:
-            redundant_msg = "redundant plural%s %s" % ("s" if len(pls) > 1 else "", ",".join("'%s'" % pl for pl in pls))
-            pagemsg("Removing %s" % redundant_msg)
-            subnotes.append("remove %s" % redundant_msg)
-            pls = []
-          else:
-            pls = new_pls
-            subnotes.extend(this_subnotes)
-
-        # Don't bother trying to deduce sp=. There are few instances and most are invariable.
-
-        blib.set_param_chain(t, fs, "1", "f", preserve_spacing=False)
-        blib.set_param_chain(t, pls, "pl", preserve_spacing=False)
-        blib.set_param_chain(t, mpls, "mpl", preserve_spacing=False)
-
+      sg = getp("sg")
       autohead = romance_utils.add_links_to_multiword_term(lemma, splithyph=False)
-      if autohead == head:
-        pagemsg("Remove redundant head %s" % head)
-        subnotes.append("remove redundant head '%s'" % head)
+      if autohead == sg:
+        pagemsg("Remove redundant head %s" % sg)
+        subnotes.append("remove redundant head '%s'" % sg)
         head = None
 
-      if head is None:
-        rmparam(t, "head")
-      elif head and head == pagetitle:
-        subnotes.append("convert head= without brackets to nolinkhead=1")
-        rmparam(t, "head")
+      if sg is None:
+        rmparam(t, "sg")
+      elif sg and sg == pagetitle:
+        subnotes.append("convert sg= without brackets to nolinkhead=1")
+        rmparam(t, "sg")
         t.add("nolinkhead", "1")
+
+      if inv:
+        t.add("inv", "1")
+      elif actual_special:
+        t.add("sp", actual_special)
+      else:
+        if f != "+":
+          t.add("f", f)
+
+        if mpl == fpl and (mpl != "+" or defmpl == deffpl):
+          # masc and fem pl the same
+          if mpl != "+":
+            t.add("pl", mpl)
+        else:
+          if mpl != "+":
+            t.add("mpl", mpl)
+          if fpl != "+":
+            t.add("fpl", fpl)
 
       if origt != str(t):
         pagemsg("Replaced %s with %s" % (origt, str(t)))
-        notes.append("clean up {{gl-adj}} (%s)" % "; ".join(blib.group_notes(subnotes)))
+        notes.append("convert {{gl-adj-old}} to {{gl-adj}} with new syntax%s" % (
+          " (%s)" % "; ".join(blib.group_notes(subnotes)) if subnotes else ""))
       else:
         pagemsg("No changes to %s" % str(t))
 
   return str(parsed), notes
 
 if __name__ == "__main__":
-  parser = blib.create_argparser("Remove redundant args in {{gl-noun}} or {{gl-adj}}",
+  parser = blib.create_argparser("Convert {{gl-noun-old}} or {{gl-adj-old}} to {{gl-noun}} or {{gl-adj}} and remove redundant args",
     include_pagefile=True, include_stdin=True)
   parser.add_argument("--do-nouns", action="store_true")
   parser.add_argument("--do-adjs", action="store_true")
@@ -542,9 +642,9 @@ if __name__ == "__main__":
 
   default_refs = []
   if args.do_nouns:
-    default_refs.append("Template:gl-noun")
+    default_refs.append("Template:gl-noun-old")
   elif args.do_adjs:
-    default_refs.append("Template:gl-adj")
+    default_refs.append("Template:gl-adj-old")
 
   blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
     default_refs=default_refs)
