@@ -25,7 +25,11 @@ local function track_label(label, langcode)
 		track(label .. "/" .. langcode)
 	end
 end
-	
+
+local function ucfirst(txt)
+	return mw.getContentLanguage():ucfirst(txt)
+end
+
 local function fetch_categories(label, labdata, lang, term_mode)
 	local categories = {}
 
@@ -51,10 +55,6 @@ local function fetch_categories(label, labdata, lang, term_mode)
 
 	local function insert_cat(cat)
 		table.insert(categories, cat)
-	end
-
-	local function ucfirst(txt)
-		return mw.getContentLanguage():ucfirst(txt)
 	end
 
 	for _, cat in ipairs(topical_categories) do
@@ -84,6 +84,23 @@ local function fetch_categories(label, labdata, lang, term_mode)
 	return categories
 end
 
+function export.get_submodules(lang)
+	local submodules = {}
+
+	-- get language-specific labels from data module
+	local langcode = data.lang and data.lang:getNonEtymologicalCode() or nil
+
+	if langcode and m_lang_specific_data.langs_with_lang_specific_modules[langcode] then
+		-- prefer per-language label in order to pick subvariety labels over regional ones
+		table.insert(submodules, "Module:labels/data/lang/" .. langcode)
+	end
+	table.insert(submodules, "Module:labels/data")
+	table.insert(submodules, "Module:labels/data/qualifiers")
+	table.insert(submodules, "Module:labels/data/regional")
+	table.insert(submodules, "Module:labels/data/topical")
+	return submodules
+end
+
 function export.get_label_info(data)
 	if not data.label then
 		error("`data` must now be an object containing the params")
@@ -95,30 +112,13 @@ function export.get_label_info(data)
 	local labdata
 	local submodule
 
-	-- Track the label so we can figure out where individual labels are used. 
-	-- get language-specific labels from data module
-	local langcode = data.lang:getNonEtymologicalCode()
-
-	if langcode and m_lang_specific_data.langs_with_lang_specific_modules[langcode] then
-		-- prefer per-language label in order to pick subvariety labels over regional ones
-		submodule = mw.loadData("Module:labels/data/lang/" .. langcode)
+	local submodules_to_check = export.get_submodules(data.lang)
+	for _, submodule_to_check in ipairs(submodules_to_check) do
+		submodule = mw.loadData(submodule_to_check)
 		labdata = submodule[label]
-	end
-	if not labdata then
-		submodule = mw.loadData("Module:labels/data")
-		labdata = submodule[label]
-	end
-	if not labdata then
-		submodule = mw.loadData("Module:labels/data/qualifiers")
-		labdata = submodule[label]
-	end
-	if not labdata then
-		submodule = mw.loadData("Module:labels/data/regional")
-		labdata = submodule[label]
-	end
-	if not labdata then
-		submodule = mw.loadData("Module:labels/data/topical")
-		labdata = submodule[label]
+		if labdata then
+			break
+		end
 	end
 	labdata = labdata or {}
 
@@ -301,6 +301,7 @@ function export.finalize_data(labels)
 			if data.deprecated_aliases then
 				local data2 = shallowcopy(data)
 				data2.deprecated = true
+				data2.canonical = label
 				for _, alias in ipairs(data2.deprecated_aliases) do
 					aliases[alias] = data2
 				end
