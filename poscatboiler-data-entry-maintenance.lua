@@ -31,7 +31,7 @@ labels["entries without References or Further reading header"] = {
 }
 
 labels["entries that don't exist"] = {
-	description = "{{{langname}}} terms that do not meet the [[Wiktionary:Criteria for inclusion|criteria for inclusion]] (CFI). They are added to the category with the template {{temp|no entry|{{{langcode}}}}}.",
+	description = "{{{langname}}} terms that do not meet the [[Wiktionary:Criteria for inclusion|criteria for inclusion]] (CFI). They are added to the category with the template {{tl|no entry|{{{langcode}}}}}.",
 	parents = {"entry maintenance"},
 }
 
@@ -250,7 +250,7 @@ raw_categories["Requests for quotations by source"] = {
 
 raw_categories["Requests for quotations"] = {
 	-- FIXME
-	description = "Words are added to this category by the inclusion in their entries of {{temp|rfv-quote}}.",
+	description = "Words are added to this category by the inclusion in their entries of {{tl|rfv-quote}}.",
 	parents = {{name = "Requests", sort = "quotations"}},
 	breadcrumb = "Quotations",
 }
@@ -263,15 +263,27 @@ raw_categories["Requests for date by source"] = {
 
 raw_categories["Requests for date"] = {
 	description = "Requests for a date to be added to a quotation.",
-	additional = "To add an article to this category, use {{temp|rfdate}} or {{temp|rfdatek}} to include the author. " ..
+	additional = "To add an article to this category, use {{tl|rfdate}} or {{tl|rfdatek}} to include the author. " ..
 	"Please remove the template from the article once the date has been provided.",
 	parents = {{name = "Requests", sort = "date"}},
 	breadcrumb = "Date",
 }
 
+raw_categories["Requests for translations in user-competency categories by number of users"] = {
+	description = "Requests for translations to be added to user-competency categories, sorted by number of users with that competency.",
+	parents = {{name = "Requests", sort = "translations"}},
+	breadcrumb = "Translations in user-competency categories by number of users",
+}
+
+raw_categories["Requests for translations in user-competency categories by language"] = {
+	description = "Requests for translations to be added to user-competency categories, sorted by language.",
+	parents = {{name = "Requests", sort = "translations"}},
+	breadcrumb = "Translations in user-competency categories by language",
+}
+
 raw_categories["Entries using missing taxonomic names"] = {
-	description = "Entries that link to wikispecies because there is no corresponding Wiktionary entry for the taxonomic name in the template {{temp|taxlink}}.",
-	additional = "The missing name is one or more of those enclosed in {{temp|taxlink}}. The entries are sorted by the missing taxonomic name." ..
+	description = "Entries that link to wikispecies because there is no corresponding Wiktionary entry for the taxonomic name in the template {{tl|taxlink}}.",
+	additional = "The missing name is one or more of those enclosed in {{tl|taxlink}}. The entries are sorted by the missing taxonomic name." ..
 	"\n\nSee [[:Category:mul:Taxonomic names]].",
 	parents = {{name = "entry maintenance", is_label = true, lang = "mul"}},
 	breadcrumb = "Missing taxonomic names",
@@ -286,11 +298,13 @@ raw_categories["Entries using missing taxonomic names"] = {
 -----------------------------------------------------------------------------
 
 
--- This array consists of category match specs. Each spec contains one or more properties, whose values are strings
--- that may contain references to other properties using the {{{PROPERTY}}} syntax. Each such spec should have at least
--- a `regex` property that matches the name of the category. Capturing groups in this regex can be referenced in other
--- properties using {{{1}}} for the first group, {{{2}}} for the second group, etc. Property expansion happens
--- recursively if needed (i.e. a property can reference another property, which in turn references a third property).
+-- This array consists of category match specs. Each spec contains one or more properties, whose values are (a) strings
+-- that may contain references to other properties using the {{{PROPERTY}}} syntax; (b) functions of one argument, an
+-- `items` table of the same properties that are accessible using the {{{PROPERTY}} syntax. Each such spec should have
+-- at least a `regex` property that matches the name of the category. Capturing groups in this regex can be referenced
+-- in other properties using {{{1}}} for the first group, {{{2}}} for the second group, etc. (or using keys "1", "2",
+-- etc. in functions). Property expansion happens recursively if needed (i.e. a property can reference another property,
+-- which in turn references a third property).
 --
 -- If there is a `language_name` propery, it specifies the language name (and will typically be a reference to a
 -- capturing group from the `regex` property); if not specified, it defaults to "{{{1}}}" unless the `nolang` property
@@ -338,7 +352,14 @@ raw_categories["Entries using missing taxonomic names"] = {
 -- `toc_template`, `toc_template_full`: Same as the corresponding fields in regular labels and raw categories, except
 --    that request-specific {{{PROPERTY}}} syntax is expanded.
 --
--- An actual template call can be inserted into a string using the syntax <<{{TEMPLATE|ARG1|ARG2|...}}>>.
+-- In general, properties can contain references to templates (e.g. {{tl}} and {{para}}), which will be appropriately
+-- expanded (this expansion happens in the poscatboiler code, not in this module). The major exception is in the
+-- `template_sample_call` and `template_actual_sample_call` properties, which are surrounded by <pre>...</pre> when
+-- inserted, so template references are not expanded. Triple-brace property references are still expanded in these
+-- properties; but beware that if any of those property references contain template references, they won't be expanded.
+-- (This actually happens in the handlers for 'Request for SCRIPT script for LANG terms'; the sample call references
+-- {{{script_code}}}, whose definition therefore cannot contain template references. The solution is to define this
+-- property using a function.)
 local requests_categories = {
 	{
 		-- This handles etymology languages.
@@ -348,7 +369,7 @@ local requests_categories = {
 		parents = {{name = "Requests concerning {{{parent_language_name}}}", sort = "{{{1}}}"}},
 		umbrella = false,
 		breadcrumb = "{{{1}}}",
-		not_hidden_category = true
+		not_hidden_category = true,
 	},
 	{
 		-- This handles regular languages.
@@ -357,7 +378,7 @@ local requests_categories = {
 		parents = {{name = "entry maintenance", is_label = true, sort = "requests"}},
 		umbrella = "Requests by language",
 		breadcrumb = "Requests",
-		not_hidden_category = true
+		not_hidden_category = true,
 	},
 	{
 		regex = "^Requests for etymologies in (.+) entries$",
@@ -523,7 +544,7 @@ local requests_categories = {
 		template_name = "t-needed",
 		template_sample_call = "{{t-needed|{{{language_code}}}|usex=1}}",
 		template_actual_sample_call = "{{t-needed|{{{language_code}}}|usex=1|nocat=1}}",
-		additional_template_description = "The {{temp|ux}}, {{temp|uxi}}, {{temp|ja-usex}} and {{temp|zh-x}} templates automatically add the page to this category if the example is in a foreign language and the translation is missing."
+		additional_template_description = "The {{tl|ux}}, {{tl|uxi}}, {{tl|ja-usex}} and {{tl|zh-x}} templates automatically add the page to this category if the example is in a foreign language and the translation is missing."
 	},
 	{
 		regex = "^Requests for translations of (.+) quotations$",
@@ -532,7 +553,7 @@ local requests_categories = {
 		template_name = "t-needed",
 		template_sample_call = "{{t-needed|{{{language_code}}}|quote=1}}",
 		template_actual_sample_call = "{{t-needed|{{{language_code}}}|quote=1|nocat=1}}",
-		additional_template_description = "The {{temp|quote}}, {{temp|quote-*}} and {{temp|Q}} templates automatically add the page to this category if the example is in a foreign language and the translation is missing."
+		additional_template_description = "The {{tl|quote}}, {{tl|quote-*}} and {{tl|Q}} templates automatically add the page to this category if the example is in a foreign language and the translation is missing."
 	},
 	{
 		regex = "^Requests for review of (.+) translations$",
@@ -547,7 +568,7 @@ local requests_categories = {
 		regex = "^Requests for transliteration of (.+) terms$",
 		umbrella = "Requests for transliteration by language",
 		template_name = "rftranslit",
-		additional_template_description = "The {{temp|head}} template, and the large number of language-specific variants of it, automatically add " ..
+		additional_template_description = "The {{tl|head}} template, and the large number of language-specific variants of it, automatically add " ..
 		"the page to this category if the example is in a foreign language and no transliteration can be generated (particularly in languages without " ..
 		"automated transliteration, such as Hebrew and Persian).",
 	},
@@ -558,7 +579,7 @@ local requests_categories = {
 		template_sample_call = "{{rftranslit|{{{language_code}}}|usex=1}}",
 		template_actual_sample_call = "{{rftranslit|{{{language_code}}}|usex=1|nocat=1}}",
 		catfix = false,
-		additional_template_description = "The {{temp|ux}} and {{temp|uxi}} templates automatically add the page to this category if the example " ..
+		additional_template_description = "The {{tl|ux}} and {{tl|uxi}} templates automatically add the page to this category if the example " ..
 		"is in a foreign language and no transliteration can be generated (particularly in languages without automated transliteration, such as " ..
 		"Hebrew and Persian).",
 	},
@@ -569,7 +590,7 @@ local requests_categories = {
 		template_sample_call = "{{rftranslit|{{{language_code}}}|quote=1}}",
 		template_actual_sample_call = "{{rftranslit|{{{language_code}}}|quote=1|nocat=1}}",
 		catfix = false,
-		additional_template_description = "The {{temp|quote}} and {{temp|quote-*}} templates automatically add the page to this category if the quotation " ..
+		additional_template_description = "The {{tl|quote}} and {{tl|quote-*}} templates automatically add the page to this category if the quotation " ..
 		"is in a foreign language and no transliteration can be generated (particularly in languages without automated transliteration, such as " ..
 		"Hebrew and Persian).",
 	},
@@ -586,7 +607,7 @@ local requests_categories = {
 		template_name = "rfscript",
 		template_actual_sample_call = "{{rfscript|{{{language_code}}}|nocat=1}}",
 		catfix = false,
-		additional_template_description = "Many templates such as {{temp|l}}, {{temp|m}} and {{temp|t}} automatically place the page in this category when they are missing the term but have been provided with a transliteration."
+		additional_template_description = "Many templates such as {{tl|l}}, {{tl|m}} and {{tl|t}} automatically place the page in this category when they are missing the term but have been provided with a transliteration."
 	},
 	{
 		-- This handles regular languages.
@@ -595,7 +616,7 @@ local requests_categories = {
 		template_name = "rfscript",
 		template_actual_sample_call = "{{rfscript|{{{language_code}}}|nocat=1}}",
 		catfix = false,
-		additional_template_description = "Many templates such as {{temp|l}}, {{temp|m}} and {{temp|t}} automatically place the page in this category when they are missing the term but have been provided with a transliteration."
+		additional_template_description = "Many templates such as {{tl|l}}, {{tl|m}} and {{tl|t}} automatically place the page in this category when they are missing the term but have been provided with a transliteration."
 	},
 	{
 		regex = "^Requests for native script in (.+) usage examples$",
@@ -604,7 +625,7 @@ local requests_categories = {
 		template_sample_call = "{{rfscript|{{{language_code}}}|usex=1}}",
 		template_actual_sample_call = "{{rfscript|{{{language_code}}}|usex=1|nocat=1}}",
 		catfix = false,
-		additional_template_description = "The {{temp|ux}} and {{temp|uxi}} templates automatically add the page to this category if the example itself is missing but the translation is supplied."
+		additional_template_description = "The {{tl|ux}} and {{tl|uxi}} templates automatically add the page to this category if the example itself is missing but the translation is supplied."
 	},
 	{
 		regex = "^Requests for native script in (.+) quotations$",
@@ -613,7 +634,7 @@ local requests_categories = {
 		template_sample_call = "{{rfscript|{{{language_code}}}|quote=1}}",
 		template_actual_sample_call = "{{rfscript|{{{language_code}}}|quote=1|nocat=1}}",
 		catfix = false,
-		additional_template_description = "The {{temp|quote}} and {{temp|quote-*}} templates automatically add the page to this category if the quotation itself is missing but the translation is supplied."
+		additional_template_description = "The {{tl|quote}} and {{tl|quote-*}} templates automatically add the page to this category if the quotation itself is missing but the translation is supplied."
 	},
 	{
 		-- This handles etymology languages.
@@ -628,11 +649,16 @@ local requests_categories = {
 		umbrella = false,
 		breadcrumb = "{{{1}}} script",
 		template_name = "rfscript",
-		script_code = "<<{{#invoke:scripts/templates|getByCanonicalName|{{{1}}}}}>>",
+		-- NOTE: The following is used in `template_sample_call` and `template_actual_sample_call`, meaning the
+		-- conversion of script name to script code needs to be done using an inline function like this, instead of
+		-- a {{#invoke:...}} template call.
+		script_code = function(items)
+			return require("Module:scripts").getByCanonicalName(items["1"])
+		end,
 		template_sample_call = "{{rfscript|{{{language_code}}}|sc={{{script_code}}}}}",
 		template_actual_sample_call = "{{rfscript|{{{language_code}}}|sc={{{script_code}}}|nocat=1}}",
 		catfix = false,
-		additional_template_description = "Many templates such as {{temp|l}}, {{temp|m}} and {{temp|t}} automatically place the page in this category when they are missing the term but have been provided with a transliteration."
+		additional_template_description = "Many templates such as {{tl|l}}, {{tl|m}} and {{tl|t}} automatically place the page in this category when they are missing the term but have been provided with a transliteration."
 	},
 	{
 		-- This handles regular languages.
@@ -642,11 +668,14 @@ local requests_categories = {
 		umbrella = "Requests for {{{1}}} script by language",
 		breadcrumb = "{{{1}}} script",
 		template_name = "rfscript",
-		script_code = "<<{{#invoke:scripts/templates|getByCanonicalName|{{{1}}}}}>>",
+		-- See comment above about this definition.
+		script_code = function(items)
+			return require("Module:scripts").getByCanonicalName(items["1"])
+		end,
 		template_sample_call = "{{rfscript|{{{language_code}}}|sc={{{script_code}}}}}",
 		template_actual_sample_call = "{{rfscript|{{{language_code}}}|sc={{{script_code}}}|nocat=1}}",
 		catfix = false,
-		additional_template_description = "Many templates such as {{temp|l}}, {{temp|m}} and {{temp|t}} automatically place the page in this category when they are missing the term but have been provided with a transliteration."
+		additional_template_description = "Many templates such as {{tl|l}}, {{tl|m}} and {{tl|t}} automatically place the page in this category when they are missing the term but have been provided with a transliteration."
 	},
 	{
 		regex = "^Requests for (.+) script by language$",
@@ -738,7 +767,7 @@ This category is hidden.]=],
 		regex = "^Requests for date in (.+) entries$",
 		umbrella = "Requests for date by language",
 		template_name = "rfdate",
-		additional_template_description = "The quotation templates, such as {{temp|quote-book}} and {{temp|quote-journal}}, " ..
+		additional_template_description = "The quotation templates, such as {{tl|quote-book}} and {{tl|quote-journal}}, " ..
 		"automatically add the page to this category if neither {{para|date}} nor {{para|year}} is provided. Providing the " ..
 		"parameter in each case on the page automatically removes the article from this category. See " ..
 		"[[Wiktionary:Quotations]] for information about formatting dates and quotations.",
@@ -753,6 +782,24 @@ This category is hidden.]=],
 		template_sample_call = "{{rfdatek|LANGCODE|{{{1}}}}}",
 		template_example_output = "\n(where LANGCODE is the language code of the entry)\n\nIt results in the message below:\n\n{{rfdatek|und|{{{1}}}}}",
 	},
+	{
+		regex = "^Requests for translations in user-competency categories with ([0-9]+)-([0-9]+) users$",
+		description = "Requests for translation of phrases indicating user competencies for specific languages and specific competency levels.",
+		additional_template_description = "This is added by user-competency categories such as " ..
+		"[[:Category:User fr-4]], which groups users who speak French at level 4 (near-native proficiency), when " ..
+		"the native-language text indicating this fact is missing. The appropriate translation should mirror the " ..
+		"English text also displayed (e.g. in this case \"These users speak French at a '''near native''' " ..
+		"level.\"), and should be supplied to {{tl|auto cat}} using the {{para|text}} parameter. The mention of the " ..
+		"language in the text should be surrounded by double angle brackets, e.g. \"&lt;&lt;français>>\", which " ..
+		"causes it to be automatically linked to the appropriate parent category.",
+		parents = {{name = "Requests for translations in user-competency categories by number of users",
+					sort = function(items)
+						return " " .. ("%010d"):format(items["1"])
+					end,
+				}},
+		breadcrumb = "{{{1}}}-{{{2}}}",
+		nolang = true,
+	},
 }
 
 table.insert(raw_handlers, function(data)
@@ -762,63 +809,54 @@ table.insert(raw_handlers, function(data)
 		items = {pagename = data.category}
 	end
 
-	local function replace_template_refs(result)
-		if not result then
-			return result
+	local function expand_value(item, val)
+		if type(val) == "function" then
+			return expand_value(item .. " ⇒ function", val(items))
+		end
+			
+		if not val then
+			return val
 		end
 
-		--[[	Replaces pseudo-template code {{{ }}} with the corresponding member
-				of the "items" table. Has to be done at least twice,
-				since some of the items are nested:
+		if type(val) == "number" then
+			val = tostring(val)
+		end
 
-				{{{template_sample_call_with_temp}}}
-					⇓
-				{{{{{template_name}}}|{{{language_code}}}}}
-					⇓
-				{{attention|en}}							]]
+		if type(val) ~= "string" then
+			error(("The item '%s' on page %s is of type %s and can't be concatenated"):format(
+				item, items.pagename, type(val)))
+		end
 
-		while result:find("{{{") do
-			result = mw.ustring.gsub(
-				result,
-				"{{{([^%}%{]+)}}}",
-				function(item)
-					if items[item] then
-						if type(items[item]) == "string" or type(items[item]) == "number" then
-							return items[item]
-						else
-							error('The item "{{{' .. item .. '}}}" is a ' .. type(items[item]) .. ' and can\'t be concatenated. (Pagename: ' .. items.pagename .. '.)')
-						end
-					else
-						error('The item "' .. item .. '" was not found in the "items" table. (Pagename: ' .. items.pagename .. '.)')
-					end
+		-- Replaces pseudo-template code {{{ }}} with the corresponding member of the "items" table. Has to be done
+		-- recursively, since some of the items are nested:
+		-- {{{template_sample_call_with_temp}}}
+		--			⇓
+		-- {{{{{template_name}}}|{{{language_code}}}}}
+		--			⇓
+		-- {{attention|en}}
+		if val:find("{{{") then
+			val = mw.ustring.gsub(val, "{{{([^%}%{]+)}}}", function(prop)
+				local propval = items[prop]
+				if not propval then
+					error(("The item '%s' (expanded from property '%s' on page %s) was not found in the 'items' table"):
+					format(prop, item, items.pagename))
 				end
+				return expand_value(item .. " ⇒ " .. prop, propval)
+			end
 			)
 		end
 
-		-- Preprocess template code surrounded by << >>, repeatedly from inside out
-		-- in case we have a << >> template call nested inside of another one
-		-- (this doesn't currently happen). We need this mechanism at all because
-		-- in "Requests for SCRIPT script for LANGUAGE terms", we need to convert the
-		-- script to a script code before insertion into the template example code,
-		-- which is inside of <pre> so it won't get expanded by the normal poscatboiler
-		-- mechanism.
-		while result:find("<<") do
-			result = mw.ustring.gsub(
-				result,
-				"<<([^><]+)>>",
-				function (template_code)
-					return mw.getCurrentFrame():preprocess(template_code)
-				end
-			)
-		end
+		return val
+	end
 
-		return result
+	local function expand_items_value(item)
+		return expand_value(item, items[item])
 	end
 
 	local function convert_items_to_category_data(items)
 		if not items.nolang then
 			items.language_name = items.language_name or "{{{1}}}"
-			items.language_name = replace_template_refs(items.language_name)
+			items.language_name = expand_items_value("language_name")
 			if items.etym_lang_only then
 				items.language_object = require("Module:etymology languages").getByCanonicalName(items.language_name)
 				if not items.language_object then
@@ -832,8 +870,9 @@ table.insert(raw_handlers, function(data)
 				end
 				items.parent_language_code = items.parent_language_object:getCode()
 				items.parent_language_name = items.parent_language_object:getCanonicalName()
-				-- Reject weird cases where the parent language has the same name as the child etymology language. In that case,
-				-- we'll get an infinite parent-category loop. This actually happens, e.g. with Rudbari and Bashkardi.
+				-- Reject weird cases where the parent language has the same name as the child etymology language. In
+				-- that case, we'll get an infinite parent-category loop. This actually happens, e.g. with Rudbari and
+				-- Bashkardi.
 				if items.parent_language_name == items.language_name then
 					return nil
 				end
@@ -859,12 +898,12 @@ table.insert(raw_handlers, function(data)
 		end
 
 		local parents = items.parents
-		local breadcrumb = items.breadcrumb and replace_template_refs(items.breadcrumb)
+		local breadcrumb = expand_items_value("breadcrumb")
 
 		if parents then
 			for _, parent in ipairs(parents) do
-				parent.name = replace_template_refs(parent.name)
-				parent.sort = replace_template_refs(parent.sort)
+				parent.name = expand_value("parent.name", parent.name)
+				parent.sort = expand_value("parent.sort", parent.sort)
 			end
 		else
 			local umbrella_type = items.pagename:match("^Requests for (.+) by language$")
@@ -881,24 +920,24 @@ table.insert(raw_handlers, function(data)
 		end
 
 		if not items.nolang and items.umbrella ~= false then
-			table.insert(parents, {name = replace_template_refs(items.umbrella), sort = items.language_name})
+			table.insert(parents, {name = expand_items_value("umbrella"), sort = items.language_name})
 		end
 
-		local additional = replace_template_refs(items.full_text_about_the_template)
+		local additional = expand_items_value("full_text_about_the_template")
 		if items.pagename:find(" by language$") then
 			additional = "{{{umbrella_msg}}}" .. (additional and "\n\n" .. additional or "")
 		end
 
 		return {
-			description = replace_template_refs(items.description) or items.pagename .. ".",
+			description = expand_items_value("description") or items.pagename .. ".",
 			lang = items.parent_language_code or items.language_code,
 			additional = additional,
 			parents = parents,
 			-- If no breadcrumb=, it will default to the category name
 			breadcrumb = breadcrumb,
-			catfix = replace_template_refs(items.catfix),
-			toc_template = replace_template_refs(items.toc_template),
-			toc_template_full = replace_template_refs(items.toc_template_full),
+			catfix = expand_items_value("catfix"),
+			toc_template = expand_items_value("toc_template"),
+			toc_template_full = expand_items_value("toc_template_full"),
 			hidden = not items.not_hidden_category,
 			can_be_empty = true,
 		}
@@ -1025,8 +1064,8 @@ table.insert(raw_handlers, function(data)
 	local taxtype = data.category:match("^Entries using missing taxonomic name %((.*)%)$")
 	if taxtype and recognized_taxtypes[taxtype] then
 		return {
-			description = "Entries that link to wikispecies because there is no corresponding Wiktionary entry for the taxonomic name in the template {{temp|taxlink}}.",
-			additional = "The missing name is one or more of those enclosed in {{temp|taxlink}}. The entries are sorted by the missing taxonomic name.",
+			description = "Entries that link to wikispecies because there is no corresponding Wiktionary entry for the taxonomic name in the template {{tl|taxlink}}.",
+			additional = "The missing name is one or more of those enclosed in {{tl|taxlink}}. The entries are sorted by the missing taxonomic name.",
 			parents = {{name = "Entries using missing taxonomic names", sort = taxtype}},
 			breadcrumb = taxtype,
 			hidden = true,
