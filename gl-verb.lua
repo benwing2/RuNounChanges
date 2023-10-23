@@ -57,11 +57,10 @@ local AV = com.AV -- accented vowel regex class
 local C = com.C -- consonant regex class
 
 local TEMPC1 = u(0xFFF1) -- temporary character used for consonant substitutions
-local TEMP_MESOCLITIC_INSERTION_POINT = u(0xFFF2) -- temporary character used to mark the mesoclitic insertion point
 
 
 local short_pp_footnote = "[usually used with auxiliary verbs " .. link_term("ser") .. " and " .. link_term("estar") .. "]"
-local long_pp_footnote = "[usually used with auxiliary verbs " .. link_term("haver") .. " and " .. link_term("ter") .. "]"
+local long_pp_footnote = "[usually used with auxiliary verbs " .. link_term("haber") .. " and " .. link_term("ter") .. "]"
 
 --[=[
 
@@ -659,14 +658,14 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		match = "^haver",
+		match = "^haber",
 		forms = {
 			pres_1s = "hei",
 			pres_2s = "has",
 			pres_3s = {"ha", "hai"},
 			pres_3p = "han",
 			pres1_and_sub = "hax", -- only for subjunctive as we override pres_1s
-			pret_conj = "irreg", pret = "houve",
+			pret_conj = "irreg", pret = "hoube",
 			noimp = true,
 			irreg = true,
 		}
@@ -697,7 +696,7 @@ local built_in_conjugations = {
 		match = "^moer",
 		forms = {
 			-- all occurrences of accented í and ï in endings handled in combine_stem_ending()
-			pres1_and_sub = "oi",
+			pres1_and_sub = "moi",
 			short_pp = "mudo", -- the main table says 'mundo' but the page for [[mundo]] says 'mudo' is "máis recomendable"
 			irreg = true,
 		}
@@ -810,7 +809,10 @@ local built_in_conjugations = {
 	{
 		-- valer, equivaler
 		match = "valer",
-		forms = {pres1_and_sub = "vall"},
+		forms = {
+			pres1_and_sub = "vall",
+			irreg = true,
+		}
 	},
 	{
 		-- We want to match antever etc. but not absolver, atrever etc. No way to avoid listing each verb.
@@ -1051,7 +1053,7 @@ local built_in_conjugations = {
 			pres_2s = "vés", pres_3s = "vén", pres_2p = {"vindes", "vides"}, pres_3p = "veñen",
 			pres1_and_sub = "veñ",
 			full_impf = "viñ",
-			pret_conj = "irreg", pret = "viñe", pret_1s = "vin", pret_3s = "veu",
+			pret_conj = "irreg", pret = "viñe", pret_1s = "vín#", pret_3s = "veu",
 			pp = "vindo",
 			-- FIXME! The following is as in the RAG tables but may be a typo and should be vén for [[vir]] like pres_3s
 			imp_2s = "vén#",
@@ -1104,7 +1106,7 @@ local function skip_slot(base, slot, allow_overrides)
 		return true
 	end
 
-	if (base.only3s or base.only3sp or base.only3p) and (slot:find("^imp_") or slot:find("^neg_imp_")) then
+	if (base.noimp or base.only3s or base.only3sp or base.only3p) and (slot:find("^imp_") or slot:find("^neg_imp_")) then
 		return true
 	end
 
@@ -1475,20 +1477,8 @@ local function add_finite_non_present(base)
 	add_tense("impf_sub", stems.impf_sub, "se", "ses", "se", nil, nil, "sen")
 	add_tense("impf_sub", stems.impf_sub_antepenult_stressed, nil, nil, nil, "semos", "sedes", nil)
 	add_tense("fut_sub", stems.fut_sub, "r", "res", "r", "rmos", "rdes", "ren")
-	if base.refl then
-		-- FIXME!
-		local mark = TEMP_MESOCLITIC_INSERTION_POINT
-		add_tense("fut", stems.fut,
-			{"ei", mark .. "ei"}, {"ás", mark .. "ás"}, {"á", mark .. "á"}, {"emos", mark .. "emos"},
-			{"edes", mark .. "edes"}, {"án", mark .. "án"})
-		add_tense("cond", stems.cond,
-			{"ia", mark .. "ia"}, {"ias", mark .. "ias"}, {"ia", mark .. "ia"}, {"iamos", mark .. "iamos"},
-			{"iades", mark .. "iades"}, {"ían", mark .. "ían"})
-	else
-		-- Don't insert forms with the mesoclitic insertion point to avoid duplication in non-reflexive verbs.
-		add_tense("fut", stems.fut, "ei", "ás", "á", "emos", "edes", "án")
-		add_tense("cond", stems.cond, "ía", "ías", "ía", "iamos", "iades", "ían")
-	end
+	add_tense("fut", stems.fut, "ei", "ás", "á", "emos", "edes", "án")
+	add_tense("cond", stems.cond, "ía", "ías", "ía", "iamos", "iades", "ían")
 	-- [[pór]] needs overrides of the pers_inf_1s and pers_inf_3s.
 	add_tense("pers_inf", stems.pers_inf, "r", "res", "r", "rmos", "rdes", "ren")
 end
@@ -1609,40 +1599,40 @@ local function suffix_clitic_to_forms(base, base_slot, clitics, store_cliticized
 		-- This can happen, e.g. in only3s/only3sp/only3p verbs.
 		return
 	end
-	local autolink = not base.alternant_multiword_spec.args.noautolinkverb
 	for _, formobj in ipairs(base.forms[base_slot]) do
+		-- Figure out the correct accenting of the verb when a clitic pronoun is attached to it. We may need to
+		-- add or remove an accent mark:
+		-- (1) No accent mark currently, none needed: infinitive sentar -> sentarse; imperative singular ten -> tente;
+		-- (2) Accent mark currently, still needed: infinitive concluír -> concluírse;
+		-- (3) No accent mark currently, accent needed: imperative singular sinte -> síntete;
+		-- (4) Accent mark currently, not needed: third singular sentirá -> sentirase, imperative singular dá -> date.
+		local syllables = com.syllabify(formobj.form)
+		local sylno = com.stressed_syllable(syllables)
+		table.insert(syllables, "lo") -- arbitrary stand-in 
+		local needs_accent = com.accent_needed(syllables, sylno)
+		if needs_accent then
+			syllables[sylno] = com.add_accent_to_syllable(syllables[sylno])
+		else
+			syllables[sylno] = com.remove_accent_from_syllable(syllables[sylno])
+		end
+		table.remove(syllables) -- remove added clitic pronoun
+		local reaccented_form = table.concat(syllables)
 		for _, clitic in ipairs(clitics) do
 			local cliticized_form
-			if formobj.form:find(TEMP_MESOCLITIC_INSERTION_POINT) then
-				-- mesoclisis in future and conditional
-				local infinitive, suffix = rmatch(formobj.form, "^(.*)" .. TEMP_MESOCLITIC_INSERTION_POINT .. "(.*)$")
-				if not infinitive then
-					error("Internal error: Can't find mesoclitic insertion point in slot '" .. base_slot .. "', form '" ..
-						formobj.form .. "'")
-				end
-				local full_form = infinitive .. suffix
-				if autolink and not infinitive:find("%[%[") then
-					infinitive = "[[" .. infinitive .. "]]"
-				end
-				cliticized_form =
-					autolink and infinitive .. "-[[" .. clitic .. "]]-[[" .. full_form .. "|" .. suffix .. "]]" or
-					infinitive .. "-" .. clitic .. "-" .. suffix
-			else
-				local clitic_suffix = autolink and "-[[" .. clitic .. "]]" or "-" .. clitic
-				local form_needs_link = autolink and not formobj.form:find("%[%[")
-				if base_slot:find("1p$") then
-					-- Final -s disappears: arrependíamos + nos -> arrependíamo-nos, etc.
-					cliticized_form = formobj.form:gsub("s$", "")
-					if form_needs_link then
-						cliticized_form = "[[" .. formobj.form .. "|" .. cliticized_form .. "]]"
-					end
+			-- Some further special cases.
+			if base_slot:find("_1p$") and clitic == "nos" then
+				-- Final -s disappears: sintamos + nos -> sintámonos
+				cliticized_form = reaccented_form:gsub("s$", "") .. clitic
+			elseif clitic:find("^[oa]s?$") then
+				if reaccented_form:find("[rs]$") then
+					cliticized_form = reaccented_form:gsub("[rs]$", "l") .. clitic
+				elseif reaccented_form:find(V .. "[iu]$") then
+					cliticized_form = reaccented_form .. "n" .. clitic
 				else
-					cliticized_form = formobj.form
-					if form_needs_link then
-						cliticized_form = "[[" .. cliticized_form .. "]]"
-					end
+					cliticized_form = reaccented_form .. clitic
 				end
-				cliticized_form = cliticized_form .. clitic_suffix
+			else
+				cliticized_form = reaccented_form .. clitic
 			end
 			store_cliticized_form(clitic, formobj, cliticized_form)
 		end
@@ -1772,18 +1762,6 @@ local function add_missing_links_to_forms(base)
 end
 
 
--- Remove special characters added to future and conditional forms to indicate mesoclitic insertion points.
-local function remove_mesoclitic_insertion_points(base)
-	for slot, forms in pairs(base.forms) do
-		if slot:find("^fut_") or slot:find("^cond_") then
-			for _, form in ipairs(forms) do
-				form.form = form.form:gsub(TEMP_MESOCLITIC_INSERTION_POINT, "")
-			end
-		end
-	end
-end
-
-
 local function conjugate_verb(base)
 	for _, vowel_alt in ipairs(base.vowel_alt_stems) do
 		construct_stems(base, vowel_alt)
@@ -1825,7 +1803,6 @@ local function conjugate_verb(base)
 	if not base.alternant_multiword_spec.args.noautolinkverb then
 		add_missing_links_to_forms(base)
 	end
-	remove_mesoclitic_insertion_points(base)
 end
 
 
@@ -2009,7 +1986,7 @@ local function normalize_all_lemmas(alternant_multiword_spec, pagename)
 
 		base.lemma = m_links.remove_links(base.lemma)
 		local refl_verb = base.lemma
-		local verb, refl = rmatch(refl_verb, "^(.-)%-(se)$")
+		local verb, refl = rmatch(refl_verb, "^(.-)(se)$")
 		if not verb then
 			verb, refl = refl_verb, nil
 		end
@@ -2021,10 +1998,10 @@ local function normalize_all_lemmas(alternant_multiword_spec, pagename)
 		if alternant_multiword_spec.args.noautolinkverb or base.user_specified_lemma:find("%[%[") then
 			linked_lemma = base.user_specified_lemma
 		elseif base.refl then
-			-- Reconstruct the linked lemma with separate links around base verb and reflexive pronoun.
+			-- Reconstruct the linked lemma with separate links around base verb, reflexive pronoun and clitic.
 			linked_lemma = base.user_specified_verb == base.verb and "[[" .. base.user_specified_verb .. "]]" or
 				"[[" .. base.verb .. "|" .. base.user_specified_verb .. "]]"
-			linked_lemma = linked_lemma .. (refl and "-[[" .. refl .. "]]" or "")
+			linked_lemma = linked_lemma .. (refl and "[[" .. refl .. "]]" or "")
 		else
 			-- Add links to the lemma so the user doesn't specifically need to, since we preserve
 			-- links in multiword lemmas and include links in non-lemma forms rather than allowing
