@@ -322,15 +322,16 @@ end
 local function organize_tag_data(data_module)
 	local tab = {}
 	for name, data in pairs(data_module.tags) do
-		if not data.tag_type then
+		local tag_type = data[m_form_of.TAG_TYPE]
+		if not tag_type then
 			-- Throw an error because hopefully it will get noticed and fixed. If we just skip it, it may never get
 			-- fixed.
 			error("Tag '" .. name .. "' has no tag_type")
 		end
-		if not tab[data.tag_type] then
-			tab[data.tag_type] = {}
+		if not tab[tag_type] then
+			tab[tag_type] = {}
 		end
-		table.insert(tab[data.tag_type], {name, data})
+		table.insert(tab[tag_type], {name, data})
 	end
 	local tag_type_order_set = m_table.listToSet(tag_type_order)
 	for tag_type, tags_of_type in pairs(tab) do
@@ -359,9 +360,13 @@ function export.tagtable()
 			local sparts = {}
 			local name, data = unpack(namedata)
 			table.insert(sparts, "| <code>" .. name .. "</code> || ")
-			if data.shortcuts then
+			local shortcuts = data[m_form_of.SHORTCUTS]
+			if shortcuts then
 				local ssparts = {}
-				for _, shortcut in ipairs(data.shortcuts) do
+				if type(shortcuts) == "string" then
+					shortcuts = {shortcuts}
+				end
+				for _, shortcut in ipairs(shortcuts) do
 					table.insert(ssparts, "<code>" .. shortcut .. "</code>")
 				end
 				table.insert(sparts, table.concat(ssparts, ", ") .. " ")

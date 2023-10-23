@@ -18,6 +18,15 @@ local rsubn = mw.ustring.gsub
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 
+export.TAG_TYPE = 1
+export.GLOSSARY = 2
+export.SHORTCUTS = 3
+export.WIKIDATA = 4
+
+export.APPENDIX = true
+export.WIKIPEDIA = false
+export.WIKTIONARY = 0
+
 export.langs_with_lang_specific_tags = {
 	["en"] = true,
 	["got"] = true,
@@ -729,23 +738,42 @@ end
 -- multipart tag). To handle multipart tags, use get_tag_display_form().
 local function get_single_tag_display_form(normtag, lang)
 	local data = export.lookup_tag(normtag, lang)
+	local display = normtag
 
 	-- If the tag has a special display form, use it
 	if data and data.display then
-		normtag = data.display
+		display = data.display
 	end
 
 	-- If there is a nonempty glossary index, then show a link to it
-	if data and data.glossary then
-		if data.glossary_type == "wikt" then
-			normtag = "[[" .. data.glossary .. "|" .. normtag .. "]]"
-		elseif data.glossary_type == "wp" then
-			normtag = "[[w:" .. data.glossary .. "|" .. normtag .. "]]"
+	local glossary = data and data[export.GLOSSARY]
+	if glossary then
+		if glossary == export.WIKTIONARY then
+			display = "[[" .. normtag .. "|" .. display .. "]]"
+		elseif glossary == export.WIKIPEDIA then
+			display = "[[w:" .. normtag .. "|" .. display .. "]]"
+		elseif glossary == export.APPENDIX then
+			display = "[[Appendix:Glossary#" .. mw.uri.anchorEncode(normtag) .. "|" .. display .. "]]"
+		elseif type(glossary) ~= "string" then
+			error(("Internal error: Wrong type %s for glossary value %s for tag %s"):format(
+				type(glossary), mw.dumpObject(glossary), normtag))
 		else
-			normtag = "[[Appendix:Glossary#" .. mw.uri.anchorEncode(data.glossary) .. "|" .. normtag .. "]]"
+			local link = rmatch(glossary, "^wikt:(.*)")
+			if link then
+				display = "[[" .. link .. "|" .. display .. "]]"
+			end
+			if not link then
+				link = rmatch(glossary, "^w:(.*)")
+				if link then
+					display = "[[w:" .. link .. "|" .. display .. "]]"
+				end
+			end
+			if not link then
+				display = "[[Appendix:Glossary#" .. mw.uri.anchorEncode(glossary) .. "|" .. display .. "]]"
+			end
 		end
 	end
-	return normtag
+	return display
 end
 
 
@@ -1268,14 +1296,14 @@ function export.to_Wikidata_IDs(tag_set, lang, skip_tags_without_ids)
 	local function get_wikidata_id(tag)
 		local data = export.lookup_tag(tag, lang)
 
-		if not data or not data.wikidata then
+		if not data or not data[export.WIKIPEDIA] then
 			if not skip_tags_without_ids then
 				error('The tag "' .. tag .. '" does not have a Wikidata ID defined in the form-of data modules')
 			else
 				return nil
 			end
 		else
-			return data.wikidata
+			return ("Q%s"):format(data[export.WIKIPEDIA])
 		end
 	end
 
@@ -1309,6 +1337,32 @@ function export.dump_form_of_data(frame)
 		data2 = require(export.form_of_data2_module)
 	}
 	return require("Module:JSON").toJSON(data)
+end
+
+
+function export.finalize_tag_data(tags, shortcuts)
+	local function process_shortcut(name, shortcut)
+		-- If the shortcut is already in the list, then there is a duplicate.
+		if shortcuts[shortcut] then
+			error("The shortcut \"" .. shortcut .. "\" (for the inflection tag \"" .. name .. "\") conflicts with an existing shortcut for the tag \"" .. shortcuts[shortcut] .. "\".")
+		elseif tags[shortcut] then
+			error("The shortcut \"" .. shortcut .. "\" (for the inflection tag \"" .. name .. "\") conflicts with an existing tag with that name.")
+		end
+
+		shortcuts[shortcut] = name
+	end
+	for name, data in pairs(tags) do
+		local data_shortcuts = data[export.SHORTCUTS]
+		if data_shortcuts then
+			if type(data_shortcuts) == "string" then
+				process_shortcut(data_shortcuts)
+			else
+				for _, shortcut in ipairs(data_shortcuts) do
+					process_shortcut(shortcut)
+				end
+			end
+		end
+	end
 end
 
 
