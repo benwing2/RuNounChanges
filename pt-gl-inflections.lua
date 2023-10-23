@@ -146,8 +146,25 @@ function export.verb_form_of(frame)
 		table.sort(valid_varcodes)
 		error("Unrecognized value for varcode=; possible values are " .. table.concat(valid_varcodes, ", "))
 	end
+	local langcode = var_properties[varcode].langcode
 	local parargs = frame:getParent().args
+	local params = {
+		[1] = {required = true},
+		["noautolinktext"] = {type = "boolean"},
+		["noautolinkverb"] = {type = "boolean"},
+		["pagename"] = {}, -- for testing/documentation pages
+		["json"] = {type = "boolean"}, -- for bot use
+		["slots"] = {},
+		["t"] = {},
+		["gloss"] = {alias_of = "t"},
+		["lit"] = {},
+		["pos"] = {},
+		["id"] = {},
+	}
 	local m_verb_module = require(var_properties[varcode].verb_module)
+	local args = require("Module:parameters").process(parargs, params)
+	local alternant_multiword_spec = m_verb_module.do_generate_forms(args, ("%s-verb form of"):format(langcode))
+
 	local function remove_variant_codes(form)
 		if var_properties[varcode].remove_variant_codes then
 			return m_verb_module.remove_variant_codes(form)
@@ -162,7 +179,7 @@ function export.verb_form_of(frame)
 			return {}
 		end
 	end
-	local alternant_multiword_spec = m_verb_module.do_generate_forms(parargs, false, "from verb form of")
+
 	local non_lemma_form = alternant_multiword_spec.verb_form_of_form
 
 	local lemmas = {}
@@ -176,8 +193,7 @@ function export.verb_form_of(frame)
 	-- FIXME: Consider supporting multiple lemmas.
 	local lemma = lemmas[1]
 
-	local slot_restrictions = alternant_multiword_spec.args.slots and
-		m_table.listToSet(rsplit(alternant_multiword_spec.args.slots, ",")) or nil
+	local slot_restrictions = args.slots and m_table.listToSet(rsplit(args.slots, ",")) or nil
 	local tags = {}
 	local slots_seen = {}
 
@@ -226,7 +242,7 @@ function export.verb_form_of(frame)
 		check_slot_restrictions_against_slots_seen()
 	end
 	if #tags > 0 then
-		return generate_inflection_of(tags, lemma, nil, alternant_multiword_spec.args, varcode)
+		return generate_inflection_of(tags, lemma, nil, args, varcode)
 	end
 
 	-- If we don't find any matches, we try again, looking for non-reflexive forms of reflexive-only verbs.
@@ -277,7 +293,6 @@ function export.verb_form_of(frame)
 		end
 		if #refl_forms_to_tags > 0 then
 			local parts = {}
-			local langcode = var_properties[varcode].langcode
 			for _, refl_form_to_tags in ipairs(refl_forms_to_tags) do
 				local only_used_in
 				if refl_form_to_tags.variant then
@@ -291,8 +306,8 @@ function export.verb_form_of(frame)
 				if refl_form_to_tags.form == lemma then
 					table.insert(parts, only_used_in)
 				else
-					local infl = generate_inflection_of(refl_form_to_tags.tags, lemma, only_used_in .. ", ",
-						alternant_multiword_spec.args, varcode)
+					local infl = generate_inflection_of(refl_form_to_tags.tags, lemma, only_used_in .. ", ", args,
+						varcode)
 					table.insert(parts, infl)
 				end
 			end
