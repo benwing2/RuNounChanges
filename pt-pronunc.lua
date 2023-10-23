@@ -1543,8 +1543,10 @@ function export.IPA_json(frame)
 end
 
 
--- "Canonicalize" a single respelling (after splitting multiple respellings on comma and parsing off inline
--- modifiers). This currently handles '+' and substitution notation.
+--[==[
+"Canonicalize" a single respelling (after splitting multiple respellings on comma and parsing off inline
+modifiers). This currently handles '+' and substitution notation.
+]==]
 function export.canonicalize_respelling(text, pagename)
 	if not text or text == "+" then
 		text = pagename
@@ -1591,6 +1593,30 @@ function export.canonicalize_respelling(text, pagename)
 end
 
 
+--[==[
+Compute the pronunciation for each given respelling of each style (i.e. dialect). `inputs` is an object listing the
+respellings and associated properties for each style. `args_style` is the value of the {{para|style}} parameter, which
+can be used to restrict the output to particular dialects. `pagename` is the page title (either the actual one or a
+value specified for debugging or demonstration purposes).
+
+The value of `inputs` is a table whose keys are "styles" (dialects) and whose values are objects with the following
+fields:
+* `pre`: Text to display before the output pronunciations, from the <pre:...> inline modifier.
+* `post`: Text to display after the output pronunciations, from the <post:...> inline modifier.
+* `bullets`: Number of bullets to display before the output pronunciations, from the <bullets:...> inline modifier;
+  defaults to 1.
+* `terms`: List of objects describing the respellings. Each object has the following fields:
+** `term`: The respelling, which may be {+} or may be a substitution spec of the form {[vol:vôl;ei:éi]}.
+** `q`: List of left qualifiers to display before the pronunciation. The pronunciation itself may include one or more
+   qualifiers, which are appended to any user-specified qualifiers.
+** `ref`: List of references to display after the pronunciation. Each reference is a string of the format described in
+   [[Module:references]]. an object of the form returned by
+   {parse_references()} in [[Module:references]], and is passed directly to {format_IPA_full()} in [[Module:IPA]].
+
+The output of this function is a list of "expressed styles", i.e. per-dialect pronunciations. Specifically, it is a
+list of objects, one per dialect group, with the following fields:
+* `hidden_tag`: 
+]==]
 function export.express_styles(inputs, args_style, pagename)
 	local pronuns_by_style = {}
 	local expressed_styles = {}
