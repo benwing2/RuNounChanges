@@ -494,7 +494,27 @@ function Category:getDescription(isChild)
 	end
 
 	local function get_labels_categorizing()
-		return require(labels_ancillary_module).get_labels_categorizing(self._info.label, "pos", self._lang)
+		local m_labels_ancillary = require(labels_ancillary_module)
+		local pos_cat_labels, sense_cat_labels, use_tlb
+		pos_cat_labels = m_labels_ancillary.find_labels_for_category(self._info.label, "pos", self._lang)
+		local sense_label = self._info.label:find("^(.*) terms$")
+		if sense_label then
+			use_tlb = true
+		else
+			sense_label = self._info.label:find("^terms with (.*) senses$")
+		end
+		if sense_label then
+			sense_cat_labels = m_labels_ancillary.find_labels_for_category(sense_label, "sense", self._lang)
+			if use_tlb then
+				return m_labels_ancillary.format_labels_categorizing(pos_cat_labels, sense_cat_labels, self._lang)
+			else
+				local all_labels = pos_cat_labels
+				for k, v in pairs(sense_cat_labels) do
+					all_labels[k] = v
+				end
+				return m_labels_ancillary.format_labels_categorizing(all_labels, nil, self._lang)
+			end
+		end
 	end
 
 	if self._lang or self._info.raw then
