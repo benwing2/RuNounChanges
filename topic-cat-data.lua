@@ -37,38 +37,23 @@ local subpages = {
 
 labels["all topics"] = {
 	type = "toplevel",
-	description = "{{{langname}}} terms organized by topic, such as \"Family\" or \"Chemistry\".",
+	description = "{{{langname}}} terms organized by topic, such as \"Family\", \"Chemistry\", \"Planets\", \"Canids\" or \"Cities in France\".",
 	parents = {{module = "poscatboiler", args = {label = "{{{langcat}}}", raw = true, called_from_inside = true}}},
 }
 
-labels["list of topics"] = {
-	type = "toplevel",
-	description = "All topics currently available in {{{langname}}}.",
-	parents = {{name = "all topics", sort = " *"}},
-}
+for _, typ in ipairs { "related-to", "set", "type", "name", "grouping" } do
+	labels["list of " .. typ .. " categories"] = {
+		type = "toplevel",
+		description = "All " .. typ .. " categories currently available in {{{langname}}}.",
+		parents = {{name = "all topics", sort = " *"}},
+	}
+end
 
+-- FIXME, remove this.
 labels["all sets"] = {
 	type = "toplevel",
 	description = "{{{langname}}} terms that belong to a particular set of things, such as \"Planets\" or \"Canids\".",
 	parents = {{module = "poscatboiler", args = {label = "{{{langcat}}}", raw = true, called_from_inside = true}}},
-}
-
-labels["list of sets"] = {
-	type = "toplevel",
-	description = "All sets currently available in {{{langname}}}.",
-	parents = {{name = "all sets", sort = " *"}},
-}
-
-labels["list of name categories"] = {
-	type = "toplevel",
-	description = "All name categories currently available in {{{langname}}}.",
-	parents = {{name = "all sets", sort = " *"}},
-}
-
-labels["list of type categories"] = {
-	type = "toplevel",
-	description = "All type categories currently available in {{{langname}}}.",
-	parents = {{name = "all sets", sort = " *"}},
 }
 
 for label, data in pairs(labels) do
