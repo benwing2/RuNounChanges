@@ -173,6 +173,11 @@ def rsub_repeatedly(fr, to, text, count=0, flags=0):
       return text
     text = newtext
 
+def ucfirst(txt):
+  if not txt:
+    return txt
+  return txt[0].upper() + txt[1:]
+
 def parse_text(text):
   return mwparserfromhell.parser.Parser().parse(text, skip_style_tags=True)
 
@@ -363,7 +368,7 @@ def remove_param_chain(t, firstparam, parampref=None):
     else:
       return changed
 
-def set_param_chain(t, values, firstparam, parampref=None, before=None):
+def set_param_chain(t, values, firstparam, parampref=None, before=None, preserve_spacing=True):
   is_number = re.search("^[0-9]+$", firstparam) and not parampref
   if parampref is None:
     parampref = "" if is_number else firstparam
@@ -379,9 +384,9 @@ def set_param_chain(t, values, firstparam, parampref=None, before=None):
     # When adding a param, if the param already exists, we want to just replace the param.
     # Otherwise, we want to add directly after the last-added param.
     if t.has(next_param):
-      t.add(next_param, val, before=before)
+      t.add(next_param, val, before=before, preserve_spacing=preserve_spacing)
     else:
-      t.add(next_param, val, before=before or insert_before_param)
+      t.add(next_param, val, before=before or insert_before_param, preserve_spacing=preserve_spacing)
     insert_before_param = find_following_param(t, next_param)
     first = False
   for i in range(paramno + 1, 30):
