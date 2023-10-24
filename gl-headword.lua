@@ -1,15 +1,15 @@
 -- This module contains code for Galician headword templates.
 -- Templates covered are:
--- * {{gl-noun}}, {{gl-proper noun}};
--- * {{gl-verb}};
--- * {{gl-adj}}, {{gl-adj-comp}}, {{gl-adj-sup}};
+-- * {{gl-noun}}, {{gl-reinteg-noun}}, {{gl-proper noun}};
+-- * {{gl-verb}}, {{gl-reinteg-verb}};
+-- * {{gl-adj}}, {{gl-reinteg-adj}}, {{gl-adj-comp}}, {{gl-adj-sup}};
 -- * {{gl-det}};
 -- * {{gl-pron-adj}};
 -- * {{gl-contr-adj}};
 -- * {{gl-pp}};
 -- * {{gl-cardinal}};
 -- * {{gl-adv}}.
--- See [[Module:gl-verb]] for Galician conjugation templates.
+-- See [[Module:gl-verb]] and [[Module:gl-reinteg-verb]] for Galician conjugation templates.
 
 local export = {}
 local pos_functions = {}
