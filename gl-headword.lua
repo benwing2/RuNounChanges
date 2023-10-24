@@ -29,13 +29,7 @@ local langname = lang:getCanonicalName()
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
-
-local suffix_categories = {
-	["adjectives"] = true,
-	["adverbs"] = true,
-	["nouns"] = true,
-	["verbs"] = true,
-}
+local usub = mw.ustring.sub
 
 -- When followed by a hyphen in a hyphenated compound, the hyphen will be included with the prefix when linked.
 local include_hyphen_prefixes = m_table.listToSet {
@@ -120,14 +114,16 @@ local function do_headword(parargs, poscat, is_reinteg)
 			heads = {pagename}
 		end
 	else
-		local auto_linked_head = require(romut_module).add_lemma_links(pagename, args.splithyph, nil,
+		local romut = require(romut_module)
+		local auto_linked_head = romut.add_links_to_multiword_term(pagename, args.splithyph, nil,
 			include_hyphen_prefixes)
 		if #heads == 0 then
 			heads = {auto_linked_head}
 		else
-			for _, head in ipairs(heads) do
-				if head == auto_linked_head then
-					track("redundant-head")
+			for i, head in ipairs(heads) do
+				if head:find("^~") then
+					head = romut.apply_link_modifiers(auto_linked_head, usub(head, 2))
+					heads[i] = head
 				end
 			end
 		end
@@ -149,10 +145,10 @@ local function do_headword(parargs, poscat, is_reinteg)
 	}
 
 	local is_suffix = false
-	if pagename:find("^%-") and suffix_categories[poscat] then
+	if pagename:find("^%-") and poscat ~= "suffix forms" then
 		is_suffix = true
 		data.pos_category = "suffixes"
-		local singular_poscat = poscat:gsub("s$", "")
+		local singular_poscat = require("Module:string utilities").singularize(poscat)
 		table.insert(data.categories, langname .. " " .. singular_poscat .. "-forming suffixes")
 		table.insert(data.inflections, {label = singular_poscat .. "-forming suffix"})
 	end
@@ -239,6 +235,19 @@ local allowed_genders = m_table.listToSet(
 	{"m", "f", "mf", "mfbysense", "m-p", "f-p", "mf-p", "mfbysense-p", "?", "?-p", "n", "n-p"}
 )
 
+local function process_genders(data, genders, g_qual)
+	for i, g in ipairs(genders) do
+		if not allowed_genders[g] then
+			error("Unrecognized gender: " .. g)
+		end
+		if g_qual[i] then
+			table.insert(data.genders, {spec = g, qualifiers = {g_qual[i]}})
+		else
+			table.insert(data.genders, g)
+		end
+	end
+end
+
 local function do_noun(args, data, tracking_categories, pos, is_suffix, is_proper)
 	local com = require(data.is_reinteg and reinteg_com_module or com_module)
 	local is_plurale_tantum = false
@@ -251,11 +260,10 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 	data.genders = {}
 	local saw_m = false
 	local saw_f = false
-	local gender_for_default_plural = args[1][1]
+	local gender_for_default_plural
+	process_genders(data, args[1], args.g_qual)
+	-- Check for specific genders and pluralia tantum.
 	for i, g in ipairs(args[1]) do
-		if not allowed_genders[g] then
-			error("Unrecognized gender: " .. g)
-		end
 		if g:find("-p$") then
 			is_plurale_tantum = true
 		else
@@ -267,14 +275,13 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 				saw_f = true
 			end
 		end
-		if args.g_qual[i] then
-			table.insert(data.genders, {spec = g, qualifiers = {args.g_qual[i]}})
-		else
-			table.insert(data.genders, g)
-		end
 	end
 	if saw_m and saw_f then
-		gender_for_default_plural = "mf"
+		gender_for_default_plural = "m"
+	elseif saw_f then
+		gender_for_default_plural = "f"
+	else
+		gender_for_default_plural = "m"
 	end
 
 	local lemma = m_links.remove_links(data.heads[1]) -- should always be specified
@@ -1134,44 +1141,21 @@ pos_functions["verbs"] = {
 		["part_qual"] = {list = "part=_qual", allow_holes = true},
 		["short_part"] = {list = true}, --short participle
 		["short_part_qual"] = {list = "short_part=_qual", allow_holes = true},
-		["pagename"] = {}, -- for testing
 		["noautolinktext"] = {type = "boolean"},
 		["noautolinkverb"] = {type = "boolean"},
 		["attn"] = {type = "boolean"},
-		["new"] = {type = "boolean"},
 	},
 	func = function(args, data, tracking_categories)
 		local preses, preses_3s, prets, parts, short_parts
-		local pagename = args.pagename or PAGENAME
-		local def_forms
 
 		if args.attn then
 			table.insert(tracking_categories, "Requests for attention concerning " .. langname)
 			return
 		end
 
-		if mw.title.getCurrentTitle().nsText == "Template" and not args.pagename then
-			if PAGENAME == "gl-verb" then
-				pagename = "carregar"
-			elseif PAGENAME == "gl-reinteg-verb" then
-				pagename = "fazer"
-			end
-		end
-
-		local parargs = mw.getCurrentFrame():getParent().args
 		local gl_verb = require(data.is_reinteg and gl_reinteg_verb_module or gl_verb_module)
-		local alternant_multiword_spec = gl_verb.do_generate_forms(parargs, "from headword")
-		for _, cat in ipairs(alternant_multiword_spec.categories) do
-			table.insert(data.categories, cat)
-		end
-
-		-- Use the "linked" form of the lemma as the head if no head= explicitly given.
-		if #data.user_specified_heads == 0 then
-			data.heads = {}
-			for _, head in ipairs(alternant_multiword_spec.forms.infinitive_linked) do
-				table.insert(data.heads, head.form)
-			end
-		end
+		local alternant_multiword_spec = gl_verb.do_generate_forms(args,
+			data.is_reinteg and "gl-reinteg-verb" or "gl-verb", data.heads[1])
 
 		local specforms = alternant_multiword_spec.forms
 		local function slot_exists(slot)
@@ -1320,6 +1304,13 @@ pos_functions["verbs"] = {
 			end
 		end
 
+		local function expand_footnotes_and_references(footnotes)
+			if not footnotes then
+				return nil
+			end
+			return require("Module:inflection utilities").fetch_headword_qualifiers_and_references(footnotes)
+		end
+
 		do_verb_form(args.pres, args.pres_qual, preses, skip_pres_if_empty)
 		-- We want to include both the pres_1s and pres_3s if there is a vowel alternation in the present singular. But we
 		-- don't want to redundantly include the pres_3s if we already included it.
@@ -1329,8 +1320,50 @@ pos_functions["verbs"] = {
 		do_verb_form(args.pret, args.pret_qual, prets)
 		do_verb_form(args.part, args.part_qual, parts)
 		do_verb_form(args.short_part, args.short_part_qual, short_parts, "skip if empty")
+
+		-- Add categories.
+		for _, cat in ipairs(alternant_multiword_spec.categories) do
+			table.insert(data.categories, cat)
+		end
+
+		-- If the user didn't explicitly specify head=, or specified exactly one head (not 2+) and we were able to
+		-- incorporate any links in that head into the 1= specification, use the infinitive generated by
+		-- [[Module:gl-verb]]/[[Module:gl-reinteg-verb]] in place of the user-specified or auto-generated head. This was
+		-- copied from [[Module:it-headword]], where doing this gets accents marked on the verb(s). We don't have
+		-- accents marked on the verb but by doing this we do get any footnotes on the infinitive propagated here. Don't
+		-- do this if the user gave multiple heads or gave a head with a multiword-linked verbal expression such as
+		-- Italian '[[dare esca]] [[al]] [[fuoco]]' (FIXME: give Galician equivalent).
+		if #data.user_specified_heads == 0 or (
+			#data.user_specified_heads == 1 and alternant_multiword_spec.incorporated_headword_head_into_lemma
+		) then
+			data.heads = {}
+			for _, lemma_obj in ipairs(alternant_multiword_spec.forms.infinitive_linked) do
+				local quals, refs = expand_footnotes_and_references(lemma_obj.footnotes)
+				table.insert(data.heads, {term = lemma_obj.form, q = quals, refs = refs})
+			end
+		end
 	end
 }
 
+-----------------------------------------------------------------------------------------
+--                                    Suffix forms                                     --
+-----------------------------------------------------------------------------------------
+
+pos_functions["suffix forms"] = {
+	params = {
+		[1] = {required = true, list = true},
+		["g"] = {list = true},
+		["g_qual"] = {list = "g=_qual", allow_holes = true},
+	},
+	func = function(args, data, is_suffix)
+		data.genders = {}
+		process_genders(data, args.g, args.g_qual)
+		local suffix_type = {}
+		for _, typ in ipairs(args[1]) do
+			table.insert(suffix_type, typ .. "-forming suffix")
+		end
+		table.insert(data.inflections, {label = "non-lemma form of " .. m_table.serialCommaJoin(suffix_type, {conj = "or"})})
+	end,
+}
 
 return export
