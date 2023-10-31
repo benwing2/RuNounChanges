@@ -353,8 +353,10 @@ function Category:substitute_template_specs(desc)
 			end
 			desc = desc or self._data.description
 			local defaulted_desc, is_default = process_default_add_the(desc)
-			if is_default then
-				topic = desc
+			if self._data.displaytitle then
+				topic = self._data.displaytitle
+			elseif is_default then
+				topic = defaulted_desc
 			else
 				topic = self._info.label
 			end
@@ -460,7 +462,7 @@ function Category:getDescription(isChild)
 			local function ins(txt)
 				table.insert(parts, txt)
 			end
-			ins("'''NOTE''': This is a multi-type category. It may contain terms of any of the following types:")
+			ins("'''NOTE''': This is a mixed category. It may contain terms of any of the following category types:")
 			for i, typ in ipairs(types) do
 				ins(("* %s {{{topic}}}%s"):format(type_data[typ].desc, i == #types and "." or ";"))
 			end
@@ -614,6 +616,11 @@ function Category:getParents()
 		for _, typ in ipairs(types) do
 			local pinfo = mw.clone(self._info)
 			pinfo.label = ("list of %s categories"):format(typ)
+			table.insert(ret, {name = Category.new(pinfo), sort = (not self._lang and " " or "") .. label})
+		end
+		if #types > 1 then
+			local pinfo = mw.clone(self._info)
+			pinfo.label = ("list of mixed categories"):format(typ)
 			table.insert(ret, {name = Category.new(pinfo), sort = (not self._lang and " " or "") .. label})
 		end
 	end
