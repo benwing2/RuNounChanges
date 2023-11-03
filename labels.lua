@@ -88,7 +88,7 @@ function export.get_submodules(lang)
 	local submodules = {}
 
 	-- get language-specific labels from data module
-	local langcode = data.lang and data.lang:getNonEtymologicalCode() or nil
+	local langcode = lang and lang:getNonEtymologicalCode() or nil
 
 	if langcode and m_lang_specific_data.langs_with_lang_specific_modules[langcode] then
 		-- prefer per-language label in order to pick subvariety labels over regional ones
@@ -276,9 +276,9 @@ function export.show_labels(data)
 	end
 	
 	return
-		"<span class=\"ib-brac\">(</span><span class=\"ib-content\">" ..
+		"<span class=\"" .. (data.term_mode and "usage-label-term" or "usage-label-sense") .. "\"><span class=\"ib-brac\">(</span><span class=\"ib-content\">" ..
 		table.concat(labels, "") ..
-		"</span><span class=\"ib-brac\">)</span>"
+		"</span><span class=\"ib-brac\">)</span></span>"
 end
 
 -- Helper function for the data modules.
