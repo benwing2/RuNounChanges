@@ -1,6 +1,8 @@
 local export = {}
 
-local m_lang_specific_data = mw.loadData("Module:labels/data/lang")
+export.lang_specific_data_list_module = "Module:labels/data/lang"
+export.lang_specific_data_modules_prefix = "Module:labels/data/lang/"
+local m_lang_specific_data = mw.loadData(export.lang_specific_data_list_module)
 local table_module = "Module:table"
 local utilities_module = "Module:utilities"
 
@@ -30,11 +32,19 @@ local function ucfirst(txt)
 	return mw.getContentLanguage():ucfirst(txt)
 end
 
-local function fetch_categories(label, labdata, lang, term_mode)
+local function fetch_categories(label, labdata, lang, term_mode, for_doc)
 	local categories = {}
 
-	local langcode = lang:getNonEtymologicalCode()
-	local canonical_name = lang:getNonEtymologicalName()
+	local langcode, canonical_name
+	if lang then
+		langcode = lang:getNonEtymologicalCode()
+		canonical_name = lang:getNonEtymologicalName()
+	elseif for_doc then
+		langcode = "<var>[langcode]</var>"
+		canonical_name = "<var>[language name]</var>"
+	else
+		error("Internal error: Must specify `lang` unless `for_doc` is given")
+	end
 
 	local empty_list = {}
 	local function canonicalize_categories(cats)
@@ -53,7 +63,19 @@ local function fetch_categories(label, labdata, lang, term_mode)
 	local regional_categories = canonicalize_categories(labdata.regional_categories)
 	local plain_categories = canonicalize_categories(labdata.plain_categories)
 
-	local function insert_cat(cat)
+	local function insert_cat(cat, sense_cat)
+		if for_doc then
+			cat = "<code>" .. cat .. "</code>"
+			if sense_cat then
+				if term_mode then
+					cat = cat .. " (using {{tl|tlb}})"
+				else
+					cat = cat .. " (using {{tl|lb}})"
+				end
+				cat = mw.getCurrentFrame():preprocess(cat)
+			end
+		end
+
 		table.insert(categories, cat)
 	end
 
@@ -66,7 +88,7 @@ local function fetch_categories(label, labdata, lang, term_mode)
 			cat = label
 		end
 		cat = (term_mode and cat .. " terms" ) or "terms with " .. cat .. " senses"
-		insert_cat(canonical_name .. " " .. cat)
+		insert_cat(canonical_name .. " " .. cat, true)
 	end
 
 	for _, cat in ipairs(pos_categories) do
@@ -92,7 +114,7 @@ function export.get_submodules(lang)
 
 	if langcode and m_lang_specific_data.langs_with_lang_specific_modules[langcode] then
 		-- prefer per-language label in order to pick subvariety labels over regional ones
-		table.insert(submodules, "Module:labels/data/lang/" .. langcode)
+		table.insert(submodules, export.lang_specific_data_modules_prefix .. langcode)
 	end
 	table.insert(submodules, "Module:labels/data")
 	table.insert(submodules, "Module:labels/data/qualifiers")
@@ -101,6 +123,27 @@ function export.get_submodules(lang)
 	return submodules
 end
 
+--[=[
+Return information on a label. On input `data` is an object with the following fields;
+* `label`: The label to return information on.
+* `lang`: The language of the label. Must be specified unless `for_doc` is given.
+* `term_mode`: If true, the label was invoked using {{tl|tlb}}; otherwise, {{tl|lb}}.
+* `for_doc`: Data is being fetched for documentation purposes. This causes the raw categories returned in
+  `categories` to be formatted for documentation display.
+* `nocat`: If true, don't add the label to any categories.
+* `already_seen`: An object used to track labels already seen, so they aren't displayed twice. Tracking is according
+  to the display form of the label, so if two labels have the same display form, the second one won't be displayed
+  (but its categories will still be added). This must be specified even if this functionality isn't needed; use {}
+  in that case.
+
+The return value is an object with the following fields:
+* `label`: The display form of the label.
+* `canonical`: If the label is an alias, this contains the canonical name of the label.
+* `categories`: A list of the categories to add the label to.
+* `formatted_categories`: A string containing the formatted categories.
+* `deprecated`: True if the label is deprecated.
+* `data`: The data structure for the label, as fetched from the label modules.
+]=]
 function export.get_label_info(data)
 	if not data.label then
 		error("`data` must now be an object containing the params")
@@ -127,6 +170,7 @@ function export.get_label_info(data)
 	end
 	if type(labdata) == "string" or labdata.alias_of then
 		label = labdata.alias_of or labdata
+		ret.canonical = label
 		labdata = submodule[label] or {}
 	end
 	if labdata.deprecated then
@@ -143,7 +187,11 @@ function export.get_label_info(data)
 	if labdata.special_display then
 		local function add_language_name(str)
 			if str == "canonical_name" then
-				return data.lang:getNonEtymologicalName()
+				if data.lang then
+					return data.lang:getNonEtymologicalName()
+				else
+					return "<code><var>[language name]</var></code>"
+				end
 			else
 				return ""
 			end
@@ -208,11 +256,13 @@ function export.get_label_info(data)
 	if data.nocat then
 		ret.formatted_categories = ""
 	else
-		local cats = fetch_categories(label, labdata, data.lang, data.term_mode)
+		local cats = fetch_categories(label, labdata, data.lang, data.term_mode, data.for_doc)
 		for _, cat in ipairs(cats) do
 			table.insert(ret.categories, cat)
 		end
-		if #ret.categories == 0 then
+		if #ret.categories == 0 or data.for_doc then
+			-- Don't try to format categories if we're doing this for documentation ({{label/doc}}), because there
+			-- will be HTML in the categories.
 			ret.formatted_categories = ""
 		else
 			ret.formatted_categories = require(utilities_module).format_categories(ret.categories, data.lang,
