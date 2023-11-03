@@ -1,38 +1,53 @@
 local export = {}
 
--- Map a function over `list`, which may in fact be a list of strings or a single string. The return value of the
--- function may also be a single string or a list. If `list` is a list and the function returns a list, the results are
--- flattened into a single list. If `list` is a single string and the function returns a single string, the return
--- value of `map` will be a single string, otherwise a list. In all cases, when calling the function on a string, if
--- the string has modifiers (e.g. 'vuitanta-vuit<tag:Central>' or 'سیزده<tr:sizdah>'), the function is called on the
--- part without the modifiers, and the modifiers are then tacked onto the return value(s) of the function. Strings with
--- multiple modifiers such as 'سیزده<tr:sizdah><tag:Iranian>' are correctly handled.
-function export.map(fun, list)
+-- Map a function over `list`, which may in fact be a list of strings, a single string or nil. In general, a single
+-- string is treated like a one-element list and nil is treated like a zero-element list. Any return values of the
+-- function will be collected into a flattened list, where a single string is again treated like a one-element list and
+-- nil is treated like a zero-element list. If the resulting list has one element (a string), that string will be
+-- returned, and if the resulting list has no elements, nil will be returned. When calling a function on a string, if
+-- the string has modifiers (e.g. 'vuitanta-vuit<tag:Central>' or 'سیزده<tr:sizdah>') and `include_modifiers` is not
+-- specified, the function is called on the part without the modifiers, and the modifiers are then tacked onto the
+-- return value(s) of the function. Strings with multiple modifiers such as 'سیزده<tr:sizdah><tag:Iranian>' are correctly
+-- handled.
+function export.map(fun, list, include_modifiers)
+	if list == nil then
+		return nil
+	end
 	if type(list) == "table" then
 		local retval = {}
 		for _, item in ipairs(list) do
-			local mapret = export.map(fun, item)
+			local mapret = export.map(fun, item, include_modifiers)
 			if type(mapret) == "table" then
 				for _, ret in ipairs(mapret) do
 					table.insert(retval, ret)
 				end
-			else
+			elseif mapret ~= nil then
 				table.insert(retval, mapret)
 			end
 		end
-		return retval
-	end
-	local term_part, tag_part = list:match("^(.*)(<.->)$")
-	if term_part then
-		local mapret = export.map(fun, term_part)
-		if type(mapret) == "table" then
-			local retval = {}
-			for _, ret in ipairs(mapret) do
-				table.insert(retval, ret .. tag_part)
-			end
-			return retval
+		if #retval == 1 then
+			return retval[1]
+		elseif #retval == 0 then
+			return nil
 		else
-			return mapret .. tag_part
+			return retval
+		end
+	end
+	if not include_modifiers then
+		local term_part, tag_part = list:match("^(.*)(<.->)$")
+		if term_part then
+			local mapret = export.map(fun, term_part)
+			if type(mapret) == "table" then
+				local retval = {}
+				for _, ret in ipairs(mapret) do
+					table.insert(retval, ret .. tag_part)
+				end
+				return retval
+			elseif mapret ~= nil then
+				return mapret .. tag_part
+			else
+				return nil
+			end
 		end
 	end
 	return fun(list)
@@ -52,6 +67,23 @@ function export.filter(fun, list, return_single_item)
 		retval = retval[1]
 	end
 	return retval
+end
+
+function export.append(...)
+	local ret = {}
+	for i=1,select('#', ...) do
+		local argt = select(i, ...)
+		if type(argt) == "table" then
+			for _, v in ipairs(argt) do
+				table.insert(ret, v)
+			end
+		else
+			table.insert(ret, argt)
+		end
+	end
+	if #ret == 1 then
+		return ret[1]
+	return ret
 end
 
 function export.power_of(n, base)
