@@ -257,7 +257,6 @@ labels["roots by shape"] = {
 
 labels["Sanskritic formations"] = {
 	description = "{{{langname}}} terms coined from [[tatsama]] [[word]]s and/or [[affix]]es.",
-	umbrella_parents = "Sanskritic formations by language",
 	parents = {"terms by etymology", "terms derived from Sanskrit"},
 }
 
@@ -435,11 +434,6 @@ labels["terms with unknown etymologies"] = {
 	parents = {{name = "terms by etymology", sort = "unknown etymology"}},
 }
 
-labels["twice-borrowed terms"] = {
-	description = "{{{langname}}} terms that were borrowed from another language that originally borrowed the term from {{{langname}}}.",
-	parents = {"terms by etymology", "borrowed terms"},
-}
-
 labels["univerbations"] = {
 	description = "{{{langname}}} terms that result from the agglutination of two or more words.",
 	parents = {"terms by etymology"},
@@ -514,6 +508,7 @@ raw_categories["Multiple etymology subcategories by language"] = {
 	},
 }
 
+-- We need to add a raw category for this umbrella category because of the initial capital letter.
 raw_categories["Sanskritic formations by language"] = {
 	description = "Categories with terms coined from [[tatsama]] [[word]]s and/or [[affix]]es.",
 	additional = "{{{umbrella_msg}}}",
@@ -521,6 +516,13 @@ raw_categories["Sanskritic formations by language"] = {
 		"Terms by etymology subcategories by language",
 	},
 }
+
+raw_categories["Terms borrowed back into the same language"] = {
+	description = "Categories with terms in specific languages that were borrowed from a second language that previously borrowed the term from the first language.",
+	additional = "A well-known example is {{m+|en|salaryman}}, a term borrowed from Japanese which in turn was borrowed from the English words [[salary]] and [[man]].\n\n{{{umbrella_msg}}}",
+	parents = "Terms by etymology subcategories by language",
+}
+
 
 
 -----------------------------------------------------------------------------
@@ -1250,6 +1252,28 @@ table.insert(handlers, function(data)
 					"terms with lemma and non-lemma form etymologies",
 				sort = pos1 .. " and " .. pos2,
 			}},
+		}
+	end
+end)
+
+
+-----------------------------------------------------------------------------
+--------------------------- Borrowed-back handlers --------------------------
+-----------------------------------------------------------------------------
+
+-- Handler for categories of the form e.g. [[:Category:English terms borrowed back into English]]. We need to use a handler
+-- because the category's language occurs inside the label itself. For the same reason, the umbrella category has a
+-- nonstandard name "Terms borrowed back into the same language", so we handle it as a regular parent and disable the
+-- built-in umbrella mechanism.
+table.insert(handlers, function(data)
+	local right_side_lang = data.label:match("^terms borrowed back into (.+)$")
+	if data.lang and right_side_lang == data.lang:getCanonicalName() then
+		return {
+			description = "{{{langname}}} terms that were borrowed from another language that originally borrowed the term from {{{langname}}}.",
+			parents = {"terms by etymology", "borrowed terms",
+				{name = "Terms borrowed back into the same language", raw = true, sort = "{{{langname}}}"}
+			},
+			umbrella = false, -- Umbrella has a nonstandard name so we treat it as a raw category
 		}
 	end
 end)
