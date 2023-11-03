@@ -67,7 +67,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period)
 
 	txt = ulower(txt)
 
-	-- Prevent palatisation of the special case kwazi-.
+	-- Prevent palatalization of the special case kwazi-.
 	tsub("^kwazi", "kwaz-i")
 
 	-- falling diphthongs <au> and <eu>, and diacriticised variants
@@ -311,10 +311,10 @@ local function phonemic(txt, do_hyph, lang, is_prep, period)
 		})
 	end
 
-	-- palatalisation
-	local palatise_into = { ["n"] = "ɲ", ["s"] = "ɕ", ["z"] = "ʑ" }
-	tsub("([nsz])I", function (c) return palatise_into[c] end)
-	tsub("([nsz])i", function (c) return palatise_into[c] .. "i" end)
+	-- palatalization
+	local palatalize_into = { ["n"] = "ɲ", ["s"] = "ɕ", ["z"] = "ʑ" }
+	tsub("([nsz])I", function (c) return palatalize_into[c] end)
+	tsub("([nsz])i", function (c) return palatalize_into[c] .. "i" end)
 
 	-- voicing and devoicing
 
@@ -379,7 +379,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period)
 		tsub("N", "w̃")
 	end
 
-	-- Hyphen separator, e.g. to prevent palatisation of <kwazi->.
+	-- Hyphen separator, e.g. to prevent palatalization of <kwazi->.
 	tsub("-", "")
 
 	tsub("_", OVERTIE)
@@ -400,41 +400,53 @@ local function phonemic(txt, do_hyph, lang, is_prep, period)
 	end
 
 	local should_stress = not (unstressed or txt:find("ˈ"))
-	local prons = should_stress and add_stress(ante) or txt
+	txt = should_stress and add_stress(ante) or txt
 
 	if is_prep then
-		prons = prons .. "$"
+		txt = txt .. "$"
 	end
+
+	local prons
 
 	if lang == "pl" then
 		if should_stress and ante > 0 and colloquial then
-			local thing = add_stress(0)
-			if thing ~= prons then
-				prons = { prons, thing }
+			local colloquial_pron = add_stress(0)
+			if colloquial_pron == txt then
+				prons = {{ pron = txt }}
+			else
+				prons = {
+					{ pron = txt, q = "prescribed" },
+					{ pron = colloquial_pron, q = "casual" },
+				}
 			end
 		end
 	elseif lang == "mpl" then
 		if tfind("[RS]") then
-			local mp_early = prons:gsub("[RS]", "r̝")
-			local mp_late = prons:gsub("R", "ʐ"):gsub("S", "ʂ")
+			local mp_early = txt:gsub("[RS]", "r̝")
+			local mp_late = txt:gsub("R", "ʐ"):gsub("S", "ʂ")
 			if period == "early" then
-				prons = mp_early
+				prons = {{ pron = mp_early, q = "early" }}
 			elseif period == "late" then
-				prons = mp_late
+				prons = {{ pron = mp_late, q = "late" }}
 			elseif not period then
 				prons = {
-					mp_early, mp_late,
+					{ pron = mp_early, q = "early" },
+					{ pron = mp_late, q = "late" },
 				}
 			else
 				error(("'%s' is not a supported Middle Polish period, try with 'early' or 'late'."):format(period))
 			end
+		else
+			prons = {{ pron = txt }}
 		end
 	elseif lang == "szl" then
 		if tfind("O") then
 			prons = {
-				prons:gsub("O", "ɔ"),
-				prons:gsub("O", "ɔw"),
+				{ pron = txt:gsub("O", "ɔ"), q = "standard" },
+				{ pron = txt:gsub("O", "ɔw"), q = "opolskie" },
 			}
+		else
+			prons = {{ pron = txt }}
 		end
 	end
 
@@ -444,14 +456,6 @@ local function phonemic(txt, do_hyph, lang, is_prep, period)
 		return prons
 	end
 
-end
-
--- TODO: This might slow things down if used too much?
-local function table_insert_if_absent(t, s)
-	for _, v in ipairs(t) do
-		if v == s then return end
-	end
-	table.insert(t, s)
 end
 
 -- Returns rhyme from a transcription.
@@ -472,27 +476,20 @@ local function multiword(term, lang, period)
 	if term:find("^%[.+%]$") then
 		return { phonetic = term }
 	elseif term:find(" ") then
-
-		-- TODO: repeated
-		function lg(s)
-			return s[lang] or s[1]
-		end
-
-		local prepositions = lg {
-			{
-				"beze?", "na", "dla", "do", "ku",
-				"nade?", "o", "ode?", "po", "pode?", "przede?",
-				"przeze?", "przy", "spode?", "u", "we?",
-				"z[ae]?", "znade?", "zza",
-			}, szl = {
+		local prepositions =
+			lang == "szl" and {
 				"bezy?", "na", "dlŏ", "d[oō]", "ku",
 				"nady?", "ô", "ôdy?", "po", "pody?", "przedy?",
 				"przezy?", "przi", "spody?", "u", "w[ey]?",
 				"z[aey]?", "[śs]", "znady?"
+			} or {
+				"beze?", "na", "dla", "do", "ku",
+				"nade?", "o", "ode?", "po", "pode?", "przede?",
+				"przeze?", "przy", "spode?", "u", "we?",
+				"z[ae]?", "znade?", "zza",
 			}
-		}
 
-		local p
+		local pronuns
 		local contains_preps = false
 
 		for word in term:gmatch("[^ ]+") do
@@ -504,51 +501,71 @@ local function multiword(term, lang, period)
 					break
 				end
 			end
-			local v = phonemic(word, false, lang, is_prep, period)
-			local sep = "%s %s"
-			if p == nil then
-				p = v
-			elseif type(p) == "string" then
-				if type(v) == "string" then
-					p = sep:format(p, v)
-				else
-					p = { sep:format(p, v[1]), sep:format(p, v[2]) }
-				end
+			local word_pronuns = phonemic(word, false, lang, is_prep, period)
+			if not pronuns then
+				pronuns = word_pronuns
 			else
-				if type(v) == "string" then
-					p = { sep:format(p[1], v), sep:format(p[2], v) }
+				local matches_up = #pronuns == #word_pronuns
+				if matches_up then
+					for i = 1, #pronuns do
+						if pronuns[i].q ~= word_pronuns[i].q then
+							matches_up = false
+							break
+						end
+					end
+				end
+				if matches_up then
+					-- We can just concatenate horizontally, in O(n) time.
+					for i = 1, #pronuns do
+						pronuns[i].pron = pronuns[i].pron .. " " .. word_pronuns[i].pron
+					end
 				else
-					p = { sep:format(p[1], v[1]), sep:format(p[2], v[2]) }
+					-- We have to check each combination for compatibility, in O(n^2) time. It's possible to
+					-- optimize this but the number of pronunciations will never be more than a few, so it's not
+					-- important.
+					local result = {}
+					for i = 1, #pronuns do
+						for j = 1, #word_pronuns do
+							if not pronuns[i].q or not word_pronuns[j].q or pronuns[i].q == word_pronuns[j].q then
+								table.insert(result, {
+									pron = pronuns[i].pron .. " " .. word_pronuns[j].pron,
+									q = pronuns[i].q or word_pronuns[j].q
+								})
+							end
+						end
+					end
 				end
 			end
-		end
-
-		local function assimilate_preps(str)
-			local function assim(from, to, before)
-				str = rsub(str, ("%s(%%$ ˈ?[%s])"):format(from, before), to.."%1")
-			end
-			local T = "ptsʂɕkx"
-			assim("d", "t", T)
-			assim("v", "f", T)
-			assim("z", "s", T)
-			if lang == "szl" then
-				local D = "bdzʐʑɡ"
-				assim("s", "z", D)
-				assim("ɕ", "ʑ", D)
-			end
-			return rsub(str, "%$", "")
 		end
 
 		if contains_preps then
-			if type(p) == "string" then
-				p = assimilate_preps(p)
-			else
-				p[1] = assimilate_preps(p[1])
-				p[2] = assimilate_preps(p[2])
+			local function assimilate_preps(str)
+				local T = "ptsʂɕkx"
+				local devoice_obstruent = {
+					["d"] = "t",
+					["v"] = "f",
+					["z"] = "s",
+				}
+				str = rsub(str, ("([dvz])(%$ ˈ?[" .. T .. "])"),
+					function(voiced, after) return devoice_obstruent[voiced] .. after end)
+				if lang == "szl" then
+					local D = "bdzʐʑɡ"
+					local voice_fricative = {
+						["s"] = "z",
+						["ɕ"] = "ʑ",
+					}
+					str = rsub(str, ("([sɕ])(%$ ˈ?[" .. D .. "])"),
+						function(unvoiced, after) return voice_fricative[unvoiced] .. after end)
+				end
+				return rsub(str, "%$", "")
+			end
+
+			for _, pronun in ipairs(pronuns) do
+				pronun.pron = assimilate_preps(pronun.pron)
 			end
 		end
 
-		return p
+		return pronuns
 
 	else
 		return phonemic(term, lang ~= "mpl", lang, false, period)
@@ -571,7 +588,7 @@ local function normalise_input(term, title)
 	local function check_suf(str, suf) return check_af(str, suf, "(%s)$", ".%1", "end") end
 
 	if term == "#" then
-		-- The diesis stands simply for {{PAGENAME}}.
+		-- The diaeresis stands simply for {{PAGENAME}}.
 		return title
 	elseif (term == "+") or term:find("^%^+$") or (term == "*") then
 		-- Inputs that are just '+', '*', '^', '^^', etc. are treated as
@@ -649,7 +666,7 @@ local function sort_things(lang, title, args_terms, args_quals, args_refs, args_
 		if hyph then
 			do_hyph = true
 			if hyph:gsub("%.", "") == title then
-				table_insert_if_absent(hyph_list, hyph)
+				require("Module:table").insertIfNot(hyph_list, hyph)
 			end
 		end
 	end
