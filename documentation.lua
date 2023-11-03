@@ -38,6 +38,28 @@ local function zh_link(word)
 	}
 end
 
+local function make_languages_data_documentation(title, cats, division)
+	local doc_template, module_cat
+	if division:find("/extra$") then
+		division = division:gsub("/extra$", "")
+		doc_template = "language extradata documentation"
+		module_cat = "Language extra data modules"
+	else
+		doc_template = "language data documentation"
+		module_cat = "Language data modules"
+	end
+	local sort_key
+	if division == "exceptional" then
+		sort_key = "x"
+	else
+		sort_key = division:gsub("/", "")
+	end
+	cats:insert(module_cat .. "|" .. sort_key)
+	return mw.getCurrentFrame():expandTemplate {
+		title = doc_template
+	}
+end
+
 local function make_Unicode_data_documentation(title, cats)
 	local subpage, first_three_of_code_point
 		= title.fullText:match("^Module:Unicode data/([^/]+)/(%x%x%x)$")
@@ -78,6 +100,30 @@ end
 -- the module into multiple categories, you need to write a `process` function that adds categories to the CATS
 -- parameter passed in.
 local module_regex = {
+	{
+		regex = "^Module:languages/data/(3/./extra)$",
+		process = make_languages_data_documentation,
+	},
+	{
+		regex = "^Module:languages/data/(3/.)$",
+		process = make_languages_data_documentation,
+	},
+	{
+		regex = "^Module:languages/data/(2/extra)$",
+		process = make_languages_data_documentation,
+	},
+	{
+		regex = "^Module:languages/data/(2)$",
+		process = make_languages_data_documentation,
+	},
+	{
+		regex = "^Module:languages/data/(exceptional/extra)$",
+		process = make_languages_data_documentation,
+	},
+	{
+		regex = "^Module:languages/data/(exceptional)$",
+		process = make_languages_data_documentation,
+	},
 	{
 		regex = "^Module:languages/.+$",
 		cat = "Language and script modules",
