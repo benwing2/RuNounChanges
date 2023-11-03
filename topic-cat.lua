@@ -328,10 +328,14 @@ function Category:substitute_template_specs(desc)
 	end
 
 	if desc:find("{{{topic}}}") then
+		local function get_displaytitle_or_label()
+			return self:format_displaytitle(false) or self._info.label
+		end
+
 		local function process_default_add_the(topic)
 			local is_default, no_singularize, wikify, add_the = self:process_default(topic)
 			if is_default then
-				topic = self._info.label
+				topic = get_displaytitle_or_label()
 				if add_the then
 					topic = "the " .. topic
 				end
@@ -353,12 +357,10 @@ function Category:substitute_template_specs(desc)
 			end
 			desc = desc or self._data.description
 			local defaulted_desc, is_default = process_default_add_the(desc)
-			if self._data.displaytitle then
-				topic = self._data.displaytitle
-			elseif is_default then
+			if is_default then
 				topic = defaulted_desc
 			else
-				topic = self._info.label
+				topic = get_displaytitle_or_label()
 			end
 		end
 
@@ -493,7 +495,7 @@ function Category:getDescription(isChild)
 
 		return self:substitute_template_specs(desc)
 	else
-		if self._info.label == "all topics" or self._info.label == "all sets" then
+		if self._info.label == "all topics" then
 			return "This category applies to content and not to meta material about the Wiki."
 		end
 
@@ -540,8 +542,8 @@ function Category:getParents()
 	local parents = self._data["parents"]
 	local label = self._info.label
 
-	if not self._lang and ( label == "all topics" or label == "all sets" ) then
-		return {{ name = "Category:Fundamental", sort = label:gsub("all ", "") }}
+	if not self._lang and label == "all topics" then
+		return {{ name = "Category:Fundamental", sort = "topics" }}
 	end
 
 	if not parents or #parents == 0 then
