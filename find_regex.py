@@ -22,7 +22,7 @@ def process_text_on_page(index, pagetitle, text, prev_comment, regex, invert, ve
   else:
     text_to_search = []
     langs = set(re.split(",(?!= )", lang))
-    sections, sections_by_lang = blib.split_text_into_sections(text, pagemsg)
+    sections, sections_by_lang, _ = blib.split_text_into_sections(text, pagemsg)
 
     for seclang, secind in sections_by_lang.items():
       if seclang in langs:

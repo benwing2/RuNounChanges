@@ -32,7 +32,7 @@ def process_text_on_page(index, pagetitle, curtext, contents, prev_comment, orig
       return
   else:
     if args.lang_only or args.subset_of_langs:
-      sections, sections_by_lang = blib.split_text_into_sections(curtext, pagemsg)
+      sections, sections_by_lang, _ = blib.split_text_into_sections(curtext, pagemsg)
 
       def replace_lang_section(lang, newsectext, origsectext):
         if lang not in sections_by_lang:
@@ -60,8 +60,8 @@ def process_text_on_page(index, pagetitle, curtext, contents, prev_comment, orig
         if not changed:
           return
       else:
-        origcontents_sections, origcontents_sections_by_lang = blib.split_text_into_sections(origcontents, pagemsg)
-        contents_sections, contents_sections_by_lang = blib.split_text_into_sections(contents, pagemsg)
+        origcontents_sections, origcontents_sections_by_lang, _ = blib.split_text_into_sections(origcontents, pagemsg)
+        contents_sections, contents_sections_by_lang, _ = blib.split_text_into_sections(contents, pagemsg)
         if origcontents_sections_by_lang != contents_sections_by_lang:
           errandpagemsg("WARNING: Languages differ or have been rearranged between original and replacement text, not saving")
           return

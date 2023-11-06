@@ -1219,7 +1219,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
     return False
 
   def find_lang_section_for_only_lang(text, lang, pagemsg):
-    sections, sections_by_lang = split_text_into_sections(text, pagemsg)
+    sections, sections_by_lang, _ = split_text_into_sections(text, pagemsg)
 
     if lang not in sections_by_lang:
       pagemsg("WARNING: Can't find %s section, skipping" % lang)
@@ -2600,17 +2600,19 @@ def split_text_into_sections(pagetext, pagemsg):
   # Split into sections
   sections = re.split(r"(^==[^=\n]+==[ \t]*\n)", pagetext, 0, re.M)
   sections_by_lang = {}
+  section_langs = []
   for j in range(2, len(sections), 2):
     m = re.search(r"\A==[ \t]*(.*?)[ \t]*==[ \t]*\n\Z", sections[j - 1])
     if not m:
       pagemsg("WARNING: Internal error: Can't match section header: %s" % (sections[j - 1].rstrip("\n")))
     else:
       seclang = m.group(1)
+      section_langs.append((j, seclang))
       if seclang in sections_by_lang:
         pagemsg("WARNING: Found two %s sections, skipping second one" % seclang)
       else:
         sections_by_lang[seclang] = j
-  return sections, sections_by_lang
+  return sections, sections_by_lang, section_langs
 
 def split_text_into_subsections(secbody, pagemsg):
   subsections = re.split(r"(^==+[^=\n]+==+[ \t]*\n)", secbody, 0, re.M)
@@ -2665,7 +2667,7 @@ def split_text_into_subsections(secbody, pagemsg):
 #    sections[j] = secbody.rstrip("\n") + sectail
 #    text = "".join(sections)
 def find_modifiable_lang_section(text, lang, pagemsg, force_final_nls=False):
-  sections, sections_by_lang = split_text_into_sections(text, pagemsg)
+  sections, sections_by_lang, _ = split_text_into_sections(text, pagemsg)
 
   has_non_lang = False
 
@@ -2687,7 +2689,7 @@ def find_modifiable_lang_section(text, lang, pagemsg, force_final_nls=False):
   return sections, j, secbody, sectail, has_non_lang
 
 def find_lang_section(pagetext, lang, pagemsg):
-  splitsections, sections_by_lang = split_text_into_sections(pagetext, pagemsg)
+  splitsections, sections_by_lang, _ = split_text_into_sections(pagetext, pagemsg)
 
   if lang not in sections_by_lang:
     pagemsg("WARNING: Can't find %s section, skipping" % lang)

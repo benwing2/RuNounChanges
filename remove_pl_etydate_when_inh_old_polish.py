@@ -15,7 +15,7 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  sections, sections_by_lang = blib.split_text_into_sections(text, pagemsg)
+  sections, sections_by_lang, _ = blib.split_text_into_sections(text, pagemsg)
   pl_sec = sections_by_lang.get("Polish", None)
   opl_sec = sections_by_lang.get("Old Polish", None)
   if pl_sec is None or opl_sec is None:
