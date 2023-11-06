@@ -24,6 +24,66 @@ end
 
 local OVERTIE = u(0x361) -- COMBINING DOUBLE INVERTED BREVE
 
+--[=[
+About dialects and dialect groups:
+
+A "dialect" describes, approximately, a single way of pronouncing the words of a language. Different dialects generally represent distinct groups of speakers, separately geographically, ethnically, socially or temporally. Within a single
+dialect it is possible to have more than one output for a given input; for example, words with rising diphthongs tend to
+have two outputs, a "faster" one with the ''i'' or ''u'' in hiatus pronounced as /j/ or /w/, and a "slower" one with
+the ''i'' or ''u'' in hiatus pronounced as /i/ or /u/. Another example concerns initial ''es-'' and ''ex-'' followed
+by a consonant, where the initial ''e-'' may be pronounce as either /e/ or /i/. In some cases, as in [[experiência]],
+this results in four outputs. Some outputs may have associated qualifiers; e.g. the "faster" version of hiatus ''i'' and
+''u'' is marked ''faster pronunciation'', and the "slower" version marked ''slower pronunciation''; but the variants in
+initial ''esC-'' and ''exC-'' are currently unmarked. The difference between multiple outputs in a single dialect and
+multiple dialects is that the multiple outputs represent different ways the same speaker might pronounce a given input
+in different circumstances, or represent idiolectal variation that cannot clearly be assigned to a given sociolinguistic
+(e.g. geographic, ethnic, social, temporal, etc.) identity.
+
+A "dialect group" groups related dialects. For example, for Portuguese, the module currently defines two dialect
+groups: Brazil and Portugal. Within each are several dialects. This concerns the display of the dialects: each dialect
+group by default displays as a single line, showing the "representative" dialect of the group, with the individual
+dialects hidden and accessible using a toggle dropdown button labeled "More" on the right side of the line. It is
+quite possible to imagine multiple levels of dialect groups (e.g. it might make sense to view the current "Northern
+Portugal" dialect as its own group, with subdialects Porto/Minho and Transmontano; when this dialect displays, it
+in turn hides the subdialects under a "More" button). However, support for this nesting isn't yet provided.
+
+"Style" here is simply another word for "dialect".
+]=]
+
+-- Dialects and subdialects:
+export.all_styles = {"gbr", "rio", "sp", "sbr", "gpt", "cpt", "spt", "npt"}
+export.all_style_groups = {
+	all = export.all_styles,
+	br = {"gbr", "rio", "sp", "sbr"},
+	pt = {"gpt", "cpt", "spt", "npt"},
+}
+
+local style_to_style_group = {}
+for group, styles in pairs(export.all_style_groups) do
+	if group ~= "all" then
+		for _, style in ipairs(styles) do
+			style_to_style_group[style] = group
+		end
+	end
+end
+
+export.all_style_descs = {
+	-- style groups
+	br = "[[w:Brazilian_Portuguese|Brazil]]",
+	pt = "[[w:European_Portuguese|Portugal]]",
+
+	-- styles
+	gbr = "[[w:Brazilian_Portuguese|Brazil]]", -- "general" Brazil
+	rio = "[[w:Carioca#Sociolect|Rio de Janeiro]]", -- Carioca accent
+	sp = "[[w:Paulistano_dialect|São Paulo]]", -- Paulistano accent
+	sbr = "Southern Brazil",
+	gpt = "[[w:European_Portuguese|Portugal]]", -- "general" Portugal
+	-- lisbon = "Lisbon", -- (not added yet)
+	cpt = "[[w:Estremenho dialect|Central Portugal]]", -- Central Portugal outside of Lisbon
+	spt = "Southern Portugal", -- Dialects of Alentejo and Algarve (West Algarve is a distinct subdialect)
+	npt = "[[w:Northern Portuguese|Northern Portugal]]" -- Northern Portugal dialects (Porto/Minho and Transmontano are subdialects)
+}
+
 --[[
 	As can be seen from the last lines of the function, this returns a table of transcriptions,
 	and if do_hyph, also a string being the hyphenation. These are based on a single spelling given,
@@ -168,7 +228,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period)
 				-- <na-, po-, o-, u-> would hit too many false positives
 			}
 			for _, v in ipairs(prefixes) do
-				if tfind("^"..v) then
+				if tfind("^" .. v) then
 					local _, other_vowels = rsubn(v, ("[%s]"):format(V), "")
 					if (n_vowels - other_vowels) > 0 then
 						tsub(("^(%s)"):format(v), "%1.")
@@ -211,27 +271,33 @@ local function phonemic(txt, do_hyph, lang, is_prep, period)
 		end
 	end
 
-	-- syllabification
+	-- Syllabify by adding a period (.) between syllables. There may already be user-supplied syllable divisions
+	-- (period, single quote or hyphen), which we need to respect. This works by replacing each sequence of VC*V with
+	-- V.V, V.CV, V.CRV (where R is a liquid) or otherwise VC.C+V, i.e. if there is more than one consonant, put the
+	-- syllable boundary after the frist consonant unless the cluster consists of consonant + liquid. The main
+	-- trickiness is due to digraphs (cz, rz, sz, dz, ch, dż, dź, and also b́ in Middle Polish, since there's no
+	-- single Unicode character for this). We need to do the whole process twice since each VC*V sequence overlaps
+	-- the next one.
 	for _ = 0, 1 do
-		tsub(("([%sU])([^%sU.']*)([%s])"):format(V, V, V), function (a, b, c)
-			local function find(x) return rfind(b, x) end
-			local function is_diagraph(thing)
-				local r = find(thing:format("[crsd]z")) or find(thing:format("ch")) or find(thing:format("d[żź]"))
-				if lang == "mpl" then return r or find(thing:format("b́")) end
-				return r
-			end
-			if ((ulen(b) < 2) or is_diagraph("^%s$")) then
-				b = "."..b
+		tsub(("([%sU])([^%sU.']*)([%s])"):format(V, V, V), function(before_v, cons, after_v)
+			if ulen(cons) < 2 then
+				cons = "." .. cons
 			else
-				local i = 2
-				if is_diagraph("^%s") then i = 3 end
-				if usub(b, i, i):find("^[rlłI-]$") then
-					b = "."..b
+				local first_two = usub(cons, 1, 2)
+				local first, rest
+				if rfind(cluster, "^[crsd]z$") or cluster == "ch" or rfind(cluster, "^d[żź]$") or
+					lang == "mpl" and cluster == "b́" then
+					first, rest = rmatch(cons, "^(..)(.*)$")
 				else
-					b = ("%s.%s"):format(usub(b, 0, i - 1), usub(b, i))
+					first, rest = rmatch(cons, "^(.)(.*)$")
+				end
+				if rfind(rest, "^[rlłI-]$") then
+					cons = "." .. cons
+				else
+					cons = first .. "." .. rest
 				end
 			end
-			return ("%s%s%s"):format(a, b, c)
+			return before_v .. cons .. after_v
 		end)
 	end
 
@@ -574,7 +640,7 @@ local function multiword(term, lang, period)
 end
 
 -- This handles all the magic characters <*>, <^>, <+>, <.>, <#>.
-local function normalise_input(term, title)
+local function canonicalize_respelling(respelling, pagename)
 
 	local function check_af(str, af, reg, repl, err_msg)
 		reg = reg:format(af)
@@ -587,25 +653,25 @@ local function normalise_input(term, title)
 	local function check_pref(str, pref) return check_af(str, pref, "^(%s)", "%1.", "start") end
 	local function check_suf(str, suf) return check_af(str, suf, "(%s)$", ".%1", "end") end
 
-	if term == "#" then
+	if respelling == "#" then
 		-- The diaeresis stands simply for {{PAGENAME}}.
-		return title
-	elseif (term == "+") or term:find("^%^+$") or (term == "*") then
+		return pagename
+	elseif (respelling == "+") or respelling:find("^%^+$") or (respelling == "*") then
 		-- Inputs that are just '+', '*', '^', '^^', etc. are treated as
-		-- if they contained the title with those symbols preceding it.
-		return term .. title
+		-- if they contained the pagename with those symbols preceding it.
+		return respelling .. pagename
 	-- Handle syntax like <po.>, <.ka> and <po..ka>. This allows to not respell
 	-- the entire word when all is needed is to specify syllabification of a prefix
 	-- and/or a suffix.
-	elseif term:find(".+%.$") then
-		return check_pref(title, term:sub(1, -2))
-	elseif term:find("^%..+") then
-		return check_suf(title, term:sub(2))
-	elseif term:find(".+%.%..+") then
-		return check_suf(check_pref(title, term:gsub("%.%..+", "")), term:gsub(".+%.%.", ""))
+	elseif respelling:find(".+%.$") then
+		return check_pref(pagename, respelling:sub(1, -2))
+	elseif respelling:find("^%..+") then
+		return check_suf(pagename, respelling:sub(2))
+	elseif respelling:find(".+%.%..+") then
+		return check_suf(check_pref(pagename, respelling:gsub("%.%..+", "")), respelling:gsub(".+%.%.", ""))
 	end
 
-	return term
+	return respelling
 
 end
 
@@ -614,7 +680,7 @@ local function sort_things(lang, title, args_terms, args_quals, args_refs, args_
 	local pron_list, hyph_list, rhyme_list, do_hyph = { {}, {}, {} }, { }, { {}, {}, {} }, false
 
 	for index, term in ipairs(args_terms) do
-		term = normalise_input(term, title)
+		term = canonicalize_respelling(term, title)
 		local pron, hyph = multiword(term, lang, args_period)
 		local qualifiers = {}
 		if args_quals[index] then
@@ -857,11 +923,11 @@ function export.IPA(frame)
 					table.insert(hyphs[hyph_i].hyph, syl_v)
 				end
 			end
-			ret = ret..require("Module:hyphenation").format_hyphenations {
+			ret = ret .. require("Module:hyphenation").format_hyphenations {
 				lang = lang, hyphs = hyphs, caption = "Syllabification"
 			}
 		else
-			ret = ret.."Syllabification: <small>[please specify syllabification manually]</small>"
+			ret = ret .. "Syllabification: <small>[please specify syllabification manually]</small>"
 			if mw.title.getCurrentTitle().nsText == "" then
 				ret = ("%s[[Category:%s-pronunciation_without_hyphenation]]"):format(ret, arg_lang)
 			end
