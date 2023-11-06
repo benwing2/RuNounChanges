@@ -339,6 +339,32 @@ local unstressed_pronunciation_substitution = {
 	["po" .. DOTOVER .. "r"] = "pu" .. DOTOVER .. "r",
 }
 
+--[=[
+About styles, dialects and dialect groups:
+
+A "dialect" describes, approximately, a single way of pronouncing the words of a language. Different dialects generally represent distinct groups of speakers, separately geographically, ethnically, socially or temporally. Within a single
+dialect it is possible to have more than one output for a given input; for example, words with rising diphthongs tend to
+have two outputs, a "faster" one with the ''i'' or ''u'' in hiatus pronounced as /j/ or /w/, and a "slower" one with
+the ''i'' or ''u'' in hiatus pronounced as /i/ or /u/. Another example concerns initial ''es-'' and ''ex-'' followed
+by a consonant, where the initial ''e-'' may be pronounce as either /e/ or /i/. In some cases, as in [[experiência]],
+this results in four outputs. Some outputs may have associated qualifiers; e.g. the "faster" version of hiatus ''i'' and
+''u'' is marked ''faster pronunciation'', and the "slower" version marked ''slower pronunciation''; but the variants in
+initial ''esC-'' and ''exC-'' are currently unmarked. The difference between multiple outputs in a single dialect and
+multiple dialects is that the multiple outputs represent different ways the same speaker might pronounce a given input
+in different circumstances, or represent idiolectal variation that cannot clearly be assigned to a given sociolinguistic
+(e.g. geographic, ethnic, social, temporal, etc.) identity.
+
+A "dialect group" groups related dialects. For example, for Portuguese, the module currently defines two dialect
+groups: Brazil and Portugal. Within each are several dialects. This concerns the display of the dialects: each dialect
+group by default displays as a single line, showing the "representative" dialect of the group, with the individual
+dialects hidden and accessible using a toggle dropdown button labeled "More" on the right side of the line. It is
+quite possible to imagine multiple levels of dialect groups (e.g. it might make sense to view the current "Northern
+Portugal" dialect as its own group, with subdialects Porto/Minho and Transmontano; when this dialect displays, it
+in turn hides the subdialects under a "More" button). However, support for this nesting isn't yet provided.
+
+"Style" here is simply another word for "dialect".
+]=]
+
 -- Dialects and subdialects:
 export.all_styles = {"gbr", "rio", "sp", "sbr", "gpt", "cpt", "spt", "npt"}
 export.all_style_groups = {
@@ -1599,23 +1625,50 @@ respellings and associated properties for each style. `args_style` is the value 
 can be used to restrict the output to particular dialects. `pagename` is the page title (either the actual one or a
 value specified for debugging or demonstration purposes).
 
-The value of `inputs` is a table whose keys are "styles" (dialects) and whose values are objects with the following
+The value of `inputs` is a table whose keys are "styles" (dialect codes) and whose values are objects with the following
 fields:
 * `pre`: Text to display before the output pronunciations, from the <pre:...> inline modifier.
 * `post`: Text to display after the output pronunciations, from the <post:...> inline modifier.
-* `bullets`: Number of bullets to display before the output pronunciations, from the <bullets:...> inline modifier;
-  defaults to 1.
+* `bullets`: Number of "bullets" (asterisks) to insert into the wikitext of the output pronunciations at the outermost
+  level, to control the indentation, from the <bullets:...> inline modifier; defaults to 1.
 * `terms`: List of objects describing the respellings. Each object has the following fields:
-** `term`: The respelling, which may be {+} or may be a substitution spec of the form {[vol:vôl;ei:éi]}.
+** `term`: The respelling. The value {+} is allowed for specifying a respelling that is the same as the pagename,
+   and substitution specs of the form {[vol:vôl;ei:éi]} are allowed.
 ** `q`: List of left qualifiers to display before the pronunciation. The pronunciation itself may include one or more
    qualifiers, which are appended to any user-specified qualifiers.
-** `ref`: List of references to display after the pronunciation. Each reference is a string of the format described in
-   [[Module:references]]. an object of the form returned by
-   {parse_references()} in [[Module:references]], and is passed directly to {format_IPA_full()} in [[Module:IPA]].
+** `ref`: List of references to display after the pronunciation. Each reference is as specified by the user, i.e. a
+   string of the format parsed by {parse_references()} in [[Module:references]].
 
 The output of this function is a list of "expressed styles", i.e. per-dialect pronunciations. Specifically, it is a
 list of objects, one per dialect group, with the following fields:
-* `hidden_tag`: 
+* `tag`: The tag text to show for the dialect group when displaying the default (hidden) tab for the dialect as a whole,
+  where the representative pronunciation(s) of that dialect group (corresponding to the first object in `styles`) is
+  shown. The value can be `false` to show no tag text (if all dialect pronunciations are the same).
+* `styles`: A list of objects, each representing the pronunciation(s) of a specific dialect in the dialect group. Each
+  object has the following fields:
+** `tag`: The tag text to show for the dialect, or `false` to show no tag text (if all dialect pronunciations are the
+   same).
+** `represented_styles`: A string representing the dialect code of the dialect represented by this object, or a list of
+   such codes.
+** `indent`: The level of indentation to display this dialect at. Generally 1 if there's only a single set of
+   pronunciations for all dialects, otherwise 2. This controls the number of "bullets" (asterisks) to insert into the
+   wikitext; see `bullets` just below.
+** `bullets`: The value of `bullets` from the corresponding structure in `inputs`. The actual number of "bullets"
+   (asterisks) inserted into the wikitext is `bullets` + `indent` - 1.
+** `pre`: Text to display before the output pronunciation(s), from the `pre` value of the corresponding structure in
+   `inputs`.
+** `post`: Text to display before the output pronunciation(s), from the `post` value of the corresponding structure in
+   `inputs`.
+** `pronuns`: A list specifying the actual pronunciation(s) to display. Each object has the following fields:
+*** `phonemic`: The phonemic IPA of the pronunciation (without surrounding slashes).
+*** `phonetic`: The phonetic IPA of the pronunciation (without surrounding brackets).
+*** `qualifiers`: The left qualifiers describing this particular pronunciation; a combination of any qualifiers
+    generated by the code itself (e.g. ''faster pronunciation'', ''slower pronunciation'') followed by any qualifiers
+	specified by the user for the corresponding input respelling. If there are no qualifiers, this field will be nil.
+*** `refs`: A list of reference objects describing the references for this pronunciation. This comes from the
+    corresponding user-specified references (if any) for the input respelling, passed through {parse_references()} in
+	[[Module:references]], and is passed directly to {format_IPA_full()} in [[Module:IPA]]. If there are no references,
+	this field will be nil.
 ]==]
 function export.express_styles(inputs, args_style, pagename)
 	local pronuns_by_style = {}
