@@ -43,6 +43,7 @@ export.placetype_aliases = {
 	["coll"] = "collectivity",
 	["comm"] = "community",
 	["acomm"] = "autonomous community",
+	["ucomm"] = "unincorporated community",
 	["cont"] = "continent",
 	["cpar"] = "civil parish",
 	["dep"] = "dependency",
@@ -739,6 +740,7 @@ export.placetype_equivs = {
 	["stream"] = "river",
 	["submerged ghost town"] = "ghost town",
 	["sub-prefectural city"] = "subprovincial city",
+	["subregion"] = "region",
 	["suburban area"] = "suburb",
 	["subway station"] = "metro station",
 	["supercontinent"] = "continent",
@@ -1628,6 +1630,13 @@ export.cat_data = {
 		preposition = "of",
 	},
 
+	["administrative region"] = {
+		preposition = "of",
+		["country/France"] = {
+			["country"] = {true},
+		},
+	},
+
 	["airport"] = {
 		["default"] = {
 			["itself"] = {true},
@@ -2506,6 +2515,9 @@ export.cat_data = {
 	["region"] = {
 		preposition = "of",
 
+		["default"] = {
+			["continent"] = {true},
+		},
 		["country/Armenia"] = {
 			["country"] = {true},
 		},
@@ -2706,10 +2718,6 @@ export.cat_data = {
 
 	["subprovincial district"] = {
 		-- China
-		preposition = "of",
-	},
-
-	["subregion"] = {
 		preposition = "of",
 	},
 
