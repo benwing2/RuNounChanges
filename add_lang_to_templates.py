@@ -55,8 +55,9 @@ def process_text_on_page(index, pagetitle, text):
         # Put remaining parameters in order.
         for name, value, showkey in params:
           t.add(name, value, showkey=showkey, preserve_spacing=False)
-        blib.set_template_name(t, templates_to_process[tn])
-        notes.append("rename {{%s}} to {{%s}}" % (tn, templates_to_process[tn]))
+        if tn != templates_to_process[tn]:
+          blib.set_template_name(t, templates_to_process[tn])
+          notes.append("rename {{%s}} to {{%s}}" % (tn, templates_to_process[tn]))
       newt = str(t)
       if newt != origt:
         pagemsg("Replaced <%s> with <%s>" % (origt, newt))
@@ -72,15 +73,9 @@ def process_text_on_page(index, pagetitle, text):
       m = re.search("^==(.*)==\n$", sections[j - 1])
       assert m
       langname = m.group(1)
-      subsections = re.split("(^==.*==\n)", sections[j], 0, re.M)
-      for k in range(2, len(subsections), 2):
-        m = re.search("^===*(.*?)=*==\n$", subsections[k - 1])
-        assert m
-        subsectitle = m.group(1)
-        parsed = blib.parse_text(subsections[k])
-        hack_templates(parsed, langname)
-        subsections[k] = str(parsed)
-      sections[j] = "".join(subsections)
+      parsed = blib.parse_text(sections[j])
+      hack_templates(parsed, langname)
+      sections[j] = str(parsed)
   else:
     # Citation section?
     langnamecode = None
