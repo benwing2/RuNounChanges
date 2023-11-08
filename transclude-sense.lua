@@ -1,6 +1,7 @@
 local export = {}
 
 local rsplit = mw.text.split
+local u = mw.ustring.char
 
 local m_templateparser = require("Module:templateparser")
 
@@ -13,8 +14,15 @@ local function escape_pattern(text)
     return text:gsub("([^%w])", "%%%1")
 end
 
+-- Ensure that Wikicode (template calls, bracketed links, HTML, bold/italics, etc.) displays literally in error messages
+-- by inserting a Unicode word-joiner symbol after all characters that may trigger Wikicode interpretation. Replacing
+-- with equivalent HTML escapes doesn't work because they are displayed literally. I could not get this to work using
+-- <nowiki>...</nowiki> (those tags display literally), using using {{#tag:nowiki|...}} (same thing) or using
+-- mw.getCurrentFrame():extensionTag("nowiki", ...) (everything gets converted to a strip marker
+-- `UNIQ--nowiki-00000000-QINU` or similar). FIXME: This is a massive hack; there must be a better way.
 local function escape_wikicode(text)
-	return mw.getCurrentFrame():extensionTag("nowiki", text)
+	text = text:gsub("([%[<'{])", "%1" .. u(0x2060))
+	return text
 end
 
 local function discard(offset, iter, obj, index)
@@ -148,7 +156,12 @@ function export.show(frame)
 				for id in content:gmatch("{{ *senseid *| *" .. escape_pattern(source_langcode) .. " *| *([^}]*)}}") do
 					alternatives = alternatives and alternatives .. ", " .. id or id
 				end
-				error("Couldn't find the template {{[[Template:senseid|senseid]]|" .. source_langcode .. "|" .. id .. "}} within entry [[" .. source .. "]]. Alternatives for |id= are: " .. alternatives)
+				if alternatives then
+					alternatives = " Alternatives for |id= are: " .. alternatives
+				else
+					alternatives = ""
+				end
+				error("Couldn't find the template {{[[Template:senseid|senseid]]|" .. source_langcode .. "|" .. id .. "}} within entry [[" .. source .. "]]." .. alternatives)
 			end
 
 			-- Do the following manually instead of using regex or iterators in hopes of saving memory.
@@ -178,8 +191,8 @@ function export.show(frame)
 					break
 				end
 				if line_start then
-					local first_line = string.match(content, "(.-)$", line_start)
-					local next_line = string.match(content, "(.-)$", next_line_start + 1)
+					local first_line = string.match(content, "(.-)%f[\n%z]", line_start)
+					local next_line = string.match(content, "(.-)%f[\n%z]", next_line_start + 1)
 					error(("No id specified and saw two definition lines '%s' and '%s' for source language '%s' on page [[%s]]"):format(
 						escape_wikicode(first_line), escape_wikicode(next_line), source_langname, source))
 				end
@@ -189,7 +202,7 @@ function export.show(frame)
 				error(("Couldn't find any definition lines for source language '%s' on page [[%s]]"):format(
 					source_langname, source))
 			end
-			line = string.match(content, "(.-)$", line_start)
+			line = string.match(content, "(.-)%f[\n%z]", line_start)
 		end
 
 		if to == nil then
