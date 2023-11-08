@@ -109,17 +109,15 @@ function export.getAlternativeForms(lang, sc, term, id)
 	
 	local alternative_forms_section = string.sub(content, index, next_section)
 	
-	local terms_groups = {}
+	local terms_list = {}
 
 	local altforms = require("Module:alternative forms")
 
 	for name, args, _, index in require("Module:templateparser").findTemplates(alternative_forms_section) do
 		if (name == "alt" or name == "alter") and args[1] == lang:getNonEtymologicalCode() then
-			local altforms, dialects = altforms.get_alternative_forms(args, entry_name, "allow self link")
-			table.insert(terms_groups, {
-				altforms = altforms,
-				dialects = dialects,
-			})
+			saw_alter = true
+			local formatted_altforms = altforms.display_alternative_forms(args, entry_name, "show dialect tags after terms", "allow self link")
+			table.insert(terms_list, formatted_altforms)
 		end
 	end
 
