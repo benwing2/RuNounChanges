@@ -63,7 +63,7 @@ def process_text_on_page(index, pagetitle, text):
                 notes.append("replace %s cat '%s' with '%s' for lang=%s" % (temptype, pv, newv, lang))
                 numbered_params.append(newv)
               else:
-                notes.append("remove %s cat '%s' for lang=%s" % (temptype, pv, lang))
+                notes.append("move %s cat '%s' to %s cat '%s' for lang=%s" % (temptype, pv, newtype, newv, lang))
                 cats_to_add.append((lang, newv, newtype, getp("sort") or None))
             else:
               numbered_params.append(pv)
@@ -126,6 +126,7 @@ def process_text_on_page(index, pagetitle, text):
           if seclangname not in blib.languages_byCanonicalName:
             pagemsg("WARNING: Found raw category '%s' and unrecognized language '%s' in section header %s" % (
               fullcat, seclangname, j // 2))
+            continue
           else:
             langcode = blib.languages_byCanonicalName[seclangname]["code"]
             cat = fullcat.strip()
@@ -135,14 +136,27 @@ def process_text_on_page(index, pagetitle, text):
       if newv is not None:
         text_to_remove.append(fullcatspec)
         cats_to_add.append((langcode, newv, newtype, sortkey))
+        notes.append("move raw-coded %s cat '%s' to %s cat '%s' for lang=%s" % (cattype, cat, newtype, newv, langcode))
 
     must_continue = False
     for remove_it in text_to_remove:
+      # See how many trailing newlines there are before removing the category, and make sure there are the same number
+      # after removing the category.
+      m = re.match(r"^(.*?)(\n*)$", sectext, re.S)
+      trailing_newlines = m.group(2)
+      # Try to remove a following newline as well, in case the template occurs in the middle of several lines of
+      # such templates; otherwise we'll get an unwanted blank line in the middle. For raw-coded categories, we check
+      # for the newline when we match the raw-coded category in finditer().
+      if remove_it.startswith("{") and remove_it + "\n" in sectext:
+        remove_it += "\n"
       sectext, did_replace = blib.replace_in_text(sectext, remove_it, "", pagemsg, no_found_repl_check=True)
       if not did_replace:
         # Something went wrong removing category; skip section
         must_continue = True
         break
+      m = re.match(r"^(.*?)(\n*)$", sectext, re.S)
+      stripped_sectext = m.group(1)
+      sectext = stripped_sectext + trailing_newlines
       pagemsg("Removed %s" % remove_it.replace("\n", r"\n"))
     if must_continue:
       continue
@@ -186,7 +200,6 @@ def process_text_on_page(index, pagetitle, text):
             for cat in cats_to_append:
               if cat not in cats_seen:
                 numbered_params.append(cat)
-                notes.append("append %s cat '%s' to existing {{%s}} for lang=%s" % (temptype, cat, tn, lang))
                 did_change = True
             if did_change:
               origt = str(t)
@@ -219,7 +232,6 @@ def process_text_on_page(index, pagetitle, text):
       catlang, cat, cattype, catsortkey = cats_to_add[0]
       empty_cat_temp = "{{%s|%s%s}}" % ("C" if cattype == "topic" else "cln" if cattype == "poscat" else "cat",
                                         catlang, "|sort=" + catsortkey if catsortkey is not None else "")
-      notes.append("create new empty cat template %s" % (empty_cat_temp))
       secbody, sectail = blib.split_trailing_categories(sectext, "")
       if sectail.strip(): # categories at end, no blank line between sectext and categories
         text_to_add = empty_cat_temp
@@ -236,7 +248,35 @@ def process_text_on_page(index, pagetitle, text):
   text = re.sub(r"\n\n+", "\n\n", text)
   if text != origtext and not notes:
     notes.append("condense 3+ newlines")
-  return text, notes
+
+  def group_notes_across_lang(notes):
+    if isinstance(notes, str):
+      return [notes]
+    notes_langs = {}
+    uniq_notes = []
+    # Preserve ordering of notes but combine duplicate notes with previous notes,
+    # maintaining a count.
+    for note in notes:
+      m = re.search("^(.*) for lang=(.*?)$", note)
+      if m:
+        common_note, lang = m.groups()
+        if common_note in notes_langs:
+          notes_langs[common_note].append(lang)
+        else:
+          notes_langs[common_note] = [lang]
+          uniq_notes.append((common_note, True))
+      else:
+        uniq_notes.append((note, False))
+    def fmt_note(note, has_lang):
+      if has_lang:
+        langs = notes_langs[note]
+        return "%s for lang=%s" % (note, ",".join(langs))
+      else:
+        return note
+    notes = [fmt_note(note, has_lang) for note, has_lang in uniq_notes]
+    return notes
+
+  return text, group_notes_across_lang(notes)
 
 parser = blib.create_argparser("Move categories based on a regex", include_pagefile=True, include_stdin=True)
 parser.add_argument("--from", help="Old name of template; can be specified multiple times",
