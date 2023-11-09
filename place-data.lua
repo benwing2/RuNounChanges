@@ -610,6 +610,7 @@ export.placetype_equivs = {
 	-- "ancient", "historic", "medieval", etc., according to qualifier_equivs.) Anything we don't
 	-- list will be categorized as if the qualifier were absent, e.g. "ancient city" will be
 	-- categorized as a city and "former sea" as a sea.
+	["historical administrative region"] = "historical political subdivision",
 	["historical autonomous republic"] = "historical political subdivision",
 	["historical borough"] = "historical political subdivision",
 	["historical canton"] = "historical political subdivision",
@@ -1065,6 +1066,11 @@ function export.maybe_singularize(placetype)
 end
 
 
+function export.resolve_placetype_aliases(placetype)
+	return export.placetype_aliases[placetype] or placetype
+end
+
+
 -- Look up and resolve any category aliases that need to be applied to a holonym. For example,
 -- "country/Republic of China" maps to "Taiwan" for use in categories like "Counties in Taiwan".
 -- This also removes any links.
@@ -1083,28 +1089,39 @@ end
 -- a three-element list {PREV_QUALIFIERS, THIS_QUALIFIER, BARE_PLACETYPE}, i.e.
 -- (a) the concatenation of zero or more previously-recognized qualifiers on the left, normally
 --     canonicalized (if there are zero such qualifiers, the value will be nil);
--- (b) a single recognized qualifier, normally canonicalized;
+-- (b) a single recognized qualifier, normally canonicalized (if there is no qualifier, the value will be nil);
 -- (c) the "bare placetype" on the right.
--- Splitting between the qualifier in (b) and the bare placetype in (c) happens at each space
--- character, proceeding from left to right, and stops if a qualifier isn't recognized. (No checks
--- are made as to whether to bare placetype is recognized, and it is not canonicalized in any way.)
--- Canonicalization of qualifiers does not happen if NO_CANON_QUALIFIERS is specified.
+-- Splitting between the qualifier in (b) and the bare placetype in (c) happens at each space character, proceeding from
+-- left to right, and stops if a qualifier isn't recognized. All placetypes are canonicalized by checking for aliases
+-- in placetype_aliases[], but no other checks are made as to whether the bare placetype is recognized. Canonicalization
+-- of qualifiers does not happen if NO_CANON_QUALIFIERS is specified.
+--
 -- For example, given the placetype "small beachside unincorporated community", the return value will be
 -- {
+--   {nil, nil, "small beachside unincorporated community"},
 --   {nil, "small", "beachside unincorporated community"},
 --   {"small", "[[beachfront]]", "unincorporated community"},
 --   {"small [[beachfront]]", "[[unincorporated]]", "community"},
 -- }
 -- Here, "beachside" is canonicalized to "[[beachfront]]" and "unincorporated" is canonicalized
 -- to "[[unincorporated]]", in both cases according to the entry in placetype_qualifiers.
+--
 -- On the other hand, if given "small former haunted community", the return value will be
 -- {
+--   {nil, nil, "small former haunted community"},
 --   {nil, "small", "former haunted community"},
 --   {"small", "former", "haunted community"},
 -- }
 -- because "small" and "former" but not "haunted" are recognized as qualifiers.
+--
+-- Finally, if given "former adr", the return value will be
+-- {
+--   {nil, nil, "former adr"},
+--   {nil, "former", "administrative region"},
+-- }
+-- because "adr" is a recognized placetype alias for "administrative region".
 function export.split_qualifiers_from_placetype(placetype, no_canon_qualifiers)
-	local splits = {}
+	local splits = {{nil, nil, export.resolve_placetype_aliases(placetype)}}
 	local prev_qualifier = nil
 	while true do
 		local qualifier, bare_placetype = placetype:match("^(.-) (.*)$")
@@ -1117,7 +1134,7 @@ function export.split_qualifiers_from_placetype(placetype, no_canon_qualifiers)
 			if not no_canon_qualifiers and canon ~= true then
 				new_qualifier = canon
 			end
-			table.insert(splits, {prev_qualifier, new_qualifier, bare_placetype})
+			table.insert(splits, {prev_qualifier, new_qualifier, export.resolve_placetype_aliases(bare_placetype)})
 			prev_qualifier = prev_qualifier and prev_qualifier .. " " .. new_qualifier or new_qualifier
 			placetype = bare_placetype
 		else
@@ -1140,8 +1157,8 @@ end
 function export.get_placetype_equivs(placetype)
 	local equivs = {}
 
-	-- Look up the equivalent placetype for `placetype` in `placetype_equivs`. If `placetype` is plural, also look up the
-	-- equivalent for the singularized version. Return any equivalent placetype(s) found.
+	-- Look up the equivalent placetype for `placetype` in `placetype_equivs`. If `placetype` is plural, also look up
+	-- the equivalent for the singularized version. Return any equivalent placetype(s) found.
 	local function lookup_placetype_equiv(placetype)
 		local retval = {}
 		-- Check for a mapping in placetype_equivs; add if present.
@@ -1156,10 +1173,10 @@ function export.get_placetype_equivs(placetype)
 		return retval
 	end
 
-	-- Insert `placetype` into `equivs`, along with any equivalent placetype listed in `placetype_equivs`. `qualifier` is
-	-- the preceding qualifier to insert into `equivs` along with the placetype (see comment at top of function). We also
-	-- check to see if `placetype` is plural, and if so, insert the singularized version along with its equivalent (if any)
-	-- in `placetype_equivs`.
+	-- Insert `placetype` into `equivs`, along with any equivalent placetype listed in `placetype_equivs`. `qualifier`
+	-- is the preceding qualifier to insert into `equivs` along with the placetype (see comment at top of function). We
+	-- also check to see if `placetype` is plural, and if so, insert the singularized version along with its equivalent
+	-- (if any) in `placetype_equivs`.
 	local function do_placetype(qualifier, placetype)
 		-- FIXME! The qualifier (first arg) is inserted into the table, but isn't
 		-- currently used anywhere.
@@ -1181,44 +1198,44 @@ function export.get_placetype_equivs(placetype)
 		end
 	end
 
-	do_placetype(nil, placetype)
-
-	-- Then successively split off recognized qualifiers and loop over successively greater sets of
-	-- qualifiers from the left.
+	-- Successively split off recognized qualifiers and loop over successively greater sets of qualifiers from the left.
 	local splits = export.split_qualifiers_from_placetype(placetype)
 
 	for _, split in ipairs(splits) do
 		local prev_qualifier, this_qualifier, bare_placetype = split[1], split[2], split[3]
-		-- First see if the rightmost split-off qualifier is in qualifier_equivs (e.g. 'former' -> 'historical').
-		-- If so, create a placetype from the qualifier mapping + the following bare_placetype; then, add
-		-- that placetype, and any mapping for the placetype in placetype_equivs.
-		local equiv_qualifier = export.qualifier_equivs[this_qualifier]
-		if equiv_qualifier then
-			do_placetype(prev_qualifier, equiv_qualifier .. " " .. bare_placetype)
-		end
-		-- Also see if the remaining placetype to the right of the rightmost split-off qualifier has a placetype equiv, and
-		-- if so, create placetypes from the qualifier + placetype equiv and qualifier equiv + placetype equiv, inserting them
-		-- along with any equivalents. This way, if we are given the placetype "former alliance", and we have a mapping
-		-- 'former' -> 'historical' in qualifier_equivs and a mapping 'alliance' -> 'confederation' in placetype_equivs, we
-		-- check for placetypes 'former confederation' and (most importantly) 'historical confederation' and their equivalents
-		-- (if any) in placetype_equivs. This allows the user to specify placetypes using any combination of
-		-- "former/ancient/historical/etc." and "league/alliance/confederacy/confederation" and it will correctly map to the
-		-- placetype 'historical confederation' and in turn to the category [[:Category:LANG:Historical polities]]. Similarly,
-		-- any combination of "former/ancient/historical/etc." and "protectorate/autonomous territory/dependent territory"
-		-- will correctly map to placetype 'historical dependent territory' and in turn to the category
-		-- [[:Category:LANG:Historical political subdivisions]].
-		local bare_placetype_equiv_list = lookup_placetype_equiv(bare_placetype)
-		for _, bare_placetype_equiv in ipairs(bare_placetype_equiv_list) do
-			do_placetype(prev_qualifier, this_qualifier .. " " .. bare_placetype_equiv)
+		if this_qualifier then
+			-- First see if the rightmost split-off qualifier is in qualifier_equivs (e.g. 'former' -> 'historical').
+			-- If so, create a placetype from the qualifier mapping + the following bare_placetype; then, add
+			-- that placetype, and any mapping for the placetype in placetype_equivs.
+			local equiv_qualifier = export.qualifier_equivs[this_qualifier]
 			if equiv_qualifier then
-				do_placetype(prev_qualifier, equiv_qualifier .. " " .. bare_placetype_equiv)
+				do_placetype(prev_qualifier, equiv_qualifier .. " " .. bare_placetype)
 			end
-		end
+			-- Also see if the remaining placetype to the right of the rightmost split-off qualifier has a placetype
+			-- equiv, and if so, create placetypes from the qualifier + placetype equiv and qualifier equiv + placetype
+			-- equiv, inserting them along with any equivalents. This way, if we are given the placetype "former
+			-- alliance", and we have a mapping 'former' -> 'historical' in qualifier_equivs and a mapping 'alliance'
+			-- -> 'confederation' in placetype_equivs, we check for placetypes 'former confederation' and (most
+			-- importantly) 'historical confederation' and their equivalents (if any) in placetype_equivs. This allows
+			-- the user to specify placetypes using any combination of "former/ancient/historical/etc." and
+			-- "league/alliance/confederacy/confederation" and it will correctly map to the placetype 'historical
+			-- confederation' and in turn to the category [[:Category:LANG:Historical polities]]. Similarly, any
+			-- combination of "former/ancient/historical/etc." and "protectorate/autonomous territory/dependent
+			-- territory" will correctly map to placetype 'historical dependent territory' and in turn to the category
+			-- [[:Category:LANG:Historical political subdivisions]].
+			local bare_placetype_equiv_list = lookup_placetype_equiv(bare_placetype)
+			for _, bare_placetype_equiv in ipairs(bare_placetype_equiv_list) do
+				do_placetype(prev_qualifier, this_qualifier .. " " .. bare_placetype_equiv)
+				if equiv_qualifier then
+					do_placetype(prev_qualifier, equiv_qualifier .. " " .. bare_placetype_equiv)
+				end
+			end
 
-		-- Then see if the rightmost split-off qualifier is in qualifier_to_placetype_equivs
-		-- (e.g. 'fictional *' -> 'fictional location'). If so, add the mapping.
-		if export.qualifier_to_placetype_equivs[this_qualifier] then
-			table.insert(equivs, {qualifier=prev_qualifier, placetype=export.qualifier_to_placetype_equivs[this_qualifier]})
+			-- Then see if the rightmost split-off qualifier is in qualifier_to_placetype_equivs
+			-- (e.g. 'fictional *' -> 'fictional location'). If so, add the mapping.
+			if export.qualifier_to_placetype_equivs[this_qualifier] then
+				table.insert(equivs, {qualifier=prev_qualifier, placetype=export.qualifier_to_placetype_equivs[this_qualifier]})
+			end
 		end
 
 		-- Finally, join the rightmost split-off qualifier to the previously split-off qualifiers to form a
