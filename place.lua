@@ -5,6 +5,7 @@ local m_langs = require("Module:languages")
 local m_strutils = require("Module:string utilities")
 local m_debug_track = require("Module:debug/track")
 local data = require("Module:place/data")
+local put_module = "Module:parse utilities"
 
 local rmatch = mw.ustring.match
 local rfind = mw.ustring.find
@@ -74,6 +75,7 @@ end
 -- Fetches the synergy table from cat_data, which describes the format of
 -- glosses consisting of <placetype1> and <placetype2>.
 -- The parameters are tables in the format {placetype, placename, langcode}.
+-- FIXME: Remove synergy table support; it's barely used and not needed.
 local function get_synergy_table(place1, place2)
 	if not place2 then
 		return nil
@@ -119,6 +121,23 @@ end
 
 ---------- Argument parsing functions and utilities
 
+
+-- Split an argument on slash, but not slash occurring inside of HTML tags like </span> or <br />.
+local function split_on_slash(arg)
+	if arg:find("<") then
+		local put = require(put_module)
+		-- We implement this by parsing balanced segment runs involving <...>, and splitting on slash in the remainder.
+		-- The result is a list of lists, so we have to rejoin the inner lists by concatenating.
+		local segments = put.parse_balanced_segment_run(arg, "<", ">")
+		local slash_separated_groups = put.split_alternating_runs(segments, "/")
+		for i, group in ipairs(slash_separated_groups) do
+			slash_separated_groups[i] = table.concat(group)
+		end
+		return slash_separated_groups
+	else
+		return rsplit(arg, "/", true)
+	end
+end
 
 
 -- Given a place spec (see parse_place_specs()) and a holonym spec (the return value
@@ -177,7 +196,7 @@ local function handle_implications(place_specs, implication_data, should_clone)
 					place_specs[n] = spec
 				end
 				for i, holonym_to_add in ipairs(imp_data) do
-					local split_holonym = rsplit(holonym_to_add, "/", true)
+					local split_holonym = split_on_slash(holonym_to_add)
 					if #split_holonym ~= 2 then
 						error("Invalid holonym in implications: " .. holonym_to_add)
 					end
@@ -240,12 +259,12 @@ end
 -- the first element will be nil. Placetype aliases (e.g. "r" for "region") and
 -- placename aliases (e.g. "US" or "USA" for "United States") will be expanded.
 local function split_holonym(datum)
-	-- Don't use rsplit() in case of slash in holonym placename, e.g. Admaston/Bromley.
-	local holonym_placetype, holonym_placename = rmatch(datum, "^(.-)/(.*)$")
-	if holonym_placetype then
-		datum = {holonym_placetype, holonym_placename}
-	else
+	local holonym_parts = split_on_slash(datum)
+	if #holonym_parts == 1 then
 		datum = {nil, datum}
+	else
+		-- Rejoin further slashes in case of slash in holonym placename, e.g. Admaston/Bromley.
+		datum = {holonym_parts[1], table.concat(holonym_parts, "/", 2)}
 	end
 
 	-- Check for langcode before the holonym placename, but don't get tripped up by
@@ -274,6 +293,7 @@ local function split_holonym(datum)
 	else
 		datum[4] = {}
 	end
+
 	if datum[1] then
 		datum[1] = data.placetype_aliases[datum[1]] or datum[1]
 		datum[2] = data.get_equiv_placetype_prop(datum[1],
@@ -303,6 +323,9 @@ end
 -- this especially so that we correctly handle holonyms (e.g. 'c/Italy') without getting confused by </span> and
 -- similar HTML tags. The Wikilink exclusion is a bit less important but may still occur e.g. in links to
 -- [[Admaston/Bromley]]. This is based on munge_text() in [[Module:munge text]].
+--
+-- FIXME: I added this as part of correctly handling embedded HTML in holonyms and placetypes, but I ended up not
+-- using this in favor of [[Module:parse utilities]]. Delete if we likely won't need it in the future.
 local function process_excluding_html_and_links(text, fn)
 	local has_html = text:find("<")
 	local has_link = text:find("%[%[")
@@ -403,8 +426,8 @@ end
 
 
 -- Process numeric args (except for the language code in 1=). `numargs` is a list of the numeric arguments passed to
--- {{place}}. The return value is one or more "place specs", each one corresponding to a single semicolon-separated
--- combination of placetype + holonyms in the numeric arguments. A given place spec is a table
+-- {{place}} starting from 2=. The return value is one or more "place specs", each one corresponding to a single
+-- semicolon-separated combination of placetype + holonyms in the numeric arguments. A given place spec is a table
 -- {"foobar", PLACETYPES, HOLONYM_SPEC, HOLONYM_SPEC, ..., HOLONYM_PLACETYPE={HOLONYM_PLACENAME, ...}, ...}.
 -- For example, the call {{place|en|city|s/Pennsylvania|c/US}} will result in the return value
 -- {{"foobar", {"city"}, {"state", "Pennsylvania"}, {"country", "United States"}, state={"Pennsylvania"}, country={"United States"}}}.
@@ -462,22 +485,8 @@ local function parse_place_specs(numargs)
 					error("Old-style arguments cannot directly follow new-style place spec")
 				end
 				last_was_new_style = false
-				if arg:find("<") then
-					-- Embedded HTML in the argument.
-					local parts_excluding_html = rsplit(arg, "<[^<>]->")
-					for _, part in ipairs(parts_excluding_html) do
-						if part:find("/") then
-							error("Saw ")
-						end
-					end
-					FIXME
-					...
-				end
 				if holonym_index == 2 then
-					local entry_placetypes = rsplit(arg, "/", true)
-					for n, ept in ipairs(entry_placetypes) do
-						entry_placetypes[n] = data.placetype_aliases[ept] or ept
-					end
+					local entry_placetypes = split_on_slash(arg)
 					specs[desc_index] = {"foobar", entry_placetypes}
 					holonym_index = holonym_index + 1
 				else
@@ -526,12 +535,13 @@ local function parse_place_specs(numargs)
 	--   [[Special:WhatLinksHere/Template:tracking/place/holonym-placetype/country]]
 	for _, spec in ipairs(specs) do
 		for _, entry_placetype in ipairs(spec[2]) do
-			track("entry-placetype/" .. entry_placetype)
 			local splits = data.split_qualifiers_from_placetype(entry_placetype, "no canon qualifiers")
 			for _, split in ipairs(splits) do
 				local prev_qualifier, this_qualifier, bare_placetype = unpack(split)
 				track("entry-placetype/" .. bare_placetype)
-				track("entry-qualifier/" .. this_qualifier)
+				if this_qualifier then
+					track("entry-qualifier/" .. this_qualifier)
+				end
 			end
 		end
 		cY = 3
@@ -805,30 +815,30 @@ end
 -- Return the linked description of a placetype. This splits off any
 -- qualifiers and displays them separately.
 local function get_placetype_description(placetype)
-	local linked_version = get_linked_placetype(placetype)
-	if linked_version then
-		return linked_version
-	else
-		local splits = data.split_qualifiers_from_placetype(placetype)
-		local prefix = ""
-		for _, split in ipairs(splits) do
-			local prev_qualifier, this_qualifier, bare_placetype = unpack(split)
+	local splits = data.split_qualifiers_from_placetype(placetype)
+	local prefix = ""
+	for _, split in ipairs(splits) do
+		local prev_qualifier, this_qualifier, bare_placetype = split[1], split[2], split[3]
+		if this_qualifier then
 			prefix = (prev_qualifier and prev_qualifier .. " " .. this_qualifier or this_qualifier) .. " "
-			local linked_version = get_linked_placetype(bare_placetype)
-			if linked_version then
-				return prefix .. " " .. linked_version
-			end
-			placetype = bare_placetype
+		else
+			prefix = ""
 		end
-		return prefix .. placetype
+		local linked_version = get_linked_placetype(bare_placetype)
+		if linked_version then
+			return prefix .. linked_version
+		end
+		placetype = bare_placetype
 	end
+	return prefix .. placetype
 end
 
 
 -- Return the linked description of a qualifier (which may be multiple words).
 local function get_qualifier_description(qualifier)
 	local splits = data.split_qualifiers_from_placetype(qualifier .. " foo")
-	local prev_qualifier, this_qualifier, bare_placetype = unpack(splits[#splits])
+	local split = splits[#splits]
+	local prev_qualifier, this_qualifier, bare_placetype = split[1], split[2], split[3]
 	return prev_qualifier and prev_qualifier .. " " .. this_qualifier or this_qualifier
 end
 	
