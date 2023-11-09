@@ -9,6 +9,7 @@ local m_templateparser = require("Module:templateparser")
 local gloss_left = "<span class=\"gloss-brac\">(</span><span class=\"gloss-content\">"
 local gloss_right = "</span><span class=\"gloss-brac\">)</span>"
 
+
 -- From [[Module:senseno]]
 local function escape_pattern(text)
     return text:gsub("([^%w])", "%%%1")
@@ -58,29 +59,46 @@ local function copy_unnamed_args_except_code(to, from)
 	end
 end
 
-local function handle_definition_template(name, args)
+local function handle_definition_template(name, args, transclude_args)
 	if name == "place" then
 		return {
 			should_remove = true,
 			must_be_first = true,
-			generate = function (frame, language, source, source_lang, id, sort, no_gloss, gloss, formatted_to)
-				if formatted_to and formatted_to ~= "" then error("{{place}} cannot be used in conjunction with 'to'.") end
-				args[1] = language:getCode()
-				args["t"] = source
-				args["tid"] = id
-				args["sort"] = sort
-				if no_gloss then
-					args["def"] = ""
+			generate = function(data)
+				if data.formatted_to and data.formatted_to ~= "" then error("{{place}} cannot be used in conjunction with 'to'.") end
+				args[1] = data.lang:getCode()
+				if #transclude_args.t > 0 then
+					for i, t in ipairs(transclude_args.t) do
+						args["t" .. (i == 1 and "" or i)] = t
+					end
 				else
+					args["t"] = data.source
+					args["tid"] = data.id
+				end
+				args["sort"] = data.sort
+				if data.no_gloss then
+					args["def"] = "-"
+				else
+					local gloss = data.gloss
+					
 					if gloss ~= "" then
-						gloss = gloss:gsub("^[,;] *", "")
 						local first_free = 2
 						while args[first_free] ~= nil do first_free = first_free + 1 end
-						args[first_free] = gloss
+						if args[first_free - 1]:find("<<") then
+							-- new-style argument; concatenate to end of argument
+							if not gloss:find("^[,;.]") then
+								gloss = " " .. gloss
+							end
+							args[first_free - 1] = args[first_free - 1] .. gloss
+						else
+							-- old-style argument; add as separate argument
+							gloss = gloss:gsub("^[,;] *", "")
+							args[first_free] = gloss
+						end
 					end
 				end
-				return require("Module:place").format(args)
-			end
+				return require("Module:place").format(args, not transclude_args.include_place_extra_info)
+			end,
 		}
 	elseif name == "abbreviation of" or name == "abbr of" or name == "abbrev of"
 		or name == "acronym of"
@@ -90,19 +108,23 @@ local function handle_definition_template(name, args)
 		return {
 			should_remove = true,
 			must_be_first = true,
-			generate = function (frame, language, source, source_lang, id, sort, no_gloss, gloss, formatted_to)
+			generate = function(data)
 				local formatted_gloss = ""
-				if not no_gloss then
-					local formatted_link = require("Module:links").full_link({ term = args[2], alt = args[3], lang = source_lang, id = args["id"] })
+				if not data.no_gloss then
+					local formatted_link = require("Module:links").full_link {
+						term = args[2], alt = args[3], lang = data.source_lang, id = args["id"]
+					}
 					local after_link = ""
-					if gloss ~= "" then
+					if data.gloss ~= "" then
 						local separator = (args["nodot"] and "") or ((args["dot"] or ";") .. " ")
-						after_link = separator .. gloss
+						after_link = separator .. data.gloss
 					end
 					formatted_gloss = " " .. gloss_left .. formatted_link .. after_link .. gloss_right
 				end
-				return formatted_to .. require("Module:links").full_link({ term = source, lang = source_lang, id = id }) .. formatted_gloss
-			end
+				return data.formatted_to .. require("Module:links").full_link {
+					term = data.source, lang = data.source_lang, id = data.id
+				} .. formatted_gloss
+			end,
 		}
 	end
 	return nil
@@ -112,11 +134,16 @@ function export.show(frame)
    	local args = require "Module:parameters".process(frame:getParent().args, {
 		[1] = { required = true }, -- langcode of target language (the current entry's language)
 		[2] = { required = true }, -- source English term to transclude from
-		["id"] = {}, -- Despite technically being required, we're not declaring this as required in order to be able to provide a more helpful error message below.
+		["id"] = {}, -- can have multiple comma-separated ID's
 		["sort"] = {},
 		["nogloss"] = { default = false, type = "boolean" },
-		["lb"] = {},
+		["no_truncate_gloss"] = { type = "boolean" },
+		-- Normally, we ignore extra info (capital, largest city, modern name, etc.) when transcluding {{place}}
+		-- because the given terms are in English and will likely differ from language to language.
+		["include_place_extra_info"] = { type = "boolean" },
+		["lb"] = {}, -- can have multiple semicolon-separated labels
 		["to"] = { type = "boolean" },
+		["t"] = { list = true },
 	})
 
 	local language_code = args[1]
@@ -238,11 +265,11 @@ function export.show(frame)
 		local sortkeys = {}
 		local sortkey_most_frequent = nil
 		local sortkey_most_frequent_n = 0
-		local function process_template(name, args, is_at_the_start)
+		local function process_template(name, tempargs, is_at_the_start)
 			local supports_sortkey = false
 			local should_remove = true -- If set, removes the template from the line after processing.
 			local must_be_first = false -- If set, ensures that nothing (except for removed templates) preceeds this template.
-			local definition_template_handler = handle_definition_template(name, args)
+			local definition_template_handler = handle_definition_template(name, tempargs, args)
 			if definition_template_handler ~= nil then
 				if generator ~= nil then
 					error("Encountered {{[[Template:" .. name .. "|" .. name .. "]]}} even though a full definition template has already been processed.")
@@ -251,39 +278,38 @@ function export.show(frame)
 				must_be_first = definition_template_handler.must_be_first
 				generator = definition_template_handler.generate
 			elseif name == "categorize" or name == "cat" then
-				copy_unnamed_args_except_code(cats, args)
+				copy_unnamed_args_except_code(cats, tempargs)
 				supports_sortkey = true
 			elseif name == "catlangname" or name == "cln" then
-				copy_unnamed_args_except_code(cats, args)
+				copy_unnamed_args_except_code(cats, tempargs)
 				supports_sortkey = true
 			elseif name == "catlangcode" or name == "topics" or name == "top" or name == "C" or name == "c" then
-				copy_unnamed_args_except_code(cats_top, args)
+				copy_unnamed_args_except_code(cats_top, tempargs)
 				supports_sortkey = true
 			elseif name == "label" or name == "lbl" or name == "lb" then
 				if encountered_label then
 					error("Encountered multiple {{[[Template:label|label]]}} templates in the definition line.")
 				end
 				encountered_label = true
-				copy_unnamed_args_except_code(labels, args)
+				copy_unnamed_args_except_code(labels, tempargs)
 				supports_sortkey = true
 				must_be_first = true
-			elseif name == "defdate" or name == "defdt"
-				or name == "ref" or name == "refn" then
+			elseif name == "defdate" or name == "defdt" or name == "ref" or name == "refn" or name == "senseid" then
 				-- Remove and do nothing.
 			else
 				-- We are dealing with a template other than the above hard-coded ones.
 				-- If it contains the language code, we cannot handle it.
-				if args[1] == source_langcode then
+				if tempargs[1] == source_langcode then
 					error("Cannot handle template {{[[Template:" .. name .. "|" .. name .. "]]}}.")
 				end
-				supports_sortkey = (args["sort"] ~= args or args["sort1"] ~= nil) -- TODO: This doesn't handle the case where there is only sortn but not sort1/sort.
+				supports_sortkey = tempargs["sort"] or tempargs["sort1"] -- TODO: This doesn't handle the case where there is only sortn but not sort1/sort.
 				should_remove = false -- Leave the template in and just copy it, e.g. [[Template:,]], [[Template:gloss]], [[Template:qualifier]], [[Template:w]] etc.
 			end
 			if supports_sortkey then
-				if args["sort1"] ~= nil then
+				if tempargs["sort1"] ~= nil then
 					error("Cannot handle multiple sort keys.")
 				end
-				local sortkey = args["sort"]
+				local sortkey = tempargs["sort"]
 				if sortkey ~= nil then
 					if sortkeys[sortkey] == nil then
 						sortkeys[sortkey] = 1
@@ -305,7 +331,13 @@ function export.show(frame)
 		line = line:gsub("^%s+", ""):gsub("%s+$", "") -- Prune ends.
 
 		-- Tidy up the remaining definition (to be used as a gloss).
-		local gloss = line:gsub("^%u", string.lower):gsub("%.$", "")
+		local gloss = line
+		if not args.no_truncate_gloss then
+			-- Truncate full sentences after a period, as they won't be formatted well as a gloss. Require a space after
+			-- the period as a possible way of reducing false positives with abbreviations.
+			gloss = gloss:gsub("%s*%. .*$", "")
+		end
+		gloss = gloss:gsub("^%u", string.lower):gsub("%.$", "")
 		gloss = gloss:gsub("^{{1|([^}|]*)}}", "%1") -- Remove [[Template:1]]
 		local _, link_end, link_dest_head, link_dest_tail, link_face_head, link_face_tail = gloss:find("^%[%[(.)([^|%]]*)|(.)([^%]]*)%]%]") -- Remove [[foo|Foo]]
 		if link_end ~= nil and link_dest_tail == link_face_tail and link_face_head:lower() == link_dest_head then
@@ -327,9 +359,12 @@ function export.show(frame)
 		local formatted_to = to and "to " or ""
 		local formatted_definition
 		if generator ~= nil then
-			formatted_definition = generator(frame, language, source, source_lang, id, sort, no_gloss, gloss, formatted_to)
+			formatted_definition = generator {
+				frame = frame, lang = language, source = source, source_lang = source_lang, id = id,
+				sort = sort, no_gloss = no_gloss, gloss = gloss, formatted_to = formatted_to,
+			}
 		else
-			local formatted_link = require("Module:links").full_link({ term = source, lang = source_lang, id = id })
+			local formatted_link = require("Module:links").full_link { term = source, lang = source_lang, id = id }
 			local formatted_gloss = no_gloss and "" or (" " .. gloss_left .. gloss .. gloss_right)
 			formatted_definition = formatted_to .. formatted_link .. formatted_gloss
 		end
