@@ -5,6 +5,7 @@ local m_langs = require("Module:languages")
 local m_strutils = require("Module:string utilities")
 local m_debug_track = require("Module:debug/track")
 local data = require("Module:place/data")
+local table_module = "Module:table"
 local put_module = "Module:parse utilities"
 
 local rmatch = mw.ustring.match
@@ -24,20 +25,19 @@ local force_cat = false -- set to true for testing
 
 
 -- Return a wikilink link {{l|language|text}}
-local function link(text, language, id)
-	if not language or language == "" then
+local function link(text, langcode, id)
+	if not langcode then
 		return text
 	end
 
-	return m_links.full_link({term = text, lang = m_langs.getByCode(language), id = id}, nil, true)
+	return m_links.full_link({term = text, lang = m_langs.getByCode(langcode, true, "allow etym"), id = id}, nil, true)
 end
 
 
--- Return the category link for a category, given the language code and the
--- name of the category.
+-- Return the category link for a category, given the language code and the name of the category.
 local function catlink(lang, text, sort_key)
-	return require("Module:utilities").format_categories({lang:getCode() .. ":" .. data.remove_links_and_html(text)}, lang,
-		sort_key, nil, force_cat or data.force_cat)
+	return require("Module:utilities").format_categories({lang:getNonEtymologicalCode() .. ":" ..
+		data.remove_links_and_html(text)}, lang, sort_key, nil, force_cat or data.force_cat)
 end
 
 
@@ -69,28 +69,6 @@ end
 
 local function lc(text)
 	return mw.getContentLanguage():lc(text)
-end
-
-
--- Fetches the synergy table from cat_data, which describes the format of
--- glosses consisting of <placetype1> and <placetype2>.
--- The parameters are tables in the format {placetype, placename, langcode}.
--- FIXME: Remove synergy table support; it's barely used and not needed.
-local function get_synergy_table(place1, place2)
-	if not place2 then
-		return nil
-	end
-	local pt_data = data.get_equiv_placetype_prop(place2[1], function(pt) return cat_data[pt] end)
-	if not pt_data or not pt_data.synergy then
-		return nil
-	end
-
-	if not place1 then
-		place1 = {}
-	end
-
-	local synergy = data.get_equiv_placetype_prop(place1[1], function(pt) return pt_data.synergy[pt] end)
-	return synergy or pt_data.synergy["default"]
 end
 
 
@@ -689,33 +667,6 @@ local function get_holonym_description(place, needs_article, display_form)
 	return ps
 end
 
--- Return a special description generated from a synergy table fetched from
--- the data module and two place tables.
-local function get_synergic_description(synergy, place1, place2)
-	local desc = ""
-
-	if place1 then
-
-		if synergy.before then
-			desc = desc .. " " .. synergy.before
-		end
-
-		desc = desc .. " " .. get_holonym_description(place1, true, true)
-	end
-
-	if synergy.between then
-		desc = desc .. " " .. synergy.between
-	end
-
-	desc = desc .. " "  .. get_holonym_description(place2, true, true)
-
-	if synergy.after then
-		desc = desc .. " " .. synergy.after
-	end
-
-	return desc
-end
-
 
 -- Return the preposition that should be used between the placetypes placetype1 and
 -- placetype2 (i.e. "city >in< France.", "country >of< South America"
@@ -739,47 +690,35 @@ local function get_in_or_of(placetype1, placetype2)
 end
 
 
--- Return a string that contains the information of how a given place (place2)
--- should be formatted in the gloss, considering the entry’s place type, the
--- place preceding it in the template’s parameter (place1) and following it
--- (place3), and whether it is the first place (parameter 4 of the function).
-local function get_contextual_holonym_description(entry_placetype, place1, place2, place3, first)
+-- Return a string that contains the information of how `place` (a holonym spec; see parse_place_specs()) should be
+-- formatted in the gloss, considering the entry's place type (specifically, the last place type if there are more than
+-- one, excluding conjunctions and parenthetical items); the place preceding it in the template's parameters
+-- (`prev_place`; also a holonym spec), and whether it is the first place (`first`).
+local function get_contextual_holonym_description(entry_placetype, prev_place, place, first)
 	local desc = ""
 
-	local synergy = get_synergy_table(place2, place3)
+	-- NOTE: place[1] is the holonym placetype if the holonym was specified with a placetype, e.g. 'c/France', or nil
+	-- otherwise. If it's nil, the holonym is just raw text, e.g. 'in southern'. place[2] is the actual holonym or
+	-- raw text.
 
-	if synergy then
-		return ""
-	end
-
-	synergy = get_synergy_table(place1, place2)
-
+	-- First compute the initial delimiter.
 	if first then
-		if place2[1] then
+		if place[1] then
 			desc = desc .. get_in_or_of(entry_placetype, "")
-		elseif not place2[2]:find("^,") then
+		elseif not place[2]:find("^,") then
 			desc = desc .. " "
 		end
 	else
-		if not synergy then
-			if place1[1] and place2[2] ~= "and" and place2[2] ~= "in" then
-				desc = desc .. ","
-			end
+		if prev_place[1] and place[2] ~= "and" and place[2] ~= "in" then
+			desc = desc .. ","
+		end
 
-			if place2[1] or not place2[2]:find("^,") then
-				desc = desc .. " "
-			end
+		if place[1] or not place[2]:find("^,") then
+			desc = desc .. " "
 		end
 	end
 
-	if not synergy then
-		desc = desc .. get_holonym_description(place2, first, true)
-	else
-		desc = desc .. get_synergic_description(synergy, place1, place2)
-	end
-
-
-	return desc
+	return desc .. get_holonym_description(place, first, true)
 end
 
 
@@ -812,8 +751,7 @@ local function get_linked_placetype(placetype)
 end
 
 
--- Return the linked description of a placetype. This splits off any
--- qualifiers and displays them separately.
+-- Return the linked description of a placetype. This splits off any qualifiers and displays them separately.
 local function get_placetype_description(placetype)
 	local splits = data.split_qualifiers_from_placetype(placetype)
 	local prefix = ""
@@ -888,65 +826,103 @@ local function get_extra_info(tag, values, sentence, auto_plural, with_colon)
 		s = s .. "; " .. tag
 	end
 
-	return s .. " " .. require("Module:table").serialCommaJoin(linked_values)
+	return s .. " " .. require(table_module).serialCommaJoin(linked_values)
 end
 
 
--- Get the full description of an old-style place spec (with separate arguments for
--- the placetype and each holonym).
+-- Get the full description of an old-style place spec (with separate arguments for the placetype and each holonym).
 local function get_old_style_gloss(args, spec, with_article, sentence)
-	local gloss = ""
-
 	-- The placetype used to determine whether "in" or "of" follows is the last placetype if there are
 	-- multiple slash-separated placetypes, but ignoring "and", "or" and parenthesized notes
 	-- such as "(one of 254)".
 	local placetype_for_in_or_of = nil
-	for n2, placetype in ipairs(spec[2]) do
-		if placetype == "and" then
-			gloss = gloss .. " and "
-		elseif placetype == "or" then
-			gloss = gloss .. " or "
-		elseif placetype:find("^%(") then
-			-- Check for placetypes beginning with a paren (so that things
-			-- like "{{place|en|county/(one of 254)|s/Texas}}" work).
-			gloss = gloss .. " " .. placetype
+	local placetypes = spec[2]
+	local function is_and_or(item)
+		return item == "and" or item == "or"
+	end
+	local parts = {}
+	local function ins(txt)
+		table.insert(parts, txt)
+	end
+	local function ins_space()
+		if #parts > 0 then
+			ins(" ")
+		end
+	end
+
+	local and_or_pos
+	for i, placetype in ipairs(placetypes) do
+		if is_and_or(placetype) then
+			and_or_pos = i
+			-- no break here; we want the last in case of more than one
+		end
+	end
+
+	local remaining_placetype_index
+	if and_or_pos then
+		track("multiple-placetypes-with-and")
+		if and_or_pos == #placetypes then
+			error("Conjunctions 'and' and 'or' cannot occur last in a set of slash-separated placetypes: " ..
+				table.concat(placetypes, "/"))
+		end
+		local items = {}
+		for i = 1, and_or_pos + 1 do
+			local pt = placetypes[i]
+			if is_and_or(pt) then
+				-- skip
+			elseif i > 1 and pt:find("^%(") then
+				-- append placetypes beginning with a paren to previous item
+				items[#items] = items[#items] .. " " .. pt
+			else
+				placetype_for_in_or_of = pt
+				table.insert(items, get_placetype_description(pt))
+			end
+		end
+		ins(require(table_module).serialCommaJoin(items, {conj = placetypes[and_or_pos]}))
+		remaining_placetype_index = and_or_pos + 2
+	else
+		remaining_placetype_index = 1
+	end
+
+	if remaining_placetype_index < #placetypes then
+		track("multiple-placetypes-without-and")
+	end
+	for i = remaining_placetype_index, #placetypes do
+		local pt = placetypes[i]
+		-- Check for placetypes beginning with a paren (so that things like "{{place|en|county/(one of 254)|s/Texas}}"
+		-- work).
+		if is_and_or(pt) or pt:find("^%(") then
+			ins_space()
+			ins(pt)
 		else
-			placetype_for_in_or_of = placetype
+			placetype_for_in_or_of = pt
 			-- Join multiple placetypes with comma unless placetypes are already
 			-- joined with "and". We allow "the" to precede the second placetype
 			-- if they're not joined with "and" (so we get "city and county seat of ..."
 			-- but "city, the county seat of ...").
-			if n2 > 1 and spec[2][n2-1] ~= "and" and spec[2][n2-1] ~= "or" then
-				local article = get_placetype_article(placetype)
-				if article ~= "the" then
-					-- Temporary tracking. Formerly we didn't insert an article in this case.
-					track("multiple-placetypes-no-the")
-				end
-				gloss = gloss .. ", " .. article .. " "
+			if i > 1 then
+				ins(", ")
+				ins(get_placetype_article(pt))
+				ins(" ")
 			end
 
-			gloss = gloss .. get_placetype_description(placetype)
+			ins(get_placetype_description(pt))
 		end
 	end
 
 	if args["also"] then
-		gloss = gloss .. " and " .. args["also"]
+		ins_space()
+		ins("and ")
+		ins(args["also"])
 	end
 
-	local c = 3
-
-	while spec[c] do
-		local prev = nil
-
-		if c > 3 then
-			prev = spec[c-1]
-		else
-			prev = {}
-		end
-
-		gloss = gloss .. get_contextual_holonym_description(placetype_for_in_or_of, prev, spec[c], spec[c+1], (c == 3))
-		c = c + 1
+	for c = 3, #spec do
+		local first = c == 3
+		local prev = first and {} or spec[c - 1]
+		ins(get_contextual_holonym_description(placetype_for_in_or_of, prev, spec[c], first))
 	end
+
+	local gloss = table.concat(parts)
 
 	if with_article then
 		gloss = (args["a"] or get_placetype_article(spec[2][1], sentence)) .. " " .. gloss
@@ -985,12 +961,15 @@ local function get_new_style_gloss(args, spec, with_article)
 end
 
 
--- Return a string with the gloss (the description of the place itself, as
--- opposed to translations). If sentence == true, the gloss’s first letter is
--- made upper case and a period is added to the end.
-local function get_gloss(args, specs, sentence)
-	if args["def"] then
-		return args["def"]
+-- Return a string with the gloss (the description of the place itself, as opposed to translations). If `sentence` is
+-- given, the gloss's first letter is made upper case and a period is added to the end. If `drop_extra_info` is given,
+-- we don't include "extra info" (modern name, capital, largest city, etc.); this is used when transcluding into
+-- another language using {{transclude sense}}.
+local function get_gloss(args, specs, sentence, drop_extra_info)
+	if args.def == "-" then
+		return ""
+	elseif args.def then
+		return args.def
 	end
 
 	local glosses = {}
@@ -1007,35 +986,37 @@ local function get_gloss(args, specs, sentence)
 
 	local ret = {table.concat(glosses)}
 
-	table.insert(ret, get_extra_info("modern", args["modern"], false, false, false))
-	table.insert(ret, get_extra_info("official name", args["official"], sentence, "auto plural", "with colon"))
-	table.insert(ret, get_extra_info("capital", args["capital"], sentence, "auto plural", "with colon"))
-	table.insert(ret, get_extra_info("largest city", args["largest city"], sentence, "auto plural", "with colon"))
-	table.insert(ret, get_extra_info("capital and largest city", args["caplc"], sentence, false, "with colon"))
-	local placetype = specs[1][2][1]
-	if placetype == "county" or placetype == "counties" then
-		placetype = "county seat"
-	elseif placetype == "parish" or placetype == "parishes" then
-		placetype = "parish seat"
-	elseif placetype == "borough" or placetype == "boroughs" then
-		placetype = "borough seat"
-	else
-		placetype = "seat"
+	if not drop_extra_info then
+		table.insert(ret, get_extra_info("modern", args["modern"], false, false, false))
+		table.insert(ret, get_extra_info("official name", args["official"], sentence, "auto plural", "with colon"))
+		table.insert(ret, get_extra_info("capital", args["capital"], sentence, "auto plural", "with colon"))
+		table.insert(ret, get_extra_info("largest city", args["largest city"], sentence, "auto plural", "with colon"))
+		table.insert(ret, get_extra_info("capital and largest city", args["caplc"], sentence, false, "with colon"))
+		local placetype = specs[1][2][1]
+		if placetype == "county" or placetype == "counties" then
+			placetype = "county seat"
+		elseif placetype == "parish" or placetype == "parishes" then
+			placetype = "parish seat"
+		elseif placetype == "borough" or placetype == "boroughs" then
+			placetype = "borough seat"
+		else
+			placetype = "seat"
+		end
+		table.insert(ret, get_extra_info(placetype, args["seat"], sentence, "auto plural", "with colon"))
+		table.insert(ret, get_extra_info("shire town", args["shire town"], sentence, "auto plural", "with colon"))
 	end
-	table.insert(ret, get_extra_info(placetype, args["seat"], sentence, "auto plural", "with colon"))
-	table.insert(ret, get_extra_info("shire town", args["shire town"], sentence, "auto plural", "with colon"))
 
 	return table.concat(ret)
 end
 
 
 -- Return the definition line.
-local function get_def(args, specs)
+local function get_def(args, specs, drop_extra_info)
 	if #args["t"] > 0 then
-		local gloss = get_gloss(args, specs, false)
+		local gloss = get_gloss(args, specs, false, drop_extra_info)
 		return get_translations(args["t"], args["tid"]) .. (gloss == "" and "" or " (" .. gloss .. ")")
 	else
-		return get_gloss(args, specs, true)
+		return get_gloss(args, specs, true, drop_extra_info)
 	end
 end
 
@@ -1398,8 +1379,10 @@ end
 ----------- Main entry point
 
 
-
-function export.format(template_args)
+-- Meant to be callable from another module (specifically, [[Module:transclude/sense]]). `drop_extra_info` means to
+-- not include "extra info" (modern name, capital, largest city, etc.); this is used when transcluding into another
+-- language using {{transclude sense}}.
+function export.format(template_args, drop_extra_info)
 	local params = {
 		[1] = {required = true},
 		[2] = {required = true, list = true},
@@ -1410,7 +1393,7 @@ function export.format(template_args)
 
 		["a"] = {},
 		["also"] = {},
-		["def"] = {allow_empty = true},
+		["def"] = {},
 
 		["modern"] = {list = true},
 		["official"] = {list = true},
@@ -1420,12 +1403,16 @@ function export.format(template_args)
 		["seat"] = {list = true},
 		["shire town"] = {list = true},
 	}
-	
+
+	-- FIXME, once we've flushed out any uses, delete the following clause. That will cause def= to be ignored.
+	if template_args.def == "" then
+		error("Cannot currently pass def= as an empty parameter; use def=- if you want to suppress the definition display")
+	end
 	local args = require("Module:parameters").process(template_args, params)
-	local lang = require("Module:languages").getByCode(args[1]) or error("The language code \"" .. args[1] .. "\" is not valid.")
+	local lang = require("Module:languages").getByCode(args[1], 1, "allow etym")
 	local place_specs = parse_place_specs(args[2])
 
-	return get_def(args, place_specs) .. get_cats(lang, place_specs, args["cat"], args["sort"])
+	return get_def(args, place_specs, drop_extra_info) .. get_cats(lang, place_specs, args["cat"], args["sort"])
 end
 
 
