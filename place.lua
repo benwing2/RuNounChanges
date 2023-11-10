@@ -1031,9 +1031,6 @@ local function get_old_style_gloss(args, place_desc, with_article, ucfirst)
 		remaining_placetype_index = 1
 	end
 
-	if remaining_placetype_index < #placetypes then
-		track("multiple-placetypes-without-and")
-	end
 	for i = remaining_placetype_index, #placetypes do
 		local pt = placetypes[i]
 		-- Check for placetypes beginning with a paren (so that things like "{{place|en|county/(one of 254)|s/Texas}}"
@@ -1049,7 +1046,15 @@ local function get_old_style_gloss(args, place_desc, with_article, ucfirst)
 			-- but "city, the county seat of ...").
 			if i > 1 then
 				ins(", ")
-				ins(get_placetype_article(pt))
+				local article = get_placetype_article(pt)
+				if article ~= "the" and i > remaining_placetype_index then
+					-- Track cases where we are comma-separating multiple placetypes without the second one starting
+					-- with "the", as they may be mistakes. The occurrence of "the" is usually intentional, e.g.
+					-- {{place|zh|municipality/state capital|s/Rio de Janeiro|c/Brazil|t1=Rio de Janeiro}}
+					-- for the city of [[Rio de Janeiro]], which displays as "a municipality, the state capital of ...".
+					track("multiple-placetypes-without-and-or-the")
+				end
+				ins(article)
 				ins(" ")
 			end
 
@@ -1490,9 +1495,9 @@ local function get_cat(lang, place_desc, entry_placetype, sort_key)
 end
 
 
--- Iterate through each type of place given in parameter 2 (a list of place descriptions, as documented at top of file)
--- and return a string with the links to all categories that need to be added to the entry.
-local function get_cats(lang, place_descriptions, additional_cats, sort_key)
+-- Iterate through each type of place given `place_descriptions` (a list of place descriptions, as documented at the
+-- top of the file) and return a string with the links to all categories that need to be added to the entry.
+local function get_cats(lang, args, place_descriptions, additional_cats, sort_key)
 	local cats = {}
 
 	handle_implications(place_descriptions, data.cat_implications, true)
@@ -1531,6 +1536,7 @@ function export.format(template_args, drop_extra_info)
 		["tid"] = {list = true, allow_holes = true},
 		["cat"] = {list = true},
 		["sort"] = {},
+		["pagename"] = {}, -- for testing or documentation purposes
 
 		["a"] = {},
 		["also"] = {},
@@ -1554,7 +1560,7 @@ function export.format(template_args, drop_extra_info)
 	local place_descriptions = parse_place_descriptions(args[2])
 
 	return get_def(args, place_descriptions, drop_extra_info) ..
-		get_cats(lang, place_descriptions, args["cat"], args["sort"])
+		get_cats(lang, args, place_descriptions, args["cat"], args["sort"])
 end
 
 
