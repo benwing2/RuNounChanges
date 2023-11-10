@@ -349,7 +349,7 @@ function export.show(frame)
 			sort = sortkey_most_frequent
 		end
 
-		local formatted_senseid = frame:expandTemplate({ title = "senseid", args = { language_code, id } })
+		local formatted_senseid = require("Module:senseid").senseid(language, id, "span")
 		local formatted_categories =
 			((next(cats    ) == nil) and "" or frame:expandTemplate({ title = "cat", args = { language_code, unpack(cats    ) } })) ..
 			((next(cats_cln) == nil) and "" or frame:expandTemplate({ title = "cln", args = { language_code, unpack(cats_cln) } })) ..
