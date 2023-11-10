@@ -5,7 +5,7 @@ You must load this module using require(), not using mw.loadData().
 ]=]
 
 local m_table = require("Module:table")
-local topic_cat_utilities_module = "Module:User:Benwing2/category tree/topic cat/utilities"
+local topic_cat_utilities_module = "Module:category tree/topic cat/utilities"
 
 -----------------------------------------------------------------------------------
 --                              Placetype Tables                                 --
@@ -16,6 +16,7 @@ local topic_cat_utilities_module = "Module:User:Benwing2/category tree/topic cat
 -- [[Module:category tree/topic cat]]. A value of "w" is similar but links to Wikipedia.
 export.political_subdivisions = {
 	["administrative atolls"] = true,
+	["administrative regions"] = true,
 	["areas"] = true,
 	["arrondissements"] = true,
 	["atolls"] = true,
@@ -301,8 +302,8 @@ export.countries = {
 	["the Federated States of Micronesia"] = {parents = {"Micronesia"}, poldiv = {"states"}},
 	["Fiji"] = {parents = {"Melanesia"}, poldiv = {"divisions", "provinces"}, british_spelling = true},
 	["Finland"] = {parents = {"Europe"}, poldiv = {"regions", "municipalities"}, british_spelling = true},
-	["France"] = {parents = {"Europe"}, poldiv = {"regions", "departments", "collectivities", "communes", "municipalities",
-		"dependent territories", "territories"}, miscdiv = {"provinces"}, british_spelling = true},
+	["France"] = {parents = {"Europe"}, poldiv = {"administrative regions", "departments", "collectivities", "communes", "municipalities",
+		"dependent territories", "territories"}, miscdiv = {"provinces", "regions"}, british_spelling = true},
 	["Gabon"] = {parents = {"Africa"}, poldiv = {"provinces", "departments"}},
 	["the Gambia"] = {parents = {"Africa"}, poldiv = {"divisions", "districts"}, british_spelling = true, wp = "The Gambia"},
 	["Georgia"] = {parents = {"Europe", "Asia"}, poldiv = {"regions", "districts"}, keydesc = "the country of [[Georgia]], in [[Eurasia]]", british_spelling = true},
@@ -532,7 +533,7 @@ export.pseudo_countries = {
 	-- British Overseas Territory
 	["the Pitcairn Islands"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "Polynesia"}, british_spelling = true},
 	-- commonwealth of the United States
-	["Puerto Rico"] = {divtype = {"commonwealth", "overseas territory", "territory"}, parents = {"United States", "North America"}},
+	["Puerto Rico"] = {divtype = {"commonwealth", "overseas territory", "territory"}, parents = {"United States", "North America"}, poldiv = {"municipalities"}},
 	-- overseas collectivity of France
 	["Saint Barthélemy"] = {divtype = {"overseas collectivity", "collectivity"}, parents = {"France", "North America"}},
 	-- British Overseas Territory
@@ -717,7 +718,7 @@ export.finnish_regions = {
 	["the Åland Islands, Finland"] = {},
 }
 
-export.french_regions = {
+export.french_administrative_regions = {
 	["Auvergne-Rhône-Alpes"] = {},
 	["Bourgogne-Franche-Comté"] = {},
 	["Brittany"] = {},
@@ -2401,14 +2402,15 @@ export.polities = {
 		data = export.finnish_regions,
 	},
 
-	-- regions of France
+	-- administrative regions of France
 	{
 		bare_label_setter = subpolity_bare_label_setter("France"),
 		value_transformer = subpolity_value_transformer("France"),
 		place_cat_handler = default_place_cat_handler(),
-		default_divtype = "region",
+		-- Canonically these are 'administrative regions' but also categorize if identified as a 'region'.
+		default_divtype = {"administrative region", "region"},
 		british_spelling = true,
-		data = export.french_regions,
+		data = export.french_administrative_regions,
 	},
 
 	-- states of Germany
