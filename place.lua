@@ -74,9 +74,13 @@ About the data structures:
 * A ''full place description'' consists of all the information known about the place. It consists of one or more place
   descriptions, zero or more English glosses (for foreign-language toponyms) and any attached ''extra information''
   such as the capital, largest city, official name or modern name.
+* Inside a place description, there are two types of placetypes. The ''entry placetypes'' are the placetypes of the
+  place being described, while the ''holonym placetypes'' are the placetypes of the holonyms that the place being
+  described is located within. Currently, a given place can have multiple placetypes specified (e.g. [[Normandy]] is
+  specified as being simultaneously an administrative region, a historic province and a medieval kingdom) while a given
+  holonym can have only one placetype associated with it.
 
 A given place description is defined internally in a table of the following form:
-
 {
   placetypes = {"STRING", "STRING", ...},
   holonyms = {
@@ -88,7 +92,7 @@ A given place description is defined internally in a table of the following form
 	},
 	...
   },
-  order = { ORDER_STRUCTURE, see below } (only for new-style place descriptions),
+  order = { ORDER_ITEM, ORDER_ITEM, ... } (only for new-style place descriptions),
   joiner = "JOINER STRING" or nil,
   holonyms_by_placetype = {
 	HOLONYM_PLACETYPE = {"PLACENAME", "PLACENAME", ...},
@@ -97,9 +101,21 @@ A given place description is defined internally in a table of the following form
   },
 }
 
-Note that new-style place descs (those specified as a single argument using <<..>> to denote placetypes, placetype
+Note that new-style place descs (those specified as a single argument using <<...>> to denote placetypes, placetype
 qualifiers and holonyms) have an additional `order` field to properly capture the raw text surrounding the items
-denoted in double angle brackets; this is described more below.
+denoted in double angle brackets. The ORDER_ITEM items in the `order` field are objects of the following form:
+{
+  type = "STRING",
+  value = "STRING" or INDEX,
+}
+Here, the `type` field is one of "raw", "qualifier", "placetype" or "holonym":
+* "raw" is used for raw text surrounding <<...>> specs.
+* "qualifier" is used for <<...>> specs without slashes in them that consist only of qualifiers (e.g. the spec
+  <<former>> in '<<former>> French <<colony>>'). 
+* "placetype" is used for <<...>> specs without slashes that do not consist only of qualifiers.
+* "holonym" is used for holonyms, i.e. <<...>> specs with a slash in them.
+For all types but "holonym", the value is a string, specifying the text in question. For "holonym", the value is a
+numeric index into the `holonyms` field.
 
 It should be noted that placetypes and placenames occurring inside the holonyms structure are canonicalized, but
 placetypes inside the placetypes structure are as specified by the user. Stripping off of qualifiers and
@@ -477,16 +493,16 @@ local function parse_new_style_place_desc(text)
 	local retval = {holonyms = {}, order = {}}
 	for i, segment in ipairs(segments) do
 		if i % 2 == 1 then
-			table.insert(retval.order, {"raw", segment})
+			table.insert(retval.order, {type = "raw", value = segment})
 		elseif segment:find("/") then
 			local holonym, is_multi = split_holonym(segment)
 			if is_multi then
 				for j, single_holonym in ipairs(holonym) do
 					if j > 1 then
 						if j == #holonym then
-							table.insert(retval.order, {"raw", " and "})
+							table.insert(retval.order, {type = "raw", value = " and "})
 						else
-							table.insert(retval.order, {"raw", ", "})
+							table.insert(retval.order, {type = "raw", value = ", "})
 						end
 						-- Signal that "the" needs to be added if appropriate
 						if not single_holonym.modifiers then
@@ -495,12 +511,12 @@ local function parse_new_style_place_desc(text)
 						table.insert(single_holonym.modifiers, "_art_")
 					end
 					table.insert(retval.holonyms, single_holonym)
-					table.insert(retval.order, {"holonym", #retval})
+					table.insert(retval.order, {type = "holonym", value = #retval.holonyms})
 					key_holonym_into_place_desc(retval, single_holonym)
 				end
 			else
 				table.insert(retval.holonyms, holonym)
-				table.insert(retval.order, {"holonym", #retval})
+				table.insert(retval.order, {type = "holonym", value = #retval.holonyms})
 				key_holonym_into_place_desc(retval, holonym)
 			end
 		else
@@ -515,9 +531,9 @@ local function parse_new_style_place_desc(text)
 			end
 			table.insert(placetypes, {placetype = segment, only_qualifiers = only_qualifiers})
 			if only_qualifiers then
-				table.insert(retval.order, {"qualifier", segment})
+				table.insert(retval.order, {type = "qualifier", value = segment})
 			else
-				table.insert(retval.order, {"placetype", segment})
+				table.insert(retval.order, {type = "placetype", value = segment})
 			end
 		end
 	end
@@ -728,13 +744,13 @@ end
 -- equivalent of "{{l|en|O'Higgins}} region".
 -- ({placename = "in the southern", false, true) returns "in the southern" (without wikilinking because .placename
 -- and .langcode are both nil).
-local function get_holonym_description(place, needs_article, display_form)
-	local output = place.placename
-	local placetype = place.placetype
+local function get_holonym_description(holonym, needs_article, display_form)
+	local output = holonym.placename
+	local placetype = holonym.placetype
 	local affix_type_pt_data, affix_type, affix, no_affix_strings, pt_equiv_for_affix_type, already_seen_affix
 
-	if not needs_article and place.modifiers then
-		for _, mod in ipairs(place.modifiers) do
+	if not needs_article and holonym.modifiers then
+		for _, mod in ipairs(holonym.modifiers) do
 			if mod == "_art_" then
 				needs_article = true
 				break
@@ -749,11 +765,11 @@ local function get_holonym_description(place, needs_article, display_form)
 		if display_handler then
 			output = display_handler(placetype, output)
 		end
-		-- Implement adding an affix (prefix or suffix) based on the place type. The affix will be
-		-- added either if the place type's cat_data spec says so (by setting 'affix_type'), or if the
+		-- Implement adding an affix (prefix or suffix) based on the holonym's placetype. The affix will be
+		-- added either if the placetype's cat_data spec says so (by setting 'affix_type'), or if the
 		-- user explicitly called for this (e.g. by using 'r:suf/O'Higgins'). Before adding the affix,
-		-- however, we check to see if the affix is already present (e.g. the place type is "district"
-		-- and the place name is "Mission District"). If the place type explicitly calls for adding
+		-- however, we check to see if the affix is already present (e.g. the placetype is "district"
+		-- and the placename is "Mission District"). If the placetype explicitly calls for adding
 		-- an affix, it can override the affix to add (by setting 'affix') and/or override the strings
 		-- used for checking if the affix is already presen (by setting 'no_affix_strings').
 		affix_type_pt_data, pt_equiv_for_affix_type = data.get_equiv_placetype_prop(placetype,
@@ -764,8 +780,8 @@ local function get_holonym_description(place, needs_article, display_form)
 			affix = affix_type_pt_data.affix or pt_equiv_for_affix_type.placetype
 			no_affix_strings = affix_type_pt_data.no_affix_strings or lc(affix)
 		end
-		if place.modifiers then
-			for _, mod in ipairs(place.modifiers) do
+		if holonym.modifiers then
+			for _, mod in ipairs(holonym.modifiers) do
 				if (mod == "pref" or mod == "Pref" or mod == "suf" or mod == "Suf") and placetype then
 					affix_type = mod
 					affix = placetype
@@ -775,14 +791,14 @@ local function get_holonym_description(place, needs_article, display_form)
 			end
 		end
 		already_seen_affix = no_affix_strings and data.check_already_seen_string(output, no_affix_strings)
-		output = link(output, place.langcode or placetype and "en" or nil)
+		output = link(output, holonym.langcode or placetype and "en" or nil)
 		if (affix_type == "suf" or affix_type == "Suf") and not already_seen_affix then
 			output = output .. " " .. (affix_type == "Suf" and ucfirst_all(affix) or affix)
 		end
 	end
 
 	if needs_article then
-		local article = get_holonym_article(placetype, place.placename, output)
+		local article = get_holonym_article(placetype, holonym.placename, output)
 		if article then
 			output = article .. " " .. output
 		end
@@ -1075,7 +1091,7 @@ local function get_new_style_gloss(args, place_desc, with_article)
 	end
 
 	for _, order in ipairs(place_desc.order) do
-		local segment_type, segment = unpack(order)
+		local segment_type, segment = order.type, order.value
 		if segment_type == "raw" then
 			table.insert(parts, segment)
 		elseif segment_type == "placetype" then
@@ -1388,7 +1404,6 @@ local function cat_specs_to_category_wikicode(lang, cat_specs, entry_placetype, 
 	if holonym then
 		local holonym_placetype, holonym_placename = holonym.placetype, holonym.placename
 		holonym_placename = data.resolve_cat_aliases(holonym_placetype, holonym_placename)
-		holonym = {holonym_placetype, holonym_placename}
 
 		for _, cat_spec in ipairs(cat_specs) do
 			local cat
@@ -1398,7 +1413,11 @@ local function cat_specs_to_category_wikicode(lang, cat_specs, entry_placetype, 
 				cat = cat_spec
 			end
 
-			cat = cat:gsub("%+%+%+", get_holonym_description(holonym, true, false))
+			if cat:find("%+%+%+") then
+				local equiv_holonym = require(table_module).shallowcopy(holonym)
+				equiv_holonym.placetype = holonym_placetype
+				cat = cat:gsub("%+%+%+", get_holonym_description(equiv_holonym, true, false))
+			end
 			all_cats = all_cats .. catlink(lang, cat, sort_key)
 		end
 	else
