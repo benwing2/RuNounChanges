@@ -15,6 +15,238 @@ end
 export.force_cat = false -- set to true for testing
 
 
+------------------------------------------------------------------------------------------
+--                                     Basic utilities                                  --
+------------------------------------------------------------------------------------------
+
+
+function export.remove_links_and_html(text)
+	text = m_links.remove_links(text)
+	return text:gsub("<.->", "")
+end
+
+
+-- Return the singular version of a maybe-plural placetype, or nil if not plural.
+function export.maybe_singularize(placetype)
+	if not placetype then
+		return nil
+	end
+	local retval = m_strutils.singularize(placetype)
+	if retval == placetype then
+		return nil
+	end
+	return retval
+end
+
+
+-- Check for special pseudo-placetypes that should be ignored for categorization purposes.
+function export.placetype_is_ignorable(placetype)
+	return placetype == "and" or placetype == "or" or placetype:find("^%(")
+end
+
+
+function export.resolve_placetype_aliases(placetype)
+	return export.placetype_aliases[placetype] or placetype
+end
+
+
+-- Look up and resolve any category aliases that need to be applied to a holonym. For example,
+-- "country/Republic of China" maps to "Taiwan" for use in categories like "Counties in Taiwan".
+-- This also removes any links.
+function export.resolve_cat_aliases(holonym_placetype, holonym_placename)
+	local retval
+	local cat_aliases = export.get_equiv_placetype_prop(holonym_placetype, function(pt) return export.placename_cat_aliases[pt] end)
+	holonym_placename = export.remove_links_and_html(holonym_placename)
+	if cat_aliases then
+		retval = cat_aliases[holonym_placename]
+	end
+	return retval or holonym_placename
+end
+
+
+-- Given a placetype, split the placetype into one or more potential "splits", each consisting of
+-- a three-element list {PREV_QUALIFIERS, THIS_QUALIFIER, BARE_PLACETYPE}, i.e.
+-- (a) the concatenation of zero or more previously-recognized qualifiers on the left, normally
+--     canonicalized (if there are zero such qualifiers, the value will be nil);
+-- (b) a single recognized qualifier, normally canonicalized (if there is no qualifier, the value will be nil);
+-- (c) the "bare placetype" on the right.
+-- Splitting between the qualifier in (b) and the bare placetype in (c) happens at each space character, proceeding from
+-- left to right, and stops if a qualifier isn't recognized. All placetypes are canonicalized by checking for aliases
+-- in placetype_aliases[], but no other checks are made as to whether the bare placetype is recognized. Canonicalization
+-- of qualifiers does not happen if NO_CANON_QUALIFIERS is specified.
+--
+-- For example, given the placetype "small beachside unincorporated community", the return value will be
+-- {
+--   {nil, nil, "small beachside unincorporated community"},
+--   {nil, "small", "beachside unincorporated community"},
+--   {"small", "[[beachfront]]", "unincorporated community"},
+--   {"small [[beachfront]]", "[[unincorporated]]", "community"},
+-- }
+-- Here, "beachside" is canonicalized to "[[beachfront]]" and "unincorporated" is canonicalized
+-- to "[[unincorporated]]", in both cases according to the entry in placetype_qualifiers.
+--
+-- On the other hand, if given "small former haunted community", the return value will be
+-- {
+--   {nil, nil, "small former haunted community"},
+--   {nil, "small", "former haunted community"},
+--   {"small", "former", "haunted community"},
+-- }
+-- because "small" and "former" but not "haunted" are recognized as qualifiers.
+--
+-- Finally, if given "former adr", the return value will be
+-- {
+--   {nil, nil, "former adr"},
+--   {nil, "former", "administrative region"},
+-- }
+-- because "adr" is a recognized placetype alias for "administrative region".
+function export.split_qualifiers_from_placetype(placetype, no_canon_qualifiers)
+	local splits = {{nil, nil, export.resolve_placetype_aliases(placetype)}}
+	local prev_qualifier = nil
+	while true do
+		local qualifier, bare_placetype = placetype:match("^(.-) (.*)$")
+		if qualifier then
+			local canon = export.placetype_qualifiers[qualifier]
+			if not canon then
+				break
+			end
+			local new_qualifier = qualifier
+			if not no_canon_qualifiers and canon ~= true then
+				new_qualifier = canon
+			end
+			table.insert(splits, {prev_qualifier, new_qualifier, export.resolve_placetype_aliases(bare_placetype)})
+			prev_qualifier = prev_qualifier and prev_qualifier .. " " .. new_qualifier or new_qualifier
+			placetype = bare_placetype
+		else
+			break
+		end
+	end
+	return splits
+end
+
+
+-- Given a placetype (which may be pluralized), return an ordered list of equivalent placetypes to look under to find
+-- the placetype's properties (such as the category or categories to be inserted). The return value is actually an
+-- ordered list of objects of the form {qualifier=QUALIFIER, placetype=EQUIV_PLACETYPE} where EQUIV_PLACETYPE is a
+-- placetype whose properties to look up, derived from the passed-in placetype or from a contiguous subsequence of the
+-- words in the passed-in placetype (always including the rightmost word in the placetype, i.e. we successively chop
+-- off qualifier words from the left and use the remainder to find equivalent placetypes). QUALIFIER is the remaining
+-- words not part of the subsequence used to find EQUIV_PLACETYPE; or nil if all words in the passed-in placetype were
+-- used to find EQUIV_PLACETYPE. (FIXME: This qualifier is not currently used anywhere.) The placetype passed in always
+-- forms the first entry.
+function export.get_placetype_equivs(placetype)
+	local equivs = {}
+
+	-- Look up the equivalent placetype for `placetype` in `placetype_equivs`. If `placetype` is plural, also look up
+	-- the equivalent for the singularized version. Return any equivalent placetype(s) found.
+	local function lookup_placetype_equiv(placetype)
+		local retval = {}
+		-- Check for a mapping in placetype_equivs; add if present.
+		if export.placetype_equivs[placetype] then
+			table.insert(retval, export.placetype_equivs[placetype])
+		end
+		local sg_placetype = export.maybe_singularize(placetype)
+		-- Check for a mapping in placetype_equivs for the singularized equivalent.
+		if sg_placetype and export.placetype_equivs[sg_placetype] then
+			table.insert(retval, export.placetype_equivs[sg_placetype])
+		end
+		return retval
+	end
+
+	-- Insert `placetype` into `equivs`, along with any equivalent placetype listed in `placetype_equivs`. `qualifier`
+	-- is the preceding qualifier to insert into `equivs` along with the placetype (see comment at top of function). We
+	-- also check to see if `placetype` is plural, and if so, insert the singularized version along with its equivalent
+	-- (if any) in `placetype_equivs`.
+	local function do_placetype(qualifier, placetype)
+		-- FIXME! The qualifier (first arg) is inserted into the table, but isn't
+		-- currently used anywhere.
+		local function insert(pt)
+			table.insert(equivs, {qualifier=qualifier, placetype=pt})
+		end
+
+		-- First do the placetype itself.
+		insert(placetype)
+		-- Then check for a singularized equivalent.
+		local sg_placetype = export.maybe_singularize(placetype)
+		if sg_placetype then
+			insert(sg_placetype)
+		end
+		-- Then check for a mapping in placetype_equivs, and a mapping for the singularized equivalent; add if present.
+		local placetype_equiv_list = lookup_placetype_equiv(placetype)
+		for _, placetype_equiv in ipairs(placetype_equiv_list) do
+			insert(placetype_equiv)
+		end
+	end
+
+	-- Successively split off recognized qualifiers and loop over successively greater sets of qualifiers from the left.
+	local splits = export.split_qualifiers_from_placetype(placetype)
+
+	for _, split in ipairs(splits) do
+		local prev_qualifier, this_qualifier, bare_placetype = unpack(split)
+		if this_qualifier then
+			-- First see if the rightmost split-off qualifier is in qualifier_equivs (e.g. 'former' -> 'historical').
+			-- If so, create a placetype from the qualifier mapping + the following bare_placetype; then, add
+			-- that placetype, and any mapping for the placetype in placetype_equivs.
+			local equiv_qualifier = export.qualifier_equivs[this_qualifier]
+			if equiv_qualifier then
+				do_placetype(prev_qualifier, equiv_qualifier .. " " .. bare_placetype)
+			end
+			-- Also see if the remaining placetype to the right of the rightmost split-off qualifier has a placetype
+			-- equiv, and if so, create placetypes from the qualifier + placetype equiv and qualifier equiv + placetype
+			-- equiv, inserting them along with any equivalents. This way, if we are given the placetype "former
+			-- alliance", and we have a mapping 'former' -> 'historical' in qualifier_equivs and a mapping 'alliance'
+			-- -> 'confederation' in placetype_equivs, we check for placetypes 'former confederation' and (most
+			-- importantly) 'historical confederation' and their equivalents (if any) in placetype_equivs. This allows
+			-- the user to specify placetypes using any combination of "former/ancient/historical/etc." and
+			-- "league/alliance/confederacy/confederation" and it will correctly map to the placetype 'historical
+			-- confederation' and in turn to the category [[:Category:LANG:Historical polities]]. Similarly, any
+			-- combination of "former/ancient/historical/etc." and "protectorate/autonomous territory/dependent
+			-- territory" will correctly map to placetype 'historical dependent territory' and in turn to the category
+			-- [[:Category:LANG:Historical political subdivisions]].
+			local bare_placetype_equiv_list = lookup_placetype_equiv(bare_placetype)
+			for _, bare_placetype_equiv in ipairs(bare_placetype_equiv_list) do
+				do_placetype(prev_qualifier, this_qualifier .. " " .. bare_placetype_equiv)
+				if equiv_qualifier then
+					do_placetype(prev_qualifier, equiv_qualifier .. " " .. bare_placetype_equiv)
+				end
+			end
+
+			-- Then see if the rightmost split-off qualifier is in qualifier_to_placetype_equivs
+			-- (e.g. 'fictional *' -> 'fictional location'). If so, add the mapping.
+			if export.qualifier_to_placetype_equivs[this_qualifier] then
+				table.insert(equivs, {qualifier=prev_qualifier, placetype=export.qualifier_to_placetype_equivs[this_qualifier]})
+			end
+		end
+
+		-- Finally, join the rightmost split-off qualifier to the previously split-off qualifiers to form a
+		-- combined qualifier, and add it along with bare_placetype and any mapping in placetype_equivs for
+		-- bare_placetype.
+		local qualifier = prev_qualifier and prev_qualifier .. " " .. this_qualifier or this_qualifier
+		do_placetype(qualifier, bare_placetype)
+	end
+	return equivs
+end
+
+
+function export.get_equiv_placetype_prop(placetype, fun)
+	if not placetype then
+		return fun(nil), nil
+	end
+	local equivs = export.get_placetype_equivs(placetype)
+	for _, equiv in ipairs(equivs) do
+		local retval = fun(equiv.placetype)
+		if retval then
+			return retval, equiv
+		end
+	end
+	return nil, nil
+end
+
+
+------------------------------------------------------------------------------------------
+--                              Placename and placetype data                            --
+------------------------------------------------------------------------------------------
+
+
 -- This is a map from aliases to their canonical forms. Any placetypes appearing
 -- as keys here will be mapped to their canonical forms in all respects, including
 -- the display form. Contrast 'placetype_equivs', which apply to categorization and
@@ -239,6 +471,7 @@ export.placetype_links = {
 	["administrative village"] = "w",
 	["alliance"] = true,
 	["archipelago"] = true,
+	["arm"] = true,
 	["associated province"] = "[[associated]] [[province]]",
 	["atoll"] = true,
 	["autonomous city"] = "w",
@@ -727,6 +960,7 @@ export.placetype_equivs = {
 	["resort city"] = "city",
 	["royal burgh"] = "borough",
 	["royal capital"] = "capital city",
+	["seat"] = "administrative centre",
 	["settlement"] = "village", -- not necessarily true, but usually is the case
 	["sheading"] = "district",
 	["shire"] = "county",
@@ -1025,13 +1259,19 @@ export.cat_implications = {
 }
 
 
+local function call_place_cat_handler(group, placetypes, placename)
+	local handler = group.place_cat_handler or m_shared.default_place_cat_handler
+	return handler(group, placetypes, placename)
+end
+
+
 export.cat_implication_handlers = {}
 
 table.insert(export.cat_implication_handlers,
 	function(placetype, holonym_placetype, holonym_placename)
 		for _, group in ipairs(m_shared.polities) do
 			-- Find the appropriate key format for the holonym (e.g. "pref/Osaka" -> "Osaka Prefecture").
-			local key = group.place_cat_handler(group, placetype, holonym_placetype, holonym_placename)
+			local key, _ = call_place_cat_handler(group, holonym_placetype, holonym_placename)
 			if key then
 				local value = group.data[key]
 				if value and value.containing_polity and value.containing_polity_type then
@@ -1044,225 +1284,11 @@ table.insert(export.cat_implication_handlers,
 	end
 )
 
------------ Basic utilities -----------
 
+------------------------------------------------------------------------------------------
+--                              Category and display handlers                           --
+------------------------------------------------------------------------------------------
 
-function export.remove_links_and_html(text)
-	text = m_links.remove_links(text)
-	return text:gsub("<.->", "")
-end
-
-
--- Return the singular version of a maybe-plural placetype, or nil if not plural.
-function export.maybe_singularize(placetype)
-	if not placetype then
-		return nil
-	end
-	local retval = m_strutils.singularize(placetype)
-	if retval == placetype then
-		return nil
-	end
-	return retval
-end
-
-
-function export.resolve_placetype_aliases(placetype)
-	return export.placetype_aliases[placetype] or placetype
-end
-
-
--- Look up and resolve any category aliases that need to be applied to a holonym. For example,
--- "country/Republic of China" maps to "Taiwan" for use in categories like "Counties in Taiwan".
--- This also removes any links.
-function export.resolve_cat_aliases(holonym_placetype, holonym_placename)
-	local retval
-	local cat_aliases = export.get_equiv_placetype_prop(holonym_placetype, function(pt) return export.placename_cat_aliases[pt] end)
-	holonym_placename = export.remove_links_and_html(holonym_placename)
-	if cat_aliases then
-		retval = cat_aliases[holonym_placename]
-	end
-	return retval or holonym_placename
-end
-
-
--- Given a placetype, split the placetype into one or more potential "splits", each consisting of
--- a three-element list {PREV_QUALIFIERS, THIS_QUALIFIER, BARE_PLACETYPE}, i.e.
--- (a) the concatenation of zero or more previously-recognized qualifiers on the left, normally
---     canonicalized (if there are zero such qualifiers, the value will be nil);
--- (b) a single recognized qualifier, normally canonicalized (if there is no qualifier, the value will be nil);
--- (c) the "bare placetype" on the right.
--- Splitting between the qualifier in (b) and the bare placetype in (c) happens at each space character, proceeding from
--- left to right, and stops if a qualifier isn't recognized. All placetypes are canonicalized by checking for aliases
--- in placetype_aliases[], but no other checks are made as to whether the bare placetype is recognized. Canonicalization
--- of qualifiers does not happen if NO_CANON_QUALIFIERS is specified.
---
--- For example, given the placetype "small beachside unincorporated community", the return value will be
--- {
---   {nil, nil, "small beachside unincorporated community"},
---   {nil, "small", "beachside unincorporated community"},
---   {"small", "[[beachfront]]", "unincorporated community"},
---   {"small [[beachfront]]", "[[unincorporated]]", "community"},
--- }
--- Here, "beachside" is canonicalized to "[[beachfront]]" and "unincorporated" is canonicalized
--- to "[[unincorporated]]", in both cases according to the entry in placetype_qualifiers.
---
--- On the other hand, if given "small former haunted community", the return value will be
--- {
---   {nil, nil, "small former haunted community"},
---   {nil, "small", "former haunted community"},
---   {"small", "former", "haunted community"},
--- }
--- because "small" and "former" but not "haunted" are recognized as qualifiers.
---
--- Finally, if given "former adr", the return value will be
--- {
---   {nil, nil, "former adr"},
---   {nil, "former", "administrative region"},
--- }
--- because "adr" is a recognized placetype alias for "administrative region".
-function export.split_qualifiers_from_placetype(placetype, no_canon_qualifiers)
-	local splits = {{nil, nil, export.resolve_placetype_aliases(placetype)}}
-	local prev_qualifier = nil
-	while true do
-		local qualifier, bare_placetype = placetype:match("^(.-) (.*)$")
-		if qualifier then
-			local canon = export.placetype_qualifiers[qualifier]
-			if not canon then
-				break
-			end
-			local new_qualifier = qualifier
-			if not no_canon_qualifiers and canon ~= true then
-				new_qualifier = canon
-			end
-			table.insert(splits, {prev_qualifier, new_qualifier, export.resolve_placetype_aliases(bare_placetype)})
-			prev_qualifier = prev_qualifier and prev_qualifier .. " " .. new_qualifier or new_qualifier
-			placetype = bare_placetype
-		else
-			break
-		end
-	end
-	return splits
-end
-
-
--- Given a placetype (which may be pluralized), return an ordered list of equivalent placetypes to look under to find
--- the placetype's properties (such as the category or categories to be inserted). The return value is actually an
--- ordered list of objects of the form {qualifier=QUALIFIER, placetype=EQUIV_PLACETYPE} where EQUIV_PLACETYPE is a
--- placetype whose properties to look up, derived from the passed-in placetype or from a contiguous subsequence of the
--- words in the passed-in placetype (always including the rightmost word in the placetype, i.e. we successively chop
--- off qualifier words from the left and use the remainder to find equivalent placetypes). QUALIFIER is the remaining
--- words not part of the subsequence used to find EQUIV_PLACETYPE; or nil if all words in the passed-in placetype were
--- used to find EQUIV_PLACETYPE. (FIXME: This qualifier is not currently used anywhere.) The placetype passed in always
--- forms the first entry.
-function export.get_placetype_equivs(placetype)
-	local equivs = {}
-
-	-- Look up the equivalent placetype for `placetype` in `placetype_equivs`. If `placetype` is plural, also look up
-	-- the equivalent for the singularized version. Return any equivalent placetype(s) found.
-	local function lookup_placetype_equiv(placetype)
-		local retval = {}
-		-- Check for a mapping in placetype_equivs; add if present.
-		if export.placetype_equivs[placetype] then
-			table.insert(retval, export.placetype_equivs[placetype])
-		end
-		local sg_placetype = export.maybe_singularize(placetype)
-		-- Check for a mapping in placetype_equivs for the singularized equivalent.
-		if sg_placetype and export.placetype_equivs[sg_placetype] then
-			table.insert(retval, export.placetype_equivs[sg_placetype])
-		end
-		return retval
-	end
-
-	-- Insert `placetype` into `equivs`, along with any equivalent placetype listed in `placetype_equivs`. `qualifier`
-	-- is the preceding qualifier to insert into `equivs` along with the placetype (see comment at top of function). We
-	-- also check to see if `placetype` is plural, and if so, insert the singularized version along with its equivalent
-	-- (if any) in `placetype_equivs`.
-	local function do_placetype(qualifier, placetype)
-		-- FIXME! The qualifier (first arg) is inserted into the table, but isn't
-		-- currently used anywhere.
-		local function insert(pt)
-			table.insert(equivs, {qualifier=qualifier, placetype=pt})
-		end
-
-		-- First do the placetype itself.
-		insert(placetype)
-		-- Then check for a singularized equivalent.
-		local sg_placetype = export.maybe_singularize(placetype)
-		if sg_placetype then
-			insert(sg_placetype)
-		end
-		-- Then check for a mapping in placetype_equivs, and a mapping for the singularized equivalent; add if present.
-		local placetype_equiv_list = lookup_placetype_equiv(placetype)
-		for _, placetype_equiv in ipairs(placetype_equiv_list) do
-			insert(placetype_equiv)
-		end
-	end
-
-	-- Successively split off recognized qualifiers and loop over successively greater sets of qualifiers from the left.
-	local splits = export.split_qualifiers_from_placetype(placetype)
-
-	for _, split in ipairs(splits) do
-		local prev_qualifier, this_qualifier, bare_placetype = unpack(split)
-		if this_qualifier then
-			-- First see if the rightmost split-off qualifier is in qualifier_equivs (e.g. 'former' -> 'historical').
-			-- If so, create a placetype from the qualifier mapping + the following bare_placetype; then, add
-			-- that placetype, and any mapping for the placetype in placetype_equivs.
-			local equiv_qualifier = export.qualifier_equivs[this_qualifier]
-			if equiv_qualifier then
-				do_placetype(prev_qualifier, equiv_qualifier .. " " .. bare_placetype)
-			end
-			-- Also see if the remaining placetype to the right of the rightmost split-off qualifier has a placetype
-			-- equiv, and if so, create placetypes from the qualifier + placetype equiv and qualifier equiv + placetype
-			-- equiv, inserting them along with any equivalents. This way, if we are given the placetype "former
-			-- alliance", and we have a mapping 'former' -> 'historical' in qualifier_equivs and a mapping 'alliance'
-			-- -> 'confederation' in placetype_equivs, we check for placetypes 'former confederation' and (most
-			-- importantly) 'historical confederation' and their equivalents (if any) in placetype_equivs. This allows
-			-- the user to specify placetypes using any combination of "former/ancient/historical/etc." and
-			-- "league/alliance/confederacy/confederation" and it will correctly map to the placetype 'historical
-			-- confederation' and in turn to the category [[:Category:LANG:Historical polities]]. Similarly, any
-			-- combination of "former/ancient/historical/etc." and "protectorate/autonomous territory/dependent
-			-- territory" will correctly map to placetype 'historical dependent territory' and in turn to the category
-			-- [[:Category:LANG:Historical political subdivisions]].
-			local bare_placetype_equiv_list = lookup_placetype_equiv(bare_placetype)
-			for _, bare_placetype_equiv in ipairs(bare_placetype_equiv_list) do
-				do_placetype(prev_qualifier, this_qualifier .. " " .. bare_placetype_equiv)
-				if equiv_qualifier then
-					do_placetype(prev_qualifier, equiv_qualifier .. " " .. bare_placetype_equiv)
-				end
-			end
-
-			-- Then see if the rightmost split-off qualifier is in qualifier_to_placetype_equivs
-			-- (e.g. 'fictional *' -> 'fictional location'). If so, add the mapping.
-			if export.qualifier_to_placetype_equivs[this_qualifier] then
-				table.insert(equivs, {qualifier=prev_qualifier, placetype=export.qualifier_to_placetype_equivs[this_qualifier]})
-			end
-		end
-
-		-- Finally, join the rightmost split-off qualifier to the previously split-off qualifiers to form a
-		-- combined qualifier, and add it along with bare_placetype and any mapping in placetype_equivs for
-		-- bare_placetype.
-		local qualifier = prev_qualifier and prev_qualifier .. " " .. this_qualifier or this_qualifier
-		do_placetype(qualifier, bare_placetype)
-	end
-	return equivs
-end
-
-
-function export.get_equiv_placetype_prop(placetype, fun)
-	if not placetype then
-		return fun(nil), nil
-	end
-	local equivs = export.get_placetype_equivs(placetype)
-	for _, equiv in ipairs(equivs) do
-		local retval = fun(equiv.placetype)
-		if retval then
-			return retval, equiv
-		end
-	end
-	return nil, nil
-end
-
-------------------------------------------------------
 
 local function city_type_cat_handler(placetype, holonym_placetype, holonym_placename, allow_if_holonym_is_city,
 		no_containing_polity, extracats)
@@ -1270,7 +1296,7 @@ local function city_type_cat_handler(placetype, holonym_placetype, holonym_place
 	if m_shared.generic_place_types[plural_placetype] then
 		for _, group in ipairs(m_shared.polities) do
 			-- Find the appropriate key format for the holonym (e.g. "pref/Osaka" -> "Osaka Prefecture").
-			local key = group.place_cat_handler(group, placetype, holonym_placetype, holonym_placename)
+			local key, _ = call_place_cat_handler(group, holonym_placetype, holonym_placename)
 			if key then
 				local value = group.data[key]
 				if value then
@@ -1343,7 +1369,7 @@ local function capital_city_cat_handler(holonym_placetype, holonym_placename, pl
 			local inserted_specific_variant_cat = false
 			for _, group in ipairs(m_shared.polities) do
 				-- Find the appropriate key format for the holonym (e.g. "pref/Osaka" -> "Osaka Prefecture").
-				local key = group.place_cat_handler(group, "capital city", holonym_placetype, holonym_placename)
+				local key, _ = call_place_cat_handler(group, holonym_placetype, holonym_placename)
 				if key then
 					local value = group.data[key]
 					if value then
@@ -1376,7 +1402,7 @@ end
 local function generic_cat_handler(holonym_placetype, holonym_placename, place_desc)
 	for _, group in ipairs(m_shared.polities) do
 		-- Find the appropriate key format for the holonym (e.g. "pref/Osaka" -> "Osaka Prefecture").
-		local key = group.place_cat_handler(group, "*", holonym_placetype, holonym_placename)
+		local key, _ = call_place_cat_handler(group, holonym_placetype, holonym_placename)
 		if key then
 			local value = group.data[key]
 			if value then
@@ -1479,6 +1505,76 @@ local function generic_cat_handler(holonym_placetype, holonym_placename, place_d
 end
 
 
+-- This is used to add pages to "bare" categories like 'en:Georgia, USA' for [[Georgia]] and any foreign-language terms
+-- that are translations of the state of Georgia. We look at the page title (or its overridden value in pagename=),
+-- as well as the glosses in t=/t2= etc. and the modern names in modern=. We need to pay attention to the entry
+-- placetypes specified so we don't overcategorize; e.g. the US state of Georgia is [[Джорджия]] in Russian but the
+-- country of Georgia is [[Грузия]], and if we just looked for matching names, we'd get both Russian terms categorized
+-- into both 'ru:Georgia, USA' and 'ru:Georgia'.
+function export.get_bare_categories(args, place_descs)
+	local bare_cats = {}
+
+	local possible_placetypes = {}
+	for _, place_desc in ipairs(place_descs) do
+		for _, placetype in ipairs(place_desc.placetypes) do
+			if not export.placetype_is_ignorable(placetype) then
+				local equivs = export.get_placetype_equivs(placetype)
+				for _, equiv in ipairs(equivs) do
+					table.insert(possible_placetypes, equiv.placetype)
+				end
+			end
+		end
+	end
+
+	local city_in_placetypes = false
+	for _, placetype in ipairs(possible_placetypes) do
+		-- Check to see whether any variant of 'city' is in placetypes, e.g. 'capital city', 'subprovincial city',
+		-- 'metropolitan city', 'prefecture-level city', etc.
+		if placetype == "city" or placetype:find(" city$") then
+			city_in_placetypes = true
+			break
+		end
+	end
+
+	local function check_term(term)
+		-- Treat Wikipedia links like local ones.
+		term = term:gsub("%[%[w:", "[["):gsub("%[%[wikipedia:", "[[")
+		term = export.remove_links_and_html(term)
+		term = term:gsub("^the ", "")
+		for _, group in ipairs(m_shared.polities) do
+			-- Try to find the term among the known polities.
+			local cat, bare_cat = call_place_cat_handler(group, possible_placetypes, term)
+			if bare_cat then
+				table.insert(bare_cats, bare_cat)
+			end
+		end
+
+		if city_in_placetypes then
+			for _, city_group in ipairs(m_shared.cities) do
+				local value = city_group.data[term]
+				if value then
+					table.insert(bare_cats, value.alias_of or term)
+					-- No point in looking further as we don't (currently) have categories for two distinct cities with
+					-- the same name.
+					break
+				end
+			end
+		end
+	end
+
+	-- FIXME: Should we only do the following if the language is English (requires that the lang is passed in)?
+	check_term(args.pagename or mw.title.getCurrentTitle().subpageText)
+	for _, t in ipairs(args.t) do
+		check_term(t)
+	end
+	for _, modern in ipairs(args.modern) do
+		check_term(modern)
+	end
+	
+	return bare_cats
+end
+
+
 -- Inner data returned by cat handler for districts, neighborhoods, etc.
 local function district_inner_data(value, itself_dest)
 	local retval = {
@@ -1528,7 +1624,7 @@ end
 local function district_cat_handler(placetype, holonym_placetype, holonym_placename)
 	for _, group in ipairs(m_shared.polities) do
 		-- Find the appropriate key format for the holonym (e.g. "pref/Osaka" -> "Osaka Prefecture").
-		local key = group.place_cat_handler(group, placetype, holonym_placetype, holonym_placename)
+		local key, _ = call_place_cat_handler(group, holonym_placetype, holonym_placename)
 		if key then
 			local value = group.data[key]
 			if value then
@@ -1632,6 +1728,11 @@ local function prefecture_display_handler(holonym_placetype, holonym_placename)
 end
 
 
+------------------------------------------------------------------------------------------
+--                                  Categorization data                                 --
+------------------------------------------------------------------------------------------
+
+
 export.cat_data = {
 	["administrative village"] = {
 		preposition = "of",
@@ -1677,6 +1778,10 @@ export.cat_data = {
 		cat_handler = function(holonym_placetype, holonym_placename, place_desc)
 			return district_cat_handler("area", holonym_placetype, holonym_placename)
 		end,
+	},
+
+	["arm"] = {
+		preposition = "of",
 	},
 
 	["atoll"] = {
