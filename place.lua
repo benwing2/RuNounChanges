@@ -1033,9 +1033,9 @@ local function get_old_style_gloss(args, place_desc, with_article, ucfirst)
 
 	for i = remaining_placetype_index, #placetypes do
 		local pt = placetypes[i]
-		-- Check for placetypes beginning with a paren (so that things like "{{place|en|county/(one of 254)|s/Texas}}"
-		-- work).
-		if is_and_or(pt) or pt:find("^%(") then
+		-- Check for and, or and placetypes beginning with a paren (so that things like
+		-- "{{place|en|county/(one of 254)|s/Texas}}" work).
+		if data.placetype_is_ignorable(pt) then
 			ins_space()
 			ins(pt)
 		else
@@ -1502,9 +1502,14 @@ local function get_cats(lang, args, place_descriptions, additional_cats, sort_ke
 
 	handle_implications(place_descriptions, data.cat_implications, true)
 
+	local bare_categories = data.get_bare_categories(args, place_descriptions)
+	for _, bare_cat in ipairs(bare_categories) do
+		table.insert(cats, catlink(lang, bare_cat, sort_key))
+	end
+
 	for _, place_desc in ipairs(place_descriptions) do
 		for _, placetype in ipairs(place_desc.placetypes) do
-			if placetype ~= "and" then
+			if not data.placetype_is_ignorable(placetype) then
 				table.insert(cats, get_cat(lang, place_desc, placetype, sort_key))
 			end
 		end
