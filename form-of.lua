@@ -35,6 +35,7 @@ export.langs_with_lang_specific_tags = {
 	["nl"] = true,
 	["pi"] = true,
 	["sw"] = true,
+	["ttj"] = true,
 }
 
 --[=[
@@ -1355,10 +1356,10 @@ function export.finalize_tag_data(tags, shortcuts)
 		local data_shortcuts = data[export.SHORTCUTS]
 		if data_shortcuts then
 			if type(data_shortcuts) == "string" then
-				process_shortcut(data_shortcuts)
+				process_shortcut(name, data_shortcuts)
 			else
 				for _, shortcut in ipairs(data_shortcuts) do
-					process_shortcut(shortcut)
+					process_shortcut(name, shortcut)
 				end
 			end
 		end

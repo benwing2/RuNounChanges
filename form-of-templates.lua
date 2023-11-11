@@ -206,7 +206,7 @@ local function parse_terms_with_inline_modifiers(paramname, val, lang)
 end
 
 
-local link_params = { "term", "alt", "t", "gloss", "sc", "tr", "ts", "pos", "g", "id", "lit" }
+local link_params = { "term", "alt", "t", "gloss", "sc", "tr", "ts", "pos", "id", "lit" }
 local link_param_set = {}
 for _, param in ipairs(link_params) do
 	link_param_set[param] = true
