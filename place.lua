@@ -791,6 +791,7 @@ local function get_holonym_description(holonym, needs_article, display_form)
 		return ""
 	end
 
+	local orig_needs_article = needs_article
 	needs_article = needs_article or holonym.needs_article
 
 	if display_form then
@@ -842,7 +843,11 @@ local function get_holonym_description(holonym, needs_article, display_form)
 	if display_form then
 		if (affix_type == "pref" or affix_type == "Pref") and not already_seen_affix then
 			output = (affix_type == "Pref" and ucfirst_all(affix) or affix) .. " of " .. output
-			if needs_article then
+			if orig_needs_article then
+				-- Put the article before the added affix if we're the first holonym in the place description. This is
+				-- distinct from the article added above for the holonym itself; cf. "c:pref/United States,Canada" ->
+				-- "the countries of the United States and Canada". We need to use the value of `needs_article` passed
+				-- in from the function, which indicates whether we're processing the first holonym.
 				output = "the " .. output
 			end
 		end
