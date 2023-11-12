@@ -4,7 +4,7 @@ local m_links = require("Module:links")
 local m_langs = require("Module:languages")
 local m_strutils = require("Module:string utilities")
 local m_debug_track = require("Module:debug/track")
-local data = require("Module:place/data")
+local data = require("Module:User:Benwing2/place/data")
 local table_module = "Module:table"
 local put_module = "Module:parse utilities"
 
@@ -84,15 +84,19 @@ A given place description is defined internally in a table of the following form
 {
   placetypes = {"STRING", "STRING", ...},
   holonyms = {
-	{
+	{ -- holonym object; see below
 	  placetype = "PLACETYPE" or nil,
 	  placename = "PLACENAME",
 	  langcode = "LANGCODE" or nil,
-	  modifiers = {"MODIFIER", "MODIFIER", ...} or nil,
+	  no_display = BOOLEAN,
+	  needs_article = BOOLEAN,
+	  affix_type = "AFFIX_TYPE" or nil,
+	  pluralize_affix = BOOLEAN,
+	  suppress_affix = BOOLEAN,
 	},
 	...
   },
-  order = { ORDER_ITEM, ORDER_ITEM, ... } (only for new-style place descriptions),
+  order = { ORDER_ITEM, ORDER_ITEM, ... }, -- (only for new-style place descriptions),
   joiner = "JOINER STRING" or nil,
   holonyms_by_placetype = {
 	HOLONYM_PLACETYPE = {"PLACENAME", "PLACENAME", ...},
@@ -100,6 +104,22 @@ A given place description is defined internally in a table of the following form
 	...
   },
 }
+
+Holonym objects have the following fields:
+* `placetype`: The canonicalized placetype of specified as e.g. "c/Australia"; nil if no slash is present.
+* `placename`: The placename or raw text.
+* `langcode`: The language code prefix if specified as e.g. "c/fr:Australie"; otherwise nil.
+* `no_display`: If true (holonym prefixed with !), don't display the holonym but use it for categorization.
+* `needs_article`: If true, prepend an article if the placename needs one (e.g. "United States").
+* `affix_type`: Type of affix to prepend (values "pref" or "Pref") or append (values "suf" or "Suf"). The actual affix
+				added is the placetype (capitalized if values "Pref" or "Suf" are given), or its plural if
+				`pluralize_affix` is given. Note that some placetypes (e.g. "district" and "department") have inherent
+				affixes displayed after (or sometimes before) them.
+* `pluralize_affix`: Pluralize any displayed affix. Used for holonyms like "c:pref/Canada,US", which displays as
+					 "the countries of Canada and the United States".
+* `suppress_affix`: Don't display any affix even if the placetype has an inherent affix. Used for the non-last
+					placenames when there are multiple and a suffix is present, and for the non-first placenames when
+					there are multiple and a prefix is present.
 
 Note that new-style place descs (those specified as a single argument using <<...>> to denote placetypes, placetype
 qualifiers and holonyms) have an additional `order` field to properly capture the raw text surrounding the items
@@ -238,6 +258,25 @@ local function get_placetype_article(placetype, ucfirst)
 end
 
 
+-- Return the correct plural of a placetype, and (if `ucfirst` is given) make the first letter uppercase. We first look
+-- up the plural in [[Module:place/data]], falling back to pluralize() in [[Module:string utilities]], which is almost
+-- always correct.
+local function get_placetype_plural(placetype, ucfirst)
+	local pt_data, equiv_placetype_and_qualifier = data.get_equiv_placetype_prop(placetype,
+		function(pt) return cat_data[pt] end)
+	if pt_data then
+		placetype = pt_data.plural or m_strutils.pluralize(equiv_placetype_and_qualifier.placetype)
+	else
+		placetype = m_strutils.pluralize(placetype)
+	end
+	if ucfirst then
+		return m_strutils.ucfirst(placetype)
+	else
+		return placetype
+	end
+end
+
+
 
 ---------- Argument parsing functions and utilities
 
@@ -260,11 +299,11 @@ local function split_on_slash(arg)
 end
 
 
--- Given a place desc (see top of file) and a holonym object (the return value of split_holonym()), add a key/value into
--- the place desc's `holonyms_by_placetype` field corresponding to the placetype and placename of the holonym. For
--- example, corresponding to the holonym "c/Italy", a key "country" with the list value {"Italy"} will be added to the
--- place desc's `holonyms_by_placetype` field. If there is already a key with that place type, the new placename will be
--- added to the end of the value's list.
+-- Given a place desc (see top of file) and a holonym object (see top of file), add a key/value into the place desc's
+-- `holonyms_by_placetype` field corresponding to the placetype and placename of the holonym. For example, corresponding
+-- to the holonym "c/Italy", a key "country" with the list value {"Italy"} will be added to the place desc's
+-- `holonyms_by_placetype` field. If there is already a key with that place type, the new placename will be added to the
+-- end of the value's list.
 local function key_holonym_into_place_desc(place_desc, holonym)
 	if not holonym.placetype then
 		return
@@ -294,7 +333,6 @@ end
 -- name, each value of which is a list of "PLACETYPE/PLACENAME" holonyms to be added to the end of the list of holonyms.
 -- `should_clone` specifies whether to clone a given place desc before modifying it.
 local function handle_implications(place_descriptions, implication_data, should_clone)
-	-- handle category implications
 	for i, desc in ipairs(place_descriptions) do
 		if desc.holonyms then
 			local imps_to_add = {}
@@ -334,9 +372,8 @@ local function handle_implications(place_descriptions, implication_data, should_
 end
 
 
--- Look up a placename in an alias table, handling links appropriately.
--- If the alias isn't found, return nil.
-local function lookup_placename_alias(placename, aliases)
+-- Look up a placename in an alias table, handling links appropriately. If the alias isn't found, return nil.
+local function lookup_placename_in_alias_table(placename, aliases)
 	-- If the placename is a link, apply the alias inside the link.
 	-- This pattern matches both piped and unpiped links. If the link is not
 	-- piped, the second capture (linktext) will be empty.
@@ -352,6 +389,15 @@ local function lookup_placename_alias(placename, aliases)
 	else
 		return aliases[placename]
 	end
+end
+
+
+-- If `placename` of type `placetype` is an alias, convert it to its canonical form; otherwise, return unchanged.
+local function resolve_placename_aliases(placetype, placename)
+	return data.get_equiv_placetype_prop(placetype,
+		function(pt) return data.placename_display_aliases[pt] and lookup_placename_in_alias_table(
+			placename, data.placename_display_aliases[pt]) end
+	) or placename
 end
 
 
@@ -375,70 +421,66 @@ local function split_holonym_placename(placename)
 end
 
 
--- Split a holonym (e.g. "continent/Europe" or "country/en:Italy" or "in southern"
--- or "r:suf/O'Higgins") into its components. Return value is
--- {PLACETYPE, PLACENAME, LANGCODE, MODIFIERS}, e.g. {"country", "Italy", "en", {}} or
--- {"region", "O'Higgins", nil, {"suf"}}. If there isn't a slash (e.g. "in southern"),
--- the first element will be nil. Placetype aliases (e.g. "r" for "region") and
--- placename aliases (e.g. "US" or "USA" for "United States") will be expanded.
+-- Split a holonym (e.g. "continent/Europe" or "country/en:Italy" or "in southern" or "r:suf/O'Higgins" or
+-- "c/Austria,Germany,Czech Republic") into its components. Return a list of holonym objects (see top of file). Note
+-- that if there isn't a slash in the holonym (e.g. "in southern"), the `placetype` field of the holonym will be nil.
+-- Placetype aliases (e.g. "r" for "region") and placename aliases (e.g. "US" or "USA" for "United States") will be
+-- expanded.
 local function split_holonym(raw)
-	local holonym_parts = split_on_slash(raw)
-	local item
+	local no_display, combined_holonym = raw:match("^(!)(.*)$")
+	no_display = not not no_display
+	combined_holonym = combined_holonym or raw
+	local holonym_parts = split_on_slash(combined_holonym)
 	if #holonym_parts == 1 then
-		item = {placename = raw}
-	else
-		-- Rejoin further slashes in case of slash in holonym placename, e.g. Admaston/Bromley.
-		item = {placetype = holonym_parts[1], placename = table.concat(holonym_parts, "/", 2)}
+		-- FIXME, remove this when we've verified there are no cases.
+		if rfind(combined_holonym, "^([^%[%]]-):([^ ].*)$") then
+			error("Language code in raw-text {{place}} argument no longer supported: " .. raw)
+		end
+		return {{placename = combined_holonym, no_display = no_display}}
 	end
 
-	-- Check for langcode before the holonym placename, but don't get tripped up by
-	-- Wikipedia links, which begin "[[w:...]]" or "[[wikipedia:]]".
-	local langcode, holonym_placename = rmatch(item.placename, "^([^%[%]]-):(.*)$")
-	if langcode then
-		item.placename = holonym_placename
-		item.langcode = langcode
-	end
+	-- Rejoin further slashes in case of slash in holonym placename, e.g. Admaston/Bromley.
+	local placetype = holonym_parts[1]
+	local placename = table.concat(holonym_parts, "/", 2)
 
 	-- Check for modifiers after the holonym placetype.
-	if item.placetype then
-		local split_holonym_placetype = rsplit(item.placetype, ":", true)
-		item.placetype = split_holonym_placetype[1]
-		local modifiers = {}
-		local i = 2
-		while true do
-			if split_holonym_placetype[i] then
-				table.insert(modifiers, split_holonym_placetype[i])
-			else
-				break
-			end
-			i = i + 1
+	local split_holonym_placetype = rsplit(placetype, ":", true)
+	placetype = split_holonym_placetype[1]
+	local affix_type
+	if #split_holonym_placetype > 2 then
+		error("Saw more than one modifier attached to holonym placetype: " .. raw)
+	end
+	if #split_holonym_placetype == 2 then
+		affix_type = split_holonym_placetype[2]
+		if affix_type ~= "pref" and affix_type ~= "Pref" and affix_type ~= "suf" and affix_type ~= "Suf" then
+			error(("Unrecognized affix type '%s', should be one of 'pref', 'Pref', 'suf' or 'Suf'"):format(affix_type))
 		end
-		item.modifiers = modifiers
 	end
 
-	if item.placetype then
-		item.placetype = data.placetype_aliases[item.placetype] or item.placetype
-		item.placename = data.get_equiv_placetype_prop(item.placetype,
-			function(pt) return data.placename_display_aliases[pt] and lookup_placename_alias(item.placename, data.placename_display_aliases[pt]) end
-		) or item.placename
+	placetype = data.resolve_placetype_aliases(placetype)
+	local holonyms = split_holonym_placename(placename)
+	local pluralize_affix = #holonyms > 1
+	local affix_holonym_index = (affix_type == "pref" or affix_type == "Pref") and 1 or #holonyms
+	for i, placename in ipairs(holonyms) do
+		-- Check for langcode before the holonym placename, but don't get tripped up by Wikipedia links, which begin
+		-- "[[w:...]]" or "[[wikipedia:]]".
+		local langcode, bare_placename = rmatch(placename, "^([^%[%]]-):(.*)$")
+		if langcode then
+			placename = bare_placename
+		end
+
+		holonyms[i] = {
+			placetype = placetype,
+			placename = resolve_placename_aliases(placetype, placename),
+			langcode = langcode,
+			affix_type = i == affix_holonym_index and affix_type or nil,
+			pluralize_affix = i == affix_holonym_index and pluralize_affix,
+			suppress_affix = i ~= affix_holonym_index,
+			no_display = no_display,
+		}
 	end
 
-	if item.placetype and item.placename:find(",") then
-		local placenames = split_holonym_placename(item.placename)
-		local retval = {}
-		for _, placename in ipairs(placenames) do
-			local holonym = {
-				placetype = item.placetype,
-				placename = placename,
-				langcode = item.langcode,
-				modifiers = item.modifiers,
-			}
-			table.insert(retval, holonym)
-		end
-		return retval, true
-	else
-		return item, false
-	end
+	return holonyms
 end
 
 
@@ -495,28 +537,26 @@ local function parse_new_style_place_desc(text)
 		if i % 2 == 1 then
 			table.insert(retval.order, {type = "raw", value = segment})
 		elseif segment:find("/") then
-			local holonym, is_multi = split_holonym(segment)
-			if is_multi then
-				for j, single_holonym in ipairs(holonym) do
-					if j > 1 then
-						if j == #holonym then
+			local holonyms = split_holonym(segment)
+			for j, holonym in ipairs(holonyms) do
+				if j > 1 then
+					if not holonym.no_display then
+						if j == #holonyms then
 							table.insert(retval.order, {type = "raw", value = " and "})
 						else
 							table.insert(retval.order, {type = "raw", value = ", "})
 						end
-						-- Signal that "the" needs to be added if appropriate
-						if not single_holonym.modifiers then
-							single_holonym.modifiers = {}
-						end
-						table.insert(single_holonym.modifiers, "_art_")
 					end
-					table.insert(retval.holonyms, single_holonym)
-					table.insert(retval.order, {type = "holonym", value = #retval.holonyms})
-					key_holonym_into_place_desc(retval, single_holonym)
+					-- All but the first in a multi-holonym need an article. For the first one, the article is
+					-- specified in the raw text if needed. (Currently, needs_article is only used when displaying the
+					-- holonym, so it wouldn't matter when no_display is set, but we set it anyway in case we need it
+					-- for something else.)
+					holonym.needs_article = true
 				end
-			else
 				table.insert(retval.holonyms, holonym)
-				table.insert(retval.order, {type = "holonym", value = #retval.holonyms})
+				if not holonym.no_display then
+					table.insert(retval.order, {type = "holonym", value = #retval.holonyms})
+				end
 				key_holonym_into_place_desc(retval, holonym)
 			end
 		else
@@ -607,26 +647,24 @@ local function parse_place_descriptions(numargs)
 					descs[desc_index] = this_desc
 					holonym_index = holonym_index + 1
 				else
-					local holonym, is_multi = split_holonym(arg)
-					if is_multi then
-						for j, single_holonym in ipairs(holonym) do
-							if j > 1 then
-								if not single_holonym.modifiers then
-									single_holonym.modifiers = {}
-								end
-								-- Signal that "the" needs to be added if appropriate
-								table.insert(single_holonym.modifiers, "_art_")
-								-- Insert "and" before the last holonym.
-								if j == #holonym then
-									this_desc.holonyms[holonym_index] = {placename = "and"}
-									holonym_index = holonym_index + 1
-								end
+					local holonyms = split_holonym(arg)
+					for j, holonym in ipairs(holonyms) do
+						if j > 1 then
+						-- All but the first in a multi-holonym need an article. Not for the first one because e.g.
+						-- {{place|en|city|s/Arizona|c/United States}} should not display as "a city in Arizona, the
+						-- United States". The first holonym given gets an article if needed regardless of our setting
+						-- here.
+							holonym.needs_article = true
+							-- Insert "and" before the last holonym.
+							if j == #holonyms then
+								this_desc.holonyms[holonym_index] = {
+									-- Use the no_display value from the first holonym; it should be the same for all
+									-- holonyms.
+									placename = "and", no_display = holonyms[1].no_display
+								}
+								holonym_index = holonym_index + 1
 							end
-							this_desc.holonyms[holonym_index] = single_holonym
-							key_holonym_into_place_desc(this_desc, this_desc.holonyms[holonym_index])
-							holonym_index = holonym_index + 1
 						end
-					else
 						this_desc.holonyms[holonym_index] = holonym
 						key_holonym_into_place_desc(this_desc, this_desc.holonyms[holonym_index])
 						holonym_index = holonym_index + 1
@@ -636,7 +674,7 @@ local function parse_place_descriptions(numargs)
 		end
 	end
 
-	handle_implications(descs, data.implications, false)
+	handle_implications(descs, data.general_implications, false)
 
 	-- Tracking code. This does nothing but add tracking for seen placetypes and qualifiers. The place will be linked to
 	-- [[Template:tracking/place/entry-placetype/PLACETYPE]] for all entry placetypes seen; in addition, if PLACETYPE
@@ -738,25 +776,22 @@ end
 -- necessary.
 --
 -- Examples:
--- ({placetype = "country", placename = "United States"}, true, true) returns the template-expanded
--- equivalent of "the {{l|en|United States}}".
--- ({placetype = "region", placename = "O'Higgins", modifiers = {"suf"}}, false, true) returns the template-expanded
+-- ({placetype = "country", placename = "United States"}, true, true) returns the template-expanded equivalent of
+-- "the {{l|en|United States}}".
+-- ({placetype = "region", placename = "O'Higgins", affix_type = "suf"}, false, true) returns the template-expanded
 -- equivalent of "{{l|en|O'Higgins}} region".
--- ({placename = "in the southern", false, true) returns "in the southern" (without wikilinking because .placename
+-- ({placename = "in the southern"}, false, true) returns "in the southern" (without wikilinking because .placetype
 -- and .langcode are both nil).
 local function get_holonym_description(holonym, needs_article, display_form)
 	local output = holonym.placename
 	local placetype = holonym.placetype
 	local affix_type_pt_data, affix_type, affix, no_affix_strings, pt_equiv_for_affix_type, already_seen_affix
 
-	if not needs_article and holonym.modifiers then
-		for _, mod in ipairs(holonym.modifiers) do
-			if mod == "_art_" then
-				needs_article = true
-				break
-			end
-		end
+	if display_form and holonym.no_display then
+		return ""
 	end
+
+	needs_article = needs_article or holonym.needs_article
 
 	if display_form then
 		-- Implement display handlers.
@@ -765,32 +800,32 @@ local function get_holonym_description(holonym, needs_article, display_form)
 		if display_handler then
 			output = display_handler(placetype, output)
 		end
-		-- Implement adding an affix (prefix or suffix) based on the holonym's placetype. The affix will be
-		-- added either if the placetype's cat_data spec says so (by setting 'affix_type'), or if the
-		-- user explicitly called for this (e.g. by using 'r:suf/O'Higgins'). Before adding the affix,
-		-- however, we check to see if the affix is already present (e.g. the placetype is "district"
-		-- and the placename is "Mission District"). If the placetype explicitly calls for adding
-		-- an affix, it can override the affix to add (by setting 'affix') and/or override the strings
-		-- used for checking if the affix is already presen (by setting 'no_affix_strings').
-		affix_type_pt_data, pt_equiv_for_affix_type = data.get_equiv_placetype_prop(placetype,
-			function(pt) return cat_data[pt] and cat_data[pt].affix_type and cat_data[pt] end
-		)
-		if affix_type_pt_data then
-			affix_type = affix_type_pt_data.affix_type
-			affix = affix_type_pt_data.affix or pt_equiv_for_affix_type.placetype
-			no_affix_strings = affix_type_pt_data.no_affix_strings or lc(affix)
-		end
-		if holonym.modifiers then
-			for _, mod in ipairs(holonym.modifiers) do
-				if (mod == "pref" or mod == "Pref" or mod == "suf" or mod == "Suf") and placetype then
-					affix_type = mod
-					affix = placetype
-					no_affix_strings = lc(affix)
-					break
-				end
+		if not holonym.suppress_affix then
+			-- Implement adding an affix (prefix or suffix) based on the holonym's placetype. The affix will be
+			-- added either if the placetype's cat_data spec says so (by setting 'affix_type'), or if the
+			-- user explicitly called for this (e.g. by using 'r:suf/O'Higgins'). Before adding the affix,
+			-- however, we check to see if the affix is already present (e.g. the placetype is "district"
+			-- and the placename is "Mission District"). If the placetype explicitly calls for adding
+			-- an affix, it can override the affix to add (by setting 'affix') and/or override the strings
+			-- used for checking if the affix is already presen (by setting 'no_affix_strings').
+			affix_type_pt_data, pt_equiv_for_affix_type = data.get_equiv_placetype_prop(placetype,
+				function(pt) return cat_data[pt] and cat_data[pt].affix_type and cat_data[pt] end
+			)
+			if affix_type_pt_data then
+				affix_type = affix_type_pt_data.affix_type
+				affix = affix_type_pt_data.affix or pt_equiv_for_affix_type.placetype
+				no_affix_strings = affix_type_pt_data.no_affix_strings or lc(affix)
 			end
+			if holonym.affix_type and placetype then
+				affix_type = holonym.affix_type
+				affix = placetype
+				no_affix_strings = lc(affix)
+			end
+			if affix and holonym.pluralize_affix then
+				affix = get_placetype_plural(affix)
+			end
+			already_seen_affix = no_affix_strings and data.check_already_seen_string(output, no_affix_strings)
 		end
-		already_seen_affix = no_affix_strings and data.check_already_seen_string(output, no_affix_strings)
 		output = link(output, holonym.langcode or placetype and "en" or nil)
 		if (affix_type == "suf" or affix_type == "Suf") and not already_seen_affix then
 			output = output .. " " .. (affix_type == "Suf" and ucfirst_all(affix) or affix)
@@ -847,20 +882,22 @@ local function get_contextual_holonym_description(entry_placetype, prev_holonym,
 
 	-- If holonym.placetype is nil, the holonym is just raw text, e.g. 'in southern'.
 
-	-- First compute the initial delimiter.
-	if first then
-		if holonym.placetype then
-			desc = desc .. get_in_or_of(entry_placetype, "")
-		elseif not holonym.placename:find("^,") then
-			desc = desc .. " "
-		end
-	else
-		if prev_holonym.placetype and holonym.placename ~= "and" and holonym.placename ~= "in" then
-			desc = desc .. ","
-		end
-
-		if holonym.placetype or not holonym.placename:find("^,") then
-			desc = desc .. " "
+	if not holonym.no_display then
+		-- First compute the initial delimiter.
+		if first then
+			if holonym.placetype then
+				desc = desc .. get_in_or_of(entry_placetype, "")
+			elseif not holonym.placename:find("^,") then
+				desc = desc .. " "
+			end
+		else
+			if prev_holonym.placetype and holonym.placename ~= "and" and holonym.placename ~= "in" then
+				desc = desc .. ","
+			end
+	
+			if holonym.placetype or not holonym.placename:find("^,") then
+				desc = desc .. " "
+			end
 		end
 	end
 
@@ -868,7 +905,10 @@ local function get_contextual_holonym_description(entry_placetype, prev_holonym,
 end
 
 
-local function get_linked_placetype(placetype)
+-- Get the display form of a placetype by looking it up in `placetype_links` in [[Module:place/data]]. If the placetype
+-- is recognized, or is the plural if a recognized placetype, the corresponding linked display form is returned (with
+-- plural placetypes displaying as plural but linked to the singular form of the placetype). Otherwise, return nil.
+local function get_placetype_display_form(placetype)
 	local linked_version = data.placetype_links[placetype]
 	if linked_version then
 		if linked_version == true then
@@ -888,6 +928,8 @@ local function get_linked_placetype(placetype)
 			elseif linked_version == "w" then
 				return "[[w:" .. sg_placetype .. "|" .. placetype .. "]]"
 			else
+				-- An explicit display form was specified. It will be singular, so we need to pluralize it to match
+				-- the pluralization of the passed-in placetype.
 				return m_strutils.pluralize(linked_version)
 			end
 		end
@@ -908,9 +950,9 @@ local function get_placetype_description(placetype)
 		else
 			prefix = ""
 		end
-		local linked_version = get_linked_placetype(bare_placetype)
-		if linked_version then
-			return prefix .. linked_version
+		local display_form = get_placetype_display_form(bare_placetype)
+		if display_form then
+			return prefix .. display_form
 		end
 		placetype = bare_placetype
 	end
@@ -1380,21 +1422,6 @@ local function find_cat_specs(entry_placetype, entry_placetype_data, place_desc,
 end
 
 
--- Return the plural of a word and makes its first letter upper case.
--- The plural is fetched from the data module; if it doesn’t find one,
--- the 'pluralize' function from [[Module:string utilities]] is called,
--- which pluralizes correctly in almost all cases.
-local function get_cat_plural(word)
-	local pt_data, equiv_placetype_and_qualifier = data.get_equiv_placetype_prop(word, function(pt) return cat_data[pt] end)
-	if pt_data then
-		word = pt_data.plural or m_strutils.pluralize(equiv_placetype_and_qualifier.placetype)
-	else
-		word = m_strutils.pluralize(word)
-	end
-	return m_strutils.ucfirst(word)
-end
-
-
 -- Turn a list of category specs (see comment at section top) into the corresponding wikicode.
 -- It is given the following arguments:
 -- (1) the language object (param 1=)
@@ -1413,7 +1440,8 @@ local function cat_specs_to_category_wikicode(lang, cat_specs, entry_placetype, 
 		for _, cat_spec in ipairs(cat_specs) do
 			local cat
 			if cat_spec == true then
-				cat = get_cat_plural(entry_placetype) .. get_in_or_of(entry_placetype, holonym_placetype) .. " +++"
+				cat = get_placetype_plural(entry_placetype, "ucfirst") ..
+					get_in_or_of(entry_placetype, holonym_placetype) .. " +++"
 			else
 				cat = cat_spec
 			end
@@ -1429,7 +1457,7 @@ local function cat_specs_to_category_wikicode(lang, cat_specs, entry_placetype, 
 		for _, cat_spec in ipairs(cat_specs) do
 			local cat
 			if cat_spec == true then
-				cat = get_cat_plural(entry_placetype)
+				cat = get_placetype_plural(entry_placetype, "ucfirst")
 			else
 				cat = cat_spec
 				if cat:find("%+%+%+") then
