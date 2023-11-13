@@ -9,6 +9,16 @@ local m_templateparser = require("Module:templateparser")
 local gloss_left = "<span class=\"gloss-brac\">(</span><span class=\"gloss-content\">"
 local gloss_right = "</span><span class=\"gloss-brac\">)</span>"
 
+local place_extra_info = {
+	["modern"] = true,
+	["official"] = true,
+	["capital"] = true,
+	["largest city"] = true,
+	["caplc"] = false,
+	["seat"] = true,
+	["shire town"] = true,
+}
+
 
 -- From [[Module:senseno]]
 local function escape_pattern(text)
@@ -26,6 +36,14 @@ local function escape_wikicode(text)
 	return text
 end
 
+local function preprocess(frame, text)
+	if text:find("{") then
+		return frame:preprocess(text)
+	else
+		return text
+	end
+end
+	
 local function discard(offset, iter, obj, index)
 	return iter, obj, index + offset
 end
@@ -65,13 +83,16 @@ local function handle_definition_template(name, args, transclude_args)
 			should_remove = true,
 			must_be_first = true,
 			generate = function(data)
-				if data.formatted_to and data.formatted_to ~= "" then error("{{place}} cannot be used in conjunction with 'to'.") end
-				args[1] = data.lang:getCode()
+				if data.formatted_to and data.formatted_to ~= "" then
+					error("{{place}} cannot be used in conjunction with 'to'.")
+				end
+				local langcode = data.lang:getCode()
+				args[1] = langcode
 				if #transclude_args.t > 0 then
 					for i, t in ipairs(transclude_args.t) do
 						args["t" .. (i == 1 and "" or i)] = t
 					end
-				else
+				elseif langcode ~= "en" then
 					args["t"] = data.source
 					args["tid"] = data.id
 				end
@@ -80,6 +101,36 @@ local function handle_definition_template(name, args, transclude_args)
 					args["def"] = "-"
 				else
 					local gloss = data.gloss
+					if not transclude_args.include_place_extra_info then
+						-- Optimize to only copy when an arg needs to be dropped (not most of the time), by first
+						-- checking whether any arg needs to be dropped.
+						local saw_arg_needing_dropped = false
+						for k, v in pairs(args) do
+							if type(k) == "string" and place_extra_info[(k:gsub("[0-9]+$", ""))] ~= nil then
+								saw_arg_needing_dropped = true
+								break
+							end
+						end
+						if saw_arg_needing_dropped then
+							local args_with_dropping = {}
+							for k, v in pairs(args) do
+								if type(k) ~= "string" or place_extra_info[(k:gsub("[0-9]+$", ""))] == nil then
+									args_with_dropping[k] = v
+								end
+							end
+							args = args_with_dropping
+						end
+					end
+
+					for extra_info_arg, is_list in pairs(place_extra_info) do
+						if is_list then
+							for i, v in ipairs(transclude_args["place_" .. extra_info_arg]) do
+								args[extra_info_arg .. (i == 1 and "" or i)] = v
+							end
+						else
+							args[extra_info_arg] = transclude_args[extra_info_arg]
+						end
+					end
 					
 					if gloss ~= "" then
 						local first_free = 2
@@ -97,7 +148,7 @@ local function handle_definition_template(name, args, transclude_args)
 						end
 					end
 				end
-				return require("Module:place").format(args, not transclude_args.include_place_extra_info)
+				return require("Module:place").format(args)
 			end,
 		}
 	elseif name == "abbreviation of" or name == "abbr of" or name == "abbrev of"
@@ -131,7 +182,7 @@ local function handle_definition_template(name, args, transclude_args)
 end
 
 function export.show(frame)
-   	local args = require "Module:parameters".process(frame:getParent().args, {
+   	local params = {
 		[1] = { required = true }, -- langcode of target language (the current entry's language)
 		[2] = { required = true }, -- source English term to transclude from
 		["id"] = {}, -- can have multiple comma-separated ID's
@@ -144,7 +195,12 @@ function export.show(frame)
 		["lb"] = {}, -- can have multiple semicolon-separated labels
 		["to"] = { type = "boolean" },
 		["t"] = { list = true },
-	})
+	}
+	for k, is_list in pairs(place_extra_info) do
+		params["place_" .. k] = { list = is_list }
+	end
+
+   	local args = require "Module:parameters".process(frame:getParent().args, params)
 
 	local language_code = args[1]
 	local language = require("Module:languages").getByCode(language_code)
@@ -179,8 +235,14 @@ function export.show(frame)
 		if id ~= "-" then
 			local senseid_start, senseid_end = content:find("{{ *senseid *| *" .. escape_pattern(source_langcode) .. " *| *" .. escape_pattern(id) .. " *}}")
 			if senseid_start == nil then
+				senseid_start, senseid_end = content:find("{{ *sid *| *" .. escape_pattern(source_langcode) .. " *| *" .. escape_pattern(id) .. " *}}")
+			end
+			if senseid_start == nil then
 				local alternatives = nil
 				for id in content:gmatch("{{ *senseid *| *" .. escape_pattern(source_langcode) .. " *| *([^}]*)}}") do
+					alternatives = alternatives and alternatives .. ", " .. id or id
+				end
+				for id in content:gmatch("{{ *sid *| *" .. escape_pattern(source_langcode) .. " *| *([^}]*)}}") do
 					alternatives = alternatives and alternatives .. ", " .. id or id
 				end
 				if alternatives then
@@ -266,6 +328,10 @@ function export.show(frame)
 		local sortkey_most_frequent = nil
 		local sortkey_most_frequent_n = 0
 		local function process_template(name, tempargs, is_at_the_start)
+			-- Expand any nested templates in template arguments.
+			for k, v in pairs(tempargs) do
+				tempargs[k] = preprocess(frame, v)
+			end
 			local supports_sortkey = false
 			local should_remove = true -- If set, removes the template from the line after processing.
 			local must_be_first = false -- If set, ensures that nothing (except for removed templates) preceeds this template.
@@ -294,7 +360,7 @@ function export.show(frame)
 				copy_unnamed_args_except_code(labels, tempargs)
 				supports_sortkey = true
 				must_be_first = true
-			elseif name == "defdate" or name == "defdt" or name == "ref" or name == "refn" or name == "senseid" then
+			elseif name == "defdate" or name == "defdt" or name == "ref" or name == "refn" or name == "senseid" or name == "sid" then
 				-- Remove and do nothing.
 			else
 				-- We are dealing with a template other than the above hard-coded ones.
@@ -343,7 +409,7 @@ function export.show(frame)
 		if link_end ~= nil and link_dest_tail == link_face_tail and link_face_head:lower() == link_dest_head then
 			gloss = "[[" .. link_dest_head .. link_dest_tail .. gloss:sub(link_end - 1)
 		end
-		gloss = frame:preprocess(gloss)
+		gloss = preprocess(frame, gloss)
 
 		if copy_sortkey then
 			sort = sortkey_most_frequent
