@@ -150,10 +150,10 @@ function export.add_multiword_links(head, default)
 			:gsub("(\1[^\2]*)\\([:#][^\2]*\2)", "%1\\\\%2")
 			:gsub("(\1[^\2]*)([:#][^\2]*\2)", "%1\\%2")
 	end
-	
+
 	--Escape any remaining square brackets to stop them breaking links (e.g. "[citation needed]").
 	head = require("Module:utilities").make_entities(head, "%[%]")
-	
+
 	--[=[
 	use this when workaround is no longer needed:
 
@@ -208,7 +208,7 @@ local function format_headword(data)
 		local function tag_text_and_add_quals_and_refs(head, formatted, j)
 			-- Add language and script wrapper.
 			formatted = m_scriptutils.tag_text(formatted, data.lang, head.sc, "head", nil, j == 1 and data.id or nil)
-	
+
 			-- Add qualifiers, references and separator.
 			return format_term_with_qualifiers_and_refs(head, formatted, j)
 		end
@@ -370,7 +370,7 @@ local function format_inflection_parts(data, parts)
 	else
 		parts_output = ""
 	end
-	
+
 	local parts_label = parts.label and ("<i>" .. parts.label .. "</i>") or ""
 	return parts_label .. parts_output, any_part_translit
 end
@@ -502,10 +502,10 @@ See [[#Further explanations for full_headword()]]
 function export.full_headword(data)
 	local remove_links = require("Module:links").remove_links
 	local format_categories = require("Module:utilities").format_categories
-	
+
 	-- Prevent data from being destructively modified.
 	local data = require("Module:table").shallowcopy(data)
-	
+
 	------------ 1. Basic checks for old-style (multi-arg) calling convention. ------------
 
 	if data.getCanonicalName then
@@ -701,15 +701,15 @@ function export.full_headword(data)
 			head.tr = nil
 		elseif not notranslit[langcode] and head.sc:isTransliterated() then
 			head.tr_manual = not not head.tr
-			
+
 			local text = head.term
 			if not data.lang:link_tr() then
 				text = remove_links(text)
 			end
-			
+
 			local automated_tr, tr_categories
 			automated_tr, head.tr_fail, tr_categories = data.lang:transliterate(text, head.sc)
-			
+
 			if automated_tr or head.tr_fail then
 				local manual_tr = head.tr
 
@@ -793,7 +793,7 @@ function export.full_headword(data)
 			display_title = nil
 		end
 	end
-	
+
 	if display_title then
 		mw.getCurrentFrame():callParserFunction(
 			"DISPLAYTITLE",
@@ -802,7 +802,7 @@ function export.full_headword(data)
 	end
 
 	------------ 8. Insert additional categories. ------------
-	
+
 	if data.force_cat_output then
 		-- [[Special:WhatLinksHere/Template:tracking/headword/force cat output]]
 		track("force cat output")
@@ -928,10 +928,10 @@ function export.full_headword(data)
 			end
 		end
 	end
-	
+
 	-- Add to various maintenance categories.
 	export.maintenance_cats(m_data, data.lang, data.categories, data.whole_page_categories)
-	
+
 	------------ 9. Format and return headwords, genders, inflections and categories. ------------
 
 	-- Format and return all the gathered information. This may add more categories (e.g. gender/number categories),
@@ -940,7 +940,7 @@ function export.full_headword(data)
 		format_headword(data) ..
 		format_genders(data) ..
 		format_inflections(data) .. '</span>'
-	
+
 	-- Language-specific categories.
 	local cats = format_categories(
 		data.categories, data.lang, data.sort_key, m_data.encoded_pagename,
