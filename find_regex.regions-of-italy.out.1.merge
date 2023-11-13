@@ -1,4 +1,4 @@
-Beginning at Mon Nov 13 01:08:00 2023
+Beginning at Mon Nov 13 15:38:13 2023
 Page 1 Աբրուցցո: -------- begin text --------
 ==Armenian==
 
@@ -1177,8 +1177,6 @@ Page 49 薩丁尼亞: -------- begin text --------
 
 ====Synonyms====
 * {{q|Mainland China}} {{zh-l|撒丁}}
-
-{{C|zh|Regions of Italy}}
 -------- end text --------
 Page 50 西西里: -------- begin text --------
 ==Chinese==
@@ -1337,8 +1335,6 @@ From {{der|cs|la|Calabria}}.
 * {{R:cs:KNLA}}
 * {{R:cs:SSJC}}
 * {{R:cs:IJP}}
-
-{{C|cs|Italy}}
 -------- end text --------
 Page 59 Ligurie: -------- begin text --------
 ==Czech==
@@ -2757,7 +2753,7 @@ From {{uder|en|it|Lazio}}. {{doublet|en|Latium}}.
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|administrative region|c/Italy}}, situated in the central peninsular section of the country with Rome as its capital; corresponds to ancient [[Latium]]
+# {{sid|en|Q1282}}{{place|en|administrative region|c/Italy|situated in the central peninsular section of the country with [[Rome]] as its capital}}. It corresponds to ancient [[Latium]].
 
 ====Related terms====
 * {{l|en|Latium}}
@@ -2878,8 +2874,8 @@ From {{uder|en|it|Lazio}}. {{doublet|en|Latium}}.
 ===Proper noun===
 {{it-proper noun|m}}
 
-# {{place|it|region|c/Italy|t=Lazio}}
-# {{lb|it|historical}} [[Latium]]
+# {{tcl|it|Lazio|id=Q1282}}
+# {{tcl|it|Latium|id=Q1048669}}
 
 ====Related terms====
 {{rel3
@@ -4696,7 +4692,7 @@ Borrowed from {{bor|en|la|Latium}}. {{doublet|en|Lazio}}.
 ===Proper noun===
 {{en-proper noun}}
 
-# {{lb|en|historical}} A region of central [[Italy]] in which the city of Rome was founded and grew to be the capital city of the Roman Empire.
+# {{sid|en|Q1048669}}{{lb|en|historical}} {{place|en|historical region|of central|c/Italy|in which the city of Rome was founded and grew to be the capital city of the Roman Empire}}.
 # [[Lazio]], the corresponding modern region.
 
 ====Translations====
@@ -4742,8 +4738,8 @@ Borrowed from {{bor|en|la|Latium}}. {{doublet|en|Lazio}}.
 ===Proper noun===
 {{fr-proper noun|m}}
 
-# {{lb|fr|historical}} {{place|fr|region|c/Italy|t=Latium}}
-# {{place|fr|region|c/Italy|t=Lazio}}
+# {{tcl|fr|Latium|id=Q1048669}}
+# {{tcl|fr|Lazio|id=Q1282}}
 
 ===See also===
 * {{list:regions of Italy/fr}}
@@ -4759,7 +4755,7 @@ Probably a loanword from an ancient non-Indo-European language, possibly related
 ===Proper noun===
 {{la-proper noun|Latium<2.loc>}}
 
-# [[#English|Latium]]
+# {{tcl|la|Latium|id=Q1048669}}
 
 ====Declension====
 {{la-ndecl|Latium<2.loc>}}
@@ -7199,8 +7195,6 @@ Page 209 Lombardiet: -------- begin text --------
 ====Related terms====
 * {{l|sv|lombard}}
 * {{l|sv|lombardisk}}
-
-{{topics|sv|Lombardy}}
 -------- end text --------
 Page 210 Pugghie: -------- begin text --------
 ==Tarantino==
@@ -7240,8 +7234,6 @@ Page 212 Абруццо: -------- begin text --------
 
 ===Further reading===
 * {{R:uk:Horokh}}
-
-{{C|uk|Abruzzo}}
 -------- end text --------
 Page 213 Апулія: -------- begin text --------
 ==Ukrainian==
@@ -7265,8 +7257,6 @@ Page 213 Апулія: -------- begin text --------
 
 ===Further reading===
 * {{R:uk:Horokh}}
-
-{{C|uk|Apulia}}
 -------- end text --------
 Page 214 Базиліката: -------- begin text --------
 ==Ukrainian==
@@ -7290,8 +7280,6 @@ Page 214 Базиліката: -------- begin text --------
 
 ===Further reading===
 * {{R:uk:Horokh}}
-
-{{C|uk|Basilicata}}
 -------- end text --------
 Page 215 Венето: -------- begin text --------
 ==Ukrainian==
@@ -7312,8 +7300,6 @@ Page 215 Венето: -------- begin text --------
 
 ===Further reading===
 * {{R:uk:Horokh}}
-
-{{C|uk|Veneto}}
 -------- end text --------
 Page 216 Емілія-Романья: -------- begin text --------
 ==Ukrainian==
@@ -7337,8 +7323,6 @@ Page 216 Емілія-Романья: -------- begin text --------
 
 ===Further reading===
 * {{R:uk:Horokh}}
-
-{{C|uk|Emilia-Romagna}}
 -------- end text --------
 Page 217 Калабрія: -------- begin text --------
 ==Ukrainian==
@@ -7364,8 +7348,6 @@ Page 217 Калабрія: -------- begin text --------
 
 ===References===
 * {{R:uk:Horokh}}
-
-{{C|uk|Calabria}}
 -------- end text --------
 Page 218 Кампанія: -------- begin text --------
 {{also|кампанія}}
@@ -7391,8 +7373,6 @@ Page 218 Кампанія: -------- begin text --------
 
 ===Further reading===
 * {{R:uk:Horokh}}
-
-{{C|uk|Campania}}
 -------- end text --------
 Page 219 Лігурія: -------- begin text --------
 ==Ukrainian==
@@ -7416,8 +7396,6 @@ Page 219 Лігурія: -------- begin text --------
 
 ===Further reading===
 * {{R:uk:Horokh}}
-
-{{C|uk|Liguria}}
 -------- end text --------
 Page 220 Ломбардія: -------- begin text --------
 ==Ukrainian==
@@ -7441,8 +7419,6 @@ Page 220 Ломбардія: -------- begin text --------
 
 ===Further reading===
 * {{R:uk:Horokh}}
-
-{{C|uk|Lombardy}}
 -------- end text --------
 Page 221 П'ємонт: -------- begin text --------
 ==Ukrainian==
@@ -7468,8 +7444,6 @@ Page 221 П'ємонт: -------- begin text --------
 * {{R:uk:R2U}}
 * {{R:uk:E2U}}
 * {{R:uk:Horokh|П'ємонт}}
-
-{{C|uk|Piedmont}}
 -------- end text --------
 Page 222 Сардинія: -------- begin text --------
 ==Ukrainian==
@@ -7495,8 +7469,6 @@ Page 222 Сардинія: -------- begin text --------
 
 ===References===
 * {{R:uk:Horokh}}
-
-{{C|uk|Sardinia}}
 -------- end text --------
 Page 223 Сицилія: -------- begin text --------
 ==Ukrainian==
@@ -7522,8 +7494,6 @@ Page 223 Сицилія: -------- begin text --------
 
 ===References===
 * {{R:uk:Horokh}}
-
-{{C|uk|Sicily}}
 -------- end text --------
 Page 224 Тоскана: -------- begin text --------
 ==Serbo-Croatian==
@@ -7598,8 +7568,6 @@ Page 225 Умбрія: -------- begin text --------
 
 ===Further reading===
 * {{R:uk:Horokh}}
-
-{{C|uk|Umbria}}
 -------- end text --------
 Page 226 Alto Àdexe: -------- begin text --------
 ==Venetian==
@@ -7642,5 +7610,5 @@ Page 229 Sikileän: -------- begin text --------
 ====Declension====
 {{vo-decl-noun-np}}
 -------- end text --------
-Elapsed time: 0 mins 25.79 secs
-Ending at Mon Nov 13 01:08:26 2023
+Elapsed time: 0 mins 20.50 secs
+Ending at Mon Nov 13 15:38:34 2023
