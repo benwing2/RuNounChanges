@@ -1638,7 +1638,7 @@ export.cities = {
 		},
 	},
 	{
-		default_divtype = "region",
+		default_divtype = "administrative region",
 		containing_polities = {"France", divtype="country"},
 		data = {
 			["Paris"] = {"Île-de-France"},
@@ -2016,10 +2016,10 @@ local function subpolity_keydesc(key, value, containing_polity, default_divtype)
 	return value.keydesc or linked_key .. ", " .. divtype .. " of " .. linked_containing_polity
 end
 
-local function apply_key_to_placename(key, key_to_placename)
+function export.call_key_to_placename(group, key)
 	local placename = key
-	if key_to_placename then
-		placename = key_to_placename(key)
+	if group.key_to_placename then
+		placename = group.key_to_placename(key)
 		if type(placename) == "table" then
 			placename = placename[1]
 		end
@@ -2040,7 +2040,7 @@ end
 
 local function subpolity_bare_label_setter(containing_polity)
 	return function(labels, group, key, value)
-		local placename = apply_key_to_placename(key, group.key_to_placename)
+		local placename = export.call_key_to_placename(group, key)
 		local keydesc = subpolity_keydesc(placename, value, containing_polity, group.default_divtype)
 		local bare_key, linked_key = export.construct_bare_and_linked_version(key)
 		local bare_containing_polity, linked_containing_polity = export.construct_bare_and_linked_version(containing_polity)
@@ -2058,12 +2058,13 @@ local function subpolity_value_transformer(containing_polity)
 		containing_polity_type, containing_polity = containing_polity[1], containing_polity[2]
 	end
 	return function(group, key, value)
-		local placename = apply_key_to_placename(key, group.key_to_placename)
+		local placename = export.call_key_to_placename(group, key)
 		value.keydesc = subpolity_keydesc(placename, value, containing_polity, group.default_divtype)
 		value.containing_polity = containing_polity
 		value.containing_polity_type = containing_polity_type
 		value.poldiv = value.poldiv or group.default_poldiv
 		value.british_spelling = value.british_spelling or group.british_spelling
+		value.no_containing_polity_cat = value.no_containing_polity_cat or group.no_containing_polity_cat
 		return value
 	end
 end
@@ -2496,6 +2497,8 @@ export.polities = {
 		value_transformer = subpolity_value_transformer("Malta"),
 		default_divtype = "region",
 		british_spelling = true,
+		-- The regions are too generic in name. For example, "Central Region" exists elsewhere, e.g. in South Africa.
+		no_containing_polity_cat = true,
 		data = export.maltese_regions,
 	},
 
@@ -2618,15 +2621,12 @@ export.polities = {
 	-- constituent countries and provinces of the United Kingdom
 	{
 		bare_label_setter = subpolity_bare_label_setter("the United Kingdom"),
-		value_transformer = function(group, key, value)
-			value = subpolity_value_transformer("the United Kingdom")(group, key, value)
-			-- Don't create categories like 'Category:en:Towns in the United Kingdom'
-			-- or 'Category:en:Places in the United Kingdom'.
-			value.no_containing_polity_cat = true
-			return value
-		end,
+		value_transformer = subpolity_value_transformer("the United Kingdom"),
 		default_divtype = {"constituent country", "country"},
 		british_spelling = true,
+		-- Don't create categories like 'Category:en:Towns in the United Kingdom'
+		-- or 'Category:en:Places in the United Kingdom'.
+		no_containing_polity_cat = true,
 		data = export.uk_constituent_countries,
 	},
 
