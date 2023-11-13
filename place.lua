@@ -4,7 +4,7 @@ local m_links = require("Module:links")
 local m_langs = require("Module:languages")
 local m_strutils = require("Module:string utilities")
 local m_debug_track = require("Module:debug/track")
-local data = require("Module:User:Benwing2/place/data")
+local data = require("Module:place/data")
 local table_module = "Module:table"
 local put_module = "Module:parse utilities"
 
@@ -299,32 +299,6 @@ local function split_on_slash(arg)
 end
 
 
--- Given a place desc (see top of file) and a holonym object (see top of file), add a key/value into the place desc's
--- `holonyms_by_placetype` field corresponding to the placetype and placename of the holonym. For example, corresponding
--- to the holonym "c/Italy", a key "country" with the list value {"Italy"} will be added to the place desc's
--- `holonyms_by_placetype` field. If there is already a key with that place type, the new placename will be added to the
--- end of the value's list.
-local function key_holonym_into_place_desc(place_desc, holonym)
-	if not holonym.placetype then
-		return
-	end
-
-	local equiv_placetypes = data.get_placetype_equivs(holonym.placetype)
-	local placename = holonym.placename
-	for _, equiv in ipairs(equiv_placetypes) do
-		local placetype = equiv.placetype
-		if not place_desc.holonyms_by_placetype then
-			place_desc.holonyms_by_placetype = {}
-		end
-		if not place_desc.holonyms_by_placetype[placetype] then
-			place_desc.holonyms_by_placetype[placetype] = {placename}
-		else
-			table.insert(place_desc.holonyms_by_placetype[placetype], placename)
-		end
-	end
-end
-
-
 -- Implement "implications", i.e. where the presence of a given holonym causes additional holonym(s) to be added. There
 -- are two types of implications, general implications (which apply to both display and categorization) and category
 -- implications (which apply only to categorization). `place_descriptions` is a list of place descriptions (see top of
@@ -363,7 +337,7 @@ local function handle_implications(place_descriptions, implication_data, should_
 						local holonym_placetype, holonym_placename = unpack(split_holonym)
 						local new_holonym = {placetype = holonym_placetype, placename = holonym_placename}
 						table.insert(desc.holonyms, new_holonym)
-						key_holonym_into_place_desc(desc, new_holonym)
+						data.key_holonym_into_place_desc(desc, new_holonym)
 					end
 				end
 			end
@@ -452,15 +426,16 @@ local function split_holonym(raw)
 	end
 	if #split_holonym_placetype == 2 then
 		affix_type = split_holonym_placetype[2]
-		if affix_type ~= "pref" and affix_type ~= "Pref" and affix_type ~= "suf" and affix_type ~= "Suf" then
-			error(("Unrecognized affix type '%s', should be one of 'pref', 'Pref', 'suf' or 'Suf'"):format(affix_type))
+		if affix_type ~= "pref" and affix_type ~= "Pref" and affix_type ~= "suf" and affix_type ~= "Suf"
+			and affix_type ~= "noaff" then
+			error(("Unrecognized affix type '%s', should be one of 'pref', 'Pref', 'suf', 'Suf' or 'noaff'"):format(affix_type))
 		end
 	end
 
 	placetype = data.resolve_placetype_aliases(placetype)
 	local holonyms = split_holonym_placename(placename)
 	local pluralize_affix = #holonyms > 1
-	local affix_holonym_index = (affix_type == "pref" or affix_type == "Pref") and 1 or #holonyms
+	local affix_holonym_index = (affix_type == "pref" or affix_type == "Pref") and 1 or affix_type == "noaff" and 0 or #holonyms
 	for i, placename in ipairs(holonyms) do
 		-- Check for langcode before the holonym placename, but don't get tripped up by Wikipedia links, which begin
 		-- "[[w:...]]" or "[[wikipedia:]]".
@@ -557,7 +532,7 @@ local function parse_new_style_place_desc(text)
 				if not holonym.no_display then
 					table.insert(retval.order, {type = "holonym", value = #retval.holonyms})
 				end
-				key_holonym_into_place_desc(retval, holonym)
+				data.key_holonym_into_place_desc(retval, holonym)
 			end
 		else
 			-- see if the placetype segment is just qualifiers
@@ -666,7 +641,7 @@ local function parse_place_descriptions(numargs)
 							end
 						end
 						this_desc.holonyms[holonym_index] = holonym
-						key_holonym_into_place_desc(this_desc, this_desc.holonyms[holonym_index])
+						data.key_holonym_into_place_desc(this_desc, this_desc.holonyms[holonym_index])
 						holonym_index = holonym_index + 1
 					end
 				end
@@ -856,25 +831,17 @@ local function get_holonym_description(holonym, needs_article, display_form)
 end
 
 
--- Return the preposition that should be used between the placetypes placetype1 and
--- placetype2 (i.e. "city >in< France.", "country >of< South America"
--- If there is no placetype2, a single whitespace is returned. Otherwise, the
--- preposition is fetched from the data module. If there isn’t any, the default
--- is "in".
--- The preposition is return with a whitespace before and after.
-local function get_in_or_of(placetype1, placetype2)
-	if not placetype2 then
-		return " "
-	end
-
+-- Return the preposition that should be used after `placetype` (e.g. "city >in< France." but
+-- "country >of< South America"). The preposition is fetched from the data module, defaulting to "in".
+local function get_in_or_of(placetype)
 	local preposition = "in"
 
-	local pt_data = data.get_equiv_placetype_prop(placetype1, function(pt) return cat_data[pt] end)
+	local pt_data = data.get_equiv_placetype_prop(placetype, function(pt) return cat_data[pt] end)
 	if pt_data and pt_data.preposition then
 		preposition = pt_data.preposition
 	end
 
-	return " " .. preposition .. " "
+	return preposition
 end
 
 
@@ -891,7 +858,7 @@ local function get_contextual_holonym_description(entry_placetype, prev_holonym,
 		-- First compute the initial delimiter.
 		if first then
 			if holonym.placetype then
-				desc = desc .. get_in_or_of(entry_placetype, "")
+				desc = desc .. " " .. get_in_or_of(entry_placetype) .. " "
 			elseif not holonym.placename:find("^,") then
 				desc = desc .. " "
 			end
@@ -1445,8 +1412,8 @@ local function cat_specs_to_category_wikicode(lang, cat_specs, entry_placetype, 
 		for _, cat_spec in ipairs(cat_specs) do
 			local cat
 			if cat_spec == true then
-				cat = get_placetype_plural(entry_placetype, "ucfirst") ..
-					get_in_or_of(entry_placetype, holonym_placetype) .. " +++"
+				cat = get_placetype_plural(entry_placetype, "ucfirst") .. " " .. get_in_or_of(entry_placetype)
+					.. " +++"
 			else
 				cat = cat_spec
 			end
@@ -1534,6 +1501,7 @@ local function get_cats(lang, args, place_descriptions, additional_cats, sort_ke
 	local cats = {}
 
 	handle_implications(place_descriptions, data.cat_implications, true)
+	data.augment_holonyms_with_containing_polity(place_descriptions)
 
 	local bare_categories = data.get_bare_categories(args, place_descriptions)
 	for _, bare_cat in ipairs(bare_categories) do
