@@ -141,7 +141,7 @@ It should be noted that placetypes and placenames occurring inside the holonyms 
 placetypes inside the placetypes structure are as specified by the user. Stripping off of qualifiers and
 canonicalization of qualifiers and bare placetypes happens later.
 
-The information with HOLONYM_PLACETYPE keys is redundant to the information in holonyms but makes categorization
+The information under `holonyms_by_placetype` is redundant to the information in holonyms but makes categorization
 easier.
 
 For example, the call {{place|en|city|s/Pennsylvania|c/US}} will result in the return value
