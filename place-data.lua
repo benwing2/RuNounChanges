@@ -242,6 +242,33 @@ function export.get_equiv_placetype_prop(placetype, fun)
 end
 
 
+-- Given a place desc (see top of file) and a holonym object (see top of file), add a key/value into the place desc's
+-- `holonyms_by_placetype` field corresponding to the placetype and placename of the holonym. For example, corresponding
+-- to the holonym "c/Italy", a key "country" with the list value {"Italy"} will be added to the place desc's
+-- `holonyms_by_placetype` field. If there is already a key with that place type, the new placename will be added to the
+-- end of the value's list.
+function export.key_holonym_into_place_desc(place_desc, holonym)
+	if not holonym.placetype then
+		return
+	end
+
+	local equiv_placetypes = export.get_placetype_equivs(holonym.placetype)
+	local placename = holonym.placename
+	for _, equiv in ipairs(equiv_placetypes) do
+		local placetype = equiv.placetype
+		if not place_desc.holonyms_by_placetype then
+			place_desc.holonyms_by_placetype = {}
+		end
+		if not place_desc.holonyms_by_placetype[placetype] then
+			place_desc.holonyms_by_placetype[placetype] = {placename}
+		else
+			table.insert(place_desc.holonyms_by_placetype[placetype], placename)
+		end
+	end
+end
+
+
+
 ------------------------------------------------------------------------------------------
 --                              Placename and placetype data                            --
 ------------------------------------------------------------------------------------------
@@ -448,6 +475,9 @@ export.placetype_qualifiers = {
 	["southeast"] = true,
 	["northwest"] = true,
 	["southwest"] = true,
+	-- seasonal qualifiers
+	["summer"] = true, -- e.g. for 'summer capital'
+	["winter"] = true,
 	-- misc. qualifiers
 	["hilly"] = true,
 	["planned"] = true,
@@ -1206,7 +1236,7 @@ end
 -- subdivisions listed in the groups in [[Module:place/shared-data]], with the containing polity
 -- as the implicand. That way, if someone writes e.g. {{place|en|village|s/Thuringia}}, it will
 -- automatically display as if written {{place|en|village|s/Thuringia|c/Germany}}.
-export.implications = {
+export.general_implications = {
 }
 
 
@@ -1263,26 +1293,6 @@ local function call_place_cat_handler(group, placetypes, placename)
 	local handler = group.place_cat_handler or m_shared.default_place_cat_handler
 	return handler(group, placetypes, placename)
 end
-
-
-export.cat_implication_handlers = {}
-
-table.insert(export.cat_implication_handlers,
-	function(placetype, holonym_placetype, holonym_placename)
-		for _, group in ipairs(m_shared.polities) do
-			-- Find the appropriate key format for the holonym (e.g. "pref/Osaka" -> "Osaka Prefecture").
-			local key, _ = call_place_cat_handler(group, holonym_placetype, holonym_placename)
-			if key then
-				local value = group.data[key]
-				if value and value.containing_polity and value.containing_polity_type then
-					local bare_containing_polity, linked_containing_polity =
-						m_shared.construct_bare_and_linked_version(value.containing_polity)
-					return {value.containing_polity_type, bare_containing_polity}
-				end
-			end
-		end
-	end
-)
 
 
 ------------------------------------------------------------------------------------------
@@ -1572,6 +1582,82 @@ function export.get_bare_categories(args, place_descs)
 	end
 	
 	return bare_cats
+end
+
+
+-- This is used to augment the holonyms associated with a place description with the containing polities. For example,
+-- given the following:
+-- # The {{w|City of Penrith}}, {{place|en|a=a|lgarea|in|s/New South Wales}}.
+-- We auto-add Australia as another holonym so that the term gets categorized into
+-- [[:Category:Local government areas in Australia]].
+-- To avoid over-categorizing we need to check to make sure no other countries are specified as holonyms.
+function export.augment_holonyms_with_containing_polity(place_descs)
+	for _, place_desc in ipairs(place_descs) do
+		if place_desc.holonyms then
+			local new_holonyms = {}
+			for _, holonym in ipairs(place_desc.holonyms) do
+				if holonym.placetype and not export.placetype_is_ignorable(holonym.placetype) then
+					local possible_placetypes = {}
+					local equivs = export.get_placetype_equivs(holonym.placetype)
+					for _, equiv in ipairs(equivs) do
+						table.insert(possible_placetypes, equiv.placetype)
+					end
+
+					for _, group in ipairs(m_shared.polities) do
+						-- Try to find the term among the known polities.
+						local key, _ = call_place_cat_handler(group, possible_placetypes, holonym.placename)
+						if key then
+							local value = group.data[key]
+							if value then
+								value = group.value_transformer(group, key, value)
+								if not value.no_containing_polity_cat and value.containing_polity and
+										value.containing_polity_type then
+									local existing_polities_of_type
+									local containing_type = value.containing_polity_type
+									local function get_existing_polities_of_type(placetype)
+										return export.get_equiv_placetype_prop(placetype,
+											function(pt) return place_desc.holonyms_by_placetype[pt] end
+										)
+									end
+									-- Usually there's a single containing type but write as if more than one can be
+									-- specified (e.g. {"administrative region", "region"}).
+									if type(containing_type) == "string" then
+										existing_polities_of_type = get_existing_polities_of_type(containing_type)
+									else
+										for _, containing_pt in ipairs(containing_type) do
+											existing_polities_of_type = get_existing_polities_of_type(containing_pt)
+											if existing_polities_of_type then
+												break
+											end
+										end
+									end
+									if existing_polities_of_type then
+										-- Don't augment. Either the containing polity is already specified as a holonym,
+										-- or some other polity is, which we consider a conflict.
+									else
+										if type(containing_type) == "table" then
+											-- If the containing type is a list, use the first element as the canonical
+											-- variant.
+											containing_type = containing_type[1]
+										end
+										-- Don't side-effect holonyms while processing them.
+										table.insert(new_holonyms, {placetype = containing_type,
+											placename = value.containing_polity, no_display = true})
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+			for _, new_holonym in ipairs(new_holonyms) do
+				table.insert(place_desc.holonyms, new_holonym)
+				export.key_holonym_into_place_desc(place_desc, new_holonym)
+			end
+		end
+	end
+
+	-- FIXME, consider doing cities as well.
 end
 
 
