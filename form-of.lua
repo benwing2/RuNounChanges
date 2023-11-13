@@ -1143,6 +1143,9 @@ controlling the display, with the following fields:
 `.tag_sets`: (REQUIRED UNLESS `.tags` IS GIVEN) List of non-canonicalized tag sets and associated per-tag-set
 			 properties. Each element of the list is an object of the form {tags = {"TAG", "TAG", ...}, labels =
 			 {"LABEL", "LABEL", ...}}. If `.tag_sets` is specified, `.tags` should not be given and vice-versa.
+			 Specifying `.tag_sets` in place of tags allowed per-tag set labels to be specified; otherwise, there is no
+			 advantage. [[Module:pt-gl-inflections]] uses this functionality to supply labels like "Brazil" and
+			 "Portugal" associated with specific tag sets.
 `.lemmas`: (RECOMMENDED) List of objects describing the lemma(s) of which the term in question is a non-lemma form.
 		   These are passed directly to full_link() in [[Module:links]]. Each object should have at minimum a `.lang`
 		   field containing the language of the lemma and a `.term` field containing the lemma itself. Each object is
