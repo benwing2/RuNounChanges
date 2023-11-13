@@ -29,6 +29,23 @@ local function get_script(sc, param_for_error)
 end
 
 
+local function get_common_template_params()
+	return {
+		-- Named params not controlling link display
+		["cat"] = {list = true},
+		["notext"] = {type = "boolean"},
+		["sort"] = {},
+		["enclitic"] = {},
+		-- FIXME! The following should only be available when withcap=1 in invocation args. Before doing that, need to
+		-- remove all uses of nocap= in other circumstances.
+		["nocap"] = {type = "boolean"},
+		-- FIXME! The following should only be available when withdot=1 in invocation args. Before doing that, need to
+		-- remove all uses of nodot= in other circumstances.
+		["nodot"] = {type = "boolean"},
+		["pagename"] = {}, -- for testing, etc.
+	}
+end
+
 --[=[
 Process parent arguments. This is similar to the following:
 	require("Module:parameters").process(parent_args, params)
@@ -341,7 +358,6 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, base_l
 	elseif iargs["linktext"] then
 		lemmas = iargs["linktext"]
 	else
-		-- Only one lemma. We use a simpler structure in `args` to save memory.
 		local term = args[term_param]
 
 		if not term and not args["alt"] and not args["tr"] and not args["ts"] then
@@ -352,10 +368,11 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, base_l
 			end
 		end
 
-		add_term_tracking_categories(term)
-
 		if term then
 			lemmas = parse_terms_with_inline_modifiers(term_param, term, lang)
+			for _, lemma in ipairs(lemmas) do
+				add_term_tracking_categories(lemma.term)
+			end
 		else
 			lemmas = {{ lang = lang }}
 		end
@@ -441,7 +458,32 @@ local function construct_form_of_text(iargs, args, term_param, compat, base_lemm
 		return text
 	end
 	return text .. require("Module:utilities").format_categories(lemma_data.categories, lemma_data.lang, args["sort"],
-		nil, m_form_of.force_cat)
+		-- If lemma_is_sort_key is given, supply the first lemma term as the sort base if possible. If sort= is given,
+		-- it will override the base; otherwise, the base will be converted appropriately to a sort key using the
+		-- same algorithm applied to pagenames.
+		iargs.lemma_is_sort_key and type(lemma_data.lemmas) == "table" and lemma_data.lemmas[1].term,
+		-- Supply the first lemma's script for sort key computation.
+		m_form_of.force_cat, type(lemma_data.lemmas) == "table" and lemma_data.lemmas[1].sc)
+end
+
+
+-- Invocation parameters shared between form_of_t(), tagged_form_of_t() and inflection_of_t().
+local function get_common_invocation_params()
+	return {
+		["term_param"] = {type = "number"},
+		["lang"] = {},
+		["sc"] = {},
+		["cat"] = {list = true},
+		["ignore"] = {list = true},
+		["def"] = {list = true},
+		["withcap"] = {type = "boolean"},
+		["withdot"] = {type = "boolean"},
+		["nolink"] = {type = "boolean"},
+		["linktext"] = {},
+		["posttext"] = {},
+		["noprimaryentrycat"] = {},
+		["lemma_is_sort_key"] = {},
+	}
 end
 
 
@@ -455,74 +497,51 @@ Invocation params:
 1= (required):
 	Text to display before the link.
 term_param=:
-	Numbered param holding the term linked to. Other numbered params come after.
-	Defaults to 1 if invocation or template param lang= is present, otherwise 2.
+	Numbered param holding the term linked to. Other numbered params come after. Defaults to 1 if invocation or template
+	param lang= is present, otherwise 2.
 lang=:
-	Default language code for language-specific templates. If specified, no
-	language code needs to be specified, and if specified it needs to be set
-	using lang=, not 1=.
+	Default language code for language-specific templates. If specified, no language code needs to be specified, and if
+	specified it needs to be set using lang=, not 1=.
 sc=:
-	Default script code for language-specific templates. The script code can
-	still be overridden using template param sc=.
+	Default script code for language-specific templates. The script code can still be overridden using template param
+	sc=.
 cat=, cat2=, ...:
-	Categories to place the page into. The language name will automatically be
-	prepended. Note that there is also a template param cat= to specify
-	categories at the template level. Use of nocat= disables categorization of
-	categories specified using invocation param cat=, but not using template
-	param cat=.
+	Categories to place the page into. The language name will automatically be prepended. Note that there is also a
+	template param cat= to specify categories at the template level. Use of nocat= disables categorization of categories
+	specified using invocation param cat=, but not using template param cat=.
 ignore=, ignore2=, ...:
-	One or more template params to silently accept and ignore. Useful e.g. when
-	the template takes additional parameters such as from= or POS=. Each value
-	is a comma-separated list of either bare parameter names or specifications
-	of the form "PARAM:list" to specify that the parameter is a list parameter.
+	One or more template params to silently accept and ignore. Useful e.g. when the template takes additional parameters
+	such as from= or POS=. Each value is a comma-separated list of either bare parameter names or specifications of the
+	form "PARAM:list" to specify that the parameter is a list parameter.
 def=, def2=, ...:
-	One or more default values to supply for template args. For example,
-	specifying '|def=tr=-' causes the default for template param '|tr=' to be
-	'-'. Actual template params override these defaults.
+	One or more default values to supply for template args. For example, specifying '|def=tr=-' causes the default for
+	template param '|tr=' to be '-'. Actual template params override these defaults.
 withcap=:
-	Capitalize the first character of the text preceding the link, unless
-	template param nocap= is given.
+	Capitalize the first character of the text preceding the link, unless template param nocap= is given.
 withdot=:
-	Add a final period after the link, unless template param nodot= is given
-	to suppress the period, or dot= is given to specify an alternative
-	punctuation character.
+	Add a final period after the link, unless template param nodot= is given to suppress the period, or dot= is given to
+	specify an alternative punctuation character.
 nolink=:
-	Suppress the display of the link. If specified, none of the template
-	params that control the link (TERM_PARAM, TERM_PARAM + 1, TERM_PARAM + 2,
-	t=, gloss=, sc=, tr=, ts=, pos=, g=, id=, lit=) will be available.
-	If the calling template uses any of these parameters, they must be
-	ignored using ignore=.
-linktext=:
-	Override the display of the link with the specified text. This is useful
-	if a custom template is available to format the link (e.g. in Hebrew,
-	Chinese and Japanese). If specified, none of the template params that
-	control the link (TERM_PARAM, TERM_PARAM + 1, TERM_PARAM + 2, t=, gloss=,
-	sc=, tr=, ts=, pos=, g=, id=, lit=) will be available. If the calling
+	Suppress the display of the link. If specified, none of the template params that control the link (TERM_PARAM,
+	TERM_PARAM + 1, TERM_PARAM + 2, t=, gloss=, sc=, tr=, ts=, pos=, g=, id=, lit=) will be available. If the calling
 	template uses any of these parameters, they must be ignored using ignore=.
+linktext=:
+	Override the display of the link with the specified text. This is useful if a custom template is available to format
+	the link (e.g. in Hebrew, Chinese and Japanese). If specified, none of the template params that control the link
+	(TERM_PARAM, TERM_PARAM + 1, TERM_PARAM + 2, t=, gloss=, sc=, tr=, ts=, pos=, g=, id=, lit=) will be available. If
+	the calling template uses any of these parameters, they must be ignored using ignore=.
 posttext=:
-	Additional text to display directly after the formatted link, before any
-	terminating period/dot and inside of "<span class='use-with-mention'>".
+	Additional text to display directly after the formatted link, before any terminating period/dot and inside of
+	"<span class='use-with-mention'>".
 noprimaryentrycat=:
-	Category to add the page to if the primary entry linked to doesn't exist.
-	The language name will automatically be prepended.
+	Category to add the page to if the primary entry linked to doesn't exist. The language name will automatically be
+	prepended.
+lemma_is_sort_key=:
+	If the user didn't specify a sort key, use the lemma as the sort key (instead of the page itself).
 ]=]--
 function export.form_of_t(frame)
-	local iparams = {
-		[1] = {required = true},
-		["term_param"] = {type = "number"},
-		["lang"] = {},
-		["sc"] = {},
-		["cat"] = {list = true},
-		["ignore"] = {list = true},
-		["def"] = {list = true},
-		["withcap"] = {type = "boolean"},
-		["withdot"] = {type = "boolean"},
-		["nolink"] = {type = "boolean"},
-		["linktext"] = {},
-		["posttext"] = {},
-		["noprimaryentrycat"] = {},
-	}
-
+	local iparams = get_common_invocation_params()
+	iparams[1] = {required = true}
 	local iargs = m_params.process(frame.args, iparams, nil, "form of/templates", "form_of_t")
 	local parent_args = frame:getParent().args
 
@@ -531,25 +550,9 @@ function export.form_of_t(frame)
 	local compat = iargs["lang"] or parent_args["lang"]
 	term_param = term_param or compat and 1 or 2
 
-	local params = {
-		-- Numbered params
-		[compat and "lang" or 1] = {required = not iargs["lang"]},
-
-		-- Named params not controlling link display
-		["cat"] = {list = true},
-		["notext"] = {type = "boolean"},
-		["sort"] = {},
-		["enclitic"] = {},
-		-- FIXME! The following should only be available when withcap=1 in
-		-- invocation args. Before doing that, need to remove all uses of
-		-- nocap= in other circumstances.
-		["nocap"] = {type = "boolean"},
-		-- FIXME! The following should only be available when withdot=1 in
-		-- invocation args. Before doing that, need to remove all uses of
-		-- nodot= in other circumstances.
-		["nodot"] = {type = "boolean"},
-		["pagename"] = {}, -- for testing, etc.
-	}
+	local params = get_common_template_params()
+	-- Numbered params
+	params[compat and "lang" or 1] = {required = not iargs["lang"]}
 
 	local base_lemma_params
 	if not iargs["nolink"] and not iargs["linktext"] then
@@ -654,25 +657,13 @@ nolink=:
 linktext=:
 posttext=:
 noprimaryentrycat=:
+lemma_is_sort_key=:
 	All of these are the same as in form_of_t().
 ]=]--
 function export.tagged_form_of_t(frame)
-	local iparams = {
-		[1] = {list = true, required = true},
-		["split_tags"] = {},
-		["term_param"] = {type = "number"},
-		["lang"] = {},
-		["sc"] = {},
-		["cat"] = {list = true},
-		["ignore"] = {list = true},
-		["def"] = {list = true},
-		["withcap"] = {type = "boolean"},
-		["withdot"] = {type = "boolean"},
-		["nolink"] = {type = "boolean"},
-		["linktext"] = {},
-		["posttext"] = {},
-		["noprimaryentrycat"] = {},
-	}
+	local iparams = get_common_invocation_params()
+	iparams[1] = {list = true, required = true}
+	iparams["split_tags"] = {}
 
 	local iargs = m_params.process(frame.args, iparams, nil, "form of/templates", "tagged_form_of_t")
 	local parent_args = frame:getParent().args
@@ -682,29 +673,13 @@ function export.tagged_form_of_t(frame)
 	local compat = iargs["lang"] or parent_args["lang"]
 	term_param = term_param or compat and 1 or 2
 
-	local params = {
-		-- Numbered params
-		[compat and "lang" or 1] = {required = not iargs["lang"]},
-
-		-- Named params not controlling link display
-		["cat"] = {list = true},
-		-- Always included because lang-specific categories may be added
-		["nocat"] = {type = "boolean"},
-		["p"] = {},
-		["POS"] = {alias_of = "p"},
-		["notext"] = {type = "boolean"},
-		["sort"] = {},
-		["enclitic"] = {},
-		-- FIXME! The following should only be available when withcap=1 in
-		-- invocation args. Before doing that, need to remove all uses of
-		-- nocap= in other circumstances.
-		["nocap"] = {type = "boolean"},
-		-- FIXME! The following should only be available when withdot=1 in
-		-- invocation args. Before doing that, need to remove all uses of
-		-- nodot= in other circumstances.
-		["nodot"] = {type = "boolean"},
-		["pagename"] = {}, -- for testing, etc.
-	}
+	local params = get_common_template_params()
+	-- Numbered params
+	params[compat and "lang" or 1] = {required = not iargs["lang"]}
+	-- Always included because lang-specific categories may be added
+	params["nocat"] = {type = "boolean"}
+	params["p"] = {}
+	params["POS"] = {alias_of = "p"}
 
 	local base_lemma_params
 	if not iargs["nolink"] and not iargs["linktext"] then
@@ -772,26 +747,14 @@ nolink=:
 linktext=:
 posttext=:
 noprimaryentrycat=:
+lemma_is_sort_key=:
 	All of these are the same as in form_of_t().
 ]=]--
 function export.inflection_of_t(frame)
-	local iparams = {
-		["preinfl"] = {list = true},
-		["postinfl"] = {list = true},
-		["split_tags"] = {},
-		["term_param"] = {type = "number"},
-		["lang"] = {},
-		["sc"] = {},
-		["cat"] = {list = true},
-		["ignore"] = {list = true},
-		["def"] = {list = true},
-		["withcap"] = {type = "boolean"},
-		["withdot"] = {type = "boolean"},
-		["nolink"] = {type = "boolean"},
-		["linktext"] = {},
-		["posttext"] = {},
-		["noprimaryentrycat"] = {},
-	}
+	local iparams = get_common_invocation_params()
+	iparams["preinfl"] = {list = true}
+	iparams["postinfl"] = {list = true}
+	iparams["split_tags"] = {}
 
 	local iargs = m_params.process(frame.args, iparams, nil, "form of/templates", "inflection_of_t")
 	local parent_args = frame:getParent().args
@@ -802,36 +765,20 @@ function export.inflection_of_t(frame)
 	term_param = term_param or compat and 1 or 2
 	local tagsind = term_param + 2
 
-	local params = {
-		-- Numbered params
-		[compat and "lang" or 1] = {required = not iargs["lang"]},
-		[tagsind] = {list = true,
-			-- at least one inflection tag is required unless preinfl or
-			-- postinfl tags are given
-			required = #iargs["preinfl"] == 0 and #iargs["postinfl"] == 0},
+	local params = get_common_template_params()
+	-- Numbered params
+	params[compat and "lang" or 1] = {required = not iargs["lang"]}
+	params[tagsind] = {list = true,
+		-- at least one inflection tag is required unless preinfl or postinfl tags are given
+		required = #iargs["preinfl"] == 0 and #iargs["postinfl"] == 0}
 
-		-- Named params not controlling link display
-		["cat"] = {list = true},
-		-- Always included because lang-specific categories may be added
-		["nocat"] = {type = "boolean"},
-		["p"] = {},
-		["POS"] = {alias_of = "p"},
-		["notext"] = {type = "boolean"},
-		["enclitic"] = {},
-		["sort"] = {},
-		-- FIXME! The following should only be available when withcap=1 in
-		-- invocation args. Before doing that, need to remove all uses of
-		-- nocap= in other circumstances.
-		["nocap"] = {type = "boolean"},
-		-- FIXME! The following should only be available when withdot=1 in
-		-- invocation args. Before doing that, need to remove all uses of
-		-- nodot= in other circumstances.
-		["nodot"] = {type = "boolean"},
-		-- Temporary, allows multipart joiner to be controlled on a template-by-template
-		-- basis
-		["joiner"] = {},
-		["pagename"] = {}, -- for testing, etc.
-	}
+	-- Named params not controlling link display
+	-- Always included because lang-specific categories may be added
+	params["nocat"] = {type = "boolean"}
+	params["p"] = {}
+	params["POS"] = {alias_of = "p"}
+	-- Temporary, allows multipart joiner to be controlled on a template-by-template basis.
+	params["joiner"] = {}
 
 	local base_lemma_params
 	if not iargs["nolink"] and not iargs["linktext"] then
