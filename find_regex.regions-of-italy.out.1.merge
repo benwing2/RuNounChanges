@@ -9,7 +9,7 @@ Page 1 Աբրուցցո: -------- begin text --------
 {{wikipedia|lang=hy}}
 {{hy-proper noun}}
 
-# {{place|hy|region|c/Italy|t=Abruzzo}}
+# {{tcl|hy|Abruzzo|id=Q1284}}
 
 ====Declension====
 {{hy-noun-ի-ներ|unc=on}}
@@ -30,12 +30,10 @@ Page 2 Ապուլիա: -------- begin text --------
 ===Proper noun===
 {{hy-proper noun}}
 
-# [[Apulia]]
+# {{tcl|hy|Apulia|id=Q1447}}
 
 ====Declension====
 {{hy-noun-ի-ներ|unc=on}}
-
-{{C|hy|Regions of Italy}}
 -------- end text --------
 Page 3 Լիգուրիա: -------- begin text --------
 ==Armenian==
@@ -47,7 +45,7 @@ Page 3 Լիգուրիա: -------- begin text --------
 {{wikipedia|lang=hy}}
 {{hy-proper noun}}
 
-# {{place|hy|region|c/Italy|t=Liguria}}
+# {{tcl|hy|Liguria|id=Q1256}}
 
 ====Declension====
 {{hy-noun-ի-ներ|unc=on}}
@@ -62,7 +60,7 @@ Page 4 Պիեմոնտ: -------- begin text --------
 {{wikipedia|lang=hy}}
 {{hy-proper noun}}
 
-# {{place|hy|region|c/Italy|t=Piedmont}}
+# {{tcl|hy|Piedmont|id=Q1216}}
 
 ====Declension====
 {{hy-noun-ի-ներ|unc=on}}
@@ -79,12 +77,10 @@ Page 5 Սարդինիա: -------- begin text --------
 ===Proper noun===
 {{hy-proper noun}}
 
-# {{place|hy|region|c/Italy|t=Sardinia}}
+# {{tcl|hy|Sardinia|id=Q1462}}
 
 ====Declension====
 {{hy-noun-ի-ներ|unc=on||Սարդինիայ}}
-
-[[Category:hy:Islands]]
 -------- end text --------
 Page 6 Սիցիլիա: -------- begin text --------
 ==Armenian==
@@ -96,12 +92,10 @@ Page 6 Սիցիլիա: -------- begin text --------
 {{wikipedia|lang=hy}}
 {{hy-proper noun}}
 
-# {{place|hy|region|c/Italy|t=Sicily}}
+# {{tcl|hy|Sicily|id=Q1460}}
 
 ====Declension====
 {{hy-noun-ի-ներ|unc=on}}
-
-[[Category:hy:Islands]]
 -------- end text --------
 Page 7 Lacio: -------- begin text --------
 {{also|lacio|Lácio}}
@@ -113,19 +107,17 @@ Page 7 Lacio: -------- begin text --------
 ===Proper noun===
 {{ast-proper noun|m}}
 
-# {{place|ast|region|c/Italy|t=Lazio}}
+# {{tcl|ast|Lazio|id=Q1282}}
 
 ==Cebuano==
 
 ===Proper noun===
 {{head|ceb|proper noun}}
 
-# a [[surname]]
+# {{surname|ceb}}
 
 ====Quotations====
 {{seeCites|ceb}}
-
-[[Category:Cebuano surnames]]
 
 ==Galician==
 
@@ -135,7 +127,7 @@ From {{der|gl|la|Latium}}.
 ===Proper noun===
 {{gl-proper noun|m}}
 
-# {{place|gl|region|c/Italy|t=Lazio}}
+# {{tcl|gl|Lazio|id=Q1282}}
 
 ===See also===
 * {{l|gl|volsco}}
@@ -151,7 +143,7 @@ From {{der|es|la|Latium}}.
 ===Proper noun===
 {{es-proper noun|m}}
 
-# {{place|es|region|c/Italy|t=Lazio}}, [[Latium]]
+# {{tcl|es|Lazio|id=Q1282}}
 # {{lb|es|historical}} [[Latium]]
 
 ====Related terms====
@@ -170,7 +162,7 @@ Page 8 Abruços: -------- begin text --------
 ===Proper noun===
 {{ca-proper noun|m-p}}
 
-# {{place|ca|region|c/Italy|t=Abruzzo}}
+# {{tcl|ca|Abruzzo|id=Q1284}}
 
 ====Related terms====
 * {{l|ca|abrucès}}
@@ -186,7 +178,7 @@ Page 9 Calàbria: -------- begin text --------
 ===Proper noun===
 {{ca-proper noun|f}}
 
-# {{place|ca|region|c/Italy|t=Calabria}}
+# {{tcl|ca|Calabria|id=Q1458}}
 
 ====Derived terms====
 * {{l|ca|calabrès}}
@@ -197,7 +189,7 @@ Page 9 Calàbria: -------- begin text --------
 ===Proper noun===
 {{oc-proper noun|f}}
 
-# {{place|oc|region|c/Italy|t=Calabria}}
+# {{tcl|oc|Calabria|id=Q1458}}
 
 ====Related terms====
 * {{l|oc|calabrés}}
@@ -213,7 +205,7 @@ Page 10 Campània: -------- begin text --------
 ===Proper noun===
 {{ca-proper noun|f}}
 
-# {{place|ca|region|c/Italy|t=Campania}}
+# {{tcl|ca|Campania|id=Q1438}}
 #: {{holo|ca|Itàlia}}
 #: {{mero|ca|Herculà|Nàpols|Pompeia|Vesuvi}}
 
@@ -226,7 +218,7 @@ Page 10 Campània: -------- begin text --------
 ===Proper noun===
 {{oc-proper noun|f}}
 
-# {{place|oc|region|c/Italy|t=Campania}}
+# {{tcl|oc|Campania|id=Q1438}}
 -------- end text --------
 Page 11 Emília-Romanya: -------- begin text --------
 ==Catalan==
@@ -235,7 +227,7 @@ Page 11 Emília-Romanya: -------- begin text --------
 ===Proper noun===
 {{ca-proper noun|?}}
 
-# {{place|ca|region|c/Italy|t=Emilia-Romagna}}
+# {{tcl|ca|Emilia-Romagna|id=Q1263}}
 -------- end text --------
 Page 12 Friül-Venècia Júlia: -------- begin text --------
 ==Catalan==
@@ -243,9 +235,7 @@ Page 12 Friül-Venècia Júlia: -------- begin text --------
 ===Proper noun===
 {{ca-proper noun|m|head=[[Friül]]-[[Venècia]] [[Júlia]]}}
 
-# {{place|ca|autonomous region|c/Italy|t=Friuli-Venezia Giulia|capital=Trieste}}
-
-{{C|ca|Regions of Italy}}
+# {{tcl|ca|Friuli-Venezia Giulia|id=Q1250|capital=Trieste}}
 -------- end text --------
 Page 13 Laci: -------- begin text --------
 {{also|laci|láci|lácí|lāci|lācī|lāči}}
@@ -273,7 +263,7 @@ From {{der|ca|la|Latium}}.
 ===Proper noun===
 {{ca-proper noun|m}}
 
-# {{place|ca|region|c/Italy|t=Lazio}}
+# {{tcl|ca|Lazio|id=Q1282}}
 # {{place|ca|historical region|c/Italy|t=Latium}}
 
 ====Related terms====
@@ -316,7 +306,7 @@ Page 14 Ligúria: -------- begin text --------
 ===Proper noun===
 {{ca-proper noun|f}}
 
-# {{place|ca|region|of northwestern|c/Italy|t1=Liguria}}
+# {{tcl|ca|Liguria|id=Q1256}}
 
 ====Related terms====
 * {{l|ca|lígur}}
@@ -339,7 +329,7 @@ Page 14 Ligúria: -------- begin text --------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|region|of northwestern|c/Italy|t1=Liguria}}
+# {{tcl|pt|Liguria|id=Q1256}}
 -------- end text --------
 Page 15 Llombardia: -------- begin text --------
 ==Catalan==
@@ -347,7 +337,7 @@ Page 15 Llombardia: -------- begin text --------
 ===Proper noun===
 {{ca-proper noun|f}}
 
-# {{place|ca|region|c/Italy|t=Lombardy}}
+# {{tcl|ca|Lombardy|id=Q1210}}
 
 ====Related terms====
 * {{l|ca|llombard}}
@@ -365,7 +355,7 @@ Page 16 Marques: -------- begin text --------
 ===Proper noun===
 {{ca-proper noun|f-p}}
 
-# {{place|ca|region|in central|c/Italy|t1=Marche}}
+# {{tcl|ca|Marche|id=Q1279}}
 
 ====Related terms====
 * {{l|ca|marca}}
@@ -391,7 +381,7 @@ Page 17 Piemont: -------- begin text --------
 ===Proper noun===
 {{ca-proper noun|m}}
 
-# {{place|ca|region|c/Italy|t=Piedmont|capital=Turin}}
+# {{tcl|ca|Piedmont|id=Q1216}}
 
 ====Derived terms====
 * {{l|ca|piemontès}}
@@ -410,7 +400,7 @@ From {{der|cs|it|Piemonte}}, from {{der|cs|la|Pedemontium|lit=at the foot of the
 ===Proper noun===
 {{cs-proper noun|m-in|adj=piemontský|dem=Piemonťan|fdem=Piemonťanka}}
 
-# {{place|cs|region|in northwestern|c/Italy|t1=Piedmont|capital=Turin}}
+# {{tcl|cs|Piedmont|id=Q1216}}
 
 ====Declension====
 {{cs-ndecl|m.sg.locě:u}}
@@ -427,7 +417,7 @@ From {{der|cs|it|Piemonte}}, from {{der|cs|la|Pedemontium|lit=at the foot of the
 ===Proper noun===
 {{head|fur|proper noun}}
 
-# [[Piedmont]]
+# {{tcl|fur|Piedmont|id=Q1216}}
 
 ====Related terms====
 * {{l|fur|piemontês}}
@@ -445,7 +435,7 @@ From {{der|cs|it|Piemonte}}, from {{der|cs|la|Pedemontium|lit=at the foot of the
 ===Proper noun===
 {{de-proper noun|toponym}}
 
-# {{place|de|region|c/Italy|t=Piedmont}}
+# {{tcl|de|Piedmont|id=Q1216}}
 
 ====Declension====
 * Genitive singular: without any article ''Piemonts'' or with the definite article ''(des) Piemont'' or ''(des) Piemonts''
@@ -464,7 +454,7 @@ From {{der|cs|it|Piemonte}}, from {{der|cs|la|Pedemontium|lit=at the foot of the
 ===Proper noun===
 {{oc-proper noun|m}}
 
-# {{place|oc|region|c/Italy|t=Piedmont}}
+# {{tcl|oc|Piedmont|id=Q1216}}
 
 ====Derived terms====
 * {{l|oc|piemontés}}
@@ -477,7 +467,7 @@ From {{der|cs|it|Piemonte}}, from {{der|cs|la|Pedemontium|lit=at the foot of the
 ===Proper noun===
 {{head|pms|proper noun|g=m}}
 
-# [[Piedmont]]
+# {{tcl|pms|Piedmont|id=Q1216}}
 
 ==Polish==
 {{wp|lang=pl}}
@@ -488,7 +478,7 @@ From {{der|cs|it|Piemonte}}, from {{der|cs|la|Pedemontium|lit=at the foot of the
 ===Proper noun===
 {{head|pl|proper noun|g=m}}
 
-# {{place|pl|region|c/Italy|t=Piedmont}}
+# {{tcl|pl|Piedmont|id=Q1216}}
 
 ====Declension====
 {{pl-decl-noun-sing|Piemont|Piemontu|Piemontowi|Piemont|Piemontem|Piemoncie|Piemoncie}}
@@ -507,7 +497,7 @@ From {{der|cs|it|Piemonte}}, from {{der|cs|la|Pedemontium|lit=at the foot of the
 ===Proper noun===
 {{ro-proper noun|n}}
 
-# {{place|ro|region|c/Italy|t=Piedmont}}
+# {{tcl|ro|Piedmont|id=Q1216}}
 
 ===Further reading===
 * {{R:DEX}}
@@ -517,7 +507,7 @@ From {{der|cs|it|Piemonte}}, from {{der|cs|la|Pedemontium|lit=at the foot of the
 ===Proper noun===
 {{sk-proper noun}}
 
-# {{place|sk|region|c/Italy|t=Piedmont}}
+# {{tcl|sk|Piedmont|id=Q1216}}
 
 ====Derived terms====
 * {{l|sk|piemontský}}
@@ -527,7 +517,7 @@ From {{der|cs|it|Piemonte}}, from {{der|cs|la|Pedemontium|lit=at the foot of the
 ===Proper noun===
 {{sl-proper noun}}
 
-# {{place|sl|region|c/Italy|t=Piedmont}}
+# {{tcl|sl|Piedmont|id=Q1216}}
 
 ====Derived terms====
 * {{l|sl|piemontski}}
@@ -542,7 +532,7 @@ Page 18 Pulla: -------- begin text --------
 ===Proper noun===
 {{ca-proper noun|f}}
 
-# {{place|ca|region|c/Italy|t=Apulia}}
+# {{tcl|ca|Apulia|id=Q1447}}
 
 ====Derived terms====
 * {{l|ca|pullès}}
@@ -555,7 +545,7 @@ Page 18 Pulla: -------- begin text --------
 ===Proper noun===
 {{es-proper noun|f}}
 
-# {{place|es|region|c/Italy|t=Apulia}}
+# {{tcl|es|Apulia|id=Q1447}}
 
 ====Derived terms====
 {{col-auto|es|pullés}}
@@ -572,7 +562,7 @@ Page 19 Sardenya: -------- begin text --------
 ===Proper noun===
 {{ca-proper noun|f}}
 
-# {{place|ca|island/and/region|c/Italy|t1=Sardinia}}
+# {{tcl|ca|Sardinia|id=Q1462}}
 
 ====Related terms====
 * {{l|ca|sard}}
@@ -592,7 +582,7 @@ From {{der|ca|la|Sicilia}}.
 ===Proper noun===
 {{ca-proper noun|f}}
 
-# {{place|ca|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|ca|Sicily|id=Q1460}}
 #: {{holo|ca|Itàlia}}
 #: {{mero|ca|Siracusa}}
 
@@ -605,7 +595,7 @@ From {{der|ca|la|Sicilia}}.
 ===Proper noun===
 {{oc-proper noun|f}}
 
-# {{place|oc|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|oc|Sicily|id=Q1460}}
 #: {{holo|oc|Itàlia|Mar Mediterranèa}}
 #: {{mero|oc|Siracusa}}
 
@@ -628,7 +618,7 @@ From {{der|ca|la|Sicilia}}.
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|island/and/region|c/Italy|in|sea/Mediterranean Sea|t1=Sicily}}
+# {{tcl|pt|Sicily|id=Q1460}}
 #: {{holo|pt|Itália}}
 #: {{mero|pt|Siracusa}}
 
@@ -659,7 +649,7 @@ Page 22 Toscana: -------- begin text --------
 ===Proper noun===
 {{ca-proper noun|f}}
 
-# {{place|ca|region|c/Italy|t=Tuscany}}
+# {{tcl|ca|Tuscany|id=Q1273}}
 
 ====Related terms====
 * {{l|ca|toscà}}
@@ -669,7 +659,7 @@ Page 22 Toscana: -------- begin text --------
 ===Proper noun===
 {{gl-proper noun}}
 
-# {{place|gl|region|c/Italy|t=Tuscany}}
+# {{tcl|gl|Tuscany|id=Q1273}}
 
 ====Related terms====
 * {{l|gl|toscano}}
@@ -687,7 +677,7 @@ From {{der|it|LL.|Tuscanus|(terra) Tuscāna|the land of the Etruscans}}, ultimat
 ===Proper noun===
 {{it-proper noun|f}}
 
-# {{place|it|region|c/Italy|t=Tuscany}}
+# {{tcl|it|Tuscany|id=Q1273}}
 
 ====Related terms====
 {{rel4
@@ -709,7 +699,7 @@ From {{der|it|LL.|Tuscanus|(terra) Tuscāna|the land of the Etruscans}}, ultimat
 ===Proper noun===
 {{head|nb|proper noun}}
 
-# {{place|nb|region|c/Italy|t=Tuscany}}
+# {{tcl|nb|Tuscany|id=Q1273}}
 
 ====Derived terms====
 * {{l|nb|toskansk}}
@@ -720,7 +710,7 @@ From {{der|it|LL.|Tuscanus|(terra) Tuscāna|the land of the Etruscans}}, ultimat
 ===Proper noun===
 {{head|nn|proper noun}}
 
-# {{place|nn|region|c/Italy|t=Tuscany}}
+# {{tcl|nn|Tuscany|id=Q1273}}
 
 ====Derived terms====
 * {{l|nn|toskansk}}
@@ -731,7 +721,7 @@ From {{der|it|LL.|Tuscanus|(terra) Tuscāna|the land of the Etruscans}}, ultimat
 ===Proper noun===
 {{oc-proper noun|f}}
 
-# {{place|oc|region|c/Italy|t=Tuscany}}
+# {{tcl|oc|Tuscany|id=Q1273}}
 
 ==Portuguese==
 
@@ -742,7 +732,7 @@ From {{der|it|LL.|Tuscanus|(terra) Tuscāna|the land of the Etruscans}}, ultimat
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|region|c/Italy|t1=Tuscany}}
+# {{tcl|pt|Tuscany|id=Q1273}}
 #: {{syn|pt|Toscânia}}
 
 ====Related terms====
@@ -757,7 +747,7 @@ From {{der|it|LL.|Tuscanus|(terra) Tuscāna|the land of the Etruscans}}, ultimat
 ===Proper noun===
 {{es-proper noun|f}}
 
-# {{place|es|region|c/Italy|t=Tuscany}}
+# {{tcl|es|Tuscany|id=Q1273}}
 
 ====Related terms====
 {{col-auto|es|toscano}}
@@ -772,7 +762,7 @@ Page 23 Úmbria: -------- begin text --------
 ===Proper noun===
 {{ca-proper noun|f}}
 
-# {{place|ca|region|c/Italy|t=Umbria}}
+# {{tcl|ca|Umbria|id=Q1280}}
 
 ====Related terms====
 * {{l|ca|umbre}}
@@ -788,7 +778,7 @@ Page 23 Úmbria: -------- begin text --------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|region|c/Italy|t1=Umbria}}
+# {{tcl|pt|Umbria|id=Q1280}}
 
 ====Related terms====
 * {{l|pt|úmbrico}}
@@ -802,7 +792,7 @@ Page 24 Vèneto: -------- begin text --------
 ===Proper noun===
 {{ca-proper noun|m}}
 
-# {{place|ca|region|c/Italy|t=Veneto}}
+# {{tcl|ca|Veneto|id=Q1243}}
 
 ====Related terms====
 * {{l|ca|vènet}}
@@ -813,7 +803,7 @@ Page 24 Vèneto: -------- begin text --------
 {{wikipedia|lang=vec}}
 {{head|vec|proper noun|g=m}}
 
-# {{place|vec|region|c/Italy|t=Veneto}}
+# {{tcl|vec|Veneto|id=Q1243}}
 
 ====Related terms====
 * {{l|vec|vèneto}}
@@ -839,9 +829,7 @@ Borrowed from {{bor|zh|it|Liguria}}.
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# [[Liguria]] {{gloss|region in northwest Italy}}
-
-{{C|zh|Regions of Italy}}
+# {{tcl|zh|Liguria|id=Q1256}}
 -------- end text --------
 Page 27 卡拉布里亚: -------- begin text --------
 {{also|卡拉布里亞}}
@@ -866,9 +854,7 @@ Borrowed from {{bor|zh|it|Calabria}}.
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# [[Calabria]]
-
-{{C|zh|Regions of Italy}}
+# {{tcl|zh|Calabria|id=Q1458}}
 -------- end text --------
 Page 29 威尼托: -------- begin text --------
 ==Chinese==
@@ -884,7 +870,7 @@ Page 29 威尼托: -------- begin text --------
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# {{place|zh|region|c/Italy|t=Veneto}}
+# {{tcl|zh|Veneto|id=Q1243}}
 -------- end text --------
 Page 30 巴西利卡塔: -------- begin text --------
 ==Chinese==
@@ -900,9 +886,7 @@ Page 30 巴西利卡塔: -------- begin text --------
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# [[Basilicata]] {{gloss|region in southern Italy}}
-
-{{C|zh|Regions of Italy}}
+# {{tcl|zh|Basilicata|id=Q1452}}
 -------- end text --------
 Page 31 托斯卡尼: -------- begin text --------
 ==Chinese==
@@ -918,7 +902,7 @@ Page 31 托斯卡尼: -------- begin text --------
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# {{lb|zh|Taiwan|Hong Kong}} {{place|zh|region|c/Italy|t=Tuscany}}
+# {{lb|zh|Taiwan|Hong Kong}} {{tcl|zh|Tuscany|id=Q1273}}
 
 ====Synonyms====
 * {{q|Mainland China}} {{zh-l|托斯卡納}}
@@ -938,7 +922,7 @@ Page 32 托斯卡納: -------- begin text --------
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# {{lb|zh|Mainland China}} {{place|zh|region|c/Italy|t=Tuscany}}
+# {{lb|zh|Mainland China}} {{tcl|zh|Tuscany|id=Q1273}}
 
 ====Synonyms====
 * {{q|Taiwan|Hong Kong}} {{zh-l|托斯卡尼}}
@@ -961,12 +945,10 @@ Page 34 拉吉歐: -------- begin text --------
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# {{lb|zh|Taiwan|Hong Kong}} [[Lazio]]
+# {{lb|zh|Taiwan|Hong Kong}} {{tcl|zh|Lazio|id=Q1282}}
 
 ====Synonyms====
 * {{q|Mainland China}} {{zh-l|拉齊奧}}
-
-{{C|zh|Regions of Italy}}
 -------- end text --------
 Page 35 拉齐奥: -------- begin text --------
 ==Chinese==
@@ -987,12 +969,10 @@ Page 36 拉齊奧: -------- begin text --------
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# {{lb|zh|Mainland China}} [[Lazio]]
+# {{lb|zh|Mainland China}} {{tcl|zh|Lazio|id=Q1282}}
 
 ====Synonyms====
 * {{q|Taiwan|Hong Kong}} {{zh-l|拉吉歐}}
-
-{{C|zh|Regions of Italy}}
 -------- end text --------
 Page 37 撒丁: -------- begin text --------
 ==Chinese==
@@ -1009,8 +989,7 @@ Page 37 撒丁: -------- begin text --------
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# {{lb|zh|Mainland China}} {{zh-div|島}} [[Sardinia]] {{gloss|island}}
-# {{lb|zh|Mainland China}} {{place|zh|region|c/Italy|t1=Sardinia}}
+# {{lb|zh|Mainland China}} {{tcl|zh|Sardinia|id=Q1462}}
 
 ====Synonyms====
 * {{q|Taiwan|Hong Kong}} {{zh-l|薩丁尼亞}}
@@ -1036,9 +1015,7 @@ Borrowed from {{bor|zh|it|Puglia}}.
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# [[Apulia]] {{gloss|region in southern Italy}}
-
-{{C|zh|Regions of Italy}}
+# {{tcl|zh|Apulia|id=Q1447}}
 -------- end text --------
 Page 40 温布利亚: -------- begin text --------
 ==Chinese==
@@ -1057,12 +1034,10 @@ Page 41 溫布利亞: -------- begin text --------
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# {{lb|zh|Taiwan}} [[Umbria]]
+# {{lb|zh|Taiwan}} {{tcl|zh|Umbria|id=Q1280}}
 
 ====Synonyms====
 * {{q|Mainland China|Hong Kong}} {{zh-l|翁布里亞}}
-
-{{C|zh|Regions of Italy}}
 -------- end text --------
 Page 42 瓦莱达奥斯塔: -------- begin text --------
 ==Chinese==
@@ -1085,9 +1060,7 @@ From {{bor|zh|it|Valle d'Aosta}}.
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# [[Valle d'Aosta]]
-
-{{C|zh|Regions of Italy}}
+# {{tcl|zh|Aosta Valley|id=Q1222}}
 -------- end text --------
 Page 44 皮埃蒙特: -------- begin text --------
 ==Chinese==
@@ -1103,7 +1076,7 @@ Page 44 皮埃蒙特: -------- begin text --------
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# {{place|zh|region|c/Italy|t=Piedmont}}
+# {{tcl|zh|Piedmont|id=Q1216}}
 
 ====Derived terms====
 {{col3|zh|皮埃蒙特語}}
@@ -1126,12 +1099,10 @@ Page 46 翁布里亞: -------- begin text --------
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# {{lb|zh|Mainland China|Hong Kong}} [[Umbria]]
+# {{lb|zh|Mainland China|Hong Kong}} {{tcl|zh|Umbria|id=Q1280}}
 
 ====Synonyms====
 * {{q|Taiwan}} {{zh-l|溫布利亞}}
-
-{{C|zh|Regions of Italy}}
 -------- end text --------
 Page 47 莫利塞: -------- begin text --------
 ==Chinese==
@@ -1150,9 +1121,7 @@ Borrowed from {{bor|zh|it|Molise}}.
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# [[Molise]] {{gloss|region in southern Italy}}
-
-{{C|zh|Regions of Italy}}
+# {{tcl|zh|Molise|id=Q1443}}
 -------- end text --------
 Page 48 萨丁尼亚: -------- begin text --------
 ==Chinese==
@@ -1172,8 +1141,7 @@ Page 49 薩丁尼亞: -------- begin text --------
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# {{lb|zh|Taiwan|Hong Kong}} {{zh-div|島}} [[Sardinia]] {{gloss|island}}
-# {{lb|zh|Taiwan|Hong Kong}} {{place|zh|region|c/Italy|t1=Sardinia}}
+# {{lb|zh|Taiwan|Hong Kong}} {{tcl|zh|Sardinia|id=Q1462}}
 
 ====Synonyms====
 * {{q|Mainland China}} {{zh-l|撒丁}}
@@ -1193,7 +1161,7 @@ Page 50 西西里: -------- begin text --------
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# {{place|zh|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|zh|Sicily|id=Q1460}}
 -------- end text --------
 Page 51 阿布魯佐: -------- begin text --------
 ==Chinese==
@@ -1209,9 +1177,7 @@ Page 51 阿布魯佐: -------- begin text --------
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# [[Abruzzo]]
-
-{{C|zh|Regions of Italy}}
+# {{tcl|zh|Abruzzo|id=Q1284}}
 -------- end text --------
 Page 52 阿布鲁佐: -------- begin text --------
 ==Chinese==
@@ -1237,12 +1203,10 @@ Borrowed from {{bor|zh|it|Marche}}.
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# {{lb|zh|Taiwan}} [[Marche]] {{gloss|region in central Italy}}
+# {{lb|zh|Taiwan}} {{tcl|zh|Marche|id=Q1279}}
 
 ====Synonyms====
 * {{q|Mainland China|Hong Kong}} {{zh-l|馬爾凱}}
-
-{{C|zh|Regions of Italy}}
 -------- end text --------
 Page 55 马尔凯: -------- begin text --------
 ==Chinese==
@@ -1265,12 +1229,10 @@ Borrowed from {{bor|zh|it|Marche}}.
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# {{lb|zh|Mainland China|Hong Kong}} [[Marche]] {{gloss|region in central Italy}}
+# {{lb|zh|Mainland China|Hong Kong}} {{tcl|zh|Marche|id=Q1279}}
 
 ====Synonyms====
 * {{q|Taiwan}} {{zh-l|馬凱}}
-
-{{C|zh|Regions of Italy}}
 -------- end text --------
 Page 57 Sardegna: -------- begin text --------
 ==Corsican==
@@ -1284,9 +1246,7 @@ Borrowed from {{inh|co|la|Sardinia}}.
 ===Proper noun===
 {{co-proper noun|f}}
 
-# {{place|co|region|c/Italy|t=Sardinia}}
-
-{{topics|co|Islands}}
+# {{tcl|co|Sardinia|id=Q1462}}
 
 ==Italian==
 {{wikipedia|lang=it}}
@@ -1300,15 +1260,13 @@ From {{inh|it|la|Sardinia}}.
 ===Proper noun===
 {{it-proper noun|f}}
 
-# {{place|it|region|c/Italy|t=Sardinia}}
+# {{tcl|it|Sardinia|id=Q1462}}
 
 ====Related terms====
 * {{l|it|sardegnolo}}
 * {{l|it|sardegnuolo}}
 * {{l|it|sardismo}}
 * {{l|it|sardo}}
-
-{{C|it|Islands}}
 -------- end text --------
 Page 58 Kalábrie: -------- begin text --------
 ==Czech==
@@ -1326,7 +1284,7 @@ From {{der|cs|la|Calabria}}.
 ===Proper noun===
 {{cs-proper noun|f|dem=Kalábrijec|fdem=Kalábrijka|adj=kalábrijský}}
 
-# {{place|cs|peninsula/and/region|in southern|c/Italy|t1=Calabria}}
+# {{tcl|cs|Calabria|id=Q1458}}
 
 ====Declension====
 {{cs-ndecl|f.sg}}
@@ -1352,7 +1310,7 @@ From {{der|cs|la|Liguria}}, from {{der|cs|grc|Λίγυς}}.
 ===Proper noun===
 {{cs-proper noun|f|adj=ligurský}}
 
-# {{place|cs|region|c/Italy|t=Liguria}}
+# {{tcl|cs|Liguria|id=Q1256}}
 
 ====Declension====
 {{cs-ndecl|f.sg}}
@@ -1372,7 +1330,7 @@ From {{der|fr|la|Liguria}}, from {{der|fr|grc|Λίγυς}}.
 ===Proper noun===
 {{fr-proper noun|f}}
 
-# {{place|fr|region|c/Italy|t=Liguria}}
+# {{tcl|fr|Liguria|id=Q1256}}
 
 ====Derived terms====
 * {{l|fr|Ligure}}
@@ -1388,7 +1346,7 @@ From {{der|fr|la|Liguria}}, from {{der|fr|grc|Λίγυς}}.
 ===Proper noun===
 {{head|fur|proper noun|g=f}}
 
-# [[Liguria]]
+# {{tcl|fur|Liguria|id=Q1256}}
 
 ====Related terms====
 * {{l|fur|ligur}}
@@ -1406,7 +1364,7 @@ Page 60 Lombardie: -------- begin text --------
 ===Proper noun===
 {{cs-proper noun|f|adj=lombardský|dem=Lombarďan}}
 
-# {{place|cs|region|c/Italy|t=Lombardy}}
+# {{tcl|cs|Lombardy|id=Q1210}}
 
 ====Declension====
 {{cs-ndecl|f.sg}}
@@ -1426,7 +1384,7 @@ Page 60 Lombardie: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|f}}
 
-# {{place|fr|region|c/Italy|t=Lombardy}}
+# {{tcl|fr|Lombardy|id=Q1210}}
 
 ====Related terms====
 * {{l|fr|lombard}}, {{l|fr|Lombard}}
@@ -1441,7 +1399,7 @@ Page 60 Lombardie: -------- begin text --------
 ===Proper noun===
 {{head|fur|proper noun|g=f}}
 
-# [[Lombardy]]
+# {{tcl|fur|Lombardy|id=Q1210}}
 
 ====Related terms====
 * {{l|fur|lombart}}
@@ -1459,7 +1417,7 @@ Page 61 Lombardsko: -------- begin text --------
 ===Proper noun===
 {{cs-proper noun|n}}
 
-# {{place|cs|region|c/Italy|t=Lombardy}}
+# {{tcl|cs|Lombardy|id=Q1210}}
 #: {{syn|cs|Lombardie}}
 
 ====Declension====
@@ -1486,7 +1444,7 @@ From {{der|cs|la|Sardinia}}, from {{der|cs|grc|Σαρδώ}}.
 ===Proper noun===
 {{cs-proper noun|f|dem=Sardiňan|dem2=Sard|fdem=Sardiňanka|fdem2=Sardka|adj=sardinský}}
 
-# {{place|cs|island/and/region|c/Italy|in the|sea/Mediterranean Sea|t1=Sardinia}}
+# {{tcl|cs|Sardinia|id=Q1462}}
 
 ====Declension====
 {{cs-ndecl|f.sg}}
@@ -1516,7 +1474,7 @@ From {{der|cs|la|Sicilia}}.
 ===Proper noun===
 {{cs-proper noun|f|dem=Sicilan|fdem=Sicilanka|adj=sicilský}}
 
-# {{place|cs|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|cs|Sicily|id=Q1460}}
 
 ====Declension====
 {{cs-ndecl|f.sg}}
@@ -1538,7 +1496,7 @@ Page 64 Toskána: -------- begin text --------
 ===Proper noun===
 {{cs-proper noun|f|adj=toskánský|dem=Toskánec|fdem=Toskánka}}
 
-# {{lb|cs|obsolete}} {{place|cs|region|c/Italy|t=Tuscany}}
+# {{lb|cs|obsolete}} {{tcl|cs|Tuscany|id=Q1273}}
 #: {{syn|cs|Toskánsko}}
 
 ====Declension====
@@ -1569,7 +1527,7 @@ From {{suf|cs|Toskána|sko}}.
 ===Proper noun===
 {{cs-proper noun|n|adj=toskánský|dem=Toskánec|fdem=Toskánka}}
 
-# {{place|cs|region|c/Italy|t=Tuscany}}
+# {{tcl|cs|Tuscany|id=Q1273}}
 
 ====Declension====
 {{cs-ndecl|n.sg}}
@@ -1585,9 +1543,8 @@ Page 66 Sardinien: -------- begin text --------
 ===Proper noun===
 {{head|da|proper noun}}
 
-# {{place|da|region|c/Italy|t=Sardinia}}
+# {{tcl|da|Sardinia|id=Q1462}}
 
-[[Category:da:Islands]]
 {{cln|da|exonyms}}
 
 ==German==
@@ -1603,7 +1560,7 @@ From {{der|de|la|Sardinia}}.
 ===Proper noun===
 {{de-proper noun|toponym}}
 
-# {{place|de|island/and/region|c/Italy|t=Sardinia}}
+# {{tcl|de|Sardinia|id=Q1462}}
 
 ====Related terms====
 * {{l|de|sardisch}}
@@ -1619,7 +1576,7 @@ From {{der|de|la|Sardinia}}.
 ===Proper noun===
 {{sv-proper noun|n}}
 
-# {{place|sv|island/and/region|c/Italy|t=Sardinia}}
+# {{tcl|sv|Sardinia|id=Q1462}}
 
 ====Related terms====
 * {{l|sv|sard}}
@@ -1640,7 +1597,7 @@ Page 67 Sicilien: -------- begin text --------
 ===Proper noun===
 {{head|da|proper noun}}
 
-# {{place|da|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|da|Sicily|id=Q1460}}
 
 {{cln|da|exonyms}}
 
@@ -1658,14 +1615,14 @@ Page 67 Sicilien: -------- begin text --------
 * {{l|fr|Sicile}}
 * {{l|fr|sicilien}}
 
-{{C|fr|Demonyms|Sicily}}
+{{C|fr|Demonyms}}
 
 ==Swedish==
 
 ===Proper noun===
 {{sv-proper noun|n}}
 
-# {{place|sv|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|sv|Sicily|id=Q1460}}
 
 ====Related terms====
 * {{l|sv|sicilianare}}
@@ -1685,9 +1642,8 @@ Page 68 Sardinië: -------- begin text --------
 ===Proper noun===
 {{nl-proper noun|n}}
 
-# {{place|nl|region|c/Italy|t=Sardinia}}
+# {{tcl|nl|Sardinia|id=Q1462}}
 
-[[Category:nl:Islands]]
 {{cln|nl|exonyms}}
 -------- end text --------
 Page 69 Sicilië: -------- begin text --------
@@ -1706,7 +1662,7 @@ Ultimately from {{der|nl|la|Sicilia}}, from {{der|nl|grc|Σικελία}}. {{ety
 ===Proper noun===
 {{nl-proper noun|n}}
 
-# {{place|nl|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|nl|Sicily|id=Q1460}}
 
 {{cln|nl|exonyms}}
 -------- end text --------
@@ -1721,7 +1677,7 @@ Page 70 Toscane: -------- begin text --------
 ===Proper noun===
 {{nl-proper noun|f}}
 
-# {{place|nl|region|c/Italy|t=Tuscany}}
+# {{tcl|nl|Tuscany|id=Q1273}}
 
 {{cln|nl|exonyms}}
 
@@ -1734,7 +1690,7 @@ Page 70 Toscane: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|f}}
 
-# {{place|fr|region|c/Italy|t=Tuscany}}
+# {{tcl|fr|Tuscany|id=Q1273}}
 
 ====Derived terms====
 * {{l|fr|Toscan}}
@@ -1755,7 +1711,7 @@ Page 70 Toscane: -------- begin text --------
 ===Proper noun===
 {{head|fur|proper noun|g=f}}
 
-# [[Tuscany]]
+# {{tcl|fur|Tuscany|id=Q1273}}
 
 ====Related terms====
 * {{l|fur|toscan}}
@@ -1769,7 +1725,7 @@ Page 71 Umbrië: -------- begin text --------
 ===Proper noun===
 {{nl-proper noun|n}}
 
-# {{place|nl|region|c/Italy|t=Umbria}}
+# {{tcl|nl|Umbria|id=Q1280}}
 
 {{cln|nl|exonyms}}
 -------- end text --------
@@ -1783,7 +1739,7 @@ From {{bor|en|it|Abruzzo}}.
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|region|in central|c/Italy}}
+# {{sid|en|Q1284}}{{place|en|adr|in central|c/Italy}}.
 
 ====Related terms====
 {{rel2|en
@@ -1827,7 +1783,7 @@ From the {{der|it|LL.|-}} or {{der|it|ML.|-}} name of the location, {{m|la|Aprut
 ===Proper noun===
 {{it-proper noun|m}}
 
-# {{place|it|region|c/Italy|t=Abruzzo}}
+# {{tcl|it|Abruzzo|id=Q1284}}
 
 ====Related terms====
 {{rel2|it
@@ -1852,7 +1808,7 @@ From the {{der|it|LL.|-}} or {{der|it|ML.|-}} name of the location, {{m|la|Aprut
 ===Proper noun===
 {{pt-proper noun}}
 
-# {{place|pt|region|c/Italy|t1=Abruzzo}}
+# {{tcl|pt|Abruzzo|id=Q1284}}
 
 ====Derived terms====
 {{rel2|pt
@@ -1869,7 +1825,7 @@ Page 73 Aosta Valley: -------- begin text --------
 ===Proper noun===
 {{en-proper noun|head=Valle d'[[Aosta]]}}
 
-# {{place|en|a=A [[French]]-[[speaking]]|region|of northwestern|c/Italy|caplc=en:Aosta}}.
+# {{sid|en|Q1222}}{{place|en|autonomous region|of northwestern|c/Italy|with a significant fraction of the population speaking [[Franco-Provençal]]|caplc=en:Aosta}}.
 #: {{syn|en|Valle d'Aosta}}
 
 ====Translations====
@@ -1886,7 +1842,7 @@ From {{der|en|la|Āpūlia}}.
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|region|in southern|c/Italy}}.
+# {{sid|en|Q1447}}{{place|en|peninsula/and/adr|in southern|c/Italy}}.
 
 ====Synonyms====
 * {{l|en|Puglia}}
@@ -1981,7 +1937,6 @@ From {{der|en|la|Āpūlia}}.
 * {{list:regions of Italy/en}}
 
 [[Category:English terms suffixed with -ia]]
-{{C|en|Peninsulas}}
 {{cln|en|exonyms}}
 
 ==Latin==
@@ -1995,7 +1950,8 @@ From {{der|en|la|Āpūlia}}.
 ===Proper noun===
 {{la-proper noun|Āpūlia<1>}}
 
-# {{lb|la|geography}} A province in lower [[Italy]], at the north of [[Calabria]] and east of [[Samnium]], now {{m+|it|Puglia}}
+# {{place|la|former province|in lower|c/Italy|to the north of [[Calabria]] and east of [[Samnium]], now {{m+|it|Puglia}}}}
+# {{lb|la|New Latin}} {{tcl|la|Apulia|id=Q1447}}
 
 ====Declension====
 {{la-ndecl|Āpūlia<1>}}
@@ -2025,7 +1981,7 @@ From {{der|en|la|Āpūlia}}.
 ===Proper noun===
 {{head|pl|proper noun|g=f}}
 
-# {{place|pl|region|c/Italy|t=Apulia}}
+# {{tcl|pl|Apulia|id=Q1447}}
 
 ====Declension====
 {{pl-decl-noun-f|tantum=s}}
@@ -2039,10 +1995,9 @@ From {{der|en|la|Āpūlia}}.
 ===Proper noun===
 {{es-proper noun|f}}
 
-# {{place|es|region|c/Italy|t=Apulia}}
+# {{tcl|es|Apulia|id=Q1447}}
 #: {{syn|es|Pulla}}
 
-{{C|es|Peninsulas}}
 {{cln|es|exonyms}}
 -------- end text --------
 Page 75 Basilicata: -------- begin text --------
@@ -2052,7 +2007,7 @@ Page 75 Basilicata: -------- begin text --------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|region|of southern|c/Italy}}.
+# {{sid|en|Q1452}}{{place|en|adr|of southern|c/Italy}}.
 
 ====Related terms====
 * {{l|en|Basilicatan}}
@@ -2087,7 +2042,7 @@ Page 75 Basilicata: -------- begin text --------
 ===Proper noun===
 {{it-proper noun|f}}
 
-# {{place|it|region|c/Italy|t=Basilicata}}
+# {{tcl|it|Basilicata|id=Q1452}}
 
 ====Derived terms====
 * {{l|it|basilicatese}}
@@ -2106,7 +2061,7 @@ From {{der|en|grc|Καλαβρία}}.
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|region|of southern|c/Italy}}.
+# {{sid|en|Q1458}}{{place|en|peninsula/and/adr|of southern|c/Italy}}.
 
 ====Derived terms====
 * {{l|en|Calabrian}}
@@ -2148,14 +2103,13 @@ From {{der|en|grc|Καλαβρία}}.
 * {{anagrams|en|a=aaabcilr|Arabical|Calabari}}
 
 [[Category:English terms suffixed with -ia]]
-[[Category:en:Peninsulas]]
 
 ==Galician==
 
 ===Proper noun===
 {{gl-proper noun}}
 
-# {{place|gl|region|c/Italy|t=Calabria}}
+# {{tcl|gl|Calabria|id=Q1458}}
 
 ====Related terms====
 * {{l|gl|calabrés}}
@@ -2172,7 +2126,7 @@ From {{der|it|la|Calabria}}.
 ===Proper noun===
 {{it-proper noun|f}}
 
-# {{place|it|region|c/Italy|t=Calabria}}
+# {{tcl|it|Calabria|id=Q1458}}
 
 ====Derived terms====
 * {{l|it|calabrese}}
@@ -2186,8 +2140,6 @@ From {{der|it|la|Calabria}}.
 ===Anagrams===
 * {{anagrams|it|a=aaabcilr|baciarla}}
 
-{{C|it|Peninsulas}}
-
 ==Latin==
 
 ===Etymology 1===
@@ -2199,7 +2151,8 @@ From the oblique stem ''calabr-'' of the [[ethnonym]] {{m|la|calaber}}, likely o
 ====Proper noun====
 {{la-proper noun|Calabria<1.loc>}}
 
-# A [[region]] of [[Italy]] roughly corresponding to today's Southern [[Apulia]].
+# {{lb|la|historical}} {{place|la|region|c/Italy|roughly corresponding to today's Southern [[Apulia]]}}
+# {{lb|la|New Latin}} {{tcl|la|Calabria|id=Q1458}}
 
 =====Declension=====
 {{la-ndecl|Calabria<1.loc>}}
@@ -2227,7 +2180,7 @@ From the oblique stem ''calabr-'' of the [[ethnonym]] {{m|la|calaber}}, likely o
 ===Proper noun===
 {{es-proper noun|f}}
 
-# {{place|es|region|c/Italy|t=Calabria}}
+# {{tcl|es|Calabria|id=Q1458}}
 
 ====Related terms====
 {{col-auto|es|calabrés}}
@@ -2243,7 +2196,7 @@ From {{bor|en|it|Campania}}, borrowed from {{bor|en|la|[[Campānia]]}}. {{double
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|region|of southern|c/Italy}}.
+# {{sid|en|Q1438}}{{place|en|adr|of southern|c/Italy}}.
 
 ====Derived terms====
 * {{l|en|Campanian}}
@@ -2282,7 +2235,7 @@ From {{bor|en|it|Campania}}, borrowed from {{bor|en|la|[[Campānia]]}}. {{double
 ===Proper noun===
 {{gl-proper noun}}
 
-# {{place|gl|region|c/Italy|t=Campania}}
+# {{tcl|gl|Campania|id=Q1438}}
 
 ==Italian==
 
@@ -2295,7 +2248,7 @@ Borrowed from {{bor|it|la|Campānia}}.
 ===Proper noun===
 {{it-proper noun|f}}
 
-# {{place|it|region|c/Italy|t=Campania}}
+# {{tcl|it|Campania|id=Q1438}}
 
 ====Derived terms====
 * {{l|it|campano}}
@@ -2320,7 +2273,7 @@ From {{m|la|campus|t=open or flat space; plain}}.
 ===Proper noun===
 {{la-proper noun|Campānia<1.loc>}}
 
-# {{place|la|t=Campania|region|of southern|c/Italy}}
+# {{lb|la|New Latin}} {{tcl|la|Campania|id=Q1438}}
 # {{transclude sense|la|Champagne|id=region}}
 
 ====Declension====
@@ -2346,7 +2299,7 @@ From {{m|la|campus|t=open or flat space; plain}}.
 ===Proper noun===
 {{es-proper noun|f}}
 
-# {{place|es|region|c/Italy|t=Campania}}
+# {{tcl|es|Campania|id=Q1438}}
 -------- end text --------
 Page 78 Emilia: -------- begin text --------
 {{also|Emília|Emilía|Emilią|Emilià}}
@@ -2367,7 +2320,7 @@ Page 78 Emilia: -------- begin text --------
 # {{given name|en|female|from=Latin}}, a rare [[latinized]] variant of [[Emily]].
 #* {{quote-book|en|year=1999|author=Kali Israel|title=Names and Stories: Emilia Dilke and Victorian Culture|publisher=OUP|year_published=2002|isbn=0195158199
 |passage="Emily" was preserved and erased, reduced to the sexless cypher "E.", and then came to denote not the shared and ordinary name "Emily" but a new, exotic, self-begotten "'''Emilia'''". No longer masculine Francis but feminine-with-a-difference '''Emilia''', vaguely Latin or Italian or French but in any case foreign, not domestic; {{...}}}}
-# {{lb|en|historical}} {{place|en|region|c/Italy}}, approximately coterminous with modern [[Emilia-Romagna]].
+# {{sid|en|Q1135779}}{{lb|en|historical}} {{place|en|historical region|c/Italy}}, approximately coterminous with modern [[Emilia-Romagna]].
 
 ====Derived terms====
 * {{l|en|Emilian}}
@@ -2460,7 +2413,7 @@ From {{der|it|la|Aemilia}}.
 {{it-proper noun|f}}
 
 # {{given name|it|female|eq=Emily}}
-# {{place|it|historic region|in northern|c/Italy}}, part of [[Emilia-Romagna]]
+# {{tcl|it|Emilia|id=Q1135779}}
 
 ====Derived terms====
 * {{l|it|emiliano}}
@@ -2541,7 +2494,7 @@ Page 79 Emilia-Romagna: -------- begin text --------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|region|of northern|c/Italy|capital=Bologna}}.
+# {{sid|en|Q1263}}{{place|en|adr|of northern|c/Italy|capital=Bologna}}.
 
 ====Related terms====
 {{col4|en
@@ -2583,7 +2536,7 @@ From the former regions {{m|it|Emilia}} and {{m|it|Romagna}}, from {{uder|it|la|
 ===Proper noun===
 {{it-proper noun|f|head=[[Emilia]]-[[Romagna]]}}
 
-# {{place|it|region|c/Italy|t=Emilia-Romagna}}
+# {{tcl|it|Emilia-Romagna|id=Q1263}}
 
 ====Related terms====
 * {{l|it|emiliano-romagnolo}}
@@ -2599,7 +2552,7 @@ From {{bor|en|it|Friuli}} ({{cog|fur|Friûl}}), from the {{der|en|la|-}} name of
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|region|in northeastern|c/Italy}}, part of [[Friuli-Venezia Giulia]].
+# {{sid|en|Q160570}}{{place|en|region|in northeastern|c/Italy|part of [[Friuli-Venezia Giulia]]}}.
 
 ====Related terms====
 * {{l|en|Friulian}}
@@ -2646,7 +2599,7 @@ From {{inh|it|la|Forum Iūliī}}.
 ===Proper noun===
 {{it-proper noun|m}}
 
-# {{l|en|Friuli}}
+# {{tcl|it|Friuli|id=Q160570}}
 
 ====Derived terms====
 * {{l|it|friulanista}}
@@ -2663,7 +2616,7 @@ Page 81 Friuli-Venezia Giulia: -------- begin text --------
 {{wikipedia}}
 {{en-proper noun|head=[[Friuli]]-[[Venezia]] [[Giulia]]}}
 
-# {{place|en|An autonomous <<region>> in northern <<c/Italy>>}}.
+# {{sid|en|Q1250}}{{place|en|autonomous region|in northern|c/Italy}}.
 
 ====Translations====
 {{trans-top|region}}
@@ -2741,148 +2694,7 @@ From {{af|it|Friuli|Venezia Giulia}}.
 ===Proper noun===
 {{it-proper noun|head=[[Friuli]]-[[Venezia Giulia]]|m}}
 
-# {{place|it|region|c/Italy|t=Friuli-Venezia Giulia}}
--------- end text --------
-Page 82 Lazio: -------- begin text --------
-==English==
-{{wikipedia}}
-
-===Etymology===
-From {{uder|en|it|Lazio}}. {{doublet|en|Latium}}.
-
-===Proper noun===
-{{en-proper noun}}
-
-# {{sid|en|Q1282}}{{place|en|administrative region|c/Italy|situated in the central peninsular section of the country with [[Rome]] as its capital}}. It corresponds to ancient [[Latium]].
-
-====Related terms====
-* {{l|en|Latium}}
-
-====Translations====
-{{trans-top|Italian region}}
-* Afrikaans: {{t|af|Latium}}
-* Albanian: {{t|sq|Lacio}}
-* Arabic: {{t|ar|لَاتْسِيُو|m|tr=latsiyō}}
-* Aragonese: {{t|an|Lazio|m}}
-* Armenian: {{t|hy|Լացիո}}
-* Asturian: {{t|ast|Lacio}}
-* Azerbaijani: {{t|az|Lasio}}
-* Basque: {{t|eu|Lazio}}
-* Belarusian: {{t|be|Лацыё|sc=Cyrl}}
-* Bikol Central: {{t|bcl|Lazio}}
-* Breton: {{t|br|Lazio}}
-* Bulgarian: {{t|bg|Лацио|sc=Cyrl}}
-* Catalan: {{t+|ca|Laci|m}}
-* Cebuano: {{t|ceb|Lacio}}
-* Chechen: {{t|ce|Лацио|sc=Cyrl}}
-* Chinese:
-*: Mandarin: {{t+|cmn|拉齐奥|tr=Lāqí'ào}}
-* Chuvash: {{t|cv|Лацио|sc=Cyrl}}
-* Cornish: {{t|kw|Lazio}}
-* Corsican: {{t|co|Laziu|m}}
-* Czech: {{t|cs|Lazio}}
-* Danish: {{t|da|Lazio}}
-* Dutch: {{t|nl|Lazio}}
-* Esperanto: {{t|eo|Latio}}
-* Estonian: {{t|et|Lazio}}
-* Extremaduran: {{t-needed|ext}}
-* Finnish: {{t|fi|Lazio}}
-* Franco-Provençal: {{t|frp|Lacion}}
-* French: {{t+|fr|Latium|m}}, {{t+|fr|Lazio|m}}
-* Friulian: {{t|fur|Lazi|m}}
-* Galician: {{t|gl|Lacio|m}}
-* Gallo: {{t-needed|roa-gal}}
-* Georgian: {{t|ka|ლაციო|sc=Geor}}, {{t|ka|ლაციოს რეგიონი}}
-* German: {{t+|de|Latium|n}}
-* Greek: {{t+|el|Λάτιο|n|sc=Grek}}
-* Hebrew: {{t|he|לאציו|sc=Hebr}}
-* Hindi: {{t|hi|लात्सियो}}
-* Hungarian: {{t|hu|Lazio}}
-* Icelandic: {{t|is|Latíum}}
-* Indonesian: {{t|id|Latium}}
-* Irish: {{t|ga|Lazio}}
-* Italian: {{t+|it|Lazio|m}}
-* Japanese: {{t|ja|ラツィオ州|tr=Ratsio-shū|sc=Jpan}}
-* Javanese: {{t|jv|Latium}}
-* Kapampangan: {{t|pam|Lazio}}
-* Kazakh: {{t|kk|Лацио|sc=Cyrl}}
-* Korean: {{t|ko|^라치오}}
-* Kurdish:
-*: Northern Kurdish: {{t|kmr|Lazio}}
-* Ladino: {{t|lad|Lazio}}
-* Latin: {{t+|la|Latium|n}}
-* Latvian: {{t|lv|Lacio}}
-* Leonese: {{t-needed|roa-leo}}
-* Ligurian: {{t|lij|Lassio}}
-* Lithuanian: {{t|lt|Lacijus}}
-* Lombard: {{t|lmo|Làsio}}
-* Macedonian: {{t|mk|Лацио|sc=Cyrl}}
-* Malay: {{t|ms|Latium}}
-* Marathi: {{t|mr|लात्सियो}}
-* Mongolian: {{t|mn|Лацио муж|sc=Cyrl}}
-* Neapolitan: {{t|nap|Lazzio|m}}
-* Northern Sami: {{t|se|Latium}}
-* Norwegian:
-*: Bokmål: {{t|nb|Latium}}
-*: Nynorsk: {{t|nn|Lazio}}
-* Occitan: {{t|oc|Laci|m}}
-* Ossetian: {{t|os|Лацио|sc=Cyrl}}
-* Persian: {{t|fa|لاتزیو|tr=lâtziyo}}
-* Picard: {{t|pcd|Latium}}
-* Piedmontese: {{t|pms|Lassio|m}}
-* Polish: {{t+|pl|Lacjum|n}}
-* Portuguese: {{t+|pt|Lácio|m}}
-* Punjabi: {{t|pa|ਲਾਤਸੀਓ}}
-* Romanian: {{t|ro|Lazio}}
-* Russian: {{t+|ru|Ла́цио}}
-* Sardinian: {{t|sc|Làtziu|m}}
-* Scots: {{t|sco|Lazio}}
-* Serbo-Croatian: {{t|sh|Лациј|m}}
-* Sicilian: {{t|scn|Lazziu|m}}
-* Slovak: {{t|sk|Lazio}}
-* Slovene: {{t+|sl|Lacij}}
-* Spanish: {{t|es|Lacio|m}}
-* Swahili: {{t|sw|Lazio}}
-* Swedish: {{t|sv|Lazio}}
-* Tarantino: {{t-needed|roa-tar}}
-* Thai: {{t|th|แคว้นลาซีโอ|tr=kwáen laaseeoh}}
-* Turkish: {{t|tr|Lazio}}
-* Ukrainian: {{t|uk|Лаціо|sc=Cyrl}}
-* Urdu: {{t|ur|لازیو|tr=lāziyo|sc=ur-Arab}}
-* Venetian: {{t|vec|Łasio|m}}
-* Vietnamese: {{t|vi|Lazio}}
-* Waray-Waray: {{t|war|Lazio}}
-* Welsh: {{t|cy|Lazio}}
-* West Frisian: {{t|fy|Latium|n}}
-* Western Panjabi: {{t|pnb|صوبہ لیزیو}}
-{{trans-bottom}}
-
-===See also===
-* {{list:regions of Italy/en}}
-
-===Anagrams===
-* {{anagrams|en|a=ailoz|Lao Zi|Laozi|Zialo|Ziola}}
-
-==Italian==
-
-===Etymology===
-{{bor+|it|la|Latium}}.
-
-===Pronunciation===
-{{it-pr|Làtsio}}
-
-===Proper noun===
-{{it-proper noun|m}}
-
-# {{tcl|it|Lazio|id=Q1282}}
-# {{tcl|it|Latium|id=Q1048669}}
-
-====Related terms====
-{{rel3
-|it|Latina
-|latino
-|laziale
-}}
+# {{tcl|it|Friuli-Venezia Giulia|id=Q1250}}
 -------- end text --------
 Page 83 Liguria: -------- begin text --------
 {{also|ligúria|Ligùria|Ligúria|Łiguria}}
@@ -2899,7 +2711,7 @@ From {{der|en|oc|Ligúria}}, from {{der|en|la|Liguria}}, from {{der|en|grc|Λί�
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|region|of northwest|c/Italy}}.
+# {{sid|en|Q1256}}{{place|en|adr|of northwest|c/Italy}}.
 
 ====Translations====
 {{trans-top|region}}
@@ -2949,7 +2761,7 @@ From {{der|en|oc|Ligúria}}, from {{der|en|la|Liguria}}, from {{der|en|grc|Λί�
 ===Proper noun===
 {{gl-proper noun}}
 
-# {{place|gl|region|c/Italy|t=Liguria}}
+# {{tcl|gl|Liguria|id=Q1256}}
 
 ====Related terms====
 * {{l|gl|lígur}}
@@ -2969,7 +2781,7 @@ From {{bor|hu|it|Liguria|t=Liguria}}.
 ===Proper noun===
 {{head|hu|proper noun}}
 
-# {{place|hu|region|in northwestern|c/Italy|t=Liguria}}
+# {{tcl|hu|Liguria|id=Q1256}}
 
 ====Declension====
 {{hu-infl-nom|Liguriá|o|n=sg}}{{hu-pos-tok|Liguriá|n=sg}}
@@ -2997,7 +2809,7 @@ From {{der|it|la|Liguria}}, from {{der|it|grc|Λίγυς}}.
 ===Proper noun===
 {{it-proper noun|f}}
 
-# {{place|it|region|c/Italy|t=Liguria}}
+# {{tcl|it|Liguria|id=Q1256}}
 
 ====Related terms====
 * {{l|it|ligure}}
@@ -3014,7 +2826,7 @@ From {{der|pl|la|Liguria}}, from {{der|pl|grc|Λίγυς}}.
 ===Proper noun===
 {{head|pl|proper noun|g=f}}
 
-# {{place|pl|region|c/Italy|t=Liguria}}
+# {{tcl|pl|Liguria|id=Q1256}}
 
 ====Declension====
 {{pl-decl-noun-sing|Liguria|Ligurii|Ligurii|Ligurię|Ligurią|Ligurii|Ligurio}}
@@ -3035,7 +2847,7 @@ From {{der|es|la|Liguria}}, from {{der|es|grc|Λίγυς}}.
 ===Proper noun===
 {{es-proper noun|f}}
 
-# {{place|es|region|c/Italy|t=Liguria}}
+# {{tcl|es|Liguria|id=Q1256}}
 
 ====Related terms====
 {{col-auto|es|ligur}}
@@ -3055,7 +2867,7 @@ From {{uder|en|la|Langobardia}}, named after [[Langobard|Langobards]], a Germani
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|region|in northern|c/Italy}}, where its capital and the largest city [[Milan]] is founded in the [[Po]] Valley.
+# {{sid|en|Q1210}}{{place|en|adr|in northern|c/Italy|where its capital and the largest city [[Milan]] is founded in the [[Po]] Valley}}.
 
 ====Translations====
 {{trans-top|region in northern Italy}}
@@ -3156,7 +2968,8 @@ Borrowed from {{bor|en|it|Marche}}.
 ====Proper noun====
 {{en-proper noun}}
 
-# {{place|en|region|in central|c/Italy}}, also known as the [[Marches]].
+# {{sid|en|Q1279}}{{place|en|adr|in central|c/Italy}}.
+#: {{syn|en|the [[Marches]]}}
 
 =====Translations=====
 {{trans-top|region of central Italy}}
@@ -3214,7 +3027,7 @@ From {{m|it|marca|marche|marches (border areas)}}.
 ===Proper noun===
 {{it-proper noun|f-p|head=le Marche}}
 
-# {{place|it|region|c/Italy|t=Marche}}
+# {{tcl|it|Marche|id=Q1279}}
 
 ===Anagrams===
 * {{anagrams|it|a=acehmr|charme}}
@@ -3246,14 +3059,12 @@ Page 86 Marches: -------- begin text --------
 ====Proper noun====
 {{en-proper noun|head=the Marches}}
 
-# {{synonym of|en|Marche}}
+# {{synonym of|en|Marche}}, {{tcl|en|Marche|id=Q1279}}.
 
 ===Anagrams===
 * {{anagrams|en|a=acehmrs|charmes|machers|mesarch|schmear}}
 
 [[Category:en:Marche]]
-[[Category:en:Regions of Italy]]
-[[Category:en:Places in Italy]]
 
 ==French==
 
@@ -3263,7 +3074,7 @@ Page 86 Marches: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|f-p}}
 
-# {{place|fr|region|c/Italy|t=Marche}}
+# {{tcl|fr|Marche|id=Q1279}}
 
 ===See also===
 * {{list:regions of Italy/fr}}
@@ -3280,7 +3091,7 @@ Page 87 Molise: -------- begin text --------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|region|of southern|c/Italy}}.
+# {{sid|en|Q1443}}{{place|en|adr|of southern|c/Italy}}.
 
 ====Translations====
 {{trans-top|region of Italy}}
@@ -3313,7 +3124,7 @@ Page 87 Molise: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|m}}
 
-# {{place|fr|region|c/Italy|t=Molise}}
+# {{tcl|fr|Molise|id=Q1443}}
 
 ===See also===
 * {{list:regions of Italy/fr}}
@@ -3330,7 +3141,7 @@ Adaptation of ''de Moulins'', the name of the noble french family ruling over th
 ===Proper noun===
 {{it-proper noun|m}}
 
-# {{place|it|region|c/Italy|t=Molise}}
+# {{tcl|it|Molise|id=Q1443}}
 
 ====Derived terms====
 * {{l|it|molisano}}
@@ -3348,7 +3159,7 @@ Borrowed from {{bor|en|it|Padania}}.
 {{wikipedia}}
 {{en-proper noun}}
 
-# {{place|en|region|in northern|c/Italy}}, centered on the valley of the river [[Po]]
+# {{place|en|region|in northern|c/Italy}}, centered on the valley of the river [[Po]].
 
 ====Derived terms====
 * {{l|en|Padanian}}
@@ -3384,7 +3195,7 @@ From {{der|en|it|piemonte||mountain foot}}, from {{der|en|ML.|Pedemontium}}, {{m
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|region|in the [[north]] of|c/Italy}}.
+# {{sid|en|Q1216}}{{place|en|adr|in the north of|c/Italy}}.
 # The region of the eastern US between the Appalachian mountains and the coastal plain, extending from eastern Alabama to northern New Jersey.
 # {{place|en|city|co/Alameda County|s/California|c/USA}}.
 
@@ -3470,7 +3281,7 @@ The name of the municipality is derived from {{m|fr|piémont|t=foothill}}.
 ===Proper noun===
 {{fr-proper noun|m}}
 
-# {{place|fr|municipality|rcm/Les Pays-d'en-Haut|r/Laurentides|p/Quebec|c/Canada}}.
+# {{place|fr|municipality|rcm/Les Pays-d'en-Haut|r/Laurentides|p/Quebec|c/Canada}}
 
 ====Derived terms====
 * {{l|fr|Piedmontais}}, {{l|fr|Piedmontaise}}
@@ -3493,7 +3304,7 @@ Borrowing from {{bor|en|la|Sardinia}} and {{der|en|grc|Σαρδώ}}, which in tu
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|island|in the|sea/Mediterranean|and a|region|of|c/Italy}}.{{c|en|Regions of Italy}}
+# {{sid|en|Q1462}}{{place|en|island/and/ar|c/Italy|in the [[Mediterranean Sea]]}}.
 # {{place|en|town|s/New York}}.
 # {{place|en|village|twp:Suf/Washington|co/Brown County|and|twp:Suf/Clay|co/Highland County|s/Ohio}}.
 # {{place|en|unincorporated community|s/Indiana}}.
@@ -3607,7 +3418,6 @@ Borrowing from {{bor|en|la|Sardinia}} and {{der|en|grc|Σαρδώ}}, which in tu
 <references/>
 
 {{cln|en|terms suffixed with -ia|exonyms}}
-{{c|en|Sardinia}}
 
 ==Finnish==
 
@@ -3620,12 +3430,10 @@ From {{der|fi|la|Sardinia}}.
 ===Proper noun===
 {{fi-proper noun}}
 
-# {{place|fi|region|c/Italy|t=Sardinia}}
+# {{tcl|fi|Sardinia|id=Q1462}}
 
 ====Declension====
 {{fi-decl-kulkija|n=sg|Sardini|a}}
-
-[[Category:fi:Islands]]
 
 ==Latin==
 
@@ -3635,7 +3443,7 @@ From {{der|la|grc|Σαρδώ}}.
 ===Proper noun===
 {{la-proper noun|Sardinia<1.loc>}}
 
-# [[#English|Sardinia]]
+# {{tcl|la|Sardinia|id=Q1462}}
 
 ====Declension====
 {{la-ndecl|Sardinia<1.loc>}}
@@ -3669,22 +3477,17 @@ From {{der|la|grc|Σαρδώ}}.
 ===References===
 * {{R:L&S}}
 
-[[Category:la:Islands]]
-[[Category:la:Place names]]
-
 ==Norwegian Bokmål==
 {{wp|lang=no}}
 
 ===Proper noun===
 {{head|nb|proper noun}}
 
-# {{place|nb|region|c/Italy|t=Sardinia}}
+# {{tcl|nb|Sardinia|id=Q1462}}
 
 ====Related terms====
 * {{l|nb|sardinier}}
 * {{l|nb|sardinsk}}
-
-{{topics|nb|Islands}}
 
 ==Norwegian Nynorsk==
 {{wp|lang=nn}}
@@ -3692,13 +3495,11 @@ From {{der|la|grc|Σαρδώ}}.
 ===Proper noun===
 {{head|nn|proper noun}}
 
-# {{place|nn|region|c/Italy|t=Sardinia}}
+# {{tcl|nn|Sardinia|id=Q1462}}
 
 ====Related terms====
 * {{l|nn|sardiniar}}
 * {{l|nn|sardinsk}}
-
-{{topics|nn|Islands}}
 
 ==Romanian==
 {{wikipedia|lang=ro}}
@@ -3706,7 +3507,7 @@ From {{der|la|grc|Σαρδώ}}.
 ===Proper noun===
 {{ro-proper noun|f}}
 
-# {{place|ro|island/and/region|c/Italy|in the|sea/Mediterranean Sea|t1=Sardinia}}
+# {{tcl|ro|Sardinia|id=Q1462}}
 
 ====Declension====
 {{ro-noun-f-ie|Sardini|n=sg}}
@@ -3728,8 +3529,7 @@ From {{inh|en|enm|Sicilie}}, {{m|en|Sicilye}}, from {{der|en|ang|Sicilia}}, from
 ===Proper noun===
 {{en-proper noun|Sicilies}} {{qualifier|see usage notes below}}
 
-# The largest [[island]] in the [[Mediterranean Sea]], politically part of Italy and thus of Southern [[Europe]], but geographically also close to Africa, and separated from Tunisia and Libya by the [[Strait of Sicily]].
-# {{place|en|autonomous region|c/Italian Republic}}, officially named [[Regione Siciliana]] (''Sicilian Region'').
+# {{sid|en|Q1460}}{{place|en|The largest <<island>> in the [[Mediterranean Sea]], an <<autonomous region>> of <<c/Italy>>, close to [[Africa]] and separated from [[Tunisia]] and [[Libya]] by the [[Strait of Sicily]]}}.
 # {{lb|en|historical}} {{synonym of|en|Kingdom of Sicily}}, {{ngd|a former kingdom controlling the island and some of southern Italy in the medieval and early modern period}}
 # {{lb|en|historical}} {{synonym of|en|Kingdom of Naples}}, {{ngd|a former kingdom controlling southern Italy and claiming sovereignty over the island in the early modern period}}
 # {{lb|en|historical}} {{synonym of|en|Kingdom of the Two Sicilies}}, {{ngd|a former kingdom controlling the island and most of southern Italy in the 19th century}}
@@ -3879,7 +3679,6 @@ Sicel|Sicilian|Siceliot|Sikeliot|Siculian|Siculi|Siculish|Sicilian American|Sici
 ===See also===
 * {{list:regions of Italy/en}}
 
-{{c|en|Regions of Italy|Countries}}
 {{cln|en|exonyms}}
 -------- end text --------
 Page 92 Trentino-Alto Adige: -------- begin text --------
@@ -3889,7 +3688,7 @@ Page 92 Trentino-Alto Adige: -------- begin text --------
 {{wikipedia}}
 {{en-proper noun|head=[[Trentino]]-[[Alto Adige]]}}
 
-# {{place|en|region|of northern|c/Italy}}.
+# {{sid|en|Q1237}}{{place|en|autonomous region|of northern|c/Italy}}.
 #: {{syn|en|Trentino-South Tyrol}}
 
 ====Translations====
@@ -3914,14 +3713,14 @@ Page 92 Trentino-Alto Adige: -------- begin text --------
 ===Proper noun===
 {{it-proper noun|m|head=[[Trentino]]-[[Alto Adige]]}}
 
-# {{place|it|region|c/Italy|t=Trentino-Alto Adige}}
+# {{tcl|it|Trentino-Alto Adige|id=Q1237}}
 
 ==Portuguese==
 
 ===Proper noun===
 {{pt-proper noun|m}}
 
-# {{place|pt|region|c/Italy|t1=Trentino-Alto Adige}}
+# {{tcl|pt|Trentino-Alto Adige|id=Q1237}}
 -------- end text --------
 Page 93 Tuscany: -------- begin text --------
 ==English==
@@ -3936,7 +3735,7 @@ Late 14c., from {{inh|en|enm|Tuscan}}, {{m|enm|Tuscane}}, from {{der|en|fro|Tosc
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|region|c/Italy}} located north of [[Lazio]] and south of [[Emilia-Romagna]].
+# {{sid|en|Q1273}}{{place|en|adr|c/Italy|located north of [[Lazio]] and south of [[Emilia-Romagna]]}}.
 
 ====Related terms====
 * {{l|en|Tuscan}}
@@ -4005,7 +3804,7 @@ Via {{uder|en|it|-}}, from {{m|en|Umbri}}, ancient {{uder|en|itc|-}} tribe inhab
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|region|c/Italy}}.
+# {{sid|en|Q1280}}{{place|en|adr|in central|c/Italy}}.
 
 ====Translations====
 {{trans-top|region of Italy}}
@@ -4052,7 +3851,7 @@ After the {{m|en|Umbri}}, an ancient {{der|it|itc}} tribe inhabiting the region.
 ===Proper noun===
 {{it-proper noun|f}}
 
-# {{place|it|region|c/Italy|t=Umbria}}
+# {{tcl|it|Umbria|id=Q1280}}
 
 ====Related terms====
 * {{l|it|umbro}}
@@ -4069,7 +3868,7 @@ After the {{m|en|Umbri}}, an ancient {{der|it|itc}} tribe inhabiting the region.
 ===Proper noun===
 {{head|pl|proper noun|g=f}}
 
-# {{place|pl|region|c/Italy|t=Umbria}}
+# {{tcl|pl|Umbria|id=Q1280}}
 
 ====Declension====
 {{pl-decl-noun-sing|Umbria|Umbrii|Umbrii|Umbrię|Umbrią|Umbrii|Umbrio}}
@@ -4094,9 +3893,8 @@ Page 95 Valle d'Aosta: -------- begin text --------
 ===Proper noun===
 {{en-proper noun|head=Valle d'[[Aosta]]}}
 
-# {{place|en|a=A [[French]]-[[speaking]]|region|of northwestern|c/Italy|caplc=en:Aosta}}.
-#: {{syn|en|Aosta Valley}}
-# {{place|en|a=The sole|province|r/Valle d'Aosta|c/Italy|consisting of the whole region}}.
+# {{syn of|en|Aosta Valley}}: {{tcl|en|Aosta Valley|id=Q1222}}.
+# {{sid|en|former province}}{{place|en|former province|ar/Aosta Valley|consisting of the whole region; abolished in 1945}}.
 #: {{syn|en|Aosta}}
 
 ====Translations====
@@ -4159,8 +3957,8 @@ Page 95 Valle d'Aosta: -------- begin text --------
 ===Proper noun===
 {{it-proper noun|f|head=la [[valle|Valle]] [[d']][[Aosta]]}}
 
-# {{place|it|region|of northwestern|c/Italy|t1=Valle d'Aosta}}
-# {{place|it|province|r/Valle d'Aosta|c/Italy|a=the sole|t1=Valle d'Aosta|t2=Aosta}}
+# {{tcl|it|Aosta Valley|id=Q1222}}
+# {{tcl|it|Valle d'Aosta|id=former province|t=Valle d'Aosta|t2=Aosta}}
 #: {{syn|it|Aosta}}
 
 ====Derived terms====
@@ -4177,7 +3975,7 @@ Page 96 Veneto: -------- begin text --------
 ===Proper noun===
 {{en-proper noun}}
 
-# {{place|en|region|of northern|c/Italy}}.
+# {{sid|en|Q1243}}{{place|en|adr|of northern|c/Italy}}.
 
 ====Derived terms====
 * {{l|en|Vittorio Veneto}}
@@ -4229,7 +4027,7 @@ From the name of the {{w|Veneti}}.
 ===Proper noun===
 {{it-proper noun|m}}
 
-# {{place|it|region|c/Italy|t=Veneto}}
+# {{tcl|it|Veneto|id=Q1243}}
 
 ====Related terms====
 * {{l|it|veneto}}
@@ -4252,8 +4050,8 @@ Borrowed from {{bor|eo|la|Latium}}.
 ===Proper noun===
 {{eo-head}}
 
-# {{place|eo|region|c/Italy|t=Lazio}}
-# {{lb|eo|historical}} {{l|en|Latium}}
+# {{tcl|eo|Lazio|id=Q1282}}
+# {{tcl|eo|Latium|id=Q1048669}}
 
 ====Derived terms====
 * {{l|eo|latia|pos=a}}
@@ -4280,12 +4078,10 @@ From {{af|eo|sardo|t1=Sardinian person|-io}}.
 ===Proper noun===
 {{eo-proper noun}}
 
-# {{place|eo|region|c/Italy|t=Sardinia}}
+# {{tcl|eo|Sardinia|id=Q1462}}
 
 ====Holonyms====
 * {{l|eo|Italio|t=Italy}}
-
-[[Category:eo:Islands]]
 -------- end text --------
 Page 99 Sicilio: -------- begin text --------
 ==Esperanto==
@@ -4298,7 +4094,7 @@ Page 99 Sicilio: -------- begin text --------
 ===Proper noun===
 {{eo-proper noun}}
 
-# {{place|eo|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|eo|Sicily|id=Q1460}}
 
 ====Holonyms====
 * {{l|eo|Italio|gloss=Italy}}
@@ -4311,7 +4107,7 @@ Page 100 Sitsiilia: -------- begin text --------
 ===Proper noun===
 {{head|et|proper noun}}
 
-# {{place|et|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|et|Sicily|id=Q1460}}
 -------- end text --------
 Page 101 Sikiloy: -------- begin text --------
 ==Faroese==
@@ -4326,7 +4122,7 @@ From {{der|fo|non|Sikiley}}.
 ===Proper noun===
 {{head|fo|proper noun|g=f}}
 
-# {{place|fo|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|fo|Sicily|id=Q1460}}
 
 ====Declension====
 {{fo-decl-proper-noun-s-indef|Sikiloy|Sikiloy|Sikiloy|Sikiloyar}}
@@ -4343,7 +4139,7 @@ Page 102 Aostanlaakso: -------- begin text --------
 ===Proper noun===
 {{fi-proper noun}}
 
-# {{place|fi|region|c/Italy|t=Valle d'Aosta}}
+# {{tcl|fi|Aosta Valley|id=Q1222}}
 
 ====Declension====
 {{fi-decl-valo|Aostanlaaks|||o|a|n=sg}}
@@ -4364,7 +4160,7 @@ From {{der|fi|it|Lombardia}}.
 ===Proper noun===
 {{fi-proper noun}}
 
-# {{place|fi|region|c/Italy|t=Lombardy}}
+# {{tcl|fi|Lombardy|id=Q1210}}
 
 ====Derived terms====
 * {{l|fi|lombardia}}
@@ -4385,7 +4181,7 @@ From {{bor|hu|it|Lombardia|t=Lombardy}}.
 ===Proper noun===
 {{head|hu|proper noun}}
 
-# {{place|hu|region|in northern|c/Italy|t=Lombardy}}
+# {{tcl|hu|Lombardy|id=Q1210}}
 
 ====Declension====
 {{hu-infl-nom|Lombardiá|o|n=sg}}{{hu-pos-tok|Lombardiá|n=sg}}
@@ -4411,7 +4207,7 @@ From {{uder|it|la|Langobardia}}, named after [[Langobard|Langobards]] ("long bea
 ===Proper noun===
 {{it-proper noun|f}}
 
-# {{place|it|region|c/Italy|t=Lombardy}}
+# {{tcl|it|Lombardy|id=Q1210}}
 
 ====Related terms====
 * {{l|it|lombardismo}}
@@ -4430,7 +4226,7 @@ From {{uder|it|la|Langobardia}}, named after [[Langobard|Langobards]] ("long bea
 ===Proper noun===
 {{pl-prop|f}}
 
-# {{place|pl|region|c/Italy|t=Lombardy}}
+# {{tcl|pl|Lombardy|id=Q1210}}
 
 ====Declension====
 {{pl-decl-noun-f|tantum=s}}
@@ -4456,7 +4252,7 @@ From {{inh|pt|roa-opt|Lombardia}}, from {{der|pt|ML.|Lombardia}}, from {{der|pt|
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|region|c/Italy|t1=Lombardy}}
+# {{tcl|pt|Lombardy|id=Q1210}}
 -------- end text --------
 Page 104 Sisilia: -------- begin text --------
 {{also|sisilia}}
@@ -4472,7 +4268,7 @@ From {{der|fi|it|Sicilia}}.
 ===Proper noun===
 {{fi-proper noun}}
 
-# {{place|fi|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|fi|Sicily|id=Q1460}}
 
 ====Declension====
 {{fi-decl-kulkija|n=sg|Sisili|a}}
@@ -4493,7 +4289,7 @@ From {{der|fi|it|Toscana}}.
 ===Proper noun===
 {{fi-proper noun}}
 
-# {{place|fi|region|c/Italy|t=Tuscany}}
+# {{tcl|fi|Tuscany|id=Q1273}}
 
 ====Declension====
 {{fi-decl-kulkija|n=sg|Toskan|a}}
@@ -4517,7 +4313,7 @@ From {{der|fi|it|Toscana}}.
 ===Proper noun===
 {{de-proper noun|f.article}}
 
-# {{place|de|region|c/Italy|t=Tuscany}}
+# {{tcl|de|Tuscany|id=Q1273}}
 
 ====Usage notes====
 * In obsolete usage, {{m|de||Toskana}} may be neuter and construed without the article. (The genitive is then {{m|de||Toskanas}}, with the article also {{m|de||des Toskana}}.)
@@ -4539,7 +4335,7 @@ From {{der|fi|it|Toscana}}.
 ===Proper noun===
 {{lt-proper noun|f}}
 
-# {{place|lt|region|c/Italy|t=Tuscany}}
+# {{tcl|lt|Tuscany|id=Q1273}}
 
 ====Declension====
 {{lt-noun-f-a-unc|Toskan}}
@@ -4553,7 +4349,7 @@ From {{der|fi|it|Toscana}}.
 ===Proper noun===
 {{sh-proper noun|g=f|head=Toskàna}}
 
-# {{place|sh|region|c/Italy|t=Tuscany}}
+# {{tcl|sh|Tuscany|id=Q1273}}
 
 ====Declension====
 {{sh-decl-noun-unc
@@ -4576,7 +4372,7 @@ Page 106 Abruzzes: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|f-p}}
 
-# {{lb|fr|plurale tantum}} {{place|fr|region|c/Italy|t=Abruzzo}}
+# {{lb|fr|plurale tantum}} {{tcl|fr|Abruzzo|id=Q1284}}
 # {{lb|fr|plurale tantum}} a mountain chain in the [[Apennines]]
 
 ====Derived terms====
@@ -4596,7 +4392,7 @@ Page 107 Basilicate: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|f}}
 
-# {{place|fr|region|c/Italy|t=Basilicata}}
+# {{tcl|fr|Basilicata|id=Q1452}}
 
 ===See also===
 * {{list:regions of Italy/fr}}
@@ -4613,7 +4409,7 @@ Page 108 Calabre: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|g=f}}
 
-# {{place|fr|region|c/Italy|t=Calabria}}
+# {{tcl|fr|Calabria|id=Q1458}}
 
 ====Related terms====
 * {{l|fr|calabrais}}
@@ -4624,7 +4420,6 @@ Page 108 Calabre: -------- begin text --------
 ===Anagrams===
 * {{l|fr|câblera}}
 
-{{C|fr|Peninsulas}}
 {{cln|fr|exonyms}}
 -------- end text --------
 Page 109 Campanie: -------- begin text --------
@@ -4636,7 +4431,7 @@ Page 109 Campanie: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|f}}
 
-# {{place|fr|region|c/Italy|t=Campania}}
+# {{tcl|fr|Campania|id=Q1438}}
 
 ====Derived terms====
 * {{l|fr|Campanien}}
@@ -4655,7 +4450,7 @@ Page 109 Campanie: -------- begin text --------
 ===Proper noun===
 {{head|fur|proper noun|g=f}}
 
-# [[Campania]]
+# {{tcl|fur|Campania|id=Q1438}}
 
 ====Related terms====
 * {{l|fur|campan}}
@@ -4672,118 +4467,10 @@ Page 110 Frioul-Vénétie julienne: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|m}}
 
-# {{place|fr|region|c/Italy|t=Friuli-Venezia Giulia}}
+# {{tcl|fr|Friuli-Venezia Giulia|id=Q1250}}
 
 ===See also===
 * {{list:regions of Italy/fr}}
--------- end text --------
-Page 111 Latium: -------- begin text --------
-==English==
-[[File:Map_Region_of_Lazio.svg|thumbnail|Latium]]
-{{wikipedia}}
-
-===Etymology===
-Borrowed from {{bor|en|la|Latium}}. {{doublet|en|Lazio}}.
-
-===Pronunciation===
-* {{IPA|en|/ˈleɪ.ʃi.əm/}}
-* {{hyphenation|en|La|ti|um}}
-
-===Proper noun===
-{{en-proper noun}}
-
-# {{sid|en|Q1048669}}{{lb|en|historical}} {{place|en|historical region|of central|c/Italy|in which the city of Rome was founded and grew to be the capital city of the Roman Empire}}.
-# [[Lazio]], the corresponding modern region.
-
-====Translations====
-{{trans-top|region of central Italy}}
-* Arabic: {{t|ar|لَاتْيُوم|m|tr=latyum}}
-* Armenian: {{t|hy|Լացիում}}
-* Catalan: {{t+|ca|Laci}}
-* Esperanto: {{t|eo|Latio}}
-* Finnish: {{t+|fi|Latium}}, {{t|fi|Lazio}}
-* French: {{t+|fr|Latium|m}}
-* Georgian: {{t|ka|ლატიუმი}}
-* German: {{t+|de|Latium|n}}
-* Greek: {{t+|el|Λάτιο|n}}
-*: Ancient: {{t|grc|Λάτιον}}
-* Hindi: {{t|hi|लैटियम}}
-* Italian: {{t+|it|Lazio|m}}
-* Japanese: {{t|ja|ラティウム|tr=Ratiumu}}
-* Korean: {{t|ko|^라티움}}
-* Kurdish:
-*: Northern Kurdish: {{t|kmr|Latyûm|f}}, {{t|kmr|Latium|f}}
-* Latin: {{t+|la|Latium|n}}
-* Portuguese: {{t+|pt|Lácio|m}}
-* Russian: {{t+|ru|Ла́ций}}
-* Sicilian: {{t|scn|Lazziu|m}}
-* Slovene: {{t+|sl|Lacij|m}}
-* Spanish: {{t|es|Lacio|m}}
-* Turkish: {{t|tr|Latium}}
-* Vietnamese: {{t+|vi|Latium}}
-* Welsh: {{t|cy|Latiwn|f}}
-{{trans-bottom}}
-
-===Anagrams===
-* {{anagrams|en|a=ailmtu|Iatmul|Ultima|mulita|ultima}}
-
-[[Category:en:Italy]]
-
-==French==
-
-===Pronunciation===
-* {{fr-IPA|Lacium|Lacieum}}
-* {{rhyme|fr|ɔm|œm}}
-
-===Proper noun===
-{{fr-proper noun|m}}
-
-# {{tcl|fr|Latium|id=Q1048669}}
-# {{tcl|fr|Lazio|id=Q1282}}
-
-===See also===
-* {{list:regions of Italy/fr}}
-
-==Latin==
-
-===Etymology===
-Probably a loanword from an ancient non-Indo-European language, possibly related to Etruscan, but it has also been linked to {{m|la|lātus||wide}}, a reference to the flat land, or {{m|la|latus||side}}, being on the central-west side of the Italian peninsula.
-
-===Pronunciation===
-* {{la-IPA}}
-
-===Proper noun===
-{{la-proper noun|Latium<2.loc>}}
-
-# {{tcl|la|Latium|id=Q1048669}}
-
-====Declension====
-{{la-ndecl|Latium<2.loc>}}
-
-====Derived terms====
-* {{l|la|Latiālis}}/ {{l|la|Latiar}}
-* {{l|la|Latius}}
-* {{l|la|Latīnus}}
-
-====Descendants====
-* {{desc|ast|Lacio}}
-* {{desc|ca|Laci}}
-* {{desc|es|Lacio}}
-* {{desc|frp|Lacion}}
-* {{desc|gl|Lacio}}
-* {{desc|it|Lazio}}
-* {{desc|lmo|Làsio}}
-* {{desc|nap|Lazzio}}
-* {{desc|pms|Lassio}}
-* {{desc|pt|Lácio}}
-* {{desc|scn|Lazziu}}
-
-===References===
-* {{R:L&S}}
-* {{R:Gaffiot}}
-
-===Anagrams===
-* {{l|la|ultima}}, {{l|la|ultimā}}
 -------- end text --------
 Page 112 Ombrie: -------- begin text --------
 {{also|ombrie}}
@@ -4795,7 +4482,7 @@ Page 112 Ombrie: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|f}}
 
-# {{place|fr|region|c/Italy|t=Umbria}}
+# {{tcl|fr|Umbria|id=Q1280}}
 
 ====Derived terms====
 * {{l|fr|Ombrien}}
@@ -4817,7 +4504,7 @@ Page 113 Piémont: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|m}}
 
-# {{place|fr|region|c/Italy|t=Piedmont}}
+# {{tcl|fr|Piedmont|id=Q1216}}
 
 ====Derived terms====
 * {{l|fr|piémontais}}
@@ -4834,12 +4521,11 @@ Page 114 Pouilles: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|f-p}}
 
-# {{place|fr|region|c/Italy|t=Apulia}}
+# {{tcl|fr|Apulia|id=Q1447}}
 
 ===See also===
 * {{list:regions of Italy/fr}}
 
-{{C|fr|Peninsulas}}
 {{cln|fr|exonyms}}
 -------- end text --------
 Page 115 Sardaigne: -------- begin text --------
@@ -4853,7 +4539,7 @@ Page 115 Sardaigne: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|f}}
 
-# {{place|fr|region|c/Italy|t=Sardinia}}
+# {{tcl|fr|Sardinia|id=Q1462}}
 
 ====Derived terms====
 * {{l|fr|Sarde}}
@@ -4868,7 +4554,6 @@ Page 115 Sardaigne: -------- begin text --------
 ===Anagrams===
 * {{l|fr|daigneras}}, {{l|fr|grenadais}}
 
-{{C|fr|Islands}}
 {{cln|fr|exonyms}}
 -------- end text --------
 Page 116 Sicile: -------- begin text --------
@@ -4882,7 +4567,7 @@ Page 116 Sicile: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|f}}
 
-# {{place|fr|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|fr|Sicily|id=Q1460}}
 
 ====Derived terms====
 * {{l|fr|sicilien}}
@@ -4909,7 +4594,7 @@ Page 117 Trentin-Haut-Adige: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|m}}
 
-# {{place|fr|region|c/Italy|t=Trentino-Alto Adige}}
+# {{tcl|fr|Trentino-Alto Adige|id=Q1237}}
 
 ===See also===
 * {{list:regions of Italy/fr}}
@@ -4924,7 +4609,7 @@ Page 118 Vallée d'Aoste: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|f|head=[[vallée|Vallée]] [[de|d']][[Aoste]]}}
 
-# {{place|fr|region|c/Italy|t=Valle d'Aosta}}
+# {{tcl|fr|Aosta Valley|id=Q1222}}
 #: {{syn|fr|Val d'Aoste}}
 
 ===See also===
@@ -4941,7 +4626,7 @@ Page 119 Vénétie: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|f}}
 
-# {{place|fr|region|c/Italy|t=Veneto}}
+# {{tcl|fr|Veneto|id=Q1243}}
 
 ====Derived terms====
 * {{l|fr|Frioul-Vénétie julienne}}
@@ -4958,7 +4643,7 @@ Page 120 Émilie-Romagne: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|f}}
 
-# {{place|fr|region|c/Italy|t=Emilia-Romagna}}
+# {{tcl|fr|Emilia-Romagna|id=Q1263}}
 
 ====Derived terms====
 * {{l|fr|Émilien-Romagnol}}
@@ -4975,7 +4660,7 @@ Page 121 Abruç: -------- begin text --------
 ===Proper noun===
 {{head|fur|proper noun|g=m}}
 
-# [[Abruzzo]]
+# {{tcl|fur|Abruzzo|id=Q1284}}
 
 ====Related terms====
 * {{l|fur|abrucês}}
@@ -4989,7 +4674,7 @@ Page 122 Calabrie: -------- begin text --------
 ===Proper noun===
 {{head|fur|proper noun|g=f}}
 
-# [[Calabria]]
+# {{tcl|fur|Calabria|id=Q1458}}
 
 ====Related terms====
 * {{l|fur|calabrês}}
@@ -5027,7 +4712,7 @@ Page 123 Lazi: -------- begin text --------
 ===Proper noun===
 {{head|fur|proper noun|g=m}}
 
-# [[Lazio]]
+# {{tcl|fur|Lazio|id=Q1282}}
 
 ====Related terms====
 * {{l|fur|laziâl}}
@@ -5063,7 +4748,7 @@ Page 124 Marcjis: -------- begin text --------
 ===Proper noun===
 {{head|fur|proper noun|g=f-p}}
 
-# [[Marche]] {{gloss|Italian region}}
+# {{tcl|fur|Marche|id=Q1279}}
 
 ====Related terms====
 * {{l|fur|marcjesan}}
@@ -5077,7 +4762,7 @@ Page 125 Molîs: -------- begin text --------
 ===Proper noun===
 {{head|fur|proper noun}}
 
-# [[Molise]]
+# {{tcl|fur|Molise|id=Q1443}}
 
 ====Related terms====
 * {{l|fur|molisan}}
@@ -5093,7 +4778,7 @@ Page 126 Pulie: -------- begin text --------
 ===Proper noun===
 {{head|fur|proper noun|g=f}}
 
-# [[Apulia]]
+# {{tcl|fur|Apulia|id=Q1447}}
 
 ====Related terms====
 * {{l|fur|puliês}}
@@ -5107,7 +4792,7 @@ Page 127 Sardegne: -------- begin text --------
 ===Proper noun===
 {{head|fur|proper noun|g=f}}
 
-# [[Sardinia]]
+# {{tcl|fur|Sardinia|id=Q1462}}
 
 ====Related terms====
 * {{l|fur|sart}}
@@ -5123,7 +4808,7 @@ Page 128 Sicilie: -------- begin text --------
 ===Proper noun===
 {{head|fur|proper noun|g=f}}
 
-# [[Sicily]]
+# {{tcl|fur|Sicily|id=Q1460}}
 
 ====Related terms====
 * {{l|fur|sicilian}}
@@ -5142,7 +4827,7 @@ From {{inh|enm|ang|Sicilia}}, from {{der|enm|la|Sicilia}}, from {{der|enm|grc|Σ
 ===Proper noun===
 {{head|enm|proper noun}}
 
-# [[Sicily]]
+# {{tcl|enm|island/and/former kingdom|cont/Europe|t=Sicily}}
 #* 1590, A Summarie of the Chronicles of England, page 733: "The other armie had in it 20 gallies, wherof some were of Sicilie, and some of the Island of Malta, under the charge of John Andreas Dorea a captaine, serving the king of Spaine."
 
 ====Descendants====
@@ -5160,7 +4845,7 @@ From {{bor|ang|la|Siculī}}.
 {{ang-proper noun|m-p}}
 
 # the [[Sicilian]]s
-# [[Sicily]]
+# {{tcl|ang|island/and/former kingdom|cont/europe|t=Sicily}}
 
 ====Declension====
 {{ang-decl-noun|type=strong i-stem
@@ -5185,7 +4870,7 @@ Page 129 Umbrie: -------- begin text --------
 ===Proper noun===
 {{head|fur|proper noun|g=f}}
 
-# [[Umbria]]
+# {{tcl|fur|Umbria|id=Q1280}}
 
 ====Related terms====
 * {{l|fur|umbri}}
@@ -5199,7 +4884,7 @@ Page 130 Abruzos: -------- begin text --------
 ===Proper noun===
 {{gl-proper noun}}
 
-# {{place|gl|region|c/Italy|t=Abruzzo}}
+# {{tcl|gl|Abruzzo|id=Q1284}}
 
 ====Related terms====
 * {{l|gl|abrucés}}
@@ -5213,7 +4898,7 @@ Page 130 Abruzos: -------- begin text --------
 ===Proper noun===
 {{es-proper noun|m-p}}
 
-# {{place|es|region|c/Italy|t=Abruzzo}}
+# {{tcl|es|Abruzzo|id=Q1284}}
 
 ====Related terms====
 {{col-auto|es|abruzo}}
@@ -5225,7 +4910,7 @@ Page 131 Lombardía: -------- begin text --------
 ===Proper noun===
 {{gl-proper noun}}
 
-# {{place|gl|region|c/Italy|t=Lombardy}}
+# {{tcl|gl|Lombardy|id=Q1210}}
 
 ====Related terms====
 * {{l|gl|lombardo}}
@@ -5239,7 +4924,7 @@ Page 131 Lombardía: -------- begin text --------
 ===Proper noun===
 {{es-proper noun|f}}
 
-# {{place|es|region|c/Italy|t=Lombardy}}
+# {{tcl|es|Lombardy|id=Q1210}}
 
 ====Related terms====
 {{col-auto|es|lombardo}}
@@ -5253,7 +4938,7 @@ Page 132 Piemonte: -------- begin text --------
 ===Proper noun===
 {{gl-proper noun}}
 
-# {{place|gl|region|c/Italy|t=Piedmont}}
+# {{tcl|gl|Piedmont|id=Q1216}}
 
 ====Related terms====
 * {{l|gl|piemontés}}
@@ -5271,7 +4956,7 @@ From {{inh|it|la|Pedemontium|lit=at the foot of mountains}} or {{m|la||Pedemonti
 ===Proper noun===
 {{it-proper noun|m}}
 
-# {{place|it|region|c/Italy|t=Piedmont}}
+# {{tcl|it|Piedmont|id=Q1216}}
 
 ====Derived terms====
 * {{l|it|piemontese}} {{qualifier|see there for further derivations}}
@@ -5293,7 +4978,7 @@ Borrowed from {{bor|pt|it|Piemonte}}, from {{der|pt|la|Pedemontium|lit=at the fo
 ===Proper noun===
 {{pt-proper noun|m}}
 
-# {{place|pt|region|in northwestern|c/Italy|t1=Piedmont}}
+# {{tcl|pt|Piedmont|id=Q1216}}
 
 ====Derived terms====
 * {{l|pt|piemontês}}
@@ -5309,12 +4994,10 @@ Page 133 Sardeña: -------- begin text --------
 ===Proper noun===
 {{gl-proper noun|f}}
 
-# {{place|gl|region|c/Italy|t=Sardinia}}
+# {{tcl|gl|Sardinia|id=Q1462}}
 
 ====Related terms====
 * {{l|gl|sardo}}
-
-{{C|gl|Islands}}
 -------- end text --------
 Page 134 Sicilia: -------- begin text --------
 {{also|sicilià|Sicília}}
@@ -5338,7 +5021,7 @@ From {{der|en|la|Sicilia|}}, from {{der|en|grc|Σικελία|}}, from {{m|grc|�
 ===Proper noun===
 {{gl-proper noun}}
 
-# {{place|gl|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|gl|Sicily|id=Q1460}}
 
 ====Related terms====
 * {{l|gl|siciliano}}
@@ -5356,7 +5039,7 @@ From {{der|en|la|Sicilia|}}, from {{der|en|grc|Σικελία|}}, from {{m|grc|�
 ===Proper noun===
 {{it-proper noun|f}}
 
-# {{place|it|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|it|Sicily|id=Q1460}}
 #: {{syn|it|Trinacria|q1=obsolete}}
 
 ====Derived terms====
@@ -5388,7 +5071,7 @@ From {{der|la|grc|Σικελία|}}, from {{m|grc|Σίκελος|t=[[Sicel]]}}, 
 ===Proper noun===
 {{la-proper noun|Sicilia<1.loc>}}
 
-# [[Sicily]]
+# {{tcl|la|Sicily|id=Q1460}}
 
 ====Declension====
 {{la-ndecl|Sicilia<1.loc>}}
@@ -5424,16 +5107,13 @@ From {{der|la|grc|Σικελία|}}, from {{m|grc|Σίκελος|t=[[Sicel]]}}, 
 * {{R:L&S}}
 * {{R:Gaffiot}}
 
-[[Category:la:Islands]]
-[[Category:la:Place names]]
-
 ==Norwegian Bokmål==
 {{wp|lang=no}}
 
 ===Proper noun===
 {{head|nb|proper noun}}
 
-# {{place|nb|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|nb|Sicily|id=Q1460}}
 
 ====Related terms====
 * {{l|nb|sicilianer}}
@@ -5445,7 +5125,7 @@ From {{der|la|grc|Σικελία|}}, from {{m|grc|Σίκελος|t=[[Sicel]]}}, 
 ===Proper noun===
 {{head|nn|proper noun}}
 
-# {{place|nn|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|nn|Sicily|id=Q1460}}
 
 ====Related terms====
 * {{l|nn|sicilianar}}
@@ -5462,7 +5142,7 @@ From {{bor|ang|la|Sicilia}} from {{der|ang|grc|Σικελία|}}, from {{m|grc|�
 ===Proper noun===
 {{ang-proper noun|f}}
 
-# [[Sicily]]
+# {{tcl|ang|island/and/former kingdom|cont/Europe|t=Sicily}}
 
 ====Declension====
 {{ang-decl-noun|type=indeclinable|Sicilia||Sicilia||Sicilia||Sicilia|}}
@@ -5491,7 +5171,7 @@ From {{inh|scn|la|Sicilia|}}, from {{der|scn|grc|Σικελία|}}, from {{m|grc
 ===Proper noun===
 {{head|scn|proper noun|g=f}}
 
-# {{place|scn|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|scn|Sicily|id=Q1460}}
 
 ====Derived terms====
 * {{l|scn|sicilianu}}
@@ -5504,7 +5184,7 @@ From {{inh|scn|la|Sicilia|}}, from {{der|scn|grc|Σικελία|}}, from {{m|grc
 ===Proper noun===
 {{es-proper noun|f}}
 
-# {{place|es|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|es|Sicily|id=Q1460}}
 
 ====Related terms====
 {{col-auto|es|siciliano}}
@@ -5515,7 +5195,7 @@ Page 135 Umbría: -------- begin text --------
 ===Proper noun===
 {{gl-proper noun}}
 
-# {{place|gl|region|c/Italy|t=Umbria}}
+# {{tcl|gl|Umbria|id=Q1280}}
 
 ====Related terms====
 * {{l|gl|umbro}}
@@ -5528,7 +5208,7 @@ Page 135 Umbría: -------- begin text --------
 ===Proper noun===
 {{es-proper noun|f}}
 
-# {{place|es|region|c/Italy|t=Umbria}}
+# {{tcl|es|Umbria|id=Q1280}}
 
 ====Related terms====
 {{col-auto|es|umbro}}
@@ -5540,7 +5220,7 @@ Page 136 Véneto: -------- begin text --------
 ===Proper noun===
 {{gl-proper noun|m}}
 
-# {{place|gl|region|c/Italy|t=Veneto}}
+# {{tcl|gl|Veneto|id=Q1243}}
 
 ====Related terms====
 * {{l|gl|véneto}}
@@ -5554,7 +5234,7 @@ Page 136 Véneto: -------- begin text --------
 ===Proper noun===
 {{es-proper noun|m}}
 
-# {{place|es|region|c/Italy|t=Veneto}}
+# {{tcl|es|Veneto|id=Q1243}}
 
 ====Related terms====
 {{col-auto|es|véneto}}
@@ -5568,7 +5248,7 @@ Page 137 Friaul-Julisch Venetien: -------- begin text --------
 ===Proper noun===
 {{de-proper noun|[[Friaul]]-[[julisch|Julisch]] [[Venetien]]<n>}}
 
-# {{place|de|region|c/Italy|t=Friuli-Venezia Giulia}}
+# {{tcl|de|Friuli-Venezia Giulia|id=Q1250}}
 -------- end text --------
 Page 138 Kalabrien: -------- begin text --------
 ==German==
@@ -5580,7 +5260,7 @@ Page 138 Kalabrien: -------- begin text --------
 ===Proper noun===
 {{de-proper noun|toponym}}
 
-# {{place|de|region|c/Italy|t=Calabria}}
+# {{tcl|de|Calabria|id=Q1458}}
 
 ====Derived terms====
 * {{l|de|kalabrisch}}
@@ -5592,7 +5272,7 @@ Page 138 Kalabrien: -------- begin text --------
 ===Proper noun===
 {{sv-proper noun|n}}
 
-# {{place|sv|region|c/Italy|t=Calabria}}
+# {{tcl|sv|Calabria|id=Q1458}}
 
 ====Related terms====
 * {{l|sv|kalabrier}}
@@ -5614,7 +5294,7 @@ Page 139 Ligurien: -------- begin text --------
 ===Proper noun===
 {{de-proper noun|toponym}}
 
-# {{place|de|region|c/Italy|t=Liguria}}
+# {{tcl|de|Liguria|id=Q1256}}
 
 ====Related terms====
 * {{l|de|ligurisch}}
@@ -5626,7 +5306,7 @@ Page 139 Ligurien: -------- begin text --------
 ===Proper noun===
 {{sv-proper noun|n}}
 
-# {{place|sv|region|c/Italy|t=Liguria}}
+# {{tcl|sv|Liguria|id=Q1256}}
 
 ====Related terms====
 * {{l|sv|ligurer}}
@@ -5645,7 +5325,7 @@ Page 140 Lombardei: -------- begin text --------
 ===Proper noun===
 {{de-proper noun|f.article}}
 
-# {{place|de|region|c/Italy|t=Lombardy}}
+# {{tcl|de|Lombardy|id=Q1210}}
 
 ====Related terms====
 * {{l|de|Lombarde}}
@@ -5668,7 +5348,7 @@ Page 141 Sizilien: -------- begin text --------
 ===Proper noun===
 {{de-proper noun|toponym,,-[rare]}}
 
-# {{place|de|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|de|Sicily|id=Q1460}}
 
 ====Usage notes====
 * The plural ''Sizilien'' refers to regions also known as ''Neapel'' and ''Sizilien'', and does also occur in the proper noun ''Königreich beider Sizilien''.
@@ -5691,7 +5371,7 @@ Page 142 Umbrien: -------- begin text --------
 ===Proper noun===
 {{de-proper noun|toponym}}
 
-# {{place|de|region|c/Italy|t=Umbria}}
+# {{tcl|de|Umbria|id=Q1280}}
 
 ====Related terms====
 * {{l|de|umbrisch}}
@@ -5704,7 +5384,7 @@ Page 142 Umbrien: -------- begin text --------
 ===Proper noun===
 {{sv-proper noun|n}}
 
-# {{place|sv|region|c/Italy|t=Umbria}}
+# {{tcl|sv|Umbria|id=Q1280}}
 
 ====Related terms====
 * {{l|sv|umbrisk}}
@@ -5722,7 +5402,7 @@ From {{af|grc|Σῐ́κελος|-ῐ́ᾱ|t1=[[Sicel]]}}.
 ===Proper noun===
 {{grc-proper noun|head=Σῐκελῐ́ᾱ|Σῐκελῐ́ᾱς|f|first}}
 
-# [[Sicily]]
+# {{place|grc|island/and/former kingdom|cont/Europe|t=Sicily}}
 
 ====Inflection====
 {{grc-decl|Σῐκελῐ́ᾱ|ᾱς|form=S}}
@@ -5756,7 +5436,7 @@ From {{inh|el|grc|Σικελία}}.
 ===Proper noun===
 {{el-noun-proper|f}}
 
-# {{place|el|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|el|Sicily|id=Q1460}}
 
 ====Declension====
 {{el-nF-α-2a|Σικελί}}
@@ -5786,7 +5466,7 @@ Page 144 Τοσκάνη: -------- begin text --------
 ===Proper noun===
 {{el-noun-proper|f}}
 
-# {{place|el|region|c/Italy|t=Tuscany}}
+# {{tcl|el|Tuscany|id=Q1273}}
 
 ====Declension====
 {{el-nF-η-2b|Τοσκάν}}
@@ -5810,7 +5490,7 @@ Page 145 Kikilia: -------- begin text --------
 ===Proper noun===
 {{haw-proper noun}}
 
-# {{place|haw|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|haw|Sicily|id=Q1460}}
 # {{given name|haw|female|from=English}} borrowed from {{bor|haw|en|Cecilia}}
 
 ===References===
@@ -5834,7 +5514,7 @@ Page 146 Szardínia: -------- begin text --------
 ===Proper noun===
 {{head|hu|proper noun}}
 
-# {{place|hu|island/and/region|c/Italy|t=Sardinia}}
+# {{tcl|hu|Sardinia|id=Q1462}}
 
 ====Declension====
 {{hu-infl-nom|Szardíniá|o|n=sg}}{{hu-pos-tok|Szardíniá|n=sg}}
@@ -5862,7 +5542,7 @@ Page 147 Szicília: -------- begin text --------
 ===Proper noun===
 {{head|hu|proper noun}}
 
-# {{place|hu|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|hu|Sicily|id=Q1460}}
 
 ====Declension====
 {{hu-infl-nom|Szicíliá|o}}{{hu-pos-tok|Szicíliá}}
@@ -5886,7 +5566,7 @@ From {{bor|hu|it|Toscana|t=Tuscany}}.
 ===Proper noun===
 {{head|hu|proper noun}}
 
-# {{place|hu|region|c/Italy|t=Tuscany}}
+# {{tcl|hu|Tuscany|id=Q1273}}
 
 ====Declension====
 {{hu-infl-nom|Toszkáná|o|n=sg}}{{hu-pos-tok|Toszkáná|n=sg}}
@@ -5913,7 +5593,7 @@ From {{inh|is|non|Langbarðaland}} (Runic Swedish dative singular {{m|non|ᛚᛅ
 ===Proper noun===
 {{head|is|proper noun|g=n}}
 
-# {{place|is|region|c/Italy|t=Lombardy}}
+# {{tcl|is|Lombardy|id=Q1210}}
 
 ====Declension====
 {{is-decl-noun-n-s|Langbarðal|a|nd|pl=-}}
@@ -5929,15 +5609,13 @@ From {{inh|is|non|Langbarðaland}} (Runic Swedish dative singular {{m|non|ᛚᛅ
 ===Proper noun===
 {{non-proper noun|n}}
 
-# [[Lombardy]]
+# {{place|non|region|in northern|c/Italy|t=Lombardy}}
 
 ====Declension====
 {{non-decl-n-a|Langbarðaland|form=sing-indef}}
 
 ====Descendants====
 * {{desc|is|Langbarðaland}}
-
-[[Category:non:Countries]]
 -------- end text --------
 Page 150 Sardinía: -------- begin text --------
 {{also|Sardinia}}
@@ -5950,12 +5628,10 @@ Page 150 Sardinía: -------- begin text --------
 ===Proper noun===
 {{head|is|proper noun|g=f}}
 
-# {{place|is|region|c/Italy|t=Sardinia}}
+# {{tcl|is|Sardinia|id=Q1462}}
 
 ====Declension====
 {{is-decl-noun-f-w1|Sardin|í|pl=-|def=-}}
-
-[[Category:is:Islands]]
 -------- end text --------
 Page 151 Sikiley: -------- begin text --------
 ==Icelandic==
@@ -5969,7 +5645,7 @@ From {{der|is|non|Sikiley}}.
 ===Proper noun===
 {{head|is|proper noun|g=f}}
 
-# {{place|is|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|is|Sicily|id=Q1460}}
 
 ====Declension====
 {{is-decl-noun-f-s1|Sikil|ey|j=j}}
@@ -5981,7 +5657,7 @@ Page 152 Sicil: -------- begin text --------
 ===Proper noun===
 {{head|ga|proper noun|head=An tSicil|g=f}}
 
-# {{place|ga|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|ga|Sicily|id=Q1460}}
 
 ====Derived terms====
 * {{l|ga|Sicileach}}
@@ -5995,7 +5671,7 @@ From {{der|ga|LL.|Tuscāna}}.
 ===Proper noun===
 {{ga-proper noun|f|head=An Tuscáin|na [[Tuscáine]]}}
 
-# {{place|ga|region|c/Italy|t=Tuscany}}
+# {{tcl|ga|Tuscany|id=Q1273}}
 
 ====Declension====
 {{ga-decl-f2-nopl|T|uscáin|uscáine}}
@@ -6012,7 +5688,7 @@ From {{der|ga|LL.|Tuscāna}}.
 ===Further reading===
 * {{R:ga:EID}}
 
-{{cln|ga|exonyms|sort=Tuscain}}
+{{cln|ga|exonyms}}
 -------- end text --------
 Page 154 Alto Adige: -------- begin text --------
 ==Italian==
@@ -6064,7 +5740,7 @@ Page 157 ampicillina: -------- begin text --------
 ===Noun===
 {{it-noun|f}}
 
-# {{place|it|a <<region>> of the [[Dolomite]]s in the <<p:pref/Belluno>>, <<r/Veneto>>, <<c/Italy>>}}
+# [[ampicillin]]
 -------- end text --------
 Page 158 Bisiacaria: -------- begin text --------
 ==Italian==
@@ -6073,7 +5749,7 @@ Page 158 Bisiacaria: -------- begin text --------
 ===Proper noun===
 {{it-proper noun}}
 
-# {{place|it|region|r/Friuli-Venezia Giulia|corresponding to the southern part of the province of [[Gorizia]]}}
+# {{place|it|region|ar/Friuli-Venezia Giulia|corresponding to the southern part of the province of [[Gorizia]]}}
 
 ====Derived terms====
 * {{l|it|bisiaco}}
@@ -6085,7 +5761,7 @@ Page 159 Bornio: -------- begin text --------
 ===Proper noun===
 {{it-proper noun}}
 
-# {{place|it|small region|p/Rovigo|r/Veneto}}
+# {{place|it|small region|p/Rovigo|adr/Veneto}}
 
 ===Anagrams===
 * {{anagrams|it|a=binoor|Orbino|borino|orbino}}
@@ -6109,7 +5785,7 @@ From {{der|it|sc|-}}; the place name means "golden place," corresponding to {{m|
 ===Proper noun===
 {{it-proper noun}}
 
-# {{place|it|region|in northern|r/Sardinia}}
+# {{place|it|region|in northern|ar/Sardinia}}
 
 ====Derived terms====
 * {{l|it|logudorese}}
@@ -6125,7 +5801,7 @@ Page 162 Lomellina: -------- begin text --------
 ===Proper noun===
 {{it-proper noun}}
 
-# {{place|it|region|in western|r/Lombardy}}
+# {{place|it|region|in western|adr/Lombardy}}
 
 ====Derived terms====
 * {{l|it|lomellino}}
@@ -6159,7 +5835,7 @@ From {{der|it|la|Āpūlia}}.
 ===Proper noun===
 {{it-proper noun|f}}
 
-# {{place|it|region|c/Italy|t=Apulia}}
+# {{tcl|it|Apulia|id=Q1447}}
 #: {{syn|it|Puglie}}
 
 ====Related terms====
@@ -6167,8 +5843,6 @@ From {{der|it|la|Āpūlia}}.
 
 ===Anagrams===
 * {{anagrams|it|a=agilpu|puliga}}
-
-{{C|it|Peninsulas}}
 -------- end text --------
 Page 165 ウンブリア: -------- begin text --------
 ==Japanese==
@@ -6176,7 +5850,7 @@ Page 165 ウンブリア: -------- begin text --------
 ===Proper noun===
 {{ja-pos|proper}}
 
-# {{place|ja|region|c/Italy|t=Umbria}}
+# {{tcl|ja|Umbria|id=Q1280}}
 -------- end text --------
 Page 166 サルデーニャ: -------- begin text --------
 ==Japanese==
@@ -6188,9 +5862,7 @@ From {{bor|ja|it|Sardegna}}.
 ===Proper noun===
 {{ja-pos|proper}}
 
-# {{place|ja|region|c/Italy|t=Sardinia}}
-
-{{top|ja|Islands}}
+# {{tcl|ja|Sardinia|id=Q1462}}
 -------- end text --------
 Page 167 シチリア: -------- begin text --------
 ==Japanese==
@@ -6202,9 +5874,7 @@ From {{bor|ja|it|Sicilia}}.
 ===Proper noun===
 {{ja-pos|proper}}
 
-# [[Sicily]]
-
-{{top|ja|Regions of Italy|Islands|Italy}}
+# {{tcl|ja|Sicily|id=Q1460}}
 -------- end text --------
 Page 168 トスカーナ: -------- begin text --------
 ==Japanese==
@@ -6216,7 +5886,7 @@ From {{bor|ja|it|Toscana}}.
 ===Proper noun===
 {{ja-pos|proper}}
 
-# {{place|ja|t=Tuscany|region|c/Italy}}
+# {{tcl|ja|Tuscany|id=Q1273}}
 -------- end text --------
 Page 169 ピエモンテ: -------- begin text --------
 ==Japanese==
@@ -6228,7 +5898,7 @@ From {{bor|ja|it|Piemonte}}. {{doublet|ja|ピードモント|tr1=Pīdomonto}}.
 ===Proper noun===
 {{ja-pos|proper}}
 
-# {{place|ja|t=Piedmont|region|c/Italy}}
+# {{tcl|ja|Piedmont|id=Q1216}}
 -------- end text --------
 Page 170 プッリャ: -------- begin text --------
 ==Japanese==
@@ -6243,7 +5913,7 @@ From {{bor|ja|it|Puglia}}.
 ===Proper noun===
 {{ja-pos|proper}}
 
-# {{place|ja|t=Apulia|region|c/Italy}}
+# {{tcl|ja|Apulia|id=Q1447}}
 -------- end text --------
 Page 171 ロンバルディア: -------- begin text --------
 ==Japanese==
@@ -6255,7 +5925,7 @@ From {{bor|ja|it|Lombardia}}.
 ===Proper noun===
 {{ja-pos|proper}}
 
-# {{place|ja|t=Lombardy|region|c/Italy}}
+# {{tcl|ja|Lombardy|id=Q1210}}
 -------- end text --------
 Page 172 Сардиния: -------- begin text --------
 ==Kazakh==
@@ -6265,7 +5935,7 @@ Page 172 Сардиния: -------- begin text --------
 ===Proper noun===
 {{kk-prop}}
 
-# {{place|kk|island/and/region|c/Italy|t=Sardinia}}
+# {{tcl|kk|Sardinia|id=Q1462}}
 
 ==Russian==
 {{wikipedia|lang=ru}}
@@ -6276,7 +5946,7 @@ Page 172 Сардиния: -------- begin text --------
 ===Proper noun===
 {{ru-proper noun+|Сарди́ния}}
 
-# {{place|ru|island/and/region|c/Italy|t=Sardinia}}
+# {{tcl|ru|Sardinia|id=Q1462}}
 
 ====Declension====
 {{ru-noun-table|Сарди́ния|n=sg}}
@@ -6327,7 +5997,7 @@ Page 174 Kalabrija: -------- begin text --------
 ===Proper noun===
 {{lv-proper noun|f|4th}}
 
-# {{place|lv|region|c/Italy|t=Calabria}}
+# {{tcl|lv|Calabria|id=Q1458}}
 
 ====Declension====
 {{lv-decl-noun|Kalabrij|a|4th|no-pl||||proper}}
@@ -6337,7 +6007,7 @@ Page 174 Kalabrija: -------- begin text --------
 ===Proper noun===
 {{lt-proper noun|f}}
 
-# {{place|lt|region|c/Italy|t=Calabria}}
+# {{tcl|lt|Calabria|id=Q1458}}
 
 ====Declension====
 {{lt-noun-f-a-unc|Kalabrij}}
@@ -6348,7 +6018,7 @@ Page 175 Lombardija: -------- begin text --------
 ===Proper noun===
 {{lt-proper noun|f}}
 
-# {{place|lt|region|c/Italy|t=Lombardy}}
+# {{tcl|lt|Lombardy|id=Q1210}}
 
 ====Declension====
 {{lt-noun-f-a-unc|Lombardij}}
@@ -6362,7 +6032,7 @@ Page 175 Lombardija: -------- begin text --------
 ===Proper noun===
 {{sh-proper noun|g=f|head=Lombàrdija}}
 
-# {{place|sh|region|c/Italy|t=Lombardy}}
+# {{tcl|sh|Lombardy|id=Q1210}}
 
 ====Declension====
 {{sh-decl-noun-unc
@@ -6386,7 +6056,7 @@ Page 175 Lombardija: -------- begin text --------
 ===Proper noun===
 {{sl-proper noun|Lombardȋja|f}}
 
-# {{place|sl|region|c/Italy|t=Lombardy}}
+# {{tcl|sl|Lombardy|id=Q1210}}
 -------- end text --------
 Page 176 Sardinija: -------- begin text --------
 {{also|Sardīnija}}
@@ -6397,12 +6067,10 @@ Page 176 Sardinija: -------- begin text --------
 ===Proper noun===
 {{lt-proper noun|f}}
 
-# {{place|lt|region|c/Italy|t=Sardinia}}
+# {{tcl|lt|Sardinia|id=Q1462}}
 
 ====Declension====
 {{lt-noun-f-a-unc|Sardinij}}
-
-[[Category:lt:Islands]]
 
 ==Serbo-Croatian==
 
@@ -6413,7 +6081,7 @@ Page 176 Sardinija: -------- begin text --------
 ===Proper noun===
 {{sh-proper noun|g=f|head=Sàrdīnija}}
 
-# {{place|sh|region|c/Italy|t=Sardinia}}
+# {{tcl|sh|Sardinia|id=Q1462}}
 
 ====Declension====
 {{sh-decl-noun-unc
@@ -6426,8 +6094,6 @@ Page 176 Sardinija: -------- begin text --------
 |Sardinijom
 }}
 
-{{C|sh|Islands}}
-
 ==Slovene==
 
 ===Pronunciation===
@@ -6436,7 +6102,7 @@ Page 176 Sardinija: -------- begin text --------
 ===Proper noun===
 {{sl-proper noun|Sardínija|f}}
 
-# {{place|sl|region|c/Italy|t=Sardinia}}
+# {{tcl|sl|Sardinia|id=Q1462}}
 
 ====Inflection====
 {{sl-decl-noun-f|Sardínij|n=sg}}
@@ -6445,8 +6111,6 @@ Page 176 Sardinija: -------- begin text --------
 * {{l|sl|Sardínec}} / {{l|sl|Sardínka}}
 * {{l|sl|sardínski}}
 * {{l|sl|sardínščina}}
-
-[[Category:sl:Islands]]
 -------- end text --------
 Page 177 Sicilija: -------- begin text --------
 ==Lithuanian==
@@ -6455,7 +6119,7 @@ Page 177 Sicilija: -------- begin text --------
 ===Proper noun===
 {{lt-proper noun|f}}
 
-# {{place|lt|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|lt|Sicily|id=Q1460}}
 
 ====Declension====
 {{lt-noun-f-a-unc|Sicilij}}
@@ -6470,7 +6134,7 @@ Page 177 Sicilija: -------- begin text --------
 ===Proper noun===
 {{sh-proper noun|g=f|head=Sìcīlija}}
 
-# {{place|sh|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|sh|Sicily|id=Q1460}}
 
 ====Declension====
 {{sh-decl-noun-unc
@@ -6491,7 +6155,7 @@ Page 177 Sicilija: -------- begin text --------
 ===Proper noun===
 {{sl-proper noun|Sicílija|f}}
 
-# {{place|sl|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|sl|Sicily|id=Q1460}}
 
 ====Inflection====
 {{sl-decl-noun-f|Sicílij|n=sg}}
@@ -6510,7 +6174,7 @@ Page 178 Ломбардија: -------- begin text --------
 ===Proper noun===
 {{mk-proper noun|f|adj=ломбардиски}}
 
-# {{place|mk|region|c/Italy|t1=Lombardy}}
+# {{tcl|mk|Lombardy|id=Q1210}}
 
 ====Derived terms====
 * {{l|mk|Ломбардиец|g=m}}, {{l|mk|Ломбардијка|g=f}}
@@ -6524,7 +6188,7 @@ Page 178 Ломбардија: -------- begin text --------
 ===Proper noun===
 {{sh-proper noun|g=f|head=Ломба̀рдија}}
 
-# {{place|sh|region|c/Italy|t=Lombardy}}
+# {{tcl|sh|Lombardy|id=Q1210}}
 
 ====Declension====
 {{sh-decl-noun-unc
@@ -6553,7 +6217,7 @@ From {{inh|mt|ar|صِقِلِّيَّة}}. One of the very few geographical name
 ===Proper noun===
 {{mt-proper noun|g=f}}
 
-# {{place|mt|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|mt|Sicily|id=Q1460}}
 
 ===Adjective===
 {{mt-adj-f}}
@@ -6594,7 +6258,7 @@ Page 181 Sardenha: -------- begin text --------
 ===Proper noun===
 {{oc-proper noun|f}}
 
-# {{place|oc|island/and/region|c/Italy|in the|sea/Mediterranean Sea|t1=Sardinia}}
+# {{tcl|oc|Sardinia|id=Q1462}}
 
 ====Related terms====
 * {{l|oc|sarde}}
@@ -6614,7 +6278,7 @@ Page 181 Sardenha: -------- begin text --------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|island/and/region|c/Italy|in the|sea/Mediterranean Sea|t1=Sardinia}}
+# {{tcl|pt|Sardinia|id=Q1462}}
 
 ====Related terms====
 * {{l|pt|sardo}}
@@ -6635,7 +6299,7 @@ Page 182 Abruzja: -------- begin text --------
 ===Proper noun===
 {{pl-proper noun|f}}
 
-# {{place|pl|region|in central|c/Italy|t=Abruzzo}}
+# {{tcl|pl|Abruzzo|id=Q1284}}
 
 ====Declension====
 {{pl-decl-noun-f|tantum=s}}
@@ -6659,7 +6323,7 @@ Page 183 Kalabria: -------- begin text --------
 ===Proper noun===
 {{head|pl|proper noun|g=f}}
 
-# {{place|pl|region|c/Italy|t=Calabria}}
+# {{tcl|pl|Calabria|id=Q1458}}
 
 ====Declension====
 {{pl-decl-noun-sing|Kalabria|Kalabrii|Kalabrii|Kalabrię|Kalabrią|Kalabrii|Kalabrio}}
@@ -6685,7 +6349,7 @@ Page 184 Kampania: -------- begin text --------
 ===Proper noun===
 {{pl-prop|f|adj=kampański}}
 
-# {{place|pl|region|c/Italy|t=Campania}}
+# {{tcl|pl|Campania|id=Q1438}}
 
 ====Declension====
 {{pl-decl-noun-f|tantum=s}}
@@ -6708,7 +6372,7 @@ Page 185 Sardynia: -------- begin text --------
 ===Proper noun===
 {{head|pl|proper noun|g=f}}
 
-# {{place|pl|region|c/Italy|t=Sardinia}}
+# {{tcl|pl|Sardinia|id=Q1462}}
 
 ====Declension====
 {{pl-decl-noun-sing
@@ -6729,7 +6393,6 @@ Page 185 Sardynia: -------- begin text --------
 * {{R:pl:WSJP}}
 * {{R:pl:PWN}}
 
-{{C|pl|Islands}}
 {{cln|pl|exonyms}}
 -------- end text --------
 Page 186 Sycylia: -------- begin text --------
@@ -6743,7 +6406,7 @@ Page 186 Sycylia: -------- begin text --------
 ===Proper noun===
 {{head|pl|proper noun|g=f}}
 
-# {{place|pl|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|pl|Sicily|id=Q1460}}
 
 ====Declension====
 {{pl-decl-noun-sing|Sycylia|Sycylii|Sycylii|Sycylię|Sycylią|Sycylii|Sycylio}}
@@ -6766,7 +6429,7 @@ Page 187 Toskania: -------- begin text --------
 ===Proper noun===
 {{head|pl|proper noun|g=f}}
 
-# {{place|pl|region|c/Italy|t=Tuscany}}
+# {{tcl|pl|Tuscany|id=Q1273}}
 
 ====Declension====
 {{pl-decl-noun-sing|Toskania|Toskanii|Toskanii|Toskanię|Toskanią|Toskanii|Toskanio}}
@@ -6793,7 +6456,7 @@ Borrowed from {{bor|pt|la|Āpūlia}}, from {{der|pt|grc|Ἰαπυγία}}.
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|region|c/Italy|t1=Apulia}}
+# {{tcl|pt|Apulia|id=Q1447}}
 
 {{cln|pt|exonyms}}
 -------- end text --------
@@ -6807,7 +6470,7 @@ Page 189 Calábria: -------- begin text --------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|peninsula/and/region|c/Italy|t1=Calabria}}
+# {{tcl|pt|Calabria|id=Q1458}}
 
 ====Derived terms====
 * {{l|pt|calabrês}}
@@ -6831,7 +6494,7 @@ Borrowed from {{bor|pt|it|Campania}} and {{bor|pt|la|Campānia}}.
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|region|c/Italy|t1=Campania}}
+# {{tcl|pt|Campania|id=Q1438}}
 -------- end text --------
 Page 191 Emília-Romanha: -------- begin text --------
 ==Portuguese==
@@ -6842,7 +6505,7 @@ Page 191 Emília-Romanha: -------- begin text --------
 ===Proper noun===
 {{pt-proper noun|f|head=[[Emília]]-[[Romanha]]}}
 
-# {{place|pt|region|c/Italy|t1=Emilia-Romagna}}
+# {{tcl|pt|Emilia-Romagna|id=Q1263}}
 -------- end text --------
 Page 192 Friul-Venécia Juliana: -------- begin text --------
 ==Portuguese==
@@ -6853,7 +6516,7 @@ Page 192 Friul-Venécia Juliana: -------- begin text --------
 ===Proper noun===
 {{pt-proper noun|m|head=[[Friul]]-[[Venécia]] [[Juliana]]}}
 
-# {{lb|pt|rare}} {{place|pt|region|c/Italy|t1=Friuli-Venezia Giulia}}
+# {{lb|pt|rare}} {{tcl|pt|Friuli-Venezia Giulia|id=Q1250}}
 -------- end text --------
 Page 193 Lácio: -------- begin text --------
 {{also|lacio|Lacio}}
@@ -6869,7 +6532,8 @@ Page 193 Lácio: -------- begin text --------
 ===Proper noun===
 {{pt-proper noun}}
 
-# {{place|pt|region|c/Italy|t1=Latium|t2=Lazio}}
+# {{tcl|pt|Lazio|id=Q1282}}
+# {{tcl|pt|Latium|id=Q1048669}}
 
 ====Related terms====
 * {{l|pt|latim}}
@@ -6885,7 +6549,7 @@ Page 194 Toscânia: -------- begin text --------
 ===Proper noun===
 {{pt-proper noun|f}}
 
-# {{place|pt|region|c/Italy|t1=Tuscany}}
+# {{tcl|pt|Tuscany|id=Q1273}}
 #: {{syn|pt|Toscana}}
 
 ====Related terms====
@@ -6901,7 +6565,7 @@ Page 195 Vale de Aosta: -------- begin text --------
 ===Proper noun===
 {{pt-proper noun|m|head=o [[vale|Vale]] [[de]] [[Aosta]]}}
 
-# {{place|pt|region|c/Italy|t1=Valle d'Aosta}}
+# {{tcl|pt|Aosta Valley|id=Q1222}}
 -------- end text --------
 Page 196 Abróz: -------- begin text --------
 ==Romagnol==
@@ -6915,13 +6579,10 @@ Cognate with {{cog|it|Abruzzo|t=a region in Italy}}.
 ===Proper noun===
 {{rgn-proper noun|m|~}}
 
-# {{l|en|Abruzzo}}
+# {{tcl|rgn|Abruzzo|id=Q1284}}
 
 ===References===
 * {{R:rgn:V|page=3}}
-
-[[Category:rgn:Regions of Italy]]
-[[Category:rgn:Places in Italy]]
 -------- end text --------
 Page 197 Rumâgna: -------- begin text --------
 ==Romagnol==
@@ -6960,7 +6621,7 @@ From {{der|ru|la|Sicilia}}, from {{der|ru|grc|Σικελία}}.
 ===Proper noun===
 {{ru-proper noun+|Сици́лия|adj=сицили́йский}}
 
-# {{place|ru|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|ru|Sicily|id=Q1460}}
 
 ====Declension====
 {{ru-noun-table|Сици́лия|n=sg}}
@@ -6993,7 +6654,7 @@ From {{inh|sc|la|Sardinia}}, derived from {{der|sc|grc|Σαρδώ}}, from its na
 {{sc-proper noun|f|head=sa Sardigna}}
 {{wp|lang=sc}}
 
-# {{place|sc|region|c/Italy|t=Sardinia}}
+# {{tcl|sc|Sardinia|id=Q1462}}
 #: {{ux|sc|Sa '''Sardigna''' est sa segunda isula italiana prus manna.|'''Sardinia''' is the second biggest Italian island.}}
 
 ====Derived terms====
@@ -7003,14 +6664,12 @@ From {{inh|sc|la|Sardinia}}, derived from {{der|sc|grc|Σαρδώ}}, from its na
 * {{l|sc|sardiscu}}
 * {{l|sc|sardu}}
 
-{{topics|sc|Islands}}
-
 ==Sicilian==
 
 ===Proper noun===
 {{head|scn|proper noun|g=f}}
 
-# {{place|scn|region|c/Italy|t=Sardinia}}
+# {{tcl|scn|Sardinia|id=Q1462}}
 -------- end text --------
 Page 200 Сардинија: -------- begin text --------
 ==Serbo-Croatian==
@@ -7022,7 +6681,7 @@ Page 200 Сардинија: -------- begin text --------
 ===Proper noun===
 {{sh-proper noun|g=f|head=Са̀рдӣнија}}
 
-# {{place|sh|region|c/Italy|t=Sardinia}}
+# {{tcl|sh|Sardinia|id=Q1462}}
 
 ====Declension====
 {{sh-decl-noun-unc
@@ -7034,8 +6693,6 @@ Page 200 Сардинија: -------- begin text --------
 |Сардинији
 |Сардинијом
 }}
-
-{{C|sh|Islands}}
 -------- end text --------
 Page 201 Сицилија: -------- begin text --------
 ==Serbo-Croatian==
@@ -7048,7 +6705,7 @@ Page 201 Сицилија: -------- begin text --------
 ===Proper noun===
 {{sh-proper noun|g=f|head=Сѝцӣлија}}
 
-# {{place|sh|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|sh|Sicily|id=Q1460}}
 
 ====Declension====
 {{sh-decl-noun-unc
@@ -7096,7 +6753,7 @@ From the personal name {{m|it|Marco}}.
 ===Proper noun===
 {{head|scn|proper noun|g=p}}
 
-# {{place|scn|region|c/Italy|t=Marche}}
+# {{tcl|scn|Marche|id=Q1279}}
 -------- end text --------
 Page 203 Sardínia: -------- begin text --------
 {{also|Sardinia|Sardinía}}
@@ -7108,7 +6765,7 @@ Page 203 Sardínia: -------- begin text --------
 ===Proper noun===
 {{sk-proper noun|f|gen=Sardínie}}
 
-# {{place|sk|region|c/Italy|t=Sardinia}}
+# {{tcl|sk|Sardinia|id=Q1462}}
 
 ====Declension====
 {{sk-decl-noun-sg|Sardínia|Sardínie|Sardínii|Sardíniu|Sardínii|Sardíniou}}
@@ -7136,12 +6793,11 @@ Page 204 Cerdeña: -------- begin text --------
 ===Proper noun===
 {{es-proper noun|f}}
 
-# {{place|es|region|c/Italy|t=Sardinia}}
+# {{tcl|es|Sardinia|id=Q1462}}
 
 ====Related terms====
 {{col-auto|es|sardo}}
 
-{{C|es|Islands}}
 {{cln|es|exonyms}}
 -------- end text --------
 Page 205 Emilia-Romaña: -------- begin text --------
@@ -7151,7 +6807,7 @@ Page 205 Emilia-Romaña: -------- begin text --------
 ===Proper noun===
 {{es-proper noun|f|head=[[Emilia]]-[[Romaña]]}}
 
-# {{place|es|region|c/Italy|t=Emilia-Romagna}}
+# {{tcl|es|Emilia-Romagna|id=Q1263}}
 
 {{cln|es|exonyms}}
 -------- end text --------
@@ -7162,7 +6818,7 @@ Page 206 Friuli-Venecia Julia: -------- begin text --------
 ===Proper noun===
 {{es-proper noun}}
 
-# {{place|es|region|c/Italy|t=Friuli-Venezia Giulia}}
+# {{tcl|es|Friuli-Venezia Giulia|id=Q1250}}
 -------- end text --------
 Page 207 Piamonte: -------- begin text --------
 ==Spanish==
@@ -7170,7 +6826,7 @@ Page 207 Piamonte: -------- begin text --------
 ===Proper noun===
 {{es-proper noun|m}}
 
-# {{place|es|region|c/Italy|t=Piedmont}}
+# {{tcl|es|Piedmont|id=Q1216}}
 
 ====Derived terms====
 {{col-auto|es|piamontés}}
@@ -7182,7 +6838,7 @@ Page 208 Apulien: -------- begin text --------
 ===Proper noun===
 {{sv-proper noun|n}}
 
-# {{place|sv|region|c/Italy|t=Apulia}}
+# {{tcl|sv|Apulia|id=Q1447}}
 -------- end text --------
 Page 209 Lombardiet: -------- begin text --------
 ==Swedish==
@@ -7190,7 +6846,7 @@ Page 209 Lombardiet: -------- begin text --------
 ===Proper noun===
 {{sv-proper noun|n}}
 
-# {{place|sv|region|c/Italy|t=Lombardy}}
+# {{tcl|sv|Lombardy|id=Q1210}}
 
 ====Related terms====
 * {{l|sv|lombard}}
@@ -7198,12 +6854,12 @@ Page 209 Lombardiet: -------- begin text --------
 -------- end text --------
 Page 210 Pugghie: -------- begin text --------
 ==Tarantino==
+{{wikipedia|lang=roa-tar}}
 
 ===Proper noun===
-{{wikipedia|lang=roa-tar}}
 {{head|roa-tar|proper noun}}
 
-# {{place|roa-tar|region|c/Italy|t=Apulia}}
+# {{tcl|roa-tar|Apulia|id=Q1447}}
 -------- end text --------
 Page 211 Sicilya: -------- begin text --------
 ==Turkish==
@@ -7213,7 +6869,7 @@ Page 211 Sicilya: -------- begin text --------
 ===Proper noun===
 {{tr-proper noun}}
 
-# {{place|tr|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|tr|Sicily|id=Q1460}}
 -------- end text --------
 Page 212 Абруццо: -------- begin text --------
 ==Ukrainian==
@@ -7227,7 +6883,7 @@ Page 212 Абруццо: -------- begin text --------
 ===Proper noun===
 {{uk-proper noun|Абру́ццо|n-in|-|adj=абру́ццький}}
 
-# {{place|uk|region|c/Italy|t1=Abruzzo}}
+# {{tcl|uk|Abruzzo|id=Q1284}}
 
 ===See also===
 * {{list:regions of Italy/uk}}
@@ -7247,7 +6903,7 @@ Page 213 Апулія: -------- begin text --------
 ===Proper noun===
 {{uk-proper noun|Апу́лія<sg>|adj=апулі́йський}}
 
-# {{place|uk|region|in southern|c/Italy|t1=Apulia}}
+# {{tcl|uk|Apulia|id=Q1447}}
 
 ====Declension====
 {{uk-ndecl|Апу́лія<sg>}}
@@ -7270,7 +6926,7 @@ Page 214 Базиліката: -------- begin text --------
 ===Proper noun===
 {{uk-proper noun|Базиліка́та<sg>}}
 
-# {{place|uk|region|in southern|c/Italy|t1=Basilicata}}
+# {{tcl|uk|Basilicata|id=Q1452}}
 
 ====Declension====
 {{uk-ndecl|Базиліка́та<sg>}}
@@ -7293,7 +6949,7 @@ Page 215 Венето: -------- begin text --------
 ===Proper noun===
 {{uk-proper noun|Ве́нето|n-in|-}}
 
-# {{place|uk|region|c/Italy|t1=Veneto}}
+# {{tcl|uk|Veneto|id=Q1243}}
 
 ===See also===
 * {{list:regions of Italy/uk}}
@@ -7313,7 +6969,7 @@ Page 216 Емілія-Романья: -------- begin text --------
 ===Proper noun===
 {{uk-proper noun|[[Емі́лія]]<sg>-[[Рома́нья]]<sg>}}
 
-# {{place|uk|region|c/Italy|t1=Emilia-Romagna}}
+# {{tcl|uk|Emilia-Romagna|id=Q1263}}
 
 ====Declension====
 {{uk-ndecl|Емі́лія<sg>-Рома́нья<sg>}}
@@ -7335,7 +6991,7 @@ Page 217 Калабрія: -------- begin text --------
 ===Proper noun===
 {{uk-proper noun|Кала́брія<sg>|adj=кала́брійський}}
 
-# {{place|uk|region|of|c/Italy|t1=Calabria}}
+# {{tcl|uk|Calabria|id=Q1458}}
 
 ====Declension====
 {{uk-ndecl|Кала́брія<sg>}}
@@ -7363,7 +7019,7 @@ Page 218 Кампанія: -------- begin text --------
 ===Proper noun===
 {{uk-proper noun|Кампа́нія<sg>}}
 
-# {{place|uk|region|in southern|c/Italy|t1=Campania}}
+# {{tcl|uk|Campania|id=Q1438}}
 
 ====Declension====
 {{uk-ndecl|Кампа́нія<sg>}}
@@ -7386,7 +7042,7 @@ Page 219 Лігурія: -------- begin text --------
 ===Proper noun===
 {{uk-proper noun|Лігу́рія<sg>|adj=лігурі́йський}}
 
-# {{place|uk|region|in northern|c/Italy|t=Liguria}}
+# {{tcl|uk|Liguria|id=Q1256}}
 
 ====Declension====
 {{uk-ndecl|Лігу́рія<sg>}}
@@ -7409,7 +7065,7 @@ Page 220 Ломбардія: -------- begin text --------
 ===Proper noun===
 {{uk-proper noun|Ломба́рдія<sg>|adj=ломба́рдський}}
 
-# {{place|uk|region|in northern|c/Italy|t=Lombardy}}
+# {{tcl|uk|Lombardy|id=Q1210}}
 
 ====Declension====
 {{uk-ndecl|Ломба́рдія<sg>}}
@@ -7432,7 +7088,7 @@ Page 221 П'ємонт: -------- begin text --------
 ===Proper noun===
 {{uk-proper noun|П'ємо́нт<sg.genu>|adj=п'ємо́нтський}}
 
-# {{place|uk|region|in northern|c/Italy|t=Piedmont}}
+# {{tcl|uk|Piedmont|id=Q1216}}
 
 ====Declension====
 {{uk-ndecl|П'ємо́нт<sg.genu>}}
@@ -7456,7 +7112,7 @@ Page 222 Сардинія: -------- begin text --------
 ===Proper noun===
 {{uk-proper noun|Сарди́нія<sg>|adj=сарди́нський}}
 
-# {{place|uk|island|cont/Europe|;and|region|c/Italy|t1=Sardinia}}
+# {{tcl|uk|Sardinia|id=Q1462}}
 
 ====Declension====
 {{uk-ndecl|Сарди́нія<sg>}}
@@ -7481,7 +7137,7 @@ Page 223 Сицилія: -------- begin text --------
 ===Proper noun===
 {{uk-proper noun|Сици́лія<sg>|adj=сици́лійський}}
 
-# {{place|uk|island|cont/Europe|;and|region|of|c/Italy|t1=Sicily}}
+# {{tcl|uk|Sicily|id=Q1460}}
 
 ====Declension====
 {{uk-ndecl|Сици́лія<sg>}}
@@ -7505,7 +7161,7 @@ Page 224 Тоскана: -------- begin text --------
 ===Proper noun===
 {{sh-proper noun|g=f|head=Тоска̀на}}
 
-# [[Tuscany]]
+# {{tcl|sh|Tuscany|id=Q1273}}
 
 ====Declension====
 {{sh-decl-noun-unc
@@ -7529,7 +7185,7 @@ Page 224 Тоскана: -------- begin text --------
 ===Proper noun===
 {{uk-proper noun|Тоска́на<sg>|adj=тоска́нський}}
 
-# {{place|uk|region|c/Italy|t1=Tuscany}}
+# {{tcl|uk|Tuscany|id=Q1273}}
 
 ====Declension====
 {{uk-ndecl|Тоска́на<sg>}}
@@ -7552,7 +7208,7 @@ Page 225 Умбрія: -------- begin text --------
 ===Proper noun===
 {{uk-proper noun|У́мбрія<sg>|adj=умбрі́йський}}
 
-# {{place|uk|region|c/Italy|t1=Umbria}}
+# {{tcl|uk|Umbria|id=Q1280}}
 
 ====Declension====
 {{uk-ndecl|У́мбрія<sg>}}
@@ -7587,7 +7243,7 @@ Page 227 Siciłia: -------- begin text --------
 ===Proper noun===
 {{head|vec|proper noun}}
 
-# {{place|vec|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|vec|Sicily|id=Q1460}}
 -------- end text --------
 Page 228 Vałe d'Aosta: -------- begin text --------
 {{also|Valle d'Aosta}}
@@ -7597,7 +7253,7 @@ Page 228 Vałe d'Aosta: -------- begin text --------
 ===Proper noun===
 {{head|vec|proper noun|g=f|head=ła [[vałe|Vałe]] [[d']][[Aosta]]}}
 
-# {{place|vec|region|of northwestern|c/Italy|t1=Valle d'Aosta}}
+# {{tcl|vec|Aosta Valley|id=Q1222}}
 -------- end text --------
 Page 229 Sikileän: -------- begin text --------
 ==Volapük==
@@ -7605,7 +7261,7 @@ Page 229 Sikileän: -------- begin text --------
 ===Proper noun===
 {{head|vo|proper noun}}
 
-# {{place|vo|island/and/region|c/Italy|t=Sicily}}
+# {{tcl|vo|Sicily|id=Q1460}}
 
 ====Declension====
 {{vo-decl-noun-np}}
