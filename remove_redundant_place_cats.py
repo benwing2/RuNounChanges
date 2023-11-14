@@ -106,6 +106,7 @@ def process_page(page, index, parsed):
       for m in re.finditer(r"\[\[(?:[Cc]ategory|CAT):(.*?)\]\]", wikicode):
         cat = m.group(1)
         cat = re.sub(r"\|.*", "", cat)
+        pagemsg("Saw auto-added category: %s" % cat)
         auto_added_categories.add(cat)
 
   text_to_remove = []
