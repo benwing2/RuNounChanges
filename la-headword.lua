@@ -121,7 +121,7 @@ function export.show(frame)
 	postscript = table.concat(postscript, ", ")
 
 	return
-		require("Module:headword").full_headword(data)
+		require("Module:User:Benwing2/headword").full_headword(data)
 		.. format(infl_classes, "/")
 		.. format(appendix, ", ")
 		.. (postscript ~= "" and " (" .. postscript .. ")" or "")
@@ -615,6 +615,8 @@ pos_functions["verbs"] = function(def, args, data, infl_classes, appendix)
 		--soleō
 		table.insert(appendix, "no [[future#English|future]]")
 	end
+	data.gloss = '<span class="ib-content qualifier-content"><abbr title="The first-singular present active indicative '
+		.. 'is used as the lemma, rather than the infinitive.">first-singular present indicative</span></abbr>'
 end
 
 pos_functions["suffixes-verb"] = pos_functions["verbs"]
