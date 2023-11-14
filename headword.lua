@@ -289,7 +289,8 @@ local function format_headword(data)
 end
 
 
-local function format_genders(data)
+local function format_genders_and_gloss(data)
+	local retval = ""
 	if data.genders and #data.genders > 0 then
 		local pos_for_cat
 		if not data.nogendercat and not m_data.no_gender_cat[data.lang:getCode()] then
@@ -300,10 +301,12 @@ local function format_genders(data)
 		for _, cat in ipairs(cats) do
 			table.insert(data.categories, cat)
 		end
-		return "&nbsp;" .. text
-	else
-		return ""
+		retval = retval .. "&nbsp;" .. text
 	end
+	if data.gloss then
+		retval = retval .. " " .. data.gloss
+	end
+	return retval
 end
 
 
@@ -938,7 +941,7 @@ function export.full_headword(data)
 	-- so make sure we do it before evaluating `data.categories`.
 	local text = '<span class="headword-line">' ..
 		format_headword(data) ..
-		format_genders(data) ..
+		format_genders_and_gloss(data) ..
 		format_inflections(data) .. '</span>'
 
 	-- Language-specific categories.
