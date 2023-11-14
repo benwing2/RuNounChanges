@@ -8,6 +8,7 @@ local legal_gender = {
 	["f"] = true,
 	["n"] = true,
 	["?"] = true,
+	["?!"] = true,
 }
 
 local declension_to_english = {
@@ -23,6 +24,7 @@ local gender_names = {
 	["f"] = "feminine",
 	["n"] = "neuter",
 	["?"] = "unknown gender",
+	["?!"] = "unattested gender",
 }
 
 local lang = require("Module:languages").getByCode("la")
@@ -109,17 +111,12 @@ function export.show(frame)
 		end
 	end
 
-	if not rfind(poscat, " forms?$") then
-		for _, head in ipairs(data.heads) do
-			-- Don't trigger on prefixes or suffixes.
-			if (rfind(head, " ") or rfind(head, ".%-.")) then
-				table.insert(data.categories, "Latin multiword terms")
-				break
-			end
-		end
+	if (NAMESPACE == "Reconstruction") then
+		data.pos_category = "reconstructed " .. poscat
+		data.nolink = true
+	else
+		data.pos_category = poscat
 	end
-
-	data.pos_category = (NAMESPACE == "Reconstruction" and "reconstructed " or "") .. poscat
 
 	postscript = table.concat(postscript, ", ")
 
@@ -163,9 +160,15 @@ local function nouns(pos, def, args, data, infl_classes, appendix)
 	local lemma_num = decldata.num == "pl" and "pl" or "sg"
 	if not lemma or #lemma == 0 then
 		lemma = decldata.forms["linked_nom_" .. lemma_num]
+		if decldata.unattested["nom_" .. lemma_num] then
+			lemma[1] = '*' .. lemma[1]
+		end
 	end
 
 	data.heads = lemma
+	-- Since we always set data.heads to the lemma and specification of the lemma is mandatory in {{la-noun}}, there aren't
+	-- really any redundant heads.
+	data.no_redundant_head_cat = true
 	data.id = decldata.id
 	
 	local genders = decldata.overriding_genders
@@ -195,13 +198,7 @@ local function nouns(pos, def, args, data, infl_classes, appendix)
 			end
 			table.insert(data.genders, g)
 			local gender_name = gender_names[gender]
-			table.insert(data.categories, "Latin " .. gender_name .. " " .. decldata.pos)
 			table.insert(data.categories, "Latin " .. gender_name ..  " indeclinable " .. decldata.pos)
-			if number == "p" and NAMESPACE == '' then
-				table.insert(data.categories, "Latin pluralia tantum")
-			elseif number == "s" and NAMESPACE == '' then
-				table.insert(data.categories, "Latin singularia tantum")
-			end
 		end
 	else
 		local is_irreg = false
@@ -223,13 +220,6 @@ local function nouns(pos, def, args, data, infl_classes, appendix)
 				g = g .. "-s"
 			end
 			table.insert(data.genders, g)
-			table.insert(data.categories, "Latin " .. gender_name .. " " .. decldata.pos)
-		end
-
-		if decldata.num == "pl" and NAMESPACE == '' then
-			table.insert(data.categories, "Latin pluralia tantum")
-		elseif decldata.num == "sg" and NAMESPACE == '' then
-			table.insert(data.categories, "Latin singularia tantum")
 		end
 
 		local function process_decl(decl_list, decl)
@@ -334,18 +324,41 @@ local function nouns(pos, def, args, data, infl_classes, appendix)
 			end
 		end
 
-		local gen = decldata.forms["gen_" .. lemma_num]
-		if gen and gen ~= "" and gen ~= "—" and #gen > 0 then
-			if is_decl then
-				-- Skip displaying the genitive for nouns that are only
-				-- indeclinable. But we do display it for nouns like Abrahām
-				-- and Ādām that can be either indeclinable or declined.
-				gen.label = "genitive"
-				table.insert(data.inflections, gen)
+		if NAMESPACE == 'Reconstruction' then
+			-- For reconstructed nouns:
+			if data.genders[1] == 'n' and lemma_num == 'sg' then
+				-- singular neuter nouns give a plural
+				local pl = decldata.forms["nom_pl"]
+				if pl and pl ~= "" and #pl > 0 then
+					pl.label = "plural"
+					table.insert(data.inflections, pl)
+				end
+			else
+				-- all others give an oblique
+				local obl = decldata.forms["acc_" .. lemma_num]
+				if obl and obl ~= "" and #obl > 0 then
+					obl.label = "oblique"
+					table.insert(data.inflections, obl)
+				end
 			end
 		else
-			table.insert(data.inflections, {label = "no genitive"})
-			table.insert(data.categories, "Latin " .. decldata.pos .. " without a genitive singular")
+			local gen = decldata.forms["gen_" .. lemma_num]
+			if (decldata.unattested["gen_" .. lemma_num]) then
+				gen[1] = '*' .. gen[1]
+				data.nolink = true
+			end
+			if gen and gen ~= "" and gen ~= "—" and #gen > 0 then
+				if is_decl then
+					-- Skip displaying the genitive for nouns that are only
+					-- indeclinable. But we do display it for nouns like Abrahām
+					-- and Ādām that can be either indeclinable or declined.
+					gen.label = "genitive"
+					table.insert(data.inflections, gen)
+				end
+			else
+				table.insert(data.inflections, {label = "no genitive"})
+				table.insert(data.categories, "Latin " .. decldata.pos .. " without a genitive singular")
+			end
 		end
 	end
 
@@ -434,6 +447,9 @@ pos_functions["verbs"] = function(def, args, data, infl_classes, appendix)
 		first_lemma = require("Module:links").remove_links(lemma_forms[1])
 	end
 	data.heads = lemma_forms
+	-- Since we always set data.heads to the lemma and specification of the lemma is mandatory in {{la-verb}}, there aren't
+	-- really any redundant heads.
+	data.no_redundant_head_cat = true
 	data.id = conjdata.id
 	local conj = typeinfo.conj_type
 	local subconj = typeinfo.conj_subtype
@@ -591,7 +607,7 @@ pos_functions["verbs"] = function(def, args, data, infl_classes, appendix)
 		--volō
 		table.insert(appendix, "no [[imperative#English|imperative]]")
 	end
-	if rfind(first_lemma, "d[īū]cō$") then
+	if (conj == "3rd" or conj == "irreg") and rfind(first_lemma, "d[īū]cō$") then
 		--dīcō
 		table.insert(appendix, "irregular short [[imperative#English|imperative]]")
 	end
@@ -611,9 +627,15 @@ local function adjectives(pos, def, args, data, infl_classes, appendix)
 	local lemma_num = decldata.num == "pl" and "pl" or "sg"
 	if not lemma or #lemma == 0 then
 		lemma = decldata.forms["linked_nom_" .. lemma_num .. "_m"]
+		if decldata.unattested["nom_" .. lemma_num .. "_m"] then
+			lemma[1] = '*' .. lemma[1]
+		end
 	end
 
 	data.heads = lemma
+	-- Since we always set data.heads to the lemma and specification of the lemma is mandatory in {{la-noun}}, there aren't
+	-- really any redundant heads.
+	data.no_redundant_head_cat = true
 	data.id = decldata.id
 
 	if is_num then
@@ -633,10 +655,21 @@ local function adjectives(pos, def, args, data, infl_classes, appendix)
 			end
 		end
 	else
+
+		local function attested_form(index)
+			local form
+			if (decldata.unattested[index]) then
+				form = { { term = '*' .. decldata.forms[index][1], nolink = true } }
+			else
+				form = decldata.forms[index]
+			end
+			return form
+		end
+
 		local masc = decldata.forms["nom_" .. lemma_num .. "_m"]
-		local fem = decldata.forms["nom_" .. lemma_num .. "_f"]
-		local neut = decldata.forms["nom_" .. lemma_num .. "_n"]
-		local gen = decldata.forms["gen_" .. lemma_num .. "_m"]
+		local fem = attested_form("nom_" .. lemma_num .. "_f")
+		local neut = attested_form("nom_" .. lemma_num .. "_n")
+		local gen = attested_form("gen_" .. lemma_num .. "_m")
 	
 		if decldata.pos == "participles" then
 			if rfind(masc[1], "ūrus$") then
@@ -708,17 +741,23 @@ local function adjectives_comp(pos, def, args, data, infl_classes, appendix)
 	local params = {
 		[1] = {alias_of = 'head'},
 		[2] = {alias_of = 'pos'},
-		["head"] = {list = true, default = mw.title.getCurrentTitle().text},
+		["head"] = {list = true},
 		["pos"] = {list = true},
 		["is_lemma"] = {type = "boolean"},
 		["id"] = {},
 	}
 	local args = require("Module:parameters").process(args, params)
+	data.no_redundant_head_cat = #args.head == 0
+	-- Set default manually so we can tell whether the user specified head=.
+	if #args.head == 0 then
+		args.head = {mw.title.getCurrentTitle().text}
+	end
 	data.heads = args.head
 	data.id = args.id
+
 	if args.is_lemma then
 		-- See below. This happens automatically by virtue of the default POS
-		-- unless we overrride it, which we do when is_lemma.
+		-- unless we override it, which we do when is_lemma.
 		table.insert(data.categories, "Latin comparative " .. pos)
 	end
 	table.insert(infl_classes, "[[Appendix:Latin third declension|third declension]]")
@@ -752,12 +791,17 @@ local function adjectives_sup(pos, def, args, data, infl_classes, appendix)
 	local params = {
 		[1] = {alias_of = 'head'},
 		[2] = {alias_of = 'pos'},
-		["head"] = {list = true, default = mw.title.getCurrentTitle().text},
+		["head"] = {list = true},
 		["pos"] = {list = true},
 		["is_lemma"] = {type = "boolean"},
 		["id"] = {},
 	}
 	local args = require("Module:parameters").process(args, params)
+	data.no_redundant_head_cat = #args.head == 0
+	-- Set default manually so we can tell whether the user specified head=.
+	if #args.head == 0 then
+		args.head = {mw.title.getCurrentTitle().text}
+	end
 	data.heads = args.head
 	data.id = args.id
 
@@ -841,6 +885,7 @@ pos_functions["adverbs"] = function(def, args, data, infl_classes, appendix)
 
 	local args = require("Module:parameters").process(args, params)
 	data.heads = args.head
+	data.no_redundant_head_cat = true -- since head= is required.
 	data.id = args.id
 	local comp, sup
 	local irreg = false
@@ -945,6 +990,7 @@ pos_functions["prepositions"] = function(def, args, data, infl_classes, appendix
 	end
 
 	data.heads = args.head
+	data.no_redundant_head_cat = true -- since 1= is required and goes into data.heads
 	data.id = args.id
 end
 
@@ -957,6 +1003,7 @@ pos_functions["gerunds"] = function(def, args, data, infl_classes, appendix, pos
 	local args = require("Module:parameters").process(args, params)
 
 	data.heads = {args[1]}
+	data.no_redundant_head_cat = true -- since 1= is required and goes into data.heads
 	table.insert(data.inflections, {label = "[[Appendix:Glossary#accusative|accusative]]"})
 	local stem = rmatch(args[1], "^(.*)um$")
 	if not stem then
@@ -984,6 +1031,7 @@ local function non_lemma_forms(def, args, data, infl_classes, appendix, postscri
 		table.insert(heads, head)
 	end
 	data.heads = heads
+	data.no_redundant_head_cat = true -- since 1= is required and goes into data.heads
 	data.genders = args.g
 	data.id = args.id
 end
@@ -1000,6 +1048,3 @@ pos_functions["numeral forms"] = non_lemma_forms
 pos_functions["suffix forms"] = non_lemma_forms
 
 return export
-
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:
