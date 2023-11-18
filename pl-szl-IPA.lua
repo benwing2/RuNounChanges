@@ -51,37 +51,30 @@ in turn hides the subdialects under a "More" button). However, support for this 
 ]=]
 
 -- Dialects and subdialects:
-export.all_styles = {"gbr", "rio", "sp", "sbr", "gpt", "cpt", "spt", "npt"}
+export.all_styles = {}
 export.all_style_groups = {
-	all = export.all_styles,
-	br = {"gbr", "rio", "sp", "sbr"},
-	pt = {"gpt", "cpt", "spt", "npt"},
+	pl = {"pl-standard"},
+	mpl = {"mpl-early", "mpl-late"},
+	szl = {"szl-standard", "opolskie"},
 }
 
 local style_to_style_group = {}
 for group, styles in pairs(export.all_style_groups) do
-	if group ~= "all" then
-		for _, style in ipairs(styles) do
-			style_to_style_group[style] = group
-		end
+	for _, style in ipairs(styles) do
+		style_to_style_group[style] = group
+		table.insert(export.all_styles, style)
 	end
 end
 
+export.all_style_groups.all = export.all_styles
+
 export.all_style_descs = {
 	-- style groups
-	br = "[[w:Brazilian_Portuguese|Brazil]]",
-	pt = "[[w:European_Portuguese|Portugal]]",
-
-	-- styles
-	gbr = "[[w:Brazilian_Portuguese|Brazil]]", -- "general" Brazil
-	rio = "[[w:Carioca#Sociolect|Rio de Janeiro]]", -- Carioca accent
-	sp = "[[w:Paulistano_dialect|São Paulo]]", -- Paulistano accent
-	sbr = "Southern Brazil",
-	gpt = "[[w:European_Portuguese|Portugal]]", -- "general" Portugal
-	-- lisbon = "Lisbon", -- (not added yet)
-	cpt = "[[w:Estremenho dialect|Central Portugal]]", -- Central Portugal outside of Lisbon
-	spt = "Southern Portugal", -- Dialects of Alentejo and Algarve (West Algarve is a distinct subdialect)
-	npt = "[[w:Northern Portuguese|Northern Portugal]]" -- Northern Portugal dialects (Porto/Minho and Transmontano are subdialects)
+	["pl-standard"] = "Standard Polish",
+	["mpl-early"] = "16<sup>th</sup> c. Middle Polish",
+	["mpl-late"] = "17<sup>th</sup>–18<sup>th</sup> c. Middle Polish",
+	["szl-standard"] = "Standard Silesian",
+	["opolskie"] = "Opolskie",
 }
 
 --[[
