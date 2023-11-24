@@ -71,9 +71,11 @@ local function remove_templates_if(haystack, predicate)
 	end
 end
 
-local function copy_unnamed_args_except_code(to, from)
+local function copy_unnamed_args_except_code(to, from, deny_list)
 	for _, value in discard(1, ipairs(from)) do
-		table.insert(to, value)
+		if not deny_list or not require("Module:table").contains(deny_list, value) then
+			table.insert(to, value)
+		end
 	end
 end
 
@@ -193,6 +195,7 @@ function export.show(frame)
 		-- because the given terms are in English and will likely differ from language to language.
 		["include_place_extra_info"] = { type = "boolean" },
 		["lb"] = {}, -- can have multiple semicolon-separated labels
+		["nolb"] = {}, -- can have multiple semicolon-separated labels
 		["to"] = { type = "boolean" },
 		["t"] = { list = true },
 	}
@@ -200,7 +203,7 @@ function export.show(frame)
 		params["place_" .. k] = { list = is_list }
 	end
 
-   	local args = require "Module:parameters".process(frame:getParent().args, params)
+   	local args = require("Module:parameters").process(frame:getParent().args, params)
 
 	local language_code = args[1]
 	local language = require("Module:languages").getByCode(language_code)
@@ -213,6 +216,16 @@ function export.show(frame)
 	local copy_sortkey = (sort == nil) and (mw.title.getCurrentTitle() == source)
 	local no_gloss = args["nogloss"]
 	local labels = args["lb"] and rsplit(args["lb"], ";") or {}
+	local nolb = args["nolb"]
+	local labels_to_ignore = nil
+	local ignore_all_labels = false
+	if nolb then
+		if nolb == "+" or nolb == "1" or nolb == "*" then
+			ignore_all_labels = true
+		else
+			labels_to_ignore = rsplit(nolb, ";")
+		end
+	end
 	local to = args["to"]
 
 	local content = mw.title.new(source):getContent()
@@ -357,7 +370,9 @@ function export.show(frame)
 					error("Encountered multiple {{[[Template:label|label]]}} templates in the definition line.")
 				end
 				encountered_label = true
-				copy_unnamed_args_except_code(labels, tempargs)
+				if not ignore_all_labels then
+					copy_unnamed_args_except_code(labels, tempargs, labels_to_ignore)
+				end
 				supports_sortkey = true
 				must_be_first = true
 			elseif name == "defdate" or name == "defdt" or name == "ref" or name == "refn" or name == "senseid" or name == "sid" then
