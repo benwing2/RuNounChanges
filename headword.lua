@@ -285,13 +285,23 @@ local function format_headword(data)
 
 	------ Paste heads and transliterations/transcriptions. ------
 
-	return head_parts .. translits_formatted
+	local lemma_gloss
+	if data.gloss then
+		lemma_gloss = ' <span class="ib-content qualifier-content">' .. data.gloss .. '</span>'
+	else
+		lemma_gloss = ""
+	end
+
+	return head_parts .. translits_formatted .. lemma_gloss
 end
 
 
-local function format_genders_and_gloss(data)
+local function format_genders(data)
 	local retval = ""
 	if data.genders and #data.genders > 0 then
+		if data.gloss then
+			retval = ","
+		end
 		local pos_for_cat
 		if not data.nogendercat and not m_data.no_gender_cat[data.lang:getCode()] then
 			local pos_category = data.pos_category:gsub("^reconstructed ", "")
@@ -302,9 +312,6 @@ local function format_genders_and_gloss(data)
 			table.insert(data.categories, cat)
 		end
 		retval = retval .. "&nbsp;" .. text
-	end
-	if data.gloss then
-		retval = retval .. " " .. data.gloss
 	end
 	return retval
 end
@@ -941,7 +948,7 @@ function export.full_headword(data)
 	-- so make sure we do it before evaluating `data.categories`.
 	local text = '<span class="headword-line">' ..
 		format_headword(data) ..
-		format_genders_and_gloss(data) ..
+		format_genders(data) ..
 		format_inflections(data) .. '</span>'
 
 	-- Language-specific categories.
