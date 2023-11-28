@@ -91,8 +91,12 @@ local function handle_definition_template(name, args, transclude_args)
 				local langcode = data.lang:getCode()
 				args[1] = langcode
 				if #transclude_args.t > 0 then
-					for i, t in ipairs(transclude_args.t) do
-						args["t" .. (i == 1 and "" or i)] = t
+					local argno = 1
+					for _, t in ipairs(transclude_args.t) do
+						if t ~= "-" then
+							args["t" .. (argno == 1 and "" or argno)] = t
+							argno = argno + 1
+						end
 					end
 				elseif langcode ~= "en" then
 					args["t"] = data.source
@@ -103,7 +107,8 @@ local function handle_definition_template(name, args, transclude_args)
 					args["def"] = "-"
 				else
 					local gloss = data.gloss
-					if not transclude_args.include_place_extra_info then
+					local include_extra = transclude_args.include_place_extra_info
+					if include_extra == false or include_extra == nil and langcode ~= "en" then
 						-- Optimize to only copy when an arg needs to be dropped (not most of the time), by first
 						-- checking whether any arg needs to be dropped.
 						local saw_arg_needing_dropped = false
@@ -198,6 +203,7 @@ function export.show(frame)
 		["nolb"] = {}, -- can have multiple semicolon-separated labels
 		["to"] = { type = "boolean" },
 		["t"] = { list = true },
+		["indent"] = {},
 	}
 	for k, is_list in pairs(place_extra_info) do
 		params["place_" .. k] = { list = is_list }
@@ -452,7 +458,7 @@ function export.show(frame)
 		table.insert(retlines, formatted_senseid .. formatted_categories .. formatted_labels .. formatted_definition)
 	end
 
-	return table.concat(retlines, "\n# ")
+	return table.concat(retlines, "\n" .. (args.indent or "#") .. " ")
 end
 
 return export
