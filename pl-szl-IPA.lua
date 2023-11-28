@@ -1248,8 +1248,10 @@ function export.show_IPA(frame)
 	-- If no inputs given, set all dialects based on current pagename.
 	if not next(inputs) then
 		for _, dialect in ipairs(export.all_dialects_by_lang[lang]) do
-			-- FIXME: Use + for consistency with Portuguese, Italian, Spanish, etc.
-			inputs[dialect] = "#"
+			--if not dialect:find("^mpl") then
+				-- FIXME: Use + for consistency with Portuguese, Italian, Spanish, etc.
+				inputs[dialect] = "#"
+			--end
 		end
 	end
 
@@ -2163,6 +2165,9 @@ local function dodialect_specified_rhymes(rhymes, hyphs, parsed_respellings, rhy
 end
 
 
+]=============]
+
+
 local function parse_pron_modifier(arg, parse_err, generate_obj, param_mods, splitchar)
 	local retval = {}
 
@@ -2716,5 +2721,3 @@ function export.show_pr(frame)
 end
 
 return export
-
-]=============]
