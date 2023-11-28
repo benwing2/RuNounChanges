@@ -277,28 +277,28 @@ function export.format_categories(categories, lang, sort_key, sort_base, force_o
 end
 
 function export.catfix(lang, sc)
-	if not lang then
-		require("Module:debug").track("catfix/no lang")
-		return nil
-	elseif type(lang) ~= "table" then
-		require("Module:debug").track("catfix/lang not table")
-		return nil
+	if not lang or not lang.getCanonicalName then
+		error('The first argument to the function "catfix" should be a language object from [[Module:languages]] or [[Module:etymology languages]].')
 	end
-	local canonicalName = lang:getCanonicalName() or error('The first argument to the function "catfix" should be a language object from Module:languages.')
-	
 	if sc and not sc.getCode then
-		error('The second argument to the function "catfix" should be a script object from Module:scripts.')
+		error('The second argument to the function "catfix" should be a script object from [[Module:scripts]].')
 	end
-	
+	local canonicalName = lang:getCanonicalName()
+	local nonEtymologicalName = lang:getNonEtymologicalName()
+
 	-- To add script classes to links on pages created by category boilerplate templates.
 	if not sc then
-		sc = data.catfix_scripts[lang:getCode()]
+		sc = data.catfix_scripts[lang:getCode()] or data.catfix_scripts[lang:getNonEtymologicalCode()]
 		if sc then
 			sc = require("Module:scripts").getByCode(sc)
 		end
 	end
-	
-	return "<span id=\"catfix\" style=\"display:none;\" class=\"CATFIX-" .. mw.uri.anchorEncode(canonicalName) .. "\">" ..
+
+	local catfix_class = "CATFIX-" .. mw.uri.anchorEncode(canonicalName)
+	if nonEtymologicalName ~= canonicalName then
+		catfix_class = catfix_class .. " CATFIX-" .. mw.uri.anchorEncode(nonEtymologicalName)
+	end
+	return "<span id=\"catfix\" style=\"display:none;\" class=\"" .. catfix_class .. "\">" ..
 		require("Module:script utilities").tag_text("&nbsp;", lang, sc, nil) ..
 		"</span>"
 end
@@ -312,11 +312,11 @@ function export.catfix_template(frame)
 	
 	local args = require("Module:parameters").process(frame:getParent().args, params, nil, "utilities", "catfix_template")
 	
-	local lang = require("Module:languages").getByCode(args[1]) or require("Module:languages").err(args[1], 1)
+	local lang = require("Module:languages").getByCode(args[1], 1, "allow etym")
 	
 	local sc = args.sc
 	if sc then
-		sc = require("Module:scripts").getByCode(sc) or error('The script code "' .. sc .. '", provided in the second parameter, is not valid.')
+		sc = require("Module:scripts").getByCode(sc, "sc")
 	end
 	
 	return export.catfix(lang, sc)
@@ -362,8 +362,7 @@ function export.make_id(lang, str)
 			str = args[2]
 			
 			local m_languages = require("Module:languages")
-			
-			lang = m_languages.getByCode(langCode) or m_languages.err(langCode, 1)
+			lang = m_languages.getByCode(langCode, 1, "allow etym")
 		elseif not lang.getCanonicalName then
 			error("The first argument to make_id should be a language object.")
 		end
