@@ -65,21 +65,22 @@ auto_cat_to_manual = {
   "Wyoming": "Wyoming, USA",
 }
 
-def process_page(page, index, parsed):
-  global args
-  pagetitle = str(page.title())
+def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
+  notes = []
+
   if ":" in pagetitle and not re.search("^(Appendix|Reconstruction|Citations):", pagetitle):
     return
 
-  text = str(page.text)
   origtext = text
   pagemsg("Processing")
-  notes = []
+
+  parsed = blib.parse_text(text)
+
   removed_cats = []
 
   auto_added_categories = set()
@@ -99,7 +100,7 @@ def process_page(page, index, parsed):
 
   for t in parsed.filter_templates():
     tn = tname(t)
-    if tn == "place":
+    if tn in ["place", "tcl", "transclude sense", "transclude"]:
       wikicode = expand_text(str(t))
       if not wikicode:
         continue
@@ -175,8 +176,9 @@ def process_page(page, index, parsed):
   return text, notes
 
 parser = blib.create_argparser("Remove redundant manually-added categories when {{place}} also adds them",
-    include_pagefile=True)
+    include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-blib.do_pagefile_cats_refs(args, start, end, process_page, default_refs=["Template:place"], edit=True)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, default_refs=["Template:place"], edit=True,
+                           stdin=True)
