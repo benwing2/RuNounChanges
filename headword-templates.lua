@@ -10,7 +10,7 @@ function export.head_t(frame)
 	
 	-- Get language and script information
 	local data = {}
-	data.lang = require("Module:languages").getByCode(args[1]) or require("Module:languages").err(args[1], 1)
+	data.lang = require("Module:languages").getByCode(args[1], 1, "allow etym")
 	data.sort_key = args["sort"]
 	data.heads = args["head"]
 	data.id = args["id"]
@@ -60,15 +60,15 @@ function export.head_t(frame)
 	data.nopalindromecat = args["nopalindromecat"]
 	
 	if args["cat2"] then
-		table.insert(data.categories, data.lang:getCanonicalName() .. " " .. args["cat2"])
+		table.insert(data.categories, data.lang:getNonEtymologicalName() .. " " .. args["cat2"])
 	end
 	
 	if args["cat3"] then
-		table.insert(data.categories, data.lang:getCanonicalName() .. " " .. args["cat3"])
+		table.insert(data.categories, data.lang:getNonEtymologicalName() .. " " .. args["cat3"])
 	end
 	
 	if args["cat4"] then
-		table.insert(data.categories, data.lang:getCanonicalName() .. " " .. args["cat4"])
+		table.insert(data.categories, data.lang:getNonEtymologicalName() .. " " .. args["cat4"])
 	end
 	
 	-- Inflected forms
@@ -103,11 +103,11 @@ function export.head_t(frame)
 		}
 		
 		if form.lang then
-			form.lang = require("Module:languages").getByCode(form.lang) or require("Module:languages").err(form.lang, "f" .. i .. "lang")
+			form.lang = require("Module:languages").getByCode(form.lang, "f" .. i .. "lang", "allow etym")
 		end
 		
 		if form.sc then
-			form.sc = require("Module:scripts").getByCode(form.sc) or error("The script code \"" .. form.sc .. "\" is not valid.")
+			form.sc = require("Module:scripts").getByCode(form.sc, "f" .. i .. "sc")
 		end
 		
 		-- If no term or alt is given, then the label is shown alone.
