@@ -68,7 +68,7 @@ local function track(text, lang, sc)
 	local u = mw.ustring.char
 	
 	if lang and text then
-		local langCode = lang:getCode()
+		local langCode = lang:getNonEtymologicalCode()
 		
 		-- [[Special:WhatLinksHere/Template:tracking/script/ang/acute]]
 		if langCode == "ang" then
@@ -219,7 +219,10 @@ function export.tag_text(text, lang, sc, face, class, id)
 		table.insert(output, class_attr({...}) )
 		
 		if lang then
-			table.insert(output, 'lang="' .. lang:getCode() .. '"')
+			-- FIXME: Is it OK to insert the etymology-only lang code and have it fall back to the first part of the
+			-- lang code (by chopping off the '-...' part)? It seems the :lang() selector does this; not sure about
+			-- [lang=...] attributes.
+			table.insert(output, 'lang="' .. lang:getNonEtymologicalCode() .. '"')
 		end
 		
 		return table.concat(output, " ")
@@ -258,7 +261,8 @@ The optional <code>kind</code> parameter can be one of the following:
 The optional <code>attributes</code> parameter is used to specify additional HTML attributes for the tag.]==]
 function export.tag_translit(translit, lang, kind, attributes, is_manual)
 	if type(lang) == "table" then
-		lang = lang.getCode and lang:getCode()
+		-- FIXME: Do better support for etym languages; see https://www.rfc-editor.org/rfc/bcp/bcp47.txt
+		lang = lang.getNonEtymologicalCode and lang:getNonEtymologicalCode()
 			or error("Second argument to tag_translit should be a language code or language object.")
 	end
 	
@@ -285,8 +289,9 @@ end
 
 function export.tag_transcription(transcription, lang, kind, attributes)
 	if type(lang) == "table" then
-		lang = lang.getCode and lang:getCode()
-			or error("Third argument to tag_translit should be a language code or language object.")
+		-- FIXME: Do better support for etym languages; see https://www.rfc-editor.org/rfc/bcp/bcp47.txt
+		lang = lang.getNonEtymologicalCode and lang:getNonEtymologicalCode()
+			or error("Second argument to tag_transcription should be a language code or language object.")
 	end
 	
 	local data = mw.loadData("Module:script utilities/data").transcription[kind or "default"]
@@ -363,6 +368,7 @@ function export.request_script(lang, sc, usex, nocat, sort_key)
 	
 	if usex then
 		local usex_type = usex == "quote" and "quotations" or "usage examples"
+		-- Etymology languages have their own categories, whose parents are the regular language.
 		category = "Requests for " .. cat_script .. " script in " .. lang:getCanonicalName() .. " " .. usex_type
 	else
 		category = "Requests for " .. cat_script .. " script for " .. lang:getCanonicalName() .. " terms"
