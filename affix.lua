@@ -506,7 +506,7 @@ local function detect_script_and_hyphens(text, lang, sc)
 		if num_possible_script_codes == 0 then
 			-- This shouldn't happen; if the language has no script codes,
 			-- the list {"None"} should be returned.
-			error("Something is majorly wrong! Language " .. lang:getNonEtymologicalName() .. " has no script codes.")
+			error("Something is majorly wrong! Language " .. lang:getCanonicalName() .. " has no script codes.")
 		end
 		if num_possible_script_codes == 1 then
 			-- 2. If the language has only one possible script, use it.
@@ -622,27 +622,41 @@ the "relevant" ones (e.g. for a prefix, a relevant template hyphen is one coming
 ]=]
 local function lookup_affix_mapping(affix, affix_type, lang, scode, thyph_re, lookup_hyph, affix_id)
 	local function do_lookup(affix)
-		local langcode = lang:getCode()
 		-- Ensure that the affix uses lookup hyphens regardless of whether it used a different type of hyphens before
 		-- or no hyphens.
 		local lookup_affix = reconstruct_term_per_hyphens(affix, affix_type, scode, thyph_re, lookup_hyph)
-		if export.langs_with_lang_specific_data[langcode] then
-			local langdata = mw.loadData(export.affix_lang_data_module_prefix .. langcode)
-			if langdata.affix_mappings then
-				local mapping = langdata.affix_mappings[lookup_affix]
-				if mapping then
-					if type(mapping) == "table" then
-						mapping = mapping[affix_id or false]
-						if mapping then
+		local function do_lookup_for_langcode(langcode)
+			if export.langs_with_lang_specific_data[langcode] then
+				local langdata = mw.loadData(export.affix_lang_data_module_prefix .. langcode)
+				if langdata.affix_mappings then
+					local mapping = langdata.affix_mappings[lookup_affix]
+					if mapping then
+						if type(mapping) == "table" then
+							mapping = mapping[affix_id or false]
+							if mapping then
+								return mapping
+							end
+						else
 							return mapping
 						end
-					else
-						return mapping
 					end
 				end
 			end
 		end
 
+		-- If `lang` is an etymology-only language, look for a mapping both for it and its full parent.
+		local langcode = lang:getCode()
+		local mapping = do_lookup_for_langcode(langcode)
+		if mapping then
+			return mapping
+		end
+		local full_langcode = lang:getNonEtymologicalCode()
+		if full_langcode ~= langcode then
+			mapping = do_lookup_for_langcode(full_langcode)
+			if mapping then
+				return mapping
+			end
+		end
 		return nil
 	end
 
@@ -934,7 +948,13 @@ function export.show_compound(data)
 			part.alt = part.alt or display_term
 		else
 			if affix_type then
-				track { affix_type, affix_type .. "/lang/" .. data.lang:getNonEtymologicalCode() }
+				local langcode = data.lang:getCode()
+				-- If `data.lang` is an etymology-only language, track both using its code and its full parent's code.
+				track { affix_type, affix_type .. "/lang/" .. langcode }
+				local full_langcode = data.lang:getNonEtymologicalCode()
+				if langcode ~= full_langcode then
+					track(affix_type .. "/lang/" .. full_langcode)
+				end
 			else
 				whole_words = whole_words + 1
 			end
@@ -1024,13 +1044,20 @@ local function track_wrong_affix_type(template, part, expected_affix_type)
 		local affix_type = export.parse_term_for_affixes(part.term, part.lang, part.sc)
 		if affix_type ~= expected_affix_type then
 			local part_name = expected_affix_type or "base"
+			local langcode = part.lang:getCode()
+			local full_langcode = part.lang:getNonEtymologicalCode()
 			require("Module:debug/track") {
 				template,
 				template .. "/" .. part_name,
 				template .. "/" .. part_name .. "/" .. (affix_type or "none"),
-				template .. "/" .. part_name .. "/" .. (affix_type or "none") .. "/lang/" ..
-					part.lang:getNonEtymologicalCode()
+				template .. "/" .. part_name .. "/" .. (affix_type or "none") .. "/lang/" .. langcode
 			}
+			-- If `part.lang` is an etymology-only language, track both using its code and its full parent's code.
+			if full_langcode ~= langcode then
+				require("Module:debug/track")(
+					template .. "/" .. part_name .. "/" .. (affix_type or "none") .. "/lang/" .. full_langcode
+				)
+			end
 		end
 	end
 end
