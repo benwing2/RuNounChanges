@@ -21,17 +21,14 @@ local data = mw.loadData("Module:gender and number/data")
 
 -- Version of format_list that can be invoked from a template.
 function export.show_list(frame)
-	local args = frame.args
-	local lang = args["lang"]; if lang == "" then lang = nil end
-	local list = {}
-	local i = 1
-	
-	while args[i] and args[i] ~= "" do
-		table.insert(list, args[i])
-		i = i + 1
-	end
-	
-	return export.format_list(list, lang)
+	local iargs = frame.args
+	local params = {
+		[1] = {list = true},
+		["lang"] = {},
+	}
+	local args = require("Module:parameters").process(iargs, params)
+	local lang = args.lang and require("Module:languages").getByCode(args.lang, "lang", "allow etym") or nil
+	return export.format_list(args[1], lang)
 end
 
 
@@ -66,6 +63,9 @@ function export.format_genders(specs, lang, pos_for_cat)
 	local seen_types = {}
 	local category_text = ""
 	local all_is_nounclass = nil
+	-- Currently we only use the language for categories, so fetch the non-etymological parent. Change this if we
+	-- use the language for any other purpose.
+	lang = lang and lang:getNonEtymological() or nil
 
 	local function do_gender_spec(spec, parts)
 		local types = {}
