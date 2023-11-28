@@ -27,15 +27,19 @@ end
 -- page text to [[Template:tracking/headword/TRACK_ID]], meaning you can find all entries with the `track_id` property
 -- by visiting [[Special:WhatLinksHere/Template:tracking/headword/TRACK_ID]].
 --
--- If `code` (a language or script code) is given, an additional tracking page
--- [[Template:tracking/headword/TRACK_ID/CODE]] is linked to, and you can find all entries in the combination of
--- `track_id` and `code` by visiting [[Special:WhatLinksHere/Template:tracking/headword/TRACK_ID/CODE]]. This makes it
--- possible to isolate only the entries with a specific tracking property that are in a given language or script.
-local function track(track_id, code)
+-- If `lang` (a language object) is given, an additional tracking page [[Template:tracking/headword/TRACK_ID/CODE]] is
+-- linked to where CODE is the language code of `lang`, and you can find all entries in the combination of `track_id`
+-- and `lang` by visiting [[Special:WhatLinksHere/Template:tracking/headword/TRACK_ID/CODE]]. This makes it possible to
+-- isolate only the entries with a specific tracking property that are in a given language. Note that if `lang`
+-- references at etymology-only language, both that language's code and its non-etymological parent's code are tracked.
+local function track(track_id, lang)
 	local tracking_page = "headword/" .. track_id
 	local m_debug_track = require("Module:debug/track")
-	if code then
-		m_debug_track{tracking_page, tracking_page .. "/" .. code}
+	if lang and lang:hasType("etymology-only") then
+		m_debug_track{tracking_page, tracking_page .. "/" .. lang:getCode(),
+			tracking_page .. "/" .. lang:getNonEtymologicalCode()}
+	elseif lang then
+		m_debug_track{tracking_page, tracking_page .. "/" .. lang:getCode()}
 	else
 		m_debug_track(tracking_page)
 	end
@@ -244,7 +248,7 @@ local function format_headword(data)
 	if has_manual_translits then
 		-- [[Special:WhatLinksHere/Template:tracking/headword/has-manual-translit]]
 		-- [[Special:WhatLinksHere/Template:tracking/headword/has-manual-translit/LANGCODE]]
-		track("has-manual-translit", data.lang:getCode())
+		track("has-manual-translit", data.lang)
 	end
 
 	------ Format the transliterations and transcriptions. ------
@@ -271,12 +275,28 @@ local function format_headword(data)
 
 		translits_formatted = " (" .. table.concat(translit_parts, " <i>or</i> ") .. ")"
 
-		local transliteration_page = mw.title.new(data.lang:getCanonicalName() .. " transliteration", "Wiktionary")
+		local langname = data.lang:getCanonicalName()
+		local transliteration_page = mw.title.new(langname .. " transliteration", "Wiktionary")
+		local saw_translit_page = false
 
 		if transliteration_page then
 			local success, exists = pcall(function () return transliteration_page.exists end)
 			if success and exists then
-				translits_formatted = " [[Wiktionary:" .. data.lang:getCanonicalName() .. " transliteration|•]]" .. translits_formatted
+				translits_formatted = " [[Wiktionary:" .. langname .. " transliteration|•]]" .. translits_formatted
+				saw_translit_page = true
+			end
+		end
+		-- If data.lang is an etymology-only language and we didn't find a translation page for it, fall back to the
+		-- non-etymology-only parent.
+		if not saw_translit_page and data.lang:hasType("etymology-only") then
+			langname = data.lang:getNonEtymologicalName()
+			transliteration_page = mw.title.new(langname .. " transliteration", "Wiktionary")
+
+			if transliteration_page then
+				local success, exists = pcall(function () return transliteration_page.exists end)
+				if success and exists then
+					translits_formatted = " [[Wiktionary:" .. langname .. " transliteration|•]]" .. translits_formatted
+				end
 			end
 		end
 	else
@@ -303,7 +323,8 @@ local function format_genders(data)
 			retval = ","
 		end
 		local pos_for_cat
-		if not data.nogendercat and not m_data.no_gender_cat[data.lang:getCode()] then
+		if not data.nogendercat and not m_data.no_gender_cat[data.lang:getCode()] and
+			not m_data.no_gender_cat[data.lang:getNonEtymologicalCode()] then
 			local pos_category = data.pos_category:gsub("^reconstructed ", "")
 			pos_for_cat = m_data.pos_for_gender_number_cat[pos_category]
 		end
@@ -376,7 +397,7 @@ local function format_inflection_parts(data, parts)
 		parts_output = (parts.label and " " or "") .. table.concat(parts)
 	elseif parts.request then
 		parts_output = " <small>[please provide]</small>"
-		table.insert(data.categories, "Requests for inflections in " .. data.lang:getCanonicalName() .. " entries")
+		table.insert(data.categories, "Requests for inflections in " .. data.lang:getNonEtymologicalName() .. " entries")
 	else
 		parts_output = ""
 	end
@@ -483,6 +504,7 @@ end
 -- of this feature as well, because they are used in place of a conventional
 -- headword template.]==]
 function export.maintenance_cats(m_data, lang, lang_cats, page_cats)
+	lang = lang:getNonEtymological() -- since we are just generating categories
 	if m_data.unsupported_title then
 		table.insert(page_cats, "Unsupported titles")
 	end
@@ -533,7 +555,9 @@ function export.full_headword(data)
 	------------ 2. Initialize pagename etc. ------------
 
 	local langcode = data.lang:getCode()
+	local full_langcode = data.lang:getNonEtymologicalCode()
 	local langname = data.lang:getCanonicalName()
+	local full_langname = data.lang:getNonEtymologicalName()
 
 	if data.pagename then -- for testing, doc pages, etc.
 		data.title = mw.title.new(data.pagename)
@@ -590,14 +614,14 @@ function export.full_headword(data)
 	init_and_find_maximum_index(data, "whole_page_categories")
 	local pos_category_already_present = false
 	if #data.categories > 0 then
-		local escaped_langname = require("Module:pattern utilities").pattern_escape(langname)
+		local escaped_langname = require("Module:pattern utilities").pattern_escape(full_langname)
 		local matches_lang_pattern = "^" .. escaped_langname .. " "
 		for _, cat in ipairs(data.categories) do
 			-- Does the category begin with the language name? If not, tag it with a tracking category.
 			if not cat:find(matches_lang_pattern) then
 				-- [[Special:WhatLinksHere/Template:tracking/headword/no lang category]]
 				-- [[Special:WhatLinksHere/Template:tracking/headword/no lang category/LANGCODE]]
-				track("no lang category", langcode)
+				track("no lang category", data.lang)
 			end
 		end
 
@@ -620,7 +644,7 @@ function export.full_headword(data)
 
 	-- Insert a category at the beginning for the part of speech unless it's already present or `data.noposcat` given.
 	if not pos_category_already_present and not data.noposcat then
-		local pos_category = langname .. " " .. data.pos_category
+		local pos_category = full_langname .. " " .. data.pos_category
 		-- FIXME: [[User:Theknightwho]] Why is this special case here? Please add an explanatory comment.
 		if pos_category ~= "Translingual Han characters" then
 			table.insert(data.categories, 1, pos_category)
@@ -634,12 +658,12 @@ function export.full_headword(data)
 		-- We don't know what this category is, so tag it with a tracking category.
 		-- [[Special:WhatLinksHere/Template:tracking/headword/unrecognized pos]]
 		-- [[Special:WhatLinksHere/Template:tracking/headword/unrecognized pos/LANGCODE]]
-		track("unrecognized pos", langcode)
+		track("unrecognized pos", data.lang)
 		-- [[Special:WhatLinksHere/Template:tracking/headword/unrecognized pos/POS]]
 		-- [[Special:WhatLinksHere/Template:tracking/headword/unrecognized pos/POS/LANGCODE]]
-		track("unrecognized pos/pos/" .. data.pos_category, langcode)
+		track("unrecognized pos/pos/" .. data.pos_category, data.lang)
 	elseif not data.noposcat then
-		table.insert(data.categories, 1, langname .. " " .. postype .. "s")
+		table.insert(data.categories, 1, full_langname .. " " .. postype .. "s")
 	end
 
 	------------ 5. Create a default headword, and add links to multiword page names. ------------
@@ -653,7 +677,8 @@ function export.full_headword(data)
 	local unmodified_default_head = default_head
 
 	-- Add links to multi-word page names when appropriate
-	if not m_data.no_multiword_links[langcode] and not is_reconstructed and export.head_is_multiword(default_head) then
+	if not m_data.no_multiword_links[langcode] and not m_data.no_multiword_links[full_langcode] and not is_reconstructed
+		and export.head_is_multiword(default_head) then
 		default_head = export.add_multiword_links(default_head, true)
 	end
 
@@ -709,7 +734,7 @@ function export.full_headword(data)
 		-- Try to generate a transliteration if necessary
 		if head.tr == "-" then
 			head.tr = nil
-		elseif not notranslit[langcode] and head.sc:isTransliterated() then
+		elseif not notranslit[langcode] and not notranslit[full_langcode] and head.sc:isTransliterated() then
 			head.tr_manual = not not head.tr
 
 			local text = head.term
@@ -726,10 +751,10 @@ function export.full_headword(data)
 				if manual_tr then
 					if (remove_links(manual_tr) == remove_links(automated_tr)) and (not head.tr_fail) then
 						table.insert(data.categories, "Terms with redundant transliterations")
-						table.insert(data.categories, "Terms with redundant transliterations/" .. langcode)
+						table.insert(data.categories, "Terms with redundant transliterations/" .. full_langcode)
 					elseif not head.tr_fail then
 						table.insert(data.categories, "Terms with manual transliterations different from the automated ones")
-						table.insert(data.categories, "Terms with manual transliterations different from the automated ones/" .. langcode)
+						table.insert(data.categories, "Terms with manual transliterations different from the automated ones/" .. full_langcode)
 					end
 				end
 
@@ -745,7 +770,9 @@ function export.full_headword(data)
 			-- Add the entry to a cleanup category.
 			if not head.tr then
 				head.tr = "<small>transliteration needed</small>"
-				table.insert(data.categories, "Requests for transliteration of " .. langname .. " terms")
+				-- FIXME: No current support for 'Request for transliteration of Classical Persian terms' or similar.
+				-- Consider adding this support in [[Module:category tree/poscatboiler/data/entry maintenance]].
+				table.insert(data.categories, "Requests for transliteration of " .. full_langname .. " terms")
 			else
 				-- Otherwise, trim it.
 				head.tr = mw.text.trim(head.tr)
@@ -820,28 +847,30 @@ function export.full_headword(data)
 
 	if has_redundant_head_param then
 		if not data.no_redundant_head_cat then
-			table.insert(data.categories, langname .. " terms with redundant head parameter")
+			table.insert(data.categories, full_langname .. " terms with redundant head parameter")
 		end
 	end
 
 	-- If the first head is multiword (after removing links), maybe insert into "LANG multiword terms".
-	if not data.nomultiwordcat and any_script_has_spaces and postype == "lemma" and not m_data.no_multiword_cat[langcode] then
+	if not data.nomultiwordcat and any_script_has_spaces and postype == "lemma" and
+		not m_data.no_multiword_cat[langcode] and not m_data.no_multiword_cat[full_langcode] then
 		-- Check for spaces or hyphens, but exclude prefixes and suffixes.
 		-- Use the pagename, not the head= value, because the latter may have extra
 		-- junk in it, e.g. superscripted text that throws off the algorithm.
 		local checkpattern = ".[%s%-፡]."
-		if m_data.hyphen_not_multiword_sep[langcode] then
+		if m_data.hyphen_not_multiword_sep[langcode] or m_data.hyphen_not_multiword_sep[full_langcode] then
 			-- Exclude hyphens if the data module states that they should for this language
 			checkpattern = ".[%s፡]."
 		end
 		if rfind(unmodified_default_head, checkpattern) and not non_categorizable(data) then
-			table.insert(data.categories, langname .. " multiword terms")
+			table.insert(data.categories, full_langname .. " multiword terms")
 		end
 	end
 
 	if data.sccat then
 		for _, head in ipairs(data.heads) do
-			table.insert(data.categories, langname .. " " .. data.pos_category .. " in " .. head.sc:getDisplayForm())
+			table.insert(data.categories, full_langname .. " " .. data.pos_category .. " in " ..
+				head.sc:getDisplayForm())
 		end
 	end
 
@@ -858,7 +887,7 @@ function export.full_headword(data)
 				end)
 			return mw.ustring.toNFC(char)
 		end
-		if langcode ~= "hi" and langcode ~= "lo" then
+		if full_langcode ~= "hi" and full_langcode ~= "lo" then
 			local standard_chars_scripts = {}
 			for _, head in ipairs(data.heads) do
 				standard_chars_scripts[head.sc:getCode()] = true
@@ -881,14 +910,14 @@ function export.full_headword(data)
 							if not explode_standard[char] then
 								if char:find("[0-9]") then
 									if not num then
-										table.insert(data.categories, langname .. " terms spelled with numbers")
+										table.insert(data.categories, full_langname .. " terms spelled with numbers")
 									end
 								else
 									local upper = char_category(char)
 									if not explode_standard[upper] then
 										char = upper
 									end
-									table.insert(data.categories, langname .. " terms spelled with " .. char)
+									table.insert(data.categories, full_langname .. " terms spelled with " .. char)
 								end
 							end
 						end
@@ -897,12 +926,12 @@ function export.full_headword(data)
 					sc_standard = mw.ustring.toNFD(sc_standard)
 					for diacritic in rgmatch(m_data.decompose_pagename, m_data.comb_chars.diacritics_single) do
 						if not mw.ustring.find(sc_standard, diacritic) then
-							table.insert(data.categories, langname .. " terms spelled with ◌" .. diacritic)
+							table.insert(data.categories, full_langname .. " terms spelled with ◌" .. diacritic)
 						end
 					end
 					for diacritic in rgmatch(m_data.decompose_pagename, m_data.comb_chars.diacritics_double) do
 						if not mw.ustring.find(sc_standard, diacritic) then
-							table.insert(data.categories, langname .. " terms spelled with ◌" .. diacritic .. "◌")
+							table.insert(data.categories, full_langname .. " terms spelled with ◌" .. diacritic .. "◌")
 						end
 					end
 				end
@@ -914,7 +943,7 @@ function export.full_headword(data)
 				if not rfind(upper, "[" .. standard .. "]") then
 					character = upper
 				end
-				table.insert(data.categories, langname .. " terms spelled with " .. character)
+				table.insert(data.categories, full_langname .. " terms spelled with " .. character)
 			end
 		end
 	end
@@ -924,7 +953,7 @@ function export.full_headword(data)
 		-- FIXME: Use of first script here seems hacky. What is the clean way of doing this in the presence of
 		-- multiple scripts?
 		and require("Module:palindromes").is_palindrome(data.title.subpageText, data.lang, data.heads[1].sc) then
-		table.insert(data.categories, langname .. " palindromes")
+		table.insert(data.categories, full_langname .. " palindromes")
 	end
 
 	if namespace == "" and not data.lang:hasType("reconstructed") then
@@ -933,7 +962,7 @@ function export.full_headword(data)
 			if data.title.prefixedText ~= m_links.getLinkPage(remove_links(head.term), data.lang, head.sc) then
 				-- [[Special:WhatLinksHere/Template:tracking/headword/pagename spelling mismatch]]
 				-- [[Special:WhatLinksHere/Template:tracking/headword/pagename spelling mismatch/LANGCODE]]
-				track("pagename spelling mismatch", langcode)
+				track("pagename spelling mismatch", data.lang)
 				break
 			end
 		end
