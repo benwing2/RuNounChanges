@@ -23,7 +23,7 @@ end
 local thai_char_range = "ก-ฺเ-๎" -- U+0E01 through U+0E3A and U+0E40 through U+0E4E (skipping Bhat sign and Thai numerals)
 
 local function translit_term(term)
-	return require(th_pron_module).translit(term, "th", "Thai", "paiboon", "translit-module")
+	return require(th_pron_module).translit(term, "th", "Thai", "paiboon", "translit-module") or term
 end
 
 
