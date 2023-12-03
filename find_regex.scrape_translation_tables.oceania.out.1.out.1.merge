@@ -1,4 +1,4 @@
-Beginning at Sun Nov 26 00:18:10 2023
+Beginning at Sat Dec  2 17:51:42 2023
 Page 1 Australia: -------- begin text --------
 {{also|Austrália|Austràlia|australia|australià}}
 ==English==
@@ -2576,8 +2576,13 @@ Page 77 ኣውስትራሊያ: -------- begin text --------
 -------- end text --------
 Page 78 Avustralya: -------- begin text --------
 ==Turkish==
+
+===Etymology===
+{{inh+|tr|ota|آوسترالیا}}<ref>{{R:ota:Redhouse|آوسترالیا|page=253}}</ref><ref>{{R:ota:Kelekian|آوسترالیا|page=41}}</ref> or {{m|ota|آوسترالیه|tr=avustraliya, ostraliya}},<ref>{{R:ota:Sami:1899|58|آوسترالیه}}</ref> from {{bor|tr|en|Australia}}.
+
 ===Pronunciation===
-{{rfp|tr|}}
+* {{IPA|tr|/a.vusˈtɾal.ja/|/a.vus.t(u)ˈɾal.ja/}}
+* {{hyph|tr|A|vus|tral|ya}}
 
 ===Proper noun===
 {{tr-proper noun}}
@@ -2585,21 +2590,21 @@ Page 78 Avustralya: -------- begin text --------
 # {{place|tr|continent/and/country|cont/Oceania|t=Australia}}
 
 ====Declension====
-{{tr-decl-noun-unc
-|{{PAGENAME}}
-|{{PAGENAME}}'yı
-|{{PAGENAME}}'ya
-|{{PAGENAME}}'da
-|{{PAGENAME}}'dan
-|{{PAGENAME}}'nın
-}}
+{{tr-prop-v-aı}}
 {{tr-poss-prop-v-aı}}
 
 ====Derived terms====
-* {{l|tr|{{PAGENAME}}lı}}
+{{der3|tr|Avustralyalı|Avustralya karatavuğu}}
 
 ===See also===
 * {{list:countries of Oceania/tr}}
+
+===References===
+<references/>
+
+===Further reading===
+* {{R:TDK}}
+* {{R:tr:OTK|page=368}}
 -------- end text --------
 Page 79 Awstraliýa: -------- begin text --------
 ==Turkmen==
@@ -2908,7 +2913,7 @@ Page 92 אויסטראַליע: -------- begin text --------
 ==Yiddish==
 
 ===Pronunciation===
-* {{IPA|yi|/ɔɪ̯sˈtʁaʎjə/}}
+* {{IPA|yi|/ɔɪ̯sˈtʀaʎjə/}}
 
 ===Proper noun===
 {{head|yi|proper noun}}
@@ -3864,7 +3869,6 @@ Page 129 Mikronezja: -------- begin text --------
 {{col-auto|pl|Mikronezyjczyk|Mikronezyjka|mikronezyjski}}
 
 ===Further reading===
-* {{R:pl:WSJP}}
 * {{R:pl:PWN}}
 -------- end text --------
 Page 130 ไมโครนีเซีย: -------- begin text --------
@@ -4847,7 +4851,6 @@ Page 162 Fidżi: -------- begin text --------
 {{col-auto|pl|title=nouns|Fidżyjczyk|Fidżyjka}}
 
 ===Further reading===
-* {{R:pl:WSJP}}
 * {{R:pl:PWN}}
 -------- end text --------
 Page 163 Vītī: -------- begin text --------
@@ -5280,7 +5283,6 @@ Borrowed from {{bor|gil|en|Gilberts}}, a shortened name of the {{w|Gilbert Islan
 {{col-auto|pl|title=nouns|Kiribatyjczyk|Kiribatyjka}}
 
 ===Further reading===
-* {{R:pl:WSJP}}
 * {{R:pl:PWN}}
 
 ==Portuguese==
@@ -6541,7 +6543,6 @@ From {{der|fi|en|Nauru}}, possibly from {{der|fi|na|anáoero||I go to the beach}
 {{col-auto|pl|title=nouns|Nauruańczyk|Nauruanka}}
 
 ===Further reading===
-* {{R:pl:WSJP}}
 * {{R:pl:PWN}}
 
 ==Portuguese==
@@ -6880,7 +6881,7 @@ From {{uder|en|nl|Nieuw-Zeeland||new Zeeland}} ({{m|nl|nieuw}} calqued as {{m|en
 ===Proper noun===
 {{en-proper noun|head=[[new|New]] [[Zealand]]}}
 
-# {{senseid|en|Q664}}{{place|en|country|cont/Oceania}}, to the east of {{l|en|Australia}}. Official name: New Zealand. Abbreviation: '''[[NZ]]''' or {{l|en|Aotearoa}}
+# {{senseid|en|Q664}}{{place|en|country|cont/Oceania}}, to the east of {{l|en|Australia}}. Official name: New Zealand. Abbreviation: '''[[NZ]]'''
 # The [[islands]] of New Zealand, especially the [[North Island]], [[South Island]] and nearby [[coastal]] islands.
 # The Realm of New Zealand, including the Cook Islands, Niue, Tokelau and the Ross Dependency.
 # {{place|en|western suburb|city/Derby|co/Derbyshire|cc/England}} {{q|[[OS]] grid ref SK3336}}.
@@ -6891,14 +6892,15 @@ From {{uder|en|nl|Nieuw-Zeeland||new Zeeland}} ({{m|nl|nieuw}} calqued as {{m|en
 
 ====Synonyms====
 {{top2}}
-* {{q|from [[Maori]]}} {{l|en|Aotearoa}}; {{q|from [[calque]] of [[Maori]]}} {{l|en|Land of the Long White Cloud}}
+* {{q|from [[Maori]]}} {{l|en|Aotearoa}}
 * {{l|en|Aotearoa New Zealand}}
 * {{l|en|Dominion of New Zealand}} {{q|dated|formal}}
 * {{l|en|Enzed}}
 * {{l|en|Godzone}} {{q|New Zealand|informal}}
 * {{l|en|Kiwiland}}
-* {{l|en|Nu Zillund}} {{q|humorous}}
+* {{l|en|Land of the Long White Cloud}}
 * {{l|en|Maoriland}}
+* {{l|en|Nu Zillund}} {{q|humorous}}
 * {{l|en|NZ}} {{q|abbreviation}}
 * {{l|en|Zealandia}}
 {{bottom}}
@@ -6917,7 +6919,6 @@ From {{uder|en|nl|Nieuw-Zeeland||new Zeeland}} ({{m|nl|nieuw}} calqued as {{m|en
 * {{l|en|New Zealandress}}
 * {{l|en|New Zealand tea tree}}
 * {{l|en|Zealandia}}
-* {{l|en|Zeelandia}}
 * {{l|en|Zealandica}}
 {{bottom}}
 
@@ -7078,7 +7079,8 @@ From {{uder|en|nl|Nieuw-Zeeland||new Zeeland}} ({{m|nl|nieuw}} calqued as {{m|en
 * Ossetian: {{t|os|Ног Зеланди}}
 * Paiwan: {{t|pwn|Autearua}}
 * Pashto: {{t+|ps|نيوزيلنډ|m}}, {{t|ps|نویزېلنډ|m|tr=nəwayzelanḍ}}
-* Persian: {{t+|fa|نِیوزیلَنْد|tr=niyuziland}}, {{t+|fa|زِلانْدِ نُو|tr=zelând-e now}}, {{t|fa|زِلانْدِ جَدید|tr=zelând-e jadid}}
+* Persian:
+*: Iranian Persian: {{t+|fa-ira|نِیوزیلَنْد}}, {{t+|fa-ira|زِلانْدِ نُو}}, {{t|fa-ira|زِلانْدِ جَدید‎}}
 * Picard: {{t|pcd|Novèle-Zilinde}}
 * Polish: {{t+|pl|Nowa Zelandia|f}}
 * Portuguese: {{t+|pt|Nova Zelândia|f}}
@@ -8805,7 +8807,6 @@ Page 308 nowozelandzki: -------- begin text --------
 {{pl-decl-adj-auto}}
 
 ===Further reading===
-* {{R:pl:WSJP}}
 * {{R:pl:PWN}}
 -------- end text --------
 Page 309 neozelandês: -------- begin text --------
@@ -9011,7 +9012,7 @@ Page 314 Palau: -------- begin text --------
 * Afrikaans: {{t|af|Palau}}, {{t|af|Belau}}
 * Arabic: {{t|ar|بَالَاو|m|tr=balāw}}
 * Armenian: {{t|hy|Պալաու}}
-* Bengali: {{t|bn|পালাউ}}
+* Bengali: {{t+|bn|পালাউ}}
 * Breton: {{t|br|Palau}}
 * Bulgarian: {{t|bg|Палау}}
 * Burmese: {{t|my|ပလောင်း}}
@@ -9260,7 +9261,6 @@ Ultimately from {{der|nn|pau|Belau||Palau}}.
 # {{place|pl|commune/and/city|p/Sassari|r/Sardinia|c/Italy|t=Palau}}
 
 ===Further reading===
-* {{R:pl:WSJP}}
 * {{R:pl:PWN}}
 
 {{cln|pl|exonyms}}
@@ -11001,7 +11001,6 @@ From {{der|fi|sm|Sāmoa}}.
 {{col-auto|pl|title=nouns|Samoańczyk|Samoanka}}
 
 ===Further reading===
-* {{R:pl:WSJP}}
 * {{R:pl:PWN}}
 
 {{C|pl|Samoa}}
@@ -12333,7 +12332,7 @@ From {{der|en|to|Tonga}}, from {{der|en|sm|toga||southern}}.
 * French: {{t+|fr|Tonga}}
 * Georgian: {{t+|ka|ტონგა}}
 * German: {{t+|de|Tonga|n}}
-* Greek: {{t+|el|Τόνγκα}}, {{t|el|Τόγκα}}
+* Greek: {{t+|el|Τόνγκα}}, {{t+|el|Τόγκα}}
 * Hawaiian: {{t|haw|Kona}}
 * Interlingua: {{t|ia|Tonga}}
 * Italian: {{t|it|Tonga}}
@@ -12616,7 +12615,6 @@ From {{der|fi|to|Tonga}}.
 {{col-auto|pl|title=nouns|Tongijczyk|Tongijka}}
 
 ===Further reading===
-* {{R:pl:WSJP}}
 * {{R:pl:PWN}}
 
 ==Portuguese==
@@ -13033,6 +13031,7 @@ From {{bor|en|tvl|Tuuvalu|lit=eight standing together}} in reference to the eigh
 ====Translations====
 {{trans-top|id=Q672|country in Oceania}}
 * Afrikaans: {{t|af|Toewaloe}}, {{t|af|Tuvalu}}
+* Amharic: {{t|am|ቱቫሉ}}
 * Arabic: {{t|ar|تُوفَالُو|f|tr=tufālū}}
 * Armenian: {{t|hy|Տուվալու}}
 * Assamese: {{t|as|টুভালু}}
@@ -13238,7 +13237,6 @@ From {{der|fi|tvl|Tuuvalu}}.
 {{col-auto|pl|title=adjective|tuwalski}}
 
 ===Further reading===
-* {{R:pl:WSJP}}
 * {{R:pl:PWN}}
 
 ==Portuguese==
@@ -13498,7 +13496,6 @@ Page 449 Tuwalu: -------- begin text --------
 {{col-auto|pl|title=adjective|tuwalski}}
 
 ===Further reading===
-* {{R:pl:WSJP}}
 * {{R:pl:PWN}}
 
 ==Turkmen==
@@ -13827,7 +13824,6 @@ From {{der|fi|bi|Vanuatu}}.
 # {{place|pl|archipelago/and/country|r/Melanesia|t=Vanuatu}}
 
 ===Further reading===
-* {{R:pl:WSJP}}
 * {{R:pl:PWN}}
 
 ==Portuguese==
@@ -14976,5 +14972,5 @@ From {{bor|th|en|Niue}}.
 
 {{topics|th|Countries}}
 -------- end text --------
-Elapsed time: 0 mins 50.79 secs
-Ending at Sun Nov 26 00:19:01 2023
+Elapsed time: 1 mins 14.22 secs
+Ending at Sat Dec  2 17:52:56 2023
