@@ -1499,105 +1499,85 @@ return export
 
 
 
+--[=[
+Generate all relevant dialect pronunciations and group into dialects. See the comment above about dialects and
+dialect groups. A "pronunciation" here could be for example the IPA phonemic/phonetic representation of the term or
+the IPA form of the rhyme that the term belongs to. If `dialect_spec` is nil, this generates all dialects for all
+dialects, but `dialect_spec` can also be a dialect spec to restrict the output. `dodialect` is a function of two
+arguments, `ret` and `dialect`, where `ret` is the return-value table (see below), and `dialect` is a string naming a
+particular dialect, such as "mpl-early" or "szl-opolskie". `dodialect` should side-effect the `ret` table by adding an
+entry to `ret.pronun` for the dialect in question.
 
---[=============[
+The return value is a table of the form
 
+{
+  pronun = {DIALECT = {PRONUN, PRONUN, ...}, DIALECT = {PRONUN, PRONUN, ...}, ...},
+  expressed_dialects = {DIALECT_GROUP, DIALECT_GROUP, ...},
+}
 
+where:
+1. DIALECT is a string such as "mpl-late" naming a specific dialect.
+2. PRONUN is a table describing a particular pronunciation. See below for the form of the PRONUN table for
+   phonemic/phonetic pronunciation vs. rhyme.
+3. DIALECT_GROUP is a table of the form {tag = "HIDDEN_TAG", dialects = {INNER_DIALECT, INNER_DIALECT, ...}}. This describes
+   a group of related dialects (such as those for Latin America) that by default (the "hidden" form) are displayed as
+   a single line, with an icon on the right to "open" the dialect group into the "shown" form, with multiple lines
+   for each dialect in the group. The tag of the dialect group is the text displayed before the pronunciation in the
+   default "hidden" form, such as "Spain" or "Latin America". It can have the special value of `false` to indicate
+   that no tag text is to be displayed. Note that the pronunciation shown in the default "hidden" form is taken
+   from the first dialect in the dialect group.
+4. INNER_DIALECT is a table of the form {tag = "SHOWN_TAG", pronun = {PRONUN, PRONUN, ...}}. This describes a single
+   dialect (such as for the Andes Mountains in the case where the seseo+lleismo accent differs from all others), to
+   be shown on a single line. `tag` is the text preceding the displayed pronunciation, or `false` if no tag text
+   is to be displayed. PRONUN is a table as described above and describes a particular pronunciation.
 
+The PRONUN table has the following form for the full phonemic/phonetic pronunciation:
 
+{
+  phonemic = "PHONEMIC",
+  phonetic = "PHONETIC",
+  differences = {FLAG = BOOLEAN, FLAG = BOOLEAN, ...},
+}
 
+Here, `phonemic` is the phonemic pronunciation (displayed as /.../) and `phonetic` is the phonetic pronunciation
+(displayed as [...]).
 
+The PRONUN table has the following form for the rhyme pronunciation:
 
+{
+  rhyme = "RHYME_PRONUN",
+  num_syl = {NUM, NUM, ...},
+  qualifiers = nil or {QUALIFIER, QUALIFIER, ...},
+  differences = {FLAG = BOOLEAN, FLAG = BOOLEAN, ...},
+}
 
+Here, `rhyme` is a phonemic pronunciation such as "ado" for [[abogado]] or "iʝa"/"iʎa" for [[tortilla]] (depending
+on the dialect), and `num_syl` is a list of the possible numbers of syllables for the term(s) that have this rhyme
+(e.g. {4} for [[abogado]], {3} for [[tortilla]] and {4, 5} for [[biología]], which may be syllabified as
+bio.lo.gí.a or bi.o.lo.gí.a). `num_syl` is used to generate syllable-count categories such as
+[[Category:Rhymes:Spanish/ia/4 syllables]] in addition to [[Category:Rhymes:Spanish/ia]]. `num_syl` may be nil to
+suppress the generation of syllable-count categories; this is typically the case with multiword terms.
+`qualifiers`, if non-nil, comes from the user using the syntax e.g. <rhyme:iʃa<q:Buenos Aires>>.
 
+The value of the `differences` field in the PRONUN table (which, as noted above, only needs to be present for the
+"distincion-lleismo" dialect, and otherwise should be nil) is a table containing flags indicating whether and how
+the per-dialect pronunciations differ. This is an optimization to avoid having to generate all six dialectal
+pronunciations and compare them. It has the following form:
 
+{
+  distincion_different = BOOLEAN,
+  lleismo_different = BOOLEAN,
+  need_rioplat = BOOLEAN,
+  sheismo_different = BOOLEAN,
+}
 
-
-
-
-
-
-
-
--- Generate all relevant dialect pronunciations and group into dialects. See the comment above about dialects and dialects.
--- A "pronunciation" here could be for example the IPA phonemic/phonetic representation of the term or the IPA form of
--- the rhyme that the term belongs to. If `dialect_spec` is nil, this generates all dialects for all dialects, but
--- `dialect_spec` can also be a dialect spec such as "seseo" or "distincion+yeismo" (see comment above) to restrict the
--- output. `dodialect` is a function of two arguments, `ret` and `dialect`, where `ret` is the return-value table (see
--- below), and `dialect` is a string naming a particular dialect, such as "distincion-lleismo" or "rioplatense-sheismo".
--- `dodialect` should side-effect the `ret` table by adding an entry to `ret.pronun` for the dialect in question.
---
--- The return value is a table of the form
---
--- {
---   pronun = {DIALECT = {PRONUN, PRONUN, ...}, DIALECT = {PRONUN, PRONUN, ...}, ...},
---   expressed_dialects = {STYLE_GROUP, STYLE_GROUP, ...},
--- }
---
--- where:
--- 1. DIALECT is a string such as "distincion-lleismo" naming a specific dialect.
--- 2. PRONUN is a table describing a particular pronunciation. If the dialect is "distincion-lleismo", there should be
---    a field in this table named `differences`, but where other fields may vary depending on the type of pronunciation
---    (e.g. phonemic/phonetic or rhyme). See below for the form of the PRONUN table for phonemic/phonetic pronunciation
---    vs. rhyme and the form of the `differences` field.
--- 3. STYLE_GROUP is a table of the form {tag = "HIDDEN_TAG", dialects = {INNER_STYLE, INNER_STYLE, ...}}. This describes
---    a group of related dialects (such as those for Latin America) that by default (the "hidden" form) are displayed as
---    a single line, with an icon on the right to "open" the dialect group into the "shown" form, with multiple lines
---    for each dialect in the group. The tag of the dialect group is the text displayed before the pronunciation in the
---    default "hidden" form, such as "Spain" or "Latin America". It can have the special value of `false` to indicate
---    that no tag text is to be displayed. Note that the pronunciation shown in the default "hidden" form is taken
---    from the first dialect in the dialect group.
--- 4. INNER_STYLE is a table of the form {tag = "SHOWN_TAG", pronun = {PRONUN, PRONUN, ...}}. This describes a single
---    dialect (such as for the Andes Mountains in the case where the seseo+lleismo accent differs from all others), to
---    be shown on a single line. `tag` is the text preceding the displayed pronunciation, or `false` if no tag text
---    is to be displayed. PRONUN is a table as described above and describes a particular pronunciation.
---
--- The PRONUN table has the following form for the full phonemic/phonetic pronunciation:
---
--- {
---   phonemic = "PHONEMIC",
---   phonetic = "PHONETIC",
---   differences = {FLAG = BOOLEAN, FLAG = BOOLEAN, ...},
--- }
---
--- Here, `phonemic` is the phonemic pronunciation (displayed as /.../) and `phonetic` is the phonetic pronunciation
--- (displayed as [...]).
---
--- The PRONUN table has the following form for the rhyme pronunciation:
---
--- {
---   rhyme = "RHYME_PRONUN",
---   num_syl = {NUM, NUM, ...},
---   qualifiers = nil or {QUALIFIER, QUALIFIER, ...},
---   differences = {FLAG = BOOLEAN, FLAG = BOOLEAN, ...},
--- }
---
--- Here, `rhyme` is a phonemic pronunciation such as "ado" for [[abogado]] or "iʝa"/"iʎa" for [[tortilla]] (depending
--- on the dialect), and `num_syl` is a list of the possible numbers of syllables for the term(s) that have this rhyme
--- (e.g. {4} for [[abogado]], {3} for [[tortilla]] and {4, 5} for [[biología]], which may be syllabified as
--- bio.lo.gí.a or bi.o.lo.gí.a). `num_syl` is used to generate syllable-count categories such as
--- [[Category:Rhymes:Spanish/ia/4 syllables]] in addition to [[Category:Rhymes:Spanish/ia]]. `num_syl` may be nil to
--- suppress the generation of syllable-count categories; this is typically the case with multiword terms.
--- `qualifiers`, if non-nil, comes from the user using the syntax e.g. <rhyme:iʃa<q:Buenos Aires>>.
---
--- The value of the `differences` field in the PRONUN table (which, as noted above, only needs to be present for the
--- "distincion-lleismo" dialect, and otherwise should be nil) is a table containing flags indicating whether and how
--- the per-dialect pronunciations differ. This is an optimization to avoid having to generate all six dialectal
--- pronunciations and compare them. It has the following form:
---
--- {
---   distincion_different = BOOLEAN,
---   lleismo_different = BOOLEAN,
---   need_rioplat = BOOLEAN,
---   sheismo_different = BOOLEAN,
--- }
---
--- where:
--- 1. `distincion_different` should be `true` if the "distincion" and "seseo" pronunciations differ;
--- 2. `lleismo_different` should be `true` if the "lleismo" and "yeismo" pronunciations differ;
--- 3. `need_rioplat` should be `true` if the Rioplatense pronunciations differ from the seseo+yeismo pronunciation;
--- 4. `sheismo_different` should be `true` if the "sheismo" and "zheismo" pronunciations differ.
-local function express_all_dialects(dialect_spec, dodialect)
+where:
+1. `distincion_different` should be `true` if the "distincion" and "seseo" pronunciations differ;
+2. `lleismo_different` should be `true` if the "lleismo" and "yeismo" pronunciations differ;
+3. `need_rioplat` should be `true` if the Rioplatense pronunciations differ from the seseo+yeismo pronunciation;
+4. `sheismo_different` should be `true` if the "sheismo" and "zheismo" pronunciations differ.
+]=]
+local function express_all_dialects(dialect_spec, lang, dodialect)
 	local ret = {
 		pronun = {},
 		expressed_dialects = {},
@@ -1605,7 +1585,7 @@ local function express_all_dialects(dialect_spec, dodialect)
 
 	local need_rioplat
 
-	-- Add a dialect object (see INNER_STYLE above) that represents a particular dialect to `ret.expressed_dialects`.
+	-- Add a dialect object (see INNER_DIALECT above) that represents a particular dialect to `ret.expressed_dialects`.
 	-- `hidden_tag` is the tag text to be used when the dialect group containing the dialect is in the default "hidden"
 	-- state (e.g. "Spain", "Latin America" or false if there is only one dialect group and no tag text should be
 	-- shown), while `tag` is the tag text to be used when the individual dialect is shown (e.g. a description such as
@@ -1744,6 +1724,26 @@ local function express_all_dialects(dialect_spec, dodialect)
 
 	return ret
 end
+
+
+--[=============[
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 local function format_all_dialects(expressed_dialects, format_dialect)
@@ -2283,17 +2283,80 @@ end
 
 -- External entry point for {{pl-pr}}, {{szl-pr}}.
 function export.show_pr(frame)
+	local frame_args = frame.args
+	local iparams = {
+		["lang"] = {required = true},
+	}
+	local iargs = require("Module:parameters").process(frame_args, iparams)
+	local lang = iargs.lang
+	if not export.all_dialect_groups_by_lang[lang] then
+		local valid_values = {}
+		for valid_lang, _ in pairs(export.all_dialect_groups_by_lang) do
+			table.insert(valid_values, ("'%s'"):format(valid_lang))
+		end
+		table.sort(valid_values)
+		error(("Unrecognized value '%s': for invocation argument lang=: Should be one of %s"):format(lang,
+			table.concat(valid_values, ", ")))
+	end
+	local langobj = require("Module:languages").getByCode(lang, true)
+
+	-- Create parameter specs
 	local params = {
-		[1] = {list = true},
+		[1] = {}, -- this replaces dialect group 'all'
+		["dialect"] = {},
 		["rhyme"] = {},
 		["hyph"] = {},
 		["hmp"] = {},
 		["audio"] = {},
 		["pagename"] = {},
 	}
+	for group, _ in pairs(export.all_dialect_groups_by_lang[lang]) do
+		if group ~= "all" then
+			params[group] = {}
+		end
+	end
+	for _, dialect in ipairs(export.all_dialects_by_lang[lang]) do
+		params[dialect] = {}
+	end
+
+	-- Parse arguments
 	local parargs = frame:getParent().args
 	local args = require("Module:parameters").process(parargs, params)
 	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
+
+	-- Set inputs
+	local inputs = {}
+	-- If 1= specified, do all dialects (not including Middle Polish).
+	if args[1] then
+		for _, dialect in ipairs(export.all_dialects_by_lang[lang]) do
+			if not dialect:find("^mpl") then
+				inputs[dialect] = args[1]
+			end
+		end
+	end
+	-- Then do remaining dialect groups other than 'all', overriding 1= if given.
+	for group, dialects in pairs(export.all_dialect_groups_by_lang[lang]) do
+		if group ~= "all" and args[group] then
+			for _, dialect in ipairs(dialects) do
+				inputs[dialect] = args[group]
+			end
+		end
+	end
+	-- Then do individual dialect settings.
+	for _, dialect in ipairs(export.all_dialects_by_lang[lang]) do
+		if args[dialect] then
+			inputs[dialect] = args[dialect]
+		end
+	end
+	-- If no inputs given, set all dialects based on current pagename.
+	if not next(inputs) then
+		for _, dialect in ipairs(export.all_dialects_by_lang[lang]) do
+			--if not dialect:find("^mpl") then
+				-- FIXME: Use + for consistency with Portuguese, Italian, Spanish, etc.
+				inputs[dialect] = "#"
+			--end
+		end
+	end
 
 	-- Parse the arguments.
 	local respellings = #args[1] > 0 and args[1] or {"+"}
