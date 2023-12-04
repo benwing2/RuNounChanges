@@ -25,7 +25,7 @@ end
 
 
 local function get_script(sc, param_for_error)
-	return sc and require("Module:scripts").getByCode(arg, param_for_error) or nil
+	return sc and require("Module:scripts").getByCode(sc, param_for_error) or nil
 end
 
 
