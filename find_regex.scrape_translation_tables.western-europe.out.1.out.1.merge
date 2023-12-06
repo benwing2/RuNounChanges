@@ -1,4 +1,4 @@
-Beginning at Mon Dec  4 02:09:24 2023
+Beginning at Wed Dec  6 04:00:37 2023
 Page 1 Kosovo: -------- begin text --------
 {{also|kosovo}}
 ==English==
@@ -6770,16 +6770,16 @@ Page 187 ܦܪܢܓܝܐ: -------- begin text --------
 [[File:Flag of France.svg|thumb|{{lang|aii|ܐܬܐ ܕܦܪܢܓܝܐ}}]]
 
 ===Etymology 1===
-{{bor+|aii|fa|فرنگ|tr=farang|t=Frank, French, European, crusader, Christian}}, an appellation given originally, by the Arabs, to the French; and afterwards to all Europeans except those of the Ottoman Empire. Ultimately from {{der|aii|fro|franc}}.
+{{bor+|aii|fa|فرنگ|tr=farang|t=Frank, French, European, crusader, Christian}}, an appellation given originally, by the Arabs, to the French; and afterwards to all Europeans except those of the Ottoman Empire. Ultimately from {{der|aii|fro|franc}} and {{bor|aii|la|Francia}}.
 
 ====Pronunciation====
-* {{a|Standard}} {{IPA|aii|[pran.ɡijːjɑː]}}
+* {{a|Standard}} {{IPA|aii|[ˈpraŋ.ɡəjɑː]}}
+* {{a|Urmian}} {{IPA|aii|[ˈpran.d͡ʒəjɑː]}}
 
 ====Proper noun====
-{{aii-proper noun|ܦܪܲܢܓܝܼܵܐ|f}}
+{{aii-proper noun|ܦܪܲܢܓܝܵܐ|f}}
 
 # {{place|aii|country|cont/Europe|t=France|official=French Republic}}
-#: {{syn|aii|ܦ̮ܪܲܢܣܵܐ|q1=colloquial}}
 #: {{ux|aii|ܡܕܝܼܢ݇ܬܵܐ ܐܵܪܸܫܟ݂ܵܝܬܵܐ ܕ'''ܦܪܲܢܓܝܼܵܐ''' ܝܠܵܗ̇ ܦܵܪܝܼܣ.|The capital city of '''France''' is Paris.}}
 # {{lb|aii|archaic}} [[Francia]]
 # {{lb|aii|dated}} [[Western world]], especially [[Europe]]
@@ -8919,10 +8919,10 @@ Page 250 फ्रान्स: -------- begin text --------
 -------- end text --------
 Page 251 Frankriika: -------- begin text --------
 ==Northern Sami==
+{{wikipedia|lang=se}}
 
 ===Pronunciation===
-{{rfp|se}}
-{{wikipedia|lang=se}}
+* {{se-IPA}}
 
 ===Proper noun===
 {{head|se|proper noun}}
@@ -13014,13 +13014,13 @@ From {{l|frr|tjüsch}} an {{l|frr|lönj}}. Cognates include Amrum dialect {{l|fr
 -------- end text --------
 Page 370 Duiska: -------- begin text --------
 ==Northern Sami==
+{{wikipedia|lang=se}}
 
 ===Etymology===
 From North Germanic, compare {{cog|sv|tysk|t=German}}.
 
 ===Pronunciation===
-{{rfp|se}}
-{{wikipedia|lang=se}}
+* {{se-IPA}}
 
 ===Proper noun===
 {{head|se|proper noun}}
@@ -17583,8 +17583,8 @@ Page 514 Holland: -------- begin text --------
 ==English==
 {{wikipedia}}
 
-===Etymology===
-From {{der|en|odt||[[holt#Old Dutch|holt]] [[lant#Old_Dutch|lant]]|wood land}}. A popular but false etymology holds that it is derived from {{m|en||hol land|hollow land}}, inspired by the [[lowland|low-lying]] [[geography]] of both the [[Netherlands|Dutch]] and the English region ([[Wikipedia:Holland, Lincolnshire|Holland, Lincolnshire]]); the latter's name is derived from {{der|en|ang||[[hoh]] [[land]]|spur land}}.
+===Etymology 1===
+From {{der|en|odt||[[holt#Old Dutch|holt]] [[lant#Old_Dutch|lant]]|wood land}}. A popular but false etymology holds that it is derived from {{m|en||hol land|hollow land}}, inspired by the [[lowland|low-lying]] [[geography]] of both the [[Netherlands|Dutch]] and the English region ([[Wikipedia:Holland, Lincolnshire|Holland, Lincolnshire]]).
 
 ===Pronunciation===
 * {{a|RP}} {{IPA|en|/ˈhɒlənd/}}
@@ -17598,7 +17598,7 @@ From {{der|en|odt||[[holt#Old Dutch|holt]] [[lant#Old_Dutch|lant]]|wood land}}. 
 
 # {{senseid|en|Q65}}A region of the [[Netherlands]] formed by two provinces: ''North Holland'' and ''South Holland''.
 # {{lb|en|metonymy|informal|proscribed|see usage notes}} The [[Netherlands]].
-# {{surname|en|English habitational|from=Middle English}} for someone from the Netherlands, or from any of the various places in England named Holland.
+# {{surname|en|English habitational|from=Middle English}} for someone from the Netherlands.
 # A historical region of [[Lincolnshire]] in England (also called ''Parts of Holland'').
 # {{place|en|city|co/Ottawa County,Allegan County|s/Michigan|c/USA}}.
 
@@ -17712,6 +17712,22 @@ From {{der|en|odt||[[holt#Old Dutch|holt]] [[lant#Old_Dutch|lant]]|wood land}}. 
 ====See also====
 * {{l|en|Dutch}}
 * {{l|en|Netherlands}}
+
+===Etymology 2===
+From {{der|en|ang||[[hoh]] [[land]]|spur land}}.
+
+===Pronunciation===
+* {{a|RP}} {{IPA|en|/ˈhɒlənd/}}
+* {{a|GA}} {{enPR|hŏlʹənd}}, {{IPA|en|/ˈhɑlənd/}}
+* {{audio|en|LL-Q1860 (eng)-Vealhurl-Holland.wav|Audio (Southern England)}}
+* {{rhymes|en|ɒlənd|s=2}}
+* {{hyph|en|Hol|land}}
+
+===Proper noun===
+{{en-proper noun}}
+
+# A historical region of [[Lincolnshire]] (also called ''Parts of Holland'').
+# {{surname|en|English habitational|from=Middle English}} for someone from any of the various places in England named Holland.
 
 [[Category:English terms suffixed with -land]]
 [[Category:en:Countries in Europe]]
@@ -24716,5 +24732,5 @@ Page 733 Switserlân: -------- begin text --------
 
 # {{topics|fy|Countries}} [[Switzerland]]
 -------- end text --------
-Elapsed time: 1 mins 5.40 secs
-Ending at Mon Dec  4 02:10:29 2023
+Elapsed time: 1 mins 15.47 secs
+Ending at Wed Dec  6 04:01:53 2023
