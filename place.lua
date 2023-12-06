@@ -1,10 +1,10 @@
 local export = {}
 
-local m_links = require("Module:links")
-local m_langs = require("Module:languages")
-local m_strutils = require("Module:string utilities")
-local m_debug_track = require("Module:debug/track")
 local data = require("Module:place/data")
+local m_links = require("Module:links")
+local m_strutils = require("Module:string utilities")
+local debug_track_module = "Module:debug/track"
+local languages_module = "Module:languages"
 local table_module = "Module:table"
 local put_module = "Module:parse utilities"
 
@@ -192,7 +192,8 @@ local function link(text, langcode, id)
 		return text
 	end
 
-	return m_links.full_link({term = text, lang = m_langs.getByCode(langcode, true, "allow etym"), id = id}, nil, true)
+	return m_links.full_link({term = text, lang = require(languages_module).getByCode(langcode, true, "allow etym"),
+		id = id}, nil, true)
 end
 
 
@@ -211,7 +212,7 @@ end
 -- Add the page to a tracking "category". To see the pages in the "category",
 -- go to [[Template:tracking/place/PAGE]] and click on "What links here".
 local function track(page)
-	m_debug_track("place/" .. page)
+	require(debug_track_module)("place/" .. page)
 	return true
 end
 
@@ -279,6 +280,16 @@ end
 
 
 ---------- Argument parsing functions and utilities
+
+
+-- Split an argument on comma, but not comma followed by whitespace.
+local function split_on_comma(val)
+	if val:find(",%s") then
+		return require(put_module).split_on_comma(val)
+	else
+		return rsplit(val, ",")
+	end
+end
 
 
 -- Split an argument on slash, but not slash occurring inside of HTML tags like </span> or <br />.
@@ -404,13 +415,16 @@ local function split_holonym(raw)
 	local no_display, combined_holonym = raw:match("^(!)(.*)$")
 	no_display = not not no_display
 	combined_holonym = combined_holonym or raw
+	local suppress_comma, combined_holonym_without_comma = combined_holonym:match("^(%*)(.*)$")
+	suppress_comma = not not suppress_comma
+	combined_holonym = combined_holonym_without_comma or combined_holonym
 	local holonym_parts = split_on_slash(combined_holonym)
 	if #holonym_parts == 1 then
 		-- FIXME, remove this when we've verified there are no cases.
 		if rfind(combined_holonym, "^([^%[%]]-):([^ ].*)$") then
 			error("Language code in raw-text {{place}} argument no longer supported: " .. raw)
 		end
-		return {{placename = combined_holonym, no_display = no_display}}
+		return {{placename = combined_holonym, no_display = no_display, suppress_comma = suppress_comma}}
 	end
 
 	-- Rejoin further slashes in case of slash in holonym placename, e.g. Admaston/Bromley.
@@ -452,6 +466,7 @@ local function split_holonym(raw)
 			pluralize_affix = i == affix_holonym_index and pluralize_affix,
 			suppress_affix = i ~= affix_holonym_index,
 			no_display = no_display,
+			suppress_comma = suppress_comma,
 		}
 	end
 
@@ -699,7 +714,19 @@ local function get_translations(transl, ids)
 	local ret = {}
 
 	for i, t in ipairs(transl) do
-		table.insert(ret, link(t, "en", ids[i]))
+		local arg_transls = split_on_comma(t)
+		local arg_ids = ids[i]
+		if arg_ids then
+			arg_ids = split_on_comma(arg_ids)
+			if #arg_transls ~= #arg_ids then
+				error(("Saw %s translation%s in t%s=%s but %s ID%s in tid%s=%s"):format(
+					#arg_transls, #arg_transls > 1 and "s" or "", i == 1 and "" or i, t, #arg_ids,
+					#arg_ids > 1 and "'s" or "", i == 1 and "" or i, ids[i]))
+			end
+		end
+		for j, arg_transl in ipairs(arg_transls) do
+			table.insert(ret, link(arg_transl, "en", arg_ids and arg_ids[j] or nil))
+		end
 	end
 
 	return table.concat(ret, ", ")
@@ -863,7 +890,8 @@ local function get_contextual_holonym_description(entry_placetype, prev_holonym,
 				desc = desc .. " "
 			end
 		else
-			if prev_holonym.placetype and holonym.placename ~= "and" and holonym.placename ~= "in" then
+			if prev_holonym.placetype and holonym.placename ~= "and" and holonym.placename ~= "in" and
+				not holonym.suppress_comma then
 				desc = desc .. ","
 			end
 	
@@ -941,11 +969,33 @@ local function get_qualifier_description(qualifier)
 end
 	
 
--- Return a string with extra information that is sometimes added to a
--- definition. This consists of the tag, a whitespace and the value (wikilinked
--- if it language contains a language code; if ucfirst == true, ". " is added
--- before the string and the first character is made upper case.
-local function get_extra_info(tag, values, ucfirst, auto_plural, with_colon)
+local term_param_mods = {
+	tr = {},
+	ts = {},
+	g = {
+		-- We need to store the <g:...> inline modifier into the "genders" key of the parsed part, because that is what
+		-- [[Module:links]] expects.
+		item_dest = "genders",
+		convert = function(arg, parse_err)
+			return rsplit(arg, ",")
+		end,
+	},
+	id = {},
+	alt = {},
+	q = {},
+	qq = {},
+	sc = {
+		convert = function(arg, parse_err)
+			return arg and require("Module:scripts").getByCode(arg, parse_err) or nil
+		end,
+	}
+}
+
+-- Return a string with extra information that is sometimes added to a definition. This consists of the tag, a
+-- whitespace and the value (wikilinked if it language contains a language code; if ucfirst == true, ". " is added
+-- before the string and the first character is made upper case).
+local function get_extra_info(args, paramname, tag, ucfirst, auto_plural, with_colon)
+	local values = args[paramname]
 	if not values then
 		return ""
 	end
@@ -966,16 +1016,49 @@ local function get_extra_info(tag, values, ucfirst, auto_plural, with_colon)
 
 	local linked_values = {}
 
-	for _, value in ipairs(values) do
-		-- Check for langcode before the holonym placename, but don't get tripped up by
-		-- Wikipedia links, which begin "[[w:...]]" or "[[wikipedia:]]".
-		local langcode, holonym_placename = rmatch(value, "^([^%[%]]-):(.*)$")
-		if langcode then
-			value = link(holonym_placename, langcode)
-		else
-			value = link(value, "en")
+	for _, val in ipairs(values) do
+		local function generate_obj(term, parse_err)
+			local obj = {}
+			if term:find(":") then
+				local actual_term, termlang = require(put_module).parse_term_with_lang(term, parse_err)
+				obj.term = actual_term
+				obj.lang = termlang
+			else
+				obj.term = term
+			end
+			obj.lang = obj.lang or require(languages_module).getByCode("en")
+			return obj
 		end
-		table.insert(linked_values, value)
+
+		local terms
+		-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>, <br/> or
+		-- similar in it, caused by wrapping an argument in {{l|...}}, {{af|...}} or similar. Basically, all tags of
+		-- the sort we parse here should consist of a less-than sign, plus letters, plus a colon, e.g. <tr:...>, so if
+		-- we see a tag on the outer level that isn't in this format, we don't try to parse it. The restriction to the
+		-- outer level is to allow generated HTML inside of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
+		if val:find("<") and not val:find("^[^<]*<[a-z]*[^a-z:]") then
+			terms = require(put_module).parse_inline_modifiers(val, {
+				paramname = paramname,
+				param_mods = term_param_mods,
+				generate_obj = generate_obj,
+				splitchar = ",",
+			})
+		else
+			if val:find(",<") then
+				-- this happens when there's an embedded {{,}} template; easiest not to try and parse the extra info
+				-- spec as multiple terms
+				terms = {val}
+			else
+				terms = split_on_comma(val)
+			end
+			for i, split in ipairs(terms) do
+				terms[i] = generate_obj(split)
+			end
+		end
+
+		for _, term in ipairs(terms) do
+			table.insert(linked_values, m_links.full_link(term, nil, true, "show qualifiers"))
+		end
 	end
 
 	local s = ""
@@ -1154,11 +1237,11 @@ local function get_gloss(args, descs, ucfirst, drop_extra_info)
 	local ret = {table.concat(glosses)}
 
 	if not drop_extra_info then
-		table.insert(ret, get_extra_info("modern", args["modern"], false, false, false))
-		table.insert(ret, get_extra_info("official name", args["official"], ucfirst, "auto plural", "with colon"))
-		table.insert(ret, get_extra_info("capital", args["capital"], ucfirst, "auto plural", "with colon"))
-		table.insert(ret, get_extra_info("largest city", args["largest city"], ucfirst, "auto plural", "with colon"))
-		table.insert(ret, get_extra_info("capital and largest city", args["caplc"], ucfirst, false, "with colon"))
+		table.insert(ret, get_extra_info(args, "modern", "modern", false, false, false))
+		table.insert(ret, get_extra_info(args, "official", "official name", ucfirst, "auto plural", "with colon"))
+		table.insert(ret, get_extra_info(args, "capital", "capital", ucfirst, "auto plural", "with colon"))
+		table.insert(ret, get_extra_info(args, "largest city", "largest city", ucfirst, "auto plural", "with colon"))
+		table.insert(ret, get_extra_info(args, "caplc", "capital and largest city", ucfirst, false, "with colon"))
 		local placetype = descs[1].placetypes[1]
 		if placetype == "county" or placetype == "counties" then
 			placetype = "county seat"
@@ -1169,8 +1252,8 @@ local function get_gloss(args, descs, ucfirst, drop_extra_info)
 		else
 			placetype = "seat"
 		end
-		table.insert(ret, get_extra_info(placetype, args["seat"], ucfirst, "auto plural", "with colon"))
-		table.insert(ret, get_extra_info("shire town", args["shire town"], ucfirst, "auto plural", "with colon"))
+		table.insert(ret, get_extra_info(args, "seat", placetype, ucfirst, "auto plural", "with colon"))
+		table.insert(ret, get_extra_info(args, "shire town", "shire town", ucfirst, "auto plural", "with colon"))
 	end
 
 	return table.concat(ret)
@@ -1548,6 +1631,12 @@ function export.format(template_args, drop_extra_info)
 		["also"] = {},
 		["def"] = {},
 
+		-- params that are only used when transcluding using {{tcl}}/{{transclude}}
+		["tcl_t"] = {list = true},
+		["tcl_tid"] = {list = true},
+		["tcl_nolb"] = {},
+
+		-- "extra info" that can be included
 		["modern"] = {list = true},
 		["official"] = {list = true},
 		["capital"] = {list = true},
