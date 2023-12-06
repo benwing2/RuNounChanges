@@ -1,4 +1,4 @@
-Beginning at Sat Dec  2 22:57:00 2023
+Beginning at Wed Dec  6 04:01:03 2023
 Page 1 Belarus: -------- begin text --------
 {{also|belarús|Bélarus|Belarús|Bêlarus|Belarus'}}
 ==English==
@@ -7099,7 +7099,7 @@ From {{inh|en|enm|Hungary}}, {{m|enm|Hungrye}}, {{m|enm|Hungry}}, from {{inh|en|
 * Portuguese: {{t+|pt|Hungria|f}}
 * Romanian: {{t+|ro|Ungaria|f}}
 * Russian: {{t+|ru|Ве́нгрия|f}}
-* Rusyn: {{t|rue|Мадярьско|n}}
+* Rusyn: {{t|rue|Мадярьско|n}}, {{t|rue|Мадя́рщина|f}}, {{t|rue|Уго́рщина|f}}, {{t|rue|Гунґáрія|f}}
 * Scottish Gaelic: {{t|gd|[[Ungair|an Ungair]]}}
 * Serbo-Croatian:
 *: Cyrillic: {{t|sh|Ма̏ђарска|f}}, {{t|sh|Ма̏џарска|f}}
@@ -9894,10 +9894,29 @@ From {{der|la|sla-pro|*poľane}}, plural of {{m|sla-pro|*poľaninъ||field dwell
 * {{l|la|polonicus}}
 
 ====Descendants====
+* {{desc|rup|Pulunia}}
+* {{desc|ast|Polonia}}
+* {{desc|ca|Polònia}}
+* {{desc|frp|Pologne}}
+* {{desc|fr|Pologne}}
+* {{desc|fur|Polonie}}
+* {{desc|gl|Polonia}}
+* {{desc|it|Polonia}}
+* {{desc|lij|Polònia}}
+* {{desc|nrf|Polongne}}
+* {{desc|oc|Polonha}}
+* {{desc|pt|Polônia|Polónia}}
+* {{desc|ro|Polonia}}
+* {{desc|rm|Pologna}}
+* {{desc|sc|Polonia}}
+* {{desc|es|Polonia}}
+* {{desc|vec|Połonia}}
+* {{desc|wa|Pologne}}
 * {{desc|zh|波羅泥亞|tr=Bōluóníyà|bor=1}}
 ** {{desc|mnc|ᠪᠣᠯᠣᠨᡳᠶᠠ|bor=1}}
 * {{desc|en|Polono-|der=1}}
 * {{desc|ka|პოლონეთი|der=1}}
+* {{desc|pl|Polonia|bor=1}}
 
 ==Polish==
 {{wp|lang=pl}}
@@ -22178,9 +22197,6 @@ Page 709 Ukraine: -------- begin text --------
 ====Derived terms====
 * {{l|en|Ukrainian}}
 
-====Descendants====
-* {{desc|uk|Юкре́йн|bor=1}}
-
 ====Translations====
 {{trans-top|id=Q212|country in Eastern Europe}}
 * Abkhaz: {{t|ab|Украина}}
@@ -22280,7 +22296,8 @@ Page 709 Ukraine: -------- begin text --------
 * Ossetian: {{t|os|Украинӕ}}
 * Ottoman Turkish: {{t|ota|اوقرانیا|tr=Ukrania}}, {{t|ota|اور طشره‌سی‎|tr=Or Taşrası}}
 * Pashto: {{t|ps|اوکراين|m|tr=okrāyn}}, {{t|ps|يوکراين|m|tr=yokrāyn}}
-* Persian: {{t|fa|اوکْرایْن|tr=okrâyn}}
+* Persian:
+*: Iranian Persian: {{t|fa-ira|اوکْرایْن|tr=okrâyn}}
 * Polish: {{t+|pl|Ukraina|f}}
 * Portuguese: {{t+|pt|Ucrânia|f}}
 * Punjabi: {{t|pa|ਯੂਕ੍ਰੇਨ}}
@@ -24145,5 +24162,5 @@ Borrowed from {{bor|yi|uk|Україна}}, from {{der|yi|orv|оукраина|t
 {{der3|yi|{{l|yi|אוקראַיִנער||Ukrainian}} {{qualifier|noun}}
 |{{l|yi|אוקראַיִניש||Ukrainian}} {{qualifier|adjective}}}}
 -------- end text --------
-Elapsed time: 1 mins 56.76 secs
-Ending at Sat Dec  2 22:58:56 2023
+Elapsed time: 1 mins 23.52 secs
+Ending at Wed Dec  6 04:02:27 2023
