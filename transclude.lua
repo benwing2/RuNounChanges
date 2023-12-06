@@ -4,6 +4,7 @@ local rsplit = mw.text.split
 local u = mw.ustring.char
 
 local m_templateparser = require("Module:templateparser")
+local pattern_utilities_module = "Module:pattern utilities"
 
 -- From [[Template:gloss]]
 local gloss_left = "<span class=\"gloss-brac\">(</span><span class=\"gloss-content\">"
@@ -71,8 +72,9 @@ local function remove_templates_if(haystack, predicate)
 	end
 end
 
-local function copy_unnamed_args_except_code(to, from, deny_list)
-	for _, value in discard(1, ipairs(from)) do
+local function copy_unnamed_args_maybe_except_code(to, from, deny_list, first_argument)
+	first_argument = first_argument or 2
+	for _, value in discard(first_argument - 1, ipairs(from)) do
 		if not deny_list or not require("Module:table").contains(deny_list, value) then
 			table.insert(to, value)
 		end
@@ -88,74 +90,87 @@ local function handle_definition_template(name, args, transclude_args)
 				if data.formatted_to and data.formatted_to ~= "" then
 					error("{{place}} cannot be used in conjunction with 'to'.")
 				end
+				local place_args = {}
 				local langcode = data.lang:getCode()
-				args[1] = langcode
+				local include_place_extra_info = transclude_args.include_place_extra_info
+				local drop_extra = include_place_extra_info == false or include_place_extra_info == nil and langcode ~= "en"
+				local saw_tcl_t
+				-- Copy the arguments but drop translations and maybe the "extra info"
+				for key, val in pairs(args) do
+					local base, num = tostring(key):match("^(.-)([0-9]*)$")
+					if base == "tcl_t" or base == "tcl_tid" then
+						saw_tcl_t = true -- otherwise ignore
+					elseif base == "tcl_nolb" then
+						data.nolb = val -- otherwise ignore
+					elseif base == "t" or base == "tid" or drop_extra and place_extra_info[base] ~= nil then
+						-- ignore it
+					else
+						place_args[key] = val
+					end
+				end
+
+				local function sub_plus(t)
+					if t:find("+") then
+						t = t:gsub("+", require(pattern_utilities_module).replacement_escape(data.source))
+					end
+					return t
+				end
+					
+				place_args[1] = langcode
 				if #transclude_args.t > 0 then
 					local argno = 1
 					for _, t in ipairs(transclude_args.t) do
 						if t ~= "-" then
-							args["t" .. (argno == 1 and "" or argno)] = t
+							place_args["t" .. (argno == 1 and "" or argno)] = sub_plus(t)
 							argno = argno + 1
 						end
 					end
-				elseif langcode ~= "en" then
-					args["t"] = data.source
-					args["tid"] = data.id
-				end
-				args["sort"] = data.sort
-				if data.no_gloss then
-					args["def"] = "-"
-				else
-					local gloss = data.gloss
-					local include_extra = transclude_args.include_place_extra_info
-					if include_extra == false or include_extra == nil and langcode ~= "en" then
-						-- Optimize to only copy when an arg needs to be dropped (not most of the time), by first
-						-- checking whether any arg needs to be dropped.
-						local saw_arg_needing_dropped = false
-						for k, v in pairs(args) do
-							if type(k) == "string" and place_extra_info[(k:gsub("[0-9]+$", ""))] ~= nil then
-								saw_arg_needing_dropped = true
-								break
-							end
-						end
-						if saw_arg_needing_dropped then
-							local args_with_dropping = {}
-							for k, v in pairs(args) do
-								if type(k) ~= "string" or place_extra_info[(k:gsub("[0-9]+$", ""))] == nil then
-									args_with_dropping[k] = v
-								end
-							end
-							args = args_with_dropping
+				elseif saw_tcl_t then
+					for key, val in pairs(args) do
+						local base, num = tostring(key):match("^(.-)([0-9]*)$")
+						if base == "tcl_t" then
+							place_args["t" .. num] = sub_plus(val)
+						elseif base == "tcl_tid" then
+							place_args["tid" .. num] = val
 						end
 					end
+				elseif langcode ~= "en" then
+					place_args["t"] = data.source
+					place_args["tid"] = data.id
+				end
+				place_args["sort"] = data.sort
+				if data.no_gloss then
+					place_args["def"] = "-"
+				else
+					local gloss = data.gloss
 
 					for extra_info_arg, is_list in pairs(place_extra_info) do
 						if is_list then
 							for i, v in ipairs(transclude_args["place_" .. extra_info_arg]) do
-								args[extra_info_arg .. (i == 1 and "" or i)] = v
+								place_args[extra_info_arg .. (i == 1 and "" or i)] = v
 							end
-						else
-							args[extra_info_arg] = transclude_args[extra_info_arg]
+						elseif transclude_args[extra_info_arg] then
+							place_args[extra_info_arg] = transclude_args[extra_info_arg]
 						end
 					end
 					
 					if gloss ~= "" then
 						local first_free = 2
-						while args[first_free] ~= nil do first_free = first_free + 1 end
-						if args[first_free - 1]:find("<<") then
+						while place_args[first_free] ~= nil do first_free = first_free + 1 end
+						if place_args[first_free - 1]:find("<<") then
 							-- new-style argument; concatenate to end of argument
 							if not gloss:find("^[,;.]") then
 								gloss = " " .. gloss
 							end
-							args[first_free - 1] = args[first_free - 1] .. gloss
+							place_args[first_free - 1] = args[first_free - 1] .. gloss
 						else
 							-- old-style argument; add as separate argument
 							gloss = gloss:gsub("^[,;] *", "")
-							args[first_free] = gloss
+							place_args[first_free] = gloss
 						end
 					end
 				end
-				return require("Module:place").format(args)
+				return require("Module:place").format(place_args)
 			end,
 		}
 	elseif name == "abbreviation of" or name == "abbr of" or name == "abbrev of"
@@ -222,16 +237,8 @@ function export.show(frame)
 	local copy_sortkey = (sort == nil) and (mw.title.getCurrentTitle() == source)
 	local no_gloss = args["nogloss"]
 	local labels = args["lb"] and rsplit(args["lb"], ";") or {}
-	local nolb = args["nolb"]
-	local labels_to_ignore = nil
-	local ignore_all_labels = false
-	if nolb then
-		if nolb == "+" or nolb == "1" or nolb == "*" then
-			ignore_all_labels = true
-		else
-			labels_to_ignore = rsplit(nolb, ";")
-		end
-	end
+	local nolb
+	local found_labels = {}
 	local to = args["to"]
 
 	local content = mw.title.new(source):getContent()
@@ -363,22 +370,20 @@ function export.show(frame)
 				must_be_first = definition_template_handler.must_be_first
 				generator = definition_template_handler.generate
 			elseif name == "categorize" or name == "cat" then
-				copy_unnamed_args_except_code(cats, tempargs)
+				copy_unnamed_args_maybe_except_code(cats, tempargs)
 				supports_sortkey = true
 			elseif name == "catlangname" or name == "cln" then
-				copy_unnamed_args_except_code(cats, tempargs)
+				copy_unnamed_args_maybe_except_code(cats, tempargs)
 				supports_sortkey = true
 			elseif name == "catlangcode" or name == "topics" or name == "top" or name == "C" or name == "c" then
-				copy_unnamed_args_except_code(cats_top, tempargs)
+				copy_unnamed_args_maybe_except_code(cats_top, tempargs)
 				supports_sortkey = true
 			elseif name == "label" or name == "lbl" or name == "lb" then
 				if encountered_label then
 					error("Encountered multiple {{[[Template:label|label]]}} templates in the definition line.")
 				end
 				encountered_label = true
-				if not ignore_all_labels then
-					copy_unnamed_args_except_code(labels, tempargs, labels_to_ignore)
-				end
+				copy_unnamed_args_maybe_except_code(found_labels, tempargs)
 				supports_sortkey = true
 				must_be_first = true
 			elseif name == "defdate" or name == "defdt" or name == "ref" or name == "refn" or name == "senseid" or name == "sid" then
@@ -437,24 +442,42 @@ function export.show(frame)
 		end
 
 		local formatted_senseid = require("Module:senseid").senseid(language, id, "span")
+
 		local formatted_categories =
 			((next(cats    ) == nil) and "" or frame:expandTemplate({ title = "cat", args = { language_code, unpack(cats    ) } })) ..
 			((next(cats_cln) == nil) and "" or frame:expandTemplate({ title = "cln", args = { language_code, unpack(cats_cln) } })) ..
 			((next(cats_top) == nil) and "" or frame:expandTemplate({ title = "top", args = { language_code, unpack(cats_top) } }))
-		local formatted_labels = (next(labels) == nil) and "" or (require("Module:labels").show_labels { labels = labels, lang = language, sort = sort} .. " ")
 
 		local formatted_to = to and "to " or ""
 		local formatted_definition
 		if generator ~= nil then
-			formatted_definition = generator {
+			local data = {
 				frame = frame, lang = language, source = source, source_lang = source_lang, id = id,
 				sort = sort, no_gloss = no_gloss, gloss = gloss, formatted_to = formatted_to,
 			}
+			formatted_definition = generator(data)
+			nolb = data.nolb or nolb
 		else
 			local formatted_link = require("Module:links").full_link { term = source, lang = source_lang, id = id }
 			local formatted_gloss = no_gloss and "" or (" " .. gloss_left .. gloss .. gloss_right)
 			formatted_definition = formatted_to .. formatted_link .. formatted_gloss
 		end
+
+		nolb = args["nolb"] or nolb
+		local labels_to_ignore = nil
+		local ignore_all_labels = false
+		if nolb then
+			if nolb == "+" or nolb == "1" or nolb == "*" then
+				ignore_all_labels = true
+			else
+				labels_to_ignore = rsplit(nolb, ";")
+			end
+		end
+		if not ignore_all_labels then
+			copy_unnamed_args_maybe_except_code(labels, found_labels, labels_to_ignore, 1)
+		end
+		local formatted_labels = (next(labels) == nil) and "" or (require("Module:labels").show_labels { labels = labels, lang = language, sort = sort} .. " ")
+
 		table.insert(retlines, formatted_senseid .. formatted_categories .. formatted_labels .. formatted_definition)
 	end
 
