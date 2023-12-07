@@ -2614,6 +2614,15 @@ def split_text_into_sections(pagetext, pagemsg):
         sections_by_lang[seclang] = j
   return sections, sections_by_lang, section_langs
 
+# Split `secbody` (the body of a language section, as returned by find_modifiable_lang_section()) into subsections.
+# Return a tuple of three values:
+#   `subsections`, `subsections_by_header`, `subsection_levels`
+# `subsections` is a list of the text of the sections, where odd-numbered elements contain headers and even-numbered
+# elements contain text between headers. `subsections_by_header` is a dictionary from header name to a list of the
+# indices of the sections with that header (indices are to the section text, not the header text). `subsection_levels`
+# is a dictionary from section index (only for even-numbered sections starting with 2) to the header level of that
+# section (as determined by the number of equal signs of the section header). The original language section body can
+# be reconstructed by concatenating the values of `subsections` with a blank string between them.
 def split_text_into_subsections(secbody, pagemsg):
   subsections = re.split(r"(^==+[^=\n]+==+[ \t]*\n)", secbody, 0, re.M)
   subsections_by_header = defaultdict(list)
@@ -2624,6 +2633,8 @@ def split_text_into_subsections(secbody, pagemsg):
       pagemsg("WARNING: Internal error: Can't match subsection header: %s" % (subsections[j - 1].rstrip("\n")))
     else:
       left_equals, header, right_equals = m.groups()
+      left_equals = len(left_equals)
+      right_equals = len(right_equals)
       if left_equals != right_equals:
         pagemsg("WARNING: Found %s equalsigns on the left but %s equal signs on the right, assuming smaller one: %s"
           % (left_equals, right_equals, subsections[j - 1].rstrip("\n")))
@@ -2675,7 +2686,8 @@ def find_modifiable_lang_section(text, lang, pagemsg, force_final_nls=False):
     sections = [text]
     j = 0
   elif lang not in sections_by_lang:
-    pagemsg("WARNING: Can't find %s section, skipping" % lang)
+    if pagemsg:
+      pagemsg("WARNING: Can't find %s section, skipping" % lang)
     return None
   else:
     j = sections_by_lang[lang]
@@ -2692,7 +2704,8 @@ def find_lang_section(pagetext, lang, pagemsg):
   splitsections, sections_by_lang, _ = split_text_into_sections(pagetext, pagemsg)
 
   if lang not in sections_by_lang:
-    pagemsg("WARNING: Can't find %s section, skipping" % lang)
+    if pagemsg:
+      pagemsg("WARNING: Can't find %s section, skipping" % lang)
     return None
   return splitsections[sections_by_lang[lang]]
 
