@@ -43,14 +43,11 @@ def process_text_on_inflection_page(index, pagetitle, pagetext, norm, pos, lemma
   lang = norm_to_lang[norm]
   langname = lang_to_name[lang]
 
-  if pos in ["verb", "gerund"]:
-    headword_pos = "verb form" if pos == "verb" else "gerund"
+  if pos == "verb":
+    headword_pos = "verb form"
     header_pos = "Verb"
     expected_header_poses = ["Verb"]
-    if pos == "verb":
-      expected_headword_templates = [("head", lang, "verb form")]
-    else:
-      expected_headword_templates = [("head", lang, "gerund"), ("head", lang, "verb form")]
+    expected_headword_templates = [("head", lang, "verb form")]
     new_headword_template = "{{head|%s|%s}}" % (lang, headword_pos)
     new_defn_template_name = "%s-verb form of" % norm
     new_defn_template = "{{%s|%s}}" % (new_defn_template_name, infl)
@@ -58,6 +55,18 @@ def process_text_on_inflection_page(index, pagetitle, pagetext, norm, pos, lemma
       expected_defn_templates = ["gl-verb form of", "gl-reinteg-verb form of"]
     else:
       expected_defn_templates = ["%s-verb form of" % norm]
+  elif pos == "gerund":
+    headword_pos = "gerund"
+    header_pos = "Verb"
+    expected_header_poses = ["Verb"]
+    expected_headword_templates = [("head", lang, "gerund"), ("head", lang, "verb form")]
+    new_headword_template = "{{head|%s|%s}}" % (lang, headword_pos)
+    new_defn_template_name = "%s-verb form of" % norm
+    new_defn_template = "{{%s|%s}}" % (new_defn_template_name, infl)
+    if norm in ["gl", "gl-reinteg"]:
+      expected_defn_templates = ["gl-verb form of", "gl-reinteg-verb form of", ("gerund of", lang)]
+    else:
+      expected_defn_templates = ["%s-verb form of" % norm, ("gerund of", lang)]
   elif pos == "participle":
     headword_pos = "participle"
     header_pos = "Participle"
@@ -74,7 +83,7 @@ def process_text_on_inflection_page(index, pagetitle, pagetext, norm, pos, lemma
   notes = []
 
   def pagemsg(txt, fn=msg):
-    fn("Page %s %s: %s %s %s of [[%s]]: %s" % (index, pagetitle, normname, headword_pos, slot, lemma, txt))
+    fn("Page %s %s: %s %s %s of %s: %s" % (index, pagetitle, normname, headword_pos, slot, infl, txt))
 
   def match_template(t, specs):
     tn = tname(t)
@@ -99,11 +108,15 @@ def process_text_on_inflection_page(index, pagetitle, pagetext, norm, pos, lemma
 """ % (new_headword_template, new_defn_template)
   newpos = "===%s===\n" % header_pos + newposbody
   newposl4 = "====%s====\n" % header_pos + newposbody
-  entrytext = "\n" + newpos
-  entrytextl4 = "\n" + newposl4
-  newsection = "==%s==\n" % langname + entrytext
+  newsection = "==%s==\n\n" % langname + newpos
   infl_part = "with infl '%s'" % infl
-  note_part = "with %s %s entry of %s" % (normname, headword_pos, infl)
+  infl_inf, infl_conj = parse_inf_and_conj(infl)
+  if infl_inf is None:
+    pagemsg("WARNING: Can't parse out infinitive from conjugation '%s'" % infl)
+    marked_up_infl = infl
+  else:
+    marked_up_infl = "[[%s]]%s" % (infl_inf, infl_conj)
+  note_part = "with %s %s entry of %s" % (normname, headword_pos, marked_up_infl)
 
   if not pagetext:
     pagemsg("Creating new page %s" % infl_part)
@@ -128,7 +141,10 @@ def process_text_on_inflection_page(index, pagetitle, pagetext, norm, pos, lemma
     return "".join(sections), notes
 
   sections, j, secbody, sectail, has_non_lang = retval
-  subsections, subsections_by_header, subsection_levels = blib.split_text_into_subsections(secbody, pagemsg)
+  subsections, subsections_by_header, subsection_levels = blib.split_text_into_subsections(
+      secbody, pagemsg)
+
+  # Look for possible matching headword/definition templates.
   matching_defn_templates = []
   for compare_against in expected_header_poses:
     if compare_against in subsections_by_header:
@@ -139,85 +155,113 @@ def process_text_on_inflection_page(index, pagetitle, pagetext, norm, pos, lemma
         for t in parsed.filter_templates():
           if match_template(t, expected_headword_templates):
             if matching_headword_template:
-              pagemsg("WARNING: Saw two %s headword templates in same section index %s: %s and %s" % (
-                normname, subsecind, str(matching_headword_template), str(t)))
+              pagemsg("WARNING: Saw two headword templates in same section index %s: %s and %s" % (
+                subsecind, str(matching_headword_template), str(t)))
               return
             matching_headword_template = t
           if match_template(t, expected_defn_templates):
             if matching_headword_template is None:
-              pagemsg("WARNING: Something strange, in %s section index %s, saw matching definition template %s but no matching headword template" % (
-                normname, subsecind, str(t)))
+              pagemsg("WARNING: Something strange, in section index %s, saw matching definition template %s but no matching headword template" % (
+                subsecind, str(t)))
               return
             matching_defn_templates.append((t, matching_headword_template, subsecind))
   if matching_defn_templates:
+    # First see if the existing definition is already present exactly.
     for matching_defn_template, matching_headword_template, subsecind in matching_defn_templates:
       if str(matching_defn_template) == new_defn_template:
-        pagemsg("Already saw %s definition template %s" % (normname, new_defn_template))
+        pagemsg("Already saw definition template %s" % new_defn_template)
         return
-      else:
-        add_after = False
-        tn = tname(matching_defn_template)
-        if tn == "past participle of":
-          matching_lemma = getparam(matching_defn_template, "2")
-          rawconj = ""
-        else:
-          arg1 = getparam(matching_defn_template, "1")
-          matching_lemma, rawconj = parse_inf_and_conj(arg1)
-          if matching_lemma is None:
-            pagemsg("WARNING: Can't parse out %s infinitive from conjugation '%s'" % (normname, arg1))
-            return
-        both_template_names = {tn, new_defn_template_name}
-        if len(both_template_names) == 2 and "past participle of" in both_template_names:
-          if matching_lemma == lemma:
-            # This must mean we saw {{*-verb form of}} instead of {{past participle of}}
-            pagemsg("WARNING: For %s past participle, saw %s instead of {{past participle of}}" % (
-              normname, str(matching_defn_template)))
-            return
-          else:
-            # note but allow
-            pagemsg("For %s, saw %s instead of %s" % (
-              normname, str(matching_defn_template), new_defn_template))
-        elif both_template_names == {"gl-verb form of", "gl-reinteg-verb form of"}:
-          add_after = True
-          # note but allow
-          pagemsg("For %s, saw %s instead of %s" % (
-            normname, str(matching_defn_template), new_defn_template))
-        elif len(both_template_names) == 1:
-          if matching_lemma == lemma:
-            pagemsg("WARNING: Saw different %s conjugation '%s' of same lemma, can't handle" % (
-              normname, arg1))
-            return
-          else:
-            add_after = True
-            pagemsg("For %s, saw %s instead of %s" % (
-              normname, str(matching_defn_template), new_defn_template))
-        else:
-          # check more templates
-          pagemsg("For %s, saw %s instead of %s" % (
-            normname, str(matching_defn_template), new_defn_template))
+    add_after = None
 
-        if add_after:
-          # Add another definition line. If there's already a defn line present, insert after any such defn lines.
-          # Else, insert at beginning.
-          if norm in ["gl", "gl-reinteg"] and pos in ["verb", "gerund"]:
-            new_defn_template_beg = r"\{\{gl(?:-reinteg)?-verb form of\|"
-          else:
-            new_defn_template_beg = re.escape(re.sub(r"^(.*?\|).*", r"\1", new_defn_template))
-          if re.search(r"^# %s" % new_defn_template_beg, subsections[subsecind], re.M):
-            newsubsec = re.sub(r"(^(# %s.*\n)+)" % new_defn_template_beg,
-                r"\1# %s\n" % new_defn_template, subsections[subsecind], 1, re.M)
-          else:
-            newsubsec = re.sub(r"^#", "# %s\n#" % new_defn_template, subsections[subsecind], 1, re.M)
-          if newsubsec == subsections[subsecind]:
-            pagemsg("WARNING: Couldn't insert new %s definition line %s in existing subsection %s" % (
-              normname, new_defn_template, subsecind))
-            return
-          subsections[subsecind] = newsubsec
-          secbody = "".join(subsections)
-          sections[j] = secbody.rstrip("\n") + sectail
-          pagemsg("Inserting new definition into existing subsection %s" % infl_part)
-          notes.append("insert new definition into existing subsection %s" % note_part)
-          return "".join(sections), notes
+    # Then see if we can find a place to add the definition, making sure we don't already have a
+    # definition for the same form in a different fashion.
+    for matching_defn_template, matching_headword_template, subsecind in matching_defn_templates:
+      def saw_instead_of():
+        pagemsg("Saw %s instead of %s" % (str(matching_defn_template), new_defn_template))
+      tn = tname(matching_defn_template)
+      if tn in ["past participle of", "gerund of"]:
+        matching_lemma = getparam(matching_defn_template, "2")
+        rawconj = ""
+      else:
+        arg1 = getparam(matching_defn_template, "1")
+        matching_lemma, rawconj = parse_inf_and_conj(arg1)
+        if matching_lemma is None:
+          pagemsg("WARNING: Can't parse out infinitive from conjugation '%s'" % arg1)
+          return
+      both_template_names = {tn, new_defn_template_name}
+      if len(both_template_names) == 2 and "past participle of" in both_template_names:
+        if matching_lemma == lemma:
+          # This must mean we saw {{*-verb form of}} instead of {{past participle of}}
+          pagemsg("WARNING: For past participle, saw %s instead of %s" % (
+            str(matching_defn_template), new_defn_template))
+          return
+        else:
+          # note but allow
+          saw_instead_of()
+      elif len(both_template_names) == 2 and "gerund of" in both_template_names:
+        if matching_lemma == lemma:
+          # This must mean we saw {{gerund of}} instead of {{*-verb form of}}
+          pagemsg("WARNING: For gerund, saw %s instead of %s" % (str(matching_defn_template), new_defn_template))
+          return
+        else:
+          # note but allow
+          saw_instead_of()
+      elif both_template_names == {"gl-verb form of", "gl-reinteg-verb form of"}:
+        add_after = subsecind
+        # note but allow
+        saw_instead_of()
+      elif len(both_template_names) == 1:
+        if matching_lemma == lemma:
+          pagemsg("WARNING: Saw %s instead of %s, can't handle" % (str(matching_defn_template), new_defn_template))
+          return
+        else:
+          add_after = subsecind
+          saw_instead_of()
+      else:
+        # check more templates
+        saw_instead_of()
+
+    if add_after is not None:
+      # Add another definition line. If there's already a defn line present, insert after any such defn
+      # lines. Else, insert at beginning.
+      if norm in ["gl", "gl-reinteg"] and pos in ["verb", "gerund"]:
+        new_defn_template_beg = r"\{\{gl(?:-reinteg)?-verb form of\|"
+      else:
+        new_defn_template_beg = re.escape(re.sub(r"^(.*?\|).*", r"\1", new_defn_template))
+      if re.search(r"^# %s" % new_defn_template_beg, subsections[subsecind], re.M):
+        newsubsec = re.sub(r"(^(# %s.*\n)+)" % new_defn_template_beg,
+            r"\1# %s\n" % new_defn_template, subsections[subsecind], 1, re.M)
+      else:
+        newsubsec = re.sub(r"^#", "# %s\n#" % new_defn_template, subsections[subsecind], 1, re.M)
+      if newsubsec == subsections[subsecind]:
+        pagemsg("WARNING: Couldn't insert new definition line %s in existing subsection %s" % (
+          new_defn_template, subsecind))
+        return
+      subsections[subsecind] = newsubsec
+      secbody = "".join(subsections)
+      sections[j] = secbody.rstrip("\n") + sectail
+      pagemsg("Inserting new definition into existing subsection %s" % infl_part)
+      notes.append("insert new definition into existing subsection %s" % note_part)
+      return "".join(sections), notes
+
+  # Didn't find POS section for form. If form is a past participle, look for an adjective section and add before.
+  if pos == "participle" and "Adjective" in subsections_by_header:
+    adj_sections = subsections_by_header["Adjective"]
+    if len(adj_sections) > 1:
+      pagemsg("WARNING: Adding participle before adjective, saw %s Adjective sections, can't handle" %
+              len(adj_sections))
+      return
+    adj_secind = adj_sections[0]
+    if subsection_levels[adj_secind] not in [3, 4]:
+      pagemsg("WARNING: Saw Adjective section %s at level %s != 3 or 4, can't handle" % (
+        subsections[adj_secind - 1].strip(), subsection_levels[adj_secind]))
+      return
+    subsections[adj_secind - 1: adj_secind - 1] = [newposl4 if subsection_levels[adj_secind] == 4 else newpos]
+    secbody = "".join(subsections)
+    sections[j] = secbody.rstrip("\n") + sectail
+    pagemsg("Inserting participle subsection %s before adjective subsection" % infl_part)
+    notes.append("insert participle subsection %s before adjective subsection" % note_part)
+    return "".join(sections), notes
 
   # Didn't find POS section for form.
   if "Etymology 1" in subsections_by_header:
@@ -227,13 +271,13 @@ def process_text_on_inflection_page(index, pagetitle, pagetext, norm, pos, lemma
       m = re.search("^Etymology ([0-9]+)$", section_header)
       if m:
         highest_etym_section = max(highest_etym_section, int(m.group(1)))
-        subsections.append("===Etymology %s===\n" % (highest_etym_section + 1))
-        subsections.append(entrytextl4)
-        secbody = "".join(subsections)
-        sections[j] = secbody.rstrip("\n") + sectail
-        pagemsg("Appending etym subsection %s" % infl_part)
-        notes.append("append etym subsection %s" % note_part)
-        return "".join(sections), notes
+    subsections.append("===Etymology %s===\n" % (highest_etym_section + 1))
+    subsections.append("\n" + newposl4)
+    secbody = "".join(subsections)
+    sections[j] = secbody.rstrip("\n") + sectail
+    pagemsg("Appending etym subsection %s" % infl_part)
+    notes.append("append etym subsection %s" % note_part)
+    return "".join(sections), notes
 
   # One etymology section for language. Wrap existing text in Etymology 1 and add Etymology 2.
   if "Etymology" in subsections_by_header:
@@ -242,12 +286,12 @@ def process_text_on_inflection_page(index, pagetitle, pagetext, norm, pos, lemma
     etymology_sections = subsections_by_header["Etymology"]
     if len(etymology_sections) > 1:
       pagemsg("WARNING: Saw %s Etymology sections, can't handle" % len(etymology_sections))
-      return None
+      return
     etymology_ind = etymology_sections[0]
     if subsection_levels[etymology_ind] != 3:
       pagemsg("WARNING: Saw Etymology section %s at level %s != 3, can't handle" % (
         subsections[etymology_ind - 1].strip(), subsection_levels[etymology_ind]))
-      return None
+      return
     if etymology_ind > 2:
       pagemsg("Found Etymology section at position %s, below other sections, moving up" % etymology_ind)
       notes.append("move Etymology subsection up to top of %s lang section" % normname)
@@ -265,11 +309,11 @@ def process_text_on_inflection_page(index, pagetitle, pagetext, norm, pos, lemma
     subsections[k] = "=" + subsections[k].strip() + "=\n"
 
   subsections.append("===Etymology 2===\n")
-  subsections.append(entrytextl4)
+  subsections.append("\n" + newposl4)
   secbody = "".join(subsections)
   sections[j] = secbody.rstrip("\n") + sectail
-  pagemsg("Wrapping existing %s lang section in Etymology 1, appending Etymology 2 subsection %s" %
-          (normname, infl_part))
+  pagemsg("Wrapping existing lang section in Etymology 1, appending Etymology 2 subsection %s" %
+          infl_part)
   notes.append("wrapping existing %s lang section in Etymology 1, append Etymology 2 subsection %s" %
                (normname, note_part))
   return "".join(sections), notes
@@ -277,8 +321,8 @@ def process_text_on_inflection_page(index, pagetitle, pagetext, norm, pos, lemma
 def process_text_on_page(index, pagetitle, pagetext):
   norm = args.norm
   normname = norm_to_name[norm]
-  def pagemsg(txt, fn=msg):
-    fn("Page %s %s: %s" % (index, pagetitle, txt))
+  def pagemsg(txt, fn=msg, overriding_index=None):
+    fn("Page %s %s: %s" % (overriding_index or index, pagetitle, txt))
   def errandpagemsg(txt):
     pagemsg(txt, fn=errandmsg)
   def expand_text(tempcall):
@@ -338,11 +382,26 @@ def process_text_on_page(index, pagetitle, pagetext):
     pagemsg("WARNING: Multiple %s conjugations %s" % (normname, ", ".join(conj for conjinf, conj, forms in conjs)))
   for conjinf, conj, forms in conjs:
     seen_forms = set()
+    forms_to_skip = set()
+    if "short_pp_ms" in forms:
+      for slot_form in ["short_pp_ms", "short_pp_fs", "short_pp_mp", "short_pp_fp"]:
+        for formobj in forms[slot_form]:
+          forms_to_skip.add(formobj["form"])
     for slot_index, (slot, slot_forms) in enumerate(sorted(list(forms.items()))):
+      def get_combined_index():
+        return "%s.%s" % (index, slot_index + 1)
+      def indexed_pagemsg(txt):
+        pagemsg(txt, overriding_index=get_combined_index())
       if slot in ["infinitive", "infinitive_linked"]:
+        indexed_pagemsg("Skipping %s slot '%s'" % (normname, slot))
         continue
-      if slot in ["pp_fs", "pp_mp", "pp_fp"]:
+      if slot in ["pp_fs", "pp_mp", "pp_fp", "short_pp_fs", "short_pp_mp", "short_pp_fp"]:
+        indexed_pagemsg("Skipping %s participle form slot '%s', code not yet written to handle it (FIXME)" % (normname, slot))
         # FIXME, deal with these
+        continue
+      if slot in ["short_pp_ms"]:
+        indexed_pagemsg("Skipping %s short participle slot '%s', code not yet written to handle it (FIXME)" % (normname, slot))
+        # FIXME, deal with this
         continue
       if slot in ["pp_ms"]:
         pos = "participle"
@@ -353,19 +412,29 @@ def process_text_on_page(index, pagetitle, pagetext):
       for formobj in slot_forms:
         form = formobj["form"]
         if form in seen_forms:
-          pagemsg("Skipping already-seen %s form %s for slot %s" % (normname, form, slot))
+          indexed_pagemsg("Skipping already-seen %s form %s for slot %s" % (normname, form, slot))
           continue
         seen_forms.add(form)
         if "[" in form:
-          pagemsg("Skipping bracket-containing %s form %s for slot %s" % (normname, form, slot))
+          indexed_pagemsg("Skipping bracket-containing %s form %s for slot %s" % (normname, form, slot))
           continue
+        should_skip = form in forms_to_skip
         if form == conjinf:
-          pagemsg("Skipping %s form %s for slot %s that's identical to lemma" % (normname, form, slot))
+          indexed_pagemsg("Skipping %s form %s for slot %s that's identical to lemma" % (normname, form, slot))
+          continue
+        if "footnotes" in formobj and "[superseded]" in formobj["footnotes"]:
+          indexed_pagemsg("Skipping %s form %s for slot %s that's superseded" % (normname, form, slot))
           continue
         def process_page(page, index, parsed):
-          return process_text_on_inflection_page(index, str(page.title()), blib.safe_page_text(page, errandpagemsg),
-                                                 norm, pos, conjinf, conj, slot)
-        blib.do_edit(pywikibot.Page(site, form), "%s.%s" % (index, slot_index + 1), process_page, save=args.save,
+          retval = process_text_on_inflection_page(index, str(page.title()), blib.safe_page_text(page, errandpagemsg),
+                                                   norm, pos, conjinf, conj, slot)
+          if retval and should_skip:
+            newtext, changelog = retval
+            indexed_pagemsg("WARNING: Skipping %s form %s for slot %s that's the same as a short past participle form, handle manually; changelog msg=%s" % (
+              normname, form, slot, blib.changelog_to_string(changelog)))
+            return
+          return retval
+        blib.do_edit(pywikibot.Page(site, form), get_combined_index(), process_page, save=args.save,
                      verbose=args.verbose, diff=args.diff)
 
 parser = blib.create_argparser("Create verb inflections for Spanish, Galician or Portuguese", include_pagefile=True,
