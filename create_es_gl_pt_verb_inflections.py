@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, argparse, json, unicodedata
+from collections import defaultdict
 
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
@@ -336,9 +337,12 @@ def process_text_on_page(index, pagetitle, pagetext):
 
   parsed = blib.parse_text(pagetext)
   conjs = []
+  standard_gl_conj_forms = None
   for t in parsed.filter_templates():
     tn = tname(t)
-    if tn == "%s-conj" % norm:
+    standard_conj_for_reinteg = norm == "gl-reinteg" and tn == "gl-conj"
+    if tn == "%s-conj" % norm or standard_conj_for_reinteg:
+      conj_normname = "Galician" if standard_conj_for_reinteg else normname
       arg1 = getparam(t, "1")
       inf = pagetitle
       if arg1 == "":
@@ -348,45 +352,59 @@ def process_text_on_page(index, pagetitle, pagetext):
       else:
         newconj = arg1
       if newconj == arg1:
-        pagemsg("%s conjugation already has infinitive in it: %s" % (normname, arg1))
+        pagemsg("%s conjugation already has infinitive in it: %s" % (conj_normname, arg1))
       else:
-        pagemsg("Converting %s conjugation '%s' to '%s'" % (normname, arg1, newconj))
+        pagemsg("Converting %s conjugation '%s' to '%s'" % (conj_normname, arg1, newconj))
         arg1 = newconj
       conjinf, rawconj = parse_inf_and_conj(arg1)
       if conjinf is None:
-        pagemsg("WARNING: Can't parse out %s infinitive from conjugation '%s'" % (normname, arg1))
+        pagemsg("WARNING: Can't parse out %s infinitive from conjugation '%s'" % (conj_normname, arg1))
         continue
       if conjinf.endswith("se"):
         pagemsg("Skipping reflexive conjugation '%s'" % arg1)
         continue
       if arg1 not in conjs:
-        jsonconj = expand_text("{{%s-conj|%s|json=1%s}}" % (norm, arg1, "|nocomb=1" if norm == "es" else ""))
+        jsonconj = expand_text("{{%s-conj|%s|json=1%s}}" % (
+          "gl" if standard_conj_for_reinteg else norm, arg1, "|nocomb=1" if norm == "es" else ""))
         if not jsonconj:
           continue
         json_expansion = json.loads(jsonconj)
         if norm == "es":
           if "forms" not in json_expansion:
             pagemsg("WARNING: Didn't see 'forms' in %s JSON expansion for conjugation '%s': %s" % (
-              normname, arg1, jsonconj))
+              conj_normname, arg1, jsonconj))
             continue
           forms = json_expansion["forms"]
         else:
           forms = json_expansion
-        new_tuple = (conjinf, arg1, forms)
-        if new_tuple not in conjs:
-          conjs.append(new_tuple)
+        if standard_conj_for_reinteg:
+          standard_gl_conj_forms = forms
+        else:
+          new_tuple = (conjinf, arg1, forms, standard_gl_conj_forms)
+          if new_tuple not in conjs:
+            conjs.append(new_tuple)
+          if tn == "gl-reinteg-conj":
+            standard_gl_conj_forms = None
   if len(conjs) == 0:
     pagemsg("WARNING: %s infinitive page exists but has no conjugations" % normname)
     return
   elif len(conjs) > 1:
-    pagemsg("WARNING: Multiple %s conjugations %s" % (normname, ", ".join(conj for conjinf, conj, forms in conjs)))
-  for conjinf, conj, forms in conjs:
+    pagemsg("WARNING: Multiple %s conjugations %s" % (normname, ", ".join(conj for conjinf, conj, forms, standard_forms in conjs)))
+  for conjinf, conj, forms, standard_forms in conjs:
     seen_forms = set()
     forms_to_skip = set()
     if "short_pp_ms" in forms:
       for slot_form in ["short_pp_ms", "short_pp_fs", "short_pp_mp", "short_pp_fp"]:
         for formobj in forms[slot_form]:
           forms_to_skip.add(formobj["form"])
+    def compute_slots_for_forms(forms):
+      slots_for_forms = defaultdict(set)
+      for slot, slot_forms in forms.items():
+        for formobj in slot_forms:
+          slots_for_forms[formobj["form"]].add(slot)
+      return slots_for_forms
+    slots_for_forms = compute_slots_for_forms(forms)
+    slots_for_standard_forms = compute_slots_for_forms(standard_forms) if standard_forms else None
     for slot_index, (slot, slot_forms) in enumerate(sorted(list(forms.items()))):
       def get_combined_index():
         return "%s.%s" % (index, slot_index + 1)
@@ -425,6 +443,21 @@ def process_text_on_page(index, pagetitle, pagetext):
         if "footnotes" in formobj and "[superseded]" in formobj["footnotes"]:
           indexed_pagemsg("Skipping %s form %s for slot %s that's superseded" % (normname, form, slot))
           continue
+        if norm == "gl-reinteg" and slots_for_standard_forms:
+          if slots_for_forms[form] == slots_for_standard_forms[form]:
+            indexed_pagemsg("Skipping %s form %s for slot %s that's identical to the corresponding standard Galician form" % (
+              normname, form, slot))
+            continue
+          else:
+            gl_reinteg_slots = sorted(list(slots_for_forms[form]))
+            gl_standard_slots = sorted(list(slots_for_standard_forms[form]))
+            if gl_standard_slots:
+              indexed_pagemsg("Not skipping %s form %s for slot %s; even though there's a corresponding standard Galician form, the standard Galician form fills slot%s %s while the reintegrated form fills slot%s %s" % (
+                normname, form, slot, "s" if len(gl_standard_slots) > 1 else "", ",".join(gl_standard_slots),
+                "s" if len(gl_reinteg_slots) > 1 else "", ",".join(gl_reinteg_slots)))
+            else:
+              indexed_pagemsg("Not skipping %s form %s for slot %s; even though there's a corresponding standard Galician verb, the form is not part of it" % (
+                normname, form, slot))
         def process_page(page, index, parsed):
           retval = process_text_on_inflection_page(index, str(page.title()), blib.safe_page_text(page, errandpagemsg),
                                                    norm, pos, conjinf, conj, slot)
