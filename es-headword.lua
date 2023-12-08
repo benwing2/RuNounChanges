@@ -271,7 +271,7 @@ local function do_adjective(args, data, pos, is_suffix, is_superlative)
 			local quals = fetch_qualifiers(args.fpl_qual[i])
 			if fpl == "+" then
 				-- Generate default feminine plural.
-				local defpls = com.make_plural(lemma, args.sp)
+				local defpls = com.make_plural(lemma, "f", args.sp)
 				if not defpls then
 					error("Unable to generate default plural of '" .. lemma .. "'")
 				end
@@ -331,7 +331,7 @@ local function do_adjective(args, data, pos, is_suffix, is_superlative)
 			local quals = fetch_qualifiers(args.mpl_qual[i])
 			if mpl == "+" then
 				-- Generate default masculine plural.
-				local defpls = com.make_plural(lemma, args.sp)
+				local defpls = com.make_plural(lemma, "m", args.sp)
 				if not defpls then
 					error("Unable to generate default plural of '" .. lemma .. "'")
 				end
@@ -347,7 +347,7 @@ local function do_adjective(args, data, pos, is_suffix, is_superlative)
 			if fpl == "+" then
 				for _, f in ipairs(feminines) do
 					-- Generate default feminine plural; f is a table.
-					local defpls = com.make_plural(f.term, args.sp)
+					local defpls = com.make_plural(f.term, "f", args.sp)
 					if not defpls then
 						error("Unable to generate default plural of '" .. f.term .. "'")
 					end
@@ -533,7 +533,7 @@ pos_functions["cardinal numbers"] = {
 -----------------------------------------------------------------------------------------
 
 local allowed_genders = require("Module:table/listToSet")(
-	{"m", "f", "mf", "mfbysense", "mfequiv", "n", "m-p", "f-p", "mf-p", "mfbysense-p", "mfequiv-p", "n-p", "?", "?-p"}
+	{"m", "f", "mf", "mfbysense", "mfequiv", "gneut", "n", "m-p", "f-p", "mf-p", "mfbysense-p", "mfequiv-p", "gneut-p", "n-p", "?", "?-p"}
 )
 
 
@@ -562,7 +562,8 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 	data.genders = {}
 	local saw_m = false
 	local saw_f = false
-	local gender_for_irreg_ending
+	local saw_gneut = false
+	local gender_for_irreg_ending, gender_for_make_plural
 	process_genders(data, args[1], args.g_qual)
 	-- Check for specific genders and pluralia tantum.
 	for _, g in ipairs(args[1]) do
@@ -576,6 +577,9 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 			if g == "f" or g == "mf" or g == "mfbysense" then
 				saw_f = true
 			end
+			if g == "gneut" then
+				saw_gneut = true
+			end
 		end
 	end
 	if saw_m and saw_f then
@@ -585,6 +589,7 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 	else
 		gender_for_irreg_ending = "m"
 	end
+	gender_for_make_plural = saw_gneut and "gneut" or gender_for_irreg_ending
 
 	local lemma = data.pagename
 
@@ -599,13 +604,13 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 		-- Gather plurals, handling requests for default plurals
 		for _, pl in ipairs(args[2]) do
 			if pl == "+" then
-				local default_pls = com.make_plural(lemma)
+				local default_pls = com.make_plural(lemma, gender_for_make_plural)
 				for _, defp in ipairs(default_pls) do
 					table.insert(plurals, defp)
 				end
 			elseif pl:find("^%+") then
 				pl = require(romut_module).get_special_indicator(pl)
-				local default_pls = com.make_plural(lemma, pl)
+				local default_pls = com.make_plural(lemma, gender_for_make_plural, pl)
 				for _, defp in ipairs(default_pls) do
 					table.insert(plurals, defp)
 				end
@@ -648,7 +653,7 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 		else
 			-- Countable or mixed countable/uncountable
 			if #plurals == 0 then
-				local pls = com.make_plural(lemma)
+				local pls = com.make_plural(lemma, gender_for_make_plural)
 				if pls then
 					for _, pl in ipairs(pls) do
 						table.insert(plurals, pl)
@@ -667,8 +672,12 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 		end
 	end
 
+	if #plurals > 1 then
+		table.insert(data.categories, langname .. " " .. plpos .. " with multiple plurals")
+	end
+
 	-- Gather masculines/feminines. For each one, generate the corresponding plural(s).
-	local function handle_mf(mfs, inflect, default_plurals)
+	local function handle_mf(mfs, gender, inflect, default_plurals)
 		local retval = {}
 		for _, mf in ipairs(mfs) do
 			if mf == "+" then
@@ -682,7 +691,7 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 				mf = inflect(lemma, special)
 			end
 			table.insert(retval, mf)
-			local mfpls = com.make_plural(mf, special)
+			local mfpls = com.make_plural(mf, gender, special)
 			if mfpls then
 				for _, mfpl in ipairs(mfpls) do
 					-- Add an accelerator for each masculine/feminine plural whose lemma
@@ -697,11 +706,11 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 	end
 
 	local feminine_plurals = {}
-	local feminines = handle_mf(args.f, com.make_feminine, feminine_plurals)
+	local feminines = handle_mf(args.f, "f", com.make_feminine, feminine_plurals)
 	local masculine_plurals = {}
-	local masculines = handle_mf(args.m, com.make_masculine, masculine_plurals)
+	local masculines = handle_mf(args.m, "m", com.make_masculine, masculine_plurals)
 
-	local function handle_mf_plural(mfpl, default_plurals, singulars)
+	local function handle_mf_plural(mfpl, gender, default_plurals, singulars)
 		local new_mfpls = {}
 		for i, mfpl in ipairs(mfpl) do
 			local accel
@@ -723,7 +732,7 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 			elseif mfpl:find("^%+") then
 				mfpl = require(romut_module).get_special_indicator(mfpl)
 				for _, mf in ipairs(singulars) do
-					local default_mfpls = com.make_plural(mf, mfpl)
+					local default_mfpls = com.make_plural(mf, gender, mfpl)
 					for _, defp in ipairs(default_mfpls) do
 						table.insert(new_mfpls, {term = defp, accel = accel})
 					end
@@ -737,12 +746,12 @@ local function do_noun(args, data, pos, is_suffix, is_proper)
 
 	if #args.fpl > 0 then
 		-- Override any existing feminine plurals.
-		feminine_plurals = handle_mf_plural(args.fpl, feminine_plurals, feminines)
+		feminine_plurals = handle_mf_plural(args.fpl, "f", feminine_plurals, feminines)
 	end
 
 	if #args.mpl > 0 then
 		-- Override any existing masculine plurals.
-		masculine_plurals = handle_mf_plural(args.mpl, masculine_plurals, masculines)
+		masculine_plurals = handle_mf_plural(args.mpl, "m", masculine_plurals, masculines)
 	end
 
 	check_all_missing(data, plurals, plpos)
