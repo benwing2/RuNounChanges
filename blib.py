@@ -416,6 +416,11 @@ def dump(page):
   old = page.get(get_redirect=True)
   msg(u'Contents of [[{0}]]:\n{1}\n----------'.format(page.title(), old))
 
+def changelog_to_string(comment):
+  if type(comment) is list:
+    comment = "; ".join(group_notes(comment))
+  return comment
+
 def handle_process_page_retval(retval, existing_text, pagemsg, verbose, do_diff):
   has_changed = False
 
@@ -450,9 +455,7 @@ def handle_process_page_retval(retval, existing_text, pagemsg, verbose, do_diff)
         pagemsg("Replacing <%s> with <%s>" % (existing_text, new))
       assert comment, "Text has changed without a comment specified"
 
-  if type(comment) is list:
-    comment = "; ".join(group_notes(comment))
-
+  comment = changelog_to_string(comment)
   return new, comment, has_changed
 
 def expand_text(tempcall, pagetitle, pagemsg, verbose, suppress_errors=False):
