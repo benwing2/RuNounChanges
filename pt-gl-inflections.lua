@@ -47,8 +47,8 @@ local function gl_reinteg_extract_labels(formobj)
 	local form = formobj.form
 	local footnotes = formobj.footnotes
 	local m_gl_reinteg_verb = require(gl_reinteg_verb_module)
-	if not not form:find(m_gl_reinteg_verb.ALTVAR) or footnotes and m_table.contains(footnotes, "[less common]") then
-		table.insert(labels, "less common")
+	if not not form:find(m_gl_reinteg_verb.ALTVAR) or footnotes and m_table.contains(footnotes, "[less recommended]") then
+		table.insert(labels, "less recommended")
 	end
 	return labels
 end
@@ -154,7 +154,8 @@ function export.verb_form_of(frame)
 		["noautolinkverb"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing/documentation pages
 		["json"] = {type = "boolean"}, -- for bot use
-		["slots"] = {},
+		["slots"] = {}, -- restrict to only these slots
+		["noslots"] = {}, -- restrict to all but these slots
 		["t"] = {},
 		["gloss"] = {alias_of = "t"},
 		["lit"] = {},
@@ -163,7 +164,7 @@ function export.verb_form_of(frame)
 	}
 	local m_verb_module = require(var_properties[varcode].verb_module)
 	local args = require("Module:parameters").process(parargs, params)
-	local alternant_multiword_spec = m_verb_module.do_generate_forms(args, ("%s-verb form of"):format(langcode))
+	local alternant_multiword_spec = m_verb_module.do_generate_forms(args, ("%s-verb form of"):format(varcode))
 
 	local function remove_variant_codes(form)
 		if var_properties[varcode].remove_variant_codes then
@@ -194,6 +195,7 @@ function export.verb_form_of(frame)
 	local lemma = lemmas[1]
 
 	local slot_restrictions = args.slots and m_table.listToSet(rsplit(args.slots, ",")) or nil
+	local negated_slot_restrictions = args.noslots and m_table.listToSet(rsplit(args.noslots, ",")) or nil
 	local tags = {}
 	local slots_seen = {}
 
@@ -208,10 +210,12 @@ function export.verb_form_of(frame)
 						local labels = extract_labels(formobj)
 						local form = remove_variant_codes(m_links.remove_links(mw.ustring.toNFC(formobj.form)))
 						if non_lemma_form == form then
-							if (not slot_restrictions or slot_restrictions[slot]) then
+							if (not slot_restrictions or slot_restrictions[slot]) and (
+								not negated_slot_restrictions or not negated_slot_restrictions[slot]
+							) then
 								m_table.insertIfNot(tags, {tag = accel, labels = labels})
 							end
-							if slot_restrictions then
+							if slot_restrictions or negated_slot_restrictions then
 								slots_seen[slot] = true
 							end
 						end
@@ -222,18 +226,29 @@ function export.verb_form_of(frame)
 	end
 
 	local function check_slot_restrictions_against_slots_seen()
-		if slot_restrictions then
-			for slot, _ in pairs(slot_restrictions) do
+		local function get_slots_seen()
+			local slots_seen_list = {}
+			for slot, _ in pairs(slots_seen) do
+				table.insert(slots_seen_list, slot)
+			end
+			table.sort(slots_seen_list)
+			return slots_seen_list
+		end
+
+		local function check_against_slots_seen(restrictions, prefix)			
+			for slot, _ in pairs(restrictions) do
 				if not slots_seen[slot] then
-					local slots_seen_list = {}
-					for slot, _ in pairs(slots_seen) do
-						table.insert(slots_seen_list, slot)
-					end
-					table.sort(slots_seen_list)
-					error(("'%s' is not any of the slots matching form '%s' for verb '%s': %s"):format(
-						slot, non_lemma_form, lemma, table.concat(slots_seen_list, ",")))
+					error(("%sslot restriction for slot '%s' had no effect (typo?) because it is not any of the slots matching form '%s' for verb '%s': possible values %s"):format(
+						prefix, slot, non_lemma_form, lemma, table.concat(get_slots_seen(), ",")))
 				end
 			end
+		end
+
+		if slot_restrictions then
+			check_against_slots_seen(slot_restrictions, "")
+		end
+		if negated_slot_restrictions then
+			check_against_slots_seen(negated_slot_restrictions, "negated ")
 		end
 	end
 
@@ -263,7 +278,9 @@ function export.verb_form_of(frame)
 					local labels = extract_labels(part_form)
 					local form = remove_variant_codes(m_links.remove_links(mw.ustring.toNFC(part_form.form)))
 					if non_lemma_form == form then
-						if (not slot_restrictions or slot_restrictions[slot]) then
+						if (not slot_restrictions or slot_restrictions[slot]) and (
+							not negated_slot_restrictions or not negated_slot_restrictions[slot]
+						) then
 							local saw_existing = false
 							for _, refl_form_to_tags in ipairs(refl_forms_to_tags) do
 								if refl_form_to_tags.form == remove_variant_codes(full_forms[i].form) then
@@ -280,7 +297,7 @@ function export.verb_form_of(frame)
 								})
 							end
 						end
-						if slot_restrictions then
+						if slot_restrictions or negated_slot_restrictions then
 							slots_seen[slot] = true
 						end
 					end
