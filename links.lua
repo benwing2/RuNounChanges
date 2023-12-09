@@ -28,6 +28,8 @@ local split = mw.text.split
 local toNFC = mw.ustring.toNFC
 local trim = mw.text.trim
 local unstrip = mw.text.unstrip
+local u = mw.ustring.char
+local TEMP_UNDERSCORE = u(0xFFF0)
 
 local function track(page, code)
 	local tracking_page = "links/" .. page
@@ -761,11 +763,12 @@ function export.full_link(data, face, allow_self_link, show_qualifiers)
 			local encode_accel_char_map = {
 				["%"] = ".",
 				[" "] = "_",
+				["_"] = TEMP_UNDERSCORE,
 				["<"] = "&lt;",
 				[">"] = "&gt;",
 			}
 			local function encode_accel_param_chars(param)
-				local retval = param:gsub("[% <>]", encode_accel_char_map) -- discard second return value
+				local retval = param:gsub("[% <>_]", encode_accel_char_map) -- discard second return value
 				return retval
 			end
 
