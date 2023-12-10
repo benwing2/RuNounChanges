@@ -142,7 +142,7 @@ def process_text_on_inflection_page(index, pagetitle, pagetext, norm, pos, lemma
     return "".join(sections), notes
 
   sections, j, secbody, sectail, has_non_lang = retval
-  subsections, subsections_by_header, subsection_levels = blib.split_text_into_subsections(
+  subsections, subsections_by_header, subsection_headers, subsection_levels = blib.split_text_into_subsections(
       secbody, pagemsg)
 
   # Look for possible matching headword/definition templates.
@@ -266,19 +266,23 @@ def process_text_on_inflection_page(index, pagetitle, pagetext, norm, pos, lemma
 
   # Didn't find POS section for form.
   if "Etymology 1" in subsections_by_header:
-    # find highest Etymology section
-    highest_etym_section = 1
-    for section_header in subsections_by_header:
-      m = re.search("^Etymology ([0-9]+)$", section_header)
+    for k in range(len(subsections) - 1, 1, -2):
+      # Find last Etymology N subsection and append new subsection directly after that (in case there are References,
+      # See also, Further reading, etc. at L3 after all Etymology N sections).
+      m = re.search("^Etymology ([0-9]+)$", subsections_by_header[k])
       if m:
-        highest_etym_section = max(highest_etym_section, int(m.group(1)))
-    subsections.append("===Etymology %s===\n" % (highest_etym_section + 1))
-    subsections.append("\n" + newposl4)
-    secbody = "".join(subsections)
-    sections[j] = secbody.rstrip("\n") + sectail
-    pagemsg("Appending etym subsection %s" % infl_part)
-    notes.append("append etym subsection %s" % note_part)
-    return "".join(sections), notes
+        highest_etym_section = int(m.group(1))
+        subsections[k + 1:k + 1] = [
+          "===Etymology %s===\n" % (highest_etym_section + 1),
+          "\n" + newposl4,
+        ]
+        secbody = "".join(subsections)
+        sections[j] = secbody.rstrip("\n") + sectail
+        pagemsg("Appending etym subsection %s" % infl_part)
+        notes.append("append etym subsection %s" % note_part)
+        return "".join(sections), notes
+    pagemsg("WARNING: Something very wrong, saw Etymology 1 but couldn't match it in loop")
+    return
 
   # One etymology section for language. Wrap existing text in Etymology 1 and add Etymology 2.
   if "Etymology" in subsections_by_header:
@@ -338,6 +342,7 @@ def process_text_on_page(index, pagetitle, pagetext):
   parsed = blib.parse_text(pagetext)
   conjs = []
   standard_gl_conj_forms = None
+  skipped_reflexive = False
   for t in parsed.filter_templates():
     tn = tname(t)
     standard_conj_for_reinteg = norm == "gl-reinteg" and tn == "gl-conj"
@@ -360,8 +365,9 @@ def process_text_on_page(index, pagetitle, pagetext):
       if conjinf is None:
         pagemsg("WARNING: Can't parse out %s infinitive from conjugation '%s'" % (conj_normname, arg1))
         continue
-      if conjinf.endswith("se"):
-        pagemsg("Skipping reflexive conjugation '%s'" % arg1)
+      if re.search("se$", conjinf) or re.search("l[aoe]s?$", conjinf):
+        pagemsg("Skipping reflexive or pronominal conjugation '%s'" % arg1)
+        skipped_reflexive = True
         continue
       if arg1 not in conjs:
         jsonconj = expand_text("{{%s-conj|%s|json=1%s}}" % (
@@ -386,7 +392,8 @@ def process_text_on_page(index, pagetitle, pagetext):
           if tn == "gl-reinteg-conj":
             standard_gl_conj_forms = None
   if len(conjs) == 0:
-    pagemsg("WARNING: %s infinitive page exists but has no conjugations" % normname)
+    if not skipped_reflexive:
+      pagemsg("WARNING: %s infinitive page exists but has no conjugations" % normname)
     return
   elif len(conjs) > 1:
     pagemsg("WARNING: Multiple %s conjugations %s" % (normname, ", ".join(conj for conjinf, conj, forms, standard_forms in conjs)))
