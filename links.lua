@@ -97,7 +97,7 @@ end
 
 local ignore_cap
 local pos_tags
-function export.getLinkPage(target, lang, sc, plain)
+function export.get_link_page(target, lang, sc, plain)
 	if not target then
 		return nil
 	end
@@ -184,8 +184,14 @@ function export.getLinkPage(target, lang, sc, plain)
 	return target, escaped > 0
 end
 
+function export.getLinkPage(target, lang, sc, plain)
+	track("getLinkPage")
+	return export.get_link_page(target, lang, sc, plain)
+end
+
+
 -- Make a link from a given link's parts
-local function makeLink(link, lang, sc, id, allow_self_link, isolated, plain)
+local function make_link(link, lang, sc, id, allow_self_link, isolated, plain)
 	-- Convert percent encoding to plaintext.
 	link.target = mw.uri.decode(link.target, "PATH")
 	link.fragment = link.fragment and mw.uri.decode(link.fragment, "PATH")
@@ -206,7 +212,7 @@ local function makeLink(link, lang, sc, id, allow_self_link, isolated, plain)
 	
 	-- Process the target
 	local escaped
-	link.target, escaped = export.getLinkPage(link.target, lang, sc, plain)
+	link.target, escaped = export.get_link_page(link.target, lang, sc, plain)
 	
 	-- If the display is the target and the reconstruction * has been escaped, remove the escaping backslash.
 	if display_is_target and escaped then
@@ -261,7 +267,7 @@ end
 
 
 -- Split a link into its parts
-local function parseLink(linktext)
+local function parse_link(linktext)
 	local link = {target = linktext}
 	
 	local target = link.target
@@ -273,14 +279,14 @@ local function parseLink(linktext)
 	
 	-- There's no point in processing these, as they aren't real links.
 	local target_lower = link.target:lower()
-	for _, falsePositive in ipairs({"category", "cat", "file", "image"}) do
-		if target_lower:match("^" .. falsePositive .. ":") then return nil end
+	for _, false_positive in ipairs({"category", "cat", "file", "image"}) do
+		if target_lower:match("^" .. false_positive .. ":") then return nil end
 	end
 	
 	link.display = get_entities(link.display)
 	link.target, link.fragment = export.get_fragment(link.target)
 	
-	-- So that makeLink does not look for a fragment again.
+	-- So that make_link does not look for a fragment again.
 	if not link.fragment then
 		link.fragment = false
 	end
@@ -293,11 +299,11 @@ local function process_embedded_links(text, data, allow_self_link, plain)
 	-- Process the non-linked text.
 	text = data.lang:makeDisplayText(text, data.sc[1], true)
 	
-	-- If the text begins with * and another character, then act as if each link begins with *. However, don't do this if the * is contained within a link at the start. E.g. `|*[[foo]]` would set allReconstructed to true, while `|[[*foo]]` would not.
-	local allReconstructed = false
+	-- If the text begins with * and another character, then act as if each link begins with *. However, don't do this if the * is contained within a link at the start. E.g. `|*[[foo]]` would set all_reconstructed to true, while `|[[*foo]]` would not.
+	local all_reconstructed = false
 	if not plain then
 		if require("Module:utilities").get_plaintext(text:gsub("%[%[.-%]%]", ".")):match("^*.") then
-			allReconstructed = true
+			all_reconstructed = true
 		end
 		-- Otherwise, handle any escapes.
 		text = text:gsub("^(\\-)\\%*", "%1*")
@@ -315,26 +321,26 @@ local function process_embedded_links(text, data, allow_self_link, plain)
 			"ignored id:", data.id, "lang:", data.lang:getNonEtymologicalCode())
 	end
 	
-	local function processLink(space1, linktext, space2)
+	local function process_link(space1, linktext, space2)
 		local capture = "[[" .. linktext .. "]]"
 		
-		local link = parseLink(linktext)
+		local link = parse_link(linktext)
 		
 		--Return unprocessed false positives untouched (e.g. categories).
 		if not link then return capture end
 		
-		if allReconstructed and not link.target:find("^%*") then
+		if all_reconstructed and not link.target:find("^%*") then
 			link.target = "*" .. link.target
 		end
 		
-		linktext = makeLink(link, data.lang, data.sc, data.id, allow_self_link, false, plain)
+		linktext = make_link(link, data.lang, data.sc, data.id, allow_self_link, false, plain)
 			:gsub("^%[%[", "\3")
 			:gsub("%]%]$", "\4")
 		
 		return space1 .. linktext .. space2
 	end
 	
-	-- Use chars 1 and 2 as temporary substitutions, so that we can use charsets. These are converted to chars 3 and 4 by processLink, which means we can convert any remaining chars 1 and 2 back to square brackets (i.e. those not part of a link).
+	-- Use chars 1 and 2 as temporary substitutions, so that we can use charsets. These are converted to chars 3 and 4 by process_link, which means we can convert any remaining chars 1 and 2 back to square brackets (i.e. those not part of a link).
 	text = text
 		:gsub("%[%[", "\1")
 		:gsub("%]%]", "\2")
@@ -344,10 +350,10 @@ local function process_embedded_links(text, data, allow_self_link, plain)
 			:gsub("%^\1", "\1%^")
 		text = unescape(text, "^")
 	end
-	text = text:gsub("\1(%s*)([^\1\2]-)(%s*)\2", processLink)
+	text = text:gsub("\1(%s*)([^\1\2]-)(%s*)\2", process_link)
 	
 	-- Remove the extra * at the beginning of a language link if it's immediately followed by a link whose display begins with * too.
-	if allReconstructed then
+	if all_reconstructed then
 		text = text:gsub("^%*\3([^|\1-\4]+)|%*", "\3%1|*")
 	end
 	
@@ -362,8 +368,8 @@ local function handle_redundant_wikilink(text, alt)
 		return text, alt
 	end
 	local temp_lower = temp:lower()
-	for _, falsePositive in ipairs({"category", "cat", "file", "image"}) do
-		if temp_lower:match("^" .. falsePositive .. ":") then
+	for _, false_positive in ipairs({"category", "cat", "file", "image"}) do
+		if temp_lower:match("^" .. false_positive .. ":") then
 			return text, alt
 		end
 	end
@@ -395,7 +401,7 @@ The first argument, <code class="n">data</code>, may contain the following items
 ; <code class="n">id</code> (''optional'')
 : Sense id string. If this argument is defined, the link will point to a language-specific sense id ({{ll|en|identifier|id=HTML}}) created by the template {{temp|senseid}}. A sense id consists of the language's canonical name, a hyphen (<code>-</code>), and the string that was supplied as the <code class="n">id</code> argument. This is useful when a term has more than one sense in a language. If the <code class="n">term</code> argument contains wikilinks, this argument is ignored. (Links in which the sense id is ignored are tracked with the tracking template {{whatlinkshere|tracking=links/id-ignored}}.)
 The second argument is as follows:
-; <code class="n">allowSelfLink</code>
+; <code class="n">allow_self_link</code>
 : If {{code|lua|true}}, the function will also generate links to the current page. The default ({{code|lua|false}}) will not generate a link but generate a bolded "self link" instead.
 The following special options are processed for each link (both simple text and with embedded wikilinks):
 * The target page name will be processed to generate the correct entry name. This is done by the [[Module:languages#makeEntryName|makeEntryName]] function in [[Module:languages]], using the <code class="n">entry_name</code> replacements in the language's data file (see [[Template:language data documentation]] for more information). This function is generally used to automatically strip dictionary-only diacritics that are not part of the normal written form of a language.
@@ -432,7 +438,7 @@ function export.language_link(data, allow_self_link)
 	else
 		text = text and cond_trim(text)
 		data.alt = data.alt and cond_trim(data.alt)
-		text = makeLink({target = text, display = data.alt, fragment = data.fragment}, data.lang, data.sc, data.id, allow_self_link, true)
+		text = make_link({target = text, display = data.alt, fragment = data.fragment}, data.lang, data.sc, data.id, allow_self_link, true)
 	end
 	
 	return text
@@ -467,7 +473,7 @@ function export.plain_link(data, allow_self_link)
 	else
 		text = cond_trim(text)
 		data.alt = data.alt and cond_trim(data.alt)
-		text = makeLink({target = text, display = data.alt, fragment = data.fragment}, data.lang, data.sc, data.id, allow_self_link, true, true)
+		text = make_link({target = text, display = data.alt, fragment = data.fragment}, data.lang, data.sc, data.id, allow_self_link, true, true)
 	end
 	
 	return text
@@ -496,25 +502,25 @@ function export.embedded_language_links(data, allow_self_link)
 	return text
 end
 
-function export.mark(text, itemType, face, lang)
+function export.mark(text, item_type, face, lang)
 	local tag = { "", "" }
 
-	if itemType == "gloss" then
+	if item_type == "gloss" then
 		tag = { '<span class="mention-gloss-double-quote">“</span><span class="mention-gloss">',
 			'</span><span class="mention-gloss-double-quote">”</span>' }
-	elseif itemType == "tr" then
+	elseif item_type == "tr" then
 		if face == "term" then
 			tag = { '<span lang="' .. lang:getNonEtymologicalCode() .. '" class="tr mention-tr Latn">',
 				'</span>' }
 		else
 			tag = { '<span lang="' .. lang:getNonEtymologicalCode() .. '" class="tr Latn">', '</span>' }
 		end
-	elseif itemType == "ts" then
+	elseif item_type == "ts" then
 		-- \226\129\160 = word joiner (zero-width non-breaking space) U+2060
 		tag = { '<span class="ts mention-ts Latn">/\226\129\160', '\226\129\160/</span>' }
-	elseif itemType == "pos" then
+	elseif item_type == "pos" then
 		tag = { '<span class="ann-pos">', '</span>' }
-	elseif itemType == "annotations" then
+	elseif item_type == "annotations" then
 		tag = { '<span class="mention-gloss-paren annotation-paren">(</span>',
 			'<span class="mention-gloss-paren annotation-paren">)</span>' }
 	end
@@ -965,12 +971,12 @@ function export.remove_links(text, tag)
 	text = text:gsub("(\1)([^\1\2]-)(\2)",
 		function(c1, c2, c3)
 			-- Don't remove files.
-			for _, falsePositive in ipairs({"file", "image"}) do
-				if c2:lower():match("^" .. falsePositive .. ":") then return c1 .. c2 .. c3 end
+			for _, false_positive in ipairs({"file", "image"}) do
+				if c2:lower():match("^" .. false_positive .. ":") then return c1 .. c2 .. c3 end
 			end
 			-- Remove categories completely.
-			for _, falsePositive in ipairs({"category", "cat"}) do
-				if c2:lower():match("^" .. falsePositive .. ":") then return "" end
+			for _, false_positive in ipairs({"category", "cat"}) do
+				if c2:lower():match("^" .. false_positive .. ":") then return "" end
 			end
 			-- In piped links, remove all text before the pipe, unless it's the final character (i.e. the pipe trick), in which case just remove the pipe.
 			c2 = c2:match("^[^|]*|(.+)") or c2:match("([^|]+)|$") or c2
@@ -1005,12 +1011,12 @@ https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/7bf779524ab1fd8e
 
 -- The character class %x should not be used, as it includes the characters a-f,
 -- which do not occur in these anchor encodings.
-local capitalHex = "[0-9A-F]"
+local capital_hex = "[0-9A-F]"
 
-local function decodeAnchor(anchor)
-	return (anchor:gsub("%.(" .. capitalHex .. capitalHex .. ")",
-		function(hexByte)
-			return string.char(tonumber(hexByte, 16))
+local function decode_anchor(anchor)
+	return (anchor:gsub("%.(" .. capital_hex .. capital_hex .. ")",
+		function(hex_byte)
+			return string.char(tonumber(hex_byte, 16))
 		end))
 end
 
@@ -1021,9 +1027,9 @@ function export.section_link(link)
 
 	link = link:gsub("_", " ")
 
-	local numberSigns = select(2, link:gsub("#", ""))
+	local number_signs = select(2, link:gsub("#", ""))
 
-	if numberSigns > 1 then
+	if number_signs > 1 then
 		error("The section link should only contain one number sign (#).")
 	end
 
@@ -1034,7 +1040,7 @@ function export.section_link(link)
 	end
 
 	if section then
-		section = decodeAnchor(section)
+		section = decode_anchor(section)
 
 		-- URI-encode (percent-encode) section to allow square brackets and
 		-- other dodgy characters in section name.
