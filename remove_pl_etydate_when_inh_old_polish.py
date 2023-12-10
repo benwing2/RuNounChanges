@@ -32,9 +32,12 @@ def process_text_on_page(index, pagetitle, text):
   opl_secbody, opl_sectail = blib.split_trailing_separator_and_categories(sections[opl_sec])
   opl_secbody, opl_sectail = blib.force_two_newlines_in_secbody(opl_secbody, opl_sectail)
 
-  pl_subsections, pl_subsections_by_header, pl_subsection_levels = blib.split_text_into_subsections(pl_secbody, pagemsg)
-  opl_subsections, opl_subsections_by_header, opl_subsection_levels = blib.split_text_into_subsections(
-      opl_secbody, pagemsg)
+  pl_subsections, pl_subsections_by_header, pl_subsection_headers, pl_subsection_levels = (
+    blib.split_text_into_subsections(pl_secbody, pagemsg)
+  )
+  opl_subsections, opl_subsections_by_header, opl_subsection_headers, opl_subsection_levels = (
+    blib.split_text_into_subsections(opl_secbody, pagemsg)
+  )
 
   if "Etymology 1" in pl_subsections_by_header:
     pagemsg("WARNING: Skipping Polish section with {{etydate}} and ==Etymology 1==, can't handle yet")

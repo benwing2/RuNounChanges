@@ -2628,6 +2628,7 @@ def split_text_into_sections(pagetext, pagemsg):
 # be reconstructed by concatenating the values of `subsections` with a blank string between them.
 def split_text_into_subsections(secbody, pagemsg):
   subsections = re.split(r"(^==+[^=\n]+==+[ \t]*\n)", secbody, 0, re.M)
+  subsection_headers = {}
   subsections_by_header = defaultdict(list)
   subsection_levels = {}
   for j in range(2, len(subsections), 2):
@@ -2645,8 +2646,9 @@ def split_text_into_subsections(secbody, pagemsg):
       else:
         num_equals = left_equals
       subsection_levels[j] = num_equals
+      subsection_headers[j] = header
       subsections_by_header[header].append(j)
-  return subsections, subsections_by_header, subsection_levels
+  return subsections, subsections_by_header, subsection_headers, subsection_levels
 
 # Find the section for the language `lang` in `text` (the text of the page), returning values so that the
 # language-specific text can be modified and then the page as a whole put back together in preparation for saving.
