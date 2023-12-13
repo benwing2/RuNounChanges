@@ -58,9 +58,6 @@ local C = com.C -- consonant regex class
 local TEMPC1 = u(0xFFF1) -- temporary character used for consonant substitutions
 
 
-local short_pp_footnote = "[usually used with auxiliary verbs " .. link_term("ser") .. " and " .. link_term("estar") .. "]"
-local long_pp_footnote = "[usually used with auxiliary verbs " .. link_term("haver") .. " and " .. link_term("ter") .. "]"
-
 --[=[
 
 Vowel alternations:
@@ -173,54 +170,147 @@ Vowel alternations:
 
 Irregular verbs:
 
--dre verbs:
+-ldre/-ndre verbs:
 
-infinitive	pres1s	pres3s	pres1p	impf1s	fut1s		pret1s		sub1s		impsub1s	pp
-(ab)soldre	absolc	absol	absolem	absolia	absoldré	absolguí	absolgui	absolgués	absolt
-(a)tendre	atenc	atén	atenem	atenia	atendré		atenguí		atengui		atengués	atès,atesa,atesos
+infinitive	pres1s	pres3s	pres1p	impf1s	fut1s		pret1s		sub1s		sub1p		pp
+(ab)soldre	absolc	absol	absolem	absolia	absoldré	absolguí	absolgui	absolguem	absolt,absolta
+(a)tendre	atenc	atén	atenem	atenia	atendré		atenguí		atengui		atenguem	atès,atesa,atesos
 					(pres2s: atens, pres3p: atenen)
-caldre		-		cal		-		calia	caldrà		calgué		calgui		calgués		calgut
-cerndre		cerno	cern	cernem	cernia	cerndré		cerní		cerni		cernés		cernut,cernuda
-coldre		colc	col		colem	colia	coldré		colguí		colgui		colgués		colt
-(de)pendre	depenc	depèn	depenem	depenia	dependré	depenguí	depengui	depengués	depès,depesa,depesos
-doldre		dolc	dol		dolem	dolia	doldré		dolguí		dolgui		dolgués		dolgut,dolguda
-(en)cendre	encenc	encén	encenem	encenia	encendré	encenguí	encengui	encengués	encès,encesa,encesos
-fendre		fenc	fen		fenem	fenia	fendré		fenguí		fengui		fengués		fes,fesa,fesos
-defendre	defenc	defèn	defenem	defenia	defendré	defenguí	defengui	defengués	defès,defesa,defesos
-fondre		fonc	fon		fonem	fonia	fondré		fonguí		fongui		fongués		fos,fosa,fosos
-difondre	difonc	difon	difonem	difonia	difondré	difonguí	difongui	difongués	difós,difosa,difosos
-enfondre	enfonc	enfon	enfonem	enfonia	enfondré	enfonguí	enfongui	enfongués	enfús,enfusa,enfusos
-moldre		molc	mol		molem	molia	moldré		molguí		molgui		molgués		molt
-oldre		olc		ol		olem	olia	oldré		olguí		olgui		olgués		olgut,olguda
-pondre		ponc	pon		ponem	ponia	pondré		ponguí		pongui		pongués		post,posta,postos
-prendre		prenc	pren	prenem	prenia	prendré		prenguí		prengui		prengués	pres,presa,presos
-aprendre	aprenc	aprèn	aprenem	aprenia	aprendré	aprenguí	aprengui	aprengués	après,apresa,apresos
-toldre		tolc	tol		tolem	tolia	toldré		tolguí		tolgui		tolgués		tolt
-tondre		tonc	ton		tonem	tonia	tondré		tonguí		tongui		tongués		tos,tosa,tosos
-romandre	romanc	roman	romanem	romania	romandré	romanguí	romangui	romangués	romàs,romasa,romasos
-vendre		venc	ven		venem	venia	vendré		venguí		vengui		vengués		venut,venuda
+caldre		-		cal		[calent] calia	caldrà		calgué		calgui		-			calgut,-
+cerndre		cerno	cern	cernem	cernia	cerndré		cerní		cerni		cernem		cernut,cernuda
+coldre		colc	col		colem	colia	coldré		colguí		colgui		colguem		colt,colta
+(de)pendre	depenc	depèn	depenem	depenia	dependré	depenguí	depengui	depenguem	depès,depesa,depesos
+doldre		dolc	dol		dolem	dolia	doldré		dolguí		dolgui		dolguem		dolgut,dolguda
+(en)cendre	encenc	encén	encenem	encenia	encendré	encenguí	encengui	encenguem	encès,encesa,encesos
+fendre		fenc	fen		fenem	fenia	fendré		fenguí		fengui		fenguem		fes,fesa,fesos
+defendre	defenc	defèn	defenem	defenia	defendré	defenguí	defengui	defenguem	defès,defesa,defesos
+fondre		fonc	fon		fonem	fonia	fondré		fonguí		fongui		fonguem		fos,fosa,fosos
+difondre	difonc	difon	difonem	difonia	difondré	difonguí	difongui	difonguem	difós,difosa,difosos
+enfondre	enfonc	enfon	enfonem	enfonia	enfondré	enfonguí	enfongui	enfonguem	enfús,enfusa,enfusos
+moldre		molc	mol		molem	molia	moldré		molguí		molgui		molguem		molt,molta
+oldre		olc		ol		olem	olia	oldré		olguí		olgui		olguem		olgut,olguda
+pondre		ponc	pon		ponem	ponia	pondré		ponguí		pongui		ponguem		post,posta,postos
+prendre		prenc	pren	prenem	prenia	prendré		prenguí		prengui		prenguem	pres,presa,presos
+aprendre	aprenc	aprèn	aprenem	aprenia	aprendré	aprenguí	aprengui	aprenguem	après,apresa,apresos
+toldre		tolc	tol		tolem	tolia	toldré		tolguí		tolgui		tolguem		tolt,tolta
+tondre		tonc	ton		tonem	tonia	tondré		tonguí		tongui		tonguem		tos,tosa,tosos
+romandre	romanc	roman	romanem	romania	romandré	romanguí	romangui	romanguem	romàs,romasa,romasos
+vendre		venc	ven		venem	venia	vendré		venguí		vengui		venguem		venut,venuda
 
--ler/-ner verbs (mostly like -dre verbs):
 
-infinitive	pres1s	pres3s	pres1p	impf1s	fut1s		pret1s		sub1s		impsub1s	pp
-soler		solc	sol		solem	solia	soldré		solguí		solgui		solgués		solgut,solguda		
-valer		valc	val		valem	valia	valdré		valguí		valgui		valgués		valgut,valguda
-(prevaler, equivaler identical)
-voler		vull	vol		volem	volia	voldré		volguí		vulgui		volgués		volgut,volguda
+-ler verbs (mostly like -ldre verbs):
+
+infinitive	pres1s	pres3s	pres1p	impf1s	fut1s		pret1s		sub1s		sub1p		pp
+caler (var. of caldre)
+doler (var. of doldre)
+soler		solc	sol		solem	solia	soldré		solguí		solgui		solguem		solgut,solguda		
+valer/valdre valc	val		valem	valia	valdré		valguí		valgui		valguem		valgut,valguda
+(prevaler, equivaler)
+
+
+other -dre/-tre verbs (regular except sometimes pp):
+
+infinitive	pres1s	pres3s	pres1p	impf1s	fut1s		pret1s		sub1s		sub1p		pp
+batre		bato	bat		batem	batia	batré		batí		bati		batem		batut,batuda
+-metre		-meto	-met	-metem	-metia	-metré		-metí		-meti		-metem		-mès,-mesa,-mesos
+(ad-, co-, compro-, e-, entremetre's, mal-, o-, per-, pro-, read-, re-, retrans-, sot-, tra-, trans-)
+perdre		perdo	perd	perdem	perdia	perdré		perdí		perdi		perdem		perdut,perduda
+
+
+-ure verbs
+
+infinitive	pres1s	pres3s	pres1p	impf1s	impf1p	fut1s		pret1s		sub1s		sub1p		pp
+caure		caic	cau		caiem	queia	quèiem	cauré		caiguí		caigui		caiguem		caigut,caiguda
+(decaure, recaure)
+plaure		plac	plau	plaem	plaïa	plaíem	plauré		plaguí		plagui		plaguem		plagut,plaguda
+(complaure)
+raure		rac		rau		raem	raïa	raíem	rauré	raguí		ragui		raguem		ragut,raguda
+beure		bec		beu		bevem	bevia	bevíem	beuré		beguí		begui		beguem		begut,beguda
+(embeure)
+creure		crec	creu	creiem	creia	crèiem	creuré		creguí		cregui		creguem		cregut,creguda
+deure		dec		deu		devem	devia	devíem	deuré		deguí		degui		deguem		degut,deguda
+jeure		jec		jei		jaiem	jeia	jèiem	jauré		jaguí		jegui		jaguem		jagut,jaguda
+(ajeure)
+lleure		-		lleu	[-]		llevia	-		lleurà		llegué		llegui		-			llegut,-
+seure		sec		seu		seiem	seia	sèiem	seuré		seguí		segui		seguem		segut,seguda
+(asseure)
+treure		trec	treu	traiem	treia	trèiem	trauré		traguí		tregui		traguem		tret,treta
+(abstreure, atreure, contreure, distreure, extreure, retreure, sostreure)
+veure		veig	veu		veiem	veia	vèiem	veuré		viu,veieres/veres, vegi	vegem		vist,vista,vists/vistos
+(entreveure, preveure, reveure)									veié/veu,veiérem/vérem
+riure		ric		riu		riem	reia	rèiem	riuré		riguí		rigui		riguem		rigut,riguda
+(somriure)
+(e)scriure	escric	escriu	escrivim escrivia escrivíem escriuré escriví/escriguí escrigui escriguem escrit,escrita
+(circumscriure, descriure, inscriure, prescriure, proscriure, subscriure, transcriure)
+viure		visc	viu		vivim	vivia	vivíem	viuré		visquí		visqui		visquem		viscut,viscuda
+(conviure, sobreviure)
+cloure		cloc	clou	cloem	cloïa	cloíem	clouré		cloguí		clogui		cloguem		clos,closa,closos
+(concloure, descloure, encloure, excloure, incloure, recloure)
+coure		coc		cou		coem	coïa	coíem	couré		coguí		cogui		coguem		cuit/cogut,cuita/coguda
+moure		moc		mou		movem	movia	movíem	mouré		moguí		mogui		moguem		mogut,moguda
+(promoure)
+noure		noc		nou		noem	noïa	noíem	nouré		noguí		nogui		noguem		nogut,noguda
+ploure		-		plou	[plovent] plovia -		plourà		plogué		plogui		-			plogut,ploguda
+
+
+-nyer verbs (regular except pp)
+
+infinitive	pres1s	pres3s	pres1p	impf1s	fut1s		pret1s		sub1s		sub1p		pp
+atènyer		atenyo	ateny	atenyem	atenyia	atenyeré	atenyí		atenyi		atenyem		atès,atesa,atesos
+empènyer	empenyo	empeny	empenyem empenyia empenyeré	empenyí		empenyi		empenyem	empès,empesa,empesos
+estrènyer	estrenyo estreny estrenyem estrenyia estrenyeré	estrenyí estrenyi	estrenyem	estret,estreta
+estrènyer
+(constrènyer,restrènyer)
+fènyer		fenyo	feny	fenyem	fenyia	fenyeré		fenyí/fenguí fenyi		fenyem		fenyut/fengut,fenyuda/fenguda
+pertànyer	pertanyo pertany pertanyem pertanyia pertanyeré	pertanyí/pertanguí pertanyi	pertanyem pertanyut/pertangut,pertanyuda/pertanguda
+plànyer		planyo	plany	planyem	planyia	planyeré	planyí/planguí planyi	planyem		plangut/planyut,planguda/planyuda
+
 
 -xer verbs (NOTE: pres2s in -xes)
-créixer		creixo	creix	creixem	creixia	creixeré	creixí/cresquí creixi	creixés/cresqués crescut,crescuda
+
+infinitive	pres1s	pres3s	pres1p	impf1s	fut1s		pret1s		sub1s		sub1p		pp
+créixer		creixo	creix	creixem	creixia	creixeré	creixí/cresquí creixi	creixem		 crescut,crescuda
 (acréixer,decréixer)
-conèixer	conec	coneix	coneixem coneixia coneixeré	coneguí		conegui		conegués	conegut,coneguda
+conèixer	conec	coneix	coneixem coneixia coneixeré	coneguí		conegui		coneguem	conegut,coneguda
 (desconèixer,reconèixer)
-merèixer
-nàixer
-(renàixer)
-néixer
+merèixer	mereixo	mereix	mereixem mereixia mereixeré	mereixí/meresquí mereixi mereixem	merescut,merescuda
+néixer/		neixo/	neix/	naixem	naixia	naixeré		naixí/nasquí neixi/		naixem/nasquem nascut,nascuda 
+nàixer		naixo	naix											 naixi
 (renéixer)
-parèixer
+parèixer	parec	pareix	pareixem pareixia pareixeré	pareguí		paregui		pareguem	paregut,pareguda
 (aparèixer,comparèixer,desaparèixer,reaparèixer)
-péixer
+péixer		peixo	peix	paixem	paixia	paixeré		paixí		peixi		paixem		pascut,pascuda
+
+
+misc. -er verbs
+
+infinitive	pres1s	pres3s	pres1p	impf1s	impf1p	fut1s		pret1s		sub1s		sub1p		pp
+córrer		corro	corre	correm	corria	corríem	correré		correguí	corri		correm		corregut,correguda
+fúmer		fumo	fum		fumem	fumia	fumíem	fumeré		fumí		fumi		fumem		fumut,fumuda
+prémer		premo	prem	premem	premia	premíem	premeré		premí		premi		premem		premut,premuda
+(es-, re-)
+témer		temo	tem		temem	temia	temíem	temeré		temí		temi		temem		temut,temuda
+trémer		[regular]
+tòrcer		torço	torç	torcem	torcia	torcíem	torceré		torcí		torci		torcem		torçut,torçuda
+(des-)				[pres2s torces]
+vèncer		venço	venç	vencem	vencia	vencíem	venceré		vencí		venci		vencem		vençut,vençuda
+(con-, re-)			[pres2s vences]
+cabre/caber	cabo	cap		cabem	cabia	cabíem	cabré		cabí		càpiga		capiguem	cabut,cabuda
+																			[sub2s càpigues]
+haver		he/haig	ha		havem/hem havia	havíem	hauré		haguí		hagi		hàgim/haguem hagut,haguda
+					[noimp]							[cond1s hauria/haguera; impsub2s haguessis/haguesses]
+poder		puc		pot		podem	podia	podíem	podré		poguí		pugui		puguem		pogut,poguda
+saber		sé		sap		sabem	sabia	sabíem	sabré		sabí		sàpiga		sapiguem	sabut,sabuda
+					[imp2s sàpigues, imp2p sapigueu]
+voler		vull	vol		volem	volia	volíem	voldré		volguí		vulgui		vulguem		volgut,volguda
+ser/ésser	soc		és		som		era		érem	seré		fui			sigui		siguem		estat/sigut,estada/siguda
+							[ger sent/essent]		[cond1s seria/fora]
+[pres: soc,ets,éts,som,sou,són; pret: fui,fores,fou,fórem,fóreu,foren; impsub: fos,fossis,fos,fóssim,fóssiu,fossin]
+[imp: sigues,sigueu]
+fer			faig	fa		fem		feia	fèiem	faré		fiu			faci		fem			fet,feta
+					[pres3p fan]
+[pret: fiu,feres,feu,férem,féreu,feren]
+
 ]=]
 local vowel_alternants = m_table.listToSet({"i-e", "i", "í", "u-o", "u", "ú", "+"})
 local vowel_alternant_to_desc = {
@@ -276,10 +366,6 @@ local function add_slots(alternant_multiword_spec)
 		{"infinitive", "inf"},
 		{"infinitive_linked", "inf"},
 		{"gerund", "ger"},
-		{"short_pp_ms", "short|m|s|past|part"},
-		{"short_pp_fs", "short|f|s|past|part"},
-		{"short_pp_mp", "short|m|p|past|part"},
-		{"short_pp_fp", "short|f|p|past|part"},
 		{"pp_ms", "m|s|past|part"},
 		{"pp_fs", "f|s|past|part"},
 		{"pp_mp", "m|p|past|part"},
@@ -349,14 +435,11 @@ local function add_slots(alternant_multiword_spec)
 	add_basic_personal_slot("pres", "pres|ind", person_number_list)
 	add_basic_personal_slot("impf", "impf|ind", person_number_list)
 	add_basic_personal_slot("pret", "pret|ind", person_number_list)
-	add_basic_personal_slot("plup", "plup|ind", person_number_list)
 	add_basic_personal_slot("fut", "fut|ind", person_number_list)
 	add_basic_personal_slot("cond", "cond", person_number_list)
 	add_basic_personal_slot("pres_sub", "pres|sub", person_number_list)
 	add_basic_personal_slot("impf_sub", "impf|sub", person_number_list)
-	add_basic_personal_slot("fut_sub", "fut|sub", person_number_list)
 	add_basic_personal_slot("imp", "imp", imp_person_number_list)
-	add_basic_personal_slot("pers_inf", "pers|inf", person_number_list)
 	-- Don't need special non-reflexive-part slots because the negative imperative is multiword, of which the
 	-- individual words are 'non' + subjunctive.
 	add_basic_personal_slot("neg_imp", "neg|imp", neg_imp_person_number_list, "no special verb form of")
@@ -427,12 +510,8 @@ for _, overridable_stem in ipairs {
 	"pres_sub_stressed",
 	"pres_sub_unstressed",
 	{"sub_conj", simple_choice({"ar", "er"}) },
-	"plup",
 	"impf_sub",
-	"fut_sub",
-	"pers_inf",
 	"pp",
-	"short_pp",
 } do
 	if type(overridable_stem) == "string" then
 		overridable_stems[overridable_stem] = allow_multiple_values
@@ -552,12 +631,8 @@ The following stems are recognized:
 -- fut: The future stem. Defaults to the infinitive stem + the conjugation vowel.
 -- cond: The conditional stem. Defaults to `fut`.
 -- impf_sub: The imperfect subjunctive stem. Defaults to `pret`.
--- fut_sub: The future subjunctive stem. Defaults to `pret`.
--- plup: The pluperfect stem. Defaults to `pret`.
--- pers_inf: The personal infinitive stem. Defaults to the infinitive stem + the conjugation vowel.
 -- pp: The masculine singular past participle. Default is based on the verb conjugation: infinitive stem + '-ado' for
      -ar verbs, otherwise infinitive stem + '-ido'.
--- short_pp: The short masculine singular past participle, for verbs with such a form. No default.
 -- pp_inv: `true` if the past participle exists only in the masculine singular.
 ]=]
 
@@ -569,24 +644,14 @@ local built_in_conjugations = {
 
 	-- Verbs not needing entries here:
 	--
-	-- (1) Verbs with short past participles: need to specify the short pp explicitly.
-	--
-	-- aceitar: use <short_pp:aceite>
-	-- anexar, completar, expressar, expulsar, findar, fritar, ganhar, gastar, limpar, pagar, pasmar, pegar, soltar:
-	--   use <short_pp:anexo> etc.
-	-- assentar: use <short_pp:assente>
-	-- entregar: use <short_pp:entregue>
-	-- enxugar: use <short_pp:enxuto>
-	-- matar: use <short_pp:morto>
-	--
-	-- (2) Verbs with orthographic consonant alternations: handled automatically.
+	-- (1) Verbs with orthographic consonant alternations: handled automatically.
 	--
 	-- -car (brincar, buscar, pecar, trancar, etc.): automatically handled in combine_stem_ending()
 	-- -zar (alcanzar, comezar, lazar): automatically handled in combine_stem_ending()
     -- -gar (apagar, cegar, esmagar, largar, navegar, resmungar, sugar, etc.): automatically handled in combine_stem_ending()
     -- -guar (iguar, minguar): automatically handled in combine_stem_ending()
 	--
-	-- (3) Verbs with vowel alternations: need to specify the alternation explicitly unless it always happens, in
+	-- (2) Verbs with vowel alternations: need to specify the alternation explicitly unless it always happens, in
 	--     which case it's handled automatically through an entry below.
 	--
 	-- esmiuzar changing to esmiúzo: use <ú>
@@ -1125,9 +1190,6 @@ local built_in_conjugations = {
 			full_impf = "puñ",
 			pret_conj = "irreg", pret = "puxe",
 			fut = "por",
-			pers_inf = "po",
-			pers_inf_1s = function(base, prefix) return prefix == "" and "pór" or "por" end,
-			pers_inf_3s = function(base, prefix) return prefix == "" and "pór" or "por" end,
 			gerund = "pondo", pp = "posto",
 			irreg = true,
 		}
@@ -1420,16 +1482,10 @@ local function construct_stems(base, vowel_alt, imp_only)
 	stems.pres_sub_stressed = base.stems.pres_sub_stressed or stems.pres1
 	stems.pres_sub_unstressed = base.stems.pres_sub_unstressed or stems.pres1_and_sub or stems.pres_unstressed
 	stems.sub_conj = base.stems.sub_conj or base.conj
-	stems.plup = base.stems.plup or stems.pret
-	-- Needed for plup_1p and plup_2p if there's an accent in the regular pluperfect stem (as for [[saír]]).
-	stems.plup_unstressed = iut.map_forms(iut.convert_to_general_list_form(stems.plup), com.remove_final_accent)
 	stems.impf_sub = base.stems.impf_sub or stems.pret
 	-- Needed for impf_sub_1p and impf_sub_2p. We can't just add an acute accent because there may already be one
 	-- (as for [[saír]]).
 	stems.impf_sub_antepenult_stressed = iut.map_forms(iut.convert_to_general_list_form(stems.impf_sub), com.add_final_accent)
-	stems.fut_sub = base.stems.fut_sub or stems.pret
-	-- use combine_stem_ending esp. so we get saír, saírmos, etc.
-	stems.pers_inf = base.stems.pers_inf or combine("pers_inf", base.inf_stem, base.conj_vowel)
 	-- use combine_stem_ending esp. so we get roído, caído, etc.
 	stems.pp = base.stems.pp or combine("pp_ms", base.inf_stem, base.conj == "ar" and "ado" or "ido")
 	stems.pp_ms = stems.pp
@@ -1441,10 +1497,6 @@ local function construct_stems(base, vowel_alt, imp_only)
 		end
 	end
 	stems.pp_fs = iut.map_forms(iut.convert_to_general_list_form(stems.pp_ms), masc_to_fem)
-	if base.stems.short_pp then
-		stems.short_pp_ms = base.stems.short_pp
-		stems.short_pp_fs = iut.map_forms(iut.convert_to_general_list_form(stems.short_pp_ms), masc_to_fem)
-	end
 	base.this_stems = stems
 end
 
@@ -1527,15 +1579,10 @@ local function add_finite_non_present(base)
 		add_tense("pret", stems.pret_base, "ín", "iches", "iu", "imos", "istes", "iron")
 	end
 
-	add_tense("plup", stems.plup, "ra", "ras", "ra", nil, nil, "ran")
-	add_tense("plup", stems.plup_unstressed, nil, nil, nil, "ramos", "rades", nil)
 	add_tense("impf_sub", stems.impf_sub, "se", "ses", "se", nil, nil, "sen")
 	add_tense("impf_sub", stems.impf_sub_antepenult_stressed, nil, nil, nil, "semos", "sedes", nil)
-	add_tense("fut_sub", stems.fut_sub, "r", "res", "r", "rmos", "rdes", "ren")
 	add_tense("fut", stems.fut, "ei", "ás", "á", "emos", "edes", "án")
 	add_tense("cond", stems.cond, "ía", "ías", "ía", "iamos", "iades", "ían")
-	-- [[pór]] needs overrides of the pers_inf_1s and pers_inf_3s.
-	add_tense("pers_inf", stems.pers_inf, "r", "res", "r", "rmos", "rdes", "ren")
 end
 
 
@@ -1566,24 +1613,11 @@ local function add_non_finite_forms(base)
 			addit("gerund_" .. persnum, stems.pres_unstressed, ger_ending)
 		end
 	end
-	-- Skip the long/short past participle footnotes if called from {{ca-verb}} so they don't show in the headword.
-	local long_pp_footnotes =
-		stems.short_pp_ms and not base.alternant_multiword_spec.from_headword and {long_pp_footnote} or nil
-	addit("pp_ms", stems.pp_ms, "", long_pp_footnotes)
+	addit("pp_ms", stems.pp_ms, "")
 	if not base.pp_inv then
-		addit("pp_fs", stems.pp_fs, "", long_pp_footnotes)
-		addit("pp_mp", stems.pp_ms, "s", long_pp_footnotes)
-		addit("pp_fp", stems.pp_fs, "s", long_pp_footnotes)
-	end
-	if stems.short_pp_ms then
-		local short_pp_footnotes =
-			stems.short_pp_ms and not base.alternant_multiword_spec.from_headword and {short_pp_footnote} or nil
-		addit("short_pp_ms", stems.short_pp_ms, "", short_pp_footnotes)
-		if not base.pp_inv then
-			addit("short_pp_fs", stems.short_pp_fs, "", short_pp_footnotes)
-			addit("short_pp_mp", stems.short_pp_ms, "s", short_pp_footnotes)
-			addit("short_pp_fp", stems.short_pp_fs, "s", short_pp_footnotes)
-		end
+		addit("pp_fs", stems.pp_fs, "")
+		addit("pp_mp", stems.pp_ms, "s")
+		addit("pp_fp", stems.pp_fs, "s")
 	end
 end
 
@@ -2258,13 +2292,6 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		insert_ann("defective", "regular")
 	end
 
-	if base.stems.short_pp then
-		insert_ann("short_pp", "irregular short past participle")
-		insert_cat("verbs with irregular short past participle")
-	else
-		insert_ann("short_pp", "regular")
-	end
-
 	if base.clitic then
 		insert_cat("verbs with lexical clitics")
 	end
@@ -2331,7 +2358,6 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	local ann = {}
 	alternant_multiword_spec.annotation = ann
 	ann.irreg = {}
-	ann.short_pp = {}
 	ann.defective = {}
 	ann.vowel_alt = {}
 	ann.cons_alt = {}
@@ -2351,10 +2377,6 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	local irreg = table.concat(ann.irreg, " or ")
 	if irreg ~= "" and irreg ~= "regular" then
 		table.insert(ann_parts, irreg)
-	end
-	local short_pp = table.concat(ann.short_pp, " or ")
-	if short_pp ~= "" and short_pp ~= "regular" then
-		table.insert(ann_parts, short_pp)
 	end
 	local defective = table.concat(ann.defective, " or ")
 	if defective ~= "" and defective ~= "regular" then
@@ -2376,9 +2398,6 @@ local function show_forms(alternant_multiword_spec)
 	local lemmas = alternant_multiword_spec.forms.infinitive
 	alternant_multiword_spec.lemmas = lemmas -- save for later use in make_table()
 
-	if alternant_multiword_spec.forms.short_pp_ms then
-		alternant_multiword_spec.has_short_pp = true
-	end
 	local reconstructed_verb_spec = export.reconstruct_verb_spec(alternant_multiword_spec)
 
 	local function transform_accel_obj(slot, formobj, accel_obj)
@@ -2433,14 +2452,6 @@ local basic_table = [=[
 ! style="border: 1px solid #999999; background:#f3d1d1" | '''<span title="infinitivo impersoal">Impersonal</span>'''
 | style="border: 1px solid #999999; vertical-align: top;" colspan="6" | {infinitive}
 |-
-! style="border: 1px solid #999999; background:#f3d1d1" | '''<span title="infinitivo conxugado">Personal</span>'''
-| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_3p}
-|-
 ! style="border: 1px solid #999999; background:#dddda0" colspan="7" | ''<span title="xerundio">Gerund</span>''
 |-
 | style="border: 1px solid #999999; background:#eeeeb1" |
@@ -2471,14 +2482,6 @@ local basic_table = [=[
 | style="border: 1px solid #999999; vertical-align: top;" | {pret_1p}
 | style="border: 1px solid #999999; vertical-align: top;" | {pret_2p}
 | style="border: 1px solid #999999; vertical-align: top;" | {pret_3p}
-|-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="pretérito pluscuamperfecto">Pluperfect</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {plup_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {plup_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {plup_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {plup_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {plup_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {plup_3p}
 |-
 ! style="border: 1px solid #999999; background:#b0bfd4" | <span title="futuro do presente">Future</span>
 | style="border: 1px solid #999999; vertical-align: top;" | {fut_1s}
@@ -2514,14 +2517,6 @@ local basic_table = [=[
 | style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_2p}
 | style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_3p}
 |-
-! style="border: 1px solid #999999; background:#b0d4b0" | <span title="futuro do subxuntivo">Future</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_3p}
-|-
 ! style="border: 1px solid #999999; background:#f4e4d0" colspan="7" | ''<span title="imperativo">Imperative</span>''
 |-
 ! style="border: 1px solid #999999; background:#d4c4b0" | <span title="imperativo afirmativo">Affirmative</span>
@@ -2540,29 +2535,6 @@ local basic_table = [=[
 | style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_3p}
 |{\cl}{notes_clause}</div></div>
 ]=]
-
-local double_pp_template = [=[
-
-! style="border: 1px solid #999999; background:#e2e4c0" colspan="7" | ''<span title="participio irregular">Short past participle</span>''
-|-
-! style="border: 1px solid #999999; background:#f3f5d1" | Masculine
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {short_pp_ms}
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {short_pp_mp}
-|-
-! style="border: 1px solid #999999; background:#f3f5d1" | Feminine
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {short_pp_fs}
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {short_pp_fp}
-|-
-! style="border: 1px solid #999999; background:#e2e4c0" colspan="7" | ''<span title="participio regular">Long past participle</span>''
-|-
-! style="border: 1px solid #999999; background:#f3f5d1" | Masculine
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_ms}
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_mp}
-|-
-! style="border: 1px solid #999999; background:#f3f5d1" | Feminine
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fs}
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fp}
-|-]=]
 
 local single_pp_template = [=[
 
@@ -2589,8 +2561,7 @@ local function make_table(alternant_multiword_spec)
 	-- Format the table.
 	forms.footnote = alternant_multiword_spec.footnote_basic
 	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
-	-- has_short_pp is computed in show_forms().
-	local pp_template = alternant_multiword_spec.has_short_pp and double_pp_template or single_pp_template
+	local pp_template = single_pp_template
 	forms.pp_clause = m_string_utilities.format(pp_template, forms)
 	local table_with_pronouns = rsub(basic_table, "<<([^<>|]-)|([^<>|]-)>>", link_term)
 	local table_with_pronouns = rsub(table_with_pronouns, "<<(.-)>>", link_term)
