@@ -44,7 +44,7 @@ def process_text_on_page(index, pagetitle, text):
           must_continue = True
           break
         headt = t
-      elif tn in ["pt-verb form of", "pt-verb-form-of"]:
+      elif tn == "pt-verb form of":
         if form_of_t:
           pagemsg("WARNING: Saw two {{pt-verb form of}} templates in section: %s and %s" % (str(form_of_t), origt))
           must_continue = True
@@ -76,6 +76,10 @@ def process_text_on_page(index, pagetitle, text):
           subsections[k - 1] = subsections[k - 1].replace("=Verb=", "=Participle=")
           notes.append("convert verb form for Portuguese lemma '%s' to past participle" % lemma)
         elif re.search("(a|os|as)$", pagetitle):
+          pp_lemma = re.sub("[ao]s?$", "", pagetitle) + "o"
+          if pp_lemma != pp:
+            pagemsg("WARNING: For verb infinitive %s, expected past participle lemma %s but saw %s, not same; skipping" % (lemma, pp, pp_lemma))
+            continue
           newtn, newg = (
             ("feminine singular of", "f-s") if pagetitle.endswith("a") else
             ("masculine plural of", "m-p") if pagetitle.endswith("os") else
@@ -85,7 +89,6 @@ def process_text_on_page(index, pagetitle, text):
           if newtn is None:
             raise ValueError("Internal error: Something wrong, can't identify gender/number of page title '%s'" %
               pagetitle)
-          pp_lemma = re.sub("[ao]s?$", "", pagetitle) + "o"
           del t.params[:]
           blib.set_template_name(t, newtn)
           t.add("1", "pt")
