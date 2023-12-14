@@ -173,29 +173,34 @@ Irregular verbs:
 -ldre/-ndre verbs:
 
 infinitive	pres1s	pres3s	pres1p	impf1s	fut1s		pret1s		sub1s		sub1p		pp
-(ab)soldre	absolc	absol	absolem	absolia	absoldré	absolguí	absolgui	absolguem	absolt,absolta
-(a)tendre	atenc	atén	atenem	atenia	atendré		atenguí		atengui		atenguem	atès,atesa,atesos
-					(pres2s: atens, pres3p: atenen)
 caldre		-		cal		[calent] calia	caldrà		calgué		calgui		-			calgut,-
-cerndre		cerno	cern	cernem	cernia	cerndré		cerní		cerni		cernem		cernut,cernuda
 coldre		colc	col		colem	colia	coldré		colguí		colgui		colguem		colt,colta
-(de)pendre	depenc	depèn	depenem	depenia	dependré	depenguí	depengui	depenguem	depès,depesa,depesos
 doldre		dolc	dol		dolem	dolia	doldré		dolguí		dolgui		dolguem		dolgut,dolguda
-(en)cendre	encenc	encén	encenem	encenia	encendré	encenguí	encengui	encenguem	encès,encesa,encesos
-fendre		fenc	fen		fenem	fenia	fendré		fenguí		fengui		fenguem		fes,fesa,fesos
-defendre	defenc	defèn	defenem	defenia	defendré	defenguí	defengui	defenguem	defès,defesa,defesos
-fondre		fonc	fon		fonem	fonia	fondré		fonguí		fongui		fonguem		fos,fosa,fosos
-difondre	difonc	difon	difonem	difonia	difondré	difonguí	difongui	difonguem	difós,difosa,difosos
-enfondre	enfonc	enfon	enfonem	enfonia	enfondré	enfonguí	enfongui	enfonguem	enfús,enfusa,enfusos
 moldre		molc	mol		molem	molia	moldré		molguí		molgui		molguem		molt,molta
 oldre		olc		ol		olem	olia	oldré		olguí		olgui		olguem		olgut,olguda
-pondre		ponc	pon		ponem	ponia	pondré		ponguí		pongui		ponguem		post,posta,postos
-prendre		prenc	pren	prenem	prenia	prendré		prenguí		prengui		prenguem	pres,presa,presos
-aprendre	aprenc	aprèn	aprenem	aprenia	aprendré	aprenguí	aprengui	aprenguem	après,apresa,apresos
+-soldre		-solc	-sol	-solem	-solia	-soldré		-solguí		-solgui		-solguem	-solt,-solta
+(absoldre, dissoldre, resoldre)
 toldre		tolc	tol		tolem	tolia	toldré		tolguí		tolgui		tolguem		tolt,tolta
-tondre		tonc	ton		tonem	tonia	tondré		tonguí		tongui		tonguem		tos,tosa,tosos
 romandre	romanc	roman	romanem	romania	romandré	romanguí	romangui	romanguem	romàs,romasa,romasos
+encendre	encenc	encén	encenem	encenia	encendré	encenguí	encengui	encenguem	encès,encesa,encesos
+fendre		fenc	fen/-fèn fenem	fenia	fendré		fenguí		fengui		fenguem		fes/-fès,fesa,fesos
+(defendre, ofendre)
+-pendre		-depenc	-pèn	-penem	-penia	-pendré		-penguí		-pengui		-penguem	-pès,-pesa,-pesos
+(dependre,despendre,expendre,suspendre)
+prendre		prenc	pren/-prèn prenem prenia prendré	prenguí		prengui		prenguem	pres/-près,presa,presos
+(aprendre, comprendre, desprendre, emprendre, reprendre, sorprendre)
+-tendre		-tenc	-tén	-tenem	-tenia	-tendré		-tenguí		-tengui		-tenguem	-tès,-tesa,-tesos
+					(pres2s: atens, pres3p: atenen)
+(atendre, contendre, distendre, entendre, estendre, pretendre)
 vendre		venc	ven		venem	venia	vendré		venguí		vengui		venguem		venut,venuda
+(malvendre, revendre)
+fondre		fonc	fon		fonem	fonia	fondré		fonguí		fongui		fonguem		fos/-fós,fosa,fosos
+(confondre, difondre, infondre, refondre)
+enfondre	enfonc	enfon	enfonem	enfonia	enfondré	enfonguí	enfongui	enfonguem	enfús,enfusa,enfusos
+pondre		ponc	pon		ponem	ponia	pondré		ponguí		pongui		ponguem		post,posta,postos
+(compondre, correspondre, descompondre, respondre)
+tondre		tonc	ton		tonem	tonia	tondré		tonguí		tongui		tonguem		tos,tosa,tosos
+cerndre		cerno	cern	cernem	cernia	cerndré		cerní		cerni		cernem		cernut,cernuda
 
 
 -ler verbs (mostly like -ldre verbs):
@@ -229,7 +234,7 @@ beure		bec		beu		bevem	bevia	bevíem	beuré		beguí		begui		beguem		begut,beguda
 (embeure)
 creure		crec	creu	creiem	creia	crèiem	creuré		creguí		cregui		creguem		cregut,creguda
 deure		dec		deu		devem	devia	devíem	deuré		deguí		degui		deguem		degut,deguda
-jeure		jec		jei		jaiem	jeia	jèiem	jauré		jaguí		jegui		jaguem		jagut,jaguda
+jeure		jec		jeu		jaiem	jeia	jèiem	jauré		jaguí		jegui		jaguem		jagut,jaguda
 (ajeure)
 lleure		-		lleu	[-]		llevia	-		lleurà		llegué		llegui		-			llegut,-
 seure		sec		seu		seiem	seia	sèiem	seuré		seguí		segui		seguem		segut,seguda
@@ -246,6 +251,7 @@ viure		visc	viu		vivim	vivia	vivíem	viuré		visquí		visqui		visquem		viscut,vi
 (conviure, sobreviure)
 cloure		cloc	clou	cloem	cloïa	cloíem	clouré		cloguí		clogui		cloguem		clos,closa,closos
 (concloure, descloure, encloure, excloure, incloure, recloure)
+encloure	encloc	enclou	encloem	encloïa	encloíem enclouré	encloguí	enclogui	encloguem	enclòs,enclosa,enclosos
 coure		coc		cou		coem	coïa	coíem	couré		coguí		cogui		coguem		cuit/cogut,cuita/coguda
 moure		moc		mou		movem	movia	movíem	mouré		moguí		mogui		moguem		mogut,moguda
 (promoure)
@@ -312,25 +318,6 @@ fer			faig	fa		fem		feia	fèiem	faré		fiu			faci		fem			fet,feta
 [pret: fiu,feres,feu,férem,féreu,feren]
 
 ]=]
-local vowel_alternants = m_table.listToSet({"i-e", "i", "í", "u-o", "u", "ú", "+"})
-local vowel_alternant_to_desc = {
-	["i-e"] = "''i-e'' alternation in present singular",
-	["i"] = "''e'' becomes ''i'' when stressed",
-	["í"] = "''i'' becomes ''í'' when stressed",
-	["u-o"] = "''u-o'' alternation in present singular",
-	["u"] = "''o'' becomes ''u'' when stressed",
-	["ú"] = "''u'' becomes ''ú'' when stressed",
-}
-
-local vowel_alternant_to_cat = {
-	["i-e"] = "i-e alternation in present singular",
-	["i"] = "e becoming i when stressed",
-	["í"] = "i becoming í when stressed",
-	["u-o"] = "u-o alternation in present singular",
-	["u"] = "o becoming u when stressed",
-	["ú"] = "u becoming ú when stressed",
-}
-
 local all_persons_numbers = {
 	["1s"] = "1|s",
 	["2s"] = "2|s",
@@ -707,14 +694,273 @@ local built_in_conjugations = {
 	-- -cer (verbs in -ecer, vencer, etc.): automatically handled in combine_stem_ending()
 	-- -guer (erguer/soerguer): automatically handled in combine_stem_ending()
 
+infinitive	pres1s	pres3s	pres1p	impf1s	fut1s		pret1s		sub1s		sub1p		pp
+caldre		-		cal		[calent] calia	caldrà		calgué		calgui		-			calgut,-
+coldre		colc	col		colem	colia	coldré		colguí		colgui		colguem		colt,colta
+doldre		dolc	dol		dolem	dolia	doldré		dolguí		dolgui		dolguem		dolgut,dolguda
+moldre		molc	mol		molem	molia	moldré		molguí		molgui		molguem		molt,molta
+oldre		olc		ol		olem	olia	oldré		olguí		olgui		olguem		olgut,olguda
+-soldre		-solc	-sol	-solem	-solia	-soldré		-solguí		-solgui		-solguem	-solt,-solta
+(absoldre, dissoldre, resoldre)
+toldre		tolc	tol		tolem	tolia	toldré		tolguí		tolgui		tolguem		tolt,tolta
+romandre	romanc	roman	romanem	romania	romandré	romanguí	romangui	romanguem	romàs,romasa,romasos
+encendre	encenc	encén	encenem	encenia	encendré	encenguí	encengui	encenguem	encès,encesa,encesos
+fendre		fenc	fen/-fèn fenem	fenia	fendré		fenguí		fengui		fenguem		fes/-fès,fesa,fesos
+(defendre, ofendre)
+-pendre		-depenc	-pèn	-penem	-penia	-pendré		-penguí		-pengui		-penguem	-pès,-pesa,-pesos
+(dependre,despendre,expendre,suspendre)
+prendre		prenc	pren/-prèn prenem prenia prendré	prenguí		prengui		prenguem	pres/-près,presa,presos
+(aprendre, comprendre, desprendre, emprendre, reprendre, sorprendre)
+-tendre		-tenc	-tén	-tenem	-tenia	-tendré		-tenguí		-tengui		-tenguem	-tès,-tesa,-tesos
+					(pres2s: atens, pres3p: atenen)
+(atendre, contendre, distendre, entendre, estendre, pretendre)
+vendre		venc	ven/-vèn venem	venia	vendré		venguí		vengui		venguem		venut,venuda
+(malvendre, revendre)
+fondre		fonc	fon		fonem	fonia	fondré		fonguí		fongui		fonguem		fos/-fós,fosa,fosos
+(confondre, difondre, infondre, refondre)
+enfondre	enfonc	enfon	enfonem	enfonia	enfondré	enfonguí	enfongui	enfonguem	enfús,enfusa,enfusos
+pondre		ponc	pon		ponem	ponia	pondré		ponguí		pongui		ponguem		post,posta,postos
+(compondre, correspondre, descompondre, respondre)
+tondre		tonc	ton		tonem	tonia	tondré		tonguí		tongui		tonguem		tos,tosa,tosos
+cerndre		cerno	cern	cernem	cernia	cerndré		cerní		cerni		cernem		cernut,cernuda
+
 	{
-		-- must be listed before -aer
-		match = "^traer",
+		-- [[caldre]], [[doldre]], [[oldre]]
+		match = match_against_verbs("ldre", {"ca", "do", "^o"}),
 		forms = {
-			-- all occurrences of accented í and ï in endings handled in combine_stem_ending()
-			pres1_and_sub = "trai",
-			pret_conj = "irreg", pret = "trouxe",
-			irreg = true,
+			stem = "l",
+			-- g_infix implies irreg = true
+			-- g_infix sets pres1_and_sub to end in -g; combine_stem_ending() changes final -g to -c
+			-- g_infix also adds -g to pret and pp stems
+			g_infix = true,
+		}
+	},
+	{
+		-- [[cerndre]]
+		match = "cerndre",
+		forms = {
+			stem = "cern",
+			-- otherwise regular
+		}
+	},
+	{
+		-- [[coldre]], [[moldre]], [[absoldre]], [[dissoldre]], [[resoldre]], [[toldre]]
+		match = "oldre", -- this must follow [[doldre]]/[[oldre]] rule above
+		forms = {
+			stem = "ol",
+			-- see above for g_infix effects
+			g_infix = true,
+			pp = "olt",
+		}
+	},
+	{
+		-- [[romandre]]
+		match = "romandre",
+		forms = {
+			stem = "roman",
+			-- see above for g_infix effects
+			g_infix = true,
+			pp = "romàs",
+		}
+	},
+	{
+		-- [[encendre]], [[atendre]], [[contendre]], [[distendre]], [[entendre]], [[estendre]], [[pretendre]]
+		match = match_against_verbs("endre", {"enc", "t"}),
+		forms = {
+			stem = "én#", -- remove final accent without prefix with vowel; also removed when adding a suffix
+			-- see above for g_infix effects
+			g_infix = true,
+			pp = "ès#", -- see above for effect of final #
+		}
+	},
+	{
+		-- [[vendre]], [[malvendre]], [[revendre]]
+		match = "vendre",
+		forms = {
+			stem = "vèn#", -- see above for effect of final #
+			-- see above for g_infix effects
+			g_infix = true,
+			pp = "venut", -- g_infix would normally make it vengut
+		}
+	},
+	{
+		-- [[fendre]], [[defendre]], [[ofendre]], [[dependre]], [[despendre]], [[expendre]], [[suspendre]], [[prendre]],
+		-- [[aprendre]], [[comprendre]], [[desprendre]], [[emprendre]], [[reprendre]], sorprendre]]
+		match = "endre", -- this must follow previous -endre rules above
+		forms = {
+			stem = "èn#", -- see above for effect of final #
+			-- see above for g_infix effects
+			g_infix = true,
+			pp = "ès#", -- see above for effect of final #
+		}
+	},
+	{
+		-- [[enfondre]]
+		match = "enfondre",
+		forms = {
+			stem = "enfon",
+			-- see above for g_infix effects
+			g_infix = true,
+			pp = "enfús",
+		}
+	},
+	{
+		-- [[pondre]], [[compondre]], [[correspondre]], [[descompondre]], [[respondre]]
+		match = "pondre",
+		forms = {
+			stem = "pon",
+			-- see above for g_infix effects
+			g_infix = true,
+			pp = "post",
+		}
+	},
+	{
+		-- [[fondre]], [[confondre]], [[difondre]], [[infondre]], [[refondre]], [[tondre]]
+		match = "ondre", -- this must follow previous -ondre rules above
+		forms = {
+			stem = "on",
+			-- see above for g_infix effects
+			g_infix = true,
+			pp = "ós#", -- see above for effect of final #
+		}
+	},
+	{
+		-- [[caure]], [[decaure]], [[recaure]]
+		match = "caure",
+		forms = {
+			-- stem ending in -ai and imperfect in -ia causes special stressed imperfect logic to take effect; we get
+			-- impf1s queia, impf1p quèiem (preceding vowel changed to è and attached to initial consonant using
+			-- combine_stem_ending(), which changes c- to qu-)
+			stem = "cai", -- i dropped by g_infix before u
+			-- g_infix implies irreg = true
+			-- g_infix sets pres1_and_sub to end in -g; combine_stem_ending() changes final -g to -c
+			-- g_infix also adds -g to pret and pp stems
+			-- g_infix sets pres3s to end in -u, removing a preceding -i or -v
+			g_infix = true,
+		}
+	},
+	{
+		-- [[plaure]], [[complaure]], [[raure]]
+		match = match_against_verbs("aure", {"pl", "r"}),
+		forms = {
+			stem = "a", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
+			g_infix = true,
+		}
+	},
+	{
+		-- [[beure]], [[embeure]], [[deure]], [[lleure]]
+		match = match_against_verbs("eure", {"b", "d", "ll"}),
+		forms = {
+			stem = "ev", -- v dropped by g_infix before g and u
+			g_infix = true,
+		}
+	},
+	{
+		-- [[creure]], [[seure]], [[asseure]]
+		match = match_against_verbs("eure", {"cr", "s"}),
+		forms = {
+			stem = "e", -- i dropped by g_infix before u
+			pres1p = "ei", -- affects pres_1p, pres_2p, gerund, imperfect (see [[caure]] above)
+			g_infix = true,
+		}
+	},
+	{
+		-- [[jeure]], [[ajeure]]
+		match = match_against_verbs("eure", {"j"}),
+		name = "jeure",
+		forms = {
+			inf_stem = "au", -- affects future and cond
+			stressed_stem = "e", -- affects stressed forms, which get g added by g_infix by added except for pres3s,
+								 -- which gets u added (controls pres_3s, pres_2s)
+			unstressed_stem = "a", -- affects unstressed_stem, which get g added by g_infix
+			pres1p = "ai", -- affects pres_1p, pres_2p, gerund, imperfect (see [[caure]] above)
+			g_infix = true,
+		}
+	},
+	{
+		-- [[treure]], [[abstreure]], [[atreure]], [[contreure]], [[distreure]], [[extreure]], [[retreure],
+		-- [[sostreure]]
+		match = match_against_verbs("eure", {"tr"}),
+		inherit = "jeure", -- inherit props from name "jeure"; must specify 'match' to correspond to form of "jeure"
+		forms = {
+			pp = "et",
+		}
+	},
+	{
+		-- [[veure]], [[entreveure]], [[preveure]], [[reveure]]
+		match = "veure",
+		forms = {
+			stem = "vei",
+			-- impf1s veia, impf1p vèiem (preceding vowel changed to è)
+			pres1_and_sub = "vej", -- changed automatically to veig in pres1s, veg- before front vowels in sub
+			pret = {"vei", "v"},
+			pret_1s = "viu",
+			pret_3s = {"veié", "veu"},
+			pp = "vist",
+		}
+	},
+	{
+		-- [[riure]], [[somriure]]
+		match = "riure",
+		forms = {
+			stem = "ri",
+			-- impf1s reia, impf1p rèiem (preceding vowel changed to è)
+			g_infix = true,
+		}
+	},
+	{
+		-- [[escriure]], [[circumscriure]], [[descriure]], [[inscriure]], [[prescriure]], [[proscriure]],
+		-- [[subscriure]], [[transcriure]]
+		match = "scriure",
+		forms = {
+			stem = "scriv", -- v dropped by g_infix before g and u
+			g_infix = true,
+			pret = {"scriv", "scrig"},
+			pp = "scrit",
+		}
+	},
+	{
+		-- [[viure]], [[conviure]], [[sobreviure]]
+		match = "viure",
+		forms = {
+			stem = "viv", -- v dropped by g_infix before g and u
+			g_infix = "visc", -- applies to pres1s, sub, pret, pp
+			pret = {"scriv", "scrig"},
+			pp = "scrit",
+		}
+	},
+	{
+		-- [[noure]]
+		match = "noure",
+		forms = {
+			stem = "no", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
+			g_infix = true,
+		}
+	},
+	{
+		-- [[cloure]], [[concloure]], [[descloure]], [[encloure]], [[excloure]], [[incloure]], [[recloure]]
+		match = "cloure",
+		forms = {
+			stem = "clo", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
+			g_infix = true,
+			pp = "clòs#", -- remove final accent without prefix with vowel; also removed when adding a suffix
+		}
+	},
+	{
+		-- [[coure]]
+		match = "coure",
+		forms = {
+			stem = "co", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
+			g_infix = true,
+			pp = {"cuit", "cogut"},
+		}
+	},
+	{
+		-- [[moure]], [[promoure]], [[ploure]]
+		match = match_against_verbs("oure", {"m", "pl"}),
+		forms = {
+			stem = "ov", -- v dropped by g_infix before g and u
+			g_infix = true,
 		}
 	},
 	{
@@ -1436,18 +1682,8 @@ local function add_single_stem_tense(base, slot_pref, stems, s1, s2, s3, p1, p2,
 end
 
 
-local function construct_stems(base, vowel_alt, imp_only)
+local function construct_stems(base)
 	local stems = {}
-	if imp_only then
-		stems.imp2s_override =
-			-- If no_pres_stressed given, there should be no imp_2s.
-			not base.no_pres_stressed and (
-			base.stems.imp2s_override or
-			vowel_alt.imp2s_override or
-			nil) or nil
-		base.this_stems = stems
-		return 
-	end
 
 	local function combine(slot, stem, ending)
 		return combine_stem_ending(base, slot, base.prefix, stem, ending, "dont include prefix")
@@ -1537,12 +1773,16 @@ local function add_present_subj(base)
 	-- Stem changing in 123s/3p vs. 12p:
 	-- * -eix- infix (-eix- in all stressed forms: 123s/3p of pres ind/sub, 2s imp
 	-- * [[collir]]: culli, cullis, culli, collim, colliu, cullin (cull- in all stressed forms)
-	-- * [[cabre]]: càpiga, càpigas, càpiga, capiguem, capigueu, càpiguen (also different endings)
+	-- * [[cabre]]: càpiga, càpigues, càpiga, capiguem, capigueu, càpiguen (also different endings)
 	local s1, s2, s3, p1, p2, p3
-	if stems.sub_conj == "ar" then
-		s1, s2, s3, p1, p2, p3 = "e", "es", "e", "emos", "edes", "en"
+	if stems.sub_conj == "i-e" then
+		s1, s2, s3, p1, p2, p3 = "i", "is", "i", "em", "eu", "in"
+	elseif stems.sub_conj == "i-i" then
+		s1, s2, s3, p1, p2, p3 = "i", "is", "i", "im", "iu", "in"
+	elseif stems.sub_conj == "a-e" then
+		s1, s2, s3, p1, p2, p3 = "a", "es", "a", "em", "eu", "en"
 	else
-		s1, s2, s3, p1, p2, p3 = "a", "as", "a", "amos", "ades", "an"
+		error("Internal error: Unrecognized present subjunctive conjugation '" .. stems.sub_conj .. "'")
 	end
 
 	addit("1s", stems.pres_sub_stressed, s1)
@@ -1560,29 +1800,27 @@ local function add_finite_non_present(base)
 		add_single_stem_tense(base, slot, stem, s1, s2, s3, p1, p2, p3)
 	end
 
+	-- * at the beginning of the ending means to remove an accent from the last vowel of the imperfect stem.
 	if stems.full_impf then
-		add_tense("impf", stems.full_impf, "a", "as", "a", "amos", "ades", "an")
+		add_tense("impf", stems.full_impf, "*a", "*es", "*a", "em", "eu", "en")
 	elseif base.conj == "ar" then
-		add_tense("impf", stems.impf, "aba", "abas", "aba", "abamos", "abades", "aban")
+		add_tense("impf", stems.impf, "ava", "avas", "ava", "àvem", "àveu", "aven")
 	else
-		add_tense("impf", stems.impf, "ía", "ías", "ía", "iamos", "iades", "ían")
+		add_tense("impf", stems.impf, "ia", "ies", "ia", "íem", "íeu", "íen")
 	end
 
-	if stems.pret_conj == "irreg" then
-		add_tense("pret", stems.short_pret, "en", nil, "o")
-		add_tense("pret", stems.pret, nil, "ches", nil, "mos", "stes", "ron")
-	elseif stems.pret_conj == "ar" then
-		add_tense("pret", stems.pret_base, "ei", "aches", "ou", "amos", "astes", "aron")
+	if stems.pret_conj == "ar" then
+		add_tense("pret", stems.pret_base, "í", "ares", "à", "àrem", "àreu", "aren")
 	elseif stems.pret_conj == "er" then
-		add_tense("pret", stems.pret_base, "ín", "iches", "eu", "emos", "estes", "eron")
+		add_tense("pret", stems.pret_base, "í", "eres", "é", "érem", "éreu", "eren")
 	else
-		add_tense("pret", stems.pret_base, "ín", "iches", "iu", "imos", "istes", "iron")
+		add_tense("pret", stems.pret_base, "í", "ires", "í", "írem", "íreu", "iren")
 	end
 
-	add_tense("impf_sub", stems.impf_sub, "se", "ses", "se", nil, nil, "sen")
-	add_tense("impf_sub", stems.impf_sub_antepenult_stressed, nil, nil, nil, "semos", "sedes", nil)
-	add_tense("fut", stems.fut, "ei", "ás", "á", "emos", "edes", "án")
-	add_tense("cond", stems.cond, "ía", "ías", "ía", "iamos", "iades", "ían")
+	-- * at the beginning of the ending means to remove an accent from the last vowel of the imperfect subjunctive stem.
+	add_tense("impf_sub", stems.impf_sub, "s", "*ssis", "s", "ssim", "ssiu", "*ssin")
+	add_tense("fut", stems.fut, "é", "às", "à", "em", "eu", "an")
+	add_tense("cond", stems.cond, "ia", "ies", "ia", "íem", "íeu", "ien")
 end
 
 
@@ -1623,29 +1861,11 @@ end
 
 
 local function add_imperatives(base)
-	for _, vowel_alt in ipairs(base.vowel_alt_stems) do
-		construct_stems(base, vowel_alt, "imp only")
-		local stems = base.this_stems
-		if stems.imp2s_override then
-			add3(base, "imp_2s", stems.imp2s_override, base.conj == "ar" and "a" or "e")
-		else
-			-- Copy pres3s to imperative since they are almost always the same.
-			insert_forms(base, "imp_2s", iut.map_forms(base.forms.pres_3s, function(form) return form end))
-		end
-	end
-	if not skip_slot(base, "imp_2p") then
-		-- Copy pres2p to imperative 2p minus -s since they are almost always the same.
-		-- But not if there's an override, to avoid possibly throwing an error.
-		insert_forms(base, "imp_2p", iut.map_forms(base.forms.pres_2p, function(form)
-			local form_no_s = rmatch(form, "^(.*)s$")
-			if not form_no_s then
-				error("Can't derive second-person plural imperative from second-person plural present indicative " ..
-					"because form '" .. form .. "' doesn't end in -s")
-			end
-			return form_no_s
-		end))
-	end
-	-- Copy subjunctives to imperatives, unless there's an override for the given slot (as with the imp_1p of [[ir]]).
+	-- Copy pres3s to imperative since they are almost always the same.
+	insert_forms(base, "imp_2s", iut.map_forms(base.forms.pres_3s, function(form) return form end))
+	-- Copy pres2p to imperative plural since they are almost always the same.
+	insert_forms(base, "imp_2p", iut.map_forms(base.forms.pres_2p, function(form) return form end))
+	-- Copy subjunctives to imperatives.
 	for _, persnum in ipairs({"3s", "1p", "3p"}) do
 		local from = "pres_sub_" .. persnum
 		local to = "imp_" .. persnum
