@@ -266,23 +266,25 @@ def process_text_on_inflection_page(index, pagetitle, pagetext, norm, pos, lemma
 
   # Didn't find POS section for form.
   if "Etymology 1" in subsections_by_header:
-    for k in range(len(subsections) - 1, 1, -2):
-      # Find last Etymology N subsection and append new subsection directly after that (in case there are References,
-      # See also, Further reading, etc. at L3 after all Etymology N sections).
-      m = re.search("^Etymology ([0-9]+)$", subsections_by_header[k])
+    highest_etym_section = 1
+    for k in range(2, len(subsections), 2):
+      # Find last Etymology N subsection. Then skip backwards past L3 sections and insert new section (in case there
+      # are References, See also, Further reading, etc. at L3 after all Etymology N sections).
+      m = re.search("^Etymology ([0-9]+)$", subsection_headers[k])
       if m:
         highest_etym_section = int(m.group(1))
-        subsections[k + 1:k + 1] = [
-          "===Etymology %s===\n" % (highest_etym_section + 1),
-          "\n" + newposl4,
-        ]
-        secbody = "".join(subsections)
-        sections[j] = secbody.rstrip("\n") + sectail
-        pagemsg("Appending etym subsection %s" % infl_part)
-        notes.append("append etym subsection %s" % note_part)
-        return "".join(sections), notes
-    pagemsg("WARNING: Something very wrong, saw Etymology 1 but couldn't match it in loop")
-    return
+    for k in range(len(subsections) - 1, 1, -2):
+      if subsection_levels[k] > 3:
+        break
+    subsections[k + 1:k + 1] = [
+      "===Etymology %s===\n" % (highest_etym_section + 1),
+      "\n" + newposl4,
+    ]
+    secbody = "".join(subsections)
+    sections[j] = secbody.rstrip("\n") + sectail
+    pagemsg("Appending etym subsection %s" % infl_part)
+    notes.append("append etym subsection %s" % note_part)
+    return "".join(sections), notes
 
   # One etymology section for language. Wrap existing text in Etymology 1 and add Etymology 2.
   if "Etymology" in subsections_by_header:
