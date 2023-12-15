@@ -694,36 +694,6 @@ local built_in_conjugations = {
 	-- -cer (verbs in -ecer, vencer, etc.): automatically handled in combine_stem_ending()
 	-- -guer (erguer/soerguer): automatically handled in combine_stem_ending()
 
-infinitive	pres1s	pres3s	pres1p	impf1s	fut1s		pret1s		sub1s		sub1p		pp
-caldre		-		cal		[calent] calia	caldrà		calgué		calgui		-			calgut,-
-coldre		colc	col		colem	colia	coldré		colguí		colgui		colguem		colt,colta
-doldre		dolc	dol		dolem	dolia	doldré		dolguí		dolgui		dolguem		dolgut,dolguda
-moldre		molc	mol		molem	molia	moldré		molguí		molgui		molguem		molt,molta
-oldre		olc		ol		olem	olia	oldré		olguí		olgui		olguem		olgut,olguda
--soldre		-solc	-sol	-solem	-solia	-soldré		-solguí		-solgui		-solguem	-solt,-solta
-(absoldre, dissoldre, resoldre)
-toldre		tolc	tol		tolem	tolia	toldré		tolguí		tolgui		tolguem		tolt,tolta
-romandre	romanc	roman	romanem	romania	romandré	romanguí	romangui	romanguem	romàs,romasa,romasos
-encendre	encenc	encén	encenem	encenia	encendré	encenguí	encengui	encenguem	encès,encesa,encesos
-fendre		fenc	fen/-fèn fenem	fenia	fendré		fenguí		fengui		fenguem		fes/-fès,fesa,fesos
-(defendre, ofendre)
--pendre		-depenc	-pèn	-penem	-penia	-pendré		-penguí		-pengui		-penguem	-pès,-pesa,-pesos
-(dependre,despendre,expendre,suspendre)
-prendre		prenc	pren/-prèn prenem prenia prendré	prenguí		prengui		prenguem	pres/-près,presa,presos
-(aprendre, comprendre, desprendre, emprendre, reprendre, sorprendre)
--tendre		-tenc	-tén	-tenem	-tenia	-tendré		-tenguí		-tengui		-tenguem	-tès,-tesa,-tesos
-					(pres2s: atens, pres3p: atenen)
-(atendre, contendre, distendre, entendre, estendre, pretendre)
-vendre		venc	ven/-vèn venem	venia	vendré		venguí		vengui		venguem		venut,venuda
-(malvendre, revendre)
-fondre		fonc	fon		fonem	fonia	fondré		fonguí		fongui		fonguem		fos/-fós,fosa,fosos
-(confondre, difondre, infondre, refondre)
-enfondre	enfonc	enfon	enfonem	enfonia	enfondré	enfonguí	enfongui	enfonguem	enfús,enfusa,enfusos
-pondre		ponc	pon		ponem	ponia	pondré		ponguí		pongui		ponguem		post,posta,postos
-(compondre, correspondre, descompondre, respondre)
-tondre		tonc	ton		tonem	tonia	tondré		tonguí		tongui		tonguem		tos,tosa,tosos
-cerndre		cerno	cern	cernem	cernia	cerndré		cerní		cerni		cernem		cernut,cernuda
-
 	{
 		-- [[caldre]], [[doldre]], [[oldre]]
 		match = match_against_verbs("ldre", {"ca", "do", "^o"}),
@@ -930,14 +900,6 @@ cerndre		cerno	cern	cernem	cernia	cerndré		cerní		cerni		cernem		cernut,cernud
 		}
 	},
 	{
-		-- [[noure]]
-		match = "noure",
-		forms = {
-			stem = "no", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
-			g_infix = true,
-		}
-	},
-	{
 		-- [[cloure]], [[concloure]], [[descloure]], [[encloure]], [[excloure]], [[incloure]], [[recloure]]
 		match = "cloure",
 		forms = {
@@ -963,6 +925,239 @@ cerndre		cerno	cern	cernem	cernia	cerndré		cerní		cerni		cernem		cernut,cernud
 			g_infix = true,
 		}
 	},
+	{
+		-- [[noure]]
+		match = "noure",
+		forms = {
+			stem = "no", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
+			g_infix = true,
+		}
+	},
+	{
+		-- [[acudir]]; NOTE: Separation by meaning does not occur in DCC, DIEC, DEIEC, and DCVB says the distinction
+		-- is geographical and makes no mention of distinction by meaning. OTOH ca.wikt does say that the pronominal
+		-- sense "to occur" tends to conjugate non-inchoative.
+		match = "acudir",
+		forms = {
+			eix_infix = {{
+				form = "+",
+				footnotes = {'[especially in the sense "to turn up, to be present"]'}
+			}, {
+				form = "-",
+				footnotes = {'[especially in the impersonal pronominal sense "to occur"]'}
+			}}
+		}
+	},
+	-- [[afegir]]: -- non-inchoative in Valencia, inchoative elsewhere
+	{
+		-- [[ajupir]]
+		-- [[bullir]], [[rebullir]]
+		-- [[cruixir]], [[escruixir]] (Routledge says this is inchoative but DIEC, DEIEC and DCC all disagree; note
+		-- pres_2s 'cruixes', handled automatically)
+		-- [[dormir]], [[adormir]]
+		-- [[esmunyir]], [[esmunyir-se]]
+		-- [[fugir]], [[defugir]], [[enfugir]]; pres sing ''fujo, fuges, fuig'' handled by combine_stem_ending()
+		-- [[grunyir]]
+		-- [[morir]], [[premorir]]
+		-- [[munyir]]
+		-- [[pudir]]
+		-- [[punyir]]
+		-- [[retrunyir]]
+		-- [[sentir]], [[pressentir]], [[ressentir]]; not [[consentir]], with can be either non-inchoative or
+		-- inchoative, and not [[assentir]] or [[dissentir]], which are only inchoative
+		match = match_against_verbs("ir", {"ajup", "bull", "cruix", "dorm", "esmuny", "fug", "gruny", "mor", "muny",
+										   "pud", "puny", "retruny", "^sent", "pressent", "^ressent"}),
+		forms = {
+			eix_infix = "-",
+		}
+	},
+	{
+		-- [[arrupir-se]];
+		-- [[brunzir]];
+		-- [[consumir]], [[resumir]], [[presumir]] (not [[sumir]], [[assumir]], [[subsumir]], which are regular)
+		-- [[mentir]], [[desmentir]]
+		-- [[percudir]]; cf. also [[acudir]] above, which to some extent has separate conjugations per meaning
+		match = match_against_verbs("ir", {"arrup", "brunz", "consum", "^resum", "presum", "ment", "percud",
+										   "consent"}),
+		forms = {
+			eix_infix = {"+", "-"},
+		}
+	},
+	-- [[cenyir]]: -- non-inchoative or inchoative in Balearics, inchoative elsewhere
+	{
+		-- [[cobrir]], [[descobrir]], [[encobrir]], [[recobrir]]
+		match = "cobrir",
+		forms = {
+			pp = "cobert",
+		}
+	},
+	{
+		-- [[collir]], [[acollir]], [[escollir]], [[recollir]]
+		match = "collir",
+		forms = {
+			pres_stressed = "cull",
+			eix_infix = "-",
+		}
+	},
+	{
+		-- [[complir]], [[acomplir]], [[incomplir]]
+		match = "complir",
+		forms = {
+			pp = {"complert", "complit"},
+		}
+	},
+	{
+		-- [[cosir]], [[descosir]], [[recosir]]
+		match = "cosir",
+		forms = {
+			pres_stressed = "cus",
+			eix_infix = "-",
+		}
+	},
+	{
+		-- [[eixir]], [[deseixir]], [[reeixir]], [[sobreeixir]]; not [[teixir]] or [[entreteixir]], so we have to list
+		-- them individually
+		match = match_against_verbs("eixir", {"^", "des", "^re", "sobre"}),
+		forms = {
+			...
+			eix_infix = "-",
+		}
+	},
+	-- [[engolir]]: -- non-inchoative in Valencia, inchoative elsewhere
+	{
+		-- [[escopir]]
+		match = "escopir",
+		forms = {
+			pres_stressed = "escup",
+			eix_infix = "-",
+		}
+	},
+	-- [[ferir]]: -- non-inchoative in Balearics, inchoative elsewhere
+	-- [[fregir]]: -- non-inchoative in Valencia, inchoative elsewhere
+	-- [[llegir]]: -- non-inchoative in Valencia and Minorca, inchoative elsewhere
+	{
+		-- [[lluir]]: regular inchoative in the figurative meaning "to display (something), to be showy" also in the
+		-- legal meaning "free from a pecuniary obligation, such as a land-based tax (emphyteusis)"; irregular in the
+		-- literal meaning "to shine"; use <no_built_in> to get regular conjugation. In the regular conjugation,
+		-- umlauts appear in the following forms: pres_1p/pres_sub_1p/imp_1p lluïm, pres_2p/pres_sub_2p/imp_2p lluïu,
+		-- impf_1s/impf_3s lluïa, impf_2s lluïes, impf_3p lluïen, pret_2s lluïres, pret_3p lluïren,
+		-- impf_sub_2s lluïssis, impf_sub_3p lluïssin, throughout the pp: lluït, lluïda, lluïts, lluïdes. IN the
+		-- irregular conjugation, umlauts appear in the same places as well as elsewhere in the present subjunctive:
+		-- pres_sub_1s/pres_sub_3s/imp_3s lluï, pres_sub_2s lluïs, pres_sub_3p/imp_3p lluïn. Notably, they do *NOT*
+		-- appear in the gerund lluint, the infinitive lluir, or anywhere in the future or conditional. Note that
+		-- verbs.cat [https://www.verbs.cat/en/conjugation/899-lluir.html] lists additional irregular forms pres_1s
+		-- lluu, and alternative impf_sub forms in -e- instead of -i- (lluïsses, lluíssem, lluísseu, lluïssen), but
+		-- these are nonstandard or dialectal per both Routledge and DEIEC.
+		match = "^lluir",
+		forms = {
+			eix_infix = "-",
+			pres3s = {"lluu", "llu"}, -- generates pres_2s, imp_2s
+		}
+	},
+	{
+		-- [[relluir]]: "to shine"; either inchoative or non-inchoative, not distinguished by meaning
+		match = "^relluir",
+		forms = {
+			eix_infix = {"+", "-"},
+			pres3s = {"rellueix", "relluu", "rellú"}, -- generates pres_2s, imp_2s; note, pres_2s will end in -es due to
+													  -- combine_stem_ending()
+		}
+	},
+	{
+		-- [[obrir]], [[entreobrir]], [[reobrir]]; not [[cobrir]] and derivatives, not [[empobrir]], so we have to list
+		-- them individually
+		match = match_against_verbs("obrir", {"^", "entre", "^re"}),
+		forms = {
+			eix_infix = "-",
+			pres3s = "obre", -- generates pres_2s, imp_2s
+			pp = "obert",
+		}
+	},
+	-- [[oir]], [[desoir]], [[entreoir]]: -- per Routledge, non-inchoative or inchoative normally but only
+	-- non-inchoative in Valencian; but all dictionaries disagree and say it is a regular inchoative-only verb.
+	-- It has the same umlauts as lluir (and [[corroir]], another regular inchoative verb).
+	{
+		-- [[omplir]], [[reomplir]]; not [[complir]] and derivatives, so we have to list them individually
+		match = match_against_verbs("omplir", {"^", "^re"}),
+		forms = {
+			eix_infix = "-",
+			pres3s = "omple", -- generates pres_2s, imp_2s
+			pp = {"omplert", "omplit"},
+		}
+	},
+	-- [[penedir-se]]: -- non-inchoative in Balearics, inchoative elsewhere
+	{
+		-- [[pruir]] "to itch": same umlauts as in [[lluir]].
+		match = "^pruir",
+		forms = {
+			eix_infix = "-",
+			pres3s = {"pruu", "pru"}, -- generates pres_2s, imp_2s
+		}
+	},
+	-- [[renyir]]: -- non-inchoative in Valencia, inchoative elsewhere
+	{
+		-- [[sortir]], [[ressortir]], [[sobresortir]]; but not [[assortir]], which is regular inchoative
+		match = match_against_verbs("sortir", {"^", "^res", "sobre"}),
+		forms = {
+			pres_stressed = "surt",
+			eix_infix = "-",
+		}
+	},
+	-- [[teixir]], [[entreteixir]]: -- non-inchoative in Valencia, inchoative elsewhere
+	-- [[tenyir]], [[destenyir]]: -- non-inchoative in Valencia, but [[retenyir]] inchoative or non-inchoative in
+	-- Valencia? (per Routledge); regular enchoative elsewhere
+	{
+		-- [[tenir]]; highly irregular
+		match = "tenir",
+		forms = {
+			...,
+			eix_infix = "-",
+		}
+	},
+	{
+		-- [[tossir]] "to cough"
+		match = "^tossir",
+		forms = {
+			pres_stressed = "tuss", -- pres_2s gets 'tusses'
+			pres_3s = "tus", -- note, pres_3s (a single form override) not pres3s (a stem override, which also affects
+							 -- pres_2s; but imp_2s is physically copied from pres_3s, so imp_2s correctly gets 'tus')
+			eix_infix = "-",
+		}
+	},
+	{
+		-- [[venir]]; highly irregular
+		match = "venir",
+		forms = {
+			...,
+			eix_infix = "-",
+		}
+	},
+	-- [[vestir]], [[desvestir]], [[revestir]], maybe [[transvestir]]: non-inchoative in Valencia, inchoative or
+	-- non-inchoative in the Balearics; regular inchoative elsewhere; but not [[envestir]] or [[investir]], which are
+	-- regular inchoative everywhere
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	{
 		-- verbs in -aer (caer, raer, debaer, degraer, esvaer and derivatives of traer, but not traer itself:
 		-- acaer/decaer/recaer,
@@ -1151,7 +1346,8 @@ cerndre		cerno	cern	cernem	cernia	cerndré		cerní		cerni		cernem		cernut,cernud
 			pres_1s = "son", pres_2s = "es", pres_3s = "é",
 			pres_1p = "somos", pres_2p = "sodes", pres_3p = "son",
 			pres1_and_sub = "sex", -- only for subjunctive as we override pres_1s
-			full_impf = "er",
+			impf1 = "er",
+			impf2 = "ér",
 			pret_conj = "irreg", pret = "fo", pret_1s = "fun", pret_2s = "fuches", pret_3s = "foi",
 			imp_2s = "sé", imp_2p = "sede",
 			irreg = true,
@@ -1485,109 +1681,24 @@ local function skip_slot(base, slot, allow_overrides)
 	return false
 end
 
-
--- Apply vowel alternations to stem.
-local function apply_vowel_alternations(stem, alternations)
-	local alternation_stems = {}
-	local saw_pres1_and_sub = false
-	local saw_pres_stressed = false
-	local saw_imp2s_override = false
-	local origstem = stem
-	-- Treat final -gu, -qu as a consonant, so the previous vowel can alternate (e.g. conseguir -> consigo).
-	-- This means a verb in -guar can't have a u-ú alternation but I don't think there are any verbs like that.
-	stem = rsub(stem, "([gq])u$", "%1" .. TEMPC1)
-
-	-- Process alternations other than +.
-	for _, altobj in ipairs(alternations) do
-		local alt = altobj.form
-		local pres1_and_sub, pres_stressed, imp2s_override, err
-		if alt == "+" then
-			-- do nothing yet
-		else
-			local before_last_vowel, last_vowel, after_last_vowel = rmatch(stem, "^(.*)(" .. V .. ")(.-)$")
-			if alt == "i-e" then
-				if last_vowel == "e" or last_vowel == "i" then
-					pres1_and_sub = before_last_vowel .. "i" .. after_last_vowel
-					imp2s_override = pres1_and_sub
-					if last_vowel == "i" then
-						pres_stressed = before_last_vowel .. "e" .. after_last_vowel
-					end
-				else
-					err = "should have -e- or -i- as the last vowel"
-				end
-			elseif alt == "i" then
-				if last_vowel == "e" then
-					pres1_and_sub = before_last_vowel .. "i" .. after_last_vowel
-					pres_stressed = pres1_and_sub
-				else
-					err = "should have -e- as the last vowel"
-				end
-			elseif alt == "u-o" then
-				if last_vowel == "o" or last_vowel == "u" then
-					pres1_and_sub = before_last_vowel .. "u" .. after_last_vowel
-					imp2s_override = pres1_and_sub
-					if last_vowel == "u" then
-						pres_stressed = before_last_vowel .. "o" .. after_last_vowel
-					end
-				else
-					err = "should have -o- or -u- as the last vowel"
-				end
-			elseif alt == "u" then
-				if last_vowel == "o" then
-					pres1_and_sub = before_last_vowel .. "u" .. after_last_vowel
-					pres_stressed = pres1_and_sub
-				else
-					err = "should have -o- as the last vowel"
-				end
-			elseif alt == "í" then
-				if last_vowel == "i" then
-					pres_stressed = before_last_vowel .. "í" .. after_last_vowel
-				else
-					err = "should have -i- as the last vowel"
-				end
-			elseif alt == "ú" then
-				if last_vowel == "u" or last_vowel == "ü" then
-					pres_stressed = before_last_vowel .. "ú" .. after_last_vowel
-				else
-					err = "should have -u- or -ü- as the last vowel"
-				end
-			else
-				error("Internal error: Unrecognized vowel alternation '" .. alt .. "'")
-			end
-		end
-		local function unapply_u_mod(val)
-			if val then
-				return {form = val:gsub(TEMPC1, "u"), footnotes = altobj.footnotes}, true
-			else
-				return nil, false
-			end
-		end
-		pres1_and_sub, saw_pres1_and_sub = unapply_u_mod(pres1_and_sub)
-		pres_stressed, saw_pres_stressed = unapply_u_mod(pres_stressed)
-		imp2s_override, saw_imp2s_override = unapply_u_mod(imp2s_override)
-		table.insert(alternation_stems, {
-			altobj = altobj,
-			pres1_and_sub = pres1_and_sub,
-			pres_stressed = pres_stressed,
-			imp2s_override = imp2s_override,
-			err = err
-		})
+local function add_stem_ending(stem, ending)
+	if ending == "" then
+		return stem
 	end
-
-	-- Now do +. We check to see which stems are used by other alternations and specify those so any footnotes are
-	-- properly attached.
-	for _, alternation_stem in ipairs(alternation_stems) do
-		if alternation_stem.altobj.form == "+" then
-			local stemobj = {form = origstem, footnotes = alternation_stem.altobj.footnotes}
-			alternation_stem.pres1_and_sub = saw_pres1_and_sub and stemobj or nil
-			alternation_stem.pres_stressed = saw_pres_stressed and stemobj or nil
-			alternation_stem.imp2s_override = saw_imp2s_override and stemobj or nil
-		end
+	if stem:find("#$") then -- remove final accent when adding a suffix
+		stem = com.remove_final_accent((stem:gsub("#$", "")))
 	end
-
-	return alternation_stems
+	return stem .. ending
 end
 
+local function process_stem(stem, fn)
+	if stem:find("#$") then
+		local stem_no_pound_sign = stem:match("^(.*)#$")
+		return fn(stem_no_pound_sign) .. "#"
+	else
+		return fn(stem)
+	end
+end
 
 -- Add the `stem` to the `ending` for the given `slot` and apply any phonetic modifications.
 -- WARNING: This function is written very carefully; changes to it can easily have unintended consequences.
@@ -1631,7 +1742,7 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, dont_includ
 		stem = rsub(stem, "z$", "c") -- aderezar -> aderecei
 	end
 
-	local retval = stem .. ending
+	local retval = add_stem_ending(stem, ending)
 	if retval:find("#$") then -- remove final accent if no prefix
 		retval = retval:gsub("#$", "")
 		if prefix == "" then
@@ -1684,46 +1795,137 @@ end
 
 local function construct_stems(base)
 	local stems = {}
+	local bst = base.stems
 
 	local function combine(slot, stem, ending)
 		return combine_stem_ending(base, slot, base.prefix, stem, ending, "dont include prefix")
 	end
-	stems.pres_unstressed = base.stems.pres_unstressed or base.inf_stem
+
+	local stressed_stem = bst.stressed_stem or bst.stem or bst.inf_stem or base.inf_stem
+	local unstressed_stem = bst.unstressed_stem or bst.stem or bst.inf_stem or base.inf_stem
+
+	local function map_general(stemforms, fn)
+		return iut.map_forms(iut.convert_to_general_list_form(stemsforms), fn)
+	end
+
+	local function add_g(stemforms)
+		return map_general(stemforms, function(form)
+			return add_stem_ending(process_stem(form, function(f) return (f:gsub("v$", "")) end), "g")
+		end)
+	end
+
+	local stressed_g_infix = bst.stressed_g_infix or bst.g_infix
+	if stressed_g_infix == true then
+		stressed_g_infix = add_g(stressed_stem)
+	end
+	local unstressed_g_infix = bst.unstressed_g_infix or bst.g_infix
+	if unstressed_g_infix == true then
+		unstressed_g_infix = add_g(unstressed_stem)
+	end
+
+
+	local pres1p = base.pres1p or unstressed_g_infix 
+
+
+	if base.g_in
+
+		stems.impf_sub_antepenult_stressed = iut.map_forms(iut.convert_to_general_list_form(stems.impf_sub), com.add_final_accent)
+
+	if base.g_infix then
+		stems.stressed_
+
+		local g_infix = 
+	{
+		-- [[plaure]], [[complaure]], [[raure]]
+		match = match_against_verbs("aure", {"pl", "r"}),
+		forms = {
+			stem = "a", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
+			g_infix = true,
+		}
+	},
+	{
+		-- [[beure]], [[embeure]], [[deure]], [[lleure]]
+		match = match_against_verbs("eure", {"b", "d", "ll"}),
+		forms = {
+			stem = "ev", -- v dropped by g_infix before g and u
+			g_infix = true,
+		}
+	},
+	{
+		-- [[creure]], [[seure]], [[asseure]]
+		match = match_against_verbs("eure", {"cr", "s"}),
+		forms = {
+			stem = "e", -- i dropped by g_infix before u
+			pres1p = "ei", -- affects pres_1p, pres_2p, gerund, imperfect (see [[caure]] above)
+			g_infix = true,
+		}
+	},
+	{
+		-- [[jeure]], [[ajeure]]
+		match = match_against_verbs("eure", {"j"}),
+		name = "jeure",
+		forms = {
+			inf_stem = "au", -- affects future and cond
+			stressed_stem = "e", -- affects stressed forms, which get g added by g_infix by added except for pres3s,
+								 -- which gets u added (controls pres_3s, pres_2s)
+			unstressed_stem = "a", -- affects unstressed_stem, which get g added by g_infix
+			pres1p = "ai", -- affects pres_1p, pres_2p, gerund, imperfect (see [[caure]] above)
+			g_infix = true,
+		}
+	},
+	stems.pres_unstressed = bst.pres_unstressed or unstressed_g_infix or unstressed_stem
 	stems.pres_stressed =
 		-- If no_pres_stressed given, pres_stressed stem should be empty so no forms are generated.
 		base.no_pres_stressed and {} or
-		base.stems.pres_stressed or
-		vowel_alt.pres_stressed or
-		base.inf_stem
+		bst.pres_stressed or
+		stressed_g_infix or
+		stressed_stem
 	stems.pres1_and_sub =
 		-- If no_pres_stressed given, the entire subjunctive is missing.
 		base.no_pres_stressed and {} or
 		-- If no_pres1_and_sub given, pres1 and entire subjunctive are missing.
 		base.no_pres1_and_sub and {} or
-		base.stems.pres1_and_sub or
-		vowel_alt.pres1_and_sub or
+		bst.pres1_and_sub or
 		nil
-	stems.pres1 = base.stems.pres1 or stems.pres1_and_sub or stems.pres_stressed
-	stems.impf = base.stems.impf or base.inf_stem
-	stems.full_impf = base.stems.full_impf
-	stems.pret_base = base.stems.pret_base or base.inf_stem
-	stems.pret_conj = base.stems.pret_conj or base.conj
-	stems.pret = base.stems.pret or iut.map_forms(iut.convert_to_general_list_form(stems.pret_base),
+	stems.pres1 = bst.pres1 or stems.pres1_and_sub or stems.pres_stressed
+	stems.impf1 = bst.impf1 or map_general(stems.pres_unstressed, function(form)
+		if base.conj == "ar" then
+			return combine("impf_1s", form, "av")
+		elseif form:find("i#?$") then
+			form = form:gsub("i#?$", "")
+			return rmatch(form, "^(.-)" .. com.V .. "*$") .. "ei"
+		else
+			return combine("impf_1s", form, "i") -- will convert to ï after a vowel
+		end
+	end)
+	stems.impf2 = bst.impf2 or map_general(stems.pres_unstressed, function(form)
+		if base.conj == "ar" then
+			return combine("impf_1s", form, "àv")
+		elseif form:find("i#?$") then
+			form = form:gsub("i#?$", "")
+			return rmatch(form, "^(.-)" .. com.V .. "*$") .. "èi"
+		else
+			return combine("impf_1s", form, "í")
+		end
+	end)
+	stems.pret_base = bst.pret_base or base.inf_stem
+	stems.pret_conj = bst.pret_conj or base.conj
+	stems.pret = bst.pret or iut.map_forms(iut.convert_to_general_list_form(stems.pret_base),
 		-- use combine_stem_ending esp. so we get saíra etc.
 		function(form) return combine("pret", form, base.conj_vowel) end)
-	stems.short_pret = base.stems.gl_short_pret or iut.map_forms(iut.convert_to_general_list_form(stems.pret),
+	stems.short_pret = bst.gl_short_pret or iut.map_forms(iut.convert_to_general_list_form(stems.pret),
 		function(form) return rsub(form, com.V .. "$", "") end)
-	stems.fut = base.stems.fut or base.inf_stem .. base.conj
-	stems.cond = base.stems.cond or stems.fut
-	stems.pres_sub_stressed = base.stems.pres_sub_stressed or stems.pres1
-	stems.pres_sub_unstressed = base.stems.pres_sub_unstressed or stems.pres1_and_sub or stems.pres_unstressed
-	stems.sub_conj = base.stems.sub_conj or base.conj
-	stems.impf_sub = base.stems.impf_sub or stems.pret
+	stems.fut = bst.fut or base.inf_stem .. base.conj
+	stems.cond = bst.cond or stems.fut
+	stems.pres_sub_stressed = bst.pres_sub_stressed or stems.pres1
+	stems.pres_sub_unstressed = bst.pres_sub_unstressed or stems.pres1_and_sub or stems.pres_unstressed
+	stems.sub_conj = bst.sub_conj or base.conj
+	stems.impf_sub = bst.impf_sub or stems.pret
 	-- Needed for impf_sub_1p and impf_sub_2p. We can't just add an acute accent because there may already be one
 	-- (as for [[saír]]).
 	stems.impf_sub_antepenult_stressed = iut.map_forms(iut.convert_to_general_list_form(stems.impf_sub), com.add_final_accent)
 	-- use combine_stem_ending esp. so we get roído, caído, etc.
-	stems.pp = base.stems.pp or combine("pp_ms", base.inf_stem, base.conj == "ar" and "ado" or "ido")
+	stems.pp = bst.pp or combine("pp_ms", base.inf_stem, base.conj == "ar" and "ado" or "ido")
 	stems.pp_ms = stems.pp
 	local function masc_to_fem(form)
 		if rfind(form, "o$") then
@@ -1771,7 +1973,7 @@ local function add_present_subj(base)
 	-- Regular -ir verb, no -eix- infix: [[dormir]]: dormi, dormis, dormi, dormim, dormiu, dormin
 	-- Regular -ir verb, -eix- infix: [[imprimir]]: imprimeixi, imprimeixis, imprimeixi, imprimim, imprimiu, imprimeixin
 	-- Stem changing in 123s/3p vs. 12p:
-	-- * -eix- infix (-eix- in all stressed forms: 123s/3p of pres ind/sub, 2s imp
+	-- * -eix- infix (-eix- in all stressed forms: 123s/3p of pres ind/sub, 2s imp)
 	-- * [[collir]]: culli, cullis, culli, collim, colliu, cullin (cull- in all stressed forms)
 	-- * [[cabre]]: càpiga, càpigues, càpiga, capiguem, capigueu, càpiguen (also different endings)
 	local s1, s2, s3, p1, p2, p3
@@ -1800,14 +2002,8 @@ local function add_finite_non_present(base)
 		add_single_stem_tense(base, slot, stem, s1, s2, s3, p1, p2, p3)
 	end
 
-	-- * at the beginning of the ending means to remove an accent from the last vowel of the imperfect stem.
-	if stems.full_impf then
-		add_tense("impf", stems.full_impf, "*a", "*es", "*a", "em", "eu", "en")
-	elseif base.conj == "ar" then
-		add_tense("impf", stems.impf, "ava", "avas", "ava", "àvem", "àveu", "aven")
-	else
-		add_tense("impf", stems.impf, "ia", "ies", "ia", "íem", "íeu", "íen")
-	end
+	add_tense("impf", stems.impf1, "a", "es", "a", nil, nil, "en")
+	add_tense("impf", stems.impf2, nil, nil, nil, "em", "eu", nil)
 
 	if stems.pret_conj == "ar" then
 		add_tense("pret", stems.pret_base, "í", "ares", "à", "àrem", "àreu", "aren")
