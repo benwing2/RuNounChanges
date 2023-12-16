@@ -595,7 +595,7 @@ local built_in_conjugations = {
 	--------------------------------------------- -ldre ----------------------------------------
 
 	{
-		-- [[caldre]], [[doldre]], [[oldre]]
+		-- [[caldre]], [[doldre]], [[condoldre's]], [[oldre]]
 		match = match_against_verbs("ldre", {"ca", "do", "^o"}),
 		forms = {
 			stem = "l",
@@ -629,7 +629,8 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- [[encendre]], [[atendre]], [[contendre]], [[distendre]], [[entendre]], [[estendre]], [[pretendre]]
+		-- [[encendre]], [[atendre]], [[contendre]], [[desentendre's]], [[distendre]], [[entendre]], [[estendre]],
+		-- [[pretendre]]
 		match = match_against_verbs("endre", {"enc", "t"}),
 		forms = {
 			stem = "én#", -- remove final accent without prefix with vowel; also removed when adding a suffix
@@ -670,7 +671,7 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- [[pondre]], [[compondre]], [[correspondre]], [[descompondre]], [[respondre]]
+		-- [[pondre]], [[compondre]], [[correspondre]], [[descompondre]], [[despondre's]], [[respondre]]
 		match = "pondre",
 		forms = {
 			stem = "pon",
@@ -705,6 +706,7 @@ local built_in_conjugations = {
 		match = "atènyer",
 		forms = {
 			pp = "atès#",
+			irreg = true,
 		}
 	},
 	{
@@ -712,6 +714,7 @@ local built_in_conjugations = {
 		match = match_against_verbs("pènyer", {"^em", "^es"}),
 		forms = {
 			pp = "pès#",
+			irreg = true,
 		}
 	},
 	{
@@ -719,6 +722,7 @@ local built_in_conjugations = {
 		match = match_against_verbs("strènyer", {"^e", "con", "^de", "^re"}),
 		forms = {
 			pp = "stret",
+			irreg = true,
 		}
 	},
 	{
@@ -726,6 +730,7 @@ local built_in_conjugations = {
 		match = "fènyer",
 		forms = {
 			pp = {"fengud", "fenyud"},
+			irreg = true,
 		}
 	},
 	{
@@ -738,6 +743,7 @@ local built_in_conjugations = {
 		match = match_against_verbs("ànyer", {"pl", "pert"}),
 		forms = {
 			pp = {"angud", "anyud"},
+			irreg = true,
 		}
 	},
 
@@ -830,6 +836,7 @@ local built_in_conjugations = {
 			pp = "vist",
 			imp_2s = "veges",
 			imp_2p = {"vegeu", "veieu"},
+			irreg = true,
 		}
 	},
 
@@ -857,7 +864,7 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- [[viure]], [[conviure]], [[sobreviure]]
+		-- [[viure]], [[conviure]], [[desviure's]], [[sobreviure]]
 		match = "viure",
 		forms = {
 			stem = "viv", -- v dropped by g_infix before g and u
@@ -923,12 +930,12 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- [[merèixer]], [[desmerèixer]]
-		match = "merèixer",
+		-- [[merèixer]], [[desmerèixer]], [[irèixer-se]]
+		match = match_against_verbs("rèixer", {"m", "^i"}
 		forms = {
-			pret = {"mereixé", "meresqué"},
-			pres_sub_unstressed = {"mereixe", "meresque"},
-			pp = "merescud",
+			pret = {"reixé", "resqué"},
+			pres_sub_unstressed = {"reixe", "resque"},
+			pp = "rescud",
 			irreg = true,
 		}
 	},
@@ -1025,6 +1032,16 @@ local built_in_conjugations = {
 			irreg = true,
 		}
 	},
+	{
+		-- [[metre]], [[admetre]], [[arremetre]], [[cometre]], [[comprometre]], [[demetre]], [[descomprometre]],
+		-- [[emetre]], [[entremetre's]], [[escometre]], [[malmetre]], [[manumetre]], [[ometre]], [[permetre]],
+		-- [[prometre]], [[readmetre]], [[remetre]], [[retransmetre]], [[sotmetre]], [[trametre]], [[transmetre]]
+		match = "metre",
+		forms = {
+			pp = "mès#", 
+			irreg = true,
+		}
+	},
 
 	--------------------------------------------------------------------------------------------
 	--                                             -ir                                        --
@@ -1048,21 +1065,22 @@ local built_in_conjugations = {
 	-- [[afegir]]: -- non-inchoative in Valencia, inchoative elsewhere
 	{
 		-- [[ajupir]]
+		-- [[buixir]]
 		-- [[bullir]], [[rebullir]]
 		-- [[cruixir]], [[escruixir]] (Routledge says this is inchoative but DIEC, DEIEC and DCC all disagree; note
 		--   pres_2s 'cruixes', handled automatically)
 		-- [[dormir]], [[adormir]]
-		-- [[esmunyir]], [[esmunyir-se]]
 		-- [[fugir]], [[confugir]], [[defugir]], [[enfugir-se]]; pres sing ''fujo, fuges, fuig'' handled by
 		--   combine_stem_ending()
+		-- [[funyir]]
 		-- [[grunyir]]
-		-- [[munyir]]
+		-- [[munyir]], [[esmunyir]]
 		-- [[pudir]]
 		-- [[punyir]]
 		-- [[retrunyir]]
-		-- [[sentir]], [[pressentir]], [[ressentir]]; not [[consentir]], with can be either non-inchoative or
+		-- [[sentir]], [[pressentir]], [[ressentir-se]]; not [[consentir]], with can be either non-inchoative or
 		-- inchoative, and not [[assentir]] or [[dissentir]], which are only inchoative
-		match = match_against_verbs("ir", {"ajup", "bull", "cruix", "dorm", "esmuny", "fug", "gruny", "muny",
+		match = match_against_verbs("ir", {"ajup", "buix", "bull", "cruix", "dorm", "fug", "funy", "gruny", "muny",
 										   "pud", "puny", "retruny", "^sent", "pressent", "^ressent"}),
 		forms = {
 			eix_infix = "-",
@@ -1074,6 +1092,7 @@ local built_in_conjugations = {
 		-- [[consumir]], [[resumir]], [[presumir]] (not [[sumir]], [[assumir]], [[subsumir]], which are regular)
 		-- [[mentir]], [[desmentir]]
 		-- [[percudir]]; cf. also [[acudir]] above, which to some extent has separate conjugations per meaning
+		-- [[consentir]]
 		match = match_against_verbs("ir", {"arrup", "brunz", "consum", "^resum", "presum", "ment", "percud",
 										   "consent"}),
 		forms = {
@@ -1082,10 +1101,11 @@ local built_in_conjugations = {
 	},
 	-- [[cenyir]]: -- non-inchoative or inchoative in Balearics, inchoative elsewhere
 	{
-		-- [[cobrir]], [[descobrir]], [[encobrir]], [[recobrir]]
+		-- [[cobrir]], [[descobrir]], [[encobrir]], [[recobrir]], [[redescobrir]]
 		match = "cobrir",
 		forms = {
 			pp = "cobert",
+			irreg = true,
 		}
 	},
 	{
@@ -1094,6 +1114,7 @@ local built_in_conjugations = {
 		forms = {
 			pres_stressed = "cull",
 			eix_infix = "-",
+			irreg = true,
 		}
 	},
 	{
@@ -1101,6 +1122,7 @@ local built_in_conjugations = {
 		match = "complir",
 		forms = {
 			pp = {"complert", "complid"},
+			irreg = true,
 		}
 	},
 	{
@@ -1109,15 +1131,17 @@ local built_in_conjugations = {
 		forms = {
 			pres_stressed = "cus",
 			eix_infix = "-",
+			irreg = true,
 		}
 	},
 	{
-		-- [[eixir]], [[deseixir]], [[reeixir]], [[sobreeixir]]; not [[teixir]] or [[entreteixir]], so we have to list
-		-- them individually
+		-- [[eixir]], [[deseixir-se]], [[reeixir]], [[sobreeixir]]; not [[teixir]] or [[entreteixir]], so we have to
+		-- list them individually
 		match = match_against_verbs("eixir", {"^", "des", "^re", "sobre"}),
 		forms = {
 			pres_stressed = "ix",
 			eix_infix = "-",
+			irreg = true,
 		}
 	},
 	-- [[engolir]]: -- non-inchoative in Valencia, inchoative elsewhere
@@ -1127,6 +1151,7 @@ local built_in_conjugations = {
 		forms = {
 			pres_stressed = "escup",
 			eix_infix = "-",
+			irreg = true,
 		}
 	},
 	{
@@ -1134,6 +1159,7 @@ local built_in_conjugations = {
 		match = "establir",
 		forms = {
 			pp = {"establert", "establid"},
+			irreg = true,
 		}
 	},
 	-- [[ferir]]: -- non-inchoative in Balearics, inchoative elsewhere
@@ -1143,6 +1169,7 @@ local built_in_conjugations = {
 		match = "imprimir",
 		forms = {
 			pp = "imprès#",
+			irreg = true,
 		}
 	},
 	-- [[llegir]]: -- non-inchoative in Valencia and Minorca, inchoative elsewhere
@@ -1163,15 +1190,18 @@ local built_in_conjugations = {
 		forms = {
 			eix_infix = "-",
 			pres3s = {"lluu", "llu"}, -- generates pres_2s, imp_2s
+			irreg = true,
 		}
 	},
 	{
-		-- [[relluir]]: "to shine"; either inchoative or non-inchoative, not distinguished by meaning
-		match = "^relluir",
+		-- [[relluir]] "to shine", [[traslluir-se]] "to be translucent"; either inchoative or non-inchoative, not
+		-- distinguished by meaning
+		match = match_against_verbs("lluir", {"^re", "tras"}),
 		forms = {
 			eix_infix = {"+", "-"},
-			pres3s = {"rellueix", "relluu", "rellú"}, -- generates pres_2s, imp_2s; note, pres_2s will end in -es due to
-													  -- combine_stem_ending()
+			pres3s = {"llueix", "lluu", "llú"}, -- generates pres_2s, imp_2s; note, pres_2s will end in -es due to
+											    -- combine_stem_ending()
+			irreg = true,
 		}
 	},
 	{
@@ -1180,6 +1210,7 @@ local built_in_conjugations = {
 		forms = {
 			eix_infix = "-",
 			pp = "mort",
+			irreg = true,
 		}
 	},
 	{
@@ -1190,6 +1221,7 @@ local built_in_conjugations = {
 			eix_infix = "-",
 			pres3s = "obre", -- generates pres_2s, imp_2s
 			pp = "obert",
+			irreg = true,
 		}
 	},
 	{
@@ -1197,18 +1229,21 @@ local built_in_conjugations = {
 		match = "^oferir",
 		forms = {
 			pp = {"ofert", "oferid"},
+			irreg = true,
 		}
 	},
 	-- [[oir]], [[desoir]], [[entreoir]]: -- per Routledge, non-inchoative or inchoative normally but only
 	-- non-inchoative in Valencian; but all dictionaries disagree and say it is a regular inchoative-only verb.
 	-- It has the same umlauts as lluir (and [[corroir]], another regular inchoative verb).
 	{
-		-- [[omplir]], [[reomplir]]; not [[complir]] and derivatives, so we have to list them individually
-		match = match_against_verbs("omplir", {"^", "^re"}),
+		-- [[omplir]], [[desomplir-se]], [[reomplir]]; not [[complir]] and derivatives, so we have to list them
+		-- individually
+		match = match_against_verbs("omplir", {"^", "des", "^re"}),
 		forms = {
 			eix_infix = "-",
 			pres3s = "omple", -- generates pres_2s, imp_2s
 			pp = {"omplert", "omplid"},
+			irreg = true,
 		}
 	},
 	-- [[penedir-se]]: -- non-inchoative in Balearics, inchoative elsewhere
@@ -1218,6 +1253,7 @@ local built_in_conjugations = {
 		forms = {
 			eix_infix = "-",
 			pres3s = {"pruu", "pru"}, -- generates pres_2s, imp_2s
+			irreg = true,
 		}
 	},
 	{
@@ -1225,6 +1261,7 @@ local built_in_conjugations = {
 		match = "^reblir",
 		forms = {
 			pp = {"reblert", "reblid"},
+			irreg = true,
 		}
 	},
 	-- [[renyir]]: -- non-inchoative in Valencia, inchoative elsewhere
@@ -1233,6 +1270,7 @@ local built_in_conjugations = {
 		match = "^sofrir",
 		forms = {
 			pp = {"sofert", "sofrid"},
+			irreg = true,
 		}
 	},
 	{
@@ -1241,6 +1279,7 @@ local built_in_conjugations = {
 		forms = {
 			pres_stressed = "surt",
 			eix_infix = "-",
+			irreg = true,
 		}
 	},
 	{
@@ -1248,6 +1287,7 @@ local built_in_conjugations = {
 		match = "^suplir",
 		forms = {
 			pp = {"suplert", "suplid"},
+			irreg = true,
 		}
 	},
 	-- [[teixir]], [[entreteixir]]: -- non-inchoative in Valencia, inchoative elsewhere
@@ -1264,8 +1304,8 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- [[cartenir]], [[contenir]], [[detenir]], [[entretenir]], [[mantenir]], [[menystenir]], [[obtenir]],
-		-- [[retenir]], [[sostenir]], [[viltenir]]; highly irregular
+		-- [[abstenir-se]], [[atenir-se]], [[captenir-se]], [[cartenir]], [[contenir]], [[detenir]], [[entretenir]],
+		-- [[mantenir]], [[menystenir]], [[obtenir]], [[retenir]], [[sostenir]], [[viltenir]]; highly irregular
 		match = "tenir",
 		forms = {
 			fut = "tindr",
@@ -1291,6 +1331,7 @@ local built_in_conjugations = {
 			pres_3s = "tus", -- note, pres_3s (a single form override) not pres3s (a stem override, which also affects
 							 -- pres_2s; but imp_2s is physically copied from pres_3s, so imp_2s correctly gets 'tus')
 			eix_infix = "-",
+			irreg = true,
 		}
 	},
 	{
@@ -1305,11 +1346,12 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- compounds of [[venir]]: [[advenir]], [[avenir]], [[contravenir]], [[convenir]], [[desconvenir]],
-		-- [[entrevenir]], [[esdevenir]], [[intervenir]], [[obvenir]], [[pervenir]], [[prevenir]], [[reconvenir]],
-		-- [[revenir]], [[sobrevenir]], [[subvenir]]; but not [[enjovenir]] or [[rejovenir]]; highly irregular
-		match = match_against_verbs("venir", {"^ad", "^a", "contra", "con", "entre", "esde", "inter", "ob", "per",
-											  "pre", "^re", "sobre", "sub"}),
+		-- compounds of [[venir]]: [[advenir]], [[avenir]], [[contravenir]], [[convenir]], [[desavenir-se]],
+		-- [[desconvenir]], [[entrevenir]], [[esdevenir]], [[intervenir]], [[obvenir]], [[pervenir]], [[prevenir]],
+		-- [[reconvenir]], [[revenir]], [[sobrevenir]], [[subvenir]]; but not [[enjovenir]] or [[rejovenir]];
+		-- highly irregular
+		match = match_against_verbs("venir", {"^ad", "^a", "contra", "con", "desa", "entre", "esde", "inter", "ob",
+											  "per", "pre", "^re", "sobre", "sub"}),
 		forms = {
 			fut = "vindr",
 			pres_3s = "vé",
@@ -1351,8 +1393,9 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- [[dir]]; behaves like an -er/-re verb
-		match = match_against_verbs("dir", {"^", "des", "entre", "inter", "mal", "pre", "^re"}),
+		-- [[dir]], [[adir-se]], [[desdir]], [[entredir]], [[interdir]], [[maldir]], [[predir]], [[redir]]; behaves
+		-- like an -er/-re verb
+		match = match_against_verbs("dir", {"^", "^a", "des", "entre", "inter", "mal", "pre", "^re"}),
 		forms = {
 			stem = "di",
 			conj = "e",
@@ -1363,7 +1406,7 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- [[dur]]; behaves like an -er/-re verb
+		-- [[dur]], [[endur-se]]; behaves like an -er/-re verb
 		match = "dur",
 		forms = {
 			stem = "du",
@@ -1536,7 +1579,8 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, is_full_wor
 	end
 
 	-- If ending begins with s and stem ends in a sibilant, we need an e in between; cf. pres_2s 'apareixes' of
-	-- [[aparèixer]], pres_2s 'torces' of [[torcer]], pres_2s 'fuges' of [[fugir]]. This may feed the next rule.
+	-- [[aparèixer]], pres_2s 'torces' of [[torcer]], pres_2s 'fuges' of [[fugir]], pres_2s 'brunzes' of [[brunzir]].
+	-- This may feed the next rule.
 	if ending:find("^s") and rfind(stem, "[çjsxz]$") then
 		ending = "e" .. ending
 	end
