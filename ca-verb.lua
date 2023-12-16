@@ -60,114 +60,6 @@ local TEMPC1 = u(0xFFF1) -- temporary character used for consonant substitutions
 
 --[=[
 
-Vowel alternations:
-
-<i-e>: 'i' in pres1s, imp2s and the whole present subjunctive; 'e' elsewhere when stressed. Generally 'e' otherwise
-	   when unstressed. E.g. [[sentir]], [[conseguir]] (the latter additionally with 'gu-g' alternation).
-<u-o>: 'u' in pres1s, imp2s and the whole present subjunctive; 'o' elsewhere when stressed. Generally 'u' otherwise
-	   when unstressed. E.g. [[durmir]], [[subir]].
-<i>: 'i' whenever stressed (in the present singular and third plural) and throughout the whole present subjunctive.
-      Otherwise 'e'. E.g. [[vestir]], [[pedir]].
-<u>: 'u' whenever stressed (in the present singular and third plural) and throughout the whole present subjunctive.
-      Otherwise 'o'. There may be no such verbs in standard Catalan.
-<í>: The last 'i' of the stem) becomes 'í' when stressed. E.g.:
-	 * [[faiscar]] (only3sp; faísca, faíscan, faísque, faísquen' also with 'c-qu' alternation), [[acainzar]],
-	   [[avaiñar]], [[cainzar]], [[caiñar]], [[desenvaiñar]], [[envaiñar]], [[arremuiñar]], [[arrepuiñar]],
-	   [[arruinar]], [[cuincar]], [[cuiñar]], [[muiñar]]
-	 * verbs in -eizar and -aizar, e.g.  [[europeizar]] ('europeízo, europeíce', etc. also with 'z-c' alternation)
-	   * [[desenraizar]], [[enraizar]], [[hebraizar]], [[xudaizar]]
-	   * [[europeizar]], [[homoxeneizar]]
-	 * some verbs in -uizar:
-	   * [[enxuizar]] (enxuízo, enxuíza, enxuíce, enxuícen, also with 'z-c' alternation), [[axuizar]]
-	   * but not any in -guizar ([[arreguizar]], [[desgaleguizar]], [[empreguizar]], [[esguizar]], [[espreguizar]],
-	     [[galeguizar]]) or -quizar ([[catequizar]], [[esnaquizar]], [[xerarquizar]])
-	 * none in -aiar?
-	   * not [[abraiar]], [[achaiar]], [[alfaiar]], [[amaiar]], [[arraiar]], [[atalaiar]], [[desmaiar]], [[encaiar]],
-	     [[engraiar]], [[ensaiar]], [[espraiar]], [[faiar]], [[laiar]], [[maiar]], [[raiar]], [[salaiar]]
-	   * unknown: [[craiar]]
-	 * some verbs in -biar:
-	   * [[adobiar]], [[asubiar]], [[espabiar]]
-	   * but not [[arrubiar]], [[asoberbiar]] /e/?, [[cambiar]], [[descambiar]], [[enrabiar]], [[ensoberbiar]] /e/?,
-		 [[entibiar]], [[gabiar]], [[gobiar]] /ɔ/, [[intercambiar]], [[rabiar]], [[recambiar]], [[sarabiar]] (only3s),
-		 [[turbiar]]
-	 * none in -ciar:
-	   * not [[acariciar]], [[agraciar]], [[anunciar]], [[apreciar]] /e/?, [[asociar]] /ɔ/, [[auspiciar]],
-	     [[autofinanciar]], [[aviciar]], [[axenciar]] /ɛ/, [[beneficiar]], [[comerciar]] /ɛ/, [[concienciar]] /ɛ/,
-		 [[conferenciar]] /e/?, [[congraciar]], [[denunciar]], [[depreciar]] /e/?, [[desasociar]] /ɔ/, [[desenviciar]],
-		 [[desgraciar]], [[desperdiciar]], [[diferenciar]] /e/?, [[dilixenciar]] /e/?, [[disociar]] /ɔ/, [[distanciar]],
-		 [[divorciar]] /ɔ/, [[enranciar]], [[ensuciar]], [[enunciar]], [[enviciar]], [[escanciar]], [[especiar]] /?/,
-		 [[evidenciar]] /e/?, [[financiar]], [[graciar]], [[influenciar]] /e/?, [[iniciar]], [[licenciar]] /ɛ/,
-		 [[maliciar]], [[negociar]] /ɔ/, [[oficiar]], [[potenciar]] /e/?, [[prenunciar]], [[presenciar]] /e/?,
-		 [[pronunciar]], [[propiciar]], [[quintaesenciar]] /e/?, [[reiniciar]], [[renunciar]], [[reverenciar]] /e/?,
-		 [[saciar]], [[sentenciar]] /e/?, [[silenciar]] /e/?, [[viciar]]
-	 * some verbs in -diar:
-	   * [[adiar]], [[vadiar]]
-	   * but not [[asediar]] /ɛ/, [[compendiar]] /ɛ/, [[custodiar]] /ɔ/, [[deslendiar]] /e/?, [[entremediar]] /e/?,
-	     [[estipendiar]] /e/?, [[fastidiar]], [[incendiar]] /e/?, [[insidiar]], [[irradiar]], [[mediar]] /e/?,
-		 [[odiar]] /ɔ/, [[parodiar]] /ɔ/, [[preludiar]], [[radiar]], [[remediar]] /ɛ/, [[repudiar]], [[salmodiar]] /ɔ/,
-		 [[subsidiar]], [[vilipendiar]] /ɛ/
-	 * some verbs in -fiar:
-	   * [[afiar]], [[confiar]], [[desafiar]], [[desconfiar]], [[desenfiar]], [[enfiar]], [[esfiar]], [[esgrafiar]],
-	     [[fiar]], [[porfiar]], probably [[sobrefiar]] (not indicated)
-	   * but not [[atrofiar]] /ɔ/, [[hipertrofiar]] /ɔ/
-	 * verbs in -guiar:
-	   * [[guiar]], [[radioguiar]], [[teleguiar]]
-	 * verbs in -hiar:
-	   * [[chiar]], [[rechiar]], [[rechouchiar]]
-	 * some verbs in -liar:
-	   * [[aliar]] (alío, alía, alíe, alíen), [[ampliar]], [[avaliar]], [[desliar]], [[liar]]
-	   * but not [[afiliar]] (afilio, afilia, afilie, afilien), [[auxiliar]], [[conciliar]], [[defoliar]],
-	     [[domiciliar]], [[escoliar]], [[espoliar]], [[exfoliar]], [[exiliar]], [[interfoliar]], [[reconciliar]]
-	   * [[paliar]] goes both ways: 'palio/palío', 'palia/palía', 'palie/palíe', 'palien/palíen'
-	   * unknown: [[represaliar]]
-	 * some verbs in -miar:
-	   * [[gurrumiar]], [[miar]]
-	   * but not [[agremiar]], [[amomiar]], [[encomiar]], [[premiar]], [[rumiar]]
-	 * some verbs in -niar:
-	   * [[agoniar]], [[desagoniar]]
-	   * but not [[calumniar]], [[conxeniar]], [[herniar]], [[miniar]]
-	 * none in -oiar?
-	   * not [[aboiar]] /ɔ/, [[acoiar]] /ɔ/, [[apoiar]] /o/, [[arroiar]] /o/ (only3s), [[choiar]]/[[enchoiar]] /ɔ/,
-	     [[enxoiar]] /ɔ/, [[loiar]] /o/
-	 * some verbs in -piar:
-	   * [[arrepiar]], [[espiar]], [[expiar]], [[piar]]
-	   * but not [[apropiar]], [[copiar]], [[expropiar]], [[fotocopiar]], [[lurpiar]], [[principiar]], [[recopiar]],
-	     [[tapiar]], [[xerocopiar]]
-	 * some verbs in -quiar:
-	   * [[esquiar]], [[maquiar]], [[remaquiar]], [[tosquiar]]
-	   * but not [[obsequiar]]
-	   * unknown: [[franquiar]]
-	 * some verbs in -riar:
-	   * [[arrefriar]], [[arriar]], [[avariar]], [[criar]], [[desvariar]], [[enriar]], [[escagarriar]], [[estriar]],
-	     [[malcriar]], [[recriar]], [[variar]]
-	   * but not [[anguriar]], [[asalariar]], [[cariar]] (only3sp), [[contrariar]], [[desmemoriar]], [[expatriar]],
-	     [[gloriar]], [[historiar]], [[inventariar]], [[inxuriar]], [[leriar]], [[repatriar]], [[seriar]],
-		 [[vangloriar]]
-	 * some verbs in -siar:
-	   * [[fantasiar]]
-	   * but not [[anestesiar]], [[extasiar]]
-	   * [[ansiar]] goes both ways: 'ansio/ansío', 'ansia/ansía', 'ansie/ansíe', 'ansien/ansíen'
-	 * some verbs in -tiar:
-	   * [[amnistiar]], [[desenfastiar]], [[enfastiar]]
-	   * but not [[angustiar]], [[sitiar]]
-	 * some verbs in -viar:
-	   * [[ataviar]], [[aviar]], [[desataviar]], [[desviar]], [[enviar]], [[extraviar]], [[reenviar]]
-	   * but not [[abreviar]], [[agraviar]], [[aliviar]], [[desagraviar]], [[diluviar]] (only3s), [[obviar]]
-	 * some verbs in -xiar:
-	   * [[vixiar]]
-	   * but not [[asfixiar]], [[colexiar]] /e/, [[contaxiar]], [[desprestixiar]], [[eloxiar]], [[plaxiar]],
-	     [[presaxiar]], [[prestixiar]], [[privilexiar]] /e/, [[refuxiar]]
-<ú>: The last 'u' of the stem becomes 'ú' when stressed. E.g.:
-     * [[reunir]] ('reúno, reúne(s), reúnem, reúna(s), reúnan')
-	 * [[esmiuzar]] ('esmiúzo, esmiúza(s), esmiúza, esmiúce(s), esmiúcen' also with 'z-c' alternation)
-     * [[saudar]] ('saúdo, saúda(s), saúda, saúde(s), saúden')
-	 * [[auñar]], [[desembaular]], [[embaular]]
-	 * [[afiuzar]], [[desafiuzar]], [[desmiudar]], [[desmiuzar]], [[enviuvar]], [[esmiuzar]] but not [[triunfar]]
-	 * NOTE: It seems most or all verbs in -uar other than in -guar, -quar have stressed ú, so we make it the default.
-]=]
-
---[=[
-
 Irregular verbs:
 
 -ldre/-ndre verbs:
@@ -491,7 +383,6 @@ for _, overridable_stem in ipairs {
 	{"pret_conj", simple_choice({"irreg", "ar", "er", "ir"}) },
 	"pret_base",
 	"pret",
-	"short_pret",
 	"fut",
 	"cond",
 	"pres_sub_stressed",
@@ -609,12 +500,8 @@ The following stems are recognized:
 -- pret_base: The preterite stem (not including the -a-/-e-/-i- stem suffix). Defaults to the infinitive stem.
 	 Only used when pret_conj ~= "irreg". 
 -- pret: The full preterite stem missing only the endings (-ste, -mos, etc.), e.g. 'fige', 'fo'. Only used for verbs
-	 with irregular preterites (pret_conj == "irreg") such as [[facer]], [[poder]], [[traer]], etc. The pret_1s and
-	 pret_3s are handled using the short_pret stem instead (pret_1s '-en', pret_3s '-o'). Defaults to `pret_base` + the
-	 conjugation vowel.
--- short_pret: The short preterite stem, used with 1s and 3s endings (pret_1s '-en', pret_3s '-o'). Only used with
-	 irregular preterites (pret_conj == "irreg"). Normally derived from pret by deleting the final vowel, and doesn't
-	 need to be given explicitly.
+	 with irregular preterites (pret_conj == "irreg") such as [[facer]], [[poder]], [[traer]], etc. Defaults to
+	 `pret_base` + the conjugation vowel.
 -- fut: The future stem. Defaults to the infinitive stem + the conjugation vowel.
 -- cond: The conditional stem. Defaults to `fut`.
 -- impf_sub: The imperfect subjunctive stem. Defaults to `pret`.
@@ -649,48 +536,77 @@ local built_in_conjugations = {
 	-- tuitar/retuitar changing to (re)tuíto: use <í>
 
 	{
-		-- dar
-		match = "^dar", -- [[desdar]] doesn't seem to exist; [[redar]] is regular and unrelated to [[dar]]
+		-- [[aguar]]:
+		--   pres agúo, agúes, agúa, agüem, agüeu, agúen
+		--   pres_sub aguï, aguïs, aguï, agüem, agüeu, aguïn
+		-- contrast a more typical verb in -guar, [[enaiguar]]:
+		--   pres enaiguo, enaigües, enaigua, enaigüem, enaigüeu, enaigüen
+		--   pres_sub enaigüi, enaigüis, enaigüi, enaigüem, enaigüeu, enaigüin
+		match = "^aguar",
 		forms = {
-			pres_1s = "dou", pres_2s = "dás", pres_3s = "dá", pres_3p = "dán#",
-			pres1_and_sub = "de", -- only for subjunctive as we override pres_1s
-			sub_conj = "er",
-			pret_conj = "irreg", pret = "de", pret_1s = "dei", pret_3s = "deu", -- /dɛw/
+			pres_stressed = "agú",
+			pres_stressed = "aguï",
 			irreg = true,
 		}
 	},
 	{
-		-- estar
-		match = "^estar", -- [[sobestar]] and [[sobrestar]] seem not to exist
+		-- [[anar]]; highly irregular
+		match = "^anar",
 		forms = {
-			pres_1s = "estou", pres_2s = "estás", pres_3s = "está", pres_3p = "están",
-			pres1_and_sub = "este", -- only for subjunctive as we override pres_1s
-			sub_conj = "er",
-			pret_conj = "irreg", pret = "estive",
-			pp_inv = true, -- no [[sobestar]] or [[sobrestar]], which would be transitive
+			inf_stem = "anir",
+			pres_1s = "vaig",
+			pres_2s = "vas",
+			pres_3s = "va",
+			pres_3p = "van",
+			pres_sub_stressed = "vagi",
+			imp_2s = "ves",
 			irreg = true,
 		}
 	},
 	{
-		-- verbs in -uar but not -guar
-		match = function(verb)
-			if verb:find("guar$") then
-				return nil
-			else
-				return match_against_verbs("uar", {""})(verb)
-			end
-		end,
+		-- [[dar]]
+		match = "^dar",
 		forms = {
-			vowel_alt = "ú",
+			pres_1s = {form = "do", footnotes = {"[obsolete]"}},
+			pres_2s = {form = "das", footnotes = {"[obsolete]"}},
+			pres_3s = {form = "da", footnotes = {"[obsolete]"}},
+			pres_3p = {form = "dan", footnotes = {"[obsolete]"}},
+			pres_sub_1s = {form = "de", footnotes = {"[obsolete]"}},
+			pres_sub_2s = {form = "des", footnotes = {"[obsolete]"}},
+			pres_sub_3s = {form = "de", footnotes = {"[obsolete]"}},
+			pres_sub_3p = {form = "den", footnotes = {"[obsolete]"}},
+			pret_1s = "di", -- regular except for lack of accent
+			pret_3s = "da", -- regular except for lack of accent
+			impf_sub_1s = "des", -- regular except for lack of accent
+			impf_sub_3s = "des", -- regular except for lack of accent
+			irreg = true,
+		}
+	},
+	{
+		-- [[estar]]; highly irregular
+		match = "^estar",
+		forms = {
+			pres_2s = "estàs",
+			pres_3s = "està",
+			pres_3p = "estan",
+			g_infix = "estig",
+			imp_2s = "estigues",
+			imp_2p = "estigueu",
+			pp = "estad",
 		}
 	},
 
 	--------------------------------------------------------------------------------------------
-	--                                             -er                                        --
+	--                                           -er/-re                                      --
 	--------------------------------------------------------------------------------------------
 
-	-- Verbs not needing entries here:
+	-- Regular verbs not needing entries here:
 	--
+	-- [[rebre]], [[concebre]], [[decebre]], [[percebre]]
+	-- [[rompre]]
+	-- [[fúmer]], [[prémer]], [[témer]], [[trémer]]
+	-- [[perdre]], [[batre]], [[botre]], [[fotre]], [[retre]]
+	-- [[tòrcer]], [[vèncer]]
 	-- -cer (verbs in -ecer, vencer, etc.): automatically handled in combine_stem_ending()
 	-- -guer (erguer/soerguer): automatically handled in combine_stem_ending()
 
@@ -698,8 +614,8 @@ local built_in_conjugations = {
 		-- [[cabre]]
 		match = "cabre",
 		forms = {
-			pres_sub_stressed = "càpig/a-e",
-			pres_sub_unstressed = "capig/a-e",
+			pres_sub_stressed = "càpiga",
+			pres_sub_unstressed = "capigue",
 		}
 	},
 	{
@@ -715,7 +631,7 @@ local built_in_conjugations = {
 			-- g_infix implies irreg = true
 			-- g_infix sets pres1_and_sub to end in -g; combine_stem_ending() changes final -g to -c
 			-- g_infix also adds -g to pret and pp stems
-			g_infix = true,
+			g_infix = "+",
 		}
 	},
 	{
@@ -724,7 +640,7 @@ local built_in_conjugations = {
 		forms = {
 			stem = "ol",
 			-- see above for g_infix effects
-			g_infix = true,
+			g_infix = "+",
 			pp = "olt",
 		}
 	},
@@ -734,8 +650,8 @@ local built_in_conjugations = {
 		forms = {
 			stem = "roman",
 			-- see above for g_infix effects
-			g_infix = true,
-			pp = "romàs",
+			g_infix = "+",
+			pp = "romàs#",
 		}
 	},
 	{
@@ -744,7 +660,7 @@ local built_in_conjugations = {
 		forms = {
 			stem = "én#", -- remove final accent without prefix with vowel; also removed when adding a suffix
 			-- see above for g_infix effects
-			g_infix = true,
+			g_infix = "+",
 			pp = "ès#", -- see above for effect of final #
 		}
 	},
@@ -754,7 +670,7 @@ local built_in_conjugations = {
 		forms = {
 			stem = "vèn#", -- see above for effect of final #
 			-- see above for g_infix effects
-			g_infix = true,
+			g_infix = "+",
 			pp = "venud", -- g_infix would normally make it vengud
 		}
 	},
@@ -765,7 +681,7 @@ local built_in_conjugations = {
 		forms = {
 			stem = "èn#", -- see above for effect of final #
 			-- see above for g_infix effects
-			g_infix = true,
+			g_infix = "+",
 			pp = "ès#", -- see above for effect of final #
 		}
 	},
@@ -775,8 +691,8 @@ local built_in_conjugations = {
 		forms = {
 			stem = "enfon",
 			-- see above for g_infix effects
-			g_infix = true,
-			pp = "enfús",
+			g_infix = "+",
+			pp = "enfús#",
 		}
 	},
 	{
@@ -785,7 +701,7 @@ local built_in_conjugations = {
 		forms = {
 			stem = "pon",
 			-- see above for g_infix effects
-			g_infix = true,
+			g_infix = "+",
 			pp = "post",
 		}
 	},
@@ -795,7 +711,7 @@ local built_in_conjugations = {
 		forms = {
 			stem = "on",
 			-- see above for g_infix effects
-			g_infix = true,
+			g_infix = "+",
 			pp = "ós#", -- see above for effect of final #
 		}
 	},
@@ -805,6 +721,46 @@ local built_in_conjugations = {
 		forms = {
 			stem = "cern",
 			-- otherwise regular
+		}
+	},
+	{
+		-- [[atènyer]]
+		match = "atènyer",
+		forms = {
+			pp = "atès#",
+		}
+	},
+	{
+		-- [[empènyer]], [[espènyer]]
+		match = match_against_verbs("pènyer", {"^em", "^es"}),
+		forms = {
+			pp = "pès#",
+		}
+	},
+	{
+		-- [[estrènyer]], [[constrènyer]], [[destrènyer]], [[restrènyer]]
+		match = match_against_verbs("strènyer", {"^e", "con", "^de", "^re"}),
+		forms = {
+			pp = "stret",
+		}
+	},
+	{
+		-- [[fènyer]]
+		match = "fènyer",
+		forms = {
+			pp = {"fengud", "fenyud"},
+		}
+	},
+	{
+		-- [[júnyer]]
+		match = "júnyer",
+		like = "junyir",
+	},
+	{
+		-- [[plànyer]], [[complànyer]], [[pertànyer]]
+		match = match_against_verbs("ànyer", {"pl", "pert"}),
+		forms = {
+			pp = {"angud", "anyud"},
 		}
 	},
 	{
@@ -819,7 +775,7 @@ local built_in_conjugations = {
 			-- g_infix sets pres1_and_sub to end in -g; combine_stem_ending() changes final -g to -c
 			-- g_infix also adds -g to pret and pp stems
 			-- g_infix sets pres3s to end in -u, removing a preceding -i or -v
-			g_infix = true,
+			g_infix = "+",
 		}
 	},
 	{
@@ -827,7 +783,7 @@ local built_in_conjugations = {
 		match = "plaure",
 		forms = {
 			stem = "a", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
-			g_infix = true,
+			g_infix = "+",
 		}
 	},
 	{
@@ -835,7 +791,7 @@ local built_in_conjugations = {
 		match = "^raure",
 		forms = {
 			stem = "a", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
-			g_infix = true,
+			g_infix = "+",
 			pp = {"ragud", "ras"},
 		}
 	},
@@ -844,7 +800,7 @@ local built_in_conjugations = {
 		match = match_against_verbs("eure", {"b", "d", "ll"}),
 		forms = {
 			stem = "ev", -- v dropped by g_infix before g and u
-			g_infix = true,
+			g_infix = "+",
 		}
 	},
 	{
@@ -853,7 +809,7 @@ local built_in_conjugations = {
 		forms = {
 			stem = "e", -- i dropped by g_infix before u
 			pres1p = "ei", -- affects pres_1p, pres_2p, gerund, imperfect (see [[caure]] above)
-			g_infix = true,
+			g_infix = "+",
 		}
 	},
 	{
@@ -866,7 +822,7 @@ local built_in_conjugations = {
 								 -- which gets u added (controls pres_3s, pres_2s)
 			unstressed_stem = "a", -- affects unstressed_stem, which get g added by g_infix
 			pres1p = "ai", -- affects pres_1p, pres_2p, gerund, imperfect (see [[caure]] above)
-			g_infix = true,
+			g_infix = "+",
 		}
 	},
 	{
@@ -899,7 +855,7 @@ local built_in_conjugations = {
 		forms = {
 			stem = "ri",
 			-- impf1s reia, impf1p rèiem (preceding vowel changed to è)
-			g_infix = true,
+			g_infix = "+",
 		}
 	},
 	{
@@ -908,8 +864,8 @@ local built_in_conjugations = {
 		match = "scriure",
 		forms = {
 			stem = "scriv", -- v dropped by g_infix before g and u
-			pres_unstressed = "scriv/i", -- pres_1p/pres_2p have -ir endings
-			g_infix = true,
+			pres_unstressed = "scrivi", -- pres_1p/pres_2p have -ir endings
+			g_infix = "+",
 			pret = {"scriví", "scrigué"},
 			pp = "scrit",
 		}
@@ -919,7 +875,7 @@ local built_in_conjugations = {
 		match = "viure",
 		forms = {
 			stem = "viv", -- v dropped by g_infix before g and u
-			pres_unstressed = "viv/i", -- pres_1p/pres_2p have -ir endings
+			pres_unstressed = "vivi", -- pres_1p/pres_2p have -ir endings
 			g_infix = "visc", -- applies to pres1s, sub, pret, pp
 		}
 	},
@@ -928,7 +884,7 @@ local built_in_conjugations = {
 		match = "cloure",
 		forms = {
 			stem = "clo", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
-			g_infix = true,
+			g_infix = "+",
 			pp = "clòs#", -- remove final accent without prefix with vowel; also removed when adding a suffix
 		}
 	},
@@ -937,7 +893,7 @@ local built_in_conjugations = {
 		match = "coure",
 		forms = {
 			stem = "co", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
-			g_infix = true,
+			g_infix = "+",
 			pp = {"cuit", "cogud"},
 		}
 	},
@@ -946,7 +902,7 @@ local built_in_conjugations = {
 		match = match_against_verbs("oure", {"m", "pl"}),
 		forms = {
 			stem = "ov", -- v dropped by g_infix before g and u
-			g_infix = true,
+			g_infix = "+",
 		}
 	},
 	{
@@ -954,7 +910,7 @@ local built_in_conjugations = {
 		match = "noure",
 		forms = {
 			stem = "no", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
-			g_infix = true,
+			g_infix = "+",
 		}
 	},
 	{
@@ -977,19 +933,19 @@ local built_in_conjugations = {
 		-- [[ajupir]]
 		-- [[bullir]], [[rebullir]]
 		-- [[cruixir]], [[escruixir]] (Routledge says this is inchoative but DIEC, DEIEC and DCC all disagree; note
-		-- pres_2s 'cruixes', handled automatically)
+		--   pres_2s 'cruixes', handled automatically)
 		-- [[dormir]], [[adormir]]
 		-- [[esmunyir]], [[esmunyir-se]]
-		-- [[fugir]], [[defugir]], [[enfugir]]; pres sing ''fujo, fuges, fuig'' handled by combine_stem_ending()
+		-- [[fugir]], [[confugir]], [[defugir]], [[enfugir-se]]; pres sing ''fujo, fuges, fuig'' handled by
+		--   combine_stem_ending()
 		-- [[grunyir]]
-		-- [[morir]], [[premorir]]
 		-- [[munyir]]
 		-- [[pudir]]
 		-- [[punyir]]
 		-- [[retrunyir]]
 		-- [[sentir]], [[pressentir]], [[ressentir]]; not [[consentir]], with can be either non-inchoative or
 		-- inchoative, and not [[assentir]] or [[dissentir]], which are only inchoative
-		match = match_against_verbs("ir", {"ajup", "bull", "cruix", "dorm", "esmuny", "fug", "gruny", "mor", "muny",
+		match = match_against_verbs("ir", {"ajup", "bull", "cruix", "dorm", "esmuny", "fug", "gruny", "muny",
 										   "pud", "puny", "retruny", "^sent", "pressent", "^ressent"}),
 		forms = {
 			eix_infix = "-",
@@ -1056,8 +1012,22 @@ local built_in_conjugations = {
 			eix_infix = "-",
 		}
 	},
+	{
+		-- [[establir]], [[preestablir]], [[restablir]]
+		match = "establir",
+		forms = {
+			pp = {"establert", "establid"},
+		}
+	},
 	-- [[ferir]]: -- non-inchoative in Balearics, inchoative elsewhere
 	-- [[fregir]]: -- non-inchoative in Valencia, inchoative elsewhere
+	{
+		-- [[imprimir]], [[reimprimir]], [[sobreimprimir]]; not any other verbs in -primir
+		match = "imprimir",
+		forms = {
+			pp = "imprès#",
+		}
+	},
 	-- [[llegir]]: -- non-inchoative in Valencia and Minorca, inchoative elsewhere
 	{
 		-- [[lluir]]: regular inchoative in the figurative meaning "to display (something), to be showy" also in the
@@ -1088,6 +1058,14 @@ local built_in_conjugations = {
 		}
 	},
 	{
+		-- [[morir]], [[premorir]]; but not [[atemorir]]
+		match = match_against_verbs("morir", {"^", "pre"}),
+		forms = {
+			eix_infix = "-",
+			pp = "mort",
+		}
+	},
+	{
 		-- [[obrir]], [[entreobrir]], [[reobrir]]; not [[cobrir]] and derivatives, not [[empobrir]], so we have to list
 		-- them individually
 		match = match_against_verbs("obrir", {"^", "entre", "^re"}),
@@ -1095,6 +1073,13 @@ local built_in_conjugations = {
 			eix_infix = "-",
 			pres3s = "obre", -- generates pres_2s, imp_2s
 			pp = "obert",
+		}
+	},
+	{
+		-- [[oferir]]; but not [[proferir]]
+		match = "^oferir",
+		forms = {
+			pp = {"ofert", "oferid"},
 		}
 	},
 	-- [[oir]], [[desoir]], [[entreoir]]: -- per Routledge, non-inchoative or inchoative normally but only
@@ -1118,7 +1103,21 @@ local built_in_conjugations = {
 			pres3s = {"pruu", "pru"}, -- generates pres_2s, imp_2s
 		}
 	},
+	{
+		-- [[reblir]]
+		match = "^reblir",
+		forms = {
+			pp = {"reblert", "reblid"},
+		}
+	},
 	-- [[renyir]]: -- non-inchoative in Valencia, inchoative elsewhere
+	{
+		-- [[sofrir]]
+		match = "^sofrir",
+		forms = {
+			pp = {"sofert", "sofrid"},
+		}
+	},
 	{
 		-- [[sortir]], [[ressortir]], [[sobresortir]]; but not [[assortir]], which is regular inchoative
 		match = match_against_verbs("sortir", {"^", "^res", "sobre"}),
@@ -1127,9 +1126,14 @@ local built_in_conjugations = {
 			eix_infix = "-",
 		}
 	},
+	{
+		-- [[suplir]]
+		match = "^suplir",
+		forms = {
+			pp = {"suplert", "suplid"},
+		}
+	},
 	-- [[teixir]], [[entreteixir]]: -- non-inchoative in Valencia, inchoative elsewhere
-	-- [[tenyir]], [[destenyir]]: -- non-inchoative in Valencia, but [[retenyir]] inchoative or non-inchoative in
-	-- Valencia? (per Routledge); regular inchoative elsewhere
 	{
 		-- [[tenir]] but not any compounds; highly irregular
 		match = "^tenir",
@@ -1160,6 +1164,8 @@ local built_in_conjugations = {
 		match = "tindre",
 		like = "tenir",
 	},
+	-- [[tenyir]], [[destenyir]]: -- non-inchoative in Valencia, but [[retenyir]] inchoative or non-inchoative in
+	-- Valencia? (per Routledge); regular inchoative elsewhere
 	{
 		-- [[tossir]] "to cough"
 		match = "^tossir",
@@ -1233,7 +1239,7 @@ local built_in_conjugations = {
 		forms = {
 			stem = "di",
 			conj = "e",
-			g_infix = true,
+			g_infix = "+",
 			imp_2s = "digues",
 			imp_2p = "digueu",
 			pp = "dit",
@@ -1245,7 +1251,7 @@ local built_in_conjugations = {
 		forms = {
 			stem = "du",
 			conj = "e",
-			g_infix = true,
+			g_infix = "+",
 			pres3s = {"duu", "du"},
 			impf1 = "dui",
 			impf2 = "dúi",
@@ -1285,33 +1291,6 @@ local built_in_conjugations = {
 		like = "ser",
 	},
 	{
-		-- [[estar]]; highly irregular
-		match = "^estar",
-		forms = {
-			pres_2s = "estàs",
-			pres_3s = "està",
-			pres_3p = "estan",
-			g_infix = "estig",
-			imp_2s = "estigues",
-			imp_2p = "estigueu",
-			pp = "estad",
-		}
-	},
-	{
-		-- [[anar]]; highly irregular
-		match = "^anar",
-		forms = {
-			inf_stem = "anir",
-			pres_1s = "vaig",
-			pres_2s = "vas",
-			pres_3s = "va",
-			pres_3p = "van",
-			pres_sub_stressed = "vagi",
-			imp_2s = "ves",
-			irreg = true,
-		}
-	},
-	{
 		-- [[haver]] as auxiliary; highly irregular
 		match = "^@haver", -- @ marks auxiliary
 		forms = {
@@ -1330,7 +1309,7 @@ local built_in_conjugations = {
 		match = "^haver",
 		forms = {
 			inf_stem = "haur",
-			pres_1s = {
+			pres_1s = "",
 			pres_2s = "vas",
 			pres_3s = "va",
 			pres_3p = "van",
@@ -1900,27 +1879,38 @@ end
 
 -- Add the `stem` to the `ending` for the given `slot` and apply any phonetic modifications.
 -- WARNING: This function is written very carefully; changes to it can easily have unintended consequences.
-local function combine_stem_ending(base, slot, prefix, stem, ending, dont_include_prefix)
+local function combine_stem_ending(base, slot, prefix, stem, ending, is_full_word, dont_include_prefix)
 	-- If the ending begins with an acute accent, it goes after the last vowel, but we don't have to do anything.
 
-	-- Use the full stem for checking for -gui ending and such, because 'stem' is just 'u' for [[arguir]],
-	-- [[delinquir]].
+	-- [Use the full stem for checking for -gui ending and such, because 'stem' is just 'u' for [[arguir]],
+	-- [[delinquir]].] -- FIXME, not accurate.
 	local full_stem = prefix .. stem
 	-- Include the prefix in the stem unless dont_include_prefix is given (used for the past participle stem).
 	if not dont_include_prefix then
 		stem = full_stem
 	end
 
-	-- If ending begins with i, it must get an accent after a/o/u to prevent the two merging into a diphthong:
-	-- caer -> caíches, caído; doer -> doíches, doído; concluír -> concluíches, concluído.
-	if ending:find("^i") and stem:find("[aouü]$") and not stem:find("[gq]u$") then
-		-- Special case for impf_1p/impf_2p, where the i is unstressed and changes into ï. FIXME: Maybe we should be
-		-- checking the slot value instead.
-		if ending == "iamos" or ending == "iades" then
-			ending = ending:gsub("^i", "ï")
-		else
-			ending = ending:gsub("^i", "í")
-		end
+	-- Ending beginning in -i after diphthong ending in V + i compresses the two i's into one (cf. pret_1s 'desmaí' and
+	-- pres_sub_1s 'desmaï' of [[desmaiar]]). This rule doesn't apply after pseudo-vowel u in gu/qu; cf. pret_1s 'guií'
+	-- of [[guiar]] and contrast pret_1s 'cruí' of [[cruiar]]. This may feed the next rule.
+	if rfind(ending, "[iíï]$") and rfind(stem, V .. "i$") and not stem:find("[gq]ui$") then
+		stem = stem:gsub("i$", "")
+	end
+
+	-- If ending begins with i (not í), it must get a diaeresis after a true vowel (not gu/qu, cf. pres_1p 'delinquim'
+	-- of [[delinquir]], not '#delinquïm'; also not a diphthong ending in u, cf. pres_sub_1s 'apreui' of [[apreuar]]
+	-- not '#apreuï') to prevent the two merging into a diphthong. Also, ü -> u before ï. Cf:
+	-- * impf_1s 'raïa' of [[raure]];
+	-- * pres_sub_1s 'creï' of [[crear]];
+	-- * pres_sub_1s 'associï' of [[associar]];
+	-- * impf_1s 'cloïa' of [[cloure]];
+	-- * pres_1p 'lluïm' of [[lluir]];
+	-- * pres_1p 'arguïm' of [[argüir]].
+	if ending:find("^i") and rfind(stem, "[aeiouü]$") and not stem:find("[aeiogq]u$") and (
+		-- exceptions need to be made for infinitive in -ir (and derived future/cond) and gerund in -int
+		ending ~= "ir" and ending ~= "int") then 
+		ending = ending:gsub("^i", "ï")
+		stem = stem:gsub("ü$", "u")
 	end
 
 	-- Spelling changes in the stem; it depends on whether the stem given is the pre-front-vowel or
@@ -1929,15 +1919,19 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, dont_includ
 	-- as the stem.
 	local is_front = rfind(ending, "^[eiéíï]")
 	if base.frontback == "front" and not is_front then
-		stem = stem:gsub("c$", "z") -- coñecer -> coñezo, vencer -> venzo, inmiscir -> inmiszo
-		stem = stem:gsub("gu$", "g") -- distinguir -> distingo, conseguir -> consigo
-		stem = stem:gsub("qu$", "c") -- delinquir -> delinco
-		stem = stem:gsub("gü$", "gu") -- argüír -> arguamos
+		stem = stem:gsub("c$", "ç") -- torcer -> torço
+		stem = stem:gsub("qu$", "c") -- ?
+		stem = stem:gsub("g$", "j") -- fugir -> fujo
+		stem = stem:gsub("gu$", "g") -- ?
+		stem = stem:gsub("gü$", "gu") -- ?
+		stem = stem:gsub("qü$", "qu") -- ?
 	elseif base.frontback == "back" and is_front then
-		stem = stem:gsub("gu$", "gü") -- iguar -> igüei
-		stem = stem:gsub("g$", "gu") -- cargar -> carguei, apagar -> apaguei
-		stem = stem:gsub("c$", "qu") -- marcar -> marquei
-		stem = rsub(stem, "z$", "c") -- aderezar -> aderecei
+		stem = stem:gsub("qu$", "qü") -- adequar -> adeqües
+		stem = stem:gsub("gu$", "gü") -- enaiguar -> enaigües
+		stem = stem:gsub("g$", "gu") -- pegar -> pegues
+		stem = stem:gsub("j$", "g") -- arranjar -> arranges
+		stem = stem:gsub("c$", "qu") -- marcar -> marques
+		stem = stem:gsub("ç$", "c") -- abraçar -> abraces
 	end
 
 	local retval = add_stem_ending(stem, ending)
@@ -1947,6 +1941,18 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, dont_includ
 			retval = com.remove_final_accent(retval)
 		end
 	end
+	if is_full_word then
+		retval = retval:gsub("([bdgj])(s?)$", function(voiced, after)
+			local devoice = {
+				b = "p",
+				d = "t",
+				g = "c",
+				j = "ig",
+			}
+			return devoice[voiced] .. after
+		end)
+	end
+
 	return retval
 end
 
@@ -1999,6 +2005,7 @@ end
 local function construct_stems(base)
 	local stems = {}
 	local bst = base.stems
+	local conj = bst.conj or base.conj
 
 	local function combine(slot, stem, ending)
 		return combine_stem_ending(base, slot, base.prefix, stem, ending, "dont include prefix")
@@ -2039,7 +2046,7 @@ local function construct_stems(base)
 		match = match_against_verbs("aure", {"pl", "r"}),
 		forms = {
 			stem = "a", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
-			g_infix = true,
+			g_infix = "+",
 		}
 	},
 	{
@@ -2047,7 +2054,7 @@ local function construct_stems(base)
 		match = match_against_verbs("eure", {"b", "d", "ll"}),
 		forms = {
 			stem = "ev", -- v dropped by g_infix before g and u
-			g_infix = true,
+			g_infix = "+",
 		}
 	},
 	{
@@ -2056,7 +2063,7 @@ local function construct_stems(base)
 		forms = {
 			stem = "e", -- i dropped by g_infix before u
 			pres1p = "ei", -- affects pres_1p, pres_2p, gerund, imperfect (see [[caure]] above)
-			g_infix = true,
+			g_infix = "+",
 		}
 	},
 	{
@@ -2069,7 +2076,7 @@ local function construct_stems(base)
 								 -- which gets u added (controls pres_3s, pres_2s)
 			unstressed_stem = "a", -- affects unstressed_stem, which get g added by g_infix
 			pres1p = "ai", -- affects pres_1p, pres_2p, gerund, imperfect (see [[caure]] above)
-			g_infix = true,
+			g_infix = "+",
 		}
 	},
 	stems.pres_unstressed = bst.pres_unstressed or unstressed_g_infix or unstressed_stem
@@ -2092,7 +2099,7 @@ local function construct_stems(base)
 			return combine("impf_1s", form, "av")
 		elseif form:find("i#?$") then
 			form = form:gsub("i#?$", "")
-			return rmatch(form, "^(.-)" .. com.V .. "*$") .. "ei"
+			return rmatch(form, "^(.-)" .. V .. "*$") .. "ei"
 		else
 			return combine("impf_1s", form, "i") -- will convert to ï after a vowel
 		end
@@ -2102,7 +2109,7 @@ local function construct_stems(base)
 			return combine("impf_1s", form, "àv")
 		elseif form:find("i#?$") then
 			form = form:gsub("i#?$", "")
-			return rmatch(form, "^(.-)" .. com.V .. "*$") .. "èi"
+			return rmatch(form, "^(.-)" .. V .. "*$") .. "èi"
 		else
 			return combine("impf_1s", form, "í")
 		end
@@ -2112,10 +2119,8 @@ local function construct_stems(base)
 	stems.pret = bst.pret or iut.map_forms(iut.convert_to_general_list_form(stems.pret_base),
 		-- use combine_stem_ending esp. so we get saíra etc.
 		function(form) return combine("pret", form, base.conj_vowel) end)
-	stems.short_pret = bst.gl_short_pret or iut.map_forms(iut.convert_to_general_list_form(stems.pret),
-		function(form) return rsub(form, com.V .. "$", "") end)
 	stems.fut = bst.fut or base.inf_stem .. base.conj
-	stems.cond = bst.cond or stems.fut
+	stems.cond = bst.cond or map_general(stems.fut, function(form) return form .. "í" end)
 	stems.pres_sub_stressed = bst.pres_sub_stressed or stems.pres1
 	stems.pres_sub_unstressed = bst.pres_sub_unstressed or stems.pres1_and_sub or stems.pres_unstressed
 	stems.sub_conj = bst.sub_conj or base.conj
@@ -2161,6 +2166,15 @@ local function add_present_indic(base)
 end
 
 
+local function a_to_e(stems, suffix)
+	return map_general(stems.pres_sub_stressed, function(form)
+		if form:find("a$") then
+			form = rsub(form, "a$", "e")
+		end
+		return form .. suffix
+	end)
+end
+
 local function add_present_subj(base)
 	local stems = base.this_stems
 	local function add_tense(stem, s1, s2, s3, p1, p2, p3)
@@ -2176,35 +2190,10 @@ local function add_present_subj(base)
 	-- * [[collir]]: culli, cullis, culli, collim, colliu, cullin (cull- in all stressed forms)
 	-- * [[cabre]]: càpiga, càpigues, càpiga, capiguem, capigueu, càpiguen (also different endings)
 
-	local pret_stems = iut.convert_to_general_list_form(stems.pres_sub_stressed)
-	for _, formobj in ipairs(pret_stems) do
-		local stem, conj = formobj.form:match("^(.*)/(.-)$")
-		if not stem then
-			stem = formobj.form
-			conj = base.conj
-		end
-		local stemobj = iut.combine_form_and_footnotes(stem, formobj.footnotes)
-		if conj == "a-e" then
-			add_tense(stemobj, "a", "es", "a", nil, nil, "en")
-		else
-			add_tense(stemobj, "i", "is", "i", nil, nil, "in")
-		end
-	end
-
-	local pret_stems = iut.convert_to_general_list_form(stems.pres_sub_unstressed)
-	for _, formobj in ipairs(pret_stems) do
-		local stem, conj = formobj.form:match("^(.*)/(.-)$")
-		if not stem then
-			stem = formobj.form
-			conj = base.conj
-		end
-		local stemobj = iut.combine_form_and_footnotes(stem, formobj.footnotes)
-		if conj == "i" then
-			add_tense(stemobj, nil, nil, nil, "im", "iu", nil)
-		else
-			add_tense(stemobj, nil, nil, nil, "em", "eu", nil)
-		end
-	end
+	add_tense(stems.pres_sub_stressed, "", nil, "", nil, nil, nil)
+	insert_forms(base, "pres_sub_2s", a_to_e(stems.pres_sub_stressed, "s"))
+	insert_forms(base, "pres_sub_3p", a_to_e(stems.pres_sub_stressed, "n"))
+	add_tense(stems.pres_sub_unstressed, nil, nil, nil, "m", "u", nil)
 end
 
 
@@ -2219,7 +2208,7 @@ local function add_finite_non_present(base)
 
 	-- pret_1s ends in -í regardless of the normal vowel of the stem.
 	insert_forms(base, "pret_1s", map_general(stems.pret, function(form)
-		return rsub(form, com.V .. "$", "") .. "í" end))
+		return rsub(form, V .. "$", "") .. "í" end))
 	-- * at the beginning of the ending means to remove an accent from the last vowel of the preterite stem.
 	add_tense("pret", stems.pret, nil, "*res", "", "rem", "reu", "*ren")
 
