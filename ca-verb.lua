@@ -516,24 +516,7 @@ local built_in_conjugations = {
 	--                                             -ar                                        --
 	--------------------------------------------------------------------------------------------
 
-	-- Verbs not needing entries here:
-	--
-	-- (1) Verbs with orthographic consonant alternations: handled automatically.
-	--
-	-- -car (brincar, buscar, pecar, trancar, etc.): automatically handled in combine_stem_ending()
-	-- -zar (alcanzar, comezar, lazar): automatically handled in combine_stem_ending()
-    -- -gar (apagar, cegar, esmagar, largar, navegar, resmungar, sugar, etc.): automatically handled in combine_stem_ending()
-    -- -guar (iguar, minguar): automatically handled in combine_stem_ending()
-	--
-	-- (2) Verbs with vowel alternations: need to specify the alternation explicitly unless it always happens, in
-	--     which case it's handled automatically through an entry below.
-	--
-	-- esmiuzar changing to esmiúzo: use <ú>
-	-- faiscar changing to faísco: use <í>
-	-- -izar changing to -ízo (ajuizar, enraizar, homogeneizar, plebeizar, etc.): use <í>
-	-- reusar changing to reúso: use <ú>
-	-- saudar changing to saúdo: use <ú>
-	-- tuitar/retuitar changing to (re)tuíto: use <í>
+	-- Orthographic consonant alternations in endings are handled automatically in combine_stem_ending().
 
 	{
 		-- [[aguar]]:
@@ -553,7 +536,7 @@ local built_in_conjugations = {
 		-- [[anar]]; highly irregular
 		match = "^anar",
 		forms = {
-			inf_stem = "anir",
+			fut = "anir",
 			pres_1s = "vaig",
 			pres_2s = "vas",
 			pres_3s = "va",
@@ -607,22 +590,10 @@ local built_in_conjugations = {
 	-- [[fúmer]], [[prémer]], [[témer]], [[trémer]]
 	-- [[perdre]], [[batre]], [[botre]], [[fotre]], [[retre]]
 	-- [[tòrcer]], [[vèncer]]
-	-- -cer (verbs in -ecer, vencer, etc.): automatically handled in combine_stem_ending()
-	-- -guer (erguer/soerguer): automatically handled in combine_stem_ending()
+	-- etc.
 
-	{
-		-- [[cabre]]
-		match = "cabre",
-		forms = {
-			pres_sub_stressed = "càpiga",
-			pres_sub_unstressed = "capigue",
-		}
-	},
-	{
-		-- [[caber]]
-		match = "caber",
-		like = "cabre",
-	},
+	--------------------------------------------- -ldre ----------------------------------------
+
 	{
 		-- [[caldre]], [[doldre]], [[oldre]]
 		match = match_against_verbs("ldre", {"ca", "do", "^o"}),
@@ -644,6 +615,9 @@ local built_in_conjugations = {
 			pp = "olt",
 		}
 	},
+
+	--------------------------------------------- -ndre ----------------------------------------
+
 	{
 		-- [[romandre]]
 		match = "romandre",
@@ -723,6 +697,9 @@ local built_in_conjugations = {
 			-- otherwise regular
 		}
 	},
+
+	--------------------------------------------- -nyer ----------------------------------------
+
 	{
 		-- [[atènyer]]
 		match = "atènyer",
@@ -763,6 +740,9 @@ local built_in_conjugations = {
 			pp = {"angud", "anyud"},
 		}
 	},
+
+	--------------------------------------------- -aure ----------------------------------------
+
 	{
 		-- [[caure]], [[decaure]], [[recaure]]
 		match = "caure",
@@ -795,6 +775,9 @@ local built_in_conjugations = {
 			pp = {"ragud", "ras"},
 		}
 	},
+
+	--------------------------------------------- -eure ----------------------------------------
+
 	{
 		-- [[beure]], [[embeure]], [[deure]], [[lleure]]
 		match = match_against_verbs("eure", {"b", "d", "ll"}),
@@ -817,7 +800,7 @@ local built_in_conjugations = {
 		match = match_against_verbs("eure", {"j"}),
 		name = "jeure",
 		forms = {
-			inf_stem = "au", -- affects future and cond
+			fut = "au", -- affects future and cond
 			stressed_stem = "e", -- affects stressed forms, which get g added by g_infix by added except for pres3s,
 								 -- which gets u added (controls pres_3s, pres_2s)
 			unstressed_stem = "a", -- affects unstressed_stem, which get g added by g_infix
@@ -849,6 +832,9 @@ local built_in_conjugations = {
 			imp_2p = {"vegeu", "veieu"},
 		}
 	},
+
+	--------------------------------------------- -iure ----------------------------------------
+
 	{
 		-- [[riure]], [[somriure]]
 		match = "riure",
@@ -879,6 +865,9 @@ local built_in_conjugations = {
 			g_infix = "visc", -- applies to pres1s, sub, pret, pp
 		}
 	},
+
+	--------------------------------------------- -oure ----------------------------------------
+
 	{
 		-- [[cloure]], [[concloure]], [[descloure]], [[encloure]], [[excloure]], [[incloure]], [[recloure]]
 		match = "cloure",
@@ -913,6 +902,134 @@ local built_in_conjugations = {
 			g_infix = "+",
 		}
 	},
+
+	--------------------------------------------- -xer ----------------------------------------
+
+	{
+		-- [[conèixer]], [[desconèixer]], [[reconèixer]]
+		match = "conèixer",
+		forms = {
+			g_infix = "coneg",
+		}
+	},
+	{
+		-- [[créixer]], [[acréixer]], [[decréixer]], [[recréixer]], [[sobrecréixer]]
+		match = "créixer",
+		forms = {
+			pret = {"creixé", "cresqué"},
+			pres_sub_unstressed = {"creixe", "cresque"},
+			pp = "crescud",
+			irreg = true,
+		}
+	},
+	{
+		-- [[merèixer]], [[desmerèixer]]
+		match = "merèixer",
+		forms = {
+			pret = {"mereixé", "meresqué"},
+			pres_sub_unstressed = {"mereixe", "meresque"},
+			pp = "merescud",
+			irreg = true,
+		}
+	},
+	{
+		-- [[néixer]]/[[nàixer]], [[renéixer]]/[[renàixer]], [[sobrenéixer]]/[[sobrenàixer]], [[péixer]]/[[pàixer]]
+		match = match_against_verbs("éixer", {"n", "p"}),
+		forms = {
+			stem = "aix",
+			fut = "aixer",
+			pres_stressed = {"eix", "aix"},
+			pres_1s = "eixo",
+			pres_sub_stressed = "eixi",
+			pret = {"aixé", "asqué"},
+			pres_sub_unstressed = {"aixe", "asque"},
+			pp = "ascud",
+			irreg = true,
+		}
+	},
+	{
+		match = "àixer",
+		like = "éixer",
+	},
+	{
+		-- [[parèixer]], [[aparèixer]], [[comparèixer]], [[desaparèixer]], [[reaparèixer]]
+		match = "parèixer",
+		forms = {
+			g_infix = "pareg",
+		}
+	},
+
+
+	--------------------------------------------- misc ----------------------------------------
+
+	{
+		-- [[cabre]]
+		match = "cabre",
+		forms = {
+			pres_sub_stressed = "càpiga",
+			pres_sub_unstressed = "capigue",
+			irreg = true,
+		}
+	},
+	{
+		-- [[caber]]
+		match = "caber",
+		like = "cabre",
+	},
+	{
+		-- [[saber]]
+		match = "saber",
+		forms = {
+			fut = "sabr",
+			pres_1s = "sé",
+			pres_sub_stressed = "sàpiga",
+			pres_sub_unstressed = "sapigue",
+			imp_2s = "sàpiga",
+			imp_2p = "sapigueu",
+			irreg = true,
+		}
+	},
+	{
+		-- [[poder]]
+		match = "poder",
+		forms = {
+			fut = "podr",
+			pres1_and_sub = "pug", -- FIXME: verify this works
+			g_infix = "pog",
+			imp_2s = "pugues",
+			imp_2p = "pugueu",
+			irreg = true,
+		}
+	},
+	{
+		-- [[voler]], [[malvoler]]
+		match = "voler",
+		forms = {
+			fut = "voldr",
+			pres1_and_sub = "vulg", -- FIXME: verify this works
+			pres_1s = "vull",
+			g_infix = "+",
+			imp_2s = "vulgues",
+			imp_2p = "vulgueu",
+		}
+	},
+	{
+		-- [[córrer]], [[acórrer]], [[concórrer]], [[decórrer]], [[descórrer]], [[discórrer]], [[encórrer]],
+		-- [[escórrer]], [[incórrer]], [[ocórrer]], [[recórrer]], [[socórrer]], [[transcórrer]]
+		match = "córrer",
+		forms = {
+			pres3s = "corre",
+			pret = "corregué",
+			pres_sub_unstressed = {"corre", "corregue"},
+			pp = "corregut",
+			irreg = true,
+		}
+	},
+
+	--------------------------------------------------------------------------------------------
+	--                                             -ir                                        --
+	--------------------------------------------------------------------------------------------
+
 	{
 		-- [[acudir]]; NOTE: Separation by meaning does not occur in DCC, DIEC, DEIEC, and DCVB says the distinction
 		-- is geographical and makes no mention of distinction by meaning. OTOH ca.wikt does say that the pronominal
@@ -1138,7 +1255,7 @@ local built_in_conjugations = {
 		-- [[tenir]] but not any compounds; highly irregular
 		match = "^tenir",
 		forms = {
-			inf_stem = "tindr",
+			fut = "tindr",
 			pres_3s = "té",
 			imp_2s = {"té", "ten", "tingues"},
 			imp_2p = {"teniu", "tingueu"},
@@ -1151,7 +1268,7 @@ local built_in_conjugations = {
 		-- [[retenir]], [[sostenir]], [[viltenir]]; highly irregular
 		match = "tenir",
 		forms = {
-			inf_stem = "tindr",
+			fut = "tindr",
 			pres_3s = "té",
 			imp_2s = {"tén", "tingues"},
 			imp_2p = {"teniu", "tingueu"},
@@ -1180,7 +1297,7 @@ local built_in_conjugations = {
 		-- [[venir]] but not any compounds; highly irregular
 		match = "^venir",
 		forms = {
-			inf_stem = "vindr",
+			fut = "vindr",
 			pres_3s = "ve",
 			imp_2s = "vine",
 			g_infix = "ving",
@@ -1194,7 +1311,7 @@ local built_in_conjugations = {
 		match = match_against_verbs("venir", {"^ad", "^a", "contra", "con", "entre", "esde", "inter", "ob", "per",
 											  "pre", "^re", "sobre", "sub"}),
 		forms = {
-			inf_stem = "vindr",
+			fut = "vindr",
 			pres_3s = "vé",
 			imp_2s = "vén",
 			g_infix = "ving",
@@ -1213,7 +1330,7 @@ local built_in_conjugations = {
 		-- [[fer]], [[contrafer]], [[desfer]], [[estrafer]], [[perfer]], [[refer]], [[satisfer]]; highly irregular
 		match = "fer",
 		forms = {
-			inf_stem = "far",
+			fut = "far",
 			pres_1s = "faig",
 			pres_2s = "fàs#",
 			pres_3s = "fà#",
@@ -1294,7 +1411,7 @@ local built_in_conjugations = {
 		-- [[haver]] as auxiliary; highly irregular
 		match = "^@haver", -- @ marks auxiliary
 		forms = {
-			inf_stem = "anir",
+			fut = "anir",
 			pres_1s = "vaig",
 			pres_2s = "vas",
 			pres_3s = "va",
@@ -1308,508 +1425,13 @@ local built_in_conjugations = {
 		-- [[haver]] as full verb; highly irregular
 		match = "^haver",
 		forms = {
-			inf_stem = "haur",
+			fut = "haur",
 			pres_1s = "",
 			pres_2s = "vas",
 			pres_3s = "va",
 			pres_3p = "van",
 			pres_sub_stressed = "vagi",
 			imp_2s = "ves",
-			irreg = true,
-		}
-	},
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	{
-		-- verbs in -aer (caer, raer, debaer, degraer, esvaer and derivatives of traer, but not traer itself:
-		-- acaer/decaer/recaer,
-		-- abstraer/atraer/contraer/descontraer/detraer/distraer/extraer/maltraer/retraer/retrotraer/subtraer)
-		match = "aer",
-		forms = {
-			-- all occurrences of accented í and ï in endings handled in combine_stem_ending()
-			pres1_and_sub = "ai",
-			irreg = true,
-		}
-	},
-	{
-		-- caber
-		match = "caber",
-		forms = {
-			pres1_and_sub = "caib",
-			pret_conj = "irreg", pret = "coube",
-			irreg = true,
-		}
-	},
-	{
-		-- crer, descrer
-		match = "crer",
-		forms = {
-			pres1_and_sub = "cre",
-			pres_2s = "crés#", pres_3s = "cré#", pres_3p = "crén#",
-			-- regular except the lack of accent in base verb
-			pret_1p = "crín#",
-			irreg = true,
-		}
-	},
-	{
-		-- acender, prender/aprender; not comprender/desprender/reprender, etc.
-		match = match_against_verbs("ender", {"^ac", "^pr", "^apr"}),
-		forms = {short_pp = "eso"},
-	},
-	{
-		-- erguer; but not soerguer
-		match = "^erguer",
-		forms = {short_pp = "ergueito"},
-	},
-	{
-		-- facer, afacer, contrafacer, desafacer, desfacer, perfacer, rarefacer, refacer, satisfacer, tumefacer
-		match = "facer",
-		forms = {
-			-- use 'fagu' because we're in a front environment; if we use 'fag', we'll get '#fajo'
-			pres1_and_sub = "fagu",
-			pres_2s = "fás#",
-			pres_3s = "fai",
-			pres_3p = "fán#",
-			pret_conj = "irreg", pret = "fixe",
-			pp = "feito",
-			fut = "far",
-			irreg = true,
-			cons_alt = false, -- avoid claiming we have a c-z alternation
-		}
-	},
-	{
-		match = "^haver",
-		forms = {
-			pres_1s = "hei",
-			pres_2s = "has",
-			pres_3s = {"ha", "hai"},
-			pres_3p = "han",
-			pres1_and_sub = "hax", -- only for subjunctive as we override pres_1s
-			pret_conj = "irreg", pret = "houve",
-			noimp = true,
-			irreg = true,
-		}
-	},
-	{
-		-- ler, reler, trasler; not escoller, expeler, valer, etc.
-		match = match_against_verbs("ler", {"^", "^re", "tras"}),
-		forms = {
-			pres1_and_sub = "le",
-			pres_2s = "lés#", pres_3s = "lé#", pres_3p = "lén#",
-			-- regular except the lack of accent in base verb
-			pret_1p = "lín#",
-			irreg = true,
-		}
-	},
-	{
-		-- morrer, premorrer
-		match = "morrer",
-		forms = {pp = "morto"},
-	},
-	{
-		-- nacer; but not renacer
-		match = "^nacer",
-		forms = {short_pp = "nado"},
-	},
-	{
-		-- moer, but not remoer
-		match = "^moer",
-		forms = {
-			-- all occurrences of accented í and ï in endings handled in combine_stem_ending()
-			pres1_and_sub = "oi",
-			short_pp = "mudo", -- the main table says 'mundo' but the page for [[mundo]] says 'mudo' is "máis recomendable"
-			irreg = true,
-		}
-	},
-	{
-		-- choer/deschoer, doer/condoer, remoer, proer, roer/corroer
-		match = "oer",
-		forms = {
-			-- all occurrences of accented í and ï in endings handled in combine_stem_ending()
-			pres1_and_sub = "oi",
-			irreg = true,
-		}
-	},
-	{
-		-- coller, toller and derivatives (acoller, desacoller, desencoller, encoller, entrecoller, escoller, recoller;
-		-- destoller, entretoller)
-		match = "oller",
-		forms = {short_pp = "olleito"},
-	},
-	{
-		-- poder
-		match = "poder",
-		forms = {
-			pres1_and_sub = "poid", -- only for subjunctive as we override pres_1s
-			pres_1s = "podo", -- /ɔ/
-			pret_conj = "irreg", pret = "puide",
-			irreg = true,
-		}
-	},
-	{
-		-- poñer, antepoñer, apoñer/desapoñer, arrepoñer, compoñer/descompoñer/recompoñer, contrapoñer, depoñer,
-		-- dispoñer/indispoñer/predispoñer, empoñer, expoñer/sobreexpoñer/subexpoñer, impoñer/reimpoñer, interpoñer,
-		-- opoñer, pospoñer, propoñer, repoñer, sobrepoñer, superpoñer, supoñer/presupoñer, traspoñer, xustapoñer
-		match = "poñer",
-		forms = {
-			pres_2s = "pós#", pres_3s = "pón#",
-			pret_conj = "irreg", pret = "puxe",
-			pp = "posto",
-			irreg = true,
-		}
-	},
-	{
-		-- pracer, but not apracer, compracer, descompracer, despracer
-		match = "^pracer",
-		forms = {
-			pret_conj = "irreg", pret = "prougue",
-			irreg = true,
-		}
-	},
-	-- prover below, just below ver
-	{
-		-- querer
-		match = "querer",
-		forms = {
-			pres1_and_sub = "queir", -- only for subjunctive as we override pres_1s
-			pres_1s = "quero", -- /ɛ/
-			pret_conj = "irreg", pret = "quixe",
-			irreg = true,
-		}
-	},
-	{
-		-- romper; but not corromper, interromper, irromper or prorromper
-		match = "^romper",
-		forms = {short_pp = "roto"},
-	},
-	{
-		-- saber, ressaber
-		match = "saber",
-		forms = {
-			pres_1s = "sei",
-			pres1_and_sub = "saib", -- only for subjunctive as we override pres_1s
-			pret_conj = "irreg", pret = "soube",
-			irreg = true,
-		}
-	},
-	{
-		-- absolver, disolver, resolver
-		match = "solver",
-		forms = {short_pp = "solto"},
-	},
-	{
-		-- suspender; but not others in -pender
-		match = "suspender",
-		forms = {short_pp = "suspenso"},
-	},
-	{
-		match = "^ser",
-		forms = {
-			pres_1s = "son", pres_2s = "es", pres_3s = "é",
-			pres_1p = "somos", pres_2p = "sodes", pres_3p = "son",
-			pres1_and_sub = "sex", -- only for subjunctive as we override pres_1s
-			impf1 = "er",
-			impf2 = "ér",
-			pret_conj = "irreg", pret = "fo", pret_1s = "fun", pret_2s = "fuches", pret_3s = "foi",
-			imp_2s = "sé", imp_2p = "sede",
-			irreg = true,
-		}
-	},
-	{
-		-- We want to match abster, conter, deter, etc. but not abater, cometer, etc. No way to avoid listing each verb.
-		match = match_against_verbs("ter", {"abs", "^a", "con", "de", "entre", "man", "ob", "^re", "sos", "^"}),
-		forms = {
-			pres_2s = "tés#", pres_3s = "tén#", pres_2p = {"tendes", "tedes"}, pres_3p = "teñen",
-			pres1_and_sub = "teñ",
-			full_impf = "tiñ",
-			pret_conj = "irreg", pret = "tive",
-			irreg = true,
-		}
-	},
-	-- traer listed above at the beginning of the -er verbs
-	{
-		-- valer, equivaler
-		match = "valer",
-		forms = {pres1_and_sub = "vall"},
-	},
-	{
-		-- We want to match antever etc. but not absolver, atrever etc. No way to avoid listing each verb.
-		-- NOTE: [[rever]] has two meanings, one with regular conjugation. Use <no_built_in> for this one.
-		match = match_against_verbs("ver", {"entre", "pre", "^re", "^"}),
-		forms = {
-			pres_2s = "vés#", pres_3s = "vé#", pres_3p = "vén#",
-			pres1_and_sub = "vex",
-			pret_conj = "irreg", pret = "vi", pret_1s = "vín#", pret_3s = "viu",
-			pp = "visto",
-			irreg = true,
-		}
-	},
-	{
-		-- [[prover]] has regular preterite and past participle
-		match = "^prover",
-		forms = {
-			pres_2s = "provés", pres_3s = "prové", pres_3p = "provén",
-			pres1_and_sub = "provex",
-			short_pp = "provisto",
-			irreg = true,
-		}
-	},
-	{
-		-- [[desprover]] has its own conjugation
-		match = "^desprover",
-		forms = {
-			pres_2s = "desprovés", pres_3s = "desprové", pres_3p = "desprovén",
-			pres1_and_sub = "desprove",
-			short_pp = "desprovisto",
-			irreg = true,
-		}
-	},
-	{
-		-- volver, avolver/desenvolver/devolver/envolver/revolver
-		match = "volver",
-		forms = {short_pp = "volto"},
-	},
-
-	--------------------------------------------------------------------------------------------
-	--                                             -ir                                        --
-	--------------------------------------------------------------------------------------------
-
-	-- Verbs not needing entries here:
-	--
-	-- subir (NOT rubir), acudir/sacudir (NOT escudir, aludir/eludir), urdir/desurdir, xurdir/rexurdir,
-	-- engulir, pulir, bulir/rebulir, ulir, mulir (NOT escapulir), durmir, sumir/consumir/ensumir (NOT
-	-- asumir/reasumir/presumir/resumir/subsumir), cuspir/chuspir, sufrir, tusir, xunguir/conxunguir/desxunguir,
-	-- munguir, fuxir/muxir/ruxir: use <u-o>
-	--   [NOTE: imp_2s durme, consume/sume]
-	-- sosubir/susubir: use <u-o>? (archaic, not in RAG dictionary)
-	-- abolir: use <no_pres_stressed>
-	-- descolorir: use <no_pres_stressed>
-	-- empedernir: use <no_pres_stressed>
-	-- espir/despir, refletir, adherir, pedir/desapedir/despedir/expedir/impedir/reexpedir, medir/comedir/descomedir,
-	-- aferir/conferir/deferir/diferir/inferir/interferir/preferir/proferir/referir/transferir,
-	-- dixerir/enxerir/suxerir, preterir, competir/repetir, advertir/divertir, vestir/investir/revestir/travestir,
-	-- agredir/transgredir, espelir: use <i>
-	-- mentir/desmentir, sentir/asentir/consentir/disentir/presentir/resentir, ferir (but no derivatives), servir,
-	-- seguir/conseguir/perseguir/proseguir: use <i-e>
-	--   [NOTE: imp_2s minte]
-	-- denegrir: use <i.only3sp>
-	-- prohibir/coibir: regular
-	-- cumprir: use <no_built_in> in the meaning "fulfill"
-	-- reunir: use <ú>
-	-- argüír/redargüír: use <ú>?
-	--
-	-- -cir alternations (aducir, resarcir): automatically handled in combine_stem_ending()
-	-- -guir alternations (e.g. conseguir, cinguir, xunguir, tinguir): automatically handled in combine_stem_ending()
-	-- -quir alternations (e.g. delinquir): automatically handled in combine_stem_ending()
-	-- -güír alternations (e.g. argüír): automatically handled in combine_stem_ending()
-
-	{
-		-- saír/sobresaír
-		match = "aír",
-		forms = {
-			pres1_and_sub = "ai",
-			-- all occurrences of accented í and ï in endings handled in combine_stem_ending()
-			irreg = true,
-		}
-	},
-	{
-		-- abrir/desabrir/reabrir
-		match = "abrir",
-		forms = {pp = "aberto"},
-	},
-	{
-		-- aflixir
-		match = "aflixir",
-		-- FIXME: should this be {pp = {"aflicto", "aflixido"}}?
-		forms = {short_pp = "aflicto"},
-	},
-	{
-		-- cubrir/descubrir/encubrir/recubrir/redescubrir
-		match = "cubrir",
-		forms = {vowel_alt = "u-o", pp = "coberto"},
-	},
-	{
-		-- cumprir (only in the meaning "to be necessary"; otherwise use <no_built_in>)
-		match = "^cumprir",
-		forms = {
-			-- We could create a <u-ó> just for this verb but that seems overkill unless another such verb appears
-			pres_stressed = "cómpr",
-			pres1_and_sub = "cumpr",
-		},
-	},
-	{
-		-- dicir, bendicir, contradicir, desdicir, maldicir, predicir
-		-- FIXME: bendicir and maldicir can also be entirely regular. This could be handled like this:
-		-- ((bendicir<>,bendicir<no_built_in>))
-		match = "dicir",
-		forms = {
-			-- use 'digu' because we're in a front environment; if we use 'dig', we'll get '#dijo'
-			pres1_and_sub = "digu",
-			pres_2s = "dís#", pres_3s = "dí#", pres_3p = "dín#",
-			pret_conj = "irreg", pret = "dixe",
-			pp = function(base, prefix) return (prefix == "" or prefix == "des" or prefix == "pre") and "dito" or
-				{"dito", "dicido"} end,
-			pp = "dito",
-			fut = "dir",
-			irreg = true,
-			cons_alt = false, -- avoid claiming we have a c-z alternation
-		}
-	},
-	{
-		-- elixir, reelixir
-		match = "elixir",
-		-- FIXME: should this be {pp = {"electo", "elixido"}}?
-		forms = {short_pp = "electo"},
-	},
-	{
-		-- frixir/sofrixir, fritir/sofritir
-		match = "fri[xt]ir",
-		forms = {short_pp = "frito"},
-	},	
-	{
-		-- inserir, reinserir
-		match = "inserir",
-		forms = {
-			vowel_alt = "i",
-			short_pp = "inserto",
-		},
-	},
-	{
-		-- ir
-		match = "^ir",
-		forms = {
-			pres_1s = "vou", pres_2s = "vas", pres_3s = "vai", pres_1p = "imos", pres_2p = "ides", pres_3p = "van",
-			pres1_and_sub = "vai", -- only for subjunctive as we override pres_1s
-			pret_conj = "irreg", pret = "fo", pret_1s = "fun", pret_2s = "fuches", pret_3s = "foi",
-			imp_1p = "vamos",
-			irreg = true,
-		}
-	},
-	{
-		-- oír, desoír, entreoír
-		match = "oír",
-		forms = {
-			-- all occurrences of accented í and ï in endings handled in combine_stem_ending()
-			pres1_and_sub = "oi", -- /ɔ/
-			irreg = true,
-		}
-	},
-	{
-		match = "ouvir",
-		forms = {
-			pres1_and_sub = "ouz",
-			irreg = true,
-		}
-	},
-	{
-		-- parir, malparir
-		match = "parir",
-		forms = {
-			pres1_and_sub = "pair",
-			irreg = true,
-		}
-	},
-	{
-		-- imprimir/reimprimir/sobreimprimir, but not comprimir/descomprimir, deprimir, oprimir, reprimir, suprimir
-		match = "imprimir",
-		forms = {short_pp = "impreso"}
-	},
-	{
-		-- rir, sorrir
-		match = match_against_verbs("rir", {"^", "sor"}),
-		forms = {
-			pres_2s = "ris#", pres_3s = "ri#", pres_3p = "rin#",
-			pret_1s = "rin#", -- regular except the lack of accent in base verb
-			pres1_and_sub = "rí",
-			irreg = true,
-		}
-	},
-	{
-		-- adscribir, circunscribir, describir, escribir/reescribir, inscribir, prescribir, proscribir, sobrescribir,
-		-- subscribir, transcribir
-		match = "scribir",
-		forms = {
-			pp = "scrito",
-			irreg = true,
-		}
-	},
-	{
-		-- concluír/recluír; not excluír/incluír/ocluír
-		match = match_against_verbs("cluír", {"con", "re"}),
-		forms = {
-			-- all occurrences of accented í and ï in endings handled in combine_stem_ending()
-			vowel_alt = "ú",
-			short_pp = "cluso",
-		}
-	},
-	{
-		-- posuír; not desposuír
-		match = "^posuír",
-		forms = {
-			-- all occurrences of accented í and ï in endings handled in combine_stem_ending()
-			vowel_alt = "ú",
-			short_pp = "poseso",
-		}
-	},
-	{
-		-- remaining verbs in -uír (excluír/incluír/ocluír, diluír,
-		-- afluír/confluír/difluír/fluír/efluír/influír/refluír, atuír/desatuír,
-		-- atribuír/contribuír/distribuír/redistribuír/retribuír/substituír,
-		-- constituír/destituír/instituír/prostituír/reconstituír/restituír,
-		-- construír/desobstruír/destruír/instruír/obstruír/reconstruír, derruír,
-		-- desposuír, diminuír, luír/esluír, estatuír, imbuír, inmiscuír, intuír, puír, pruír)
-		match = "[uü]ír", -- this won't match -guir verbs (e.g. [[conseguir]]) or -quir verbs (e.g. [[delinquir]])
-		forms = {
-			-- all occurrences of accented í and ï in endings handled in combine_stem_ending()
-			vowel_alt = "ú",
-		}
-	},
-	{
-		-- We want to match advir, convir, devir, etc. but not ouvir, servir, etc. No way to avoid listing each verb.
-		match = match_against_verbs("vir", {"ad", "^a", "con", "contra", "de", "^desa", "inter", "pre", "pro", "sobre", "^"}),
-		forms = {
-			pres_2s = "vés", pres_3s = "vén", pres_2p = {"vindes", "vides"}, pres_3p = "veñen",
-			pres1_and_sub = "veñ",
-			full_impf = "viñ",
-			pret_conj = "irreg", pret = "viñe", pret_1s = "vin", pret_3s = "veu",
-			pp = "vindo",
-			-- FIXME! The following is as in the RAG tables but may be a typo and should be vén for [[vir]] like pres_3s
-			imp_2s = "vén#",
-			irreg = true,
-		}
-	},
-
-	--------------------------------------------------------------------------------------------
-	--                                            misc                                        --
-	--------------------------------------------------------------------------------------------
-
-	{
-		-- pór, antepor, apor/desapor, arrepor, compor/descompor/recompor, contrapor, depor, dispor/indispor/predispor,
-		-- empor, expor/sobreexpor/subexpor, impor/reimpor, interpor, opor, pospor, propor, repor, sobrepor,
-		-- superpor, supor/presupor, traspor, xustapor
-		match = "p[oó]r",
-		forms = {
-			pres_2s = "pós#", pres_3s = "pón#", pres_1p = "pomos", pres_2p = "pondes", pres_3p = "pón#",
-			pres1_and_sub = "poñ",
-			full_impf = "puñ",
-			pret_conj = "irreg", pret = "puxe",
-			fut = "por",
-			gerund = "pondo", pp = "posto",
 			irreg = true,
 		}
 	},
@@ -1913,11 +1535,26 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, is_full_wor
 		stem = stem:gsub("ü$", "u")
 	end
 
+	-- If ending begins with s and stem ends in a sibilant, we need an e in between; cf. pres_2s 'apareixes' of
+	-- [[aparèixer]], pres_2s 'torces' of [[torcer]], pres_2s 'fuges' of [[fugir]]. This may feed the next rule.
+	if ending:find("^s") and rfind(stem, "[çjsxz]$") then
+		ending = "e" .. ending
+	end
+
 	-- Spelling changes in the stem; it depends on whether the stem given is the pre-front-vowel or
 	-- pre-back-vowel variant, as indicated by `frontback`. We want these front-back spelling changes to happen
 	-- between stem and ending, not between prefix and stem; the prefix may not have the same "front/backness"
 	-- as the stem.
-	local is_front = rfind(ending, "^[eiéíï]")
+	if rfind(ending, "^[eiéíï]") then
+		-- adequar -> adeqües
+		-- enaiguar -> enaigües
+		-- pegar -> pegues
+		-- arranjar -> arranges
+		-- marcar -> marques
+		-- abraçar -> abraces
+		stem = com.back_to_front(stem)
+	end
+
 	if base.frontback == "front" and not is_front then
 		stem = stem:gsub("c$", "ç") -- torcer -> torço
 		stem = stem:gsub("qu$", "c") -- ?
@@ -1942,14 +1579,17 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, is_full_wor
 		end
 	end
 	if is_full_word then
-		retval = retval:gsub("([bdgj])(s?)$", function(voiced, after)
+		-- Devoice final voiced obstruent (cf. pres_2s 'caps', pres_3s 'cap' of [[cabre]]). But not after a consonant
+		-- (cf. pres_2s 'perds', pres_3s 'perd' of [[perdre]]), except for g -> c, which operates even after a
+		-- consonant (pres_1s 'resolc' of [[resoldre]], pres_1s 'tinc' of [[tenir]]).
+		retval = retval:gsub("g(s?)$", "c%1")
+		retval = rsub(retval, "(" .. V .. ")([bdj])(s?)$", function(before, voiced, after)
 			local devoice = {
 				b = "p",
 				d = "t",
-				g = "c",
-				j = "ig",
+				j = "ig", -- fugir -> fuig
 			}
-			return devoice[voiced] .. after
+			return before, devoice[voiced] .. after
 		end)
 	end
 
@@ -2008,7 +1648,7 @@ local function construct_stems(base)
 	local conj = bst.conj or base.conj
 
 	local function combine(slot, stem, ending)
-		return combine_stem_ending(base, slot, base.prefix, stem, ending, "dont include prefix")
+		return combine_stem_ending(base, slot, base.prefix, stem, ending, false, "dont include prefix")
 	end
 
 	local stressed_stem = bst.stressed_stem or bst.stem or bst.inf_stem or base.inf_stem
@@ -2071,7 +1711,7 @@ local function construct_stems(base)
 		match = match_against_verbs("eure", {"j"}),
 		name = "jeure",
 		forms = {
-			inf_stem = "au", -- affects future and cond
+			fut = "au", -- affects future and cond
 			stressed_stem = "e", -- affects stressed forms, which get g added by g_infix by added except for pres3s,
 								 -- which gets u added (controls pres_3s, pres_2s)
 			unstressed_stem = "a", -- affects unstressed_stem, which get g added by g_infix
