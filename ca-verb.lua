@@ -695,6 +695,19 @@ local built_in_conjugations = {
 	-- -guer (erguer/soerguer): automatically handled in combine_stem_ending()
 
 	{
+		-- [[cabre]]
+		match = "cabre",
+		forms = {
+			pres_sub_stressed = "càpig/a-e",
+			pres_sub_unstressed = "capig/a-e",
+		}
+	},
+	{
+		-- [[caber]]
+		match = "caber",
+		like = "cabre",
+	},
+	{
 		-- [[caldre]], [[doldre]], [[oldre]]
 		match = match_against_verbs("ldre", {"ca", "do", "^o"}),
 		forms = {
@@ -703,14 +716,6 @@ local built_in_conjugations = {
 			-- g_infix sets pres1_and_sub to end in -g; combine_stem_ending() changes final -g to -c
 			-- g_infix also adds -g to pret and pp stems
 			g_infix = true,
-		}
-	},
-	{
-		-- [[cerndre]]
-		match = "cerndre",
-		forms = {
-			stem = "cern",
-			-- otherwise regular
 		}
 	},
 	{
@@ -750,7 +755,7 @@ local built_in_conjugations = {
 			stem = "vèn#", -- see above for effect of final #
 			-- see above for g_infix effects
 			g_infix = true,
-			pp = "venut", -- g_infix would normally make it vengut
+			pp = "venud", -- g_infix would normally make it vengud
 		}
 	},
 	{
@@ -795,6 +800,14 @@ local built_in_conjugations = {
 		}
 	},
 	{
+		-- [[cerndre]]
+		match = "cerndre",
+		forms = {
+			stem = "cern",
+			-- otherwise regular
+		}
+	},
+	{
 		-- [[caure]], [[decaure]], [[recaure]]
 		match = "caure",
 		forms = {
@@ -810,11 +823,20 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- [[plaure]], [[complaure]], [[raure]]
-		match = match_against_verbs("aure", {"pl", "r"}),
+		-- [[plaure]], [[complaure]]
+		match = "plaure",
 		forms = {
 			stem = "a", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
 			g_infix = true,
+		}
+	},
+	{
+		-- [[raure]]
+		match = "^raure",
+		forms = {
+			stem = "a", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
+			g_infix = true,
+			pp = {"ragud", "ras"},
 		}
 	},
 	{
@@ -848,8 +870,8 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- [[treure]], [[abstreure]], [[atreure]], [[contreure]], [[distreure]], [[extreure]], [[retreure],
-		-- [[sostreure]]
+		-- [[treure]], [[abstreure]], [[atreure]], [[bestreure]], [[contreure]], [[detreure]], [[distreure]],
+		-- [[extreure]], [[retreure], [[retrotreure]], [[sostreure]]
 		match = match_against_verbs("eure", {"tr"}),
 		inherit = "jeure", -- inherit props from name "jeure"; must specify 'match' to correspond to form of "jeure"
 		forms = {
@@ -867,6 +889,8 @@ local built_in_conjugations = {
 			pret_1s = "viu",
 			pret_3s = {"veié", "veu"},
 			pp = "vist",
+			imp_2s = "veges",
+			imp_2p = {"vegeu", "veieu"},
 		}
 	},
 	{
@@ -884,8 +908,9 @@ local built_in_conjugations = {
 		match = "scriure",
 		forms = {
 			stem = "scriv", -- v dropped by g_infix before g and u
+			pres_unstressed = "scriv/i", -- pres_1p/pres_2p have -ir endings
 			g_infix = true,
-			pret = {"scriv", "scrig"},
+			pret = {"scriví", "scrigué"},
 			pp = "scrit",
 		}
 	},
@@ -894,9 +919,8 @@ local built_in_conjugations = {
 		match = "viure",
 		forms = {
 			stem = "viv", -- v dropped by g_infix before g and u
+			pres_unstressed = "viv/i", -- pres_1p/pres_2p have -ir endings
 			g_infix = "visc", -- applies to pres1s, sub, pret, pp
-			pret = {"scriv", "scrig"},
-			pp = "scrit",
 		}
 	},
 	{
@@ -914,11 +938,11 @@ local built_in_conjugations = {
 		forms = {
 			stem = "co", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
 			g_infix = true,
-			pp = {"cuit", "cogut"},
+			pp = {"cuit", "cogud"},
 		}
 	},
 	{
-		-- [[moure]], [[promoure]], [[ploure]]
+		-- [[moure]], [[promoure]], [[remoure]], [[somoure]], [[ploure]]
 		match = match_against_verbs("oure", {"m", "pl"}),
 		forms = {
 			stem = "ov", -- v dropped by g_infix before g and u
@@ -1003,7 +1027,7 @@ local built_in_conjugations = {
 		-- [[complir]], [[acomplir]], [[incomplir]]
 		match = "complir",
 		forms = {
-			pp = {"complert", "complit"},
+			pp = {"complert", "complid"},
 		}
 	},
 	{
@@ -1019,7 +1043,7 @@ local built_in_conjugations = {
 		-- them individually
 		match = match_against_verbs("eixir", {"^", "des", "^re", "sobre"}),
 		forms = {
-			...
+			pres_stressed = "ix",
 			eix_infix = "-",
 		}
 	},
@@ -1082,7 +1106,7 @@ local built_in_conjugations = {
 		forms = {
 			eix_infix = "-",
 			pres3s = "omple", -- generates pres_2s, imp_2s
-			pp = {"omplert", "omplit"},
+			pp = {"omplert", "omplid"},
 		}
 	},
 	-- [[penedir-se]]: -- non-inchoative in Balearics, inchoative elsewhere
@@ -1105,14 +1129,36 @@ local built_in_conjugations = {
 	},
 	-- [[teixir]], [[entreteixir]]: -- non-inchoative in Valencia, inchoative elsewhere
 	-- [[tenyir]], [[destenyir]]: -- non-inchoative in Valencia, but [[retenyir]] inchoative or non-inchoative in
-	-- Valencia? (per Routledge); regular enchoative elsewhere
+	-- Valencia? (per Routledge); regular inchoative elsewhere
 	{
-		-- [[tenir]]; highly irregular
-		match = "tenir",
+		-- [[tenir]] but not any compounds; highly irregular
+		match = "^tenir",
 		forms = {
-			...,
+			inf_stem = "tindr",
+			pres_3s = "té",
+			imp_2s = {"té", "ten", "tingues"},
+			imp_2p = {"teniu", "tingueu"},
+			g_infix = "ting",
 			eix_infix = "-",
 		}
+	},
+	{
+		-- [[cartenir]], [[contenir]], [[detenir]], [[entretenir]], [[mantenir]], [[menystenir]], [[obtenir]],
+		-- [[retenir]], [[sostenir]], [[viltenir]]; highly irregular
+		match = "tenir",
+		forms = {
+			inf_stem = "tindr",
+			pres_3s = "té",
+			imp_2s = {"tén", "tingues"},
+			imp_2p = {"teniu", "tingueu"},
+			g_infix = "ting",
+			eix_infix = "-",
+		}
+	},
+	{
+		-- [[tindre]]: variant of [[tenir]]
+		match = "tindre",
+		like = "tenir",
 	},
 	{
 		-- [[tossir]] "to cough"
@@ -1125,22 +1171,174 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- [[venir]]; highly irregular
-		match = "venir",
+		-- [[venir]] but not any compounds; highly irregular
+		match = "^venir",
 		forms = {
-			...,
+			inf_stem = "vindr",
+			pres_3s = "ve",
+			imp_2s = "vine",
+			g_infix = "ving",
 			eix_infix = "-",
 		}
+	},
+	{
+		-- compounds of [[venir]]: [[advenir]], [[avenir]], [[contravenir]], [[convenir]], [[desconvenir]],
+		-- [[entrevenir]], [[esdevenir]], [[intervenir]], [[obvenir]], [[pervenir]], [[prevenir]], [[reconvenir]],
+		-- [[revenir]], [[sobrevenir]], [[subvenir]]; but not [[enjovenir]] or [[rejovenir]]; highly irregular
+		match = match_against_verbs("venir", {"^ad", "^a", "contra", "con", "entre", "esde", "inter", "ob", "per",
+											  "pre", "^re", "sobre", "sub"}),
+		forms = {
+			inf_stem = "vindr",
+			pres_3s = "vé",
+			imp_2s = "vén",
+			g_infix = "ving",
+			eix_infix = "-",
+		}
+	},
+	{
+		-- [[vindre]]: variant of [[venir]]
+		match = "vindre",
+		like = "venir",
 	},
 	-- [[vestir]], [[desvestir]], [[revestir]], maybe [[transvestir]]: non-inchoative in Valencia, inchoative or
 	-- non-inchoative in the Balearics; regular inchoative elsewhere; but not [[envestir]] or [[investir]], which are
 	-- regular inchoative everywhere
-
-
-
-
-
-
+	{
+		-- [[fer]], [[contrafer]], [[desfer]], [[estrafer]], [[perfer]], [[refer]], [[satisfer]]; highly irregular
+		match = "fer",
+		forms = {
+			inf_stem = "far",
+			pres_1s = "faig",
+			pres_2s = "fàs#",
+			pres_3s = "fà#",
+			pres_3p = "fan",
+			pres_unstressed = "fe",
+			impf1 = "fei",
+			impf2 = "fèi",
+			pres_sub_stressed = "faci",
+			pres_sub_unstressed = "fe",
+			pret = "fé",
+			pret_1s = "fiu",
+			pret_3s = "feu",
+			impf_sub_1s = "fés#", -- regular except for base form [[fes]], lacking an accent
+			impf_sub_3s = "fés#", -- same
+			imp_2s = "fés#",
+			pp = "fet",
+			irreg = true,
+		}
+	},
+	{
+		-- [[dir]]; behaves like an -er/-re verb
+		match = match_against_verbs("dir", {"^", "des", "entre", "inter", "mal", "pre", "^re"}),
+		forms = {
+			stem = "di",
+			conj = "e",
+			g_infix = true,
+			imp_2s = "digues",
+			imp_2p = "digueu",
+			pp = "dit",
+		}
+	},
+	{
+		-- [[dur]]; behaves like an -er/-re verb
+		match = "dur",
+		forms = {
+			stem = "du",
+			conj = "e",
+			g_infix = true,
+			pres3s = {"duu", "du"},
+			impf1 = "dui",
+			impf2 = "dúi",
+			pp = "dut",
+		}
+	},
+	{
+		-- [[ser]]; highly irregular
+		match = "^ser",
+		forms = {
+			pres_1s = "soc",
+			pres_2s = "ets",
+			pres_3s = "és",
+			pres_1p = "som",
+			pres_2p = "sou",
+			pres_3p = "són",
+			impf1 = "er",
+			impf2 = "ér",
+			pres_sub_stressed = "sigui",
+			pres_sub_unstressed = "sigue",
+			pret = "fó",
+			pret_1s = "fui",
+			pret_3s = "fou",
+			impf_sub_1s = "fos", -- regular except for lack of accent
+			impf_sub_3s = "fos", -- same
+			cond = {"serí", "fór"},
+			imp_2s = "sigues",
+			imp_2p = "sigueu",
+			pp = {"estad", "sigud"},
+			gerund = {"sent", "essent"},
+			irreg = true,
+		}
+	},
+	{
+		-- [[ésser]]; variant of [[ser]]
+		match = "^ésser",
+		like = "ser",
+	},
+	{
+		-- [[estar]]; highly irregular
+		match = "^estar",
+		forms = {
+			pres_2s = "estàs",
+			pres_3s = "està",
+			pres_3p = "estan",
+			g_infix = "estig",
+			imp_2s = "estigues",
+			imp_2p = "estigueu",
+			pp = "estad",
+		}
+	},
+	{
+		-- [[anar]]; highly irregular
+		match = "^anar",
+		forms = {
+			inf_stem = "anir",
+			pres_1s = "vaig",
+			pres_2s = "vas",
+			pres_3s = "va",
+			pres_3p = "van",
+			pres_sub_stressed = "vagi",
+			imp_2s = "ves",
+			irreg = true,
+		}
+	},
+	{
+		-- [[haver]] as auxiliary; highly irregular
+		match = "^@haver", -- @ marks auxiliary
+		forms = {
+			inf_stem = "anir",
+			pres_1s = "vaig",
+			pres_2s = "vas",
+			pres_3s = "va",
+			pres_3p = "van",
+			pres_sub_stressed = "vagi",
+			imp_2s = "ves",
+			irreg = true,
+		}
+	},
+	{
+		-- [[haver]] as full verb; highly irregular
+		match = "^haver",
+		forms = {
+			inf_stem = "haur",
+			pres_1s = {
+			pres_2s = "vas",
+			pres_3s = "va",
+			pres_3p = "van",
+			pres_sub_stressed = "vagi",
+			imp_2s = "ves",
+			irreg = true,
+		}
+	},
 
 
 
@@ -1793,6 +1991,11 @@ local function add_single_stem_tense(base, slot_pref, stems, s1, s2, s3, p1, p2,
 end
 
 
+local function map_general(stemforms, fn)
+	return iut.map_forms(iut.convert_to_general_list_form(stemforms), fn)
+end
+
+
 local function construct_stems(base)
 	local stems = {}
 	local bst = base.stems
@@ -1803,10 +2006,6 @@ local function construct_stems(base)
 
 	local stressed_stem = bst.stressed_stem or bst.stem or bst.inf_stem or base.inf_stem
 	local unstressed_stem = bst.unstressed_stem or bst.stem or bst.inf_stem or base.inf_stem
-
-	local function map_general(stemforms, fn)
-		return iut.map_forms(iut.convert_to_general_list_form(stemsforms), fn)
-	end
 
 	local function add_g(stemforms)
 		return map_general(stemforms, function(form)
@@ -1964,8 +2163,8 @@ end
 
 local function add_present_subj(base)
 	local stems = base.this_stems
-	local function addit(slot, stems, ending)
-		add3(base, "pres_sub_" .. slot, stems, ending)
+	local function add_tense(stem, s1, s2, s3, p1, p2, p3)
+		add_single_stem_tense(base, "pres_sub", stem, s1, s2, s3, p1, p2, p3)
 	end
 
 	-- Regular -ar verb: [[amar]]: ami, amis, ami, amem, ameu, amin
@@ -1976,23 +2175,36 @@ local function add_present_subj(base)
 	-- * -eix- infix (-eix- in all stressed forms: 123s/3p of pres ind/sub, 2s imp)
 	-- * [[collir]]: culli, cullis, culli, collim, colliu, cullin (cull- in all stressed forms)
 	-- * [[cabre]]: càpiga, càpigues, càpiga, capiguem, capigueu, càpiguen (also different endings)
-	local s1, s2, s3, p1, p2, p3
-	if stems.sub_conj == "i-e" then
-		s1, s2, s3, p1, p2, p3 = "i", "is", "i", "em", "eu", "in"
-	elseif stems.sub_conj == "i-i" then
-		s1, s2, s3, p1, p2, p3 = "i", "is", "i", "im", "iu", "in"
-	elseif stems.sub_conj == "a-e" then
-		s1, s2, s3, p1, p2, p3 = "a", "es", "a", "em", "eu", "en"
-	else
-		error("Internal error: Unrecognized present subjunctive conjugation '" .. stems.sub_conj .. "'")
+
+	local pret_stems = iut.convert_to_general_list_form(stems.pres_sub_stressed)
+	for _, formobj in ipairs(pret_stems) do
+		local stem, conj = formobj.form:match("^(.*)/(.-)$")
+		if not stem then
+			stem = formobj.form
+			conj = base.conj
+		end
+		local stemobj = iut.combine_form_and_footnotes(stem, formobj.footnotes)
+		if conj == "a-e" then
+			add_tense(stemobj, "a", "es", "a", nil, nil, "en")
+		else
+			add_tense(stemobj, "i", "is", "i", nil, nil, "in")
+		end
 	end
 
-	addit("1s", stems.pres_sub_stressed, s1)
-	addit("2s", stems.pres_sub_stressed, s2)
-	addit("3s", stems.pres_sub_stressed, s3)
-	addit("1p", stems.pres_sub_unstressed, p1)
-	addit("2p", stems.pres_sub_unstressed, p2)
-	addit("3p", stems.pres_sub_stressed, p3)
+	local pret_stems = iut.convert_to_general_list_form(stems.pres_sub_unstressed)
+	for _, formobj in ipairs(pret_stems) do
+		local stem, conj = formobj.form:match("^(.*)/(.-)$")
+		if not stem then
+			stem = formobj.form
+			conj = base.conj
+		end
+		local stemobj = iut.combine_form_and_footnotes(stem, formobj.footnotes)
+		if conj == "i" then
+			add_tense(stemobj, nil, nil, nil, "im", "iu", nil)
+		else
+			add_tense(stemobj, nil, nil, nil, "em", "eu", nil)
+		end
+	end
 end
 
 
@@ -2005,18 +2217,16 @@ local function add_finite_non_present(base)
 	add_tense("impf", stems.impf1, "a", "es", "a", nil, nil, "en")
 	add_tense("impf", stems.impf2, nil, nil, nil, "em", "eu", nil)
 
-	if stems.pret_conj == "ar" then
-		add_tense("pret", stems.pret_base, "í", "ares", "à", "àrem", "àreu", "aren")
-	elseif stems.pret_conj == "er" then
-		add_tense("pret", stems.pret_base, "í", "eres", "é", "érem", "éreu", "eren")
-	else
-		add_tense("pret", stems.pret_base, "í", "ires", "í", "írem", "íreu", "iren")
-	end
+	-- pret_1s ends in -í regardless of the normal vowel of the stem.
+	insert_forms(base, "pret_1s", map_general(stems.pret, function(form)
+		return rsub(form, com.V .. "$", "") .. "í" end))
+	-- * at the beginning of the ending means to remove an accent from the last vowel of the preterite stem.
+	add_tense("pret", stems.pret, nil, "*res", "", "rem", "reu", "*ren")
 
 	-- * at the beginning of the ending means to remove an accent from the last vowel of the imperfect subjunctive stem.
 	add_tense("impf_sub", stems.impf_sub, "s", "*ssis", "s", "ssim", "ssiu", "*ssin")
 	add_tense("fut", stems.fut, "é", "às", "à", "em", "eu", "an")
-	add_tense("cond", stems.cond, "ia", "ies", "ia", "íem", "íeu", "ien")
+	add_tense("cond", stems.cond, "*a", "*es", "*a", "em", "eu", "*en")
 end
 
 
