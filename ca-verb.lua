@@ -35,7 +35,7 @@ local m_string_utilities = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local iut = require("Module:inflection utilities")
-local com = require("Module:ca-common")
+local com = require("Module:User:Benwing2/ca-common")
 
 local force_cat = false -- set to true for debugging
 local check_for_red_links = false -- set to false for debugging
@@ -52,7 +52,6 @@ end
 
 
 local V = com.V -- vowel regex class
-local AV = com.AV -- accented vowel regex class
 local C = com.C -- consonant regex class
 
 
@@ -319,7 +318,7 @@ local function add_slots(alternant_multiword_spec)
 	add_basic_personal_slot("impf_sub", "impf|sub", person_number_list)
 	add_basic_personal_slot("imp", "imp", imp_person_number_list)
 	-- Don't need special non-reflexive-part slots because the negative imperative is multiword, of which the
-	-- individual words are 'non' + subjunctive.
+	-- individual words are 'no' + subjunctive.
 	add_basic_personal_slot("neg_imp", "neg|imp", neg_imp_person_number_list, "no special verb form of")
 	-- Don't need special non-reflexive-part slots because we don't want [[arrependendo]] mapping to [[arrependendo-me]]
 	-- (only [[arrependendo-se]]) or [[arrepender]] mapping to [[arrepender-me]] (only [[arrepender-se]]).
@@ -528,7 +527,7 @@ local built_in_conjugations = {
 		match = "^anar",
 		forms = {
 			fut = "anir",
-			pres_1s = "vaig",
+			pres_1s = "vaj", -- will be converted to 'vaig'; 'vaig' gets converted to 'vaic'
 			pres_2s = "vas",
 			pres_3s = "va",
 			pres_3p = "van",
@@ -808,10 +807,11 @@ local built_in_conjugations = {
 		forms = {
 			stem = "veie",
 			-- impf1s veia, impf1p vèiem (preceding vowel changed to è)
-			pres_1s = "veig",
+			pres_stressed = "veu",
+			pres_1s = "vej", -- will be converted to 'veig'; 'veig' gets converted to 'veic'
 			pres_sub_stressed = "vegi",
 			pres_sub_unstressed = "vege",
-			pret = {"vei", "v"},
+			pret = {"veié", "vé"},
 			pret_1s = "viu",
 			pret_3s = {"veié", "veu"},
 			pp = "vist",
@@ -910,7 +910,7 @@ local built_in_conjugations = {
 	},
 	{
 		-- [[merèixer]], [[desmerèixer]], [[irèixer-se]]
-		match = match_against_verbs("rèixer", {"m", "^i"}
+		match = match_against_verbs("rèixer", {"me", "^i"}),
 		forms = {
 			pret = {"reixé", "resqué"},
 			pres_sub_unstressed = {"reixe", "resque"},
@@ -1349,7 +1349,7 @@ local built_in_conjugations = {
 		match = "fer",
 		forms = {
 			fut = "far",
-			pres_1s = "faig",
+			pres_1s = "faj", -- will be converted to 'faig'; 'faig' gets converted to 'faic'
 			pres_2s = "fàs#",
 			pres_3s = "fà#",
 			pres_3p = "fan",
@@ -1429,7 +1429,7 @@ local built_in_conjugations = {
 		match = "^@haver", -- @ marks auxiliary
 		forms = {
 			fut = "anir",
-			pres_1s = "vaig",
+			pres_1s = "vaj", -- will be converted to 'vaig'; 'vaig' gets converted to 'vaic'
 			pres_2s = "vas",
 			pres_3s = "va",
 			pres_3p = "van",
@@ -1591,7 +1591,7 @@ local function combine_stem_ending(base, stem, ending, is_full_word, dont_includ
 				d = "t",
 				j = "ig", -- pres_3s 'fuj' of [[fugir]] -> 'fuig'
 			}
-			return before, devoice[voiced] .. after
+			return before .. devoice[voiced] .. after
 		end)
 	end
 
@@ -1695,18 +1695,18 @@ local function construct_stems(base)
 			if form == "+" then
 				return map_general(stem, function(form)
 					local stem_base, conj_vowel = split_conj_vowel(form)
-					return combine(stem_base, "eix")
+					return combine(stem_base, "eixe")
 				end)
 			elseif form == "-" then
-				return stem
+				return stems.stem
 			else
 				return form
 			end
 		end)
 	end
 
-	local stressed_stem = bst.stressed_stem or eix_infix_stem or stem
-	local unstressed_stem = bst.unstressed_stem or stem
+	local stressed_stem = bst.stressed_stem or eix_infix_stem or stems.stem
+	local unstressed_stem = bst.unstressed_stem or stems.stem
 
 	-- Add the 'g' that is characteristic of g-infix verbs. We remove a stem-final v, e.g. [[beure]] with stem 'beve'
 	-- becomes 'beg'.
@@ -1761,11 +1761,24 @@ local function construct_stems(base)
 		-- If no_pres_stressed given, pres3s stem should be empty so no forms are generated.
 		base.no_pres_stressed and {} or
 		stressed_g_infix or
-		map_general(stems.pres_stressed, FIXME)
+		map_general(stems.pres_stressed, function(form)
+			local stem_base, conj_vowel = split_conj_vowel(form)
+			return combine(stem_base, "o")
+		end)
 	stems.pres3s =
 		-- If no_pres_stressed given, pres3s stem should be empty so no forms are generated.
 		base.no_pres_stressed and {} or
-		bst.pres3s or ... FIXME
+		bst.pres3s or
+		map_general(stems.pres_stressed, function(form)
+			local stem_base, conj_vowel = split_conj_vowel(form)
+			if conj_vowel == "a" then
+				return form
+			elseif rfind(stem_base, C .. "[lr]$") and not rfind(stem_base, V .. "ll$") then
+				return combine(stem_base, "e")
+			else
+				return stem_base
+			end
+		end)
 
 	local function compute_impf_stem(with_accent)
 		return map_general(stems.pres_unstressed, function(form)
@@ -1809,7 +1822,15 @@ local function construct_stems(base)
 			local stem_base, conj_vowel = split_conj_vowel(form)
 			return combine(stem_base, conj_vowel == "i" and "i" or "e")
 		end)
-	stems.impf_sub = bst.impf_sub or stems.pret
+	stems.impf_sub = bst.impf_sub or map_general(stems.pret, function(form)
+		local stem_base = rmatch(form, "^(.*)à$") -- already in "back" form, no need to convert
+		if stem_base then
+			return combine(stem_base, "é")
+		else
+			return form
+		end
+	end)
+		
 	stems.pp = bst.pp or
 		unstressed_g_infix and map_general(unstressed_g_infix,
 			function(form) return combine(form, "ud") end
@@ -2102,18 +2123,18 @@ end
 
 
 local function generate_negative_imperatives(base)
-	-- Copy subjunctives to negative imperatives, preceded by "non".
+	-- Copy subjunctives to negative imperatives, preceded by "no".
 	for _, persnum in ipairs(neg_imp_person_number_list) do
 		local from = "pres_sub_" .. persnum
 		local to = "neg_imp_" .. persnum
 		insert_forms(base, to, iut.map_forms(base.forms[from], function(form)
 			if base.alternant_multiword_spec.args.noautolinkverb then
-				return "non " .. form
+				return "no " .. form
 			elseif form:find("%[%[") then
 				-- already linked, e.g. when reflexive
-				return "[[non]] " .. form
+				return "[[no]] " .. form
 			else
-				return "[[non]] [[" .. form .. "]]"
+				return "[[no]] [[" .. form .. "]]"
 			end
 		end))
 	end
@@ -2168,7 +2189,7 @@ local function conjugate_verb(base)
 		return slot:find("^imp_")
 	end)
 	-- We need to add joined reflexives, then joined and non-joined clitics, then non-joined reflexives, so we get
-	-- [[arrepéndete]] but [[non]] [[te]] [[arrependas]].
+	-- [[arrepéndete]] but [[no]] [[te]] [[arrependas]].
 	if base.refl then
 		add_reflexive_or_fixed_clitic_to_forms(base, "do reflexive", "do joined")
 		process_slot_overrides(base, nil, "do reflexive") -- do reflexive-only slot overrides
@@ -2454,7 +2475,7 @@ local function detect_indicator_spec(base)
 	-- Remove accents from e.g. [[parèixer]], [[córrer]].
 	stem = com.remove_accents(stem)
 	base.conj_vowel = (suffix == "re" or suffix == "ur") and "e" or suffix:gsub("r$", "")
-	base.stem = stem .. conj_vowel
+	base.stem = stem .. base.conj_vowel
 
 	-- Propagate built-in-verb indicator flags to `base` and combine with user-specified flags.
 	for indicator_flag, _ in pairs(indicator_flags) do
@@ -2578,7 +2599,7 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		insert_cat("reflexive verbs")
 	end
 
-	local stem_base, conj_vowel = split_conj_vowel(base.inf_stem)
+	local stem_base, conj_vowel = split_conj_vowel(base.stem)
 	local cons_alt
 	if conj_vowel == "i" and base.output_stems.eix_infix == "+" then
 		-- no alternations in verbs like [[afligir]] because all endings are front
@@ -2786,7 +2807,7 @@ local basic_table = [=[
 | style="border: 1px solid #999999; vertical-align: top;" | {imp_2p}
 | style="border: 1px solid #999999; vertical-align: top;" | {imp_3p}
 |-
-! style="border: 1px solid #999999; background:#d4c4b0" | <span title="Negatiu">Negative</span> (<<non>>)
+! style="border: 1px solid #999999; background:#d4c4b0" | <span title="Negatiu">Negative</span> (<<no>>)
 | style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_2s}
 | style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_3s}
 | style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_1p}
