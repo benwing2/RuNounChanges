@@ -42,7 +42,6 @@ function export.show(frame)
 	local params = {
 		["head"] = {list = true},
 		["id"] = {},
-		["json"] = {type = "boolean"},
 		["splithyph"] = {type = "boolean"},
 		["nolinkhead"] = {type = "boolean"},
 		["json"] = {type = "boolean"},
@@ -1000,7 +999,14 @@ pos_functions["verbs"] = {
 		elseif alternant_multiword_spec.only3p then
 			table.insert(data.inflections, {label = "third-person plural only"})
 		end
-	
+
+		local function expand_footnotes_and_references(footnotes)
+			if not footnotes then
+				return nil
+			end
+			return require("Module:inflection utilities").fetch_headword_qualifiers_and_references(footnotes)
+		end
+
 		do_verb_form(args.pres, args.pres_qual, preses, skip_pres_if_empty)
 		do_verb_form(args.pret, args.pret_qual, prets)
 		do_verb_form(args.part, args.part_qual, parts)

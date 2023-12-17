@@ -2554,7 +2554,13 @@ local function show_forms(alternant_multiword_spec)
 			return nil
 		end
 		if accel_obj then
-			accel_obj.form = "verb-form-" .. reconstructed_verb_spec
+			if slot:find("^pp_") then
+				accel_obj.form = slot
+			elseif slot == "gerund" then
+				accel_obj.form = "gerund-" .. reconstructed_verb_spec
+			else
+				accel_obj.form = "verb-form-" .. reconstructed_verb_spec
+			end
 		end
 		return accel_obj
 	end
