@@ -1670,13 +1670,15 @@ end
 
 
 local function construct_stems(base)
-	local stems = {}
-	local bst = base.stems
+	base.output_stems = {}
+	local stems = base.output_stems
+	local bst = base.input_stems
 
 	local function combine(stem, ending)
 		return combine_stem_ending(base, stem, ending, false, "dont include prefix")
 	end
 
+	stems.irreg = bst.irreg or bst.g_infix
 	-- NOTE: Some stems end in a conjugation or similar vowel, specifically:
 	-- * `stem` (ends in conjugation vowel -a/-e/-i);
 	-- * `stressed_stem` (likewise);
@@ -1686,11 +1688,15 @@ local function construct_stems(base)
 	--   -er/-re/-ir verbs except -e when required as a prop vowel, as in [[cobrir]]);
 	-- * `pres_sub_stressed` (which assumes the form of pres_sub_3s and hence usually ends in -i, occasionally -a);
 	-- * `pres_sub_unstressed` (which assumes the form of pres_sub_1p minus the -m, hence ends in -e or -i).
-	local stem = bst.stem or base.stem
+
+	-- Save stem for use in add_categories_and_annotation() for determining the conjugation class.
+	stems.stem = bst.stem or base.stem
 	local eix_infix_stem
 	if base.conj_vowel == "i" then
-		local eix_infix = bst.eix_infix or bst.g_infix and "-" or "+"
-		eix_infix_stem = flatmap_general(eix_infix, function(form)
+		-- Save eix_infix value for use in add_categories_and_annotation() for determining whether consonant
+		-- alternations exist.
+		stems.eix_infix = bst.eix_infix or bst.g_infix and "-" or "+"
+		eix_infix_stem = flatmap_general(stems.eix_infix, function(form)
 			if form == "+" then
 				return map_general(stem, function(form)
 					local stem_base, conj_vowel = split_conj_vowel(form)
@@ -1827,7 +1833,7 @@ end
 
 
 local function add_present_indic(base)
-	local stems = base.stems
+	local stems = base.output_stems
 	local function addit(slot, stems, ending)
 		add3(base, "pres_" .. slot, stems, ending)
 	end
@@ -1842,7 +1848,7 @@ end
 
 
 local function add_present_subj(base)
-	local stems = base.stems
+	local stems = base.output_stems
 	local function addit(slot, stems, ending)
 		add3(base, "pres_sub_" .. slot, stems, ending)
 	end
@@ -1866,7 +1872,7 @@ end
 
 
 local function add_finite_non_present(base)
-	local stems = base.stems
+	local stems = base.output_stems
 	local function add_tense(slot, stem, s1, s2, s3, p1, p2, p3)
 		add_single_stem_tense(base, slot, stem, s1, s2, s3, p1, p2, p3)
 	end
@@ -1890,7 +1896,7 @@ end
 
 
 local function add_non_finite_forms(base)
-	local stems = base.stems
+	local stems = base.output_stems
 	local function addit(slot, stems, ending, footnotes)
 		add3(base, slot, stems, ending, footnotes)
 	end
@@ -2379,7 +2385,7 @@ local function detect_indicator_spec(base)
 	end
 
 	base.forms = {}
-	base.stems = {}
+	base.input_stems = {}
 	base.basic_overrides = {}
 	base.basic_reflexive_only_overrides = {}
 	if not base.no_built_in then
@@ -2408,7 +2414,7 @@ local function detect_indicator_spec(base)
 						-- an individual form override of a basic form
 						base.basic_overrides[stem] = forms
 					else
-						base.stems[stem] = forms
+						base.input_stems[stem] = forms
 					end
 				end
 				break
@@ -2418,7 +2424,7 @@ local function detect_indicator_spec(base)
 
 	-- Override built-in-verb stems and overrides with user-specified ones.
 	for stem, values in pairs(base.user_stems) do
-		base.stems[stem] = values
+		base.input_stems[stem] = values
 	end
 	for override, values in pairs(base.user_basic_overrides) do
 		if not base.alternant_multiword_spec.verb_slots_basic_map[override] then
@@ -2452,7 +2458,7 @@ local function detect_indicator_spec(base)
 
 	-- Propagate built-in-verb indicator flags to `base` and combine with user-specified flags.
 	for indicator_flag, _ in pairs(indicator_flags) do
-		base[indicator_flag] = base[indicator_flag] or base.stems[indicator_flag]
+		base[indicator_flag] = base[indicator_flag] or base.input_stems[indicator_flag]
 	end
 end
 
@@ -2519,14 +2525,22 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 			end
 		end
 	end
-	
-	if(base.conj == "or") then
-		insert_cat("verbs ending in -er")
-	else
-		insert_cat("verbs ending in -" .. base.conj)
-	end
 
-	if base.irreg then
+	map_general(base.output_stems.stem, function(stem)
+		local stem_base, conj_vowel = split_conj_vowel(stem)
+		if conj_vowel == "a" then
+			insert_cat("first conjugation verbs")
+		elseif conj_vowel == "e" then
+			insert_cat("second conjugation verbs")
+		elseif conj_vowel == "i" then
+			insert_cat("third conjugation verbs")
+		else
+			error(("Internal error: Stem '%s' doesn't end in conjugation vowel a/e/i and split_conj_vowel() didn't catch it"
+				):format(stem))
+		end
+	end)
+
+	if base.output_stems.irreg then
 		insert_ann("irreg", "irregular")
 		insert_cat("irregular verbs")
 	else
@@ -2557,31 +2571,22 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		insert_cat("reflexive verbs")
 	end
 
-	local cons_alt = base.stems.cons_alt
-	if cons_alt == nil then
-		if base.conj == "ar" then
-			if base.inf_stem:find("z$") then
-				cons_alt = "c-z"
-			elseif base.inf_stem:find("c$") then
-				cons_alt = "c-qu"
-			elseif base.inf_stem:find("g$") then
-				cons_alt = "g-gu"
-			elseif base.inf_stem:find("gu$") then
-				cons_alt = "gu-gü"
-			end
-		else
-			if base.no_pres_stressed or base.no_pres1_and_sub then
-				cons_alt = nil -- no e.g. c-z alternation in this case
-			elseif base.inf_stem:find("c$") then
-				cons_alt = "c-z"
-			elseif base.inf_stem:find("qu$") then
-				cons_alt = "c-qu"
-			elseif base.inf_stem:find("gu$") then
-				cons_alt = "g-gu"
-			elseif base.inf_stem:find("gü$") then
-				cons_alt = "gu-gü"
-			end
-		end
+	local stem_base, conj_vowel = split_conj_vowel(base.inf_stem)
+	local cons_alt
+	if conj_vowel == "i" and base.output_stems.eix_infix == "+" then
+		-- no alternations in verbs like [[afligir]] because all endings are front
+	elseif stem_base:find("ç$") then
+		cons_alt = "ç-c"
+	elseif stem_base:find("c$") then
+		cons_alt = "c-qu"
+	elseif stem_base:find("g$") then
+		cons_alt = "g-gu"
+	elseif stem_base:find("gu$") then
+		cons_alt = "gu-gü"
+	elseif stem_base:find("j$") then
+		cons_alt = "j-g"
+	elseif stem_base:find("qu$") then
+		cons_alt = "qu-qü"
 	end
 
 	if cons_alt then
