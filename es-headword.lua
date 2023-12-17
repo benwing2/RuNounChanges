@@ -10,9 +10,10 @@ local rsplit = mw.text.split
 
 local m_links = require("Module:links")
 local m_table = require("Module:table")
+local com = require("Module:es-common")
 local headword_module = "Module:headword"
 local romut_module = "Module:romance utilities"
-local com = require("Module:es-common")
+local es_verb_module = "Module:es-verb"
 
 local lang = require("Module:languages").getByCode("es")
 local langname = lang:getCanonicalName()
@@ -74,9 +75,6 @@ function export.show(frame)
 				if head:find("^~") then
 					head = romut.apply_link_modifiers(auto_linked_head, usub(head, 2))
 					heads[i] = head
-				end
-				if head == auto_linked_head then
-					track("redundant-head")
 				end
 			end
 		end
@@ -867,34 +865,17 @@ pos_functions["verbs"] = {
 		["noautolinktext"] = {type = "boolean"},
 		["noautolinkverb"] = {type = "boolean"},
 		["attn"] = {type = "boolean"},
-		["new"] = {type = "boolean"},
 	},
 	func = function(args, data, frame)
 		local preses, prets, parts
-		local pagename = args.pagename or PAGENAME
-		local def_forms
 
 		if args.attn then
 			table.insert(data.categories, "Requests for attention concerning " .. langname)
 			return
 		end
 
-		if mw.title.getCurrentTitle().nsText == "Template" and PAGENAME == "es-verb" and not args.pagename then
-			pagename = "averiguar"
-		end
-		
-		local parargs = frame:getParent().args
-		local alternant_multiword_spec = require("Module:es-verb").do_generate_forms(parargs, "from headword")
-		for _, cat in ipairs(alternant_multiword_spec.categories) do
-			table.insert(data.categories, cat)
-		end
-
-		if #data.heads == 0 then
-			data.no_redundant_head_cat = true
-			for _, head in ipairs(alternant_multiword_spec.forms.infinitive_linked) do
-				table.insert(data.heads, head.form)
-			end
-		end
+		local es_verb = require(es_verb_module)
+		local alternant_multiword_spec = es_verb.do_generate_forms(args, "es-verb", data.heads[1])
 
 		local specforms = alternant_multiword_spec.forms
 		local function slot_exists(slot)
@@ -911,19 +892,16 @@ pos_functions["verbs"] = {
 				return {
 					slot = slot_tense .. "_1s",
 					label = ("first-person singular %s"):format(label_tense),
-					accel = ("1|s|%s|ind"):format(slot_tense),
 				}
 			elseif has_3s then
 				return {
 					slot = slot_tense .. "_3s",
 					label = ("third-person singular %s"):format(label_tense),
-					accel = ("3|s|%s|ind"):format(slot_tense),
 				}
 			else
 				return {
 					slot = slot_tense .. "_3p",
 					label = ("third-person plural %s"):format(label_tense),
-					accel = ("3|p|%s|ind"):format(slot_tense),
 				}
 			end
 		end
@@ -933,7 +911,6 @@ pos_functions["verbs"] = {
 		parts = {
 			slot = "pp_ms",
 			label = "past participle",
-			accel = "m|s|past|part"
 		}
 
 		if #args.pres > 0 or #args.pret > 0 or #args.part > 0 then
@@ -955,12 +932,16 @@ pos_functions["verbs"] = {
 			return stripped_qualifiers
 		end
 
-		local function do_verb_form(args, qualifiers, slot_desc)
+		local function do_verb_form(args, qualifiers, slot_desc, skip_if_empty)
 			local forms
+			local to_insert
 
 			if #args == 0 then
 				forms = specforms[slot_desc.slot]
 				if not forms or #forms == 0 then
+					if skip_if_empty then
+						return
+					end
 					forms = {{form = "-"}}
 				end
 			elseif #args == 1 and args[1] == "-" then
@@ -983,23 +964,35 @@ pos_functions["verbs"] = {
 			end
 
 			if forms[1].form == "-" then
-				return {label = "no " .. slot_desc.label}
+				to_insert = {label = "no " .. slot_desc.label}
 			else
 				local into_table = {label = slot_desc.label}
-				local accel = {form = slot_desc.accel}
 				for _, form in ipairs(forms) do
 					local qualifiers = strip_brackets(form.footnotes)
 					-- Strip redundant brackets surrounding entire form. These may get generated e.g.
 					-- if we use the angle bracket notation with a single word.
 					local stripped_form = rmatch(form.form, "^%[%[([^%[%]]*)%]%]$") or form.form
 					-- Don't include accelerators if brackets remain in form, as the result will be wrong.
-					local this_accel = not stripped_form:find("%[%[") and accel or nil
+					-- FIXME: For now, don't include accelerators. We should use {{es-verb form of}} instead.
+					-- local this_accel = not stripped_form:find("%[%[") and accel or nil
+					local this_accel = nil
 					table.insert(into_table, {term = stripped_form, q = qualifiers, accel = this_accel})
 				end
-				return into_table
+				to_insert = into_table
 			end
+
+			table.insert(data.inflections, to_insert)
 		end
 
+		local skip_pres_if_empty
+		if alternant_multiword_spec.no_pres1_and_sub then
+			table.insert(data.inflections, {label = "no first-person singular present"})
+			table.insert(data.inflections, {label = "no present subjunctive"})
+		end
+		if alternant_multiword_spec.no_pres_stressed then
+			table.insert(data.inflections, {label = "no stressed present indicative or subjunctive"})
+			skip_pres_if_empty = true
+		end
 		if alternant_multiword_spec.only3s then
 			table.insert(data.inflections, {label = glossary_link("impersonal")})
 		elseif alternant_multiword_spec.only3sp then
@@ -1008,9 +1001,31 @@ pos_functions["verbs"] = {
 			table.insert(data.inflections, {label = "third-person plural only"})
 		end
 	
-		table.insert(data.inflections, do_verb_form(args.pres, args.pres_qual, preses))
-		table.insert(data.inflections, do_verb_form(args.pret, args.pret_qual, prets))
-		table.insert(data.inflections, do_verb_form(args.part, args.part_qual, parts))
+		do_verb_form(args.pres, args.pres_qual, preses, skip_pres_if_empty)
+		do_verb_form(args.pret, args.pret_qual, prets)
+		do_verb_form(args.part, args.part_qual, parts)
+
+		-- Add categories.
+		for _, cat in ipairs(alternant_multiword_spec.categories) do
+			table.insert(data.categories, cat)
+		end
+
+		-- If the user didn't explicitly specify head=, or specified exactly one head (not 2+) and we were able to
+		-- incorporate any links in that head into the 1= specification, use the infinitive generated by
+		-- [[Module:es-verb]] in place of the user-specified or auto-generated head. This was copied from
+		-- [[Module:it-headword]], where doing this gets accents marked on the verb(s). We don't have accents marked on
+		-- the verb but by doing this we do get any footnotes on the infinitive propagated here. Don't do this if the
+		-- user gave multiple heads or gave a head with a multiword-linked verbal expression such as Italian
+		-- '[[dare esca]] [[al]] [[fuoco]]' (FIXME: give Spanish equivalent).
+		if #data.user_specified_heads == 0 or (
+			#data.user_specified_heads == 1 and alternant_multiword_spec.incorporated_headword_head_into_lemma
+		) then
+			data.heads = {}
+			for _, lemma_obj in ipairs(alternant_multiword_spec.forms.infinitive_linked) do
+				local quals, refs = expand_footnotes_and_references(lemma_obj.footnotes)
+				table.insert(data.heads, {term = lemma_obj.form, q = quals, refs = refs})
+			end
+		end
 	end
 }
 
