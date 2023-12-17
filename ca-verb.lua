@@ -806,7 +806,8 @@ local built_in_conjugations = {
 			stem = "veie",
 			-- impf1s veia, impf1p vèiem (preceding vowel changed to è)
 			pres_1s = "veig",
-			sub = "vej", -- changed to veg- before front vowels in sub
+			pres_sub_stressed = "vegi",
+			pres_sub_unstressed = "vege",
 			pret = {"vei", "v"},
 			pret_1s = "viu",
 			pret_3s = {"veié", "veu"},
@@ -977,7 +978,8 @@ local built_in_conjugations = {
 		forms = {
 			fut = "podr",
 			pres_1s = "puc",
-			sub = "pug",
+			pres_sub_stressed = "pugui",
+			pres_sub_unstressed = "pugue",
 			g_infix = "pog",
 			imp_2s = "pugues",
 			imp_2p = "pugueu",
@@ -990,7 +992,8 @@ local built_in_conjugations = {
 		forms = {
 			fut = "voldr",
 			pres_1s = "vull",
-			sub = "vulg",
+			pres_sub_stressed = "vulgui",
+			pres_sub_unstressed = "vulgue",
 			g_infix = "+",
 			imp_2s = "vulgues",
 			imp_2p = "vulgueu",
@@ -1515,9 +1518,8 @@ end
 
 -- Add the `stem` to the `ending` for the given `slot` and apply any phonetic modifications.
 -- WARNING: This function is written very carefully; changes to it can easily have unintended consequences.
-local function combine_stem_ending(base, slot, prefix, stem, ending, is_full_word, dont_include_prefix)
-	-- If the ending begins with an acute accent, it goes after the last vowel, but we don't have to do anything.
-
+local function combine_stem_ending(base, stem, ending, is_full_word, dont_include_prefix)
+	local prefix = base.prefix
 	-- [Use the full stem for checking for -gui ending and such, because 'stem' is just 'u' for [[arguir]],
 	-- [[delinquir]].] -- FIXME, not accurate.
 	local full_stem = prefix .. stem
@@ -1526,10 +1528,36 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, is_full_wor
 		stem = full_stem
 	end
 
+	-- A * at the beginning of the ending is a signal to remove a stressed accent from the stem. This may feed any of
+	-- the following rules.
+	if ending:find("^%*") then
+		ending = ending:gsub("^%*", "")
+		stem = com.remove_accents(stem)
+	end
+
+	-- If ending begins with s and stem ends in a sibilant, we need an e in between; cf. pres_2s 'apareixes' of
+	-- [[aparèixer]], pres_2s 'torces' of [[tòrcer]], pres_2s 'fuges' of [[fugir]], pres_2s 'brunzes' of [[brunzir]].
+	-- This may feed the next rule.
+	if ending:find("^s") and rfind(stem, "[çjsxz]$") then
+		ending = "e" .. ending
+	end
+
+	-- By default, stems are in their "back" (standalone) form. Before a front vowel, convert the final consonant to
+	-- its "front" form so the pronunciation doesn't change.
+	if rfind(ending, "^[eiéíï]") then
+		-- adequar -> adeqües
+		-- enaiguar -> enaigües
+		-- pegar -> pegues
+		-- arranjar -> arranges
+		-- marcar -> marques
+		-- abraçar -> abraces
+		stem = com.back_to_front(stem)
+	end
+
 	-- Ending beginning in -i after diphthong ending in V + i compresses the two i's into one (cf. pret_1s 'desmaí' and
 	-- pres_sub_1s 'desmaï' of [[desmaiar]]). This rule doesn't apply after pseudo-vowel u in gu/qu; cf. pret_1s 'guií'
 	-- of [[guiar]] and contrast pret_1s 'cruí' of [[cruiar]]. This may feed the next rule.
-	if rfind(ending, "[iíï]$") and rfind(stem, V .. "i$") and not stem:find("[gq]ui$") then
+	if rfind(ending, "^[iíï]") and rfind(stem, V .. "i$") and not rfind(stem, "[gq][uü]i$") then
 		stem = stem:gsub("i$", "")
 	end
 
@@ -1549,32 +1577,11 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, is_full_wor
 		stem = stem:gsub("ü$", "u")
 	end
 
-	-- If ending begins with s and stem ends in a sibilant, we need an e in between; cf. pres_2s 'apareixes' of
-	-- [[aparèixer]], pres_2s 'torces' of [[torcer]], pres_2s 'fuges' of [[fugir]], pres_2s 'brunzes' of [[brunzir]].
-	-- This may feed the next rule.
-	if ending:find("^s") and rfind(stem, "[çjsxz]$") then
-		ending = "e" .. ending
-	end
-
-	-- Spelling changes in the stem; it depends on whether the stem given is the pre-front-vowel or
-	-- pre-back-vowel variant, as indicated by `frontback`. We want these front-back spelling changes to happen
-	-- between stem and ending, not between prefix and stem; the prefix may not have the same "front/backness"
-	-- as the stem.
-	if rfind(ending, "^[eiéíï]") then
-		-- adequar -> adeqües
-		-- enaiguar -> enaigües
-		-- pegar -> pegues
-		-- arranjar -> arranges
-		-- marcar -> marques
-		-- abraçar -> abraces
-		stem = com.back_to_front(stem)
-	end
-
 	local retval = add_stem_ending(stem, ending)
 	if retval:find("#$") then -- remove final accent if no prefix
 		retval = retval:gsub("#$", "")
 		if prefix == "" then
-			retval = com.remove_final_accent(retval)
+			retval = com.remove_accents(retval, "final syllable only")
 		end
 	end
 	if is_full_word then
@@ -1586,7 +1593,7 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, is_full_wor
 			local devoice = {
 				b = "p",
 				d = "t",
-				j = "ig", -- fugir -> fuig
+				j = "ig", -- pres_3s 'fuj' of [[fugir]] -> 'fuig'
 			}
 			return before, devoice[voiced] .. after
 		end)
@@ -1602,7 +1609,7 @@ local function add3(base, slot, stems, endings, footnotes, allow_overrides)
 	end
 
 	local function do_combine_stem_ending(stem, ending)
-		return combine_stem_ending(base, slot, base.prefix, stem, ending, "is full word")
+		return combine_stem_ending(base, stem, ending, "is full word")
 	end
 
 	iut.add_forms(base.forms, slot, stems, endings, do_combine_stem_ending, nil, nil, footnotes)
@@ -1646,21 +1653,48 @@ local function flatmap_general(stemforms, fn)
 end
 
 
+-- Given a stem ending in a conjugation vowel -a/-e/-i, split into stem base and conjugation vowel, converting the
+-- stem base to "back" form if the conjugation vowel is -e/-i (hence 'torce' of [[tòrcer]] splits into 'torç' and 'e',
+-- and 'fugi' of [[fugir]] splits into 'fuj' and 'i').
+local function split_conj_vowel(stem)
+	local stem_base, conj_vowel = stem:match("^(.*)([aei])$")
+	if not stem_base then
+		error(("Internal error: Stem '%s' doesn't end in conjugation vowel a/e/i"):format(stem))
+	end
+	if conj_vowel == "e" or conj_vowel == "i" then
+		stem_base = com.front_to_back(stem_base)
+	end
+	return stem_base, conj_vowel
+end
+
+
 local function construct_stems(base)
 	local stems = {}
 	local bst = base.stems
 
-	local function combine(slot, stem, ending)
-		return combine_stem_ending(base, slot, base.prefix, stem, ending, false, "dont include prefix")
+	local function combine(stem, ending)
+		return combine_stem_ending(base, stem, ending, false, "dont include prefix")
 	end
 
+	-- NOTE: Some stems end in a conjugation or similar vowel, specifically:
+	-- * `stem` (ends in conjugation vowel -a/-e/-i);
+	-- * `stressed_stem` (likewise);
+	-- * `unstressed_stem` (likewise);
+	-- * `pres_unstressed` (which assumes the form of pres_1p minus the -m, hence ends in -e or -i; note that
+	--   `pres_stressed` assumes the form of pres_3s and hence will have final -a for -ar verbs but not a vowel for
+	--   -er/-re/-ir verbs except -e when required as a prop vowel, as in [[cobrir]]);
+	-- * `pres_sub_stressed` (which assumes the form of pres_sub_3s and hence usually ends in -i, occasionally -a);
+	-- * `pres_sub_unstressed` (which assumes the form of pres_sub_1p minus the -m, hence ends in -e or -i).
 	local stem = bst.stem or base.stem
 	local eix_infix_stem
 	if base.conj_vowel == "i" then
 		local eix_infix = bst.eix_infix or bst.g_infix and "-" or "+"
 		eix_infix_stem = flatmap_general(eix_infix, function(form)
 			if form == "+" then
-				return stem:gsub("[aei]$", "") .. "eix"
+				return map_general(stem, function(form)
+					local stem_base, conj_vowel = split_conj_vowel(form)
+					return combine(stem_base, "eix")
+				end)
 			elseif form == "-" then
 				return stem
 			else
@@ -1676,8 +1710,9 @@ local function construct_stems(base)
 	-- becomes 'beg'.
 	local function add_g(stemforms)
 		return map_general(stemforms, function(form)
-			form = form:gsub("[aei]$", ""):gsub("v$", "") -- remove conjugation vowel and stem-final v
-			return form .. "g"
+			local stem_base, conj_vowel = split_conj_vowel(form)
+			stem_base = stem_base:gsub("v$", "")
+			return combine(stem_base, "g")
 		end)
 	end
 	-- Add the 'u' of the pres_3s that is characteristic of g-infix verbs. We remove a stem-final v and i, e.g.
@@ -1685,12 +1720,9 @@ local function construct_stems(base)
 	-- consonant, e.g. [[doldre]] with stem 'dole' becomes 'dol' not '#dolu'.
 	local function add_u(stemforms)
 		return map_general(stemforms, function(form)
-			form = form:gsub("[aei]$", ""):gsub("[vi]$", "") -- remove conjugation vowel and stem-final v
-			if not rfind(form, com.V .. "$") then
-				return form
-			else
-				return form .. "u"
-			end
+			local stem_base, conj_vowel = split_conj_vowel(form)
+			stem_base = stem_base:gsub("[vi]$", "")
+			return combine(stem_base, "u")
 		end)
 	end
 
@@ -1718,7 +1750,7 @@ local function construct_stems(base)
 		bst.pres_stressed or
 		g_infix_pres_stressed or
 		stressed_stem
-	stems.pres1s = stressed_g_infix or map_general(stems.pres_stressed
+	stems.pres1s = stressed_g_infix or map_general(stems.pres_stressed)
 	stems.pres1_and_sub =
 		-- If no_pres_stressed given, the entire subjunctive is missing.
 		base.no_pres_stressed and {} or
@@ -1729,47 +1761,57 @@ local function construct_stems(base)
 	stems.pres1 = stems.pres1_and_sub or stems.pres_stressed
 	stems.impf1 = bst.impf1 or map_general(stems.pres_unstressed, function(form)
 		if base.conj == "ar" then
-			return combine("impf_1s", form, "av")
+			return combine(form, "av")
 		elseif form:find("i#?$") then
 			form = form:gsub("i#?$", "")
 			return rmatch(form, "^(.-)" .. V .. "*$") .. "ei"
 		else
-			return combine("impf_1s", form, "i") -- will convert to ï after a vowel
+			return combine(form, "i") -- will convert to ï after a vowel
 		end
 	end)
 	stems.impf2 = bst.impf2 or map_general(stems.pres_unstressed, function(form)
 		if base.conj == "ar" then
-			return combine("impf_1s", form, "àv")
+			return combine(form, "àv")
 		elseif form:find("i#?$") then
 			form = form:gsub("i#?$", "")
 			return rmatch(form, "^(.-)" .. V .. "*$") .. "èi"
 		else
-			return combine("impf_1s", form, "í")
+			return combine(form, "í")
 		end
 	end)
-	stems.pret = bst.pret or iut.map_forms(iut.convert_to_general_list_form(stems.pret_base),
-		-- use combine_stem_ending esp. so we get saíra etc.
-		function(form) return combine("pret", form, base.conj_vowel) end)
-	stems.fut = bst.fut or base.inf_stem .. base.conj
-	stems.cond = bst.cond or map_general(stems.fut, function(form) return form .. "í" end)
-	stems.pres_sub_stressed = bst.pres_sub_stressed or stems.pres1
+	stems.pret = bst.pret or
+		unstressed_g_infix and map_general(unstressed_g_infix,
+			function(form) return combine(form, "é") end
+		) or
+		map_general(unstressed_stem, function(form)
+			local accent_conj_vowel = {
+				a = "à",
+				e = "é",
+				i = "í"
+			}
+			local stem_base, conj_vowel = split_conj_vowel(form)
+			return combine(stem_base, accent_conj_vowel[conj_vowel])
+		end)
+	stems.fut = bst.fut or base.inf_stem
+	stems.cond = bst.cond or map_general(stems.fut, function(form) return combine(form, "í") end)
+	stems.pres_sub_stressed = bst.pres_sub_stressed or
+		stressed_g_infix and map_general(stressed_g_infix, function(form) return combine(form, "i") end) or
+		map_general(stressed_stem, function(form)
+			local stem_base, conj_vowel = split_conj_vowel(form)
+			return combine(stem_base, "i")
+
 	stems.pres_sub_unstressed = bst.pres_sub_unstressed or stems.pres1_and_sub or stems.pres_unstressed
 	stems.sub_conj = bst.sub_conj or base.conj
 	stems.impf_sub = bst.impf_sub or stems.pret
-	-- Needed for impf_sub_1p and impf_sub_2p. We can't just add an acute accent because there may already be one
-	-- (as for [[saír]]).
-	stems.impf_sub_antepenult_stressed = iut.map_forms(iut.convert_to_general_list_form(stems.impf_sub), com.add_final_accent)
-	-- use combine_stem_ending esp. so we get roído, caído, etc.
-	stems.pp = bst.pp or combine("pp_ms", base.inf_stem, base.conj == "ar" and "ado" or "ido")
-	stems.pp_ms = stems.pp
-	local function masc_to_fem(form)
-		if rfind(form, "o$") then
-			return rsub(form, "o$", "a")
-		else
-			return form
-		end
-	end
-	stems.pp_fs = iut.map_forms(iut.convert_to_general_list_form(stems.pp_ms), masc_to_fem)
+	stems.pp = bst.pp or
+		unstressed_g_infix and map_general(unstressed_g_infix,
+			function(form) return combine(form, "ud") end
+		) or
+		map_general(unstressed_stem, function(form)
+			local stem_base, conj_vowel = split_conj_vowel(form)
+			-- use combine() so we get 'abduïd' from 'abdu-' of [[abduir]], 'conseguid' from 'conseg-, etc.
+			return combine(stem_base, (conj_vowel == "e" and "u" or conj_vowel) .. "d")
+		end)
 end
 
 
@@ -1778,7 +1820,7 @@ local function a_to_e(base, stems, suffix)
 		if form:find("a$") then
 			form = rsub(form, "a$", "e")
 		end
-		return combine_stem_ending(base, slot, base.prefix, form, suffix, "is full word")
+		return combine_stem_ending(base, form, suffix, "is full word")
 	end)
 end
 
@@ -1833,7 +1875,9 @@ local function add_finite_non_present(base)
 
 	-- pret_1s ends in -í regardless of the normal vowel of the stem.
 	insert_forms(base, "pret_1s", map_general(stems.pret, function(form)
-		return rsub(form, V .. "$", "") .. "í" end))
+		-- Use combine_stem_ending() to handle back-to-front conversions, e.g. pegà -> peguí for [[pegar]] and ensure
+		-- that the prefix gets added.
+		return combine_stem_ending(base, rsub(form, V .. "$", ""), "í", "is full word") end))
 	-- * at the beginning of the ending means to remove an accent from the last vowel of the preterite stem.
 	add_tense("pret", stems.pret, nil, "*res", "", "rem", "reu", "*ren")
 
@@ -1858,9 +1902,7 @@ local function add_non_finite_forms(base)
 			insert_form(base, "infinitive_" .. persnum, {form = base.verb})
 		end
 	end
-	-- verbs in -por have the gerund overridden
-	local ger_ending = base.conj == "ar" and "ando" or base.conj == "er" and "endo" or "indo"
-	addit("gerund", stems.pres_unstressed, ger_ending)
+	addit("gerund", stems.pres_unstressed, "nt")
 	-- Also insert "gerund + reflexive pronoun" combinations if we're handling a reflexive verb. We insert exactly the
 	-- same form as for the bare gerund; later on in add_reflexive_or_fixed_clitic_to_forms(), we add the appropriate
 	-- clitic pronouns. It's important not to do this for non-reflexive verbs, because in that case, the clitic
@@ -1868,14 +1910,24 @@ local function add_non_finite_forms(base)
 	-- inflections of the bare gerund. Thanks to [[User:JeffDoozan]] for this bug fix.
     if base.refl then
 		for _, persnum in ipairs(person_number_list) do
-			addit("gerund_" .. persnum, stems.pres_unstressed, ger_ending)
+			addit("gerund_" .. persnum, stems.pres_unstressed, "nt")
 		end
 	end
-	addit("pp_ms", stems.pp_ms, "")
+	addit("pp_ms", stems.pp, "")
 	if not base.pp_inv then
-		addit("pp_fs", stems.pp_fs, "")
-		addit("pp_mp", stems.pp_ms, "s")
-		addit("pp_fp", stems.pp_fs, "s")
+		addit("pp_fs", stems.pp, "a")
+		-- make_plural() handles the complexities of e.g. 'vist' of [[veure]] -> 'vistos'/'vists' and 'romàs' of
+		-- [[romandre]] -> 'romasos'. We need to use flatmap_general() because make_plural() may return more than one
+		-- plural, and we need to use map_general() on the result, applying combine_stem_ending(), to ensure that
+		-- prefixes get properly added and plurals like 'amads' of stem 'amad' of [[amar]] get converted to 'amats'.
+		insert_forms(base, "pp_mp", map_general(flatmap_general(stems.pp, function(form)
+			-- Remove any # indicating that an accent will be dropped; it will be dropped in any case by make_plural().
+			form = form:gsub("#$", "")
+			return com.make_plural(form, "m")
+		end), function(form)
+			return combine_stem_ending(base, form, "", "is full word")
+		end))
+		addit("pp_fp", stems.pp, "es")
 	end
 end
 
@@ -2392,10 +2444,6 @@ local function detect_indicator_spec(base)
 	elseif suffix == "ur" then
 		stem = stem .. "u"
 	end
-	if suffix == "er" or suffix == "ir" then
-		-- Convert to back variant if necessary (e.g. [[torcer]] -> 'torç', [[fugir]] -> 'fuj').
-		stem = com.front_to_back(stem)
-	end
 	-- Remove accents from e.g. [[parèixer]], [[córrer]].
 	stem = com.remove_accents(stem)
 	base.conj_vowel = (suffix == "re" or suffix == "ur") and "e" or suffix:gsub("r$", "")
@@ -2631,105 +2679,22 @@ local basic_table = [=[
 ! style="border: 1px solid #999999; background:#D0D0D0" colspan="3" | Singular
 ! style="border: 1px solid #999999; background:#D0D0D0" colspan="3" | Plural
 |-
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | First-person<br />(<<eu>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Second-person<br />(<<ti>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Third-person<br />(<<el>> / <<ela>> / <<vostede|Vde.>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | First-person<br />(<<nós>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Second-person<br />(<<vós>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Third-person<br />(<<eles>> / <<elas>> / <<vostedes|Vdes.>>)
+! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | First-person<br />(<<jo>>)
+! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Second-person<br />(<<tu>>)
+! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Third-person<br />(<<ell>> / <<ella>> / <<vostè>>)
+! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | First-person<br />(<<nosaltres>> / <<nós>>)
+! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Second-person<br />(<<vosaltres>> / <<vós>>)
+! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Third-person<br />(<<ells>> / <<elles>> / <<vostès>>)
 |-
-! style="border: 1px solid #999999; background:#e2c0c0" colspan="7" | ''<span title="infinitivo">Infinitive</span>''
+! style="border: 1px solid #999999; background:#e2c0c0" colspan="7" | ''<span title="Infinitiu">Infinitive</span>''
 |-
-! style="border: 1px solid #999999; background:#f3d1d1" | '''<span title="infinitivo impersoal">Impersonal</span>'''
-| style="border: 1px solid #999999; vertical-align: top;" colspan="6" | {infinitive}
+| style="border: 1px solid #999999; vertical-align: top;" colspan="7" | {infinitive}
 |-
-! style="border: 1px solid #999999; background:#dddda0" colspan="7" | ''<span title="xerundio">Gerund</span>''
+! style="border: 1px solid #999999; background:#dddda0" colspan="7" | ''<span title="Gerundi">Gerund</span>''
 |-
-| style="border: 1px solid #999999; background:#eeeeb1" |
-| style="border: 1px solid #999999; vertical-align: top;" colspan="6" | {gerund}
-|-{pp_clause}
-! style="border: 1px solid #999999; background:#d0dff4" colspan="7" | ''<span title="indicativo">Indicative</span>''
+| style="border: 1px solid #999999; vertical-align: top;" colspan="7" | {gerund}
 |-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="presente">Present</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_3p}
-|-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="pretérito imperfecto">Imperfect</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_3p}
-|-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="pretérito perfecto">Preterite</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_3p}
-|-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="futuro do presente">Future</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_3p}
-|-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="condicional">Conditional</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_3p}
-|-
-! style="border: 1px solid #999999; background:#d0f4d0" colspan="7" | ''<span title="subxuntivo">Subjunctive</span>''
-|-
-! style="border: 1px solid #999999; background:#b0d4b0" | <span title=" presente do subxuntivo">Present</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_3p}
-|-
-! style="border: 1px solid #999999; background:#b0d4b0" | <span title="pretérito imperfecto do subxuntivo">Imperfect</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_3p}
-|-
-! style="border: 1px solid #999999; background:#f4e4d0" colspan="7" | ''<span title="imperativo">Imperative</span>''
-|-
-! style="border: 1px solid #999999; background:#d4c4b0" | <span title="imperativo afirmativo">Affirmative</span>
-| style="border: 1px solid #999999; vertical-align: top;" rowspan="2" |
-| style="border: 1px solid #999999; vertical-align: top;" | {imp_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {imp_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {imp_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {imp_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {imp_3p}
-|-
-! style="border: 1px solid #999999; background:#d4c4b0" | <span title="imperativo negativo">Negative</span> (<<non>>)
-| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_3p}
-|{\cl}{notes_clause}</div></div>
-]=]
-
-local single_pp_template = [=[
-
-! style="border: 1px solid #999999; background:#e2e4c0" colspan="7" | ''<span title="participio pasado">Past participle</span>''
+! style="border: 1px solid #999999; background:#e2e4c0" colspan="7" | ''<span title="Participi passat">Past participle</span>''
 |-
 ! style="border: 1px solid #999999; background:#f3f5d1" | Masculine
 | style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_ms}
@@ -2738,7 +2703,85 @@ local single_pp_template = [=[
 ! style="border: 1px solid #999999; background:#f3f5d1" | Feminine
 | style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fs}
 | style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fp}
-|-]=]
+|-
+! style="border: 1px solid #999999; background:#d0dff4" colspan="7" | ''<span title="Indicatiu">Indicative</span>''
+|-
+! style="border: 1px solid #999999; background:#b0bfd4" | <span title="Present">Present</span>
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_1s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_3p}
+|-
+! style="border: 1px solid #999999; background:#b0bfd4" | <span title="Imperfet">Imperfect</span>
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_1s}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_3p}
+|-
+! style="border: 1px solid #999999; background:#b0bfd4" | <span title="Passat">Preterite</span>
+| style="border: 1px solid #999999; vertical-align: top;" | {pret_1s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pret_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pret_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pret_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {pret_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {pret_3p}
+|-
+! style="border: 1px solid #999999; background:#b0bfd4" | <span title="Futur">Future</span>
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_1s}
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {fut_3p}
+|-
+! style="border: 1px solid #999999; background:#b0bfd4" | <span title="Condicional">Conditional</span>
+| style="border: 1px solid #999999; vertical-align: top;" | {cond_1s}
+| style="border: 1px solid #999999; vertical-align: top;" | {cond_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {cond_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {cond_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {cond_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {cond_3p}
+|-
+! style="border: 1px solid #999999; background:#d0f4d0" colspan="7" | ''<span title="Subjuntiu">Subjunctive</span>''
+|-
+! style="border: 1px solid #999999; background:#b0d4b0" | <span title="Present">Present</span>
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_1s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_3p}
+|-
+! style="border: 1px solid #999999; background:#b0d4b0" | <span title="Imperfet">Imperfect</span>
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_1s}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_3p}
+|-
+! style="border: 1px solid #999999; background:#f4e4d0" colspan="7" | ''<span title="Imperatiu">Imperative</span>''
+|-
+! style="border: 1px solid #999999; background:#d4c4b0" | <span title="Afirmatiu">Affirmative</span>
+| style="border: 1px solid #999999; vertical-align: top;" rowspan="2" |
+| style="border: 1px solid #999999; vertical-align: top;" | {imp_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {imp_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {imp_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {imp_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {imp_3p}
+|-
+! style="border: 1px solid #999999; background:#d4c4b0" | <span title="Negatiu">Negative</span> (<<non>>)
+| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_2s}
+| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_3s}
+| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_1p}
+| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_2p}
+| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_3p}
+|{\cl}{notes_clause}</div></div>
+]=]
 
 local function make_table(alternant_multiword_spec)
 	local forms = alternant_multiword_spec.forms
@@ -2752,8 +2795,6 @@ local function make_table(alternant_multiword_spec)
 	-- Format the table.
 	forms.footnote = alternant_multiword_spec.footnote_basic
 	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
-	local pp_template = single_pp_template
-	forms.pp_clause = m_string_utilities.format(pp_template, forms)
 	local table_with_pronouns = rsub(basic_table, "<<([^<>|]-)|([^<>|]-)>>", link_term)
 	local table_with_pronouns = rsub(table_with_pronouns, "<<(.-)>>", link_term)
 	return m_string_utilities.format(table_with_pronouns, forms)
@@ -2771,7 +2812,6 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 		["noautolinkverb"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing/documentation pages
 		["json"] = {type = "boolean"}, -- for bot use
-		["reinteg"] = {}, -- ignored here; see [[Module:ca-headword]]
 	}
 
 	if from_headword then
