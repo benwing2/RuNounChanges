@@ -376,7 +376,6 @@ end
 for _, overridable_stem in ipairs {
 	"pres_unstressed",
 	"pres_stressed",
-	"pres1_and_sub",
 	-- Don't include pres1; use pres_1s if you need to override just that form
 	"impf",
 	"full_impf",
@@ -477,17 +476,10 @@ The following stems are recognized:
 -- pres_stressed: The present indicative stressed stem (1s, 2s, 3s, 3p). Also controls the imperative 2s.
      Default is empty if indicator `no_pres_stressed`, else a vowel alternation if such an indicator is given
 	 (e.g. `ue`, `ì`), else the infinitive stem.
--- pres1_and_sub: Overriding stem for 1s present indicative and the entire subjunctive. Only set by irregular verbs
-     and by the indicators `no_pres_stressed` (e.g. [[precaver]]) and `no_pres1_and_sub` (since verbs of this sort,
-	 e.g. [[puir]], are missing the entire subjunctive as well as the 1s present indicative). Used by many irregular
-	 verbs, e.g. [[caber]], verbs in '-air', [[dizer]], [[ter]], [[valer]], etc. Some verbs set this and then supply an
-	 override for the pres_1s if it's irregular, e.g. [[saber]], with irregular subjunctive stem "saib-" and special
-	 1s present indicative "sei".
 -- pres1: Special stem for 1s present indicative. Normally, do not set this explicitly. If you need to specify an
      irregular 1s present indicative, use the form override pres_1s= to specify the entire form. Defaults to
-	 pres1_and_sub if given, else pres_stressed.
--- pres_sub_unstressed: The present subjunctive unstressed stem (1p, 2p). Defaults to pres1_and_sub if given, else the
-     infinitive stem.
+	 pres_stressed.
+-- pres_sub_unstressed: The present subjunctive unstressed stem (1p, 2p). Defaults to the infinitive stem.
 -- pres_sub_stressed: The present subjunctive stressed stem (1s, 2s, 3s, 1p). Defaults to pres1.
 -- sub_conj: Determines the set of endings used in the subjunctive. Should be one of "ar" or "er".
 -- impf: The imperfect stem (not including the -av-/-i- stem suffix, which is determined by the conjugation). Defaults
@@ -528,7 +520,7 @@ local built_in_conjugations = {
 		match = "^aguar",
 		forms = {
 			pres_stressed = "agú",
-			pres_stressed = "aguï",
+			pres_sub_stressed = "aguï",
 			irreg = true,
 		}
 	},
@@ -598,10 +590,8 @@ local built_in_conjugations = {
 		-- [[caldre]], [[doldre]], [[condoldre's]], [[oldre]]
 		match = match_against_verbs("ldre", {"ca", "do", "^o"}),
 		forms = {
-			stem = "l",
 			-- g_infix implies irreg = true
-			-- g_infix sets pres1_and_sub to end in -g; combine_stem_ending() changes final -g to -c
-			-- g_infix also adds -g to pret and pp stems
+			-- g_infix adds -g to pres_1s, sub, pret and pp stems; combine_stem_ending() changes final -g to -c
 			g_infix = "+",
 		}
 	},
@@ -609,7 +599,6 @@ local built_in_conjugations = {
 		-- [[coldre]], [[moldre]], [[absoldre]], [[dissoldre]], [[resoldre]], [[toldre]]
 		match = "oldre", -- this must follow [[doldre]]/[[oldre]] rule above
 		forms = {
-			stem = "ol",
 			-- see above for g_infix effects
 			g_infix = "+",
 			pp = "olt",
@@ -622,7 +611,6 @@ local built_in_conjugations = {
 		-- [[romandre]]
 		match = "romandre",
 		forms = {
-			stem = "roman",
 			-- see above for g_infix effects
 			g_infix = "+",
 			pp = "romàs#",
@@ -633,7 +621,7 @@ local built_in_conjugations = {
 		-- [[pretendre]]
 		match = match_against_verbs("endre", {"enc", "t"}),
 		forms = {
-			stem = "én#", -- remove final accent without prefix with vowel; also removed when adding a suffix
+			pres_3s = "én#", -- remove final accent without prefix with vowel; also removed when adding a suffix
 			-- see above for g_infix effects
 			g_infix = "+",
 			pp = "ès#", -- see above for effect of final #
@@ -643,7 +631,7 @@ local built_in_conjugations = {
 		-- [[vendre]], [[malvendre]], [[revendre]]
 		match = "vendre",
 		forms = {
-			stem = "vèn#", -- see above for effect of final #
+			pres_3s = "vèn#", -- see above for effect of final #
 			-- see above for g_infix effects
 			g_infix = "+",
 			pp = "venud", -- g_infix would normally make it vengud
@@ -664,7 +652,6 @@ local built_in_conjugations = {
 		-- [[enfondre]]
 		match = "enfondre",
 		forms = {
-			stem = "enfon",
 			-- see above for g_infix effects
 			g_infix = "+",
 			pp = "enfús#",
@@ -674,7 +661,6 @@ local built_in_conjugations = {
 		-- [[pondre]], [[compondre]], [[correspondre]], [[descompondre]], [[despondre's]], [[respondre]]
 		match = "pondre",
 		forms = {
-			stem = "pon",
 			-- see above for g_infix effects
 			g_infix = "+",
 			pp = "post",
@@ -684,18 +670,9 @@ local built_in_conjugations = {
 		-- [[fondre]], [[confondre]], [[difondre]], [[infondre]], [[refondre]], [[tondre]]
 		match = "ondre", -- this must follow previous -ondre rules above
 		forms = {
-			stem = "on",
 			-- see above for g_infix effects
 			g_infix = "+",
 			pp = "ós#", -- see above for effect of final #
-		}
-	},
-	{
-		-- [[cerndre]]
-		match = "cerndre",
-		forms = {
-			stem = "cern",
-			-- otherwise regular
 		}
 	},
 
@@ -756,11 +733,10 @@ local built_in_conjugations = {
 			-- stem ending in -ai and imperfect in -ia causes special stressed imperfect logic to take effect; we get
 			-- impf1s queia, impf1p quèiem (preceding vowel changed to è and attached to initial consonant using
 			-- combine_stem_ending(), which changes c- to qu-)
-			stem = "cai", -- i dropped by g_infix before u
+			stem = "caie", -- i dropped by g_infix before u
 			-- g_infix implies irreg = true
-			-- g_infix sets pres1_and_sub to end in -g; combine_stem_ending() changes final -g to -c
-			-- g_infix also adds -g to pret and pp stems
-			-- g_infix sets pres3s to end in -u, removing a preceding -i or -v
+			-- g_infix adds -g to pres_1s, sub, pret and pp stems; combine_stem_ending() changes final -g to -c
+			-- g_infix sets pres_stressed to end in -u, removing a preceding -i or -v
 			g_infix = "+",
 		}
 	},
@@ -768,7 +744,7 @@ local built_in_conjugations = {
 		-- [[plaure]], [[complaure]]
 		match = "plaure",
 		forms = {
-			stem = "a", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
+			stem = "ae", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
 			g_infix = "+",
 		}
 	},
@@ -776,7 +752,7 @@ local built_in_conjugations = {
 		-- [[raure]]
 		match = "^raure",
 		forms = {
-			stem = "a", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
+			stem = "ae", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
 			g_infix = "+",
 			pp = {"ragud", "ras"},
 		}
@@ -788,7 +764,7 @@ local built_in_conjugations = {
 		-- [[beure]], [[embeure]], [[deure]], [[lleure]]
 		match = match_against_verbs("eure", {"b", "d", "ll"}),
 		forms = {
-			stem = "ev", -- v dropped by g_infix before g and u
+			stem = "eve", -- v dropped by g_infix before g and u
 			g_infix = "+",
 		}
 	},
@@ -796,8 +772,7 @@ local built_in_conjugations = {
 		-- [[creure]], [[seure]], [[asseure]]
 		match = match_against_verbs("eure", {"cr", "s"}),
 		forms = {
-			stem = "e", -- i dropped by g_infix before u
-			pres1p = "ei", -- affects pres_1p, pres_2p, gerund, imperfect (see [[caure]] above)
+			stem = "eie", -- i dropped by g_infix before u; affects pres_1p, pres_2p, gerund, imperfect (see [[caure]])
 			g_infix = "+",
 		}
 	},
@@ -806,11 +781,12 @@ local built_in_conjugations = {
 		match = match_against_verbs("eure", {"j"}),
 		name = "jeure",
 		forms = {
+			-- FIXME
 			fut = "au", -- affects future and cond
-			stressed_stem = "e", -- affects stressed forms, which get g added by g_infix by added except for pres3s,
-								 -- which gets u added (controls pres_3s, pres_2s)
+			stressed_stem = "e", -- affects stressed forms, which get g added by g_infix by added except for
+								 -- pres_stressed, which gets u added (controls pres_3s, pres_2s, pres_3p)
 			unstressed_stem = "a", -- affects unstressed_stem, which get g added by g_infix
-			pres1p = "ai", -- affects pres_1p, pres_2p, gerund, imperfect (see [[caure]] above)
+			pres_stressed = "ai", -- affects pres_1p, pres_2p, gerund, imperfect (see [[caure]] above)
 			g_infix = "+",
 		}
 	},
@@ -827,9 +803,10 @@ local built_in_conjugations = {
 		-- [[veure]], [[entreveure]], [[preveure]], [[reveure]]
 		match = "veure",
 		forms = {
-			stem = "vei",
+			stem = "veie",
 			-- impf1s veia, impf1p vèiem (preceding vowel changed to è)
-			pres1_and_sub = "vej", -- changed automatically to veig in pres1s, veg- before front vowels in sub
+			pres_1s = "veig",
+			sub = "vej", -- changed to veg- before front vowels in sub
 			pret = {"vei", "v"},
 			pret_1s = "viu",
 			pret_3s = {"veié", "veu"},
@@ -846,7 +823,7 @@ local built_in_conjugations = {
 		-- [[riure]], [[somriure]]
 		match = "riure",
 		forms = {
-			stem = "ri",
+			stem = "rie",
 			-- impf1s reia, impf1p rèiem (preceding vowel changed to è)
 			g_infix = "+",
 		}
@@ -856,8 +833,7 @@ local built_in_conjugations = {
 		-- [[subscriure]], [[transcriure]]
 		match = "scriure",
 		forms = {
-			stem = "scriv", -- v dropped by g_infix before g and u
-			pres_unstressed = "scrivi", -- pres_1p/pres_2p have -ir endings
+			stem = "scrivi", -- v dropped by g_infix before g and u; pres_1p/pres_2p have -ir endings
 			g_infix = "+",
 			pret = {"scriví", "scrigué"},
 			pp = "scrit",
@@ -867,8 +843,7 @@ local built_in_conjugations = {
 		-- [[viure]], [[conviure]], [[desviure's]], [[sobreviure]]
 		match = "viure",
 		forms = {
-			stem = "viv", -- v dropped by g_infix before g and u
-			pres_unstressed = "vivi", -- pres_1p/pres_2p have -ir endings
+			stem = "vivi", -- v dropped by g_infix before g and u; pres_1p/pres_2p have -ir endings
 			g_infix = "visc", -- applies to pres1s, sub, pret, pp
 		}
 	},
@@ -879,7 +854,7 @@ local built_in_conjugations = {
 		-- [[cloure]], [[concloure]], [[descloure]], [[encloure]], [[excloure]], [[incloure]], [[recloure]]
 		match = "cloure",
 		forms = {
-			stem = "clo", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
+			stem = "cloe", -- ï in impf1s cloïa gets generated automatically by combine_stem_ending()
 			g_infix = "+",
 			pp = "clòs#", -- remove final accent without prefix with vowel; also removed when adding a suffix
 		}
@@ -888,7 +863,7 @@ local built_in_conjugations = {
 		-- [[coure]]
 		match = "coure",
 		forms = {
-			stem = "co", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
+			stem = "coe", -- ï in impf1s coïa gets generated automatically by combine_stem_ending()
 			g_infix = "+",
 			pp = {"cuit", "cogud"},
 		}
@@ -897,7 +872,7 @@ local built_in_conjugations = {
 		-- [[moure]], [[promoure]], [[remoure]], [[somoure]], [[ploure]]
 		match = match_against_verbs("oure", {"m", "pl"}),
 		forms = {
-			stem = "ov", -- v dropped by g_infix before g and u
+			stem = "ove", -- v dropped by g_infix before g and u
 			g_infix = "+",
 		}
 	},
@@ -905,7 +880,7 @@ local built_in_conjugations = {
 		-- [[noure]]
 		match = "noure",
 		forms = {
-			stem = "no", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
+			stem = "noe", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
 			g_infix = "+",
 		}
 	},
@@ -943,12 +918,12 @@ local built_in_conjugations = {
 		-- [[néixer]]/[[nàixer]], [[renéixer]]/[[renàixer]], [[sobrenéixer]]/[[sobrenàixer]], [[péixer]]/[[pàixer]]
 		match = match_against_verbs("éixer", {"n", "p"}),
 		forms = {
-			stem = "aix",
+			stem = "aixe",
 			fut = "aixer",
 			pres_stressed = {"eix", "aix"},
 			pres_1s = "eixo",
-			pres_sub_stressed = "eixi",
 			pret = {"aixé", "asqué"},
+			pres_sub_stressed = "eixi",
 			pres_sub_unstressed = {"aixe", "asque"},
 			pp = "ascud",
 			irreg = true,
@@ -1001,7 +976,8 @@ local built_in_conjugations = {
 		match = "poder",
 		forms = {
 			fut = "podr",
-			pres1_and_sub = "pug", -- FIXME: verify this works
+			pres_1s = "puc",
+			sub = "pug",
 			g_infix = "pog",
 			imp_2s = "pugues",
 			imp_2p = "pugueu",
@@ -1013,8 +989,8 @@ local built_in_conjugations = {
 		match = "voler",
 		forms = {
 			fut = "voldr",
-			pres1_and_sub = "vulg", -- FIXME: verify this works
 			pres_1s = "vull",
+			sub = "vulg",
 			g_infix = "+",
 			imp_2s = "vulgues",
 			imp_2p = "vulgueu",
@@ -1025,7 +1001,7 @@ local built_in_conjugations = {
 		-- [[escórrer]], [[incórrer]], [[ocórrer]], [[recórrer]], [[socórrer]], [[transcórrer]]
 		match = "córrer",
 		forms = {
-			pres3s = "corre",
+			pres_stressed = "corre",
 			pret = "corregué",
 			pres_sub_unstressed = {"corre", "corregue"},
 			pp = "corregut",
@@ -1194,9 +1170,10 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- [[relluir]] "to shine", [[traslluir-se]] "to be translucent"; either inchoative or non-inchoative, not
-		-- distinguished by meaning
-		match = match_against_verbs("lluir", {"^re", "tras"}),
+		-- [[entrelluir]] "to be half-seen", [[relluir]] "to shine", [[traslluir-se]] "to be translucent"; either
+		-- inchoative or non-inchoative, not distinguished by meaning; note, [[deslluir]] and [[enlluir]] are regular
+		-- inchoative verbs.
+		match = match_against_verbs("lluir", {"entre", "^re", "tras"}),
 		forms = {
 			eix_infix = {"+", "-"},
 			pres3s = {"llueix", "lluu", "llú"}, -- generates pres_2s, imp_2s; note, pres_2s will end in -es due to
@@ -1219,7 +1196,7 @@ local built_in_conjugations = {
 		match = match_against_verbs("obrir", {"^", "entre", "^re"}),
 		forms = {
 			eix_infix = "-",
-			pres3s = "obre", -- generates pres_2s, imp_2s
+			pres_stressed = "obre",
 			pp = "obert",
 			irreg = true,
 		}
@@ -1241,7 +1218,7 @@ local built_in_conjugations = {
 		match = match_against_verbs("omplir", {"^", "des", "^re"}),
 		forms = {
 			eix_infix = "-",
-			pres3s = "omple", -- generates pres_2s, imp_2s
+			pres_stressed = "omple",
 			pp = {"omplert", "omplid"},
 			irreg = true,
 		}
@@ -1300,7 +1277,6 @@ local built_in_conjugations = {
 			imp_2s = {"té", "ten", "tingues"},
 			imp_2p = {"teniu", "tingueu"},
 			g_infix = "ting",
-			eix_infix = "-",
 		}
 	},
 	{
@@ -1313,7 +1289,6 @@ local built_in_conjugations = {
 			imp_2s = {"tén", "tingues"},
 			imp_2p = {"teniu", "tingueu"},
 			g_infix = "ting",
-			eix_infix = "-",
 		}
 	},
 	{
@@ -1342,7 +1317,6 @@ local built_in_conjugations = {
 			pres_3s = "ve",
 			imp_2s = "vine",
 			g_infix = "ving",
-			eix_infix = "-",
 		}
 	},
 	{
@@ -1357,7 +1331,6 @@ local built_in_conjugations = {
 			pres_3s = "vé",
 			imp_2s = "vén",
 			g_infix = "ving",
-			eix_infix = "-",
 		}
 	},
 	{
@@ -1397,8 +1370,7 @@ local built_in_conjugations = {
 		-- like an -er/-re verb
 		match = match_against_verbs("dir", {"^", "^a", "des", "entre", "inter", "mal", "pre", "^re"}),
 		forms = {
-			stem = "di",
-			conj = "e",
+			stem = "die",
 			g_infix = "+",
 			imp_2s = "digues",
 			imp_2p = "digueu",
@@ -1409,10 +1381,9 @@ local built_in_conjugations = {
 		-- [[dur]], [[endur-se]]; behaves like an -er/-re verb
 		match = "dur",
 		forms = {
-			stem = "du",
-			conj = "e",
+			stem = "due",
 			g_infix = "+",
-			pres3s = {"duu", "du"},
+			pres3s = {"duu", "du"}, -- generates pres_2s, imp_2s
 			impf1 = "dui",
 			impf2 = "dúi",
 			pp = "dut",
@@ -1599,22 +1570,6 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, is_full_wor
 		stem = com.back_to_front(stem)
 	end
 
-	if base.frontback == "front" and not is_front then
-		stem = stem:gsub("c$", "ç") -- torcer -> torço
-		stem = stem:gsub("qu$", "c") -- ?
-		stem = stem:gsub("g$", "j") -- fugir -> fujo
-		stem = stem:gsub("gu$", "g") -- ?
-		stem = stem:gsub("gü$", "gu") -- ?
-		stem = stem:gsub("qü$", "qu") -- ?
-	elseif base.frontback == "back" and is_front then
-		stem = stem:gsub("qu$", "qü") -- adequar -> adeqües
-		stem = stem:gsub("gu$", "gü") -- enaiguar -> enaigües
-		stem = stem:gsub("g$", "gu") -- pegar -> pegues
-		stem = stem:gsub("j$", "g") -- arranjar -> arranges
-		stem = stem:gsub("c$", "qu") -- marcar -> marques
-		stem = stem:gsub("ç$", "c") -- abraçar -> abraces
-	end
-
 	local retval = add_stem_ending(stem, ending)
 	if retval:find("#$") then -- remove final accent if no prefix
 		retval = retval:gsub("#$", "")
@@ -1647,7 +1602,7 @@ local function add3(base, slot, stems, endings, footnotes, allow_overrides)
 	end
 
 	local function do_combine_stem_ending(stem, ending)
-		return combine_stem_ending(base, slot, base.prefix, stem, ending)
+		return combine_stem_ending(base, slot, base.prefix, stem, ending, "is full word")
 	end
 
 	iut.add_forms(base.forms, slot, stems, endings, do_combine_stem_ending, nil, nil, footnotes)
@@ -1686,90 +1641,84 @@ local function map_general(stemforms, fn)
 end
 
 
+local function flatmap_general(stemforms, fn)
+	return iut.flatmap_forms(iut.convert_to_general_list_form(stemforms), fn)
+end
+
+
 local function construct_stems(base)
 	local stems = {}
 	local bst = base.stems
-	local conj = bst.conj or base.conj
 
 	local function combine(slot, stem, ending)
 		return combine_stem_ending(base, slot, base.prefix, stem, ending, false, "dont include prefix")
 	end
 
-	local stressed_stem = bst.stressed_stem or bst.stem or bst.inf_stem or base.inf_stem
-	local unstressed_stem = bst.unstressed_stem or bst.stem or bst.inf_stem or base.inf_stem
-
-	local function add_g(stemforms)
-		return map_general(stemforms, function(form)
-			return add_stem_ending(process_stem(form, function(f) return (f:gsub("v$", "")) end), "g")
+	local stem = bst.stem or base.stem
+	local eix_infix_stem
+	if base.conj_vowel == "i" then
+		local eix_infix = bst.eix_infix or bst.g_infix and "-" or "+"
+		eix_infix_stem = flatmap_general(eix_infix, function(form)
+			if form == "+" then
+				return stem:gsub("[aei]$", "") .. "eix"
+			elseif form == "-" then
+				return stem
+			else
+				return form
+			end
 		end)
 	end
 
-	local stressed_g_infix = bst.stressed_g_infix or bst.g_infix
-	if stressed_g_infix == true then
-		stressed_g_infix = add_g(stressed_stem)
+	local stressed_stem = bst.stressed_stem or eix_infix_stem or stem
+	local unstressed_stem = bst.unstressed_stem or stem
+
+	-- Add the 'g' that is characteristic of g-infix verbs. We remove a stem-final v, e.g. [[beure]] with stem 'beve'
+	-- becomes 'beg'.
+	local function add_g(stemforms)
+		return map_general(stemforms, function(form)
+			form = form:gsub("[aei]$", ""):gsub("v$", "") -- remove conjugation vowel and stem-final v
+			return form .. "g"
+		end)
 	end
-	local unstressed_g_infix = bst.unstressed_g_infix or bst.g_infix
-	if unstressed_g_infix == true then
-		unstressed_g_infix = add_g(unstressed_stem)
+	-- Add the 'u' of the pres_3s that is characteristic of g-infix verbs. We remove a stem-final v and i, e.g.
+	-- [[beure]] with stem 'beve' becomes 'beu' and [[veure]] with stem 'veie' becomes 'veu'. We don't add -u after a
+	-- consonant, e.g. [[doldre]] with stem 'dole' becomes 'dol' not '#dolu'.
+	local function add_u(stemforms)
+		return map_general(stemforms, function(form)
+			form = form:gsub("[aei]$", ""):gsub("[vi]$", "") -- remove conjugation vowel and stem-final v
+			if not rfind(form, com.V .. "$") then
+				return form
+			else
+				return form .. "u"
+			end
+		end)
 	end
 
+	local stressed_g_infix, unstressed_g_infix, g_infix_pres_stressed
+	if bst.g_infix then
+		local function flatmap_g_infix(default)
+			return flatmap_general(bst.g_infix, function(form)
+				if form == "+" then
+					return default
+				else
+					return form
+				end
+			end)
+		end
 
-	local pres1p = base.pres1p or unstressed_g_infix 
+		stressed_g_infix = flatmap_g_infix(add_g(stressed_stem))
+		unstressed_g_infix = flatmap_g_infix(add_g(unstressed_stem))
+		g_infix_pres_stressed = flatmap_g_infix(add_u(stressed_stem))
+	end
 
-
-	if base.g_in
-
-		stems.impf_sub_antepenult_stressed = iut.map_forms(iut.convert_to_general_list_form(stems.impf_sub), com.add_final_accent)
-
-	if base.g_infix then
-		stems.stressed_
-
-		local g_infix = 
-	{
-		-- [[plaure]], [[complaure]], [[raure]]
-		match = match_against_verbs("aure", {"pl", "r"}),
-		forms = {
-			stem = "a", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
-			g_infix = "+",
-		}
-	},
-	{
-		-- [[beure]], [[embeure]], [[deure]], [[lleure]]
-		match = match_against_verbs("eure", {"b", "d", "ll"}),
-		forms = {
-			stem = "ev", -- v dropped by g_infix before g and u
-			g_infix = "+",
-		}
-	},
-	{
-		-- [[creure]], [[seure]], [[asseure]]
-		match = match_against_verbs("eure", {"cr", "s"}),
-		forms = {
-			stem = "e", -- i dropped by g_infix before u
-			pres1p = "ei", -- affects pres_1p, pres_2p, gerund, imperfect (see [[caure]] above)
-			g_infix = "+",
-		}
-	},
-	{
-		-- [[jeure]], [[ajeure]]
-		match = match_against_verbs("eure", {"j"}),
-		name = "jeure",
-		forms = {
-			fut = "au", -- affects future and cond
-			stressed_stem = "e", -- affects stressed forms, which get g added by g_infix by added except for pres3s,
-								 -- which gets u added (controls pres_3s, pres_2s)
-			unstressed_stem = "a", -- affects unstressed_stem, which get g added by g_infix
-			pres1p = "ai", -- affects pres_1p, pres_2p, gerund, imperfect (see [[caure]] above)
-			g_infix = "+",
-		}
-	},
-	stems.pres_unstressed = bst.pres_unstressed or unstressed_g_infix or unstressed_stem
+	stems.pres_unstressed = bst.pres_unstressed or unstressed_stem
 	stems.pres_stressed =
 		-- If no_pres_stressed given, pres_stressed stem should be empty so no forms are generated.
 		base.no_pres_stressed and {} or
 		bst.pres_stressed or
-		stressed_g_infix or
+		g_infix_pres_stressed or
 		stressed_stem
+	stems.pres1s = stressed_g_infix or map_general(stems.pres_stressed
 	stems.pres1_and_sub =
 		-- If no_pres_stressed given, the entire subjunctive is missing.
 		base.no_pres_stressed and {} or
@@ -1777,7 +1726,7 @@ local function construct_stems(base)
 		base.no_pres1_and_sub and {} or
 		bst.pres1_and_sub or
 		nil
-	stems.pres1 = bst.pres1 or stems.pres1_and_sub or stems.pres_stressed
+	stems.pres1 = stems.pres1_and_sub or stems.pres_stressed
 	stems.impf1 = bst.impf1 or map_general(stems.pres_unstressed, function(form)
 		if base.conj == "ar" then
 			return combine("impf_1s", form, "av")
@@ -1798,8 +1747,6 @@ local function construct_stems(base)
 			return combine("impf_1s", form, "í")
 		end
 	end)
-	stems.pret_base = bst.pret_base or base.inf_stem
-	stems.pret_conj = bst.pret_conj or base.conj
 	stems.pret = bst.pret or iut.map_forms(iut.convert_to_general_list_form(stems.pret_base),
 		-- use combine_stem_ending esp. so we get saíra etc.
 		function(form) return combine("pret", form, base.conj_vowel) end)
@@ -1823,46 +1770,38 @@ local function construct_stems(base)
 		end
 	end
 	stems.pp_fs = iut.map_forms(iut.convert_to_general_list_form(stems.pp_ms), masc_to_fem)
-	base.this_stems = stems
+end
+
+
+local function a_to_e(base, stems, suffix)
+	return map_general(stems, function(form)
+		if form:find("a$") then
+			form = rsub(form, "a$", "e")
+		end
+		return combine_stem_ending(base, slot, base.prefix, form, suffix, "is full word")
+	end)
 end
 
 
 local function add_present_indic(base)
-	local stems = base.this_stems
+	local stems = base.stems
 	local function addit(slot, stems, ending)
 		add3(base, "pres_" .. slot, stems, ending)
 	end
-	local s2, s3, p1, p2, p3
-	if base.conj == "ar" then
-		s2, s3, p1, p2, p3 = "es", "a", "em", "eu", "en"
-	else
-		s2, s3, p1, p2, p3 = "es", "e", "imos", "ides", "en"
-	else
-		error("Internal error: Unrecognized conjugation " .. base.conj)
-	end
 
-	addit("1s", stems.pres1, "o")
-	addit("2s", stems.pres_stressed, s2)
-	addit("3s", stems.pres_stressed, s3)
-	addit("1p", stems.pres_unstressed, p1)
-	addit("2p", stems.pres_unstressed, p2)
-	addit("3p", stems.pres_stressed, p3)
+	addit("1s", stems.pres1s, "")
+	insert_forms(base, "pres_2s", a_to_e(base, stems.pres3s, "s"))
+	addit("3s", stems.pres3s, "")
+	addit("1p", stems.pres_unstressed, "m")
+	addit("2p", stems.pres_unstressed, "u")
+	insert_forms(base, "pres_3p", a_to_e(base, stems.pres_stressed, "n"))
 end
 
-
-local function a_to_e(stems, suffix)
-	return map_general(stems.pres_sub_stressed, function(form)
-		if form:find("a$") then
-			form = rsub(form, "a$", "e")
-		end
-		return form .. suffix
-	end)
-end
 
 local function add_present_subj(base)
-	local stems = base.this_stems
-	local function add_tense(stem, s1, s2, s3, p1, p2, p3)
-		add_single_stem_tense(base, "pres_sub", stem, s1, s2, s3, p1, p2, p3)
+	local stems = base.stems
+	local function addit(slot, stems, ending)
+		add3(base, "pres_sub_" .. slot, stems, ending)
 	end
 
 	-- Regular -ar verb: [[amar]]: ami, amis, ami, amem, ameu, amin
@@ -1874,15 +1813,17 @@ local function add_present_subj(base)
 	-- * [[collir]]: culli, cullis, culli, collim, colliu, cullin (cull- in all stressed forms)
 	-- * [[cabre]]: càpiga, càpigues, càpiga, capiguem, capigueu, càpiguen (also different endings)
 
-	add_tense(stems.pres_sub_stressed, "", nil, "", nil, nil, nil)
-	insert_forms(base, "pres_sub_2s", a_to_e(stems.pres_sub_stressed, "s"))
-	insert_forms(base, "pres_sub_3p", a_to_e(stems.pres_sub_stressed, "n"))
-	add_tense(stems.pres_sub_unstressed, nil, nil, nil, "m", "u", nil)
+	addit("1s", stems.pres_sub_stressed, "")
+	insert_forms(base, "pres_sub_2s", a_to_e(base, stems.pres_sub_stressed, "s"))
+	addit("3s", stems.pres_sub_stressed, "")
+	addit("1p", stems.pres_unstressed, "m")
+	addit("2p", stems.pres_unstressed, "u")
+	insert_forms(base, "pres_sub_3p", a_to_e(base, stems.pres_sub_stressed, "n"))
 end
 
 
 local function add_finite_non_present(base)
-	local stems = base.this_stems
+	local stems = base.stems
 	local function add_tense(slot, stem, s1, s2, s3, p1, p2, p3)
 		add_single_stem_tense(base, slot, stem, s1, s2, s3, p1, p2, p3)
 	end
@@ -1904,7 +1845,7 @@ end
 
 
 local function add_non_finite_forms(base)
-	local stems = base.this_stems
+	local stems = base.stems
 	local function addit(slot, stems, ending, footnotes)
 		add3(base, slot, stems, ending, footnotes)
 	end
@@ -2151,11 +2092,9 @@ end
 
 
 local function conjugate_verb(base)
-	for _, vowel_alt in ipairs(base.vowel_alt_stems) do
-		construct_stems(base, vowel_alt)
-		add_present_indic(base)
-		add_present_subj(base)
-	end
+	construct_stems(base)
+	add_present_indic(base)
+	add_present_subj(base)
 	add_finite_non_present(base)
 	add_non_finite_forms(base)
 	-- do non-reflexive non-imperative slot overrides
@@ -2272,27 +2211,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 					{prefix = first_element, base = base, parse_err = parse_err, fetch_footnotes = fetch_footnotes})
 			end
 		else
-			local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*,%s*")
-			for j = 1, #comma_separated_groups do
-				local alt = comma_separated_groups[j][1]
-				if not vowel_alternants[alt] then
-					if #comma_separated_groups == 1 then
-						parse_err("Unrecognized spec or vowel alternant '" .. alt .. "'")
-					else
-						parse_err("Unrecognized vowel alternant '" .. alt .. "'")
-					end
-				end
-				if base.vowel_alt then
-					for _, existing_alt in ipairs(base.vowel_alt) do
-						if existing_alt.form == alt then
-							parse_err("Vowel alternant '" .. alt .. "' specified twice")
-						end
-					end
-				else
-					base.vowel_alt = {}
-				end
-				table.insert(base.vowel_alt, {form = alt, footnotes = fetch_footnotes(comma_separated_groups[j])})
-			end
+			parse_err("Unrecognized spec '" .. first_element .. "'")
 		end
 	end
 
@@ -2301,7 +2220,7 @@ end
 
 
 -- Reconstruct the overall verb spec from the output of iut.parse_inflected_text(), so we can use it in
--- [[Module:accel/pt]].
+-- [[Module:accel/ca]].
 function export.reconstruct_verb_spec(alternant_multiword_spec)
 	local parts = {}
 
@@ -2457,35 +2376,34 @@ local function detect_indicator_spec(base)
 
 	base.prefix = base.prefix or ""
 	base.non_prefixed_verb = base.non_prefixed_verb or base.verb
-	local inf_stem, suffix = rmatch(base.non_prefixed_verb, "^(.*)([aeiíoó]r)$")
+	local inf_stem, suffix = rmatch(base.non_prefixed_verb, "^(.*)(re)$")
+	if not inf_stem then
+		inf_stem, suffix = rmatch(base.non_prefixed_verb, "^(.*)([aeiu]r)$")
+	end
 	if not inf_stem then
 		error("Unrecognized infinitive: " .. base.verb)
 	end
-	base.inf_stem = inf_stem
-	suffix = suffix == "ór" and "or" or suffix == "ír" and "ir" or suffix
-	base.conj = suffix
-	base.conj_vowel = suffix == "ar" and "a" or suffix == "ir" and "i" or "e"
-	base.frontback = suffix == "ar" and "back" or "front"
-
-	if base.stems.vowel_alt then -- built-in verb with specified vowel alternation
-		if base.vowel_alt then
-			error(base.verb .. " is a recognized built-in verb, and should not have vowel alternations specified with it")
-		end
-		base.vowel_alt = iut.convert_to_general_list_form(base.stems.vowel_alt)
+	-- Save full infinitive stem for use in future and conditional.
+	base.inf_stem = (inf_stem .. suffix):gsub("e$", "")
+	local stem = inf_stem
+	if suffix == "re" then
+		-- verbs in -ldre, -ndre have stem without the d
+		stem = stem:gsub("([ln])d$", "%1")
+	elseif suffix == "ur" then
+		stem = stem .. "u"
 	end
+	if suffix == "er" or suffix == "ir" then
+		-- Convert to back variant if necessary (e.g. [[torcer]] -> 'torç', [[fugir]] -> 'fuj').
+		stem = com.front_to_back(stem)
+	end
+	-- Remove accents from e.g. [[parèixer]], [[córrer]].
+	stem = com.remove_accents(stem)
+	base.conj_vowel = (suffix == "re" or suffix == "ur") and "e" or suffix:gsub("r$", "")
+	base.stem = stem .. conj_vowel
+
 	-- Propagate built-in-verb indicator flags to `base` and combine with user-specified flags.
 	for indicator_flag, _ in pairs(indicator_flags) do
 		base[indicator_flag] = base[indicator_flag] or base.stems[indicator_flag]
-	end
-
-	-- Convert vowel alternation indicators into stems.
-	local vowel_alt = base.vowel_alt or {{form = "+"}}
-	base.vowel_alt_stems = apply_vowel_alternations(base.inf_stem, vowel_alt)
-	for _, vowel_alt_stems in ipairs(base.vowel_alt_stems) do
-		if vowel_alt_stems.err then
-			error("To use '" .. vowel_alt_stems.altobj.form .. "', present stem '" .. base.prefix .. base.inf_stem .. "' " ..
-				vowel_alt_stems.err)
-		end
 	end
 end
 
@@ -2504,7 +2422,6 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 
 	add_slots(alternant_multiword_spec)
 
-	alternant_multiword_spec.vowel_alt = {}
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		detect_indicator_spec(base)
 		-- User-specified indicator flags. Do these after calling detect_indicator_spec() because the latter may set these
@@ -2512,13 +2429,6 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 		for prop, _ in pairs(indicator_flags) do
 			if base[prop] then
 				alternant_multiword_spec[prop] = true
-			end
-		end
-		-- Vowel alternants. Do these after calling detect_indicator_spec() because the latter sets base.vowel_alt for
-		-- built-in verbs.
-		if base.vowel_alt then
-			for _, altobj in ipairs(base.vowel_alt) do
-				m_table.insertIfNot(alternant_multiword_spec.vowel_alt, altobj.form)
 			end
 		end
 	end)
@@ -2599,19 +2509,6 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		insert_cat("reflexive verbs")
 	end
 
-	if not base.vowel_alt then
-		insert_ann("vowel_alt", "non-alternating")
-	else
-		for _, alt in ipairs(base.vowel_alt) do
-			if alt.form == "+" then
-				insert_ann("vowel_alt", "non-alternating")
-			else
-				insert_ann("vowel_alt", vowel_alternant_to_desc[alt.form])
-				insert_cat("verbs with " .. vowel_alternant_to_cat[alt.form])
-			end
-		end
-	end
-
 	local cons_alt = base.stems.cons_alt
 	if cons_alt == nil then
 		if base.conj == "ar" then
@@ -2658,7 +2555,6 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	alternant_multiword_spec.annotation = ann
 	ann.irreg = {}
 	ann.defective = {}
-	ann.vowel_alt = {}
 	ann.cons_alt = {}
 
 	local multiword_lemma = false
@@ -2680,10 +2576,6 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	local defective = table.concat(ann.defective, " or ")
 	if defective ~= "" and defective ~= "regular" then
 		table.insert(ann_parts, defective)
-	end
-	local vowel_alt = table.concat(ann.vowel_alt, " or ")
-	if vowel_alt ~= "" and vowel_alt ~= "non-alternating" then
-		table.insert(ann_parts, vowel_alt)
 	end
 	local cons_alt = table.concat(ann.cons_alt, " or ")
 	if cons_alt ~= "" and cons_alt ~= "non-alternating" then
