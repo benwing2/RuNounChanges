@@ -51,6 +51,8 @@ local function link_term(term, display)
 end
 
 
+local front_vowel = "eèéiíï"
+local front_vowel_c = "[" .. front_vowel .. "]"
 local V = com.V -- vowel regex class
 local C = com.C -- consonant regex class
 
@@ -97,7 +99,7 @@ cerndre		cerno	cern	cernem	cernia	cerndré		cerní		cerni		cernem		cernut,cernud
 infinitive	pres1s	pres3s	pres1p	impf1s	fut1s		pret1s		sub1s		sub1p		pp
 caler (var. of caldre)
 doler (var. of doldre)
-soler		solc	sol		solem	solia	soldré		solguí		solgui		solguem		solgut,solguda		
+soler		solc	sol		solem	solia	soldré		solguí		solgui		solguem		solgut,solguda
 valer/valdre valc	val		valem	valia	valdré		valguí		valgui		valguem		valgut,valguda
 (prevaler, equivaler)
 
@@ -517,7 +519,7 @@ local built_in_conjugations = {
 		--   pres_sub enaigüi, enaigüis, enaigüi, enaigüem, enaigüeu, enaigüin
 		match = "^aguar",
 		forms = {
-			pres_stressed = "agúa",
+			pres_stressed = "agú",
 			pres_sub_stressed = "aguï",
 			irreg = true,
 		}
@@ -814,6 +816,7 @@ local built_in_conjugations = {
 			pret = {"veié", "vé"},
 			pret_1s = "viu",
 			pret_3s = {"veié", "veu"},
+			impf_sub = "veié",
 			pp = "vist",
 			imp_2s = "veges",
 			imp_2p = {"vegeu", "veieu"},
@@ -1276,6 +1279,7 @@ local built_in_conjugations = {
 		match = "^tenir",
 		forms = {
 			fut = "tindr",
+			pres_stressed = "ten",
 			pres_3s = "té",
 			imp_2s = {"té", "ten", "tingues"},
 			imp_2p = {"teniu", "tingueu"},
@@ -1288,6 +1292,7 @@ local built_in_conjugations = {
 		match = "tenir",
 		forms = {
 			fut = "tindr",
+			pres_stressed = "ten",
 			pres_3s = "té",
 			imp_2s = {"tén", "tingues"},
 			imp_2p = {"teniu", "tingueu"},
@@ -1317,6 +1322,7 @@ local built_in_conjugations = {
 		match = "^venir",
 		forms = {
 			fut = "vindr",
+			pres_stressed = "ven",
 			pres_3s = "ve",
 			imp_2s = "vine",
 			g_infix = "ving",
@@ -1331,6 +1337,7 @@ local built_in_conjugations = {
 											  "per", "pre", "^re", "sobre", "sub"}),
 		forms = {
 			fut = "vindr",
+			pres_stressed = "ven",
 			pres_3s = "vé",
 			imp_2s = "vén",
 			g_infix = "ving",
@@ -1540,7 +1547,7 @@ local function combine_stem_ending(base, stem, ending, is_full_word, dont_includ
 
 	-- By default, stems are in their "back" (standalone) form. Before a front vowel, convert the final consonant to
 	-- its "front" form so the pronunciation doesn't change.
-	if rfind(ending, "^[eiéíï]") then
+	if rfind(ending, "^" .. front_vowel_c) then
 		-- adequar -> adeqües
 		-- enaiguar -> enaigües
 		-- pegar -> pegues
@@ -1678,9 +1685,10 @@ local function construct_stems(base)
 	-- * `stem` (ends in conjugation vowel -a/-e/-i);
 	-- * `stressed_stem` (likewise);
 	-- * `unstressed_stem` (likewise);
-	-- * `pres_unstressed` (which assumes the form of the gerund minus the -nt; note that `pres_stressed` assumes the
-	--   form of pres_3s and hence will have final -a for -ar verbs but not a vowel for -er/-re/-ir verbs except -e
-	--   when required as a prop vowel, as in [[cobrir]]);
+	-- * `pres_unstressed` (which assumes the form of the gerund minus the -nt; note that `pres_stressed` does *NOT*
+	--   end in a conjugation vowel, but assumes the stem form; the value of pres_3s will be derived by adding -a for
+	--   -ar verbs and otherwise adding an -e prop vowel when required, as in [[cobrir]], and otherwise adding no
+	--   vowel);
 	-- * `pres_sub_stressed` (which assumes the form of pres_sub_3s and hence usually ends in -i, occasionally -a);
 	-- * `pres_sub_unstressed` (which assumes the form of pres_sub_1p minus the -m, hence ends in -e or -i).
 
@@ -1756,28 +1764,35 @@ local function construct_stems(base)
 		base.no_pres_stressed and {} or
 		bst.pres_stressed or
 		g_infix_pres_stressed or
-		stressed_stem
+		map_general(stressed_stem, function(form)
+			local stem_base, conj_vowel = split_conj_vowel(form)
+			return stem_base
+		end)
 	stems.pres1s =
-		-- If no_pres_stressed given, pres3s stem should be empty so no forms are generated.
+		-- If no_pres_stressed given, pres1s stem should be empty so no forms are generated.
 		base.no_pres_stressed and {} or
 		stressed_g_infix or
 		map_general(stems.pres_stressed, function(form)
-			local stem_base, conj_vowel = split_conj_vowel(form)
-			return combine(stem_base, "o")
+			return combine(form, "o")
 		end)
 	stems.pres3s =
 		-- If no_pres_stressed given, pres3s stem should be empty so no forms are generated.
 		base.no_pres_stressed and {} or
 		bst.pres3s or
 		map_general(stems.pres_stressed, function(form)
-			local stem_base, conj_vowel = split_conj_vowel(form)
-			if conj_vowel == "a" then
-				return form
-			elseif rfind(stem_base, C .. "[lr]$") and not rfind(stem_base, V .. "ll$") then
-				return combine(stem_base, "e")
+			if base.conj_vowel == "a" then
+				return combine(form, "a")
+			elseif rfind(form, C .. "[lr]$") and not rfind(form, V .. "ll$") then
+				return combine(form, "e")
 			else
-				return stem_base
+				return form
 			end
+		end)
+	stems.pres3p =
+		-- If no_pres_stressed given, pres3p stem should be empty so no forms are generated.
+		base.no_pres_stressed and {} or
+		map_general(stems.pres_stressed, function(form)
+			return combine(form, "en")
 		end)
 
 	local function compute_impf_stem(with_accent)
@@ -1830,7 +1845,7 @@ local function construct_stems(base)
 			return form
 		end
 	end)
-		
+
 	stems.pp = bst.pp or
 		unstressed_g_infix and map_general(unstressed_g_infix,
 			function(form) return combine(form, "ud") end
@@ -1845,10 +1860,13 @@ end
 
 local function a_to_e(base, stems, suffix)
 	return map_general(stems, function(form)
-		if form:find("a$") then
-			form = rsub(form, "a$", "e")
+		local stem_base = form:match("^(.-)a$")
+		if stem_base then
+			suffix = "e" .. suffix
+		else
+			stem_base = form
 		end
-		return combine_stem_ending(base, form, suffix, "is full word")
+		return combine_stem_ending(base, stem_base, suffix, "is full word")
 	end)
 end
 
@@ -1864,7 +1882,7 @@ local function add_present_indic(base)
 	addit("3s", stems.pres3s, "")
 	insert_forms(base, "pres_1p", a_to_e(base, stems.pres_unstressed, "m"))
 	insert_forms(base, "pres_2p", a_to_e(base, stems.pres_unstressed, "u"))
-	insert_forms(base, "pres_3p", a_to_e(base, stems.pres_stressed, "n"))
+	addit("3p", stems.pres3p, "")
 end
 
 
@@ -1903,9 +1921,16 @@ local function add_finite_non_present(base)
 
 	-- pret_1s ends in -í regardless of the normal vowel of the stem.
 	insert_forms(base, "pret_1s", map_general(stems.pret, function(form)
+		local stem_base, conj_vowel = rmatch(form, "^(.*)(" .. V .. ")$")
+		if not stem_base then
+			error(("Internal error: Preterite stem '%s' doesn't end in vowel"):format(form))
+		end
+		if rfind(conj_vowel, front_vowel_c) then
+			stem_base = com.front_to_back(stem_base)
+		end
 		-- Use combine_stem_ending() to handle back-to-front conversions, e.g. pegà -> peguí for [[pegar]] and ensure
 		-- that the prefix gets added.
-		return combine_stem_ending(base, rsub(form, V .. "$", ""), "í", "is full word") end))
+		return combine_stem_ending(base, stem_base, "í", "is full word") end))
 	-- * at the beginning of the ending means to remove an accent from the last vowel of the preterite stem.
 	add_tense("pret", stems.pret, nil, "*res", "", "rem", "reu", "*ren")
 
