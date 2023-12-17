@@ -1,5 +1,115 @@
 local export = {}
 
+--[=[
+This module implements fetching of language-specific information and processing text in a given language.
+
+There are two types of languages: full languages and etymology-only languages. The essential difference is that only
+full languages appear in L2 headings in vocabulary entries, and hence categories like [[:Category:French nouns]] exist
+only for full languages. Etymology-only languages have either a full language or another etymology-only language as
+their parent (in the parent-child inheritance sense), and for etymology-only languages with another etymology-only
+language as their parent, a full language can always be derived by following the parent links upwards. For example,
+"Canadian French", code 'fr-CA', is an etymology-only language whose parent is the full language "French", code 'fr'.
+An example of an etymology-only language with another etymology-only parent is "Northumbrian Old English", code
+'ang-nor', which has "Anglian Old English", code 'ang-ang' as its parent; this is an etymology-only language whose
+parent is "Old English", code "ang", which is a full language. (This is because Northumbrian Old English is considered
+a variety of Anglian Old English.) Sometimes the parent is the "Undetermined" language, code 'und'; this is the case,
+for example, for "substrate" languages such as "Pre-Greek", code 'qsb-grc', and "the BMAC substrate", code 'qsb-bma'.
+
+It is important to distinguish language ''parents'' from language ''ancestors''. The parent-child relationship is one
+of containment, i.e. if X is a child of Y, X is considered a variety of Y. On the other hand, the ancestor-descendant
+relationship is one of descent in time. For example, "Classical Latin", code 'la-cla', and "Late Latin", code 'la-lat',
+are both etymology-only languages with "Latin", code 'la', as their parents, because both of the former are varieties
+of Latin. However, Late Latin does *NOT* have Classical Latin as its parent because Late Latin is *not* a variety of
+Classical Latin; rather, it is a descendant. There is in fact a separate 'ancestors' field that is used to express the
+ancestor-descendant relationship, and Late Latin's ancestor is given as Classical Latin. It is also important to note
+that sometimes an etymology-only language is actually the conceptual ancestor of its parent language. This happens,
+for example, with "Old Italian" (code 'it-oit'), which is an etymology-only variant of full language "Italian" (code
+'it'), and with "Old Latin" (code 'itc-ola'), which is an etymology-only variant of Latin. In both cases, the full
+language has the etymology-only variant listed as an ancestor. This allows a Latin term to inherit from Old Latin
+using the {{tl|inh}} template (where in this template, "inheritance" refers to ancestral inheritance, i.e. inheritance
+in time, rather than in the parent-child sense); likewise for Italian and Old Italian.
+
+Full languages come in three subtypes:
+* {regular}: This indicates a full language that is attested according to [[WT:CFI]] and therefore permitted in the
+			 main namespace. There may also be reconstructed terms for the language, which are placed in the
+			 {Reconstruction} namespace and must be prefixed with * to indicate a reconstruction. Most full languages
+			 are natural (not constructed) languages, but a few constructed languages (e.g. Esperanto and Volapük,
+			 among others) are also allowed in the mainspace and considered regular languages.
+* {reconstructed}: This language is not attested according to [[WT:CFI]], and therefore is allowed only in the
+				   {Reconstruction} namespace. All terms in this language are reconstructed, and must be prefixed with
+				   *. Languages such as Proto-Indo-European and Proto-Germanic are in this category.
+* {appendix-constructed}: This language is attested but does not meet the additional requirements set out for
+						  constructed languages ([[WT:CFI#Constructed languages]]). Its entries must therefore be in
+						  the Appendix namespace, but they are not reconstructed and therefore should not have *
+						  prefixed in links. Most constructed languages are of this subtype.
+
+Both full languages and etymology-only languages have a {Language} object associated with them, which is fetched using
+the {getByCode} function in [[Module:languages]] to convert a language code to a {Language} object. Depending on the
+options supplied to this function, etymology-only languages may or may not be accepted, and family codes may be
+accepted (returning a {Family} object as described in [[Module:families]]). There are also separate {getByCanonicalName}
+functions in [[Module:languages]] and [[Module:etymology languages]] to convert a language's canonical name to a
+{Language} object (depending on whether the canonical name refers to a full or etymology-only language).
+
+Textual strings belonging to a given language come in several different ''text variants'':
+# The ''input text'' is what the user supplies in wikitext, in the parameters to {{tl|m}}, {{tl|l}}, {{tl|ux}},
+  {{tl|t}}, {{tl|lang}} and the like.
+# The ''display text'' is the text in the form as it will be displayed to the user. This can include accent marks that
+  are stripped to form the entry text (see below), as well as embedded bracketed links that are variously processed
+  further. The display text is generated from the input text by applying language-specific transformations; for most
+  languages, there will be no such transformations. Examples of transformations are bad-character replacements for
+  certain languages (e.g. replacing 'l' or '1' to [[palochka]] in certain languages in Cyrillic); and for Thai and
+  Khmer, converting space-separated words to bracketed words and resolving respelling substitutions such as [กรีน/กฺรีน],
+  which indicate how to transliterate given words.
+# The ''entry text'' is the text in the form used to generate a link to a Wiktionary entry. This is usually generated
+  from the display text by stripping certain sorts of diacritics on a per-language basis, and sometimes doing other
+  transformations. The concept of ''entry text'' only really makes sense for text that does not contain embedded links,
+  meaning that display text containing embedded links will need to have the links individually processed to get
+  per-link entry text in order to generate the resolved display text (see below).
+# The ''resolved display text'' is the result of resolving embedded links in the display text (e.g. converting them to
+  two-part links where the first part has entry-text transformations applied, and adding appropriate language-specific
+  fragments) and adding appropriate language and script tagging. This text can be passed directly to MediaWiki for
+  display.
+# The ''source translit text'' is the text as supplied to the language-specific {transliterate()} method. The form of
+  the source translit text may need to be language-specific, e.g Thai and Khmer will need the full unprocessed input
+  text, whereas other languages may need to work off the display text. [FIXME: It's still unclear to me how embedded
+  bracketed links are handled in the existing code.] In general, embedded links need to be removed (i.e. converted to
+  their "bare display" form by taking the right part of two-part links and removing double brackets), but when this
+  happens is unclear to me [FIXME]. Some languages have a chop-up-and-paste-together scheme that sends parts of the
+  text through the transliterate mechanism, and for others (those listed in {contiguous_substition} in
+  [[Module:languages/data]]) they receive the full input text, but preprocessed in certain ways. (The wisdom of this is
+  still unclear to me.)
+# The ''transliterated text'' (or ''transliteration'') is the result of transliterating the source translit text.
+  Unlike for all the other text variants except the transcribed text, it is always in the Latin script.
+# The ''transcribed text'' (or ''transcription'') is the result of transcribing the source translit text, where
+  "transcription" here means a close approximation to the phonetic form of the language in languages (e.g. Akkadian,
+  Sumerian, Ancient Egyptian, maybe Tibetan) that have a wide difference between the written letters and spoken form.
+  Unlike for all the other text variants other than the transliterated text, it is always in the Latin script.
+  Currently, the transcribed text is always supplied manually be the user; there is no such thing as a
+  {lua|transcribe()} method on language objects.
+# The ''sort key'' is the text used in sort keys for determining the placing of pages in categories they belong to. The
+  sort key is generated from the pagename or a specified ''sort base'' by lowercasing, doing language-specific
+  transformations and then uppercasing the result. If the sort base is supplied and is generated from input text, it
+  needs to be converted to display text, have embedded links removed (i.e. resolving them to their right side if they
+  are two-part links) and have entry text transformations applied.
+# There are other text variants that occur in usexes (specifically, there are normalized variants of several of the
+  above text variants), but we can skip them for now.
+
+The following methods exist on {Language} objects to convert between different text variants:
+# {makeDisplayText}: This converts input text to display text.
+# {lua|makeEntryName}: This converts input or display text to entry text. [FIXME: This needs some rethinking. In
+  particular, {lua|makeEntryName} is sometimes called on display text (in some paths inside of [[Module:links]]) and
+  sometimes called on input text (in other paths inside of [[Module:links]], and usually from other modules). We need
+  to make sure we don't try to convert input text to display text twice, but at the same time we need to support
+  calling it directly on input text since so many modules do this. This means we need to add a parameter indicating
+  whether the passed-in text is input or display text; if that former, we call {lua|makeDisplayText} ourselves.]
+# {lua|transliterate}: This appears to convert input text with embedded brackets removed into a transliteration.
+  [FIXME: This needs some rethinking. In particular, it calls {lua|processDisplayText} on its input, which won't work
+  for Thai and Khmer, so we may need language-specific flags indicating whether to pass the input text directly to the
+  language transliterate method. In addition, I'm not sure how embedded links are handled in the existing translit code;
+  a lot of callers remove the links themselves before calling {lua|transliterate()}, which I assume is wrong.]
+# {lua|makeSortKey}: This converts entry text (?) to a sort key. [FIXME: Clarify this.]
+]=]
+
 local function track(page)
 	require("Module:debug/track")("languages/" .. page)
 	return true
