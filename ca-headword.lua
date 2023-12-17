@@ -10,56 +10,8 @@ local romut_module = "Module:romance utilities"
 local lang = require("Module:languages").getByCode("ca")
 local langname = lang:getCanonicalName()
 
-local rfind = mw.ustring.find
-local rmatch = mw.ustring.match
-local rsubn = mw.ustring.gsub
 local usub = mw.ustring.sub
-
-local unaccented_vowel = "aeiou"
-local accented_vowel = "àèéíòóú"
-local vowel = unaccented_vowel .. accented_vowel
-
-local V = "[" .. vowel .. "]"
-local UV = "[" .. unaccented_vowel .. "]"
-local AV = "[" .. accented_vowel .. "]"
-local C = "[^" .. vowel .. "]"
-
--- Used when forming the feminine of adjectives in -i. Those with the stressed vowel 'e' or 'o' always seem to have è, ò.
-local accent_vowel = {
-	["a"] = "à",
-	["e"] = "è",
-	["i"] = "í",
-	["o"] = "ò",
-	["u"] = "ù",
-}
-
-local prepositions = {
-	-- a + optional article (including salat)
-	"al?s? ",
-	-- de + optional article (including salat)
-	"del?s? ",
-	"d'",
-	-- ca + optional article (including salat and [[en]])
-	"can? ",
-	"cal?s? ",
-	-- per + optional article
-	"per ",
-	"pels? ",
-	-- others
-	"en ",
-	"amb ",
-	"cap ",
-	"com ",
-	"entre ",
-	"sense ",
-	"sobre ",
-}
-
--- version of rsubn() that discards all but the first return value
-local function rsub(term, foo, bar)
-	local retval = rsubn(term, foo, bar)
-	return retval
-end
+local rsub = com.rsub
 
 local function track(page)
 	require("Module:debug/track")("ca-headword/" .. page)

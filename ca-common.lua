@@ -1,59 +1,131 @@
 local export = {}
 
+local unaccented_vowel = "aeiouïü"
+local accented_vowel = "àèéíòóú"
+local vowel = unaccented_vowel .. accented_vowel
+
+local rfind = mw.ustring.find
+local rmatch = mw.ustring.match
+local rsubn = mw.ustring.gsub
+local usub = mw.ustring.sub
+
+-- version of rsubn() that discards all but the first return value
+function export.rsub(term, foo, bar)
+	local retval = rsubn(term, foo, bar)
+	return retval
+end
+
+local rsub = export.rsub
+
+export.V = "[" .. vowel .. "]"
+export.UV = "[" .. unaccented_vowel .. "]"
+export.AV = "[" .. accented_vowel .. "]"
+export.C = "[^" .. vowel .. "]"
+
+local V = export.V
+local UV = export.UV
+local AV = export.AV
+local C = export.C
+
+-- Used when forming the feminine of adjectives in -i. Those with the stressed vowel 'e' or 'o' always seem to have è, ò.
+local accent_vowel = {
+	["a"] = "à",
+	["e"] = "è",
+	["i"] = "í",
+	["o"] = "ò",
+	["u"] = "ú",
+}
+
+local prepositions = {
+	-- a + optional article (including salat)
+	"al?s? ",
+	-- de + optional article (including salat)
+	"del?s? ",
+	"d'",
+	-- ca + optional article (including salat and [[en]])
+	"can? ",
+	"cal?s? ",
+	-- per + optional article
+	"per ",
+	"pels? ",
+	-- others
+	"en ",
+	"amb ",
+	"cap ",
+	"com ",
+	"entre ",
+	"sense ",
+	"sobre ",
+}
+
 -- Make a link out of a form, or show a dash if empty.
 function export.link_form(form, tag)
-    if not PAGENAME then
-        PAGENAME = mw.title.getCurrentTitle().text
-    end
+	if not PAGENAME then
+		PAGENAME = mw.title.getCurrentTitle().text
+	end
 
-    if type(form) == "table" then
-        for n, subform in pairs(form) do
-            form[n] = export.link_form(subform, tag)
-        end
-        return table.concat(form, ", ")
-    else
-        if form ~= "" then
-            return "<" .. (tag or "span") .. " lang=\"ca\">[[" .. form .. (form ~= PAGENAME and "#Catalan|" .. form or "") .. "]]</" .. (tag or "span") .. ">"
-        else
-            return "&mdash;"
-        end
-    end
+	if type(form) == "table" then
+		for n, subform in pairs(form) do
+			form[n] = export.link_form(subform, tag)
+		end
+		return table.concat(form, ", ")
+	else
+		if form ~= "" then
+			return "<" .. (tag or "span") .. " lang=\"ca\">[[" .. form .. (form ~= PAGENAME and "#Catalan|" .. form or "") .. "]]</" .. (tag or "span") .. ">"
+		else
+			return "&mdash;"
+		end
+	end
 end
 
 -- Remove accents from any of the vowels in a word.
 -- If an accented í follows another vowel, a diaeresis is added following
 -- normal Catalan spelling rules.
-function export.remove_accents(word)
-    word = mw.ustring.gsub(
-    	word,
-    	"(.?.?)([àèéíòóú])",
-    	function (preceding, vowel)
-    		if vowel == "í" then
-    			if preceding:find("^[gq]u$") then
-    				return preceding .. "i"
-    			elseif preceding:find("[aeiou]$") then
-    				return preceding .. "ï"
-    			end
-    		end
+function export.remove_accents(word, final_syllable_only)
+	word = rsub(
+		word,
+		"(.?.?)([àèéíòóú])(" .. (final_syllable_only and export.C .. "*" or ".*") .. ")$",
+		function (preceding, vowel, after)
+			if vowel == "í" then
+				if preceding:find("^[gq]u$") then
+					return preceding .. "i"
+				elseif preceding:find("[aeiou]$") then
+					return preceding .. "ï"
+				end
+			end
 
-    		-- Decompose the accented vowel to an unaccented vowel (a, e, i, o, u)
-    		-- plus an acute or grave; return the unaccented vowel.
-    		return preceding .. mw.ustring.toNFD(vowel):sub(1, 1)
-    	end)
+			-- Decompose the accented vowel to an unaccented vowel (a, e, i, o, u)
+			-- plus an acute or grave; return the unaccented vowel.
+			return preceding .. mw.ustring.toNFD(vowel):sub(1, 1) .. after
+		end)
 
-    return word
+	return word
 end
 
--- Applies alternation of the final consonant of a stem, converting the form
--- used before a back vowel into the form used before a front vowel.
+-- Apply alternation of the final consonant of a stem, converting the form used before a back vowel into the form used
+-- before a front vowel.
 function export.back_to_front(stem)
-    return (stem:gsub("qu$", "qü"):gsub("c$", "qu"):gsub("ç$", "c"):gsub("gu$", "gü"):gsub("g$", "gu"):gsub("j$", "g"))
+	return (stem
+		:gsub("qu$", "qü") -- adequar -> adeqües
+		:gsub("c$", "qu") -- marcar -> marques
+		:gsub("ç$", "c") -- abraçar -> abraces
+		:gsub("gu$", "gü") -- enaiguar -> enaigües
+		:gsub("g$", "gu") -- pegar -> pegues
+		:gsub("j$", "g") -- arranjar -> arranges
+	)
 end
 
--- Applies alternation of the final consonant of a stem, converting the form
--- used before a front vowel into the form used before a back vowel.
+-- Apply alternation of the final consonant of a stem, converting the form used before a front vowel into the form used
+-- before a back vowel.
 function export.front_to_back(stem)
-    return (stem:gsub("c$", "ç"):gsub("qu$", "c"):gsub("qü$", "qu"):gsub("g$", "j"):gsub("gu$", "g"):gsub("gü$", "gu"))
+	return (stem
+		:gsub("c$", "ç") -- torcer -> torço
+		:gsub("qu$", "c")
+		:gsub("qü$", "qu")
+		:gsub("g$", "j") -- fugir -> fujo
+		:gsub("gu$", "g")
+		:gsub("gü$", "gu")
+	)
 end
 
 -----------------------------------------------------------------------------------------
