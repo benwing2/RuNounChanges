@@ -384,6 +384,25 @@ local function handle_redundant_wikilink(text, alt)
 	return text, alt
 end
 
+local function process_embedded_make_link()
+	-- Do we have a redundant wikilink? If so, remove it.
+	if text then
+		text, data.alt = handle_redundant_wikilink(text, data.alt)
+	end
+
+	-- Do we have embedded wikilinks?
+	if text and text:find("%[%[.-%]%]") then
+		text = process_embedded_links(text, data, allow_self_link)
+	-- If not, make a link using the parameters.
+	else
+		text = text and cond_trim(text)
+		data.alt = data.alt and cond_trim(data.alt)
+		text = make_link({target = text, display = data.alt, fragment = data.fragment}, data.lang, data.sc, data.id, allow_self_link, true)
+	end
+
+	return text
+end
+
 --[==[Creates a basic link to the given term. It links to the language section (such as <code>==English==</code>), but it does not add language and script wrappers, so any code that uses this function should call the <code class="n">[[Module:script utilities#tag_text|tag_text]]</code> from [[Module:script utilities]] to add such wrappers itself at some point.
 The first argument, <code class="n">data</code>, may contain the following items, a subset of the items used in the <code class="n">data</code> argument of <code class="n">full_link</code>. If any other items are included, they are ignored.
 { {
