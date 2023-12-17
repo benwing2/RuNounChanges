@@ -269,7 +269,8 @@ local function add_slots(alternant_multiword_spec)
 	-- match one-to-one; otherwise we don't match up the two slots (which means {{ca-verb form of}} won't work in this
 	-- case, but such a case is extremely rare and not worth worrying about). Alternatives that handle this "properly"
 	-- are significantly more complicated and require non-trivial modifications to [[Module:inflection utilities]].
-	local need_special_verb_form_of_slots = alternant_multiword_spec.from_verb_form_of and alternant_multiword_spec.refl
+	local need_special_verb_form_of_slots = alternant_multiword_spec.source_template == "ca-verb form of" and
+		alternant_multiword_spec.refl
 
 	if need_special_verb_form_of_slots then
 		alternant_multiword_spec.verb_slots_reflexive_verb_form_of = {
@@ -2045,7 +2046,7 @@ local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joi
 				-- Maybe generate non-reflexive parts and separated syntactic variants for use in
 				-- {{ca-verb form of}}. See comment in add_slots() above `need_special_verb_form_of_slots`.
 				-- Check for do_joined so we only run this code once.
-				if do_reflexive and do_joined and base.alternant_multiword_spec.from_verb_form_of and
+				if do_reflexive and do_joined and base.alternant_multiword_spec.source_template == "ca-verb form of" and
 					-- Skip personal variants of infinitives and gerunds so we don't think [[arrependendo]] is a
 					-- non-reflexive equivalent of [[arrependendo-me]].
 					not slot:find("infinitive_") and not slot:find("gerund_") then
@@ -2312,7 +2313,7 @@ end
 
 
 -- Normalize all lemmas, substituting the pagename for blank lemmas and adding links to multiword lemmas.
-local function normalize_all_lemmas(alternant_multiword_spec, pagename)
+local function normalize_all_lemmas(alternant_multiword_spec, head)
 
 	-- (1) Add links to all before and after text. Remember the original text so we can reconstruct the verb spec later.
 	if not alternant_multiword_spec.args.noautolinktext then
@@ -2338,7 +2339,7 @@ local function normalize_all_lemmas(alternant_multiword_spec, pagename)
 	--     so we can use it below in the 'lemma_linked' form.
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		if base.lemma == "" then
-			base.lemma = pagename
+			base.lemma = head
 		end
 
 		base.user_specified_lemma = base.lemma
@@ -2496,8 +2497,7 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		end
 	end
 
-	if check_for_red_links and not alternant_multiword_spec.from_headword and not alternant_multiword_spec.from_verb_form_of
-		and multiword_lemma then
+	if check_for_red_links and alternant_multiword_spec.source_template == "ca-conj" and multiword_lemma then
 		for _, slot_and_accel in ipairs(alternant_multiword_spec.all_verb_slots) do
 			local slot = slot_and_accel[1]
 			local forms = base.forms[slot]
@@ -2805,39 +2805,7 @@ end
 -- Return value is WORD_SPEC, an object where the conjugated forms are in `WORD_SPEC.forms`
 -- for each slot. If there are no values for a slot, the slot key will be missing. The value
 -- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
-function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
-	local params = {
-		[1] = {required = from_verb_form_of},
-		["noautolinktext"] = {type = "boolean"},
-		["noautolinkverb"] = {type = "boolean"},
-		["pagename"] = {}, -- for testing/documentation pages
-		["json"] = {type = "boolean"}, -- for bot use
-	}
-
-	if from_headword then
-		params["head"] = {list = true}
-		params["pres"] = {list = true} --present
-		params["pres_qual"] = {list = "pres=_qual", allow_holes = true}
-		params["pret"] = {list = true} --preterite
-		params["pret_qual"] = {list = "pret=_qual", allow_holes = true}
-		params["part"] = {list = true} --participle
-		params["part_qual"] = {list = "part=_qual", allow_holes = true}
-		params["short_part"] = {list = true} --short participle
-		params["short_part_qual"] = {list = "part=_qual", allow_holes = true}
-		params["attn"] = {type = "boolean"}
-		params["id"] = {}
-	end
-
-	if from_verb_form_of then
-		params["slots"] = {}
-		params["t"] = {}
-		params["gloss"] = {alias_of = "t"}
-		params["lit"] = {}
-		params["pos"] = {}
-		params["id"] = {}
-	end
-
-	local args = require("Module:parameters").process(parent_args, params)
+function export.do_generate_forms(args, source_template, headword_head)
 	local PAGENAME = mw.title.getCurrentTitle().text
 	local function in_template_space()
 		return mw.title.getCurrentTitle().nsText == "Template"
@@ -2847,22 +2815,24 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 	-- current page title or the value of |pagename=; but not when called from {{ca-verb form of}}, where the
 	-- page title is a non-lemma form. Note that the verb spec may omit the infinitive; e.g. it may be "<i-e>".
 	-- For this reason, we use the value of `pagename` computed here down below, when calling normalize_all_lemmas().
-	local pagename = not from_verb_form_of and args.pagename or from_headword and args.head[1] or PAGENAME
+	local pagename = source_template ~= "ca-verb form of" and args.pagename or PAGENAME
+	local head = headword_head or pagename
 	local arg1 = args[1]
+
 	if not arg1 then
 		if (pagename == "ca-conj" or pagename == "ca-verb") and in_template_space() then
 			arg1 = "paliar<í,+>"
 		elseif pagename == "ca-verb form of" and in_template_space() then
 			arg1 = "amar"
 		else
-			arg1 = pagename
+			arg1 = "<>"
 		end
 	end
 
 	-- When called from {{ca-verb form of}}, determine the non-lemma form whose inflections we're being asked to
 	-- determine. This normally comes from the page title or the value of |pagename=.
 	local verb_form_of_form
-	if from_verb_form_of then
+	if source_template == "ca-verb form of" then
 		verb_form_of_form = args.pagename
 		if not verb_form_of_form then
 			if PAGENAME == "ca-verb form of" and in_template_space() then
@@ -2873,30 +2843,33 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 		end
 	end
 
-	if arg1:find(" ") and not arg1:find("<") then
-		-- If multiword lemma without <> already, try to add it after the first word.
-
-		local need_explicit_angle_brackets = false
-		if arg1:find("%(%(") then
-			need_explicit_angle_brackets = true
-		else
-			local refl_clitic_verb, orig_refl_clitic_verb, post
-
+	local incorporated_headword_head_into_lemma = false
+	if arg1:find("^<.*>$") then -- missing lemma
+		if head:find(" ") then
+			-- If multiword lemma, try to add arg spec after the first word.
 			-- Try to preserve the brackets in the part after the verb, but don't do it
 			-- if there aren't the same number of left and right brackets in the verb
 			-- (which means the verb was linked as part of a larger expression).
-			refl_clitic_verb, post = rmatch(arg1, "^(.-)( .*)$")
+			local refl_clitic_verb, post = rmatch(head, "^(.-)( .*)$")
 			local left_brackets = rsub(refl_clitic_verb, "[^%[]", "")
 			local right_brackets = rsub(refl_clitic_verb, "[^%]]", "")
 			if #left_brackets == #right_brackets then
-				arg1 = refl_clitic_verb .. "<>" .. post
+				arg1 = iut.remove_redundant_links(refl_clitic_verb) .. arg1 .. post
+				incorporated_headword_head_into_lemma = true
 			else
-				need_explicit_angle_brackets = true
+				-- Try again using the form without links.
+				local linkless_head = m_links.remove_links(head)
+				if linkless_head:find(" ") then
+					refl_clitic_verb, post = rmatch(linkless_head, "^(.-)( .*)$")
+					arg1 = refl_clitic_verb .. arg1 .. post
+				else
+					error("Unable to incorporate <...> spec into explicit head due to a multiword linked verb or " ..
+						"unbalanced brackets; please include <> explicitly: " .. arg1)
+				end
 			end
-		end
-
-		if need_explicit_angle_brackets then
-			error("Multiword argument without <> and with alternants, a multiword linked verb or unbalanced brackets; please include <> explicitly: " .. arg1)
+		else
+			-- Will be incorporated through `head` below in the call to normalize_all_lemmas().
+			incorporated_headword_head_into_lemma = true
 		end
 	end
 
@@ -2914,11 +2887,11 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 	local alternant_multiword_spec = iut.parse_inflected_text(arg1, parse_props)
 	alternant_multiword_spec.pos = pos or "verbs"
 	alternant_multiword_spec.args = args
-	alternant_multiword_spec.from_headword = from_headword
-	alternant_multiword_spec.from_verb_form_of = from_verb_form_of
+	alternant_multiword_spec.source_template = source_template
 	alternant_multiword_spec.verb_form_of_form = verb_form_of_form
+	alternant_multiword_spec.incorporated_headword_head_into_lemma = incorporated_headword_head_into_lemma
 
-	normalize_all_lemmas(alternant_multiword_spec, pagename)
+	normalize_all_lemmas(alternant_multiword_spec, head)
 	detect_all_indicator_specs(alternant_multiword_spec)
 	local inflect_props = {
 		slot_list = alternant_multiword_spec.all_verb_slots,
@@ -2945,7 +2918,15 @@ end
 -- user-specified arguments and generate a displayable table of the conjugated forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
-	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	local params = {
+		[1] = {},
+		["noautolinktext"] = {type = "boolean"},
+		["noautolinkverb"] = {type = "boolean"},
+		["pagename"] = {}, -- for testing/documentation pages
+		["json"] = {type = "boolean"}, -- for bot use
+	}
+	local args = require("Module:parameters").process(parent_args, params)
+	local alternant_multiword_spec = export.do_generate_forms(args, "ca-conj")
 	if type(alternant_multiword_spec) == "string" then
 		-- JSON return value
 		return alternant_multiword_spec
