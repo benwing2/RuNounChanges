@@ -584,7 +584,7 @@ local built_in_conjugations = {
 	-- [[tòrcer]], [[vèncer]]
 	-- etc.
 
-	--------------------------------------------- -ldre ----------------------------------------
+	------------------------------------------- -ldre/-ler --------------------------------------
 
 	{
 		-- [[caldre]], [[doldre]], [[condoldre's]], [[oldre]]
@@ -596,12 +596,62 @@ local built_in_conjugations = {
 		}
 	},
 	{
+		-- [[caler]]
+		match = "caler",
+		like = "caldre",
+	},
+	{
+		-- [[doler]] and compounds
+		match = "doler",
+		like = "doldre",
+	},
+	{
+		-- [[valer]], [[equivaler]], [[prevaler]], [[sobrevaler]]
+		match = "valer",
+		forms = {
+			-- see above for g_infix effects
+			fut = "valdr",
+			g_infix = "+",
+		}
+	},
+	{
+		-- [[valdre]] and compounds
+		match = "valdre",
+		like = "valer",
+	},
+	{
 		-- [[coldre]], [[moldre]], [[absoldre]], [[dissoldre]], [[resoldre]], [[toldre]]
 		match = "oldre", -- this must follow [[doldre]]/[[oldre]] rule above
 		forms = {
 			-- see above for g_infix effects
 			g_infix = "+",
 			pp = "olt",
+		}
+	},
+	{
+		-- [[soler]]
+		match = "^soler",
+		forms = {
+			-- see above for g_infix effects
+			fut = {},
+			pret = {},
+			impf_sub = "solgué", -- regular, but we disabled the preterite, which would normally disable impf_sub too
+			g_infix = "+",
+			pp = {},
+			noimp = true,
+		}
+	},
+	{
+		-- [[voler]], [[malvoler]]
+		match = "voler",
+		forms = {
+			fut = "voldr",
+			pres_1s = "vull",
+			pres_sub_stressed = "vulgui",
+			pres_sub_unstressed = "vulgue",
+			g_infix = "+",
+			imp_2s = "vulgues",
+			imp_2p = "vulgueu",
 		}
 	},
 
@@ -1007,19 +1057,6 @@ local built_in_conjugations = {
 			imp_2s = "pugues",
 			imp_2p = "pugueu",
 			irreg = true,
-		}
-	},
-	{
-		-- [[voler]], [[malvoler]]
-		match = "voler",
-		forms = {
-			fut = "voldr",
-			pres_1s = "vull",
-			pres_sub_stressed = "vulgui",
-			pres_sub_unstressed = "vulgue",
-			g_infix = "+",
-			imp_2s = "vulgues",
-			imp_2p = "vulgueu",
 		}
 	},
 	{
