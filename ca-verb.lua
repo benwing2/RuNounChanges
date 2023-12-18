@@ -782,10 +782,14 @@ local built_in_conjugations = {
 		match = "jeure",
 		forms = {
 			fut = "jaur", -- affects future and cond
-			stressed_stem = "je", -- affects stressed forms, which get g added by g_infix by added except for
-								 -- pres_stressed, which gets u added (controls pres_3s, pres_2s, pres_3p)
-			unstressed_stem = "ja", -- affects unstressed_stem, which get g added by g_infix
+			stressed_stem = "jee", -- affects stressed forms, which get g added by g_infix by added except for
+								   -- pres_stressed, which gets u added (controls pres_3s, pres_2s, pres_3p)
+			unstressed_stem = "jae", -- affects unstressed_stem, which get g added by g_infix
+			pres_stressed = {"jeu", "jau"},
 			pres_unstressed = "jaie", -- affects pres_1p, pres_2p, gerund, imperfect (see [[caure]])
+			pres_1s = {"jec", "jac"},
+			impf1 = "jei", -- otherwise we'd get impf_1s '#geia' etc.
+			impf2 = "jèi",
 			g_infix = "+",
 		}
 	},
@@ -796,9 +800,11 @@ local built_in_conjugations = {
 		forms = {
 			-- like [[jeure]] except for irregular pp
 			fut = "traur",
-			stressed_stem = "tre",
-			unstressed_stem = "tra",
+			stressed_stem = "tree",
+			unstressed_stem = "trae",
+			pres_stressed = {"treu", "trau"},
 			pres_unstressed = "traie",
+			pres_1s = {"trec", "trac"},
 			g_infix = "+",
 			pp = "tret",
 		}
@@ -1566,18 +1572,17 @@ local function combine_stem_ending(base, stem, ending, is_full_word, dont_includ
 
 	-- If ending begins with i (not í), it must get a diaeresis after a true vowel (not gu/qu, cf. pres_1p 'delinquim'
 	-- of [[delinquir]], not '#delinquïm'; also not a diphthong ending in u, cf. pres_sub_1s 'apreui' of [[apreuar]]
-	-- not '#apreuï') to prevent the two merging into a diphthong. Also, ü -> u before ï. Cf:
+	-- not '#apreuï') to prevent the two merging into a diphthong. Note that ü -> u before ï, but to simplify things
+	-- we leave the double umlauts in place and remove the first one during postprocessing, in fix_double_umlauts().
+	-- Cf.:
 	-- * impf_1s 'raïa' of [[raure]];
 	-- * pres_sub_1s 'creï' of [[crear]];
 	-- * pres_sub_1s 'associï' of [[associar]];
 	-- * impf_1s 'cloïa' of [[cloure]];
 	-- * pres_1p 'lluïm' of [[lluir]];
 	-- * pres_1p 'arguïm' of [[argüir]].
-	if ending:find("^i") and rfind(stem, "[aeiouü]$") and not stem:find("[aeiogq]u$") and (
-		-- exceptions need to be made for infinitive in -ir (and derived future/cond) and gerund in -int
-		ending ~= "ir" and ending ~= "int") then 
+	if ending:find("^i") and rfind(stem, "[aeiouü]$") and not stem:find("[aeiogq]u$") then 
 		ending = ending:gsub("^i", "ï")
-		stem = stem:gsub("ü$", "u")
 	end
 
 	local retval = add_stem_ending(stem, ending)
@@ -1667,7 +1672,6 @@ local function split_conj_vowel(stem)
 	if conj_vowel == "ï" then
 		-- To simplify handling of ï, convert to i. It will be converted back to ï as necessary in
 		-- combine_stem_ending().
-		stem_base = stem_base:gsub("([gq])u$", "%1ü")
 		conj_vowel = "i"
 	end
 	if rfind(conj_vowel, front_vowel_c) then
@@ -2013,6 +2017,15 @@ local function add_imperatives(base)
 end
 
 
+local function fix_double_umlauts(base)
+	for slot, forms in pairs(base.forms) do
+		for _, form in ipairs(forms) do
+			form.form = form.form:gsub("üï", "uï")
+		end
+	end
+end
+
+
 local function process_slot_overrides(base, filter_slot, reflexive_only)
 	local overrides = reflexive_only and base.basic_reflexive_only_overrides or base.basic_overrides
 	for slot, forms in pairs(overrides) do
@@ -2216,6 +2229,7 @@ local function conjugate_verb(base)
 	add_present_subj(base)
 	add_finite_non_present(base)
 	add_non_finite_forms(base)
+	fix_double_umlauts(base)
 	-- do non-reflexive non-imperative slot overrides
 	process_slot_overrides(base, function(slot)
 		return not slot:find("^imp_") and not slot:find("^neg_imp_")
@@ -2515,8 +2529,11 @@ local function detect_indicator_spec(base)
 	end
 	base.conj_vowel = (suffix == "re" or suffix == "ur") and "e" or suffix:gsub("r$", "")
 	-- If the stem is followed by a front vowel, convert it to its "back" form before calling combine_stem_ending(),
-	-- which expects the "back" form of the stem and may convert it back to the "front" form.
-	if rfind(suffix, "^" .. front_vowel_c) then
+	-- which expects the "back" form of the stem and may convert it back to the "front" form. Don't do this conversion
+	-- for ï so we leave [[arguïr]] (underlyingly 'argüïr') as 'argu', and end up with base.stem containing the
+	-- underlying form 'argüï'. We remove the first of two umlauts in a row in a postprocessing step
+	-- (fix_double_umlauts()).
+	if rfind(suffix, "^[ei]") then
 		stem = com.front_to_back(stem)
 	end
 	-- Use combine_stem_ending() so we get ï if necessary.
