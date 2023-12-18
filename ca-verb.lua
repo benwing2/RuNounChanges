@@ -463,7 +463,7 @@ handled in this function. In particular:
 3. If the ending begins with a double asterisk, this is a signal to conditionally delete the accent on the last letter
    of the stem. "Conditionally" means we don't do it if the last two letters would form a diphthong without the accent
    on the second one (e.g. in [[sair]], with stem 'saí'); but as an exception, we do delete the accent in stems
-   ending in -guí, -quí (e.g. in [[conseguir]]) because in this case the ui isn't a diphthong.
+   ending in -guí, -quí (e.g. in [[seguir]]) because in this case the ui isn't a diphthong.
 4. If the ending begins with an asterisk, this is a signal to delete the accent on the last letter of the stem, e.g.
    fizé -> fizermos. Unlike for **, this removal is unconditional, so we get e.g. 'sairmos' not #'saírmos'.
 5. If ending begins with i, it must get an accent after an unstressed vowel (in some but not all cases) to prevent the
@@ -1656,15 +1656,21 @@ local function flatmap_general(stemforms, fn)
 end
 
 
--- Given a stem ending in a conjugation vowel -a/-e/-i, split into stem base and conjugation vowel, converting the
--- stem base to "back" form if the conjugation vowel is -e/-i (hence 'torce' of [[tòrcer]] splits into 'torç' and 'e',
+-- Given a stem ending in a conjugation vowel -a/-e/-i/-ï, split into stem base and conjugation vowel, converting the
+-- stem base to "back" form if the conjugation vowel is front (hence 'torce' of [[tòrcer]] splits into 'torç' and 'e',
 -- and 'fugi' of [[fugir]] splits into 'fuj' and 'i').
 local function split_conj_vowel(stem)
-	local stem_base, conj_vowel = stem:match("^(.*)([aei])$")
+	local stem_base, conj_vowel = rmatch(stem, "^(.*)([aeiï])$")
 	if not stem_base then
 		error(("Internal error: Stem '%s' doesn't end in conjugation vowel a/e/i"):format(stem))
 	end
-	if conj_vowel == "e" or conj_vowel == "i" then
+	if conj_vowel == "ï" then
+		-- To simplify handling of ï, convert to i. It will be converted back to ï as necessary in
+		-- combine_stem_ending().
+		stem_base = stem_base:gsub("([gq])u$", "%1ü")
+		conj_vowel = "i"
+	end
+	if rfind(conj_vowel, front_vowel_c) then
 		stem_base = com.front_to_back(stem_base)
 	end
 	return stem_base, conj_vowel
@@ -1701,7 +1707,7 @@ local function construct_stems(base)
 		stems.eix_infix = bst.eix_infix or bst.g_infix and "-" or "+"
 		eix_infix_stem = flatmap_general(stems.eix_infix, function(form)
 			if form == "+" then
-				return map_general(stem, function(form)
+				return map_general(stems.stem, function(form)
 					local stem_base, conj_vowel = split_conj_vowel(form)
 					return combine(stem_base, "eixe")
 				end)
@@ -1737,7 +1743,11 @@ local function construct_stems(base)
 			else
 				stem_base = rsub(stem_base, "(" .. V .. ")i$", "%1")
 			end
-			return combine(stem_base, rfind(stem_base, V .. "$") and "ue" or "e")
+			if rfind(stem_base, V .. "$") then
+				return combine(stem_base, "u")
+			else
+				return stem_base
+			end
 		end)
 	end
 
@@ -1818,7 +1828,7 @@ local function construct_stems(base)
 			local accent_conj_vowel = {
 				a = "à",
 				e = "é",
-				i = "í"
+				i = "í",
 			}
 			local stem_base, conj_vowel = split_conj_vowel(form)
 			return combine(stem_base, accent_conj_vowel[conj_vowel])
@@ -1835,7 +1845,7 @@ local function construct_stems(base)
 		unstressed_g_infix and map_general(unstressed_g_infix, function(form) return combine(form, "e") end) or
 		map_general(unstressed_stem, function(form)
 			local stem_base, conj_vowel = split_conj_vowel(form)
-			return combine(stem_base, conj_vowel == "i" and "i" or "e")
+			return combine(stem_base, conj_vowel == "i" and conj_vowel or "e")
 		end)
 	stems.impf_sub = bst.impf_sub or map_general(stems.pret, function(form)
 		local stem_base = rmatch(form, "^(.*)à$") -- already in "back" form, no need to convert
@@ -1852,7 +1862,7 @@ local function construct_stems(base)
 		) or
 		map_general(unstressed_stem, function(form)
 			local stem_base, conj_vowel = split_conj_vowel(form)
-			-- use combine() so we get 'abduïd' from 'abdu-' of [[abduir]], 'conseguid' from 'conseg-, etc.
+			-- use combine() so we get 'abduïd' from 'abdu-' of [[abduir]], 'seguid' from 'seg-' from [[seguir]], etc.
 			return combine(stem_base, (conj_vowel == "e" and "u" or conj_vowel) .. "d")
 		end)
 end
@@ -1955,7 +1965,11 @@ local function add_non_finite_forms(base)
 			insert_form(base, "infinitive_" .. persnum, {form = base.verb})
 		end
 	end
-	addit("gerund", stems.pres_unstressed, "nt")
+	-- Gerunds don't have an umlaut over the i in cases like 'abduint' of 'abduir' (not '#abduïnt').
+	local pres_unstressed_no_umlaut = map_general(stems.pres_unstressed, function(form)
+		return rsub(form, "ï$", "i")
+	end)
+	addit("gerund", pres_unstressed_no_umlaut, "nt")
 	-- Also insert "gerund + reflexive pronoun" combinations if we're handling a reflexive verb. We insert exactly the
 	-- same form as for the bare gerund; later on in add_reflexive_or_fixed_clitic_to_forms(), we add the appropriate
 	-- clitic pronouns. It's important not to do this for non-reflexive verbs, because in that case, the clitic
@@ -1963,7 +1977,7 @@ local function add_non_finite_forms(base)
 	-- inflections of the bare gerund. Thanks to [[User:JeffDoozan]] for this bug fix.
     if base.refl then
 		for _, persnum in ipairs(person_number_list) do
-			addit("gerund_" .. persnum, stems.pres_unstressed, "nt")
+			addit("gerund_" .. persnum, pres_unstressed_no_umlaut, "nt")
 		end
 	end
 	addit("pp_ms", stems.pp, "")
@@ -2488,6 +2502,8 @@ local function detect_indicator_spec(base)
 	if not inf_stem then
 		error("Unrecognized infinitive: " .. base.verb)
 	end
+	-- Remove accents from e.g. [[parèixer]], [[córrer]].
+	inf_stem = com.remove_accents(inf_stem)
 	-- Save full infinitive stem for use in future and conditional.
 	base.inf_stem = (inf_stem .. suffix):gsub("e$", "")
 	local stem = inf_stem
@@ -2497,10 +2513,14 @@ local function detect_indicator_spec(base)
 	elseif suffix == "ur" then
 		stem = stem .. "u"
 	end
-	-- Remove accents from e.g. [[parèixer]], [[córrer]].
-	stem = com.remove_accents(stem)
 	base.conj_vowel = (suffix == "re" or suffix == "ur") and "e" or suffix:gsub("r$", "")
-	base.stem = stem .. base.conj_vowel
+	-- If the stem is followed by a front vowel, convert it to its "back" form before calling combine_stem_ending(),
+	-- which expects the "back" form of the stem and may convert it back to the "front" form.
+	if rfind(suffix, "^" .. front_vowel_c) then
+		stem = com.front_to_back(stem)
+	end
+	-- Use combine_stem_ending() so we get ï if necessary.
+	base.stem = combine_stem_ending(base, stem, base.conj_vowel, false, "dont include prefix")
 
 	-- Propagate built-in-verb indicator flags to `base` and combine with user-specified flags.
 	for indicator_flag, _ in pairs(indicator_flags) do
