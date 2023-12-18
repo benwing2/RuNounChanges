@@ -55,6 +55,7 @@ local front_vowel = "eèéiíï"
 local front_vowel_c = "[" .. front_vowel .. "]"
 local V = com.V -- vowel regex class
 local C = com.C -- consonant regex class
+local WORD_JOINER = u(0x2060) -- hack to prevent empty single-quoted strings from being interpreted as italics
 
 
 --[=[
@@ -658,12 +659,13 @@ local built_in_conjugations = {
 	--------------------------------------------- -ndre ----------------------------------------
 
 	{
-		-- [[romandre]]
-		match = "romandre",
+		-- [[romandre]]; write it this way so there's a prefix with a vowel to prevent against the accent in the pp
+		-- from being removed while still removing it in the feminine.
+		match = match_against_verbs("mandre", {"^ro"}),
 		forms = {
 			-- see above for g_infix effects
 			g_infix = "+",
-			pp = "romàs#",
+			pp = "màs#",
 		}
 	},
 	{
@@ -699,12 +701,13 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- [[enfondre]]
-		match = "enfondre",
+		-- [[enfondre]]; write it this way so there's a prefix with a vowel to prevent against the accent in the pp
+		-- from being removed while still removing it in the feminine.
+		match = match_against_verbs("fondre", {"^en"}),
 		forms = {
 			-- see above for g_infix effects
 			g_infix = "+",
-			pp = "enfús#",
+			pp = "fús#",
 		}
 	},
 	{
@@ -729,10 +732,11 @@ local built_in_conjugations = {
 	--------------------------------------------- -nyer ----------------------------------------
 
 	{
-		-- [[atènyer]]
-		match = "atènyer",
+		-- [[atènyer]]; write it this way so there's a prefix with a vowel to prevent against the accent in the pp
+		-- from being removed while still removing it in the feminine.
+		match = match_against_verbs("tènyer", {"^a"}),
 		forms = {
-			pp = "atès#",
+			pp = "tès#",
 			irreg = true,
 		}
 	},
@@ -1210,10 +1214,12 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- [[imprimir]], [[reimprimir]], [[sobreimprimir]]; not any other verbs in -primir
-		match = "imprimir",
+		-- [[imprimir]], [[reimprimir]], [[sobreimprimir]]; not any other verbs in -primir; write it this way so
+		-- there's a prefix with a vowel to prevent against the accent in the pp from being removed while still
+		-- removing it in the feminine.
+		match = match_against_verbs("primir", {"im"}),
 		forms = {
-			pp = "imprès",
+			pp = "près#",
 			irreg = true,
 		}
 	},
@@ -1817,7 +1823,8 @@ local function construct_stems(base)
 			else
 				stem_base = rsub(stem_base, "(" .. V .. ")i$", "%1")
 			end
-			if rfind(stem_base, V .. "$") then
+			-- Add u after vowel but not after another u, so we get pres_3p 'duen' of [[dur]] not '#duuen'.
+			if rfind(stem_base, V .. "$") and not stem_base:find("u$") then
 				return combine(stem_base, "u")
 			else
 				return stem_base
@@ -2248,6 +2255,9 @@ end
 
 
 local function generate_negative_imperatives(base)
+	if base.noimp then
+		return
+	end
 	-- Copy subjunctives to negative imperatives, preceded by "no".
 	for _, persnum in ipairs(neg_imp_person_number_list) do
 		local from = "pres_sub_" .. persnum
@@ -2591,11 +2601,6 @@ local function detect_indicator_spec(base)
 				local new_prefix, new_non_prefixed_verb, new_built_in_spec = find_built_in(base.verb, built_in_spec.likevar)
 				if new_prefix then
 					-- redirected to another built-in verb
-					if new_prefix ~= prefix then
-						error(("Internal error: When using 'like =' to redirect the conjugation of '%s' to another " ..
-							"verb, prefix '%s' of spec using 'like =' must match prefix '%s' of redirected-to spec"):
-							format(base.orig_verb, prefix, new_prefix))
-					end
 					base.prefix = new_prefix
 					base.non_prefixed_verb = new_non_prefixed_verb
 					built_in_spec = new_built_in_spec
