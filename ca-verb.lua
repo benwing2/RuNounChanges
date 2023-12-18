@@ -171,7 +171,7 @@ créixer		creixo	creix	creixem	creixia	creixeré	creixí/cresquí creixi	creixem
 conèixer	conec	coneix	coneixem coneixia coneixeré	coneguí		conegui		coneguem	conegut,coneguda
 (desconèixer,reconèixer)
 merèixer	mereixo	mereix	mereixem mereixia mereixeré	mereixí/meresquí mereixi mereixem	merescut,merescuda
-néixer/		neixo/	neix/	naixem	naixia	naixeré		naixí/nasquí neixi/		naixem/nasquem nascut,nascuda 
+néixer/		neixo/	neix/	naixem	naixia	naixeré		naixí/nasquí neixi/		naixem/nasquem nascut,nascuda
 nàixer		naixo	naix											 naixi
 (renéixer)
 parèixer	parec	pareix	pareixem pareixia pareixeré	pareguí		paregui		pareguem	paregut,pareguda
@@ -490,7 +490,7 @@ The following stems are recognized:
      Defaults to the conjugation as determined from the infinitive. When pret_conj == "irreg", `pret` is used, otherwise
 	 `pret_base`.
 -- pret_base: The preterite stem (not including the -a-/-e-/-i- stem suffix). Defaults to the infinitive stem.
-	 Only used when pret_conj ~= "irreg". 
+	 Only used when pret_conj ~= "irreg".
 -- pret: The full preterite stem missing only the endings (-ste, -mos, etc.), e.g. 'fige', 'fo'. Only used for verbs
 	 with irregular preterites (pret_conj == "irreg") such as [[facer]], [[poder]], [[traer]], etc. Defaults to
 	 `pret_base` + the conjugation vowel.
@@ -639,7 +639,7 @@ local built_in_conjugations = {
 	},
 	{
 		-- [[fendre]], [[defendre]], [[ofendre]], [[dependre]], [[despendre]], [[expendre]], [[suspendre]], [[prendre]],
-		-- [[aprendre]], [[comprendre]], [[desprendre]], [[emprendre]], [[reprendre]], sorprendre]]
+		-- [[aprendre]], [[comprendre]], [[desprendre]], [[emprendre]], [[reprendre]], [[sorprendre]]
 		match = "endre", -- this must follow previous -endre rules above
 		forms = {
 			stem = "èn#", -- see above for effect of final #
@@ -744,7 +744,7 @@ local built_in_conjugations = {
 		-- [[plaure]], [[complaure]]
 		match = "plaure",
 		forms = {
-			stem = "ae", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
+			stem = "plae", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
 			g_infix = "+",
 		}
 	},
@@ -752,7 +752,7 @@ local built_in_conjugations = {
 		-- [[raure]]
 		match = "^raure",
 		forms = {
-			stem = "ae", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
+			stem = "rae", -- ï in impf1s -aïa gets generated automatically by combine_stem_ending()
 			g_infix = "+",
 			pp = {"ragud", "ras"},
 		}
@@ -833,15 +833,6 @@ local built_in_conjugations = {
 	--------------------------------------------- -iure ----------------------------------------
 
 	{
-		-- [[riure]], [[somriure]]
-		match = "riure",
-		forms = {
-			stem = "rie",
-			-- impf1s reia, impf1p rèiem (preceding vowel changed to è)
-			g_infix = "+",
-		}
-	},
-	{
 		-- [[escriure]], [[circumscriure]], [[descriure]], [[inscriure]], [[prescriure]], [[proscriure]],
 		-- [[subscriure]], [[transcriure]]
 		match = "scriure",
@@ -850,6 +841,15 @@ local built_in_conjugations = {
 			g_infix = "+",
 			pret = {"scriví", "scrigué"},
 			pp = "scrit",
+		}
+	},
+	{
+		-- [[riure]], [[somriure]]
+		match = "riure", -- must follow rule for 'scriure'
+		forms = {
+			stem = "rie",
+			-- impf1s reia, impf1p rèiem (preceding vowel changed to è)
+			g_infix = "+",
 		}
 	},
 	{
@@ -873,12 +873,23 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- [[coure]]
+		-- [[coure]] "to cook"
 		match = "coure",
+		var = "cook",
 		forms = {
 			stem = "coe", -- ï in impf1s coïa gets generated automatically by combine_stem_ending()
 			g_infix = "+",
-			pp = {"cuit", "cogud"},
+			pp = "cuit",
+		}
+	},
+	{
+		-- [[coure]] "to sting"
+		match = "coure",
+		var = "sting",
+		forms = {
+			stem = "coe", -- ï in impf1s coïa gets generated automatically by combine_stem_ending()
+			g_infix = "+",
+			-- pp regular 'cogud'
 		}
 	},
 	{
@@ -1018,7 +1029,7 @@ local built_in_conjugations = {
 		forms = {
 			pret = "corregué",
 			pres_sub_unstressed = {"corre", "corregue"},
-			pp = "corregut",
+			pp = "corregud",
 			irreg = true,
 		}
 	},
@@ -1028,7 +1039,7 @@ local built_in_conjugations = {
 		-- [[prometre]], [[readmetre]], [[remetre]], [[retransmetre]], [[sotmetre]], [[trametre]], [[transmetre]]
 		match = "metre",
 		forms = {
-			pp = "mès#", 
+			pp = "mès#",
 			irreg = true,
 		}
 	},
@@ -1158,7 +1169,7 @@ local built_in_conjugations = {
 		-- [[imprimir]], [[reimprimir]], [[sobreimprimir]]; not any other verbs in -primir
 		match = "imprimir",
 		forms = {
-			pp = "imprès#",
+			pp = "imprès",
 			irreg = true,
 		}
 	},
@@ -1515,7 +1526,7 @@ local function add_stem_ending(stem, ending)
 		return stem
 	end
 	if stem:find("#$") then -- remove final accent when adding a suffix
-		stem = com.remove_final_accent((stem:gsub("#$", "")))
+		stem = com.remove_accents((stem:gsub("#$", "")), "final syllable only")
 	end
 	return stem .. ending
 end
@@ -1541,7 +1552,7 @@ local function combine_stem_ending(base, stem, ending, is_full_word, dont_includ
 	-- the following rules.
 	if ending:find("^%*") then
 		ending = ending:gsub("^%*", "")
-		stem = com.remove_accents(stem)
+		stem = com.remove_accents(stem, "final syllable only")
 	end
 
 	-- If ending begins with s and stem ends in a sibilant, we need an e in between; cf. pres_2s 'apareixes' of
@@ -1581,7 +1592,7 @@ local function combine_stem_ending(base, stem, ending, is_full_word, dont_includ
 	-- * impf_1s 'cloïa' of [[cloure]];
 	-- * pres_1p 'lluïm' of [[lluir]];
 	-- * pres_1p 'arguïm' of [[argüir]].
-	if ending:find("^i") and rfind(stem, "[aeiouü]$") and not stem:find("[aeiogq]u$") then 
+	if ending:find("^i") and rfind(stem, "[aeiouü]$") and not stem:find("[aeiogq]u$") then
 		ending = ending:gsub("^i", "ï")
 	end
 
@@ -1769,7 +1780,7 @@ local function construct_stems(base)
 
 		stressed_g_infix = flatmap_g_infix(add_g(stressed_stem))
 		unstressed_g_infix = flatmap_g_infix(add_g(unstressed_stem))
-		g_infix_pres_stressed = flatmap_g_infix(add_u(stressed_stem))
+		g_infix_pres_stressed = add_u(stressed_stem)
 	end
 
 	stems.pres_unstressed = bst.pres_unstressed or unstressed_stem
@@ -1961,12 +1972,12 @@ local function add_non_finite_forms(base)
 		add3(base, slot, stems, ending, footnotes)
 	end
 
-	insert_form(base, "infinitive", {form = base.verb})
+	insert_form(base, "infinitive", {form = base.orig_verb})
 	-- Also insert "infinitive + reflexive pronoun" combinations if we're handling a reflexive verb. See comment below
 	-- for "gerund + reflexive pronoun" combinations.
 	if base.refl then
 		for _, persnum in ipairs(person_number_list) do
-			insert_form(base, "infinitive_" .. persnum, {form = base.verb})
+			insert_form(base, "infinitive_" .. persnum, {form = base.orig_verb})
 		end
 	end
 	-- Gerunds don't have an umlaut over the i in cases like 'abduint' of 'abduir' (not '#abduïnt').
@@ -2069,7 +2080,7 @@ local function suffix_clitic_to_forms(base, base_slot, clitics, store_cliticized
 		-- (4) Accent mark currently, not needed: third singular sentirá -> sentirase, imperative singular dá -> date.
 		local syllables = com.syllabify(formobj.form)
 		local sylno = com.stressed_syllable(syllables)
-		table.insert(syllables, "lo") -- arbitrary stand-in 
+		table.insert(syllables, "lo") -- arbitrary stand-in
 		local needs_accent = com.accent_needed(syllables, sylno)
 		if needs_accent then
 			syllables[sylno] = com.add_accent_to_syllable(syllables[sylno])
@@ -2462,36 +2473,70 @@ local function detect_indicator_spec(base)
 	base.input_stems = {}
 	base.basic_overrides = {}
 	base.basic_reflexive_only_overrides = {}
+	base.orig_verb = base.verb -- in case of a 'like = "..."' redirect
 	if not base.no_built_in then
-		for _, built_in_conj in ipairs(built_in_conjugations) do
-			if type(built_in_conj.match) == "function" then
-				base.prefix, base.non_prefixed_verb = built_in_conj.match(base.verb)
-			elseif built_in_conj.match:find("^%^") and rsub(built_in_conj.match, "^%^", "") == base.verb then
-				-- begins with ^, for exact match, and matches
-				base.prefix, base.non_prefixed_verb = "", base.verb
-			else
-				base.prefix, base.non_prefixed_verb = rmatch(base.verb, "^(.*)(" .. built_in_conj.match .. ")$")
-			end
-			if base.prefix then
-				-- we found a built-in verb
-				for stem, forms in pairs(built_in_conj.forms) do
-					if type(forms) == "function" then
-						forms = forms(base, base.prefix)
-					end
-					if stem:find("^refl_") then
-						stem = stem:gsub("^refl_", "")
-						if not base.alternant_multiword_spec.verb_slots_basic_map[stem] then
-							error("Internal error: setting for 'refl_" .. stem .. "' does not refer to a basic verb slot")
-						end
-						base.basic_reflexive_only_overrides[stem] = forms
-					elseif base.alternant_multiword_spec.verb_slots_basic_map[stem] then
-						-- an individual form override of a basic form
-						base.basic_overrides[stem] = forms
-					else
-						base.input_stems[stem] = forms
-					end
+		local function find_built_in(verb)
+			local prefix, non_prefixed_verb
+			for _, built_in_spec in ipairs(built_in_conjugations) do
+				if type(built_in_spec.match) == "function" then
+					prefix, non_prefixed_verb = built_in_spec.match(verb)
+				elseif built_in_spec.match:find("^%^") and rsub(built_in_spec.match, "^%^", "") == verb then
+					-- begins with ^, for exact match, and matches
+					prefix, non_prefixed_verb = "", verb
+				else
+					prefix, non_prefixed_verb = rmatch(verb, "^(.*)(" .. built_in_spec.match .. ")$")
 				end
-				break
+				if prefix then
+					return prefix, non_prefixed_verb, built_in_spec
+				end
+			end
+			return nil
+		end
+
+		local prefix, non_prefixed_verb, built_in_spec = find_built_in(base.verb)
+		if prefix then
+			-- we found a built-in verb
+			if built_in_spec.like then
+				-- we found a redirect to another verb that has the same conjugation, just a different infinitive
+				base.verb = prefix .. built_in_spec.like
+				local new_prefix, new_non_prefixed_verb, new_built_in_spec = find_built_in(base.verb)
+				if new_prefix then
+					-- redirected to another built-in verb
+					if new_prefix ~= prefix then
+						error(("Internal error: When using 'like =' to redirect the conjugation of '%s' to another " ..
+							"verb, prefix '%s' of spec using 'like =' must match prefix '%s' of redirected-to spec"):
+							format(base.orig_verb, prefix, new_prefix))
+					end
+					base.prefix = new_prefix
+					base.non_prefixed_verb = new_non_prefixed_verb
+					built_in_spec = new_built_in_spec
+				else
+					built_in_spec = nil
+				end
+			else
+				base.prefix = prefix
+				base.non_prefixed_verb = non_prefixed_verb
+			end
+		end
+
+		if built_in_spec then
+			-- we found a built-in verb, possibly redirecting to another built-in verb
+			for stem, forms in pairs(built_in_spec.forms) do
+				if type(forms) == "function" then
+					forms = forms(base, base.prefix)
+				end
+				if stem:find("^refl_") then
+					stem = stem:gsub("^refl_", "")
+					if not base.alternant_multiword_spec.verb_slots_basic_map[stem] then
+						error("Internal error: setting for 'refl_" .. stem .. "' does not refer to a basic verb slot")
+					end
+					base.basic_reflexive_only_overrides[stem] = forms
+				elseif base.alternant_multiword_spec.verb_slots_basic_map[stem] then
+					-- an individual form override of a basic form
+					base.basic_overrides[stem] = forms
+				else
+					base.input_stems[stem] = forms
+				end
 			end
 		end
 	end
@@ -2530,9 +2575,9 @@ local function detect_indicator_spec(base)
 	base.conj_vowel = (suffix == "re" or suffix == "ur") and "e" or suffix:gsub("r$", "")
 	-- If the stem is followed by a front vowel, convert it to its "back" form before calling combine_stem_ending(),
 	-- which expects the "back" form of the stem and may convert it back to the "front" form. Don't do this conversion
-	-- for ï so we leave [[arguïr]] (underlyingly 'argüïr') as 'argu', and end up with base.stem containing the
-	-- underlying form 'argüï'. We remove the first of two umlauts in a row in a postprocessing step
-	-- (fix_double_umlauts()).
+	-- for ï so we leave [[arguïr]] (underlyingly 'argüïr') as 'argu' ("back" form), which becomes 'argü' ("front" form)
+	-- before front vowel ï and we end up with base.stem containing the underlying form 'argüï'. We remove the first of
+	-- two umlauts in a row in a postprocessing step (fix_double_umlauts()).
 	if rfind(suffix, "^[ei]") then
 		stem = com.front_to_back(stem)
 	end
@@ -2768,113 +2813,113 @@ local basic_table = [=[
 {description}<div class="NavFrame">
 <div class="NavHead" align=center>&nbsp; &nbsp; Conjugation of {title}</div>
 <div class="NavContent" align="left">
-{\op}| class="inflection-table" style="background:#F6F6F6; text-align: left; border: 1px solid #999999;" cellpadding="3" cellspacing="0"
+{\op}| class="inflection-table inflection-ca inflection-verb" data-toggle-category="inflection" cellpadding="3" cellspacing="0"
 |-
-! style="border: 1px solid #999999; background:#B0B0B0" rowspan="2" |
-! style="border: 1px solid #999999; background:#D0D0D0" colspan="3" | Singular
-! style="border: 1px solid #999999; background:#D0D0D0" colspan="3" | Plural
+! class="ca-topleft-blank-heading" rowspan="2" |
+! class="ca-num-heading" colspan="3" | Singular
+! class="ca-num-heading" colspan="3" | Plural
 |-
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | First-person<br />(<<jo>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Second-person<br />(<<tu>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Third-person<br />(<<ell>> / <<ella>> / <<vostè>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | First-person<br />(<<nosaltres>> / <<nós>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Second-person<br />(<<vosaltres>> / <<vós>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Third-person<br />(<<ells>> / <<elles>> / <<vostès>>)
+! class="ca-pers-heading" | First-person<br />(<<jo>>)
+! class="ca-pers-heading" | Second-person<br />(<<tu>>)
+! class="ca-pers-heading" | Third-person<br />(<<ell>> / <<ella>> / <<vostè>>)
+! class="ca-pers-heading" | First-person<br />(<<nosaltres>> / <<nós>>)
+! class="ca-pers-heading" | Second-person<br />(<<vosaltres>> / <<vós>>)
+! class="ca-pers-heading" | Third-person<br />(<<ells>> / <<elles>> / <<vostès>>)
 |-
-! style="border: 1px solid #999999; background:#e2c0c0" colspan="7" | ''<span title="Infinitiu">Infinitive</span>''
+! class="ca-inf-heading" colspan="7" | ''<span title="Infinitiu">Infinitive</span>''
 |-
-| style="border: 1px solid #999999; vertical-align: top;" colspan="7" | {infinitive}
+| class="ca-verb-form" colspan="7" | {infinitive}
 |-
-! style="border: 1px solid #999999; background:#dddda0" colspan="7" | ''<span title="Gerundi">Gerund</span>''
+! class="ca-ger-heading" colspan="7" | ''<span title="Gerundi">Gerund</span>''
 |-
-| style="border: 1px solid #999999; vertical-align: top;" colspan="7" | {gerund}
+| class="ca-verb-form" colspan="7" | {gerund}
 |-
-! style="border: 1px solid #999999; background:#e2e4c0" colspan="7" | ''<span title="Participi passat">Past participle</span>''
+! class="ca-pp-heading" colspan="7" | ''<span title="Participi passat">Past participle</span>''
 |-
-! style="border: 1px solid #999999; background:#f3f5d1" | Masculine
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_ms}
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_mp}
+! class="ca-pp-subheading" | Masculine
+| class="ca-verb-form" colspan="3" | {pp_ms}
+| class="ca-verb-form" colspan="3" | {pp_mp}
 |-
-! style="border: 1px solid #999999; background:#f3f5d1" | Feminine
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fs}
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fp}
+! class="ca-pp-subheading" | Feminine
+| class="ca-verb-form" colspan="3" | {pp_fs}
+| class="ca-verb-form" colspan="3" | {pp_fp}
 |-
-! style="border: 1px solid #999999; background:#d0dff4" colspan="7" | ''<span title="Indicatiu">Indicative</span>''
+! class="ca-indic-heading" colspan="7" | ''<span title="Indicatiu">Indicative</span>''
 |-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="Present">Present</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_3p}
+! class="ca-indic-subheading" | <span title="Present">Present</span>
+| class="ca-verb-form" | {pres_1s}
+| class="ca-verb-form" | {pres_2s}
+| class="ca-verb-form" | {pres_3s}
+| class="ca-verb-form" | {pres_1p}
+| class="ca-verb-form" | {pres_2p}
+| class="ca-verb-form" | {pres_3p}
 |-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="Imperfet">Imperfect</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_3p}
+! class="ca-indic-subheading" | <span title="Imperfet">Imperfect</span>
+| class="ca-verb-form" | {impf_1s}
+| class="ca-verb-form" | {impf_2s}
+| class="ca-verb-form" | {impf_3s}
+| class="ca-verb-form" | {impf_1p}
+| class="ca-verb-form" | {impf_2p}
+| class="ca-verb-form" | {impf_3p}
 |-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="Passat">Preterite</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_3p}
+! class="ca-indic-subheading" | <span title="Passat">Preterite</span>
+| class="ca-verb-form" | {pret_1s}
+| class="ca-verb-form" | {pret_2s}
+| class="ca-verb-form" | {pret_3s}
+| class="ca-verb-form" | {pret_1p}
+| class="ca-verb-form" | {pret_2p}
+| class="ca-verb-form" | {pret_3p}
 |-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="Futur">Future</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_3p}
+! class="ca-indic-subheading" | <span title="Futur">Future</span>
+| class="ca-verb-form" | {fut_1s}
+| class="ca-verb-form" | {fut_2s}
+| class="ca-verb-form" | {fut_3s}
+| class="ca-verb-form" | {fut_1p}
+| class="ca-verb-form" | {fut_2p}
+| class="ca-verb-form" | {fut_3p}
 |-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="Condicional">Conditional</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_3p}
+! class="ca-indic-subheading" | <span title="Condicional">Conditional</span>
+| class="ca-verb-form" | {cond_1s}
+| class="ca-verb-form" | {cond_2s}
+| class="ca-verb-form" | {cond_3s}
+| class="ca-verb-form" | {cond_1p}
+| class="ca-verb-form" | {cond_2p}
+| class="ca-verb-form" | {cond_3p}
 |-
-! style="border: 1px solid #999999; background:#d0f4d0" colspan="7" | ''<span title="Subjuntiu">Subjunctive</span>''
+! class="ca-subj-heading" colspan="7" | ''<span title="Subjuntiu">Subjunctive</span>''
 |-
-! style="border: 1px solid #999999; background:#b0d4b0" | <span title="Present">Present</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_3p}
+! class="ca-subj-subheading" | <span title="Present">Present</span>
+| class="ca-verb-form" | {pres_sub_1s}
+| class="ca-verb-form" | {pres_sub_2s}
+| class="ca-verb-form" | {pres_sub_3s}
+| class="ca-verb-form" | {pres_sub_1p}
+| class="ca-verb-form" | {pres_sub_2p}
+| class="ca-verb-form" | {pres_sub_3p}
 |-
-! style="border: 1px solid #999999; background:#b0d4b0" | <span title="Imperfet">Imperfect</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_3p}
+! class="ca-subj-subheading" | <span title="Imperfet">Imperfect</span>
+| class="ca-verb-form" | {impf_sub_1s}
+| class="ca-verb-form" | {impf_sub_2s}
+| class="ca-verb-form" | {impf_sub_3s}
+| class="ca-verb-form" | {impf_sub_1p}
+| class="ca-verb-form" | {impf_sub_2p}
+| class="ca-verb-form" | {impf_sub_3p}
 |-
-! style="border: 1px solid #999999; background:#f4e4d0" colspan="7" | ''<span title="Imperatiu">Imperative</span>''
+! class="ca-imp-heading" colspan="7" | ''<span title="Imperatiu">Imperative</span>''
 |-
-! style="border: 1px solid #999999; background:#d4c4b0" | <span title="Afirmatiu">Affirmative</span>
-| style="border: 1px solid #999999; vertical-align: top;" rowspan="2" |
-| style="border: 1px solid #999999; vertical-align: top;" | {imp_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {imp_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {imp_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {imp_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {imp_3p}
+! class="ca-imp-subheading" | <span title="Afirmatiu">Affirmative</span>
+| class="ca-verb-form" rowspan="2" |
+| class="ca-verb-form" | {imp_2s}
+| class="ca-verb-form" | {imp_3s}
+| class="ca-verb-form" | {imp_1p}
+| class="ca-verb-form" | {imp_2p}
+| class="ca-verb-form" | {imp_3p}
 |-
-! style="border: 1px solid #999999; background:#d4c4b0" | <span title="Negatiu">Negative</span> (<<no>>)
-| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_3p}
+! class="ca-imp-subheading" | <span title="Negatiu">Negative</span> (<<no>>)
+| class="ca-verb-form" | {neg_imp_2s}
+| class="ca-verb-form" | {neg_imp_3s}
+| class="ca-verb-form" | {neg_imp_1p}
+| class="ca-verb-form" | {neg_imp_2p}
+| class="ca-verb-form" | {neg_imp_3p}
 |{\cl}{notes_clause}</div></div>
 ]=]
 
@@ -2892,7 +2937,8 @@ local function make_table(alternant_multiword_spec)
 	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
 	local table_with_pronouns = rsub(basic_table, "<<([^<>|]-)|([^<>|]-)>>", link_term)
 	local table_with_pronouns = rsub(table_with_pronouns, "<<(.-)>>", link_term)
-	return m_string_utilities.format(table_with_pronouns, forms)
+	return require("Module:TemplateStyles")("Module:User:Benwing2/ca-verb/style.css") ..
+		m_string_utilities.format(table_with_pronouns, forms)
 end
 
 
