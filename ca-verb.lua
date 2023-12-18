@@ -642,7 +642,7 @@ local built_in_conjugations = {
 		-- [[aprendre]], [[comprendre]], [[desprendre]], [[emprendre]], [[reprendre]], [[sorprendre]]
 		match = "endre", -- this must follow previous -endre rules above
 		forms = {
-			stem = "èn#", -- see above for effect of final #
+			pres_3s = "èn#", -- see above for effect of final #
 			-- see above for g_infix effects
 			g_infix = "+",
 			pp = "ès#", -- see above for effect of final #
@@ -1059,7 +1059,7 @@ local built_in_conjugations = {
 				footnotes = {'[especially in the sense "to turn up, to be present"]'}
 			}, {
 				form = "-",
-				footnotes = {'[especially in the impersonal pronominal sense "to occur"]'}
+				footnotes = {'[especially in the pronominal sense "to occur"]'}
 			}}
 		}
 	},
@@ -1071,8 +1071,6 @@ local built_in_conjugations = {
 		-- [[cruixir]], [[escruixir]] (Routledge says this is inchoative but DIEC, DEIEC and DCC all disagree; note
 		--   pres_2s 'cruixes', handled automatically)
 		-- [[dormir]], [[adormir]]
-		-- [[fugir]], [[confugir]], [[defugir]], [[enfugir-se]]; pres sing ''fujo, fuges, fuig'' handled by
-		--   combine_stem_ending()
 		-- [[funyir]]
 		-- [[grunyir]]
 		-- [[munyir]], [[esmunyir]]
@@ -1081,8 +1079,8 @@ local built_in_conjugations = {
 		-- [[retrunyir]]
 		-- [[sentir]], [[pressentir]], [[ressentir-se]]; not [[consentir]], with can be either non-inchoative or
 		-- inchoative, and not [[assentir]] or [[dissentir]], which are only inchoative
-		match = match_against_verbs("ir", {"ajup", "buix", "bull", "cruix", "dorm", "fug", "funy", "gruny", "muny",
-										   "pud", "puny", "retruny", "^sent", "pressent", "^ressent"}),
+		match = match_against_verbs("ir", {"ajup", "buix", "bull", "cruix", "dorm", "funy", "gruny", "muny", "pud",
+										   "puny", "retruny", "^sent", "pressent", "^ressent"}),
 		forms = {
 			eix_infix = "-",
 		}
@@ -1113,7 +1111,7 @@ local built_in_conjugations = {
 		-- [[collir]], [[acollir]], [[escollir]], [[recollir]]
 		match = "collir",
 		forms = {
-			pres_stressed = "cull",
+			stressed_stem = "culli",
 			eix_infix = "-",
 			irreg = true,
 		}
@@ -1130,7 +1128,7 @@ local built_in_conjugations = {
 		-- [[cosir]], [[descosir]], [[recosir]]
 		match = "cosir",
 		forms = {
-			pres_stressed = "cus",
+			stressed_stem = "cusi",
 			eix_infix = "-",
 			irreg = true,
 		}
@@ -1140,7 +1138,7 @@ local built_in_conjugations = {
 		-- list them individually
 		match = match_against_verbs("eixir", {"^", "des", "^re", "sobre"}),
 		forms = {
-			pres_stressed = "ix",
+			stressed_stem = "ixi",
 			eix_infix = "-",
 			irreg = true,
 		}
@@ -1150,7 +1148,7 @@ local built_in_conjugations = {
 		-- [[escopir]]
 		match = "escopir",
 		forms = {
-			pres_stressed = "escup",
+			stressed_stem = "escupi",
 			eix_infix = "-",
 			irreg = true,
 		}
@@ -1165,6 +1163,15 @@ local built_in_conjugations = {
 	},
 	-- [[ferir]]: -- non-inchoative in Balearics, inchoative elsewhere
 	-- [[fregir]]: -- non-inchoative in Valencia, inchoative elsewhere
+	{
+		-- [[fugir]], [[confugir]], [[defugir]], [[enfugir-se]]; pres sing ''fujo, fuges, fuig'' handled by
+		--   combine_stem_ending(); can't be handled by rule above that lists many non-inchoative verbs because the
+		--   prefix would be 'fug' and the front-back alternation code doesn't apply to prefixes.
+		match = "fugir",
+		forms = {
+			eix_infix = "-",
+		}
+	},
 	{
 		-- [[imprimir]], [[reimprimir]], [[sobreimprimir]]; not any other verbs in -primir
 		match = "imprimir",
@@ -1277,7 +1284,7 @@ local built_in_conjugations = {
 		-- [[sortir]], [[ressortir]], [[sobresortir]]; but not [[assortir]], which is regular inchoative
 		match = match_against_verbs("sortir", {"^", "^res", "sobre"}),
 		forms = {
-			pres_stressed = "surt",
+			stressed_stem = "surti",
 			eix_infix = "-",
 			irreg = true,
 		}
@@ -1327,7 +1334,7 @@ local built_in_conjugations = {
 		-- [[tossir]] "to cough"
 		match = "^tossir",
 		forms = {
-			pres_stressed = "tuss", -- pres_2s gets 'tusses'
+			stressed_stem = "tussi", -- pres_2s gets 'tusses'
 			pres_3s = "tus", -- note, pres_3s (a single form override) not pres3s (a stem override, which also affects
 							 -- pres_2s; but imp_2s is physically copied from pres_3s, so imp_2s correctly gets 'tus')
 			eix_infix = "-",
@@ -1450,31 +1457,46 @@ local built_in_conjugations = {
 	},
 	{
 		-- [[haver]] as auxiliary; highly irregular
-		match = "^@haver", -- @ marks auxiliary
+		match = "^haver",
+		var = "aux",
 		forms = {
-			fut = "anir",
-			pres_1s = "vaj", -- will be converted to 'vaig'; 'vaig' gets converted to 'vaic'
-			pres_2s = "vas",
-			pres_3s = "va",
-			pres_3p = "van",
-			pres_sub_stressed = "vagi",
-			imp_2s = "ves",
-			irreg = true,
+			pres_1s = "he",
+			pres_2s = "has",
+			pres_3s = "ha",
+			pres_1p = "hem",
+			pres_2p = "heu",
+			pres_3p = "han",
+			fut = "haur",
+			cond = {"haurí", "haguér"},
+			pres_sub_stressed = "hagi",
+			pres_sub_unstressed = "hàgi",
+			noimp = true,
+			g_infix = "+",
 		}
 	},
 	{
 		-- [[haver]] as full verb; highly irregular
 		match = "^haver",
+		var = "full",
 		forms = {
+			pres_1s = {"hec", "hac"},
+			pres_stressed = {"heu", "hau"},
 			fut = "haur",
-			pres_1s = "",
-			pres_2s = "vas",
-			pres_3s = "va",
-			pres_3p = "van",
-			pres_sub_stressed = "vagi",
-			imp_2s = "ves",
-			irreg = true,
+			pres_sub_stressed = "hegui",
+			g_infix = "+",
 		}
+	},
+	{
+		-- [[heure]]; variant of full verb [[haver]]
+		match = "^heure",
+		like = "haver",
+		likevar = "full",
+	},
+	{
+		-- [[haure]]; variant of full verb [[haver]]
+		match = "^haure",
+		like = "haver",
+		likevar = "full",
 	},
 }
 
@@ -1597,9 +1619,9 @@ local function combine_stem_ending(base, stem, ending, is_full_word, dont_includ
 	end
 
 	local retval = add_stem_ending(stem, ending)
-	if retval:find("#$") then -- remove final accent if no prefix
+	if retval:find("#$") then -- remove final accent if no vowels in prefix
 		retval = retval:gsub("#$", "")
-		if base.prefix == "" then
+		if not rfind(base.prefix, V) then
 			retval = com.remove_accents(retval, "final syllable only")
 		end
 	end
@@ -2015,6 +2037,9 @@ end
 
 
 local function add_imperatives(base)
+	if base.noimp then
+		return
+	end
 	-- Copy pres3s to imperative since they are almost always the same.
 	insert_forms(base, "imp_2s", iut.map_forms(base.forms.pres_3s, function(form) return form end))
 	-- Copy pres2p to imperative plural since they are almost always the same.
@@ -2332,7 +2357,12 @@ local function parse_indicator_spec(angle_bracket_spec)
 				parse_err("Spec '" .. first_element .. "' specified twice")
 			end
 			base[first_element] = true
-		elseif rfind(first_element, ":") then
+		elseif first_element:find("^var:") then
+			if #dot_separated_group > 1 then
+				parse_err(("Can't attach footnotes to 'var:' spec '%s'"):format(first_element))
+			end
+			base.var = first_element:match("^var:(.*)$")
+		elseif first_element:find(":") then
 			local colon_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*:%s*")
 			local first_element = colon_separated_groups[1][1]
 			if #colon_separated_groups[1] > 1 then
@@ -2437,7 +2467,7 @@ local function normalize_all_lemmas(alternant_multiword_spec, head)
 
 		base.lemma = m_links.remove_links(base.lemma)
 		local refl_verb = base.lemma
-		local verb, refl = rmatch(refl_verb, "^(.-)(se)$")
+		local verb, refl = rmatch(refl_verb, "^(.-)%-(se)$")
 		if not verb then
 			verb, refl = refl_verb, nil
 		end
@@ -2452,7 +2482,7 @@ local function normalize_all_lemmas(alternant_multiword_spec, head)
 			-- Reconstruct the linked lemma with separate links around base verb, reflexive pronoun and clitic.
 			linked_lemma = base.user_specified_verb == base.verb and "[[" .. base.user_specified_verb .. "]]" or
 				"[[" .. base.verb .. "|" .. base.user_specified_verb .. "]]"
-			linked_lemma = linked_lemma .. (refl and "[[" .. refl .. "]]" or "")
+			linked_lemma = linked_lemma .. (refl and "-[[" .. refl .. "]]" or "")
 		else
 			-- Add links to the lemma so the user doesn't specifically need to, since we preserve
 			-- links in multiword lemmas and include links in non-lemma forms rather than allowing
@@ -2475,31 +2505,53 @@ local function detect_indicator_spec(base)
 	base.basic_reflexive_only_overrides = {}
 	base.orig_verb = base.verb -- in case of a 'like = "..."' redirect
 	if not base.no_built_in then
-		local function find_built_in(verb)
+		local function match_built_in_spec(verb, built_in_spec)
 			local prefix, non_prefixed_verb
+			if type(built_in_spec.match) == "function" then
+				prefix, non_prefixed_verb = built_in_spec.match(verb)
+			elseif built_in_spec.match:find("^%^") and rsub(built_in_spec.match, "^%^", "") == verb then
+				-- begins with ^, for exact match, and matches
+				prefix, non_prefixed_verb = "", verb
+			else
+				prefix, non_prefixed_verb = rmatch(verb, "^(.*)(" .. built_in_spec.match .. ")$")
+			end
+			return prefix, non_prefixed_verb
+		end
+
+		local function find_built_in(verb, var)
 			for _, built_in_spec in ipairs(built_in_conjugations) do
-				if type(built_in_spec.match) == "function" then
-					prefix, non_prefixed_verb = built_in_spec.match(verb)
-				elseif built_in_spec.match:find("^%^") and rsub(built_in_spec.match, "^%^", "") == verb then
-					-- begins with ^, for exact match, and matches
-					prefix, non_prefixed_verb = "", verb
-				else
-					prefix, non_prefixed_verb = rmatch(verb, "^(.*)(" .. built_in_spec.match .. ")$")
-				end
+				local prefix, non_prefixed_verb = match_built_in_spec(verb, built_in_spec)
 				if prefix then
-					return prefix, non_prefixed_verb, built_in_spec
+					if not built_in_spec.var then
+						if var then
+							error(("Can't specify a variant spec 'var:%s' with verb '%s'"):format(var, verb))
+						end
+						return prefix, non_prefixed_verb, built_in_spec
+					elseif not var then
+						local possible_vars = {}
+						for _, built_in_spec in ipairs(built_in_conjugations) do
+							local prefix, non_prefixed_verb = match_built_in_spec(verb, built_in_spec)
+							if prefix then
+								table.insert(possible_vars, built_in_spec.var)
+							end
+						end
+						error(("For verb '%s', must specify a variant using 'var:...'; possible values are %s"):format(
+							verb, table.concat(possible_vars, ", ")))
+					elseif built_in_spec.var == var then
+						return prefix, non_prefixed_verb, built_in_spec
+					end
 				end
 			end
 			return nil
 		end
 
-		local prefix, non_prefixed_verb, built_in_spec = find_built_in(base.verb)
+		local prefix, non_prefixed_verb, built_in_spec = find_built_in(base.verb, base.var)
 		if prefix then
 			-- we found a built-in verb
 			if built_in_spec.like then
 				-- we found a redirect to another verb that has the same conjugation, just a different infinitive
 				base.verb = prefix .. built_in_spec.like
-				local new_prefix, new_non_prefixed_verb, new_built_in_spec = find_built_in(base.verb)
+				local new_prefix, new_non_prefixed_verb, new_built_in_spec = find_built_in(base.verb, built_in_spec.likevar)
 				if new_prefix then
 					-- redirected to another built-in verb
 					if new_prefix ~= prefix then
@@ -2656,16 +2708,26 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 
 	map_general(base.output_stems.stem, function(stem)
 		local stem_base, conj_vowel = split_conj_vowel(stem)
-		if conj_vowel == "a" then
+		local need_no_eix_infix = true
+		if conj_vowel ~= base.conj_vowel then
+			insert_ann("conj", "[[Appendix:Catalan verbs#Irregular verbs|mixed conjugation]]")
+			insert_cat("mixed conjugation verbs")
+		elseif conj_vowel == "a" then
+			insert_ann("conj", "[[Appendix:Catalan verbs#First conjugation|first conjugation]]")
 			insert_cat("first conjugation verbs")
 		elseif conj_vowel == "e" then
+			insert_ann("conj", "[[Appendix:Catalan verbs#Second conjugation|second conjugation]]")
 			insert_cat("second conjugation verbs")
 		elseif conj_vowel == "i" then
+			insert_ann("conj", "[[Appendix:Catalan verbs#Third conjugation|third conjugation]]")
 			insert_cat("third conjugation verbs")
+			need_no_eix_infix = false
 			map_general(base.output_stems.eix_infix, function(form)
 				if form == "+" then
+					insert_ann("eix_infix", "with -eix-")
 					insert_cat("third conjugation verbs with -eix-")
 				elseif form == "-" then
+					insert_ann("eix_infix", "without -eix-")
 					insert_cat("third conjugation verbs without -eix-")
 				end
 			end)
@@ -2673,7 +2735,17 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 			error(("Internal error: Stem '%s' doesn't end in conjugation vowel a/e/i and split_conj_vowel() didn't catch it"
 				):format(stem))
 		end
+		if need_no_eix_infix then
+			insert_ann("eix_infix", "no infix")
+		end
 	end)
+
+	if base.input_stems.g_infix then
+		insert_ann("g_infix", "with velar infix")
+			insert_cat("verbs with velar infix")
+	else
+		insert_ann("g_infix", "no infix")
+	end
 
 	if base.output_stems.irreg then
 		insert_ann("irreg", "irregular")
@@ -2741,6 +2813,9 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	alternant_multiword_spec.categories = {}
 	local ann = {}
 	alternant_multiword_spec.annotation = ann
+	ann.conj = {}
+	ann.g_infix = {}
+	ann.eix_infix = {}
 	ann.irreg = {}
 	ann.defective = {}
 	ann.cons_alt = {}
@@ -2757,9 +2832,21 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma)
 	end)
 	local ann_parts = {}
+	local conj = table.concat(ann.conj, " or ")
+	if conj ~= "" then
+		table.insert(ann_parts, conj)
+	end
+	local eix_infix = table.concat(ann.eix_infix, " or ")
+	if eix_infix ~= "" and eix_infix ~= "no infix" then
+		table.insert(ann_parts, eix_infix)
+	end
 	local irreg = table.concat(ann.irreg, " or ")
 	if irreg ~= "" and irreg ~= "regular" then
 		table.insert(ann_parts, irreg)
+	end
+	local g_infix = table.concat(ann.g_infix, " or ")
+	if g_infix ~= "" and g_infix ~= "no infix" then
+		table.insert(ann_parts, g_infix)
 	end
 	local defective = table.concat(ann.defective, " or ")
 	if defective ~= "" and defective ~= "regular" then
@@ -2769,7 +2856,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	if cons_alt ~= "" and cons_alt ~= "non-alternating" then
 		table.insert(ann_parts, cons_alt)
 	end
-	alternant_multiword_spec.annotation = table.concat(ann_parts, "; ")
+	alternant_multiword_spec.annotation = table.concat(ann_parts, ", ")
 end
 
 
