@@ -35,7 +35,7 @@ local m_string_utilities = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local iut = require("Module:inflection utilities")
-local com = require("Module:User:Benwing2/ca-common")
+local com = require("Module:ca-common")
 
 local force_cat = false -- set to true for debugging
 local check_for_red_links = false -- set to false for debugging
@@ -46,8 +46,8 @@ local rsplit = mw.text.split
 local rsub = com.rsub
 local u = mw.ustring.char
 
-local function link_term(term, display)
-	return m_links.full_link({ lang = lang, term = term, alt = display }, "term")
+local function link_term(term, display, face)
+	return m_links.full_link({ lang = lang, term = term, alt = display }, face)
 end
 
 
@@ -223,13 +223,40 @@ local person_number_list = {"1s", "2s", "3s", "1p", "2p", "3p"}
 local imp_person_number_list = {"2s", "3s", "1p", "2p", "3p"}
 local neg_imp_person_number_list = {"2s", "3s", "1p", "2p", "3p"}
 
-person_number_to_reflexive_pronoun = {
-	["1s"] = "me",
-	["2s"] = "te",
-	["3s"] = "se",
-	["1p"] = "nos",
-	["2p"] = "vos",
-	["3p"] = "se",
+proclitic_non_elided_person_number_to_reflexive_pronoun = {
+	["1s"] = "em ",
+	["2s"] = "et ",
+	["3s"] = "es ",
+	["1p"] = "ens ",
+	["2p"] = "us ",
+	["3p"] = "es ",
+}
+
+proclitic_elided_person_number_to_reflexive_pronoun = {
+	["1s"] = "m'",
+	["2s"] = "t'",
+	["3s"] = "s'",
+	["1p"] = "ens ",
+	["2p"] = "us ",
+	["3p"] = "s'",
+}
+
+enclitic_non_elided_person_number_to_reflexive_pronoun = {
+	["1s"] = "-me",
+	["2s"] = "-te",
+	["3s"] = "-se",
+	["1p"] = "-nos",
+	["2p"] = "-vos",
+	["3p"] = "-se",
+}
+
+enclitic_elided_person_number_to_reflexive_pronoun = {
+	["1s"] = "'m",
+	["2s"] = "'t",
+	["3s"] = "'s",
+	["1p"] = "'ns",
+	["2p"] = "-us",
+	["3p"] = "'s",
 }
 
 local indicator_flags = m_table.listToSet {
@@ -2116,13 +2143,17 @@ local function process_slot_overrides(base, filter_slot, reflexive_only)
 end
 
 
+local function link_clitic(clitic)
+	return (clitic:gsub("([^ %-]+)", "[[%1]]"))
+end
+
 -- Prefix `form` with `clitic`, adding fixed text `between` between them. Add links as appropriate unless the user
 -- requested no links. Check whether form already has brackets (as will be the case if the form has a fixed clitic).
 local function prefix_clitic_to_form(base, clitic, between, form)
 	if base.alternant_multiword_spec.args.noautolinkverb then
 		return clitic .. between .. form
 	else
-		local clitic_pref = "[[" .. clitic .. "]]" .. between
+		local clitic_pref = link_clitic(clitic) .. between
 		if form:find("%[%[") then
 			return clitic_pref .. form
 		else
@@ -2132,53 +2163,22 @@ local function prefix_clitic_to_form(base, clitic, between, form)
 end
 
 
--- Add the appropriate clitic pronouns in `clitics` to the forms in `base_slot`. `store_cliticized_form` is a function
--- of three arguments (clitic, formobj, cliticized_form) and should store the cliticized form for the specified clitic
--- and form object.
-local function suffix_clitic_to_forms(base, base_slot, clitics, store_cliticized_form)
-	if not base.forms[base_slot] then
-		-- This can happen, e.g. in only3s/only3sp/only3p verbs.
-		return
-	end
-	for _, formobj in ipairs(base.forms[base_slot]) do
-		-- Figure out the correct accenting of the verb when a clitic pronoun is attached to it. We may need to
-		-- add or remove an accent mark:
-		-- (1) No accent mark currently, none needed: infinitive sentar -> sentarse; imperative singular ten -> tente;
-		-- (2) Accent mark currently, still needed: infinitive concluír -> concluírse;
-		-- (3) No accent mark currently, accent needed: imperative singular sinte -> síntete;
-		-- (4) Accent mark currently, not needed: third singular sentirá -> sentirase, imperative singular dá -> date.
-		local syllables = com.syllabify(formobj.form)
-		local sylno = com.stressed_syllable(syllables)
-		table.insert(syllables, "lo") -- arbitrary stand-in
-		local needs_accent = com.accent_needed(syllables, sylno)
-		if needs_accent then
-			syllables[sylno] = com.add_accent_to_syllable(syllables[sylno])
+-- Suffix `form` with `clitic`. Add links as appropriate unless the user requested no links. Check whether form already
+-- has brackets (as will be the case if the form has a fixed clitic).
+local function suffix_clitic_to_form(base, clitic, form)
+	local autolink = not base.alternant_multiword_spec.args.noautolinkverb
+	if base.alternant_multiword_spec.args.noautolinkverb then
+		return form .. clitic
+	else
+		local clitic_suf = link_clitic(clitic)
+		if form:find("%[%[") then
+			return form .. clitic_suf
 		else
-			syllables[sylno] = com.remove_accent_from_syllable(syllables[sylno])
-		end
-		table.remove(syllables) -- remove added clitic pronoun
-		local reaccented_form = table.concat(syllables)
-		for _, clitic in ipairs(clitics) do
-			local cliticized_form
-			-- Some further special cases.
-			if base_slot == "imp_1p" and clitic == "nos" then
-				-- Final -s disappears: sintamos + nos -> sintámonos
-				cliticized_form = reaccented_form:gsub("s$", "") .. clitic
-			elseif clitic:find("^[oa]s?$") then
-				if reaccented_form:find("[rs]$") then
-					cliticized_form = reaccented_form:gsub("[rs]$", "l") .. clitic
-				elseif reaccented_form:find(V .. "[iu]$") then
-					cliticized_form = reaccented_form .. "n" .. clitic
-				else
-					cliticized_form = reaccented_form .. clitic
-				end
-			else
-				cliticized_form = reaccented_form .. clitic
-			end
-			store_cliticized_form(clitic, formobj, cliticized_form)
+			return "[[" .. form .. "]]" .. clitic_suf
 		end
 	end
 end
+
 
 -- Add a reflexive pronoun or fixed clitic (FIXME: not working), as appropriate to the base forms that were generated.
 -- `do_joined` means to do only the forms where the pronoun is joined to the end of the form; otherwise, do only the
@@ -2186,22 +2186,38 @@ end
 local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joined)
 	for _, slotaccel in ipairs(base.alternant_multiword_spec.verb_slots_basic) do
 		local slot, accel = unpack(slotaccel)
-		local clitic
-		if not do_reflexive then
-			clitic = base.clitic
-		elseif slot:find("[123]") then
-			local persnum = slot:match("^.*_(.-)$")
-			clitic = person_number_to_reflexive_pronoun[persnum]
+		local persnum
+		if slot:find("[123]") then
+			persnum = slot:match("^.*_(.-)$")
 		else
-			clitic = "se"
+			persnum = "3s"
 		end
+		local function get_proclitic(form)
+			--if not do_reflexive then
+			--	return base.clitic
+			if form:find("^[aeiouh]") then
+				return proclitic_elided_person_number_to_reflexive_pronoun[persnum]
+			else
+				return proclitic_non_elided_person_number_to_reflexive_pronoun[persnum]
+			end
+		end
+		local function get_enclitic(form)
+			--if not do_reflexive then
+			--	return base.clitic
+			if rfind(form, C .. "$") or rfind(form, V .. "[iu]$") and not form:find("[gq]ui$") then
+				return enclitic_non_elided_person_number_to_reflexive_pronoun[persnum]
+			else
+				return enclitic_elided_person_number_to_reflexive_pronoun[persnum]
+			end
+		end
+
 		if base.forms[slot] then
 			if do_reflexive and slot:find("^pp_") or slot == "infinitive_linked" then
 				-- do nothing with reflexive past participles or with infinitive linked (handled at the end)
 			elseif slot:find("^neg_imp_") then
 				error("Internal error: Should not have forms set for negative imperative at this stage")
 			else
-				local slot_has_suffixed_clitic = not slot:find("_sub")
+				local slot_has_suffixed_clitic = slot:find("infinitive") or slot:find("gerund") or slot:find("^imp_")
 				-- Maybe generate non-reflexive parts and separated syntactic variants for use in
 				-- {{ca-verb form of}}. See comment in add_slots() above `need_special_verb_form_of_slots`.
 				-- Check for do_joined so we only run this code once.
@@ -2214,22 +2230,21 @@ local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joi
 					insert_forms(base, slot .. "_non_reflexive", mw.clone(base.forms[slot]))
 					if slot_has_suffixed_clitic then
 						insert_forms(base, slot .. "_variant", iut.map_forms(base.forms[slot], function(form)
-							return prefix_clitic_to_form(base, clitic, " ... ", form)
+							return prefix_clitic_to_form(base, get_proclitic(form), "... ", form)
 						end))
 					end
 				end
 				if slot_has_suffixed_clitic then
 					if do_joined then
-						suffix_clitic_to_forms(base, slot, {clitic},
-							function(clitic, formobj, cliticized_form)
-								formobj.form = cliticized_form
-							end
-						)
+						-- Add clitic after form.
+						for _, form in ipairs(base.forms[slot]) do
+							form.form = suffix_clitic_to_form(base, get_enclitic(form.form), form.form)
+						end
 					end
 				elseif not do_joined then
-					-- Add clitic as separate word before all other forms.
+					-- Add clitic before form.
 					for _, form in ipairs(base.forms[slot]) do
-						form.form = prefix_clitic_to_form(base, clitic, " ", form.form)
+						form.form = prefix_clitic_to_form(base, get_proclitic(form.form), "", form.form)
 					end
 				end
 			end
@@ -2515,6 +2530,9 @@ local function normalize_all_lemmas(alternant_multiword_spec, head)
 		base.lemma = m_links.remove_links(base.lemma)
 		local refl_verb = base.lemma
 		local verb, refl = rmatch(refl_verb, "^(.-)%-(se)$")
+		if not verb then
+			verb, refl = rmatch(refl_verb, "^(.-)('s)$")
+		end
 		if not verb then
 			verb, refl = refl_verb, nil
 		end
@@ -2812,9 +2830,9 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		insert_ann("defective", "regular")
 	end
 
-	if base.clitic then
-		insert_cat("verbs with lexical clitics")
-	end
+	--if base.clitic then
+	--	insert_cat("verbs with lexical clitics")
+	--end
 
 	if base.refl then
 		insert_cat("reflexive verbs")
@@ -2940,122 +2958,144 @@ local notes_template = [=[
 
 local basic_table = [=[
 {description}<div class="NavFrame">
-<div class="NavHead" align=center>&nbsp; &nbsp; Conjugation of {title}</div>
-<div class="NavContent" align="left">
-{\op}| class="inflection-table inflection-ca inflection-verb" data-toggle-category="inflection" cellpadding="3" cellspacing="0"
+<div class="NavHead">&nbsp; &nbsp; Conjugation of {title}</div>
+<div class="NavContent">
+{\op}| style="width:100%;background:#F0F0F0;padding:.3em" data-toggle-category="inflection"
 |-
-! class="ca-topleft-blank-heading" rowspan="2" |
-! class="ca-num-heading" colspan="3" | Singular
-! class="ca-num-heading" colspan="3" | Plural
+! colspan="3" style="background:#e2e4c0;" | <span title="infinitiu">infinitive</span>
+| colspan="5" | {infinitive}
 |-
-! class="ca-pers-heading" | First-person<br />(<<jo>>)
-! class="ca-pers-heading" | Second-person<br />(<<tu>>)
-! class="ca-pers-heading" | Third-person<br />(<<ell>> / <<ella>> / <<vostè>>)
-! class="ca-pers-heading" | First-person<br />(<<nosaltres>> / <<nós>>)
-! class="ca-pers-heading" | Second-person<br />(<<vosaltres>> / <<vós>>)
-! class="ca-pers-heading" | Third-person<br />(<<ells>> / <<elles>> / <<vostès>>)
+! colspan="3" style="background:#e2e4c0;" | <span title="gerundi">gerund</span>
+| colspan="5" | {gerund}
 |-
-! class="ca-inf-heading" colspan="7" | ''<span title="Infinitiu">Infinitive</span>''
+! rowspan="3" colspan="2" style="background:#e2e4c0" | <span title="participi passat">past participle</span>
+| colspan="2" style="background:#e2e4c0" |
+! colspan="2" style="background:#e2e4c0" | masculine
+! colspan="2" style="background:#e2e4c0" | feminine
 |-
-| class="ca-verb-form" colspan="7" | {infinitive}
+! colspan="2" style="background:#e2e4c0" | singular
+| colspan="2" | {pp_ms}
+| colspan="2" | {pp_fs}
 |-
-! class="ca-ger-heading" colspan="7" | ''<span title="Gerundi">Gerund</span>''
+! colspan="2" style="background:#e2e4c0" | plural
+| colspan="2" | {pp_mp}
+| colspan="2" | {pp_fp}
 |-
-| class="ca-verb-form" colspan="7" | {gerund}
+! colspan="2" rowspan="2" style="background:#e2e4cb;" | person
+! colspan="3" style="background:#e2e4cb;" | singular
+! colspan="3" style="background:#e2e4cb;" | plural
 |-
-! class="ca-pp-heading" colspan="7" | ''<span title="Participi passat">Past participle</span>''
+! style="background:#e2e4cb;width:12.5%;" | first
+! style="background:#e2e4cb;width:12.5%;" | second
+! style="background:#e2e4cb;width:12.5%;" | third
+! style="background:#e2e4cb;width:12.5%;" | first
+! style="background:#e2e4cb;width:12.5%;" | second
+! style="background:#e2e4cb;width:12.5%;" | third
 |-
-! class="ca-pp-subheading" | Masculine
-| class="ca-verb-form" colspan="3" | {pp_ms}
-| class="ca-verb-form" colspan="3" | {pp_mp}
+! rowspan="6" style="background:#c0cfe4;" | <span title="indicatiu">indicative</span>
+! style="background:#c0cfe4;" |
+! style="background:#c0cfe4;" | <<jo>>
+! style="background:#c0cfe4;" | <<tu>>
+! style="background:#c0cfe4;" | <<ell>>/<<ella>><br /><<vostè>>
+! style="background:#c0cfe4;" | <<nosaltres>><br /><<nós>>
+! style="background:#c0cfe4;" | <<vosaltres>><br /><<vós>>
+! style="background:#c0cfe4;" | <<ells>>/<<elles>><br /><<vostès>>
 |-
-! class="ca-pp-subheading" | Feminine
-| class="ca-verb-form" colspan="3" | {pp_fs}
-| class="ca-verb-form" colspan="3" | {pp_fp}
+! style="height:3em;background:#c0cfe4;" | <span title="present">present</span>
+| {pres_1s}
+| {pres_2s}
+| {pres_3s}
+| {pres_1p}
+| {pres_2p}
+| {pres_3p}
 |-
-! class="ca-indic-heading" colspan="7" | ''<span title="Indicatiu">Indicative</span>''
+! style="height:3em;background:#c0cfe4;" | <span title="imperfet">imperfect</span>
+| {impf_1s}
+| {impf_2s}
+| {impf_3s}
+| {impf_1p}
+| {impf_2p}
+| {impf_3p}
 |-
-! class="ca-indic-subheading" | <span title="Present">Present</span>
-| class="ca-verb-form" | {pres_1s}
-| class="ca-verb-form" | {pres_2s}
-| class="ca-verb-form" | {pres_3s}
-| class="ca-verb-form" | {pres_1p}
-| class="ca-verb-form" | {pres_2p}
-| class="ca-verb-form" | {pres_3p}
+! style="height:3em;background:#c0cfe4;" | <span title="futur">future</span>
+| {fut_1s}
+| {fut_2s}
+| {fut_3s}
+| {fut_1p}
+| {fut_2p}
+| {fut_3p}
 |-
-! class="ca-indic-subheading" | <span title="Imperfet">Imperfect</span>
-| class="ca-verb-form" | {impf_1s}
-| class="ca-verb-form" | {impf_2s}
-| class="ca-verb-form" | {impf_3s}
-| class="ca-verb-form" | {impf_1p}
-| class="ca-verb-form" | {impf_2p}
-| class="ca-verb-form" | {impf_3p}
+! style="height:3em;background:#c0cfe4;" | <span title="passat">preterite</span>
+| {pret_1s}
+| {pret_2s}
+| {pret_3s}
+| {pret_1p}
+| {pret_2p}
+| {pret_3p}
 |-
-! class="ca-indic-subheading" | <span title="Passat">Preterite</span>
-| class="ca-verb-form" | {pret_1s}
-| class="ca-verb-form" | {pret_2s}
-| class="ca-verb-form" | {pret_3s}
-| class="ca-verb-form" | {pret_1p}
-| class="ca-verb-form" | {pret_2p}
-| class="ca-verb-form" | {pret_3p}
+! style="height:3em;background:#c0cfe4;" | <span title="condicional">conditional</span>
+| {cond_1s}
+| {cond_2s}
+| {cond_3s}
+| {cond_1p}
+| {cond_2p}
+| {cond_3p}
 |-
-! class="ca-indic-subheading" | <span title="Futur">Future</span>
-| class="ca-verb-form" | {fut_1s}
-| class="ca-verb-form" | {fut_2s}
-| class="ca-verb-form" | {fut_3s}
-| class="ca-verb-form" | {fut_1p}
-| class="ca-verb-form" | {fut_2p}
-| class="ca-verb-form" | {fut_3p}
+! style="background:#c0e4c0;" rowspan="3" | <span title="subjuntiu">subjunctive</span>
+! style="background:#c0e4c0;" |
+! style="background:#c0e4c0;" | <<jo>>
+! style="background:#c0e4c0;" | <<tu>>
+! style="background:#c0e4c0;" | <<ell>>/<<ella>><br /><<vostè>>
+! style="background:#c0e4c0;" | <<nosaltres>><br /><<nós>>
+! style="background:#c0e4c0;" | <<vosaltres>><br /><<vós>>
+! style="background:#c0e4c0;" | <<ells>>/<<elles>><br /><<vostès>>
 |-
-! class="ca-indic-subheading" | <span title="Condicional">Conditional</span>
-| class="ca-verb-form" | {cond_1s}
-| class="ca-verb-form" | {cond_2s}
-| class="ca-verb-form" | {cond_3s}
-| class="ca-verb-form" | {cond_1p}
-| class="ca-verb-form" | {cond_2p}
-| class="ca-verb-form" | {cond_3p}
+! style="height:3em;background:#c0e4c0;" | <span title="present">present</span>
+| {pres_sub_1s}
+| {pres_sub_2s}
+| {pres_sub_3s}
+| {pres_sub_1p}
+| {pres_sub_2p}
+| {pres_sub_3p}
 |-
-! class="ca-subj-heading" colspan="7" | ''<span title="Subjuntiu">Subjunctive</span>''
+! style="height:3em;background:#c0e4c0;" rowspan="1" | <span title="imperfet">imperfect</span>
+| {impf_sub_1s}
+| {impf_sub_2s}
+| {impf_sub_3s}
+| {impf_sub_1p}
+| {impf_sub_2p}
+| {impf_sub_3p}
 |-
-! class="ca-subj-subheading" | <span title="Present">Present</span>
-| class="ca-verb-form" | {pres_sub_1s}
-| class="ca-verb-form" | {pres_sub_2s}
-| class="ca-verb-form" | {pres_sub_3s}
-| class="ca-verb-form" | {pres_sub_1p}
-| class="ca-verb-form" | {pres_sub_2p}
-| class="ca-verb-form" | {pres_sub_3p}
+! rowspan="3" style="height:3em;background:#e4d4c0;" | <span title="imperatiu">imperative</span>
+! style="background:#e4d4c0;" |
+! style="background:#e4d4c0;" | &mdash;
+! style="background:#e4d4c0;" | <<tu>>
+! style="background:#e4d4c0;" | <<vostè>>
+! style="background:#e4d4c0;" | <<nosaltres>>
+! style="background:#e4d4c0;" | <<vosaltres>><br /><<vós>>
+! style="background:#e4d4c0;" | <<vostès>>
 |-
-! class="ca-subj-subheading" | <span title="Imperfet">Imperfect</span>
-| class="ca-verb-form" | {impf_sub_1s}
-| class="ca-verb-form" | {impf_sub_2s}
-| class="ca-verb-form" | {impf_sub_3s}
-| class="ca-verb-form" | {impf_sub_1p}
-| class="ca-verb-form" | {impf_sub_2p}
-| class="ca-verb-form" | {impf_sub_3p}
+! style="height:3em;background:#e4d4c0;" | <span title="afirmatiu">affirmative</span>
+| &mdash;
+| {imp_2s}
+| {imp_3s}
+| {imp_1p}
+| {imp_2p}
+| {imp_3p}
 |-
-! class="ca-imp-heading" colspan="7" | ''<span title="Imperatiu">Imperative</span>''
-|-
-! class="ca-imp-subheading" | <span title="Afirmatiu">Affirmative</span>
-| class="ca-verb-form" rowspan="2" |
-| class="ca-verb-form" | {imp_2s}
-| class="ca-verb-form" | {imp_3s}
-| class="ca-verb-form" | {imp_1p}
-| class="ca-verb-form" | {imp_2p}
-| class="ca-verb-form" | {imp_3p}
-|-
-! class="ca-imp-subheading" | <span title="Negatiu">Negative</span> (<<no>>)
-| class="ca-verb-form" | {neg_imp_2s}
-| class="ca-verb-form" | {neg_imp_3s}
-| class="ca-verb-form" | {neg_imp_1p}
-| class="ca-verb-form" | {neg_imp_2p}
-| class="ca-verb-form" | {neg_imp_3p}
-|{\cl}{notes_clause}</div></div>
-]=]
+! style="height:3em;background:#e4d4c0;" | <span title="negatiu">negative</span> (<<no>>)
+| &mdash;
+| {neg_imp_2s}
+| {neg_imp_3s}
+| {neg_imp_1p}
+| {neg_imp_2p}
+| {neg_imp_3p}
+|{\cl}{notes_clause}</div></div>]=]
 
 local function make_table(alternant_multiword_spec)
 	local forms = alternant_multiword_spec.forms
 
-	forms.title = link_term(alternant_multiword_spec.lemmas[1].form)
+	forms.title = link_term(alternant_multiword_spec.lemmas[1].form, nil, "term")
 	if alternant_multiword_spec.annotation ~= "" then
 		forms.title = forms.title .. " (" .. alternant_multiword_spec.annotation .. ")"
 	end
@@ -3066,8 +3106,7 @@ local function make_table(alternant_multiword_spec)
 	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
 	local table_with_pronouns = rsub(basic_table, "<<([^<>|]-)|([^<>|]-)>>", link_term)
 	local table_with_pronouns = rsub(table_with_pronouns, "<<(.-)>>", link_term)
-	return require("Module:TemplateStyles")("Module:User:Benwing2/ca-verb/style.css") ..
-		m_string_utilities.format(table_with_pronouns, forms)
+	return m_string_utilities.format(table_with_pronouns, forms)
 end
 
 
@@ -3090,10 +3129,8 @@ function export.do_generate_forms(args, source_template, headword_head)
 	local arg1 = args[1]
 
 	if not arg1 then
-		if (pagename == "ca-conj" or pagename == "ca-verb") and in_template_space() then
-			arg1 = "paliar<í,+>"
-		elseif pagename == "ca-verb form of" and in_template_space() then
-			arg1 = "amar"
+		if (pagename == "ca-conj" or pagename == "ca-verb" or pagename == "ca-verb form of") and in_template_space() then
+			arg1 = "amar<>"
 		else
 			arg1 = "<>"
 		end
