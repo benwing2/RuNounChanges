@@ -4,10 +4,10 @@ local export = {}
 
 Authorship: Ben Wing <benwing2>
 
-This module implements {{pt-verb form of}}, {{gl-verb form of}} and {{gl-reinteg-verb form of}}, which automatically
-generate the appropriate inflections of a non-lemma verb form given the form and the conjugation spec for the verb
-(which is usually just the infinitive; see {{pt-conj}}/{{pt-verb}}, {{gl-conj}}/{{gl-verb}} and {{gl-reinteg-conj}}/
-{{gl-reinteg-verb}}).
+This module implements {{pt-verb form of}}, {{ca-verb form of}}, {{gl-verb form of}} and {{gl-reinteg-verb form of}},
+which automatically generate the appropriate inflections of a non-lemma verb form given the form and the conjugation
+spec for the verb (which is usually just the infinitive; see {{pt-conj}}/{{pt-verb}}, {{ca-conj}}/{{ca-verb}},
+{{gl-conj}}/{{gl-verb}} and {{gl-reinteg-conj}}/{{gl-reinteg-verb}}).
 ]=]
 
 local m_links = require("Module:links")
@@ -15,6 +15,7 @@ local m_table = require("Module:table")
 local m_form_of = require("Module:form of")
 local accel_module = "Module:accel"
 local pt_verb_module = "Module:pt-verb"
+local ca_verb_module = "Module:ca-verb"
 local gl_verb_module = "Module:gl-verb"
 local gl_reinteg_verb_module = "Module:gl-reinteg-verb"
 
@@ -53,13 +54,19 @@ local function gl_reinteg_extract_labels(formobj)
 	return labels
 end
 
-local var_properties = {
+local norm_properties = {
 	pt = {
 		verb_module = pt_verb_module,
 		lang = require("Module:languages").getByCode("pt"),
 		langcode = "pt",
 		extract_labels = pt_extract_labels,
 		remove_variant_codes = true,
+	},
+	ca = {
+		verb_module = ca_verb_module,
+		lang = require("Module:languages").getByCode("ca"),
+		langcode = "ca",
+		remove_variant_codes = false,
 	},
 	gl = {
 		verb_module = gl_verb_module,
@@ -77,12 +84,12 @@ local var_properties = {
 }
 
 local function track(page)
-	require("Module:debug/track")("pt-gl-inflections/" .. page)
+	require("Module:debug/track")("romance-inflections/" .. page)
 	return true
 end
 
-local function generate_inflection_of(tag_sets, lemma, pretext, args, varcode)
-	local lang = var_properties[varcode].lang
+local function generate_inflection_of(tag_sets, lemma, pretext, args, norm)
+	local lang = norm_properties[norm].lang
 	for _, tag_set in ipairs(tag_sets) do
 		tag_set.tags = rsplit(tag_set.tag, "|")
 		tag_set.tag = nil
@@ -134,19 +141,19 @@ local function generate_inflection_of(tag_sets, lemma, pretext, args, varcode)
 end
 
 function export.verb_form_of(frame)
-	local varcode = frame.args.varcode
-	if not varcode then
-		error("Frame (invocation) argument varcode= must be specified")
+	local norm = frame.args.norm
+	if not norm then
+		error("Frame (invocation) argument norm= must be specified")
 	end
-	if not var_properties[varcode] then
-		local valid_varcodes = {}
-		for k, v in pairs(var_properties) do
-			table.insert(valid_varcodes, k)
+	if not norm_properties[norm] then
+		local valid_norms = {}
+		for k, v in pairs(norm_properties) do
+			table.insert(valid_norms, k)
 		end
-		table.sort(valid_varcodes)
-		error("Unrecognized value for varcode=; possible values are " .. table.concat(valid_varcodes, ", "))
+		table.sort(valid_norms)
+		error("Unrecognized value for norm=; possible values are " .. table.concat(valid_norms, ", "))
 	end
-	local langcode = var_properties[varcode].langcode
+	local langcode = norm_properties[norm].langcode
 	local parargs = frame:getParent().args
 	local params = {
 		[1] = {required = true},
@@ -162,20 +169,20 @@ function export.verb_form_of(frame)
 		["pos"] = {},
 		["id"] = {},
 	}
-	local m_verb_module = require(var_properties[varcode].verb_module)
+	local m_verb_module = require(norm_properties[norm].verb_module)
 	local args = require("Module:parameters").process(parargs, params)
-	local alternant_multiword_spec = m_verb_module.do_generate_forms(args, ("%s-verb form of"):format(varcode))
+	local alternant_multiword_spec = m_verb_module.do_generate_forms(args, ("%s-verb form of"):format(norm))
 
 	local function remove_variant_codes(form)
-		if var_properties[varcode].remove_variant_codes then
+		if norm_properties[norm].remove_variant_codes then
 			return m_verb_module.remove_variant_codes(form)
 		else
 			return form
 		end
 	end
 	local function extract_labels(formobj)
-		if var_properties[varcode].extract_labels then
-			return var_properties[varcode].extract_labels(formobj)
+		if norm_properties[norm].extract_labels then
+			return norm_properties[norm].extract_labels(formobj)
 		else
 			return {}
 		end
@@ -257,7 +264,7 @@ function export.verb_form_of(frame)
 		check_slot_restrictions_against_slots_seen()
 	end
 	if #tags > 0 then
-		return generate_inflection_of(tags, lemma, nil, args, varcode)
+		return generate_inflection_of(tags, lemma, nil, args, norm)
 	end
 
 	-- If we don't find any matches, we try again, looking for non-reflexive forms of reflexive-only verbs.
@@ -323,8 +330,7 @@ function export.verb_form_of(frame)
 				if refl_form_to_tags.form == lemma then
 					table.insert(parts, only_used_in)
 				else
-					local infl = generate_inflection_of(refl_form_to_tags.tags, lemma, only_used_in .. ", ", args,
-						varcode)
+					local infl = generate_inflection_of(refl_form_to_tags.tags, lemma, only_used_in .. ", ", args, norm)
 					table.insert(parts, infl)
 				end
 			end
