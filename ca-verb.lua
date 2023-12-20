@@ -875,6 +875,10 @@ local built_in_conjugations = {
 		}
 	},
 	{
+		match = "jaure",
+		like = "jeure",
+	},
+	{
 		-- [[treure]], [[abstreure]], [[atreure]], [[bestreure]], [[contreure]], [[detreure]], [[distreure]],
 		-- [[extreure]], [[retreure], [[retrotreure]], [[sostreure]]
 		match = "treure",
@@ -889,6 +893,10 @@ local built_in_conjugations = {
 			g_infix = "+",
 			pp = "tret",
 		}
+	},
+	{
+		match = "traure",
+		like = "treure",
 	},
 	{
 		-- [[veure]], [[entreveure]], [[preveure]], [[reveure]]
@@ -1155,12 +1163,13 @@ local built_in_conjugations = {
 	},
 	{
 		-- [[arrupir-se]];
+		-- [[brumir]];
 		-- [[brunzir]];
 		-- [[consumir]], [[resumir]], [[presumir]] (not [[sumir]], [[assumir]], [[subsumir]], which are regular)
 		-- [[mentir]], [[desmentir]]
 		-- [[percudir]]; cf. also [[acudir]], which to some extent has separate conjugations per meaning
 		-- [[consentir]]
-		match = match_against_verbs("ir", {"arrup", "brunz", "consum", "^resum", "presum", "ment", "percud",
+		match = match_against_verbs("ir", {"arrup", "brum", "brunz", "consum", "^resum", "presum", "ment", "percud",
 										   "consent"}),
 		forms = {
 			eix_infix = {"+", "-"},
@@ -1197,16 +1206,26 @@ local built_in_conjugations = {
 		match = "cosir",
 		forms = {
 			stressed_stem = "cusi",
+			pres_3s = "cús#",
 			eix_infix = "-",
 			irreg = true,
 		}
 	},
 	{
-		-- [[eixir]], [[deseixir-se]], [[reeixir]], [[sobreeixir]]; not [[teixir]] or [[entreteixir]], so we have to
-		-- list them individually
-		match = match_against_verbs("eixir", {"^", "des", "^re", "sobre"}),
+		-- [[eixir]], [[deseixir-se]]; not [[teixir]] or [[entreteixir]], and not [[reeixir]] or [[sobreeixir]],
+		-- which have an ï in the stem-stressed forms
+		match = match_against_verbs("eixir", {"^", "des"}),
 		forms = {
 			stressed_stem = "ixi",
+			eix_infix = "-",
+			irreg = true,
+		}
+	},
+	{
+		-- [[reeixir]], [[sobreeixir]]
+		match = match_against_verbs("eixir", {"^re", "sobre"}),
+		forms = {
+			stressed_stem = "ïxi",
 			eix_infix = "-",
 			irreg = true,
 		}
@@ -1425,10 +1444,10 @@ local built_in_conjugations = {
 	{
 		-- compounds of [[venir]]: [[advenir]], [[avenir]], [[contravenir]], [[convenir]], [[desavenir-se]],
 		-- [[desconvenir]], [[entrevenir]], [[esdevenir]], [[intervenir]], [[obvenir]], [[pervenir]], [[prevenir]],
-		-- [[reconvenir]], [[revenir]], [[sobrevenir]], [[subvenir]]; but not [[enjovenir]] or [[rejovenir]];
-		-- highly irregular
+		-- [[provenir]], [[reconvenir]], [[revenir]], [[sobrevenir]], [[subvenir]]; but not [[enjovenir]] or
+		-- [[rejovenir]]; highly irregular
 		match = match_against_verbs("venir", {"^ad", "^a", "contra", "con", "desa", "entre", "esde", "inter", "ob",
-											  "per", "pre", "^re", "sobre", "sub"}),
+											  "per", "pre", "pro", "^re", "sobre", "sub"}),
 		forms = {
 			fut = "vindr",
 			pres_stressed = "ven",
@@ -1470,9 +1489,9 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- [[dir]], [[adir-se]], [[desdir]], [[entredir]], [[interdir]], [[maldir]], [[predir]], [[redir]]; behaves
-		-- like an -er/-re verb
-		match = match_against_verbs("dir", {"^", "^a", "des", "entre", "inter", "mal", "pre", "^re"}),
+		-- [[dir]], [[adir-se]], [[contradir]], [[desdir]], [[entredir]], [[interdir]], [[maldir]], [[predir]], [[redir]];
+		-- behaves like an -er/-re verb
+		match = match_against_verbs("dir", {"^", "^a", "contra", "des", "entre", "inter", "mal", "pre", "^re"}),
 		forms = {
 			stem = "die",
 			g_infix = "+",
@@ -1632,9 +1651,14 @@ local function process_stem(stem, fn)
 	end
 end
 
--- Add the `stem` to the `ending` for the given `slot` and apply any phonetic modifications.
+-- Add the `stem` to the `ending` and apply any phonetic modifications. `is_full_word` indicates that we're creating
+-- a "full word" not a stem, and turns on devoicing of final consonants. `dont_include_prefix` is used when creating
+-- stems and indicates not to prepend the prefix in `base.prefix` to the result. `is_pres_sub_stressed` is used when
+-- creating the pres_sub_stressed stem, to correctly handle both [[desaiguar]] and [[argüir]], whose respective
+-- interactions between ü and i/ï are very tricky.
+--
 -- WARNING: This function is written very carefully; changes to it can easily have unintended consequences.
-local function combine_stem_ending(base, stem, ending, is_full_word, dont_include_prefix)
+local function combine_stem_ending(base, stem, ending, is_full_word, dont_include_prefix, is_pres_sub_stressed)
 	-- Include the prefix in the stem unless dont_include_prefix is given (used in construct_stems()).
 	if not dont_include_prefix then
 		stem = base.prefix .. stem
@@ -1684,7 +1708,12 @@ local function combine_stem_ending(base, stem, ending, is_full_word, dont_includ
 	-- * impf_1s 'cloïa' of [[cloure]];
 	-- * pres_1p 'lluïm' of [[lluir]];
 	-- * pres_1p 'arguïm' of [[argüir]].
-	if ending:find("^i") and rfind(stem, "[aeiouü]$") and not stem:find("[aeiogq]u$") then
+	if ending:find("^i") and rfind(stem, "[aeiouü]$") and not stem:find("[aeiogq]u$") and
+		-- Unstressed subjunctive endings of [[enaiguar]] remain without umlaut: enaigüi/enaigüis/enaigüin;
+		-- but stressed endings of [[argüir]] that begin with 'i' do get an umlaut: arguït, impf. arguïa, including
+		-- stressed subjunctive endings arguïm/arguïu. In both cases the ending is '-i' as part of the creation of
+		-- the respective stems. There seems no way of distinguishing the two cases other than with a special flag.
+		not (rfind(stem, "[gq]ü$") and ending == "i" and is_pres_sub_stressed) then
 		ending = ending:gsub("^i", "ï")
 	end
 
@@ -1789,8 +1818,9 @@ local function construct_stems(base)
 	local stems = base.output_stems
 	local bst = base.input_stems
 
-	local function combine(stem, ending)
-		return combine_stem_ending(base, stem, ending, false, "dont include prefix")
+	-- YUCK, see combine_stem_ending() for the necessity of is_pres_sub_stressed.
+	local function combine(stem, ending, is_pres_sub_stressed)
+		return combine_stem_ending(base, stem, ending, false, "dont include prefix", is_pres_sub_stressed)
 	end
 
 	stems.irreg = bst.irreg or bst.g_infix
@@ -1947,7 +1977,7 @@ local function construct_stems(base)
 		stressed_g_infix and map_general(stressed_g_infix, function(form) return combine(form, "i") end) or
 		map_general(stressed_stem, function(form)
 			local stem_base, conj_vowel = split_conj_vowel(form)
-			return combine(stem_base, "i")
+			return combine(stem_base, "i", "is pres_sub_stressed")
 		end)
 	stems.pres_sub_unstressed = bst.pres_sub_unstressed or
 		unstressed_g_infix and map_general(unstressed_g_infix, function(form) return combine(form, "e") end) or
@@ -3217,6 +3247,9 @@ function export.do_generate_forms(args, source_template, headword_head)
 	end
 
 	compute_categories_and_annotation(alternant_multiword_spec)
+	if args.json and source_template == "ca-conj" then
+		return require("Module:JSON").toJSON(alternant_multiword_spec.forms)
+	end
 	return alternant_multiword_spec
 end
 
