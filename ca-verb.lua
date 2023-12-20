@@ -43,8 +43,16 @@ local check_for_red_links = false -- set to false for debugging
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
+local rsubn = mw.ustring.gsub
 local rsub = com.rsub
 local u = mw.ustring.char
+
+-- version of rsubn() that returns a 2nd argument boolean indicating whether a substitution was made.
+local function rsubb(term, foo, bar)
+	local retval, nsubs = rsubn(term, foo, bar)
+	return retval, nsubs > 0
+end
+
 
 local function link_term(term, display, face)
 	return m_links.full_link({ lang = lang, term = term, alt = display }, face)
@@ -55,8 +63,11 @@ local front_vowel = "eèéiíï"
 local front_vowel_c = "[" .. front_vowel .. "]"
 local V = com.V -- vowel regex class
 local C = com.C -- consonant regex class
-local WORD_JOINER = u(0x2060) -- hack to prevent empty single-quoted strings from being interpreted as italics
-
+-- IS_USER_STEM_OVERRIDE is prepended to user-supplied stem overrides to prevent `base.prefix` from being prepended.
+-- IS_USER_FORM_OVERRIDE is similar but also prevents final devoicing (cf. Balearic pres_1s 'trob' of [[trobar]]).
+-- Don't use 0xFFF0 in case we call a [[Module:parse-utilities]] function that uses it temporarily.
+local IS_USER_STEM_OVERRIDE = u(0xFFF1)
+local IS_USER_FORM_OVERRIDE = u(0xFFF2)
 
 --[=[
 
@@ -374,56 +385,47 @@ end
 
 local overridable_stems = {}
 
-local function allow_multiple_values(separated_groups, data)
+local function allow_multiple_values_for_override(separated_groups, data, is_form_override)
 	local retvals = {}
 	for _, separated_group in ipairs(separated_groups) do
 		local footnotes = data.fetch_footnotes(separated_group)
-		local retval = {form = separated_group[1], footnotes = footnotes}
+		local form = separated_group[1]
+		-- Prepend marker to prevent prefixing with `base.prefix`, and (in the case of form overrides) prevent
+		-- final devoicing.
+		if is_form_override then
+			form = IS_USER_FORM_OVERRIDE .. form
+		else
+			form = IS_USER_STEM_OVERRIDE .. form
+		end
+		local retval = {form = form, footnotes = footnotes}
 		table.insert(retvals, retval)
 	end
 	return retvals
 end
 
-local function simple_choice(choices)
-	return function(separated_groups, data)
-		if #separated_groups > 1 then
-			data.parse_err("For spec '" .. data.prefix .. ":', only one value currently allowed")
-		end
-		if #separated_groups[1] > 1 then
-			data.parse_err("For spec '" .. data.prefix .. ":', no footnotes currently allowed")
-		end
-		local choice = separated_groups[1][1]
-		if not m_table.contains(choices, choice) then
-			data.parse_err("For spec '" .. data.prefix .. ":', saw value '" .. choice .. "' but expected one of '" ..
-				table.concat(choices, ",") .. "'")
-		end
-		return choice
-	end
-end
-
 for _, overridable_stem in ipairs {
+	"stem",
+	"stressed_stem",
+	"unstressed_stem",
 	"pres_unstressed",
 	"pres_stressed",
-	-- Don't include pres1; use pres_1s if you need to override just that form
-	"impf",
-	"full_impf",
-	{"pret_conj", simple_choice({"irreg", "ar", "er", "ir"}) },
-	"pret_base",
+	"pres3s", -- overrides just pres_2s and pres_3s
+	-- Don't include pres1s, pres3p; use pres_1s etc. if you need to override just those forms
+	"impf1",
+	"impf2",
 	"pret",
 	"fut",
 	"cond",
 	"pres_sub_stressed",
 	"pres_sub_unstressed",
-	{"sub_conj", simple_choice({"ar", "er"}) },
 	"impf_sub",
 	"pp",
+	"g_infix",
+	"eix_infix",
 } do
-	if type(overridable_stem) == "string" then
-		overridable_stems[overridable_stem] = allow_multiple_values
-	else
-		local stem, validator = unpack(overridable_stem)
-		overridable_stems[stem] = validator
-	end
+	-- Written so we can substitute a different validator; parallel code in [[Module:es-verb]] and [[Module:pt-verb]]
+	-- has simple_choice validators.
+	overridable_stems[overridable_stem] = allow_multiple_values_for_override
 end
 
 
@@ -475,7 +477,7 @@ of the verb if it matches, otherwise nil. The function match_against_verbs() is 
 of verbs with a common ending and specific prefixes (e.g. [[ter]] and [[ater]] but not [[abater]], etc.).
 
 The value of forms= is a table specifying stems and individual override forms. Each key of the table names either a
-stem (e.g. `pres_stressed`), a stem property (e.g. `vowel_alt`) or an individual override form (e.g. `pres_1s`).
+stem (e.g. `pres_stressed`), a stem property (e.g. `g_infix`) or an individual override form (e.g. `pres_1s`).
 Each value of a stem can either be a string (a single stem), a list of strings, or a list of objects of the form
 {form = STEM, footnotes = {FOONOTES}}. Each value of an individual override should be of exactly the same form except
 that the strings specify full forms rather than stems. The values of a stem property depend on the specific property
@@ -485,19 +487,13 @@ In order to understand how the stem specifications work, it's important to under
 by combine_stem_ending(). In general, the complexities of predictable prefix, stem and ending modifications are all
 handled in this function. In particular:
 
-1. Spelling-based modifications (c/z, g/gu, gu/gü, g/j) occur automatically as appropriate for the ending.
-2. If the stem begins with an acute accent, the accent is moved onto the last vowel of the prefix (for handling verbs
-   in -uar such as [[minguar]], pres_3s 'míngua').
-3. If the ending begins with a double asterisk, this is a signal to conditionally delete the accent on the last letter
-   of the stem. "Conditionally" means we don't do it if the last two letters would form a diphthong without the accent
-   on the second one (e.g. in [[sair]], with stem 'saí'); but as an exception, we do delete the accent in stems
-   ending in -guí, -quí (e.g. in [[seguir]]) because in this case the ui isn't a diphthong.
-4. If the ending begins with an asterisk, this is a signal to delete the accent on the last letter of the stem, e.g.
-   fizé -> fizermos. Unlike for **, this removal is unconditional, so we get e.g. 'sairmos' not #'saírmos'.
-5. If ending begins with i, it must get an accent after an unstressed vowel (in some but not all cases) to prevent the
+1. Spelling-based modifications (c/qu, ç/c, g/gu, j/g, gu/gü, qu/qü) occur automatically as appropriate for the ending.
+2. If the ending begins with an asterisk, this is a signal to delete the accent on the last syllable of the stem, e.g.
+   veié -> veierem.
+3. If ending begins with i, it may turn into í or ï after an unstressed vowel (in some but not all cases) to prevent the
    two merging into a diphthong. See combine_stem_ending() for specifics.
 
-The following stems are recognized:
+The following stems are recognized [FIXME: This is not correct for Catalan, needs rewriting]:
 
 -- pres_unstressed: The present indicative unstressed stem (1p, 2p). Also controls the imperative 2p
      and gerund. Defaults to the infinitive stem (minus the ending -ar/-er/-ir/-or).
@@ -509,16 +505,8 @@ The following stems are recognized:
 	 pres_stressed.
 -- pres_sub_unstressed: The present subjunctive unstressed stem (1p, 2p). Defaults to the infinitive stem.
 -- pres_sub_stressed: The present subjunctive stressed stem (1s, 2s, 3s, 1p). Defaults to pres1.
--- sub_conj: Determines the set of endings used in the subjunctive. Should be one of "ar" or "er".
 -- impf: The imperfect stem (not including the -av-/-i- stem suffix, which is determined by the conjugation). Defaults
      to the infinitive stem.
--- full_impf: The full imperfect stem missing only the endings (-a, -as, -am, etc.). Used for verbs with irregular
-     imperfects such as [[ser]], [[ter]], [[vir]] and [[pór]].
--- pret_conj: Determines the set of endings used in the preterite. Should be one of "ar", "er", "ir" or "irreg".
-     Defaults to the conjugation as determined from the infinitive. When pret_conj == "irreg", `pret` is used, otherwise
-	 `pret_base`.
--- pret_base: The preterite stem (not including the -a-/-e-/-i- stem suffix). Defaults to the infinitive stem.
-	 Only used when pret_conj ~= "irreg".
 -- pret: The full preterite stem missing only the endings (-ste, -mos, etc.), e.g. 'fige', 'fo'. Only used for verbs
 	 with irregular preterites (pret_conj == "irreg") such as [[facer]], [[poder]], [[traer]], etc. Defaults to
 	 `pret_base` + the conjugation vowel.
@@ -1659,8 +1647,9 @@ end
 --
 -- WARNING: This function is written very carefully; changes to it can easily have unintended consequences.
 local function combine_stem_ending(base, stem, ending, is_full_word, dont_include_prefix, is_pres_sub_stressed)
-	-- Include the prefix in the stem unless dont_include_prefix is given (used in construct_stems()).
-	if not dont_include_prefix then
+	-- Include the prefix in the stem unless dont_include_prefix is given (used in construct_stems()), or the value of
+	-- `stem` comes from a user-specified stem or form override.
+	if not dont_include_prefix and not stem:find(IS_USER_STEM_OVERRIDE) and not stem:find(IS_USER_FORM_OVERRIDE) then
 		stem = base.prefix .. stem
 	end
 
@@ -1725,18 +1714,23 @@ local function combine_stem_ending(base, stem, ending, is_full_word, dont_includ
 		end
 	end
 	if is_full_word then
-		-- Devoice final voiced obstruent (cf. pres_2s 'caps', pres_3s 'cap' of [[cabre]]). But not after a consonant
-		-- (cf. pres_2s 'perds', pres_3s 'perd' of [[perdre]]), except for g -> c, which operates even after a
-		-- consonant (pres_1s 'resolc' of [[resoldre]], pres_1s 'tinc' of [[tenir]]).
-		retval = retval:gsub("g(s?)$", "c%1")
-		retval = rsub(retval, "(" .. V .. ")([bdj])(s?)$", function(before, voiced, after)
-			local devoice = {
-				b = "p",
-				d = "t",
-				j = "ig", -- pres_3s 'fuj' of [[fugir]] -> 'fuig'
-			}
-			return before .. devoice[voiced] .. after
-		end)
+		local saw_is_user_form_override
+		retval, saw_is_user_form_override = rsubb(retval, IS_USER_FORM_OVERRIDE, "")
+		retval = retval:gsub(IS_USER_STEM_OVERRIDE, "")
+		if not saw_is_user_form_override then
+			-- Devoice final voiced obstruent (cf. pres_2s 'caps', pres_3s 'cap' of [[cabre]]). But not after a
+			-- consonant (cf. pres_2s 'perds', pres_3s 'perd' of [[perdre]]), except for g -> c, which operates
+			-- even after a consonant (pres_1s 'resolc' of [[resoldre]], pres_1s 'tinc' of [[tenir]]).
+			retval = retval:gsub("g(s?)$", "c%1")
+			retval = rsub(retval, "(" .. V .. ")([bdj])(s?)$", function(before, voiced, after)
+				local devoice = {
+					b = "p",
+					d = "t",
+					j = "ig", -- pres_3s 'fuj' of [[fugir]] -> 'fuig'
+				}
+				return before .. devoice[voiced] .. after
+			end)
+		end
 	end
 
 	return retval
@@ -2473,8 +2467,9 @@ local function parse_indicator_spec(angle_bracket_spec)
 					parse_err("Basic override '" .. first_element .. "' specified twice")
 				end
 				table.remove(colon_separated_groups, 1)
-				base.user_basic_overrides[first_element] = allow_multiple_values(colon_separated_groups,
-					{prefix = first_element, base = base, parse_err = parse_err, fetch_footnotes = fetch_footnotes})
+				base.user_basic_overrides[first_element] = allow_multiple_values_for_override(colon_separated_groups,
+					{prefix = first_element, base = base, parse_err = parse_err, fetch_footnotes = fetch_footnotes},
+					"is form override")
 			end
 		else
 			parse_err("Unrecognized spec '" .. first_element .. "'")
