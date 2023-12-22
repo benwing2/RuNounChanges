@@ -8,12 +8,14 @@ import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
 
 lang_to_name = {
+  "ca": "Catalan",
   "es": "Spanish",
   "gl": "Galician",
   "pt": "Portuguese",
 }
 
 norm_to_name = {
+  "ca": "Catalan",
   "es": "Spanish",
   "gl": "Galician",
   "gl-reinteg": "Galician (reintegrationist)",
@@ -21,6 +23,7 @@ norm_to_name = {
 }
 
 norm_to_lang = {
+  "ca": "ca",
   "es": "es",
   "gl": "gl",
   "gl-reinteg": "gl",
@@ -59,15 +62,21 @@ def process_text_on_inflection_page(index, pagetitle, pagetext, norm, pos, lemma
   elif pos == "gerund":
     headword_pos = "gerund"
     header_pos = "Verb"
-    expected_header_poses = ["Verb"]
-    expected_headword_templates = [("head", lang, "gerund"), ("head", lang, "verb form")]
+    expected_header_poses = ["Verb", "Participle"]
+    expected_headword_templates = [
+      ("head", lang, "gerund"), ("head", lang, "verb form"), ("head", lang, "present participle"),
+      ("head", lang, "participle")
+    ]
     new_headword_template = "{{head|%s|%s}}" % (lang, headword_pos)
-    new_defn_template_name = "%s-verb form of" % norm
-    new_defn_template = "{{%s|%s}}" % (new_defn_template_name, infl)
+    new_defn_template_name = "gerund of"
+    new_defn_template = "{{%s|%s|%s}}" % (new_defn_template_name, lang, lemma)
+    #new_defn_template_name = "%s-verb form of" % norm
+    #new_defn_template = "{{%s|%s}}" % (new_defn_template_name, infl)
+    expected_defn_templates = [("gerund of", lang), ("present participle of", lang)]
     if norm in ["gl", "gl-reinteg"]:
-      expected_defn_templates = ["gl-verb form of", "gl-reinteg-verb form of", ("gerund of", lang)]
+      expected_defn_templates = ["gl-verb form of", "gl-reinteg-verb form of"] + expected_defn_templates
     else:
-      expected_defn_templates = ["%s-verb form of" % norm, ("gerund of", lang)]
+      expected_defn_templates = ["%s-verb form of" % norm] + expected_defn_templates
   elif pos == "participle":
     headword_pos = "participle"
     header_pos = "Participle"
@@ -180,7 +189,7 @@ def process_text_on_inflection_page(index, pagetitle, pagetext, norm, pos, lemma
       def saw_instead_of():
         pagemsg("Saw %s instead of %s" % (str(matching_defn_template), new_defn_template))
       tn = tname(matching_defn_template)
-      if tn in ["past participle of", "gerund of"]:
+      if tn in ["present participle of", "past participle of", "gerund of"]:
         matching_lemma = getparam(matching_defn_template, "2")
         rawconj = ""
       else:
@@ -201,7 +210,8 @@ def process_text_on_inflection_page(index, pagetitle, pagetext, norm, pos, lemma
           saw_instead_of()
       elif len(both_template_names) == 2 and "gerund of" in both_template_names:
         if matching_lemma == lemma:
-          # This must mean we saw {{gerund of}} instead of {{*-verb form of}}
+          # This must mean we saw {{*-verb form of}} or {{present participle of}} instead of
+          # {{gerund of}}
           pagemsg("WARNING: For gerund, saw %s instead of %s" % (str(matching_defn_template), new_defn_template))
           return
         else:
@@ -225,7 +235,7 @@ def process_text_on_inflection_page(index, pagetitle, pagetext, norm, pos, lemma
     if add_after is not None:
       # Add another definition line. If there's already a defn line present, insert after any such defn
       # lines. Else, insert at beginning.
-      if norm in ["gl", "gl-reinteg"] and pos in ["verb", "gerund"]:
+      if norm in ["gl", "gl-reinteg"] and pos == "verb":
         new_defn_template_beg = r"\{\{gl(?:-reinteg)?-verb form of\|"
       else:
         new_defn_template_beg = re.escape(re.sub(r"^(.*?\|).*", r"\1", new_defn_template))
