@@ -54,16 +54,16 @@ local function fix_prefixes(word)
 		"m[aà]cro", "m[ií]cro", "mono", "morfo", "m[uú]lti",
 		"n[eé]o",
 		"octo", "orto",
-		"penta", "p[oòô]li", "pol[ií]tico", "pr[oòô]to", "ps[eèê]udo", "psico", -- ambiguous pre-(s), pro-
+		"penta", "p[oòô]li", "pol[ií]tico", "pr[oòô]to", "ps[eèêë]udo", "psico", -- ambiguous pre-(s), pro-
 		"qu[aà]si", "qu[ií]mio",
 		"r[aà]dio", -- ambiguous re-
-		"s[eèê]mi", "s[oó]bre", "s[uú]pra",
+		"s[eèêë]mi", "s[oó]bre", "s[uú]pra",
 		"termo", "tetra", "tri", -- ambiguous tele-(r)
 		"[uú]ltra", "[uu]n[ií]",
 		"v[ií]ce"
 	}
-	local prefix_r = {"[eèéê]xtra", "pr[eé]"}
-	local prefix_s = {"antropo", "centro", "deca", "d[ií]no", "eco", "[eèéê]xtra",
+	local prefix_r = {"[eèéêë]xtra", "pr[eé]"}
+	local prefix_s = {"antropo", "centro", "deca", "d[ií]no", "eco", "[eèéêë]xtra",
 		"hetero", "p[aà]ra", "post", "pré", "s[oó]ta", "tele"}
 	local prefix_i = {"pr[eé]", "pr[ií]mo", "pro", "tele"}
 	local no_prefix = {"autoic", "autori", "biret", "biri", "bisa", "bisell", "bisó", "biur", "contrari", "contrau",
@@ -141,8 +141,8 @@ local function fix_y(word)
 	
 	word = ugsub(word, "ny", "ñ")
 	
-	word = ugsub(word, "y([^aeiouàèéêíòóôúïü])", "i%1") -- vowel if not next to another vowel
-	word = ugsub(word, "([^aeiouàèéêíòóôúïü·%-%.])y", "%1i") -- excluding also syllables separators
+	word = ugsub(word, "y([^aeiouàèéêëíòóôúïü])", "i%1") -- vowel if not next to another vowel
+	word = ugsub(word, "([^aeiouàèéêëíòóôúïü·%-%.])y", "%1i") -- excluding also syllables separators
 	
 	return word
 end
@@ -184,8 +184,8 @@ local function split_syllables(remainder)
 	while remainder ~= "" do
 		local consonants, vowels
 		
-		consonants, remainder = umatch(remainder, "^([^aeiouàèéêíòóôúïü]*)(.-)$")
-		vowels, remainder = umatch(remainder, "^([aeiouàèéêíòóôúïü]*)(.-)$")
+		consonants, remainder = umatch(remainder, "^([^aeiouàèéêëíòóôúïü]*)(.-)$")
+		vowels, remainder = umatch(remainder, "^([aeiouàèéêëíòóôúïü]*)(.-)$")
 		
 		if vowels == "" then
 			syllables[#syllables].coda = syllables[#syllables].coda .. consonants
@@ -228,7 +228,7 @@ local function split_syllables(remainder)
 	
 	-- Detect stress
 	for i, syll in ipairs(syllables) do
-		if ufind(syll.vowel, "^[àèéêíòóôú]$") then
+		if ufind(syll.vowel, "^[àèéêëíòóôú]$") then
 			syllables.stress = i -- primary stress: the last one stressed
 			syll.stressed = true
 		end
@@ -256,7 +256,7 @@ end
 
 local IPA_vowels = {
 	["a"] = "a", ["à"] = "a",
-	["e"] = "e", ["è"] = "ɛ", ["ê"] = "ɛ", ["é"] = "e",
+	["e"] = "e", ["è"] = "ɛ", ["ê"] = "ɛ", ["ë"] = "ɛ", ["é"] = "e",
 	["i"] = "i", ["í"] = "i", ["ï"] = "i",
 	["o"] = "o", ["ò"] = "ɔ", ["ô"] = "ɔ", ["ó"] = "o",
 	["u"] = "u", ["ú"] = "u", ["ü"] = "u",
@@ -536,7 +536,7 @@ local function to_IPA(syllables, mid_vowel_hint)
 			syll.onset = "z"
 		end
 		
-		if ufind(syll.vowel, "^[eèéêií]$") then
+		if ufind(syll.vowel, "^[eèéêëií]$") then
 			syll.onset = ugsub(syll.onset, "tg$", "d͡ʒ")
 			syll.onset = ugsub(syll.onset, "[cg]$", {["c"] = "s", ["g"] = "ʒ"})
 			syll.onset = ugsub(syll.onset, "[qg]u$", {["qu"] = "k", ["gu"] = "ɡ"})
@@ -655,7 +655,7 @@ accents["Balearic"] = function(syllables, mid_vowel_hint)
 		end
 		
 		-- Stressed schwa
-		if i == syllables.stress and mid_vowel_hint == "ê" then
+		if i == syllables.stress and mid_vowel_hint == "ê" then -- not ë
 			current.vowel = ugsub(current.vowel, "ɛ", "ə")
 		end
 		
@@ -705,8 +705,8 @@ accents["Valencian"] = function(syllables, mid_vowel_hint)
 		local previous = syllables[i-1]
 		
 		-- Variable mid vowel
-		if i == syllables.stress and (mid_vowel_hint == "ê" or mid_vowel_hint == "ô") then
-			current.vowel = ugsub(current.vowel, "[ɛɔ]", {["ɛ"] = "e", ["ɔ"] = "o"})
+		if i == syllables.stress and (mid_vowel_hint == "ê" or mid_vowel_hint == "ë" or mid_vowel_hint == "ô") then
+			current.vowel = ugsub(current.vowel, "[ɛëɔ]", {["ɛ"] = "e", ["ë"] = "e", ["ɔ"] = "o"})
 		end
 		
 		-- Fortition of palatal fricatives
@@ -816,7 +816,7 @@ function export.show(frame)
 	local word = ulower(args[1])
 	local mid_vowel_hint = nil
 	
-	if word == "é" or word == "è" or word == "ê" or word == "ó" or word == "ò" or word == "ô" then
+	if word == "é" or word == "è" or word == "ê" or word == "ë" or word == "ó" or word == "ò" or word == "ô" then
 		mid_vowel_hint = word
 		word = ulower(mw.title.getCurrentTitle().text)
 	end
@@ -826,8 +826,8 @@ function export.show(frame)
 	local syllables = split_syllables(word)
 	
 	if mid_vowel_hint == nil then
-		if ufind(syllables[syllables.stress].vowel, "[éêòóô]") then
-			mid_vowel_hint = umatch(syllables[syllables.stress].vowel, "[éêòóô]")
+		if ufind(syllables[syllables.stress].vowel, "[éêëòóô]") then
+			mid_vowel_hint = umatch(syllables[syllables.stress].vowel, "[éêëòóô]")
 		elseif ufind(syllables[syllables.stress].vowel, "[eè]") then
 			mid_vowel_hint = mid_vowel_e(syllables)
 		elseif syllables[syllables.stress].vowel == "o" then
@@ -854,8 +854,8 @@ function export.test(word, mid_vowel_hint)
 	local syllables = split_syllables(word)
 	
 	if mid_vowel_hint == nil then
-		if ufind(syllables[syllables.stress].vowel, "[éêòóô]") then
-			mid_vowel_hint = umatch(syllables[syllables.stress].vowel, "[éêòóô]")
+		if ufind(syllables[syllables.stress].vowel, "[éêëòóô]") then
+			mid_vowel_hint = umatch(syllables[syllables.stress].vowel, "[éêëòóô]")
 		elseif ufind(syllables[syllables.stress].vowel, "[eè]") then
 			mid_vowel_hint = mid_vowel_e(syllables)
 		elseif syllables[syllables.stress].vowel == "o" then
@@ -873,8 +873,8 @@ function export.debug(word, mid_vowel_hint)
 	
 	local syllables = split_syllables(word)
 	if mid_vowel_hint == nil then
-		if ufind(syllables[syllables.stress].vowel, "[éêòóô]") then
-			mid_vowel_hint = umatch(syllables[syllables.stress].vowel, "[éêòóô]")
+		if ufind(syllables[syllables.stress].vowel, "[éêëòóô]") then
+			mid_vowel_hint = umatch(syllables[syllables.stress].vowel, "[éêëòóô]")
 		elseif ufind(syllables[syllables.stress].vowel, "[eè]") then
 			mid_vowel_hint = mid_vowel_e(syllables)
 		elseif syllables[syllables.stress].vowel == "o" then
