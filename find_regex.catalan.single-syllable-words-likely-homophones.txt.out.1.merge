@@ -30,6 +30,9 @@ Page 1 Déu: -------- begin text --------
 -------- end text --------
 Page 2 Fes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Proper noun===
 {{ca-proper noun|?}}
 
@@ -184,24 +187,28 @@ Onomatopoeic from the sound of a lamb.
 Page 11 bec: -------- begin text --------
 
 ===Etymology===
+
+===Etymology 1===
 {{inh+|ca|la|beccus||beak}}, from {{der|ca|cel-gau|*beccos}}, from {{der|ca|cel-pro|*bekkos}}.
 
-===Pronunciation===
-{{sense|noun}}
-* {{ca-IPA|bék}}<ref>{{R:ca:DCVB}}</ref>
+====Pronunciation====
+* {{ca-IPA|é}}<ref>{{R:ca:DCVB}}</ref>
 * {{rhymes|ca|ek}}
-{{sense|verb}}
-* {{ca-IPA|bêk}}
 
-===Noun===
+====Noun====
 {{ca-noun|m}}
 
 # [[beak]], [[bill]]
 
-====Derived terms====
+=====Derived terms=====
 {{der3|ca|becaina|becample|beccurt|bec d'esclop|becfí|becgroc|becllarg|becplaner|bectort|becvermell|escaldabec}}
 
-===Verb===
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ê}}
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|beure}}
@@ -212,10 +219,13 @@ Page 11 bec: -------- begin text --------
 -------- end text --------
 Page 12 becs: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Noun===
 {{head|ca|noun form}}
 
-# {{plural of|ca|bec}}
+# {{plural of|ca|bec|t=beak}}
 
 -------- end text --------
 Page 13 ben: -------- begin text --------
@@ -232,25 +242,31 @@ Page 13 ben: -------- begin text --------
 #: {{uxi|ca|Demà al matí '''ben''' d'hora m'aixeco i viatjo a Milan.|Tomorrow morning '''quite''' early I'll get up and travel to Milan.}}
 
 ====Usage notes====
-The form {{m|ca|ben}} is used when it precedes the adjective, adverb or verb form that it modifies, and {{m|ca|bé}} is used in all other cases.
+* The form {{m|ca|ben}} is used when it precedes the adjective, adverb or verb form that it modifies, and {{m|ca|bé}} is used in all other cases.
 
 -------- end text --------
 Page 14 bens: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|è}}
+
 ===Noun===
 {{head|ca|noun form}}
 
-# {{plural of|ca|bé}}
+# {{plural of|ca|be|t=sheep}}
 
 -------- end text --------
 Page 15 bes: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}<!-- per cawikt, for all three meanings -->
 
 ===Etymology 1===
 
 ====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|be}}
+# {{plural of|ca|be|t=the letter B}}
 
 ===Etymology 2===
 {{inh+|ca|la|basium}}, from {{der|ca|ine-pro|*bu}}. Compare {{cog|oc|bais}}, {{cog|es|beso}}, {{cog|it|bacio}}.
@@ -279,6 +295,9 @@ Page 15 bes: -------- begin text --------
 -------- end text --------
 Page 16 beu: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -286,6 +305,9 @@ Page 16 beu: -------- begin text --------
 
 -------- end text --------
 Page 17 beus: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -328,15 +350,18 @@ Possibly from a reconstructed {{m|cel-gau|*bledino-}}, a derivation of {{der|ca|
 -------- end text --------
 Page 19 blens: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Noun===
 {{head|ca|noun form}}
 
-# {{plural of|ca|ble}}
+# {{plural of|ca|ble|t=wick}}
 -------- end text --------
 Page 20 bloc: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- for both meanings -->
 
 ===Etymology 1===
 {{bor+|ca|fr|bloc}}.
@@ -374,6 +399,9 @@ Recommend spelling (by TERMCAT) until 2013, when {{m|ca|blog}} was accepted by t
 
 -------- end text --------
 Page 21 blocs: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -432,61 +460,91 @@ The form {{m|ca|bon}} is used as the masculine singular form when the adjective 
 -------- end text --------
 Page 23 boc: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 Pre-Roman, possibly from {{der|ca|goh|boc}}, from {{der|ca|gem-pro|*bukkaz}}, possibly from {{der|ca|ine-pro|*bʰuǵ-}}.
 
-===Pronunciation===
+====Pronunciation====
 * {{ca-IPA|ó}}
 
-===Noun===
+====Noun====
 {{ca-noun|m}}
 
 # [[buck]] {{gloss|male goat}}
 #: {{syn|ca|cabró}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|boc expiatori}}
 * {{l|ca|boquet}}
 
-===Further reading===
-* {{R:ca:IEC2}}
+===Etymology 2===
+{{bor+|ca|de|Bock}}.
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+
+====Noun====
+{{ca-noun|m}}
+
+# [[pint glass]], [[half-]][[liter]] [[jug]]
 
 {{C|ca|Caprines|Male animals}}
 
 -------- end text --------
 Page 24 bocs: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+
+====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|boc}}
+# {{plural of|ca|boc|t=buck, male goat}}
+#: {{syn|ca|cabrons}}
 
-====Synonyms====
-* {{l|ca|cabrons}}
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|boc|t=pint glass}}
+#: {{syn|ca|cabrons}}
 
 -------- end text --------
 Page 25 bon: -------- begin text --------
 
-===Etymology===
-From {{inh|ca|la|bonus}}, from {{inh|ca|itc-ola|duenos}}, later {{m|itc-ola|duonus}}, from {{inh|ca|itc-pro|*dwenos}}, from {{der|ca|ine-pro|*dew-||to show favor, revere}}.
-
 ===Pronunciation===
 * {{ca-IPA|ò}}
 
-===Adjective===
+===Etymology 1===
+From {{inh|ca|la|bonus}}, from {{inh|ca|itc-ola|duenos}}, later {{m|itc-ola|duonus}}, from {{inh|ca|itc-pro|*dwenos}}, from {{der|ca|ine-pro|*dew-||to show favor, revere}}.
+
+====Adjective====
 {{head|ca|adjective form}}
 
 # [[good]]; {{alternative form of|ca|bo|nocap=1}}
 
-====Usage notes====
+=====Usage notes=====
 The form {{m|ca|bon}} is used as the masculine singular form when the adjective precedes the noun, and {{m|ca|bo}} is used in all other cases.
 
-====Related terms====
+=====Related terms=====
 * {{l|ca|bé}}, {{l|ca|ben}}
 * {{l|ca|bondat}}
 
-====References====
+=====References=====
 * {{R:ca:DCVB|bo}}
+
+===Etymology 2===
+{{bor+|ca|bo|བོན}}.
+
+====Noun====
+{{ca-noun|m}}
+
+# [[Bon]] {{gl|an indigenous Tibetan religion}}
 
 -------- end text --------
 Page 26 bons: -------- begin text --------
@@ -494,10 +552,19 @@ Page 26 bons: -------- begin text --------
 ===Pronunciation===
 * {{ca-IPA|ò}}
 
-===Adjective===
+===Etymology 1===
+
+====Adjective====
 {{head|ca|adjective form}}
 
-# {{adj form of|ca|bo||m|p}}
+# {{masculine plural of|ca|bo}}
+
+===Etymology 2===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|bon|t=Bon {{q|Tibetan religion}}}}
 
 -------- end text --------
 Page 27 bou: -------- begin text --------
@@ -526,7 +593,7 @@ Page 27 bou: -------- begin text --------
 From {{der|ca|grc|βόλος}}.
 
 ====Noun====
-{{ca-noun|m}}
+{{ca-noun|m|-}}
 
 # [[seine]] fishing
 
@@ -552,13 +619,16 @@ Page 28 bous: -------- begin text --------
 ===Noun===
 {{head|ca|noun form}}
 
-# {{plural of|ca|bou}}
+# {{plural of|ca|bou|t=ox; steer; edible crab}}
 
 -------- end text --------
 Page 29 bren: -------- begin text --------
 
 ===Etymology===
 From {{der|ca|roa-oca|breny}}, from {{der|ca|cel-gau|*brennos||rotten}}, from {{der|ca|cel-pro|*bragnos||foul, rotten}}. Cognate with {{cog|en|bran}}.
+
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -568,32 +638,41 @@ From {{der|ca|roa-oca|breny}}, from {{der|ca|cel-gau|*brennos||rotten}}, from {{
 
 ===Further reading===
 * {{R:ca:IEC2}}
+* {{R:ca:GDLC}}
+* {{R:ca:DNV}}
 
 {{C|ca|Grains}}
 
 -------- end text --------
 Page 30 bres: -------- begin text --------
 
-===Etymology===
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- for both -->
+
+===Etymology 1===
 From {{der|ca|VL.|berciolum}}, diminutive of {{m|la|*bertium}}, from {{der|ca|cel-gau|*berta}} (compare {{cog|sga|bert||bundle}}). Cognate with {{cog|fr|berceau}}.
 
-===Pronunciation===
-* {{ca-IPA|ê}}
-
-===Noun===
+====Noun====
 {{ca-noun|m|#sos}}
 
-# [[cradle]] (''[[w:Northwestern Catalan|Northwestern]]'', ''[[w:Valencian|Northern Valencian]]'', ''[[w:Balearic dialect|Balearic]]'')
-# a [[big]] [[cradle]]-[[shape]]d [[basket]] (''[[w:Northwestern Catalan|Northwestern]]'')
+# {{lb|ca|Northwestern Catalan|Northern|_|Valencian|Balearic}} [[cradle]]
+# {{lb|ca|Northwestern Catalan}} a [[big]] [[cradle]]-[[shape]]d [[basket]]
 
-====Related terms====
+=====Related terms=====
 * {{l|ca|bressol}}, {{l|ca|bressar}}
 
-===Further reading===
+====Further reading====
 * {{R:ca:IEC2}}
 * {{R:ca:GDLC}}
 * {{R:ca:DNV}}
 * {{R:ca:DCVB}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{lb|ca|Balearic}} {{ca-verb form of|bressar<pres_1s:bres>}}
 
 -------- end text --------
 Page 31 breu: -------- begin text --------
@@ -638,10 +717,18 @@ Page 31 breu: -------- begin text --------
 -------- end text --------
 Page 32 breus: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Adjective===
 {{head|ca|adjective form}}
 
-# {{masculine plural of|ca|breu}}
+# {{masculine plural of|ca|breu|t=short, brief}}
+
+===Noun===
+{{head|ca|noun form}}
+
+# {{plural of|ca|breu|t=breve, sigil}}
 -------- end text --------
 Page 33 broc: -------- begin text --------
 
@@ -649,7 +736,7 @@ Page 33 broc: -------- begin text --------
 {{inh+|ca|la|broccus}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- for both meanings -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -671,6 +758,13 @@ Page 33 broc: -------- begin text --------
 * {{R:ca:GDLC}}
 * {{R:ca:IEC2}}
 
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{lb|ca|Balearic}} {{ca-verb form of|brocar<pres_1s:broc>}}
+
 -------- end text --------
 Page 34 brou: -------- begin text --------
 
@@ -690,6 +784,9 @@ Compare {{cog|it|brodo}}, {{cog|es|brodio}}, {{cog|pt|bródio}}, {{cog|fr|brouet
 
 -------- end text --------
 Page 35 brous: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -725,7 +822,10 @@ The form {{m|ca|ben}} is used when it precedes the adjective, adverb or verb for
 ===Noun===
 {{ca-noun|m|#ns}}
 
-# [[good]]
+# [[good]], [[valuable]] [[object]]
+# [[satisfactory]] [[grade]] {{q|at school}}
+# [[good]] {{gl|quality of being good}}
+# [[virtue]]
 
 ===Related terms===
 * {{l|ca|bo}}, {{l|ca|bon}}
@@ -738,6 +838,9 @@ The form {{m|ca|ben}} is used when it precedes the adjective, adverb or verb for
 
 -------- end text --------
 Page 37 béns: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Adjective===
 {{head|ca|adjective form}}
@@ -785,11 +888,24 @@ Page 40 cec: -------- begin text --------
 * {{l|ca|cegament}}
 * {{l|ca|cita a cegues}}
 
+===Noun===
+{{ca-noun|m|f=cega}}
+
+# [[blind]] [[person]]
+
+===Noun===
+{{ca-noun|m}}
+
+# [[cecum]]/[[caecum]]
+
 ===References===
 * {{R:ca:DCVB}}
 
 -------- end text --------
 Page 41 cecs: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Adjective===
 {{head|ca|adjective form}}
@@ -815,6 +931,9 @@ From {{der|ca|la|cēnsus}}.
 -------- end text --------
 Page 43 ces: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -822,6 +941,10 @@ Page 43 ces: -------- begin text --------
 
 -------- end text --------
 Page 44 che: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
+* {{ca-IPA|è}}
 
 ===Interjection===
 {{head|ca|interjection}}
@@ -858,6 +981,9 @@ Page 45 clec: -------- begin text --------
 -------- end text --------
 Page 46 cloc: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -865,6 +991,9 @@ Page 46 cloc: -------- begin text --------
 
 -------- end text --------
 Page 47 clon: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -880,6 +1009,9 @@ Page 47 clon: -------- begin text --------
 -------- end text --------
 Page 48 clons: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -891,7 +1023,7 @@ Page 49 clos: -------- begin text --------
 {{inh+|ca|la|clausus}}. Compare {{cog|oc|claus}}, {{cog|fr|clos}}, and {{cog|it|chiuso}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ò}}
 
 ===Adjective===
 {{ca-adj}}
@@ -915,6 +1047,9 @@ Page 49 clos: -------- begin text --------
 -------- end text --------
 Page 50 clou: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -922,6 +1057,9 @@ Page 50 clou: -------- begin text --------
 
 -------- end text --------
 Page 51 clous: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -931,28 +1069,58 @@ Page 51 clous: -------- begin text --------
 -------- end text --------
 Page 52 coc: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|ò}}
-
 ===Etymology 1===
-From {{der|ca|NL.|coccus}}.
+{{inh+|ca|LL.|cocus}}, from {{der|ca|la|coquus}}.
+
+====Pronunciation====
+* {{ca-IPA|ò}}
 
 ====Noun====
 {{ca-noun|m|f=coquessa}}
 
 # [[cook]]
-# [[coccus]] {{gloss|bacteria}}
 
 ===Etymology 2===
-{{bor+|ca|en|coke}}.
+{{bor+|ca|NL.|coccus}}, from {{der|ca|grc|κόκκος||grain, seed}}.
+
+====Pronunciation====
+* {{ca-IPA|ò}}
 
 ====Noun====
 {{ca-noun|m}}
 
-# {{clipping of|ca|carbó de coc}}
+# [[coccus]] {{gloss|bacteria}}
 
 ===Etymology 3===
+{{bor+|ca|en|coke}}.
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+
+====Noun====
+{{ca-noun|m|-}}
+
+# {{clipping of|ca|carbó de coc}}
+
+===Etymology 4===
+Variant of {{m|ca|coca}}.
+
+====Alternative forms====
+* {{alt|ca|cóc||pre-2016}}
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+
+====Noun====
+{{ca-noun|m}}
+
+# [[scone]]
+
+===Etymology 5===
 {{nonlemma}}
+
+====Pronunciation====
+* {{ca-IPA|ò}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -967,19 +1135,45 @@ From {{der|ca|NL.|coccus}}.
 -------- end text --------
 Page 53 cocs: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+
+====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|coc}}
+# {{plural of|ca|coc|t=cook}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|coc|t=coccus}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|coc|t=scone}}
 
 -------- end text --------
 Page 54 con: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Etymology===
-From {{der|ca|la|conus}}.
+{{bor+|ca|la|cōnus}}.
 
 ===Pronunciation===
+* {{ca-IPA|ó}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-con.wav|Audio}}
 
 ===Noun===
@@ -992,6 +1186,9 @@ From {{der|ca|la|conus}}.
 
 -------- end text --------
 Page 55 cons: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -1031,6 +1228,9 @@ Page 56 cos: -------- begin text --------
 -------- end text --------
 Page 57 cou: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -1039,6 +1239,9 @@ Page 57 cou: -------- begin text --------
 -------- end text --------
 Page 58 cous: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -1046,6 +1249,9 @@ Page 58 cous: -------- begin text --------
 
 -------- end text --------
 Page 59 crec: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -1057,7 +1263,7 @@ Page 60 creu: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- both meanings -->
 * {{rhymes|ca|ɛw|s=1}}
 
 ===Etymology 1===
@@ -1090,12 +1296,19 @@ Page 60 creu: -------- begin text --------
 -------- end text --------
 Page 61 creus: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- both meanings -->
+
+===Etymology 1===
+
+====Noun====
 {{head|ca|noun form}}
 
 # {{plural of|ca|creu}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|creure}}
@@ -1137,6 +1350,9 @@ From {{inh|ca|la|de|dē}}.
 -------- end text --------
 Page 63 dec: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -1157,7 +1373,7 @@ Page 65 dens: -------- begin text --------
 {{bor+|ca|la|dēnsus}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|ë}}
 
 ===Adjective===
 {{ca-adj}}
@@ -1186,7 +1402,7 @@ Page 66 des: -------- begin text --------
 ====Preposition====
 {{head|ca|preposition}}
 
-# from
+# [[from]]
 
 =====Derived terms=====
 * {{l|ca|des de}}
@@ -1214,12 +1430,12 @@ Page 66 des: -------- begin text --------
 Page 67 deu: -------- begin text --------
 {{number box|ca}}
 
-===Pronunciation===
-* {{ca-IPA|dèu}}
-* {{rhymes|ca|ɛw|s=1}}
-
 ===Etymology 1===
 {{inh+|ca|la|decem}}, from {{inh|ca|ine-pro|*déḱm̥}}.
+
+====Pronunciation====
+* {{ca-IPA|dèu}}
+* {{rhymes|ca|ɛw|s=1}}
 
 ====Numeral====
 {{ca-num}}
@@ -1232,14 +1448,30 @@ Page 67 deu: -------- begin text --------
 # [[ten]]
 
 ===Etymology 2===
+{{inh+|ca|roa-oca|dou}}, of pre-Roman origin; influenced by {{m+|la|dux}}.
+
+====Pronunciation====
+* {{ca-IPA|dèu}}
+* {{rhymes|ca|ɛw|s=1}}
+
+====Noun====
+{{ca-noun|f}}
+
+# [[spring]] {{gl|source of water}}
+
+===Etymology 3===
 {{nonlemma}}
+
+====Pronunciation====
+* {{ca-IPA|dêu}}
+* {{rhymes|ca|ɛw|s=1}}
 
 ====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|deure}}
 
-===Etymology 3===
+===Etymology 4===
 {{nonlemma}}
 
 ====Verb====
@@ -1250,12 +1482,32 @@ Page 67 deu: -------- begin text --------
 -------- end text --------
 Page 68 deus: -------- begin text --------
 
-===Noun===
-{{head|ca|noun form}}
+===Etymology 1===
 
-# {{plural of|ca|deu}}
+====Pronunciation====
+* {{ca-IPA|è}}
 
-===Verb===
+====Noun====
+{{head|ca|noun form|g=m-p}}
+
+# {{plural of|ca|deu|t=tens}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|è}}
+
+====Noun====
+{{head|ca|noun form|g=f-p}}
+
+# {{plural of|ca|deu|t=springs {{q|of water}}}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|ê}}
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|deure}}
@@ -1263,11 +1515,12 @@ Page 68 deus: -------- begin text --------
 -------- end text --------
 Page 69 do: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|ó}}
-
 ===Etymology 1===
 From {{inh-lite|ca|la|donum|dōnum|gift}}.
+
+====Pronunciation====
+* {{a|traditional}} {{ca-IPA|ó}}
+* {{a|more commonly}} {{ca-IPA|ò}}
 
 ====Noun====
 {{ca-noun|m|#ns}}
@@ -1278,6 +1531,10 @@ From {{inh-lite|ca|la|donum|dōnum|gift}}.
 ===Etymology 2===
 Borrowed from {{bor-lite|ca|it|do}}.
 
+====Pronunciation====
+* {{a|originally, Italianate}} {{ca-IPA|ò}}
+* {{a|more commonly}} {{ca-IPA|ó}}
+
 ====Noun====
 {{ca-noun|m}}
 
@@ -1285,6 +1542,9 @@ Borrowed from {{bor-lite|ca|it|do}}.
 
 ===Etymology 3===
 {{nonlemma}}
+
+====Pronunciation====
+* {{ca-IPA|ó}}
 
 ====Verb====
 {{head-lite|ca|verb forms}}
@@ -1294,10 +1554,14 @@ Borrowed from {{bor-lite|ca|it|do}}.
 -------- end text --------
 Page 70 dons: -------- begin text --------
 
+===Pronunciation===
+* {{a|traditional}} {{ca-IPA|ó}}
+* {{a|more commonly}} {{ca-IPA|ò}}
+
 ===Noun===
 {{head|ca|noun form}}
 
-# {{plural of|ca|do}}
+# {{plural of|ca|do|t=gift}}
 
 -------- end text --------
 Page 71 dos: -------- begin text --------
@@ -1333,12 +1597,13 @@ Page 71 dos: -------- begin text --------
 ===Etymology 2===
 
 ====Pronunciation====
-* {{ca-IPA|ó}}
+* {{a|originally, Italianate}} {{ca-IPA|ò}}
+* {{a|more commonly}} {{ca-IPA|ó}}
 
 ====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|do}}
+# {{plural of|ca|do|t=do {{q|note of the musical scale}}}}
 
 ===Etymology 3===
 {{inh+|ca|roa-oca|dos}}, from {{inh|ca|VL.|dossum}}, from {{inh|ca|la|dorsum||back}}. Compare {{doublet|ca|dors|notext=1}}, a borrowed doublet.
@@ -1363,6 +1628,12 @@ Page 71 dos: -------- begin text --------
 -------- end text --------
 Page 72 dron: -------- begin text --------
 
+===Etymology===
+{{bor+|ca|en|drone}}.
+
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -1370,6 +1641,9 @@ Page 72 dron: -------- begin text --------
 
 -------- end text --------
 Page 73 drons: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -1411,12 +1685,18 @@ Page 74 déu: -------- begin text --------
 -------- end text --------
 Page 75 déus: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Noun===
 {{head|ca|noun form}}
 
 # {{plural of|ca|déu}}
 -------- end text --------
 Page 76 dó: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -1439,7 +1719,9 @@ The Algherese imperative form ''dó'' is an optional reduced form of the imperat
 -------- end text --------
 Page 77 e: -------- begin text --------
 
+
 ===Pronunciation===
+* {{ca-IPA|é}}
 * {{rhymes-lite|ca|e|s=1}}
 
 ===Noun===
@@ -1452,12 +1734,12 @@ Page 77 e: -------- begin text --------
 -------- end text --------
 Page 78 en: -------- begin text --------
 
-===Pronunciation===
-* {{a|Balearic|Central Catalan}} {{IPA|ca|/ən/}}
-* {{a|Valencian}} {{IPA|ca|/en/}}
-
 ===Etymology 1===
 From the final syllable of {{der|ca|la|domine||Mister}}.
+
+====Pronunciation====
+* {{a|Balearic|Central Catalan}} {{IPA|ca|/ən/}}
+* {{a|Valencian}} {{IPA|ca|/en/}}
 
 ====Article====
 {{head|ca|articles|elided|n'|g=m-s|feminine|na}}
@@ -1474,6 +1756,10 @@ From the final syllable of {{der|ca|la|domine||Mister}}.
 ===Etymology 2===
 From {{inh|ca|la|in||in, inside}}, from {{inh|ca|itc-pro|*en}}, from {{inh|ca|ine-pro|*h₁én||in}}.
 
+====Pronunciation====
+* {{a|Balearic|Central Catalan}} {{IPA|ca|/ən/}}
+* {{a|Valencian}} {{IPA|ca|/en/}}
+
 ====Preposition====
 {{head|ca|prepositions}}
 
@@ -1481,6 +1767,10 @@ From {{inh|ca|la|in||in, inside}}, from {{inh|ca|itc-pro|*en}}, from {{inh|ca|in
 
 ===Etymology 3===
 From {{der|ca|la|inde||thence}}. Compare {{cog|fr|en}}, {{cog|it|ne}}.
+
+====Pronunciation====
+* {{a|Balearic|Central Catalan}} {{IPA|ca|/ən/}}
+* {{a|Valencian}} {{IPA|ca|/en/}}
 
 ====Pronoun====
 {{head|ca|pronouns|cat2=personal pronouns|proclitic||contracted|n'|enclitic|ne|contracted enclitic|'n}}
@@ -1507,6 +1797,16 @@ From {{der|ca|la|inde||thence}}. Compare {{cog|fr|en}}, {{cog|it|ne}}.
 ====Further reading====
 * {{R:ca:IEC2}}
 * {{R:ca:DCVB}}
+
+===Etymology 4===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Noun====
+{{ca-noun|f}}
+
+# {{lb|ca|traditional}} {{alt form|ca|ena|t=the letter N}}
 
 -------- end text --------
 Page 79 ens: -------- begin text --------
@@ -1538,19 +1838,30 @@ Page 79 ens: -------- begin text --------
 ====Noun====
 {{ca-noun|m|#}}
 
+# [[entity]], [[being]]
 # [[organization]], [[entity]], [[institution]]
 #: '''''ens''' públic''
 #:: ''public '''institution'''''
 
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{lb|ca|traditional}} {{plural of|ca|en|t=the letter N}}
+
 -------- end text --------
 Page 80 es: -------- begin text --------
 
-===Pronunciation===
-* {{a|Balearic|Central Catalan}} {{IPA-lite|ca|/əs/}}
-* {{a|Valencian}} {{IPA-lite|ca|/es/}}
-
 ===Etymology 1===
 {{inh+|ca|la|sē}}.
+
+====Pronunciation====
+* {{a|Balearic|Central Catalan}} {{IPA-lite|ca|/əs/}}
+* {{a|Valencian}} {{IPA-lite|ca|/es/}}
 
 ====Pronoun====
 {{ca-ppron|type=procl|procl_con=s'|encl=se|encl_con='s}}
@@ -1569,6 +1880,10 @@ Page 80 es: -------- begin text --------
 ===Etymology 2===
 From {{inh-lite|ca|la|ipse}}.
 
+====Pronunciation====
+* {{a|Balearic|Central Catalan}} {{IPA-lite|ca|/əs/}}
+* {{a|Valencian}} {{IPA-lite|ca|/es/}}
+
 ====Alternative forms====
 * {{l-lite|ca|so}}
 
@@ -1582,10 +1897,13 @@ From {{inh-lite|ca|la|ipse}}.
 
 ===Etymology 3===
 
+====Pronunciation====
+* {{ca-IPA|é}}
+
 ====Noun====
 {{head-lite|ca|noun forms}}
 
-# {{plural of|ca|e}}
+# {{plural of|ca|e|t=the letter E}}
 
 ====Further reading====
 * {{R:ca:IEC2}}
@@ -1593,31 +1911,54 @@ From {{inh-lite|ca|la|ipse}}.
 -------- end text --------
 Page 81 fe: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{inh+|ca|la|fides|fidem}}, ultimately from {{der|ca|ine-pro|*bʰeydʰ-}}. Attested from the 12th century.<ref>{{R:ca:GDLC}}</ref> Compare {{cog|oc|fe}}.
 
-===Pronunciation===
+====Pronunciation====
 * {{ca-IPA|ê}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-fe.wav|Audio}}
 
-===Noun===
+====Noun====
 {{ca-noun|f}}
 
 # [[faith]]
 
-====Related terms====
+=====Related terms=====
 * {{l|ca|fidel}}
 
-===References===
-<references/>
+===Etymology 2===
+{{inh+|ca|la|fēnum}}.
 
-===Further reading===
+====Pronunciation====
+* {{ca-IPA|ê}}
+
+====Noun====
+{{ca-noun|m}}
+
+# {{lb|ca|archaic|or|dialectal}} [[hay]]
+#: {{syn|ca|fenc}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Alternative forms====
+* {{alt|ca|fé||pre-2016}}
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{lb|ca|Balearic}} {{ca-verb form of|fer<pret_3s:fe.imp_2s:fe}}
+
+====Further reading====
 * {{R:ca:IEC2}}
-* {{R:ca:DNV}}
-* {{R:ca:DCVB}}
 
 -------- end text --------
 Page 82 fen: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -1626,6 +1967,9 @@ Page 82 fen: -------- begin text --------
 
 -------- end text --------
 Page 83 fens: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -1639,13 +1983,20 @@ Page 84 fes: -------- begin text --------
 From {{inh|ca|la|fissus}}.
 
 ====Pronunciation====
-* {{ca-IPA|è}}
+* {{ca-IPA|ê}}
 * {{rhymes|ca|ɛs}}
 
 ====Adjective====
-{{head|ca|adjective form}}
+{{ca-adj}}
 
-# (dated or dialectal) [[cleft]]
+# {{lb|ca|dated|or|dialectal}} [[cleft]], [[split]]
+
+====Noun====
+{{ca-noun|f}}
+
+# [[split]]ting, [[cleave|cleaving]]
+# [[cleft]], [[fissure]]
+# [[notch]] {{q|in the ears of livestock, to mark them}}
 
 ====Participle====
 {{ca-pp}}
@@ -1653,17 +2004,30 @@ From {{inh|ca|la|fissus}}.
 # {{past participle of|ca|fendre}}
 
 ===Etymology 2===
+{{bor+|ca|ar|فأس|t=pickaxe}}.
 
 ====Pronunciation====
-* {{ca-IPA|è}}
+* {{ca-IPA|é}}
+
+====Noun====
+{{ca-noun|m|#sos}}
+
+# [[hoe]] {{gl|agricultural tool}}
+#: {{synonyms|ca|magall}}
+
+===Etymology 3===
+Named after the city of Fes, Morocco. See {{der|ca|ota|فس|tr=fes}}.
+
+====Pronunciation====
+* {{ca-IPA|ê}}
 * {{rhymes|ca|ɛs}}
 
 ====Noun====
-{{head|ca|noun form}}
+{{ca-noun|m}}
 
-# {{plural of|ca|fe}}
+# [[fez]] (hat)
 
-===Etymology 3===
+===Etymology 4===
 
 ====Pronunciation====
 * {{ca-IPA|é}}
@@ -1674,25 +2038,27 @@ From {{inh|ca|la|fissus}}.
 
 # {{ca-verb form of|fer}}
 
-===Etymology 4===
-{{bor+|ca|ar|فأس|t=pickaxe}}
+===Etymology 5===
 
 ====Pronunciation====
-* {{ca-IPA|é}}
+* {{ca-IPA|ê}}
+* {{rhymes|ca|ɛs}}
 
 ====Noun====
-{{ca-noun|m}}
+{{head|ca|noun form}}
 
-# [[hoe]] (agricultural tool)
-#: {{synonyms|ca|magall}}
+# {{plural of|ca|fe|t=faith}}
 
 ===Etymology 5===
-Named after the city of Fes, Morocco. See {{der|ca|ota|فس|tr=fes}}.
+
+====Pronunciation====
+* {{ca-IPA|ê}}
+* {{rhymes|ca|ɛs}}
 
 ====Noun====
-{{ca-noun|m}}
+{{head|ca|noun form}}
 
-# [[fez]] (hat)
+# {{lb|ca|archaic|or|dialectal}} {{plural of|ca|fe|t=hay}}
 
 ===Further reading===
 * {{R:ca:DCVB}}
@@ -1701,7 +2067,7 @@ Named after the city of Fes, Morocco. See {{der|ca|ota|فس|tr=fes}}.
 Page 85 feu: -------- begin text --------
 
 ===Etymology 1===
-From {{der|ca|pro|feu}}, from {{der|ca|frk|*fehu}}, from {{der|ca|gem-pro|*fehu}}.
+{{inh+|ca|roa-oca|feu}}, from {{der|ca|VL.|*feus}}, from {{der|ca|frk|*fehu}}, from {{der|ca|gem-pro|*fehu}}.
 
 ====Pronunciation====
 * {{ca-IPA|é}}
@@ -1718,10 +2084,13 @@ From {{der|ca|pro|feu}}, from {{der|ca|frk|*fehu}}, from {{der|ca|gem-pro|*fehu}
 {{nonlemma}}
 
 ====Alternative forms====
-* {{alt|ca|fais||Balearic}}
+* {{alt|ca|feis||Balearic|second-person plural present and imperative only}}
+* {{alt|ca|faceu||Balearic|second-person plural subjunctive only}}
+* {{alt|ca|fé||Balearic|third-person singular past only}}
+* {{alt|ca|féu||pre-2016|third-person singular past only}}
 
 ====Pronunciation====
-* {{a|second-person plural}} {{ca-IPA|ê}} 
+* {{a|second-person plural present, subjunctive, imperative}} {{ca-IPA|ê}} 
 * {{a|third-person singular past}} {{ca-IPA|é}}
 
 ====Verb====
@@ -1757,10 +2126,25 @@ From {{der|ca|pro|feu}}, from {{der|ca|frk|*fehu}}, from {{der|ca|gem-pro|*fehu}
 -------- end text --------
 Page 86 feus: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|feu}}
+# {{plural of|ca|feu|t=fiefdom, fee}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{a|Algherese}} {{IPA|ca|/ˈfɛws/}} <!-- Unlike the Castilianism feos, the Algherese feus has but 1 syllable -->
+
+====Noun====
+{{head|ca|adjective form}}
+
+# {{masculine plural of|ca|feu|t=ugly, ungrateful, bad}}
 
 -------- end text --------
 Page 87 floc: -------- begin text --------
@@ -1789,6 +2173,9 @@ From {{der|ca|la|floccus}}.
 -------- end text --------
 Page 88 flocs: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -1808,6 +2195,9 @@ Page 89 foc: -------- begin text --------
 {{ca-noun|m}}
 
 # [[fire]]
+# [[fire]] {{gl|act of shooting}}
+# [[home]]
+#: {{syn|ca|llar|niu}}
 
 ====Derived terms====
 {{der3|ca
@@ -1835,8 +2225,11 @@ Page 89 foc: -------- begin text --------
 -------- end text --------
 Page 90 focs: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Noun===
-{{head|ca|noun form|g=m|g2=p}}
+{{head|ca|noun form|g=m-p}}
 
 # {{plural of|ca|foc}}
 
@@ -1844,7 +2237,7 @@ Page 90 focs: -------- begin text --------
 Page 91 fon: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ó}}<!-- all meanings -->
 
 ===Etymology 1===
 {{bor+|ca|grc|φωνή||sound}}.
@@ -1865,26 +2258,48 @@ Page 91 fon: -------- begin text --------
 
 # {{ca-verb form of|fondre}}
 
+===Etymology 3===
+{{nonlemma}}
+
+====Verb====
+{{head|ca|verb form}} {{tlb|ca|Valencia}}
+
+# {{lb|ca|literary}} {{ca-verb form of|ésser<pret_3s:fon>}}
+#: {{syn|ca|fou||Central Catalan}}
+# {{lb|ca|colloquial}} {{ca-verb form of|ésser<pret_1s:fon>}}
+#: {{syn|ca|fui||Central Catalan|literary Valencian}}
+
+===Etymology 4===
+{{nonlemma}}
+
+====Verb====
+{{head|ca|verb form}} {{tlb|ca|Balearic}}
+
+# {{ca-verb form of|fonar<pres_1s:fon>}}
+#: {{syn|ca|fono||Central Catalan}}
+
 -------- end text --------
 Page 92 fons: -------- begin text --------
 
-===Etymology===
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both meanings -->
+
+===Etymology 1===
 {{dercat|ca|itc-pro|ine-pro|inh=2}}
 {{inh+|ca|la|fundus}}.
 
-===Pronunciation===
-* {{ca-IPA|ó}}
-
-===Noun===
+====Noun====
 {{ca-noun|m|#}}
 
 # [[bottom]] {{gloss|lowest part}}
 
-====Related terms====
+=====Related terms=====
 * {{l|ca|fonera}}
 * {{l|ca|fundar}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|fondre}}
@@ -1902,6 +2317,9 @@ Page 93 fos: -------- begin text --------
 
 ===Etymology 1===
 
+====Pronunciation====
+* {{ca-IPA|ó}}
+
 ====Verb====
 {{head|ca|verb form}}
 
@@ -1911,13 +2329,30 @@ Page 93 fos: -------- begin text --------
 ===Etymology 2===
 From {{inh|ca|la|fūsus}}.
 
+====Pronunciation====
+* {{ca-IPA|ó}}
+
 ====Participle====
 {{ca-pp}}
 
 # {{past participle of|ca|fondre}}
 
+===Etymology 3===
+From {{inh|ca|la|fūsus}}.
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+
+====Noun====
+{{ca-noun|m|#sos}}
+
+# {{lb|ca|Algherese}} {{alt form|ca|fossa}}
+
 -------- end text --------
 Page 94 fou: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both meanings -->
 
 ===Etymology 1===
 {{inh+|ca|la|fox|fōcem}}, early monophthongized variant of {{m|la|faux|faucem}}.
@@ -2006,12 +2441,18 @@ Page 96 frec: -------- begin text --------
 -------- end text --------
 Page 97 frecs: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Noun===
 {{head|ca|noun form}}
 
 # {{plural of|ca|frec}}
 -------- end text --------
 Page 98 frens: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -2043,6 +2484,9 @@ Page 99 fres: -------- begin text --------
 -------- end text --------
 Page 100 féu: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -2054,6 +2498,7 @@ Page 100 féu: -------- begin text --------
 Page 101 ge: -------- begin text --------
 
 ===Pronunciation===
+* {{ca-IPA|é}}
 * {{rhymes|ca|e|s=1}}
 
 ===Noun===
@@ -2065,10 +2510,10 @@ Page 101 ge: -------- begin text --------
 Page 102 gec: -------- begin text --------
 
 ===Etymology===
-Variant of {{m|ca|jac}}.
+Variant of {{m|ca|jac}}; influenced by {{m|ca|jaquet}} and {{m|ca|jaqueta}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|ë}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -2086,6 +2531,9 @@ Variant of {{m|ca|jac}}.
 -------- end text --------
 Page 103 gecs: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ë}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -2098,7 +2546,7 @@ Page 104 gen: -------- begin text --------
 {{bor+|ca|de|Gen}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ë}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -2126,13 +2574,13 @@ Page 104 gen: -------- begin text --------
 -------- end text --------
 Page 105 gens: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{inh+|ca|la|genus}}.
 
-===Pronunciation===
-* {{ca-IPA|géns}}
+====Pronunciation====
+* {{ca-IPA|é}}
 
-===Adverb===
+====Adverb====
 {{ca-adv}}
 
 # a [[bit]], [[few]]
@@ -2142,16 +2590,29 @@ Page 105 gens: -------- begin text --------
 #: {{uxi|ca|Et queda '''gens''' de sal?|Do you have '''any''' salt left?}}
 #: {{uxi|ca|No queda '''gens''' de sal.|There isn't '''any''' salt left.}}
 
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ë}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|gen|t=gene}}
+
 ===Further reading===
 * {{R:ca:DCVB}}
 
 -------- end text --------
 Page 106 ges: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Noun===
 {{head|ca|noun form}}
 
-# {{plural of|ca|ge}}
+# {{plural of|ca|ge|t=the letter G}}
 
 -------- end text --------
 Page 107 gos: -------- begin text --------
@@ -2245,6 +2706,7 @@ Page 108 grec: -------- begin text --------
 Page 109 grecs: -------- begin text --------
 
 ===Pronunciation===
+* {{ca-IPA|é}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-grecs.wav|Audio (Valencian)}}
 
 ===Adjective===
@@ -2255,13 +2717,13 @@ Page 109 grecs: -------- begin text --------
 ===Noun===
 {{head|ca|noun form}}
 
-# {{masculine plural of|ca|grec}}
+# {{plural of|ca|grec}}
 
 -------- end text --------
 Page 110 gres: -------- begin text --------
 
 ===Etymology===
-From {{m|ca|gresa||granitic sand, sandy regolith}}, variant form of {{m|ca|greda||clay}}, or borrowed from {{der|ca|fr|grès||sandstone}}.
+From {{m|ca|gresa||granitic sand, sandy regolith}}, variant form of {{m|ca|greda||clay}}, or borrowed from {{bor|ca|fr|grès||sandstone}}.
 
 ===Pronunciation===
 * {{ca-IPA|è}}
@@ -2296,6 +2758,7 @@ Page 111 greu: -------- begin text --------
 # [[grave]], [[serious]]
 #: {{ant|ca|lleu}}
 # [[hard]], [[difficult]]
+# {{lb|ca|music}} [[bass]]
 
 ====Derived terms====
 * {{l|ca|accent greu}}
@@ -2314,6 +2777,9 @@ Page 111 greu: -------- begin text --------
 
 -------- end text --------
 Page 112 greus: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Adjective===
 {{head|ca|adjective form}}
@@ -2360,6 +2826,9 @@ Page 113 groc: -------- begin text --------
 -------- end text --------
 Page 114 grocs: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Adjective===
 {{head|ca|adjective form}}
 
@@ -2389,6 +2858,12 @@ Page 115 gros: -------- begin text --------
 |preu per preu, sabates grosses
 }}
 
+===Noun===
+{{ca-noun|m|#sos}}
+
+# [[main]] [[part]]
+# {{lb|ca|numismatics}} [[groschen]] {{gl|obsolete silver coin}}
+
 ===Further reading===
 * {{R:ca:IEC2}}
 * {{R:ca:GDLC}}
@@ -2398,20 +2873,32 @@ Page 115 gros: -------- begin text --------
 -------- end text --------
 Page 116 he: -------- begin text --------
 
-===Alternative forms===
-* {{alter|ca|haig}}
-
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|é}}<!-- both meanings -->
 * {{rhymes|ca|e|s=1}}
 
-===Verb===
+===Etymology 1===
+
+====Alternative forms====
+* {{alter|ca|haig}}
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|haver<var:aux>}}
 
+===Etymology 2===
+
+====Noun====
+{{ca-noun|f}}
+
+# [[he]] {{gl|fifth letter of various Semitic alphabets}}
+
 -------- end text --------
 Page 117 hec: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -2422,6 +2909,9 @@ Page 117 hec: -------- begin text --------
 -------- end text --------
 Page 118 heu: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -2430,6 +2920,9 @@ Page 118 heu: -------- begin text --------
 
 -------- end text --------
 Page 119 heus: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- both meanings -->
 
 ===Etymology 1===
 
@@ -2508,7 +3001,7 @@ Page 121 hoc: -------- begin text --------
 {{inh+|ca|roa-oca|hoc}}, from {{inh|ca|la|hoc||this}}. Cognate with {{cog|oc|òc}} and partially with {{cog|fr|oui}}.
 
 ===Pronunciation===
-* {{ca-IPA|òk}}
+* {{ca-IPA|ò}}
 
 ===Particle===
 {{head|ca|particle}}
@@ -2518,7 +3011,7 @@ Page 121 hoc: -------- begin text --------
 ===Adverb===
 {{ca-adv}}
 
-# {{non-gloss definition|the opposite of '[[not]]'}}
+# [[indeed]] {{non-gloss definition|the opposite of ''[[not]]''}}
 #: {{ux|ca|Voleu venir amb nosaltres? – '''Hoc''' vull venir!|Do you want to come with us? – I '''do''' want to come.!}}
 
 ====Usage notes====
@@ -2534,6 +3027,9 @@ Page 121 hoc: -------- begin text --------
 -------- end text --------
 Page 122 hon: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Adverb===
 {{ca-adv}}
 
@@ -2544,6 +3040,9 @@ Page 122 hon: -------- begin text --------
 
 -------- end text --------
 Page 123 jec: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|è}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -2564,6 +3063,9 @@ Page 124 jeu: -------- begin text --------
 
 -------- end text --------
 Page 125 jeus: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|è}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -2609,14 +3111,14 @@ Page 126 jo: -------- begin text --------
 -------- end text --------
 Page 127 joc: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{inh+|ca|roa-oca|joc}}, from {{inh|ca|la|iocus||pastime, sport}}. Compare {{cog|oc|jòc}}, {{cog|fr|jeu}}, {{cog|es|juego}}.
 
-===Pronunciation===
+====Pronunciation====
 * {{ca-IPA|ò}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-joc.wav|Audio}}
 
-===Noun===
+====Noun====
 {{ca-noun|m}}
 
 # [[game]] {{gloss|a playful or competitive activity}}
@@ -2626,13 +3128,38 @@ Page 127 joc: -------- begin text --------
 # [[assembly]] {{gloss|set of pieces working together in a mechanism}}
 # {{lb|ca|music}} [[rank]], [[register]]
 
-====Derived terms====
+=====Derived terms=====
 {{der3|ca|enjogassar|joc d'atzar|joc de cartes|joc de mans|joc de mots|joc de paraules|joc de rol|joc de taula|joc de tauler|joguina|teoria dels jocs|videojoc}}
 
-====Related terms====
+=====Related terms=====
 * {{l|ca|joguet}}
 * {{l|ca|joguina}}
 * {{l|ca|jugar}}
+
+===Etymology 2===
+Ultimately from {{der|ca|frk|*juk||perch, roost}}.
+
+====Alternative forms====
+* {{alt|ca|jóc||pre-2016}}
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+
+====Noun====
+{{ca-noun|m|g2=f}}
+
+# [[roost]] {{q|for birds}}
+# [[perch]] {{q|in a bird cage}}
+# [[nest]]
+
+=====Derived terms=====
+* {{l|ca|anar a joc||to put (birds) in their roost; {{q|figuratively}} to put to bed}}
+* {{l|ca|ésser a joc||to be in bed}}
+
+====Adjective====
+{{ca-adj}}
+
+# [[lie down|lying down]], in [[bed]]
 
 ===References===
 * {{R:ca:IEC2}}
@@ -2643,10 +3170,28 @@ Page 127 joc: -------- begin text --------
 -------- end text --------
 Page 128 jocs: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+
+====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|joc}}
+# {{plural of|ca|joc|t=game}}
+
+===Etymology 2===
+
+====Alternative forms====
+* {{alt|ca|jócs||pre-2016}}
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|joc|t=perch, roost, nest}}
 -------- end text --------
 Page 129 jou: -------- begin text --------
 
@@ -2654,13 +3199,16 @@ Page 129 jou: -------- begin text --------
 {{inh+|ca|roa-oca|jou}}, from {{inh|ca|la|iugum}} (compare {{cog|oc|jo}}, {{cog|fr|joug}}, {{cog|es|yugo}}), from {{inh|ca|itc-pro|*jugom}}, from {{inh|ca|ine-pro|*yugóm}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{a|Central|Balearic}} {{ca-IPA|ó}}
+* {{a|Valencian}} {{ca-IPA|ò}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-jou.wav|Audio}}
 
 ===Noun===
 {{ca-noun|m}}
 
-# [[yoke]]
+# {{lb|ca|agriculture|also|figuratively}} [[yoke]]
+# [[col]] {{q|between mountains}}
+# {{lb|ca|nautical}} [[transom]] {{q|type of structural beam}}
 
 ====Derived terms====
 * {{l|ca|enjovar}}
@@ -2680,10 +3228,14 @@ Page 129 jou: -------- begin text --------
 -------- end text --------
 Page 130 jous: -------- begin text --------
 
+===Pronunciation===
+* {{a|Central|Balearic}} {{ca-IPA|ó}}
+* {{a|Valencian}} {{ca-IPA|ò}}
+
 ===Noun===
 {{head|ca|noun form}}
 
-# {{plural of|ca|jou}}
+# {{plural of|ca|jou|t=yoke}}
 
 -------- end text --------
 Page 131 les: -------- begin text --------
@@ -2732,6 +3284,9 @@ Page 131 les: -------- begin text --------
 -------- end text --------
 Page 132 leu: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|è}}
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -2748,10 +3303,13 @@ Page 132 leu: -------- begin text --------
 -------- end text --------
 Page 133 leus: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|è}}
+
 ===Noun===
 {{head|ca|noun form}}
 
-# {{plural of|ca|leu}}
+# {{plural of|ca|leu|t=leu {{q|unit of currency}}}}
 
 -------- end text --------
 Page 134 llec: -------- begin text --------
@@ -2780,7 +3338,7 @@ Page 134 llec: -------- begin text --------
 Page 135 lleu: -------- begin text --------
 
 ===Etymology 1===
-From {{der|ca|la|levis}}.
+From {{der|ca|la|levis}}. For the meaning "lungs", compare archaic {{m+|en|lights||lungs {{q|of animals, eaten as food}}}}, because they are lighter than adjacent parts of the animal.
 
 ====Pronunciation====
 * {{ca-IPA|é}}
@@ -2791,8 +3349,7 @@ From {{der|ca|la|levis}}.
 # [[light]] {{gloss|not heavy}}
 #: {{syn|ca|lleuger}}
 #: {{ant|ca|feixuc|pesat}}
-# {{q|Pallarès|Rosellonès}} [[soon]]
-#: {{syn|ca|aviat}}
+# {{lb|ca|figurative}} [[slight]]
 
 =====Derived terms=====
 * {{l|ca|alleujar}}
@@ -2801,26 +3358,48 @@ From {{der|ca|la|levis}}.
 =====Related terms=====
 * {{l|ca|lleuger}}
 
-====Further reading====
-* {{R:ca:IEC2}}
-* {{R:ca:GDLC}}
-* {{R:ca:DNV}}
-* {{R:ca:DCVB}}
+====Adverb====
+{{ca-adv}}
+
+# {{lb|ca|Pallarès|Rosellonès}} [[soon]]
+#: {{syn|ca|aviat}}
+
+====Noun====
+{{ca-noun|m}}
+
+# {{lb|ca|archaic|or|dialectal}} [[lung]]s
 
 ===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ê}}
 
 ====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|lleure<only3s>}}
 
+===Further reading===
+* {{R:ca:IEC2}}
+* {{R:ca:GDLC}}
+* {{R:ca:DNV}}
+* {{R:ca:DCVB}}
+
 -------- end text --------
 Page 136 lleus: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Adjective===
 {{head|ca|adjective form}}
 
 # {{plural of|ca|lleu}}
+
+===Noun===
+{{head|ca|noun form}}
+
+# {{lb|ca|archaic|or|dialectal}} {{plural of|ca|lleu|t=lungs}}
 -------- end text --------
 Page 137 lloc: -------- begin text --------
 
@@ -2862,6 +3441,9 @@ Page 137 lloc: -------- begin text --------
 
 -------- end text --------
 Page 138 llocs: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -2908,6 +3490,10 @@ From {{der-lite|ca|la|illum}}, from {{m-lite|la|ille}}.
 -------- end text --------
 Page 140 los: -------- begin text --------
 
+===Pronunciation===
+* {{a|Central Catalan}} {{IPA|ca|/lus/}}
+* {{a|Valencia}} {{IPA|ca|/los/}}
+
 ===Etymology 1===
 {{inh+|ca|la|illōs}}; cf. {{m|ca|els}}.
 
@@ -2937,25 +3523,39 @@ Page 140 los: -------- begin text --------
 -------- end text --------
 Page 141 me: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{inh+|ca|la|mē}} (accusative of {{m-lite|la|ego}}).
 
-===Pronoun===
+====Pronunciation====
+* {{a|Central Catalan}} {{IPA|ca|/mə/}}
+* {{a|Valencia}} {{IPA|ca|/me/}}
+
+====Pronoun====
 {{ca-ppron|type=encl|encl_con='m|procl=em|procl_con=m'}}
 
 # {{l|en|me}} (direct or indirect object)
 
-====Usage notes====
+=====Usage notes=====
 * {{U:ca:pronouns|form=full}}
 *: {{uxi|ca|Segueix-'''me'''!|Follow me!}}
 *: {{uxi|ca|Tant '''me''' fa.|q=after adverb|I don't care.}}
 *: {{uxi|ca|'''Me''' sembla que…|q=sentence-initial, nonstandard|It seems that…}}
 
-====Declension====
+=====Declension=====
 {{ca-decl-ppron}}
 
-====Related terms====
+=====Related terms=====
 {{col3|ca|em|mi|jo}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|è}}
+
+====Noun====
+{{ca-noun|f|-}}
+
+# {{lb|ca|colloquial|childish|euphemistic}} [[poo]]
 
 -------- end text --------
 Page 142 mec: -------- begin text --------
@@ -2986,6 +3586,9 @@ Page 142 mec: -------- begin text --------
 -------- end text --------
 Page 143 mecs: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|è}}
+
 ===Adjective===
 {{head|ca|adjective form}}
 
@@ -2994,13 +3597,13 @@ Page 143 mecs: -------- begin text --------
 -------- end text --------
 Page 144 mes: -------- begin text --------
 
-===Pronunciation===
+===Etymology 1===
+{{inh+|ca|roa-oca|mes}}, from {{inh|ca|la|mensis|mēnsem|t=month}}, from {{inh|ca|ine-pro|*mḗh₁n̥s||moon, month}}. Compare {{cog|oc|mes}}, {{cog|fr|mois}}, {{cog|es|mes}}.
+
+====Pronunciation====
 * {{ca-IPA|é}}
 * {{homophones|ca|més}}
 * {{rhymes|ca|es|s=1}}
-
-===Etymology 1===
-{{inh+|ca|roa-oca|mes}}, from {{inh|ca|la|mensis|mēnsem|t=month}}, from {{inh|ca|ine-pro|*mḗh₁n̥s||moon, month}}. Compare {{cog|oc|mes}}, {{cog|fr|mois}}, {{cog|es|mes}}.
 
 ====Noun====
 {{ca-noun|m}}
@@ -3017,15 +3620,37 @@ Page 144 mes: -------- begin text --------
 * {{list:Gregorian calendar months/ca}}
 
 ===Etymology 2===
+{{inh+|ca|roa-oca|mas}}, {{m|roa-oca|mays}}, from {{der|ca|la|magis}}.
+
+====Pronunciation====
+* {{ca-IPA|é}}
+* {{homophones|ca|més}}
+* {{rhymes|ca|es|s=1}}
+
+====Adverb====
+{{ca-adv}}
+
+# [[but]]
+
+===Etymology 3===
 {{inh+|ca|la|missus}}, perfect passive participle of {{m|la|mitto|mittere}}.
+
+====Pronunciation====
+* {{ca-IPA|ê}}
+* {{rhymes|ca|es|s=1}}
 
 ====Participle====
 {{ca-pp}}
 
 # {{past participle of|ca|metre}}
 
-===Etymology 3===
+===Etymology 4===
 {{inh+|ca|VL.||mās}}, reduced form of {{inh|ca|la|meās}}.
+
+====Pronunciation====
+* {{ca-IPA|é}}
+* {{homophones|ca|més}}
+* {{rhymes|ca|es|s=1}}
 
 ====Determiner====
 {{head|ca|determiner form}}
@@ -3070,17 +3695,30 @@ The weak possessive {{m|ca|mon}} is also from {{inh|ca|la|meus|meum}}, but as an
 * {{l|ca|mon}}
 
 ===Etymology 2===
+{{onomatopoeic|ca}}.
+
+====Alternative forms====
+* {{alt|ca|mèu||pre-2016}}
 
 ====Pronunciation====
 * {{ca-IPA|è}}
 
+====Interjection====
+{{head|ca|interjection}}
+
+# [[meow]]
+
 ====Noun====
 {{ca-noun|m}}
 
-# {{lb|ca|2016 spelling reform}} {{alternative form of|ca|mèu|t=meow}}
+# [[meow]]
+#: {{syn|ca|miol}}
 
 ===Etymology 3===
 {{bor+|ca|la|mēum}}.
+
+====Alternative forms====
+* {{alt|ca|mèu||pre-2016}}
 
 ====Pronunciation====
 * {{ca-IPA|è}}
@@ -3101,6 +3739,9 @@ Page 146 meus: -------- begin text --------
 
 ===Etymology 1===
 
+====Pronunciation====
+* {{ca-IPA|é}}
+
 ====Pronoun====
 {{head|ca|pronoun form}}
 
@@ -3108,10 +3749,16 @@ Page 146 meus: -------- begin text --------
 
 ===Etymology 2===
 
+====Alternative forms====
+* {{alt|ca|mèus||pre=2016}}
+
+====Pronunciation====
+* {{ca-IPA|è}}
+
 ====Noun====
 {{head|ca|noun form}}
 
-# {{lb|ca|2016 spelling reform}} {{masculine plural of|ca|meu|t=meow}}
+# {{plural of|ca|meu|t=meow}}
 
 -------- end text --------
 Page 147 moc: -------- begin text --------
@@ -3125,22 +3772,29 @@ Page 147 moc: -------- begin text --------
 ====Noun====
 {{ca-noun|m}}
 
-# [[mucus]]
+# [[mucus]], [[phlegm]]
 # [[snot]]
+# [[candle]] [[dripping]]s
+# {{lb|ca|figurative|colloquial}} [[snub]], [[rebuff]]
+# [[snood]] {{gl|the flap of erectile red skin on the beak of a male turkey}}
+# {{lb|ca|nautical}} [[martingale]] {{gl|spar used to strengthen the [[bowsprit]]}}
+# {{lb|ca|botany}} [[catkin]]
+# {{lb|ca|ichthyology}} [[big]] [[salp]] (''[[Salpa maxima]]'') {{q|type of fish}}
 
 =====Derived terms=====
 * {{l|ca|moc de gall}}
 * {{l|ca|mocar}}
 
 ===Etymology 2===
+Claimed by the DCVB (''Diccionari català-valencià-balear'') to be derived from a nonexistent English ''bock'', supposedly meaning "vase". Perhaps in reality a confusion with {{m+|fr|bock||beer stein}}, from {{m+|de|Bockbier||[[bock]] [[beer]]}}.
 
 ====Pronunciation====
-* {{ca-IPA|ó}}
+* {{ca-IPA|ò}}
 
 ====Noun====
 {{ca-noun|m}}
 
-# [[snood]] (The flap of erectile red skin on the beak of a male turkey)
+# {{lb|ca|Menorca}} [[vase]], [[pitcher]]
 
 ===Etymology 3===
 
@@ -3164,10 +3818,13 @@ Page 147 moc: -------- begin text --------
 -------- end text --------
 Page 148 mocs: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Noun===
 {{head|ca|noun form}}
 
-# {{plural of|ca|moc}}
+# {{plural of|ca|moc|t=mucus; snot; snub, rebuff; snood; etc.}}
 -------- end text --------
 Page 149 mon: -------- begin text --------
 
@@ -3205,10 +3862,26 @@ The standard masculine plural form is ''mos'', but {{m|ca|mons}} can be found in
 -------- end text --------
 Page 150 mons: -------- begin text --------
 
-===Alternative forms===
-* {{q|standard}} {{l|ca|mos}}
+===Etymology 1===
 
-===Determiner===
+====Pronunciation====
+* {{ca-IPA|ó}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|món|t=world}}
+
+===Etymology 2===
+
+====Alternative forms====
+* {{alt|ca|mos||standard}}
+
+====Pronunciation====
+* {{a|Balearic|Central}} {{IPA|ca|/muns/}} {{q|always unstressed}}
+* {{a|Valencian}} {{IPA|ca|/mons/}} {{q|always unstressed}}
+
+====Determiner====
 {{head|ca|determiner form}}
 
 # {{lb|ca|dialectal}} {{masculine plural of|ca|mon}}
@@ -3241,6 +3914,10 @@ Page 151 mos: -------- begin text --------
 ===Etymology 2===
 From {{m|ca|nos}}, assimilated to the ''-m'' ending in reflexive constructions.
 
+====Pronunciation====
+* {{a|Balearic|Central}} {{IPA|ca|/mus/}} {{q|always unstressed}}
+* {{a|Valencian}} {{IPA|ca|/mos/}} {{q|always unstressed}}
+
 ====Pronoun====
 {{ca-ppron|type=encl|encl_con='ns|procl=ens}}
 
@@ -3249,6 +3926,10 @@ From {{m|ca|nos}}, assimilated to the ''-m'' ending in reflexive constructions.
 
 ===Etymology 3===
 {{inh+|ca|VL.||*mōs}}, reduced form of {{inh|ca|la|meōs}}.
+
+====Pronunciation====
+* {{a|Balearic|Central}} {{IPA|ca|/mus/}} {{q|always unstressed}}
+* {{a|Valencian}} {{IPA|ca|/mos/}} {{q|always unstressed}}
 
 ====Determiner====
 {{head|ca|determiner form}}
@@ -3278,6 +3959,10 @@ Page 152 mou: -------- begin text --------
 -------- end text --------
 Page 153 mous: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+* {{rhymes|ca|ɔws|s=1}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -3286,39 +3971,41 @@ Page 153 mous: -------- begin text --------
 -------- end text --------
 Page 154 mèu: -------- begin text --------
 
-===Alternative forms===
-* {{alt|ca|meu||2016 spelling reform}}
-
-===Etymology===
-{{onomatopoeic|ca}}
-
 ===Pronunciation===
 * {{ca-IPA}}
 
-===Interjection===
+===Etymology 1===
+
+====Interjection====
 {{head|ca|interjection}}
 
-# [[meow]]
+# {{superseded spelling of|ca|meu|t=meow}}
 
-===Noun===
+====Noun====
 {{ca-noun|m}}
 
-# [[meow]]
-#: {{syn|ca|miol}}
+# {{superseded spelling of|ca|meu|t=meow}}
 
-====Usage notes====
+===Etymology 2===
+
+====Noun====
+{{ca-noun|m|-}}
+
+# {{superseded spelling of|ca|meu|t=[[baldmoney]], [[spignel]]}}
+
+===Usage notes===
 {{U:ca:deprecated use of diacritic}}
 
 -------- end text --------
 Page 155 mèus: -------- begin text --------
 
-===Alternative forms===
-* {{alter|ca|meus||2016 spelling reform}}
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Noun===
 {{head|ca|noun form}}
 
-# {{plural of|ca|mèu}}
+# {{superseded spelling of|ca|meu|t=meows}}
 
 ====Usage notes====
 {{U:ca:deprecated use of diacritic}}
@@ -3394,6 +4081,10 @@ Page 157 món: -------- begin text --------
 -------- end text --------
 Page 158 ne: -------- begin text --------
 
+===Pronunciation===
+* {{a|Balearic|Central}} {{IPA|ca|/nə/}}
+* {{a|Valencian|Algherese}} {{IPA|ca|/ne/}}
+
 ===Pronoun===
 {{ca-ppron|type=encl|encl_con='n|procl=en|procl_con=n'}}
 
@@ -3422,7 +4113,7 @@ Page 159 nen: -------- begin text --------
 From {{der|ca|VL.|*ninnus}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ë}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-nen.wav|Audio}}
 
 ===Noun===
@@ -3440,10 +4131,13 @@ From {{der|ca|VL.|*ninnus}}.
 -------- end text --------
 Page 160 nens: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ë}}
+
 ===Noun===
 {{head|ca|noun form}}
 
-# {{plural of|ca|nen}}
+# {{plural of|ca|nen|t=boy}}
 
 -------- end text --------
 Page 161 neu: -------- begin text --------
@@ -3483,6 +4177,9 @@ Page 161 neu: -------- begin text --------
 -------- end text --------
 Page 162 neus: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -3519,6 +4216,11 @@ From {{inh|ca|roa-oca|no}}, from {{inh|ca|la|nōn}}.
 ====See also====
 * {{l|ca|pas}}
 
+===Noun===
+{{ca-noun|m}}
+
+# [[no]]
+
 ===Further reading===
 * {{R:ca:IEC2}}
 * {{R:ca:GDLC}}
@@ -3528,31 +4230,82 @@ From {{inh|ca|roa-oca|no}}, from {{inh|ca|la|nōn}}.
 -------- end text --------
 Page 164 noc: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- all meanings -->
+
+===Etymology 1===
+{{inh+|ca|VL.|*naucus||trough}}, from {{m|VL.||*naucula}}, diminutive of {{der|ca|la|navis||ship}}.
+
+====Noun====
+{{ca-noun|m}}
+
+# {{lb|ca|textiles}} [[full]]ing [[mill]
+# {{lb|ca|tanning}} [[pit]] where [[hide]]s are [[soak]]ed
+
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|noure}}
 
+===Etymology 3===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{lb|ca|Balearic}} {{ca-verb form of|nocar<pres_1s:noc>}}
+
 -------- end text --------
 Page 165 nos: -------- begin text --------
 
-===Etymology===
-{{inh+|ca|la|nōs||we; us}}, from {{inh|ca|itc-pro|*nōs}}.
+===Etymology 1===
+Inherited from the unstressed accusative of {{inh|ca|la|nōs||we; us}}, from {{inh|ca|itc-pro|*nōs}}.
 
-===Pronoun===
+====Pronunciation====
+* {{a|Balearic|Central}} {{IPA|ca|/nus/}} {{q|always unstressed}}
+* {{a|Valencian}} {{IPA|ca|/nos/}} {{q|always unstressed}}
+
+====Pronoun====
 {{ca-ppron|type=encl|encl_con='ns|procl=ens}}
 
 # [[us]] (direct or indirect object)
 
-====Usage notes====
+=====Usage notes=====
 * {{U:ca:pronouns|form=full}}
 *: {{uxi|ca|Fes'''-nos''' una visita, si us plau!|Pay '''us''' a visit, please!}}
 
-====Declension====
+=====Declension=====
 {{ca-decl-ppron}}
 
-====Related terms====
-* {{l|ca|nosaltres}}
+===Etymology 2===
+Inherited from the stressed nominative of {{inh|ca|la|nōs||we; us}}; see Etymology 1. Replaced in normal usage by {{m|ca|nosaltres}}. For the development of a distinction between stressed and unstressed forms of what was originally a single word, compare {{m+|pt|nós}} and {{m|pt|nos}}. See also the parallel development in Spanish of {{m|es|nosotros}}.
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+
+====Alternative forms====
+* {{alt|ca|nós||pre-2016}}
+
+====Pronoun====
+{{head|ca|pronoun}}
+
+# {{lb|ca|archaic}} [[we]]
+#: {{syn|ca|nosaltres}}
+# {{lb|ca|royal|majestic}} [[we]] {{gl|the so-called [[royal we]], used by a king or queen to refer to themselves in the first person}}
+
+=====Usage notes=====
+{{U:ca:deprecated use of diacritic}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|no|t=no}}
 
 ===Further reading===
 * {{R:ca:DCVB}}
@@ -3563,7 +4316,7 @@ Page 165 nos: -------- begin text --------
 Page 166 nou: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- all meanings -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-nou.wav|Audio (Valencian)}}
 * {{hyphenation|ca|nou}}
 * {{rhymes|ca|ɔw|s=1}}
@@ -3647,26 +4400,31 @@ Page 166 nou: -------- begin text --------
 -------- end text --------
 Page 167 nous: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- all meanings -->
+* {{hyphenation|ca|nous}}
+* {{rhymes|ca|ɔws|s=1}}
+
 ===Etymology 1===
 
 ====Adjective====
 {{head|ca|adjective form}}
 
-# {{masculine plural of|ca|nou}} {{gloss|[[new]]}}
+# {{masculine plural of|ca|nou|t=new}}
 
 ===Etymology 2===
 
 ====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|nou}} {{gloss|[[nines]]}}
+# {{plural of|ca|nou|t=nine}}
 
 ===Etymology 3===
 
 ====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|nou}} {{gloss|[[nuts]]}}
+# {{plural of|ca|nou|t=nut}}
 
 ===Etymology 4===
 
@@ -3678,24 +4436,16 @@ Page 167 nous: -------- begin text --------
 -------- end text --------
 Page 168 nós: -------- begin text --------
 
-===Etymology===
-{{inh+|ca|la|nōs||we; us}}, from {{inh|ca|itc-pro|*nōs}}.
-
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Pronoun===
 {{head|ca|pronoun}}
 
-# {{lb|ca|archaic}} [[we]]
-#: {{syn|ca|nosaltres}}
-# [[we]] (''[[majestic plural|majestic]]'')
+# {{superseded spelling of|ca|nós|t=we {{q|specifically the "royal we", used by a sovereign in the singular}}}}
 
 ====Usage notes====
 {{U:ca:deprecated use of diacritic}}
-
-====Declension====
-{{ca-decl-ppron}}
 
 -------- end text --------
 Page 169 o: -------- begin text --------
@@ -3703,7 +4453,7 @@ Page 169 o: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{a|Balearic|Central Catalan|Valencian}} {{IPA-lite|ca|/ˈo/}} <!-- {{ca-IPA|ó}} -->
+* {{ca-IPA|ó}}
 
 ====Noun====
 {{head-lite|ca|nouns|plural|os|g=f}}
@@ -3714,7 +4464,7 @@ Page 169 o: -------- begin text --------
 From {{inh-lite|ca|la|aut}}.
 
 ====Pronunciation====
-* {{a|Balearic|Central Catalan|Valencian}} {{IPA-lite|ca|/ˈɔ/}} <!-- {{ca-IPA|ò}} -->
+* {{ca-IPA|ò}}
 
 ====Conjunction====
 {{head-lite|ca|conjunctions}}
@@ -3785,50 +4535,116 @@ Page 171 os: -------- begin text --------
 * {{l|ca|ossi}}
 
 ===Etymology 2===
+[[File:Brown bear (Ursus arctos arctos) running.jpg|thumb|l'ós bru]]
+
+====Alternative forms====
+* {{alt|ca|ós||pre-2016}}
+
+====Etymology====
+{{inh+|ca|la|ursus}}. Compare {{cog|es|oso}}, {{cog|oc|ors}}, {{cog|fr|ours}}.
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+* {{audio|ca|LL-Q7026 (cat)-Millars-ós.wav|Audio (Valencian)}}
+* {{rhymes|ca|os|s=1}}
+
+====Noun====
+{{ca-noun|m|#sos|f=#sa}}
+
+# [[bear]] {{gloss|mammal}}
+
+=====Usage notes=====
+{{U:ca:deprecated use of diacritic}}
+
+=====Derived terms=====
+* {{l|ca|all d'os}}
+
+{{rel-top|specific species of bear}}
+* {{l|ca|os blanc}}
+* {{l|ca|os bru}}
+* {{l|ca|os d'Alaska}}
+* {{l|ca|os malai}}
+* {{l|ca|os morrut}}
+* {{l|ca|os negre americà}}
+* {{l|ca|os polar}}
+* {{l|ca|os tibetà}}
+{{rel-bottom}}
+
+{{rel-top|other non-ursine mammals}}
+* {{l|ca|os formiguer}}
+* {{l|ca|os marí}}
+* {{l|ca|os rentador}}
+{{rel-bottom}}
+
+===Further reading===
+* {{R:ca:IEC2}}
+* {{R:ca:GDLC}}
+* {{R:ca:DNV}}
+* {{R:ca:DCVB}}
+
+===Etymology 3===
 
 ====Pronunciation====
 * {{ca-IPA|ó}}
 
 ====Noun====
-{{ca-noun|m|#sos|f=#sa}}
+{{head|ca|noun form}}
 
-# {{lb|ca|2016 spelling reform}} {{alternative form of|ca|ós|t=bear}}
+# {{plural of|ca|o|t=the letter O}}
 
-=====Derived terms=====
-* {{l|ca|all d'os}}
-
-===References===
-* {{R:ca:IEC2}}
-* {{R:ca:GDLC}}
-* {{R:ca:DNV}}
-* {{R:ca:DCVB}}
+{{C|ca|Ursids}}
 
 -------- end text --------
 Page 172 ou: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{inh+|ca|roa-oca|ou}}, from {{inh|ca|la|ōvum|t=egg}}. Compare {{cog|oc|uòu}}, {{cog|fr|œuf}}, {{cog|es|huevo}}.
 
-===Pronunciation===
+====Pronunciation====
 * {{ca-IPA|ò}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-ou.wav|Audio (Valencian)}}
 * {{rhymes|ca|ɔw|s=1}}
 
-===Noun===
+====Noun====
 {{ca-noun|m}}
 
 # [[egg]]
+# {{lb|ca|colloquial}} [[ball]], [[testicle]]
 
 ===References===
 * {{R:ca:IEC2}}
 * {{R:ca:GDLC}}
 * {{R:ca:DNV}}
 * {{R:ca:DCVB}}
+
+===Etymology 2===
+{{onomatopoeic|ca}}.
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+
+====Interjection====
+{{head|ca|interjection}}
+
+# {{lb|ca|Mallorca|Menorca}} [[whoa]]! {{gl|command to an animal to stop}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{lb|ca|Valencia|Northern Calatan}} {{ca-verb form of|oir<pres_3s:ou>}}
 
 {{C|ca|Biology|Foods}}
 
 -------- end text --------
 Page 173 ous: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -3852,36 +4668,68 @@ Page 174 pe: -------- begin text --------
 -------- end text --------
 Page 175 pens: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- both meanings -->
+
+===Etymology 1===
+
+====Noun====
+{{ca-noun|m|#}}
+
+# {{lb|ca|obsolete}} [[thought]]
+
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{lb|ca|Balearic}} {{ca-verb form of|pensar<pres_1s:pens>}}
+# {{lb|ca|Balearic|Algherese}} {{ca-verb form of|pensar<pres_1s:pens>}}
 
 -------- end text --------
 Page 176 pes: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{inh+|ca|roa-oca|pes}}, from {{inh|ca|la|pēnsum}}.
 
-===Pronunciation===
+====Pronunciation====
 * {{ca-IPA|ê}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-pes.wav|Audio}}
 
-===Noun===
+====Noun====
 {{ca-noun|m}}
 
 # [[weight]], the [[heaviness]] of something, as caused by the downward [[force]] of [[gravity]] of its [[mass]].
 # [[weight]], a piece of metal or other materials known to [[weigh]] a definite amount, as the ones used on [[scales]] or [[sport]]s
 
-====Derived terms====
+=====Derived terms=====
 {{der3|ca|contrapès|fer el pes|pes gall|pes mosca|pes ploma|pes pesant|pes lleuger|pes wèlter|pes semipesat|sobrepès}}
 
-====Related terms====
+=====Related terms=====
 * {{l|ca|pesar}}
 
 ===References===
 * {{R:ca:IEC2}}
 * {{R:ca:DCVB}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|pe|t=the letter P}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{lb|ca|Balearic|Algherese}} {{ca-verb form of|pensar<pres_1s:pens>}}
 
 -------- end text --------
 Page 177 peu: -------- begin text --------
@@ -3906,7 +4754,9 @@ Cognate with {{cog|oc|pè}}; {{cog|fr|pied}}; {{cog|ast,es|pie}}; and {{cog|gl,p
 #: {{uxi|ca|'''peu''' de pàgina|page '''footer'''}}
 
 ====Coordinate terms====
-* {{l|ca|vara}} {{q|3 peus}}, {{l|ca|pas}} or {{l|ca|passa}} {{q|5 peus}}, {{l|ca|braça}} {{q|6 peus}}
+* {{l|ca|vara}} {{q|3 peus}}
+* {{l|ca|pas}}, {{l|ca|passa}} {{q|5 peus}}
+* {{l|ca|braça}} {{q|6 peus}}
 
 ====Derived terms====
 * {{l|ca|a peu}}
@@ -3923,6 +4773,9 @@ Cognate with {{cog|oc|pè}}; {{cog|fr|pied}}; {{cog|ast,es|pie}}; and {{cog|gl,p
 
 -------- end text --------
 Page 178 peus: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|è}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -4006,6 +4859,9 @@ Page 180 plec: -------- begin text --------
 -------- end text --------
 Page 181 plens: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Adjective===
 {{head|ca|adjective form}}
 
@@ -4022,18 +4878,24 @@ Page 182 ploc: -------- begin text --------
 -------- end text --------
 Page 183 plou: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
-# {{ca-verb form of|ploure}}
+# {{lb|ca|poetic}} {{ca-verb form of|ploure}}
 
 -------- end text --------
 Page 184 plous: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
-# {{ca-verb form of|ploure}}
+# {{lb|ca|poetic}} {{ca-verb form of|ploure}}
 -------- end text --------
 Page 185 poc: -------- begin text --------
 
@@ -4076,12 +4938,19 @@ Page 185 poc: -------- begin text --------
 -------- end text --------
 Page 186 pocs: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+* {{rhymes|ca|ɔks|s=1}}
+
 ===Determiner===
 {{head|ca|determiner form}}
 
 # {{masculine plural of|ca|poc}}
 -------- end text --------
 Page 187 pon: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -4091,6 +4960,9 @@ Page 187 pon: -------- begin text --------
 -------- end text --------
 Page 188 pons: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -4099,16 +4971,16 @@ Page 188 pons: -------- begin text --------
 -------- end text --------
 Page 189 pou: -------- begin text --------
 
-===Etymology===
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both meanings -->
+* {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-pou.wav|Audio}}
+* {{rhymes|ca|ow|s=1}}
+
+===Etymology 1===
 {{dercat|ca|ine-pro}}
 {{inh+|ca|roa-oca|pou}}, from pre-literary */ˈpot͡s/, from {{inh|ca|la|puteus}}. Attested from 1272.<ref>{{R:ca:GDLC}}</ref>
 
-===Pronunciation===
-* {{ca-IPA|ó}}
-* {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-pou.wav|Audio}}
-* {{rhymes|ca|ɔw|s=1}}
-
-===Noun===
+====Noun====
 {{ca-noun|m}}
 
 # [[well]] {{gloss|a hole sunk into the ground as a source of water, oil, natural gas or other fluids}}
@@ -4118,8 +4990,15 @@ Page 189 pou: -------- begin text --------
 |t=The show causes a growing anxiety in the viewer because of the characters' tendency to hide their wounds instead of healing them, and that becomes a '''well''' of misunderstandings and conflicts that build up over time.
 |url=https://www.ara.cat/opinio/Secrets-prejudicis-americana-Monica-Planas_0_2506549488.html}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|pouar}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{lb|ca|Balearic|Algherese}} {{ca-verb form of|pouar<pres_1s:pou>}}
 
 ===References===
 <references/>
@@ -4131,6 +5010,9 @@ Page 189 pou: -------- begin text --------
 
 -------- end text --------
 Page 190 pous: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -4164,12 +5046,18 @@ Page 191 prec: -------- begin text --------
 -------- end text --------
 Page 192 precs: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Noun===
 {{head|ca|noun form}}
 
 # {{plural of|ca|prec}}
 -------- end text --------
 Page 193 pren: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -4178,6 +5066,9 @@ Page 193 pren: -------- begin text --------
 
 -------- end text --------
 Page 194 prens: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -4191,7 +5082,7 @@ Page 195 pres: -------- begin text --------
 {{inh+|ca|la|prēnsus}}, from older {{m|la|prehensus}}.
 
 ===Pronunciation===
-* {{ca-IPA|prês}}
+* {{ca-IPA|ê}}
 
 ===Participle===
 {{ca-pp}}
@@ -4206,6 +5097,11 @@ Page 195 pres: -------- begin text --------
 ====Related terms====
 * {{l|ca|presó}}
 
+===Adjective===
+{{ca-adj}}
+
+# [[imprisoned]]
+
 ===References===
 * {{R:ca:IEC2}}
 * {{R:ca:DCVB}}
@@ -4213,7 +5109,7 @@ Page 195 pres: -------- begin text --------
 -------- end text --------
 Page 196 preu: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{dercat|ca|ine-pro}}
 {{inh+|ca|roa-oca|preu}}, from pre-literary */ˈpɾɛt͡s/, from {{inh|ca|la|pretium}}.
 
@@ -4242,6 +5138,13 @@ Page 196 preu: -------- begin text --------
 * {{l|ca|prear}}
 * {{l|ca|preciós}}
 
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{lb|ca|Balearic|Algherese}} {{ca-verb form of|preuar<pres_1s:preu>}}
+
 ===References===
 * {{R:ca:IEC2}}
 * {{R:ca:DCVB}}
@@ -4251,6 +5154,9 @@ Page 196 preu: -------- begin text --------
 -------- end text --------
 Page 197 preus: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|è}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -4258,6 +5164,9 @@ Page 197 preus: -------- begin text --------
 
 -------- end text --------
 Page 198 pro: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ô}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -4292,6 +5201,9 @@ Page 199 pron: -------- begin text --------
 -------- end text --------
 Page 200 prons: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Adjective===
 {{head|ca|adjective form}}
 
@@ -4300,27 +5212,27 @@ Page 200 prons: -------- begin text --------
 -------- end text --------
 Page 201 prou: -------- begin text --------
 
-===Etymology===
-{{inh+|ca|roa-oca|prou}}, from {{inh|ca|LL.|prōde|t=profitable}}, rebracketed from {{der|ca|la|prosum|prōdest|t=is useful}}.
-
 ===Pronunciation===
-* {{ca-IPA|pròu}}
+* {{ca-IPA|ò}}<!-- all meanings -->
 * {{rhymes|ca|ɔw|s=1}}
 
-===Adjective===
-{{head|ca|adjective|g=mf|plural|prous|f1qual=colloquial}}
+===Etymology 1===
+{{inh+|ca|roa-oca|prou}}, from {{inh|ca|LL.|prōde|t=profitable}}, rebracketed from {{der|ca|la|prosum|prōdest|t=is useful}}.
+
+====Adjective====
+{{ca-adj|mf|pl=+|pl_qual=colloquial}}
 
 # [[enough]], [[sufficient]]
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|amb prou feines}}
 
-===Pronoun===
+====Pronoun====
 {{head|ca|pronoun}}
 
 # [[enough]], an adequate number or amount
 
-===Adverb===
+====Adverb====
 {{ca-adv}}
 
 # [[enough]], [[sufficiently]]
@@ -4330,6 +5242,13 @@ Page 201 prou: -------- begin text --------
 |url=https://www.lavanguardia.com/lacontra/20190617/462906405587/nomes-salvarem-la-terra-si-units-prioritzem-la-ciencia.html}}
 # [[quite]], [[considerably]]
 #: {{syn|ca|bastant}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{lb|ca|Balearic}} {{ca-verb form of|provar<pres_1s:prou>}}
 
 ===References===
 * {{R:ca:IEC2}}
@@ -4357,7 +5276,7 @@ Page 203 re: -------- begin text --------
 * {{alt|ca|ren||archaic}}
 
 ====Pronunciation====
-* {{ca-IPA|ê}}
+* {{ca-IPA|ë}}
 
 ====Pronoun====
 {{head|ca|pronoun}}
@@ -4368,7 +5287,7 @@ Page 203 re: -------- begin text --------
 Compare {{cog|en|re}}.
 
 ====Pronunciation====
-* {{ca-IPA|è}}
+* {{ca-IPA|é}}
 
 ====Noun====
 {{ca-noun|m}}
@@ -4420,12 +5339,11 @@ Page 205 ren: -------- begin text --------
 -------- end text --------
 Page 206 res: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|rê(s)}}
-* {{rhymes|ca|es|s=1}}
-
 ===Etymology 1===
 {{inh+|ca|la|rēs||thing}}. Compare {{cog|fr|rien}}.
+
+====Pronunciation====
+* {{ca-IPA|rê(s)}}
 
 ====Pronoun====
 {{head|ca|pronoun}}
@@ -4460,11 +5378,43 @@ In Algherese, this form alternates with {{m|ca|arrés}}: ''arrés'' is the defau
 |text=}}
 
 ===Etymology 2===
+{{deverbal|ca|resar}}. A Hispanicism.
+
+====Alternative forms====
+* {{alt|ca|rés||pre-2016}}
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Pronoun====
+{{ca-noun|m}} {{tlb|ca|Christianity}}
+
+# [[prayer]] {{gl|action or act of praying}}
+#: {{syn|ca|oració|pregària}}
+# [[office]] {{gl|required liturgy to be recited each day}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|é}}
 
 ====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|re}}
+# {{plural of|ca|re|t=[[re]] {{gl|second note of the musical scale}}}}
+
+===Etymology 4===
+
+====Alternative forms====
+* {{alt|ca|rés||pre-2016}}
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{lb|ca|Balearic|Algherese}} {{ca-verb form of|resar<pres_1s:res>}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -4517,6 +5467,9 @@ Page 208 reus: -------- begin text --------
 -------- end text --------
 Page 209 rho: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -4542,7 +5495,7 @@ Page 210 ro: -------- begin text --------
 Page 211 roc: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- all meanings -->
 
 ===Etymology 1===
 From {{m|ca|roca}}.
@@ -4561,10 +5514,10 @@ From {{der|ca|fa|رخ|tr=rox}}, from {{der|ca|pal|lhw'|tr=rox||rook, castle (''c
 ====Noun====
 {{ca-noun|m}}
 
-# {{lb|ca|obsolete}} [[rook]] {{gloss|chess piece}}
+# {{lb|ca|obsolete}} [[rook]] {{q|chess piece}}
 #: {{syn|ca|torre}}
-# {{lb|ca|heraldry}} [[rook]] {{gloss|heraldic charge}}
-# {{lb|ca|mythology}} {{l|en|roc}} {{gloss|mythological bird}}
+# {{lb|ca|heraldry}} [[rook]] {{q|heraldic charge}}
+# {{lb|ca|mythology}} {{l|en|roc}} {{q|mythological bird}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -4572,19 +5525,31 @@ From {{der|ca|fa|رخ|tr=rox}}, from {{der|ca|pal|lhw'|tr=rox||rook, castle (''c
 -------- end text --------
 Page 212 rocs: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both meanings -->
+
+===Etymology 1===
+
+====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|roc}}
+# {{plural of|ca|roc|t=rock, stone}}
+
+===Etymology 2===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|roc|t=[[rook]] {{q|chess piece or heraldic charge}}; [[roc]] {{q|mythological bird}}}}
 
 -------- end text --------
 Page 213 ros: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|rós}}
-
 ===Etymology 1===
 {{inh+|ca|roa-oca|ros}}, from {{inh|ca|la|russus}}, derived from {{der|ca|ine-pro|*h₁rewdʰ-}}. Compare {{cog|oc|ros}}, {{cog|fr|roux}}, {{cog|es|rojo}}.
+
+====Pronunciation====
+* {{ca-IPA|ó}}
 
 ====Adjective====
 {{ca-adj|#sa}}
@@ -4596,6 +5561,9 @@ Page 213 ros: -------- begin text --------
 
 ===Etymology 2===
 {{inh+|ca|la|rōs}}, used as a neuter. Compare the form {{m|ca|rou}}.
+
+====Pronunciation====
+* {{ca-IPA|ò}}
 
 ====Noun====
 {{ca-noun|m}}
@@ -4609,10 +5577,23 @@ Page 213 ros: -------- begin text --------
 ===Etymology 3===
 {{named-after|ca|occ=general|Ros Olano|wplink=Antonio Ros de Olano, 1st Marquess of Guad-el-Jelú}}.
 
+====Pronunciation====
+* {{ca-IPA|ó}}
+
 ====Noun====
 {{ca-noun|m|#sos}}
 
 # a particular type of [[military]] [[cap]], introduced by General Ros de Olano in the Spanish Army in the XIX century.
+
+===Etymology 4===
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|ro|t=[[rho]] {{q|Greek letter}}}}
 
 ===References===
 * {{R:ca:IEC2}}
@@ -4643,6 +5624,9 @@ Page 214 rou: -------- begin text --------
 -------- end text --------
 Page 215 rès: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Adverb===
 {{ca-adv}}
 
@@ -4650,16 +5634,25 @@ Page 215 rès: -------- begin text --------
 -------- end text --------
 Page 216 rés: -------- begin text --------
 
-===Etymology===
-Deverbal of {{m|ca|resar}}
-
 ===Pronunciation===
 * {{ca-IPA}}
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{ca-noun|m}}
 
-# {{lb|ca|religion}} the act of [[prayer]]
+# {{superseded spelling of|ca|res|t=prayer}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{lb|ca|Balearic|Algherese}} {{superseded spelling of|ca|res}} {{q|first singular present indicative of {{m|ca|resar||to pray}}}}
+
+===Usage notes===
+{{U:ca:deprecated use of diacritic}}
 
 -------- end text --------
 Page 217 se: -------- begin text --------
@@ -6294,13 +7287,6 @@ Page 289 és: -------- begin text --------
 
 -------- end text --------
 Page 290 ós: -------- begin text --------
-[[File:Brown bear (Ursus arctos arctos) running.jpg|thumb|l'ós bru]]
-
-===Alternative forms===
-* {{alt|ca|os||2016 spelling reform}}
-
-===Etymology===
-{{inh+|ca|la|ursus}}. Compare {{cog|es|oso}}, {{cog|oc|ors}}, {{cog|fr|ours}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -6310,33 +7296,9 @@ Page 290 ós: -------- begin text --------
 ===Noun===
 {{ca-noun|m|#sos|f=#sa}}
 
-# [[bear]] {{gloss|mammal}}
+# {{superseded spelling of|ca|os|t=bear}}
 
 ====Usage notes====
 {{U:ca:deprecated use of diacritic}}
-
-====Derived terms====
-{{rel-top|specific species of bear}}
-* {{l|ca|ós blanc}}
-* {{l|ca|ós bru}}
-* {{l|ca|ós d'Alaska}}
-* {{l|ca|ós malai}}
-* {{l|ca|ós morrut}}
-* {{l|ca|ós negre americà}}
-* {{l|ca|ós polar}}
-* {{l|ca|ós tibetà}}
-{{rel-bottom}}
-
-{{rel-top|other non-ursine mammals}}
-* {{l|ca|ós formiguer}}
-* {{l|ca|ós marí}}
-* {{l|ca|ós rentador}}
-{{rel-bottom}}
-
-===Further reading===
-* {{R:ca:IEC2}}
-* {{R:ca:DCVB}}
-
-{{C|ca|Ursids}}
 
 -------- end text --------
