@@ -1,4 +1,4 @@
-Beginning at Thu Dec 21 01:01:22 2023
+Beginning at Fri Dec 22 22:19:14 2023
 Page 1 Déu: -------- begin text --------
 
 ===Etymology===
@@ -802,7 +802,7 @@ Page 42 cens: -------- begin text --------
 From {{der|ca|la|cēnsus}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ë}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -2549,6 +2549,7 @@ Page 123 jec: -------- begin text --------
 {{head|ca|verb form}}
 
 # {{ca-verb form of|jeure}}
+# {{ca-verb form of|jaure}}
 -------- end text --------
 Page 124 jeu: -------- begin text --------
 
@@ -2559,6 +2560,7 @@ Page 124 jeu: -------- begin text --------
 {{head|ca|verb form}}
 
 # {{ca-verb form of|jeure}}
+# {{ca-verb form of|jaure}}
 
 -------- end text --------
 Page 125 jeus: -------- begin text --------
@@ -2567,6 +2569,7 @@ Page 125 jeus: -------- begin text --------
 {{head|ca|verb form}}
 
 # {{ca-verb form of|jeure}}
+# {{ca-verb form of|jaure}}
 -------- end text --------
 Page 126 jo: -------- begin text --------
 
@@ -2776,13 +2779,13 @@ Page 134 llec: -------- begin text --------
 -------- end text --------
 Page 135 lleu: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 From {{der|ca|la|levis}}.
 
-===Pronunciation===
+====Pronunciation====
 * {{ca-IPA|é}}
 
-===Adjective===
+====Adjective====
 {{ca-adj|mf}}
 
 # [[light]] {{gloss|not heavy}}
@@ -2791,19 +2794,25 @@ From {{der|ca|la|levis}}.
 # {{q|Pallarès|Rosellonès}} [[soon]]
 #: {{syn|ca|aviat}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|alleujar}}
 * {{l|ca|lleument}}
 
-====Related terms====
+=====Related terms=====
 * {{l|ca|lleuger}}
 
-===Further reading===
+====Further reading====
 * {{R:ca:IEC2}}
 * {{R:ca:GDLC}}
 * {{R:ca:DNV}}
 * {{R:ca:DCVB}}
 
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|lleure<only3s>}}
 
 -------- end text --------
 Page 136 lleus: -------- begin text --------
@@ -4756,7 +4765,7 @@ Page 219 secs: -------- begin text --------
 Page 220 sens: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ê}}
 
 ===Preposition===
 {{head|ca|preposition}}
@@ -4871,7 +4880,7 @@ Page 223 seus: -------- begin text --------
 * {{alt|ca|sèus||pre-2016}}
 
 ====Pronunciation====
-* {{ca-IPA|ê}}<!-- FIXME: cawikt says Balearic /ə/ or /ɛ/ -->
+* {{ca-IPA|ê}}
 
 ====Noun====
 {{head|ca|noun form|g=m-p}}
@@ -4881,7 +4890,7 @@ Page 223 seus: -------- begin text --------
 ===Etymology 4===
 
 ====Pronunciation====
-* {{ca-IPA|ê}}<!-- FIXME: cawikt says Balearic /ə/ or /ɛ/ -->
+* {{ca-IPA|è}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -4963,6 +4972,7 @@ Compare {{m|ca|soca|t=trunk}}.
 {{head|ca|verb form}}
 
 # {{ca-verb form of|ésser}}
+# {{ca-verb form of|ser}}
 
 ===Further reading===
 * {{R:ca:DCVB}}
@@ -5336,6 +5346,7 @@ Page 241 ten: -------- begin text --------
 {{head|ca|verb form}}
 
 # {{ca-verb form of|tenir}}
+# {{ca-verb form of|tindre}}
 
 ====Usage notes====
 Generally, the imperative form {{m|ca|ten}} is a contextual form of {{m|ca|té}} used when clitic pronouns (e.g., {{m|ca|te}}) are attached to the end of the verb.
@@ -5358,6 +5369,7 @@ Page 242 tens: -------- begin text --------
 {{head|ca|verb form}}
 
 # {{ca-verb form of|tenir}}
+# {{ca-verb form of|tindre}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -5483,34 +5495,50 @@ Page 248 tocs: -------- begin text --------
 -------- end text --------
 Page 249 ton: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{inh+|ca|roa-oca|ton}}, from {{inh|ca|VL.||*tum}}, reduced form of {{inh|ca|la|tuus|tuum}}, from {{inh|ca|itc-pro|*towos}}. Compare {{cog|oc,fr|ton}}.
 
 In unstressed position in Vulgar Latin {{m|la||tuum, tuam}} etc. were monosyllabic and regularly became {{m|ca||ton, ta}} etc. in Catalan. When stressed they were disyllabic and became {{m|ca|teu}}, {{m|roa-oca|tua}} > {{m|ca|teua}} etc.
 
-===Determiner===
+====Determiner====
 {{head|ca|determiner|cat2=possessive determiners|g=m|feminine|ta|masculine plural|tos|feminine plural|tes}}
 
 # [[your]] (singular)
 
-====Usage notes====
+=====Usage notes=====
 {{ca-poss-determiner-note}}
 
 The standard masculine plural form is ''tos'', but {{m|ca|tons}} can be found in some dialects.
 
-===See also===
+====See also====
 * {{l|ca|teu}}
 
-===References===
+====References====
 * {{R:ca:DCVB}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|tondre}}
 
 -------- end text --------
 Page 250 tons: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{head|ca|noun form}}
 
 # {{plural of|ca|to}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|tondre}}
 
 -------- end text --------
 Page 251 tos: -------- begin text --------
@@ -5552,6 +5580,13 @@ From {{m|ca|tossa}}.
 
 =====Derived terms=====
 * {{l|ca|tossut}}
+
+===Etymology 3===
+
+====Participle====
+{{ca-pp}}
+
+# {{past participle of|ca|tondre}}
 
 ===Further reading===
 * {{R:ca:DCVB}}
@@ -5626,6 +5661,7 @@ Page 254 trec: -------- begin text --------
 {{head|ca|verb form}}
 
 # {{ca-verb form of|treure}}
+# {{ca-verb form of|traure}}
 
 -------- end text --------
 Page 255 tren: -------- begin text --------
@@ -5705,6 +5741,7 @@ Page 258 treu: -------- begin text --------
 {{head|ca|verb form}}
 
 # {{ca-verb form of|treure}}
+# {{ca-verb form of|traure}}
 
 -------- end text --------
 Page 259 treus: -------- begin text --------
@@ -5713,6 +5750,7 @@ Page 259 treus: -------- begin text --------
 {{head|ca|verb form}}
 
 # {{ca-verb form of|treure}}
+# {{ca-verb form of|traure}}
 -------- end text --------
 Page 260 tro: -------- begin text --------
 
@@ -5856,6 +5894,7 @@ Page 266 té: -------- begin text --------
 {{head|ca|verb form}}
 
 # {{ca-verb form of|tenir}}
+# {{ca-verb form of|tindre}}
 
 -------- end text --------
 Page 267 tén: -------- begin text --------
@@ -5915,6 +5954,7 @@ Page 271 vens: -------- begin text --------
 {{head|ca|verb form}}
 
 # {{ca-verb form of|vendre}}
+# {{ca-verb form of|venir}}
 
 -------- end text --------
 Page 272 ves: -------- begin text --------
@@ -6300,5 +6340,3 @@ Page 290 ós: -------- begin text --------
 {{C|ca|Ursids}}
 
 -------- end text --------
-Elapsed time: 0 mins 27.19 secs
-Ending at Thu Dec 21 01:01:49 2023
