@@ -747,7 +747,11 @@ def cat_subcats(page, startprefix=None, endprefix=None, seen=None, prune_cats_re
     yield i, current
 
 def prefix_pages(prefix, startprefix=None, endprefix=None, namespace=None):
-  pageiter = site.allpages(prefix=prefix, namespace=namespace)
+  pageiter = site.allpages(
+    prefix=None if prefix == '-' else prefix, namespace=namespace,
+    start=startprefix if isinstance(startprefix, str) else None,
+    filterredir=False
+  )
   for i, current in iter_items(pageiter, startprefix, endprefix):
     yield i, current
 
@@ -1052,7 +1056,8 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--contribs", help="Names of users whose contributions to iterate over, comma-separated.")
     parser.add_argument("--contribs-start", help="Timestamp to start doing contributions at.")
     parser.add_argument("--contribs-end", help="Timestamp to end doing contributions at.")
-    parser.add_argument("--prefix-pages", help="Do pages with these prefixes, comma-separated.")
+    parser.add_argument("--prefix-pages", help="Do pages with these prefixes, comma-separated.",
+                        default="-")
     parser.add_argument("--prefix-namespace", help="Namespace of pages to do using --prefix-pages.")
     parser.add_argument("--namespaces", help="List of namespace(s) to restrict pages to.")
     parser.add_argument("--ref-namespaces", help="List of namespace(s) to restrict --refs to.")
@@ -1096,7 +1101,7 @@ def parse_start_end(startprefix, endprefix):
 
 def args_has_non_default_pages(args):
   return not not (args.pages or args.pagefile or args.pages_from_find_regex or args.pages_from_previous_output
-      or args.cats or args.refs or args.specials or args.contribs or args.prefix_pages
+      or args.cats or args.refs or args.specials or args.contribs or args.prefix_namespace
       or args.pages_and_refs or args.namespaces)
 
 # Process a run of pages, with the set of pages specified in various possible ways, e.g. from --pagefile, --cats,
