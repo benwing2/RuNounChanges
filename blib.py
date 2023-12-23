@@ -1412,7 +1412,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
       for contrib in split_arg(args.contribs):
         for index, page in query_usercontribs(contrib, start, end, starttime=args.contribs_start, endtime=args.contribs_end):
           process_pywikibot_page(index, pywikibot.Page(site, page['title']))
-    if args.prefix_pages:
+    if args.prefix_namespace:
       for prefix in split_arg(args.prefix_pages):
         namespace = args.prefix_namespace
         for index, page in prefix_pages(prefix, start, end, namespace):
