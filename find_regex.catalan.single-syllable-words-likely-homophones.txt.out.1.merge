@@ -3648,9 +3648,8 @@ Page 144 mes: -------- begin text --------
 {{inh+|ca|VL.||mās}}, reduced form of {{inh|ca|la|meās}}.
 
 ====Pronunciation====
-* {{ca-IPA|é}}
-* {{homophones|ca|més}}
-* {{rhymes|ca|es|s=1}}
+* {{a|Balearic|Central}} {{IPA|ca|/məs/}} {{q|always unstressed}}
+* {{a|Valencian|Algherese}} {{IPA|ca|/mes/}} {{q|always unstressed}}
 
 ====Determiner====
 {{head|ca|determiner form}}
@@ -5661,6 +5660,10 @@ Page 217 se: -------- begin text --------
 {{dercat|ca|ine-pro|inh=1}}
 From {{inh-lite|ca|la|se|sē}}.
 
+===Pronunciation===
+* {{a|Balearic|Central}} {{IPA|ca|/sə/}}
+* {{a|Valencian|Algherese}} {{IPA|ca|/se/}}
+
 ===Pronoun===
 {{ca-ppron|type=encl|encl_con='s|procl=es|procl_con=s'}}
 
@@ -5684,7 +5687,6 @@ Page 218 sec: -------- begin text --------
 
 ====Pronunciation====
 * {{ca-IPA|ê}}
-* {{homophones|ca|cec|séc}}
 
 ====Adjective====
 {{ca-adj}}
@@ -5731,14 +5733,28 @@ Page 218 sec: -------- begin text --------
 # {{ca-verb form of|seure}}
 
 ===Etymology 3===
+{{deverbal|ca|segar|t=to harvest}}.
+
+====Alternative forms====
+* {{alt|ca|séc||pre-2016}}
 
 ====Pronunciation====
 * {{ca-IPA|é}}
+* {{homophones|ca|cec}}
 
 ====Noun====
 {{ca-noun|m}}
 
-# {{lb|ca|2016 spelling reform}} {{alternative form of|ca|séc}}
+# [[fold]]
+# [[groove]]
+# [[wrinkle]]
+
+=====Usage notes=====
+* {{U:ca:deprecated use of diacritic}}
+
+===Further reading===
+* {{R:ca:IEC2}}
+* {{R:ca:DCVB}}
 
 ===References===
 * {{R:ca:IEC2}}
@@ -5749,10 +5765,29 @@ Page 218 sec: -------- begin text --------
 -------- end text --------
 Page 219 secs: -------- begin text --------
 
-===Adjective===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|ê}}
+
+====Adjective====
 {{head|ca|adjective form}}
 
-# {{masculine plural of|ca|sec}}
+# {{masculine plural of|ca|sec|t=dry}}
+
+===Etymology 2===
+
+====Alternative forms====
+* {{alt|ca|sécs||pre-2016}}
+
+====Pronunciation====
+* {{ca-IPA|é}}
+* {{homophones|ca|cecs}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|sec|t=fold; groove}}
 
 -------- end text --------
 Page 220 sens: -------- begin text --------
@@ -5763,10 +5798,10 @@ Page 220 sens: -------- begin text --------
 ===Preposition===
 {{head|ca|preposition}}
 
-# {{archaic form of|ca|sense}}
+# {{archaic form of|ca|sense|t=without}}
 
 ====Usage notes====
-This preposition has been superseded in all dialects by the form ''sense''. ''Sens'' is nowadays only used in poetry (for metrical reasons or for a deliberately archaizing effect), and in common set phrases: ''sens dubte'' ("without a doubt") and ''sens falta'' ("without fail").
+This preposition has been superseded in all dialects by the form ''sense''. ''Sens'' is nowadays only used in poetry (for metrical reasons or for a deliberately archaizing effect), and in common set phrases: {{m|ca|sens dubte||without a doubt}} and {{m|ca|sens falta||without fail}}.
 
 ====Derived terms====
 * {{l|ca|sens dubte}}
@@ -5781,12 +5816,42 @@ This preposition has been superseded in all dialects by the form ''sense''. ''Se
 -------- end text --------
 Page 221 ses: -------- begin text --------
 
-===Article===
+===Etymology 1===
+{{inh+|ca|la|sessus|lit=act of sitting}}. Compare {{cog|es|sieso}}.
+
+====Pronunciation====
+* {{ca-IPA|é}}
+* {{rhymes|ca|es|s=1}}
+
+====Noun====
+{{ca-noun|m|#sos}}
+
+# [[anus]], [[lowermost]] [[part]] of the [[rectum]]
+
+===Etymology 2===
+{{inh+|ca|VL.||sās}}, reduced form of {{inh|ca|la|suās}}.
+
+====Pronunciation====
+* {{a|Balearic|Central}} {{IPA|ca|/səs/}} {{q|always unstressed}}
+* {{a|Valencian|Algherese}} {{IPA|ca|/ses/}} {{q|always unstressed}}
+
+====Determiner====
+{{head|ca|determiner form}}
+
+# {{feminine plural of|ca|son}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{a|Balearic|Central}} {{IPA|ca|/səs/}} {{q|always unstressed}}
+* {{a|Valencian|Algherese}} {{IPA|ca|/ses/}} {{q|always unstressed}}
+
+====Article====
 {{head|ca|article|g=f-p}}
 
 # {{lb|ca|dialectal|Balearic}} feminine plural definite article; [[the]]
 
-===See also===
+====See also====
 * {{l|ca|salat}}
 
 -------- end text --------
@@ -5830,11 +5895,32 @@ The weak form {{m|ca|son}} is also from {{inh|ca|la|suus|suum}} in an unstressed
 ====Noun====
 {{ca-noun|f}}
 
-# [[seat]]
+# [[seat]] {{q|of power or authority}}, [[center]]
 #: {{syn|ca|central}}
+# {{lb|ca|Christianity}} [[seat]] {{q|of a bishop or pope}}, [[see]]
+# {{lb|ca|Christianity}} [[cathedral]]
 
 ===Etymology 3===
-See {{m|ca|seure}}.
+{{inh+|ca|roa-oca|sèu}}, from {{inh|ca|la|sēbum||tallow, grease; suet}}, from {{der|ca|ine-pro|*seyb-||to pour out}}.
+
+====Alternative forms====
+* {{alt|ca|sèu||pre-2016}}
+
+====Pronunciation====
+* {{ca-IPA|ê}}
+
+====Noun====
+{{ca-noun|m}}
+
+# [[suet]]
+# [[tallow]]
+# [[sebum]]
+
+====References====
+* {{R:ca:DCVB}}
+
+===Etymology 4===
+{{nonlemma}}
 
 ====Pronunciation====
 * {{ca-IPA|è}}
@@ -5843,6 +5929,20 @@ See {{m|ca|seure}}.
 {{head|ca|verb form}}
 
 # {{ca-verb form of|seure}}
+
+===Etymology 5===
+{{nonlemma}}
+
+====Alternative forms====
+* {{alt|ca|séu||pre-2016}}
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{lb|ca|colloquial|_|Northern Catalan|Algherese}} {{ca-verb form of|ser<pres_2p:seu>}}
 
 -------- end text --------
 Page 223 seus: -------- begin text --------
@@ -5865,7 +5965,7 @@ Page 223 seus: -------- begin text --------
 ====Noun====
 {{head|ca|noun form|g=f-p}}
 
-# {{plural of|ca|seu|t=seat}}
+# {{plural of|ca|seu|t=seat {{q|of authority}}, [[see]]; [[cathedral]]}}
 
 ===Etymology 3===
 
@@ -5893,11 +5993,11 @@ Page 223 seus: -------- begin text --------
 -------- end text --------
 Page 224 so: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
 {{inh+|ca|roa-oca|so}}~{{m|roa-oca|son}}, from {{inh|ca|la|sonus}}. Compare {{cog|oc|son}}, {{cog|fr|son}}, {{cog|es|sueno}}.
+
+====Pronunciation====
+* {{ca-IPA|ò}}
 
 ====Noun====
 {{ca-noun|m|#ns}}
@@ -5909,11 +6009,54 @@ Page 224 so: -------- begin text --------
 * {{l|ca|sònic}}
 
 ===Etymology 2===
+{{b-f|ca|sons|pos=plural}}. Compare {{cog|es|sueño}}, {{cog|pt|sono}}, from {{der|ca|la|somnus}}.
+
+====Alternative forms====
+* {{alt|ca|son||standard}}
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+
+====Noun====
+{{ca-noun|m|#ns}}
+
+# {{lb|ca|Tarragon|Mallorca|Menorca}} [[sleep]]
+
+=====Related terms=====
+* {{l|ca|sonar}}
+* {{l|ca|sònic}}
+
+===Etymology 3===
+
+====Alternative forms====
+* {{alt|ca|só||pre-2016}}
+
+====Pronunciation====
+* {{ca-IPA|ó}}
 
 ====Verb====
-{{head|ca|verb}}
+{{head|ca|verb form}} {{tlb|ca|archaic|Central Catalan|Northwest Catalan|Algherese}}
 
-# {{obsolete spelling of|ca|só}}
+# {{ca-verb form of|ésser<pres_1s:so>}}
+# {{ca-verb form of|ser<pres_1s:so>}}
+
+=====Usage notes=====
+This form is still used in certain dialects, such as Algherese.
+
+===Etymology 4===
+
+====Pronunciation====
+* {{IPA|ca|/ˈso/|/ˈsu/}}
+
+====Alternative forms====
+* {{alt|ca|s'||after {{m|ca|amb}} or sometimes {{m|ca|en}}, before a vowel}}
+* {{alt|ca|es||not after {{m|ca|amb}} or sometimes {{m|ca|en}}}}
+
+====Article====
+{{head|ca|article form}}
+
+# {{lb|ca|Mallorca|Ibiza}} {{alt form|ca|es|t=the|pos=masculine singular}} {{q|used after {{m|ca|amb||with}} and sometimes {{m|ca|en||in}}, before a consonant}}
+#: {{uxi|ca|Va anar-hi amb so cotxe.|He went there with the car.}}
 
 ===References===
 * {{R:ca:IEC2}}
@@ -5924,35 +6067,57 @@ Page 224 so: -------- begin text --------
 -------- end text --------
 Page 225 soc: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|ò}}
-
 ===Etymology 1===
-{{nonlemma}}
+From {{inh|ca|la|sum}}. {{rfe|ca|Is there an etymological source for the final /k/?}}
+
+====Alternative forms====
+* {{alt|ca|sóc||pre-2016}}
+* {{alt|ca|so||archaic or dialectal}}
+* {{alt|ca|só||archaic or dialectal, pre-2016}}
+
+====Pronunciation====
+* {{ca-IPA|ó}}
 
 ====Verb====
 {{head|ca|verb form}}
 
-# {{lb|ca|2016 spelling reform}} {{alternative spelling of|ca|sóc}}
+# {{ca-verb form of|ser}}
+# {{ca-verb form of|ésser}}
 
 ===Etymology 2===
 Compare {{m|ca|soca|t=trunk}}.
 
+====Pronunciation====
+* {{ca-IPA|ò}}
+
 ====Noun====
 {{ca-noun|m}}
 
-# [[stump]]
+# [[stump]] {{q|of a tree}}
+# [[block]] {{q|of an anvil}}
+# [[block]], [[chock]] {{q|for preventing movement of a wheel}}
 
 ===Etymology 3===
 {{inh+|ca|la|soccus|t=slipper}}. Compare {{cog|es|zueco}}.
 
+====Pronunciation====
+* {{ca-IPA|ò}}
+
 ====Noun====
 {{ca-noun|m}}
 
-# [[clog]]
+# [[clog]] {{gl|wooden shoe}}
 #: {{syn|ca|esclop}}
+# [[shoe]] {{q|of a brake}}
 
 ===Etymology 4===
+{{bor+|ca|ar|سُوق||market}}.
+
+====Alterantive forms====
+* {{alt|ca|assoc}}
+
+====Pronunciation====
+* {{ca-IPA|ò}}
 
 ====Noun====
 {{ca-noun|mf}}
@@ -5961,24 +6126,62 @@ Compare {{m|ca|soca|t=trunk}}.
 
 ===Etymology 5===
 
-====Verb====
-{{head|ca|verb form}}
+====Pronunciation====
+* {{ca-IPA|ó}}
 
-# {{ca-verb form of|ésser}}
-# {{ca-verb form of|ser}}
+====Noun====
+{{ca-noun|m}}
+
+# {{lb|ca|dialectal}} {{alt form|ca|solc||furrow; groove}}
 
 ===Further reading===
 * {{R:ca:DCVB}}
 * {{R:ca:IEC2}}
 * {{R:ca:GDLC}}
+* {{R:ca:DNV}}
 
 -------- end text --------
 Page 226 socs: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+
+====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|soc}}
+# {{plural of|ca|soc|t=stump {{q|of a tree}}; [[block]] {{q|of an anvil}}}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|soc|t=wooden clog; brake shoe}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|soc|t=souq}}
+
+===Etymology 4===
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{lb|ca|dialectal}} {{plural of|ca|soc|t=furrow; groove}}
 
 -------- end text --------
 Page 227 son: -------- begin text --------
@@ -5987,6 +6190,10 @@ Page 227 son: -------- begin text --------
 {{inh+|ca|roa-oca|son}}, from {{inh|ca|VL.||sum}}, reduced form of {{inh|ca|la|suus|suum}}, accusative of {{m|la|suus}}, from {{inh|ca|itc-pro|*sowos}}. Compare {{cog|oc,fr|son}}.
 
 In unstressed position in Vulgar Latin {{m|la||suum, suam}} etc. were monosyllabic and regularly became {{m|ca||son, sa}} etc. in Catalan. When stressed they were disyllabic and became {{m|ca|seu}}, {{m|roa-oca|sua}} > {{m|ca|seua}} etc.
+
+====Pronunciation====
+* {{a|Balearic|Central}} {{IPA|ca|/sun/}} {{q|always unstressed}}
+* {{a|Valencian}} {{IPA|ca|/son/}} {{q|always unstressed}}
 
 ====Determiner====
 {{head|ca|determiner|cat2=possessive determiners|g=m|feminine|sa|masculine plural|sos|feminine plural|ses}}
@@ -6018,7 +6225,7 @@ In Algherese, ''son'' and its forms mainly give reference to ''vostè''.
 |text=}}
 
 ===Etymology 2===
-{{inh+|ca|roa-oca|son}}, from {{inh|ca|la|somnus}}, from {{inh|ca|ine-pro|*swépnos}}.
+{{inh+|ca|roa-oca|son}}, from {{inh|ca|la|somnus}}, from {{inh|ca|ine-pro|*swépnos}}. Feminine noun by analogy with {{m|ca|fam||hunger}} and {{m|ca|set||thirst}}.
 
 ====Alternative forms====
 * {{alt|ca|so||Balearic}}
@@ -6032,7 +6239,7 @@ In Algherese, ''son'' and its forms mainly give reference to ''vostè''.
 # [[sleep]]
 
 ====Noun====
-{{ca-noun|f}}
+{{ca-noun|f|-}}
 
 # [[sleepiness]]
 #: {{syn|ca|somnolència}}
@@ -6052,24 +6259,33 @@ In Algherese, ''son'' and its forms mainly give reference to ''vostè''.
 -------- end text --------
 Page 228 sons: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+* {{ca-IPA|ò}}
+
+===Etymology 1===
+
+====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|so}}
+# {{plural of|ca|so|t=sound}}
+
+===Etymology 2===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|son|t=sleep}}
+# {{lb|ca|Tarragon|Mallorca|Menorca}} {{plural of|ca|so|t=sleep}}
 
 -------- end text --------
 Page 229 sou: -------- begin text --------
 
-===Pronunciation===
-{{q|noun}}
-* {{ca-IPA|ò}}
-* {{rhymes|ca|ɔw|s=1}}
-{{q|verb|pronoun}}
-* {{ca-IPA|ó}}
-* {{rhymes|ca|ow|s=1}}
-
 ===Etymology 1===
 {{inh+|ca|roa-oca|sou}}~{{m|roa-oca|sol}}, from {{inh|ca|LL.|soldus}}, contraction of {{inh|ca|la|solĭdus}}. {{doublet|ca|sòlid}}. Compare {{cog|fr|sou}}.
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+* {{rhymes|ca|ɔw|s=1}}
 
 ====Noun====
 {{ca-noun|m}}
@@ -6079,6 +6295,10 @@ Page 229 sou: -------- begin text --------
 #: {{uxi|ca|tinc un '''sou''' de 1200 euros|I have a '''salary''' of 1200 euros}}
 
 ===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+* {{rhymes|ca|ow|s=1}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -6091,6 +6311,10 @@ Page 229 sou: -------- begin text --------
 
 ====Alternative forms====
 * {{alt|ca|seu||non-Algherese dialects}}
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+* {{rhymes|ca|ow|s=1}}
 
 ====Pronoun====
 {{head|ca|pronoun|cat2=possessive pronouns|feminine|sua|masculine plural|sous|feminine plural|sues}}
@@ -6124,6 +6348,9 @@ Page 230 sous: -------- begin text --------
 
 ===Etymology 1===
 
+====Pronunciation====
+* {{ca-IPA|ó}}
+
 ====Pronoun====
 {{head|ca|pronoun form}}
 
@@ -6131,39 +6358,40 @@ Page 230 sous: -------- begin text --------
 
 ===Etymology 2===
 
+====Pronunciation====
+* {{ca-IPA|ò}}
+
 ====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|sou}}
+# {{plural of|ca|sou|t=salary, wage}}
 
 -------- end text --------
 Page 231 sèu: -------- begin text --------
 
-===Alternative forms===
-* {{alt|ca|seu||2016 orthographic reform}}
+===Pronunciation===
+* {{ca-IPA}}
 
-===Etymology===
-{{inh+|ca|roa-oca|sèu}}, from {{inh|ca|la|sēbum||tallow, grease; suet}}, from {{der|ca|ine-pro|*seyb-||to pour out}}.
+====Noun====
+{{ca-noun|m}}
+
+# {{superseded spelling of|ca|seu|t=suet; tallow; sebum}}
+
+====Usage notes====
+{{U:ca:deprecated use of diacritic}}
+-------- end text --------
+Page 232 sèus: -------- begin text --------
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Noun===
-{{ca-noun|m}}
-
-# [[suet]]
-# [[tallow]]
-# [[sebum]]
-
-===References===
-* {{R:ca:DCVB}}
--------- end text --------
-Page 232 sèus: -------- begin text --------
-
-===Noun===
 {{head|ca|noun form}}
 
-# {{plural of|ca|sèu}}
+# {{superseded spelling of|ca|seus|t=suets; tallows; sebums}}
+
+====Usage notes====
+{{U:ca:deprecated use of diacritic}}
 -------- end text --------
 Page 233 sé: -------- begin text --------
 
@@ -6179,39 +6407,35 @@ Page 233 sé: -------- begin text --------
 -------- end text --------
 Page 234 séc: -------- begin text --------
 
-===Alternative forms===
-* {{alt|ca|sec||2016 spelling reform}}
-
-===Etymology===
-{{deverbal|ca|segar|t=to harvest}}.
-
 ===Pronunciation===
 * {{ca-IPA}}
-* {{homophones|ca|sec|cec}}
 
-===Noun===
+====Noun====
 {{ca-noun|m}}
 
-# [[fold]]
-# [[groove]]
-# [[wrinkle]]
+# {{superseded spelling of|ca|sec|t=fold; groove; wrinkle}}
 
 ====Usage notes====
-* {{U:ca:deprecated use of diacritic}}
-
-===Further reading===
-* {{R:ca:IEC2}}
-* {{R:ca:DCVB}}
+{{U:ca:deprecated use of diacritic}}
 
 -------- end text --------
 Page 235 sécs: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Noun===
 {{head|ca|noun form}}
 
-# {{plural of|ca|séc}}
+# {{superseded spelling of|ca|secs|t=folds; grooves; wrinkles}}
+
+====Usage notes====
+{{U:ca:deprecated use of diacritic}}
 -------- end text --------
 Page 236 sés: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -6227,20 +6451,13 @@ Page 237 só: -------- begin text --------
 ===Verb===
 {{head|ca|verb form}}
 
-# {{lb|ca|archaic|dialectal}} {{ca-verb form of|ser<pres_1s:só>}}
+# {{lb|ca|archaic|or|dialectal}} {{superseded spelling of|ca|so}} {{q|specifically for the archaic or dialectal first singular present indicative of {{m|ca|ser}}/{{m|ca|ésser}}}}
 
 ====Usage notes====
-This form is still used in certain dialects, such as Algherese.
+{{U:ca:deprecated use of diacritic}}
 
 -------- end text --------
 Page 238 sóc: -------- begin text --------
-
-===Alternative forms===
-* {{alter|ca|soc||2016 spelling reform}}
-* {{alter|ca|só|so||obsolete}}
-
-===Etymology===
-From {{inh|ca|la|sum}}. {{rfe|ca|Is there an etymological source for the final /k/?}}
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -6332,7 +6549,7 @@ Originally from {{der-lite|ca|nan|-}} {{m-lite|nan|sc=Hani|茶|tr=tê}}.
 Page 241 ten: -------- begin text --------
 
 ===Pronunciation===
-* {{IPA|ca|/ten/}}
+* {{ca-IPA|é}}
 * {{rhymes|ca|en|s=1}}
 
 ===Verb===
@@ -6350,6 +6567,9 @@ Page 242 tens: -------- begin text --------
 ===Etymology 1===
 {{bor+|ca|la|tēnsus}}. Compare the inherited doublet {{doublet|ca|tes|notext=1}}.
 
+====Pronunciation====
+* {{ca-IPA|ë}}
+
 ====Adjective====
 {{ca-adj}}
 
@@ -6358,11 +6578,24 @@ Page 242 tens: -------- begin text --------
 
 ===Etymology 2===
 
+====Pronunciation====
+* {{ca-IPA|é}}
+
 ====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|tenir}}
 # {{ca-verb form of|tindre}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|ë}}
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{lb|ca|Balearic}} {{ca-verb form of|tensar<pres_1s:tens>}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -6373,23 +6606,67 @@ Page 242 tens: -------- begin text --------
 -------- end text --------
 Page 243 tes: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{inh+|ca|la|tēnsus}}. Compare the borrowed doublet {{doublet|ca|tens|notext=1}}.
 
-===Pronunciation===
-* {{ca-IPA|ê}}
+====Pronunciation====
+* {{ca-IPA|ë}}
+* {{a|Algherese}} {{IPA|ca|/tes/}}
 
-===Adjective===
+====Adjective====
 {{ca-adj}}
 
 # [[tight]], [[taut]] {{gloss|not loose}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|tesar}}
 
-====Related terms====
+=====Related terms=====
 * {{l|es|tendir}}
 * {{l|es|tensió}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|è}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|te|t=tea}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|te|t=the letter T}}
+
+===Etymology 4===
+
+====Pronunciation====
+* {{ca-IPA|ë}}
+* {{a|Algherese}} {{IPA|ca|/tes/}}
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{lb|ca|Balearic|Algherese}} {{ca-verb form of|tesar<pres_1s:tes>}}
+
+===Etymology 5===
+{{inh+|ca|VL.||tās}}, reduced form of {{inh|ca|la|tuās}}.
+
+====Pronunciation====
+* {{a|Balearic|Central}} {{IPA|ca|/təs/}} {{q|always unstressed}}
+* {{a|Valencian|Algherese}} {{IPA|ca|/tes/}} {{q|always unstressed}}
+
+====Determiner====
+{{head|ca|determiner form}}
+
+# {{lb|ca|obsolete}} {{feminine plural of|ca|ton}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -6428,6 +6705,9 @@ When preceding a noun, {{m|ca||teu}} is always preceded by the appropriate defin
 -------- end text --------
 Page 245 teus: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Pronoun===
 {{head|ca|pronoun form}}
 
@@ -6464,22 +6744,32 @@ First attested 1575, borrowed from {{bor|ca|la|tonus}}, from {{der|ca|grc|τόν
 -------- end text --------
 Page 247 toc: -------- begin text --------
 
-===Etymology===
-{{deverbal|ca|tocar}}.
-
 ===Pronunciation===
 * {{ca-IPA|ò}}
 
-===Noun===
+===Etymology 1===
+{{deverbal|ca|tocar}}.
+
+====Noun====
 {{ca-noun|m}}
 
 # [[touch]]
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|toc de queda}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{lb|ca|Balearic}} {{ca-verb form of|tocar<pres_1s:toc>}}
 
 -------- end text --------
 Page 248 tocs: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -6492,6 +6782,10 @@ Page 249 ton: -------- begin text --------
 {{inh+|ca|roa-oca|ton}}, from {{inh|ca|VL.||*tum}}, reduced form of {{inh|ca|la|tuus|tuum}}, from {{inh|ca|itc-pro|*towos}}. Compare {{cog|oc,fr|ton}}.
 
 In unstressed position in Vulgar Latin {{m|la||tuum, tuam}} etc. were monosyllabic and regularly became {{m|ca||ton, ta}} etc. in Catalan. When stressed they were disyllabic and became {{m|ca|teu}}, {{m|roa-oca|tua}} > {{m|ca|teua}} etc.
+
+====Pronunciation====
+* {{a|Balearic|Central}} {{IPA|ca|/tun/}} {{q|always unstressed}}
+* {{a|Valencian}} {{IPA|ca|/ton/}} {{q|always unstressed}}
 
 ====Determiner====
 {{head|ca|determiner|cat2=possessive determiners|g=m|feminine|ta|masculine plural|tos|feminine plural|tes}}
