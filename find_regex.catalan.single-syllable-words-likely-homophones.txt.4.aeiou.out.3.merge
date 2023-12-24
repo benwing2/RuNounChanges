@@ -8388,11 +8388,11 @@ Page 526 costos: -------- begin text --------
 -------- end text --------
 Page 527 cota: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|ò}}<!-- 
-
 ===Etymology 1===
 {{inh+|ca|roa-oca|cota}}, from {{der|ca|frk|*kottō}}. {{etydate|981}}
+
+====Pronunciation====
+* {{ca-IPA|ò}}
 
 ====Noun====
 {{ca-noun|f}}
@@ -8411,10 +8411,23 @@ Page 527 cota: -------- begin text --------
 ===Etymology 2===
 {{bor+|ca|LL.|quotus|quota (pars)}}.
 
+====Pronunciation====
+* {{ca-IPA|ò}}
+
 ====Noun====
 {{ca-noun|f}}
 
 # {{lb|ca|topography}} [[elevation]]
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+
+====Adjective====
+{{head|ca|adjective form}}
+
+# {{feminine singular of|ca|cot|t=bowed down}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -8425,10 +8438,35 @@ Page 527 cota: -------- begin text --------
 -------- end text --------
 Page 528 cotes: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+
+====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|cota}}
+# {{plural of|ca|cota|t=tunic, coat {{q|historical}}}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|cota|t=(topographic) elevation}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+
+====Adjective====
+{{head|ca|adjective form}}
+
+# {{feminine plural of|ca|cot|t=bowed down}}
 
 -------- end text --------
 Page 529 cotna: -------- begin text --------
@@ -8449,6 +8487,9 @@ Page 529 cotna: -------- begin text --------
 -------- end text --------
 Page 530 cotnes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -8465,7 +8506,7 @@ Page 531 cotxa: -------- begin text --------
 ===Noun===
 {{ca-noun|f}}
 
-# [[redstart]]
+# [[redstart]] {{q|type of bird}}
 
 ====Derived terms====
 {{der4|ca|cotxa capblava|cotxa cuablava|cotxa cua-roja|cotxa fumada|cotxa blava}}
@@ -8510,11 +8551,22 @@ Page 532 cotxe: -------- begin text --------
 -------- end text --------
 Page 533 cotxes: -------- begin text --------
 
-===Noun===
-{{head|ca|noun form}}
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both etyms -->
 
-# {{plural of|ca|cotxe}}
-# {{plural of|ca|cotxa}}
+===Etymology 1===
+
+====Noun====
+{{head|ca|noun form|g=m-p}}
+
+# {{plural of|ca|cotxe|t=carriage; car}}
+
+===Etymology 2===
+
+====Noun====
+{{head|ca|noun form|g=f-p}}
+
+# {{plural of|ca|cotxa|t=[[redstart]] {{q|bird}}}}
 -------- end text --------
 Page 534 cova: -------- begin text --------
 
@@ -8539,6 +8591,9 @@ From {{der|ca|VL.|*cova}}, from {{der|ca|la|cavus}}.
 
 ===Etymology 2===
 
+====Pronunciation====
+* {{ca-IPA|ó}}
+
 ====Verb====
 {{head|ca|verb form}}
 
@@ -8546,6 +8601,9 @@ From {{der|ca|VL.|*cova}}, from {{der|ca|la|cavus}}.
 
 -------- end text --------
 Page 535 cove: -------- begin text --------
+
+===Alternative forms===
+* {{alt|ca|covo||Northern Catalan|Mallorca|Menorca}}
 
 ===Etymology===
 {{inh+|ca|la|cophinus}}, from {{der|ca|grc|κόφινος||basket}}.
@@ -8575,13 +8633,28 @@ Page 537 coves: -------- begin text --------
 
 ===Etymology 1===
 
+====Pronunciation====
+* {{ca-IPA|ò}}
+
 ====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|cova}}
-# {{plural of|ca|cove}}
+# {{plural of|ca|cova|t=cave}}
 
 ===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|cove|t=large basket}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|ó}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -8589,6 +8662,9 @@ Page 537 coves: -------- begin text --------
 # {{ca-verb form of|covar}}
 -------- end text --------
 Page 538 covi: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -8598,12 +8674,18 @@ Page 538 covi: -------- begin text --------
 -------- end text --------
 Page 539 covin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|covar}}
 -------- end text --------
 Page 540 covis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -8613,12 +8695,22 @@ Page 540 covis: -------- begin text --------
 -------- end text --------
 Page 541 covo: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+
+====Noun====
 {{ca-noun|m}}
 
-# {{alternative form of|ca|cove}}
+# {{lb|ca|Northern Catalan|Mallorcan|Menorcan}} {{alternative form of|ca|cove}}
 
-===Verb===
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|covar}}
@@ -8667,6 +8759,9 @@ Page 543 crea: -------- begin text --------
 -------- end text --------
 Page 544 creen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -8674,6 +8769,9 @@ Page 544 creen: -------- begin text --------
 
 -------- end text --------
 Page 545 crees: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -8683,6 +8781,9 @@ Page 545 crees: -------- begin text --------
 -------- end text --------
 Page 546 cregui: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -8690,12 +8791,18 @@ Page 546 cregui: -------- begin text --------
 -------- end text --------
 Page 547 creguin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|creure}}
 -------- end text --------
 Page 548 creguis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
