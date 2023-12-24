@@ -441,6 +441,7 @@ local function mid_vowel_e(syllables)
 		elseif (post_letters == "ma" or post_letters == "mes") and #syllables > 2 then
 			return "ê"
 		elseif post_letters == "ns" or post_letters == "na" or post_letters == "nes" then -- inflection of -è
+			require("Module:debug/track")("ca-IPA/ens-ena-enes") -- checking ê or ë
 			return "ê"
 		elseif post_letters == "nse" or post_letters == "nses" then
 			return "ê"
@@ -510,14 +511,15 @@ local function to_IPA(syllables, mid_vowel_hint)
 		if mid_vowel_hint then
 			syllables[syllables.stress].vowel = mid_vowel_hint
 		elseif syllables[syllables.stress].vowel == "e" or syllables[syllables.stress].vowel == "o" then
+			local marks = {["e"] = mw.ustring.char(0x0301, 0x0300, 0x0302, 0x0308), ["o"] = mw.ustring.char(0x0301, 0x0300, 0x0302)}
 			error("The stressed vowel \"" .. syllables[syllables.stress].vowel
-				.. "\" is ambiguous. Please mark it with an acute, grave, or circumflex accent: "
+				.. "\" is ambiguous. Please mark it with an acute, grave, or combined accent: "
 				.. table.concat(
 					require("Module:fun").map(
 						function (accent)
 							return syllables[syllables.stress].vowel .. accent
 						end,
-						mw.ustring.char(0x0301, 0x0300, 0x0302)),
+						marks[syllables[syllables.stress].vowel]),
 					", "):gsub("^(.+), ", "%1, or ")
 				.. ".")
 		end
