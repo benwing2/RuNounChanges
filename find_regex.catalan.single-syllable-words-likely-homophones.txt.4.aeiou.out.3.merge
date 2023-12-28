@@ -33229,18 +33229,8 @@ Page 2038 rosquis: -------- begin text --------
 Page 2039 rossa: -------- begin text --------
 
 ===Etymology 1===
-{{nonlemma}}
-
-====Pronunciation====
-* {{ca-IPA|ó}}
-
-====Adjective====
-{{head|ca|adjective form}}
-
-# {{feminine singular of|ca|ros}}
-
-===Etymology 2===
-{{nonlemma}}
+{{dercat|ca|gem|gmw-pro|gem-pro}}
+From {{der|ca|pro|rossa}}, from {{der|ca|VL.|*rossa}}.
 
 ====Alternative forms====
 * {{alt|ca|ròssa||pre-2016}}
@@ -33251,38 +33241,104 @@ Page 2039 rossa: -------- begin text --------
 ====Noun====
 {{ca-noun|f}}
 
-# {{alternative form of|ca|ròssa}}
+# {{lb|ca|dialectal}} [[horse]]
+# a horse, ass, or mule that is skinny, old, and useless; a [[nag]], a [[hack]]
+# an old, worn-out, useless person
+# [[carrion]]
+#: {{syn|ca|carronya}}
+
+=====Derived terms=====
+* {{l|ca|rossam|t=herd of horses}}
+* {{l|ca|rossí|t=nag}}
+
+=====Related terms=====
+* {{l|ca|rossegar||to drag}}
+
+===Etymology 2===
+{{nonlemma}}
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+
+====Adjective====
+{{head|ca|adjective form}}
+
+# {{feminine singular of|ca|ros}}
+
+====Noun====
+{{ca-noun|f}}
+
+# {{female equivalent of|ca|ros|t=blond person}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
+* {{R:ca:GDLC}}
+* {{R:ca:DNV}}
+* {{R:ca:DCVB}}
+
+{{C|ca|Equids}}
 
 -------- end text --------
 Page 2040 rosses: -------- begin text --------
 
-===Pronunciation===
+===Etymology 1===
+
+====Alternative forms====
+* {{alt|ca|ròsses||pre-2016}}
+
+====Pronunciation====
+* {{ca-IPA|ò}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|rossa|t=nag, hack {{gl|worn-out horse}}; carrion}}
+
+===Etymology 2===
+
+====Pronunciation====
 * {{ca-IPA|ó}}
 
-===Adjective===
+====Adjective====
 {{head|ca|adjective form}}
 
 # {{feminine plural of|ca|ros}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|rossa|t=blonde woman}}
 
 -------- end text --------
 Page 2041 rossos: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ó}}<!-- both etyms -->
 * {{rhymes|ca|osos|s=2}}
 
-===Adjective===
+===Etymology 1===
+
+====Adjective====
 {{head|ca|adjective form}}
 
 # {{masculine plural of|ca|ros}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|ros|t=blond person}}
+
+===Etymology 2===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|ros|t=type of [[shako]] hat}}
 -------- end text --------
 Page 2042 rosta: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- both etyms; FIXME: GDLC says /o/ for Central Catalan for Etym 1 and 2, although DNV says /ɔ/ for Valencian for both -->
 
 ===Etymology 1===
 {{nonlemma}}
@@ -33315,29 +33371,51 @@ Perhaps related to {{m|ca|rostir}}.
 -------- end text --------
 Page 2043 rostes: -------- begin text --------
 
-===Adjective===
-{{head|ca|adjective}}
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms; FIXME: GDLC says /o/ for Central Catalan for Etym 1 and 2, although DNV says /ɔ/ for Valencian for both -->
+
+===Etymology 1===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|rosta}}
+
+===Etymology 2===
+
+====Adjective====
+{{head|ca|adjective form}}
 
 # {{feminine plural of|ca|rost}}
 
 -------- end text --------
 Page 2044 rostos: -------- begin text --------
 
-===Adjective===
-{{head|ca|adjective form}}
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms; FIXME: GDLC says /o/ for Central Catalan for Etym 1 and 2, although DNV says /ɔ/ for Valencian for both -->
 
-# {{masculine plural of|ca|rost}}
+===Etymology 1===
 
-===Noun===
+====Noun====
 {{head|ca|noun form}}
 
 # {{plural of|ca|rost}}
+
+===Etymology 2===
+
+====Adjective====
+{{head|ca|adjective form}}
+
+# {{masculine plural of|ca|rost}}
 
 -------- end text --------
 Page 2045 rostre: -------- begin text --------
 
 ===Etymology===
 {{bor+|ca|osp|rostro}}, from {{der|ca|la|rostrum}}, attested from the 14th century<ref>{{R:ca:GDLC}}</ref>.
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -33355,6 +33433,9 @@ Page 2045 rostre: -------- begin text --------
 -------- end text --------
 Page 2046 rostres: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -33362,50 +33443,122 @@ Page 2046 rostres: -------- begin text --------
 -------- end text --------
 Page 2047 rota: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both etyms; FIXME: verify Central pronun -->
+
+===Etymology 1===
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|rotar}}
+# {{ca-verb form of|rotar|t=to belch}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|rotar|t=to rotate, to turn}}
 
 -------- end text --------
 Page 2048 roten: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both etyms; FIXME: verify Central pronun -->
+
+===Etymology 1===
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|rotar}}
+# {{ca-verb form of|rotar|t=to belch}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|rotar|t=to rotate, to turn}}
 
 -------- end text --------
 Page 2049 rotes: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both etyms; FIXME: verify Central pronun -->
+
+===Etymology 1===
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|rotar}}
+# {{ca-verb form of|rotar|t=to belch}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|rotar|t=to rotate, to turn}}
 
 -------- end text --------
 Page 2050 roti: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both etyms; FIXME: verify Central pronun -->
+
+===Etymology 1===
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|rotar}}
+# {{ca-verb form of|rotar|t=to belch}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|rotar|t=to rotate, to turn}}
 
 -------- end text --------
 Page 2051 rotin: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both etyms; FIXME: verify Central pronun -->
+
+===Etymology 1===
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|rotar}}
+# {{ca-verb form of|rotar|t=to belch}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|rotar|t=to rotate, to turn}}
 
 -------- end text --------
 Page 2052 rotis: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both etyms; FIXME: verify Central pronun -->
+
+===Etymology 1===
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|rotar}}
+# {{ca-verb form of|rotar|t=to belch}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|rotar|t=to rotate, to turn}}
 
 -------- end text --------
 Page 2053 rotlle: -------- begin text --------
@@ -33439,6 +33592,9 @@ Page 2053 rotlle: -------- begin text --------
 -------- end text --------
 Page 2054 rotlles: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -33450,7 +33606,7 @@ Page 2055 rotllo: -------- begin text --------
 {{inh+|ca|roa-oca|rotlo}}, from {{inh|ca|la|rotulus||roll}}. {{doublet|ca|rotlle}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- FIXME: DNV says /o/, although cawikt and DCVB say /ɔ/ -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -33477,12 +33633,18 @@ Page 2055 rotllo: -------- begin text --------
 -------- end text --------
 Page 2056 rotllos: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- FIXME: DNV says /o/, although cawikt and DCVB say /ɔ/ -->
+
 ===Noun===
 {{head|ca|noun form}}
 
 # {{plural of|ca|rotllo}}
 -------- end text --------
 Page 2057 rotlo: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ô}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -33497,6 +33659,9 @@ Page 2057 rotlo: -------- begin text --------
 -------- end text --------
 Page 2058 rotlos: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ô}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -33504,17 +33669,25 @@ Page 2058 rotlos: -------- begin text --------
 -------- end text --------
 Page 2059 roto: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both etyms; FIXME: verify Central pronun -->
+
+===Etymology 1===
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|rotar}}
+# {{ca-verb form of|rotar|t=to belch}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|rotar|t=to rotate, to turn}}
 
 -------- end text --------
 Page 2060 ròssa: -------- begin text --------
-
-===Etymology===
-{{dercat|ca|gem|gmw-pro|gem-pro}}
-From {{der|ca|pro|rossa}}, from {{der|ca|VL.|*rossa}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -33522,26 +33695,7 @@ From {{der|ca|pro|rossa}}, from {{der|ca|VL.|*rossa}}.
 ===Noun===
 {{ca-noun|f}}
 
-# {{lb|ca|dialectal}} [[horse]]
-# a horse, ass, or mule that is skinny, old, and useless; a [[nag]], a [[hack]]
-# an old, worn-out, useless person
-# [[carrion]]
-#: {{syn|ca|carronya}}
-
-====Derived terms====
-* {{l|ca|rossam|t=herd of horses}}
-* {{l|ca|rossí|t=nag}}
-
-====Related terms====
-* {{l|ca|rossegar||to drag}}
-
-===Further reading===
-* {{R:ca:IEC2}}
-* {{R:ca:GDLC}}
-* {{R:ca:DNV}}
-* {{R:ca:DCVB}}
-
-{{C|ca|Equids}}
+# {{superseded spelling of|ca|rossa|t=nag, hack {{gl|worn-out horse}}; carrion}}
 -------- end text --------
 Page 2061 seca: -------- begin text --------
 
