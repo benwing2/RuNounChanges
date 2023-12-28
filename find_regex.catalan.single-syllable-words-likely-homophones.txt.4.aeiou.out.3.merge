@@ -30859,6 +30859,9 @@ Page 1879 provo: -------- begin text --------
 -------- end text --------
 Page 1880 qüento: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -30869,6 +30872,9 @@ Page 1880 qüento: -------- begin text --------
 * {{R:ca:DCVB}}
 -------- end text --------
 Page 1881 rea: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|è}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -30894,6 +30900,9 @@ Page 1882 reben: -------- begin text --------
 -------- end text --------
 Page 1883 rebi: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -30901,12 +30910,18 @@ Page 1883 rebi: -------- begin text --------
 -------- end text --------
 Page 1884 rebin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|rebre}}
 -------- end text --------
 Page 1885 rebis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -30919,7 +30934,7 @@ Page 1886 reble: -------- begin text --------
 Probably a {{deverbal|ca|reblir|nocap=1|t=fill, cover up}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- FIXME: GDLC says /e/ for Central Catalan -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -30952,6 +30967,9 @@ Page 1887 rebo: -------- begin text --------
 
 -------- end text --------
 Page 1888 rebran: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31006,6 +31024,9 @@ Page 1889 rebre: -------- begin text --------
 -------- end text --------
 Page 1890 reca: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -31013,6 +31034,9 @@ Page 1890 reca: -------- begin text --------
 
 -------- end text --------
 Page 1891 reco: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31034,10 +31058,10 @@ Page 1892 recta: -------- begin text --------
 Page 1893 recte: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|è}}<!-- both etyms -->
 
 ===Etymology 1===
-{{bor+|ca|la|rectus}}, ultimately from {{der|ca|ine-pro|*h₃reǵtós||straightened, right}}.
+{{bor+|ca|la|rēctus}}, ultimately from {{der|ca|ine-pro|*h₃reǵtós||straightened, right}}.
 
 ====Adjective====
 {{ca-adj}}
@@ -31046,8 +31070,13 @@ Page 1893 recte: -------- begin text --------
 #: {{syn|ca|dret}}
 #: {{ant|ca|corb}}
 
+====Adverb====
+{{ca-adv}}
+
+# [[straight]]
+
 ===Etymology 2===
-{{bor+|ca|la|rectum}}.
+{{bor+|ca|la|rēctum}}.
 
 ====Noun====
 {{ca-noun|m}}
@@ -31066,12 +31095,18 @@ Page 1893 recte: -------- begin text --------
 -------- end text --------
 Page 1894 rectes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|è}}
+
 ===Adjective===
 {{head|ca|adjective form}}
 
 # {{plural of|ca|recte}}
 -------- end text --------
 Page 1895 rees: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|è}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -31081,12 +31116,18 @@ Page 1895 rees: -------- begin text --------
 -------- end text --------
 Page 1896 refan: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|refer}}
 -------- end text --------
 Page 1897 refon: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31096,7 +31137,7 @@ Page 1897 refon: -------- begin text --------
 Page 1898 rega: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- both etyms; FIXME, a guess based on etymology -->
 
 ===Etymology 1===
 {{dercat|ca|cel}}
@@ -31154,7 +31195,7 @@ Page 1899 regi: -------- begin text --------
 Page 1900 regis: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|règi}}
 
 ===Adjective===
 {{head|ca|adjective form}}
@@ -31164,20 +31205,31 @@ Page 1900 regis: -------- begin text --------
 -------- end text --------
 Page 1901 regla: -------- begin text --------
 
-===Etymology===
-{{semi-learned borrowing|ca|la|regula}}. {{doublet|ca|reixa}}.
-
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|é}}<!-- both etyms -->
 
-===Noun===
+===Etymology 1===
+{{semi-learned borrowing|ca|la|regula}}. {{doublet|ca|rella}}.
+
+====Noun====
 {{ca-noun|f}}
 
 # [[rule]], [[ruling]]
 # [[period]] {{gloss|menstruation}}
 
+===Etymology 2===
+{{nonlemma}}
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|reglar}}
+
 -------- end text --------
 Page 1902 regles: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -31187,11 +31239,11 @@ Page 1902 regles: -------- begin text --------
 -------- end text --------
 Page 1903 regna: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}<!-- both etyms -->
+
 ===Etymology 1===
 {{inh+|ca|roa-oca|regna}}, from {{inh|ca|la-eme|retina}}, ultimately from {{der|ca|la|retineo|retinere|t=restrain, hold back}}.
-
-====Pronunciation====
-* {{ca-IPA|rèŋna}}
 
 ====Noun====
 {{ca-noun|f}}
@@ -31212,11 +31264,10 @@ Page 1903 regna: -------- begin text --------
 Page 1904 regne: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|rēgnum}}.
+{{bor+|ca|la|rēgnum}}.
 
 ===Pronunciation===
-* {{a|Balearic|Central Catalan}} {{IPA|ca|/ˈreŋ.nə/}}
-* {{a|Valencian}} {{IPA|ca|/ˈreŋ.ne/}}
+* {{ca-IPA|é}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -31245,6 +31296,9 @@ From {{der|ca|la|rēgnum}}.
 -------- end text --------
 Page 1905 regnen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -31253,19 +31307,35 @@ Page 1905 regnen: -------- begin text --------
 -------- end text --------
 Page 1906 regnes: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+* {{ca-IPA|é}}<!-- all three etyms -->
+
+===Etymology 1===
+
+====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|regna}}
-# {{plural of|ca|regne}}
+# {{plural of|ca|regna|t=rein}}
 
-===Verb===
+===Etymology 2===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|regne|t=kingdom}}
+
+===Etymology 3===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|regnar}}
 
 -------- end text --------
 Page 1907 regni: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31275,6 +31345,9 @@ Page 1907 regni: -------- begin text --------
 -------- end text --------
 Page 1908 regnin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -31283,7 +31356,7 @@ Page 1908 regnin: -------- begin text --------
 Page 1909 regnis: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31293,6 +31366,9 @@ Page 1909 regnis: -------- begin text --------
 -------- end text --------
 Page 1910 regno: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -31300,6 +31376,9 @@ Page 1910 regno: -------- begin text --------
 
 -------- end text --------
 Page 1911 rego: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- FIXME, a guess based on etymology -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31309,6 +31388,9 @@ Page 1911 rego: -------- begin text --------
 -------- end text --------
 Page 1912 reguen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- FIXME, a guess based on etymology -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -31317,13 +31399,28 @@ Page 1912 reguen: -------- begin text --------
 -------- end text --------
 Page 1913 regues: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- both etyms; FIXME, a guess based on etymology -->
+
+===Etymology 1===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|rega|t=furrow}}
+
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|regar}}
 
 -------- end text --------
 Page 1914 regui: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- FIXME, a guess based on etymology -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31332,12 +31429,18 @@ Page 1914 regui: -------- begin text --------
 -------- end text --------
 Page 1915 reguin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- FIXME, a guess based on etymology -->
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|regar}}
 -------- end text --------
 Page 1916 reguis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- FIXME, a guess based on etymology -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31347,7 +31450,7 @@ Page 1916 reguis: -------- begin text --------
 Page 1917 rei: -------- begin text --------
 
 ===Etymology===
-{{inh+|ca|roa-oca|rei}}, {{m|roa-oca|reig}}, from {{inh|ca|la|rēx|rēgem}}, from {{inh|ca|ine-pro|*h₃rḗǵs||rules}}.
+{{inh+|ca|roa-oca|rei}}, {{m|roa-oca|reig}}, from {{inh|ca|la|rēx|rēgem}}, from {{inh|ca|ine-pro|*h₃rḗǵs||ruler}}.
 
 ===Pronunciation===
 * {{ca-IPA|é}}
@@ -31375,6 +31478,9 @@ Page 1917 rei: -------- begin text --------
 -------- end text --------
 Page 1918 reis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -31384,7 +31490,10 @@ Page 1918 reis: -------- begin text --------
 Page 1919 rella: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|rēgula}}.
+{{inh+|ca|la|rēgula}}. {{doublet|ca|regla}}.
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -31400,12 +31509,18 @@ From {{der|ca|la|rēgula}}.
 -------- end text --------
 Page 1920 relles: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Noun===
 {{head|ca|noun form}}
 
 # {{plural of|ca|rella}}
 -------- end text --------
 Page 1921 rema: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31415,6 +31530,9 @@ Page 1921 rema: -------- begin text --------
 -------- end text --------
 Page 1922 remen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -31422,6 +31540,9 @@ Page 1922 remen: -------- begin text --------
 
 -------- end text --------
 Page 1923 remes: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31432,7 +31553,7 @@ Page 1923 remes: -------- begin text --------
 Page 1924 remi: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31442,12 +31563,18 @@ Page 1924 remi: -------- begin text --------
 -------- end text --------
 Page 1925 remin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|remar}}
 -------- end text --------
 Page 1926 remis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31458,7 +31585,7 @@ Page 1926 remis: -------- begin text --------
 Page 1927 remo: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31494,6 +31621,9 @@ Page 1928 renda: -------- begin text --------
 -------- end text --------
 Page 1929 rendes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -31501,6 +31631,9 @@ Page 1929 rendes: -------- begin text --------
 
 -------- end text --------
 Page 1930 rengla: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ë}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -31522,6 +31655,9 @@ Page 1931 rengle: -------- begin text --------
 ===Etymology===
 From {{m|ca|reng}}.
 
+===Pronunciation===
+* {{ca-IPA|ë}}
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -31541,6 +31677,9 @@ From {{m|ca|reng}}.
 -------- end text --------
 Page 1932 rengles: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ë}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -31551,7 +31690,7 @@ Page 1933 reni: -------- begin text --------
 {{elements|ca|Re|tungstè|W|osmi|Os}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|è}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-reni.wav|Audio (Valencian)}}
 
 ===Noun===
@@ -31562,6 +31701,9 @@ Page 1933 reni: -------- begin text --------
 -------- end text --------
 Page 1934 renta: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -31569,6 +31711,9 @@ Page 1934 renta: -------- begin text --------
 
 -------- end text --------
 Page 1935 renten: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31578,6 +31723,9 @@ Page 1935 renten: -------- begin text --------
 -------- end text --------
 Page 1936 rentes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -31585,6 +31733,9 @@ Page 1936 rentes: -------- begin text --------
 
 -------- end text --------
 Page 1937 renti: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31594,12 +31745,18 @@ Page 1937 renti: -------- begin text --------
 -------- end text --------
 Page 1938 rentin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|rentar}}
 -------- end text --------
 Page 1939 rentis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31609,6 +31766,9 @@ Page 1939 rentis: -------- begin text --------
 -------- end text --------
 Page 1940 rento: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -31617,12 +31777,18 @@ Page 1940 rento: -------- begin text --------
 -------- end text --------
 Page 1941 renya: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|renyar}}
 -------- end text --------
 Page 1942 renyen: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31631,12 +31797,18 @@ Page 1942 renyen: -------- begin text --------
 -------- end text --------
 Page 1943 renyes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|renyar}}
 -------- end text --------
 Page 1944 renyi: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31645,12 +31817,18 @@ Page 1944 renyi: -------- begin text --------
 -------- end text --------
 Page 1945 renyin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|renyar}}
 -------- end text --------
 Page 1946 renyis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31659,6 +31837,9 @@ Page 1946 renyis: -------- begin text --------
 -------- end text --------
 Page 1947 renyo: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -31666,16 +31847,31 @@ Page 1947 renyo: -------- begin text --------
 -------- end text --------
 Page 1948 repta: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|reptar}}
+# {{ca-verb form of|reptar|t=to challenge; to reprimand}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|reptar|t=to crawl}}
 
 -------- end text --------
 Page 1949 repte: -------- begin text --------
 
 ===Etymology===
 {{deverbal|ca|reptar}}.
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -31689,15 +31885,30 @@ Page 1949 repte: -------- begin text --------
 -------- end text --------
 Page 1950 repten: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|reptar}}
+# {{ca-verb form of|reptar|t=to challenge; to reprimand}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|reptar|t=to crawl}}
 
 -------- end text --------
 Page 1951 reptes: -------- begin text --------
 
 ===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|é}}
 
 ====Noun====
 {{head|ca|noun form}}
@@ -31706,42 +31917,103 @@ Page 1951 reptes: -------- begin text --------
 
 ===Etymology 2===
 
+====Pronunciation====
+* {{ca-IPA|é}}
+
 ====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|reptar}}
+# {{ca-verb form of|reptar|t=to challenge; to reprimand}}
+
+===Etymology 3===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|reptar|t=to crawl}}
 
 -------- end text --------
 Page 1952 repti: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|reptar}}
+# {{ca-verb form of|reptar|t=to challenge; to reprimand}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|reptar|t=to crawl}}
 -------- end text --------
 Page 1953 reptin: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|reptar}}
+# {{ca-verb form of|reptar|t=to challenge; to reprimand}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|reptar|t=to crawl}}
 -------- end text --------
 Page 1954 reptis: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|reptar}}
+# {{ca-verb form of|reptar|t=to challenge; to reprimand}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|reptar|t=to crawl}}
 -------- end text --------
 Page 1955 repto: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|reptar}}
+# {{ca-verb form of|reptar|t=to challenge; to reprimand}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|reptar|t=to crawl}}
 
 -------- end text --------
 Page 1956 requen: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31750,12 +32022,18 @@ Page 1956 requen: -------- begin text --------
 -------- end text --------
 Page 1957 reques: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|recar}}
 -------- end text --------
 Page 1958 requi: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31764,6 +32042,9 @@ Page 1958 requi: -------- begin text --------
 -------- end text --------
 Page 1959 requin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -31771,6 +32052,9 @@ Page 1959 requin: -------- begin text --------
 
 -------- end text --------
 Page 1960 requis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31820,7 +32104,8 @@ Page 1961 rere: -------- begin text --------
 Page 1962 resa: -------- begin text --------
 
 ===Pronunciation===
-* {{rhymes|ca|ɛza|s=2}}
+* {{ca-IPA|é}}
+* {{rhymes|ca|eza|s=2}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31830,6 +32115,9 @@ Page 1962 resa: -------- begin text --------
 -------- end text --------
 Page 1963 resen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -31837,6 +32125,9 @@ Page 1963 resen: -------- begin text --------
 
 -------- end text --------
 Page 1964 reses: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31846,6 +32137,9 @@ Page 1964 reses: -------- begin text --------
 -------- end text --------
 Page 1965 resi: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -31853,6 +32147,9 @@ Page 1965 resi: -------- begin text --------
 
 -------- end text --------
 Page 1966 resin: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31862,12 +32159,18 @@ Page 1966 resin: -------- begin text --------
 -------- end text --------
 Page 1967 resis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|resar}}
 -------- end text --------
 Page 1968 reso: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31877,12 +32180,18 @@ Page 1968 reso: -------- begin text --------
 -------- end text --------
 Page 1969 resos: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Noun===
 {{head|ca|noun form}}
 
-# {{plural of|ca|rés}}
+# {{plural of|ca|res|t=prayer}}
 -------- end text --------
 Page 1970 respon: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31892,20 +32201,22 @@ Page 1970 respon: -------- begin text --------
 -------- end text --------
 Page 1971 resta: -------- begin text --------
 
-===Etymology===
-{{deverbal|ca|restar}}.
-
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|é}}<!-- both etyms -->
 * {{rhymes|ca|esta|s=2}}
 
-===Noun===
+===Etymology 1===
+{{deverbal|ca|restar}}.
+
+====Noun====
 {{ca-noun|f}}
 
 # [[rest]], [[remainder]]
 # {{lb|ca|in the plural}} [[remains]], [[leftovers]], [[debris]]
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|restar}}
@@ -31916,6 +32227,9 @@ Page 1971 resta: -------- begin text --------
 -------- end text --------
 Page 1972 resten: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -31924,21 +32238,35 @@ Page 1972 resten: -------- begin text --------
 -------- end text --------
 Page 1973 restes: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+* {{ca-IPA|é}}<!-- both etyms -->
+
+===Etymology 1===
+
+====Noun====
 {{head|ca|noun form}}
 
 # {{plural of|ca|resta}}
+
+====Noun====
+{{ca-noun|f-p}}
+
 # [[leftovers]]
 #: {{syn|ca|deixalles}}
 # [[debris]], [[rubble]]
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|restar}}
 
 -------- end text --------
 Page 1974 resti: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31948,6 +32276,9 @@ Page 1974 resti: -------- begin text --------
 -------- end text --------
 Page 1975 restin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -31956,6 +32287,9 @@ Page 1975 restin: -------- begin text --------
 -------- end text --------
 Page 1976 restis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -31963,6 +32297,9 @@ Page 1976 restis: -------- begin text --------
 
 -------- end text --------
 Page 1977 resto: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
