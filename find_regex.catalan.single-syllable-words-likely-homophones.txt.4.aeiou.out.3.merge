@@ -29265,7 +29265,7 @@ Page 1780 poques: -------- begin text --------
 Page 1781 porpra: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ó}}<!-- both etyms -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-porpra.wav|Audio (Valencian)}}
 * {{audio|ca|LL-Q7026 (cat)-Toniher-porpra.wav|Audio (Catalonia)}}
 
@@ -29303,6 +29303,9 @@ Page 1781 porpra: -------- begin text --------
 -------- end text --------
 Page 1782 porpres: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -29333,6 +29336,9 @@ Page 1783 porra: -------- begin text --------
 -------- end text --------
 Page 1784 porres: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -29344,13 +29350,13 @@ Page 1785 porro: -------- begin text --------
 {{inh+|ca|roa-oca|porro}}~{{m|roa-oca|porre}}, from {{inh|ca|la|porrum}}. <!-- DCVB entry below does not show Old Catalan porre, but it can be found through a search. -->
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ó}}<!-- FIXME: cawikt and DCVB say /ɔ/ for both Eastern and Western -->
 
 ===Noun===
 {{ca-noun|m}}
 
 # {{lb|ca|plant}} [[leek]]
-# {{lb|ca|slang}} a cigarette made with cannabis, [[joint]]
+# {{lb|ca|slang}} [[spliff]] {{gl|cigarette made with marijuana and tobacco}}
 
 ====Derived terms====
 * {{l|ca|porradell}}
@@ -29369,6 +29375,9 @@ Page 1785 porro: -------- begin text --------
 -------- end text --------
 Page 1786 porros: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- FIXME: cawikt and DCVB say /ɔ/ for both Eastern and Western -->
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -29378,7 +29387,7 @@ Page 1786 porros: -------- begin text --------
 Page 1787 porta: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- both etyms -->
 * {{audio|ca|LL-Q7026 (cat)-Toniher-porta.wav|Audio (Catalonia)}}
 
 ===Etymology 1===
@@ -29422,6 +29431,9 @@ Page 1787 porta: -------- begin text --------
 -------- end text --------
 Page 1788 porten: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -29430,13 +29442,28 @@ Page 1788 porten: -------- begin text --------
 -------- end text --------
 Page 1789 portes: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms -->
+
+===Etymology 1===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|porta}}
+
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|portar}}
 
 -------- end text --------
 Page 1790 porti: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -29446,6 +29473,9 @@ Page 1790 porti: -------- begin text --------
 -------- end text --------
 Page 1791 portin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -29453,6 +29483,9 @@ Page 1791 portin: -------- begin text --------
 
 -------- end text --------
 Page 1792 portis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -29462,6 +29495,9 @@ Page 1792 portis: -------- begin text --------
 -------- end text --------
 Page 1793 porto: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -29469,6 +29505,9 @@ Page 1793 porto: -------- begin text --------
 
 -------- end text --------
 Page 1794 porxe: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -29481,6 +29520,9 @@ Page 1794 porxe: -------- begin text --------
 * {{R:ca:DCVB}}
 -------- end text --------
 Page 1795 porxes: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -29530,6 +29572,9 @@ Page 1796 porxo: -------- begin text --------
 -------- end text --------
 Page 1797 porxos: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -29537,13 +29582,32 @@ Page 1797 porxos: -------- begin text --------
 -------- end text --------
 Page 1798 posa: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- FIXME: GDLC says /o/ for the noun sense -->
+
+===Etymology 1===
+{{deverbal|ca|posar}}.
+
+====Noun====
+{{ca-noun|f}}
+
+# [[pose]] {{q|especially of an artist's model}}
+# [[position]]
+# {{lb|ca|photography}} [[exposure]]
+# [[attitude]] {{gl|state of mind, positive or negative}}
+
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|posar}}
 
 -------- end text --------
 Page 1799 posen: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -29553,13 +29617,28 @@ Page 1799 posen: -------- begin text --------
 -------- end text --------
 Page 1800 poses: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms; FIXME: GDLC says /o/ for the noun sense -->
+
+===Etymology 1===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|posa}}
+
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|posar}}
 
 -------- end text --------
 Page 1801 posi: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -29569,6 +29648,9 @@ Page 1801 posi: -------- begin text --------
 -------- end text --------
 Page 1802 posin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -29576,12 +29658,18 @@ Page 1802 posin: -------- begin text --------
 -------- end text --------
 Page 1803 posis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|posar}}
 -------- end text --------
 Page 1804 poso: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -29591,7 +29679,12 @@ Page 1804 poso: -------- begin text --------
 -------- end text --------
 Page 1805 posta: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms -->
+
+===Etymology 1===
+
+====Noun====
 {{ca-noun|f}}
 
 # [[post]] {{gloss|an assigned station}}
@@ -29599,8 +29692,15 @@ Page 1805 posta: -------- begin text --------
 #: {{uxi|ca|'''posta''' de sol|sun'''set'''}}
 # [[laying]] {{gloss|the act of laying an egg}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|a posta}}
+
+===Etymology 2===
+
+====Participle====
+{{head|ca|past participle form}}
+
+# {{feminine singular of|ca|post}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -29611,13 +29711,28 @@ Page 1805 posta: -------- begin text --------
 -------- end text --------
 Page 1806 postes: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms -->
+
+===Etymology 1===
+
+====Noun====
 {{head|ca|noun form}}
 
 # {{plural of|ca|posta}}
 
+===Etymology 2===
+
+====Participle====
+{{head|ca|past participle form}}
+
+# {{feminine plural of|ca|post}}
+
 -------- end text --------
 Page 1807 postres: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- FIXME: cawikt and DCVB say /ɔ/ for Valencian but DNV says /o/ -->
 
 ===Noun===
 {{ca-noun|f-p}}
@@ -29668,6 +29783,9 @@ From {{der|ca|VL.|*pauta}}. {{etydate|1371}}
 -------- end text --------
 Page 1809 potes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Noun===
 {{head|ca|noun form|g=f}}
 
@@ -29676,25 +29794,39 @@ Page 1809 potes: -------- begin text --------
 -------- end text --------
 Page 1810 potra: -------- begin text --------
 
-===Etymology===
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both etyms -->
+
+===Etymology 1===
 {{bor+|ca|es|potra}}.
 
-===Pronunciation===
-* {{ca-IPA|ó}}
-
-===Noun===
+====Noun====
 {{ca-noun|f}}
 
-# an [[inguinal]] [[hernia]]
+# [[inguinal]] [[hernia]]
 # [[good luck]]
+# [[colic]] {{gl|persistent anger or crying in children}}
+
+===Etymology 2===
+{{unc|ca}}.
+
+====Noun====
+{{ca-noun|f}}
+
+# {{alt form|ca|poltra|t=filly}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
+* {{R:ca:DNV}}
+* {{R:ca:DCVB}}
 
 {{C|ca|Pathology}}
 
 -------- end text --------
 Page 1811 prega: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -29703,6 +29835,9 @@ Page 1811 prega: -------- begin text --------
 
 -------- end text --------
 Page 1812 prego: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -29737,6 +29872,9 @@ Page 1813 pregon: -------- begin text --------
 -------- end text --------
 Page 1814 preguen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -29744,6 +29882,9 @@ Page 1814 preguen: -------- begin text --------
 
 -------- end text --------
 Page 1815 pregues: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -29753,12 +29894,18 @@ Page 1815 pregues: -------- begin text --------
 -------- end text --------
 Page 1816 pregui: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|pregar}}
 -------- end text --------
 Page 1817 preguin: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -29767,12 +29914,18 @@ Page 1817 preguin: -------- begin text --------
 -------- end text --------
 Page 1818 preguis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|pregar}}
 -------- end text --------
 Page 1819 premen: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -29783,7 +29936,7 @@ Page 1819 premen: -------- begin text --------
 Page 1820 premi: -------- begin text --------
 
 ===Etymology 1===
-From {{der|ca|la|praemium}}.
+{{bor+|ca|la|praemium}}.
 
 ====Pronunciation====
 * {{ca-IPA|è}}
@@ -29801,6 +29954,9 @@ From {{der|ca|la|praemium}}.
 
 ===Etymology 2===
 
+====Pronunciation====
+* {{ca-IPA|é}}
+
 ====Verb====
 {{head|ca|verb form}}
 
@@ -29808,6 +29964,9 @@ From {{der|ca|la|praemium}}.
 
 -------- end text --------
 Page 1821 premin: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -29818,12 +29977,18 @@ Page 1822 premis: -------- begin text --------
 
 ===Etymology 1===
 
+====Pronunciation====
+* {{ca-IPA|è}}
+
 ====Noun====
 {{head|ca|noun form}}
 
 # {{plural of|ca|premi}}
 
 ===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|é}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -29833,6 +29998,9 @@ Page 1822 premis: -------- begin text --------
 -------- end text --------
 Page 1823 premo: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -29841,11 +30009,11 @@ Page 1823 premo: -------- begin text --------
 -------- end text --------
 Page 1824 premsa: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}<!-- both etyms -->
+
 ===Etymology 1===
 {{deverbal|ca|premsar}}.
-
-====Pronunciation====
-* {{ca-IPA|é}}
 
 ====Noun====
 {{ca-noun|f}}
@@ -29875,12 +30043,18 @@ Page 1824 premsa: -------- begin text --------
 -------- end text --------
 Page 1825 premsen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|premsar}}
 -------- end text --------
 Page 1826 premses: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}<!-- both etyms -->
 
 ===Etymology 1===
 
@@ -29898,12 +30072,18 @@ Page 1826 premses: -------- begin text --------
 -------- end text --------
 Page 1827 premsi: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|premsar}}
 -------- end text --------
 Page 1828 premsin: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -29912,6 +30092,9 @@ Page 1828 premsin: -------- begin text --------
 -------- end text --------
 Page 1829 premsis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -29919,12 +30102,18 @@ Page 1829 premsis: -------- begin text --------
 -------- end text --------
 Page 1830 premso: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|premsar}}
 -------- end text --------
 Page 1831 prendran: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|pendran}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -29969,12 +30158,18 @@ Page 1832 prendre: -------- begin text --------
 -------- end text --------
 Page 1833 prenen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|prendre}}
 -------- end text --------
 Page 1834 prengui: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -29983,12 +30178,18 @@ Page 1834 prengui: -------- begin text --------
 -------- end text --------
 Page 1835 prenguin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|prendre}}
 -------- end text --------
 Page 1836 prenguis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -29997,12 +30198,18 @@ Page 1836 prenguis: -------- begin text --------
 -------- end text --------
 Page 1837 prenya: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|prenyar}}
 -------- end text --------
 Page 1838 prenyen: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -30011,12 +30218,18 @@ Page 1838 prenyen: -------- begin text --------
 -------- end text --------
 Page 1839 prenyes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|prenyar}}
 -------- end text --------
 Page 1840 prenyi: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -30025,12 +30238,18 @@ Page 1840 prenyi: -------- begin text --------
 -------- end text --------
 Page 1841 prenyin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|prenyar}}
 -------- end text --------
 Page 1842 prenyis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -30039,6 +30258,9 @@ Page 1842 prenyis: -------- begin text --------
 -------- end text --------
 Page 1843 prenyo: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -30046,24 +30268,52 @@ Page 1843 prenyo: -------- begin text --------
 -------- end text --------
 Page 1844 presa: -------- begin text --------
 
-===Etymology 1===
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- both etyms -->
 
-====Pronunciation====
-* {{ca-IPA|è}}
+===Etymology 1===
+Nominalization of the feminine past participle of {{m|ca|prendre||to take}}.
 
 ====Noun====
 {{ca-noun|f}}
 
+# [[take|taking]], [[grab]]bing, [[seize|seizing]]
+# [[capture]]
+# something taken, e.g.:
+## [[dose]] {{q|of medicine}}
+## [[recording]] {{q|of audio or video}}
+## [[prey]]
+# {{lb|ca|law|war||nautical}} {{w|prize of war}} {{gl|neutral or enemy ship carrying weapons, seized during wartime}}
+# {{lb|ca|law|war}} [[angary]]
+# {{lb|ca|law|war}} [[property]] [[seize]]d under the [[right]] of [[angary]]
+# [[electrical]] [[connection]]
+# [[device]] or [[cable]] used to make an [[electrical]] [[connection]]
+# [[power outlet]]
+# [[electrical]] [[plug]]
+# {{lb|ca|electricity}} [[ground]]
 # [[dam]], [[barrage]]
-# [[prey]]
+# [[diversion]] {{q|of a river}}
+# [[water]] [[divert]]ed or [[retain]]ed behind a [[dam]]
+# [[sluice]]
+# [[harden]]ing or [[bind]]ing {{q|of an adhesive}}
 
 ===Etymology 2===
 {{nonlemma}}
 
+====Noun====
+{{ca-noun|f}}
+
+# {{female equivalent of|ca|pres|t=prisoner}}
+
 ====Participle====
 {{head|ca|past participle form|g=f-s}}
 
-# {{ca-verb form of|prendre}}
+# {{feminine singular of|ca|pres}}
+
+====Adjective====
+{{head|ca|adjective form|g=f-s}}
+
+# {{feminine singular of|ca|pres}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -30075,44 +30325,58 @@ Page 1844 presa: -------- begin text --------
 Page 1845 preses: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ê}}<!-- both etyms -->
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|presa}}
+# {{plural of|ca|presa|t=anything taken (dose, recording, prey, etc.); dam; power outlet; etc.}}
 
-===Participle===
+===Etymology 2===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|presa|t=female prisoner}}
+
+====Participle====
 {{head|ca|past participle form|g=f-p}}
 
-# {{ca-verb form of|prendre}}
+# {{feminine plural of|ca|pres}}
+
+====Adjective====
+{{head|ca|adjective form|g=f-p}}
+
+# {{feminine plural of|ca|pres}}
 
 -------- end text --------
 Page 1846 presos: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
-
-===Adjective===
-{{head|ca|adjective form}}
-
-# {{plural of|ca|pres}}
-
-===Noun===
-{{head|ca|noun form}}
-
-# {{plural of|ca|pres}}
+* {{ca-IPA|ê}}
 
 ===Participle===
 {{head|ca|past participle form|g=m-p}}
 
-# {{ca-verb form of|prendre}}
+# {{masculine plural of|ca|pres}}
+
+===Adjective===
+{{head|ca|adjective form}}
+
+# {{masculine plural of|ca|pres}}
+
+===Noun===
+{{head|ca|noun form}}
+
+# {{plural of|ca|pres|t=prisoner}}
 
 -------- end text --------
 Page 1847 pressa: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|pressa}}.
+{{bor+|ca|la|pressa}}.
 
 ===Pronunciation===
 * {{ca-IPA|é}}
@@ -30131,6 +30395,9 @@ From {{der|ca|la|pressa}}.
 -------- end text --------
 Page 1848 presta: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -30138,6 +30405,9 @@ Page 1848 presta: -------- begin text --------
 
 -------- end text --------
 Page 1849 presten: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -30147,6 +30417,9 @@ Page 1849 presten: -------- begin text --------
 -------- end text --------
 Page 1850 prestes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -30154,6 +30427,9 @@ Page 1850 prestes: -------- begin text --------
 
 -------- end text --------
 Page 1851 presti: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -30163,12 +30439,18 @@ Page 1851 presti: -------- begin text --------
 -------- end text --------
 Page 1852 prestin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|prestar}}
 -------- end text --------
 Page 1853 prestis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -30179,9 +30461,24 @@ Page 1853 prestis: -------- begin text --------
 Page 1854 presto: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|é}}<!-- both etyms -->
 
-===Verb===
+===Etymology 1===
+{{bor+|ca|it|presto}}.
+
+====Adverb====
+{{ca-adv}}
+
+# {{lb|ca|music}} [[presto]]
+
+====Noun====
+{{ca-noun|m}}
+
+# {{lb|ca|music}} [[presto]] {{gl|piece played very rapidly}}
+
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|prestar}}
@@ -30210,6 +30507,9 @@ Page 1855 previ: -------- begin text --------
 -------- end text --------
 Page 1856 previs: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|è}}
+
 ===Adjective===
 {{head|ca|adjective form}}
 
@@ -30219,6 +30519,9 @@ Page 1857 proa: -------- begin text --------
 
 ===Etymology===
 {{inh+|ca|la|prōra}}, from {{der|ca|grc|πρῷρα}}.
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -30236,6 +30539,9 @@ Page 1857 proa: -------- begin text --------
 
 -------- end text --------
 Page 1858 proes: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -30288,6 +30594,9 @@ Page 1860 prole: -------- begin text --------
 -------- end text --------
 Page 1861 prona: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Adjective===
 {{head|ca|adjective form}}
 
@@ -30295,6 +30604,9 @@ Page 1861 prona: -------- begin text --------
 
 -------- end text --------
 Page 1862 prones: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Adjective===
 {{head|ca|adjective form}}
@@ -30307,7 +30619,7 @@ Page 1863 propi: -------- begin text --------
 From {{der|ca|la|proprius}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ò}}
 
 ===Adjective===
 {{ca-adj}}
@@ -30333,6 +30645,9 @@ From {{der|ca|la|proprius}}.
 -------- end text --------
 Page 1864 propis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -30342,10 +30657,10 @@ Page 1864 propis: -------- begin text --------
 Page 1865 prosa: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|prōsa}}.
+{{bor+|ca|la|prōsa}}.
 
 ===Pronunciation===
-* {{ca-IPA|pròsa}}
+* {{ca-IPA|ò}}
 
 ===Noun===
 {{ca-noun|f|-}}
@@ -30361,6 +30676,9 @@ From {{der|ca|la|prōsa}}.
 -------- end text --------
 Page 1866 prostra: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -30369,12 +30687,18 @@ Page 1866 prostra: -------- begin text --------
 -------- end text --------
 Page 1867 prostren: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|prostrar}}
 -------- end text --------
 Page 1868 prostres: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -30384,6 +30708,9 @@ Page 1868 prostres: -------- begin text --------
 -------- end text --------
 Page 1869 prostri: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -30392,6 +30719,9 @@ Page 1869 prostri: -------- begin text --------
 -------- end text --------
 Page 1870 prostrin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -30399,12 +30729,18 @@ Page 1870 prostrin: -------- begin text --------
 -------- end text --------
 Page 1871 prostris: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|prostrar}}
 -------- end text --------
 Page 1872 prostro: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -30414,14 +30750,14 @@ Page 1872 prostro: -------- begin text --------
 -------- end text --------
 Page 1873 prova: -------- begin text --------
 
-===Etymology===
-{{deverbal|ca|provar}}, possibly corresponding to {{inh|ca|LL.|proba}}, from {{inh|ca|la|probō}}.
-
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- both etyms -->
 * {{hyphenation|ca|pro|va}}
 
-===Noun===
+===Etymology 1===
+{{deverbal|ca|provar}}, possibly corresponding to {{inh|ca|LL.|proba}}, from {{inh|ca|la|probō}}.
+
+====Noun====
 {{ca-noun|f}}
 
 # [[exam]]
@@ -30429,10 +30765,12 @@ Page 1873 prova: -------- begin text --------
 # [[proof]], [[evidence]] {{gloss|fact or observation presented in support of an assertion}}
 # {{lb|ca|legal}} [[evidence]] {{gloss|anything admitted by a court to prove or disprove alleged matters of fact in a trial}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|a prova de bales}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|provar}}
@@ -30446,6 +30784,9 @@ Page 1873 prova: -------- begin text --------
 -------- end text --------
 Page 1874 proven: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -30454,12 +30795,19 @@ Page 1874 proven: -------- begin text --------
 -------- end text --------
 Page 1875 proves: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms -->
+
+===Etymology 1===
+
+====Noun====
 {{head|ca|noun form}}
 
 # {{plural of|ca|prova}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|provar}}
@@ -30468,7 +30816,7 @@ Page 1875 proves: -------- begin text --------
 Page 1876 provi: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -30478,6 +30826,9 @@ Page 1876 provi: -------- begin text --------
 -------- end text --------
 Page 1877 provin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -30486,6 +30837,9 @@ Page 1877 provin: -------- begin text --------
 -------- end text --------
 Page 1878 provis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -30493,6 +30847,9 @@ Page 1878 provis: -------- begin text --------
 
 -------- end text --------
 Page 1879 provo: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
