@@ -84,7 +84,8 @@ labels["redlinks"] = {
 }
 
 labels["terms with IPA pronunciation"] = {
-	description = "{{{langname}}} terms that include the pronunciation in the form of IPA. For requests related to this category, see [[:Category:Requests for pronunciation in {{{langname}}} entries]].",
+	description = "{{{langname}}} terms that include the pronunciation in the form of IPA.",
+	additional = "For requests related to this category, see [[:Category:Requests for pronunciation in {{{langname}}} entries]].",
 	parents = {"entry maintenance"},
 }
 
@@ -96,6 +97,68 @@ labels["terms with hyphenation"] = {
 labels["terms with audio links"] = {
 	description = "{{{langname}}} terms that include the pronunciation in the form of an audio link.",
 	parents = {"entry maintenance"},
+}
+
+labels["terms with non-automated script codes"] = {
+	description = "{{{langname}}} terms with non-automated script codes.",
+	additional = "Terms are placed here if their script code has been specified using the {{code|text|sc{{=}}}} parameter, and it is different to the one which is automatically generated.",
+	parents = {"entry maintenance"},
+	catfix = false,
+	can_be_empty = true,
+	hidden = true,
+}
+
+labels["terms with redundant script codes"] = {
+	description = "{{{langname}}} terms with redundant script codes.",
+	additional = "Terms are placed here if their script code has been specified using the {{code|text|sc{{=}}}} parameter, and it the same as the one which is automatically generated.",
+	parents = {"entry maintenance"},
+	catfix = false,
+	can_be_empty = true,
+	hidden = true,
+}
+
+labels["terms with non-automated sortkeys"] = {
+	description = "{{{langname}}} terms with non-automated sortkeys.",
+	additional = "Terms are placed here if they have been sorted using a sortkey other than the one which is automatically generated. This can happen for two reasons:\n# A different sortkey has been specified using the {{code|text|sort{{=}}}} parameter.\n# One or more categories have been added using raw wikitext, which means the page's default sortkey is used for that category. If that default sortkey is different from the automatic sortkey, then the page will also be added here.",
+	parents = {"entry maintenance"},
+	catfix = false,
+	can_be_empty = true,
+	hidden = true,
+}
+
+labels["terms with redundant sortkeys"] = {
+	description = "{{{langname}}} terms with redundant sortkeys.",
+	additional = "Terms are placed here if their sortkey has been specified using the {{code|text|sort{{=}}}} parameter, and it the same as the one which is automatically generated.",
+	parents = {"entry maintenance"},
+	catfix = false,
+	can_be_empty = true,
+	hidden = true,
+}
+
+labels["links with ignored alt parameters"] = {
+	description = "Pages containing {{{langname}}} links where the {{code|text|alt{{=}}}} parameter has been ignored.",
+	additional = "This occurs when the main linked text includes a wikilink.",
+	parents = {"entry maintenance"},
+	catfix = false,
+	can_be_empty = true,
+	hidden = true,
+}
+
+labels["links with redundant alt parameters"] = {
+	description = "Pages containing {{{langname}}} links where the {{code|text|alt{{=}}}} parameter is redundant.",
+	parents = {"entry maintenance"},
+	catfix = false,
+	can_be_empty = true,
+	hidden = true,
+}
+
+labels["links with ignored id parameters"] = {
+	description = "Pages containing {{{langname}}} links where the {{code|text|id{{=}}}} parameter has been ignored.",
+	additional = "This occurs when the main linked text includes a wikilink.",
+	parents = {"entry maintenance"},
+	catfix = false,
+	can_be_empty = true,
+	hidden = true,
 }
 
 labels["descendant hubs"] = {
@@ -112,23 +175,27 @@ labels["terms needing to be assigned to a sense"] = {
 
 --[=[
 labels["terms with inflection tables"] = {
-	description = "{{{langname}}} entries that contain inflection tables. For requests related to this category, see [[:Category:Requests for inflections in {{{langname}}} entries]].",
+	description = "{{{langname}}} entries that contain inflection tables.".
+	additional = "For requests related to this category," see [[:Category:Requests for inflections in {{{langname}}} entries]].",
 	parents = {"entry maintenance"},
 }
 ]=]
 
 labels["terms with collocations"] = {
-	description = "{{{langname}}} entries that contain [[collocation]]s that were added using templates such as [[Template:co]]. For requests related to this category, see [[:Category:Requests for collocations in {{{langname}}}]]. See also [[:Category:Requests for quotations in {{{langname}}}]] and [[:Category:Requests for example sentences in {{{langname}}}]].",
+	description = "{{{langname}}} entries that contain [[collocation]]s that were added using templates such as {{tl|co}}.",
+	additional = "For requests related to this category, see [[:Category:Requests for collocations in {{{langname}}}]]. See also [[:Category:Requests for quotations in {{{langname}}}]] and [[:Category:Requests for example sentences in {{{langname}}}]].",
 	parents = {"entry maintenance"},
 }
 
 labels["terms with usage examples"] = {
-	description = "{{{langname}}} entries that contain usage examples that were added using templates such as [[Template:ux]]. For requests related to this category, see [[:Category:Requests for example sentences in {{{langname}}}]]. See also [[:Category:Requests for collocations in {{{langname}}}]] and [[:Category:Requests for quotations in {{{langname}}}]].",
+	description = "{{{langname}}} entries that contain usage examples that were added using templates such as {{tl|ux}}.",
+	additional = "For requests related to this category, see [[:Category:Requests for example sentences in {{{langname}}}]]. See also [[:Category:Requests for collocations in {{{langname}}}]] and [[:Category:Requests for quotations in {{{langname}}}]].",
 	parents = {"entry maintenance"},
 }
 
 labels["terms with quotations"] = {
-	description = "{{{langname}}} entries that contain quotes that were added using templates such as [[Template:quote]], [[Template:quote-book]], [[Template:quote-journal]], etc. For requests related to this category, see [[:Category:Requests for quotations in {{{langname}}}]]. See also [[:Category:Requests for collocations in {{{langname}}}]] and [[:Category:Requests for example sentences in {{{langname}}}]].",
+	description = "{{{langname}}} entries that contain quotes that were added using templates such as {{tl|quote}}, {{tl|quote-book}}, {{tl|quote-journal}}, etc.",
+	additional = "For requests related to this category, see [[:Category:Requests for quotations in {{{langname}}}]]. See also [[:Category:Requests for collocations in {{{langname}}}]] and [[:Category:Requests for example sentences in {{{langname}}}]].",
 	parents = {"entry maintenance"},
 }
 
@@ -217,7 +284,7 @@ raw_categories["Entry maintenance subcategories by language"] = {
 }
 
 raw_categories["Requests"] = {
-	intro = "{{shortcut|WT:CR|WT:RQ}}",
+	topright = "{{shortcut|WT:CR|WT:RQ}}",
 	description = "A parent category for the various request categories.",
 	parents = {"Category:Wiktionary"},
 }
@@ -256,7 +323,7 @@ raw_categories["Requests for quotations"] = {
 }
 
 raw_categories["Requests for date by source"] = {
-	description = "Categories with requests for date, broken out by the source of the quotation whose date is sought.",
+	description = "{{rfd}}Categories with requests for date, broken out by the source of the quotation whose date is sought.",
 	parents = {{name = "Requests for date", sort = "source"}},
 	breadcrumb = "By source",
 }
@@ -279,6 +346,7 @@ raw_categories["Requests for translations in user-competency categories by langu
 	description = "Requests for translations to be added to user-competency categories, sorted by language.",
 	parents = {{name = "Requests", sort = "translations"}},
 	breadcrumb = "Translations in user-competency categories by language",
+	hidden = true,
 }
 
 raw_categories["Entries using missing taxonomic names"] = {
@@ -297,6 +365,13 @@ raw_categories["Entries using missing taxonomic names"] = {
 --                                                                         --
 -----------------------------------------------------------------------------
 
+local function script_name_to_code(name)
+	local sc = require("Module:scripts").getByCanonicalName(name)
+	if not sc then
+		error("Unrecognized script name '" .. name .. "'")
+	end
+	return sc:getCode()
+end
 
 -- This array consists of category match specs. Each spec contains one or more properties, whose values are (a) strings
 -- that may contain references to other properties using the {{{PROPERTY}}} syntax; (b) functions of one argument, an
@@ -653,7 +728,7 @@ local requests_categories = {
 		-- conversion of script name to script code needs to be done using an inline function like this, instead of
 		-- a {{#invoke:...}} template call.
 		script_code = function(items)
-			return require("Module:scripts").getByCanonicalName(items["1"])
+			return script_name_to_code(items["1"])
 		end,
 		template_sample_call = "{{rfscript|{{{language_code}}}|sc={{{script_code}}}}}",
 		template_actual_sample_call = "{{rfscript|{{{language_code}}}|sc={{{script_code}}}|nocat=1}}",
@@ -670,7 +745,7 @@ local requests_categories = {
 		template_name = "rfscript",
 		-- See comment above about this definition.
 		script_code = function(items)
-			return require("Module:scripts").getByCanonicalName(items["1"])
+			return script_name_to_code(items["1"])
 		end,
 		template_sample_call = "{{rfscript|{{{language_code}}}|sc={{{script_code}}}}}",
 		template_actual_sample_call = "{{rfscript|{{{language_code}}}|sc={{{script_code}}}|nocat=1}}",
@@ -679,6 +754,11 @@ local requests_categories = {
 	},
 	{
 		regex = "^Requests for (.+) script by language$",
+		parents = {{name = "Requests for script by language", sort = "{{{1}}} script"}},
+		nolang = true,
+	},
+	{
+		regex = "^Requests for script by language$",
 		nolang = true,
 	},
 	{
@@ -750,8 +830,8 @@ This category is hidden.]=],
 		template_name = "rfv",
 	},
 	{
-		regex = "^Requests for attention in etymologies in (.+) entries$",
-		umbrella = "Requests for attention in etymologies by language",
+		regex = "^Requests for attention in (.+) etymologies$",
+		umbrella = "Requests for attention by language"
 	},
 	{
 		regex = "^Requests for quotations/(.+)$",
@@ -774,7 +854,7 @@ This category is hidden.]=],
 	},
 	{
 		regex = "^Requests for date/(.+)$",
-		description = "Requests for a date for a quotation or quotations from {{{1}}}.",
+		description = "{{rfd|section=Category:Requests for date by source}}Requests for a date for a quotation or quotations from {{{1}}}.",
 		parents = {{name = "Requests for date by source", sort = "{{{1}}}"}},
 		breadcrumb = "{{{1}}}",
 		nolang = true,
@@ -783,24 +863,46 @@ This category is hidden.]=],
 		template_example_output = "\n(where LANGCODE is the language code of the entry)\n\nIt results in the message below:\n\n{{rfdatek|und|{{{1}}}}}",
 	},
 	{
-		regex = "^Requests for translations in user-competency categories with ([0-9]+)-([0-9]+) users$",
-		description = "Requests for translation of phrases indicating user competencies for specific languages and specific competency levels.",
-		additional_template_description = "This is added by user-competency categories such as " ..
-		"[[:Category:User fr-4]], which groups users who speak French at level 4 (near-native proficiency), when " ..
-		"the native-language text indicating this fact is missing. The appropriate translation should mirror the " ..
-		"English text also displayed (e.g. in this case \"These users speak French at a '''near native''' " ..
-		"level.\"), and should be supplied to {{tl|auto cat}} using the {{para|text}} parameter. The mention of the " ..
-		"language in the text should be surrounded by double angle brackets, e.g. \"&lt;&lt;français>>\", which " ..
-		"causes it to be automatically linked to the appropriate parent category.",
-		parents = {{name = "Requests for translations in user-competency categories by number of users",
-					sort = function(items)
-						return " " .. ("%010d"):format(items["1"])
-					end,
-				}},
-		breadcrumb = "{{{1}}}-{{{2}}}",
-		nolang = true,
+		regex = "^Requests for attestation of (.+) terms$",
+		umbrella = "Requests for attestation of terms by language",
+		breadcrumb = "Attestation",
+		additional_template_description = "The {{tl|LDL}} template adds this category when a language code is supplied in {{para|1}} (as it should be)."
 	},
 }
+
+local user_competency_additional_template_description = "This is added by user-competency categories such as " ..
+	"[[:Category:User fr-4]], which groups users who speak French at level 4 (near-native proficiency), when " ..
+	"the native-language text indicating this fact is missing. The appropriate translation should mirror the " ..
+	"English text also displayed (e.g. in this case \"These users speak French at a '''near native''' " ..
+	"level.\"), and should be supplied to {{tl|auto cat}} using the {{para|text}} parameter. The mention of the " ..
+	"language in the text should be surrounded by double angle brackets, e.g. \"&lt;&lt;français>>\", which " ..
+	"causes it to be automatically linked to the appropriate parent category."
+local user_competency_parents = {{name = "Requests for translations in user-competency categories by number of users",
+	sort = function(items)
+		return " " .. ("%010d"):format(items["1"])
+	end,
+}}
+
+table.insert(requests_categories,
+	{
+		regex = "^Requests for translations in user%-competency categories with ([0-9]+)%-([0-9]+) users$",
+		description = "Requests for translation of phrases indicating user competencies for specific languages and specific competency levels, for categories with {{{1}}}-{{{2}}} users.",
+		additional_template_description = user_competency_additional_template_description,
+		parents = user_competency_parents,
+		breadcrumb = "{{{1}}}-{{{2}}}",
+		nolang = true,
+	}
+)
+table.insert(requests_categories,
+	{
+		regex = "^Requests for translations in user%-competency categories with ([0-9]+) (users?)$",
+		description = "Requests for translation of phrases indicating user competencies for specific languages and specific competency levels, for categories with {{{1}}} {{{2}}}.",
+		additional_template_description = user_competency_additional_template_description,
+		parents = user_competency_parents,
+		breadcrumb = "{{{1}}}",
+		nolang = true,
+	}
+)
 
 table.insert(raw_handlers, function(data)
 	local items
@@ -895,6 +997,8 @@ table.insert(raw_handlers, function(data)
 			if items.additional_template_description then
 				items.full_text_about_the_template = items.full_text_about_the_template .. "\n\n" .. items.additional_template_description
 			end
+		else
+			items.full_text_about_the_template = items.additional_template_description
 		end
 
 		local parents = items.parents
