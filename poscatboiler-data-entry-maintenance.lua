@@ -135,6 +135,15 @@ labels["terms with redundant sortkeys"] = {
 	hidden = true,
 }
 
+labels["links with redundant target parameters"] = {
+	description = "Pages containing {{{langname}}} links where the alt text could replace the link target, instead of being given separately.",
+	additional = "This occurs when the only difference between the link target and the alt text is that the alt text contains diacritics (or other characters) which would have been ignored anyway had they been included in the link target. For example, {{tl|l|la|amo|amō}} ({{l|la|amo|amō}}) is exactly the same as {{tl|l|la|amō}} ({{l|la|amō}}), because macrons are automatically stripped from Latin link targets, even though they're still displayed.",
+	parents = {"entry maintenance"},
+	catfix = false,
+	can_be_empty = true,
+	hidden = true,
+}
+
 labels["links with ignored alt parameters"] = {
 	description = "Pages containing {{{langname}}} links where the {{code|text|alt{{=}}}} parameter has been ignored.",
 	additional = "This occurs when the main linked text includes a wikilink.",
@@ -146,6 +155,7 @@ labels["links with ignored alt parameters"] = {
 
 labels["links with redundant alt parameters"] = {
 	description = "Pages containing {{{langname}}} links where the {{code|text|alt{{=}}}} parameter is redundant.",
+	additional = "This occurs when the alt text makes no difference to the output. For example, {{tl|l|en|foo|foo}} ({{l|en|foo|foo}}) is exactly the same as {{tl|l|en|foo}} ({{l|en|foo}}).",
 	parents = {"entry maintenance"},
 	catfix = false,
 	can_be_empty = true,
