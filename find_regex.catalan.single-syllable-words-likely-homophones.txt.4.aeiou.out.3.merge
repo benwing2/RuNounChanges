@@ -6756,7 +6756,7 @@ Page 426 comptes: -------- begin text --------
 ===Etymology 1===
 
 ====Noun====
-{{head|ca|noun form|m}}
+{{head|ca|noun form|g=m-p}}
 
 # {{plural of|ca|compte}}
 
@@ -33753,6 +33753,9 @@ Page 2063 secta: -------- begin text --------
 ===Etymology===
 {{bor+|ca|la|secta}}.
 
+===Pronunciation===
+* {{ca-IPA|è}}
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -33760,6 +33763,9 @@ Page 2063 secta: -------- begin text --------
 
 -------- end text --------
 Page 2064 sectes: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|è}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -33891,10 +33897,16 @@ From {{der|ca|la|saeculum}}.
 
 ===Etymology 2===
 
+====Alternative forms====
+* {{alt|ca|sègle||pre-2016}}
+
+====Pronunciation====
+* {{ca-IPA|ë}}
+
 ====Noun====
 {{ca-noun|m}}
 
-# {{alt form|ca|sègol}}
+# {{lb|ca|dialectal}} {{alt form|ca|sègol|t=rye}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -33907,12 +33919,33 @@ From {{der|ca|la|saeculum}}.
 -------- end text --------
 Page 2074 segles: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|segle}}
+# {{plural of|ca|segle|t=century}}
+
+===Etymology 2===
+
+====Alternative forms====
+* {{alt|ca|sègles||pre-2016}}
+
+====Pronunciation====
+* {{ca-IPA|ë}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|segle|t=rye}}
 -------- end text --------
 Page 2075 sego: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -34016,18 +34049,46 @@ Page 2079 segui: -------- begin text --------
 -------- end text --------
 Page 2080 seguin: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|segar}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|è}}
+
+====Verb====
+{{head|ca|verb form}}
+
 # {{ca-verb form of|seure}}
 -------- end text --------
 Page 2081 seguis: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|segar}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|è}}
+
+====Verb====
+{{head|ca|verb form}}
+
 # {{ca-verb form of|seure}}
 
 -------- end text --------
@@ -34084,6 +34145,9 @@ Page 2083 selva: -------- begin text --------
 -------- end text --------
 Page 2084 selves: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -34103,6 +34167,9 @@ Page 2085 sembla: -------- begin text --------
 -------- end text --------
 Page 2086 semblen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -34110,6 +34177,9 @@ Page 2086 semblen: -------- begin text --------
 
 -------- end text --------
 Page 2087 sembles: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -34119,6 +34189,9 @@ Page 2087 sembles: -------- begin text --------
 -------- end text --------
 Page 2088 sembli: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -34127,12 +34200,18 @@ Page 2088 sembli: -------- begin text --------
 -------- end text --------
 Page 2089 semblin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|semblar}}
 -------- end text --------
 Page 2090 semblis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -34142,6 +34221,9 @@ Page 2090 semblis: -------- begin text --------
 -------- end text --------
 Page 2091 semblo: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -34150,11 +34232,11 @@ Page 2091 semblo: -------- begin text --------
 -------- end text --------
 Page 2092 sembra: -------- begin text --------
 
-===Etymology 1===
-From {{m|ca|sembrar|t=to sow}}.
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- both etyms -->
 
-====Pronunciation====
-* {{ca-IPA|ê}}
+===Etymology 1===
+{{deverbal|ca|sembrar|t=to sow}}.
 
 ====Noun====
 {{ca-noun|f}}
@@ -34180,12 +34262,18 @@ From {{m|ca|sembrar|t=to sow}}.
 -------- end text --------
 Page 2093 sembren: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|sembrar}}
 -------- end text --------
 Page 2094 sembres: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- both etyms -->
 
 ===Etymology 1===
 
@@ -34204,6 +34292,9 @@ Page 2094 sembres: -------- begin text --------
 -------- end text --------
 Page 2095 sembri: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -34212,6 +34303,9 @@ Page 2095 sembri: -------- begin text --------
 -------- end text --------
 Page 2096 sembrin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -34219,12 +34313,18 @@ Page 2096 sembrin: -------- begin text --------
 -------- end text --------
 Page 2097 sembris: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|sembrar}}
 -------- end text --------
 Page 2098 sembro: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -34238,7 +34338,7 @@ Page 2099 semen: -------- begin text --------
 {{lbor|ca|la|sēmen}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|ë}}
 
 ===Noun===
 {{ca-noun|m|sèmens|pl2=sémens}}
@@ -34284,7 +34384,7 @@ Page 2100 sempre: -------- begin text --------
 Page 2101 sena: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|sēna}}.
+{{bor+|ca|la|sēna}}.
 
 ===Pronunciation===
 * {{ca-IPA|ë}}
@@ -34307,10 +34407,10 @@ From {{der|ca|la|sēna}}.
 Page 2102 senda: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|sēmita||narrow way, footpath}}.
+{{inh+|ca|la|sēmita||narrow way, footpath}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|é}}<!-- FIXME! é is unexpected from Latin ē; we'd expect ê -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -34331,6 +34431,9 @@ From {{der|ca|la|sēmita||narrow way, footpath}}.
 -------- end text --------
 Page 2103 sendes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}<!-- FIXME! é is unexpected from Latin ē; we'd expect ê -->
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -34339,6 +34442,9 @@ Page 2103 sendes: -------- begin text --------
 -------- end text --------
 Page 2104 senes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ë}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -34346,6 +34452,12 @@ Page 2104 senes: -------- begin text --------
 
 -------- end text --------
 Page 2105 sengles: -------- begin text --------
+
+===Etymology===
+{{inh+|ca|la|singuli|singulōs|one by one, one each}}. {{etydate|11th century}}
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Adjective===
 {{head|ca|adjective|g=m-p|g2=f-p}}
@@ -34367,7 +34479,7 @@ Page 2106 sense: -------- begin text --------
 Ultimately from {{inh|ca|la|sine}}, possibly conflated with {{m|ca|absentia}}, or more likely from {{m|ca|sens}}, itself from {{inh|ca|roa-oca|sen}} (with an adverbial -s-), from Latin {{m|la|sine}}. Compare {{cog|fr|sans}}, {{cog|oc|sens}}, {{cog|it|senza}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- FIXME: GDLC says /e/ not #/ɛ/ -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-sense.wav|Audio}}
 
 ===Preposition===
@@ -34389,6 +34501,9 @@ Ultimately from {{inh|ca|la|sine}}, possibly conflated with {{m|ca|absentia}}, o
 -------- end text --------
 Page 2107 senten: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -34396,6 +34511,9 @@ Page 2107 senten: -------- begin text --------
 
 -------- end text --------
 Page 2108 senti: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -34405,12 +34523,18 @@ Page 2108 senti: -------- begin text --------
 -------- end text --------
 Page 2109 sentin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|sentir}}
 -------- end text --------
 Page 2110 sentis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -34419,6 +34543,9 @@ Page 2110 sentis: -------- begin text --------
 
 -------- end text --------
 Page 2111 sento: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -34432,7 +34559,7 @@ Page 2112 senya: -------- begin text --------
 {{inh+|ca|la|signa}}, plural of {{m|la|signum}}. {{doublet|ca|signe}}, a borrowing. Compare {{cog|es|seña}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|ê}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -34460,6 +34587,9 @@ Page 2112 senya: -------- begin text --------
 
 -------- end text --------
 Page 2113 senyes: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -34538,7 +34668,7 @@ Page 2117 sequi: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{ca-IPA}}
+* {{ca-IPA|è}}
 
 ====Noun====
 {{ca-noun|m}}
@@ -34583,6 +34713,9 @@ Page 2119 sequis: -------- begin text --------
 -------- end text --------
 Page 2120 seran: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -34592,6 +34725,7 @@ Page 2120 seran: -------- begin text --------
 Page 2121 serbi: -------- begin text --------
 
 ===Pronunciation===
+* {{ca-IPA|è}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-serbi.wav|Audio (Valencian)}}
 
 ===Adjective===
@@ -34622,6 +34756,7 @@ Page 2121 serbi: -------- begin text --------
 Page 2122 serbis: -------- begin text --------
 
 ===Pronunciation===
+* {{ca-IPA|è}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-serbis.wav|Audio (Valencian)}}
 
 ===Adjective===
@@ -34637,13 +34772,13 @@ Page 2122 serbis: -------- begin text --------
 -------- end text --------
 Page 2123 serra: -------- begin text --------
 
-===Etymology 1===
-{{inh+|ca|roa-oca|serra}}, from {{inh|ca|la|serra}}.
-
-====Pronunciation====
-* {{ca-IPA|è}}
+===Pronunciation===
+* {{ca-IPA|è}}<!-- all three etyms -->
 * {{homophones|ca|cerra}}
 * {{audio|ca|LL-Q7026 (cat)-Toniher-serra.wav|Audio (Catalonia)}}
+
+===Etymology 1===
+{{inh+|ca|roa-oca|serra}}, from {{inh|ca|la|serra}}.
 
 ====Noun====
 {{ca-noun|f}}
@@ -34663,7 +34798,15 @@ Page 2123 serra: -------- begin text --------
 ====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|serrar}}
+# {{ca-verb form of|serrar|t=to saw}}
+
+===Etymology 3===
+{{nonlemma}}
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|serrar|t=to squeeze; to clench}}
 
 ===References===
 * {{R:ca:DCVB}}
@@ -34676,12 +34819,29 @@ Page 2123 serra: -------- begin text --------
 -------- end text --------
 Page 2124 serren: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|è}}<!-- both etyms -->
+
+===Etymology 1===
+{{nonlemma}}
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|serrar}}
+# {{ca-verb form of|serrar|t=to saw}}
+
+===Etymology 2===
+{{nonlemma}}
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|serrar|t=to squeeze; to clench}}
 -------- end text --------
 Page 2125 serres: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|è}}<!-- all three etyms -->
 
 ===Etymology 1===
 
@@ -34694,45 +34854,107 @@ Page 2125 serres: -------- begin text --------
 # {{plural of|ca|serra}}
 
 ===Etymology 2===
+{{nonlemma}}
 
 ====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|serrar}}
+# {{ca-verb form of|serrar|t=to saw}}
+
+===Etymology 3===
+{{nonlemma}}
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|serrar|t=to squeeze; to clench}}
 
 -------- end text --------
 Page 2126 serri: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|è}}<!-- both etyms -->
+
+===Etymology 1===
+{{nonlemma}}
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|serrar}}
+# {{ca-verb form of|serrar|t=to saw}}
+
+===Etymology 2===
+{{nonlemma}}
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|serrar|t=to squeeze; to clench}}
 
 -------- end text --------
 Page 2127 serrin: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|è}}<!-- both etyms -->
+
+===Etymology 1===
+{{nonlemma}}
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|serrar}}
+# {{ca-verb form of|serrar|t=to saw}}
+
+===Etymology 2===
+{{nonlemma}}
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|serrar|t=to squeeze; to clench}}
 -------- end text --------
 Page 2128 serris: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|è}}<!-- both etyms -->
+
+===Etymology 1===
+{{nonlemma}}
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|serrar}}
+# {{ca-verb form of|serrar|t=to saw}}
+
+===Etymology 2===
+{{nonlemma}}
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|serrar|t=to squeeze; to clench}}
 
 -------- end text --------
 Page 2129 serro: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|è}}<!-- both etyms -->
 
-===Verb===
+===Etymology 1===
+{{nonlemma}}
+
+====Verb====
 {{head|ca|verb form}}
 
-# {{ca-verb form of|serrar}}
+# {{ca-verb form of|serrar|t=to saw}}
+
+===Etymology 2===
+{{nonlemma}}
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|serrar|t=to squeeze; to clench}}
 
 -------- end text --------
 Page 2130 serva: -------- begin text --------
@@ -34741,7 +34963,7 @@ Page 2130 serva: -------- begin text --------
 {{inh+|ca|la|sorbus}}, with unexplained mutation of the vowel.
 
 ====Pronunciation====
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- FIXME: GDLC says /e/ rather than expected #/ɛ/ -->
 
 ====Noun====
 {{ca-noun|f}}
@@ -34767,16 +34989,31 @@ Page 2130 serva: -------- begin text --------
 -------- end text --------
 Page 2131 serves: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|ê}}<!-- FIXME: GDLC says /e/ rather than expected #/ɛ/ -->
+
+====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|serva}}
+# {{plural of|ca|serva|t=serviceberry}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|serva|t=female serf}}
 
 -------- end text --------
 Page 2132 sesta: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|[[hōra]] [[sexta]]|t=sixth hour, counting from [[dawn]]}}. Cognate with {{cog|pt|sesta}} and {{cog|es|siesta}}.
+{{inh+|ca|la|sexta|(hōra) sexta|t=sixth hour, counting from [[dawn]]}}. Cognate with {{cog|pt|sesta}} and {{cog|es|siesta}}.
 
 ===Pronunciation===
 * {{ca-IPA|é}}
@@ -34800,6 +35037,9 @@ From {{der|ca|la|[[hōra]] [[sexta]]|t=sixth hour, counting from [[dawn]]}}. Cog
 -------- end text --------
 Page 2133 sestes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -34808,10 +35048,10 @@ Page 2133 sestes: -------- begin text --------
 Page 2134 setge: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|VL.|*sēdicum}}.
+From {{der|ca|VL.|*sĕdicum}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|é}}<!-- FIXME: GDLC says /ɛ/ -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -34832,6 +35072,9 @@ From {{der|ca|VL.|*sēdicum}}.
 -------- end text --------
 Page 2135 setges: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}<!-- FIXME: GDLC says /ɛ/ -->
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -34843,14 +35086,15 @@ Page 2136 seti: -------- begin text --------
 * {{alt|ca|siti}}
 
 ===Etymology===
-Perhaps from {{der|ca|la|situs}}.
+Perhaps {{bor+|ca|la|situs|nocap=1}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|è}}
 
 ===Noun===
 {{ca-noun|m}}
 
+# [[seat]]
 # [[site]], [[spot]]
 
 ===Further reading===
@@ -34881,6 +35125,9 @@ Page 2137 setra: -------- begin text --------
 -------- end text --------
 Page 2138 setres: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -34893,7 +35140,7 @@ Page 2139 setze: -------- begin text --------
 {{inh+|ca|la|sēdecim||sixteen}}, from {{m|la|sex||six}} + {{m|la|decem||ten}} (compare {{cog|oc|setze}}, {{cog|fr|seize}}, {{cog|it|sedici}}).
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|ë}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-setze.wav|Audio}}
 * {{rhymes|ca|ɛdze|s=2}}
 
@@ -34913,6 +35160,9 @@ Page 2139 setze: -------- begin text --------
 
 -------- end text --------
 Page 2140 setzes: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ë}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -34947,7 +35197,10 @@ Page 2141 seva: -------- begin text --------
 Page 2142 seves: -------- begin text --------
 
 ===Alternative forms===
-* {{l|ca|seues}} (Valencia)
+* {{alt|ca|seues||Valencia}}
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Pronoun===
 {{head|ca|pronoun form}}
@@ -34955,6 +35208,9 @@ Page 2142 seves: -------- begin text --------
 # {{feminine plural of|ca|seu}}
 -------- end text --------
 Page 2143 sexa: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|sèksa}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -34996,6 +35252,9 @@ Page 2144 sexe: -------- begin text --------
 -------- end text --------
 Page 2145 sexen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|sèksen}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -35016,7 +35275,7 @@ Page 2146 sexes: -------- begin text --------
 Page 2147 sexi: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|seksi}}
+* {{ca-IPA|sèksi}}<!-- both etyms -->
 
 ===Etymology 1===
 {{bor+|ca|en|sexy}}.
@@ -35038,12 +35297,18 @@ Page 2147 sexi: -------- begin text --------
 -------- end text --------
 Page 2148 sexin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|sèksin}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|sexar}}
 -------- end text --------
 Page 2149 sexis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|sèksis}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35053,6 +35318,9 @@ Page 2149 sexis: -------- begin text --------
 -------- end text --------
 Page 2150 sexo: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|sèkso}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -35061,15 +35329,13 @@ Page 2150 sexo: -------- begin text --------
 -------- end text --------
 Page 2151 sexta: -------- begin text --------
 
-===Etymology===
-From {{der|ca|la|sextus||sixth}}.
+===Pronunciation===
+* {{ca-IPA|sëksta}}<!-- both etyms -->
 
-===Adjective===
-{{head|ca|adjective form}}
+===Etymology 1===
+{{bor+|ca|la|sexta}}, feminine singular of {{m|la|sextus}}.
 
-# {{feminine singular of|ca|sext}}
-
-===Noun===
+====Noun====
 {| style="float:right"
 |[[File:6 w.svg|thumb|la sexta major]]
 |[[File:6 m.png|thumb|la sexta menor]]
@@ -35079,12 +35345,22 @@ From {{der|ca|la|sextus||sixth}}.
 # {{lb|ca|music}} [[sixth]]
 # [[sext]]; a liturgical hour
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|sexta major}}
 * {{l|ca|sexta menor}}
 
+===Etymology 2===
+
+====Adjective====
+{{head|ca|adjective form}}
+
+# {{feminine singular of|ca|sext}}
+
 -------- end text --------
 Page 2152 sextes: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|sëkstes}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -35094,11 +35370,11 @@ Page 2152 sextes: -------- begin text --------
 -------- end text --------
 Page 2153 sobra: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms -->
+
 ===Etymology 1===
 {{deverbal|ca|sobrar}}.
-
-====Pronunciation====
-* {{ca-IPA|ò}}
 
 ====Noun====
 {{ca-noun|f}}
@@ -35166,6 +35442,9 @@ Page 2154 sobre: -------- begin text --------
 -------- end text --------
 Page 2155 sobren: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -35176,35 +35455,49 @@ Page 2156 sobres: -------- begin text --------
 
 ===Etymology 1===
 
+====Pronunciation====
+* {{ca-IPA|ò}}
+
 ====Noun====
 {{head|ca|noun form}}
 
 # {{plural of|ca|sobra}}
+
+====Noun====
+{{ca-noun|f-p}}
+
 # [[leftovers]]
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ó}}
 
 ====Noun====
 {{head|ca|noun form}}
 
 # {{plural of|ca|sobre}}
 
-===Etymology 2===
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
 
 ====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|sobrar}}
 
-{{cln|ca|lemmas}}
 {{C|ca|Meals}}
 
 -------- end text --------
 Page 2157 sobri: -------- begin text --------
 
-===Etymology 1===
-From {{der|ca|la|sōbrius}}.
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms -->
 
-====Pronunciation====
-* {{ca-IPA}}
+===Etymology 1===
+{{bor+|ca|la|sōbrius}}.
 
 ====Adjective====
 {{ca-adj}}
@@ -35231,6 +35524,9 @@ From {{der|ca|la|sōbrius}}.
 -------- end text --------
 Page 2158 sobrin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -35238,10 +35534,10 @@ Page 2158 sobrin: -------- begin text --------
 -------- end text --------
 Page 2159 sobris: -------- begin text --------
 
-===Etymology 1===
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms -->
 
-====Pronunciation====
-* {{ca-IPA}}
+===Etymology 1===
 
 ====Adjective====
 {{head|ca|adjective form}}
@@ -35258,6 +35554,9 @@ Page 2159 sobris: -------- begin text --------
 -------- end text --------
 Page 2160 sobro: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -35265,6 +35564,9 @@ Page 2160 sobro: -------- begin text --------
 
 -------- end text --------
 Page 2161 sobta: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35276,12 +35578,18 @@ Page 2162 sobte: -------- begin text --------
 ===Etymology===
 {{inh+|ca|la|sŭbĭtus}}.
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Noun===
 {{ca-noun|m}}
 
 # {{only used in|ca|de sobte}}
 -------- end text --------
 Page 2163 sobten: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35290,12 +35598,18 @@ Page 2163 sobten: -------- begin text --------
 -------- end text --------
 Page 2164 sobtes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|sobtar}}
 -------- end text --------
 Page 2165 sobti: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35304,6 +35618,9 @@ Page 2165 sobti: -------- begin text --------
 -------- end text --------
 Page 2166 sobtin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -35311,12 +35628,18 @@ Page 2166 sobtin: -------- begin text --------
 -------- end text --------
 Page 2167 sobtis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|sobtar}}
 -------- end text --------
 Page 2168 sobto: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35351,10 +35674,10 @@ Page 2170 soci: -------- begin text --------
 {{bor+|ca|la|socius}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ò}}
 
 ===Noun===
-{{ca-noun|m|f=sòcia  }}
+{{ca-noun|m|f=sòcia}}
 
 # [[member]]
 # {{lb|ca|colloquial}} [[man]], [[dude]], [[geezer]]
@@ -35367,6 +35690,9 @@ Page 2170 soci: -------- begin text --------
 
 -------- end text --------
 Page 2171 socis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -35426,11 +35752,11 @@ Page 2173 sofre: -------- begin text --------
 -------- end text --------
 Page 2174 soga: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms -->
+
 ===Etymology 1===
 {{inh+|ca|LL.|sōca}}, of {{der|ca|cel|-}} origin, from {{der|ca|cel-gau|*soucā}}, ultimately from {{der|ca|ine-pro|*sew-||to bend, to cut, to drive}}, see also {{cog|sa|सुवति}}.<ref>{{R:es:Roberts:2014}}, p. 558</ref>
-
-====Pronunciation====
-* {{ca-IPA|ó}}
 
 ====Noun====
 {{ca-noun|f}}
@@ -35463,12 +35789,18 @@ Page 2174 soga: -------- begin text --------
 -------- end text --------
 Page 2175 soges: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Noun===
 {{head|ca|noun form}}
 
 # {{plural of|ca|soja}}
 -------- end text --------
 Page 2176 sogo: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35527,12 +35859,19 @@ Page 2178 sogre: -------- begin text --------
 -------- end text --------
 Page 2179 sogres: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Noun===
 {{head|ca|noun form}}
 
 # {{plural of|ca|sogre}}
+# {{plural of|ca|sogra}}
 -------- end text --------
 Page 2180 soguen: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35540,6 +35879,9 @@ Page 2180 soguen: -------- begin text --------
 # {{ca-verb form of|sogar}}
 -------- end text --------
 Page 2181 sogues: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms -->
 
 ===Etymology 1===
 
@@ -35557,6 +35899,9 @@ Page 2181 sogues: -------- begin text --------
 -------- end text --------
 Page 2182 sogui: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -35564,12 +35909,18 @@ Page 2182 sogui: -------- begin text --------
 -------- end text --------
 Page 2183 soguin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|sogar}}
 -------- end text --------
 Page 2184 soguis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35583,6 +35934,9 @@ Page 2185 soja: -------- begin text --------
 
 ===Etymology===
 {{bor+|ca|es|soja}}.
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -35602,7 +35956,7 @@ Page 2185 soja: -------- begin text --------
 Page 2186 sola: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- all three etyms -->
 
 ===Etymology 1===
 From {{der|ca|VL.|*sola}}, from {{der|ca|la|solea}}.
@@ -35646,6 +36000,9 @@ From {{der|ca|VL.|*sola}}, from {{der|ca|la|solea}}.
 -------- end text --------
 Page 2187 solca: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -35653,6 +36010,9 @@ Page 2187 solca: -------- begin text --------
 
 -------- end text --------
 Page 2188 solco: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35662,6 +36022,9 @@ Page 2188 solco: -------- begin text --------
 -------- end text --------
 Page 2189 solda: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -35669,6 +36032,9 @@ Page 2189 solda: -------- begin text --------
 
 -------- end text --------
 Page 2190 solden: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35678,6 +36044,9 @@ Page 2190 solden: -------- begin text --------
 -------- end text --------
 Page 2191 soldes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -35685,6 +36054,9 @@ Page 2191 soldes: -------- begin text --------
 
 -------- end text --------
 Page 2192 soldi: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35694,12 +36066,18 @@ Page 2192 soldi: -------- begin text --------
 -------- end text --------
 Page 2193 soldin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|soldar}}
 -------- end text --------
 Page 2194 soldis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35708,6 +36086,9 @@ Page 2194 soldis: -------- begin text --------
 
 -------- end text --------
 Page 2195 soldo: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35730,29 +36111,15 @@ Page 2196 soldre: -------- begin text --------
 -------- end text --------
 Page 2197 solen: -------- begin text --------
 
-===Verb===
-{{head|ca|verb form}}
-
-# {{ca-verb form of|soler}}
-# {{ca-verb form of|solar}}
-
--------- end text --------
-Page 2198 soles: -------- begin text --------
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms -->
 
 ===Etymology 1===
 
-====Pronunciation====
-* {{ca-IPA|ò}}
+====Verb====
+{{head|ca|verb form}}
 
-====Adjective====
-{{head|ca|adjective form}}
-
-# {{feminine plural of|ca|sol}}
-
-====Noun====
-{{head|ca|noun form}}
-
-# {{plural of|ca|sola}}
+# {{ca-verb form of|soler}}
 
 ===Etymology 2===
 
@@ -35765,7 +36132,40 @@ Page 2198 soles: -------- begin text --------
 * {{anagrams|ca|a=eloss|lesos|loess}}
 
 -------- end text --------
+Page 2198 soles: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- all three etyms -->
+
+===Etymology 1===
+
+====Adjective====
+{{head|ca|adjective form}}
+
+# {{feminine plural of|ca|sol}}
+
+===Etymology 2===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|sola}}
+
+====Anagrams====
+* {{anagrams|ca|a=eloss|lesos|loess}}
+
+===Etymology 3===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|solar}}
+
+-------- end text --------
 Page 2199 solgui: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35774,6 +36174,9 @@ Page 2199 solgui: -------- begin text --------
 -------- end text --------
 Page 2200 solguin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -35781,12 +36184,18 @@ Page 2200 solguin: -------- begin text --------
 -------- end text --------
 Page 2201 solguis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|soler}}
 -------- end text --------
 Page 2202 soli: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35796,6 +36205,9 @@ Page 2202 soli: -------- begin text --------
 -------- end text --------
 Page 2203 solin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -35803,6 +36215,9 @@ Page 2203 solin: -------- begin text --------
 
 -------- end text --------
 Page 2204 solis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35812,6 +36227,9 @@ Page 2204 solis: -------- begin text --------
 -------- end text --------
 Page 2205 solla: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -35819,6 +36237,9 @@ Page 2205 solla: -------- begin text --------
 
 -------- end text --------
 Page 2206 sollen: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35828,6 +36249,9 @@ Page 2206 sollen: -------- begin text --------
 -------- end text --------
 Page 2207 solles: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -35835,6 +36259,9 @@ Page 2207 solles: -------- begin text --------
 
 -------- end text --------
 Page 2208 solli: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35844,12 +36271,18 @@ Page 2208 solli: -------- begin text --------
 -------- end text --------
 Page 2209 sollin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|sollar}}
 -------- end text --------
 Page 2210 sollis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35858,6 +36291,9 @@ Page 2210 sollis: -------- begin text --------
 
 -------- end text --------
 Page 2211 sollo: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35870,10 +36306,14 @@ Page 2212 solo: -------- begin text --------
 ===Etymology 1===
 {{bor+|ca|it|solo}}.
 
+====Pronunciation====
+* {{ca-IPA|ô}}
+
 ====Noun====
 {{ca-noun|m}}
 
 # {{lb|ca|music}} {{l|en|solo}} {{gloss|a piece of music for one performer}}
+# {{lb|ca|card games}} {{l|en|solo}} {{gloss|a trick-taking card game played with 36 cards, similar to {{w|frog (American card game)|frog}}}}
 
 =====Derived terms=====
 * {{l|ca|solista}}
@@ -35886,6 +36326,9 @@ Page 2212 solo: -------- begin text --------
 
 ===Etymology 2===
 
+====Pronunciation====
+* {{ca-IPA|ò}}
+
 ====Verb====
 {{head|ca|verb form}}
 
@@ -35893,6 +36336,9 @@ Page 2212 solo: -------- begin text --------
 
 -------- end text --------
 Page 2213 solos: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ô}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -35902,12 +36348,18 @@ Page 2213 solos: -------- begin text --------
 -------- end text --------
 Page 2214 solquen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|solcar}}
 -------- end text --------
 Page 2215 solques: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35916,12 +36368,18 @@ Page 2215 solques: -------- begin text --------
 -------- end text --------
 Page 2216 solqui: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|solcar}}
 -------- end text --------
 Page 2217 solquin: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35930,6 +36388,9 @@ Page 2217 solquin: -------- begin text --------
 -------- end text --------
 Page 2218 solquis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -35937,38 +36398,50 @@ Page 2218 solquis: -------- begin text --------
 -------- end text --------
 Page 2219 solta: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- all three etyms -->
+
 ===Etymology 1===
 From {{af|ca|solt|-a}}.
 
-====Pronunciation====
-* {{ca-IPA|ò}}
+====Noun====
+{{ca-noun|f}}
+
+# {{lb|ca|archaic}} [[release]], [[release|releasing]]
+# {{lb|ca|archaic}} [[absolve|absolving]] {{q|from guilt or an obligation}}
+# {{lb|ca|archaic}} [[resolution]] {{q|of a difficulty}}
+# [[coherence]], [[method]]
+# [[logic]], [[sense]]
+# {{lb|ca|fishing}} [[high]] [[vertical]] [[fishing]] [[net]]
+# {{lb|ca|bird|_|sports}} [[release]] {{q|of a dove, for mating purposes}}
+
+=====Derived terms=====
+* {{l|ca|sense solta ni volta||without rhyme or reason}}
+
+===Etymology 2===
+{{nonlemma}}
 
 ====Adjective====
 {{head|ca|adjective form}}
 
 # {{feminine singular of|ca|solt}}
 
-====Noun====
-{{ca-noun|f}}
-
-# [[coherence]], [[method]]
-
-=====Derived terms=====
-* {{l|ca|sense solta ni volta}}
-
-====Further reading====
-* {{R:ca:IEC2}}
-* {{R:ca:DCVB}}
-
-===Etymology 2===
+===Etymology 3===
 
 ====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|soltar}}
 
+===Further reading===
+* {{R:ca:IEC2}}
+* {{R:ca:DCVB}}
+
 -------- end text --------
 Page 2220 solten: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35978,6 +36451,9 @@ Page 2220 solten: -------- begin text --------
 -------- end text --------
 Page 2221 soltes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -35985,6 +36461,9 @@ Page 2221 soltes: -------- begin text --------
 
 -------- end text --------
 Page 2222 solti: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35994,6 +36473,9 @@ Page 2222 solti: -------- begin text --------
 -------- end text --------
 Page 2223 soltin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -36001,12 +36483,18 @@ Page 2223 soltin: -------- begin text --------
 -------- end text --------
 Page 2224 soltis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|soltar}}
 -------- end text --------
 Page 2225 solto: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -36051,6 +36539,10 @@ Found within Algherese and more generally as a Castilianism, coexisting in both 
 -------- end text --------
 Page 2227 sombres: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+* {{a|Algherese}} {{IPA|ca|/ˈsom.bɾes/}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -36060,7 +36552,7 @@ Page 2227 sombres: -------- begin text --------
 Page 2228 somni: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|somnium}}. Compare the inherited Old Catalan {{m|roa-oca|suny}}. See also the related {{m|ca|son||sleep}}.
+{{bor+|ca|la|somnium}}. Compare the inherited {{m+|roa-oca|suny}}. See also the related {{m|ca|son||sleep}}.
 
 ===Pronunciation===
 * {{ca-IPA|ò}}
@@ -36083,6 +36575,9 @@ Page 2228 somni: -------- begin text --------
 -------- end text --------
 Page 2229 somnis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -36103,11 +36598,11 @@ Page 2230 sona: -------- begin text --------
 -------- end text --------
 Page 2231 sonda: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both etyms -->
+
 ===Etymology 1===
 From {{der|ca|frm|sonde||sounding line}}, from {{der|ca|fro|sonde||sounding line}}, from {{der|ca|ang||sund-|sounding}}, as in {{m|ang|sundġierd||sounding-rod}}, {{m|ang|sundlīne||sounding-line, lead}}, {{m|ang|sundrāp||sounding-rope, lead}}, from {{m|ang|sund||ocean, sea}}, from {{der|ca|gem-pro|*sundą||a swim, body of water, sound}}, from {{der|ca|ine-pro|*swem(bh)-||to be unsteady, swim}}. Cognate with {{cog|non|sund||swimming; strait, sound}}. More at {{m|en|sound}}.
-
-====Pronunciation====
-* {{ca-IPA|ó}}
 
 ====Noun====
 {{ca-noun|f}}
@@ -36135,6 +36630,9 @@ From {{der|ca|frm|sonde||sounding line}}, from {{der|ca|fro|sonde||sounding line
 -------- end text --------
 Page 2232 sonden: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -36142,6 +36640,9 @@ Page 2232 sonden: -------- begin text --------
 
 -------- end text --------
 Page 2233 sondes: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both etyms -->
 
 ===Etymology 1===
 
@@ -36160,6 +36661,9 @@ Page 2233 sondes: -------- begin text --------
 -------- end text --------
 Page 2234 sondi: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -36168,12 +36672,18 @@ Page 2234 sondi: -------- begin text --------
 -------- end text --------
 Page 2235 sondin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|sondar}}
 -------- end text --------
 Page 2236 sondis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -36183,6 +36693,9 @@ Page 2236 sondis: -------- begin text --------
 -------- end text --------
 Page 2237 sondo: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -36190,6 +36703,9 @@ Page 2237 sondo: -------- begin text --------
 
 -------- end text --------
 Page 2238 sonen: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -36199,6 +36715,9 @@ Page 2238 sonen: -------- begin text --------
 -------- end text --------
 Page 2239 sones: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -36206,6 +36725,9 @@ Page 2239 sones: -------- begin text --------
 
 -------- end text --------
 Page 2240 soni: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -36215,6 +36737,9 @@ Page 2240 soni: -------- begin text --------
 -------- end text --------
 Page 2241 sonin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -36223,6 +36748,9 @@ Page 2241 sonin: -------- begin text --------
 -------- end text --------
 Page 2242 sonis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -36230,6 +36758,9 @@ Page 2242 sonis: -------- begin text --------
 
 -------- end text --------
 Page 2243 sono: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -36243,7 +36774,7 @@ Page 2244 sonso: -------- begin text --------
 Of expressive origin.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt and DCVB say /o/ for Central Catalan -->
 
 ===Adjective===
 {{ca-adj}}
@@ -36266,7 +36797,7 @@ Of expressive origin.
 Page 2245 sopa: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ó}}<!-- both etyms -->
 
 ===Etymology 1===
 {{inh+|ca|LL.|suppa|t=sopped bread}}, from {{der|ca|gem-pro|*supô}}.
@@ -36295,6 +36826,9 @@ Page 2245 sopa: -------- begin text --------
 -------- end text --------
 Page 2246 sopen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -36303,13 +36837,28 @@ Page 2246 sopen: -------- begin text --------
 -------- end text --------
 Page 2247 sopes: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both etyms -->
+
+===Etymology 1===
+
+====Noun====
+{{head|ca|noun form|g=f-p}}
+
+# {{plural of|ca|sopa}}
+
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|sopar}}
 
 -------- end text --------
 Page 2248 sopi: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -36319,6 +36868,9 @@ Page 2248 sopi: -------- begin text --------
 -------- end text --------
 Page 2249 sopin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -36326,6 +36878,9 @@ Page 2249 sopin: -------- begin text --------
 
 -------- end text --------
 Page 2250 sopis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -36335,6 +36890,9 @@ Page 2250 sopis: -------- begin text --------
 -------- end text --------
 Page 2251 sopo: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -36342,6 +36900,9 @@ Page 2251 sopo: -------- begin text --------
 
 -------- end text --------
 Page 2252 soques: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -36351,6 +36912,9 @@ Page 2252 soques: -------- begin text --------
 -------- end text --------
 Page 2253 sorda: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Adjective===
 {{head|ca|adjective form|g=f-s}}
 
@@ -36359,6 +36923,9 @@ Page 2253 sorda: -------- begin text --------
 -------- end text --------
 Page 2254 sordes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Adjective===
 {{head|ca|adjective form}}
 
@@ -36366,6 +36933,12 @@ Page 2254 sordes: -------- begin text --------
 
 -------- end text --------
 Page 2255 sorgo: -------- begin text --------
+
+===Etymology===
+{{bor+|ca|it,es|sorgo}}.
+
+===Pronunciation===
+* {{ca-IPA|ô}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -36388,7 +36961,7 @@ Page 2256 sorna: -------- begin text --------
 From {{m|ca|sorn}}.
 
 ===Pronunciation===
-* {{ca-IPA|ô}}
+* {{ca-IPA|ó}}<!-- FIXME: cawikt says ô -->
 
 ===Adjective===
 {{head|ca|adjective form}}
@@ -36421,7 +36994,7 @@ From {{m|ca|sorn}}.
 Page 2257 sorra: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ó}}<!-- all three etyms -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-sorra.wav|Audio}}
 
 ===Etymology 1===
@@ -36468,6 +37041,9 @@ Page 2257 sorra: -------- begin text --------
 -------- end text --------
 Page 2258 sorren: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -36475,14 +37051,24 @@ Page 2258 sorren: -------- begin text --------
 -------- end text --------
 Page 2259 sorres: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- all three etyms -->
+
 ===Etymology 1===
 
 ====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|sorra}}
+# {{plural of|ca|sorra|t=sand}}
 
 ===Etymology 2===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|sorra|t=belly {{q|of tuna}}}}
+
+===Etymology 3===
 
 ====Verb====
 {{head|ca|verb form}}
@@ -36490,6 +37076,9 @@ Page 2259 sorres: -------- begin text --------
 # {{ca-verb form of|sorrar}}
 -------- end text --------
 Page 2260 sorri: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -36499,6 +37088,9 @@ Page 2260 sorri: -------- begin text --------
 -------- end text --------
 Page 2261 sorrin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -36507,6 +37099,9 @@ Page 2261 sorrin: -------- begin text --------
 -------- end text --------
 Page 2262 sorris: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -36514,6 +37109,9 @@ Page 2262 sorris: -------- begin text --------
 
 -------- end text --------
 Page 2263 sorro: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -36526,7 +37124,7 @@ Page 2264 sosa: -------- begin text --------
 {{bor+|ca|ar|سُوَيْدَاء}} respectively a dialectal variant of it.
 
 ===Pronunciation===
-* {{ca-IPA|ô}}
+* {{ca-IPA|ó}}<!-- FIXME: cawikt and DCVB say ô -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -36550,22 +37148,29 @@ Page 2264 sosa: -------- begin text --------
 -------- end text --------
 Page 2265 sostre: -------- begin text --------
 
-===Etymology===
-{{deverbal|ca|sostrar}}.
-
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|cen=ô|nw=ó|val=ó|bal=ó}}<!-- both etyms -->
 * {{audio|ca|LL-Q7026 (cat)-Toniher-sostre.wav|Audio (Catalonia)}}
 
-===Noun===
+===Etymology 1===
+{{deverbal|ca|sostrar}}.
+
+====Noun====
 {{ca-noun|m}}
 
 # [[ceiling]]
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|persona sense sostre}}
 * {{l|ca|sensesostre}}
 * {{l|ca|sostremort}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|sostrar}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -36575,10 +37180,22 @@ Page 2265 sostre: -------- begin text --------
 -------- end text --------
 Page 2266 sostres: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+* {{ca-IPA|cen=ô|nw=ó|val=ó|bal=ó}}<!-- both etyms -->
+
+===Etymology 1===
+
+====Noun====
 {{head|ca|noun form}}
 
 # {{plural of|ca|sostre}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|sostrar}}
 -------- end text --------
 Page 2267 sota: -------- begin text --------
 
@@ -36612,12 +37229,18 @@ Page 2267 sota: -------- begin text --------
 -------- end text --------
 Page 2268 sotgen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- FIXME: A guess for Central Catalan; verify -->
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|sotjar}}
 -------- end text --------
 Page 2269 sotges: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- FIXME: A guess for Central Catalan; verify -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -36626,12 +37249,18 @@ Page 2269 sotges: -------- begin text --------
 -------- end text --------
 Page 2270 sotgi: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- FIXME: A guess for Central Catalan; verify -->
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|sotjar}}
 -------- end text --------
 Page 2271 sotgin: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- FIXME: A guess for Central Catalan; verify -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -36640,12 +37269,18 @@ Page 2271 sotgin: -------- begin text --------
 -------- end text --------
 Page 2272 sotgis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- FIXME: A guess for Central Catalan; verify -->
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|sotjar}}
 -------- end text --------
 Page 2273 sotja: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- FIXME: A guess for Central Catalan; verify -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -36654,6 +37289,9 @@ Page 2273 sotja: -------- begin text --------
 -------- end text --------
 Page 2274 sotjo: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- FIXME: A guess for Central Catalan; verify -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -36661,10 +37299,13 @@ Page 2274 sotjo: -------- begin text --------
 -------- end text --------
 Page 2275 sègle: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ë}}
+
 ===Noun===
 {{ca-noun|m}}
 
-# {{lb|ca|dialectal}} {{alt form|ca|sègol}}
+# {{lb|ca|dialectal}} {{superseded spelling of|ca|segle|t=rye}}
 
 ===Further reading===
 * {{R:ca:GDLC}}
