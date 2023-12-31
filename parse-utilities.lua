@@ -52,11 +52,13 @@ bracket-bounded text in the even-numbered segments. Hence, such lists can be pas
 ]=]
 
 
--- Parse a string containing matched instances of parens, brackets or the like. Return a list of strings, alternating
--- between textual runs not containing the open/close characters and runs beginning and ending with the open/close
--- characters. For example,
---
--- parse_balanced_segment_run("foo(x(1)), bar(2)", "(", ")") = {"foo", "(x(1))", ", bar", "(2)", ""}.
+--[==[
+Parse a string containing matched instances of parens, brackets or the like. Return a list of strings, alternating
+between textual runs not containing the open/close characters and runs beginning and ending with the open/close
+characters. For example,
+
+{parse_balanced_segment_run("foo(x(1)), bar(2)", "(", ")") = {"foo", "(x(1))", ", bar", "(2)", ""}}
+]==]
 function export.parse_balanced_segment_run(segment_run, open, close)
 	return m_string_utilities.capturing_split(segment_run, "(%b" .. open .. close .. ")")
 end
@@ -98,21 +100,21 @@ end
 ]=]
 
 
---[=[
+--[==[
 Like parse_balanced_segment_run() but accepts multiple sets of delimiters. For example,
 
-parse_multi_delimiter_balanced_segment_run("foo[bar(baz[bat])], quux<glorp>", {{"[", "]"}, {"(", ")"}, {"<", ">"}}) =
-	{"foo", "[bar(baz[bat])]", ", quux", "<glorp>", ""}.
+{parse_multi_delimiter_balanced_segment_run("foo[bar(baz[bat])], quux<glorp>", {{"[", "]"}, {"(", ")"}, {"<", ">"}}) =
+	{"foo", "[bar(baz[bat])]", ", quux", "<glorp>", ""}}.
 
 Each element in the list of delimiter pairs is a string specifying an equivalence class of possible delimiter
-characters. You can use this, for example, to allow either "[" or "&#91;" to be treated equivalently, with either one
-closed by either "]" or "&#93;". To do this, first replace "&#91;" and "&#93;" with single Unicode characters such as
-U+FFF0 and U+FFF1, and then specify a two-character string containing "[" and U+FFF0 as the opening delimiter, and a
-two-character string containing "]" and U+FFF1 as the corresponding closing delimiter.
+characters. You can use this, for example, to allow either "[" or "&amp;#91;" to be treated equivalently, with either
+one closed by either "]" or "&amp;#93;". To do this, first replace "&amp;#91;" and "&amp;#93;" with single Unicode
+characters such as U+FFF0 and U+FFF1, and then specify a two-character string containing "[" and U+FFF0 as the opening
+delimiter, and a two-character string containing "]" and U+FFF1 as the corresponding closing delimiter.
 
 If `no_error_on_unmatched` is given and an error is found during parsing, a string is returned containing the error
 message instead of throwing an error.
-]=]
+]==]
 function export.parse_multi_delimiter_balanced_segment_run(segment_run, delimiter_pairs, no_error_on_unmatched)
 	local escaped_delimiter_pairs = {}
 	local open_to_close_map = {}
@@ -191,19 +193,19 @@ function export.parse_multi_delimiter_balanced_segment_run(segment_run, delimite
 end
 
 
---[=[
+--[==[
 Split a list of alternating textual runs of the format returned by `parse_balanced_segment_run` on `splitchar`. This
 only splits the odd-numbered textual runs (the portions between the balanced open/close characters).  The return value
 is a list of lists, where each list contains an odd number of elements, where the even-numbered elements of the sublists
 are the original balanced textual run portions. For example, if we do
 
-parse_balanced_segment_run("foo<M.proper noun> bar<F>", "<", ">") =
-  {"foo", "<M.proper noun>", " bar", "<F>", ""}
+{parse_balanced_segment_run("foo<M.proper noun> bar<F>", "<", ">") =
+  {"foo", "<M.proper noun>", " bar", "<F>", ""}}
 
 then
 
-split_alternating_runs({"foo", "<M.proper noun>", " bar", "<F>", ""}, " ") =
-  {{"foo", "<M.proper noun>", ""}, {"bar", "<F>", ""}}
+{split_alternating_runs({"foo", "<M.proper noun>", " bar", "<F>", ""}, " ") =
+  {{"foo", "<M.proper noun>", ""}, {"bar", "<F>", ""}}}
 
 Note that we did not touch the text "<M.proper noun>" even though it contains a space in it, because it is an
 even-numbered element of the input list. This is intentional and allows for embedded separators inside of
@@ -213,28 +215,28 @@ to split_alternating_runs().
 
 If `preserve_splitchar` is passed in, the split character is included in the output, as follows:
 
-split_alternating_runs({"foo", "<M.proper noun>", " bar", "<F>", ""}, " ", true) =
-  {{"foo", "<M.proper noun>", ""}, {" "}, {"bar", "<F>", ""}}
+{split_alternating_runs({"foo", "<M.proper noun>", " bar", "<F>", ""}, " ", true) =
+  {{"foo", "<M.proper noun>", ""}, {" "}, {"bar", "<F>", ""}}}
 
 Consider what happens if the original string has multiple spaces between brackets, and multiple sets of brackets
 without spaces between them.
 
-parse_balanced_segment_run("foo[dated][low colloquial] baz-bat quux xyzzy[archaic]", "[", "]") =
-  {"foo", "[dated]", "", "[low colloquial]", " baz-bat quux xyzzy", "[archaic]", ""}
+{parse_balanced_segment_run("foo[dated][low colloquial] baz-bat quux xyzzy[archaic]", "[", "]") =
+  {"foo", "[dated]", "", "[low colloquial]", " baz-bat quux xyzzy", "[archaic]", ""}}
 
 then
 
-split_alternating_runs({"foo", "[dated]", "", "[low colloquial]", " baz-bat quux xyzzy", "[archaic]", ""}, "[ %-]") =
-  {{"foo", "[dated]", "", "[low colloquial]", ""}, {"baz"}, {"bat"}, {"quux"}, {"xyzzy", "[archaic]", ""}}
+{split_alternating_runs({"foo", "[dated]", "", "[low colloquial]", " baz-bat quux xyzzy", "[archaic]", ""}, "[ %-]") =
+  {{"foo", "[dated]", "", "[low colloquial]", ""}, {"baz"}, {"bat"}, {"quux"}, {"xyzzy", "[archaic]", ""}}}
 
 If `preserve_splitchar` is passed in, the split character is included in the output,
 as follows:
 
-split_alternating_runs({"foo", "[dated]", "", "[low colloquial]", " baz bat quux xyzzy", "[archaic]", ""}, "[ %-]", true) =
-  {{"foo", "[dated]", "", "[low colloquial]", ""}, {" "}, {"baz"}, {"-"}, {"bat"}, {" "}, {"quux"}, {" "}, {"xyzzy", "[archaic]", ""}}
+{split_alternating_runs({"foo", "[dated]", "", "[low colloquial]", " baz bat quux xyzzy", "[archaic]", ""}, "[ %-]", true) =
+  {{"foo", "[dated]", "", "[low colloquial]", ""}, {" "}, {"baz"}, {"-"}, {"bat"}, {" "}, {"quux"}, {" "}, {"xyzzy", "[archaic]", ""}}}
 
 As can be seen, the even-numbered elements in the outer list are one-element lists consisting of the separator text.
-]=]
+]==]
 function export.split_alternating_runs(segment_runs, splitchar, preserve_splitchar)
 	local grouped_runs = {}
 	local run = {}
@@ -264,12 +266,14 @@ function export.strip_spaces(text)
 end
 
 
--- Apply an arbitrary function `frob` to the "raw-text" segments in a split run set (the output of
--- split_alternating_runs()). We leave alone stuff within balanced delimiters (footnotes, inflection specs and the
--- like), as well as splitchars themselves if present. `preserve_splitchar` indicates whether splitchars are present
--- in the split run set. `frob` is a function of one argument (the string to frob) and should return one argument (the
--- frobbed string). We operate by only frobbing odd-numbered segments, and only in odd-numbered runs if
--- preserve_splitchar is given.
+--[==[
+Apply an arbitrary function `frob` to the "raw-text" segments in a split run set (the output of
+split_alternating_runs()). We leave alone stuff within balanced delimiters (footnotes, inflection specs and the
+like), as well as splitchars themselves if present. `preserve_splitchar` indicates whether splitchars are present
+in the split run set. `frob` is a function of one argument (the string to frob) and should return one argument (the
+frobbed string). We operate by only frobbing odd-numbered segments, and only in odd-numbered runs if
+preserve_splitchar is given.
+]==]
 function export.frob_raw_text_alternating_runs(split_run_set, frob, preserve_splitchar)
 	for i, run in ipairs(split_run_set) do
 		if not preserve_splitchar or i % 2 == 1 then
@@ -283,9 +287,11 @@ function export.frob_raw_text_alternating_runs(split_run_set, frob, preserve_spl
 end
 
 
--- Like split_alternating_runs() but applies an arbitrary function `frob` to "raw-text" segments in the result (i.e.
--- not stuff within balanced delimiters such as footnotes and inflection specs, and not splitchars if present). `frob`
--- is a function of one argument (the string to frob) and should return one argument (the frobbed string).
+--[==[
+Like split_alternating_runs() but applies an arbitrary function `frob` to "raw-text" segments in the result (i.e.
+not stuff within balanced delimiters such as footnotes and inflection specs, and not splitchars if present). `frob`
+is a function of one argument (the string to frob) and should return one argument (the frobbed string).
+]==]
 function export.split_alternating_runs_and_frob_raw_text(run, splitchar, frob, preserve_splitchar)
 	local split_runs = export.split_alternating_runs(run, splitchar, preserve_splitchar)
 	export.frob_raw_text_alternating_runs(split_runs, frob, preserve_splitchar)
@@ -293,13 +299,15 @@ function export.split_alternating_runs_and_frob_raw_text(run, splitchar, frob, p
 end
 
 
--- Split the non-modifier parts of an alternating run (after parse_balanced_segment_run() is called) on a Lua pattern,
--- but not on certain sequences involving characters in that pattern (e.g. comma+whitespace). `splitchar` is the pattern
--- to split on; `preserve_splitchar` indicates whether to preserve the delimiter and is the same as in
--- split_alternating_runs(). `escape_fun` is called beforehand on each run of raw text and should return two values:
--- the escaped run and whether unescaping is needed. If any call to `escape_fun` indicates that unescaping is needed,
--- `unescape_fun` will be called on each run of raw text after splitting on `splitchar`. The return value of this
--- function is as in split_alternating_runs().
+--[==[
+Split the non-modifier parts of an alternating run (after parse_balanced_segment_run() is called) on a Lua pattern,
+but not on certain sequences involving characters in that pattern (e.g. comma+whitespace). `splitchar` is the pattern
+to split on; `preserve_splitchar` indicates whether to preserve the delimiter and is the same as in
+split_alternating_runs(). `escape_fun` is called beforehand on each run of raw text and should return two values:
+the escaped run and whether unescaping is needed. If any call to `escape_fun` indicates that unescaping is needed,
+`unescape_fun` will be called on each run of raw text after splitting on `splitchar`. The return value of this
+function is as in split_alternating_runs().
+]==]
 function export.split_alternating_runs_escaping(run, splitchar, preserve_splitchar, escape_fun, unescape_fun)
 	-- First replace comma with a temporary character in comma+whitespace sequences.
 	local need_unescape = false
@@ -319,7 +327,9 @@ function export.split_alternating_runs_escaping(run, splitchar, preserve_splitch
 end
 
 
--- Replace comma with a temporary char in comma + whitespace.
+--[==[
+Replace comma with a temporary char in comma + whitespace.
+]==]
 function export.escape_comma_whitespace(run, tempcomma)
 	tempcomma = tempcomma or u(0xFFF0)
 
@@ -332,7 +342,9 @@ function export.escape_comma_whitespace(run, tempcomma)
 end
 
 
--- Undo the replacement of comma with a temporary char.
+--[==[
+Undo the replacement of comma with a temporary char.
+]==]
 function export.unescape_comma_whitespace(run, tempcomma)
 	tempcomma = tempcomma or u(0xFFF0)
 
@@ -341,8 +353,10 @@ function export.unescape_comma_whitespace(run, tempcomma)
 end
 
 
--- Split the non-modifier parts of an alternating run (after parse_balanced_segment_run() is called) on comma, but not
--- on comma+whitespace. See `split_on_comma()` above for more information and the meaning of `tempcomma`.
+--[==[
+Split the non-modifier parts of an alternating run (after parse_balanced_segment_run() is called) on comma, but not
+on comma+whitespace. See `split_on_comma()` above for more information and the meaning of `tempcomma`.
+]==]
 function export.split_alternating_runs_on_comma(run, tempcomma)
 	tempcomma = tempcomma or u(0xFFF0)
 
@@ -360,12 +374,14 @@ function export.split_alternating_runs_on_comma(run, tempcomma)
 end
 
 
--- Split text on a Lua pattern, but not on certain sequences involving characters in that pattern (e.g.
--- comma+whitespace). `splitchar` is the pattern to split on; `preserve_splitchar` indicates whether to preserve the
--- delimiter between split segments. `escape_fun` is called beforehand on the text and should return two values: the
--- escaped run and whether unescaping is needed. If the call to `escape_fun` indicates that unescaping is needed,
--- `unescape_fun` will be called on each run of text after splitting on `splitchar`. The return value of this a list
--- of runs, interspersed with delimiters if `preserve_splitchar` is specified.
+--[==[
+Split text on a Lua pattern, but not on certain sequences involving characters in that pattern (e.g.
+comma+whitespace). `splitchar` is the pattern to split on; `preserve_splitchar` indicates whether to preserve the
+delimiter between split segments. `escape_fun` is called beforehand on the text and should return two values: the
+escaped run and whether unescaping is needed. If the call to `escape_fun` indicates that unescaping is needed,
+`unescape_fun` will be called on each run of text after splitting on `splitchar`. The return value of this a list
+of runs, interspersed with delimiters if `preserve_splitchar` is specified.
+]==]
 function export.split_escaping(text, splitchar, preserve_splitchar, escape_fun, unescape_fun)
 	-- First escape sequences we don't want to count for splitting.
 	local need_unescape
@@ -383,10 +399,12 @@ function export.split_escaping(text, splitchar, preserve_splitchar, escape_fun, 
 end
 
 
--- Split text on comma, but not on comma+whitespace. This is similar to `mw.text.split(text, ",")` but will not split
--- on commas directly followed by whitespace, to handle embedded commas in terms (which are almost always followed by
--- a space). `tempcomma` is the Unicode character to temporarily use when doing the splitting; normally U+FFF0, but
--- you can specify a different character if you use U+FFF0 for some internal purpose.
+--[==[
+Split text on comma, but not on comma+whitespace. This is similar to `mw.text.split(text, ",")` but will not split
+on commas directly followed by whitespace, to handle embedded commas in terms (which are almost always followed by
+a space). `tempcomma` is the Unicode character to temporarily use when doing the splitting; normally U+FFF0, but
+you can specify a different character if you use U+FFF0 for some internal purpose.
+]==]
 function export.split_on_comma(text, tempcomma)
 	tempcomma = tempcomma or u(0xFFF0)
 
@@ -404,11 +422,13 @@ function export.split_on_comma(text, tempcomma)
 end
 
 
--- Ensure that Wikicode (bracketed links, HTML, bold/italics, etc.) displays literally in error messages by inserting
--- a Unicode word-joiner symbol after all characters that may trigger Wikicode interpr. Replacing with equivalent
--- HTML escapes doesn't work because they are displayed literally. I could not get this to work using
--- <nowiki>...</nowiki> (those tags display literally) and using using {{#tag:nowiki|...}} (same thing).
--- FIXME: This is a massive hack; there must be a better way.
+--[==[
+Ensure that Wikicode (bracketed links, HTML, bold/italics, etc.) displays literally in error messages by inserting
+a Unicode word-joiner symbol after all characters that may trigger Wikicode interpr. Replacing with equivalent
+HTML escapes doesn't work because they are displayed literally. I could not get this to work using
+<nowiki>...</nowiki> (those tags display literally) and using using {{#tag:nowiki|...}} (same thing).
+FIXME: This is a massive hack; there must be a better way.
+]==]
 function export.escape_wikicode(term)
 	term = term:gsub("([%[<'])", "%1" .. u(0x2060))
 	return term
@@ -443,7 +463,7 @@ end
 
 
 --[==[
-Parse a term that may have a language code preceding it (e.g. {la:minūtia} or @{grc:[[σκῶρ|σκατός]]}). Return
+Parse a term that may have a language code preceding it (e.g. {la:minūtia} or {grc:[[σκῶρ|σκατός]]}). Return
 two arguments, the term minus the language code and the language object corresponding to the language code.
 Etymology-only languages are allowed. This function also correctly handles Wikipedia prefixes (e.g. 'w:Abatemarco'
 or 'w:it:Colle Val d'Elsa' or 'lw:ru:Филарет') and Wikisource prefixes (e.g. 's:Twelve O'Clock' or
@@ -491,10 +511,29 @@ function export.parse_term_with_lang(term, parse_err_or_paramname, return_parts)
 		return ("[[%s|%s]]"):format(prefixed_link, display or link), lang, prefixed_link, display
 	end
 
-	-- Wiktionary language codes have at least two lowercase letters followed possibly by lowercase letters and/or
-	-- hyphens (there are more restrictions but this is close enough). Also check for nonstandard Latin etymology
-	-- language codes (e.g. VL. or LL.). (There used to be more nonstandard codes but they have all been eliminated.)
-	termlang, actual_term = term:match("^([a-z][a-z][a-z-]*):([^ ].*)$")
+	-- Wiktionary language codes are in one of the following formats, where 'x' is a lowercase letter and 'X' an uppercase
+	-- letter:
+	-- xx
+	-- xxx
+	-- xxx-xxx
+	-- xxx-xxx-xxx
+	-- xx-xxx (for etymology-only languages)
+	-- xx-xxx-xxx (maybe? for etymology-only languages)
+	-- xx-XX (for etymology-only languages, where XX is a country code, e.g. en-US)
+	-- xxx-XX (for etymology-only languages, where XX is a country code)
+	--
+	-- We check for these formats as well as nonstandard Latin etymology language codes (e.g. VL. or LL.). (There used to
+	-- be more nonstandard codes but they have all been eliminated.)
+	termlang, actual_term = term:match("^([a-z][a-z][a-z]?):([^ ].*)$")
+	if not termlang then
+		termlang, actual_term = term:match("^([a-z][a-z][a-z]?%-[A-Z][A-Z]):([^ ].*)$")
+	end
+	if not termlang then
+		termlang, actual_term = term:match("^([a-z][a-z][a-z]?%-[a-z][a-z][a-z]):([^ ].*)$")
+	end
+	if not termlang then
+		termlang, actual_term = term:match("^([a-z][a-z][a-z]?%-[a-z][a-z][a-z]%-[a-z][a-z][a-z]):([^ ].*)$")
+	end
 	if not termlang then
 		-- Special hack for Latin variants, which can have nonstandard etym codes, e.g. VL., LL.
 		termlang, actual_term = term:match("^([A-Z]L%.):([^ ].*)$")
@@ -510,7 +549,7 @@ end
 
 --[==[
 Parse a term that may have inline modifiers attached (e.g. {rifiuti<q:plural-only>} or
-@{rinfusa<t:bulk cargo><lit:resupplying><qq:more common in the plural {{m|it|rinfuse}}>}).
+{rinfusa<t:bulk cargo><lit:resupplying><qq:more common in the plural {{m|it|rinfuse}}>}).
 * `arg` is the term to parse.
 * `props` is an object holding further properties controlling how to parse the term (only `param_mods` and
   `generate_obj` are required):
