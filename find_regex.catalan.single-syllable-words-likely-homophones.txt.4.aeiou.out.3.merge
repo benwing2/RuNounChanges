@@ -2933,7 +2933,7 @@ Page 184 bova: -------- begin text --------
 Page 185 boxa: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|bóksa}}
+* {{ca-IPA|[ó,ks]}}<!-- both etyms -->
 
 ===Etymology 1===
 {{deverbal|ca|boxar}}.
@@ -2973,7 +2973,7 @@ Page 185 boxa: -------- begin text --------
 Page 186 boxen: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|bóksen}}
+* {{ca-IPA|[ó,ks]}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -2984,7 +2984,7 @@ Page 186 boxen: -------- begin text --------
 Page 187 boxes: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|bókses}}
+* {{ca-IPA|[ó,ks]}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -2995,7 +2995,7 @@ Page 187 boxes: -------- begin text --------
 Page 188 boxi: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|bóksi}}
+* {{ca-IPA|[ó,ks]}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -3006,7 +3006,7 @@ Page 188 boxi: -------- begin text --------
 Page 189 boxin: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|bóksin}}
+* {{ca-IPA|[ó,ks]}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -3016,7 +3016,7 @@ Page 189 boxin: -------- begin text --------
 Page 190 boxis: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|bóksis}}
+* {{ca-IPA|[ó,ks]}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -3027,7 +3027,7 @@ Page 190 boxis: -------- begin text --------
 Page 191 boxo: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|bókso}}
+* {{ca-IPA|[ó,ks]}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -5247,7 +5247,7 @@ Page 332 cloguis: -------- begin text --------
 Page 333 clona: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt says /ɔ/ for everywhere but DNV says /o/. I'm guessing ô then. -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -5258,7 +5258,7 @@ Page 333 clona: -------- begin text --------
 Page 334 clonen: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt says /ɔ/ for everywhere but DNV says /o/. I'm guessing ô then. -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -5269,7 +5269,7 @@ Page 334 clonen: -------- begin text --------
 Page 335 clones: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt says /ɔ/ for everywhere but DNV says /o/. I'm guessing ô then. -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -5280,7 +5280,7 @@ Page 335 clones: -------- begin text --------
 Page 336 cloni: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt says /ɔ/ for everywhere but DNV says /o/. I'm guessing ô then. -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -5291,7 +5291,7 @@ Page 336 cloni: -------- begin text --------
 Page 337 clonin: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt says /ɔ/ for everywhere but DNV says /o/. I'm guessing ô then. -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -5301,7 +5301,7 @@ Page 337 clonin: -------- begin text --------
 Page 338 clonis: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt says /ɔ/ for everywhere but DNV says /o/. I'm guessing ô then. -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -5311,7 +5311,7 @@ Page 338 clonis: -------- begin text --------
 Page 339 clono: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt says /ɔ/ for everywhere but DNV says /o/. I'm guessing ô then. -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -35330,7 +35330,7 @@ Page 2150 sexo: -------- begin text --------
 Page 2151 sexta: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|sëksta}}<!-- both etyms -->
+* {{ca-IPA|[ë,ks]}}<!-- both etyms -->
 
 ===Etymology 1===
 {{bor+|ca|la|sexta}}, feminine singular of {{m|la|sextus}}.
@@ -35360,7 +35360,7 @@ Page 2151 sexta: -------- begin text --------
 Page 2152 sextes: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|sëkstes}}
+* {{ca-IPA|[ë,ks]}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -37336,6 +37336,9 @@ Page 2276 tebi: -------- begin text --------
 -------- end text --------
 Page 2277 tebis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|è}}
+
 ===Adjective===
 {{head|ca|adjective form}}
 
@@ -37343,13 +37346,38 @@ Page 2277 tebis: -------- begin text --------
 -------- end text --------
 Page 2278 teca: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|é}}
+===Etymology 1===
+Probably deverbal from {{m|ca|encatacar|encatacar-se|to eat}}, in turn a cross between {{m|ca|atacar|atacar-se|to attack}}, {{m|ca|encarcanyar|encarcanyar-se}}, and {{der|ca|roa-oca|entecar|entecar-se|to be contagious}}, alteration of {{m|roa-oca||*eticar-se}}, from {{m|roa-oca|ètic||phthisic, tuberculosis}}.<ref>{{R:ca:GDLC}}.</ref>
 
-===Noun===
+====Pronunciation====
+* {{ca-IPA|ë}}
+
+====Noun====
 {{ca-noun|f}}
 
 # {{lb|ca|colloquial}} [[food]]
+
+===Etymology 2===
+Probably {{bor+|ca|es|teca|nocap=1}}; in turn from {{der|ca|pt|teca}}, from {{der|ca|ml|തേക്ക്}}}.
+
+====Noun====
+{{ca-noun|f}}
+
+# {{lb|ca|botany}} [[teak]]
+
+===Etymology 3===
+{{bor+|ca|la|thēca||case, envelope, sheath}}, from {{der|ca|grc|θήκη}}.
+
+====Pronunciation====
+* {{ca-IPA|ë}}
+
+====Noun====
+{{ca-noun|f}}
+
+# {{lb|ca|biology}} [[theca]]
+
+===References===
+<references />
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -37381,6 +37409,9 @@ See {{cog|pt,es|tecla}}.
 -------- end text --------
 Page 2280 tecles: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -37393,7 +37424,7 @@ Page 2281 tela: -------- begin text --------
 {{inh+|ca|roa-oca|tela}}, from {{inh|ca|la|tēla}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|è}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -37418,6 +37449,9 @@ Page 2281 tela: -------- begin text --------
 
 -------- end text --------
 Page 2282 teles: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|è}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -37447,15 +37481,19 @@ Page 2283 tema: -------- begin text --------
 -------- end text --------
 Page 2284 temen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|témer}}
 
-[[temeñ]]
-
 -------- end text --------
 Page 2285 temes: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -37465,6 +37503,9 @@ Page 2285 temes: -------- begin text --------
 -------- end text --------
 Page 2286 temi: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -37472,6 +37513,9 @@ Page 2286 temi: -------- begin text --------
 
 -------- end text --------
 Page 2287 temin: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37481,6 +37525,9 @@ Page 2287 temin: -------- begin text --------
 -------- end text --------
 Page 2288 temis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -37488,6 +37535,9 @@ Page 2288 temis: -------- begin text --------
 
 -------- end text --------
 Page 2289 temo: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37539,13 +37589,28 @@ From {{der|ca|la|templum}}.
 -------- end text --------
 Page 2292 temples: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+* {{ca-IPA|é}}<!-- both etyms -->
+
+===Etymology 1===
+
+====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|temple}}
+# {{plural of|ca|temple|t=temple {{q|building}}}}
+
+===Etymology 2===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|templa|t=temple {{q|anatomy}}}}
 
 -------- end text --------
 Page 2293 tempo: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Etymology===
 {{bor+|ca|it|tempo}}. {{doublet|ca|temps}}.
@@ -37558,6 +37623,9 @@ Page 2293 tempo: -------- begin text --------
 -------- end text --------
 Page 2294 tempra: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -37566,6 +37634,9 @@ Page 2294 tempra: -------- begin text --------
 -------- end text --------
 Page 2295 tempren: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -37573,12 +37644,18 @@ Page 2295 tempren: -------- begin text --------
 -------- end text --------
 Page 2296 tempres: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|temprar}}
 -------- end text --------
 Page 2297 tempri: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37588,6 +37665,9 @@ Page 2297 tempri: -------- begin text --------
 -------- end text --------
 Page 2298 temprin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -37596,12 +37676,18 @@ Page 2298 temprin: -------- begin text --------
 -------- end text --------
 Page 2299 tempris: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|temprar}}
 -------- end text --------
 Page 2300 tempro: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37664,18 +37750,26 @@ Page 2307 tempto: -------- begin text --------
 -------- end text --------
 Page 2308 tenca: -------- begin text --------
 
-===Etymology===
+===Pronunciation===
+* {{ca-IPA|ë}}<!-- both etyms -->
+
+===Etymology 1===
 From {{der|ca|la|tinca}}.
 
-===Pronunciation===
-* {{ca-IPA|ê}}
-
-===Noun===
+====Noun====
 {{ca-noun|f}}
 
 # [[tench]] {{gloss|''[[Tinca tinca]]'', a species of freshwater game fish}}
 
+===Etymology 2===
+Probably alteration of {{m|ca|penca}}.
+
+# [[slice]] {{q|e.g. of bacon}}
+# [[cork]] [[board]]
+
 ===Further reading===
+* {{R:ca:GDLC}}
+* {{R:ca:DCVB}}
 * {{R:ca:IEC2}}
 
 {{C|ca|Cyprinids}}
@@ -37705,6 +37799,9 @@ Page 2309 tenda: -------- begin text --------
 -------- end text --------
 Page 2310 tendes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -37714,7 +37811,7 @@ Page 2310 tendes: -------- begin text --------
 Page 2311 tendra: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ˈtɛn.dɾa}}
+* {{ca-IPA|è}}
 
 ===Adjective===
 {{head|ca|adjective form}}
@@ -37760,6 +37857,9 @@ Page 2312 tendre: -------- begin text --------
 -------- end text --------
 Page 2313 tendres: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|è}}
+
 ===Adjective===
 {{head|ca|adjective form|g=m|g2=f}}
 
@@ -37767,6 +37867,9 @@ Page 2313 tendres: -------- begin text --------
 
 -------- end text --------
 Page 2314 tenen: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37776,6 +37879,9 @@ Page 2314 tenen: -------- begin text --------
 
 -------- end text --------
 Page 2315 tenis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|è}}
 
 ===Noun===
 {{ca-noun|m|-}}
@@ -37809,12 +37915,27 @@ Page 2316 tennis: -------- begin text --------
 -------- end text --------
 Page 2317 tenques: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ë}}
+
+===Etymology 1===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|tenca|t=tench}}
+
+===Etymology 2===
+
 ===Noun===
 {{head|ca|noun form}}
 
-# {{plural of|ca|tenca}}
+# {{plural of|ca|tenca|t=slice {{q|of bacon, etc.}}}}
 -------- end text --------
 Page 2318 tensa: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ë}}
 
 ===Adjective===
 {{head|ca|adjective form}}
@@ -37824,6 +37945,9 @@ Page 2318 tensa: -------- begin text --------
 -------- end text --------
 Page 2319 tenses: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ë}}
+
 ===Adjective===
 {{head|ca|adjective form}}
 
@@ -37831,6 +37955,9 @@ Page 2319 tenses: -------- begin text --------
 
 -------- end text --------
 Page 2320 tensos: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ë}}
 
 ===Adjective===
 {{head|ca|adjective form}}
@@ -37840,10 +37967,22 @@ Page 2320 tensos: -------- begin text --------
 -------- end text --------
 Page 2321 teques: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+* {{ca-IPA|ë}}<!-- both etyms -->
+
+===Etymology 1===
+
+====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|teca}}
+# {{plural of|ca|teca|t=food}}
+
+===Etymology 2===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|teca|t=theca}}
 
 -------- end text --------
 Page 2322 terbi: -------- begin text --------
@@ -37851,7 +37990,7 @@ Page 2322 terbi: -------- begin text --------
 {{elements|ca|Tb|gadolini|Gd|disprosi|Dy}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|è}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-terbi.wav|Audio (Valencian)}}
 
 ===Noun===
@@ -37891,6 +38030,9 @@ Page 2323 terme: -------- begin text --------
 
 -------- end text --------
 Page 2324 termes: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -37956,6 +38098,9 @@ Page 2325 terra: -------- begin text --------
 -------- end text --------
 Page 2326 terres: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|è}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -37963,6 +38108,9 @@ Page 2326 terres: -------- begin text --------
 
 -------- end text --------
 Page 2327 terços: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|è}}
 
 ===Adjective===
 {{head|ca|adjective form}}
@@ -37978,7 +38126,7 @@ Page 2327 terços: -------- begin text --------
 Page 2328 tesa: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ë}}<!-- all four etyms -->
 
 ===Etymology 1===
 From {{der|ca|la|tēnsa}}, feminine perfect passive participle of {{m|la|tendō||to stretch}}.
@@ -38019,6 +38167,9 @@ From {{der|ca|la|tēnsa}}, feminine perfect passive participle of {{m|la|tendō|
 -------- end text --------
 Page 2329 tesen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ë}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38026,6 +38177,9 @@ Page 2329 tesen: -------- begin text --------
 
 -------- end text --------
 Page 2330 teses: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ë}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38048,6 +38202,9 @@ Page 2331 tesi: -------- begin text --------
 
 ===Etymology 2===
 
+====Pronunciation====
+* {{ca-IPA|ë}}
+
 ====Verb====
 {{head|ca|verb form}}
 
@@ -38062,6 +38219,9 @@ Page 2331 tesi: -------- begin text --------
 -------- end text --------
 Page 2332 tesin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ë}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38071,12 +38231,18 @@ Page 2333 tesis: -------- begin text --------
 
 ===Etymology 1===
 
+====Pronunciation====
+* {{ca-IPA|è}}
+
 ====Noun====
 {{head|ca|noun form}}
 
 # {{plural of|ca|tesi}}
 
 ===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ë}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -38106,6 +38272,9 @@ Page 2335 tesles: -------- begin text --------
 -------- end text --------
 Page 2336 teso: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ë}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38113,6 +38282,9 @@ Page 2336 teso: -------- begin text --------
 
 -------- end text --------
 Page 2337 tesos: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ë}}
 
 ===Adjective===
 {{head|ca|adjective form}}
@@ -38122,13 +38294,13 @@ Page 2337 tesos: -------- begin text --------
 -------- end text --------
 Page 2338 testa: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{inh+|ca|la|testa||burned clay; baked earthenware}}.
 
-===Pronunciation===
+====Pronunciation====
 * {{ca-IPA|é}}
 
-===Noun===
+====Noun====
 {{ca-noun|f}}
 
 # [[head]]
@@ -38136,7 +38308,7 @@ Page 2338 testa: -------- begin text --------
 # [[end]] {{q|of a post, plank, barrel, etc.}}
 # {{lb|ca|botany}} {{l|en|testa}} {{q|the outer layer of a [[seed coat]]}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|testarrada}}
 * {{l|ca|testarral}}
 * {{l|ca|testarrut}}
@@ -38144,8 +38316,38 @@ Page 2338 testa: -------- begin text --------
 * {{l|ca|testera}}
 * {{l|ca|testó}}
 
-====Related terms====
+=====Related terms=====
 * {{l|ca|test}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Adjective====
+{{head|ca|adjective form}}
+
+# {{feminine singular of|ca|test|t=tense}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|ë}}
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|testar|t=to test}}
+
+===Etymology 4===
+
+====Pronunciation====
+* {{ca-IPA|é}}<!-- FIXME: A guess for Central Catalan based on etymology -->
+
+====Verb====
+{{head|ca|verb form}}
+
+# {{ca-verb form of|testar|t=to witness}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -38153,16 +38355,44 @@ Page 2338 testa: -------- begin text --------
 -------- end text --------
 Page 2339 testos: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|ë}}
+
+====Noun====
 {{head|ca|noun form}}
 
-# {{plural of|ca|test}}
+# {{plural of|ca|test|t=test}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|test|t=flowerpot; shard, fragment}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|é}}
+
+====Adjective====
+{{head|ca|adjective form}}
+
+# {{masculine plural of|ca|test|t=tense}}
 
 -------- end text --------
 Page 2340 teva: -------- begin text --------
 
 ===Alternative forms===
-* {{l|ca|teua}} (Valencia)
+* {{alt|ca|teua||Valencia}}
+
+===Pronunciation===
+* {{ca-IPA|é}}<!-- FIXME: /ɛ/ per GDLC (mistake?) -->
 
 ===Pronoun===
 {{head|ca|pronoun form}}
@@ -38173,7 +38403,10 @@ Page 2340 teva: -------- begin text --------
 Page 2341 teves: -------- begin text --------
 
 ===Alternative forms===
-* {{l|ca|teues}} (Valencia)
+* {{alt|ca|teues||Valencia}}
+
+===Pronunciation===
+* {{ca-IPA|é}}<!-- FIXME: /ɛ/ per GDLC (mistake?) -->
 
 ===Pronoun===
 {{head|ca|pronoun form}}
@@ -38184,10 +38417,10 @@ Page 2341 teves: -------- begin text --------
 Page 2342 textos: -------- begin text --------
 
 ===Alternative forms===
-* {{l|ca|texts}}
+* {{alt|ca|texts}}
 
 ===Pronunciation===
-* {{ca-IPA|téstos}}
+* {{ca-IPA|cen=tékstos|val=tèkstos}}<!-- FIXME: correct? -->
 
 ===Noun===
 {{head|ca|noun form}}
@@ -38198,10 +38431,10 @@ Page 2342 textos: -------- begin text --------
 Page 2343 theta: -------- begin text --------
 
 ===Etymology===
-From the {{der|ca|grc|θῆτα}}.
+{{bor+|ca|grc|θῆτα}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|ë}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -38218,6 +38451,9 @@ From the {{der|ca|grc|θῆτα}}.
 -------- end text --------
 Page 2344 thetes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ë}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -38229,7 +38465,7 @@ Page 2345 tmesi: -------- begin text --------
 from {{bor|ca|LL.|tmēsis}}, from {{der|ca|grc|τμῆσις||a cutting}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|dmèsi,mèsi}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -38246,7 +38482,7 @@ from {{bor|ca|LL.|tmēsis}}, from {{der|ca|grc|τμῆσις||a cutting}}.
 Page 2346 toca: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|tòca}}
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38257,7 +38493,7 @@ Page 2346 toca: -------- begin text --------
 Page 2347 toco: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|tóco}}
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38268,7 +38504,7 @@ Page 2347 toco: -------- begin text --------
 Page 2348 tofa: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|tofus}}.
+{{bor+|ca|la|tofus}}.
 
 ===Pronunciation===
 * {{ca-IPA|}}
@@ -38287,6 +38523,9 @@ From {{der|ca|la|tofus}}.
 
 -------- end text --------
 Page 2349 toldran: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38321,6 +38560,9 @@ Page 2350 toldre: -------- begin text --------
 -------- end text --------
 Page 2351 tolen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38329,6 +38571,9 @@ Page 2351 tolen: -------- begin text --------
 -------- end text --------
 Page 2352 tolgui: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38336,12 +38581,18 @@ Page 2352 tolgui: -------- begin text --------
 -------- end text --------
 Page 2353 tolguin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|toldre}}
 -------- end text --------
 Page 2354 tolguis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38358,6 +38609,9 @@ Page 2355 toma: -------- begin text --------
 -------- end text --------
 Page 2356 tomba: -------- begin text --------
 {{wikipedia|lang=ca}}
+
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both etyms -->
 
 ===Etymology 1===
 {{inh+|ca|roa-oca|tomba}}, inherited from {{inh|ca|LL.|tumba}}, from {{der|ca|grc|τύμβος}}.
@@ -38385,6 +38639,9 @@ Page 2356 tomba: -------- begin text --------
 -------- end text --------
 Page 2357 tomben: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38392,6 +38649,9 @@ Page 2357 tomben: -------- begin text --------
 
 -------- end text --------
 Page 2358 tombes: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both etyms -->
 
 ===Etymology 1===
 
@@ -38410,6 +38670,9 @@ Page 2358 tombes: -------- begin text --------
 -------- end text --------
 Page 2359 tombi: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38418,6 +38681,9 @@ Page 2359 tombi: -------- begin text --------
 -------- end text --------
 Page 2360 tombin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38425,12 +38691,18 @@ Page 2360 tombin: -------- begin text --------
 -------- end text --------
 Page 2361 tombis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|tombar}}
 -------- end text --------
 Page 2362 tombo: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38515,6 +38787,9 @@ Page 2369 tona: -------- begin text --------
 -------- end text --------
 Page 2370 tondran: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38527,7 +38802,7 @@ Page 2371 tondre: -------- begin text --------
 {{inh+|ca|VL.||*tondĕre}}, variant of {{der|ca|la|tondeō|tondēre}}. Cognate with {{cog|fr|tondre}}.
 
 ===Pronunciation===
-* {{ca-IPA|ô}}<!-- FIXME: cawikt says /o/ for everywhere but GDLC says /ɔ/ for Central -->
+* {{ca-IPA|ô}}<!-- FIXME: cawikt and DCVB say /o/ for Central; GDLC says /ɔ/, but it says [[tosa]] has /o/; something is off -->
 
 ===Verb===
 {{ca-verb|root=ô}}
@@ -38554,6 +38829,9 @@ Page 2371 tondre: -------- begin text --------
 -------- end text --------
 Page 2372 tonen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ô}}<!-- FIXME: cawikt and DCVB say /o/ for Central; GDLC says /ɔ/, but it says [[tosa]] has /o/; something is off -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38561,6 +38839,9 @@ Page 2372 tonen: -------- begin text --------
 
 -------- end text --------
 Page 2373 tones: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -38595,6 +38876,9 @@ Page 2374 tonga: -------- begin text --------
 -------- end text --------
 Page 2375 tongui: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ô}}<!-- FIXME: cawikt and DCVB say /o/ for Central; GDLC says /ɔ/, but it says [[tosa]] has /o/; something is off -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38602,12 +38886,18 @@ Page 2375 tongui: -------- begin text --------
 -------- end text --------
 Page 2376 tonguin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ô}}<!-- FIXME: cawikt and DCVB say /o/ for Central; GDLC says /ɔ/, but it says [[tosa]] has /o/; something is off -->
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|tondre}}
 -------- end text --------
 Page 2377 tonguis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ô}}<!-- FIXME: cawikt and DCVB say /o/ for Central; GDLC says /ɔ/, but it says [[tosa]] has /o/; something is off -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38625,10 +38915,11 @@ Page 2378 tonya: -------- begin text --------
 * {{ca-IPA|ó}}
 
 ===Noun===
-{{ca-noun|f}}
+{{ca-noun|f}} {{tlb|ca|Valencia}}
 
-# {{lb|ca|Valencia}} a type of sweet [[bun]] similar to a brioche
+# a type of sweet [[bun]] similar to a brioche
 #: {{syn|ca|mona|fogassa|pa socarrat}}
+# {{lb|ca|colloquial}} [[violent]] [[blow]]
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -38638,6 +38929,9 @@ Page 2378 tonya: -------- begin text --------
 -------- end text --------
 Page 2379 topa: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38645,6 +38939,9 @@ Page 2379 topa: -------- begin text --------
 
 -------- end text --------
 Page 2380 topen: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38654,6 +38951,9 @@ Page 2380 topen: -------- begin text --------
 -------- end text --------
 Page 2381 topes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38661,6 +38961,9 @@ Page 2381 topes: -------- begin text --------
 
 -------- end text --------
 Page 2382 topi: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38670,6 +38973,9 @@ Page 2382 topi: -------- begin text --------
 -------- end text --------
 Page 2383 topin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38678,12 +38984,18 @@ Page 2383 topin: -------- begin text --------
 -------- end text --------
 Page 2384 topis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|topar}}
 -------- end text --------
 Page 2385 topo: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38692,6 +39004,9 @@ Page 2385 topo: -------- begin text --------
 
 -------- end text --------
 Page 2386 toquen: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38702,7 +39017,7 @@ Page 2386 toquen: -------- begin text --------
 Page 2387 toques: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|tòques}}
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38713,7 +39028,7 @@ Page 2387 toques: -------- begin text --------
 Page 2388 toqui: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38723,6 +39038,9 @@ Page 2388 toqui: -------- begin text --------
 -------- end text --------
 Page 2389 toquin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38731,7 +39049,7 @@ Page 2389 toquin: -------- begin text --------
 Page 2390 toquis: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38745,7 +39063,7 @@ Page 2391 tora: -------- begin text --------
 {{bor+|ca|LL.|phthora}}, from {{der|ca|grc|φθορά||destruction}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ó}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -38766,10 +39084,10 @@ Page 2391 tora: -------- begin text --------
 Page 2392 torba: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ó}}<!-- all three etyms; FIXME: cawikt says /ɔ/ for Central Catalan and Balearic -->
 
 ===Etymology 1===
-{{bor+|ca|fr|tourbe}}, from {{der|ca|frk|*turba}}. Cognate with {{cognate|en|turf}}.
+{{bor+|ca|fr|tourbe}}, from {{der|ca|frk|*turba}}. Cognate with {{cog|en|turf}}.
 
 ====Noun====
 {{ca-noun|f}}
@@ -38789,6 +39107,8 @@ Page 2392 torba: -------- begin text --------
 # [[disturbance]]
 #: {{syn|ca|torbament}}
 
+===Etymology 3===
+
 ====Verb====
 {{head|ca|verb form}}
 
@@ -38800,6 +39120,9 @@ Page 2392 torba: -------- begin text --------
 -------- end text --------
 Page 2393 torben: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- FIXME: cawikt says /ɔ/ for Central Catalan and Balearic -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38807,12 +39130,27 @@ Page 2393 torben: -------- begin text --------
 -------- end text --------
 Page 2394 torbes: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- both etyms; FIXME: cawikt says /ɔ/ for Central Catalan and Balearic -->
+
+===Etymology 1===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|torba|t=disturbance}}
+
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|torbar}}
 -------- end text --------
 Page 2395 torbi: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- FIXME: cawikt says /ɔ/ for Central Catalan and Balearic -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38822,12 +39160,18 @@ Page 2395 torbi: -------- begin text --------
 -------- end text --------
 Page 2396 torbin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- FIXME: cawikt says /ɔ/ for Central Catalan and Balearic -->
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|torbar}}
 -------- end text --------
 Page 2397 torbis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- FIXME: cawikt says /ɔ/ for Central Catalan and Balearic -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38836,6 +39180,9 @@ Page 2397 torbis: -------- begin text --------
 -------- end text --------
 Page 2398 torbo: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- FIXME: cawikt says /ɔ/ for Central Catalan and Balearic -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38843,6 +39190,9 @@ Page 2398 torbo: -------- begin text --------
 
 -------- end text --------
 Page 2399 torca: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38875,6 +39225,9 @@ Page 2401 torces: -------- begin text --------
 -------- end text --------
 Page 2402 torci: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38884,6 +39237,9 @@ Page 2402 torci: -------- begin text --------
 -------- end text --------
 Page 2403 torcin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38892,6 +39248,9 @@ Page 2403 torcin: -------- begin text --------
 -------- end text --------
 Page 2404 torcis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38899,6 +39258,9 @@ Page 2404 torcis: -------- begin text --------
 # {{ca-verb form of|torçar}}
 -------- end text --------
 Page 2405 torco: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38910,7 +39272,7 @@ Page 2406 tori: -------- begin text --------
 {{elements|ca|Th|actini|Ac|protactini|Pa}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ò}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-tori.wav|Audio (Valencian)}}
 
 ===Noun===
@@ -38954,6 +39316,9 @@ Page 2408 torna: -------- begin text --------
 -------- end text --------
 Page 2409 tornen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38961,6 +39326,9 @@ Page 2409 tornen: -------- begin text --------
 
 -------- end text --------
 Page 2410 tornes: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38971,7 +39339,7 @@ Page 2410 tornes: -------- begin text --------
 Page 2411 torni: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -38981,6 +39349,9 @@ Page 2411 torni: -------- begin text --------
 -------- end text --------
 Page 2412 tornin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38989,6 +39360,9 @@ Page 2412 tornin: -------- begin text --------
 -------- end text --------
 Page 2413 tornis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -38996,6 +39370,9 @@ Page 2413 tornis: -------- begin text --------
 
 -------- end text --------
 Page 2414 torno: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -39037,6 +39414,9 @@ Page 2415 toro: -------- begin text --------
 -------- end text --------
 Page 2416 toros: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -39045,12 +39425,18 @@ Page 2416 toros: -------- begin text --------
 -------- end text --------
 Page 2417 torquen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|torcar}}
 -------- end text --------
 Page 2418 torques: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -39060,6 +39446,9 @@ Page 2418 torques: -------- begin text --------
 -------- end text --------
 Page 2419 torqui: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -39068,12 +39457,18 @@ Page 2419 torqui: -------- begin text --------
 -------- end text --------
 Page 2420 torquin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|torcar}}
 -------- end text --------
 Page 2421 torquis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -39082,6 +39477,9 @@ Page 2421 torquis: -------- begin text --------
 
 -------- end text --------
 Page 2422 torra: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -39129,6 +39527,9 @@ Page 2423 torre: -------- begin text --------
 -------- end text --------
 Page 2424 torren: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -39139,12 +39540,18 @@ Page 2425 torres: -------- begin text --------
 
 ===Etymology 1===
 
+====Pronunciation====
+* {{ca-IPA|ó}}
+
 ====Noun====
 {{head|ca|noun form}}
 
 # {{plural of|ca|torre}}
 
 ===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -39154,6 +39561,9 @@ Page 2425 torres: -------- begin text --------
 -------- end text --------
 Page 2426 torri: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -39162,12 +39572,18 @@ Page 2426 torri: -------- begin text --------
 -------- end text --------
 Page 2427 torrin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|torrar}}
 -------- end text --------
 Page 2428 torris: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -39176,6 +39592,9 @@ Page 2428 torris: -------- begin text --------
 
 -------- end text --------
 Page 2429 torro: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -39186,7 +39605,7 @@ Page 2429 torro: -------- begin text --------
 Page 2430 torsos: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}
 
 ===Noun===
 {{head|ca|noun form}}
@@ -39199,12 +39618,10 @@ Page 2431 torta: -------- begin text --------
 ===Pronunciation===
 * {{ca-IPA|ò}}
 
-===Adjective===
-{{head|ca|adjective form}}
+===Etymology 1===
+Nominalization of what was originally the feminine past participle of {{m|ca|tòrcer}}.
 
-# {{feminine singular of|ca|tort}}
-
-===Noun===
+====Noun====
 {{ca-noun|f}}
 
 # [[twisting]]
@@ -39212,20 +39629,52 @@ Page 2431 torta: -------- begin text --------
 # [[turn]], [[bend]]
 #: {{ux|ca|Simulava que estava borratxo i marxava fent '''tortes''' cap a casa.|He pretended he was drunk and went off towards home making '''twists and turns'''.}}
 # a [[circuitous]] [[route]], a [[roundabout]] [[way]]
-#: {{syn|ca|marrada}}
+#: {{syn|ca|marrada}}<!-- this is found in DCVB but the dates show it to be Old Catalan
 # {{lb|ca|archaic}} [[torch]]
-#: {{syn|ca|torxa}}
+#: {{syn|ca|torxa}} -->
+
+===Etymology 2===
+
+====Adjective====
+{{head|ca|adjective form}}
+
+# {{feminine singular of|ca|tort}}
+
+====Noun====
+{{ca-noun|f}}
+
+# {{female equivalent of|ca|tort|t=one-eyed person}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
+* {{R:ca:GDLC}}
+* {{R:ca:DCVB}}
+* {{R:ca:DNV}}
 
 -------- end text --------
 Page 2432 tortes: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
+
+===Etymology 1===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|torta|t=turn, bend}}
+
+===Etymology 2===
 
 ===Adjective===
 {{head|ca|adjective form}}
 
 # {{feminine plural of|ca|tort}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|torta|t=one-eyed woman}}
 
 -------- end text --------
 Page 2433 torxa: -------- begin text --------
@@ -39250,12 +39699,18 @@ Page 2433 torxa: -------- begin text --------
 -------- end text --------
 Page 2434 torxes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Noun===
 {{head|ca|noun form}}
 
 # {{plural of|ca|torxa}}
 -------- end text --------
 Page 2435 torça: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -39278,7 +39733,7 @@ Page 2436 torço: -------- begin text --------
 Page 2437 tosa: -------- begin text --------
 
 ===Etymology===
-From {{m|ca|tondre}}.
+Nominalization of the feminine past participle of {{m|ca|tondre}}.
 
 ===Pronunciation===
 * {{ca-IPA|ó}}
@@ -39301,26 +39756,30 @@ From {{m|ca|tondre}}.
 -------- end text --------
 Page 2438 tosca: -------- begin text --------
 
-===Etymology===
-From {{l|ca|tosc}}.
-
 ===Pronunciation===
 * {{ca-IPA|ó}}
 
-===Noun===
+===Etymology 1===
+From {{af|ca|tosc|-a}}.
+
+====Noun====
 {{ca-noun|f}}
 
-# [[deposit]], [[incrustation]]
+# [[deposit]], [[incrustation]], [[scale]]
 #: {{syn|ca|incrustació}}
+# {{lb|ca|dentistry}} [[tartar]] 
 # [[pumice]]
 #: {{syn|ca|pedra tosca|pumicita}}
+# {{lb|ca|botany}} [[cork]] {{gl|bark of the cork tree}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|toscar}}
 * {{l|ca|toscós}}
 * {{l|ca|tosquejar}}
 
-===Adjective===
+===Etymology 2===
+
+====Adjective====
 {{head|ca|adjective form}}
 
 # {{feminine singular of|ca|tosc}}
@@ -39342,7 +39801,10 @@ From {{der|ca|qsb-ibe|-}} word {{m|qsb-ibe|*taucia|t=stump}}.
 ===Noun===
 {{ca-noun|f}}
 
-# [[hill]], [[height]]
+# [[volume]], [[size]]
+# {{lb|ca|geography}} [[hill]], [[height]]
+# {{lb|ca|anatomy}} [[occiput]]
+#: {{syn|ca|tos}}
 
 ====Derived terms====
 * {{l|ca|tos}}
@@ -39358,13 +39820,18 @@ From {{der|ca|qsb-ibe|-}} word {{m|qsb-ibe|*taucia|t=stump}}.
 -------- end text --------
 Page 2440 tossos: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Noun===
 {{head|ca|noun form}}
 
-# {{plural of|ca|tos}}
-# {{plural of|ca|tòs}}
+# {{plural of|ca|tos|t=occiput}}
 -------- end text --------
 Page 2441 tota: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Adjective===
 {{head|ca|adjective form|g=f-s}}
@@ -39373,6 +39840,9 @@ Page 2441 tota: -------- begin text --------
 
 -------- end text --------
 Page 2442 totes: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Adjective===
 {{head|ca|adjective form}}
