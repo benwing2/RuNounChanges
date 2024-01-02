@@ -332,13 +332,17 @@ Replace comma with a temporary char in comma + whitespace.
 ]==]
 function export.escape_comma_whitespace(run, tempcomma)
 	tempcomma = tempcomma or u(0xFFF0)
+	local escaped = false
 
+	if run:find("\\,") then
+		run = run:gsub("\\,", "\\" .. tempcomma) -- assign to temp to discard second return value
+		escaped = true
+	end
 	if run:find(",%s") then
 		run = run:gsub(",(%s)", tempcomma .. "%1") -- assign to temp to discard second return value
-		return run, true
-	else
-		return run, false
+		escaped = true
 	end
+	return run, escaped
 end
 
 
@@ -383,6 +387,28 @@ escaped run and whether unescaping is needed. If the call to `escape_fun` indica
 of runs, interspersed with delimiters if `preserve_splitchar` is specified.
 ]==]
 function export.split_escaping(text, splitchar, preserve_splitchar, escape_fun, unescape_fun)
+	if not rfind(text, splitchar) then
+		return {text}
+	end
+
+	-- If there are square or angle brackets, we don't want to split on delimiters inside of them. To effect this, we
+	-- use parse_multi_delimiter_balanced_segment_run() to parse balanced brackets, then do delimiter splitting on the
+	-- non-bracketed portions of text using split_alternating_runs_escaping(), and concatenate back to a list of
+	-- strings. When calling parse_multi_delimiter_balanced_segment_run(), we make sure not to throw an error on
+	-- unbalanced brackets; in that case, we fall through to the code below that handles the case without brackets.
+	if text:find("[%[<]") then
+		local runs = export.parse_multi_delimiter_balanced_segment_run(text, {{"[", "]"}, {"<", ">"}},
+			"no error on unmatched")
+		if type(runs) ~= "string" then
+			local split_runs = export.split_alternating_runs_escaping(runs, splitchar, preserve_splitchar, escape_fun,
+				unescape_fun)
+			for i = 1, #split_runs, (preserve_splitchar and 2 or 1) do
+				split_runs[i] = table.concat(split_runs[i])
+			end
+			return split_runs
+		end
+	end
+
 	-- First escape sequences we don't want to count for splitting.
 	local need_unescape
 	text, need_unescape = escape_fun(text)
@@ -406,6 +432,10 @@ a space). `tempcomma` is the Unicode character to temporarily use when doing the
 you can specify a different character if you use U+FFF0 for some internal purpose.
 ]==]
 function export.split_on_comma(text, tempcomma)
+	if not text:find(",") then
+		return {text}
+	end
+
 	tempcomma = tempcomma or u(0xFFF0)
 
 	-- Replace comma with a temporary char in comma + whitespace.
