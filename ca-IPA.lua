@@ -11,9 +11,11 @@ local umatch = mw.ustring.match
 local ugsub = mw.ustring.gsub
 local ulower = mw.ustring.lower
 
-local list_true = require("Module:table").listToSet
+local patut_module = "Module:pattern utilities"
 
-local valid_onsets = list_true({
+local listToSet = require("Module:table").listToSet
+
+local valid_onsets = listToSet {
 	"b", "bl", "br",
 	"c", "cl", "cr",
 	"ç",
@@ -37,7 +39,7 @@ local valid_onsets = list_true({
 	"w",
 	"x",
 	"z",
-})
+} 
 
 local function fix_prefixes(word)
 	-- Orthographic fixes for unassimilated prefixes
@@ -292,8 +294,8 @@ end
 local function postprocess_general(syllables)
 	syllables = mw.clone(syllables)
 	
-	local voiced = list_true({"b", "ð", "d", "ɡ", "m", "n", "ɲ", "l", "ʎ", "r", "ɾ", "v", "z", "ʒ"})
-	local voiceless = list_true({"p", "t", "k", "f", "s", "ʃ", ""})
+	local voiced = listToSet {"b", "ð", "d", "ɡ", "m", "n", "ɲ", "l", "ʎ", "r", "ɾ", "v", "z", "ʒ"}
+	local voiceless = listToSet {"p", "t", "k", "f", "s", "ʃ", ""}
 	local voicing = {["k"]="ɡ", ["f"]="v", ["p"]="b", ["t"]="d", ["s"]="z"}
 	local devoicing = {["b"]="p", ["d"]="t", ["ɡ"]="k"}
 	
@@ -807,14 +809,306 @@ local function group_sort_and_format(syllables, mid_vowel_hint, test)
 	return out
 end
 
+
+local function convert_respelling_to_original(to, pagename, whole_word)
+	local patut = require(patut_module)
+	local from = rsub(to, "ks", "x")
+	local escaped_from = patut.pattern_escape(from)
+	if whole_word then
+		escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
+	end
+	if rfind(pagename, escaped_from) then
+		return from
+	end
+	error(("Single substitution spec '%s' couldn't be matched to pagename '%s'"):format(to, pagename))
+end
+	
+
+-- Given raw respelling, canonicalize it. This currently applies substitutions of the form e.g. [ny] or [th:t,nýz].
+local function canonicalize(text, pagename)
+	if text == "+" then
+		text = pagename
+	elseif rfind(text, "^%[.*%]$") then
+		local subs = rsplit(rmatch(text, "^%[(.*)%]$"), ",")
+		text = pagename
+		local function err(msg)
+			error(msg .. ": " .. text)
+		end
+		for _, sub in ipairs(subs) do
+			local from, escaped_from, to, escaped_to, whole_word
+			if rfind(sub, "^~") then
+				-- whole-word match
+				sub = rmatch(sub, "^~(.*)$")
+				whole_word = true
+			end
+			if sub:find(":") then
+				from, to = rmatch(sub, "^(.-):(.*)$")
+			else
+				to = sub
+				from = convert_respelling_to_original(to, pagename, whole_word)
+			end
+			local patut = require(patut_module)
+			escaped_from = patut.pattern_escape(from)
+			if whole_word then
+				escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
+			end
+			escaped_to = patut.replacement_escape(to)
+			local subbed_text, nsubs = rsubn(text, escaped_from, escaped_to)
+			if nsubs == 0 then
+				err(("Substitution spec %s -> %s didn't match processed pagename"):format(from, to))
+			elseif nsubs > 1 then
+				err(("Substitution spec %s -> %s matched multiple substrings in processed pagename, add more context"):format(from, to))
+			else
+				text = subbed_text
+			end
+		end
+	end
+
+	return text
+end
+
+local function parse_respelling(respelling, pagename, parse_err)
+	local raw_phonemic, raw_phonetic = respelling:match("^/(.*)/ %[(.*)%]$")
+	if not raw_phonemic then
+		raw_phonemic = respelling:match("^/(.*)/$")
+	end
+	if not raw_phonemic then
+		raw_phonetic = respelling:match("^%[(.*)%]$")
+	end
+	if raw_phonemic or raw_phonetic then
+		return {
+			raw = true,
+			raw_phonemic = raw_phonemic,
+			raw_phonetic = raw_phonetic,
+		}
+	end
+
+	if respelling == "+" then
+		respelling = pagename
+	elseif rfind(respelling, "^%[.*%]$") then
+		local subs = rsplit(rmatch(respelling, "^%[(.*)%]$"), ",")
+		respelling = pagename
+		for _, sub in ipairs(subs) do
+			local from, escaped_from, to, escaped_to, whole_word
+			if rfind(sub, "^~") then
+				-- whole-word match
+				sub = rmatch(sub, "^~(.*)$")
+				whole_word = true
+			end
+			if sub:find(":") then
+				from, to = rmatch(sub, "^(.-):(.*)$")
+			else
+				to = sub
+				from = convert_respelling_to_original(to, pagename, whole_word)
+			end
+			if not patut then
+				patut = require(patut_module)
+			end
+			escaped_from = patut.pattern_escape(from)
+			if whole_word then
+				escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
+			end
+			escaped_to = patut.replacement_escape(to)
+			local subbed_respelling, nsubs = rsubn(respelling, escaped_from, escaped_to)
+			if nsubs == 0 then
+				err(("Substitution spec %s -> %s didn't match processed pagename"):format(from, to))
+			elseif nsubs > 1 then
+				err(("Substitution spec %s -> %s matched multiple substrings in processed pagename, add more context"):format(from, to))
+			else
+				respelling = subbed_respelling
+			end
+		end
+	end
+
+	end
+	return {term = respelling}
+end
+
+
+local dialects = {"bal", "cen", "val"}
+
 function export.show(frame)
 	local params = {
-		[1] = {default = mw.title.getCurrentTitle().text},
-		indent = {}
+		[1] = {},
+		indent = {},
+		pagename = {} -- for testing or documentation pages
 	}
-	
+
+	for _, dialect in ipairs(dialects) do
+		params[dialect] = {}
+	end
+
 	local args = require("Module:parameters").process(frame:getParent().args, params)
-	
+	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
+
+	-- Set inputs
+	local inputs = {}
+	-- If 1= specified, do all dialects.
+	if args[1] then
+		for _, dialect in ipairs(dialects) do
+			inputs[dialect] = {input = args[1], param = 1}
+		end
+	end
+	-- Then do individual dialect settings.
+	for _, dialect in ipairs(dialects) do
+		if args[dialect] then
+			inputs[dialect] = {input = args[dialect], param = dialect}
+		end
+	end
+	-- If no inputs given, set all dialects based on current pagename.
+	if not next(inputs) then
+		for _, dialect in ipairs(dialects) do
+			inputs[dialect] = {input = "+", param = "(pagename)"}
+		end
+	end
+
+	-- Parse the arguments.
+	local put
+	for dialect, inputspec in pairs(inputs) do
+		local function generate_obj(text, parse_err_or_paramname)
+			local obj = {}
+			if text:find(":[^ ]") or text:find("%[%[") then
+				obj.text, obj.lang, obj.link = require(parse_utilities_module).parse_term_with_lang(text,
+					parse_err_or_paramname)
+			else
+				obj.text = text
+				obj.link = text
+			end
+			return obj
+		end
+
+		if inputspec.input:find("[<%[]") then
+			if not put then
+				put = require("Module:parse utilities")
+			end
+			-- Parse balanced segment runs involving either [...] (substitution notation) or <...> (inline modifiers).
+			-- We do this because we don't want commas inside of square or angle brackets to count as respelling
+			-- delimiters. However, we need to rejoin square-bracketed segments with nearby ones after splitting
+			-- alternating runs on comma. For example, if we are given
+			-- "a[x]a<q:learned>,[vol:vôl;ei:éi,ei]<q:nonstandard>", after calling
+			-- parse_multi_delimiter_balanced_segment_run() we get the following output:
+			--
+			-- {"a", "[x]", "a", "<q:learned>", ",", "[vol:vôl;ei:éi,ei]", "", "<q:nonstandard>", ""}
+			--
+			-- After calling split_alternating_runs(), we get the following:
+			--
+			-- {{"a", "[x]", "a", "<q:learned>", ""}, {"", "[vol:vôl;ei:éi,ei]", "", "<q:nonstandard>", ""}}
+			--
+			-- We need to rejoin stuff on either side of the square-bracketed portions.
+			local segments = put.parse_multi_delimiter_balanced_segment_run(inputspec.input, {{"<", ">"}, {"[", "]"}})
+
+			-- Not with spaces around the comma; see above for why we don't want to split off comma followed by space.
+			local comma_separated_groups = put.split_alternating_runs_on_comma(segments)
+
+			-- Process each value.
+			local respellings = {}
+			for _, group in ipairs(comma_separated_groups) do
+				-- Rejoin runs that don't involve <...>.
+				local j = 2
+				while j <= #group do
+					if not group[j]:find("^<.*>$") then
+						group[j - 1] = group[j - 1] .. group[j] .. group[j + 1]
+						table.remove(group, j)
+						table.remove(group, j)
+					else
+						j = j + 2
+					end
+				end
+
+				local obj
+				if #group > 1 then
+					-- Check for inline modifier.
+					obj = put.parse_inline_modifiers_from_segments {
+						group = group,
+						arg = oneval,
+						props = {
+							paramname = inputspec.param,
+							param_mods = param_mods,
+							generate_obj = generate_obj,
+						}
+					}
+				else
+					obj = generate_obj(group[1], inputspec.param)
+				end
+				table.insert(respellings, obj)
+			end
+
+			local parsed = {terms = {}}
+			for i, group in ipairs(comma_separated_groups) do
+				-- Rejoin bracketed segments with nearby ones, as described above.
+				local j = 2
+				while j <= #group do
+					if group[j]:find("^%[") then
+						group[j - 1] = group[j - 1] .. group[j] .. group[j + 1]
+						table.remove(group, j)
+						table.remove(group, j)
+					else
+						j = j + 2
+					end
+				end
+				local parsed = put.parse_inline_modifiers_from_segments {
+				for j, segment in ipairs(group) do
+					group[j] = rsub(segment, TEMP1, ", ")
+				end
+
+				local term = {term = group[1], ref = {}, q = {}}
+				for j = 2, #group - 1, 2 do
+					if group[j + 1] ~= "" then
+						parse_err("Extraneous text '" .. group[j + 1] .. "' after modifier")
+					end
+					local modtext = group[j]:match("^<(.*)>$")
+					if not modtext then
+						parse_err("Internal error: Modifier '" .. group[j] .. "' isn't surrounded by angle brackets")
+					end
+					local prefix, arg = modtext:match("^([a-z]+):(.*)$")
+					if not prefix then
+						parse_err("Modifier " .. group[j] .. " lacks a prefix, should begin with one of " ..
+							"'pre:', 'post:', 'ref:', 'bullets:' or 'q:'")
+					end
+					if prefix == "ref" or prefix == "q" then
+						table.insert(term[prefix], arg)
+					elseif prefix == "pre" or prefix == "post" or prefix == "bullets" then
+						if i < #comma_separated_groups then
+							parse_err("Modifier '" .. prefix .. "' should occur after the last comma-separated term")
+						end
+						if parsed[prefix] then
+							parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. group[j])
+						end
+						if prefix == "bullets" then
+							if not arg:find("^[0-9]+$") then
+								parse_err("Modifier 'bullets' should have a number as argument")
+							end
+							parsed.bullets = tonumber(arg)
+						else
+							parsed[prefix] = arg
+						end
+					else
+						parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. group[j]
+							.. ", should be one of 'pre', 'post', 'ref', 'bullets' or 'q'")
+					end
+				end
+				table.insert(parsed.terms, term)
+			end
+			if not parsed.bullets then
+				parsed.bullets = 1
+			end
+			inputs[dialect] = parsed
+		else
+			local terms = {}
+			-- We don't want to split on comma+space, which should become a foot boundary as in
+			-- [[rei morto, rei posto]].
+			local subbed_input = rsub(input, ", ", TEMP1)
+			for _, term in ipairs(rsplit(subbed_input, ",")) do
+				term = rsub(term, TEMP1, ", ")
+				table.insert(terms, {term = term, ref = {}, q = {}})
+			end
+			inputs[dialect] = {
+				terms = terms,
+				bullets = 1,
+			}
+		end
+	end
+
 	local word = ulower(args[1])
 	local mid_vowel_hint = nil
 	
