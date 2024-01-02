@@ -746,11 +746,11 @@ def cat_subcats(page, startprefix=None, endprefix=None, seen=None, prune_cats_re
   for i, current in iter_items(pageiter, startprefix, endprefix):
     yield i, current
 
-def prefix_pages(prefix, startprefix=None, endprefix=None, namespace=None):
+def prefix_pages(prefix, startprefix=None, endprefix=None, namespace=None, filter_redirects=None):
   pageiter = site.allpages(
     prefix=None if prefix == '-' else prefix, namespace=namespace,
     start=startprefix if isinstance(startprefix, str) else None,
-    filterredir=False
+    filterredir=filter_redirects
   )
   for i, current in iter_items(pageiter, startprefix, endprefix):
     yield i, current
@@ -1059,6 +1059,7 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--prefix-pages", help="Do pages with these prefixes, comma-separated.",
                         default="-")
     parser.add_argument("--prefix-namespace", help="Namespace of pages to do using --prefix-pages.")
+    parser.add_argument("--redirects-only", help="Restrict --prefix-pages to redirects only.", action="store_true")
     parser.add_argument("--namespaces", help="List of namespace(s) to restrict pages to.")
     parser.add_argument("--ref-namespaces", help="List of namespace(s) to restrict --refs to.")
     parser.add_argument("--filter-pages", help="Regex to use to filter page names.")
@@ -1415,7 +1416,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
     if args.prefix_namespace:
       for prefix in split_arg(args.prefix_pages):
         namespace = args.prefix_namespace
-        for index, page in prefix_pages(prefix, start, end, namespace):
+        for index, page in prefix_pages(prefix, start, end, namespace, filter_redirects=True if args.redirects_only else None):
           process_pywikibot_page(index, page)
 
   else:
