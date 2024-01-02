@@ -92,7 +92,7 @@ From {{m|ca|bandera}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to put a [[flag]] on
 
@@ -115,7 +115,7 @@ Page 6 abandonar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[abandon]]
 # {{lb|ca|intransitive}} {{rfdef|ca}}
@@ -169,7 +169,7 @@ From {{confix|ca|a|barrot|ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[pack]]; to [[cram]]
 
@@ -189,7 +189,7 @@ Page 9 abassegar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[overwhelm]]
 #: {{syn|ca|aclaparar}}
@@ -514,17 +514,40 @@ Page 22 abonar: -------- begin text --------
 ===Pronunciation===
 * {{ca-IPA}}
 
-===Verb===
-{{ca-verb}}
+===Etymology 1===
+From {{af|a-|bo|-ar}}.
 
-# {{lb|ca|transitive}} to [[pay]] for
-#* {{quote-journal|ca|date=November 9 2016|author=María Jesús Ibáñez|title=Escola pública rica, escola pública pobra|work=El Periódico|url=http://www.elperiodico.cat/ca/noticias/societat/escola-publica-rica-pobra-segregacio-escolar-sindic-greuges-5618290
-|passage=O que pressionen, a través dels nens, perquè els pares '''abonin''' quotes de material i d’excursions i sortides escolars, perquè si no es paguen l’alumne en queda exclòs.}}
+====Verb====
+{{ca-verb|root=ò}} {{tlb|ca|transitive}}
 
-====Conjugation====
+# to [[accredit]], to [[make]] (someone) [[appear]] [[good]]
+# to [[redeem]] the [[actions]] of (someone), to [[make]] [[good]] again
+# to [[guarantee]], to [[act]] as [[guarantor]] for (someone)
+# to [[vouch]] for (someone)
+# to [[confirm]] {{q|e.g. one's fears, or a witness's claim}}
+# to [[affirm]], to [[certify]]
+# {{lb|ca|agriculture}} to [[fertilize]]
+
+=====Conjugation=====
 {{ca-conj}}
 
-====Derived terms====
+===Etymology 2===
+{{bor+|ca|fr|abonner}}.
+
+====Verb====
+{{ca-verb|root=ò}}
+
+# {{lb|ca|transitive}} to [[pay]] for
+# {{lb|ca|transitive}} to [[remit]] (payment)
+#* {{quote-journal|ca|date=November 9 2016|author=María Jesús Ibáñez|title=Escola pública rica, escola pública pobra|work=El Periódico|url=http://www.elperiodico.cat/ca/noticias/societat/escola-publica-rica-pobra-segregacio-escolar-sindic-greuges-5618290
+|passage=O que pressionen, a través dels nens, perquè els pares '''abonin''' quotes de material i d’excursions i sortides escolars, perquè si no es paguen l’alumne en queda exclòs.}}
+# {{lb|ca|transitive}} to [[credit]] (someone's account)
+# {{lb|ca|reflexive}} to [[subscribe]] to
+
+=====Conjugation=====
+{{ca-conj}}
+
+=====Derived terms=====
 * {{l|ca|abonament}}
 
 ===Further reading===
@@ -540,7 +563,7 @@ From {{confix|ca|a|bony|ar|t2=bump}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[dent]]
 
@@ -635,8 +658,9 @@ From {{af|ca|a-|braó|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
+# {{lb|ca|transitive}} to [[embrace]] [[forcefully]]
 # {{lb|ca|reflexive}} to [[throw]] oneself on; to [[tackle]]
 
 ====Conjugation====
@@ -1119,9 +1143,9 @@ Page 46 acarnissar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{head|ca|verb form}}
 
-# {{inflection of|ca|acarnissar-se||inf}}
+# {{ca-verb form of|acarnissar-se}}
 -------- end text --------
 Page 47 acarnissar-se: -------- begin text --------
 
@@ -1158,7 +1182,7 @@ Page 48 acaronar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to hold someone you love closer
 # to [[cuddle]]
@@ -1250,7 +1274,7 @@ From {{der|ca|la|accelerō|accelerāre}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a guess but likely -->
 
 # to [[accelerate]], [[speed up]]
 
@@ -1328,7 +1352,7 @@ From {{af|ca|accident|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to create a geological [[feature]]
 # {{lb|ca|reflexive}} to have an [[accident]]
@@ -1352,7 +1376,7 @@ From {{af|ca|acció|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[operate]], to put into motion
 # {{lb|ca|transitive|law}} to [[file]], to [[initiate]] (a lawsuit)
@@ -1377,7 +1401,7 @@ From {{af|ca|acer|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[harden]], to [[steel]]
 # {{lb|ca|transitive}} to [[plate]] with [[steel]]
@@ -1623,7 +1647,7 @@ From {{af|ca|a-|coltell|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[knife]], to [[stab]]
 
@@ -1752,7 +1776,7 @@ Page 72 aconsellar: -------- begin text --------
 From {{af|ca|a-|consell|-ar}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[advise]]
 
@@ -1929,22 +1953,38 @@ Page 79 acostumar-se: -------- begin text --------
 -------- end text --------
 Page 80 acotar: -------- begin text --------
 
-===Etymology===
-{{rfe|ca}}
-
 ===Pronunciation===
 * {{ca-IPA}}
 * {{rhymes|ca|a(ɾ)|s=3}}
 
-===Verb===
-{{ca-verb}}
+===Etymology 1===
+{{unc|ca}}.
+
+====Verb====
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive|reflexive}} to [[bend down]]
 #: {{syn|ca|ajupir}}
 #* {{quote-book|ca|year=1955|title=El testament|author=Xavier Benguerel|text='''S'acotà''' a l'escalfapanxes amb l'intent de cremar la carta, però es repensà.|t=She '''bent down''' to the fireplace with the intent of burning the letter but changed her mind.}}
 # {{lb|ca|transitive}} to [[cut]] or [[prune]] a tree at the ground level so that it can grow [[sprout]]s
 
-====Conjugation====
+======Conjugation======
+{{ca-conj}}
+
+====Derived terms====
+{{der3|ca|acot|acotament|cot}}
+
+===Etymology 2===
+From {{af|a-|cota|-ar}}.
+
+====Verb====
+{{ca-verb|root=ò}}
+
+# {{lb|ca|transitive|theater}} to [[annotate]] (a script of a play) with [[theatrical]] [[note]]s
+# {{lb|ca|transitive|topography}} to [[annotate]] (a topographical map) with [[indication]]s of the [[height]] of the [[land]]
+# {{lb|ca|transitive|mathematics}} to [[bound]] (a set)
+
+======Conjugation======
 {{ca-conj}}
 
 ====Derived terms====
@@ -2341,7 +2381,7 @@ From {{af|ca|a-|diner|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[sell]] for a good [[profit]]
 # {{lb|ca|intransitive}} to get [[rich]]
@@ -2608,9 +2648,9 @@ Page 105 adonar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{head|ca|verb form}}
 
-# {{inflection of|ca|adonar-se||inf}}
+# {{ca-verb form of|adonar-se}}
 -------- end text --------
 Page 106 adonar-se: -------- begin text --------
 
@@ -2618,9 +2658,9 @@ Page 106 adonar-se: -------- begin text --------
 From {{af|ca|a-|donar}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
-# {{lb|ca|pronominal}} to [[take notice]] {{q|'''de''' ''of''}}, to [[realise]]
+# {{lb|ca|pronominal}} to [[take notice]] {{+preo|ca|de|means=of}}, to [[realise]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -2931,7 +2971,7 @@ Page 118 adulterar: -------- begin text --------
 {{lbor|ca|la|adulterō|adulterāre}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME, a guess but likely -->
 
 # {{lb|ca|intransitive}} to commit [[adultery]]
 # {{lb|ca|transitive}} to [[adulterate]]
@@ -2989,7 +3029,7 @@ From {{inh|ca|roa-oca|averar}}, from {{inh|ca|la-eme|advērō|advērāre}}. The 
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- FIXME, a guess but likely based on [[ver]] -->
 
 # {{lb|ca|transitive}} to [[affirm]], to [[establish]]
 # {{lb|ca|intranstive|law}} to [[aver]]
@@ -3040,9 +3080,12 @@ From {{der|ca|la|advertō}}, attested from the 15th century.<ref>{{R:ca:GDLC}}</
 Page 122 advindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|advenir}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:GDLC}}
@@ -3081,7 +3124,7 @@ From {{af|ca|a-|faiçó|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[shape]], to [[work]] {{q|an object from a material}}
 
@@ -3251,11 +3294,11 @@ From {{af|ca|a-|fart|-ar}}.
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|transitive}} to [[fill up]] {{q|'''de''' with}}, to [[stuff]]
+# {{lb|ca|transitive}} to [[fill up]], to [[stuff]] {{+preo|ca|de|means=with}}
 # {{lb|ca|figurative|transitive}} to make [[fed up]], [[bore]], [[annoy]]
 #: {{syn|ca|enfastidir}}
-# {{lb|ca|reflexive}} to get [[full]], [[satiate]] oneself {{q|'''de''' with}}
-# {{lb|ca|figurative|pronominal}} to get [[fed up]] {{q|'''de''' with}}
+# {{lb|ca|reflexive}} to get [[full]], [[satiate]] oneself {{+preo|ca|de|means=with}}
+# {{lb|ca|figurative|pronominal}} to get [[fed up]] {{+preo|ca|de|means=with}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -3324,10 +3367,10 @@ Page 135 afeccionar-se: -------- begin text --------
 From {{af|ca|afecció|-ar}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
-# {{lb|ca|reflexive}} to grow to like (a person)
-# {{lb|ca|reflexive}} to become a fan of, to become interested in
+# to grow to like (a person)
+# to become a fan of, to become interested in
 #: {{syn|ca|aficionar-se}}
 
 ====Conjugation====
@@ -3785,7 +3828,7 @@ From {{confix|ca|a|fusell|ar|t2=rifle}}.
 * {{rhymes|ca|a(ɾ)}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[shoot]], to [[execute]] with guns
 # {{lb|ca|transitive}} to [[plagiarize]]
@@ -3941,9 +3984,9 @@ Page 160 agenollar: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-agenollar.wav|Audio (Catalonia)}}
 
 ===Verb===
-{{head|ca|verb}}
+{{head|ca|verb form}}
 
-# {{inflection of|ca|agenollar-se||inf}}
+# {{ca-verb form of|agenollar-se}}
 -------- end text --------
 Page 161 agenollar-se: -------- begin text --------
 
@@ -4054,7 +4097,7 @@ From {{der|ca|la|agito|agitāre}}.
 Page 165 aglomerar: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME, a guess but likely -->
 
 # to [[agglomerate]]
 
@@ -4120,7 +4163,7 @@ From {{af|ca|agost|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[graze]] on stubble
 # {{lb|ca|transitive}} to [[wither]], to [[shrivel]]
@@ -4379,7 +4422,7 @@ Page 177 aguantar: -------- begin text --------
 Page 178 aguantar-se per un fil: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[hang by a thread]]
 #: {{syn|ca|venir d'un fil}}
@@ -4542,7 +4585,7 @@ From {{af|ca|aire|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[air]]
 # {{lb|ca|reflexive}} to go for some air, to step outside {{q|of a person}}
@@ -4595,7 +4638,7 @@ Page 188 aixafar la guitarra: -------- begin text --------
 {{lit|to smash the guitar}}.
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[upset the applecart]], to [[spoil]] plans {{q|'''a algú''' someone's}}
 #: {{uxi|ca|Em van '''aixafar la guitarra''' unes turistes que parlaven en anglès i que es van plantar davant meu.|'''My plans were spoiled''' by some tourists who spoke English and stationed themselves in front of me.}}
@@ -4725,9 +4768,12 @@ Variant of {{m|ca|soplujar}} influenced by dialectal {{m|ca|esplugar||to shelter
 Page 194 ajaure: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
-# {{alt form|ca|ajeure}}
+# {{lb|ca|Western Catalan}} {{alternative form of|ca|ajeure}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -4762,9 +4808,12 @@ From {{m|ca|jeure}}.
 Page 196 ajeure's: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{reflexive of|ca|ajeure}}
+
+====Conjugation====
+{{ca-conj}}
 -------- end text --------
 Page 197 ajornalar: -------- begin text --------
 
@@ -5200,7 +5249,7 @@ From {{af|ca|ala|-ejar}}.
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-aletejar.wav|Audio (Catalonia)}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[flap]], to [[flutter]] (wings)
 
@@ -5300,7 +5349,7 @@ From {{af|ca|aliment|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[feed]]
 # to [[nourish]]
@@ -5438,7 +5487,7 @@ From {{confix|ca|a|lleuger|ar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alternative form of|ca|alleugerir}}
 
@@ -5517,7 +5566,7 @@ Page 227 alliberar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME, a guess but likely -->
 
 # {{lb|ca|transitive}} to [[liberate]]; [[free]]; [[release]]
 # {{lb|ca|transitive}} to [[rid]]
@@ -5537,7 +5586,7 @@ From {{af|ca|a-|lliçó|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[instruct]] in
 #: {{syn|ca|instruir}}
@@ -5705,7 +5754,7 @@ From {{affix|ca|a-|lluny|-ar|t2=far}}.
 Page 235 alterar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|altero|alterāre}}.
+{{bor+|ca|la|altero|alterāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -5740,7 +5789,7 @@ From {{der|ca|la|alternō|alternāre}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=è}}
 
 # to [[alternate]]
 
@@ -5818,7 +5867,7 @@ From {{af|ca|a-|manera|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[affect]], [[exaggerate]]
 # {{lb|ca|intransitive|pronominal}} to become [[mannered]], [[affected]]
@@ -6029,7 +6078,7 @@ From {{af|ca|ambient|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[set]] {{gloss|to locate (a play, etc.); to assign a backdrop to}}
 # {{lb|ca|transitive}} to [[provide]] an [[ambiance]] to a place
@@ -6133,7 +6182,7 @@ From {{af|ca|amè|-itzar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to make pleasant, agreeable; add charm to, brighten up, etc.
 #* {{quote-book|ca|year=1977|author=Oleguer Sarsanedas|title=Per què es destrueix la natura?|text=Quan es parla de la Natura, la gent s'imagina de seguida el món dels animals salvatges, el món de les plantes espontànies —és a dir: és corrent de reduir la Natura a la vegetació i a la fauna o, a tot estirar, als grans paisatges '''amenitzats''' per animals i plantes, bastits sobre un relleu poc o molt espectacular.|t=When one talks about Nature, people immediately imagine the world of wild animals, the world of uncultivated plants--that is to say, it is prevalent to reduce Nature to vegetation and fauna or, at most, to great landscapes '''made pleasant''' with animals and plants, mounted upon a more or less spectacular relief.}}
@@ -6257,7 +6306,7 @@ From {{af|ca|a-|moltó|-ar|se|t2=wether}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|intransitive}} to [[flock together]], to [[follow]] the [[herd]]
 #: {{syn|ca|amunionar-se}}
@@ -6458,7 +6507,7 @@ From {{af|ca|a-|munió|-ar|se|t2=crowd, throng}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[mob]], [[throng]], [[huddle]] {{gloss|to form a throng}}
 #: {{syn|ca|amoltonar-se}}
@@ -6472,7 +6521,7 @@ From {{af|ca|a-|munió|-ar|se|t2=crowd, throng}}.
 Page 265 amuntegar: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[pile up]]
 
@@ -6513,7 +6562,7 @@ Page 267 anar: -------- begin text --------
 # to [[go]]
 # {{lb|ca|auxiliary verb, taking an infinitive}} {{ngd|forms the periphrastic preterite; see usage notes below for more information}}
 #: {{ux|ca|Ahir '''vaig''' parlar amb ma germana.|Yesterday, I spoke with my sister.}}
-# {{lb|ca|reflexive and pronominal}} to [[go away]], to [[leave]] {{ngd|requires a reflexive pronoun according the subject, and the appropriate form of the adverbial pronoun [[en#Catalan|en]]}}
+# {{lb|ca|reflexive|pronominal}} to [[go away]], to [[leave]] {{ngd|requires a reflexive pronoun according the subject, and the appropriate form of the adverbial pronoun [[en#Catalan|en]]}}
 #: {{uxi|ca|apa, '''me'n vaig'''|so, I'm leaving}}
 #: {{uxi|ca|'''Se'n va anar'''|She went away}}. (a song title)
 
@@ -6569,7 +6618,7 @@ See {{m|ca|anar|gloss=to go}}
 Page 270 anar a parar: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|<var:full>}}
 
 # to [[end up]], to [[wind up]]
 -------- end text --------
@@ -6578,7 +6627,7 @@ Page 271 anar-se'n: -------- begin text --------
 ===Verb===
 {{head|ca|verb|head=[[anar]]-[[se]]'[[en|n]]}}
 
-# {{lb|ca|reflexive and pronominal}} to [[go away]], to [[leave]] {{ngd|requires a reflexive pronoun according the subject, and the appropriate form of the adverbial pronoun [[en#Catalan|en]]}}
+# {{lb|ca|reflexive|pronominal}} to [[go away]], to [[leave]] {{ngd|requires a reflexive pronoun according the subject, and the appropriate form of the adverbial pronoun [[en#Catalan|en]]}}
 #: {{uxi|ca|apa, '''me'n vaig'''|so, I'm leaving}}
 #: {{uxi|ca|'''Se'n va anar'''|She went away}}. (a song title)
 
@@ -6811,7 +6860,7 @@ From {{af|ca|a-|nivell|-ar|t2=level}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[level]]
 
@@ -6853,7 +6902,7 @@ Page 284 annexionar: -------- begin text --------
 From {{af|ca|annexió|-ar}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[annex]]
 #: {{syn|ca|annexar}}
@@ -6895,14 +6944,14 @@ From {{af|ca|a-|la:nōmen|-ar}}.
 Page 286 anotar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|annotō|annotāre}}, alternative form of {{m|la|adnotō}}.
+{{bor+|ca|la|annotō|annotāre}}, alternative form of {{m|la|adnotō}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[note]], to make note of
 
@@ -7159,6 +7208,7 @@ From {{af|ca|a-|palanca|-ar}}.
 ===Verb===
 {{ca-verb}}
 
+# {{lb|ca|transitive}} to [[lever]], to [[raise]] or [[open]] with a [[lever]]
 # {{lb|ca|reflexive}} to [[settle down]]
 #: {{syn|ca|acomodar}}
 
@@ -7293,7 +7343,7 @@ Page 301 aparellar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[prepare]]
 #: {{syn|ca|preparar|disposar}}
@@ -7318,7 +7368,7 @@ From {{af|ca|aparent|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[feign]], to [[pretend]]
 #* {{quote-journal|ca|date=January 4 2017|title=La guerra de les Campos ocupa (gairebé) totes les portades|work=El Periódico|author=Iosu de la Torre|url=http://www.elperiodico.cat/ca/noticias/extra/guerra-campos-ocupa-gairebe-totes-portades-5726177
@@ -7373,7 +7423,7 @@ From {{confix|ca|a|pedra|ar|t2=stone}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[stone]]
 
@@ -7389,7 +7439,7 @@ From {{af|ca|a-|pegar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|dialectal}} to [[glue]], to [[stick]]
 #: {{syn|ca|enganxar}}
@@ -7483,7 +7533,7 @@ From {{af|ca|a-|pit|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|intransitive}} to thrust one's chest forward while making a forceful effort
 # {{lb|ca|transitive}} to [[breast]], to [[chest]] {{gloss|to hit with the chest}}
@@ -7642,7 +7692,7 @@ Page 315 aplegar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[join]]; [[join up]]; [[collect up]]
 
@@ -7717,7 +7767,7 @@ From {{af|ca|a-|poder|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- from cawikt and [[poder]] -->
 
 # {{lb|ca|obsolete|transitive}} to [[overpower]]
 # {{lb|ca|transitive}} to [[delegate]] [[authority]] to, to [[empower]] (to act on one's behalf)
@@ -7898,7 +7948,7 @@ Page 326 apregonar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[deepen]]
 #: {{syn|ca|enfondir|profunditzar}}
@@ -8394,7 +8444,7 @@ From {{af|ca|argent|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[silver-plate]]
 #: {{syn|ca|platejar}}
@@ -8448,7 +8498,7 @@ From {{der|ca|la|argūmentor|argūmentārī}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|ambitransitive}} to [[argue]] {{gloss|make a case for a point of view}}
 
@@ -8522,7 +8572,7 @@ From {{af|ca|arpa|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[claw]], to [[scratch]]
 #: {{syn|ca|arpellejar|escatar|esgarrapar|fregar|grapar|gratar|raspar|rautar}}
@@ -8552,7 +8602,7 @@ From {{af|ca|arpelles|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[claw]], to [[scratch]]
 #: {{syn|ca|arpejar|escatar|esgarrapar|fregar|grapar|gratar|raspar|rautar}}
@@ -8574,7 +8624,7 @@ From {{af|ca|arpó|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[harpoon]]
 
@@ -8597,10 +8647,10 @@ Page 355 arquejar: -------- begin text --------
 {{af|ca|arc|-ejar}}
 
 ====Verb====
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
-# {{lb|ca|transitive}} [[arc]] {{gloss|[[bend]] something into the shape of an arc}}
-# {{lb|ca|pronominal}} [[arc]] {{gloss|take the shape of an arc}}
+# {{lb|ca|transitive}} to [[arc]] {{gloss|[[bend]] something into the shape of an arc}}
+# {{lb|ca|pronominal}} to [[arc]] {{gloss|take the shape of an arc}}
 
 =====Synonyms=====
 * {{l|ca|arcar}}
@@ -8609,9 +8659,9 @@ Page 355 arquejar: -------- begin text --------
 {{af|ca|arca|-ejar}}
 
 ====Verb====
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
-# {{lb|ca|transitive|nautical}} [[measure]] the [[volume]] of a [[vessel]]
+# {{lb|ca|transitive|nautical}} to [[measure]] the [[volume]] of a [[vessel]]
 
 =====Conjugation=====
 {{ca-conj}}
@@ -8660,7 +8710,7 @@ From {{confix|ca|a|racó|ar|t2=corner}}. Compare {{cog|es|arrinconar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to put in a [[corner]], to [[set aside]]
 # {{lb|ca|transitive}} to [[retire]], [[shelve]]
@@ -8821,7 +8871,7 @@ From {{af|ca|a-|recer|-ar|t2=shelter}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to place [[under cover]], to [[shelter]], to [[protect]]
 #: {{syn|ca|abrigar}}
@@ -9005,7 +9055,7 @@ From {{af|ca|a-|replegar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[gather]], [[collect]]
 #: {{syn|ca|ajuntar|recollir}}
@@ -9196,7 +9246,7 @@ Alteration of {{m|ca|arremangar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[roll up]] {{q|sleeves, trouser legs, etc.}}
 # {{lb|ca|pronominal}} to [[roll up]] one's sleeves; {{lb|ca|figurative}} to get to work, to [[get down to business]]
@@ -9247,7 +9297,7 @@ From {{prefix|ca|a|rossegar}}.
 * {{rhymes|ca|a(ɾ)}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|ambitransitive}} to [[drag]]
 #: {{uxi|ca|Pesava massa i va haver d''''arrossegar'''-lo.|It weighed too much and he had to '''drag''' it.}}
@@ -9274,7 +9324,7 @@ From {{prefix|ca|a|rossegar}}.
 Page 382 arrossegar pel fang: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[drag through the mud]]
 #: {{ux|ca|M'han '''arrossegat pel fang''' i m'han tractat com a un criminal.|They've '''dragged me through the mud''' and treated me like a criminal.}}
@@ -9528,7 +9578,7 @@ Page 393 aspergir: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive|Christianity|agriculture}} to [[sprinkle]]
 #: {{syn|ca|ruixar}}
@@ -9586,7 +9636,7 @@ From {{confix|ca|a|sabent|ar|t2=knowing}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[inform]]; to [[let know]]
 #: {{syn|ca|informar}}
@@ -9776,7 +9826,7 @@ From {{af|ca|a-|set|-egar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[make]] [[thirsty]]
 #: {{ux|ca|Com si fos un tauró, el gust de la sang em va '''assedegar''' i en volia més.|As if I were a shark, the taste of blood '''made''' me '''thirsty''' and I wanted more.}}
@@ -9866,7 +9916,7 @@ Page 406 assentar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[settle]], to [[set up]]
 
@@ -10159,7 +10209,7 @@ From {{af|ca|a-|solell|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[expose]] to [[sunlight]]
 
@@ -10214,7 +10264,7 @@ Variant form of {{m|ca|sossegar}}, from earlier {{m|ca|*sessegar}}, from {{inh|c
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[calm]], [[soothe]], [[hush]]
 #: {{syn|ca|calmar|apaivagar|tranquil·litzar}}
@@ -10239,7 +10289,7 @@ From {{af|ca|assot|-ar}}, attested from the 14th century.<ref>{{R:ca:GDLC}}</ref
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[flog]], to [[flagellate]]
 #: {{syn|ca|flagel·lar}}
@@ -10429,7 +10479,7 @@ From {{af|ca|a-|tanda|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to assign a turn to
 # {{lb|ca|intransitive|pronominal}} to take one's turn
@@ -10958,9 +11008,9 @@ Page 453 atrevir: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{head|ca|verb form}}
 
-# {{inflection of|ca|atrevir-se||inf}}
+# {{ca-verb form of|atrevir-se}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -11043,7 +11093,7 @@ From {{affix|ca|a-|tropell|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[run over]]
 # to [[rush]]
@@ -11150,7 +11200,7 @@ Page 461 augmentar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|ambitransitive}} to [[increase]], [[augment]]
 
@@ -11283,7 +11333,7 @@ Page 467 autolesionar-se: -------- begin text --------
 From {{af|ca|auto-|lesionar}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|reflexive}} to [[injure]] oneself
 
@@ -11381,10 +11431,10 @@ Page 472 avalotar: -------- begin text --------
 {{unc|ca}}, perhaps from {{der|ca|la|volūtāre}}. Compare {{cog|es|alborotar}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[stir up]], [[agitate]]
 # {{lb|ca|reflexive}} to [[rise up]], [[riot]]
@@ -11479,6 +11529,7 @@ Page 476 avenir: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
+# {{lb|ca|transitive}} to [[make]] (different people) [[agree]], to [[cause]] to [[come to terms]]
 # {{lb|ca|reflexive}} to [[get on]] with someone, without conflict
 #: {{ux|ca|Al final les parts en disputa s'han '''avingut'''.}}
 # {{lb|ca|reflexive}} to [[come to terms]]
@@ -11500,7 +11551,7 @@ Page 477 averar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- FIXME, a guess but likely based on [[ver]] -->
 
 # {{lb|ca|transitive|dialectal}} to [[reach for]], to [[bring]] [[closer]]
 
@@ -11594,9 +11645,12 @@ From {{af|ca|a-|vinagre|-ar}}.
 Page 482 avindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|avenir}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:GDLC}}
@@ -11886,7 +11940,7 @@ From {{af|ca|balança|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[swing]], to [[oscillate]]
 #: {{syn|ca|balandrejar|bransolejar|sondrollar|trontollar}}
@@ -11914,7 +11968,7 @@ Page 495 balandrejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[oscillate]], [[swing]], [[sway]], [[roll]]
 #: {{syn|ca|oscil·lar|balancejar}}
@@ -11939,12 +11993,15 @@ From {{m|ca|balb}} in its earlier sense of "stammering".
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[babble]], to [[stutter]]
 #: {{ux|ca|Els nadons comencen a '''balbotejar''' a partir dels sis o set mesos.|Infants start '''babbling''' at six or seven months.}}
 #: {{ux|ca|'''Balbotejava''' com un adolescent.|He '''babbled''' like an adolescent.}}
 # {{lb|ca|transitive}} to [[babble]] (out), to [[bleat]] (out), to [[stammer]] (out)
+
+====Conjugation====
+{{ca-conj}}
 
 ====Synonyms====
 * {{l|ca|balbucejar}}
@@ -11970,12 +12027,15 @@ Alteration of earlier {{m|ca|balbuçar}}, from {{der|ca|VL.|*balbūtiāre}}, a v
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[stutter]], to [[stammer]]
 #: {{ux|ca|El locutor '''balbucejava''' i repetia monòtonament una mateixa frase.|The speaker '''stammered''' and monotonously repeated the same phrase.}}
 # {{lb|ca|transitive}} to [[stammer]] (out),  [[babble]], [[bleat]] out
 #: {{ux|ca|'''Balbucejava''' mots a mitges, tremolava.|She '''stammered out''' words incompletely, she trembled.}}
+
+====Conjugation====
+{{ca-conj}}
 
 ====Synonyms====
 * {{l|ca|balbucitar}}
@@ -12085,7 +12145,7 @@ From {{af|ca|ban|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[exile]]
 #: {{syn|ca|desterrar}}
@@ -12138,7 +12198,7 @@ From {{af|ca|banya|-egar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[gore]]
 
@@ -12240,7 +12300,7 @@ Of expressive origin. Compare {{m|ca|balbucejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[mumble]], [[mutter]]
 #: {{syn|ca|barbotegar|farfallejar}}
@@ -12295,7 +12355,7 @@ Page 509 barrejar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|ambitransitive|pronominal}} to [[mix]] {{gloss|mix together}}
 #: {{syn|ca|mesclar}}
@@ -12488,7 +12548,7 @@ From {{af|ca|batre|-egar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[beat]], to [[throb]]
 #: {{uxi|ca|El seu cor començarà a '''bategar''' amb violència.|His heart began '''beating''' violently.}}
@@ -12520,7 +12580,7 @@ Page 517 batejar: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-batejar.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[baptize]]
 
@@ -12608,7 +12668,7 @@ From {{af|ca|batxiller|-ejar|t1=busybody}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[pry]], [[snoop]]
 #: {{syn|ca|tafanejar}}
@@ -12628,7 +12688,7 @@ Page 521 batzegar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[shake]]
 #: {{syn|ca|sacsejar}}
@@ -12653,7 +12713,7 @@ From {{af|ca|bava|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[drool]], to [[drivel]]
 # {{lb|ca|transitive}} to [[drool]] on, to [[slobber]] on, {{q|molluscs}} to [[slime]]
@@ -13034,7 +13094,7 @@ Page 537 bisellar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[bevel]]
 
@@ -13085,7 +13145,7 @@ From {{suffix|ca|blanc|ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|ambitransitive}} to [[whiten]]
 # {{lb|ca|cooking|transitive}} to [[blanch]]
@@ -13227,7 +13287,7 @@ Page 544 bloquejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[block]]
 #: {{syn|ca|blocar}}
@@ -13321,7 +13381,7 @@ From {{suffix|ca|boicot|ejar}}.
 * {{rhymes|ca|a(ɾ)}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[boycott]]
 
@@ -13340,7 +13400,7 @@ From {{der|ca|VL.||*volvicāre}}, from {{der|ca|la|volvere}}.
 {{ca-verb}}
 
 # to [[overturn]]
-# to put [[diaper|diapers]] on a baby
+# to put [[diaper]]s on a baby
 # {{lb|ca|reflexive}} to [[gather]] for a cause
 
 ====Conjugation====
@@ -13431,7 +13491,7 @@ From {{af|ca|bombarda|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[bomb]], to [[bombard]]
 
@@ -13460,7 +13520,7 @@ From {{m|ca|bomba||pump}}.
 * {{rhymes|ca|a(ɾ)}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[pump]]
 
@@ -13549,7 +13609,7 @@ From {{af|ca|borró|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|intransitive}} to [[bud]]
 
@@ -13571,7 +13631,7 @@ Page 557 botar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|intransitive}} to [[bounce]], to [[bound]]
 #: {{syn|ca|botre}}
@@ -13598,7 +13658,7 @@ From {{af|ca|bot|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[bound]], to [[spring]], to [[skip]]
 #: {{syn|ca|saltironar}}
@@ -13645,7 +13705,7 @@ From {{af|ca|botó|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[button]]
 # {{lb|ca|intransitive}} to [[bud]]
@@ -13725,7 +13785,7 @@ From {{af|ca|botzinar|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[grumble]], [[complain]]
 #: {{syn|ca|botzinar|rondinar}}
@@ -13774,11 +13834,11 @@ Page 565 boxejar: -------- begin text --------
 {{bor+|ca|es|boxear}}, from {{der|ca|en|box}}. Equivalent to {{af|ca|boxa|-ejar}}.
 
 ===Pronunciation===
-* {{ca-IPA|boksejar}}
+* {{ca-IPA|[ks]}}
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[box]] {{gloss|participate in boxing}}
 #: {{syn|ca|boxar}}
@@ -13860,7 +13920,7 @@ From {{af|ca|branca|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|intransitive}} to put out branches {{q|of a tree}}
 #: {{syn|ca|ramar|ramejar}}
@@ -13868,6 +13928,9 @@ From {{af|ca|branca|-ar}}.
 #: {{syn|ca|ramificar-se}}
 # {{lb|ca|transitive}} to [[prune]], to [[trim]]
 #: {{syn|ca|esporgar|podar}}
+
+====Conjugation====
+{{ca-conj}}
 
 ====Derived terms====
 * {{l|ca|brancament}}
@@ -13924,7 +13987,7 @@ From {{af|ca|brandar|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[brandish]] {{gloss|to move a weapon back and forth}}
 #: {{syn|ca|brandar}}
@@ -13974,7 +14037,7 @@ From {{der|ca|got|𐌱𐍂𐌹𐌺𐌰𐌽||to break}}, from {{der|ca|gem-pro|*b
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[fight]], to [[struggle]]
 # {{lb|ca|transitive}} to [[scrub]]
@@ -14215,7 +14278,7 @@ Page 581 brotar: -------- begin text --------
 From {{der|ca|got|*𐌱𐍂𐌿𐍄𐍉𐌽}}. Compare {{cog|oc|brotar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|root=ó}}
 * {{rhymes|ca|a(ɾ)|s=2}}
 * {{homophones|ca|brotà}}
 
@@ -14356,7 +14419,7 @@ From {{af|ca|bufó|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[clown around]], to [[play]] the [[buffoon]]
 # to [[joke]], to [[jest]]
@@ -14443,9 +14506,9 @@ Page 589 burlar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{head|ca|verb form}}
 
-# {{form of|ca|infinitive|burlar-se}}
+# {{ca-verb form of|burlar-se}}
 
 -------- end text --------
 Page 590 burlar-se: -------- begin text --------
@@ -14540,7 +14603,7 @@ From {{af|ca|bus<t:diver>|-ejar}}. Compare {{cog|es|bucear}}.
 * {{homophones|ca|bussejà}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[dive]] {{gloss|swim underwater}}
 
@@ -14589,9 +14652,12 @@ From {{af|ca|bústia|-ar}}.
 Page 595 caber: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alternative form of|ca|cabre}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -14720,13 +14786,13 @@ Page 599 caçar: -------- begin text --------
 Page 600 caciquejar: -------- begin text --------
 
 ===Etymology===
-{{af|ca|cacic|-ejar}}
+From {{af|ca|cacic|-ejar}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to behave like a petty tyrant, to [[throw one's weight around]], to [[abuse]] one's [[authority]]
 #* {{quote-book|ca|year=1925|author=Josep Carner|title=Les bonhomies|text='''Caciqueja''' en un poble i parla en un cafè habitual contra la decadència del parlamentarisme.|t=He '''throws his weight around''' in the village and speaks against the decadence of parliamentarianism in his usual café.}}
@@ -14774,7 +14840,7 @@ From {{af|ca|caducar|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to be [[senile]]
 #: {{syn|ca|repapiejar}}
@@ -14865,7 +14931,7 @@ From {{af|ca|calamarsa|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|weather|impersonal}} to [[hail]]
 #: {{syn|ca|calabruixar|granissar|pedregar}}
@@ -15050,7 +15116,7 @@ From {{inh|ca|VL.|*caldidiāre}}, derived from {{der|ca|la|caldus|t=hot}}. {{sur
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive|intransitive}} to [[heat up]], to [[warm up]] {{gloss|to cause to become hotter}}
 # to [[heat up]] {{gloss|to become more exciting or intense}}
@@ -15138,9 +15204,12 @@ Page 614 caler: -------- begin text --------
 * {{rhymes|ca|e(ɾ)|s=2}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|<only3sp>}}
 
 # {{alternative form of|ca|caldre}}
+
+====Conjugation====
+{{ca-conj|<only3sp>}}
 
 -------- end text --------
 Page 615 calfar: -------- begin text --------
@@ -15197,7 +15266,7 @@ From {{der|ca|la|chalo|chalāre}}, from {{der|ca|grc|χαλάω}}.
 #: {{uxi|ca|Si us plau, '''calleu'''!|Please, silence!}}
 # {{lb|ca|transitive}} to [[hush]], to make [[silent]]
 #: {{uxi|ca|I llavors el va fer '''callar'''.|And then he shut him up.}}
-# {{lb|ca|transitive}} (can be reflexive as well) to say [[nothing]] about, to not [[mention]]
+# {{lb|ca|transitive|or|reflexive}} to say [[nothing]] about, to not [[mention]]
 #: {{uxi|ca|Aquestes coses se les '''calla'''.|She does not mention such things.}}
 
 ====Conjugation====
@@ -15503,6 +15572,9 @@ From {{compound|ca|cap|ficar|t1=head|t2=to put}}.
 ===Verb===
 {{ca-verb}}
 
+# {{lb|ca|transitive}} to [[insert]] the [[end]] of (something) {{q|into something else}}
+# {{lb|ca|transitive|agriculture}} to [[hang]] (a branch of a vine) so as to [[take root]]
+# {{lb|ca|intransitive|nautical}} to [[pitch]] {{q|of a ship}}
 # {{lb|ca|reflexive}} to [[worry]]
 #: {{syn|ca|preocupar|amoïnar}}
 #: {{uxi|ca|No t'hi '''capfiquis''' tant!}}
@@ -15525,6 +15597,9 @@ Page 630 capficar-se: -------- begin text --------
 
 # {{reflexive of|ca|capficar}}
 #: {{syn|ca|preocupar-se}}
+
+====Conjugation====
+{{ca-conj}}
 -------- end text --------
 Page 631 capgirar: -------- begin text --------
 
@@ -15722,16 +15797,19 @@ From {{af|ca|cap|tenir|se|t1=head|t2=to have|pos3=reflexive pronoun}}.
 Page 638 captindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{head|ca|verb form}}
 
-# {{form of|ca|infinitive|captindre's}}
+# {{ca-verb form of|captindre's}}
 -------- end text --------
 Page 639 captindre's: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|captenir-se}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:DNV}}
@@ -15795,7 +15873,7 @@ From {{af|ca|carabassa|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{alternative form of|ca|carbassejar}}
 
@@ -15860,7 +15938,7 @@ From {{m|ca|carabassejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to resemble a pumpkin
 # {{lb|ca|transitive}} to [[fail]] {{q|exam, course, etc.}}, to [[flunk out]]
@@ -16025,7 +16103,7 @@ From {{af|ca|carranc|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to walk slowly and with difficulty; to [[limp]], [[hobble]] along
 #: {{syn|ca|coixejar}}
@@ -16045,7 +16123,7 @@ Page 653 carregar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- per cawikt, despite the etym; possibly by influence of [[càrrega]], with unstressed /e/ -->
 
 # to [[load]]
 # to [[charge]] {{gloss|a battery}}
@@ -16075,7 +16153,7 @@ Page 654 carretejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[cart]]
 # {{lb|ca|transitive}} to [[haul]]
@@ -16099,7 +16177,7 @@ Page 655 carrisquejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[grate]], [[creak]], [[squeak]]
 #: {{syn|ca|grinyolar|xerricar}}
@@ -16200,7 +16278,7 @@ From {{af|ca|cascavell|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[jingle]], [[tinkle]]
 # {{lb|ca|intransitive}} to [[rattle]]
@@ -16407,7 +16485,7 @@ From {{af|ca|caució|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|law}} to [[bail out]]
 
@@ -16627,7 +16705,7 @@ Page 675 cegar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[blind]]
 # {{lb|ca|transitive}} to [[block off]], [[obstruct]]
@@ -17002,7 +17080,7 @@ Page 690 circumnavegar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[circumnavigate]]
 
@@ -17133,7 +17211,7 @@ Page 696 clapotejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[slosh]], [[swash]] {{gloss|make a liquid slapping sound}}
 
@@ -17257,7 +17335,7 @@ From {{af|ca|clivella|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[crack]] {{gloss|to make a crack or cracks in}}
 # {{lb|ca|pronominal}} to [[crack]] {{gloss|to develop cracks}}
@@ -17280,7 +17358,7 @@ Page 703 clonar: -------- begin text --------
 From {{suffix|ca|clon|ar}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ô}}<!-- FIXME: cawikt says ò everywhere but DNV says /o/. ô is a guess -->
 
 # to [[clone]]
 
@@ -17624,7 +17702,7 @@ From {{suffix|ca|coix|ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[limp]]
 # {{lb|ca|of furniture}} to [[wobble]]
@@ -17799,7 +17877,7 @@ From {{af|ca|col·lecció|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[collect]] {{gloss|to accumulate a number of similar or related objects, particularly for a hobby or recreation}}
 
@@ -17956,7 +18034,7 @@ From {{suffix|ca|colp|ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{alt form|ca|copejar}}
 
@@ -18067,7 +18145,7 @@ Page 731 combregar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|Christianity}} to [[communicate]] {{gloss|to give or receive [[Holy Communion]]}}
 
@@ -18125,7 +18203,7 @@ From {{uder|ca|la|commentor|commentārī}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[comment]]
 
@@ -18235,7 +18313,7 @@ From {{af|ca|comissió|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[commission]]
 
@@ -18294,7 +18372,7 @@ From {{af|ca|commoció|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=5}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[shock]] {{gloss|to cause to be emotionally shocked}}
 #* {{quote-journal|ca|date=January 4 2017|author=Julia Camacho|title=Presó per als agents detinguts per narcotràfic a Isla Mayor|work=El Periódico|url=http://www.elperiodico.cat/ca/noticias/successos-i-tribunals/preso-guardies-civils-detinguts-per-narcotrafic-isla-mayor-5725564
@@ -18338,11 +18416,14 @@ From {{der|ca|la|commoveō}}.
 Page 742 commutar: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
-# [[switch]], [[toggle]]
-# {{lb|ca|legal}} [[commute]]
-# {{lb|ca|math}} [[commute]]
+# to [[switch]], [[toggle]]
+# {{lb|ca|legal}} to [[commute]]
+# {{lb|ca|math}} to [[commute]]
+
+====Conjugation====
+{{ca-conj}}
 -------- end text --------
 Page 743 compactar: -------- begin text --------
 
@@ -18614,7 +18695,7 @@ Page 753 complementar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[complement]] {{gloss|to provide what the partner lacks}}
 
@@ -19423,7 +19504,7 @@ From {{af|ca|condició|-ar}}.
 * {{homophones|ca|condicionà}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[condition]]
 
@@ -19443,7 +19524,7 @@ Page 783 condimentar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[season]] {{gloss|to flavour food}}
 
@@ -19540,7 +19621,7 @@ Page 786 conéixer: -------- begin text --------
 Page 787 confeccionar: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[make]], [[prepare]]
 
@@ -19793,8 +19874,8 @@ Page 797 conformar: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|transitive|reflexive|conformar-se}} to [[shape]], to [[form]]
-# {{lb|ca|transitive|reflexive|conformar-se}} to [[conform]] to
+# {{lb|ca|transitive|or|reflexive}} to [[shape]], to [[form]]
+# {{lb|ca|transitive|or|reflexive}} to [[conform]] to
 
 ====Conjugation====
 {{ca-conj}}
@@ -20018,14 +20099,14 @@ From {{der|ca|la|cōnectō}}. Attested from 1537.<ref>{{R:ca:GDLC}}</ref>
 Page 806 connotar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|connoto|connotāre}}.
+{{bor+|ca|la|connoto|connotāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[imply]]
 
@@ -20282,13 +20363,13 @@ From {{der|ca|la|cōnservō|cōnservāre|to preserve; to conserve}}.
 Page 816 considerar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|considero|cōnsīderāre}}.
+{{bor+|ca|la|considero|cōnsīderāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME, a guess but likely -->
 
 # to [[consider]]
 # to think highly of
@@ -20902,9 +20983,12 @@ From {{af|ca|contextual|-itzar}}.
 Page 841 contindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|contenir}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:GDLC}}
@@ -21050,7 +21134,7 @@ From {{af|ca|contra-|placa|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[laminate]]
 
@@ -21187,9 +21271,12 @@ From {{der|ca|la|contrāveniō}}.
 Page 853 contravindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|contravenir}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:GDLC}}
@@ -21464,9 +21551,12 @@ Page 862 convidar: -------- begin text --------
 Page 863 convindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|convenir}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:GDLC}}
@@ -21530,7 +21620,7 @@ Page 865 convocar: -------- begin text --------
 Page 866 cooperar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|cooperor|cooperārī}}.
+{{bor+|ca|la|cooperor|cooperārī}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -21538,7 +21628,7 @@ From {{der|ca|la|cooperor|cooperārī}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME, a guess but likely -->
 
 # {{lb|ca|intransitive}} to [[cooperate]]
 
@@ -21627,7 +21717,7 @@ From {{af|ca|cop|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[hit]], to [[strike]], to [[knock]]
 
@@ -21888,7 +21978,7 @@ Page 879 coronar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[crown]]
 
@@ -22143,7 +22233,7 @@ Page 888 corroure: -------- begin text --------
 ===Verb===
 {{head|ca|verb}}
 
-# to [[corrode]]
+# {{lb|ca|obsolete}} to [[corrode]]
 
 ====Related terms====
 * {{l|ca|corroir}}
@@ -22163,7 +22253,7 @@ From {{af|ca|cort|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[court]], to [[woo]]
 #: {{syn|ca|fer la cort}}
@@ -22268,7 +22358,7 @@ From {{af|ca|cost|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[pay]] for (someone else)
 
@@ -22287,7 +22377,7 @@ From {{af|ca|cota|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[collate]] {{gloss|compare two documents}}
 #: {{syn|ca|confrontar}}
@@ -22392,25 +22482,34 @@ Page 897 craquejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Etymology 1===
-{{af|ca|crack|-ejar|lang1=en}}.
+From {{af|ca|crack|-ejar|lang1=en}}.
 
 ====Verb====
-{{ca-verb}}
-# {{lb|ca|transitive}} to [[overcome]] the [[security]] of a computer system or other component.
+{{ca-verb|root=ê}}
+
+# {{lb|ca|transitive|computing}} to [[crack]] (a computer system or other component)
+
+=====Conjugation=====
+{{ca-conj}}
 
 ===Etymology 2===
 {{af|ca|crack|-ejar|lang1=en}}.
 
 ====Verb====
-{{ca-verb}}
-# {{lb|ca|transitive}} to obtain petroleum products by [[cracking]]
+{{ca-verb|root=ê}}
+
+# {{lb|ca|transitive|petrochemistry}} to [[crack]] (organic molecules to obtain petroleum)
+
+=====Conjugation=====
+{{ca-conj}}
 
 ===Etymology 3===
 From {{af|ca|crac|-ejar}} (onomatopoeia of a sharp sound)
 
 ====Verb====
-{{ca-verb}}
-# {{lb|ca|intransitive}} to make a sharp sound when a solid material breaks.
+{{ca-verb|root=ê}}
+
+# {{lb|ca|intransitive}} to [[crack]] {{gl|to make a sharp sound when a solid material breaks}}
 
 =====Conjugation=====
 {{ca-conj}}
@@ -22856,7 +22955,7 @@ From {{af|ca|croquis|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[sketch]]
 #: {{syn|ca|esbossar}}
@@ -22981,7 +23080,7 @@ Page 919 cuclejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[caw]]
 
@@ -23009,7 +23108,7 @@ From {{suffix|ca|cua|ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|of a tail}} to [[wag]]
 
@@ -23618,7 +23717,7 @@ Perhaps from {{der|ca|la|candeō||to gleam white}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[weaken]], to make weak
 # {{lb|ca|intransitive}} to [[weaken]], to grow weak
@@ -24189,7 +24288,7 @@ From {{af|ca|de-|gota|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|intransitive}} to [[drip]]
 #: {{syn|ca|gotejar|degotejar}}
@@ -24217,7 +24316,7 @@ From {{suffix|ca|degotar|ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[drip]], to [[trickle]]
 #: {{syn|ca|repicar|ressonar}}
@@ -24319,7 +24418,7 @@ Page 971 deixar: -------- begin text --------
 Page 972 deixar de: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[quit]], to [[stop]], to [[cease]]
 
@@ -24505,13 +24604,13 @@ Page 979 delegar: -------- begin text --------
 Page 980 deliberar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|delibero|deliberāre}}.
+{{bor+|ca|la|delibero|deliberāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME, a guess but likely -->
 
 # to [[deliberate]]
 #* {{quote-journal|ca|date=October 6 2016|title=El Constitucional obre amb els toros un nou front amb Catalunya|author=Manuel Vilaseró; Ángeles Vázquez|work=El Periódico|url=http://www.elperiodico.cat/ca/noticias/societat/tribunal-constitucional-obre-amb-els-toros-nou-front-amb-catalunya-5461471|passage=Fonts de l'alt tribunal qualifiquen l'assumpte de "senzill", i per això no esperen un gran discussió quan els 11 magistrats que componen el ple comencin a '''deliberar''' l'assumpte.}}
@@ -24684,7 +24783,7 @@ Page 986 demanar: -------- begin text --------
 |passage=Què t'ha semblat, la carta d'en Ramon, m'ha '''demanat''' mentre esperàvem que ens servissin.
 |t=What did you think of Ramon's letter, she '''asked''' me while we waited to be served.}}
 #: {{syn|ca|preguntar}}
-# {{lb|ca|reflexive|demanar-se}} to [[wonder]]
+# {{lb|ca|reflexive}} to [[wonder]]
 #* {{quote-book|ca|year=2014|author=Blanca Busquets|title=Paraules a mitges|publisher=ROSA VENTS|isbn=9788415961598
 |passage=De seguida, li feia somrient, i mentre anava cap a la cuina, '''em demanava''' si ella i les altres em perdonarien mai el que estava a punt de fer.
 |t=Immediately, I smiled at her, and as I went toward the kitchen, I '''wondered''' if she and the others would ever forgive me for what I was about to do.}}
@@ -24915,7 +25014,7 @@ Page 995 denotar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[denote]]
 
@@ -24938,7 +25037,7 @@ Page 996 dentar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|intransitive}} to [[teethe]] {{gloss|grow teeth}}
 # {{lb|ca|transitive}} to determine the age of (an animal) from examining the teeth
@@ -25005,14 +25104,14 @@ Page 998 departir: -------- begin text --------
 Page 999 depauperar: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la-med|depauperare||to impoverish}}, from Latin {{m|la|de-}} + {{m|la|pauperare||to impoverish}}, from {{m|la|pauper||poor}}. Cognate with {{cog|it|depauperare}}, {{cog|en|depauperate}}.
+{{bor+|ca|la-med|depaupero|dēpauperāre|to impoverish}}, from {{der|ca|la|dē-}} + {{m|la|paupero|pauperāre|to impoverish}}, from {{m|la|pauper||poor}}. Cognate with {{cog|it|depauperare}}, {{cog|en|depauperate}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 * {{homophones|ca|depauperà}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME, a guess but likely -->
 
 # {{lb|ca|transitive}} to [[impoverish]]
 #: {{syn|ca|empobrir}}
@@ -25320,7 +25419,7 @@ Page 1010 derrotar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[defeat]]
 
@@ -25782,9 +25881,9 @@ From {{af|ca|des-|avenir-se}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
-# {{lb|ca|intransitive}} to [[fall out]] ('''amb''' with), to [[disagree]] ('''amb''' with)
+# {{lb|ca|intransitive}} to [[fall out]], to [[disagree]] {{+preo|ca|amb|means=with}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -25806,6 +25905,7 @@ From {{af|ca|des-|ballesta|-ar}}.
 
 ===Verb===
 {{ca-verb}}
+
 # {{lb|ca|transitive}} to [[take apart]], [[dismantle]]
 #: {{syn|ca|desmuntar|desfer}}
 #* {{RQ:Sanchez Pell freda | chapter = 2 | passage = Les van '''desballestar''' allà mateix. A l'interior d'una barra de ferro de la meva bicicleta van trobar-hi la carta. | translation = They '''took''' them '''apart''' right there. Inside an iron bar of my bicycle they found the letter.}}
@@ -25912,7 +26012,7 @@ Page 1036 desbloquejar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[unblock]]
 #: {{syn|ca|desblocar}}
@@ -25976,7 +26076,7 @@ From {{af|ca|des-|botonar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[unbutton]]
 #: {{ant|ca|botonar}}
@@ -26650,7 +26750,7 @@ From {{af|ca|descontent|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[displease]], [[dissatisfy]]
 
@@ -26696,9 +26796,12 @@ From {{af|ca|des-|convenir}}.
 Page 1068 desconvindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|desconvenir}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:GDLC}}
@@ -27056,6 +27159,34 @@ Page 1083 desempallegar: -------- begin text --------
 
 # {{ca-verb form of|desempallegar-se}}
 -------- end text --------
+||||||| parent of 201eda56 (find_regex.catalan-verbs.out.1.merge: our changes)
+Page 1083 desempallegar: -------- begin text --------
+
+===Alternative forms===
+* {{alt|ca|desempagar}}
+
+===Etymology===
+{{inh+|ca|roa-oca|*desempeegar}}, {{der|ca|VL.|*disimpedicāre}}, from {{m|la|impedicāre}}.
+
+===Pronunciation===
+* {{ca-IPA}}
+* {{rhymes|ca|a(ɾ)|s=5}}
+
+===Verb===
+{{ca-verb}}
+
+# {{lb|ca|reflexive|desempallegar-se de}} to [[get rid of]], to [[shake off]]
+#: {{syn|ca|esbandir}}
+
+====Conjugation====
+{{ca-conj}}
+
+===Further reading===
+* {{R:ca:IEC2}}
+* {{R:ca:DCVB}}
+-------- end text --------
+=======
+>>>>>>> 201eda56 (find_regex.catalan-verbs.out.1.merge: our changes)
 Page 1084 desempaquetar: -------- begin text --------
 
 ===Etymology===
@@ -27477,7 +27608,7 @@ From {{af|ca|des-|esperar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to cause to [[despair]], to deprive of hope
 # {{lb|ca|intransitive}} to [[despair]] ('''de''' of)
@@ -27664,7 +27795,7 @@ From {{af|ca|des-|gavell|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alternative form of|ca|esgavellar||to take apart}}
 
@@ -28088,7 +28219,7 @@ Page 1129 desmantellar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[dismantle]]
 
@@ -28279,7 +28410,7 @@ From {{prefix|ca|des|donar}}. The first ⟨n⟩ is a result of {{glossary|assimi
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[evict]]
 
@@ -28582,7 +28713,7 @@ From {{der|ca|LL.|displicāre}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive|reflexive}} to [[unfold]], to [[spread out]]
 #: {{ant|ca|plegar}}
@@ -28894,7 +29025,7 @@ From {{af|ca|des-|tarot|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[disconcert]]
 #: {{syn|ca|desconcertar}}
@@ -29072,7 +29203,7 @@ From {{af|ca|destral|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[axe]] {{gloss|chop with an axe}}, to [[fell]] {{q|with an axe}}
 # {{lb|ca|intransitive}} to [[chop]] away
@@ -29480,9 +29611,12 @@ Page 1187 detindre: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|detenir}}
+
+====Conjugation====
+{{ca-conj}}
 -------- end text --------
 Page 1188 detonar: -------- begin text --------
 
@@ -29493,7 +29627,7 @@ Page 1188 detonar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|intransitive}} to [[detonate]]
 
@@ -30199,9 +30333,6 @@ Page 1216 dinyar: -------- begin text --------
 -------- end text --------
 Page 1217 dinyar-la: -------- begin text --------
 
-===Etymology===
-{{es-compound of|diny|ar||la|mood=inf}}
-
 ===Pronunciation===
 * {{ca-IPA}}
 
@@ -30639,7 +30770,7 @@ Page 1235 dislocar: -------- begin text --------
 {{ca-conj}}
 
 ====Derived terms====
-* {{l|ca|dislocació }}
+* {{l|ca|dislocació}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -30667,7 +30798,7 @@ From {{der|ca|la|dīminuō|diminuere|t=to break into small pieces; to diminish}}
 * {{l|ca|disminuït}}
 
 ====Related terms====
-* {{l|ca|disminució }}
+* {{l|ca|disminució}}
 
 ===Further reading===
 * {{R:ca:GDLC}}
@@ -31064,7 +31195,7 @@ From {{af|ca|distorsió|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=5}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[distort]]
 
@@ -31436,7 +31567,7 @@ Page 1268 documentar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[document]]
 
@@ -31506,9 +31637,12 @@ From a rhizotonic variant of {{inh|ca|roa-oca|doler}}, from {{inh|ca|la|doleō|d
 Page 1271 doler: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alternative form of|ca|doldre}}
+
+====Conjugation====
+{{ca-conj}}
 
 -------- end text --------
 Page 1272 domar: -------- begin text --------
@@ -31626,12 +31760,11 @@ Page 1276 donar: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-donar.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[give]]
 
 ====Conjugation====
-Originally, the second and third person singulars were ''dones'' and ''dona'', but those two got their meanings swapped with {{m|ca|dònes}} and {{m|ca|dòna}}, which originally meant "women" and "woman," respectively.
 {{ca-conj}}
 
 ====Derived terms====
@@ -31669,27 +31802,30 @@ Originally, the second and third person singulars were ''dones'' and ''dona'', b
 Page 1277 donar a conèixer: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[make known]]
+
+====Conjugation====
+{{ca-conj}}
 -------- end text --------
 Page 1278 donar a menjar: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[feed]] {{gloss|to give food to eat}}
 #: {{syn|ca|alimentar}}
+
+====Conjugation====
+{{ca-conj}}
 -------- end text --------
 Page 1279 donar carpetada a: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to close the file on, to [[put aside]]
-
-====Conjugation====
-See {{m|ca|donar|gloss=to give}}
 -------- end text --------
 Page 1280 donar d'alta: -------- begin text --------
 
@@ -31697,7 +31833,7 @@ Page 1280 donar d'alta: -------- begin text --------
 From {{com|ca|donar|de|alta}}.
 
 ===Verb===
-{{head|ca|verb|head=[[donar]] [[d']][[alta]]}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[register]], to [[enroll]]
 # {{lb|ca|transitive|military}} to declare fit for duty
@@ -31713,7 +31849,7 @@ Page 1281 donar de baixa: -------- begin text --------
 {{cal|ca|es|dar de baja}}.
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive|reflexive}} to [[unregister]], to [[unsubscribe]]
 #: {{ant|ca|donar d'alta}}
@@ -31725,7 +31861,7 @@ Page 1281 donar de baixa: -------- begin text --------
 Page 1282 donar per descomptat: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|head=~descompta[t:r]}}
 
 # to [[take for granted]]
 #: {{syn|ca|descomptar}}
@@ -31740,7 +31876,7 @@ Page 1283 donar voltes: -------- begin text --------
 Cognate to {{cog|es|dar vueltas}}.
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|head=~volt[es:a]}}
 
 # to [[go round in circles]]
 #* {{quote-journal|ca|journal=Time Out Barcelona|author=Erica Aspas|title=El gran museu de la llum|date=Feb 13 2019|page=19
@@ -31762,9 +31898,9 @@ From {{af|ca|dona|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
-# {{lb|ca|intransitive}} {{q|of a girl}} to look or act like grown woman
+# {{lb|ca|intransitive}} to [[look]] or [[act]] like a [[grown]] [[woman]] {{q|of a girl}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -31840,13 +31976,13 @@ Page 1286 dormir: -------- begin text --------
 Page 1287 dotar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|dōtō|dōtāre}}.
+{{bor+|ca|la|dōtō|dōtāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[endow]]
 # to [[supply]], [[provide]], [[grant]]
@@ -31875,7 +32011,7 @@ From {{suffix|ca|dotor|ejar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[snoop]], to [[gossip]], to [[pry]]
 
@@ -32086,7 +32222,7 @@ From {{af|ca|dropo|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[loaf]], [[idle]]
 #: {{syn|ca|gandulejar|mandrejar}}
@@ -33133,7 +33269,7 @@ From {{af|ca|en-|baf|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[sicken]] {{q|through excess of sweetness, oiliness, etc.}}, to [[surfeit]], to [[cloy]]
 # {{lb|ca|figurative}} to [[bore]], to [[annoy]]
@@ -33607,6 +33743,9 @@ From {{af|ca|em-|bord|-ó|ir|t2=bastard}}.
 # {{lb|ca|pronominal|figurative}} to [[degenerate]], to [[ruin]] oneself
 #: {{syn|ca|degenerar|corrompre’s}}
 
+====Conjugation====
+{{ca-conj}}
+
 ===Further reading===
 * {{R:ca:IEC2}}
 -------- end text --------
@@ -33619,11 +33758,14 @@ From {{af|ca|en-|borratxo|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to make [[drunk]], to [[intoxicate]]
 # {{lb|ca|reflexive}} to get [[drunk]]
 # {{lb|ca|transitive}} to cause colours to [[bleed]], especially while washing clothes
+
+====Conjugation====
+{{ca-conj}}
 
 ====Synonyms====
 * {{l|ca|embriagar}}
@@ -34187,7 +34329,7 @@ From {{af|ca|en-|mantell|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to put a [[coat]] on
 
@@ -34275,7 +34417,7 @@ From {{af|ca|en-|metzina|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[poison]]
 #: {{syn|ca|enverinar}}
@@ -34384,7 +34526,7 @@ From {{af|ca|en-|muralla|-ar|t2=wall}}.
 Page 1387 emocionar: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[move]]; to [[touch]] (emotionally)
 
@@ -34401,7 +34543,7 @@ From {{af|ca|en-|padró|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive|reflexive}} to [[register]] with the municipal authorities
 
@@ -34643,7 +34785,7 @@ From {{af|ca|en-|parent|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|intransitive}} to become [[related]] {{gloss|through marriage, etc.}}
 
@@ -34777,7 +34919,7 @@ Page 1403 empatxar: -------- begin text --------
 # {{lb|ca|transitive}} to [[impede]], [[hinder]]
 #: {{syn|ca|impedir}}
 # {{lb|ca|transitive}} to give [[indigestion]]
-# {{lb|ca|pronominal}} to [[worry]] ('''de''' about)
+# {{lb|ca|pronominal}} to [[worry]] {{+preo|ca|de|means=about}}
 #: {{syn|ca|preocupar-se}}
 # {{lb|ca|pronominal}} to suffer [[indigestion]]
 #: {{syn|ca|indigestar-se}}
@@ -34873,7 +35015,7 @@ From {{af|ca|empenta|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[push]], to [[shove]]
 
@@ -35195,7 +35337,7 @@ Page 1421 emprar: -------- begin text --------
 #: {{syn|ca|fer servir|utilitzar|usar}}
 #: {{uxi|ca|Puc '''emprar''' el telèfon?|May I use the phone?}}
 #* {{quote-web|ca|url=https://www.elpuntavui.cat/societat/article/5-societat/2234983-queixes-lingueistiques-a-l-alca.html|title=Queixes lingüístiques a l'alça|date=2022-12-27|author=Emma Ansola|work=El Punt Avui|passage={{...|Coincidint amb la commemoració del 25è aniversari de la Declaració Universal dels Drets Lingüístics, que protegeix les llengües minoritzades,}}l’entitat va presentar l’informe, en què any rere any, des del 2016, augmenta el nombre de queixes lingüístiques per vulneració del dret a '''emprar''' el català en la comunicació diària.|translation={{...}}the institution presented the report, in which year after year, since 2016, the number of linguistic complaints for violations of the right to '''use''' Catalan in daily communication increases.}}
-# {{indtr|ca|de|.archaic|.pronominal}} to [[make use]] of; to [[employ]] (someone)
+# {{lb|ca|archaic|pronominal}} to [[make use]] of; to [[employ]] {{+preo|ca|de|someone}}
 
 ====Usage notes====
 Considered to be a [[learned word]], mostly used in written form or formal speeches. Colloquial usage is {{m|ca|fer servir}}.
@@ -35302,7 +35444,7 @@ From {{af|ca|en-|presó|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[imprison]]
 
@@ -35403,7 +35545,7 @@ From {{suffix|ca|emulsió|ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[emulsify]]
 
@@ -35566,7 +35708,7 @@ From {{af|ca|en-|cadell|-ar|t2=tonguing plane}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[tongue]] {{gloss|to join pieces of wood by means of a [[tongue and groove]]}}
 
@@ -35832,7 +35974,8 @@ From {{af|ca|en-|capritx|-ar|t2=fancy}}.
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|pronominal}} to [[fall for]]
+# {{lb|ca|transitive}} to [[cause]] to [[fall in love]]
+# {{lb|ca|pronominal}} to [[fall in love]] with
 
 ====Conjugation====
 {{ca-conj}}
@@ -35943,7 +36086,7 @@ Page 1451 encarcerar: -------- begin text --------
 From {{af|ca|en-|càrcer|ar}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[incarcerate]] {{gloss|to lock away in prison}}
 #: {{syn|ca|empresonar}}
@@ -36047,7 +36190,7 @@ From {{af|ca|en-|casella|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[pigeonhole]] {{gloss|to categorize; especially to limit or be limited to a particular category, role, etc.}}
 
@@ -36125,7 +36268,7 @@ From {{af|ca|en-|cavall|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[piggyback]] on
 #: {{syn|ca|encavalcar}}
@@ -36901,9 +37044,9 @@ From {{der|ca|VL.|*indīrectiāre}}.
 Page 1490 endur: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{head|ca|verb form}}
 
-# {{inflection of|ca|endur-se||inf}}
+# {{ca-verb form of|endur-se}}
 
 -------- end text --------
 Page 1491 endur-se: -------- begin text --------
@@ -37640,7 +37783,7 @@ From {{af|ca|en-|gàlib|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[bamboozle]], to [[dupe]]
 #: {{syn|ca|enganyar|entabanar}}
@@ -37670,7 +37813,7 @@ From {{af|ca|en-|ganxo|-ar|t2=hook}}.
 
 # to [[stick]] ([[together]]), to [[paste]]
 # to [[attach]], to [[hitch]] (up), to [[hook up]]
-# {{lb|ca|pronominal}} to [[stick]], to [[adhere]] ('''a'''/'''en''' to)
+# {{lb|ca|pronominal}} to [[stick]], to [[adhere]] {{+preo|ca|[[a]]/[[en]]|means=to}}
 # {{lb|ca|computing}} to [[paste]] {{gloss|insert an item previously saved to memory}}
 #: {{cot|ca|copiar|retallar}}
 # {{lb|ca|military}} to [[recruit]]
@@ -37746,9 +37889,9 @@ Page 1524 engavanyar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
-# {{lb|ca|transitive}} {{q|of clothes}} to [[constrain]], [[hinder]], [[pull]], [[pinch]], etc.
+# {{lb|ca|transitive}} to [[constrain]], [[hinder]], [[pull]], [[pinch]], etc. {{q|of clothes}}
 #: {{syn|ca|embarassar}}
 # {{lb|ca|transitive|figurative}} to [[weigh]] upon, [[oppress]]
 #* {{quote-book|ca|year=1955|author=Josep Pla|title=El moments|text=En aquesta hora els seus pensaments solen ésser lúgubres i tot els '''engavanya''' i deprimeix.|t=At that hour their thoughts tended to be gloomy and everything '''weighed upon''' and depressed them.}}
@@ -37857,7 +38000,7 @@ From {{af|ca|en-|gipó|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to make a [[rush job]] of; to [[half-ass]], to [[botch]]
 # {{lb|ca|pronominal}} to [[dress]] carelessly, to [[throw on]]
@@ -37921,7 +38064,7 @@ From {{af|ca|en-|golfo|-ar}}.
 ====Verb====
 {{head|ca|verb form}}
 
-# {{verb form of|ca|engolfar-se||inf}}
+# {{ca-verb form of|engolfar-se}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -37936,7 +38079,7 @@ From {{af|ca|en-|golf|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|intransitive}} to form a [[gulf]]
 # {{lb|ca|intransitive}} to [[sail]] away from land
@@ -38092,7 +38235,7 @@ From {{af|ca|en-|grilló|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[shackle]], to [[fetter]]
 
@@ -38137,7 +38280,7 @@ Perhaps from {{m|ca|engruna}}, although the noun could also be derived from the 
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[crumble]], to reduce to crumbs
 #: {{syn|ca|esmicolar}}
@@ -38532,6 +38675,7 @@ From {{af|ca|en-}} + {{der|ca|la|nōdicō|nōdicāre}}.
 ===Verb===
 {{ca-verb}}
 
+# {{lb|ca|transitive}} to [[choke]]
 # {{lb|ca|reflexive}} to [[choke]] {{gloss|be unable to breathe}}
 
 ====Conjugation====
@@ -38682,7 +38826,7 @@ From {{af|ca|en-|rampa|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[cramp]]
 # {{lb|ca|transitive}} to [[shock]] {{gloss|give an electric shock to}}
@@ -38713,7 +38857,7 @@ From {{af|ca|en-|raó|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|intransitive}} to [[talk]], [[chat]]
 #: {{syn|ca|parlar|xerrar}}
@@ -38849,7 +38993,7 @@ From {{af|ca|en-|rínxol|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[curl]]
 # {{lb|ca|intransitive|pronominal}} to [[curl]], to be [[curly]]
@@ -38920,6 +39064,7 @@ From {{af|ca|en-|rogall|-ar}}.
 ===Verb===
 {{ca-verb}}
 
+# {{lb|ca|transitive}} to [[cause]] to go [[hoarse]]
 # {{lb|ca|reflexive}} to go [[hoarse]]
 #: {{syn|ca|enronquir-se}}
 
@@ -38964,12 +39109,12 @@ From {{af|ca|en-|roig|-ir}}.
 Page 1571 enrojolar: -------- begin text --------
 
 ===Etymology===
-From {{m|ca|en-}} + {{m|ca|rojor}} "redness" + {{m|ca|-ar}}, with [[dissimilation]] of the second ''r'' to ''l''.
+From {{af|ca|en-|rojor<t:redness>|-ar}}, with [[dissimilation]] of the second ''r'' to ''l''.
 
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|reflexive}} to [[blush]]
+# {{lb|ca|intransitive|or|reflexive}} to [[blush]]
 #: {{syn|ca|ruboritzar}}
 
 ====Conjugation====
@@ -39040,7 +39185,7 @@ From {{af|ca|en-|rotlle|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[roll up]]
 #: {{syn|ca|cargolar}}
@@ -39072,7 +39217,7 @@ From {{af|ca|en-|runa|-ar|t2=rubble}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to reduce to [[rubble]], to [[demolish]]
 # {{lb|ca|pronominal}} to be reduced to [[rubble]], to be [[demolished]]
@@ -39141,7 +39286,7 @@ From {{af|ca|en-|sarró|t2=sack|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[deceive]], to [[fool]]
 
@@ -39526,7 +39671,7 @@ From {{af|ca|en-|taula|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|board games|transitive}} to [[set up]], to [[start]]
 # {{lb|ca|figurative|transitive}} to [[initiate]] {{q|a contest, a conversation, etc.}}
@@ -39728,7 +39873,7 @@ From {{af|ca|en-|to|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|intransitive}} to [[be]] in [[tune]]
 # {{lb|ca|transitive}} to [[tune up]]
@@ -39782,7 +39927,7 @@ Page 1602 entortellar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a guess based on [[tortell]] "cake in the form of a crown" and DNV's /e/ -->
 
 # {{lb|ca|transitive}} to [[curve]] into a [[circle]]
 
@@ -40223,7 +40368,7 @@ From {{af|ca|enveja|-ar}}. Compare {{cog|it|invidiare}}, {{cog|fr|envier}}.
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-envejar.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[envy]]
 
@@ -40854,7 +40999,7 @@ Variant of {{m|ca|espargir}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} {{rfdef|ca}}
 #: {{syn|ca|dissipar|esbatre}}
@@ -41063,7 +41208,7 @@ From {{af|ca|es-|borró|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[stand on end]] {{q|of hair}}, to [[horripilate]], to cause [[goose flesh]]
 #: {{syn|ca|horripilar|esborrifar}}
@@ -41231,7 +41376,7 @@ From {{af|ca|es-|brossa|-ar|t2=brush, deadwood}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[clear]] {{q|of brush, etc.}}
 #: {{ux|ca|Va començar d''''esbrossar''' la lloma on havien d'assentar la barraca.|He began to '''clear''' the ridge where they had to establish the cabin.}}
@@ -41257,7 +41402,7 @@ From {{confix|ca|es|budell|ar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[gut]], to [[disembowel]]
 #: {{syn|ca|eviscerar|desbudellar}}
@@ -41311,9 +41456,9 @@ From {{af|ca|es-|cabell|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
-# {{lb|ca|transitive}} to [[muss]] or [[tousel]], the hair (of someone)
+# {{lb|ca|transitive}} to [[muss]] or [[tousel]] the [[hair]] of (someone), to [[dishevel]]
 #* {{quote-book|ca|year=1984|author=Pau Faner|title=Lady Valentine|text=L'oncle Pius, que era molt alt i estava molt magre, portava els calçons arromangats i anava en camiseta, tot escabellat pel vent, i llançava i recollia l'ham sense a penes pescar cap peix.|t=Uncle Pius, who was very tall and very thin, used to go around in his undershirt with his pantlegs rolled up, '''hair''' all '''mussed''' by the wind, tossing and reeling in the hook without hardly ever catching any fish.}}
 
 ====Conjugation====
@@ -41730,7 +41875,7 @@ From {{af|ca|lang1=en|scan|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[scan]]
 
@@ -41917,9 +42062,10 @@ Page 1685 escarmentar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
-# {{rfdef|ca}}
+# {{lb|ca|transitive}} to [[punish]], to [[teach a lesson]] to
+# {{lb|ca|pronominal}} to [[learn one's lesson]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -41979,7 +42125,7 @@ Page 1689 escassejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to be [[scanty]], [[insufficient]]
 # {{lb|ca|transitive}} to [[skimp]] on
@@ -42628,7 +42774,7 @@ Page 1715 escotar: -------- begin text --------
 From {{af|ca|escot|-ar|t1=an individual's share of the cost}}.
 
 ====Verb====
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[pay]] one's share of the cost
 
@@ -42642,7 +42788,7 @@ From {{af|ca|escot|-ar|t1=an individual's share of the cost}}.
 * {{ca-IPA}}
 
 ====Verb====
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to make clothing with [[décolletage]] that shows [[cleavage]]
 # to wear clothing with [[décolletage]] that shows [[cleavage]]
@@ -42955,9 +43101,12 @@ From {{der|ca|la|ex}} + {{m|la|dēvenīre}}, present active infinitive of {{m|la
 Page 1727 esdevindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|esdevenir}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:GDLC}}
@@ -43279,7 +43428,7 @@ From {{af|ca|es-|gavell|-ar|t2=bundle}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[take apart]], [[break down]]
 #: {{syn|ca|desballestar}}
@@ -43337,7 +43486,7 @@ From {{m|ca|esglaó}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[place]] at [[interval]]s
 
@@ -43357,7 +43506,7 @@ From {{confix|ca|es|gota|ar|t2=drop}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[exhaust]], to [[deplete]], to [[use up]]
 # {{lb|ca|reflexive}} to be [[used up]], to [[run out]]
@@ -43401,7 +43550,7 @@ From {{af|ca|es-|gra|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[thresh]] {{q|grains}}
 # to [[shell]] {{q|legumes}}
@@ -43454,7 +43603,7 @@ From {{af|ca|es-|guardar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[regard]], [[look at]]
 #: {{syn|ca|mirar}}
@@ -43475,13 +43624,13 @@ From {{af|ca|es-|guardar}}.
 Page 1748 esgüellar: -------- begin text --------
 
 ===Etymology===
-Of [[imitative]] origin.
+{{onomatopoeic|ca}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|intransitive}} to [[squeal]], to [[squeak]]
 
@@ -43531,9 +43680,9 @@ Alternation of earlier {{m|ca|esgarrar}}.
 Page 1750 esllavissar: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{head|ca|verb form}}
 
-# {{inflection of|ca|esllavissar-se||inf}}
+# {{ca-verb form of|esllavissar-se}}
 -------- end text --------
 Page 1751 esllavissar-se: -------- begin text --------
 
@@ -43636,7 +43785,7 @@ From {{af|ca|es-|ment|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[mention]]
 #: {{syn|ca|mencionar}}
@@ -43858,6 +44007,7 @@ From {{af|ca|es-|munyir}}.
 ===Verb===
 {{ca-verb}}
 
+# {{lb|ca|transitive}} to [[slide]] (something) [[through]] a [[narrow]] [[passage]]
 # {{lb|ca|reflexive}} to [[slip through]], to [[flow]] through
 
 ====Conjugation====
@@ -44106,7 +44256,7 @@ From {{af|ca|esparver|-ar|t1=sparrowhawk}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[frighten]], to [[bewilder]]
 #: {{syn|ca|esverar|espantar}}
@@ -44190,7 +44340,7 @@ Page 1777 espaventar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a bit of a guess here, but likely -->
 
 # {{lb|ca|archaic}} to [[scare]], [[frighten]]
 # {{lb|ca|archaic}} to [[scare]] [[away]], [[drive]] off
@@ -44315,9 +44465,9 @@ Page 1782 espellifar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
-# {{q|especially of clothing}} {{lb|ca|transitive}} to [[wear out]], to [[shred]]
+# {{lb|ca|transitive}} to [[wear out]], to [[shred]] {{q|especially of clothing}}
 #* {{quote-book|ca|year=1962|author=Manuel  Ibáñez i Escofet|title=Kubala, un barceloní de Budapest|text=La senyora Anna no sempre col·laborava en la confecció de la pilota, que durava fins que les puntades de peu de la quitxalla l''''espellifaven''' i la convertien en el trist i esventrat cadàver del que, més o menys perfecta, havia estat una esfera.|t=Mrs Anna didn't always collaborate in the fashioning of the ball, which lasted until the kicks of the mob of children '''wore''' it '''out''' and converted into a sad, disemboweled corpse what had been a more-or-less perfect sphere.}}
 # {{lb|ca|pronominal}} to [[wear out]], [[fray]]
 
@@ -44346,9 +44496,9 @@ From {{inh|ca|la|expellō|expellere}}. {{doublet|ca|expel·lir}}, a learned borr
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
-# {{lb|ca|intransitive}} {{q|of flowers}} to [[open]]
+# {{lb|ca|intransitive}} to [[open]] {{q|of flowers}}
 #* {{quote-book|ca|year=1990|author=Renada-Laura Portet|title=Lettera amorosa|text=Tot té un sentit, Jordi, el vent que xiula, la campana que toca, les flors que '''espelleixen''', els besos que es donen.|t=Everything has a meaning, Jordi: the wind that whistles, the bell that tolls, the flowers that '''bloom''', the kisses that are given.}} 
 # {{lb|ca|pronominal}} to [[bloom]]
 
@@ -44420,7 +44570,7 @@ Page 1786 esperar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[wait]], wait for, [[await]]
 # to [[hope]]
@@ -44485,7 +44635,7 @@ From {{af|ca|esperó|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[spur]]
 #: {{syn|ca|esperonejar}}
@@ -44511,7 +44661,7 @@ From {{af|ca|esperó|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[spur]]
 #: {{syn|ca|esperonar}}
@@ -44588,7 +44738,7 @@ From {{af|ca|es-|pet|-egar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[crash]]  {{q|of thunder, etc.}}, to [[burst]]
 # {{lb|ca|colloquial|intransitive}} to [[shatter]] to pieces, to [[smash]]
@@ -44764,12 +44914,15 @@ From {{af|ca|es-|pit|-egar}}. For the reappearance of etymological '''r''' in th
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to uncover the chest, either by loosening the top portion of a garment or removing it completely
 #: {{ux|ca|A l'estiu van '''espitregats'''.|In summer they go about '''bare-chested'''.}}
 # {{lb|ca|reflexive}} to be [[barechested]] or [[bare-breasted]]; to wear a [[low-cut]] neckline; to go [[topless]]
 #: {{syn|ca|escotar}}
+
+====Conjugation====
+{{ca-conj}}
 
 ====Related terms====
 * {{l|ca|apitrar}}
@@ -44915,6 +45068,7 @@ From {{af|ca|es-|poruc|-ir}}.
 
 ===Verb===
 {{ca-verb}}
+
 # {{lb|ca|transitive}} to [[frighten]]
 #* {{RQ:Sanchez Pell freda | chapter = 14 | passage = Amb una violència forassenyada va amenaçar amb un pal el triangle, que va fugir '''esporuguit''', i es va endur l'Aneris al far. | translation = With mad violence, he threatened the triangle with a stick, making him flee '''in fear''', and he took Aneris to the lighthouse.}}
 # {{lb|ca|pronominal}} to [[take fright]]
@@ -45020,7 +45174,7 @@ From {{af|ca|espurna|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[spark]] {{gloss|give off sparks}}
 # {{lb|ca|intransitive}} to [[sparkle]], [[twinkle]]
@@ -45074,7 +45228,7 @@ From {{af|ca|es-|quarter|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[quarter]] {{gloss|to divide by four}}
 #: {{syn|ca|quarterar|quarterejar}}
@@ -45126,13 +45280,13 @@ Page 1814 esqueixar: -------- begin text --------
 Page 1815 esquellar: -------- begin text --------
 
 ===Etymology===
-{{af|ca|esquella|-ar}}
+From {{af|ca|esquella|-ar}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[bell]] {{gloss|put a bell on}}
 
@@ -45155,7 +45309,7 @@ Page 1816 esquellejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} {{q|of cowbells}} to [[ring]], to [[tock]]
 #: {{syn|ca|picarolejar}}
@@ -45472,7 +45626,7 @@ From {{af|ca|estable|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[stable]]
 
@@ -45561,7 +45715,7 @@ From {{af|ca|estació|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[park]] {{gloss|to bring a vehicle to a halt in a specified place}}
 
@@ -45799,11 +45953,14 @@ From {{af|ca|es-|tavella|-ar|t2=seedpod}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[shell]] {{gloss|to remove the husk from}}
 # {{lb|ca|transitive}} to [[smash]], to [[shatter]]
 # {{lb|ca|intransitive|pronominal}} to [[smash]], to [[shatter]]
+
+====Conjugation====
+{{ca-conj}}
 
 ====Derived terms====
 * {{l|ca|estavellament}}
@@ -45820,7 +45977,7 @@ From {{af|ca|estella|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[splinter]], to [[split]]
 #: {{syn|ca|asclar|esquerdar}}
@@ -46241,7 +46398,7 @@ From {{af|ca|estiu|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[summer]] (spend summer somewhere)
 
@@ -46439,8 +46596,8 @@ From {{af|ca|estrena|-ar|t1=premiere}}.
 |translation=They study, they work, they get married, they tidy up the house, they go out with friends, they take care of each other and they '''wear''' new clothes often, they have time for everything, for each and every thing.}}
 # {{lb|ca|by extension|transitive}} to [[premiere]] {{gloss|to present a play or film for the first time}}
 #* {{quote-journal|ca|title='Orange is the new black' acabarà després de la setena temporada|journal=Ara|date=Oct 18 2018|passage=El drama carcerari, que es va '''estrenar''' el 2013, començava amb l'entrada a la presó de Piper Chapman (Taylor Schilling), {{...}}|translation=The prison drama, which '''premiered''' in 2013, began with the entrance into prison of Piper Chapman (Taylor Schilling) {{...}}|url=https://www.ara.cat/media/Orange-acabara-despres-setena-temporada_0_2108789302.html}}
-# {{lb|ca|reflexive|estrenar-se}} to do something for the first time; to [[break one's duck]]
-# {{lb|ca|reflexive|estrenar-se}} to make the first sale of the day
+# {{lb|ca|reflexive}} to do something for the first time; to [[break one's duck]]
+# {{lb|ca|reflexive}} to make the first sale of the day
 
 ====Conjugation====
 {{ca-conj}}
@@ -46736,7 +46893,7 @@ Page 1880 esverar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb}}<!-- root é in DNV -->
 
 # {{lb|ca|transitive}} to [[scare]], to [[frighten]]
 #: {{syn|ca|espantar}}
@@ -47019,7 +47176,7 @@ From {{af|ca|evolució|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=6}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[evolve]], [[develop]]
 
@@ -47066,7 +47223,7 @@ Page 1892 exagerar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME, a guess but likely -->
 
 # to [[exaggerate]]
 
@@ -47108,14 +47265,14 @@ Page 1893 examinar: -------- begin text --------
 Page 1894 exasperar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|exasperō|exasperāre}}.
+{{bor+|ca|la|exasperō|exasperāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[exasperate]]
 
@@ -47676,7 +47833,7 @@ Page 1918 exonerar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME, a guess but likely -->
 
 # {{lb|ca|transitive}} to [[exonerate]]
 # {{lb|ca|transitive}} to [[exempt]]
@@ -47753,7 +47910,7 @@ From {{af|ca|expansió|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[expand]]
 # {{lb|ca|pronominal}} to [[expand]]
@@ -47804,7 +47961,7 @@ From {{af|ca|expedient|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=5}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to take [[disciplinary]] measures against somebody
 
@@ -47865,7 +48022,7 @@ From {{der|ca|la|expendō}}.
 Page 1926 experimentar: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[experiment]]
 # to [[experience]]
@@ -47987,7 +48144,7 @@ Page 1930 explotar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[exploit]]
 # to [[explode]]
@@ -48533,7 +48690,7 @@ From {{suffix|ca|fals|ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[falsify]]
 
@@ -48782,7 +48939,7 @@ From {{suffix|ca|feina|ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[work]], to be [[busy]], to [[occupy oneself]]
 
@@ -49056,7 +49213,7 @@ Compare {{cog|es|hacer acto de presencia}}, {{cog|fr|faire acte de présence}}, 
 Page 1970 fer aigües: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|head=~aig[ües:ua]}}
 
 # {{lb|ca|nautical}} [[take on water]]
 # {{lb|ca|figurative}} [[take on water]], [[falter]]
@@ -49070,7 +49227,7 @@ Page 1971 fer campana: -------- begin text --------
 According to Joan Amades<ref>Amades, Joan. ''Refranyer català comentat'' (Barcelona: Ed. Selecta, 1951)</ref>, from the practice of punishing truants by forcing them to ring the bells in church services.
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[play hookey]], to [[skive]]
 #: {{syn|ca|fer pila|fer fugina|fer safrà}}
@@ -49095,7 +49252,7 @@ Compare {{cog|es|hacer caso}} and {{cog|fr|faire cas}}.
 Page 1973 fer cinc cèntims: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|head=~cèntim[s:]}}
 
 # {{lb|ca|idiom}} to [[summarize]]
 -------- end text --------
@@ -49116,7 +49273,7 @@ Page 1975 fer de sentinella: -------- begin text --------
 Page 1976 fer el pes: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|idiomatic|lit}} to [[please]], to [[satisfy]]
 #: {{ux|ca|Aquesta noia '''no em fa el pes'''|I'm not happy with that girl|lit=She's not the right weight}}
@@ -49127,7 +49284,7 @@ Page 1977 fer el préssec: -------- begin text --------
 {{lit|to do the peach}}, in reference to a blushing face resembling a peach.
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to be [[embarrassed]] by actions taken based on a lack of understanding of a situation
 -------- end text --------
@@ -49198,7 +49355,7 @@ Page 1982 fer goig: -------- begin text --------
 {{ca-verb}}
 
 # to [[look]] [[nice]], to be [[pretty]]
-#* {{quote-book|ca|title=Cròniques de la veritat oculta|year=1955|chapter=Coses de la providència|author=w:Pere Calders|passage=Em vaig posar la meva millor roba i em plau de dir que '''feia goig''', emparant-me en el fet que en el temps que som la gent no estima la modèstia fingida.|translation=I put on my best clothes, and I am pleased to say that '''they looked good'''... }}
+#* {{quote-book|ca|title=Cròniques de la veritat oculta|year=1955|chapter=Coses de la providència|author=w:Pere Calders|passage=Em vaig posar la meva millor roba i em plau de dir que '''feia goig''', emparant-me en el fet que en el temps que som la gent no estima la modèstia fingida.|translation=I put on my best clothes, and I am pleased to say that '''they looked good'''...}}
 -------- end text --------
 Page 1983 fer l'agost: -------- begin text --------
 
@@ -49263,14 +49420,14 @@ Page 1989 fer nit: -------- begin text --------
 Page 1990 fer nyam: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[eat]]
 -------- end text --------
 Page 1991 fer pinya: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|castells}} to [[huddle]] together to form the [[pinya]], the base of a [[castell]]
 # {{lb|ca|by extension}} to [[support]] toward a common goal, to [[stand by]], to [[collaborate]] with
@@ -49326,7 +49483,7 @@ Page 1995 fer sortir de polleguera: -------- begin text --------
 From {{com|ca|fer|sortir de polleguera}}.
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|idiomatic|transitive}} to [[drive someone up the wall]]
 
@@ -49338,7 +49495,7 @@ From {{com|ca|fer|sortir de polleguera}}.
 Page 1996 fer temps: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|intransitive}} to [[kill time]]
 #* {{quote-book|ca|year=1990|author=Isabel Clara Simó|title=Els ulls de Clídice|page=63|passage=Vaig '''fer temps''' encenent una cigarreta i mirant el fum enfilar-se, com una teranyina, al meu davant.|t=I '''killed time''' by lighting a cigarette and watching the smoke unfurl, like a spiderweb, in front of me.}}
@@ -49436,7 +49593,7 @@ From {{der|ca|la|fermentō|fermentāre}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|intransitive|transitive}} to [[ferment]]
 
@@ -49524,7 +49681,7 @@ Page 2004 festejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|ambitransitive}} to [[woo]], to [[court]]
 # {{lb|ca|transitive}} to [[fawn over]]
@@ -49613,7 +49770,7 @@ Page 2007 fiblonejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[sting]] (with a stinger)
 
@@ -49746,7 +49903,7 @@ From {{af|ca|filet|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive|cooking}} to [[filet]]
 # {{lb|ca|transitive|construction|woodworking}} to [[filet]] {{gloss|apply fillets to}}
@@ -50192,7 +50349,7 @@ From {{af|ca|flanc|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[flank]]
 
@@ -50261,7 +50418,7 @@ From {{af|ca|flirt|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{alt form|ca|flirtar}}
 
@@ -50314,7 +50471,7 @@ Page 2034 flotar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|intransitive}} to [[float]]
 #: {{syn|ca|surar}}
@@ -50391,7 +50548,7 @@ From {{af|ca|fluix|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[weaken]]
 
@@ -50464,7 +50621,7 @@ From {{af|ca|fogó|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[singe]], [[scorch]]
 
@@ -50576,7 +50733,7 @@ Page 2044 fomentar: -------- begin text --------
 {{bor+|ca|LL.|fōmentō|fōmentāre}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to apply a [[poultice]]
 # {{lb|ca|transitive}} to [[promote]], [[foster]], [[foment]]
@@ -50599,7 +50756,7 @@ Page 2045 fonamentar: -------- begin text --------
 From {{af|ca|fonament|-ar}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[ground]] in, to [[base]] in
 
@@ -50833,7 +50990,7 @@ From {{suffix|ca|forn|ejar|t1=oven}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|ambitransitive}} to [[bake]]
 
@@ -51194,7 +51351,7 @@ From {{af|ca|fragment|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[fragment]]
 
@@ -51219,7 +51376,7 @@ From {{m|ca|franc}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[clear]]
 #: {{syn|ca|afranquir}}
@@ -51246,7 +51403,7 @@ From {{af|ca|frase|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[form]] [[phrases]]
 # {{lb|ca|transitive|music}} to [[phrase]]
@@ -51289,7 +51446,7 @@ From {{af|ca|fred|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to get cold
 
@@ -51398,7 +51555,7 @@ From {{der|ca|la|frequentō|frequentāre}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[frequent]]
 
@@ -51495,7 +51652,7 @@ From {{af|ca|fressa|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[rustle]], to [[murmur]]
 # {{lb|ca|intransitive}} to [[bustle]] about
@@ -51592,7 +51749,7 @@ From {{suffix|ca|fuet|ejar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[whip]] {{gloss|hit with a whip}}
 #: {{syn|ca|assotar}}
@@ -51752,7 +51909,7 @@ From {{inh|ca|VL.|*fūmidiāre}}, from {{inh|ca|la|fumigo|fūmigāre}}. {{surf|c
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[steam]]
 # to [[smoke]]
@@ -51825,7 +51982,7 @@ Page 2094 funcionar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[work]], [[function]]
 
@@ -51946,7 +52103,7 @@ Page 2099 fusionar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[fuse]]
 
@@ -51963,7 +52120,7 @@ From {{af|ca|fuster|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # to do [[carpentry]]
 # to do [[woodworking]]
@@ -52020,7 +52177,7 @@ From {{af|ca|galant|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # to [[flirt]] with, to [[court]]
 
@@ -52042,7 +52199,7 @@ From {{af|ca|gallina|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[dawdle]]
 #: {{syn|ca|ronsejar}}
@@ -52062,7 +52219,7 @@ From {{af|ca|gallof|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[loaf]], to [[idle]]
 #: {{syn|ca|dropejar|gandulejar|mandrejar}}
@@ -52178,7 +52335,7 @@ From {{af|ca|gandul|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[laze]], to [[loaf]] {{gloss|to be lazy}}
 #: {{syn|ca|dropejar|gallofejar|mandrejar}}
@@ -52214,7 +52371,7 @@ Alteration of {{m|ca|ganyir}} (from {{der|ca|la|ganniō||to yelp}}) under influe
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[howl]]
 #: {{syn|ca|udolar}}
@@ -52279,7 +52436,7 @@ From {{m|ca|garfi}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[scratch]]
 #: {{syn|ca|esgarrapar}}
@@ -52342,7 +52499,7 @@ From {{af|ca|gargall|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[expectorate]] phlegm
 
@@ -52380,13 +52537,13 @@ From {{der|ca|la|gargarizō|gargarizāre}}.
 Page 2120 gargotejar: -------- begin text --------
 
 ===Etymology===
-From [[gargot]] .
+From {{af|ca|gargot|-ejar}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[scribble]], [[doodle]]
 
@@ -52464,7 +52621,7 @@ From {{suffix|ca|gat|ejar|t1=cat}}, attested from 1653.<ref>{{R:ca:GDLC}}</ref>
 * {{audio|ca|LL-Q7026 (cat)-Millars-gatejar.wav|Audio (Valencian)}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[crawl]]
 
@@ -52546,7 +52703,7 @@ Page 2127 gavanyar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[damage]]
 #: {{syn|ca|fer malbé}}
@@ -52566,12 +52723,15 @@ From {{af|ca|gebre|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|intransitive}} to [[frost]]
 #: {{ux|ca|El matí és fresc i de nit ha '''gebrat'''.|The morning is cool and overnight there was a '''frost'''.}}
 # {{lb|ca|transitive}} to [[frost]], to sprinkle with sugar or salt
 #: {{ux|ca|'''Gebro''' la vora amb suc de llima i sal gruixuda.|I '''frost''' the rim with lime juice and coarse salt.}}
+
+====Conjugation====
+{{ca-conj}}
 
 ====Derived terms====
 * {{l|ca|gebrada}}
@@ -52721,7 +52881,7 @@ From {{der|ca|la|generō|generāre}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME, a guess but likely -->
 
 # to [[generate]], [[create]]
 
@@ -52810,7 +52970,7 @@ From {{suffix|ca|gestió|ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[negotiate]]
 # to [[manage]]
@@ -52975,7 +53135,7 @@ Page 2144 glopejar: -------- begin text --------
 From {{suffix|ca|glop|ejar|t1=gulp}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[rinse]] {{gloss|one's mouth}}
 
@@ -53086,7 +53246,7 @@ From {{af|ca|gol|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive|sports}} to score many [[goal]]s against
 
@@ -53107,7 +53267,7 @@ From {{af|ca|gorra|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[sponge]], to [[mooch]], to [[freeload]]
 
@@ -53155,7 +53315,7 @@ Page 2152 gotejar: -------- begin text --------
 From {{af|ca|gota|-ejar}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[drip]] {{gloss|fall one drop at a time}}
 #: {{syn|ca|degotar}}
@@ -53283,7 +53443,7 @@ From {{af|ca|granís|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[hail]]
 #: {{syn|ca|calamarsejar|pedregar}}
@@ -53368,7 +53528,7 @@ From {{suffix|ca|grapa|t1=paw|ejar}}. First attested in 1803.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|colloquial}} to [[touch]] carelessly, to [[grope]], to [[feel up]]
 #: {{syn|ca|manyuclar|q1=dialectal}}
@@ -53723,7 +53883,7 @@ From {{af|ca|guardó|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[award]] (a prize)
 
@@ -53799,7 +53959,7 @@ Page 2176 guerrejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|ambitransitive}} to [[war]]
 
@@ -54561,7 +54721,7 @@ From {{af|ca|humit|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[humidify]], [[moisten]], [[dampen]]
 #: {{syn|ca|humectar}}
@@ -54992,9 +55152,12 @@ Page 2228 immutar: -------- begin text --------
 Page 2229 impacientar: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
-# to cause someone to become [[impatient]]
+# to cause (someone) to become [[impatient]]
+
+====Conjugation====
+{{ca-conj}}
 
 -------- end text --------
 Page 2230 impactar: -------- begin text --------
@@ -55166,7 +55329,7 @@ Page 2237 implementar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a bit of a guess, but likely -->
 
 # {{lb|ca|transitive}} to [[implement]]
 
@@ -55299,7 +55462,7 @@ From {{af|ca|impressió|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[impress]]
 
@@ -55554,13 +55717,13 @@ Page 2254 incidir: -------- begin text --------
 Page 2255 incinerar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|incinerō|incinerāre}}.
+{{bor+|ca|la|incinerō|incinerāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME, a guess but likely -->
 
 # {{lb|ca|transitive}} to [[incinerate]]
 
@@ -55749,7 +55912,7 @@ From {{af|ca|increment|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[increment]]
 
@@ -56150,7 +56313,7 @@ From {{af|ca|infecció|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=5}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[infect]]
 #: {{syn|ca|infectar}}
@@ -56969,7 +57132,7 @@ From {{af|ca|inspecció|-ar|t1=inspection}}, attested from the 19th century.<ref
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[inspect]]
 
@@ -57177,7 +57340,7 @@ From {{af|ca|instrument|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive|music}} to [[score]], to [[orchestrate]]
 #: {{syn|ca|orquestrar}}
@@ -57254,7 +57417,7 @@ From {{af|ca|insurrecció|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=6}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to cause to [[rise up]]
 
@@ -57317,7 +57480,7 @@ Page 2323 intentar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[try]], to [[attempt]]
 #: {{uxi|ca|No vaig '''intentar''' mai concentrar-me en una única cosa.|I never '''tried''' to concentrate on one single thing.}}
@@ -57345,7 +57508,7 @@ From {{af|ca|interacció|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=6}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[interact]]
 #: {{syn|ca|interactuar}}
@@ -57737,9 +57900,12 @@ Page 2338 intervenir: -------- begin text --------
 Page 2339 intervindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|intervenir}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:GDLC}}
@@ -57957,7 +58123,7 @@ From {{af|ca|invent|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[invent]]
 
@@ -58471,7 +58637,7 @@ From {{af|ca|joguina|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[play around]] ('''amb''' with), to [[toy with]]
 
@@ -58490,7 +58656,7 @@ From {{af|ca|jornal|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[odd-job]]
 
@@ -58586,7 +58752,7 @@ Page 2376 jugar: -------- begin text --------
 # {{indtr|ca|a}} to [[play]] (some game)
 #: {{uxi|ca|'''Jugar''' a lladres i serenos|to '''play''' cops and robbers}}
 # {{lb|ca|intransitive}} to [[gamble]]
-# {{lb|ca|transitive and reflexive}} to [[bet]] (something)
+# {{lb|ca|transitive|reflexive}} to [[bet]] (something)
 #: {{lb|ca|idiomatic}} {{uxi|ca|'''Jugar'''-s'hi les garrofes|to risk one's means of living|lit=''to '''bet''' one's [[carob]]s on something''}}
 
 ====Conjugation====
@@ -58609,9 +58775,12 @@ Page 2376 jugar: -------- begin text --------
 Page 2377 júnyer: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|junyir}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -58692,7 +58861,7 @@ Page 2380 justejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to be [[scarce]], to [[suffice]]; {{q|of clothing}} to be [[tight]]
 #: {{syn|ca|escassejar}}
@@ -58860,7 +59029,7 @@ From {{der|ca|la|lamento|lamentāre}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[lament]]
 
@@ -59090,7 +59259,7 @@ From {{af|ca|lesió|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive|pronominal}} to [[injure]], [[wound]]
 #: {{syn|ca|danyar|ferir}}
@@ -59172,7 +59341,7 @@ Page 2400 liderar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME, a guess but likely -->
 
 # to [[lead]]
 
@@ -59328,13 +59497,13 @@ Page 2405 lladrar: -------- begin text --------
 Page 2406 llagotejar: -------- begin text --------
 
 ===Etymology===
-{{af|ca|llagot|-ejar}}
+From {{af|ca|llagot|-ejar}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[flatter]], [[cajole]]
 #: {{syn|ca|adular|llepar}}
@@ -59359,7 +59528,7 @@ Page 2407 llagrimejar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[shed tears]], [[water]], [[weep]]
 # {{lb|ca|intransitive}} to [[drizzle]]
@@ -59413,7 +59582,7 @@ Page 2409 llaminar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|dialectal|transitive}} to [[lick]] {{q|of a dam, particularly a ewe, towards her young}}
 
@@ -59543,7 +59712,7 @@ From {{af|ca|llarg|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[run]] [[long]], to be on the [[long]] side
 
@@ -59672,7 +59841,7 @@ From {{af|ca|llavi|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to move the lips without speaking
 # {{lb|ca|transitive}} to [[mouth]] {{gloss|to say words silently}}
@@ -59895,7 +60064,7 @@ From {{af|ca|lletra|t1=letter|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[spell]] {{gloss|provide a word letter by letter}}
 # {{lb|ca|transitive}} to [[syllabify]] {{gloss|provide a word syllable by syllable}}
@@ -59983,7 +60152,7 @@ Page 2430 llevar-se: -------- begin text --------
 Page 2431 llevar-se la gorra: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|intransitive}} to [[tip one's hat]]
 #* {{quote-book|ca|year=1932|author=w:Prudenci Bertrana|title=L'ós benemèrit i altres bèsties|text=Juli li ensenyà a donar la pota, a '''llevar-li la gorra''', a portar-li les espardenyes, a caminar dret i a fer el mort.|t=Juli taught him how to shake hands, '''tip his hat''', bring him his slippers, walk upright, and play dead.}}
@@ -60488,13 +60657,13 @@ From {{af|ca|mac|-ar}}.
 Page 2448 macerar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|macērō|macērāre|to soften}}. {{doublet|ca|maurar}}, an inherited form.
+{{bor+|ca|la|macērō|macērāre|to soften}}. {{doublet|ca|maurar}}, an inherited form.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME, a guess but likely -->
 
 # {{lb|ca|transitive}} to [[macerate]] {{gloss|to soften in a liquid}}
 #: {{syn|ca|estovar}}
@@ -60750,7 +60919,7 @@ From {{af|ca|mal-|fiar-se}}.
 {{ca-conj}}
 
 ====Related terms====
-* {{l|ca|malfiança }}
+* {{l|ca|malfiança}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -61171,7 +61340,7 @@ From {{af|ca|mandra|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[loaf]], to [[idle]]
 #: {{syn|ca|gandulejar|dropejar}}
@@ -61219,7 +61388,11 @@ From {{suffix|ca|mànec|ar}}.
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|reflexive}} to [[arrange]], to [[sort out|sort things out]]
+# {{lb|ca|transitive}} to [[put]] a [[handle]] on
+# {{lb|ca|transitive}} to [[adjust]]
+# {{lb|ca|transitive}} to [[arrange]], to [[put]] in [[work]]ing [[order]]
+# {{lb|ca|transitive}} to [[arrange]], to [[sort out]]
+# {{lb|ca|pronominal}} to [[manage]], to [[handle]], to [[tolerate]] (something difficult)
 
 ====Conjugation====
 {{ca-conj}}
@@ -61233,7 +61406,7 @@ Page 2479 manejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[handle]], to [[manipulate]]
 # {{lb|ca|transitive}} to [[manage]], to [[operate]]
@@ -61397,7 +61570,7 @@ Page 2485 mantindre: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|chiefly|Valencian}} {{alternative form of|ca|mantenir}}
 
@@ -61468,12 +61641,15 @@ From {{af|ca|manxa|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[blow]] [[air]] {{q|especially with a bellows}}
 #: {{uxi|ca|No és igual '''manxar''' que tocar l'orgue.|'''Pumping air''' isn't the same as playing the organ.}}
 # to [[inflate]], to [[pump up]]
 #: {{ux|ca|Vaig parar de '''manxar''' un moment per comprovar la tensió del pneumàtic.|I stopped '''pumping''' for a moment to test the pressure in the tyre.}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -61572,7 +61748,7 @@ From {{af|ca|marbre|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[marble]] {{gloss|to give the appearance of marble}}
 #: {{syn|ca|marbrejar}}
@@ -61592,7 +61768,7 @@ From {{af|ca|marbre|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[marble]] {{gloss|to give the appearance of marble}}
 #: {{syn|ca|marbrar}}
@@ -61678,6 +61854,9 @@ Page 2497 marcir-se: -------- begin text --------
 
 # {{reflexive of|ca|marcir}}
 #: {{syn|ca|pansir-se}}
+
+====Conjugation====
+{{ca-conj}}
 -------- end text --------
 Page 2498 marejar: -------- begin text --------
 
@@ -61689,7 +61868,7 @@ From {{suffix|ca|mar|ejar|t1=sea}}.
 * {{audio|ca|LL-Q7026 (cat)-Millars-marejar.wav|Audio (Valencian)}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to cause to feel [[sick]] or [[dizzy]]
 
@@ -61828,7 +62007,7 @@ From {{af|ca|massa|t1=too much|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to be [[too much]], exist in [[excess]]
 
@@ -61947,14 +62126,10 @@ Page 2509 masturbar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# ({{reflexive of|ca|masturbar}}) to [[masturbate]] (oneself)
-<!--
-
-reflexivity not supported yet
+# {{reflexive of|ca|masturbar}}: to [[masturbate]] (oneself)
 
 ====Conjugation====
-{{ca-conj-ar|masturb|refl=1}}
--->
+{{ca-conj}}
 
 ====Related terms====
 * {{l|ca|masturbació}}
@@ -62049,7 +62224,7 @@ From {{com|ca|matí|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intranstive}} to [[get up]] early
 #: {{syn|ca|matinar}}
@@ -62324,7 +62499,7 @@ From {{af|ca|menció|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} {{rfdef|ca}}
 
@@ -62377,11 +62552,11 @@ From {{der|ca|la|mandūcō|mandūcāre}}. Compare {{cog|fr|manger}} and {{cog|it
 
 # {{lb|ca|intransitive}} to [[eat]] something solid
 #: {{lb|ca|idiomatic}} {{uxi|ca|'''menjar''' en el mateix plat|to be very good friends}} (an [[idiom]], literally ''to eat on the same plate'')
-# {{lb|ca|transitive|usually reflexive}} to [[eat]] (something)
+# {{lb|ca|transitive|usually|reflexive}} to [[eat]] (something)
 #: {{lb|ca|idiomatic}} {{uxi|ca|'''menjar'''-se les ungles|to bite one's nails}}
 #: {{lb|ca|idiomatic}} {{uxi|ca|'''menjar'''-se amb els ulls algú o alguna cosa|to look avidly somebody or something}} (an [[idiom]], literally ''to eat with the eyes'')
 #: {{lb|ca|idiomatic}} {{uxi|ca|'''menjar'''-se algú a petons|to hug and kiss somebody extensively}} (an [[idiom]], literally ''to eat somebody kiss by kiss'')
-# {{lb|ca|transitive|usually reflexive}} to [[consume]], to [[deplete]] (something)
+# {{lb|ca|transitive|usually|reflexive}} to [[consume]], to [[deplete]] (something)
 
 ====Conjugation====
 {{ca-conj}}
@@ -62416,7 +62591,7 @@ From {{af|ca|menjar|-ot|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[eat]] little, to [[pick at]] one's food
 #: {{syn|ca|menjucar|menjuquejar|menjussar}}
@@ -62607,7 +62782,7 @@ From {{af|ca|meravella|-ar|t1=wonder, marvel}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[amaze]], [[captivate]]
 #: {{syn|ca|esbalair}}
@@ -63401,13 +63576,13 @@ From {{af|ca|model|-ar}}.
 Page 2565 moderar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|moderor|moderārī|t=regulate, restrain, moderate}}.
+{{bor+|ca|la|moderor|moderārī|t=regulate, restrain, moderate}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME, a guess but likely -->
 
 # {{lb|ca|transitive}} to [[moderate]] {{gloss|to reduce the excessiveness of}}
 
@@ -63491,9 +63666,9 @@ Page 2568 modular: -------- begin text --------
 Page 2569 mofar: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{head|ca|verb form}}
 
-# {{form of|ca|infinitive|mofar-se}}
+# {{ca-verb form of|mofar-se}}
 
 -------- end text --------
 Page 2570 mofar-se: -------- begin text --------
@@ -63782,13 +63957,13 @@ From {{af|ca|moral|-itzar}}.
 Page 2580 morigerar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|mōrigerus||compliant, obedient}}, from {{m|la|mōrem gerō||to do what someone else wants}}.
+{{bor+|ca|la|morigeror|mōrigerārī|to comply with}}, from {{m|la|mōrem gerō||to do what someone else wants}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[restrain]], to [[moderate]]
 
@@ -63842,7 +64017,7 @@ From {{af|ca|morro|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[lip]]
 # to [[snog]], to [[make out]] (with), to [[French kiss]]
@@ -64628,7 +64803,7 @@ Page 2612 navegar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[navigate]], to [[sail]]
 
@@ -64653,7 +64828,7 @@ Page 2613 nàxer: -------- begin text --------
 ===Verb===
 {{head|ca|verb}}
 
-# {{obsolete form of|ca|[[néixer]], [[nàixer]]}}
+# {{obsolete form of|ca|néixer,nàixer}}
 -------- end text --------
 Page 2614 necessitar: -------- begin text --------
 
@@ -64720,7 +64895,7 @@ Page 2616 negar: -------- begin text --------
 {{inh+|ca|roa-oca|negar}}, from {{der|ca|la|nego|negāre|t=refuse}}.<!-- DCVB claims it's a borrowing, but there is no reason it cannot be inherited like the French nier. I have left it as {{der}} for now. -->
 
 ====Verb====
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[deny]] {{gloss|not allow}}
 # to [[deny]] {{gloss|assert that something is not true}}
@@ -64821,7 +64996,7 @@ From {{af|ca|neguit|-ejar|t1=worry}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive|pronominal}} to [[annoy]], to [[worry]]
 #: {{syn|ca|inquietar}}
@@ -64885,7 +65060,7 @@ Restructuring, based on {{m|ca|net||clean}}, of {{inh|ca|roa-oca|nedejar}}, from
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[clean]]
 
@@ -64990,29 +65165,37 @@ Forms other than the third person are rarely used except in a poetic sense.
 Page 2625 nevisquejar: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[snow]] lightly
 #: {{syn|ca|nevotejar}}
+
+====Conjugation====
+Forms other than the third person are rarely used except in a poetic sense.
+{{ca-conj}}
 -------- end text --------
 Page 2626 nevotejar: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[snow]] lightly
 #: {{syn|ca|nevisquejar}}
+
+====Conjugation====
+Forms other than the third person are rarely used except in a poetic sense.
+{{ca-conj}}
 -------- end text --------
 Page 2627 niar: -------- begin text --------
 
 ===Etymology===
-From ''{{l|ca|niu}}''.
+From {{af|ca|niu|-ar}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[nest]]
 
@@ -65081,7 +65264,7 @@ From {{af|ca|noli|t1=charter fee|-ejar}}.
 * {{homophones|ca|noliejà}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[charter]]
 
@@ -65184,7 +65367,7 @@ From {{suffix|ca|normatiu|itzar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[normativize]]
 
@@ -65204,7 +65387,7 @@ From {{der|ca|la|notō|notāre}}.
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[note]], make a [[note]]
 
@@ -65309,9 +65492,12 @@ Page 2639 nuar: -------- begin text --------
 Page 2640 nuar-se: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{reflexive of|ca|nuar}}
+
+====Conjugation====
+{{ca-conj}}
 -------- end text --------
 Page 2641 obeir: -------- begin text --------
 
@@ -65440,7 +65626,7 @@ Page 2645 obliterar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[obliterate]], to [[erase]], to [[smudge]], to [[cross out]]
 #: {{syn|ca|esborrar}}
@@ -65582,7 +65768,7 @@ From {{af|ca|obsessió|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[obsess]] {{gloss|to dominate the thoughts of someone}}
 #: {{syn|ca|obsedir}}
@@ -65747,9 +65933,12 @@ From {{der|ca|la|obveniō}}.
 Page 2658 obvindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|obvenir}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:DNV}}
@@ -65763,7 +65952,7 @@ From {{af|ca|ocasió|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[cause]]; [[bring about]]
 
@@ -66137,7 +66326,7 @@ From {{af|ca|ombra|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[shade]], [[overshadow]]
 #: {{syn|ca|ombrar}}
@@ -66242,7 +66431,7 @@ Page 2677 onejar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to make waves, produce waves
 # {{lb|ca|intransitive}} to [[wave]] (e.g. a flag, banner)
@@ -66265,7 +66454,7 @@ Page 2678 operar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[produce]], to [[achieve]]
 # to [[operate]] {{gloss|to perform surgery}}
@@ -66531,7 +66720,7 @@ Page 2689 orejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[air]]
 # {{lb|ca|reflexive}} to get some fresh air {{q|of a person}}
@@ -66606,7 +66795,7 @@ Page 2692 orientar: -------- begin text --------
 From {{af|ca|orient|-ar}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[orient]]
 
@@ -66673,7 +66862,7 @@ From {{af|ca|oripell|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[tinsel]] {{gloss|cover with tinsel}}
 # {{lb|ca|transitive}} to [[ornament]]; {{lb|ca|figurative}} to [[embellish]], [[embroider]]
@@ -66694,7 +66883,7 @@ Page 2696 ormejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[harness]]
 #: {{syn|ca|aparellar}}
@@ -66715,7 +66904,7 @@ Page 2696 ormejar: -------- begin text --------
 Page 2697 ornamentar: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[adorn]], [[bedeck]]
 
@@ -66820,7 +67009,7 @@ Page 2702 ostentar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[display]], to [[flaunt]]
 # {{lb|ca|transitive}} to [[hold]], to [[possess]] (a title or position)
@@ -67018,7 +67207,7 @@ From {{af|ca|paladar|-ejar|t1=palate}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[savour]] {{gloss|enjoy a food or drink}}
 #: {{syn|ca|assaborir}}
@@ -67066,7 +67255,7 @@ From {{af|ca|pala|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # to [[shovel]]
 # to [[paddle]] {{q|a canoe}}
@@ -67116,7 +67305,7 @@ From {{af|ca|pampallugues|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[flicker]]
 
@@ -67222,7 +67411,7 @@ From {{af|ca|papissot|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[lisp]]
 
@@ -67279,7 +67468,7 @@ Page 2719 parar: -------- begin text --------
 #: {{lb|ca|idiomatic}} {{uxi|ca|'''parar''' el cop|to avoid or mitigate the adverse consequences of something|lit=to stop the blow}}
 #: {{lb|ca|idiomatic}} {{uxi|ca|'''parar''' els peus|to oppose the attitude or the actions (of somebody)|lit=to stop their feet}}
 #: {{lb|ca|idiomatic}} {{uxi|ca|'''para''' el carro!|used to stop someone who rushes to say or to do something|lit=stop the cart!}} 
-# {{lb|ca|intransitive and reflexive}} to [[stop]] oneself (a person, an animal, a machine) from continuing movement or action
+# {{lb|ca|intransitive|reflexive}} to [[stop]] oneself (a person, an animal, a machine) from continuing movement or action
 #: {{uxi|ca|el rellotge '''s'ha parat'''|the clock '''has stopped'''}}
 # {{lb|ca|intransitive}} to [[stop]] somewhere or at sometime (a vehicle, a person)
 #: {{uxi|ca|aquest tren no '''para''' a Gavà|this train is not '''stopping''' at Gavà}}
@@ -67487,7 +67676,7 @@ Page 2724 parlar: -------- begin text --------
 Page 2725 parlar com un llibre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|simile}} to [[talk like a book]] {{gloss|with great authority}}
 -------- end text --------
@@ -67500,7 +67689,7 @@ From {{af|ca|parlar|-ot|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[talk]] excessively, [[prattle]], [[chatter]]
 
@@ -67557,7 +67746,7 @@ Page 2728 parpellejar: -------- begin text --------
 {{af|ca|parpella|-ejar}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[blink]]
 #: {{syn|ca|pestanyejar}}
@@ -67646,7 +67835,7 @@ Page 2730 partir: -------- begin text --------
 Page 2731 partir peres: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|head=~per[es:a]}}
 
 # to [[fall out]] {{q|with someone}}
 #: {{syn|ca|renyir}}
@@ -67719,7 +67908,7 @@ Page 2732 passar: -------- begin text --------
 Page 2733 passar la pilota: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|idiom}} to [[pass the buck]]
 -------- end text --------
@@ -67729,7 +67918,7 @@ Page 2734 passar per alt: -------- begin text --------
 Compare {{cog|es|pasar por alto}}.
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|idiom}} to [[overlook]]; [[skip]], [[forgo]]
 -------- end text --------
@@ -67764,7 +67953,7 @@ From {{af|ca|passar|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[take a walk]] {{q|for exercise or pleasure}}
 # {{lb|ca|transitive}} to [[walk]] {{q|a dog, etc.}}
@@ -67879,7 +68068,7 @@ From {{af|ca|patent|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[patent]]
 
@@ -67965,7 +68154,7 @@ Page 2744 patollar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|intransitive}} to [[slog]] through mud or mire
 
@@ -68121,7 +68310,7 @@ From {{af|ca|pedal|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[pedal]]
 #: {{syn|ca|pedalar}}
@@ -68618,7 +68807,7 @@ Page 2767 perdonar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[pardon]], [[forgive]], [[excuse]]
 #: {{syn|ca|disculpar|excusar}}
@@ -68739,7 +68928,7 @@ From {{af|ca|perfecció|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=5}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive|pronominal}} to [[perfect]]
 
@@ -69026,7 +69215,7 @@ Page 2783 perquirir: -------- begin text --------
 * {{l|ca|perquisidor}}
 
 ====Related terms====
-* {{l|ca|perquisició }}
+* {{l|ca|perquisició}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -69041,7 +69230,7 @@ From {{af|ca|perquisició|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|intransitive}} to [[pursue]] an [[inquiry]]
 # {{lb|ca|intransitive}} to [[conduct]] a [[search]]
@@ -69098,7 +69287,7 @@ Page 2786 perseverar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- per cawikt; FIXME: verify -->
 
 # {{lb|ca|intransitive}} to [[persevere]]
 #: {{syn|ca|continuar|mantenir|persistir|seguir}}
@@ -69400,9 +69589,12 @@ From {{der|ca|la|pervertō}}.
 Page 2798 pervindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|pervenir}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:DNV}}
@@ -69598,7 +69790,7 @@ From {{af|ca|petó|t1=kiss|pos1=n|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[kiss]], [[give]] [[kisses]] to, [[cover]] with kisses
 #: {{syn|ca|besar}}
@@ -69676,7 +69868,7 @@ From {{af|ca|picó|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[roll]], [[tamp]]
 
@@ -69700,7 +69892,7 @@ Page 2808 picossejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[peck]] {{gloss|injure or seize with the beak}}
 #* {{quote-book|ca|year=2015|author=Josep Vallverdú|title=Viatge al segle XX|text=Si diem que menja com un ocellet no volem dir que '''picosseja''' el mill, o que s'alimenta de pinso; volem dir que menja poca quantitat.|t=If we say that he eats like a bird, we don't mean that he '''pecks''' millet or that he subsists on feed; we mean that he eats small quantities.}}
@@ -69769,7 +69961,7 @@ From {{af|ca|pigment|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[pigment]]
 
@@ -69848,7 +70040,7 @@ From {{af|ca|pilot|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[pilot]]
 
@@ -69871,7 +70063,7 @@ From {{af|ca|pilota|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to kick a ball about without playing a formal game
 
@@ -70209,7 +70401,7 @@ From {{af|ca|pla|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[flatten]]
 # to [[plan]]
@@ -70292,7 +70484,7 @@ From {{af|ca|planta|-ejar}}, {{cal|ca|es|plantear|nocap=1}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[suggest]], [[throw up]]
 #: {{syn|ca|formular|presentar|proposar}}
@@ -70355,7 +70547,7 @@ From {{af|ca|placa|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # to [[plate]] {{q|of metal}}
 #: {{syn|ca|xapar}}
@@ -70417,7 +70609,7 @@ From {{af|ca|plata|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[silver-plate]]
 #: {{syn|ca|argentar}}
@@ -70475,7 +70667,7 @@ Page 2840 plegar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[fold]]
 # {{lb|ca|transitive}} to [[bend]]
@@ -70569,7 +70761,7 @@ From {{m|ca|ploricó}}. Compare {{cog|es|lloriquear}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[whimper]]
 #: {{syn|ca|somicar}}
@@ -70642,7 +70834,7 @@ From {{af|ca|ploviscar|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive|impersonal}} to [[drizzle]] {{gloss|to rain lightly}}
 #: {{syn|ca|ploviscar|plovinejar|roinar}}
@@ -70707,7 +70899,7 @@ From {{af|ca|poble|-ejar|t1=village}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to resemble a village {{q|of a city}}
 #* {{quote-book|ca|author=Joan Daniel Bezsonoff i Montalat|title=La revolta dels geperuts|year=1999|text=Narbona és una metròpoli que '''pobleja'''. El barri de l'estació, indigne d'una ciutat, ronqueja.|t=Narbonne is a metropolis that '''resembles a village'''. The station quarter, unworthy of a city, snores.}}
@@ -70913,7 +71105,7 @@ Page 2856 pol·luir: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[defile]], to [[foul]]
 #: {{syn|ca|embrutar}}
@@ -70959,14 +71151,14 @@ From {{af|ca|polpa|-ar}}.
 Page 2858 ponderar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|ponderō|ponderāre}}.
+{{bor+|ca|la|ponderō|ponderāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a guess, but likely -->
 
 # {{lb|ca|transitive}} {{rfdef|ca}}
 
@@ -71037,7 +71229,7 @@ Page 2861 porquejar: -------- begin text --------
 From {{af|ca|porc|-ejar|t1=pig}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|colloquial}} to make something [[dirty]]
 
@@ -71150,10 +71342,10 @@ Page 2864 posar al dia: -------- begin text --------
 Page 2865 posar en quarantena: -------- begin text --------
 
 ===Etymology===
-Figurative meaning of {{m|ca|posar||put}} {{m|ca|en||in}} {{m|ca|quarantena||quarantine}}
+{{lit|to put in quarantine}}, used figuratively.
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|idiom}} to defer judgment on a proposal or idea so as to give time for evidence on its validity or usefulness to develop
 -------- end text --------
@@ -71343,7 +71535,7 @@ From dialectal {{af|ca|potina|t1=hodgepodge|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[fiddle with]], to [[muck about]] with
 # {{lb|ca|transitive}} to [[bungle]], to [[botch]], to [[make a hash of]]
@@ -71639,9 +71831,9 @@ Page 2886 pregonar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
-# proclaim
+# to [[proclaim]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -71815,7 +72007,7 @@ Page 2893 prendre el pèl: -------- begin text --------
 {{lit|to take the skin}}.
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[pull one's leg]], to [[take the piss]] ('''a''' out of)
 #* {{quote-book|ca|year=2011|title=Viatge a Nicaragua|author=Josep Oriol Granés Cortey|page=19|passage=Aquells nens que m'han caigut tant bé, i com m''''han pres el pèl'''!|t=Those boys who I liked so much, how they '''took the piss out of''' me!}}
@@ -71823,7 +72015,7 @@ Page 2893 prendre el pèl: -------- begin text --------
 Page 2894 prendre el seu temps: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{head|ca|verb}}<!-- reflexive possessives not supported yet in [[Module:ca-verb]] -->
 
 # to [[take one's time]]
 #: {{syn|ca|prendre's el seu temps}}
@@ -71831,7 +72023,7 @@ Page 2894 prendre el seu temps: -------- begin text --------
 #** Don't worry, '''take your time'''
 
 ====Usage notes====
-As in English, the possessive ''seu'' is reflexive, and is always the form that agrees with the subject.
+* As in English, the possessive ''seu'' is reflexive, and is always the form that agrees with the subject.
 -------- end text --------
 Page 2895 prendre mal: -------- begin text --------
 
@@ -71911,6 +72103,9 @@ Page 2899 preocupar-se: -------- begin text --------
 
 # {{reflexive of|ca|preocupar}}
 #: {{ux|ca|No et '''preocupis''', sigues feliç!|Don't '''worry''', be happy!}}
+
+====Conjugation====
+{{ca-conj}}
 
 -------- end text --------
 Page 2900 preparar: -------- begin text --------
@@ -71995,7 +72190,7 @@ From {{der|ca|la|praesentō|praesentāre}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[present]]; to [[show]]
 # {{lb|ca|of people}} to [[introduce]]
@@ -72069,7 +72264,7 @@ From {{af|ca|pressió|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[press]]
 
@@ -72315,9 +72510,12 @@ From {{prefix|ca|pre|veure}}.
 Page 2916 previndre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|prevenir}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:GDLC}}
@@ -72843,7 +73041,7 @@ From {{der|ca|LL.|proiecto|prōiectāre}} (compare {{cog|it|proiettare}}, {{cog|
 Page 2937 proliferar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|proliferus|t=proliferous}} + {{af|ca|-ar}}.
+From {{af|ca|la:proliferus<t:proliferous>|-ar}}, probably by way of {{bor|ca|fr|proliférer}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -72851,7 +73049,7 @@ From {{der|ca|la|proliferus|t=proliferous}} + {{af|ca|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a guess, but likely -->
 
 # {{lb|ca|intransitive}} to [[proliferate]]
 
@@ -72930,7 +73128,7 @@ From {{af|ca|promoció|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=5}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[promote]], [[publicise]]
 
@@ -73179,7 +73377,7 @@ Page 2950 proporcionar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[provide]], [[supply]]
 #: {{syn|ca|facilitar|subministrar}}
@@ -73280,14 +73478,14 @@ From {{uder|ca|la|prōrogō|prōrogāre}}.
 Page 2954 prosperar: -------- begin text --------
 
 ===Etymology===
-From {{uder|ca|la|prosperō|prosperāre}}.
+{{bor+|ca|la|prosperō|prosperāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a guess, but likely; compare [[esperar]] -->
 
 # to [[prosper]]
 
@@ -73553,9 +73751,12 @@ From {{der|ca|la|prōveniō|prōvenīre|t=originate, arise}}.
 Page 2964 provindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|provenir}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:GDLC}}
@@ -73936,7 +74137,7 @@ From {{af|ca|puta|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive|vulgar}} to [[whore]] {{gloss|to work as a prostitute}}
 # {{lb|ca|transitive|figurative}} to [[mistreat]], to [[persecute]]
@@ -74086,13 +74287,13 @@ Page 2984 quantificar: -------- begin text --------
 Page 2985 quarterar: -------- begin text --------
 
 ===Etymology===
-{{af|ca|quarter|-ar}}
+From {{af|ca|quarter|-ar}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a guess, but likely -->
 
 # {{lb|ca|transitive}} to [[quarter]] {{gloss|divide into quarters}}
 #: {{syn|ca|esquarterar|quarterejar}}
@@ -74112,7 +74313,7 @@ Page 2986 quarterejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|heraldry}} to [[quarter]], to [[party]]
 #: {{syn|ca|quarterar}}
@@ -74175,9 +74376,9 @@ Page 2989 queixar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{head|ca|verb form}}
 
-# {{inflection of|ca|queixar-se||inf}}
+# {{ca-verb form of|queixar-se}}
 
 -------- end text --------
 Page 2990 queixar-se: -------- begin text --------
@@ -74212,7 +74413,7 @@ From {{af|ca|oc:quèc|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[stutter]]
 
@@ -74239,7 +74440,7 @@ From {{der|ca|la|quaestiōnō|quaestiōnāre}}, equivalent to {{af|ca|qüestió|
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|ambitransitive}} to [[question]]
 
@@ -74305,7 +74506,7 @@ From {{af|ca|rabeig|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive|pronominal}} to [[soak]] {{gloss|clean in water}}
 # {{lb|ca|transitive|pronominal}} to [[bathe]]
@@ -74381,7 +74582,7 @@ From {{af|ca|radical|-itzar}}.
 {{ca-conj}}
 
 ====Derived terms====
-* {{l|ca|radicalització }}
+* {{l|ca|radicalització}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -74428,7 +74629,7 @@ From {{af|ca|rambla|-ejar|t1=avenue, promenade}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[stroll]] on a city street
 
@@ -74450,7 +74651,7 @@ From {{af|ca|ram|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to put out branches, to [[branch]] (out)
 #: {{syn|ca|brancar|ramar}}
@@ -74497,7 +74698,7 @@ From {{af|ca|rampí|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[rake]]
 #: {{syn|ca|rasclar}}
@@ -74550,7 +74751,7 @@ From {{af|ca|ranc|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[limp]] {{gloss|walk lamely}}
 #: {{syn|ca|coixejar}}
@@ -74576,7 +74777,7 @@ From {{af|ca|raó|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|ambitransitive}} to [[reason]]
 #: {{syn|ca|concloure|decidir}}
@@ -74740,7 +74941,7 @@ From {{af|ca|rastre|-ejar}}, attested from the 15th century.<ref>{{R:ca:GDLC}}</
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[track]] {{gloss|to follow the tracks of}}
 
@@ -74961,7 +75162,7 @@ From {{af|ca|reacció|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|intransitive}} to [[react]]
 
@@ -75158,7 +75359,7 @@ Page 3028 rebatejar: -------- begin text --------
 From {{af|ca|re-|batejar}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[rechristen]], to [[rename]]
 
@@ -75218,7 +75419,7 @@ Possibly from {{der|ca|VL.|*repentare}}, from {{der|ca|la|repēns|t=sudden, unex
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a guess but likely -->
 
 # {{lb|ca|ambitransitive}} to [[burst]], [[explode]], [[blow up]], [[break]]
 #* {{quote-book|ca|year=1946|title=A la boca dels núvols|author=Ramon Vinyes i Cluet|text='''Rebenta''' de sobte un gran terrabastall de trons que ha estat precedit per una enlluernadora llampegadissa.|t=A great crashing din of thunderclaps, which has been preceded by a dazzling series of lighting flashes, suddenly '''bursts forth'''.}}
@@ -75321,7 +75522,7 @@ Page 3035 rebotar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[bounce]]
 
@@ -75440,7 +75641,7 @@ From {{af|ca|rebrot|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|intransitive}} to [[resprout]], to put out new buds
 
@@ -76462,7 +76663,7 @@ Page 3079 recuperar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a guess, but likely -->
 
 # {{lb|ca|intransitive}} to [[recover]], [[recuperate]]
 #* {{quote-book|ca|year=2009|title=[http://books.google.com/books?id=ncP-xBLiHgoC&pg=PA75&dq=vespre&hl=ca&ei=czuXTuuFFMinhAe-1oiXBA&sa=X&oi=book_result&ct=result&resnum=6&ved=0CEoQ6AEwBQ#v=onepage&q&f=false Les Aventures d'en Nono]|author=Jean Grave|passage=Finalment, quand tots van haver reposat i '''recuperat'''|translation=Finally, when everyone had rested and recuperated}}
@@ -76938,9 +77139,9 @@ From {{confix|ca|re|ferm|ar}}.
 Page 3100 refiar: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{head|ca|verb form}}
 
-# {{form of|ca|infinitive|refiar-se}}
+# {{ca-verb form of|refiar-se}}
 -------- end text --------
 Page 3101 refiar-se: -------- begin text --------
 
@@ -77044,7 +77245,7 @@ From {{af|ca|reflexió|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=5}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[reflect]]; to think about
 
@@ -77197,8 +77398,8 @@ From {{af|ca|re-|fred|-ar|t2=cold}}.
 {{ca-verb}}
 
 # {{lb|ca|transitive}} to [[cool down]]
-# {{lb|ca|reflexive|refredar-se}} to [[cool down]]
-# {{lb|ca|reflexive|refredar-se}} to [[catch a cold]]
+# {{lb|ca|reflexive}} to [[cool down]]
+# {{lb|ca|reflexive}} to [[catch a cold]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -77222,6 +77423,9 @@ From {{com|ca|refredar|es}}.
 {{ca-verb}}
 
 # {{reflexive of|ca|refredar}}
+
+====Conjugation====
+{{ca-conj}}
 -------- end text --------
 Page 3113 refregar: -------- begin text --------
 
@@ -77281,7 +77485,7 @@ Page 3115 refrigerar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a guess, but likely -->
 
 # to [[cool]]; [[cool down]]
 # to [[refrigerate]]
@@ -77309,7 +77513,7 @@ Page 3116 refringir: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[refract]]
 #: {{syn|ca|refractar}}
@@ -77482,7 +77686,7 @@ From {{af|ca|regany|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[bare]] {{q|teeth, skin}}
 #: {{ux|ca|Em va '''reganyar''' les dents com un gos.|He '''bared''' his teeth to me like a dog.}}
@@ -77573,7 +77777,7 @@ Page 3126 regatejar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[haggle]] over
 # {{lb|ca|transitive|figurative}} to [[skimp]] (on)
@@ -77594,14 +77798,14 @@ Page 3126 regatejar: -------- begin text --------
 Page 3127 regenerar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|regenerō|regenerāre}}.
+{{bor+|ca|la|regenerō|regenerāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 * {{rhymes|ca|a(ɾ)}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME, a guess but likely -->
 
 # {{lb|ca|transitive}} to [[generate]], [[create]]
 
@@ -77630,7 +77834,7 @@ From {{af|ca|regent|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[run]] {{gloss|to control or manage, be in charge of}}
 #: {{uxi|ca|'''regentar''' un hostal|to '''run''' a hostel}}
@@ -78021,12 +78225,15 @@ From {{af|ca|re-|introduir}}.
 -------- end text --------
 Page 3143 reiterar: -------- begin text --------
 
+===Etymology===
+{{bor+|ca|LL.|reitero|reiterāre}}.
+
 ===Pronunciation===
 * {{ca-IPA|reïterar}}
 * {{homophones|ca|reiterà}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a guess, but likely -->
 
 # to [[reiterate]]
 
@@ -78094,7 +78301,7 @@ From {{af|ca|relació|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=5}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[relate]] (to)
 #: {{ux|ca|[E]ls termes '''relacionats''' amb la vida quotidiana dels pastors[.]|The terms related to the life of the shepherds.}}
@@ -78568,7 +78775,7 @@ From {{m|ca|remorejar||to murmur}} via {{glossary|dissimilation}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[come up with]] [[excuses]], to [[dawdle]]
 # {{lb|ca|intransitive}} to [[grumble]]
@@ -78699,7 +78906,7 @@ Page 3170 remunerar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a guess, but likely -->
 
 # {{lb|ca|transitive}} to [[remunerate]]
 #: {{syn|ca|recompensar}}
@@ -78783,10 +78990,13 @@ Page 3172 rendir: -------- begin text --------
 Page 3173 rendir-se: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[give up]]
 # to [[give in]]
+
+====Conjugation====
+{{ca-conj}}
 -------- end text --------
 Page 3174 renegar: -------- begin text --------
 
@@ -78877,7 +79087,7 @@ Page 3177 rentar: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-rentar.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[wash]]
 #: {{syn|ca|llavar|netejar}}
@@ -79053,7 +79263,7 @@ Of expressive origin.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to be [[senile]]
 #: {{syn|ca|caduquejar}}
@@ -79293,7 +79503,7 @@ From {{af|ca|re-|plegar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[refold]]
 # {{lb|ca|transitive}} to [[withdraw]]
@@ -79490,7 +79700,7 @@ From {{der|ca|la|repraesentō|repraesentāre}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[represent]]
 
@@ -80186,7 +80396,7 @@ Page 3227 ressonar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|intransitive}} to [[resound]]
 
@@ -80809,9 +81019,12 @@ Page 3251 retratar: -------- begin text --------
 Page 3252 retraure: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|Western}} {{alt form|ca|retreure}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -80904,7 +81117,7 @@ From {{af|ca|re-|tronar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|intransitive}} to [[boom]], to [[rumble]]
 # {{lb|ca|intransitive}} to [[echo]], to [[resound]]
@@ -81103,13 +81316,13 @@ From {{prefix|ca|re|venjar|gloss2=to take vengence}}.
 Page 3264 reverberar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|reverberō|reverberāre}}.
+{{bor+|ca|la|reverberō|reverberāre}}.
 
 ===Pronunciation===
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a guess, but likely -->
 
 # to [[reverberate]]
 
@@ -81182,9 +81395,12 @@ Page 3267 reveure: -------- begin text --------
 * {{alt|ca|revore||Valencian}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[see]] again
+
+====Conjugation====
+{{ca-conj}}
 
 ====Derived terms====
 * {{l|ca|a reveure}}
@@ -81192,9 +81408,12 @@ Page 3267 reveure: -------- begin text --------
 Page 3268 revindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|revenir}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:GDLC}}
@@ -81431,7 +81650,7 @@ From {{af|ca|ribot|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[plane]]
 
@@ -81647,7 +81866,7 @@ From {{af|ca|roda|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[circumvent]], to [[get around]]
 # {{lb|ca|transitive}} to [[encircle]], to [[surround]], to [[envelop]]
@@ -81721,7 +81940,7 @@ From {{af|ca|roina|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|impersonal}} to [[drizzle]]
 #: {{syn|ca|ploviscar|plovisquejar|plovinejar|roinar}}
@@ -81742,7 +81961,7 @@ From {{af|ca|romanços|-ejar|t1=excuses}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[come up with]] [[excuses]]; to [[procrastinate]]
 #: {{syn|ca|cançonejar|rondallejar|camandulejar|remolejar}}
@@ -81848,9 +82067,12 @@ Page 3295 roncar: -------- begin text --------
 Page 3296 rondallejar: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
-# [[dawdle]], [[hang around]]
+# to [[dawdle]], to [[hang around]]
+
+====Conjugation====
+{{ca-conj}}
 -------- end text --------
 Page 3297 rondinar: -------- begin text --------
 
@@ -81885,7 +82107,7 @@ From {{af|ca|rondinar|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[murmur]]
 
@@ -81907,7 +82129,7 @@ Onomatopoeic; {{m|ca|ronron}} {{suffix|ca||ejar}}. Compare {{cog|fr|ronronner}},
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|informal}} to [[purr]] {{gloss|like a cat}}
 #: {{syn|ca|roncar}}
@@ -81926,7 +82148,7 @@ From {{af|ca|ronsa|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[dawdle]]
 #: {{syn|ca|gallinejar}}
@@ -82007,7 +82229,7 @@ Probably from {{af|ca|ròssa|-egar|t1=nag}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alternative form of|ca|arrossegar}}
 
@@ -82058,7 +82280,7 @@ Page 3305 rotar: -------- begin text --------
 {{inh+|ca|VL.||*ruptāre}}, modification of {{inh|ca|la|ructō|ructāre}}.
 
 ====Verb====
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[belch]], [[burp]]
 #: {{syn|ca|eructar}}
@@ -82074,7 +82296,7 @@ Page 3305 rotar: -------- begin text --------
 ===Etymology 2===
 
 ====Verb====
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|Castilianism}} to [[rotate]]
 #: {{syn|ca|rodar}}
@@ -82125,7 +82347,7 @@ From {{suffix|ca|rovell|ar|t1=rust}}, attested from 1696.<ref>{{R:ca:GDLC}}</ref
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[rust]]
 
@@ -82260,7 +82482,7 @@ Page 3312 rumorejar: -------- begin text --------
 From {{suffix|ca|rumor|ejar}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[rumor]]
 #* {{quote-journal|ca|year=|date=December 2016|author=|title=Madonna es va embolicar amb Michael Jackson|work=El Periódico|url=http://www.elperiodico.cat/ca/noticias/gent/madonna-afer-michael-jackson-james-corden-carpool-karaoke-5678353
@@ -82334,7 +82556,7 @@ Page 3314 saber: -------- begin text --------
 Page 3315 saber greu: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[feel]] bad (for); to [[regret]]
 #* {{quote-book|ca|year=2013|author=Jordi Cortés Rodríguez; Xavier Montoriol Cunill|title=L'exèrcit de les tenebres|publisher=Grupo Planeta Spain|isbn=9788415790754
@@ -82355,7 +82577,7 @@ Page 3315 saber greu: -------- begin text --------
 Page 3316 sabotejar: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[sabotage]]
 
@@ -82420,7 +82642,7 @@ From {{af|ca|sacsar|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[shake]]
 #: {{syn|ca|batzegar}}
@@ -82743,7 +82965,7 @@ From {{af|ca|saltiró|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|intransitive}} to [[hop]], to [[skip]]
 #: {{syn|ca|botejar}}
@@ -82821,7 +83043,7 @@ From {{m|ca|sanció}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[sanction]]
 
@@ -82843,7 +83065,7 @@ From {{af|ca|sa|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to make [[healthy]]
 # {{lb|ca|transitive}} to [[sanitize]]
@@ -82869,7 +83091,7 @@ Either directly from {{der|ca|la|singultō|singultāre}} via [[metathesis]] or f
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|intransitive}} to [[sob]]
 
@@ -82940,7 +83162,7 @@ Page 3340 saquejar: -------- begin text --------
 {{bor+|ca|it|saccheggiare}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[loot]], [[rob]], [[plunder]]
 
@@ -82966,7 +83188,7 @@ From {{af|ca|sardana|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to dance the [[sardana]]
 
@@ -83036,7 +83258,7 @@ Page 3344 satisfer: -------- begin text --------
 * {{ca-IPA|é}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[satisfy]]
 
@@ -83232,7 +83454,7 @@ From {{af|ca|set|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[thirst]], to feel [[thirsty]]
 #: {{ux|ca|No hi ha més trist malanat que'l qui '''sedeja''' sens mida.|There is no sadder wretch than he who '''thirsts''' without measure.}}
@@ -83321,7 +83543,7 @@ Page 3355 segellar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[stamp]]
 
@@ -83436,7 +83658,7 @@ From {{af|ca|selecció|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=5}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[pick]], [[select]], [[call up]]
 
@@ -84055,7 +84277,7 @@ Variation of {{m|ca|sanglotar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|intransitive}} to [[hiccup]]
 
@@ -84241,7 +84463,7 @@ From {{af|ca|sobre-|alimentar}}.
 * {{rhymes|ca|a(ɾ)|s=6}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[overfeed]]
 
@@ -84417,9 +84639,12 @@ From {{der|ca|la|superveniō}}.
 Page 3397 sobrevindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|sobrevenir}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:GDLC}}
@@ -85053,7 +85278,7 @@ From {{af|ca|solució|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[solve]], [[sort out]]
 #: {{syn|ca|aclarir|enretirar|resoldre}}
@@ -85221,7 +85446,7 @@ Page 3428 sonar: -------- begin text --------
 {{inh+|ca|roa-oca|sonar}}, from {{inh|ca|la|sono|sonāre}}.
 
 ====Verb====
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|intransitive}} to [[sound]], to make a sound
 # {{lb|ca|intransitive}} to [[ring]], to [[buzz]]
@@ -85283,7 +85508,7 @@ From {{af|ca|sonda|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[sound]] (to test with a probe)
 #: {{syn|ca|sondar}}
@@ -85502,7 +85727,7 @@ From {{af|ca|sorra|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[sandblast]]
 # {{lb|ca|intransitive}} to [[sand]]
@@ -85527,7 +85752,7 @@ From {{af|ca|sort|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[draw lots]]
 #: {{syn|ca|treure a sorts}}
@@ -85566,7 +85791,7 @@ Page 3440 sortir: -------- begin text --------
 # to [[come out]], to be [[published]], to be [[make known|made known]]
 # to [[end up]], to [[turn out]]
 #: {{uxi|ca|'''sortir''' bé|to '''come out''' well}}
-# {{lb|ca|reflexive and pronominal}} to manage to get out of a difficult situation successfully {{ngd|(requires a reflexive pronoun according the subject, and the appropriate form of the adverbial pronoun [[en#Catalan|en]])}}
+# {{lb|ca|reflexive|pronominal}} to manage to get out of a difficult situation successfully {{ngd|(requires a reflexive pronoun according the subject, and the appropriate form of the adverbial pronoun [[en#Catalan|en]])}}
 #: {{uxi|ca|Ho tenia difícil, però '''se'n va sortir''' prou bé|It was difficult for him, but he did well enough}}
 
 
@@ -85591,7 +85816,7 @@ Page 3440 sortir: -------- begin text --------
 Page 3441 sortir de l'armari: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb|head=[[sortir]] [[de]] [[l']][[armari]]}}
+{{ca-verb}}
 
 # to [[come out of the closet]]
 
@@ -85603,7 +85828,7 @@ Page 3442 sortir de polleguera: -------- begin text --------
 {{lit|leave the hinge}}.
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|idiom}} to [[fly off the handle]]
 
@@ -85705,7 +85930,7 @@ From {{der|ca|la|suspectō|suspectāre}}.
 Page 3446 sossegar: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alternative form of|ca|assossegar||to calm}}
 
@@ -85749,9 +85974,12 @@ Page 3447 sostenir: -------- begin text --------
 Page 3448 sostindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|sostenir}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:GDLC}}
@@ -85920,7 +86148,7 @@ From {{m|ca|sotragar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|ambitransitive}} to [[jolt]]
 
@@ -85975,7 +86203,7 @@ From {{af|ca|sovint|-ejar|t1=often}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to do [[often]]
 # {{lb|ca|intransitive}} to [[happen]] often
@@ -86505,9 +86733,12 @@ From {{der|ca|la|subvertō}}.
 Page 3478 subvindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{alt form|ca|subvenir}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:GDLC}}
@@ -86639,9 +86870,9 @@ Page 3483 suïcidar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{head|ca|verb form}}
 
-# {{inflection of|ca|suïcidar-se||inf}}
+# {{ca-verb form of|suïcidar-se}}
 -------- end text --------
 Page 3484 suïcidar-se: -------- begin text --------
 
@@ -86736,7 +86967,7 @@ Page 3488 superar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[surpass]]; [[exceed]]
 # to [[overcome]]; [[get past]]
@@ -87003,7 +87234,7 @@ From {{suffix|ca|suc|ejar|t1=juice}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to release or [[secrete]] juice or other fluids
 #: ''La ferida li '''suqueja'''''
@@ -87094,7 +87325,7 @@ Page 3501 sustentar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME, a guess but likely -->
 
 # {{lb|ca|transitive}} to [[sustain]] {{gloss|to provide for or nourish}}
 # {{lb|ca|transitive}} to [[sustain]] {{gloss|to keep from falling; to bear; to uphold; to support}}
@@ -87208,7 +87439,7 @@ From {{af|ca|tafaner|-ejar|t1=busybody}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[snoop]], to [[pry]]
 #: {{syn|ca|batxillejar|xafardejar}}
@@ -87417,7 +87648,7 @@ From {{af|ca|taral·larà|-ejar|t1=tra-la-la}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[hum]]
 
@@ -87439,7 +87670,7 @@ From {{af|ca|taral·la|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # {{alternative form of|ca|taral·larejar||to hum}}
 
@@ -87490,10 +87721,13 @@ From {{af|ca|tard|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # to be or become somewhat late or delayed
 #: {{ux|ca|La llum del dia semblava que mes que mai '''tardejava''' en visitar-nos.|The daylight seems more than ever to '''be late''' in visiting us.}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -87569,7 +87803,7 @@ From {{af|ca|tatxó|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ó}}
 
 # to [[secure]] with tacks, to [[tack down]]
 # to [[adorn]] with studs, to [[stud]]
@@ -87614,7 +87848,7 @@ From {{suffix|ca|tecla|ejar|t1=key [in a keyboard]}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[type]]
 
@@ -87663,7 +87897,7 @@ From {{af|ca|telèfon|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[telephone]]
 
@@ -87747,7 +87981,7 @@ Page 3526 temperar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[moderate]]
 #: {{syn|ca|moderar|assuaujar}}
@@ -87927,12 +88161,9 @@ Page 3531 tenir: -------- begin text --------
 Page 3532 tenir en compte: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[take into account]]
-
-====Conjugation====
-* see {{m|ca|tenir}}
 
 -------- end text --------
 Page 3533 tenir la bona: -------- begin text --------
@@ -87941,7 +88172,7 @@ Page 3533 tenir la bona: -------- begin text --------
 From {{com|ca|tenir|la|bona|t1=to have|t2=the}}, feminine form of {{m|ca|bo||good; good thing}}.
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|head=~bo[na:]}}
 
 # {{lb|ca|intransitive}} to be [[in good spirits]]
 #: {{syn|ca|estar de bon humor}}
@@ -87954,7 +88185,7 @@ From {{com|ca|tenir|la|bona|t1=to have|t2=the}}, feminine form of {{m|ca|bo||goo
 Page 3534 tenir lloc: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[take place]]
 -------- end text --------
@@ -87971,12 +88202,9 @@ Page 3536 tenir raó: -------- begin text --------
 Compare {{cog|fr|avoir raison}}.
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to be [[right]]; to be [[correct]]
-
-====Conjugation====
-* see {{m|ca|tenir}}
 -------- end text --------
 Page 3537 tenyir: -------- begin text --------
 
@@ -88100,7 +88328,7 @@ From {{af|ca|terra|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to have an [[earthy]] taste or color
 #: {{uxi|ca|l'aigua '''terreja'''}}
@@ -88163,7 +88391,7 @@ From {{af|ca|test|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[test]]
 #: {{syn|ca|provar|testar}}
@@ -88282,7 +88510,7 @@ From {{af|ca|timbal|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[play]] the [[drum]], to [[drum]]
 
@@ -88303,12 +88531,12 @@ Page 3551 tindre: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|chiefly|Valencian}} {{alternative form of|ca|tenir}}
 
 ====Usage notes====
-Considered less formal than {{m|ca|tenir}}, except in Valencian, where it is the standard form.
+* Considered less formal than {{m|ca|tenir}}, except in Valencian, where it is the standard form.
 
 ====Conjugation====
 {{ca-conj}}
@@ -88389,7 +88617,7 @@ Page 3554 tirar endavant: -------- begin text --------
 Page 3555 tirar les amonestacions: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|head=~amonestaci[ons:ó]}}
 
 # {{lb|ca|intransitive}} to [[publish]] the [[banns]]
 
@@ -88408,7 +88636,7 @@ From {{af|ca|tirar|-ot|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[shoot]] at {{q|with a gun}}, [[fire]] upon, [[snipe]] at
 
@@ -88477,7 +88705,7 @@ From {{af|ca|titubar|-ejar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[titubate]]
 #: {{syn|ca|titubar}}
@@ -88538,9 +88766,12 @@ Page 3560 titular: -------- begin text --------
 Page 3561 titulitzar: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
-# [[securitize]]
+# to [[securitize]]
+
+=====Conjugation=====
+{{ca-conj}}
 
 {{C|ca|Finance}}
 -------- end text --------
@@ -88585,7 +88816,7 @@ Page 3563 tocar el dos: -------- begin text --------
 From {{m|ca|tocar||touch}} {{m|ca|el||the}} and archaic Catalan {{m|ca|dos||back}}, to tap the back of a horse or other transport animals to encourage him moving forward.
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|idiom}} to [[leave]]; to [[up and leave]]; to [[scram]]
 
@@ -88621,14 +88852,14 @@ From {{der|ca|la|tollō|tollere}}. Compare {{cog|it|togliere}}.
 Page 3565 tolerar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|tolerāre}}.
+{{bor+|ca|la|tolero|tolerāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a guess, but likely -->
 
 # to [[tolerate]]
 
@@ -88966,7 +89197,7 @@ From {{af|ca|torn|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[lathe]]
 # to [[encircle]]
@@ -89180,7 +89411,7 @@ Page 3585 tractar: -------- begin text --------
 # {{indtr|ca|de}} to [[try]]
 #: {{syn|ca|provar|intentar}}
 #: {{uxi|ca|El govern '''tracta''' de desenvolupar noves indústries.|The government is '''trying''' to develop new industries.}}
-# {{indtr|ca|de|.reflexive}} to be about, to [[concern]]; to be
+# {{lb|ca|reflexive}} to be about, to [[concern]]; to be {{+preo|ca|de}}
 # to have [[dealings]], to have [[to do with]]
 #: {{uxi|ca|el vaig '''tractar''' breument|I briefly '''had to do''' with him}}
 
@@ -89419,7 +89650,7 @@ From {{af|ca|trampa|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[cheat]]
 # {{lb|ca|transitive}} to [[swindle]]
@@ -89721,7 +89952,7 @@ Page 3607 transliterar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a guess, but likely -->
 
 # to [[transliterate]]
 
@@ -90062,9 +90293,9 @@ Page 3622 treballar: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|reflexive}} [[suffer]], [[exert]] oneself
-# {{lb|ca|intransitive}} [[apply]] oneself diligently to a task
-# {{lb|ca|transitive}} [[fashion]], [[shape]], [[knead]]
+# {{lb|ca|reflexive}} to [[suffer]], [[exert]] oneself
+# {{lb|ca|intransitive}} to [[apply]] oneself diligently to a task
+# {{lb|ca|transitive}} to [[fashion]], [[shape]], [[knead]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -90114,7 +90345,7 @@ From {{af|ca|tremolar|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[quiver]]
 
@@ -90303,7 +90534,7 @@ From {{m|ca|trepar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|transitive}} to [[trample]]
 #: {{syn|ca|trepitjar}}
@@ -90459,7 +90690,7 @@ Page 3636 tricotar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[knit]]
 
@@ -90778,7 +91009,7 @@ Page 3647 tronar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[thunder]]
 
@@ -90844,7 +91075,7 @@ Ultimately from {{der|ca|frk|*trottōn|t=to go, run}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|intransitive}} to [[trot]]
 # {{lb|ca|intransitive}} to [[rush]], to walk [[hurriedly]]
@@ -90947,7 +91178,7 @@ Page 3654 tuitejar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|Internet}} to [[tweet]] {{gloss|send a message from Twitter}}
 #* {{quote-journal|ca|year=|date=October 2016|author=|title=Tardà denuncia una amenaça de mort|work=El Periódico|url=http://www.elperiodico.cat/ca/noticias/politica/triga-denuncia-amenaca-mort-tren-penjat-hauries-destar-5521590
@@ -91206,7 +91437,7 @@ From {{af|ca|uniforme|-ar}}.
 # to [[standardize]], make [[uniform]]
 #: {{syn|ca|uniformitzar}}
 # to provide with [[uniform]]s
-#{{lb|ca|reflexive}} to become [[uniform]], [[standard]]
+# {{lb|ca|reflexive}} to become [[uniform]], [[standard]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -91627,7 +91858,7 @@ From {{af|ca|vagar|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intranstive}} to [[wander]], to [[drift]]
 #: {{syn|ca|vagar|errar}}
@@ -91655,7 +91886,7 @@ From {{af|ca|vaiver|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to go [[back and forth]], to [[wander]], to [[pace]] [[side-to-side]], etc.
 #* {{quote-book|ca|year=1943|author=Agustí Bartra|title=Xabola|text='''Vaiverejaren''' entre roques i matolls sense acabar de decidir-se, fins que Vives, rient, va dir: "No volies dormir sota un arbre? Allà en veig un de corpulent i solitari."|t=They '''wandered back and forth''' between rocks and bushes without reaching a decision until Vives, laughing, said, "Didn't you want to sleep under a tree? There I see a corpulent and solitary one."}}
@@ -91735,11 +91966,10 @@ Page 3689 valer la pena: -------- begin text --------
 Compare {{cog|fr|en valoir la peine}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to be [[worth]] the [[effort]]
-#: Ens sembla que '''val la pena''' de transcriure un d'aquests textos
-#:: It seemed to be worth the effort to transcribe one of these texts
+#: {{ux|ca|Ens sembla que '''val la pena''' de transcriure un d'aquests textos.|It seemed to be worth the effort to transcribe one of these texts.}}
 
 -------- end text --------
 Page 3690 valorar: -------- begin text --------
@@ -91795,9 +92025,9 @@ From {{af|ca|vals|-ar}}.
 Page 3692 vanar: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{head|ca|verb form}}
 
-# {{form of|ca|infinitive|vanar-se}}
+# {{ca-verb form of|vanar-se}}
 
 -------- end text --------
 Page 3693 vanar-se: -------- begin text --------
@@ -91820,9 +92050,9 @@ Page 3693 vanar-se: -------- begin text --------
 Page 3694 vantar: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{head|ca|verb form}}
 
-# {{form of|ca|infinitive|vantar-se}}
+# {{ca-verb form of|vantar-se}}
 
 -------- end text --------
 Page 3695 vantar-se: -------- begin text --------
@@ -92113,13 +92343,13 @@ Page 3705 vendre: -------- begin text --------
 Page 3706 venerar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|veneror|venerārī}}.
+{{bor+|ca|la|veneror|venerārī}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a guess, but likely -->
 
 # {{lb|ca|transitive}} to [[venerate]]
 
@@ -92230,10 +92460,13 @@ From {{af|ca|ventall|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # to [[fan]]
 #: {{syn|ca|ventar}}
+
+====Conjugation====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -92247,7 +92480,7 @@ From {{af|ca|vent|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|intransitive}} to be [[windy]]
 #: {{syn|ca|ventejar}}
@@ -92279,7 +92512,7 @@ From {{af|ca|vent|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[air]]
 # {{lb|ca|transitive}} to [[winnow]]
@@ -92416,7 +92649,7 @@ From {{af|ca|vespre|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to grow [[dark]], to [[dusk]]
 #: {{syn|ca|envesprir|enfosquir-se}}
@@ -92840,7 +93073,7 @@ From {{der|ca|la|vindicō|vindicāre|t=avenge, claim}}.
 ===Verb===
 {{ca-verb}}
 
-#  {{lb|ca|transitive}} {{rfdef|ca}}
+# {{lb|ca|transitive}} {{rfdef|ca}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -92849,9 +93082,12 @@ From {{der|ca|la|vindicō|vindicāre|t=avenge, claim}}.
 Page 3737 vindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb}}
 
 # {{lb|ca|Valencian}} {{alternative form of|ca|venir}}
+
+====Conjugation====
+{{ca-conj}}
 
 -------- end text --------
 Page 3738 violar: -------- begin text --------
@@ -93133,7 +93369,7 @@ Page 3748 vociferar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a guess, but likely -->
 
 # to [[vociferate]]
 
@@ -93359,7 +93595,7 @@ From {{suffix|ca|vora|-ejar|t1=border, hem}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[skirt]], to [[go round]]
 #* {{quote-book|ca|year=1934|author=Joan Puig i Ferreter|title=Camins de França|text='''Vorejàvem''' el canal en direcció al centre de la ciutat.|t=We '''skirted''' the canal in the direction of the city centre.}}
@@ -93385,7 +93621,7 @@ From {{der|ca|la|vōtum}} < {{m|la|voveō}}. Compare {{cog|es,pt|votar}}, {{cog|
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[vote]]
 
@@ -93435,10 +93671,10 @@ Page 3760 vulnerar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: a guess, but likely -->
 
-# to [[harm]], [[damage]] {{gloss|a reputation}}
-# to [[infringe]], [[violate]] {{gloss|rights}}
+# to [[harm]], [[damage]] {{q|e.g. a reputation}}
+# to [[infringe]], [[violate]] {{q|e.g. one's rights}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -93485,7 +93721,7 @@ From {{af|ca|xafarder|-ejar|t1=gossipmonger}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[blab]], [[gossip]]
 #: {{syn|ca|tafanejar}}
@@ -93509,7 +93745,7 @@ From {{suffix|ca|xafarot|ejar}}.
 * {{rhymes|ca|a(ɾ)|s=5}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # to [[gossip]]
 
@@ -93567,7 +93803,7 @@ From {{af|ca|xampurrat|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[smatter]]
 
@@ -93628,7 +93864,7 @@ From {{af|ca|xopar|-ejar}}, with alteration of the vowels.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[splash]] about
 #: {{syn|ca|xipollejar}}
@@ -93648,7 +93884,7 @@ From earlier {{m|ca|*eixorbetar}}, from {{der|ca|la|exorbitō|exorbitāre|to go 
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|intransitive}} to [[slosh]], to [[splatter]]
 
@@ -93694,7 +93930,7 @@ From {{m|ca|xat}}, which is derived from {{der|ca|en|chat}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[chat]]
 
@@ -93801,7 +94037,7 @@ From {{af|ca|xerrar|-ot|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[babble]] {{q|of infants}}
 # to [[chirp]] {{q|of birds}}
@@ -93876,7 +94112,7 @@ From {{af|ca|xipoll|-ejar|t1=pool, puddle}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[splash]] about
 #: {{syn|ca|xapotejar}}
@@ -93961,7 +94197,7 @@ Page 3781 xiuxiuejar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[whisper]]
 #* '''2012''', Joseph Conrad (translation by Ferran Ràfols Gesa), ''Contes del neguit'' (Tales of Unrest), Editorial Alpha, page 54:
@@ -94162,7 +94398,7 @@ From {{suffix|ca|zig-zag|ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[zigzag]]
 
@@ -94205,7 +94441,7 @@ From {{af|ca|zum-zum|-ejar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|intransitive}} to [[hum]], to [[buzz]]
 #: {{syn|ca|bonir|brunzir}}
