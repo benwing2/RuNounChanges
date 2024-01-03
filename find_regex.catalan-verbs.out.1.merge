@@ -10055,7 +10055,7 @@ From {{af|ca|a-|setge|-ar}}.
 Page 411 asseure: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|assideō|assidēre}}.
+{{inh+|ca|la|assideō|assidēre}}.
 
 ===Pronunciation===
 * {{ca-IPA|è}}
@@ -10064,12 +10064,10 @@ From {{der|ca|la|assideō|assidēre}}.
 {{ca-verb|root=è}}
 
 # {{lb|ca|transitive}} to [[seat]], to [[place]] [[down]]
+# {{lb|ca|intransitive|reflexive}} to [[sit]] [[down]], to [[seat]] [[oneself]]
 
 ====Conjugation====
 {{ca-conj}}
-
-====Derived terms====
-* {{l|ca|asseure's}}
 
 ====Related terms====
 * {{l|ca|seure}}
@@ -10082,16 +10080,13 @@ From {{der|ca|la|assideō|assidēre}}.
 -------- end text --------
 Page 412 asseure's: -------- begin text --------
 
-===Etymology===
-From {{com|ca|asseure|es}}.
-
 ===Pronunciation===
 * {{ca-IPA|assèures}}
 
 ===Verb===
 {{ca-verb|root=è}}
 
-# {{lb|ca|intransitive|reflexive}} to [[sit]] [[down]], to [[seat]] [[oneself]]
+# {{reflexive of|ca|asseure}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -28845,26 +28840,26 @@ Page 1153 desprendre: -------- begin text --------
 # to [[detach]], to [[unfasten]]
 # to [[give off]], to [[emit]]
 # to [[deduce]]
+# {{lb|ca|pronominal}} to [[come off]], [[fall off]]
+# {{lb|ca|pronominal}} to [[rid]] oneself (of), [[shake]] (off)
+# {{lb|ca|pronominal}} to be [[deduced]] from, be [[inferred]] from, be [[implied]] by
 
 ====Conjugation====
 {{ca-conj}}
 
 ====Derived terms====
-* {{l|ca|desprendre's}}
 * {{l|ca|despreniment}}
 
 -------- end text --------
 Page 1154 desprendre's: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|desprêndres}}
+* {{ca-IPA|des.p(r)êndres}}
 
 ===Verb===
 {{ca-verb|root=ê}}
 
-# to [[come off]], [[fall off]]
-# to be [[deduced]] from, be [[inferred]] from, be [[implied]] by
-# to [[rid]] oneself (of), [[shake]] (off)
+# {{reflexive of|ca|desprendre}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -92931,6 +92926,8 @@ Page 3724 veure: -------- begin text --------
 #: {{ux|ca|Et '''veig''' una mica estressat.|You seem [lit. I '''find''' you] a little stressed.}}
 # {{lb|ca|intransitive|hi}} (with pronoun ''hi'') to be able to [[see]]
 #: {{uxi|ca|Que '''hi veu''' bé?|Can you see ok?}}
+# {{lb|ca|pronominal}} to [[look]], to [[appear]]
+#: {{ux|ca|Penses que '''em veig''' bonica? &mdash; Sí, '''et veus''' increïble!|Do think '''I look''' nice? &mdash; Yes, '''you look''' incredible!}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -92964,8 +92961,7 @@ Page 3725 veure's: -------- begin text --------
 ===Verb===
 {{ca-verb|root=ê}}
 
-# to [[look]], to [[appear]]
-#: {{ux|ca|Penses que '''em veig''' bonica? &mdash; Sí, '''et veus''' increïble!|Do think '''I look''' nice? &mdash; Yes, '''you look''' incredible!}}
+# {{reflexive of|ca|veure}}
 
 ====Conjugation====
 {{ca-conj}}
