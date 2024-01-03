@@ -1563,7 +1563,7 @@ From {{af|ca|a-}} + {{der|ca|la|cōpulō|cōpulāre}} (inherited). {{doublet|ca|
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb|root=ó}}
+{{ca-verb|root=ó}}<!-- from cawikt; attested directly by DNV and by [[cobla]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[couple]], to [[join]]
 #* {{quote-journal|ca|date=January 19 2017|author=Josep M. Berengueras|title=Així és Nintendo Switch, que arriba el 3 de març al preu de 299 euros|work=El Periódico|url=http://www.elperiodico.cat/ca/noticias/tecnologia/nintendo-switch-presentacion-preu-jocs-5740726
@@ -17512,7 +17512,7 @@ Page 708 cobrar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[charge]] {{gloss|money}}
 # {{lb|ca|transitive}} to [[collect]], [[receive]] {{gloss|payment}}
@@ -21818,11 +21818,11 @@ Page 872 copsar: -------- begin text --------
 {{unc|ca}}. {{rfe|ca}}
 
 ===Pronunciation===
-* {{ca-IPA}}<!-- stressed forms have /o/ in Valencian, otherwise unknown -->
+* {{ca-IPA}}
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- from cawikt; attested directly by DNV -->
 
 # to [[catch]] {{gloss|to seize an object in motion, especially from the air}}
 #: {{syn|ca|atrapar|agafar}}
@@ -25481,7 +25481,7 @@ From {{af|ca|des-|acoblar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- from cawikt; attested directly by DNV and by [[cobla]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[decouple]]
 
@@ -25678,7 +25678,7 @@ Page 1020 desallotjar: -------- begin text --------
 From {{affix|ca|des-|allotjar}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[evacuate]] {{gloss|from a demonstration}}
 # to [[evict]] {{gloss|from a building}}
@@ -27028,7 +27028,7 @@ From {{af|ca|des-|doblar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- from cawikt; attested directly by DNV and by [[doble]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[unfold]]
 # to [[break down]] into [[constituent]] parts
@@ -27471,7 +27471,7 @@ Page 1096 desenrotllar: -------- begin text --------
 From {{af|ca|des-|enrotllar}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ô}}<!-- attested directly by DNV and by [[rotlle]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[develop]] {{gloss|to advance, to promote the growth of}}
 #: {{syn|ca|desenvolupar}}
@@ -28776,7 +28776,7 @@ From {{af|ca|des-|poblar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ô}}<!-- FIXME: cawikt says /ɔ/ everywhere based off of [[poble]], which is /ɔ/ everywhere including Valencia as vouched by DNV; but DNV says [[poblar]] has root /o/ in Valencia along with [[pobla]] "nucleus of settlers founded by means of a settlement charter" -->
 
 # {{lb|ca|transitive}} to [[depopulate]]
 # {{lb|ca|pronominal}} to [[depopulate]] {{gloss|lose population}}
@@ -29387,7 +29387,7 @@ From {{prefix|ca|des|vetllar}}, or from {{inh|ca|la|evigilare}}, with the prefix
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|cen=ë|val=ë}}<!-- apparently no Balearic; from cawikt; attested directly by DNV and by [[vetlla]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[wake up]], [[wake]]
 # {{lb|ca|reflexive}} to [[wake up]], [[awaken]]
@@ -31530,7 +31530,7 @@ Either from {{compound|ca|doble|-ar}} or {{inh|ca|LL.|duplō|duplāre}}, from {{
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- from cawikt; attested directly by DNV and by [[doble]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[double]] {{gloss|make twice as much or twice as large}}
 # {{lb|ca|intransitive}} to [[double]] {{gloss|become twice as much or twice as large}}
@@ -34471,7 +34471,7 @@ From {{af|ca|en-|metzina|-ar}}.
 Page 1383 emmotlar: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{alt form|ca|emmotllar}}
 
@@ -34491,7 +34491,7 @@ Page 1384 emmotllar: -------- begin text --------
 From {{af|ca|en-|motlle|-ar}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[mold]] {{gloss|to shape in or on a mold; to form into a particular shape; to give shape to}}
 
@@ -39222,7 +39222,7 @@ From {{af|ca|en-|rotlle|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ô}}<!-- attested directly by DNV and by [[rotlle]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[roll up]]
 #: {{syn|ca|cargolar}}
@@ -39406,7 +39406,7 @@ From {{af|ca|en-|sofre|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- attested directly by DNV and by [[sofre]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[sulfur]]
 
@@ -41339,7 +41339,7 @@ From {{af|ca|es-|butza|-ar|t2=belly, entrails}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb}}<!-- DNV says root /o/; not attested in GDLC -->
 
 # {{lb|ca|transitive|reflexive}} to [[break]] open, [[burst]] open
 #: {{syn|ca|rebentar}}
@@ -46559,7 +46559,7 @@ Earlier {{m|ca|estojar}}; from {{inh|ca|VL.|*studiare}}, from {{der|ca|la|studiu
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- from cawikt; attested directly by DNV and by [[estoig]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[keep]] {{q|in a case, box}}; to [[box up]], to [[put away]]
 # {{lb|ca|transitive}} to [[encase]], to [[contain]], to [[harbour]]
@@ -51204,7 +51204,7 @@ Page 2061 fotjar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ô}}<!-- FIXME: cawikt and DCVB say /ɔ/ everywhere but DNV says /o/ in Valencia -->
 
 # {{lb|ca|intransitive}} to [[root about]] {{q|of a hog, etc.}}
 #: {{syn|ca|furgar}}
@@ -54717,7 +54717,7 @@ From {{af|ca|hospital|-itzar}}.
 Page 2207 hostatjar: -------- begin text --------
 
 ===Etymology===
-From {{m|ca|hostatge}}.
+From {{af|ca|hostatge|-ar}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -61541,7 +61541,7 @@ From {{af|ca|maniobra|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|ambitransitive}} to [[maneuver]]
 
@@ -65739,7 +65739,7 @@ Page 2646 obrar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[work]] {{gloss|to shape, form or improve a material}}
 # to [[act]], to [[behave]]
@@ -66658,7 +66658,7 @@ Page 2683 optar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[pick]], [[choose]], [[go for]]
 
@@ -70949,7 +70949,7 @@ From {{suffix|ca|poble|t1=people, population|ar}}.
 * {{audio|ca|LL-Q7026 (cat)-Millars-poblar.wav|Audio (Valencian)}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ô}}<!-- FIXME: cawikt says /ɔ/ everywhere based off of [[poble]], which is /ɔ/ everywhere including Valencia as vouched by DNV; but DNV says [[poblar]] has root /o/ in Valencia along with [[pobla]] "nucleus of settlers founded by means of a settlement charter" -->
 
 # to [[populate]]
 
@@ -76238,7 +76238,7 @@ Page 3059 recobrar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[recover]], to [[retrieve]], to [[regain]]
 # {{lb|ca|reflexive}} to [[recover]] {{gloss|to get better, regain one's health}}
@@ -79652,7 +79652,7 @@ From {{af|ca|re-|poblar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ô}}<!-- FIXME: cawikt says /ɔ/ everywhere based off of [[poble]], which is /ɔ/ everywhere including Valencia as vouched by DNV; but DNV says [[poblar]] has root /o/ in Valencia along with [[pobla]] "nucleus of settlers founded by means of a settlement charter" -->
 
 # {{lb|ca|transitive}} to [[repopulate]]
 
@@ -92868,7 +92868,7 @@ Page 3723 vetllar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|cen=ë|val=ë}}<!-- apparently no Balearic; from cawikt; attested directly by DNV and by [[vetlla]] in GDLC -->
 
 # to [[stay up]] (not sleep at night)
 # to work nights, to work a night shift
