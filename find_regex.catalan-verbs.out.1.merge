@@ -833,7 +833,7 @@ From {{der|ca|la|absolvō|absolvere|t=absolve}}.
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-absoldre.wav|Audio (Catalonia)}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[absolve]], [[acquit]]
 # {{lb|ca|transitive}} to [[forgive]], [[release]] (from a debt or obligation)
@@ -880,6 +880,9 @@ Page 35 abstenir: -------- begin text --------
 
 -------- end text --------
 Page 36 abstindre: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -2500,13 +2503,13 @@ From {{der|ca|la|adiuro|adiurāre}}.
 Page 99 admetre: -------- begin text --------
 
 ===Etymology===
-Semi-learned borrowing or adaptation of {{bor|ca|la|admittō|admittere}}, based on {{m|ca|metre}}.
+{{slbor|ca|la|admittō|admittere}}, based on {{m|ca|metre}}.
 
 ===Pronunciation===
-* {{ca-IPA|ammêtre}}
+* {{ca-IPA|ê}}<!-- formerly said 'ammêtre' but not verifiable in any dictionary -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[admit]]
 # to [[accept]]
@@ -2932,7 +2935,7 @@ Page 115 adreçar: -------- begin text --------
 Page 116 adscriure: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|ascribo|adscrībere}} and adapted to the inherited Catalan {{m|ca|escriure}} < {{m|la|scribo|scrībere}}.
+{{bor+|ca|la|ascribo|adscrībere}} and adapted to the inherited {{m+|ca|escriure}} < {{m|la|scribo|scrībere}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -3014,13 +3017,13 @@ Page 119 advenir: -------- begin text --------
 * {{alt|ca|advindre}}
 
 ===Etymology===
-From {{der|ca|la|adveniō|advenīre}}.
+{{bor+|ca|la|adveniō|advenīre}}. {{doublet|ca|avenir}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|intransitive}} to [[happen]], to [[occur]]
 
@@ -3097,7 +3100,7 @@ From {{der|ca|la|advertō}}, attested from the 15th century.<ref>{{R:ca:GDLC}}</
 Page 122 advindre: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|advenir}}
 
@@ -4805,10 +4808,10 @@ Page 195 ajeure: -------- begin text --------
 From {{m|ca|jeure}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ë}}<!-- /e/ per DNV -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}
 
 # {{lb|ca|transitive}} to [[lay down]]
 # {{lb|ca|reflexive}} to [[lie down]] {{gloss|assume a reclining position}}
@@ -4821,8 +4824,11 @@ From {{m|ca|jeure}}.
 -------- end text --------
 Page 196 ajeure's: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ë}}<!-- /e/ per DNV -->
+
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}
 
 # {{reflexive of|ca|ajeure}}
 
@@ -7501,7 +7507,7 @@ Page 307 apercebre: -------- begin text --------
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[apperceive]], to be [[aware]] of, to [[understand]] the [[significance]] of
 # to [[recognize]] {{gloss|something that one sees}}
@@ -7985,7 +7991,7 @@ Page 327 aprehendre: -------- begin text --------
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[grasp]], to [[understand]]
 #: {{syn|ca|copsar|entendre}}
@@ -8010,7 +8016,7 @@ Page 328 aprendre: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-aprendre.wav|Central}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[learn]]
 
@@ -10580,7 +10586,7 @@ Page 432 atendre: -------- begin text --------
 * {{ca-IPA|é}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # be [[attentive]], [[pay attention]] to
 # to [[attend]]
@@ -11532,13 +11538,13 @@ Page 476 avenir: -------- begin text --------
 * {{alt|ca|avindre}}
 
 ===Etymology===
-{{inh+|ca|la|adveniō|advenīre|to come to, to arrive}}.
+{{inh+|ca|la|adveniō|advenīre|to come to, to arrive}}. {{doublet|ca|advenir}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[make]] (different people) [[agree]], to [[cause]] to [[come to terms]]
 # {{lb|ca|reflexive}} to [[get on]] with someone, without conflict
@@ -11656,7 +11662,7 @@ From {{af|ca|a-|vinagre|-ar}}.
 Page 482 avindre: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|avenir}}
 
@@ -13755,7 +13761,7 @@ Page 561 botre: -------- begin text --------
 * {{ca-IPA|ó}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|intransitive}} to [[bounce]], [[bound]], [[jump]]
 #: {{syn|ca|botar}}
@@ -15801,8 +15807,11 @@ Page 637 captenir-se: -------- begin text --------
 ===Etymology===
 From {{af|ca|cap|tenir|se|t1=head|t2=to have|pos3=reflexive pronoun}}.
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|reflexive}} to [[behave]] in a certain way
 #: {{syn|ca|[[portar]]-se|[[comportar]]-se}}
@@ -15826,8 +15835,11 @@ Page 638 captindre: -------- begin text --------
 -------- end text --------
 Page 639 captindre's: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|captenir-se}}
 
@@ -17425,7 +17437,7 @@ Page 705 cloure: -------- begin text --------
 * {{rhymes|ca|ɔwɾe|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[close]], isolate from the exterior
 #: {{syn|ca|tancar}}
@@ -18309,7 +18321,7 @@ Page 736 cometre: -------- begin text --------
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[commit]]
 
@@ -18818,7 +18830,7 @@ From {{der|ca|la|compōnō|compōnere}}.
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[compose]], to [[put]] [[together]]
 # to [[create]]
@@ -18975,7 +18987,7 @@ Page 762 comprendre: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-comprendre.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[include]]
 #: {{syn|ca|incloure}}
@@ -19033,13 +19045,13 @@ Page 763 comprimir: -------- begin text --------
 Page 764 comprometre: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|compromittere||to make a mutual promise to abide by the decision of an arbiter}}, from {{m|la|com-||together}} + {{m|la|promittere||to promise}}.
+{{bor+|ca|la|compromitto|compromittere|to make a mutual promise to abide by the decision of an arbiter}}, from {{m|la|com-||together}} + {{m|la|promittere||to promise}}. Adapted to {{m+|ca|metre}}.
 
 ===Pronunciation===
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[compromise]]
 
@@ -19239,7 +19251,7 @@ Page 771 concebre: -------- begin text --------
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[conceive]], to [[bring]] into [[existence]]
 # to bring into the [[mind]], to [[think of]]
@@ -19357,7 +19369,7 @@ From {{der|ca|la|conclūdō|conclūdere}}.
 * {{rhymes|ca|ɔwɾe|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[conclude]]
 
@@ -19858,7 +19870,7 @@ Page 795 confluir: -------- begin text --------
 Page 796 confondre: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|confundō|cōnfundere}}, possibly a borrowing.
+Probably {{bor+|ca|la|confundō|cōnfundere|nocap=1}}.
 
 ===Pronunciation===
 * {{ca-IPA|ó}}
@@ -20900,9 +20912,9 @@ Page 836 contendre: -------- begin text --------
 * {{ca-IPA|é}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
-# fight, quarrel
+# to [[fight]], to [[quarrel]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -20919,7 +20931,7 @@ Page 837 contenir: -------- begin text --------
 * {{alt|ca|contindre}}
 
 ===Etymology===
-From {{der|ca|la|contineō|continēre}}.
+{{bor+|ca|la|contineō|continēre}}, with conjugation based on {{m|ca|tenir}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -20927,7 +20939,7 @@ From {{der|ca|la|contineō|continēre}}.
 * {{rhymes|ca|i(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[contain]]
 
@@ -21006,7 +21018,7 @@ From {{af|ca|contextual|-itzar}}.
 Page 841 contindre: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|contenir}}
 
@@ -21268,13 +21280,13 @@ Page 852 contravenir: -------- begin text --------
 * {{alt|ca|contravindre}}
 
 ===Etymology===
-From {{der|ca|la|contrāveniō}}.
+{{bor+|ca|la|contrāveniō|contrāvenīre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[contravene]]
 
@@ -21294,7 +21306,7 @@ From {{der|ca|la|contrāveniō}}.
 Page 853 contravindre: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|contravenir}}
 
@@ -21429,7 +21441,7 @@ Page 858 convenir: -------- begin text --------
 * {{rhymes|ca|i(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|intransitive}} to be [[apt]] or [[suitable]]
 # {{lb|ca|intransitive}} to [[agree]] {{gloss|to harmonize in opinion or action}}
@@ -21574,7 +21586,7 @@ Page 862 convidar: -------- begin text --------
 Page 863 convindre: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|convenir}}
 
@@ -22034,7 +22046,7 @@ First attested ca. 1880.<ref>{{R:ca:GDLC}}</ref> From {{compound|ca|cor|t1=heart
 * {{ca-IPA|còr.pêndre}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[captivate]] (somebody's heart)
 #: {{syn|ca|captivar}}
@@ -22134,13 +22146,13 @@ Page 882 córrer: -------- begin text --------
 Page 883 correspondre: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|correspondeō|correspondēre}}.
+{{bor+|ca|la|correspondeō|correspondēre}}.
 
 ===Pronunciation===
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[correspond]]
 
@@ -23836,13 +23848,13 @@ Page 947 decaure: -------- begin text --------
 Page 948 decebre: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|dēcipiō|dēcipere}}.
+{{slbor|ca|la|dēcipiō|dēcipere}}.
 
 ===Pronunciation===
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|obsolete}} to [[deceive]], to [[trick]]
 #: {{syn|ca|enganyar}}
@@ -24128,13 +24140,13 @@ From {{af|ca|de-|fallir}}.
 Page 959 defendre: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|pro|defendre}}, from {{der|ca|la|dēfendō|dēfendere}}.
+{{bor+|ca|pro|defendre}}, from {{der|ca|la|dēfendō|dēfendere}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|ë}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}
 
 # to [[defend]]
 # to [[prohibit]], to [[forbid]]
@@ -25171,7 +25183,7 @@ Page 1000 dependre: -------- begin text --------
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{indtr|ca|de}} to [[depend]] (on)
 #: {{ux|ca|Ell '''depèn''' totalment de la seva mare.|He '''depends''' completely on his mother.}}
@@ -25769,7 +25781,7 @@ From {{af|ca|des-|aprendre}}.
 * {{ca-IPA|desapêndre}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[unlearn]]
 #: {{syn|ca|ignorar|obliterar}}
@@ -25875,8 +25887,11 @@ Page 1029 desatendre: -------- begin text --------
 ===Etymology===
 From {{af|ca|des-|atendre}}.
 
+===Pronunciation===
+* {{ca-IPA|é}}
+
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[neglect]] {{gloss|to fail to care for or attend to something}}
 
@@ -25917,7 +25932,7 @@ From {{af|ca|des-|avenir-se}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|intransitive}} to [[fall out]], to [[disagree]] {{+preo|ca|amb|means=with}}
 
@@ -26423,7 +26438,7 @@ Page 1051 descloure: -------- begin text --------
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[open]]
 #: {{syn|ca|obrir}}
@@ -26550,7 +26565,7 @@ From {{prefix|ca|des|compondre}}.
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[decompose]], to [[take apart]], to [[separate]] into [[components]]
 
@@ -26812,7 +26827,7 @@ Page 1067 desconvenir: -------- begin text --------
 From {{af|ca|des-|convenir}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|intransitive}} to [[disagree]]
 #: {{ant|ca|convenir}}
@@ -26832,7 +26847,7 @@ From {{af|ca|des-|convenir}}.
 Page 1068 desconvindre: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|desconvenir}}
 
@@ -28627,7 +28642,7 @@ From {{der|ca|la|dispendō|dispendere}}.
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[spend]]
 #: {{syn|ca|gastar}}
@@ -28825,7 +28840,7 @@ Page 1153 desprendre: -------- begin text --------
 * {{ca-IPA|des.p(r)êndre}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[detach]], to [[unfasten]]
 # to [[give off]], to [[emit]]
@@ -28845,7 +28860,7 @@ Page 1154 desprendre's: -------- begin text --------
 * {{ca-IPA|desprêndres}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[come off]], [[fall off]]
 # to be [[deduced]] from, be [[inferred]] from, be [[implied]] by
@@ -29542,7 +29557,7 @@ Page 1183 detenir: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[stop]], to [[block]]
 # {{lb|ca|transitive}} to [[detain]]
@@ -29648,7 +29663,7 @@ Page 1187 detindre: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|detenir}}
 
@@ -31109,7 +31124,7 @@ From {{der|ca|la|dissolvō|dissolvere}}.
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[dissolve]], to [[disunite]]
 # to [[break up]], to [[disband]]
@@ -31185,7 +31200,7 @@ Page 1250 distendre: -------- begin text --------
 * {{ca-IPA|é}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[distend]], to [[stretch]] out
 
@@ -34234,13 +34249,13 @@ Page 1373 emergir: -------- begin text --------
 Page 1374 emetre: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|ēmittō|ēmittere}}.
+{{bor+|ca|la|ēmittō|ēmittere}}; adapted to {{m+|ca|metre}}.
 
 ===Pronunciation===
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[emit]], to [[send out]]
 # to [[broadcast]]
@@ -35424,7 +35439,7 @@ Page 1423 emprendre: -------- begin text --------
 * {{ca-IPA|em.p(r)êndre}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[undertake]]
 
@@ -36357,7 +36372,7 @@ Page 1460 encendre: -------- begin text --------
 * {{ca-IPA|é}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[set on fire]], to [[set fire]] to, to [[light]]
 # {{lb|ca|of a device}} to [[switch]] on, to [[turn on]]
@@ -36524,7 +36539,7 @@ Page 1466 encloure: -------- begin text --------
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[catch]], to [[trap]]
 #: {{syn|ca|agafar}}
@@ -39742,7 +39757,7 @@ Page 1594 entendre: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-entendre.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[understand]]
 #: {{syn|ca|comprendre}}
@@ -42587,8 +42602,11 @@ Page 1704 escometre: -------- begin text --------
 ===Etymology===
 From {{af|ca|es-|cometre}}.
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[attack]], [[assault]]
 # to [[undertake]] {{gloss|an enterprise}}
@@ -43147,13 +43165,13 @@ Page 1726 esdevenir: -------- begin text --------
 * {{alt|ca|esdevindre}}
 
 ===Etymology===
-From {{der|ca|la|ex}} + {{m|la|dēvenīre}}, present active infinitive of {{m|la|dēveniō}}.
+From {{der|ca|la|ex}} + {{m|la|devenio|dēvenīre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[become]], to [[turn into]]
 
@@ -43173,7 +43191,7 @@ From {{der|ca|la|ex}} + {{m|la|dēvenīre}}, present active infinitive of {{m|la
 Page 1727 esdevindre: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|esdevenir}}
 
@@ -46079,7 +46097,7 @@ Page 1843 estendre: -------- begin text --------
 * {{ca-IPA|é}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[spread]], to [[stretch]] out
 # to [[extend]], to [[enlarge]]
@@ -47521,10 +47539,10 @@ Page 1901 excloure: -------- begin text --------
 From {{der|ca|la|exclūdō}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[exclude]]
 
@@ -48077,10 +48095,13 @@ Page 1924 expel·lir: -------- begin text --------
 Page 1925 expendre: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|expendō}}.
+{{bor+|ca|la|expendō|expendere}}.
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[retail]]
 # {{lb|ca|transitive}} to [[circulate]], to [[spread]]
@@ -49143,7 +49164,7 @@ Page 1967 fendre: -------- begin text --------
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[split]], to [[cleave]]
 # {{lb|ca|transitive}} to [[score]] {{gloss|cut a groove in order to create a fold}}
@@ -51314,7 +51335,7 @@ Page 2066 fotre: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Marvives-fotre.wav|Audio (Barcelona, Spain)}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|vulgar}} to [[fuck]]
 # {{lb|ca|vulgar}} to [[do]]
@@ -55883,7 +55904,7 @@ Page 2258 incloure: -------- begin text --------
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[include]]
 #: {{syn|ca|contenir|comprendre|encloure}}
@@ -57957,7 +57978,7 @@ Page 2338 intervenir: -------- begin text --------
 * {{rhymes|ca|i(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[intervene]]
 
@@ -57981,7 +58002,7 @@ Page 2338 intervenir: -------- begin text --------
 Page 2339 intervindre: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|intervenir}}
 
@@ -58686,8 +58707,11 @@ Page 2370 jeure: -------- begin text --------
 {{inh+|ca|roa-oca|jaure}}, from a pre-literary */ˈd͡ʒad͡z(e)re/, from {{inh|ca|VL.||*iacĕre}}, from {{inh|ca|la|iaceo|iacēre}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|ë}}<!-- /e/ per DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-jeure.wav|Audio}}
+
+===Verb===
+{{ca-verb|root=ë}}
 
 ===Verb===
 {{ca-verb}}
@@ -60948,7 +60972,7 @@ From {{af|ca|mal-|entendre}}.
 * {{ca-IPA|é}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[misunderstand]]
 #: {{ant|ca|entendre}}
@@ -61078,7 +61102,7 @@ From {{prefix|ca|mal|t1=bad|metre|t2=to put}}.
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[spoil]]
 #: {{syn|ca|espatllar}}
@@ -61176,7 +61200,7 @@ From {{prefix|ca|mal|vendre}}.
 * {{ca-IPA|màlvêndre}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[sell]] at a low price or [[at a loss]]
 
@@ -61628,7 +61652,7 @@ Page 2484 mantenir: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[maintain]]; to [[uphold]]; to [[keep going]]
 
@@ -61651,12 +61675,12 @@ Page 2485 mantindre: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|chiefly|Valencian}} {{alternative form of|ca|mantenir}}
 
 ====Usage notes====
-Considered less formal than {{m|ca|mantenir}}, except in Valencian, where it is the standard form.
+* Considered less formal than {{m|ca|mantenir}}, except in Valencian, where it is the standard form.
 
 ====Conjugation====
 {{ca-conj}}
@@ -61692,13 +61716,13 @@ From {{af|ca|manufactura|-ar}}.
 Page 2487 manumetre: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|manūmittere}}, from pre-Classical Latin {{m|la|manū}} {{m|la|ēmittere}}, literally ‘send out from one’s hand’.
+{{bor+|ca|la|manumitto|manūmittere}}, from pre-Classical Latin {{m|la|[[manū]] [[ēmittō]]|lit=send out from one’s hand}}. Adapted to {{m+|ca|metre}}.
 
 ===Pronunciation===
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[manumit]]
 
@@ -63112,11 +63136,11 @@ From {{af|ca|metralla|-ar}}.
 -------- end text --------
 Page 2546 metre: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|ê}}
-
 ===Etymology 1===
 {{bor+|ca|fr|mètre}}.
+
+====Pronunciation====
+* {{ca-IPA|cen=è|bal=é|val=é}}<!-- strange but this is what cawikt says -->
 
 ====Noun====
 {{ca-noun|m}}
@@ -63129,8 +63153,11 @@ Page 2546 metre: -------- begin text --------
 ===Etymology 2===
 {{inh+|ca|roa-oca|metre}}, from {{inh|ca|la|mittō|mittere}}. Compare {{cog|oc|metre}}, {{cog|fr|mettre}}, {{cog|es|meter}}.
 
+====Pronunciation====
+* {{ca-IPA|ê}}
+
 ====Verb====
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive|archaic}} to [[put]], to [[place]]
 #: {{syn|ca|posar}}
@@ -63852,7 +63879,7 @@ Page 2572 moldre: -------- begin text --------
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[grind]], to [[mill]]
 #: {{syn|ca|molinar}}
@@ -65948,7 +65975,7 @@ Page 2654 obtenir: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-obtenir.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[obtain]], to [[get]]
 
@@ -65973,7 +66000,7 @@ Page 2655 obtindre: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{synonym of|ca|obtenir}}
 
@@ -66002,10 +66029,10 @@ Page 2657 obvenir: -------- begin text --------
 * {{alt|ca|obvindre}}
 
 ===Etymology===
-From {{der|ca|la|obveniō}}.
+{{bor+|ca|la|obveniō|obvenīre}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|intransitive}} to [[fall to]]
 #: {{syn|ca|recaure}}
@@ -66023,7 +66050,7 @@ From {{der|ca|la|obveniō}}.
 Page 2658 obvindre: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|obvenir}}
 
@@ -66264,13 +66291,13 @@ Page 2667 ofegar: -------- begin text --------
 Page 2668 ofendre: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|offendō|offendere}}.
+{{bor+|ca|la|offendō|offendere}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ë}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}
 
 # to [[harm]], to [[hurt]]
 # to [[offend]], to [[cause]] [[offence]]
@@ -66435,13 +66462,13 @@ From {{af|ca|ombra|-ejar}}.
 Page 2674 ometre: -------- begin text --------
 
 ===Etymology===
-Adaptation or borrowing from {{bor|ca|la|omittō|omittere}}, based on Catalan {{m|ca|metre}}.
+{{bor+|ca|la|omittō|omittere}}; adapted to {{m+|ca|metre}}.
 
 ===Pronunciation===
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[omit]]
 
@@ -68842,7 +68869,7 @@ Page 2765 percebre: -------- begin text --------
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[perceive]]
 # {{lb|ca|transitive}} to [[receive]]
@@ -69164,14 +69191,14 @@ Page 2777 perllongar: -------- begin text --------
 Page 2778 permetre: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|permittō|permittere}}, possibly semi-learned.
+{{bor+|ca|la|permittō|permittere}}; adapted to {{m+|ca|metre}}.
 
 ===Pronunciation===
 * {{ca-IPA|ê}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-permetre.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[allow]]; to [[permit]]
 
@@ -69632,10 +69659,10 @@ Page 2796 pervenir: -------- begin text --------
 * {{alt|ca|pervindre}}
 
 ===Etymology===
-From {{der|ca|la|perveniō}}.
+{{bor+|ca|la|perveniō|pervenīre}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|intransitive}} to [[arrive at]] with difficulty {{gloss|to reach a destination}}
 # {{lb|ca|intransitive}} to [[arrive at]] {{gloss|to reach a conclusion}}
@@ -69679,7 +69706,7 @@ From {{der|ca|la|pervertō}}.
 Page 2798 pervindre: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|pervenir}}
 
@@ -71262,7 +71289,7 @@ Page 2859 pondre: -------- begin text --------
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[lay]] {{gloss|an egg}}
 # {{lb|ca|reflexive}} to set {{gloss|sun}}
@@ -72062,7 +72089,7 @@ Page 2892 prendre: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-prendre.wav|Central}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[take]]
 
@@ -72452,13 +72479,13 @@ From {{der|ca|la|praesūmō|praesūmere}}.
 Page 2910 pretendre: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|praetendō|praetendere}}.
+{{bor+|ca|la|praetendō|praetendere}}.
 
 ===Pronunciation===
 * {{ca-IPA|é}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[pursue]], to [[seek]]
 # {{lb|ca|transitive}} to [[claim]]
@@ -72546,7 +72573,7 @@ Page 2914 prevenir: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[warn]]
 # to [[anticipate]]
@@ -72597,7 +72624,7 @@ From {{prefix|ca|pre|veure}}.
 Page 2916 previndre: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|prevenir}}
 
@@ -73190,7 +73217,7 @@ Page 2939 prometre: -------- begin text --------
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[promise]]
 # {{lb|ca|reflexive}} to promise oneself (in marriage)
@@ -73811,14 +73838,14 @@ Page 2963 provenir: -------- begin text --------
 * {{alt|ca|provindre}}
 
 ===Etymology===
-From {{der|ca|la|prōveniō|prōvenīre|t=originate, arise}}.
+{{bor+|ca|la|prōveniō|prōvenīre|t=originate, arise}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 * {{rhymes|ca|i(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[originate]], to [[stem]] (from)
 # to [[arise]] (from)
@@ -73840,7 +73867,7 @@ From {{der|ca|la|prōveniō|prōvenīre|t=originate, arise}}.
 Page 2964 provindre: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|provenir}}
 
@@ -75273,8 +75300,11 @@ Page 3021 readmetre: -------- begin text --------
 ===Etymology===
 From {{af|ca|re-|admetre}}.
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[readmit]]
 
@@ -75634,7 +75664,7 @@ From {{prefix|ca|re|botre}}.
 * {{ca-IPA|ó}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[rebound]]
 #: {{syn|ca|rebotar}}
@@ -75665,7 +75695,7 @@ Page 3037 rebre: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-rebre.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[receive]]
 
@@ -75956,8 +75986,11 @@ From {{af|ca|re-|caure}}.
 -------- end text --------
 Page 3048 recebre: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{alternative form of|ca|rebre}}
 
@@ -76437,7 +76470,7 @@ From {{prefix|ca|re|compondre}}.
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[recompose]], to [[put together]] again
 # to [[recombine]]
@@ -78776,10 +78809,13 @@ Page 3160 remenar les cireres: -------- begin text --------
 Page 3161 remetre: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|remittō}}.
+Probably {{bor+|ca|la|remittō|remittere|nocap=1}}; adapted to {{m+|ca|metre}}.
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[pardon]], to [[remit]] {{gloss|a crime, etc.}}
 # {{lb|ca|transitive}} to [[send]], to [[remit]]
@@ -78857,7 +78893,7 @@ From {{prefix|ca|re|moldre}}.
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[grind]] [[again]]
 
@@ -79746,7 +79782,7 @@ Page 3199 reprendre: -------- begin text --------
 * {{ca-IPA|re.p(r)êndre}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[retake]]
 # to [[take back]]
@@ -80240,7 +80276,7 @@ From {{inh|ca|roa-oca}}, from {{inh|ca|la|resolvō|resolvere}}. Compare {{cog|fr
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[resolve]], to [[break down]]
 # to break down, to [[explain]]
@@ -80349,7 +80385,7 @@ Page 3221 respondre: -------- begin text --------
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[reply]]; to [[respond]]
 
@@ -80867,7 +80903,7 @@ Page 3241 retenir: -------- begin text --------
 * {{rhymes|ca|i(ɾ)}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[retain]]; to [[keep]]
 # to [[retain]]; to [[remember]]
@@ -80889,7 +80925,7 @@ Page 3242 retindre: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|retenir}}
 
@@ -81141,10 +81177,10 @@ Page 3253 retre: -------- begin text --------
 From {{der|ca|la|reddō|reddere}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|cen=è|bal=é|val=é}}<!-- FIXME: GDLC says /ɛ/ for Central but cawikt says é everywhere; I assume this is a recent change in Central -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=cen:è; bal:é; val:é}}
 
 # to [[give back]], to [[return]]
 # to [[pay back]], to [[repay]]
@@ -81370,7 +81406,7 @@ Page 3262 revenir: -------- begin text --------
 * {{rhymes|ca|i(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[come]] [[again]]
 ## to come to be [[responsible]]
@@ -81508,7 +81544,7 @@ Page 3267 reveure: -------- begin text --------
 Page 3268 revindre: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|revenir}}
 
@@ -84006,12 +84042,12 @@ From a reduction of {{m|ca|ésser}}, from {{inh|ca|la|sum}}, from {{inh|ca|itc-p
 ===Pronunciation===
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-ser.wav|Audio}}
 {{q|verb}}
-* {{ca-IPA}}
+* {{ca-IPA|é}}
 {{q|noun}}
 * {{ca-IPA|sérr}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|intransitive}} to [[be]], to [[exist]]
 #: {{ux|ca|'''Ser''' o no '''ser''', aquesta és la qüestió.|To '''be''' or not to '''be''', that is the question.}}
@@ -84718,10 +84754,10 @@ Page 3396 sobrevenir: -------- begin text --------
 * {{alt|ca|sobrevindre}}
 
 ===Etymology===
-From {{der|ca|la|superveniō}}.
+{{inh+|ca|la|superveniō|supervenīre}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|intransitive}} to [[come up]], [[arise]], [[come forth]], be [[bring about|brought about]]
 
@@ -84738,7 +84774,7 @@ From {{der|ca|la|superveniō}}.
 Page 3397 sobrevindre: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|sobrevenir}}
 
@@ -85206,7 +85242,7 @@ Page 3414 soldre: -------- begin text --------
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{alternative form of|ca|soler}}
 
@@ -85230,10 +85266,10 @@ From {{m|ca|sòl}}.
 {{inh+|ca|la|soleō|solēre}}.
 
 ====Pronunciation====
-* {{ca-IPA|é}}
+* {{ca-IPA|ê}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
 
 ====Verb====
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|auxiliary}} to [[usually]]..., to be [[accustomed]] to..., to have the [[habit]] of...
 #: {{ux|ca|'''solen''' fer la passejada|they usually go for a walk|inline=1}}
@@ -85784,11 +85820,10 @@ From {{der|ca|roa-oca|sobreprendre}}, probably with influence from {{der|ca|fr|s
 
 ===Pronunciation===
 * {{ca-IPA|sor.p(r)êndre}}
-
 {{rfap|ca}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[surprise]]
 
@@ -86063,7 +86098,7 @@ Page 3447 sostenir: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[sustain]], [[bear]], [[hold up]]
 # {{lb|ca|transitive|}} to [[defend]], [[uphold]]
@@ -86087,7 +86122,7 @@ Page 3447 sostenir: -------- begin text --------
 Page 3448 sostindre: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|sostenir}}
 
@@ -86202,7 +86237,7 @@ Page 3452 sotmetre: -------- begin text --------
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[subdue]]
 # {{lb|ca|transitive}} to [[submit]], to [[subject]]
@@ -86799,10 +86834,10 @@ Page 3476 subvenir: -------- begin text --------
 * {{alt|ca|subvindre}}
 
 ===Etymology===
-From {{der|ca|la|subveniō}}.
+{{bor+|ca|la|subveniō|subvenīre}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|intransitive}} to [[pay]], to [[meet]] {{q|expenses}}
 
@@ -86846,7 +86881,7 @@ From {{der|ca|la|subvertō}}.
 Page 3478 subvindre: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{alt form|ca|subvenir}}
 
@@ -87415,7 +87450,7 @@ Page 3500 suspendre: -------- begin text --------
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[suspend]], to [[hang]]
 # to suspend, to [[hold off]], [[defer]] [[momentarily]]
@@ -88071,7 +88106,7 @@ From {{der|ca|la|timeō|timēre}}. Cf. also Old Catalan {{m|roa-oca|tembre}}.
 * {{rhymes|ca|eme(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[fear]]
 
@@ -88240,7 +88275,7 @@ Page 3531 tenir: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[have]], [[possess]]
 # to [[hold]]
@@ -88644,7 +88679,7 @@ Page 3551 tindre: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|chiefly|Valencian}} {{alternative form of|ca|tenir}}
 
@@ -88942,10 +88977,10 @@ Page 3564 toldre: -------- begin text --------
 From {{der|ca|la|tollō|tollere}}. Compare {{cog|it|togliere}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive|archaic}} to [[remove]], to [[take away]]
 #: {{syn|ca|llevar|treure}}
@@ -89048,10 +89083,10 @@ Page 3568 tondre: -------- begin text --------
 {{inh+|ca|VL.||*tondĕre}}, variant of {{der|ca|la|tondeō|tondēre}}. Cognate with {{cog|fr|tondre}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt says /o/ for everywhere but GDLC says /ɔ/ for Central -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ô}}
 
 # to [[crop]]
 # to [[shear]]
@@ -89237,7 +89272,7 @@ Page 3574 tòrcer: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[twist]]
 
@@ -89730,10 +89765,13 @@ From {{af|ca|trama|-ar}}.
 Page 3593 trametre: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|pro|trametre}}, from {{der|ca|la|tramittō}}.
+{{bor+|ca|pro|trametre}}, from {{der|ca|la|tramittō}}.
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[send]]
 #: {{syn|ca|enviar}}
@@ -90084,13 +90122,13 @@ Page 3607 transliterar: -------- begin text --------
 Page 3608 transmetre: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|trānsmittō|trānsmittere}}, adapted to Catalan {{m|ca|metre}}. Cf. also the doublet {{doublet|ca|trametre|notext=1}}.
+{{bor+|ca|la|trānsmittō|trānsmittere}}, adapted to {{m+|ca|metre}}. Cf. also the doublet {{doublet|ca|trametre|notext=1}}.
 
 ===Pronunciation===
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[transmit]]
 # {{lb|ca|transitive}} to [[send out]], to [[broadcast]]
@@ -91419,8 +91457,11 @@ Page 3661 ullprendre: -------- begin text --------
 ===Etymology===
 From {{compound|ca|ull|t1=eye|prendre|t2=take}}.
 
+===Pronunciation===
+* {{ca-IPA|ull.p(r)êndre}}
+
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[strike]] {{gloss|as in "striking"}} {{gloss|by the sight}}
 
@@ -92433,7 +92474,7 @@ Page 3705 vendre: -------- begin text --------
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[sell]]
 #: {{ant|ca|comprar}}
@@ -92494,7 +92535,7 @@ Page 3707 venir: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|intransitive}} to [[come]]
 
@@ -93195,7 +93236,7 @@ From {{der|ca|la|vindicō|vindicāre|t=avenge, claim}}.
 Page 3737 vindre: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|Valencian}} {{alternative form of|ca|venir}}
 
