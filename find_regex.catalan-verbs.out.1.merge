@@ -356,7 +356,7 @@ Page 16 abeurar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- per cawikt; attested directly by DNV and not in GDLC -->
 
 # to [[give]] [[water]] {{gloss|chiefly to an animal}}
 
@@ -715,7 +715,7 @@ Page 29 abreujar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- based on [[breu]] and attested directly in DNV -->
 
 # to [[abbreviate]]; to [[shorten]]
 #: {{syn|ca|abreviar}}
@@ -4314,7 +4314,7 @@ From {{inh|ca|VL.|*aggraviare|*aggreviare, *aggraviare}}, variant form(s) of {{d
 * {{rhymes|ca|a(ɾ)}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- from cawikt [[agreuja]]; attested directly by DNV and by [[greu]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[aggravate]], to [[worsen]]
 # {{lb|ca|pronominal}} to [[worsen]] {{gloss|get worse}}
@@ -5561,7 +5561,7 @@ Page 226 alleujar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- from cawikt; attested directly by DNV and by [[lleu]] in GDLC -->
 
 # to [[relieve]], [[ease]]
 # to [[lighten]], [[alleviate]]
@@ -6719,7 +6719,7 @@ From {{af|ca|angoixa|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- from cawikt; attested directly by DNV and by [[angoixa]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[distress]], to cause [[anguish]]
 #* {{quote-journal|ca|year=|date=October 2016|author=|title="Als Testimonis de Jehovà els preocupa més un gai que un pederasta"|work=El Periódico|url=http://www.elperiodico.cat/ca/noticias/societat/paul-marshall-extestimoni-jehova-els-preocupen-mes-els-gais-que-els-pederastes-5454461
@@ -24432,7 +24432,7 @@ Page 971 deixar: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-deixar.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- from cawikt; attested directly by DNV and by [[deix]] and [[deixa]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[leave]] {{gloss|to refrain from taking (something) away}}
 # {{lb|ca|reflexive}} to [[let oneself go]] {{gloss|to cease to care about one's appearance}}
@@ -27099,7 +27099,7 @@ Page 1078 desembeinar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- attested directly by DNV and by [[beina]] in GDLC and DCVB -->
 
 # {{lb|ca|transitive}}  to [[unsheathe]]
 
@@ -29411,7 +29411,7 @@ From {{prefix|ca|des|vetllar}}, or from {{inh|ca|la|evigilare}}, with the prefix
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb|cen=ë|val=ë}}<!-- apparently no Balearic; from cawikt; attested directly by DNV and by [[vetlla]] in GDLC -->
+{{ca-verb|root=cen:ë; val:ë}}<!-- apparently no Balearic; from cawikt; attested directly by DNV and by [[vetlla]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[wake up]], [[wake]]
 # {{lb|ca|reflexive}} to [[wake up]], [[awaken]]
@@ -33688,7 +33688,7 @@ From {{af|ca|en-|boira|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}<!-- from cawikt; attested directly by DNV and by [[boira]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[fog]] {{gloss|cover with fog}}
 # {{lb|ca|figurative|transitive}} to [[cloud]], to make [[foggy]], to [[confuse]]
@@ -36881,7 +36881,7 @@ From {{confix|ca|en|deute|ar}}. Compare {{cog|oc|endeutar}}, {{cog|fr|endetter}}
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- based on [[deute]]; also attested directly by DNV -->
 
 # {{lb|ca|transitive}} to put into [[debt]]
 # {{lb|ca|reflexive|endeutar-se}} to go into debt
@@ -37378,7 +37378,7 @@ From {{af|ca|en-|feina|t2=work|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- attested by [[feina]] in GDLC, DNV and DCVB -->
 
 # {{lb|ca|transitive}} to [[load]] with [[work]]; to [[swamp]]
 #* {{quote-web|ca|url=https://cat.elpais.com/cat/2020/06/22/opinion/1592840943_467906.html|title=La política infantil|date=2020-06-22|author=Francesc de Carreras|work=El País|passage=Al Govern li havien canviat les preguntes i, com és obvi, no tenia preparades les respostes. Estava '''enfeinat''' en altres coses. Començava a viure en la nova realitat.|t=The Government was asked new questions and obviously hadn't prepared answers to them. It was too busy with other things. It started to live in the new reality.}}
@@ -37395,7 +37395,7 @@ Page 1503 enfeudar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- attested directly by DNV and by [[feu]] in GDLC -->
 
 # to [[enfeoff]]
 
@@ -38250,7 +38250,7 @@ From {{af|ca|en-|greix|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- from cawikt [[engreixa]]; attested directly by DNV and by [[greix]] in GDLC and DCVB -->
 
 # {{lb|ca|transitive|reflexive}} to [[fatten]]
 
@@ -39009,7 +39009,7 @@ Page 1564 enreixar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- attested directly by DNV and by [[reixa]] in GDLC and DCVB -->
 
 # {{lb|ca|transitive}} to put a [[grill]] or [[grating]] on
 # {{lb|ca|transitive}} to [[fence]] (in)
@@ -39842,7 +39842,7 @@ From {{af|ca|en-|terc|-ar}}, from a pre-Romance source such as Proto-Celtic {{m|
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb|cen=è|val=é}}<!-- based on [[enterc]]; per cawikt, not in Balearic -->
+{{ca-verb|cen:è; val:é}}<!-- based on [[enterc]]; per cawikt, not in Balearic -->
 
 # {{lb|ca|transitive}} to make [[stiff]] or [[taut]]
 # {{lb|ca|pronominal}} to become [[stiff]] or [[taut]]
@@ -45356,7 +45356,7 @@ Page 1814 esqueixar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- from cawikt; attested directly by DNV and by [[esqueix]] in GDLC -->
 
 # to [[rip]]
 #: {{uxi|ca|'''esqueixar''' una tela|'''to rip''' a piece of cloth}}
@@ -49069,7 +49069,7 @@ From {{af|ca|feix|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- from cawikt; attested directly by DNV and by [[feix]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[sheave]] {{gloss|bind into sheaves}}
 
@@ -53766,7 +53766,7 @@ From {{suffix|ca|greix|ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- from cawikt [[greixa]]; attested directly by DNV and by [[greix]] in GDLC -->
 
 # to [[grease]] {{gloss|put grease or fat on}}
 
@@ -56497,7 +56497,7 @@ Page 2281 infeudar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- attested directly by DNV and by [[feu]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[enfeoff]]
 
@@ -67485,7 +67485,7 @@ Earlier {{m|ca|pantaixar}}, from {{inh|ca|VL.|*pantasiō|*pantasiāre|to have a 
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=cen:é; bal:è; val:é}}<!-- FIXME: cawikt says ê but GDLC says /e/ for [[panteix]]; attested directly by DNV; DCVB only lists /ɛ/ or /aj/ for various locations -->
 
 # to [[pant]]
 
@@ -74516,7 +74516,7 @@ Page 2990 queixar-se: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- attested directly by DNV and by [[queixa]] in cawikt and GDLC -->
 
 # to [[complain]]
 
@@ -82070,7 +82070,7 @@ From {{af|ca|roina|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}<!-- from cawikt; attested directly by DNV and by [[roina]] in GDLC -->
 
 # {{lb|ca|impersonal}} to [[drizzle]]
 #: {{syn|ca|ploviscar|plovisquejar|roinejar}}
@@ -88622,7 +88622,7 @@ From {{af|ca|teula|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- based on [[teula]]; attested directly by DNV -->
 
 # {{lb|ca|transitive}} to [[tile]]
 # {{lb|ca|transitive}} to [[roof]]
@@ -92931,7 +92931,7 @@ Page 3723 vetllar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb|cen=ë|val=ë}}<!-- apparently no Balearic; from cawikt; attested directly by DNV and by [[vetlla]] in GDLC -->
+{{ca-verb|cen:ë; val:ë}}<!-- apparently no Balearic; from cawikt; attested directly by DNV and by [[vetlla]] in GDLC -->
 
 # to [[stay up]] (not sleep at night)
 # to work nights, to work a night shift
