@@ -2765,7 +2765,7 @@ Page 109 adormir: -------- begin text --------
 * {{rhymes|ca|i(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}<!-- per cawikt and DNV -->
 
 # {{lb|ca|transitive}} to put to [[sleep]]
 # {{lb|ca|extension}} to [[anesthetise]]
@@ -2792,7 +2792,7 @@ Page 109 adormir: -------- begin text --------
 Page 110 adormir-se: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}<!-- per cawikt and DNV -->
 
 # to [[fall asleep]]
 
@@ -10064,7 +10064,7 @@ From {{der|ca|la|assideō|assidēre}}.
 * {{ca-IPA|è}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=è}}
 
 # {{lb|ca|transitive}} to [[seat]], to [[place]] [[down]]
 
@@ -10092,7 +10092,7 @@ From {{com|ca|asseure|es}}.
 * {{ca-IPA|assèures}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=è}}
 
 # {{lb|ca|intransitive|reflexive}} to [[sit]] [[down]], to [[seat]] [[oneself]]
 
@@ -11002,10 +11002,10 @@ Page 452 atreure: -------- begin text --------
 From {{der|ca|la|attrahō|attrahere}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|ë}}<!-- per cawikt, confirmed by GDLC and DNV -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}
 
 # {{lb|ca|transitive}} to [[attract]]
 
@@ -13041,13 +13041,13 @@ Page 534 beure: -------- begin text --------
 {{inh+|ca|la|bibō|bibere}}, from {{inh|ca|itc-pro|*pibō}}, from {{inh|ca|ine-pro|*píph₃eti}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- from cawikt, confirmed by GDLC and DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-beure.wav|Audio}}
 * {{homophones|ca|veure}}
 * {{rhymes|ca|ɛwɾe|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[drink]]
 
@@ -18426,8 +18426,11 @@ Page 741 commoure: -------- begin text --------
 ===Etymology===
 From {{der|ca|la|commoveō}}.
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- from cawikt, confirmed by GDLC and DNV -->
+
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[disturb]], to [[shake up]]
 # to [[move]], to [[touch]] {{gloss|to arouse the feelings or passions of}}
@@ -20353,7 +20356,7 @@ From {{der|ca|la|cōnsentiō|cōnsentīre}} (possibly borrowed).
 * {{rhymes|ca|i(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb}}<!-- DNV says root /e/ -->
 
 # to [[consent]], to [[permit]]
 
@@ -21327,10 +21330,10 @@ Page 854 contreure: -------- begin text --------
 From {{der|ca|la|contrahō}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|ë}}<!-- per cawikt, confirmed by GDLC and DNV -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}
 
 # {{lb|ca|transitive}} to [[contract]] {{gloss|to acquire}}
 # {{lb|ca|grammar|transitive}} to [[contract]] {{gloss|to shorten by omitting letters}}
@@ -22266,7 +22269,7 @@ Page 888 corroure: -------- begin text --------
 {{bor+|ca|la|corrōdo|corrōdere}}. Based on the model of Old Catalan {{m|roa-oca|roure}} {{q|from Latin {{m|la|rōdō|rōdere}}}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ò}}<!-- from DNV -->
 
 ===Verb===
 {{head|ca|verb}}
@@ -22432,12 +22435,12 @@ From {{af|ca|cota|-ejar}}.
 -------- end text --------
 Page 895 coure: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
 {{elements|ca|Cu|níquel|Ni|zinc|Zn}}
 {{inh+|ca|VL.||*cūbru(m)}}, from {{inh|ca|LL.|cūprum}} (compare {{cog|oc|coire}}, {{cog|fr|cuivre}}, {{cog|es|cobre}}), from {{inh|ca|la|cȳprium}} ({{m|la|aes}}), from {{der|ca|grc|Κύπρος}}.
+
+====Pronunciation====
+* {{ca-IPA|cen=ó|bal=ò|val=ò}}<!-- FIXME: cawikt says ò everywhere but GDLC says /o/ for this meaning -->
 
 ====Noun====
 {{ca-noun|m|-}}
@@ -22450,9 +22453,12 @@ Page 895 coure: -------- begin text --------
 ===Etymology 2===
 {{inh+|ca|LL.|cocō|cocere}}, from {{inh|ca|la|coquo|coquere}}. Compare {{cog|oc|còire}}.
 
+====Pronunciation====
+* {{ca-IPA|ò}}
+
 ====Verb====
-{{ca-verb|<var:cook>}} {{q|in the meaning "to cook"}}<br />
-{{ca-verb|<var:sting>}} {{q|in the meaning "to sting"}}
+{{ca-verb|<var:cook>|root=ò}} {{q|in the meaning "to cook"}}<br />
+{{ca-verb|<var:sting>|root=ò}} {{q|in the meaning "to sting"}}<!-- from cawikt; root confirmed by GDLC and DNV -->
 
 # to [[cook]]
 #: {{syn|ca|cuinar}}
@@ -22799,11 +22805,11 @@ Page 906 creure: -------- begin text --------
 {{inh+|ca|la|crēdō|crēdere}}, from {{inh|ca|itc-pro|*krezdō}}, from {{der|ca|ine-pro|*ḱred dʰeh₁-||to place one's heart, i.e. to trust, believe}}, compound phrase of oblique case form of {{m|ine-pro|*ḱḗr||heart}} and {{m|ine-pro|*dʰeh₁-||to put, place, set}}. Compare {{cog|oc|creire}} or {{m|oc|créser}}, {{cog|fr|croire}}, {{cog|es|creer}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- from cawikt, confirmed by GDLC and DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-creure.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive|transitive and reflexive}} to take something as [[true]]
 #: {{uxi|ca|No '''creguis''' res si no ho veus.|Don't believe anything if you don't see it.}}
@@ -28322,7 +28328,7 @@ From {{af|ca|des-|mentir}}.
 * {{rhymes|ca|i(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- from cawikt and DNV -->
 
 # to [[refute]], [[deny]]
 #* {{quote-journal|ca|date=October 6 2016|title=Robbie Williams és acusat de racista pel seu nou videoclip|work=El Periódico|url=http://www.elperiodico.cat/ca/noticias/gent/robbie-williams-acusat-racista-nou-videoclip-5467670|passage=Williams ha '''desmentit''' ràpidament a Twitter que sigui una referència al president rus, Vladímir Putin.|translation=Williams quickly '''denied''' on Twitter that it is a reference to the Russian president, Vladimir Putin.}}
@@ -29721,7 +29727,7 @@ Page 1190 deure: -------- begin text --------
 {{inh+|ca|la|dēbeō|dēbēre|t=owe}} (probably through a {{inh|ca|VL.|-}} root {{m|la||*debĕre}}). Compare {{cog|oc|deure}}, {{m|oc|dever}}, {{cog|fr|devoir}}, {{cog|es|deber}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- from cawikt, confirmed by GDLC and DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-deure.wav|Audio}}
 * {{rhymes|ca|ɛwɾe|s=2}}
 
@@ -29731,7 +29737,7 @@ Page 1190 deure: -------- begin text --------
 # [[duty]], [[obligation]]
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # (transitive) to [[owe]]
 # to [[have to]] (followed by an infinitive) 
@@ -31264,10 +31270,10 @@ Page 1253 distreure: -------- begin text --------
 {{bor+|ca|la|distrahō|distrahere}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|ë}}<!-- per cawikt, confirmed by GDLC and DNV -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}
 
 # to [[distract]]
 # to [[entertain]]
@@ -32006,7 +32012,7 @@ Page 1286 dormir: -------- begin text --------
 * {{rhymes|ca|i(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}<!-- per cawikt and DNV -->
 
 # {{lb|ca|intransitive}} to [[sleep]]
 
@@ -48609,10 +48615,10 @@ Page 1945 extreure: -------- begin text --------
 From {{prefix|ca|ex|treure}}, or borrowed from {{bor|ca|la|extrahō|extrahere}}. More at {{m|ca|treure}}.
 
 ===Pronunciation===
-* {{ca-IPA|estrèure}}
+* {{ca-IPA|ë}}<!-- per cawikt, confirmed by GDLC and DNV; has [ks] -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}
 
 # to [[extract]] {{gloss|remove, chiefly using physical force}}
 
@@ -60184,7 +60190,7 @@ Page 2428 lleure: -------- begin text --------
 {{inh+|ca|la|licēre}}. Compare {{cog|fr|loisir}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- from cawikt, confirmed by GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -60193,10 +60199,11 @@ Page 2428 lleure: -------- begin text --------
 #: {{syn|ca|oci}}
 
 ===Verb===
-{{ca-verb|<only3s>}}
+{{ca-verb|<only3s>|root=ê}}
 
 # {{lb|ca|impersonal}} to be [[allowed]], [[permitted]] (to do something)
 # {{lb|ca|impersonal}} to be [[free]] (to do something)
+
 ====Conjugation====
 {{ca-conj|<only3s>}}
 
@@ -61249,8 +61256,11 @@ Page 2468 malveure: -------- begin text --------
 ===Etymology===
 From {{af|ca|mal|veure}}.
 
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- from cawikt, confirmed by GDLC and DNV -->
+
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[look down on]], to perceive as bad
 #: {{ant|ca|benveure}}
@@ -62764,7 +62774,7 @@ Page 2531 mentir: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-mentir.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- from cawikt and DNV -->
 
 # to [[lie]] {{gloss|say something untrue}}
 
@@ -64108,7 +64118,7 @@ Page 2581 morir: -------- begin text --------
 * {{rhymes|ca|i(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}<!-- per cawikt, confirmed by DNV -->
 
 # to [[die]]
 
@@ -64327,12 +64337,12 @@ Page 2589 moure: -------- begin text --------
 {{inh+|ca|VL.||*movĕre}}, from {{inh|ca|la|moveō|movēre}}. Compare {{cog|oc|mòure}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- from cawikt, confirmed by GDLC and DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-moure.wav|Audio}}
 * {{rhymes|ca|ɔwɾe|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[move]] {{gloss|to cause to change place or posture in any manner; to set in motion}}
 # {{lb|ca|reflexive}} to [[move]] {{gloss|to change place or posture}}
@@ -65554,10 +65564,10 @@ Page 2638 noure: -------- begin text --------
 {{inh+|ca|VL.||*nocĕre}}, from {{inh|ca|la|noceo|nocēre}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ò}}<!-- from cawikt, confirmed by GDLC and DNV -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|obsolete|transitive}} to [[harm]], to [[prejudice]]
 
@@ -65800,7 +65810,7 @@ Page 2647 obrir: -------- begin text --------
 * {{rhymes|ca|i(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}<!-- from cawikt, confirmed by DNV -->
 
 # to [[open]]
 #: {{syn|ca|descloure}}
@@ -66491,7 +66501,7 @@ Page 2675 omplir: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}<!-- from cawikt, confirmed by DNV -->
 
 # to [[fill]]
 # to [[fill up]]
@@ -70901,12 +70911,12 @@ Page 2844 ploure: -------- begin text --------
 {{inh+|ca|VL.|*plovit|*plovere}}, from {{inh|ca|CL.|pluit|pluere}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ò}}<!-- from cawikt, confirmed by GDLC and DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-ploure.wav|Audio}}
 * {{rhymes|ca|ɔwɾe|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|impersonal}} to [[rain]]
 
@@ -72601,10 +72611,10 @@ Page 2915 preveure: -------- begin text --------
 From {{prefix|ca|pre|veure}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- from cawikt, confirmed by GDLC and DNV -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[foresee]], to [[expect]]
 
@@ -73264,10 +73274,10 @@ Page 2941 promoure: -------- begin text --------
 From {{der|ca|la|prōmoveō}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- from cawikt, confirmed by GDLC and DNV -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[promote]]
 #: {{syn|ca|ascendir}}
@@ -78950,8 +78960,11 @@ Page 3167 remoure: -------- begin text --------
 ===Etymology===
 From {{der|ca|la|removeō}}, attested from the 13th century.<ref>{{R:ca:GDLC}}</ref>
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- from cawikt, confirmed by GDLC and DNV -->
+
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[dig up]], to [[turn over]] (land)
 # {{lb|ca|transitive}} to [[remove]]
@@ -79346,7 +79359,7 @@ Page 3182 reobrir: -------- begin text --------
 From {{af|ca|re-|obrir}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}<!-- from cawikt, confirmed by DNV -->
 
 # {{lb|ca|transitive}} to [[reopen]]
 
@@ -81204,10 +81217,10 @@ Page 3254 retreure: -------- begin text --------
 From {{prefix|ca|re|treure}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|ë}}<!-- per cawikt, confirmed by GDLC and DNV -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}
 
 # to [[reproach]]
 
@@ -81530,8 +81543,11 @@ Page 3267 reveure: -------- begin text --------
 ===Alternative forms===
 * {{alt|ca|revore||Valencian}}
 
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- from cawikt, confirmed by GDLC and DNV -->
+
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[see]] again
 
@@ -82463,7 +82479,7 @@ From {{der|ca|la|rōbur||oak tree}}.
 From {{m|ca|rou||dew}}.
 
 ====Verb====
-{{ca-verb|<only3s.g_infix:rog>}}
+{{ca-verb|<only3s.g_infix:rog>|root=ó}}<!-- from cawikt -->
 
 # {{lb|ca|dialectal|_|Central Catalan}} to [[rain]] [[lightly]]
 
@@ -83917,7 +83933,7 @@ Page 3364 sentir: -------- begin text --------
 * {{rhymes|ca|i(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb}}<!-- DNV says root /e/ -->
 
 # to [[sense]]
 # to [[feel]]
@@ -84169,7 +84185,7 @@ Page 3371 seure: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-seure.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=è}}
 
 # {{lb|ca|intransitive}} to [[sit]], to be [[sitting]]
 #: {{ux|ca|Va '''seure''' al davant per poder sentir.|He '''sat''' in the front so as to be able to hear.}}
@@ -86143,10 +86159,10 @@ Page 3449 sostreure: -------- begin text --------
 From {{der|ca|la|subtrahō||to remove}}, with the first syllable altered by analogy with words like {{m|ca|sosllevar}} and {{m|ca|soscavar}} which contain a prefix derived from the archaic preposition {{m|ca|sots}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|ë}}<!-- per cawikt, confirmed by GDLC and DNV -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}
 
 # {{lb|ca|transitive}} to [[remove]], to [[relieve]], to [[take away]]
 #: {{ux|ca|Res no podrà '''sostreure''' a l’esser humà de les tristes condicions de la seva existència: patir i morir.|Nothing will be able to '''relieve''' human beings of the sad conditions of their existence: to suffer and die.}}
@@ -90706,10 +90722,10 @@ Page 3631 treure: -------- begin text --------
 {{inh+|ca|roa-oca|traure}}, apparently from a {{inh|ca|VL.||*tracĕre}} (for the sound-changes, compare Latin {{m|la|dīcĕre}} > Catalan {{m|ca|diure}}), from {{inh|ca|la|traho|trahere}}, from {{der|ca|ine-pro|*tragʰ-||to draw, drag}}. {{etydate|16th century}}<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|ë}}<!-- per cawikt, confirmed by GDLC and DNV -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}
 
 # [[take out]], [[take off]], [[take down]]
 # [[take away]], [[carry out]], [[carry away]]
@@ -92937,13 +92953,13 @@ Page 3724 veure: -------- begin text --------
 {{inh+|ca|roa-oca|veure}}, from {{inh|ca|la|videō|vidēre}} (with a change in verb class), from {{inh|ca|itc-pro|*widēō}}, from {{der|ca|ine-pro|*weyd-||to know; see}}. Old Catalan {{m|roa-oca|veher}} and {{m|roa-oca|veser}} continued the Latin {{m|la||vidēre}} directly.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- from cawikt, confirmed by GDLC and DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-veure.wav|Audio}}
 * {{homophones|ca|beure}}
 * {{rhymes|ca|ɛwɾe|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[see]]
 # to [[find]] (someone or something to be a certain way)
@@ -92978,10 +92994,10 @@ Page 3724 veure: -------- begin text --------
 Page 3725 veure's: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|vêures}}
+* {{ca-IPA|vêures}}<!-- from cawikt, confirmed by GDLC and DNV -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[look]], to [[appear]]
 #: {{ux|ca|Penses que '''em veig''' bonica? &mdash; Sí, '''et veus''' increïble!|Do think '''I look''' nice? &mdash; Yes, '''you look''' incredible!}}
@@ -92995,7 +93011,7 @@ Page 3726 veure's amb cor: -------- begin text --------
 {{lit|to see oneself with heart}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|idiom}} to feel capable
 -------- end text --------
