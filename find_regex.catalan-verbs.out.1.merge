@@ -3957,7 +3957,7 @@ Page 158 agençar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- FIXME: a semi-guess, based on directly-attested DNV and [[agençaaparador]] in GDLC, given with /ɛ/ for agença- -->
 
 # {{lb|ca|transitive}} to [[arrange]]
 
@@ -6340,7 +6340,7 @@ From {{der|ca|LL.|-}} or {{der|ca|VL.||*admonestrāre}}, from {{der|ca|CL.|admon
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb}}<!-- DNV says root /e/ -->
 
 # {{lb|ca|transitive}} to [[admonish]], [[reprimand]]
 # {{lb|ca|transitive|sports}} to [[book]]
@@ -8064,7 +8064,7 @@ Page 330 aprestar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[prepare]]
 #: {{syn|ca|preparar}}
@@ -9002,7 +9002,7 @@ Compare {{cog|pt,es|arrancar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- from cawikt; attested directly by DNV and in [[arrencaqueixals]] in GDLC -->
 
 # to [[rip]], to [[rip off]], to [[pull off]], to [[pull out]], to [[yank]]
 # to [[take off]], to [[set off]], to [[start]]
@@ -9037,7 +9037,7 @@ From {{af|ca|a-|renda|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- attested directly by DNV and based on [[renda]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[rent]]
 #: {{syn|ca|llogar}}
@@ -9097,7 +9097,7 @@ Page 373 arrestar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- based on cawikt and [[arrest]] -->
 
 # to [[arrest]]
 
@@ -18194,7 +18194,7 @@ Page 732 començar: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-començar.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}<!-- from cawikt; confirmed directly by DNV and by [[començ]] in GDLC -->
 
 # to [[begin]], to [[start]]
 
@@ -18219,7 +18219,7 @@ Page 732 començar: -------- begin text --------
 Page 733 comentar: -------- begin text --------
 
 ===Etymology===
-From {{uder|ca|la|commentor|commentārī}}.
+{{bor+|ca|la|commentor|commentārī}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -18611,7 +18611,7 @@ Page 749 compensar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb}}<!-- DNV says root /e/ -->
 
 # {{lb|ca|transitive}} to [[compensate]]
 
@@ -18920,7 +18920,7 @@ From {{suffix|ca|compost|ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[compost]] {{gloss|to produce compost}}
 
@@ -19500,7 +19500,7 @@ Page 781 condensar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb}}<!-- DNV says root /e/ -->
 
 # {{lb|ca|transitive}} to [[condense]]
 
@@ -19922,7 +19922,7 @@ Page 798 confrontar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- FIXME: by analogy with [[afrontar]] -->
 
 # {{lb|ca|transitive}} to [[collate]] {{gloss|compare two documents}}
 #: {{syn|ca|cotejar}}
@@ -20215,13 +20215,13 @@ Possibly from a {{inh|ca|VL.|*conquisitō|*conquīsītāre}} (compare {{cog|oc|c
 Page 809 conrar: -------- begin text --------
 
 ===Etymology===
-Contraction of {{m|ca|conrear}}.
+Variant of {{m|ca|conrear}}.
 
 ===Pronunciation===
-* {{ca-IPA}}<!-- root-stressed forms have /o/ in Valencia; unknown otherwise -->
+* {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- per cawikt -->
 
 # {{lb|ca|transitive}} to [[cultivate]]
 
@@ -20849,9 +20849,9 @@ Page 834 contar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- per cawikt -->
 
-# {{lb|ca|transitive}} to [[tell]], [[say]]
+# {{lb|ca|transitive}} to [[tell]], to [[say]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -20961,16 +20961,16 @@ From {{com|ca|contenidor|-itzar}}.
 Page 839 contestar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|contestor|contestārī}}.
+{{bor+|ca|la|contestor|contestārī}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 * {{homophones|ca|contestà}}
 
 ===Verb===
-{{ca-verb}} {{tlb|ca|ambitransitive}}
+{{ca-verb|root=é}} {{tlb|ca|ambitransitive}}<!-- based on [[contesta]] -->
 
-# to [[answer]], [[reply]]
+# to [[answer]], to [[reply]]
 #: {{syn|ca|respondre}}
 
 ====Conjugation====
@@ -21204,7 +21204,7 @@ From {{af|ca|contra-|restar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- based on [[restar]] -->
 
 # {{lb|ca|transitive}} to [[counteract]]
 
@@ -22361,11 +22361,11 @@ Page 892 costar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[cost]] {{gloss|have a given price}}
 #* {{quote-book|ca|year=2009|title=[http://books.google.com/books?id=ncP-xBLiHgoC&pg=PA171&dq=vespre&hl=ca&ei=czuXTuuFFMinhAe-1oiXBA&sa=X&oi=book_result&ct=result&resnum=6&ved=0CEoQ6AEwBQ#v=onepage&q&f=false Les Aventures d'en Nono]|author=Jean Grave|passage=Digues, mare, quant '''costarà''' un llibre de contes[?]|translation=Tell me, mother, how much does a story book cost?}}
-# to be very difficult
+# to be very [[difficult]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -24163,7 +24163,7 @@ From {{der|ca|la|dē||from, out}} + {{m|la|fenestra||window}}.
 * {{homophones|ca|defenestrà}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- based on directly attested DNV and [[finestra]] in GDLC -->
 
 # to [[defenestrate]]
 # {{lb|ca|figuratively}} to [[fire]], to [[expel]] someone from a position of power
@@ -24182,7 +24182,7 @@ Page 961 defensar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}<!-- FIXME: a guess, based on directly attested DNV and [[defensa]] in GDLC -->
 
 # to [[defend]]
 #: {{syn|ca|defendre}}
@@ -24485,13 +24485,13 @@ Page 973 deixatar: -------- begin text --------
 Page 974 deixondar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|VL.|*deexsomnito|*dēexsomnitāre}}, from {{der|ca|la|somnus||sleep}}.
+{{inh+|ca|VL.|*deexsomnito|*dēexsomnitāre}}, from {{der|ca|la|somnus||sleep}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- per cawikt -->
 
 # {{alternative form of|ca|deixondir}}
 
@@ -25937,7 +25937,7 @@ From {{af|ca|des-|ballesta|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- based on [[ballesta]] -->
 
 # {{lb|ca|transitive}} to [[take apart]], [[dismantle]]
 #: {{syn|ca|desmuntar|desfer}}
@@ -27808,7 +27808,7 @@ Page 1110 desforestar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- based on [[forest]] in cawikt -->
 
 # to [[deforest]]
 #: {{syn|ca|desboscar}}
@@ -29619,13 +29619,13 @@ From {{der|ca|la|dēterminō|dētermināre|limit, set a bound}}.
 Page 1186 detestar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|detestor|detestārī}}.
+{{bor+|ca|la|detestor|detestārī}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- FIXME: by analogy with [[contestar]], based on [[contesta]] -->
 
 # {{lb|ca|transitive}} to [[detest]]
 
@@ -31008,7 +31008,7 @@ Page 1243 dissenyar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- based on cawikt; confirmed by DNV directly and GDLC [[disseny]] -->
 
 # to [[design]]
 
@@ -31836,7 +31836,7 @@ Page 1276 donar: -------- begin text --------
 Page 1277 donar a conèixer: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[make known]]
 
@@ -31846,7 +31846,7 @@ Page 1277 donar a conèixer: -------- begin text --------
 Page 1278 donar a menjar: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[feed]] {{gloss|to give food to eat}}
 #: {{syn|ca|alimentar}}
@@ -31857,7 +31857,7 @@ Page 1278 donar a menjar: -------- begin text --------
 Page 1279 donar carpetada a: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to close the file on, to [[put aside]]
 -------- end text --------
@@ -31867,7 +31867,7 @@ Page 1280 donar d'alta: -------- begin text --------
 From {{com|ca|donar|de|alta}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[register]], to [[enroll]]
 # {{lb|ca|transitive|military}} to declare fit for duty
@@ -31883,7 +31883,7 @@ Page 1281 donar de baixa: -------- begin text --------
 {{cal|ca|es|dar de baja}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive|reflexive}} to [[unregister]], to [[unsubscribe]]
 #: {{ant|ca|donar d'alta}}
@@ -31895,7 +31895,7 @@ Page 1281 donar de baixa: -------- begin text --------
 Page 1282 donar per descomptat: -------- begin text --------
 
 ===Verb===
-{{ca-verb|head=~descompta[t:r]}}
+{{ca-verb|root=ó|head=~descompta[t:r]}}
 
 # to [[take for granted]]
 #: {{syn|ca|descomptar}}
@@ -31910,7 +31910,7 @@ Page 1283 donar voltes: -------- begin text --------
 Cognate to {{cog|es|dar vueltas}}.
 
 ===Verb===
-{{ca-verb|head=~volt[es:a]}}
+{{ca-verb|root=ó|head=~volt[es:a]}}
 
 # to [[go round in circles]]
 #* {{quote-journal|ca|journal=Time Out Barcelona|author=Erica Aspas|title=El gran museu de la llum|date=Feb 13 2019|page=19
@@ -33819,7 +33819,7 @@ Page 1357 emboscar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[ambush]]
 
@@ -35445,7 +35445,7 @@ Page 1424 emprenyar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- from cawikt, directly attested as /e/ in DNV -->
 
 # {{lb|ca|colloquial|transitive}} to [[annoy]], [[bother]], [[piss off]]
 #: {{syn|ca|empipar|enfadar|enutjar|fastiguejar}}
@@ -37496,7 +37496,7 @@ From {{af|ca|en-|fons|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- per cawikt; confirmed by DNV [[enfonsar]], GDLC [[fons]] -->
 
 # to cause to [[descend]], to [[send]] [[down]]
 #: {{syn|ca|afonar}}
@@ -37585,7 +37585,7 @@ From {{af|ca|en-|fort|-ir}}.
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|transitive|reflexive}} to [[strengthen]], [[reinforce]]
+# {{lb|ca|transitive|reflexive}} to [[strengthen]], to [[reinforce]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -37602,7 +37602,7 @@ Page 1512 enfoscar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- based on [[fosc]] -->
 
 # {{alt form|ca|enfosquir}}
 
@@ -37658,7 +37658,7 @@ From {{m|ca|front}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- per DNV, confirmed by [[enfront]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[face]]; to be [[face to face]] with
 #: {{syn|ca|afrontar}}
@@ -38242,7 +38242,7 @@ From {{confix|ca|en|gresca|t2=fun|ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- based on [[gresca]] -->
 
 # {{lb|ca|transitive}} to [[rouse]], to [[liven up]], to [[encourage]]
 #: {{syn|ca|incitar|excitar|entusiasmar}}
@@ -38399,7 +38399,7 @@ From {{af|ca|en-|jonc|t2=reed|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- per DNV, confirmed by [[jonc]] in GDLC -->
 
 # {{lb|ca|transitive}} to cover the soil with [[reed]]s
 # {{lb|ca|transitive}} to [[garnish]] with [[reed]]s
@@ -38810,7 +38810,7 @@ From {{af|ca|enquesta|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- based on [[enquesta]] -->
 
 # {{lb|ca|transitive}} to [[poll]], [[survey]]
 
@@ -39174,7 +39174,7 @@ From {{af|ca|en-|rosca|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ô}}<!-- based on [[rosca]] per GDLC and DNV; FIXME: cawikt says /ɔ/ for Valencia but DNV says /o/ -->
 
 # {{lb|ca|transitive}} to [[coil]]
 # {{lb|ca|transitive}} to [[screw]] in/together
@@ -39346,7 +39346,7 @@ Page 1579 ensenyar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- from cawikt; confirmed directly by DNV and by [[ensenya]] in GDLC -->
 
 # to [[teach]]
 #: {{syn|ca|instruir|ensinistrar}}
@@ -42045,11 +42045,11 @@ From {{af|ca|escàpol|-ir}}.
 -------- end text --------
 Page 1683 escar: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
-From {{der|ca|grc|ἐσχάριον}}, probably via {{bor|ca|lij|scaro}}. Cognate with {{cog|it|squero}}.
+Probably {{bor+|ca|lij|scaro|nocap=1}}; ultimately from {{bor+|ca|grc|ἐσχάριον}}. Cognate with {{cog|it|squero}}.
+
+====Pronunciation====
+* {{ca-IPA|escarr}}
 
 ====Noun====
 {{ca-noun|m}}
@@ -42063,14 +42063,27 @@ From {{der|ca|grc|ἐσχάριον}}, probably via {{bor|ca|lij|scaro}}. Cognat
 ===Etymology 2===
 From {{af|ca|esca|-ar}}. Cognate with {{cog|fr|escher}}.
 
-====Verb====
-{{ca-verb}}
+====Pronunciation====
+* {{ca-IPA}}
 
-# {{lb|ca|fishing|transitive}} to [[bait]] {{q|a hook}}
+====Verb====
+{{ca-verb|root=ê}}<!-- based on [[esca]] -->
+
+# {{lb|ca|fishing|transitive}} to [[bait]] (a hook)
 #: {{ux|ca|Qui no '''esca''', no pesca.|He who doesn't '''bait the hook''' doesn't fish.}}
 
 =====Conjugation=====
 {{ca-conj}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|escarr}}
+
+====Noun====
+{{ca-noun|m}}
+
+# {{lb|ca|archaic}} [[piecework]]
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -45078,9 +45091,12 @@ Page 1805 esponjar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
-# {{lb|ca|transitive|pronominal}} {{rfdef|ca}}
+# {{lb|ca|transitive}} to [[sponge]] [[up]], to [[absorb]] with a [[sponge]]
+# {{lb|ca|transitive}} to [[raze]]
+# {{lb|ca|pronominal}} to [[fluff up]] {{gl|to become soft and porous}}
+# {{lb|ca|pronominal|figurative}} to [[swell]], to become [[proud]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -52958,13 +52974,13 @@ From {{der|ca|la|generō|generāre}}.
 Page 2135 gestar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|gestō|gestāre}}.
+{{bor+|ca|la|gestō|gestāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- based on cawikt -->
 
 # to [[gestate]]
 
@@ -53043,7 +53059,7 @@ From {{af|ca|giragonsa|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- based on [[giragonsa]] in GDLC and directly attested in DNV -->
 
 # {{lb|ca|intransitive}} to [[wind]], to [[twist and turn]]
 #: {{ux|ca|Féu '''giragonsar''' el cigar entre els dits.|He made the cigar '''twist and turn''' between his fingers.}}
@@ -53782,13 +53798,13 @@ Page 2168 gronxar: -------- begin text --------
 * {{alt|ca|gronsar}}
 
 ===Etymology===
-{{inh+|ca|VL.|*cronticare}}, northern variation of {{der|ca|VL.|*crontiare}}, from a Proto-Celtic or Pre-Indo-European root.
+{{inh+|ca|VL.|*cronticāre}}, northern variation of {{der|ca|VL.|*crontiare}}, from a Proto-Celtic or Pre-Indo-European root.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- per cawikt and DNV -->
 
 # {{lb|ca|transitive}} to [[swing]], to [[rock]]
 # {{lb|ca|intransitive|pronominal}} to [[swing]], to [[sway]], to [[rock]] back and forth
@@ -54628,7 +54644,7 @@ Page 2204 honrar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- per GDLC [[honra]] and directly attested by DNV -->
 
 # to [[honor]]
 
@@ -59972,7 +59988,7 @@ Variant of {{m|ca|llançar}}.
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- per cawikt -->
 
 # {{lb|ca|transitive}} to [[throw]] {{gloss|to cause an object to move rapidly through the air}}
 #: {{syn|ca|llançar}}
@@ -60079,7 +60095,7 @@ From {{af|ca|llesca|-ar}}.
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- based on cawikt; confirmed by [[llesca]] in GDLC and [[llescar]] in DNV -->
 
 # {{lb|ca|transitive}} to [[slice]]
 
@@ -60100,7 +60116,7 @@ From {{af|ca|llest|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- based on [[llest]] -->
 
 # {{lb|ca|regional|Northern Catalan}} to [[choose]]
 #: {{syn|ca|escollir|triar}}
@@ -60805,7 +60821,7 @@ From {{af|ca|magenc|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- from cawikt; confirmed directly by DNV and by [[magenc]] in GDLC -->
 
 # {{lb|ca|intransitive}} to [[hoe]] [[over]], to [[till]]
 
@@ -61487,14 +61503,14 @@ Page 2479 manejar: -------- begin text --------
 Page 2480 manifestar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|manifēstō|manifēstāre}}.
+{{bor+|ca|la|manifēstō|manifēstāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- based on [[manifest]] -->
 
 # to [[show]], to [[demonstrate]]
 # {{lb|ca|reflexive}} to [[protest]]
@@ -62600,14 +62616,14 @@ Page 2526 mendicar: -------- begin text --------
 Page 2527 menjar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|mandūcō|mandūcāre}}. Compare {{cog|fr|manger}} and {{cog|it|mangiare}}.
+{{inh+|ca|la|mandūcō|mandūcāre}}. Compare {{cog|fr|manger}} and {{cog|it|mangiare}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-menjar.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=cen:é; bal:ê; val:é}}<!-- from cawikt; confirmed directly by DNV and by [[menja]] in GDLC -->
 
 # {{lb|ca|intransitive}} to [[eat]] something solid
 #: {{lb|ca|idiomatic}} {{uxi|ca|'''menjar''' en el mateix plat|to be very good friends}} (an [[idiom]], literally ''to eat on the same plate'')
@@ -63859,13 +63875,13 @@ Page 2572 moldre: -------- begin text --------
 Page 2573 molestar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|molestāre}}, from {{m|la|molestus||troublesome}}.
+{{bor+|ca|la|molesto|molestāre}}, from {{m|la|molestus||troublesome}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- based on [[molest]] -->
 
 # {{lb|ca|transitive}} to [[bother]], [[annoy]]
 #: {{syn|ca|empipar}}
@@ -67014,9 +67030,9 @@ From {{af|ca|osca|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
-# to [[nick]], [[dent]] {{q|a blade}}
+# to [[nick]], to [[dent]] (a blade)
 #: {{ux|ca|S''''osca''' el coltell més dur si és mal usat.|The hardest knife will become '''nicked''' if it's ill used.}}
 
 ====Conjugation====
@@ -68624,7 +68640,7 @@ From {{af|ca|penca|-ar}}.
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}<!-- from cawikt; confirmed diretly by DNV and by [[penca]] in GDLC -->
 
 # {{lb|ca|intransitive|colloquial}} to [[work]]
 
@@ -68702,7 +68718,7 @@ Page 2761 penjar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- from cawikt; confirmed directly by DNV and by [[penja-robes]] in GDLC -->
 
 # to [[hang]]
 # to [[hang up]]
@@ -68733,12 +68749,12 @@ Page 2762 pensar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- per cawikt; confirmed directly by DNV and by [[pensa]] in GDLC -->
 
 # to [[think]]
-# {{lb|ca|pensar {{l|ca|en}}}} to [[think about]], to [[think of]], to [[have in mind]]
-# {{lb|ca|pensar {{l|ca|de}}}} to think about, to be of the [[opinion]] about
-# {{lb|ca|pensar {{l|ca|a}}}} to [[remember]], to [[reminisce]] over
+# to [[think about]], to [[think of]], to [[have in mind]] {{+preo|ca|en}}
+# to think about, to be of the [[opinion]] about {{+preo|ca|de}}
+# to [[remember]], to [[reminisce]] over {{+preo|ca|a}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -69131,7 +69147,7 @@ Page 2776 perjudicar: -------- begin text --------
 Page 2777 perllongar: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- per GDLC [[perllonga]] and directly attested by DNV -->
 
 # to [[prolong]]; [[lengthen]]
 # to [[put off]]; [[postpone]]; [[delay]]
@@ -69716,7 +69732,7 @@ Page 2800 pescar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- based on [[pesca]] -->
 
 # to [[fish]]
 
@@ -72120,7 +72136,7 @@ Page 2897 prenyar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- per cawikt; confirmed directly by DNV and by [[prenys]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[impregnate]]
 #: {{syn|ca|fecundar}}
@@ -72352,7 +72368,7 @@ From {{af|ca|pressupost|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[budget]], to [[cost]] (out)
 
@@ -72376,7 +72392,7 @@ Page 2908 prestar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- based on cawikt -->
 
 # {{lb|ca|transitive|pronominal}} to [[loan]]; to [[lend]]
 
@@ -73144,7 +73160,7 @@ Page 2938 prolongar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb}}<!-- DNV says root /o/; highly likely to be ó everywhere; compare [[perllongar]] -->
 
 # {{lb|ca|transitive}} to [[prolong]]
 
@@ -73697,7 +73713,7 @@ From {{der|ca|la|prōtegō}}.
 Page 2960 protestar: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- cawikt; also based on [[protesta]] -->
 
 # to [[protest]]
 # to [[declare]]
@@ -75378,7 +75394,7 @@ From {{af|ca|re-|arrencar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- from cawikt; attested directly by DNV and in [[arrencaqueixals]] in GDLC -->
 
 # {{lb|ca|computing}} to [[reboot]]
 #: {{syn|ca|reinicialitzar|reiniciar}}
@@ -76392,7 +76408,7 @@ From {{af|ca|re-|començar}}.
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}<!-- from cawikt; confirmed directly by DNV and by [[començ]] in GDLC -->
 
 # {{lb|ca|ambitransitive}} to [[recommence]], [[restart]], [[start over]]
 #: {{syn|ca|reiniciar}}
@@ -76842,7 +76858,7 @@ Page 3083 redimir: -------- begin text --------
 Page 3084 redissenyar: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- based on cawikt; confirmed by DNV directly and GDLC [[disseny]] -->
 
 # to [[redesign]]
 -------- end text --------
@@ -77530,7 +77546,7 @@ Page 3114 refrescar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- based on [[refresc]] -->
 
 # to [[refresh]]
 
@@ -79233,7 +79249,7 @@ From {{af|ca|reny|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- confirmed directly by DNV and by [[reny]] in GDLC and DCVB -->
 
 # to [[scold]], to [[rebuke]]
 #: {{syn|ca|bonegar|q1=Valencian}}
@@ -79436,7 +79452,7 @@ From {{af|ca|re-|pensar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- per cawikt; confirmed directly by DNV and by [[pensa]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[rethink]] {{gloss|to think again about a problem}}
 # {{lb|ca|pronominal}} to [[change one's mind]]
@@ -79987,7 +80003,7 @@ From {{af|ca|requesta|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- based on [[requesta]] -->
 
 # {{lb|ca|transitive}} to [[demand]]
 #: {{syn|ca|requerir}}
@@ -80452,7 +80468,7 @@ From {{af|ca|ressenya|-ar|t1=review}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- confirmed directly by DNV and by [[ressenya]] in GDLC and DCVB -->
 
 # {{lb|ca|transitive}} to [[review]] {{gloss|to write a critical evaluation of a new art work etc.}}
 
@@ -80617,14 +80633,14 @@ From {{af|ca|re-|establir}}<!--or directly from Latin?-->.
 Page 3233 restar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|restō|restāre}}.
+{{inh+|ca|la|restō|restāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- per cawikt; confirmed by [[resta]] in GDLC -->
 
 # {{lb|ca|intransitive}} to [[stay]], [[remain]]
 #: {{syn|ca|quedar}}
@@ -82123,7 +82139,7 @@ Page 3295 roncar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- based on GDLC [[ronc]] and directly attested by DNV -->
 
 # to [[snore]]
 # to [[purr]]
@@ -82249,7 +82265,7 @@ From {{af|ca|rosca|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ô}}<!-- based on [[rosca]] per GDLC and DNV; FIXME: cawikt says /ɔ/ for Valencia but DNV says /o/ -->
 
 # {{lb|ca|transitive}} to [[thread]] (a screw)
 #: {{syn|ca|filetejar}}
@@ -83665,14 +83681,13 @@ From {{der|ca|la|sēgregō|segregāre}}.
 Page 3357 segrestar: -------- begin text --------
 
 ===Etymology===
-{{inh+|ca|la|sequestrō|sequestrāre}}.
-Compare {{cog|es|secuestrar}}.
+{{inh+|ca|la|sequestrō|sequestrāre}}. Compare {{cog|es|secuestrar}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- based on [[segrest]] -->
 
 # to [[kidnap]]
 # to [[hijack]] {{gloss|a plane}}
@@ -84634,7 +84649,7 @@ From {{prefix|ca|sobre|menjar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=cen:é; bal:ê; val:é}}<!-- from cawikt for [[menjar]]; confirmed directly by DNV and by [[menja]] in GDLC -->
 
 # to [[overeat]]
 
@@ -85574,9 +85589,10 @@ From {{af|ca|sonda|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- based on GDLC [[sonda]] and directly attested by DNV -->
 
 # {{lb|ca|transitive|nautical}} to [[sound]], to take [[soundings]] of
+# {{lb|ca|transitive|medical}} to [[insert a [[probe]] into
 # {{lb|ca|transitive|figurative}} to [[sound out]] {{gloss|determine a person's intent or preference}}
 
 ====Conjugation====
@@ -90510,7 +90526,7 @@ Page 3627 trencar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- from cawikt; confirmed directly by DNV and by [[trenc]] and [[trenca]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[break]]
 #: {{syn|ca|rompre}}
@@ -92524,7 +92540,7 @@ Page 3710 venjar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- from cawikt; confirmed directly by DNV for Valencian -->
 
 # to [[avenge]]
 
