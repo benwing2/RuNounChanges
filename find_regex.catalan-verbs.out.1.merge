@@ -1865,14 +1865,14 @@ From {{m|ca|corral}}.
 Page 76 acórrer: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|accurrō|accurrere}}. Equivalent to {{prefix|ca|a|córrer}}.
+{{slbor|ca|la|accurrō|accurrere}}. Equivalent to {{prefix|ca|a|córrer}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 * {{rhymes|ca|ore(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|intransitive}} to [[rush]] to someone's [[aid]]
 
@@ -7313,7 +7313,7 @@ Page 300 aparèixer: -------- begin text --------
 * {{rhymes|ca|ɛʃe(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[appear]]
 #: {{ant|ca|desaparèixer}}
@@ -10632,7 +10632,7 @@ Page 434 atènyer: -------- begin text --------
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[arrive]]
 # to [[attain]]
@@ -14674,6 +14674,9 @@ From {{af|ca|bústia|-ar}}.
 -------- end text --------
 Page 595 caber: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
+
 ===Verb===
 {{ca-verb}}
 
@@ -15223,8 +15226,8 @@ Page 614 caler: -------- begin text --------
 {{inh+|ca|la|caleō|calēre}}. Compare {{cog|oc|caler}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
-* {{rhymes|ca|e(ɾ)|s=2}}
+* {{ca-IPA|ê}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
+* {{rhymes|ca|ɛ(ɾ)|s=2}}
 
 ===Verb===
 {{ca-verb|<only3sp>}}
@@ -15260,9 +15263,6 @@ Page 615 calfar: -------- begin text --------
 
 -------- end text --------
 Page 616 calguer: -------- begin text --------
-
-===Pronunciation===
-* {{ca-IPA}}
 
 ===Verb===
 {{head|ca|verb}}
@@ -18543,7 +18543,7 @@ From {{prefix|ca|con|parèixer}}, based on {{der|ca|la|compāreō|compārēre}},
 * {{rhymes|ca|ɛʃe(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[appear]], to [[attend]], to [[show up]]
 # to be [[found]] {{gloss|after having been [[lost]]}}
@@ -19379,14 +19379,14 @@ From {{der|ca|la|conclūdō|conclūdere}}.
 Page 777 concórrer: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|concurrō|concurrere}}. Equivalent to {{prefix|ca|con|córrer}}.
+{{slbor|ca|la|concurrō|concurrere}}. Equivalent to {{prefix|ca|con|córrer}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 * {{rhymes|ca|ore(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[concur]], [[gather]], to [[come together]], to [[assemble]]
 # to [[converge]], to [[join]]
@@ -19601,7 +19601,7 @@ Page 785 conèixer: -------- begin text --------
 * {{rhymes|ca|ɛʃe(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[know]] {{gloss|a person, a place, etc.}}
 #: {{uxi|ca|'''Conec''' un bon restaurant italià.|I '''know''' of a good Italian restaurant.}}
@@ -20636,10 +20636,10 @@ Page 826 constrènyer: -------- begin text --------
 {{inh+|ca|la|cōnstringō|cōnstringere}} (compare {{cog|oc|constrénher}}, {{cog|fr|contraindre}}, {{cog|es|constreñir}}).
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- DCVB attests /ə́/ in Mallorca -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[constrain]], to [[oblige]]
 # to [[constrict]]
@@ -21394,11 +21394,11 @@ Page 857 convèncer: -------- begin text --------
 From {{der|ca|la|convincō|convincere}}. First appears 15th century.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ë}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-convèncer.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}
 
 # to [[convince]], [[win over]]
 
@@ -22089,7 +22089,7 @@ Page 882 córrer: -------- begin text --------
 * {{rhymes|ca|ore(ɾ)|s=2}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[run]]
 # to [[rush]]
@@ -22630,10 +22630,10 @@ Page 901 créixer: -------- begin text --------
 {{inh+|ca|la|crēscō|crēscere}}, from {{inh|ca|itc-pro|*krēskō}}, from {{der|ca|ine-pro|*ḱer-|*ḱreh₁-|to grow, become bigger}}. Compare {{cog|oc|créisser}}, {{cog|fr|croître}}, {{cog|es|crecer}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[grow]]
 
@@ -24000,10 +24000,13 @@ Page 953 decorar: -------- begin text --------
 Page 954 decréixer: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|dēcrēscō}}, attested from 1868.<ref>{{R:ca:GDLC}}</ref>
+{{slbor|ca|la|decresco|dēcrēscere}}, attested from 1868.<ref>{{R:ca:GDLC}}</ref>
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|intransitive}} to [[decrease]], to [[diminish]]
 
@@ -25745,7 +25748,7 @@ Page 1023 desaparèixer: -------- begin text --------
 * {{rhymes|ca|ɛʃe(ɾ)|s=5}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[disappear]]
 
@@ -26647,7 +26650,7 @@ From {{prefix|ca|des|conèixer}}.
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to not [[know]] about, to be [[unaware]] of
 # to not [[recognise]]
@@ -30586,13 +30589,13 @@ Page 1225 discernir: -------- begin text --------
 Page 1226 discórrer: -------- begin text --------
 
 ===Etymology===
-Semi-learned borrowing from {{lbor|ca|la|discurro|discurrere|notext=1}}.
+{{slbor|ca|la|discurro|discurrere}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[create]], to [[think up]]
 #: {{syn|ca|idea|inventar}}
@@ -31644,7 +31647,7 @@ From a rhizotonic variant of {{inh|ca|roa-oca|doler}}, from {{inh|ca|la|doleō|d
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[hurt]]
 
@@ -31670,8 +31673,11 @@ From a rhizotonic variant of {{inh|ca|roa-oca|doler}}, from {{inh|ca|la|doleō|d
 -------- end text --------
 Page 1271 doler: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
+
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{alternative form of|ca|doldre}}
 
@@ -35075,7 +35081,7 @@ Page 1408 empènyer: -------- begin text --------
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[push]], [[shove]]
 # {{lb|ca|transitive|figurative}} to [[impel]]
@@ -36693,7 +36699,7 @@ Page 1474 encórrer: -------- begin text --------
 * {{rhymes|ca|ore(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[incur]], to [[bring upon]] oneself
 
@@ -40622,7 +40628,7 @@ Page 1628 enviar: -------- begin text --------
 Page 1629 envoltar: -------- begin text --------
 
 ===Etymology===
-From {{m|ca|envolt}}, past participle of {{der|ca|roa-oca|envoldre}} (corresponding to Latin {{m|la|involutus}}, perfect passive participle of {{m|la|involvo|involvō, involvere}}), or possibly from a {{inh|ca|VL.||*involtāre}}, for {{inh|ca|la|involutāre}}, frequentative of {{m|la|involvere}}. {{etydate|14th century}}<ref>{{R:ca:GDLC}}</ref> Compare {{cog|oc|envoltar}}, {{cog|it|involtare}}.
+From {{m|ca|envolt}}, past participle of {{der|ca|roa-oca|envoldre}} (corresponding to {{m+|la|involūtus}}, perfect passive participle of {{m|la|involvo|involvō, involvere}}), or possibly from a {{inh|ca|VL.||*involtāre}}, for {{inh|ca|la|involūtāre}}, frequentative of {{m|la|involvere}}. {{etydate|14th century}}<ref>{{R:ca:GDLC}}</ref> Compare {{cog|oc|envoltar}}, {{cog|it|involtare}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -40800,7 +40806,7 @@ Page 1636 equivaler: -------- begin text --------
 From {{der|ca|la|aequivaleō}}, from {{m|la|aequi-||equal}} + {{m|la|valeō||to be worth}}, whence also {{m|ca|valer}}. Attested from 1803.<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
 
 ===Verb===
 {{ca-verb}}
@@ -42756,7 +42762,7 @@ Page 1712 escórrer: -------- begin text --------
 * {{rhymes|ca|ore(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[drain]], to let [[liquid]] run out of
 # to [[hang out to dry]]
@@ -45157,13 +45163,13 @@ From {{af|ca|es-|poruc|-ir}}.
 Page 1808 esprémer: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|exprimō}}. {{doublet|ca|exprimir}}.
+{{inh+|ca|la|exprimō|exprimere}}. {{doublet|ca|exprimir}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[squeeze]]; to [[juice]]
 
@@ -45606,10 +45612,10 @@ From {{af|ca|esquiu|-ar}}.
 Page 1825 esser: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- from cawikt -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|regional}} {{alternative form of|ca|ésser}}
 
@@ -45628,7 +45634,7 @@ Page 1826 ésser: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-ésser.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|copulative}} to [[be]]
 # to [[exist]], to be [[real]], to be [[reality]]
@@ -46690,7 +46696,7 @@ Page 1868 estrènyer: -------- begin text --------
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[squeeze]]
 #* {{quote-book|ca|year=1906|author=Josep Morató i Grau|title=Els habitants de la lluna|publisher=Ilustració Catalana|page=103
@@ -54232,12 +54238,12 @@ Page 2186 haver: -------- begin text --------
 {{inh+|ca|roa-oca|haver}}, from {{inh|ca|la|habeō|habēre|t=have, hold, possess}}, probably from a {{inh|ca|itc-pro|*habēō}} or {{m|itc-pro|*haβēō}}, possibly ultimately from {{der|ca|ine-pro|*gʰh₁bʰ-||to grab, to take}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-haver.wav|Audio}}
 
 ===Verb===
-{{ca-verb|<var:aux>}} {{q|as auxiliary}}<br />
-{{ca-verb|<var:full>}} {{q|as full verb}}
+{{ca-verb|<var:aux>|root=ê}} {{q|as auxiliary}}<br /><!-- root=ê per cawikt for [[heu]], [[heus]], [[hem]] -->
+{{ca-verb|<var:full>|root=ê}} {{q|as full verb}}
 
 # {{lb|ca|auxiliary}} {{non-gloss definition|[[auxiliary verb]] to form compound tenses or [[perfect tense]]s, together with a [[past participle]]}}
 #: {{ux|ca|ho '''he''' fet jo|I '''have''' done it}}
@@ -54393,10 +54399,10 @@ From {{der|ca|la|haesitō|haesitāre}}.
 Page 2193 heure: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|ê}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}<!-- from cawikt; for [[heu]], [[heus]], [[hem]], etc. -->
 
 # {{lb|ca|Eastern Catalan}} {{alt form|ca|haver}}
 #* {{quote-book|ca|title=Les roses franques|author=w:Joan Maragall|url=https://mdc.csuc.cat/digital/collection/epistolari/id/8304/rec/79|passage=He vist unes rosas{{sic}} d'un vermell pujat d'un vermell negrós d'un vermell morat. / Penjaven gronxantse del mur d'un jardí / ningú les pot '''heure''' no 's poden cullir.}}
@@ -61260,13 +61266,13 @@ From {{af|ca|mal-|viure}}.
 Page 2470 malvoler: -------- begin text --------
 
 ===Etymology===
-{{com|ca|mal|voler}}
+From {{com|ca|mal|voler}}.
 
 ===Pronunciation===
-* {{ca-IPA|màlvolér}}
+* {{ca-IPA|màlvolêr}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[wish]] ill; to [[dislike]]
 
@@ -62919,7 +62925,7 @@ Page 2538 merèixer: -------- begin text --------
 * {{rhymes|ca|ɛʃe(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[deserve]], to [[merit]]
 # to be [[worth]]
@@ -65107,7 +65113,7 @@ Page 2620 néixer: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-néixer.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|standard Catalan|intransitive}} to [[be born]]
 
@@ -66089,13 +66095,13 @@ Page 2661 occir: -------- begin text --------
 Page 2662 ocórrer: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|occurro|occurrere}}, based on Catalan {{m|ca|córrer}}.
+{{slbor|ca|la|occurro|occurrere}}, based on Catalan {{m|ca|córrer}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[occur]]
 
@@ -67658,7 +67664,7 @@ Page 2721 parèixer: -------- begin text --------
 * {{rhymes|ca|ɛʃe(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|especially|Valencia|Balears}} to [[appear]], to [[seem]], to [[look like]]
 #: {{syn|ca|semblar}}
@@ -68503,7 +68509,7 @@ Page 2753 péixer: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[feed]] (an animal, a small child, a sick person, etc.)
 
@@ -71018,11 +71024,11 @@ Page 2850 poder: -------- begin text --------
 {{inh+|ca|roa-oca|poder}}, from {{inh|ca|VL.|posso|potēre}}, regularization of {{inh|ca|la|possum|posse}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- from cawikt; /ɛ/ confirmed for Central for GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-poder.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to be [[able]]; [[can]]
 # to be [[allowed]], to be [[permitted]]; [[may]]
@@ -71972,7 +71978,7 @@ Page 2889 prémer: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{lb|ca|transitive}} to [[squeeze]], to [[press]]
 
@@ -72489,7 +72495,7 @@ Page 2912 prevaler: -------- begin text --------
 * {{alt|ca|prevaldre}}
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
 
 ===Verb===
 {{ca-verb}}
@@ -75370,7 +75376,7 @@ From {{af|ca|re-|aparèixer}}.
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[reappear]]
 
@@ -76494,7 +76500,7 @@ Page 3069 reconèixer: -------- begin text --------
 * {{rhymes|ca|ɛʃe(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[recognise]]
 # to [[acknowledge]]
@@ -76637,7 +76643,7 @@ Page 3075 recórrer: -------- begin text --------
 * {{rhymes|ca|ore(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|intransitive}} to [[turn to]], to [[fall back on]] {{+preo|ca|a}}
 #: {{ux|ca|Ha '''recorregut''' als serveis públics existents per lluitar contra la seva addicció.|She has '''turned to''' the existing public services to combat her addiction.}}
@@ -80999,7 +81005,7 @@ From {{af|ca|re-|tòrcer|t2=to twist}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[twist]]
 #: {{syn|ca|retorçar}}
@@ -82613,7 +82619,7 @@ Page 3314 saber: -------- begin text --------
 {{inh+|ca|roa-oca|saber}}, from {{inh|ca|VL.||*sapēre}}, from {{inh|ca|la|sapio|sapĕre|t=taste, know}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-saber.wav|Audio}}
 
 ===Verb===
@@ -83239,7 +83245,7 @@ From the irregular subjunctive forms {{m|ca|sàpiga}}, {{m|ca|sàpigues}} etc. o
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{head|ca|verb}}
 
 # {{lb|ca|colloquial|or|dialectal}} {{alt form|ca|saber}}.
 #* {{quote-book|ca|title=Gent de casa|chapter=s:ca:L'última festa|year=1906|author=Emili Vilanova i March|passage=— ''Sidro'', tindràs d'escriure al noy; si s'escapa aquest correu, estarà un altre mes sense '''sapiguer''' de nosaltres.}}
@@ -84883,13 +84889,13 @@ From {{af|ca|social|-itzar}}.
 Page 3404 socórrer: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|succurrō}}.
+{{slbor|ca|la|succurrō|succurrere}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[aid]]; [[assist]]
 #: {{syn|ca|ajudar}}
@@ -89849,14 +89855,14 @@ From {{af|ca|trans-|bord|-ar}}.
 Page 3598 transcórrer: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|trānscurrere}}.
+{{slbor|ca|la|transcurro|trānscurrere}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 * {{rhymes|ca|ore(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[go by]], [[pass]] {{gloss|said of the time}}
 
@@ -92035,7 +92041,7 @@ Page 3688 valer: -------- begin text --------
 {{inh+|ca|roa-oca|valer}}, from {{inh|ca|la|valeō|valēre}}, from {{inh|ca|itc-pro|*walēō}}, from {{inh|ca|ine-pro|*h₂wl̥h₁éh₁yeti}}, from {{m|ine-pro|*h₂welh₁-||to rule, be strong}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
 
 ===Verb===
 {{ca-verb}}
@@ -92384,11 +92390,11 @@ Page 3703 vèncer: -------- begin text --------
 {{inh+|ca|roa-oca|vèncer}}~{{m|roa-oca|vençre}}, from {{inh|ca|la|vincō|vincere}}, from {{inh|ca|itc-pro|*winkō}}, from {{der|ca|ine-pro|*wi-n-k-}}, nasal infix from {{m|ine-pro|*weyk-||to overcome}}. Compare {{cog|oc|vèncer}}, {{cog|fr|vaincre}}, {{cog|es|vencer}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ë}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-vèncer.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}
 
 # to [[win]]
 # to [[defeat]]
@@ -93593,11 +93599,11 @@ Page 3752 voler: -------- begin text --------
 {{inh+|ca|VL.|voleo|volēre}}, regularized from {{inh|ca|la|volō|velle}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- per cawikt; /ɛ/ for Central confirmed by GDLC -->
 * {{a|Central}} {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-voler.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[want]]
 # {{lb|ca|transitive}} to [[merit]]
