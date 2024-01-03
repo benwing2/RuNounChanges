@@ -2910,7 +2910,7 @@ Page 115 adreçar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=cen:é; bal:ê; val:é}}<!-- FIXME: per cawikt [[adreça]] should be ê everywhere, but GDLC says /e/ for [[adreça]]; DNV says /e/ -->
 
 # to [[address]]; to [[confront]]
 
@@ -3773,7 +3773,7 @@ From {{af|ca|a-|foc|-ar}}.
 {{inh+|ca|VL.||*affōcāre}}, alteration of {{inh|ca|la|offōcō|offōcāre}}. {{doublet|ca|ofegar}}.
 
 ====Verb====
-{{ca-verb}}
+{{ca-verb}}<!-- not in DNV -->
 
 # {{lb|ca|transitive}} to [[suffocate]]
 # {{lb|ca|intransitive|pronominal}} to [[suffocate]]
@@ -5781,7 +5781,7 @@ Page 235 alterar: -------- begin text --------
 * {{rhymes|ca|a(ɾ)}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb}}<!-- DNV says root /e/ -->
 
 # to [[alter]]
 # to [[upset]]
@@ -14307,12 +14307,12 @@ Page 581 brotar: -------- begin text --------
 From {{der|ca|got|*𐌱𐍂𐌿𐍄𐍉𐌽}}. Compare {{cog|oc|brotar}}.
 
 ===Pronunciation===
-* {{ca-IPA|root=ó}}
+* {{ca-IPA}}
 * {{rhymes|ca|a(ɾ)|s=2}}
 * {{homophones|ca|brotà}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # to [[sprout]]
 
@@ -32155,7 +32155,7 @@ Page 1291 dreçar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb}}<!-- DNV says root /e/; possibly is like [[adreçar]] -->
 
 # {{lb|ca|intransitive}} to go [[straight]]
 # {{lb|ca|transitive}} to [[straighten]], to set [[upright]]
@@ -33644,7 +33644,7 @@ From {{af|ca|em-|boç|-ar}}.
 * {{homophones|ca|embossar}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- based on [[boç]] and attested directly by DNV -->
 
 # {{lb|ca|transitive}} to [[muzzle]]
 # {{lb|ca|pronominal}} to [[muffle]] (up)
@@ -37071,13 +37071,13 @@ From {{af|ca|en-|drap|-ar}}.
 Page 1489 endreçar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|VL.|*indīrectiāre}}.
+{{inh+|ca|VL.|*indīrectiāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=cen:é; bal:ê; val:é}}<!-- FIXME: per cawikt [[endreçar]] should be ê everywhere, but GDLC says /e/ for [[endreç]] and [[endreça]]; DNV says /e/ -->
 
 # {{lb|ca|transitive}} to [[tidy up]]
 #: {{syn|ca|[[posar]] [[en ordre]]}}
@@ -65040,7 +65040,7 @@ Page 2616 negar: -------- begin text --------
 {{inh+|ca|roa-oca|negar}}, from {{inh|ca|la|neco|necāre|t=murder}}, which specialized to the sense of 'drown' in Romance. Cognate with {{cog|fr|noyer}}.
 
 ====Verb====
-{{ca-verb}}
+{{ca-verb}}<!-- DNV says root /e/ -->
 
 # {{lb|ca|transitive|reflexive}} to [[drown]]
 # {{lb|ca|transitive|reflexive}} to [[flood]]
@@ -79938,7 +79938,7 @@ From {{af|ca|reprotxe|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ô}}<!-- DNV has root /o/ but GDLC has /ɔ/ for [[reprotxe]] -->
 
 # {{lb|ca|transitive}} to [[reproach]], to [[censure]]
 
@@ -80764,7 +80764,7 @@ Page 3235 restoblar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- based on [[restoble]] in GDLC and attested directly by DNV -->
 
 # {{lb|ca|agriculture}} to [[resow]], to plant the same crop again in the same field
 
@@ -84582,7 +84582,7 @@ Page 3388 sobrar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}<!-- attested directly by DNV and by [[sobra]] in GDLC -->
 
 # {{lb|ca|transitive}} to [[surpass]], to [[overcome]]
 #: {{syn|ca|superar|sobrepujar}}
@@ -84853,7 +84853,7 @@ Page 3400 sobtar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- attested directly by DNV and by [[sobte]] in GDLC -->
 
 # to [[surprise]]
 
@@ -86229,7 +86229,7 @@ Page 3451 sotjar: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb}}<!-- DNV has root /o/ -->
 
 # {{lb|ca|transitive}} to [[spy]] on, to [[watch]] covertly
 #: {{syn|ca|espiar|vetllar|observar}}
@@ -86339,7 +86339,7 @@ From {{af|ca|sotsobre|-ar}}. Compare {{cog|es|zozobrar}} (from Old Catalan).
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ô}}<!-- attested directly by DNV with /o/ and by [[sotsobre]] in GDLC with /ɔ/ -->
 
 # {{lb|ca|intransitive}} to [[capsize]]
 #: {{syn|ca|fer sotsobre}}
