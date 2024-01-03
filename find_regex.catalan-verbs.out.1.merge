@@ -1925,6 +1925,7 @@ From {{af|ca|a-|costum|-ar}}.
 {{ca-verb}}
 
 # {{lb|ca|transitive}} to [[accustom]], make accustomed
+# {{lb|ca|pronominal}} to become [[accustomed]], to [[get]] [[used to|used]] {{+preo|ca|a|means=to}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -1951,8 +1952,7 @@ Page 79 acostumar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|intransitive}} to become [[accustomed]]
-# {{indtr|ca|a}} to [[get]] [[used to]]
+# {{reflexive of|ca|acostumar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -2772,13 +2772,13 @@ Page 109 adormir: -------- begin text --------
 #: {{syn|ca|anestesiar|insensibilitzar}}
 # {{lb|ca|transitive|figurative}} to [[lull]]
 #: {{syn|ca|calmar|apaivagar}}
+# {{lb|ca|pronominal}} to [[fall asleep]]
 
 ====Conjugation====
 {{ca-conj}}
 
 ====Derived terms====
 * {{l|ca|adormiment}}
-* {{l|ca|adormir-se}}
 
 ====Related terms====
 * {{l|ca|dormir}}
@@ -2794,7 +2794,7 @@ Page 110 adormir-se: -------- begin text --------
 ===Verb===
 {{ca-verb|root=ò}}<!-- per cawikt and DNV -->
 
-# to [[fall asleep]]
+# {{reflexive of|ca|adormir}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -3171,6 +3171,7 @@ Page 126 afaitar: -------- begin text --------
 # {{lb|ca|transitive}} to [[shave]]
 #: {{syn|ca|rapar|rasurar|barbejar}}
 #* {{quote-book|ca|author=w:Sergi Pàmies|chapter=Precisament parlàvem de tu|title=Si menges una llimona sense fer ganyotes|year=2006|passage=Llegia els diaris, '''m'afaitava''' molt a poc a poc i escoltava la ràdio.}}
+# {{lb|ca|reflexive}} to [[shave]] oneself
 # {{lb|ca|obsolete}} to [[adorn]]
 #: {{syn|ca|abellir|adornar}}
 
@@ -3193,7 +3194,7 @@ Page 127 afaitar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|intransitive}} to [[shave]] oneself
+# {{reflexive of|ca|afaitar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -3882,6 +3883,7 @@ From {{af|ca|a-|gafar|lang2=roa-oca}}, the latter from a {{der|ca|gem|-}} source
 # to [[grasp]]
 # to [[catch]], [[seize]]
 # to [[catch]], [[take]] {{gloss|a vehicle}}
+# {{lb|ca|pronominal}} to [[hold on]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -3903,7 +3905,7 @@ Page 155 agafar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# to [[hold on]]
+# {{reflexive of|ca|agafar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -8825,6 +8827,9 @@ From dissimilation of earlier *{{m|ca||arreorir}}, from {{der|ca|VL.||*adrigōr�
 
 # {{lb|ca|transitive}} to [[bend]]
 #: {{syn|ca|ajupir|abatre}}
+# {{lb|ca|pronominal}} to [[curl up]] {{gloss|e.g. from the cold}}
+#: {{syn|ca|arrupir-se|arronsar-se}}
+#* {{quote-book|ca|year=1947|author=Sebastià Juan Arbó|title=Tino Costa|text=La dona, mig adormida, mastegà malediccions i '''s'arraulí''' de nou dintre el seu xal deteriorat.|t=The woman, half asleep, muttered curses and '''curled up''' again inside her deteriorated shawl.}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -8841,21 +8846,13 @@ From dissimilation of earlier *{{m|ca||arreorir}}, from {{der|ca|VL.||*adrigōr�
 -------- end text --------
 Page 363 arraulir-se: -------- begin text --------
 
-===Etymology===
-From {{com|ca|arraulir|se}}.
-
 ===Verb===
 {{ca-verb}}
 
-# to [[curl up]] {{gloss|e.g. from the cold}}
-#: {{syn|ca|arrupir-se|arronsar-se}}
-#* {{quote-book|ca|year=1947|author=Sebastià Juan Arbó|title=Tino Costa|text=La dona, mig adormida, mastegà malediccions i '''s'arraulí''' de nou dintre el seu xal deteriorat.|t=The woman, half asleep, muttered curses and '''curled up''' again inside her deteriorated shawl.}}
+# {{reflexive of|ca|arraulir}}
 
 ====Conjugation====
 {{ca-conj}}
-
-===Further reading===
-* {{R:ca:IEC2|arraulir}}
 -------- end text --------
 Page 364 arrebossar: -------- begin text --------
 
@@ -15449,6 +15446,9 @@ From {{der|ca|la|campsō|campsāre}}.
 # to [[tire]]
 # to [[wear out]], to [[exhaust]]
 # to [[bore]], to [[annoy]]
+# {{lb|ca|pronominal}} to [[tire]], to become [[tired]]
+# {{lb|ca|pronominal}} to [[tire out]] oneself
+# {{lb|ca|pronominal}} to get [[bored]], to get tired (of)
 
 ====Conjugation====
 {{ca-conj}}
@@ -15469,9 +15469,7 @@ Page 624 cansar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# to [[tire]], to become [[tired]]
-# to [[tire out]] oneself
-# to get [[bored]], to get tired (of)
+# {{reflexive of|ca|cansar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -15605,7 +15603,7 @@ From {{compound|ca|cap|ficar|t1=head|t2=to put}}.
 # {{lb|ca|transitive|agriculture}} to [[hang]] (a branch of a vine) so as to [[take root]]
 # {{lb|ca|intransitive|nautical}} to [[pitch]] {{q|of a ship}}
 # {{lb|ca|reflexive}} to [[worry]]
-#: {{syn|ca|preocupar|amoïnar}}
+#: {{syn|ca|preocupar-se|amoïnar-se}}
 #: {{uxi|ca|No t'hi '''capfiquis''' tant!}}
 
 ====Conjugation====
@@ -15625,7 +15623,6 @@ Page 630 capficar-se: -------- begin text --------
 {{ca-verb}}
 
 # {{reflexive of|ca|capficar}}
-#: {{syn|ca|preocupar-se}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -16243,6 +16240,7 @@ Probably from {{af|ca|casa|-ar}}.
 {{ca-verb}}
 
 # to [[marry]], [[wed]] someone to (unite two others in wedlock)
+# {{lb|ca|reflexive}} to [[marry]], [[get married]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -16264,13 +16262,10 @@ Probably from {{af|ca|casa|-ar}}.
 -------- end text --------
 Page 657 casar-se: -------- begin text --------
 
-===Etymology===
-From {{m|ca|casar}}.
-
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|reflexive}} to [[marry]], [[get married]] (literally, to get oneself married)
+# {{reflexive of|ca|casar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -28702,8 +28697,7 @@ From {{der|ca|VL.|*expertare}}, from {{m|la|*expertus}}, from {{der|ca|la|experr
 
 # {{lb|ca|transitive}} to [[wake]], [[awaken]], [[wake up]]
 # {{lb|ca|transitive}} to wake up (a feeling, sentiment), [[arouse]]
-# {{lb|ca|intransitive}} to [[wake up]] {{gloss|become [[awake]]}}
-#: {{syn|ca|despertar-se}}
+# {{lb|ca|intransitive|or|pronominal}} to [[wake up]] {{gloss|become [[awake]]}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -28724,9 +28718,9 @@ Page 1148 despertar-se: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=è}}
 
-# {{lb|ca|intransitive}} to [[wake up]], to [[awaken]], to become [[awake]]
+# {{reflexive of|ca|despertar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -30455,6 +30449,7 @@ Balearic has {{m|ca|deis}} and Valencian has {{m|ca|dis}} as the second-person p
 
 ====Derived terms====
 * {{l|ca|dir-se}}
+* {{l|ca|com et dius}}
 * {{l|ca|és a dir}}
 * {{l|ca|voler dir}}
 
@@ -30472,9 +30467,6 @@ Balearic has {{m|ca|deis}} and Valencian has {{m|ca|dis}} as the second-person p
 -------- end text --------
 Page 1220 dir-se: -------- begin text --------
 
-===Etymology===
-{{inh+|ca|la|dīcere}}.
-
 ===Pronunciation===
 * {{ca-IPA}}
 * {{rhymes|ca|iɾse|s=2}}
@@ -30482,21 +30474,10 @@ Page 1220 dir-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# to [[be called]]
+# {{reflexive of|ca|dir}}
 
 ====Conjugation====
 {{ca-conj}}
-
-====Derived terms====
-{{col3|ca
-|com et dius
-}}
-
-===Further reading===
-* {{R:ca:IEC2|dir}}
-* {{R:ca:GDLC|dir}}
-* {{R:ca:DNV|dir}}
-* {{R:ca:DCVB|dir}}
 -------- end text --------
 Page 1221 dire: -------- begin text --------
 
@@ -30691,6 +30672,7 @@ Page 1229 disculpar: -------- begin text --------
 
 # to [[excuse]], [[forgive]]
 #: {{syn|ca|perdonar}}
+# {{lb|ca|pronominal}} to [[apologise]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -30707,13 +30689,10 @@ Page 1230 disculpar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# to [[apologise]]
+# {{reflexive of|ca|disculpar}}
 
 ====Conjugation====
 {{ca-conj}}
-
-====Related terms====
-* {{l|ca|disculpa}}
 -------- end text --------
 Page 1231 discutir: -------- begin text --------
 
@@ -31384,13 +31363,12 @@ Page 1258 divertir: -------- begin text --------
 # to [[amuse]], [[entertain]]
 #: {{syn|ca|distreure|entretenir}}
 # to [[distract]]
-# {{lb|ca|reflexive}} to [[enjoy oneself]]
+# {{lb|ca|reflexive}} to [[enjoy oneself]], to [[have fun]], to [[have a good time]]
+#: {{syn|ca|entretenir-se|passar-ho bé}}
+#* {{quote-book|ca|year=2009|title=[http://books.google.com/books?id=ncP-xBLiHgoC&pg=PA47&dq=vespre&hl=ca&ei=czuXTuuFFMinhAe-1oiXBA&sa=X&oi=book_result&ct=result&resnum=6&ved=0CEoQ6AEwBQ#v=onepage&q&f=false Les Aventures d'en Nono]|author=Jean Grave|passage=els nens s'escamparen pel jardí, discutint els jocs amb els quells pensaven '''divertir-se'''|translation=the kids were scattered across the garden, talking about the fun games they were thinking of playing}}
 
 ====Conjugation====
 {{ca-conj}}
-
-====Derived terms====
-* {{l|ca|divertir-se}}
 
 ====Related terms====
 * {{l|ca|diversió}}
@@ -31407,15 +31385,9 @@ Page 1259 divertir-se: -------- begin text --------
 {{ca-verb}}
 
 # {{reflexive of|ca|divertir}}
-# to [[have fun]], to [[enjoy oneself]], to [[have a good time]]
-#* {{quote-book|ca|year=2009|title=[http://books.google.com/books?id=ncP-xBLiHgoC&pg=PA47&dq=vespre&hl=ca&ei=czuXTuuFFMinhAe-1oiXBA&sa=X&oi=book_result&ct=result&resnum=6&ved=0CEoQ6AEwBQ#v=onepage&q&f=false Les Aventures d'en Nono]|author=Jean Grave|passage=els nens s'escamparen pel jardí, discutint els jocs amb els quells pensaven '''divertir-se'''|translation=the kids were scattered across the garden, talking about the fun games they were thinking of playing}}
 
 ====Conjugation====
 {{ca-conj}}
-
-====Synonyms====
-* {{l|ca|entretenir-se}}, {{l|ca|passar-ho bé}}
-
 -------- end text --------
 Page 1260 dividir: -------- begin text --------
 
@@ -32471,6 +32443,7 @@ From {{m|ca|dutxa}}.
 {{ca-verb}}
 
 # {{lb|ca|transitive}} to [[shower]], to give a shower to
+# {{lb|ca|pronominal}} to [[shower]], to have a shower
 
 ====Conjugation====
 {{ca-conj}}
@@ -32487,7 +32460,7 @@ Page 1303 dutxar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|intransitive}} to [[shower]], to have a shower
+# {{reflexive of|ca|dutxar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -33995,6 +33968,7 @@ From {{m|ca|embriac}}, from {{der|ca|LL.|ēbriācus}}, from {{der|ca|la|ēbrius}
 {{ca-verb}}
 
 # {{lb|ca|transitive}} to [[get]] [[drunk]] {{gloss|cause to become inebriated}}
+# {{lb|ca|pronominal}} to [[become]] [[drunk]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -34015,7 +33989,7 @@ Page 1364 embriagar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# to [[become]] [[drunk]]
+# {{reflexive of|ca|embriagar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -34767,6 +34741,7 @@ From {{af|ca|empapar|-uss-}}.
 {{ca-verb}}
 
 # {{lb|ca|transitive}} to [[feed]] a bird or a baby
+# {{lb|ca|pronominal|colloquial}} to [[devour]], to [[pig out]], to [[gorge]] oneself
 
 ====Conjugation====
 {{ca-conj}}
@@ -34776,13 +34751,10 @@ Page 1395 empapussar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|intransitive|colloquial}} to [[devour]], to [[pig out]], to [[gorge]] oneself
+# {{reflexive of|ca|empapussar}}
 
 ====Conjugation====
 {{ca-conj}}
-
-====See also====
-* {{l|ca|empapussar}}
 -------- end text --------
 Page 1396 empaquetar: -------- begin text --------
 
@@ -35886,6 +35858,8 @@ From {{af|ca|en-|call|-ar}}.
 # to get [[stuck]], [[jam]]
 # to [[run aground]], become [[stranded]]
 # {{lb|ca|computing}} to (cause to) [[hang]] or [[freeze]]
+# {{lb|ca|pronominal}} to become [[obstructed]] or [[jammed]]
+# {{lb|ca|pronominal|computing}} to [[hang]], to [[freeze]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -35906,8 +35880,7 @@ Page 1441 encallar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# to become [[obstructed]] or [[jammed]]
-# {{lb|ca|computing}} to [[hang]], to [[freeze]]
+# {{reflexive of|ca|encallar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -38763,7 +38736,7 @@ Page 1555 ennuvolar-se: -------- begin text --------
 From {{m|ca|en-}} + {{m|ca|núvol}} + {{m|ca|-ar}} + {{m|ca|se}}. Compare {{cog|oc|ennivolar}}, {{cog|fur|innulâsi}}, {{cog|ro|înnora|(a se) înnora}}, cf. also {{cog|pt|nublar}}, {{cog|es|nublar}}, {{m|es|anublar}}, {{cog|it|annuvolare}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- per cawikt; confirmed by DNV -->
 
 # {{lb|ca|impersonal}} to [[become]] [[cloudy]], to [[cloud over]]
 
@@ -40862,6 +40835,7 @@ From {{der|ca|la|aequus|t=equal}} + {{m|la|vocāre|t=call}}. Cognate to {{cog|en
 {{ca-verb|root=ò}}
 
 # to [[mistake]], be [[wrong]] about, make a mistake
+# {{lb|ca|pronominal}} to make a [[mistake]], to be [[mistaken]], to be [[wrong]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -40873,9 +40847,9 @@ From {{der|ca|la|aequus|t=equal}} + {{m|la|vocāre|t=call}}. Cognate to {{cog|en
 Page 1638 equivocar-se: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
-# to make a [[mistake]], to be [[mistaken]], to be [[wrong]]
+# {{reflexive of|ca|equivocar}}
 
 ====Inflection====
 {{ca-conj}}
@@ -43297,6 +43271,7 @@ Page 1731 esforçar: -------- begin text --------
 {{ca-verb|root=ò}}
 
 # {{lb|ca|obsolete}} to [[strengthen]]
+# {{lb|ca|pronominal}} to [[try]] [[hard]], to [[make an effort]], to [[strive]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -43323,7 +43298,7 @@ Page 1732 esforçar-se: -------- begin text --------
 ===Verb===
 {{ca-verb|root=ò}}
 
-# to [[try]] [[hard]], to [[make an effort]], to [[strive]]
+# {{reflexive of|ca|esforçar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -44671,6 +44646,7 @@ Page 1786 esperar: -------- begin text --------
 # to [[wait]], wait for, [[await]]
 # to [[hope]]
 # to [[expect]]
+# {{lb|ca|pronominal}} to [[expect]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -44689,9 +44665,9 @@ Page 1786 esperar: -------- begin text --------
 Page 1787 esperar-se: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
-# to [[expect]]
+# {{reflexive of|ca|esperar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -50343,6 +50319,8 @@ From {{af|ca|fix|-ar}}. Compare {{cog|es|fijar}}.
 
 # {{lb|ca|transitive}} to [[fix]], [[fasten]], set in place
 # {{lb|ca|transitive}} to [[set]], [[decide]], [[settle]] on
+# {{lb|ca|pronominal}} to [[focus]] on, to [[observe]]
+# {{lb|ca|pronominal}} to [[notice]], to [[see]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -50365,8 +50343,7 @@ Page 2026 fixar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# to [[focus]] on, to [[observe]]
-# to [[notice]], to [[see]]
+# {{reflexive of|ca|fixar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -56230,7 +56207,7 @@ From {{af|ca|indigest|-ar}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}<!-- per cawikt; confirmed directly by DNV and by [[indigest]] in GDLC -->
 
 # {{lb|ca|transitive}} to give [[indigestion]]
 #: {{uxi|ca|Hi ha llibres que '''se''' m''''han indigestat'''.|There are books that have '''given''' me '''indigestion'''.}}
@@ -56584,12 +56561,17 @@ Probably a semi-learned borrowing from {{lbor|ca|la|īnflō|īnflāre|notext=1}}
 
 # {{lb|ca|transitive}} to [[inflate]]
 # {{lb|ca|transitive}} to make [[swollen]]
+# {{lb|ca|reflexive}} to [[swell]], to grow tight as a result of [[enlarging]]
+# {{lb|ca|reflexive}} to [[swell up]], to become [[swollen]]
+# {{lb|ca|reflexive}} to become [[overwhelmed]] with [[anger]]
+# {{lb|ca|figurative|pronominal}} to become [[full of oneself]], to becomes [[swell-headed]]
+#: {{syn|ca|envanir-se}}
 
 ====Conjugation====
 {{ca-conj}}
 
 ====Synonyms====
-* {{l|ca|unflar}}
+* {{l|ca|unflar}} {{q|Valencian}}
 
 ====Derived terms====
 * {{l|ca|botinflar-se}}
@@ -56600,9 +56582,6 @@ Probably a semi-learned borrowing from {{lbor|ca|la|īnflō|īnflāre|notext=1}}
 ====Related terms====
 * {{l|ca|inflable}}
 * {{l|ca|inflació}}
-
-===See also===
-* [[inflar-se]]
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -56619,22 +56598,10 @@ Page 2285 inflar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|reflexive}} to [[swell]], to grow tight as a result of [[enlarging]]
-# {{lb|ca|reflexive}} to [[swell up]], to become [[swollen]]
-# {{lb|ca|reflexive}} to become [[overwhelmed]] with [[anger]]
-# {{lb|ca|figurative|pronominal}} to become [[full of oneself]], to becomes [[swell-headed]]
-#: {{syn|ca|envanir-se}}
+# {{reflexive of|ca|inflar}}
 
 ====Conjugation====
 {{ca-conj}}
-
-====Synonyms====
-* {{qualifier|Valencian}} {{l|ca|unflar-se}}
-
-===Further reading===
-* {{R:ca:IEC2}}
-
-{{C|ca|Pathology}}
 -------- end text --------
 Page 2286 infligir: -------- begin text --------
 
@@ -60227,6 +60194,7 @@ Page 2429 llevar: -------- begin text --------
 # {{lb|ca|transitive}} to [[raise]], to [[lift]], to [[help]] [[get up]]
 # {{lb|ca|reflexive}} to [[get up]]
 # {{lb|ca|intransitive}} to [[rise]]
+# {{lb|ca|pronominal}} to [[get up]], to get out of [[bed]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -60254,9 +60222,9 @@ Page 2429 llevar: -------- begin text --------
 Page 2430 llevar-se: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
-# to [[get up]], to get out of [[bed]]
+# {{reflexive of|ca|llevar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -61804,6 +61772,7 @@ Page 2490 maquillar: -------- begin text --------
 {{ca-verb}}
 
 # to [[apply]] [[makeup]] or [[cosmetics]]
+# {{lb|ca|reflexive}} to put on [[makeup]], to apply [[cosmetics]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -61826,7 +61795,7 @@ Page 2491 maquillar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|reflexive}} to put on [[makeup]], to apply [[cosmetics]]
+# {{reflexive of|ca|maquillar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -61968,7 +61937,6 @@ Page 2497 marcir-se: -------- begin text --------
 {{ca-verb}}
 
 # {{reflexive of|ca|marcir}}
-#: {{syn|ca|pansir-se}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -62241,15 +62209,10 @@ Page 2509 masturbar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# {{reflexive of|ca|masturbar}}: to [[masturbate]] (oneself)
+# {{reflexive of|ca|masturbar}}
 
 ====Conjugation====
 {{ca-conj}}
-
-====Related terms====
-* {{l|ca|masturbació}}
-* {{l|ca|masturbador}}
-* {{l|ca|masturbatori}}
 -------- end text --------
 Page 2510 matar: -------- begin text --------
 
@@ -63632,6 +63595,7 @@ Derived from {{af|ca|moc|-ar}}, based on {{der|ca|la|mūcō|mūcāre}}.
 {{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[blow one's nose|blow]] someone's [[nose]]
+# {{lb|ca|pronominal}} to [[blow one's nose]]
 # {{lb|ca|transitive|figurative}} to [[shut up|shut]] someone [[up]]
 #: {{syn|ca|deixar mocat}}
 # {{lb|ca|transitive}} to [[snuff]], to [[extinguish]]
@@ -63669,7 +63633,7 @@ Page 2563 mocar-se: -------- begin text --------
 ===Verb===
 {{ca-verb|root=ó}}
 
-# to [[blow one's nose]]
+# {{reflexive of|ca|mocar|t=to blow someone's nose}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -66195,6 +66159,7 @@ Page 2664 ocupar: -------- begin text --------
 # to [[fill]], to [[take up]] {{gloss|be in or hold a given place}}
 # to [[employ]], to [[keep]] [[busy]]
 # to occupy, to [[conquer]]
+# {{lb|ca|reflexive}} to [[occupy]] oneself, to [[busy]] oneself
 
 ====Conjugation====
 {{ca-conj}}
@@ -66220,7 +66185,7 @@ Page 2665 ocupar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# to [[occupy]] oneself, to [[busy]] oneself
+# {{reflexive of|ca|ocupar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -71411,8 +71376,11 @@ Page 2863 posar: -------- begin text --------
 
 # {{lb|ca|transitive}} to [[put]], to [[place]]
 # {{lb|ca|transitive}} to [[set]]
-# {{lb|ca|transitive}} to [[apply]] {{q|of medication or cosmetics}}
+# {{lb|ca|transitive}} to [[apply]] (medication or cosmetics)
+# {{lb|ca|reflexive}} to [[apply]] (medication or cosmetics) {{q|to oneself}}
 # {{lb|ca|intransitive}} to [[rest]], to [[stay]]
+# {{lb|ca|pronominal}} to [[get]], to [[become]], to [[turn]]
+# {{lb|ca|pronominal}} to [[put on]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -71458,7 +71426,7 @@ Page 2863 posar: -------- begin text --------
 Page 2864 posar al dia: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb|head=[[posar]] [[al dia]]}}
+{{ca-verb|head=[[posar]] [[al dia]]|root=ò}}
 
 # to [[update]]
 #: {{syn|ca|actualitzar|modernitzar}}
@@ -71469,14 +71437,14 @@ Page 2865 posar en quarantena: -------- begin text --------
 {{lit|to put in quarantine}}, used figuratively.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|idiom}} to defer judgment on a proposal or idea so as to give time for evidence on its validity or usefulness to develop
 -------- end text --------
 Page 2866 posar en relleu: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[emphasize]], to [[highlight]]
 
@@ -71486,11 +71454,9 @@ Page 2866 posar en relleu: -------- begin text --------
 Page 2867 posar-se: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
-# to [[get]], to [[become]], to [[turn]]
-# to [[put on]]
-# {{lb|ca|of medication or cosmetics}} to [[apply]] (to oneself)
+# {{reflexive of|ca|posar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -71501,7 +71467,7 @@ Page 2867 posar-se: -------- begin text --------
 Page 2868 posar-se vermell: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb|head=[[posar-se]] [[vermell]]}}
+{{ca-verb|root=ò}}
 
 # to [[redden]], to [[blush]]
 #: {{syn|ca|tornar-se vermell}}
@@ -71981,8 +71947,9 @@ Page 2887 preguntar: -------- begin text --------
 
 # to [[ask]]
 #: {{syn|ca|demanar}}
-# {{lb|ca|used with {{m|ca|sobre}}}} to [[ask]] about
-# {{lb|ca|used with {{m|ca|per}}}} to [[ask]] for
+# to [[ask]] {{+preo|ca|sobre|means=about}}
+# to [[ask]] {{+preo|ca|per|means=for}}
+# {{lb|ca|pronominal}} to [[ask]] [[oneself]], to [[wonder]] {{+preo|ca|sobre|means=about}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -72000,8 +71967,7 @@ Page 2888 preguntar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# to [[ask]] [[oneself]], to [[wonder]]
-# {{lb|ca|in the phrase "preguntar-se sobre"}} to [[wonder]] about
+# {{reflexive of|ca|preguntar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -72205,6 +72171,7 @@ Page 2898 preocupar: -------- begin text --------
 
 # to [[worry]], to [[concern]] (someone)
 # {{lb|ca|reflexive}} to be [[worried]]
+#: {{ux|ca|No et '''preocupis''', sigues feliç!|Don't '''worry''', be happy!}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -72226,7 +72193,6 @@ Page 2899 preocupar-se: -------- begin text --------
 {{ca-verb}}
 
 # {{reflexive of|ca|preocupar}}
-#: {{ux|ca|No et '''preocupis''', sigues feliç!|Don't '''worry''', be happy!}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -73358,7 +73324,7 @@ Page 2943 pronosticar: -------- begin text --------
 Page 2944 pronunciar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|prōnūntiō|prōnūntiāre}}.
+{{bor+|ca|la|prōnūntiō|prōnūntiāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -73368,9 +73334,10 @@ From {{der|ca|la|prōnūntiō|prōnūntiāre}}.
 {{ca-verb}}
 
 # {{lb|ca|transitive}} to [[pronounce]]
-# {{lb|ca|transitive}} to [[deliver]] {{gloss|a speech}}
+# {{lb|ca|transitive}} to [[deliver]] (a speech)
 # {{lb|ca|transitive}} to [[say]]
 #* {{quote-book|ca|year=2009|title=[http://books.google.com/books?id=ncP-xBLiHgoC&pg=PA17&dq=vespre&hl=ca&ei=czuXTuuFFMinhAe-1oiXBA&sa=X&oi=book_result&ct=result&resnum=6&ved=0CEoQ6AEwBQ#v=onepage&q&f=false Les Aventures d'en Nono]|author=Jean Grave|passage=No sabia '''pronunciar''' paraules severes|translation=He didn't know how to say harsh words}}
+# {{lb|ca|pronominal}} to [[pass]] [[sentence]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -73392,7 +73359,7 @@ Page 2945 pronunciar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# to [[pass]] [[sentence]]
+# {{reflexive of|ca|pronunciar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -74469,6 +74436,8 @@ Page 2987 quedar: -------- begin text --------
 # to [[be]]
 # to [[meet up]]
 #: {{uxi|ca|'''quedarem''' a les dues|they will meet at two}}
+# {{lb|ca|pronominal}} to [[stay]], to [[remain]]
+#: {{syn|ca|romandre}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -74488,10 +74457,9 @@ Page 2987 quedar: -------- begin text --------
 Page 2988 quedar-se: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
-# to [[stay]], to [[remain]]
-#: {{syn|ca|romandre}}
+# {{reflexive of|ca|quedar}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -75522,7 +75490,7 @@ Page 3030 rebel·lar-se: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=è}}<!-- per DNV; confirmed by [[rebel]] in GDLC -->
 
 # to [[rebel]]
 
@@ -77554,7 +77522,7 @@ Page 3112 refredar-se: -------- begin text --------
 From {{com|ca|refredar|es}}.
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{reflexive of|ca|refredar}}
 
@@ -79139,8 +79107,7 @@ Page 3173 rendir-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# to [[give up]]
-# to [[give in]]
+# {{reflexive of|ca|rendir}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -81452,7 +81419,7 @@ From {{prefix|ca|re|venjar|gloss2=to take vengence}}.
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ë}}<!-- directly per DNV and by [[revenja]] in GDLC and DCVB -->
 
 # to [[revenge]]
 
@@ -84549,6 +84516,7 @@ Page 3386 situar: -------- begin text --------
 
 # to [[situate]], [[place]], [[put]]
 # to [[locate]]
+# {{lb|ca|reflexive}} to [[be]] (in a place)
 
 ====Conjugation====
 {{ca-conj}}
@@ -84566,12 +84534,12 @@ Page 3386 situar: -------- begin text --------
 Page 3387 situar-se: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb|head=[[situar]]-[[se]]}}
+{{ca-verb}}
 
-# {{lb|ca|reflexive}} to [[be]] (in a place)
+# {{reflexive of|ca|situar}}
 
 ====Conjugation====
-* see {{m|ca|situar}}
+{{ca-conj}}
 -------- end text --------
 Page 3388 sobrar: -------- begin text --------
 
@@ -89325,14 +89293,15 @@ Page 3575 tornar: -------- begin text --------
 
 # {{lb|ca|intransitive}} to [[return]], to [[go]]/[[come]] [[back]]
 # {{lb|ca|transitive}} to return, to [[give]] back
-# {{indtr|ca|a|aux=infinitive}} to [[do]] [[again]], to [[repeat]]
+# to [[do]] [[again]], to [[repeat]] {{+preo|ca|a|infinitive}}
 #: {{uxi|ca|Ho '''tornarem''' a fer|We will do it again}}
+# {{lb|ca|pronominal}} to [[turn]], to [[become]]
 
 ====Conjugation====
 {{ca-conj}}
 
 ====Derived terms====
-* {{l|ca|tornar-se}}
+* {{l|ca|tornar-se vermell}}
 
 ===References===
 * {{R:ca:DCVB}}
@@ -89341,15 +89310,12 @@ Page 3575 tornar: -------- begin text --------
 Page 3576 tornar-se: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}<!-- based on [[torn]] and [[torna]]; DNV confirms /o/ -->
 
-# to [[turn]], to [[become]]
+# {{reflexive of|ca|tornar}}
 
 ====Conjugation====
 {{ca-conj}}
-
-====Derived terms====
-* {{l|ca|tornar-se vermell}}
 
 -------- end text --------
 Page 3577 tornejar: -------- begin text --------
@@ -91514,8 +91480,10 @@ Page 3663 unflar: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# to [[inflate]]
-#: {{syn|ca|inflar<q:Standard>}}
+# {{lb|ca|transitive}} to [[inflate]]
+#: {{syn|ca|inflar<q:standard>}}
+# {{lb|ca|reflexive}} to [[swell]], to grow tight as a result of [[enlarging]]
+# {{lb|ca|reflexive}} to become [[overwhelmed]] with [[anger]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -91532,14 +91500,10 @@ Page 3664 unflar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|reflexive}} to [[swell]], to grow tight as a result of [[enlarging]]
-# {{lb|ca|reflexive}} to become [[overwhelmed]] with [[anger]]
+# {{reflexive of|ca|unflar}}
 
 ====Conjugation====
 {{ca-conj}}
-
-====Synonyms====
-* {{qualifier|Standard}} {{l|ca|inflar-se}}
 -------- end text --------
 Page 3665 ungir: -------- begin text --------
 
@@ -91636,7 +91600,7 @@ From {{af|ca|uniforme|-itzar}}.
 Page 3669 unir: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|ūniō|ūnīre}}.
+{{bor+|ca|la|ūniō|ūnīre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -91648,6 +91612,8 @@ From {{der|ca|la|ūniō|ūnīre}}.
 # {{lb|ca|transitive}} to [[unite]], [[join]]
 # {{lb|ca|transitive}} to [[combine]]
 # {{lb|ca|transitive}} to [[link]] together
+# {{lb|ca|intransitive}} to be [[united]], to be [[joined]]
+# {{lb|ca|pronominal}} to [[join]] {{gloss|a group}}, to become a [[participant]] or [[member]] of {{+preo|ca|a}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -91673,8 +91639,7 @@ Page 3670 unir-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|intransitive}} to be [[united]], to be [[joined]]
-# {{lb|ca|unir-se a}} to [[join]] {{gloss|a group}}, to become a [[participant]] or [[member]] of
+# {{reflexive of|ca|unir}}
 
 ====Conjugation====
 {{ca-conj}}
