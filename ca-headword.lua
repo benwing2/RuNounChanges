@@ -756,6 +756,7 @@ pos_functions["verbs"] = {
 		["attn"] = {type = "boolean"},
 		["pres_1_sg"] = {}, -- accept any ignore old-style param
 		["past_part"] = {}, -- accept any ignore old-style param
+		["root"] = {}, -- FIXME: Implement root-stressed vowel quality
 	},
 	func = function(args, data, tracking_categories, frame)
 		local preses, preses_3s, prets, parts, short_parts
