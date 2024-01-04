@@ -432,6 +432,8 @@ a space). `tempcomma` is the Unicode character to temporarily use when doing the
 you can specify a different character if you use U+FFF0 for some internal purpose.
 ]==]
 function export.split_on_comma(text, tempcomma)
+	-- Don't do anything if no comma. Note that split_escaping() has a similar check at the beginning, so if there's a
+	-- comma we effectively do this check twice, but this is worth it to optimize for the common no-comma case.
 	if not text:find(",") then
 		return {text}
 	end
