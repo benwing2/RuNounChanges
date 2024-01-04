@@ -40,6 +40,9 @@ local dialects_to_names = {
 	cen = "Central Catalan",
 	val = "Valencian",
 }
+local dialect_groups = {
+	east = {"bal", "cen"},
+}
 
 local mid_vowel_hints = "éèêëóòô"
 local mid_vowel_hint_c = "[" .. mid_vowel_hints .. "]"
@@ -952,6 +955,9 @@ function export.show(frame)
 	for _, dialect in ipairs(dialects) do
 		params[dialect] = {}
 	end
+	for dialect_group, _ in pairs(dialect_groups) do
+		params[dialect_group] = {}
+	end
 
 	local args = require("Module:parameters").process(frame:getParent().args, params)
 	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
@@ -962,6 +968,14 @@ function export.show(frame)
 	if args[1] then
 		for _, dialect in ipairs(dialects) do
 			inputs[dialect] = {input = args[1], param = 1}
+		end
+	end
+	-- Then do dialect groups.
+	for dialect_group, group_dialects in pairs(dialect_groups) do
+		if args[dialect_group] then
+			for _, dialect in ipairs(group_dialects) do
+				inputs[dialect] = {input = args[dialect_group], param = dialect_group}
+			end
 		end
 	end
 	-- Then do individual dialect settings.
