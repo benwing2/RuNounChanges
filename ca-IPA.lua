@@ -1,9 +1,16 @@
-local m_ipa = require("Module:IPA")
-local m_a = require("Module:accent qualifier")
-
 local export = {}
 
 local lang = require("Module:languages").getByCode("ca")
+
+local m_IPA = require("Module:IPA")
+local m_a = require("Module:accent qualifier")
+local m_table = require("Module:table")
+
+local parse_utilities_module = "Module:parse utilities"
+local patut_module = "Module:pattern utilities"
+
+local listToSet = require("Module:table").listToSet
+
 
 local usub = mw.ustring.sub
 local rfind = mw.ustring.find
@@ -17,12 +24,6 @@ local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
 	return retval
 end
-
-local parse_utilities_module = "Module:parse utilities"
-local patut_module = "Module:pattern utilities"
-
-local listToSet = require("Module:table").listToSet
-
 
 local function split_on_comma(term)
 	if term:find(",%s") or term:find("\\") then
@@ -806,7 +807,7 @@ local function join_syllables(syllables)
 		syllables[i] = syll
 	end
 	
-	return "/" .. rsub(table.concat(syllables, "."), ".([ˈˌ])", "%1") .. "/"
+	return rsub(table.concat(syllables, "."), ".([ˈˌ])", "%1")
 end
 
 local function group_sort_and_format(syllables, mid_vowel_hint, test)
@@ -829,7 +830,7 @@ local function group_sort_and_format(syllables, mid_vowel_hint, test)
 		end
 	else
 		for ipa, accents in pairs(grouped) do
-			table.insert(out, m_a.show(accents) .. " " .. m_ipa.format_IPA_full(lang, {{pron = ipa}}))
+			table.insert(out, m_a.show(accents) .. " " .. m_IPA.format_IPA_full(lang, {{pron = ipa}}))
 		end
 	end
 	
@@ -853,11 +854,17 @@ end
 	
 
 local function parse_respelling(respelling, pagename, parse_err)
+	local saw_raw
+	local remaining_respelling = respelling:match("^raw:(.*)$")
+	if remaining_respelling then
+		saw_raw = true
+		respelling = remaining_respelling
+	end
 	local raw_phonemic, raw_phonetic = respelling:match("^/(.*)/ %[(.*)%]$")
 	if not raw_phonemic then
 		raw_phonemic = respelling:match("^/(.*)/$")
 	end
-	if not raw_phonemic then
+	if not raw_phonemic and saw_raw then
 		raw_phonetic = respelling:match("^%[(.*)%]$")
 	end
 	if raw_phonemic or raw_phonetic then
@@ -887,7 +894,7 @@ local function parse_respelling(respelling, pagename, parse_err)
 				from, to = rmatch(sub, "^(.-):(.*)$")
 			elseif rfind(sub, "^" .. mid_vowel_hint_c .. "$") then
 				if mid_vowel_hint then
-					parse_err("Specified mid vowel hint twice, '%s' and '%s'":format(
+					parse_err(("Specified mid vowel hint twice, '%s' and '%s'"):format(
 						mid_vowel_hint, sub))
 				end
 				mid_vowel_hint = sub
@@ -931,7 +938,7 @@ local function generate_pronun_syllables(word, mid_vowel_hint)
 			mid_vowel_hint = mid_vowel_o(syllables)
 		end
 	end
-	return to_IPA(syllables, mid_vowel_hint)
+	return to_IPA(syllables, mid_vowel_hint), mid_vowel_hint
 end
 
 
@@ -984,7 +991,7 @@ function export.show(frame)
 		end
 
 		local function generate_obj(respelling, parse_err)
-			return parse_respelling(term, pagename, parse_err)
+			return parse_respelling(respelling, pagename, parse_err)
 		end
 
 		if inputspec.input:find("[<%[]") then
@@ -1009,6 +1016,7 @@ function export.show(frame)
 			local comma_separated_groups = put.split_alternating_runs_on_comma(segments)
 
 			-- Process each value.
+			local outer_container = {terms = {}}
 			for _, group in ipairs(comma_separated_groups) do
 				-- Rejoin runs that don't involve <...>.
 				local j = 2
@@ -1032,7 +1040,7 @@ function export.show(frame)
 					aa = { store = "insert" },
 				}
 
-				set_parsed_respelling(put.parse_inline_modifiers_from_segments {
+				table.insert(outer_container.terms, put.parse_inline_modifiers_from_segments {
 					group = group,
 					arg = inputspec.input,
 					props = {
@@ -1040,16 +1048,17 @@ function export.show(frame)
 						param_mods = param_mods,
 						generate_obj = generate_obj,
 						splitchar = ",",
-						outer_container = {},
+						outer_container = outer_container,
 					},
 				})
 			end
+			set_parsed_respelling(outer_container)
 		else
 			local termobjs = {}
 			local function parse_err(msg)
-				error(msg .. ": " .. inputspec.param .. "= " .. respelling)
+				error(msg .. ": " .. inputspec.param .. "= " .. inputspec.input)
 			end
-			for _, term in ipairs(split_on_comma(respelling)) do
+			for _, term in ipairs(split_on_comma(inputspec.input)) do
 				table.insert(termobjs, generate_obj(term, parse_err))
 			end
 			set_parsed_respelling {
@@ -1069,7 +1078,8 @@ function export.show(frame)
 				termobj.raw_phonetic = nil
 			else
 				local word = ulower(termobj.term)
-				local syllables = generate_pronun_syllables(word, termobj.mid_vowel_hint)
+				local mid_vowel_hint = termobj.mid_vowel_hint
+				local syllables, mid_vowel_hint = generate_pronun_syllables(word, mid_vowel_hint)
 				termobj.phonemic = join_syllables(accents[dialect](syllables, mid_vowel_hint))
 				-- set to nil so by-value comparisons respect only the resulting phonemic/phonetic and qualifiers
 				termobj.term = nil
@@ -1078,23 +1088,97 @@ function export.show(frame)
 		end
 	end
 
-	-- Format the results.
-local function group_sort_and_format(syllables, mid_vowel_hint, test)
-	local grouped = {}
-
-	for _, accent in pairs(accent_order) do
-		local ipa = join_syllables(accents[accent](syllables, mid_vowel_hint))
-		if grouped[ipa] then
-			table.insert(grouped[ipa], accent)
-		else
-			grouped[ipa] = {accent}
+	-- Group the results.
+	local grouped_pronuns = {}
+	for dialect, pronun_spec in pairs(parsed_respellings) do
+		local saw_existing = false
+		for _, group in ipairs(grouped_pronuns) do
+			if m_table.deepEquals(group.pronuns, pronun_spec.terms) then
+				table.insert(group.dialects, dialect)
+				saw_existing = true
+				break
+			end
+		end
+		if not saw_existing then
+			table.insert(grouped_pronuns, {dialects = {dialect}, pronuns = pronun_spec.terms})
 		end
 	end
-	
+
+	-- Format the results.
+	for _, grouped_pronun_spec in pairs(grouped_pronuns) do
+		local pronunciations = {}
+
+		-- Loop through each pronunciation. For each one, add the phonemic and phonetic versions to `pronunciations`,
+		-- for formatting by [[Module:IPA]].
+		for j, pronun in ipairs(grouped_pronun_spec.pronuns) do
+			-- Add dialect tags to left accent qualifiers if first one
+			local as = pronun.a
+			if j == 1 then
+				if as then
+					as = m_table.deepcopy(as)
+				else
+					as = {}
+				end
+				for _, dialect in ipairs(grouped_pronun_spec.dialects) do
+					table.insert(as, dialects_to_names[dialect])
+				end
+			end
+
+			local first_pronun = #pronunciations + 1
+
+			if not pronun.phonemic and not pronun.phonetic then
+				error("Internal error: Saw neither phonemic nor phonetic pronunciation")
+			end
+
+			if pronun.phonemic then -- missing if 'raw:[...]' given
+				local slash_pron = "/" .. pronun.phonemic .. "/"
+				table.insert(pronunciations, {
+					pron = slash_pron,
+				})
+			end
+
+			if pronun.phonetic then -- missing if '/.../' given
+				local bracket_pron = "[" .. pronun.phonetic .. "]"
+				table.insert(pronunciations, {
+					pron = bracket_pron,
+				})
+			end
+
+			local last_pronun = #pronunciations
+
+			if pronun.q then
+				pronunciations[first_pronun].q = pronun.q
+			end
+			if as then
+				pronunciations[first_pronun].a = as
+			end
+			if j > 1 then
+				pronunciations[first_pronun].separator = ", "
+			end
+			if pronun.qq then
+				pronunciations[last_pronun].qq = pronun.qq
+			end
+			if pronun.aa then
+				pronunciations[last_pronun].aa = pronun.aa
+			end
+			if pronun.refs then
+				pronunciations[last_pronun].refs = pronun.refs
+			end
+			if first_pronun ~= last_pronun then
+				pronunciations[last_pronun].separator = " "
+			end
+		end
+
+		grouped_pronun_spec.formatted = m_IPA.format_IPA_full(lang, pronunciations, nil, "")
+	end
+
+	-- Concatenate formatted results.
+	local formatted = {}
+	for _, grouped_pronun_spec in ipairs(grouped_pronuns) do
+		table.insert(formatted, grouped_pronun_spec.formatted)
+	end
 	local indent = (args.indent or "*") .. " "
-	
-	local out = table.concat(group_sort_and_format(syllables, mid_vowel_hint), "\n" .. indent)
-	
+	local out = table.concat(formatted, "\n" .. indent)
 	if args.indent then
 		out = indent .. out
 	end
@@ -1104,14 +1188,14 @@ end
 
 -- Used by [[Module:ca-IPA/testcases]].
 function export.test(word, mid_vowel_hint)
-	local syllables = generate_pronun_syllables(word, mid_vowel_hint)
+	local syllables, mid_vowel_hint = generate_pronun_syllables(word, mid_vowel_hint)
 
 	return table.concat(group_sort_and_format(syllables, mid_vowel_hint, true), ";<br>")
 end
 
 -- on debug console use: =p.debug("your_word", "your_hint")
 function export.debug(word, mid_vowel_hint)
-	local syllables = generate_pronun_syllables(ulower(word), mid_vowel_hint)
+	local syllables, mid_vowel_hint = generate_pronun_syllables(ulower(word), mid_vowel_hint)
 
 	local ret = {}
 
