@@ -286,7 +286,7 @@ Page 12 abdicar: -------- begin text --------
 Page 13 abduir: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|abduco|abdūcere}}; adapted to inherited forms such as {{noncog|ca|conduir}}.
+{{bor+|ca|la|abduco|abdūcere}}; adapted to inherited forms such as {{m|ca|conduir}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -473,7 +473,7 @@ From {{confix|ca|a|boca|ar|t2=mouth}}.
 Page 20 abolir: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|aboleo|abolēre}}.
+{{bor+|ca|la|aboleo|abolēre}}, with change of conjugation.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -826,7 +826,7 @@ Page 32 abrogar: -------- begin text --------
 Page 33 absoldre: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|absolvō|absolvere|t=absolve}}.
+{{bor+|ca|la|absolvō|absolvere|t=to absolve}}; adapted to inherited verbs like {{m|ca|resoldre}}.
 
 ===Pronunciation===
 * {{ca-IPA|ò}}
@@ -1252,7 +1252,7 @@ First attested in 1521,<ref>{{R:ca:DCVB}}</ref> hence probably borrowed from {{b
 Page 51 accedir: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|accēdō|accēdere}}.
+{{bor+|ca|la|accēdō|accēdere}}, with change of conjugation.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -2074,7 +2074,7 @@ From {{af|ca|a-|crèdit|-ar|t2=credit}}.
 Page 83 activar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|actīvus}}.
+From {{der|ca|la|āctīvus}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -2317,7 +2317,7 @@ Page 91 adaptar: -------- begin text --------
 Page 92 adduir: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|adduco|addūcere}}; adapted to inherited forms such as {{noncog|ca|conduir}}.
+{{bor+|ca|la|adduco|addūcere}}; adapted to inherited forms such as {{m|ca|conduir}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -2344,7 +2344,7 @@ Page 92 adduir: -------- begin text --------
 Page 93 adherir: -------- begin text --------
 
 ===Etymology===
-{{lbor|ca|la|adhaereō|adhaerēre}}.
+{{lbor|ca|la|adhaereō|adhaerēre}}, with change of conjugation.
 
 ===Pronunciation===
 * {{ca-IPA|aderir}}
@@ -2878,7 +2878,7 @@ From {{af|ca|a-|dors|-ar}}.
 Page 114 adquirir: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|acquiro|adquīrere}}.
+{{bor+|ca|la|acquiro|adquīrere}}, with change of conjugation.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -3068,7 +3068,7 @@ From {{inh|ca|roa-oca|averar}}, from {{inh|ca|la-eme|advērō|advērāre}}. The 
 Page 121 advertir: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|advertō}}, attested from the 15th century.<ref>{{R:ca:GDLC}}</ref>
+{{bor+|ca|la|advertō|advertere}}, with change of conjugation. {{etydate|15th century}}<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -12146,7 +12146,7 @@ Related to {{m|ca|balda||pivot}}.
 Page 500 ballar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|LL.|ballāre}}, from {{der|ca|grc|βάλλω|t=to throw}}. Compare {{cog|oc|balar}}.
+From {{der|ca|LL.|ballo|ballāre}}, from {{der|ca|grc|βάλλω|t=to throw}}. Compare {{cog|oc|balar}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -14054,7 +14054,7 @@ From {{af|ca|brandar|-ejar}}.
 Page 571 brandir: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|VL.|*brandiō}}, from {{m|la|*brandus}}, from {{der|ca|frk|*brand}}.
+{{inh+|ca|VL.|*brandiō|*brandīre}}, from {{m|la|*brandus}}, from {{der|ca|frk|*brand}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -17513,7 +17513,7 @@ Page 706 coagular: -------- begin text --------
 Page 707 coartar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|coartō|coartāre}}.
+{{bor+|ca|la|coartō|coartāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -17723,7 +17723,7 @@ From {{uder|ca|la|cohabitō|cohabitāre}}.
 Page 714 coincidir: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|coincidō}}.
+{{bor+|ca|la|coincidō|coincidere}}, with change of conjugation.
 
 ===Pronunciation===
 * {{ca-IPA|coïncidir}}
@@ -17954,7 +17954,7 @@ From {{af|ca|col·lecció|-ar}}.
 Page 722 col·lidir: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|collīdō}}.
+{{bor+|ca|la|collīdō|collīdere}}, with change of conjugation.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -18170,7 +18170,7 @@ Page 729 combatre: -------- begin text --------
 Page 730 combinar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|LL.|combīnō|combīnāre}}.
+{{bor+|ca|LL.|combīnō|combīnāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -18447,7 +18447,7 @@ From {{af|ca|commoció|-ar}}.
 Page 741 commoure: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|commoveō}}.
+{{bor+|ca|la|commoveō|commovēre}}; adapted to inherited {{m|ca|moure}}. {{etydate|1696}}
 
 ===Pronunciation===
 * {{ca-IPA|ò}}<!-- from cawikt, confirmed by GDLC and DNV -->
@@ -19602,7 +19602,7 @@ Page 783 condimentar: -------- begin text --------
 Page 784 conduir: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|condūcō|condūcere|t=lead, bring or draw together}}, from {{m|la|con-}} + {{m|la|dūcō|t=lead}}.
+{{inh+|ca|la|condūcō|condūcere|t=lead, bring or draw together}}, with change of conjugation, from {{m|la|con-}} + {{m|la|dūcō|t=lead}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -19693,7 +19693,7 @@ Page 787 confeccionar: -------- begin text --------
 Page 788 conferir: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|cōnferō}}.
+{{bor+|ca|la|cōnferō|cōnferre}}, with change of conjugation.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -20957,7 +20957,7 @@ Page 837 contenir: -------- begin text --------
 * {{alt|ca|contindre}}
 
 ===Etymology===
-{{bor+|ca|la|contineō|continēre}}, with conjugation based on {{m|ca|tenir}}.
+{{bor+|ca|la|contineō|continēre}}; adapted to inherited {{m|ca|tenir}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -21552,7 +21552,7 @@ Page 860 conversar: -------- begin text --------
 Page 861 convertir: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|convertō}}.
+{{bor||ca|la|convertō|convertere}}, with change of conjugation.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -24129,7 +24129,7 @@ Page 956 dedicar: -------- begin text --------
 Page 957 deduir: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|deduco|dēdūcere}}; adapted to inherited forms such as {{noncog|ca|conduir}}.
+{{bor+|ca|la|deduco|dēdūcere}}; adapted to inherited forms such as {{m|ca|conduir}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -30041,7 +30041,7 @@ Page 1200 diferenciar: -------- begin text --------
 Page 1201 diferir: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|differō|t=differ}}.
+{{bor+|ca|la|differō|differre|t=to differ}}, with change of conjugation.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -31152,7 +31152,7 @@ From {{der|ca|la|dissociō|dissociāre}}, attested from 1839.<ref>{{R:ca:GDLC}}<
 Page 1247 dissoldre: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|dissolvō|dissolvere}}.
+{{bor+|ca|la|dissolvō|dissolvere|t=to dissolve}}; adapted to inherited verbs like {{m|ca|resoldre}}.
 
 ===Pronunciation===
 * {{ca-IPA|ò}}
@@ -31400,7 +31400,7 @@ Page 1257 diversificar: -------- begin text --------
 Page 1258 divertir: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|dīvertere||to turn away; to separate}}.
+{{bor+|ca|la|diverto|dīvertere|t=to turn away; to separate}}, with change of conjugation.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -56361,7 +56361,7 @@ From {{af|ca|individual|-itzar}}.
 Page 2274 induir: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|induco|indūcere}}; adapted to inherited forms such as {{noncog|ca|conduir}}.
+{{bor+|ca|la|induco|indūcere}}; adapted to inherited forms such as {{m|ca|conduir}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -56519,7 +56519,7 @@ Page 2279 infectar: -------- begin text --------
 Page 2280 inferir: -------- begin text --------
 
 ===Etymology===
-{{lbor|ca|la|īnferō|īnferre|t=to carry in}}.
+{{lbor|ca|la|īnferō|īnferre|t=to carry in}}, with change of conjugation.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -57813,6 +57813,9 @@ From {{af|ca|interès|-ar|t1=interest}}, attested from the 15th century.<ref>{{R
 -------- end text --------
 Page 2330 interferir: -------- begin text --------
 
+===Etymology===
+{{lbor|ca|la|interferō|interferre}}, with change of conjugation.
+
 ===Verb===
 {{ca-verb}}
 
@@ -58177,7 +58180,7 @@ Page 2343 intrigar: -------- begin text --------
 Page 2344 introduir: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|introduco|intrōdūcere}}; adapted to inherited forms such as {{noncog|ca|conduir}}.
+{{bor+|ca|la|introduco|intrōdūcere}}; adapted to inherited forms such as {{m|ca|conduir}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -58319,7 +58322,7 @@ From {{af|ca|inventari|-ar}}.
 Page 2351 invertir: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|inverto|invertere}}.
+{{bor+|ca|la|inverto|invertere}}, with change of conjugation.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -66034,7 +66037,7 @@ Page 2653 obstruir: -------- begin text --------
 Page 2654 obtenir: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|obtineō|obtinēre}}, with conjugation based on {{m|ca|tenir}}.
+{{bor+|ca|la|obtineō|obtinēre}}; adapted to inherited {{m|ca|tenir}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -72648,7 +72651,7 @@ Page 2914 prevenir: -------- begin text --------
 * {{alt|ca|previndre}}
 
 ===Etymology===
-{{lbor|ca|la|praeveniō||anticipate}}.
+{{lbor|ca|la|praeveniō|praevenīre|t=anticipate}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -72977,7 +72980,7 @@ Page 2926 procurar: -------- begin text --------
 Page 2927 produir: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|produco|prōdūcere}}; adapted to inherited forms such as {{noncog|ca|conduir}}.
+{{bor+|ca|la|produco|prōdūcere}}; adapted to inherited forms such as {{m|ca|conduir}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -73342,7 +73345,7 @@ From {{af|ca|promoció|-ar}}.
 Page 2941 promoure: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|prōmoveō}}.
+{{bor+|ca|la|promoveō|prōmovēre}}; adapted to inherited {{m|ca|moure}}. {{etydate|1344}}
 
 ===Pronunciation===
 * {{ca-IPA|ò}}<!-- from cawikt, confirmed by GDLC and DNV -->
@@ -77007,7 +77010,7 @@ From {{prefix|ca|re-|distribuir}}.
 Page 3086 reduir: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|reduco|redūcere}}; adapted to inherited forms such as {{noncog|ca|conduir}}.
+{{bor+|ca|la|reduco|redūcere}}; adapted to inherited forms such as {{m|ca|conduir}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -79041,7 +79044,7 @@ From {{af|ca|re-|moll|-ir}}.
 Page 3167 remoure: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|removeō}}, attested from the 13th century.<ref>{{R:ca:GDLC}}</ref>
+{{inh+|ca|VL.||*removĕre}}, from {{inh|ca|la|removeō|removēre}}. Compare {{m|ca|moure}}. {{etydate|13th century}}<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
 * {{ca-IPA|ò}}<!-- from cawikt, confirmed by GDLC and DNV -->
@@ -79986,6 +79989,9 @@ Page 3202 reprimir: -------- begin text --------
 -------- end text --------
 Page 3203 reproduir: -------- begin text --------
 
+===Etymology===
+From {{af|ca|re-|produir}}.
+
 ===Pronunciation===
 * {{ca-IPA}}
 * {{homophones|ca|reproduí}}
@@ -79995,8 +80001,8 @@ Page 3203 reproduir: -------- begin text --------
 {{ca-verb}}
 
 # {{lb|ca|transitive}} to [[reproduce]] {{gloss|produce again; to recreate}}
-# {{lb|ca|transitive}} to reproduce {{gloss|produce an image or copy of}}
-# {{lb|ca|reflexive|pronominal}} to reproduce {{gloss|generate offspring}}
+# {{lb|ca|transitive}} to [[reproduce]] {{gloss|produce an image or copy of}}
+# {{lb|ca|reflexive|pronominal}} to [[reproduce]] {{gloss|generate offspring}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -80994,7 +81000,7 @@ Page 3241 retenir: -------- begin text --------
 * {{alt|ca|retindre}}
 
 ===Etymology===
-{{inh+|ca|roa-oca|retenir}}, from {{inh|ca|la|retineo|retinēre}} with a change in verb class.
+{{inh+|ca|roa-oca|retenir}}, from {{inh|ca|la|retineo|retinēre}}, with change of conjugation.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -83719,7 +83725,7 @@ Page 3353 seduir: -------- begin text --------
 {{root|ca|ine-pro|*dewk-}}
 
 ===Etymology===
-From {{der|ca|la|sēdūcō|sēdūcere|t=to seduce; to lead astray}}.
+{{bor+|ca|la|seduco|sēdūcere|t=to seduce; to lead astray}}; adapted to inherited forms such as {{m|ca|conduir}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -86200,7 +86206,7 @@ Page 3447 sostenir: -------- begin text --------
 * {{alt|ca|sostindre}}
 
 ===Etymology===
-{{inh+|ca|roa-oca|sostenir}}, from {{inh|ca|la|sustineo|sustinēre}}, with a change in verb class. Compare {{cog|oc|sostenir}}, {{cog|fr|soutenir}}.
+{{inh+|ca|roa-oca|sostenir}}, from {{inh|ca|la|sustineo|sustinēre}}, with change of conjugation. Compare {{cog|oc|sostenir}}, {{cog|fr|soutenir}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -86587,7 +86593,7 @@ Page 3460 subdividir: -------- begin text --------
 Page 3461 subduir: -------- begin text --------
 
 ===Etymology===
-{{slbor|ca|la|subdūcō}}. Cognate with {{cog|en|subdue}}.
+{{bor+|ca|la|subduco|subdūcere}}; adapted to inherited forms such as {{m|ca|conduir}}. Cognate with {{cog|en|subdue}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -88380,7 +88386,7 @@ Page 3531 tenir: -------- begin text --------
 * {{alt|ca|tindre|tendre}}
 
 ===Etymology===
-{{inh+|ca|la-eme|tenio|tenīre}}, from {{inh|ca|CL.|teneo|tenēre}}.
+{{inh+|ca|la-eme|tenio|tenīre}}, from {{inh|ca|CL.|teneo|tenēre}} with change of conjugation to {{m|ca|-ir}} also found in Occitan and French.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -89703,7 +89709,7 @@ Page 3586 tractar de: -------- begin text --------
 Page 3587 traduir: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|trādūcō|trādūcere}}.
+{{bor+|ca|la|traduco|trādūcere}}; adapted to inherited forms such as {{m|ca|conduir}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -90051,7 +90057,7 @@ Page 3599 transcriure: -------- begin text --------
 Page 3600 transferir: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|transfero|trānsferre}}.
+{{bor+|ca|la|transfero|trānsferre}}, with change of conjugation.
 
 ===Pronunciation===
 * {{ca-IPA}}
