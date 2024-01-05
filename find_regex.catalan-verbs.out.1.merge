@@ -27251,34 +27251,6 @@ Page 1083 desempallegar: -------- begin text --------
 
 # {{ca-verb form of|desempallegar-se}}
 -------- end text --------
-||||||| parent of 201eda56 (find_regex.catalan-verbs.out.1.merge: our changes)
-Page 1083 desempallegar: -------- begin text --------
-
-===Alternative forms===
-* {{alt|ca|desempagar}}
-
-===Etymology===
-{{inh+|ca|roa-oca|*desempeegar}}, {{der|ca|VL.|*disimpedicāre}}, from {{m|la|impedicāre}}.
-
-===Pronunciation===
-* {{ca-IPA}}
-* {{rhymes|ca|a(ɾ)|s=5}}
-
-===Verb===
-{{ca-verb}}
-
-# {{lb|ca|reflexive|desempallegar-se de}} to [[get rid of]], to [[shake off]]
-#: {{syn|ca|esbandir}}
-
-====Conjugation====
-{{ca-conj}}
-
-===Further reading===
-* {{R:ca:IEC2}}
-* {{R:ca:DCVB}}
--------- end text --------
-=======
->>>>>>> 201eda56 (find_regex.catalan-verbs.out.1.merge: our changes)
 Page 1084 desempaquetar: -------- begin text --------
 
 ===Etymology===
@@ -40252,7 +40224,7 @@ Page 1611 entretenir-se: -------- begin text --------
 * {{ca-IPA}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # {{reflexive of|ca|entretenir}}
 
