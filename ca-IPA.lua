@@ -34,18 +34,18 @@ local function split_on_comma(term)
 end
 
 
-local dialects = {"bal", "cen", "val"}
-local dialects_to_names = {
+export.dialects = {"bal", "cen", "val"}
+export.dialects_to_names = {
 	bal = "Balearic",
 	cen = "Central Catalan",
 	val = "Valencian",
 }
-local dialect_groups = {
+export.dialect_groups = {
 	east = {"bal", "cen"},
 }
 
-local mid_vowel_hints = "éèêëóòô"
-local mid_vowel_hint_c = "[" .. mid_vowel_hints .. "]"
+export.mid_vowel_hints = "éèêëóòô"
+export.mid_vowel_hint_c = "[" .. export.mid_vowel_hints .. "]"
 
 local valid_onsets = listToSet {
 	"b", "bl", "br",
@@ -856,6 +856,9 @@ local function convert_respelling_to_original(to, pagename, whole_word)
 end
 	
 
+-- Parse a respelling given by the user, allowing for '+' for pagename, mid vowel hints in place of a respelling
+-- and substitution specs like '[ks]' or [val:vol,ê,ks]. Return an object
+-- {term = PARSED_RESPELLING, mid_vowel_hint = MID_VOWEL_HINT}.
 local function parse_respelling(respelling, pagename, parse_err)
 	local saw_raw
 	local remaining_respelling = respelling:match("^raw:(.*)$")
@@ -880,7 +883,7 @@ local function parse_respelling(respelling, pagename, parse_err)
 	local mid_vowel_hint
 	if respelling == "+" then
 		respelling = pagename
-	elseif rfind(respelling, "^" .. mid_vowel_hint_c .. "$") then
+	elseif rfind(respelling, "^" .. export.mid_vowel_hint_c .. "$") then
 		mid_vowel_hint = respelling
 		respelling = pagename
 	elseif rfind(respelling, "^%[.*%]$") then
@@ -895,7 +898,7 @@ local function parse_respelling(respelling, pagename, parse_err)
 			end
 			if sub:find(":") then
 				from, to = rmatch(sub, "^(.-):(.*)$")
-			elseif rfind(sub, "^" .. mid_vowel_hint_c .. "$") then
+			elseif rfind(sub, "^" .. export.mid_vowel_hint_c .. "$") then
 				if mid_vowel_hint then
 					parse_err(("Specified mid vowel hint twice, '%s' and '%s'"):format(
 						mid_vowel_hint, sub))
@@ -928,6 +931,69 @@ local function parse_respelling(respelling, pagename, parse_err)
 end
 
 
+-- Parse a list of comma-split runs containing one or more respellings, i.e. after calling parse_balanced_segment_run()
+-- or the like followed by split_alternating_runs() or the like (see [[Module:parse utilities]]). `pagename` is the
+-- pagename, for use when a respelling is just '+', a mid-vowel hint like 'ê' or a substitution spec like '[ks]'.
+-- `original_input` is the raw input and `input_param` the name of the param containing the raw input; both are used
+-- only in error messages. Return an object specifying the respellings, currently with a single field 'terms' (this
+-- format is used in case other outer properties exist in the future), where 'terms' is a list of term objects. Each
+-- term object contains either a field 'term' with the respelling and an optional field 'mid_vowel_hint' with the
+-- extracted mid-vowel hint (e.g. "ê"), or fields 'raw_phonemic' and/or 'raw_phonetic' (if the user specified raw IPA
+-- using "/.../" or "/.../ [...]" or "raw:[...]"). In addition, there may be fields 'q', 'qq', 'a', 'aa', and/or 'ref'
+-- corresponding to inline modifiers. Each such field is a list; all are lists of strings except for 'ref', which is
+-- a list of objects as returned by parse_references() in [[Module:references]].
+function export.parse_comma_separated_groups(comma_separated_groups, pagename, original_input, input_param)
+	local function generate_obj(respelling, parse_err)
+		return parse_respelling(respelling, pagename == true and respelling or pagename, parse_err)
+	end
+	local put = require(parse_utilities_module)
+
+	local outer_container = {terms = {}}
+	for _, group in ipairs(comma_separated_groups) do
+		-- Rejoin runs that don't involve <...>.
+		local j = 2
+		while j <= #group do
+			if not group[j]:find("^<.*>$") then
+				group[j - 1] = group[j - 1] .. group[j] .. group[j + 1]
+				table.remove(group, j)
+				table.remove(group, j)
+			else
+				j = j + 2
+			end
+		end
+
+		local param_mods = {
+			-- pre = { overall = true },
+			-- post = { overall = true },
+			ref = { store = "insert", convert = function(arg, parse_err)
+				return require("Module:references").parse_references(arg)
+			end },
+			q = { store = "insert" },
+			qq = { store = "insert" },
+			a = { store = "insert" },
+			aa = { store = "insert" },
+		}
+
+		table.insert(outer_container.terms, put.parse_inline_modifiers_from_segments {
+			group = group,
+			arg = original_input,
+			props = {
+				paramname = input_param,
+				param_mods = param_mods,
+				generate_obj = generate_obj,
+				splitchar = ",",
+				outer_container = outer_container,
+			},
+		})
+	end
+
+	return outer_container
+end
+
+
+-- Generate the pronunciation of `word` (a string, the respelling), where `mid_vowel_hint` specifies how to handle
+-- stressed mid vowels. Return two values: the phonemic pronunciation along with the mid vowel hint, determined from
+-- the respelling itself if `mid_vowel_hint` isn't passed in.
 local function generate_pronun_syllables(word, mid_vowel_hint)
 	word = word_fixes(word)
 	
@@ -945,142 +1011,12 @@ local function generate_pronun_syllables(word, mid_vowel_hint)
 end
 
 
-function export.show(frame)
-	local params = {
-		[1] = {},
-		indent = {},
-		pagename = {} -- for testing or documentation pages
-	}
-
-	for _, dialect in ipairs(dialects) do
-		params[dialect] = {}
-	end
-	for dialect_group, _ in pairs(dialect_groups) do
-		params[dialect_group] = {}
-	end
-
-	local args = require("Module:parameters").process(frame:getParent().args, params)
-	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
-
-	-- Set inputs
-	local inputs = {}
-	-- If 1= specified, do all dialects.
-	if args[1] then
-		for _, dialect in ipairs(dialects) do
-			inputs[dialect] = {input = args[1], param = 1}
-		end
-	end
-	-- Then do dialect groups.
-	for dialect_group, group_dialects in pairs(dialect_groups) do
-		if args[dialect_group] then
-			for _, dialect in ipairs(group_dialects) do
-				inputs[dialect] = {input = args[dialect_group], param = dialect_group}
-			end
-		end
-	end
-	-- Then do individual dialect settings.
-	for _, dialect in ipairs(dialects) do
-		if args[dialect] then
-			inputs[dialect] = {input = args[dialect], param = dialect}
-		end
-	end
-	-- If no inputs given, set all dialects based on current pagename.
-	if not next(inputs) then
-		for _, dialect in ipairs(dialects) do
-			inputs[dialect] = {input = "+", param = "(pagename)"}
-		end
-	end
-
-	-- Parse the arguments.
-	local parsed_respellings = {}
-	for dialect, inputspec in pairs(inputs) do
-		-- In the corresponding code in [[Module:es-pronunc]], we insert `parsed` into `parsed_respellings` because we
-		-- can have multiple sets of respellings, each set associated with an argument and each argument containing
-		-- possibly multiple comma-separated respellings. Here, there's only one argument per dialect.
-		local function set_parsed_respelling(parsed)
-			if not parsed_respellings[dialect] then
-				parsed_respellings[dialect] = {}
-			end
-			parsed_respellings[dialect] = parsed
-		end
-
-		local function generate_obj(respelling, parse_err)
-			return parse_respelling(respelling, pagename, parse_err)
-		end
-
-		if inputspec.input:find("[<%[]") then
-			local put = require(parse_utilities_module)
-			-- Parse balanced segment runs involving either [...] (substitution notation) or <...> (inline modifiers).
-			-- We do this because we don't want commas inside of square or angle brackets to count as respelling
-			-- delimiters. However, we need to rejoin square-bracketed segments with nearby ones after splitting
-			-- alternating runs on comma. For example, if we are given
-			-- "a[x]a<q:learned>,[vol:vôl;ei:éi,ei]<q:nonstandard>", after calling
-			-- parse_multi_delimiter_balanced_segment_run() we get the following output:
-			--
-			-- {"a", "[x]", "a", "<q:learned>", ",", "[vol:vôl;ei:éi,ei]", "", "<q:nonstandard>", ""}
-			--
-			-- After calling split_alternating_runs(), we get the following:
-			--
-			-- {{"a", "[x]", "a", "<q:learned>", ""}, {"", "[vol:vôl;ei:éi,ei]", "", "<q:nonstandard>", ""}}
-			--
-			-- We need to rejoin stuff on either side of the square-bracketed portions.
-			local segments = put.parse_multi_delimiter_balanced_segment_run(inputspec.input, {{"<", ">"}, {"[", "]"}})
-
-			-- Not with spaces around the comma; see above for why we don't want to split off comma followed by space.
-			local comma_separated_groups = put.split_alternating_runs_on_comma(segments)
-
-			-- Process each value.
-			local outer_container = {terms = {}}
-			for _, group in ipairs(comma_separated_groups) do
-				-- Rejoin runs that don't involve <...>.
-				local j = 2
-				while j <= #group do
-					if not group[j]:find("^<.*>$") then
-						group[j - 1] = group[j - 1] .. group[j] .. group[j + 1]
-						table.remove(group, j)
-						table.remove(group, j)
-					else
-						j = j + 2
-					end
-				end
-
-				local param_mods = {
-					pre = { overall = true },
-					post = { overall = true },
-					ref = { store = "insert" },
-					q = { store = "insert" },
-					qq = { store = "insert" },
-					a = { store = "insert" },
-					aa = { store = "insert" },
-				}
-
-				table.insert(outer_container.terms, put.parse_inline_modifiers_from_segments {
-					group = group,
-					arg = inputspec.input,
-					props = {
-						paramname = inputspec.param,
-						param_mods = param_mods,
-						generate_obj = generate_obj,
-						splitchar = ",",
-						outer_container = outer_container,
-					},
-				})
-			end
-			set_parsed_respelling(outer_container)
-		else
-			local termobjs = {}
-			local function parse_err(msg)
-				error(msg .. ": " .. inputspec.param .. "= " .. inputspec.input)
-			end
-			for _, term in ipairs(split_on_comma(inputspec.input)) do
-				table.insert(termobjs, generate_obj(term, parse_err))
-			end
-			set_parsed_respelling {
-				terms = termobjs,
-			}
-		end
-	end
-
+-- Generate the phonemic and phonetic pronunciations of the respellings in `parsed_respellings`, which is a table whose
+-- keys are dialect identifiers (e.g. "cen" for Central Catalan, "val" for Valencian) and whose values are objects of
+-- the format returned by parse_comma_separated_groups() (see comment above that function). This destructively modifies
+-- `parsed_respellings`, adding fields `phonemic` and `phonetic` containing the generated pronunciations and removing
+-- the input fields used to generate those output fields. (FIXME: Currently only phonemic pronunciation is generated.)
+function export.generate_phonemic_phonetic(parsed_respellings)
 	-- Convert each canonicalized respelling to phonemic/phonetic IPA.
 	for dialect, respelling_spec in pairs(parsed_respellings) do
 		for _, termobj in ipairs(respelling_spec.terms) do
@@ -1101,8 +1037,16 @@ function export.show(frame)
 			end
 		end
 	end
+end
 
-	-- Group the results.
+
+-- Group pronunciations by dialect, i.e. grouping pronunciations that are identical in every way (including both the
+-- pronunciation(s) and any qualifiers and other inline modifiers). `parsed_respellings` contains the output from
+-- generate_phonemic_phonetic(), and the return value is a list of grouped pronunciations, where each object in the list
+-- contains fields 'dialects' (a list of dialects containing the pronunciations) and 'pronuns' (a list of
+-- pronunciations, where each pronunciation is specified by an object containing fields 'phonemic' and 'phonetic', as
+-- generated by generate_phonemic_phonetic(), along with any inline modifier fields 'q', 'qq', 'a', 'aa' and/or 'ref').
+function export.group_pronuns_by_dialect(parsed_respellings)
 	local grouped_pronuns = {}
 	for dialect, pronun_spec in pairs(parsed_respellings) do
 		local saw_existing = false
@@ -1117,13 +1061,19 @@ function export.show(frame)
 			table.insert(grouped_pronuns, {dialects = {dialect}, pronuns = pronun_spec.terms})
 		end
 	end
+	return grouped_pronuns
+end
 
-	-- Format the results.
+
+-- Format pronunciations grouped by dialect. `grouped_pronuns` contains the output of group_pronuns_by_dialect().
+-- This destructively modifies `grouped_pronuns`, adding a field 'formatted' to the first-level values of
+-- `grouped_pronuns` containing the formatted pronunciation(s) for a given set of dialects.
+function export.format_grouped_pronunciations(grouped_pronuns)
 	for _, grouped_pronun_spec in pairs(grouped_pronuns) do
 		local pronunciations = {}
 
 		-- Loop through each pronunciation. For each one, add the phonemic and phonetic versions to `pronunciations`,
-		-- for formatting by [[Module:IPA]].
+		-- for formatting by [[Module:IPA]] or raw (for use in [[Module:ca-headword]]).
 		for j, pronun in ipairs(grouped_pronun_spec.pronuns) do
 			-- Add dialect tags to left accent qualifiers if first one
 			local as = pronun.a
@@ -1134,7 +1084,7 @@ function export.show(frame)
 					as = {}
 				end
 				for _, dialect in ipairs(grouped_pronun_spec.dialects) do
-					table.insert(as, dialects_to_names[dialect])
+					table.insert(as, export.dialects_to_names[dialect])
 				end
 			end
 
@@ -1185,6 +1135,108 @@ function export.show(frame)
 
 		grouped_pronun_spec.formatted = m_IPA.format_IPA_full(lang, pronunciations, nil, "")
 	end
+end
+
+
+function export.show(frame)
+	local params = {
+		[1] = {},
+		indent = {},
+		pagename = {} -- for testing or documentation pages
+	}
+
+	for _, dialect in ipairs(export.dialects) do
+		params[dialect] = {}
+	end
+	for dialect_group, _ in pairs(export.dialect_groups) do
+		params[dialect_group] = {}
+	end
+
+	local args = require("Module:parameters").process(frame:getParent().args, params)
+	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
+
+	-- Set inputs
+	local inputs = {}
+	-- If 1= specified, do all dialects.
+	if args[1] then
+		for _, dialect in ipairs(export.dialects) do
+			inputs[dialect] = {input = args[1], param = 1}
+		end
+	end
+	-- Then do dialect groups.
+	for dialect_group, group_dialects in pairs(export.dialect_groups) do
+		if args[dialect_group] then
+			for _, dialect in ipairs(group_dialects) do
+				inputs[dialect] = {input = args[dialect_group], param = dialect_group}
+			end
+		end
+	end
+	-- Then do individual dialect settings.
+	for _, dialect in ipairs(export.dialects) do
+		if args[dialect] then
+			inputs[dialect] = {input = args[dialect], param = dialect}
+		end
+	end
+	-- If no inputs given, set all dialects based on current pagename.
+	if not next(inputs) then
+		for _, dialect in ipairs(export.dialects) do
+			inputs[dialect] = {input = "+", param = "(pagename)"}
+		end
+	end
+
+	-- Parse the arguments.
+	local parsed_respellings = {}
+	for dialect, inputspec in pairs(inputs) do
+		local function generate_obj(respelling, parse_err)
+			return parse_respelling(respelling, pagename, parse_err)
+		end
+
+		if inputspec.input:find("[<%[]") then
+			local put = require(parse_utilities_module)
+			-- Parse balanced segment runs involving either [...] (substitution notation) or <...> (inline modifiers).
+			-- We do this because we don't want commas inside of square or angle brackets to count as respelling
+			-- delimiters. However, we need to rejoin square-bracketed segments with nearby ones after splitting
+			-- alternating runs on comma. For example, if we are given
+			-- "a[x]a<q:learned>,[vol:vôl,ks]<q:nonstandard>", after calling
+			-- parse_multi_delimiter_balanced_segment_run() we get the following output:
+			--
+			-- {"a", "[x]", "a", "<q:learned>", ",", "[vol:vôl,ks]", "", "<q:nonstandard>", ""}
+			--
+			-- After calling split_alternating_runs(), we get the following:
+			--
+			-- {{"a", "[x]", "a", "<q:learned>", ""}, {"", "[vol:vôl,ks]", "", "<q:nonstandard>", ""}}
+			--
+			-- We need to rejoin stuff on either side of the square-bracketed portions.
+			local segments = put.parse_multi_delimiter_balanced_segment_run(inputspec.input, {{"<", ">"}, {"[", "]"}})
+
+			local comma_separated_groups = put.split_alternating_runs_on_comma(segments)
+
+			-- Process each value.
+			local outer_container = export.parse_comma_separated_groups(comma_separated_groups, pagename,
+				inputspec.input, inputspec.param)
+			parsed_respellings[dialect] = outer_container
+		else
+			local termobjs = {}
+			local function parse_err(msg)
+				error(msg .. ": " .. inputspec.param .. "=" .. inputspec.input)
+			end
+			for _, term in ipairs(split_on_comma(inputspec.input)) do
+				table.insert(termobjs, generate_obj(term, parse_err))
+			end
+			parsed_respellings[dialect] = {
+				terms = termobjs,
+			}
+		end
+	end
+
+	-- Convert each canonicalized respelling to phonemic/phonetic IPA.
+	export.generate_phonemic_phonetic(parsed_respellings)
+
+	-- Group the results.
+	local grouped_pronuns = export.group_pronuns_by_dialect(parsed_respellings)
+
+	-- Format the results.
+	export.format_grouped_pronunciations(grouped_pronuns)
 
 	-- Concatenate formatted results.
 	local formatted = {}
@@ -1196,7 +1248,7 @@ function export.show(frame)
 	if args.indent then
 		out = indent .. out
 	end
-	
+
 	return out
 end
 
