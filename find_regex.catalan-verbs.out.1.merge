@@ -1,4 +1,4 @@
-Beginning at Mon Jan  1 18:22:02 2024
+Beginning at Thu Jan  4 22:01:53 2024
 Page 2 abadocar: -------- begin text --------
 
 ===Etymology===
@@ -846,51 +846,18 @@ Page 34 absorbir: -------- begin text --------
 -------- end text --------
 Page 35 abstenir: -------- begin text --------
 
-===Alternative forms===
-* {{alt|ca|abstindre}}
-
-===Etymology===
-From {{der|ca|la|abstineō}}.
-
-===Pronunciation===
-* {{ca-IPA}}
-* {{rhymes|ca|i(ɾ)|s=3}}
-
 ===Verb===
-{{ca-verb}}
+{{head|ca|verb form}}
 
-# {{lb|ca|reflexive}} to [[abstain]] {{gloss|refrain from}}
-
-====Conjugation====
-{{ca-conj}}
-
-====Derived terms====
-* {{l|ca|absteniment}}
-
-====Related terms====
-* {{l|ca|abstemi}}
-* {{l|ca|abstenció}}
-* {{l|ca|abstinència}}
-* {{l|ca|abstinent}}
-
-===Further reading===
-* {{R:ca:IEC2}}
-* {{R:ca:GDLC|abstenir-se}}
-* {{R:ca:DNV}}
-* {{R:ca:DCVB}}
+# {{ca-verb form of|abstenir-se}}
 
 -------- end text --------
 Page 36 abstindre: -------- begin text --------
 
 ===Verb===
-{{head|ca|verb}}
+{{head|ca|verb form}}
 
-# {{alt form|ca|abstenir}}
-
-===Further reading===
-* {{R:ca:GDLC|abstindre's}}
-* {{R:ca:DNV}}
-* {{R:ca:DCVB}}
+# {{ca-verb form of|abstindre's}}
 -------- end text --------
 Page 37 abuixar: -------- begin text --------
 
@@ -2401,19 +2368,11 @@ Page 96 adir: -------- begin text --------
 * {{ca-IPA}}
 
 ===Etymology 1===
-From {{prefix|ca|a|dir|t2=to say}}, compare {{cog|la|addīcō|t=to speak favourably of}}.
 
 ====Verb====
-{{ca-verb}}
+{{head|ca|verb form}}
 
-# {{lb|ca|reflexive}} to [[suit]], to [[fit]] together, to [[match]]
-#: {{ux|ca|Aquests dos colors no s''''adiuen''' gens.|These two colors don't '''match''' at all.}}
-
-=====Conjugation=====
-{{ca-conj}}
-
-=====Derived terms=====
-* {{l|ca|adient}}
+# {{ca-verb form of|adir-se}}
 
 ===Etymology 2===
 {{bor+|ca|la|adeo|adīre|t=to take possession of}}.
@@ -3113,31 +3072,6 @@ Page 123 advocar: -------- begin text --------
 * {{R:ca:IEC2}}
 
 -------- end text --------
-Page 124 aesmar: -------- begin text --------
-
-===Alternative forms===
-* {{alt|ca|asmar|esmar}}
-
-===Etymology===
-{{inh+|ca|VL.|*adaestimō}}, from {{m|la|aestimō|t=to value}}, compare {{cog|pro|adesmar}}.<ref>{{R:ca:DCVB}}</ref>
-
-===Pronunciation===
-* {{ca-IPA}}
-
-===Verb===
-{{ca-verb}}
-
-# {{lb|ca|obsolete|transitive}} to [[estimate]]
-#: {{syn|ca|estimar|calcular}}
-# {{lb|ca|obsolete|transitive}} to [[esteem]], [[appreciate]]
-#: {{syn|ca|apreciar}}
-
-====Derived terms====
-* {{l|ca|esma}}
-
-===References===
-<references/>
--------- end text --------
 Page 125 afaiçonar: -------- begin text --------
 
 ===Etymology===
@@ -3569,9 +3503,9 @@ Page 141 aficar: -------- begin text --------
 Page 142 aficionar: -------- begin text --------
 
 ===Verb===
-{{ca-verb}}
+{{head|ca|verb form}}
 
-# {{lb|ca|reflexive}} to [[take to]]
+# {{ca-verb form of|aficionar-se}}
 
 -------- end text --------
 Page 143 afilar: -------- begin text --------
@@ -5007,6 +4941,8 @@ Page 203 alabar: -------- begin text --------
 ===Pronunciation===
 * {{ca-IPA}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-alabar.wav|Audio (Catalonia)}}
+* {{rhyme|ca|a(ɾ)|s=3}}
+* {{hyph|ca|a|la|bar}}
 
 ===Verb===
 {{ca-verb}}
@@ -10868,13 +10804,6 @@ Page 444 atorgar: -------- begin text --------
 * {{R:ca:DCVB}}
 
 -------- end text --------
-Page 445 atorrentar: -------- begin text --------
-
-===Verb===
-{{ca-verb}}
-
-# (of a stream of water) to [[rage]]
--------- end text --------
 Page 446 atorrollar: -------- begin text --------
 
 ===Etymology===
@@ -10951,26 +10880,10 @@ Page 448 atracar: -------- begin text --------
 -------- end text --------
 Page 449 atrafegar: -------- begin text --------
 
-===Etymology===
-{{af|ca|a-|trafegar}}
-
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Verb===
-{{ca-verb}}
+{{head|ca|verb form}}
 
-# {{lb|ca|pronominal}} to [[work]] hard, to [[exhaust]] oneself with hard work
-
-====Conjugation====
-{{ca-conj}}
-
-====Derived terms====
-* {{l|ca|atrafegament}}
-* {{l|ca|atrafegat}}
-
-===Further reading===
-* {{R:ca:IEC2}}
+# {{ca-verb form of|atrafegar-se}}
 -------- end text --------
 Page 450 atrapar: -------- begin text --------
 
@@ -27138,28 +27051,10 @@ From {{af|ca|des-|embullar}}.
 -------- end text --------
 Page 1083 desempallegar: -------- begin text --------
 
-===Alternative forms===
-* {{alt|ca|desempagar}}
-
-===Etymology===
-{{inh+|ca|roa-oca|*desempeegar}}, {{der|ca|VL.|*disimpedicāre}}, from {{m|la|impedicāre}}.
-
-===Pronunciation===
-* {{ca-IPA}}
-* {{rhymes|ca|a(ɾ)|s=5}}
-
 ===Verb===
-{{ca-verb}}
+{{head|ca|verb form}}
 
-# {{lb|ca|reflexive|desempallegar-se de}} to [[get rid of]], to [[shake off]]
-#: {{syn|ca|esbandir}}
-
-====Conjugation====
-{{ca-conj}}
-
-===Further reading===
-* {{R:ca:IEC2}}
-* {{R:ca:DCVB}}
+# {{ca-verb form of|desempallegar-se}}
 -------- end text --------
 Page 1084 desempaquetar: -------- begin text --------
 
@@ -29312,31 +29207,10 @@ From {{af|ca|des-|unir}}.
 -------- end text --------
 Page 1176 desvergonyir: -------- begin text --------
 
-===Etymology===
-From {{af|ca|des-|vergonya|-ir}}.
-
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Verb===
-{{head|ca|verb}}
+{{head|ca|verb form}}
 
-# {{lb|ca|pronominal}} to lose one's sense of shame, to have the shamelessness ('''a fer''' to do something)
-#* {{quote-book|ca|year=1960|author=Maria Aurèlia Capmany|title=Tu i l'hipòcrita|text=Amb la riquesa, la teva avarícia es '''desvergonyirà'''.|t=With wealth, your avarice '''will become unabashed'''.}}
-# {{lb|ca|pronominal}} to become disrespectful ('''amb''' towards), to lose one's fear ('''amb''' of)
-
-====Conjugation====
-{{ca-conj}}
-
-====Synonyms====
-* {{sense|to dare [to do]}} {{l|ca|atrevir-se}}
-
-====Derived terms====
-* {{l|ca|desvergonyiment}}
-* {{l|ca|desvergonyit}}
-
-===Further reading===
-* {{R:ca:IEC2}}
+# {{ca-verb form of|desvergonyir-se}}
 -------- end text --------
 Page 1177 desvetllar: -------- begin text --------
 
@@ -35296,23 +35170,10 @@ From {{af|ca|en-|pòrtland|-ar}}. According Termcat, verb ''emporlanar'' is form
 -------- end text --------
 Page 1420 emportar: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-* {{rhymes|ca|a(ɾ)|s=3}}
-
 ===Verb===
-{{ca-verb}}
+{{head|ca|verb form}}
 
-# {{lb|ca|reflexive}} to [[carry away]], to [[take]]
-
-====Conjugation====
-{{ca-conj}}
-
-====Related terms====
-* {{l|ca|portar}}
-
-===Further reading===
-* {{R:ca:IEC2}}
+# {{ca-verb form of|emportar-se}}
 -------- end text --------
 Page 1421 emprar: -------- begin text --------
 
@@ -38159,11 +38020,11 @@ From {{af|ca|en-|grapa|-ar}} [c. 1900].
 ====Conjugation====
 {{ca-conj}}
 
-====Related terms====
-* {{l|ca|grapa}}
-
 ====Derived terms====
 * {{l|ca|engrapadora}}
+
+====Related terms====
+* {{l|ca|grapa}}
 
 ===Further reading===
 * {{R:ca:DCVB}}
@@ -40113,12 +39974,17 @@ From {{af|ca|entre|tenir}}.
 * {{rhymes|ca|i(ɾ)|s=4}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=é}}
 
 # to [[delay]], [[hold up]]
 #: {{syn|ca|retenir}}
 # to [[entertain]]
 #: {{syn|ca|divertir|distreure}}
+# {{lb|ca|pronominal}} to [[waste time]], to [[dawdle]]
+# {{lb|ca|pronominal}} to be [[delayed]]
+#: {{syn|ca|retardar-se}}
+# {{lb|ca|pronominal}} to [[amuse]] oneself
+#: {{syn|ca|distreure's}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -40142,11 +40008,7 @@ Page 1611 entretenir-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# to [[waste time]], to [[dawdle]]
-# to be [[delayed]]
-#: {{syn|ca|retardar-se}}
-# to [[amuse]] oneself
-#: {{syn|ca|distreure's}}
+# {{reflexive of|ca|entretenir}}
 
 ====Conjugation====
 {{ca-conj}}
@@ -40972,7 +40834,7 @@ Page 1644 esbandir: -------- begin text --------
 
 # to [[rinse]]
 # {{lb|ca|colloquial}} to [[get rid of]]
-#: {{syn|ca|desempallegar}}
+#: {{syn|ca|desempallegar-se}}
 #* {{quote-book|ca|year=1993|author=w:Quim Monzó|title=El perquè de tot plegat|publisher=Quaderns Crema|location=Barcelona|isbn=84-7727-105-4|page=63|chapter=Amb el cor a la mà|passage=Decideixen '''esbandir''' els afers més o menys amorosos que cada un tenia fins ara.}}
 
 ====Conjugation====
@@ -41725,14 +41587,9 @@ Alternative form of {{m|ca|escamnar}}, influenced by {{der|ca|es|escamar}}.
 From {{af|ca|es-|cama|-ar|t2=leg}}.
 
 ====Verb====
-{{ca-verb}}
+{{head|ca|verb form}}
 
-# {{lb|ca|reflexive|Balearic}} to [[escape]], to [[make off]]
-#: {{syn|ca|fugir}}
-# {{lb|ca|reflexive|Balearic}} to [[run around]] (to be very busy doing many different things)
-
-=====Conjugation=====
-{{ca-conj}}
+# {{lb|ca|Balearic}} {{ca-verb form of|escamar-se|t=to escape; to run around}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -42101,49 +41958,17 @@ Page 1686 escarnir: -------- begin text --------
 -------- end text --------
 Page 1687 escarrassar: -------- begin text --------
 
-===Etymology===
-From {{m|ca|escarrar}}.
-
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Verb===
-{{ca-verb}}
+{{head|ca|verb form}}
 
-# {{lb|ca|pronominal}} to [[strain]], [[exhaust]] oneself
-#: {{syn|ca|esforçar}}
-#: {{uxi|ca|No '''t'escarrassis''' tant, que t'hi deixaràs l'esquena.|Don't stretch out so much, or else you'll break your back on it.}}
-#* {{RQ:Sanchez Pell freda|chapter=16|passage=Vaig renunciar. Per què '''escarrassar-m'''<nowiki/>'hi? Què hi guanyava, pegant-li?}}
-
-====Conjugation====
-{{ca-conj}}
-
-====Derived terms====
-* {{l|ca|escarrassat}}
-
-===Further reading===
-* {{R:ca:DCVB}}
-* {{R:ca:IEC2}}
+# {{ca-verb form of|escarrassar-se}}
 -------- end text --------
 Page 1688 escarxofar: -------- begin text --------
 
-===Etymology===
-From {{m|ca|escarxofa||artichoke}}.
-
-===Pronunciation===
-* {{ca-IPA}}
-* {{rhymes|ca|a(ɾ)|s=4}}
-
 ===Verb===
-{{ca-verb}}
+{{head|ca|verb form}}
 
-# {{lb|ca|reflexive}} to [[stretch out]], [[spread out]] on a [[seat]]
-
-====Conjugation====
-{{ca-conj}}
-
-===Further reading===
-* {{R:ca:IEC2}}
+# {{ca-verb form of|escarxofar-se}}
 -------- end text --------
 Page 1689 escassejar: -------- begin text --------
 
@@ -53227,10 +53052,10 @@ From {{af|ca|goja|-ar}}.
 # {{lb|ca|transitive}} to [[bewitch]]
 #: {{syn|ca|fetillar|encisar|maleficiar|embruixar|fadar|encantar}}
 
-====Conjugation====
+=====Conjugation=====
 {{ca-conj}}
 
-===Further reading===
+====Further reading====
 * {{R:ca:DCVB}}
 * {{R:ca:GDLC}}
 * {{R:ca:IEC2}}
@@ -53244,10 +53069,10 @@ From {{af|ca|goig|-ar}}.
 # {{lb|ca|transitive|intransitive|or|reflexive|;|archaic|or|dialectal}} to [[enjoy]]; to [[benefit]] (from)
 #: {{syn|ca|gaudir}}
 
-====Conjugation====
+=====Conjugation=====
 {{ca-conj}}
 
-===Further reading===
+====Further reading====
 * {{R:ca:DCVB}}
 * {{R:ca:GDLC}}
 * {{R:ca:IEC2}}
@@ -57859,6 +57684,7 @@ Page 2336 interrompre: -------- begin text --------
 
 -------- end text --------
 Page 2337 intersectar: -------- begin text --------
+{{rfv|ca}}
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -58508,6 +58334,14 @@ From {{af|ca|italià|-itzar}}.
 -------- end text --------
 Page 2365 jactar: -------- begin text --------
 
+===Verb===
+{{head|ca|verb form}}
+
+# {{ca-verb form of|jactar-se}}
+
+-------- end text --------
+Page 2366 jactar-se: -------- begin text --------
+
 ===Etymology===
 {{bor+|ca|la|iactō|iactāre}}, [[frequentive]] of {{m|la|iaciō||to throw}}.
 
@@ -58517,7 +58351,7 @@ Page 2365 jactar: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|pronominal}} to [[boast]], to [[brag]]
+# to [[boast]], to [[brag]]
 #: {{ux|ca|'''Es''' va '''jactar''' de salvar a tothom.|She '''boasted''' about saving everyone.}}
 
 ====Related terms====
@@ -58526,14 +58360,6 @@ Page 2365 jactar: -------- begin text --------
 
 ===Further reading===
 * {{R:ca:IEC2}}
-
--------- end text --------
-Page 2366 jactar-se: -------- begin text --------
-
-===Verb===
-{{head|ca|verb}}
-
-# ({{reflexive of|ca|jactar}})
 
 -------- end text --------
 Page 2367 jaquir: -------- begin text --------
@@ -71245,7 +71071,7 @@ Page 2862 portar: -------- begin text --------
 {{ca-conj}}
 
 ====Derived terms====
-* {{l|ca|emportar}}
+* {{l|ca|emportar-se}}
 * {{l|ca|portejador}}
 
 ===References===
@@ -75347,27 +75173,15 @@ From {{af|ca|re-|batejar}}.
 -------- end text --------
 Page 3029 rebel·lar: -------- begin text --------
 
-===Etymology===
-From {{bor|ca|la|rebellō|rebellāre}}, presumably a borrowing in light of the geminate /ll/ (in place of expected */ʎ/).
-
 ===Pronunciation===
 * {{ca-IPA}}
 * {{homophones|ca|rebel·là}}
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
-{{ca-verb}}
+{{head|ca|verb form}}
 
-# {{lb|ca|reflexive|pronominal}} to [[rebel]], to [[revolt]], to resist authority
-
-====Conjugation====
-{{ca-conj}}
-
-===Further reading===
-* {{R:ca:IEC2}}
-* {{R:ca:GDLC|rebel·lar-se}}
-* {{R:ca:DNV}}
-* {{R:ca:DCVB}}
+# {{ca-verb form of|rebel·lar-se}}
 -------- end text --------
 Page 3030 rebel·lar-se: -------- begin text --------
 
@@ -75380,7 +75194,7 @@ Page 3030 rebel·lar-se: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|reflexive}} to [[rebel]]
+# to [[rebel]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -89446,7 +89260,7 @@ Either from {{inh|ca|VL.|*trānsfrīcāre}}, from {{m|la|fricō||to rub}}, or fr
 {{ca-conj}}
 
 ====Derived terms====
-* {{l|ca|atrafegar|atrafegar-se}}
+* {{l|ca|atrafegar-se}}
 * {{l|ca|tràfec}}
 * {{l|ca|trafegament}}
 
@@ -91698,14 +91512,14 @@ From {{der|ca|la|vacō|vacāre}}.
 ====Conjugation====
 {{ca-conj}}
 
-===Anagrams===
-* {{anagrams|ca|cavar|varca}}
-
 ===Further reading===
 * {{R:ca:IEC2}}
 * {{R:ca:GDLC}}
 * {{R:ca:DNV}}
 * {{R:ca:DCVB}}
+
+===Anagrams===
+* {{anagrams|ca|cavar|varca}}
 
 -------- end text --------
 Page 3681 vaccinar: -------- begin text --------
@@ -94409,5 +94223,5 @@ From {{af|ca|zum-zum|-ejar}}.
 
 {{C|ca|Sounds}}
 -------- end text --------
-Elapsed time: 5 mins 39.84 secs
-Ending at Mon Jan  1 18:27:42 2024
+Elapsed time: 5 mins 38.42 secs
+Ending at Thu Jan  4 22:07:32 2024
