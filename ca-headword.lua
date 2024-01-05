@@ -5,13 +5,17 @@ local force_cat = false -- for testing; if true, categories appear in non-mainsp
 
 local com = require("Module:ca-common")
 local m_table = require("Module:table")
+local parse_utilities_module = "Module:parse utilities"
 local romut_module = "Module:romance utilities"
 local ca_verb_module = "Module:ca-verb"
+local ca_IPA_module = "Module:User:Benwing2/ca-IPA"
 
 local lang = require("Module:languages").getByCode("ca")
 local langname = lang:getCanonicalName()
 
+local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
+local rsplit = mw.text.split
 local usub = mw.ustring.sub
 local rsub = com.rsub
 
@@ -102,7 +106,8 @@ function export.show(frame)
 		return require("Module:JSON").toJSON(data)
 	end
 
-	return require("Module:headword").full_headword(data)
+	local post_note = data.post_note and "; " .. data.post_note or ""
+	return require("Module:headword").full_headword(data) .. post_note
 end
 
 
@@ -948,6 +953,177 @@ pos_functions["verbs"] = {
 				local quals, refs = expand_footnotes_and_references(lemma_obj.footnotes)
 				table.insert(data.heads, {term = lemma_obj.form, q = quals, refs = refs})
 			end
+		end
+
+		if args.root then
+			local m_ca_IPA = require(ca_IPA_module)
+
+			local parsed_respellings = {}
+			local function set_parsed_respelling(dialect, parsed)
+				-- Validate the individual root vowel specs.
+				for _, termobj in ipairs(parsed.terms) do
+					if not rfind(termobj.term, "^" .. m_ca_IPA.mid_vowel_hint_c .. "$") then
+						error(("Root vowel spec '%s' should be one of the vowels %s"):format(
+							termobj.term, m_ca_IPA.mid_vowel_hints))
+					end
+				end
+
+				if not dialect then
+					for _, dial in ipairs(m_ca_IPA.dialects) do
+						-- Need to clone as we destructively modify each one later with the pronun.
+						parsed_respellings[dial] = m_table.deepcopy(parsed)
+					end
+				elseif m_ca_IPA.dialect_groups[dialect] then
+					for _, dial in ipairs(m_ca_IPA.dialect_groups[dialect]) do
+						-- Need to clone as we destructively modify each one later with the pronun.
+						parsed_respellings[dial] = m_table.deepcopy(parsed)
+					end
+				else
+					parsed_respellings[dialect] = parsed
+				end
+			end
+
+			local function check_dialect_or_dialect_group(dialect)
+				if not m_table.contains(m_ca_IPA.dialects, dialect) and not
+					m_ca_IPA.dialect_groups[dialect] then
+					local dialect_list = {}
+					for _, dial in ipairs(m_ca_IPA.dialects) do
+						table.insert(dialect_list, "'" .. dial .. "'")
+					end
+					dialect_list = m_table.serialCommaJoin(dialect_list, {conj = "or", dontTag = true})
+					local dialect_group_list = {}
+					for dialect_group, _ in pairs(m_ca_IPA.dialect_groups) do
+						table.insert(dialect_group_list, "'" .. dialect_group .. "'")
+					end
+					dialect_group_list = m_table.serialCommaJoin(dialect_group_list,
+						{conj = "or", dontTag = true})
+					error(("Unrecognized dialect '%s': Should be a dialect %s or a dialect group %s"):format(
+						dialect, dialect_list, dialect_group_list))
+				end
+			end
+
+			-- Parse the root vowel specs.
+			if args.root:find("[<%[]") then
+				local put = require(parse_utilities_module)
+				-- Parse balanced segment runs involving either [...] (substitution notation) or <...> (inline
+				-- modifiers). We do this because we don't want commas or semicolons inside of square or angle brackets
+				-- to count as respelling delimiters. However, we need to rejoin square-bracketed segments with nearby
+				-- ones after splitting alternating runs on comma and semicolon.
+				local segments = put.parse_multi_delimiter_balanced_segment_run(args.root, {{"<", ">"}, {"[", "]"}})
+
+				local semicolon_separated_groups = put.split_alternating_runs(segments, "%s*;%s*")
+				for _, group in ipairs(semicolon_separated_groups) do
+					local first_element = group[1]
+					local dialect
+					if first_element:find("^[a-z]+:") then
+						-- a dialect-specific spec
+						local rest
+						dialect, rest = first_element:match("^([a-z]+):(.*)$")
+						check_dialect_or_dialect_group(dialect)
+						group[1] = rest
+					end
+
+					local comma_separated_groups = put.split_alternating_runs_on_comma(group)
+
+					-- Process each value.
+					local outer_container = m_ca_IPA.parse_comma_separated_groups(comma_separated_groups, true, args.root,
+						"root")
+					set_parsed_respelling(dialect, outer_container)
+				end
+			else
+				local function parse_err(msg)
+					error(msg .. ": root=" .. args.root)
+				end
+				for _, dialect_spec in ipairs(rsplit(args.root, "%s*;%s*")) do
+					local dialect
+					if dialect_spec:find("^[a-z]+:") then
+						-- a dialect-specific spec
+						local rest
+						dialect, rest = dialect_spec:match("^([a-z]+):(.*)$")
+						check_dialect_or_dialect_group(dialect)
+						dialect_spec = rest
+					end
+					local termobjs = {}
+					for _, term in ipairs(rsplit(dialect_spec, ",")) do
+						table.insert(termobjs, {term = term})
+					end
+					set_parsed_respelling(dialect, {
+						terms = termobjs,
+					})
+				end
+			end
+
+			-- Convert each canonicalized respelling to phonemic/phonetic IPA.
+			m_ca_IPA.generate_phonemic_phonetic(parsed_respellings)
+
+			-- Group the results.
+			local grouped_pronuns = m_ca_IPA.group_pronuns_by_dialect(parsed_respellings)
+
+			-- Format for display.
+			for _, grouped_pronun_spec in pairs(grouped_pronuns) do
+				local pronunciations = {}
+
+				local function ins(text)
+					table.insert(pronunciations, text)
+				end
+
+				-- Loop through each pronunciation. For each one, format the phonemic version "raw".
+				for j, pronun in ipairs(grouped_pronun_spec.pronuns) do
+					-- Add dialect tags to left accent qualifiers if first one
+					local as = pronun.a
+					if j == 1 then
+						if as then
+							as = m_table.deepcopy(as)
+						else
+							as = {}
+						end
+						for _, dialect in ipairs(grouped_pronun_spec.dialects) do
+							table.insert(as, m_ca_IPA.dialects_to_names[dialect])
+						end
+					else
+						ins(", ")
+					end
+
+					local slash_pron = "/" .. pronun.phonemic:gsub("ˈ", "") .. "/"
+					if as or pronun.q or pronun.qq or pronun.aa then
+						local data = {
+							q = pronun.q,
+							a = as,
+							qq = pronun.qq,
+							aa = pronun.aa
+						}
+						ins(require("Module:pron qualifier").format_qualifiers(data, slash_pron))
+					else
+						ins(slash_pron)
+					end
+					if pronun.refs then
+						-- FIXME: Copied from [[Module:IPA]]. Should be in a module.
+						local refs = {}
+						if #pronun.refs > 0 then
+							for _, refspec in ipairs(pronun.refs) do
+								if type(refspec) ~= "table" then
+									refspec = {text = refspec}
+								end
+								local refargs
+								if refspec.name or refspec.group then
+									refargs = {name = refspec.name, group = refspec.group}
+								end
+								table.insert(refs, mw.getCurrentFrame():extensionTag("ref", refspec.text, refargs))
+							end
+							ins(table.concat(refs))
+						end
+					end
+				end
+
+				grouped_pronun_spec.formatted = table.concat(pronunciations)
+			end
+
+			-- Concatenate formatted results.
+			local formatted = {}
+			for _, grouped_pronun_spec in ipairs(grouped_pronuns) do
+				table.insert(formatted, grouped_pronun_spec.formatted)
+			end
+			data.post_note = "''root stress'': " .. table.concat(formatted, "; ")
 		end
 	end
 }
