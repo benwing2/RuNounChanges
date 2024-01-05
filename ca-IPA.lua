@@ -33,6 +33,11 @@ local function split_on_comma(term)
 	end
 end
 
+local function track_mid_vowel(vowel, cont)
+	require("Module:debug/track"){"ca-IPA/" .. vowel, "ca-IPA/" .. vowel .. "/" .. cont}
+	return true
+end
+
 
 export.dialects = {"bal", "cen", "val"}
 export.dialects_to_names = {
@@ -463,35 +468,48 @@ local function mid_vowel_e(syllables)
 	
 	if syllables[syllables.stress].vowel == "e" then
 		if post_vowel == "i" or post_vowel == "u" then
+			track_mid_vowel("e", "i-u")
 			return "è"
 		elseif rfind(post_letters, "^ct[ae]?s?$") then
+			track_mid_vowel("e", "ct-cts-cta-ctes")
 			return "è"
 		elseif post_letters == "dre" or post_letters == "dres" then
+			track_mid_vowel("e", "dre-dres")
 			return "é"
 		elseif rfind(post_consonants, "^l") and syllables.stress == #syllables then
+			track_mid_vowel("e", "final-l")
 			return "è"
 		elseif post_consonants == "l" or post_consonants == "ls" or post_consonants == "l·l" then
+			track_mid_vowel("e", "l-ls-ll")
 			return "è"
 		elseif (post_letters == "ma" or post_letters == "mes") and #syllables > 2 then
+			track_mid_vowel("e", "ma-mes")
 			return "ê"
 		elseif post_letters == "ns" or post_letters == "na" or post_letters == "nes" then -- inflection of -è
-			require("Module:debug/track")("ca-IPA/ens-ena-enes") -- checking ê or ë
+			track_mid_vowel("e", "ens-ena-enes") -- checking ê or ë
 			return "ê"
 		elseif post_letters == "nse" or post_letters == "nses" then
+			track_mid_vowel("e", "nse-nses")
 			return "ê"
 		elseif post_letters == "nt" or post_letters == "nts" then
+			track_mid_vowel("e", "nt-nts")
 			return "é"
 		elseif rfind(post_letters, "^r[ae]?s?$") then
+			track_mid_vowel("e", "r-rs-ra-res")
 			return "é"
 		elseif rfind(post_consonants, "^r[dfjlnrstxyz]") then -- except bilabial and velar
+			track_mid_vowel("e", "rC")
 			return "è"
 		elseif post_letters == "sos" or post_letters == "sa" or post_letters == "ses" then -- inflection of -ès
+			track_mid_vowel("e", "sos-sa-ses")
 			return "ê"
 		elseif rfind(post_letters, "^t[ae]?s?$") then
+			track_mid_vowel("e", "t-ts-ta-tes")
 			return "ê"
 		end
 	elseif syllables[syllables.stress].vowel == "è" then
 		if post_letters == "s" or post_letters == "" then -- -ès, -è
+			track_mid_vowel("è", "s-blank")
 			return "ê"
 		end
 	end
@@ -511,28 +529,40 @@ local function mid_vowel_o(syllables)
 	end
 	
 	if post_vowel == "i" or post_vowel == "u" then
+		track_mid_vowel("o", "i-u")
 		return "ò"
 	elseif usub(post_letters, 1, 1) == "i" and usub(post_letters, 1, 2) ~= "ix" then -- diphthong oi
+		track_mid_vowel("o", "i-not-ix")
 		return "ò"
 	elseif rfind(post_letters, "^u[^s]") then -- diphthong ou, ambiguous if final
+		track_mid_vowel("o", "u-not-us")
 		return "ò"
 	elseif #syllables == 1 and (post_letters == "" or post_letters == "s" or post_letters == "ns") then -- monosyllable
+		track_mid_vowel("o", "mono")
 		return "ò"
 	elseif post_letters == "fa" or post_letters == "fes" then
+		track_mid_vowel("o", "fa-fes")
 		return "ò"
 	elseif post_consonants == "fr" then
+		track_mid_vowel("o", "fr")
 		return "ó"
 	elseif post_letters == "ldre" then
+		track_mid_vowel("o", "ldre")
 		return "ò"
 	elseif post_letters == "ma" or post_letters == "mes" then
+		track_mid_vowel("o", "ma-mes")
 		return "ó"
 	elseif post_letters == "ndre" then
+		track_mid_vowel("o", "ndre")
 		return "ò"
 	elseif rfind(post_letters, "^r[ae]?s?$") then
+		track_mid_vowel("o", "r-rs-ra-res")
 		return "ó"
 	elseif rfind(post_letters, "^r[ft]s?$") then
+		track_mid_vowel("o", "rf-rfs-rt-rts")
 		return "ò"
 	elseif post_letters == "rme" or post_letters == "rmes" then
+		track_mid_vowel("o", "rme-rmes")
 		return "ó"
 	end
 	
@@ -915,7 +945,7 @@ local function parse_respelling(respelling, pagename, parse_err)
 					escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
 				end
 				escaped_to = patut.replacement_escape(to)
-				local subbed_respelling, nsubs = rsub(respelling, escaped_from, escaped_to)
+				local subbed_respelling, nsubs = rsubn(respelling, escaped_from, escaped_to)
 				if nsubs == 0 then
 					parse_err(("Substitution spec %s -> %s didn't match processed pagename"):format(from, to))
 				elseif nsubs > 1 then
