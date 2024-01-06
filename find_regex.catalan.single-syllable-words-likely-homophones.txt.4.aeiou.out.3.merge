@@ -1,4 +1,4 @@
-Beginning at Sat Dec 23 03:19:45 2023
+Beginning at Fri Jan  5 19:06:46 2024
 Page 1 Berga: -------- begin text --------
 
 ===Etymology===
@@ -2340,7 +2340,7 @@ Page 182 botre: -------- begin text --------
 * {{ca-IPA|ó}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|intransitive}} to [[bounce]], [[bound]], [[jump]]
 #: {{syn|ca|botar}}
@@ -3858,7 +3858,7 @@ Page 297 cerndre: -------- begin text --------
 * {{ca-IPA|cèndre}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=è}}
 
 # {{lb|ca|transitive}} to [[sieve]]
 #: {{syn|ca|sedassar|sedassejar|tamisar}}
@@ -8213,7 +8213,7 @@ From a rhizotonic variant of {{inh|ca|roa-oca|doler}}, from {{inh|ca|la|doleō|d
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[hurt]]
 
@@ -10524,7 +10524,7 @@ Page 832 fendre: -------- begin text --------
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive}} to [[split]], to [[cleave]]
 # {{lb|ca|transitive}} to [[score]] {{gloss|cut a groove in order to create a fold}}
@@ -11724,7 +11724,7 @@ Page 922 fondre: -------- begin text --------
 * {{ca-IPA|ó}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|transitive}} to [[melt]], to cause to melt
 # {{lb|ca|reflexive}} to melt, to be [[melted]]
@@ -12521,7 +12521,7 @@ Page 984 fotre: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Marvives-fotre.wav|Audio (Barcelona, Spain)}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ó}}
 
 # {{lb|ca|vulgar}} to [[fuck]]
 # {{lb|ca|vulgar}} to [[do]]
@@ -13430,9 +13430,22 @@ Page 1056 gleves: -------- begin text --------
 -------- end text --------
 Page 1057 glosa: -------- begin text --------
 
-===Verb===
-{{head|ca|verb form}}
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms -->
 
+===Etymology 1===
+
+====Noun====
+{{ca-noun|f}}
+
+# {{lb|ca|music|especially|Mallorca}} [[short]], often [[improvised]] [[folk song]] or [[popular]] [[song]]
+# {{lb|ca|archaic}} {{alt form|ca|glossa|t=gloss; commentary}}
+
+===Etymology 2===
+
+====Verb====
+{{head|ca|verb form}}
+  
 # {{ca-verb form of|glosar}}
 
 -------- end text --------
@@ -13485,10 +13498,10 @@ Page 1063 gloso: -------- begin text --------
 Page 1064 glossa: -------- begin text --------
 
 ===Alternative forms===
-* {{alt|ca|glosa}}
+* {{alt|ca|glosa||archaic}}
 
 ===Etymology===
-From {{der|ca|la|glossa}}.
+{{bor+|ca|la|glossa}}.
 
 ===Pronunciation===
 * {{ca-IPA|ò}}
@@ -13921,13 +13934,6 @@ Page 1088 gotes: -------- begin text --------
 
 # {{plural of|ca|gota}}
 
--------- end text --------
-Page 1089 goços: -------- begin text --------
-
-===Noun===
-{{head|ca|noun form}}
-
-# {{plural of|ca|goç}}
 -------- end text --------
 Page 1090 greda: -------- begin text --------
 
@@ -17020,11 +17026,11 @@ Page 1324 metran: -------- begin text --------
 -------- end text --------
 Page 1325 metre: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|ê}}
-
 ===Etymology 1===
 {{bor+|ca|fr|mètre}}.
+
+====Pronunciation====
+* {{ca-IPA|cen=è|bal=é|val=é}}<!-- strange but this is what cawikt says -->
 
 ====Noun====
 {{ca-noun|m}}
@@ -17037,8 +17043,11 @@ Page 1325 metre: -------- begin text --------
 ===Etymology 2===
 {{inh+|ca|roa-oca|metre}}, from {{inh|ca|la|mittō|mittere}}. Compare {{cog|oc|metre}}, {{cog|fr|mettre}}, {{cog|es|meter}}.
 
+====Pronunciation====
+* {{ca-IPA|ê}}
+
 ====Verb====
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # {{lb|ca|transitive|archaic}} to [[put]], to [[place]]
 #: {{syn|ca|posar}}
@@ -17405,7 +17414,7 @@ Page 1345 moldre: -------- begin text --------
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # to [[grind]], to [[mill]]
 #: {{syn|ca|molinar}}
@@ -23220,7 +23229,7 @@ Page 1771 pondre: -------- begin text --------
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive}} to [[lay]] {{gloss|an egg}}
 # {{lb|ca|reflexive}} to set {{gloss|sun}}
@@ -24022,7 +24031,7 @@ Page 1832 prendre: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-prendre.wav|Central}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[take]]
 
@@ -24696,7 +24705,7 @@ Page 1889 rebre: -------- begin text --------
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-rebre.wav|Audio}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[receive]]
 
@@ -25747,13 +25756,13 @@ Page 1984 retre: -------- begin text --------
 * {{alt|ca|rendre||archaic}}
 
 ===Etymology===
-From {{der|ca|la|reddō|reddere}}.
+{{inh+|ca|la|reddō|reddere}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|cen=è|bal=é|val=é}}<!-- FIXME: GDLC says /ɛ/ for Central but cawikt says é everywhere; I assume this is a recent change in Central -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=cen:è; bal:é; val:é}}
 
 # to [[give back]], to [[return]]
 # to [[pay back]], to [[repay]]
@@ -28754,9 +28763,12 @@ Page 2196 soldre: -------- begin text --------
 * {{ca-IPA|ò}}
 
 ===Verb===
-{{head|ca|verb}}
+{{ca-verb|root=ò}}
 
 # {{alternative form of|ca|soler}}
+
+====Conjugation====
+{{ca-conj}}
 -------- end text --------
 Page 2197 solen: -------- begin text --------
 
@@ -28784,15 +28796,15 @@ Page 2198 soles: -------- begin text --------
 
 # {{plural of|ca|sola}}
 
-====Anagrams====
-* {{anagrams|ca|a=eloss|lesos|loess}}
-
 ===Etymology 2===
 
 ====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|solar}}
+
+===Anagrams===
+* {{anagrams|ca|a=eloss|lesos|loess}}
 
 -------- end text --------
 Page 2199 solgui: -------- begin text --------
@@ -30685,13 +30697,13 @@ Page 2349 toldran: -------- begin text --------
 Page 2350 toldre: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|tollō|tollere}}. Compare {{cog|it|togliere}}.
+{{inh+|ca|la|tollō|tollere}}. Compare {{cog|it|togliere}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ò}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ò}}
 
 # {{lb|ca|transitive|archaic}} to [[remove]], to [[take away]]
 #: {{syn|ca|llevar|treure}}
@@ -30916,10 +30928,10 @@ Page 2371 tondre: -------- begin text --------
 {{inh+|ca|VL.||*tondĕre}}, variant of {{der|ca|la|tondeō|tondēre}}. Cognate with {{cog|fr|tondre}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt says /o/ for everywhere but GDLC says /ɔ/ for Central -->
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ô}}
 
 # to [[crop]]
 # to [[shear]]
@@ -33169,7 +33181,7 @@ Page 2559 vendre: -------- begin text --------
 * {{ca-IPA|ê}}
 
 ===Verb===
-{{ca-verb}}
+{{ca-verb|root=ê}}
 
 # to [[sell]]
 #: {{ant|ca|comprar}}
@@ -35061,5 +35073,5 @@ Page 2722 óssos: -------- begin text --------
 ====Usage notes====
 {{U:ca:deprecated use of diacritic}}
 -------- end text --------
-Elapsed time: 4 mins 2.25 secs
-Ending at Sat Dec 23 03:23:47 2023
+Elapsed time: 4 mins 15.88 secs
+Ending at Fri Jan  5 19:11:02 2024
