@@ -763,7 +763,7 @@ Page 57 beca: -------- begin text --------
 {{rfe|ca}}
 
 ====Pronunciation====
-* {{ca-IPA|ë}}
+* {{ca-IPA|è}}<!-- FIXME: cawikt says ë but DNV says è -->
 
 ====Noun====
 {{ca-noun|f}}
@@ -778,7 +778,7 @@ Page 57 beca: -------- begin text --------
 {{nonlemma}}
 
 ====Pronunciation====
-* {{ca-IPA|ë}}
+* {{ca-IPA|è}}<!-- FIXME: cawikt says ë but DNV says è -->
 
 ====Verb====
 {{head|ca|verb form}}
@@ -805,7 +805,7 @@ Page 58 beco: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{ca-IPA|ë}}
+* {{ca-IPA|è}}<!-- FIXME: cawikt says ë but DNV says è -->
 
 ====Verb====
 {{head|ca|verb form}}
@@ -1152,7 +1152,7 @@ Page 83 bequen: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{ca-IPA|ë}}
+* {{ca-IPA|è}}<!-- FIXME: cawikt says ë but DNV says è -->
 
 ====Verb====
 {{head|ca|verb form}}
@@ -1175,7 +1175,7 @@ Page 84 beques: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{ca-IPA|ë}}
+* {{ca-IPA|è}}<!-- FIXME: cawikt says ë but DNV says è -->
 
 ====Noun====
 {{head|ca|noun form}}
@@ -1186,7 +1186,7 @@ Page 84 beques: -------- begin text --------
 {{nonlemma}}
 
 ====Pronunciation====
-* {{ca-IPA|ë}}
+* {{ca-IPA|è}}<!-- FIXME: cawikt says ë but DNV says è -->
 
 ====Verb====
 {{head|ca|verb form}}
@@ -1210,7 +1210,7 @@ Page 85 bequi: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{ca-IPA|ë}}
+* {{ca-IPA|è}}<!-- FIXME: cawikt says ë but DNV says è -->
 
 ====Verb====
 {{head|ca|verb form}}
@@ -1232,7 +1232,7 @@ Page 86 bequin: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{ca-IPA|ë}}
+* {{ca-IPA|è}}<!-- FIXME: cawikt says ë but DNV says è -->
 
 ====Verb====
 {{head|ca|verb form}}
@@ -1254,7 +1254,7 @@ Page 87 bequis: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{ca-IPA|ë}}
+* {{ca-IPA|è}}<!-- FIXME: cawikt says ë but DNV says è -->
 
 ====Verb====
 {{head|ca|verb form}}
@@ -9014,7 +9014,7 @@ Page 557 crepa: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{ca-IPA|cen=ë|west=ë}}
+* {{ca-IPA|cen=ë|val=ë}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -9037,7 +9037,7 @@ Page 558 crepen: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{ca-IPA|cen=ë|west=ë}}
+* {{ca-IPA|cen=ë|val=ë}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -9060,7 +9060,7 @@ Page 559 crepes: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{ca-IPA|cen=ë|west=ë}}
+* {{ca-IPA|cen=ë|val=ë}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -9083,7 +9083,7 @@ Page 560 crepi: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{ca-IPA|cen=ë|west=ë}}
+* {{ca-IPA|cen=ë|val=ë}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -9106,7 +9106,7 @@ Page 561 crepin: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{ca-IPA|cen=ë|west=ë}}
+* {{ca-IPA|cen=ë|val=ë}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -9128,7 +9128,7 @@ Page 562 crepis: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{ca-IPA|cen=ë|west=ë}}
+* {{ca-IPA|cen=ë|val=ë}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -9150,7 +9150,7 @@ Page 563 crepo: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{ca-IPA|cen=ë|west=ë}}
+* {{ca-IPA|cen=ë|val=ë}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -11874,7 +11874,7 @@ Page 753 emes: -------- begin text --------
 Page 754 empra: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere but GDLC [[empre]] says é; presumably é is more recent for Central -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -11884,7 +11884,7 @@ Page 754 empra: -------- begin text --------
 Page 755 empren: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere but GDLC [[empre]] says é; presumably é is more recent for Central -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -11894,7 +11894,7 @@ Page 755 empren: -------- begin text --------
 Page 756 empres: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere but GDLC [[empre]] says é; presumably é is more recent for Central -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -11905,7 +11905,7 @@ Page 756 empres: -------- begin text --------
 Page 757 empri: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere but GDLC [[empre]] says é; presumably é is more recent for Central -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -11915,7 +11915,7 @@ Page 757 empri: -------- begin text --------
 Page 758 emprin: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere but GDLC [[empre]] says é; presumably é is more recent for Central -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -11925,7 +11925,7 @@ Page 758 emprin: -------- begin text --------
 Page 759 empris: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere but GDLC [[empre]] says é; presumably é is more recent for Central -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -11935,7 +11935,7 @@ Page 759 empris: -------- begin text --------
 Page 760 empro: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere but GDLC [[empre]] says é; presumably é is more recent for Central -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -14126,7 +14126,7 @@ Page 893 foguis: -------- begin text --------
 Page 894 folga: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}<!-- both etyms -->
+* {{ca-IPA|ó}}<!-- both etyms -->
 
 ===Etymology 1===
 {{deverbal|ca|folgar}}.
@@ -14150,7 +14150,7 @@ Page 894 folga: -------- begin text --------
 Page 895 folgo: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -14161,7 +14161,7 @@ Page 895 folgo: -------- begin text --------
 Page 896 folguen: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -14172,7 +14172,7 @@ Page 896 folguen: -------- begin text --------
 Page 897 folgues: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}<!-- both etyms -->
+* {{ca-IPA|ó}}<!-- both etyms -->
 
 ===Etymology 1===
 
@@ -14192,7 +14192,7 @@ Page 897 folgues: -------- begin text --------
 Page 898 folgui: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -14202,7 +14202,7 @@ Page 898 folgui: -------- begin text --------
 Page 899 folguin: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -14212,7 +14212,7 @@ Page 899 folguin: -------- begin text --------
 Page 900 folguis: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -14222,7 +14222,7 @@ Page 900 folguis: -------- begin text --------
 Page 901 folla: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}<!-- both etyms -->
+* {{ca-IPA|ó}}<!-- both etyms -->
 
 ===Etymology 1===
 
@@ -14242,7 +14242,7 @@ Page 901 folla: -------- begin text --------
 Page 902 follen: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -14253,7 +14253,7 @@ Page 902 follen: -------- begin text --------
 Page 903 folles: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}<!-- both etyms -->
+* {{ca-IPA|ó}}<!-- both etyms -->
 
 ===Etymology 1===
 
@@ -14273,7 +14273,7 @@ Page 903 folles: -------- begin text --------
 Page 904 folli: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -14284,7 +14284,7 @@ Page 904 folli: -------- begin text --------
 Page 905 follin: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -14294,7 +14294,7 @@ Page 905 follin: -------- begin text --------
 Page 906 follis: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -14305,7 +14305,7 @@ Page 906 follis: -------- begin text --------
 Page 907 follo: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|ó}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -15397,7 +15397,7 @@ Page 970 foten: -------- begin text --------
 Page 971 fotgen: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt and DCVB say /ɔ/ everywhere but DNV says /o/ in Valencia -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -15406,10 +15406,32 @@ Page 971 fotgen: -------- begin text --------
 -------- end text --------
 Page 972 fotges: -------- begin text --------
 
-===Pronunciation===
+===Etymology 1===
+
+====Pronunciation====
 * {{ca-IPA|ò}}
 
-===Verb===
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|fotja|t=coot}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ó}}
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|fotja|t=puddle}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|ô}}<!-- FIXME: cawikt and DCVB say /ɔ/ everywhere but DNV says /o/ in Valencia -->
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|fotjar}}
@@ -15417,7 +15439,7 @@ Page 972 fotges: -------- begin text --------
 Page 973 fotgi: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt and DCVB say /ɔ/ everywhere but DNV says /o/ in Valencia -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -15427,7 +15449,7 @@ Page 973 fotgi: -------- begin text --------
 Page 974 fotgin: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt and DCVB say /ɔ/ everywhere but DNV says /o/ in Valencia -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -15437,7 +15459,7 @@ Page 974 fotgin: -------- begin text --------
 Page 975 fotgis: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt and DCVB say /ɔ/ everywhere but DNV says /o/ in Valencia -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -15479,14 +15501,14 @@ Page 978 fotis: -------- begin text --------
 -------- end text --------
 Page 979 fotja: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|ò}}<!-- both etyms -->
-
 ===Etymology 1===
 Perhaps borrowed from a {{bor|ca|mxi||*folğa, *folec̆a}}, from {{der|ca|la|fulix|fulicem}}, variant of {{m|la|fulica}}.<ref>{{R:es:DCECH|focha|924|vol=2}}</ref>
 
 ====Alternative forms====
 * {{alt|ca|forja||Mallorca}}
+
+====Pronunciation====
+* {{ca-IPA|ò}}
 
 ====Noun====
 {{ca-noun|f}}
@@ -15506,6 +15528,19 @@ Perhaps borrowed from a {{bor|ca|mxi||*folğa, *folec̆a}}, from {{der|ca|la|ful
 
 ===Etymology 2===
 
+====Pronunciation====
+* {{ca-IPA|ó}}
+
+====Noun====
+{{ca-noun|f}}
+
+# [[puddle]] {{q|of water or mud}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|ô}}<!-- FIXME: cawikt and DCVB say /ɔ/ everywhere but DNV says /o/ in Valencia -->
+
 ====Verb====
 {{head|ca|verb form}}
 
@@ -15516,7 +15551,7 @@ Perhaps borrowed from a {{bor|ca|mxi||*folğa, *folec̆a}}, from {{der|ca|la|ful
 Page 980 fotjo: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt and DCVB say /ɔ/ everywhere but DNV says /o/ in Valencia -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -17660,7 +17695,7 @@ Page 1109 grossos: -------- begin text --------
 Page 1110 hedra: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|west=é}}
+* {{ca-IPA|val=é}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -18270,7 +18305,7 @@ Page 1141 jova: -------- begin text --------
 {{inh+|ca|la|juga}}, plural of {{m|la|jugum||yoke}}.
 
 ===Pronunciation===
-* {{ca-IPA|east=ó|west=ò}}<!-- same backwards pattern as in [[jou]] -->
+* {{ca-IPA|bal=ó|cen=ó|val=ò}}<!-- same backwards pattern as in [[jou]] -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -18357,7 +18392,7 @@ Page 1143 joves: -------- begin text --------
 ===Etymology 2===
 
 ====Pronunciation====
-* {{ca-IPA|east=ó|west=ò}}<!-- same backwards pattern as in [[jou]] -->
+* {{ca-IPA|bal=ó|cen=ó|val=ò}}<!-- same backwards pattern as in [[jou]] -->
 
 ====Noun====
 {{head|ca|noun form}}
@@ -18857,7 +18892,7 @@ Page 1176 llengua: -------- begin text --------
 
 ===Pronunciation===
 * {{ca-IPA|é<qq:formal>}}
-* {{ca-IPA|cen=llènga<qq:informal>|nw=/ˈʎeŋ.ɡwɛ/<qq:informal>|bal=/ˈʎeŋ.ɡo/<qq:informal>}}
+* {{ca-IPA|cen=llènga<qq:informal>|bal=/ˈʎeŋ.ɡo/<qq:informal>}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-llengua.wav|Audio}}
 
 ===Noun===
@@ -23943,7 +23978,7 @@ Page 1461 nombre: -------- begin text --------
 {{inh+|ca|roa-oca|nombre}}, from {{inh|ca|la|numerus}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|cen=ò|bal=ó|val=ó}}<!-- per Vriullop -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-nombre.wav|Audio}}
 
 ===Noun===
@@ -23987,6 +24022,9 @@ Page 1461 nombre: -------- begin text --------
 
 -------- end text --------
 Page 1462 nombres: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|cen=ò|bal=ó|val=ó}}<!-- per Vriullop -->
 
 ===Noun===
 {{head|ca|noun form}}
@@ -24853,7 +24891,7 @@ Page 1511 odre: -------- begin text --------
 {{inh+|ca|la|uter}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|cen=ò|bal=ó|val=ó}}<!-- per Vriullop -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -24873,6 +24911,9 @@ Page 1512 ofi: -------- begin text --------
 ===Etymology===
 {{clipping|ca|oficina}}.
 
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- per Vriullop -->
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -24881,11 +24922,11 @@ Page 1512 ofi: -------- begin text --------
 -------- end text --------
 Page 1513 oi: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|ò}}<!-- both etyms; FIXME: DCVB says ''oi'' "whoa, hey, ouch" is /oj/ and a separate etymology from ''oi'' "yes" -->
-
 ===Etymology 1===
 {{inh+|ca|la|odium}}. {{doublet|ca|odi}}.
+
+====Pronunciation====
+* {{ca-IPA|ò}}<!-- per DCVB, GDLC, DNV -->
 
 ====Noun====
 {{ca-noun|m}}
@@ -24894,6 +24935,10 @@ Page 1513 oi: -------- begin text --------
 # {{lb|ca|Mallorca|chiefly in the plural}} [[aversion]], [[revulsion]], [[nausea]]
 
 ===Etymology 2===
+{{inh+|ca|la|hoc}}.
+
+====Pronunciation====
+* {{ca-IPA|ò}}<!-- per DCVB, GDLC, DNV -->
 
 ====Interjection====
 {{head|ca|interjection}}
@@ -24903,6 +24948,15 @@ Page 1513 oi: -------- begin text --------
 |passage='''Oi que''' ho farà? Digui que sí.
 |translation=Won't you do it? Say you will.}}
 # {{n-g|indicates agreement with a statement}}: [[yeah]]; that's [[right]]
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|cen=ò|val=ò|bal=ó}}<!-- Balearic per DCVB; Central per GDLC, Valencia per DNV -->
+
+====Interjection====
+{{head|ca|interjection}}
+
 # {{n-g|indicates surprise}}: [[whoa]]; [[hey]]
 # {{n-g|indicates physical pain}}: [[ouch]]
 
@@ -25802,7 +25856,7 @@ Page 1567 orla: -------- begin text --------
 Probably from {{inh|ca|VL.|*ōrula}}, diminutive of {{der|ca|la|ōra}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}<!-- FIXME: DNV says /o/ -->
+* {{ca-IPA|ô}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -25833,7 +25887,7 @@ Page 1568 oro: -------- begin text --------
 {{bor+|ca|es|oro}}.
 
 ====Pronunciation====
-* {{ca-IPA|ò}}<!-- FIXME: DNV says /o/ -->
+* {{ca-IPA|ô}}<!-- per GDLC, DNV -->
 
 ====Noun====
 {{ca-noun|m}}
@@ -25861,7 +25915,7 @@ Page 1568 oro: -------- begin text --------
 Page 1569 oros: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}<!-- FIXME: DNV says /o/ -->
+* {{ca-IPA|ô}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{head|ca|noun form}}
@@ -27216,7 +27270,7 @@ Page 1651 perca: -------- begin text --------
 {{lbor|ca|la|perca}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}<!-- FIXME: DNV says /e/ for Valencian -->
+* {{ca-IPA|ë}}<!-- per Vriullop -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -27690,7 +27744,7 @@ Page 1681 pesta: -------- begin text --------
 {{inh+|ca|la|pestis}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}<!-- FIXME: GDLC says /e/ for Central Catalan -->
+* {{ca-IPA|cen=è,é|bal=è|val=è}}<!-- per Vriullop -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -28028,7 +28082,7 @@ Page 1703 pleca: -------- begin text --------
 {{unk|ca}}.
 
 ===Pronunciation===
-* {{ca-IPA|cen=ê|val=ê}}<!-- FIXME: Balearic unknown -->
+* {{ca-IPA|ë}}<!-- per Vriullop -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -28498,7 +28552,7 @@ Page 1731 ploro: -------- begin text --------
 Page 1732 pobla: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt says /ɔ/ everywhere based off of [[poble]], which is /ɔ/ everywhere including Valencia as vouched by DNV; but DNV says [[poblar]] has root /o/ in Valencia along with [[pobla]] "nucleus of settlers founded by means of a settlement charter" -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -28545,7 +28599,7 @@ Page 1733 poble: -------- begin text --------
 Page 1734 poblen: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt says /ɔ/ everywhere based off of [[poble]], which is /ɔ/ everywhere including Valencia as vouched by DNV; but DNV says [[poblar]] has root /o/ in Valencia along with [[pobla]] "nucleus of settlers founded by means of a settlement charter" -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -28554,10 +28608,10 @@ Page 1734 poblen: -------- begin text --------
 -------- end text --------
 Page 1735 pobles: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|ò}}<!-- both etyms -->
-
 ===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|ò}}<!-- per GDLC, DNV -->
 
 ====Noun====
 {{head|ca|noun form}}
@@ -28565,6 +28619,9 @@ Page 1735 pobles: -------- begin text --------
 # {{plural of|ca|poble}}
 
 ===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ô}}<!-- FIXME: cawikt says /ɔ/ everywhere based off of [[poble]], which is /ɔ/ everywhere including Valencia as vouched by DNV; but DNV says [[poblar]] has root /o/ in Valencia along with [[pobla]] "nucleus of settlers founded by means of a settlement charter" -->
 
 ====Verb====
 {{head|ca|verb form}}
@@ -28574,7 +28631,7 @@ Page 1735 pobles: -------- begin text --------
 Page 1736 pobli: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt says /ɔ/ everywhere based off of [[poble]], which is /ɔ/ everywhere including Valencia as vouched by DNV; but DNV says [[poblar]] has root /o/ in Valencia along with [[pobla]] "nucleus of settlers founded by means of a settlement charter" -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -28584,7 +28641,7 @@ Page 1736 pobli: -------- begin text --------
 Page 1737 poblin: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt says /ɔ/ everywhere based off of [[poble]], which is /ɔ/ everywhere including Valencia as vouched by DNV; but DNV says [[poblar]] has root /o/ in Valencia along with [[pobla]] "nucleus of settlers founded by means of a settlement charter" -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -28594,7 +28651,7 @@ Page 1737 poblin: -------- begin text --------
 Page 1738 poblis: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt says /ɔ/ everywhere based off of [[poble]], which is /ɔ/ everywhere including Valencia as vouched by DNV; but DNV says [[poblar]] has root /o/ in Valencia along with [[pobla]] "nucleus of settlers founded by means of a settlement charter" -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -28604,7 +28661,7 @@ Page 1738 poblis: -------- begin text --------
 Page 1739 poblo: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: cawikt says /ɔ/ everywhere based off of [[poble]], which is /ɔ/ everywhere including Valencia as vouched by DNV; but DNV says [[poblar]] has root /o/ in Valencia along with [[pobla]] "nucleus of settlers founded by means of a settlement charter" -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -29350,7 +29407,7 @@ Page 1785 porro: -------- begin text --------
 {{inh+|ca|roa-oca|porro}}~{{m|roa-oca|porre}}, from {{inh|ca|la|porrum}}. <!-- DCVB entry below does not show Old Catalan porre, but it can be found through a search. -->
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- FIXME: cawikt and DCVB say /ɔ/ for both Eastern and Western -->
+* {{ca-IPA|ó}}<!-- Vriullop: expected ò but usually changes to ó before -rr- -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -29376,7 +29433,7 @@ Page 1785 porro: -------- begin text --------
 Page 1786 porros: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- FIXME: cawikt and DCVB say /ɔ/ for both Eastern and Western -->
+* {{ca-IPA|ó}}<!-- Vriullop: expected ò but usually changes to ó before -rr- -->
 
 ===Noun===
 {{head|ca|noun form}}
@@ -29582,11 +29639,11 @@ Page 1797 porxos: -------- begin text --------
 -------- end text --------
 Page 1798 posa: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|ò}}<!-- FIXME: GDLC says /o/ for the noun sense -->
-
 ===Etymology 1===
 {{deverbal|ca|posar}}.
+
+====Pronunciation====
+* {{ca-IPA|ó}}<!-- per Vriullop; based on calque of French or Spanish -->
 
 ====Noun====
 {{ca-noun|f}}
@@ -29597,6 +29654,9 @@ Page 1798 posa: -------- begin text --------
 # [[attitude]] {{gl|state of mind, positive or negative}}
 
 ===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -29617,10 +29677,10 @@ Page 1799 posen: -------- begin text --------
 -------- end text --------
 Page 1800 poses: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|ò}}<!-- both etyms; FIXME: GDLC says /o/ for the noun sense -->
-
 ===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|ó}}<!-- per Vriullop; based on calque of French or Spanish -->
 
 ====Noun====
 {{head|ca|noun form}}
@@ -29628,6 +29688,9 @@ Page 1800 poses: -------- begin text --------
 # {{plural of|ca|posa}}
 
 ===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -30934,7 +30997,7 @@ Page 1886 reble: -------- begin text --------
 Probably a {{deverbal|ca|reblir|nocap=1|t=fill, cover up}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}<!-- FIXME: GDLC says /e/ for Central Catalan -->
+* {{ca-IPA|cen=é|val=é|bal=ê}}<!-- Vriullop: expected é; Balearic ê by analogy -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -31047,7 +31110,7 @@ Page 1891 reco: -------- begin text --------
 Page 1892 recta: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|è}}
 
 ===Adjective===
 {{head|ca|adjective form}}
@@ -31136,12 +31199,12 @@ Page 1897 refon: -------- begin text --------
 -------- end text --------
 Page 1898 rega: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|ê}}<!-- both etyms; FIXME, a guess based on etymology -->
-
 ===Etymology 1===
 {{dercat|ca|cel}}
 {{bor+|ca|cel-gau|*rica||furrow}}, from {{der|ca|cel-pro|*ɸrikā}}. Cognate with {{cog|fr|raie}}.
+
+====Pronunciation====
+* {{ca-IPA|é}}
 
 ====Noun====
 {{ca-noun|f}}
@@ -31155,6 +31218,9 @@ Page 1898 rega: -------- begin text --------
 
 ===Etymology 2===
 {{nonlemma}}
+
+====Pronunciation====
+* {{ca-IPA|ê}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -31378,7 +31444,7 @@ Page 1910 regno: -------- begin text --------
 Page 1911 rego: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}<!-- FIXME, a guess based on etymology -->
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31389,7 +31455,7 @@ Page 1911 rego: -------- begin text --------
 Page 1912 reguen: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}<!-- FIXME, a guess based on etymology -->
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31399,10 +31465,10 @@ Page 1912 reguen: -------- begin text --------
 -------- end text --------
 Page 1913 regues: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|ê}}<!-- both etyms; FIXME, a guess based on etymology -->
-
 ===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|é}}
 
 ====Noun====
 {{head|ca|noun form}}
@@ -31410,6 +31476,9 @@ Page 1913 regues: -------- begin text --------
 # {{plural of|ca|rega|t=furrow}}
 
 ===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ê}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -31420,7 +31489,7 @@ Page 1913 regues: -------- begin text --------
 Page 1914 regui: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}<!-- FIXME, a guess based on etymology -->
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31430,7 +31499,7 @@ Page 1914 regui: -------- begin text --------
 Page 1915 reguin: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}<!-- FIXME, a guess based on etymology -->
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31440,7 +31509,7 @@ Page 1915 reguin: -------- begin text --------
 Page 1916 reguis: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}<!-- FIXME, a guess based on etymology -->
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -31859,6 +31928,9 @@ Page 1948 repta: -------- begin text --------
 
 ===Etymology 2===
 
+====Pronunciation====
+* {{ca-IPA|ê}}
+
 ====Verb====
 {{head|ca|verb form}}
 
@@ -31897,6 +31969,9 @@ Page 1950 repten: -------- begin text --------
 
 ===Etymology 2===
 
+====Pronunciation====
+* {{ca-IPA|ê}}
+
 ====Verb====
 {{head|ca|verb form}}
 
@@ -31927,6 +32002,9 @@ Page 1951 reptes: -------- begin text --------
 
 ===Etymology 3===
 
+====Pronunciation====
+* {{ca-IPA|ê}}
+
 ====Verb====
 {{head|ca|verb form}}
 
@@ -31947,6 +32025,9 @@ Page 1952 repti: -------- begin text --------
 
 ===Etymology 2===
 
+====Pronunciation====
+* {{ca-IPA|ê}}
+
 ====Verb====
 {{head|ca|verb form}}
 
@@ -31965,6 +32046,9 @@ Page 1953 reptin: -------- begin text --------
 # {{ca-verb form of|reptar|t=to challenge; to reprimand}}
 
 ===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ê}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -31985,6 +32069,9 @@ Page 1954 reptis: -------- begin text --------
 
 ===Etymology 2===
 
+====Pronunciation====
+* {{ca-IPA|ê}}
+
 ====Verb====
 {{head|ca|verb form}}
 
@@ -32003,6 +32090,9 @@ Page 1955 repto: -------- begin text --------
 # {{ca-verb form of|reptar|t=to challenge; to reprimand}}
 
 ===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ê}}
 
 ====Verb====
 {{head|ca|verb form}}
@@ -32309,6 +32399,9 @@ Page 1977 resto: -------- begin text --------
 -------- end text --------
 Page 1978 reten: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ë}}<!-- guess from Vriullop -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -32316,6 +32409,9 @@ Page 1978 reten: -------- begin text --------
 
 -------- end text --------
 Page 1979 reti: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ë}}<!-- guess from Vriullop -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -32325,6 +32421,9 @@ Page 1979 reti: -------- begin text --------
 -------- end text --------
 Page 1980 retin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ë}}<!-- guess from Vriullop -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -32333,6 +32432,9 @@ Page 1980 retin: -------- begin text --------
 -------- end text --------
 Page 1981 retis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ë}}<!-- guess from Vriullop -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -32340,6 +32442,9 @@ Page 1981 retis: -------- begin text --------
 
 -------- end text --------
 Page 1982 reto: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ë}}<!-- guess from Vriullop -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -33112,7 +33217,7 @@ From {{der-lite|ca|la|rosa}}.
 Page 2031 rosca: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}<!-- both etyms; FIXME: cawikt and DCVB say /ɔ/ for Valencian but DNV says /o/ -->
+* {{ca-IPA|ô}}<!-- both etyms; per Vriullop -->
 
 ===Etymology 1===
 {{unk|ca}}. In the sense of "pastry", perhaps borrowed or at least influenced by {{cog|es|rosca}}.
@@ -33146,7 +33251,7 @@ Page 2031 rosca: -------- begin text --------
 Page 2032 rosco: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}<!-- FIXME: cawikt and DCVB say /ɔ/ for Valencian but DNV says /o/ -->
+* {{ca-IPA|ô}}<!-- per Vriullop -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -33168,7 +33273,7 @@ Page 2033 roses: -------- begin text --------
 Page 2034 rosquen: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}<!-- FIXME: cawikt and DCVB say /ɔ/ for Valencian but DNV says /o/ -->
+* {{ca-IPA|ô}}<!-- per Vriullop -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -33179,7 +33284,7 @@ Page 2034 rosquen: -------- begin text --------
 Page 2035 rosques: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}<!-- both etyms; FIXME: cawikt and DCVB say /ɔ/ for Valencian but DNV says /o/ -->
+* {{ca-IPA|ô}}<!-- both etyms; per Vriullop -->
 
 ===Etymology 1===
 
@@ -33199,7 +33304,7 @@ Page 2035 rosques: -------- begin text --------
 Page 2036 rosqui: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}<!-- FIXME: cawikt and DCVB say /ɔ/ for Valencian but DNV says /o/ -->
+* {{ca-IPA|ô}}<!-- per Vriullop -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -33209,7 +33314,7 @@ Page 2036 rosqui: -------- begin text --------
 Page 2037 rosquin: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}<!-- FIXME: cawikt and DCVB say /ɔ/ for Valencian but DNV says /o/ -->
+* {{ca-IPA|ô}}<!-- per Vriullop -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -33219,7 +33324,7 @@ Page 2037 rosquin: -------- begin text --------
 Page 2038 rosquis: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}<!-- FIXME: cawikt and DCVB say /ɔ/ for Valencian but DNV says /o/ -->
+* {{ca-IPA|ô}}<!-- per Vriullop -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -33337,11 +33442,11 @@ Page 2041 rossos: -------- begin text --------
 -------- end text --------
 Page 2042 rosta: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|ò}}<!-- both etyms; FIXME: GDLC says /o/ for Central Catalan for Etym 1 and 2, although DNV says /ɔ/ for Valencian for both -->
-
 ===Etymology 1===
 {{nonlemma}}
+
+====Pronunciation====
+* {{ca-IPA|ò}}
 
 ====Adjective====
 {{head|ca|adjective form}}
@@ -33350,6 +33455,9 @@ Page 2042 rosta: -------- begin text --------
 
 ===Etymology 2===
 Perhaps related to {{m|ca|rostir}}.
+
+====Pronunciation====
+* {{ca-IPA|cen=ó|bal=ò|val=ò}}<!-- per Vriullop -->
 
 ====Noun====
 {{ca-noun|f}}
@@ -33371,10 +33479,10 @@ Perhaps related to {{m|ca|rostir}}.
 -------- end text --------
 Page 2043 rostes: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|ò}}<!-- both etyms; FIXME: GDLC says /o/ for Central Catalan for Etym 1 and 2, although DNV says /ɔ/ for Valencian for both -->
-
 ===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|cen=ó|bal=ò|val=ò}}<!-- per Vriullop -->
 
 ====Noun====
 {{head|ca|noun form}}
@@ -33382,6 +33490,9 @@ Page 2043 rostes: -------- begin text --------
 # {{plural of|ca|rosta}}
 
 ===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
 
 ====Adjective====
 {{head|ca|adjective form}}
@@ -33392,7 +33503,7 @@ Page 2043 rostes: -------- begin text --------
 Page 2044 rostos: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}<!-- both etyms; FIXME: GDLC says /o/ for Central Catalan for Etym 1 and 2, although DNV says /ɔ/ for Valencian for both -->
+* {{ca-IPA|ò}}<!-- both etyms; per Vriullop; FIXME: GDLC says /o/ for Central Catalan for Etym 1 and 2, although DNV says /ɔ/ for Valencian for both -->
 
 ===Etymology 1===
 
@@ -33402,6 +33513,9 @@ Page 2044 rostos: -------- begin text --------
 # {{plural of|ca|rost}}
 
 ===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ò}}
 
 ====Adjective====
 {{head|ca|adjective form}}
@@ -33444,7 +33558,7 @@ Page 2046 rostres: -------- begin text --------
 Page 2047 rota: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- both etyms; FIXME: verify Central pronun -->
+* {{ca-IPA|ó}}<!-- both etyms -->
 
 ===Etymology 1===
 
@@ -33464,7 +33578,7 @@ Page 2047 rota: -------- begin text --------
 Page 2048 roten: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- both etyms; FIXME: verify Central pronun -->
+* {{ca-IPA|ó}}<!-- both etyms -->
 
 ===Etymology 1===
 
@@ -33484,7 +33598,7 @@ Page 2048 roten: -------- begin text --------
 Page 2049 rotes: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- both etyms; FIXME: verify Central pronun -->
+* {{ca-IPA|ó}}<!-- both etyms -->
 
 ===Etymology 1===
 
@@ -33504,7 +33618,7 @@ Page 2049 rotes: -------- begin text --------
 Page 2050 roti: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- both etyms; FIXME: verify Central pronun -->
+* {{ca-IPA|ó}}<!-- both etyms -->
 
 ===Etymology 1===
 
@@ -33524,7 +33638,7 @@ Page 2050 roti: -------- begin text --------
 Page 2051 rotin: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- both etyms; FIXME: verify Central pronun -->
+* {{ca-IPA|ó}}<!-- both etyms -->
 
 ===Etymology 1===
 
@@ -33544,7 +33658,7 @@ Page 2051 rotin: -------- begin text --------
 Page 2052 rotis: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- both etyms; FIXME: verify Central pronun -->
+* {{ca-IPA|ó}}<!-- both etyms -->
 
 ===Etymology 1===
 
@@ -33606,7 +33720,7 @@ Page 2055 rotllo: -------- begin text --------
 {{inh+|ca|roa-oca|rotlo}}, from {{inh|ca|la|rotulus||roll}}. {{doublet|ca|rotlle}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}<!-- FIXME: DNV says /o/, although cawikt and DCVB say /ɔ/ -->
+* {{ca-IPA|ò}}<!-- FIXME: DNV says /o/, although cawikt and DCVB say /ɔ/; Vriullop says /o/ is archaic and [[rotllo]] isn't normally used in Valencian -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -33634,7 +33748,7 @@ Page 2055 rotllo: -------- begin text --------
 Page 2056 rotllos: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}<!-- FIXME: DNV says /o/, although cawikt and DCVB say /ɔ/ -->
+* {{ca-IPA|ò}}<!-- FIXME: DNV says /o/, although cawikt and DCVB say /ɔ/; Vriullop says /o/ is archaic and [[rotllo]] isn't normally used in Valencian -->
 
 ===Noun===
 {{head|ca|noun form}}
@@ -33719,6 +33833,9 @@ Page 2061 seca: -------- begin text --------
 ===Etymology 2===
 {{bor+|ca|ar|سِكَّة}}.
 
+====Pronunciation====
+* {{ca-IPA|ë}}<!-- per Vriullop -->
+
 ====Noun====
 {{ca-noun|f}}
 
@@ -33776,12 +33893,12 @@ Page 2064 sectes: -------- begin text --------
 Page 2065 seda: -------- begin text --------
 {{wikipedia|lang=ca}}
 
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- both etyms; ê for [[sedar]] per Vriullop, although with some uncertainty -->
+* {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-seda.wav|Audio}}
+
 ===Etymology 1===
 {{inh+|ca|roa-oca|seda}}, from {{inh|ca|la|sēta}}, variant of {{m|la|saeta}}, from {{inh|ca|itc-pro|*saitā}}, from {{der|ca|ine-pro|*séh₂ito-}}, {{m|ine-pro|*sh₂éyto-}}, from {{m|ine-pro|*sh₂ey-}}, {{m|ine-pro|*seh₂i-||to bind}}.
-
-====Pronunciation====
-* {{ca-IPA|ê}}
-* {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-seda.wav|Audio}}
 
 ====Noun====
 {{ca-noun|f}}
@@ -33808,6 +33925,9 @@ Page 2065 seda: -------- begin text --------
 -------- end text --------
 Page 2066 seden: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -33816,13 +33936,28 @@ Page 2066 seden: -------- begin text --------
 -------- end text --------
 Page 2067 sedes: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- both etyms; ê for [[sedar]] per Vriullop, although with some uncertainty -->
+
+===Etymology 1===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|sedar}}
 
+===Etymology 2===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|seda}}
+
 -------- end text --------
 Page 2068 sedi: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -33832,6 +33967,9 @@ Page 2068 sedi: -------- begin text --------
 -------- end text --------
 Page 2069 sedin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -33840,6 +33978,9 @@ Page 2069 sedin: -------- begin text --------
 -------- end text --------
 Page 2070 sedis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -33847,6 +33988,9 @@ Page 2070 sedis: -------- begin text --------
 
 -------- end text --------
 Page 2071 sedo: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -34479,7 +34623,7 @@ Page 2106 sense: -------- begin text --------
 Ultimately from {{inh|ca|la|sine}}, possibly conflated with {{m|ca|absentia}}, or more likely from {{m|ca|sens}}, itself from {{inh|ca|roa-oca|sen}} (with an adverbial -s-), from Latin {{m|la|sine}}. Compare {{cog|fr|sans}}, {{cog|oc|sens}}, {{cog|it|senza}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}<!-- FIXME: GDLC says /e/ not #/ɛ/ -->
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- per Vriullop -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-sense.wav|Audio}}
 
 ===Preposition===
@@ -34646,6 +34790,9 @@ Page 2116 seques: -------- begin text --------
 # {{plural of|ca|seca|t=sandbar, shoal, reef}}
 
 ===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ë}}<!-- per Vriullop -->
 
 ====Noun====
 {{head|ca|noun form}}
@@ -34845,9 +34992,6 @@ Page 2125 serres: -------- begin text --------
 
 ===Etymology 1===
 
-====Pronunciation====
-* {{ca-IPA}}
-
 ====Noun====
 {{head|ca|noun form}}
 
@@ -34963,7 +35107,7 @@ Page 2130 serva: -------- begin text --------
 {{inh+|ca|la|sorbus}}, with unexplained mutation of the vowel.
 
 ====Pronunciation====
-* {{ca-IPA|ê}}<!-- FIXME: GDLC says /e/ rather than expected #/ɛ/ -->
+* {{ca-IPA|ê}}<!-- per Vriullop; GDLC is incorrect here, not distinguishing different etyms -->
 
 ====Noun====
 {{ca-noun|f}}
@@ -34992,7 +35136,7 @@ Page 2131 serves: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{ca-IPA|ê}}<!-- FIXME: GDLC says /e/ rather than expected #/ɛ/ -->
+* {{ca-IPA|ê}}<!-- per Vriullop; GDLC is incorrect here, not distinguishing different etyms -->
 
 ====Noun====
 {{head|ca|noun form}}
@@ -35048,10 +35192,11 @@ Page 2133 sestes: -------- begin text --------
 Page 2134 setge: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|VL.|*sĕdicum}}.
+{{inh+|ca|VL.|*sĕdicum}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}<!-- FIXME: GDLC says /ɛ/ -->
+* {{ca-IPA|cen=è|bal=é|val=é}}<!-- per Vriullop; cawikt says é everywhere, confirmed by all except GDLC [[setge]], which
+may represent a more recent pronunciation -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -35073,7 +35218,8 @@ From {{der|ca|VL.|*sĕdicum}}.
 Page 2135 setges: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}<!-- FIXME: GDLC says /ɛ/ -->
+* {{ca-IPA|cen=è|bal=é|val=é}}<!-- per Vriullop; cawikt says é everywhere, confirmed by all except GDLC [[setge]], which
+may represent a more recent pronunciation -->
 
 ===Noun===
 {{head|ca|noun form}}
@@ -36774,12 +36920,17 @@ Page 2244 sonso: -------- begin text --------
 Of expressive origin.
 
 ===Pronunciation===
-* {{ca-IPA|ô}}<!-- FIXME: cawikt and DCVB say /o/ for Central Catalan -->
+* {{ca-IPA|cen=ò|bal=ó|val=ó}}<!-- per Vriullop -->
 
 ===Adjective===
 {{ca-adj}}
 
 # [[dull]], [[boring]]
+
+===Noun===
+{{ca-noun|m|f=+}}
+
+# [[dullard]], [[dull]] person
 
 ===Noun===
 {{ca-noun|m}}
@@ -36957,18 +37108,13 @@ Page 2255 sorgo: -------- begin text --------
 -------- end text --------
 Page 2256 sorna: -------- begin text --------
 
-===Etymology===
-From {{m|ca|sorn}}.
-
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- FIXME: cawikt says ô -->
+* {{ca-IPA|ó}}<!-- both etyms; per Vriullop, confirmed by GDLC and DNV -->
 
-===Adjective===
-{{head|ca|adjective form}}
+===Etymology 1===
+Nominalization of the feminine of {{m|ca|sorn||dawdling}}.
 
-# {{feminine singular of|ca|sorn}}
-
-===Noun===
+====Noun====
 {{ca-noun|f}}
 
 # [[sarcasm]]
@@ -36981,8 +37127,15 @@ From {{m|ca|sorn}}.
 |url=https://cat.elpais.com/cat/2020/10/10/actualidad/1602349687_421892.html
 |passage=“La majoria dels clients són nacionals i repeteixen. Suposo que és el que passava abans i el que ha portat la nova normalitat”, diu amb una mica de '''sorna'''.}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|sorneguer}}
+
+===Etymology 2===
+
+====Adjective====
+{{head|ca|adjective form}}
+
+# {{feminine singular of|ca|sorn}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -37124,7 +37277,7 @@ Page 2264 sosa: -------- begin text --------
 {{bor+|ca|ar|سُوَيْدَاء}} respectively a dialectal variant of it.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- FIXME: cawikt and DCVB say ô -->
+* {{ca-IPA|ó}}<!-- per Vriullop -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -37149,7 +37302,7 @@ Page 2264 sosa: -------- begin text --------
 Page 2265 sostre: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|cen=ô|nw=ó|val=ó|bal=ó}}<!-- both etyms -->
+* {{ca-IPA|cen=ò|val=ó|bal=ó}}<!-- both etyms; per Vriullop, Central ò due to Coromines' law -->
 * {{audio|ca|LL-Q7026 (cat)-Toniher-sostre.wav|Audio (Catalonia)}}
 
 ===Etymology 1===
@@ -37181,7 +37334,7 @@ Page 2265 sostre: -------- begin text --------
 Page 2266 sostres: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|cen=ô|nw=ó|val=ó|bal=ó}}<!-- both etyms -->
+* {{ca-IPA|cen=ò|val=ó|bal=ó}}<!-- both etyms; per Vriullop, Central ò due to Coromines' law -->
 
 ===Etymology 1===
 
@@ -37230,7 +37383,7 @@ Page 2267 sota: -------- begin text --------
 Page 2268 sotgen: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- FIXME: A guess for Central Catalan; verify -->
+* {{ca-IPA|ó}}<!-- per Vriullop, uncertain for Central Catalan -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37240,7 +37393,7 @@ Page 2268 sotgen: -------- begin text --------
 Page 2269 sotges: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- FIXME: A guess for Central Catalan; verify -->
+* {{ca-IPA|ó}}<!-- per Vriullop, uncertain for Central Catalan -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37250,7 +37403,7 @@ Page 2269 sotges: -------- begin text --------
 Page 2270 sotgi: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- FIXME: A guess for Central Catalan; verify -->
+* {{ca-IPA|ó}}<!-- per Vriullop, uncertain for Central Catalan -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37260,7 +37413,7 @@ Page 2270 sotgi: -------- begin text --------
 Page 2271 sotgin: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- FIXME: A guess for Central Catalan; verify -->
+* {{ca-IPA|ó}}<!-- per Vriullop, uncertain for Central Catalan -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37270,7 +37423,7 @@ Page 2271 sotgin: -------- begin text --------
 Page 2272 sotgis: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- FIXME: A guess for Central Catalan; verify -->
+* {{ca-IPA|ó}}<!-- per Vriullop, uncertain for Central Catalan -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37280,7 +37433,7 @@ Page 2272 sotgis: -------- begin text --------
 Page 2273 sotja: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- FIXME: A guess for Central Catalan; verify -->
+* {{ca-IPA|ó}}<!-- per Vriullop, uncertain for Central Catalan -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37290,7 +37443,7 @@ Page 2273 sotja: -------- begin text --------
 Page 2274 sotjo: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- FIXME: A guess for Central Catalan; verify -->
+* {{ca-IPA|ó}}<!-- per Vriullop, uncertain for Central Catalan -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37624,7 +37777,7 @@ Page 2293 tempo: -------- begin text --------
 Page 2294 tempra: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere but GDLC [[tempre]] says é; presumably é is more recent for Central -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37635,7 +37788,7 @@ Page 2294 tempra: -------- begin text --------
 Page 2295 tempren: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere but GDLC [[tempre]] says é; presumably é is more recent for Central -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37645,7 +37798,7 @@ Page 2295 tempren: -------- begin text --------
 Page 2296 tempres: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere but GDLC [[tempre]] says é; presumably é is more recent for Central -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37655,7 +37808,7 @@ Page 2296 tempres: -------- begin text --------
 Page 2297 tempri: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere but GDLC [[tempre]] says é; presumably é is more recent for Central -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37666,7 +37819,7 @@ Page 2297 tempri: -------- begin text --------
 Page 2298 temprin: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere but GDLC [[tempre]] says é; presumably é is more recent for Central -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37677,7 +37830,7 @@ Page 2298 temprin: -------- begin text --------
 Page 2299 tempris: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere but GDLC [[tempre]] says é; presumably é is more recent for Central -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -37687,7 +37840,7 @@ Page 2299 tempris: -------- begin text --------
 Page 2300 tempro: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere but GDLC [[tempre]] says é; presumably é is more recent for Central -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -39859,6 +40012,9 @@ Page 2443 totxa: -------- begin text --------
 -------- end text --------
 Page 2444 totxes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|cen=ó,ò<q:Girona>|bal=ò|val=ó}}
+
 ===Adjective===
 {{head|ca|adjective form}}
 
@@ -39870,7 +40026,7 @@ Page 2445 totxo: -------- begin text --------
 {{bor+|ca|an|tocho}}, from {{der|ca|la|tuscus}}. Compare {{cog|es|tocho}}.
 
 ===Pronunciation===
-* {{ca-IPA|ô}}
+* {{ca-IPA|cen=ó,ò<q:Girona>|bal=ò|val=ó}}
 
 ===Adjective===
 {{ca-adj}}
@@ -39902,6 +40058,9 @@ Page 2445 totxo: -------- begin text --------
 -------- end text --------
 Page 2446 totxos: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|cen=ó,ò<q:Girona>|bal=ò|val=ó}}
+
 ===Adjective===
 {{head|ca|adjective form}}
 
@@ -39914,22 +40073,22 @@ Page 2446 totxos: -------- begin text --------
 -------- end text --------
 Page 2447 tova: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|east=ó|val=ò,ó}}<!-- both etyms, apparently -->
+
 ===Etymology 1===
 {{bor+|ca|ar|طُوب}}.
-
-====Pronunciation====
-* {{ca-IPA|ò}}
 
 ====Noun====
 {{ca-noun|f}}
 
 # [[adobe]]
 #: {{syn|ca|atovó|q1=Valencian}}
+# [[porous]] [[stone]]
+#: {{coi|ca|tova calcària|limestone, travertine}}
+#: {{coi|ca|tova volcànica|tuff}}
 
 ===Etymology 2===
-
-====Pronunciation====
-* {{ca-IPA|ó}}
 
 ====Adjective====
 {{head|ca|adjective form}}
@@ -39944,6 +40103,9 @@ Page 2447 tova: -------- begin text --------
 
 -------- end text --------
 Page 2448 toves: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|east=ó|val=ò,ó}}<!-- both etyms, apparently -->
 
 ===Etymology 1===
 
@@ -39962,6 +40124,9 @@ Page 2448 toves: -------- begin text --------
 -------- end text --------
 Page 2449 tregui: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ë}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -39969,6 +40134,9 @@ Page 2449 tregui: -------- begin text --------
 # {{ca-verb form of|traure}}
 -------- end text --------
 Page 2450 treguin: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ë}}
 
 ===Verb===
 {{head|ca|verb form}}
@@ -39978,6 +40146,9 @@ Page 2450 treguin: -------- begin text --------
 -------- end text --------
 Page 2451 treguis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ë}}
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -39986,18 +40157,20 @@ Page 2451 treguis: -------- begin text --------
 -------- end text --------
 Page 2452 trempa: -------- begin text --------
 
-===Etymology===
+===Pronunciation===
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- both etyms; FIXME: cawikt says ê everywhere, in agreement with DCVB for [[tremp]] and [[trempa]], but GDLC gives /e/ for both [[tremp]] and [[trempa]]; maybe /e/ is more modern as DCVB's fieldwork is ~ 100 years old -->
+
+===Etymology 1===
 {{deverbal|ca|trempar}}.
 
-===Pronunciation===
-* {{ca-IPA|ê}}
-
-===Noun===
+====Noun====
 {{ca-noun|f}}
 
 # {{lb|ca|painting}} [[tempera]]
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trempar}}
@@ -40008,12 +40181,18 @@ Page 2452 trempa: -------- begin text --------
 -------- end text --------
 Page 2453 trempen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere, in agreement with DCVB for [[tremp]] and [[trempa]], but GDLC gives /e/ for both [[tremp]] and [[trempa]]; maybe /e/ is more modern as DCVB's fieldwork is ~ 100 years old -->
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trempar}}
 -------- end text --------
 Page 2454 trempes: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere, in agreement with DCVB for [[tremp]] and [[trempa]], but GDLC gives /e/ for both [[tremp]] and [[trempa]]; maybe /e/ is more modern as DCVB's fieldwork is ~ 100 years old -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40023,6 +40202,9 @@ Page 2454 trempes: -------- begin text --------
 -------- end text --------
 Page 2455 trempi: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere, in agreement with DCVB for [[tremp]] and [[trempa]], but GDLC gives /e/ for both [[tremp]] and [[trempa]]; maybe /e/ is more modern as DCVB's fieldwork is ~ 100 years old -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -40031,12 +40213,18 @@ Page 2455 trempi: -------- begin text --------
 -------- end text --------
 Page 2456 trempin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere, in agreement with DCVB for [[tremp]] and [[trempa]], but GDLC gives /e/ for both [[tremp]] and [[trempa]]; maybe /e/ is more modern as DCVB's fieldwork is ~ 100 years old -->
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trempar}}
 -------- end text --------
 Page 2457 trempis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere, in agreement with DCVB for [[tremp]] and [[trempa]], but GDLC gives /e/ for both [[tremp]] and [[trempa]]; maybe /e/ is more modern as DCVB's fieldwork is ~ 100 years old -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40046,6 +40234,9 @@ Page 2457 trempis: -------- begin text --------
 -------- end text --------
 Page 2458 trempo: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|cen=é|bal=ê|val=é}}<!-- FIXME: cawikt says ê everywhere, in agreement with DCVB for [[tremp]] and [[trempa]], but GDLC gives /e/ for both [[tremp]] and [[trempa]]; maybe /e/ is more modern as DCVB's fieldwork is ~ 100 years old -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -40054,10 +40245,10 @@ Page 2458 trempo: -------- begin text --------
 Page 2459 trena: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- both etyms; from cawikt; confirmed by GDLC and DNV -->
 
 ===Etymology 1===
-From {{der|ca|VL.|*trēna}}, from {{der|ca|la|trīna||triple}}.
+{{inh+|ca|VL.|*trēna}}, from {{der|ca|la|trīna||triple}}.
 
 ====Noun====
 {{ca-noun|f}}
@@ -40085,20 +40276,38 @@ From {{der|ca|VL.|*trēna}}, from {{der|ca|la|trīna||triple}}.
 -------- end text --------
 Page 2460 trenca: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|ê}}
+===Etymology 1===
+{{deverbal|ca|trencar}}.
 
-===Noun===
+====Pronunciation====
+* {{ca-IPA|ê}}<!-- from cawikt; confirmed by GDLC and DNV -->
+
+====Noun====
 {{ca-noun|f}}
 
 # [[breakage]]
 #: {{syn|ca|trencadissa}}
 # [[branching]] {{gloss|in a road, river, etc.}}
 #: {{syn|ca|trencall}}
-# [[duffel coat]]
 # [[lesser grey shrike]]
 
-===Verb===
+===Etymology 2===
+{{bor+|ca|es|trenca}}; further origin uncertain.
+
+====Pronunciation====
+* {{ca-IPA|ë}}<!-- FIXME: Balearic unknown but ê seems unlikely for a borrowing -->
+
+====Noun====
+{{ca-noun|f}}
+
+# [[duffel coat]]
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|ê}}<!-- from cawikt; confirmed by GDLC and DNV -->
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trencar}}
@@ -40111,6 +40320,9 @@ Page 2460 trenca: -------- begin text --------
 -------- end text --------
 Page 2461 trenco: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- from cawikt; confirmed by GDLC and DNV -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -40118,6 +40330,9 @@ Page 2461 trenco: -------- begin text --------
 
 -------- end text --------
 Page 2462 trenen: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- from cawikt; confirmed by GDLC ([[trena]]) and DNV directly -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40128,15 +40343,27 @@ Page 2462 trenen: -------- begin text --------
 Page 2463 trenes: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- both etyms; from cawikt; confirmed by GDLC and DNV -->
 
-===Verb===
+===Etymology 1===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|trena}}
+
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trenar}}
 
 -------- end text --------
 Page 2464 treni: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- from cawikt; confirmed by GDLC ([[trena]]) and DNV directly -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40146,6 +40373,9 @@ Page 2464 treni: -------- begin text --------
 -------- end text --------
 Page 2465 trenin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- from cawikt; confirmed by GDLC ([[trena]]) and DNV directly -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -40154,12 +40384,18 @@ Page 2465 trenin: -------- begin text --------
 -------- end text --------
 Page 2466 trenis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- from cawikt; confirmed by GDLC ([[trena]]) and DNV directly -->
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trenar}}
 -------- end text --------
 Page 2467 treno: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- from cawikt; confirmed by GDLC ([[trena]]) and DNV directly -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40169,6 +40405,9 @@ Page 2467 treno: -------- begin text --------
 -------- end text --------
 Page 2468 trenquen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- from cawikt; confirmed by GDLC and DNV -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -40176,12 +40415,40 @@ Page 2468 trenquen: -------- begin text --------
 -------- end text --------
 Page 2469 trenques: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|ê}}<!-- from cawikt; confirmed by GDLC and DNV -->
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|trenca|t=breakage; lesser grey shrike}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|ë}}<!-- FIXME: Balearic unknown but ê seems unlikely for a borrowing -->
+
+====Verb====
+{{head|ca|noun form}}
+
+# {{plural of|ca|trenca|t=duffel coat}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|ê}}<!-- from cawikt; confirmed by GDLC and DNV -->
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trencar}}
 -------- end text --------
 Page 2470 trenqui: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- from cawikt; confirmed by GDLC and DNV -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40190,12 +40457,18 @@ Page 2470 trenqui: -------- begin text --------
 -------- end text --------
 Page 2471 trenquin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- from cawikt; confirmed by GDLC and DNV -->
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trencar}}
 -------- end text --------
 Page 2472 trenquis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- from cawikt; confirmed by GDLC and DNV -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40235,6 +40508,9 @@ Page 2473 trenta: -------- begin text --------
 -------- end text --------
 Page 2474 trentes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -40242,28 +40518,40 @@ Page 2474 trentes: -------- begin text --------
 -------- end text --------
 Page 2475 trepa: -------- begin text --------
 
-===Etymology===
-{{deverbal|ca|trepar}}.
-
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|é}}<!-- all three etyms; FIXME: may be wrong, but confirmed for Etymology 1 and 2 by GDLC and all three etyms by DNV -->
 
-===Noun===
+===Etymology 1===
+{{deverbal|ca|trepar}}. {{etydate|1205}}
+
+====Noun====
 {{ca-noun|f}}
 
 # {{lb|ca|historical}} a form of [[trimming]] added to clothing consisting of a hole in the cloth with a different colour of material showing underneath
 # {{lb|ca|graphic art}} [[stencil]]
 #: {{syn|ca|estergit}}
+
+===Etymology 2===
+Possibly derived from Etymology 1 (per GDLC) or a variant of {{m|ca|tropa}} (per DCVB), changed probably by analogy with {{m|ca|trepalla}}.
+
+====Noun====
+{{ca-noun|f}}
+
 # [[mob]], [[rabble]]
 #: {{syn|ca|gentalla}}
 
-===Verb===
+===Etymology 3===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trepar}}
 
 -------- end text --------
 Page 2476 trepen: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}<!-- FIXME: may be wrong; attested directly by DNV and through [[trepa]] by GDLC -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40273,13 +40561,35 @@ Page 2476 trepen: -------- begin text --------
 -------- end text --------
 Page 2477 trepes: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|é}}<!-- all three etyms; FIXME: may be wrong, but confirmed for Etymology 1 and 2 by GDLC and all three etyms by DNV -->
+
+===Etymology 1===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|trepa|t=trimming; stencil}}
+
+===Etymology 2===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|trepa|t=mob; riffraff}}
+
+===Etymology 3===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trepar}}
 
 -------- end text --------
 Page 2478 trepi: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}<!-- FIXME: may be wrong; attested directly by DNV and through [[trepa]] by GDLC -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40288,6 +40598,9 @@ Page 2478 trepi: -------- begin text --------
 -------- end text --------
 Page 2479 trepin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}<!-- FIXME: may be wrong; attested directly by DNV and through [[trepa]] by GDLC -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -40295,12 +40608,18 @@ Page 2479 trepin: -------- begin text --------
 -------- end text --------
 Page 2480 trepis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}<!-- FIXME: may be wrong; attested directly by DNV and through [[trepa]] by GDLC -->
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trepar}}
 -------- end text --------
 Page 2481 trepo: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}<!-- FIXME: may be wrong; attested directly by DNV and through [[trepa]] by GDLC -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40310,6 +40629,9 @@ Page 2481 trepo: -------- begin text --------
 -------- end text --------
 Page 2482 tresos: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -40317,25 +40639,32 @@ Page 2482 tresos: -------- begin text --------
 -------- end text --------
 Page 2483 treta: -------- begin text --------
 
-===Etymology===
-{{inh+|ca|la|tracta}}.
-
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|é}}<!-- both etyms -->
 
-===Noun===
+===Etymology 1===
+{{inh+|ca|la|tracta}}. {{etydate|1009}}
+
+====Noun====
 {{ca-noun|f}}
 
+# [[take out|taking out]], [[withdrawal]]
+# [[output]] {{q|of a factory, method of production, etc.}}
+# [[accessibility]] {{q|of a house, etc., for vehicles}}
+# {{lb|ca|business}} [[export]]
 # [[trick]]
 # [[joke]], witty [[remark]]
-# [[shot]]
+# {{lb|ca|tennis}} [[ace]] {{gl|unreturnable serve}}
+# {{lb|ca|archaic}} [[shot]] {{q|of a gun, cannon, etc.}}
 #: {{syn|ca|tret}}
-# {{lb|ca|business}} [[export]]
+# {{lb|ca|livestock}} [[separation]] of [[livestock]] [[intend]]ed for [[sale]] {{q|because unsuitable for breeding}}
 
-===Participle===
+===Etymology 2===
+
+====Participle====
 {{head|ca|past participle form|g=f-s}}
 
-# {{ca-verb form of|treure}}
+# {{feminine singular of|ca|tret}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -40345,10 +40674,10 @@ Page 2484 tretze: -------- begin text --------
 {{number box|ca}}
 
 ===Etymology===
-{{inh+|ca|la|tredecim||thirteen}}, from {{m|la|trēs||three}} + {{m|la|decem||ten}} (compare {{cog|oc|tretze}}, {{cog|fr|treize}}, {{cog|es|trece}}, {{cog|it|tredici}}).
+{{inh+|ca|la|trēdecim||thirteen}}, from {{m|la|trēs||three}} + {{m|la|decem||ten}} (compare {{cog|oc|tretze}}, {{cog|fr|treize}}, {{cog|es|trece}}, {{cog|it|tredici}}).
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|é}}<!-- from cawikt; confirmed by GDLC and DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-tretze.wav|Audio}}
 * {{rhymes|ca|edze|s=2}}
 
@@ -40375,6 +40704,9 @@ Page 2484 tretze: -------- begin text --------
 -------- end text --------
 Page 2485 tretzes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}<!-- from cawikt; confirmed by GDLC and DNV -->
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -40386,7 +40718,7 @@ Page 2486 treva: -------- begin text --------
 Ultimately from {{der|ca|gem-pro|*trewwō||fidelity, pledge}}, either via {{cog|got|𐍄𐍂𐌹𐌲𐌲𐍅𐌰}}, source of {{cog|es|tregua}}, or via {{cog|frk|*treuwu}}, source of {{cog|fro|trieve}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|é}}<!-- from cawikt; confirmed by GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -40404,6 +40736,9 @@ Ultimately from {{der|ca|gem-pro|*trewwō||fidelity, pledge}}, either via {{cog|
 -------- end text --------
 Page 2487 treves: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|é}}<!-- from cawikt; confirmed by GDLC and DNV -->
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -40411,19 +40746,30 @@ Page 2487 treves: -------- begin text --------
 -------- end text --------
 Page 2488 troba: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms; from cawikt, confirmed by GDLC and DNV -->
+
+===Etymology 1===
+{{deverbal|ca|trobar}}.
+
+====Noun====
 {{ca-noun|f}}
 
 # [[find]], [[discovery]]
 #: {{syn|ca|troballa}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trobar}}
 
 -------- end text --------
 Page 2489 troben: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- from cawikt, confirmed by GDLC and DNV -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40433,13 +40779,28 @@ Page 2489 troben: -------- begin text --------
 -------- end text --------
 Page 2490 trobes: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms; from cawikt, confirmed by GDLC and DNV -->
+
+===Etymology 1===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|troba}}
+
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trobar}}
 
 -------- end text --------
 Page 2491 trobi: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- from cawikt, confirmed by GDLC and DNV -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40449,6 +40810,9 @@ Page 2491 trobi: -------- begin text --------
 -------- end text --------
 Page 2492 trobin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- from cawikt, confirmed by GDLC and DNV -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -40456,12 +40820,18 @@ Page 2492 trobin: -------- begin text --------
 -------- end text --------
 Page 2493 trobis: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- from cawikt, confirmed by GDLC and DNV -->
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trobar}}
 -------- end text --------
 Page 2494 trobo: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- from cawikt, confirmed by GDLC and DNV -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40475,7 +40845,7 @@ Page 2495 troca: -------- begin text --------
 {{inh+|ca|VL.|*torca}}, from {{der|ca|la|torquis||collar, wreath}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- from cawikt, confirmed by GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -40492,12 +40862,13 @@ Page 2495 troca: -------- begin text --------
 Page 2496 tromba: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ó}}<!-- from cawikt, confirmed by GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|f}}
 
-# {{rfdef|ca}}
+# [[whirlwind]], [[waterspout]]
+# [[tornado]]
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -40509,7 +40880,7 @@ Page 2497 trombe: -------- begin text --------
 {{lbor|ca|NL.|thrombus}}, from {{der|ca|grc|θρόμβος}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ó}}<!-- from cawikt, confirmed by GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -40529,22 +40900,32 @@ Page 2498 trompa: -------- begin text --------
 Ultimately of imitative origin. Probably from a Germanic source (compare {{cog|frk|*trumba}}, {{cog|goh|trumpa}}) via {{bor|ca|it|tromba}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ó}}<!-- from cawikt, confirmed by GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|f}}
 
 # [[French horn]]
-# [[trunk]] (of animal)
-# {{lb|ca|anatomy}} [[tube]]
+# [[horn]] {{q|e.g. for hunting}}
+# [[trunk]] {{q|of an animal}}
+# {{lb|ca|entomology}} [[proboscis]] {{q|of an insect}}
+# {{lb|ca|anatomy}} [[tube]], [[duct]]
 # {{lb|ca|architecture}} [[squinch]]
 # [[trompe]]
+# {{lb|ca|colloquial}} [[drunkenness]]
 
 ====Derived terms====
 {{der2|ca|trompada|trompera|trompeta|a trompons}}
 
 ====Related terms====
 * {{l|ca|trompar}}
+
+===Noun===
+{{ca-noun|mfbysense}}
+
+# {{lb|ca|music}} [[horn]] [[player]]
+# [[dunce]], [[simpleton]]
+# {{lb|ca|colloquial}} [[drunkard]]
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -40554,16 +40935,24 @@ Ultimately of imitative origin. Probably from a Germanic source (compare {{cog|f
 -------- end text --------
 Page 2499 trompes: -------- begin text --------
 
-===Noun===
-{{head|ca|noun form}}
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- from cawikt, confirmed by GDLC and DNV -->
 
-# {{plural of|ca|trompa}}
+===Noun===
+{{head|ca|noun form|g=f-p}}
+
+# {{plural of|ca|trompa|t=horn; trunk, proboscis {{q|of an animal}}; tube, duct}}
+
+===Noun===
+{{head|ca|noun form|g=mfbysense-p}}
+
+# {{plural of|ca|trompa|t=horn player; simpleton; drunkard}}
 
 -------- end text --------
 Page 2500 trona: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- all three etyms, per GDLC and DNV -->
 
 ===Etymology 1===
 {{inh+|ca|la|tribuna}}. {{doublet|ca|tribuna}}.
@@ -40574,8 +40963,17 @@ Page 2500 trona: -------- begin text --------
 # [[pulpit]]
 #: {{syn|ca|púlpit}}
 # [[highchair]]
+# {{lb|ca|colloquial|figurative}} [[top hat]]
 
 ===Etymology 2===
+{{bor+|ca|es|trona}}, ultimately from {{der|ca|egy|-}} by way of {{der|ca|grc|νίτρον}}; see {{cog|en|trona}} for more.
+
+====Noun====
+{{ca-noun|f}}
+
+# {{lb|ca|chemistry}} {{l|en|trona}} {{q|dihydrate mineral form of {{w|sodium sesquicarbonate}}, formula Na<sub>3</sub>H(CO<sub>3</sub>)<sub>2</sub> · 2H<sub>2</sub>O}}
+
+===Etymology 3===
 {{nonlemma}}
 
 ====Verb====
@@ -40591,6 +40989,9 @@ Page 2500 trona: -------- begin text --------
 -------- end text --------
 Page 2501 tronen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- per GDLC and DNV -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -40599,7 +41000,19 @@ Page 2501 tronen: -------- begin text --------
 -------- end text --------
 Page 2502 trones: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms, per GDLC and DNV -->
+
+===Etymology 1===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|trona|t=pulpit; highchair; top hat}}
+
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|tronar}}
@@ -40608,7 +41021,7 @@ Page 2502 trones: -------- begin text --------
 Page 2503 troni: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ò}}<!-- per GDLC and DNV -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40618,12 +41031,18 @@ Page 2503 troni: -------- begin text --------
 -------- end text --------
 Page 2504 tronin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- per GDLC and DNV -->
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|tronar}}
 -------- end text --------
 Page 2505 tronis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- per GDLC and DNV -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40633,6 +41052,9 @@ Page 2505 tronis: -------- begin text --------
 -------- end text --------
 Page 2506 trono: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- per GDLC and DNV -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -40641,14 +41063,17 @@ Page 2506 trono: -------- begin text --------
 -------- end text --------
 Page 2507 tropa: -------- begin text --------
 
+===Etymology===
+{{bor+|ca|es|tropa}}.
+
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|cen=ó|bal=ò|val=ò}}
 
 ===Noun===
 {{ca-noun|f}}
 
-# [[troop]], [[crowd]]
 # {{lb|ca|military}} [[army]], [[troop]]
+# {{lb|ca|pejorative}} [[crowd]], [[throng]]
 
 ===References===
 * {{R:ca:IEC2}}
@@ -40659,6 +41084,9 @@ Page 2507 tropa: -------- begin text --------
 -------- end text --------
 Page 2508 tropes: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|cen=ó|bal=ò|val=ò}}
+
 ===Noun===
 {{head|ca|noun form}}
 
@@ -40667,11 +41095,11 @@ Page 2508 tropes: -------- begin text --------
 -------- end text --------
 Page 2509 trossa: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms; confirmed by GDLC and DNV -->
+
 ===Etymology 1===
 {{deverbal|ca|trossar}}.
-
-====Pronunciation====
-* {{ca-IPA|ò}}
 
 ====Noun====
 {{ca-noun|f}}
@@ -40697,6 +41125,9 @@ Page 2509 trossa: -------- begin text --------
 -------- end text --------
 Page 2510 trossen: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- confirmed by GDLC and DNV -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -40705,13 +41136,28 @@ Page 2510 trossen: -------- begin text --------
 -------- end text --------
 Page 2511 trosses: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms; confirmed by GDLC and DNV -->
+
+===Etymology 1===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|trossa}}
+
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trossar}}
 
 -------- end text --------
 Page 2512 trossi: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- confirmed by GDLC and DNV -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40721,12 +41167,18 @@ Page 2512 trossi: -------- begin text --------
 -------- end text --------
 Page 2513 trossin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- confirmed by GDLC and DNV -->
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trossar}}
 -------- end text --------
 Page 2514 trossis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- confirmed by GDLC and DNV -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40735,12 +41187,18 @@ Page 2514 trossis: -------- begin text --------
 -------- end text --------
 Page 2515 trosso: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- confirmed by GDLC and DNV -->
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trossar}}
 -------- end text --------
 Page 2516 trossos: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- confirmed by GDLC and DNV -->
 
 ===Noun===
 {{head|ca|noun form}}
@@ -40749,15 +41207,15 @@ Page 2516 trossos: -------- begin text --------
 -------- end text --------
 Page 2517 trota: -------- begin text --------
 
-===Etymology 1===
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- per cawikt, both etyms; verbal sense confirmed by GDLC and DNV -->
 
-====Pronunciation====
-* {{ca-IPA|ò}}
+===Etymology 1===
 
 ====Noun====
 {{ca-noun|f}}
 
-# {{rfdef|ca}}
+# {{lb|ca|rare}} {{vern|common eagle ray}} ({{taxlink|Myliobatis aquila|species}})
 
 ===Etymology 2===
 
@@ -40769,6 +41227,9 @@ Page 2517 trota: -------- begin text --------
 -------- end text --------
 Page 2518 troten: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- confirmed by GDLC and DNV -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -40777,13 +41238,28 @@ Page 2518 troten: -------- begin text --------
 -------- end text --------
 Page 2519 trotes: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- both etyms; from cawikt; verbal sense confirmed by GDLC and DNV -->
+
+===Etymology 1===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trotar}}
 
+===Etymology 2===
+
+====Noun====
+{{head|ca|noun form}}
+
+# {{plural of|ca|trota|t=common eagle ray}}
+
 -------- end text --------
 Page 2520 troti: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- confirmed by GDLC and DNV -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40793,12 +41269,18 @@ Page 2520 troti: -------- begin text --------
 -------- end text --------
 Page 2521 trotin: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- confirmed by GDLC and DNV -->
+
 ===Verb===
 {{head|ca|verb form}}
 
 # {{ca-verb form of|trotar}}
 -------- end text --------
 Page 2522 trotis: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- confirmed by GDLC and DNV -->
 
 ===Verb===
 {{head|ca|verb form}}
@@ -40812,7 +41294,7 @@ Page 2523 trotllo: -------- begin text --------
 {{rfe|ca}}
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ô}}<!-- FIXME: /ɔ/ everywhere per cawikt, but /o/ per DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -40830,6 +41312,9 @@ Page 2523 trotllo: -------- begin text --------
 -------- end text --------
 Page 2524 troto: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- confirmed by GDLC and DNV -->
+
 ===Verb===
 {{head|ca|verb form}}
 
@@ -40839,6 +41324,7 @@ Page 2524 troto: -------- begin text --------
 Page 2525 txeca: -------- begin text --------
 
 ===Pronunciation===
+* {{ca-IPA|ë}}<!-- from cawikt, confirmed by GDLC and DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-txeca.wav|Audio (Valencian)}}
 
 ===Adjective===
@@ -40849,6 +41335,7 @@ Page 2525 txeca: -------- begin text --------
 Page 2526 txeques: -------- begin text --------
 
 ===Pronunciation===
+* {{ca-IPA|ë}}<!-- from cawikt, confirmed by GDLC and DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-txeques.wav|Audio (Valencian)}}
 
 ===Adjective===
