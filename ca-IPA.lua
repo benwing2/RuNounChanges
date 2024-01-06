@@ -335,7 +335,7 @@ local function postprocess_general(syllables)
 	local voiceless = listToSet {"p", "t", "k", "f", "s", "ʃ", ""}
 	local voicing = {["k"]="ɡ", ["f"]="v", ["p"]="b", ["t"]="d", ["s"]="z"}
 	local devoicing = {["b"]="p", ["d"]="t", ["ɡ"]="k"}
-	
+
 	for i = 1, #syllables do
 		local current = syllables[i]
 		local previous = syllables[i - 1]
@@ -354,13 +354,18 @@ local function postprocess_general(syllables)
 			if cons then
 				previous.coda = rsub(previous.coda, "t$", cons)
 			end
-			
+
+			-- ɡn -> ŋn
+			if rfind(current.onset, "^n") then
+				previous.coda = rsub(previous.coda, "ɡ$", "ŋ")
+			end
+
 			-- n + labial > labialized assimilation
 			if rfind(current.onset, "^[mbp]") then
 				previous.coda = rsub(previous.coda, "n$", "m")
 			elseif rfind(current.onset, "^[fv]") then
 				previous.coda = rsub(previous.coda, "n$", "m") -- strictly ɱ
-			
+
 			-- l/n + palatal > palatalized assimilation
 			elseif rfind(current.onset, "^[ʒʎʃɲ]")
 			or rfind(current.onset, "^t͡ʃ")
