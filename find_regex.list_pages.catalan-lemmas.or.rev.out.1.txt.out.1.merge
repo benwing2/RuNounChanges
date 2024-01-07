@@ -9,7 +9,7 @@ Page 1 or: -------- begin text --------
 From {{inh-lite|ca|la|aurum}}, from {{inh|ca|itc-pro|*auzom}}, from {{der|ca|ine-pro|*h₂é-h₂us-o-||glow}}, from {{m|ine-pro|*h₂ews-||to dawn, become light, become red}}.
 
 ===Pronunciation===
-* {{ca-IPA|òrr}}
+* {{ca-IPA|òrr|bal=òrr<q:Menorca>,ò<q:Mallorca>}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-or.wav|Audio (Valencian)}}
 
 ===Noun===
@@ -32,7 +32,7 @@ Page 2 edat d'or: -------- begin text --------
 Page 3 -or: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|-or|-ōrem}}.
+{{inh+|ca|la|-or|-ōrem}}.
 
 ===Suffix===
 {{ca-noun|f}}
@@ -55,7 +55,7 @@ Page 4 raor: -------- begin text --------
 From earlier {{m|ca|rasor}}, from {{inh|ca|LL.|rāsōrium}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|raó(r)}}
 
 ===Noun===
 {{ca-noun|m|raons}}
@@ -86,7 +86,7 @@ Page 5 bor: -------- begin text --------
 {{elements|ca|B|beril·li|Be|carboni|C}}
 
 ===Pronunciation===
-* {{ca-IPA|bórr}}
+* {{ca-IPA|bòrr}}<!-- per GDLC and DNV; FIXME: A guess for Balearic; not documented in DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-bor.wav|Audio (Valencian)}}
 
 ===Noun===
@@ -109,10 +109,10 @@ Page 5 bor: -------- begin text --------
 Page 6 labor: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|labor}}.
+{{bor+|ca|la|labor|labōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(rr)]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -126,10 +126,10 @@ Page 7 sabor: -------- begin text --------
 {{inh+|ca|roa-oca|sabor}}, from {{inh|ca|la|sapor|sapōrem|flavor, taste}}, noun based on {{m|la|sapio|sapere|t=to taste}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|[ó(rr)]}}
 
 ===Noun===
-{{ca-noun|mf}}
+{{ca-noun|m|g2=f|g2_qual=archaic, poetic or regional}}
 
 # [[taste]], [[flavor]]
 
@@ -149,10 +149,10 @@ Page 7 sabor: -------- begin text --------
 Page 8 albor: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- both etyms? GDLC says -r is silent in both; DCVB agrees that Etymology 1 has no /r/ in Balearic; unknown on Etymology 2 -->
 
 ===Etymology 1===
-From {{der|ca|la|albor}}.
+From {{der|ca|la|albor|albōrem}}.
 
 ====Noun====
 {{ca-noun|f}}
@@ -162,7 +162,7 @@ From {{der|ca|la|albor}}.
 # [[dawnlight]]
 
 ===Etymology 2===
-From {{der|ca|la|alburnus}}. {{doublet|ca|alburn}}, a learned borrowing.
+{{inh+|ca|la|alburnus}}. {{doublet|ca|alburn}}, a learned borrowing.
 
 ====Noun====
 {{ca-noun|m}}
@@ -178,10 +178,10 @@ From {{der|ca|la|alburnus}}. {{doublet|ca|alburn}}, a learned borrowing.
 Page 9 tambor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|xaa|tr=ṭabbúl|تابول}}, hypocorism/diminutive of {{der|ca|ar|طُنْبُور}}; see {{cog|fa|طبل||drum}}.
+{{bor+|ca|xaa|tr=ṭabbúl|تابول}}, hypocorism/diminutive of {{der|ca|ar|طُنْبُور}}; see {{cog|fa|طبل||drum}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|[ó(r)]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -206,10 +206,10 @@ From {{der|ca|xaa|tr=ṭabbúl|تابول}}, hypocorism/diminutive of {{der|ca|a
 Page 10 rubor: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|rubor}}.
+{{bor+|ca|la|rubor|rubōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(rr)]}}
 
 ===Noun===
 {{ca-noun|mf}}
@@ -230,12 +230,12 @@ Page 10 rubor: -------- begin text --------
 Page 11 cor: -------- begin text --------
 {{wikipedia|lang=ca}}
 
-===Pronunciation===
-* {{ca-IPA|còrr}}
-
 ===Etymology 1===
 {{dercat|ca|itc-pro|ine-pro}}
 {{inh+|ca|roa-oca|cor}}, from {{inh|ca|VL.|*corem|g=m}}, from {{inh|ca|la|cor|g=n}}.
+
+====Pronunciation====
+* {{ca-IPA|còrr|bal=còrr<q:most parts>,cò<q:some parts of Menorca>}}<!-- per GDLC, DCVB and DNV -->
 
 ====Noun====
 {{ca-noun|m}}
@@ -252,6 +252,9 @@ Page 11 cor: -------- begin text --------
 
 ===Etymology 2===
 Probably borrowed from {{bor|ca|la|chorus}} (14th century), from {{der|ca|grc|χορός}}.
+
+====Pronunciation====
+* {{ca-IPA|cò(rr)}}<!-- per GDLC, DCVB and DNV -->
 
 ====Noun====
 {{ca-noun|m}}
@@ -303,7 +306,7 @@ Page 15 llacor: -------- begin text --------
 From {{af|ca|llac|-or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -321,10 +324,10 @@ From {{af|ca|llac|-or}}.
 Page 16 decor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|decōrum}}. {{doublet|ca|decòrum}}.
+{{bor+|ca|la|decōrum}}. {{doublet|ca|decòrum}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[órr]|bal=?}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -348,7 +351,7 @@ Page 17 secor: -------- begin text --------
 From {{af|ca|sec|-or}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|[ó(r)]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -366,7 +369,10 @@ From {{af|ca|sec|-or}}.
 Page 18 icor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|grc|ἰχώρ}}.
+{{bor+|ca|grc|ἰχώρ}}.
+
+===Pronunciation===
+* {{ca-IPA|[órr]|bal=?}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -381,7 +387,7 @@ Page 19 licor: -------- begin text --------
 {{swp|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[órr]}}<!-- /r/ in Balearic per DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -402,7 +408,7 @@ Page 20 picor: -------- begin text --------
 From {{af|ca|picar|-or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC, DCVB -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -420,7 +426,7 @@ From {{af|ca|picar|-or}}.
 Page 21 petricor: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+{{rfp|ca}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -437,7 +443,7 @@ Page 22 blancor: -------- begin text --------
 From {{suffix|ca|blanc|or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}
 
 ===Noun===
 {{ca-noun|f|-}}
@@ -460,7 +466,7 @@ Page 24 frescor: -------- begin text --------
 From {{af|ca|fresc|-or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -484,7 +490,7 @@ Page 25 foscor: -------- begin text --------
 From {{suffix|ca|fosc|or}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|[ó(r)]}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-foscor.wav|Audio}}
 * {{rhymes|ca|o(ɾ)|s=2}}
 
@@ -710,7 +716,7 @@ Page 35 pecador: -------- begin text --------
 Page 36 predicador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|praedicātor|praedicātōrem}}.
+{{bor+|ca|la|praedicātor|praedicātōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -738,7 +744,7 @@ From {{der|ca|la|praedicātor|praedicātōrem}}.
 Page 37 indicador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|indicātor|indicātōrem}}.
+{{bor+|ca|la|indicātor|indicātōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -960,7 +966,7 @@ From {{m|ca|roca}}.
 Page 47 enderrocador: -------- begin text --------
 
 ===Etymology===
-{{af|ca|enderrocar|-dor}}
+From {{af|ca|enderrocar|-dor}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -1224,7 +1230,7 @@ Page 58 cuidador: -------- begin text --------
 Page 59 fundador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|fundātor|fundātōrem}}.
+{{bor+|ca|la|fundātor|fundātōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -1347,7 +1353,7 @@ From {{af|ca|estafar|-dor}}.
 Page 65 triomfador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|triumphātor|triumphātōrem}}.
+{{slbor|ca|la|triumphātor|triumphātōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -1705,7 +1711,7 @@ Page 82 lligador: -------- begin text --------
 Page 83 investigador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|investīgātor|investīgātōrem}}.
+{{bor+|ca|la|investīgātor|investīgātōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -1919,7 +1925,7 @@ Page 94 somiador: -------- begin text --------
 * {{alt|ca|somniador}}
 
 ===Etymology===
-From {{der|ca|la|somniātor|somniātōrem}}, or from {{af|ca|somiar|-dor}}.
+{{slbor|ca|la|somniātor|somniātōrem}}, or from {{af|ca|somiar|-dor}}.
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -2108,7 +2114,7 @@ Page 103 boxejador: -------- begin text --------
 From {{suffix|ca|boxejar|dor}}.
 
 ===Pronunciation===
-* {{ca-IPA|boksejador}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -2198,7 +2204,7 @@ Page 108 massatjador: -------- begin text --------
 Page 109 Puigbalador: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|Púigbaladór}}
 * {{rhymes|ca|o(ɾ)|s=4}}
 
 ===Proper noun===
@@ -2287,7 +2293,7 @@ Page 114 ultracongelador: -------- begin text --------
 From {{af|ca|ultra-|congelador}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|últracongeladór}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -2358,7 +2364,7 @@ From {{af|ca|pelar|-dora}}.
 Page 118 revelador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|revelator|revelātōrem}}. Equivalent to {{suffix|ca|revelar|dor}}.
+{{bor+|ca|la|revelator|revelātōrem}}. Equivalent to {{suffix|ca|revelar|dor}}.
 
 ===Adjective===
 {{ca-adj}}
@@ -2391,7 +2397,7 @@ Page 119 perfilador: -------- begin text --------
 Page 120 compilador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|LL.|compīlātor|compīlātōrem}}.
+{{bor+|ca|LL.|compīlātor|compīlātōrem}}.
 
 ===Noun===
 {{ca-noun|m}}
@@ -2411,7 +2417,7 @@ From {{der|ca|LL.|compīlātor|compīlātōrem}}.
 Page 121 ventilador: -------- begin text --------
 
 ===Etymology===
-{{slbor|ca|la|ventilātor|ventilātōrem}}.
+{{bor+|ca|la|ventilātor|ventilātōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -2609,7 +2615,7 @@ Page 129 colador: -------- begin text --------
 Page 130 violador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|violātor|violātōrem}}.
+{{bor+|ca|la|violātor|violātōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -2802,7 +2808,7 @@ Page 139 legislador: -------- begin text --------
 Page 140 adulador: -------- begin text --------
 
 ===Etymology===
-{{slbor|ca|la|adūlātor|adūlātōrem}}.
+{{bor+|ca|la|adūlātor|adūlātōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -2884,7 +2890,7 @@ From {{com|ca|ànec|xiulador|t1=duck|t2=whistling}}.
 Page 144 simulador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|simulātor|simulātōrem}}.
+{{bor+|ca|la|simulātor|simulātōrem}}.
 
 ===Noun===
 {{ca-noun|m}}
@@ -3121,7 +3127,7 @@ Page 156 formador: -------- begin text --------
 Page 157 reformador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|refōrmātor|refōrmātōrem}}.
+{{bor+|ca|la|refōrmātor|refōrmātōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -3298,7 +3304,7 @@ Page 165 fascinador: -------- begin text --------
 Page 166 ordinador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|ōrdinātor|ōrdinātōrem}}, influenced by {{m|ca|ordenar}}.
+{{bor+|ca|la|ōrdinātor|ōrdinātōrem}}, influenced by {{m|ca|ordenar}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -3420,7 +3426,7 @@ Page 170 denominador: -------- begin text --------
 Page 171 donador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|donator|donātōrem}}.
+From {{der|ca|la|donator|dōnātōrem}}.
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -3476,13 +3482,6 @@ From {{af|ca|col·leccionar|-dor}}.
 * {{R:ca:GDLC}}
 * {{R:ca:DNV}}
 * {{R:ca:DCVB}}
--------- end text --------
-Page 174 col·lisonador: -------- begin text --------
-
-===Noun===
-{{ca-noun|m}}
-
-# {{lb|ca|physics}} [[collider]]
 -------- end text --------
 Page 175 detonador: -------- begin text --------
 
@@ -3667,7 +3666,7 @@ From {{af|ca|parar|-dor}}.
 Page 186 aparador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|LL.|apparator|apparātōrem}}.
+{{bor+|ca|LL.|apparator|apparātōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -3827,7 +3826,7 @@ Page 193 accelerador: -------- begin text --------
 Page 194 numerador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|numerātor|numerātōrem}}.
+{{bor+|ca|la|numerātor|numerātōrem}}.
 
 ===Noun===
 {{ca-noun|m}}
@@ -3841,7 +3840,7 @@ From {{der|ca|la|numerātor|numerātōrem}}.
 Page 195 generador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|generator|generātōrem}}.
+{{bor+|ca|la|generator|generātōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -3901,7 +3900,7 @@ From {{af|ca|incinerar|-dor}}.
 Page 197 emperador: -------- begin text --------
 
 ===Etymology===
-Taken from {{der|ca|la|imperātor|imperātōrem}} as a semi-learned term. Cf. {{m|ca|emprar}}.
+{{slbor|ca|la|imperātor|imperātōrem}}. Cf. {{m|ca|emprar}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -3986,7 +3985,7 @@ From {{af|ca|mirar|-dor}}.
 Page 201 admirador: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|admīrātor|admīrātōrem}}; {{af|ca|admirar|-dor}}.
+{{bor+|ca|la|admīrātor|admīrātōrem}}. {{surf|ca|admirar|-dor}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -4110,7 +4109,7 @@ From {{af|ca|virar|-dor}}.
 Page 207 orador: -------- begin text --------
 
 ===Etymology===
-From {{uder|ca|la|ōrātor|ōrātōrem}}.
+{{bor+|ca|la|ōrātor|ōrātōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -4177,7 +4176,7 @@ Page 209 adorador: -------- begin text --------
 Page 210 explorador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|explōrātor|explōrātōrem}}.
+{{bor+|ca|la|explōrātor|explōrātōrem}}.
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -4316,7 +4315,7 @@ From {{af|ca|esborrar|-dor}}.
 Page 217 administrador: -------- begin text --------
 
 ===Etymology===
-From {{uder|ca|la|administrātor|administrātōrem}}.
+{{bor+|ca|la|administrātor|administrātōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -4347,7 +4346,7 @@ From {{uder|ca|la|administrātor|administrātōrem}}.
 Page 218 daurador: -------- begin text --------
 
 ===Etymology===
-From {{af|ca|daurar|-dor|t1=to gild}}, attested from 1413.<ref>{{R:ca:GDLC}}</ref>
+From {{af|ca|daurar|-dor|t1=to gild}}. {{etydate|1413}}<ref>{{R:ca:GDLC}}</ref>
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -4399,7 +4398,7 @@ From {{af|ca|carburar|-dor}}.
 Page 222 procurador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|prōcūrātor|prōcūrātōrem}}.
+{{bor+|ca|la|prōcūrātor|prōcūrātōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -4624,7 +4623,7 @@ Page 234 microprocessador: -------- begin text --------
 From {{prefix|ca|micro|processador}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|mícroprocessadór}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -4664,6 +4663,9 @@ Page 237 teleespectador: -------- begin text --------
 
 ===Etymology===
 From {{af|ca|tele-|espectador}}.
+
+===Pronunciation===
+* {{ca-IPA|tèlespectadór}}
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -5263,7 +5265,7 @@ Page 264 prestador: -------- begin text --------
 Page 265 testador: -------- begin text --------
 
 ===Etymology===
-From {{uder|ca|la|testātor}}.
+{{bor+|ca|la|testātor|testātōrem}}.
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -5331,7 +5333,7 @@ From {{af|ca|entrevistar|-dor}}.
 Page 269 escrutador: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|scrūtātor|scrūtātōrem}}.
+{{bor+|ca|la|scrūtātor|scrūtātōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA|ó}}
@@ -5339,7 +5341,7 @@ From {{der|ca|la|scrūtātor|scrūtātōrem}}.
 ===Noun===
 {{ca-noun|m|f=+}}
 
-# {{lb|ca|politics}} Someone who inspects or tallies election ballots
+# {{lb|ca|politics}} someone who inspects or tallies election ballots
 
 ====Related terms====
 * {{l|ca|escrutar}}
@@ -5418,7 +5420,7 @@ Page 274 llavador: -------- begin text --------
 [[File:Llavador de Massalavés (País Valencià).jpg|thumb|alt=Llavador located in Massalavés, near Valencia.|''Llavador'' located in Massalavés, near Valencia.]]
 
 ===Etymology===
-{{inh+|ca|la|lavatorium}}, equivalent to {{af|ca|llavar|t1=to wash|-dor}}. Similar to {{cog|es|lavadero||washboard}}.
+{{inh+|ca|la|lavatorium}}, equivalent to {{af|ca|llavar|t1=to wash|-dor}}. Compare {{cog|es|lavadero||washboard}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -5598,7 +5600,7 @@ Page 285 estovador: -------- begin text --------
 Page 286 observador: -------- begin text --------
 
 ===Etymology===
-From {{uder|ca|la|observator|observātōrem}}.
+{{bor+|ca|la|observator|observātōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -5693,7 +5695,7 @@ Page 289 ambaixador: -------- begin text --------
 Page 290 enganxador: -------- begin text --------
 
 ===Etymology===
-{{af|ca|enganxar|-dor}}
+From {{af|ca|enganxar|-dor}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -5731,7 +5733,7 @@ Page 292 boxador: -------- begin text --------
 From {{suffix|ca|boxar|dor}}.
 
 ===Pronunciation===
-* {{ca-IPA|boksador}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -6176,7 +6178,7 @@ Page 316 contrafaedor: -------- begin text --------
 From {{af|ca|contrafer|-dor}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|còntrafaedór}}
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -6401,7 +6403,7 @@ Page 328 fredor: -------- begin text --------
 From {{suffix|ca|fred|or|gloss1=cold}} (suffix indicating an abstract noun). Compare {{cog|fr|froideur}}, {{cog|es|frior}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -6719,7 +6721,7 @@ From {{af|ca|engolir|-dor}}.
 Page 346 demolidor: -------- begin text --------
 
 ===Etymology===
-{{af|ca|demolir|-dor}}
+From {{af|ca|demolir|-dor}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -6992,7 +6994,7 @@ From {{af|ca|conquerir|-dor}}.
 Page 360 cosidor: -------- begin text --------
 
 ===Etymology===
-{{af|ca|cosir|-dor}}
+From {{af|ca|cosir|-dor}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -7155,7 +7157,7 @@ Page 367 buidor: -------- begin text --------
 From {{suffix|ca|buit|or}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|[ó(r)]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -7313,7 +7315,7 @@ Page 375 roldor: -------- begin text --------
 {{inh+|ca|VL.|*roretŭriu}}, from {{der|ca|la|rhus tyrius||Tyrian sumac}}, a name originally applied to the [[tanner's sumac]], {{m|en|Rhus coriaria}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -7329,10 +7331,10 @@ Page 375 roldor: -------- begin text --------
 Page 376 candor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|candor}}.
+{{bor+|ca|la|candor|candōrem}}. {{etydate|1839}}
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|[ó(r)]}}
 
 ===Noun===
 {{ca-noun|mf}}
@@ -7355,7 +7357,7 @@ Page 377 grandor: -------- begin text --------
 From {{af|ca|gran|-or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -7375,7 +7377,10 @@ From {{af|ca|gran|-or}}.
 Page 378 esplendor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|splendor}}.
+{{bor+|ca|la|splendor|splendōrem}}. {{etydate|1474}}
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -7390,7 +7395,7 @@ Page 379 resplendor: -------- begin text --------
 From {{af|ca|resplendir|-or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -7410,7 +7415,7 @@ Page 380 còndor: -------- begin text --------
 {{bor+|ca|es|cóndor}}, from {{der|ca|qu|kuntur}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[rr]}}<!-- per cawikt for Balearic -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -7429,7 +7434,7 @@ Page 380 còndor: -------- begin text --------
 Page 381 Teodor: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[órr]|bal=?}}
 * {{rhymes|ca|o(ɾ)|s=3}}
 
 ===Proper noun===
@@ -7444,7 +7449,7 @@ Page 382 inodor: -------- begin text --------
 {{lbor|ca|la|inodōrus}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[rr]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj}}
@@ -7464,6 +7469,9 @@ Page 382 inodor: -------- begin text --------
 -------- end text --------
 Page 383 ardor: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- DCVB says [əɾðóɾ] for Central; may be archaic; cawikt confirms no final [ɾ] -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -7474,13 +7482,13 @@ Page 383 ardor: -------- begin text --------
 Page 384 tardor: -------- begin text --------
 
 ===Alternative forms===
-* {{alt|ca|tardaó||western dialects}}
+* {{alt|ca|tardaó||Western dialects}}
 
 ===Etymology===
 {{inh+|ca|roa-oca|tardaó}} (influenced by the suffix {{m|ca|-or}}), from {{inh|ca|la|tardatio|tardātiōnem}}, from {{m|la|tardus||late}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|[ó(r)]}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-tardor.wav|Audio}}
 
 ===Noun===
@@ -7503,11 +7511,11 @@ Page 384 tardor: -------- begin text --------
 -------- end text --------
 Page 385 pudor: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
 {{bor+|ca|la|pudor|pudōrem}}.
+
+====Pronunciation====
+* {{ca-IPA|[órr]}}<!-- confirmed by GDLC and DCVB -->
 
 ====Noun====
 {{ca-noun|m}}
@@ -7517,7 +7525,10 @@ Page 385 pudor: -------- begin text --------
 # [[modesty]]
 
 ===Etymology 2===
-From {{der|ca|la|pūtor|pūtōrem}}.
+From {{der|ca|la|pūtor|pūtōrem}}. {{etydate|14th century}}
+
+====Pronunciation====
+* {{ca-IPA|[ó(r)]}}<!-- confirmed by GDLC and DCVB -->
 
 ====Noun====
 {{ca-noun|f}}
@@ -7653,6 +7664,9 @@ From {{suffix|ca|distribuir|dor}}.
 -------- end text --------
 Page 393 meteor: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[ôrr]}}<!-- confirmed by GDLC and DCVB -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -7663,11 +7677,16 @@ Page 393 meteor: -------- begin text --------
 -------- end text --------
 Page 394 for: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|fôrr|bal=?}}<!-- per GDLC and DNV; no pronun in DCVB -->
+
 ===Noun===
 {{ca-noun|m}}
 
-# [[prize]], [[worth]]
+# [[tax]], [[rate]]
+# {{lb|ca|numismatics}} [[exchange rate]], [[market value]] {{q|of a coin}}
 # [[forum]]
+# {{lb|ca|archaic}} [[fuero]], [[tribual]]
 
 -------- end text --------
 Page 395 Safor: -------- begin text --------
@@ -7686,14 +7705,14 @@ Page 396 esgarrifor: -------- begin text --------
 From {{af|ca|esgarrifar|-or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}
 
 ===Noun===
 {{ca-noun|f}}
 
 # [[fright]], [[terror]]
 #: {{syn|ca|terror}}
-# [[gooseflesh]]
+# [[goose flesh]], [[goose bump]]s
 #: {{syn|ca|horripilació|pell de gallina}}
 
 ===Further reading===
@@ -7707,7 +7726,7 @@ Page 397 escalfor: -------- begin text --------
 From {{af|ca|escalfar|-or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -7732,7 +7751,7 @@ Page 399 fòsfor: -------- begin text --------
 {{elements|ca|P|silici|Si|sofre|S}}
 
 ===Pronunciation===
-* {{ca-IPA|fòsforr}}
+* {{ca-IPA|fòsforr}}<!-- confirmed by GDLC and DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-fòsfor.wav|Audio (Valencian)}}
 
 ===Noun===
@@ -7754,6 +7773,9 @@ Page 399 fòsfor: -------- begin text --------
 -------- end text --------
 Page 400 semàfor: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[o(rr)]}}<!-- per GDLC and cawikt -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -7762,7 +7784,7 @@ Page 400 semàfor: -------- begin text --------
 Page 401 Cristòfor: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|Cristòforr}}
+* {{ca-IPA|Cristòforr|bal=?}}<!-- per GDLC -->
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -7775,12 +7797,14 @@ Page 402 rigor: -------- begin text --------
 {{bor+|ca|la|rigor|rigōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[órr]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
-{{ca-noun|f}}
+{{ca-noun|mf}}
 
-# [[rigour]]
+# [[rigour]]/[[rigor]]
+# [[precision]], [[exactness]]
+# [[harshness]] {{q|of a climate}}
 
 ====Related terms====
 * {{l|ca|rigorós}}
@@ -7794,15 +7818,16 @@ Page 402 rigor: -------- begin text --------
 Page 403 vigor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|vigor|vigōrem|vigour}}, attested from the 13th century.<ref>{{R:ca:GDLC}}</ref>
+{{bor+|ca|la|vigor|vigōrem|vigour}}. {{etydate|13th century}}<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[órr]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
-{{ca-noun|m}}
+{{ca-noun|mf}}
 
-# [[vigour]]
+# [[vigour]]/[[vigor]]
+# [[validity]]
 
 ====Related terms====
 * {{l|ca|vigorós}}
@@ -7819,10 +7844,10 @@ From {{der|ca|la|vigor|vigōrem|vigour}}, attested from the 13th century.<ref>{{
 Page 404 xafogor: -------- begin text --------
 
 ===Etymology===
-{{inh+|ca|VL.|*exoffocatiō}}, from {{der|ca|la|offōcō|t=to choke}}.
+{{inh+|ca|VL.|*exoffocatiō|*exoffocatiōnem}}, from {{der|ca|la|offōcō|t=to choke}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -7841,7 +7866,7 @@ Page 405 grogor: -------- begin text --------
 From {{suffix|ca|groc|or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -7858,7 +7883,7 @@ Page 406 amargor: -------- begin text --------
 From {{af|ca|amarg|-or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -7887,8 +7912,14 @@ Page 408 sènior: -------- begin text --------
 ===Alternative forms===
 * {{alt|ca|sénior||Valencian}}
 
+===Etymology===
+{{bor+|ca|la|senior}} (nominative). {{doublet|ca|senyor}}, which was inherited.
+
+===Pronunciation===
+* {{ca-IPA|sëniorr|bal=?}}<!-- not in DCVB -->
+
 ===Adjective===
-{{head|ca|adjective}}
+{{ca-adj|mf}}
 
 # {{lb|ca|in names}} [[senior]]; the [[elder]]
 
@@ -7900,10 +7931,10 @@ Page 408 sènior: -------- begin text --------
 Page 409 inferior: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|īnferior}}.
+{{bor+|ca|la|īnferior|īnferiōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(rr)]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj|mf}}
@@ -7924,10 +7955,10 @@ From {{der|ca|la|īnferior}}.
 Page 410 superior: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|superior}}, attested from 1653.<ref>{{R:ca:GDLC}}</ref>
+{{bor+|ca|la|superior|superiōrem}}. {{etydate|1653}}<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(rr)]}}<!-- per cawikt, GDLC (which says pronounced -r, consistent with [[inferior]]) and DCVB (which says silent -r, but says [[inferior]] has pronounced -r) -->
 
 ===Adjective===
 {{ca-adj|mf}}
@@ -7955,7 +7986,7 @@ Page 410 superior: -------- begin text --------
 Page 411 ulterior: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(rr)]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj|mf}}
@@ -7973,10 +8004,10 @@ Page 411 ulterior: -------- begin text --------
 Page 412 anterior: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|anterior}}.
+{{bor+|ca|la|anterior|anteriōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(rr)]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj|mf}}
@@ -8009,7 +8040,7 @@ Page 413 quasianterior: -------- begin text --------
 From {{af|ca|quasi-|anterior}}.
 
 ===Pronunciation===
-* {{ca-IPA|quàsianteriór}}
+* {{ca-IPA|[quà,ó(rr)]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj|mf}}
@@ -8019,7 +8050,10 @@ From {{af|ca|quasi-|anterior}}.
 Page 414 interior: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|interior}}.
+{{bor+|ca|la|interior|interiōrem}}.
+
+===Pronunciation===
+* {{ca-IPA|[ó(rr)]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj|mf}}
@@ -8052,10 +8086,10 @@ Page 415 planta d'interior: -------- begin text --------
 Page 416 posterior: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|posterior}}.
+{{bor+|ca|la|posterior|posteriōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(rr)]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj|mf}}
@@ -8094,7 +8128,7 @@ Page 418 quasiposterior: -------- begin text --------
 From {{af|ca|quasi-|posterior}}.
 
 ===Pronunciation===
-* {{ca-IPA|quàsiposteriór}}
+* {{ca-IPA|[quà,ó(rr)]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj|mf}}
@@ -8104,7 +8138,10 @@ From {{af|ca|quasi-|posterior}}.
 Page 419 exterior: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|exterior}}.
+{{bor+|ca|la|exterior|exteriōrem}}.
+
+===Pronunciation===
+* {{ca-IPA|[ó(rr)]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj|mf}}
@@ -8139,7 +8176,10 @@ From {{der|ca|la|exterior}}.
 Page 420 prior: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|prior}}.
+{{bor+|ca|la|prior|priōrem}}.
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB; not like [[superior]] -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -8162,10 +8202,10 @@ From {{der|ca|la|prior}}.
 Page 421 major: -------- begin text --------
 
 ===Etymology===
-{{inh+|ca|la|maior}}.
+{{inh+|ca|la|maior|maiōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB; not like [[superior]] -->
 
 ===Adjective===
 {{ca-adj|mf}}
@@ -8226,7 +8266,7 @@ Page 424 rojor: -------- begin text --------
 From {{suffix|ca|roig|or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|f|-}}
@@ -8247,7 +8287,7 @@ Page 425 lletjor: -------- begin text --------
 From {{suffix|ca|lleig|or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|f|-}}
@@ -8261,7 +8301,7 @@ Page 426 pitjor: -------- begin text --------
 {{inh+|ca|la|peior|peiōrem}}, from {{inh|ca|ine-pro|*ped-yōs||to the ground, downward}}. {{etydate|14th century}}<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj|mf}}
@@ -8297,7 +8337,7 @@ Page 427 calor: -------- begin text --------
 {{inh+|ca|la|calor|calōrem|heat, warmth|g=m}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-calor.wav|Audio}}
 
 ===Noun===
@@ -8329,6 +8369,7 @@ Page 428 valor: -------- begin text --------
 {{bor+|ca|LL.|valor|valōrem}}, a noun based on {{der|ca|la|valeo|valēre}}.
 
 ===Pronunciation===
+* {{ca-IPA|[órr]}}<!-- per GDLC and DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-valor.wav|Audio}}
 
 ===Noun===
@@ -8356,7 +8397,7 @@ Page 429 clor: -------- begin text --------
 {{elements|ca|Cl|sofre|S|argó|Ar}}
 
 ===Pronunciation===
-* {{ca-IPA|clòrr}}
+* {{ca-IPA|clòrr}}<!-- per GDLC and DNV; FIXME: A guess for Balearic; not documented in DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-clor.wav|Audio (Valencian)}}
 
 ===Noun===
@@ -8385,7 +8426,7 @@ Page 430 flor: -------- begin text --------
 {{inh+|ca|la|flos|flōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|[ò(r)]}}<!-- per GDLC, DCVB and DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-flor.wav|Audio}}
 
 ===Noun===
@@ -8423,7 +8464,7 @@ Page 430 flor: -------- begin text --------
 Page 431 coliflor: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|còlifló(r)}}<!-- per GDLC; DCVB confirms [[flor]] -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-coliflor.wav|Audio (Valencian)}}
 
 ===Noun===
@@ -8453,7 +8494,7 @@ Page 432 llor: -------- begin text --------
 * {{alt|ca|llord}}
 
 ===Pronunciation===
-* {{ca-IPA|llòrr}}
+* {{ca-IPA|llòrr}}<!-- both etyms, per GDLC and DNV; FIXME: Balearic pronun not documented for Etymology 1 "mulatto" in DCVB -->
 
 ===Etymology 1===
 {{inh+|ca|la|lūridus||pale yellow}}.
@@ -8461,7 +8502,8 @@ Page 432 llor: -------- begin text --------
 ====Adjective====
 {{ca-adj}}
 
-# {{lb|ca|obsolete|color}} dark [[brown]]
+# {{lb|ca|obsolete}} [[dark]] [[brown]]
+# {{lb|ca|obsolete}} [[mulatto]] {{gl|mixed race, with one Black and one White parent}}
 
 =====Hypernyms=====
 * {{l|ca|bru}}
@@ -8496,7 +8538,7 @@ Page 433 vermellor: -------- begin text --------
 From {{suffix|ca|vermell|or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|f|-}}
@@ -8510,7 +8552,7 @@ Page 434 millor: -------- begin text --------
 {{inh+|ca|roa-oca|mellor}}, from {{inh|ca|la|melior|meliōrem|t=better}}, from {{inh|ca|ine-pro|*mélyōs}}, from {{m|ine-pro|*mel-||strong, big}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 * {{rhymes|ca|o(ɾ)|s=2}}
 
 ===Adjective===
@@ -8536,7 +8578,7 @@ Page 435 olor: -------- begin text --------
 {{inh+|ca|la|olor|olōrem}}, a non-Classical counterpart to {{inh|ca|la|odor|odōrem}}, likely influenced by {{m|la|oleo|olēre|t=to smell}}, both ultimately from {{der|ca|ine-pro|*h₃ed-||to smell, stink}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -8596,12 +8638,12 @@ Page 439 color: -------- begin text --------
 {{inh+|ca|la|color|colōrem}}. Compare {{cog|oc|color}}, {{cog|fr|couleur}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-color.wav|Audio}}
 * {{rhymes|ca|o(ɾ)|s=2}}
 
 ===Noun===
-{{ca-noun|m}}
+{{ca-noun|m|g2=f|g2_qual=archaic, regional or poetic}}
 
 # {{l|en|color}}, [[colour]]
 # {{lb|ca|poker}} [[flush]]
@@ -8634,7 +8676,8 @@ Page 441 tricolor: -------- begin text --------
 From {{af|ca|tri-|color}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[órr]}}<!-- per GDLC, despite [[color]] with silent r but consistent with [[incolor]]; Balearic by analogy with [[incolor]], indicated with pronounced r in DCVB -->
+* {{rhymes|ca|oɾ|s=3}}
 
 ===Adjective===
 {{ca-adj|mf}}
@@ -8655,8 +8698,8 @@ From {{af|ca|tri-|color}}.
 Page 442 incolor: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
-* {{rhymes|ca|o(ɾ)|s=3}}
+* {{ca-IPA|[órr]}}<!-- per GDLC and DCVB, despite [[color]] with silent r but consistent with [[tricolor]] -->
+* {{rhymes|ca|oɾ|s=3}}
 
 ===Adjective===
 {{ca-adj}}
@@ -8677,11 +8720,12 @@ Page 443 dolor: -------- begin text --------
 {{inh+|ca|la|dolor|dolōrem}}.
 
 ===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-dolor.wav|Audio}}
 * {{rhymes|ca|o(ɾ)|s=2}}
 
 ===Noun===
-{{ca-noun|mf}}
+{{ca-noun|m|g2=f|g2_qual=archaic, regional or poetic}}
 
 # [[pain]] of a continuing nature, especially that of [[rheumatism]]
 # [[sorrow]] or [[grief]] of a continuing nature
@@ -8702,10 +8746,10 @@ Page 443 dolor: -------- begin text --------
 Page 444 tremolor: -------- begin text --------
 
 ===Etymology===
-From earlier {{m|ca|tremoló}}, a contraction of {{m|ca|tremolaó}}, from {{inh|ca|VL.|*tremulatiō}}, from {{m|la|tremulus||trembling}}.
+From earlier {{m|ca|tremoló}}, a contraction of {{m|ca|tremolaó}}, from {{inh|ca|VL.|*tremulātiō|*tremulātiōnem}}, from {{m|la|tremulus||trembling}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -8724,7 +8768,7 @@ Page 445 plor: -------- begin text --------
 {{deverbal|ca|plorar}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|[ò(r)]}}<!-- per GDLC, DCVB and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -8744,15 +8788,15 @@ Page 445 plor: -------- begin text --------
 Page 446 amor: -------- begin text --------
 
 ===Etymology===
-{{inh+|ca|la|amōre}}, singular ablative of {{m|la|amor}}. Attested from the 12th century.<ref>{{R:ca:GDLC}}</ref>
+{{inh+|ca|la|amor|amōrem}}. {{etydate|12th century}}<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
-* {{ca-IPA|amórr}}
+* {{ca-IPA|[ó(rr)]}}<!-- per GDLC and DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-amor.wav|Audio}}
 * {{rhymes|ca|oɾ|s=2}}
 
 ===Noun===
-{{ca-noun|m}}
+{{ca-noun|m|g2=f|g2_qual=archaic or poetic}}
 
 # [[love]]
 #: {{ant|ca|odi}}
@@ -8794,7 +8838,7 @@ Page 448 clamor: -------- begin text --------
 {{inh+|ca|la|clāmor|clāmōrem|a shout, cry}}, from {{m|la|clāmō||cry out, complain}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 * {{rhymes|ca|o(ɾ)|s=2}}
 
 ===Noun===
@@ -8813,7 +8857,7 @@ Page 449 desamor: -------- begin text --------
 From {{prefix|ca|des|amor}}.
 
 ===Pronunciation===
-* {{ca-IPA|desamórr}}
+* {{ca-IPA|[ó(rr)]}}<!-- per GDLC; DCVB says silent -r in Central Catalan but this disagrees with what they say about [[amor]] -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -8828,10 +8872,10 @@ From {{prefix|ca|des|amor}}.
 Page 450 remor: -------- begin text --------
 
 ===Etymology===
-{{inh+|ca|la|rūmor}}.
+{{inh+|ca|la|rūmor|rūmōrem}}. {{doublet|ca|rumor}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -8861,7 +8905,7 @@ Page 451 cremor: -------- begin text --------
 From {{af|ca|cremar|-or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -8879,14 +8923,14 @@ From {{af|ca|cremar|-or}}.
 Page 452 temor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|timor}}.
+From {{der|ca|la|timor|timōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
-* {{rhymes|ca|o(r)}}
+* {{ca-IPA|[ó(rr)]}}<!-- per GDLC and cawikt; DCVB says silent -r in Central Catalan, but that may be outdated -->
+* {{rhymes|ca|oɾ|s=2}}
 
 ===Noun===
-{{ca-noun|mf}}
+{{ca-noun|m|g2=f|g2_qual=archaic, popular or poetic}}
 
 # [[fear]]
 #: {{syn|ca|por}}
@@ -8907,7 +8951,7 @@ Page 453 primor: -------- begin text --------
 From {{af|ca|prim|-or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|f|-}}
@@ -8925,10 +8969,10 @@ Page 454 humor: -------- begin text --------
 {{bor+|ca|la|hūmor|hūmōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(rr)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
-{{ca-noun|m}}
+{{ca-noun|m|g2=f|g2_qual=archaic, regional or poetic}}
 
 # [[humour]]
 
@@ -8942,13 +8986,16 @@ Page 454 humor: -------- begin text --------
 Page 455 rumor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|rumor|rumorem}}.
+{{bor+|ca|la|rumor|rūmōrem}} (a borrowing per DCVB). {{doublet|ca|remor}}. {{etydate|14th century}}
+
+===Pronunciation===
+* {{ca-IPA|[ó(rr)]}}<!-- per GDLC and cawikt; DCVB doesn't indicate pronunciation -->
 
 ===Pronunciation===
 * {{ca-IPA}}
 
 ===Noun===
-{{ca-noun|m}}
+{{ca-noun|m|g2=f|g2_qual=archaic, regional or poetic}}
 
 # {{l|en|rumor}}
 
@@ -8966,7 +9013,7 @@ Page 456 tumor: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[órr]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -8982,7 +9029,7 @@ Page 457 menor: -------- begin text --------
 {{inh+|ca|la|minor|minōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(rr)]}}<!-- per GDLC and cawikt; DCVB says silent -r in Central Catalan but may be outdated -->
 
 ===Adjective===
 {{ca-adj|mf}}
@@ -9009,15 +9056,19 @@ Page 458 tenor: -------- begin text --------
 From {{der|ca|la|tenor|tenōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(rr)]|bal=tenó<q:Mallorca>,tenórr<q:Menorca>}}<!-- per GDLC, cawikt, DCVB says -->
 
 ===Noun===
 {{ca-noun|m}}
 
-# [[tone]], [[tendency]]
-# {{l|en|tenor}}
+# {{lb|ca|music}} {{l|en|tenor}}
 
-====Related terms====
+===Noun===
+{{ca-noun|m|g2=f|g2_qual=archaic}}
+
+# [[tone]], [[tendency]], [[tenor]]
+
+===Related terms===
 * {{l|ca|tenir}}
 
 ===Further reading===
@@ -9030,7 +9081,7 @@ Page 459 finor: -------- begin text --------
 From {{af|ca|fi|-or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -9051,10 +9102,10 @@ Page 460 honor: -------- begin text --------
 {{inh+|ca|roa-oca|honor}}, from {{inh|ca|la|honor|honōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA|honórr}}
+* {{ca-IPA|[ó(rr)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
-{{ca-noun|m}}
+{{ca-noun|m|g2=f|g2_qual=archaic, regional or poetic}}
 
 # [[honour]]
 #: {{ant|ca|deshonor}}
@@ -9094,15 +9145,21 @@ Page 461 punt d'honor: -------- begin text --------
 -------- end text --------
 Page 462 Elionor: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[ó(rr)]}}<!-- per GDLC and DCVB; DCVB says silent -r in Central Catalan but that may be outdated -->
+
 ===Proper noun===
 {{ca-proper noun|f}}
 
-# [[Eleanor]]
+# {{given name|ca|female|eq=Eleanor}}
 -------- end text --------
 Page 463 sonor: -------- begin text --------
 
 ===Etymology===
 {{bor+|ca|la|sonōrus}}.
+
+===Pronunciation===
+* {{ca-IPA|[órr]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj}}
@@ -9110,7 +9167,8 @@ Page 463 sonor: -------- begin text --------
 # [[sounding]], making sound
 # {{lb|ca|relational}} [[sound]]
 # [[sonorous]], [[loud]]
-# [[wordy]], [[grandiloquent]]
+# {{lb|ca|linguistics}} [[voiced]]
+# {{lb|ca|pejorative}} [[wordy]], [[pompous]], [[grandiloquent]]
 
 ====Derived terms====
 * {{l|ca|banda sonora}}
@@ -9128,10 +9186,10 @@ Page 463 sonor: -------- begin text --------
 Page 464 por: -------- begin text --------
 
 ===Etymology 1===
-{{inh+|ca|roa-oca|paor}}, from {{inh|ca|la|pavor|pavōrem}}. Attested from the 12th century.<ref>{{R:ca:GDLC}}</ref> Compare {{cog|oc|paur}}, {{cog|fr|peur}}.
+{{inh+|ca|roa-oca|paor}}, from {{inh|ca|la|pavor|pavōrem}}. {{etydate|12th century}}<ref>{{R:ca:GDLC}}</ref> Compare {{cog|oc|paur}}, {{cog|fr|peur}}.
 
 ====Pronunciation====
-* {{ca-IPA|ó}}
+* {{ca-IPA|cen=pó|bal=pò|val=pòrr}}<!-- per cawikt; confirmed by GDLC, DCVB and DNV; also: Northern póu, Northwestern pò -->
 
 ====Noun====
 {{ca-noun|f}}
@@ -9144,10 +9202,13 @@ Page 464 por: -------- begin text --------
 
 ===Etymology 2===
 
+====Pronunciation====
+* {{ca-IPA|pôrr}}<!-- per GDLC and DNV; FIXME: pronunciation for Balearic not attested in DCVB; this is a guess -->
+
 ====Noun====
 {{ca-noun|m}}
 
-# {{alt form|ca|porus|t=pore}}
+# {{lb|ca|archaic}} {{alt form|ca|porus|t=pore}}
 
 ===References===
 <references/>
@@ -9159,10 +9220,10 @@ Page 464 por: -------- begin text --------
 Page 465 vapor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|vapor}}.
+{{bor+|ca|la|vapor|vapōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[órr]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -9202,10 +9263,10 @@ Page 467 cavall de vapor: -------- begin text --------
 Page 468 sopor: -------- begin text --------
 
 ===Etymology===
-{{lbor|ca|la|sopor}}.
+{{lbor|ca|la|sopor|sopōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|[órr]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|mf}}
@@ -9233,7 +9294,7 @@ Page 469 claror: -------- begin text --------
 From {{af|ca|clar|-or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 * {{homophones|ca|claró}}
 
 ===Noun===
@@ -9251,10 +9312,10 @@ From {{af|ca|clar|-or}}.
 Page 470 maror: -------- begin text --------
 
 ===Etymology===
-From {{m|ca|mar}}.
+From {{af|ca|mar|-or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -9290,7 +9351,7 @@ Page 472 negror: -------- begin text --------
 From {{suffix|ca|negre|or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -9301,6 +9362,9 @@ From {{suffix|ca|negre|or}}.
 -------- end text --------
 Page 473 aspror: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
+
 ===Noun===
 {{ca-noun|f|-}}
 
@@ -9309,19 +9373,16 @@ Page 473 aspror: -------- begin text --------
 Page 474 error: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|error}}.
+{{bor+|ca|la|error|errōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA|errórr}}
+* {{ca-IPA|[ó(rr)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
-{{ca-noun|m}}
+{{ca-noun|m|g2=f|g2=archaic, regional or poetic}}
 
 # {{l|en|error}}
 #: {{syn|ca|equivoc|equivocació|incorrecció}}
-
-====Usage notes====
-Also used as feminine noun, especially in older usage.
 
 ====Related terms====
 * {{l|ca|errar}}
@@ -9343,13 +9404,13 @@ Page 475 marge d'error: -------- begin text --------
 Page 476 terror: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|terror|terrorem}}.
+{{bor+|ca|la|terror|terrōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(rr)]}}<!-- per GDLC; FIXME: DCVB and cawikt say silent -r in Central Catalan but that may be outdated; Forvo pronun confirms pronounced -r -->
 
 ===Noun===
-{{ca-noun|mf}}
+{{ca-noun|m|g2=f|g2=archaic, regional or poetic}}
 
 # {{l|en|terror}}, [[horror]]
 
@@ -9357,13 +9418,13 @@ Page 476 terror: -------- begin text --------
 Page 477 furor: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|furor}}.
+{{bor+|ca|la|furor|furōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[órr]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
-{{ca-noun|mf}}
+{{ca-noun|m|g2=f|g2=archaic or poetic}}
 
 # {{l|en|furor}}, [[frenzy]]
 # {{lb|ca|figurative}} [[rage]], [[craze]]
@@ -9398,24 +9459,44 @@ Compare {{cog|fr|faire fureur}}.
 -------- end text --------
 Page 479 sor: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{dercat|ca|itc-pro|ine-pro}}
 {{inh+|ca|la|soror}} (nominative form).
 
-===Pronunciation===
-* {{ca-IPA}}
+====Pronunciation====
+* {{ca-IPA|sòrr}}<!-- per GDLC, DCVB, DNV -->
 
-===Noun===
+====Noun====
 {{ca-noun|f}}
 
 # {{lb|ca|religion}} [[sister]], female member of a religious community
 # {{lb|ca|archaic}} [[sister]]
 
-===Further reading===
+====Further reading====
 * {{R:ca:IEC2}}
 * {{R:ca:GDLC}}
 * {{R:ca:DNV}}
 * {{R:ca:DCVB}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|val=sòrr|bal=sòrr}}<!-- per DCVB, DNV; Balearic is a guess as DCVB only attests the feminine as [sɔ́ɾa] -->
+
+====Adjective====
+{{ca-adj}}
+
+# {{lb|ca|regional}} [[reddish]]
+
+===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|val=sòrr}}<!-- per DNV -->
+
+====Adjective====
+{{ca-noun|m}}
+
+# {{lb|ca|Valencia|botany}} [[sorus]]
 
 {{cln|ca|terms inherited from Latin nominatives}}
 
@@ -9425,15 +9506,16 @@ Page 480 rasor: -------- begin text --------
 ===Alternative forms===
 * {{alt|ca|raor||standard}}
 
+===Pronunciation===
+{{rfp|ca}}<!-- none given because this is dialectal only -->
+
 ===Noun===
 {{ca-noun|m|rasons}}
 
 # {{lb|ca|archaic|dialectal}} {{alternative form of|ca|raor}}
+#: {{syn|ca|navalla}}
 # {{lb|ca|Algherese}} [[knife]]
-
-====Synonyms====
-* {{sense|razor}} {{l|ca|navalla}}
-* {{sense|knife}} {{l|ca|ganivet}}, {{l|ca|coltell}}
+#: {{syn|ca|ganivet|coltell}}
 
 ====Derived terms====
 {{der2|ca|rasonet|rasor de taula|rasor de barba|rasor de rems}}
@@ -9449,7 +9531,13 @@ Page 480 rasor: -------- begin text --------
 Page 481 invasor: -------- begin text --------
 
 ===Etymology===
-From {{uder|ca|la|invāsor}}.
+{{bor+|ca|la|invāsor|invāsōrem}}.
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan but that must be outdated -->
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Adjective===
 {{ca-adj}}
@@ -9477,7 +9565,7 @@ Page 482 tresor: -------- begin text --------
 From {{der|ca|la|thesaurus}}, from {{der|ca|grc|θησαυρός}}. {{doublet|ca|tesaurus}}.
 
 ===Pronunciation===
-* {{ca-IPA|tresòrr}}
+* {{ca-IPA|[ò(rr)]}}<!-- per GDLC, DCVB and DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-tresor.wav|Audio}}
 
 ===Noun===
@@ -9501,6 +9589,9 @@ From {{der|ca|la|thesaurus}}, from {{der|ca|grc|θησαυρός}}. {{doublet|ca
 Page 483 televisor: -------- begin text --------
 {{wikipedia|lang=ca}}
 
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -9511,7 +9602,10 @@ Page 483 televisor: -------- begin text --------
 Page 484 divisor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|divisor}}.
+{{bor+|ca|la|divisor|dīvīsōrem}}.
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan but that must be outdated -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -9528,7 +9622,7 @@ From {{der|ca|la|divisor}}.
 Page 485 retrovisor: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -9556,6 +9650,9 @@ Page 486 mirall retrovisor: -------- begin text --------
 -------- end text --------
 Page 487 supervisor: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|sùpervisó(r)}}<!-- per GDLC -->
+
 ===Noun===
 {{ca-noun|m|f=+}}
 
@@ -9574,12 +9671,20 @@ Page 487 supervisor: -------- begin text --------
 Page 488 impulsor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|impulsor}}.
+{{bor+|ca|la|impulsor|impulsōrem}}.
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan but that must be outdated -->
 
 ===Adjective===
 {{ca-adj}}
 
 # [[impulsive]]
+
+===Noun===
+{{ca-noun|m|f=+}}
+
+# [[promoter]]
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -9591,8 +9696,7 @@ From {{der|ca|la|impulsor}}.
 Page 489 censor: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
-
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; pronun not given in DCVB -->
 * {{homophones|ca|sensor}}
 
 ===Noun===
@@ -9611,10 +9715,10 @@ Page 489 censor: -------- begin text --------
 Page 490 ascensor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|ascēnsor}}.
+{{bor+|ca|la|ascēnsor|ascēnsōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; pronun not given in DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Toniher-ascensor.wav|Audio (Catalonia)}}
 
 ===Noun===
@@ -9632,15 +9736,21 @@ From {{der|ca|la|ascēnsor}}.
 Page 491 defensor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|dēfēnsor}}.
+{{bor+|ca|la|dēfēnsor|dēfēnsōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
+
+===Adjective===
+{{ca-adj}}
+
+# [[defending]]
 
 ===Noun===
 {{ca-noun|m|f=+}}
 
 # [[defender]]
+# {{lb|ca|law}} [[defense attorney]]
 
 ====Related terms====
 * {{l|ca|defendre}}
@@ -9655,7 +9765,10 @@ From {{der|ca|la|dēfēnsor}}.
 Page 492 agrimensor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|agrīmēnsor||land surveyor}}.
+{{bor+|ca|la|agrīmēnsor|agrīmēnsōrem|land surveyor}}.
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan but that must be outdated -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -9675,10 +9788,10 @@ From {{der|ca|la|agrīmēnsor||land surveyor}}.
 Page 493 aspersor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|aspersus}} {{suffix|ca||or}}.
+From {{af|ca|la:aspersus|-or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -9695,8 +9808,11 @@ From {{der|ca|la|aspersus}} {{suffix|ca||or}}.
 -------- end text --------
 Page 494 inversor: -------- begin text --------
 
+===Etymology===
+{{bor+|ca|la|inversor|īnversōrem}}.
+
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan but that must be outdated -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -9721,6 +9837,9 @@ Page 495 precursor: -------- begin text --------
 ===Etymology===
 {{bor+|ca|la|praecursor|praecursōrem}}.
 
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan but that must be outdated -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -9744,7 +9863,7 @@ Page 496 grassor: -------- begin text --------
 From {{af|ca|gras|-or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -9759,7 +9878,15 @@ From {{af|ca|gras|-or}}.
 Page 497 successor: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|successor}}.
+{{bor+|ca|la|successor|successōrem}}.
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan but that must be outdated -->
+
+===Adjective===
+{{ca-adj}}
+
+# {{lb|ca|law}} [[succeeding]], [[following]]
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -9779,7 +9906,12 @@ Page 497 successor: -------- begin text --------
 Page 498 predecessor: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; no pronun in DCVB -->
+
+===Adjective===
+{{ca-adj}}
+
+# {{lb|ca|law}} [[preceding]]
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -9797,6 +9929,9 @@ Page 498 predecessor: -------- begin text --------
 -------- end text --------
 Page 499 antecessor: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; no pronun in DCVB -->
+
 ===Noun===
 {{ca-noun|m|f=+}}
 
@@ -9812,21 +9947,21 @@ Page 499 antecessor: -------- begin text --------
 Page 500 intercessor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|intercessor}}.
+{{bor+|ca|la|intercessor|intercessōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 * {{hyphenation|ca|in|ter|ces|sor}}
 
 ===Noun===
 {{ca-noun|m|f=+}}
 
-# {{l|en|intercessor}} {{gloss|one who intercedes}}
+# {{lb|ca|law|Christianity}} {{l|en|intercessor}} {{gloss|one who intercedes}}
 
 ===Adjective===
 {{ca-adj}}
 
-# [[interceding]] {{gloss|that intercedes}}
+# {{lb|ca|law|Christianity}} [[interceding]] {{gloss|that intercedes}}, [[mediating]]
 
 ===Related terms===
 * {{l|ca|intercedir}}
@@ -9841,13 +9976,13 @@ From {{der|ca|la|intercessor}}.
 Page 501 confessor: -------- begin text --------
 
 ===Etymology===
-{{lbor|ca|la|cōnfessor}}.
+{{lbor|ca|la|cōnfessor|cōnfessōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
-{{ca-noun|m}}
+{{ca-noun|m|f=+}}
 
 # {{lb|ca|Christianity}} {{l|en|confessor|confessor of the faith}}
 # {{l|en|confessor}} {{gloss|priest who hears confessions}}
@@ -9865,10 +10000,10 @@ Page 501 confessor: -------- begin text --------
 Page 502 professor: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|professor}}.
+{{bor+|ca|la|professor|professōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -9876,6 +10011,7 @@ Page 502 professor: -------- begin text --------
 # {{l|en|professor}}
 # [[teacher]]
 #: {{syn|ca|mestre|ensenyant}}
+# {{lb|ca|music}} [[musician]] {{q|in an orchestra}}
 
 ====Derived terms====
 * {{l|ca|professorat}}
@@ -9898,6 +10034,9 @@ Page 503 marmessor: -------- begin text --------
 ===Etymology===
 {{inh+|ca|la|manumissor|manūmissōrem|t=emancipator}}.
 
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
+
 ===Noun===
 {{ca-noun|m|f=+}}
 
@@ -9910,6 +10049,9 @@ Page 504 espessor: -------- begin text --------
 
 ===Etymology===
 From {{af|ca|espès|-or}}.
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -9926,10 +10068,10 @@ From {{af|ca|espès|-or}}.
 Page 505 agressor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|aggressor}}.
+{{bor+|ca|la|aggressor|aggressōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan but that must be outdated -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -9946,15 +10088,20 @@ From {{der|ca|la|aggressor}}.
 Page 506 assessor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|assessor}}.
+{{bor+|ca|la|assessor|assessōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan but that must be outdated -->
+
+===Adjective===
+{{ca-adj}}
+
+# {{lb|ca|law}} who [[assess]]es
 
 ===Noun===
 {{ca-noun|m|f=+}}
 
-# {{l|en|assessor}}
+# {{lb|ca|law}} {{l|en|assessor}}
 
 ====Derived terms====
 * {{l|ca|assessorar}}
@@ -9969,10 +10116,10 @@ From {{der|ca|la|assessor}}.
 Page 507 emissor: -------- begin text --------
 
 ===Etymology===
-{{lbor|ca|la|emissor}}.
+{{lbor|ca|la|emissor|ēmissōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj}}
@@ -10001,7 +10148,15 @@ Page 507 emissor: -------- begin text --------
 Page 508 transmissor: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|trānsmissor}}.
+{{bor+|ca|la|trānsmissor|trānsmissōrem}}.
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; no pronun in DCVB -->
+
+===Adjective===
+{{ca-adj}}
+
+# {{lb|ca|relational}} [[transmission]], [[transmitting]]; who [[transmit]]s
 
 ===Noun===
 {{ca-noun|m}}
@@ -10027,7 +10182,7 @@ Page 509 coïssor: -------- begin text --------
 Alteration of {{m|ca|cuiçor}}, from earlier {{m|ca|*cuiçó}} (with a change of suffix), from {{der|ca|la|coctiō||cooking}}. {{doublet|ca|cocció}}, a learned borrowing.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -10052,7 +10207,7 @@ Page 510 lluïssor: -------- begin text --------
 From {{af|ca|lluir|-or}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -10071,10 +10226,10 @@ Page 511 relator: -------- begin text --------
 * {{alt|ca|relador||obsolete}}
 
 ===Etymology===
-{{lbor|ca|la|relātor}}.
+{{lbor|ca|la|relātor|relātōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj}}
@@ -10099,15 +10254,23 @@ Page 511 relator: -------- begin text --------
 Page 512 actor: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|āctor}}.
+{{bor+|ca|la|āctor|āctōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan but that must be outdated -->
+
+===Noun===
+{{ca-noun|m|f=actora}}
+
+# {{lb|ca|sociology}} {{l|en|actor}}, [[agent]] {{gl|person who does an action}}
+# [[maker]], [[author]] {{q|e.g. of a law}}
+# {{lb|ca|law}} [[plaintiff]]
+# {{lb|ca|law}} [[legal]] [[entity]] who is [[party]] to a [[contract]]
 
 ===Noun===
 {{ca-noun|m|f=actriu}}
 
-# an {{l|en|actor}}
+# {{lb|ca|theater|film}} {{l|en|actor}}
 
 ====Related terms====
 * {{l|ca|actuar}}
@@ -10119,6 +10282,9 @@ Page 512 actor: -------- begin text --------
 
 -------- end text --------
 Page 513 redactor: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -10135,15 +10301,19 @@ Page 513 redactor: -------- begin text --------
 Page 514 factor: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|factor}}.
+{{bor+|ca|la|factor|factōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
 
-# {{l|en|factor}} {{gloss|integral part}}
+# [[doer]], [[agent]] {{gl|someone who does something}}
+# {{l|en|factor}} {{gloss|element, important part}}
+# {{lb|ca|biology|mathematics}} {{l|en|factor}}
+# {{lb|ca|railroad}} [[porter]]
+# {{lb|ca|business|commerce}} [[agent]] {{gl|someone who buys and sells on someone else's behalf}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -10155,7 +10325,10 @@ Page 515 benefactor: -------- begin text --------
 * {{alt|ca|benfactor}}
 
 ===Etymology===
-{{bor+|ca|LL.|benefactor}}.
+{{bor+|ca|LL.|benefactor|benefactōrem}}.
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; no pronun in DCVB -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -10175,7 +10348,10 @@ Page 515 benefactor: -------- begin text --------
 Page 516 malfactor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|malefactor}}.
+{{bor+|ca|la|malefactor|malefactōrem}}.
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj}}
@@ -10198,6 +10374,9 @@ From {{der|ca|la|malefactor}}.
 -------- end text --------
 Page 517 benfactor: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|bén.factó(r)}}<!-- per GDLC; no pronun in DCVB -->
+
 ===Noun===
 {{ca-noun|m|f=+}}
 
@@ -10210,6 +10389,9 @@ Page 517 benfactor: -------- begin text --------
 * {{R:ca:DCVB}}
 -------- end text --------
 Page 518 tractor: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; no pronun in DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -10232,7 +10414,7 @@ Page 519 lector: -------- begin text --------
 {{bor+|ca|la|lēctor|lēctōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan but that must be outdated -->
 
 ===Adjective===
 {{ca-adj}}
@@ -10265,7 +10447,10 @@ Page 520 targeta de lector: -------- begin text --------
 Page 521 elector: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|elector}}.
+{{bor+|ca|la|elector|ēlēctōrem}}.
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -10286,13 +10471,18 @@ From {{der|ca|la|elector}}.
 Page 522 reflector: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan but that must be outdated -->
 
 ===Adjective===
 {{ca-adj}}
 
 # [[reflective]]
 #: {{syn|ca|reflectant}}
+
+===Noun===
+{{ca-noun|m}}
+
+# {{lb|ca|physics|automotive}} [[reflector]]
 
 ====Further reading====
 * {{R:ca:DNV}}
@@ -10302,7 +10492,10 @@ Page 522 reflector: -------- begin text --------
 Page 523 inspector: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|īnspector}}, attested from 1803.<ref>{{R:ca:GDLC}}</ref>
+{{bor+|ca|la|īnspector|īnspectōrem}}. {{etydate|1803}}<ref>{{R:ca:GDLC}}</ref>
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -10324,15 +10517,16 @@ From {{der|ca|la|īnspector}}, attested from 1803.<ref>{{R:ca:GDLC}}</ref>
 Page 524 rector: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|rector}}.
+{{bor+|ca|la|rector|rēctōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj}}
 
 # [[ruling]]
+# [[guide|guiding]], [[regulate|regulating]], [[direct]]ing
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -10354,7 +10548,15 @@ Page 524 rector: -------- begin text --------
 Page 525 director: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|LL.|director|directorem}}, from {{der|ca|la|directus}}, attested from 1696.<ref>{{R:ca:GDLC}}</ref>
+{{bor+|ca|LL.|director|dīrēctōrem}}, from {{der|ca|la|dīrēctus}}. {{etydate|1696}}<ref>{{R:ca:GDLC}}</ref>
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
+
+===Adjective===
+{{ca-adj}}
+
+# [[guide|guiding]], [[regulate|regulating]], [[direct]]ing
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -10379,19 +10581,35 @@ Page 525 director: -------- begin text --------
 -------- end text --------
 Page 526 corrector: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
+
+===Adjective===
+{{ca-adj}}
+
+# [[correct]]ing
+
+===Noun===
+{{ca-noun|m|f=+}}
+
+# {{lb|ca|education}} [[proofreader]]
+# {{lb|ca|publishing}} [[copy editor]]
+
 ===Noun===
 {{ca-noun|m}}
 
 # {{lb|ca|cosmetics}} [[concealer]]
+# {{lb|ca|graphic arts}} [[correcting fluid]]
+# {{lb|ca|computers}} [[corrector]], [[correction]] [[software]] {{q|of spelling or grammar}}
 
 -------- end text --------
 Page 527 sector: -------- begin text --------
 
 ===Etymology===
-{{lbor|ca|la|sector}}.
+{{lbor|ca|la|sector|sectōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA|sectórr}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan but that must be outdated -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -10408,10 +10626,10 @@ Page 527 sector: -------- begin text --------
 Page 528 protector: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|prōtēctor}}.
+{{bor+|ca|la|prōtēctor|prōtēctōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan but that must be outdated -->
 
 ===Adjective===
 {{ca-adj}}
@@ -10446,10 +10664,10 @@ From {{der|ca|la|prōtēctor}}.
 Page 529 vector: -------- begin text --------
 
 ===Etymology===
-{{lbor|ca|la|vector}}.
+{{lbor|ca|la|vector|vectōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan but that must be outdated -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -10472,7 +10690,7 @@ Page 530 pseudovector: -------- begin text --------
 From {{af|ca|pseudo-|vector}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|psèudovectó(r)}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan in [[vector]] but that must be outdated -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -10487,7 +10705,10 @@ From {{af|ca|pseudo-|vector}}.
 Page 531 doctor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|doctor}}.
+{{bor+|ca|la|doctor|doctōrem}}.
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -10508,7 +10729,7 @@ From {{der|ca|la|doctor}}.
 Page 532 traductor: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-traductor.wav|Audio}}
 
 ===Noun===
@@ -10531,7 +10752,7 @@ Page 533 conductor: -------- begin text --------
 {{bor+|ca|la|conductor|conductōrem|contractor, employer}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj}}
@@ -10552,10 +10773,10 @@ Page 533 conductor: -------- begin text --------
 Page 534 productor: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|productor}}, from {{m|la|productus}}.
+{{bor+|ca|la|productor|prōductōrem}}, from {{m|la|prōductus}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan but that must be outdated -->
 
 ===Adjective===
 {{ca-adj}}
@@ -10577,13 +10798,21 @@ Page 534 productor: -------- begin text --------
 -------- end text --------
 Page 535 reproductor: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; no pronun in DCVB -->
+
 ===Adjective===
 {{ca-adj}}
 
 # [[reproductive]] {{gloss|of or relating to reproduction}}
 #: {{syn|ca|reproductiu}}
 
-====Related terms====
+===Noun===
+{{ca-noun|m|f=+}}
+
+# [[breed]]ing [[animal]]
+
+===Related terms===
 * {{l|ca|reproduir}}
 
 ===Further reading===
@@ -10596,16 +10825,21 @@ Page 535 reproductor: -------- begin text --------
 Page 536 destructor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|dēstrūctor}}.
+{{bor+|ca|la|dēstrūctor|dēstrūctōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 * {{rhymes|ca|o(ɾ)|s=3}}
+
+===Adjective===
+{{ca-adj}}
+
+# [[destructive]]
 
 ===Noun===
 {{ca-noun|m}}
 
-# {{l|en|destructor}} {{gloss|someone who destructs}}
+# [[destroyer]] {{gloss|someone who destroys}}
 # {{lb|ca|computing}} {{l|en|destructor}}
 # [[destroyer]] warship
 
@@ -10624,7 +10858,10 @@ From {{der|ca|la|dēstrūctor}}.
 Page 537 instructor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|īnstructor}}.
+{{bor+|ca|la|instructor|īnstrūctōrem}}.
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj}}
@@ -10649,7 +10886,7 @@ From {{der|ca|la|īnstructor}}.
 Page 538 Víctor: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[orr]}}<!-- per GDLC and DCVB -->
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -10660,7 +10897,7 @@ Page 538 Víctor: -------- begin text --------
 Page 539 pretor: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; no pronun in DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -10672,6 +10909,9 @@ Page 540 estretor: -------- begin text --------
 
 ===Etymology===
 From {{af|ca|estret|-or}}.
+
+===Pronunciation===
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -10687,15 +10927,20 @@ From {{af|ca|estret|-or}}.
 Page 541 editor: -------- begin text --------
 
 ===Etymology===
-From {{uder|ca|la|ēditor}}.
+{{bor+|ca|la|ēditor|ēditōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
+
+===Adjective===
+{{ca-adj}}
+
+# [[edit]]ing
 
 ===Noun===
 {{ca-noun|m|f=+}}
 
-# {{l|en|editor}}
+# {{lb|ca|graphic arts|publishing|computers}} {{l|en|editor}}
 
 ====Related terms====
 * {{l|ca|editar}}
@@ -10708,18 +10953,16 @@ From {{uder|ca|la|ēditor}}.
 Page 542 creditor: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la||crēditōr-}}, stem of {{m|la|crēditor}}.
+{{bor+|ca|la|creditor|crēditōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
 
 # {{l|en|creditor}}
-
-====Synonyms====
-* {{qualifier|slang}} {{l|ca|anglès}}, {{qualifier|slang|Valencia}} {{l|ca|anglés}}
+#: {{syn|ca|anglès<qq:slang>|anglés<qq:slang, Valencia>}}
 
 {{C|ca|Economics|People}}
 
@@ -10727,10 +10970,10 @@ Page 542 creditor: -------- begin text --------
 Page 543 progenitor: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|prōgenitor}}.
+{{bor+|ca|la|prōgenitor|prōgenitōrem}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|[ó(r)]}}<!-- per GDLC; DCVB says pronounced -r in Central Catalan but that must be outdated -->
 * {{rhyme|ca|o(ɾ)|s=4}}
 * {{hyph|ca|pro|ge|ni|tor}}
 
@@ -10753,7 +10996,7 @@ Page 543 progenitor: -------- begin text --------
 Page 544 monitor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|monitor|monitōrem|t=warner}}.
+{{bor+|ca|la|monitor|monitōrem|t=warner}}.
 
 ===Noun===
 {{ca-noun|m}}
@@ -10777,7 +11020,7 @@ From {{der|ca|la|monitor|monitōrem|t=warner}}.
 Page 545 compositor: -------- begin text --------
 
 ===Etymology===
-From {{uder|ca|la|compositor}}.
+{{bor+|ca|la|compositor|compositōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -10865,7 +11108,7 @@ Page 548 apicultor: -------- begin text --------
 Page 549 agricultor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|agricultor}}.
+{{bor+|ca|la|agricultor|agricultōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -10902,7 +11145,7 @@ Page 550 motocultor: -------- begin text --------
 Page 551 escultor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|sculptor}}.
+{{slbor|ca|la|sculptor|sculptōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -10928,7 +11171,7 @@ From {{der|ca|la|sculptor}}.
 Page 552 cantor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|cantor}}.
+{{bor+|ca|la|cantor|cantōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -11039,7 +11282,7 @@ Page 556 inventor: -------- begin text --------
 Page 557 pintor: -------- begin text --------
 
 ===Etymology===
-{{inh+|ca|roa-oca|pintor}}, from {{inh|ca|VL.|*pinctor|*pīnctōrem}}, from {{inh|ca|la|pictor|pictorem}}. Compare {{cog|oc|pintor}}, {{cog|es|pintor}}, {{cog|fr|peintre}}.
+{{inh+|ca|roa-oca|pintor}}, from {{inh|ca|VL.|*pinctor|*pīnctōrem}}, from {{inh|ca|la|pictor|pictōrem}}. Compare {{cog|oc|pintor}}, {{cog|es|pintor}}, {{cog|fr|peintre}}.
 
 ===Pronunciation===
 * {{ca-IPA|ó}}
@@ -11113,7 +11356,7 @@ Page 560 dotor: -------- begin text --------
 Page 561 motor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|motor}}.
+{{bor+|ca|la|motor|mōtōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA|motórr}}
@@ -11210,7 +11453,7 @@ Page 564 ciclomotor: -------- begin text --------
 Page 565 promotor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|promotor}}.
+{{bor+|ca|la|promotor|prōmōtōrem}}.
 
 ===Adjective===
 {{ca-adj}}
@@ -11240,7 +11483,7 @@ Page 566 receptor: -------- begin text --------
 * {{ca-IPA}}
 
 ===Etymology 1===
-{{bor+|ca|la|receptorius}}.
+{{bor+|ca|la|receptōrius}}.
 
 ====Adjective====
 {{ca-adj}}
@@ -11248,7 +11491,7 @@ Page 566 receptor: -------- begin text --------
 # [[receptive]]
 
 ===Etymology 2===
-{{bor+|ca|la|receptor}}.
+{{bor+|ca|la|receptor|receptōrem}}.
 
 ====Noun====
 {{ca-noun|m}}
@@ -11283,7 +11526,7 @@ Page 567 transceptor: -------- begin text --------
 Page 568 subscriptor: -------- begin text --------
 
 ===Etymology===
-From {{uder|ca|la|subscrīptor}}.
+{{bor+|ca|la|subscrīptor|subscrīptōrem}}.
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -11303,7 +11546,7 @@ From {{uder|ca|la|subscrīptor}}.
 Page 569 escriptor: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|scriptor|scriptorem}}.
+{{bor+|ca|la|scriptor|scrīptōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -11326,7 +11569,7 @@ Page 569 escriptor: -------- begin text --------
 Page 570 interruptor: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|LL.|interruptor}}, from {{der|ca|la|interrumpō}}.
+{{bor+|ca|LL.|interruptor|interruptōrem}}, from {{der|ca|la|interrumpō}}.
 
 ===Noun===
 {{ca-noun|m}}
@@ -11363,7 +11606,7 @@ From {{af|ca|cobert|-or}}.
 Page 572 desertor: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|desertor|desertorem}}, from {{der|ca|la|desertus}}.
+{{bor+|ca|la|desertor|dēsertōrem}}, from {{der|ca|la|dēsertus}}.
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -11394,7 +11637,7 @@ Page 573 fortor: -------- begin text --------
 Page 574 astor: -------- begin text --------
 
 ===Etymology===
-{{inh+|ca|VL.|acceptor}}, modification of {{der|ca|la|accipiter||hawk}}.
+{{inh+|ca|VL.|acceptor|acceptōrem}}, modification of {{der|ca|la|accipiter||hawk}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -11423,7 +11666,7 @@ Page 574 astor: -------- begin text --------
 Page 575 castor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|castor}}.
+{{bor+|ca|la|castor|castŏrem}}.
 
 ===Pronunciation===
 * {{ca-IPA|ó}}
@@ -11535,7 +11778,7 @@ Page 581 estor: -------- begin text --------
 Page 582 gestor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|gestor}}.
+{{bor+|ca|la|gestor|gestōrem}}.
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -11573,7 +11816,7 @@ From {{af|ca|trist|-or}}.
 Page 584 impostor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|LL.|impostor}}.
+{{bor+|ca|LL.|impostor|impostōrem}}.
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -11590,7 +11833,7 @@ From {{der|ca|LL.|impostor}}.
 Page 585 autor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|auctor}}.
+{{bor+|ca|la|auctor|auctōrem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -11656,7 +11899,7 @@ Page 587 cantautor: -------- begin text --------
 Page 588 locutor: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|locūtor}}.
+{{bor+|ca|la|locūtor|locūtōrem}}.
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -11753,7 +11996,7 @@ Page 593 claudàtor: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Etymology===
-{{bor+|ca|la|claudator}}, from {{m|la|claudere}}.
+{{bor+|ca|NL.|claudātor}} (nominative), from {{m|la|claudō}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -11802,7 +12045,7 @@ Page 596 fluor: -------- begin text --------
 {{elements|ca|F|oxigen|O|neó|Ne}}
 
 ===Etymology===
-{{lbor|ca|la|fluor||flowing}}.
+{{lbor|ca|la|fluor|fluōrem|flowing}}.
 
 ===Pronunciation===
 * {{ca-IPA|fluórr}}
@@ -11854,7 +12097,7 @@ Page 598 -vor: -------- begin text --------
 
 ===Etymology===
 {{root|ca|ine-pro|*gʷerh₃-}}
-From the {{der|ca|la|vorō|t=I devour}}.
+{{bor+|ca|la|-vorus}}, from {{der|ca|la|vorō|vorāre|t=to devour}}.
 
 ===Suffix===
 {{ca-adj}}
@@ -11867,12 +12110,12 @@ From the {{der|ca|la|vorō|t=I devour}}.
 # [[-vore]]
 
 ===Derived terms===
-{{suffixsee|ca}}
+From {{suffixsee|ca}}.
 -------- end text --------
 Page 599 favor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|favor}}, attested from the 14th century.<ref>{{R:ca:GDLC}}</ref>
+From {{der|ca|la|favor|favōrem}}. {{etydate|14th century}}<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
 * {{audio|ca|LL-Q7026 (cat)-Millars-favor.wav|Audio (Valencian)}}
@@ -11925,7 +12168,7 @@ From {{suffix|ca|blau|or}}.
 Page 602 llavor: -------- begin text --------
 
 ===Etymology===
-{{inh+|ca|VL.|labor|t=agricultural work}}, from {{der|ca|la|labor|t=work}}.
+{{inh+|ca|VL.|labor|labōrem|t=agricultural work}}, from {{der|ca|la|labor|t=work}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -11967,7 +12210,7 @@ From {{af|ca|tou|-or}}.
 Page 604 fervor: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|fervor}}, attested from the 14th century.<ref>{{R:ca:GDLC}}</ref>
+{{bor+|ca|la|fervor|fervōrem}}. {{etydate|14th century}}<ref>{{R:ca:GDLC}}</ref>
 
 ===Noun===
 {{ca-noun|mf}}
@@ -12112,7 +12355,7 @@ Page 609 senyor: -------- begin text --------
 Page 610 dolçor: -------- begin text --------
 
 ===Etymology===
-From {{af|ca|dolç|-or}}, attested from the 14th century.<ref>{{R:ca:GDLC}}</ref>
+From {{af|ca|dolç|-or}}. {{etydate|14th century}}<ref>{{R:ca:GDLC}}</ref>
 
 ===Noun===
 {{ca-noun|f}}
@@ -12131,7 +12374,7 @@ From {{af|ca|dolç|-or}}, attested from the 14th century.<ref>{{R:ca:GDLC}}</ref
 Page 611 torçor: -------- begin text --------
 
 ===Etymology===
-{{af|ca|tòrcer|-or}}
+From {{af|ca|tòrcer|-or}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
