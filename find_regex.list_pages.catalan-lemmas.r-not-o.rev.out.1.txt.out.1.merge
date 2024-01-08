@@ -39,6 +39,12 @@ Page 5 -ar: -------- begin text --------
 ===Etymology 1===
 {{inh+|ca|la|-āris|t=of, pertaining to}}.
 
+====Pronunciation====
+{{q|adjective}}
+* {{ca-IPA|-a(rr)}}<!-- DCVB confirms silent Balearic -r in [[vulgar]], [[familiar]], [[peculiar]], [[polar]], [[exemplar]] -->
+{{q|noun}}
+* {{ca-IPA|-a(r)}}
+
 ====Suffix====
 {{ca-adj|mf}}
 
@@ -54,6 +60,9 @@ Page 5 -ar: -------- begin text --------
 
 ===Etymology 2===
 {{inh+|ca|la|-āre}}.
+
+====Pronunciation====
+* {{ca-IPA|-a(r)}}
 
 ====Suffix====
 {{ca-verb}}
@@ -74,14 +83,40 @@ Page 5 -ar: -------- begin text --------
 -------- end text --------
 Page 6 bar: -------- begin text --------
 
-===Etymology===
-From {{bor|ca|fr|barre}}.
+===Pronunciation===
+* {{ca-IPA|barr|bal=barr,ba}}<!-- all etyms? per GDLC and cawikt; pronun not given in DCVB; FIXME: only Etymology 1 and 2 given pronuns in GDLC; Etymology 3 not present -->
 
-===Noun===
-{{head|ca|nouns|g=m|plural|bars}}
+===Etymology 1===
+{{bor+|ca|en|bar}}.
 
-# {{l|en|bar}} {{gloss|establishment}}
+====Noun====
+{{ca-noun|m}}
+
+# {{l|en|bar}} {{gloss|establishment where alcohol is served}}
+
+===Etymology 2===
+{{bor+|en|grc|βάρος||weight}}.
+
+====Noun====
+{{ca-noun|m}}
+
 # {{l|en|bar}} {{gloss|unit of measure}}
+
+===Etymology 3===
+Variant of archaic {{m|ca|bare}}, from {{der|ca|roa-oca|baare}}, derived from the nominative case of {{m|roa-oca|baador}}, a variant of {{m|roa-oca|bausador}} (whence {{m+|ca|bausador}}), borrowed from Old Occitan; of uncertain origin but probably related to {{cog|de|böse||evil}}.<ref>{{R:ca:GDLC}}{{R:ca|DCVB}}</ref>
+
+====Adjective====
+{{ca-adj|mf}}
+
+# {{lb|ca|obsolete}} [[traitorous]]
+
+====Noun====
+{{ca-noun|mfbysense}}
+
+# {{lb|ca|obsolete}} [[traitor]]
+
+===References===
+<references />
 
 -------- end text --------
 Page 7 acabar: -------- begin text --------
@@ -151,7 +186,7 @@ Page 7 acabar: -------- begin text --------
 Page 8 menyscabar: -------- begin text --------
 
 ===Etymology===
-From {{inh|ca|VL.|*minuscapō|*minuscapāre}}. Cognate with {{cog|pt|menoscabar}}.
+{{inh+|ca|VL.|*minuscapō|*minuscapāre}}. Cognate with {{cog|pt|menoscabar}}.
 
 ===Pronunciation===
 * {{ca-IPA|bal=ményscabàr|cen=mènyscabàr|val=ményscabàr}}
@@ -236,6 +271,9 @@ Page 11 mil·libar: -------- begin text --------
 
 ===Etymology===
 From {{af|ca|mil·li-|-bar}}.
+
+===Pronunciation===
+* {{ca-IPA|[arr]|bal=[arr],[ar:à]}}<!-- per GDLC, and per cawikt [[bar]] for Balearic -->
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -380,6 +418,9 @@ From {{m|ca|gamba|t=leg}}.
 -------- end text --------
 Page 17 arrambar: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Verb===
 {{ca-verb}}
 
@@ -501,6 +542,9 @@ From an {{onomatopoeic|ca|nocap=1}} / expressive root ''tumb-'' or ''tomb-'', im
 -------- end text --------
 Page 22 lumbar: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC, cawikt -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -522,7 +566,7 @@ Page 23 liquidàmbar: -------- begin text --------
 From the [[Liquidambar|genus name]].
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[arr]|bal=?}}<!-- FIXME: not in DCVB; DCVB has [[àmbar]] but no pronun given -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -931,7 +975,7 @@ Page 37 masturbar: -------- begin text --------
 Page 38 bàrbar: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|bàrbarr}}
+* {{ca-IPA|bàrbarr}}<!-- per GDLC, DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -1032,7 +1076,7 @@ Page 43 isòbar: -------- begin text --------
 From {{af|ca|iso-|-bar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]|bal=?}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -1054,12 +1098,12 @@ From {{af|ca|iso-|-bar}}.
 -------- end text --------
 Page 44 car: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|carr}}
-* {{rhymes|ca|aɾ|s=1}}
-
 ===Etymology 1===
-From {{inh|ca|la|carus|cārus}}.
+{{inh+|ca|la|cārus}}.
+
+====Pronunciation====
+* {{ca-IPA|carr|bal=ca<q:Mallorca,Menorca>,carr<q:Ibiza>}}<!-- per GDLC, DCVB -->
+* {{rhymes|ca|aɾ|s=1}}
 
 ====Adjective====
 {{ca-adj}}
@@ -1071,13 +1115,29 @@ From {{inh|ca|la|carus|cārus}}.
 #: {{syn|ca|estimat|amat|apreciat}}
 
 ===Etymology 2===
-From {{inh|ca|la|quare|quārē|how; why}}. Compare {{cog|fr|car}}.
+{{inh+|ca|la|quārē||how; why}}. Compare {{cog|fr|car}}.
+
+====Pronunciation====
+* {{ca-IPA|carr|bal=?}}<!-- FIXME: pronun for this meaning not given in DCVB -->
+* {{rhymes|ca|aɾ|s=1}}
 
 ====Conjunction====
 {{head|ca|conjunction}}
 
-# [[as]], [[since]], [[because]], [[for]]
+# {{lb|ca|archaic}} [[as]], [[since]], [[because]], [[for]]
 #: {{syn|ca|perquè}}
+
+===Etymology 3===
+{{bor+|ca|gkm|κάροιον|t=yard, spar}}, from {{der|ca|grc|κεραίᾱ}}.
+
+====Pronunciation====
+* {{ca-IPA|carr}}<!-- per GDLC, DCVB -->
+* {{rhymes|ca|aɾ|s=1}}
+
+====Noun====
+{{ca-noun|m}}
+
+# {{lb|ca|nautical}} [[foreyard]]
 
 ===Further reading===
 * {{R:ca:DCVB}}
@@ -1086,7 +1146,7 @@ From {{inh|ca|la|quare|quārē|how; why}}. Compare {{cog|fr|car}}.
 Page 45 aplacar: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- both etyms -->
 
 ===Etymology 1===
 {{bor+|ca|la|plācō|plācāre|to appease}}.
@@ -1141,11 +1201,11 @@ From {{af|ca|contra-|placa|-ar}}.
 -------- end text --------
 Page 47 macar: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
 {{inh+|ca|VL.|*maccare}}. (Compare {{cog|it|ammaccare}}, {{cog|es|macar}}.) Ultimate origin unknown.
+
+====Pronunciation====
+* {{ca-IPA}}
 
 ====Verb====
 {{ca-verb}}
@@ -1159,10 +1219,13 @@ Page 47 macar: -------- begin text --------
 ===Etymology 2===
 From {{af|ca|mac|-ar}}.
 
+====Pronunciation====
+* {{ca-IPA|bal=macà}}<!-- per DCVB -->
+
 ====Noun====
 {{ca-noun|m}}
 
-# stony ground
+# {{lb|ca|Balearic}} [[stony]] [[ground]]
 #: {{syn|ca|codolar}}
 
 ===Further reading===
@@ -1331,7 +1394,7 @@ Page 54 contraatacar: -------- begin text --------
 From {{prefix|ca|contra|atacar}}.
 
 ===Pronunciation===
-* {{ca-IPA|côntra(a)tacàr}}
+* {{ca-IPA|côntratacàr,côntraatacàr}}
 
 ===Verb===
 {{ca-verb}}
@@ -1447,7 +1510,7 @@ From {{affix|ca|en-|butxaca|-ar}}.
 Page 59 becar: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- both etyms -->
 * {{homophones|ca|becà|vacà|vacar}}
 * {{rhymes|ca|a(ɾ)|s=2}}
 
@@ -1841,7 +1904,7 @@ Page 72 predicar: -------- begin text --------
 Page 73 mendicar: -------- begin text --------
 
 ===Etymology===
-{{lbor|ca|la|mendīcō||I beg}}.
+{{lbor|ca|la|mendīcō|mendīcāre|to beg}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -1917,7 +1980,7 @@ Page 75 vindicar: -------- begin text --------
 Page 76 reivindicar: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|reïvindicar}}
+* {{ca-IPA|[eï]}}
 
 ===Verb===
 {{ca-verb}}
@@ -2182,6 +2245,9 @@ Page 87 solidificar: -------- begin text --------
 ===Etymology===
 From {{suffix|ca|sòlid|ificar}}.
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Verb===
 {{ca-verb}}
 
@@ -2363,7 +2429,10 @@ Page 94 exemplificar: -------- begin text --------
 Page 95 simplificar: -------- begin text --------
 
 ===Etymology===
-From the {{bor|ca|ML.|simplificor|simplificārī}}.
+{{bor+|ca|ML.|simplificor|simplificārī}}.
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Verb===
 {{ca-verb}}
@@ -2663,7 +2732,7 @@ Page 107 vitrificar: -------- begin text --------
 Page 108 purificar: -------- begin text --------
 
 ===Etymology===
-From {{uder|ca|la|pūrificō|pūrificāre}}.
+{{bor+|ca|la|pūrificō|pūrificāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -2773,6 +2842,9 @@ Page 112 versificar: -------- begin text --------
 -------- end text --------
 Page 113 diversificar: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Verb===
 {{ca-verb}}
 
@@ -2879,7 +2951,7 @@ Page 117 ratificar: -------- begin text --------
 Page 118 rectificar: -------- begin text --------
 
 ===Etymology===
-From {{uder|ca|la|rectifico|rēctificāre}}.
+{{bor+|ca|la|rectifico|rēctificāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -3256,6 +3328,9 @@ Page 132 publicar: -------- begin text --------
 -------- end text --------
 Page 133 clicar: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Verb===
 {{ca-verb}}
 
@@ -3416,6 +3491,9 @@ Page 138 multiplicar: -------- begin text --------
 
 -------- end text --------
 Page 139 implicar: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Verb===
 {{ca-verb}}
@@ -3602,6 +3680,7 @@ From a contraction of {{m|ca|*sonamicar}} from {{m|ca|sonar}}, an analogical for
 
 ===Verb===
 {{ca-verb}}
+
 # {{lb|ca|intransitive}} to [[whimper]]
 #: {{syn|ca|ploriquejar}}
 #* {{RQ:Sanchez Pell freda | chapter = 4 | passage = Vaig '''somicar''' amb llàgrimes petites, i al mateix temps que plorava, mentre em mossegava un puny, sabia, em constava, que cap providència em trauria mai de l'illa. | translation = I '''whimpered''' with small tears, and while I was crying, while I bit on a fist, I knew, it was obvious to me, that no providence could ever get me off the island.}}
@@ -4103,6 +4182,7 @@ Page 164 sofisticar: -------- begin text --------
 Page 165 diagnosticar: -------- begin text --------
 
 ===Pronunciation===
+* {{ca-IPA}}
 * {{rhymes|ca|a(ɾ)|s=5}}
 
 ===Verb===
@@ -5583,7 +5663,7 @@ From {{af|ca|per-|tocar}}.
 Page 218 autocar: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|àutocarr|bal=?}}<!-- per GDLC; no pronun given in DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -5662,6 +5742,9 @@ Page 221 revocar: -------- begin text --------
 
 ===Etymology===
 {{bor+|ca|la|revocō|revocāre}}.
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Verb===
 {{ca-verb|root=ò}}
@@ -5763,6 +5846,9 @@ Page 225 desconvocar: -------- begin text --------
 ===Etymology===
 From {{af|ca|des-|convocar}}.
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Verb===
 {{ca-verb|root=ò}}
 
@@ -5811,6 +5897,7 @@ Page 227 xocar: -------- begin text --------
 {{bor+|ca|fr|choquer}}.
 
 ===Pronunciation===
+* {{ca-IPA}}
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
@@ -5867,6 +5954,9 @@ Page 229 desembarcar: -------- begin text --------
 
 ===Etymology===
 From {{af|ca|des-|embarcar}}.
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Verb===
 {{ca-verb}}
@@ -6141,7 +6231,7 @@ From {{af|ca|forca|-ar}}.
 Page 239 enforcar: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- both etyms -->
 
 ===Etymology 1===
 From {{af|ca|en-|forca|-ar}}.
@@ -6229,7 +6319,7 @@ Page 243 Madagascar: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[arr]|bal=?}}<!-- per GDLC; not in DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-Madagascar.wav|Audio (Valencian)}}
 
 ===Proper noun===
@@ -6279,7 +6369,7 @@ Page 245 escar: -------- begin text --------
 Probably {{bor+|ca|lij|scaro|nocap=1}}; ultimately from {{der|ca|grc|ἐσχάριον}}. Cognate with {{cog|it|squero}}.
 
 ====Pronunciation====
-* {{ca-IPA|escarr}}
+* {{ca-IPA|[a(rr)]}}<!-- per DCVB; FIXME: no pronun given in GDLC; guessing it's the same as [[escar]] "piecework") -->
 
 ====Noun====
 {{ca-noun|m}}
@@ -6308,7 +6398,7 @@ From {{af|ca|esca|-ar}}. Cognate with {{cog|fr|escher}}.
 ===Etymology 3===
 
 ====Pronunciation====
-* {{ca-IPA|escarr}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC; no pronun given in DCVB (FIXME: guessing that it's the same as [[escar]] "drydock") -->
 
 ====Noun====
 {{ca-noun|m}}
@@ -6325,7 +6415,7 @@ Page 246 llescar: -------- begin text --------
 From {{af|ca|llesca|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA}}
 
 ===Verb===
 {{ca-verb|root=ê}}<!-- based on cawikt; confirmed by [[llesca]] in GDLC and [[llescar]] in DNV -->
@@ -6384,6 +6474,7 @@ Page 247 pescar: -------- begin text --------
 Page 248 refrescar: -------- begin text --------
 
 ===Pronunciation===
+* {{ca-IPA}}
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
@@ -6436,6 +6527,9 @@ Page 250 confiscar: -------- begin text --------
 
 ===Etymology===
 {{bor+|ca|la|confiscō|cōnfiscāre|to declare property of the [[fisc]]}}.
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Verb===
 {{ca-verb}}
@@ -6751,7 +6845,7 @@ Page 263 èuscar: -------- begin text --------
 {{bor+|ca|eu|euskara}}.
 
 ===Pronunciation===
-* {{ca-IPA|èuscarr}}
+* {{ca-IPA|[arr]|bal=?}}<!-- per GDLC; no pronun given in DCVB -->
 
 ===Adjective===
 {{ca-adj}}
@@ -6777,7 +6871,7 @@ Page 263 èuscar: -------- begin text --------
 Page 264 Òscar: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|Òscarr}}
+* {{ca-IPA|[arr]|bal=?}}<!-- per GDLC; no pronun given in DCVB -->
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -7140,7 +7234,7 @@ Page 278 àcar: -------- begin text --------
 {{bor+|ca|NL.|acarus}}, from {{der|ca|grc|ἄκαρι||cheese mite}}, from {{m|grc|ἀκαρής||tiny}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[arr]|bal=?}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -7158,6 +7252,7 @@ Page 279 dar: -------- begin text --------
 From {{inh-lite|ca|la|do|alt=dare}}, present active infinitive of {{m-lite|la|do|dō}}. Replaced by {{m-lite|ca|donar}} and became a {{glossary|defective}} verb.
 
 ===Pronunciation===
+* {{ca-IPA|da(r)}}<!-- per GDLC, DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-dar.wav|Audio}}
 
 ===Verb===
@@ -7275,7 +7370,7 @@ Page 283 paladar: -------- begin text --------
 {{inh+|ca|roa-oca|paladar}}, from {{inh|ca|VL.|*palātārem}}, derived from {{der|ca|la|palātum}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC, DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -7308,7 +7403,7 @@ Page 284 bladar: -------- begin text --------
 From {{af|ca|blat|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -7349,6 +7444,9 @@ Page 286 nadar: -------- begin text --------
 
 -------- end text --------
 Page 287 radar: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[arr]|bal=?}}<!-- per GDLC; no pronun in DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -7513,6 +7611,9 @@ From {{af|ca|en-|ret|-ar|t2=net}}.
 
 -------- end text --------
 Page 294 lloredar: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -8213,7 +8314,7 @@ Page 320 faldar: -------- begin text --------
 From {{af|ca|falda|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -8515,10 +8616,10 @@ Page 330 blindar: -------- begin text --------
 Page 331 llindar: -------- begin text --------
 
 ===Etymology===
-{{inh+|ca|la|limitāris}}.
+{{inh+|ca|la|līmitāris}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -9598,10 +9699,10 @@ Page 371 exsudar: -------- begin text --------
 Page 372 balear: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|Baleares||Balearic Islands}}.
+{{bor+|ca|la|Baleārēs||Balearic Islands}}.
 
 ===Pronunciation===
-* {{ca-IPA|balearr}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC; FIXME: pronun not given in DCVB (ironically) -->
 * {{rhymes|ca|aɾ|s=3}}
 
 ===Adjective===
@@ -9639,7 +9740,7 @@ Page 373 coclear: -------- begin text --------
 {{bor+|ca|la|cochlear}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -9653,7 +9754,7 @@ Page 373 coclear: -------- begin text --------
 Page 374 nuclear: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -9696,7 +9797,7 @@ Page 376 termonuclear: -------- begin text --------
 From {{af|ca|termo-|nuclear}}.
 
 ===Pronunciation===
-* {{ca-IPA|tèrmonuclear}}
+* {{ca-IPA|tèrmonucleà(rr)}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -9714,10 +9815,10 @@ From {{af|ca|termo-|nuclear}}.
 Page 377 linear: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|līneāris}}.
+{{bor+|ca|la|līneāris}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -9945,7 +10046,7 @@ Page 385 far: -------- begin text --------
 From {{der|ca|la|pharus}}.
 
 ===Pronunciation===
-* {{ca-IPA|farr}}
+* {{ca-IPA|farr}}<!-- FIXME: not in DCVB; Balearic pronun is a guess -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-far.wav|Audio}}
 * {{rhymes|ca|aɾ|s=1}}
 
@@ -10484,7 +10585,7 @@ Page 405 aerofar: -------- begin text --------
 From {{af|ca|aero-|far}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[arr]}}<!-- FIXME: [[far]] not in DCVB; Balearic pronun is a guess -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -10562,7 +10663,7 @@ Page 408 xofar: -------- begin text --------
 From the {{bor|ca|he|שׁוֹפָר|tr=shofár||shofar|sc=Hebr}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+{{rfp|ca}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -10690,7 +10791,7 @@ Page 413 àfar: -------- begin text --------
 {{wikipedia|Àfars|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA|àfarr}}
+* {{ca-IPA|[arr]|bal=?}}<!-- not in GDLC but almost certainly as other adjectives and nouns in unstressed -ar have pronounced -r in Central Catalan; cf [[tàtar]], [[càtar]], [[búlgar]], [[mudèjar]] -->
 
 ===Noun===
 {{ca-noun|mfbysense}}
@@ -11412,10 +11513,10 @@ Page 440 engegar: -------- begin text --------
 
 ===Etymology===
 Numerous derivations have been proposed, including:
-# from a {{inh|ca|VL.|*exiacico|*exiacicāre}}, from {{m|VL.|*iacium||bed, bedding}} (source of {{m|ca|jaç}}), from {{der|ca|la|iaceō||I lie}};
+# from a {{inh|ca|VL.|*exiacico|*exiacicāre}}, from {{m|VL.|*iacium||bed, bedding}} (source of {{m|ca|jaç}}), from {{der|ca|la|iaceō||to lie}};
 # from an [[Andalusi Arabic]] form of {{der|ca|ar|تَشَكَّى}}, frequentive/intensive of {{m|ar|شَكَا||to complain}} (source of {{m|ca|xacra}});
-# from {{der|ca|la|īnstīgō|īnstīgāre|I incite, I urge}} (source of {{m|ca|instigar}});
-# from a {{inh|ca|VL.|*indeago|*indeāgāre}}, alteration of {{m|la|indāgō||I track, I hunt}} (source of {{m|ca|indagar}}).
+# from {{der|ca|la|īnstīgō|īnstīgāre|to incite, to urge}} (source of {{m|ca|instigar}});
+# from a {{inh|ca|VL.|*indeago|*indeāgāre}}, alteration of {{m|la|indāgō||to track, to hunt}} (source of {{m|ca|indagar}}).
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -12170,7 +12271,7 @@ Page 466 combregar: -------- begin text --------
 Page 467 pedregar: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- both etyms; per GDLC -->
 
 ===Etymology 1===
 * {{af|ca|pedra|-ar}}
@@ -13119,6 +13220,9 @@ Page 503 cigar: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Pronunciation===
+* {{ca-IPA|[arr]|bal=?}}
+
+===Pronunciation===
 * {{ca-IPA}}
 
 ===Noun===
@@ -13746,7 +13850,10 @@ Page 525 promulgar: -------- begin text --------
 Page 526 vulgar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|vulgāris}}.
+{{bor+|ca|la|vulgāris}}.
+
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj}}
@@ -13796,7 +13903,7 @@ Page 528 búlgar: -------- begin text --------
 {{bor+|ca|ML.|Bulgarus}}, from {{der|ca|cu|блъгаринъ|t=Bulgarian}}.
 
 ===Pronunciation===
-* {{ca-IPA|búlgarr}}
+* {{ca-IPA|[arr]|bal=?}}<!-- per GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-búlgar.wav|Audio}}
 
 ===Adjective===
@@ -13935,7 +14042,7 @@ Page 533 prolongar: -------- begin text --------
 Page 534 fogar: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- both etyms; per GDLC -->
 
 ===Etymology 1===
 From {{af|ca|foc|-ar}}.
@@ -16434,7 +16541,7 @@ Page 633 biliar: -------- begin text --------
 From {{af|ca|bilis|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -16530,7 +16637,7 @@ Page 638 afiliar: -------- begin text --------
 Page 639 miliar: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -16546,7 +16653,10 @@ Page 639 miliar: -------- begin text --------
 Page 640 familiar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|familiāris}}.
+{{bor+|ca|la|familiāris}}.
+
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj}}
@@ -16581,6 +16691,9 @@ From {{der|ca|la|familiāris}}.
 -------- end text --------
 Page 641 intrafamiliar: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|íntrafamilià(rr)}}<!-- per GDLC and DCVB for [[familiar]]; secondary stress per GDLC [[intracellular]] -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -16591,6 +16704,9 @@ Page 642 unifamiliar: -------- begin text --------
 
 ===Etymology===
 From {{af|ca|uni-|familiar}}.
+
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC and DCVB for [[familiar]]; no secondary stress per GDLC [[unicellular]] -->
 
 ===Adjective===
 {{ca-adj}}
@@ -16662,17 +16778,30 @@ From {{af|ca|exili|-ar}}; compare {{cog|LL.|exsilior|exsiliārī|to be exiled}}.
 -------- end text --------
 Page 645 auxiliar: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|[ks]}}
-
 ===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|[ks,a(rr)]}}<!-- per GDLC -->
 
 ====Adjective====
 {{ca-adj}}
 
 # [[auxiliary]]
+# {{lb|ca|grammar}} [[auxiliary]]
+
+====Noun====
+{{ca-noun|mfbysense}}
+
+# [[auxiliary]], [[assistant]]
+# [[substitute]] {{q|teacher}}
+# {{lb|ca|grammar}} [[auxiliary]]
 
 ===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|[ks]}}<!-- per GDLC -->
+
+====Verb====
 {{ca-verb}}
 
 # to [[aid]], to [[help]]
@@ -16744,10 +16873,10 @@ Page 648 ampliar: -------- begin text --------
 Page 649 peculiar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|pecūliāris}}.
+{{bor+|ca|la|pecūliāris}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -16971,11 +17100,11 @@ From {{suffix|es|hèrnia|ar}}.
 -------- end text --------
 Page 658 boiar: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
-Ultimately from {{der|ca|ru|боярин}}.
+Ultimately from {{der|ca|ru|боя́рин}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- both etyms; per GDLC -->
 
 ====Noun====
 {{ca-noun|m}}
@@ -16984,6 +17113,9 @@ Ultimately from {{der|ca|ru|боярин}}.
 
 ===Etymology 2===
 From {{af|ca|boia|-ar}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- both etyms; per GDLC -->
 
 ====Verb====
 {{ca-verb|root=ò}}
@@ -17657,7 +17789,7 @@ Page 684 bestiar: -------- begin text --------
 From {{af|ca|bèstia|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -17778,7 +17910,7 @@ Page 689 caviar: -------- begin text --------
 {{bor+|ca|fr|caviar}}, from {{der|ca|it|caviale|caviaro}} or {{der|ca|ota|خاویار|tr=havyar}}, from {{der|ca|fa|خاویار|tr=xâvyâr}}.
 
 ===Pronunciation===
-* {{ca-IPA|caviarr}}
+* {{ca-IPA|[arr]|bal=?}}<!-- per GDLC -->
 * {{rhymes|ca|aɾ|s=3}}
 
 ===Noun===
@@ -18060,7 +18192,7 @@ Page 699 asfixiar: -------- begin text --------
 From {{af|ca|asfixia|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ks]}}
 
 ===Verb===
 {{ca-verb}}
@@ -22994,6 +23126,9 @@ Page 907 taronjar: -------- begin text --------
 ===Etymology===
 From {{af|ca|taronja|t1=orange|-ar}}.
 
+===Pronunciation===
+* {{ca-IPA|[a(r)]}}<!-- by analogy with other such nouns in -ar -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -23820,6 +23955,9 @@ Page 939 mudèjar: -------- begin text --------
 {{bor+|ca|ar|مُدَجَّن||domesticated}}, from the verb {{m|ar|دَجَّنَ||to tame}}, from {{m|ar|دَجَنَ||to become accustomed}}.
 
 ===Pronunciation===
+* {{ca-IPA|[arr]|bal=?}}<!-- per GDLC; not in DCVB -->
+
+===Pronunciation===
 * {{ca-IPA}}
 
 ===Adjective===
@@ -23828,7 +23966,7 @@ Page 939 mudèjar: -------- begin text --------
 # [[Mudéjar]]
 
 ===Noun===
-{{ca-noun|m}}
+{{ca-noun|mfbysense}}
 
 # [[Mudéjar]]
 
@@ -23956,11 +24094,11 @@ Page 943 recalar: -------- begin text --------
 -------- end text --------
 Page 944 intercalar: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
 {{bor+|ca|la|intercalāris}}.
+
+====Pronunciation====
+* {{ca-IPA|íntercalà(rr)}}<!-- per GDLC -->
 
 ====Adjective====
 {{ca-adj}}
@@ -23969,6 +24107,9 @@ Page 944 intercalar: -------- begin text --------
 
 ===Etymology 2===
 {{bor+|ca|la|intercalō|intercalāre}}.
+
+====Pronunciation====
+* {{ca-IPA|íntercalà(r)}}<!-- per GDLC -->
 
 ====Verb====
 {{ca-verb}}
@@ -23985,11 +24126,11 @@ Page 944 intercalar: -------- begin text --------
 -------- end text --------
 Page 945 escalar: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
-{{bor+|ca|la|scalāris}}.
+{{bor+|ca|la|scālāris}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ====Adjective====
 {{ca-adj}}
@@ -23998,6 +24139,9 @@ Page 945 escalar: -------- begin text --------
 
 ===Etymology 2===
 From {{af|ca|escala|-ar}}.
+
+====Pronunciation====
+* {{ca-IPA}}<!-- per GDLC -->
 
 ====Verb====
 {{ca-verb}}
@@ -24926,7 +25070,7 @@ Page 982 clar: -------- begin text --------
 {{inh+|ca|la|clārus}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC, DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-clar.wav|Audio}}
 
 ===Adjective===
@@ -24957,10 +25101,10 @@ Page 983 espectre clar: -------- begin text --------
 Page 984 és clar: -------- begin text --------
 
 ===Alternative forms===
-* {{alt|ca|esclar}}
+* {{alt|ca|esclar||proscribed}}
 
 ===Pronunciation===
-* {{ca-IPA|esclàr}}
+* {{ca-IPA|escla(r)}}
 
 ====Usage notes====
 In most dialects the interjection has undergone {{glossary|univerbation}}, and it is pronounced as a single {{glossary|oxytonic}} word. This in turn triggers the reduction of {{IPAchar|/e/}} into {{IPAchar|/ə/}} in Eastern dialects. However, the form {{m|ca|esclar}} is still considered a misspelling.
@@ -25487,7 +25631,7 @@ Page 1006 cautelar: -------- begin text --------
 From {{af|ca|cautela|t1=caution|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -25501,11 +25645,11 @@ From {{af|ca|cautela|t1=caution|-ar}}.
 -------- end text --------
 Page 1007 velar: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
 {{bor+|ca|la|vēlāris}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ====Adjective====
 {{ca-adj}}
@@ -25518,13 +25662,16 @@ Page 1007 velar: -------- begin text --------
 ====Noun====
 {{ca-noun|f}}
 
-# {{l|en|velar}}
+# {{lb|ca|linguistics}} {{l|en|velar}}
 
 =====Related terms=====
 * {{l|ca|vel}}
 
 ===Etymology 2===
 {{bor+|ca|la|vēlō|vēlāre}}.
+
+====Pronunciation====
+* {{ca-IPA}}<!-- per GDLC -->
 
 ====Verb====
 {{ca-verb|root=è}}
@@ -25733,7 +25880,7 @@ Page 1015 manglar: -------- begin text --------
 From {{af|ca|mangle|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- by analogy with other such nouns in -ar -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -25752,7 +25899,7 @@ Page 1016 senglar: -------- begin text --------
 {{inh+|ca|roa-oca|senglar}}, from {{inh|ca|la|([[porcus]]) [[singulāris]]||solitary (pig)}}. Compare {{cog|oc|singlar}}, {{cog|fr|sanglier}}. {{doublet|ca|singular}}, a borrowing from Latin.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-senglar.wav|Audio (Valencian)}}
 
 ===Noun===
@@ -25769,7 +25916,7 @@ Page 1016 senglar: -------- begin text --------
 Page 1017 porc senglar: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|pòrcsenglàr}}
+* {{ca-IPA|pòrc senglà(r)}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -25997,10 +26144,10 @@ Page 1025 anihilar: -------- begin text --------
 Page 1026 similar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|similāris}}.
+{{bor+|ca|la|similāris}}.
 
 ===Pronunciation===
-* {{ca-IPA|similarr}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-similar.wav|Audio}}
 
 ===Adjective===
@@ -26043,7 +26190,7 @@ Page 1028 pilar: -------- begin text --------
 {{inh+|ca|VL.|*pīlāre}}, from {{der|ca|la|pīla||pillar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -26426,7 +26573,7 @@ Page 1043 vilar: -------- begin text --------
 From {{der|ca|la|vīllāre}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -26468,10 +26615,10 @@ Page 1044 espavilar: -------- begin text --------
 Page 1045 llar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|lār||household|g=m}}, first attested 1360.<ref>{{R:ca:GDLC}}</ref>
+{{inh+|ca|la|lār||household|g=m}}, first attested 1360.<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
-* {{ca-IPA|llarr}}
+* {{ca-IPA|llarr}}<!-- per GDLC and DCVB -->
 * {{rhymes|ca|aɾ|s=1}}
 
 ===Noun===
@@ -27296,7 +27443,7 @@ Page 1077 abellar: -------- begin text --------
 From {{af|ca|abella|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -27946,6 +28093,9 @@ Page 1104 billar: -------- begin text --------
 ===Etymology===
 {{bor+|ca|fr|billard}}.
 
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC and DCVB -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -27982,8 +28132,8 @@ Page 1106 manillar: -------- begin text --------
 From {{m|ca|mano||hand}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
-* {{rhymes|ca|a|aɾ}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC; pronun not in DCVB but this seems likely -->
+* {{rhymes|ca|a(ɾ)}}
 * {{hyph|ca|ma|ni|llar}}
 
 ===Noun===
@@ -28247,7 +28397,7 @@ From {{af|ca|bolla|-ar}}.
 Page 1116 collar: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- both etyms; per GDLC and DCVB -->
 
 ===Etymology 1===
 {{inh+|ca|LL.|collāre||an unattached item worn about the neck}}, from {{der|ca|la|collāris}}.
@@ -28778,6 +28928,9 @@ Page 1138 matollar: -------- begin text --------
 
 ===Etymology===
 From {{af|ca|matoll|-ar}}.
+
+===Pronunciation===
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -29594,11 +29747,11 @@ From {{af|ca|tras-|colar}}.
 -------- end text --------
 Page 1171 escolar: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
 {{bor+|ca|LL.|scholāris}}, from {{der|ca|la|schola}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ====Noun====
 {{ca-noun|mfbysense}}
@@ -29621,6 +29774,9 @@ Page 1171 escolar: -------- begin text --------
 
 ===Etymology 2===
 From {{af|ca|es-|colar}}.
+
+====Pronunciation====
+* {{ca-IPA}}<!-- per GDLC -->
 
 ====Verb====
 {{ca-verb|root=ò}}
@@ -29887,10 +30043,10 @@ From {{af|ca|en-|rojor<t:redness>|-ar}}, with [[dissimilation]] of the second ''
 -------- end text --------
 Page 1182 molar: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ====Adjective====
 {{ca-adj}}
@@ -29904,6 +30060,9 @@ Page 1182 molar: -------- begin text --------
 
 ===Etymology 2===
 
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
+
 ====Adjective====
 {{ca-adj}}
 
@@ -29913,6 +30072,23 @@ Page 1182 molar: -------- begin text --------
 * {{l|ca|mol}}
 
 ===Etymology 3===
+From {{af|ca|mola<t:coil of rope>|-ar}}.
+
+====Pronunciation====
+* {{ca-IPA}}<!-- per GDLC -->
+
+====Verb====
+{{ca-verb|root=ò}}
+
+# {lb|ca|transitive}} to [[coil]] (a rope)
+
+=====Conjugation=====
+{{ca-conj}}
+
+===Etymology 4===
+
+====Pronunciation====
+* {{ca-IPA}}<!-- per GDLC -->
 
 ====Verb====
 {{ca-verb|root=ò}}
@@ -29922,8 +30098,11 @@ Page 1182 molar: -------- begin text --------
 =====Conjugation=====
 {{ca-conj}}
 
-===Etymology 4===
+===Etymology 5===
 {{bor+|ca|es|molar}}.
+
+====Pronunciation====
+* {{ca-IPA}}<!-- per GDLC -->
 
 ====Verb====
 {{ca-verb|root=ó}}
@@ -30021,7 +30200,7 @@ From {{confix|ca|es|mola|ar|t2=grindstone, millstone}}.
 Page 1186 polar: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC, DCVB -->
 
 ===Adjective===
 {{ca-adj}}
@@ -30046,7 +30225,7 @@ Page 1187 ós polar: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA|óspolàrr}}
+* {{ca-IPA|ós polà(rr)}}
 
 ===Noun===
 {{ca-noun|m|óssos polars}}
@@ -30099,6 +30278,9 @@ Page 1189 extrapolar: -------- begin text --------
 -------- end text --------
 Page 1190 bipolar: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC, DCVB [[polar]] -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -30117,22 +30299,32 @@ Page 1191 trastorn bipolar: -------- begin text --------
 -------- end text --------
 Page 1192 interpolar: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{bor+|ca|la|interpolō|interpolāre}}.
 
-===Pronunciation===
+====Pronunciation====
 * {{ca-IPA}}
 * {{homophones|ca|interpolà}}
 * {{rhymes|ca|a(ɾ)|s=4}}
 
-===Verb===
+====Verb====
 {{ca-verb|root=ò}}
 
 # to [[insert]] (something) {{q|between other things}}
 # {{lb|ca|mathematics|linguistics}} to [[interpolate]]
 
-====Conjugation====
+=====Conjugation=====
 {{ca-conj}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC, DCVB [[polar]] -->
+
+====Adjective====
+{{ca-adj}}
+
+# {{lb|ca|electricity}} {{l|en|interpolar}} {{q|e.g. of a magnet}}
 
 -------- end text --------
 Page 1193 controlar: -------- begin text --------
@@ -30160,11 +30352,11 @@ Page 1193 controlar: -------- begin text --------
 -------- end text --------
 Page 1194 solar: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
-From {{m|ca|sòl|t=soil}}.
+From {{af|ca|sòl<t:soil>|-ar}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ====Noun====
 {{ca-noun|m}}
@@ -30176,6 +30368,9 @@ From {{m|ca|sòl|t=soil}}.
 
 ===Etymology 2===
 {{bor+|ca|la|sōlāris}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ====Adjective====
 {{ca-adj}}
@@ -30194,6 +30389,9 @@ From {{m|ca|sòl|t=soil}}.
 ===Etymology 3===
 From {{af|ca|sòl|-ar|t1=soil; surface}}.
 
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
+
 ====Verb====
 {{ca-verb|root=ò}}
 
@@ -30205,6 +30403,9 @@ From {{af|ca|sòl|-ar|t1=soil; surface}}.
 
 ===Etymology 4===
 From {{af|ca|sola|-ar|t1=sole}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ====Verb====
 {{ca-verb|root=ò}}
@@ -30555,18 +30756,21 @@ Page 1209 contemplar: -------- begin text --------
 -------- end text --------
 Page 1210 exemplar: -------- begin text --------
 
-===Etymology===
-From {{uder|ca|la|exemplar}}.
-
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- both etyms; per GDLC and DCVB -->
 
-===Adjective===
+===Etymology 1===
+{{bor+|ca|la|exemplāris}}.
+
+====Adjective====
 {{ca-adj}}
 
 # [[exemplary]]
 
-===Noun===
+===Etymology 2===
+{{bor+|ca|la|exemplar}}.
+
+====Noun====
 {{ca-noun|m}}
 
 # [[copy]]; [[edition]]
@@ -30831,11 +31035,11 @@ From {{af|ca|en-|taula|-ar}}.
 -------- end text --------
 Page 1221 tabular: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
 {{lbor|ca|la|tabulāris}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ====Adjective====
 {{ca-adj}}
@@ -30843,7 +31047,10 @@ Page 1221 tabular: -------- begin text --------
 # {{l|en|tabular}}
 
 ===Etymology 2===
-{{lbor|ca|la|tabulō}}.
+{{lbor|ca|la|tabulō|tabulāre}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ====Verb====
 {{ca-verb}}
@@ -30866,6 +31073,9 @@ Page 1221 tabular: -------- begin text --------
 
 -------- end text --------
 Page 1222 mandibular: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -30891,7 +31101,8 @@ Page 1223 tribular: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# {{rfdef|ca}}
+# {{lb|ca|transitive}} to [[sadden]], to [[dismay]], to [[distress]]
+# {{lb|ca|reflexive}} to be [[sadden]]ed, to be [[dismay]]ed, to be [[distress]]ed
 
 ====Conjugation====
 {{ca-conj}}
@@ -30940,6 +31151,9 @@ Page 1225 deambular: -------- begin text --------
 
 -------- end text --------
 Page 1226 tubular: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -31036,7 +31250,7 @@ Page 1229 macular: -------- begin text --------
 Page 1230 espectacular: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -31058,6 +31272,9 @@ Page 1231 molecular: -------- begin text --------
 ===Etymology===
 From {{af|ca|molècula|-ar}}.
 
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -31072,6 +31289,9 @@ From {{af|ca|molècula|-ar}}.
 -------- end text --------
 Page 1232 biomolecular: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[bío,à(rr)]}}<!-- per GDLC; secondary stress per [[biomecànica]] -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -31080,25 +31300,36 @@ Page 1232 biomolecular: -------- begin text --------
 -------- end text --------
 Page 1233 especular: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{bor+|ca|la|speculor|speculārī}}.
 
-===Pronunciation===
-* {{ca-IPA}}
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- per GDLC (which accidentally reverses the verb and adjective pronunciations) -->
 
-===Verb===
+====Verb====
 {{ca-verb}}
 
 # {{lb|ca|intransitive}} to [[speculate]]
 
-====Conjugation====
+=====Conjugation=====
 {{ca-conj}}
 
-====Related terms====
+=====Related terms=====
 * {{l|ca|espècul}}
 * {{l|ca|especulació}}
 * {{l|ca|especulador}}
 * {{l|ca|especulatiu}}
+
+===Etymology 2===
+{{bor+|ca|la|speculāris}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
+
+====Adjective====
+{{ca-adj}}
+
+# [[specular]]
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -31136,7 +31367,7 @@ Page 1235 secular: -------- begin text --------
 {{bor+|ca|la|saeculāris}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -31156,6 +31387,9 @@ Page 1235 secular: -------- begin text --------
 -------- end text --------
 Page 1236 radicular: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -31171,10 +31405,10 @@ Page 1236 radicular: -------- begin text --------
 Page 1237 perpendicular: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|LL.|perpendiculāris}}, from {{m|la|perpendiculum}}.
+{{bor+|ca|LL.|perpendiculāris}}, from {{m|la|perpendiculum}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -31198,27 +31432,40 @@ From {{der|ca|LL.|perpendiculāris}}, from {{m|la|perpendiculum}}.
 -------- end text --------
 Page 1238 vehicular: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
+===Etymology 1===
+{{bor+|ca|LL.|vehiculāris}}. {{etydate|1888}}
 
-===Adjective===
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
+
+====Adjective====
 {{ca-adj}}
 
 # {{l|en|vehicular}}
 
-====Related terms====
+=====Related terms=====
 * {{l|ca|vehicle}}
 
-===Verb===
+===Etymology 2===
+From {{af|ca|vehicle|-ar}}, re-Latinized.
+
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
+
+====Verb====
 {{ca-verb}}
 
-# to [[vehicle]], [[transmit]]
+# to [[convey]] by [[vehicle]]
+# {{lb|ca|figurative}} to [[transmit]], to [[conduct]]
 
-====Conjugation====
+=====Conjugation=====
 {{ca-conj}}
 
 -------- end text --------
 Page 1239 fol·licular: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -31236,6 +31483,14 @@ Page 1239 fol·licular: -------- begin text --------
 -------- end text --------
 Page 1240 funicular: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
+
+===Adjective===
+{{ca-adj}}
+
+# {{l|en|funicular}}
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -31249,6 +31504,9 @@ Page 1240 funicular: -------- begin text --------
 
 -------- end text --------
 Page 1241 curricular: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -31267,7 +31525,7 @@ From {{af|ca|matrícula|-ar}}.
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|transitive|reflexive}} to [[enrol]], to [[register]]
+# {{lb|ca|transitive|reflexive}} to [[enrol]]/[[enroll]], to [[register]]
 
 ====Conjugation====
 {{ca-conj}}
@@ -31287,6 +31545,9 @@ From {{af|ca|matrícula|-ar}}.
 -------- end text --------
 Page 1243 vesicular: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -31304,22 +31565,33 @@ Page 1243 vesicular: -------- begin text --------
 -------- end text --------
 Page 1244 articular: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{bor+|ca|la|articulō|articulāre}}.
 
-===Pronunciation===
-* {{ca-IPA}}
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
-===Verb===
+====Verb====
 {{ca-verb}}
 
 # to [[articulate]] (to express with words)
 
-====Conjugation====
+=====Conjugation=====
 {{ca-conj}}
 
-====Related terms====
+=====Related terms=====
 * {{l|ca|articulació}}
+
+===Etymology 2===
+{{bor+|ca|la|articulāris}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
+
+====Adjective====
+{{ca-adj}}
+
+# {{l|en|articular}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -31334,7 +31606,7 @@ Page 1245 monoarticular: -------- begin text --------
 From {{af|ca|mono-|articular}}.
 
 ===Pronunciation===
-* {{ca-IPA|articularr}}
+* {{ca-IPA|[món,à(rr)]<!-- per GDLC for [[articular]]; secondary stress by analogy with [[monocameral]] -->
 * {{rhymes|ca|aɾ|s=6}}
 * {{hyph|ca|mo|no|ar|ti|cu|lar}}
 
@@ -31353,7 +31625,7 @@ Page 1246 particular: -------- begin text --------
 {{bor+|ca|la|particulāris}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -31364,7 +31636,13 @@ Page 1246 particular: -------- begin text --------
 ====Derived terms====
 * {{l|ca|particularment}}
 
-====Related terms====
+===Noun===
+{{ca-noun|m}}
+
+# [[individual]]
+# [[subject]], [[matter]], [[issue]]
+
+===Related terms===
 * {{l|ca|partícula}}
 * {{l|ca|particularitat}}
 
@@ -31410,7 +31688,7 @@ Page 1247 gesticular: -------- begin text --------
 Page 1248 testicular: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|testicularr}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -31428,6 +31706,9 @@ Page 1249 clavicular: -------- begin text --------
 
 ===Etymology===
 From {{suffix|ca|clavícula|ar}}.
+
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -31560,7 +31841,7 @@ Page 1254 ocular: -------- begin text --------
 {{bor+|ca|la|oculāris}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -31598,11 +31879,11 @@ Page 1255 inocular: -------- begin text --------
 -------- end text --------
 Page 1256 circular: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
 {{bor+|ca|LL.|circulāris}}, from {{der|ca|la|circulus}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ====Adjective====
 {{ca-adj}}
@@ -31616,6 +31897,9 @@ Page 1256 circular: -------- begin text --------
 
 ===Etymology 2===
 {{bor+|ca|LL.|circulo|circulāre}}, post-Augustan form of {{der|ca|la|circulor|circulārī}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ====Verb====
 {{ca-verb}}
@@ -31651,6 +31935,9 @@ Page 1258 semicircular: -------- begin text --------
 
 ===Etymology===
 From {{af|ca|semicercle|-ar}}.
+
+===Pronunciation===
+* {{ca-IPA|[sèm,à(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -31719,10 +32006,10 @@ Page 1260 emascular: -------- begin text --------
 Page 1261 vascular: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|NL.|vasculāris}}.
+{{bor+|ca|NL.|vāsculāris}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 * {{homophones|ca|bascular}}
 * {{rhymes|ca|a(ɾ)|s=3}}
 
@@ -31746,6 +32033,9 @@ Page 1262 cardiovascular: -------- begin text --------
 ===Etymology===
 From {{af|ca|cardio-|vascular}}.
 
+===Pronunciation===
+* {{ca-IPA|[càr,là(rr)]}}<!-- per GDLC -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -31763,7 +32053,7 @@ Page 1263 muscular: -------- begin text --------
 {{bor+|ca|ML.|-}} or {{bor|ca|NL.|mūsculāris}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 * {{rhymes|ca|aɾ|s=3}}
 
 ===Adjective===
@@ -31782,6 +32072,9 @@ Page 1263 muscular: -------- begin text --------
 
 -------- end text --------
 Page 1264 crepuscular: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -31847,7 +32140,7 @@ From {{m|ca|acídul}}.
 Page 1267 glandular: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -31889,23 +32182,32 @@ Page 1268 ondular: -------- begin text --------
 -------- end text --------
 Page 1269 modular: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
+===Etymology 1===
+From {{af|ca|mòdul|-ar}}.
 
-===Adjective===
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
+
+====Adjective====
 {{ca-adj}}
 
 # {{l|en|modular}}
 
-===Verb===
+===Etymology 2===
+{{bor+|ca|la|modulor|modulārī}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
+
+====Verb====
 {{ca-verb}}
 
 # to [[modulate]]
 
-====Conjugation====
+=====Conjugation=====
 {{ca-conj}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|freqüència modulada}}
 * {{l|ca|modulació}}
 
@@ -31966,12 +32268,12 @@ Page 1271 coagular: -------- begin text --------
 -------- end text --------
 Page 1272 regular: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-* {{rhymes|ca|a(ɾ)|s=3}}
-
 ===Etymology 1===
 {{bor+|ca|LL.|rēgulāris}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
+* {{rhymes|ca|aɾ|s=3}}
 
 ====Adjective====
 {{ca-adj}}
@@ -31993,6 +32295,10 @@ Page 1272 regular: -------- begin text --------
 
 ===Etymology 2===
 {{bor+|ca|la|rēgulō|rēgulāre}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
+* {{rhymes|ca|a(ɾ)|s=3}}
 
 ====Verb====
 {{ca-verb}}
@@ -32021,7 +32327,8 @@ Page 1273 irregular: -------- begin text --------
 {{bor+|ca|LL.|irrēgulāris}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
+* {{rhymes|ca|aɾ|s=4}}
 
 ===Adjective===
 {{ca-adj}}
@@ -32047,6 +32354,9 @@ Page 1274 ligular: -------- begin text --------
 ===Etymology===
 From {{suffix|ca|lígula|ar}}.
 
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}
+
 ===Adjective===
 {{ca-adj}}
 
@@ -32058,7 +32368,7 @@ Page 1275 angular: -------- begin text --------
 {{bor+|ca|la|angulāris}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -32084,11 +32394,11 @@ Page 1276 moment angular: -------- begin text --------
 -------- end text --------
 Page 1277 triangular: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
 {{bor+|ca|LL.|triangulāris}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
 
 ====Adjective====
 {{ca-adj}}
@@ -32097,6 +32407,9 @@ Page 1277 triangular: -------- begin text --------
 
 ===Etymology 2===
 From {{af|ca|la:triangulus|-ar}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- from GDLC -->
 
 ====Verb====
 {{ca-verb}}
@@ -32119,7 +32432,7 @@ Page 1278 rectangular: -------- begin text --------
 From {{suffix|ca|rectangle|ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -32136,7 +32449,7 @@ Page 1279 singular: -------- begin text --------
 {{bor+|ca|la|singulāris}}. {{doublet|ca|senglar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-singular.wav|Audio}}
 
 ===Adjective===
@@ -32153,6 +32466,11 @@ Page 1279 singular: -------- begin text --------
 |singularitat
 |singularitzar
 }}
+
+===Noun===
+{{ca-noun|m}}
+
+# {{lb|ca|grammar}} [[singular]]
 
 {{C|ca|Grammar}}
 
@@ -32232,7 +32550,7 @@ Page 1282 ulular: -------- begin text --------
 Page 1283 cel·lular: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -32252,7 +32570,7 @@ Page 1284 acel·lular: -------- begin text --------
 From {{af|ca|a-|cel·lular}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
 * {{rhymes|ca|a(ɾ)|s=4}}
 * {{hyph|ca|a|cel|lu|lar}}
 
@@ -32271,7 +32589,7 @@ Page 1285 intracel·lular: -------- begin text --------
 From {{prefix|ca|intra|cel·lular}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ìnt,à(rr)]}}<!-- from GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -32283,6 +32601,9 @@ Page 1286 extracel·lular: -------- begin text --------
 
 ===Etymology===
 From {{prefix|ca|extra|cel·lular}}.
+
+===Pronunciation===
+* {{ca-IPA|[èxt,à(rr)]}}<!-- from GDLC [[cellular]]; secondary stress per [[extramatrimonial]] -->
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -32297,6 +32618,9 @@ Page 1287 unicel·lular: -------- begin text --------
 
 ===Etymology===
 From {{af|ca|uni-|cel·lular}}.
+
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC; no secondary stress -->
 
 ===Adjective===
 {{ca-adj}}
@@ -32316,7 +32640,7 @@ Page 1288 pluricel·lular: -------- begin text --------
 From {{af|ca|pluri-|cèl·lula|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC; no secondary stress -->
 * {{rhymes|ca|a(ɾ)|s=5}}
 * {{hyph|ca|plu|ri|cel|lu|lar}}
 
@@ -32333,10 +32657,10 @@ From {{af|ca|pluri-|cèl·lula|-ar}}.
 Page 1289 mular: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|mūlāris}}.
+{{bor+|ca|la|mūlāris}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -32537,19 +32861,22 @@ Page 1296 acumular: -------- begin text --------
 -------- end text --------
 Page 1297 granular: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
 From {{af|ca|grànul|-ar}}.
 
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
+
 ====Adjective====
-{{ca-adj|mf}}
+{{ca-adj}}
 
 # {{l|en|granular}}
 
 ===Etymology 2===
 From {{af|ca|grànul|-ar}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- from GDLC -->
 
 ====Verb====
 {{ca-verb}}
@@ -32647,7 +32974,7 @@ Page 1301 popular: -------- begin text --------
 {{bor+|ca|la|populāris}}.
 
 ===Pronunciation===
-* {{ca-IPA|popularr}}
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -32673,7 +33000,7 @@ Page 1302 glomerular: -------- begin text --------
 From {{suffix|ca|glomèrul|ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}
 * {{rhymes|ca|a|aɾ}}
 * {{hyph|ca|glo|me|ru|lar}}
 
@@ -32692,7 +33019,7 @@ Page 1303 insular: -------- begin text --------
 {{bor+|ca|la|īnsulāris}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -32707,22 +33034,27 @@ Page 1303 insular: -------- begin text --------
 Page 1304 peninsular: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|paenīnsulāris}}.
+{{bor+|ca|la|paenīnsulāris}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Adjective===
 {{ca-adj}}
 
-# {{l|en|peninsular}}
+# {{l|en|peninsular}} {{gl|relating to a peninsula}}
+
+===Noun===
+{{ca-noun|mfbysense}}
+
+# {{l|en|peninsular}} {{gl|inhabitant of a peninsula}}
 
 -------- end text --------
 Page 1305 consular: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -32738,11 +33070,11 @@ Page 1305 consular: -------- begin text --------
 -------- end text --------
 Page 1306 capsular: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
 From {{af|ca|càpsula|-ar|t1=capsule|t2=adjectival suffix}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
 
 ====Adjective====
 {{ca-adj}}
@@ -32755,10 +33087,13 @@ From {{af|ca|càpsula|-ar|t1=capsule|t2=adjectival suffix}}.
 ===Etymology 2===
 From {{af|ca|càpsula|-ar|t1=capsule|t2=infinitive suffix}}.
 
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- from GDLC -->
+
 ====Verb====
 {{ca-verb}}
 
-# {{lb|ca|transitive}} to [[cap]]
+# {{lb|ca|transitive}} to [[cap]] (wine or champagne)
 
 =====Conjugation=====
 {{ca-conj}}
@@ -32843,32 +33178,49 @@ Page 1309 congratular: -------- begin text --------
 -------- end text --------
 Page 1310 capitular: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-* {{rhymes|ca|a(ɾ)|s=4}}
+===Etymology 1===
+{{bor+|ca|LL.|capitulāris}}. {{etydate|1685}}
 
-===Adjective===
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
+* {{rhymes|ca|aɾ|s=4}}
+
+====Adjective====
 {{ca-adj}}
 
-# {{l|en|capitular}}
+# {{lb|ca|relational|Christianity}} (religious) [[chapter]]; {{l|en|capitular}}
+# {{lb|ca|relational|botany}} [[capitule]], [[inflorescence]]; {{l|en|capitular}}
 
-===Verb===
+====Noun====
+{{ca-noun|m}}
+
+# {{lb|ca|Christianity}} {{l|en|capitular}} {{gl|member of a religious chapter}}
+
+===Etymology 2===
+{{bor+|ca|LL.|capitulor|capitulārī}}. {{etydate|1434}}
+
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- from GDLC -->
+* {{rhymes|ca|a(ɾ)|s=4}}
+
+====Verb====
 {{ca-verb}}
 
-# to [[surrender]]
+# {{lb|ca|intransitive}} to [[surrender]], to [[capitulate]]
+# {{lb|ca|transitive}} to [[divide]] into [[chapter]]s
 
-====Conjugation====
+=====Conjugation=====
 {{ca-conj}}
 
 -------- end text --------
 Page 1311 titular: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-* {{homophones|ca|titulà}}
-
 ===Etymology 1===
 {{bor+|ca|LL.|titulāris}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
+* {{homophones|ca|titulà}}
 
 ====Adjective====
 {{ca-adj}}
@@ -32888,10 +33240,18 @@ Page 1311 titular: -------- begin text --------
 ===Etymology 2===
 {{bor+|ca|LL.|titulō|titulāre}}.
 
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- from GDLC -->
+* {{homophones|ca|titulà}}
+
 ====Verb====
 {{ca-verb}}
 
-# {{lb|ca|transitive}} to [[title]], [[entitle]]
+# {{lb|ca|transitive}} to [[title]] (a book, etc.)
+# {{lb|ca|transitive}} to [[grant]] a [[diploma]] to
+# {{lb|ca|transitive|chemistry}} to [[titrate]]
+# {{lb|ca|pronominal}} to be [[title]]d {{q|of a book, etc.}}
+# {{lb|ca|pronominal}} to [[obtain]] a [[diploma]], to [[graduate]]
 
 =====Conjugation=====
 {{ca-conj}}
@@ -32907,7 +33267,7 @@ Page 1311 titular: -------- begin text --------
 Page 1312 intitular: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|LL.|intitulāre}}.
+{{bor+|ca|LL.|intitulo|intitulāre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -32928,6 +33288,9 @@ Page 1312 intitular: -------- begin text --------
 
 -------- end text --------
 Page 1313 postular: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Verb===
 {{ca-verb}}
@@ -32994,6 +33357,9 @@ Page 1316 flagel·lar: -------- begin text --------
 ===Etymology 1===
 {{bor+|ca|la|flagellō|flagellāre}}, attested from the 13th century.<ref>{{R:ca:GDLC}}</ref>
 
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- from GDLC -->
+
 ====Verb====
 {{ca-verb|root=è}}
 
@@ -33013,6 +33379,9 @@ Page 1316 flagel·lar: -------- begin text --------
 
 ===Etymology 2===
 From {{af|ca|flagel|-ar|t1=flagellum}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}
 
 ====Adjective====
 {{ca-adj}}
@@ -33108,7 +33477,10 @@ Page 1319 apel·lar: -------- begin text --------
 Page 1320 estel·lar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|stellāris}}.
+{{bor+|ca|la|stēllāris}}.
+
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -33143,6 +33515,9 @@ Page 1322 interestel·lar: -------- begin text --------
 
 ===Etymology===
 From {{af|ca|inter-|estel·lar}}.
+
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -33185,17 +33560,31 @@ Page 1324 codicil·lar: -------- begin text --------
 ===Alternative forms===
 * {{alt|ca|codicilar}}
 
-===Etymology===
-From {{af|ca|codicil|-ar}}.
+===Etymology 1===
+From {{af|ca|codicil|-ar<pos:adjective-forming suffix>}}.
 
-===Pronunciation===
-* {{ca-IPA}}
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
 
-===Adjective===
+====Adjective====
 {{ca-adj}}
 
 # {{lb|ca|relational}} [[codicil]]; [[codicillary]]
 #: {{uxi|ca|clàusula '''codicil·lar'''|'''codicillary''' clause}}
+
+===Etymology 2===
+From {{af|ca|codicil|-ar<pos:verb-forming suffix>}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- from GDLC -->
+
+====Verb====
+{{ca-verb}}
+
+# {{lb|ca|intransitive}} to [[make]] a [[codicil]]
+
+=====Conjugation=====
+{{ca-conj}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -33229,7 +33618,7 @@ Page 1326 capil·lar: -------- begin text --------
 {{bor+|ca|la|capillāris}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
 * {{rhymes|ca|aɾ|s=3}}
 * {{hyph|ca|ca|pil|lar}}
 
@@ -33286,6 +33675,9 @@ Page 1327 destil·lar: -------- begin text --------
 * {{anagrams|ca|trillades}}
 -------- end text --------
 Page 1328 axil·lar: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[ks,a(rr)]}}<!-- from GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -33356,12 +33748,13 @@ Page 1331 dòlar: -------- begin text --------
 {{bor+|ca|en|dollar}}, from {{der|ca|nl|daalder}}, from {{der|ca|de|Thaler}}.
 
 ===Pronunciation===
+* {{ca-IPA|[arr]|bal=?}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-dòlar.wav|Audio}}
 
 ===Noun===
 {{ca-noun|m}}
 
-# a [[dollar]], a [[designation]] for specific [[currency]]
+# [[dollar]]
 
 {{C|ca|Currency}}
 -------- end text --------
@@ -33371,7 +33764,7 @@ Page 1332 mar: -------- begin text --------
 {{inh+|ca|roa-oca|mar}}, from {{inh|ca|la|mare||sea}}, from {{inh|ca|itc-pro|*mari}}, from {{inh|ca|ine-pro|*móri}}.
 
 ===Pronunciation===
-* {{ca-IPA|marr}}
+* {{ca-IPA|marr}}<!-- per GDLC and DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-mar.wav|Audio (Valencian)}}
 * {{homophones|ca|ma|mà}}
 * {{rhymes|ca|a(ɾ)|s=1}}
@@ -33672,7 +34065,7 @@ Page 1349 calamar: -------- begin text --------
 {{bor+|ca|it|calamaro}}, from {{der|ca|la|calamārius}}.
 
 ===Pronunciation===
-* {{ca-IPA|calamàrr}}
+* {{ca-IPA|calamà(rr)}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -33882,7 +34275,7 @@ Page 1357 plenamar: -------- begin text --------
 From {{com|ca|ple|mar|t1=full|t2=sea}}.
 
 ===Pronunciation===
-* {{ca-IPA|plènamàr}}
+* {{ca-IPA|plènamàrr}}<!-- per GDLC; cf. [[mar]] for DCVB -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -34012,7 +34405,7 @@ Page 1362 ultramar: -------- begin text --------
 From {{af|ca|ultra-|mar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|últramàrr}}<!-- per GDLC; cf. [[mar]] for DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -34036,7 +34429,7 @@ Page 1363 baixamar: -------- begin text --------
 From {{compound|ca|baix|t1=low|mar|t2=sea}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|bàixamàrr}}<!-- per GDLC; cf. [[mar]] for DCVB -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -34717,7 +35110,7 @@ Page 1390 fulmar: -------- begin text --------
 {{bor+|ca|en|fulmar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[arr]|bal=?}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -34798,7 +35191,7 @@ Page 1393 colomar: -------- begin text --------
 From {{af|ca|colom|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -36063,7 +36456,7 @@ Page 1442 avellanar: -------- begin text --------
 From {{af|ca|avellana|t1=hazelnut|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -36338,7 +36731,7 @@ Page 1452 campanar: -------- begin text --------
 From {{suffix|ca|campana|ar|t1=bell}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -36587,7 +36980,7 @@ Page 1462 fenar: -------- begin text --------
 From {{af|ca|fenc|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -36703,7 +37096,7 @@ Page 1466 alenar: -------- begin text --------
 Page 1467 milenar: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -36712,7 +37105,7 @@ Page 1467 milenar: -------- begin text --------
 # a number only resolvable to the nearest [[thousand]] in quantity
 
 ====Usage notes====
-Rather than using the feminine ordinal ({{m|ca|milena}} or {{m|ca|mil·lèsima}}) as the word for a set of one thousand as is usual, for one thousand, '''milenar''' and its synonym are used.
+* Rather than using the feminine ordinal ({{m|ca|milena}} or {{m|ca|mil·lèsima}}) as the word for a set of one thousand as is usual, for one thousand, '''milenar''' and its synonym are used.
 
 ====Synonyms====
 * {{l|ca|miler}}
@@ -37008,7 +37401,7 @@ Page 1480 berenar: -------- begin text --------
 From {{m|ca|berena}}, from {{inh|ca|LL.|merendō|merendāre}}, from {{inh|ca|la|merenda}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- both meanings -->
 
 ===Verb===
 {{ca-verb|root=é}}
@@ -37155,7 +37548,7 @@ Page 1485 senar: -------- begin text --------
 {{unk|ca}}, likely of pre-Roman origin.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- from GDLC; not with pronounced -r -->
 
 ===Adjective===
 {{ca-adj}}
@@ -37185,7 +37578,7 @@ Page 1486 centenar: -------- begin text --------
 From {{af|ca|centè|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- from GDLC; not with pronounced -r -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -37785,12 +38178,12 @@ Page 1509 al·lucinar: -------- begin text --------
 -------- end text --------
 Page 1510 dinar: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-* {{rhymes|ca|a(ɾ)|s=2}}
-
 ===Etymology 1===
 Ultimately derived from {{der|ca|la|dēnārius}}. {{doublet|ca|diner|denari}}.
+
+====Pronunciation====
+* {{ca-IPA|[arr]|bal=?}}
+* {{rhymes|ca|aɾ|s=2}}
 
 ====Noun====
 {{ca-noun|m}}
@@ -37799,6 +38192,10 @@ Ultimately derived from {{der|ca|la|dēnārius}}. {{doublet|ca|diner|denari}}.
 
 ===Etymology 2===
 {{bor+|ca|pro|disnar}}, from {{der|ca|VL.||*disiūnāre}}, from {{m|la||disieiūnāre|to break the fast}}, from {{der|ca|LL.}}, from {{m|la|dis-}} + {{m|la|iēiūnō||to fast}}, from {{der|ca|la|ieiūnus}}. Compare {{cog|oc|disnar}}, {{cog|fr|dîner}}.
+
+====Pronunciation====
+* {{ca-IPA}}
+* {{rhymes|ca|a(ɾ)|s=2}}
 
 ====Noun====
 {{ca-noun|m}}
@@ -38344,23 +38741,29 @@ From {{af|ca|terbolí|-ar}}.
 -------- end text --------
 Page 1532 molinar: -------- begin text --------
 
-===Etymology===
-From {{af|ca|molí|-ar}}.
+===Pronunciation===
+* {{ca-IPA|[a(r)]}}<!-- both etyms; per GDLC -->
 
-===Noun===
+===Etymology 1===
+From {{af|ca|molí|-ar<pos:noun-forming suffix>}}.
+
+====Noun====
 {{ca-noun|m}}
 
 # an area with [[mill]]s
 
-===Verb===
+===Etymology 2===
+From {{af|ca|molí|-ar<pos:verb-forming suffix>}}.
+
+====Verb====
 {{ca-verb}}
 
 # to [[mill]], to [[grind]]
 
-====Conjugation====
+=====Conjugation=====
 {{ca-conj}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|molinada}}
 
 ===Further reading===
@@ -38532,26 +38935,31 @@ From {{af|ca|des-|caminar}}.
 -------- end text --------
 Page 1539 laminar: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 From {{af|ca|làmina|-ar}}.
 
-===Pronunciation===
-* {{ca-IPA}}
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
 
-===Adjective===
+====Adjective====
 {{ca-adj}}
 
 # {{l|en|laminar}}, [[laminary]], [[laminate]]
 
-===Verb===
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- from GDLC -->
+
+====Verb====
 {{ca-verb}}
 
 # {{lb|ca|transitive}} to [[laminate]]
 
-====Conjugation====
+=====Conjugation=====
 {{ca-conj}}
 
-====Derived terms====
+=====Derived terms=====
 {{der3|ca|laminació|laminador|laminat|laminatge}}
 
 ===Further reading===
@@ -38719,6 +39127,9 @@ Page 1545 eliminar: -------- begin text --------
 -------- end text --------
 Page 1546 preliminar: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- from GDLC -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -38726,6 +39137,11 @@ Page 1546 preliminar: -------- begin text --------
 
 ====Derived terms====
 * {{l|ca|preliminarment}}
+
+===Noun===
+{{ca-noun|m}}
+
+# {{lb|ca|law|chiefly in the plural}} [[preliminary]] [[agreement]]; [[preliminary]] [[procedure]]
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -39118,6 +39534,9 @@ From {{af|ca|roina|-ar}}.
 {{C|ca|Atmospheric phenomena|Rain|Water}}
 -------- end text --------
 Page 1564 pinar: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Etymology===
 From {{suffix|ca|pi|-ar}}.
@@ -39946,7 +40365,10 @@ From {{m|ca|revessar}}.
 -------- end text --------
 Page 1597 encoixinar: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+* {{ca-IPA}}
+
+===Verb===
 {{ca-verb}}
 
 # to [[pad]], [[cushion]]
@@ -39957,7 +40379,7 @@ Page 1597 encoixinar: -------- begin text --------
 Page 1598 atonyinar: -------- begin text --------
 
 ===Etymology===
-{{m|ca|a-}} + {{m|ca|tonyina}} "tuna" + {{m|ca|-ar}}
+From {{af|ca|a-|tonyina<t:tuna>|-ar}}.
 
 ===Verb===
 {{ca-verb}}
@@ -40998,7 +41420,7 @@ Page 1640 ganglionar: -------- begin text --------
 From {{af|ca|ganglió|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -41377,6 +41799,9 @@ Page 1657 pulmonar: -------- begin text --------
 ===Etymology===
 From {{suffix|ca|pulmó|ar}}; cf. Latin {{m|la|pulmonarius}}.
 
+===Pronunciation===
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -41716,11 +42141,11 @@ From {{af|ca|re-|tronar}}.
 -------- end text --------
 Page 1671 sonar: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
 {{inh+|ca|roa-oca|sonar}}, from {{inh|ca|la|sono|sonāre}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ====Verb====
 {{ca-verb|root=ò}}
@@ -41739,6 +42164,9 @@ Page 1671 sonar: -------- begin text --------
 
 ===Etymology 2===
 {{bor+|ca|en|sonar}}.
+
+====Pronunciation====
+* {{ca-IPA|[arr]|bal=?}}<!-- per GDLC -->
 
 ====Noun====
 {{ca-noun|m|-}}
@@ -42606,7 +43034,7 @@ Page 1705 dunar: -------- begin text --------
 From {{af|ca|duna|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -42667,10 +43095,10 @@ From {{af|ca|des-|dejunar}}.
 Page 1708 lunar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|lūnāris}}.
+{{bor+|ca|la|lūnāris}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -43898,9 +44326,6 @@ Page 1756 Empar: -------- begin text --------
 ===Etymology===
 Compare {{cog|es|Amparo}}.
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Proper noun===
 {{ca-proper noun|f}}
 
@@ -44302,12 +44727,6 @@ From {{af|ca|sopa|-ar}}.
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-sopar.wav|Audio}}
 * {{homophones|ca|sopà}}
 
-===Noun===
-{{ca-noun|m}}
-
-# [[dinner]]; [[tea]] {{gloss|evening meal}}
-#: {{syn|ca|cena<q:archaic>}}
-
 ===Verb===
 {{ca-verb|root=ó}}
 
@@ -44320,6 +44739,12 @@ From {{af|ca|sopa|-ar}}.
 ====Derived terms====
 * {{l|ca|ressopar}}
 * {{l|ca|sopada}}
+
+===Noun===
+{{ca-noun|m}}
+
+# [[dinner]]; [[tea]] {{gloss|evening meal}}
+#: {{syn|ca|cena<q:archaic>}}
 
 ===Further reading===
 * {{R:ca:DCVB}}
@@ -44729,7 +45154,7 @@ Page 1787 rar: -------- begin text --------
 {{bor+|ca|la|rārus}}.
 
 ===Pronunciation===
-* {{ca-IPA|rarr}}
+* {{ca-IPA|rarr}}<!-- per GDLC, DCVB -->
 * {{rhymes|ca|aɾ|s=1}}
 
 ===Adjective===
@@ -45559,7 +45984,7 @@ Page 1816 cogombrar: -------- begin text --------
 From {{suffix|ca|cogombre|ar|gloss1=cucumber|gloss2=place where a crop is grown}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -46437,7 +46862,7 @@ Page 1853 tarongerar: -------- begin text --------
 From {{af|ca|taronger|t1=orange tree|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -46522,7 +46947,7 @@ Page 1857 palmerar: -------- begin text --------
 From {{af|ca|palmera|t1=palm tree|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -47079,7 +47504,7 @@ Page 1878 cirerar: -------- begin text --------
 From {{af|ca|cirera|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -47092,7 +47517,7 @@ Page 1879 reiterar: -------- begin text --------
 {{bor+|ca|LL.|reitero|reiterāre}}.
 
 ===Pronunciation===
-* {{ca-IPA|reïterar}}
+* {{ca-IPA|[eï]}}
 * {{homophones|ca|reiterà}}
 
 ===Verb===
@@ -47171,7 +47596,7 @@ Page 1882 fruiterar: -------- begin text --------
 From {{af|ca|fruiter|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -49233,7 +49658,7 @@ Page 1965 blatdemorar: -------- begin text --------
 From {{af|ca|blat de moro|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA|blàtdemoràr}}
+* {{ca-IPA|blàtdemorà(r)}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -50920,7 +51345,7 @@ Page 2032 ullastrar: -------- begin text --------
 From {{af|ca|ullastre|t1=wild olive tree|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -52547,6 +52972,9 @@ Page 2094 basar: -------- begin text --------
 ===Etymology 1===
 {{bor+|ca|fa|بازار|tr=bâzâr||market}}, from {{der|ca|ine-pro|*wes-||to buy}}, maybe borrowed through {{bor|ca|fr|bazar||bazaar}}.
 
+====Pronunciation====
+* {{ca-IPA|[arr]|bal=?}}<!-- per GDLC -->
+
 ====Noun====
 {{ca-noun|m}}
 
@@ -52554,6 +52982,9 @@ Page 2094 basar: -------- begin text --------
 
 ===Etymology 2===
 From {{af|ca|base|t1=base|-ar}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ====Verb====
 {{ca-verb}}
@@ -53554,6 +53985,9 @@ Page 2134 púlsar: -------- begin text --------
 
 ===Etymology===
 {{bor+|ca|en|pulsar}}.
+
+===Pronunciation===
+* {{ca-IPA|[arr]|bal=?}}<!-- not in GDLC but almost certainly correct for Central Catalan; essentially all nouns ending in unstressed -ar pronounce the r -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -54717,7 +55151,7 @@ Page 2176 herbassar: -------- begin text --------
 From {{af|ca|herba|-às|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -55717,7 +56151,7 @@ Page 2215 canyissar: -------- begin text --------
 From {{af|ca|canyís|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -55996,7 +56430,7 @@ Page 2226 arrossar: -------- begin text --------
 From {{af|ca|arròs|t1=rice|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -56272,6 +56706,9 @@ From {{af|ca|empapar|-uss-}}.
 -------- end text --------
 Page 2238 hússar: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[arr]|bal=?}}<!-- per GDLC -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -56280,10 +56717,10 @@ Page 2238 hússar: -------- begin text --------
 Page 2239 tsar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|ru|царь}}, from {{der|ca|orv|цьсарь}}, from {{der|ca|sla-pro|*cěsařь}}, from a {{der|ca|gem}} language, from {{der|ca|gem-pro|*kaisaraz}}, from {{der|ca|la|Caesar}}. {{doublet|ca|Cèsar}}.
+{{bor+|ca|ru|царь}}, from {{der|ca|orv|цьсарь}}, from {{der|ca|sla-pro|*cěsařь}}, from a {{der|ca|gem}} language, from {{der|ca|gem-pro|*kaisaraz}}, from {{der|ca|la|Caesar}}. {{doublet|ca|Cèsar}}.
 
 ===Pronunciation===
-* {{ca-IPA|tsarr}}
+* {{ca-IPA|tsarr}}<!-- per GDLC; not in DCVB but likely for Balearic as most monosyllabic words pronounce the -r, especially in literary terms -->
 
 ===Noun===
 {{ca-noun|m|f=#ina}}
@@ -56435,7 +56872,7 @@ Page 2244 acusar: -------- begin text --------
 Page 2245 excusar: -------- begin text --------
 
 ===Etymology===
-Semi-learned form derived from {{der|ca|la|excūsō|excūsāre}}.
+{{bor+|ca|la|excūsō|excūsāre}}.
 
 ===Verb===
 {{ca-verb}}
@@ -56519,7 +56956,7 @@ Page 2249 Cèsar: -------- begin text --------
 {{bor+|ca|la|Caesar}}. {{doublet|ca|kàiser|tsar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[arr]|bal=?}}
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -56533,7 +56970,7 @@ Page 2249 Cèsar: -------- begin text --------
 Page 2250 Qatar: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|katarr}}
+* {{ca-IPA|katarr|bal=?}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-Qatar.wav|Audio (Valencian)}}
 
 ===Proper noun===
@@ -57270,11 +57707,12 @@ Page 2278 avatar: -------- begin text --------
 {{bor+|ca|en|-}}, from {{der|ca|sa|-}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[arr]|bal=?}}<!-- per GDLC; pronun not given in DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
 
+# {{lb|ca|religion}} {{l|en|avatar}}
 # {{lb|ca|computer games}} {{l|en|avatar}}
 
 ===Anagrams===
@@ -58478,7 +58916,7 @@ Page 2326 avetar: -------- begin text --------
 From {{af|ca|avet|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -59382,7 +59820,7 @@ Page 2364 militar: -------- begin text --------
 {{bor+|ca|la|mīlitāris}}, from {{m|la|mīles||soldier}}.
 
 ====Pronunciation====
-* {{ca-IPA|militarr}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ====Adjective====
 {{ca-adj}}
@@ -59405,12 +59843,13 @@ Page 2364 militar: -------- begin text --------
 {{bor+|ca|la|milito|mīlitāre}}.
 
 ====Pronunciation====
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ====Verb====
-{{ca-verb}}
+{{ca-verb}} {{tlb|ca|intransitive}}
 
-# to [[participate]] actively in a political party or movement
+# to [[serve]] in the [[army]]
+# to [[participate]] [[actively]] {{q|in a political party or movement}}
 
 =====Conjugation=====
 {{ca-conj}}
@@ -59426,6 +59865,9 @@ Page 2365 paramilitar: -------- begin text --------
 
 ===Etymology===
 From {{af|ca|para-|militar}}.
+
+===Pronunciation===
+* {{ca-IPA|[pàr,tà(rr)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -60013,7 +60455,7 @@ Page 2389 altar: -------- begin text --------
 {{inh+|ca|la|altāre}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-altar.wav|Audio}}
 * {{rhymes|ca|a(ɾ)|s=2}}
 
@@ -60110,6 +60552,9 @@ From {{af|ca|esmalt|-ar}}.
 
 -------- end text --------
 Page 2394 Gibraltar: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -60813,11 +61258,11 @@ Page 2421 bescantar: -------- begin text --------
 -------- end text --------
 Page 2422 plantar: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA}}
-
 ===Etymology 1===
 From {{af|ca|planta|-ar|t1=sole of the foot}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC -->
 
 ====Adjective====
 {{ca-adj}}
@@ -60826,6 +61271,9 @@ From {{af|ca|planta|-ar|t1=sole of the foot}}.
 
 ===Etymology 2===
 {{inh+|ca|roa-oca|plantar}}, from {{inh|ca|LL.|planto|plantāre}}.
+
+====Pronunciation====
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ====Verb====
 {{ca-verb}}
@@ -62241,16 +62689,26 @@ Page 2478 repintar: -------- begin text --------
 -------- end text --------
 Page 2479 quintar: -------- begin text --------
 
-===Etymology===
+===Pronunciation===
+* {{ca-IPA|[a(r)]}}<!-- both etyms; per GDLC -->
+
+===Etymology 1===
 {{bor+|ca|ar|قِنْطَار}}, from {{der|ca|la|centēnārius||hundredweight}}.
 
-===Pronunciation===
-* {{ca-IPA}}
-
-===Noun===
+====Noun====
 {{ca-noun|m}}
 
 # [[quintal]]
+
+===Etymology 2===
+
+====Verb====
+{{ca-verb}}
+
+# to [[draw lots]]
+
+=====Conjugation=====
+{{ca-conj}}
 
 -------- end text --------
 Page 2480 contar: -------- begin text --------
@@ -62850,7 +63308,7 @@ Page 2501 cocotar: -------- begin text --------
 From {{af|ca|coco|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -64545,7 +65003,7 @@ Page 2566 Tàrtar: -------- begin text --------
 {{bor+|ca|la|Tartarus}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|Tàrtarr|bal=?}}<!-- per GDLC -->
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -64559,23 +65017,38 @@ Page 2566 Tàrtar: -------- begin text --------
 -------- end text --------
 Page 2567 tàrtar: -------- begin text --------
 
-===Adjective===
+===Pronunciation===
+* {{ca-IPA|tàrtarr|bal=?}}<!-- both etyms; per GDLC; pronun not in DCVB -->
+
+===Etymology 1===
+{{bor+|ca|la|Tartarus||hell}}.
+
+====Noun====
+{{ca-noun|m}}
+
+# {{lb|ca|poetic}} [[hell]]
+# {{lb|ca|chemistry}} [[cream of tartar]]
+#: {{coi|ca|tàrtar emètic|[[tartar emetic]] ({{w|antimony potassium tartrate}})}}
+
+===Etymology 2===
+
+====Adjective====
 {{ca-adj}}
 
-# {{alternative form of|ca|tàtar}}
+# {{lb|ca|proscribed}} {{alternative form of|ca|tàtar|t=Tatar}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|salsa tàrtara}}
 
-===Noun===
+====Noun====
 {{ca-noun|m|f=+}}
 
-# {{alternative form of|ca|tàtar}}
+# {{lb|ca|proscribed}} {{alternative form of|ca|tàtar|t=Tatar {{q|person}}}}
 
-===Noun===
+====Noun====
 {{ca-noun|m|-}}
 
-# {{alternative form of|ca|tàtar}}
+# {{lb|ca|proscribed}} {{alternative form of|ca|tàtar|t=Tatar {{q|language}}}}
 -------- end text --------
 Page 2568 aürtar: -------- begin text --------
 
@@ -65107,7 +65580,7 @@ Page 2587 malestar: -------- begin text --------
 From {{af|ca|mal|estar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -65205,7 +65678,7 @@ Page 2591 benestar: -------- begin text --------
 From {{af|ca|bé|estar|t1=well|t2=to be}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[bé,à(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -65228,7 +65701,7 @@ From {{af|ca|bé|estar|t1=well|t2=to be}}.
 Page 2592 Ginestar: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+{{rfp|ca}}
 
 ===Proper noun===
 {{ca-proper noun|mfbysense}}
@@ -66500,7 +66973,7 @@ Page 2643 càtar: -------- begin text --------
 {{bor+|ca|ML.|Catharus}}, from {{der|ca|grc|καθαρός||pure}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[arr]|bal=?}}<!-- from GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -66529,6 +67002,9 @@ Page 2644 tàtar: -------- begin text --------
 
 ===Alternative forms===
 * {{alt|ca|tàrtar}}
+
+===Pronunciation===
+* {{ca-IPA|[arr]|bal=?}}<!-- from GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -66725,7 +67201,7 @@ Page 2651 jaguar: -------- begin text --------
 {{bor+|ca|pt|jaguar}}, from {{der|ca|tpw|îagûara}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[arr]|bal=?}}<!-- per GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-jaguar.wav|Audio (Valencian)}}
 * {{hyphenation|ca|ja|guar}}
 
@@ -67432,7 +67908,7 @@ Page 2680 var: -------- begin text --------
 {{bor+|ca|la|vārus}}.
 
 ===Pronunciation===
-* {{ca-IPA|varr}}
+* {{ca-IPA|varr}}<!-- from GDLC; FIXME: by analogy with [[rar]] for Balearic; not in DCVB -->
 
 ===Adjective===
 {{ca-adj}}
@@ -67451,10 +67927,10 @@ Page 2680 var: -------- begin text --------
 Page 2681 avar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|avarus}}.
+{{bor+|ca|la|avārus}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[arr]}}<!-- from GDLC and DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-avar.wav|Audio}}
 
 ===Adjective===
@@ -68100,29 +68576,31 @@ From {{m|ca|subjectiu}}.
 -------- end text --------
 Page 2705 cultivar: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{bor+|ca|ML.|cultīvō|cultīvāre|t=to till, cultivate}}, from {{m|la|cultīvus|t=tilled}}, from {{der|ca|la|cultus}}, perfect passive participle of {{m|la|colō|t=to till, cultivate}}.
 
-===Pronunciation===
+====Pronunciation====
 * {{ca-IPA}}
 
-===Verb===
+====Verb====
 {{ca-verb}}
 
 # {{lb|ca|agriculture}} to [[cultivate]]; to [[grow]] {{gloss|plants, etc.}}
 #: {{syn|ca|conrear}}
 
-====Conjugation====
+=====Conjugation=====
 {{ca-conj}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|cultivable}}
 * {{l|ca|cultivador}}
 
-====Related terms====
+=====Related terms=====
 * {{l|ca|cultiu}}
 
-===Noun===
+===Etymology 2===
+
+====Noun====
 {{ca-noun|f}}
 
 # {{l|en|cultivar}} {{gloss|a cultivated variety of a plant species}}
@@ -68322,10 +68800,10 @@ Page 2712 salvar: -------- begin text --------
 Page 2713 Àlvar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|non|Alfarr}}, from {{compound|non|alfr|t1=elf|herr|t2=army|nocat=1}}. Cognate to {{cog|sv|Alvar}} and {{cog|es|Álvaro}}.
+{{bor+|ca|non|Alfarr}}, from {{compound|non|alfr|t1=elf|herr|t2=army|nocat=1}}. Cognate to {{cog|sv|Alvar}} and {{cog|es|Álvaro}}.
 
 ===Pronunciation===
-* {{ca-IPA|Àlvarr}}
+* {{ca-IPA|Àlvarr|bal=?}}
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -68726,7 +69204,7 @@ Page 2728 conservar: -------- begin text --------
 Page 2729 àvar: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[arr]|bal=?}}<!-- not in GDLC but almost certainly as other adjectives and nouns in unstressed -ar have pronounced -r in Central Catalan; cf [[tàtar]], [[càtar]], [[búlgar]], [[mudèjar]] -->
 
 ===Adjective===
 {{ca-adj}}
@@ -68749,6 +69227,9 @@ Page 2729 àvar: -------- begin text --------
 -------- end text --------
 Page 2730 bolívar: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[arr]|bal=?}}<!-- from GDLC -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -68768,7 +69249,7 @@ Page 2731 almívar: -------- begin text --------
 {{bor+|ca|ar|ميبة|المَيْبَة}}, from {{der|ca|fa|[[می]] [[به]]|tr=may bih|lit=quince nectar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[arr]|bal=?}}<!-- from GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -70331,7 +70812,7 @@ Page 2791 canyar: -------- begin text --------
 From {{af|ca|canya|t1=cane, reed|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -71231,7 +71712,7 @@ Page 2828 atzar: -------- begin text --------
 {{bor+|ca|ar|زَهْر|الزَهْر|dice}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[a(rr)]}}<!-- per GDLC, DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -77183,6 +77664,9 @@ Page 3094 saber: -------- begin text --------
 -------- end text --------
 Page 3095 iber: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[érr]}}<!-- from GDLC -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -77628,7 +78112,7 @@ Page 3116 nombre sencer: -------- begin text --------
 Page 3117 sincer: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|sincerus}}. {{doublet|ca|sencer}}.
+{{bor+|ca|la|sincērus}}. {{doublet|ca|sencer}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -77816,7 +78300,7 @@ Page 3125 tercer: -------- begin text --------
 {{number box|ca}}
 
 ===Etymology===
-From {{der|ca|la|tertiārius}}.
+{{inh+|ca|la|tertiārius}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -79167,7 +79651,7 @@ From {{suffix|ca|granja|er}}.
 Page 3188 estranger: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|fro|estrangier}}.
+{{bor+|ca|fro|estrangier}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -81652,7 +82136,7 @@ Page 3307 salmer: -------- begin text --------
 Page 3308 Homer: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|grc|Ὅμηρος||hostage}}.
+{{bor+|ca|grc|Ὅμηρος||hostage}}.
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -82080,7 +82564,7 @@ Page 3330 húmer: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Etymology===
-From {{der|ca|la|humerus}}.
+{{bor+|ca|la|humerus}}.
 
 ===Pronunciation===
 * {{ca-IPA|húmerr}}
@@ -86458,7 +86942,7 @@ From {{af|ca|baratar|-er}}.
 Page 3531 caràcter: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|character}}, from {{der|ca|grc|χαρακτήρ||type, nature, character}}, from {{m|grc|χαράσσω||to engrave}}.
+{{bor+|ca|la|character}}, from {{der|ca|grc|χαρακτήρ||type, nature, character}}, from {{m|grc|χαράσσω||to engrave}}.
 
 ===Pronunciation===
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-caràcter.wav|Audio}}
@@ -86947,7 +87431,7 @@ Page 3554 revolter: -------- begin text --------
 Page 3555 adúlter: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|adulter}}.
+{{bor+|ca|la|adulter}}.
 
 ===Adjective===
 {{ca-adj}}
@@ -87500,7 +87984,7 @@ Page 3577 repòrter: -------- begin text --------
 Page 3578 Ester: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|he|אֶסְתֵּר}}.
+{{bor+|ca|he|אֶסְתֵּר}}.
 
 ===Pronunciation===
 * {{ca-IPA|Estérr}}
@@ -87739,7 +88223,7 @@ From {{af|ca|llagosta|-er}}.
 Page 3588 auster: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|austērus}}.
+{{bor+|ca|la|austērus}}.
 
 ===Adjective===
 {{ca-adj}}
@@ -87902,7 +88386,7 @@ See {{m|ca|èter|t=ether}}
 Page 3598 quadrilàter: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|NL.|quadrilaterus}}.
+{{bor+|ca|NL.|quadrilaterus}}.
 
 ===Adjective===
 {{ca-adj}}
@@ -88005,7 +88489,7 @@ Shortened form of {{der|ca|en|water closet}}; compare {{cog|es|wáter}}.
 Page 3604 èter: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|aethēr}}, from {{der|ca|grc|αἰθήρ}}.
+{{bor+|ca|la|aethēr}}, from {{der|ca|grc|αἰθήρ}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -88030,7 +88514,7 @@ Page 3605 Demèter: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Etymology===
-From {{der|ca|grc|Δημήτηρ}}.
+{{bor+|ca|grc|Δημήτηρ}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -88044,7 +88528,7 @@ From {{der|ca|grc|Δημήτηρ}}.
 Page 3606 urèter: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|grc|οὐρητήρ}}.
+{{bor+|ca|grc|οὐρητήρ}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -88123,7 +88607,7 @@ Page 3609 bíter: -------- begin text --------
 Page 3610 úter: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|uterus}}.
+{{bor+|ca|la|uterus}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -89605,7 +90089,7 @@ Page 3682 Sever: -------- begin text --------
 Page 3683 sever: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|sevērus}}.
+{{bor+|ca|la|sevērus}}.
 
 ===Pronunciation===
 * {{ca-IPA|sevérr}}
@@ -90948,7 +91432,7 @@ Page 3747 alegr: -------- begin text --------
 Page 3748 -ir: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|-iō|-īre}}, the ending of the present active infinitive form of [[Appendix:Latin fourth conjugation|fourth conjugation]] verbs, which merged with {{m|la|-ēscō|-ēscere}}, {{m|la|-īscō|-īscere}}, from which come the ''-eix-'' infix.
+{{inh+|ca|la|-iō|-īre}}, the ending of the present active infinitive form of [[Appendix:Latin fourth conjugation|fourth conjugation]] verbs, which merged with {{m|la|-ēscō|-ēscere}}, {{m|la|-īscō|-īscere}}, from which come the ''-eix-'' infix.
 
 ===Pronunciation===
 * {{ca-IPA|ir}}
@@ -91108,7 +91592,7 @@ Page 3754 vair: -------- begin text --------
 * {{alt|ca|vaire}}
 
 ===Etymology===
-From {{der|ca|la|varius}}.
+{{inh+|ca|la|varius}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -91288,7 +91772,7 @@ Page 3760 exhibir: -------- begin text --------
 Page 3761 albir: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|arbitrium}}.
+{{inh+|ca|la|arbitrium}}.
 
 ===Noun===
 {{ca-noun|m}}
@@ -97146,7 +97630,7 @@ Page 3990 esdevenir: -------- begin text --------
 * {{alt|ca|esdevindre}}
 
 ===Etymology===
-From {{der|ca|la|ex}} + {{m|la|devenio|dēvenīre}}.
+From {{der|ca|la|ex-}} + {{m|la|devenio|dēvenīre}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -97968,7 +98452,7 @@ Page 4020 corroir: -------- begin text --------
 Page 4021 Epir: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|Epirus}}, from {{der|ca|grc|Ἤπειρος||mainland}}.
+{{bor+|ca|la|Epirus}}, from {{der|ca|grc|Ἤπειρος||mainland}}.
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -98058,7 +98542,7 @@ Page 4024 papir: -------- begin text --------
 Page 4025 tapir: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|tpw|tapi'ira}}.
+{{bor+|ca|tpw|tapi'ira}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -102554,7 +103038,7 @@ Page 4194 disminuir: -------- begin text --------
 Page 4195 faquir: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|ar|فَقِير}}, via either English or French.
+{{bor+|ca|ar|فَقِير}}, via either English or French.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -103871,7 +104355,7 @@ Page 4249 manicur: -------- begin text --------
 Page 4250 obscur: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|obscūrus}}.
+{{bor+|ca|la|obscūrus}}.
 
 ===Pronunciation===
 * {{ca-IPA|o(p)scurr}}
@@ -104618,7 +105102,7 @@ Page 4282 Singapur: -------- begin text --------
 Page 4283 impur: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|impūrus}}.
+{{bor+|ca|la|impūrus}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -104757,7 +105241,7 @@ From {{m|ca|aturar|t=to stop}}, {{cal|ca|es|paro|nocap=1}}.
 Page 4290 prematur: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|praemātūrus}}.
+{{bor+|ca|la|praemātūrus}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -105002,7 +105486,7 @@ Page 4302 Alt Millars: -------- begin text --------
 Page 4303 metatars: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|grc|μετατάρσιον}}.
+{{bor+|ca|grc|μετατάρσιον}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -105373,7 +105857,7 @@ Page 4323 divers: -------- begin text --------
 Page 4324 univers: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|ūniversum}}, neuter of {{m|la|ūniversus||whole, entire}}.
+{{bor+|ca|la|ūniversum}}, neuter of {{m|la|ūniversus||whole, entire}}.
 
 ===Pronunciation===
 * {{ca-IPA|univèrrs}}
@@ -105448,7 +105932,7 @@ Page 4328 envers: -------- begin text --------
 Page 4329 invers: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|inversus}}.
+{{bor+|ca|la|inversus}}.
 
 ===Adjective===
 {{ca-adj}}
@@ -105471,7 +105955,7 @@ From {{der|ca|la|inversus}}.
 Page 4330 pervers: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|perversus}}.
+{{bor+|ca|la|perversus}}.
 
 ===Adjective===
 {{ca-adj}}
@@ -105532,7 +106016,7 @@ Page 4332 curs: -------- begin text --------
 Page 4333 decurs: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|decursus}}.
+{{bor+|ca|la|dēcursus}}.
 
 ===Noun===
 {{ca-noun|m}}
