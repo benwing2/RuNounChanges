@@ -77688,7 +77688,7 @@ Page 3096 riber: -------- begin text --------
 From {{af|ca|riba|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -77715,7 +77715,7 @@ Page 3097 àlber: -------- begin text --------
 {{inh+|ca|LL.|albarus}}, from {{m|la|albus}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[e(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -77736,6 +77736,7 @@ Page 3098 bomber: -------- begin text --------
 From {{suffix|ca|bomba|er}}.
 
 ===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-bomber.wav|Audio}}
 
 ===Noun===
@@ -77752,7 +77753,7 @@ Page 3099 adober: -------- begin text --------
 From {{af|ca|adobar|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -77776,6 +77777,9 @@ Page 3100 barber: -------- begin text --------
 ===Etymology===
 From {{suffix|ca|barba|er}}.
 
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
+
 ===Noun===
 {{ca-noun|m|f=+}}
 
@@ -77787,6 +77791,9 @@ From {{suffix|ca|barba|er}}.
 -------- end text --------
 Page 3101 berber: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[érr]|bal=?}}<!-- per GDLC -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -77795,10 +77802,13 @@ Page 3101 berber: -------- begin text --------
 -------- end text --------
 Page 3102 líber: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[err]|bal=?}}<!-- per GDLC -->
+
 ===Noun===
 {{ca-noun|m}}
 
-# [[bast]] (of tree)
+# [[bast]] {{q|of a tree}}
 -------- end text --------
 Page 3103 acer: -------- begin text --------
 
@@ -77806,7 +77816,7 @@ Page 3103 acer: -------- begin text --------
 {{inh+|ca|LL.|aciārium}}, from {{inh|ca|la|aciēs}}, from {{der|ca|ine-pro|*h₂eḱ-||sharp, pointed}}. Compare {{cog|fr|acier}}, {{cog|gl|aceiro}}, {{cog|it|acciaio}}, {{cog|oc|acièr}}, {{cog|pt|aço}}, {{cog|es|acero}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[érr]}}<!-- per GDLC and DCVB, although with DCVB it appears complex -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-acer.wav|Audio}}
 
 ===Noun===
@@ -77837,7 +77847,7 @@ Page 3104 macer: -------- begin text --------
 From {{af|ca|maça|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -77856,7 +77866,7 @@ Page 3105 recer: -------- begin text --------
 Variant of {{m|ca|recés}}, from {{inh|ca|la|recessus|recessum}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -77876,7 +77886,7 @@ Page 3106 primicer: -------- begin text --------
 {{lbor|ca|la|prīmicērius}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -77903,7 +77913,7 @@ Page 3107 mitjancer: -------- begin text --------
 From {{af|ca|mitjançar|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=#}}
@@ -77922,7 +77932,7 @@ Page 3108 balancer: -------- begin text --------
 From {{af|ca|balança|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -77948,7 +77958,7 @@ Page 3109 llancer: -------- begin text --------
 {{af|ca|llança|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=llancera}}
@@ -77982,13 +77992,13 @@ Page 3111 romancer: -------- begin text --------
 From {{af|ca|romanç|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
 
 # {{lb|ca|relational}} [[romance]] {{gl|literary work, either verse or prose}}
-# {{lb|ca|colloquial}} [[smooth-talking]]
+# {{lb|ca|colloquial|pejorative}} [[smooth-talking]]
 
 ===Noun===
 {{ca-noun|m}}
@@ -77998,7 +78008,7 @@ From {{af|ca|romanç|-er}}.
 ===Noun===
 {{ca-noun|m|f=+}}
 
-# [[smooth=talker]]
+# {{lb|ca|colloquial|pejorative}} [[smooth-talker]]
 # [[jongleur]]
 #: {{syn|ca|joglar}}
 
@@ -78012,6 +78022,9 @@ Page 3112 financer: -------- begin text --------
 
 ===Etymology===
 From {{af|ca|finança|-er}}.
+
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -78036,7 +78049,7 @@ Page 3113 sobrancer: -------- begin text --------
 From {{af|ca|sobrança|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA}}<!-- by analogy with GDLC words, e.g. [[financer]], [[parencer]] -->
 
 ===Adjective===
 {{ca-adj}}
@@ -78055,7 +78068,7 @@ Page 3114 parencer: -------- begin text --------
 From {{af|ca|parença|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -78072,10 +78085,10 @@ From {{af|ca|parença|-er}}.
 Page 3115 sencer: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|sincērus}}. {{doublet|ca|sincer}}.
+{{inh+|ca|la|sincērus}}. {{doublet|ca|sincer}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|sencê(r)|val=sencê(r),sancê(r)}}
 
 ===Adjective===
 {{ca-adj}}
@@ -78115,7 +78128,7 @@ Page 3117 sincer: -------- begin text --------
 {{bor+|ca|la|sincērus}}. {{doublet|ca|sencer}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|+|bal=[érr]}}<!-- per DCVB; possibly outdated for Balearic, as they attest pronounced -r also in Central Catalan -->
 
 ===Adjective===
 {{ca-adj}}
@@ -78143,7 +78156,7 @@ Page 3118 càncer: -------- begin text --------
 {{bor+|ca|la|cancer||crab}}, from {{der|ca|grc|καρκίνος||crab}}; applied to cancerous tumors because the enlarged veins resembled the legs of a crab. {{doublet|ca|cranc}}, which was inherited.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[err]|bal=?}}<!-- per GDLC; pronun not given in DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-càncer.wav|Audio}}
 
 ===Noun===
@@ -78175,7 +78188,7 @@ Page 3119 vèncer: -------- begin text --------
 {{inh+|ca|roa-oca|vèncer}}~{{m|roa-oca|vençre}}, from {{inh|ca|la|vincō|vincere}}, from {{inh|ca|itc-pro|*winkō}}, from {{der|ca|ine-pro|*wi-n-k-}}, nasal infix from {{m|ine-pro|*weyk-||to overcome}}. Compare {{cog|oc|vèncer}}, {{cog|fr|vaincre}}, {{cog|es|vencer}}.
 
 ===Pronunciation===
-* {{ca-IPA|ë}}
+* {{ca-IPA|vënce(r)}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-vèncer.wav|Audio}}
 
 ===Verb===
@@ -78207,7 +78220,7 @@ Page 3120 convèncer: -------- begin text --------
 {{bor+|ca|la|convincō|convincere}}; adapted to inherited {{m|ca|vèncer}}. {{etydate|15th century}}
 
 ===Pronunciation===
-* {{ca-IPA|ë}}
+* {{ca-IPA|convënce(r)}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-convèncer.wav|Audio}}
 
 ===Verb===
@@ -78231,6 +78244,9 @@ Page 3120 convèncer: -------- begin text --------
 -------- end text --------
 Page 3121 véncer: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|val=vénce(r)}}
+
 ===Verb===
 {{ca-verb}}
 
@@ -78246,7 +78262,7 @@ Page 3122 arbocer: -------- begin text --------
 From {{af|ca|arboç|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -78264,6 +78280,9 @@ Page 3123 marcer: -------- begin text --------
 ===Etymology===
 From {{suffix|ca|març|er}}.
 
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -78279,7 +78298,7 @@ Page 3124 mercer: -------- begin text --------
 Either from {{inh|ca|VL.|*merciārius}} or from {{der|ca|roa-oca|merç|t=commodity}}, both ultimately from {{der|ca|la|merx||merchandise, goods}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -78303,7 +78322,7 @@ Page 3125 tercer: -------- begin text --------
 {{inh+|ca|la|tertiārius}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-tercer.wav|Audio}}
 
 ===Adjective===
@@ -78332,12 +78351,12 @@ Page 3126 càrcer: -------- begin text --------
 {{inh+|ca|la|carcer}}. Compare {{cog|es|cárcel}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[err]|bal=?}}
 
 ===Noun===
 {{ca-noun|m}}
 
-# [[prison]]
+# {{lb|ca|archaic|poetic}} [[prison]]
 #: {{syn|ca|presó}}
 
 ====Derived terms====
@@ -78357,7 +78376,7 @@ Page 3127 tòrcer: -------- begin text --------
 {{inh+|ca|roa-oca|tòrcer}}~{{m|roa-oca|torçre}}, from {{inh|ca|VL.|*torcĕre}}, from {{inh|ca|la|torqueo|torquēre}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[e(r)]}}<!-- per GDLC and DCVB -->
 
 ===Verb===
 {{ca-verb|root=ò}}
@@ -78389,7 +78408,7 @@ Page 3128 retòrcer: -------- begin text --------
 From {{af|ca|re-|tòrcer|t2=to twist}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[e(r)]}}<!-- per GDLC and DCVB -->
 
 ===Verb===
 {{ca-verb|root=ò}}
@@ -78418,7 +78437,7 @@ Page 3129 Mercader: -------- begin text --------
 From {{m|ca|mercader||merchant}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -78432,7 +78451,7 @@ Page 3130 mercader: -------- begin text --------
 From {{suffix|ca|mercat|er|t1=market}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 * {{rhymes|ca|e(ɾ)}}
 
 ===Noun===
@@ -78457,6 +78476,9 @@ From {{suffix|ca|mercat|er|t1=market}}.
 -------- end text --------
 Page 3131 verdader: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -78467,7 +78489,7 @@ Page 3131 verdader: -------- begin text --------
 Page 3132 bugader: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -78498,7 +78520,7 @@ Page 3133 cansalader: -------- begin text --------
 {{af|ca|cansalada|-er}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=cansaladera}}
@@ -78520,7 +78542,7 @@ Page 3134 blader: -------- begin text --------
 From {{af|ca|blat|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -78543,7 +78565,7 @@ Page 3135 teulader: -------- begin text --------
 From {{af|ca|teulada|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -78567,7 +78589,7 @@ Page 3136 mainader: -------- begin text --------
 From {{af|ca|mainada|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -78587,7 +78609,7 @@ Page 3137 escarader: -------- begin text --------
 From {{af|ca|escarada|-er|t1=piecework}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -78609,12 +78631,12 @@ Page 3138 mesader: -------- begin text --------
 {{af|ca|mesada|-er}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- by analogy with other agent nouns in -er -->
 
 ===Noun===
 {{ca-noun|m|f=mesadera}}
 
-# Someone who rents month-to-month.
+# [[month-to-month]] [[renter]]
 
 ===See also===
 * {{l|ca|anyader}}
@@ -78625,6 +78647,9 @@ Page 3138 mesader: -------- begin text --------
 {{C|ca|People}}
 -------- end text --------
 Page 3139 vertader: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -78638,7 +78663,7 @@ Page 3140 seder: -------- begin text --------
 From {{af|ca|seda|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -78672,7 +78697,7 @@ Page 3141 mentider: -------- begin text --------
 From {{af|ca|mentida|t1=lie|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -78713,7 +78738,7 @@ Page 3143 sender: -------- begin text --------
 {{inh+|ca|roa-oca|sender}} (att. 1154),<ref>{{R:ca:GDLC}}</ref> from {{inh|ca|la-eme|sēmitārius|id=noun}}, derived from {{der|ca|la|sēmita}}. Compare {{cog|oc|sendièr}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -78740,7 +78765,7 @@ Page 3144 guinder: -------- begin text --------
 From {{af|ca|guinda|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -78760,7 +78785,7 @@ Page 3145 neboder: -------- begin text --------
 From {{suffix|ca|nebot|er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -78776,29 +78801,36 @@ From {{suffix|ca|nebot|er}}.
 -------- end text --------
 Page 3146 poder: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{inh+|ca|roa-oca|poder}}, from {{inh|ca|VL.|posso|potēre}}, regularization of {{inh|ca|la|possum|posse}}.
 
-===Pronunciation===
-* {{ca-IPA|ê}}<!-- from cawikt; /ɛ/ confirmed for Central for GDLC -->
+====Pronunciation====
+* {{ca-IPA|[ê(r)]}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC and for Ibiza by DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-poder.wav|Audio}}
 
-===Verb===
+====Verb====
 {{ca-verb|root=ò}}
 
 # to be [[able]]; [[can]]
 # to be [[allowed]], to be [[permitted]]; [[may]]
 
-====Conjugation====
+=====Conjugation=====
 {{ca-conj}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|potser}}
 
-====Related terms====
+=====Related terms=====
 * {{l|ca|potent}}
 
-===Noun===
+===Etymology 2===
+Nominalization of Etymology 1.
+
+====Pronunciation====
+* {{ca-IPA|[ê(rr)]}}<!-- from cawikt and GDLC; /ɛ/ confirmed for Central by GDLC; DCVB confirms schwa and silent -r for Mallorca and Ibiza -->
+* {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-poder.wav|Audio}}
+
+====Noun====
 {{ca-noun|m}}
 
 # [[power]]
@@ -78807,6 +78839,18 @@ Page 3146 poder: -------- begin text --------
 ====Derived terms====
 * {{l|ca|apoderar}}
 * {{l|ca|poderós}}
+
+===Etymology 3===
+Per GDLC, a popular alteration of {{m|ca|potser}}.
+
+====Pronunciation====
+* {{ca-IPA|podé}}<!-- from cawikt; /e/ confirmed for Central by GDLC -->
+
+====Adverb====
+{{ca-adv}}
+
+# {{lb|ca|colloquial}} [[maybe]]
+#: {{syn|ca|potser}}
 
 ===References===
 * {{R:ca:IEC2}}
@@ -78832,6 +78876,9 @@ Page 3148 alabarder: -------- begin text --------
 ===Etymology===
 From {{af|ca|alabarda|-er}}.
 
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -78849,7 +78896,7 @@ Page 3149 bombarder: -------- begin text --------
 From {{af|ca|bombarda|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -78873,7 +78920,7 @@ Page 3150 xafarder: -------- begin text --------
 From {{m|ca|safareig|fer safareig|t=to do the laundry}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 * {{rhymes|ca|e(ɾ)|s=3}}
 
 ===Adjective===
@@ -78902,7 +78949,7 @@ Page 3151 merder: -------- begin text --------
 From {{af|ca|merda|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -78926,17 +78973,26 @@ From {{af|ca|merda|-er}}.
 -------- end text --------
 Page 3152 corder: -------- begin text --------
 
-===Etymology===
-Ultimately from {{der|ca|VL.|*cordārium}}. Per the DCVB, probably borrowed via {{bor|ca|es|cordero}} on the following grounds: it is not attested in Catalan until the fifteenth century, it was at first found alongside a more Castilian-like variant {{m|ca|cordero}}, and its distribution is limited to western dialects.<ref>{{R:ca:DCVB}}</ref>
-
 ===Pronunciation===
-* {{ca-IPA|cordér}}
+* {{ca-IPA}}<!-- both etyms; per GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-corder.wav|Audio (Valencian)}}
 
-===Noun===
+===Etymology 1===
+From {{af|ca|corda|-er}}.
+
+====Noun====
+{{ca-noun|m|f=+}}
+
+# [[ropemaker]]
+# [[rope]] [[seller]]
+
+===Etymology 2===
+Ultimately from {{der|ca|VL.|*cordārium}}. Per the DCVB, probably borrowed via {{bor|ca|es|cordero}} on the following grounds: it is not attested in Catalan until the fifteenth century, it was at first found alongside a more Castilian-like variant {{m|ca|cordero}}, and its distribution is limited to western dialects.<ref>{{R:ca:DCVB}}</ref>
+
+====Noun====
 {{ca-noun|m}}
 
-# [[lamb]]
+# {{lb|ca|regional}} [[lamb]]
 #: {{syn|ca|anyell}}
 
 ===References===
@@ -78949,7 +79005,7 @@ Page 3153 escuder: -------- begin text --------
 From {{af|ca|escut|-er}} or from {{inh|ca|LL.|scūtārius}}, from {{inh|ca|la|scūtum|t=shield}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -78968,6 +79024,9 @@ Page 3154 líder: -------- begin text --------
 ===Etymology===
 {{bor+|ca|en|leader}}.
 
+===Pronunciation===
+* {{ca-IPA|[err]|bal=?}}<!-- per GDLC -->
+
 ===Noun===
 {{ca-noun|mfbysense}}
 
@@ -78976,11 +79035,11 @@ Page 3154 líder: -------- begin text --------
 -------- end text --------
 Page 3155 fer: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|é}}
-
 ===Etymology 1===
 {{inh+|ca|roa-oca|far}}~{{m|roa-oca|fair}}, from {{inh|ca|la|facere}}, present active infinitive of {{m|ro|facio|faciō}}, from {{inh|ca|itc-pro|*fakiō}}, from {{inh|ca|ine-pro|*dʰeh₁-||to put, place, set}}.
+
+====Pronunciation====
+* {{ca-IPA|[é(r)]}}<!-- per GDLC -->
 
 ====Verb====
 {{ca-verb}}
@@ -79004,7 +79063,7 @@ Page 3155 fer: -------- begin text --------
 #: {{uxi|ca|La canària '''ha fet''' un ou.|The canary has laid an egg.}}
 # to [[cause]]
 # {{lb|ca|auxiliary}} to make (someone) (do something), that is {{non-gloss definition|[[auxiliary verb]] to form the [[causative]] together with an [[infinitive]]}}
-#: {{uxi|ca|em '''van fer''' tornar a buscar el rebut|they '''made''' me to go back to get the receipt}}
+#: {{uxi|ca|em '''van fer''' tornar a buscar el rebut|they '''made''' me go back to get the receipt}}
 #: {{uxi|ca|l''''has feta''' plorar|you '''made''' her cry}}
 # to [[go]]
 # {{lb|ca|impersonal|of weather}} to [[be]]
@@ -79057,6 +79116,9 @@ Balearic uses {{m|ca|fais}} for the second person plural form in the present ind
 ===Etymology 2===
 {{inh+|ca|la|ferus}} (compare {{cog|oc||fèr}}, {{cog|fr|fier}}, {{cog|es|fiero}}), from {{der|ca|ine-pro|*ǵʰwer-}}.
 
+====Pronunciation====
+* {{ca-IPA|[é(rr)]}}<!-- per GDLC and DCVB -->
+
 ====Adjective====
 {{ca-adj}}
 
@@ -79084,6 +79146,9 @@ Page 3156 gat fer: -------- begin text --------
 -------- end text --------
 Page 3157 -fer: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[err]}}<!-- per GDLC; [[mamífer]] is the only term I can find in DCVB with pronunciation given, and it includes pronounced -r for Palma = Balearics -->
+
 ===Suffix===
 {{ca-adj}}
 
@@ -79109,7 +79174,7 @@ Page 3158 afer: -------- begin text --------
 From {{af|ca|a-|fer}}, compare {{cog|fr|affaire}}.
 
 ===Pronunciation===
-* {{ca-IPA|aférr}}
+* {{ca-IPA|aférr|bal=aférr,afé}}<!-- per GDLC, DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -79128,7 +79193,7 @@ Page 3159 contrafer: -------- begin text --------
 From {{af|ca|contra-|fer}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[còn,é(r)]}}<!-- per GDLC -->
 
 ===Verb===
 {{ca-verb}}
@@ -79153,7 +79218,7 @@ Page 3160 estrafer: -------- begin text --------
 {{blend|ca|escarnir|contrafer}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[é(r)]}}<!-- per GDLC -->
 
 ===Verb===
 {{ca-verb}}
@@ -79173,7 +79238,7 @@ Page 3161 refer: -------- begin text --------
 From {{af|ca|re-|fer|t2=to do}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[é(r)]}}<!-- per GDLC -->
 
 ===Verb===
 {{ca-verb}}
@@ -79193,10 +79258,10 @@ From {{af|ca|re-|fer|t2=to do}}.
 Page 3162 liqüefer: -------- begin text --------
 
 ===Etymology===
-{{partial calque|ca|la|liquefaciō}}.
+{{partial calque|ca|la|liquefaciō|liquefacere}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[é(r)]}}<!-- per GDLC -->
 
 ===Verb===
 {{ca-verb}}
@@ -79222,7 +79287,7 @@ Page 3163 Llucifer: -------- begin text --------
 {{slbor|ca|la|Lūcifer}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[é(r)]}}<!-- per GDLC -->
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -79243,7 +79308,7 @@ Page 3164 garrofer: -------- begin text --------
 From {{af|ca|garrofa|t1=carob fruit|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -79268,7 +79333,7 @@ Page 3165 xofer: -------- begin text --------
 {{bor+|ca|fr|chauffeur}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -79286,7 +79351,7 @@ Page 3166 desfer: -------- begin text --------
 From {{af|ca|des-|fer}}. Compare {{cog|fr|défaire}}, {{cog|it|disfare}}, {{cog|pt|desfazer}}, {{cog|ro|desface}}, {{cog|es|deshacer}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[é(r)]}}<!-- per GDLC -->
 
 ===Verb===
 {{ca-verb}}
@@ -79315,7 +79380,7 @@ Page 3167 satisfer: -------- begin text --------
 {{bor+|ca|la|satisfacio|satisfacere}}, based on the conjugation of {{m|ca|fer}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|[é(r)]}}<!-- per GDLC -->
 
 ===Verb===
 {{ca-verb}}
@@ -79343,6 +79408,9 @@ Page 3168 lucífer: -------- begin text --------
 {{lbor|ca|la|lūcifer}}. {{doublet|ca|Llucifer}}.
 
 ===Pronunciation===
+* {{ca-IPA|[err]}}<!-- per GDLC; pronun not in DCVB but compare [[mamífer]] -->
+
+===Pronunciation===
 * {{ca-IPA}}
 
 ===Adjective===
@@ -79362,7 +79430,7 @@ Page 3169 glandífer: -------- begin text --------
 {{lbor|ca|la|glandifer}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[err]}}<!-- per GDLC; pronun not in DCVB but compare [[mamífer]] -->
 
 ===Adjective===
 {{ca-adj}}
@@ -79381,12 +79449,13 @@ Page 3170 prolífer: -------- begin text --------
 Equivalent to {{af|ca|prole|-fer}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[err]}}<!-- per GDLC; pronun not in DCVB but compare [[mamífer]] -->
 
 ===Adjective===
 {{ca-adj}}
 
-# [[proliferous]]
+# {{lb|ca|biology}} [[proliferous]]
+# [[prolific]]
 
 ====Derived terms====
 * {{l|ca|proliferar}}
@@ -79400,7 +79469,7 @@ Equivalent to {{af|ca|prole|-fer}}.
 Page 3171 mamífer: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|mamíferr}}
+* {{ca-IPA|[err]}}<!-- per GDLC and DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-mamífer.wav|Audio}}
 
 ===Adjective===
@@ -79422,12 +79491,12 @@ Page 3172 titanífer: -------- begin text --------
 From {{af|ca|titani|-fer}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[err]}}<!-- per GDLC; pronun not in DCVB but compare [[mamífer]] -->
 
 ===Adjective===
 {{ca-adj}}
 
-# [[titaniferous]]
+# {{lb|ca|mineralogy}} [[titaniferous]] {{gl|containing titanium, of ore}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -79438,12 +79507,13 @@ From {{af|ca|titani|-fer}}.
 Page 3173 seminífer: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[err]}}<!-- per GDLC; pronun not in DCVB but compare [[mamífer]] -->
 
 ===Adjective===
 {{ca-adj}}
 
-# [[seminiferous]]
+# {{lb|ca|zoology}} [[seminiferous]] {{gl|bearing semen}}
+# {{lb|ca|biology}} [[seminiferous]] {{gl|containing seeds}}
 
 ====Related terms====
 * {{l|ca|semen}}
@@ -79453,10 +79523,13 @@ Page 3174 aluminífer: -------- begin text --------
 ===Etymology===
 From {{af|ca|alumini|-fer}}.
 
+===Pronunciation===
+* {{ca-IPA|[err]}}<!-- per GDLC; pronun not in DCVB but compare [[mamífer]] -->
+
 ===Adjective===
 {{ca-adj}}
 
-# [[aluminiferous]]
+# {{lb|ca|mineralogy}} [[aluminiferous]] {{gl|containing aluminum, of ore}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -79467,7 +79540,7 @@ From {{af|ca|alumini|-fer}}.
 Page 3175 somnífer: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[err]}}<!-- per GDLC; pronun not in DCVB but compare [[mamífer]] -->
 
 ===Adjective===
 {{ca-adj}}
@@ -79480,6 +79553,9 @@ Page 3175 somnífer: -------- begin text --------
 # [[sedative]], [[soporific]]
 -------- end text --------
 Page 3176 aerífer: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[err]}}<!-- per GDLC; pronun not in DCVB but compare [[mamífer]] -->
 
 ===Adjective===
 {{ca-adj}}
@@ -79494,19 +79570,23 @@ Page 3177 diamantífer: -------- begin text --------
 ===Etymology===
 From {{suffix|ca|diamant|ífer}}.
 
+===Pronunciation===
+* {{ca-IPA|[err]}}<!-- per GDLC; pronun not in DCVB but compare [[mamífer]] -->
+
 ===Adjective===
 {{ca-adj}}
 
-# [[diamondiferous]]
-
-{{C|ca|Mineralogy}}
+# {{lb|ca|mineralogy}} [[diamondiferous]] {{gl|containing diamonds, of ore}}
 -------- end text --------
 Page 3178 argentífer: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[err]}}<!-- per GDLC; pronun not in DCVB but compare [[mamífer]] -->
+
 ===Adjective===
 {{ca-adj}}
 
-# {{lb|ca|geology}} [[argentiferous]] {{gloss|containing or producing silver}}
+# {{lb|ca|mineralogy}} [[argentiferous]] {{gloss|containing or producing silver, of ore}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -79515,6 +79595,14 @@ Page 3178 argentífer: -------- begin text --------
 * {{R:ca:DCVB}}
 -------- end text --------
 Page 3179 rotífer: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[err]}}<!-- per GDLC; pronun not in DCVB but compare [[mamífer]] -->
+
+===Adjective===
+{{ca-adj}}
+
+# containing a [[wheel]], [[wheel]]-[[bear]]ing
 
 ===Noun===
 {{ca-noun|m}}
@@ -79529,7 +79617,7 @@ Page 3180 aqüífer: -------- begin text --------
 From {{confix|ca|aqüi|t1=water [combining form]|fer|t2=carrying, containing}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[err]}}<!-- per GDLC; not in DCVB but compare [[mamífer]] -->
 
 ===Adjective===
 {{ca-adj}}
@@ -79549,7 +79637,7 @@ From {{confix|ca|aqüi|t1=water [combining form]|fer|t2=carrying, containing}}.
 Page 3181 xòfer: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|xòferr}}
+* {{ca-IPA|[err]|bal=?}}<!-- not in GDLC but seems likely given that other nouns in unstressed -er have pronounced r; compare [[mànager]] -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -79560,6 +79648,9 @@ Page 3182 mànager: -------- begin text --------
 
 ===Etymology===
 {{bor+|ca|en|manager}}.
+
+===Pronunciation===
+* {{ca-IPA|[err]|bal=?}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|mfbysense}}
@@ -79586,7 +79677,7 @@ Page 3184 Alger: -------- begin text --------
 From {{der|ca|ar|الجَزَائِر|lit=the islands}}. {{root|ca|ar|ج ز ر}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -79624,7 +79715,7 @@ Page 3186 aranger: -------- begin text --------
 From {{suffix|ca|aranja|er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -79637,6 +79728,9 @@ Page 3187 granger: -------- begin text --------
 
 ===Etymology===
 From {{suffix|ca|granja|er}}.
+
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -79654,7 +79748,7 @@ Page 3188 estranger: -------- begin text --------
 {{bor+|ca|fro|estrangier}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -79687,7 +79781,7 @@ Page 3189 esponger: -------- begin text --------
 {{af|ca|esponja|-er}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- by analogy with terms such as [[rellotger]], [[mentider]] with -er -->
 
 ===Adjective===
 {{ca-adj}}
@@ -79705,7 +79799,7 @@ Page 3190 taronger: -------- begin text --------
 From {{suffix|ca|taronja|t1=orange|er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -79732,7 +79826,7 @@ Page 3191 Tànger: -------- begin text --------
 From {{der|ca|ar|طَنْجَة}}, from {{der|ca|la|Tingis}}, from {{der|ca|xpu|𐤕𐤍𐤂}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[err]}}<!-- per GDLC and DCVB -->
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -79747,6 +79841,9 @@ From {{der|ca|ar|طَنْجَة}}, from {{der|ca|la|Tingis}}, from {{der|ca|xpu|
 -------- end text --------
 Page 3192 Roger: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
+
 ===Proper noun===
 {{ca-proper noun|m}}
 
@@ -79759,7 +79856,7 @@ Page 3193 verger: -------- begin text --------
 {{inh+|ca|VL.|*virdiārium}}, syncopated form of {{inh|ca|la|viridiārium}}, variant of {{m|la|viridārium}}, from {{m|la|viridis||green}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -79783,7 +79880,7 @@ Page 3193 verger: -------- begin text --------
 Page 3194 viatger: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -79811,7 +79908,7 @@ Page 3195 formatger: -------- begin text --------
 From {{af|ca|formatge|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -79839,7 +79936,7 @@ Page 3196 farratger: -------- begin text --------
 From {{af|ca|farratge|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- by analogy with terms such as [[formatger]] and [[rellotger]] with -er -->
 
 ===Adjective===
 {{ca-adj}}
@@ -79854,6 +79951,9 @@ Page 3197 passatger: -------- begin text --------
 
 ===Etymology===
 From {{suffix|ca|passatge|er}}.
+
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -79881,7 +79981,7 @@ Page 3198 missatger: -------- begin text --------
 From {{suffix|ca|missatge|er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -79897,7 +79997,7 @@ Page 3199 mitger: -------- begin text --------
 From {{af|ca|mig|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -79915,6 +80015,9 @@ Page 3200 rellotger: -------- begin text --------
 
 ===Etymology===
 From {{suffix|ca|rellotge|er}}.
+
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -79936,7 +80039,7 @@ Page 3201 lleuger: -------- begin text --------
 {{inh+|ca|roa-oca|leuger}}, from {{inh|ca|VL.|*leviārius}}, from {{af|la|*levius|-ārius|nocat=1}}, the former element representing an alteration of {{der|ca|la|levis||lightweight}}. Compare {{cog|oc|leugièr}}, {{cog|fr|léger}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -79962,7 +80065,7 @@ Page 3201 lleuger: -------- begin text --------
 Page 3202 Níger: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|Nígerr}}
+* {{ca-IPA|[err]}}<!-- per GDLC; not in DCVB but pronun with pronounced -r likely, cf. [[Tànger]] -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-Níger.wav|Audio (Valencian)}}
 
 ===Proper noun===
@@ -79978,6 +80081,9 @@ Page 3203 moher: -------- begin text --------
 
 ===Etymology===
 {{bor+|ca|en|mohair}}, ultimately from {{der|ca|ar|مُخَيَّر|t=choice}}.
+
+===Pronunciation===
+* {{ca-IPA|mohërr}}<!-- per GDLC and DNV; a guess for Balearic as pronun not given in DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -80040,7 +80146,7 @@ Page 3206 papaier: -------- begin text --------
 From {{af|ca|papaia|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -80058,7 +80164,7 @@ Page 3207 raier: -------- begin text --------
 From {{af|ca|rai|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -80081,7 +80187,7 @@ Page 3208 artificier: -------- begin text --------
 From {{af|ca|artifici|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -80097,7 +80203,7 @@ From {{af|ca|artifici|-er}}.
 Page 3209 Alier: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+{{rfp|ca}}
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -80120,7 +80226,7 @@ Page 3211 olier: -------- begin text --------
 From {{af|ca|oli|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -80151,7 +80257,7 @@ Page 3212 superpetrolier: -------- begin text --------
 From {{compound|ca|super|petrolier}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[súp,ié(r)]}}<!-- per GDLC for [[petrolier]]; cf. [[superposició]] for secondary stress -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -80164,6 +80270,9 @@ Page 3213 linier: -------- begin text --------
 
 ===Etymology===
 {{bor+|ca|en|linesman}}, and {{suffix|ca|línia|t1=line|er}}.
+
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|mfbysense}}
@@ -80178,7 +80287,7 @@ Page 3214 xifonier: -------- begin text --------
 {{bor+|ca|fr|chiffonnier}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -80196,7 +80305,7 @@ Page 3215 cerimonier: -------- begin text --------
 From {{af|ca|cerimònia|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- by analogy with agent nouns in -er -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -80215,7 +80324,7 @@ Page 3216 joier: -------- begin text --------
 From {{suffix|ca|joia|er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -80238,7 +80347,7 @@ Page 3217 xirimoier: -------- begin text --------
 From {{af|ca|xirimoia|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -80256,7 +80365,7 @@ Page 3218 grier: -------- begin text --------
 From earlier {{m|ca|guier}}, from {{der|ca|la|gigērium}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -80276,7 +80385,7 @@ Page 3219 llantier: -------- begin text --------
 From {{af|ca|llàntia|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -80299,7 +80408,7 @@ Page 3220 canotier: -------- begin text --------
 {{bor+|ca|fr|canotier}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -80318,7 +80427,7 @@ Page 3221 Xavier: -------- begin text --------
 From the toponymic surname of a {{bor|ca|es|-}} saint, from {{der|ca|eu|Xabier}}. See {{m|en|Xavier}} for more.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -80335,7 +80444,7 @@ Page 3222 caler: -------- begin text --------
 {{inh+|ca|la|caleō|calēre}}. Compare {{cog|oc|caler}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
+* {{ca-IPA|[ê(r)]}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
 * {{rhymes|ca|ɛ(ɾ)|s=2}}
 
 ===Verb===
@@ -80353,7 +80462,7 @@ Page 3223 pedaler: -------- begin text --------
 {{af|ca|pedal|-er}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -80368,7 +80477,7 @@ Page 3223 pedaler: -------- begin text --------
 Page 3224 galer: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- both etyms; per GDLC -->
 
 ===Etymology 1===
 From {{af|ca|gala|-er|t1=oak gall}}.
@@ -80399,7 +80508,7 @@ Page 3225 semaler: -------- begin text --------
 From {{af|ca|semal|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -80417,7 +80526,7 @@ Page 3226 fanaler: -------- begin text --------
 From {{af|ca|fanal|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -80435,7 +80544,7 @@ Page 3227 jornaler: -------- begin text --------
 From {{af|ca|jornal|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -80457,7 +80566,7 @@ Page 3228 saler: -------- begin text --------
 From {{af|ca|sal|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -80483,7 +80592,7 @@ Page 3229 sotaler: -------- begin text --------
 From {{af|ca|sotal|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|val=+}}<!-- by analogy with other terms in -er -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -80502,7 +80611,7 @@ Page 3230 valer: -------- begin text --------
 {{inh+|ca|roa-oca|valer}}, from {{inh|ca|la|valeō|valēre}}, from {{inh|ca|itc-pro|*walēō}}, from {{inh|ca|ine-pro|*h₂wl̥h₁éh₁yeti}}, from {{m|ine-pro|*h₂welh₁-||to rule, be strong}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
+* {{ca-IPA|[ê(r)]}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
 
 ===Verb===
 {{ca-verb}}
@@ -80543,7 +80652,7 @@ Page 3231 prevaler: -------- begin text --------
 * {{alt|ca|prevaldre}}
 
 ===Pronunciation===
-* {{ca-IPA|ê}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
+* {{ca-IPA|[ê(r)]}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
 
 ===Verb===
 {{ca-verb}}
@@ -80569,7 +80678,7 @@ Page 3232 equivaler: -------- begin text --------
 {{bor+|ca|la|aequivaleō|aequivalēre}}; adapted to inherited {{m|ca|valer}}. {{etydate|1803}}<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
-* {{ca-IPA|ê}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
+* {{ca-IPA|[ê(r)]}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
 
 ===Verb===
 {{ca-verb}}
@@ -80601,7 +80710,7 @@ Page 3233 deler: -------- begin text --------
 {{inh+|ca|VL.|*dēlērium}}, alteration of {{der|ca|la|dēlīrium||madness}}. {{doublet|ca|deliri}}, a learned borrowing.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|[ë(r)]}}<!-- from cawikt; /ɛ/ confirmed for Central by GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -80622,6 +80731,9 @@ Page 3234 candeler: -------- begin text --------
 
 ===Etymology===
 From {{af|ca|candela|-er}}, or from {{der|ca|ML.|candelārius}}.
+
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -80647,7 +80759,7 @@ Page 3235 teler: -------- begin text --------
 From {{suffix|ca|tela|er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -80665,6 +80777,9 @@ From {{suffix|ca|tela|er}}.
 -------- end text --------
 Page 3236 hoteler: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -80678,7 +80793,7 @@ Page 3236 hoteler: -------- begin text --------
 Page 3237 veler: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- both etyms; per GDLC -->
 
 ===Etymology 1===
 From {{af|ca|vela|-er}}.
@@ -80717,7 +80832,13 @@ Page 3238 botifler: -------- begin text --------
 Possibly from {{der|ca|fr|beauté}} and {{der|ca|fr|fleur}}, in reference to [[fleur-de-lis]], symbol of the [[Borbonic]] monarchy.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
+
+===Adjective===
+{{ca-adj}}
+
+# [[chubby]]-[[cheeked]], [[fat]]-[[cheeked]]
+# {{lb|ca|figuratively}} [[pompous]], [[arrogant]], [[presumptuous]]
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -80734,7 +80855,7 @@ Possibly from {{der|ca|fr|beauté}} and {{der|ca|fr|fleur}}, in reference to [[f
 Page 3239 miler: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -80764,7 +80885,7 @@ Page 3240 brasiler: -------- begin text --------
 From {{af|ca|Brasil|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-brasiler.wav|Audio (Valencian)}}
 
 ===Adjective===
@@ -80785,7 +80906,7 @@ Page 3241 faller: -------- begin text --------
 {{af|ca|Falles|-er}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -80809,7 +80930,7 @@ Page 3242 rialler: -------- begin text --------
 From {{suffix|ca|rialla|er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -80825,7 +80946,7 @@ From {{suffix|ca|rialla|er}}.
 Page 3243 Vilaller: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+{{rfp|ca}}
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -80840,12 +80961,13 @@ Page 3244 cremaller: -------- begin text --------
 From {{af|ca|cremall|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
 
-# {{rfdef|ca}}
+# {{lb|ca|historical}} [[torch]] that [[burn]]s [[teak]]
+# {{lb|ca|historical|in the plural}} [[hook]]ed [[chain]] for [[hang]]ing [[pot]]s over a [[fireplace]]
 
 ===Further reading===
 * {{R:ca:DCVB}}
@@ -80857,7 +80979,7 @@ Page 3245 paller: -------- begin text --------
 From {{suffix|ca|palla|er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -80881,6 +81003,9 @@ Page 3246 graller: -------- begin text --------
 ===Etymology===
 From {{af|ca|gralla|-er}}.
 
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
+
 ===Noun===
 {{ca-noun|m|f=+}}
 
@@ -80897,7 +81022,7 @@ Page 3247 metraller: -------- begin text --------
 From {{af|ca|metralla|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -80918,7 +81043,7 @@ Page 3248 taller: -------- begin text --------
 {{bor+|ca|fr|atelier}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -80935,7 +81060,7 @@ Page 3248 taller: -------- begin text --------
 Page 3249 Bataller: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC [[bataller]] -->
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -80946,6 +81071,9 @@ Page 3250 cavaller: -------- begin text --------
 
 ===Etymology===
 {{inh+|ca|LL.|caballārius||horseman}}, from {{inh|ca|la|caballus||horse}}. Compare {{cog|oc|cavalièr}}, {{cog|fr|chevalier}}, {{cog|es|caballero}}.
+
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -80976,7 +81104,7 @@ Page 3252 abeller: -------- begin text --------
 From {{af|ca|abella|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -81013,12 +81141,12 @@ Page 3253 ribeller: -------- begin text --------
 From {{af|ca|ribella|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
 
-# [[washstand]]
+# {{lb|ca|regional}} [[washstand]]
 #: {{syn|ca|peu de ribella|rentamans}}
 
 ===Further reading===
@@ -81030,6 +81158,9 @@ Page 3254 canceller: -------- begin text --------
 
 ===Etymology===
 {{inh+|ca|la|cancellārius}}.
+
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -81043,12 +81174,18 @@ Page 3254 canceller: -------- begin text --------
 -------- end text --------
 Page 3255 carceller: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
+
 ===Noun===
 {{ca-noun|m|f=+}}
 
 # {{alternative form of|ca|escarceller}}
 -------- end text --------
 Page 3256 escarceller: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -81061,7 +81198,7 @@ Page 3257 rodeller: -------- begin text --------
 {{af|ca|rodella|-er}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -81079,15 +81216,15 @@ Page 3258 escudeller: -------- begin text --------
 From {{af|ca|escudella|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
 
-# a [[shelf]] for dishware
+# [[shelf]] for dishware
 
 ===Noun===
-{{ca-noun|m|#a}}
+{{ca-noun|m|f=+}}
 
 # [[potter]]
 
@@ -81102,13 +81239,18 @@ Page 3259 femeller: -------- begin text --------
 From {{af|ca|femella|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
 
-# [[womanizing]], [[skirt]]-[[chasing]]
+# {{lb|ca|pejorative}} [[womanizing]], [[skirt]]-[[chasing]]
 #: {{syn|ca|faldiller|doner}}
+
+===Noun===
+{{ca-noun|m}}
+
+# {{lb|ca|pejorative}} [[womanizer]], [[skirt chaser]]
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -81119,7 +81261,7 @@ Page 3260 corneller: -------- begin text --------
 From {{m|ca|cornell}}, diminutive of {{m|ca|corn||cornel}}, from {{inh|ca|la|cornus}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -81135,6 +81277,9 @@ From {{m|ca|cornell}}, diminutive of {{m|ca|corn||cornel}}, from {{inh|ca|la|cor
 Page 3261 Montpeller: -------- begin text --------
 {{wikipedia|lang=ca}}
 
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
+
 ===Proper noun===
 {{ca-proper noun|?}}
 
@@ -81146,21 +81291,21 @@ Page 3262 best-seller: -------- begin text --------
 {{bor+|ca|en|best-seller}}.
 
 ===Pronunciation===
-* {{ca-IPA|bès sèler}}<ref>[http://esadir.cat/entrades/fitxa/node/bestseller esadir.cat]</ref>
+* {{ca-IPA|bèst.sèlerr}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
 
 # [[bestseller]]
 
-===References===
-<references/>
-
 -------- end text --------
 Page 3263 conseller: -------- begin text --------
 
 ===Etymology===
 From {{der|ca|la}}. Cognate to {{cog|en|counselor}} and {{m|en|councilor}}.
+
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -81186,6 +81331,9 @@ Page 3264 casteller: -------- begin text --------
 ===Etymology===
 From {{suffix|ca|castell|er}}.
 
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
+
 ===Noun===
 {{ca-noun|m|f=+}}
 
@@ -81208,7 +81356,7 @@ Page 3265 cisteller: -------- begin text --------
 From {{af|ca|cistell|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -81234,7 +81382,7 @@ Page 3266 esqueller: -------- begin text --------
 {{af|ca|esquella|-er}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -81280,7 +81428,7 @@ Page 3268 canyeller: -------- begin text --------
 From {{af|ca|canyella|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -81298,14 +81446,19 @@ Page 3269 faldiller: -------- begin text --------
 From {{af|ca|faldilla|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
 
-# {{l|en|skirt chaser|skirt-chasing}}, [[womanizing]]
+# [[skirt chaser|skirt-chasing]], [[womanizing]]
 #: {{syn|ca|femeller|doner}}
 # [[clingy]]
+
+===Noun===
+{{ca-noun|m}}
+
+# [[skirt chaser]], [[womanizer]]
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -81316,7 +81469,7 @@ Page 3270 coniller: -------- begin text --------
 From {{af|ca|conill|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -81339,12 +81492,12 @@ Page 3271 guerriller: -------- begin text --------
 From {{af|ca|guerrilla|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
 
-# [[guerrilla]]
+# {{lb|ca|relational}} [[guerrilla]]
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -81363,7 +81516,7 @@ Page 3272 fetiller: -------- begin text --------
 From {{af|ca|fetilla|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -81390,7 +81543,7 @@ Page 3273 sortiller: -------- begin text --------
 From {{af|ca|sortilla|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -81414,10 +81567,13 @@ Page 3274 taquiller: -------- begin text --------
 ===Etymology===
 From {{af|ca|taquilla|-er}}.
 
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
+
 ===Adjective===
 {{ca-adj}}
 
-# [[successful]] at the [[box-office]]
+# {{lb|ca|colloquial}} [[successful]] at the [[box-office]]
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -81436,12 +81592,12 @@ Page 3275 batxiller: -------- begin text --------
 {{bor+|ca|fr|bachelier}}. Cognate with {{cog|en|bachelor}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
 
-# {{lb|ca|historical}} Someone holding a [[bachelor's degree]]
+# {{lb|ca|historical}} [[holder]] of a [[bachelor's degree]]
 # someone holding a [[baccalaureate]]; a [[high school]] [[graduate]]
 # [[busybody]]
 
@@ -81465,7 +81621,7 @@ Page 3276 groller: -------- begin text --------
 {{rfe|ca}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -81481,10 +81637,13 @@ Page 3276 groller: -------- begin text --------
 -------- end text --------
 Page 3277 respatller: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC -->
+
 ===Noun===
 {{ca-noun|m}}
 
-# the [[back]] of a [[chair]]; ''(in a vehicle)'' [[backrest]]
+# the [[back]] of a [[chair]]; [[backrest]] {{q|in a vehicle}}
 -------- end text --------
 Page 3278 ametller: -------- begin text --------
 
@@ -81492,7 +81651,7 @@ Page 3278 ametller: -------- begin text --------
 From {{suffix|ca|ametlla|er}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|cen=[m:mm]|bal=+|val=+}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -81513,7 +81672,7 @@ Page 3279 muller: -------- begin text --------
 {{inh+|ca|la|mulier|mulierem}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA}}<!-- per GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-muller.wav|Audio}}
 
 ===Noun===
@@ -81535,6 +81694,9 @@ Page 3279 muller: -------- begin text --------
 -------- end text --------
 Page 3280 Càller: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[err]|bal=?}}<!-- per GDLC; pronun not given in DCVB -->
+
 ===Proper noun===
 {{ca-proper noun|m}}
 
@@ -81552,7 +81714,7 @@ Page 3281 Sóller: -------- begin text --------
 {{unk|ca}}; probably of pre-Roman origin. (The popular derivation from ''s'olla'' "the pot" is unsupported by documentary evidence, as earlier attestations consistently show final ''-r''.)
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|bal=[e(r)]}}<!-- per DCVB -->
 
 ===Proper noun===
 {{ca-proper noun|?}}
@@ -81810,7 +81972,7 @@ Page 3293 perler: -------- begin text --------
 From {{af|ca|perla|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- by analogy with other adjectives in -er -->
 
 ===Adjective===
 {{ca-adj}}
@@ -81873,7 +82035,7 @@ Page 3296 culer: -------- begin text --------
 From {{af|ca|cul|-er|t1=bottom, butt}}. The football sense is from fans sitting on the walls of the first stadium in Barcelona, exposing their {{m|ca|cul|culs}} to passersby.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj|mf}}
@@ -81906,12 +82068,12 @@ Page 3297 pel·liculer: -------- begin text --------
 From {{af|ca|pel·lícula|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
 
-# {{lb|ca|relational}} [[film]], [[cinema]]; [[filmic]], [[cinematic]], [[dramatic]]
+# {{lb|ca|relational|neologism}} [[film]], [[cinema]]; [[filmic]], [[cinematic]], [[dramatic]]
 #* {{quote-journal|ca|date=1 Oct 2020|author=Àlex Gutiérrez|title=Les amebes menjacervells contra els pescaclics honestos|journal=Ara Balears|url=https://www.arabalears.cat/misc/amebes-menjacervells-contra-pescaclics-honestos_129_3140546.html|text=N'és un exemple aquesta ameba que apareix a múltiples titulars amb el '''pel·liculer''' sobrenom de "menjacervells". El seu nom científic, ''Naegleria fowleri'', és bastant menys sexi, des del punt de vista de la captura del clic ociós.|t=An example of this is this amoeba that appears in multiple headlines with the '''cinematic''' nickname of "brain-eating". Its scientific name, ''Naegleria fowleri'', is rather less sexy from the point of view of capturing idle clicks.}}
 
 {{C|ca|Cinematography}}
@@ -81922,7 +82084,7 @@ Page 3298 mer: -------- begin text --------
 From {{der|ca|la|merus}}.
 
 ===Pronunciation===
-* {{ca-IPA|mérr}}
+* {{ca-IPA|mérr}}<!-- FIXME: pronun not in DCVB, but pronounced -r seems likely in a monosyllable -->
 
 ===Adjective===
 {{ca-adj}}
@@ -82022,6 +82184,9 @@ From {{af|ca|remar|-er}}.
 Page 3303 khmer: -------- begin text --------
 {{wikipedia|lang=ca|Llengua khmer}}
 
+===Pronunciation===
+* {{ca-IPA|[err]}}<!-- per GDLC; FIXME: not in DCVB but pronounced -r seems likely -->
+
 ===Adjective===
 {{ca-adj|mf}}
 
@@ -82050,7 +82215,7 @@ Page 3304 primer: -------- begin text --------
 {{inh+|ca|roa-oca|primer}}, from {{inh|ca|la|prīmārius}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-primer.wav|Audio}}
 * {{rhymes|ca|e(ɾ)|s=2}}
 
@@ -82266,7 +82431,7 @@ Page 3315 fumer: -------- begin text --------
 From {{af|ca|fum|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -82396,6 +82561,9 @@ Page 3320 témer: -------- begin text --------
 -------- end text --------
 Page 3321 dímer: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[err]}}<!-- per GDLC; FIXME: pronun not in DCVB but likely pronounced -r; compare [[efímer]] and words in -ífer -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -82420,7 +82588,7 @@ Page 3322 efímer: -------- begin text --------
 {{bor+|ca|la|ephēmerus}}, from {{der|ca|grc|ἐφήμερος}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[err]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj}}
@@ -82435,6 +82603,12 @@ Page 3322 efímer: -------- begin text --------
 Page 3323 polímer: -------- begin text --------
 {{wikipedia|lang=ca}}
 
+===Etymology===
+Ultimately from {{der|ca|grc|πολυμερής||of many parts}}.
+
+===Pronunciation===
+* {{ca-IPA|[err]}}<!-- per GDLC; FIXME: pronun not in DCVB but likely pronounced -r; compare [[efímer]] and words in -ífer -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -82443,7 +82617,12 @@ Page 3323 polímer: -------- begin text --------
 ====Derived terms====
 * {{l|ca|polimeritzar}}
 
-====Related terms====
+===Adjective===
+{{ca-adj}}
+
+# {{lb|ca|relational}} [[polymer]]; [[polymeric]]
+
+===Related terms===
 * {{l|ca|polimeria}}
 
 ===Further reading===
@@ -82454,10 +82633,14 @@ Page 3323 polímer: -------- begin text --------
 -------- end text --------
 Page 3324 trímer: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[err]}}<!-- per GDLC; FIXME: pronun not in DCVB but likely pronounced -r; compare [[efímer]] and words in -ífer -->
+
 ===Adjective===
 {{ca-adj}}
 
-# {{lb|ca|chemistry}} [[trimerous]]
+# {{lb|ca|chemistry}} [[trimeric]]
+# {{lb|ca|entomology}} [[trimerous]]
 
 ===Noun===
 {{ca-noun|m}}
@@ -82472,6 +82655,9 @@ Page 3324 trímer: -------- begin text --------
 -------- end text --------
 Page 3325 oligòmer: -------- begin text --------
 {{wikipedia|lang=ca}}
+
+===Pronunciation===
+* {{ca-IPA|[err]}}<!-- not in GDLC but compare [[trìmer]], [[monòmer]]; FIXME: not in DCVB but likely pronounced -r; compare [[efímer]] and words in -ífer -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -82491,6 +82677,9 @@ Page 3325 oligòmer: -------- begin text --------
 Page 3326 monòmer: -------- begin text --------
 {{wikipedia|lang=ca}}
 
+===Pronunciation===
+* {{ca-IPA|[err]}}<!-- per GDLC; FIXME: pronun not in DCVB but likely pronounced -r; compare [[efímer]] and words in -ífer -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -82503,6 +82692,9 @@ Page 3326 monòmer: -------- begin text --------
 * {{l|ca|trímer}}
 -------- end text --------
 Page 3327 isòmer: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[err]}}<!-- per GDLC; FIXME: pronun not in DCVB but likely pronounced -r; compare [[efímer]] and words in -ífer -->
 
 ===Adjective===
 {{ca-adj}}
@@ -82530,7 +82722,7 @@ Page 3328 vòmer: -------- begin text --------
 {{bor+|ca|la|vōmer}}.
 
 ===Pronunciation===
-* {{ca-IPA|vòmerr}}
+* {{ca-IPA|[err]}}<!-- per GDLC; FIXME: pronun not in DCVB but likely pronounced -r; compare [[efímer]] and words in -ífer -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -82545,7 +82737,7 @@ Page 3329 fúmer: -------- begin text --------
 {{back-formation|ca|fumut}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[e(r)]}}<!-- per GDLC -->
 
 ===Verb===
 {{ca-verb}}
@@ -82567,7 +82759,7 @@ Page 3330 húmer: -------- begin text --------
 {{bor+|ca|la|humerus}}.
 
 ===Pronunciation===
-* {{ca-IPA|húmerr}}
+* {{ca-IPA|[err]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
