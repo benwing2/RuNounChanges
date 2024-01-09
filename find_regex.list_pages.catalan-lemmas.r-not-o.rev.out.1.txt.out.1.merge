@@ -106105,7 +106105,7 @@ Page 4303 metatars: -------- begin text --------
 {{bor+|ca|grc|μετατάρσιον}}.
 
 ===Pronunciation===
-* {{ca-IPA|métatárrs}}<!-- per GDLC; pronounced -r in Balearic highly likely in a learned word -->
+* {{ca-IPA|métatárrs}}<!-- per GDLC; pronun not given in DCVB but pronounced -r in Balearic highly likely in a learned word -->
 * {{hyph|ca|me|ta|tars}}
 
 ===Noun===
@@ -106128,12 +106128,12 @@ Page 4304 rosegaaltars: -------- begin text --------
 From {{com|ca|rosega|altars|t1=nibbles|t2=altars}}.
 
 ===Pronunciation===
-* {{ca-IPA|rosêgaaltàrs}}
+* {{ca-IPA|rosêgaaltà(r)s}}<!-- GDLC and DCVB confirm no pronounced -r in [[altar]] in Central Catalan and Balearic; GDLC confirms /ɛ/ in Central Catalan and DNV confirms /e/ in Valencian -->
 
 ===Noun===
 {{ca-noun|mfbysense|#}}
 
-# a sanctimonious person
+# [[sanctimonious]] [[person]], [[hypocrite]]
 #: {{syn|ca|xarrupallànties}}
 
 ===Further reading===
@@ -106147,7 +106147,7 @@ Page 4305 quars: -------- begin text --------
 {{bor+|ca|fr|quartz}}, from {{der|ca|de|Quarz}}.
 
 ===Pronunciation===
-* {{ca-IPA|quarrs}}
+* {{ca-IPA|quarrs}}<!-- per GDLC; pronun not given in DCVB but pronounced -r highly likely in learned word -->
 
 ===Noun===
 {{ca-noun|m|-}}
@@ -106174,7 +106174,7 @@ Page 4306 galavars: -------- begin text --------
 {{rfe|ca}}
 
 ===Pronunciation===
-* {{ca-IPA|galavarç}}
+* {{ca-IPA|galavarrs}}<!-- per DCVB; not in GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -106204,12 +106204,12 @@ Page 4309 Argelers: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+{{rfp|ca}}
 
 ===Proper noun===
 {{ca-proper noun|m}}
 
-#{{place|ca|town/and/commune|department/Pyrénées-Orientales|r/Occitanie|c/France|t1=Argelès-sur-Mer}}
+# {{place|ca|town/and/commune|department/Pyrénées-Orientales|r/Occitanie|c/France|t1=Argelès-sur-Mer}}
 
 ====Descendants====
 * {{desc|fr|Argelès-sur-Mer}}
@@ -106217,11 +106217,11 @@ Page 4309 Argelers: -------- begin text --------
 Page 4310 Granollers: -------- begin text --------
 
 ===Etymology===
-# from {{m|ca|granolla||frog}};
-# from {{der|ca|VL.|*grānuculārios||granaries}}, from {{m|VL.|*grānuculum}}, diminutive of {{m|la|grānum||a grain}}.
+* from {{m|ca|granolla||frog}};
+* from {{der|ca|VL.|*grānuculārios||granaries}}, from {{m|VL.|*grānuculum}}, diminutive of {{m|la|grānum||a grain}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{a|locally}} {{IPA|ca|gɾənuˈјɛs}}
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -106233,6 +106233,9 @@ Page 4310 Granollers: -------- begin text --------
 * {{l|ca|granollessenc}}
 -------- end text --------
 Page 4311 immers: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|immèrrs}}<!-- per GDLC, DNV; pronun not given in DCVB but pronounced -r highly likely in learned word -->
 
 ===Adjective===
 {{ca-adj}}
@@ -106249,7 +106252,7 @@ Page 4311 immers: -------- begin text --------
 Page 4312 diners: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[é(r)s]|val=[é(r)s],dinés}}<!-- per GDLC, DCVB, DNV -->
 * {{rhymes|ca|e(ɾ)s|s=2}}
 
 ===Noun===
@@ -106291,6 +106294,9 @@ Page 4315 petjapapers: -------- begin text --------
 ===Etymology===
 From {{compound|ca|petja|papers|t1=treads upon|t2=papers}}.
 
+===Pronunciation===
+* {{ca-IPA|pétjapapé(r)s}}<!-- per GDLC, DNV -->
+
 ===Noun===
 {{ca-noun|m|#}}
 
@@ -106303,6 +106309,9 @@ Page 4316 dispers: -------- begin text --------
 
 ===Etymology===
 {{bor+|ca|la|dispersus}}.
+
+===Pronunciation===
+* {{ca-IPA|[èrrs]}}<!-- per GDLC, DCVB, DNV -->
 
 ===Adjective===
 {{ca-adj}}
@@ -106325,7 +106334,7 @@ Page 4317 escombracarrers: -------- begin text --------
 From {{compound|ca|escombrar|t1=to sweep|carrers|t2=streets}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|escómbracarré(r)s}}<!-- per GDLC, DCVB, DNV -->
 
 ===Noun===
 {{ca-noun|mfbysense|-}}
@@ -106372,7 +106381,7 @@ Page 4319 vers: -------- begin text --------
 {{bor+|ca|la|versus||toward, facing}}.
 
 ====Pronunciation====
-* {{ca-IPA|vérrs}}
+* {{ca-IPA|cen=vèrs|bal=vérs|val=vérs}}<!-- per GDLC, DCVB, DNV -->
 
 ====Preposition====
 {{head|ca|preposition}}
@@ -106393,10 +106402,10 @@ Page 4319 vers: -------- begin text --------
 Page 4320 advers: -------- begin text --------
 
 ===Etymology===
-From {{uder|ca|la|adversus}}.
+{{bor+|ca|la|adversus}}.
 
 ===Pronunciation===
-* {{ca-IPA|abvèrrs}}
+* {{ca-IPA|advèrrs|bal=abvèrrs}}<!-- per GDLC, DCVB, DNV -->
 
 ===Adjective===
 {{ca-adj}}
@@ -106419,7 +106428,7 @@ From {{uder|ca|la|adversus}}.
 Page 4321 devers: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|cen=devèrrs|bal=devés|val=devérrs,devés}}<!-- per GDLC, DCVB, DNV -->
 
 ===Adverb===
 {{ca-adv}}
@@ -106435,8 +106444,7 @@ Page 4322 Vivers: -------- begin text --------
 Seemingly from the plural of {{m|ca|viver}}, from {{inh|ca|la|vīvārium||preserve, enclosure}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
-* {{rhymes|ca|e(ɾ)s|s=2}}
+{{rfp|ca}}
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -106452,6 +106460,9 @@ Page 4323 divers: -------- begin text --------
 
 ===Etymology===
 {{bor+|ca|la|dīversus}}.
+
+===Pronunciation===
+* {{ca-IPA|[èrrs]}}<!-- per GDLC, DCVB, DNV -->
 
 ===Adjective===
 {{ca-adj}}
@@ -106476,7 +106487,7 @@ Page 4324 univers: -------- begin text --------
 {{bor+|ca|la|ūniversum}}, neuter of {{m|la|ūniversus||whole, entire}}.
 
 ===Pronunciation===
-* {{ca-IPA|univèrrs}}
+* {{ca-IPA|[èrrs]}}<!-- per GDLC, DCVB, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -106493,7 +106504,7 @@ Page 4325 multivers: -------- begin text --------
 {{clq|ca|en|multiverse}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|[èrrs]}}<!-- per [[univers]] in GDLC, DCVB, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -106509,7 +106520,7 @@ Page 4325 multivers: -------- begin text --------
 Page 4326 Anvers: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|Anvèrrs}}
+* {{ca-IPA|[èrrs]}}<!-- per GDLC; likely the same for Balearic, Valencian -->
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -106524,7 +106535,7 @@ Page 4327 anvers: -------- begin text --------
 {{bor+|ca|es|anverso}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[èrrs]}}<!-- per GDLC, DCVB, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -106536,7 +106547,7 @@ Page 4327 anvers: -------- begin text --------
 Page 4328 envers: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|cen=envèrrs|bal=envés|val=envérrs}}<!-- per GDLC, DCVB, DNV -->
 
 ===Adverb===
 {{ca-adv}}
@@ -106549,6 +106560,9 @@ Page 4329 invers: -------- begin text --------
 
 ===Etymology===
 {{bor+|ca|la|inversus}}.
+
+===Pronunciation===
+* {{ca-IPA|[èrrs]}}<!-- per DCVB, DNV; GDLC says /e/ but this is likely a mistake, compare [[advers]], [[anvers]], [[divers]], [[pervers]] from the same Latin root all with /ɛ/ -->
 
 ===Adjective===
 {{ca-adj}}
@@ -106572,6 +106586,9 @@ Page 4330 pervers: -------- begin text --------
 
 ===Etymology===
 {{bor+|ca|la|perversus}}.
+
+===Pronunciation===
+* {{ca-IPA|[èrrs]}}<!-- per GDLC, DCVB, DNV -->
 
 ===Adjective===
 {{ca-adj}}
@@ -106608,7 +106625,7 @@ Page 4332 curs: -------- begin text --------
 {{bor+|ca|la|cursus}}. Compare the inherited doublets {{doublet|ca|cors|cós|notext=1}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[urrs]}}<!-- per GDLC, DCVB, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -106634,6 +106651,9 @@ Page 4333 decurs: -------- begin text --------
 ===Etymology===
 {{bor+|ca|la|dēcursus}}.
 
+===Pronunciation===
+* {{ca-IPA|[urrs]}}<!-- per GDLC, DCVB, DNV -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -106656,7 +106676,7 @@ Page 4334 recurs: -------- begin text --------
 {{bor+|ca|la|recursus}}.
 
 ===Pronunciation===
-* {{ca-IPA|recurrs}}
+* {{ca-IPA|[urrs]}}<!-- per GDLC, DCVB, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -106674,7 +106694,7 @@ Page 4335 concurs: -------- begin text --------
 {{bor+|ca|la|concursus}}.
 
 ===Pronunciation===
-* {{ca-IPA|concurrs}}
+* {{ca-IPA|[urrs]}}<!-- per GDLC, DCVB, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -106699,7 +106719,7 @@ Page 4336 discurs: -------- begin text --------
 {{bor+|ca|LL.|discursus}}, from {{der|ca|la|discurrō}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[urrs]}}<!-- per GDLC, DCVB, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -106718,15 +106738,24 @@ Page 4336 discurs: -------- begin text --------
 -------- end text --------
 Page 4337 transcurs: -------- begin text --------
 
+===Etymology===
+{{bor+|ca|LL.|trānscursus}}, from {{der|ca|la|trānscurrō}}.
+
+===Pronunciation===
+* {{ca-IPA|[urrs]}}<!-- per GDLC, DCVB, DNV -->
+
 ===Noun===
 {{ca-noun|m}}
 
-# [[passing]]
+# [[passing]], [[passage]]
 -------- end text --------
 Page 4338 extramurs: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|[[extrā]] [[mūrōs]]}}. {{surf|ca|extra-|murs}}.
+{{bor+|ca|la|[[extrā]] [[mūrōs]]}}. {{surf|ca|extra-|murs}}.
+
+===Pronunciation===
+* {{ca-IPA|èkstramúrrs}}<!-- per GDLC; pronun not given in DCVB but pronounced -r likely for a literary term like this -->
 
 ===Pronunciation===
 * {{ca-IPA}}
