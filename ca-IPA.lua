@@ -489,7 +489,7 @@ local function postprocess_general(syllables)
 end
 
 local function mid_vowel_e(syllables)
-	-- most common cases, other ones are supposed ambiguous
+	-- most common cases, other ones are assumed ambiguous
 	post_consonants = syllables[syllables.stress].coda
 	post_vowel = ""
 	post_letters = post_consonants
@@ -500,15 +500,9 @@ local function mid_vowel_e(syllables)
 	end
 	
 	if syllables[syllables.stress].vowel == "e" then
-		if post_vowel == "i" or post_vowel == "u" then
-			track_mid_vowel("e", "i-u")
+		if post_vowel == "u" then
+			track_mid_vowel("e", "u")
 			return "è"
-		elseif rfind(post_letters, "^ct[ae]?s?$") then
-			track_mid_vowel("e", "ct-cts-cta-ctes")
-			return "è"
-		elseif post_letters == "dre" or post_letters == "dres" then
-			track_mid_vowel("e", "dre-dres")
-			return "é"
 		elseif rfind(post_consonants, "^l") and syllables.stress == #syllables then
 			track_mid_vowel("e", "final-l")
 			return "è"
@@ -551,7 +545,7 @@ local function mid_vowel_e(syllables)
 end
 
 local function mid_vowel_o(syllables)
-	-- most common cases, other ones are supposed ambiguous
+	-- most common cases, other ones are assumed ambiguous
 	post_consonants = syllables[syllables.stress].coda
 	post_vowel = ""
 	post_letters = post_consonants
@@ -561,41 +555,15 @@ local function mid_vowel_o(syllables)
 		post_letters = post_consonants .. post_vowel .. syllables[#syllables].coda
 	end
 	
-	if post_vowel == "i" or post_vowel == "u" then
-		track_mid_vowel("o", "i-u")
+	if post_vowel == "u" then
+		track_mid_vowel("o", "u")
 		return "ò"
-	elseif usub(post_letters, 1, 1) == "i" and usub(post_letters, 1, 2) ~= "ix" then -- diphthong oi
-		track_mid_vowel("o", "i-not-ix")
-		return "ò"
-	elseif rfind(post_letters, "^u[^s]") then -- diphthong ou, ambiguous if final
-		track_mid_vowel("o", "u-not-us")
-		return "ò"
-	elseif #syllables == 1 and (post_letters == "" or post_letters == "s" or post_letters == "ns") then -- monosyllable
-		track_mid_vowel("o", "mono")
-		return "ò"
-	elseif post_letters == "fa" or post_letters == "fes" then
-		track_mid_vowel("o", "fa-fes")
-		return "ò"
-	elseif post_consonants == "fr" then
-		track_mid_vowel("o", "fr")
-		return "ó"
-	elseif post_letters == "ldre" then
-		track_mid_vowel("o", "ldre")
-		return "ò"
-	elseif post_letters == "ma" or post_letters == "mes" then
-		track_mid_vowel("o", "ma-mes")
-		return "ó"
-	elseif post_letters == "ndre" then
-		track_mid_vowel("o", "ndre")
-		return "ò"
+	-- this may be mostly OK but there aren't too many examples; if we want to add this it should be limited to -oic(s)/-oica/-oiques, -oide(s)
+	--elseif usub(post_letters, 1, 1) == "i" and usub(post_letters, 1, 2) ~= "ix" then -- diphthong oi
+	--	track_mid_vowel("o", "i-not-ix")
+	--	return "ò"
 	elseif rfind(post_letters, "^r[ae]?s?$") then
 		track_mid_vowel("o", "r-rs-ra-res")
-		return "ó"
-	elseif rfind(post_letters, "^r[ft]s?$") then
-		track_mid_vowel("o", "rf-rfs-rt-rts")
-		return "ò"
-	elseif post_letters == "rme" or post_letters == "rmes" then
-		track_mid_vowel("o", "rme-rmes")
 		return "ó"
 	end
 	
