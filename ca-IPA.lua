@@ -17,6 +17,7 @@ FIXME:
 1. [zʒ] should reduce to [ʒ] in Central and Balearic ([[disjunt]], [[disjuntor]]). Similar for [sʃ] ([[desxifrar]]).
 2. There needs to be a way of forcing [ʃ]. (Maybe just ʃ?)
 3. Make sure manual dot for syllable break works, cf. [[best-seller]] respelled `bèst.sèlerr'.
+4. Explicit accents on a/i/u should be removed in split_syllables().
 
 ]=]
 
@@ -26,6 +27,7 @@ local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 local rsubn = mw.ustring.gsub
 local ulower = mw.ustring.lower
+local u = mw.ustring.char
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -79,6 +81,9 @@ local written_accented_to_plain_vowel = {
 
 export.mid_vowel_hints = "éèêëóòô"
 export.mid_vowel_hint_c = "[" .. export.mid_vowel_hints .. "]"
+
+local TEMP_PAREN_R = u(0xFFF1)
+local TEMP_PAREN_RR = u(0xFFF2)
 
 local valid_onsets = listToSet {
 	"b", "bl", "br",
@@ -135,56 +140,56 @@ local function fix_prefixes(word)
 	local prefix_i = {"pr[eé]", "pr[ií]mo", "pro", "tele"}
 	local no_prefix = {"autoic", "autori", "biret", "biri", "bisa", "bisell", "bisó", "biur", "contrari", "contrau",
 		"diari", "equise", "heterosi", "monoi", "parasa", "parasit", "preix", "psicosi", "sobrera", "sobreri"}
-	
+
 	-- False prefixes
 	for _, pr in ipairs(no_prefix) do
 		if rfind(word, "^" .. pr) then
 			return word
 		end
 	end
-	
+
 	-- Double r in prefix + r + vowel
 	for _, pr in ipairs(prefix_r) do
 		word = rsub(word, "^(" .. pr .. ")r([aàeèéiíïoòóuúü])", "%1rr%2")
 	end
 	word = rsub(word, "^eradic", "erradic")
-	
+
 	-- Double s in prefix + s + vowel
 	for _, pr in ipairs(prefix_s) do
 		word = rsub(word, "^(" .. pr .. ")s([aàeèéiíïoòóuúü])", "%1ss%2")
 	end
-	
+
 	-- Hiatus in prefix + i
 	for _, pr in ipairs(prefix_i) do
 		word = rsub(word, "^(" .. pr .. ")i(.)", "%1ï%2")
 	end
-	
+
 	-- Both prefix + r/s or i/u
 	for _, pr in ipairs(prefix) do
 		word = rsub(word, "^(" .. pr .. ")([rs])([aàeèéiíïoòóuúü])", "%1%2%2%3")
 		word = rsub(word, "^(" .. pr .. ")i(.)", "%1ï%2")
 		word = rsub(word, "^(" .. pr .. ")u(.)", "%1ü%2")
 	end
-	
+
 	-- Voiced s in prefix roots -fons-, -dins-, -trans-
 	word = rsub(word, "^enfons([aàeèéiíoòóuú])", "enfonz%1")
 	word = rsub(word, "^endins([aàeèéiíoòóuú])", "endinz%1")
 	word = rsub(word, "tr([aà])ns([aàeèéiíoòóuúbdghlmv])", "tr%1nz%2")
-	
+
 	-- in + ex > ineks/inegz
 	word = rsub(word, "^inex", "inhex")
-	
+
 	return word
 end
 
 local function restore_diaereses(word)
 	-- Some structural forms do not have diaeresis per diacritic savings, let's restore it to identify hiatus
-	
+
 	word = rsub(word, "([iu])um(s?)$", "%1üm%2") -- Latinisms (-ius is ambiguous but rare)
-	
+
 	word = rsub(word, "([aeiou])isme(s?)$", "%1ísme%2") -- suffix -isme
 	word = rsub(word, "([aeiou])ist([ae]s?)$", "%1íst%2") -- suffix -ista
-	
+
 	word = rsub(word, "([aeou])ir$", "%1ír") -- verbs -ir
 	word = rsub(word, "([aeou])int$", "%1ínt") -- present participle
 	word = rsub(word, "([aeo])ir([éà])$", "%1ïr%2") -- future
@@ -199,89 +204,91 @@ local function restore_diaereses(word)
 	word = rsub(word, "([^gq]u)iria$", "%1ïria")
 	word = rsub(word, "([aeo])ir(ie[sn])$", "%1ïr%2")
 	word = rsub(word, "([^gq]u)ir(ie[sn])$", "%1ïr%2")
-	
+
 	return word
 end
 
 local function fix_y(word)
 	-- y > vowel i else consonant /j/, except ny
-	
+
 	word = rsub(word, "ny", "ñ")
-	
+
 	word = rsub(word, "y([^aeiouàèéêëíòóôúïü])", "i%1") -- vowel if not next to another vowel
 	word = rsub(word, "([^aeiouàèéêëíòóôúïü·%-%.])y", "%1i") -- excluding also syllables separators
-	
+
 	return word
 end
 
 local function word_fixes(word)
+	word = rsub(word, "%(rr%)", TEMP_PAREN_RR)
+	word = rsub(word, "%(r%)", TEMP_PAREN_R)
 	word = rsub(word, "%-([rs]?)", "-%1%1")
 	word = rsub(word, "rç$", "rrs") -- silent r only in plurals -rs
 	word = fix_prefixes(word) -- internal pause after a prefix
 	word = restore_diaereses(word) -- no diaeresis saving
 	word = fix_y(word) -- ny > ñ else y > i vowel or consonant
-	
+
 	return word
 end
 
 local function split_vowels(vowels)
 	local syllables = {{onset = "", vowel = usub(vowels, 1, 1), coda = ""}}
 	vowels = usub(vowels, 2)
-	
+
 	while vowels ~= "" do
 		local syll = {onset = "", vowel = "", coda = ""}
 		syll.onset, syll.vowel, vowels = rmatch(vowels, "^([iu]?)(.)(.-)$")
 		table.insert(syllables, syll)
 	end
-	
+
 	local count = #syllables
-	
+
 	if count >= 2 and (syllables[count].vowel == "i" or syllables[count].vowel == "u") then
 		syllables[count - 1].coda = syllables[count].vowel
 		syllables[count] = nil
 	end
-	
+
 	return syllables
 end
 
 -- Split the word into syllables
 local function split_syllables(remainder)
 	local syllables = {}
-	
+
 	while remainder ~= "" do
 		local consonants, vowels
-		
+
 		consonants, remainder = rmatch(remainder, "^([^aeiouàèéêëíòóôúïü]*)(.-)$")
 		vowels, remainder = rmatch(remainder, "^([aeiouàèéêëíòóôúïü]*)(.-)$")
-		
+
 		if vowels == "" then
 			syllables[#syllables].coda = syllables[#syllables].coda .. consonants
 		else
 			local onset = consonants
 			local first_vowel = usub(vowels, 1, 1)
-			
+
 			if (rfind(onset, "[gq]$") and (first_vowel == "ü" or (first_vowel == "u" and vowels ~= "u")))
 			or ((onset == "" or onset == "h") and #syllables == 0 and first_vowel == "i" and vowels ~= "i")
 			then
 				onset = onset .. usub(vowels, 1, 1)
 				vowels = usub(vowels, 2)
 			end
-			
+
 			local vsyllables = split_vowels(vowels)
 			vsyllables[1].onset = onset .. vsyllables[1].onset
-			
+
 			for _, s in ipairs(vsyllables) do
 				table.insert(syllables, s)
 			end
 		end
 	end
-	
+
 	-- Shift over consonants from the onset to the preceding coda,
 	-- until the syllable onset is valid
 	for i = 2, #syllables do
 		local current = syllables[i]
 		local previous = syllables[i-1]
-		
+
 		while not (current.onset == "" or valid_onsets[current.onset]) do
 			local letter = usub(current.onset, 1, 1)
 			current.onset = usub(current.onset, 2)
@@ -292,7 +299,7 @@ local function split_syllables(remainder)
 			end
 		end
 	end
-	
+
 	-- Detect stress
 	for i, syll in ipairs(syllables) do
 		if rfind(syll.vowel, "^[àèéêëíòóôú]$") then
@@ -300,15 +307,15 @@ local function split_syllables(remainder)
 			syll.stressed = true
 		end
 	end
-	
+
 	if not syllables.stress then
 		local count = #syllables
-		
+
 		if count == 1 then
 			syllables.stress = 1
 		else
 			local final = syllables[count]
-			
+
 			if final.coda == "" or final.coda == "s" or (final.coda == "n" and (final.vowel == "e" or final.vowel == "i")) then
 				syllables.stress = count - 1
 			else
@@ -317,7 +324,7 @@ local function split_syllables(remainder)
 		end
 		syllables[syllables.stress].stressed = true
 	end
-	
+
 	return syllables
 end
 
@@ -331,34 +338,34 @@ local IPA_vowels = {
 
 local function replace_context_free(cons)
 	cons = rsub(cons, "ŀ", "l")
-	
+
 	cons = rsub(cons, "r", "ɾ")
 	cons = rsub(cons, "ɾɾ", "r")
 	cons = rsub(cons, "ss", "s")
 	cons = rsub(cons, "ll", "ʎ")
 	cons = rsub(cons, "ñ", "ɲ") -- hint ny > ñ
-	
+
 	cons = rsub(cons, "[dt]j", "d͡ʒ")
 	cons = rsub(cons, "tx", "t͡ʃ")
 	cons = rsub(cons, "[dt]z", "d͡z")
-	
+
 	cons = rsub(cons, "ç", "s")
 	cons = rsub(cons, "[cq]", "k")
 	cons = rsub(cons, "h", "")
 	cons = rsub(cons, "g", "ɡ")
 	cons = rsub(cons, "j", "ʒ")
 	cons = rsub(cons, "x", "ʃ")
-	
+
 	cons = rsub(cons, "i", "j") -- must be after j > ʒ
 	cons = rsub(cons, "y", "j") -- must be after j > ʒ and fix_y
 	cons = rsub(cons, "[uü]", "w")
-	
+
 	return cons
 end
 
 local function postprocess_general(syllables)
 	syllables = mw.clone(syllables)
-	
+
 	local voiced = listToSet {"b", "ð", "d", "ɡ", "m", "n", "ɲ", "l", "ʎ", "r", "ɾ", "v", "z", "ʒ"}
 	local voiceless = listToSet {"p", "t", "k", "f", "s", "ʃ", ""}
 	local voicing = {["k"]="ɡ", ["f"]="v", ["p"]="b", ["t"]="d", ["s"]="z"}
@@ -367,14 +374,14 @@ local function postprocess_general(syllables)
 	for i = 1, #syllables do
 		local current = syllables[i]
 		local previous = syllables[i - 1]
-		
+
 		-- Coda consonant losses
 		if i < #syllables or (i == #syllables and rfind(current.coda, "s$")) then
 			current.coda = rsub(current.coda, "m[pb]", "m")
 			current.coda = rsub(current.coda, "([ln])[td]", "%1")
 			current.coda = rsub(current.coda, "n[kɡ]", "ŋ")
 		end
-		
+
 		-- Consonant assimilations
 		if i > 1 then
 			-- t + lateral/nasal assimilation
@@ -401,25 +408,25 @@ local function postprocess_general(syllables)
 			then
 				previous.coda = rsub(previous.coda, "[ln]$", {["l"] = "ʎ", ["n"] = "ɲ"})
 			end
-			
+
 			-- ɡʒ > d͡ʒ
 			if previous.coda == "ɡ" and current.onset == "ʒ" then
 				previous.coda = ""
 				current.onset = "d͡ʒ"
 			end
 		end
-		
+
 		current.coda = rsub(current.coda, "n[kɡ]", "ŋk")
 		current.coda = rsub(current.coda, "n([ʃʒ])", "ɲ%1")
 		current.coda = rsub(current.coda, "n(t͡ʃ)", "ɲ%1")
 		current.coda = rsub(current.coda, "n(d͡ʒ)", "ɲ%1")
-		
+
 		current.coda = rsub(current.coda, "l([ʃʒ])", "ʎ%1")
 		current.coda = rsub(current.coda, "l(t͡ʃ)", "ʎ%1")
 		current.coda = rsub(current.coda, "l(d͡ʒ)", "ʎ%1")
-		
+
 		current.coda = rsub(current.coda, "ɲs", "ɲʃ")
-		
+
 		-- Voicing or devoicing
 		if i > 1 then
 			local coda_letter = usub(previous.coda, -1)
@@ -432,23 +439,23 @@ local function postprocess_general(syllables)
 				previous.coda = rsub(previous.coda, "[bd]s", {["bs"] = "ps", ["ds"] = "ts"})
 			end
 		end
-		
+
 		-- Allophones of r
 		if i == 1 then
 			current.onset = rsub(current.onset, "^ɾ", "r")
 		end
-		
+
 		-- no spirants after r/z
 		if i > 1 and mw.ustring.find(previous.coda, "[rz]$") then
 			current.onset = mw.ustring.gsub(current.onset, "^[βðɣ]", {["β"] = "b", ["ð"] = "d", ["ɣ"] = "ɡ"})
 		end
-		
+
 		if i > 1 then
 			if rfind(previous.coda, "[lns]$") then
 				current.onset = rsub(current.onset, "^ɾ", "r")
 			end
 		end
-		
+
 		-- Double sound of letter x > ks/gz (on cultisms, ambiguous in onsets)
 		current.coda = rsub(current.coda, "^ʃs?", "ks")
 		if i > 1 and previous.coda == "kz" then
@@ -457,7 +464,7 @@ local function postprocess_general(syllables)
 		if i > 1 and current.onset == "s" then
 			previous.coda = rsub(previous.coda, "s$", "") -- reduction exs, exc(e/i) and sc(e/i)
 		end
-		
+
 		if i > 1 and previous.onset == "" and (previous.vowel == "e" or previous.vowel == "ɛ")
 		and ((previous.coda == "" and current.onset == "ʃ") or (previous.coda == "ks" and current.onset == ""))
 		then
@@ -469,7 +476,7 @@ local function postprocess_general(syllables)
 
 	-- Final devoicing
 	local final = syllables[#syllables].coda
-	
+
 	final = rsub(final, "d͡ʒ", "t͡ʃ")
 	final = rsub(final, "d͡z", "t͡s")
 	final = rsub(final, "b", "p")
@@ -478,13 +485,13 @@ local function postprocess_general(syllables)
 	final = rsub(final, "ʒ", "ʃ")
 	final = rsub(final, "v", "f")
 	final = rsub(final, "z", "s")
-	
+
 	-- Final loses
 	final = rsub(final, "j(t͡ʃ)", "%1")
 	final = rsub(final, "([ʃs])s", "%1") -- homophone plurals -xs, -igs, -çs
-	
+
 	syllables[#syllables].coda = final
-	
+
 	return syllables
 end
 
@@ -498,7 +505,7 @@ local function mid_vowel_e(syllables)
 		post_vowel = syllables[#syllables].vowel
 		post_letters = post_consonants .. post_vowel .. syllables[#syllables].coda
 	end
-	
+
 	if syllables[syllables.stress].vowel == "e" then
 		if post_vowel == "u" then
 			track_mid_vowel("e", "u")
@@ -540,7 +547,7 @@ local function mid_vowel_e(syllables)
 			return "ê"
 		end
 	end
-	
+
 	return nil
 end
 
@@ -554,7 +561,7 @@ local function mid_vowel_o(syllables)
 		post_vowel = syllables[#syllables].vowel
 		post_letters = post_consonants .. post_vowel .. syllables[#syllables].coda
 	end
-	
+
 	if post_vowel == "u" then
 		track_mid_vowel("o", "u")
 		return "ò"
@@ -566,7 +573,7 @@ local function mid_vowel_o(syllables)
 		track_mid_vowel("o", "r-rs-ra-res")
 		return "ó"
 	end
-	
+
 	return nil
 end
 
@@ -589,36 +596,58 @@ local function to_IPA(syllables, mid_vowel_hint)
 				.. ".")
 		end
 	end
-	
+
+	-- Final -r is ambiguous in many cases.
+	local final = syllables[#syllables]
+	-- Stressed final r after a or i in non-monosyllables is treated as (r), i.e. verbal infinitives are assumed (NOTE:
+	-- not always the case, e.g. there are many adjectives and nouns in -ar that should be marked as '(rr)', and
+	-- several loanword nouns in -ir that should be marked as 'rr'). Likewise for stressed final r or rs after é in
+	-- non-monosyllables (which are usually adjectives or nouns with the -er ending, but may be verbal infinitives,
+	-- which should be marked as 'ê(r)'). That is, it disappears other than in Valencian. All other final r and final
+	-- rs are considered ambiguous and need to be rewritten using rr, (rr) or (r).
+	if #syllables > 1 and final.stressed then
+		-- FIXME: Explicit accents on a/i/u should be removed in split_syllables().
+		if final.coda == "r" and rfind(final.vowel, "[aàiíé]") or final.coda == "rs" and final.vowel == "é" then
+			final.coda = TEMP_PAREN_R
+		end
+	end
+	if rfind(final.coda, "^rs?$") or rfind(final.coda, "[^r]rs?$") then
+		error("Final -r by itself or in -rs is ambiguous except in the verbal endings -ar or -ir and in the nominal " ..
+			"or adjectival ending -er(s), and needs to be rewritten using one of 'rr' (pronounced everywhere), " ..
+			"'(rr)' (pronounced everywhere but Balearic) or '(r)' (pronounced only in Valencian). Note that nouns " ..
+			"and adjectives in -ar usually need rewriting using '(rr)', and loanword nouns in -ir usually need " ..
+			"rewriting using 'rr'.")
+	end
+
 	local syllables_IPA = {stress = syllables.stress}
-	
+
 	for key, val in ipairs(syllables) do
 		syllables_IPA[key] = {onset = val.onset, vowel = val.vowel, coda = val.coda, stressed = val.stressed}
 	end
-	
+
 	-- Replace letters with IPA equivalents
 	for i, syll in ipairs(syllables_IPA) do
 		-- Voicing of s
-		if syll.onset == "s" and i > 1 and (syllables[i-1].coda == "" or syllables[i-1].coda == "i" or syllables[i-1].coda == "u") then
+		if syll.onset == "s" and i > 1 and rfind(syllables[i - 1].coda, "^[iu]?$") then
 			syll.onset = "z"
 		end
-		
+
 		if rfind(syll.vowel, "^[eèéêëií]$") then
 			syll.onset = rsub(syll.onset, "tg$", "d͡ʒ")
 			syll.onset = rsub(syll.onset, "[cg]$", {["c"] = "s", ["g"] = "ʒ"})
 			syll.onset = rsub(syll.onset, "[qg]u$", {["qu"] = "k", ["gu"] = "ɡ"})
 		end
-		
+
 		syll.coda = rsub(syll.coda, "igs?$", "id͡ʒ")
-		
+
 		syll.onset = replace_context_free(syll.onset)
 		syll.coda = replace_context_free(syll.coda)
-		
+
 		syll.vowel = rsub(syll.vowel, ".", IPA_vowels)
 	end
-	
+
 	syllables_IPA = postprocess_general(syllables_IPA)
-	
+
 	return syllables_IPA
 end
 
@@ -628,25 +657,25 @@ local function reduction_ae(syllables)
 		local current = syllables[i]
 		local previous = syllables[i - 1] or {onset = "", vowel = "", coda = ""}
 		local posterior = syllables[i + 1] or {onset = "", vowel = "", coda = ""}
-		
+
 		local pre_vowel_pair = previous.vowel .. previous.coda .. current.onset .. current.vowel
 		local post_vowel_pair = current.vowel .. current.coda .. posterior.onset .. posterior.vowel
 		local reduction = true
-		
+
 		if current.stressed then
 			reduction = false
 		elseif pre_vowel_pair == "əe" then
 			reduction = false
 		elseif post_vowel_pair == "ea" or post_vowel_pair == "eɔ" then
 			reduction = false
-		elseif i < syllables.stress -1 and post_vowel_pair == "ee" then
+		elseif i < syllables.stress - 1 and post_vowel_pair == "ee" then
 			posterior.vowel = "ə"
 		elseif i > syllables.stress and post_vowel_pair == "ee" then
 			reduction = false
 		elseif pre_vowel_pair == "oe" or pre_vowel_pair == "ɔe" then
 			reduction = false
 		end
-		
+
 		if reduction then
 			current.vowel = rsub(current.vowel, "[ae]", "ə")
 		end
@@ -654,229 +683,154 @@ local function reduction_ae(syllables)
 	return syllables
 end
 
-local accents = {}
 
-accents.cen = function(syllables)
+local function do_dialect_specific(syllables, dialect, mid_vowel_hint)
 	syllables = mw.clone(syllables)
-	
-	-- Reduction of unstressed vowels a,e
-	syllables = reduction_ae(syllables)
-	
-	-- Final consonant losses
-	local final = syllables[#syllables].coda
-	
-	final = rsub(final, "^ɾ(s?)$", "%1") -- no loss with hint -rr
-	final = rsub(final, "m[pb]$", "m")
-	final = rsub(final, "([ln])[td]$", "%1")
-	final = rsub(final, "[nŋ][kɡ]$", "ŋ")
-	
-	syllables[#syllables].coda = final
-	
-	for i = 1, #syllables do
-		local current = syllables[i]
-		local previous = syllables[i-1]
-		
-		-- Reduction of unstressed o
-		if current.vowel == "o" and not (current.stressed or current.coda == "w") then
-			current.vowel = rsub(current.vowel, "o", "u")
-		end
-		
-		-- v > b
-		current.onset = rsub(current.onset, "v", "b")
-		current.coda = rsub(current.coda, "nb", "mb")
-		if i > 1 and rfind(current.onset, "^b") then
-			previous.coda = rsub(previous.coda, "n$", "m")
-		end
-		
-		-- allophones of r
-		current.coda = rsub(current.coda, "ɾ", "r")
-		
-		-- Remove j before palatal obstruents
-		current.coda = rsub(current.coda, "j([ʃʒ])", "%1")
-		current.coda = rsub(current.coda, "j(t͡ʃ)", "%1")
-		current.coda = rsub(current.coda, "j(d͡ʒ)", "%1")
-		
-		if i > 1 then
-			if rfind(current.onset, "^[ʃʒ]") or rfind(current.onset, "^t͡ʃ") or rfind(current.onset, "^d͡ʒ") then
-				previous.coda = rsub(previous.coda, "j$", "")
-			end
-		end
+
+	if dialect ~= "val" then
+		-- Reduction of unstressed vowels a,e
+		syllables = reduction_ae(syllables)
 	end
-	
-	return syllables
-end
 
-accents.bal = function(syllables, mid_vowel_hint)
-	syllables = mw.clone(syllables)
-	
-	-- Reduction of unstressed vowels a,e
-	syllables = reduction_ae(syllables)
-	
-	for i = 1, #syllables do
-		local current = syllables[i]
-		local previous = syllables[i-1]
-		
-		-- Reduction of unstressed o per vowel harmony
-		if i > 1 and current.stressed and rfind(current.vowel, "[iu]") and not previous.stressed then
-			previous.vowel = rsub(previous.vowel, "o", "u")
-		end
-		
-		-- Stressed schwa
-		if i == syllables.stress and mid_vowel_hint == "ê" then -- not ë
-			current.vowel = rsub(current.vowel, "ɛ", "ə")
-		end
-		
-		-- Remove j before palatal obstruents
-		current.coda = rsub(current.coda, "j([ʃʒ])", "%1")
-		current.coda = rsub(current.coda, "j(t͡ʃ)", "%1")
-		current.coda = rsub(current.coda, "j(d͡ʒ)", "%1")
-		
-		if i > 1 then
-			if rfind(current.onset, "^[ʃʒ]") or rfind(current.onset, "^t͡ʃ") or rfind(current.onset, "^d͡ʒ") then
-				previous.coda = rsub(previous.coda, "j$", "")
-			end
-		end
-		
-		-- No palatal gemination ʎʎ > ll or ʎ, in Valencian and Balearic
-		if i > 1 and current.onset == "ʎ" and previous.coda == "ʎ" then
-			local prev_syll = previous.onset .. previous.vowel .. previous.coda
-			if rfind(prev_syll, "[bpw]aʎ$")
-				or rfind(prev_syll, "[mv]eʎ$")
-				or rfind(prev_syll, "tiʎ$")
-				or rfind(prev_syll, "m[oɔ]ʎ$")
-				or (rfind(prev_syll, "uʎ$") and current.vowel == "a")
-				then
-				previous.coda = "l"
-				current.onset = "l"
-			else
-				previous.coda = ""
-			end
-		end
-		
+	if dialect == "cen" then
 		-- Final consonant losses
-		if #syllables == 1 then
-			current.coda = rsub(current.coda, "ɾ(s?)$", "%1") -- no loss with hint -rr in monosyllables
-		elseif i == #syllables then
-			current.coda = rsub(current.coda, "[rɾ](s?)$", "%1") -- including hint -rr
-		end
-	end
-	
-	return syllables
-end
+		local final = syllables[#syllables].coda
 
-accents.val = function(syllables, mid_vowel_hint)
-	syllables = mw.clone(syllables)
-	
+		final = rsub(final, "m[pb]$", "m")
+		final = rsub(final, "([ln])[td]$", "%1")
+		final = rsub(final, "[nŋ][kɡ]$", "ŋ")
+
+		syllables[#syllables].coda = final
+	end
+
 	for i = 1, #syllables do
 		local current = syllables[i]
 		local previous = syllables[i-1]
-		
-		-- Variable mid vowel
-		if i == syllables.stress and (mid_vowel_hint == "ê" or mid_vowel_hint == "ë" or mid_vowel_hint == "ô") then
-			current.vowel = rsub(current.vowel, "[ɛëɔ]", {["ɛ"] = "e", ["ë"] = "e", ["ɔ"] = "o"})
+
+		-- In replace_context_free(), we converted single r to ɾ and double rr to r.
+		-- FIXME: For some reason, Central and Balearic final -r renders as /r/ but Valencian final -r renders as /ɾ/.
+		-- This is inherited from the older code. Correct?
+		if dialect == "cen" then
+			current.coda = rsub(current.coda, TEMP_PAREN_R, "")
+			current.coda = rsub(current.coda, TEMP_PAREN_RR, "r")
+		elseif dialect == "bal" then
+			current.coda = rsub(current.coda, TEMP_PAREN_R, "")
+			current.coda = rsub(current.coda, TEMP_PAREN_RR, "")
+		else
+			current.coda = rsub(current.coda, TEMP_PAREN_R, "ɾ")
+			current.coda = rsub(current.coda, TEMP_PAREN_RR, "ɾ")
+			current.coda = rsub(current.coda, "r", "ɾ")
 		end
-		
-		-- Fortition of palatal fricatives
-		current.onset = rsub(current.onset, "ʒ", "d͡ʒ")
-		current.onset = rsub(current.onset, "d͡d", "d")
-		
-		current.coda = rsub(current.coda, "ʒ", "d͡ʒ")
-		current.coda = rsub(current.coda, "d͡d", "d")
-		
-		if i > 1 and previous.vowel == "i" and previous.coda == "" and current.onset == "d͡z" then
-			current.onset = "z"
-		elseif (i == 1 and current.onset == "ʃ")
-			or (i > 1 and current.onset == "ʃ" and previous.coda ~= "" and previous.coda ~= "j")
-			then
-			current.onset = "t͡ʃ"
-		end
-		
-		-- No palatal gemination ʎʎ > ll or ʎ, in Valencian and Balearic
-		if i > 1 and current.onset == "ʎ" and previous.coda == "ʎ" then
-			local prev_syll = previous.onset .. previous.vowel .. previous.coda
-			if rfind(prev_syll, "[bpw]aʎ$")
-				or rfind(prev_syll, "[mv]eʎ$")
-				or rfind(prev_syll, "tiʎ$")
-				or rfind(prev_syll, "m[oɔ]ʎ$")
-				or (rfind(prev_syll, "uʎ$") and current.vowel == "a")
-				then
-				previous.coda = "l"
-				current.onset = "l"
-			else
-				previous.coda = ""
+
+		if dialect == "cen" then
+			-- Reduction of unstressed o
+			if current.vowel == "o" and not (current.stressed or current.coda == "w") then
+				current.vowel = rsub(current.vowel, "o", "u")
+			end
+		elseif dialect == "bal" then
+			-- Reduction of unstressed o per vowel harmony
+			if i > 1 and current.stressed and rfind(current.vowel, "[iu]") and not previous.stressed then
+				previous.vowel = rsub(previous.vowel, "o", "u")
+			end
+		else -- Valencian
+			-- Variable mid vowel
+			if i == syllables.stress and (mid_vowel_hint == "ê" or mid_vowel_hint == "ë" or mid_vowel_hint == "ô") then
+				current.vowel = rsub(current.vowel, "[ɛëɔ]", {["ɛ"] = "e", ["ë"] = "e", ["ɔ"] = "o"})
 			end
 		end
-		
-		-- Hint -rr only for Central
-		if i == #syllables then
-			current.coda = rsub(current.coda, "r(s?)$", "ɾ%1")
+
+		if dialect == "cen" then
+			-- v > b
+			current.onset = rsub(current.onset, "v", "b")
+			current.coda = rsub(current.coda, "nb", "mb")
+			if i > 1 and rfind(current.onset, "^b") then
+				previous.coda = rsub(previous.coda, "n$", "m")
+			end
+		end
+
+		if dialect == "cen" then
+			-- allophones of r
+			current.coda = rsub(current.coda, "ɾ", "r")
+		end
+
+		if dialect == "bal" then
+			-- Stressed schwa
+			if i == syllables.stress and mid_vowel_hint == "ê" then -- not ë
+				current.vowel = rsub(current.vowel, "ɛ", "ə")
+			end
+		end
+
+		if dialect ~= "val" then
+			-- Remove j before palatal obstruents
+			current.coda = rsub(current.coda, "j([ʃʒ])", "%1")
+			current.coda = rsub(current.coda, "j(t͡ʃ)", "%1")
+			current.coda = rsub(current.coda, "j(d͡ʒ)", "%1")
+
+			if i > 1 then
+				if rfind(current.onset, "^[ʃʒ]") or rfind(current.onset, "^t͡ʃ") or rfind(current.onset, "^d͡ʒ") then
+					previous.coda = rsub(previous.coda, "j$", "")
+				end
+			end
+		else -- Valencian
+			-- Fortition of palatal fricatives
+			current.onset = rsub(current.onset, "ʒ", "d͡ʒ")
+			current.onset = rsub(current.onset, "d͡d", "d")
+
+			current.coda = rsub(current.coda, "ʒ", "d͡ʒ")
+			current.coda = rsub(current.coda, "d͡d", "d")
+
+			if i > 1 and previous.vowel == "i" and previous.coda == "" and current.onset == "d͡z" then
+				current.onset = "z"
+			elseif (i == 1 and current.onset == "ʃ")
+				or (i > 1 and current.onset == "ʃ" and previous.coda ~= "" and previous.coda ~= "j")
+				then
+				current.onset = "t͡ʃ"
+			end
+		end
+
+		if dialect ~= "cen" then
+			-- No palatal gemination ʎʎ > ll or ʎ, in Valencian and Balearic
+			if i > 1 and current.onset == "ʎ" and previous.coda == "ʎ" then
+				local prev_syll = previous.onset .. previous.vowel .. previous.coda
+				if rfind(prev_syll, "[bpw]aʎ$")
+					or rfind(prev_syll, "[mv]eʎ$")
+					or rfind(prev_syll, "tiʎ$")
+					or rfind(prev_syll, "m[oɔ]ʎ$")
+					or (rfind(prev_syll, "uʎ$") and current.vowel == "a")
+					then
+					previous.coda = "l"
+					current.onset = "l"
+				else
+					previous.coda = ""
+				end
+			end
 		end
 	end
-	
+
 	return syllables
 end
-
-
-local accent_order = {}
-
-for accent, _ in pairs(accents) do
-	table.insert(accent_order, accent)
-end
-
-table.sort(accent_order)
 
 
 local function join_syllables(syllables)
 	syllables = mw.clone(syllables)
-	
+
 	for i, syll in ipairs(syllables) do
 		syll = syll.onset .. syll.vowel .. syll.coda
-	
+
 		if i == syllables.stress then -- primary stress
 			syll = "ˈ" .. syll
 		elseif syllables[i].stressed then -- secondary stress
 			syll = "ˌ" .. syll
 		end
-		
+
 		syllables[i] = syll
 	end
-	
+
 	return rsub(table.concat(syllables, "."), ".([ˈˌ])", "%1")
 end
 
-local function group_sort_and_format(syllables, mid_vowel_hint, test)
-	local grouped = {}
-
-	for _, accent in pairs(accent_order) do
-		local ipa = join_syllables(accents[accent](syllables, mid_vowel_hint))
-		if grouped[ipa] then
-			table.insert(grouped[ipa], accent)
-		else
-			grouped[ipa] = {accent}
-		end
-	end
-	
-	local out = {}
-	
-	if test then
-		for ipa, accents in pairs(grouped) do
-			table.insert(out, table.concat(accents, ", ") .. ": " .. ipa)
-		end
-	else
-		for ipa, accents in pairs(grouped) do
-			table.insert(out, m_a.show(accents) .. " " .. m_IPA.format_IPA_full(lang, {{pron = ipa}}))
-		end
-	end
-	
-	table.sort(out)
-	return out
-end
-
-
 local function convert_respelling_to_original(to, pagename, whole_word)
-	if not patut then
-		patut = require(patut_module)
-	end
+	local patut = require(patut_module)
 	local from = rsub(to, "ks", "x"):gsub("gz", "x")
 	from = rsub(from, written_accented_vowel_c, written_accented_to_plain_vowel)
 	local escaped_from = patut.pattern_escape(from)
@@ -887,10 +841,15 @@ local function convert_respelling_to_original(to, pagename, whole_word)
 		return from
 	end
 	-- Check for partial replacement.
-	escaped_from = patut.pattern_escape(to)
 	-- Replace specially-handled characters with a class matching the character and possible replacements.
+	escaped_from = to
+	escaped_from = escaped_from:gsub("%(rr%)", "r")
+	escaped_from = escaped_from:gsub("%(r%)", "r")
+	escaped_from = patut.pattern_escape(escaped_from)
+	escaped_from = escaped_from:gsub("rr", "rr?")
 	escaped_from = rsub(escaped_from, written_accented_vowel_c,
 		function(v) return "[" .. v .. written_acute_to_plain_vowel[v] .. "]" end)
+	escaped_from = "(" .. escaped_from .. ")"
 	if whole_word then
 		escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
 	end
@@ -1045,7 +1004,7 @@ end
 -- the respelling itself if `mid_vowel_hint` isn't passed in.
 local function generate_pronun_syllables(word, mid_vowel_hint)
 	word = word_fixes(word)
-	
+
 	local syllables = split_syllables(word)
 	if mid_vowel_hint == nil then
 		if rfind(syllables[syllables.stress].vowel, "[éêëòóô]") then
@@ -1079,7 +1038,7 @@ function export.generate_phonemic_phonetic(parsed_respellings)
 				local word = ulower(termobj.term)
 				local mid_vowel_hint = termobj.mid_vowel_hint
 				local syllables, mid_vowel_hint = generate_pronun_syllables(word, mid_vowel_hint)
-				termobj.phonemic = join_syllables(accents[dialect](syllables, mid_vowel_hint))
+				termobj.phonemic = join_syllables(do_dialect_specific(syllables, accent, mid_vowel_hint))
 				-- set to nil so by-value comparisons respect only the resulting phonemic/phonetic and qualifiers
 				termobj.term = nil
 				termobj.mid_vowel_hint = nil
@@ -1305,7 +1264,25 @@ end
 function export.test(word, mid_vowel_hint)
 	local syllables, mid_vowel_hint = generate_pronun_syllables(word, mid_vowel_hint)
 
-	return table.concat(group_sort_and_format(syllables, mid_vowel_hint, true), ";<br>")
+	local grouped = {}
+
+	for _, dialect in ipairs(export.dialects) do
+		local ipa = join_syllables(do_dialect_specific(syllables, dialect, mid_vowel_hint))
+		if grouped[ipa] then
+			table.insert(grouped[ipa], dialect)
+		else
+			grouped[ipa] = {dialect}
+		end
+	end
+
+	local out = {}
+
+	for ipa, accents in pairs(grouped) do
+		table.insert(out, table.concat(accents, ", ") .. ": " .. ipa)
+	end
+
+	table.sort(out)
+	return table.concat(out, ";<br>")
 end
 
 -- on debug console use: =p.debug("your_word", "your_hint")
@@ -1314,11 +1291,11 @@ function export.debug(word, mid_vowel_hint)
 
 	local ret = {}
 
-	for _, accent in ipairs(accent_order) do
-		local syllables_accented = accents[accent](syllables, mid_vowel_hint)
-		table.insert(ret, accent .. " " .. join_syllables(syllables_accented))
+	for _, dialect in ipairs(export.dialects) do
+		local syllables_accented = do_dialect_specific(syllables, dialect, mid_vowel_hint)
+		table.insert(ret, dialect .. " " .. join_syllables(syllables_accented))
 	end
-	
+
 	return table.concat(ret, "\n")
 end
 
