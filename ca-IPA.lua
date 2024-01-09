@@ -11,6 +11,14 @@ local patut_module = "Module:pattern utilities"
 
 local listToSet = require("Module:table").listToSet
 
+--[=[
+FIXME:
+
+1. [zʒ] should reduce to [ʒ] in Central and Balearic ([[disjunt]], [[disjuntor]]). Similar for [sʃ] ([[desxifrar]]).
+2. There needs to be a way of forcing [ʃ]. (Maybe just ʃ?)
+3. Make sure manual dot for syllable break works, cf. [[best-seller]] respelled `bèst.sèlerr'.
+
+]=]
 
 local usub = mw.ustring.sub
 local rfind = mw.ustring.find
@@ -47,6 +55,26 @@ export.dialects_to_names = {
 }
 export.dialect_groups = {
 	east = {"bal", "cen"},
+}
+
+
+local written_vowel = "aeiouyàèéíïòóúüý"
+local written_vowel_c = "[aeiouyàèéíïòóúüý]"
+-- We don't include ê, ë or ô; these only make sense as mid-vowel hints for stressed mid vowels, and are handled
+-- specially.
+local written_accented_vowel = "àèéíïòóúüý"
+local written_accented_vowel_c = "[àèéíïòóúüý]"
+local written_accented_to_plain_vowel = {
+	["à"] = "a",
+	["è"] = "e",
+	["é"] = "e",
+	["í"] = "i",
+	["ï"] = "i",
+	["ò"] = "o",
+	["ó"] = "o",
+	["ú"] = "u",
+	["ü"] = "u",
+	["ý"] = "y",
 }
 
 export.mid_vowel_hints = "éèêëóòô"
@@ -878,8 +906,11 @@ end
 
 
 local function convert_respelling_to_original(to, pagename, whole_word)
-	local patut = require(patut_module)
-	local from = rsub(to, "ks", "x")
+	if not patut then
+		patut = require(patut_module)
+	end
+	local from = rsub(to, "ks", "x"):gsub("gz", "x")
+	from = rsub(from, written_accented_vowel_c, written_accented_to_plain_vowel)
 	local escaped_from = patut.pattern_escape(from)
 	if whole_word then
 		escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
@@ -887,9 +918,24 @@ local function convert_respelling_to_original(to, pagename, whole_word)
 	if rfind(pagename, escaped_from) then
 		return from
 	end
+	-- Check for partial replacement.
+	escaped_from = patut.pattern_escape(to)
+	-- Replace specially-handled characters with a class matching the character and possible replacements.
+	escaped_from = rsub(escaped_from, written_accented_vowel_c,
+		function(v) return "[" .. v .. written_acute_to_plain_vowel[v] .. "]" end)
+	if whole_word then
+		escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
+	end
+	local match = rmatch(pagename, escaped_from)
+	if match then
+		if match == to then
+			error(("Single substitution spec '%s' found in pagename '%s', replacement would have no effect"):
+				format(to, pagename))
+		end
+		return match
+	end
 	error(("Single substitution spec '%s' couldn't be matched to pagename '%s'"):format(to, pagename))
 end
-	
 
 -- Parse a respelling given by the user, allowing for '+' for pagename, mid vowel hints in place of a respelling
 -- and substitution specs like '[ks]' or [val:vol,ê,ks]. Return an object
