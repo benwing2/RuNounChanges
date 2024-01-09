@@ -91965,7 +91965,7 @@ Page 3748 -ir: -------- begin text --------
 {{inh+|ca|la|-iō|-īre}}, the ending of the present active infinitive form of [[Appendix:Latin fourth conjugation|fourth conjugation]] verbs, which merged with {{m|la|-ēscō|-ēscere}}, {{m|la|-īscō|-īscere}}, from which come the ''-eix-'' infix.
 
 ===Pronunciation===
-* {{ca-IPA|ir}}
+* {{ca-IPA|i(r)}}
 
 ===Suffix===
 {{head|ca|suffix}}
@@ -91986,6 +91986,9 @@ Page 3748 -ir: -------- begin text --------
 
 -------- end text --------
 Page 3749 Cir: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[irr]|bal=?}}<!-- per GDLC -->
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -92125,7 +92128,7 @@ Page 3754 vair: -------- begin text --------
 {{inh+|ca|la|varius}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|vayrr|bal=?}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -92152,7 +92155,7 @@ Page 3755 envair: -------- begin text --------
 {{inh+|ca|VL.|*invādīre}}, from {{der|ca|la|invādō|invādere}}.
 
 ===Pronunciation===
-* {{ca-IPA|envaïr}}
+* {{ca-IPA}}
 
 ===Verb===
 {{ca-verb}}
@@ -92304,6 +92307,9 @@ Page 3761 albir: -------- begin text --------
 ===Etymology===
 {{inh+|ca|la|arbitrium}}.
 
+===Pronunciation===
+* {{ca-IPA|[irr]}}<!-- per GDLC, DCVB -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -92415,7 +92421,7 @@ Page 3766 poncir: -------- begin text --------
 From {{der|ca|la|pomum Syriae||apple of Syria}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -92434,7 +92440,7 @@ From {{der|ca|la|pomum Syriae||apple of Syria}}.
 Page 3767 Capcir: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+{{rfp|ca}}
 * {{rhymes|ca|i(ɾ)|s=2}}
 
 ===Proper noun===
@@ -92532,7 +92538,7 @@ Page 3771 dir: -------- begin text --------
 {{inh+|ca|la|dīcō|dīcere}}, from {{inh|ca|itc-pro|*deikō}}, from {{inh|ca|ine-pro|*déyḱti||to show, point out}}. Compare {{cog|oc|dire}} or {{m|oc|díser}}, {{cog|fr|dire}}, and {{cog|es|decir}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[i(r)]}}<!-- per GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-dir.wav|Audio}}
 
 ===Verb===
@@ -94632,7 +94638,7 @@ Page 3852 safir: -------- begin text --------
 From {{der|ca|la|sapphīrus}}, from {{der|ca|grc|σάπφειρος}}.
 
 ===Pronunciation===
-* {{ca-IPA|safirr}}
+* {{ca-IPA|[irr]}}<!-- per GDLC, DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-safir.wav|Audio (Valencian)}}
 
 ===Noun===
@@ -94655,7 +94661,7 @@ Page 3853 quefir: -------- begin text --------
 {{bor+|ca|ru|кефи́р}}.
 
 ===Pronunciation===
-* {{ca-IPA|quefirr}}
+* {{ca-IPA|[irr]}}<!-- per GDLC; not in DCVB but pronounced -r seems likely, see [[safir]], [[albir]], [[emir]], [[vampir]], [[respir]], [[sospir]] -->
 
 ===Noun===
 {{ca-noun|m|-}}
@@ -94696,7 +94702,7 @@ Page 3855 gir: -------- begin text --------
 {{deverbal|ca|girar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[irr]}}<!-- per GDLC, DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -95464,6 +95470,9 @@ Page 3886 autogir: -------- begin text --------
 ===Etymology===
 {{bor+|ca|fr|autogire}}. Equivalent to {{af|ca|auto-|gir}}.
 
+===Pronunciation===
+* {{ca-IPA|àutogírr}}<!-- per GDLC; not in DCVB but compare [[gir]], [[safir]], [[albir]], [[emir]], [[vampir]], [[respir]], [[sospir]] -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -95971,7 +95980,7 @@ Page 3905 ahir: -------- begin text --------
 From {{m|ca|a||to}} + {{inh|ca|roa-oca|hir}}, from {{inh|ca|la|herī}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ahi(r)}}<!-- per GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-ahir.wav|Audio}}
 
 ===Adverb===
@@ -95996,7 +96005,7 @@ Page 3906 abans-d'ahir: -------- begin text --------
 From {{compound|ca|abans|alt1=abans de|ahir|t1=before|t2=yesterday}}.
 
 ===Pronunciation===
-* {{ca-IPA|abànsdahír}}
+* {{ca-IPA|abànsdahí(r)}}<!-- per GDLC -->
 
 ===Adverb===
 {{ca-adv}}
@@ -96013,7 +96022,7 @@ Page 3907 despús-ahir: -------- begin text --------
 {{com+|ca|despús|ahir}}.
 
 ===Pronunciation===
-* {{ca-IPA|despús-ahír}}
+* {{ca-IPA|despúsahí(r)}}<!-- per GDLC -->
 
 ===Adverb===
 {{ca-adv}}
@@ -96027,6 +96036,9 @@ Page 3907 despús-ahir: -------- begin text --------
 Page 3908 baixkir: -------- begin text --------
 {{wp|lang=ca}}
 {{wp|Baixkirs|lang=ca}}
+
+===Pronunciation===
+* {{ca-IPA|[irr]}}<!-- not in GDLC but highly likely; compare [[kefir]], [[safir]], [[albir]] -->
 
 ===Adjective===
 {{ca-adj}}
@@ -96995,6 +97007,9 @@ Page 3944 expel·lir: -------- begin text --------
 -------- end text --------
 Page 3945 Ramir: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[irr]}}<!-- per GDLC; pronun not given in DCVB but pronounced -r seems likely, see [[safir]], [[albir]], [[emir]], [[vampir]], [[respir]], [[sospir]] -->
+
 ===Proper noun===
 {{ca-proper noun|m}}
 
@@ -97004,7 +97019,7 @@ Page 3946 emir: -------- begin text --------
 {{wp|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[irr]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -97594,7 +97609,7 @@ Page 3968 assumir: -------- begin text --------
 Page 3969 Caixmir: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|cajmirr}}
+* {{ca-IPA|Cajmirr}}<!-- per GDLC; not in DCVB but pronounced -r seems likely, see [[safir]], [[albir]], [[emir]], [[vampir]], [[respir]], [[sospir]] -->
 * {{hyphenation|ca|Caix|mir}}
 
 ===Proper noun===
@@ -97612,11 +97627,11 @@ Page 3970 Jammu i Caixmir: -------- begin text --------
 Page 3971 caixmir: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|cajmirr}}
+* {{ca-IPA|cajmirr}}<!-- per GDLC; not in DCVB but pronounced -r seems likely, see [[safir]], [[albir]], [[emir]], [[vampir]], [[respir]], [[sospir]] -->
 * {{hyphenation|ca|caix|mir}}
 
 ===Noun===
-{{head|ca|noun}}
+{{ca-noun|m|-}}
 
 # [[cashmere]]
 
@@ -98984,6 +98999,9 @@ Page 4021 Epir: -------- begin text --------
 ===Etymology===
 {{bor+|ca|la|Epirus}}, from {{der|ca|grc|Ἤπειρος||mainland}}.
 
+===Pronunciation===
+* {{ca-IPA|[irr]}}<!-- per GDLC; not in DCVB but pronounced -r seems likely, see [[safir]], [[albir]], [[emir]], [[vampir]], [[respir]], [[sospir]] -->
+
 ===Proper noun===
 {{ca-proper noun|m}}
 
@@ -99052,7 +99070,7 @@ Page 4024 papir: -------- begin text --------
 {{lbor|ca|la|papӯrus}}, from {{der|ca|grc|πᾰ́πῡρος}}. {{doublet|ca|paper}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[irr]}}<!-- per GDLC; not in DCVB but pronounced -r seems likely, see [[safir]], [[albir]], [[emir]], [[vampir]], [[respir]], [[sospir]] -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -99075,7 +99093,7 @@ Page 4025 tapir: -------- begin text --------
 {{bor+|ca|tpw|tapi'ira}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[irr]}}<!-- per GDLC; not in DCVB but pronounced -r seems likely, see [[safir]], [[albir]], [[emir]], [[vampir]], [[respir]], [[sospir]] -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -99118,7 +99136,7 @@ Page 4027 vampir: -------- begin text --------
 {{bor+|ca|fr|vampire}}, attested from 1864.<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[irr]}}<!-- per GDLC and DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-vampir.wav|Audio (Valencian)}}
 * {{hyphenation|ca|vam|pir}}
 
@@ -99207,8 +99225,7 @@ Page 4030 Vallespir: -------- begin text --------
 From {{der|ca|la|[[vallis|Vallis]] [[asperi|Asperi]]}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
-* {{rhymes|ca|i(ɾ)|s=3}}
+{{rfp|ca}}
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -99223,7 +99240,7 @@ From {{der|ca|la|[[vallis|Vallis]] [[asperi|Asperi]]}}.
 Page 4031 respir: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[irr]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -99239,6 +99256,9 @@ Page 4032 sospir: -------- begin text --------
 
 ===Etymology===
 From {{der|ca|la|suspīrium}}.
+
+===Pronunciation===
+* {{ca-IPA|[irr]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -100700,7 +100720,7 @@ Page 4086 visir: -------- begin text --------
 {{bor+|ca|fr|vizir}}, from {{der|ca|ota|وزیر|tr=vezir}}, from {{der|ca|ar|وَزِير||helper, aide, minister}}.
 
 ===Pronunciation===
-* {{ca-IPA|visirr}}
+* {{ca-IPA|[irr]}}<!-- per GDLC; pronun not given in DCVB but pronounced -r seems likely, see [[safir]], [[albir]], [[emir]], [[vampir]], [[respir]], [[sospir]] -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -100927,7 +100947,10 @@ Page 4096 tir: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Etymology===
-See {{m|ca|tirar|t=to shoot}}
+{{deverbal|ca|tirar|t=to shoot}}.
+
+===Pronunciation===
+* {{ca-IPA|tirr}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -101110,7 +101133,7 @@ Page 4103 retir: -------- begin text --------
 {{deverbal|ca|retirar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[irr]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -101381,12 +101404,12 @@ Page 4112 mentir: -------- begin text --------
 Page 4113 cementir: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|coemētērium}}.
+{{inh+|ca|la|coemētērium}}.
 
 ===Noun===
 {{ca-noun|m}}
 
-# {{alt sp|ca|cementiri|t=[[cemetery]]}}
+# {{lb|ca|obsolete}} {{alt form|ca|cementiri|t=[[cemetery]]}}
 
 ===Further reading===
 * {{R:ca:DCVB|cementeri|cementir}}
@@ -101516,7 +101539,7 @@ Page 4118 càntir: -------- begin text --------
 From an alternative form of {{m|ca|cànter}}, from {{der|ca|la|cantharus}}, from {{der|ca|grc|κάνθαρος}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[i(r)]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -101997,7 +102020,7 @@ Page 4136 màrtir: -------- begin text --------
 {{bor+|ca|EL.|martyr}}, from {{der|ca|grc|μάρτυρ}}.
 
 ===Pronunciation===
-* {{ca-IPA|màrtirr}}
+* {{ca-IPA|[irr]}}<!-- per GDLC and DCVB -->
 
 ===Noun===
 {{ca-noun|mfbysense}}
@@ -102015,12 +102038,18 @@ Page 4136 màrtir: -------- begin text --------
 -------- end text --------
 Page 4137 megalomàrtir: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|megalomàrtirr}}<!-- not in GDLC; compare [[màrtir]]; FIXME: lack of secondary stress is a guess, compare [[megalocefàlia]] -->
+
 ===Noun===
 {{ca-noun|m}}
 
 # {{lb|ca|Eastern Orthodoxy}} [[great martyr]]
 -------- end text --------
 Page 4138 protomàrtir: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|prótomàrtirr}}<!-- per GDLC; compare [[màrtir]] in DCVB for Balearic pronunciation -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -102088,7 +102117,7 @@ Page 4141 monestir: -------- begin text --------
 From {{der|ca|la|monastērium||monastery}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[i(r)]}}<!-- per GDLC, DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-monestir.wav|Audio}}
 
 ===Noun===
@@ -102560,7 +102589,7 @@ Page 4159 sàtir: -------- begin text --------
 {{bor+|ca|la|satyrus}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[irr]}}<!-- per GDLC; pronun not given in DCVB but pronounced -r seems likely, see [[safir]], [[albir]], [[emir]], [[vampir]], [[respir]], [[sospir]] -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -102689,6 +102718,9 @@ Page 4164 cuir: -------- begin text --------
 
 ===Etymology===
 {{inh+|ca|la|corium}}.
+
+===Pronunciation===
+* {{ca-IPA|cuyrr}}<!-- per GDLC; only dialectal pronuns given in DCVB but pronounced -r seems likely, see [[safir]], [[albir]], [[emir]], [[vampir]], [[respir]], [[sospir]] and compare [[vair]] -->
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -103571,7 +103603,7 @@ Page 4195 faquir: -------- begin text --------
 {{bor+|ca|ar|فَقِير}}, via either English or French.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[irr]}}<!-- per GDLC; pronun not given in DCVB but pronounced -r seems likely, see [[safir]], [[albir]], [[emir]], [[vampir]], [[respir]], [[sospir]] -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -104111,8 +104143,7 @@ Page 4218 Guadalquivir: -------- begin text --------
 {{bor+|ca|es|Guadalquivir}}, derived from {{der|ca|ar|وَادِي الكَبِير|lit=the great river}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
-* {{rhymes|ca|i(ɾ)|s=4}}
+{{rfp|ca}}
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -104726,7 +104757,7 @@ Page 4241 algutzir: -------- begin text --------
 {{bor+|ca|xaa|وزير|الوَزِير|tr=al-wazīr}}, from {{der|ca|ar|وَزِير||minister}}. {{doublet|ca|visir}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[irr]}}<!-- per GDLC; pronun not given in DCVB but pronounced -r seems likely, see [[safir]], [[albir]], [[emir]], [[vampir]], [[respir]], [[sospir]] -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -104773,6 +104804,9 @@ Page 4242 argüir: -------- begin text --------
 -------- end text --------
 Page 4243 -ur: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|-urr}}<!-- cf. GDLC [[carbur]], DCVB [[iodur]] -->
+
 ===Suffix===
 {{ca-noun|m}}
 
@@ -104799,6 +104833,7 @@ Page 4244 aur: -------- begin text --------
 Page 4245 gaur: -------- begin text --------
 
 ===Pronunciation===
+{{rfp|ca}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-gaur.wav|Audio (Valencian)}}
 
 ===Noun===
@@ -104820,7 +104855,7 @@ Page 4246 carbur: -------- begin text --------
 From {{af|ca|carb-|-ur}}.
 
 ===Pronunciation===
-* {{ca-IPA|carburr}}
+* {{ca-IPA|[urr]}}<!-- per GDLC; for Balearic, cf. DCVB [[iodur]] -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -104842,7 +104877,7 @@ Page 4247 hidrocarbur: -------- begin text --------
 From {{prefix|ca|hidro|carbur}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|hídrocarbúrr}}<!-- per GDLC; for Balearic, cf. DCVB [[iodur]] -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -104854,7 +104889,7 @@ From {{prefix|ca|hidro|carbur}}.
 Page 4248 pedicur: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[urr]|bal=?}}<!-- per GDLC; pronun not given in DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -104870,7 +104905,7 @@ Page 4248 pedicur: -------- begin text --------
 Page 4249 manicur: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[urr]|bal=?}}<!-- per GDLC; pronun not given in DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -104888,7 +104923,7 @@ Page 4250 obscur: -------- begin text --------
 {{bor+|ca|la|obscūrus}}.
 
 ===Pronunciation===
-* {{ca-IPA|o(p)scurr}}
+* {{ca-IPA|[urr]}}<!-- per GDLC and DCVB -->
 
 ===Adjective===
 {{ca-adj}}
@@ -104915,8 +104950,8 @@ Page 4250 obscur: -------- begin text --------
 Page 4251 dur: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
-* {{rhymes|ca|uɾ|s=1}}
+* {{ca-IPA|du(r)}}<!-- both etyms; per GDLC and DCVB -->
+* {{rhymes|ca|u(ɾ)|s=1}}
 
 ===Etymology 1===
 {{dercat|ca|itc-pro|ine-pro|inh=1}}
@@ -104994,25 +105029,23 @@ Page 4253 madur: -------- begin text --------
 {{inh+|ca|roa-oca|madur}}, from {{inh|ca|la|mātūrus}} (compare {{cog|oc|madur}}, {{cog|fr|mûr}}, {{cog|es|maduro}}), from {{der|ca|ine-pro|*meh₂-||to ripen, mature}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[u(r)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
 
-# Mature, fully developed, as in a [[ripe]] fruit.
-# Mature, carefully worked out, as in a mature plan.
-# (an adult person) Mature, older than middle age.
-# (a child or a youngster) Mature, that behaves or thinks like an adult.
-# (medicine) Mature, full of [[suppuration]]. {{uxi|ca|Un gra '''madur'''.|A mature pimple.}}
+# [[ripe]] {{q|of a fruit}}
+# [[mature]] {{q|of a plan, a person, etc.}}
+# [[adult]]
+# [[old]], [[worn out]] {{q|of an object}}
+# {{lb|ca|medicine}} [[mature]] {{q|full of suppuration; of a pimple or abscess}}
 
-#: {{ant|ca|immatur|immadur}}
+====Antonyms====
+* {{l|ca|immatur}}
+* {{l|ca|immadur}}
 
 ====Derived terms====
 * {{l|ca|maduresa}}
-
-====Related terms====
-* {{l|ca|immadur}}
-* {{l|ca|immatur}}
 * {{l|ca|madurar}}
 
 ===References===
@@ -105028,12 +105061,12 @@ Page 4254 immadur: -------- begin text --------
 {{bor+|ca|la|immātūrus}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[u(r)]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
 
-# {{lb|ca|especially|of a person's behavior}} [[immature]]
+# [[immature]] {{q|especially of a person's behavior}}
 #: {{syn|ca|immatur}}
 #: {{ant|ca|madur}}
 
@@ -105049,6 +105082,9 @@ Page 4255 iodur: -------- begin text --------
 
 ===Etymology===
 From {{af|ca|iode|-ur}}.
+
+===Pronunciation===
+* {{ca-IPA|[urr]}}<!-- per GDLC, DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -105067,7 +105103,7 @@ Page 4256 amateur: -------- begin text --------
 {{bor+|ca|fr|amateur}}.
 
 ===Pronunciation===
-* {{ca-IPA|amatérr}}
+* {{ca-IPA|amatérr|bal=?}}<!-- per GDLC, DNV; not in DCVB -->
 
 ===Adjective===
 {{ca-adj|mf}}
