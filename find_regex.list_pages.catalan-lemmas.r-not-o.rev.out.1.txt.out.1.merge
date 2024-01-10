@@ -1,4 +1,4 @@
-Beginning at Sun Jan  7 16:51:41 2024
+Beginning at Tue Jan  9 18:07:26 2024
 Page 1 1r: -------- begin text --------
 
 ===Adjective===
@@ -6195,14 +6195,6 @@ From {{af|ca|torca|-ar|t1=wiping cloth}}, from {{m|roa-oca|torca||collar}}.
 
 ===Further reading===
 * {{R:ca:IEC2}}
--------- end text --------
-Page 241 Oscar: -------- begin text --------
-
-===Proper noun===
-{{ca-proper noun|m}}
-
-# {{given name|ca|eq=Oscar|male}}
-
 -------- end text --------
 Page 242 cascar: -------- begin text --------
 
@@ -15817,7 +15809,7 @@ Page 605 incendiar: -------- begin text --------
 Page 606 vilipendiar: -------- begin text --------
 
 ===Etymology===
-From {{af|ca|vilipendi|-ar}}.
+From {{der|ca|la|vilipendo}}, equivalent to {{af|ca|vilipendi|-ar}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -36664,13 +36656,18 @@ Page 1465 alienar: -------- begin text --------
 ===Verb===
 {{ca-verb|root=ê}}
 
-# to [[alienate]]
+# {{lb|ca|transitive}} to [[alienate]]
+# {{lb|ca|transitive|legal}} to [[transfer]], [[dispose]] of
+# {{lb|ca|transitive}} to [[estrange]]; to [[drive mad]]
 
 ====Conjugation====
 {{ca-conj}}
 
+====Derived terms====
+* {{l|ca|desalienar}}
+
 ====Related terms====
-* {{l|ca|alienació}}
+* {{der3|ca|aliè|alienable|alienació|alienador|alienant|alienat}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -51834,10 +51831,16 @@ Page 2065 fulgurar: -------- begin text --------
 ===Verb===
 {{ca-verb}}
 
-# {{rfdef|ca}}
+# {{lb|ca|intransitive}} to [[fulgurate]], to emit beams of light
+# {{lb|ca|intransitive}} to [[twinkle]], to [[scintillate]]
 
 ====Conjugation====
 {{ca-conj}}
+
+===Further reading===
+* {{R:ca:DCVB}}
+* {{R:ca:GDLC}}
+* {{R:ca:IEC2}}
 
 -------- end text --------
 Page 2066 augurar: -------- begin text --------
@@ -83162,24 +83165,6 @@ From {{af|ca|englantina|-er}}.
 
 {{C|ca|Roses}}
 -------- end text --------
-Page 3378 clemintiner: -------- begin text --------
-
-===Etymology===
-From {{af|ca|clementina|-er}}.
-
-===Pronunciation===
-* {{ca-IPA}}
-
-===Noun===
-{{ca-noun|m}}
-
-# [[clementine]] {{gloss|tree}}
-
-===Further reading===
-* {{R:ca:IEC2}}
-
-{{C|ca|Citrus subfamily plants}}
--------- end text --------
 Page 3379 potiner: -------- begin text --------
 
 ===Etymology===
@@ -89879,7 +89864,7 @@ From {{af|ca|serva|-er}}.
 ===Noun===
 {{ca-noun|m}}
 
-# [[serviceberry]] {{q|tree}}
+# [[serviceberry]], [[Sorbus domestica]] {{q|tree}}
 
 ====Derived terms====
 * {{l|ca|severola}}
@@ -105672,5 +105657,5 @@ Page 4339 Tours: -------- begin text --------
 # {{place|ca|city|c/France|t=Tours}}
 
 -------- end text --------
-Elapsed time: 6 mins 45.00 secs
-Ending at Sun Jan  7 16:58:26 2024
+Elapsed time: 6 mins 29.77 secs
+Ending at Tue Jan  9 18:13:56 2024
