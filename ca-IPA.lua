@@ -60,20 +60,20 @@ export.dialect_groups = {
 }
 
 
-local written_vowel = "aeiouyàèéíïòóúüý"
-local written_vowel_c = "[aeiouyàèéíïòóúüý]"
--- We don't include ê, ë or ô; these only make sense as mid-vowel hints for stressed mid vowels, and are handled
--- specially.
-local written_accented_vowel = "àèéíïòóúüý"
-local written_accented_vowel_c = "[àèéíïòóúüý]"
+local written_unaccented_vowel = "aeiouy"
+local written_accented_vowel = "àèéêëíïòóôúüý"
+local written_accented_vowel_c = "[" .. written_accented_vowel .. "]"
 local written_accented_to_plain_vowel = {
 	["à"] = "a",
 	["è"] = "e",
 	["é"] = "e",
+	["ê"] = "e",
+	["ë"] = "e",
 	["í"] = "i",
 	["ï"] = "i",
 	["ò"] = "o",
 	["ó"] = "o",
+	["ô"] = "o",
 	["ú"] = "u",
 	["ü"] = "u",
 	["ý"] = "y",
@@ -507,25 +507,8 @@ local function mid_vowel_e(syllables)
 	end
 
 	if syllables[syllables.stress].vowel == "e" then
-		if post_vowel == "u" then
-			track_mid_vowel("e", "u")
-			return "è"
-		elseif rfind(post_consonants, "^l") and syllables.stress == #syllables then
-			track_mid_vowel("e", "final-l")
-			return "è"
-		elseif post_consonants == "l" or post_consonants == "ls" or post_consonants == "l·l" then
-			track_mid_vowel("e", "l-ls-ll")
-			return "è"
-		elseif (post_letters == "ma" or post_letters == "mes") and #syllables > 2 then
-			track_mid_vowel("e", "ma-mes")
-			return "ê"
-		elseif post_letters == "ns" or post_letters == "na" or post_letters == "nes" then -- inflection of -è
-			track_mid_vowel("e", "ens-ena-enes") -- checking ê or ë
-			return "ê"
-		elseif post_letters == "nse" or post_letters == "nses" then
-			track_mid_vowel("e", "nse-nses")
-			return "ê"
-		elseif post_letters == "nt" or post_letters == "nts" then
+		-- final -el (not -ell) usually è but not too many cases
+		if post_letters == "nt" or post_letters == "nts" then
 			track_mid_vowel("e", "nt-nts")
 			return "é"
 		elseif rfind(post_letters, "^r[ae]?s?$") then
@@ -607,16 +590,17 @@ local function to_IPA(syllables, mid_vowel_hint)
 	-- rs are considered ambiguous and need to be rewritten using rr, (rr) or (r).
 	if #syllables > 1 and final.stressed then
 		-- FIXME: Explicit accents on a/i/u should be removed in split_syllables().
-		if final.coda == "r" and rfind(final.vowel, "[aàiíé]") or final.coda == "rs" and final.vowel == "é" then
+		if final.coda == "r" and rfind(final.vowel, "[aàiíé]") or final.coda == "rs" and rfind(final.vowel, "[é]") or
+			final.vowel == "ó" and rfind(final.coda, "^rs?$") and rfind(final.onset, "[stdç]") then
 			final.coda = TEMP_PAREN_R
 		end
 	end
 	if rfind(final.coda, "^rs?$") or rfind(final.coda, "[^r]rs?$") then
-		error("Final -r by itself or in -rs is ambiguous except in the verbal endings -ar or -ir and in the nominal " ..
-			"or adjectival ending -er(s), and needs to be rewritten using one of 'rr' (pronounced everywhere), " ..
-			"'(rr)' (pronounced everywhere but Balearic) or '(r)' (pronounced only in Valencian). Note that nouns " ..
-			"and adjectives in -ar usually need rewriting using '(rr)', and loanword nouns in -ir usually need " ..
-			"rewriting using 'rr'.")
+		error("Final -r by itself or in -rs is ambiguous except in the verbal endings -ar or -ir, in the nominal " ..
+			"or adjectival endings -er(s) and -[dtsç]or(s). In all other cases it needs to be rewritten using one " ..
+			"of 'rr' (pronounced everywhere), '(rr)' (pronounced everywhere but Balearic) or '(r)' (pronounced only " ..
+			"in Valencian). Note that adjectives in -ar usually need rewriting using '(rr)'; nouns in -ar referring " ..
+			"to places should be rewritten using '(r)'; and loanword nouns in -ir usually need rewriting using 'rr'.")
 	end
 
 	local syllables_IPA = {stress = syllables.stress}
@@ -831,7 +815,7 @@ end
 
 local function convert_respelling_to_original(to, pagename, whole_word)
 	local patut = require(patut_module)
-	local from = rsub(to, "ks", "x"):gsub("gz", "x")
+	local from = to:gsub("ks", "x"):gsub("gz", "x"):gsub("%.", "")
 	from = rsub(from, written_accented_vowel_c, written_accented_to_plain_vowel)
 	local escaped_from = patut.pattern_escape(from)
 	if whole_word then
@@ -843,12 +827,15 @@ local function convert_respelling_to_original(to, pagename, whole_word)
 	-- Check for partial replacement.
 	-- Replace specially-handled characters with a class matching the character and possible replacements.
 	escaped_from = to
+	-- Handling of '(rr)', '(r)' and '.' need to be done before calling pattern_escape(); otherwise they will be
+	-- escaped.
 	escaped_from = escaped_from:gsub("%(rr%)", "r")
 	escaped_from = escaped_from:gsub("%(r%)", "r")
+	escaped_from = escaped_from:gsub("ks", "x"):gsub("gz", "x"):gsub("%.", "")
 	escaped_from = patut.pattern_escape(escaped_from)
 	escaped_from = escaped_from:gsub("rr", "rr?")
 	escaped_from = rsub(escaped_from, written_accented_vowel_c,
-		function(v) return "[" .. v .. written_acute_to_plain_vowel[v] .. "]" end)
+		function(v) return "[" .. v .. written_accented_to_plain_vowel[v] .. "]" end)
 	escaped_from = "(" .. escaped_from .. ")"
 	if whole_word then
 		escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
@@ -868,6 +855,16 @@ end
 -- and substitution specs like '[ks]' or [val:vol,ê,ks]. Return an object
 -- {term = PARSED_RESPELLING, mid_vowel_hint = MID_VOWEL_HINT}.
 local function parse_respelling(respelling, pagename, parse_err)
+	if respelling == "?" then
+		return {
+			unknown = true
+		}
+	end
+	if respelling == "-" then
+		return {
+			omitted = true
+		}
+	end
 	local saw_raw
 	local remaining_respelling = respelling:match("^raw:(.*)$")
 	if remaining_respelling then
@@ -1028,7 +1025,9 @@ function export.generate_phonemic_phonetic(parsed_respellings)
 	-- Convert each canonicalized respelling to phonemic/phonetic IPA.
 	for dialect, respelling_spec in pairs(parsed_respellings) do
 		for _, termobj in ipairs(respelling_spec.terms) do
-			if termobj.raw_phonemic or termobj.raw_phonetic then
+			if termobj.unknown or termobj.omitted then
+				-- leave alone, will handle later
+			elseif termobj.raw_phonemic or termobj.raw_phonetic then
 				termobj.phonemic = termobj.raw_phonemic
 				termobj.phonetic = termobj.raw_phonetic
 				-- set to nil so by-value comparisons respect only the resulting phonemic/phonetic and qualifiers
@@ -1038,7 +1037,7 @@ function export.generate_phonemic_phonetic(parsed_respellings)
 				local word = ulower(termobj.term)
 				local mid_vowel_hint = termobj.mid_vowel_hint
 				local syllables, mid_vowel_hint = generate_pronun_syllables(word, mid_vowel_hint)
-				termobj.phonemic = join_syllables(do_dialect_specific(syllables, accent, mid_vowel_hint))
+				termobj.phonemic = join_syllables(do_dialect_specific(syllables, dialect, mid_vowel_hint))
 				-- set to nil so by-value comparisons respect only the resulting phonemic/phonetic and qualifiers
 				termobj.term = nil
 				termobj.mid_vowel_hint = nil
@@ -1057,16 +1056,25 @@ end
 function export.group_pronuns_by_dialect(parsed_respellings)
 	local grouped_pronuns = {}
 	for dialect, pronun_spec in pairs(parsed_respellings) do
-		local saw_existing = false
-		for _, group in ipairs(grouped_pronuns) do
-			if m_table.deepEquals(group.pronuns, pronun_spec.terms) then
-				table.insert(group.dialects, dialect)
-				saw_existing = true
+		local saw_omitted = false
+		for _, termobj in ipairs(pronun_spec.terms) do
+			if termobj.omitted then
+				saw_omitted = true
 				break
 			end
 		end
-		if not saw_existing then
-			table.insert(grouped_pronuns, {dialects = {dialect}, pronuns = pronun_spec.terms})
+		if not saw_omitted then
+			local saw_existing = false
+			for _, group in ipairs(grouped_pronuns) do
+				if m_table.deepEquals(group.pronuns, pronun_spec.terms) then
+					table.insert(group.dialects, dialect)
+					saw_existing = true
+					break
+				end
+			end
+			if not saw_existing then
+				table.insert(grouped_pronuns, {dialects = {dialect}, pronuns = pronun_spec.terms})
+			end
 		end
 	end
 	return grouped_pronuns
@@ -1098,22 +1106,27 @@ function export.format_grouped_pronunciations(grouped_pronuns)
 
 			local first_pronun = #pronunciations + 1
 
-			if not pronun.phonemic and not pronun.phonetic then
-				error("Internal error: Saw neither phonemic nor phonetic pronunciation")
-			end
-
-			if pronun.phonemic then -- missing if 'raw:[...]' given
-				local slash_pron = "/" .. pronun.phonemic .. "/"
-				table.insert(pronunciations, {
-					pron = slash_pron,
-				})
-			end
-
-			if pronun.phonetic then -- missing if '/.../' given
-				local bracket_pron = "[" .. pronun.phonetic .. "]"
-				table.insert(pronunciations, {
-					pron = bracket_pron,
-				})
+			if pronun.unknown then
+				-- FIXME: This is a massive hack but it works for now.
+				table.insert(pronunciations, { pron = "", pretext = "''unknown''" })
+			else
+				if not pronun.phonemic and not pronun.phonetic then
+					error("Internal error: Saw neither phonemic nor phonetic pronunciation")
+				end
+	
+				if pronun.phonemic then -- missing if 'raw:[...]' given
+					local slash_pron = "/" .. pronun.phonemic .. "/"
+					table.insert(pronunciations, {
+						pron = slash_pron,
+					})
+				end
+	
+				if pronun.phonetic then -- missing if '/.../' given
+					local bracket_pron = "[" .. pronun.phonetic .. "]"
+					table.insert(pronunciations, {
+						pron = bracket_pron,
+					})
+				end
 			end
 
 			local last_pronun = #pronunciations
@@ -1277,8 +1290,12 @@ function export.test(word, mid_vowel_hint)
 
 	local out = {}
 
-	for ipa, accents in pairs(grouped) do
-		table.insert(out, table.concat(accents, ", ") .. ": " .. ipa)
+	for ipa, dialects in pairs(grouped) do
+		local dialect_names = {}
+		for _, dialect in ipairs(dialects) do
+			table.insert(dialect_names, export.dialects_to_names[dialect])
+		end
+		table.insert(out, table.concat(dialect_names, ", ") .. ": /" .. ipa .. "/")
 	end
 
 	table.sort(out)
