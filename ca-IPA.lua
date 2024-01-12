@@ -352,7 +352,7 @@ local function replace_context_free(cons)
 	cons = rsub(cons, "ç", "s")
 	cons = rsub(cons, "[cq]", "k")
 	cons = rsub(cons, "h", "")
-	cons = rsub(cons, "g", "ɡ")
+	cons = rsub(cons, "g", "ɡ") -- regular g to IPA ɡ
 	cons = rsub(cons, "j", "ʒ")
 	cons = rsub(cons, "x", "ʃ")
 
@@ -619,7 +619,7 @@ local function to_IPA(syllables, mid_vowel_hint)
 		if rfind(syll.vowel, "^[eèéêëií]$") then
 			syll.onset = rsub(syll.onset, "tg$", "d͡ʒ")
 			syll.onset = rsub(syll.onset, "[cg]$", {["c"] = "s", ["g"] = "ʒ"})
-			syll.onset = rsub(syll.onset, "[qg]u$", {["qu"] = "k", ["gu"] = "ɡ"})
+			syll.onset = rsub(syll.onset, "[qg]u$", {["qu"] = "k", ["gu"] = "g"})
 		end
 
 		syll.coda = rsub(syll.coda, "igs?$", "id͡ʒ")
@@ -689,7 +689,7 @@ local function do_dialect_specific(syllables, dialect, mid_vowel_hint)
 
 	for i = 1, #syllables do
 		local current = syllables[i]
-		local previous = syllables[i-1]
+		local previous = syllables[i - 1]
 
 		-- In replace_context_free(), we converted single r to ɾ and double rr to r.
 		-- FIXME: For some reason, Central and Balearic final -r renders as /r/ but Valencian final -r renders as /ɾ/.
@@ -729,6 +729,17 @@ local function do_dialect_specific(syllables, dialect, mid_vowel_hint)
 			current.coda = rsub(current.coda, "nb", "mb")
 			if i > 1 and rfind(current.onset, "^b") then
 				previous.coda = rsub(previous.coda, "n$", "m")
+			end
+		end
+
+		if dialect ~= "val" then
+			-- bl -> bbl, gl -> ggl; to avoid this, write b.l or g.l so the b/g is in a separate syllable;
+			-- this must follow v > b above; NOTE: IPA ɡ must be used here not regular g
+			if i > 1 and previous.coda == "" then
+				local bg = rmatch(current.onset, "^([bɡ])l")
+				if bg then
+					previous.coda = bg
+				end
 			end
 		end
 
@@ -813,7 +824,11 @@ local function join_syllables(syllables)
 	return rsub(table.concat(syllables, "."), ".([ˈˌ])", "%1")
 end
 
-local function convert_respelling_to_original(to, pagename, whole_word)
+
+-- Given a single substitution spec, `to`, figure out the corresponding value of `from` used in a complete
+-- substitution spec. `pagename` is the name of the page, either the actual one or taken from the `pagename` param.
+-- `whole_word`, if set, indicates that the match must be to a whole word (it was preceded by ~).
+local function convert_single_substitution_to_original(to, pagename, whole_word)
 	local patut = require(patut_module)
 	local from = to:gsub("ks", "x"):gsub("gz", "x"):gsub("%.", "")
 	from = rsub(from, written_accented_vowel_c, written_accented_to_plain_vowel)
@@ -851,9 +866,12 @@ local function convert_respelling_to_original(to, pagename, whole_word)
 	error(("Single substitution spec '%s' couldn't be matched to pagename '%s'"):format(to, pagename))
 end
 
+
 -- Parse a respelling given by the user, allowing for '+' for pagename, mid vowel hints in place of a respelling
--- and substitution specs like '[ks]' or [val:vol,ê,ks]. Return an object
--- {term = PARSED_RESPELLING, mid_vowel_hint = MID_VOWEL_HINT}.
+-- and substitution specs like '[ks]' or [val:vol,ê,ks]. In general, return an object
+-- {term = PARSED_RESPELLING, mid_vowel_hint = MID_VOWEL_HINT}. Other fields are set in special cases: If a raw
+-- respelling was seen, the fields `raw_phonemic` and/or `raw_phonetic` are set; if ? is seen, the field `unknown` is
+-- set; and if - is seen, the field `omitted` is set.
 local function parse_respelling(respelling, pagename, parse_err)
 	if respelling == "?" then
 		return {
@@ -911,7 +929,7 @@ local function parse_respelling(respelling, pagename, parse_err)
 				mid_vowel_hint = sub
 			else
 				to = sub
-				from = convert_respelling_to_original(to, pagename, whole_word)
+				from = convert_single_substitution_to_original(to, pagename, whole_word)
 			end
 			if from then
 				local patut = require(patut_module)
