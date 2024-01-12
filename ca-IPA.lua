@@ -733,12 +733,19 @@ local function do_dialect_specific(syllables, dialect, mid_vowel_hint)
 		end
 
 		if dialect ~= "val" then
-			-- bl -> bbl, gl -> ggl; to avoid this, write b.l or g.l so the b/g is in a separate syllable;
-			-- this must follow v > b above; NOTE: IPA ɡ must be used here not regular g
-			if i > 1 and previous.coda == "" then
+			-- bl -> bbl, gl -> ggl after the stress; to avoid this, write b.l or g.l so the b/g is in a separate
+			-- syllable; this must follow v > b above; NOTE: IPA ɡ must be used here not regular g
+			if i > 1 and previous.coda == "" and previous.stressed then
 				local bg = rmatch(current.onset, "^([bɡ])l")
 				if bg then
 					previous.coda = bg
+				end
+			end
+		else -- Valencian; undo manually written 'bbl', 'ggl' in words like [[poblar]], [[reglament]]
+			if i > 1 then
+				local bg = rmatch(current.onset, "^([bɡ])l")
+				if bg and previous.coda == bg then
+					previous.coda = ""
 				end
 			end
 		end
