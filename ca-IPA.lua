@@ -15,7 +15,7 @@ local listToSet = require("Module:table").listToSet
 FIXME:
 
 1. [zʒ] should reduce to [ʒ] in Central and Balearic ([[disjunt]], [[disjuntor]]). Similar for [sʃ] ([[desxifrar]]).
-2. There needs to be a way of forcing [ʃ]. (Maybe just ʃ?)
+2. There needs to be a way of forcing [ʃ]. (Maybe just ʃ?) [DONE]
 3. Make sure manual dot for syllable break works, cf. [[best-seller]] respelled `bèst.sèlerr'.
 4. Explicit accents on a/i/u should be removed in split_syllables().
 5. Compress double schwa in Central/Balearic in e.g. [[sobreescalfament]]; seems not to operate in Valencian.
@@ -289,8 +289,7 @@ local function split_syllables(remainder)
 		end
 	end
 
-	-- Shift over consonants from the onset to the preceding coda,
-	-- until the syllable onset is valid
+	-- Shift over consonants from the onset to the preceding coda, until the syllable onset is valid
 	for i = 2, #syllables do
 		local current = syllables[i]
 		local previous = syllables[i-1]
@@ -298,7 +297,7 @@ local function split_syllables(remainder)
 		while not (current.onset == "" or valid_onsets[current.onset]) do
 			local letter = usub(current.onset, 1, 1)
 			current.onset = usub(current.onset, 2)
-			if not rfind(letter, "[·%-%.]") then -- syllables separators
+			if not rfind(letter, "[·%-%.]") then -- syllable separators
 				previous.coda = previous.coda .. letter
 			else
 				break
@@ -360,7 +359,7 @@ local function replace_context_free(cons)
 	cons = rsub(cons, "h", "")
 	cons = rsub(cons, "g", "ɡ") -- regular g to IPA ɡ
 	cons = rsub(cons, "j", "ʒ")
-	cons = rsub(cons, "x", "ʃ")
+	-- Don't replace x -> ʃ yet so we can distinguish x from manually specified ʃ.
 
 	cons = rsub(cons, "i", "j") -- must be after j > ʒ
 	cons = rsub(cons, "y", "j") -- must be after j > ʒ and fix_y
@@ -377,10 +376,37 @@ local function postprocess_general(syllables)
 	local voicing = {["k"]="ɡ", ["f"]="v", ["p"]="b", ["t"]="d", ["s"]="z"}
 	local devoicing = {["b"]="p", ["d"]="t", ["ɡ"]="k"}
 
+	-- Handle ex + (h) vowel > egz; this must happen separately before the changes below to x because we look
+	-- at previous.coda. FIXME: Rewrite to use single rsub's across the whole word.
 	for i = 1, #syllables do
 		local current = syllables[i]
 		local previous = syllables[i - 1]
 
+		if i > 1 and previous.onset == "" and (previous.vowel == "e" or previous.vowel == "ɛ")
+		and ((previous.coda == "" and current.onset == "x") or (previous.coda == "x" and current.onset == ""))
+		then
+			previous.coda = "ɡ"
+			current.onset = "z"
+		end
+	end
+
+	for i = 1, #syllables do
+		local current = syllables[i]
+		local previous = syllables[i - 1]
+
+		-- Handle remaining x
+		-- Double sound of letter x > ks/gz (on cultisms, ambiguous in onsets)
+		current.coda = rsub(current.coda, "^xs?", "ks")
+		current.onset = rsub(current.onset, "x", "ʃ")
+		current.coda = rsub(current.coda, "x", "ʃ")
+
+		if i > 1 and previous.coda == "kz" then
+			previous.coda = "ɡz" -- voicing the group
+		end
+		if i > 1 and current.onset == "s" then
+			previous.coda = rsub(previous.coda, "s$", "") -- reduction exs, exc(e/i) and sc(e/i)
+		end
+		
 		-- Coda consonant losses
 		if i < #syllables or (i == #syllables and rfind(current.coda, "s$")) then
 			current.coda = rsub(current.coda, "m[pb]", "m")
@@ -461,23 +487,6 @@ local function postprocess_general(syllables)
 				current.onset = rsub(current.onset, "^ɾ", "r")
 			end
 		end
-
-		-- Double sound of letter x > ks/gz (on cultisms, ambiguous in onsets)
-		current.coda = rsub(current.coda, "^ʃs?", "ks")
-		if i > 1 and previous.coda == "kz" then
-			previous.coda = "ɡz" -- voicing the group
-		end
-		if i > 1 and current.onset == "s" then
-			previous.coda = rsub(previous.coda, "s$", "") -- reduction exs, exc(e/i) and sc(e/i)
-		end
-
-		if i > 1 and previous.onset == "" and (previous.vowel == "e" or previous.vowel == "ɛ")
-		and ((previous.coda == "" and current.onset == "ʃ") or (previous.coda == "ks" and current.onset == ""))
-		then
-			-- ex + (h) vowel > egz
-			previous.coda = "ɡ"
-			current.onset = "z"
-		end
 	end
 
 	-- Final devoicing
@@ -492,7 +501,7 @@ local function postprocess_general(syllables)
 	final = rsub(final, "v", "f")
 	final = rsub(final, "z", "s")
 
-	-- Final loses
+	-- Final losses
 	final = rsub(final, "j(t͡ʃ)", "%1")
 	final = rsub(final, "([ʃs])s", "%1") -- homophone plurals -xs, -igs, -çs
 
@@ -843,25 +852,14 @@ end
 -- substitution spec. `pagename` is the name of the page, either the actual one or taken from the `pagename` param.
 -- `whole_word`, if set, indicates that the match must be to a whole word (it was preceded by ~).
 local function convert_single_substitution_to_original(to, pagename, whole_word)
-	local patut = require(patut_module)
-	local from = to:gsub("ks", "x"):gsub("gz", "x"):gsub("([bg])%1l", "%1l"):gsub("%.", "")
-	from = rsub(from, AV, written_accented_to_plain_vowel)
-	local escaped_from = patut.pattern_escape(from)
-	if whole_word then
-		escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
-	end
-	if rfind(pagename, escaped_from) then
-		return from
-	end
-	-- Check for partial replacement.
 	-- Replace specially-handled characters with a class matching the character and possible replacements.
-	escaped_from = to
-	-- Handling of '(rr)', '(r)' and '.' need to be done before calling pattern_escape(); otherwise they will be
+	local escaped_from = to
+	-- Handling of '(rr)', '(r)', '.' and '-' needs to be done before calling pattern_escape(); otherwise they will be
 	-- escaped.
 	escaped_from = escaped_from:gsub("%(rr%)", "r")
 	escaped_from = escaped_from:gsub("%(r%)", "r")
-	escaped_from = escaped_from:gsub("ks", "x"):gsub("gz", "x"):gsub("%.", "")
-	escaped_from = patut.pattern_escape(escaped_from)
+	escaped_from = escaped_from:gsub("ks", "x"):gsub("gz", "x"):gsub("([bg])%1l", "%1l"):gsub("[.%-]", "")
+	escaped_from = require(patut_module).pattern_escape(escaped_from)
 	escaped_from = escaped_from:gsub("rr", "rr?")
 	escaped_from = rsub(escaped_from, AV, function(v) return "[" .. v .. written_accented_to_plain_vowel[v] .. "]" end)
 	escaped_from = "(" .. escaped_from .. ")"
@@ -948,7 +946,7 @@ local function parse_respelling(respelling, pagename, parse_err)
 			respelling = "+"
 		end
 	end
-	
+
 	local mid_vowel_hint
 	if respelling == "+" then
 		respelling = pagename
@@ -1193,14 +1191,14 @@ function export.format_grouped_pronunciations(grouped_pronuns)
 				if not pronun.phonemic and not pronun.phonetic then
 					error("Internal error: Saw neither phonemic nor phonetic pronunciation")
 				end
-	
+
 				if pronun.phonemic then -- missing if 'raw:[...]' given
 					local slash_pron = "/" .. pronun.phonemic .. "/"
 					table.insert(pronunciations, {
 						pron = slash_pron,
 					})
 				end
-	
+
 				if pronun.phonetic then -- missing if '/.../' given
 					local bracket_pron = "[" .. pronun.phonetic .. "]"
 					table.insert(pronunciations, {
