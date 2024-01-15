@@ -18,7 +18,11 @@ FIXME:
 2. There needs to be a way of forcing [ʃ]. (Maybe just ʃ?)
 3. Make sure manual dot for syllable break works, cf. [[best-seller]] respelled `bèst.sèlerr'.
 4. Explicit accents on a/i/u should be removed in split_syllables().
-
+5. Compress double schwa in Central/Balearic in e.g. [[sobreescalfament]]; seems not to operate in Valencian.
+6. bm -> [mm] e.g. [[subministrament]]; seems not to operate in Valencian.
+7. ë (and presumably ê) doesn't work in secondary stress, always becomes /ɛ/ (e.g. in [[extrajudicial]] respelled
+   'ëxtrajudiciàl'; this seems to be because the handling of ë goes through mid_vowel_hint, which doesn't work for
+   secondary stress.
 ]=]
 
 local usub = mw.ustring.sub
@@ -62,7 +66,9 @@ export.dialect_groups = {
 
 local written_unaccented_vowel = "aeiouy"
 local written_accented_vowel = "àèéêëíïòóôúüý"
-local written_accented_vowel_c = "[" .. written_accented_vowel .. "]"
+local AV = "[" .. written_accented_vowel .. "]"
+local written_vowel = written_unaccented_vowel .. written_accented_vowel
+local V = "[" .. written_vowel .. "]"
 local written_accented_to_plain_vowel = {
 	["à"] = "a",
 	["è"] = "e",
@@ -520,9 +526,6 @@ local function mid_vowel_e(syllables)
 		elseif post_letters == "sos" or post_letters == "sa" or post_letters == "ses" then -- inflection of -ès
 			track_mid_vowel("e", "sos-sa-ses")
 			return "ê"
-		elseif rfind(post_letters, "^t[ae]?s?$") then
-			track_mid_vowel("e", "t-ts-ta-tes")
-			return "ê"
 		end
 	elseif syllables[syllables.stress].vowel == "è" then
 		if post_letters == "s" or post_letters == "" then -- -ès, -è
@@ -560,7 +563,7 @@ local function mid_vowel_o(syllables)
 	return nil
 end
 
-local function to_IPA(syllables, mid_vowel_hint)
+local function to_IPA(syllables, suffix_syllables, mid_vowel_hint, pos)
 	-- Stressed vowel is ambiguous
 	if rfind(syllables[syllables.stress].vowel, "[eéèoòó]") then
 		if mid_vowel_hint then
@@ -628,6 +631,10 @@ local function to_IPA(syllables, mid_vowel_hint)
 		syll.coda = replace_context_free(syll.coda)
 
 		syll.vowel = rsub(syll.vowel, ".", IPA_vowels)
+	end
+
+	for _, suffix_syl in ipairs(suffix_syllables) do
+		table.insert(syllables_IPA, suffix_syl)
 	end
 
 	syllables_IPA = postprocess_general(syllables_IPA)
@@ -837,8 +844,8 @@ end
 -- `whole_word`, if set, indicates that the match must be to a whole word (it was preceded by ~).
 local function convert_single_substitution_to_original(to, pagename, whole_word)
 	local patut = require(patut_module)
-	local from = to:gsub("ks", "x"):gsub("gz", "x"):gsub("%.", "")
-	from = rsub(from, written_accented_vowel_c, written_accented_to_plain_vowel)
+	local from = to:gsub("ks", "x"):gsub("gz", "x"):gsub("([bg])%1l", "%1l"):gsub("%.", "")
+	from = rsub(from, AV, written_accented_to_plain_vowel)
 	local escaped_from = patut.pattern_escape(from)
 	if whole_word then
 		escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
@@ -856,8 +863,7 @@ local function convert_single_substitution_to_original(to, pagename, whole_word)
 	escaped_from = escaped_from:gsub("ks", "x"):gsub("gz", "x"):gsub("%.", "")
 	escaped_from = patut.pattern_escape(escaped_from)
 	escaped_from = escaped_from:gsub("rr", "rr?")
-	escaped_from = rsub(escaped_from, written_accented_vowel_c,
-		function(v) return "[" .. v .. written_accented_to_plain_vowel[v] .. "]" end)
+	escaped_from = rsub(escaped_from, AV, function(v) return "[" .. v .. written_accented_to_plain_vowel[v] .. "]" end)
 	escaped_from = "(" .. escaped_from .. ")"
 	if whole_word then
 		escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
@@ -872,6 +878,23 @@ local function convert_single_substitution_to_original(to, pagename, whole_word)
 	end
 	error(("Single substitution spec '%s' couldn't be matched to pagename '%s'"):format(to, pagename))
 end
+
+
+local canonicalize_pos = {
+	n = "noun",
+	noun = "noun",
+	v = "verb",
+	vb = "verb",
+	verb = "verb",
+	a = "adjective",
+	adj = "adjective",
+	adjective = "adjective",
+	av = "adverb",
+	adv = "adverb",
+	adverb = "adverb",
+	o = "other",
+	other = "other",
+}
 
 
 -- Parse a respelling given by the user, allowing for '+' for pagename, mid vowel hints in place of a respelling
@@ -910,6 +933,22 @@ local function parse_respelling(respelling, pagename, parse_err)
 		}
 	end
 
+	local pos, rest = respelling:match("^([a-z]+)/(.*)$")
+	if pos then
+		if not canonicalize_pos[pos] then
+			local valid_pos = {}
+			for vp, _ in pairs(canonicalize_pos) do
+				table.insert(valid_pos, vp)
+			end
+			error(("Unrecognized part of speech '%s', should be one of %s"):format(pos, table.concat(valid_pos, ", ")))
+		end
+		pos = canonicalize_pos[pos]
+		respelling = rest
+		if respelling == "" then
+			respelling = "+"
+		end
+	end
+	
 	local mid_vowel_hint
 	if respelling == "+" then
 		respelling = pagename
@@ -957,7 +996,7 @@ local function parse_respelling(respelling, pagename, parse_err)
 		end
 	end
 
-	return {term = respelling, mid_vowel_hint = mid_vowel_hint}
+	return {term = respelling, mid_vowel_hint = mid_vowel_hint, pos = pos}
 end
 
 
@@ -1024,7 +1063,18 @@ end
 -- Generate the pronunciation of `word` (a string, the respelling), where `mid_vowel_hint` specifies how to handle
 -- stressed mid vowels. Return two values: the phonemic pronunciation along with the mid vowel hint, determined from
 -- the respelling itself if `mid_vowel_hint` isn't passed in.
-local function generate_pronun_syllables(word, mid_vowel_hint)
+local function generate_pronun_syllables(word, mid_vowel_hint, pos)
+	local suffix_syllables = {}
+	if not pos or pos == "adverb" then
+		local word_before_ment, ment = rmatch(word, "^(.*)(m[eé]nt)$")
+		if word_before_ment and (pos == "adverb" or not rfind(word_before_ment, "[iï]$") and
+			rfind(word_before_ment, V .. ".*" .. V)) then
+			suffix_syllables = {{onset = "m", vowel = "e", coda = "nt", stressed = true}}
+			pos = "adjective"
+			word = word_before_ment
+		end
+	end
+
 	word = word_fixes(word)
 
 	local syllables = split_syllables(word)
@@ -1037,7 +1087,12 @@ local function generate_pronun_syllables(word, mid_vowel_hint)
 			mid_vowel_hint = mid_vowel_o(syllables)
 		end
 	end
-	return to_IPA(syllables, mid_vowel_hint), mid_vowel_hint
+
+	local ipa_syllables = to_IPA(syllables, suffix_syllables, mid_vowel_hint, pos)
+	if #suffix_syllables > 0 then
+		ipa_syllables.stress = #ipa_syllables
+	end
+	return ipa_syllables, mid_vowel_hint
 end
 
 
@@ -1061,7 +1116,7 @@ function export.generate_phonemic_phonetic(parsed_respellings)
 			else
 				local word = ulower(termobj.term)
 				local mid_vowel_hint = termobj.mid_vowel_hint
-				local syllables, mid_vowel_hint = generate_pronun_syllables(word, mid_vowel_hint)
+				local syllables, mid_vowel_hint = generate_pronun_syllables(word, mid_vowel_hint, termobj.pos)
 				termobj.phonemic = join_syllables(do_dialect_specific(syllables, dialect, mid_vowel_hint))
 				-- set to nil so by-value comparisons respect only the resulting phonemic/phonetic and qualifiers
 				termobj.term = nil
@@ -1299,8 +1354,8 @@ function export.show(frame)
 end
 
 -- Used by [[Module:ca-IPA/testcases]].
-function export.test(word, mid_vowel_hint)
-	local syllables, mid_vowel_hint = generate_pronun_syllables(word, mid_vowel_hint)
+function export.test(word, mid_vowel_hint, pos)
+	local syllables, mid_vowel_hint = generate_pronun_syllables(word, mid_vowel_hint, pos)
 
 	local grouped = {}
 
@@ -1327,9 +1382,9 @@ function export.test(word, mid_vowel_hint)
 	return table.concat(out, ";<br>")
 end
 
--- on debug console use: =p.debug("your_word", "your_hint")
-function export.debug(word, mid_vowel_hint)
-	local syllables, mid_vowel_hint = generate_pronun_syllables(ulower(word), mid_vowel_hint)
+-- on debug console use: =p.debug("your_word", "your_hint", "your_pos")
+function export.debug(word, mid_vowel_hint, pos)
+	local syllables, mid_vowel_hint = generate_pronun_syllables(ulower(word), mid_vowel_hint, pos)
 
 	local ret = {}
 
