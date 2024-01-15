@@ -2894,7 +2894,7 @@ From {{com|ca|espina|xoca|t1=thorn|t2=shocks}}.
 Page 11782 ex: -------- begin text --------
 
 ===Pronunciation===
-{{rfp|ca}}<!-- DNV says /e/ -->
+{{rfp|ca|DNV says /e/ but not in GDLC}}
 
 ===Noun===
 {{ca-noun|mfbysense|#}}
@@ -8270,7 +8270,7 @@ Page 12766 flox: -------- begin text --------
 From the {{m|mul|Phlox|genus name}}, from {{der|ca|grc|φλόξ||flame}}.
 
 ===Pronunciation===
-{{rfp|ca}}<!-- /o/ in DNV -->
+{{rfp|ca|unclear the pronunciation of o in Central Catalan; /o/ in DNV}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -8638,6 +8638,9 @@ Page 14625 hexaclorobenzè: -------- begin text --------
 ===Etymology===
 From {{af|ca|hexa-|cloro-|benzè|t3=benzene}}.
 
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- per DNV; not in GDLC; DCVB attests /ətilə́/ for [[etilè]] in Balearic, showing that -è "-ene" has schwa in Balearic; hexa- and cloro- in GDLC seem to not have secondary stress; [gz] is automatic -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -8649,6 +8652,9 @@ From {{af|ca|hexa-|cloro-|benzè|t3=benzene}}.
 -------- end text --------
 Page 14626 hexaclorobenzé: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|val=+}}<!-- per DNV; [gz] is automatic -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -8658,6 +8664,9 @@ Page 14627 hexaclorofè: -------- begin text --------
 
 ===Alternative forms===
 * {{alt|ca|hexaclorofé||Valencian}}
+
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- per DNV; not in GDLC; DCVB attests /ətilə́/ for [[etilè]] in Balearic, showing that -è "-ene" has schwa in Balearic; hexa- and cloro- in GDLC seem to not have secondary stress; [gz] is automatic -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -8669,6 +8678,9 @@ Page 14627 hexaclorofè: -------- begin text --------
 * {{R:ca:DNV}}
 -------- end text --------
 Page 14628 hexaclorofé: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|val=+}}<!-- per DNV; [gz] is automatic -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -8738,6 +8750,9 @@ From {{suffix|ca|hexàgon|al}}.
 -------- end text --------
 Page 14632 hexàpode: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Adjective===
 {{ca-adj}}
 
@@ -8754,7 +8769,7 @@ Page 14633 hexè: -------- begin text --------
 * {{alt|ca|hexé||Valencian}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- DCVB attests /ətilə́/ for [[etilè]] in Balearic, showing that -è "-ene" has schwa in Balearic; [gz] is automatic -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -8768,6 +8783,9 @@ Page 14633 hexè: -------- begin text --------
 -------- end text --------
 Page 14634 hexé: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|val=+}}
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -8779,7 +8797,7 @@ Page 14635 hexilè: -------- begin text --------
 * {{alt|ca|hexilé||Valencian}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- DCVB attests /ətilə́/ for [[etilè]] in Balearic, showing that -è "-ene" has schwa in Balearic; [gz] is automatic -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -8795,6 +8813,9 @@ Page 14635 hexilè: -------- begin text --------
 -------- end text --------
 Page 14636 hexilé: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|val=+}}
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -8802,6 +8823,9 @@ Page 14636 hexilé: -------- begin text --------
 -------- end text --------
 Page 14637 hexosa: -------- begin text --------
 {{wikipedia|lang=ca}}
+
+===Pronunciation===
+* {{ca-IPA|ó}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -8825,6 +8849,9 @@ Page 14670 hidroxibenzè: -------- begin text --------
 ===Etymology===
 From {{af|ca|hidroxi-|benzè|t2=benzene}}.
 
+===Pronunciation===
+* {{ca-IPA|[ks,ê]}}<!-- FIXME: may have secondary stress on òx; [[hidroxilamina]] in GDLC has no secondary stress though; DCVB attests /ətilə́/ for [[etilè]] in Balearic, showing that -è "-ene" has schwa in Balearic -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -8838,12 +8865,18 @@ From {{af|ca|hidroxi-|benzè|t2=benzene}}.
 -------- end text --------
 Page 14671 hidroxibenzé: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|val=[ks]}}
+
 ===Noun===
 {{ca-noun|m}}
 
 # {{lb|ca|Valencian}} {{alt sp|ca|hidroxibenzè}}
 -------- end text --------
 Page 14672 hidròxid: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|val=[ks]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -8864,6 +8897,9 @@ Page 14673 hidroxinaftalè: -------- begin text --------
 ===Etymology===
 From {{af|ca|hidroxi-|naftalè|t2=naphthalene}}.
 
+===Pronunciation===
+* {{ca-IPA|[ks,ê]}}<!-- FIXME: may have secondary stress on òx; [[hidroxilamina]] in GDLC has no secondary stress though; DCVB attests /ətilə́/ for [[etilè]] in Balearic, showing that -è "-ene" has schwa in Balearic -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -8877,6 +8913,9 @@ From {{af|ca|hidroxi-|naftalè|t2=naphthalene}}.
 -------- end text --------
 Page 14674 hidroxinaftalé: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[ks]}}
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -8884,6 +8923,9 @@ Page 14674 hidroxinaftalé: -------- begin text --------
 -------- end text --------
 Page 14708 hipertext: -------- begin text --------
 {{wikipedia|lang=ca}}
+
+===Pronunciation===
+* {{ca-IPA|[íp,té]|val=[íp,tè]}}<!-- per GDLC, DNV, DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -8893,7 +8935,7 @@ Page 14708 hipertext: -------- begin text --------
 Page 14743 hipòxia: -------- begin text --------
 
 ===Pronunciation===
-* {{IPA|ca|/iˈpɔk.si.a/|qual1=Valencian}}
+* {{ca-IPA|[ks]}}
 * {{hyph|ca|hi|pò|xi|a}}
 
 ===Noun===
@@ -8911,7 +8953,7 @@ Page 14743 hipòxia: -------- begin text --------
 Page 14828 homosexual: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|homosseksual}}
+* {{ca-IPA|[òmo-s,ks,àl]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -8933,6 +8975,7 @@ Page 14829 homosexualitat: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Pronunciation===
+* {{ca-IPA|[òmo-s,ks,àt]}}<!-- per GDLC -->
 * {{rhymes|ca|at|s=7}}
 
 ===Noun===
@@ -8954,7 +8997,7 @@ Page 15033 ídix: -------- begin text --------
 {{bor+|ca|de|Jiddisch}} or {{der|ca|en|Yiddish}}, from {{der|ca|yi|ייִדיש}}.
 
 ===Pronunciation===
-* {{ca-IPA|ídij}}
+* {{ca-IPA|ídiʃ}}
 
 ===Adjective===
 {{ca-adj|inv}}
@@ -9000,6 +9043,9 @@ Page 15455 índex: -------- begin text --------
 -------- end text --------
 Page 15514 Indoxina: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[Ín,ín]}}
+
 ===Proper noun===
 {{ca-proper noun|f}}
 
@@ -9031,7 +9077,7 @@ Page 15546 inexacte: -------- begin text --------
 From {{prefix|ca|in|exacte}}.
 
 ===Pronunciation===
-* {{ca-IPA|inegzacte}}
+* {{ca-IPA}}
 
 ===Adjective===
 {{ca-adj}}
@@ -9075,7 +9121,7 @@ Page 15548 inexistent: -------- begin text --------
 {{lbor|ca|la|inexsistens|inexsistentem}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA}}
 
 ===Adjective===
 {{ca-adj}}
@@ -9095,6 +9141,9 @@ Page 15549 inexorable: -------- begin text --------
 ===Etymology===
 {{bor+|ca|la|inexorābilis}}.
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Adjective===
 {{ca-adj}}
 
@@ -9113,7 +9162,7 @@ Page 15549 inexorable: -------- begin text --------
 Page 15550 inexplicable: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|inexplicābilis}}.
+{{bor+|ca|la|inexplicābilis}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -9154,6 +9203,9 @@ Page 15552 inexpressable: -------- begin text --------
 ===Etymology===
 From {{af|ca|in-|expressable}}.
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Adjective===
 {{ca-adj}}
 
@@ -9170,6 +9222,9 @@ Page 15553 inexpressiu: -------- begin text --------
 
 ===Etymology===
 From {{af|ca|in-|expressiu}}.
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Adjective===
 {{ca-adj}}
@@ -9219,6 +9274,7 @@ Page 15595 infix: -------- begin text --------
 Page 15603 inflexibilitat: -------- begin text --------
 
 ===Pronunciation===
+* {{ca-IPA|[ks]}}
 * {{rhymes|ca|at}}
 
 ===Noun===
@@ -9273,6 +9329,9 @@ From {{suffix|ca|inflexible|ment}}.
 -------- end text --------
 Page 15606 inflexió: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[ks]}}
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -9284,6 +9343,9 @@ Page 15713 inoxidable: -------- begin text --------
 ===Etymology===
 From {{af|ca|in-|oxidable}}.
 
+===Pronunciation===
+* {{ca-IPA|[ks]}}
+
 ===Adjective===
 {{ca-adj}}
 
@@ -9294,6 +9356,9 @@ From {{af|ca|in-|oxidable}}.
 
 -------- end text --------
 Page 15923 intersexual: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[ks]}}<!-- per GDLC [[intersexualitat]]; no secondary stress -->
 
 ===Adjective===
 {{ca-adj}}
@@ -9311,7 +9376,7 @@ Page 15923 intersexual: -------- begin text --------
 Page 15924 intersexualitat: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|intersecsualitat}}
+* {{ca-IPA|[ks]}}<!-- per GDLC; no secondary stress -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -9322,6 +9387,9 @@ Page 15924 intersexualitat: -------- begin text --------
 -------- end text --------
 Page 15925 intertextual: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Adjective===
 {{ca-adj}}
 
@@ -9329,6 +9397,9 @@ Page 15925 intertextual: -------- begin text --------
 
 -------- end text --------
 Page 15926 intertextualitat: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -9355,7 +9426,7 @@ Page 15949 intoxicació: -------- begin text --------
 From {{af|ca|intoxicar|-ció}}.
 
 ===Pronunciation===
-* {{ca-IPA|intocsicació}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -9371,7 +9442,7 @@ From {{af|ca|intoxicar|-ció}}.
 Page 16032 inxa: -------- begin text --------
 
 ===Etymology===
-According to Moll, probably from {{inh|ca|la|īnfula||}}. Another possible origin is from {{bor|ca|fr|anche||musical reed}}, from {{der|ca|goh|ancha||leg, shin}}.
+According to Moll, probably {{inh+|ca|la|īnfula|nocap=1}}. Another possible origin is a borrowing from {{bor|ca|fr|anche||musical reed}}, from {{der|ca|goh|ancha||leg, shin}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -9423,6 +9494,9 @@ Page 16424 Khrusxov: -------- begin text --------
 Page 16456 la Manxa: -------- begin text --------
 {{wikipedia|lang=ca}}
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Proper noun===
 {{ca-proper noun|f|head=la Manxa}}
 
@@ -9452,7 +9526,7 @@ Page 16537 lax: -------- begin text --------
 {{lbor|ca|la|laxus}}.
 
 ===Pronunciation===
-* {{ca-IPA|lacs}}
+* {{ca-IPA}}
 
 ===Adjective===
 {{ca-adj}}
@@ -9502,7 +9576,7 @@ Page 16598 lexema: -------- begin text --------
 From {{af|ca|lèx-|-ema}}, a derivation from {{m|ca|lèxic}} on the model of {{l|ca|fonema}}.
 
 ===Pronunciation===
-* {{ca-IPA|leksêma}}
+* {{ca-IPA|[ks,ë]|bal=[ks,é]}}<!-- irregular but documented this way in DCVB under [[fonema]], consistent with GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -9521,10 +9595,10 @@ From {{af|ca|lèx-|-ema}}, a derivation from {{m|ca|lèxic}} on the model of {{l
 Page 16599 lèxic: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|grc|λεξῐκόν}}.
+{{bor+|ca|grc|λεξῐκόν}}.
 
 ===Pronunciation===
-* {{ca-IPA|lèksic}}
+* {{ca-IPA|[ks]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -9563,7 +9637,7 @@ From {{af|ca|lexical|-itzar}}.
 Page 16601 lexicògraf: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|leksicògraf}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -9580,7 +9654,7 @@ Page 16601 lexicògraf: -------- begin text --------
 Page 16602 lexicògrafa: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|leksicògrafa}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -9593,7 +9667,7 @@ Page 16603 lexicografia: -------- begin text --------
 From {{af|ca|lexico-|-grafia}}.
 
 ===Pronunciation===
-* {{ca-IPA|lecsicografia}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -9619,7 +9693,7 @@ Page 16604 lexicogràfic: -------- begin text --------
 From {{af|ca|lexicografia|-ic}}.
 
 ===Pronunciation===
-* {{ca-IPA|leksicogràfic}}
+* {{ca-IPA|[ks]}}
 * {{rhymes|ca|afik|s=5}}
 
 ===Adjective===
@@ -9645,7 +9719,7 @@ Page 16689 linx: -------- begin text --------
 {{bor+|ca|la|lynx}}.
 
 ===Pronunciation===
-* {{ca-IPA|lincs}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|m|#s}}
@@ -9777,7 +9851,7 @@ Page 17320 luxe: -------- begin text --------
 {{lbor|ca|la|lūxus}}.
 
 ===Pronunciation===
-* {{ca-IPA|lucse}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -9798,7 +9872,7 @@ Page 17321 Luxemburg: -------- begin text --------
 {{slim-wikipedia|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA|luksemburg}}
+* {{ca-IPA|[ks]}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-Luxemburg.wav|Audio (Valencian)}}
 
 ===Proper noun===
@@ -9820,7 +9894,7 @@ Page 17322 luxemburguès: -------- begin text --------
 From {{af|ca|Luxemburg|-ès}}.
 
 ===Pronunciation===
-* {{ca-IPA|luksemburguès}}
+* {{ca-IPA|[ks]}}
 * {{rhymes|ca|ɛs|s=4}}
 
 ===Adjective===
@@ -9848,7 +9922,7 @@ From {{af|ca|Luxemburg|-ès}}.
 Page 17323 luxemburgués: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|luksemburguês}}
+* {{ca-IPA|val=[ks]}}
 * {{rhymes|ca|es|s=4}}
 
 ===Adjective===
@@ -9868,7 +9942,7 @@ Page 17323 luxemburgués: -------- begin text --------
 Page 17324 luxemburguesa: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|luksemburguesa}}
+* {{ca-IPA|[ks,ê]}}
 * {{rhymes|ca|ɛza|s=5}}
 
 ===Noun===
@@ -9888,7 +9962,7 @@ Page 17325 luxós: -------- begin text --------
 From {{suffix|ca|luxe|ós}}.
 
 ===Pronunciation===
-* {{ca-IPA|lucsós}}
+* {{ca-IPA|[ks]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -9931,7 +10005,7 @@ Page 17327 luxúria: -------- begin text --------
 {{lbor|ca|la|lūxuria}}.
 
 ===Pronunciation===
-* {{ca-IPA|luksúria}}
+* {{ca-IPA|[ks]}}
 * {{rhymes|ca|uɾia|s=4}}
 
 ===Noun===
@@ -9955,7 +10029,7 @@ Page 17328 luxuriós: -------- begin text --------
 {{lbor|ca|la|lūxuriōsus}}.
 
 ===Pronunciation===
-* {{ca-IPA|lucsuriós}}
+* {{ca-IPA|[ks]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -9978,7 +10052,7 @@ Page 17749 manx: -------- begin text --------
 * {{alt|ca|manés||Valencian}}
 
 ===Pronunciation===
-* {{ca-IPA|mancs}}
+* {{ca-IPA|[ks]}}
 
 ===Adjective===
 {{ca-adj|mf}}
@@ -9986,7 +10060,7 @@ Page 17749 manx: -------- begin text --------
 # [[Manx]] {{gloss|pertaining to the Isle of Man or to the Manx language}}
 
 ====Usage notes====
-The {{m|ca|IEC}} and the {{m|ca|AVL}} disagree over which term to use. Instead of {{m|ca||manx}}, the AVL calls for the use of {{m|ca|manés}} in Valencian. The Central Catalan equivalent, {{m|ca|manès}}, is not recognized by the IEC but is in use.
+* The {{m|ca|IEC}} and the {{m|ca|AVL}} disagree over which term to use. Instead of {{m|ca||manx}}, the AVL calls for the use of {{m|ca|manés}} in Valencian. The Central Catalan equivalent, {{m|ca|manès}}, is not recognized by the IEC but is in use.
 
 ===Noun===
 {{ca-noun|m|-}}
@@ -10006,6 +10080,9 @@ Page 17750 manxa: -------- begin text --------
 
 ===Etymology===
 {{inh+|ca|la|mantica}}.
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -10028,7 +10105,7 @@ Page 17750 manxa: -------- begin text --------
 Page 17751 manxa de bicicleta: -------- begin text --------
 
 ===Etymology===
-From {{l|ca|manxa}} ("bellows, pump").
+{{lit|bicycle pump}}.
 
 ===Noun===
 {{ca-noun|m}}
@@ -10059,6 +10136,9 @@ From {{af|ca|manxa|-ar}}.
 
 -------- end text --------
 Page 17753 manxec: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ë|bal=?}}<!-- per GDLC, DNV; not in DCVB, no obvious parallels; the two closest, [[noruec]] and [[gallec]], are different from each other -->
 
 ===Noun===
 {{ca-noun|m|f=manxega}}
@@ -10145,18 +10225,22 @@ Page 17779 màquina expenedora: -------- begin text --------
 Page 17962 marxa: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- both etyms -->
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{ca-noun|f}}
 
 # [[walk]] {{gloss|act of walking}}
 #* {{quote-book|ca|year=2009|title=[http://books.google.com/books?id=ncP-xBLiHgoC&pg=PA17&dq=vespre&hl=ca&ei=czuXTuuFFMinhAe-1oiXBA&sa=X&oi=book_result&ct=result&resnum=6&ved=0CEoQ6AEwBQ#v=onepage&q&f=false Les Aventures d'en Nono]|author=Jean Grave|passage=va continuar amb la '''marxa''' cap a la capital.|translation=he will continue with the walk to the capital}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|sobre la marxa}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|marxar}}
@@ -10189,7 +10273,7 @@ Page 17963 marxamo: -------- begin text --------
 Page 17964 marxant: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- both etyms -->
 
 ===Etymology 1===
 {{bor+|ca|fro|marchant||merchant}}.
@@ -10237,7 +10321,7 @@ Page 17966 marxapeu: -------- begin text --------
 {{calque|ca|fr|marchepied}}. Equivalent to {{com|ca|marxa|peu|t1=marches|t2=foot}}.
 
 ===Pronunciation===
-* {{ca-IPA|màrxapèu}}
+* {{ca-IPA|màrxapèu}}<!-- per GDLC, DNV, DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -10281,6 +10365,9 @@ Compare {{cog|oc|marchar}}, borrowed from {{bor|ca|fr|marcher}} or {{cog|es|marc
 -------- end text --------
 Page 17968 marxisme: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[ks]}}
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -10293,6 +10380,9 @@ Page 17968 marxisme: -------- begin text --------
 
 -------- end text --------
 Page 17969 marxista: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[ks]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -10335,10 +10425,10 @@ Alteration of {{m|ca|marcívol||wilty}}.
 Page 18111 màxim: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|maximus}} and {{m|la|maximum}}.
+{{bor+|ca|la|maximus}} and {{m|la|maximum}}.
 
 ===Pronunciation===
-* {{ca-IPA|màksim}}
+* {{ca-IPA|[ks]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -10362,6 +10452,9 @@ From {{der|ca|la|maximus}} and {{m|la|maximum}}.
 -------- end text --------
 Page 18112 Maximilià: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[ks]}}
+
 ===Proper noun===
 {{ca-proper noun|m}}
 
@@ -10382,6 +10475,9 @@ Page 18113 maximitzar: -------- begin text --------
 -------- end text --------
 Page 18384 mesotòrax: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}<!-- no secondary stress per GDLC -->
+
 ===Noun===
 {{ca-noun|m|#s}}
 
@@ -10390,6 +10486,7 @@ Page 18384 mesotòrax: -------- begin text --------
 Page 18433 metatextual: -------- begin text --------
 
 ===Pronunciation===
+* {{ca-IPA|[èt,àl]}}<!-- secondary stress per GDLC [[metacentre]] -->
 * {{rhymes|ca|al|s=5}}
 
 ===Adjective===
@@ -10399,12 +10496,18 @@ Page 18433 metatextual: -------- begin text --------
 -------- end text --------
 Page 18434 metatextualitat: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[èt,tàt]}}<!-- secondary stress per GDLC [[metacentre]] -->
+
 ===Noun===
 {{ca-noun|f}}
 
 # [[metatextuality]]
 -------- end text --------
 Page 18435 metatòrax: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[èt]}}<!-- secondary stress per GDLC -->
 
 ===Noun===
 {{ca-noun|m|#s}}
@@ -10414,7 +10517,7 @@ Page 18435 metatòrax: -------- begin text --------
 Page 18483 metrosexual: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|metrossecsual}}
+* {{ca-IPA|[o-s,ks]}}<!-- no words with secondary stress on metro- in GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -10425,9 +10528,7 @@ Page 18483 metrosexual: -------- begin text --------
 Page 18491 Mèxic: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|mècsic}}
-* {{ca-IPA|mèxic}}
-* {{ca-IPA|mèjic}}
+* {{ca-IPA|[ks]|bal=[ks],[x:j]<q:archaic, informal>}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-Mèxic.wav|Audio (Central)}}
 
 ===Proper noun===
@@ -10435,9 +10536,7 @@ Page 18491 Mèxic: -------- begin text --------
 
 # {{place|ca|country|cont/North America|t1=Mexico}}
 # {{place|ca|caplc|c/Mexico|t=Mexico City}}
-
-====Synonyms====
-* {{sense|city}} {{l|ca|ciutat de Mèxic}}
+#: {{syn|ca|ciutat de Mèxic}}
 
 ====Derived terms====
 * {{l|ca|Nou Mèxic}}
@@ -10449,12 +10548,10 @@ Page 18491 Mèxic: -------- begin text --------
 Page 18492 mexicà: -------- begin text --------
 
 ===Etymology===
-: {{suffix|ca|Mèxic|à|gloss1=Mexico|gloss2=-an}}
+From {{suffix|ca|Mèxic|à|gloss1=Mexico|gloss2=-an}}.
 
 ===Pronunciation===
-* {{ca-IPA|mecsicà}}
-* {{ca-IPA}}
-* {{ca-IPA|megicà}}
+* {{ca-IPA|[ks]|bal=[ks],[x:j]<q:archaic, informal>}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-mexicà.wav|Audio}}
 * {{rhymes|ca|a|s=3}}
 
@@ -10480,6 +10577,7 @@ Page 18492 mexicà: -------- begin text --------
 Page 18493 mexicana: -------- begin text --------
 
 ===Pronunciation===
+* {{ca-IPA|[ks]|bal=[ks],[x:j]<q:archaic, informal>}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-mexicana.wav|Audio (Valencian)}}
 
 ===Adjective===
@@ -10499,7 +10597,7 @@ Page 18764 mix: -------- begin text --------
 Probably from {{bor|ca|xaa|مش|tr=mašš}}.
 
 ===Pronunciation===
-* {{ca-IPA|mij}}
+* {{ca-IPA|miʃ}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-mix.wav|Audio}}
 
 ===Noun===
@@ -10526,7 +10624,7 @@ Page 18765 mixina: -------- begin text --------
 From the [[Myxine|genus name]], from {{der|ca|grc|μυξῖνος||slime-fish, a kind of mullet}}.
 
 ===Pronunciation===
-* {{ca-IPA|micsina}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -10547,7 +10645,7 @@ Page 18766 Mixnà: -------- begin text --------
 {{bor+|ca|he|מִשְׁנָה||repetition, oral law|tr=mišnāh}}, from {{m|he|שָׁנָה|tr=šānāh||to repeat, teach}}. {{root|ca|he|שׁ־נ־ה}}.
 
 ===Pronunciation===
-* {{ca-IPA|miixnà}}
+* {{ca-IPA|[x:ʃ]}}
 
 ===Proper noun===
 {{ca-proper noun|f}}
@@ -10576,6 +10674,9 @@ Page 18767 mixt: -------- begin text --------
 Page 18942 monoaminooxidasa: -------- begin text --------
 {{wikipedia|lang=ca}}
 
+===Pronunciation===
+* {{ca-IPA|[món,mín,ks,às]}}<!-- FIXME: secondary stresses are somewhat of a guess; compare [[monosacàrid]] /mònuzəkáɾit/ in GDLC -->
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -10591,7 +10692,7 @@ Page 18984 monòxid: -------- begin text --------
 From {{prefix|ca|mono|òxid}}.
 
 ===Pronunciation===
-* {{ca-IPA|monògzid}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -10618,6 +10719,9 @@ Page 19214 multiplexació: -------- begin text --------
 ===Etymology===
 From {{af|ca|multiplexar|-ció}}.
 
+===Pronunciation===
+* {{ca-IPA|[úl,ks]}}<!-- per GDLC -->
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -10635,6 +10739,9 @@ Page 19399 nas xato: -------- begin text --------
 # [[pug nose]]
 -------- end text --------
 Page 19458 nàxer: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[(r)]}}
 
 ===Verb===
 {{head|ca|verb}}
@@ -10654,6 +10761,9 @@ Page 19554 neomexicà: -------- begin text --------
 ===Etymology===
 From {{af|ca|neo-|mexicà}}.
 
+===Pronunciation===
+* {{ca-IPA|[né,ks]}}<!-- for secondary stress, compare GLDC [[neocaledonià]] -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -10672,10 +10782,10 @@ From {{af|ca|neo-|mexicà}}.
 Page 19644 nexe: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|nexus||the act of binding together; bond}}, from {{m|la|nectō||bind}}.
+{{bor+|ca|la|nexus||the act of binding together; bond}}, from {{m|la|nectō||bind}}.
 
 ===Pronunciation===
-* {{ca-IPA|nèkse}}
+* {{ca-IPA|[èks]}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -10744,6 +10854,9 @@ Page 19714 nixtamalització: -------- begin text --------
 ===Etymology===
 {{bor+|ca|es|nixtamalización}}.
 
+===Pronunciation===
+{{rfp|ca|the Spanish source has [nist]; unclear whether it would be [ks] or [ʃ] in Catalan, and not in GDLC or DNV}}
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -10777,6 +10890,9 @@ Page 20227 oligoxè: -------- begin text --------
 ===Alternative forms===
 * {{alt|ca|oligoxé||Valencian}}
 
+===Pronunciation===
+* {{ca-IPA|[ks]}}<!-- no secondary stress in GDLC [[oligocènic]], [[oligofrènia]] -->
+
 ===Adjective===
 {{ca-adj}}
 
@@ -10787,6 +10903,9 @@ Page 20227 oligoxè: -------- begin text --------
 * {{R:ca:DNV}}
 -------- end text --------
 Page 20228 oligoxé: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|val=[ks]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -10808,6 +10927,9 @@ Page 20460 orientació sexual: -------- begin text --------
 -------- end text --------
 Page 20510 ortodox: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}
+
 ===Adjective===
 {{ca-adj}}
 
@@ -10818,6 +10940,9 @@ Page 20518 ortopiroxè: -------- begin text --------
 
 ===Alternative forms===
 * {{alt|ca|ortopiroxé||Valencian}}
+
+===Pronunciation===
+* {{ca-IPA|[ks]}}<!-- no secondary stress in GDLC words such as [[ortodromia]], [[ortocromàtic]], [[ortocentre]] -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -10830,6 +10955,9 @@ Page 20518 ortopiroxè: -------- begin text --------
 * {{R:ca:DNV}}
 -------- end text --------
 Page 20519 ortopiroxé: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|val=[ks]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -10869,7 +10997,7 @@ From {{der|ca|VL.|*hordeāta}}, itself derived from {{der|ca|la|hordeum|t=barley
 Page 20614 oxàlic: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|oksàlic}}
+* {{ca-IPA|[ks]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -10887,6 +11015,9 @@ Page 20614 oxàlic: -------- begin text --------
 -------- end text --------
 Page 20615 Oxford: -------- begin text --------
 
+===Pronunciation===
+{{rfp|ca|unclear the pronunciation of the stressed vowel: /o/ or /ɔ/}}
+
 ===Proper noun===
 {{ca-proper noun|m}}
 
@@ -10900,7 +11031,7 @@ Page 20616 òxid: -------- begin text --------
 {{bor+|ca|fr|oxyde}}, attested from 1839.<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
-* {{ca-IPA|òksit}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -10930,7 +11061,7 @@ Page 20617 oxidació: -------- begin text --------
 From {{af|ca|oxidar|-ció}}.
 
 ===Pronunciation===
-* {{ca-IPA|ocsidació}}
+* {{ca-IPA|[ks]}}
 * {{rhymes|ca|o|s=5}}
 
 ===Noun===
@@ -10975,7 +11106,7 @@ Page 20619 oxigen: -------- begin text --------
 {{elements|ca|O|nitrogen|N|fluor|F}}
 
 ===Pronunciation===
-* {{ca-IPA|ogzigen}}
+* {{ca-IPA|[gz]|val=[ks]}}<!-- [gz] is correct per GDLC and confirmed by DCVB, but DNV says [ks] for Valencian and DCVB agrees; DCVB says [odzíʒən] for Palma in Mallorca, but that may be informal or outdated -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-oxigen.wav|Audio (Valencian)}}
 
 ===Noun===
@@ -10998,6 +11129,9 @@ Page 20620 oxigenació: -------- begin text --------
 ===Etymology===
 From {{af|ca|oxigenar|-ció}}.
 
+===Pronunciation===
+* {{ca-IPA|[gz]|val=[ks]}}<!-- [gz] is correct per GDLC and confirmed by DCVB, but DNV says [ks] for Valencian and DCVB agrees; DCVB says [odzíʒən] for Palma in Mallorca, but that may be informal or outdated -->
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -11015,7 +11149,7 @@ Page 20621 oxigenar: -------- begin text --------
 From {{af|ca|oxigen|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA|[ks]}}
+* {{ca-IPA|[gz]|val=[ks]}}<!-- [gz] is correct per GDLC and confirmed by DCVB, but DNV says [ks] for Valencian and DCVB agrees; DCVB says [odzíʒən] for Palma in Mallorca, but that may be informal or outdated -->
 
 ===Verb===
 {{ca-verb|root=ë}}
@@ -11037,6 +11171,9 @@ From {{af|ca|oxigen|-ar}}.
 -------- end text --------
 Page 20622 oxímoron: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[ks]}}<!-- Note that [[oxigen]] has [gz] in Central Catalan but other terms in oxi- generally have [ks] -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -11044,6 +11181,7 @@ Page 20622 oxímoron: -------- begin text --------
 
 ====Further reading====
 * {{R:ca:IEC2}}
+* {{R:ca:DNV}}
 
 -------- end text --------
 Page 20623 oxiür: -------- begin text --------
@@ -11091,7 +11229,7 @@ Page 20837 pansexual: -------- begin text --------
 From {{af|ca|pan-|sexual}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[àn,ks,àl]}}<!-- not in GDLC but for secondary stress compare [[panafricanisme]] -->
 
 ===Adjective===
 {{ca-adj}}
@@ -11112,7 +11250,7 @@ From {{af|ca|pan-|sexual}}.
 Page 20838 pansexualitat: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[àn,ks,àt]}}<!-- not in GDLC but for secondary stress compare [[panafricanisme]] -->
 * {{rhymes|ca|at|s=6}}
 
 ===Noun===
@@ -11158,7 +11296,7 @@ Page 20855 panxacontent: -------- begin text --------
 From {{com|ca|panxa|content}}.
 
 ===Pronunciation===
-* {{ca-IPA|pànxacontént}}
+* {{ca-IPA|[àn,ént]}}
 
 ===Adjective===
 {{ca-adj|#a}}
@@ -11198,7 +11336,7 @@ Page 20857 panxell: -------- begin text --------
 From {{suffix|ca|panxa|ell}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|é}}<!-- per GDLC, DNV, DCVB -->
 * {{rhymes|ca|eʎ|s=2}}
 
 ===Noun===
@@ -11245,6 +11383,9 @@ Page 20900 papiroflèxia: -------- begin text --------
 ===Etymology===
 Cognate to {{cog|es|papiroflexia}}.
 
+===Pronunciation===
+* {{ca-IPA|[ks]}}<!-- FIXME: secondary stress not clear -->
+
 ===Noun===
 {{ca-noun|f|-}}
 
@@ -11257,6 +11398,9 @@ Cognate to {{cog|es|papiroflexia}}.
 -------- end text --------
 Page 20911 para-xocs: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|pàra-xòcs}}<!-- per GDLC, DNV -->
+
 ===Noun===
 {{ca-noun|m|#}}
 
@@ -11266,7 +11410,10 @@ Page 20929 paradoxa: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Etymology===
-From {{der|ca|la|paradoxum}}, from {{der|ca|grc|παράδοξος}}.
+{{bor+|ca|la|paradoxum}}, from {{der|ca|grc|παράδοξος}}.
+
+===Pronunciation===
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -11333,7 +11480,7 @@ Page 20985 pardal xarrec: -------- begin text --------
 Page 21465 per exemple: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|peregzémple}}
+* {{ca-IPA|peregzémple|val=peregzèmple}}<!-- FIXME, shouldn't be necessary to run the words together; fix the multiword support in [[Module:ca-IPA]] -->
 
 ===Adverb===
 {{ca-adv}}
@@ -11342,6 +11489,9 @@ Page 21465 per exemple: -------- begin text --------
 #: {{syn|ca|p. ex.|p. e.|v. gr.|com ara}}
 -------- end text --------
 Page 21615 peròxid: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -11354,7 +11504,7 @@ Page 21690 perxa: -------- begin text --------
 {{inh+|ca|la|pertica}}, through a contracted {{inh|ca|VL.||*perca}}. Compare {{cog|fr|perche}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|è}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -11384,7 +11534,7 @@ Page 21691 perxell: -------- begin text --------
 From {{af|ca|perxa|-ell}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|é}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -11442,11 +11592,11 @@ Page 21895 pinxar: -------- begin text --------
 -------- end text --------
 Page 21896 pinxo: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}<!-- both etyms -->
+
 ===Etymology 1===
 {{bor+|ca|es|pincho}}.
-
-====Pronunciation====
-* {{ca-IPA}}
 
 ====Noun====
 {{ca-noun|m}}
@@ -11475,7 +11625,7 @@ Page 21950 piroxè: -------- begin text --------
 * {{alt|ca|piroxé||Valencian}}
 
 ===Pronunciation===
-* {{ca-IPA|piroksè}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -11493,6 +11643,9 @@ Page 21950 piroxè: -------- begin text --------
 -------- end text --------
 Page 21951 piroxé: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|val=[ks]}}
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -11500,22 +11653,24 @@ Page 21951 piroxé: -------- begin text --------
 -------- end text --------
 Page 21995 pixa: -------- begin text --------
 
-===Etymology===
+===Pronunciation===
+* {{ca-IPA}}<!-- both etyms -->
+
+===Etymology 1===
 {{deverbal|ca|pixar}}.
 
-===Pronunciation===
-* {{ca-IPA}}
-
-===Noun===
+====Noun====
 {{ca-noun|f}}
 
 # {{lb|ca|vulgar}} [[prick]], [[cock]]
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|pixaconill}}
 * {{l|ca|pixota}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|pixar}}
@@ -11530,7 +11685,7 @@ Page 21996 pixaconill: -------- begin text --------
 From {{com|ca|pixa|conill|t1=penis|t2=rabbit}}.
 
 ===Pronunciation===
-* {{ca-IPA|píxaconíll}}
+* {{ca-IPA|[pí,ní]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -11549,7 +11704,7 @@ Page 21997 pixallits: -------- begin text --------
 From {{af|ca|pixa|llits|t1=pisses|t2=beds}}. From the diuretic properties of the root. Compare {{cog|fr|pissenlit}}, {{cog|en|pissabed}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[pí,llí]}}
 
 ===Noun===
 {{ca-noun|m|#}}
@@ -11567,7 +11722,10 @@ From {{af|ca|pixa|llits|t1=pisses|t2=beds}}. From the diuretic properties of the
 Page 21998 pixapí: -------- begin text --------
 
 ===Etymology===
-Singular form of {{m|ca|pixapins}}
+Singular form of {{m|ca|pixapins}}.
+
+===Pronunciation===
+* {{ca-IPA|[píx]}}
 
 ===Noun===
 {{ca-noun|mfbysense}}
@@ -11581,7 +11739,7 @@ Page 21999 pixapins: -------- begin text --------
 From {{af|ca|pixa|pins|t1=pees|t2=pines}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|píxapíns}}
 
 ===Noun===
 {{ca-noun|mfbysense|#}}
@@ -11635,7 +11793,7 @@ Page 22001 pixaví: -------- begin text --------
 From {{com|ca|pixa|ví|t1=pisses|t2=wine}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[píx]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -11670,7 +11828,7 @@ Page 22003 píxel: -------- begin text --------
 {{bor+|ca|en|pixel}}.
 
 ===Pronunciation===
-* {{ca-IPA|pícsel}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -11691,7 +11849,7 @@ From {{af|ca|pixar|-era}}.
 
 # {{lb|ca|vulgar}} the [[desire]] or the [[urge]] to [[piss]]
 #: {{syn|ca|orinera}}
-#: {{ux|ca|Va recordar que tenia '''pixera''', i se'n va anar cap a les latrines.|He remembered that he had '''the desire to piss''' and headed off toward the latrines.}}
+#: {{ux|ca|Va recordar que tenia '''pixera''', i se'n va anar cap a les latrines.|He remembered he '''needed to piss'''  and headed off toward the latrines.|lit=... had '''the desire to piss''' ...}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -11699,10 +11857,10 @@ From {{af|ca|pixar|-era}}.
 Page 22005 píxide: -------- begin text --------
 
 ===Etymology===
-From {{m|la|pyxis}}.
+{{bor+|ca|la|pyxis|pyxidem}}.
 
 ===Pronunciation===
-* {{ca-IPA|píkside}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -11786,7 +11944,7 @@ From {{af|ca|planxa|-ar}}.
 Page 22182 pneumotòrax: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[nèu]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|#s}}
@@ -11794,6 +11952,9 @@ Page 22182 pneumotòrax: -------- begin text --------
 # {{lb|ca|pathology}} [[pneumothorax]]
 -------- end text --------
 Page 22285 politoxicòman: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[òl,ks]}}<!-- for secondary stress, compare [[polivalència]] in GDLC -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -11806,7 +11967,7 @@ Page 22371 ponx: -------- begin text --------
 {{bor+|ca|en|punch}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ô}}<!-- per GDLC, DNV; pronun not given in DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -11845,7 +12006,7 @@ Page 22373 ponxo: -------- begin text --------
 {{bor+|ca|es|poncho}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ó}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -11881,7 +12042,7 @@ From {{af|ca|porxo|-ada}}.
 Page 22454 porxe: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -11902,7 +12063,7 @@ Page 22455 porxo: -------- begin text --------
 {{inh+|ca|roa-oca|porxo}}~{{m|roa-oca|porxe}}, from {{inh|ca|la|porticus}}. Doublet of the borrowing {{doublet|ca|pòrtic|notext=1}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -11947,7 +12108,7 @@ Page 22623 prefix: -------- begin text --------
 {{bor+|ca|LL.|praefixum}}, from {{der|ca|la|praefixus}}.
 
 ===Pronunciation===
-* {{ca-IPA|prefics}}
+* {{ca-IPA}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -11961,6 +12122,9 @@ Page 22624 prefixal: -------- begin text --------
 
 ===Etymology===
 From {{suffix|ca|prefix|al}}.
+
+===Pronunciation===
+* {{ca-IPA|[ks]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -12008,10 +12172,10 @@ Page 22934 prolix: -------- begin text --------
 Page 22935 prolixitat: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|prōlixitās|prōlixitātem}}.
+{{bor+|ca|la|prōlixitās|prōlixitātem}}.
 
 ===Pronunciation===
-* {{ca-IPA|proliksitat}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -12029,6 +12193,9 @@ From {{der|ca|la|prōlixitās|prōlixitātem}}.
 
 -------- end text --------
 Page 23059 protòrax: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[prò]}}<!-- per GDLC -->
 
 ===Noun===
 {{ca-noun|m|#s}}
@@ -12064,7 +12231,7 @@ Page 23090 pròxim: -------- begin text --------
 {{bor+|ca|la|proximus}}; first attested 1599<ref>{{R:ca:GDLC}}</ref>.
 
 ===Pronunciation===
-* {{ca-IPA|pròcsim}}
+* {{ca-IPA|[ks]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -12091,6 +12258,9 @@ Page 23090 pròxim: -------- begin text --------
 -------- end text --------
 Page 23091 pròximament: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[ks]}}
+
 ===Adverb===
 {{ca-adv}}
 
@@ -12102,7 +12272,7 @@ Page 23092 proximitat: -------- begin text --------
 {{bor+|ca|la|proximitas|proximitātem}}.
 
 ===Pronunciation===
-* {{ca-IPA|proksimitat}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -12128,13 +12298,13 @@ Page 23213 punt d'inflexió: -------- begin text --------
 -------- end text --------
 Page 23236 punxa: -------- begin text --------
 
-===Etymology===
+===Pronunciation===
+* {{ca-IPA}}<!-- both etyms -->
+
+===Etymology 1===
 {{deverbal|ca|punxar}}.
 
-===Pronunciation===
-* {{ca-IPA}}
-
-===Noun===
+====Noun====
 {{ca-noun|f}}
 
 # [[point]]
@@ -12142,11 +12312,13 @@ Page 23236 punxa: -------- begin text --------
 # a [[stabbing]] [[pain]]
 # {{lb|ca|textiles}} [[noil]]
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|punexgut}}
 * {{l|ca|punxós}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|punxar}}
@@ -12160,7 +12332,7 @@ Page 23237 punxadiscos: -------- begin text --------
 From {{com|ca|punxa|discos|t1=punctures|t2=records}}.
 
 ===Pronunciation===
-* {{ca-IPA|púnxadíscos}}
+* {{ca-IPA|[ún,dí]}}
 
 ===Noun===
 {{ca-noun|mfbysense|#}}
@@ -12300,7 +12472,7 @@ From {{af|ca|punxós|-et}}.
 Page 23243 punxut: -------- begin text --------
 
 ===Etymology===
-From {{m|ca|punxa}}.
+From {{af|ca|punxa|-ut}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -12336,7 +12508,7 @@ Page 23725 rauxa: -------- begin text --------
 {{was fwotd|ca|2017|May|28}}
 
 ===Etymology===
-Along with {{cog|oc|rauja||rage}} from {{inh|ca|LL.|rabia}}, classical {{m|la|rabiēs||rage}}. The appearance of ''x'' in place of ''j'' likely due to {{m|ca|raixa||a violent emotion}}. {{doublet|ca|ràbia}}.
+Along with {{cog|oc|rauja||rage}} from {{inh|ca|LL.|rabia}} from {{inh|ca|CL.|rabiēs||rage}}. The appearance of ''x'' in place of ''j'' likely due to {{m|ca|raixa||a violent emotion}}. {{doublet|ca|ràbia}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -12358,7 +12530,10 @@ Along with {{cog|oc|rauja||rage}} from {{inh|ca|LL.|rabia}}, classical {{m|la|ra
 Page 23989 reflex: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|reflexus}}, first attested 1803.<ref>{{R:ca:GDLC}}</ref>
+{{bor+|ca|la|reflexus}}. {{etydate|1803}}<ref>{{R:ca:GDLC}}</ref>
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Adjective===
 {{ca-adj}}
@@ -12393,7 +12568,7 @@ Page 23990 reflexió: -------- begin text --------
 {{bor+|ca|la|reflexiō|reflexiōnem}}.
 
 ===Pronunciation===
-* {{ca-IPA|reflecsió}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -12436,7 +12611,7 @@ Page 23992 reflexiu: -------- begin text --------
 {{bor+|ca|la|reflexīvus}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ks]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -12454,7 +12629,7 @@ Page 23992 reflexiu: -------- begin text --------
 Page 23994 reflux: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|refluxus}}.
+{{bor+|ca|la|reflūxus}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -12476,10 +12651,10 @@ Page 23994 reflux: -------- begin text --------
 Page 24149 relaxació: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|relaxātiō|relaxātiōnem}}.
+{{bor+|ca|la|relaxātiō|relaxātiōnem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ks]}}
 * {{rhymes|ca|o|s=5}}
 
 ===Noun===
@@ -12526,7 +12701,7 @@ Page 24370 República Txeca: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA|república txêca}}
+* {{ca-IPA|[xë]}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-República Txeca.wav|Audio}}
 
 ===Proper noun===
@@ -12559,14 +12734,15 @@ Page 24671 rínxol: -------- begin text --------
 ===Etymology===
 Earlier {{m|ca|rinxo}}, from {{bor|ca|it|riccio}}.
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Noun===
 {{ca-noun|m}}
 
 # [[lock]] {{q|of hair}}, [[curl]]
-#: {{ux|ca|Em vaig deixar el cabell llarg i vaig descobrir que tenia '''rínxols'''.|I left my hair long and I discovered that I have '''curls'''.}}
-
-====Synonyms====
-{{der3|ca|bucle|ris|rull}}
+#: {{ux|ca|Em vaig deixar el cabell llarg i vaig descobrir que tenia '''rínxols'''.|I let my hair grow long and I discovered that I have '''curls'''.}}
+#: {{syn|ca|bucle|ris|rull}}
 
 ====Derived terms====
 * {{l|ca|enrinxolar}}
@@ -12682,7 +12858,7 @@ Page 25177 saltar amb perxa: -------- begin text --------
 Page 25380 saxífraga: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|sacsífrag}}
+* {{ca-IPA|[ks]}}
 
 ===Adjective===
 {{head|ca|adjective form|g=f-s}}
@@ -12703,10 +12879,10 @@ Page 25380 saxífraga: -------- begin text --------
 Page 25381 saxó: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|LL.|Saxonia}}, from {{der|ca|la|Saxō}}.
+{{bor+|ca|LL.|Saxōnia}}, from {{der|ca|la|Saxō}}.
 
 ===Pronunciation===
-* {{ca-IPA|sacsó}}
+* {{ca-IPA|[ks]}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-saxó.wav|Audio (Valencian)}}
 
 ===Adjective===
@@ -12740,7 +12916,7 @@ Page 25382 saxofon: -------- begin text --------
 * {{alt|ca|saxòfon}}
 
 ===Pronunciation===
-* {{ca-IPA|sacsofón}}
+* {{ca-IPA|[ks,ô]}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -12756,7 +12932,7 @@ Page 25383 saxòfon: -------- begin text --------
 * {{alt|ca|saxofon}}
 
 ===Pronunciation===
-* {{ca-IPA|sacsòfon}}
+* {{ca-IPA|[ks]}}
 * {{rhymes|ca|ɔfon|s=3}}
 
 ===Noun===
@@ -12778,7 +12954,7 @@ Page 25384 saxofonista: -------- begin text --------
 From {{suffix|ca|saxòfon|ista}}.
 
 ===Pronunciation===
-* {{ca-IPA|sacsofonista}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|mfbysense}}
@@ -12795,7 +12971,7 @@ Page 25385 Saxònia: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA|sacsònia}}
+* {{ca-IPA|[ks]}}
 
 ===Proper noun===
 {{ca-proper noun|f}}
@@ -12814,7 +12990,7 @@ Page 25831 sex symbol: -------- begin text --------
 {{bor+|ca|en|sex symbol}}.
 
 ===Pronunciation===
-* {{ca-IPA|sèksímbol}}<ref>[https://www.esadir.cat/entrades/fitxa/id/2283 "sex symbol" at ésAdir]</ref>
+* {{ca-IPA|sèksímbol|val=séksímbol}}<ref>[https://www.esadir.cat/entrades/fitxa/id/2283 "sex symbol" at ésAdir]</ref>
 
 ===Noun===
 {{ca-noun|mfbysense|+last|nolinkhead=1}}
@@ -12854,7 +13030,7 @@ Page 25833 sexe: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA|sèkse}}
+* {{ca-IPA|sèkse}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -12885,7 +13061,7 @@ Page 25833 sexe: -------- begin text --------
 Page 25834 sexe anal: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|sekse anal}}
+* {{ca-IPA|[èks]}}
 
 ===Noun===
 {{ca-noun|m|-}}
@@ -12948,7 +13124,7 @@ Page 25839 sexisme: -------- begin text --------
 From {{af|ca|sexe|-isme}}.
 
 ===Pronunciation===
-* {{ca-IPA|seksisme}}
+* {{ca-IPA|[ks]}}
 * {{rhymes|ca|izme|s=3}}
 
 ===Noun===
@@ -12966,7 +13142,7 @@ Page 25840 sexista: -------- begin text --------
 From {{af|ca|sexe|-ista}}.
 
 ===Pronunciation===
-* {{ca-IPA|seksista}}
+* {{ca-IPA|[ks]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -12985,6 +13161,9 @@ From {{af|ca|sexe|-ista}}.
 -------- end text --------
 Page 25841 sexòleg: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[ks]}}
+
 ===Noun===
 {{ca-noun|m|f=sexòloga}}
 
@@ -13000,6 +13179,9 @@ Page 25841 sexòleg: -------- begin text --------
 -------- end text --------
 Page 25842 sexòloga: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[ks]}}
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -13009,7 +13191,7 @@ Page 25843 sexologia: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA|seksologia}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -13030,6 +13212,9 @@ Page 25844 sexològic: -------- begin text --------
 ===Etymology===
 From {{af|ca|sexologia|-ic}}.
 
+===Pronunciation===
+* {{ca-IPA|[ks]}}
+
 ===Adjective===
 {{ca-adj}}
 
@@ -13047,7 +13232,7 @@ Page 25845 sext: -------- begin text --------
 {{bor+|ca|la|sextus||sixth}}.
 
 ===Pronunciation===
-* {{ca-IPA|sëkst}}
+* {{ca-IPA|ë}}<!-- per GDLC, DNV; pronun not given in DCVB but ë likely for a borrowing -->
 
 ===Adjective===
 {{ca-adj}}
@@ -13075,7 +13260,7 @@ Page 25846 Sext: -------- begin text --------
 Page 25847 sexta: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|[ë,ks]}}<!-- both etyms -->
+* {{ca-IPA|ë}}<!-- both etyms; per GDLC, DNV; pronun not given in DCVB but ë likely for a borrowing -->
 
 ===Etymology 1===
 {{bor+|ca|la|sexta}}, feminine singular of {{m|la|sextus}}.
@@ -13103,6 +13288,9 @@ Page 25847 sexta: -------- begin text --------
 
 -------- end text --------
 Page 25848 sextet: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê|bal=?}}<!-- per GDLC, DNV; pronun not given in DCVB, possibly ê if interpreted as a diminutive -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -13133,7 +13321,7 @@ Page 25849 sextina: -------- begin text --------
 Page 25850 sexual: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|sexuālis}}, attested from 1839.<ref>{{R:ca:GDLC}}</ref>
+{{bor+|ca|la|sexuālis}}. {{etydate|1839}}<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
 * {{ca-IPA|[ks]}}
@@ -13164,7 +13352,7 @@ Page 25850 sexual: -------- begin text --------
 Page 25851 sexualitat: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|seksualitat}}
+* {{ca-IPA|[ks]}}
 * {{rhymes|ca|at|s=5}}
 
 ===Noun===
@@ -13233,7 +13421,7 @@ Page 26027 sintaxi: -------- begin text --------
 {{bor+|ca|la|syntaxis}}, from {{der|ca|grc|σῠ́ντᾰξῐς}}.
 
 ===Pronunciation===
-* {{ca-IPA|sintaksi}}
+* {{ca-IPA|[ks]}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-sintaxi.wav|Audio}}
 
 ===Noun===
@@ -13262,7 +13450,7 @@ Page 26109 sobre la marxa: -------- begin text --------
 Page 26594 sufix: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|sufics}}
+* {{ca-IPA}}
 * {{rhymes|ca|iks|s=2}}
 
 ===Noun===
@@ -13274,6 +13462,9 @@ Page 26594 sufix: -------- begin text --------
 
 -------- end text --------
 Page 26854 tamoxifè: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -13289,7 +13480,7 @@ Page 27034 taxa: -------- begin text --------
 From {{der|ca|la|taxo|taxāre|t=to appraise}}.
 
 ===Pronunciation===
-* {{ca-IPA|tacsa}}
+* {{ca-IPA|[ks]}}
 
 ===Noun===
 {{ca-noun|f}}
