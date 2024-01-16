@@ -64,8 +64,8 @@ export.dialect_groups = {
 }
 
 
-local written_unaccented_vowel = "aeiouy"
-local written_accented_vowel = "àèéêëíïòóôúüý"
+local written_unaccented_vowel = "aeiouyAEIOUY"
+local written_accented_vowel = "àèéêëíïòóôúüýÀÈÉÊËÍÏÒÓÔÚÜÝ"
 local AV = "[" .. written_accented_vowel .. "]"
 local written_vowel = written_unaccented_vowel .. written_accented_vowel
 local V = "[" .. written_vowel .. "]"
@@ -83,6 +83,19 @@ local written_accented_to_plain_vowel = {
 	["ú"] = "u",
 	["ü"] = "u",
 	["ý"] = "y",
+	["À"] = "A",
+	["È"] = "E",
+	["É"] = "E",
+	["Ê"] = "E",
+	["Ë"] = "E",
+	["Í"] = "I",
+	["Ï"] = "I",
+	["Ò"] = "O",
+	["Ó"] = "O",
+	["Ô"] = "O",
+	["Ú"] = "U",
+	["Ü"] = "U",
+	["Ý"] = "Y",
 }
 
 export.mid_vowel_hints = "éèêëóòô"
@@ -233,6 +246,8 @@ local function word_fixes(word)
 	word = fix_prefixes(word) -- internal pause after a prefix
 	word = restore_diaereses(word) -- no diaeresis saving
 	word = fix_y(word) -- ny > ñ else y > i vowel or consonant
+	-- all words in pn- (e.g. [[pneumotòrax]] and mn- (e.g. [[mnemònic]]) have silent p/m in both Central and Valencian
+	word = rsub(word, "^[pm]n", "n")
 
 	return word
 end
