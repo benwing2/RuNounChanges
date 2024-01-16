@@ -23,7 +23,10 @@ FIXME:
 7. ë (and presumably ê) doesn't work in secondary stress, always becomes /ɛ/ (e.g. in [[extrajudicial]] respelled
    'ëxtrajudiciàl'; this seems to be because the handling of ë goes through mid_vowel_hint, which doesn't work for
    secondary stress.
+8. Respect ʃ at beginning of word in Valencian.
+9. Prefixes e.g. [[xilo-]] should not have stress by default.
 ]=]
+
 
 local usub = mw.ustring.sub
 local rfind = mw.ustring.find
@@ -37,6 +40,17 @@ local u = mw.ustring.char
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
 	return retval
+end
+
+-- apply rsub() repeatedly until no change
+local function rsub_repeatedly(term, foo, bar)
+	while true do
+		local new_term = rsub(term, foo, bar)
+		if new_term == term then
+			return term
+		end
+		term = new_term
+	end
 end
 
 local function split_on_comma(term)
@@ -66,9 +80,11 @@ export.dialect_groups = {
 
 local written_unaccented_vowel = "aeiouyAEIOUY"
 local written_accented_vowel = "àèéêëíïòóôúüýÀÈÉÊËÍÏÒÓÔÚÜÝ"
+local ipa_vowel = "ɔɛ"
 local AV = "[" .. written_accented_vowel .. "]"
 local written_vowel = written_unaccented_vowel .. written_accented_vowel
-local V = "[" .. written_vowel .. "]"
+local vowel = written_vowel .. ipa_vowel
+local V = "[" .. vowel .. "]"
 local written_accented_to_plain_vowel = {
 	["à"] = "a",
 	["è"] = "e",
@@ -97,6 +113,20 @@ local written_accented_to_plain_vowel = {
 	["Ü"] = "U",
 	["Ý"] = "Y",
 }
+
+local AC = u(0x0301) -- acute =  ́
+local GR = u(0x0300) -- grave =  ̀
+
+local stress = AC .. GR
+local stress_c = "[" .. AC .. GR .. "]"
+local ipa_stress = "ˈˌ"
+local ipa_stress_c = "[" .. ipa_stress .. "]"
+local sylsep = "%-." .. SYLDIV -- hyphen included for syllabifying from spelling
+local sylsep_c = "[" .. sylsep .. "]"
+local wordsep = "# "
+local separator_not_wordsep = accent .. ipa_stress .. sylsep
+local separator = separator_not_wordsep .. wordsep
+local separator_c = "[" .. separator .. "]"
 
 export.mid_vowel_hints = "éèêëóòô"
 export.mid_vowel_hint_c = "[" .. export.mid_vowel_hints .. "]"
@@ -365,9 +395,11 @@ local function replace_context_free(cons)
 	cons = rsub(cons, "ll", "ʎ")
 	cons = rsub(cons, "ñ", "ɲ") -- hint ny > ñ
 
-	cons = rsub(cons, "[dt]j", "d͡ʒ")
-	cons = rsub(cons, "tx", "t͡ʃ")
-	cons = rsub(cons, "[dt]z", "d͡z")
+	-- NOTE: We use single-character affricate symbols during processing for ease in handling, and convert them
+	-- to tied multi-character affricates at the end of join_syllables().
+	cons = rsub(cons, "[dt]j", "ʤ")
+	cons = rsub(cons, "tx", "ʧ")
+	cons = rsub(cons, "[dt]z", "ʣ")
 
 	cons = rsub(cons, "ç", "s")
 	cons = rsub(cons, "[cq]", "k")
@@ -383,27 +415,34 @@ local function replace_context_free(cons)
 	return cons
 end
 
-local function postprocess_general(syllables)
-	syllables = mw.clone(syllables)
 
-	local voiced = listToSet {"b", "ð", "d", "ɡ", "m", "n", "ɲ", "l", "ʎ", "r", "ɾ", "v", "z", "ʒ"}
-	local voiceless = listToSet {"p", "t", "k", "f", "s", "ʃ", ""}
+-- Do context-sensitive phonological changes. Formerly this was all done syllable-by-syllable but that made the code
+-- tricky (since it often had to look at adjacent syllables) and full of subtle bugs. Now we first concatenate the
+-- syllables back to a word and work on the word as a whole. FIXME: We should just keep the word always together and
+-- not split into a syllable-by-syllable structure at all.
+local function postprocess_general(syllables, dialect)
+	-- Combine syllables.
+	local combined = {}
+	for i, syll in ipairs(syllables) do
+		local ac = i == syllables.stress and AC or -- primary stress
+			syllables[i].stressed and GR or -- secondary stress
+			""
+		table.insert(combined, syll.onset .. syll.vowel .. ac .. syll.coda)
+	end
+	local text = "#" .. table.concat(combined, ".") .. "#"
+
+	local voiced = listToSet {"b", "ð", "d", "ɡ", "m", "n", "ɲ", "l", "ʎ", "r", "ɾ", "v", "z", "ʒ", "ʣ", "ʤ"}
+	-- FIXME, why is "" here?
+	local voiceless = listToSet {"p", "t", "k", "f", "s", "ʃ", "ʦ", "ʧ", ""}
+	-- FIXME, do we need to add ʧ, ʤ, ʦ or ʣ?
 	local voicing = {["k"]="ɡ", ["f"]="v", ["p"]="b", ["t"]="d", ["s"]="z"}
 	local devoicing = {["b"]="p", ["d"]="t", ["ɡ"]="k"}
 
-	-- Handle ex + (h) vowel > egz; this must happen separately before the changes below to x because we look
-	-- at previous.coda. FIXME: Rewrite to use single rsub's across the whole word.
-	for i = 1, #syllables do
-		local current = syllables[i]
-		local previous = syllables[i - 1]
-
-		if i > 1 and previous.onset == "" and (previous.vowel == "e" or previous.vowel == "ɛ")
-		and ((previous.coda == "" and current.onset == "x") or (previous.coda == "x" and current.onset == ""))
-		then
-			previous.coda = "ɡ"
-			current.onset = "z"
-		end
-	end
+	-- Handle -ex- + vowel > -egz-. Note that this also handles inex- + vowel because in fix_prefixes we respell
+	-- inex- as inhex-, which ends up at this stage as in.e.xV, or as in.ex.V in the case of inexh-.
+	text = rsub_repeatedly(text, "([.#][eɛ]" .. stress_c .. "?)%.x(" .. V .. ")", "%1ɡ.z%2") --IPA ɡ
+	-- Handle -exh- + vowel > -egz-.
+	text = rsub_repeatedly(text, "([.#][eɛ]" .. stress_c .. "?)x%.(" .. V .. ")", "%1ɡ.z%2") --IPA ɡ
 
 	for i = 1, #syllables do
 		local current = syllables[i]
@@ -449,9 +488,7 @@ local function postprocess_general(syllables)
 				previous.coda = rsub(previous.coda, "n$", "m") -- strictly ɱ
 
 			-- l/n + palatal > palatalized assimilation
-			elseif rfind(current.onset, "^[ʒʎʃɲ]")
-			or rfind(current.onset, "^t͡ʃ")
-			or rfind(current.onset, "^d͡ʒ")
+			elseif rfind(current.onset, "^[ʒʎʃɲʧʤ]")
 			then
 				previous.coda = rsub(previous.coda, "[ln]$", {["l"] = "ʎ", ["n"] = "ɲ"})
 			end
@@ -459,19 +496,13 @@ local function postprocess_general(syllables)
 			-- ɡʒ > d͡ʒ
 			if previous.coda == "ɡ" and current.onset == "ʒ" then
 				previous.coda = ""
-				current.onset = "d͡ʒ"
+				current.onset = "ʤ"
 			end
 		end
 
 		current.coda = rsub(current.coda, "n[kɡ]", "ŋk")
-		current.coda = rsub(current.coda, "n([ʃʒ])", "ɲ%1")
-		current.coda = rsub(current.coda, "n(t͡ʃ)", "ɲ%1")
-		current.coda = rsub(current.coda, "n(d͡ʒ)", "ɲ%1")
-
-		current.coda = rsub(current.coda, "l([ʃʒ])", "ʎ%1")
-		current.coda = rsub(current.coda, "l(t͡ʃ)", "ʎ%1")
-		current.coda = rsub(current.coda, "l(d͡ʒ)", "ʎ%1")
-
+		current.coda = rsub(current.coda, "n([ʃʒʧʤ])", "ɲ%1")
+		current.coda = rsub(current.coda, "l([ʃʒʧʤ])", "ʎ%1")
 		current.coda = rsub(current.coda, "ɲs", "ɲʃ")
 
 		-- Voicing or devoicing
@@ -493,7 +524,7 @@ local function postprocess_general(syllables)
 		end
 
 		-- no spirants after r/z
-		if i > 1 and mw.ustring.find(previous.coda, "[rz]$") then
+		if i > 1 and mw.ustring.find(previous.coda, "[rzʣ]$") then
 			current.onset = mw.ustring.gsub(current.onset, "^[βðɣ]", {["β"] = "b", ["ð"] = "d", ["ɣ"] = "ɡ"})
 		end
 
@@ -507,8 +538,8 @@ local function postprocess_general(syllables)
 	-- Final devoicing
 	local final = syllables[#syllables].coda
 
-	final = rsub(final, "d͡ʒ", "t͡ʃ")
-	final = rsub(final, "d͡z", "t͡s")
+	final = rsub(final, "ʤ", "ʧ")
+	final = rsub(final, "ʣ", "ʦ")
 	final = rsub(final, "b", "p")
 	final = rsub(final, "d", "t")
 	final = rsub(final, "ɡ", "k")
@@ -517,8 +548,8 @@ local function postprocess_general(syllables)
 	final = rsub(final, "z", "s")
 
 	-- Final losses
-	final = rsub(final, "j(t͡ʃ)", "%1")
-	final = rsub(final, "([ʃs])s", "%1") -- homophone plurals -xs, -igs, -çs
+	final = rsub(final, "j(ʧ)", "%1")
+	final = rsub(final, "([ʃʧs])s", "%1") -- homophone plurals -xs, -igs, -çs
 
 	syllables[#syllables].coda = final
 
@@ -644,12 +675,12 @@ local function to_IPA(syllables, suffix_syllables, mid_vowel_hint, pos)
 		end
 
 		if rfind(syll.vowel, "^[eèéêëií]$") then
-			syll.onset = rsub(syll.onset, "tg$", "d͡ʒ")
+			syll.onset = rsub(syll.onset, "tg$", "ʤ")
 			syll.onset = rsub(syll.onset, "[cg]$", {["c"] = "s", ["g"] = "ʒ"})
 			syll.onset = rsub(syll.onset, "[qg]u$", {["qu"] = "k", ["gu"] = "g"})
 		end
 
-		syll.coda = rsub(syll.coda, "igs?$", "id͡ʒ")
+		syll.coda = rsub(syll.coda, "igs?$", "iʤ")
 
 		syll.onset = replace_context_free(syll.onset)
 		syll.coda = replace_context_free(syll.coda)
@@ -795,29 +826,24 @@ local function do_dialect_specific(syllables, dialect, mid_vowel_hint)
 
 		if dialect ~= "val" then
 			-- Remove j before palatal obstruents
-			current.coda = rsub(current.coda, "j([ʃʒ])", "%1")
-			current.coda = rsub(current.coda, "j(t͡ʃ)", "%1")
-			current.coda = rsub(current.coda, "j(d͡ʒ)", "%1")
+			current.coda = rsub(current.coda, "j([ʃʒʧʤ])", "%1")
 
 			if i > 1 then
-				if rfind(current.onset, "^[ʃʒ]") or rfind(current.onset, "^t͡ʃ") or rfind(current.onset, "^d͡ʒ") then
+				if rfind(current.onset, "^[ʃʒʧʤ]") then
 					previous.coda = rsub(previous.coda, "j$", "")
 				end
 			end
 		else -- Valencian
 			-- Fortition of palatal fricatives
-			current.onset = rsub(current.onset, "ʒ", "d͡ʒ")
-			current.onset = rsub(current.onset, "d͡d", "d")
+			current.onset = rsub(current.onset, "ʒ", "ʤ")
+			current.coda = rsub(current.coda, "ʒ", "ʤ")
 
-			current.coda = rsub(current.coda, "ʒ", "d͡ʒ")
-			current.coda = rsub(current.coda, "d͡d", "d")
-
-			if i > 1 and previous.vowel == "i" and previous.coda == "" and current.onset == "d͡z" then
+			if i > 1 and previous.vowel == "i" and previous.coda == "" and current.onset == "ʣ" then
 				current.onset = "z"
 			elseif (i == 1 and current.onset == "ʃ")
 				or (i > 1 and current.onset == "ʃ" and previous.coda ~= "" and previous.coda ~= "j")
 				then
-				current.onset = "t͡ʃ"
+				current.onset = "ʧ"
 			end
 		end
 
@@ -859,7 +885,10 @@ local function join_syllables(syllables)
 		syllables[i] = syll
 	end
 
-	return rsub(table.concat(syllables, "."), ".([ˈˌ])", "%1")
+	local text = rsub(table.concat(syllables, "."), ".([ˈˌ])", "%1")
+	local full_affricates = { ["ʦ"] = "t͡s", ["ʣ"] = "d͡z", ["ʧ"] = "t͡ʃ", ["ʤ"] = "d͡ʒ" }
+	text = rsub(text, "([ʦʣʧʤ])", full_affricates)
+	return text
 end
 
 
