@@ -10645,7 +10645,7 @@ Page 18766 Mixnà: -------- begin text --------
 {{bor+|ca|he|מִשְׁנָה||repetition, oral law|tr=mišnāh}}, from {{m|he|שָׁנָה|tr=šānāh||to repeat, teach}}. {{root|ca|he|שׁ־נ־ה}}.
 
 ===Pronunciation===
-* {{ca-IPA|[x:ʃ]}}
+* {{ca-IPA|[ʃ]}}
 
 ===Proper noun===
 {{ca-proper noun|f}}
@@ -11756,7 +11756,7 @@ From {{af|ca|pixa|pins|t1=pees|t2=pines}}.
 Page 22000 pixar: -------- begin text --------
 
 ===Etymology===
-{{inh+|ca|VL.|*pīssiāre}}, of {{onomatopoeic|it|title=echoic}} origin.
+{{inh+|ca|VL.|*pīssiāre}}, of {{onomatopoeic|ca|title=echoic}} origin.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -14310,7 +14310,7 @@ Page 29386 xa: -------- begin text --------
 {{bor+|ca|fa|شاه|tr=šâh}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|+|val=[ʃ]}}
 
 ===Noun===
 {{ca-noun|m|#s}}
@@ -14330,7 +14330,7 @@ Page 29387 xabec: -------- begin text --------
 {{bor+|ca|ar|شُبَّاك}}, either borrowed directly or via {{cog|it|sciabecco}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}<!-- per GDLC and DNV -->
+* {{ca-IPA|è|val=[ʃ,è]}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -14596,7 +14596,7 @@ From {{suffix|ca|xafarot|ejar}}.
 Page 29402 xàfec: -------- begin text --------
 
 ===Etymology===
-{{onomatopoeic|ca}}
+{{onomatopoeic|ca}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -14820,7 +14820,7 @@ Page 29413 xaloc: -------- begin text --------
 Likely from {{bor|ca|pro|eissalot}} and its variants (e.g. {{m|pro|exaloc}}), from [[Massalia]]n {{der|ca|grc||*ἐξαλώτης}}, from {{m|grc|ἔξαλος|pos="out of the sea" → "wind from the southeast"}}. Traditionally thought to be a derivative of {{bor|ca|ar|شَرْق|t=east}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}<!-- FIXME, DNV allows initial /ʃ-/ but it gets converted to /tʃ-/ automatically -->
+* {{ca-IPA|ò|val=[ʃ,ò],ò}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -15090,22 +15090,30 @@ From {{af|ca|xampurrat|-ejar}}.
 -------- end text --------
 Page 29427 xanca: -------- begin text --------
 
-===Etymology===
+===Pronunciation===
+* {{ca-IPA}}<!-- both etyms -->
+
+===Etymology 1===
 {{inh+|ca|LL.|zancha}}, from {{der|ca|xpr|-}}.
 
-===Pronunciation===
-* {{ca-IPA}}
-
-===Noun===
+====Noun====
 {{ca-noun|f}}
 
 # [[stilt]]
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|xanquer}}
 
-====Related terms====
+=====Related terms=====
 * {{l|ca|xancle}}
+
+===Etymology 2===
+
+====Noun====
+{{ca-noun|f}} {{tlb|ca|Valencian}}
+
+# [[poor]]-[[quality]] [[item]], [[piece]] of [[schlock]]
+# [[unsellable]] [[item]] {{q|due to being old or out of fashion}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -15182,7 +15190,7 @@ Page 29432 xangainès: -------- begin text --------
 From {{af|ca|Xangai|-ès}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- FIXME: Unclear if Valencian has /ʃ-/ or /tʃ-/ or both -->
 
 ===Adjective===
 {{ca-adj}}
@@ -15269,7 +15277,7 @@ Page 29436 xantè: -------- begin text --------
 * {{alt|ca|xanté||Valencian}}
 
 ===Pronunciation===
-* {{ca-IPA}}<!-- DCVB attests /ətilə́/ for [[etilè]] in Balearic, showing that -è "-ene" has schwa in Balearic -->
+* {{ca-IPA|[ks]|val=[ʃ]}}<!-- DCVB attests /ətilə́/ for [[etilè]] in Balearic, showing that -è "-ene" has schwa in Balearic -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -15284,7 +15292,7 @@ Page 29436 xantè: -------- begin text --------
 Page 29437 xanté: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|val=+}}
+* {{ca-IPA|val=[ʃ]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -15583,7 +15591,7 @@ Page 29451 xaria: -------- begin text --------
 {{bor+|ca|ar|شَرِيعَة|lit=path, way}}. {{root|ca|ar|ش ر ع}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ʃ]}}
 
 ===Noun===
 {{ca-noun|f|-}}
@@ -15682,10 +15690,10 @@ Page 29457 xarop: -------- begin text --------
 * {{alt|ca|aixarop}}
 
 ===Etymology===
-{{bor+|ca|xaa|شَرَاب}}, from {{der|ca|ar|شَرَاب||wine, syrup}}.Compare {{cog|pt|xarope}} and {{cog|es|jarabe}}.
+{{bor+|ca|xaa|شَرَاب}}, from {{der|ca|ar|شَرَاب||wine, syrup}}. Compare {{cog|pt|xarope}} and {{cog|es|jarabe}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}<!-- FIXME, DNV allows initial /ʃ-/ but it gets converted to /tʃ-/ automatically -->
+* {{ca-IPA|ò|val=[ʃ,ò],ò}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -15721,7 +15729,7 @@ Page 29459 xaropós: -------- begin text --------
 From {{af|ca|xarop|-ós}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|+|val=[ʃ],+}}
 
 ===Adjective===
 {{ca-adj}}
@@ -15756,7 +15764,7 @@ Page 29461 xarranca: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Etymology===
-From {{m|ca|eixarrancar|eixarrancar-se|do the splits}}.
+From {{m|ca|eixarrancar|eixarrancar-se|to spread the legs}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -15821,7 +15829,7 @@ From {{com|ca|xarrupa|llànties|t1=sucks|t2=lamps}}.
 ===Noun===
 {{ca-noun|mfbysense|#}}
 
-# a pious person who spends the whole day in church
+# a [[pious]] [[person]] who [[spend]]s the whole day in [[church]]
 #: {{syn|ca|rosegaaltars}}
 
 ===Further reading===
@@ -15977,6 +15985,9 @@ Page 29473 xatàrdia: -------- begin text --------
 ===Etymology===
 {{named-after|ca|Barthélemy Joseph Paul Xatard|nat=French|occ=botanist|born=1774|died=1876}}.
 
+===Pronunciation===
+* {{ca-IPA|val=?}}<!-- not in GDLC or DNV; unclear whether [ʃ] or [tʃ] in Valencian -->
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -16025,7 +16036,7 @@ Page 29477 xativí: -------- begin text --------
 From {{suffix|ca|Xàtiva|í}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ʃ]}}<!-- per GDLC and DNV -->
 
 ===Adjective===
 {{ca-adj}}
@@ -16065,7 +16076,7 @@ Page 29478 xato: -------- begin text --------
 Page 29479 xató: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}<!-- both etyms -->
+* {{ca-IPA}}<!-- both etyms; DNV only attests the cooking sense but [tʃ] seems likely for the other one based on other French borrowings -->
 
 ===Etymology 1===
 Perhaps reduced from earlier *{{m|ca|(ai)xataó}}, from {{m|ca|aixatar}}, variant form of {{m|ca|deixatar||to dissolve}}.
@@ -16148,7 +16159,7 @@ Page 29483 xauarma: -------- begin text --------
 {{bor+|ca|ar|شَاوَرْمَا}}, {{m|ar|شَاوِرْمَا}}, from {{der|ca|ota|چویرمه|tr=çevirme|t=spinning, rotating}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ʃ]}}<!-- per PTV [https://www.avl.gva.es/lexicval/ptv?paraula=xauarma] -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -16167,7 +16178,7 @@ Page 29484 Xauxa: -------- begin text --------
 From earlier {{bor|ca|es|Xauxa}} (now [[w:Jauja|Jauja]]), a city and province in central Peru, from Wanka {{der|ca|qu|Shawsha}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|+|val=+,ʃauʃa}}
 
 ===Proper noun===
 {{ca-proper noun|f}}
@@ -16349,6 +16360,9 @@ Page 29495 xef: -------- begin text --------
 ===Etymology===
 {{bor+|ca|fr|chef}}.
 
+===Pronunciation===
+* {{ca-IPA|è}}<!-- per GDLC and DNV -->
+
 ===Noun===
 {{ca-noun|mfbysense}}
 
@@ -16367,6 +16381,9 @@ Page 29496 xeic: -------- begin text --------
 ===Etymology===
 {{bor+|ca|ar|شَيْخ}}.
 
+===Pronunciation===
+* {{ca-IPA|ë|val=[ʃë],ë}}<!-- pre GDLC and DNV; not in DCVB but ë is likely -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -16384,7 +16401,7 @@ Page 29499 xemeneia: -------- begin text --------
 {{inh+|ca|roa-oca|xemenea}}, from {{der|ca|fro|cheminee}}, from {{der|ca|LL.|camīnāta}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|ë}}<!-- per GDLC, DNV, DCVB -->
 * {{audio|ca|LL-Q7026 (cat)-Toniher-xemeneia.wav|Audio (Catalonia)}}
 
 ===Noun===
@@ -16444,7 +16461,7 @@ Page 29503 xenisme: -------- begin text --------
 {{bor+|ca|fr|xénisme}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ks]|val=[ʃ]}}<!-- per DNV; not in GDLC but words in xeno- have [ks] -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -16464,6 +16481,9 @@ Page 29504 xenixell: -------- begin text --------
 ===Etymology===
 From earlier {{m|ca|senixó}}, from {{der|ca|la|seneciō}}.
 
+===Pronunciation===
+* {{ca-IPA|é}}<!-- per GDLC and DNV -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -16479,7 +16499,7 @@ Page 29505 xenó: -------- begin text --------
 {{elements|ca|Xe|iode|I|cesi|Cs}}
 
 ===Pronunciation===
-* {{ca-IPA|ksenó}}
+* {{ca-IPA|[ks]|val=[ʃ]}}<!-- per GDLC and DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-xenó.wav|Audio (Valencian)}}
 * {{rhymes|ca|o|s=2}}
 
@@ -16494,7 +16514,7 @@ Page 29506 xenòfil: -------- begin text --------
 From {{af|ca|xeno-|-fil}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ks]|val=[ʃ]}}<!-- per GDLC and DNV -->
 
 ===Adjective===
 {{ca-adj}}
@@ -16520,7 +16540,7 @@ Page 29507 xenofília: -------- begin text --------
 From {{af|ca|xeno-|-fília}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ks]|val=[ʃ]}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -16540,7 +16560,7 @@ Page 29508 xenòfob: -------- begin text --------
 From {{af|ca|xeno-|-fob}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ks]|val=[ʃ]}}<!-- per GDLC and DNV -->
 
 ===Adjective===
 {{ca-adj}}
@@ -16566,7 +16586,7 @@ Page 29509 xenofòbia: -------- begin text --------
 From {{affix|ca|xeno-|-fòbia}}.
 
 ===Pronunciation===
-* {{ca-IPA|ʃenofòbia}}
+* {{ca-IPA|[ks]|val=[ʃ]}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -16584,6 +16604,9 @@ From {{affix|ca|xeno-|-fòbia}}.
 -------- end text --------
 Page 29510 xéquel: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC and DNV -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -16594,10 +16617,10 @@ Page 29510 xéquel: -------- begin text --------
 Page 29511 xerec: -------- begin text --------
 
 ===Etymology===
-{{b-f|ca|xereca}}, from {{bor|ca|ary|شَرِيحَة||dried fig}}.
+{{b-f|ca|xereca}}, from {{der|ca|ary|شَرِيحَة||dried fig}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|ë}}<!-- per GDLC and DNV -->
 
 ===Adjective===
 {{ca-adj}}
@@ -16610,21 +16633,23 @@ Page 29511 xerec: -------- begin text --------
 -------- end text --------
 Page 29512 xereca: -------- begin text --------
 
-===Etymology===
+===Pronunciation===
+* {{ca-IPA|ë}}<!-- per GDLC and DNV -->
+
+===Etymology 1===
 {{bor+|ca|ary|شَرِيحَة||dried fig}}.
 
-===Pronunciation===
-* {{ca-IPA|è}}
-
-===Noun===
+====Noun====
 {{ca-noun|f}}
 
 # dried [[fig]]
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|xerec}}
 
-===Adjective===
+===Etymology 2===
+
+====Adjective====
 {{head|ca|adjective form}}
 
 # {{feminine singular of|ca|xerec}}
@@ -16659,6 +16684,9 @@ Page 29513 xerès: -------- begin text --------
 {{C|ca|Wines}}
 -------- end text --------
 Page 29514 xerés: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|val=+}}
 
 ===Noun===
 {{ca-noun|m|xeressos}}
@@ -16721,7 +16749,7 @@ Page 29518 xerigot: -------- begin text --------
 {{inh+|ca|roa-oca|sirigot|sirigot, sorigot}}, from the reconstructed [[protoform]] ''*sorikŏtto'', from {{der|ca|qsb-ibe}}, possibly of {{der|ca|ine-pro|-}} or {{der|ca|euq-pro|-}} origin.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -16743,7 +16771,7 @@ Page 29519 xeringa: -------- begin text --------
 {{slbor|ca|ML.|syringa}}, from {{der|ca|grc|σῦριγξ|t=pipe, syrinx}}. {{doublet|ca|siringa}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|+|val=+,[ʃ]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -16760,6 +16788,9 @@ Page 29519 xeringa: -------- begin text --------
 -------- end text --------
 Page 29520 xerinola: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- per GDLC and DNV -->
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -16775,7 +16806,7 @@ Page 29520 xerinola: -------- begin text --------
 Page 29521 xerlovita: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|val=+}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -16805,6 +16836,9 @@ Page 29522 xerlovita camagroga: -------- begin text --------
 {{C|ca|Scolopacids}}
 -------- end text --------
 Page 29523 xerpa: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[ʃë]}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -16849,16 +16883,20 @@ From {{af|ca|serra|-ac}}, with [[palatalization]] of the initial consonant.
 Page 29525 xerrada: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{ca-noun|f}}
 
 # [[chat]] {{gloss|an informal conversation}}
 # [[talk]], academic [[lecture]]
 #* {{quote-web|ca|url=https://cat.elpais.com/cat/2017/02/09/catalunya/1486647416_607653.html|title=El rebuig a una xerrada homòfoba divideix Junts pel Sí|date=2017-02-09|accessdate=2021-06-04|author=Dani Cordero|work=El País|passage=La '''xerrada''' que diumenge oferirà a l’església de Santa Anna de Barcelona el francès Philippe Ariño, homosexual declarat que promou la castedat en les relacions de parella del mateix sexe, ha dividit avui Junts pel Sí al Parlament.|t=The '''talk''' given at the church of Santa Anna in Barcelona on Sunday by the Frenchman Philippe Ariño, a self-declared homosexual who promotes chastity among same-sex couples, divided Junts pel Sí in Parlament today.}}
 
-===Participle===
+===Etymology 2===
+
+====Participle====
 {{head|ca|past participle form|g=f-s}}
 
 # {{feminine singular of|ca|xerrat}}
@@ -16913,7 +16951,7 @@ Page 29528 xerrameca: -------- begin text --------
 From {{m|ca|xerrar||to chatter}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|ë|bal=?}}<!-- per GDLC and DNV; Balearic pronun not given in DCVB -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -16990,7 +17028,7 @@ From {{af|ca|xerrar|-era}}.
 Page 29531 xerric-xerrac: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|xerrícxerràc}}
+* {{ca-IPA|[íc,àc]}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -17054,6 +17092,9 @@ From {{af|ca|xerrar|-ot|-ejar}}.
 -------- end text --------
 Page 29534 Xerxes: -------- begin text --------
 
+===Pronunciation===
+{{rfp|ca}}
+
 ===Proper noun===
 {{ca-proper noun|m}}
 
@@ -17066,7 +17107,7 @@ Page 29536 xeviot: -------- begin text --------
 {{bor+|ca|en|Cheviot}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -17080,6 +17121,9 @@ Page 29536 xeviot: -------- begin text --------
 {{C|ca|Fabrics|Sheep}}
 -------- end text --------
 Page 29537 xibec: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é|val=è}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -17112,29 +17156,37 @@ From {{com|ca|xibec|cap-roig|t1=pochard|t2=redheaded}}.
 -------- end text --------
 Page 29539 xic: -------- begin text --------
 
-===Etymology===
+===Pronunciation===
+* {{ca-IPA}}<!-- both etyms -->
+
+===Etymology 1===
 {{inh+|ca|la|ciccum}}. Compare {{cog|es|chico}}.
 
-===Pronunciation===
-* {{ca-IPA}}
-
-===Adjective===
+====Adjective====
 {{ca-adj}}
 
 # [[small]]
 #: {{syn|ca|petit}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|un xic}}
 
-===Noun===
+====Noun====
 {{ca-noun|m|f=+}}
 
 # [[boy]]
 #: {{syn|ca|noi}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|xicot}}
+
+===Etymology 2===
+{{bor+|ca|fr|chic}}.
+
+====Adjective====
+{{ca-adj|inv=1}}
+
+# [[chic]]
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -17183,7 +17235,7 @@ Page 29542 xicle: -------- begin text --------
 {{bor+|ca|es|chicle}}, from a {{der|ca|azc-nah}} language;  cf. {{cog|nci|tzictli}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- for initial [tʃ] in Valencian, see DNV [[xiclet]] -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -17221,7 +17273,7 @@ From {{af|ca|xicle|-et}}.
 Page 29544 xicoia: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- per DNV; compare GDLC [[xicoira]] -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -17243,7 +17295,7 @@ Page 29545 xicoira: -------- begin text --------
 {{inh+|ca|la|cichoria}}, plural of {{m|la|cichorium}}, a borrowing of {{der|ca|grc|κιχόριον}}. The initial ''x'' is most like due to the influence of Mozarabic. Compare {{cog|es|chicoria}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -17283,7 +17335,7 @@ From {{suffix|ca|xic|ot|t1=boy}}.
 Page 29547 xicota: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -17328,6 +17380,9 @@ From {{af|ca|xicot|-et}}.
 * {{R:ca:DCVB}}
 -------- end text --------
 Page 29550 xicoteta: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- per GDLC, DNV; pronun not given in DCVB but a regular diminutive formation -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -17406,7 +17461,7 @@ Page 29554 xifonada: -------- begin text --------
 {{bor+|ca|fr|chiffonnade}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per PTV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -17424,7 +17479,7 @@ Page 29555 xifonier: -------- begin text --------
 {{bor+|ca|fr|chiffonnier}}.
 
 ===Pronunciation===
-* {{ca-IPA}}<!-- per GDLC -->
+* {{ca-IPA|[ʃ]}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -17438,12 +17493,12 @@ Page 29555 xifonier: -------- begin text --------
 -------- end text --------
 Page 29556 xifra: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|+|val=[ʃ],+}}
+* {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-xifra.wav|Audio}}
+
 ===Etymology 1===
 {{bor+|ca|ar|صِفْر||empty}}, attested from the 14th century.<ref>{{R:ca:GDLC}}</ref> {{root|ca|ar|ص ف ر}}
-
-====Pronunciation====
-* {{ca-IPA}}
-* {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-xifra.wav|Audio}}
 
 ====Noun====
 {{ca-noun|f}}
@@ -17511,7 +17566,7 @@ Page 29559 xifrar: -------- begin text --------
 From {{af|ca|xifra|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|+|val=[ʃ],+}}
 
 ===Verb===
 {{ca-verb}}
@@ -17536,7 +17591,7 @@ From {{af|ca|xifra|-ar}}.
 Page 29560 xifrat: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|+|val=[ʃ],+}}
 
 ===Adjective===
 {{ca-adj}}
@@ -17555,7 +17610,7 @@ Page 29561 xifratge: -------- begin text --------
 From {{af|ca|xifrar|-atge}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|+|val=[ʃ],+}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -17575,7 +17630,7 @@ Page 29562 xiisme: -------- begin text --------
 {{wp|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -17591,7 +17646,7 @@ Page 29563 xiïta: -------- begin text --------
 From {{suffix|ca|xiisme|ita}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ===Adjective===
 {{ca-adj}}
@@ -17618,7 +17673,7 @@ Page 29565 xilè: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ====Adjective====
 {{ca-adj}}
@@ -17634,6 +17689,9 @@ Page 29565 xilè: -------- begin text --------
 * {{l|ca|Xile|gloss=Chile}}
 
 ===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|[ks]|val=[ʃ]}}<!-- per GDLC and DNV -->
 
 ====Noun====
 {{ca-noun|m}}
@@ -17651,21 +17709,37 @@ Page 29565 xilè: -------- begin text --------
 -------- end text --------
 Page 29566 xilé: -------- begin text --------
 
-===Pronunciation===
+===Etymology 1===
+
+====Pronunciation====
+* {{ca-IPA|val=+}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-xilé.wav|Audio (Valencian)}}
 
-===Adjective===
+====Adjective====
 {{ca-adj}}
 
-# {{lb|ca|Valencian}} {{alt sp|ca|xilè}}
+# {{lb|ca|Valencian}} {{alt sp|ca|xilè|t=Chilean}}
 
-===Noun===
+====Noun====
 {{ca-noun|m|f=+}}
 
-# {{lb|ca|Valencian}} {{alt sp|ca|xilè}}
+# {{lb|ca|Valencian}} {{alt sp|ca|xilè|t=Chilean}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{ca-IPA|val=[ʃ]}}
+
+====Noun====
+{{ca-noun|m}}
+
+# {{lb|ca|Valencian}} {{alt sp|ca|xilè|t=xylene}}
 -------- end text --------
 Page 29567 xilema: -------- begin text --------
 {{wikipedia|lang=ca}}
+
+===Pronunciation===
+* {{ca-IPA|cen=[ks,è]|bal=[ks,é]|val=[ʃ,é]}}<!-- per GDLC, DNV; pronun not given in DCVB but compare [[fonema]] for -ema -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -17678,6 +17752,7 @@ Page 29567 xilema: -------- begin text --------
 Page 29568 xilena: -------- begin text --------
 
 ===Pronunciation===
+* {{ca-IPA|ê}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-xilena.wav|Audio (Valencian)}}
 
 ===Adjective===
@@ -17694,6 +17769,9 @@ Page 29569 xíling: -------- begin text --------
 
 ===Etymology===
 {{bor+|ca|en|shilling}}.
+
+===Pronunciation===
+* {{ca-IPA|ʃíliŋ}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -17713,7 +17791,7 @@ Page 29570 xilo-: -------- begin text --------
 {{bor+|ca|grc|ξύλον|t=wood}}.
 
 ===Pronunciation===
-* {{ca-IPA|xilo}}
+* {{ca-IPA|[ks]|val=[ʃ]}}<!-- per GDLC and DNV [[xilòfag]] etc. -->
 
 ===Prefix===
 {{head|ca|prefix}}
@@ -17733,7 +17811,7 @@ Page 29571 xilòfag: -------- begin text --------
 From {{confix|ca|xilo|fag}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ks]|val=[ʃ]}}<!-- per GDLC and DNV -->
 
 ===Adjective===
 {{ca-adj}}
@@ -17751,7 +17829,7 @@ Page 29572 xilòfon: -------- begin text --------
 From {{confix|ca|xilo|fon}}.
 
 ===Pronunciation===
-* {{ca-IPA|xilòfon}}
+* {{ca-IPA|[ks]|val=[ʃ]}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -17772,7 +17850,7 @@ Page 29573 xilofonista: -------- begin text --------
 From {{af|ca|xilòfon|-ista}}.
 
 ===Pronunciation===
-* {{ca-IPA|xilofonista}}
+* {{ca-IPA|[ks]|val=[ʃ]}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|mfbysense}}
@@ -17791,7 +17869,7 @@ Page 29574 xilografia: -------- begin text --------
 From {{confix|ca|xilo|grafia}}.
 
 ===Pronunciation===
-* {{ca-IPA|ksilografia}}
+* {{ca-IPA|[ks]|val=[ʃ]}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -17815,6 +17893,9 @@ From {{confix|ca|xilo|grafia}}.
 Page 29575 xilulosa: -------- begin text --------
 {{wikipedia|lang=ca}}
 
+===Pronunciation===
+* {{ca-IPA|[ks,ó]|val=[ʃ,ó]}}<!-- per GDLC and DNV [[cel·lulosa]] and terms in [[xilo-]] e.g. [[xilòfag]] -->
+
 ===Noun===
 {{ca-noun|f|-}}
 
@@ -17831,7 +17912,7 @@ Page 29576 ximpanzé: -------- begin text --------
 {{bor+|ca|fr|chimpanzé}}, from a {{der|ca|bnt}} language.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m|#s}}
@@ -17853,7 +17934,7 @@ Page 29577 ximple: -------- begin text --------
 Variant of {{m|ca|simple}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 * {{hyphenation|ca|xim|ple}}
 
 ===Adjective===
@@ -17885,7 +17966,7 @@ Page 29578 ximpleria: -------- begin text --------
 From {{af|ca|ximple|-eria}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -17900,6 +17981,9 @@ From {{af|ca|ximple|-eria}}.
 -------- end text --------
 Page 29579 ximplesa: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- per GDLC and DNV -->
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -17907,10 +17991,13 @@ Page 29579 ximplesa: -------- begin text --------
 -------- end text --------
 Page 29581 xíndria: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}<!-- FIXME: not in DNV, but [tʃ] seems likely in a regional agricultural term -->
+
 ===Noun===
 {{ca-noun|f}}
 
-# {{alternative form of|ca|síndria}}
+# {{lb|ca|regional}} {{alternative form of|ca|síndria}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -17922,7 +18009,7 @@ Page 29582 xiné: -------- begin text --------
 {{bor+|ca|fr|chiné}}, past participle of {{m|fr|chiner||to produce fabric in this manner}}, from {{m|fr|Chine||China}} as the source of this technique.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m|#s}}
@@ -17946,7 +18033,7 @@ Page 29583 xinès: -------- begin text --------
 From {{suffix|ca|Xina|ès|gloss1=China|gloss2=-ese}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-xinès.wav|Audio}}
 * {{rhymes|ca|ɛs|s=2}}
 
@@ -17983,9 +18070,7 @@ From {{suffix|ca|Xina|ès|gloss1=China|gloss2=-ese}}.
 Page 29584 xinés: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Valencian}} {{IPA
-| ca
-|/t͡ʃiˈnes/}}
+* {{ca-IPA|val=+}}<!-- per DNV -->
 
 ===Etymology 1===
 
@@ -18009,7 +18094,7 @@ Page 29584 xinés: -------- begin text --------
 Page 29585 xinesa: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|xinèsa}}
+* {{ca-IPA|ê}}<!-- per GDLC and DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-xinesa.wav|Audio (Valencian)}}
 * {{rhymes|ca|ɛza|s=3}}
 
@@ -18026,7 +18111,7 @@ Page 29585 xinesa: -------- begin text --------
 Page 29586 xino-xano: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[xí,xà]}}<!-- per GDLC and DNV -->
 
 ===Adverb===
 {{ca-adv|head=xino-xano}}
@@ -18044,7 +18129,7 @@ Page 29587 xintoisme: -------- begin text --------
 From {{af|ca|lang1=ja|神道|tr1=Shintō|-isme}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[ʃ]}}<!-- per GDLC and DNV -->
 * {{rhymes|ca|izme|s=4}}
 
 ===Noun===
@@ -18069,7 +18154,7 @@ Page 29588 xinxa: -------- begin text --------
 {{bor+|ca|mxi|*činče}}, itself from {{der|ca|la|cimex|cīmicem}} (cf. {{cog|es|chinche}}). The Catalan singular {{m|ca||xinxa}} is a back-formation from the plural {{m|ca|xinxes}}. Displaced {{cog|roa-oca|címeu}}, which was directly inherited from Latin.<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -18112,7 +18197,7 @@ Page 29590 xinxilla: -------- begin text --------
 {{bor+|ca|es|chinchilla}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -18143,7 +18228,7 @@ Page 29591 xip: -------- begin text --------
 {{bor+|ca|en|chip}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -18154,7 +18239,7 @@ Page 29591 xip: -------- begin text --------
 ===Noun===
 {{ca-noun|f}}
 
-# {{q|US, CA}} [[chips]], [[potato chips]]; {{q|UK}} [[crisps]], [[potato crips]] {{gloss|thin fried slice of potato, etc}}
+# {{q|US, CA}} [[chips]], [[potato chips]]; {{q|UK}} [[crisps]], [[potato crips]] {{gloss|thin fried slice of potato, etc.}}
 
 ====Derived terms====
 * {{l|ca|microxip}}
@@ -18173,7 +18258,7 @@ Page 29592 xipell: -------- begin text --------
 Variant form of {{m|ca|cepell}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|é}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -18197,7 +18282,7 @@ Page 29593 xipoll: -------- begin text --------
 Variant of earlier {{m|ca|xopoll}}, from {{m|ca|xopar||to soak}} + {{m|ca|-oll}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ó}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -18226,7 +18311,7 @@ Page 29594 xipollar: -------- begin text --------
 From {{af|ca|xipoll|-ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ===Verb===
 {{ca-verb|root=ó}}
@@ -18248,12 +18333,12 @@ Page 29595 xipolleig: -------- begin text --------
 {{deverbal|ca|xipollejar}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ê}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
 
-# a splash
+# [[splash]]
 
 ====Related terms====
 * {{l|ca|xipoll}}
@@ -18269,6 +18354,7 @@ Page 29596 xipollejar: -------- begin text --------
 From {{af|ca|xipoll|-ejar|t1=pool, puddle}}.
 
 ===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
@@ -18300,7 +18386,7 @@ Page 29598 xiprer: -------- begin text --------
 From earlier {{m|ca|ciprer}}, a [[back-formation]] from {{m|ca|ciprés}} which was reinterpreted as a plural form (i.e. '''ciprers'''). From {{der|ca|LL.|cypressus}}, from earlier {{m|la|cupressus}}, a borrowing of {{der|ca|grc|κῠπᾰ́ρῐσσος}}.
 
 ===Pronunciation===
-* {{ca-IPA}}<!-- per GDLC -->
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -18330,6 +18416,9 @@ Page 29600 xipriota: -------- begin text --------
 
 ===Etymology===
 From {{suffix|ca|Xipre|ota}}.
+
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ===Adjective===
 {{ca-adj}}
@@ -18369,6 +18458,9 @@ From {{affix|ca|xic|-et|pos2=diminutive suffix}}.
 -------- end text --------
 Page 29602 xiqueta: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- per GDLC, DNV; pronun not given in DCVB but a regular diminutive formation -->
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -18385,7 +18477,7 @@ Page 29603 xirimoia: -------- begin text --------
 {{bor+|ca|es|chirimoya}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -18405,7 +18497,7 @@ Page 29604 xirimoier: -------- begin text --------
 From {{af|ca|xirimoia|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}<!-- per GDLC -->
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -18423,7 +18515,7 @@ Page 29605 xiringuito: -------- begin text --------
 {{bor+|ca|es|chiringuito}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- not in GDLC or DNV but as a Castilianism, likely with [tʃ] in Valencian -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -18437,7 +18529,7 @@ Page 29606 xirivia: -------- begin text --------
 {{bor+|ca|xaa|-}} / {{der|ca|ar|كَرَاوِيَا|t=caraway}} (because viewed as a plant [[caraway]] and [[parsnip]] are similar, of the same subfamily, ''[[Apioideae]]'').
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -18474,7 +18566,7 @@ Page 29608 xisclar: -------- begin text --------
 {{inh+|ca|roa-oca|cisclar}}, from {{der|ca|VL.|*cisclō|*cisclāre}}, alteration of {{m|la|fistulō|fistulare|t=to play the flute}}. Compare {{cog|es|chillar}} and {{cog|eu|txistulari}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 * {{homophones|ca|xisclà}}
 * {{rhymes|ca|a(ɾ)|s=2}}
 
@@ -18503,7 +18595,7 @@ Page 29609 xiscle: -------- begin text --------
 {{deverbal|ca|xisclar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -18524,7 +18616,7 @@ Page 29610 xistorra: -------- begin text --------
 {{bor+|ca|eu|txistor}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ó}}<!-- per DNV; not in GDLC but ó seems likely for a borrowing -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -18542,7 +18634,7 @@ Page 29614 xiulador: -------- begin text --------
 From {{af|ca|xiular|-dor}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ===Adjective===
 {{ca-adj}}
@@ -18563,7 +18655,7 @@ Page 29615 xiular: -------- begin text --------
 From alteration of {{inh|ca|roa-oca|siular}}, from {{inh|ca|la|sībilō|sībilāre}}. Cognate with {{cog|oc|fiular}}, {{m|oc|siular}}, {{m|oc|siblar}}, {{cog|fr|siffler}}, {{cog|es|silbar}}, {{m|es|chiflar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
@@ -18608,7 +18700,7 @@ Page 29617 xiuxiueig: -------- begin text --------
 {{deverbal|ca|xiuxiuejar}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|[u.ê]}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -18625,7 +18717,7 @@ Page 29618 xiuxiuejar: -------- begin text --------
 {{onomatopoeic|ca}}; {{m|ca|xiu-xiu||sound of whispering}} {{suffix|ca||ejar}}.
 
 ===Pronunciation===
-* {{ca-IPA|xiuxiu.ejar}}
+* {{ca-IPA|[u.e]}}<!-- per GDLC, DNV -->
 * {{rhymes|ca|a(ɾ)|s=4}}
 
 ===Verb===
@@ -18662,7 +18754,7 @@ Page 29620 xivaisme: -------- begin text --------
 From {{af|ca|Xiva|-isme}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|val=?}}<!-- unknown how x is pronounced in Valencian; not in DNV -->
 * {{rhymes|ca|izme|s=4}}
 
 ===Noun===
@@ -18676,10 +18768,13 @@ From {{af|ca|Xiva|-isme}}.
 Page 29621 xivaïta: -------- begin text --------
 {{wikipedia|lang=ca}}
 
+===Pronunciation===
+* {{ca-IPA|val=?}}<!-- unknown how x is pronounced in Valencian; not in DNV -->
+
 ===Noun===
 {{ca-noun|mfbysense}}
 
-# {{lb|ca|Hinduism}} [[Saiva]]
+# {{lb|ca|Hinduism}} [[Shaiva]]
 -------- end text --------
 Page 29622 xivarri: -------- begin text --------
 
@@ -18687,7 +18782,7 @@ Page 29622 xivarri: -------- begin text --------
 {{bor+|ca|fr|charivari}}, via {{der|ca|oc|chavari}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -18703,7 +18798,7 @@ Page 29622 xivarri: -------- begin text --------
 Page 29623 xivita: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -18730,16 +18825,12 @@ Page 29624 xixell: -------- begin text --------
 From {{inh|ca|roa-oca|seixell}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|[ʃi,é]}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
 
-# [[stock dove]] ([[stock pigeon]])
-#: {{syn|ca|xixella}}
-
-====Related terms====
-* {{l|ca|xeixa}}
+# {{alt form|ca|xixella|t=[[stock dove]] ([[stock pigeon]])}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -18755,7 +18846,7 @@ Page 29625 xixella: -------- begin text --------
 From {{af|ca|xixell|-a}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|[ʃi,é]}}<!-- per GDLC, DNV -->
 * {{hyphenation|ca|xi|xe|lla}}
 
 ===Noun===
@@ -18763,6 +18854,9 @@ From {{af|ca|xixell|-a}}.
 
 # [[stock dove]] ([[stock pigeon]])
 #: {{syn|ca|xixell}}
+
+====Related terms====
+* {{l|ca|xeixa}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -18775,17 +18869,17 @@ From {{af|ca|xixell|-a}}.
 Page 29626 Xixona: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|[ʃiʃó]}}<!-- pronun in PTV under [[aiguamel de Xixona]], [[torró de Xixona]]; FIXME: not in GDLC so not completely clear the mid-vowel pronun, but ó seems likely as this is a Valencian locality -->
 
 ===Proper noun===
 {{ca-proper noun|f}}
 
-# {{place|ca|town|district/Alacantí|acomm/Valencian Community|c/Spain}}.
+# {{place|ca|town|district/Alacantí|acomm/Valencian Community|c/Spain}}
 -------- end text --------
 Page 29627 xo: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ʃó}}
 
 ===Interjection===
 {{head|ca|interjection}}
@@ -18795,12 +18889,12 @@ Page 29627 xo: -------- begin text --------
 -------- end text --------
 Page 29628 xoc: -------- begin text --------
 
-===Pronunciation===
-* {{ca-IPA|ò}}<!-- all three etymologies -->
-* {{rhymes|ca|ɔk|s=1}}
-
 ===Etymology 1===
 {{deverbal|ca|xocar}}. In the sense of "shock" a {{calque|ca|en|shock|nocap=1}}.
+
+====Pronunciation====
+* {{ca-IPA|ò}}<!-- per GDLC, DNV, DCVB -->
+* {{rhymes|ca|ɔk|s=1}}
 
 ====Noun====
 {{ca-noun|m}}
@@ -18812,12 +18906,18 @@ Page 29628 xoc: -------- begin text --------
 ===Etymology 2===
 {{bor+|ca|en|chalk}}.
 
+====Pronunciation====
+* {{ca-IPA|bal=ò}}<!-- per DCVB -->
+
 ====Noun====
 {{ca-noun|m}}
 
 # {{lb|ca|Menorca}} [[chalk]]
 
 ===Etymology 3===
+
+====Pronunciation====
+* {{ca-IPA|bal=ò}}<!-- related to Etymology 1 -->
 
 ====Verb====
 {{head|ca|verb form}}
@@ -18834,7 +18934,7 @@ Page 29629 xocar: -------- begin text --------
 {{bor+|ca|fr|choquer}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
@@ -18867,7 +18967,7 @@ Page 29630 xocolata: -------- begin text --------
 {{bor+|ca|es|chocolate}}, from {{der|ca|nci}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-xocolata.wav|Audio}}
 * {{rhymes|ca|ata|s=4}}
 * {{hyph|ca|xo|co|la|ta}}
@@ -18893,7 +18993,7 @@ Page 29631 xocolatada: -------- begin text --------
 From {{af|ca|xocolata|-ada}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -18909,7 +19009,7 @@ Page 29632 xocolater: -------- begin text --------
 From {{af|ca|xocolata|-er}}.
 
 ===Pronunciation===
-* {{ca-IPA}}<!-- per GDLC -->
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Adjective===
 {{ca-adj}}
@@ -18936,7 +19036,7 @@ Page 29633 xocolateria: -------- begin text --------
 From {{af|ca|xocolater|-ia}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -18962,7 +19062,7 @@ Page 29634 xocolatina: -------- begin text --------
 {{bor+|ca|fr|chocolatine}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 * {{rhymes|ca|ina|s=5}}
 
 ===Noun===
@@ -18988,7 +19088,7 @@ Page 29635 xofar: -------- begin text --------
 From the {{bor|ca|he|שׁוֹפָר|tr=shofár||shofar|sc=Hebr}}.
 
 ===Pronunciation===
-* {{ca-IPA|xofarr}}
+* {{ca-IPA|[rr]|val=?}}<!-- not in GDLC or DNV; pronounced -r almost certain in recent loanword, but Valencian pronunciation of x- unclear here -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -19009,7 +19109,7 @@ Page 29636 xofer: -------- begin text --------
 {{bor+|ca|fr|chauffeur}}.
 
 ===Pronunciation===
-* {{ca-IPA}}<!-- per GDLC -->
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -19024,7 +19124,7 @@ Page 29636 xofer: -------- begin text --------
 Page 29637 xòfer: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|[err]|bal=?}}<!-- not in GDLC but seems likely given that other nouns in unstressed -er have pronounced r; compare [[mànager]] -->
+* {{ca-IPA|[err]|bal=?}}<!-- per DNV; not in GDLC but seems likely given that other nouns in unstressed -er have pronounced r; compare [[mànager]] -->
 
 ===Noun===
 {{ca-noun|m|f=+}}
@@ -19032,6 +19132,9 @@ Page 29637 xòfer: -------- begin text --------
 # {{alt form|ca|xofer}}
 -------- end text --------
 Page 29638 xofera: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|é}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -19041,7 +19144,7 @@ Page 29638 xofera: -------- begin text --------
 Page 29639 xòfera: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -19054,7 +19157,7 @@ Page 29640 xoll: -------- begin text --------
 {{deverbal|ca|xollar}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ó}}<!-- per GDLC, DNV -->
 
 ===Adjective===
 {{ca-adj}}
@@ -19074,11 +19177,11 @@ Page 29640 xoll: -------- begin text --------
 -------- end text --------
 Page 29641 xolla: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|ó}}<!-- per GDLC, DNV -->
+
 ===Etymology 1===
 {{deverbal|ca|xollar}}.
-
-====Pronunciation====
-* {{ca-IPA|ó}}
 
 ====Noun====
 {{ca-noun|f}}
@@ -19109,7 +19212,7 @@ Page 29642 xollar: -------- begin text --------
 {{inh+|ca|VL.|*exsubīliāre}}, from {{m|la|īlia||lower abdomen}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Verb===
 {{ca-verb|root=ó}}
@@ -19137,7 +19240,7 @@ Page 29643 xona: -------- begin text --------
 {{rfe|ca}}
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ó}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -19155,19 +19258,45 @@ Page 29643 xona: -------- begin text --------
 -------- end text --------
 Page 29644 xop: -------- begin text --------
 
-===Etymology===
-20th century, {{deverbal|ca|xopar|nocap=1}}.
+===Etymology 1===
+{{deverbal|ca|xopar|nocap=1}}. {{etydate|20th century}}
 
-===Pronunciation===
-* {{ca-IPA|ó}}
+====Pronunciation====
+* {{ca-IPA|ó}}<!-- per GDLC, DNV -->
 
-===Adjective===
+====Adjective====
 {{ca-adj}}
 
-# [[soaked]], [[soaked to the bones]]
+# {{lb|ca|colloquial}} [[soaked]], [[soaked to the bones]]
 #: {{syn|ca|amarat|moll|mullat}}
 
+===Etymology 2===
+{{bor+|ca|fr|chope}}. {{etydate|20th century}}
+
+====Pronunciation====
+* {{ca-IPA|ô}}<!-- per GDLC, DNV -->
+
+# [[half]]-[[pint]] [[beer]] [[glass]]
+
+===Etymology 3===
+{{bor+|ca|es|chopo}}, from {{der|ca|VL.|*plōppus}}, from {{der|ca|CL.|pōpulus}}. {{etydate|14th century}}
+
+====Pronunciation====
+* {{ca-IPA|ó}}<!-- per GDLC, DNV -->
+
+# {{lb|ca|regional|especially|Valencian}} [[black poplar]] ({{taxlink|Populus nigra|species|noshow=1}})
+
+===Etymology 4===
+{{onomatopoeic|ca}}.
+
+====Pronunciation====
+* {{ca-IPA|val=ò}}<!-- per DNV -->
+
+# {{lb|ca|Valencian}} [[crash]], [[bang]] {{q|sound}}
+
 ===Further reading===
+* {{R:ca:GDLC}}
+* {{R:ca:DNV}}
 * {{R:ca:DCVB}}
 -------- end text --------
 Page 29645 xopar: -------- begin text --------
@@ -19176,7 +19305,7 @@ Page 29645 xopar: -------- begin text --------
 Probably from a {{inh|ca|VL.||*exsuppāre}}, from {{inh|ca|LL.|suppa}}, of {{der|ca|gem}} origin. {{etydate|1617}}<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
@@ -19221,13 +19350,16 @@ From {{af|ca|xopar|-et}}.
 -------- end text --------
 Page 29647 xoquí: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC, DNV -->
+
 ===Etymology 1===
 From {{der|ca|la|soccus}}, via {{der|ca|xaa|-}}.
 
 ====Noun====
 {{ca-noun|m}}
 
-# {{lb|ca|Balears}} [[thong]], [[sandal]]
+# {{lb|ca|Balearic}} [[thong]], [[sandal]]
 #: {{syn|ca|xancleta}}
 
 ===Etymology 2===
@@ -19246,20 +19378,21 @@ From {{der|ca|la|soccus}}, via {{der|ca|xaa|-}}.
 -------- end text --------
 Page 29648 xoriço: -------- begin text --------
 
+===Alternative forms===
+* {{alt|ca|xoriç||Valencian|only for the sausage}}
+
 ===Etymology===
 {{bor+|ca|es|chorizo}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-xoriço.wav|Audio (Valencian)}}
 
 ===Noun===
 {{ca-noun|m}}
 
 # [[chorizo]]
-
-====Related terms====
-* {{l|ca|xoriç}}
+# {{lb|ca|Valencian}} {{vern|giant red shrimp}} ({{taxlink|Aristaeomorpha foliacea|species|noshow=1}})
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -19275,7 +19408,7 @@ Page 29649 xoriguer: -------- begin text --------
 {{inh+|ca|LL.|sōricārius}}, from {{m|la|sōrex||mouse}}.
 
 ===Pronunciation===
-* {{ca-IPA}}<!-- per GDLC -->
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -19303,30 +19436,50 @@ Page 29650 xoriguer petit: -------- begin text --------
 -------- end text --------
 Page 29651 xot: -------- begin text --------
 
-===Etymology===
-Onomatopoeic, from the cry.
-
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- all four etyms, per DNV; GDLC confirms pronun on Etymology 1 and 2 -->
 
-===Noun===
+===Etymology 1===
+{{onomatopoeic|ca}}.
+
+====Noun====
 {{ca-noun|m}}
 
 # a [[scops owl]] (owl of the genus ''[[Otus]]''), especially the [[Eurasian scops owl]] (''[[Otus scops]]'')
 #: {{syn|ca|xut|mussol}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|xot eurasiàtic}}
 
-===Noun===
+===Etymology 2===
+{{onomatopoeic|ca}}.
+
+====Noun====
 {{ca-noun|m|f=+}}
 
-# a [[suckling]] [[kid]] [[goat]]
+# {{lb|ca|regional}} a [[suckling]] [[kid]] [[goat]]
 # {{lb|ca|Mallorca}} [[lamb]]
 #: {{syn|ca|anyell}}
 
+===Etymology 3===
+{{bor+|ca|fr|chott}}, from {{der|ca|ar|شَطّ}}.
+
+====Noun====
+{{ca-noun|m}}
+
+# {{lb|ca|geology}} [[chott]] {{gl|a dry salt lake of the Sahara}}
+
+===Etymology 4===
+
+====Noun====
+{{ca-noun|m}}
+
+# {{lb|ca|Valencian|Balearic}} [[indentation]] {{gl|caused by an impact of one object on another}}
+
 ===Further reading===
 * {{R:ca:IEC2}}
+* {{R:ca:GDLC}}
+* {{R:ca:DNV}}
 
 {{C|ca|Baby animals|Owls}}
 -------- end text --------
@@ -19344,6 +19497,9 @@ Page 29653 xotis: -------- begin text --------
 ===Etymology===
 {{bor+|ca|fr|schottisch}}, from {{der|ca|de|schottisch}}.
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- per GDLC, DNV -->
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -19360,14 +19516,14 @@ Page 29654 xou: -------- begin text --------
 {{bor+|ca|en|show}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
 
 # [[#English|show]], [[spectacle]]
 #: {{syn|ca|espectacle}}
-# {{lb|ca|informal}} a [[scene]], i.e. an exhibition of passionate or strong feeling before others, creating embarrassment or disruption
+# {{lb|ca|informal}} [[scene]] {{gl|an exhibition of passionate or strong feeling before others, creating embarrassment or disruption}}
 #: {{syn|ca|escena}}
 #* {{quote-journal|ca|date=November 1 2016|title=Ana Maria Dae, miss i romanesa, a la portada d'Interviú|work=El Periódico|url=http://www.elperiodico.cat/ca/noticias/extra/ana-maria-dae-portada-interviu-5582421|passage=Ha fet de l'entreteniment el seu art i protagonitza un '''xou''' que és reclamat als quatre punts cardinals.|translation=She has made entertainment her art and she stars in a '''show''' that is in demand at the four cardinal points.}}
 
@@ -19379,26 +19535,28 @@ Page 29654 xou: -------- begin text --------
 -------- end text --------
 Page 29655 xucla: -------- begin text --------
 
-===Etymology===
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC, DNV -->
+
+===Etymology 1===
 {{deverbal|ca|xuclar}}.
 
-===Pronunciation===
-* {{ca-IPA}}
-
-===Noun===
+====Noun====
 {{ca-noun|f}}
 
 # {{vern|blotched picarel}} ({{taxlink|Spicara maena|species|noshow=1}})
 #: {{syn|ca|caua|gerla|gerret|mata-soldats}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|ca|xucla blanca}}
 * {{l|ca|xucla vera}}
 
-====Related terms====
+=====Related terms=====
 * {{l|ca|xuclet}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|xuclar}}
@@ -19427,7 +19585,7 @@ Page 29657 xucladit: -------- begin text --------
 From {{com|ca|xucla|dit|t1=sucks|t2=finger}}.
 
 ===Pronunciation===
-* {{ca-IPA|xúcladít}}
+* {{ca-IPA|[xú,dí]}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -19446,7 +19604,7 @@ Page 29658 xuclador: -------- begin text --------
 From {{af|ca|xuclar|-dor}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -19467,7 +19625,7 @@ Page 29659 xuclamel: -------- begin text --------
 From {{compound|ca|xucla|mel|t1=sucks|t2=honey}}.
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|è}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -19483,10 +19641,10 @@ From {{compound|ca|xucla|mel|t1=sucks|t2=honey}}.
 Page 29660 xuclar: -------- begin text --------
 
 ===Etymology===
-Probably from a {{inh|ca|VL.||*sūctulāre}}<ref>{{R:ca:GDLC}}</ref>, from {{inh|ca|la|suctus}}, from {{m|la|sūgō}}. Alternatively, of onomatopoetic origin. Compare {{cog|es|chupar}}.
+Probably from {{inh|ca|VL.||*sūctulāre}}<ref>{{R:ca:GDLC}}</ref>, from {{inh|ca|la|sūctus}}, from {{m|la|sūgō}}. Alternatively, of onomatopoeic origin. Compare {{cog|es|chupar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Verb===
 {{ca-verb}}
@@ -19541,7 +19699,7 @@ Page 29662 xucrut: -------- begin text --------
 {{bor+|ca|fr|choucroute}}, from {{der|ca|gsw|sürkrüt}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -19556,6 +19714,9 @@ Page 29662 xucrut: -------- begin text --------
 {{C|ca|Foods|Vegetables}}
 -------- end text --------
 Page 29663 xueta: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ê}}<!-- per GDLC, DNV, DCVB -->
 
 ===Adjective===
 {{ca-adj}}
@@ -19579,7 +19740,7 @@ Page 29663 xueta: -------- begin text --------
 Page 29664 xufa: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -19608,12 +19769,12 @@ Page 29666 xufla: -------- begin text --------
 Compare {{cog|es|chufa}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|f}}
 
-# [[chufa]]
+# [[chufa]] {{q|plant}}
 #: {{syn|ca|xuflera}}
 # [[tiger nut]]
 
@@ -19652,7 +19813,7 @@ Page 29669 xulla: -------- begin text --------
 From earlier {{m|ca|ensunya||lard}} by a process of [[palatalisation]] (i.e. *''enxunya''), [[dissimilation]] (i.e. *''enxulla''), and [[misdivision]] (i.e. *''en xulla''). Ultimately from {{der|ca|la|axungia||axle grease}}. Cognate to {{cog|gl|enxunlla}}, {{cog|es|enjundia}} and {{cog|pt|enxúndia}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -19700,7 +19861,7 @@ Page 29671 xulo: -------- begin text --------
 {{bor+|ca|es|chulo}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- not in GDLC or DNV but as a Castilianism, likely to have [tʃ] in Valencian -->
 
 ===Adjective===
 {{ca-adj}}
@@ -19714,12 +19875,12 @@ Page 29672 xumar: -------- begin text --------
 {{onomatopoeic|ca}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Verb===
 {{ca-verb}}
 
-# {{lb|ca|ambitransitive}} to [[lip]], to [[suck up]] or [[drink]] putting the lips on a recipient, around a bottle neck, on a breast, etc
+# {{lb|ca|ambitransitive}} to [[lip]], to [[suck up]] or [[drink]] putting the lips on a recipient, around a bottle neck, on a breast, etc.
 #: {{syn|ca|beure a morro}}
 # {{lb|ca|ambitransitive|colloquial}} to [[suckle]], to [[suck]], also to [[suck]] from a [[teat]]
 # {{lb|ca|intransitive}} to [[drink]] wine
@@ -19758,7 +19919,7 @@ Page 29674 xungo: -------- begin text --------
 {{bor+|ca|es|chungo}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- not in GDLC or DNV but as a Castilianism, likely to have [tʃ] in Valencian -->
 
 ===Adjective===
 {{ca-adj}}
@@ -19777,7 +19938,7 @@ Page 29676 xurma: -------- begin text --------
 {{bor+|ca|it|ciurma}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -19795,11 +19956,12 @@ Page 29676 xurma: -------- begin text --------
 -------- end text --------
 Page 29677 xurrasco: -------- begin text --------
 {{wp|lang=ca}}
+
 ===Etymology===
 {{bor+|ca|es|churrasco}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per DNV (not in GDLC) -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -19813,6 +19975,9 @@ Page 29677 xurrasco: -------- begin text --------
 -------- end text --------
 Page 29678 xurreria: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}<!-- per GDLC, DNV -->
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -19824,7 +19989,7 @@ Page 29679 xurriaques: -------- begin text --------
 Fromm {{der|ca|mxi|*atxorriiaka}}, from a [[metathesis|metathesised]] version of {{der|ca|VL.|*excorrigiata}}, from {{m|la|corrigia||thong; whip}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|f-p}}
@@ -19851,7 +20016,7 @@ Page 29680 xurro: -------- begin text --------
 {{bor+|ca|es|churro}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -19882,15 +20047,17 @@ Page 29680 xurro: -------- begin text --------
 Page 29681 xut: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- all three etyms; per GDLC and DNV -->
 
 ===Etymology 1===
-Onomatopoeic.
+{{onomatopoeic|ca}}.
 
 ====Noun====
 {{ca-noun|m}}
 
 # [[hoot]] {{gloss|cry of an owl}}
+# {{lb|ca|Lleida}} [[barn owl]]
+#: {{syn|ca|xuta<qq:regional>|òliba}}
 
 =====Derived terms=====
 * {{l|ca|xuta}}
@@ -19902,11 +20069,20 @@ Onomatopoeic.
 {{ca-noun|m}}
 
 # {{lb|ca|sports}} [[kick]] {{gloss|a hit with the foot}}
+# {{lb|ca|slang}} [[hit]] {{q|of an injected drug}}
 
 =====Derived terms=====
 * {{l|ca|xut de sobrebot}}
 * {{l|ca|xut de transformació}}
 * {{l|ca|xutar}}
+
+===Etymology 3===
+{{onomatopoeic|ca}}.
+
+====Noun====
+{{head|ca|interjection}}
+
+# [[shh]], [[hush]]
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -19937,7 +20113,7 @@ Page 29683 xut de sobretot: -------- begin text --------
 Page 29684 xuta: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 
 ===Etymology 1===
 From {{af|ca|xut|-a|t1=hoot}}.
@@ -19959,10 +20135,10 @@ From {{af|ca|xut|-a|t1=hoot}}.
 Page 29685 xutar: -------- begin text --------
 
 ===Etymology===
-From {{m|ca|xut}}.
+From {{af|ca|xut|-ar}}, from {{der|ca|en|shoot}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV -->
 * {{rhymes|ca|a(ɾ)|s=2}}
 
 ===Verb===
