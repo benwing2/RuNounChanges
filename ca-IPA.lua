@@ -35,6 +35,7 @@ local rsplit = mw.text.split
 local rsubn = mw.ustring.gsub
 local ulower = mw.ustring.lower
 local u = mw.ustring.char
+local ugcodepoint = w.ustring.gcodepoint
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -127,6 +128,7 @@ local wordsep = "# "
 local separator_not_wordsep = accent .. ipa_stress .. sylsep
 local separator = separator_not_wordsep .. wordsep
 local separator_c = "[" .. separator .. "]"
+local C = "[^" .. vowel .. separator .. "]" -- consonant class including h
 
 export.mid_vowel_hints = "éèêëóòô"
 export.mid_vowel_hint_c = "[" .. export.mid_vowel_hints .. "]"
@@ -429,132 +431,299 @@ local function postprocess_general(syllables, dialect)
 			""
 		table.insert(combined, syll.onset .. syll.vowel .. ac .. syll.coda)
 	end
-	local text = "#" .. table.concat(combined, ".") .. "#"
+	local text = "##" .. table.concat(combined, ".") .. "##"
+
+	local function concat_keys(tab)
+		local res = {}
+		for k, _ in pairs(tab) do
+			table.insert(res, k)
+		end
+		return table.concat(res)
+	end
 
 	local voiced = listToSet {"b", "ð", "d", "ɡ", "m", "n", "ɲ", "l", "ʎ", "r", "ɾ", "v", "z", "ʒ", "ʣ", "ʤ"}
-	-- FIXME, why is "" here?
-	local voiceless = listToSet {"p", "t", "k", "f", "s", "ʃ", "ʦ", "ʧ", ""}
-	-- FIXME, do we need to add ʧ, ʤ, ʦ or ʣ?
-	local voicing = {["k"]="ɡ", ["f"]="v", ["p"]="b", ["t"]="d", ["s"]="z"}
-	local devoicing = {["b"]="p", ["d"]="t", ["ɡ"]="k"}
+	local voiced_keys = concat_keys(voiced)
+	local voiceless = listToSet {"p", "t", "k", "f", "s", "ʃ", "ʦ", "ʧ"}
+	local voiceless_keys = concat_keys(voiceless)
+	local voicing = {["p"] = "b", ["t"] = "d", ["k"] = "ɡ", ["f"] = "v", ["s"] = "z", ["ʃ"] = "ʒ", ["ʦ"] = "ʤ",
+		["ʧ"] = "ʤ"}
+	local voicing_keys = concat_keys(voicing)
+	local devoicing = {}
+	for k, v in pairs(voicing) do
+		devoicing[v] = k
+	end
+	local devoicing_keys = concat_keys(devoicing)
 
-	-- Handle -ex- + vowel > -egz-. Note that this also handles inex- + vowel because in fix_prefixes we respell
-	-- inex- as inhex-, which ends up at this stage as in.e.xV, or as in.ex.V in the case of inexh-.
-	text = rsub_repeatedly(text, "([.#][eɛ]" .. stress_c .. "?)%.x(" .. V .. ")", "%1ɡ.z%2") --IPA ɡ
-	-- Handle -exh- + vowel > -egz-.
-	text = rsub_repeatedly(text, "([.#][eɛ]" .. stress_c .. "?)x%.(" .. V .. ")", "%1ɡ.z%2") --IPA ɡ
+	-- Handle ex(h)- + vowel > -egz-. We handle -x- on either side of the syllable boundary (ex- vs. exh-). Note that
+	-- this also handles inex(h)- + vowel because in fix_prefixes we respell inex- as inhex-, which ends up at this
+	-- stage as in.e.xV, or as in.ex.V in the case of inexh-.
+	text = rsub_repeatedly(text, "([.#][eɛ]" .. stress_c .. "?)" .. sylsep_c .. "*x" .. sylsep_c .. "*(" .. V .. ")",
+		"%1ɡ.z%2") --IPA ɡ
+
+	-- Handle remaining x
+
+	-- -x- at the beginning of a coda becomes [ks], e.g. [[annex]], [[apèndix]], [[extracció]]; but not elsewhere in
+	-- the coda, e.g. in [[romanx]], [[ponx]]; words with [ks] in -nx such as [[esfinx]], [[linx]], [[manx]] need
+	-- respelling with [ks]; words ending in vowel + x like [[ídix]] need respelling with [ʃ]
+	text = rsub(text, "(" .. V .. stress_c .. "?)x", "%1ks")
+	-- Other x becomes [ʃ]
+	text = rsub(text, "x", "ʃ")
+
+	-- Doubled ss -> s e.g. in exs-, exc(e/i)-, sc(e/i)-
+	text = rsub(text, "s(" .. sylsep_c .. "*)s", "%1s")
+
+	-- Coda consonant losses; in Central Catalan, they happen everywhere, but otherwise they don't happen when
+	-- absolutely word-finally (e.g. [[blanc]] has /k/ in Balearic and Valencian but not [[blancs]]).
+	local boundary = dialect == "cen" and "(.)" or "([^#])"
+	text = rsub(text, "m[pb]" .. boundary, "m%1")
+	text = rsub(text, "([ln])[td]" .. boundary, "%1%2")
+	text = rsub(text, "[nŋ][kɡ]" .. boundary, "ŋ%1")
+
+	-- Consonant assimilations
+
+	-- t + lateral/nasal assimilation -> geminate across syllable boundary; FIXME: this doesn't always happen in -tl-,
+	-- -tm-, e.g. [[atmosfèric]] [ədmusfɛ́ɾik] in GDLC along with [[tmesi]] [dmɛ́zi]; [[atlàntic]] has [əllántik] in GDLC
+	-- but [adlántik] in DNV.
+	text = rsub(text, "t(" .. sylsep_c .. ")([lʎmn])", "%2%1%2")
+
+	-- ɡn -> ŋn e.g. [[regnar]] (including word-initial gn- e.g. [[gnòmic]], [[gneis]]) 
+	text = rsub(text, "g(" .. sylsep_c .. "*n)", "ŋ%1")
+
+	-- n + labial > labialized assimilation
+	text = rsub(text, "n(" .. sylsep_c .. "*[mbp])", "m%1")
+	text = rsub(text, "n(" .. sylsep_c .. "*[fv])", "ɱ%1")
+
+	-- n + velar > velarized assimilation
+	text = rsub(text, "n(" .. sylsep_c .. "*[kɡ])", "ŋ%1")
+
+	-- l/n + palatal > palatalized assimilation
+	text = rsub(text, "([ln])(" .. sylsep_c .. "*[ʎɲʃʒʧʤ])", function(ln, palatal)
+		ln = ({["l"] = "ʎ", ["n"] = "ɲ"})[ln]
+		return ln .. palatal
+	end)
+
+	-- ɡʒ > d͡ʒ
+	text = rsub(text, "ɡ(" .. sylsep_c .. "*)ʒ", "%1ʤ")
+
+	-- ɲs > ɲʃ; FIXME: not sure the purpose of this; it doesn't apply in [[menys]] or derived terms like [[menyspreu]]
+	-- text = rsub(text, "ɲs", "%1ʃ")
+
+	-- Voicing or devoicing; we want to proceed from right to left, and due to the limitations of patterns (in
+	-- particular, the lack of support for alternations), it's difficult to do this cleanly using Lua patterns, so we
+	-- do it character by character.
+	local chars = {}
+	for codepoint in ugcodepoint(text) do
+		table.insert(chars, u(codepoint))
+	end
+	-- We need to look two characters ahead in some cases, so start two characters from the end. This is safe because
+	-- the overall respelling ends in "##". (Similarly, as an optimization, don't check the first two characters, which
+	-- are always "##".)
+	for i = #chars - 2, 3, -1 do
+		-- We are looking for two consonants next to each other, possibly separated by a syllable divider.
+		-- We also handle a consonant followed by a syllable divider then a vowel, and a consonant word-finally.
+		local first = chars[i]
+		local second
+		if not rfind(first, C) then
+			-- continue
+		elseif chars[i + 1] == "#" then
+			second = ""
+		elseif rfind(chars[i + 1], sylsep_c) then
+			if rfind(chars[i + 2], C) then
+				second = chars[i + 2]
+			elseif rfind(chars[i + 2], V) then
+				second = ""
+			end
+		elseif rfind(chars[i + 1], C) then
+			second = chars[i + 1]
+		end
+		if second then
+			if voiced[second] and voicing[first] then
+				chars[i] = voicing[first]
+			elseif (voiceless[second] or second == "") and devoicing[first] then
+				chars[i] = devoicing[first]
+			end
+		end
+	end
+	text = table.concat(chars)
+
+	-- ɾ -> r word-initially or after [lns]
+	text = rsub(text, "([#lns]" .. sylsep_c .. ")ɾ", "%1r")
+
+	-- no spirants after r/z
+	-- FIXME: Spirant support isn't properly implemented.
+	text = rsub(text, "([rzʣ]" .. sylsep_c .. "*)([βðɣ])", function(prev, fricative)
+		fricative = ({["β"] = "b", ["ð"] = "d", ["ɣ"] = "ɡ"})[fricative]
+		return prev .. fricative
+	end)
+
+	-- Final losses
+	text = rsub(text, "j(ʧs?#)", "%1") -- boigs /bɔt͡ʃ/
+	text = rsub(text, "([ʃʧs])s#", "%1#") -- homophone plurals -xs, -igs, -çs
+
+	return text
+end
+
+-- Reduction of unstressed a,e in Central and Balearic (Eastern Catalan)
+local function reduction_ae(syllables)
+	for i = 1, #syllables do
+		local current = syllables[i]
+		local previous = syllables[i - 1] or {onset = "", vowel = "", coda = ""}
+		local posterior = syllables[i + 1] or {onset = "", vowel = "", coda = ""}
+
+		local pre_vowel_pair = previous.vowel .. previous.coda .. current.onset .. current.vowel
+		local post_vowel_pair = current.vowel .. current.coda .. posterior.onset .. posterior.vowel
+		local reduction = true
+
+		if current.stressed then
+			reduction = false
+		elseif pre_vowel_pair == "əe" then
+			reduction = false
+		elseif post_vowel_pair == "ea" or post_vowel_pair == "eɔ" then
+			reduction = false
+		elseif i < syllables.stress - 1 and post_vowel_pair == "ee" then
+			posterior.vowel = "ə"
+		elseif i > syllables.stress and post_vowel_pair == "ee" then
+			reduction = false
+		elseif pre_vowel_pair == "oe" or pre_vowel_pair == "ɔe" then
+			reduction = false
+		end
+
+		if reduction then
+			current.vowel = rsub(current.vowel, "[ae]", "ə")
+		end
+	end
+	return syllables
+end
+
+
+local function do_dialect_specific(syllables, dialect, mid_vowel_hint)
+	syllables = mw.clone(syllables)
+
+	if dialect ~= "val" then
+		-- Reduction of unstressed vowels a,e
+		syllables = reduction_ae(syllables)
+	end
 
 	for i = 1, #syllables do
 		local current = syllables[i]
 		local previous = syllables[i - 1]
 
-		-- Handle remaining x
-		-- Double sound of letter x > ks/gz (on cultisms, ambiguous in onsets)
-		current.coda = rsub(current.coda, "^xs?", "ks")
-		current.onset = rsub(current.onset, "x", "ʃ")
-		current.coda = rsub(current.coda, "x", "ʃ")
-
-		if i > 1 and previous.coda == "kz" then
-			previous.coda = "ɡz" -- voicing the group
-		end
-		if i > 1 and current.onset == "s" then
-			previous.coda = rsub(previous.coda, "s$", "") -- reduction exs, exc(e/i) and sc(e/i)
-		end
-		
-		-- Coda consonant losses
-		if i < #syllables or (i == #syllables and rfind(current.coda, "s$")) then
-			current.coda = rsub(current.coda, "m[pb]", "m")
-			current.coda = rsub(current.coda, "([ln])[td]", "%1")
-			current.coda = rsub(current.coda, "n[kɡ]", "ŋ")
+		-- In replace_context_free(), we converted single r to ɾ and double rr to r.
+		-- FIXME: For some reason, Central and Balearic final -r renders as /r/ but Valencian final -r renders as /ɾ/.
+		-- This is inherited from the older code. Correct?
+		if dialect == "cen" then
+			current.coda = rsub(current.coda, TEMP_PAREN_R, "")
+			current.coda = rsub(current.coda, TEMP_PAREN_RR, "r")
+		elseif dialect == "bal" then
+			current.coda = rsub(current.coda, TEMP_PAREN_R, "")
+			current.coda = rsub(current.coda, TEMP_PAREN_RR, "")
+		else
+			current.coda = rsub(current.coda, TEMP_PAREN_R, "ɾ")
+			current.coda = rsub(current.coda, TEMP_PAREN_RR, "ɾ")
+			current.coda = rsub(current.coda, "r", "ɾ")
 		end
 
-		-- Consonant assimilations
-		if i > 1 then
-			-- t + lateral/nasal assimilation
-			local cons = rmatch(current.onset, "^([lʎmn])")
-			if cons then
-				previous.coda = rsub(previous.coda, "t$", cons)
+		if dialect == "cen" then
+			-- Reduction of unstressed o
+			if current.vowel == "o" and not (current.stressed or current.coda == "w") then
+				current.vowel = rsub(current.vowel, "o", "u")
 			end
-
-			-- ɡn -> ŋn
-			if rfind(current.onset, "^n") then
-				previous.coda = rsub(previous.coda, "ɡ$", "ŋ")
+		elseif dialect == "bal" then
+			-- Reduction of unstressed o per vowel harmony
+			if i > 1 and current.stressed and rfind(current.vowel, "[iu]") and not previous.stressed then
+				previous.vowel = rsub(previous.vowel, "o", "u")
 			end
+		else -- Valencian
+			-- Variable mid vowel
+			if i == syllables.stress and (mid_vowel_hint == "ê" or mid_vowel_hint == "ë" or mid_vowel_hint == "ô") then
+				current.vowel = rsub(current.vowel, "[ɛëɔ]", {["ɛ"] = "e", ["ë"] = "e", ["ɔ"] = "o"})
+			end
+		end
 
-			-- n + labial > labialized assimilation
-			if rfind(current.onset, "^[mbp]") then
+		if dialect == "cen" then
+			-- v > b
+			current.onset = rsub(current.onset, "v", "b")
+			current.coda = rsub(current.coda, "nb", "mb")
+			if i > 1 and rfind(current.onset, "^b") then
 				previous.coda = rsub(previous.coda, "n$", "m")
-			elseif rfind(current.onset, "^[fv]") then
-				previous.coda = rsub(previous.coda, "n$", "m") -- strictly ɱ
-
-			-- l/n + palatal > palatalized assimilation
-			elseif rfind(current.onset, "^[ʒʎʃɲʧʤ]")
-			then
-				previous.coda = rsub(previous.coda, "[ln]$", {["l"] = "ʎ", ["n"] = "ɲ"})
-			end
-
-			-- ɡʒ > d͡ʒ
-			if previous.coda == "ɡ" and current.onset == "ʒ" then
-				previous.coda = ""
-				current.onset = "ʤ"
 			end
 		end
 
-		current.coda = rsub(current.coda, "n[kɡ]", "ŋk")
-		current.coda = rsub(current.coda, "n([ʃʒʧʤ])", "ɲ%1")
-		current.coda = rsub(current.coda, "l([ʃʒʧʤ])", "ʎ%1")
-		current.coda = rsub(current.coda, "ɲs", "ɲʃ")
-
-		-- Voicing or devoicing
-		if i > 1 then
-			local coda_letter = usub(previous.coda, -1)
-			local onset_letter = usub(current.onset, 1, 1)
-			if voiced[onset_letter] and voicing[coda_letter] then
-				previous.coda = rsub(previous.coda, coda_letter .. "$", voicing[coda_letter])
-			elseif voiceless[onset_letter] and devoicing[coda_letter] then
-				previous.coda = rsub(previous.coda, coda_letter .. "$", devoicing[coda_letter])
-			else
-				previous.coda = rsub(previous.coda, "[bd]s", {["bs"] = "ps", ["ds"] = "ts"})
+		if dialect ~= "val" then
+			-- bl -> bbl, gl -> ggl after the stress; to avoid this, write b.l or g.l so the b/g is in a separate
+			-- syllable; this must follow v > b above; NOTE: IPA ɡ must be used here not regular g
+			if i > 1 and previous.coda == "" and previous.stressed then
+				local bg = rmatch(current.onset, "^([bɡ])l")
+				if bg then
+					previous.coda = bg
+				end
+			end
+		else -- Valencian; undo manually written 'bbl', 'ggl' in words like [[poblar]], [[reglament]]
+			if i > 1 then
+				local bg = rmatch(current.onset, "^([bɡ])l")
+				if bg and previous.coda == bg then
+					previous.coda = ""
+				end
 			end
 		end
 
-		-- Allophones of r
-		if i == 1 then
-			current.onset = rsub(current.onset, "^ɾ", "r")
+		if dialect == "cen" then
+			-- allophones of r
+			current.coda = rsub(current.coda, "ɾ", "r")
 		end
 
-		-- no spirants after r/z
-		if i > 1 and mw.ustring.find(previous.coda, "[rzʣ]$") then
-			current.onset = mw.ustring.gsub(current.onset, "^[βðɣ]", {["β"] = "b", ["ð"] = "d", ["ɣ"] = "ɡ"})
+		if dialect == "bal" then
+			-- Stressed schwa
+			if i == syllables.stress and mid_vowel_hint == "ê" then -- not ë
+				current.vowel = rsub(current.vowel, "ɛ", "ə")
+			end
 		end
 
-		if i > 1 then
-			if rfind(previous.coda, "[lns]$") then
-				current.onset = rsub(current.onset, "^ɾ", "r")
+		if dialect ~= "val" then
+			-- Remove j before palatal obstruents
+			current.coda = rsub(current.coda, "j([ʃʒʧʤ])", "%1")
+
+			if i > 1 then
+				if rfind(current.onset, "^[ʃʒʧʤ]") then
+					previous.coda = rsub(previous.coda, "j$", "")
+				end
+			end
+		else -- Valencian
+			-- Fortition of palatal fricatives
+			current.onset = rsub(current.onset, "ʒ", "ʤ")
+			current.coda = rsub(current.coda, "ʒ", "ʤ")
+
+			if i > 1 and previous.vowel == "i" and previous.coda == "" and current.onset == "ʣ" then
+				current.onset = "z"
+			elseif (i == 1 and current.onset == "ʃ")
+				or (i > 1 and current.onset == "ʃ" and previous.coda ~= "" and previous.coda ~= "j")
+				then
+				current.onset = "ʧ"
+			end
+		end
+
+		if dialect ~= "cen" then
+			-- No palatal gemination ʎʎ > ll or ʎ, in Valencian and Balearic
+			if i > 1 and current.onset == "ʎ" and previous.coda == "ʎ" then
+				local prev_syll = previous.onset .. previous.vowel .. previous.coda
+				if rfind(prev_syll, "[bpw]aʎ$")
+					or rfind(prev_syll, "[mv]eʎ$")
+					or rfind(prev_syll, "tiʎ$")
+					or rfind(prev_syll, "m[oɔ]ʎ$")
+					or (rfind(prev_syll, "uʎ$") and current.vowel == "a")
+					then
+					previous.coda = "l"
+					current.onset = "l"
+				else
+					previous.coda = ""
+				end
 			end
 		end
 	end
 
-	-- Final devoicing
-	local final = syllables[#syllables].coda
-
-	final = rsub(final, "ʤ", "ʧ")
-	final = rsub(final, "ʣ", "ʦ")
-	final = rsub(final, "b", "p")
-	final = rsub(final, "d", "t")
-	final = rsub(final, "ɡ", "k")
-	final = rsub(final, "ʒ", "ʃ")
-	final = rsub(final, "v", "f")
-	final = rsub(final, "z", "s")
-
-	-- Final losses
-	final = rsub(final, "j(ʧ)", "%1")
-	final = rsub(final, "([ʃʧs])s", "%1") -- homophone plurals -xs, -igs, -çs
-
-	syllables[#syllables].coda = final
-
 	return syllables
 end
+
 
 local function mid_vowel_e(syllables)
 	-- most common cases, other ones are assumed ambiguous
@@ -736,17 +905,6 @@ local function do_dialect_specific(syllables, dialect, mid_vowel_hint)
 	if dialect ~= "val" then
 		-- Reduction of unstressed vowels a,e
 		syllables = reduction_ae(syllables)
-	end
-
-	if dialect == "cen" then
-		-- Final consonant losses
-		local final = syllables[#syllables].coda
-
-		final = rsub(final, "m[pb]$", "m")
-		final = rsub(final, "([ln])[td]$", "%1")
-		final = rsub(final, "[nŋ][kɡ]$", "ŋ")
-
-		syllables[#syllables].coda = final
 	end
 
 	for i = 1, #syllables do
