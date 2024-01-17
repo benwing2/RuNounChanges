@@ -24,7 +24,28 @@ FIXME:
    'ëxtrajudiciàl'; this seems to be because the handling of ë goes through mid_vowel_hint, which doesn't work for
    secondary stress.
 8. Respect ʃ at beginning of word in Valencian.
-9. Prefixes e.g. [[xilo-]] should not have stress by default.
+9. [ʃ] in single substitution specs should match against written x.
+10. Prefixes e.g. [[xilo-]] should not have stress by default.
+11. Remove single quote near beginning of processing so we don't need to respell infinitives like [[captindre's]].
+12. Correctly handle -bl and -gl in respelling, generating [bl] and [gl].
+13. Correctly handle [βðɣ] in respelling forcing fricatives; should not be fortitioned.
+14. [βðɣ] in single substitution specs should match against b/d/g.
+15. [ss] in single substitution specs should match against ss?; used to force a pronounced [s].
+16. Correctly handle written -dg- after [rz]: fricatives in Valencian, stops in Central (and Balearic?).
+17. Correctly handle lenition of written -bdg-: (1) -b- not lenited in Valencian or Balearic, lenited to [β] in
+    Central Catalan after vowels and consonants except nasals and [rz]; (2) -g- not lenited after nasals, also not
+	after [rz] in Central Catalan (and maybe Balearic?), otherwise yes except utterance initial; (3) -d- not lenited
+	after nasals or laterals, also not after [rz] in Central Catalan (and maybe Balearic?), otherwise yes except
+	utterance initial. Verify against ca-IPA equivalent on cawikt and also based on {{w|Catalan phonology}} and the IEC
+	grammar that Vriullop linked.
+18. Finish rewriting do_dialect_specific() to operate on whole word using Lua patterns.
+19. Implement multiword handling.
+20. Make sure suffix handling works correctly.
+21. Add many more test cases and redo test harness ala the German test harness.
+22. Redo handling of mid-vowel hints so it gets done early and in one place.
+23. Think about how to solve the issue of mid-vowel hints along with secondary stress marks in substitution specs.
+    Maybe a single mid-vowel spec should be rewritten to be a single substitution spec and the insertion of the
+	mid-vowel spec should happen during resolution of substitution specs.
 ]=]
 
 
