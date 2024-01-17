@@ -54,6 +54,14 @@ local function rsub_repeatedly(term, foo, bar)
 	end
 end
 
+local function split_into_chars(text)
+	local chars = {}
+	for codepoint in ugcodepoint(text) do
+		table.insert(chars, u(codepoint))
+	end
+	return chars
+end
+
 local function split_on_comma(term)
 	if term:find(",%s") or term:find("\\") then
 		return require(parse_utilities_module).split_on_comma(term)
@@ -511,10 +519,7 @@ local function postprocess_general(syllables, dialect)
 	-- Voicing or devoicing; we want to proceed from right to left, and due to the limitations of patterns (in
 	-- particular, the lack of support for alternations), it's difficult to do this cleanly using Lua patterns, so we
 	-- do it character by character.
-	local chars = {}
-	for codepoint in ugcodepoint(text) do
-		table.insert(chars, u(codepoint))
-	end
+	local chars = split_into_chars(text)
 	-- We need to look two characters ahead in some cases, so start two characters from the end. This is safe because
 	-- the overall respelling ends in "##". (Similarly, as an optimization, don't check the first two characters, which
 	-- are always "##".)
@@ -556,53 +561,78 @@ local function postprocess_general(syllables, dialect)
 		return prev .. fricative
 	end)
 
-	-- Final losses
+	-- Final losses.
 	text = rsub(text, "j(ʧs?#)", "%1") -- boigs /bɔt͡ʃ/
 	text = rsub(text, "([ʃʧs])s#", "%1#") -- homophone plurals -xs, -igs, -çs
 
-	return text
-end
-
--- Reduction of unstressed a,e in Central and Balearic (Eastern Catalan)
-local function reduction_ae(syllables)
-	for i = 1, #syllables do
-		local current = syllables[i]
-		local previous = syllables[i - 1] or {onset = "", vowel = "", coda = ""}
-		local posterior = syllables[i + 1] or {onset = "", vowel = "", coda = ""}
-
-		local pre_vowel_pair = previous.vowel .. previous.coda .. current.onset .. current.vowel
-		local post_vowel_pair = current.vowel .. current.coda .. posterior.onset .. posterior.vowel
-		local reduction = true
-
-		if current.stressed then
-			reduction = false
-		elseif pre_vowel_pair == "əe" then
-			reduction = false
-		elseif post_vowel_pair == "ea" or post_vowel_pair == "eɔ" then
-			reduction = false
-		elseif i < syllables.stress - 1 and post_vowel_pair == "ee" then
-			posterior.vowel = "ə"
-		elseif i > syllables.stress and post_vowel_pair == "ee" then
-			reduction = false
-		elseif pre_vowel_pair == "oe" or pre_vowel_pair == "ɔe" then
-			reduction = false
-		end
-
-		if reduction then
-			current.vowel = rsub(current.vowel, "[ae]", "ə")
+	-- Reduction of unstressed a,e in Central and Balearic (Eastern Catalan).
+	if dialect ~= "val" then
+		-- The following rules seem to apply, based on the old code:
+		-- (1) Stressed a and e are never reduced.
+		-- (2) Unstressed e directly following ə/o/ɔ is not reduced.
+		-- (3) Unstressed e directly before written <a> or before /ɔ/ is not reduced.
+		-- (4) Written <ee> when both vowels precede the primary stress is reduced to [əə]. (This rule preempts #2.)
+		-- (5) Written <ee> when both vowels follow the primary stress isn't reduced at all.
+		-- Rule #2 in particular seems to require that we proceed left to right, which is how the old code was
+		-- implemented.
+		-- FIXME: These rules seem overly complex and may produce incorrect results in some circumstances.
+		local chars = split_into_chars(text)
+		-- See above where voicing assimilation is handled. The overall respelling begins and ends in ## and we need to
+		-- look ahead two or more chars.
+		local seen_primary_stress = false
+		for i = 3, #chars - 2 do
+			local this = chars[i]
+			if chars[i] == AC then
+				seen_primary_stress = true
+			end
+			if (this ~= "a" and this ~= "e") or rfind(chars[i + 1], stress_c) then
+				-- Not a/e, or a stressed vowel; continue
+			else
+				local reduction = true
+				local prev, prev_stress, nxt, nxt_stress
+				if not rfind(chars[i - 1], sylsep_c) then
+					prev = ""
+				else
+					prev = chars[i - 2]
+					prev_stress = ""
+					if rfind(prev, stress_c) then
+						prev_stress = prev
+						prev = chars[i - 3] or ""
+					end
+				end
+				if not rfind(chars[i + 1], sylsep_c) then
+					nxt = ""
+					-- leave nxt at nil
+				else
+					nxt = chars[i + 2]
+					nxt_stress = chars[i + 3] or ""
+				end
+				if this == "e" and rfind(prev, "[əoɔ]") then
+					reduction = false
+				elseif this == "e" and rfind(nxt, "[aɔ]") then
+					reduction = false
+				elseif this == "e" and nxt == "e" and not rfind(nxt_stress, AC) then
+					-- FIXME: Check specifically for AC duplicates previous logic but is probably wrong or unnecessary.
+					if not seen_primary_stress then
+						chars[i + 2] = "ə"
+					else
+						reduction = false
+					end
+				end
+				if reduction then
+					chars[i] = "ə"
+				end
+			end
 		end
 	end
-	return syllables
+	text = table.concat(chars)
+
+	return text
 end
 
 
 local function do_dialect_specific(syllables, dialect, mid_vowel_hint)
 	syllables = mw.clone(syllables)
-
-	if dialect ~= "val" then
-		-- Reduction of unstressed vowels a,e
-		syllables = reduction_ae(syllables)
-	end
 
 	for i = 1, #syllables do
 		local current = syllables[i]
