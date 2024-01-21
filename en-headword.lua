@@ -30,6 +30,7 @@ function export.show(frame)
 		["json"] = {type = "boolean"},
 		["sort"] = {},
 		["nolinkhead"] = {type = "boolean"},
+		["nosuffix"] = {type = "boolean"},
 		["nomultiwordcat"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing
 	}
@@ -63,13 +64,16 @@ function export.show(frame)
 		inflections = {},
 		nomultiwordcat = args.nomultiwordcat,
 		sort_key = args.sort,
-		pagename = pagename,
+		pagename = args.pagename,
+		-- This is always set, and in the case of unsupported titles, it's the displayed version (e.g. 'C|N>K' instead of
+		-- 'Unsupported titles/C through N to K').
+		displayed_pagename = pagename,
 		id = args.id,
 		force_cat_output = force_cat,
 	}
 
 	local is_suffix = false
-	if pagename:find("^%-") and poscat ~= "suffix forms" then
+	if not args.nosuffix and pagename:find("^%-") and not pagename:find("^%-%-") and poscat ~= "suffix forms" then
 		is_suffix = true
 		data.pos_category = "suffixes"
 		local singular_poscat = require("Module:string utilities").singularize(poscat)
@@ -121,13 +125,14 @@ end
 local function make_comparatives(params, data)
 	local comp_parts = {label = glossary_link("comparative"), accel = {form = "comparative"}}
 	local sup_parts = {label = glossary_link("superlative"), accel = {form = "superlative"}}
+	local pagename = data.displayed_pagename
 
 	if #params == 0 then
 		table.insert(params, {"more"})
 	end
 
 	-- To form the stem, replace -(e)y with -i and remove a final -e.
-	local stem = data.pagename:gsub("([^aeiou])e?y$", "%1i"):gsub("e$", "")
+	local stem = pagename:gsub("([^aeiou])e?y$", "%1i"):gsub("e$", "")
 
 	-- Go over each parameter given and create a comparative and superlative form
 	for i, val in ipairs(params) do
@@ -137,12 +142,12 @@ local function make_comparatives(params, data)
 		local sup_qual = val[4]
 		local comp_part, sup_part
 
-		if comp == "more" and data.pagename ~= "many" and data.pagename ~= "much" then
-			comp_part = "[[more]] " .. data.pagename
-			sup_part = "[[most]] " .. data.pagename
-		elseif comp == "further" and data.pagename ~= "far" then
-			comp_part = "[[further]] " .. data.pagename
-			sup_part = "[[furthest]] " .. data.pagename
+		if comp == "more" and pagename ~= "many" and pagename ~= "much" then
+			comp_part = "[[more]] " .. pagename
+			sup_part = "[[most]] " .. pagename
+		elseif comp == "further" and pagename ~= "far" then
+			comp_part = "[[further]] " .. pagename
+			sup_part = "[[furthest]] " .. pagename
 		elseif comp == "er" then
 			comp_part = stem .. "er"
 			sup_part = stem .. "est"
@@ -348,7 +353,7 @@ pos_functions["nouns"] = {
 		["pl=qual"] = { list = true, allow_holes = true },
 		},
 	func = function(args, data)
-		local pagename = data.pagename
+		local pagename = data.displayed_pagename
 		-- Gather all the plural parameters from the numbered parameters.
 		local plurals = {}
 
@@ -450,7 +455,7 @@ pos_functions["nouns"] = {
 				if type(pl) == "table" then
 					pl = pl.term
 				end
-				local check_pl = m_links.getLinkPage(pl, lang)
+				local check_pl = m_links.get_link_page(pl, lang)
 				if not stem:find(" ") and not (check_pl == stem .. "s" or check_pl == stem .. "es" or check_ies(check_pl, stem)) then
 					irregular = true
 					if check_pl == stem then
@@ -472,7 +477,7 @@ pos_functions["proper nouns"] = {
 		[1] = {list = true},
 		},
 	func = function(args, data)
-		local pagename = data.pagename
+		local pagename = data.displayed_pagename
 		local plurals = args[1]
 
 		-- Decide what to do next...
@@ -644,7 +649,7 @@ pos_functions["verbs"] = {
 
 		local pres_3sgs, pres_ptcs, pasts, past_ptcs
 
-		local pagename = data.pagename
+		local pagename = data.displayed_pagename
 
 		------------------------------------------- UTILITY FUNCTIONS #1 ------------------------------------------
 
@@ -1069,13 +1074,13 @@ pos_functions["verbs"] = {
 			end
 		end
 
-		local pres_3sg_infls = collect_forms("third-person singular simple present", "3|s|pres",
+		local pres_3sg_infls = collect_forms("third-person singular simple present", "s-verb-form",
 			pres_3sgs, args[1], args.pres_3sg_qual, canonicalize_s_form)
-		local pres_ptc_infls = collect_forms("present participle", "pres|ptcp",
+		local pres_ptc_infls = collect_forms("present participle", "ing-form",
 			pres_ptcs, args[2], args.pres_ptc_qual, canonicalize_ing_form)
-		local past_infls = collect_forms("simple past", "past",
+		local past_infls = collect_forms("simple past", "spast",
 			pasts, args[3], args.past_qual, canonicalize_ed_form)
-		local past_ptc_infls = collect_forms("past participle", "past|ptcp",
+		local past_ptc_infls = collect_forms("past participle", "past|part",
 			past_ptcs, args[4], args.past_ptc_qual, canonicalize_ed_form)
 
 		-- Are the past forms identical to the past participle forms? If so, we use a single
@@ -1140,7 +1145,7 @@ pos_functions["verbs"] = {
 				past_infls.label = "no simple past or past participle"
 			else
 				past_infls.label = "simple past and past participle"
-				past_infls.accel = {form = "past|and|past|ptcp"}
+				past_infls.accel = {form = "ed-form"}
 			end
 			table.insert(data.inflections, past_infls)
 		else
