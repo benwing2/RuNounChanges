@@ -18,6 +18,56 @@ local function track(page)
 	return true
 end
 
+
+-- Auto-add links to a word that should not have spaces but may have hyphens. We split off final punctuation, then
+-- split on hyphens if `splithyph` is given. We only split on hyphens if they are in the middle of the word, not at the
+-- beginning of end (hyphens at the beginning or end indicate suffixes or prefixes, respectively.
+local function add_single_word_links(space_word, splithyph)
+	local space_word_no_punct, punct = rmatch(space_word, "^(.*)([,;:?!])$")
+	space_word_no_punct = space_word_no_punct or space_word
+	punct = punct or ""
+	local words
+	-- don't split prefixes and suffixes
+	if not splithyph or space_word_no_punct:find("^%-") or space_word_no_punct:find("%-$") then
+		words = {space_word_no_punct}
+	else
+		words = rsplit(space_word_no_punct, "%-")
+	end
+	local linked_words = {}
+	for j, word in ipairs(words) do
+		word = "[[" .. word .. "]]"
+		if j < #words then
+			word = word .. "-"
+		end
+		table.insert(linked_words, word)
+	end
+	return table.concat(linked_words) .. punct
+end
+
+
+-- Auto-add links to a multiword term. Links are not added to single-word terms. We split on spaces, and also on hyphens
+-- if `splithyph` is given or the word has no spaces.. We don't always split on hyphens because of cases like
+-- "open-pit mine" where "open-pit" should be linked as a whole, but provide the option to do it for cases like
+-- "Abbott-Miller tube" and "adult-onset diabetes". If there's no space, however, then it makes sense to split on
+-- hyphens by default (e.g. for "abbot-bishop"). Cases where only some of the hyphens should be split can always be
+-- handled by explicitly specifying the head.
+local function add_links_to_multiword_term(term, splithyph)
+	if not rfind(term, " ") then
+		splithyph = true
+	end
+	local words = rsplit(term, " ")
+	local linked_words = {}
+	for _, word in ipairs(words) do
+		table.insert(linked_words, add_single_word_links(word, splithyph))
+	end
+	local retval = table.concat(linked_words, " ")
+	-- If we ended up with a single link consisting of the entire term,
+	-- remove the link.
+	local unlinked_retval = rmatch(retval, "^%[%[([^%[%]]*)%]%]$")
+	return unlinked_retval or retval
+end
+
+
 -- The main entry point.
 -- This is the only function that can be invoked from a template.
 function export.show(frame)
@@ -29,6 +79,7 @@ function export.show(frame)
 		["id"] = {},
 		["json"] = {type = "boolean"},
 		["sort"] = {},
+		["splithyph"] = {type = "boolean"},
 		["nolinkhead"] = {type = "boolean"},
 		["nosuffix"] = {type = "boolean"},
 		["nomultiwordcat"] = {type = "boolean"},
@@ -51,6 +102,17 @@ function export.show(frame)
 	if args.nolinkhead or args.pagename then
 		if #heads == 0 then
 			heads = {pagename}
+		end
+	else
+		local auto_linked_head = add_links_to_multiword_term(pagename, args.splithyph)
+		if #heads == 0 then
+			heads = {auto_linked_head}
+		else
+			for _, head in ipairs(heads) do
+				if head == auto_linked_head then
+					track("redundant-head")
+				end
+			end
 		end
 	end
 
