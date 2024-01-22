@@ -36,8 +36,8 @@ FIXME:
 13. Remove single quote near beginning of processing so we don't need to respell infinitives like [[captindre's]].
 14. Correctly handle -bl and -gl in respelling, generating [bl] and [gl].
 15. Correctly handle [βðɣ] in respelling forcing fricatives; should not be fortitioned.
-16. [βðɣ] in single substitution specs should match against b/d/g.
-17. [ss] in single substitution specs should match against ss?; used to force a pronounced [s].
+16. [βðɣ] in single substitution specs should match against b/d/g. [DONE]
+17. [ss] in single substitution specs should match against ss?; used to force a pronounced [s]. [DONE]
 18. [dm] in single substitution specs should match against [td]m.
 19. Correctly handle written -dg- after [rz]: fricatives in Valencian, stops in Central (and Balearic?).
 20. Correctly handle lenition of written -bdg-: (1) -b- not lenited in Valencian or Balearic, lenited to [β] in
@@ -48,7 +48,7 @@ FIXME:
 	grammar that Vriullop linked.
 21. Finish rewriting do_dialect_specific() to operate on whole word using Lua patterns. [DONE]
 22. Implement multiword handling.
-23. Make sure suffix handling works correctly.
+23. Make sure suffix handling works correctly. [DONE]
 24. Add many more test cases and redo test harness ala the German test harness. [DONE]
 25. Redo handling of mid-vowel hints so it gets done early and in one place. [DONE]
 26. Think about how to solve the issue of mid-vowel hints along with secondary stress marks in substitution specs.
@@ -426,6 +426,11 @@ local function split_syllables(word, stress_prefixes)
 		is_prefix = true
 		remainder = remainder:gsub("%-$", "")
 	end
+	local is_suffix = false
+	if remainder:find("^%-") then -- suffix
+		is_suffix = true
+		remainder = remainder:gsub("^%-", "")
+	end
 	local saw_dotover = false
 
 	while remainder ~= "" do
@@ -505,6 +510,7 @@ local function split_syllables(word, stress_prefixes)
 	end
 
 	syllables.is_prefix = is_prefix
+	syllables.is_suffix = is_suffix
 	return syllables
 end
 
@@ -512,6 +518,9 @@ local function reconstitute_word_from_syllables(syllables)
 	local parts = {}
 	local function ins(txt)
 		table.insert(parts, txt)
+	end
+	if syllables.is_suffix then
+		ins("-")
 	end
 	for _, syl in ipairs(syllables) do
 		ins(syl.separator)
@@ -830,11 +839,11 @@ local function postprocess_general(syllables, dialect)
 		-- No palatal gemination ʎʎ > ll or ʎ, in Valencian and Balearic.
 		-- FIXME: These conditions seem to be targeting specific words and should probably be fixed using respelling
 		-- instead.
-		text = rsub(text, "([bpw]a)ʎ(" .. sylsep_c .. "*)ʎ", "%1l%2l")
-		text = rsub(text, "([mv]e)ʎ(" .. sylsep_c .. "*)ʎ", "%1l%2l")
-		text = rsub(text, "(ti)ʎ(" .. sylsep_c .. "*)ʎ", "%1l%2l")
-		text = rsub(text, "(m[oɔ])ʎ(" .. sylsep_c .. "*)ʎ", "%1l%2l")
-		text = rsub(text, "(u)ʎ(" .. sylsep_c .. "*)ʎ", "%1l%2l")
+		text = rsub(text, "([bpw]a" .. stress_c .. "*)ʎ(" .. sylsep_c .. "*)ʎ", "%1l%2l")
+		text = rsub(text, "([mv]e" .. stress_c .. "*)ʎ(" .. sylsep_c .. "*)ʎ", "%1l%2l")
+		text = rsub(text, "(ti" .. stress_c .. "*)ʎ(" .. sylsep_c .. "*)ʎ", "%1l%2l")
+		text = rsub(text, "(m[oɔ]" .. stress_c .. "*)ʎ(" .. sylsep_c .. "*)ʎ", "%1l%2l")
+		text = rsub(text, "(u" .. stress_c .. "*)ʎ(" .. sylsep_c .. "*)ʎ", "%1l%2l")
 		text = rsub(text, "ʎ(" .. sylsep_c .. "*ʎ)", "%1")
 	end
 
@@ -957,6 +966,10 @@ local function convert_single_substitution_to_original(to, pagename, whole_word)
 	escaped_from = escaped_from:gsub("ks", "x"):gsub("gz", "x"):gsub("([bg])%1l", "%1l"):gsub("[.%-]", "")
 	escaped_from = require(patut_module).pattern_escape(escaped_from)
 	escaped_from = escaped_from:gsub("rr", "rr?")
+	escaped_from = escaped_from:gsub("ss", "ss?")
+	escaped_from = escaped_from:gsub("β", "b")
+	escaped_from = escaped_from:gsub("ð", "d")
+	escaped_from = escaped_from:gsub("ɣ", "g")
 	escaped_from = rsub(escaped_from, AV, function(v) return "[" .. v .. written_accented_to_plain_vowel[v] .. "]" end)
 	escaped_from = "(" .. escaped_from .. ")"
 	if whole_word then
