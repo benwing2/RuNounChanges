@@ -1,4 +1,4 @@
-Beginning at Sat Jan 13 22:42:05 2024
+Beginning at Mon Jan 22 00:14:39 2024
 Page 157 abaxial: -------- begin text --------
 
 ===Etymology===
@@ -906,7 +906,7 @@ Page 2891 auxiliar: -------- begin text --------
 
 # to [[aid]], to [[help]]
 
-====Conjugation====
+=====Conjugation=====
 {{ca-conj}}
 
 -------- end text --------
@@ -1481,7 +1481,7 @@ Page 5388 carxofera: -------- begin text --------
 From {{af|ca|carxofa|-era}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|é}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -1989,12 +1989,12 @@ Page 7356 corxera: -------- begin text --------
 {{bor+|ca|fr|crochée||hooked}}, from {{der|ca|fr|croc||hook}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|é}}
 
 ===Noun===
 {{ca-noun|f}}
 
-# {{lb|ca|music}} [[quaver]]
+# {{lb|ca|music}} [[quaver]]/[[eighth note]]
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -3798,11 +3798,11 @@ Page 11832 exculpar: -------- begin text --------
 # {{lb|ca|transitive}} to [[exonerate]]
 # {{lb|ca|transitive|law}} to [[acquit]]
 
-====Synonyms====
-* {{l|ca|disculpar}}
-
 ====Conjugation====
 {{ca-conj}}
+
+====Synonyms====
+* {{l|ca|disculpar}}
 
 ====Derived terms====
 * {{l|ca|exculpació}}
@@ -4497,7 +4497,7 @@ Page 11864 exiliada: -------- begin text --------
 ===Participle===
 {{head|ca|past participle form|g=f-s}}
 
-# {{ca-verb form of|exiliar}}
+# {{feminine singular of|ca|exiliat}}
 
 -------- end text --------
 Page 11865 exiliar: -------- begin text --------
@@ -4973,10 +4973,10 @@ Page 11887 exorcitzar: -------- begin text --------
 Page 11888 exosfera: -------- begin text --------
 
 ===Etymology===
-: {{confix|ca|exo|sfera}}
+From {{confix|ca|exo|sfera}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|é}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -6035,7 +6035,7 @@ From {{af|ca|exportar|-dor}}.
 Page 11941 exportadora: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|ó}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -6869,7 +6869,7 @@ From {{der|ca|la|externus}}.
 Page 11978 externa: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|è}}
 
 ===Adjective===
 {{head|ca|adjective form}}
@@ -8256,10 +8256,10 @@ Page 14335 guerxa: -------- begin text --------
 Page 14336 guerxo: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|it|guercio}}.
+{{bor+|ca|it|guercio}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|è}}<!-- per GDLC, DNV, DCVB -->
 
 ===Adjective===
 {{ca-adj}}
@@ -11387,7 +11387,7 @@ Page 22004 pixera: -------- begin text --------
 From {{af|ca|pixar|-era}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|é}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -11530,7 +11530,7 @@ Page 22372 ponxera: -------- begin text --------
 From {{af|ca|ponx|-era}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|é}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -12962,30 +12962,6 @@ Page 26109 sobre la marxa: -------- begin text --------
 
 # [[along the way]]
 -------- end text --------
-Page 26145 sóc bisexual: -------- begin text --------
-{{phrasebook|ca|Love|Sex}}
-
-===Phrase===
-{{ca-phrase|head=~sóc:ser}}
-
-# [[I'm bisexual]]
--------- end text --------
-Page 26146 sóc heterosexual: -------- begin text --------
-{{phrasebook|ca|Love|Sex}}
-
-===Phrase===
-{{ca-phrase|head=~sóc:ser}}
-
-# [[I'm straight]]
--------- end text --------
-Page 26147 sóc homosexual: -------- begin text --------
-{{phrasebook|ca|Love|Sex}}
-
-===Phrase===
-{{ca-phrase|head=~sóc:ser}}
-
-# [[I'm gay]]
--------- end text --------
 Page 26594 sufix: -------- begin text --------
 
 ===Pronunciation===
@@ -13236,7 +13212,7 @@ Page 27393 text: -------- begin text --------
 {{bor+|ca|ML.|textus||text}}, from {{der|ca|la|textus}}, perfect passive participle of {{m|la|texō||weave}}, attested from the 14th century.<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
-* {{ca-IPA|tékst}}
+* {{ca-IPA|é|val=è}}<!-- per GDLC, DNV, DCVB -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -13532,7 +13508,7 @@ Page 28131 trinxera: -------- begin text --------
 {{bor+|ca|fr|tranchée}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|é}}
 * {{rhymes|ca|eɾa|s=3}}
 * {{hyph|ca|trin|xe|ra}}
 
@@ -16353,7 +16329,7 @@ Page 29525 xerrada: -------- begin text --------
 ===Participle===
 {{head|ca|past participle form|g=f-s}}
 
-# {{ca-verb form of|xerrar}}
+# {{feminine singular of|ca|xerrat}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -16466,7 +16442,7 @@ Page 29530 xerrera: -------- begin text --------
 From {{af|ca|xerrar|-era}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|é}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -19084,7 +19060,7 @@ Page 29665 xufera: -------- begin text --------
 From {{af|ca|xufa|-era}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|é}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -19126,12 +19102,12 @@ Page 29667 xuflera: -------- begin text --------
 From {{af|ca|xufla|-era}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|é}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|f}}
 
-# [[chufa]] {{gloss|plant}}
+# [[chufa]] {{q|plant}}
 
 ===Further reading===
 * {{R:ca:DCVB}}
@@ -19473,5 +19449,5 @@ From {{m|ca|xut}}.
 ===Further reading===
 * {{R:ca:IEC2}}
 -------- end text --------
-Elapsed time: 1 mins 53.50 secs
-Ending at Sat Jan 13 22:43:58 2024
+Elapsed time: 1 mins 35.34 secs
+Ending at Mon Jan 22 00:16:14 2024
