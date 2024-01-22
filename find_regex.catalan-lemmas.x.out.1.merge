@@ -654,6 +654,9 @@ Page 2456 arxiota: -------- begin text --------
 ===Etymology===
 {{bor+|ca|es|achiote}}, from {{der|ca|nci|āchiyōtl}}.
 
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- per DNV; not in GDLC -->
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -1130,7 +1133,7 @@ Page 3645 berrixó: -------- begin text --------
 Page 3812 bisexual: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|[bi-s,ks]}}<!-- per GDLC, DNV -->
+* {{ca-IPA|[biss,ks]}}<!-- per GDLC, DNV -->
 
 ===Adjective===
 {{ca-adj}}
@@ -1155,7 +1158,7 @@ Page 3813 bisexualitat: -------- begin text --------
 From {{af|ca|bi-|sexualitat}}.
 
 ===Pronunciation===
-* {{ca-IPA|[bi-s,ks]}}<!-- per GDLC, DNV -->
+* {{ca-IPA|[biss,ks]}}<!-- per GDLC, DNV -->
 * {{rhymes|ca|at|s=6}}
 
 ===Noun===
@@ -3120,7 +3123,7 @@ Page 11793 exantema: -------- begin text --------
 {{bor+|ca|la|exanthēma}}, from {{der|ca|grc|ἐξάνθημα}}.
 
 ===Pronunciation===
-* {{ca-IPA|ë}}<!-- per GDLC, DNV; not in DCVB but unlikely to be ê -->
+* {{ca-IPA|ë}}<!-- per GDLC, DNV; not in DCVB but compare [[enfisema]], where DCVB says /ɛ/ for Palma, contrary to [[fonema]] -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -8592,7 +8595,7 @@ Page 14502 hèlix: -------- begin text --------
 Page 14617 heterosexual: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|[èt,o-s,ks,àl]}}<!-- GDLC says /ètəɾu/ but that seems wrong; compare [[heterogàmia]] with /ɛ̀təɾu/ -->
+* {{ca-IPA|[èt,oss,ks,àl]}}<!-- GDLC says /ètəɾu/ but that seems wrong; compare [[heterogàmia]] with /ɛ̀təɾu/ -->
 
 ===Adjective===
 {{ca-adj}}
@@ -8617,7 +8620,7 @@ Page 14618 heterosexualitat: -------- begin text --------
 From {{af|ca|hetero-|sexualitat}}.
 
 ===Pronunciation===
-* {{ca-IPA|[èt,o-s,ks,àt]}}<!-- GDLC says /ètəɾu/ but that seems wrong; compare [[heterogàmia]] with /ɛ̀təɾu/ -->
+* {{ca-IPA|[èt,oss,ks,àt]}}<!-- GDLC says /ètəɾu/ but that seems wrong; compare [[heterogàmia]] with /ɛ̀təɾu/ -->
 
 ===Noun===
 {{ca-noun|f|-}}
@@ -17184,7 +17187,7 @@ Page 29539 xic: -------- begin text --------
 {{bor+|ca|fr|chic}}.
 
 ====Adjective====
-{{ca-adj|inv=1}}
+{{ca-adj|inv}}
 
 # [[chic]]
 
