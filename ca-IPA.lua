@@ -46,7 +46,7 @@ FIXME:
 	after nasals or laterals, also not after [rz] in Central Catalan (and maybe Balearic?), otherwise yes except
 	utterance initial. Verify against ca-IPA equivalent on cawikt and also based on {{w|Catalan phonology}} and the IEC
 	grammar that Vriullop linked.
-21. Finish rewriting do_dialect_specific() to operate on whole word using Lua patterns.
+21. Finish rewriting do_dialect_specific() to operate on whole word using Lua patterns. [DONE]
 22. Implement multiword handling.
 23. Make sure suffix handling works correctly.
 24. Add many more test cases and redo test harness ala the German test harness. [DONE]
@@ -57,6 +57,7 @@ FIXME:
 27. <tm> should default to [dm] not [mm].
 28. Fix handling of mid vowel default in -è/-ès/-esa so it doesn't affect [[tèbia]] etc. [DONE]
 29. x- after hyphen should probably become tx- in Valencian, cf. [[para-xocs]].
+30. Implement DOTOVER to indicate lack of stress in a word, e.g. in a suffix. [DONE]
 ]=]
 
 
@@ -106,6 +107,14 @@ local function split_on_comma(term)
 	else
 		return rsplit(term, ",")
 	end
+end
+
+local function concat_keys(tab)
+	local res = {}
+	for k, _ in pairs(tab) do
+		table.insert(res, k)
+	end
+	return table.concat(res)
 end
 
 
@@ -159,6 +168,7 @@ local written_accented_to_plain_vowel = {
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- grave =  ̀
 local CFLEX = u(0x0302) -- circumflex =  ̂
+local DOTOVER = u(0x0307) -- dot over =  ̇
 local DIA = u(0x0308) -- diaeresis =  ̈
 
 local stress = AC .. GR
@@ -210,6 +220,14 @@ local valid_onsets = listToSet {
 	"y",
 	"z",
 } 
+
+local decompose_dotover = {
+	-- No composed i or u with DOTOVER.
+	["ȧ"] = "a" .. DOTOVER,
+	["ė"] = "e" .. DOTOVER,
+	["ȯ"] = "o" .. DOTOVER,
+	["ẏ"] = "y" .. DOTOVER,
+}
 
 local function fix_prefixes(word)
 	-- Orthographic fixes for unassimilated prefixes
@@ -371,6 +389,11 @@ end
 local function split_vowels(vowels)
 	local syllables = {{onset = "", vowel = usub(vowels, 1, 1), coda = "", separator = ""}}
 	vowels = usub(vowels, 2)
+	local vowels_after_dotover = rmatch(vowels, DOTOVER .. "(.*)$")
+	if vowels_after_dotover then
+		syllables[1].has_dotover = true
+		vowels = vowels_after_dotover
+	end
 
 	while vowels ~= "" do
 		local syll = {onset = "", vowel = "", coda = ""}
@@ -403,14 +426,16 @@ local function split_syllables(word, stress_prefixes)
 		is_prefix = true
 		remainder = remainder:gsub("%-$", "")
 	end
+	local saw_dotover = false
 
 	while remainder ~= "" do
 		local consonants, vowels
 
 		-- FIXME: Using C and V below instead of the existing patterns slows things down TREMENDOUSLY.
 		-- Not sure why.
-		consonants, remainder = rmatch(remainder, "^([^aeiouàèéêëíòóôúïü]*)(.-)$")
-		vowels, remainder = rmatch(remainder, "^([aeiouàèéêëíòóôúïü]*)(.-)$")
+		local vowel_list = "aeiouàèéêëíòóôúïü" .. DOTOVER
+		consonants, remainder = rmatch(remainder, "^([^" .. vowel_list .. "]*)(.-)$")
+		vowels, remainder = rmatch(remainder, "^([" .. vowel_list .. "]*)(.-)$")
 
 		if vowels == "" then
 			syllables[#syllables].coda = syllables[#syllables].coda .. consonants
@@ -430,6 +455,9 @@ local function split_syllables(word, stress_prefixes)
 
 			for _, s in ipairs(vsyllables) do
 				table.insert(syllables, s)
+				if s.has_dotover then
+					saw_dotover = true
+				end
 			end
 		end
 	end
@@ -459,7 +487,7 @@ local function split_syllables(word, stress_prefixes)
 		end
 	end
 
-	if not syllables.stress and (stress_prefixes or not is_prefix) then
+	if not syllables.stress and not saw_dotover and (stress_prefixes or not is_prefix) then
 		local count = #syllables
 
 		if count == 1 then
@@ -489,6 +517,9 @@ local function reconstitute_word_from_syllables(syllables)
 		ins(syl.separator)
 		ins(syl.onset)
 		ins(syl.vowel)
+		if syl.has_dotover then
+			ins(DOTOVER)
+		end
 		ins(syl.coda)
 	end
 	if syllables.is_prefix then
@@ -559,14 +590,6 @@ local function postprocess_general(syllables, dialect)
 		table.insert(combined, syll.onset .. syll.vowel .. ac .. syll.coda)
 	end
 	local text = "##" .. table.concat(combined, ".") .. (syllables.is_prefix and "#" .. PREFIX_MARKER .. "#" or "##")
-
-	local function concat_keys(tab)
-		local res = {}
-		for k, _ in pairs(tab) do
-			table.insert(res, k)
-		end
-		return table.concat(res)
-	end
 
 	-- Voicing of <s> and <f> seems to occur before m, n, ll and rr but not l or r, which are intentionally omitted.
 	local voiced = listToSet {"b", "ð", "d", "ɡ", "m", "n", "ɲ", "ʎ", "r", "v", "z", "ʒ", "ʣ", "ʤ"}
@@ -1168,7 +1191,11 @@ end
 local function generate_pronun(word, dialect, pos)
 	local suffix_syllables = {}
 	local orig_word = word
+
 	word = ulower(word)
+	local dotover_keys = concat_keys(decompose_dotover)
+	word = rsub(word, "[" .. dotover_keys .. "]", decompose_dotover)
+
 	if not pos or pos == "adverb" then
 		local word_before_ment, ment = rmatch(word, "^(.*)(m[eé]nt)$")
 		if word_before_ment and (pos == "adverb" or not rfind(word_before_ment, "[iï]$") and
