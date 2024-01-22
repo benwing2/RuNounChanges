@@ -650,7 +650,7 @@ local function postprocess_general(syllables, dialect)
 
 	-- ɾ -> r word-initially or after [lns]; needs to precede voicing assimilation as <s> will be voiced to [z] before
 	-- /r/ but not /ɾ/.
-	text = rsub(text, "([#lns]" .. sylsep_c .. ")ɾ", "%1r")
+	text = rsub(text, "([#lns]" .. sylsep_c .. "*)ɾ", "%1r")
 
 	-- Voicing or devoicing; we want to proceed from right to left, and due to the limitations of patterns (in
 	-- particular, the lack of support for alternations), it's difficult to do this cleanly using Lua patterns, so we
@@ -843,17 +843,19 @@ end
 
 local function to_IPA(syllables, suffix_syllables, dialect, pos, orig_word)
 	-- Stressed vowel is ambiguous
-	local stressed_vowel = syllables[syllables.stress].vowel
-	if rfind(stressed_vowel, "[eo]") then
-		local marks = {["e"] = {AC, GR, CFLEX, DIA}, ["o"] = {AC, GR, CFLEX}}
-		local marked_vowels = {}
-		for _, mark in ipairs(marks[stressed_vowel]) do
-			table.insert(marked_vowels, stressed_vowel .. mark)
-		end
+	if syllables.stress then
+		local stressed_vowel = syllables[syllables.stress].vowel
+		if rfind(stressed_vowel, "[eo]") then
+			local marks = {["e"] = {AC, GR, CFLEX, DIA}, ["o"] = {AC, GR, CFLEX}}
+			local marked_vowels = {}
+			for _, mark in ipairs(marks[stressed_vowel]) do
+				table.insert(marked_vowels, stressed_vowel .. mark)
+			end
 
-		error(("In respelling '%s', the stressed vowel '%s' is ambiguous. Please mark it with an acute, " ..
-			"grave, or combined accent: %s."):format(orig_word, stressed_vowel,
-			m_table.serialCommaJoin(marked_vowels, {dontTag = true, conj = "or"})))
+			error(("In respelling '%s', the stressed vowel '%s' is ambiguous. Please mark it with an acute, " ..
+				"grave, or combined accent: %s."):format(orig_word, stressed_vowel,
+				m_table.serialCommaJoin(marked_vowels, {dontTag = true, conj = "or"})))
+		end
 	end
 
 	-- Final -r is ambiguous in many cases.
@@ -1166,6 +1168,7 @@ end
 local function generate_pronun(word, dialect, pos)
 	local suffix_syllables = {}
 	local orig_word = word
+	word = ulower(word)
 	if not pos or pos == "adverb" then
 		local word_before_ment, ment = rmatch(word, "^(.*)(m[eé]nt)$")
 		if word_before_ment and (pos == "adverb" or not rfind(word_before_ment, "[iï]$") and
@@ -1206,8 +1209,7 @@ function export.generate_phonemic_phonetic(parsed_respellings)
 				termobj.raw_phonemic = nil
 				termobj.raw_phonetic = nil
 			else
-				local word = ulower(termobj.term)
-				termobj.phonemic = generate_pronun(word, dialect, termobj.pos)
+				termobj.phonemic = generate_pronun(termobj.term, dialect, termobj.pos)
 				-- set to nil so by-value comparisons respect only the resulting phonemic/phonetic and qualifiers
 				termobj.term = nil
 			end
