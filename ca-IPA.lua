@@ -28,7 +28,7 @@ FIXME:
 8. bm -> [mm] e.g. [[subministrament]]; seems not to operate in Valencian.
 9. ë (and presumably ê) doesn't work in secondary stress, always becomes /ɛ/ (e.g. in [[extrajudicial]] respelled
    'ëxtrajudiciàl'; this seems to be because the handling of ë goes through mid_vowel_hint, which doesn't work for
-   secondary stress.
+   secondary stress. [DONE]
 10. Respect ʃ at beginning of word in Valencian.
 11. [ʃ] in single substitution specs should match against written x.
 12. Prefixes e.g. [[xilo-]] should not have stress by default, and written primary stresses should be converted to
@@ -49,13 +49,14 @@ FIXME:
 21. Finish rewriting do_dialect_specific() to operate on whole word using Lua patterns.
 22. Implement multiword handling.
 23. Make sure suffix handling works correctly.
-24. Add many more test cases and redo test harness ala the German test harness.
-25. Redo handling of mid-vowel hints so it gets done early and in one place.
+24. Add many more test cases and redo test harness ala the German test harness. [DONE]
+25. Redo handling of mid-vowel hints so it gets done early and in one place. [DONE]
 26. Think about how to solve the issue of mid-vowel hints along with secondary stress marks in substitution specs.
     Maybe a single mid-vowel spec should be rewritten to be a single substitution spec and the insertion of the
-	mid-vowel spec should happen during resolution of substitution specs.
+	mid-vowel spec should happen during resolution of substitution specs. [DONE]
 27. <tm> should default to [dm] not [mm].
-28. Fix handling of mid vowel default in -è/-ès/-esa so it doesn't affect [[tèbia]] etc.
+28. Fix handling of mid vowel default in -è/-ès/-esa so it doesn't affect [[tèbia]] etc. [DONE]
+29. x- after hyphen should probably become tx- in Valencian, cf. [[para-xocs]].
 ]=]
 
 
@@ -68,13 +69,19 @@ local ulower = mw.ustring.lower
 local u = mw.ustring.char
 local ugcodepoint = mw.ustring.gcodepoint
 
--- version of rsubn() that discards all but the first return value
+-- Version of rsubn() that discards all but the first return value.
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
 	return retval
 end
 
--- apply rsub() repeatedly until no change
+-- Version of rsubn() that returns a 2nd argument boolean indicating whether a substitution was made.
+local function rsubb(term, foo, bar)
+	local retval, nsubs = rsubn(term, foo, bar)
+	return retval, nsubs > 0
+end
+
+-- Apply rsub() repeatedly until no change.
 local function rsub_repeatedly(term, foo, bar)
 	while true do
 		local new_term = rsub(term, foo, bar)
@@ -99,11 +106,6 @@ local function split_on_comma(term)
 	else
 		return rsplit(term, ",")
 	end
-end
-
-local function track_mid_vowel(vowel, cont)
-	require("Module:debug/track"){"ca-IPA/" .. vowel, "ca-IPA/" .. vowel .. "/" .. cont}
-	return true
 end
 
 
@@ -317,6 +319,40 @@ local function fix_y(word)
 	return word
 end
 
+local function mid_vowel_fixes(word)
+	local function track_mid_vowel(vowel, cont)
+		require("Module:debug/track"){"ca-IPA/" .. vowel, "ca-IPA/" .. vowel .. "/" .. cont}
+		return true
+	end
+	local changed
+	-- final -el (not -ell) usually è but not too many cases
+	word, changed = rsubb(word, "e(nts?)$", "é%1")
+	if changed then
+		track_mid_vowel("e", "nt-nts")
+	end
+	word, changed = rsubb(word, "e(rs?)$", "é%1")
+	if changed then
+		track_mid_vowel("e", "r-rs")
+	end
+	word, changed = rsubb(word, "o(rs?)$", "ó%1")
+	if changed then
+		track_mid_vowel("o", "r-rs")
+	end
+	word, changed = rsubb(word, "è(s?)$", "ê%1")
+	if changed then
+		track_mid_vowel("è", "s-blank")
+	end
+	word, changed = rsubb(word, "e(s[oe]s)$", "ê%1")
+	if changed then
+		track_mid_vowel("e", "sos-sa-ses")
+	end
+	word, changed = rsubb(word, "e(sa)$", "ê%1")
+	if changed then
+		track_mid_vowel("e", "sos-sa-ses")
+	end
+	return word
+end
+
 local function word_fixes(word)
 	word = rsub(word, "%(rr%)", TEMP_PAREN_RR)
 	word = rsub(word, "%(r%)", TEMP_PAREN_R)
@@ -325,6 +361,7 @@ local function word_fixes(word)
 	word = fix_prefixes(word) -- internal pause after a prefix
 	word = restore_diaereses(word) -- no diaeresis saving
 	word = fix_y(word) -- ny > ñ else y > i vowel or consonant
+	word = mid_vowel_fixes(word)
 	-- all words in pn- (e.g. [[pneumotòrax]] and mn- (e.g. [[mnemònic]]) have silent p/m in both Central and Valencian
 	word = rsub(word, "^[pm]n", "n")
 
@@ -332,7 +369,7 @@ local function word_fixes(word)
 end
 
 local function split_vowels(vowels)
-	local syllables = {{onset = "", vowel = usub(vowels, 1, 1), coda = ""}}
+	local syllables = {{onset = "", vowel = usub(vowels, 1, 1), coda = "", separator = ""}}
 	vowels = usub(vowels, 2)
 
 	while vowels ~= "" do
@@ -351,8 +388,13 @@ local function split_vowels(vowels)
 	return syllables
 end
 
--- Split the word into syllables
-local function split_syllables(word)
+-- Split the word into syllables. Return a list of syllable objects, each of which contains fields `onset`, `vowel`,
+-- `coda`, `separator` (a user-specified syllable divider that goes before the syllable; one of '·', '-' or '.') and
+-- `stressed` (a boolean indicating that the syllable is stressed). In addition, the list has fields `stress` (the
+-- index of the syllable with primary stress) and `is_prefix` (true if the word is a prefix, i.e. it ends in '-').
+-- Normally, prefixes are treated as unstressed if a stressed syllable isn't explicitly marked, but this can be
+-- overridden with `stress_prefixes`, which causes the automatic stress-assignment algorithm to run for these terms.
+local function split_syllables(word, stress_prefixes)
 	local syllables = {}
 
 	local remainder = word
@@ -400,10 +442,11 @@ local function split_syllables(word)
 		while not (current.onset == "" or valid_onsets[current.onset]) do
 			local letter = usub(current.onset, 1, 1)
 			current.onset = usub(current.onset, 2)
-			if not rfind(letter, "[·%-%.]") then -- syllable separators
-				previous.coda = previous.coda .. letter
-			else
+			if rfind(letter, "[·%-%.]") then -- syllable separators
+				current.separator = letter
 				break
+			else
+				previous.coda = previous.coda .. letter
 			end
 		end
 	end
@@ -416,7 +459,7 @@ local function split_syllables(word)
 		end
 	end
 
-	if not syllables.stress and not is_prefix then
+	if not syllables.stress and (stress_prefixes or not is_prefix) then
 		local count = #syllables
 
 		if count == 1 then
@@ -437,12 +480,39 @@ local function split_syllables(word)
 	return syllables
 end
 
+local function reconstitute_word_from_syllables(syllables)
+	local parts = {}
+	local function ins(txt)
+		table.insert(parts, txt)
+	end
+	for _, syl in ipairs(syllables) do
+		ins(syl.separator)
+		ins(syl.onset)
+		ins(syl.vowel)
+		ins(syl.coda)
+	end
+	if syllables.is_prefix then
+		ins("-")
+	end
+	return table.concat(parts)
+end
+
+local IPA_vowels_central = {
+	["ê"] = "ɛ", ["ë"] = "ɛ", ["ô"] = "ɔ",
+}
+local IPA_vowels_balearic = {
+	["ê"] = "ə", ["ë"] = "ɛ", ["ô"] = "ɔ",
+}
+local IPA_vowels_valencian = {
+	["ê"] = "e", ["ë"] = "e", ["ô"] = "o",
+}
+
 local IPA_vowels = {
-	["a"] = "a", ["à"] = "a",
-	["e"] = "e", ["è"] = "ɛ", ["ê"] = "ɛ", ["ë"] = "ɛ", ["é"] = "e",
-	["i"] = "i", ["í"] = "i", ["ï"] = "i",
-	["o"] = "o", ["ò"] = "ɔ", ["ô"] = "ɔ", ["ó"] = "o",
-	["u"] = "u", ["ú"] = "u", ["ü"] = "u",
+	["à"] = "a",
+	["è"] = "ɛ", ["ê"] = "ɛ", ["ë"] = "ɛ", ["é"] = "e",
+	["í"] = "i", ["ï"] = "i",
+	["ò"] = "ɔ", ["ô"] = "ɔ", ["ó"] = "o",
+	["ú"] = "u", ["ü"] = "u",
 }
 
 local function replace_context_free(cons)
@@ -714,17 +784,6 @@ local function postprocess_general(syllables, dialect)
 		-- as a Lua pattern, o can be followed only by consonants and/or syllable separators (no vowels, stress marks
 		-- or word separators).
 		text = rsub(text, "o([^" .. vowel .. stress .. wordsep .. "]*[iu]" .. stress_c .. ")", "u%1")
-		-- Stressed schwa (FIXME: Redo mid-vowel hint handling).
-		if mid_vowel_hint == "ê" then -- not ë
-			text = rsub(text, "ɛ" .. AC, "ə" .. AC)
-		end
-	else -- Valencian
-		-- Variable mid vowel. FIXME: Redo mid-vowel hint handling.
-		if mid_vowel_hint == "ê" or mid_vowel_hint == "ë" or mid_vowel_hint == "ô" then
-			text = rsub(text, "([ɛëɔ])" .. AC, function(eo)
-				return ({["ɛ"] = "e", ["ë"] = "e", ["ɔ"] = "o"})[eo]  .. AC
-			end)
-		end
 	end
 
 	if dialect ~= "val" then
@@ -782,82 +841,19 @@ local function postprocess_general(syllables, dialect)
 end
 
 
-local function mid_vowel_e(syllables)
-	-- most common cases, other ones are assumed ambiguous
-	post_consonants = syllables[syllables.stress].coda
-	post_vowel = ""
-	post_letters = post_consonants
-	if syllables.stress == #syllables - 1 then
-		post_consonants = post_consonants .. syllables[#syllables].onset
-		post_vowel = syllables[#syllables].vowel
-		post_letters = post_consonants .. post_vowel .. syllables[#syllables].coda
-	end
-
-	if syllables[syllables.stress].vowel == "e" then
-		-- final -el (not -ell) usually è but not too many cases
-		if post_letters == "nt" or post_letters == "nts" then
-			track_mid_vowel("e", "nt-nts")
-			return "é"
-		elseif rfind(post_letters, "^rs?$") then
-			track_mid_vowel("e", "r-rs")
-			return "é"
-		elseif rfind(post_consonants, "^r[dfjlnrstxyz]") then -- except bilabial and velar
-			track_mid_vowel("e", "rC")
-			return "è"
-		elseif post_letters == "sos" or post_letters == "sa" or post_letters == "ses" then -- inflection of -ès
-			track_mid_vowel("e", "sos-sa-ses")
-			return "ê"
-		end
-	elseif syllables[syllables.stress].vowel == "è" then
-		if post_letters == "s" or post_letters == "" then -- -ès, -è
-			track_mid_vowel("è", "s-blank")
-			return "ê"
-		end
-	end
-
-	return nil
-end
-
-local function mid_vowel_o(syllables)
-	-- most common cases, other ones are assumed ambiguous
-	post_consonants = syllables[syllables.stress].coda
-	post_vowel = ""
-	post_letters = post_consonants
-	if syllables.stress == #syllables - 1 then
-		post_consonants = post_consonants .. syllables[#syllables].onset
-		post_vowel = syllables[#syllables].vowel
-		post_letters = post_consonants .. post_vowel .. syllables[#syllables].coda
-	end
-
-	-- this may be mostly OK but there aren't too many examples; if we want to add this it should be limited to -oic(s)/-oica/-oiques, -oide(s)
-	--elseif usub(post_letters, 1, 1) == "i" and usub(post_letters, 1, 2) ~= "ix" then -- diphthong oi
-	--	track_mid_vowel("o", "i-not-ix")
-	--	return "ò"
-	if rfind(post_letters, "^rs?$") then
-		track_mid_vowel("o", "r-rs")
-		return "ó"
-	end
-
-	return nil
-end
-
-local function to_IPA(syllables, suffix_syllables, dialect, mid_vowel_hint, pos, orig_word)
+local function to_IPA(syllables, suffix_syllables, dialect, pos, orig_word)
 	-- Stressed vowel is ambiguous
 	local stressed_vowel = syllables[syllables.stress].vowel
-	if rfind(stressed_vowel, "[eéèoòó]") then
-		if mid_vowel_hint then
-			syllables[syllables.stress].vowel = mid_vowel_hint
-		elseif stressed_vowel == "e" or stressed_vowel == "o" then
-			local marks = {["e"] = {AC, GR, CFLEX, DIA}, ["o"] = {AC, GR, CFLEX}}
-			local marked_vowels = {}
-			for _, mark in ipairs(marks[stressed_vowel]) do
-				table.insert(marked_vowels, stressed_vowel .. mark)
-			end
-
-			error(("In respelling '%s', the stressed vowel '%s' is ambiguous. Please mark it with an acute, " ..
-				"grave, or combined accent: %s."):format(orig_word, stressed_vowel,
-				m_table.serialCommaJoin(marked_vowels, {dontTag = true, conj = "or"})))
+	if rfind(stressed_vowel, "[eo]") then
+		local marks = {["e"] = {AC, GR, CFLEX, DIA}, ["o"] = {AC, GR, CFLEX}}
+		local marked_vowels = {}
+		for _, mark in ipairs(marks[stressed_vowel]) do
+			table.insert(marked_vowels, stressed_vowel .. mark)
 		end
+
+		error(("In respelling '%s', the stressed vowel '%s' is ambiguous. Please mark it with an acute, " ..
+			"grave, or combined accent: %s."):format(orig_word, stressed_vowel,
+			m_table.serialCommaJoin(marked_vowels, {dontTag = true, conj = "or"})))
 	end
 
 	-- Final -r is ambiguous in many cases.
@@ -869,7 +865,6 @@ local function to_IPA(syllables, suffix_syllables, dialect, mid_vowel_hint, pos,
 	-- which should be marked as 'ê(r)'). That is, it disappears other than in Valencian. All other final r and final
 	-- rs are considered ambiguous and need to be rewritten using rr, (rr) or (r).
 	if #syllables > 1 and final.stressed then
-		-- FIXME: Explicit accents on a/i/u should be removed in split_syllables().
 		if final.coda == "r" and rfind(final.vowel, "[aàiíé]") or final.coda == "rs" and rfind(final.vowel, "[é]") or
 			final.vowel == "ó" and rfind(final.coda, "^rs?$") and rfind(final.onset, "[stdç]") then
 			final.coda = TEMP_PAREN_R
@@ -908,6 +903,11 @@ local function to_IPA(syllables, suffix_syllables, dialect, mid_vowel_hint, pos,
 		syll.onset = replace_context_free(syll.onset)
 		syll.coda = replace_context_free(syll.coda)
 
+		syll.vowel = rsub(syll.vowel, ".",
+			dialect == "cen" and IPA_vowels_central or
+			dialect == "bal" and IPA_vowels_balearic or
+			IPA_vowels_valencian
+		)
 		syll.vowel = rsub(syll.vowel, ".", IPA_vowels)
 	end
 
@@ -966,11 +966,10 @@ local canonicalize_pos = {
 }
 
 
--- Parse a respelling given by the user, allowing for '+' for pagename, mid vowel hints in place of a respelling
--- and substitution specs like '[ks]' or [val:vol,ê,ks]. In general, return an object
--- {term = PARSED_RESPELLING, mid_vowel_hint = MID_VOWEL_HINT}. Other fields are set in special cases: If a raw
--- respelling was seen, the fields `raw_phonemic` and/or `raw_phonetic` are set; if ? is seen, the field `unknown` is
--- set; and if - is seen, the field `omitted` is set.
+-- Parse a respelling given by the user, allowing for '+' for pagename, mid vowel hints in place of a respelling and
+-- substitution specs like '[ks]' or [val:vol,ê,ks]. In general, return an object {term = PARSED_RESPELLING, pos = POS}.
+-- Other fields are set in special cases: If a raw respelling was seen, the fields `raw_phonemic` and/or `raw_phonetic`
+-- are set; if ? is seen, the field `unknown` is set; and if - is seen, the field `omitted` is set.
 local function parse_respelling(respelling, pagename, parse_err)
 	if respelling == "?" then
 		return {
@@ -1018,54 +1017,87 @@ local function parse_respelling(respelling, pagename, parse_err)
 		end
 	end
 
-	local mid_vowel_hint
 	if respelling == "+" then
 		respelling = pagename
-	elseif rfind(respelling, "^" .. export.mid_vowel_hint_c .. "$") then
-		mid_vowel_hint = respelling
-		respelling = pagename
-	elseif rfind(respelling, "^%[.*%]$") then
-		local subs = rsplit(rmatch(respelling, "^%[(.*)%]$"), ",")
-		respelling = pagename
-		for _, sub in ipairs(subs) do
-			local from, escaped_from, to, escaped_to, whole_word
-			if rfind(sub, "^~") then
-				-- whole-word match
-				sub = rmatch(sub, "^~(.*)$")
-				whole_word = true
-			end
-			if sub:find(":") then
-				from, to = rmatch(sub, "^(.-):(.*)$")
-			elseif rfind(sub, "^" .. export.mid_vowel_hint_c .. "$") then
-				if mid_vowel_hint then
-					parse_err(("Specified mid vowel hint twice, '%s' and '%s'"):format(
-						mid_vowel_hint, sub))
-				end
-				mid_vowel_hint = sub
-			else
-				to = sub
-				from = convert_single_substitution_to_original(to, pagename, whole_word)
-			end
-			if from then
-				local patut = require(patut_module)
-				escaped_from = patut.pattern_escape(from)
-				if whole_word then
-					escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
-				end
-				escaped_to = patut.replacement_escape(to)
-				local subbed_respelling, nsubs = rsubn(respelling, escaped_from, escaped_to)
-				if nsubs == 0 then
-					parse_err(("Substitution spec %s -> %s didn't match processed pagename"):format(from, to))
-				elseif nsubs > 1 then
-					parse_err(("Substitution spec %s -> %s matched multiple substrings in processed pagename, add more context"):format(from, to))
+	else
+		if rfind(respelling, "^" .. export.mid_vowel_hint_c .. "$") then
+			respelling = "[" .. respelling .. "]"
+		end
+		if rfind(respelling, "^%[.*%]$") then
+			local subs = rsplit(rmatch(respelling, "^%[(.*)%]$"), ",")
+			respelling = pagename
+			local mid_vowel_hint
+			local regular_subs = {}
+			for _, sub in ipairs(subs) do
+				if rfind(sub, "^" .. export.mid_vowel_hint_c .. "$") then
+					if mid_vowel_hint then
+						parse_err(("Specified mid vowel hint twice, '%s' and '%s'"):format(
+							mid_vowel_hint, sub))
+					end
+					mid_vowel_hint = sub
 				else
-					respelling = subbed_respelling
+					table.insert(regular_subs, sub)
+				end
+			end
+			if mid_vowel_hint then
+				local suffix = ""
+				-- FIXME: This duplicates logic in generate_pronun().
+				if not pos or pos == "adverb" then
+					local part_before_ment, ment = rmatch(respelling, "^(.*)(m[eé]nt)$")
+					if part_before_ment and (pos == "adverb" or not rfind(part_before_ment, "[iï]$") and
+						rfind(part_before_ment, V .. ".*" .. V)) then
+						suffix = ment
+						respelling = part_before_ment
+					end
+				end
+				local syllables = split_syllables(respelling, "stress prefixes")
+				local stressed_vowel = syllables[syllables.stress].vowel
+				if rfind(mid_vowel_hint, "[èéêë]") and (stressed_vowel == "e" or stressed_vowel == "è") or
+					rfind(mid_vowel_hint, "[òóô]") and stressed_vowel == "o" then
+						syllables[syllables.stress].vowel = mid_vowel_hint
+				else
+					parse_err(("Stressed vowel '%s' not compatible with mid vowel hint '%s'"):format(
+						stressed_vowel, mid_vowel_hint))
+				end
+				respelling = reconstitute_word_from_syllables(syllables) .. suffix
+			end
+
+			for _, sub in ipairs(regular_subs) do
+				local from, escaped_from, to, escaped_to, whole_word
+				if rfind(sub, "^~") then
+					-- whole-word match
+					sub = rmatch(sub, "^~(.*)$")
+					whole_word = true
+				end
+				if sub:find(":") then
+					from, to = rmatch(sub, "^(.-):(.*)$")
+				else
+					to = sub
+					from = convert_single_substitution_to_original(to, pagename, whole_word)
+				end
+				if from then
+					local patut = require(patut_module)
+					escaped_from = patut.pattern_escape(from)
+					if whole_word then
+						escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
+					end
+					escaped_to = patut.replacement_escape(to)
+					local subbed_respelling, nsubs = rsubn(respelling, escaped_from, escaped_to)
+					if nsubs == 0 then
+						parse_err(("Substitution spec %s -> %s didn't match processed pagename '%s'"):format(
+							from, to, respelling))
+					elseif nsubs > 1 then
+						parse_err(("Substitution spec %s -> %s matched multiple substrings in processed pagename '%s', add " ..
+							"more context"):format(from, to, respelling))
+					else
+						respelling = subbed_respelling
+					end
 				end
 			end
 		end
 	end
 
-	return {term = respelling, mid_vowel_hint = mid_vowel_hint, pos = pos}
+	return {term = respelling, pos = pos}
 end
 
 
@@ -1075,11 +1107,11 @@ end
 -- `original_input` is the raw input and `input_param` the name of the param containing the raw input; both are used
 -- only in error messages. Return an object specifying the respellings, currently with a single field 'terms' (this
 -- format is used in case other outer properties exist in the future), where 'terms' is a list of term objects. Each
--- term object contains either a field 'term' with the respelling and an optional field 'mid_vowel_hint' with the
--- extracted mid-vowel hint (e.g. "ê"), or fields 'raw_phonemic' and/or 'raw_phonetic' (if the user specified raw IPA
--- using "/.../" or "/.../ [...]" or "raw:[...]"). In addition, there may be fields 'q', 'qq', 'a', 'aa', and/or 'ref'
--- corresponding to inline modifiers. Each such field is a list; all are lists of strings except for 'ref', which is
--- a list of objects as returned by parse_references() in [[Module:references]].
+-- term object contains either a field `term` with the respelling and an optional part of speech `pos`, or fields
+-- `raw_phonemic` and/or `raw_phonetic` (if the user specified raw IPA using "/.../" or "/.../ [...]" or "raw:[...]"),
+-- `unknown` (if the user specified "?"), or `omitted` (if the user specified "-"). In addition, there may be fields
+-- `q`, `qq`, `a`, `aa`, and/or `ref` corresponding to inline modifiers. Each such field is a list; all are lists of
+-- strings except for `ref`, which is a list of objects as returned by parse_references() in [[Module:references]].
 function export.parse_comma_separated_groups(comma_separated_groups, pagename, original_input, input_param)
 	local function generate_obj(respelling, parse_err)
 		return parse_respelling(respelling, pagename == true and respelling or pagename, parse_err)
@@ -1129,9 +1161,9 @@ function export.parse_comma_separated_groups(comma_separated_groups, pagename, o
 end
 
 
--- Generate the pronunciation of `word` (a string, the respelling) in `dialect` ("cen", "bal" or "val"), where
--- `mid_vowel_hint` specifies how to handle stressed mid vowels.
-local function generate_pronun(word, dialect, mid_vowel_hint, pos)
+-- Generate the pronunciation of `word` (a string, the respelling) in `dialect` ("cen", "bal" or "val"), with
+-- part of speech `pos`.
+local function generate_pronun(word, dialect, pos)
 	local suffix_syllables = {}
 	local orig_word = word
 	if not pos or pos == "adverb" then
@@ -1145,19 +1177,8 @@ local function generate_pronun(word, dialect, mid_vowel_hint, pos)
 	end
 
 	word = word_fixes(word)
-
 	local syllables = split_syllables(word)
-	if mid_vowel_hint == nil then
-		if rfind(syllables[syllables.stress].vowel, "[éêëòóô]") then
-			mid_vowel_hint = rmatch(syllables[syllables.stress].vowel, "[éêëòóô]")
-		elseif rfind(syllables[syllables.stress].vowel, "[eè]") then
-			mid_vowel_hint = mid_vowel_e(syllables)
-		elseif syllables[syllables.stress].vowel == "o" then
-			mid_vowel_hint = mid_vowel_o(syllables)
-		end
-	end
-
-	local pronun = to_IPA(syllables, suffix_syllables, dialect, mid_vowel_hint, pos, orig_word)
+	local pronun = to_IPA(syllables, suffix_syllables, dialect, pos, orig_word)
 	if #suffix_syllables > 0 then
 		-- Put primary stress on the last syllable and convert existing primary stress to secondary.
 		pronun = rsub(pronun, "ˈ", "ˌ")
@@ -1186,11 +1207,9 @@ function export.generate_phonemic_phonetic(parsed_respellings)
 				termobj.raw_phonetic = nil
 			else
 				local word = ulower(termobj.term)
-				local mid_vowel_hint = termobj.mid_vowel_hint
-				termobj.phonemic = generate_pronun(word, dialect, mid_vowel_hint, termobj.pos)
+				termobj.phonemic = generate_pronun(word, dialect, termobj.pos)
 				-- set to nil so by-value comparisons respect only the resulting phonemic/phonetic and qualifiers
 				termobj.term = nil
-				termobj.mid_vowel_hint = nil
 			end
 		end
 	end
@@ -1429,7 +1448,7 @@ function export.test(pagename, respelling, dialect)
 		error(msg)
 	end
 	local parsed = parse_respelling(respelling, pagename, parse_err)
-	return generate_pronun(parsed.term, dialect, parsed.mid_vowel_hint, parsed.pos)
+	return generate_pronun(parsed.term, dialect, parsed.pos)
 end
 
 return export
