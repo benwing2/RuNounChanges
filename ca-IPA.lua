@@ -417,7 +417,7 @@ end
 -- index of the syllable with primary stress) and `is_prefix` (true if the word is a prefix, i.e. it ends in '-').
 -- Normally, prefixes are treated as unstressed if a stressed syllable isn't explicitly marked, but this can be
 -- overridden with `stress_prefixes`, which causes the automatic stress-assignment algorithm to run for these terms.
-local function split_syllables(word, stress_prefixes)
+local function split_syllables(word, stress_prefixes, may_be_uppercase)
 	local syllables = {}
 
 	local remainder = word
@@ -438,7 +438,8 @@ local function split_syllables(word, stress_prefixes)
 
 		-- FIXME: Using C and V below instead of the existing patterns slows things down TREMENDOUSLY.
 		-- Not sure why.
-		local vowel_list = "aeiouàèéêëíòóôúïü" .. DOTOVER
+		local vowel_list = may_be_uppercase and "aeiouàèéêëíòóôúïüAEIOUÀÈÉÊËÍÒÓÔÚÏÜ" .. DOTOVER or
+			"aeiouàèéêëíòóôúïü" .. DOTOVER
 		consonants, remainder = rmatch(remainder, "^([^" .. vowel_list .. "]*)(.-)$")
 		vowels, remainder = rmatch(remainder, "^([" .. vowel_list .. "]*)(.-)$")
 
@@ -500,7 +501,8 @@ local function split_syllables(word, stress_prefixes)
 		else
 			local final = syllables[count]
 
-			if final.coda == "" or final.coda == "s" or (final.coda == "n" and (final.vowel == "e" or final.vowel == "i")) then
+			if final.coda == "" or final.coda == "s" or (final.coda == "n" and (
+				final.vowel == "e" or final.vowel == "i" or final.vowel == "ï")) then
 				syllables.stress = count - 1
 			else
 				syllables.stress = count
@@ -913,7 +915,7 @@ local function to_IPA(syllables, suffix_syllables, dialect, pos, orig_word)
 			"need rewriting using 'rr'."):format(orig_word))
 	end
 
-	local syllables_IPA = {stress = syllables.stress}
+	local syllables_IPA = {stress = syllables.stress, is_prefix = syllables.is_prefix, is_suffix = syllables.is_suffix}
 
 	for key, val in ipairs(syllables) do
 		syllables_IPA[key] = {onset = val.onset, vowel = val.vowel, coda = val.coda, stressed = val.stressed}
@@ -963,10 +965,11 @@ local function convert_single_substitution_to_original(to, pagename, whole_word)
 	-- escaped.
 	escaped_from = escaped_from:gsub("%(rr%)", "r")
 	escaped_from = escaped_from:gsub("%(r%)", "r")
-	escaped_from = escaped_from:gsub("ks", "x"):gsub("gz", "x"):gsub("([bg])%1l", "%1l"):gsub("[.%-]", "")
+	escaped_from = escaped_from:gsub("ks", "x"):gsub("Ks", "X"):gsub("gz", "x"):gsub("([bg])%1l", "%1l"):gsub("[.%-]", "")
 	escaped_from = require(patut_module).pattern_escape(escaped_from)
 	escaped_from = escaped_from:gsub("rr", "rr?")
 	escaped_from = escaped_from:gsub("ss", "ss?")
+	escaped_from = escaped_from:gsub("ʃ", "[xX]")
 	escaped_from = escaped_from:gsub("β", "b")
 	escaped_from = escaped_from:gsub("ð", "d")
 	escaped_from = escaped_from:gsub("ɣ", "g")
@@ -1088,10 +1091,12 @@ local function parse_respelling(respelling, pagename, parse_err)
 						respelling = part_before_ment
 					end
 				end
-				local syllables = split_syllables(respelling, "stress prefixes")
+				local syllables = split_syllables(respelling, "stress prefixes", "may be uppercase")
 				local stressed_vowel = syllables[syllables.stress].vowel
-				if rfind(mid_vowel_hint, "[èéêë]") and (stressed_vowel == "e" or stressed_vowel == "è") or
-					rfind(mid_vowel_hint, "[òóô]") and stressed_vowel == "o" then
+				if stressed_vowel == mid_vowel_hint then
+					-- do nothing
+				elseif rfind(mid_vowel_hint, "[èéêë]") and rfind(stressed_vowel, "[eEèÈ]") or
+					rfind(mid_vowel_hint, "[òóô]") and rfind(stressed_vowel, "[oO]") then
 						syllables[syllables.stress].vowel = mid_vowel_hint
 				else
 					parse_err(("Stressed vowel '%s' not compatible with mid vowel hint '%s'"):format(
