@@ -222,11 +222,16 @@ local valid_onsets = listToSet {
 } 
 
 local decompose_dotover = {
-	-- No composed i or u with DOTOVER.
+	-- No composed i, u or U with DOTOVER.
 	["ȧ"] = "a" .. DOTOVER,
 	["ė"] = "e" .. DOTOVER,
 	["ȯ"] = "o" .. DOTOVER,
 	["ẏ"] = "y" .. DOTOVER,
+	["Ȧ"] = "A" .. DOTOVER,
+	["Ė"] = "E" .. DOTOVER,
+	["İ"] = "I" .. DOTOVER,
+	["Ȯ"] = "O" .. DOTOVER,
+	["Ẏ"] = "Y" .. DOTOVER,
 }
 
 local function fix_prefixes(word)
@@ -538,6 +543,54 @@ local function reconstitute_word_from_syllables(syllables)
 	end
 	return table.concat(parts)
 end
+
+local function decompose_respelling(text)
+	local dotover_keys = concat_keys(decompose_dotover)
+	return rsub(text, "[" .. dotover_keys .. "]", decompose_dotover)
+end
+
+local function canon_respelling(text)
+	local function canon_spaces(text)
+		text = rsub(text, "%s+", " ")
+		text = rsub(text, "^ ", "")
+		text = rsub(text, " $", "")
+		return text
+	end
+
+	text = canon_spaces(text)
+	-- eliminate upside down punctuation
+	text = rsub(text, "[¡¿]", "")
+	-- eliminate utterance-final punctuation
+	text = rsub(text, "[!?.]$", "")
+	-- eliminate double and triple quotes
+	text = rsub(text, "''+", "")
+	-- may need to eliminate extraneous spaces again, e.g. if there was a space before or after an eliminated
+	-- punctuation mark
+	text = canon_spaces(text)
+	-- convert commas and en/en dashes to IPA foot boundaries
+	text = rsub(text, " [,–—] ", " | ")
+	-- question mark or exclamation point in the middle of a sentence -> IPA foot boundary
+	text = rsub(text, "([^ ]) *[!?] *([^ ])", "%1 | %2")
+	return text
+end
+
+	-- Make prefixes unstressed unless they have an explicit stress marker; also make certain
+	-- monosyllabic words (e.g. [[el]], [[la]], [[de]], [[en]], etc.) without stress marks be
+	-- unstressed.
+	local words = rsplit(text, " ")
+	for i, word in ipairs(words) do
+		if rfind(word, "%-$") and not rfind(word, accent_c) or unstressed_words[word] then
+			-- add CFLEX to the last vowel not the first one, or we will mess up 'que' by
+			-- adding the CFLEX after the 'u'
+			words[i] = rsub(word, "^(.*" .. V .. ")", "%1" .. CFLEX)
+		end
+	end
+	text = table.concat(words, " ")
+	-- Convert hyphens to spaces, to handle [[Austria-Hungría]], [[franco-italiano]], etc.
+	text = rsub(text, "%-", " ")
+	-- put # at word beginning and end and double ## at text/foot boundary beginning/end
+	text = rsub(text, " | ", "# | #")
+	text = "##" .. rsub(text, " ", "# #") .. "##"
 
 local IPA_vowels_central = {
 	["ê"] = "ɛ", ["ë"] = "ɛ", ["ô"] = "ɔ",
@@ -875,7 +928,7 @@ local function postprocess_general(syllables, dialect)
 end
 
 
-local function to_IPA(syllables, suffix_syllables, dialect, pos, orig_word)
+local function preprocess_word(syllables, suffix_syllables, dialect, pos, orig_word)
 	-- Stressed vowel is ambiguous
 	if syllables.stress then
 		local stressed_vowel = syllables[syllables.stress].vowel
@@ -990,6 +1043,88 @@ local function convert_single_substitution_to_original(to, pagename, whole_word)
 end
 
 
+local function apply_substitution_spec(respelling, pagename, pos, allow_mid_vowel_hints, parse_err)
+	local subs = split_on_comma(rmatch(respelling, "^%[(.*)%]$"))
+	respelling = pagename
+	local mid_vowel_hint
+	local regular_subs = {}
+	for _, sub in ipairs(subs) do
+		if rfind(sub, "^" .. export.mid_vowel_hint_c .. "$") then
+			if mid_vowel_hint then
+				parse_err(("Specified mid vowel hint twice, '%s' and '%s'"):format(
+					mid_vowel_hint, sub))
+			end
+			mid_vowel_hint = sub
+		else
+			table.insert(regular_subs, sub)
+		end
+	end
+	if mid_vowel_hint then
+		if not allow_mid_vowel_hints then
+			parse_err(("Mid vowel hint '%s' not allowed when apply one substitution spec to multiple words"):format(
+				mid_vowel_hint))
+		end
+		local suffix = ""
+		-- FIXME: This duplicates logic in to_IPA().
+		if not pos or pos == "adverb" then
+			local part_before_ment, ment = rmatch(respelling, "^(.*)(m[eé]nt)$")
+			if part_before_ment and (pos == "adverb" or not rfind(part_before_ment, "[iï]$") and
+				rfind(part_before_ment, V .. ".*" .. V)) then
+				suffix = ment
+				respelling = part_before_ment
+			end
+		end
+		local syllables = split_syllables(respelling, "stress prefixes", "may be uppercase")
+		local stressed_vowel = syllables[syllables.stress].vowel
+		if stressed_vowel == mid_vowel_hint then
+			-- do nothing
+		elseif rfind(mid_vowel_hint, "[èéêë]") and rfind(stressed_vowel, "[eEèÈ]") or
+			rfind(mid_vowel_hint, "[òóô]") and rfind(stressed_vowel, "[oO]") then
+				syllables[syllables.stress].vowel = mid_vowel_hint
+		else
+			parse_err(("Stressed vowel '%s' not compatible with mid vowel hint '%s'"):format(
+				stressed_vowel, mid_vowel_hint))
+		end
+		respelling = reconstitute_word_from_syllables(syllables) .. suffix
+	end
+
+	for _, sub in ipairs(regular_subs) do
+		local from, escaped_from, to, escaped_to, whole_word
+		if rfind(sub, "^~") then
+			-- whole-word match
+			sub = rmatch(sub, "^~(.*)$")
+			whole_word = true
+		end
+		if sub:find(":") then
+			from, to = rmatch(sub, "^(.-):(.*)$")
+		else
+			to = sub
+			from = convert_single_substitution_to_original(to, pagename, whole_word)
+		end
+		if from then
+			local patut = require(patut_module)
+			escaped_from = patut.pattern_escape(from)
+			if whole_word then
+				escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
+			end
+			escaped_to = patut.replacement_escape(to)
+			local subbed_respelling, nsubs = rsubn(respelling, escaped_from, escaped_to)
+			if nsubs == 0 then
+				parse_err(("Substitution spec %s -> %s didn't match processed pagename '%s'"):format(
+					from, to, respelling))
+			elseif nsubs > 1 then
+				parse_err(("Substitution spec %s -> %s matched multiple substrings in processed pagename '%s', add " ..
+					"more context"):format(from, to, respelling))
+			else
+				respelling = subbed_respelling
+			end
+		end
+	end
+
+	return respelling
+end
+
+
 local canonicalize_pos = {
 	n = "noun",
 	noun = "noun",
@@ -1007,10 +1142,33 @@ local canonicalize_pos = {
 }
 
 
+local function parse_off_pos(respelling, parse_err)
+	local pos, rest = respelling:match("^([a-z]+)/(.*)$")
+	if pos then
+		if not canonicalize_pos[pos] then
+			local valid_pos = {}
+			for vp, _ in pairs(canonicalize_pos) do
+				table.insert(valid_pos, vp)
+			end
+			table.sort(valid_pos)
+			parse_err(("Unrecognized part of speech '%s', should be one of %s"):format(pos,
+				table.concat(valid_pos, ", ")))
+		end
+		pos = canonicalize_pos[pos]
+		respelling = rest
+		if respelling == "" then
+			respelling = "+"
+		end
+	end
+	return pos, respelling
+end
+
+
 -- Parse a respelling given by the user, allowing for '+' for pagename, mid vowel hints in place of a respelling and
--- substitution specs like '[ks]' or [val:vol,ê,ks]. In general, return an object {term = PARSED_RESPELLING, pos = POS}.
--- Other fields are set in special cases: If a raw respelling was seen, the fields `raw_phonemic` and/or `raw_phonetic`
--- are set; if ? is seen, the field `unknown` is set; and if - is seen, the field `omitted` is set.
+-- substitution specs like '[ks]' or [val:vol,ê,ks]. In general, return an object {words = {WORD, WORD, ...}} where
+-- WORD is of the form {term = PARSED_RESPELLING, pos = POS}. Other fields are set in special cases: If a raw respelling
+-- was seen, the fields `raw_phonemic` and/or `raw_phonetic` are set; if '?' is seen, the field `unknown` is set; and if
+-- '-' is seen, the field `omitted` is set.
 local function parse_respelling(respelling, pagename, parse_err)
 	if respelling == "?" then
 		return {
@@ -1042,105 +1200,96 @@ local function parse_respelling(respelling, pagename, parse_err)
 		}
 	end
 
-	local pos, rest = respelling:match("^([a-z]+)/(.*)$")
-	if pos then
-		if not canonicalize_pos[pos] then
-			local valid_pos = {}
-			for vp, _ in pairs(canonicalize_pos) do
-				table.insert(valid_pos, vp)
+	pagename = decompose_respelling(pagename)
+	respelling = decompose_respelling(respelling)
+
+	local function split_respelling_into_words(respelling, parse_pos)
+		respelling = canon_respelling(respelling)
+		local word_objs = {}
+		local respelling_words = rsplit(respelling, " ")
+		for _, word in ipairs(respelling_words) do
+			local pos
+			if parse_pos then
+				pos, word = parse_off_pos(word, parse_err)
 			end
-			error(("Unrecognized part of speech '%s', should be one of %s"):format(pos, table.concat(valid_pos, ", ")))
+			table.insert(word_objs, {term = word, pos = pos})
 		end
-		pos = canonicalize_pos[pos]
-		respelling = rest
-		if respelling == "" then
-			respelling = "+"
-		end
+		return {words = word_objs}
 	end
 
-	if respelling == "+" then
-		respelling = pagename
+	local function substitute_respelling_word(respelling_word, pagename_word)
+		local pos
+		pos, respelling_word = parse_off_pos(respelling_word, parse_err)
+		if respelling_word == "+" then
+			respelling_word = pagename_word
+		else
+			if rfind(respelling_word, "^" .. export.mid_vowel_hint_c .. "$") then
+				respelling_word = "[" .. respelling_word .. "]"
+			end
+			if rfind(respelling_word, "^%[.*%]$") then
+				respelling_word = apply_substitution_spec(respelling_word, pagename_word, pos,
+					"allow mid vowel hint", parse_err)
+			end
+		end
+		return {term = respelling_word, pos = pos}
+	end
+
+	-- At this point, if there are multiple words in the pagename, there are three syntaxes allowed: all-at-once,
+	-- replacement or word-by-word. All-at-once syntax involves either a + representing the entire pagename, or a
+	-- substitution spec that applies to all words in the pagename. This syntax cannot have a prefixed part of speech
+	-- because it wouldn't be clear which word to apply the part of speech to. Replacement syntax simply spells out the
+	-- respelling without any substitution specs or +'s (but possibly with parts of speech prefixed to individual
+	-- words), and can have a different number of words than the pagename (essentially, the pagename is disregarded).
+	-- Word-by-word syntax involves a combination of respelled words, per-word substitution specs and/or a +
+	-- representing an individual word, and must have the same number of words as the pagename so that substitution
+	-- specs and +'s can be lined up with words in the pagename. In all cases, the return value is in the same format;
+	-- see comment at top of function.
+	if pagename:find(" ") then
+		if respelling == "+" then
+			return split_respelling_into_words(pagename)
+		elseif rfind(respelling, "^%[.*%]$") then
+			-- all-at-once syntax with substitution spec
+			return split_respelling_into_words(apply_substitution_spec(respelling, pagename, nil, false, parse_err))
+		elseif rfind(respelling, "^([a-z]+)/$") or rfind(respelling, "^([a-z]+)/%[[^%[%]]*%]$") then
+			-- attempt to include a part of speech in all-at-once syntax
+			parse_err(("Part of speech not allowed when pagename is multiword and all-at-once syntax is used in " ..
+				"the respelling, but saw '%s'"):format(respelling))
+		elseif rfind(respelling, "^" .. export.mid_vowel_hint_c .. "$") then
+			-- attempt to use a mid-vowel hint in all-at-once syntax
+			parse_err(("Single mid-vowel hint not allowed when pagename is multiword because it's not clear which " ..
+				"word to apply it to, but saw '%s'"):format(respelling))
+		elseif rfind(respelling, "[+%[%]]") or rfind(respelling, "^" .. export.mid_vowel_hint_c .. " ") or
+			rfind(respelling, " " .. export.mid_vowel_hint_c .. " ") or
+			rfind(respelling, " " .. export.mid_vowel_hint_c .. "$") then
+			-- word-by-word syntax
+			local sub_with_space = rmatch(respelling, "%[[^%[%]]* [^%[%]]*%]")
+			if sub_with_space then
+				parse_err(("When using word-by-word syntax with a multiword pagename, saw substitution spec '%s' " ..
+					"with spaces, which is not allowed because it must match a single word"):format(sub_with_space))
+			end
+			pagename = canon_respelling(pagename)
+			respelling = canon_respelling(respelling)
+			local pagename_words = rsplit(pagename, " ")
+			local respelling_words = rsplit(respelling, " ")
+			if #pagename_words ~= #respelling_words then
+				parse_err(("When using word-by-word syntax with a multiword pagename, saw %s words in pagename but " ..
+					"%s word%s in respelling; they need to match"):format(pagename_words, respelling_words,
+						respelling_words > 1 and "s" or ""))
+			end
+			local word_objs = {}
+			for i = 1, #pagename_words do
+				table.insert(word_objs, substitute_respelling_word(respelling_words[i], pagename_words[i]))
+			end
+			return {words = word_objs}
+		else
+			-- replacement syntax; pagename ignored
+			return split_respelling_into_words(respelling, "parse pos")
+		end
 	else
-		if rfind(respelling, "^" .. export.mid_vowel_hint_c .. "$") then
-			respelling = "[" .. respelling .. "]"
-		end
-		if rfind(respelling, "^%[.*%]$") then
-			local subs = rsplit(rmatch(respelling, "^%[(.*)%]$"), ",")
-			respelling = pagename
-			local mid_vowel_hint
-			local regular_subs = {}
-			for _, sub in ipairs(subs) do
-				if rfind(sub, "^" .. export.mid_vowel_hint_c .. "$") then
-					if mid_vowel_hint then
-						parse_err(("Specified mid vowel hint twice, '%s' and '%s'"):format(
-							mid_vowel_hint, sub))
-					end
-					mid_vowel_hint = sub
-				else
-					table.insert(regular_subs, sub)
-				end
-			end
-			if mid_vowel_hint then
-				local suffix = ""
-				-- FIXME: This duplicates logic in generate_pronun().
-				if not pos or pos == "adverb" then
-					local part_before_ment, ment = rmatch(respelling, "^(.*)(m[eé]nt)$")
-					if part_before_ment and (pos == "adverb" or not rfind(part_before_ment, "[iï]$") and
-						rfind(part_before_ment, V .. ".*" .. V)) then
-						suffix = ment
-						respelling = part_before_ment
-					end
-				end
-				local syllables = split_syllables(respelling, "stress prefixes", "may be uppercase")
-				local stressed_vowel = syllables[syllables.stress].vowel
-				if stressed_vowel == mid_vowel_hint then
-					-- do nothing
-				elseif rfind(mid_vowel_hint, "[èéêë]") and rfind(stressed_vowel, "[eEèÈ]") or
-					rfind(mid_vowel_hint, "[òóô]") and rfind(stressed_vowel, "[oO]") then
-						syllables[syllables.stress].vowel = mid_vowel_hint
-				else
-					parse_err(("Stressed vowel '%s' not compatible with mid vowel hint '%s'"):format(
-						stressed_vowel, mid_vowel_hint))
-				end
-				respelling = reconstitute_word_from_syllables(syllables) .. suffix
-			end
-
-			for _, sub in ipairs(regular_subs) do
-				local from, escaped_from, to, escaped_to, whole_word
-				if rfind(sub, "^~") then
-					-- whole-word match
-					sub = rmatch(sub, "^~(.*)$")
-					whole_word = true
-				end
-				if sub:find(":") then
-					from, to = rmatch(sub, "^(.-):(.*)$")
-				else
-					to = sub
-					from = convert_single_substitution_to_original(to, pagename, whole_word)
-				end
-				if from then
-					local patut = require(patut_module)
-					escaped_from = patut.pattern_escape(from)
-					if whole_word then
-						escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
-					end
-					escaped_to = patut.replacement_escape(to)
-					local subbed_respelling, nsubs = rsubn(respelling, escaped_from, escaped_to)
-					if nsubs == 0 then
-						parse_err(("Substitution spec %s -> %s didn't match processed pagename '%s'"):format(
-							from, to, respelling))
-					elseif nsubs > 1 then
-						parse_err(("Substitution spec %s -> %s matched multiple substrings in processed pagename '%s', add " ..
-							"more context"):format(from, to, respelling))
-					else
-						respelling = subbed_respelling
-					end
-				end
-			end
-		end
+		local word_obj = substitute_respelling_word(respelling, pagename)
+		word_obj.term = canon_respelling(word_obj.term)
+		return {words = {word_obj}}
 	end
-
-	return {term = respelling, pos = pos}
 end
 
 
@@ -1204,29 +1353,26 @@ function export.parse_comma_separated_groups(comma_separated_groups, pagename, o
 end
 
 
--- Generate the pronunciation of `word` (a string, the respelling) in `dialect` ("cen", "bal" or "val"), with
--- part of speech `pos`.
-local function generate_pronun(word, dialect, pos)
+-- Generate the pronunciation of `words` (a list of word objects representing respellings, each of which is an object
+-- of the form {term = RESPELLING, pos = PART_OF_SPEECH} in `dialect` ("cen", "bal" or "val").
+local function to_IPA(words, dialect)
 	local suffix_syllables = {}
-	local orig_word = word
+	local orig_text = text
 
-	word = ulower(word)
-	local dotover_keys = concat_keys(decompose_dotover)
-	word = rsub(word, "[" .. dotover_keys .. "]", decompose_dotover)
-
+	text = ulower(text)
 	if not pos or pos == "adverb" then
-		local word_before_ment, ment = rmatch(word, "^(.*)(m[eé]nt)$")
-		if word_before_ment and (pos == "adverb" or not rfind(word_before_ment, "[iï]$") and
-			rfind(word_before_ment, V .. ".*" .. V)) then
+		local text_before_ment, ment = rmatch(text, "^(.*)(m[eé]nt)$")
+		if text_before_ment and (pos == "adverb" or not rfind(text_before_ment, "[iï]$") and
+			rfind(text_before_ment, V .. ".*" .. V)) then
 			suffix_syllables = {{onset = "m", vowel = "e", coda = "nt", stressed = true}}
 			pos = "adjective"
-			word = word_before_ment
+			text = text_before_ment
 		end
 	end
 
-	word = word_fixes(word)
-	local syllables = split_syllables(word)
-	local pronun = to_IPA(syllables, suffix_syllables, dialect, pos, orig_word)
+	text = word_fixes(word)
+	local syllables = split_syllables(text)
+	local pronun = preprocess_word(syllables, suffix_syllables, dialect, pos, orig_text)
 	if #suffix_syllables > 0 then
 		-- Put primary stress on the last syllable and convert existing primary stress to secondary.
 		pronun = rsub(pronun, "ˈ", "ˌ")
@@ -1254,7 +1400,7 @@ function export.generate_phonemic_phonetic(parsed_respellings)
 				termobj.raw_phonemic = nil
 				termobj.raw_phonetic = nil
 			else
-				termobj.phonemic = generate_pronun(termobj.term, dialect, termobj.pos)
+				termobj.phonemic = to_IPA(termobj.words, dialect)
 				-- set to nil so by-value comparisons respect only the resulting phonemic/phonetic and qualifiers
 				termobj.term = nil
 			end
@@ -1495,7 +1641,7 @@ function export.test(pagename, respelling, dialect)
 		error(msg)
 	end
 	local parsed = parse_respelling(respelling, pagename, parse_err)
-	return generate_pronun(parsed.term, dialect, parsed.pos)
+	return to_IPA(parsed.words, dialect)
 end
 
 return export
