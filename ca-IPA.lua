@@ -29,10 +29,10 @@ FIXME:
 9. ë (and presumably ê) doesn't work in secondary stress, always becomes /ɛ/ (e.g. in [[extrajudicial]] respelled
    'ëxtrajudiciàl'; this seems to be because the handling of ë goes through mid_vowel_hint, which doesn't work for
    secondary stress. [DONE]
-10. Respect ʃ at beginning of word in Valencian.
-11. [ʃ] in single substitution specs should match against written x.
+10. Respect ʃ at beginning of word in Valencian. [DONE]
+11. [ʃ] in single substitution specs should match against written x. [DONE]
 12. Prefixes e.g. [[xilo-]] should not have stress by default, and written primary stresses should be converted to
-    secondary.
+    secondary. [DONE]
 13. Remove single quote near beginning of processing so we don't need to respell infinitives like [[captindre's]].
 14. Correctly handle -bl and -gl in respelling, generating [bl] and [gl].
 15. Correctly handle [βðɣ] in respelling forcing fricatives; should not be fortitioned.
@@ -47,7 +47,7 @@ FIXME:
 	utterance initial. Verify against ca-IPA equivalent on cawikt and also based on {{w|Catalan phonology}} and the IEC
 	grammar that Vriullop linked.
 21. Finish rewriting do_dialect_specific() to operate on whole word using Lua patterns. [DONE]
-22. Implement multiword handling.
+22. Implement multiword handling. [DONE]
 23. Make sure suffix handling works correctly. [DONE]
 24. Add many more test cases and redo test harness ala the German test harness. [DONE]
 25. Redo handling of mid-vowel hints so it gets done early and in one place. [DONE]
@@ -69,53 +69,6 @@ local rsubn = mw.ustring.gsub
 local ulower = mw.ustring.lower
 local u = mw.ustring.char
 local ugcodepoint = mw.ustring.gcodepoint
-
--- Version of rsubn() that discards all but the first return value.
-local function rsub(term, foo, bar)
-	local retval = rsubn(term, foo, bar)
-	return retval
-end
-
--- Version of rsubn() that returns a 2nd argument boolean indicating whether a substitution was made.
-local function rsubb(term, foo, bar)
-	local retval, nsubs = rsubn(term, foo, bar)
-	return retval, nsubs > 0
-end
-
--- Apply rsub() repeatedly until no change.
-local function rsub_repeatedly(term, foo, bar)
-	while true do
-		local new_term = rsub(term, foo, bar)
-		if new_term == term then
-			return term
-		end
-		term = new_term
-	end
-end
-
-local function split_into_chars(text)
-	local chars = {}
-	for codepoint in ugcodepoint(text) do
-		table.insert(chars, u(codepoint))
-	end
-	return chars
-end
-
-local function split_on_comma(term)
-	if term:find(",%s") or term:find("\\") then
-		return require(parse_utilities_module).split_on_comma(term)
-	else
-		return rsplit(term, ",")
-	end
-end
-
-local function concat_keys(tab)
-	local res = {}
-	for k, _ in pairs(tab) do
-		table.insert(res, k)
-	end
-	return table.concat(res)
-end
 
 
 export.dialects = {"bal", "cen", "val"}
@@ -188,10 +141,10 @@ export.mid_vowel_hint_c = "[" .. export.mid_vowel_hints .. "]"
 
 local TEMP_PAREN_R = u(0xFFF1)
 local TEMP_PAREN_RR = u(0xFFF2)
-local PREFIX_MARKER = u(0xFFF3) -- marker indicating a prefix so we can convert primary to secondary accents
 -- Pseudo-consonant at the edge of prefixes ending in a vowel and suffixes beginning with a vowel; FIXME: not currently
 -- used.
-local PSEUDOCONS = u(0xFFF4)
+local PSEUDOCONS = u(0xFFF3)
+-- local PREFIX_MARKER = u(0xFFF4) -- marker indicating a prefix so we can convert primary to secondary accents
 
 
 local valid_onsets = listToSet {
@@ -233,6 +186,80 @@ local decompose_dotover = {
 	["Ȯ"] = "O" .. DOTOVER,
 	["Ẏ"] = "Y" .. DOTOVER,
 }
+
+local unstressed_words = listToSet {
+	-- proclitic object pronouns
+	"em", "et", "es", "el", "la", "els", "les", "li", "ens", "us", "ho", "hi", "en",
+	-- enclitic object pronouns attached with hyphen so no need to include
+	-- contracted object pronouns and articles attached with apostrophe so no need to include
+	-- unstressed possessives
+	"mon", "ma", "mos", "mes", "ton", "ta", "tos", "tes", "son", "sa", "sos", "ses",
+	-- prepositions
+	"a", "de", "per", "amb", "ab", -- 'en' already included as proclitic object pronouns
+	-- prepositional contractions
+	"al", "als", "del", "dels", "pel", "pels",
+	-- articles 'el', 'la', 'els', 'les' already included as proclitic pronouns
+	-- personal articles
+	"na", -- 'en' already included above
+	-- indefinite articles
+	"un", "uns",
+	-- salat articles
+	"ets", "so", -- 'es' already included as proclitic object pronouns and 'ses', 'sa', 'sos' as possessives
+	-- conjunctions
+	"i", "o", "si", "ni", "que",
+}
+
+local unstressed_word_replacement = {
+	per = "perr",
+}
+
+-- Version of rsubn() that discards all but the first return value.
+local function rsub(term, foo, bar)
+	local retval = rsubn(term, foo, bar)
+	return retval
+end
+
+-- Version of rsubn() that returns a 2nd argument boolean indicating whether a substitution was made.
+local function rsubb(term, foo, bar)
+	local retval, nsubs = rsubn(term, foo, bar)
+	return retval, nsubs > 0
+end
+
+-- Apply rsub() repeatedly until no change.
+local function rsub_repeatedly(term, foo, bar)
+	while true do
+		local new_term = rsub(term, foo, bar)
+		if new_term == term then
+			return term
+		end
+		term = new_term
+	end
+end
+
+local function split_into_chars(text)
+	local chars = {}
+	for codepoint in ugcodepoint(text) do
+		table.insert(chars, u(codepoint))
+	end
+	return chars
+end
+
+local function split_on_comma(term)
+	if term:find(",%s") or term:find("\\") then
+		return require(parse_utilities_module).split_on_comma(term)
+	else
+		return rsplit(term, ",")
+	end
+end
+
+local function concat_keys(tab)
+	local res = {}
+	for k, _ in pairs(tab) do
+		table.insert(res, k)
+	end
+	return table.concat(res)
+end
+
 
 local function fix_prefixes(word)
 	-- Orthographic fixes for unassimilated prefixes
@@ -343,6 +370,11 @@ local function fix_y(word)
 end
 
 local function mid_vowel_fixes(word)
+	-- Don't touch known unstressed words like 'per', which shouldn't get accents.
+	if unstressed_words[word] then
+		return word
+	end
+
 	local function track_mid_vowel(vowel, cont)
 		require("Module:debug/track"){"ca-IPA/" .. vowel, "ca-IPA/" .. vowel .. "/" .. cont}
 		return true
@@ -425,6 +457,12 @@ end
 local function split_syllables(word, stress_prefixes, may_be_uppercase)
 	local syllables = {}
 
+	-- Treat unstressed words as if DOTOVER were added above the vowel, unless `stress_prefixes` is set, in which
+	-- case we want to assign stress to words like [[ton]] that may look like unstressed words, so that mid vowel
+	-- hints work correctly with them.
+	local saw_dotover = not stress_prefixes and unstressed_words[word]
+	-- Respell certain unstressed words.
+	word = unstressed_word_replacement[word] or word
 	local remainder = word
 	local is_prefix = false
 	if remainder:find("%-$") then -- prefix
@@ -436,7 +474,6 @@ local function split_syllables(word, stress_prefixes, may_be_uppercase)
 		is_suffix = true
 		remainder = remainder:gsub("^%-", "")
 	end
-	local saw_dotover = false
 
 	while remainder ~= "" do
 		local consonants, vowels
@@ -574,23 +611,6 @@ local function canon_respelling(text)
 	return text
 end
 
-	-- Make prefixes unstressed unless they have an explicit stress marker; also make certain
-	-- monosyllabic words (e.g. [[el]], [[la]], [[de]], [[en]], etc.) without stress marks be
-	-- unstressed.
-	local words = rsplit(text, " ")
-	for i, word in ipairs(words) do
-		if rfind(word, "%-$") and not rfind(word, accent_c) or unstressed_words[word] then
-			-- add CFLEX to the last vowel not the first one, or we will mess up 'que' by
-			-- adding the CFLEX after the 'u'
-			words[i] = rsub(word, "^(.*" .. V .. ")", "%1" .. CFLEX)
-		end
-	end
-	text = table.concat(words, " ")
-	-- Convert hyphens to spaces, to handle [[Austria-Hungría]], [[franco-italiano]], etc.
-	text = rsub(text, "%-", " ")
-	-- put # at word beginning and end and double ## at text/foot boundary beginning/end
-	text = rsub(text, " | ", "# | #")
-	text = "##" .. rsub(text, " ", "# #") .. "##"
 
 local IPA_vowels_central = {
 	["ê"] = "ɛ", ["ë"] = "ɛ", ["ô"] = "ɔ",
@@ -642,19 +662,9 @@ end
 
 -- Do context-sensitive phonological changes. Formerly this was all done syllable-by-syllable but that made the code
 -- tricky (since it often had to look at adjacent syllables) and full of subtle bugs. Now we first concatenate the
--- syllables back to a word and work on the word as a whole. FIXME: We should just keep the word always together and
--- not split into a syllable-by-syllable structure at all.
-local function postprocess_general(syllables, dialect)
-	-- Combine syllables.
-	local combined = {}
-	for i, syll in ipairs(syllables) do
-		local ac = i == syllables.stress and AC or -- primary stress
-			syllables[i].stressed and GR or -- secondary stress
-			""
-		table.insert(combined, syll.onset .. syll.vowel .. ac .. syll.coda)
-	end
-	local text = "##" .. table.concat(combined, ".") .. (syllables.is_prefix and "#" .. PREFIX_MARKER .. "#" or "##")
-
+-- syllables back to words and the words to the combined text and work on the text as a whole. FIXME: We should move
+-- more of the work done in preprocess_word(), e.g. most of replace_context_free(), here.
+local function postprocess_general(text, dialect)
 	-- Voicing of <s> and <f> seems to occur before m, n, ll and rr but not l or r, which are intentionally omitted.
 	local voiced = listToSet {"b", "ð", "d", "ɡ", "m", "n", "ɲ", "ʎ", "r", "v", "z", "ʒ", "ʣ", "ʤ"}
 	local voiced_keys = concat_keys(voiced)
@@ -711,28 +721,34 @@ local function postprocess_general(syllables, dialect)
 	-- t + lateral/nasal assimilation -> geminate across syllable boundary; FIXME: this doesn't always happen in -tl-,
 	-- -tm-, e.g. [[atmosfèric]] [ədmusfɛ́ɾik] in GDLC along with [[tmesi]] [dmɛ́zi]; [[atlàntic]] has [əllántik] in GDLC
 	-- but [adlántik] in DNV.
+	-- FIXME: Clean this up, maybe move below voicing assimilation, investigate whether it operates across words.
 	text = rsub(text, "t(" .. sylsep_c .. ")([lʎmn])", "%2%1%2")
 
 	-- ɡn -> ŋn e.g. [[regnar]] (including word-initial gn- e.g. [[gnòmic]], [[gneis]]) 
-	text = rsub(text, "g(" .. sylsep_c .. "*n)", "ŋ%1")
+	-- FIXME: This should be moved below voicing assimilation, and we need to investigate if it operates across words
+	-- (here I'm guessing yes).
+	text = rsub(text, "g(" .. separator_c .. "*n)", "ŋ%1")
 
 	-- n + labial > labialized assimilation
-	text = rsub(text, "n(" .. sylsep_c .. "*[mbp])", "m%1")
-	text = rsub(text, "n(" .. sylsep_c .. "*[fv])", "ɱ%1")
+	text = rsub(text, "n(" .. separator_c .. "*[mbp])", "m%1")
+	text = rsub(text, "n(" .. separator_c .. "*[fv])", "ɱ%1")
 
 	-- n + velar > velarized assimilation
-	text = rsub(text, "n(" .. sylsep_c .. "*[kɡ])", "ŋ%1")
+	text = rsub(text, "n(" .. separator_c .. "*[kɡ])", "ŋ%1")
 
 	-- l/n + palatal > palatalized assimilation
-	text = rsub(text, "([ln])(" .. sylsep_c .. "*[ʎɲʃʒʧʤ])", function(ln, palatal)
+	text = rsub(text, "([ln])(" .. separator_c .. "*[ʎɲʃʒʧʤ])", function(ln, palatal)
 		ln = ({["l"] = "ʎ", ["n"] = "ɲ"})[ln]
 		return ln .. palatal
 	end)
 
 	-- ɡʒ > d͡ʒ
+	-- FIXME: This should be moved below voicing assimilation, and we need to investigate if it operates across words
 	text = rsub(text, "ɡ(" .. sylsep_c .. "*)ʒ", "%1ʤ")
 
 	-- ɲs > ɲʃ; FIXME: not sure the purpose of this; it doesn't apply in [[menys]] or derived terms like [[menyspreu]]
+	-- NOTE: Per [https://giec.iec.cat/textgramatica/codi/4.4], it does apply in these scenarios but the result is
+	-- somewhere between [s] and [ʃ], which is why it isn't shown in GDLC.
 	-- text = rsub(text, "ɲs", "%1ʃ")
 
 	-- ɾ -> r word-initially or after [lns]; needs to precede voicing assimilation as <s> will be voiced to [z] before
@@ -747,25 +763,50 @@ local function postprocess_general(syllables, dialect)
 	-- the overall respelling ends in "##". (Similarly, as an optimization, don't check the first two characters, which
 	-- are always "##".)
 	for i = #chars - 2, 3, -1 do
-		-- We are looking for two consonants next to each other, possibly separated by a syllable divider.
+		-- We are looking for two consonants next to each other, possibly separated by a syllable or word divider.
 		-- We also handle a consonant followed by a syllable divider then a vowel, and a consonant word-finally.
 		local first = chars[i]
+		-- If `second` is nil, no assimilation occurs. Otherwise, `second` should be a consonant or empty string (which
+		-- represents a syllable or word boundary followed by a vowel or end of string), and we assimilate to that
+		-- consonant (empty string forces devoicing).
 		local second
+		-- If set to true, we're processing a consonant directly before a word boundary followed by a word beginning
+		-- with a vowel. In this context, voiceless sibilants voice. Note that we handle voicing of <s> word-internally
+		-- separately, in preprocess_word() [FIXME: maybe move much of the processing in preprocess_word() into this
+		-- function].
+		local word_boundary_before_vowel
 		if not rfind(first, C) then
-			-- continue
-		elseif chars[i + 1] == "#" then
-			second = ""
-		elseif rfind(chars[i + 1], sylsep_c) then
+			-- leave `second` at nil; no assimilation
+		elseif chars[i + 1] == "#" then -- word boundary
+			if chars[i + 2] == " " then
+				-- chars[i + 3] should always be "#"
+				if chars[i + 3] ~= "#" then
+					error(("Internal error: word boundary followed by space but not # in '%s'"):format(text))
+				end
+				if rfind(chars[i + 4], C) then
+					second = chars[i + 4]
+				else
+					second = ""
+					word_boundary_before_vowel = true
+				end
+			else
+				second = ""
+			end
+		elseif rfind(chars[i + 1], sylsep_c) then -- syllable boundary
 			if rfind(chars[i + 2], C) then
 				second = chars[i + 2]
-			elseif rfind(chars[i + 2], V) then
+			else
 				second = ""
 			end
 		elseif rfind(chars[i + 1], C) then
 			second = chars[i + 1]
+		else
+			-- followed by a vowel not across a syllable or word boundary; leave `second` as nil, no assimilation
 		end
 		if second then
-			if voiced[second] and voicing[first] then
+			if word_boundary_before_vowel and rfind(first, "[zʒʣʤ]") then
+				-- leave alone
+			elseif voiced[second] and voicing[first] or word_boundary_before_vowel and rfind(first, "[sʃʦʧ]") then
 				chars[i] = voicing[first]
 			elseif (voiceless[second] or second == "") and devoicing[first] then
 				chars[i] = devoicing[first]
@@ -796,55 +837,73 @@ local function postprocess_general(syllables, dialect)
 		-- Rule #2 in particular seems to require that we proceed left to right, which is how the old code was
 		-- implemented.
 		-- FIXME: These rules seem overly complex and may produce incorrect results in some circumstances.
-		local chars = split_into_chars(text)
-		-- See above where voicing assimilation is handled. The overall respelling begins and ends in ## and we need to
-		-- look ahead two or more chars.
-		local seen_primary_stress = false
-		for i = 3, #chars - 2 do
-			local this = chars[i]
-			if chars[i] == AC then
-				seen_primary_stress = true
-			end
-			if (this ~= "a" and this ~= "e") or rfind(chars[i + 1], stress_c) then
-				-- Not a/e, or a stressed vowel; continue
-			else
-				local reduction = true
-				local prev, prev_stress, nxt, nxt_stress
-				if not rfind(chars[i - 1], sylsep_c) then
-					prev = ""
-				else
-					prev = chars[i - 2]
-					prev_stress = ""
-					if rfind(prev, stress_c) then
-						prev_stress = prev
-						prev = chars[i - 3] or ""
-					end
+		local words = rsplit(text, " ")
+		for j, word in ipairs(words) do
+			local chars = split_into_chars(word)
+			-- See above where voicing assimilation is handled. The overall respelling begins and ends in #, which we
+			-- can ignore. We need to look ahead three chars in some circumstances, but in all those circumstances we
+			-- shoudn't run off the end (and have assertions to check this).
+			local seen_primary_stress = false
+			for i = 2, #chars - 1 do
+				local this = chars[i]
+				if chars[i] == AC then
+					seen_primary_stress = true
 				end
-				if not rfind(chars[i + 1], sylsep_c) then
-					nxt = ""
-					-- leave nxt at nil
+				if (this ~= "a" and this ~= "e") or rfind(chars[i + 1], stress_c) then
+					-- Not a/e, or a stressed vowel; continue
 				else
-					nxt = chars[i + 2]
-					nxt_stress = chars[i + 3] or ""
-				end
-				if this == "e" and rfind(prev, "[əoɔ]") then
-					reduction = false
-				elseif this == "e" and rfind(nxt, "[aɔ]") then
-					reduction = false
-				elseif this == "e" and nxt == "e" and not rfind(nxt_stress, AC) then
-					-- FIXME: Check specifically for AC duplicates previous logic but is probably wrong or unnecessary.
-					if not seen_primary_stress then
-						chars[i + 2] = "ə"
+					local reduction = true
+					local prev, prev_stress, nxt, nxt_stress
+					if not rfind(chars[i - 1], sylsep_c) then
+						prev = ""
 					else
+						prev = chars[i - 2] -- this should be non-nil as chars[i - 1] is a syllable separator (not #)
+						if not prev then
+							error(("Internal error: Missing # at word boundary in '%s'"):format(text))
+						end
+						prev_stress = ""
+						if rfind(prev, stress_c) then
+							prev_stress = prev
+							prev = chars[i - 3]
+							-- As above; chars[i - 2] is a stress indicator (not #).
+							if not prev then
+								error(("Internal error: Missing # at word boundary in '%s'"):format(text))
+							end
+						end
+					end
+					if not rfind(chars[i + 1], sylsep_c) then
+						nxt = ""
+						-- leave nxt at nil
+					else
+						nxt = chars[i + 2]
+						nxt_stress = chars[i + 3]
+						-- chars[i + 1] is a syllable separator, so chars[i + 2] should not be a word boundary, so
+						-- chars[i + 3] should exist.
+						if not nxt or not nxt_stress then
+							error(("Internal error: Syllable separator at word boundary or missing # at word " ..
+								"boundary in '%s'"):format(text))
+						end
+					end
+					if this == "e" and rfind(prev, "[əoɔ]") then
 						reduction = false
+					elseif this == "e" and rfind(nxt, "[aɔ]") then
+						reduction = false
+					elseif this == "e" and nxt == "e" and not rfind(nxt_stress, AC) then
+						-- FIXME: Check specifically for AC duplicates previous logic but is probably wrong or unnecessary.
+						if not seen_primary_stress then
+							chars[i + 2] = "ə"
+						else
+							reduction = false
+						end
+					end
+					if reduction then
+						chars[i] = "ə"
 					end
 				end
-				if reduction then
-					chars[i] = "ə"
-				end
 			end
+			words[j] = table.concat(chars)
 		end
-		text = table.concat(chars)
+		text = table.concat(words, " ")
 	end
 
 	-- Handle variable r. In replace_context_free(), we converted single r to ɾ and double rr to r.
@@ -874,11 +933,12 @@ local function postprocess_general(syllables, dialect)
 	end
 
 	if dialect ~= "val" then
-		-- bl -> bbl, gl -> ggl after the stress; to avoid this, use <βl> or <ɣl>. FIXME: We need a way of forcing
-		-- a hard ungeminated [b] or [ɡ]. This must follow v > b above; NOTE: IPA ɡ must be used here not regular g.
-		text = rsub(text, "(" .. stress_c .. C .. "*)(" .. sylsep_c .. ")([bɡ])l", "%1%3%2%3l")
+		-- bl -> bbl, gl -> ggl after the stress when following a vowel; to avoid this, use <βl> or <ɣl>. FIXME: We
+		-- need a way of forcing a hard ungeminated [b] or [ɡ]. This must follow v > b above; NOTE: IPA ɡ must be used
+		-- here not regular g.
+		text = rsub(text, "(" .. stress_c .. ")(" .. sylsep_c .. ")([bɡ])l", "%1%3%2%3l")
 	else -- Valencian; undo manually written 'bbl', 'ggl' in words like [[poblar]], [[reglament]]
-		text = rsub(text, "(" .. stress_c .. C .. "*)([bɡ])(" .. sylsep_c .. ")%2l", "%1%3%2l")
+		text = rsub(text, "([bɡ])(" .. sylsep_c .. ")%1l", "%2%1l")
 	end
 
 	if dialect ~= "val" then
@@ -916,12 +976,12 @@ local function postprocess_general(syllables, dialect)
 	-- Make all primary stresses but the last one in a given word be secondary. May be fed by the first rule above.
 	-- FIXME: Currently this is handled earlier, but we might want to move it here, as is done in [[Module:pt-pronunc]].
 	-- text = rsub_repeatedly(text, "ˈ([^ ]+)ˈ", "ˌ%1ˈ")
-	-- Make primary stresses in prefixes become secondary.
-	text = rsub_repeatedly(text, "ˈ([^#]*#" .. PREFIX_MARKER .. ")", "ˌ%1")
+	-- Make primary stresses in prefixes become secondary. (FIXME: Handled earlier now.)
+	-- text = rsub_repeatedly(text, "ˈ([^#]*#" .. PREFIX_MARKER .. ")", "ˌ%1")
 
 	-- Remove # symbols at word/text boundaries, as well as _ (which forces separate interpretation), pseudo-consonant
 	-- markers (at edges of some prefixes/suffixes), and prefix markers, and recompose.
-	text = rsub(text, "[#_" .. PSEUDOCONS .. PREFIX_MARKER .. "]", "")
+	text = rsub(text, "[#_" .. PSEUDOCONS .. "]", "")
 	text = mw.ustring.toNFC(text)
 
 	return text
@@ -1004,7 +1064,7 @@ local function preprocess_word(syllables, suffix_syllables, dialect, pos, orig_w
 		table.insert(syllables_IPA, suffix_syl)
 	end
 
-	return postprocess_general(syllables_IPA, dialect)
+	return syllables_IPA
 end
 
 
@@ -1244,7 +1304,7 @@ local function parse_respelling(respelling, pagename, parse_err)
 	-- representing an individual word, and must have the same number of words as the pagename so that substitution
 	-- specs and +'s can be lined up with words in the pagename. In all cases, the return value is in the same format;
 	-- see comment at top of function.
-	if pagename:find(" ") then
+	if pagename:find(" ") or respelling:find(" ") then
 		if respelling == "+" then
 			return split_respelling_into_words(pagename)
 		elseif rfind(respelling, "^%[.*%]$") then
@@ -1273,8 +1333,8 @@ local function parse_respelling(respelling, pagename, parse_err)
 			local respelling_words = rsplit(respelling, " ")
 			if #pagename_words ~= #respelling_words then
 				parse_err(("When using word-by-word syntax with a multiword pagename, saw %s words in pagename but " ..
-					"%s word%s in respelling; they need to match"):format(pagename_words, respelling_words,
-						respelling_words > 1 and "s" or ""))
+					"%s word%s in respelling; they need to match"):format(#pagename_words, #respelling_words,
+						#respelling_words > 1 and "s" or ""))
 			end
 			local word_objs = {}
 			for i = 1, #pagename_words do
@@ -1356,29 +1416,47 @@ end
 -- Generate the pronunciation of `words` (a list of word objects representing respellings, each of which is an object
 -- of the form {term = RESPELLING, pos = PART_OF_SPEECH} in `dialect` ("cen", "bal" or "val").
 local function to_IPA(words, dialect)
-	local suffix_syllables = {}
-	local orig_text = text
+	local pronuns = {}
+	for _, wordobj in ipairs(words) do
+		local word = wordobj.term
+		local pos = wordobj.pos
+		local suffix_syllables = {}
+		local orig_word = word
 
-	text = ulower(text)
-	if not pos or pos == "adverb" then
-		local text_before_ment, ment = rmatch(text, "^(.*)(m[eé]nt)$")
-		if text_before_ment and (pos == "adverb" or not rfind(text_before_ment, "[iï]$") and
-			rfind(text_before_ment, V .. ".*" .. V)) then
-			suffix_syllables = {{onset = "m", vowel = "e", coda = "nt", stressed = true}}
-			pos = "adjective"
-			text = text_before_ment
+		word = ulower(word)
+		if not pos or pos == "adverb" then
+			local word_before_ment, ment = rmatch(word, "^(.*)(m[eé]nt)$")
+			if word_before_ment and (pos == "adverb" or not rfind(word_before_ment, "[iï]$") and
+				rfind(word_before_ment, V .. ".*" .. V)) then
+				suffix_syllables = {{onset = "m", vowel = "e", coda = "nt", stressed = true}}
+				pos = "adjective"
+				word = word_before_ment
+			end
 		end
+
+		word = word_fixes(word)
+		local syllables = split_syllables(word)
+		syllables = preprocess_word(syllables, suffix_syllables, dialect, pos, orig_word)
+		-- Combine syllables.
+		local combined = {}
+		local has_ment = #suffix_syllables > 0
+		for i, syll in ipairs(syllables) do
+			local ac = (i == syllables.stress and not syllables.is_prefix and not has_ment or
+				has_ment and i == #syllables) and AC or -- primary stress
+				syllables[i].stressed and GR or -- secondary stress
+				""
+			table.insert(combined, syll.onset .. syll.vowel .. ac .. syll.coda)
+		end
+		table.insert(pronuns, table.concat(combined, "."))
 	end
 
-	text = word_fixes(word)
-	local syllables = split_syllables(text)
-	local pronun = preprocess_word(syllables, suffix_syllables, dialect, pos, orig_text)
-	if #suffix_syllables > 0 then
-		-- Put primary stress on the last syllable and convert existing primary stress to secondary.
-		pronun = rsub(pronun, "ˈ", "ˌ")
-		pronun = rsub(pronun, "ˌ(me" .. C .. "+)$", "ˈ%1")
-	end
-	return pronun
+	-- Put double ## at utterance boundaries (beginning/end of string) and at foot boundaries (marked with |).
+	-- Note that if the string without pound signs is 'foo bar baz | bat quux', the final string will be
+	-- '##foo# #bar# #baz## #|# ##bat# #quux##'.
+	local text = "##" .. table.concat(pronuns, " ") .. "##"
+	text = rsub(text, " | ", "# | #")
+	text = rsub(text, " ", "# #")
+	return postprocess_general(text, dialect)
 end
 
 
@@ -1402,7 +1480,7 @@ function export.generate_phonemic_phonetic(parsed_respellings)
 			else
 				termobj.phonemic = to_IPA(termobj.words, dialect)
 				-- set to nil so by-value comparisons respect only the resulting phonemic/phonetic and qualifiers
-				termobj.term = nil
+				termobj.words = nil
 			end
 		end
 	end
