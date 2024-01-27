@@ -61,6 +61,7 @@ FIXME:
 30. Implement DOTOVER to indicate lack of stress in a word, e.g. in a suffix. [DONE]
 31. Handle words without vowels. [DONE]
 32. Finish reviewing places where we may need to check for tie symbols.
+33. Handle tie indicating liaison in e.g. [[Sant Antoni de Portmany]]. [DONE]
 ]=]
 
 
@@ -528,7 +529,8 @@ local function split_syllables(word, stress_prefixes, may_be_uppercase)
 		local current = syllables[i]
 		local previous = syllables[i-1]
 
-		while not (current.onset == "" or valid_onsets[current.onset]) do
+		while not (current.onset == "" or valid_onsets[current.onset] or
+			rfind(current.onset, tie_c .. "$") and valid_onsets[rsub(current.onset, tie_c .. "$", "")]) do
 			local letter = usub(current.onset, 1, 1)
 			current.onset = usub(current.onset, 2)
 			if rfind(letter, "[·%-%.]") then -- syllable separators
@@ -536,6 +538,9 @@ local function split_syllables(word, stress_prefixes, may_be_uppercase)
 				break
 			else
 				previous.coda = previous.coda .. letter
+				if rfind(letter, tie_c) then
+					break
+				end
 			end
 		end
 	end
@@ -695,8 +700,7 @@ local function postprocess_general(text, dialect)
 		return true
 	end
 
-	-- Voicing of <s> and <f> seems to occur before m, n, ll and rr but not l or r, which are intentionally omitted.
-	local voiced = listToSet {"b", "ð", "d", "g", "m", "n", "ɲ", "ʎ", "r", "v", "z", "ʒ", "ʣ", "ʤ"}
+	local voiced = listToSet {"b", "ð", "d", "g", "m", "n", "ɲ", "l", "ʎ", "r", "ɾ", "v", "z", "ʒ", "ʣ", "ʤ"}
 	local voiced_keys = concat_keys(voiced)
 	local voiceless = listToSet {"p", "t", "k", "f", "s", "ʃ", "ʦ", "ʧ"}
 	local voiceless_keys = concat_keys(voiceless)
@@ -799,6 +803,7 @@ local function postprocess_general(text, dialect)
 	for i = #chars - 2, 3, -1 do
 		-- We are looking for two consonants next to each other, possibly separated by a syllable or word divider.
 		-- We also handle a consonant followed by a syllable divider then a vowel, and a consonant word-finally.
+		-- Note that only coda consonants can change voicing, so we need to check to make sure we're in the coda.
 		local first = chars[i]
 		-- If `second` is nil, no assimilation occurs. Otherwise, `second` should be a consonant or empty string (which
 		-- represents a syllable or word boundary followed by a vowel or end of string), and we assimilate to that
@@ -836,12 +841,27 @@ local function postprocess_general(text, dialect)
 			-- followed by a vowel not across a syllable or word boundary; leave `second` as nil, no assimilation
 		end
 		if second then
-			if word_boundary_before_vowel and rfind(first, "[zʒʣʤ]") then
-				-- leave alone
-			elseif voiced[second] and voicing[first] or word_boundary_before_vowel and rfind(first, "[sʃʦʧ]") then
-				chars[i] = voicing[first]
-			elseif (voiceless[second] or second == "") and devoicing[first] then
-				chars[i] = devoicing[first]
+			-- Make sure we're in the coda. We have to look backwards until we find a vowel or syllable/word boundary.
+			local in_coda = false
+			local j = i - 1
+			while true do
+				verify(j > 0, "Missing word boundary at beginning of overall respelling")
+				if rfind(chars[j], "[" .. sylsep_l .. wordsep_l .. "]") then
+					break
+				elseif rfind(chars[j], V) then
+					in_coda = true
+					break
+				end
+				j = j - 1
+			end
+			if in_coda then
+				if word_boundary_before_vowel and rfind(first, "[zʒʣʤ]") then
+					-- leave alone
+				elseif voiced[second] and voicing[first] or word_boundary_before_vowel and rfind(first, "[sʃʦʧ]") then
+					chars[i] = voicing[first]
+				elseif (voiceless[second] or second == "") and devoicing[first] then
+					chars[i] = devoicing[first]
+				end
 			end
 		end
 	end
@@ -857,14 +877,14 @@ local function postprocess_general(text, dialect)
 	-- Balearic is like Valencian in not leniting <b>, and probably like Central Catalan otherwise.
 	local lenite_bdg = {["b"] = "β", ["d"] = "ð", ["g"] = "ɣ"}
 	if dialect == "cen" then
-		text = rsub(text, "([" .. vowel_l .. "jwlʎ]" .. wordsep_c .. "*[.#]" .. wordsep_c .. "*)([bdg])",
+		text = rsub(text, "([" .. vowel_l .. "jwlʎv]" .. wordsep_c .. "*[.#]" .. wordsep_c .. "*)([bdg])",
 			function(before, bdg) return before .. lenite_bdg[bdg] end)
 	elseif dialect == "val" then
-		text = rsub(text, "([" .. vowel_l .. "jwlʎrɾzʣ]" .. wordsep_c .. "*[.#]" .. wordsep_c .. "*)([dg])",
+		text = rsub(text, "([" .. vowel_l .. "jwlʎvrɾzʣ]" .. wordsep_c .. "*[.#]" .. wordsep_c .. "*)([dg])",
 			function(before, dg) return before .. lenite_bdg[dg] end)
 	else
 		verify(dialect == "bal", ("Unrecognized dialect '%s'"):format(dialect))
-		text = rsub(text, "([" .. vowel_l .. "jwlʎ]" .. wordsep_c .. "*[.#]" .. wordsep_c .. "*)([dg])",
+		text = rsub(text, "([" .. vowel_l .. "jwlʎv]" .. wordsep_c .. "*[.#]" .. wordsep_c .. "*)([dg])",
 			function(before, dg) return before .. lenite_bdg[dg] end)
 	end
 
