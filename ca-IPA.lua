@@ -16,7 +16,7 @@ FIXME:
 
 1. [zʒ] should reduce to [ʒ] in Central and Balearic ([[disjunt]], [[disjuntor]]). Similar for [sʃ] ([[desxifrar]]).
 2. There needs to be a way of forcing [ʃ]. (Maybe just ʃ?) [DONE]
-3. Make sure manual dot for syllable break works, cf. [[best-seller]] respelled `bèst.sèlerr'.
+3. Make sure manual dot for syllable break works, cf. [[best-seller]] respelled `bèst.sèlerr'. [DONE]
 4. Explicit accents on a/i/u should be removed in split_syllables().
 5. Compress double schwa in Central/Balearic in e.g. [[sobreescalfament]], [[centreafricà]], [[contraatac]],
    [[contraescarpa]]; seems not to operate in Valencian.
@@ -33,19 +33,20 @@ FIXME:
 11. [ʃ] in single substitution specs should match against written x. [DONE]
 12. Prefixes e.g. [[xilo-]] should not have stress by default, and written primary stresses should be converted to
     secondary. [DONE]
-13. Remove single quote near beginning of processing so we don't need to respell infinitives like [[captindre's]].
+13. Convert apostrophe near beginning to tie (‿) and make sure we take account of it later, so that words like
+	[[captindre's]] and phrases like [[dona d'aigua]] work correctly. [DONE]
 14. Correctly handle -bl and -gl in respelling, generating [bl] and [gl].
 15. Correctly handle [βðɣ] in respelling forcing fricatives; should not be fortitioned.
 16. [βðɣ] in single substitution specs should match against b/d/g. [DONE]
 17. [ss] in single substitution specs should match against ss?; used to force a pronounced [s]. [DONE]
 18. [dm] in single substitution specs should match against [td]m.
-19. Correctly handle written -dg- after [rz]: fricatives in Valencian, stops in Central (and Balearic?).
+19. Correctly handle written -dg- after [rz]: fricatives in Valencian, stops in Central (and Balearic?). [DONE]
 20. Correctly handle lenition of written -bdg-: (1) -b- not lenited in Valencian or Balearic, lenited to [β] in
     Central Catalan after vowels and consonants except nasals and [rz]; (2) -g- not lenited after nasals, also not
 	after [rz] in Central Catalan (and maybe Balearic?), otherwise yes except utterance initial; (3) -d- not lenited
 	after nasals or laterals, also not after [rz] in Central Catalan (and maybe Balearic?), otherwise yes except
 	utterance initial. Verify against ca-IPA equivalent on cawikt and also based on {{w|Catalan phonology}} and the IEC
-	grammar that Vriullop linked.
+	grammar that Vriullop linked. [DONE]
 21. Finish rewriting do_dialect_specific() to operate on whole word using Lua patterns. [DONE]
 22. Implement multiword handling. [DONE]
 23. Make sure suffix handling works correctly. [DONE]
@@ -58,6 +59,8 @@ FIXME:
 28. Fix handling of mid vowel default in -è/-ès/-esa so it doesn't affect [[tèbia]] etc. [DONE]
 29. x- after hyphen should probably become tx- in Valencian, cf. [[para-xocs]].
 30. Implement DOTOVER to indicate lack of stress in a word, e.g. in a suffix. [DONE]
+31. Handle words without vowels. [DONE]
+32. Finish reviewing places where we may need to check for tie symbols.
 ]=]
 
 
@@ -82,13 +85,14 @@ export.dialect_groups = {
 }
 
 
-local written_unaccented_vowel = "aeiouyAEIOUY"
-local written_accented_vowel = "àèéêëíïòóôúüýÀÈÉÊËÍÏÒÓÔÚÜÝ"
-local ipa_vowel = "ɔɛə"
-local AV = "[" .. written_accented_vowel .. "]"
-local written_vowel = written_unaccented_vowel .. written_accented_vowel
-local vowel = written_vowel .. ipa_vowel
-local V = "[" .. vowel .. "]"
+local written_unaccented_vowel_l = "aeiouyAEIOUY"
+local written_stressed_vowel_l = "àèéêëíòóôúýÀÈÉÊËÍÒÓÔÚÝ"
+local written_accented_not_stressed_vowel_l = "ïüÏÜ"
+local written_accented_vowel_l = written_stressed_vowel_l .. written_accented_not_stressed_vowel_l
+local ipa_vowel_l = "ɔɛə"
+local written_vowel_l = written_unaccented_vowel_l .. written_accented_vowel_l
+local vowel_l = written_vowel_l .. ipa_vowel_l
+local V = "[" .. vowel_l .. "]"
 local written_accented_to_plain_vowel = {
 	["à"] = "a",
 	["è"] = "e",
@@ -124,17 +128,21 @@ local CFLEX = u(0x0302) -- circumflex =  ̂
 local DOTOVER = u(0x0307) -- dot over =  ̇
 local DIA = u(0x0308) -- diaeresis =  ̈
 
-local stress = AC .. GR
-local stress_c = "[" .. stress .. "]"
-local ipa_stress = "ˈˌ"
-local ipa_stress_c = "[" .. ipa_stress .. "]"
-local sylsep = "%-." -- hyphen included for syllabifying from spelling; FIXME: formerly included SYLDIV
-local sylsep_c = "[" .. sylsep .. "]"
-local wordsep = "# "
-local separator_not_wordsep = stress .. ipa_stress .. sylsep
-local separator = separator_not_wordsep .. wordsep
-local separator_c = "[" .. separator .. "]"
-local C = "[^" .. vowel .. separator .. "]" -- consonant class including h
+local stress_l = AC .. GR
+local stress_c = "[" .. stress_l .. "]"
+local ipa_stress_l = "ˈˌ"
+local ipa_stress_c = "[" .. ipa_stress_l .. "]"
+local sylsep_l = "%-." -- hyphen included for syllabifying from spelling; FIXME: formerly included SYLDIV
+local sylsep_c = "[" .. sylsep_l .. "]"
+local tie_l = "‿'"
+local tie_c = "[" .. tie_l .. "]"
+local charsep_l = sylsep_l .. tie_l .. stress_l .. ipa_stress_l
+local charsep_c = "[" .. charsep_l .. "]"
+local wordsep_l = "# "
+local wordsep_c = "[" .. wordsep_l .. "]"
+local separator_l = charsep_l .. wordsep_l
+local separator_c = "[" .. separator_l .. "]"
+local C = "[^" .. vowel_l .. separator_l .. "]" -- consonant class including h
 
 export.mid_vowel_hints = "éèêëóòô"
 export.mid_vowel_hint_c = "[" .. export.mid_vowel_hints .. "]"
@@ -486,7 +494,12 @@ local function split_syllables(word, stress_prefixes, may_be_uppercase)
 		vowels, remainder = rmatch(remainder, "^([" .. vowel_list .. "]*)(.-)$")
 
 		if vowels == "" then
-			syllables[#syllables].coda = syllables[#syllables].coda .. consonants
+			if #syllables > 0 then
+				syllables[#syllables].coda = syllables[#syllables].coda .. consonants
+			else
+				-- word without vowels, e.g. foot boundary |
+				table.insert(syllables, {onset = consonants, vowel = "", coda = "", separator = ""})
+			end
 		else
 			local onset = consonants
 			local first_vowel = usub(vowels, 1, 1)
@@ -529,28 +542,34 @@ local function split_syllables(word, stress_prefixes, may_be_uppercase)
 
 	-- Detect stress
 	for i, syll in ipairs(syllables) do
-		if rfind(syll.vowel, "^[àèéêëíòóôú]$") then
+		if rfind(syll.vowel, "^[" .. written_stressed_vowel_l .. "]$") then
 			syllables.stress = i -- primary stress: the last one stressed
 			syll.stressed = true
 		end
 	end
 
+	-- Assign default stress
 	if not syllables.stress and not saw_dotover and (stress_prefixes or not is_prefix) then
 		local count = #syllables
 
 		if count == 1 then
-			syllables.stress = 1
+			if syllables[1].vowel ~= "" then -- vowel-less words don't get stress
+				syllables.stress = 1
+			end
 		else
 			local final = syllables[count]
 
-			if final.coda == "" or final.coda == "s" or (final.coda == "n" and (
+			-- Take account of tie symbols (apostrophes and ‿).
+			if rfind(final.coda, "^[s" .. tie_l .. "]*$") or (rfind(final.coda, "^" .. tie_c .. "*n" .. tie_c .. "*$") and (
 				final.vowel == "e" or final.vowel == "i" or final.vowel == "ï")) then
 				syllables.stress = count - 1
 			else
 				syllables.stress = count
 			end
 		end
-		syllables[syllables.stress].stressed = true
+		if syllables.stress then
+			syllables[syllables.stress].stressed = true
+		end
 	end
 
 	syllables.is_prefix = is_prefix
@@ -601,11 +620,15 @@ local function canon_respelling(text)
 	text = rsub(text, "[!?.]$", "")
 	-- eliminate double and triple quotes
 	text = rsub(text, "''+", "")
+	-- Convert commas and em/en dashes to IPA foot boundaries; require a space after commas and en dashes (for the
+	-- latter, in particular, to avoid treating the en dash in 'Bose–Einstein condensate' as a foot boundary.
+	text = rsub(text, " *[,–] ", " | ")
+	text = rsub(text, " *[—] *", " | ")
+	-- remaining commas and en dashes become spaces
+	text = rsub(text, "[,–]", " ")
 	-- may need to eliminate extraneous spaces again, e.g. if there was a space before or after an eliminated
 	-- punctuation mark
 	text = canon_spaces(text)
-	-- convert commas and en/en dashes to IPA foot boundaries
-	text = rsub(text, " [,–—] ", " | ")
 	-- question mark or exclamation point in the middle of a sentence -> IPA foot boundary
 	text = rsub(text, "([^ ]) *[!?] *([^ ])", "%1 | %2")
 	return text
@@ -648,13 +671,13 @@ local function replace_context_free(cons)
 	cons = rsub(cons, "ç", "s")
 	cons = rsub(cons, "[cq]", "k")
 	cons = rsub(cons, "h", "")
-	cons = rsub(cons, "g", "ɡ") -- regular g to IPA ɡ
 	cons = rsub(cons, "j", "ʒ")
 	-- Don't replace x -> ʃ yet so we can distinguish x from manually specified ʃ.
 
 	cons = rsub(cons, "i", "j") -- must be after j > ʒ
 	cons = rsub(cons, "y", "j") -- must be after j > ʒ and fix_y
 	cons = rsub(cons, "[uü]", "w")
+	cons = rsub(cons, "'", "‿")
 
 	return cons
 end
@@ -665,12 +688,19 @@ end
 -- syllables back to words and the words to the combined text and work on the text as a whole. FIXME: We should move
 -- more of the work done in preprocess_word(), e.g. most of replace_context_free(), here.
 local function postprocess_general(text, dialect)
+	local function verify(cond, msg)
+		if not cond then
+			error(("Internal error: %s; processed respelling at this point is '%s'"):format(msg, text))
+		end
+		return true
+	end
+
 	-- Voicing of <s> and <f> seems to occur before m, n, ll and rr but not l or r, which are intentionally omitted.
-	local voiced = listToSet {"b", "ð", "d", "ɡ", "m", "n", "ɲ", "ʎ", "r", "v", "z", "ʒ", "ʣ", "ʤ"}
+	local voiced = listToSet {"b", "ð", "d", "g", "m", "n", "ɲ", "ʎ", "r", "v", "z", "ʒ", "ʣ", "ʤ"}
 	local voiced_keys = concat_keys(voiced)
 	local voiceless = listToSet {"p", "t", "k", "f", "s", "ʃ", "ʦ", "ʧ"}
 	local voiceless_keys = concat_keys(voiceless)
-	local voicing = {["p"] = "b", ["t"] = "d", ["k"] = "ɡ", ["f"] = "v", ["s"] = "z", ["ʃ"] = "ʒ", ["ʦ"] = "ʤ",
+	local voicing = {["p"] = "b", ["t"] = "d", ["k"] = "g", ["f"] = "v", ["s"] = "z", ["ʃ"] = "ʒ", ["ʦ"] = "ʤ",
 		["ʧ"] = "ʤ"}
 	local voicing_keys = concat_keys(voicing)
 	local devoicing = {}
@@ -679,36 +709,40 @@ local function postprocess_general(text, dialect)
 	end
 	local devoicing_keys = concat_keys(devoicing)
 
+	------------------ Handle <x>
+
 	-- Handle ex(h)- + vowel > -egz-. We handle -x- on either side of the syllable boundary (ex- vs. exh-). Note that
 	-- this also handles inex(h)- + vowel because in fix_prefixes we respell inex- as inhex-, which ends up at this
 	-- stage as in.e.xV, or as in.ex.V in the case of inexh-.
-	text = rsub_repeatedly(text, "([.#][eɛ]" .. stress_c .. "*)" .. sylsep_c .. "*x" .. sylsep_c .. "*(" .. V .. ")",
-		"%1ɡ.z%2") --IPA ɡ
-
-	-- Handle remaining x
-
+	text = rsub_repeatedly(text, "([.#][eɛ]" .. stress_c .. "*)(" .. charsep_c .. "*)x(" .. charsep_c .. "*" .. V ..
+		")", function(e, pre, post)
+			-- Preserve other character separators (especially the tie character ‿).
+			pre = pre:gsub("%.", "")
+			post = post:gsub("%.", "")
+			return e .. pre .. "g.z" .. post
+		end)
 	-- -x- at the beginning of a coda becomes [ks], e.g. [[annex]], [[apèndix]], [[extracció]]; but not elsewhere in
 	-- the coda, e.g. in [[romanx]], [[ponx]]; words with [ks] in -nx such as [[esfinx]], [[linx]], [[manx]] need
 	-- respelling with [ks]; words ending in vowel + x like [[ídix]] need respelling with [ʃ]
-	text = rsub(text, "(" .. V .. stress_c .. "*)x", "%1ks")
+	text = rsub(text, "(" .. V .. charsep_c .. "*)x", "%1ks")
 	if dialect == "val" then
 		-- Word-initial <x> as well as <x> after a consonant other than /j/ (including in the coda, e.g. [[ponx]])
 		-- becomes [t͡ʃ].
 		text = rsub(text, "#x", "#ʧ")
-		text = rsub(text, "([^" .. vowel .. separator .. "j]" .. sylsep_c .. "*)x", "%1ʧ")
+		text = rsub(text, "([^" .. vowel_l .. separator_l .. "j]" .. charsep_c .. "*)x", "%1ʧ")
 	end
 	-- Other x becomes [ʃ]
 	text = rsub(text, "x", "ʃ")
 
-	-- Doubled ss -> s e.g. in exs-, exc(e/i)-, sc(e/i)-
-	text = rsub(text, "s(" .. sylsep_c .. "*)s", "%1s")
+	-- Doubled ss -> s e.g. in exs-, exc(e/i)-, sc(e/i)-; FIXME: should this apply across word boundaries?
+	text = rsub(text, "s(" .. charsep_c .. "*)s", "%1s")
 
 	-- Coda consonant losses; in Central Catalan, they happen everywhere, but otherwise they don't happen when
 	-- absolutely word-finally (e.g. [[blanc]] has /k/ in Balearic and Valencian but not [[blancs]]).
 	local boundary = dialect == "cen" and "(.)" or "([^#])"
 	text = rsub(text, "m[pb]" .. boundary, "m%1")
 	text = rsub(text, "([ln])[td]" .. boundary, "%1%2")
-	text = rsub(text, "[nŋ][kɡ]" .. boundary, "ŋ%1")
+	text = rsub(text, "[nŋ][kg]" .. boundary, "ŋ%1")
 
 	-- Consonant assimilations
 
@@ -724,7 +758,7 @@ local function postprocess_general(text, dialect)
 	-- FIXME: Clean this up, maybe move below voicing assimilation, investigate whether it operates across words.
 	text = rsub(text, "t(" .. sylsep_c .. ")([lʎmn])", "%2%1%2")
 
-	-- ɡn -> ŋn e.g. [[regnar]] (including word-initial gn- e.g. [[gnòmic]], [[gneis]]) 
+	-- gn -> ŋn e.g. [[regnar]] (including word-initial gn- e.g. [[gnòmic]], [[gneis]]) 
 	-- FIXME: This should be moved below voicing assimilation, and we need to investigate if it operates across words
 	-- (here I'm guessing yes).
 	text = rsub(text, "g(" .. separator_c .. "*n)", "ŋ%1")
@@ -734,7 +768,7 @@ local function postprocess_general(text, dialect)
 	text = rsub(text, "n(" .. separator_c .. "*[fv])", "ɱ%1")
 
 	-- n + velar > velarized assimilation
-	text = rsub(text, "n(" .. separator_c .. "*[kɡ])", "ŋ%1")
+	text = rsub(text, "n(" .. separator_c .. "*[kg])", "ŋ%1")
 
 	-- l/n + palatal > palatalized assimilation
 	text = rsub(text, "([ln])(" .. separator_c .. "*[ʎɲʃʒʧʤ])", function(ln, palatal)
@@ -742,9 +776,9 @@ local function postprocess_general(text, dialect)
 		return ln .. palatal
 	end)
 
-	-- ɡʒ > d͡ʒ
+	-- gʒ > d͡ʒ
 	-- FIXME: This should be moved below voicing assimilation, and we need to investigate if it operates across words
-	text = rsub(text, "ɡ(" .. sylsep_c .. "*)ʒ", "%1ʤ")
+	text = rsub(text, "g(" .. sylsep_c .. "*)ʒ", "%1ʤ")
 
 	-- ɲs > ɲʃ; FIXME: not sure the purpose of this; it doesn't apply in [[menys]] or derived terms like [[menyspreu]]
 	-- NOTE: Per [https://giec.iec.cat/textgramatica/codi/4.4], it does apply in these scenarios but the result is
@@ -780,9 +814,7 @@ local function postprocess_general(text, dialect)
 		elseif chars[i + 1] == "#" then -- word boundary
 			if chars[i + 2] == " " then
 				-- chars[i + 3] should always be "#"
-				if chars[i + 3] ~= "#" then
-					error(("Internal error: word boundary followed by space but not # in '%s'"):format(text))
-				end
+				verify(chars[i + 3] == "#", "Word boundary followed by space but not #")
 				if rfind(chars[i + 4], C) then
 					second = chars[i + 4]
 				else
@@ -815,12 +847,26 @@ local function postprocess_general(text, dialect)
 	end
 	text = table.concat(chars)
 
-	-- no spirants after r/z
-	-- FIXME: Spirant support isn't properly implemented.
-	text = rsub(text, "([rzʣ]" .. sylsep_c .. "*)([βðɣ])", function(prev, fricative)
-		fricative = ({["β"] = "b", ["ð"] = "d", ["ɣ"] = "ɡ"})[fricative]
-		return prev .. fricative
-	end)
+	-- In Central Catalan, b/d/g become fricatives (actually approximants, like in Spanish) in the onset following a
+	-- vowel and (except for <d>) after <l> and <ll> (cf. GDLC [[cabellblanc]] [kəβɛ̀ʎβláŋ]). This also happens across
+	-- word boundaries but doesn't happen after stops, nor in Central Catalan after [r], [ɾ] or [z] (and hence probably
+	-- not after [ʒ] either, although I can't find any examples in GDLC).
+	--
+	-- In Valencian, <b> doesn't lenite (at least formally?), but <d> and <g> do lenite after [r], [ɾ] or [z].
+	--
+	-- Balearic is like Valencian in not leniting <b>, and probably like Central Catalan otherwise.
+	local lenite_bdg = {["b"] = "β", ["d"] = "ð", ["g"] = "ɣ"}
+	if dialect == "cen" then
+		text = rsub(text, "([" .. vowel_l .. "jwlʎ]" .. wordsep_c .. "*[.#]" .. wordsep_c .. "*)([bdg])",
+			function(before, bdg) return before .. lenite_bdg[bdg] end)
+	elseif dialect == "val" then
+		text = rsub(text, "([" .. vowel_l .. "jwlʎrɾzʣ]" .. wordsep_c .. "*[.#]" .. wordsep_c .. "*)([dg])",
+			function(before, dg) return before .. lenite_bdg[dg] end)
+	else
+		verify(dialect == "bal", ("Unrecognized dialect '%s'"):format(dialect))
+		text = rsub(text, "([" .. vowel_l .. "jwlʎ]" .. wordsep_c .. "*[.#]" .. wordsep_c .. "*)([dg])",
+			function(before, dg) return before .. lenite_bdg[dg] end)
+	end
 
 	-- Final losses.
 	text = rsub(text, "j(ʧs?#)", "%1") -- boigs /bɔt͡ʃ/
@@ -858,17 +904,13 @@ local function postprocess_general(text, dialect)
 						prev = ""
 					else
 						prev = chars[i - 2] -- this should be non-nil as chars[i - 1] is a syllable separator (not #)
-						if not prev then
-							error(("Internal error: Missing # at word boundary in '%s'"):format(text))
-						end
+						verify(prev, "Missing # at word boundary")
 						prev_stress = ""
 						if rfind(prev, stress_c) then
 							prev_stress = prev
 							prev = chars[i - 3]
 							-- As above; chars[i - 2] is a stress indicator (not #).
-							if not prev then
-								error(("Internal error: Missing # at word boundary in '%s'"):format(text))
-							end
+							verify(prev, "Missing # at word boundary")
 						end
 					end
 					if not rfind(chars[i + 1], sylsep_c) then
@@ -879,10 +921,7 @@ local function postprocess_general(text, dialect)
 						nxt_stress = chars[i + 3]
 						-- chars[i + 1] is a syllable separator, so chars[i + 2] should not be a word boundary, so
 						-- chars[i + 3] should exist.
-						if not nxt or not nxt_stress then
-							error(("Internal error: Syllable separator at word boundary or missing # at word " ..
-								"boundary in '%s'"):format(text))
-						end
+						verify(nxt and nxt_stress, "Syllable separator at word boundary or missing # at word boundary")
 					end
 					if this == "e" and rfind(prev, "[əoɔ]") then
 						reduction = false
@@ -916,6 +955,7 @@ local function postprocess_general(text, dialect)
 		text = rsub(text, TEMP_PAREN_R, "")
 		text = rsub(text, TEMP_PAREN_RR, "")
 	else
+		verify(dialect == "val", ("Unrecognized dialect '%s'"):format(dialect))
 		text = rsub(text, TEMP_PAREN_R, "ɾ")
 		text = rsub(text, TEMP_PAREN_RR, "ɾ")
 		-- Coda /r/ -> /ɾ/
@@ -924,21 +964,20 @@ local function postprocess_general(text, dialect)
 
 	if dialect == "cen" then
 		-- Reduction of unstressed o (not before w)
-		text = rsub(text, "o([^" .. stress .. "w])", "u%1")
+		text = rsub(text, "o([^" .. stress_l .. "w])", "u%1")
 	elseif dialect == "bal" then
 		-- Reduction of unstressed o per vowel harmony: unstressed /o/ -> /u/ directly before stressed /i/ or /u/;
 		-- as a Lua pattern, o can be followed only by consonants and/or syllable separators (no vowels, stress marks
 		-- or word separators).
-		text = rsub(text, "o([^" .. vowel .. stress .. wordsep .. "]*[iu]" .. stress_c .. ")", "u%1")
+		text = rsub(text, "o([^" .. vowel_l .. stress_l .. wordsep_l .. "]*[iu]" .. stress_c .. ")", "u%1")
 	end
 
 	if dialect ~= "val" then
 		-- bl -> bbl, gl -> ggl after the stress when following a vowel; to avoid this, use <βl> or <ɣl>. FIXME: We
-		-- need a way of forcing a hard ungeminated [b] or [ɡ]. This must follow v > b above; NOTE: IPA ɡ must be used
-		-- here not regular g.
-		text = rsub(text, "(" .. stress_c .. ")(" .. sylsep_c .. ")([bɡ])l", "%1%3%2%3l")
+		-- need a way of forcing a hard ungeminated [b] or [g]. This must follow v > b above.
+		text = rsub(text, "(" .. stress_c .. ")(" .. sylsep_c .. ")([bg])l", "%1%3%2%3l")
 	else -- Valencian; undo manually written 'bbl', 'ggl' in words like [[poblar]], [[reglament]]
-		text = rsub(text, "([bɡ])(" .. sylsep_c .. ")%1l", "%2%1l")
+		text = rsub(text, "([bg])(" .. sylsep_c .. ")%1l", "%2%1l")
 	end
 
 	if dialect ~= "val" then
@@ -962,9 +1001,16 @@ local function postprocess_general(text, dialect)
 		text = rsub(text, "ʎ(" .. sylsep_c .. "*ʎ)", "%1")
 	end
 
+	---------- Convert pseudo-symbols to real ones.
+
+	-- Convert g to IPA ɡ.
+	text = rsub(text, "g", "ɡ")
+
 	-- Convert pseudo-afficate symbols to full affricates.
 	local full_affricates = { ["ʦ"] = "t͡s", ["ʣ"] = "d͡z", ["ʧ"] = "t͡ʃ", ["ʤ"] = "d͡ʒ" }
 	text = rsub(text, "([ʦʣʧʤ])", full_affricates)
+
+	---------- Generate IPA stress marks.
 
 	-- Convert acute and grave to IPA stress marks.
 	text = rsub(text, AC, "ˈ")
@@ -1014,7 +1060,7 @@ local function preprocess_word(syllables, suffix_syllables, dialect, pos, orig_w
 	-- which should be marked as 'ê(r)'). That is, it disappears other than in Valencian. All other final r and final
 	-- rs are considered ambiguous and need to be rewritten using rr, (rr) or (r).
 	if #syllables > 1 and final.stressed then
-		if final.coda == "r" and rfind(final.vowel, "[aàiíé]") or final.coda == "rs" and rfind(final.vowel, "[é]") or
+		if final.coda == "r" and rfind(final.vowel, "[aàiíé]") or final.coda == "rs" and final.vowel == "é" or
 			final.vowel == "ó" and rfind(final.coda, "^rs?$") and rfind(final.onset, "[stdç]") then
 			final.coda = TEMP_PAREN_R
 		end
@@ -1086,7 +1132,8 @@ local function convert_single_substitution_to_original(to, pagename, whole_word)
 	escaped_from = escaped_from:gsub("β", "b")
 	escaped_from = escaped_from:gsub("ð", "d")
 	escaped_from = escaped_from:gsub("ɣ", "g")
-	escaped_from = rsub(escaped_from, AV, function(v) return "[" .. v .. written_accented_to_plain_vowel[v] .. "]" end)
+	escaped_from = rsub(escaped_from, "[" .. written_accented_vowel_l .. "]",
+		function(v) return "[" .. v .. written_accented_to_plain_vowel[v] .. "]" end)
 	escaped_from = "(" .. escaped_from .. ")"
 	if whole_word then
 		escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
@@ -1464,7 +1511,7 @@ end
 -- keys are dialect identifiers (e.g. "cen" for Central Catalan, "val" for Valencian) and whose values are objects of
 -- the format returned by parse_comma_separated_groups() (see comment above that function). This destructively modifies
 -- `parsed_respellings`, adding fields `phonemic` and `phonetic` containing the generated pronunciations and removing
--- the input fields used to generate those output fields. (FIXME: Currently only phonemic pronunciation is generated.)
+-- the input fields used to generate those output fields. (FIXME: Currently only phonetic pronunciation is generated.)
 function export.generate_phonemic_phonetic(parsed_respellings)
 	-- Convert each canonicalized respelling to phonemic/phonetic IPA.
 	for dialect, respelling_spec in pairs(parsed_respellings) do
@@ -1478,7 +1525,7 @@ function export.generate_phonemic_phonetic(parsed_respellings)
 				termobj.raw_phonemic = nil
 				termobj.raw_phonetic = nil
 			else
-				termobj.phonemic = to_IPA(termobj.words, dialect)
+				termobj.phonetic = to_IPA(termobj.words, dialect)
 				-- set to nil so by-value comparisons respect only the resulting phonemic/phonetic and qualifiers
 				termobj.words = nil
 			end
@@ -1490,9 +1537,9 @@ end
 -- Group pronunciations by dialect, i.e. grouping pronunciations that are identical in every way (including both the
 -- pronunciation(s) and any qualifiers and other inline modifiers). `parsed_respellings` contains the output from
 -- generate_phonemic_phonetic(), and the return value is a list of grouped pronunciations, where each object in the list
--- contains fields 'dialects' (a list of dialects containing the pronunciations) and 'pronuns' (a list of
--- pronunciations, where each pronunciation is specified by an object containing fields 'phonemic' and 'phonetic', as
--- generated by generate_phonemic_phonetic(), along with any inline modifier fields 'q', 'qq', 'a', 'aa' and/or 'ref').
+-- contains fields `dialects` (a list of dialects containing the pronunciations) and `pronuns` (a list of
+-- pronunciations, where each pronunciation is specified by an object containing fields `phonemic` and `phonetic`, as
+-- generated by generate_phonemic_phonetic(), along with any inline modifier fields `q`, `qq`, `a`, `aa` and/or `ref`).
 function export.group_pronuns_by_dialect(parsed_respellings)
 	local grouped_pronuns = {}
 	for dialect, pronun_spec in pairs(parsed_respellings) do
