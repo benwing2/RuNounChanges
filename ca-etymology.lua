@@ -5,7 +5,7 @@ local lang = require("Module:languages").getByCode("ca")
 
 
 local function looks_like_infinitive(term)
-	return term:find("[aei]r$") or term:find("re$")
+	return term:find("[aeiu]r$") or term:find("re$")
 end
 
 
@@ -15,7 +15,7 @@ local function form_imperative(imp, inf, parse_err)
 		stem, ending = inf:match("^(.*)(re)$")
 	end
 	if not stem then
-		parse_err(("Unrecognized infinitive '%s', doesn't end in -ar, -er, -ir or -re"):format(inf))
+		parse_err(("Unrecognized infinitive '%s', doesn't end in -ar, -er, -ir, -ur or -re"):format(inf))
 	end
 	if imp ~= "+" then
 		parse_err(("Unrecognized imperative spec '%s'"):format(imp))
@@ -23,7 +23,10 @@ local function form_imperative(imp, inf, parse_err)
 	if ending == "ar" then
 		return stem .. "a"
 	else
-		return stem .. "e"
+		-- córrer -> corre, tòrcer -> torce
+		-- The addition of -e applies even in cases like [[tòrcer]] where the third-singular present isn't expected to
+		-- have an -e, and to cases like [[cobrir]] that have -eix in the third-singular present.
+		return com.remove_accents(stem) .. "e"
 	end
 end
 
@@ -33,7 +36,12 @@ local function form_plural(pl, term, parse_err)
 		parse_err(("Unrecognized plural spec '%s'"):format(pl))
 	end
 	-- FIXME, maybe we can do better than default to masculine.
-	return require(com_module).make_plural(term, "m")
+	local pls = com.make_plural(term, "m")
+	if #pls == 0 then
+		parse_err(("Can't form plural of '%s'"):format(term))
+	else
+		return pls[1]
+	end
 end
 
 
