@@ -62,6 +62,7 @@ FIXME:
 31. Handle words without vowels. [DONE]
 32. Finish reviewing places where we may need to check for tie symbols.
 33. Handle tie indicating liaison in e.g. [[Sant Antoni de Portmany]]. [DONE]
+34. Handle pronunciation of [[amb]] correctly.
 ]=]
 
 
@@ -218,10 +219,6 @@ local unstressed_words = listToSet {
 	"i", "o", "si", "ni", "que",
 }
 
-local unstressed_word_replacement = {
-	per = "perr",
-}
-
 -- Version of rsubn() that discards all but the first return value.
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
@@ -267,6 +264,68 @@ local function concat_keys(tab)
 		table.insert(res, k)
 	end
 	return table.concat(res)
+end
+
+
+local function handle_unstressed_words(words)
+	words = table.deepcopy(words)
+
+	-- Lowercase all words for ease in further processing.
+	for i, wordobj in ipairs(words) do
+		words[i].term = ulower(words[i].term)
+	end
+
+	-- Check if the word at index `i` in `words` is "amb" and the following word begins with a vowel.
+	local function is_amb_to_join(words, i)
+		local wordobj = words[i]
+		return i < #words and wordobj.term == "a" .. DOTOVER .. "mb" and rfind(words[i + 1].term, "^h?" .. V)
+	end
+	local saw_amb_to_join = true
+
+	-- Mark all unstressed words with DOTOVER, so that split_syllables() doesn't assign stress. We need to do this
+	-- before special handling for [[amb]], because [[amb]] may join to another unstressed word like [[el]], in the
+	-- process losing the identity of the two words. In the process, see if [[amb]] occurs before a following
+	-- vowel-initial word (which may begin with h-).
+	for i, wordobj in ipairs(words) do
+		-- Put DOTOVER after the last vowel (to handle the case of [[que]]). It doesn't actually matter where we put
+		-- it, because split_syllables() just looks for DOTOVER anywhere in the word.
+		if unstressed_words[wordobj[i].term] then
+			wordobj[i].term = rsub(wordobj[i].term, "^(.*" .. V .. ")", "%1" .. DOTOVER)
+		end
+		if is_amb_to_join(words, i) then
+			saw_amb_to_join = true
+		end
+	end
+
+	-- Join [[amb]] before vowel-initial word with following word.
+	if saw_amb_to_join then
+		local new_words = {}
+		local i = 1
+		while i < #words do -- use < because last word will never join to next
+			if is_amb_to_join(words, i) then
+				table.insert(new_words, {term = words[i].term .. "‿" .. words[i + 1].term, pos = words[i + 1].pos})
+				i = i + 2
+			else
+				table.insert(new_words, words[i])
+				i = i + 1
+			end
+		end
+		words = new_words
+	end
+
+	-- Finally, rewrite some unstressed words to get the right pronunciation. Any remaining [[amb]] not before a
+	-- vowel-initial word is pronounced [am] even in Valencian (where [amp]/[amb] would be expected), and [[per]] always
+	-- has a pronounced <r>.
+	local unstressed_word_replacement = {
+		["a" .. DOTOVER .. "mb"] = "a" .. DOTOVER .. "m",
+		["pe" .. DOTOVER .. "r"] = "pe" .. DOTOVER .. "rr",
+	}
+
+	for i, wordobj in ipairs(words) do
+		wordobj[i].term = unstressed_word_replacement[wordobj[i].term] or wordobj[i].term
+	end
+
+	return words
 end
 
 
@@ -379,11 +438,6 @@ local function fix_y(word)
 end
 
 local function mid_vowel_fixes(word)
-	-- Don't touch known unstressed words like 'per', which shouldn't get accents.
-	if unstressed_words[word] then
-		return word
-	end
-
 	local function track_mid_vowel(vowel, cont)
 		require("Module:debug/track"){"ca-IPA/" .. vowel, "ca-IPA/" .. vowel .. "/" .. cont}
 		return true
@@ -465,13 +519,8 @@ end
 -- overridden with `stress_prefixes`, which causes the automatic stress-assignment algorithm to run for these terms.
 local function split_syllables(word, stress_prefixes, may_be_uppercase)
 	local syllables = {}
+	local saw_dotover = false
 
-	-- Treat unstressed words as if DOTOVER were added above the vowel, unless `stress_prefixes` is set, in which
-	-- case we want to assign stress to words like [[ton]] that may look like unstressed words, so that mid vowel
-	-- hints work correctly with them.
-	local saw_dotover = not stress_prefixes and unstressed_words[word]
-	-- Respell certain unstressed words.
-	word = unstressed_word_replacement[word] or word
 	local remainder = word
 	local is_prefix = false
 	if remainder:find("%-$") then -- prefix
@@ -1484,6 +1533,9 @@ end
 -- of the form {term = RESPELLING, pos = PART_OF_SPEECH} in `dialect` ("cen", "bal" or "val").
 local function to_IPA(words, dialect)
 	local pronuns = {}
+
+	words = handle_unstressed_words(words)
+	
 	for _, wordobj in ipairs(words) do
 		local word = wordobj.term
 		local pos = wordobj.pos
