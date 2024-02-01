@@ -1,8 +1,8 @@
-Beginning at Sat Jan 13 21:54:41 2024
+Beginning at Wed Jan 31 18:06:45 2024
 Page 197 ablació: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|ablātiō|ablātiōnem}}.
+{{bor+|ca|la|ablātiō|ablātiōnem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -304,7 +304,7 @@ Page 2349 arreglar: -------- begin text --------
 Page 3703 bíblia: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|biblia}}, from {{der|ca|grc|βιβλία}}, plural of {{m|grc|βιβλίον||book}}.
+{{bor+|ca|la|biblia}}, from {{der|ca|grc|βιβλία}}, plural of {{m|grc|βιβλίον||book}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -430,7 +430,7 @@ Page 3709 biblioteca: -------- begin text --------
 {{bor+|ca|la|bibliothēca}}, from {{der|ca|grc|βιβλιοθήκη||library}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|ë}}<!-- per GDLC, DNV, DCVB; DCVB claims /ɛ/ for Valencia contra DNV -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-biblioteca.wav|Audio}}
 
 ===Noun===
@@ -501,7 +501,7 @@ From {{af|ca|Bíblia|-ista}}.
 Page 4393 buglossa: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|būglōssa}}.
+{{bor+|ca|la|būglōssa}}.
 
 ===Noun===
 {{ca-noun|f}}
@@ -524,7 +524,7 @@ Page 4512 cabellblanc: -------- begin text --------
 From {{com|ca|cabell|blanc|t1=hair|t2=white}}.
 
 ===Pronunciation===
-* {{ca-IPA|cabêllblànc}}
+* {{ca-IPA|[bê,là]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -543,7 +543,7 @@ Page 5142 carablanc: -------- begin text --------
 From {{com|ca|cara|blanc|t1=face|t2=white}}.
 
 ===Pronunciation===
-* {{ca-IPA|càrablànc}}
+* {{ca-IPA|[cà,là]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -640,7 +640,7 @@ Page 7676 cuablanc: -------- begin text --------
 From {{com|ca|cua|blanc|t1=tail|t2=white}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[cú,là]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -668,7 +668,7 @@ Page 7677 cuablau: -------- begin text --------
 From {{com|ca|cua|blau|t1=tail|t2=blue}}.
 
 ===Pronunciation===
-* {{ca-IPA|cúablàu}}
+* {{ca-IPA|[cú,là]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -681,7 +681,7 @@ Page 7743 culblanc: -------- begin text --------
 From {{com|ca|cul|blanc|t1=ass|t2=white}}.
 
 ===Pronunciation===
-* {{ca-IPA|culblanc}}
+* {{ca-IPA|[cú,là]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -1529,7 +1529,7 @@ From {{af|ca|feble|-ment}}.
 Page 12265 feblesa: -------- begin text --------
 
 ===Etymology===
-From {{af|ca|feble|-esa}}, attested from the 14th century.<ref>{{R:ca:GDLC}}</ref>
+From {{af|ca|feble|-esa}}. {{etydate|14th century}}<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -1554,13 +1554,13 @@ From {{af|ca|feble|-esa}}, attested from the 14th century.<ref>{{R:ca:GDLC}}</re
 -------- end text --------
 Page 12500 fibla: -------- begin text --------
 
-===Etymology===
-{{inh+|ca|la|fībula||pin, broach}}.
-
 ===Pronunciation===
 * {{ca-IPA}}
 
-===Noun===
+===Etymology 1===
+{{inh+|ca|la|fībula||pin, broach}}.
+
+====Noun====
 {{ca-noun|f}}
 
 # [[punch]] {{gloss|tool for making holes}}
@@ -1569,7 +1569,9 @@ Page 12500 fibla: -------- begin text --------
 #: {{syn|ca|boquera}}
 # {{lb|ca|historical}} Measure for water flow used in Barcelona equal to 100 {{m|ca|plomes}} or 220 kiloliters/day
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|fiblar}}
@@ -1600,7 +1602,7 @@ From {{af|ca|fiblar|-ada|t1=to sting}}.
 ====Participle====
 {{head|ca|past participle form|g=f-s}}
 
-# {{ca-verb form of|fiblar}}
+# {{feminine singular of|ca|fiblat}}
 
 ===Further reading===
 * {{R:ca:IEC2}}
@@ -1608,7 +1610,7 @@ From {{af|ca|fiblar|-ada|t1=to sting}}.
 Page 12502 fiblar: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|fibulo|fībulāre}}, from {{m|la|fībula|t=buckle}}.
+{{inh+|ca|la|fibulo|fībulāre}}, from {{m|la|fībula|t=buckle}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -1664,7 +1666,7 @@ From {{m|ca|fiblar||to sting}}, influenced by {{m|ca|agulló||stinger}}.
 Page 12504 fiblonejar: -------- begin text --------
 
 ===Etymology===
-{{af|ca|fibló|-ejar}}.
+From {{af|ca|fibló|-ejar}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -1710,7 +1712,7 @@ Page 14016 gorjablanc: -------- begin text --------
 From {{com|ca|gorja|blanc|t1=throat|t2=white}}.
 
 ===Pronunciation===
-* {{ca-IPA|gòrjablànc}}
+* {{ca-IPA|[gò,là]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -1780,7 +1782,7 @@ From {{suffix|ca|hemoglobina|úria}}.
 Page 14702 hiperglucèmia: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|[íp]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -1794,7 +1796,7 @@ Page 14702 hiperglucèmia: -------- begin text --------
 Page 14725 hipoglucèmia: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|è}}
+* {{ca-IPA|[íp]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -1819,7 +1821,7 @@ Page 15049 iglú: -------- begin text --------
 Page 15162 immoble: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|immōbĭlis}}.
+{{bor+|ca|la|immōbĭlis}}.
 
 ===Adjective===
 {{ca-adj}}
@@ -1862,7 +1864,7 @@ From {{af|ca|immuno-|globulina}}.
 Page 15748 insoluble: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|īnsolūbilis}}.
+{{bor+|ca|la|īnsolūbilis}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -2012,7 +2014,7 @@ Page 18944 monobloc: -------- begin text --------
 {{bor+|ca|fr|monobloc}}. Equivalent to {{af|ca|mono-|bloc}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- no secondary stress per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -2027,6 +2029,9 @@ Page 18944 monobloc: -------- begin text --------
 -------- end text --------
 Page 18996 Montblanc: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}<!-- per esAdir; no secondary stress -->
+
 ===Proper noun===
 {{ca-proper noun|m}}
 
@@ -2034,6 +2039,9 @@ Page 18996 Montblanc: -------- begin text --------
 
 -------- end text --------
 Page 18997 montblanquí: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA}}<!-- per esAdir; no secondary stress -->
 
 ===Adjective===
 {{ca-adj}}
@@ -2048,7 +2056,7 @@ Page 18997 montblanquí: -------- begin text --------
 Page 19514 negligència: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|neglegentia}}.
+{{bor+|ca|la|neglegentia}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -2207,7 +2215,7 @@ Page 20023 óblast: -------- begin text --------
 Page 20024 oblic: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|oblīquus}}.
+{{bor+|ca|la|oblīquus}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -2422,7 +2430,7 @@ Page 20034 obliquar: -------- begin text --------
 Page 20035 obliqüitat: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|obliquitas|obliquitātem}}.
+{{bor+|ca|la|obliquitas|obliquitātem}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -2572,7 +2580,7 @@ Page 20223 oligodendroglioma: -------- begin text --------
 From {{af|ca|oligodendròglia|-oma}}.
 
 ===Pronunciation===
-{{rfp|ca}}<!-- stressed ó is correct but secondary stresses are unclear -->
+{{rfp|ca|stressed ó is correct but secondary stresses are unclear}}
 * {{rhymes|ca|oma|s=8}}
 * {{hyph|ca|o|li|go|den|dro|gli|o|ma}}
 
@@ -2585,7 +2593,7 @@ From {{af|ca|oligodendròglia|-oma}}.
 Page 20431 oreneta cuablanca: -------- begin text --------
 
 ===Etymology===
-From {{com|ca|oreneta|cuablanc|t1=swallow|t2=white-tailed}}.
+{{lit|white-tailed swallow}}.
 
 ===Noun===
 {{ca-noun|f}}
@@ -2601,7 +2609,10 @@ From {{com|ca|oreneta|cuablanc|t1=swallow|t2=white-tailed}}.
 Page 21328 pela-cables: -------- begin text --------
 
 ===Etymology===
-{{com|ca|pela|cables|t1=peels|t2=wires}}
+{{ca-verb-obj|pelar<t:to peel>|cable<t:cables, wires><pl:1>}}.
+
+===Pronunciation===
+* {{ca-IPA|[pè,cà]}}
 
 ===Noun===
 {{ca-noun|m|pela-cables}}
@@ -2624,7 +2635,7 @@ Page 22185 Pobla de Vallbona: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Pronunciation===
-* {{a|Central Catalan}} {{IPA|ca|/ˈpɔ.blə də bəʎˈbɔ.nə/}}
+* {{ca-IPA|[óbbl,bò]}}
 
 ===Proper noun===
 {{ca-proper noun|f|head=[[la|La]] [[pobla|Pobla]] [[de]] Vallbona}}
@@ -2848,7 +2859,7 @@ Page 22246 poliglot: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA|poliglòt}}
+* {{ca-IPA|ò}}<!-- per GDLC, DNV -->
 * {{rhymes|ca|ɔt|s=3}}
 
 ===Adjective===
@@ -2869,6 +2880,9 @@ Page 22246 poliglot: -------- begin text --------
 
 -------- end text --------
 Page 22247 poliglota: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -2940,7 +2954,7 @@ Page 23164 Publi: -------- begin text --------
 Page 23165 públic: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|pūblicus}}.
+{{bor+|ca|la|pūblicus}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -2976,16 +2990,19 @@ From {{der|ca|la|pūblicus}}.
 -------- end text --------
 Page 23166 publicà: -------- begin text --------
 
-
 ===Pronunciation===
 * {{ca-IPA}}
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{ca-noun|m}}
 
 # {{lb|ca|Ancient Rome}} [[tax collector]], [[publican]]
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|ca|verb form}}
 
 # {{ca-verb form of|publicar}}
@@ -2993,7 +3010,7 @@ Page 23166 publicà: -------- begin text --------
 Page 23167 publicació: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|pūblicātiōn}}.
+{{bor+|ca|la|pūblicātiōn}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -3276,6 +3293,9 @@ Page 24361 república: -------- begin text --------
 -------- end text --------
 Page 24362 república bananera: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[ér]}}
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -3288,7 +3308,7 @@ Page 24363 República Catalana: -------- begin text --------
 {{wp|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA|república catalàna}}
+* {{ca-IPA}}
 
 ===Proper noun===
 {{ca-proper noun|f|head=[[república|República]] [[catalana|Catalana]]}}
@@ -3303,7 +3323,7 @@ Page 24364 República Centreafricana: -------- begin text --------
 {{clq|ca|fr|République centrafricaine}}.
 
 ===Pronunciation===
-* {{ca-IPA|república centreafricàna}}
+* {{ca-IPA|[Cé,càn]}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-República Centreafricana.wav|Audio (Valencian)}}
 
 ===Proper noun===
@@ -3317,6 +3337,9 @@ Page 24364 República Centreafricana: -------- begin text --------
 -------- end text --------
 Page 24365 República d'Irlanda: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Proper noun===
 {{ca-proper noun|f|head=[[república|República]] [[d']][[Irlanda]]}}
 
@@ -3328,6 +3351,9 @@ Page 24365 República d'Irlanda: -------- begin text --------
 Page 24366 República de l'Altai: -------- begin text --------
 {{wikipedia|lang=ca}}
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Proper noun===
 {{ca-proper noun|f|head=[[república|República]] [[de]] [[l']][[Altai]]}}
 
@@ -3338,7 +3364,7 @@ Page 24366 República de l'Altai: -------- begin text --------
 Page 24367 República Democràtica del Congo: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|república democràtica del cóngo}}
+* {{ca-IPA|[Có]}}<!-- per GDLC and [[café del Congo]] in PTV -->
 * {{audio|ca|LL-Q7026 (cat)-Millars-República Democràtica del Congo.wav|Audio (Valencian)}}
 
 ===Proper noun===
@@ -3350,7 +3376,7 @@ Page 24368 República Dominicana: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA|república dominicàna}}
+* {{ca-IPA}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-República Dominicana.wav|Audio (Valencian)}}
 
 ===Proper noun===
@@ -3365,6 +3391,9 @@ Page 24368 República Dominicana: -------- begin text --------
 Page 24369 República Islàmica de l'Iran: -------- begin text --------
 {{wikipedia|lang=ca}}
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Proper noun===
 {{ca-proper noun|head=[[república|República]] [[islàmic|Islàmica]] de l’[[Iran]]|f}}
 
@@ -3376,7 +3405,7 @@ Page 24370 República Txeca: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA|república txêca}}
+* {{ca-IPA|[xë]}}<!-- [[txec]] per GDLC, DNV; pronun not in DCVB but ë is likely for a recentish borrowing -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-República Txeca.wav|Audio}}
 
 ===Proper noun===
@@ -3495,7 +3524,7 @@ Page 24762 rogle: -------- begin text --------
 Page 24877 rossinyol cuablau: -------- begin text --------
 
 ===Etymology===
-From {{com|ca|rossinyol|cuablau|t1=nightingale|t2=blue-tailed}}.
+{{lit|blue-tailed nightingale}}.
 
 ===Noun===
 {{ca-noun|m}}
@@ -3595,7 +3624,7 @@ Page 25896 sigla: -------- begin text --------
 Page 26275 soluble: -------- begin text --------
 
 ===Etymology===
-From {{der|ca|la|solubilis}}.
+{{bor+|ca|la|solūbilis}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -3721,10 +3750,10 @@ Page 27499 tiroglobulina: -------- begin text --------
 Page 28003 trencaglaç: -------- begin text --------
 
 ===Etymology===
-From {{af|ca|trencar|glaç}}.
+{{ca-verb-obj|trencar<t:to break>|glaç<t:ice>}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[rê,là]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -3768,5 +3797,5 @@ Page 28723 ve doble: -------- begin text --------
 # {{Latn-def|ca|name|W|w}}
 
 -------- end text --------
-Elapsed time: 0 mins 35.16 secs
-Ending at Sat Jan 13 21:55:16 2024
+Elapsed time: 0 mins 18.98 secs
+Ending at Wed Jan 31 18:07:04 2024
