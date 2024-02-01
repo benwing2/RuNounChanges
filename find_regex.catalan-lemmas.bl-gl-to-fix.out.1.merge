@@ -207,12 +207,18 @@ Page 764 Aglí: -------- begin text --------
 -------- end text --------
 Page 765 aglomeració: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}
+
 ===Noun===
 {{ca-noun|f}}
 
 # [[agglomeration]]
 -------- end text --------
 Page 766 aglomerar: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Verb===
 {{ca-verb|root=é}}<!-- FIXME, a guess but likely -->
@@ -269,7 +275,7 @@ Page 1296 alquibla: -------- begin text --------
 {{bor+|ca|xaa|القِبْلَة|tr=al-qíbla}}, from {{der|ca|ar|قِبْلَة}}.
 
 ===Pronunciation===
-{{rfp|ca}}<!-- pronunciation of -bl- unclear -->
+{{rfp|ca|pronunciation of -bl- unclear}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -308,7 +314,7 @@ Page 3703 bíblia: -------- begin text --------
 {{bor+|ca|la|biblia}}, from {{der|ca|grc|βιβλία}}, plural of {{m|grc|βιβλίον||book}}.
 
 ===Pronunciation===
-* {{ca-IPA|[βl]}}<!-- per GDLC, DNV; no gemination, fricative [β] -->
+* {{ca-IPA|[b_l]}}<!-- per GDLC, DNV; no gemination, fricative [β] -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -332,7 +338,7 @@ Page 3704 Bíblia: -------- begin text --------
 {{bor+|ca|la|biblia}}, from {{der|ca|grc|βιβλία}}, plural of {{m|grc|βιβλίον||books}}.
 
 ===Pronunciation===
-* {{ca-IPA|[βl]}}<!-- per GDLC, DNV; no gemination, fricative [β] -->
+* {{ca-IPA|[b_l]}}<!-- per GDLC, DNV; no gemination, fricative [β] -->
 
 ===Proper noun===
 {{ca-proper noun|f}}
@@ -351,7 +357,7 @@ Page 3705 bíblic: -------- begin text --------
 {{bor+|ca|la|biblicus||biblical}}. {{surf|ca|Bíblia|gloss1=Bible|-ic}}.
 
 ===Pronunciation===
-* {{ca-IPA|[βl]}}<!-- per GDLC, DNV; no gemination, fricative [β] -->
+* {{ca-IPA|[b_l]}}<!-- per GDLC, DNV; no gemination, fricative [β] -->
 
 ===Adjective===
 {{ca-adj}}
@@ -376,7 +382,7 @@ Page 3706 bíblicament: -------- begin text --------
 From {{af|ca|bíblic|-ment}}.
 
 ===Pronunciation===
-* {{ca-IPA|[βl]}}<!-- per GDLC, DNV; no gemination, fricative [β] -->
+* {{ca-IPA|[b_l]}}<!-- per GDLC, DNV; no gemination, fricative [β] -->
 
 ===Adverb===
 {{ca-adv}}
@@ -504,6 +510,9 @@ Page 4393 buglossa: -------- begin text --------
 ===Etymology===
 {{bor+|ca|la|būglōssa}}.
 
+===Pronunciation===
+* {{ca-IPA|ô}}<!-- per GDLC and DNV -->
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -567,6 +576,9 @@ From {{com|ca|cara|blanc|t1=face|t2=white}}.
 -------- end text --------
 Page 5143 carablanc d'escudet: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[cà,là,êt]}}
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -580,7 +592,7 @@ Page 6200 cobla: -------- begin text --------
 {{inh+|ca|la|cōpula}}. {{doublet|ca|còpula}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- per GDLC, DNV, DCVB -->
+* {{ca-IPA|ó}}<!-- per GDLC, DNV, DCVB; with [b.bl] -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -606,7 +618,7 @@ Page 6201 Coblença: -------- begin text --------
 {{bor+|ca|fr|Coblence}}, from {{der|ca|gmh|Kobelenz}}, from {{der|ca|la|cōnfluentēs|Cōnfluentēs}}, referring to the [[confluence]] of the [[Rhine]] and [[Moselle]] rivers.
 
 ===Pronunciation===
-* {{ca-IPA|cen=[bblè]|val=?|bal=?}}<!-- per GDLC -->
+* {{ca-IPA|[bblë]}}<!-- per GDLC and other terms in -ença e.g. [[Provença]], [[naixença]] -->
 
 ===Proper noun===
 {{ca-proper noun|f}}
@@ -622,6 +634,9 @@ Page 6201 Coblença: -------- begin text --------
 {{cln|ca|exonyms}}
 -------- end text --------
 Page 6332 colibrí puntablanc: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[pú,là]}}
 
 ===Noun===
 {{ca-noun|m|head=[[colibrí]] [[punta]][[blanc]]|colibrís puntablancs}}
@@ -647,7 +662,7 @@ Page 7676 cuablanc: -------- begin text --------
 From {{com|ca|cua|blanc|t1=tail|t2=white}}.
 
 ===Pronunciation===
-* {{ca-IPA|[cú,là]}}
+* {{ca-IPA|[cú,là]}}<!-- per GDLC; NOTE: GDLC claims hard ungeminated [bl] after a vowel in this word and certain others unpredictably, e.g. [[hipoglucèmia]]; I think these are typos -->
 
 ===Adjective===
 {{ca-adj}}
@@ -688,7 +703,7 @@ Page 7743 culblanc: -------- begin text --------
 From {{com|ca|cul|blanc|t1=ass|t2=white}}.
 
 ===Pronunciation===
-* {{ca-IPA|[cú,là]}}
+* {{ca-IPA|[cú,là]}}<!-- per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -904,7 +919,7 @@ From {{af|ca|des-|poblar}}.
 Page 8777 diables: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- with [b.bl] in Central Catalan -->
 
 ===Noun===
 {{head|ca|noun form}}
@@ -945,6 +960,9 @@ From {{af|ca|diable|-ó}}.
 -------- end text --------
 Page 8779 diabló de l'avellaner: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[bbl]}}
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -953,6 +971,9 @@ Page 8779 diabló de l'avellaner: -------- begin text --------
 {{C|ca|Weevils}}
 -------- end text --------
 Page 8780 diabló de les castanyes: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[bbl]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -1013,7 +1034,7 @@ Page 9179 doble: -------- begin text --------
 {{inh+|ca|la|duplus}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}<!-- per GDLC, DNV, DCVB -->
+* {{ca-IPA|ó}}<!-- per GDLC, DNV, DCVB; with [b.bl] -->
 
 ===Adjective===
 {{ca-adj}}
@@ -1138,6 +1159,9 @@ From {{af|ca|doble|-et}}.
 -------- end text --------
 Page 9256 domini públic: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}<!-- with [b.bl] in Central Catalan -->
+
 ===Noun===
 {{ca-noun|m|-}}
 
@@ -1240,6 +1264,9 @@ Page 9554 eglefí: -------- begin text --------
 -------- end text --------
 Page 9616 ela doble: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[él,dó]}}<!-- per GDLC, DNV -->
+
 ===Alternative forms===
 * {{alt|ca|ele doble||Valencia}}
 
@@ -1251,6 +1278,9 @@ Page 9616 ela doble: -------- begin text --------
 {{C|ca|Orthography}}
 -------- end text --------
 Page 9628 ele doble: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|val=[él,dó]}}<!-- per DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -1291,6 +1321,9 @@ From {{af|ca|en-|diable|-ar|t2=devil}}.
 
 -------- end text --------
 Page 10139 enemic públic número u: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Noun===
 {{ca-noun|m|+first-second}}
@@ -1402,7 +1435,7 @@ From {{m|ca|esglaó}}.
 Page 10986 església: -------- begin text --------
 
 ===Etymology===
-Semi-learned descendant of {{der|ca|la|ecclēsia}}, from {{der|ca|grc|ἐκκλησία}}.
+{{slbor|ca|la|ecclēsia}}, from {{der|ca|grc|ἐκκλησία}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -1588,7 +1621,7 @@ Page 12500 fibla: -------- begin text --------
 #: {{syn|ca|punxó}}
 # [[sluice]] {{gloss|opening to allow water to flow out of a reservoir, irrigation channel, etc.}}
 #: {{syn|ca|boquera}}
-# {{lb|ca|historical}} Measure for water flow used in Barcelona equal to 100 {{m|ca|plomes}} or 220 kiloliters/day
+# {{lb|ca|historical}} [[measure]] for [[water]] [[flow]] used in [[Barcelona]] equal to 100 {{m|ca|plomes}} or 220 [[kiloliters]]/[[day]]
 
 ===Etymology 2===
 
@@ -1706,6 +1739,9 @@ From {{af|ca|fibló|-ejar}}.
 Page 13573 gas noble: -------- begin text --------
 {{wikipedia|lang=ca}}
 
+===Pronunciation===
+* {{ca-IPA|[nô]}}
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -1717,7 +1753,7 @@ Page 13573 gas noble: -------- begin text --------
 Page 13924 glioblastoma: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|[ío-bl,stó]}}<!-- ó by analogy with [[granuloma]], [[papil·loma]] in GDLC, etc.; -bl by analogy with [[hemoglobina]] in GDLC; [[hemoglobina]] in DNV has [ɣl], but /bl/ in Valencian is always [bl] so it doesn't matter -->
+* {{ca-IPA|[ío,tó]}}<!-- ó by analogy with [[granuloma]], [[papil·loma]] in GDLC, etc. -->
 * {{rhymes|ca|oma|s=5}}
 * {{hyph|ca|gli|o|blas|to|ma}}
 
@@ -1733,7 +1769,7 @@ Page 14016 gorjablanc: -------- begin text --------
 From {{com|ca|gorja|blanc|t1=throat|t2=white}}.
 
 ===Pronunciation===
-* {{ca-IPA|[gò,là]}}
+* {{ca-IPA|[gò,là]}}<!-- per DNV; not in GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -1754,7 +1790,7 @@ From {{com|ca|gorja|blanc|t1=throat|t2=white}}.
 Page 14520 hemoglobina: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|[èmo-gl,ín]|val=[èm,ín]}}<!-- per GDLC with [gl], but per DNV with [ɣl] -->
+* {{ca-IPA|[èm,ín]}}<!-- per GDLC; NOTE: GDLC claims hard ungeminated [gl] after a vowel in this word and certain others unpredictably, e.g. [[cuablanc]] and [[hipoglucèmia]]; I think these are typos -->
 * {{rhymes|ca|ina}}
 * {{hyph|ca|he|mo|glo|bi|na}}
 
@@ -1784,8 +1820,7 @@ Page 14521 hemoglobinúria: -------- begin text --------
 From {{suffix|ca|hemoglobina|úria}}.
 
 ===Pronunciation===
-* {{ca-IPA|[èmo-gl,úr]|val=[èm,úr]}}<!-- per GDLC with [gl], but per DNV with [ɣl] -->
-* {{ca-IPA}}
+* {{ca-IPA|[èm]}}<!-- see comment at [[hemoglobina]] -->
 * {{rhymes|ca|uɾia|s=7}}
 * {{hyph|ca|he|mo|glo|bi|nú|ri|a}}
 
@@ -1818,7 +1853,7 @@ Page 14702 hiperglucèmia: -------- begin text --------
 Page 14725 hipoglucèmia: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA|[íp]}}
+* {{ca-IPA|[íp]}}<!-- per GDLC, DNV; NOTE: GDLC claims hard ungeminated [gl] after a vowel in this word and certain others unpredictably, e.g. [[cuablanc]] and [[hemoglobina]]; I think these are typos -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -1832,7 +1867,7 @@ Page 14725 hipoglucèmia: -------- begin text --------
 Page 15049 iglú: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC and DNV -->
 
 ===Noun===
 {{ca-noun|m|#s}}
@@ -1846,7 +1881,7 @@ Page 15162 immoble: -------- begin text --------
 {{bor+|ca|la|immōbĭlis}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}<!-- per GDLC, DNV -->
+* {{ca-IPA|ò}}<!-- per GDLC, DNV; with [b.bl] -->
 
 ===Adjective===
 {{ca-adj}}
@@ -1873,6 +1908,9 @@ Page 15179 immunoglobulina: -------- begin text --------
 
 ===Etymology===
 From {{af|ca|immuno-|globulina}}.
+
+===Pronunciation===
+* {{ca-IPA|[mú,ín]}}<!-- per GDLC, DNV; NOTE: GDLC claims hard ungeminated [gl] after a vowel in this word and certain others unpredictably, e.g. [[cuablanc]], [[hemoglobina]], [[hipglucèmia]]; I think these are typos -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -1909,6 +1947,9 @@ Page 15748 insoluble: -------- begin text --------
 -------- end text --------
 Page 15844 interacció nuclear feble: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[fé]}}
+
 ===Noun===
 {{ca-noun|f|-}}
 
@@ -1924,7 +1965,7 @@ Page 16130 isoglossa: -------- begin text --------
 From {{af|ca|iso-|-glossa}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- per GDLC, DNV -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -1940,7 +1981,7 @@ From {{af|ca|iso-|-glossa}}.
 Page 16245 jeroglífic: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- per GDLC, DNV with fricative g -->
 
 ===Adjective===
 {{ca-adj}}
@@ -1965,6 +2006,9 @@ Page 18342 merla cuablanca: -------- begin text --------
 ===Etymology===
 From {{com|ca|merla|cuablanca|t1=blackbird}}, feminine form of {{m|ca|cuablanc||white-tailed}}.
 
+===Pronunciation===
+* {{ca-IPA|[mè,cú,là]}}
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -1974,6 +2018,9 @@ From {{com|ca|merla|cuablanca|t1=blackbird}}, feminine form of {{m|ca|cuablanc||
 {{C|ca|Muscicapids}}
 -------- end text --------
 Page 18552 milà capblanc: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[cà,là]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -1989,7 +2036,7 @@ Page 18774 moble: -------- begin text --------
 {{inh+|ca|roa-oca|moble}}, from {{inh|ca|la|mobilis|mobilem}}, used in juridical contexts to refer to movable possessions. Compare {{cog|oc|mòble}}, {{cog|fr|meuble}}, {{cog|es|mueble}}. {{doublet|ca|mòbil}}, a borrowing from Latin.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- per GDLC and DNV; with [b.bl] in Central Catalan -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -2021,6 +2068,9 @@ Page 18775 moblista: -------- begin text --------
 ===Etymology===
 From {{af|ca|moble|-ista}}.
 
+===Pronunciation===
+* {{ca-IPA|[bbl]}}<!-- by analogy with [[moble]] -->
+
 ===Noun===
 {{ca-noun|mfbysense}}
 
@@ -2039,7 +2089,7 @@ Page 18944 monobloc: -------- begin text --------
 {{bor+|ca|fr|monobloc}}. Equivalent to {{af|ca|mono-|bloc}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}<!-- no secondary stress per GDLC -->
+* {{ca-IPA|ò}}<!-- per GDLC, DNV; no secondary stress per GDLC; NOTE: GDLC claims hard ungeminated [bl] after a vowel in this word and certain others unpredictably, e.g. [[cuablanc]] and [[hemoglobina]]; I think these are typos -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -2084,7 +2134,7 @@ Page 19514 negligència: -------- begin text --------
 {{bor+|ca|la|neglegentia}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- with fricative <g> per GDLC -->
 * {{rhymes|ca|ɛnsia|s=5}}
 
 ===Noun===
@@ -2108,7 +2158,7 @@ Page 19515 negligent: -------- begin text --------
 {{bor+|ca|la|negligens|negligentem}}. {{etydate|1272}}<ref>{{R:ca:GDLC}}</ref>
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- with fricative <g> per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -2134,7 +2184,7 @@ Page 19516 negligir: -------- begin text --------
 {{bor+|ca|la|negligō|negligere}}, with normal change of conjugation to ''-ir''.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- with fricative <g> per GDLC -->
 * {{rhymes|ca|i(ɾ)|s=3}}
 
 ===Verb===
@@ -2213,7 +2263,7 @@ Page 19745 noblesa: -------- begin text --------
 From {{af|ca|noble|-esa}}.
 
 ===Pronunciation===
-* {{ca-IPA|ê}}
+* {{ca-IPA|[bbl]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -2229,7 +2279,7 @@ From {{af|ca|noble|-esa}}.
 Page 20023 óblast: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+{{rfp|ca|Unknown if it has [b.bl]; can't verify}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -2243,7 +2293,7 @@ Page 20024 oblic: -------- begin text --------
 {{bor+|ca|la|oblīquus}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- with fricative <b> per GDLC -->
 
 ===Adjective===
 {{ca-adj|obliqua}}
@@ -2269,7 +2319,7 @@ Page 20026 oblidadís: -------- begin text --------
 {{surf|ca|oblidat|-ís}}. Compare {{cog|es|olvidadizo}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- with fricative <b> per GDLC -->
 * {{rhymes|ca|is|s=4}}
 
 ===Adjective===
@@ -2290,7 +2340,7 @@ Page 20027 oblidar: -------- begin text --------
 {{inh+|ca|roa-oca|oblidar}}, from {{inh|ca|VL.|*oblītāre}}, a frequentative based on {{der|ca|la|oblīvīscor}} (via its past participle {{m|la|oblītus}}). Compare {{cog|oc|oblidar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- with fricative <b> per GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-oblidar.wav|Audio}}
 * {{homophones|ca|oblidà}}
 * {{rhymes|ca|a(ɾ)|s=3}}
@@ -2323,7 +2373,7 @@ Page 20028 oblidós: -------- begin text --------
 From {{suffix|ca|oblidar|ós}}.
 
 ===Pronunciation===
-* {{ca-IPA|ó}}
+* {{ca-IPA|ó}}<!-- with fricative <b> per GDLC -->
 * {{rhymes|ca|os|s=3}}
 
 ===Adjective===
@@ -2338,7 +2388,7 @@ Page 20029 obligació: -------- begin text --------
 {{bor+|ca|la|obligātiō|obligātiōnem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- with fricative <b> per GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-obligació.wav|Audio}}
 
 ===Noun===
@@ -2355,7 +2405,7 @@ Page 20030 obligar: -------- begin text --------
 {{bor+|ca|la|obligō|obligāre}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- with fricative <b> per GDLC -->
 * {{rhymes|ca|a(ɾ)|s=3}}
 
 ===Verb===
@@ -2379,7 +2429,7 @@ Page 20031 obligatori: -------- begin text --------
 {{bor+|ca|la|obligātōrius}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ò}}<!-- with fricative <b> per GDLC -->
 
 ===Adjective===
 {{ca-adj}}
@@ -2402,6 +2452,9 @@ Page 20031 obligatori: -------- begin text --------
 -------- end text --------
 Page 20032 obligatòriament: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA}}<!-- with fricative <b> per GDLC -->
+
 ===Adverb===
 {{ca-adv}}
 
@@ -2413,7 +2466,7 @@ Page 20033 obligatorietat: -------- begin text --------
 From {{af|ca|obligatori|-tat}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- with fricative <b> per GDLC -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -2431,7 +2484,7 @@ Page 20034 obliquar: -------- begin text --------
 {{bor+|ca|la|oblīquō|oblīquāre}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- with fricative <b> per GDLC -->
 
 ===Verb===
 {{ca-verb}}
@@ -2458,7 +2511,7 @@ Page 20035 obliqüitat: -------- begin text --------
 {{bor+|ca|la|obliquitas|obliquitātem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- with fricative <b> per GDLC -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -2480,7 +2533,7 @@ Page 20036 oblit: -------- begin text --------
 {{bor+|ca|la|oblitus}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- with fricative <b> per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -2506,7 +2559,7 @@ Page 20037 obliteració: -------- begin text --------
 {{lbor|ca|la|oblitteratio|oblitterātiōnem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- with hard ungeminated [bl] per GDLC but I think this is a typo; cf. comments at [[hemoglobina]], [[hipoglucèmia]] -->
 
 ===Noun===
 {{ca-noun|f}}
@@ -2530,7 +2583,7 @@ Page 20038 obliterador: -------- begin text --------
 From {{af|ca|obliterar|-dor}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- with hard ungeminated [bl] per GDLC but I think this is a typo; cf. comments at [[hemoglobina]], [[hipoglucèmia]] -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -2552,7 +2605,7 @@ Page 20039 obliterar: -------- begin text --------
 {{lbor|ca|la|oblitterō|oblitterāre|t=blot out}}, from {{m|la|oblinō|t=smear over}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA}}<!-- with hard ungeminated [bl] per GDLC but I think this is a typo; cf. comments at [[hemoglobina]], [[hipoglucèmia]] -->
 
 ===Verb===
 {{ca-verb|root=é}}
@@ -2581,7 +2634,7 @@ Page 20040 oblong: -------- begin text --------
 {{bor+|ca|la|oblongus}}.
 
 ===Pronunciation===
-* {{ca-IPA|ò}}
+* {{ca-IPA|ó}}<!-- per GDLC and DNV -->
 
 ===Adjective===
 {{ca-adj}}
@@ -2590,6 +2643,9 @@ Page 20040 oblong: -------- begin text --------
 
 -------- end text --------
 Page 20044 obra pública: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[òb]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -2620,6 +2676,9 @@ Page 20431 oreneta cuablanca: -------- begin text --------
 ===Etymology===
 {{lit|white-tailed swallow}}.
 
+===Pronunciation===
+* {{ca-IPA|[êt,cú,là]}}
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -2648,6 +2707,9 @@ Page 21328 pela-cables: -------- begin text --------
 -------- end text --------
 Page 21838 pigarg cuablanc: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[cú,là]}}
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -2675,7 +2737,7 @@ Page 22186 població: -------- begin text --------
 From {{suffix|ca|poblar|ció}} or a {{slbor|ca|LL.|populātiō|populātiōnem|nocap=1}} from {{der|ca|la|populus||people}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[bbl]}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-població.wav|Audio}}
 
 ===Noun===
@@ -2702,7 +2764,7 @@ Page 22187 poblacional: -------- begin text --------
 From {{af|ca|població|-al}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[bbl]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -2743,7 +2805,7 @@ Page 22189 poblar: -------- begin text --------
 From {{suffix|ca|poble|t1=people, population|ar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[bbl]}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-poblar.wav|Audio (Valencian)}}
 
 ===Verb===
@@ -2775,7 +2837,7 @@ Page 22190 poblat: -------- begin text --------
 From {{af|ca|poblar|-at}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[bbl]}}
 * {{audio|ca|LL-Q7026 (cat)-Millars-poblat.wav|Audio (Valencian)}}
 * {{rhymes|ca|at|s=2}}
 
@@ -2841,7 +2903,7 @@ Page 22192 poblejar: -------- begin text --------
 From {{af|ca|poble|-ejar|t1=village}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[bbl]}}
 
 ===Verb===
 {{ca-verb|root=ê}}
@@ -2861,6 +2923,9 @@ Page 22193 Poblenou: -------- begin text --------
 ===Etymology===
 From {{af|ca|poble|nou}}.
 
+===Pronunciation===
+* {{ca-IPA|[òbbl,nò]}}
+
 ===Proper noun===
 {{ca-proper noun|m}}
 
@@ -2870,6 +2935,9 @@ Page 22194 poblet: -------- begin text --------
 
 ===Etymology===
 From {{af|ca|poble|-et}}.
+
+===Pronunciation===
+* {{ca-IPA|[bblê]}}
 
 ===Noun===
 {{ca-noun|m}}
@@ -2921,7 +2989,7 @@ Page 22834 problema: -------- begin text --------
 {{bor+|ca|la|problēma}}, from {{der|ca|grc|πρόβλημα|t=obstacle}}.
 
 ===Pronunciation===
-* {{ca-IPA|é}}
+* {{ca-IPA|ë}}<!-- per GDLC, DNV; DCVB claims /e/ everywhere contra GDLC -->
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-problema.wav|Audio}}
 
 ===Noun===
@@ -2934,7 +3002,7 @@ Page 22834 problema: -------- begin text --------
 Page 22835 problemàtic: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|problematicus}}.
+{{bor+|ca|la|problēmaticus}}.
 
 ===Pronunciation===
 * {{ca-IPA}}
@@ -2969,6 +3037,9 @@ Page 22836 problemàtica: -------- begin text --------
 # {{feminine singular of|ca|problemàtic}}
 -------- end text --------
 Page 23164 Publi: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA}}
 
 ===Proper noun===
 {{ca-proper noun|m}}
@@ -3016,7 +3087,7 @@ Page 23165 públic: -------- begin text --------
 Page 23166 publicà: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[bbl]}}
 
 ===Etymology 1===
 
@@ -3035,10 +3106,10 @@ Page 23166 publicà: -------- begin text --------
 Page 23167 publicació: -------- begin text --------
 
 ===Etymology===
-{{bor+|ca|la|pūblicātiōn}}.
+{{bor+|ca|la|pūblicātiō|pūblicātiōnem}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[bbl]}}
 * {{audio|ca|LL-Q7026 (cat)-Unjoanqualsevol-publicació.wav|Audio}}
 
 ===Noun===
@@ -3074,7 +3145,7 @@ Page 23169 publicar: -------- begin text --------
 {{bor+|ca|la|pūblicō|publicāre|t=to make public}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[bbl]}}
 
 ===Verb===
 {{ca-verb}}
@@ -3098,7 +3169,7 @@ Page 23169 publicar: -------- begin text --------
 Page 23170 publicitari: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[bbl]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -3116,7 +3187,7 @@ Page 23170 publicitari: -------- begin text --------
 Page 23171 publicitat: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[bbl]}}
 * {{rhymes|ca|at|s=4}}
 
 ===Noun===
@@ -3140,7 +3211,7 @@ Page 23786 reble: -------- begin text --------
 Probably a {{deverbal|ca|reblir|nocap=1|t=fill, cover up}}.
 
 ===Pronunciation===
-* {{ca-IPA|cen=é|val=é|bal=ê}}<!-- Vriullop: expected é; Balearic ê by analogy -->
+* {{ca-IPA|cen=é|val=é|bal=ê}}<!-- Vriullop: expected é; Balearic ê by analogy; [bbl] per GDLC -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -3208,6 +3279,9 @@ Page 24323 repoblació: -------- begin text --------
 ===Etymology===
 From {{af|ca|repoblar|-ció}}.
 
+===Pronunciation===
+* {{ca-IPA|[bbl]}}
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -3246,7 +3320,7 @@ Page 24325 repoblar: -------- begin text --------
 From {{af|ca|re-|poblar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[bbl]}}
 
 ===Verb===
 {{ca-verb|root=ô}}<!-- FIXME: cawikt says /ɔ/ everywhere based off of [[poble]], which is /ɔ/ everywhere including Valencia as vouched by DNV; but DNV says [[poblar]] has root /o/ in Valencia along with [[pobla]] "nucleus of settlers founded by means of a settlement charter" -->
@@ -3273,7 +3347,7 @@ Page 24360 republicà: -------- begin text --------
 From {{af|ca|república|-à}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[bbl]}}
 
 ===Adjective===
 {{ca-adj}}
@@ -3441,6 +3515,9 @@ Page 24370 República Txeca: -------- begin text --------
 -------- end text --------
 Page 24371 republicanisme: -------- begin text --------
 
+===Pronunciation===
+* {{ca-IPA|[bbl]}}
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -3471,7 +3548,7 @@ Page 24465 restablir: -------- begin text --------
 From {{af|ca|re-|establir}}<!--or directly from Latin?-->.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[bbl]}}
 * {{homophones|ca|restablí}}
 * {{rhymes|ca|i(ɾ)|s=3}}
 
@@ -3498,7 +3575,7 @@ Page 24474 restoblar: -------- begin text --------
 {{inh+|ca|VL.|*restupulare}}, from {{der|ca|la|stupula}}, alteration of {{m|la|stipula||stubble}}. Cognate to {{m|ca|rostollar}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[bbl]}}
 
 ===Verb===
 {{ca-verb|root=ó}}<!-- based on [[restoble]] in GDLC and attested directly by DNV -->
@@ -3551,6 +3628,9 @@ Page 24877 rossinyol cuablau: -------- begin text --------
 ===Etymology===
 {{lit|blue-tailed nightingale}}.
 
+===Pronunciation===
+* {{ca-IPA|[yò,cú,là]}}
+
 ===Noun===
 {{ca-noun|m}}
 
@@ -3562,7 +3642,7 @@ Page 24877 rossinyol cuablau: -------- begin text --------
 Page 24931 ruble: -------- begin text --------
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[b_l]}}<!-- FIXME: given with hard ungeminated [bl] in GDLC, which seems unlikely --><!-- FIXME: given with hard ungeminated [bl] in GDLC, which seems unlikely -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -3729,6 +3809,9 @@ Page 26655 superpoblació: -------- begin text --------
 ===Etymology===
 From {{af|ca|super-|població}}.
 
+===Pronunciation===
+* {{ca-IPA|[sú,bbl]}}
+
 ===Noun===
 {{ca-noun|f}}
 
@@ -3743,6 +3826,9 @@ Page 26746 tabloide: -------- begin text --------
 
 ===Etymology===
 {{bor+|ca|en|tabloid}}, probably via {{cog|es|tabloide}}.
+
+===Pronunciation===
+* {{ca-IPA|ò}}<!-- per DNV; FIXME: not in GDLC so unclear if it has [bbl] -->
 
 ===Noun===
 {{ca-noun|m}}
@@ -3762,7 +3848,7 @@ Page 27499 tiroglobulina: -------- begin text --------
 {{wikipedia|lang=ca}}
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[tí,lí]}}
 * {{rhymes|ca|ina}}
 * {{hyph|ca|ti|ro|glo|bu|li|na}}
 
@@ -3796,7 +3882,7 @@ Page 28387 ullblau: -------- begin text --------
 From {{compound|ca|ull|blau|t1=eye|t2=blue}}.
 
 ===Pronunciation===
-* {{ca-IPA}}
+* {{ca-IPA|[úl,là]}}
 * {{rhymes|ca|aw|s=2}}
 
 ===Adjective===
@@ -3805,6 +3891,9 @@ From {{compound|ca|ull|blau|t1=eye|t2=blue}}.
 # [[blue-eyed]]
 -------- end text --------
 Page 28464 unió estable de parella: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[rê]}}
 
 ===Noun===
 {{ca-noun|f}}
@@ -3815,6 +3904,9 @@ Page 28464 unió estable de parella: -------- begin text --------
 * [https://www.registrecivil.ad/unions-estables-de-parella Expedient previ al registre d'unions estables de parella], ''Registre Civil del Principat d'Andorra''
 -------- end text --------
 Page 28723 ve doble: -------- begin text --------
+
+===Pronunciation===
+* {{ca-IPA|[vé,dó]}}
 
 ===Noun===
 {{ca-noun|f}}
