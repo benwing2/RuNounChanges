@@ -11,6 +11,8 @@ local string_utilities_module = "Module:string utilities"
 local lang = require("Module:languages").getByCode("en")
 local langname = lang:getCanonicalName()
 
+local rsplit = mw.text.split
+
 local function glossary_link(entry, text)
 	text = text or entry
 	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
@@ -1243,6 +1245,99 @@ pos_functions["verbs"] = {
 		else
 			table.insert(data.inflections, past_infls)
 			table.insert(data.inflections, past_ptc_infls)
+		end
+
+		if pagename:find(" ") then
+			-- Check for placeholder "it"
+			local words = rsplit(pagename, " ")
+			for i, word in ipairs(words) do
+				if word == "it" or word == "its" or word == "it's" then
+					table.insert(data.categories, langname .. ' terms with placeholder "it"')
+					break
+				end
+			end
+
+			-- Check for phrasal verbs
+			local phrasal_particles = require("Module:table/listToSet") {
+				-- NOTE: This should only contain common adverbial particles, not random words like [[low]],
+				-- [[adrift]], etc.
+				"aback",
+				"about",
+				"above",
+				"across",
+				"after",
+				"against",
+				"ahead",
+				"along",
+				"apart",
+				"around",
+				"as",
+				"aside",
+				"at",
+				"away",
+				"back",
+				"before",
+				"behind",
+				"below",
+				"between",
+				"beyond",
+				"by",
+				"down",
+				"for",
+				"forth",
+				"from",
+				"in",
+				"into",
+				"of",
+				"off",
+				"on",
+				"onto",
+				"out",
+				"over",
+				"past",
+				"round",
+				"through",
+				"to",
+				"together",
+				"towards",
+				"under",
+				"up",
+				"upon",
+				"with",
+				"without",
+			}
+			local allowed_non_particle_words = require("Module:table/listToSet") {
+				"it",
+				"one",
+				"oneself",
+				"someone",
+			}
+			local base = pagename
+			local seen_particles = {}
+			-- Only consider a verb to be phrasal if it consists of a single base verb followed exclusively by either
+			-- particles from `phrasal_particles` or placeholder words from `allowed_non_particle_words`, where at
+			-- least one following word is from `phrasal_particles` (hence [[can it]] is not a phrasal verb).
+			while true do
+				local prev, particle = base:match("^(.+) (.-)$")
+				if not prev then
+					break
+				end
+				if phrasal_particles[particle] then
+					table.insert(seen_particles, particle)
+				elseif allowed_non_particle_words[particle] then
+					-- do nothing
+				else
+					break
+				end
+				base = prev
+			end
+			if not base:find(" ") and #seen_particles > 0 then
+				table.insert(data.categories, langname .. " phrasal verbs")
+				for i = #seen_particles, 1, -1 do
+					table.insert(data.categories, langname .. " phrasal verbs with particle (" .. seen_particles[i] ..
+						")")
+				end
+			end
 		end
 	end
 }
