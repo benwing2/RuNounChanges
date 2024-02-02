@@ -2,6 +2,7 @@ local export = {}
 
 local table_module = "Module:table"
 local pattern_utilities_module = "Module:pattern utilities"
+local parse_utilities_module = "Module:parse utilities"
 
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
@@ -12,7 +13,48 @@ local rsubn = mw.ustring.gsub
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
 	return retval
-end 
+end
+
+
+-- Default function to split a word on apostrophes. Don't split apostrophes at the beginning or end of a word (e.g.
+-- [['ndrangheta]] or [[po']]). Handle multiple apostrophes correctly, e.g. [[l'altr'ieri]] -> [[l']][altr']][[ieri]].
+function export.default_split_apostrophe(word)
+	local begapo, inner_word, endapo = word:match("^('*)(.-)('*)$")
+	local apostrophe_parts = rsplit(word, "'")
+	local linked_apostrophe_parts = {}
+	local apostrophes_at_beginning = ""
+	local i = 1
+	-- Apostrophes at beginning get attached to the first word after (which will always exist but may
+	-- be blank if the word consists only of apostrophes).
+	while i < #apostrophe_parts do -- <, not <=, in case the word consists only of apostrophes
+		local apostrophe_part = apostrophe_parts[i]
+		i = i + 1
+		if apostrophe_part == "" then
+			apostrophes_at_beginning = apostrophes_at_beginning .. "'"
+		else
+			break
+		end
+	end
+	apostrophe_parts[i] = apostrophes_at_beginning .. apostrophe_parts[i]
+	-- Now, do the remaining parts. A blank part indicates more than one apostrophe in a row; we join
+	-- all of them to the preceding word.
+	while i <= #apostrophe_parts do
+		local apostrophe_part = apostrophe_parts[i]
+		if apostrophe_part == "" then
+			linked_apostrophe_parts[#linked_apostrophe_parts] =
+				linked_apostrophe_parts[#linked_apostrophe_parts] .. "'"
+		elseif i == #apostrophe_parts then
+			table.insert(linked_apostrophe_parts, apostrophe_part)
+		else
+			table.insert(linked_apostrophe_parts, apostrophe_part .. "'")
+		end
+		i = i + 1
+	end
+	for i, tolink in ipairs(linked_apostrophe_parts) do
+		linked_apostrophe_parts[i] = "[[" .. tolink .. "]]"
+	end
+	return table.concat(linked_apostrophe_parts)
+end
 
 
 --[=[
@@ -37,11 +79,21 @@ local function add_single_word_links(space_word, data)
 	space_word_no_punct = space_word_no_punct or space_word
 	punct = punct or ""
 	local words
-	-- don't split prefixes and suffixes
-	if not data.split_hyphen or space_word_no_punct:find("^%-") or space_word_no_punct:find("%-$") then
+	if space_word_no_punct:find("^%-") or space_word_no_punct:find("%-$") then
+		-- don't split prefixes and suffixes
 		words = {space_word_no_punct}
-	else
-		words = rsplit(space_word_no_punct, "%-")
+	elseif type(data.split_hyphen_when_space) == "function" then
+		words = data.split_hyphen_when_space(space_word_no_punct)
+		if type(words) == "string" then
+			return words .. punct
+		end
+	end
+	if not words then
+		if data.split_hyphen_when_space then
+			words = rsplit(space_word_no_punct, "%-")
+		else
+			words = {space_word_no_punct}
+		end
 	end
 	local linked_words = {}
 	for j, word in ipairs(words) do
@@ -52,44 +104,7 @@ local function add_single_word_links(space_word, data)
 			if (not data.no_split_apostrophe_words or not data.no_split_apostrophe_words[word]) and
 				data.split_apostrophe and word:find("'") then
 				if data.split_apostrophe == true then
-					-- Default apostrophe-splitting algorithm. Don't split apostrophes at the beginning or end of a
-					-- word (e.g. [['ndrangheta]] or [[po']]). Handle multiple apostrophes correctly, e.g.
-					-- [[l'altr'ieri]] -> [[l']][altr']][[ieri]].
-					local begapo, inner_word, endapo = word:match("^('*)(.-)('*)$")
-					local apostrophe_parts = rsplit(word, "'")
-					local linked_apostrophe_parts = {}
-					local apostrophes_at_beginning = ""
-					local i = 1
-					-- Apostrophes at beginning get attached to the first word after (which will always exist but may
-					-- be blank if the word consists only of apostrophes).
-					while i < #apostrophe_parts do -- <, not <=, in case the word consists only of apostrophes
-						local apostrophe_part = apostrophe_parts[i]
-						i = i + 1
-						if apostrophe_part == "" then
-							apostrophes_at_beginning = apostrophes_at_beginning .. "'"
-						else
-							break
-						end
-					end
-					apostrophe_parts[i] = apostrophes_at_beginning .. apostrophe_parts[i]
-					-- Now, do the remaining parts. A blank part indicates more than one apostrophe in a row; we join
-					-- all of them to the preceding word.
-					while i <= #apostrophe_parts do
-						local apostrophe_part = apostrophe_parts[i]
-						if apostrophe_part == "" then
-							linked_apostrophe_parts[#linked_apostrophe_parts] =
-								linked_apostrophe_parts[#linked_apostrophe_parts] .. "'"
-						elseif i == #apostrophe_parts then
-							table.insert(linked_apostrophe_parts, apostrophe_part)
-						else
-							table.insert(linked_apostrophe_parts, apostrophe_part .. "'")
-						end
-						i = i + 1
-					end
-					for i, tolink in ipairs(linked_apostrophe_parts) do
-						linked_apostrophe_parts[i] = "[[" .. tolink .. "]]"
-					end
-					word = table.concat(linked_apostrophe_parts)
+					word = export.default_split_apostrophe(word)
 				else -- custom apostrophe splitter/linker
 					word = data.split_apostrophe(word)
 				end
@@ -121,7 +136,7 @@ function export.add_links_to_multiword_term(term, data)
 	end
 	if not rfind(term, " ") then
 		data = require(table_module).shallowcopy(data)
-		data.split_hyphen = true
+		data.split_hyphen_when_space = true
 	end
 	local words = rsplit(term, " ")
 	local linked_words = {}
@@ -137,15 +152,15 @@ end
 
 
 -- Badly named older entry point. FIXME: Obsolete me!
-function export.add_lemma_links(lemma, split_hyphen)
-	return export.add_links_to_multiword_term(lemma, {split_hyphen = split_hyphen})
+function export.add_lemma_links(lemma, split_hyphen_when_space)
+	return export.add_links_to_multiword_term(lemma, {split_hyphen_when_space = split_hyphen_when_space})
 end
 
 
 -- Ensure that brackets display literally in error messages. Replacing with equivalent HTML escapes doesn't work
 -- because they are displayed literally; but inserting a Unicode word-joiner symbol works.
 local function escape_wikicode(term)
-	return require(put_module).escape_wikicode(term)
+	return require(parse_utilities_module).escape_wikicode(term)
 end
 
 
@@ -164,7 +179,7 @@ end
 -- is [[il]] [[bue]] [[che]] [[dice]] [[cornuto]] [[all']][[asino]]. With a modifier_spec of 'dice:dire', the result
 -- is [[il]] [[bue]] [[che]] [[dire|dice]] [[cornuto]] [[all']][[asino]]. Here, based on the modifier spec, the
 -- non-lemma form [[dice]] is replaced with the two-part link [[dire|dice]].
--- 
+--
 -- Another example: given the source phrase [[chi semina vento raccoglie tempesta]] "sow the wind, reap the whirlwind"
 -- (literally (he) who sows wind gathers [the] tempest"). The result of calling add_links_to_multiword_term() is
 -- [[chi]] [[semina]] [[vento]] [[raccoglie]] [[tempesta]], and with a modifier_spec of 'semina:~re; raccoglie:~re',
