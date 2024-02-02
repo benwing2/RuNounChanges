@@ -36,6 +36,8 @@ function export.show(frame)
 		["json"] = {type = "boolean"},
 		["sort"] = {},
 		["splithyph"] = {type = "boolean"},
+		["nosplithyph"] = {type = "boolean"},
+		["hyphspace"] = {type = "boolean"},
 		["nolinkhead"] = {type = "boolean"},
 		["nosuffix"] = {type = "boolean"},
 		["nomultiwordcat"] = {type = "boolean"},
@@ -59,6 +61,8 @@ function export.show(frame)
 	if args.nolinkhead or not pagename:find("[ '%-]") then
 		autohead = pagename
 	else
+		local m_headutil = require(headword_utilities_module)
+
 		local en_no_split_apostrophe_words = require("Module:table/listToSet") {
 			"one's",
 			"someone's",
@@ -104,6 +108,39 @@ function export.show(frame)
 			"vice",
 		}
 
+		local function is_english(term)
+			local title = mw.title.new(term)
+			if title and title.exists then
+				local content = title:getContent()
+				if content and content:find("==English==\n") then
+					return true
+				end
+			end
+			return false
+		end
+
+		local function en_split_hyphen_when_space(word)
+			if not word:find("%-") then
+				return nil
+			end
+			if args.hyphspace then
+				return "[[" .. word:gsub("%-", " ") .. "|" .. word .. "]]"
+			end
+			if args.nosplithyph then
+				return "[[" .. word .. "]]"
+			end
+			if not args.splithyph then
+				local space_word = word:gsub("%-", " ")
+				if is_english(space_word) then
+					return "[[" .. space_word .. "|" .. word .. "]]"
+				end
+				if is_english(word) then
+					return "[[" .. word .. "]]"
+				end
+			end
+			return nil
+		end
+
 		local function en_split_apostrophe(word)
 			local base = word:match("^(.*)'s$")
 			if base then
@@ -113,12 +150,8 @@ function export.show(frame)
 			if base then
 				if base:find("s$") then
 					local sg = require(string_utilities_module).singularize(base)
-					local title = mw.title.new(sg)
-					if title and title.exists then
-						local content = title:getContent()
-						if content and content:find("==English==\n") then
-							return "[[" .. sg .. "|" .. base .. "]][[-'|']]"
-						end
+					if is_english(sg) then
+						return "[[" .. sg .. "|" .. base .. "]][[-'|']]"
 					end
 				end
 				return "[[" .. base .. "]][[-'|']]"
@@ -126,8 +159,8 @@ function export.show(frame)
 			return "[[" .. word .. "]]"
 		end
 
-		autohead = require(headword_utilities_module).add_links_to_multiword_term(pagename, {
-			split_hyphen = args.splithyph,
+		autohead = m_headutil.add_links_to_multiword_term(pagename, {
+			split_hyphen_when_space = en_split_hyphen_when_space,
 			split_apostrophe = en_split_apostrophe,
 			no_split_apostrophe_words = en_no_split_apostrophe_words,
 			include_hyphen_prefixes = en_include_hyphen_prefixes,
