@@ -4,6 +4,9 @@ local pos_functions = {}
 local force_cat = false -- for testing; if true, categories appear in non-mainspace pages
 
 local m_links = require("Module:links")
+local table_module = "Module:table"
+local headword_utilities_module = "Module:User:Benwing2/headword utilities"
+local string_utilities_module = "Module:string utilities"
 
 local lang = require("Module:languages").getByCode("en")
 local langname = lang:getCanonicalName()
@@ -16,55 +19,6 @@ end
 local function track(page)
 	require("Module:debug/track")("en-headword/" .. page)
 	return true
-end
-
-
--- Auto-add links to a word that should not have spaces but may have hyphens. We split off final punctuation, then
--- split on hyphens if `splithyph` is given. We only split on hyphens if they are in the middle of the word, not at the
--- beginning of end (hyphens at the beginning or end indicate suffixes or prefixes, respectively.
-local function add_single_word_links(space_word, splithyph)
-	local space_word_no_punct, punct = rmatch(space_word, "^(.*)([,;:?!])$")
-	space_word_no_punct = space_word_no_punct or space_word
-	punct = punct or ""
-	local words
-	-- don't split prefixes and suffixes
-	if not splithyph or space_word_no_punct:find("^%-") or space_word_no_punct:find("%-$") then
-		words = {space_word_no_punct}
-	else
-		words = rsplit(space_word_no_punct, "%-")
-	end
-	local linked_words = {}
-	for j, word in ipairs(words) do
-		word = "[[" .. word .. "]]"
-		if j < #words then
-			word = word .. "-"
-		end
-		table.insert(linked_words, word)
-	end
-	return table.concat(linked_words) .. punct
-end
-
-
--- Auto-add links to a multiword term. Links are not added to single-word terms. We split on spaces, and also on hyphens
--- if `splithyph` is given or the word has no spaces.. We don't always split on hyphens because of cases like
--- "open-pit mine" where "open-pit" should be linked as a whole, but provide the option to do it for cases like
--- "Abbott-Miller tube" and "adult-onset diabetes". If there's no space, however, then it makes sense to split on
--- hyphens by default (e.g. for "abbot-bishop"). Cases where only some of the hyphens should be split can always be
--- handled by explicitly specifying the head.
-local function add_links_to_multiword_term(term, splithyph)
-	if not rfind(term, " ") then
-		splithyph = true
-	end
-	local words = rsplit(term, " ")
-	local linked_words = {}
-	for _, word in ipairs(words) do
-		table.insert(linked_words, add_single_word_links(word, splithyph))
-	end
-	local retval = table.concat(linked_words, " ")
-	-- If we ended up with a single link consisting of the entire term,
-	-- remove the link.
-	local unlinked_retval = rmatch(retval, "^%[%[([^%[%]]*)%]%]$")
-	return unlinked_retval or retval
 end
 
 
@@ -99,19 +53,95 @@ function export.show(frame)
 
 	local user_specified_heads = args.head
 	local heads = user_specified_heads
-	if args.nolinkhead or args.pagename then
-		if #heads == 0 then
-			heads = {pagename}
-		end
+	local autohead
+	if args.nolinkhead or not pagename:find("[ '%-]") then
+		autohead = pagename
 	else
-		local auto_linked_head = add_links_to_multiword_term(pagename, args.splithyph)
-		if #heads == 0 then
-			heads = {auto_linked_head}
-		else
-			for _, head in ipairs(heads) do
-				if head == auto_linked_head then
-					track("redundant-head")
+		local en_no_split_apostrophe_words = require("Module:table/listToSet") {
+			"one's",
+			"someone's",
+			"he's",
+			"she's",
+			"it's",
+		}
+
+		local en_include_hyphen_prefixes = require("Module:table/listToSet") {
+			"acousto",
+			"Afro",
+			"agro",
+			"anarcho",
+			"angio",
+			"Anglo",
+			"ante",
+			"anti",
+			"arch",
+			"auto",
+			-- "be",
+			"bi",
+			"bio",
+			"de",
+			"ex",
+			"hyper",
+			"hypo",
+			"infra",
+			"inter",
+			"intra",
+			"macro",
+			"micro",
+			"neo",
+			"non",
+			"pan",
+			"post",
+			"pre",
+			"pro",
+			"proto",
+			"re",
+			"sub",
+			"super",
+			"un",
+			"vice",
+		}
+
+		local function en_split_apostrophe(word)
+			local base = word:match("^(.*)'s$")
+			if base then
+				return "[[" .. base .. "]][[-'s|'s]]"
+			end
+			base = word:match("^(.*)'$")
+			if base then
+				if base:find("s$") then
+					local sg = require(string_utilities_module).singularize(base)
+					local title = mw.title.new(sg)
+					if title and title.exists then
+						local content = title:getContent()
+						if content and content:find("==English==\n") then
+							return "[[" .. sg .. "|" .. base .. "]][[-'|']]"
+						end
+					end
 				end
+				return "[[" .. base .. "]][[-'|']]"
+			end
+			return "[[" .. word .. "]]"
+		end
+
+		autohead = require(headword_utilities_module).add_links_to_multiword_term(pagename, {
+			split_hyphen = args.splithyph,
+			split_apostrophe = en_split_apostrophe,
+			no_split_apostrophe_words = en_no_split_apostrophe_words,
+			include_hyphen_prefixes = en_include_hyphen_prefixes,
+		})
+	end
+
+	if #heads == 0 then
+		heads = {autohead}
+	else
+		for i, head in ipairs(heads) do
+			if head:find("^~") then
+				head = require(headword_utilities_module).apply_link_modifiers(autohead, head:sub(2))
+				heads[i] = head
+			end
+			if head == autohead then
+				track("redundant-head")
 			end
 		end
 	end
