@@ -474,202 +474,177 @@ local function canonicalize_plural(pl, stem, pagename)
 		:gsub("[:#]", "\\%0"))
 end
 
-pos_functions["nouns"] = {
-	params = {
-		[1] = {list = true, allow_holes = true},
-		["pl=qual"] = { list = true, allow_holes = true },
-		},
-	func = function(args, data)
-		local pagename = data.displayed_pagename
+local function do_nouns(args, data, is_proper)
+	local pagename = data.displayed_pagename
+
+	local function gather_inflections_with_quals(infl_field, qual_field, label)
 		-- Gather all the plural parameters from the numbered parameters.
-		local plurals = {}
-
-		for i = 1, args[1].maxindex do
-			local pl = args[1][i]
-
-			if pl then
-				local qual = args["plqual"][i]
-
-				if qual then
-					table.insert(plurals, {term = pl, q = {qual}})
-				else
-					table.insert(plurals, pl)
-				end
-			end
+		local infls = {}
+		if label then
+			infls.label = label
 		end
 
-		local need_default_plural = true
-		if plurals[1] == "-" then
-			-- Uncountable noun; may occasionally have a plural
-			table.remove(plurals, 1)  -- Remove the "-"
-			table.insert(data.categories, langname .. " uncountable nouns")
+		for i, infl in ipairs(args[infl_field]) do
+			local qual = args[qual_field][i]
 
-			-- If plural forms were given explicitly, then show "usually"
-			if #plurals > 0 then
-				table.insert(data.inflections, {label = "usually " .. glossary_link("uncountable")})
-				table.insert(data.categories, langname .. " countable nouns")
+			if qual then
+				table.insert(infls, {term = infl, q = {qual}})
 			else
-				table.insert(data.inflections, {label = glossary_link("uncountable")})
-			end
-			need_default_plural = false
-		elseif plurals[1] == "~" then
-			-- Mixed countable/uncountable noun, always has a plural
-			table.remove(plurals, 1)  -- Remove the "~"
-			table.insert(data.inflections, {label = glossary_link("countable") .. " and " .. glossary_link("uncountable")})
-			table.insert(data.categories, langname .. " uncountable nouns")
-			table.insert(data.categories, langname .. " countable nouns")
-
-			-- If no plural was given, add a default one now
-			if #plurals == 0 then
-				plurals = {default_plural(pagename)}
-			end
-		else
-			-- The default (countable noun), always has a plural
-			table.insert(data.categories, langname .. " countable nouns")
-		end
-		-- Plural is unknown
-		if plurals[1] == "?" then
-			table.remove(plurals, 1)  -- Remove the "?"
-			-- Not desired; see [[Wiktionary:Tea_room/2021/August#"Plural unknown or uncertain"]]
-			-- table.insert(data.inflections, {label = "plural unknown or uncertain"})
-			table.insert(data.categories, langname .. " nouns with unknown or uncertain plurals")
-			if #plurals > 0 then
-				error("Can't specify explicit plurals along with '?' for unknown/uncertain plural")
-			end
-			return
-		end
-		-- Plural is not attested
-		if plurals[1] == "!" then
-			table.remove(plurals, 1)  -- Remove the "!"
-			table.insert(data.inflections, {label = "plural not attested"})
-			table.insert(data.categories, langname .. " nouns with unattested plurals")
-			if #plurals > 0 then
-				error("Can't specify explicit plurals along with '!' for unattested plural")
-			end
-			return
-		end
-
-		-- If no plural was given, maybe add a default one, otherwise (when "-" was given) return
-		if #plurals == 0 then
-			if need_default_plural then
-				plurals = {default_plural(pagename)}
-			else
-				return
+				table.insert(infls, infl)
 			end
 		end
 
-		-- There are plural forms to show, so show them
-		local pl_parts = {label = "plural", accel = {form = "p"}}
-
-		local function check_ies(pl, stem)
-			local newplural, nummatches = stem:gsub("([^aeiou])y$","%1ies")
-			return nummatches > 0 and pl == newplural
-		end
-		local stem = pagename
-		local irregular = false
-		for i, pl in ipairs(plurals) do
-			local canon_pl = canonicalize_plural(pl, stem, pagename)
-			if canon_pl then
-				table.insert(pl_parts, canon_pl)
-			elseif type(pl) == "table" then
-				canon_pl = canonicalize_plural(pl.term, stem, pagename)
-				if canon_pl then
-					table.insert(pl_parts, {term=canon_pl, q=pl.q})
-				end
-			end
-			if not canon_pl then
-				table.insert(pl_parts, pl)
-				if type(pl) == "table" then
-					pl = pl.term
-				end
-				local check_pl = m_links.get_link_page(pl, lang)
-				if not stem:find(" ") and not (check_pl == stem .. "s" or check_pl == stem .. "es" or check_ies(check_pl, stem)) then
-					irregular = true
-					if check_pl == stem then
-						table.insert(data.categories, langname .. " indeclinable nouns")
-					end
-				end
-			end
-		end
-		if irregular then
-			table.insert(data.categories, langname .. " nouns with irregular plurals")
-		end
-
-		table.insert(data.inflections, pl_parts)
+		return infls
 	end
+
+	local plurals = gather_inflections_with_quals(1, "plqual")
+
+	if plurals[1] == "p" then
+		-- plurale tantum
+		if #plurals > 1 then
+			error("With plurale tantum noun, can't specify more than one plural")
+		end
+		data.genders = {"p"} -- this should auto-insert the correct 'pluralia tantum' category
+		if #args.sg > 0 then
+			table.insert(data.inflections, {label = "normally plural"})
+			table.insert(data.inflections, gather_inflections_with_quals("sg", "sgqual", "singular"))
+		else
+			table.insert(data.inflections, {label = "plural only"})
+		end
+		if #args.attr > 0 then
+			table.insert(data.inflections, gather_inflections_with_quals("attr", "attrqual", "attributive"))
+		end
+		return
+	end
+
+	local need_default_plural = not is_proper
+	if plurals[1] == "-" then
+		-- Uncountable noun; may occasionally have a plural
+		table.remove(plurals, 1)  -- Remove the "-"
+		table.insert(data.categories, langname .. " uncountable nouns")
+
+		-- If plural forms were given explicitly, then show "usually"
+		if #plurals > 0 then
+			table.insert(data.inflections, {label = "usually " .. glossary_link("uncountable")})
+			table.insert(data.categories, langname .. " countable nouns")
+		else
+			table.insert(data.inflections, {label = glossary_link("uncountable")})
+		end
+		need_default_plural = false
+	elseif plurals[1] == "~" then
+		-- Mixed countable/uncountable noun, always has a plural
+		table.remove(plurals, 1)  -- Remove the "~"
+		table.insert(data.inflections, {label = glossary_link("countable") .. " and " .. glossary_link("uncountable")})
+		table.insert(data.categories, langname .. " uncountable nouns")
+		table.insert(data.categories, langname .. " countable nouns")
+
+		-- If no plural was given, add a default one now
+		if #plurals == 0 then
+			plurals = {default_plural(pagename)}
+		end
+	elseif is_proper then
+		-- For proper nouns, the default is uncountable
+		table.insert(data.categories, langname .. " uncountable nouns")
+	else
+		-- For common nouns, the default is countable, has a plural
+		table.insert(data.categories, langname .. " countable nouns")
+	end
+	-- Plural is unknown
+	if plurals[1] == "?" then
+		table.remove(plurals, 1)  -- Remove the "?"
+		-- Not desired; see [[Wiktionary:Tea_room/2021/August#"Plural unknown or uncertain"]]
+		-- table.insert(data.inflections, {label = "plural unknown or uncertain"})
+		table.insert(data.categories, langname .. " nouns with unknown or uncertain plurals")
+		if #plurals > 0 then
+			error("Can't specify explicit plurals along with '?' for unknown/uncertain plural")
+		end
+		return
+	end
+	-- Plural is not attested
+	if plurals[1] == "!" then
+		table.remove(plurals, 1)  -- Remove the "!"
+		table.insert(data.inflections, {label = "plural not attested"})
+		table.insert(data.categories, langname .. " nouns with unattested plurals")
+		if #plurals > 0 then
+			error("Can't specify explicit plurals along with '!' for unattested plural")
+		end
+		return
+	end
+
+	-- If no plural was given, maybe add a default one, otherwise (when "-" was given) return
+	if #plurals == 0 then
+		if need_default_plural then
+			plurals = {default_plural(pagename)}
+		else
+			return
+		end
+	end
+
+	-- There are plural forms to show, so show them
+	local pl_parts = {label = "plural", accel = {form = "p"}}
+
+	local function check_ies(pl, stem)
+		local newplural, nummatches = stem:gsub("([^aeiou])y$","%1ies")
+		return nummatches > 0 and pl == newplural
+	end
+	local stem = pagename
+	local irregular = false
+	for i, pl in ipairs(plurals) do
+		local canon_pl = canonicalize_plural(pl, stem, pagename)
+		if canon_pl then
+			table.insert(pl_parts, canon_pl)
+		elseif type(pl) == "table" then
+			canon_pl = canonicalize_plural(pl.term, stem, pagename)
+			if canon_pl then
+				table.insert(pl_parts, {term = canon_pl, q = pl.q})
+			end
+		end
+		if not canon_pl then
+			table.insert(pl_parts, pl)
+			if type(pl) == "table" then
+				pl = pl.term
+			end
+			local check_pl = m_links.get_link_page(pl, lang)
+			if not stem:find(" ") and not (check_pl == stem .. "s" or check_pl == stem .. "es" or check_ies(check_pl, stem)) then
+				irregular = true
+				if check_pl == stem then
+					table.insert(data.categories, langname .. " indeclinable nouns")
+				end
+			end
+		end
+	end
+	if irregular then
+		table.insert(data.categories, langname .. " nouns with irregular plurals")
+	end
+
+	table.insert(data.inflections, pl_parts)
+end
+
+
+-- Return the parameters to be used for nouns and proper nouns. Currently the same.
+local function get_noun_params(is_proper)
+	return {
+		[1] = {list = true, disallow_holes = true},
+		["pl=qual"] = {list = true, allow_holes = true},
+		-- The following four only used for pluralia tantum (1=p)
+		["sg"] = {list = true, disallow_holes = true},
+		["sg=qual"] = {list = true, allow_holes = true},
+		["attr"] = {list = true, disallow_holes = true},
+		["attr=qual"] = {list = true, allow_holes = true},
+	}
+end
+
+
+pos_functions["nouns"] = {
+	params = get_noun_params(false),
+	func = do_nouns,
 }
 
 pos_functions["proper nouns"] = {
-	params = {
-		[1] = {list = true},
-		},
-	func = function(args, data)
-		local pagename = data.displayed_pagename
-		local plurals = args[1]
-
-		-- Decide what to do next...
-		local mode = nil
-
-		if plurals[1] == "?" or plurals[1] == "!" or plurals[1] == "-" or plurals[1] == "~" then
-			mode = plurals[1]
-			table.remove(plurals, 1)  -- Remove the mode parameter
-		end
-
-		-- Plural is unknown
-		if mode == "?" then
-			table.insert(data.categories, langname .. " proper nouns with unknown or uncertain plurals")
-			return
-		-- Plural is not attested
-		elseif mode == "!" then
-			table.insert(data.inflections, {label = "plural not attested"})
-			table.insert(data.categories, langname .. " proper nouns with unattested plurals")
-			return
-		-- Uncountable noun; may occasionally have a plural
-		elseif mode == "-" then
-			-- If plural forms were given explicitly, then show "usually"
-			if #plurals > 0 then
-				table.insert(data.inflections, {label = "usually " .. glossary_link("uncountable")})
-				table.insert(data.categories, langname .. " countable proper nouns")
-			else
-				table.insert(data.inflections, {label = glossary_link("uncountable")})
-			end
-		-- Mixed countable/uncountable noun, always has a plural
-		elseif mode == "~" then
-			table.insert(data.inflections, {label = glossary_link("countable") .. " and " .. glossary_link("uncountable")})
-			table.insert(data.categories, langname .. " countable proper nouns")
-
-			-- If no plural was given, add a default one now
-			if #plurals == 0 then
-				plurals = {"s"}
-			end
-		elseif #plurals > 0 then
-			table.insert(data.categories, langname .. " countable proper nouns")
-		end
-
-		-- If there are no plurals to show, return now
-		if #plurals == 0 then
-			return
-		end
-
-		-- There are plural forms to show, so show them
-		local pl_parts = {label = "plural", accel = {form = "p"}}
-
-		local stem = pagename
-
-		for i, pl in ipairs(plurals) do
-			if pl == "s" then
-				table.insert(pl_parts, stem .. "s")
-			elseif pl == "es" then
-				table.insert(pl_parts, stem .. "es")
-			else
-				table.insert(pl_parts, pl)
-			end
-
-		end
-
-		table.insert(data.inflections, pl_parts)
-	end
+	params = get_noun_params("is proper"),
+	func = function(args, data) return do_nouns(args, data, "is proper") end,
 }
+
 
 local function base_default_verb_forms(verb)
 	local s_form = default_plural(verb)
