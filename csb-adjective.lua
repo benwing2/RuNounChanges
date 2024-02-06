@@ -58,36 +58,38 @@ end
 
 
 -- All slots that are used by any of the different tables. The key is the slot and the value is a list of the tables
--- that use the slot. "" = regular, "plonly" = indicator 'plonly', "dva" = indicator 'dva'.
+-- that use the slot. "regular" = regular, "plonly" = indicator 'plonly', "dva" = [[dwa]] and [[òba]].
 local input_adjective_slots = {
-	nom_m = {""},
-	nom_f = {""},
-	nom_n = {""},
-	nom_mp_pers = {"", "plonly"},
-	nom_p_npers = {"", "plonly"},
-	nom_mp = {"dva"},
-	nom_fnp = {"dva"},
-	gen_mn = {""},
-	gen_f = {""},
-	gen_p = {"", "plonly", "dva"},
-	dat_mn = {""},
-	dat_f = {""},
-	dat_p = {"", "plonly", "dva"},
-	acc_m_an = {""},
-	acc_m_in = {""},
-	acc_f = {""},
-	acc_n = {""},
-	acc_mp_pers = {"", "plonly"},
-	acc_p_npers = {"", "plonly"},
-	acc_mp = {"dva"},
-	acc_fnp = {"dva"},
-	ins_mn = {""},
-	ins_f = {""},
-	ins_p = {"", "plonly", "dva"},
-	loc_mn = {""},
-	loc_f = {""},
-	loc_p = {"", "plonly", "dva"},
-	short = {""},
+	nom_m = {"regular"},
+	nom_f = {"regular"},
+	nom_n = {"regular"},
+	nom_mp_pers = {"regular", "dva", "plonly"},
+	nom_p_npers = {"regular", "plonly"},
+	nom_mp_npers = {"dva"},
+	nom_fp = {"dva"},
+	nom_np = {"dva"},
+	gen_mn = {"regular"},
+	gen_f = {"regular"},
+	gen_p = {"regular", "plonly", "dva"},
+	dat_mn = {"regular"},
+	dat_f = {"regular"},
+	dat_p = {"regular", "plonly", "dva"},
+	acc_m_an = {"regular"},
+	acc_m_in = {"regular"},
+	acc_f = {"regular"},
+	acc_n = {"regular"},
+	acc_mp_pers = {"regular", "dva", "plonly"},
+	acc_p_npers = {"regular", "plonly"},
+	acc_mp_npers = {"dva"},
+	acc_fp = {"dva"},
+	acc_np = {"dva"},
+	ins_mn = {"regular"},
+	ins_f = {"regular"},
+	ins_p = {"regular", "plonly", "dva"},
+	loc_mn = {"regular"},
+	loc_f = {"regular"},
+	loc_p = {"regular", "plonly", "dva"},
+	short = {"regular"},
 }
 
 
@@ -99,6 +101,10 @@ local output_adjective_slots = {
 	nom_mp_pers = "pr|nom|m|p",
 	nom_mp_pers_linked = "pr|nom|m|p", -- used in [[Module:csb-noun]]?
 	nom_p_npers = "np|nom|p",
+	nom_mp_npers = "np|nom|m|p",
+	nom_mp_npers_linked = "pr|nom|m|p", -- used in [[Module:csb-noun]]?
+	nom_fp = "nom|f|p",
+	nom_np = "nom|n|p",
 	gen_mn = "gen|m//n|s",
 	gen_f = "gen|f|s",
 	gen_p = "gen|p",
@@ -111,8 +117,9 @@ local output_adjective_slots = {
 	acc_n = "acc|n|s",
 	acc_mp_pers = "pr|acc|m|p",
 	acc_p_npers = "np|acc|p",
-	acc_mp = "acc|m|p",
-	acc_fnp = "acc|f//n|p",
+	acc_mp_npers = "np|acc|m|p",
+	acc_fp = "acc|f|p",
+	acc_np = "acc|n|p",
 	ins_mn = "ins|m//n|s",
 	ins_f = "ins|f|s",
 	ins_p = "ins|p",
@@ -123,7 +130,7 @@ local output_adjective_slots = {
 }
 
 
-local potential_lemma_slots = {"nom_m", "nom_mp_pers"}
+local potential_lemma_slots = {"nom_m", "nom_mp_npers", "nom_mp_pers"}
 
 
 local function get_output_adjective_slots(alternant_multiword_spec)
@@ -262,6 +269,23 @@ end
 
 
 decls["irreg"] = function(base)
+	if base.lemma == "dwa" then
+		for _, slot_value in ipairs {
+			{"nom_mp_pers", {"dwaj", "dwaji"}},
+			{"nom_mp_npers", "dwa"},
+			{"nom_fp", "dwie"},
+			{"nom_np", "dwa"},
+			{"gen_p", "dwùch"},
+			{"dat_p", {"dwùma", "dwùm"}},
+			{"ins_p", "dwùm"},
+			{"loc_p", "dwùch"},
+		} do
+			local slot, value = unpack(slot_value)
+			add(base, slot, "", value)
+		end
+		return
+	end
+
 	error("Not implemented yet")
 end
 
@@ -390,6 +414,9 @@ end
 local function detect_indicator_spec(base)
 	if base.irreg then
 		base.decl = "irreg"
+		if base.lemma == "dwa" or base.lemma == "òba" then
+			base.dva = true
+		end
 	else
 		base.decl = "normal"
 	end
@@ -402,12 +429,17 @@ end
 local function detect_all_indicator_specs(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		detect_indicator_spec(base)
-		for _, overall_prop in ipairs { "dva", "plonly" } do
-			if alternant_multiword_spec[overall_prop] == nil then
-				alternant_multiword_spec[overall_prop] = base[overall_prop]
-			elseif alternant_multiword_spec[overall_prop] ~= base[overall_prop] then
-				-- We do this because we have a special table with its own slots for each of these special variants.
-				error("If some alternants set '" .. overall_prop .. "', all must do so")
+		local special = base.plonly and "plonly" or base.dva and "dva" or "regular"
+		if alternant_multiword_spec.special == nil then
+			alternant_multiword_spec.special = special
+		elseif alternant_multiword_spec.special ~= special then
+			-- We do this because we have a special table with its own slots for each of these special variants.
+			if special == "dva" then
+				error("If some alternants are irregular [[dva]] or [[òba]], all must be")
+			elseif special == "plonly" then
+				error("If some alternants use indicator 'plonly', all must")
+			else
+				error("Can't mix regular declension with 'plonly' indicator or with irregular [[dva]] or [[òba]]")
 			end
 		end
 	end)
@@ -416,10 +448,15 @@ end
 
 local function process_slot_overrides(base, do_slot)
 	for slot, overrides in pairs(base.overrides) do
-		-- FIXME: Implement proper checking for allowed overrides
-		--if skip_slot(base.number, slot) then
-		--	error("Override specified for invalid slot '" .. slot .. "' due to '" .. base.number .. "' number restriction")
-		--end
+		local special = base.plonly and "plonly" or base.dva and "dva" or "regular"
+		local allowed_specials = input_adjective_slots[slot]
+		if not allowed_specials then
+			error(("Internal error: Encountered unrecognized slot '%s' not caught during parse_indicator_spec()"):format(
+				slot))
+		end
+		if not m_table.contains(allowed_specials, special) then
+			error(("Override specified for slot '%s' not compatible with table type '%s'"):format(slot, special))
+		end
 		if do_slot(slot) then
 			base.slot_overridden[slot] = true
 			base.forms[slot] = nil
@@ -460,6 +497,9 @@ local function handle_derived_slots_and_overrides(base)
 	copy_if("nom_m", "acc_m_in")
 	copy_if("gen_p", "acc_mp_pers")
 	copy_if("nom_p_npers", "acc_p_npers")
+	copy_if("nom_mp_npers", "acc_mp_npers")
+	copy_if("nom_fp", "acc_fp")
+	copy_if("nom_np", "acc_np")
 
 	-- Handle overrides for derived slots, to allow them to be overridden.
 	process_slot_overrides(base, is_derived_slot)
@@ -475,48 +515,6 @@ local function handle_derived_slots_and_overrides(base)
 				return form
 			end
 		end))
-	end
-end
-
-
--- Process override for the arguments in `args`, storing the results into `forms`. If `do_acc`, only do accusative
--- slots; otherwise, don't do accusative slots.
-local function process_overrides(forms, args, do_acc)
-	for slot, _ in pairs(input_adjective_slots) do
-		if args[slot] and not not do_acc == not not slot:find("^acc") then
-			forms[slot] = nil
-			if args[slot] ~= "-" and args[slot] ~= "—" then
-				local segments = iut.parse_balanced_segment_run(args[slot], "[", "]")
-				local comma_separated_groups = iut.split_alternating_runs(segments, "%s*,%s*")
-				for _, comma_separated_group in ipairs(comma_separated_groups) do
-					local formobj = {
-						form = comma_separated_group[1],
-						footnotes = fetch_footnotes(comma_separated_group),
-					}
-					iut.insert_form(forms, slot, formobj)
-				end
-			end
-		end
-	end
-end
-
-
-local function check_allowed_overrides(alternant_multiword_spec, args)
-	local special = alternant_multiword_spec.special or alternant_multiword_spec.surname and "surname" or ""
-	for slot, types in pairs(input_adjective_slots) do
-		if args[slot] then
-			local allowed = false
-			for _, typ in ipairs(types) do
-				if typ == special then
-					allowed = true
-					break
-				end
-			end
-			if not allowed then
-				error(("Override %s= not allowed for %s"):format(slot, special == "" and "regular declension" or
-					"special=" .. special))
-			end
-		end
 	end
 end
 
@@ -672,33 +670,39 @@ local function make_table(alternant_multiword_spec)
 
 	local table_spec_plonly = template_prelude("55") .. table_spec_pl .. template_postlude()
 
-	local table_spec_dva = template_prelude("40") .. [=[
+	local table_spec_dva = template_prelude("55") .. [=[
 ! style="width:40%;background:#d9ebff" colspan="2" | 
-! style="background:#d9ebff" colspan="2" | plural
+! style="background:#d9ebff" colspan="4" | plural
 |-
 ! style="width:40%;background:#d9ebff" colspan="2" | 
-! style="background:#d9ebff" | masculine
-! style="background:#d9ebff" | feminine/neuter
+! style="background:#d9ebff" | masculine personal
+! style="background:#d9ebff" | masculine nonpersonal
+! style="background:#d9ebff" | feminine
+! style="background:#d9ebff" | neuter
 |-
 ! style="background:#eff7ff" colspan="2" | nominative
-| {nom_mp}
-| {nom_fnp}
+| {nom_mp_pers}
+| {nom_mp_npers}
+| {nom_fp}
+| {nom_np}
 |-
 ! style="background:#eff7ff" colspan="2" | genitive
-| colspan="2" | {gen_p} 
+| colspan="4" | {gen_p} 
 |-
 ! style="background:#eff7ff" colspan="2" | dative
-| colspan="2" | {dat_p} 
+| colspan="4" | {dat_p} 
 |-
 ! style="background:#eff7ff" colspan="2" | accusative
-| {acc_mp}
-| {acc_fnp}
+| {acc_mp_pers}
+| {acc_mp_npers}
+| {acc_fp}
+| {acc_np}
 |-
 ! style="background:#eff7ff" colspan="2" | instrumental
-| colspan="2" | {ins_p} 
+| colspan="4" | {ins_p} 
 |-
 ! style="background:#eff7ff" colspan="2" | locative
-| colspan="2" | {loc_p} 
+| colspan="4" | {loc_p} 
 ]=] .. template_postlude()
 
 	local short_template = [=[
