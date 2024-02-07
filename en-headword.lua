@@ -5,7 +5,7 @@ local force_cat = false -- for testing; if true, categories appear in non-mainsp
 
 local m_links = require("Module:links")
 local table_module = "Module:table"
-local headword_utilities_module = "Module:User:Benwing2/headword utilities"
+local headword_utilities_module = "Module:headword utilities"
 local string_utilities_module = "Module:string utilities"
 
 local lang = require("Module:languages").getByCode("en")
@@ -72,6 +72,9 @@ function export.show(frame)
 		}
 
 		local en_include_hyphen_prefixes = require("Module:table/listToSet") {
+			-- We don't include things that are also words even though they are often (perhaps mostly) prefixes, e.g.
+			-- "be", "counter", "cross", "extra", "half", "mid", "over", "pan", "under".
+			"acro",
 			"acousto",
 			"Afro",
 			"agro",
@@ -82,28 +85,48 @@ function export.show(frame)
 			"anti",
 			"arch",
 			"auto",
-			-- "be",
 			"bi",
 			"bio",
+			"cis",
+			"co",
+			"cryo",
+			"crypto",
 			"de",
+			"demi",
+			"eco",
+			"electro",
+			"Euro",
 			"ex",
+			"Greco",
+			"hemi",
+			"hydro",
 			"hyper",
 			"hypo",
 			"infra",
+			"Indo",
 			"inter",
 			"intra",
+			"Judeo",
 			"macro",
+			"meta",
 			"micro",
+			"mini",
+			"multi",
 			"neo",
+			"neuro",
 			"non",
-			"pan",
+			"para",
+			"peri",
 			"post",
 			"pre",
 			"pro",
 			"proto",
+			"pseudo",
 			"re",
+			"semi",
 			"sub",
 			"super",
+			"trans",
 			"un",
 			"vice",
 		}
@@ -216,12 +239,6 @@ function export.show(frame)
 	if pagename:find("[Qq][^Uu]") or pagename:find("[Qq]$") then
 		table.insert(data.categories, langname .. " words containing Q not followed by U")
 	end
-	if pagename:find("([A-Za-z])%1%1") then
-		table.insert(data.categories, langname .. " words containing three consecutive instances of the same letter")
-	end
-	if pagename:find("([A-Za-z])%1%1%1") then
-		table.insert(data.categories, langname .. " words containing four consecutive instances of the same letter")
-	end
 	-- mw.ustring.toNFD performs decomposition, so letters that decompose
 	-- to an ASCII vowel and a diacritic, such as é, are counted as vowels and
 	-- do not need to be included in the pattern.
@@ -316,6 +333,8 @@ end
 pos_functions["adjectives"] = {
 	params = {
 		[1] = {list = true, allow_holes = true},
+		["def"] = {type = "boolean"},
+		["the"] = {type = "boolean", alias_of = "def"},
 		["comp_qual"] = {list = "comp=_qual", allow_holes = true},
 		["sup"] = {list = true, allow_holes = true},
 		["sup_qual"] = {list = "sup=_qual", allow_holes = true},
@@ -324,6 +343,12 @@ pos_functions["adjectives"] = {
 		local shift = 0
 		local is_not_comparable = false
 		local is_comparative_only = false
+
+		if args.def then
+			for i, head in ipairs(data.heads) do
+				data.heads[i] = "the " .. head
+			end
+		end
 
 		-- If the first parameter is ?, then don't show anything, just return.
 		if args[1][1] == "?" then
@@ -497,6 +522,12 @@ local function do_nouns(args, data, is_proper)
 		return infls
 	end
 
+	if args.def then
+		for i, head in ipairs(data.heads) do
+			data.heads[i] = "the " .. head
+		end
+	end
+
 	local plurals = gather_inflections_with_quals(1, "plqual")
 
 	if plurals[1] == "p" then
@@ -625,6 +656,8 @@ end
 local function get_noun_params(is_proper)
 	return {
 		[1] = {list = true, disallow_holes = true},
+		["def"] = {type = "boolean"},
+		["the"] = {type = "boolean", alias_of = "def"},
 		["pl=qual"] = {list = true, allow_holes = true},
 		-- The following four only used for pluralia tantum (1=p)
 		["sg"] = {list = true, disallow_holes = true},
