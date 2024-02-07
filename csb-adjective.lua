@@ -64,7 +64,7 @@ local input_adjective_slots = {
 	nom_f = {"regular"},
 	nom_n = {"regular"},
 	nom_mp_pers = {"regular", "dva", "plonly"},
-	nom_p_npers = {"regular", "plonly"},
+	nom_p_not_mp_pers = {"regular", "plonly"},
 	nom_mp_npers = {"dva"},
 	nom_fp = {"dva"},
 	nom_np = {"dva"},
@@ -79,7 +79,7 @@ local input_adjective_slots = {
 	acc_f = {"regular"},
 	acc_n = {"regular"},
 	acc_mp_pers = {"regular", "dva", "plonly"},
-	acc_p_npers = {"regular", "plonly"},
+	acc_p_not_mp_pers = {"regular", "plonly"},
 	acc_mp_npers = {"dva"},
 	acc_fp = {"dva"},
 	acc_np = {"dva"},
@@ -100,7 +100,7 @@ local output_adjective_slots = {
 	nom_n = "nom|n|s",
 	nom_mp_pers = "pr|nom|m|p",
 	nom_mp_pers_linked = "pr|nom|m|p", -- used in [[Module:csb-noun]]?
-	nom_p_npers = "np|nom|p",
+	nom_p_not_mp_pers = "np|nom|p",
 	nom_mp_npers = "np|nom|m|p",
 	nom_mp_npers_linked = "pr|nom|m|p", -- used in [[Module:csb-noun]]?
 	nom_fp = "nom|f|p",
@@ -116,7 +116,7 @@ local output_adjective_slots = {
 	acc_f = "acc|f|s",
 	acc_n = "acc|n|s",
 	acc_mp_pers = "pr|acc|m|p",
-	acc_p_npers = "np|acc|p",
+	acc_p_not_mp_pers = "np|acc|p",
 	acc_mp_npers = "np|acc|m|p",
 	acc_fp = "acc|f|p",
 	acc_np = "acc|n|p",
@@ -156,7 +156,7 @@ end
 
 
 local function add_normal_decl(base, stems,
-	nom_m, nom_f, nom_n, nom_mp_pers, nom_p_npers,
+	nom_m, nom_f, nom_n, nom_mp_pers, nom_p_not_mp_pers,
 	gen_mn, gen_f, gen_p,
 	dat_mn, dat_f, dat_p,
 	acc_f,
@@ -170,7 +170,7 @@ local function add_normal_decl(base, stems,
 	add(base, "nom_f", stems, nom_f)
 	add(base, "nom_n", stems, nom_n)
 	add(base, "nom_mp_pers", stems, nom_mp_pers)
-	add(base, "nom_p_npers", stems, nom_p_npers)
+	add(base, "nom_p_not_mp_pers", stems, nom_p_not_mp_pers)
 	add(base, "gen_mn", stems, gen_mn)
 	add(base, "gen_f", stems, gen_f)
 	add(base, "gen_p", stems, gen_p)
@@ -496,7 +496,7 @@ local function handle_derived_slots_and_overrides(base)
 	copy_if("gen_mn", "acc_m_an")
 	copy_if("nom_m", "acc_m_in")
 	copy_if("gen_p", "acc_mp_pers")
-	copy_if("nom_p_npers", "acc_p_npers")
+	copy_if("nom_p_not_mp_pers", "acc_p_not_mp_pers")
 	copy_if("nom_mp_npers", "acc_mp_npers")
 	copy_if("nom_fp", "acc_fp")
 	copy_if("nom_np", "acc_np")
@@ -597,48 +597,59 @@ local function make_table(alternant_multiword_spec)
 |{\cl}{notes_clause}</div></div></div>]=]
 	end
 
-	local table_spec_sg = [=[
+	local table_spec_both = template_prelude("75") .. [=[
 ! style="background:#d9ebff" colspan=5 | singular
+! style="background:#d9ebff" colspan=2 | plural
 |-
 ! style="background:#d9ebff" |
 ! style="background:#d9ebff" | masculine animate
 ! style="background:#d9ebff" | masculine inanimate
 ! style="background:#d9ebff" | feminine
 ! style="background:#d9ebff" | neuter
+! style="background:#d9ebff" | masculine personal
+! style="background:#d9ebff" | other than masculine personal
 |-
 ! style="background:#eff7ff" | nominative
 | colspan=2 | {nom_m}
 | {nom_f}
 | {nom_n}
+| {nom_mp_pers}
+| {nom_p_not_mp_pers}
 |-
 ! style="background:#eff7ff" | genitive
 | colspan=2 | {gen_mn}
 | {gen_f}
 | {gen_mn}
+| colspan=2 | {gen_p}
 |-
 ! style="background:#eff7ff" | dative
 | colspan=2 | {dat_mn}
 | {dat_f}
 | {dat_mn}
+| colspan=2 | {dat_p}
 |-
 ! style="background:#eff7ff" | accusative
 | {acc_m_an}
 | {acc_m_in}
 | {acc_f}
 | {acc_n}
+| {acc_mp_pers}
+| {acc_p_not_mp_pers}
 |-
 ! style="background:#eff7ff" | instrumental
 | colspan=2 | {ins_mn}
 | {ins_f}
 | {ins_mn}
+| colspan=2 | {ins_p}
 |-
 ! style="background:#eff7ff" | locative
 | colspan=2 | {loc_mn}
 | {loc_f}
-| {loc_mn}{short_clause}
-]=]
+| {loc_mn}
+| colspan=2 | {loc_p}{short_clause}
+]=] .. template_postlude()
 
-	local table_spec_pl = [=[
+	local table_spec_plonly = template_prelude("40") .. [=[
 ! style="background:#d9ebff" colspan=5 | plural
 |-
 ! style="background:#d9ebff" | 
@@ -647,7 +658,7 @@ local function make_table(alternant_multiword_spec)
 |-
 ! style="background:#eff7ff" | nominative
 | {nom_mp_pers}
-| colspan=3 | {nom_p_npers}
+| colspan=3 | {nom_p_not_mp_pers}
 |-
 ! style="background:#eff7ff" | genitive
 | colspan=4 | {gen_p}
@@ -657,18 +668,14 @@ local function make_table(alternant_multiword_spec)
 |-
 ! style="background:#eff7ff" | accusative
 | {acc_mp_pers}
-| colspan=3 | {acc_p_npers}
+| colspan=3 | {acc_p_not_mp_pers}
 |-
 ! style="background:#eff7ff" | instrumental
 | colspan=4 | {ins_p}
 |-
 ! style="background:#eff7ff" | locative
 | colspan=4 | {loc_p}
-]=]
-
-	local table_spec = template_prelude("55") .. table_spec_sg .. "|-\n" .. table_spec_pl .. template_postlude()
-
-	local table_spec_plonly = template_prelude("55") .. table_spec_pl .. template_postlude()
+]=] .. template_postlude()
 
 	local table_spec_dva = template_prelude("55") .. [=[
 ! style="width:40%;background:#d9ebff" colspan="2" | 
@@ -740,7 +747,7 @@ local function make_table(alternant_multiword_spec)
 	return m_string_utilities.format(
 		alternant_multiword_spec.special == "plonly" and table_spec_plonly or
 		alternant_multiword_spec.special == "dva" and table_spec_dva or
-		table_spec, forms
+		table_spec_both, forms
 	)
 end
 
