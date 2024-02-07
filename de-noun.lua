@@ -1177,7 +1177,7 @@ local function detect_indicator_spec(alternant_multiword_spec, base)
 	else
 		if base.special_proper then
 			if alternant_multiword_spec.special_proper == nil then
-				alternant_multiword_spec.special_proper == base.special_proper
+				alternant_multiword_spec.special_proper = base.special_proper
 			elseif alternant_multiword_spec.special_proper ~= base.special_proper then
 				-- We do this because we have a special table with its own slots for each of these special variants.
 				-- FIXME: This might be too strong of a restriction.
