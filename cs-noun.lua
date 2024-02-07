@@ -57,7 +57,7 @@ FIXME:
 27. Allow for reducible spec in pluralia tantum and dereduce accordingly; also automatically assign reducibility
 	if singular stem ends in -Ck or -Cc. [DONE]
 28. Use `pos` value in all categories.
-29. Support determiners [[kolik]], [[tolik]], [[několik]], [[mnoho]].
+29. Support determiners [[kolik]], [[tolik]], [[několik]], [[mnoho]]. [DONE]
 30. Support a '.velar' indicator for foreign names whose pronunciation but not spelling ends in a velar: [[Remarque]],
 	[[Braque]], [[Mike]], [[Drake]], [[Jake]] with vocative 'Remarquu', 'Braquu', 'Mikeu', 'Drakeu', 'Jakeu'. In
 	general we need more thought around such foreign names; essentially, for names in a silent e, sometimes the -e
@@ -71,7 +71,9 @@ FIXME:
 	in oblique forms e.g. for [[software]]. We may need to combine this with an explicit indicator of hard, soft or
 	velar as there will be names with silent -e and preceding soft consonant e.g. [[Bruce]], [[Coleridge]]. Note
 	that when the -e is kept it is still dropped before front vowels, hence dat sg 'Bruci'/Bruceovi'. Need some
-	investigation in IJP and cswikt.
+	investigation in IJP and cswikt. [.velar DONE]
+31. Support 'declnumber'. [DONE]
+32. Support foreign nouns in -ee ([[Yankee]]). [DONE]
 
 ]=]
 
@@ -148,7 +150,7 @@ local output_noun_slots = {
 local function get_output_noun_slots(alternant_multiword_spec)
 	-- FIXME: To save memory we modify the table in-place. This won't work if we ever end up with multiple calls to
 	-- this module in the same Lua invocation, and we would need to clone the table.
-	if alternant_multiword_spec.number ~= "both" then
+	if alternant_multiword_spec.actual_number ~= "both" then
 		for slot, accel_form in pairs(output_noun_slots) do
 			output_noun_slots[slot] = accel_form:gsub("|[sp]$", "")
 		end
@@ -178,8 +180,8 @@ local clitic_cases = {
 }
 
 
-local function dereduce(stem)
-	local dereduced_stem = com.dereduce(stem)
+local function dereduce(base, stem)
+	local dereduced_stem = com.dereduce(base, stem)
 	if not dereduced_stem then
 		error("Unable to dereduce stem '" .. stem .. "'")
 	end
@@ -228,7 +230,11 @@ The way we handle this as follows:
 ]=]
 local function apply_special_cases(base, slot, stem, ending)
 	local palatalize_voc
-	if slot == "voc_s" and ending == "e" and base.palatalize_voc then
+	if base.c_as_k and rfind(ending, "^[aouyáóúůý]") then
+		local k_stem = rsub(stem, "c$", "k")
+		stem = {stem, k_stem}
+	elseif slot == "voc_s" and ending == "e" and base.palatalize_voc and not base["-velar"] then
+		-- Don't palatalize words like [[hadíth]] with silent -h.
 		local palstem = com.apply_first_palatalization(stem)
 		-- According to IJP, nouns ending in -Cr palatalize in the vocative, but those in -Vr don't. In reality,
 		-- though, it's more complex. It appears that animate nouns in -Cr tend to palatalize but inanimate nouns
@@ -271,6 +277,11 @@ local function apply_special_cases(base, slot, stem, ending)
 			-- has nom_pl 'quarterbaci, quarterbackove'. We need to check the lemma as well because nouns in -cek don't do this.
 			stem = rsub(stem, "ck$", "k")
 		end
+		if base.velar then
+			-- [[petanque]] /petank/ -> loc pl 'petancích'.
+			stem = rsub(stem, "gu$", "g")
+			stem = rsub(stem, "qu$", "k")
+		end
 		-- loc_s of hard masculines is sometimes -e/ě; the user might indicate this as -e, which we should handle
 		-- correctly
 		stem = com.apply_second_palatalization(stem)
@@ -298,6 +309,8 @@ local function add(base, slot, stems, endings, footnotes)
 	if not endings then
 		return
 	end
+	-- Call skip_slot() based on the declined number; if the actual number is different, we correct this in
+	-- decline_noun() at the end.
 	if skip_slot(base.number, slot) then
 		return
 	end
@@ -312,7 +325,7 @@ local function add(base, slot, stems, endings, footnotes)
 		-- compute the appropriate stem based on the slot and whether the ending begins with a vowel.
 		local stem
 		if ending == "-" then
-			stem = base.user_specified_lemma
+			stem = base.actual_lemma
 			ending = ""
 		elseif type(stems) == "string" then
 			stem = stems
@@ -345,6 +358,8 @@ end
 
 local function process_slot_overrides(base, do_slot)
 	for slot, overrides in pairs(base.overrides) do
+		-- Call skip_slot() based on the declined number; if the actual number is different, we correct this in
+		-- decline_noun() at the end.
 		if skip_slot(base.number, slot) then
 			error("Override specified for invalid slot '" .. slot .. "' due to '" .. base.number .. "' number restriction")
 		end
@@ -514,22 +529,26 @@ local function default_masc_animate_nom_pl(base, stems)
 		-- (but Žid → Židé, Čech → Češi).] -- There are too many exceptions to this to make a special rule. It is better to use
 		-- the overall default of -i and require that cases with -ove, -ove/-i, -i/-ove, etc. use overrides.
 		-- com.is_monosyllabic(base.lemma) and "ové" or
-		-- terms in -cek/-ček; order of -ové vs. -i sometimes varies:
+		-- reducible terms in -Cek; order of -ové vs. -i sometimes varies:
 		-- [[fracek]] (ové/i), [[klacek]] (i/ové), [[macek]] (ové/i), [[nácek]] (i/ové), [[prcek]] (ové/i), [[racek]] (ové/i);
 		-- [[bazilišek]] (i/ové), [[černoušek]] (i/ové), [[drahoušek]] (ové/i), [[fanoušek]] (i/ové), [[františek]] (an/inan,
 		-- ends in -i/-y but not -ové), [[koloušek]] (-i only), [[kulíšek]] (i/ové), [[oříšek]] (i/ové), [[papoušek]] (-i only),
 		-- [[prášek]] (i/ové), [[šašek]] (i/ové).
-		-- make sure to check `stems` as we don't want to include non-reducible words in -cek/-ček/-šek (but do want to include
+		-- make sure to check `stems` as we don't want to include non-reducible words in -Cek (but do want to include
 		-- [[quarterback]], with -i/-ové)
-		rfind(stems.vowel_stem, "^" .. com.lowercase_c .. ".*[cčš]k$") and {"i", "ové"} or
+		rfind(stems.vowel_stem, "^" .. com.lowercase_c .. ".*" .. com.cons_c .. "k$") and {"i", "ové"} or
+		-- [[stoik]], [[neurotik]], [[logik]], [[fyzik]], etc.
+		rfind(base.lemma, "^" .. com.lowercase_c .. ".ik$") and {"i", "ové"} or
 		-- barmani, gentlemani, jazzmani, kameramani, narkomani, ombudsmani, pivotmani, rekordmani, showmani, supermani, toxikomani
 		rfind(base.lemma, "^" .. com.lowercase_c .. ".*man$") and "i" or
 		-- terms ending in -an after a palatal or a consonant that doesn't change when palatalized, i.e. labial or l (but -man
 		-- forms -mani unless in a proper noun): Brňan → Brňané, křesťan → křesťané, měšťan → měšťané, Moravan → Moravané,
 		-- občan → občané, ostrovan → ostrované, Pražan → Pražané, Slovan → Slované, svatebčan → svatebčané, venkovan → venkované,
-		-- Australan → Australané; some late formations pluralize this way but don't have a palatal consonant preceding the -an,
-		-- e.g. [[pohan]], [[Oděsan]]; these need manual overrides
-		rfind(base.lemma, "[" .. com.inherently_soft .. com.labial .. "l]an$") and {"é", "i"} or -- most now can also take -i
+		-- Australan → Australané; also s, because there are many demonyms in -san e.g. [[Andalusan]], [[Barbadosan]], [[Oděsan]],
+		-- and few proper nouns in -san; similarly z because of [[Belizan]], [[Gazan]], [[Kavkazan]], etc.; also w, which isn't a
+		-- normal consonant in Czech but occurs in [[Glasgowan]] and [[Zimbabwan]]; NOTE: a few misc words like [[pohan]] also
+		-- work this way but need manual overrides
+		rfind(base.lemma, "[" .. com.inherently_soft .. com.labial .. "wlsz]an$") and {"é", "i"} or -- most now can also take -i
 		-- proper names: Baťové, Novákové, Petrové, Tomášové, Vláďové; exclude demonyms (but include surnames)
 		rfind(base.lemma, "^" .. com.uppercase_c) and (base.surname or not rfind(base.lemma, "[eě]c$")) and "ové" or
 		-- demonyms: [[Albánec]], [[Gruzínec]], [[Izraelec]], [[Korejec]], [[Libyjec]], [[Litevec]], [[Němec]], [[Portugalec]]
@@ -562,7 +581,7 @@ decls["hard-m"] = function(base, stems)
 	-- Nouns ending in hard -c, e.g. [[hec]] "joke", [[kibuc]] "kibbutz", don't palatalize.
 	base.palatalize_voc = not rfind(stems.vowel_stem, "c$")
 	base.hard_c = true
-	local velar = rfind(stems.vowel_stem, com.velar_c .. "$")
+	local velar = base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$")
 	-- See [https://prirucka.ujc.cas.cz/en/?id=360] on declension of toponyms.
 	local toponym = base.animacy == "inan" and rfind(base.lemma, "^" .. com.uppercase_c)
 	-- Some toponyms take -a in the genitive singular, e.g. toponyms in -ín ([[Zlín]], [[Jičín]], [[Berlín]]);
@@ -618,14 +637,14 @@ end
 
 declprops["hard-m"] = {
 	desc = function(base, stems)
-		if rfind(stems.vowel_stem, com.velar_c .. "$") then
+		if base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$") then
 			return "velar GENDER"
 		else
 			return "hard GENDER"
 		end
 	end,
 	cat = function(base, stems)
-		if rfind(stems.vowel_stem, com.velar_c .. "$") then
+		if base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$") then
 			return "velar-stem"
 		else
 			return "hard"
@@ -738,7 +757,7 @@ decls["a-m"] = function(base, stems)
 	-- [[paňáca]], etc.) behave likewise.
 	-- FIXME: [[pária]] "pariah", [[Maria]] etc.
 	local loc_p =
-		(rfind(stems.vowel_stem, com.velar_c .. "$") or rfind(stems.vowel_stem, com.inherently_soft_c .. "$")) and
+		(base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$") or rfind(stems.vowel_stem, com.inherently_soft_c .. "$")) and
 		"ích" or "ech"
 	add_decl(base, stems, "y", "ovi", "u", "o", "ovi", "ou",
 		it_ist and {"é", "i"} or "ové", "ů", "ům", "y", loc_p, "y")
@@ -814,6 +833,19 @@ declprops["ie-m"] = {
 }
 
 
+decls["ee-m"] = function(base, stems)
+	-- [[Yankee]] "Yankee"
+	--
+	-- NOTE: The stem ends in -ee.
+	add_decl(base, stems, "ho", "mu", nil, "-", "m", "m",
+		"ové", "ů", "ům", "e", "ích", "i")
+end
+
+declprops["ee-m"] = {
+	cat = "GENPOS in -ee"
+}
+
+
 decls["o-m"] = function(base, stems)
 	-- [[kápo]] "head, leader"; [[lamželezo]] "strongman"; [[torero]] "bullfighter"; [[žako]] "African gray parrot";
 	-- [[dingo]] "dingo"; [[kakapo]] "kakapo" (given in Wiktionary with dat_s/loc_s in -ovi only not -ovi/-u; probably
@@ -828,7 +860,7 @@ decls["o-m"] = function(base, stems)
 	--
 	-- Velar nouns ([[žako]], [[dingo]], etc.) have -ích in the loc_p (which triggers the second palatalization)
 	-- instead of -ech.
-	local velar = rfind(stems.vowel_stem, com.velar_c .. "$")
+	local velar = base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$")
 	-- inanimates e.g. [[Pluto]] (planet) have -u only, like for normal hard masculines.
 	local dat_s = base.animacy == "inan" and "u" or base.surname and "ovi"or {"ovi", "u"}
 	local loc_s = dat_s
@@ -872,11 +904,16 @@ declprops["tstem-m"] = {
 
 decls["hard-f"] = function(base, stems)
 	base.no_palatalize_c = true
+	if base.c_as_k then
+		-- forms like 'ayahuascy' are allowed.
+		base.hard_c = true
+	end
 	-- [[skica]] "sketch", [[gejša]] "geisha", [[rikša]] "rickshaw (vehicle)"; [[arakača]], [[čača]], [[čiča]] (drink),
 	-- [[dača]] "dacha", [[gutaperča]] "guttapercha", [[viskača]]; [[babča]], [[číča]], [[káča]], [[mamča]], [[úča]].
-	-- Also appears to apply to ď (e.g. [[Naďa]]) and ť, as well as certain words with stems in -ň and -j (e.g. [[Táña]],
-	-- [[doňa]], [[Darja]], [[Troja]]/[[Trója]]), which normally have a mixed declension.
-	local dat_s = rfind(base.vowel_stem, "[cčšžďťjň]$") and {"ě", "i"} or "ě"
+	-- Also appears to apply to ď (e.g. [[Naďa]]) and ť, as well as certain words with stems in -ň and -j (e.g. [[doňa]],
+	-- and personal names such as [[Táña]] and [[Darja]]), which normally have a mixed declension.
+	local soft_cons = rfind(base.vowel_stem, "[cčšžďťjň]$") and not base.c_as_k
+	local dat_s = soft_cons and {"ě", "i"} or "ě"
 	local loc_s = dat_s
 	add_decl(base, stems, "y", dat_s, "u", "o", loc_s, "ou",
 		"y", "", "ám", "y", "ách", "ami")
@@ -908,7 +945,8 @@ declprops["soft-f"] = {
 
 decls["mixed-f"] = function(base, stems)
 	-- Lowercase nouns in -ňa (e.g. bárišňa/báryšňa, doňa, dueňa, piraňa, vikuňa) and -ja (e.g. maracuja, papája, sója).
-	-- Does not appear to apply to proper nouns (e.g. [[Táňa]] "Tanya", [[Darja]] "Daria", [[Troja]]/[[Trója]] "Troy",
+	-- Also non-personal proper nouns in -ňa (e.g. [[Keňa]] "Kenya") and -ja (e.g. [[Troja]]/[[Trója]] "Troy",
+	-- [[Amudarja]] "Amu Darya"). Does not appear to apply to personal proper nouns (e.g. [[Táňa]] "Tanya", [[Darja]] "Daria"),
 	-- which usually decline like [[gejša]], [[dača]], [[skica]]).
 	add_decl(base, stems, {"i", "e"}, {"e", "i"}, "u", "o", {"e", "i"}, "ou",
 			{"i", "e"}, {"", "í"}, {"ám", "ím"}, {"i", "e"}, {"ách", "ích"}, {"ami", "emi"})
@@ -1001,6 +1039,11 @@ decls["ea-f"] = function(base, stems)
 		-- diarea, gonorea, chorea, nauzea, paleogea, seborea, trachea
 		add_decl(base, stems, "y", "i", "u", "o", "i", "ou",
 			"y", "í", {"ám", "ím"}, "y", {"ách", "ích"}, "ami")
+	elseif base.persname then
+		-- Medea, Andrea, etc.
+		add_decl(base, stems, {"y", "je", "ji"}, {"e", "je", "ji"}, "u", "o", {"e", "je", "ji"}, "ou",
+			-- this is a guess, based on the same as below; plural of personal names not attested in IJP
+			{"y", "je"}, "jí", {"ám", "jím"}, {"y", "je"}, {"ách", "jích"}, {"ami", "jemi"})
 	else
 		-- idea, odysea ("wandering pilgrimage"), orchidea, palea, spirea
 		-- proper names Galilea, Judea, Caesarea, Korea, Odyssea ("epic poem")
@@ -1046,7 +1089,7 @@ declprops["ia-f"] = {
 
 
 decls["hard-n"] = function(base, stems)
-	local velar = rfind(stems.vowel_stem, com.velar_c .. "$")
+	local velar = base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$")
 	-- NOTE: Per IJP it appears the meaning of the preceding preposition makes a difference: 'o' = "about" takes
 	-- '-u' or '-ě', while 'na/v' = "in, on" normally takes '-ě'.
 	local loc_s =
@@ -1089,14 +1132,14 @@ end
 
 declprops["hard-n"] = {
 	desc = function(base, stems)
-		if rfind(stems.vowel_stem, com.velar_c .. "$") then
+		if base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$") then
 			return "velar GENDER"
 		else
 			return "hard GENDER"
 		end
 	end,
 	cat = function(base, stems)
-		if rfind(stems.vowel_stem, com.velar_c .. "$") then
+		if base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$") then
 			return "velar-stem"
 		else
 			return "hard"
@@ -1118,16 +1161,19 @@ decls["semisoft-n"] = function(base, stems)
 	-- * In -yo: only [[embryo]]
 	-- * In -eum: [[muzeum]], [[lyceum]], [[linoleum]], [[ileum]], etc.
 	-- * In -ium: [[atrium]] "atrium", most chemical elements, etc.
+	-- * In -uum: [[individuum]], [[kontinuum]], [[premenstruum]], [[residuum]], [[vakuum]]/[[vacuum]]
+	-- * In -yum: only [[baryum]] "barium" (none others in SSJC)
 	-- * In -ion: [[enkómion]] "encomium", [[eufonion]] (variant of [[eufonium]]), [[amnion]], [[ganglion]], [[gymnasion]],
 	--   [[scholion]], [[kritérion]] (rare for [[kritérium]]), [[onomatopoion]] (variant of [[onomatopoie]]),
 	--   [[symposion]], [[synedrion]]; also [[Byzantion]], but this is sg-only; most words in -ion are masculine
 	-- Hard in the singular, mostly soft in the plural. Those in -eo and -uo have alternative hard endings in the
-	-- dat/loc/ins pl, but not those in -eum. Those in -ao have only hard endings except in the gen pl. (There are
-	-- apparently no neuters in -eon; those in -eon e.g. [[akordeon]], [[neon]], [[nukleon]] are masculine.)
+	-- dat/loc/ins pl, but not those in -eum or -uum. Those in -ao have only hard endings except in the gen pl. (There are
+	-- apparently no neuters in -eon; those in -eon or -yon e.g. [[akordeon]], [[neon]], [[nukleon]], [[karyon]], [[Lyon]]
+	-- are masculine.)
 	local dat_p, loc_p, ins_p
-	if rfind(base.user_specified_lemma, "ao$") then
+	if rfind(base.actual_lemma, "ao$") then
 		dat_p, loc_p, ins_p = "ům", "ech", "y"
-	elseif rfind(base.user_specified_lemma, "[eu]o$") then
+	elseif rfind(base.actual_lemma, "[eu]o$") then
 		dat_p, loc_p, ins_p = {"ím", "ům"}, {"ích", "ech"}, {"i", "y"}
 	else
 		dat_p, loc_p, ins_p = "ím", "ích", "i"
@@ -1393,15 +1439,27 @@ local function set_pron_defaults(base)
 
 	local gender, number, animacy, has_clitic = pron_props()
 	base.gender = gender
-	base.user_specified_gender = gender
+	base.actual_gender = gender
 	base.number = number
+	base.actual_number = number
 	base.animacy = animacy
+	base.actual_animacy = animacy
 	base.has_clitic = has_clitic
+end
+
+
+local function determine_pronoun_stems(base)
+	if base.stem_sets then
+		error("Reducible and vowel alternation specs cannot be given with pronouns")
+	end
+	base.stem_sets = {{reducible = false, vowel_stem = "", nonvowel_stem = ""}}
+	base.decl = "pron"
 end
 
 
 decls["pron"] = function(base, stems)
 	local after_prep_footnote =	"[after a preposition]"
+	local animate_footnote = "[animate]"
 	if base.lemma == "kdo" then
 		add_decl(base, stems, "koho", "komu", nil, nil, "kom", "kým")
 	elseif base.lemma == "co" then
@@ -1415,13 +1473,19 @@ decls["pron"] = function(base, stems)
 	elseif base.lemma == "vy" then
 		add_pl_only_decl(base, stems, "vás", "vám", "vás", "vás", "vámi")
 	elseif base.lemma == "on" or base.lemma == "ono" then
-		local acc_s = base.lemma == "on" and {"jeho", "jej"} or "je"
-		local clitic_acc_s = base.lemma == "on" and {"jej", "ho"} or "je"
-		local prep_acc_s = base.lemma == "on" and {"něho", "něj"} or "ně"
+		local acc_s = base.lemma == "on" and "jej" or {"jej", "je"}
+		local clitic_acc_s = base.lemma == "on" and {"jej", "ho"} or {"jej", "ho", "je"}
+		local prep_acc_s = base.lemma == "on" and "něj" or {"něj", "ně"}
 		local prep_clitic_acc_s = base.lemma == "on" and "-ň" or nil
-		add_sg_decl_with_clitic(base, stems, "jeho", "ho", "jemu", "mu", acc_s, clitic_acc_s, nil, nil, "jím")
-		add_sg_decl_with_clitic(base, stems, "něho", nil, "němu", nil, prep_acc_s, prep_clitic_acc_s, nil, "něm", "ním",
+		add_sg_decl_with_clitic(base, stems, {"jeho", "jej"}, {"ho", "jej"}, "jemu", "mu", acc_s, clitic_acc_s, nil, nil, "jím")
+		add_sg_decl_with_clitic(base, stems, {"něho", "něj"}, nil, "němu", nil, prep_acc_s, prep_clitic_acc_s, nil, "něm", "ním",
 			after_prep_footnote)
+		if base.lemma == "on" then
+		add_sg_decl_with_clitic(base, stems, nil, nil, nil, nil, "jeho", nil, nil, nil, nil,
+			animate_footnote)
+		add_sg_decl_with_clitic(base, stems, nil, nil, nil, nil, "něho", nil, nil, nil, nil,
+			after_prep_footnote and animate_footnote)
+		end
 	elseif base.lemma == "ona" and base.number == "sg" then
 		add_sg_decl(base, stems, "jí", "jí", "ji", nil, nil, "jí")
 		add_sg_decl(base, stems, "ní", "ní", "ni", nil, "ní", "ní", after_prep_footnote)
@@ -1455,9 +1519,11 @@ local function set_num_defaults(base)
 
 	local gender, number, animacy, has_clitic = num_props()
 	base.gender = gender
-	base.user_specified_gender = gender
+	base.actual_gender = gender
 	base.number = number
+	base.actual_number = number
 	base.animacy = animacy
+	base.actual_animacy = animacy
 	base.has_clitic = has_clitic
 end
 
@@ -1509,6 +1575,47 @@ end
 
 declprops["num"] = {
 	desc = "GENDER numeral",
+	cat = {},
+}
+
+
+local function set_det_defaults(base)
+	if base.gender or base.number or base.animacy then
+		error("Can't specify gender, number or animacy for determiner")
+	end
+
+	local function det_props()
+		-- Return values are GENDER, NUMBER, ANIMACY, HAS_CLITIC.
+		return "none", "none", "none", false
+	end
+
+	local gender, number, animacy, has_clitic = det_props()
+	base.gender = gender
+	base.actual_gender = gender
+	base.number = number
+	base.actual_number = number
+	base.animacy = animacy
+	base.actual_animacy = animacy
+	base.has_clitic = has_clitic
+end
+
+
+local function determine_determiner_stems(base)
+	if base.stem_sets then
+		error("Reducible and vowel alternation specs cannot be given with determiners")
+	end
+	local stem = rmatch(base.lemma, "^(.*)" .. com.vowel_c .. "$") or base.lemma
+	base.stem_sets = {{reducible = false, vowel_stem = stem, nonvowel_stem = stem}}
+	base.decl = "det"
+end
+
+
+decls["det"] = function(base, stems)
+	add_sg_decl(base, stems, "a", "a", "-", nil, "a", "a")
+end
+
+declprops["det"] = {
+	desc = "GENDER determiner",
 	cat = {},
 }
 
@@ -1662,6 +1769,7 @@ dot-separated indicators within them). Return value is an object of the form
   adj = true, -- may be missing
   decllemma = "DECLENSION-LEMMA", -- may be missing
   declgender = "DECLENSION-GENDER", -- may be missing
+  declnumber = "DECLENSION-NUMBER", -- may be missing
 
   -- The following additional fields are added by other functions:
   orig_lemma = "ORIGINAL-LEMMA", -- as given by the user
@@ -1769,7 +1877,11 @@ local function parse_indicator_spec(angle_bracket_spec)
 				base.animacy = part
 			elseif part == "hard" or part == "soft" or part == "mixed" or part == "surname" or part == "istem" or
 				part == "-istem" or part == "tstem" or part == "nstem" or part == "tech" or part == "foreign" or
-				part == "mostlyindecl" or part == "indecl" or part == "pron" or part == "det" or part == "num" then
+				part == "mostlyindecl" or part == "indecl" or part == "pron" or part == "det" or part == "num" or
+				-- Use 'velar' with words like [[petanque]] and [[Braque]] that end with a pronounced velar (and hence are declined
+				-- like velars) but not with a spelled velar; use '-velar' with words like [[hadíth]] that end with a spelled but
+				-- silent velar.
+				part == "collapse_ee" or part == "persname" or part == "c_as_k" or part == "velar" or part == "-velar" then
 				if base[part] then
 					error("Can't specify '" .. part .. "' twice: '" .. inside .. "'")
 				end
@@ -1806,6 +1918,11 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify 'declgender:' twice: '" .. inside .. "'")
 				end
 				base.declgender = rsub(part, "^declgender:", "")
+			elseif rfind(part, "^declnumber:") then
+				if base.declnumber then
+					error("Can't specify 'declnumber:' twice: '" .. inside .. "'")
+				end
+				base.declnumber = rsub(part, "^declnumber:", "")
 			else
 				error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
 			end
@@ -1819,11 +1936,26 @@ local function is_regular_noun(base)
 	return not base.adj and not base.pron and not base.det and not base.num
 end
 
+
+local function process_declnumber(base)
+	base.actual_number = base.number
+	if base.declnumber then
+		if base.declnumber == "sg" or base.declnumber == "pl" then
+			base.number = base.declnumber
+		else
+			error(("Unrecognized value '%s' for 'declnumber', should be 'sg' or 'pl'"):format(base.declnumber))
+		end
+	end
+end
+
+
 local function set_defaults_and_check_bad_indicators(base)
 	-- Set default values.
 	local regular_noun = is_regular_noun(base)
-	if base.pron or base.det then
+	if base.pron then
 		set_pron_defaults(base)
+	elseif base.det then
+		set_det_defaults(base)
 	elseif base.num then
 		set_num_defaults(base)
 	elseif not base.adj then
@@ -1835,9 +1967,10 @@ local function set_defaults_and_check_bad_indicators(base)
 			end
 		end
 		base.number = base.number or "both"
+		process_declnumber(base)
 		base.animacy = base.animacy or "inan"
-		base.user_specified_gender = base.gender
-		base.user_specified_animacy = base.animacy
+		base.actual_gender = base.gender
+		base.actual_animacy = base.animacy
 		if base.declgender then
 			if base.declgender == "m-an" then
 				base.gender = "m"
@@ -1978,7 +2111,7 @@ local function synthesize_singular_lemma(base)
 						stems.reducible = true
 					end
 					if stems.reducible then
-						lemma = dereduce(lemma)
+						lemma = dereduce(base, lemma)
 					end
 				end
 				break
@@ -2026,9 +2159,9 @@ local function synthesize_singular_lemma(base)
 		if lemma_determined and lemma_determined ~= lemma then
 			error(("Attempt to set two different singular lemmas '%s' and '%s'"):format(lemma_determined, lemma))
 		end
-		base.lemma = lemma
 		lemma_determined = lemma
 	end
+	base.lemma = lemma_determined
 end
 
 
@@ -2224,9 +2357,9 @@ local function determine_declension(base)
 			elseif rfind(stem, "[ou]$") then
 				-- [[stoa]], [[kongrua]], [[Samoa]], [[Nikaragua]], etc.
 				base.decl = "oa-f"
-			elseif rfind(stem, "^" .. com.lowercase_c .. ".*[ňj]$") then
-				-- [[maracuja]], [[papája]], [[sója]]; [[piraňa]] etc. Not [[Táňa]], [[Darja]], [[Troja]]/[[Trója]], which decline
-				-- like [[gejša]], [[skica]], etc. (subtype of hard feminines).
+			elseif not base.persname and rfind(stem, "^.*[ňj]$") then
+				-- [[maracuja]], [[papája]], [[sója]]; [[piraňa]] etc. Also [[Keňa]], [[Troja]]/[[Trója]], [[Amudarja]].
+				-- Not [[Táňa]], [[Darja]], which decline like [[gejša]], [[skica]], etc. (subtype of hard feminines).
 				base.decl = "mixed-f"
 			else
 				base.decl = "hard-f"
@@ -2255,14 +2388,25 @@ local function determine_declension(base)
 				base.decl = "hard-m"
 				return
 			end
+			if base.hard then
+				-- -e be damned; e.g. [[Sofokles]] with hard stem 'Sofokle-' (genitive 'Sofoklea', dative 'Sofokleovi', etc.)
+				base.nonvowel_stem = base.lemma
+				base.decl = "hard-m"
+				return
+			end
 			if base.tstem then
 				if base.animacy ~= "an" then
 					error("T-stem masculine lemma in -e must be animate")
 				end
 				base.decl = "tstem-m"
-			elseif rfind(stem, "i") then
+			elseif rfind(stem, "i$") then
 				-- [[zombie]], [[hippie]], [[yuppie]], [[rowdie]]
 				base.decl = "ie-m"
+			elseif rfind(stem, "e$") then
+				-- [[Yankee]]
+				base.nonvowel_stem = base.lemma
+				base.decl = "ee-m"
+				return
 			else
 				base.decl = "e-m"
 			end
@@ -2361,9 +2505,9 @@ local function determine_declension(base)
 		if base.gender == "m" then
 			if base.foreign then
 				-- [[komunismus]] "communism", [[kosmos]] "cosmos", [[hádes]] "Hades"
-				stem = rmatch(base.lemma, "^(.*)[ueo]s$")
+				stem = rmatch(base.lemma, "^(.*)[ueoaéá]s$")
 				if not stem then
-					error("Unrecognized masculine foreign ending, should be -us, -es or -os")
+					error("Unrecognized masculine foreign ending, should be -us, -es, -os, -as, -és or -ás")
 				end
 				if not base.hard and (rfind(stem, "[ei]$") and base.animacy == "an" or
 					rfind(stem, "i$") and base.animacy == "inan") then
@@ -2407,7 +2551,7 @@ local function determine_declension(base)
 				end
 				if base.hard then
 					base.decl = "hard-n"
-				elseif rfind(stem, "[ei]$") then
+				elseif rfind(stem, "[eiuy]$") then
 					base.decl = "semisoft-n"
 				else
 					base.decl = "hard-n"
@@ -2475,7 +2619,8 @@ local function determine_default_reducible(base)
 	if rfind(stem, com.cons_c .. "[lr]" .. com.cons_c .. "$") then
 		-- [[vrba]], [[vlha]]; not reducible. (But note [[jablko]], reducible; needs override.)
 		base.default_reducible = false
-	elseif not base.foreign and rfind(stem, com.cons_c .. "[bkhlrmnv]$") then
+	elseif not base.foreign and (rfind(stem, com.cons_c .. "[bkhlrmnv]$") or base.c_as_k and rfind(stem, com.cons_c .. "c$")) then
+		-- [[ayahuasca]] has gen pl 'ayahuasek'
 		base.default_reducible = true
 	elseif base.foreign and rfind(stem, com.cons_c .. "r$") then
 		-- Foreign nouns in -CCum seem generally non-reducible in the gen pl except for those in -Crum like [[centrum]],
@@ -2535,8 +2680,8 @@ local function determine_stems(base)
 			-- if the vowel being modified isn't the last vowel in the stem.
 			stems.oblique_nonvowel_stem = com.apply_vowel_alternation(stems.vowelalt, stems.nonvowel_stem)
 			if stems.reducible then
-				stems.nonvowel_stem = dereduce(stems.nonvowel_stem)
-				stems.oblique_nonvowel_stem = dereduce(stems.oblique_nonvowel_stem)
+				stems.nonvowel_stem = dereduce(base, stems.nonvowel_stem)
+				stems.oblique_nonvowel_stem = dereduce(base, stems.oblique_nonvowel_stem)
 			end
 		else
 			stems.nonvowel_stem = base.nonvowel_stem
@@ -2562,15 +2707,14 @@ end
 
 
 local function detect_indicator_spec(base)
-	if base.pron or base.det then
-		if base.stem_sets then
-			error("Reducible and vowel alternation specs cannot be given with pronouns and determiners")
-		end
-		base.stem_sets = {{reducible = false, vowel_stem = "", nonvowel_stem = ""}}
-		base.decl = base.pron and "pron" or "det"
+	if base.pron then
+		determine_pronoun_stems(base)
+	elseif base.det then
+		determine_determiner_stems(base)
 	elseif base.num then
 		determine_numeral_stems(base)
 	elseif base.adj then
+		process_declnumber(base)
 		synthesize_adj_lemma(base)
 	elseif base.manual then
 		if base.stem_sets then
@@ -2598,7 +2742,7 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		detect_indicator_spec(base)
 		if base.number ~= "pl" then
-			alternant_multiword_spec.sg_genders[base.user_specified_gender] = true
+			alternant_multiword_spec.sg_genders[base.actual_gender] = true
 		end
 		if base.number ~= "sg" then
 			-- All t-stem masculines are neuter in the plural.
@@ -2606,7 +2750,7 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 			if base.decl == "tstem-m" then
 				plgender = "n"
 			else
-				plgender = base.user_specified_gender
+				plgender = base.actual_gender
 			end
 			alternant_multiword_spec.pl_genders[plgender] = true
 		end
@@ -2681,8 +2825,8 @@ local function propagate_properties_downward(alternant_multiword_spec, property,
 			obj[property] = default
 			retval = default
 		end
-		if not obj["user_specified_" .. property] then
-			obj["user_specified_" .. property] = retval
+		if not obj["actual_" .. property] then
+			obj["actual_" .. property] = retval
 		end
 		return retval
 	end
@@ -2793,7 +2937,7 @@ local function normalize_all_lemmas(alternant_multiword_spec, pagename)
 			base.all_uppercase = true
 			lemma = ulower(lemma)
 		end
-		base.user_specified_lemma = lemma
+		base.actual_lemma = lemma
 		base.lemma = base.decllemma or lemma
 	end)
 end
@@ -2807,6 +2951,24 @@ local function decline_noun(base)
 		decls[base.decl](base, stems)
 	end
 	handle_derived_slots_and_overrides(base)
+	local function copy(from_slot, to_slot)
+		base.forms[to_slot] = base.forms[from_slot]
+	end
+	if base.actual_number ~= base.number then
+		local source_num = base.number == "sg" and "_s" or "_p"
+		local dest_num = base.number == "sg" and "_p" or "_s"
+		for case, _ in pairs(cases) do
+			copy(case .. source_num, case .. dest_num)
+			copy("nom" .. source_num .. "_linked", "nom" .. dest_num .. "_linked")
+		end
+		if base.actual_number ~= "both" then
+			local erase_num = base.actual_number == "sg" and "_p" or "_s"
+			for case, _ in pairs(cases) do
+				base.forms[case .. erase_num] = nil
+			end
+			base.forms["nom" .. erase_num .. "_linked"] = nil
+		end
+	end
 end
 
 
@@ -2832,9 +2994,9 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		m_table.insertIfNot(all_cats, "Czech " .. cattype)
 	end
 	if alternant_multiword_spec.pos == "noun" then
-		if alternant_multiword_spec.number == "sg" then
+		if alternant_multiword_spec.actual_number == "sg" then
 			insert("uncountable nouns")
-		elseif alternant_multiword_spec.number == "pl" then
+		elseif alternant_multiword_spec.actual_number == "pl" then
 			insert("pluralia tantum")
 		end
 	end
@@ -2873,7 +3035,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	end
 
 	local function do_word_spec(base)
-		local actual_genanim = get_genanim(base.user_specified_gender, base.user_specified_animacy)
+		local actual_genanim = get_genanim(base.actual_gender, base.actual_animacy)
 		local declined_genanim = get_genanim(base.gender, base.animacy)
 		local genanim
 		if actual_genanim ~= declined_genanim then
@@ -2882,7 +3044,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		else
 			genanim = actual_genanim
 		end
-		if base.user_specified_gender == "m" then
+		if base.actual_gender == "m" then
 			-- Insert a category for 'Czech masculine animate nouns' or 'Czech masculine inanimate nouns'; the base categories
 			-- [[:Category:Czech masculine nouns]], [[:Czech animate nouns]] are auto-inserted.
 			insert(actual_genanim .. " " .. alternant_multiword_spec.plpos)
@@ -2973,9 +3135,9 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 			do_word_spec(alternant_or_word_spec)
 		end
 	end
-	if alternant_multiword_spec.number == "sg" or alternant_multiword_spec.number == "pl" then
+	if alternant_multiword_spec.actual_number == "sg" or alternant_multiword_spec.actual_number == "pl" then
 		-- not "both" or "none" (for [[sebe]])
-		table.insert(annparts, alternant_multiword_spec.number == "sg" and "sg-only" or "pl-only")
+		table.insert(annparts, alternant_multiword_spec.actual_number == "sg" and "sg-only" or "pl-only")
 	end
 	if #decldescs == 0 then
 		table.insert(annparts, "indecl")
@@ -3000,7 +3162,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	if #stemspecs > 1 then
 		insert("nouns with multiple stems")
 	end
-	if alternant_multiword_spec.number == "both" and not m_table.deepEquals(alternant_multiword_spec.sg_genders, alternant_multiword_spec.pl_genders) then
+	if alternant_multiword_spec.actual_number == "both" and not m_table.deepEquals(alternant_multiword_spec.sg_genders, alternant_multiword_spec.pl_genders) then
 		insert("nouns that change gender in the plural")
 	end
 	alternant_multiword_spec.categories = all_cats
@@ -3171,16 +3333,16 @@ local function make_table(alternant_multiword_spec)
 	end
 
 	local number, numcode
-	if alternant_multiword_spec.number == "sg" then
+	if alternant_multiword_spec.actual_number == "sg" then
 		number, numcode = "singular", "s"
-	elseif alternant_multiword_spec.number == "pl" then
+	elseif alternant_multiword_spec.actual_number == "pl" then
 		number, numcode = "plural", "p"
-	elseif alternant_multiword_spec.number == "none" then -- used for [[sebe]]
+	elseif alternant_multiword_spec.actual_number == "none" then -- used for [[sebe]]
 		number, numcode = "", "s"
 	end
 
 	local table_spec =
-		alternant_multiword_spec.number == "both" and table_spec_both or
+		alternant_multiword_spec.actual_number == "both" and table_spec_both or
 		alternant_multiword_spec.has_clitic and get_table_spec_one_number_clitic(number, numcode) or
 		get_table_spec_one_number(number, numcode)
 	forms.notes_clause = forms.footnote ~= "" and
@@ -3192,7 +3354,7 @@ end
 local function compute_headword_genders(alternant_multiword_spec)
 	local genders = {}
 	local number
-	if alternant_multiword_spec.number == "pl" then
+	if alternant_multiword_spec.actual_number == "pl" then
 		number = "-p"
 	else
 		number = ""
@@ -3254,12 +3416,14 @@ function export.do_generate_forms(parent_args, from_headword)
 	-- animacy. Make sure 'mixed' works.
 	propagate_properties(alternant_multiword_spec, "gender", "mixed", "mixed")
 	detect_all_indicator_specs(alternant_multiword_spec)
+	-- Propagate 'actual_number' after calling detect_all_indicator_specs(), which sets 'actual_number' for adjectives.
+	propagate_properties(alternant_multiword_spec, "actual_number", "both", "both")
 	determine_noun_status(alternant_multiword_spec)
 	set_pos(alternant_multiword_spec)
 	alternant_multiword_spec.output_noun_slots = get_output_noun_slots(alternant_multiword_spec)
 	local inflect_props = {
 		skip_slot = function(slot)
-			return skip_slot(alternant_multiword_spec.number, slot)
+			return skip_slot(alternant_multiword_spec.actual_number, slot)
 		end,
 		slot_table = alternant_multiword_spec.output_noun_slots,
 		get_variants = get_variants,
