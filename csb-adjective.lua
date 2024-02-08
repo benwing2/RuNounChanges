@@ -269,7 +269,8 @@ end
 
 
 decls["irreg"] = function(base)
-	if base.lemma == "dwa" then
+	local lemma = base.lemma
+	if lemma == "dwa" then
 		for _, slot_value in ipairs {
 			{"nom_mp_pers", {"dwaj", "dwaji"}},
 			{"nom_mp_npers", "dwa"},
@@ -285,8 +286,60 @@ decls["irreg"] = function(base)
 		end
 		return
 	end
+	local stem = lemma:match("^([st]w)ój$")
+	if not stem then
+		stem = lemma:match("^(m)ój$")
+	end
+	if stem then
+		add_normal_decl(base, stem,
+			"ój", "òja", "òje", "òji", "òje",
+			"òjégò", "òji", "òjich",
+			"òjémù", "òji", "òjim",
+			"òjã",
+			"òjim", "òją", "òjima",
+			"òjim", "òji", "òjich"
+		)
+		add_normal_decl(base, stem,
+			nil, "a", nil, nil, nil,
+			"égò", "i", {"ich", "ëch"},
+			"émù", "i", "im",
+			"ã",
+			"im", "ą", "ima",
+			"im", "i", {"ich", "ëch"},
+			"[rare]"
+		)
+		return
+	end
+	local stem1, stem2
+	if lemma == "naj" or lemma == "naji" or lemma == "nasz" then
+		stem1 = "naj"
+		stem2 = "nasz"
+	elseif lemma == "waj" or lemma == "waji" or lemma == "wasz" then
+		stem1 = "waj"
+		stem2 = "wasz"
+	elseif lemma == "Wasz" then
+		stem2 = "Wasz"
+	end
+	local function add_plural_pron_endings(stem)
+		add_normal_decl(base, stem,
+			"", "a", "e", "i", "e",
+			"égò", "i", "ich",
+			"émù", "i", "im",
+			"ã",
+			"im", "ą", "ima",
+			"im", "i", "ich"
+		)
+	end
+	if stem1 then
+		add_plural_pron_endings(stem1)
+		add_normal_decl(base, stem1, "i")
+	end
+	if stem2 then
+		add_plural_pron_endings(stem2)
+		return
+	end
 
-	error("Not implemented yet")
+	error(("Unrecognized irregular lemma '%s'"):format(base.lemma))
 end
 
 
