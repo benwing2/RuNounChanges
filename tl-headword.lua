@@ -5,6 +5,8 @@
 -- * {{tl-adj}};
 -- * {{tl-adv}};
 -- * {{tl-num}};
+-- * {{tl-pron}};
+-- * {{tl-prep}};
 -- * {{tl-head}}.
 
 local export = {}
@@ -16,6 +18,7 @@ local lang = require("Module:languages").getByCode("tl")
 local langname = lang:getCanonicalName()
 
 local rmatch = mw.ustring.match
+local rsplit = mw.text.split
 
 local function track(page)
 	require("Module:debug/track")("tl-headword/" .. page)
@@ -47,7 +50,9 @@ function export.show(frame)
 		["b"] = {list = true},
 		["nolink"] = {type = "boolean"},
 		["nolinkhead"] = {type = "boolean", alias_of = "nolink"},
+		["suffix"] = {type = "boolean"},
 		["nosuffix"] = {type = "boolean"},
+		["addlpos"] = {},
 		["json"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing
 	}
@@ -101,12 +106,20 @@ function export.show(frame)
 	}
 
 	data.is_suffix = false
-	if not args.nosuffix and pagename:find("^%-") and poscat ~= "suffixes" and poscat ~= "suffix forms" then
+	if args.suffix or (
+		not args.nosuffix and pagename:find("^%-") and poscat ~= "suffixes" and poscat ~= "suffix forms"
+	) then
 		data.is_suffix = true
 		data.pos_category = "suffixes"
 		local singular_poscat = require("Module:string utilities").singularize(poscat)
 		table.insert(data.categories, langname .. " " .. singular_poscat .. "-forming suffixes")
 		table.insert(data.inflections, {label = singular_poscat .. "-forming suffix"})
+		if args.addlpos then
+			for _, addlpos in ipairs(rsplit(args.addlpos, "%s*,%s*")) do
+				table.insert(data.categories, langname .. " " .. addlpos .. "-forming suffixes")
+				table.insert(data.inflections, {label = addlpos .. "-forming suffix"})
+			end
+		end
 	end
 
 	if pos_functions[poscat] then
