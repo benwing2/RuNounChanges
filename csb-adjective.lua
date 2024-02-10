@@ -13,7 +13,7 @@ TERMINOLOGY:
 
 -- "slot" = A particular combination of case/gender/number.
 	 Example slot names for adjectives are "gen_f" (genitive feminine singular) and
-	 "nom_mp_pers" (personal nominative masculine plural). Each slot is filled with zero or more forms.
+	 "nom_mp_pers" (nominative masculine personal plural). Each slot is filled with zero or more forms.
 
 -- "form" = The declined Kashubian form representing the value of a given slot.
 
@@ -186,7 +186,7 @@ local function add_normal_decl(base, stems,
 	add(base, "loc_p", stems, loc_p)
 end
 
-local function add_normal_oblique_hard_y_decl(base, stem)		
+local function add_normal_oblique_hard_y_decl(base, stem)
 	add_normal_decl(base, stem,
 		nil, "ô", "é", "y", "é",
 		"égò", "y", "ëch",
@@ -681,8 +681,8 @@ local function make_table(alternant_multiword_spec)
 ! style="background:#d9ebff" | masculine inanimate
 ! style="background:#d9ebff" | feminine
 ! style="background:#d9ebff" | neuter
-! style="background:#d9ebff" | masculine personal
-! style="background:#d9ebff" | other than masculine personal
+! style="background:#d9ebff" | virile (= masculine personal)
+! style="background:#d9ebff" | non-virile
 |-
 ! style="background:#eff7ff" | nominative
 | colspan=2 | {nom_m}
@@ -728,8 +728,8 @@ local function make_table(alternant_multiword_spec)
 ! style="background:#d9ebff" colspan=5 | plural
 |-
 ! style="background:#d9ebff" | 
-! style="background:#d9ebff" | masculine personal
-! style="background:#d9ebff" colspan=3 | other than masculine personal
+! style="background:#d9ebff" | virile (= masculine personal)
+! style="background:#d9ebff" colspan=3 | non-virile
 |-
 ! style="background:#eff7ff" | nominative
 | {nom_mp_pers}
@@ -852,7 +852,7 @@ function export.do_generate_forms(parent_args, pos, from_headword)
 		else
 			args[1] = pagename
 		end
-	end		
+	end
 	local parse_props = {
 		parse_indicator_spec = parse_indicator_spec,
 		allow_default_indicator = true,
