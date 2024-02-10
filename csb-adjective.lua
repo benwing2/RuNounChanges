@@ -218,8 +218,11 @@ decls["normal"] = function(base)
 	stem, suffix = rmatch(base.lemma, "^(.*)(i)$")
 	if stem then
 		local soft = stem_is_soft(stem)
-		local cztok = rfind(stem, "cz$") and base.cztok
-		local hard_stem = cztok and rsub(stem, "cz$", "k") or stem
+		if base.unsoften then
+			hard_stem = rsub(rsub(stem, "cz$", "k"), "dż$", "g")
+		else
+			hard_stem = stem
+		end
 		-- Because there may be two stems, do them separately.
 		add_normal_decl(base, stem,
 			"i", nil, "é", "i", "é",
@@ -269,19 +272,19 @@ end
 decls["irreg"] = function(base)
 	local lemma = base.lemma
 
-	if lemma == "dwa" then
+	if lemma == "dwa" or lemma == "òba" then
 		for _, slot_value in ipairs {
-			{"nom_mp_pers", {"dwaj", "dwaji"}},
-			{"nom_mp_npers", "dwa"},
-			{"nom_fp", "dwie"},
-			{"nom_np", "dwa"},
-			{"gen_p", "dwùch"},
-			{"dat_p", {"dwùma", "dwùm"}},
-			{"ins_p", "dwùm"},
-			{"loc_p", "dwùch"},
+			{"nom_mp_pers", {"aj", "aji"}},
+			{"nom_mp_npers", "a"},
+			{"nom_fp", "ie"},
+			{"nom_np", "a"},
+			{"gen_p", "ùch"},
+			{"dat_p", {"ùma", "ùm"}},
+			{"ins_p", "ùm"},
+			{"loc_p", "ùch"},
 		} do
 			local slot, value = unpack(slot_value)
-			add(base, slot, "", value)
+			add(base, slot, lemma == "dwa" and "dw" or "òb", value)
 		end
 		return
 	end
@@ -354,14 +357,28 @@ decls["irreg"] = function(base)
 		return
 	end
 
-	stem = lemma:match("^(niżód)en$")
+	stem = lemma:match("^(.*)en$")
 	if stem then
 		add_normal_decl(base, stem, "en")
 		add_normal_oblique_hard_y_decl(base, stem .. "n")
 		return
 	end
 
-	error(("Unrecognized irregular lemma '%s'"):format(base.lemma))
+	stem = lemma:match("^(.*)ek$")
+	if stem then
+		-- Because there may be two stems, do them separately.
+		add_normal_decl(base, stem,
+			"ek", "kô", "czé", "cë", "czé",
+			"czégò", "czi", "czich",
+			"czémù", "czi", "czim",
+			"ką",
+			"czim", "ką", "czima",
+			"czim", "czi", "czich"
+		)
+		return
+	end
+
+	error(("Unrecognized irregular lemma '%s'"):format(lemma))
 end
 
 
@@ -451,7 +468,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 						base.overrides[slot] = {override}
 					end
 				end
-			elseif part == "cztok" or part == "irreg" or part == "dva" or part == "plonly" then
+			elseif part == "unsoften" or part == "irreg" or part == "dva" or part == "plonly" then
 				if #dot_separated_group > 1 then
 					error("Footnotes only allowed with slot overrides or by themselves: '" ..
 						table.concat(dot_separated_group) .. "'")
@@ -495,8 +512,9 @@ local function detect_indicator_spec(base)
 	else
 		base.decl = "normal"
 	end
-	if base.cztok and not base.lemma:find("czi$") then
-		error(("Indicator 'cztok' can only be specified with lemmas ending in -czi, but saw '%s'"):format(base.lemma))
+	if base.unsoften and not base.lemma:find("czi$") and not base.lemma:find("dżi") then
+		error(("Indicator 'unsoften' can only be specified with lemmas ending in -czi or -dżi, but saw '%s'")
+			:format(base.lemma))
 	end
 end
 
