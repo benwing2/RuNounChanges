@@ -186,6 +186,16 @@ local function add_normal_decl(base, stems,
 	add(base, "loc_p", stems, loc_p)
 end
 
+local function add_normal_oblique_hard_y_decl(base, stem)		
+	add_normal_decl(base, stem,
+		nil, "ô", "é", "y", "é",
+		"égò", "y", "ëch",
+		"émù", "y", "ym",
+		"ą",
+		"ym", "ą", "yma",
+		"ym", "y", "ëch"
+	)
+end
 
 local decls = {}
 
@@ -199,14 +209,8 @@ decls["normal"] = function(base)
 	-- hard in -y
 	stem, suffix = rmatch(base.lemma, "^(.*)(y)$")
 	if stem then
-		add_normal_decl(base, stem,
-			"y", "ô", "é", "y", "é",
-			"égò", "y", "ëch",
-			"émù", "y", "ym",
-			"ą",
-			"ym", "ą", "yma",
-			"ym", "y", "ëch"
-		)
+		add_normal_decl(base, stem, "y")
+		add_normal_oblique_hard_y_decl(base, stem)
 		return
 	end
 
@@ -253,14 +257,8 @@ decls["normal"] = function(base)
 	-- possessive in -in
 	stem, suffix = rmatch(base.lemma, "^(.*)(in)$")
 	if stem then
-		add_normal_decl(base, stem,
-			"in", "ina", {"ino", "iné"}, "iny", "iné",
-			"inégò", "iny", "inëch",
-			"inémù", "iny", "inym",
-			"iną",
-			"inym", "iną", "inyma",
-			"inym", "iny", "inëch"
-		)
+		add_normal_decl(base, stem, "in", nil, "ino")
+		add_normal_oblique_hard_y_decl(base, stem .. "in")
 		return
 	end
 
@@ -270,6 +268,7 @@ end
 
 decls["irreg"] = function(base)
 	local lemma = base.lemma
+
 	if lemma == "dwa" then
 		for _, slot_value in ipairs {
 			{"nom_mp_pers", {"dwaj", "dwaji"}},
@@ -286,6 +285,7 @@ decls["irreg"] = function(base)
 		end
 		return
 	end
+
 	local stem = lemma:match("^([st]w)ój$")
 	if not stem then
 		stem = lemma:match("^(m)ój$")
@@ -310,6 +310,7 @@ decls["irreg"] = function(base)
 		)
 		return
 	end
+
 	local stem1, stem2
 	if lemma == "naj" or lemma == "naji" or lemma == "nasz" then
 		stem1 = "naj"
@@ -336,6 +337,27 @@ decls["irreg"] = function(base)
 	end
 	if stem2 then
 		add_plural_pron_endings(stem2)
+		return
+	end
+
+	stem = lemma:match("^(jed)en$")
+	if stem then
+		add_normal_decl(base, stem, "en")
+		add_normal_decl(base, stem .. "n",
+			nil, "a", "o", "y", "e",
+			"égò", "y", "ëch",
+			"émù", "y", "ym",
+			"ã",
+			"ym", "ą", "yma",
+			"ym", "y", "ëch"
+		)
+		return
+	end
+
+	stem = lemma:match("^(niżód)en$")
+	if stem then
+		add_normal_decl(base, stem, "en")
+		add_normal_oblique_hard_y_decl(base, stem .. "n")
 		return
 	end
 
