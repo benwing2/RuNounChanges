@@ -4,9 +4,9 @@ local concat = table.concat
 local insert = table.insert
 local rgmatch = mw.ustring.gmatch
 local rsubn = mw.ustring.gsub
-local ufind = mw.ustring.find
+local rfind = mw.ustring.find
 local ulen = mw.ustring.len
-local umatch = mw.ustring.match
+local rmatch = mw.ustring.match
 local toNFC = mw.ustring.toNFC
 local toNFD = mw.ustring.toNFD
 
@@ -60,7 +60,7 @@ local function text_in_script(text, script_code)
 	local out
 	if characters then
 		text = rsub(text, "%W", "")
-		out = ufind(text, "[" .. characters .. "]")
+		out = rfind(text, "[" .. characters .. "]")
 	end
 
 	if out then
@@ -136,7 +136,7 @@ end
 --[==[Return true if the given head is multiword according to the algorithm used in full_headword().]==]
 function export.head_is_multiword(head)
 	for possibleWordBreak in rgmatch(head, spacingPunctuation) do
-		if umatch(possibleWordBreak, notWordPunc) then
+		if rmatch(possibleWordBreak, notWordPunc) then
 			return true
 		end
 	end
@@ -350,12 +350,19 @@ local function format_inflection_parts(data, parts)
 		end
 
 		local partaccel = part.accel
-		local face = part.hypothetical and "hypothetical" or "bold"
+		local face = part.face or "bold"
+		if face ~= "bold" and face ~= "plain" and face ~= "hypothetical" then
+			error("The face `" .. face .. "` " .. (
+				mw.loadData("Module:script utilities/data").faces[face] and
+				"should not be used for non-headword terms on the headword line." or
+				"is invalid."
+			))
+		end
 
 		-- Here the final part 'or data.nolink' allows to have 'nolink=true'
 		-- right into the 'data' table to disable links of the entire headword
 		-- when inflected forms aren't entry-worthy, e.g.: in Vulgar Latin
-		local nolink = part.hypothetical or part.nolink or data.nolink
+		local nolink = part.face == "hypothetical" or part.nolink or data.nolink
 
 		local formatted
 		if part.label then
@@ -919,7 +926,7 @@ function export.full_headword(data)
 			-- Exclude hyphens if the data module states that they should for this language
 			checkpattern = ".[%s፡]."
 		end
-		if umatch(unmodified_default_head, checkpattern) and not non_categorizable(data) then
+		if rmatch(unmodified_default_head, checkpattern) and not non_categorizable(data) then
 			insert(data.categories, full_langname .. " multiword terms")
 		end
 	end
@@ -935,7 +942,22 @@ function export.full_headword(data)
 	local standard = data.lang:getStandardCharacters()
 	if standard and not non_categorizable(data) then
 		local function char_category(char)
-			local specials = {["#"] = "number sign", ["<"] = "less-than sign", [">"] = "greater-than sign", ["["] = "left square bracket", ["]"] = "right square bracket", ["_"] = "underscore", ["{"] = "left curly bracket", ["|"] = "vertical line", ["}"] = "right curly bracket", ["ß"] = "ẞ", ["ͅ"] = "ͅ", ["\239\191\189"] = "replacement character"}
+			local specials = {
+				["#"] = "number sign",
+				["("] = "parentheses",
+				[")"] = "parentheses",
+				["<"] = "angle brackets",
+				[">"] = "angle brackets",
+				["["] = "square brackets",
+				["]"] = "square brackets",
+				["_"] = "underscore",
+				["{"] = "braces",
+				["|"] = "vertical line",
+				["}"] = "braces",
+				["ß"] = "ẞ",
+				["ͅ"] = "",
+				["\239\191\189"] = "replacement character",
+			}
 			char = toNFD(char)
 				:gsub("[%z\1-\127\194-\244][\128-\191]*", function(m)
 					local new_m = specials[m]
@@ -962,13 +984,16 @@ function export.full_headword(data)
 						local sc_standard = rsub(sc_standard, m_data.comb_chars.combined_double, explode)
 						sc_standard = rsub(sc_standard, m_data.comb_chars.combined_single, explode)
 							:gsub("[%z\1-\127\194-\244][\128-\191]*", explode)
-						local num
+						local num_cat_inserted
 						for char in pairs(m_data.explode_pagename) do
 							if not explode_standard[char] then
 								if char:find("[0-9]") then
-									if not num then
+									if not num_cat_inserted then
 										insert(data.categories, full_langname .. " terms spelled with numbers")
+										num_cat_inserted = true
 									end
+								elseif rfind(char, m_data.emoji_pattern) then
+									insert(data.categories, full_langname .. " terms spelled with emoji")
 								else
 									local upper = char_category(char)
 									if not explode_standard[upper] then
@@ -982,12 +1007,12 @@ function export.full_headword(data)
 					-- If a diacritic doesn't appear in any of the standard characters, also categorise for it generally.
 					sc_standard = toNFD(sc_standard)
 					for diacritic in rgmatch(m_data.decompose_pagename, m_data.comb_chars.diacritics_single) do
-						if not umatch(sc_standard, diacritic) then
+						if not rmatch(sc_standard, diacritic) then
 							insert(data.categories, full_langname .. " terms spelled with ◌" .. diacritic)
 						end
 					end
 					for diacritic in rgmatch(m_data.decompose_pagename, m_data.comb_chars.diacritics_double) do
-						if not umatch(sc_standard, diacritic) then
+						if not rmatch(sc_standard, diacritic) then
 							insert(data.categories, full_langname .. " terms spelled with ◌" .. diacritic .. "◌")
 						end
 					end
@@ -997,7 +1022,7 @@ function export.full_headword(data)
 		elseif ulen(m_data.pagename) ~= 1 then
 			for character in rgmatch(m_data.pagename, "([^" .. standard .. "])") do
 				local upper = char_category(character)
-				if not umatch(upper, "[" .. standard .. "]") then
+				if not rmatch(upper, "[" .. standard .. "]") then
 					character = upper
 				end
 				insert(data.categories, full_langname .. " terms spelled with " .. character)
@@ -1007,7 +1032,7 @@ function export.full_headword(data)
 	
 	if data.heads[1].sc:isSystem("alphabet") then
 		local pagename, i = m_data.pagename:ulower(), 2
-		while umatch(pagename, "(%a)" .. ("%1"):rep(i)) do
+		while rmatch(pagename, "(%a)" .. ("%1"):rep(i)) do
 			i = i + 1
 			insert(data.categories, full_langname .. " terms with " .. i .. " consecutive instances of the same letter")
 		end
