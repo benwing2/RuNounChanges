@@ -38,7 +38,8 @@ function export.show(frame)
 		["splithyph"] = {type = "boolean"},
 		["nosplithyph"] = {type = "boolean"},
 		["hyphspace"] = {type = "boolean"},
-		["nolinkhead"] = {type = "boolean"},
+		["nolink"] = {type = "boolean"},
+		["nolinkhead"] = {type = "boolean", alias_of = "nolink"},
 		["nosuffix"] = {type = "boolean"},
 		["nomultiwordcat"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing
@@ -58,7 +59,7 @@ function export.show(frame)
 	local user_specified_heads = args.head
 	local heads = user_specified_heads
 	local autohead
-	if args.nolinkhead or not pagename:find("[ '%-]") then
+	if args.nolink or not pagename:find("[ '%-]") then
 		autohead = pagename
 	else
 		local m_headutil = require(headword_utilities_module)
@@ -330,11 +331,28 @@ local function make_comparatives(params, data)
 	table.insert(data.inflections, sup_parts)
 end
 
+
+local function make_heads_definite(args, data)
+	if args.def == "~" then
+		local newheads = {}
+		for i, head in ipairs(data.heads) do
+			table.insert(newheads, head)
+			table.insert(newheads, "the " .. head)
+		end
+		data.heads = newheads
+	else
+		for i, head in ipairs(data.heads) do
+			data.heads[i] = "the " .. head
+		end
+	end
+end
+
+
 pos_functions["adjectives"] = {
 	params = {
 		[1] = {list = true, allow_holes = true},
-		["def"] = {type = "boolean"},
-		["the"] = {type = "boolean", alias_of = "def"},
+		["def"] = {},
+		["the"] = {alias_of = "def"},
 		["comp_qual"] = {list = "comp=_qual", allow_holes = true},
 		["sup"] = {list = true, allow_holes = true},
 		["sup_qual"] = {list = "sup=_qual", allow_holes = true},
@@ -345,9 +363,7 @@ pos_functions["adjectives"] = {
 		local is_comparative_only = false
 
 		if args.def then
-			for i, head in ipairs(data.heads) do
-				data.heads[i] = "the " .. head
-			end
+			make_heads_definite(args, data)
 		end
 
 		-- If the first parameter is ?, then don't show anything, just return.
@@ -523,9 +539,7 @@ local function do_nouns(args, data, is_proper)
 	end
 
 	if args.def then
-		for i, head in ipairs(data.heads) do
-			data.heads[i] = "the " .. head
-		end
+		make_heads_definite(args, data)
 	end
 
 	local plurals = gather_inflections_with_quals(1, "plqual")
@@ -656,8 +670,8 @@ end
 local function get_noun_params(is_proper)
 	return {
 		[1] = {list = true, disallow_holes = true},
-		["def"] = {type = "boolean"},
-		["the"] = {type = "boolean", alias_of = "def"},
+		["def"] = {},
+		["the"] = {alias_of = "def"},
 		["pl=qual"] = {list = true, allow_holes = true},
 		-- The following four only used for pluralia tantum (1=p)
 		["sg"] = {list = true, disallow_holes = true},
