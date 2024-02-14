@@ -756,7 +756,6 @@ kot			kota		kotu		kocie		koty		kotów		kotami
 lew			lwa			lwu			lwie		lwy			lwów		lwami
 pies		psa			psu			psie		psy			psów		psami
 wół			wołu		wołowi		wołe		woły		wołów		wołami
-Reksio		Reksia		Reksiowi	Reksiu		Reksie		Reksiów		Reksiami
 
 
 "Animal" (?) - feminine abstract nouns referring to (normally) male people
@@ -772,6 +771,12 @@ nom sg		gen sg		dat sg		loc sg		voc sg		nom pl		gen pl		ins pl
 satelita	satelity	satelicie	satelicie	satelito	satelity	satelitów	satelitami
 
 
+"Animal" (?) - masculine nouns in -o
+
+nom sg		gen sg		dat sg		loc sg		voc sg		nom pl		gen pl		ins pl
+Reksio		Reksia		Reksiowi	Reksiu		Reksiu		Reksie		Reksiów		Reksiami
+
+
 "Animal" (?) - adjectivally declined nouns: voc sg like nom sg
 
 nom sg		gen sg		dat sg		loc sg		nom pl		gen pl		ins pl
@@ -782,9 +787,116 @@ chodzony	chodzonego	chodzonemu	chodzonym	chodzone	chodzonych	chodzonymi
 Inanimate (voc sg like loc sg unless otherwise indicated):
 
 nom sg		gen sg		dat sg		loc sg		nom pl		gen pl		ins pl
+bat			bata		batowi		bacie		baty		batów		batami
+-			-			-			-			wczasy		wczasów		wczasami
+chochoł		chochoła	chochołowi	chochole	chochoły	chochołów	chochołami
+-			-			-			-			Orły		Orłów		Orłami
+ser			sera		serowi		serze		sery		serów		serami
+-			-			-			-			wagary		wagarów		wagarami
+ząb			zęba		zębowi		zębie		zęby		zębów		zębami
+Kikół		Kikoła		Kikołowi	Kikole		Kikoły		Kikołów		Kikołami
+wór			wora		worowi		worze		wory		worów		worami
+bęben		bębna		bębnowi		bębnie		bębny		bębnów		bębnami
+węzeł		węzła		węzłowi		węźle		węzły		węzłów		węzłami
+sweter		swetra		swetrowi	swetrze		swetry		swetrów		swetrami
+owies		owsa		owsowi		owsie		owsy		owsów		owsami
+kieł		kła			kłowi		kle			kły			kłów		kłami
+wągier		wągra		wągrowi		wągrze		wągry		wągrów		wągrami
+kocioł		kotła		kotłowi		kotle		kotły		kotłów		kotłami
+kościół		kościoła	kościołowi	kościele	kościoły	kościołów	kościołami
+cień		cienia		cieniowi	cieniu		cienie		cieni		cieniami
+modrzew		modrzewia	modrzewiowi	modrzewiu	modrzewie	modrzewi	modrzewiami
+bal			bala		balowi		balu		bale		bali		balami
+gwóźdź		gwoździa	gwoździowi	gwoździu	gwoździe	gwoździ		gwoździami
+tułów		tułowia		tułowiowi	tułowiu		tułowie		tułowi		tułowiami
+mięsień		mięśnia		mięśniowi	mięśniu		mięśnie		mięśni		mięśniami
+mebel		mebla		meblowi		meblu		meble		mebli		meblami
+pień		pnia		pniowi		pniu		pnie		pni			pniami
+węgiel		węgla		węglowi		węglu		węgle		węgli		węglami
+przeddzień	-			-			przededniu	-			-			-			only nom/loc sg
+tydzień		tygodnia	tygodniowi	tygodniu	tygodnie	tygodni		tygodniami
+liść		liścia		liściowi	liściu		liście		liści		liśćmi		loc_pl: liściach
+kić			kicia		kiciowi		kiciu		kicie		kiciów		kiciami
+maj			maja		majowi		maju		maje		majów		majami
+-			-			-			-			dzieje		dziejów		dziejami
+korab		korabia		korabiowi	korabiu		korabie		korabiów	korabiami
+koc			koca		kocowi		kocu		koce		koców		kocami
+-			-			-			-			lejce		lejców		lejcami
+słój		słoja		słojowi		słoju		słoje		słojów		słojami
+Racibórz	Raciborza	Raciborzowi	Raciborzu	Raciborze	Raciborzów	Raciborzami
+styczeń		stycznia	styczniowi	styczniu	stycznie	styczniów	styczniami
+koniec		końca		końcowi		końcu		końce		końców		końcami
+grudzień	grudnia		grudniowi	grudniu		grudnie		grudniów	grudniami
+lipiec		lipca		lipcowi		lipcu		lipce		lipców		lipcami
+bniec		bieńca		bieńcowi	bieńcu		bieńce		bieńców		bieńcami
+wiersz		wiersza		wierszowi	wierszu		wiersze		wierszy		wierszami
+nóż			noża		nożowi		nożu		noże		noży		nożami
+miesiąc		miesiąca	miesiącowi	miesiącu	miesiące	miesięcy	miesiącami
+pieniądz	pieniądza	pieniądzowi	pieniądzu	pieniądze	pieniędzy	pieniędzmi	loc_pl: pieniądzach
+śmieć		śmiecia		śmieciowi	śmieciu		śmieci		śmieci		śmieciami
+dzień		dnia		dniowi		dniu		dni			dni			dniami
+kajak		kajaka		kajakowi	kajaku		kajaki		kajaków		kajakami	ins_sg: kajakiem
+-			-			-			-			obcęgi		obcęgów		obcęgami
+Tworóg		Tworoga		Tworogowi	Tworogu		Tworogi		Tworogów	Tworogami	ins_sg: Tworogiem
+młotek		młotka		młotkowi	młotku		młotki		młotków		młotkami	ins_sg: młotkiem
+miech		miecha		miechowi	miechu		miechy		miechów		miechami
+-			-			-			-			Tychy		Tychów		Tychami
+łeb			łba			łbu			łbie		łby			łbów		łbami
+świat		świata		światu		świecie		światy		światów		światami
+cud			cudu		cudowi		cudzie		cuda		cudów		cudami
+epejsodion	epejsodionu	epejsodionowi epejsodionie epejsodia epejsodiów	epejsodiami
+seans		seansu		seansowi	seansie		seanse		seansów		seansami
+sad			sadu		sadowi		sadzie		sady		sadów		sadami
+wał			wału		wałowi		wale		wały		wałów		wałami
+mur			muru		murowi		murze		mury		murów		murami
+dąb			dębu		dębowi		dębie		dęby		dębów		dębami
+dół			dołu		dołowi		dole		doły		dołów		dołami
+bór			boru		borowi		borze		bory		borów		borami
+sen			snu			snowi		śnie		sny			snów		snami
+klajster	klajstru	klajstrowi	klajstrze	klajstry	klajstrów	klajstrami
+cukier		cukru		cukrowi		cukrze		cukry		cukrów		cukrami
+chrzest		chrztu		chrztowi	chrzcie		chrzty		chrztów		chrztami
+kwiat		kwiatu		kwiatowi	kwiecie		kwiaty		kwiatów		kwiatami
+wiatr		wiatru		wiatrowi	wietrze		wiatry		wiatrów		wiatrami
+popiół		popiołu		popiołowi	popiele		popioły		popiołów	popiołami
+lud			ludu		ludowi		ludzie		ludy		ludów		ludami
+tytoń		tytoniu		tytoniowi	tytoniu		tytonie		tytoni		tytoniami
+Ałtaj		Ałtaju		Ałtajowi	Ałtaju		-			-			-
+szczaw		szczawiu	szczawiowi	szczawiu	szczawie	szczawi		szczawiami
+lokal		lokalu		lokalowi	lokalu		lokale		lokali		lokalami
+pokój		pokoju		pokojowi	pokoju		pokoje		pokoi		pokojami
+nów			nowiu		nowiowi		nowiu		nowie		nowi		nowiami
+fuzel		fuzlu		fuzlowi		fuzlu		fuzle		fuzli		fuzlami
+dziegieć	dziegciu	dziegciowi	dziegciu	dziegcie	dziegci		dziegciami
+margiel		marglu		marglowi	marglu		margle		margli		marglami
+gaj			gaju		gajowi		gaju		gaje		gajów		gajami
+bal			balu		balowi		balu		bale		balów		balami
+owoc		owocu		owocowi		owocu		owoce		owoców		owocami
+rój			roju		rojowi		roju		roje		rojów		rojami
+kruszec		kruszcu		kruszcowi	kruszcu		kruszce		kruszców	kruszcami
+nikiel		niklu		niklowi		niklu		nikle		niklów		niklami
+bagaż		bagażu		bagażowi	bagażu		bagaże		bagaży		bagażami
+brzeg		brzegu		brzegowi	brzegu		brzegi		brzegów		brzegami	ins_sg: brzegiem
+rok			roku		rokowi		roku		lata		lat			latami		ins_sg: rokiem
+próg		progu		progowi		progu		progi		progów		progami		ins_sg: progiem
+statek		statku		statkowi	statku		statki		statków		statkami	ins_sg: statkiem
+dom			domu		domowi		domu		domy		domów		domami
+dach		dachu		dachowi		dachu		dachy		dachów		dachami
+mech		mchu		mchowi		mchu		mchy		mchów		mchami
 
 
+Inanimate in -o (voc sg like loc sg unless otherwise indicated):
 
+nom sg		gen sg		dat sg		loc sg		nom pl		gen pl		ins pl
+brzusio		brzusia		brzusiowi	brzusiu		brzusie		brzusiów	brzusiami
+
+
+Inanimate - adjectivally declined nouns: voc sg like nom sg
+
+nom sg		gen sg		dat sg		loc sg		nom pl		gen pl		ins pl
+polski		polskiego	polskiemu	polskim		polskie		polskich	polskimi
+luty		lutego		lutemu		lutym		lute		lutych		lutymi
+-			-			-			-			niektóre	niektórych	niektórymi
 ]=]
 
 decls["hard-m"] = function(base, stems)
