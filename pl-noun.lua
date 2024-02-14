@@ -648,6 +648,15 @@ baca		bacy		bacy		bacy		baco		bacowie		bace		baców		bacami
 łowca		łowcy		łowcy		łowcy		łowco		łowcy		łowce		łowców		łowcami
 
 
+Personal declined like feminine nouns in -o:
+
+Kościuszko	Kościuszki	Kościusce	Kościusce	Kościuszko	Kościuszkowie Kościuszki Kościuszków Kościuszkami
+tato		taty		tacie		tacie		tato		tatowie		taty		tatów		tatami
+Jagiełło	Jagiełły	Jagiełłe	Jagiełłe	Jagiełło	Jagiełłowie	Jagiełły	Jagiełłów	Jagiełłami
+Fredro		Fredry		Fredrze		Fredrze		Fredro		Fredrowie	Fredry		Fredrów		Fredrami
+Trapszo		Trapszy		Trapszy		Trapszy		Trapszo		Trapszowie	Trapsze		Trapszów	Trapszami
+
+
 Personal declined like adjectival nouns:
 
 sędzia		sędziego	sędziemu	sędzim/sędzi sędzio		sędziowie	sędzie		sędziów		sędziami
@@ -661,6 +670,16 @@ efendi		efendiego	efendiemu	efendim		efendi		efendiowie	efendie		efendich	efendi
 rabbi		rabbiego	rabbiemu	rabbim		rabbi		rabbiowie	rabbie		rabbich		rabbimi
 podstoli	podstolego	podstolemu	podstolim	podstoli	podstolowie	podstole	podstolich	podstolimi
 bliski		bliskiego	bliskiemu	bliskim		bliski		bliscy		bliskie		bliskich	bliskimi
+myśliwy		myśliwego	myśliwemu	myśliwym	myśliwy		myśliwi		myśliwe		myśliwych	myśliwymi
+-			-			-			-			-			obecni		obecne		obecnych	obecymi
+biegły		biegłego	biegłemu	biegłym		biegły		biegli		biegłe		biegłych	biegłymi
+uczony		uczonego	uczonemu	uczonym		uczony		uczeni		uczone		uczonych	uczonymi
+rozwiedziony rozwiedzionego rozwiedzionemu rozwiedzionym rozwiedziony rozwiedzeni rozwiedzione rozwiedzionych rozwiedzionymi
+chorąży		chorążego	chorążemu	chorążym	chorąży		chorążowie	chorąże		chorążych	chorążymi
+służący		służącego	służącemu	służącym	służący		służący		służące		służących	służącymi
+chory		chorego		choremu		chorym		chory		chorzy		chore		chorych		chorymi
+-			-			-			-			-			niektórzy	niektóre	niektórych	niektórymi
+-			-			-			-			-			państwo		państwo		państwa		państwem	(??)
 
 
 Personal declined like neuter t-stem nouns:
@@ -671,7 +690,17 @@ książę		księcia		księciu		księciu		książę		książęta	książęta	ksi�
 Personal in -o:
 
 mafiozo		mafioza		mafiozowi	mafiozie	mafiozo		mafiozi		mafiozy		mafiozów	mafiozami
-
+mikado		mikada		mikadowi	mikadzie	mikado		mikadowie	mikada		mikadów		mikadami
+maestro		maestra		maestrowi	maestrze	maestro		maestrowie	maestra		maestrów	maestrami
+Apollo		Apollina	Apollinowi	Apollinie	Apollo/Apollinie Apollinowie Apolliny Apollinów	Apollinami
+Iwo			Iwona		Iwonowi		Iwonie		Iwo/Iwonie	Iwonowie	Iwony		Iwonów		Iwonami
+synalo		synala		synalowi	synalu		synalo		synale		synale		synalów		synalami
+gauczo		gaucza		gauczowi	gauczu		gauczo		gauczowie	gaucze		gauczów		gauczami
+Zdzicho		Zdzicha		Zdzichowi	Zdzichu		Zdzichu		Zdzichowie	Zdzicha		Zdzichów	Zdzichami
+wariatuncio	wariatuncia	wariatunciowi wariatunciu wariatunciu wariatunciowie wariatuncie wariatunciów wariatunciami
+dziadzio	dziadzia	dziadziowi	dziadziu	dziadziu	dziadziowie	dziadzie	dziadziów	dziadziami
+wujo		wuja		wujowi		wuju		wujo		wujowie		wuje		wujów		wujami
+Mieszko		Mieszka		Mieszkowi	Mieszku		Mieszko		Mieszkowie	Mieszki		Mieszków	Mieszkami	ins_sg: Mieszkiem
 
 
 
