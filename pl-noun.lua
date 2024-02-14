@@ -538,6 +538,198 @@ local function default_masc_animate_nom_pl(base, stems)
 end
 
 
+--[=[
+Examples:
+
+
+Personal:
+
+nom sg		gen sg		dat sg		loc sg		voc sg		nom pl 1	nom pl 2	gen pl		ins pl
+Rosjanin	Rosjanina	Rosjaninowi	Rosjaninie	Rosjaninie	Rosjanie	Rosjany		Rosjan		Rosjanami
+Hiszpan		Hiszpana	Hiszpanowi	Hiszpanie	Hiszpanie	Hiszpanie	Hiszpany	Hiszpanów	Hiszpanami
+Afrykanin	Afrykanina	Afrykaninowi Afrykaninie Afrykaninie Afrykanie	Afrykany	Afrykanów	Afrykanami
+facet		faceta		facetowi	facecie		facecie		faceci		facety		facetów		facetami
+Hucuł		Hucuła		Hucułowi	Hucule		Hucule		Huculi		Hucuły		Hucułów		Hucułami
+błazen		błazna		błaznowi	błaźnie		błaźnie		błaźni		błaźny		błaznów		błaznami
+Arab		Araba		Arabowi		Arabie		Arabie		Arabowie	Araby		Arabów		Arabami
+apostoł		apostoła	apostołowi	apostole	apostole	apostolowie	apostoły	apostołów	apostołami
+inżynier	inżyniera	inżynierowi	inżynierze	inżynierze	inżynierowie inżyniery	inżynierów	inżynierami
+nierób		nieroba		nierobowi	nierobie	nierobie	-			nieroby		nierobów	nierobami
+Głód		Głoda		Głodowi		Głodzie		Głodzie		Głodowie	Głody		Głodów		Głodami
+głodomór	głodomora	głodomorowi	głodomorze	głodomorze	-			głodomory	głodomorów	głodomorami
+poseł		posła		posłowi		posle		posle		posłowie	posły		posłów		posłami
+majster		majstra		majstrowi	majstrze	majstrze	majstrowie	majstry		majstrów	majstrami
+kiep		kpa			kpowi		kpie		kpie		-			kpy			kpów		kpami
+karzeł		karła		karłowi		karle		karle		karłowie	karły		karłów		karłami
+szwagier	szwagra		szwagrowi	szwagrze	szwagrze	szwagrowie	szwagry		szwagrów	szwagrami
+osioł		osła		osłowi		ośle		ośle		osłowie		osły		osłów		osłami
+anioł		anioła		aniołowi	aniele		aniele		aniołowie	anioły		aniołów		aniołami
+pędziwiatr	pędziwiatra	pędziwiatrowi pędziwiatrze pędziwiatrze -		pędziwiatry	pędziwiatrów pędziwiatrami
+lider		lidera		liderowi	liderze		liderze		liderzy		lidery		liderów		liderami
+arbiter		arbitra		arbitrowi	arbitrze	arbitrze	arbitrzy	arbitry		arbitrów	arbitrami
+Węgier		Węgra		Węgrowi		Węgrze		Węgrze		Węgrzy		Węgry		Węgrów		Węgrami
+młodzieniec	młodzieńca	młodzieńcowi młodzieńcu	młodzieńcze	młodzieńcy	młodzieńce	młodzieńców	młodzieńcami
+starzec		starca		starcowi	starcu		starcze		starcy		starce		starców		starcami
+przyjaciel	przyjaciela	przyjacielowi przyjacielu przyjacielu przyjaciele przyjaciele przyjaciół przyjaciółmi dat_pl: przyjaciołom; loc_pl: przyjaciołach
+leń			lenia		leniowi		leniu		lenie		lenie		lenie		leni		leniami
+złodziej	złodzieja	złodziejowi	złodzieju	złodzieju	złodzieje	złodzieje	złodziei	złodziejami
+kowal		kowala		kowalowi	kowalu		kowalu		kowale		kowale		kowali		kowalami
+hycel		hycla		hyclowi		hyclu		hyclu		hycle		hycle		hycli		hyclami
+gość		gościa		gościowi	gościu		gościu		goście		goście		gości		gośćmi		loc_pl: gościom
+-			-			-			-			-			ludzie		ludzie		ludzi		ludźmi		loc_pl: ludziach
+kniaź		kniazia		kniaziowi	kniaziu		kniaziu		kniazie		kniazie		kniaziów	kniaziami
+zbój		zbója		zbójowi		zbóju		zbóju		zbóje		zbóje		zbójów		zbójami
+gap			gapia		gapiowi		gapiu		gapiu		gapie		gapie		gapiów		gapiami
+model		modela		modelowi	modelu		modelu		modele		modele		modelów		modelami
+stróż		stróża		stróżowi	stróżu		stróżu		stróże		stróże		stróżów		stróżami
+rodzic		rodzica		rodzicowi	rodzicu		rodzicu		rodzice		rodzice		rodziców	rodzicami
+gnój		gnoja		gnojowi		gnoju		gnoju		gnoje		gnoje		gnojów		gnojami
+urwipołeć	urwipołcia	urwipołciowi urwipołciu	urwipołciu	urwipołcie	urwipołcie	urwipołciów	urwipołciami
+przechodzień przechodnia przechodniowi przechodniu przechodniu przechodnie przechodnie przechodniów przechodniami
+lekarz		lekarza		lekarzowi	lekarzu		lekarzu		lekarze		lekarze		lekarzy		lekarzami
+Włoch		Włocha		Włochowi	Włochu		Włochu		Włosi		Włochy		Włochów		Włochami
+teść		teśćia		teśćiowi	teśćiu		teśćiu		teśćiowie	teśćie		teśćiów		teśćiami
+wuj			wuja		wujowi		wuju		wuju		wujowie		wuje		wujów		wujami
+król		króla		królowi		królu		królu		królowie	króle		królów		królami
+widz		widza		widzowi		widzu		widzu		widzowie	widze		widzów		widzami
+mąż			męża		mężowi		mężu		mężu		mężowie		męże		mężów		mężami
+uczeń		ucznia		uczniowi	uczniu		uczniu		uczniowie	ucznie		uczniów		uczniami
+Nobel		Nobla		Noblowi		Noblu		Noblu		Noblowie	Noble		Noblów		Nobliami
+Stępień		Stępnia		Stępniowi	Stępniu		Stępniu		Stępniowie	Stępnie		Stępniów	Stępniami
+szejk		szejka		szejkowi	szejku		szejku		szejkowie	szejki		szejków		szejkami	ins_sg: szejkiem
+wróg		wroga		wrogowi		wrogu		wrogu		wrogowie	wrogi		wrogów		wrogami		ins_sg: wrogiem
+dziadek		dziadka		dziadkowi	dziadku		dziadku		dziadkowie	dziadki		dziadków	dziadkami	ins_sg: dziadkiem
+syn			syna		synowi		synu		synu		synowie		syny		synów		synami
+druh		druha		druhowi		druhu		druhu		druhowie	druhy		druhów		druhami
+szewc		szewca		szewcowi	szewcu		szewcu		szewcy		szewce		szewców		szewcami
+jeniec		jeńca		jeńcowi		jeńcu		jeńcu		jeńcy		jeńce		jeńców		jeńcami
+samiec		samca		samcowi		samcu		samcu		samcy		samce		samców		samcami
+Polak		Polaka		Polakowi	Polaku		Polaku		Polacy		Polaki		Polaków		Polakami	ins_sg: Polakiem
+człowiek	człowieka	człowiekowi	człowieku	człowieku/człowiecze -	-			-			-			ins_sg: człowiekiem
+Turek		Turka		Turkowi		Turku		Turku		Turcy		Turki		Turków		Turkami		ins_sg: Turkiem
+brat		brata		bratu		bracie		bracie		bracia		braty		braci		braćmi		loc_pl: braciach
+chłop		chłopa		chłopu		chłopie		chłopie		chłopi		chłopy		chłopów		chłopami
+diabeł		diabła		diabłu		diable		diable		diabli		diabły		diabłów		diabłami
+ksiądz		księdza		księdzu		księdzu		księże		księża		księża		księży		księżmi		loc_pl: księżach
+ojciec		ojca		ojcu		ojcu		ojcze		ojcowie		ojce		ojców		ocjami
+człek		człeka		człeku		człeku		człecze		człekowie	człeki		człeków		człekami	ins_sg: człekiem
+bóg			boga		bogu		bogu		boże		bogowie		bogi		bogów		bogami		ins_sg: bogiem
+pan			pana		panu		panu		panie		panowie		pany		panów		panami
+chłopiec	chłopca		chłopcu		chłopcu		chłopcze	chłopcy		chłopce		chłopców	chłopcami
+
+
+Personal declined like consonant-stem feminine nouns:
+
+mość		mości		mości		mości		mości		moście		moście		mościów		mościami
+waszeć		waszeci		waszeci		waszeci		waszeci		waszeciowie	waszecie	waszeciów	waszeciami
+
+
+Personal declined like feminine nouns in -a:
+
+Inka		Inki		Ince		Ince		Inko		Inkowie		Inki		Inków		Inkami
+sługa		sługi		słudze		słudze		sługo		słudzy		sługi		sług		sługami
+kolega		kolegi		koledze		koledze		kolego		koledzy		kolegi		kolegów		kolegami
+cieśla		cieśli		cieśli		cieśli		cieślo		cieśle		cieśle		cieśli		cieślami
+kaznodzieja	kaznodziei	kaznodziei	kaznodziei	kaznodziejo	kaznodzieje	kaznodzieje	kaznodziejów kaznodziejami
+Maja		Mai			Mai			Mai			Majo		Majowie		Maje		Majów		Majami
+Aria		Arii		Arii		Arii		Ario		Ariowie		Arie		Ariów		Ariami
+dziadzia	dziadzi		dziadzi		dziadzi		dziadziu	dziadziowie	dziadzie	dziadziów	dziadziami
+mężczyzna	mężczyzny	mężczyźnie	mężczyźnie	mężczyzno	mężczyźni	mężczyzny	mężczyzn	mężczyznami
+artysta		artysty		artyście	artyście	artysto		artyści		artysty		artystów	artystami
+kameduła	kameduły	kamedule	kamedule	kameduło	kameduli	kameduły	kamedułów	kamedułami
+drużba		drużby		drużbie		drużbie		drużbo		drużbowie	drużby		drużbów		drużbami
+mułła		mułły		mulle		mulle		mułło		mułłowie	mułły		mułłów		mułłami
+waligóra	waligóry	waligórze	waligórze	waligóro	waligórowie	waligóry	waligórów	waligórami
+monarcha	monarchy	monarsze	monarsze	monarcho	monarchowie	monarchy	monarchów	monarchami
+psychiatra	psychiatry	psychiatrze	psychiatrze	psychiatro	psychiatrzy	psychiatry	psychiatrów	psychiatrami
+Jeszua		Jeszuy		Jeszui		Jeszui		Jeszuo		Jeszuowie	Jeszuy		Jeszuów		Jeszuami
+wielmoża	wielmoży	wielmoży	wielmoży	wielmożo	wielmoże	wielmoże	wielmożów	wielmożami
+baca		bacy		bacy		bacy		baco		bacowie		bace		baców		bacami
+łowca		łowcy		łowcy		łowcy		łowco		łowcy		łowce		łowców		łowcami
+
+
+Personal declined like adjectival nouns:
+
+sędzia		sędziego	sędziemu	sędzim/sędzi sędzio		sędziowie	sędzie		sędziów		sędziami
+hrabia		hrabiego	hrabiemu	hrabim/hrabi hrabio		hrabiowie	hrabie		hrabiów		hrabiami
+Linde		Lindego		Lindemu		Lindem		Linde		Lindowie	Linde		Lindów		Lindami
+bliźni		bliźniego	bliźniemu	bliźnim		bliźni		bliźni		bliźnie		bliźnich	bliźnimi
+hadżi		hadżiego	hadżiemu	hadżim		hadżi		hadżi		hadżie		hadżich		hadżimi
+zombi		zombiego	zombiemu	zombim		zombi		zombi		zombie		zombich		zombimi
+podstarości	podstarościego podstarościemu podstarościm podstarości podstarościowie podstaroście podstarościch podstarościmi
+efendi		efendiego	efendiemu	efendim		efendi		efendiowie	efendie		efendich	efendimi
+rabbi		rabbiego	rabbiemu	rabbim		rabbi		rabbiowie	rabbie		rabbich		rabbimi
+podstoli	podstolego	podstolemu	podstolim	podstoli	podstolowie	podstole	podstolich	podstolimi
+bliski		bliskiego	bliskiemu	bliskim		bliski		bliscy		bliskie		bliskich	bliskimi
+
+
+Personal declined like neuter t-stem nouns:
+
+książę		księcia		księciu		księciu		książę		książęta	książęta	książąt		książętami
+
+
+Personal in -o:
+
+mafiozo		mafioza		mafiozowi	mafiozie	mafiozo		mafiozi		mafiozy		mafiozów	mafiozami
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+udo			uda			udzie		uda			ud			udami
+-			-			-			usta		ust			ustami
+działo		działa		dziale		działa		dział		działami
+zero		zera		zerze		zera		zer			zerami
+niebo		nieba		niebie		niebosa/nieba niebios	niebiosami
+słowo		słowa		słowie		słowa		słów		słowami
+-			-			-			wrota		wrót		wrotami
+koło		koła		kole		koła		kół			kołami
+dno			dna			dnie		dna			den			dnami
+-			-			-			drwa		drew		drwami
+tło			tła			tle			tła			tel			tłami
+-			-			-			gusła		guseł		gusłami
+żebro		żebra		żebrze		żebra		żeber		żebrami
+okno		okna		oknie		okna		okien		oknami
+szkło		szkła		szkle		szkła		szkieł		szkłami
+gniazdo		gniazda		gnieździe	gniazda		gniazd		gniazdami
+ciało		ciała		ciele		ciała		ciał		ciałami
+światło		światła		świetle		światła		świateł		światłami
+wygwizdowo	wygwizdowa	wygwizdowie	wygwizdowa	wygwizdowów	wygwizdowami
+cudo		cuda		cudzie		cuda		cudów		cudami
+echo		echa		echu		echa		ech			echami
+wojsko		wojska		wojsku		wojska		wojsk		wojskami	ins_sg: wojskiem
+-			-			-			Łaziska		Łazisk		Łaziskami
+jajo		jaja		jaju		jaja		jaj			jajami
+molo		mola		molu		mola		mol			molami
+płuco		płuca		płucu		płuca		płuc		płucami
+dobro		dobra		dobru		dobra		dóbr		dobrami
+zło			zła			złu			zła			zeł			złami
+jabłko		jabłka		jabłku		jabłka		jabłek		jabłkami	ins_sg: jabłkiem
+-			-			-			jasełka		jasełek		jasełkami
+chłopisko	chłopiska	chłopisku	chłopiska	chłopisków	chłopiskami	ins_sg: chłopiskiem
+pysio		pysia		pysiu		pysia		pysiów		pysiami
+studio		studia		studiu		studia		studiów		studiami
+ranczo		rancza		ranczu		rancza		ranczów		ranczami
+dziecko		dziecka		dziecku		dzieci		dzieci		dziećmi		loc_pl: dzieciach
+ucho		ucha		uchu		uszy		uszu		uszami
+oko			oka			oku			oczy		oczu		oczami		ins_sg: okiem
+wotum		wotum		wotum		wota		wotów		wotami		indecl in sg
+-			-			-			polonika	poloników	polonikami
+-			-			-			realia		realiów		realiami
+-			-			-			miscellanea	miscellaneów miscellaneami
+]=]
+
 decls["hard-m"] = function(base, stems)
 	-- Nouns ending in hard -c, e.g. [[hec]] "joke", [[kibuc]] "kibbutz", don't palatalize.
 	base.palatalize_voc = not rfind(stems.vowel_stem, "c$")
@@ -868,7 +1060,7 @@ Examples:
 
 In -a:
 
-nom sg		gen sg		dat sg		voc sg		nom pl		gen pl		ins pl		loc pl
+nom sg		gen sg		dat sg		voc sg		nom pl		gen pl		ins pl
 [[ręka]]	ręki		ręce		ręko		ręce		rąk			rękami
 [[apteka]]	apteki		aptece		apteko		apteki		aptek		aptekami
 -			-			-			-			Kluki		Kluk		Klukami
@@ -924,9 +1116,9 @@ nom sg		gen sg		dat sg		voc sg		nom pl		gen pl		ins pl		loc pl
 [[gra]]		gry			grze		gro			gry			gier		grami
 [[gwiazda]]	gwiazdy		gwieździe	gwiazdo		gwiazdy		gwiazd		gwiazdami
 [[wiara]]	wiary		wierze		wiaro		wiary		wiar		wiarami
--			-			-			-			Włochy		Włoch		Włochami		Włoszech
--			-			-			-			Węgry		Węgier		Węgrami			Węgrzech
--			-			-			-			Niemcy		Niemiec		Niemcami		Niemczech
+-			-			-			-			Włochy		Włoch		Włochami		loc_pl: Włoszech
+-			-			-			-			Węgry		Węgier		Węgrami			loc_pl: Węgrzech
+-			-			-			-			Niemcy		Niemiec		Niemcami		loc_pl: Niemczech
 [[nuda]]	nudy		nudzie		nudo		nudy		nudów		nudami
 [[statua]]	statuy/statui statui	statuo		statuy		statui		statuami
 [[ulica]]	ulicy		ulicy		ulico		ulice		ulic		ulicami
@@ -1180,50 +1372,6 @@ Examples:
 In -o:
 
 nom sg		gen sg		loc sg		nom pl		gen pl		ins pl
-
-In -e:
-
-nom sg		gen sg		loc sg		nom pl		gen pl		ins pl
-danie		dania		daniu		dania		dań			daniami
-staje		staja		staju		staja		staj		stajami
-wesele		wesela		weselu		wesela		wesel		weselami
-słońce		słońca		słońcu		słońca		słońc		słońcami
-nasienie	nasienia	nasieniu	nasiona		nasion		nasionami
-przysłowie	przysłowia	przysłowiu	przysłowia	przysłów	przysłowiami
-pole		pola		polu		pola		pól			polami
-morze		morza		morzu		morza		mórz		morzami
-ziele		ziela		zielu		zioła		ziół		ziołami
-narzędzie	narzędzia	narzędziu	narzędzia	narzędzi	narzędziami
--			-			-			trzewia		trzewi		trzewiami
-wole		wola		wolu		wola		woli		wolami
-ślepie		ślepia		ślepiu		ślepia		ślepiów		ślepiami
-pnącze		pnącza		pnączu		pnącza		pnączy		pnączami
--			-			-			Krowodrza	Krowodrzy	Krowodrzami
-regale		regale		regale		regalia		regaliów	regaliami		indecl in sg
-
-
-Adjectival in -e:
-
-nom sg		gen sg		loc sg		nom pl		gen pl		ins pl
-Krakowskie	Krakowskiego Krakowskiem -			-			-
--			-			-			Końskie		Końskich	Końskimi
-Zakopane	Zakopanego	Zakopanem	-			-			-
-Białe		Białego		Białem		-			-			-
-Dobre		Dobrego		Dobrem		-			-			-
-pańskie		pańskiego	pańskim		pańskie		pańskich	pańskimi
-młode		młodego		młodym		młode		młodych		młodymi
-
-
-In -ę (t-stem):
-
-nom sg		gen sg		loc sg		nom pl		gen pl		ins pl
--			-			-			oczęta		ocząt		oczętami
-cielę		cielęcia	cielęciu	cielęta		cieląt		cielętami
-
-
-In -o:
-
-nom sg		gen sg		loc sg		nom pl		gen pl		ins pl
 udo			uda			udzie		uda			ud			udami
 -			-			-			usta		ust			ustami
 działo		działa		dziale		działa		dział		działami
@@ -1265,6 +1413,48 @@ wotum		wotum		wotum		wota		wotów		wotami		indecl in sg
 -			-			-			polonika	poloników	polonikami
 -			-			-			realia		realiów		realiami
 -			-			-			miscellanea	miscellaneów miscellaneami
+
+
+In -e:
+
+nom sg		gen sg		loc sg		nom pl		gen pl		ins pl
+danie		dania		daniu		dania		dań			daniami
+staje		staja		staju		staja		staj		stajami
+wesele		wesela		weselu		wesela		wesel		weselami
+słońce		słońca		słońcu		słońca		słońc		słońcami
+nasienie	nasienia	nasieniu	nasiona		nasion		nasionami
+przysłowie	przysłowia	przysłowiu	przysłowia	przysłów	przysłowiami
+pole		pola		polu		pola		pól			polami
+morze		morza		morzu		morza		mórz		morzami
+ziele		ziela		zielu		zioła		ziół		ziołami
+narzędzie	narzędzia	narzędziu	narzędzia	narzędzi	narzędziami
+-			-			-			trzewia		trzewi		trzewiami
+wole		wola		wolu		wola		woli		wolami
+ślepie		ślepia		ślepiu		ślepia		ślepiów		ślepiami
+pnącze		pnącza		pnączu		pnącza		pnączy		pnączami
+-			-			-			Krowodrza	Krowodrzy	Krowodrzami
+regale		regale		regale		regalia		regaliów	regaliami		indecl in sg
+
+
+Adjectival in -e:
+
+nom sg		gen sg		loc sg		nom pl		gen pl		ins pl
+Krakowskie	Krakowskiego Krakowskiem -			-			-
+-			-			-			Końskie		Końskich	Końskimi
+Zakopane	Zakopanego	Zakopanem	-			-			-
+Białe		Białego		Białem		-			-			-
+Dobre		Dobrego		Dobrem		-			-			-
+pańskie		pańskiego	pańskim		pańskie		pańskich	pańskimi
+młode		młodego		młodym		młode		młodych		młodymi
+
+
+In -ę (t-stem):
+
+nom sg		gen sg		loc sg		nom pl		gen pl		ins pl
+-			-			-			oczęta		ocząt		oczętami
+cielę		cielęcia	cielęciu	cielęta		cieląt		cielętami
+
+
 ]=]
 
 decls["hard-n"] = function(base, stems)
