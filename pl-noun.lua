@@ -85,17 +85,17 @@ local output_noun_slots = {
 	clitic_dat_s = "clitic|dat|s",
 	acc_s = "acc|s",
 	clitic_acc_s = "clitic|acc|s",
-	voc_s = "voc|s",
-	loc_s = "loc|s",
 	ins_s = "ins|s",
+	loc_s = "loc|s",
+	voc_s = "voc|s",
 	nom_p = "nom|p",
 	nom_p_linked = "nom|p",
 	gen_p = "gen|p",
 	dat_p = "dat|p",
 	acc_p = "acc|p",
-	voc_p = "voc|p",
-	loc_p = "loc|p",
 	ins_p = "ins|p",
+	loc_p = "loc|p",
+	voc_p = "voc|p",
 }
 
 
@@ -119,9 +119,9 @@ local cases = {
 	gen = true,
 	dat = true,
 	acc = true,
-	voc = true,
-	loc = true,
 	ins = true,
+	loc = true,
+	voc = true,
 }
 
 
@@ -222,21 +222,11 @@ local function apply_special_cases(base, slot, stem, ending)
 		else
 			stem = palstem
 		end
-	elseif rfind(ending, "^[ěií]") or slot == "loc_s" and ending == "e" then
-		if rfind(stem, "ck$") and rfind(base.lemma, "ck$") then
-			-- IJP says nouns in -ck (back, comeback, crack, deadlock, hatchback, hattrick, joystick, paperback, quarterback,
-			-- rock, soundtrack, track, truck) simplify the resulting -cc ending in the loc_p to -c. Similarly [[quarterback]]
-			-- has nom_pl 'quarterbaci, quarterbackove'. We need to check the lemma as well because nouns in -cek don't do this.
-			stem = rsub(stem, "ck$", "k")
-		end
-		if base.velar then
-			-- [[petanque]] /petank/ -> loc pl 'petancích'.
-			stem = rsub(stem, "gu$", "g")
-			stem = rsub(stem, "qu$", "k")
-		end
-		-- loc_s of hard masculines is sometimes -e/ě; the user might indicate this as -e, which we should handle
-		-- correctly
-		stem = com.apply_second_palatalization(stem)
+	elseif rfind(ending, "e") and (slot == "dat_s" or slot == "loc_s") then
+		-- loc_s of hard masculines is sometimes -e with palatalization; the user might indicate this as -e, which we
+		-- should handle correctly
+		stem = com.soften_fem_dat_sg(stem)
+		ending = ""
 	end
 	return stem, ending
 end
@@ -285,7 +275,7 @@ local function add(base, slot, stems, endings, footnotes)
 			local is_vowel_ending = rfind(ending, "^" .. com.vowel_c)
 			if stems.oblique_slots == "all" or
 				(stems.oblique_slots == "gen_p" or stems.oblique_slots == "all-oblique") and slot == "gen_p" or
-				stems.oblique_slots == "all-oblique" and (slot == "ins_s" or slot == "dat_p" or slot == "loc_p" or slot == "ins_p") then
+				stems.oblique_slots == "all-oblique" and (slot == "ins_s" or slot == "dat_p" or slot == "ins_p" or slot == "loc_p") then
 				if is_vowel_ending then
 					stem = stems.oblique_vowel_stem
 				else
@@ -345,16 +335,16 @@ end
 
 
 local function add_decl(base, stems,
-	gen_s, dat_s, acc_s, voc_s, loc_s, ins_s,
-	nom_p, gen_p, dat_p, acc_p, loc_p, ins_p, footnotes
+	gen_s, dat_s, acc_s, ins_s, loc_s, voc_s,
+	nom_p, gen_p, dat_p, acc_p, ins_p, loc_p, footnotes
 )
 	add(base, "nom_s", stems, "-", footnotes)
 	add(base, "gen_s", stems, gen_s, footnotes)
 	add(base, "dat_s", stems, dat_s, footnotes)
 	add(base, "acc_s", stems, acc_s, footnotes)
-	add(base, "voc_s", stems, voc_s, footnotes)
-	add(base, "loc_s", stems, loc_s, footnotes)
 	add(base, "ins_s", stems, ins_s, footnotes)
+	add(base, "loc_s", stems, loc_s, footnotes)
+	add(base, "voc_s", stems, voc_s, footnotes)
 	if base.number == "pl" then
 		-- If this is a plurale tantum noun and we're processing the nominative plural, use the user-specified lemma
 		-- rather than generating the plural from the synthesized singular, which may not match the specified lemma
@@ -370,26 +360,26 @@ local function add_decl(base, stems,
 	add(base, "gen_p", stems, gen_p, footnotes)
 	add(base, "dat_p", stems, dat_p, footnotes)
 	add(base, "acc_p", stems, acc_p, footnotes)
-	add(base, "loc_p", stems, loc_p, footnotes)
 	add(base, "ins_p", stems, ins_p, footnotes)
+	add(base, "loc_p", stems, loc_p, footnotes)
 end
 
 local function add_sg_decl(base, stems,
-	gen_s, dat_s, acc_s, voc_s, loc_s, ins_s, footnotes
+	gen_s, dat_s, acc_s, ins_s, loc_s, voc_s, footnotes
 )
-	add_decl(base, stems, gen_s, dat_s, acc_s, voc_s, loc_s, ins_s,
+	add_decl(base, stems, gen_s, dat_s, acc_s, ins_s, loc_s, voc_s,
 		nil, nil, nil, nil, nil, nil, footnotes)
 end
 
 local function add_pl_only_decl(base, stems,
-	gen_p, dat_p, acc_p, loc_p, ins_p, footnotes
+	gen_p, dat_p, acc_p, ins_p, loc_p, footnotes
 )
 	add_decl(base, stems, nil, nil, nil, nil, nil, nil, 
-		"-", gen_p, dat_p, acc_p, loc_p, ins_p, footnotes)
+		"-", gen_p, dat_p, acc_p, ins_p, loc_p, footnotes)
 end
 
 local function add_sg_decl_with_clitic(base, stems,
-	gen_s, clitic_gen_s, dat_s, clitic_dat_s, acc_s, clitic_acc_s, voc_s, loc_s, ins_s, footnotes, no_nom_s
+	gen_s, clitic_gen_s, dat_s, clitic_dat_s, acc_s, clitic_acc_s, ins_s, loc_s, voc_s, footnotes, no_nom_s
 )
 	if not no_nom_s then
 		add(base, "nom_s", stems, "-", footnotes)
@@ -400,9 +390,9 @@ local function add_sg_decl_with_clitic(base, stems,
 	add(base, "clitic_dat_s", stems, clitic_dat_s, footnotes)
 	add(base, "acc_s", stems, acc_s, footnotes)
 	add(base, "clitic_acc_s", stems, clitic_acc_s, footnotes)
-	add(base, "voc_s", stems, voc_s, footnotes)
-	add(base, "loc_s", stems, loc_s, footnotes)
 	add(base, "ins_s", stems, ins_s, footnotes)
+	add(base, "loc_s", stems, loc_s, footnotes)
+	add(base, "voc_s", stems, voc_s, footnotes)
 end
 
 
@@ -454,7 +444,26 @@ end
 -- `stems`; the latter specifies the computed stems (vowel vs. non-vowel, singular vs. plural) and whether the noun
 -- is reducible and/or has vowel alternations in the stem. Most of the specifics of determining which stem to use
 -- and how to modify it for the given ending are handled in add_decl(); the declension functions just need to generate
--- the appropriate endings.
+-- the appropriate endings. Specifically:
+--
+-- Alternations between -ś/-si, -ń/ni etc. handled in combine_stem_ending(); the stems in `stems` are in the
+-- consonant-final state (using -ś/-ń/etc. and with soft labials stored with TEMP_SOFT_LABIAL after them), which
+-- is converted to the pre-vowel state there. This also handles alternations between -iami/-ami after different sorts
+-- of soft consonants.
+--
+-- Alternations between -i/-y handled in combine_stem_ending() as well, as is dropping of j before -i.
+--
+-- Palatalization in the dat/loc sg (esp. of feminine and neuter nouns) and in voc sg of masculine nouns and the nom pl
+-- of masculine personal nouns is handled in apply_special_cases().
+--
+-- Reducibility of nouns like [[brukiew]], [[żagiew]], [[brew]], [[płeć]], [[wieś]], [[cześć]], [[wesz]] handled in
+-- determine_stems(), which sets vowel_stem and nonvowel_stem differently (controlled by * or -* indicators, with
+-- the default handled in determine_default_reducible()).
+--
+-- Vowel alternations between ó/o and ą/ę handled in apply_vowel_alternation() (controlled by the # indicator).
+--
+-- Ending differences between - and -i in the voc sg, between -ie and -i in the nom pl and between -(i)ami and -mi
+-- in the ins pl need to be handled through overrides.
 local decls = {}
 -- Table specifying additional properties for declension types. Every declension type must have such a table, which
 -- specifies which category or categories to add and what annotation to show in the title bar of the declension table.
@@ -854,16 +863,117 @@ declprops["tstem-m"] = {
 }
 
 
+--[=[
+Examples:
+
+In -a:
+
+nom sg		gen sg		dat sg		voc sg		nom pl		gen pl		ins pl		loc pl
+[[ręka]]	ręki		ręce		ręko		ręce		rąk			rękami
+[[apteka]]	apteki		aptece		apteko		apteki		aptek		aptekami
+-			-			-			-			Kluki		Kluk		Klukami
+[[droga]]	drogi		drodze		drogo		drogi		dróg		drogami
+[[matka]]	matki		matce		matko		matki		matek		matkami
+-			-			-			-			sanki		sanek		sankami
+[[mamuśka]]	mamuśki		mamuśce		mamuśku		mamuśki		mamusiek	mamuśkami
+[[świnia]]	świni		świni		świnio		świnie		świń		świniami
+-			-			-			-			sanie		sań			saniami
+[[szyja]]	szyi		szyi		szyjo		szyje		szyj		szyjami
+-			-			-			-			pomyje		pomyj		pomyjami
+[[ziemia]]	ziemi		ziemi		ziemio		ziemie		ziem		ziemiami
+[[fala]]	fali		fali		falo		fale		fal			falami
+[[rola]]	roli		roli		rolo		role		ról			rolami
+[[muszla]]	muszli		muszli		muszlo		muszle		muszel		muszlami
+[[stajnia]]	stajni		stajni		stajnio		stajnie		stajen		stajniami
+[[suknia]]	sukni		sukni		suknio		suknie		sukien		sukniami
+[[bazia]]	bazi		bazi		bazio		bazie		bazi		baziami
+-			-			-			-			spodnie		spodni		spodniami
+[[zbroja]]	zbroi		zbroi		zbrojo		zbroje		zbroi		zbrojami
+[[lilia]]	lilii		lilii		lilio		lilie		lilii		liliami
+-			-			-			-			ferie		ferii		feriami
+[[opcja]]	opcji		opcji		opcjo		opcje		opcji		opcjami
+[[głębia]]	głębi		głębi		głębio		głębie		głębi		głębiami
+-			-			-			-			grabie		grabi		grabiami
+[[butla]]	butli		butli		butlo		butle		butli		butlami
+-			-			-			-			gęśle		gęśli		gęślami
+[[idea]]	idei		idei		ideo		idee		idei		ideami
+[[Ania]]	Ani			Ani			Aniu		Anie		Ań			Aniami
+[[Maja]]	Mai			Mai			Maju		Maje		Maj			Majami
+[[Ola]]		Oli			Oli			Olu			Ole			Ol			Olami
+[[wnusia]]	wnusi		wnusi		wnusiu		wnusie		wnusi		wnusiami
+[[szansa]]	szansy		szansie		szanso		szanse		szans		szansami
+[[kobieta]]	kobiety		kobiecie	kobieto		kobiety		kobiet		kobietami
+-			-			-			-			Prusy		Prus		Prusami
+[[siła]]	siły		sile		siło		siły		sił			siłami
+-			-			-			-			pakuły		pakuł		pakułami
+[[nora]]	nory		norze		noro		nory		nor			norami
+-			-			-			-			Czastary	Czastar		Czastarami
+[[much]]	muchy		musze		mucho		muchy		much		muchami
+-			-			-			-			Czechy		Czech		Czechami
+[[doba]]	doby		dobie		dobo		doby		dób			dobami
+-			-			-			-			Ciepłowody	Ciepłowód	Ciepłowodami
+[[szkoła]]	szkoły		szkole		szkoło		szkoły		szkół		szkołami
+[[siostra]]	siostry		siostrze	siostro		siostry		sióstr		siostrami
+[[ćma]]		ćmy			ćmie		ćmo			ćmy			ciem		ćmami
+[[miotła]]	miotły		miotle		miotło		miotły		mioteł		miotłami
+-			-			-			-			widły		wideł		widłami
+[[kołdra]]	kołdry		kołdrze		kołdro		kołdry		kołder		kołdrami
+-			-			-			-			Suchożebry	Suchożeber	Suchożebrami
+[[panna]]	panny		pannie		panno		panny		panien		pannami
+[[igła]]	igły		igle		igło		igły		igieł		igłami
+[[gra]]		gry			grze		gro			gry			gier		grami
+[[gwiazda]]	gwiazdy		gwieździe	gwiazdo		gwiazdy		gwiazd		gwiazdami
+[[wiara]]	wiary		wierze		wiaro		wiary		wiar		wiarami
+-			-			-			-			Włochy		Włoch		Włochami		Włoszech
+-			-			-			-			Węgry		Węgier		Węgrami			Węgrzech
+-			-			-			-			Niemcy		Niemiec		Niemcami		Niemczech
+[[nuda]]	nudy		nudzie		nudo		nudy		nudów		nudami
+[[statua]]	statuy/statui statui	statuo		statuy		statui		statuami
+[[ulica]]	ulicy		ulicy		ulico		ulice		ulic		ulicami
+-			-			-			-			Kielce		Kielc		Kielcami
+[[zorza]]	zorzy		zorzy		zorzo		zorze		zórz		zorzami
+-			-			-			-			Strzelce	Strzelec	Strzelcami
+[[owca]]	owcy		owcy		owco		owce		owiec		owcami
+-			-			-			-			szczypce	szczypiec	szczypcami
+[[sadza]]	sadzy		sadzy		sadzo		sadze		sadzy		sadzami
+-			-			-			-			nosze		noszy		noszami
+
+
+Adjectival in -a:
+
+nom sg		gen sg		dat sg		voc sg		nom pl		gen pl		ins pl
+[[Plaska]]	Plaskiej	Plaskiej	Plaska		Plaskie		Plaskich	Plaskimi
+[[położna]]	położnej	położnej	położna		położne		położnych	położnymi
+[[trwała]]	trwałej		trwałej		trwała		trwałe		trwałych	trwałymi
+[[Dobra]]	Dobrej		Dobrej		Dobra		Dobre		Dobrych		Dobrymi
+[[Sucha]]	Suchej		Suchej		Sucha		Suche		Suchych		Suchymi
+[[służąca]]	służącej	służącej	służąca		służące		służących	służącymi
+[[królowa]]	królowej	królowej	królowo		królowe		królowych	królowymi
+
+
+In -ni:
+
+nom sg		gen sg		dat sg		acc sg		nom pl		gen pl		ins pl
+[[pani]]	pani		pani		panią		panie		pań			paniami
+[[bogini]]	bogini		bogini		boginię		boginie		bogiń		boginiami
+
+]=]
+
 decls["hard-f"] = function(base, stems)
-	-- [[skica]] "sketch", [[gejša]] "geisha", [[rikša]] "rickshaw (vehicle)"; [[arakača]], [[čača]], [[čiča]] (drink),
-	-- [[dača]] "dacha", [[gutaperča]] "guttapercha", [[viskača]]; [[babča]], [[číča]], [[káča]], [[mamča]], [[úča]].
-	-- Also appears to apply to ď (e.g. [[Naďa]]) and ť, as well as certain words with stems in -ň and -j (e.g. [[doňa]],
-	-- and personal names such as [[Táña]] and [[Darja]]), which normally have a mixed declension.
-	local soft_cons = rfind(base.vowel_stem, "[cčšžďťjň]$") and not base.c_as_k
-	local dat_s = soft_cons and {"ě", "i"} or "ě"
-	local loc_s = dat_s
-	add_decl(base, stems, "y", dat_s, "u", "o", loc_s, "ou",
-		"y", "", "ám", "y", "ách", "ami")
+	local soft_cons = rfind(base.vowel_stem, "[" .. com.paired_palatal .. com.TEMP_SOFT_LABIAL .. "cjlż]$") or
+		rfind(base.stem, "[cdrs]z$")
+	local nom_p = soft_cons and "e" or "y" -- converted to i after k/g
+	-- Words in -Cj ([[gracja]], [[torsja]]) and -Cl ([[hodowla]], [[grobla]], [[bernikla]]) have -i
+	local gen_p = rfind(base.vowel_stem, com.cons_c .. "[jl]$") and "i" or ""
+	add_decl(base, stems, "y", -- converted to i after inherently soft endings and k/g/l
+		"e", -- may trigger palatalization and conversion to i/y
+		"ę", "ą",
+		"e", -- may trigger palatalization and conversion to i/y
+		"o",
+		nom_p,
+		gen_p, -- if empty string, added after nonvowel_stem, which may be dereduced
+		"om", nom_p, "ami", "ach")
+	-- FIXME: Handle archaic gen_p in -yj for words in -Cj like [[gracja]], [[torsja]]
 end
 
 declprops["hard-f"] = {
@@ -903,10 +1013,39 @@ declprops["mixed-f"] = {
 	cat = "mixed"
 }
 
+--[=[
+Examples:
+
+nom sg		gen sg		voc sg		nom pl		ins pl
+[[córuś]]	córusi		córuś		córusie		córusiami
+[[oś]]		osi			osi			osie		osiami
+[[kolej]]	kolei		kolei		koleje		kolejami
+[[Gołdap]]	Gołdapi		Gołdapi		Gołdapie	Gołdapiami
+[[kąpiel]]	kąpieli		kąpieli		kąpiele		kąpielami
+[[łódź]]	łodzi		łodzi		łodzie		łodziami
+[[gląb]]	glębi		glębi		glębie		glębiami
+[[sól]]		soli		soli		sole		solami
+[[płeć]]	płci		płci		płcie		płciami
+[[konew]]	konwi		konwi		konwie		konwiami
+[[wieś]]	wsi			wsi			wsie		wsiami
+[[żagiew]]	żagwi		żagwi		żagwie		żagwiami
+[[dłoń]]	dłoni		dłoni		dłonie		dłońmi
+[[sieć]]	sieci		sieci		sieci		sieciami
+-			-			-			wnętrzności	wnętrznościami
+-			-			-			drzwi		drzwiami
+[[myśl]]	myśli		myśli		myśli		myślami
+[[brew]]	brwi		brwi		brwi		brwiami
+[[cześć]]	czci		czci		czci		czciami
+[[kość]]	kości		kości		kości		kośćmi
+[[noc]]		nocy		nocy		noce		nocami
+[[uprząż]]	uprzęży		uprzęży		uprzęże		uprzężami
+[[mysz]]	myszy		myszy		myszy		myszami
+[[wesz]]	wszy		wszy		wszy		wszami
+]=]
 
 decls["cons-f"] = function(base, stems)
-	-- e.g. [[dlaň]] "palm (of the hand)"
-	add_decl(base, stems, "e", "i", "-", "i", "i", "í",
+	-- See comment above definition of decls[] for where stem and ending alternations are handled.
+	add_decl(base, stems, "y", "y", "-", "ą", "y", "i",
 		"e", "í", "ím", "e", "ích", "emi")
 end
 
@@ -927,35 +1066,35 @@ declprops["istem-f"] = {
 
 
 decls["mixed-istem-f"] = function(base, stems)
-	local gen_s, nom_p, dat_p, loc_p, ins_p
+	local gen_s, nom_p, dat_p, ins_p, loc_p
 	-- Use of ě vs E below is intentional. Contrast [[oběť]] dat pl 'obětem' (depalatalizing) with [[nit]] ins pl
 	-- 'nitěmi' (palatalizing). See comment above under apply_special_cases().
 	if base.mixedistem == "pěst" then
 		-- pěst, past, mast, lest [reducible; ins pl 'lstmi'], pelest, propust, plst, oběť, zeď [reducible; ins pl
 		-- 'zdmi'], paměť [ins pl 'pamětmi/paměťmi]
-		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", {"ím", "Em"}, {"ích", "Ech"}, "mi"
+		gen_s, nom_p, dat_p, ins_p, loc_p = "i", "i", {"ím", "Em"}, "mi", {"ích", "Ech"}
 	elseif base.mixedistem == "moc" then
 		-- moc, nemoc, pomoc, velmoc; NOTE: pravomoc has -i/-e alternation in gen_s, nom_p
-		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", {"Em", "ím"}, {"Ech", "ích"}, "ěmi"
+		gen_s, nom_p, dat_p, ins_p, loc_p = "i", "i", {"Em", "ím"}, "ěmi", {"Ech", "ích"}
 	elseif base.mixedistem == "myš" then
 		-- myš, veš [reducible, ins pl vešmi], hruď, měď, pleť, spleť, směs, smrt, step, odpověď [ins pl 'odpověď'mi/odpovědmi'], šeď,
 		-- závěť [ins pl 'závěťmi/závětmi'], plsť [ins pl 'plstmi']
-		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", "ím", "ích", "mi"
+		gen_s, nom_p, dat_p, ins_p, loc_p = "i", "i", "ím", "mi", "ích"
 	elseif base.mixedistem == "noc" then
 		-- lež [reducible], noc, mosaz, rez [reducible], ves [reducible], mysl, sůl, běl, žluť
-		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", "ím", "ích", "ěmi"
+		gen_s, nom_p, dat_p, ins_p, loc_p = "i", "i", "ím", "ěmi", "ích"
 	elseif base.mixedistem == "žluč" then
 		-- žluč, moč, modř, čeleď, kapraď, záď, žerď, čtvrť/čtvrt, drť, huť, chuť, nit, pečeť, závrať, pouť, stať, ocel
-		gen_s, nom_p, dat_p, loc_p, ins_p = {"i", "ě"}, {"i", "ě"}, "ím", "ích", "ěmi"
+		gen_s, nom_p, dat_p, ins_p, loc_p = {"i", "ě"}, {"i", "ě"}, "ím", "ěmi", "ích"
 	elseif base.mixedistem == "loď" then
 		-- loď, suť
-		gen_s, nom_p, dat_p, loc_p, ins_p = {"i", "ě"}, {"i", "ě"}, "ím", "ích", {"ěmi", "mi"}
+		gen_s, nom_p, dat_p, ins_p, loc_p = {"i", "ě"}, {"i", "ě"}, {"ěmi", "mi"}, "ím", "ích"
 	else
 		error(("Unrecognized value '%s' for 'mixedistem', should be one of 'pěst', 'moc', 'myš', 'noc', 'žluč' or 'loď'"):
 			format(base.mixedistem))
 	end
-	add_decl(base, stems, gen_s, "i", "-", "i", "i", "í",
-		nom_p, "í", dat_p, nom_p, loc_p, ins_p)
+	add_decl(base, stems, gen_s, "i", "-", "í", "i", "i",
+		nom_p, "í", dat_p, nom_p, ins_p, loc_p)
 end
 
 declprops["mixed-istem-f"] = {
@@ -1034,6 +1173,99 @@ declprops["ia-f"] = {
 	cat = "GENPOS in -ia"
 }
 
+--[=[
+Examples:
+
+
+In -o:
+
+nom sg		gen sg		loc sg		nom pl		gen pl		ins pl
+
+In -e:
+
+nom sg		gen sg		loc sg		nom pl		gen pl		ins pl
+danie		dania		daniu		dania		dań			daniami
+staje		staja		staju		staja		staj		stajami
+wesele		wesela		weselu		wesela		wesel		weselami
+słońce		słońca		słońcu		słońca		słońc		słońcami
+nasienie	nasienia	nasieniu	nasiona		nasion		nasionami
+przysłowie	przysłowia	przysłowiu	przysłowia	przysłów	przysłowiami
+pole		pola		polu		pola		pól			polami
+morze		morza		morzu		morza		mórz		morzami
+ziele		ziela		zielu		zioła		ziół		ziołami
+narzędzie	narzędzia	narzędziu	narzędzia	narzędzi	narzędziami
+-			-			-			trzewia		trzewi		trzewiami
+wole		wola		wolu		wola		woli		wolami
+ślepie		ślepia		ślepiu		ślepia		ślepiów		ślepiami
+pnącze		pnącza		pnączu		pnącza		pnączy		pnączami
+-			-			-			Krowodrza	Krowodrzy	Krowodrzami
+regale		regale		regale		regalia		regaliów	regaliami		indecl in sg
+
+
+Adjectival in -e:
+
+nom sg		gen sg		loc sg		nom pl		gen pl		ins pl
+Krakowskie	Krakowskiego Krakowskiem -			-			-
+-			-			-			Końskie		Końskich	Końskimi
+Zakopane	Zakopanego	Zakopanem	-			-			-
+Białe		Białego		Białem		-			-			-
+Dobre		Dobrego		Dobrem		-			-			-
+pańskie		pańskiego	pańskim		pańskie		pańskich	pańskimi
+młode		młodego		młodym		młode		młodych		młodymi
+
+
+In -ę (t-stem):
+
+nom sg		gen sg		loc sg		nom pl		gen pl		ins pl
+-			-			-			oczęta		ocząt		oczętami
+cielę		cielęcia	cielęciu	cielęta		cieląt		cielętami
+
+
+In -o:
+
+nom sg		gen sg		loc sg		nom pl		gen pl		ins pl
+udo			uda			udzie		uda			ud			udami
+-			-			-			usta		ust			ustami
+działo		działa		dziale		działa		dział		działami
+zero		zera		zerze		zera		zer			zerami
+niebo		nieba		niebie		niebosa/nieba niebios	niebiosami
+słowo		słowa		słowie		słowa		słów		słowami
+-			-			-			wrota		wrót		wrotami
+koło		koła		kole		koła		kół			kołami
+dno			dna			dnie		dna			den			dnami
+-			-			-			drwa		drew		drwami
+tło			tła			tle			tła			tel			tłami
+-			-			-			gusła		guseł		gusłami
+żebro		żebra		żebrze		żebra		żeber		żebrami
+okno		okna		oknie		okna		okien		oknami
+szkło		szkła		szkle		szkła		szkieł		szkłami
+gniazdo		gniazda		gnieździe	gniazda		gniazd		gniazdami
+ciało		ciała		ciele		ciała		ciał		ciałami
+światło		światła		świetle		światła		świateł		światłami
+wygwizdowo	wygwizdowa	wygwizdowie	wygwizdowa	wygwizdowów	wygwizdowami
+cudo		cuda		cudzie		cuda		cudów		cudami
+echo		echa		echu		echa		ech			echami
+wojsko		wojska		wojsku		wojska		wojsk		wojskami	ins_sg: wojskiem
+-			-			-			Łaziska		Łazisk		Łaziskami
+jajo		jaja		jaju		jaja		jaj			jajami
+molo		mola		molu		mola		mol			molami
+płuco		płuca		płucu		płuca		płuc		płucami
+dobro		dobra		dobru		dobra		dóbr		dobrami
+zło			zła			złu			zła			zeł			złami
+jabłko		jabłka		jabłku		jabłka		jabłek		jabłkami	ins_sg: jabłkiem
+-			-			-			jasełka		jasełek		jasełkami
+chłopisko	chłopiska	chłopisku	chłopiska	chłopisków	chłopiskami	ins_sg: chłopiskiem
+pysio		pysia		pysiu		pysia		pysiów		pysiami
+studio		studia		studiu		studia		studiów		studiami
+ranczo		rancza		ranczu		rancza		ranczów		ranczami
+dziecko		dziecka		dziecku		dzieci		dzieci		dziećmi		loc_pl: dzieciach
+ucho		ucha		uchu		uszy		uszu		uszami
+oko			oka			oku			oczy		oczu		oczami		ins_sg: okiem
+wotum		wotum		wotum		wota		wotów		wotami		indecl in sg
+-			-			-			polonika	poloników	polonikami
+-			-			-			realia		realiów		realiami
+-			-			-			miscellanea	miscellaneów miscellaneami
+]=]
 
 decls["hard-n"] = function(base, stems)
 	local velar = base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$")
@@ -1114,19 +1346,19 @@ decls["semisoft-n"] = function(base, stems)
 	--   [[scholion]], [[kritérion]] (rare for [[kritérium]]), [[onomatopoion]] (variant of [[onomatopoie]]),
 	--   [[symposion]], [[synedrion]]; also [[Byzantion]], but this is sg-only; most words in -ion are masculine
 	-- Hard in the singular, mostly soft in the plural. Those in -eo and -uo have alternative hard endings in the
-	-- dat/loc/ins pl, but not those in -eum or -uum. Those in -ao have only hard endings except in the gen pl. (There are
+	-- dat/ins/loc pl, but not those in -eum or -uum. Those in -ao have only hard endings except in the gen pl. (There are
 	-- apparently no neuters in -eon; those in -eon or -yon e.g. [[akordeon]], [[neon]], [[nukleon]], [[karyon]], [[Lyon]]
 	-- are masculine.)
-	local dat_p, loc_p, ins_p
+	local dat_p, ins_p, loc_p
 	if rfind(base.actual_lemma, "ao$") then
-		dat_p, loc_p, ins_p = "ům", "ech", "y"
+		dat_p, ins_p, loc_p = "ům", "ech", "y"
 	elseif rfind(base.actual_lemma, "[eu]o$") then
-		dat_p, loc_p, ins_p = {"ím", "ům"}, {"ích", "ech"}, {"i", "y"}
+		dat_p, ins_p, loc_p = {"ím", "ům"}, {"ích", "ech"}, {"i", "y"}
 	else
-		dat_p, loc_p, ins_p = "ím", "ích", "i"
+		dat_p, ins_p, loc_p = "ím", "ích", "i"
 	end
 	add_decl(base, stems, "a", "u", "-", "-", "u", "em",
-		"a", "í", dat_p, "a", loc_p, ins_p)
+		"a", "í", dat_p, "a", ins_p, loc_p)
 end
 
 declprops["semisoft-n"] = {
@@ -1239,22 +1471,22 @@ decls["adj"] = function(base, stems)
 			copy("nom_m", "nom_s")
 			copy("gen_mn", "gen_s")
 			copy("dat_mn", "dat_s")
-			copy("loc_mn", "loc_s")
 			copy("ins_mn", "ins_s")
+			copy("loc_mn", "loc_s")
 		elseif base.gender == "f" then
 			copy("nom_f", "nom_s")
 			copy("gen_f", "gen_s")
 			copy("dat_f", "dat_s")
 			copy("acc_f", "acc_s")
-			copy("loc_f", "loc_s")
 			copy("ins_f", "ins_s")
+			copy("loc_f", "loc_s")
 		else
 			copy("nom_n", "nom_s")
 			copy("gen_mn", "gen_s")
 			copy("dat_mn", "dat_s")
 			copy("acc_n", "acc_s")
-			copy("loc_mn", "loc_s")
 			copy("ins_mn", "ins_s")
+			copy("loc_mn", "loc_s")
 		end
 		if not base.forms.voc_s then
 			iut.insert_forms(base.forms, "voc_s", base.forms.nom_s)
@@ -2267,6 +2499,19 @@ local function synthesize_adj_lemma(base)
 end
 
 
+-- Determine the gender based on the lemma and other settings.
+local function determine_gender(base)
+	if rmatch(base.lemma, "a$") then
+		base.gender = "f"
+	elseif rmatch(base.lemma, "[oe]$") then
+		base.gender = "n"
+	else
+		-- FIXME
+		...
+	end
+end
+
+
 -- Determine the declension based on the lemma, gender and number. The declension is set in base.decl. In the process,
 -- we set either base.vowel_stem (if the lemma ends in a vowel) or base.nonvowel_stem (if the lemma does not end in a
 -- vowel), which is used by determine_stems(). In some cases (specifically with certain foreign nouns), we set
@@ -2673,6 +2918,9 @@ local function detect_indicator_spec(base)
 	else
 		if base.number == "pl" then
 			synthesize_singular_lemma(base)
+		end
+		if not base.gender then
+			determine_gender(base)
 		end
 		determine_declension(base)
 		determine_default_reducible(base)
