@@ -620,12 +620,14 @@ chłopiec	chłopca		chłopcu		chłopcu		chłopcze	chłopcy		chłopce		chłopców
 
 Personal declined like consonant-stem feminine nouns:
 
+nom sg		gen sg		dat sg		loc sg		voc sg		nom pl 1	nom pl 2	gen pl		ins pl
 mość		mości		mości		mości		mości		moście		moście		mościów		mościami
 waszeć		waszeci		waszeci		waszeci		waszeci		waszeciowie	waszecie	waszeciów	waszeciami
 
 
 Personal declined like feminine nouns in -a:
 
+nom sg		gen sg		dat sg		loc sg		voc sg		nom pl 1	nom pl 2	gen pl		ins pl
 Inka		Inki		Ince		Ince		Inko		Inkowie		Inki		Inków		Inkami
 sługa		sługi		słudze		słudze		sługo		słudzy		sługi		sług		sługami
 kolega		kolegi		koledze		koledze		kolego		koledzy		kolegi		kolegów		kolegami
@@ -650,15 +652,16 @@ baca		bacy		bacy		bacy		baco		bacowie		bace		baców		bacami
 
 Personal declined like feminine nouns in -o:
 
+nom sg		gen sg		dat sg		loc sg		voc sg		nom pl 1	nom pl 2	gen pl		ins pl
 Kościuszko	Kościuszki	Kościusce	Kościusce	Kościuszko	Kościuszkowie Kościuszki Kościuszków Kościuszkami
 tato		taty		tacie		tacie		tato		tatowie		taty		tatów		tatami
 Jagiełło	Jagiełły	Jagiełłe	Jagiełłe	Jagiełło	Jagiełłowie	Jagiełły	Jagiełłów	Jagiełłami
 Fredro		Fredry		Fredrze		Fredrze		Fredro		Fredrowie	Fredry		Fredrów		Fredrami
 Trapszo		Trapszy		Trapszy		Trapszy		Trapszo		Trapszowie	Trapsze		Trapszów	Trapszami
 
-
 Personal declined like adjectival nouns:
 
+nom sg		gen sg		dat sg		loc sg		voc sg		nom pl 1	nom pl 2	gen pl		ins pl
 sędzia		sędziego	sędziemu	sędzim/sędzi sędzio		sędziowie	sędzie		sędziów		sędziami
 hrabia		hrabiego	hrabiemu	hrabim/hrabi hrabio		hrabiowie	hrabie		hrabiów		hrabiami
 Linde		Lindego		Lindemu		Lindem		Linde		Lindowie	Linde		Lindów		Lindami
@@ -679,16 +682,17 @@ chorąży		chorążego	chorążemu	chorążym	chorąży		chorążowie	chorąże	
 służący		służącego	służącemu	służącym	służący		służący		służące		służących	służącymi
 chory		chorego		choremu		chorym		chory		chorzy		chore		chorych		chorymi
 -			-			-			-			-			niektórzy	niektóre	niektórych	niektórymi
--			-			-			-			-			państwo		państwo		państwa		państwem	(??)
 
 
 Personal declined like neuter t-stem nouns:
 
+nom sg		gen sg		dat sg		loc sg		voc sg		nom pl 1	nom pl 2	gen pl		ins pl
 książę		księcia		księciu		księciu		książę		książęta	książęta	książąt		książętami
 
 
 Personal in -o:
 
+nom sg		gen sg		dat sg		loc sg		voc sg		nom pl 1	nom pl 2	gen pl		ins pl
 mafiozo		mafioza		mafiozowi	mafiozie	mafiozo		mafiozi		mafiozy		mafiozów	mafiozami
 mikado		mikada		mikadowi	mikadzie	mikado		mikadowie	mikada		mikadów		mikadami
 maestro		maestra		maestrowi	maestrze	maestro		maestrowie	maestra		maestrów	maestrami
@@ -703,60 +707,84 @@ wujo		wuja		wujowi		wuju		wujo		wujowie		wuje		wujów		wujami
 Mieszko		Mieszka		Mieszkowi	Mieszku		Mieszko		Mieszkowie	Mieszki		Mieszków	Mieszkami	ins_sg: Mieszkiem
 
 
+Personal declined in the plural like a singular neuter noun:
+
+nom sg		gen sg		dat sg		loc sg		voc sg		nom pl 1	nom pl 2	gen pl		ins pl
+-			-			-			-			-			państwo		państwo		państwa		państwem	loc/dat_pl: państwu
+
+
+Animal (voc sg like loc sg unless otherwise indicated):
+
+nom sg		gen sg		dat sg		loc sg		nom pl		gen pl		ins pl
+kontredans	kontredansa	kontredansowi kontredansie kontredanse kontredansów kontredansami
+gad			gada		gadowi		gadzie		gady		gadów		gadami
+muł			muła		mułowi		mule		muły		mułów		mułami
+tur			tura		turowi		turze		tury		turów		turami
+rybołów		rybołowa	rybołowowi	rybołowie	rybołowy	rybołowów	rybołowami
+sokół		sokoła		sokołowi	sokole		sokoły		sokołów		sokołami
+upiór		upiora		upiorowi	upiorze		upiory		upiorów		upiorami
+suseł		susła		susłowi		suśle		susły		susłów		susłami
+koliber		kolibra		kolibrowi	kolibrze	kolibry		kolibrów	kolibrami
+giez		gza			gzowi		gzie		gzy			gzów		gzami
+orzeł		orła		orłowi		orle		orły		orłów		orłami
+wągier		wągra		wągrowi		wągrze		wągry		wągrów		wągrami
+kozioł		kozła		kozłowi		koźle		kozły		kozłów		kozłami
+słoń		słonia		słoniowi	słoniu		słonie		słoni		słoniami
+żółw		żółwia		żółwiowi	żółwiu		żółwie		żółwi		żółwiami
+goryl		goryla		gorylowi	gorylu		goryle		goryli		gorylami
+gołąb		gołębia		gołębiowi	gołębiu		gołębie		gołębi		gołębiami
+mól			mola		molowi		molu		mole		moli		molami
+truteń		trutnia		trutniowi	trutniu		trutnie		trutnii		trutniami
+rubel		rubla		rublowi		rublu		ruble		rubli		rublami
+szkarłupień	szkarłupnia	szkarłupniowi szkarłupniu szkarłupnie szkarłupni szkarłupniami
+bargiel		bargla		barglowi	barglu		bargle		bargli		barglami
+koń			konia		koniowi		koniu		konie		koni		końmi		loc_pl: koniach
+miś			misia		misiowi		misiu		misie		misiów		misiami
+wij			wija		wijowi		wiju		wije		wijów		wijami
+rydz		rydza		rydzowi		rydzu		rydze		rydzów		rydzami
+kozodój		kozodoja	kozodojowi	kozodoju	kozodoje	kozodojów	kozodojami
+piesiec		pieśca		pieścowi	pieścu		pieśce		pieśców		pieścami
+tasiemiec	tasiemca	tasiemcowi	tasiemcu	tasiemce	tasiemców	tasiemcami
+węgorz		węgorza		węgorzowi	węgorzu		węgorze		węgorzy		węgorzami
+wąż			węża		wężowi		wężu		węże		węży		wężami
+zając		zająca		zającowi	zającu		zające		zajęcy		zającami
+ptak		ptaka		ptakowi		ptaku		ptaki		ptaków		ptakami		ins_sg: ptakiem
+raróg		raroga		rarogowi	rarogu		rarogi		rarogów		rarogami	ins_sg: rarogiem
+kotek		kotka		kotkowi		kotku		kotki		kotków		kotkami		ins_sg: kotkiem
+duch		ducha		duchowi		dochu		duchy		duchów		duchami
+kot			kota		kotu		kocie		koty		kotów		kotami
+lew			lwa			lwu			lwie		lwy			lwów		lwami
+pies		psa			psu			psie		psy			psów		psami
+wół			wołu		wołowi		wołe		woły		wołów		wołami
+Reksio		Reksia		Reksiowi	Reksiu		Reksie		Reksiów		Reksiami
+
+
+"Animal" (?) - feminine abstract nouns referring to (normally) male people
+
+nom sg		gen sg		dat sg		loc sg		voc sg		nom pl		gen pl		ins pl
+świątobliwość świątobliwości świątobliwości świątobliwości świątobliwośc świątobliwości świątobliwości świątobliwościami
+eminencja	eminencji	eminencji	eminencji	eminencjo	eminencje	eminencji	eminencjami
+
+
+"Animal" (?) - masculine nouns in -a
+
+nom sg		gen sg		dat sg		loc sg		voc sg		nom pl		gen pl		ins pl
+satelita	satelity	satelicie	satelicie	satelito	satelity	satelitów	satelitami
+
+
+"Animal" (?) - adjectivally declined nouns: voc sg like nom sg
+
+nom sg		gen sg		dat sg		loc sg		nom pl		gen pl		ins pl
+zbójnicki	zbójnickiego zbójnickiemu zbójnickim zbójnickie	zbójnickich	zbójnickimi
+chodzony	chodzonego	chodzonemu	chodzonym	chodzone	chodzonych	chodzonymi
+
+
+Inanimate (voc sg like loc sg unless otherwise indicated):
+
+nom sg		gen sg		dat sg		loc sg		nom pl		gen pl		ins pl
 
 
 
-
-
-
-
-
-
-
-
-
-
-udo			uda			udzie		uda			ud			udami
--			-			-			usta		ust			ustami
-działo		działa		dziale		działa		dział		działami
-zero		zera		zerze		zera		zer			zerami
-niebo		nieba		niebie		niebosa/nieba niebios	niebiosami
-słowo		słowa		słowie		słowa		słów		słowami
--			-			-			wrota		wrót		wrotami
-koło		koła		kole		koła		kół			kołami
-dno			dna			dnie		dna			den			dnami
--			-			-			drwa		drew		drwami
-tło			tła			tle			tła			tel			tłami
--			-			-			gusła		guseł		gusłami
-żebro		żebra		żebrze		żebra		żeber		żebrami
-okno		okna		oknie		okna		okien		oknami
-szkło		szkła		szkle		szkła		szkieł		szkłami
-gniazdo		gniazda		gnieździe	gniazda		gniazd		gniazdami
-ciało		ciała		ciele		ciała		ciał		ciałami
-światło		światła		świetle		światła		świateł		światłami
-wygwizdowo	wygwizdowa	wygwizdowie	wygwizdowa	wygwizdowów	wygwizdowami
-cudo		cuda		cudzie		cuda		cudów		cudami
-echo		echa		echu		echa		ech			echami
-wojsko		wojska		wojsku		wojska		wojsk		wojskami	ins_sg: wojskiem
--			-			-			Łaziska		Łazisk		Łaziskami
-jajo		jaja		jaju		jaja		jaj			jajami
-molo		mola		molu		mola		mol			molami
-płuco		płuca		płucu		płuca		płuc		płucami
-dobro		dobra		dobru		dobra		dóbr		dobrami
-zło			zła			złu			zła			zeł			złami
-jabłko		jabłka		jabłku		jabłka		jabłek		jabłkami	ins_sg: jabłkiem
--			-			-			jasełka		jasełek		jasełkami
-chłopisko	chłopiska	chłopisku	chłopiska	chłopisków	chłopiskami	ins_sg: chłopiskiem
-pysio		pysia		pysiu		pysia		pysiów		pysiami
-studio		studia		studiu		studia		studiów		studiami
-ranczo		rancza		ranczu		rancza		ranczów		ranczami
-dziecko		dziecka		dziecku		dzieci		dzieci		dziećmi		loc_pl: dzieciach
-ucho		ucha		uchu		uszy		uszu		uszami
-oko			oka			oku			oczy		oczu		oczami		ins_sg: okiem
-wotum		wotum		wotum		wota		wotów		wotami		indecl in sg
--			-			-			polonika	poloników	polonikami
--			-			-			realia		realiów		realiami
--			-			-			miscellanea	miscellaneów miscellaneami
 ]=]
 
 decls["hard-m"] = function(base, stems)
