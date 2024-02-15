@@ -26,14 +26,25 @@ local function glossary_link(entry, text)
 	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
 end
 
+local function do_inflection(data, forms, label, accel)
+	if forms and #forms > 0 then
+		forms.label = label
+		if accel then
+			forms.accel = accel
+		end
+		table.insert(data.inflections, forms)
+	end
+end
+
+
 -- The main entry point.
 -- This is the only function that can be invoked from a template.
 function export.show(frame)
 	local tracking_categories = {}
-	
+
 	local poscat = frame.args[1]
 		or error("Plural part of speech e.g. 'nouns' has not been specified. Please pass parameter 1 to the module invocation.")
-	
+
 	local params = {
 		["head"] = {list = true},
 		["id"] = {},
@@ -54,7 +65,7 @@ function export.show(frame)
 			params[key] = val
 		end
 	end
-	
+
 	local args = require("Module:parameters").process(parargs, params)
 	local data = {
 		lang = lang,
@@ -67,10 +78,10 @@ function export.show(frame)
 		sort_key = args["sort"],
 		categories = {}
 	}
-	
+
 	if args["suff"] then
 		data.pos_category = "suffixes"
-		
+
 		if suffix_categories[poscat] then
 			local singular_poscat = poscat:gsub("s$", "")
 			table.insert(data.categories, langname .. " " .. singular_poscat .. "-forming suffixes")
@@ -78,7 +89,7 @@ function export.show(frame)
 			error("No category exists for suffixes forming " .. poscat .. ".")
 		end
 	end
-	
+
 	if pos_functions[poscat] then
 		pos_functions[poscat].func(args, data, tracking_categories)
 	end
@@ -150,15 +161,14 @@ pos_functions["verbs"] = {
 				m_table.insertIfNot(first_singular, arg1s)
 			end
 		end
-		first_singular.label = "first-person singular present"
-		first_singular.accel = {form = "1|s|pres:ind//fut"}
-		table.insert(data.inflections, first_singular)
+		do_inflection(data, first_singular, "first-person singular present", {form = "1|s|pres:ind//fut"})
 		if args.irr then
 			table.insert(data.categories, langname .. " irregular verbs")
 		end
 	end
 }
-	
+
+
 pos_functions["adjectives"] = {
 	params = {
 		["f"] = {list = true},
@@ -178,9 +188,7 @@ pos_functions["adjectives"] = {
 		if #args.f == 0 then
 			args.f = {PAGENAME}
 		end
-		args.f.label = "feminine singular"
-		args.f.accel = {form = "f|s"}
-		table.insert(data.inflections, args.f)
+		do_inflection(data, args.f, "feminine singular", {form = "f|s"})
 
 		if #args.pl == 0 then
 			args.pl = mw.clone(data.heads)
@@ -188,9 +196,7 @@ pos_functions["adjectives"] = {
 		if #args.pl == 0 then
 			args.pl = {PAGENAME}
 		end
-		args.pl.label = "plural"
-		args.pl.accel = {form = "p"}
-		table.insert(data.inflections, args.pl)
+		do_inflection(data, args.pl, "plural", {form = "p"})
 
 		local eqs, comps, sups
 		if args[1] == "-" then
@@ -264,29 +270,12 @@ pos_functions["adjectives"] = {
 			end
 		end
 
-		if eqs then
-			eqs.label = glossary_link("equative")
-			-- don't add accelerator for multiword equative, or the mutated portion of the
-			-- equative will end up with an accelerated entry
-			if args[1] == "ach" then
-				eqs.accel = {form = "equative"}
-			end
-			table.insert(data.inflections, eqs)
-		end
-		if comps then
-			comps.label = glossary_link("comparative")
-			if args[1] == "ach" then
-				comps.accel = {form = "comparative"}
-			end
-			table.insert(data.inflections, comps)
-		end
-		if sups then
-			sups.label = glossary_link("superlative")
-			if args[1] == "ach" then
-				sups.accel = {form = "superlative"}
-			end
-			table.insert(data.inflections, sups)
-		end
+		-- Don't add accelerator for multiword equative/comparative/superlative, or the mutated portion of the
+		-- equative will end up with an accelerated entry.
+		local need_accel = args[1] == "ach"
+		do_inflection(data, eqs, glossary_link("equative"), need_accel and {form = "equative"} or nil)
+		do_inflection(data, comps, glossary_link("comparative"), need_accel and {form = "comparative"} or nil)
+		do_inflection(data, sups, glossary_link("superlative"), need_accel and {form = "superlative"} or nil)
 	end
 }
 
@@ -295,6 +284,7 @@ local allowed_genders = {
 	["f"] = true,
 	["mf"] = true,
 	["mfbysense"] = true,
+	["p"] = true,
 	["m-p"] = true,
 	["f-p"] = true,
 	["mf-p"] = true,
@@ -311,9 +301,11 @@ local function noun_params(args)
 		["nomut"] = {type = "boolean"},
 		["mut"] = {type = "boolean"},
 	}
-	if args[1] and args[1]:find("%-p$") then
+	if args[1] and args[1]:find("p$") then
 		params[2] = {alias_of = "sg"}
 		params["sg"] = {list = true}
+		params["msg"] = {list = true}
+		params["fsg"] = {list = true}
 	else
 		params[2] = {alias_of = "pl"}
 		params["pl"] = {list = true}
@@ -327,26 +319,11 @@ local function do_nouns(pos, args, data, tracking_categories)
 		if not allowed_genders[g] then
 			error("Unrecognized gender: " .. g)
 		end
-		if g == "c" or g == "mf" then
-			table.insert(genders, "m")
-			table.insert(genders, "f")
-		else
-			table.insert(genders, g)
-		end
+		table.insert(genders, g)
 	end
 
 	local plpos = require("Module:string utilities").pluralize(pos)
 
-	if #genders > 0 then
-		data.genders = genders
-		if #genders > 1 then
-			table.insert(data.categories, langname .. " " .. plpos .. " with multiple genders")
-		end
-	else
-		data.genders = {"?"}
-		table.insert(data.categories, "Requests for gender in " .. langname .. " entries")
-	end
-	
 	-- Check for special plural signals
 	local mode = nil
 
@@ -356,7 +333,7 @@ local function do_nouns(pos, args, data, tracking_categories)
 			mode = args.pl[1]
 			table.remove(args.pl, 1)  -- Remove the mode parameter
 		end
-		
+
 		local countable, uncountable
 		if mode == "?" then
 			-- Plural is unknown
@@ -413,37 +390,42 @@ local function do_nouns(pos, args, data, tracking_categories)
 					m_table.insertIfNot(plurals, pl)
 				end
 			end
-		
-			plurals.label = "plural"
-			plurals.accel = {form = "p"}
-			table.insert(data.inflections, plurals)
+
+			do_inflection(data, plurals, "plural", {form = "p"})
 		end
-	end
-
-	if args.sg then
-		if args.sg[1] == "-" then
-			table.insert(data.inflections, {label = "no " .. glossary_link("singulative")})
-		elseif #args.sg > 0 then
-			args.sg.label = glossary_link("singulative")
-			args.sg.accel = {form = "singulative"}
-			table.insert(data.inflections, args.sg)
+	else -- plurale tantum or collective
+		local function has_singulative(sgargs)
+			return #sgargs > 0 and sgargs[1] ~= "-"
 		end
+		if has_singulative(args.sg) or has_singulative(args.msg) or has_singulative(args.fsg) then
+			local new_g = {}
+			for _, g in ipairs(genders) do
+				if g ~= "p" then
+					g = g:gsub("%-p$", "")
+					table.insert(new_g, g)
+				end
+			end
+			genders = new_g
+			table.insert(data.inflections, {label = glossary_link("collective")})
+			table.insert(data.categories, langname .. " collective " .. plpos)
+		end
+		local function do_singulative(sgargs, label, accel)
+			if sgargs then
+				if sgargs[1] == "-" then
+					table.insert(data.inflections, {label = "no " .. label})
+				else
+					do_inflection(data, sgargs, label, accel)
+				end
+			end
+		end
+		do_singulative(args.sg, glossary_link("singulative"), {form = "singulative"})
+		do_singulative(args.msg, "masculine " .. glossary_link("singulative"))
+		do_singulative(args.fsg, "feminine " .. glossary_link("singulative"))
 	end
-
-	if #args.f > 0 then
-		args.f.label = "feminine"
-		table.insert(data.inflections, args.f)
-	end
-
-	if #args.m > 0 then
-		args.m.label = "masculine"
-		table.insert(data.inflections, args.m)
-	end
-
-	if #args.dim > 0 then
-		args.dim.label = glossary_link("diminutive")
-		table.insert(data.inflections, args.dim)
-	end
+	do_inflection(data, args.f, "feminine")
+	do_inflection(data, args.m, "masculine")
+	do_inflection(data, args.dim, glossary_link("diminutive"))
+	data.genders = genders
 end
 
 pos_functions["nouns"] = {
