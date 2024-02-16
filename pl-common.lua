@@ -140,6 +140,7 @@ function export.soften_masc_pers_pl(word)
 		try("h", "si") or
 		try("sł", "śli") or
 		try("zł", "źli") or
+		try("łł", "lli") or
 		try("ł", "li") or
 		try("r", "rzy") or
 		try("sn", "śni") or
@@ -165,6 +166,7 @@ function export.soften_fem_dat_sg(word)
 		try("h", "że") or
 		try("sł", "śle") or
 		try("zł", "źle") or
+		try("ł", "lle") or
 		try("ł", "le") or
 		try("(" .. export.vowel_c .. ")j", "%2i") or
 		try("([jl])", "%2i") or
