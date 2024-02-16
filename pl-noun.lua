@@ -2006,6 +2006,177 @@ eyes		-			-			-			oczęta		ocząt		oczętami
 calf_of_cow	cielę		cielęcia	cielęciu	cielęta		cieląt		cielętami
 ]=]
 
+--[=[
+Counts from SGJP (defaults to /n2):
+
+Type		e.g.		ending		gensg		locsg		nompl		genpl		count	indicator		notes
+C1c			nacięcie	-cie		-cia		-ciu		-cia		-ć			2432
+C1c/p2		zajęcia		-cia		[-]			[-]			-cia		-ć			1
+C1c/p3		objęcia		-cia		[-]			[-]			-cia		-ć			3
+C1ę+(en)/n1	imię		-ę			-enia		-eniu		-ona		-on			1
+C1ę+(en)	plemię		-ę			-enia		-eniu		-ona		-on			17
+C1ę+(ęc)/m1	książę		-ę			księcia/	księciu/	-ęta		-ąt			2
+									-ęcia:dated -ęciu:dated
+C1ę+(ęc)/n1	źrebię		-ę			-ęcia		-ęciu		-ęta		-ąt			99
+C1ę+(ęc)	lalczę		-ę			-ęcia		-ęciu		-ęta		-ąt			3
+C1ę+(ęc)/p2	Bliźnięta	-ęta		[-]			[-]			-ęta		-ąt			30
+C1ę+(ęc)/p3	bucięta		-ęta		[-]			[-]			-ęta		-ąt			46
+C1+(i)		osiedle		-e			-a			-u			-a			-i			157
+C1+(i)/p2	Izwiestia	-a			[-]			[-]			-a			-i			1
+C1+(i)/p3	Izwiestia	-a			[-]			[-]			-a			-i			1
+Cile		ziele		-ele		-ela		-elu		-oła		-ół			3						ziele/trójziele/zimoziele
+C1ló		pole		-ole		-ola		-olu		-ola		-ól			5
+C1ló/p2:p3	Pola		-ola		[-]			[-]			-ola		-ól			1
+C1n			mieszkanie	-nie		-nia		-niu		-nia		-ń			29553
+C1n/p3		rokowania	-nia		[-]			[-]			-nia		-ń			13
+C1ne		nasienie	-enie		-enia		-eniu		-ona		-on			1
+C1ne+0		imienie		-enie		-enia/ona	-eniu		-enia		-eni/on		1
+C1(o)+(i)	pikolo		-o			-a			-u			-a			-i			5						pueblo/diabolo/piccolo/pikolo/tremolo
+C1+(ów)		studio		-o			-a			-u			-a			-ów			33						all in -io or -eo (video/wideo/rodeo) except gorąco/leporello/leczo/intermezzo
+C1wo		przysłowie	-owie		-owia		-owiu		-owia		-ów			1
+C1żą+(ęt)	książę		-ążę		-ęcia		-ęciu		-ążęta		ążąt		2
+C2			serce		-e			-a			-u			-a			-			604
+C2cei		żelazce		-ce			-ca			-cu			-ca			-iec		2						żelazce/żelezce
+C2ceiz		żeleźce		-źce		-źca		-źcu		-źca		-ziec		1
+C2ce(i)		jajco		-co			-ca			-cu			-ca			-ec			1
+C2ce(i)/p3	jajca		-ca			[-]			[-]			-ca			-ec			1						jajca/jelca
+C2+(ów)		drzewce		-e			-a			-u			-a			-ów			8
+C2+(ów)/p2	errata		-a			[-]			[-]			-a			-ów			1
+C2+(ów)/p3	aktualia	-a			[-]			[-]			-a			-ów			121						~50% in -ia, 4 in -ea, the rest in -Ca
+C2+(y)/n1	nozdrze		-e			-a			-u			-a			-y			1
+C2+(y)		naręcze		-e			-a			-u			-a			-y			443
+C2+(y)/p3	przestworza	-a			[-]			[-]			-a			-y			1
+Czzro		morze		-orze		-orza		-orzu		-orza		-órz		2						morze/zorze
+Czzro/p2:p3	Borza		-orza		[-]			[-]			-orza		-órz		1
+C2żó		zboże		-oże		-oża		-ożu		-oża		-óż			3						zboże/łoże/złoże	
+C3			skupisko	-o			-a			-u			-a			-			984						ins -iem; in -go/-ko esp. -isko/-ysko
+C3			pludrzyska	-a			[-]			[-]			-a			-			1
+C3(cco)		sirocco		-cco		-cca		-ccu		-cca		-cc			1						ins -kkiem
+C3(cco)/m3	sirocco		-cco		-cca		-ccu		-cca		-cc			1					
+C3(cko)/n1	dziecko		-cko		-cka		-cku		-ci			-ci			1						ins -ckiem; dat_pl -ciom; ins_pl -ćmi; loc_pl -ciach
+C3(cko)/n2	półdziecko	-cko		-cka		-cku		-ci			-ci			1						ins -ckiem; dat_pl -ciom; ins_pl -ćmi; loc_pl -ciach
+C3(cko)/p2:p3 Zdzieci	-ci			[-]			[-]			-ci			-ci			1						ins -ckiem; dat_pl -ciom; ins_pl -ćmi; loc_pl -ciach
+C3(co)		Servisco	-co			-ca			-cu			-ca			-c			3						ins -kiem; lastrico/rococo/Servisco
+C3+(ełyko)	wilczełyko	-ełyko		-egołyka	-ymłyku		-ełyka		-ychłyk		1		wilcze<+>łyko<>
+C3+(eoczko)	woleoczko	-eoczko		-egooczka	-imoczku	-eoczka		-ichoczek	1		wole<+>oczko<>
+C3h			ciacho		-o			-a			-u			-a			-			36
+C3ke		serduszko	-ko			-ka			-ku			-ka			-ek			733						ins -kiem
+C3ke/p2		usteczka	-ka			[-]			[-]			-ka			-ek			6
+C3ke/p3		jasełeczka	-ka			[-]			[-]			-ka			-ek			11
+C3kein		kazańko		-ńko		-ńka		-ńku		-ńka		-niek		14						ins -ńkiem
+C3kein/p2	wroteńka	-ńka		[-]			[-]			-ńka		-niek		1
+C3ok		oko			-oko		-oka		-oku		-oczy		-oczów/ócz:dated_rare 1				ins -okiem
+C3+(owi)/m1	konisko		-o			-a			-u			-a			-ów			1						ins -iem; dat -owi
+C3+(ów)		papierosisko -o			-a			-u			-a			-ów			59						ins -iem
+C3+(ów)/m1	biedaczysko -o			-a			-u			-a			-ów			18						ins -iem
+C3+(ów)/p3	pludrzyska	-a			[-]			[-]			-a			-ów			1
+C4			bielmo		-o			-a			-ie			-a			-			5139					in -[bmnsvwz]o esp. -owo/-ctwo/-stwo
+C4/p2		odedrzwia	-a			[-]			[-]			-a			-			156
+C4/p3		portczyska	-a			[-]			[-]			-a			-			165
+C4d			stado		-o			-a			-zie		-a			-			34
+C4d+(ów)	cudo		-o			-a			-zie		-a			-ów			2						cudo/awokado
+C4dza		gniazdo		-azdo		-azda		-eździe		-azda		-azd		1
+C4hcu		ucho		-cho		-cha		-chu		-szy		-szy/szów:rare 1
+C4l			kakao		-o			-a			-le			-a			-ł			3						macao/kakao/makao
+C4le		czoło		-oło		-oła		-ele		-oła		-ół			1
+C4ł			działo		-ło			-ła			-le			-ła			-ł			10
+C4ła		ciało		-ało		-ała		-ele		-ała		-ał			4						ciało/przeciwciało/autoprzeciwciało/antyciało
+C4łe		wiertło		-ło			-ła			-le			-ła			-eł			221						mostly in -dło
+C4łe/p2		widła		-ła			[-]			[-]			-ła			-eł			18
+C4łe/p3		gusła		-ła			[-]			[-]			-ła			-eł			26
+C4łei		sprzęgło	-ło			-ła			-le			-ła			-ieł		15						in -[kg]ło
+C4łei/p2	Niepiekła	-ła			[-]			[-]			-ła			-ieł		1
+C4łei/p3	szkła		-ła			[-]			[-]			-ła			-ieł		2						Niepiekła/szkła
+C4łes		hasło		-sło		-sła		-śle		-sła		-seł		14
+C4łe+(u)	zło			-ło			-ła			-łu			-ła			-eł			2						zło/wszechzło
+C4łez		giezło		-zło		-zła		-źle		-zła		-zeł		2						giezło/gzło
+C4ło		koło		-oło		-oła		-ole		-oła		-ół			7
+C4ło/p3		koła		-oła		[-]			[-]			-oła		-ół			1
+C4łs		rzemiosło	-sło		-sła		-śle		-sła		-sł			3						rzemiesło/rzemiosło/trzósło
+C4łta		światło		-atło		-atła		-etle		-atła		-ateł		3						światło/półświatło/dwuświatło
+C4łz		giezło		-zło		-zła		-źle		-zła		-zł			1
+C4me		jarzmo		-mo			-ma			-mie		-ma			-em			4						pasmo/powismo/karzmo/krzyżmo
+C5ms		pismo		-smo		-sma		-śmie		-sma		-sm			12						pasmo and pismo+compounds
+C4ne		dno			-no			-na			-nie		-na			-en			44						in -[djlłr]no/-chno/-czno
+C4ne/p2		Próchna		-na			[-]			[-]			-na			-en			2
+C4ne/p3		żarna		-na			[-]			[-]			-na			-en			3
+C4nei		drewno		-no			-na			-nie		-na			-ien		66						in -[gkmpw]no
+C4neic		płótno		-tno		-tna		-tnie		-tna		-cien		7						Kłótno/płótno/półpłótno/Krytno/Korytno/Szczytno/Żytno
+C4neis		krosno		-sno		-sno		-śnie		-sna		-sien		5						Olesno/Chrosno/krosno/Krosno/Prosno
+C4nez		kiełzno		-zno		-zno		-źnie		-zna		-zen		1
+C4nś		krośno		-śno		-śno		-śnie		-śna		-sien		21
+C4nz		kiełzno		-zno		-zno		-źnie		-zna		-zn			5						Gniezno/Drezno/Brzezno/Pilzno/kiełzno
+C4+(ów)		Szczepanowo	-o			-a			-ie			-a			-ów			1551					concertino (gen_pl -nów/-n), awizo (gen_pl -zów/z), + 1549 proper names (toponyms) in -owo (gen_pl -ow/owów/ów)
+C4r			bajoro		-ro			-ra			-rze		-ra			-r			30						allegro/makro/mokro/szatro/metro/piętro/bistro/jutro/Rytro + the rest in -Vro
+C4rbo		dobro		-obro		-obra		-obru		-obra		-óbr		1
+C4rbo/p2	Dobra		-obra		[-]			[-]			-obra		-óbr		1
+C4rbo/p3	dobra		-obra		[-]			[-]			-obra		-óbr		2						dobra/Dobra
+C4re		futro		-ro			-ra			-rze		-ra			-er			20						4 in -bro, 9 in -dro, chuchro, 6 in -tro
+C4re+(ów)	olstro		-ro			-ra			-rze		-ra			-rów		3						cicero/cycero/olstro
+C4se+ech	niebiosa	-osa		[-]			[-]			-osa		-os			1						loc_pl niebiesiech
+C4t			dłuto		-to			-ta			-cie		-ta			-t			75
+C4ta		lato		-ato		-ata		-ecie		-ata		-at			1
+C4t(e)		andante		-te			-ta			-cie		-ta			t			1
+C4tę		święto		-ęto		-ęta		-ęcie		-ęta		-ąt			1
+C4to		wrota/p2	-ota
+C4t+(ów)	divertimento -to
+C4tsa		miasto		-asto
+C4we		drwa		-wa
+C4wo		Legionowo	-owo
+C4wo+(y?)	słowo		-owo
+C4+(y?)		usta		-a
+C5i			facsimile	-e
+[C5no+ua] - masc type
+C5mu		muzeum		-um
+C5t			poema		-
+
+
+
+
+
+
+
+
+
+
+
+
+A1jŻ		moja		-ja			-je			-ich		2						moja/twoja
+A1Ż			bliźnia		-ia			-ie			-ich		17
+A1Ż/p2:p3	Moście		-ie			-ie			-ich		3
+A3Ż			puszczalska	-a			-ie			-ich		12660					in -[gk]a
+A4+o		królowa		-a			-e			-ych		111						voc in -o
+A4t+(rzecz)	rzeczpospolita -pospolita -ypospolite -ypospolitych 1	rzecz<f>pospolita<+>
+A4Ż			chora		-a			-e			-ych		1559
+D1			fobia		-ia			-ie			-ii/ij:arch	1861					none in -[cdrt]ia except Garcia; lots like anhedonia in -nia that could be a different decl; none in -sia or -zia; also idea, Ilja, ninja, Mantegna [pron Mantenja], Odya [pron Odja], Zápolya [pron Zápoja/Zápojo with initial stress] not in -ia
+D1/m1		Garcia		-ia			-iowie/-ie:depr -iów	23						Garcia/Aria/Zamaria/paria/Beria, otherwise none in -[cdrt]ia; also Ilja/ninja/Mantegna/odya/Zápolya not in -ia
+D1/m2		kanalia		-ia			-ie			-iów		1		((kanalia<m>,kanalia<>)) can be masc or fem
+D1/p3		egzekwie	-ia			-ie			-ii/ij:arch	4
+D1+!		Aniela		-la			-le			-li/l:char	38						voc in -u; all in -[eilouy]la, all proper names except ciotula/mamula/matula; all proper names take voc -o or -u
+D1A+-(-fchar) IKEA		-A			-e (not cap) -i			1
+D1c			ciuchcia	-cia		-cie		-ci/ć:char	8						no proper names
+D1c/m1		ciamcia		-cia		-cie		-ciów		2
+D1c/p2		Degucie		-cie		-cie		-ci/ć:char	4
+D1c/p3		krocie		-cie		-cie		-ci/ć:char	5
+D1c+!		ciocia		-cia		-cie		-ci/ć:char	63						voc in -u; ~50% proper names
+D1c+!/m1	ciamcia		-cia		-cie		-ciów		2						voc in -u
+D1+(-fchar)	trufla		-ea,-la		-ee,-le		-ei,li		291						also Nauzykaa and 10 proper names in -ia; all terms in -la are -Cla except koala, mądrala, ~20 in -ela, campanila, tequila, ~80 in -ola, aula, Depaula, szynszyla
+D1+(-fchar)/m1 bibliopola -la		-le			-li			2						gen_pl not in -lów
+D1+(-fchar)/m2 papla	-cja/la		-cje/le		-cji		7						j not suppressed before -i
+D1+(-fchar)/p2 grable	-la			-le			-li			90						also Jaglie/Kolonie/korepetycje
+D1+(-fchar)/p3 bambetle	-la			-le			-li			116						also Jaglie/Kolonie/komicje/korepetycje/Dionizje/afrodyzje
+D1+!(-fneut) Ela		-la			-le			-l			30						voc in -u; all in -[aeiou]la, all proper names except babula/żonula/czarnula; some proper names + żonula/czarnula take voc -o or -u
+D1+(-fneut)	ziemia		-mia		-mie		-m			2						only ziemia/Ziemia
+D1i+!/m1	dziadzia	-ia			-iowie/ie:depr -iów		5							Kościa/ojczunia/dziadzia/dziamdzia/dziumdzia
+D1i+(-fchar) chełbia	-ia			-ie			-i			806
+D1i+(-fchar)/m1 Gołdynia -ia		-iowie/ie:depr -iów		163
+D1i+(-fchar)/p2 grabie	-ie			-ie			-i			8
+D1i+(-fchar)/p3 drabie	-ie			-ie			-i			18
+D1in		gospodyni	-ni			-nie		-ń			177						acc in -ę; most end in -czyni, 6 in -ani (none in -pani), ksieni, 23 in -ini, 2 in -dyni
+
+...
+
+]=]
 decls["hard-n"] = function(base, stems)
 	local velar = base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$")
 	-- NOTE: Per IJP it appears the meaning of the preceding preposition makes a difference: 'o' = "about" takes
