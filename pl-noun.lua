@@ -1391,15 +1391,15 @@ D1+!		Aniela		-la			-le			-li/l:char	38						voc in -u; all in -[eilouy]la, all 
 D1A+-(-fchar) IKEA		-A			-e (not cap) -i			1
 D1c			ciuchcia	-cia		-cie		-ci/ć:char	8						no proper names
 D1c/m1		ciamcia		-cia		-cie		-ciów		2
-D1c/p2		Degucie		-cie		-cie		-ciów		4
-D1c/p3		krocie		-cie		-cie		-ciów		5
+D1c/p2		Degucie		-cie		-cie		-ci/ć:char	4
+D1c/p3		krocie		-cie		-cie		-ci/ć:char	5
 D1c+!		ciocia		-cia		-cie		-ci/ć:char	63						voc in -u; ~50% proper names
 D1c+!/m1	ciamcia		-cia		-cie		-ciów		2						voc in -u
 D1+(-fchar)	trufla		-ea,-la		-ee,-le		-ei,li		291						also Nauzykaa and 10 proper names in -ia; all terms in -la are -Cla except koala, mądrala, ~20 in -ela, campanila, tequila, ~80 in -ola, aula, Depaula, szynszyla
-D1+(-fchar)/m1 bibliopola -la		-le			-li			2
-D1+(-fchar)/m2 papla	-la			-le			-li			7
-D1+(-fchar)/p2 grable	-la			-le			-li			90
-D1+(-fchar)/p3 bambetle	-la			-le			-li			116
+D1+(-fchar)/m1 bibliopola -la		-le			-li			2						gen_pl not in -lów
+D1+(-fchar)/m2 papla	-cja/la		-cje/le		-cji		7						j not suppressed before -i
+D1+(-fchar)/p2 grable	-la			-le			-li			90						also Jaglie/Kolonie/korepetycje
+D1+(-fchar)/p3 bambetle	-la			-le			-li			116						also Jaglie/Kolonie/komicje/korepetycje/Dionizje/afrodyzje
 D1+!(-fneut) Ela		-la			-le			-l			30						voc in -u; all in -[aeiou]la, all proper names except babula/żonula/czarnula; some proper names + żonula/czarnula take voc -o or -u
 D1+(-fneut)	ziemia		-mia		-mie		-m			2						only ziemia/Ziemia
 D1i+!/m1	dziadzia	-ia			-iowie/ie:depr -iów		5							Kościa/ojczunia/dziadzia/dziamdzia/dziumdzia
@@ -1509,8 +1509,8 @@ D3k/p3		Duszniki	-ki			-ki			-k			364
 D3kć		paćka		-ćka		-ćki		-ciek		13						dat in -ćce
 D3kć/p2:p3	Boćki		-ćki		-ćki		-ciek		6
 D3ke		babka		-ka			-ki			-ek			12817					dat in -ce; all in -Cka; none in -kka; lots in -lka/rka/ska
-D3ke/m1		tatka		-ka			-kowie/ki:depr -ek		9						dat in -ce; all such terms also have gen_pl in -ków
-D3ke/m2		szpicbródka	-ka			-ki			-ek			1						dat in -ce; also fem
+D3ke/m1		tatka		-ka			-kowie/ki:depr -ek		9						dat in -ce; gen_pl not in -ków but all such terms also have gen_pl in -ków
+D3ke/m2		szpicbródka	-ka			-ki			-ek			1						dat in -ce; also fem; gen_pl not in -ków
 D3ke/p2		grabelki	-ki			-ki			-ek			1181
 D3ke/p3		Koluszki	-ki			-ki			-ek			1284
 D3kein		bańka		-ńka		-ńki		-niek		75						dat in -ńce
@@ -1536,39 +1536,44 @@ D4/m1		Bereza		-a			-owie/y:depr -ów		1439					in -[bfmnpsvwz]a; dat in -ie
 D4/m2		bucina		-a			-y			-ów			30						in -[bfmnpsvwz]a; dat in -ie
 D4/p2		sanczyny	-y			-y			-			1593					in -[bfmnpsvwz]y
 D4/p3		annuity		-y			-y			-			1745					in -[bfmnpsvwz]y
-D4+0/m2		glina		-a			-y			-ów			1
+D4+0/m2		glina		-a			-y			-ów			1						dat in -nie
 D4(A)		NASA		-A			-y			-			9
 D4(ah)/m1	Bramah		-ah			-owie/y:depr -ów		1
-D4be		torba		-ba			-by			-eb			1
+D4be		torba		-ba			-by			-eb			1						dat in -bie
 D4be/p2:p3	Izdby		-by			-by			-eb			1
-D4bę		gęba		-ęba		-ęby		-ąb			2
-D4bę/m1		moczygęba	-ęba		-ębowie/-ęby:depr -ębów	2
+D4bę		gęba		-ęba		-ęby		-ąb			2						dat in -bie
+D4bę/m1		moczygęba	-ęba		-ębowie/-ęby:depr -ębów	2						dat in -bie
 D4bę/p2		Wilczogęby	-ęby		-ęby		-ąb			1
 D4bę/p3		otręby		-ęby		-ęby		-ąb			2
-D4bó		choroba		-oba		-oby		-ób			19
-D4bśo		prośba		-ośba		-ośby		-ósb		1
-D4bźo		groźba		-oźba		-oźby		-óźb		3
-D4d			banda
+D4bó		choroba		-oba		-oby		-ób			19						dat in -bie
+D4bśo		prośba		-ośba		-ośby		-ósb		1						dat in -bie
+D4bźo		groźba		-oźba		-oźby		-óźb		3						dat in -bie
+D4d			banda		-da			-dy			-d			1112					dat in -dzie
+D4d/m1		aojda		-da			-dowie/dy:depr -dów		583						dat in -dzie
+D4d/m2		przybłęda	-da			-dy			-dów		2						dat in -dzie
+D4d/p3		drakonidy	-dy			-dy			-d			2
 D4de		Gwda		-da			-dy			-ed			2						dat in -dzie
 D4(dha)		Sargodha	-dha		-dhy		-dh			1						dat in -dzie
-D4d(o)		Szwedo
-D4dó		nagroda
-D4d+(ów)	inwalida
+D4d(o)/m1	Szwedo		-do			-dowie/dy:depr -dów		38						dat in -dzie
+D4dó		nagroda		-oda		-ody		-ód			139						dat in -odzie
+D4dó/p2:p3	Ciepłowody	-ody		-ody		-ód			16
+D4d+(ów)/m1	inwalida	-da			-dzi/dy:depr -dów		15						dat in -dzie
 D4d+(-pl:gen) Brda		-da			-dy			missing		1
-D4dz		uzda
+D4dz		uzda		-zda		-zdy		-zd			31						dat in -ździe
+D4dz/m1		skoczybruzda -zda		-zdowie/zdy:depr -zdów	27						dat in -ździe
 D4dza		gwiazda		-azda		-azdy		-azd		10						dat in -eździe
-D4dza/m1	Gwiazda		-azda		-azdowie/azdy -azdów	1						dat in -eździe (or -aździe)
-D4dz(o)		Hnizdo
+D4dza/m1	Gwiazda		-azda		-azdowie/azdy:depr -azdów 1						dat in -eździe (or -aździe)
+D4dz(o)/m1	Hnizdo		-zdo		-zdowie/zdy:depr -zdów	1						dat in -ździe
 D4(e)		Kaliope		-e			-y			-			1						reg except nom; dat in -ie
 D4+e		szansa		-a			-e			-			3						ansa/romansa/szansa; dat in -ie
-D4(ha)/m1	Saldanha	-ha			-hy			-h			1						dat in -ie without h
+D4(ha)/m1	Saldanha	-ha			-hy			-hów		1						dat in -ie without h
 D4hc		mucha		-cha		-chy		-ch			439						dat in -sze
 D4hc/m1		autarcha	-cha		-chowie/chy:depr -chów	237						dat in -sze
-D4hc/m2		marcha		-cha		-chy		-chów		3
+D4hc/m2		marcha		-cha		-chy		-chów		3						dat in -sze
 D4hc/p2:p3	Włochy		-chy		-chy		-ch			23
 D4hc+(ech)/p2:p3 Włochy	-chy		-chy		-ch			1						loc_pl Włoszech
 D4hc(o)+w/m1 Mikłucho	-cho		-chowie/chy:depr -chów	4						dat in -sze
-D4hc+w/m1	klecha		-cha		-chowie/chy:depr -ch	1						dat in -sze
+D4hc+w/m1	klecha		-cha		-chowie/chy:depr -ch	1						dat in -sze; gen_pl not in -chów
 D4h+(dz)	Praha		-ha			-hy			-h			1						dat in -dze
 D4h(o)+w/m1	Weryho		-ho			-howie/hy:depr -hów		3						dat in -sze
 D4h+(sz)	yamaha		-ha			-hy			-h			11						dat in -sze
@@ -1592,12 +1597,88 @@ D4łó		szkoła		-oła		-oły		-ół			13						dat in -le
 D4łó/p2		Baboły		-oły		-oły		-ół			6						dat in -le
 D4łó/p3		pierdoły	-oły		-oły		-ół			7						dat in -le
 D4łs		ciosła		-sła		-sły		-seł		7						dat in -śle
-D4łs/m1		Zawisła		-sła		-słowie/sły:depr -seł	3						dat in -śle
+D4łs/m1		Zawisła		-sła		-słowie/sły:depr -słow	3						dat in -śle
 D4łs(o)+w/m1 Porosło	-sło		-słowie/sły:depr -słów	18						dat in -śle
 D4ł+w/m1	kameduła	-ła			-li/ły:depr	-łów		1						dat in -le
 D4łz		gruzła		-zła		-zły		-zeł		2						dat in -źle
 D4łz/m1		Wizła		-zła		-złowie/ły:depr -złów	1						dat in -źle
 D4łz(o)+w/m1 Oślizło	-zło		-złowie/ły:depr -złów	5						dat in -źle
+D4mć		ćma			-ćma		-ćmy		-ciem		1						dat in -ćmie
+D4me		karczma		-ma			-my			-em			5						dat in -mie
+D4ne		druhna		-na			-ny			-en			58						dat in -nie; in -[dhjłrż]na/chna/szna
+D4nei		trumna		-na			-ny			-ien		84						dat in -nie; in -[gmnw]na
+D4nei/p2:p3	Stegny		-ny			-ny			-ien		4						in -gny
+D4neis		ciosna		-sna		-ny			-sn/sen		3						dat in -śnie; ciosna/Ciosna/Wiosna
+D4nes		sosna		-sna		-sny		-sen		18						dat in -śnie
+D4nes/m1	Sosna		-sna		-snowie/sny:depr -snów	3						dat in -śnie
+D4ns(o)/m1	Kosno		-sno		-snowie/sny:depr -snów	1						dat in -śnie
+D4nz		blizna		-zna		-zny		-zn			456						dat in -źnie
+D4nz/m1		mężczyzna	-zna		-źni/zny:depr -zn		1						dat in -źnie
+D4nz(o)		Tryzno/m1	-zno		-znowie/zny:depr -znów	1						dat in -źnie
+D4nz+w		Puścizna	-zna		-zny		-zn			6						dat in -źnie
+D4nz+w/m1	Tryzna		-zna		-znowie/zny:depr -znów	6						dat in -źnie; SGJP says -źnowie but that seems a mistake
+D4nź		kneźna		-źna		-źny		-zien		1						dat in -źnie
+D4(o)/m1	Michno		-o			-owie/y:depr -ów		76						in -[bmnpswz]o, preceded by V or C
+D4pó		stopa		-opa		-opy		-óp			2						dat in -opie
+D4r			góra		-ra			-ry			-r			850						dat in -rze; 20 in -bra, lycra, 38 in -dra, cyfra, 10 in -gra, 3 in -chra, 2 in -hra, 3 in -jra, 10 in -kra, 2 in -mra, 4 in -pra, 41 in -tra, 7 in -wra, 2 in -żra, rest in -Vra
+D4r/m1		pediatra	-ra			-rzy/ry:depr -rów		27						dat in -rze; 13 in -tra, rest in -Vra
+D4ra		ofiara		-ara		-ary		-ar			5						dat in -erze
+D4re		kołdra		-ra			-ry			-er			33						dat in -rze; 3 in -bra (all 3 are optionally reducible), 22 in -dra (red: Hadra,nadra,flądra,kołdra,afelandra,salamandra,Aleksandra,bindra,odra,Odra,łachudra,miazdra,klabzdra,mizdra; opt red: fladra,cynadra,zadra,szołdra,kalandra,kasandra,Kasandra,wydra), czochra (opt red), klamra (red), 6 in -tra (red: litra,hajstra,olstra,mustra,Brahmaputra; opt red: mutra)
+D4re/p2		Zadry		-ry			-ry			-er			5						dat in -rze
+D4re/p3		cynadry		-ry			-ry			-er			5						dat in -rze
+D4rei		gra			-ra			-ry			-ier		10						dat in -rze; in -[kg]ra
+D4rei/p2:p3	Wigry		-ry			-ry			-ier		5						dat in -rze; in -[kg]ra
+D4r(ha)/m1	Cerha		-rha		-rhowie/rhy:depr -rhów	1						dat in -rze, no h before
+D4ro		obora		-ora		-ory		-ór			29						dat in -orze
+D4ro/p2:p3	Obory		-ory		-ory		-ór			3
+D4r(o)+w/m1	Fredro		-ro			-rowie/ry:depr -rów		56						dat in -rze
+D4(rr)		Canberra	-rra		-rry		-rr			14						dat in -rze, no r before
+D4(rr)/m1	Carra		-rra		-rrowie/rry:depr -rrów	6						dat in -rze, no r before
+D4rtsó		siostra		-ostra		-ostry		-óstr		2						dat in -ostrze
+D4r+w		Stachura	-ra			-ry			-r			669						dat in -rze
+D4r+w/m1	Pazura		-ra			-rowie/ry:depr -rów		692						dat in -rze
+D4r+w/m2	lisiura		-ra			-ry			-rów		3						dat in -rze
+D4r+w/p3	maniery		-ry			-ry			-r			2
+D4t			minuta		-ta			-ty			-t			1302					dat in -cie
+D4t/m1		Galata		-ta			-towie/ty:depr -tów		500						dat in -cie
+D4t/m2		argonauta	-ta			-ty			-tów		10						dat in -cie
+D4t/p3		panty		-ty			-ty			-t			1
+D4t(ha)		Hertha		-tha		-thy		-th			3						dat in -cie
+D4t(ha)/m1	Botha		-tha		-thowie/thy:depr -thów	2						dat in -cie
+D4t+i/m1	poeta		-ta			-ci/ty:depr	-tów		233						dat in -cie
+D4t+i/m2	przechrzta	-ta			-ty			-tów		2						dat in -cie
+D4t(o)/m1	tato		-to			-towie/ty:depr -tów		38						dat in -cie
+D4to		robota		-ota		-oty		-ót			8						dat in -ocie
+D4to/p2:p3	roboty		-oty		-oty		-ót			1
+D4t+(-pl:gen) krzta		-ta			-ty			missing		1						dat in -cie
+D4ts		langusta	-sta		-sty		-st			107						dat in -ście
+D4ts/m1		podstarosta	-sta		-stowie/sty:depr -stów	49						dat in -ście; all proper names except podesta/starosta/podstarosta/wicestarosta; 5 in -asta, 8 in -esta, 18 in -ista, 2 in -msta, 7 in -osta, 6 in -usta, 3 in -ysta
+D4ts/m2		antagonista	-sta		-sty		-stów		1						dat in -ście
+D4tsa		niewiasta	-asta		-asty		-ast		1						dat in -eście
+D4ts+i/m1	cyklista	-sta		-ści/sty:depr -stów		1076					dat in -ście; 16 in -asta, podesta, 3 in -osta (diagnosta/farmakognosta/prognosta), all the rest in -ista/-ysta; no proper names AFAICT
+D4ts(o)/m1	Kusto		-sto		-stowie/sty:depr -stów	3						dat in -ście
+D4t(TA)		EFTA		-TA			-Ty			-T			6						dat in -cie (ETA/NAFTA/EFTA/CEFTA/ELTA/LETTA; all except LETTA can be indeclinable)
+D4we		łyżwa		-wa			-wy			-ew			21						dat in -wie
+D4we/p2:p3	Mątwy		-wy			-wy			-ew			2
+D4wei		pluskwa		-wa			-wy			-iew		2						in -[kg]wa
+D4wei/p2:p3	Łagwy		-wy			-wy			-iew		2						in -[kg]wy
+D4wó		połowa		-owa		-owy		-ów			122						dat in -owie
+D4wó/m1		trzęsigłowa	-owa		-owowie:rare/-owy:depr -owów 1					dat in -owie
+D4wó/p2		Charzykowy	-owy		-owy		-ów			64
+D4wó/p3		okowy		-owy		-owy		-ów			66
+D4wó+agłowa	białagłowa	-agłowa		-egłowy		-ychgłów	1		biała<+>głowa<>
+D4x+w		Dixa		-xa			-xy			-x			3						dat in -ksie
+D4x+w/m1	Jaxa		-xa			-xowie/xy:depr -xów		3						dat in -ksie
+D4ze		łza			-za			-zy			-ez			1						dat in -zie
+D4zei		gza			-za			-zy			-iez		1						dat in -zie
+D4zó		poza		-oza		-ozy		-óz			12						dat in -ozie
+D4zó/p2:p3	Płozy		-ozy		-ozy		-óz			4						dat in -ozie
+
+
+
+
+
+
 
 ...
 ]=]
