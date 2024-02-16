@@ -1557,6 +1557,9 @@ def try_repeatedly(fun, errandpagemsg, operation="save", bad_value_ret=None, max
     except pywikibot.exceptions.InvalidTitleError as e:
       log_exception("Invalid title", e, skipping=True)
       return bad_value_ret
+    except pywikibot.exceptions.TitleblacklistError as e:
+      log_exception("Title is blacklisted", e, skipping=True)
+      return bad_value_ret
     except (pywikibot.exceptions.LockedPageError, pywikibot.exceptions.NoUsernameError) as e:
       log_exception("Page is protected", e, skipping=True)
       return bad_value_ret
@@ -1569,6 +1572,9 @@ def try_repeatedly(fun, errandpagemsg, operation="save", bad_value_ret=None, max
     except Exception as e:
       if "invalidtitle" in str(e):
         log_exception("Invalid title", e, skipping=True)
+        return bad_value_ret
+      if "title-blacklist-forbidden" in str(e):
+        log_exception("Title is blacklisted", e, skipping=True)
         return bad_value_ret
       if "abusefilter-disallowed" in str(e):
         log_exception("Abuse filter: Disallowed", e, skipping=True)
