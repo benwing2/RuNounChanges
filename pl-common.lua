@@ -77,10 +77,48 @@ for labial in mw.ustring.gmatch(export.plain_labial, ".") do
 	export.paired_plain_to_palatal[labial] = labial .. export.TEMP_SOFT_LABIAL
 end
 
-local lc_inherently_soft = "ćńśź" .. export.TEMP_SOFT_LABIAL
-local uc_inherently_soft = uupper(lc_inherently_soft)
-export.inherently_soft = lc_inherently_soft .. uc_inherently_soft
-export.inherently_soft_c = "[" .. export.inherently_soft .. "]"
+-- Soft consonant requiring 'i' glide in spelling to indicate this.
+local lc_soft_requiring_i_glide = lc_paired_palatal .. export.TEMP_SOFT_LABIAL
+local uc_soft_requiring_i_glide = uupper(lc_soft_requiring_i_glide)
+export.soft_requiring_i_glide = lc_soft_requiring_i_glide .. uc_soft_requiring_i_glide
+export.soft_requiring_i_glide_c = "[" .. export.soft_requiring_i_glide .. "]"
+
+
+-- Soft consonant that cannot take 'y' after it (excluding velar k/g, which often need special handling).
+local lc_soft = lc_soft_requiring_i_glide .. "jl"
+local uc_soft = uupper(lc_soft)
+export.soft = lc_soft .. uc_soft
+export.soft_c = "[" .. export.soft .. "]"
+
+
+-- Ends in a soft consonant that requires 'i' glide in spelling to indicate this.
+function export.ends_in_soft_requiring_i_glide(word)
+	return rfind(word, export.soft_requiring_i_glide_c .. "$")
+end
+
+
+-- Ends in a soft consonant that cannot take 'y' after it (excluding velar k/g, which often need special handling).
+function export.ends_in_soft(word)
+	return rfind(word, export.soft_c .. "$")
+end
+
+
+-- Ends in a soft velar sound that cannot take 'y' after it (k/g).
+function export.ends_in_soft_velar(word)
+	return word:find("[kg]$")
+end
+
+
+-- Ends in a soft consonant or velar that cannot take 'y' after it.
+function export.ends_in_soft_or_velar(word)
+	return export.ends_in_soft(word) or export.ends_in_soft_velar(word)
+end
+
+
+-- Ends in an originally soft sound that has been hardened and must take 'y' not 'i' after it.
+function export.ends_in_hardened_soft_cons(word)
+	return rfind(word, "[cż]$") or word:find("[cdrs]z$")
+end
 
 
 local function make_try(word)
@@ -144,7 +182,7 @@ function export.soften_fem_dat_sg(word)
 		try("([cdsr]z)", "%2y") or
 		try("([fwmpbnsz])", "%2ie") or
 		try("([fwmpbcnsz]i)", "%2") or
-		try("stk", "sce") or -- FIXME: examples?
+		-- not -stk; lots of examples like [[stażystka]] with -stce
 		try("k", "ce") or
 		try("g", "dze") or
 		word .. "y"
@@ -152,6 +190,7 @@ end
 
 
 function export.reduce(word)
+	-- FIXME
 	local pre, letter, vowel, post = rmatch(word, "^(.*)([" .. export.cons .. "y%-])([eě])(" .. export.cons_c .. "+)$")
 	if not pre then
 		return nil
@@ -171,11 +210,8 @@ function export.dereduce(stem)
 	local epvowel
 	if rfind(letter, "[" .. export.paired_palatal .. "]") then
 		letter = export.paired_palatal_to_plain[letter]
-		epvowel = "ě"
-	else
-		epvowel = "e"
 	end
-	return pre .. letter .. epvowel .. post
+	return pre .. letter .. "e" .. post
 end
 
 
@@ -197,21 +233,20 @@ function export.convert_paired_palatal_to_plain(stem, ending)
 	-- For stems that alternate between ci/ni/si/zi and ć/ń/ś/ź, we always maintain the stem in the latter format and
 	-- convert to the corresponding plain as needed. Likewise, stems ending in /bj/ /vj/ etc. use TEMP_SOFT_LABIAL.
 	-- FIXME
-	--if ending and not rfind(ending, "^[Eeěií]") then
-	--	stem = stem:gsub(export.TEMP_SOFT_LABIAL, "")
-	--	return stem, ending
-	--end
+	if ending and not rfind(ending, "^" .. export.vowel_c) then
+		stem = stem:gsub(export.TEMP_SOFT_LABIAL, "")
+		return stem, ending
+	end
 	local stembegin, lastchar = rmatch(stem, "^(.*)([" .. export.paired_palatal .. export.TEMP_SOFT_LABIAL .. "])$")
 	if lastchar then
-		-- FIXME
-		-- ending = ending and rsub(ending, "^e", "ě") or nil
-		stem = stembegin .. export.paired_palatal_to_plain[lastchar]
+		ending = ending and rsub(ending, "^i", "") or nil
+		stem = stembegin .. export.paired_palatal_to_plain[lastchar] .. "i"
 	end
 	-- FIXME
 	-- 'E' has served its purpose of preventing the e -> ě conversion after a paired palatal (i.e. it depalatalizes
 	-- paired palatals).
 	-- ending = ending and rsub(ending, "^E", "e") or nil
-	return stem -- , ending
+	return stem, ending
 end
 
 
@@ -219,13 +254,11 @@ function export.combine_stem_ending(base, slot, stem, ending)
 	if stem == "?" then
 		return "?"
 	else
-		if ending:find("^y") and (rfind(stem, export.inherently_soft_c .. "$") or stem:find("[kgl]$")) then
+		if ending:find("^y") and export.ends_in_soft_or_velar(stem) then
 			ending = ending:gsub("^y", "i")
 		end
-		if rfind(ending, "^" .. export.vowel_c) then
-			-- Convert ńi -> ni, and ńe (or any other vowel) -> nie.
-			stem = export.convert_paired_palatal_to_plain(stem) .. (ending == "i" and "" or "i")
-		end
+		-- Convert ńi -> ni, and ńe (or any other vowel) -> nie.
+		stem, ending = export.convert_paired_palatal_to_plain(stem, ending)
 		if stem:find("j$") and ending:find("^i") then
 			stem = stem:gsub("j$", "")
 		end
