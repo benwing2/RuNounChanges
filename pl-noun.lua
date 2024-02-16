@@ -440,30 +440,40 @@ local function handle_derived_slots_and_overrides(base)
 end
 
 
--- Table mapping declension types to functions to decline the noun. The function takes two arguments, `base` and
--- `stems`; the latter specifies the computed stems (vowel vs. non-vowel, singular vs. plural) and whether the noun
--- is reducible and/or has vowel alternations in the stem. Most of the specifics of determining which stem to use
--- and how to modify it for the given ending are handled in add_decl(); the declension functions just need to generate
--- the appropriate endings. Specifically:
---
--- Alternations between -ś/-si, -ń/ni etc. handled in combine_stem_ending(); the stems in `stems` are in the
--- consonant-final state (using -ś/-ń/etc. and with soft labials stored with TEMP_SOFT_LABIAL after them), which
--- is converted to the pre-vowel state there. This also handles alternations between -iami/-ami after different sorts
--- of soft consonants.
---
--- Alternations between -i/-y handled in combine_stem_ending() as well, as is dropping of j before -i.
---
--- Palatalization in the dat/loc sg (esp. of feminine and neuter nouns) and in voc sg of masculine nouns and the nom pl
--- of masculine personal nouns is handled in apply_special_cases().
---
--- Reducibility of nouns like [[brukiew]], [[żagiew]], [[brew]], [[płeć]], [[wieś]], [[cześć]], [[wesz]] handled in
--- determine_stems(), which sets vowel_stem and nonvowel_stem differently (controlled by * or -* indicators, with
--- the default handled in determine_default_reducible()).
---
--- Vowel alternations between ó/o and ą/ę handled in apply_vowel_alternation() (controlled by the # indicator).
---
--- Ending differences between - and -i in the voc sg, between -ie and -i in the nom pl and between -(i)ami and -mi
--- in the ins pl need to be handled through overrides.
+--[=[
+Table mapping declension types to functions to decline the noun. The function takes two arguments, `base` and `stems`;
+the latter specifies the computed stems (vowel vs. non-vowel, singular vs. plural) and whether the noun is reducible
+and/or has vowel alternations in the stem. Most of the specifics of determining which stem to use and how to modify it
+for the given ending are handled in add_decl() or functions called by it; the declension functions just need to generate
+the appropriate endings. Specifically:
+
+Alternations between -ś/-si, -ń/ni etc. handled in combine_stem_ending(); the stems in `stems` are in the
+consonant-final state (using -ś/-ń/etc. and with soft labials stored with TEMP_SOFT_LABIAL after them), which
+is converted to the pre-vowel state there. This also handles alternations between -iami/-ami after different sorts
+of soft consonants.
+
+Alternations between -i/-y handled in combine_stem_ending() as well, as is dropping of j before -i.
+
+Palatalization in the dat/loc sg before -e (which may change to -i or -y in the process), in the voc sg of masculine
+nouns before -i and in the nom pl of masculine personal nouns before -i is handled in apply_special_cases(). 
+
+Stem variations due to the "fleeting e" in the nom sg and/or gen pl (which we refer to as "reducibility" for
+consistency with East Slavic languages) is handled in determine_stems(), which sets vowel_stem and nonvowel_stem
+differently (controlled by * or -* indicators, with the default handled in determine_default_reducible()). The actual
+construction of the reduced stem (i.e. removal of a fleeting e) or dereduced stem (i.e. addition of a fleeting e) is
+handled in reduce() and/or dereduce() in [[Module:pl-common]].
+
+"Quantitative" vowel alternations between ó/o and ą/ę handled in apply_vowel_alternation() (controlled by the #
+indicator).
+
+Defaults are provided for cases where the ending varies between different nouns in a given declension, but some
+variations are unpredictable and need to be handled through overrides. Note that overrides can specify just the ending or
+the entire form; in the former case, an overridden ending may trigger changes to the stem or even the ending itself, in
+the same way that such modifications happen when endings are specified using add_decl(). For example, specifying '-e' as
+the locative singular ending will automatically trigger palatalization according to the usual rules. Usually these
+changes are helpful and avoid the need for a lot of full-form overrides, but in the cases where they cause problems,
+a full-form override should be used.
+]=]
 local decls = {}
 -- Table specifying additional properties for declension types. Every declension type must have such a table, which
 -- specifies which category or categories to add and what annotation to show in the title bar of the declension table.
@@ -557,7 +567,7 @@ engineer	inżynier	inżyniera	inżynierowi	inżynierze	inżynierze	inżynierowie
 loafer		nierób		nieroba		nierobowi	nierobie	nierobie	-			nieroby		nierobów	nierobami
 ?			Głód		Głoda		Głodowi		Głodzie		Głodzie		Głodowie	Głody		Głodów		Głodami
 glutton		głodomór	głodomora	głodomorowi	głodomorze	głodomorze	-			głodomory	głodomorów	głodomorami
-Sejm member	poseł		posła		posłowi		posle		posle		posłowie	posły		posłów		posłami
+Sejm_member	poseł		posła		posłowi		posle		posle		posłowie	posły		posłów		posłami
 master		majster		majstra		majstrowi	majstrze	majstrze	majstrowie	majstry		majstrów	majstrami
 fool		kiep		kpa			kpowi		kpie		kpie		-			kpy			kpów		kpami
 dwarf		karzeł		karła		karłowi		karle		karle		karłowie	karły		karłów		karłami
@@ -620,7 +630,7 @@ boy			chłopiec	chłopca		chłopcu		chłopcu		chłopcze	chłopcy		chłopce		chł
 
 Personal declined like consonant-stem feminine nouns:
 
-nom_sg		gen_sg		dat_sg		loc_sg		voc_sg		nom_pl_1	nom_pl_2	gen_pl		ins_pl
+meaning		nom_sg		gen_sg		dat_sg		loc_sg		voc_sg		nom_pl_1	nom_pl_2	gen_pl		ins_pl
 majesty		mość		mości		mości		mości		mości		moście		moście		mościów		mościami
 ?			waszeć		waszeci		waszeci		waszeci		waszeci		waszeciowie	waszecie	waszeciów	waszeciami
 
@@ -652,7 +662,7 @@ hunter		łowca		łowcy		łowcy		łowcy		łowco		łowcy		łowce		łowców		łowca
 
 Personal declined like feminine nouns in -o:
 
-nom_sg		gen_sg		dat_sg		loc_sg		voc_sg		nom_pl_1	nom_pl_2	gen_pl		ins_pl
+meaning		nom_sg		gen_sg		dat_sg		loc_sg		voc_sg		nom_pl_1	nom_pl_2	gen_pl		ins_pl
 [surname]	Kościuszko	Kościuszki	Kościusce	Kościusce	Kościuszko	Kościuszkowie Kościuszki Kościuszków Kościuszkami
 dad			tato		taty		tacie		tacie		tato		tatowie		taty		tatów		tatami
 [surname]	Jagiełło	Jagiełły	Jagielle	Jagielle	Jagiełło	Jagiełłowie	Jagiełły	Jagiełłów	Jagiełłami
@@ -662,7 +672,7 @@ dad			tato		taty		tacie		tacie		tato		tatowie		taty		tatów		tatami
 
 Personal declined like adjectival nouns:
 
-nom_sg		gen_sg		dat_sg		loc_sg		voc_sg		nom_pl_1	nom_pl_2	gen_pl		ins_pl
+meaning		nom_sg		gen_sg		dat_sg		loc_sg		voc_sg		nom_pl_1	nom_pl_2	gen_pl		ins_pl
 judge		sędzia		sędziego	sędziemu	sędzim/sędzi sędzio		sędziowie	sędzie		sędziów		sędziami
 count		hrabia		hrabiego	hrabiemu	hrabim/hrabi hrabio		hrabiowie	hrabie		hrabiów		hrabiami
 [surname]	Linde		Lindego		Lindemu		Lindem		Linde		Lindowie	Linde		Lindów		Lindami
@@ -1315,19 +1325,50 @@ queen		[[królowa]]	królowej	królowej	królowo		królowe		królowych	królowym
 
 In -ni:
 
-nom_sg		gen_sg		dat_sg		acc_sg		nom_pl		gen_pl		ins_pl
+meaning		nom_sg		gen_sg		dat_sg		acc_sg		nom_pl		gen_pl		ins_pl
 woman,Mrs.	[[pani]]	pani		pani		panią		panie		pań			paniami
 goddess		[[bogini]]	bogini		bogini		boginię		boginie		bogiń		boginiami
 
+
+In a consonant:
+
+meaning		nom_sg		gen_sg		voc_sg		nom_pl		ins_pl
+daughter	[[córuś]]	córusi		córuś		córusie		córusiami
+axis		[[oś]]		osi			osi			osie		osiami
+train		[[kolej]]	kolei		kolei		koleje		kolejami
+[town,lake]	[[Gołdap]]	Gołdapi		Gołdapi		Gołdapie	Gołdapiami
+bath		[[kąpiel]]	kąpieli		kąpieli		kąpiele		kąpielami
+boat		[[łódź]]	łodzi		łodzi		łodzie		łodziami
+depth		[[gląb]]	glębi		glębi		glębie		glębiami
+salt		[[sól]]		soli		soli		sole		solami
+gender		[[płeć]]	płci		płci		płcie		płciami
+jug			[[konew]]	konwi		konwi		konwie		konwiami
+village		[[wieś]]	wsi			wsi			wsie		wsiami
+torch		[[żagiew]]	żagwi		żagwi		żagwie		żagwiami
+palm_of_hand [[dłoń]]	dłoni		dłoni		dłonie		dłońmi
+net			[[sieć]]	sieci		sieci		sieci		sieciami
+guts		-			-			-			wnętrzności	wnętrznościami
+door		-			-			-			drzwi		drzwiami
+thought		[[myśl]]	myśli		myśli		myśli		myślami
+eyebrow		[[brew]]	brwi		brwi		brwi		brwiami
+respect		[[cześć]]	czci		czci		czci		czciami
+bone		[[kość]]	kości		kości		kości		kośćmi
+night		[[noc]]		nocy		nocy		noce		nocami
+harness		[[uprząż]]	uprzęży		uprzęży		uprzęże		uprzężami
+mouse		[[mysz]]	myszy		myszy		myszy		myszami
+louse		[[wesz]]	wszy		wszy		wszy		wszami
 ]=]
 
 decls["hard-f"] = function(base, stems)
-	-- See comment above definition of decls[] for where stem and ending alternations are handled.
-	local soft_cons = rfind(base.vowel_stem, "[" .. com.paired_palatal .. com.TEMP_SOFT_LABIAL .. "cjlż]$") or
-		rfind(base.stem, "[cdrs]z$")
+	-- See comment above definition of 'local decls' for where stem and ending alternations are handled.
+	local soft_cons = com.ends_in_soft(base.vowel_stem) or com.ends_in_hardened_soft_cons(base.vowel_stem)
 	local nom_p = soft_cons and "e" or "y" -- converted to i after k/g
-	-- Words in -Cj ([[gracja]], [[torsja]]) and -Cl ([[hodowla]], [[grobla]], [[bernikla]]) have -i
-	local gen_p = rfind(base.vowel_stem, com.cons_c .. "[jl]$") and "i" or ""
+	-- Words in -Cj ([[gracja]], [[torsja]]) and -Cl ([[hodowla]], [[grobla]], [[bernikla]]) have -i (FIXME: inherited
+	-- from the old module; check if this needs to be generalized). Check the non-vowel stem so that we don't do this
+	-- for reducible nouns.
+	local gen_p = (
+		rfind(base.nonvowel_stem, com.cons_c .. "[jl]$") or com.ends_in_soft_requiring_i_glide(base.nonvowel_stem)
+	) and "i" or ""
 	add_decl(base, stems, "y", "e", "ę", "ą", "e", "o",
 		nom_p, gen_p, "om", nom_p, "ami", "ach")
 	-- FIXME: Handle archaic gen_p in -yj for words in -Cj like [[gracja]], [[torsja]]
@@ -1337,6 +1378,136 @@ declprops["hard-f"] = {
 	cat = "hard"
 }
 
+
+--[=[
+Counts from SGJP:
+
+Type		e.g.		ending		nompl		genpl		count	indicator		notes
+D1			aktynoterapia -ia		-ie			-ii/ij arch	1861					lots like anhedonia in -nia that could be a different decl; only Garcia in -cia; none in -sia or -zia; also idea, Ilja, ninja, Mantegna, Odya, Zápolya not in -ia
+D1!			Maryla		-la			-le			-li/l char	38						voc in -u; all in -[eilouy]la, all proper names except ciotula/mamula/matula; all proper names take voc -o or -u
+D1/m1		Garcia		-ia			-iowie/-ie depr -iów	23
+D1/m2		kanalia		-ia			-ie			-iów		1		((kanalia<m>,kanalia<f>)) can be masc or fem
+D1/p3		egzekwie	-ia			-ie			-ii/ij arch	4
+D1A+-(-fchar) IKEA		-A			-e (not cap) -i			1
+D1c			mołodycia	-cia		-cie		-ci/ć char	8						no proper names
+D1c/m1		ciamcia		-cia		-cie		-ciów		2
+D1c/p2		Degucie		-cie		-cie		-ciów		4
+D1c/p3		krocie		-cie		-cie		-ciów		5
+D1c!		Anelcia		-cia		-cie		-ci/ć char	63						voc in -u; ~50% proper names
+D1c!/m1		ciamcia		-cia		-cie		-ciów		2						voc in -u
+D1+(-fchar)	hopla		-ea,-la		-ee,-le		-ei,li		291						also Nauzykaa and 10 proper names in -ia; all terms in -la are -Cla except koala, mądrala, ~20 in -ela, campanila, tequila, ~80 in -ola, aula, Depaula, szynszyla
+D1+(-fchar)/m1 bibliopola -la		-le			-li			2
+D1+(-fchar)/m2 papla	-la			-le			-li			7
+D1+(-fchar)/p2 grable	-la			-le			-li			90
+D1+(-fchar)/p3 bambetle	-la			-le			-li			116
+D1+!(-fneut) Ala		-la			-le			-l			30						voc in -u; all in -[aeiou]la, all proper names except babula/żonula/czarnula; some proper names + żonula/czarnula take voc -o or -u
+D1+(-fneut)	Ziemia		-mia		-mie		-m			2						only ziemia/Ziemia
+D1i+!/m1	dziadzia	-ia			-iowie/ie depr -iów	5							Kościa/ojczunia/dziadzia/dziamdzia/dziumdzia
+D1i+(-fchar) bagażownia	-ia			-ie			-i			806
+D1i+(-fchar)/m1 Gołdynia -ia		-iowie/ie depr -iów	163
+D1i+(-fchar)/p2 grabie	-ie			-ie			-i			8
+D1i+(-fchar)/p3 drabie	-ie			-ie			-i			18
+D1in		oprawczyni	-ni			-nie		-ń			177						acc in -ę; most end in -czyni, 6 in -ani (none in -pani), ksieni, 23 in -ini, 2 in -dyni
+D1in+ą		acpani		-ni			-nie		-ń			10						acc in -ą; all end in -pani
+D1j			Chaja		-ja			-je			-i/j char	194						~75% proper names
+D1j/m1		Maja		-ja			-jowie/je depr -jów		111						all proper names except raja
+D1j+!		Maja		-ja			-je			-i/j char	5						voc in -o or -u
+D1j+(-fchar) Amalteja	-ja			-je			-i			45						~50% proper names
+D1j+(-fchar)/p3 gronostaje -je		-je			-i			5						all except wierzeje can also be masc with gen_pl -jów
+D1j+(-fneut) Maryja		-ja			-je			-j			10						mostly common nouns
+D1j+(-fneut)/m1 zawedyja -ja		-je			-jów		6
+D1jo		zbroja		-oja		-oje		-oi/ój char	1
+D1jo/p2:p3	Odoje		-oje		-oje		-oi/ój char	2
+D1j+(yj)	aksjomatyzacja -ja		-je			-ji/yj arch	2592					all in -[csz]ja
+D1j+(yj)/p2	korepetycje	-ja			-je			-ji/yj arch	1
+D1j+(yj)/p3	antecedencje -ja		-je			-ji/yj arch	26
+D1le		chochla		-la			-le			-li/el char	13
+D1le/p2		Jeszkotle	-le			-le			-li/el char	4
+D1le/p3		Groble		-le			-le			-li/el char	4
+D1lei		brykla		-kla		-kle		-kli/kiel char 1
+D1ló		dola		-ola		-ole		-oli/ól char 2
+D1ló+(-fneut) rola		-ola		-ole		-ól			3
+D1ló+(-fneut)/p2:p3 Gole -ole		-ole		-ól			2
+D1n			cieślarnia	-nia		-nie		-ni/ń char	686
+D1n+!		Leonia		-nia		-nie		-ni rare/ń char	58					voc in -u; 1/3 proper names in -unia, 103 common in -unia, 1/3 proper in -[aeioy]nia
+D1n+!/m2	niunia		-nia		-nie		-niów		1						voc in -u
+D1ne		kuchnia		-nia		-nie		-ni/en arch	2
+D1nei		głownia		-nia		-nia		-ni/ien char 6						all in -[kgw]nia
+D1neiz		studnia		-dnia		-dnia		-dni/dzien char 1
+D1neiz/p2:p3 Studnia	-dnie		-dnia		-dni/dzien char 1
+D1n+(-fneut) Cedynia	-nia		-nie		-ń			26						all in -ynia or -[kw]inia
+D1n+(-fneut)/p2:p3 sanie -nie		-nie		-ń			89						in both -Vnie and -Cnie
+D1nś		laurowiśnia	-śnia		-śnie		-śni/sien char 5
+D1ńe		wisznia		-nia		-nie		-ni/eń char 3
+D1o+!/m1	Puzio		-o			-owie/e depr -ów		1
+D1+(ów)		barkarola	-la			-le			-li/l char	322						all in -[Vl]la except pudźa
+D1+(ów)/m1	bidula		-la			-lowie/le depr -lów		6						all in -Vla except ninja/cieśla
+D1+(ów)/m2	ninja		-a			-e			-ów			1
+D1+(ów)/p3	stalle		-e			-e			-i/- char	1
+D1s			gębusia		-sia		-sie		-si rare/ś char 6
+D1s/p2:p3	Basie		-sie		-sie		-si rare/ś char 3
+D1s+!		Alusia		-sia		-sie		-si rare/ś char 104					voc in -u; ~75% proper names
+
+
+
+
+
+
+
+
+D10			Supraśl		-l			-e			68		<f>
+D10+i		myśl		-l			-i			5		<f.nompli>
+D1bą0		gląb		-b			-e			1		<f.#>			ą/ę alternation
+D1ć0		barć		-ć			-e			67		<f>
+D1ć0+e		imć			-ć			-e			8		?				masc gender
+D1ć0+i		bioróżnorodność -ć		-i			64650	<>				nouns in -ość will default to feminine
+D1ć0+i/p2	pyszności	-ć			-i			25		<pl>
+D1ć0+i(mi)	kość		-ć			-i			3		<insplmi>		ins_pl in -mi
+D1ć0+i(mi)/p3 kośći		-ć			-i			2		<f.pl.insplmi>?	ins_pl in -mi
+D1ć0(mi)	okiść		-ć			-e			2		<insplmi>		ins_pl in -mi
+D1ć0+w		aszmość		-ć			-owie/-e	5		?				masc gender
+D1će0		płacheć		-ć			-e			2		<f.*>			płacheć -> płachci-
+D1ćó0		uwróć		-ć			-e			1		<f.#>			ó/o alternation
+D1ćśe0		cześć		-ć			-i			1		<f.*.decllemma:czeć> cześć -> czci-
+D1i0		Gołdap		labial		-e			7		<f>
+D1i0+i		głasnost	hard cons	-i			2		<f.nompli>		other one is Ob
+D1j0		rozchwiej	-j			-e			4		<f>
+D1lei0		magiel		-l			-e			1		<f.*>			magiel -> magl-
+D1ló0		siarkosól	-l			-e			5		<f.#>			ó/o alternation
+D1ń0		bojaźń		-ń			-e			109		<f>
+D1ń0+i		pieśń		-ń			-i			2		<f.nompli>
+D1ń0+(mi)	dań			-ń			-e			3		<f.insplmi>		ins_pl in -mi
+D1ń0+(mi)/p2 sanie		-ń			-e			3		<f.pl.insplmi>?	ins_pl in -mi
+D1ń0+(mi)/p3 autosanie	-ń			-e			3		<f.pl.insplmi>?	ins_pl in -mi
+D1ńe0		bezdeń		-ń			-i			1		<f.*.nompli>	bezdeń -> bezdni-
+Dińei0		rówień		-ń			-e			1		<f.*>			rówień -> równi-
+D1ś0		Ruś			-ś			-e			10		<f>
+D1ś0+!		córuś		-ś			-e			3		<f.voc->		voc_sg in - instead of -i
+Diś0+i		nurogęś		-ś			-i			5		<f.nompli.insplami:mi>
+D1ś0+i(mi)	nurogęś		-ś			-i			2		[same as above]	ins_pl in -mi
+D1śei0		półwieś		-ś			-e			7		<f.*.nomple:i>	półwieś -> półwsi-
+D1śei0		półwieś		-ś			-i			7		[same as above]	półwieś -> półwsi-
+D1we0		Narew		-w			-e			28		<f.*>			Narew -> Narwi-
+D1we0+i		brew		-w			-i			1		<f.*.nompli>	brew -> brwi-
+D1we0+i/p2	odrzwi		-w			-i			1		<f.*.pl.nompli>?
+D1wei0		bukiew		-w			-e			25		<f.*>			bukiew -> bukwi-
+D1wó0		Ostrów		-w			-e			1		<f.#>			ó/o alternation; Ostrów -> Ostrowi-
+D1ź0		czeladź		-ź			-e			37		<f>
+D1ź0+i		dopowiedź	-ź			-i			16		<f.nompli>
+D1ź0+i/p3	zapowiedzi	-ź			-i			1		<f.pl.nompli>?
+D1źą0		gałąź		-Vź			-e			1		<f.#.insplami:mi> ą/ę alternation
+D1źą0+(mi)	gałąź		-Vź			-e			1		[same as above]	ą/ę alternation; ins_pl in -mi
+D1źdą0		żołądź		-dź			-e			2		<f.#>			ą/ę alternation; other one is also żołądź
+D1źdó0		gródź		-dź			-e			9		<f.#>			ó/o alternation
+D1źó0		zamróź		-Vź			-e			1		<f.#>			ó/o alternation
+D20			Bydgoszcz	{[cż],[crs]z} -e		178		<f>				
+D20+anoc	Wielkanoc	-noc		 -e			2		((Wielkanoc<f>,Wielka<+>noc<f.[rare]>)) other one is also Wielkanoc; gen_sg Wielkiejnocy; etc.
+D20+y		Bydgoszcz	{[cż],[crs]z} -y		4		<f.nomply>
+D2zse0		wesz		-sz			-y			1		<f.*.nomply>	wesz -> wsz-
+D2żą0		przeprząż	-ż			-e			2		<f.#>			ą/ę alternation
+D2że0		reż			-ż			-e			2		<f.*>			reż -> rż-
+D2żó0		podłóż		-ż			-e			1		<f.#>			ó/o alternation
+]=]
 
 decls["soft-f"] = function(base, stems)
 	-- This also includes feminines in -ie, e.g. [[belarie]], [[signorie]], [[uncie]], and feminines in -oe, e.g.
@@ -1371,39 +1542,67 @@ declprops["mixed-f"] = {
 }
 
 --[=[
-Examples:
+Counts from SGJP:
 
-meaning		nom_sg		gen_sg		voc_sg		nom_pl		ins_pl
-daughter	[[córuś]]	córusi		córuś		córusie		córusiami
-axis		[[oś]]		osi			osi			osie		osiami
-train		[[kolej]]	kolei		kolei		koleje		kolejami
-[town,lake]	[[Gołdap]]	Gołdapi		Gołdapi		Gołdapie	Gołdapiami
-bath		[[kąpiel]]	kąpieli		kąpieli		kąpiele		kąpielami
-boat		[[łódź]]	łodzi		łodzi		łodzie		łodziami
-depth		[[gląb]]	glębi		glębi		glębie		glębiami
-salt		[[sól]]		soli		soli		sole		solami
-gender		[[płeć]]	płci		płci		płcie		płciami
-jug			[[konew]]	konwi		konwi		konwie		konwiami
-village		[[wieś]]	wsi			wsi			wsie		wsiami
-torch		[[żagiew]]	żagwi		żagwi		żagwie		żagwiami
-palm_of_hand [[dłoń]]	dłoni		dłoni		dłonie		dłońmi
-net			[[sieć]]	sieci		sieci		sieci		sieciami
-guts		-			-			-			wnętrzności	wnętrznościami
-door		-			-			-			drzwi		drzwiami
-thought		[[myśl]]	myśli		myśli		myśli		myślami
-eyebrow		[[brew]]	brwi		brwi		brwi		brwiami
-respect		[[cześć]]	czci		czci		czci		czciami
-bone		[[kość]]	kości		kości		kości		kośćmi
-night		[[noc]]		nocy		nocy		noce		nocami
-harness		[[uprząż]]	uprzęży		uprzęży		uprzęże		uprzężami
-mouse		[[mysz]]	myszy		myszy		myszy		myszami
-louse		[[wesz]]	wszy		wszy		wszy		wszami
+Type		e.g.		ending		nompl		count	indicator		notes
+D10			Supraśl		-l			-e			68		<f>
+D10+i		myśl		-l			-i			5		<f.nompli>
+D1bą0		gląb		-b			-e			1		<f.#>			ą/ę alternation
+D1ć0		barć		-ć			-e			67		<f>
+D1ć0+e		imć			-ć			-e			8		?				masc gender
+D1ć0+i		bioróżnorodność -ć		-i			64650	<>				nouns in -ość will default to feminine
+D1ć0+i/p2	pyszności	-ć			-i			25		<pl>
+D1ć0+i(mi)	kość		-ć			-i			3		<insplmi>		ins_pl in -mi
+D1ć0+i(mi)/p3 kośći		-ć			-i			2		<f.pl.insplmi>?	ins_pl in -mi
+D1ć0(mi)	okiść		-ć			-e			2		<insplmi>		ins_pl in -mi
+D1ć0+w		aszmość		-ć			-owie/-e	5		?				masc gender
+D1će0		płacheć		-ć			-e			2		<f.*>			płacheć -> płachci-
+D1ćó0		uwróć		-ć			-e			1		<f.#>			ó/o alternation
+D1ćśe0		cześć		-ć			-i			1		<f.*.decllemma:czeć> cześć -> czci-
+D1i0		Gołdap		labial		-e			7		<f>
+D1i0+i		głasnost	hard cons	-i			2		<f.nompli>		other one is Ob
+D1j0		rozchwiej	-j			-e			4		<f>
+D1lei0		magiel		-l			-e			1		<f.*>			magiel -> magl-
+D1ló0		siarkosól	-l			-e			5		<f.#>			ó/o alternation
+D1ń0		bojaźń		-ń			-e			109		<f>
+D1ń0+i		pieśń		-ń			-i			2		<f.nompli>
+D1ń0+(mi)	dań			-ń			-e			3		<f.insplmi>		ins_pl in -mi
+D1ń0+(mi)/p2 sanie		-ń			-e			3		<f.pl.insplmi>?	ins_pl in -mi
+D1ń0+(mi)/p3 autosanie	-ń			-e			3		<f.pl.insplmi>?	ins_pl in -mi
+D1ńe0		bezdeń		-ń			-i			1		<f.*.nompli>	bezdeń -> bezdni-
+Dińei0		rówień		-ń			-e			1		<f.*>			rówień -> równi-
+D1ś0		Ruś			-ś			-e			10		<f>
+D1ś0+!		córuś		-ś			-e			3		<f.voc->		voc_sg in - instead of -i
+Diś0+i		nurogęś		-ś			-i			5		<f.nompli.insplami:mi>
+D1ś0+i(mi)	nurogęś		-ś			-i			2		[same as above]	ins_pl in -mi
+D1śei0		półwieś		-ś			-e			7		<f.*.nomple:i>	półwieś -> półwsi-
+D1śei0		półwieś		-ś			-i			7		[same as above]	półwieś -> półwsi-
+D1we0		Narew		-w			-e			28		<f.*>			Narew -> Narwi-
+D1we0+i		brew		-w			-i			1		<f.*.nompli>	brew -> brwi-
+D1we0+i/p2	odrzwi		-w			-i			1		<f.*.pl.nompli>?
+D1wei0		bukiew		-w			-e			25		<f.*>			bukiew -> bukwi-
+D1wó0		Ostrów		-w			-e			1		<f.#>			ó/o alternation; Ostrów -> Ostrowi-
+D1ź0		czeladź		-ź			-e			37		<f>
+D1ź0+i		dopowiedź	-ź			-i			16		<f.nompli>
+D1ź0+i/p3	zapowiedzi	-ź			-i			1		<f.pl.nompli>?
+D1źą0		gałąź		-Vź			-e			1		<f.#.insplami:mi> ą/ę alternation
+D1źą0+(mi)	gałąź		-Vź			-e			1		[same as above]	ą/ę alternation; ins_pl in -mi
+D1źdą0		żołądź		-dź			-e			2		<f.#>			ą/ę alternation; other one is also żołądź
+D1źdó0		gródź		-dź			-e			9		<f.#>			ó/o alternation
+D1źó0		zamróź		-Vź			-e			1		<f.#>			ó/o alternation
+D20			Bydgoszcz	{[cż],[crs]z} -e		178		<f>				
+D20+anoc	Wielkanoc	-noc		 -e			2		((Wielkanoc<f>,Wielka<+>noc<f.[rare]>)) other one is also Wielkanoc; gen_sg Wielkiejnocy; etc.
+D20+y		Bydgoszcz	{[cż],[crs]z} -y		4		<f.nomply>
+D2zse0		wesz		-sz			-y			1		<f.*.nomply>	wesz -> wsz-
+D2żą0		przeprząż	-ż			-e			2		<f.#>			ą/ę alternation
+D2że0		reż			-ż			-e			2		<f.*>			reż -> rż-
+D2żó0		podłóż		-ż			-e			1		<f.#>			ó/o alternation
 ]=]
 
 decls["cons-f"] = function(base, stems)
-	-- See comment above definition of decls[] for where stem and ending alternations are handled.
-	add_decl(base, stems, "y", "y", "-", "ą", "y", "i",
-		"e", "í", "ím", "e", "ích", "emi")
+	-- See comment above definition of 'local decls' for where stem and ending alternations are handled.
+	add_decl(base, stems, "y", "y", "-", "ą", "y", "y",
+		"e", "y", "om", "e", "ami", "ach")
 end
 
 declprops["cons-f"] = {
@@ -2408,7 +2607,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify number twice: '" .. inside .. "'")
 				end
 				base.number = part
-			elseif part == "an" or part == "inan" then
+			elseif part == "pr" or part == "anml" or part == "inan" then
 				if base.animacy then
 					error("Can't specify animacy twice: '" .. inside .. "'")
 				end
