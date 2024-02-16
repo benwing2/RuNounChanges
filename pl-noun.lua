@@ -1383,9 +1383,16 @@ declprops["hard-f"] = {
 Counts from SGJP:
 
 Type		e.g.		ending		nompl		genpl		count	indicator		notes
-D1			fobia		 -ia		-ie			-ii/ij:arch	1861					none in -[cdrt]ia except Garcia; lots like anhedonia in -nia that could be a different decl; none in -sia or -zia; also idea, Ilja, ninja, Mantegna [pron Mantenja], Odya [pron Odja], Zápolya [pron Zápoja/Zápojo with initial stress] not in -ia
+A1jŻ		moja		-ja			-je			-ich		2						moja/twoja
+A1Ż			bliźnia		-ia			-ie			-ich		17
+A1Ż/p2:p3	Moście		-ie			-ie			-ich		3
+A3Ż			puszczalska	-a			-ie			-ich		12660					in -[gk]a
+A4+o		królowa		-a			-e			-ych		111						voc in -o
+A4t+(rzecz)	rzeczpospolita -pospolita -ypospolite -ypospolitych 1	rzecz<f>pospolita<+>
+A4Ż			chora		-a			-e			-ych		1559
+D1			fobia		-ia			-ie			-ii/ij:arch	1861					none in -[cdrt]ia except Garcia; lots like anhedonia in -nia that could be a different decl; none in -sia or -zia; also idea, Ilja, ninja, Mantegna [pron Mantenja], Odya [pron Odja], Zápolya [pron Zápoja/Zápojo with initial stress] not in -ia
 D1/m1		Garcia		-ia			-iowie/-ie:depr -iów	23						Garcia/Aria/Zamaria/paria/Beria, otherwise none in -[cdrt]ia; also Ilja/ninja/Mantegna/odya/Zápolya not in -ia
-D1/m2		kanalia		-ia			-ie			-iów		1		((kanalia<m>,kanalia<f>)) can be masc or fem
+D1/m2		kanalia		-ia			-ie			-iów		1		((kanalia<m>,kanalia<>)) can be masc or fem
 D1/p3		egzekwie	-ia			-ie			-ii/ij:arch	4
 D1+!		Aniela		-la			-le			-li/l:char	38						voc in -u; all in -[eilouy]la, all proper names except ciotula/mamula/matula; all proper names take voc -o or -u
 D1A+-(-fchar) IKEA		-A			-e (not cap) -i			1
