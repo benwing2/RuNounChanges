@@ -13,7 +13,6 @@
 -- * {{it-pos}};
 -- * {{it-suffix form}}.
 -- See [[Module:it-verb]] for Italian conjugation templates.
--- See [[Module:it-conj]] for an older Italian conjugation module that is still widely used but will be going away.
 
 local export = {}
 local pos_functions = {}
@@ -209,7 +208,7 @@ end
 local function process_terms_with_qualifiers(terms, quals)
 	local infls = {}
 	for i, term in ipairs(terms) do
-		table.insert(infls, {term = term, qualifiers = fetch_qualifiers(quals[i])})
+		table.insert(infls, {term = term, q = fetch_qualifiers(quals[i])})
 	end
 	return infls
 end
@@ -417,7 +416,7 @@ local function do_noun(args, data, tracking_categories, pos, is_suffix, is_prope
 			end
 		end
 					
-		local infl = {qualifiers = qualifiers, accel = accel, genders = genders}
+		local infl = {q = qualifiers, accel = accel, genders = genders}
 		if term == lemma and not no_inv then
 			infl.label = glossary_link("invariable")
 		else
@@ -854,7 +853,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 			else
 				fpl = replace_hash_with_lemma(fpl, lemma)
 			end
-			table.insert(feminine_plurals, {term = fpl, qualifiers = fetch_qualifiers(args.fpl_qual[i])})
+			table.insert(feminine_plurals, {term = fpl, q = fetch_qualifiers(args.fpl_qual[i])})
 		end
 
 		check_all_missing(feminine_plurals, plpos, tracking_categories)
@@ -874,7 +873,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 			else
 				f = replace_hash_with_lemma(f, lemma)
 			end
-			table.insert(feminines, {term = f, qualifiers = fetch_qualifiers(args.f_qual[i])})
+			table.insert(feminines, {term = f, q = fetch_qualifiers(args.f_qual[i])})
 		end
 
 		local argsmpl = args.mpl
@@ -908,7 +907,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 			else
 				mpl = replace_hash_with_lemma(mpl, lemma)
 			end
-			table.insert(masculine_plurals, {term = mpl, qualifiers = fetch_qualifiers(argsmpl_qual[i])})
+			table.insert(masculine_plurals, {term = mpl, q = fetch_qualifiers(argsmpl_qual[i])})
 		end
 
 		for i, fpl in ipairs(argsfpl) do
@@ -919,11 +918,11 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 					if not defpl then
 						error("Unable to generate default plural of '" .. f.term .. "'")
 					end
-					table.insert(feminine_plurals, {term = defpl, qualifiers = fetch_qualifiers(argsfpl_qual[i], f.qualifiers)})
+					table.insert(feminine_plurals, {term = defpl, q = fetch_qualifiers(argsfpl_qual[i], f.qualifiers)})
 				end
 			else
 				fpl = replace_hash_with_lemma(fpl, lemma)
-				table.insert(feminine_plurals, {term = fpl, qualifiers = fetch_qualifiers(argsfpl_qual[i])})
+				table.insert(feminine_plurals, {term = fpl, q = fetch_qualifiers(argsfpl_qual[i])})
 			end
 		end
 
@@ -1154,27 +1153,7 @@ pos_functions["verbs"] = {
 				if not footnotes then
 					return nil
 				end
-				local quals, refs
-				for _, qualifier in ipairs(footnotes) do
-					local this_footnote, this_refs =
-						require("Module:inflection utilities").expand_footnote_or_references(qualifier, "return raw")
-					if this_refs then
-						if not refs then
-							refs = this_refs
-						else
-							for _, ref in ipairs(this_refs) do
-								table.insert(refs, ref)
-							end
-						end
-					else
-						if not quals then
-							quals = {this_footnote}
-						else
-							table.insert(quals, this_footnote)
-						end
-					end
-				end
-				return quals, refs
+				return require("Module:inflection utilities").fetch_headword_qualifiers_and_references(footnotes)
 			end
 
 			local function do_verb_form(slot, label, rowslot, rowlabel)
@@ -1231,7 +1210,7 @@ pos_functions["verbs"] = {
 							end
 						end
 						prev_footnotes = quals
-						table.insert(retval, {term = form.form, qualifiers = quals_with_ditto, refs = refs})
+						table.insert(retval, {term = form.form, q = quals_with_ditto, refs = refs})
 					end
 				end
 
@@ -1313,10 +1292,8 @@ pos_functions["verbs"] = {
 			) then
 				data.heads = {}
 				for _, lemma_obj in ipairs(alternant_multiword_spec.forms.inf) do
-					-- FIXME, can't yet specify qualifiers or references for heads
-					table.insert(data.heads, lemma_obj.form)
-					-- local quals, refs = expand_footnotes_and_references(lemma_obj.footnotes)
-					-- table.insert(data.heads, {term = lemma_obj.form, qualifiers = quals, refs = refs})
+					local quals, refs = expand_footnotes_and_references(lemma_obj.footnotes)
+					table.insert(data.heads, {term = lemma_obj.form, q = quals, refs = refs})
 				end
 			end
 		end
