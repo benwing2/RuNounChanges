@@ -1549,7 +1549,7 @@ D4bó		choroba		-oba		-oby		-ób			19
 D4bśo		prośba		-ośba		-ośby		-ósb		1
 D4bźo		groźba		-oźba		-oźby		-óźb		3
 D4d			banda
-D4de		Gwda
+D4de		Gwda		-da			-dy			-ed			2						dat in -dzie
 D4(dha)		Sargodha	-dha		-dhy		-dh			1						dat in -dzie
 D4d(o)		Szwedo
 D4dó		nagroda
@@ -1576,13 +1576,28 @@ D4h+(sz)/m1	Taha		-ha			-howie/hy:depr -hów		2						dat in -sze
 D4h+(ż)		braha		-ha			-hy			-h			10						dat in -że
 D4h+(ż)/m1	Sapieha		-ha			-howie/hy:depr -hów		3						dat in -że
 D4+i/m1		ortodoksa	-a			-i/y:depr	-ów			78						dat in -ie; in -na except Kaszuba/ortodoksa/Jehowa
-D4ł			mogiła
-D4łe		jodła
-D4łei		igła
-D4łł		mułła
-D4łł(o)+w	Jundziłło	-łło		-
-...
-
+D4ł			mogiła		-ła			-ły			-ł			829						dat in -le
+D4ł/m1		Drzymała	-ła			-łowie/ły:depr -łów		712						dat in -le
+D4łe		jodła,kapła	-ła			-ły			-eł			18						dat in -le
+D4łe/p2		widły		-ły			-ły			-eł			12
+D4łe/p3		kudły		-ły			-ły			-eł			13
+D4łei		igła		-ła			-ły			-ieł		12						dat in -le
+D4łei/p2:p3	Cegły		-ły			-ły			-ieł		4
+D4łł		Jagiełła	-łła		-łły		-łł			23						dat in -lle
+D4łł/m1		mułła		-łła		-łłowie/łły:depr -łłów	3						dat in -lle
+D4łł(o)+w/m1 Jundziłło	-łło		-łłowie/łły:depr -łłów	12						dat in -lle
+D4ł(o)+w/m1 popychajło	-ło			-łowie/ły:depr -łów		217						dat in -le
+D4ł(o)+wa/m1 czuryło	-ło			-łowie/ła:depr -łów		8						dat in -le
+D4łó		szkoła		-oła		-oły		-ół			13						dat in -le
+D4łó/p2		Baboły		-oły		-oły		-ół			6						dat in -le
+D4łó/p3		pierdoły	-oły		-oły		-ół			7						dat in -le
+D4łs		ciosła		-sła		-sły		-seł		7						dat in -śle
+D4łs/m1		Zawisła		-sła		-słowie/sły:depr -seł	3						dat in -śle
+D4łs(o)+w/m1 Porosło	-sło		-słowie/sły:depr -słów	18						dat in -śle
+D4ł+w/m1	kameduła	-ła			-li/ły:depr	-łów		1						dat in -le
+D4łz		gruzła		-zła		-zły		-zeł		2						dat in -źle
+D4łz/m1		Wizła		-zła		-złowie/ły:depr -złów	1						dat in -źle
+D4łz(o)+w/m1 Oślizło	-zło		-złowie/ły:depr -złów	5						dat in -źle
 
 ...
 ]=]
