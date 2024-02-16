@@ -94,6 +94,7 @@ function export.show(frame)
 			"crypto",
 			"de",
 			"demi",
+			"e",
 			"eco",
 			"electro",
 			"Euro",
@@ -132,6 +133,11 @@ function export.show(frame)
 			"vice",
 		}
 
+		local en_include_hyphen_suffixes = require("Module:table/listToSet") {
+			"y",
+			"like",
+		}
+
 		local function is_english(term)
 			local title = mw.title.new(term)
 			if title and title.exists then
@@ -165,6 +171,14 @@ function export.show(frame)
 			return nil
 		end
 
+		local function en_link_hyphen_split_component(word)
+			if is_english(word) then
+				return "[[" .. word .. "]]"
+			else
+				return word
+			end
+		end
+
 		local function en_split_apostrophe(word)
 			local base = word:match("^(.*)'s$")
 			if base then
@@ -185,9 +199,11 @@ function export.show(frame)
 
 		autohead = m_headutil.add_links_to_multiword_term(pagename, {
 			split_hyphen_when_space = en_split_hyphen_when_space,
+			link_hyphen_split_component = en_link_hyphen_split_component,
 			split_apostrophe = en_split_apostrophe,
 			no_split_apostrophe_words = en_no_split_apostrophe_words,
 			include_hyphen_prefixes = en_include_hyphen_prefixes,
+			include_hyphen_suffixes = en_include_hyphen_suffixes,
 		})
 	end
 

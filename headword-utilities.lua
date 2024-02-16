@@ -16,9 +16,18 @@ local function rsub(term, foo, bar)
 end
 
 
+local function link_hyphen_split_component(word, data)
+	if data.link_hyphen_split_component then
+		return  data.link_hyphen_split_component(word)
+	else
+		return "[[" .. word .. "]]"
+	end
+end
+
+
 -- Default function to split a word on apostrophes. Don't split apostrophes at the beginning or end of a word (e.g.
 -- [['ndrangheta]] or [[po']]). Handle multiple apostrophes correctly, e.g. [[l'altr'ieri]] -> [[l']][altr']][[ieri]].
-function export.default_split_apostrophe(word)
+function export.default_split_apostrophe(word, data)
 	local begapo, inner_word, endapo = word:match("^('*)(.-)('*)$")
 	local apostrophe_parts = rsplit(word, "'")
 	local linked_apostrophe_parts = {}
@@ -51,7 +60,7 @@ function export.default_split_apostrophe(word)
 		i = i + 1
 	end
 	for i, tolink in ipairs(linked_apostrophe_parts) do
-		linked_apostrophe_parts[i] = "[[" .. tolink .. "]]"
+		linked_apostrophe_parts[i] = link_hyphen_split_component(tolink, data)
 	end
 	return table.concat(linked_apostrophe_parts)
 end
@@ -74,22 +83,48 @@ Italian [['ndrangheta]] or [[po']]), and includes the apostrophe in the link to 
 but not `true`, it should be a function of one argument that does custom apostrophe-splitting. The argument is the word
 to split, and the return value should be the split and linked word.
 ]=]
-local function add_single_word_links(space_word, data)
-	local space_word_no_punct, punct = rmatch(space_word, "^(.*)([,;:?!])$")
+local function add_single_word_links(space_word, data, term_has_spaces)
+	local space_word_no_punct, punct
+	local punct_pattern = data.punctuation
+	if punct_pattern == nil then
+		punct_pattern = "[,;:?!]"
+	end
+	if type(punct_pattern) == "function" then
+		space_word_no_punct, punct = punct_pattern(space_word)
+	elseif type(punct_pattern) == "string" then
+		space_word_no_punct, punct = rmatch(space_word, "^(.*)(" .. punct_pattern .. ")$")
+	end
 	space_word_no_punct = space_word_no_punct or space_word
 	punct = punct or ""
 	local words
 	if space_word_no_punct:find("^%-") or space_word_no_punct:find("%-$") then
 		-- don't split prefixes and suffixes
 		words = {space_word_no_punct}
-	elseif type(data.split_hyphen_when_space) == "function" then
-		words = data.split_hyphen_when_space(space_word_no_punct)
-		if type(words) == "string" then
-			return words .. punct
+	else
+		local splitter
+		if term_has_spaces then
+			splitter = data.split_hyphen_when_space
+		else
+			splitter = data.split_hyphen_when_no_space
+		end
+		if type(splitter) == "function" then
+			words = splitter(space_word_no_punct)
+			if type(words) == "string" then
+				return words .. punct
+			end
 		end
 	end
 	if not words then
-		if data.split_hyphen_when_space then
+		local split_hyphen
+		if term_has_spaces then
+			split_hyphen = data.split_hyphen_when_space
+		else
+			split_hyphen = data.split_hyphen_when_no_space
+			if split_hyphen == nil then -- default to true; use `false` to avoid this
+				split_hyphen = true
+			end
+		end
+		if split_hyphen then
 			words = rsplit(space_word_no_punct, "%-")
 		else
 			words = {space_word_no_punct}
@@ -99,17 +134,19 @@ local function add_single_word_links(space_word, data)
 	for j, word in ipairs(words) do
 		if j < #words and data.include_hyphen_prefixes and data.include_hyphen_prefixes[word] then
 			word = "[[" .. word .. "-]]"
+		elseif j > 1 and data.include_hyphen_suffixes and data.include_hyphen_suffixes[word] then
+			word = "[[-" .. word .. "]]"
 		else
 			-- Don't split on apostrophes if the word is in `no_split_apostrophe_words`.
 			if (not data.no_split_apostrophe_words or not data.no_split_apostrophe_words[word]) and
 				data.split_apostrophe and word:find("'") then
 				if data.split_apostrophe == true then
-					word = export.default_split_apostrophe(word)
+					word = export.default_split_apostrophe(word, data)
 				else -- custom apostrophe splitter/linker
 					word = data.split_apostrophe(word)
 				end
 			else
-				word = "[[" .. word .. "]]"
+				word = link_hyphen_split_component(word, data)
 			end
 			if j < #words then
 				word = word .. "-"
@@ -120,13 +157,41 @@ local function add_single_word_links(space_word, data)
 	return table.concat(linked_words) .. punct
 end
 
--- Auto-add links to a multiword term. Links are not added to single-word terms. We split on spaces, and also on hyphens
--- if `split_hyphen` is given or the word has no spaces. In addition, we split on apostrophes, including the apostrophe
--- in the link to its left (so we auto-split "de l'eau" "[[de]] [[l']][[eau]]"). We don't always split on hyphens
+--[=[
+Auto-add links to a multiword term. `data` contains fields customizing how to do this. By default we proceed as follows:
+
+(1) If the term already has embedded links in it, they are left unchanged.
+(2) Otherwise, if there are spaces present, we split on spaces and link each word separately.
+(3) If a given space-separated component ends in punctuation (defaulting to [,;:?!]), it is separated off, the remainder	of the algorithm run, and the punctuation pasted back on.
+(4) If there are hyphens in a given space-separated component, we may link each hyphenated term separately depending
+    on the settings in `data`. Normally the hyphens are not included in the linked terms, but this can be overridden
+    for specific prefixes and/or suffixes. By default, if there are spaces in the multiword term, we do not link
+	hyphenated components (because of cases like "boire du petit-lait" where "petit-lait" should be linked as a whole),
+	but do so otherwise (e.g. for "avant-avant-hier"); this can overridden for cases like "croyez-le ou non".
+	Cases where only some of the hyphens should be split can always be handled by explicitly specifying the head (e.g.
+	"Nord-Pas-de-Calais" given as head=[[Nord]]-[[Pas-de-Calais]]).
+(5) If there are apostrophes in a given component, we may link each apostrophe-separated term separately depending
+    on the settings in `data`, including the apostrophe in the link to its left (so we split "de l'eau" as
+	"[[de]] [[l']][[eau]]").
+
+The settings in `data` are as follows:
+
+`split_hyphen_when_no_space`: Whether to split on hyphens when the term has no spaces. Defaults to true if set to `nil`.
+   This can be a function of one argument, to implement a custom splitting algorithm for hyphen-separated terms. If
+   this returns 
+
+
+If `data.split_apostrophe` is specified, we split on apostrophes unless `data.no_split_apostrophe_words` is given and
+the word is in the specified set, such as French [[c'est]] and [[quelqu'un]]. If `data.split_apostrophe` is true, the
+default algorithm applies, which splits on all apostrophes except those at the beginning and end of a word (as in
+Italian [['ndrangheta]] or [[po']]), and includes the apostrophe in the link to its left (so we auto-split French
+[[l'eau]] as [[l']][[eau]] and [[l'altr'ieri]] as [[l']][altr']][[ieri]]). If `data.split_apostrophe` is specified
+but not `true`, it should be a function of one argument that does custom apostrophe-splitting. The argument is the word
+to split, and the return value should be the split and linked word.
+
+	We don't always split on hyphens
 -- because of cases like "boire du petit-lait" where "petit-lait" should be linked as a whole, but provide the option to
 -- do it for cases like "croyez-le ou non". If there's no space, however, then it makes sense to split on hyphens by
--- default (e.g. for "avant-avant-hier"). Cases where only some of the hyphens should be split can always be handled by
--- explicitly specifying the head (e.g. "Nord-Pas-de-Calais" given as head=[[Nord]]-[[Pas-de-Calais]]).
 --
 -- `no_split_apostrophe_words` and `include_hyphen_prefixes` allow for special-case handling of particular words and
 -- are as described in the comment above add_single_word_links().
@@ -134,14 +199,11 @@ function export.add_links_to_multiword_term(term, data)
 	if rfind(term, "[%[%]]") then
 		return term
 	end
-	if not rfind(term, " ") then
-		data = require(table_module).shallowcopy(data)
-		data.split_hyphen_when_space = true
-	end
 	local words = rsplit(term, " ")
+	local term_has_spaces = #words > 1
 	local linked_words = {}
 	for _, word in ipairs(words) do
-		table.insert(linked_words, add_single_word_links(word, data))
+		table.insert(linked_words, add_single_word_links(word, data, term_has_spaces))
 	end
 	local retval = table.concat(linked_words, " ")
 	-- If we ended up with a single link consisting of the entire term,
