@@ -49,6 +49,12 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
   if to_page.replace(".", "") == from_page.replace(".", ""):
     pagemsg("Saw from-page '%s' same as to-page with periods removed" % from_page)
     continue
+  if to_page.replace(",", "") == from_page.replace(",", ""):
+    pagemsg("Saw from-page '%s' same as to-page with commas removed" % from_page)
+    continue
+  if to_page.replace("/", "") == from_page.replace("/", ""):
+    pagemsg("Saw from-page '%s' same as to-page with slashes removed" % from_page)
+    continue
   if to_page.lower() == from_page.lower():
     pagemsg("Saw from-page '%s' same as to-page with capitalization ignored" % from_page)
     continue
@@ -57,7 +63,11 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
   def remove_accents(txt):
     return re.sub("[\u0300-\u036F]", "", unicodedata.normalize("NFD", txt))
   def ie_to_y(txt):
-    return re.sub("ie$", "y", txt)
+    return re.sub(r"ie\b", "y", txt)
+  def ey_to_y(txt):
+    return re.sub(r"ey\b", "y", txt)
+  def ah_eh_to_a_e(txt):
+    return re.sub(r"([ae])h\b", r"\1", txt)
   def ise_to_ize(txt, omit_extra_e=False, with_y=False):
     iy = "y" if with_y else "i"
     txt = re.sub(r"%ss(e[sdr]?|e?ing|e?ation|e?ational|e?able|e?ability)\b" % iy, r"%sz\1" % iy, txt)
@@ -76,16 +86,16 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
     return re.sub(r"re\b", "er", txt)
   def or_to_er(txt):
     return re.sub(r"or\b", "er", txt)
-  def ey_to_y(txt):
-    return re.sub(r"ey\b", "y", txt)
   def gue_to_g(txt):
     return re.sub(r"gue\b", "g", txt)
+  def k_to_c(txt):
+    return re.sub(r"[KkC]([abcdfgjklmnopqrstuvwxz])", r"c\1", txt)
   def our_to_or(txt):
     return re.sub(r"our(s|e[dr]s?|ing|(?:ful|al|ous|less)?(?:ly)?)\b", r"or\1", txt)
   def common_our_to_or(txt):
     return re.sub(r"(col|[fs]av|lab|vap|od|succ|harb|arb|tum|rig|behavi|enam|endeav)our", r"\1or", txt)
   def ll_to_l(txt):
-    return re.sub(r"ll(|er'?s?'?|ed|ing|ful)\b", r"l\1", txt)
+    return re.sub(r"ll(|er'?s?'?|ed|ing|ful|ate(?:[drs]|rs)?)\b", r"l\1", txt)
   def grey_to_gray(txt):
     return re.sub("([Gg])rey", r"\1ray", txt)
   def plough_to_plow(txt):
@@ -101,6 +111,9 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
     continue
   if ey_to_y(to_page) == ey_to_y(from_page):
     pagemsg("Saw from-page '%s' same as to-page with -ey -> -y" % from_page)
+    continue
+  if ah_eh_to_a_e(to_page) == ah_eh_to_a_e(from_page):
+    pagemsg("Saw from-page '%s' same as to-page with -ah/-eh -> -a/-e" % from_page)
     continue
   if ise_to_ize(to_page) == ise_to_ize(from_page):
     pagemsg("Saw from-page '%s' same as to-page with -ise/-iser/-ises/-ised/-is(e)ing/-is(e)ation(al)/is(e)able/is(e)ability -> same with -iz-" % from_page)
@@ -141,8 +154,11 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
   if gue_to_g(to_page) == gue_to_g(from_page):
     pagemsg("Saw from-page '%s' same as to-page with -gue -> -g" % from_page)
     continue
+  if k_to_c(to_page) == k_to_c(from_page):
+    pagemsg("Saw from-page '%s' same as to-page with ka/ko/ku/kk/kt/etc. -> same with c" % from_page)
+    continue
   if ll_to_l(to_page) == ll_to_l(from_page):
-    pagemsg("Saw from-page '%s' same as to-page with -ll/-lled/-ller/-lling -> same with -l-" % from_page)
+    pagemsg("Saw from-page '%s' same as to-page with -ll(ed)/-ller(s)/-lling/-llate(d)/-llater(s) -> same with -l-" % from_page)
     continue
   if grey_to_gray(to_page) == grey_to_gray(from_page):
     pagemsg("Saw from-page '%s' same as to-page with grey -> gray" % from_page)
@@ -151,7 +167,8 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
     pagemsg("Saw from-page '%s' same as to-page with plough -> plow" % from_page)
     continue
   def canonicalize(txt):
-    txt = txt.lower().replace("-", "").replace(" ", "").replace("'", "").replace(".", "")
+    txt = txt.lower()
+    txt = txt.replace("-", "").replace(" ", "").replace("'", "").replace(".", "").replace(",", "").replace("/", "")
     txt = remove_accents(txt)
     txt = ey_to_y(txt)
     txt = ie_to_y(txt)
@@ -169,6 +186,8 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
     txt = grey_to_gray(txt)
     txt = plough_to_plow(txt)
     txt = ible_eable_to_able(txt)
+    txt = ah_eh_to_a_e(txt)
+    txt = k_to_c(txt)
     return txt
   if canonicalize(to_page) == canonicalize(from_page):
     nomsg = False
