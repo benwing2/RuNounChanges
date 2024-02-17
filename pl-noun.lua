@@ -2010,6 +2010,15 @@ calf_of_cow	cielę		cielęcia	cielęciu	cielęta		cieląt		cielętami
 Counts from SGJP (defaults to /n2):
 
 Type		e.g.		ending		gensg		locsg		nompl		genpl		count	indicator		notes
+A1jN		moje		-je			-jego		-im			-je			-ich		3						moje/swoje/twoje
+A1N			wdowie		-ie			-iego		-im			-ie			-ich		8						polskie/pańskie/szampańskie/reńskie/psiarskie/dworskie/ostatnie/wdowie
+A3k+(em)	Głębokie	-ie			-iego		-iem		-ie			-ich		163						all toponyms in -[bgkns]ie
+A3N			drugie		-gie		-giego		-gim		-gie		-gich		1
+A4+(em)		Zakopane	-e			-ego		-em			-e			-ych		233						all toponyms in -[błnprstwzż]e/{ch,cz,rs,sz}e
+A4+(em)/p2:p3 Żółte		-e			[-]			[-]			-e			-ych		29						all toponyms in -[błnprstwzż]e/{ch,cz,rs,sz}e
+A4N/n1		małe		-e			-ego		-ym			-e			-ych		1
+A4N			czesne		-e			-ego		-ym			-e			-ych		189
+A4N/p3		berberysowate -e		[-]			[-]			-e			-ych		280						~75% in -owate
 C1c			nacięcie	-cie		-cia		-ciu		-cia		-ć			2432
 C1c/p2		zajęcia		-cia		[-]			[-]			-cia		-ć			1
 C1c/p3		objęcia		-cia		[-]			[-]			-cia		-ć			3
@@ -2118,64 +2127,17 @@ C4t			dłuto		-to			-ta			-cie		-ta			-t			75
 C4ta		lato		-ato		-ata		-ecie		-ata		-at			1
 C4t(e)		andante		-te			-ta			-cie		-ta			t			1
 C4tę		święto		-ęto		-ęta		-ęcie		-ęta		-ąt			1
-C4to		wrota/p2	-ota
-C4t+(ów)	divertimento -to
-C4tsa		miasto		-asto
-C4we		drwa		-wa
-C4wo		Legionowo	-owo
-C4wo+(y?)	słowo		-owo
-C4+(y?)		usta		-a
-C5i			facsimile	-e
-[C5no+ua] - masc type
-C5mu		muzeum		-um
-C5t			poema		-
-
-
-
-
-
-
-
-
-
-
-
-
-A1jŻ		moja		-ja			-je			-ich		2						moja/twoja
-A1Ż			bliźnia		-ia			-ie			-ich		17
-A1Ż/p2:p3	Moście		-ie			-ie			-ich		3
-A3Ż			puszczalska	-a			-ie			-ich		12660					in -[gk]a
-A4+o		królowa		-a			-e			-ych		111						voc in -o
-A4t+(rzecz)	rzeczpospolita -pospolita -ypospolite -ypospolitych 1	rzecz<f>pospolita<+>
-A4Ż			chora		-a			-e			-ych		1559
-D1			fobia		-ia			-ie			-ii/ij:arch	1861					none in -[cdrt]ia except Garcia; lots like anhedonia in -nia that could be a different decl; none in -sia or -zia; also idea, Ilja, ninja, Mantegna [pron Mantenja], Odya [pron Odja], Zápolya [pron Zápoja/Zápojo with initial stress] not in -ia
-D1/m1		Garcia		-ia			-iowie/-ie:depr -iów	23						Garcia/Aria/Zamaria/paria/Beria, otherwise none in -[cdrt]ia; also Ilja/ninja/Mantegna/odya/Zápolya not in -ia
-D1/m2		kanalia		-ia			-ie			-iów		1		((kanalia<m>,kanalia<>)) can be masc or fem
-D1/p3		egzekwie	-ia			-ie			-ii/ij:arch	4
-D1+!		Aniela		-la			-le			-li/l:char	38						voc in -u; all in -[eilouy]la, all proper names except ciotula/mamula/matula; all proper names take voc -o or -u
-D1A+-(-fchar) IKEA		-A			-e (not cap) -i			1
-D1c			ciuchcia	-cia		-cie		-ci/ć:char	8						no proper names
-D1c/m1		ciamcia		-cia		-cie		-ciów		2
-D1c/p2		Degucie		-cie		-cie		-ci/ć:char	4
-D1c/p3		krocie		-cie		-cie		-ci/ć:char	5
-D1c+!		ciocia		-cia		-cie		-ci/ć:char	63						voc in -u; ~50% proper names
-D1c+!/m1	ciamcia		-cia		-cie		-ciów		2						voc in -u
-D1+(-fchar)	trufla		-ea,-la		-ee,-le		-ei,li		291						also Nauzykaa and 10 proper names in -ia; all terms in -la are -Cla except koala, mądrala, ~20 in -ela, campanila, tequila, ~80 in -ola, aula, Depaula, szynszyla
-D1+(-fchar)/m1 bibliopola -la		-le			-li			2						gen_pl not in -lów
-D1+(-fchar)/m2 papla	-cja/la		-cje/le		-cji		7						j not suppressed before -i
-D1+(-fchar)/p2 grable	-la			-le			-li			90						also Jaglie/Kolonie/korepetycje
-D1+(-fchar)/p3 bambetle	-la			-le			-li			116						also Jaglie/Kolonie/komicje/korepetycje/Dionizje/afrodyzje
-D1+!(-fneut) Ela		-la			-le			-l			30						voc in -u; all in -[aeiou]la, all proper names except babula/żonula/czarnula; some proper names + żonula/czarnula take voc -o or -u
-D1+(-fneut)	ziemia		-mia		-mie		-m			2						only ziemia/Ziemia
-D1i+!/m1	dziadzia	-ia			-iowie/ie:depr -iów		5							Kościa/ojczunia/dziadzia/dziamdzia/dziumdzia
-D1i+(-fchar) chełbia	-ia			-ie			-i			806
-D1i+(-fchar)/m1 Gołdynia -ia		-iowie/ie:depr -iów		163
-D1i+(-fchar)/p2 grabie	-ie			-ie			-i			8
-D1i+(-fchar)/p3 drabie	-ie			-ie			-i			18
-D1in		gospodyni	-ni			-nie		-ń			177						acc in -ę; most end in -czyni, 6 in -ani (none in -pani), ksieni, 23 in -ini, 2 in -dyni
-
-...
-
+C4to		wrota/p2	-ota		[-]			[-]			-ota		-ót			1
+C4t+(ów)	divertimento -to		-ta			-cie		-ta			-tów		4						pizzicato/sfumato/sgraffito/divertimento
+C4tsa		miasto		-asto		-asta		-eście		-asta		-ast		5						ciasto/miasto/Miasto/trójmiasto/Trójmiasto
+C4we/p3		drwa		-wa			[-]			[-]			-wa			-ew			1
+C4wo		Legionowo	-owo		-owa		-owie		-owa		-ów			1548					all proper names in -owo (gen_pl -ow/owów/ów)
+C4wo+(y?)	słowo		-owo		-owa		-owie		-owa		-ów			1						ins_pl słowami/słowy:dated
+C4+(y?)/p2	usta		-a			[-]			[-]			-a			-			1						ins_pl ustami/usty:obsolete
+C5i			facsimile	-e			-e			-e			-ia			-iów		5						indecl in sg; regale/ekstemporale/uniwersale/facsimile/faksymile
+C5mu		muzeum		-um			-um			-um			-a			-ów			445						indecl in sg
+[C5no+ua]/m3 epeisodion	[masc type]
+C5t			poema		-			-			-			-ta			-tów		8						Greek neut in -ma; indecl in sg; drama/dylema/poema/systema/apoftegma/klima/dilemma/aksjoma
 ]=]
 decls["hard-n"] = function(base, stems)
 	local velar = base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$")
