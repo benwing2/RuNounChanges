@@ -43,7 +43,7 @@ def process_page(page, index):
   result = expand_text(contents)
   if not result:
     return
-  if ("Category:Categories with invalid label" in result or
+  if ("Category:Categories that are not defined in the category tree" in result or
       "The automatically-generated contents of this category has errors" in result):
     pagemsg("Won't create page, would lead to errors: <%s>" % result)
   else:
