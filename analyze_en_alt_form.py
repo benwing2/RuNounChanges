@@ -90,6 +90,8 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
     return re.sub(r"gue\b", "g", txt)
   def k_to_c(txt):
     return re.sub(r"[KkC]([abcdfgjklmnopqrstuvwxz])", r"c\1", txt)
+  def gh_to_g(txt):
+    return re.sub(r"[Gg]h([aou]|\b)", r"g\1", txt)
   def our_to_or(txt):
     return re.sub(r"our(s|e[dr]s?|ing|(?:ful|al|ous|less)?(?:ly)?)\b", r"or\1", txt)
   def common_our_to_or(txt):
@@ -100,6 +102,10 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
     return re.sub("([Gg])rey", r"\1ray", txt)
   def plough_to_plow(txt):
     return re.sub("([Pp])lough", r"\1low", txt)
+  def mould_to_mold(txt):
+    return re.sub("([Mm])ould", r"\1old", txt)
+  def defence_offence_licence_to_defense_offense_license(txt):
+    return re.sub("(Def|def|Off|off|Lic|lic)ence", r"\1ense", txt)
   if remove_accents(to_page) == remove_accents(from_page):
     if check_for_accented_ed(to_page) or check_for_accented_ed(from_page):
       pagemsg("WARNING: Saw from-page '%s' same as to-page with accents removed and needs manual checking for accented -ed" % from_page)
@@ -157,6 +163,9 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
   if k_to_c(to_page) == k_to_c(from_page):
     pagemsg("Saw from-page '%s' same as to-page with ka/ko/ku/kk/kt/etc. -> same with c" % from_page)
     continue
+  if gh_to_g(to_page) == gh_to_g(from_page):
+    pagemsg("Saw from-page '%s' same as to-page with gha/gho/ghu/gh$ -> same with g" % from_page)
+    continue
   if ll_to_l(to_page) == ll_to_l(from_page):
     pagemsg("Saw from-page '%s' same as to-page with -ll(ed)/-ller(s)/-lling/-llate(d)/-llater(s) -> same with -l-" % from_page)
     continue
@@ -165,6 +174,12 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
     continue
   if plough_to_plow(to_page) == plough_to_plow(from_page):
     pagemsg("Saw from-page '%s' same as to-page with plough -> plow" % from_page)
+    continue
+  if mould_to_mold(to_page) == mould_to_mold(from_page):
+    pagemsg("Saw from-page '%s' same as to-page with mould -> mold" % from_page)
+    continue
+  if defence_offence_licence_to_defense_offense_license(to_page) == defence_offence_licence_to_defense_offense_license(from_page):
+    pagemsg("Saw from-page '%s' same as to-page with defence/offence/licence -> defense/offense/license" % from_page)
     continue
   def canonicalize(txt):
     txt = txt.lower()
