@@ -745,7 +745,7 @@ elephant	żółw		żółwia		żółwiowi	żółwiu		żółwie		żółwi		żółw
 gorilla		goryl		goryla		gorylowi	gorylu		goryle		goryli		gorylami
 pigeon		gołąb		gołębia		gołębiowi	gołębiu		gołębie		gołębi		gołębiami
 moth		mól			mola		molowi		molu		mole		moli		molami
-drone		truteń		trutnia		trutniowi	trutniu		trutnie		trutnii		trutniami
+drone		truteń		trutnia		trutniowi	trutniu		trutnie		trutni		trutniami
 ruble		rubel		rubla		rublowi		rublu		ruble		rubli		rublami
 echinoderm	szkarłupień	szkarłupnia	szkarłupniowi szkarłupniu szkarłupnie szkarłupni szkarłupniami
 nuthatch	bargiel		bargla		barglowi	barglu		bargle		bargli		barglami
@@ -854,7 +854,7 @@ bellows		miech		miecha		miechowi	miechu		miechy		miechów		miechami
 [city]		-			-			-			-			Tychy		Tychów		Tychami
 animal_head	łeb			łba			łbu			łbie		łby			łbów		łbami
 world		świat		świata		światu		świecie		światy		światów		światami
-miracle		jcud			cudu		cudowi		cudzie		cuda		cudów		cudami
+miracle		cud			cudu		cudowi		cudzie		cuda		cudów		cudami
 epeisodion	epejsodion	epejsodionu	epejsodionowi epejsodionie epejsodia epejsodiów	epejsodiami
 séance		seans		seansu		seansowi	seansie		seanse		seansów		seansami
 orchard		sad			sadu		sadowi		sadzie		sady		sadów		sadami
@@ -1455,14 +1455,14 @@ D1ló+(-fneut)/p2:p3 Gole -ole		*			-ole		-ól			2
 D1n			łania		-nia		-ni			-nie		-ni/ń:char	686
 D1n+!		kawunia		-nia		-ni			-nie		-ni:rare/ń:char	58					voc in -u; 1/3 proper names in -unia, 103 common in -unia, 1/3 proper in -[aeioy]nia
 D1n+!/m2	niunia		-nia		-ni			-nie		-niów		1						voc in -u
-D1ne		stajnia		-nia		-ni			-nie		-ni/en:arch	2
+D1ne		stajnia		-nia		-ni			-nie		-ni/en:arch	2						stajnia/kuchnia
 D1nei		suknia		-nia		-ni			-nia		-ni/ien:char 6						all in -[kgw]nia
 D1neiz		studnia		-dnia		-ni			-dnia		-dni/dzien:char 1
-D1neiz/p2:p3 Studnia	-dnie		*			-dnia		-dni/dzien:char 1
+D1neiz/p2:p3 Studnie	-dnie		*			-dnia		-dni/dzien:char 1
 D1n+(-fneut) dynia		-nia		-ni			-nie		-ń			26						all in -ynia or -[kw]inia
 D1n+(-fneut)/p2:p3 sanie -nie		*			-nie		-ń			89						in both -Vnie and -Cnie
-D1nś		wiśnia		-śnia		-śni		-śnie		-śni/sien:char 5
-D1ńe		lutnia		-nia		-ni			-nie		-ni/eń:char 3
+D1nś		wiśnia		-śnia		-śni		-śnie		-śni/sien:char 5					wiśnia/workowiśnia/laurowiśnia/sośnia/Mięsośnia
+D1ńe		lutnia		-nia		-ni			-nie		-ni/eń:char 3						wisznia/Wisznia/lutnia
 D1o+!/m1	Puzio		-o			-			-owie/e:depr -ów		1
 D1+(ów)		fala		-a			-i			-e			-i/-:char	322						all in -[Vl]la except pudźa
 D1+(ów)/m1	bidula		-a			-i			-owie/e:depr -ów		6						all in -Vla except ninja/cieśla
@@ -1587,7 +1587,7 @@ D4d+(ów)/m1	inwalida	-da			-dzie		-dzi/dy:depr -dów		15
 D4d+(-pl:gen) Brda		-da			-dzie		-dy			*			1
 D4dz		uzda		-zda		-ździe		-zdy		-zd			31
 D4dz/m1		skoczybruzda -zda		-ździe		-zdowie/zdy:depr -zdów	27
-D4dza		gwiazda		-azda		-eździe		-azdy		-azd		10
+D4dza		gwiazda		-azda		-eździe		-azdy		-azd		10						gwiazda+compounds, jazda/Objazda/pojazda
 D4dza/m1	Gwiazda		-azda		-eździe		-azdowie/azdy:depr -azdów 1						alt dat in -aździe
 D4dz(o)/m1	Hnizdo		-zdo		-ździe		-zdowie/zdy:depr -zdów	1
 D4(e)		Kaliope		-e			-pie		-y			-			1						reg except nom
@@ -1762,59 +1762,58 @@ declprops["mixed-f"] = {
 --[=[
 Counts from SGJP:
 
-Type		e.g.		ending		nompl		count	indicator		notes
-D10			gardziel	-l			-e			68		<f>
-D10+i		myśl		-l			-i			5		<f.nompli>
-D1bą0		gląb		-b			-e			1		<f.#>			ą/ę alternation
-D1ć0		ploć		-ć			-e			67		<f>
-D1ć0+e		waszmość	-ć			-e			8		?				masc gender
-D1ć0+i		ość			-ć			-i			64650	<>				nouns in -ość will default to feminine
-D1ć0+i/p2	pyszności	-ć			-i			25		<pl>
-D1ć0+i(mi)	kość		-ć			-i			3		<insplmi>		ins_pl in -mi
-D1ć0+i(mi)/p3 kośći		-ć			-i			2		<f.pl.insplmi>?	ins_pl in -mi
-D1ć0(mi)	okiść		-ć			-e			2		<insplmi>		ins_pl in -mi
-D1ć0+w		aszmość		-ć			-owie/-e	5		?				masc gender
-D1će0		płacheć		-ć			-e			2		<f.*>			płacheć -> płachci-
-D1ćó0		uwróć		-ć			-e			1		<f.#>			ó/o alternation
-D1ćśe0		cześć		-ć			-i			1		<f.*.decllemma:czeć> cześć -> czci-
-D1i0		Gołdap		labial		-e			7		<f>
-D1i0+i		głasnost	hard cons	-i			2		<f.nompli>		other one is Ob
-D1j0		rozchwiej	-j			-e			4		<f>
-D1lei0		magiel		-l			-e			1		<f.*>			magiel -> magl-
-D1ló0		siarkosól	-l			-e			5		<f.#>			ó/o alternation
-D1ń0		bojaźń		-ń			-e			109		<f>
-D1ń0+i		pieśń		-ń			-i			2		<f.nompli>
-D1ń0+(mi)	dań			-ń			-e			3		<f.insplmi>		ins_pl in -mi
-D1ń0+(mi)/p2 sanie		-ń			-e			3		<f.pl.insplmi>?	ins_pl in -mi
-D1ń0+(mi)/p3 autosanie	-ń			-e			3		<f.pl.insplmi>?	ins_pl in -mi
-D1ńe0		bezdeń		-ń			-i			1		<f.*.nompli>	bezdeń -> bezdni-
-Dińei0		rówień		-ń			-e			1		<f.*>			rówień -> równi-
-D1ś0		Ruś			-ś			-e			10		<f>
-D1ś0+!		córuś		-ś			-e			3		<f.voc->		voc_sg in - instead of -i
-Diś0+i		nurogęś		-ś			-i			5		<f.nompli.insplami:mi>
-D1ś0+i(mi)	nurogęś		-ś			-i			2		[same as above]	ins_pl in -mi
-D1śei0		półwieś		-ś			-e			7		<f.*.nomple:i>	półwieś -> półwsi-
-D1śei0		półwieś		-ś			-i			7		[same as above]	półwieś -> półwsi-
-D1we0		Narew		-w			-e			28		<f.*>			Narew -> Narwi-
-D1we0+i		brew		-w			-i			1		<f.*.nompli>	brew -> brwi-
-D1we0+i/p2	odrzwi		-w			-i			1		<f.*.pl.nompli>?
-D1wei0		bukiew		-w			-e			25		<f.*>			bukiew -> bukwi-
-D1wó0		Ostrów		-w			-e			1		<f.#>			ó/o alternation; Ostrów -> Ostrowi-
-D1ź0		czeladź		-ź			-e			37		<f>
-D1ź0+i		dopowiedź	-ź			-i			16		<f.nompli>
-D1ź0+i/p3	zapowiedzi	-ź			-i			1		<f.pl.nompli>?
-D1źą0		gałąź		-Vź			-e			1		<f.#.insplami:mi> ą/ę alternation
-D1źą0+(mi)	gałąź		-Vź			-e			1		[same as above]	ą/ę alternation; ins_pl in -mi
-D1źdą0		żołądź		-dź			-e			2		<f.#>			ą/ę alternation; other one is also żołądź
-D1źdó0		gródź		-dź			-e			9		<f.#>			ó/o alternation
-D1źó0		zamróź		-Vź			-e			1		<f.#>			ó/o alternation
-D20			Bydgoszcz	{[cż],[crs]z} -e		178		<f>				
-D20+anoc	Wielkanoc	-noc		 -e			2		((Wielkanoc<f>,Wielka<+>noc<f.[rare]>)) other one is also Wielkanoc; gen_sg Wielkiejnocy; etc.
-D20+y		Bydgoszcz	{[cż],[crs]z} -y		4		<f.nomply>
-D2zse0		wesz		-sz			-y			1		<f.*.nomply>	wesz -> wsz-
-D2żą0		przeprząż	-ż			-e			2		<f.#>			ą/ę alternation
-D2że0		reż			-ż			-e			2		<f.*>			reż -> rż-
-D2żó0		podłóż		-ż			-e			1		<f.#>			ó/o alternation
+Type		e.g.		ending		gensg		nompl		count	indicator		notes
+D10			gardziel	-			-i			-e			68		<f>				all in -l, mostly in -el and -śl
+D10+i		myśl		-i			-i			-i			5		<f.nompli>		all in -l; Trzebiel/Rygol/Supraśl/myśl/Teklimyśl
+D1bą0		gląb		-ąb			-ębi		-ębie		1		<f.#>			ą/ę alternation
+D1ć0		płoć		-ć			-ci			-cie		67		<f>
+D1ć0+e/m1	waszmość	-ć			-ci			-cie		8		?				masc gender
+D1ć0+i		ość			-ć			-ci			-ci			64650	<>				nouns in -ość will default to feminine
+D1ć0+i/p2	pyszności	-ći			*			-ci			25		<pl>
+D1ć0+i(mi)	nić,kość	-ć			-ci			-ci			3		<insplmi>		ins_pl in -ćmi
+D1ć0+i(mi)/p3 kośći		-ć			-ci			-ci			2		<f.pl.insplmi>	ins_pl in -ćmi
+D1ć0(mi)	kiść		-ć			-ci			-cie		2		<insplmi>		ins_pl in -ćmi
+D1ć0+w/m1	waszeć		-ć			-ci			-ciowie/-cie:depr 5	?				masc gender
+D1će0		płeć		-eć			-ci			-cie		2		<f.*>
+D1ćó0		uwróć		-óć			-oci		-ocie		1		<f.#>			ó/o alternation
+D1ćśe0		cześć		-eść		-ci			-ci			1		<f.*.decllemma:czeć> cześć -> czci-
+D1i0		chełb		-			-i			-ie			7		<f>				in -[bmp]
+D1i0+i		głasnost	-			-i			-i			2		<f.nompli>		głasnost/Ob
+D1j0		kolej		-j			-i			-je			4		<f>
+D1lei0		magiel		-iel		-li			-le			1		<f.*>
+D1ló0		sól			-ól			-oli		-ole		5		<f.#>			ó/o alternation
+D1ń0		otchłań		-ń			-ni			-nie		109		<f>
+D1ń0+i		pieśń		-ń			-ni			-ni			2		<f.nompli>		baśń/pieśń
+D1ń0+(mi)	dłoń		-ń			-ni			-nie		3		<f.insplmi>		ins_pl in -ńmi; dań/dłoń/skroń
+D1ń0+(mi)/p2:p3 sanie	-nie		*			-nie		3		<f.pl.insplmi>	ins_pl in -ńmi; sanie/aerosanie/autosanie
+D1ńe0		bezdeń		-eń			-ni			-ni			1		<f.*.nompli>
+Dińei0		rówień		-ień		-ni			-nie		1		<f.*>
+D1ś0		Ruś			-ś			-si			-sie		10		<f>
+D1ś0+!		córuś		-ś			-si			-sie		3		<f.voc->		voc_sg in - instead of -i
+Diś0+i		pierś		-ś			-si			-si			5		<f.nompli.insplami:mi> gęś/Gęś/nurogęś/pierś/połpierś
+D1ś0+i(mi)	gęś			-ś			-si			-si			2		[same as above]	ins_pl in -śmi; gęś/nurogęś
+D1śei0		wieś		-ieś		-si			-sie		7		<f.*.nomple:i[obsolete]>	wieś and compounds including toponyms
+D1śei0+i	wieś		-ieś		-si			-si			7		[same as above; obsolete]
+D1we0		Narew		-ew			-wi			-wie		28		<f.*>
+D1we0+i		brew		-ew			-wi			-wi			1		<f.*.nompli>
+D1we0+i/p2	drzwi		-wi			*			-wi			2		<f.*.pl.nompli>	drzwi/odrzwi
+D1wei0		cerkiew		-iew		-wi			-wie		25		<f.*>
+D1wó0		Ostrów		-ów			-owi		-owie		1		<f.#>			ó/o alternation
+D1ź0		maź			-ź			-zi			-zie		37		<f>
+D1ź0+i		spowiedź	-ź			-zi			-zi			16		<f.nompli>
+D1ź0+i/p3	zapowiedzi	-zi			*			-zi			1		<f.pl.nompli>
+D1źą0		gałąź		-ąź			-ęzi		-ęzie		1		<f.#.insplami:mi> ą/ę alternation
+D1źą0+(mi)	gałąź		-ąź			-ęzi		-ęzie		1		[same as above]	ą/ę alternation; ins_pl in -ęźmi
+D1źdą0		żołądź		-ądź		-ędzi		-ędzie		2		<f.#>			ą/ę alternation; other one is also żołądź [different meaning, has multiple declensions]
+D1źdó0		łódź		-ódź		-odzi		-odzie		9		<f.#>			ó/o alternation
+D1źó0		zamróź		-óź			-ozi		-ozie		1		<f.#>			ó/o alternation
+D20			noc			-			-y			-e			178		<f>				in -[cż]/[crs]z
+D20+anoc	Wielkanoc	-anoc		-iejnocy	-ienoce		2		((Wielkanoc<f>,Wielka<+>noc<f.[rare]>)) other one is also Wielkanoc [different meaning, both meanings have multiple declensions]
+D20+y		rzecz		-			-y			-y			4		<f.nomply>		in -[cż]/[crs]z
+D2zse0		wesz		-esz		-szy		-szy		1		<f.*.nomply>
+D2żą0		uprząż		-ąż			-ęży		-ęże		2		<f.#>			ą/ę alternation
+D2że0		reż			-eż			-ży			-że			2		<f.*>
+D2żó0		podłóż		-óż			-oży		-oże		1		<f.#>			ó/o alternation
 ]=]
 
 decls["cons-f"] = function(base, stems)
@@ -1964,7 +1963,7 @@ gate		-			-			-			wrota		wrót		wrotami
 circle,wheel koło		koła		kole		koła		kół			kołami
 bottom		dno			dna			dnie		dna			den			dnami
 firewood	-			-			-			drwa		drew		drwami
-background	tło			tła			tle			tła			tel			tłami
+background	tło			tła			tle			tła			teł			tłami
 witchcraft	-			-			-			gusła		guseł		gusłami
 rib			żebro		żebra		żebrze		żebra		żeber		żebrami
 window		okno		okna		oknie		okna		okien		oknami
@@ -3672,7 +3671,22 @@ local function determine_declension(base)
 end
 
 
--- Determine the default value for the 'reducible' flag.
+--[=[
+Determine the default value for the 'reducible' flag:
+1 For nouns in a consonant (masculines and consonant-stem feminines):
+...
+2. For nouns in -CCa:
+2a. second C = soft:
+* Nouns in -Cja (C = [csz]; ~2600 terms): reducible because they have archaic gen_pl in -yj.
+* Nouns in -Cla: 12 common nouns, all reducible except those in -lla; lots of proper nouns, split between reducible and
+  non-reducible.
+* Nouns in -Cca: common nouns mostly non-reducible; proper nouns split. But 3 nouns in -sca /ska/ are reducible
+2b. second C = hardened soft consonant: Only komża is reducible.
+2c. second C = velar: the vast majority are, but ~20 are not.
+2d. second C = hard consonant: Too varied to generalize; more appear to not be.
+3. For nouns in CCo: Most in -Cko where C is not [cs] are reducible; only [[manko]] and [[Kłodzko]] are not. Most nouns
+   in -Cło are also reducible. Otherwise too varied to generalize, or mostly not reducible.
+]=]
 local function determine_default_reducible(base)
 	-- Nouns in vowels other than -a/o as well as masculine nouns ending in all vowels don't have null endings so not
 	-- reducible. Note, we are never called on adjectival nouns.

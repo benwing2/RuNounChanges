@@ -121,6 +121,68 @@ function export.ends_in_hardened_soft_cons(word)
 end
 
 
+function export.apply_vowel_alternation(alt, stem, is_vowel_stem, noerror)
+	local modstem, origvowel
+	if alt == "quant" then
+		local modtable
+		if is_vowel_stem then
+			-- vowel in vowel-ending stem "lengthens" before non-vowel ending: ę -> ą, o -> ó
+			modtable = {
+				["ę"] = "ą",
+				["o"] = "ó",
+			}
+		else
+			-- vowel in non-vowel-ending stem "shortens" before vowel ending: ą -> ę, ó -> o
+			modtable = {
+				["ą"] = "ę",
+				["ó"] = "o",
+			}
+		end
+		local fromvowels = {}
+		for k, v in pairs(modtable) do
+			table.insert(fromvowels, k)
+		end
+		modstem = rsub(stem, "([" .. table.concat(fromvowels) .. "])(" .. export.cons_c .. "+)$",
+			function(vowel, post)
+				origvowel = vowel
+				return modtable[vowel] .. post
+			end
+		)
+		if modstem == stem then
+			if noerror then
+				return stem, nil
+			else
+				error(("Quantitative vowel alternation can't be applied because stem '%s' doesn't have %s as its last vowel"):format(
+					stem, require("Module:table").serialCommaJoin(fromvowels, {dontTag = true, conj = "or"})))
+			end
+		end
+	elseif alt == "umlaut" then
+		-- [[gwiazda]] -> dat/loc 'gwieźdie'; [[gniazdo]] -> loc 'gnieździe'; [[światło]] -> loc 'świetle';
+		-- [[ciało]] -> loc 'ciele'; [[czoło]] -> loc 'czele'; [[lato]] -> loc 'lecie'; [[miasto]] -> loc 'mieście' (likewise
+		-- [[ciasto]]); [[anioł]] -> loc/voc 'aniele'; [[niebiosa]] (neut pl) -> loc_pl 'niebiesiech'; [[kościół]] ->
+		-- gen 'kościoła', loc/voc 'kościele'; [[popiół]] -> gen 'popiołu', loc/voc 'popiele'; [[świat]] -> loc/voc 'świecie';
+		-- [[kwiat]] -> loc/voc 'kwiecie'.
+		--
+		-- In the other direction; [[przyjaciel]] -> nom_pl_1/nom_pl_2 'przyjaciele' but gen_pl 'przyjaciół',
+		-- ins_pl 'przyjaciółmi', dat_pl 'przyjaciołom', loc_pl 'przyjaciołach'.
+		modstem = rsub(stem, "([ao])(" .. export.cons_c .. "+)$", "e%1")
+		if modstem == stem then
+			if noerror then
+				return stem, nil
+			else
+				error(("Umlaut vowel alternation can't be applied because stem '%s' doesn't have a or o as its last vowel"):format(
+					stem))
+			end
+		end
+	elseif alt then
+		error("Internal error: Unrecognized vowel alternation indicator '" .. alt .. "'")
+	else
+		return stem, nil
+	end
+	return modstem, origvowel
+end
+
+
 local function make_try(word)
 	return function(from, to)
 		local subbed
@@ -159,7 +221,7 @@ function export.soften_masc_pers_pl(word)
 end
 
 
-function export.soften_fem_dat_sg(word)
+function export.soften_dat_loc_sg(word)
 	local try = make_try(word)
 	return
 		try("ch", "sze") or
@@ -191,6 +253,14 @@ function export.soften_fem_dat_sg(word)
 end
 
 
+--[=[
+Issues:
+1. What is the vowel added?
+2. When do we palatalize the sound (not the letter) before the e?
+3. When do we depalatalize the sound before the e?
+4. When do we palatalize the sound after the e?
+5. When do we depalatalize the sound after the e?
+]=]
 function export.reduce(word)
 	-- FIXME
 	local pre, letter, vowel, post = rmatch(word, "^(.*)([" .. export.cons .. "y%-])([eě])(" .. export.cons_c .. "+)$")
@@ -204,12 +274,43 @@ function export.reduce(word)
 end
 
 
-function export.dereduce(stem)
+--[=[
+Issues:
+1. What is the vowel added?
+* Apparently always e (or ie to indicate palatalization), except in -Cj, where C in [csz], where y is inserted,
+  e.g. [[funkcja]] -> archaic 'funkcyj'; also in -Ci, where C in [cdrt], where y is inserted, e.g. [[parodia]]/
+  [[brewerie]] (FIXME: maybe not a case of dereduction);  FIXME: do we ever insert i after a soft-only version of C?
+2. When do we palatalize the sound (not the letter) before the e?
+* (a) When k or g;
+  (b) when second letter is c and first letter is a labial, e.g. [[owca]] -> 'owiec', [[skrzypce]] -> 'skrzypiec';
+      also in żelazce/żelezce -> 'żelaziec'/'żeleziec' and [[Zamojsce]] -> 'Zamojsiec'; not when first letter is
+	  unpalatalizable [jlż] or rz (e.g. [[Siedlce]] -> 'Siedlec', [[Węgrzce]] -> 'Węgrzec'); also not when the c is
+	  pronounced as /k/ e.g. [[Athabasca]], [[nesca]], [[villanesca]] with -sec;
+  (c) when second letter is n and first letter is a labial or [tsn] (not [dhjlłrzż]/ch/cz/sz), e.g. [[trumna]] ->
+      'trumien', [[panna]] -> 'panien' (+ 12 others), [[hrywna]] -> 'hrywien' (+ ~70 others, mostly in -ówna),
+	  [[drewno]] -> 'drewien', [[płotno]] -> 'płocien' (likewise Kłótno/półpłótno/Krytno/Korytno/Szczytno/Żytno),
+	  [[krosno]] -> 'krosien' (likewise Krosno/Olesno/Chrosno/Prosno); NOTE: not in -sna, e.g. [[ciosna]] ->
+	  'ciosn/ciosen' (likewise Ciosna/wiosna), [[sosna]] -> 'sosen' (likewise zwiesna/wiosna and 15 proper names);
+  (d) when second letter in ni (i.e. ń) and first letter is d or w (only in [[studnia]]/[[Studnie]] -> 'studzien',
+	  [[głownia]] -> 'głowien', [[głównia]] -> 'główien'); not in [[kuchnia]] -> 'kuchen', [[lutnia]] -> 'luteń'.
+3. When do we depalatalize the sound before the e?
+* Never.
+4. When do we palatalize the sound after the e?
+* Never.
+5. When do we depalatalize the sound after the e?
+* Sometimes if ni (i.e. ń); specifically in [[stajnia]] -> 'stajen' (archaic), [[kuchnia]] -> 'kuchen' (archaic); also
+  [[suknia]] -> 'sukien', likewise [[minisuknia]], [[Białosuknia]], [[głownia]], [[głównia]], [[dżwignia]]; also
+  [[studnia]] -> 'studzien', likewise [[Studnie]]; also [[wiśnia]] -> 'wisien', likewise [[workowiśnia]],
+  [[laurowiśnia]], [[sośnia]], [[Mięsośnia]]; but not in [[wisznia]]/[[Wisznia]] -> 'wiszeń'/'Wiszeń', likewise
+  [[lutnia]] -> 'luteń'.
+
+]=]
+function export.dereduce(base, stem)
 	local pre, letter, post = rmatch(stem, "^(.*)(" .. export.cons_c .. ")(" .. export.cons_c .. ")$")
 	if not pre then
 		return nil
 	end
-	local epvowel
+	local epvowel = 
 	if rfind(letter, "[" .. export.paired_palatal .. "]") then
 		letter = export.paired_palatal_to_plain[letter]
 	end
@@ -261,9 +362,10 @@ function export.combine_stem_ending(base, slot, stem, ending)
 		end
 		-- Convert ńi -> ni, and ńe (or any other vowel) -> nie.
 		stem, ending = export.convert_paired_palatal_to_plain(stem, ending)
-		if stem:find("j$") and ending:find("^i") then
+		if rfind(stem, export.vowel_c .. "j$") and ending:find("^i") then
 			stem = stem:gsub("j$", "")
 		end
+		-- FIXME: Review the following w/r/t EFTA dat_sg EF-cie
 		if base and base.all_uppercase then
 			stem = uupper(stem)
 		end
