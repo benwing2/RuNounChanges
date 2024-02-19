@@ -255,22 +255,74 @@ end
 
 --[=[
 Issues:
-1. What is the vowel added?
-2. When do we palatalize the sound (not the letter) before the e?
-3. When do we depalatalize the sound before the e?
-4. When do we palatalize the sound after the e?
-5. When do we depalatalize the sound after the e?
+1. What is the vowel removed?
+* Almost always (i)e. But [[Akademgorodok]] -> 'Akademgorodka', [[kocioł]] -> 'kotła', [[osioł]] -> 'osła' (likewise
+  [[półosioł]], [[kozioł]] -> 'kozła' (likewise [[Kozioł]]).
+2. When do we palatalize the sound (not the letter) before the removed vowel?
+* Never.
+3. When do we depalatalize the sound before the removed vowel?
+* (a) When k or g;
+  (b) When a labial, cf. [[Lubiel]] -> 'Lubla' (likewise Babiel/Zubiel/Szemiel/Szumiel/Cempiel/Kopiel/Szawiel/Kowiel),
+      [[Zgłobień]] -> 'Zgłobnia', [[Mień]] -> 'Mnia', [[pień]] -> 'pnia' (likewise several others), [[rzewien]] ->
+	  'rzewnia' (likewise Drawień/Krzewień); [[bankowiec]] -> 'bankowca' (likewise hundreds of others);
+  (c) in -ień: -cień -> -tnia e.g. [[trucień]]; -dzień -> -dnia e.g. [[grudzień]] (but [[włosień]] -> 'włośnia',
+      [[więzień]] -> 'więźnia');
+  (d) in -iec: isolated [[sarniec]] -> 'sarnca', [[garniec]]/[[półgarniec]] -> 'garnca'/'półgarnca' (but hundreds in
+	  -niec -> -ńca e.g. [[Amerykaniec]], [[biedrzeniec]]); isolated [[rodopisiec]] and [[latopisiec]] -> 'rodopisca',
+	  'latopisca' (but several in -siec -> -śca, e.g. [[kosiec]] -> 'kośca', [[krztusiec]] -> 'krztuśca'); isolated
+	  [[iściec]] -> 'istca' (but several in -ściec -> -śćca, e.g. [[kiściec]] -> 'kiśćca');
+  (e) in -rzec: [[dworzec]] -> 'dworca', [[Czarnogórzec]] -> 'Czarnogórca' (likewise about 50 others; but
+	  [[Nozdrzec]] -> 'Nozdrzca', likewise Mokrzec/Jeziorzec/Wieprzec/Piestrzec/Purzec);
+  (f) in -ieł: isolated [[kocieł]] -> 'kotła', [[kozieł]]/[[Kozieł]] -> 'kozła'/'Kozła' (no counterexamples);
+  (g) in -rzeł: [[orzeł]] -> 'orła' (likewise [[karzeł]], a handful of others; no counterexamples);
+  (h) in -ioł: See under (1) above.
+4. When do we palatalize the sound after the removed vowel?
+* Never.
+5. When do we depalatalize the sound after the removed vowel?
+* Never.
+6. Other irregularities: [[bniec]] -> 'bieńca'; [[ojciec]] -> 'ojca' (likewise praojciec/prapraojciec); [[deszcz]] ->
+   'dżdżu'; [[chrzest]] -> 'chrtu' (likewise przechrzest); [[cześć]] -> 'czci'.
 ]=]
-function export.reduce(word)
-	-- FIXME
-	local pre, letter, vowel, post = rmatch(word, "^(.*)([" .. export.cons .. "y%-])([eě])(" .. export.cons_c .. "+)$")
+function export.reduce(base, word, typ)
+	local pre, c1, pal_i, vowel, c2 =
+		rmatch(word, "^(.*)([" .. export.cons .. "y%-])(i?)([eo])(" .. export.cons_c .. "+)$")
 	if not pre then
 		return nil
 	end
-	if vowel == "ě" and rfind(letter, "[" .. export.paired_plain .. "]") then
-		letter = export.paired_plain_to_palatal[letter]
+	if pal_i == "i" and rfind(c1, "[" .. export.paired_plain .. "]") then
+		c1 = export.paired_plain_to_palatal[c1]
 	end
-	return pre .. letter .. post
+	pre = pre .. c1
+	if typ == true then
+		if c2 == "ń" and pal_i == "i" and (pre:find("ć$") or pre:find("dź$")) then
+			-- This handles -cień -> tnia, -dzień -> -dnia
+			typ = "depal"
+		elseif (c2 == "c" or c2 == "ł") and pal_i == "" and pre:find("rz$") then
+			-- This handles -rzec -> -rca, -rzeł -> -rła
+			typ = "depal"
+		elseif c2 == "ł" and pal_i == "i" and (pre:find("ć$") or pre:find("[^d]ź$")) then
+			-- This handles -cieł -> -tła, -zieł -> -zła
+			typ = "depal"
+		end
+	end
+	if typ == "pal" then
+		error("Internal error: type 'pal' (explicit palatalization) not allowed with reduce()")
+	end
+	if typ == "depal" then
+		local try = make_try(pre)
+		pre =
+			try("dź", "d") or
+			try("ź", "z") or
+			try("ść", "st") or
+			try("ć", "t") or
+			try("ś", "s") or
+			try("ń", "n") or
+			try("rz", "r") or
+			try("rz", "r") or
+			error(("Unable to depalatalize stem '%s' when reducing word '%s'"):format(pre, word))
+	end
+
+	return pre .. c2
 end
 
 
@@ -305,7 +357,7 @@ Issues:
   [[lutnia]] -> 'luteń'.
 
 ]=]
-function export.dereduce(base, stem)
+function export.dereduce(base, stem, typ)
 	local pre, letter, post = rmatch(stem, "^(.*)(" .. export.cons_c .. ")(" .. export.cons_c .. ")$")
 	if not pre then
 		return nil

@@ -34,6 +34,7 @@ local m_table = require("Module:table")
 local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
+local parse_utilities_module = "Module:parse utilities"
 local m_para = require("Module:parameters")
 local com = require("Module:pl-common")
 
@@ -1105,7 +1106,7 @@ B2ceic/m1	ociec		2		-ciec	-ćca			dat -ćcowi; voc -ćcu
 B2ceic/m2	kiściec		4		-ciec	-ćca
 B2ceic/m3	gościec		11		-ciec	-ćca
 B2ceic+!?/m1 samoiściec 1		-ciec	-ćca			voc -ćcze
-B2ceicś!/m1 iściec		1		-iściec	-stca			voc -stcze
+B2ceicś!/m1 iściec		1		-ściec	-stca			voc -stcze
 B2ceic+(u)!w/m1 ociec	2		-ciec	-ćca			dat -ćcu/ćcowi; voc -ćcze
 B2cein/m1	Amerykaniec	177		-niec	-ńca
 B2cein/m2	biedrzeniec	42		-niec	-ńca
@@ -3434,20 +3435,20 @@ dot-separated indicators within them). Return value is an object of the form
   footnotes = {"FOOTNOTE", "FOOTNOTE", ...}, -- may be missing
   stems = { -- may be missing
 	{
-	  reducible = TRUE_OR_FALSE,
+	  reducible = TRUE_OR_FALSE or "pal" or "depal",
+	  quant_alt = TRUE_OR_FALSE,
+	  umlaut = TRUE_OR_FALSE,
 	  footnotes = {"FOOTNOTE", "FOOTNOTE", ...}, -- may be missing
 	  -- The following fields are filled in by determine_stems()
 	  vowel_stem = "STEM",
 	  nonvowel_stem = "STEM",
-	  oblique_slots = one of {nil, "gen_p", "all", "all-oblique"},
-	  oblique_vowel_stem = "STEM" or nil (only needs to be set if oblique_slots is non-nil),
-	  oblique_nonvowel_stem = "STEM" or nil (only needs to be set if oblique_slots is non-nil),
+	  umlauted_vowel_stem = "STEM" or nil (defaults to vowel_stem),
 	},
 	...
   },
-  gender = "GENDER", -- "m", "f", "n"
+  gender = "GENDER", -- "m", "f", "n"; may be missing
   number = "NUMBER", -- "sg", "pl"; may be missing
-  animacy = "ANIMACY", -- "inan", "an"; may be missing
+  animacy = "ANIMACY", -- "inan", "anml", "pr"; may be missing
   hard = true, -- may be missing
   soft = true, -- may be missing
   mixed = true, -- may be missing
@@ -3493,81 +3494,92 @@ local function parse_indicator_spec(angle_bracket_spec)
 		local segments = iut.parse_balanced_segment_run(inside, "[", "]")
 		local dot_separated_groups = iut.split_alternating_runs_and_strip_spaces(segments, "%.")
 		for i, dot_separated_group in ipairs(dot_separated_groups) do
+			local function parse_err(txt)
+				error(("%s: '%s'"):format(txt, require(parse_utilities_module).escape_wikicode(table.concat(
+					dot_separated_group))))
+			end
 			local part = dot_separated_group[1]
 			local case_prefix = usub(part, 1, 3)
+			local reducible_alternant_pattern = "[-*#~p]+"
 			if cases[case_prefix] then
 				local slots, override = parse_override(dot_separated_group)
 				for _, slot in ipairs(slots) do
 					if base.overrides[slot] then
-						error(("Two overrides specified for slot '%s'"):format(slot))
+						parse_err(("Two overrides specified for slot '%s'"):format(slot))
 					else
 						base.overrides[slot] = {override}
 					end
 				end
 			elseif part == "" then
 				if #dot_separated_group == 1 then
-					error("Blank indicator: '" .. inside .. "'")
+					parse_err("Blank indicator")
 				end
 				base.footnotes = fetch_footnotes(dot_separated_group)
-			elseif rfind(part, "^[-*#~]*$") or rfind(part, "^[-*#~]*,") then
+			elseif rfind(part, "^" .. reducible_alternant_pattern .. "$") or
+				rfind(part, "^" .. reducible_alternant_pattern .. ",") then
 				if base.stem_sets then
-					error("Can't specify reducible/vowel-alternant indicator twice: '" .. inside .. "'")
+					parse_err("Can't specify reducible/vowel-alternant indicator twice")
 				end
 				local comma_separated_groups = iut.split_alternating_runs_and_strip_spaces(dot_separated_group, ",")
 				local stem_sets = {}
 				for i, comma_separated_group in ipairs(comma_separated_groups) do
 					local pattern = comma_separated_group[1]
 					local orig_pattern = pattern
-					local reducible, vowelalt, oblique_slots
+					local reducible, quant_alt, umlaut, oblique_slots
 					if pattern == "-" then
 						-- default reducible, no vowel alt
 					else
 						local before, after
-						before, reducible, after = rmatch(pattern, "^(.-)(%-?%*)(.-)$")
+						before, quant_ant, after = rmatch(pattern, "^(.-)(#)(.-)$")
 						if before then
 							pattern = before .. after
-							reducible = reducible == "*"
 						end
-						if pattern ~= "" then
-							if not rfind(pattern, "^##?ě?$") then
-								error("Unrecognized vowel-alternation pattern '" .. pattern .. "', should be one of #, ##, #ě or ##ě: '" .. inside .. "'")
-							end
-							if pattern == "#ě" or pattern == "##ě" then
-								vowelalt = "quant-ě"
-							else
-								vowelalt = "quant"
-							end
-							-- `oblique_slots` will be later changed to "all" if the lemma ends in a consonant.
-							if pattern == "##" or pattern == "##ě" then
-								oblique_slots = "all-oblique"
-							else
-								oblique_slots = "gen_p"
-							end
+						before, umlaut, after = rmatch(pattern, "^(.-)(~)(.-)$")
+						if before then
+							pattern = before .. after
+						end
+						if pattern == "" then
+							-- default reducible
+						elseif pattern == "-*" then
+							-- non-reducible
+							reducible = false
+						elseif pattern == "*" then
+							-- reducible
+							reducible = true
+						elseif pattern == "*p" then
+							-- reducible with palatalization of first cons
+							reducible = "pal"
+						elseif pattern == "*-p" then
+							-- reducible with depalatalization of first cons
+							reducible = "depal"
+						else
+							parse_err(("Unrecognized reducible pattern '%s', should be one of *, -*, *p or *-p"):format(
+								pattern))
 						end
 					end
 					table.insert(stem_sets, {
 						reducible = reducible,
-						vowelalt = vowelalt,
-						oblique_slots = oblique_slots,
+						quant_alt = quant_alt,
+						umlaut = umlaut,
 						footnotes = fetch_footnotes(comma_separated_group)
 					})
 				end
 				base.stem_sets = stem_sets
 			elseif #dot_separated_group > 1 then
-				error("Footnotes only allowed with slot overrides, reducible or vowel alternation specs or by themselves: '" .. table.concat(dot_separated_group) .. "'")
+				parse_err("Footnotes only allowed with slot overrides, reducible or vowel alternation specs or by themselves")
 			elseif part == "m" or part == "f" or part == "n" then
 				if base.gender then
-					error("Can't specify gender twice: '" .. inside .. "'")
+					parse_err("Can't specify gender twice")
 				end
 				base.gender = part
 			elseif part == "sg" or part == "pl" then
 				if base.number then
-					error("Can't specify number twice: '" .. inside .. "'")
+					parse_err("Can't specify number twice")
 				end
 				base.number = part
 			elseif part == "pr" or part == "anml" or part == "inan" then
 				if base.animacy then
-					error("Can't specify animacy twice: '" .. inside .. "'")
+					parse_err("Can't specify animacy twice")
 				end
 				base.animacy = part
 			elseif part == "hard" or part == "soft" or part == "mixed" or part == "surname" or part == "istem" or
@@ -3578,7 +3590,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 				-- silent velar.
 				part == "collapse_ee" or part == "persname" or part == "c_as_k" or part == "velar" or part == "-velar" then
 				if base[part] then
-					error("Can't specify '" .. part .. "' twice: '" .. inside .. "'")
+					parse_err("Can't specify '" .. part .. "' twice")
 				end
 				base[part] = true
 				-- Allow 'hard' to signal that -y is allowed after -c, as in hard masculine nouns such as [[hec]]
@@ -3590,36 +3602,31 @@ local function parse_indicator_spec(angle_bracket_spec)
 				end
 			elseif part == "+" then
 				if base.adj then
-					error("Can't specify '+' twice: '" .. inside .. "'")
+					parse_err("Can't specify '+' twice")
 				end
 				base.adj = true
 			elseif part == "!" then
 				if base.manual then
-					error("Can't specify '!' twice: '" .. inside .. "'")
+					parse_err("Can't specify '!' twice")
 				end
 				base.manual = true
-			elseif rfind(part, "^mixedistem:") then
-				if base.mixedistem then
-					error("Can't specify 'mixedistem:' twice: '" .. inside .. "'")
-				end
-				base.mixedistem = rsub(part, "^mixedistem:", "")
 			elseif rfind(part, "^decllemma:") then
 				if base.decllemma then
-					error("Can't specify 'decllemma:' twice: '" .. inside .. "'")
+					parse_err("Can't specify 'decllemma:' twice")
 				end
 				base.decllemma = rsub(part, "^decllemma:", "")
 			elseif rfind(part, "^declgender:") then
 				if base.declgender then
-					error("Can't specify 'declgender:' twice: '" .. inside .. "'")
+					parse_err("Can't specify 'declgender:' twice")
 				end
 				base.declgender = rsub(part, "^declgender:", "")
 			elseif rfind(part, "^declnumber:") then
 				if base.declnumber then
-					error("Can't specify 'declnumber:' twice: '" .. inside .. "'")
+					parse_err("Can't specify 'declnumber:' twice")
 				end
 				base.declnumber = rsub(part, "^declnumber:", "")
 			else
-				error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
+				parse_err("Unrecognized indicator '" .. part .. "'")
 			end
 		end
 	end
@@ -4282,7 +4289,14 @@ end
 --[=[
 Determine the default value for the 'reducible' flag:
 1 For nouns in a consonant (masculines and consonant-stem feminines):
-...
+* Nouns in -eć seem mostly reducible (~40; but not berbeć/cieć/kmieć/śmiec/rupieć/Budwieć/Międzyświeć).
+* Nouns in -el seem mostly reducible but with lots of exceptions; excluding nouns in -ciel gets down to ~40 exceptions.
+* Nouns in -eń, lots both ways.
+* Nouns in -ec seem mostly reducible; lots of them.
+* Nouns in -ek seem mostly reducible; lots of them, with relatively few exceptions.
+* Nouns in -e- seem mostly reducible, with some exceptions (all proper names).
+* Nouns in -er, lots both ways.
+* Feminine nouns in -ew seem mostly reducible.
 2. For nouns in -CCa:
 2a. second C = soft:
 * Nouns in -Cja (C = [csz]; ~2600 terms): reducible because they have archaic gen_pl in -yj.
