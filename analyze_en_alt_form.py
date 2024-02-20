@@ -16,8 +16,12 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
   def linemsg(txt):
     msg("Line %s: %s" % (lineno, txt))
   m = re.search(r"^Page ([0-9]+) (.*?): Found match for regex:.*?\{\{(?:alternative form of|alt form|altform|alt form of)\|en\|(.*?)[|}]", line)
+  if m:
+    from_template = "altform"
   if not m:
     m = re.search(r"^Page ([0-9]+) (.*?): Found match for regex:.*?\{\{(?:alternative spelling of|alt sp|alt spell|altspell|altsp|alt sp of|alt spelling of)\|en(?:\|from=[^{}=|]*)?\|(.*?)[|}]", line)
+    if m:
+      from_template = "altsp"
   if not m:
     linemsg("WARNING: Unrecognized line: %s" % line)
     continue
@@ -80,6 +84,8 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
     return txt.replace("ae", "e").replace("oe", "e").replace("æ", "e").replace("œ", "e")
   def l_bar_to_l(txt):
     return txt.replace("ł", "l")
+  def y_to_i(txt):
+    return txt.replace("y", "i")
   def ph_to_f(txt):
     return txt.replace("ph", "f")
   def re_to_er(txt):
@@ -88,8 +94,12 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
     return re.sub(r"or\b", "er", txt)
   def gue_to_g(txt):
     return re.sub(r"gue\b", "g", txt)
+  def ck_to_k(txt):
+    return txt.replace("ck", "k")
+  def q_to_k(txt):
+    return txt.replace("q", "k")
   def k_to_c(txt):
-    return re.sub(r"[KkC]([abcdfgjklmnopqrstuvwxz])", r"c\1", txt)
+    return re.sub(r"[Cc]?[KkCc]([abcdfgjklmnopqrstuvwxz])", r"c\1", txt)
   def gh_to_g(txt):
     return re.sub(r"[Gg]h([aou]|\b)", r"g\1", txt)
   def our_to_or(txt):
@@ -100,6 +110,10 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
     return re.sub(r"ll(|er'?s?'?|ed|ing|ful|ate(?:[drs]|rs)?)\b", r"l\1", txt)
   def grey_to_gray(txt):
     return re.sub("([Gg])rey", r"\1ray", txt)
+  def tyre_to_tire(txt):
+    return re.sub(r"\b([Tt])yre", r"\1ire", txt)
+  def arse_to_ass(txt):
+    return re.sub(r"\b([Aa])rse", r"\1ss", txt)
   def plough_to_plow(txt):
     return re.sub("([Pp])lough", r"\1low", txt)
   def mould_to_mold(txt):
@@ -111,6 +125,25 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
       pagemsg("WARNING: Saw from-page '%s' same as to-page with accents removed and needs manual checking for accented -ed" % from_page)
     else:
       pagemsg("Saw from-page '%s' same as to-page with accents removed" % from_page)
+    continue
+  # These should go near the top in preference to more general changes like y -> i.
+  if grey_to_gray(to_page) == grey_to_gray(from_page):
+    pagemsg("Saw from-page '%s' same as to-page with grey -> gray" % from_page)
+    continue
+  if tyre_to_tire(to_page) == tyre_to_tire(from_page):
+    pagemsg("Saw from-page '%s' same as to-page with tyre -> tire" % from_page)
+    continue
+  if arse_to_ass(to_page) == arse_to_ass(from_page):
+    pagemsg("Saw from-page '%s' same as to-page with arse -> ass" % from_page)
+    continue
+  if plough_to_plow(to_page) == plough_to_plow(from_page):
+    pagemsg("Saw from-page '%s' same as to-page with plough -> plow" % from_page)
+    continue
+  if mould_to_mold(to_page) == mould_to_mold(from_page):
+    pagemsg("Saw from-page '%s' same as to-page with mould -> mold" % from_page)
+    continue
+  if defence_offence_licence_to_defense_offense_license(to_page) == defence_offence_licence_to_defense_offense_license(from_page):
+    pagemsg("Saw from-page '%s' same as to-page with defence/offence/licence -> defense/offense/license" % from_page)
     continue
   if ie_to_y(to_page) == ie_to_y(from_page):
     pagemsg("Saw from-page '%s' same as to-page with -ie -> -y" % from_page)
@@ -145,6 +178,9 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
   if ph_to_f(to_page) == ph_to_f(from_page):
     pagemsg("Saw from-page '%s' same as to-page with ph -> f" % from_page)
     continue
+  if y_to_i(to_page) == y_to_i(from_page):
+    pagemsg("Saw from-page '%s' same as to-page with y -> i" % from_page)
+    continue
   if common_our_to_or(to_page) == common_our_to_or(from_page):
     pagemsg("Saw from-page '%s' same as to-page with common-word -our -> -or" % from_page)
     continue
@@ -160,8 +196,14 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
   if gue_to_g(to_page) == gue_to_g(from_page):
     pagemsg("Saw from-page '%s' same as to-page with -gue -> -g" % from_page)
     continue
+  if ck_to_k(to_page) == ck_to_k(from_page):
+    pagemsg("Saw from-page '%s' same as to-page with ck -> k" % from_page)
+    continue
+  if q_to_k(to_page) == q_to_k(from_page):
+    pagemsg("Saw from-page '%s' same as to-page with q -> k" % from_page)
+    continue
   if k_to_c(to_page) == k_to_c(from_page):
-    pagemsg("Saw from-page '%s' same as to-page with ka/ko/ku/kk/kt/etc. -> same with c" % from_page)
+    pagemsg("Saw from-page '%s' same as to-page with (c)ka/(c)ko/(c)ku/(c)kk/(c)kt/etc. -> same with c" % from_page)
     continue
   if gh_to_g(to_page) == gh_to_g(from_page):
     pagemsg("Saw from-page '%s' same as to-page with gha/gho/ghu/gh$ -> same with g" % from_page)
@@ -169,24 +211,19 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
   if ll_to_l(to_page) == ll_to_l(from_page):
     pagemsg("Saw from-page '%s' same as to-page with -ll(ed)/-ller(s)/-lling/-llate(d)/-llater(s) -> same with -l-" % from_page)
     continue
-  if grey_to_gray(to_page) == grey_to_gray(from_page):
-    pagemsg("Saw from-page '%s' same as to-page with grey -> gray" % from_page)
-    continue
-  if plough_to_plow(to_page) == plough_to_plow(from_page):
-    pagemsg("Saw from-page '%s' same as to-page with plough -> plow" % from_page)
-    continue
-  if mould_to_mold(to_page) == mould_to_mold(from_page):
-    pagemsg("Saw from-page '%s' same as to-page with mould -> mold" % from_page)
-    continue
-  if defence_offence_licence_to_defense_offense_license(to_page) == defence_offence_licence_to_defense_offense_license(from_page):
-    pagemsg("Saw from-page '%s' same as to-page with defence/offence/licence -> defense/offense/license" % from_page)
-    continue
   def canonicalize(txt):
     txt = txt.lower()
     txt = txt.replace("-", "").replace(" ", "").replace("'", "").replace(".", "").replace(",", "").replace("/", "")
     txt = remove_accents(txt)
+    txt = grey_to_gray(txt)
+    txt = tyre_to_tire(txt)
+    txt = arse_to_ass(txt)
+    txt = plough_to_plow(txt)
+    txt = ible_eable_to_able(txt)
+    txt = defence_offence_licence_to_defense_offense_license(txt)
     txt = ey_to_y(txt)
     txt = ie_to_y(txt)
+    txt = y_to_i(txt)
     txt = ise_to_ize(txt, omit_extra_e=True)
     txt = ise_to_ize(txt, omit_extra_e=True, with_y=True)
     txt = ae_oe_to_e(txt)
@@ -196,13 +233,13 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
     txt = our_to_or(txt)
     txt = re_to_er(txt)
     txt = or_to_er(txt)
-    txt = gue_to_g(txt)
-    txt = ll_to_l(txt)
-    txt = grey_to_gray(txt)
-    txt = plough_to_plow(txt)
-    txt = ible_eable_to_able(txt)
-    txt = ah_eh_to_a_e(txt)
+    txt = ck_to_k(txt)
+    txt = q_to_k(txt)
     txt = k_to_c(txt)
+    txt = gue_to_g(txt)
+    txt = gh_to_g(txt)
+    txt = ll_to_l(txt)
+    txt = ah_eh_to_a_e(txt)
     return txt
   if canonicalize(to_page) == canonicalize(from_page):
     nomsg = False
@@ -215,4 +252,4 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
     if not nomsg:
       pagemsg("Saw from-page '%s' same as to-page with full canonicalization applied" % from_page)
     continue
-  pagemsg("Saw from-page '%s' not same as to-page, can't convert to {{alt spell}}" % from_page)
+  pagemsg("Saw from-page '%s' not same as to-page, can't convert ||| {{%s}} ||| " % (from_page, from_template))
