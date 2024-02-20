@@ -90,6 +90,7 @@ local output_noun_slots = {
 	loc_s = "loc|s",
 	voc_s = "voc|s",
 	nom_p = "nom|p",
+	nom_p_depr = "deprecative|nom|p",
 	nom_p_linked = "nom|p",
 	gen_p = "gen|p",
 	dat_p = "dat|p",
@@ -741,8 +742,8 @@ gadfly		giez		gza			gzowi		gzie		gzy			gzów		gzami
 eagle		orzeł		orła		orłowi		orle		orły		orłów		orłami
 cysticercus	wągier		wągra		wągrowi		wągrze		wągry		wągrów		wągrami
 billygoat	kozioł		kozła		kozłowi		koźle		kozły		kozłów		kozłami
-słoń		słonia		słoniowi	słoniu		słonie		słoni		słoniami
-elephant	żółw		żółwia		żółwiowi	żółwiu		żółwie		żółwi		żółwiami
+elephant	słoń		słonia		słoniowi	słoniu		słonie		słoni		słoniami
+turtle		żółw		żółwia		żółwiowi	żółwiu		żółwie		żółwi		żółwiami
 gorilla		goryl		goryla		gorylowi	gorylu		goryle		goryli		gorylami
 pigeon		gołąb		gołębia		gołębiowi	gołębiu		gołębie		gołębi		gołębiami
 moth		mól			mola		molowi		molu		mole		moli		molami
@@ -763,7 +764,7 @@ hare		zając		zająca		zającowi	zającu		zające		zajęcy		zającami
 bird		ptak		ptaka		ptakowi		ptaku		ptaki		ptaków		ptakami		ins_sg: ptakiem
 saker_falcon raróg		raroga		rarogowi	rarogu		rarogi		rarogów		rarogami	ins_sg: rarogiem
 kitty		kotek		kotka		kotkowi		kotku		kotki		kotków		kotkami		ins_sg: kotkiem
-ghost		duch		ducha		duchowi		dochu		duchy		duchów		duchami
+ghost		duch		ducha		duchowi		duchu		duchy		duchów		duchami
 cat			kot			kota		kotu		kocie		koty		kotów		kotami
 lion		lew			lwa			lwu			lwie		lwy			lwów		lwami
 dog			pies		psa			psu			psie		psy			psów		psami
@@ -1018,8 +1019,8 @@ B1ńe/m2		truteń		1		-eń			-nia		-niu
 B1ńe/m3		sążeń		21		-eń			-nia		-niu
 B1ńei/m2	szkarłupień	3		-ień		-nia		-niu
 B1ńei/m3	pień		20		-ień		-nia		-niu
-B1ńeic/m2	trucień		1		-cień		-tnia
-B1ńeic/m3	przewiercień 3		-cień		-tnia
+B1ńeic/m2	trucień		1		-cień		-tnia		-tniu
+B1ńeic/m3	przewiercień 3		-cień		-tnia		-tniu
 B1ńeic+(ów)/m1 Kwiecień 1		-cień		-tnia
 B1ńeic+(ów)/m3 kwiecień 2		-cień		-tnia
 B1ńei+(ów)/m1 skupień	3		-ień		-nia
@@ -1067,7 +1068,7 @@ B1ś+(ów)/m1	centuś		593		-ś			-sia
 B1ś+(ów)/m2	buś			18		-ś			-sia
 B1ś+(ów)/m3	chlebuś		17		-ś			-sia
 B1ś+w/m1	tatuś		533		-ś			-sia
-B1+u/m3		spaktakl	486		-			-u
+B1+u/m3		spektakl	486		-			-u
 B1+'u/m3	siècle		2		-			-'u
 B1+-u/m3	GUC			6		-			--u
 B1wó/m3		śródtułów	8		-ów			-owia
@@ -1244,153 +1245,153 @@ B3+w/m3		storczyk	2802	-			-a
 B3+w/p1		małżonkowie	4		-owie		*
 B3+w/p2		żłóbczaki	372		-i			*
 B3+w/p3		baraszki	537		-i			*
-B4/m1		acan		4476	-			-a
-B4/m2		pion		658		-			-a
-B4/m3		chleb		2415	-			-a
-B4/p2		plecy		408		-y			*
-B4/p3		androny		647		-y			*
-B4+!/m1		skurwysyn	1		-			-a				loc -ie/u; voc -u
-B4+-/m1		z			1		-			--a
-B4+-/m2		z			1		-			--a
-B4+-/m3		z			1		-			--a
-B4+0/m3		gram		1		-			-a				gen_pl - after a numeral
-B4+a/m3		expens		7		-			-u				nom_pl -a
-B4bą+u/m3	dąb			29		-ąb			-ębu
-B4bą+w/m1	dziewosłąb	3		-ąb			-ęba		
-B4bą+w/m2	jarząb		6		-ąb			-ęba		
-B4bą+w/m3	ząb			6		-ąb			-ęba		
-B4bą+w/p1	dziewosłęby	1		-ęby		*
-B4be+(u)/m2	łeb			1		-ęb			-ba
-B4be+(u)/m3	łeb			1		-ęb			-ba
-B4be+w/m1	wichrzyłeb	1		-ęb			-ba
-B4bó/m1		chleborób	12		-ób			-oba
-B4bó/m2		brzytwodziób 8		-ób			-oba
-B4bó/m3		dziób		2		-ób			-oba
-B4bó+u/m3	grób		13		-ób			-obu
-B4bó+w/m1	Sposób		4		-ób			-oba
-B4(ce)+'/m1	Wallace		6		-ce			-ce'a			loc/voc -sie
-B4(ce)+'/m2	breakdance	6		-ce			-ce'a			loc/voc -sie
-B4(ce)+'/m3	interface	3		-ce			-ce'u			loc/voc -sie
-B4+ćpan/m1	imćpan		1		-ćpan		-cipana			nom_pl (im)ćpanowie; other forms in -cipan-
-B4d+a/m3	cud			1		-			-u				nom_pl -a
-B4da/m3		obiad		2		-ad			-adu			loc/voc -edzie
-B4dą+u/m3	wzgląd		12		-ąd			-ędu			loc/voc -ędzie
-B4de/m1		sąsiad		2		-ad			-ada			loc/voc -edzie; nom_pl -edzi
-B4de+u/m3	przód		1		-ód			-odu			loc/voc -edzie
+B4/m1		acan		4476	-			-a			-ie
+B4/m2		pion		658		-			-a			-ie
+B4/m3		chleb		2415	-			-a			-ie
+B4/p2		plecy		408		-y			*			*
+B4/p3		androny		647		-y			*			*
+B4+!/m1		skurwysyn	1		-			-a			-ie/u															voc -u
+B4+-/m1		z			1		-			--a			-ecie
+B4+-/m2		z			1		-			--a			-ecie
+B4+-/m3		z			1		-			--a			-ecie
+B4+0/m3		gram		1		-			-a			-ie			-owie		-y		-[count]
+B4+a/m3		ekspens		7		-			-u			-ie			*			-a										organ/wolumen/wolumin/sekstern/interes/ekspens/sukurs
+B4bą+u/m3	dąb			29		-ąb			-ębu		-ębie		*			-ęby
+B4bą+w/m1	dziewosłąb	3		-ąb			-ęba		-ębie		-ębowie		-ęby
+B4bą+w/m2	jarząb		6		-ąb			-ęba		-ębie		*			-ęby
+B4bą+w/m3	ząb			6		-ąb			-ęba		-ębie		*			-ęby
+B4bą+w/p1	dziewosłęby	1		-ęby		*			*			*			-ęby
+B4be+(u)/m2	łeb			1		-eb			-ba			-bie		*
+B4be+(u)/m3	łeb			1		-eb			-ba			-bie		*
+B4be+w/m1	wichrzyłeb	1		-eb			-ba			-bie
+B4bó/m1		chleborób	12		-ób			-oba		-obie
+B4bó/m2		brzytwodziób 8		-ób			-oba		-obie		*
+B4bó/m3		dziób		2		-ób			-oba		-obie		*
+B4bó+u/m3	grób		13		-ób			-obu		-obie		*
+B4bó+w/m1	Sposób		4		-ób			-oba		-obie
+B4(ce)+'/m1	Wallace		6		-ce			-ce'a		-sie
+B4(ce)+'/m2	breakdance	6		-ce			-ce'a		-sie		*
+B4(ce)+'/m3	interface	3		-ce			-ce'u		-sie		*
+B4+ćpan/m1	imćpan		1		-ćpan		-cipana		-cipanu		-ćpanowie	-cipany		-cipanów					voc -cipanie
+B4d+a/m3	cud			1		-			-u			-(d)zie		*			-a			-ów
+B4da/m3		obiad		2		-ad			-adu		-edzie		*			-ady		-adów
+B4dą+u/m3	wzgląd		12		-ąd			-ędu		-ędzie		*			-ędy		-ędów
+B4de/m1		sąsiad		2		-ad			-ada		-edzie		-edzi		-ady		-adów
+B4de+u/m3	przód		1		-ód			-odu		-edzie		*
 B4d+i/m1	chasyd		77		-			-a				loc/voc -(d)zie; nom_pl -(d)zi
-B4dó+u/m3	dowód		114		-ód			-odu			loc/voc -odzie
-B4dó+u/p3	podchody	2		-ody		*
-B4dó+w/m1	koniowód	21		-ód			-oda			loc/voc -odzie
-B4dó+w/m2	grzbietoród	5		-ód			-oda			loc/voc -odzie
-B4d+u/m3	zakład		545		-			-u				loc/voc -(d)zie
-B4d+u/p3	Z-dy		2		-y			*
-B4d+u!/m3	lud			1		-			-u				loc -(d)zie; voc -u
-B4D+-u/m3	ZBOWiD		4		-u			--u				loc/voc --zie
-B4d+!w/m1	dziad		1		-			-a				loc -(d)zie; voc -u
-B4d+w/m1	Herald		311		-			-a				loc/voc -(d)zie
-B4d+w/m2	almand		87		-			-a				loc/voc -(d)zie
-B4d+w/m3	listopad	53		-			-a				loc/voc -(d)zie
-B4d+w/p2	Niderlandy	66		-y			*
-B4d+w/p3	bokobrody	101		-y			*
-B4D+-w/m3	CAD			2		-			--a				loc/voc --zie
-B4dza/m3	zjazd		17		-azd		-azdu			loc/voc -eździe
-B4dzó/m3	Gózd		2		-ózd		-ozdu			loc/voc -oździe
-B4dz+u/m3	gwizd		6		-zd			-zdu			loc/voc -ździe
-B4dz+w/m1	Gorazd		9		-zd			-zda			loc/voc -ździe
-B4dz+w/m3	drozd		1		-zd			-zda			loc/voc -ździe
-B4+e/m2		kontredans	3		-			-a				loc/voc -ie; nom_pl -e
-B4+e/m3		kwadrans	2		-			-a				loc/voc -ie; nom_pl -e
-B4ed+'u/m3	offside		3		-e			-e'u			loc/voc -zie
-B4ed+'w/m1	Claude		7		-e			-e'a			loc/voc -zie
-B4ed+'w/m2	allemande	1		-e			-e'a			loc/voc -zie
-B4e+i/m1	cicerone	1		-e			-a				loc/voc -ie
-B4ens+'w/m1	Daisne		1		-sne		-sne'a			loc/voc -śnie
-B4(es)+'/m1	Gennes		2		-es			-es'a			loc/voc -ie
-B4e+'u/m3	regime		10		-e			-e'u			loc/voc -ie
-B4e+'!w/m1	Marlowe		4		-			-'a				loc/voc -
-B4e+'w/m1	Larousse	22		-e			-e'a			loc/voc -ie
-B4e+'w/m2	anglaise	5		-e			-e'a			loc/voc -ie
-B4e+'w/m3	Danone		5		-e			-e'a			loc/voc -ie
-B4F+-u/m3	AWF,ABS		m3		-			--u				loc/voc --ie
-B4g+w/m1	d'Estaing	m1		-g			-ga				loc (d'Estain)ie; voc as nom
-B4h/m1		mnich,Czech	6		-ch			-cha			nom_pl -si
-B4H+-/m3	PIH			4		-			--u
-B4hced/m3	dech		1		-dech		-tchu
-B4hce+u/m3	mech		1		-ech		-chu
-B4hce+w/m1	Mniszech	1		-ech		-cha
-B4hd+w/m1	Lundegårdh	1		-h			-ha				loc/voc -(d)zie
-B4hn+u/m3	Minh		1		-h			-hu				loc/voc -(n)ie
-B4hn+w/m1	Minh		1		-h			-ha				loc/voc -(n)ie
-B4hp+w/m1	Joseph		1		-ph			-pha			loc/voc -fie
-B4h+u/m3	sztych		183		-			-u
-B4h+w/m1	lizuch		959		-			-a
-B4h+w/m2	Moloch		50		-			-a
-B4h+w/m3	brzuch		118		-			-a
-B4h+w/p2	Tychy		13		-y			*
-B4h+w/p3	Tychy		14		-y			*
-B4+i/m1		intruz		969		-			-a				loc/voc -ie; nom_pl -i
-B4+(ie)/m1	cygan		13		-			-a				loc/voc/nom_pl -ie
-B4+(ie)0/m1	zakrystian	1		-			-a				loc/voc/nom_pl -ie; gen_pl -
-B4le/m3		kościół		2		-ół			-oła			loc/voc -ele
-B4le+u/m3	popioł		1		-ół			-ołu			loc/voc -ele
-B4łeic/m3	kocieł		1		-cieł		-tła			loc/voc -tle
-B4łei+w/m1	Szczygieł	2		-ieł		-ła				loc/voc -le
-B4łei+w/m2	bargieł		3		-ieł		-ła				loc/voc -le
-B4łei+w/m3	kieł,węgieł	5		-ieł		-ła				loc/voc -le; in -[gk]ieł except Kozieł (gen Kozła, loc/voc Kozle)
-B4łeiz/m2	kozieł		1		-zieł		-zła			loc/voc -źle
-B4łes+w/m1	poseł		6		-seł		-sła			loc/voc -śle
-B4łes+w/m2	suseł		1		-seł		-sła			loc/voc -śle
-B4łe+(u)i/m1 diabeł		1		-eł			-ła				loc/voc -le; nom_pl -li
-B4łe+(u)i/m2 diabeł		1		-eł			-ła				loc/voc -le
-B4łe+w/m1	Gaweł		20		-eł			-ła				loc/voc -le
-B4łe+w/m2	wyżeł		1		-eł			-ła				loc/voc -le
-B4łe+w/m3	supeł		5		-eł			-ła				loc/voc -le
-B4łezr+w/m1	orzeł		4		-rzeł		-rła			loc/voc -rle
-B4łezr+w/m2	podkarzeł	4		-rzeł		-rła			loc/voc -rle
-B4łezr+w/m3	Orzeł		1		-rzeł		-rła			loc/voc -rle
+B4dó+u/m3	dowód		114		-ód			-odu		-odzie		*
+B4dó+u/p3	podchody	2		-ody		*			*			*			-ody
+B4dó+w/m1	koniowód	21		-ód			-oda		-odzie
+B4dó+w/m2	grzbietoród	5		-ód			-oda		-odzie		*
+B4d+u/m3	zakład		545		-			-u			-(d)zie		*
+B4d+u/p3	Z-dy		2		-y			*			*			*
+B4d+u!/m3	lud			1		-			-u			-(d)zie		*													voc -u
+B4D+-u/m3	ZBOWiD		4		-u			--u			--zie
+B4d+!w/m1	dziad		1		-			-a			-(d)zie															voc -u
+B4d+w/m1	Herald		311		-			-a			-(d)zie
+B4d+w/m2	almand		87		-			-a			-(d)zie		*
+B4d+w/m3	listopad	53		-			-a			-(d)zie		*
+B4d+w/p2	Niderlandy	66		-y			*			*			*
+B4d+w/p3	bokobrody	101		-y			*			*			*
+B4D+-w/m3	CAD			2		-			--a			--zie		*
+B4dza/m3	zjazd		17		-azd		-azdu		-eździe		*
+B4dzó/m3	Gózd		2		-ózd		-ozdu		-oździe		*
+B4dz+u/m3	gwizd		6		-zd			-zdu		-ździe		*
+B4dz+w/m1	Gorazd		9		-zd			-zda		-ździe
+B4dz+w/m3	drozd		1		-zd			-zda		-ździe		*
+B4+e/m2		kontredans	3		-			-a			-ie			*			-e
+B4+e/m3		kwadrans	2		-			-a			-ie			*			-e
+B4ed+'u/m3	offside		3		-e			-e'u		-zie		*
+B4ed+'w/m1	Claude		7		-e			-e'a		-zie
+B4ed+'w/m2	allemande	1		-e			-e'a		-zie		*
+B4e+i/m1	cicerone	1		-e			-a			-ie
+B4ens+'w/m1	Daisne		1		-sne		-sne'a		-śnie
+B4(es)+'/m1	Gennes		2		-es			-es'a		-ie
+B4e+'u/m3	regime		10		-e			-e'u		-ie			*
+B4e+'!w/m1	Marlowe		4		-			-'a			-
+B4e+'w/m1	Larousse	22		-e			-e'a		-ie
+B4e+'w/m2	anglaise	5		-e			-e'a		-ie			*
+B4e+'w/m3	Danone		5		-e			-e'a		-ie			*
+B4F+-u/m3	AWF,ABS		m3		-			--u			--ie		*
+B4g+w/m1	d'Estaing	m1		-g			-ga			(d'Estain)ie													voc as nom
+B4h/m1		mnich,Czech	6		-ch			-cha		-chu		-si
+B4H+-/m3	PIH			4		-			--u			--u			*			--y			--ów
+B4hced/m3	dech		1		-dech		-tchu		-tchu		*			-tchy		-tchów
+B4hce+u/m3	mech		1		-ech		-chu		-chu		*			-chy		-chów
+B4hce+w/m1	Mniszech	1		-ech		-cha		-chu		-chowie		-chy		-chów
+B4hd+w/m1	Lundegårdh	1		-h			-ha			-(d)zie		-howie		-hy			-hów
+B4hn+u/m3	Minh		1		-h			-hu			-(n)ie
+B4hn+w/m1	Minh		1		-h			-ha			-(n)ie
+B4hp+w/m1	Joseph		1		-ph			-pha		-fie
+B4h+u/m3	sztych		183		-			-u			-u
+B4h+w/m1	lizuch		959		-			-a			-u
+B4h+w/m2	Moloch		50		-			-a			-u
+B4h+w/m3	brzuch		118		-			-a			-u
+B4h+w/p2	Tychy		13		-y			*			*
+B4h+w/p3	Tychy		14		-y			*			*
+B4+i/m1		intruz		969		-			-a			-ie			-i			-y
+B4+(ie)/m1	cygan		13		-			-a			-ie			-ie			-y
+B4+(ie)0/m1	zakrystian	1		-			-a			-ie			-ie			-y			-
+B4le/m3		kościół		2		-ół			-oła		-ele
+B4le+u/m3	popioł		1		-ół			-ołu		-ele
+B4łeic/m3	kocieł		1		-cieł		-tła		-tle
+B4łei+w/m1	Szczygieł	2		-ieł		-ła			-le
+B4łei+w/m2	bargieł		3		-ieł		-ła			-le
+B4łei+w/m3	kieł,węgieł	5		-ieł		-ła			-le																in -[gk]ieł except Kozieł (gen Kozła, loc/voc Kozle)
+B4łeiz/m2	kozieł		1		-zieł		-zła		-źle
+B4łes+w/m1	poseł		6		-seł		-sła		-śle
+B4łes+w/m2	suseł		1		-seł		-sła		-śle
+B4łe+(u)i/m1 diabeł		1		-eł			-ła			-le			-li
+B4łe+(u)i/m2 diabeł		1		-eł			-ła			-le
+B4łe+w/m1	Gaweł		20		-eł			-ła			-le
+B4łe+w/m2	wyżeł		1		-eł			-ła			-le
+B4łe+w/m3	supeł		5		-eł			-ła			-le
+B4łezr+w/m1	orzeł		4		-rzeł		-rła		-rle
+B4łezr+w/m2	podkarzeł	4		-rzeł		-rła		-rle
+B4łezr+w/m3	Orzeł		1		-rzeł		-rła		-rle
 B4łez+(u)w/m1 orzeł		1		-rzeł		-rła			loc/voc -rle; dat -rłu
 B4łez+(u)w/m2 orzeł		1		-rzeł		-rła			loc/voc -rle; dat -rłu
-B4łez+w/m1	Gruzeł		4		-zeł		-zła			loc/voc -źle
-B4łez+w/m2	Węzeł		1		-zeł		-zła			loc/voc -źle
-B4łez+w/m3	węzeł		5		-zeł		-zła			loc/voc -źle
+B4łez+w/m1	Gruzeł		4		-zeł		-zła		-źle
+B4łez+w/m2	Węzeł		1		-zeł		-zła		-źle
+B4łez+w/m3	węzeł		5		-zeł		-zła		-źle
 B4ł+i/m1	Hucuł		4		-ł			-ła				loc/voc -le; nom_pl -li
-B4łł+w/m1	Radziwiłł	3		-łł			-łła			loc/voc -lle
+B4łł+w/m1	Radziwiłł	3		-łł			-łła		-lle
 B4ło+i/m1	anioł		4		-oł			-oła			loc/voc -ele; nom_pl -eli:ołowie
-B4łoic/m3	kocioł		1		-cioł		-tła			loc/voc -tle
-B4łoic/p3	kotły		1		-tły		*
-B4łois+(u)w/m2 osioł	3		-sioł		-sła			loc/voc -śle
-B4łois+w/m1 osioł		1		-sioł		-sła			loc/voc -śle
-B4łois+w/m2 półosioł	2		-sioł		-sła			loc/voc -śle
-B4łoiz+w/m1 kozioł		2		-zioł		-zła			loc/voc -źle
-B4łoiz+w/m2 kozioł		1		-zioł		-zła			loc/voc -źle
-B4łoiz+w/m3 kozioł		2		-zioł		-zła			loc/voc -źle
+B4łoic/m3	kocioł		1		-cioł		-tła		-tle
+B4łoic/p3	kotły		1		-tły		*			*
+B4łois+(u)w/m2 osioł	3		-sioł		-sła		-śle
+B4łois+w/m1 osioł		1		-sioł		-sła		-śle
+B4łois+w/m2 półosioł	2		-sioł		-sła		-śle
+B4łoiz+w/m1 kozioł		2		-zioł		-zła		-źle
+B4łoiz+w/m2 kozioł		1		-zioł		-zła		-źle
+B4łoiz+w/m3 kozioł		2		-zioł		-zła		-źle
 B4łó+i/m1	sokół		1		-ół			-oła			loc/voc -ole; nom_pl -oli
-B4łó+u/m2	piżmowół	3		-ół			-ołu			loc/voc -ole
-B4łó+u/m3	zespół		48		-ół			-ołu			loc/voc -ole
-B4łó+w/m1	kopidół		18		-ół			-oła			loc/voc -ole
-B4łó+w/m2	dół			5		-ół			-oła			loc/voc -ole
-B4łó+w/m3	kół			7		-ół			-oła			loc/voc -ole
-B4łs+u/m3	niedomysł	11		-sł			-słu			loc/voc -śle
-B4łs+w/m1	Przemysł	16		-sł			-sła			loc/voc -śle
-B4ł+u/m3	kanał		304		-ł			-łu				loc/voc -le
-B4ł+w/m1	nielegał	324		-ł			-ła				loc/voc -le
-B4ł+w/m2	bucefał		30		-ł			-ła				loc/voc -le
-B4ł+w/m3	sandał		21		-ł			-ła				loc/voc -le
-B4me+u/m3	najem		4		-em			-mu				loc/voc -mie
-B4me+w/m3	Najem		1		-em			-ma				loc/voc -mie
-B4nes+u/m3	sen			3		-sen		-snu			loc/voc -śnie
-B4ne+u/m3	len			2		-en			-nu				loc/voc -nie
-B4ne+w/m1	Bęben		3		-en			-na				loc/voc -nie
-B4ne+w/m2	bęben		1		-en			-na				loc/voc -nie
-B4ne+w/m3	bochen		1		-en			-na				loc/voc -nie
+B4łó+u/m2	piżmowół	3		-ół			-ołu		-ole
+B4łó+u/m3	zespół		48		-ół			-ołu		-ole
+B4łó+w/m1	kopidół		18		-ół			-oła		-ole
+B4łó+w/m2	dół			5		-ół			-oła		-ole
+B4łó+w/m3	kół			7		-ół			-oła		-ole
+B4łs+u/m3	niedomysł	11		-sł			-słu		-śle
+B4łs+w/m1	Przemysł	16		-sł			-sła		-śle
+B4ł+u/m3	kanał		304		-ł			-łu			-le
+B4ł+w/m1	nielegał	324		-ł			-ła			-le
+B4ł+w/m2	bucefał		30		-ł			-ła			-le
+B4ł+w/m3	sandał		21		-ł			-ła			-le
+B4me+u/m3	najem		4		-em			-mu			-mie
+B4me+w/m3	Najem		1		-em			-ma			-mie
+B4nes+u/m3	sen			3		-sen		-snu		-śnie
+B4ne+u/m3	len			2		-en			-nu			-nie
+B4ne+w/m1	Bęben		3		-en			-na			-nie
+B4ne+w/m2	bęben		1		-en			-na			-nie
+B4ne+w/m3	bochen		1		-en			-na			-nie
 B4nez+i/m1	błazen		1		-zen		-zna			loc/voc -źnie; nom_pl -źni
-B4nez+w/m1	błazen		1		-zen		-zna			loc/voc -źnie
+B4nez+w/m1	błazen		1		-zen		-zna		-źnie
 B4ni/m1		muzułmanin	56		-in			-ina			loc/voc -inie; nom_pl -ie; gen_pl -ów
 B4ni+0/m1	krakowianin	2140	-in			-ina			loc/voc -inie; nom_pl -ie; gen_pl -
 B4ni+w/m1	Germanin	2		-in			-ina			loc/voc -inie; nom_pl -owie; gen_pl -ów
 B4+(num.)/m3 raz		1		-			-a[count]/-u	loc/voc -zie; gen_pl -y[count]/ów
-B4od+w/m1	Alfredo		47		-o			-a				loc/voc -(d)zie
-B4od+w/m2	kupido		4		-o			-a				loc/voc -(d)zie
+B4od+w/m1	Alfredo		47		-o			-a			-(d)zie
+B4od+w/m2	kupido		4		-o			-a			-(d)zie
 B4o+i/m1	mafioso		2		-o			-a				loc/voc -ie; nom_pl -i
 B4o+(in)/m1	Apollo		1		-o			-ina			loc/voc -inie; nom_pl -inowie
 B4o+(on)/m1	Cycero		1		-o			-ona			loc -onie; voc -o/onie
@@ -1399,159 +1400,159 @@ B4or+w/m3	pampero		1		-ro			-ra				loc -rze; voc -ro
 B4ot+w/m1	Canaletto	20		-to			-ta				loc -cie; voc -to
 B4ot+w/m2	putto		20		-to			-ta				loc -cie; voc -to
 B4o+!w/m1	Picasso		44		-o			-a				loc -ie; voc -o
-B4o+w/m1	Zdzicho		2		-o			-a				loc/voc -u
-B4pei+w/m1	kiep		1		-iep		-pa				loc/voc -pie
-B4pei+w/m3	kiep		1		-iep		-pa				loc/voc -pie
-B4pe+w/m3	półwysep	4		-ep			-pu				loc/voc -pie
-B4(phe)+'/m1 Christophe	1		-phe		-phe'a			loc/voc -fie
-B4R+-/m2	TIR,STAR	2		-			--a				loc/voc -(R)-ze
-B4rbó+u/m3	Bóbr		1		-óbr		-obru			loc/voc -obrze
-B4rbó+w/m2	bóbr		1		-óbr		-obra			loc/voc -obrze
-B4rec/m3	amfimacer	2		-cer		-kra			loc/voc -krze
-B4rec+u/m3	amfimacer	2		-cer		-kru			loc/voc -krze
-B4rei+u/m3	cukier		13		-ier		-ru				loc/voc -rze
-B4rei+w/m1	junkier		11		-ier		-ra				loc/voc -rze
-B4rei+w/m2	wągier		4		-ier		-ra				loc/voc -rze
-B4rei+w/m3	ablegier	11		-ier		-ra				loc/voc -rze
+B4o+w/m1	Zdzicho		2		-o			-a			-u
+B4pei+w/m1	kiep		1		-iep		-pa			-pie
+B4pei+w/m3	kiep		1		-iep		-pa			-pie
+B4pe+w/m3	półwysep	4		-ep			-pu			-pie
+B4(phe)+'/m1 Christophe	1		-phe		-phe'a		-fie
+B4R+-/m2	TIR,STAR	2		-			--a			-(R)-ze
+B4rbó+u/m3	Bóbr		1		-óbr		-obru		-obrze
+B4rbó+w/m2	bóbr		1		-óbr		-obra		-obrze
+B4rec/m3	amfimacer	2		-cer		-kra		-krze
+B4rec+u/m3	amfimacer	2		-cer		-kru		-krze
+B4rei+u/m3	cukier		13		-ier		-ru			-rze
+B4rei+w/m1	junkier		11		-ier		-ra			-rze
+B4rei+w/m2	wągier		4		-ier		-ra			-rze
+B4rei+w/m3	ablegier	11		-ier		-ra			-rze
 B4rei+y/m1	Węgier		7		-ier		-ra				loc/voc -rze; nom_pl -rzy
-B4r(es)+'w/m1 Ingres	1		-res		-res'a			loc/voc -rze
-B4r(e)+'u/m3 software	10		-re			-re'u			loc/voc -rze
-B4re+u/m3	wicher		39		-er			-ru				loc/voc -rze
-B4r(e)+'w/m1 Astaire	12		-re			-re'a			loc/voc -rze
-B4r(e)+'w/m3 brumaire	2		-re			-re'a			loc/voc -rze
-B4re+w/m1	Aleksander	78		-er			-ra				loc/voc -rze
-B4re+w/m2	Skamander	14		-er			-ra				loc/voc -rze
-B4re+w/m3	świder		70		-er			-ra				loc/voc -rze
+B4r(es)+'w/m1 Ingres	1		-res		-res'a		-rze
+B4r(e)+'u/m3 software	10		-re			-re'u		-rze
+B4re+u/m3	wicher		39		-er			-ru			-rze
+B4r(e)+'w/m1 Astaire	12		-re			-re'a		-rze
+B4r(e)+'w/m3 brumaire	2		-re			-re'a		-rze
+B4re+w/m1	Aleksander	78		-er			-ra			-rze
+B4re+w/m2	Skamander	14		-er			-ra			-rze
+B4re+w/m3	świder		70		-er			-ra			-rze
 B4re+y/m1	Holender	52		-er			-ra				loc/voc -rze; nom_pl -rzy
-B4r(h)+u/m3	Aligarh		1		-rh			-rhu			loc/voc -rze
+B4r(h)+u/m3	Aligarh		1		-rh			-rhu		-rze
 B4r(o)+y/m1	banderillero 2		-ro			-ra				loc/voc -rze; nom_pl -rzy
-B4ró+u/m3	zbiór		120		-ór			-oru			loc/voc -orze
-B4ró+w/m1	rymotwór	44		-ór			-ora			loc/voc -orze
-B4ró+w/m2	białozór	11		-ór			-ora			loc/voc -orze
-B4ró+w/m3	topór		13		-ór			-ora			loc/voc -orze
+B4ró+u/m3	zbiór		120		-ór			-oru		-orze
+B4ró+w/m1	rymotwór	44		-ór			-ora		-orze
+B4ró+w/m2	białozór	11		-ór			-ora		-orze
+B4ró+w/m3	topór		13		-ór			-ora		-orze
 B4ró+y/m1	doktór		4		-ór			-ora			loc/voc -orze; nom_pl -rzy
-B4r(re)+w/m1 Pierre		4		-rre		-rre'a			loc/voc -rze
+B4r(re)+w/m1 Pierre		4		-rre		-rre'a		-rze
 B4r(ro)+w/m1 Pizarro	2		-rro		-rra			loc -rze; voc -rro
 B4rr+w/m1	Starr		2		-rr			-rra			loc/voc -rze
-B4rr+w/m2	birr		2		-rr			-rra			loc/voc -rze
-B4rr+w/m3	parr		2		-rr			-rra			loc/voc -rze
-B4r(s)+u/m3	parcours	1		-rs			-rsu			loc/voc -rze
-B4rta+u/m3	wiatr		4		-atr		-atru			loc/voc -etrze
-B4r+u/m3	browar		931		-r			-ru				loc/voc -rze
-B4r+u/p3	moczary		1		-ry			*
-B4R+-u/m3	BOR			39		-			--u				loc/voc -(R)-ze
-B4r+w/m1	Adenauer	2106	-r			-ra				loc/voc -rze
-B4r+w/m2	amur		243		-r			-ra				loc/voc -rze
-B4r+w/m3	litr		243		-r			-ra				loc/voc -rze
-B4r+w/p3	labry		1		-ry			*
+B4rr+w/m2	birr		2		-rr			-rra		-rze
+B4rr+w/m3	parr		2		-rr			-rra		-rze
+B4r(s)+u/m3	parcours	1		-rs			-rsu		-rze
+B4rta+u/m3	wiatr		4		-atr		-atru		-etrze
+B4r+u/m3	browar		931		-r			-ru			-rze
+B4r+u/p3	moczary		1		-ry			*			*
+B4R+-u/m3	BOR			39		-			--u			-(R)-ze
+B4r+w/m1	Adenauer	2106	-r			-ra			-rze
+B4r+w/m2	amur		243		-r			-ra			-rze
+B4r+w/m3	litr		243		-r			-ra			-rze
+B4r+w/p3	labry		1		-ry			*			*
 B4r+y/m1	zecer		1010	-r			-ra				loc/voc -rze; nom_pl -rzy
-B4r+y/m3	manipulator	3		-r			-ra				loc/voc -rze
-B4s+'/p3	cornflakes	1		-s			*				gen_pl -'ów
-B4S+-/m1	VIP			2		-			--a				loc/voc --ie
-B4S+-/m2	AIDS,UNIX	7		-			--a				loc/voc --ie
-B4S+-/m3	x			3		-			--a				loc/voc --ie
-B4s+0/p3	cornflakes	1		-s			*				gen_pl -sów
-B4sa+u/m3	las			19		-as			-asu			loc/voc -esie
-B4są/m3		otrząs		1		-ąs			-ęsu			loc/voc -ęsie
+B4r+y/m3	manipulator	3		-r			-ra			-rze
+B4s+'/p3	cornflakes	1		-s			*			*		gen_pl -'ów
+B4S+-/m1	VIP			2		-			--a			--ie
+B4S+-/m2	AIDS,UNIX	7		-			--a			--ie
+B4S+-/m3	x			3		-			--a			--ie
+B4s+0/p3	cornflakes	1		-s			*			*	gen_pl -sów
+B4sa+u/m3	las			19		-as			-asu		-esie
+B4są/m3		otrząs		1		-ąs			-ęsu		-ęsie
 B4sei+(u)/m1 pies		1		-ies		-sa				loc/voc -sie; dat -su
 B4sei+(u)/m2 pies		2		-ies		-sa				loc/voc -sie; dat -su
-B4sei+w/m1	Owies		1		-ies		-sa				loc/voc -sie
-B4sei+w/m3	owies		1		-ies		-sa				loc/voc -sie
+B4sei+w/m1	Owies		1		-ies		-sa			-sie
+B4sei+w/m3	owies		1		-ies		-sa			-sie
 B4s+!w/m1	Jezus		1		-s			-sa				loc -sie; voc -
-B4T+-/m3	WAT,KRRiT	14		-T			-T-u			loc/voc --cie
+B4T+-/m3	WAT,KRRiT	14		-T			-T-u		--cie
 B4t+0/m3	procent		3		-t			-ta[count]/t[count] loc/voc -cie; nom_pl/gen_pl -t[count]
 B4t+a/m1	brat		4		-t			-ta				loc/voc -cie; dat -tu; nom_pl -cia; gen_pl -ci; ins_pl -ćmi; dat_pl -ciom
 B4t+a/p1	b-cia		1		-cia		*				gen_pl -ci; ins_pl -ćmi; dat_pl -ciom
-B4ta/m3		wszechświat	1		-at			-ata			loc/voc -ecie
-B4TA+-/m3	VAT,DAT		6		-AT			-AT-u			loc/voc -acie
+B4ta/m3		wszechświat	1		-at			-ata		-ecie
+B4TA+-/m3	VAT,DAT		6		-AT			-AT-u		-acie
 B4ta+(u)/m3	świat		11		-at			-ata			loc/voc -ecie; dat -atu
-B4ta+u/m3	kwiat		19		-at			-atu			loc/voc -ecie
-B4tą+u/m3	szcząt		1		-ąt			-ętu			loc/voc -ęcie
-B4tc+w/m3	compact		1		-ct			-ctu			loc/voc -kcie
-B4(tes)/m1	Descartes	1		-tes		-tes'a			loc/voc -cie
-B4tes+u/m3	oset		1		-set		-stu			loc/voc -ście
-B4tes+w/m1	Oset		1		-set		-sta			loc/voc -ście
-B4T+-(etu)/m3 BZ		19		-			--etu			loc/voc --ecie
-B4te+u/m3	ocet		2		-et			-tu				loc/voc -cie
-B4t(e)+'w/m1 Bellonte	8		-te			-te'a			loc/voc -cie
-B4t(e)+'w/m2 courante	1		-te			-te'a			loc/voc -cie
-B4te+w/m1	Ocet		1		-et			-tu				loc/voc -cie
-B4t(hes)+w/m1 Barthes	1		-thes		-thes'a			loc/voc -cie
-B4t(he)+w/m1 Forsythe	2		-the		-the'a			loc/voc -cie
-B4t(h)+!w/m1 Smith,Keith 8		-th			-tha			loc/voc -sie/cie
-B4t(h)+w/m1	Hindemith	25		-th			-tha			loc/voc -cie
-B4t(h)+w/m3	plymouth	1		-th			-tha			loc/voc -cie
+B4ta+u/m3	kwiat		19		-at			-atu		-ecie
+B4tą+u/m3	szcząt		1		-ąt			-ętu		-ęcie
+B4tc+w/m3	compact		1		-ct			-ctu		-kcie
+B4(tes)/m1	Descartes	1		-tes		-tes'a		-cie
+B4tes+u/m3	oset		1		-set		-stu		-ście
+B4tes+w/m1	Oset		1		-set		-sta		-ście
+B4T+-(etu)/m3 BZ		19		-			--etu		--ecie
+B4te+u/m3	ocet		2		-et			-tu			-cie
+B4t(e)+'w/m1 Bellonte	8		-te			-te'a		-cie
+B4t(e)+'w/m2 courante	1		-te			-te'a		-cie
+B4te+w/m1	Ocet		1		-et			-tu			-cie
+B4t(hes)+w/m1 Barthes	1		-thes		-thes'a		-cie
+B4t(he)+w/m1 Forsythe	2		-the		-the'a		-cie
+B4t(h)+!w/m1 Smith,Keith 8		-th			-tha		-sie/cie
+B4t(h)+w/m1	Hindemith	25		-th			-tha		-cie
+B4t(h)+w/m3	plymouth	1		-th			-tha		-cie
 B4t+i/m1	konkurent	582		-t			-ta				loc/voc -cie; nom_pl -ci
-B4t+i/p1	Parcelanci	1		-ci			*
-B4TI+-/m3	PIT			4		-IT			-IT-u			loc/voc -icie
-B4TiRR+-/m3	KRRiT		1		-RRiT		-RRiT-u			loc/voc -rricie
-B4TO+-/m3	LOT			2		-OT			-OT-u			loc/voc -ocie
-B4T+-(otu)/m3 PTJ		5		-			--otu			loc/voc --ocie
-B4tó+u/m3	powrót		15		-ót			-otu			loc/voc -ocie
-B4tó+w/m1	Nawrót		5		-ót			-ota			loc/voc -ocie
-B4tó+w/m2	Wywrót		1		-ót			-ota			loc/voc -ocie
-B4tó+w/m3	kołowrót	1		-ót			-ota			loc/voc -ocie
-B4tó+w/m3	PAGART		1		-AGART		-AGART-u		loc/voc -agarcie
-B4ts(es)+w/m1 Costes	1		-stes		-stes'a			loc/voc -ście
-B4tse+u/m3	chrzest		2		-est		-tu				loc/voc -cie
-B4ts(e)+w/m1 Benveniste	1		-ste		-ste'a			loc/voc -ście
+B4t+i/p1	Parcelanci	1		-ci			*			*
+B4TI+-/m3	PIT			4		-IT			-IT-u		-icie
+B4TiRR+-/m3	KRRiT		1		-RRiT		-RRiT-u		-rricie
+B4TO+-/m3	LOT			2		-OT			-OT-u		-ocie
+B4T+-(otu)/m3 PTJ		5		-			--otu		--ocie
+B4tó+u/m3	powrót		15		-ót			-otu		-ocie
+B4tó+w/m1	Nawrót		5		-ót			-ota		-ocie
+B4tó+w/m2	Wywrót		1		-ót			-ota		-ocie
+B4tó+w/m3	kołowrót	1		-ót			-ota		-ocie
+B4tó+w/m3	PAGART		1		-AGART		-AGART-u	-agarcie
+B4ts(es)+w/m1 Costes	1		-stes		-stes'a		-ście
+B4tse+u/m3	chrzest		2		-est		-tu			-cie
+B4ts(e)+w/m1 Benveniste	1		-ste		-ste'a		-ście
 B4ts+i/m1	oszust		1		-st			-sta			loc/voc -ście; nom_pl -ści
-B4ts(o)/m1	Mefisto		3		-sto		-sta			loc/voc -ście
-B4ts+u/m3	agrest		196		-st			-stu			loc/voc -ście
+B4ts(o)/m1	Mefisto		3		-sto		-sta		-ście
+B4ts+u/m3	agrest		196		-st			-stu		-ście
 B4ts+ua/m3	gust		4		-st			-stu			loc/voc -ście; nom_pl -sta
-B4ts+w/m1	August		113		-st			-sta			loc/voc -ście
-B4ts+w/m2	chłyst		9		-st			-sta			loc/voc -ście
-B4ts+w/m3	pancerfaust	8		-st			-sta			loc/voc -ście
-B4tt+w/m1	Czeczott	22		-tt			-tta			loc/voc -cie
-B4t+u/m3	kłopot		2294	-t			-tu				loc/voc -cie
-B4T+-u/m3	MSZ,BZ		15		-			--u				loc/voc --ecie
+B4ts+w/m1	August		113		-st			-sta		-ście
+B4ts+w/m2	chłyst		9		-st			-sta		-ście
+B4ts+w/m3	pancerfaust	8		-st			-sta		-ście
+B4tt+w/m1	Czeczott	22		-tt			-tta		-cie
+B4t+u/m3	kłopot		2294	-t			-tu			-cie
+B4T+-u/m3	MSZ,BZ		15		-			--u			--ecie
 B4t+(u)a/m1	psubrat		1		-t			-ta				loc/voc -cie; dat -tu; nom_pl -cia
 B4t+ua/m3	grunt		18		-t			-tu				loc/voc -cie; nom_pl -ta
 B4t+(u)i/m1	czart,kat	2		-t			-ta				loc/voc -cie; dat -towi/tu; nom_pl -ci
 B4t+(u)w/m1	sukinkot	2		-t			-ta				loc/voc -cie; dat -tu
 B4t+(u)w/m2	kot,czart	4		-t			-ta				loc/voc -cie; dat -tu
-B4t+w/m1	Blériot		1115	-t			-ta				loc/voc -cie
-B4t+w/m2	abisobiont	231		-t			-ta				loc/voc -cie
-B4t+w/m3	młot		217		-t			-ta				loc/voc -cie
-B4t+w/p3	panty		2		-ty			*
-B4t+u/m3	skarb		5351	-			-u				loc/voc -ie
-B4t+u/n2	opus		1		-			-u				loc/voc -ie (NOTE: voc correct per SGJP)
-B4t+u/p2	Zięby		29		-y			*
-B4t+u/p3	wyływy		30		-y			*
+B4t+w/m1	Blériot		1115	-t			-ta			-cie
+B4t+w/m2	abisobiont	231		-t			-ta			-cie
+B4t+w/m3	młot		217		-t			-ta			-cie
+B4t+w/p3	panty		2		-ty			*			*
+B4t+u/m3	skarb		5351	-			-u			-ie
+B4t+u/n2	opus		1		-			-u			-ie (NOTE: voc correct per SGJP)
+B4t+u/p2	Zięby		29		-y			*			*
+B4t+u/p3	wyływy		30		-y			*			*
 B4t+u!/m3	dom			1		-			-u				loc -u; voc -ie
 B4t+(u)/m1	chłop		3		-			-a				loc/voc -ie; nom_pl -i
-B4t+(u)/m2	babochłop	1		-			-a				loc/voc -ie
+B4t+(u)/m2	babochłop	1		-			-a			-ie
 B4+ua/m3	regestr		1		-r			-ru				loc/voc -rze; nom_pl -ra
 B4+ue/m3	dysonans	27		-			-u				loc/voc -ie; nom_pl -e
-B4(us)/m3	ablatiwus	22		-us			-u				loc/voc -ie
+B4(us)/m3	ablatiwus	22		-us			-u			-ie
 B4+(u)!w/m1	pan			18		-			-a				loc -u; voc -ie; dat -u
 B4+u(y?)/m3	czas		1		-			-u				loc/voc -ie; ins_pl -ami/y[dated]
 B4+w/m1		sampan		1		-			-a				loc -u; voc -ie
-B4+!w/m1	Arrow,Shaw	38		-			-a				loc/voc -
-B4we/m3		szew		1		-ew			-wa				loc/voc -wie
-B4we+(u)/m2	lew			3		-ew			-wa				loc/voc -wie
+B4+!w/m1	Arrow,Shaw	38		-			-a			-
+B4we/m3		szew		1		-ew			-wa			-wie
+B4we+(u)/m2	lew			3		-ew			-wa			-wie
 B4we+(u?)/m1 Lew		1		-ew			-wa				loc/voc -wie; dat -wu/wowi[rare]
-B4we+u/m3	pozew		3		-ew			-wu				loc/voc -wie
+B4we+u/m3	pozew		3		-ew			-wu			-wie
 B4we+ystaw/m3 Krasnystaw 1		-ystaw		-egostawu
 B4wó+(u)/m3	Berdyczów	2270	-ów			-owa			loc/voc -owie; dat -owu[archaic]
-B4wó+u/m3	cudzysłów	28		-ów			-owu			loc/voc -owie
-B4wó+w/m1	pustogłów	118		-ów			-owa			loc/voc -owie
-B4wó+w/m2	kolcogłów	10		-ów			-owa			loc/voc -owie
-B4wó+w/m3	wygwizdów	2276	-ów			-owa			loc/voc -owie
-B4x/m1		Max			9		-x			-ksa			loc/voc -ksie
-B4x/m2		melex		5		-x			-ksa			loc/voc -ksie
-B4x/m3		Fenix		3		-x			-ksa			loc/voc -ksie
-B4x+u/m3	appendix	24		-x			-ksu			loc/voc -ksie
-B4x+w/m1	Merckx		1		-x			-sa				loc/voc -sie
-B4zą/m3		pawąz		1		-ąz			-ęza			loc/voc -ęzie
-B4zą+u/m3	grąz		2		-ąz			-ęzu			loc/voc -ęzie
-B4ze/m3		Łobez		1		-ez			-za				loc/voc -zie
-B4zei/m2	giez		1		-iez		-za				loc/voc -zie
-B4zei+u/m3	bez			1		-ez			-zu				loc/voc -zie
-B4zó+u/m3	obóz		46		-óz			-ozu			loc/voc -ozie
-B4zó+w/m1	smarowóz	5		-óz			-oza			loc/voc -ozie
-B4zó+w/m2	Przewóz		1		-óz			-oza			loc/voc -ozie
-B4zó+w/m3	powróz		4		-óz			-oza			loc/voc -ozie
+B4wó+u/m3	cudzysłów	28		-ów			-owu		-owie
+B4wó+w/m1	pustogłów	118		-ów			-owa		-owie
+B4wó+w/m2	kolcogłów	10		-ów			-owa		-owie
+B4wó+w/m3	wygwizdów	2276	-ów			-owa		-owie
+B4x/m1		Max			9		-x			-ksa		-ksie
+B4x/m2		melex		5		-x			-ksa		-ksie
+B4x/m3		Fenix		3		-x			-ksa		-ksie
+B4x+u/m3	appendix	24		-x			-ksu		-ksie
+B4x+w/m1	Merckx		1		-x			-sa			-sie
+B4zą/m3		pawąz		1		-ąz			-ęza		-ęzie
+B4zą+u/m3	grąz		2		-ąz			-ęzu		-ęzie
+B4ze/m3		Łobez		1		-ez			-za			-zie
+B4zei/m2	giez		1		-iez		-za			-zie
+B4zei+u/m3	bez			1		-ez			-zu			-zie
+B4zó+u/m3	obóz		46		-óz			-ozu		-ozie
+B4zó+w/m1	smarowóz	5		-óz			-oza		-ozie
+B4zó+w/m2	Przewóz		1		-óz			-oza		-ozie
+B4zó+w/m3	powróz		4		-óz			-oza		-ozie
 ]=]
 
 
@@ -2008,306 +2009,306 @@ louse		[[wesz]]	wszy		wszy		wszy		wszami
 --[=[
 Counts from SGJP:
 
-Type		e.g.		ending		datsg		nompl		genpl		count	indicator		notes
-A1jŻ		moja		-ja			-jej		-je			-ich		2						moja/twoja
-A1Ż			bliźnia		-ia			-iej		-ie			-ich		17
-A1Ż/p2:p3	Moście		-ie			*			-ie			-ich		3
-A3Ż			puszczalska	-a			-kiej		-ie			-ich		12660					in -[gk]a
-A4+o		królowa		-a			-ej			-e			-ych		111						voc in -o
-A4t+(rzecz)	rzeczpospolita -pospolita -ypospolitej -ypospolite -ypospolitych 1	rzecz<f>pospolita<+>
-A4Ż			chora		-a			-ej			-e			-ych		1559
-D1			fobia		-ia			-ii			-ie			-ii/ij:arch	1861					none in -[cdrt]ia except Garcia; lots like anhedonia in -nia that could be a different decl; none in -sia or -zia; also idea, Ilja, ninja, Mantegna [pron Mantenja], Odya [pron Odja], Zápolya [pron Zápoja/Zápojo with initial stress] not in -ia
-D1/m1		Garcia		-ia			-ii			-iowie/-ie:depr -iów	23						Garcia/Aria/Zamaria/paria/Beria, otherwise none in -[cdrt]ia; also Ilja/ninja/Mantegna/odya/Zápolya not in -ia
-D1/m2		kanalia		-ia			-ii			-ie			-iów		1		((kanalia<m>,kanalia<>)) can be masc or fem
-D1/p3		egzekwie	-ia			*			-ie			-ii/ij:arch	4
-D1+!		Aniela		-la			-li			-le			-li/l:char	38						voc in -u; all in -[eilouy]la, all proper names except ciotula/mamula/matula; all proper names take voc -o or -u
-D1A+-(-fchar) IKEA		-A			--i			--e			 --i		1						lowercase case endings with preceding hyphen
-D1c			ciuchcia	-cia		-ci			-cie		-ci/ć:char	8						no proper names
-D1c/m1		ciamcia		-cia		-ci			-cie		-ciów		2
-D1c/p2		Degucie		-cie		*			-cie		-ci/ć:char	4
-D1c/p3		krocie		-cie		*			-cie		-ci/ć:char	5
-D1c+!		ciocia		-cia		-ci			-cie		-ci/ć:char	63						voc in -u; ~50% proper names
-D1c+!/m1	ciamcia		-cia		-ci			-cie		-ciów		2						voc in -u
-D1+(-fchar)	trufla		-a			-i			-e			-i			291						most in -la and -ea; also Nauzykaa and 10 proper names in -ia; all terms in -la are -Cla except koala, mądrala, ~20 in -ela, campanila, tequila, ~80 in -ola, aula, Depaula, szynszyla
-D1+(-fchar)/m1 bibliopola -a		-i			-e			-i			2						gen_pl not in -lów; bibliopola/cieśla (but both terms have alternate gen_pl in -ów)
-D1+(-fchar)/m2 papla	-a			-i			-e			-i			7						j not suppressed before -i; magnificencja/ekscelencja/eminencja/koala/ebola/papla/zgadula
-D1+(-fchar)/p2 grable	-a			*			-e			-i			90						also Jaglie/Kolonie/korepetycje
-D1+(-fchar)/p3 bambetle	-a			*			-e			-i			116						also Jaglie/Kolonie/komicje/korepetycje/Dionizje/afrodyzje
-D1+!(-fneut) Ela		-a			-i			-e			-			30						voc in -u; all in -[aeiou]la, all proper names except babula/żonula/czarnula; some proper names + żonula/czarnula take voc -o or -u
-D1+(-fneut)	ziemia		-mia		-mi			-mie		-m			2						only ziemia/Ziemia
-D1i+!/m1	dziadzia	-ia			-i			-iowie/ie:depr -iów		5							Kościa/ojczunia/dziadzia/dziamdzia/dziumdzia
-D1i+(-fchar) chełbia	-ia			-i			-ie			-i			806
-D1i+(-fchar)/m1 Gołdynia -ia		-i			-iowie/ie:depr -iów		163
-D1i+(-fchar)/p2 grabie	-ie			-i			-ie			-i			8
-D1i+(-fchar)/p3 drabie	-ie			-i			-ie			-i			18
-D1in		gospodyni	-ni			-ni			-nie		-ń			177						acc in -ę; most end in -czyni, 6 in -ani (none in -pani), ksieni, 23 in -ini, 2 in -dyni
-D1in+ą		pani		-ni			-ni			-nie		-ń			10						acc in -ą; all end in -pani
-D1j			baja		-ja			-i			-je			-i/j:char	194						~75% proper names
-D1j/m1		Maja		-ja			-i			-jowie/je:depr -jów		111						all proper names except raja
-D1j+!		Maja		-ja			-i			-je			-i/j:char	5						voc in -o or -u
-D1j+(-fchar) nadzieja	-ja			-i			-je			-i			45						~50% proper names
-D1j+(-fchar)/p3 gronostaje -je		*			-je			-i			5						all except wierzeje can also be masc with gen_pl -jów
-D1j+(-fneut) dwója		-ja			-i			-je			-j			10						mostly common nouns
-D1j+(-fneut)/m1 zawedyja -ja		-i			-je			-jów		6
-D1jo		zbroja		-oja		-oi			-oje		-oi/ój:char	1
-D1jo/p2:p3	Odoje		-oje		-oi			-oje		-oi/ój:char	2
-D1j+(yj)	funkcja		 -ja		-ji			-je			-ji/yj:arch	2592					all in -[csz]ja
-D1j+(yj)/p2	korepetycje	-ja			*			-je			-ji/yj:arch	1
-D1j+(yj)/p3	antecedencje -ja		*			-je			-ji/yj:arch	26
-D1le		grobla		-la			-li			-le			-li/el:char	13
-D1le/p2		Jeszkotle	-le			*			-le			-li/el:char	4
-D1le/p3		Groble		-le			*			-le			-li/el:char	4
-D1lei		brykla		-kla		-kli		-kle		-kli/kiel:char 1
-D1ló		topola		-ola		-oli		-ole		-oli/ól:char 2						also dola
-D1ló+(-fneut) rola		-ola		-oli		-ole		-ól			3
-D1ló+(-fneut)/p2:p3 Gole -ole		*			-ole		-ól			2
-D1n			łania		-nia		-ni			-nie		-ni/ń:char	686
-D1n+!		kawunia		-nia		-ni			-nie		-ni:rare/ń:char	58					voc in -u; 1/3 proper names in -unia, 103 common in -unia, 1/3 proper in -[aeioy]nia
-D1n+!/m2	niunia		-nia		-ni			-nie		-niów		1						voc in -u
-D1ne		stajnia		-nia		-ni			-nie		-ni/en:arch	2						stajnia/kuchnia
-D1nei		suknia		-nia		-ni			-nia		-ni/ien:char 6						all in -[kgw]nia
-D1neiz		studnia		-dnia		-ni			-dnia		-dni/dzien:char 1
-D1neiz/p2:p3 Studnie	-dnie		*			-dnia		-dni/dzien:char 1
-D1n+(-fneut) dynia		-nia		-ni			-nie		-ń			26						all in -ynia or -[kw]inia
-D1n+(-fneut)/p2:p3 sanie -nie		*			-nie		-ń			89						in both -Vnie and -Cnie
-D1nś		wiśnia		-śnia		-śni		-śnie		-śni/sien:char 5					wiśnia/workowiśnia/laurowiśnia/sośnia/Mięsośnia
-D1ńe		lutnia		-nia		-ni			-nie		-ni/eń:char 3						wisznia/Wisznia/lutnia
-D1o+!/m1	Puzio		-o			-			-owie/e:depr -ów		1
-D1+(ów)		fala		-a			-i			-e			-i/-:char	322						all in -[Vl]la except pudźa
-D1+(ów)/m1	bidula		-a			-i			-owie/e:depr -ów		6						all in -Vla except ninja/cieśla
-D1+(ów)/m2	ninja		-a			-i			-e			-ów			1
-D1+(ów)/p3	stalle		-e			-i			-e			-i/-:char	1
-D1s			paczusia	-sia		-si			-sie		-si:rare/ś:char 6					all common nouns in -usia, voc in -u or -o
-D1s/p2:p3	Basie		-sie		*			-sie		-si:rare/ś:char 3
-D1s+!		samosia		-sia		-si			-sie		-si:rare/ś:char 104					voc in -u; ~75% proper names
-D1+w		antresola	-a			-i			-e			-i/-:char	544						all proper, both in -Vla and -Cla
-D1+w/m1		Kaligula	-a			-i			-owie/e:depr -ów		554						all in -la except Mathea
-D1wei		stągwia		-gwia		-gwi		-gwie		-giew		1
-D1+y		statua		-a			-i			-y			-i			11						gen in -i/y; kwinoa/stoa/tamandua/Pardua/Managua/Nikaragua/genua/Genua/Papua/statua/Mantua
-D1+y/m1		Gargantua	-a			-i			-owie/y:depr -ów		6						gen in -i/y; all proper in -ua
-D1y(ah)		Kayah		-yah		-i			-ye			-i			1
-D1+(yj)		parodia		-ia			-ii			-ie			-ii/yj:arch	672						all in -[cdrt]ia
-D1+(yj)/p2	Indie		-ie			*			-ie			-ii/yj:arch	1
-D1+(yj)/p3	brewerie	-ie			*			-ie			-ii/yj:arch	8						Indie/fanaberie/ferie/peryferie/filakterie/eleuterie/brewerie/perypetie
-D1y+(ów)	Goya		-ya			-i			-ye			-i			1						[pron Goja]
-D1y+(ów)/m1	Goya		-ya			-i			-yowie/ye:depr -yów		2						Goya [pron Goja], Tuleya [pron Tuleja]
-D1z			buzia		-zia		-zi			-zie		-zi/ź:char	11
-D1z/p2:p3	Kiezie		-zie		*			-zie		-zi/ź:char	1
-D1z+!		pindzia		-zia		-zi			-zie		-zi/ź:char	32						voc in -u; ~75% proper names
-D2			Hańcza		-a			-y			-e			-y/-:char	136						in -c/[cdrs]z/ż; only bejca in -ca
-D2/m1		znawca		-a			-y			-y/e:depr	-ów			460						all in -ca
-D2ce/p2:p3	Siedlce		-ce			*			-ce			-ec			15						in -[jlż]ce + Węgrzce
-D2cei		owca		-ca			-cy			-ce			-iec		1
-D2cei/p2:p3	skrzypce	-ce			*			-ce			-iec		85						in -[bmpw]ce + Zamojsce
-D2+(-fchar)	msza		-a			-y			-e			-y			75						in -c/[cdrs]z/ż + cha-cha; only Żernica in -ca
-D2+(-fchar)/m1 hulajdusza -a		-y			-e			-ów			11						in -c/[cs]z/ż; 4 in -ca
-D2+(-fchar)/m2 nindża	-a			-y			-e			-ów			1
-D2+(-fchar)/p2 dżwierze -e			*			-e			-y			98						in -c/[cdrs]z/ż; 6 in -ce
-D2+(-fchar)/p3 Karkonosze -e		*			-e			-y			109						in -c/[cdrs]z/ż; 7 in -ce; subsumes all in p2
-D2+(-fneut)	óslica		-a			-y			-e			-			2342					in -c/[cdrs]z/ż; most in -ica/yca
-D2+(-fneut)/m1 Gruca	-a			-y			-owie/e:depr -ów		339						in -c/[cdrs]z/ż except Fritza
-D2+(-fneut)/m2 gońca	-a			-y			-e			-ów			3						gońca/zabawca/poprawca
-D2+(-fneut)/p2 grabice	-a			*			-e			-			2650
-D2+(-fneut)/p3 Gardzienice -a		*			-e			-			2659					in -[cjlż]/[cdrs]z except Skuze/Chotyze/Parypse; all proper names except maybe grabice/prace; most in -ice/yce
-D2(o)m1		Trapszo		-o			-y			-owie/-e:depr -ów		12
-D2(se)		berceuse	-se			-zie		-zy			-z			1
-D2zdo		grodza		-odza		-odzy		-odze		-odzy/-ódz:char 1
-D2zdo/p2:p3	Ochodze		-odze		*			-odze		-odzy/-ódz:char 1
-Dzzro		zorza		-orza		-orzy		-orze		-órz		1
-D2że		komża		-ża			-ży			-że			-ży/-eż:char 1
-D2żo		rogoża		-oża		-oży		-oże		-oży/-óż:char 3						rogoża/Ochoża/rohoża
-D2żo+(-fneut) loża		-oża		-oży		-oże		-óż			1
-D2(ca)		carioca		-ca			-ce			-ki			-c			4						Fonseca/carioca/Jessica/coca; gen/nom_pl -ki, otherwise in -c-
-D2(ca)/m1	Fonseca		-ca			-ce			-cowie/ki:depr -ców		4						Fonseca/Sica/Tezcatlipoca/Lorca; gen/nom_pl_depr -ki, otherwise in -c-
-D2(ca)e		Athabasca	-ca			-ce			-ki			-ec			3						Athabasca/nesca/villanesca; gen/nom_pl -ki, otherwise in -c-
-D3g			wilga		-ga			-dze		-gi			-g			662
-D3g/m1		drandryga	-ga			-dze		-dzy/gi:depr -gów		22
-D3g/m2		murga		-ga			-dze		-gi			-gów		2						murga/drandryga
-D3g/p2		sarangi		-gi			*			-gi			-g			37						most are proper names also p3
-D3g/p3		figi		-gi			*			-gi			-g			41						most are proper names also p2
-D3g+0		wyga		-ga			-dze		-gi			-g			1
-D3g+0/m1	sługa		-ga			-dze		-dzy/gi:depr -g			1						gen_pl sług:sługów
-D3ge		rózga		-ga			-dze		-gi			-eg			2						drzazga/rózga; both have gen_pl -g:-eg
-D3ge/m1		auriga		-ga			-dze		-gowie/gi:depr -gów		371
-D3gę		księga		-ęga		-ędze		-ęgi		-ąg			5
-D3gę/p2:p3	Kręgi		-ęgi		*			-ęgi		-ąg			2						Kręgi/Mortęgi
-D3g(ha)+w/m1 Agha		-gha		-dze		-ghowie/ghi:depr -ghów	1
-D3go		załoga		-oga		-odze		-ogi		-óg			47
-D3go/p2		Nałogi		-ogi		*			-ogi		-óg			7
-D3go/p3		drogi		-ogi		*			-ogi		-óg			8
-D3gro		morga		-orga		-ordze		-orgi		-órg		1
-D3k			sroka		-ka			-ce			-ki			-k			940						all in -Vka except mekka/Mekka/alka/kalka/walka/flanka/arka/Turka/łaska/niełaska/neska/klęska/odaliska/Polska/Wielkopolska/Małopolska/troska/beztroska
-D3k/m1		judoka		-ka			-ce			-cy/ki:depr	-ków		26
-D3k/m2		sika		-ka			-ce			-ki			-ków		1
-D3k/p2		Duszniki	-ki			*			-ki			-k			361
-D3k/p3		Duszniki	-ki			*			-ki			-k			364
-D3kć		paćka		-ćka		-ćce		-ćki		-ciek		13
-D3kć/p2:p3	Boćki		-ćki		*			-ćki		-ciek		6
-D3ke		babka		-ka			-ce			-ki			-ek			12817					all in -Cka; none in -kka; lots in -lka/rka/ska
-D3ke/m1		tatka		-ka			-ce			-kowie/ki:depr -ek		9						gen_pl not in -ków but all such terms also have gen_pl in -ków
-D3ke/m2		szpicbródka	-ka			-ce			-ki			-ek			1						also fem; gen_pl not in -ków
-D3ke/p2		grabelki	-ki			*			-ki			-ek			1181
-D3ke/p3		Koluszki	-ki			*			-ki			-ek			1284
-D3kein		bańka		-ńka		-ńce		-ńki		-niek		75
-D3kein/m1	Mateńka		-ńka		-ńce		-ńkowie/-ńki:depr -ńków	1
-D3kein/p2	Mońki		-ńki		*			-ńki		-niek		11
-D3kein/p2	sierszeńki	-ńki		*			-ńki		-niek		13
-D3kę		męka		-ęka		-ęce		-ęki		-ąk			1
-D3kę/p3		męki		-ęki		*			-ęki		-ąk			1
-D3kę+c		ręka		-ęka		-ęce		-ęce		-ąk			1
-D3k(o)+w	Doroszeńko	-ko			-ce			-kowie/ki:depr -ków		1027
-D3kś		ośka		-śka		-śce		-śki		-siek		55
-D3kś/p2		Jaśki		-śki		*			-śki		-siek		5
-D3kś/p3		siuśki		-śki		*			-śki		-siek		5
-D3kś+!		mamuśka		-śka		-śce		-śki		-siek		2						voc in -u
-D3k+w		Dejnaka		-ka			-ce			-ki			-k			173						all proper in -Vka
-D3k+w/m1	papinka		-ka			-ce			-kowie/ki:depr -ków		1593
-D3k+w/m2	meszka		-ka			-ce			-ki			-ków		1
-D3kź		buźka		-źka		-źce		-źki		-ziek		6
-D3kź/m1		Buźka		-źka		-źce		-źkowie/źki:depr -źkow	1
-D3kź/p2:p3	Idźki		-źki		*			-źki		-ziek		2
-D4			baba		-a			-ie			-y			-			5760					in -[bfmnpsvwz]a
-D4/m1		Bereza		-a			-ie			-owie/y:depr -ów		1439					in -[bfmnpsvwz]a
-D4/m2		bucina		-a			-ie			-y			-ów			30						in -[bfmnpsvwz]a
-D4/p2		sanczyny	-y			*			-y			-			1593					in -[bfmnpsvwz]y
-D4/p3		annuity		-y			*			-y			-			1745					in -[bfmnpsvwz]y
-D4+0/m2		glina		-a			-ie			-y			-ów			1
-D4(A)		NASA		-A			--ie		--y			-			9						ABBA/UEFA/FIFA/FAMA/SABENA/NEMA/APA/NASA/ANSA; hyphen before non-null case endings
-D4(ah)/m1	Bramah		-ah			-ie			-owie/y:depr -ów		1
-D4be		torba		-ba			-bie		-by			-eb			1
-D4be/p2:p3	Izdby		-by			*			-by			-eb			1
-D4bę		gęba		-ęba		-ębie		-ęby		-ąb			2
-D4bę/m1		moczygęba	-ęba		-ębie		-ębowie/-ęby:depr -ębów	2
-D4bę/p2		Wilczogęby	-ęby		*			-ęby		-ąb			1
-D4bę/p3		otręby		-ęby		*			-ęby		-ąb			2
-D4bó		choroba		-oba		-obie		-oby		-ób			19
-D4bśo		prośba		-ośba		-ośbie		-ośby		-ósb		1
-D4bźo		groźba		-oźba		-oźbie		-oźby		-óźb		3
-D4d			banda		-da			-dzie		-dy			-d			1112
-D4d/m1		aojda		-da			-dzie		-dowie/dy:depr -dów		583
-D4d/m2		przybłęda	-da			-dzie		-dy			-dów		2
-D4d/p3		drakonidy	-dy			*			-dy			-d			2
-D4de		Gwda		-da			-dzie		-dy			-ed			2
-D4(dha)		Sargodha	-dha		-dzie		-dhy		-dh			1
-D4d(o)/m1	Szwedo		-do			-dzie		-dowie/dy:depr -dów		38
-D4dó		nagroda		-oda		-odzie		-ody		-ód			139
-D4dó/p2:p3	Ciepłowody	-ody		*			-ody		-ód			16
-D4d+(ów)/m1	inwalida	-da			-dzie		-dzi/dy:depr -dów		15
-D4d+(-pl:gen) Brda		-da			-dzie		-dy			*			1
-D4dz		uzda		-zda		-ździe		-zdy		-zd			31
-D4dz/m1		skoczybruzda -zda		-ździe		-zdowie/zdy:depr -zdów	27
-D4dza		gwiazda		-azda		-eździe		-azdy		-azd		10						gwiazda+compounds, jazda/Objazda/pojazda
-D4dza/m1	Gwiazda		-azda		-eździe		-azdowie/azdy:depr -azdów 1						alt dat in -aździe
-D4dz(o)/m1	Hnizdo		-zdo		-ździe		-zdowie/zdy:depr -zdów	1
-D4(e)		Kaliope		-e			-pie		-y			-			1						reg except nom
-D4+e		szansa		-a			-ie			-e			-			3						ansa/romansa/szansa
-D4(ha)/m1	Saldanha	-ha			-ie			-hy			-hów		1
-D4hc		mucha		-cha		-sze		-chy		-ch			439
-D4hc/m1		autarcha	-cha		-sze		-chowie/chy:depr -chów	237
-D4hc/m2		marcha		-cha		-sze		-chy		-chów		3
-D4hc/p2:p3	Włochy		-chy		*			-chy		-ch			23
-D4hc+(ech)/p2:p3 Włochy	-chy		*			-chy		-ch			1						loc_pl Włoszech
-D4hc(o)+w/m1 Mikłucho	-cho		-sze		-chowie/chy:depr -chów	4
-D4hc+w/m1	klecha		-cha		-sze		-chowie/chy:depr -ch	1						gen_pl not in -chów
-D4h+(dz)	Praha		-ha			-dze		-hy			-h			1
-D4h(o)+w/m1	Weryho		-ho			-sze		-howie/hy:depr -hów		3
-D4h+(sz)	yamaha		-ha			-sze		-hy			-h			11
-D4h+(sz)/m1	Taha		-ha			-sze		-howie/hy:depr -hów		2
-D4h+(ż)		braha		-ha			-że			-hy			-h			10
-D4h+(ż)/m1	Sapieha		-ha			-że			-howie/hy:depr -hów		3
-D4+i/m1		ortodoksa	-a			-ie			-i/y:depr	-ów			78						in -na except Kaszuba/ortodoksa/Jehowa
-D4ł			mogiła		-ła			-le			-ły			-ł			829
-D4ł/m1		Drzymała	-ła			-le			-łowie/ły:depr -łów		712
-D4łe		jodła,kapła	-ła			-le			-ły			-eł			18
-D4łe/p2		widły		-ły			*			-ły			-eł			12
-D4łe/p3		kudły		-ły			*			-ły			-eł			13
-D4łei		igła		-ła			-le			-ły			-ieł		12
-D4łei/p2:p3	Cegły		-ły			*			-ły			-ieł		4
-D4łł		Jagiełła	-łła		-lle		-łły		-łł			23
-D4łł/m1		mułła		-łła		-lle		-łłowie/łły:depr -łłów	3
-D4łł(o)+w/m1 Jundziłło	-łło		-lle		-łłowie/łły:depr -łłów	12
-D4ł(o)+w/m1 popychajło	-ło			-le			-łowie/ły:depr -łów		217
-D4ł(o)+wa/m1 czuryło	-ło			-le			-łowie/ła:depr -łów		8
-D4łó		szkoła		-oła		-ole		-oły		-ół			13
-D4łó/p2		Baboły		-oły		-ole		-oły		-ół			6
-D4łó/p3		pierdoły	-oły		-ole		-oły		-ół			7
-D4łs		ciosła		-sła		-śle		-sły		-seł		7
-D4łs/m1		Zawisła		-sła		-śle		-słowie/sły:depr -słow	3
-D4łs(o)+w/m1 Porosło	-sło		-śle		-słowie/sły:depr -słów	18
-D4ł+w/m1	kameduła	-ła			-le			-li/ły:depr	-łów		1
-D4łz		gruzła		-zła		-źle		-zły		-zeł		2
-D4łz/m1		Wizła		-zła		-źle		-złowie/ły:depr -złów	1
-D4łz(o)+w/m1 Oślizło	-zło		-źle		-złowie/ły:depr -złów	5
-D4mć		ćma			-ćma		-ćmie		-ćmy		-ciem		1
-D4me		karczma		-ma			-mie		-my			-em			5
-D4ne		druhna		-na			-nie		-ny			-en			58						in -[dhjłrż]na/chna/szna
-D4nei		trumna		-na			-nie		-ny			-ien		84						in -[gmnw]na
-D4nei/p2:p3	Stegny		-ny			*			-ny			-ien		4						in -gny
-D4neis		ciosna		-sna		-śnie		-ny			-sn/sen		3						ciosna/Ciosna/Wiosna
-D4nes		sosna		-sna		-śnie		-sny		-sen		18
-D4nes/m1	Sosna		-sna		-śnie		-snowie/sny:depr -snów	3
-D4ns(o)/m1	Kosno		-sno		-śnie		-snowie/sny:depr -snów	1
-D4nz		blizna		-zna		-źnie		-zny		-zn			456
-D4nz/m1		mężczyzna	-zna		-źnie		-źni/zny:depr -zn		1
-D4nz(o)		Tryzno/m1	-zno		-źnie		-znowie/zny:depr -znów	1
-D4nz+w		Puścizna	-zna		-źnie		-zny		-zn			6
-D4nz+w/m1	Tryzna		-zna		-źnie		-znowie/zny:depr -znów	6						SGJP says -źnowie but that seems a mistake
-D4nź		kneźna		-źna		-źnie		-źny		-zien		1
-D4(o)/m1	Michno		-o			-ie			-owie/y:depr -ów		76						in -[bmnpswz]o, preceded by V or C
-D4pó		stopa		-opa		-opie		-opy		-óp			2
-D4r			góra		-ra			-rze		-ry			-r			850						20 in -bra, lycra, 38 in -dra, cyfra, 10 in -gra, 3 in -chra, 2 in -hra, 3 in -jra, 10 in -kra, 2 in -mra, 4 in -pra, 41 in -tra, 7 in -wra, 2 in -żra, rest in -Vra
-D4r/m1		pediatra	-ra			-rze		-rzy/ry:depr -rów		27						13 in -tra, rest in -Vra
-D4ra		ofiara		-ara		*			-ary		-ar			5
-D4re		kołdra		-ra			-rze		-ry			-er			33						3 in -bra (all 3 are optionally reducible), 22 in -dra (red: Hadra,nadra,flądra,kołdra,afelandra,salamandra,Aleksandra,bindra,odra,Odra,łachudra,miazdra,klabzdra,mizdra; opt red: fladra,cynadra,zadra,szołdra,kalandra,kasandra,Kasandra,wydra), czochra (opt red), klamra (red), 6 in -tra (red: litra,hajstra,olstra,mustra,Brahmaputra; opt red: mutra)
-D4re/p2		Zadry		-ry			-rze		-ry			-er			5
-D4re/p3		cynadry		-ry			-rze		-ry			-er			5
-D4rei		gra			-ra			-rze		-ry			-ier		10						in -[kg]ra
-D4rei/p2:p3	Wigry		-ry			*			-ry			-ier		5						in -[kg]ra
-D4r(ha)/m1	Cerha		-rha		-rze		-rhowie/rhy:depr -rhów	1						no h before dative
-D4ro		obora		-ora		-orze		-ory		-ór			29
-D4ro/p2:p3	Obory		-ory		*			-ory		-ór			3
-D4r(o)+w/m1	Fredro		-ro			-rze		-rowie/ry:depr -rów		56
-D4(rr)		Canberra	-rra		-rze		-rry		-rr			14						no r before dative
-D4(rr)/m1	Carra		-rra		-rze		-rrowie/rry:depr -rrów	6						no r before dative
-D4rtsó		siostra		-ostra		-ostrze		-ostry		-óstr		2
-D4r+w		Stachura	-ra			-rze		-ry			-r			669
-D4r+w/m1	Pazura		-ra			-rze		-rowie/ry:depr -rów		692
-D4r+w/m2	lisiura		-ra			-rze		-ry			-rów		3
-D4r+w/p3	maniery		-ry			*			-ry			-r			2
-D4t			minuta		-ta			-cie		-ty			-t			1302
-D4t/m1		Galata		-ta			-cie		-towie/ty:depr -tów		500
-D4t/m2		argonauta	-ta			-cie		-ty			-tów		10
-D4t/p3		panty		-ty			*			-ty			-t			1
-D4t(ha)		Hertha		-tha		-cie		-thy		-th			3
-D4t(ha)/m1	Botha		-tha		-cie		-thowie/thy:depr -thów	2
-D4t+i/m1	poeta		-ta			-cie		-ci/ty:depr	-tów		233
-D4t+i/m2	przechrzta	-ta			-cie		-ty			-tów		2
-D4t(o)/m1	tato		-to			-cie		-towie/ty:depr -tów		38
-D4to		robota		-ota		-ocie		-oty		-ót			8
-D4to/p2:p3	roboty		-oty		*			-oty		-ót			1
-D4t+(-pl:gen) krzta		-ta			-cie		-ty			*			1
-D4ts		langusta	-sta		-ście		-sty		-st			107
-D4ts/m1		podstarosta	-sta		-ście		-stowie/sty:depr -stów	49						all proper names except podesta/starosta/podstarosta/wicestarosta; 5 in -asta, 8 in -esta, 18 in -ista, 2 in -msta, 7 in -osta, 6 in -usta, 3 in -ysta
-D4ts/m2		antagonista	-sta		-ście		-sty		-stów		1
-D4tsa		niewiasta	-asta		-eście		-asty		-ast		1
-D4ts+i/m1	cyklista	-sta		-ście		-ści/sty:depr -stów		1076					16 in -asta, podesta, 3 in -osta (diagnosta/farmakognosta/prognosta), all the rest in -ista/-ysta; no proper names AFAICT
-D4ts(o)/m1	Kusto		-sto		-ście		-stowie/sty:depr -stów	3
-D4t(TA)		EFTA		-TA			--cie		-T-y			-T		6						ETA/NAFTA/EFTA/CEFTA/ELTA/LETTA; all except LETTA can be indeclinable; hyphen before non-null case endings
-D4we		łyżwa		-wa			-wie		-wy			-ew			21
-D4we/p2:p3	Mątwy		-wy			*			-wy			-ew			2
-D4wei		pluskwa		-wa			-wie		-wy			-iew		2						in -[kg]wa
-D4wei/p2:p3	Łagwy		-wy			*			-wy			-iew		2						in -[kg]wy
-D4wó		połowa		-owa		-owie		-owy		-ów			122
-D4wó/m1		trzęsigłowa	-owa		-owie		-owowie:rare/-owy:depr -owów 1
-D4wó/p2		Charzykowy	-owy		*			-owy		-ów			64
-D4wó/p3		okowy		-owy		*			-owy		-ów			66
-D4wó+agłowa	białagłowa	-agłowa		ejgłowie	-egłowy		-ychgłów	1		biała<+>głowa<>
-D4x+w		Dixa		-xa			-ksie		-xy			-x			3
-D4x+w/m1	Jaxa		-xa			-ksie		-xowie/xy:depr -xów		3
-D4ze		łza			-za			-zie		-zy			-ez			1
-D4zei		gza			-za			-zie		-zy			-iez		1
-D4zó		poza		-oza		-ozie		-ozy		-óz			12
-D4zó/p2:p3	Płozy		-ozy		-ozie		-ozy		-óz			4
+Type		e.g.		count	ending		datsg		nompl		genpl		indicator		notes
+A1jŻ		moja		2		-ja			-jej		-je			-ich						moja/twoja
+A1Ż			bliźnia		17		-ia			-iej		-ie			-ich		
+A1Ż/p2:p3	Moście		3		-ie			*			-ie			-ich		
+A3Ż			puszczalska	12660	-a			-kiej		-ie			-ich						in -[gk]a
+A4+o		królowa		111		-a			-ej			-e			-ych						voc in -o
+A4t+(rzecz)	rzeczpospolita 1	-pospolita -ypospolitej -ypospolite -ypospolitych rzecz<f>pospolita<+>
+A4Ż			chora		1559	-a			-ej			-e			-ych		
+D1			fobia		1861	-ia			-ii			-ie			-ii/ij:arch					none in -[cdrt]ia except Garcia; lots like anhedonia in -nia that could be a different decl; none in -sia or -zia; also idea, Ilja, ninja, Mantegna [pron Mantenja], Odya [pron Odja], Zápolya [pron Zápoja/Zápojo with initial stress] not in -ia
+D1/m1		Garcia		23		-ia			-ii			-iowie/-ie:depr -iów					Garcia/Aria/Zamaria/paria/Beria, otherwise none in -[cdrt]ia; also Ilja/ninja/Mantegna/odya/Zápolya not in -ia
+D1/m2		kanalia		1		-ia			-ii			-ie			-iów		((kanalia<m>,kanalia<>)) can be masc or fem
+D1/p3		egzekwie	4		-ia			*			-ie			-ii/ij:arch	
+D1+!		Aniela		38		-la			-li			-le			-li/l:char					voc in -u; all in -[eilouy]la, all proper names except ciotula/mamula/matula; all proper names take voc -o or -u
+D1A+-(-fchar) IKEA		1		-A			--i			--e			 --i						lowercase case endings with preceding hyphen
+D1c			ciuchcia	8		-cia		-ci			-cie		-ci/ć:char					no proper names
+D1c/m1		ciamcia		2		-cia		-ci			-cie		-ciów		
+D1c/p2		Degucie		4		-cie		*			-cie		-ci/ć:char	
+D1c/p3		krocie		5		-cie		*			-cie		-ci/ć:char	
+D1c+!		ciocia		63		-cia		-ci			-cie		-ci/ć:char					voc in -u; ~50% proper names
+D1c+!/m1	ciamcia		2		-cia		-ci			-cie		-ciów						voc in -u
+D1+(-fchar)	trufla		291		-a			-i			-e			-i							most in -la and -ea; also Nauzykaa and 10 proper names in -ia; all terms in -la are -Cla except koala, mądrala, ~20 in -ela, campanila, tequila, ~80 in -ola, aula, Depaula, szynszyla
+D1+(-fchar)/m1 bibliopola 2		-a			-i			-e			-i							gen_pl not in -lów; bibliopola/cieśla (but both terms have alternate gen_pl in -ów)
+D1+(-fchar)/m2 papla	7		-a			-i			-e			-i							j not suppressed before -i; magnificencja/ekscelencja/eminencja/koala/ebola/papla/zgadula
+D1+(-fchar)/p2 grable	90		-a			*			-e			-i							also Jaglie/Kolonie/korepetycje
+D1+(-fchar)/p3 bambetle	116		-a			*			-e			-i							also Jaglie/Kolonie/komicje/korepetycje/Dionizje/afrodyzje
+D1+!(-fneut) Ela		30		-a			-i			-e			-							voc in -u; all in -[aeiou]la, all proper names except babula/żonula/czarnula; some proper names + żonula/czarnula take voc -o or -u
+D1+(-fneut)	ziemia		2		-mia		-mi			-mie		-m							only ziemia/Ziemia
+D1i+!/m1	dziadzia	5		-ia			-i			-iowie/ie:depr -iów						Kościa/ojczunia/dziadzia/dziamdzia/dziumdzia
+D1i+(-fchar) chełbia	806		-ia			-i			-ie			-i			
+D1i+(-fchar)/m1 Gołdynia 163		-ia		-i			-iowie/ie:depr -iów		
+D1i+(-fchar)/p2 grabie	8		-ie			-i			-ie			-i			
+D1i+(-fchar)/p3 drabie	18		-ie			-i			-ie			-i			
+D1in		gospodyni	177		-ni			-ni			-nie		-ń							acc in -ę; most end in -czyni, 6 in -ani (none in -pani), ksieni, 23 in -ini, 2 in -dyni
+D1in+ą		pani		10		-ni			-ni			-nie		-ń							acc in -ą; all end in -pani
+D1j			baja		194		-ja			-i			-je			-i/j:char					~75% proper names
+D1j/m1		Maja		111		-ja			-i			-jowie/je:depr -jów						all proper names except raja
+D1j+!		Maja		5		-ja			-i			-je			-i/j:char					voc in -o or -u
+D1j+(-fchar) nadzieja	45		-ja			-i			-je			-i							~50% proper names
+D1j+(-fchar)/p3 gronostaje 5	-je			*			-je			-i							all except wierzeje can also be masc with gen_pl -jów
+D1j+(-fneut) dwója		10		-ja			-i			-je			-j							mostly common nouns
+D1j+(-fneut)/m1 zawedyja 6		-ja			-i			-je			-jów		
+D1jo		zbroja		1		-oja		-oi			-oje		-oi/ój:char	
+D1jo/p2:p3	Odoje		2		-oje		-oi			-oje		-oi/ój:char	
+D1j+(yj)	funkcja		2592	-ja			-ji			-je			-ji/yj:arch					all in -[csz]ja
+D1j+(yj)/p2	korepetycje	1		-ja			*			-je			-ji/yj:arch	
+D1j+(yj)/p3	antecedencje 26		-ja			*			-je			-ji/yj:arch	
+D1le		grobla		13		-la			-li			-le			-li/el:char	
+D1le/p2		Jeszkotle	4		-le			*			-le			-li/el:char	
+D1le/p3		Groble		4		-le			*			-le			-li/el:char	
+D1lei		brykla		1		-kla		-kli		-kle		-kli/kiel:char 
+D1ló		topola		2		-ola		-oli		-ole		-oli/ól:char 				also dola
+D1ló+(-fneut) rola		3		-ola		-oli		-ole		-ól			
+D1ló+(-fneut)/p2:p3 Gole 2		-ole		*			-ole		-ól			
+D1n			łania		686		-nia		-ni			-nie		-ni/ń:char	
+D1n+!		kawunia		58		-nia		-ni			-nie		-ni:rare/ń:char				voc in -u; 1/3 proper names in -unia, 103 common in -unia, 1/3 proper in -[aeioy]nia
+D1n+!/m2	niunia		1		-nia		-ni			-nie		-niów						voc in -u
+D1ne		stajnia		2		-nia		-ni			-nie		-ni/en:arch					stajnia/kuchnia
+D1nei		suknia		6		-nia		-ni			-nia		-ni/ien:char 				all in -[kgw]nia
+D1neiz		studnia		1		-dnia		-ni			-dnia		-dni/dzien:char 
+D1neiz/p2:p3 Studnie	1		-dnie		*			-dnia		-dni/dzien:char 
+D1n+(-fneut) dynia		26		-nia		-ni			-nie		-ń							all in -ynia or -[kw]inia
+D1n+(-fneut)/p2:p3 sanie 89		-nie		*			-nie		-ń							in both -Vnie and -Cnie
+D1nś		wiśnia		5		-śnia		-śni		-śnie		-śni/sien:char				wiśnia/workowiśnia/laurowiśnia/sośnia/Mięsośnia
+D1ńe		lutnia		3		-nia		-ni			-nie		-ni/eń:char 				wisznia/Wisznia/lutnia
+D1o+!/m1	Puzio		1		-o			-			-owie/e:depr -ów		
+D1+(ów)		fala		322		-a			-i			-e			-i/-:char					all in -[Vl]la except pudźa
+D1+(ów)/m1	bidula		6		-a			-i			-owie/e:depr -ów						all in -Vla except ninja/cieśla
+D1+(ów)/m2	ninja		1		-a			-i			-e			-ów			
+D1+(ów)/p3	stalle		1		-e			-i			-e			-i/-:char	
+D1s			paczusia	6		-sia		-si			-sie		-si:rare/ś:char 			all common nouns in -usia, voc in -u or -o
+D1s/p2:p3	Basie		3		-sie		*			-sie		-si:rare/ś:char 
+D1s+!		samosia		104		-sia		-si			-sie		-si:rare/ś:char 			voc in -u; ~75% proper names
+D1+w		antresola	544		-a			-i			-e			-i/-:char					all proper, both in -Vla and -Cla
+D1+w/m1		Kaligula	554		-a			-i			-owie/e:depr -ów						all in -la except Mathea
+D1wei		stągwia		1		-gwia		-gwi		-gwie		-giew		
+D1+y		statua		11		-a			-i			-y			-i							gen in -i/y; kwinoa/stoa/tamandua/Pardua/Managua/Nikaragua/genua/Genua/Papua/statua/Mantua
+D1+y/m1		Gargantua	6		-a			-i			-owie/y:depr -ów						gen in -i/y; all proper in -ua
+D1y(ah)		Kayah		1		-yah		-i			-ye			-i			
+D1+(yj)		parodia		672		-ia			-ii			-ie			-ii/yj:arch					all in -[cdrt]ia
+D1+(yj)/p2	Indie		1		-ie			*			-ie			-ii/yj:arch	
+D1+(yj)/p3	brewerie	8		-ie			*			-ie			-ii/yj:arch					Indie/fanaberie/ferie/peryferie/filakterie/eleuterie/brewerie/perypetie
+D1y+(ów)	Goya		1		-ya			-i			-ye			-i							[pron Goja]
+D1y+(ów)/m1	Goya		2		-ya			-i			-yowie/ye:depr -yów						Goya [pron Goja], Tuleya [pron Tuleja]
+D1z			buzia		11		-zia		-zi			-zie		-zi/ź:char	
+D1z/p2:p3	Kiezie		1		-zie		*			-zie		-zi/ź:char	
+D1z+!		pindzia		32		-zia		-zi			-zie		-zi/ź:char					voc in -u; ~75% proper names
+D2			Hańcza		136		-a			-y			-e			-y/-:char					in -c/[cdrs]z/ż; only bejca in -ca
+D2/m1		znawca		460		-a			-y			-y/e:depr	-ów							all in -ca
+D2ce/p2:p3	Siedlce		15		-ce			*			-ce			-ec							in -[jlż]ce + Węgrzce
+D2cei		owca		1		-ca			-cy			-ce			-iec		
+D2cei/p2:p3	skrzypce	85		-ce			*			-ce			-iec						in -[bmpw]ce + Zamojsce
+D2+(-fchar)	msza		75		-a			-y			-e			-y							in -c/[cdrs]z/ż + cha-cha; only Żernica in -ca
+D2+(-fchar)/m1 hulajdusza 11	-a			-y			-e			-ów							in -c/[cs]z/ż; 4 in -ca
+D2+(-fchar)/m2 nindża	1		-a			-y			-e			-ów			
+D2+(-fchar)/p2 dżwierze 98		-e			*			-e			-y							in -c/[cdrs]z/ż; 6 in -ce
+D2+(-fchar)/p3 Karkonosze 109	-e			*			-e			-y							in -c/[cdrs]z/ż; 7 in -ce; subsumes all in p2
+D2+(-fneut)	óslica		2342	-a			-y			-e			-						in -c/[cdrs]z/ż; most in -ica/yca
+D2+(-fneut)/m1 Gruca	339		-a			-y			-owie/e:depr -ów						in -c/[cdrs]z/ż except Fritza
+D2+(-fneut)/m2 gońca	3		-a			-y			-e			-ów							gońca/zabawca/poprawca
+D2+(-fneut)/p2 grabice	2650	-a			*			-e			-			
+D2+(-fneut)/p3 Gardzienice 2659	-a			*			-e			-							in -[cjlż]/[cdrs]z except Skuze/Chotyze/Parypse; all proper names except maybe grabice/prace; most in -ice/yce
+D2(o)m1		Trapszo		12		-o			-y			-owie/-e:depr -ów		
+D2(se)		berceuse	1		-se			-zie		-zy			-z			
+D2zdo		grodza		1		-odza		-odzy		-odze		-odzy/-ódz:char 
+D2zdo/p2:p3	Ochodze		1		-odze		*			-odze		-odzy/-ódz:char 
+Dzzro		zorza		1		-orza		-orzy		-orze		-órz		
+D2że		komża		1		-ża			-ży			-że			-ży/-eż:char 
+D2żo		rogoża		3		-oża		-oży		-oże		-oży/-óż:char 				rogoża/Ochoża/rohoża
+D2żo+(-fneut) loża		1		-oża		-oży		-oże		-óż			
+D2(ca)		carioca		4		-ca			-ce			-ki			-c							Fonseca/carioca/Jessica/coca; gen/nom_pl -ki, otherwise in -c-
+D2(ca)/m1	Fonseca		4		-ca			-ce			-cowie/ki:depr -ców						Fonseca/Sica/Tezcatlipoca/Lorca; gen/nom_pl_depr -ki, otherwise in -c-
+D2(ca)e		Athabasca	3		-ca			-ce			-ki			-ec							Athabasca/nesca/villanesca; gen/nom_pl -ki, otherwise in -c-
+D3g			wilga		662		-ga			-dze		-gi			-g			
+D3g/m1		drandryga	22		-ga			-dze		-dzy/gi:depr -gów		
+D3g/m2		murga		2		-ga			-dze		-gi			-gów						murga/drandryga
+D3g/p2		sarangi		37		-gi			*			-gi			-g							most are proper names also p3
+D3g/p3		figi		41		-gi			*			-gi			-g							most are proper names also p2
+D3g+0		wyga		1		-ga			-dze		-gi			-g			
+D3g+0/m1	sługa		1		-ga			-dze		-dzy/gi:depr -g							gen_pl sług:sługów
+D3ge		rózga		2		-ga			-dze		-gi			-eg							drzazga/rózga; both have gen_pl -g:-eg
+D3ge/m1		auriga		371		-ga			-dze		-gowie/gi:depr -gów		
+D3gę		księga		5		-ęga		-ędze		-ęgi		-ąg			
+D3gę/p2:p3	Kręgi		2		-ęgi		*			-ęgi		-ąg							Kręgi/Mortęgi
+D3g(ha)+w/m1 Agha		1		-gha		-dze		-ghowie/ghi:depr -ghów	
+D3go		załoga		47		-oga		-odze		-ogi		-óg			
+D3go/p2		Nałogi		7		-ogi		*			-ogi		-óg			
+D3go/p3		drogi		8		-ogi		*			-ogi		-óg			
+D3gro		morga		1		-orga		-ordze		-orgi		-órg		
+D3k			sroka		940		-ka			-ce			-ki			-k							all in -Vka except mekka/Mekka/alka/kalka/walka/flanka/arka/Turka/łaska/niełaska/neska/klęska/odaliska/Polska/Wielkopolska/Małopolska/troska/beztroska
+D3k/m1		judoka		26		-ka			-ce			-cy/ki:depr	-ków		
+D3k/m2		sika		1		-ka			-ce			-ki			-ków		
+D3k/p2		Duszniki	361		-ki			*			-ki			-k			
+D3k/p3		Duszniki	364		-ki			*			-ki			-k			
+D3kć		paćka		13		-ćka		-ćce		-ćki		-ciek		
+D3kć/p2:p3	Boćki		6		-ćki		*			-ćki		-ciek		
+D3ke		babka		12817	-ka			-ce			-ki			-ek							all in -Cka; none in -kka; lots in -lka/rka/ska
+D3ke/m1		tatka		9		-ka			-ce			-kowie/ki:depr -ek						gen_pl not in -ków but all such terms also have gen_pl in -ków
+D3ke/m2		szpicbródka	1		-ka			-ce			-ki			-ek							also fem; gen_pl not in -ków
+D3ke/p2		grabelki	1181	-ki			*			-ki			-ek			
+D3ke/p3		Koluszki	1284	-ki			*			-ki			-ek			
+D3kein		bańka		75		-ńka		-ńce		-ńki		-niek		
+D3kein/m1	Mateńka		1		-ńka		-ńce		-ńkowie/-ńki:depr -ńków	
+D3kein/p2	Mońki		11		-ńki		*			-ńki		-niek		
+D3kein/p2	sierszeńki	13		-ńki		*			-ńki		-niek		
+D3kę		męka		1		-ęka		-ęce		-ęki		-ąk			
+D3kę/p3		męki		1		-ęki		*			-ęki		-ąk			
+D3kę+c		ręka		1		-ęka		-ęce		-ęce		-ąk			
+D3k(o)+w	Doroszeńko	1027	-ko			-ce			-kowie/ki:depr -ków		
+D3kś		ośka		55		-śka		-śce		-śki		-siek		
+D3kś/p2		Jaśki		5		-śki		*			-śki		-siek		
+D3kś/p3		siuśki		5		-śki		*			-śki		-siek		
+D3kś+!		mamuśka		2		-śka		-śce		-śki		-siek						voc in -u
+D3k+w		Dejnaka		173		-ka			-ce			-ki			-k							all proper in -Vka
+D3k+w/m1	papinka		1593	-ka			-ce			-kowie/ki:depr -ków		
+D3k+w/m2	meszka		1		-ka			-ce			-ki			-ków		
+D3kź		buźka		6		-źka		-źce		-źki		-ziek		
+D3kź/m1		Buźka		1		-źka		-źce		-źkowie/źki:depr -źkow	
+D3kź/p2:p3	Idźki		2		-źki		*			-źki		-ziek		
+D4			baba		5760	-a			-ie			-y			-							in -[bfmnpsvwz]a
+D4/m1		Bereza		1439	-a			-ie			-owie/y:depr -ów						in -[bfmnpsvwz]a
+D4/m2		bucina		30		-a			-ie			-y			-ów							in -[bfmnpsvwz]a
+D4/p2		sanczyny	1593	-y			*			-y			-							in -[bfmnpsvwz]y
+D4/p3		annuity		1745	-y			*			-y			-							in -[bfmnpsvwz]y
+D4+0/m2		glina		1		-a			-ie			-y			-ów			
+D4(A)		NASA		9		-A			--ie		--y			-							ABBA/UEFA/FIFA/FAMA/SABENA/NEMA/APA/NASA/ANSA; hyphen before non-null case endings
+D4(ah)/m1	Bramah		1		-ah			-ie			-owie/y:depr -ów		
+D4be		torba		1		-ba			-bie		-by			-eb			
+D4be/p2:p3	Izdby		1		-by			*			-by			-eb			
+D4bę		gęba		2		-ęba		-ębie		-ęby		-ąb			
+D4bę/m1		moczygęba	2		-ęba		-ębie		-ębowie/-ęby:depr -ębów	
+D4bę/p2		Wilczogęby	1		-ęby		*			-ęby		-ąb			
+D4bę/p3		otręby		2		-ęby		*			-ęby		-ąb			
+D4bó		choroba		19		-oba		-obie		-oby		-ób			
+D4bśo		prośba		1		-ośba		-ośbie		-ośby		-ósb		
+D4bźo		groźba		3		-oźba		-oźbie		-oźby		-óźb		
+D4d			banda		1112	-da			-dzie		-dy			-d			
+D4d/m1		aojda		583		-da			-dzie		-dowie/dy:depr -dów		
+D4d/m2		przybłęda	2		-da			-dzie		-dy			-dów		
+D4d/p3		drakonidy	2		-dy			*			-dy			-d			
+D4de		Gwda		2		-da			-dzie		-dy			-ed			
+D4(dha)		Sargodha	1		-dha		-dzie		-dhy		-dh			
+D4d(o)/m1	Szwedo		38		-do			-dzie		-dowie/dy:depr -dów		
+D4dó		nagroda		139		-oda		-odzie		-ody		-ód			
+D4dó/p2:p3	Ciepłowody	16		-ody		*			-ody		-ód			
+D4d+(ów)/m1	inwalida	15		-da			-dzie		-dzi/dy:depr -dów		
+D4d+(-pl:gen) Brda		1		-da			-dzie		-dy			*			
+D4dz		uzda		31		-zda		-ździe		-zdy		-zd			
+D4dz/m1		skoczybruzda 27		-zda		-ździe		-zdowie/zdy:depr -zdów	
+D4dza		gwiazda		10		-azda		-eździe		-azdy		-azd						gwiazda+compounds, jazda/Objazda/pojazda
+D4dza/m1	Gwiazda		1		-azda		-eździe		-azdowie/azdy:depr -azdów 				alt dat in -aździe
+D4dz(o)/m1	Hnizdo		1		-zdo		-ździe		-zdowie/zdy:depr -zdów	
+D4(e)		Kaliope		1		-e			-pie		-y			-							reg except nom
+D4+e		szansa		3		-a			-ie			-e			-							ansa/romansa/szansa
+D4(ha)/m1	Saldanha	1		-ha			-ie			-hy			-hów		
+D4hc		mucha		439		-cha		-sze		-chy		-ch			
+D4hc/m1		autarcha	237		-cha		-sze		-chowie/chy:depr -chów	
+D4hc/m2		marcha		3		-cha		-sze		-chy		-chów		
+D4hc/p2:p3	Włochy		23		-chy		*			-chy		-ch			
+D4hc+(ech)/p2:p3 Włochy	1		-chy		*			-chy		-ch							loc_pl Włoszech
+D4hc(o)+w/m1 Mikłucho	4		-cho		-sze		-chowie/chy:depr -chów	
+D4hc+w/m1	klecha		1		-cha		-sze		-chowie/chy:depr -ch					gen_pl not in -chów
+D4h+(dz)	Praha		1		-ha			-dze		-hy			-h			
+D4h(o)+w/m1	Weryho		3		-ho			-sze		-howie/hy:depr -hów		
+D4h+(sz)	yamaha		11		-ha			-sze		-hy			-h			
+D4h+(sz)/m1	Taha		2		-ha			-sze		-howie/hy:depr -hów		
+D4h+(ż)		braha		10		-ha			-że			-hy			-h			
+D4h+(ż)/m1	Sapieha		3		-ha			-że			-howie/hy:depr -hów		
+D4+i/m1		ortodoksa	78		-a			-ie			-i/y:depr	-ów							in -na except Kaszuba/ortodoksa/Jehowa
+D4ł			mogiła		829		-ła			-le			-ły			-ł			
+D4ł/m1		Drzymała	712		-ła			-le			-łowie/ły:depr -łów		
+D4łe		jodła,kapła	18		-ła			-le			-ły			-eł			
+D4łe/p2		widły		12		-ły			*			-ły			-eł			
+D4łe/p3		kudły		13		-ły			*			-ły			-eł			
+D4łei		igła		12		-ła			-le			-ły			-ieł		
+D4łei/p2:p3	Cegły		4		-ły			*			-ły			-ieł		
+D4łł		Jagiełła	23		-łła		-lle		-łły		-łł			
+D4łł/m1		mułła		3		-łła		-lle		-łłowie/łły:depr -łłów	
+D4łł(o)+w/m1 Jundziłło	12		-łło		-lle		-łłowie/łły:depr -łłów	
+D4ł(o)+w/m1 popychajło	217		-ło			-le			-łowie/ły:depr -łów		
+D4ł(o)+wa/m1 czuryło	8		-ło			-le			-łowie/ła:depr -łów		
+D4łó		szkoła		13		-oła		-ole		-oły		-ół			
+D4łó/p2		Baboły		6		-oły		-ole		-oły		-ół			
+D4łó/p3		pierdoły	7		-oły		-ole		-oły		-ół			
+D4łs		ciosła		7		-sła		-śle		-sły		-seł		
+D4łs/m1		Zawisła		3		-sła		-śle		-słowie/sły:depr -słow	
+D4łs(o)+w/m1 Porosło	18		-sło		-śle		-słowie/sły:depr -słów	
+D4ł+w/m1	kameduła	1		-ła			-le			-li/ły:depr	-łów		
+D4łz		gruzła		2		-zła		-źle		-zły		-zeł		
+D4łz/m1		Wizła		1		-zła		-źle		-złowie/ły:depr -złów	
+D4łz(o)+w/m1 Oślizło	5		-zło		-źle		-złowie/ły:depr -złów	
+D4mć		ćma			1		-ćma		-ćmie		-ćmy		-ciem		
+D4me		karczma		5		-ma			-mie		-my			-em			
+D4ne		druhna		58		-na			-nie		-ny			-en							in -[dhjłrż]na/chna/szna
+D4nei		trumna		84		-na			-nie		-ny			-ien						in -[gmnw]na
+D4nei/p2:p3	Stegny		4		-ny			*			-ny			-ien						in -gny
+D4neis		ciosna		3		-sna		-śnie		-ny			-sn/sen						ciosna/Ciosna/Wiosna
+D4nes		sosna		18		-sna		-śnie		-sny		-sen		
+D4nes/m1	Sosna		3		-sna		-śnie		-snowie/sny:depr -snów	
+D4ns(o)/m1	Kosno		1		-sno		-śnie		-snowie/sny:depr -snów	
+D4nz		blizna		456		-zna		-źnie		-zny		-zn			
+D4nz/m1		mężczyzna	1		-zna		-źnie		-źni/zny:depr -zn		
+D4nz(o)		Tryzno/m1	1		-zno		-źnie		-znowie/zny:depr -znów	
+D4nz+w		Puścizna	6		-zna		-źnie		-zny		-zn			
+D4nz+w/m1	Tryzna		6		-zna		-źnie		-znowie/zny:depr -znów					SGJP says -źnowie but that seems a mistake
+D4nź		kneźna		1		-źna		-źnie		-źny		-zien		
+D4(o)/m1	Michno		76		-o			-ie			-owie/y:depr -ów						in -[bmnpswz]o, preceded by V or C
+D4pó		stopa		2		-opa		-opie		-opy		-óp			
+D4r			góra		850		-ra			-rze		-ry			-r							20 in -bra, lycra, 38 in -dra, cyfra, 10 in -gra, 3 in -chra, 2 in -hra, 3 in -jra, 10 in -kra, 2 in -mra, 4 in -pra, 41 in -tra, 7 in -wra, 2 in -żra, rest in -Vra
+D4r/m1		pediatra	27		-ra			-rze		-rzy/ry:depr -rów						13 in -tra, rest in -Vra
+D4ra		ofiara		5		-ara		*			-ary		-ar			
+D4re		kołdra		33		-ra			-rze		-ry			-er							3 in -bra (all 3 are optionally reducible), 22 in -dra (red: Hadra,nadra,flądra,kołdra,afelandra,salamandra,Aleksandra,bindra,odra,Odra,łachudra,miazdra,klabzdra,mizdra; opt red: fladra,cynadra,zadra,szołdra,kalandra,kasandra,Kasandra,wydra), czochra (opt red), klamra (red), 6 in -tra (red: litra,hajstra,olstra,mustra,Brahmaputra; opt red: mutra)
+D4re/p2		Zadry		5		-ry			-rze		-ry			-er			
+D4re/p3		cynadry		5		-ry			-rze		-ry			-er			
+D4rei		gra			10		-ra			-rze		-ry			-ier						in -[kg]ra
+D4rei/p2:p3	Wigry		5		-ry			*			-ry			-ier						in -[kg]ra
+D4r(ha)/m1	Cerha		1		-rha		-rze		-rhowie/rhy:depr -rhów					no h before dative
+D4ro		obora		29		-ora		-orze		-ory		-ór			
+D4ro/p2:p3	Obory		3		-ory		*			-ory		-ór			
+D4r(o)+w/m1	Fredro		56		-ro			-rze		-rowie/ry:depr -rów		
+D4(rr)		Canberra	14		-rra		-rze		-rry		-rr							no r before dative
+D4(rr)/m1	Carra		6		-rra		-rze		-rrowie/rry:depr -rrów					no r before dative
+D4rtsó		siostra		2		-ostra		-ostrze		-ostry		-óstr		
+D4r+w		Stachura	669		-ra			-rze		-ry			-r			
+D4r+w/m1	Pazura		692		-ra			-rze		-rowie/ry:depr -rów		
+D4r+w/m2	lisiura		3		-ra			-rze		-ry			-rów		
+D4r+w/p3	maniery		2		-ry			*			-ry			-r			
+D4t			minuta		1302	-ta			-cie		-ty			-t			
+D4t/m1		Galata		500		-ta			-cie		-towie/ty:depr -tów		
+D4t/m2		argonauta	10		-ta			-cie		-ty			-tów		
+D4t/p3		panty		1		-ty			*			-ty			-t			
+D4t(ha)		Hertha		3		-tha		-cie		-thy		-th			
+D4t(ha)/m1	Botha		2		-tha		-cie		-thowie/thy:depr -thów	
+D4t+i/m1	poeta		233		-ta			-cie		-ci/ty:depr	-tów		
+D4t+i/m2	przechrzta	2		-ta			-cie		-ty			-tów		
+D4t(o)/m1	tato		38		-to			-cie		-towie/ty:depr -tów		
+D4to		robota		8		-ota		-ocie		-oty		-ót			
+D4to/p2:p3	roboty		1		-oty		*			-oty		-ót			
+D4t+(-pl:gen) krzta		1		-ta			-cie		-ty			*			
+D4ts		langusta	107		-sta		-ście		-sty		-st			
+D4ts/m1		podstarosta	49		-sta		-ście		-stowie/sty:depr -stów					all proper names except podesta/starosta/podstarosta/wicestarosta; 5 in -asta, 8 in -esta, 18 in -ista, 2 in -msta, 7 in -osta, 6 in -usta, 3 in -ysta
+D4ts/m2		antagonista	1		-sta		-ście		-sty		-stów		
+D4tsa		niewiasta	1		-asta		-eście		-asty		-ast		
+D4ts+i/m1	cyklista	1076	-sta		-ście		-ści/sty:depr -stów						16 in -asta, podesta, 3 in -osta (diagnosta/farmakognosta/prognosta), all the rest in -ista/-ysta; no proper names AFAICT
+D4ts(o)/m1	Kusto		3		-sto		-ście		-stowie/sty:depr -stów	
+D4t(TA)		EFTA		6		-TA			--cie		-T-y			-T						ETA/NAFTA/EFTA/CEFTA/ELTA/LETTA; all except LETTA can be indeclinable; hyphen before non-null case endings
+D4we		łyżwa		21		-wa			-wie		-wy			-ew			
+D4we/p2:p3	Mątwy		2		-wy			*			-wy			-ew			
+D4wei		pluskwa		2		-wa			-wie		-wy			-iew						in -[kg]wa
+D4wei/p2:p3	Łagwy		2		-wy			*			-wy			-iew						in -[kg]wy
+D4wó		połowa		122		-owa		-owie		-owy		-ów			
+D4wó/m1		trzęsigłowa	1		-owa		-owie		-owowie:rare/-owy:depr -owów 
+D4wó/p2		Charzykowy	64		-owy		*			-owy		-ów			
+D4wó/p3		okowy		66		-owy		*			-owy		-ów			
+D4wó+agłowa	białagłowa	1		-agłowa		ejgłowie	-egłowy		-ychgłów	biała<+>głowa<>
+D4x+w		Dixa		3		-xa			-ksie		-xy			-x			
+D4x+w/m1	Jaxa		3		-xa			-ksie		-xowie/xy:depr -xów		
+D4ze		łza			1		-za			-zie		-zy			-ez			
+D4zei		gza			1		-za			-zie		-zy			-iez		
+D4zó		poza		12		-oza		-ozie		-ozy		-óz			
+D4zó/p2:p3	Płozy		4		-ozy		-ozie		-ozy		-óz			
 ]=]
 
 --[=[
@@ -2371,58 +2372,58 @@ declprops["mixed-f"] = {
 --[=[
 Counts from SGJP:
 
-Type		e.g.		ending		gensg		nompl		count	indicator		notes
-D10			gardziel	-			-i			-e			68		<f>				all in -l, mostly in -el and -śl
-D10+i		myśl		-i			-i			-i			5		<f.nompli>		all in -l; Trzebiel/Rygol/Supraśl/myśl/Teklimyśl
-D1bą0		gląb		-ąb			-ębi		-ębie		1		<f.#>			ą/ę alternation
-D1ć0		płoć		-ć			-ci			-cie		67		<f>
-D1ć0+e/m1	waszmość	-ć			-ci			-cie		8		?				masc gender
-D1ć0+i		ość			-ć			-ci			-ci			64650	<>				nouns in -ość will default to feminine
-D1ć0+i/p2	pyszności	-ći			*			-ci			25		<pl>
-D1ć0+i(mi)	nić,kość	-ć			-ci			-ci			3		<insplmi>		ins_pl in -ćmi
-D1ć0+i(mi)/p3 kośći		-ć			-ci			-ci			2		<f.pl.insplmi>	ins_pl in -ćmi
-D1ć0(mi)	kiść		-ć			-ci			-cie		2		<insplmi>		ins_pl in -ćmi
-D1ć0+w/m1	waszeć		-ć			-ci			-ciowie/-cie:depr 5	?				masc gender
-D1će0		płeć		-eć			-ci			-cie		2		<f.*>
-D1ćó0		uwróć		-óć			-oci		-ocie		1		<f.#>			ó/o alternation
-D1ćśe0		cześć		-eść		-ci			-ci			1		<f.*.decllemma:czeć> cześć -> czci-
-D1i0		chełb		-			-i			-ie			7		<f>				in -[bmp]
-D1i0+i		głasnost	-			-i			-i			2		<f.nompli>		głasnost/Ob
-D1j0		kolej		-j			-i			-je			4		<f>
-D1lei0		magiel		-iel		-li			-le			1		<f.*>
-D1ló0		sól			-ól			-oli		-ole		5		<f.#>			ó/o alternation
-D1ń0		otchłań		-ń			-ni			-nie		109		<f>
-D1ń0+i		pieśń		-ń			-ni			-ni			2		<f.nompli>		baśń/pieśń
-D1ń0+(mi)	dłoń		-ń			-ni			-nie		3		<f.insplmi>		ins_pl in -ńmi; dań/dłoń/skroń
-D1ń0+(mi)/p2:p3 sanie	-nie		*			-nie		3		<f.pl.insplmi>	ins_pl in -ńmi; sanie/aerosanie/autosanie
-D1ńe0		bezdeń		-eń			-ni			-ni			1		<f.*.nompli>
-Dińei0		rówień		-ień		-ni			-nie		1		<f.*>
-D1ś0		Ruś			-ś			-si			-sie		10		<f>
-D1ś0+!		córuś		-ś			-si			-sie		3		<f.voc->		voc_sg in - instead of -i
-Diś0+i		pierś		-ś			-si			-si			5		<f.nompli.insplami:mi> gęś/Gęś/nurogęś/pierś/połpierś
-D1ś0+i(mi)	gęś			-ś			-si			-si			2		[same as above]	ins_pl in -śmi; gęś/nurogęś
-D1śei0		wieś		-ieś		-si			-sie		7		<f.*.nomple:i[obsolete]>	wieś and compounds including toponyms
-D1śei0+i	wieś		-ieś		-si			-si			7		[same as above; obsolete]
-D1we0		Narew		-ew			-wi			-wie		28		<f.*>
-D1we0+i		brew		-ew			-wi			-wi			1		<f.*.nompli>
-D1we0+i/p2	drzwi		-wi			*			-wi			2		<f.*.pl.nompli>	drzwi/odrzwi
-D1wei0		cerkiew		-iew		-wi			-wie		25		<f.*>
-D1wó0		Ostrów		-ów			-owi		-owie		1		<f.#>			ó/o alternation
-D1ź0		maź			-ź			-zi			-zie		37		<f>
-D1ź0+i		spowiedź	-ź			-zi			-zi			16		<f.nompli>
-D1ź0+i/p3	zapowiedzi	-zi			*			-zi			1		<f.pl.nompli>
-D1źą0		gałąź		-ąź			-ęzi		-ęzie		1		<f.#.insplami:mi> ą/ę alternation
-D1źą0+(mi)	gałąź		-ąź			-ęzi		-ęzie		1		[same as above]	ą/ę alternation; ins_pl in -ęźmi
-D1źdą0		żołądź		-ądź		-ędzi		-ędzie		2		<f.#>			ą/ę alternation; other one is also żołądź [different meaning, has multiple declensions]
-D1źdó0		łódź		-ódź		-odzi		-odzie		9		<f.#>			ó/o alternation
-D1źó0		zamróź		-óź			-ozi		-ozie		1		<f.#>			ó/o alternation
-D20			noc			-			-y			-e			178		<f>				in -[cż]/[crs]z
-D20+anoc	Wielkanoc	-anoc		-iejnocy	-ienoce		2		((Wielkanoc<f>,Wielka<+>noc<f.[rare]>)) other one is also Wielkanoc [different meaning, both meanings have multiple declensions]
-D20+y		rzecz		-			-y			-y			4		<f.nomply>		in -[cż]/[crs]z
-D2zse0		wesz		-esz		-szy		-szy		1		<f.*.nomply>
-D2żą0		uprząż		-ąż			-ęży		-ęże		2		<f.#>			ą/ę alternation
-D2że0		reż			-eż			-ży			-że			2		<f.*>
-D2żó0		podłóż		-óż			-oży		-oże		1		<f.#>			ó/o alternation
+Type		e.g.		count	ending		gensg		nompl		indicator		notes
+D10			gardziel	68		-			-i			-e			<f>				all in -l, mostly in -el and -śl
+D10+i		myśl		5		-i			-i			-i			<f.nompli>		all in -l; Trzebiel/Rygol/Supraśl/myśl/Teklimyśl
+D1bą0		gląb		1		-ąb			-ębi		-ębie		<f.#>			ą/ę alternation
+D1ć0		płoć		67		-ć			-ci			-cie		<f>
+D1ć0+e/m1	waszmość	8		-ć			-ci			-cie		?				masc gender
+D1ć0+i		ość			64650	-ć			-ci			-ci			<>				nouns in -ość will default to feminine
+D1ć0+i/p2	pyszności	25		-ći			*			-ci			<pl>
+D1ć0+i(mi)	nić,kość	3		-ć			-ci			-ci			<insplmi>		ins_pl in -ćmi
+D1ć0+i(mi)/p3 kośći		2		-ć			-ci			-ci			<f.pl.insplmi>	ins_pl in -ćmi
+D1ć0(mi)	kiść		2		-ć			-ci			-cie		<insplmi>		ins_pl in -ćmi
+D1ć0+w/m1	waszeć		5		-ć			-ci			-ciowie/-cie:depr ?			masc gender
+D1će0		płeć		2		-eć			-ci			-cie		<f.*>
+D1ćó0		uwróć		1		-óć			-oci		-ocie		<f.#>			ó/o alternation
+D1ćśe0		cześć		1		-eść		-ci			-ci			<f.*.decllemma:czeć> cześć -> czci-
+D1i0		chełb		7		-			-i			-ie			<f>				in -[bmp]
+D1i0+i		głasnost	2		-			-i			-i			<f.nompli>		głasnost/Ob
+D1j0		kolej		4		-j			-i			-je			<f>
+D1lei0		magiel		1		-iel		-li			-le			<f.*>
+D1ló0		sól			5		-ól			-oli		-ole		<f.#>			ó/o alternation
+D1ń0		otchłań		109		-ń			-ni			-nie		<f>
+D1ń0+i		pieśń		2		-ń			-ni			-ni			<f.nompli>		baśń/pieśń
+D1ń0+(mi)	dłoń		3		-ń			-ni			-nie		<f.insplmi>		ins_pl in -ńmi; dań/dłoń/skroń
+D1ń0+(mi)/p2:p3 sanie	3		-nie		*			-nie		<f.pl.insplmi>	ins_pl in -ńmi; sanie/aerosanie/autosanie
+D1ńe0		bezdeń		1		-eń			-ni			-ni			<f.*.nompli>
+Dińei0		rówień		1		-ień		-ni			-nie		<f.*>
+D1ś0		Ruś			10		-ś			-si			-sie		<f>
+D1ś0+!		córuś		3		-ś			-si			-sie		<f.voc->		voc_sg in - instead of -i
+Diś0+i		pierś		5		-ś			-si			-si			<f.nompli.insplami:mi> gęś/Gęś/nurogęś/pierś/połpierś
+D1ś0+i(mi)	gęś			2		-ś			-si			-si			[same as above]	ins_pl in -śmi; gęś/nurogęś
+D1śei0		wieś		7		-ieś		-si			-sie		<f.*.nomple:i[obsolete]> wieś and compounds including toponyms
+D1śei0+i	wieś		7		-ieś		-si			-si			[same as above; obsolete]
+D1we0		Narew		28		-ew			-wi			-wie		<f.*>
+D1we0+i		brew		1		-ew			-wi			-wi			<f.*.nompli>
+D1we0+i/p2	drzwi		2		-wi			*			-wi			<f.*.pl.nompli>	drzwi/odrzwi
+D1wei0		cerkiew		25		-iew		-wi			-wie		<f.*>
+D1wó0		Ostrów		1		-ów			-owi		-owie		<f.#>			ó/o alternation
+D1ź0		maź			37		-ź			-zi			-zie		<f>
+D1ź0+i		spowiedź	16		-ź			-zi			-zi			<f.nompli>
+D1ź0+i/p3	zapowiedzi	1		-zi			*			-zi			<f.pl.nompli>
+D1źą0		gałąź		1		-ąź			-ęzi		-ęzie		<f.#.insplami:mi> ą/ę alternation
+D1źą0+(mi)	gałąź		1		-ąź			-ęzi		-ęzie		[same as above]	ą/ę alternation; ins_pl in -ęźmi
+D1źdą0		żołądź		2		-ądź		-ędzi		-ędzie		<f.#>			ą/ę alternation; other one is also żołądź [different meaning, has multiple declensions]
+D1źdó0		łódź		9		-ódź		-odzi		-odzie		<f.#>			ó/o alternation
+D1źó0		zamróź		1		-óź			-ozi		-ozie		<f.#>			ó/o alternation
+D20			noc			178		-			-y			-e			<f>				in -[cż]/[crs]z
+D20+anoc	Wielkanoc	2		-anoc		-iejnocy	-ienoce		((Wielkanoc<f>,Wielka<+>noc<f.[rare]>)) other one is also Wielkanoc [different meaning, both meanings have multiple declensions]
+D20+y		rzecz		4		-			-y			-y			<f.nomply>		in -[cż]/[crs]z
+D2zse0		wesz		1		-esz		-szy		-szy		<f.*.nomply>
+D2żą0		uprząż		2		-ąż			-ęży		-ęże		<f.#>			ą/ę alternation
+D2że0		reż			2		-eż			-ży			-że			<f.*>
+D2żó0		podłóż		1		-óż			-oży		-oże		<f.#>			ó/o alternation
 ]=]
 
 decls["cons-f"] = function(base, stems)
@@ -2654,135 +2655,135 @@ calf_of_cow	cielę		cielęcia	cielęciu	cielęta		cieląt		cielętami
 --[=[
 Counts from SGJP (defaults to /n2):
 
-Type		e.g.		ending		gensg		locsg		nompl		genpl		count	indicator		notes
-A1jN		moje		-je			-jego		-im			-je			-ich		3						moje/swoje/twoje
-A1N			wdowie		-ie			-iego		-im			-ie			-ich		8						polskie/pańskie/szampańskie/reńskie/psiarskie/dworskie/ostatnie/wdowie
-A3k+(em)	Głębokie	-ie			-iego		-iem		-ie			-ich		163						all toponyms in -[bgkns]ie
-A3N			drugie		-gie		-giego		-gim		-gie		-gich		1
-A4+(em)		Zakopane	-e			-ego		-em			-e			-ych		233						all toponyms in -[błnprstwzż]e/{ch,cz,rs,sz}e
-A4+(em)/p2:p3 Żółte		-e			*			*			-e			-ych		29						all toponyms in -[błnprstwzż]e/{ch,cz,rs,sz}e
-A4N/n1		małe		-e			-ego		-ym			-e			-ych		1
-A4N			czesne		-e			-ego		-ym			-e			-ych		189
-A4N/p3		berberysowate -e		*			*			-e			-ych		280						~75% in -owate
-C1c			nacięcie	-cie		-cia		-ciu		-cia		-ć			2432
-C1c/p2		zajęcia		-cia		*			*			-cia		-ć			1
-C1c/p3		objęcia		-cia		*			*			-cia		-ć			3
-C1ę+(en)/n1	imię		-ę			-enia		-eniu		-ona		-on			1
-C1ę+(en)	plemię		-ę			-enia		-eniu		-ona		-on			17
-C1ę+(ęc)/m1	książę		-ę			księcia/	księciu/	-ęta		-ąt			2
+Type		e.g.		count	ending		gensg		locsg		nompl		genpl		indicator		notes
+A1jN		moje		3		-je			-jego		-im			-je			-ich						moje/swoje/twoje
+A1N			wdowie		8		-ie			-iego		-im			-ie			-ich						polskie/pańskie/szampańskie/reńskie/psiarskie/dworskie/ostatnie/wdowie
+A3k+(em)	Głębokie	163		-ie			-iego		-iem		-ie			-ich						all toponyms in -[bgkns]ie
+A3N			drugie		1		-gie		-giego		-gim		-gie		-gich		
+A4+(em)		Zakopane	233		-e			-ego		-em			-e			-ych						all toponyms in -[błnprstwzż]e/{ch,cz,rs,sz}e
+A4+(em)/p2:p3 Żółte		29		-e			*			*			-e			-ych						all toponyms in -[błnprstwzż]e/{ch,cz,rs,sz}e
+A4N/n1		małe		1		-e			-ego		-ym			-e			-ych		
+A4N			czesne		189		-e			-ego		-ym			-e			-ych		
+A4N/p3		berberysowate 280	-e			*			*			-e			-ych						~75% in -owate
+C1c			nacięcie	2432	-cie		-cia		-ciu		-cia		-ć			
+C1c/p2		zajęcia		1		-cia		*			*			-cia		-ć			
+C1c/p3		objęcia		3		-cia		*			*			-cia		-ć			
+C1ę+(en)/n1	imię		1		-ę			-enia		-eniu		-ona		-on			
+C1ę+(en)	plemię		17		-ę			-enia		-eniu		-ona		-on			
+C1ę+(ęc)/m1	książę		2		-ę			księcia/	księciu/	-ęta		-ąt			
 									-ęcia:dated -ęciu:dated
-C1ę+(ęc)/n1	źrebię		-ę			-ęcia		-ęciu		-ęta		-ąt			99
-C1ę+(ęc)	lalczę		-ę			-ęcia		-ęciu		-ęta		-ąt			3
-C1ę+(ęc)/p2	Bliźnięta	-ęta		*			*			-ęta		-ąt			30
-C1ę+(ęc)/p3	bucięta		-ęta		*			*			-ęta		-ąt			46
-C1+(i)		osiedle		-e			-a			-u			-a			-i			157
-C1+(i)/p2	Izwiestia	-a			*			*			-a			-i			1
-C1+(i)/p3	Izwiestia	-a			*			*			-a			-i			1
-Cile		ziele		-ele		-ela		-elu		-oła		-ół			3						ziele/trójziele/zimoziele
-C1ló		pole		-ole		-ola		-olu		-ola		-ól			5
-C1ló/p2:p3	Pola		-ola		*			*			-ola		-ól			1
-C1n			mieszkanie	-nie		-nia		-niu		-nia		-ń			29553
-C1n/p3		rokowania	-nia		*			*			-nia		-ń			13
-C1ne		nasienie	-enie		-enia		-eniu		-ona		-on			1
-C1ne+0		imienie		-enie		-enia/ona	-eniu		-enia		-eni/on		1
-C1(o)+(i)	pikolo		-o			-a			-u			-a			-i			5						pueblo/diabolo/piccolo/pikolo/tremolo
-C1+(ów)		studio		-o			-a			-u			-a			-ów			33						all in -io or -eo (video/wideo/rodeo) except gorąco/leporello/leczo/intermezzo
-C1wo		przysłowie	-owie		-owia		-owiu		-owia		-ów			1
-C1żą+(ęt)	książę		-ążę		-ęcia		-ęciu		-ążęta		ążąt		2
-C2			serce		-e			-a			-u			-a			-			604
-C2cei		żelazce		-ce			-ca			-cu			-ca			-iec		2						żelazce/żelezce
-C2ceiz		żeleźce		-źce		-źca		-źcu		-źca		-ziec		1
-C2ce(i)		jajco		-co			-ca			-cu			-ca			-ec			1
-C2ce(i)/p3	jajca		-ca			*			*			-ca			-ec			1						jajca/jelca
-C2+(ów)		drzewce		-e			-a			-u			-a			-ów			8
-C2+(ów)/p2	errata		-a			*			*			-a			-ów			1
-C2+(ów)/p3	aktualia	-a			*			*			-a			-ów			121						~50% in -ia, 4 in -ea, the rest in -Ca
-C2+(y)/n1	nozdrze		-e			-a			-u			-a			-y			1
-C2+(y)		naręcze		-e			-a			-u			-a			-y			443
-C2+(y)/p3	przestworza	-a			*			*			-a			-y			1
-Czzro		morze		-orze		-orza		-orzu		-orza		-órz		2						morze/zorze
-Czzro/p2:p3	Borza		-orza		*			*			-orza		-órz		1
-C2żó		zboże		-oże		-oża		-ożu		-oża		-óż			3						zboże/łoże/złoże	
-C3			skupisko	-o			-a			-u			-a			-			984						ins -iem; in -go/-ko esp. -isko/-ysko
-C3			pludrzyska	-a			*			*			-a			-			1
-C3(cco)		sirocco		-cco		-cca		-ccu		-cca		-cc			1						ins -kkiem
-C3(cco)/m3	sirocco		-cco		-cca		-ccu		-cca		-cc			1					
-C3(cko)/n1	dziecko		-cko		-cka		-cku		-ci			-ci			1						ins -ckiem; dat_pl -ciom; ins_pl -ćmi; loc_pl -ciach
-C3(cko)/n2	półdziecko	-cko		-cka		-cku		-ci			-ci			1						ins -ckiem; dat_pl -ciom; ins_pl -ćmi; loc_pl -ciach
-C3(cko)/p2:p3 Zdzieci	-ci			*			*			-ci			-ci			1						ins -ckiem; dat_pl -ciom; ins_pl -ćmi; loc_pl -ciach
-C3(co)		Servisco	-co			-ca			-cu			-ca			-c			3						ins -kiem; lastrico/rococo/Servisco
-C3+(ełyko)	wilczełyko	-ełyko		-egołyka	-ymłyku		-ełyka		-ychłyk		1		wilcze<+>łyko<>
-C3+(eoczko)	woleoczko	-eoczko		-egooczka	-imoczku	-eoczka		-ichoczek	1		wole<+>oczko<>
-C3h			ciacho		-o			-a			-u			-a			-			36
-C3ke		serduszko	-ko			-ka			-ku			-ka			-ek			733						ins -kiem
-C3ke/p2		usteczka	-ka			*			*			-ka			-ek			6
-C3ke/p3		jasełeczka	-ka			*			*			-ka			-ek			11
-C3kein		kazańko		-ńko		-ńka		-ńku		-ńka		-niek		14						ins -ńkiem
-C3kein/p2	wroteńka	-ńka		*			*			-ńka		-niek		1
-C3ok		oko			-oko		-oka		-oku		-oczy		-oczów/ócz:dated_rare 1				ins -okiem
-C3+(owi)/m1	konisko		-o			-a			-u			-a			-ów			1						ins -iem; dat -owi
-C3+(ów)		papierosisko -o			-a			-u			-a			-ów			59						ins -iem
-C3+(ów)/m1	biedaczysko -o			-a			-u			-a			-ów			18						ins -iem
-C3+(ów)/p3	pludrzyska	-a			*			*			-a			-ów			1
-C4			bielmo		-o			-a			-ie			-a			-			5139					in -[bmnsvwz]o esp. -owo/-ctwo/-stwo
-C4/p2		odedrzwia	-a			*			*			-a			-			156
-C4/p3		portczyska	-a			*			*			-a			-			165
-C4d			stado		-o			-a			-zie		-a			-			34
-C4d+(ów)	cudo		-o			-a			-zie		-a			-ów			2						cudo/awokado
-C4dza		gniazdo		-azdo		-azda		-eździe		-azda		-azd		1
-C4hcu		ucho		-cho		-cha		-chu		-szy		-szy/szów:rare 1
-C4l			kakao		-o			-a			-le			-a			-ł			3						macao/kakao/makao
-C4le		czoło		-oło		-oła		-ele		-oła		-ół			1
-C4ł			działo		-ło			-ła			-le			-ła			-ł			10
-C4ła		ciało		-ało		-ała		-ele		-ała		-ał			4						ciało/przeciwciało/autoprzeciwciało/antyciało
-C4łe		wiertło		-ło			-ła			-le			-ła			-eł			221						mostly in -dło
-C4łe/p2		widła		-ła			*			*			-ła			-eł			18
-C4łe/p3		gusła		-ła			*			*			-ła			-eł			26
-C4łei		sprzęgło	-ło			-ła			-le			-ła			-ieł		15						in -[kg]ło
-C4łei/p2	Niepiekła	-ła			*			*			-ła			-ieł		1
-C4łei/p3	szkła		-ła			*			*			-ła			-ieł		2						Niepiekła/szkła
-C4łes		hasło		-sło		-sła		-śle		-sła		-seł		14
-C4łe+(u)	zło			-ło			-ła			-łu			-ła			-eł			2						zło/wszechzło
-C4łez		giezło		-zło		-zła		-źle		-zła		-zeł		2						giezło/gzło
-C4ło		koło		-oło		-oła		-ole		-oła		-ół			7
-C4ło/p3		koła		-oła		*			*			-oła		-ół			1
-C4łs		rzemiosło	-sło		-sła		-śle		-sła		-sł			3						rzemiesło/rzemiosło/trzósło
-C4łta		światło		-atło		-atła		-etle		-atła		-ateł		3						światło/półświatło/dwuświatło
-C4łz		giezło		-zło		-zła		-źle		-zła		-zł			1
-C4me		jarzmo		-mo			-ma			-mie		-ma			-em			4						pasmo/powismo/karzmo/krzyżmo
-C5ms		pismo		-smo		-sma		-śmie		-sma		-sm			12						pasmo and pismo+compounds
-C4ne		dno			-no			-na			-nie		-na			-en			44						in -[djlłr]no/-chno/-czno
-C4ne/p2		Próchna		-na			*			*			-na			-en			2
-C4ne/p3		żarna		-na			*			*			-na			-en			3
-C4nei		drewno		-no			-na			-nie		-na			-ien		66						in -[gkmpw]no
-C4neic		płótno		-tno		-tna		-tnie		-tna		-cien		7						Kłótno/płótno/półpłótno/Krytno/Korytno/Szczytno/Żytno
-C4neis		krosno		-sno		-sno		-śnie		-sna		-sien		5						Olesno/Chrosno/krosno/Krosno/Prosno
-C4nez		kiełzno		-zno		-zno		-źnie		-zna		-zen		1
-C4nś		krośno		-śno		-śno		-śnie		-śna		-sien		21
-C4nz		kiełzno		-zno		-zno		-źnie		-zna		-zn			5						Gniezno/Drezno/Brzezno/Pilzno/kiełzno
-C4+(ów)		Szczepanowo	-o			-a			-ie			-a			-ów			1551					concertino (gen_pl -nów/-n), awizo (gen_pl -zów/z), + 1549 proper names (toponyms) in -owo (gen_pl -ow/owów/ów)
-C4r			bajoro		-ro			-ra			-rze		-ra			-r			30						allegro/makro/mokro/szatro/metro/piętro/bistro/jutro/Rytro + the rest in -Vro
-C4rbo		dobro		-obro		-obra		-obru		-obra		-óbr		1
-C4rbo/p2	Dobra		-obra		*			*			-obra		-óbr		1
-C4rbo/p3	dobra		-obra		*			*			-obra		-óbr		2						dobra/Dobra
-C4re		futro		-ro			-ra			-rze		-ra			-er			20						4 in -bro, 9 in -dro, chuchro, 6 in -tro
-C4re+(ów)	olstro		-ro			-ra			-rze		-ra			-rów		3						cicero/cycero/olstro
-C4se+ech	niebiosa	-osa		*			*			-osa		-os			1						loc_pl niebiesiech
-C4t			dłuto		-to			-ta			-cie		-ta			-t			75
-C4ta		lato		-ato		-ata		-ecie		-ata		-at			1
-C4t(e)		andante		-te			-ta			-cie		-ta			t			1
-C4tę		święto		-ęto		-ęta		-ęcie		-ęta		-ąt			1
-C4to		wrota/p2	-ota		*			*			-ota		-ót			1
-C4t+(ów)	divertimento -to		-ta			-cie		-ta			-tów		4						pizzicato/sfumato/sgraffito/divertimento
-C4tsa		miasto		-asto		-asta		-eście		-asta		-ast		5						ciasto/miasto/Miasto/trójmiasto/Trójmiasto
-C4we/p3		drwa		-wa			*			*			-wa			-ew			1
-C4wo		Legionowo	-owo		-owa		-owie		-owa		-ów			1548					all proper names in -owo (gen_pl -ow/owów/ów)
-C4wo+(y?)	słowo		-owo		-owa		-owie		-owa		-ów			1						ins_pl słowami/słowy:dated
-C4+(y?)/p2	usta		-a			*			*			-a			-			1						ins_pl ustami/usty:obsolete
-C5i			facsimile	-e			-e			-e			-ia			-iów		5						indecl in sg; regale/ekstemporale/uniwersale/facsimile/faksymile
-C5mu		muzeum		-um			-um			-um			-a			-ów			445						indecl in sg
+C1ę+(ęc)/n1	źrebię		99		-ę			-ęcia		-ęciu		-ęta		-ąt			
+C1ę+(ęc)	lalczę		3		-ę			-ęcia		-ęciu		-ęta		-ąt			
+C1ę+(ęc)/p2	Bliźnięta	30		-ęta		*			*			-ęta		-ąt			
+C1ę+(ęc)/p3	bucięta		46		-ęta		*			*			-ęta		-ąt			
+C1+(i)		osiedle		157		-e			-a			-u			-a			-i			
+C1+(i)/p2	Izwiestia	1		-a			*			*			-a			-i			
+C1+(i)/p3	Izwiestia	1		-a			*			*			-a			-i			
+Cile		ziele		3		-ele		-ela		-elu		-oła		-ół							ziele/trójziele/zimoziele
+C1ló		pole		5		-ole		-ola		-olu		-ola		-ól			
+C1ló/p2:p3	Pola		1		-ola		*			*			-ola		-ól			
+C1n			mieszkanie	29553	-nie		-nia		-niu		-nia		-ń			
+C1n/p3		rokowania	13		-nia		*			*			-nia		-ń			
+C1ne		nasienie	1		-enie		-enia		-eniu		-ona		-on			
+C1ne+0		imienie		1		-enie		-enia/ona	-eniu		-enia		-eni/on		
+C1(o)+(i)	pikolo		5		-o			-a			-u			-a			-i							pueblo/diabolo/piccolo/pikolo/tremolo
+C1+(ów)		studio		33		-o			-a			-u			-a			-ów							all in -io or -eo (video/wideo/rodeo) except gorąco/leporello/leczo/intermezzo
+C1wo		przysłowie	1		-owie		-owia		-owiu		-owia		-ów			
+C1żą+(ęt)	książę		2		-ążę		-ęcia		-ęciu		-ążęta		ążąt		
+C2			serce		604		-e			-a			-u			-a			-			
+C2cei		żelazce		2		-ce			-ca			-cu			-ca			-iec						żelazce/żelezce
+C2ceiz		żeleźce		1		-źce		-źca		-źcu		-źca		-ziec		
+C2ce(i)		jajco		1		-co			-ca			-cu			-ca			-ec			
+C2ce(i)/p3	jajca		1		-ca			*			*			-ca			-ec							jajca/jelca
+C2+(ów)		drzewce		8		-e			-a			-u			-a			-ów			
+C2+(ów)/p2	errata		1		-a			*			*			-a			-ów			
+C2+(ów)/p3	aktualia	121		-a			*			*			-a			-ów							~50% in -ia, 4 in -ea, the rest in -Ca
+C2+(y)/n1	nozdrze		1		-e			-a			-u			-a			-y			
+C2+(y)		naręcze		443		-e			-a			-u			-a			-y			
+C2+(y)/p3	przestworza	1		-a			*			*			-a			-y			
+Czzro		morze		2		-orze		-orza		-orzu		-orza		-órz						morze/zorze
+Czzro/p2:p3	Borza		1		-orza		*			*			-orza		-órz		
+C2żó		zboże		3		-oże		-oża		-ożu		-oża		-óż							zboże/łoże/złoże	
+C3			skupisko	984		-o			-a			-u			-a			-							ins -iem; in -go/-ko esp. -isko/-ysko
+C3			pludrzyska	1		-a			*			*			-a			-			
+C3(cco)		sirocco		1		-cco		-cca		-ccu		-cca		-cc							ins -kkiem
+C3(cco)/m3	sirocco		1		-cco		-cca		-ccu		-cca		-cc						
+C3(cko)/n1	dziecko		1		-cko		-cka		-cku		-ci			-ci							ins -ckiem; dat_pl -ciom; ins_pl -ćmi; loc_pl -ciach
+C3(cko)/n2	półdziecko	1		-cko		-cka		-cku		-ci			-ci							ins -ckiem; dat_pl -ciom; ins_pl -ćmi; loc_pl -ciach
+C3(cko)/p2:p3 Zdzieci	1		-ci			*			*			-ci			-ci							ins -ckiem; dat_pl -ciom; ins_pl -ćmi; loc_pl -ciach
+C3(co)		Servisco	3		-co			-ca			-cu			-ca			-c							ins -kiem; lastrico/rococo/Servisco
+C3+(ełyko)	wilczełyko	1		-ełyko		-egołyka	-ymłyku		-ełyka		-ychłyk		wilcze<+>łyko<>
+C3+(eoczko)	woleoczko	1		-eoczko		-egooczka	-imoczku	-eoczka		-ichoczek	wole<+>oczko<>
+C3h			ciacho		36		-o			-a			-u			-a			-			
+C3ke		serduszko	733		-ko			-ka			-ku			-ka			-ek							ins -kiem
+C3ke/p2		usteczka	6		-ka			*			*			-ka			-ek			
+C3ke/p3		jasełeczka	11		-ka			*			*			-ka			-ek			
+C3kein		kazańko		14		-ńko		-ńka		-ńku		-ńka		-niek						ins -ńkiem
+C3kein/p2	wroteńka	1		-ńka		*			*			-ńka		-niek		
+C3ok		oko			1		-oko		-oka		-oku		-oczy		-oczów/ócz:dated_rare 		ins -okiem
+C3+(owi)/m1	konisko		1		-o			-a			-u			-a			-ów							ins -iem; dat -owi
+C3+(ów)		papierosisko 59		-o			-a			-u			-a			-ów							ins -iem
+C3+(ów)/m1	biedaczysko 18		-o			-a			-u			-a			-ów							ins -iem
+C3+(ów)/p3	pludrzyska	1		-a			*			*			-a			-ów			
+C4			bielmo		5139	-o			-a			-ie			-a			-							in -[bmnsvwz]o esp. -owo/-ctwo/-stwo
+C4/p2		odedrzwia	156		-a			*			*			-a			-			
+C4/p3		portczyska	165		-a			*			*			-a			-			
+C4d			stado		34		-o			-a			-zie		-a			-			
+C4d+(ów)	cudo		2		-o			-a			-zie		-a			-ów							cudo/awokado
+C4dza		gniazdo		1		-azdo		-azda		-eździe		-azda		-azd		
+C4hcu		ucho		1		-cho		-cha		-chu		-szy		-szy/szów:rare 
+C4l			kakao		3		-o			-a			-le			-a			-ł							macao/kakao/makao
+C4le		czoło		1		-oło		-oła		-ele		-oła		-ół			
+C4ł			działo		10		-ło			-ła			-le			-ła			-ł			
+C4ła		ciało		4		-ało		-ała		-ele		-ała		-ał							ciało/przeciwciało/autoprzeciwciało/antyciało
+C4łe		wiertło		221		-ło			-ła			-le			-ła			-eł							mostly in -dło
+C4łe/p2		widła		18		-ła			*			*			-ła			-eł			
+C4łe/p3		gusła		26		-ła			*			*			-ła			-eł			
+C4łei		sprzęgło	15		-ło			-ła			-le			-ła			-ieł						in -[kg]ło
+C4łei/p2	Niepiekła	1		-ła			*			*			-ła			-ieł		
+C4łei/p3	szkła		2		-ła			*			*			-ła			-ieł						Niepiekła/szkła
+C4łes		hasło		14		-sło		-sła		-śle		-sła		-seł		
+C4łe+(u)	zło			2		-ło			-ła			-łu			-ła			-eł							zło/wszechzło
+C4łez		giezło		2		-zło		-zła		-źle		-zła		-zeł						giezło/gzło
+C4ło		koło		7		-oło		-oła		-ole		-oła		-ół			
+C4ło/p3		koła		1		-oła		*			*			-oła		-ół			
+C4łs		rzemiosło	3		-sło		-sła		-śle		-sła		-sł							rzemiesło/rzemiosło/trzósło
+C4łta		światło		3		-atło		-atła		-etle		-atła		-ateł						światło/półświatło/dwuświatło
+C4łz		giezło		1		-zło		-zła		-źle		-zła		-zł			
+C4me		jarzmo		4		-mo			-ma			-mie		-ma			-em							pasmo/powismo/karzmo/krzyżmo
+C5ms		pismo		12		-smo		-sma		-śmie		-sma		-sm							pasmo and pismo+compounds
+C4ne		dno			44		-no			-na			-nie		-na			-en							in -[djlłr]no/-chno/-czno
+C4ne/p2		Próchna		2		-na			*			*			-na			-en			
+C4ne/p3		żarna		3		-na			*			*			-na			-en			
+C4nei		drewno		66		-no			-na			-nie		-na			-ien						in -[gkmpw]no
+C4neic		płótno		7		-tno		-tna		-tnie		-tna		-cien						Kłótno/płótno/półpłótno/Krytno/Korytno/Szczytno/Żytno
+C4neis		krosno		5		-sno		-sno		-śnie		-sna		-sien						Olesno/Chrosno/krosno/Krosno/Prosno
+C4nez		kiełzno		1		-zno		-zno		-źnie		-zna		-zen		
+C4nś		krośno		21		-śno		-śno		-śnie		-śna		-sien		
+C4nz		kiełzno		5		-zno		-zno		-źnie		-zna		-zn							Gniezno/Drezno/Brzezno/Pilzno/kiełzno
+C4+(ów)		Szczepanowo	1551	-o			-a			-ie			-a			-ów							concertino (gen_pl -nów/-n), awizo (gen_pl -zów/z), + 1549 proper names (toponyms) in -owo (gen_pl -ow/owów/ów)
+C4r			bajoro		30		-ro			-ra			-rze		-ra			-r							allegro/makro/mokro/szatro/metro/piętro/bistro/jutro/Rytro + the rest in -Vro
+C4rbo		dobro		1		-obro		-obra		-obru		-obra		-óbr		
+C4rbo/p2	Dobra		1		-obra		*			*			-obra		-óbr		
+C4rbo/p3	dobra		2		-obra		*			*			-obra		-óbr						dobra/Dobra
+C4re		futro		20		-ro			-ra			-rze		-ra			-er							4 in -bro, 9 in -dro, chuchro, 6 in -tro
+C4re+(ów)	olstro		3		-ro			-ra			-rze		-ra			-rów						cicero/cycero/olstro
+C4se+ech	niebiosa	1		-osa		*			*			-osa		-os							loc_pl niebiesiech
+C4t			dłuto		75		-to			-ta			-cie		-ta			-t			
+C4ta		lato		1		-ato		-ata		-ecie		-ata		-at			
+C4t(e)		andante		1		-te			-ta			-cie		-ta			t			
+C4tę		święto		1		-ęto		-ęta		-ęcie		-ęta		-ąt			
+C4to		wrota/p2	1		-ota		*			*			-ota		-ót			
+C4t+(ów)	divertimento 4		-to			-ta			-cie		-ta			-tów						pizzicato/sfumato/sgraffito/divertimento
+C4tsa		miasto		5		-asto		-asta		-eście		-asta		-ast						ciasto/miasto/Miasto/trójmiasto/Trójmiasto
+C4we/p3		drwa		1		-wa			*			*			-wa			-ew			
+C4wo		Legionowo	1548	-owo		-owa		-owie		-owa		-ów							all proper names in -owo (gen_pl -ow/owów/ów)
+C4wo+(y?)	słowo		1		-owo		-owa		-owie		-owa		-ów							ins_pl słowami/słowy:dated
+C4+(y?)/p2	usta		1		-a			*			*			-a			-							ins_pl ustami/usty:obsolete
+C5i			facsimile	5		-e			-e			-e			-ia			-iów						indecl in sg; regale/ekstemporale/uniwersale/facsimile/faksymile
+C5mu		muzeum		445		-um			-um			-um			-a			-ów							indecl in sg
 [C5no+ua]/m3 epeisodion	[masc type]
-C5t			poema		-			-			-			-ta			-tów		8						Greek neut in -ma; indecl in sg; drama/dylema/poema/systema/apoftegma/klima/dilemma/aksjoma
+C5t			poema		8		-			-			-			-ta			-tów						Greek neut in -ma; indecl in sg; drama/dylema/poema/systema/apoftegma/klima/dilemma/aksjoma
 ]=]
 decls["hard-n"] = function(base, stems)
 	local velar = base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$")

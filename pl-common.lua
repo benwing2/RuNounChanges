@@ -281,7 +281,7 @@ Issues:
 5. When do we depalatalize the sound after the removed vowel?
 * Never.
 6. Other irregularities: [[bniec]] -> 'bieńca'; [[ojciec]] -> 'ojca' (likewise praojciec/prapraojciec); [[deszcz]] ->
-   'dżdżu'; [[chrzest]] -> 'chrtu' (likewise przechrzest); [[cześć]] -> 'czci'.
+   'dżdżu'; [[chrzest]] -> 'chrtu' (likewise przechrzest); [[cześć]] -> 'czci'; [[dech]] -> 'tchu'.
 ]=]
 function export.reduce(base, word, typ)
 	local pre, c1, pal_i, vowel, c2 =
