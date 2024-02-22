@@ -270,7 +270,8 @@ Issues:
   (d) in -iec: isolated [[sarniec]] -> 'sarnca', [[garniec]]/[[półgarniec]] -> 'garnca'/'półgarnca' (but hundreds in
 	  -niec -> -ńca e.g. [[Amerykaniec]], [[biedrzeniec]]); isolated [[rodopisiec]] and [[latopisiec]] -> 'rodopisca',
 	  'latopisca' (but several in -siec -> -śca, e.g. [[kosiec]] -> 'kośca', [[krztusiec]] -> 'krztuśca'); isolated
-	  [[iściec]] -> 'istca' (but several in -ściec -> -śćca, e.g. [[kiściec]] -> 'kiśćca');
+	  [[iściec]] -> 'istca' (but several in -ściec -> -śćca, e.g. [[kiściec]] -> 'kiśćca'); isolated [[mołodziec]] ->
+	  'mołodca' (but several in -dziec -> -dźca, e.g. [[bodziec]] -> 'bodźca', [[jeździec]] -> 'jeźdźca');
   (e) in -rzec: [[dworzec]] -> 'dworca', [[Czarnogórzec]] -> 'Czarnogórca' (likewise about 50 others; but
 	  [[Nozdrzec]] -> 'Nozdrzca', likewise Mokrzec/Jeziorzec/Wieprzec/Piestrzec/Purzec);
   (f) in -ieł: isolated [[kocieł]] -> 'kotła', [[kozieł]]/[[Kozieł]] -> 'kozła'/'Kozła' (no counterexamples);

@@ -989,7 +989,7 @@ B1l+0/m3	promil		1		-			-a			-u			-e			-[count]	-[count]
 B1le/m1		Abel		22		-el			-la			-lu			-le			-le			-li
 B1le/m2		puzzel		30		-el			-la			-lu			*			-le			-li
 B1le/m3		sopel		149		-el			-la			-lu			*			-le			-li
-B1le+0/m1	przyjaciel	2		-el			-ela		-elu		-ele		-ele		-ół			?				ins_pl -ółmi; loc_pl -olac
+B1le+0/m1	przyjaciel	2		-el			-ela		-elu		-ele		-ele		-ół			?				ins_pl -ółmi; loc_pl -olach
 B1lei/m1	singiel		1		-iel		-la			-lu			-le			-le			-li
 B1lei/m2	bargiel		7		-iel		-la			-lu			*			-le			-li
 B1lei/m3	żagiel		70		-iel		-la			-lu			*			-le			-li
@@ -1031,231 +1031,233 @@ B1ńeis/m2	włosień		1		-sień		-śnia		-śniu		*			-śnie		-śni
 B1ńeis/m3	mięsień		6		-sień		-śnia		-śniu		*			-śnie		-śni
 B1ńeis+w(ów)/m1 Wrzesień 1		-sień		-śnia		-śniu		-śniowie	-śnie		-śniów
 B1ńeis+w(ów)/m3 wrzesień 1		-sień		-śnia		-śniu		*			-śnie		-śniów
-B1ńeiz/m1	przychodzień 4		-dzień		-dnia		-dniu
-B1ńeiz/m3	grudzień	4		-dzień		-dnia		-dniu		*
-B1ńeiz+i/m3	dzień		1		-dzień		-dnia		-dniu		*
-B1ńeiz+i/p3	suchedni	1		-dni		*			*			*
-B1ńeiz+(ów)/m1 przechodzień	4	-dzień		-dnia		-dniu
-B1ńeiz+w/m1 więzień		2		-zień		-źnia		-źniu
-B1ńeiz+w(ów)/m1 Grudzień 2		-dzień		-dnia		-dniu
-B1ńeiz+w(ów)/m3 przewodzień 2	-dzień		-dnia		-dniu		*
-B1ńe+(ów)/m1 leżeń		4		-eń			-nia		-niu
-B1ńe+(ów)/m2 dureń		1		-eń			-nia		-niu		*
-B1ńe+(ów)/m3 Wiedeń		7		-eń			-nia		-niu		*
-B1ńe+w/m1	uczeń		2		-eń			-nia		-niu
-B1ńe+w(ów)/m1 uczeń		11		-eń			-nia		-niu
-B1ń+godzień/m3 tydzień	1		-dzień		-godnia		-godniu		*
-B1ń+i/p3	pielmieni	1		-ni			*			*			*
-B1ń+(mi)/m2	koń			4		-ń			-nia		-niu		*												ins_pl -ńmi
-B1ń+(ów)/m1	lizuń		14		-ń			-nia		-niu
-B1ń+(ów)/m2	diugoń		4		-ń			-nia		-niu		*
-B1ń+(ów)/m3	cierń		152		-ń			-nia		-niu		*
-B1ń+u/m3	tytoń		7		-ń			-niu		-niu		*
-B1ń+u(ów)/m3 tytoń		6		-ń			-niu		-niu		*
-B1ń+w(ów)/m1 Sadłoń		449		-ń			-nia		-niu
-B1o+!/m1	Romeo		3		-o			-a			-o																voc in -o; VERIFY loc in -o
-B1ol+w/m1	pikolo		2		-o			-a			-u																voc in -o
-B1ol+w(ów)/m1 pikolo	3		-o			-a			-u																voc in -o
-B1(o)+!w/m1	impresario	133		-o			-a			-u																voc in -o
-B1(o)+w/m1	apollo		108		-o			-a			-u
-B1(o)+w/m2	pysio		10		-o			-a			-u			*
-B1(o)+w/m3	brzusio		3		-o			-a			-u			*
-B1+-(ów)/m1	DJ			1		-			--a			--u
-B1ś/m1		abbuś		9		-ś			-sia		-siu
-B1ś/m2		ptyś		20		-ś			-sia		-siu		*
-B1ś/m3		pyś			7		-ś			-sia		-siu		*
-B1ś+(ów)/m1	centuś		593		-ś			-sia		-siu
-B1ś+(ów)/m2	buś			18		-ś			-sia		-siu		*
-B1ś+(ów)/m3	chlebuś		17		-ś			-sia		-siu		*
-B1ś+w/m1	tatuś		533		-ś			-sia		-siu
-B1+u/m3		spektakl	486		-			-u			-u			*
-B1+'u/m3	siècle		2		-			-'u			-'u			*
-B1+-u/m3	GUC,BOŚ		6		-			--u			--u			*
-B1wó/m3		śródtułów	8		-ów			-owia		-owiu		*
-B1wó+(u)/m3	ołów		4		-ów			-owiu		-owiu		*
-B1+'w(ów)/m1 Gaulle		18		-			-'a			-'u
-B1+'w(ów)/m2 dodge		2		-			-'a			-'u			*
-B1+'w(ów)/m3 ensemble	4		-			-'a			-'u			*
-B1y/m1		cowboy		2		-y			-ya			-yu																cowboy/jockey
-B1ź/m1		witeź		2		-ź			-zia		-ziu
-B1ź/m2		hyź			7		-ź			-zia		-ziu		*
-B1ź/m3		fontaź		8		-ź			-zia		-ziu		*
-B1źdą/m2	żołądź		1		-ądź		-ędzia		-ędziu		*
-B1źdą/m3	żołądź		1		-ądź		-ędzia		-ędziu		*
-B1źdźó/m2	gwóźdź		1		-óźdź		-oździa		-oździu		*
-B1źdźó/m3	gwóźdź		1		-óźdź		-oździa		-oździu		*
-B1źdźó+(mi)/m3 gwóźdź	1		-óźdź		-oździa		-oździu		*													ins_pl (gw)oźdźmi
-B1ź+(ów)/m1	kniaź		6		-ź			-zia		-ziu
-B1ź+(ów)/m2	hyź			2		-ź			-zia		-ziu
-B1ź+(ów)/m3	fontaź		1		-ź			-zia		-ziu
-B1ź+w(ów)/m1 kniaź		40		-ź			-zia		-ziu
+B1ńeiz/m1	przychodzień 4		-dzień		-dnia		-dniu		-dnie		-dnie		-dniów
+B1ńeiz/m3	grudzień	4		-dzień		-dnia		-dniu		*			-dnie		-dniów
+B1ńeiz+i/m3	dzień		1		-dzień		-dnia		-dniu		*			-dni		-dni
+B1ńeiz+i/p3	suchedni	1		-dni		*			*			*			-dni		-dni
+B1ńeiz+(ów)/m1 przechodzień	4	-dzień		-dnia		-dniu		-dnie		-dnie		-dniów
+B1ńeiz+w/m1 więzień		2		-zień		-źnia		-źniu		-źniowie/źnie[dated] -źnie -źniów
+B1ńeiz+w(ów)/m1 Grudzień 2		-dzień		-dnia		-dniu		-niowie		-nie		-niów
+B1ńeiz+w(ów)/m3 przewodzień 2	-dzień		-dnia		-dniu		*			-nie		-niów
+B1ńe+(ów)/m1 leżeń		4		-eń			-nia		-niu		-nie		-nie		-niów
+B1ńe+(ów)/m2 dureń		1		-eń			-nia		-niu		*			-nie		-niów
+B1ńe+(ów)/m3 Wiedeń		7		-eń			-nia		-niu		*			-nie		-niów
+B1ńe+w/m1	uczeń		2		-eń			-nia		-niu		-niowie		-nie		-ni
+B1ńe+w(ów)/m1 uczeń		11		-eń			-nia		-niu		-niowie		-nie		-niów
+B1ń+godzień/m3 tydzień	1		-dzień		-godnia		-godniu		*			-godnie		-godni
+B1ń+i/p3	pielmieni	1		-ni			*			*			*			-ni			-ni
+B1ń+(mi)/m2	koń			4		-ń			-nia		-niu		*			-nie		-ni							ins_pl -ńmi
+B1ń+(ów)/m1	lizuń		14		-ń			-nia		-niu		-nie		-nie		-niów
+B1ń+(ów)/m2	diugoń		4		-ń			-nia		-niu		*			-nie		-niów
+B1ń+(ów)/m3	cierń		152		-ń			-nia		-niu		*			-nie		-niów
+B1ń+u/m3	tytoń		7		-ń			-niu		-niu		*			-nie		-ni
+B1ń+u(ów)/m3 tytoń		6		-ń			-niu		-niu		*			-nie		-niów
+B1ń+w(ów)/m1 Sadłoń		449		-ń			-nia		-niu		-niowie		-nie		-niów
+B1o+!/m1	Romeo		3		-o			-a			-o			-owie		-a			-ów							voc in -o; VERIFY loc in -o
+B1ol+w/m1	pikolo		2		-o			-a			-u			-owie		-e			-i							voc in -o
+B1ol+w(ów)/m1 pikolo	3		-o			-a			-u			-e			-e			-ów							voc in -o
+B1(o)+!w/m1	impresario	133		-o			-a			-u			-owie		-e			-ów							voc in -o
+B1(o)+w/m1	apollo		108		-o			-a			-u			-owie		-e			-ów
+B1(o)+w/m2	pysio		10		-o			-a			-u			*			-e			-ów
+B1(o)+w/m3	brzusio		3		-o			-a			-u			*			-e			-ów
+B1+-(ów)/m1	DJ			1		-			--a			--u			--e			--e			--ów
+B1ś/m1		abbuś		9		-ś			-sia		-siu		-sie		-sie		-si
+B1ś/m2		ptyś		20		-ś			-sia		-siu		*			-sie		-si
+B1ś/m3		pyś			7		-ś			-sia		-siu		*			-sie		-si
+B1ś+(ów)/m1	centuś		593		-ś			-sia		-siu		-sie		-sie		-siów
+B1ś+(ów)/m2	buś			18		-ś			-sia		-siu		*			-sie		-siów
+B1ś+(ów)/m3	chlebuś		17		-ś			-sia		-siu		*			-sie		-siów
+B1ś+w/m1	tatuś		533		-ś			-sia		-siu		-siówie		-sie		-siów
+B1+u/m3		spektakl	486		-			-u			-u			*			-e			-i
+B1+'u/m3	siècle		2		-			-'u			-'u			*			-'e			-'i
+B1+-u/m3	GUC,BOŚ		6		-			--u			--u			*			-e			-ów
+B1wó/m3		śródtułów	8		-ów			-owia		-owiu		*			-owie		-owi
+B1wó+(u)/m3	ołów		4		-ów			-owiu		-owiu		*			-owie		-owiów/owi
+B1+'w(ów)/m1 Gaulle		18		-			-'a			-'u			-'owie		-'e			-'ów
+B1+'w(ów)/m2 dodge		2		-			-'a			-'u			*			-'e			-'ów
+B1+'w(ów)/m3 ensemble	4		-			-'a			-'u			*			-'e			-'ów
+B1y/m1		cowboy		2		-y			-ya			-yu			-ye			-ye			-i							cowboy/jockey
+B1ź/m1		witeź		2		-ź			-zia		-ziu		-zie		-zie		-zi
+B1ź/m2		hyź			7		-ź			-zia		-ziu		*			-zie		-zi
+B1ź/m3		fontaź		8		-ź			-zia		-ziu		*			-zie		-zi
+B1źdą/m2	żołądź		1		-ądź		-ędzia		-ędziu		*			-ędzie		-ędzi
+B1źdą/m3	żołądź		1		-ądź		-ędzia		-ędziu		*			-ędzie		-ędzi
+B1źdźó/m2	gwóźdź		1		-óźdź		-oździa		-oździu		*			-oździe		-oździ
+B1źdźó/m3	gwóźdź		1		-óźdź		-oździa		-oździu		*			-oździe		-oździ
+B1źdźó+(mi)/m3 gwóźdź	1		-óźdź		-oździa		-oździu		*			-oździe		-oździ						ins_pl (gw)oźdźmi
+B1ź+(ów)/m1	kniaź		6		-ź			-zia		-ziu		-zie		-zie		-ziów
+B1ź+(ów)/m2	hyź			2		-ź			-zia		-ziu		*			-zie		-ziów
+B1ź+(ów)/m3	fontaź		1		-ź			-zia		-ziu		*			-zie		-ziów
+B1ź+w(ów)/m1 kniaź		40		-ź			-zia		-ziu		-ziowie		-zie		-ziów
 B2cą+(y)/m2	tysiąc		2		-ąc			-ąca		-ącu		-ące		-ące		-ęcy
-B2cą+(y)/m3	półmiesiąc	4		-ąc			-ąca		-ącu		-ące		-ące		-ęcy
-B2ce/m1		Zaporożec	51		-ec			-ca			-cu
-B2ce/m2		cielec		39		-ec			-ca			-cu
-B2ce/m3		kolec		135		-ec			-ca			-cu
-B2ce/p2		kolce		2		-ce			*			*
-B2ce+!/m1	chudzielec	47		-ec			-ca			-cu																voc -cze
-B2cei/m1	bankowiec	529		-iec		-ca			-cu
-B2cei/m2	borowiec	424		-iec		-ca			-cu
-B2cei/m3	hufiec		721		-iec		-ca			-cu
-B2cei/p3	manowce		1		-ce			*
-B2cei+!/m1	głupiec		483		-iec		-ca			-cu																voc -cze
-B2cei+!/m2	latawiec	1		-iec		-ca			-cu																voc -cze
-B2cei+!/m3	patrolowiec	2		-iec		-ca			-cu																voc -cze
-B2ceic/m1	ociec		2		-ciec		-ćca		-ćcu
-B2ceic/m2	kiściec		4		-ciec		-ćca		-ćcu
-B2ceic/m3	gościec		11		-ciec		-ćca		-ćcu
+B2cą+(y)/m3	półmiesiąc	4		-ąc			-ąca		-ącu		*			-ące		-ęcy
+B2ce/m1		Zaporożec	51		-ec			-ca			-cu			-cy			-ce			-ców
+B2ce/m2		cielec		39		-ec			-ca			-cu			*			-ce			-ców
+B2ce/m3		kolec		135		-ec			-ca			-cu			*			-ce			-ców
+B2ce/p2		kolce		2		-ce			*			*			*			-ce			-ców
+B2ce+!/m1	chudzielec	47		-ec			-ca			-cu			-cy			-ce			-ców						voc -cze
+B2cei/m1	bankowiec	529		-iec		-ca			-cu			-cy			-ce			-ców
+B2cei/m2	borowiec	424		-iec		-ca			-cu			*			-ce			-ców
+B2cei/m3	hufiec		721		-iec		-ca			-cu			*			-ce			-ców
+B2cei/p3	manowce		1		-ce			*			*			*			-ce			-ców
+B2cei+!/m1	głupiec		483		-iec		-ca			-cu			-cy			-ce			-ców						voc -cze
+B2cei+!/m2	latawiec	1		-iec		-ca			-cu			*			-ce			-ców						voc -cze
+B2cei+!/m3	patrolowiec	2		-iec		-ca			-cu			*			-ce			-ców						voc -cze
+B2ceic/m1	ociec		2		-ciec		-ćca		-ćcu		-ćcowie		-ćce		-ćców
+B2ceic/m2	kiściec		4		-ciec		-ćca		-ćcu		*			-ćce		-ćców
+B2ceic/m3	gościec		11		-ciec		-ćca		-ćcu		*			-ćce		-ćców
 B2ceic+!?/m1 samoiściec 1		-ciec		-ćca		-ćcu		-ćcy		-ćce		-ćców						voc -ćcze/ćcu
 B2ceicś!/m1 iściec		1		-ściec		-stca		-stcu		-stcy		-stce		-stców						voc -stcze/stcu
 B2ceic+(u)!w/m1 ociec	2		-ciec		-ćca		-ćcu		-ćcowie		-ćce		-ćców						dat -ćcu/ćcowi; voc -ćcze
-B2cein/m1	Amerykaniec	177		-niec		-ńca		-ńcu		-
-B2cein/m2	biedrzeniec	42		-niec		-ńca		-ńcu
-B2cein/m3	kaganiec	302		-niec		-ńca		-ńcu
-B2cein/p1	oblubieńcy	2		-ńcy		*
-B2cein/p3	kłańce		2		-ńce		*
-B2cein+!/m1	goniec		70		-niec		-ńca			voc -ńcze
-B2ceinb/m3	bniec		1		-bniec		-bieńca
-B2cein+(ów)/m1 odrapaniec 6		-niec		-ńca
-B2cein+u/m3 robroniec	1		-niec		-ńca
-B2cein+w/m1 Daniec		125		-niec		-ńca
-B2ceis+!?/m1 kosiec		1		-siec		-śca
-B2ceis+w/m1	Kosiec		6		-siec		-śca
-B2ceis+w/m2	osiec		2		-siec		-śca
-B2ceis+w/m3	krztusiec	14		-siec		-śca
-B2cei+(u)!	chłopiec	1		-iec		-ca				dat -cu; voc -cze
-B2cei+!w/m1	ojciec		3		-ciec		-ca				voc -cze
-B2cei+!w/p1	ojcowie		1		-cowie		*
-B2cei+w/m1	Dziadkowiec	168		-iec		-ca
-B2cei+(y)/m3 garniec	2		-iec		-ca
-B2ceiz/m1	chudziec	4		-ziec		-źca
-B2ceiz/m2	brodziec	7		-ziec		-źca
-B2ceiz/m3	bodziec		19		-ziec		-źca
-B2ceiz+!/m1	jeździec	4		-ziec		-źca
-B2ceiz+!?/m1 mołodziec	1		-ziec		-źca
-B2ceiz+w/m1	Dudziec		7		-ziec		-źca
-B2ce+u/m3	kruszec		4		-ec			-cu
-B2ce+w/m1	Michalec	91		-ec			-ca
-B2cez/m1	Czarnogórzec 13		-rzec		-rca
-B2cez/m2	dwuparzec	2		-rzec		-rca
-B2cez/m3	dworzec		31		-rzec		-rca
-B2cez/p1	igrce		1		-rce		*
-B2cez+!		mędrzec		13		-rzec		-rca			voc -rcze
-B2cez+w/m1	Marzec		12		-rzec		-rca
-B2cez+(y)/m3 korzec		2		-rzec		-rca
-B2+e(ów)/m1	kibic		5746	-			-a				nom_pl -e
-B2+e(ów)/m2	kusacz		5		-			-a				nom_pl -e
-B2+e(ów)/m3	decybel		12		-			-a				nom_pl -e
-B2+e(ów)/p1	rodzice		1		-e			*
-B2+e(ów)/p2	rajce		2		-e			*
-B2+'u/m3	image		12		-			-'u
-B2+u(ów)/m3	wiec		753		-			-u
-B2+u(y)/m3	pilotaż		278		-			-u
-B2+'u(y)/m3	collage		4		-			-'u
-B2+w(ów)/m1	kloc		6743	-			-a
-B2+w(ów)/m2	borodziej	302		-			-a
-B2+w(ów)/m3	antydaktyl	1408	-			-a
-B2+w(ów)/p2	Gorce		7		-e			*
-B2+w(ów)/p3	harce		11		-e			*
-B2+w(y)/m1	czausz		13		-			-a
-B2+w(y)/m2	biegacz		161		-			-a
-B2+w(y)/m3	kalosz		1135	-			-a
-B2+!y/m1	szewc		1		-			-a				voc -(c)ze
-B2+(y)/m1	tancerz		1532	-			-a
-B2+(y)/m2	kusacz		3		-			-a
-B2+(y)/m3	Wodacz		3		-			-a
-B2zce/m3	Chodecz		6		-ecz		-cza
-B2zcs/m3	deszcz		1		-eszcz		-żdżu
-B2zdą+(y)/m3 pieniądz	2		-ądz		-ądza			gen_pl -ędzy; ins_pl -ędzmi
-B2zdę/m1	ksiądz		1		-ądz		-ędza			voc -ęże
-B2zdó/m1	Inowłódz	1		-ódz		-odza
-B2zdó+w/m1	wódz		2		-ódz		-odza
-B2zre/m3	Chroberz	1		-erz		-rza
-B2zrei/m3	kierz		6		-ierz		-rza
-B2zró+(y)/m3 Myślibórz	42		-órz		-orza
-B2żą+w/m1	mąż			1		-ąż			-ęża
-B2żą+w/m2	wąż			1		-ąż			-ęża
-B2żą+w/m3	wąż			2		-ąż			-ęża
-B2żą+w(y)/m2 wąż		2		-ąż			-ęża
-B2żą+w(y)/m3 Witowąż	1		-ąż			-ęża
-B2żó+(y)/m3 nóż			9		-óż			-oża
-B3(co)+w/m1	Angelico	5		-co			-ca				ins -kiem; nom_pl_2 -ki
-B3(cq)+w/m1	Gracq		1		-cq			-cqa			ins -kiem; nom_pl_2 -ki
-B3c+u/m3	Quebec		9		-c			-cu				ins -kiem; nom_pl -ki
-B3c+w/m1	Balzac		94		-c			-ca				ins -kiem; nom_pl_2 -ki
-B3c+w/m2	cadillac	5		-c			-ca				ins -kiem; nom_pl -ki
-B3c+w/m3	panasonic	6		-c			-ca				ins -kiem; nom_pl -ki
-B3g/m1		szpieg/-log	277		-g			-ga				nom_pl -dzy
-B3gą+u/m3	krąg		23		-ąg			-ęgu
-B3gą+w/m3	pałąg		2		-ąg			-ęga
-B3gó+uw/m3	stóg		31		-óg			-ogu
-B3gó+!w/m1	bóg			1		-óg			-oga			voc -oże
-B3gó+w/m1	wróg		40		-óg			-oga
-B3gó+w/m2	brzuchonóg	37		-óg			-oga
-B3gó+w/m3	pieróg		17		-óg			-oga
-B3gró/m3	mórg		1		-órg		-orga
-B3gró+u/m3	bórg		1		-órg		-orgu
-B3(gues)+w/m1 Desargues	1		-ues		-ues'a			ins (Desarg)iem; nom_pl (Desarg)i
-B3(gu)+w/m1	Doumergue	1		-ue			-ue'a			ins (Doumerg)iem; nom_pl (Doumerg)i
-B3k/m1		rybak		1662	-k			-ka				nom_pl -cy
-B3k/m2		czternastak	33		-k			-ka				nom_pl -ki
-B3k/m3		poprzednik	41		-k			-ka				nom_pl -ki
-B3k+!/m1	człek		2		-k			-ka				voc -cze; nom_pl -cy
-B3K+-/m1	y			1		-			--a
-B3K+-/m2	CMYK		2		-			--a
-B3K+-/m3	y			4		-			--a
-B3K+człowiek/m1 praczłowiek 6	-człowiek	-człowieka		nom_pl -ludzie; ins_pl -ludźmi
-B3K+człowiek/p1 podludzie 1		-ludzie		*				ins_pl ludźmi
-B3K+człowiek/m1 człowiek 1		-człowiek	-człowieka		voc -człowiecze; nom_pl -ludzie; ins_pl -ludźmi
-B3ke/m1		Turek		4		-ek			-ka				nom_pl -cy
-B3keic+w/m1	Maciek		11		-ciek		-ćka
-B3keic+w/m2	bociek		3		-ciek		-ćka
-B3kein+w/m1	Heniek		25		-niek		-ńka
-B3kein+w/m2	kleniek		5		-niek		-ńka
-B3kein+w/m3	pieniek		6		-niek		-ńka
-B3keis+w/m1	Czesiek		41		-siek		-śka
-B3keis+w/m2	bysiek		3		-siek		-śka
-B3keis+w/m3	jasiek		2		-siek		-śka
-B3keiz+w/m1	Dziudziek	3		-ziek		-źka
-B3ke+latka/m3 roczek	1		-roczek		-roczku			nom_pl -latka; gen_pl latek
-B3(ke)+u/m3	remake		1		-e			-e'u			ins -(k)iem; nom_pl -(k)i
-B3ke+u/m3	śnieżek		662		-ek			-ku
-B3(ke)+'w/m1 Blake		5		-e			-e'a			ins -(k)iem; nom_pl -(k)i
-B3ke+w/m1	pionek		2969	-ek			-ka
-B3ke+w/m2	amorek		573		-ek			-ka
-B3ke+w/m3	stożek		2209	-ek			-ka
-B3ke+w/p1	pradziadkowie 2		-kowie		*
-B3ke+w/p2	korki		1		-ki			*
-B3ke+w/p3	portaski	1		-ki			*
-B3ko/m3		Akademgorodok 1		-ok			-ka
-B3(ko)+w/m1	Mieszko		35		-o			-a
-B3(ko)+w/m2	guanako		3		-o			-a
-B3K+-u/m3	NIK			13		-			--u
-B3K+ystok/m3 Białystok	5		-ystok		-egostoku
-B3+lata/m3	rok			1		-rok		-roku			nom_pl -lata; gen_pl -lat; ins_pl -latami:laty[obsolete]
-B3q/m1		Haq			1		-q			-qa				ins -kiem; nom_pl -ki
-B3(ques)+w/m1 Jacques	1		-cques		-cques'a		ins (Ja)kiem; nom_pl_2 (Ja)ki
-B3(que)+u/m3 boutique	1		-que		-que'u			ins -kiem; nom_pl -ki
-B3(que)+w/m1 Remarque	1		-que		-que'a			ins -kiem; nom_pl_2 -ki
-B3(qu)+w/m1 Jaques		1		-ques		-ques'a			ins -(Ja)kiem; nom_pl_2 -(Ja)ki
-B3+u/m3		ślizg		1742	-			-u
-B3+w/m1		kurpik		7558	-			-a
-B3+w/m2		bakteriofag	901		-			-a
-B3+w/m3		storczyk	2802	-			-a
-B3+w/p1		małżonkowie	4		-owie		*
-B3+w/p2		żłóbczaki	372		-i			*
-B3+w/p3		baraszki	537		-i			*
-B4/m1		acan		4476	-			-a			-ie
-B4/m2		pion		658		-			-a			-ie
-B4/m3		chleb		2415	-			-a			-ie
-B4/p2		plecy		408		-y			*			*
-B4/p3		androny		647		-y			*			*
-B4+!/m1		skurwysyn	1		-			-a			-ie/u															voc -u
-B4+-/m1		z			1		-			--a			-ecie
-B4+-/m2		z			1		-			--a			-ecie
-B4+-/m3		z			1		-			--a			-ecie
-B4+0/m3		gram		1		-			-a			-ie			-owie		-y		-[count]
-B4+a/m3		ekspens		7		-			-u			-ie			*			-a										organ/wolumen/wolumin/sekstern/interes/ekspens/sukurs
+B2cein/m1	Amerykaniec	177		-niec		-ńca		-ńcu		-ńcy		-ńce		-ńców
+B2cein/m2	biedrzeniec	42		-niec		-ńca		-ńcu		*			-ńce		-ńców
+B2cein/m3	kaganiec	302		-niec		-ńca		-ńcu		*			-ńce		-ńców
+B2cein/p1	oblubieńcy	2		-ńcy		*			*			-ńcy		-ńce		-ńców
+B2cein/p3	kłańce		2		-ńce		*			*			*			-ńce		-ńców
+B2cein+!/m1	goniec		70		-niec		-ńca		-ńcu		-ńcy		-ńce		-ńców						voc -ńcze
+B2ceinb/m3	bniec		1		-bniec		-bieńca		-bieńcu		-bieńcy		-bieńce		-bieńców
+B2cein+(ów)/m1 odrapaniec 6		-niec		-ńca		-ńcu		-ńce		-ńce		-ńców
+B2cein+u/m3 robroniec	1		-niec		-ńcu		-ńcu		*			-ńce		-ńców
+B2cein+w/m1 Daniec		125		-niec		-ńca		-ńcu		-ńcowie		-ńce		-ńców
+B2ceis+!?/m1 kosiec		1		-siec		-śca		-ścu		-ścy		-śce		-śców						voc -ścze/-ścu
+B2ceis+w/m1	Kosiec		6		-siec		-śca		-ścu		-ścowie		-śce		-śców
+B2ceis+w/m2	osiec		2		-siec		-śca		-ścu		*			-śce		-śców
+B2ceis+w/m3	krztusiec	14		-siec		-śca		-ścu		*			-śce		-śców
+B2cei+(u)!/m1 chłopiec	1		-iec		-ca			-cu			-cy			-ce			-ców						dat -cu; voc -cze
+B2cei+!w/m1	ojciec		3		-ciec		-ca			-cu			-cowie		-ce			-ców						dat -cu; voc -cze
+B2cei+!w/p1	ojcowie		1		-cowie		*			*			-cowie		-ce			-ców
+B2cei+w/m1	Dziadkowiec	168		-iec		-ca			-cu			-cowie		-ce			-ców
+B2cei+(y)/m3 garniec	2		-iec		-ca			-cu			-cy			-ce			-cy
+B2ceiz/m1	chudziec	4		-ziec		-źca		-źcu		-źcy		-źce		-źców
+B2ceiz/m2	brodziec	7		-ziec		-źca		-źcu		*			-źce		-źców
+B2ceiz/m3	bodziec		19		-ziec		-źca		-źcu		*			-źce		-źców
+B2ceiz+!/m1	jeździec	4		-ziec		-źca		-źcu		-źcy		-źce		-źców						voc -źcze
+B2ceiz+!?/m1 mołodziec	1		-dziec		-dca		-dcu		-dcy		-dce		-dców						voc -dcze/-dcu
+B2ceiz+w/m1	Dudziec		7		-ziec		-źca		-źcu		-źcowie		-źce		-źców
+B2ce+u/m3	kruszec		4		-ec			-cu			-cu			*			-ce			-ców
+B2ce+w/m1	Michalec	91		-ec			-ca			-cu			-cowie		-ce			-ców
+B2cez/m1	Czarnogórzec 13		-rzec		-rca		-cu			-cy			-ce			-ców
+B2cez/m2	dwuparzec	2		-rzec		-rca		-cu			*			-ce			-ców
+B2cez/m3	dworzec		31		-rzec		-rca		-cu			*			-ce			-ców
+B2cez/p3	igrce		1		-rce		*			*			*			-ce			-ców
+B2cez+!		mędrzec		13		-rzec		-rca		-cu			-cy			-ce			-ców						voc -rcze
+B2cez+w/m1	Marzec		12		-rzec		-rca		-cu			-cowie		-ce			-ców
+B2cez+(y)/m3 korzec		2		-rzec		-rca		-cu			-cowie		-ce			-ców
+B2+e(ów)/m1	kibic		5746	-			-a			-u			-e			-e			-ów
+B2+e(ów)/m2	kusacz		5		-			-a			-u			-e			-e			-ów
+B2+e(ów)/m3	decybel		12		-			-a			-u			-e			-e			-ów
+B2+e(ów)/p1	rodzice		1		-e			*			*			-e			-e			-ów
+B2+e(ów)/p2	rajce		2		-e			*			*			*			-e			-ów
+B2+'u/m3	image		12		-			-'u			-'u						-'e			-'ów
+B2+u(ów)/m3	wiec		753		-			-u			-u			*			-e			-ów
+B2+u(y)/m3	pilotaż		278		-			-u			-u			*			-e			-y
+B2+'u(y)/m3	collage		4		-			-'u			-'u			*			-'e			-'y
+B2+w(ów)/m1	kloc		6743	-			-a			-u			-owie		-e			-ów
+B2+w(ów)/m2	borodziej	302		-			-a			-u			*			-e			-ów
+B2+w(ów)/m3	antydaktyl	1408	-			-a			-u			*			-e			-ów
+B2+w(ów)/p2	Gorce		7		-e			*			*			*			-e			-ów
+B2+w(ów)/p3	harce		11		-e			*			*			*			-e			-ów
+B2+w(y)/m1	czausz		13		-			-a			-u			-owie		-e			-y
+B2+w(y)/m2	biegacz		161		-			-a			-u			*			-e			-y
+B2+w(y)/m3	kalosz		1135	-			-a			-u			*			-e			-y
+B2+w(y)/m3	kalosz		1135	-			-a			-u			*			-e			-y
+B2+w(y)/p3	klawisze	2		-			*			*			*			-e			-y
+B2+!y/m1	szewc		1		-			-a			-u			-y			-e			-ów							voc -(c)u/(c)ze
+B2+(y)/m1	tancerz		1532	-			-a			-u			-e			-e			-y
+B2+(y)/m2	kusacz		3		-			-a			-u			*			-e			-y
+B2+(y)/m3	Wodacz		3		-			-a			-u			*			-e			-y
+B2zce/m3	Chodecz		6		-ecz		-cza		-czu		-cze		-cze		-czów
+B2zcs/m3	deszcz		1		-eszcz		-żdżu		-żdżu		*			-żdże		-żdżów
+B2zdą+(y)/m3 pieniądz	2		-ądz		-ądza		-ądzu		*			-ądze		-ędzy						ins_pl -ędzmi
+B2zdę/m1	ksiądz		1		-ądz		-ędza		-ędzu		-ęża		-ędze[rare]	-ęży						dat -ęszu; voc -ęże; ins_pl -ężmi; dat_pl -ężom; loc_pl -ężach
+B2zdó/m1	Inowłódz	1		-ódz		-odza		-odzu		-odze		-odze		-odzów
+B2zdó+w/m1	wódz		2		-ódz		-odza		-odzu		-odzowie	-odze		-odzów
+B2zre/m3	Chroberz	1		-erz		-rza		-rzu		-rze		-rze		-rzów
+B2zrei/m3	kierz		6		-ierz		-rza		-rzu		-rze		-rze		-rzów
+B2zró+(y)/m3 Myślibórz	42		-órz		-orza		-orzu		*			-orze		-orzy
+B2żą+w/m1	mąż			1		-ąż			-ęża		-ężu		-ężowie		-ęże		-ężów
+B2żą+w/m2	wąż			1		-ąż			-ęża		-ężu		*			-ęże		-ężów
+B2żą+w/m3	wąż			2		-ąż			-ęża		-ężu		*			-ęże		-ężów
+B2żą+w(y)/m2 wąż		2		-ąż			-ęża		-ężu		-ężowie		-ęże		-ęży
+B2żą+w(y)/m3 Witowąż	1		-ąż			-ęża		-ężu		*			-ęże		-ęży
+B2żó+(y)/m3 nóż			9		-óż			-oża		-ożu		*			-oże		-oży
+B3(co)+w/m1	Angelico	5		-co			-ca			-cu			-cowie		-ki			-ców						ins -kiem; voc -co
+B3(cq)+w/m1	Gracq		1		-cq			-cqa		-cqu		-cqowie		-ki			-cqów						ins -kiem
+B3c+u/m3	Quebec		9		-c			-cu			-cu			*			-ki			-ców						ins -kiem
+B3c+w/m1	Balzac		94		-c			-ca			-cu			-cowie		-ki			-ców						ins -kiem
+B3c+w/m2	cadillac	5		-c			-ca			-cu			*			-ki			-ców						ins -kiem
+B3c+w/m3	panasonic	6		-c			-ca			-cu			*			-ki			-ców						ins -kiem
+B3g/m1		szpieg/-log	277		-g			-ga			-gu			-dzy		-gi			-gów
+B3gą+u/m3	krąg		23		-ąg			-ęgu		-ęgu		*			-ęgi		-ęgów
+B3gą+w/m3	pałąg		2		-ąg			-ęga		-ęgu		-ęgowie		-ęgi		-ęgów
+B3gó+uw/m3	stóg		31		-óg			-ogu		-ogu		*			-ogi		-ogów
+B3gó+!w/m1	bóg			1		-óg			-oga		-ogu		-ogowie		-ogi		-ogów						voc -oże
+B3gó+w/m1	wróg		40		-óg			-oga		-ogu		-ogowie		-ogi		-ogów
+B3gó+w/m2	brzuchonóg	37		-óg			-oga		-ogu		*			-ogi		-ogów
+B3gó+w/m3	pieróg		17		-óg			-oga		-ogu		*			-ogi		-ogów
+B3gró/m3	mórg		1		-órg		-orga		-orgu		-orgowie	-orgi		-orgów
+B3gró+u/m3	bórg		1		-órg		-orgu		-orgu		*			-orgi		-orgów
+B3(gues)+w/m1 Desargues	1		-ues		-ues'a		-ues'u		-ues'owie	-i			-ues'ów						ins -iem
+B3(gu)+w/m1	Doumergue	1		-ue			-ue'a		-ue'u		-ue'owie	-i			-ue'ów						ins -iem
+B3k/m1		rybak		1662	-k			-ka			-ku			-cy			-ki			-ków
+B3k/m2		czternastak	33		-k			-ka			-ku			*			-ki			-ków
+B3k/m3		poprzednik	41		-k			-ka			-ku			*			-ki			-ków
+B3k+!/m1	człek		2		-k			-ka			-ku			-cy			-ki			-ków						voc -cze
+B3K+-/m1	y			1		-			--a			--u			--owie		--i			--ów
+B3K+-/m2	CMYK		2		-			--a			--u			*			--i			--ów
+B3K+-/m3	y			4		-			--a			--u			*			--i			--ów
+B3K+człowiek/m1 praczłowiek 6	-człowiek	-człowieka	-człowieku	-ludzie		-ludzie		-ludzi						ins_pl -ludźmi
+B3K+człowiek/p1 podludzie 1		-ludzie		*			*			-ludzie		-ludzie		-ludzi						ins_pl -ludźmi
+B3K+człowiek+!/m1 człowiek 1	-człowiek	-człowieka	-człowieku	-ludzie		-ludzie		-ludzi						voc -człowiecze; ins_pl -ludźmi
+B3ke/m1		Turek		4		-ek			-ka			-ku			-cy			-ki			-ków
+B3keic+w/m1	Maciek		11		-ciek		-ćka		-ćku		-ćkowie		-ćki		-ćków
+B3keic+w/m2	bociek		3		-ciek		-ćka		-ćku		*			-ćki		-ćków
+B3kein+w/m1	Heniek		25		-niek		-ńka		-ńku		-ńkowie		-ńki		-ńków
+B3kein+w/m2	kleniek		5		-niek		-ńka		-ńku		-ńkowie		-ńki		-ńków
+B3kein+w/m3	pieniek		6		-niek		-ńka		-ńku		-ńkowie		-ńki		-ńków
+B3keis+w/m1	Czesiek		41		-siek		-śka		-śku		-śkowie		-śki		-śków
+B3keis+w/m2	bysiek		3		-siek		-śka		-śku		-śkowie		-śki		-śków
+B3keis+w/m3	jasiek		2		-siek		-śka		-śku		-śkowie		-śki		-śków
+B3keiz+w/m1	Dziudziek	3		-ziek		-źka		-źku		-źkowie		-źki		-źków
+B3ke+latka/m3 roczek	1		-roczek		-roczku		-roczku		*			-latka		-latek
+B3(ke)+u/m3	remake		1		-e			-e'u		-e'u		*			-i			-e'ów						ins -iem
+B3ke+u/m3	śnieżek		662		-ek			-ku			-ku			*			-ki			-ków
+B3(ke)+'w/m1 Blake		5		-e			-e'a		-e'u		-e'owie		-i			-e'ów						ins -iem
+B3ke+w/m1	pionek		2969	-ek			-ka			-ku			-kowie		-ki			-ków
+B3ke+w/m2	amorek		573		-ek			-ka			-ku			*			-ki			-ków
+B3ke+w/m3	stożek		2209	-ek			-ka			-ku			*			-ki			-ków
+B3ke+w/p1	pradziadkowie 2		-kowie		*			*			-kowie		-ki			-ków
+B3ke+w/p2	korki		1		-ki			*			*			*			-ki			-ków
+B3ke+w/p3	portaski	1		-ki			*			*			*			-ki			-ków
+B3ko/m3		Akademgorodok 1		-ok			-ka			-ku			*			-ki			-ków
+B3(ko)+w/m1	Mieszko		35		-o			-a			-u			-owie		-i			-ów
+B3(ko)+w/m2	guanako		3		-o			-a			-u			*			-i			-ów
+B3K+-u/m3	NIK			13		-			--u			--u			*			--i			--ów
+B3K+ystok/m3 Białystok	5		-ystok		-egostoku	-ymstoku	*			-estoki		-ychstoków					voc -ystoku
+B3+lata/m3	rok			1		-rok		-roku		-roku		*			-lata		-lat						ins_pl -latami/laty[obsolete]
+B3q/m1		Haq			1		-q			-qa			-qu			-qowie		-ki			-qów						ins -kiem
+B3(ques)+w/m1 Jacques	1		-cques		-cques'a	-cques'u	-cques'owie	-ki			-cques'ów					ins -kiem
+B3(que)+u/m3 boutique	1		-que		-que'u		-que'u		*			-ki			-que'ów						ins -kiem
+B3(que)+w/m1 Remarque	1		-que		-que'a		-que'u		-que'owie	-ki			-que'ów						ins -kiem
+B3(qu)+w/m1 Jaques		1		-ques		-ques'a		-ques'u		-ques'owie	-ki			-ques'ów					ins -kiem
+B3+u/m3		ślizg		1742	-			-u			-u			*			-i			-ów
+B3+w/m1		kurpik		7558	-			-a			-u			-owie		-i			-ów
+B3+w/m2		bakteriofag	901		-			-a			-u			*			-i			-ów
+B3+w/m3		storczyk	2802	-			-a			-u			*			-i			-ów
+B3+w/p1		małżonkowie	4		-owie		*			*			-owie		-i			-ów
+B3+w/p2		żłóbczaki	372		-i			*			*			*			-i			-ów
+B3+w/p3		baraszki	537		-i			*			*			*			-i			-ów
+B4/m1		acan		4476	-			-a			-ie			-owie		-y			-ów
+B4/m2		pion		658		-			-a			-ie			*			-y			-ów
+B4/m3		chleb		2415	-			-a			-ie			*			-y			-ów
+B4/p2		plecy		408		-y			*			*			*			-y			-ów
+B4/p3		androny		647		-y			*			*			*			-y			-ów
+B4+!/m1		skurwysyn	1		-			-a			-ie/u		-i			-y			-ów							voc -u
+B4+-/m1		z			1		-			--a			-ecie		--owie		--y			--ów
+B4+-/m2		z			1		-			--a			-ecie		*			--y			--ów
+B4+-/m3		z			1		-			--a			-ecie		*			--y			--ów
+B4+0/m3		gram		1		-			-a			-ie			-owie		-y			-[count]
+B4+a/m3		ekspens		7		-			-u			-ie			*			-a			-ów							organ/wolumen/wolumin/sekstern/interes/ekspens/sukurs
 B4bą+u/m3	dąb			29		-ąb			-ębu		-ębie		*			-ęby
 B4bą+w/m1	dziewosłąb	3		-ąb			-ęba		-ębie		-ębowie		-ęby
 B4bą+w/m2	jarząb		6		-ąb			-ęba		-ębie		*			-ęby
