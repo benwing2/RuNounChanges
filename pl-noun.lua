@@ -1400,163 +1400,163 @@ B4o+i/m1	mafioso		2		-o			-a			-ie			-i			-a			-ów
 B4o+(in)/m1	Apollo		1		-o			-ina		-inie		-inowie		-iny		-inów
 B4o+(on)/m1	Cycero		9		-o			-ona		-onie		-onowie		-ony		-onów						voc -o/onie
 B4or+w/m1	maestro		27		-ro			-ra			-rze		-rowie		-ry			-rów						voc -ro
-B4or+w/m3	pampero		1		-ro			-ra			-rze		*			-ryq		-rów						voc -ro
-B4ot+w/m1	Canaletto	20		-to			-ta				loc -cie; voc -to
-B4ot+w/m2	putto		20		-to			-ta				loc -cie; voc -to
-B4o+!w/m1	Picasso		44		-o			-a				loc -ie; voc -o
-B4o+w/m1	Zdzicho		2		-o			-a			-u
-B4pei+w/m1	kiep		1		-iep		-pa			-pie
-B4pei+w/m3	kiep		1		-iep		-pa			-pie
-B4pe+w/m3	półwysep	4		-ep			-pu			-pie
-B4(phe)+'/m1 Christophe	1		-phe		-phe'a		-fie
-B4R+-/m2	TIR,STAR	2		-			--a			-(R)-ze
-B4rbó+u/m3	Bóbr		1		-óbr		-obru		-obrze
-B4rbó+w/m2	bóbr		1		-óbr		-obra		-obrze
-B4rec/m3	amfimacer	2		-cer		-kra		-krze
-B4rec+u/m3	amfimacer	2		-cer		-kru		-krze
-B4rei+u/m3	cukier		13		-ier		-ru			-rze
-B4rei+w/m1	junkier		11		-ier		-ra			-rze
-B4rei+w/m2	wągier		4		-ier		-ra			-rze
-B4rei+w/m3	ablegier	11		-ier		-ra			-rze
-B4rei+y/m1	Węgier		7		-ier		-ra			-rze		nom_pl -rzy
-B4r(es)+'w/m1 Ingres	1		-res		-res'a		-rze
-B4r(e)+'u/m3 software	10		-re			-re'u		-rze
-B4re+u/m3	wicher		39		-er			-ru			-rze
-B4r(e)+'w/m1 Astaire	12		-re			-re'a		-rze
-B4r(e)+'w/m3 brumaire	2		-re			-re'a		-rze
-B4re+w/m1	Aleksander	78		-er			-ra			-rze
-B4re+w/m2	Skamander	14		-er			-ra			-rze
-B4re+w/m3	świder		70		-er			-ra			-rze
-B4re+y/m1	Holender	52		-er			-ra			-rze		nom_pl -rzy
-B4r(h)+u/m3	Aligarh		1		-rh			-rhu		-rze
-B4r(o)+y/m1	banderillero 2		-ro			-ra			-rze		nom_pl -rzy
-B4ró+u/m3	zbiór		120		-ór			-oru		-orze
-B4ró+w/m1	rymotwór	44		-ór			-ora		-orze
-B4ró+w/m2	białozór	11		-ór			-ora		-orze
-B4ró+w/m3	topór		13		-ór			-ora		-orze
-B4ró+y/m1	doktór		4		-ór			-ora		-orze		nom_pl -rzy
-B4r(re)+w/m1 Pierre		4		-rre		-rre'a		-rze
-B4r(ro)+w/m1 Pizarro	2		-rro		-rra			loc -rze; voc -rro
-B4rr+w/m1	Starr		2		-rr			-rra			loc/voc -rze
-B4rr+w/m2	birr		2		-rr			-rra		-rze
-B4rr+w/m3	parr		2		-rr			-rra		-rze
-B4r(s)+u/m3	parcours	1		-rs			-rsu		-rze
-B4rta+u/m3	wiatr		4		-atr		-atru		-etrze
-B4r+u/m3	browar		931		-r			-ru			-rze
-B4r+u/p3	moczary		1		-ry			*			*
-B4R+-u/m3	BOR			39		-			--u			-(R)-ze
-B4r+w/m1	Adenauer	2106	-r			-ra			-rze
-B4r+w/m2	amur		243		-r			-ra			-rze
-B4r+w/m3	litr		243		-r			-ra			-rze
-B4r+w/p3	labry		1		-ry			*			*
-B4r+y/m1	zecer		1010	-r			-ra			-rze		nom_pl -rzy
-B4r+y/m3	manipulator	3		-r			-ra			-rze
-B4s+'/p3	cornflakes	1		-s			*			*		gen_pl -'ów
-B4S+-/m1	VIP			2		-			--a			--ie
-B4S+-/m2	AIDS,UNIX	7		-			--a			--ie
-B4S+-/m3	x			3		-			--a			--ie
-B4s+0/p3	cornflakes	1		-s			*			*	gen_pl -sów
-B4sa+u/m3	las			19		-as			-asu		-esie
-B4są/m3		otrząs		1		-ąs			-ęsu		-ęsie
-B4sei+(u)/m1 pies		1		-ies		-sa			-sie		dat -su
-B4sei+(u)/m2 pies		2		-ies		-sa			-sie		dat -su
-B4sei+w/m1	Owies		1		-ies		-sa			-sie
-B4sei+w/m3	owies		1		-ies		-sa			-sie
-B4s+!w/m1	Jezus		1		-s			-sa				loc -sie; voc -
-B4T+-/m3	WAT,KRRiT	14		-T			-T-u		--cie
-B4t+0/m3	procent		3		-t			-ta[count]/t[count] loc/voc -cie; nom_pl/gen_pl -t[count]
-B4t+a/m1	brat		4		-t			-ta			-cie		dat -tu; nom_pl -cia; gen_pl -ci; ins_pl -ćmi; dat_pl -ciom
-B4t+a/p1	b-cia		1		-cia		*				gen_pl -ci; ins_pl -ćmi; dat_pl -ciom
-B4ta/m3		wszechświat	1		-at			-ata		-ecie
-B4TA+-/m3	VAT,DAT		6		-AT			-AT-u		-acie
-B4ta+(u)/m3	świat		11		-at			-ata		-ecie		dat -atu
-B4ta+u/m3	kwiat		19		-at			-atu		-ecie
-B4tą+u/m3	szcząt		1		-ąt			-ętu		-ęcie
-B4tc+w/m3	compact		1		-ct			-ctu		-kcie
-B4(tes)/m1	Descartes	1		-tes		-tes'a		-cie
-B4tes+u/m3	oset		1		-set		-stu		-ście
-B4tes+w/m1	Oset		1		-set		-sta		-ście
-B4T+-(etu)/m3 BZ		19		-			--etu		--ecie
-B4te+u/m3	ocet		2		-et			-tu			-cie
-B4t(e)+'w/m1 Bellonte	8		-te			-te'a		-cie
-B4t(e)+'w/m2 courante	1		-te			-te'a		-cie
-B4te+w/m1	Ocet		1		-et			-tu			-cie
-B4t(hes)+w/m1 Barthes	1		-thes		-thes'a		-cie
-B4t(he)+w/m1 Forsythe	2		-the		-the'a		-cie
-B4t(h)+!w/m1 Smith,Keith 8		-th			-tha		-sie/cie
-B4t(h)+w/m1	Hindemith	25		-th			-tha		-cie
-B4t(h)+w/m3	plymouth	1		-th			-tha		-cie
-B4t+i/m1	konkurent	582		-t			-ta			-cie		nom_pl -ci
-B4t+i/p1	Parcelanci	1		-ci			*			*
-B4TI+-/m3	PIT			4		-IT			-IT-u		-icie
-B4TiRR+-/m3	KRRiT		1		-RRiT		-RRiT-u		-rricie
-B4TO+-/m3	LOT			2		-OT			-OT-u		-ocie
-B4T+-(otu)/m3 PTJ		5		-			--otu		--ocie
-B4tó+u/m3	powrót		15		-ót			-otu		-ocie
-B4tó+w/m1	Nawrót		5		-ót			-ota		-ocie
-B4tó+w/m2	Wywrót		1		-ót			-ota		-ocie
-B4tó+w/m3	kołowrót	1		-ót			-ota		-ocie
-B4tó+w/m3	PAGART		1		-AGART		-AGART-u	-agarcie
-B4ts(es)+w/m1 Costes	1		-stes		-stes'a		-ście
-B4tse+u/m3	chrzest		2		-est		-tu			-cie
-B4ts(e)+w/m1 Benveniste	1		-ste		-ste'a		-ście
-B4ts+i/m1	oszust		1		-st			-sta		-ście		nom_pl -ści
-B4ts(o)/m1	Mefisto		3		-sto		-sta		-ście
-B4ts+u/m3	agrest		196		-st			-stu		-ście
-B4ts+ua/m3	gust		4		-st			-stu		-ście		nom_pl -sta
-B4ts+w/m1	August		113		-st			-sta		-ście
-B4ts+w/m2	chłyst		9		-st			-sta		-ście
-B4ts+w/m3	pancerfaust	8		-st			-sta		-ście
-B4tt+w/m1	Czeczott	22		-tt			-tta		-cie
-B4t+u/m3	kłopot		2294	-t			-tu			-cie
-B4T+-u/m3	MSZ,BZ		15		-			--u			--ecie
-B4t+(u)a/m1	psubrat		1		-t			-ta			-cie		dat -tu; nom_pl -cia
-B4t+ua/m3	grunt		18		-t			-tu			-cie		nom_pl -ta
-B4t+(u)i/m1	czart,kat	2		-t			-ta			-cie		dat -towi/tu; nom_pl -ci
-B4t+(u)w/m1	sukinkot	2		-t			-ta			-cie		dat -tu
-B4t+(u)w/m2	kot,czart	4		-t			-ta			-cie		dat -tu
-B4t+w/m1	Blériot		1115	-t			-ta			-cie
-B4t+w/m2	abisobiont	231		-t			-ta			-cie
-B4t+w/m3	młot		217		-t			-ta			-cie
-B4t+w/p3	panty		2		-ty			*			*
-B4t+u/m3	skarb		5351	-			-u			-ie
-B4t+u/n2	opus		1		-			-u			-ie (NOTE: voc correct per SGJP)
-B4t+u/p2	Zięby		29		-y			*			*
-B4t+u/p3	wyływy		30		-y			*			*
-B4t+u!/m3	dom			1		-			-u				loc -u; voc -ie
-B4t+(u)/m1	chłop		3		-			-a			-ie		nom_pl -i
-B4t+(u)/m2	babochłop	1		-			-a			-ie
-B4+ua/m3	regestr		1		-r			-ru			-rze		nom_pl -ra
-B4+ue/m3	dysonans	27		-			-u			-ie		nom_pl -e
-B4(us)/m3	ablatiwus	22		-us			-u			-ie
-B4+(u)!w/m1	pan			18		-			-a				loc -u; voc -ie; dat -u
-B4+u(y?)/m3	czas		1		-			-u			-ie		ins_pl -ami/y[dated]
-B4+w/m1		sampan		1		-			-a				loc -u; voc -ie
-B4+!w/m1	Arrow,Shaw	38		-			-a			-
-B4we/m3		szew		1		-ew			-wa			-wie
-B4we+(u)/m2	lew			3		-ew			-wa			-wie
-B4we+(u?)/m1 Lew		1		-ew			-wa			-wie		dat -wu/wowi[rare]
-B4we+u/m3	pozew		3		-ew			-wu			-wie
-B4we+ystaw/m3 Krasnystaw 1		-ystaw		-egostawu
-B4wó+(u)/m3	Berdyczów	2270	-ów			-owa		-owie		dat -owu[archaic]
-B4wó+u/m3	cudzysłów	28		-ów			-owu		-owie
-B4wó+w/m1	pustogłów	118		-ów			-owa		-owie
-B4wó+w/m2	kolcogłów	10		-ów			-owa		-owie
-B4wó+w/m3	wygwizdów	2276	-ów			-owa		-owie
-B4x/m1		Max			9		-x			-ksa		-ksie
-B4x/m2		melex		5		-x			-ksa		-ksie
-B4x/m3		Fenix		3		-x			-ksa		-ksie
-B4x+u/m3	appendix	24		-x			-ksu		-ksie
-B4x+w/m1	Merckx		1		-x			-sa			-sie
-B4zą/m3		pawąz		1		-ąz			-ęza		-ęzie
-B4zą+u/m3	grąz		2		-ąz			-ęzu		-ęzie
-B4ze/m3		Łobez		1		-ez			-za			-zie
-B4zei/m2	giez		1		-iez		-za			-zie
-B4zei+u/m3	bez			1		-ez			-zu			-zie
-B4zó+u/m3	obóz		46		-óz			-ozu		-ozie
-B4zó+w/m1	smarowóz	5		-óz			-oza		-ozie
-B4zó+w/m2	Przewóz		1		-óz			-oza		-ozie
-B4zó+w/m3	powróz		4		-óz			-oza		-ozie
+B4or+w/m3	pampero		1		-ro			-ra			-rze		*			-ry			-rów						voc -ro
+B4ot+w/m1	Canaletto	20		-to			-ta			-cie		-towie		-ty			-tów						voc -to
+B4ot+w/m2	putto		20		-to			-ta			-cie		*			-ty			-tów						voc -to
+B4o+!w/m1	Picasso		44		-o			-a			-ie			-owie		-y			-ów							voc -o
+B4o+w/m1	Zdzicho		2		-o			-a			-u			-owie		-y			-ów
+B4pei+w/m1	kiep		1		-iep		-pa			-pie		-powie[rare] -py		-pów
+B4pei+w/m3	kiep		1		-iep		-pa			-pie		*			-py			-pów
+B4pe+w/m3	półwysep	4		-ep			-pu			-pie		*			-py			-pów
+B4(phe)+'/m1 Christophe	1		-phe		-phe'a		-fie		-phe'owie	-phe'y		-phe'ów
+B4R+-/m2	TIR,STAR	2		-			--a			--ze		--owie		--y			--ów
+B4rbó+u/m3	Bóbr		1		-óbr		-obru		-obrze		*			-obry		-obrów
+B4rbó+w/m2	bóbr		1		-óbr		-obra		-obrze		-obrowie	-obry		-obrów
+B4rec/m3	amfimacer	2		-cer		-kra		-krze		*			-kry		-krów
+B4rec+u/m3	amfimacer	2		-cer		-kru		-krze		*			-kry		-krów
+B4rei+u/m3	cukier		13		-ier		-ru			-rze		*			-ry			-rów
+B4rei+w/m1	junkier		11		-ier		-ra			-rze		-rowie		-ry			-rów
+B4rei+w/m2	wągier		4		-ier		-ra			-rze		*			-ry			-rów
+B4rei+w/m3	ablegier	11		-ier		-ra			-rze		*			-ry			-rów
+B4rei+y/m1	Węgier		7		-ier		-ra			-rze		-rzy		-ry			-rów
+B4r(es)+'w/m1 Ingres	1		-res		-res'a		-rze		-res'owie	-res'y		-res'ów
+B4r(e)+'u/m3 software	10		-re			-re'u		-rze		*			-re'y		-re'ów
+B4re+u/m3	wicher		39		-er			-ru			-rze		*			-ry			-rów
+B4r(e)+'w/m1 Astaire	12		-re			-re'a		-rze		-re'owie	-re'y		-re'ów
+B4r(e)+'w/m3 brumaire	2		-re			-re'a		-rze		*			-re'y		-re'ów
+B4re+w/m1	Aleksander	78		-er			-ra			-rze		-rowie		-ry			-rów
+B4re+w/m2	Skamander	14		-er			-ra			-rze		*			-ry			-rów
+B4re+w/m3	świder		70		-er			-ra			-rze		*			-ry			-rów
+B4re+y/m1	Holender	52		-er			-ra			-rze		-rzy		-ry			-rów
+B4r(h)+u/m3	Aligarh		1		-rh			-rhu		-rze		*			-rhy		-rhów
+B4r(o)+y/m1	banderillero 2		-ro			-ra			-rze		-rzy		-ry			-rów
+B4ró+u/m3	zbiór		120		-ór			-oru		-orze		*			-ory		-orów
+B4ró+w/m1	rymotwór	44		-ór			-ora		-orze		-orowie		-ory		-orów
+B4ró+w/m2	białozór	11		-ór			-ora		-orze		*			-ory		-orów
+B4ró+w/m3	topór		13		-ór			-ora		-orze		*			-ory		-orów
+B4ró+y/m1	doktór		4		-ór			-ora		-orze		-orzy		-ory		-orów
+B4r(re)+w/m1 Pierre		4		-rre		-rre'a		-rze		-rre'owie	-rre'y		-rre'ów
+B4r(ro)+w/m1 Pizarro	2		-rro		-rra		-rze		-rrowie		-rry		-rrów						voc -rro
+B4rr+w/m1	Starr		2		-rr			-rra		-rze		-rrowie		-rry		-rrów
+B4rr+w/m2	birr		2		-rr			-rra		-rze		*			-rry		-rrów
+B4rr+w/m3	parr		2		-rr			-rra		-rze		*			-rry		-rrów
+B4r(s)+u/m3	parcours	1		-rs			-rsu		-rze		*			-rsy		-rsów
+B4rta+u/m3	wiatr		4		-atr		-atru		-etrze		*			-atry		-atrów
+B4r+u/m3	browar		931		-r			-ru			-rze		*			-ry			-rów
+B4r+u/p3	moczary		1		-ry			*			*			*			-ry			-rów
+B4R+-u/m3	BOR			39		-			--u			--ze		*			--y			--ów
+B4r+w/m1	Adenauer	2106	-r			-ra			-rze		-rowie		-ry			-rów
+B4r+w/m2	amur		243		-r			-ra			-rze		*			-ry			-rów
+B4r+w/m3	litr		243		-r			-ra			-rze		*			-ry			-rów
+B4r+w/p3	labry		1		-ry			*			*			*			-ry			-rów
+B4r+y/m1	zecer		1010	-r			-ra			-rze		-rzy		-ry			-rów
+B4r+y/m3	manipulator	3		-r			-ra			-rze		*			-ry			-rów
+B4s+'/p3	cornflakes	1		-s			*			*			*			-s			-'ów
+B4S+-/m1	VIP			2		-			--a			--ie		--owie		--y			--ów
+B4S+-/m2	AIDS,UNIX	7		-			--a			--ie		*			--y			--ów
+B4S+-/m3	x			3		-			--a			--ie		*			--y			--ów
+B4s+0/p3	cornflakes	1		-s			*			*			*			-s			-sów
+B4sa+u/m3	las			19		-as			-asu		-esie		*			-asy		-asów
+B4są/m3		otrząs		1		-ąs			-ęsu		-ęsie		*			-ęsy		-ęsów
+B4sei+(u)/m1 pies		1		-ies		-sa			-sie		-sowie		-sy			-sów						dat -su
+B4sei+(u)/m2 pies		2		-ies		-sa			-sie		*			-sy			-sów						dat -su
+B4sei+w/m1	Owies		1		-ies		-sa			-sie		-sowie		-sy			-sów
+B4sei+w/m3	owies		1		-ies		-sa			-sie		*			-sy			-sów
+B4s+!w/m1	Jezus		1		-s			-sa			-sie		-sowie		-sy			-sów						voc -
+B4T+-/m3	WAT,KRRiT	14		-T			-T-u		--cie		*			-T-y		-T-ów
+B4t+0/m3	procent		3		-t			-ta[count]/t[count] -cie *			-t[count]	-t[count]
+B4t+a/m1	brat		4		-t			-ta			-cie		-cia		-ty			-ci							dat -tu; ins_pl -ćmi; dat_pl -ciom; loc_pl -ciach
+B4t+a/p1	b-cia		1		-cia		*			*			-cia		-ty			-ci							ins_pl -ćmi; dat_pl -ciom; loc_pl -ciach
+B4ta/m3		wszechświat	1		-at			-ata		-ecie		*			-aty		-atów
+B4TA+-/m3	VAT,DAT		6		-AT			-AT-u		-acie		*			-AT-y		-AT-ów
+B4ta+(u)/m3	świat		11		-at			-ata		-ecie		*			-aty		-atów						dat -atu
+B4ta+u/m3	kwiat		19		-at			-atu		-ecie		*			-aty		-atów
+B4tą+u/m3	szcząt		1		-ąt			-ętu		-ęcie		*			-ęty		-ętów
+B4tc+w/m3	compact		1		-ct			-ctu		-kcie		-ctowie		-cty		-ctów
+B4(tes)/m1	Descartes	1		-tes		-tes'a		-cie		-tes'owie	-tes'y		-tes'ów
+B4tes+u/m3	oset		1		-set		-stu		-ście		*			-sty		-stów
+B4tes+w/m1	Oset		1		-set		-sta		-ście		-stowie		-sty		-stów
+B4T+-(etu)/m3 BZ		19		-			--etu		--ecie		*			--ety		--etów
+B4te+u/m3	ocet		2		-et			-tu			-cie		*			-ty			-tów
+B4t(e)+'w/m1 Bellonte	8		-te			-te'a		-cie		-te'owie	-te'y		-te'ów
+B4t(e)+'w/m2 courante	1		-te			-te'a		-cie		*			-te'y		-te'ów
+B4te+w/m1	Ocet		1		-et			-tu			-cie		-towie		-ty			-tów
+B4t(hes)+w/m1 Barthes	1		-thes		-thes'a		-cie		-thes'owie	-thes'y		-thes'ów
+B4t(he)+w/m1 Forsythe	2		-the		-the'a		-cie		-the'owie	-the'y		-the'ów
+B4t(h)+!w/m1 Smith,Keith 8		-th			-tha		-sie/cie	-thowie		-thy		-thów
+B4t(h)+w/m1	Hindemith	25		-th			-tha		-cie		-thowie		-thy		-thów
+B4t(h)+w/m3	plymouth	1		-th			-tha		-cie		*			-thy		-thów
+B4t+i/m1	konkurent	582		-t			-ta			-cie		-ci			-ty			-tów
+B4t+i/p1	Parcelanci	1		-ci			*			*			-ci			-ty			-tów
+B4TI+-/m3	PIT			4		-IT			-IT-u		-icie		*			-IT-y		-IT-ów
+B4TiRR+-/m3	KRRiT		1		-RRiT		-RRiT-u		-rricie		*			-RRiT-y		-RRiT-ów
+B4TO+-/m3	LOT			2		-OT			-OT-u		-ocie		*			-OT-y		-OT-ów
+B4T+-(otu)/m3 PTJ		5		-			--otu		--ocie		*			--oty		--otów
+B4tó+u/m3	powrót		15		-ót			-otu		-ocie		*			-oty		-otów
+B4tó+w/m1	Nawrót		5		-ót			-ota		-ocie		-otowie		-oty		-otów
+B4tó+w/m2	Wywrót		1		-ót			-ota		-ocie		*			-oty		-otów
+B4tó+w/m3	kołowrót	1		-ót			-ota		-ocie		*			-oty		-otów
+B4tó+w/m3	PAGART		1		-AGART		-AGART-u	-agarcie	*			-AGART-y	-AGART-ów
+B4ts(es)+w/m1 Costes	1		-stes		-stes'a		-ście		-stes'owie	-stes'y		-stes'ów
+B4tse+u/m3	chrzest		2		-est		-tu			-cie		*			-ty			-tów
+B4ts(e)+w/m1 Benveniste	1		-ste		-ste'a		-ście		-ste'owie	-ste'y		-ste'ów
+B4ts+i/m1	oszust		4		-st			-sta		-ście		-ści		-sty		-stów
+B4ts(o)/m1	Mefisto		3		-sto		-sta		-ście		-stowie		-sty		-stów
+B4ts+u/m3	agrest		196		-st			-stu		-ście		*			-sty		-stów
+B4ts+ua/m3	gust		4		-st			-stu		-ście		*			-sta		-stów
+B4ts+w/m1	August		113		-st			-sta		-ście		-stowie		-sty		-stów
+B4ts+w/m2	chłyst		9		-st			-sta		-ście		*			-sty		-stów
+B4ts+w/m3	pancerfaust	8		-st			-sta		-ście		*			-sty		-stów
+B4tt+w/m1	Czeczott	22		-tt			-tta		-cie		-ttowie		-tty		-ttów
+B4t+u/m3	kłopot		2294	-t			-tu			-cie		*			-ty			-tów
+B4T+-u/m3	MSZ,BZ		15		-			--u			--ecie		*			--y			--ów
+B4t+(u)a/m1	psubrat		1		-t			-ta			-cie		-cia		-ty			-tów						dat -tu
+B4t+ua/m3	grunt		18		-t			-tu			-cie		*			-ta			-tów
+B4t+(u)i/m1	czart,kat	2		-t			-ta			-cie		-ci			-ty			-tów						dat -towi/tu
+B4t+(u)w/m1	sukinkot	2		-t			-ta			-cie		-towie		-ty			-tów						dat -tu
+B4t+(u)w/m2	kot,czart	4		-t			-ta			-cie		*			-ty			-tów						dat -tu
+B4t+w/m1	Blériot		1115	-t			-ta			-cie		-towie		-ty			-tów
+B4t+w/m2	abisobiont	231		-t			-ta			-cie		*			-ty			-tów
+B4t+w/m3	młot		217		-t			-ta			-cie		*			-ty			-tów
+B4t+w/p3	panty		2		-ty			*			*			*			-ty			-tów
+B4t+u/m3	skarb		5351	-			-u			-ie			*			-y			-ów
+B4t+u/n2	opus		1		-			-u			-ie			*			-y			-ów							(NOTE: voc and nom_pl correct per SGJP despite being a neuter; need to check elsewhere)
+B4t+u/p2	Zięby		29		-y			*			*			*			-y			-ów
+B4t+u/p3	wyływy		30		-y			*			*			*			-y			-ów
+B4t+u!/m3	dom			1		-			-u			-u			*			-y			-ów							voc -ie
+B4t+(u)/m1	chłop		3		-			-a			-ie			-i			-y			-ów							dat -u
+B4t+(u)/m2	babochłop	1		-			-a			-ie			*			-y			-ów							dat -u
+B4+ua/m3	regestr		1		-r			-ru			-rze		*			-ra			-rów
+B4+ue/m3	dysonans	27		-			-u			-ie			*			-e			-ów
+B4(us)/m3	ablatiwus	22		-us			-u			-ie			*			-y			-ów
+B4+(u)!w/m1	pan			18		-			-a			-u			*			-y			-ów							voc -ie; dat -u
+B4+u(y?)/m3	czas		1		-			-u			-ie			*			-y			-ów							ins_pl -ami/y[dated]
+B4+w/m1		sampan		1		-			-a			-u			-owie		-y			-ów							voc -ie
+B4+!w/m1	Arrow,Shaw	38		-			-a			-			-owie		-y			-ów
+B4we/m3		szew		1		-ew			-wa			-wie		*			-wy			-wów
+B4we+(u)/m2	lew			3		-ew			-wa			-wie		*			-wy			-wów
+B4we+(u?)/m1 Lew		1		-ew			-wa			-wie		-wowie		-wy			-wów						dat -wu/wowi[rare]
+B4we+u/m3	pozew		3		-ew			-wu			-wie		*			-wy			-wów
+B4we+ystaw/m3 Krasnystaw 1		-ystaw		-egostawu	-ymstawie	*			-estawy		-ychstawów					voc -ystawie
+B4wó+(u)/m3	Berdyczów	2270	-ów			-owa		-owie		*			-owy		-owów						dat -owu[archaic (only in "ku")]
+B4wó+u/m3	cudzysłów	28		-ów			-owu		-owie		*			-owy		-owów
+B4wó+w/m1	pustogłów	118		-ów			-owa		-owie		-owowie		-owy		-owów
+B4wó+w/m2	kolcogłów	10		-ów			-owa		-owie		*			-owy		-owów
+B4wó+w/m3	wygwizdów	2276	-ów			-owa		-owie		*			-owy		-owów
+B4x/m1		Max			9		-x			-ksa		-ksie		-ksowie		-ksy		-ksów
+B4x/m2		melex		5		-x			-ksa		-ksie		*			-ksy		-ksów
+B4x/m3		Fenix		3		-x			-ksa		-ksie		*			-ksy		-ksów
+B4x+u/m3	appendix	24		-x			-ksu		-ksie		*			-ksy		-ksów
+B4x+w/m1	Merckx		1		-x			-sa			-sie		-sowie		-sy			-sów
+B4zą/m3		pawąz		1		-ąz			-ęza		-ęzie		-ęzowie		-ęzy		-ęzów
+B4zą+u/m3	grąz		2		-ąz			-ęzu		-ęzie		*			-ęzy		-ęzów
+B4ze/m3		Łobez		1		-ez			-za			-zie		-zowie		-zy			-zów
+B4zei/m2	giez		1		-iez		-za			-zie		-zowie		-zy			-zów
+B4zei+u/m3	bez			1		-ez			-zu			-zie		*			-zy			-zów
+B4zó+u/m3	obóz		46		-óz			-ozu		-ozie		*			-ozy		-ozów
+B4zó+w/m1	smarowóz	5		-óz			-oza		-ozie		-ozowie		-ozy		-ozów
+B4zó+w/m2	Przewóz		1		-óz			-oza		-ozie		*			-ozy		-ozów
+B4zó+w/m3	powróz		4		-óz			-oza		-ozie		*			-ozy		-ozów
 ]=]
 
 
