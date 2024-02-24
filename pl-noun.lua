@@ -2011,6 +2011,40 @@ louse		[[wesz]]	wszy		wszy		wszy		wszami
 ]=]
 
 --[=[
+Issues for feminine-type nouns:
+
+1. What is the default nom_pl for feminine nouns?
+* Type D1 (soft): in -e.
+* Type D2 (hardened soft): in -e except for [[berceuse]] (should be treated as hard-stem based on pronun).
+* Type D3 (velar): in -i.
+* Type D4 (hard): in -y except for ansa/romansa/szansa in -e (note, no palatalization).
+2. What is the default gen_pl?
+* Type D1 (soft): various subtypes:
+  (1) in [-jly]a;
+  (2) in -ia where -i- just indicates palatalization after [cnsz];
+  (3) in -ia where -i- indicates palatalization of the preceding consonant + /j/, specifically after a labial [bfmpvw],
+	  a velar (k/g/ch), or [ln]; rarely in -cia (only [[Garcia]], pron [Garcija]), rarely in -czia (only [[glediczia]],
+	  [[welwiczia]]), rarely in -dżia (only [[feredżia]], [[lodżia]]); none in -[drts]ia;
+  (4) in -ia where -i- indicates /j/ following a hard consonant, specifically after [drt]; rarely in -cia: only
+      [[dacia]] (pron [daczja]), [[felicia]] (pron [felicja]), [[lancia]] (pron [lanczja]);
+  (5) in -ja where -j- indicates /j/ following a hard consonant, specifically after [csz];
+  (6) in -ua;
+  (7) in -ni.
+
+
+  [three possibilities: (a) null ending only
+* Type D2 (hardened soft): three possibilities: (a) null ending only; (b) -y only; (c) both. Type (a) seems most common,
+  particularly for those in -ca (hardly any of type (b) or (c)), but those in [cdrs]z/ż seem distributed among all
+  three types with no obvious patterns.
+* Type D3 (velar): in null ending, sometimes dereduced or with o -> ó.
+* Type D4 (hard): in null ending, sometimes dereduced or with o -> ó.
+3. How to handle "neutral" vs. "marked" gen_pl?
+4. Do we need a different declension for non-native -ia nouns, and if so how do we detect them?
+5. How to handle foreign nouns? (a more general issue)
+6. How to handle archaic gen_pl in -yj for words in -Cj like [[gracja]], [[torsja]]?
+]=]
+
+--[=[
 Counts from SGJP:
 
 Feminine nouns:
@@ -2023,8 +2057,8 @@ A3Ż			puszczalska	12660	-a			-kiej		-ie			-ich						in -[gk]a
 A4+o		królowa		111		-a			-ej			-e			-ych						voc in -o
 A4t+(rzecz)	rzeczpospolita 1	-pospolita -ypospolitej -ypospolite -ypospolitych rzecz<f>pospolita<+>
 A4Ż			chora		1559	-a			-ej			-e			-ych		
-D1			fobia		1861	-ia			-ii			-ie			-ii/ij[arch]				none in -[cdrt]ia except Garcia; lots like anhedonia in -nia that could be a different decl; none in -sia or -zia; also idea, Ilja, ninja, Mantegna [pron Mantenja], Odya [pron Odja], Zápolya [pron Zápoja/Zápojo with initial stress] not in -ia
-D1/p3		egzekwie	4		-ia			*			-ie			-ii/ij[arch]	
+D1			fobia		1861	-a			-i			-e			-i/j[arch]					none in -[cdrt]ia except Garcia; lots like anhedonia in -nia that could be a different decl; none in -sia or -zia; all in -ia except idea, Odya [pron Odja]
+D1/p3		egzekwie	4		-e			*			-e			-i/j[arch]					bakalie/luperkalie/ceremonie/egzekwie
 D1+!		Aniela		38		-la			-li			-le			-li/l[char]					voc in -u; all in -[eilouy]la, all proper names except ciotula/mamula/matula; all proper names take voc -o or -u
 D1A+-(-fchar) IKEA		1		-A			--i			--e			 --i						lowercase case endings with preceding hyphen
 D1c			ciuchcia	8		-cia		-ci			-cie		-ci/ć[char]					no proper names
@@ -2229,8 +2263,8 @@ D4zó/p2:p3	Płozy		4		-ozy		-ozie		-ozy		-óz
 Masculine nouns:
 
 Type		e.g.		count	ending		datsg		nompl		nompl2		genpl		indicator		notes
-D1/m1		Garcia		23		-ia			-ii			-iowie		-ie			-iów						Garcia/Aria/Zamaria/paria/Beria, otherwise none in -[cdrt]ia; also Ilja/ninja/Mantegna/odya/Zápolya not in -ia
-D1/m2		kanalia		1		-ia			-ii			*			-ie			-iów		((kanalia<m>,kanalia<>)) can be masc or fem
+D1/m1		Garcia		23		-a			-i			-owie		-e			-ów							Garcia/Aria/Zamaria/paria/Beria, otherwise none in -[cdrt]ia; also Ilja/ninja/Mantegna [pron Mantenja]/Odya [pron Odja]/Zápolya [pron Zápoja/Zápojo with initial stress] not in -ia
+D1/m2		kanalia		1		-a			-i			*			-e			-ów		((kanalia<m>,kanalia<>)) can be masc or fem
 D1c/m1		ciamcia		2		-cia		-ci			-cie		-cie		-ciów		
 D1c+!/m1	ciamcia		2		-cia		-ci			-cie		-cie		-ciów						voc in -u
 D1+(-fchar)/m1 bibliopola 2		-a			-i			-e			-e			-i							gen_pl not in -lów; bibliopola/cieśla (but both terms have alternate gen_pl in -ów)
@@ -2322,17 +2356,6 @@ D4ts+i/m1	cyklista	1076	-sta		-ście		-ści		-sty		-stów						16 in -asta, pode
 D4ts(o)/m1	Kusto		3		-sto		-ście		-stowie		-sty		-stów	
 D4wó/m1		trzęsigłowa	1		-owa		-owie		-owowie[rare] -owy		-owów 
 D4x+w/m1	Jaxa		3		-xa			-ksie		-xowie		-xy			-xów		
-]=]
-
---[=[
-Issues for feminine nouns:
-
-1. What is the default nom_pl?
-2. What is the default gen_pl?
-3. How to handle "neutral" vs. "marked" gen_pl?
-4. Do we need a different declension for non-native -ia nouns, and if so how do we detect them?
-5. How to handle foreign nouns? (a more general issue)
-6. How to handle archaic gen_pl in -yj for words in -Cj like [[gracja]], [[torsja]]?
 ]=]
 
 decls["hard-f"] = function(base, stems)
