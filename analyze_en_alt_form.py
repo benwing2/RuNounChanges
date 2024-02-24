@@ -33,6 +33,12 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
   if to_page == from_page:
     pagemsg("WARNING: Saw from-page '%s' same as to-page" % from_page)
     continue
+  transformations = [
+      (lambda x: x.lower(), "capitalization ignored", "alt case"),
+      (lambda x: x.replace("-", ""), "hyphens removed", "alt sp"),
+      (lambda x: x.replace("-", " "), "hyphens converted to spaces", "alt sp"),
+      (lambda x: x.replace(" ", ""), "spaces removed", "alt sp"),
+
   if to_page.replace("-", "") == from_page.replace("-", ""):
     pagemsg("Saw from-page '%s' same as to-page with hyphens removed" % from_page)
     continue
