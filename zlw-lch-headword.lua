@@ -1,6 +1,12 @@
 local export = {}
 local pos_functions = {}
 
+local parse_utilities_module = "Module:parse utilities"
+
+local rsplit = mw.text.split
+
+----------------------------------------------- Utilities --------------------------------------------
+
 local function track(page)
 	require("Module:debug").track("zlw-lch-headword/" .. page)
 	return true
@@ -11,8 +17,68 @@ local function glossary_link(entry, text)
 	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
 end
 
--- The main entry point.
--- This is the only function that can be invoked from a template.
+local param_mods = {
+	g = {
+		-- We need to store the <g:...> inline modifier into the "genders" key of the parsed part, because that is what
+		-- [[Module:links]] expects.
+		item_dest = "genders",
+		convert = function(arg, parse_err)
+			return rsplit(arg, ",")
+		end,
+	},
+	id = {},
+	q = {store = "insert"},
+	qq = {store = "insert"},
+}
+
+-- Parse the inflections specified by the raw arguments in `infls`. Parse inline modifiers attached to the raw
+-- arguments. Return `infls` if there are any inflections, otherwise nil. WARNING: Destructively modifies `infls`.
+local function parse_inflection(infls)
+	local function generate_obj(term, parse_err)
+		return {term = term}
+	end
+
+	for i, infl in ipairs(infls) do
+		-- Check for inline modifier, e.g. acetylenowo<q:rare>.
+		if infl:find("<") then
+			infl = require(parse_utilities_module).parse_inline_modifiers(infl, {
+				param_mods = param_mods,
+				generate_obj = generate_obj,
+			})
+		else
+			infl = generate_obj(infl)
+		end
+
+		infls[i] = infl
+	end
+	if #infls > 0 then
+		return infls
+	else
+		return nil
+	end
+end
+
+
+-- Insert the parsed inflections in `infls` (as parsed by `parse_inflection`) into `data.inflections`, with label
+-- `label` and optional accelerator spec `accel`.
+local function insert_inflection(data, infls, label, accel)
+	if infls and #infls > 0 then
+		if #infls == 1 and (infls[1] == "-" or infls[1].term == "-") then
+			if infls[1].q then
+				error(("Can't specify qualifiers with the value '-' for %s"):format(label))
+			end
+			table.insert(data.inflections, {label = "no " .. label})
+		else
+			infls.label = label
+			infls.accel = accel
+			table.insert(data.inflections, infls)
+		end
+	end
+end
+
+
+----------------------------------------------- Main entry point --------------------------------------------
+
 function export.show(frame)
 	local iparams = {
 		[1] = {required = true},
@@ -35,6 +101,7 @@ function export.show(frame)
 		["suffix"] = {type = "boolean"},
 		["nosuffix"] = {type = "boolean"},
 		["json"] = {type = "boolean"},
+		["abbr"] = {list = true},
 		["pagename"] = {}, -- for testing
 	}
 
@@ -89,48 +156,14 @@ function export.show(frame)
 		pos_functions[poscat].func(args, data)
 	end
 
+	local abbrs = parse_inflection(args.abbr)
+	insert_inflection(data, abbrs, "abbreviation")
+
 	if args.json then
 		return require("Module:JSON").toJSON(data)
 	end
 
 	return require("Module:headword").full_headword(data)
-end
-
-
------------------------------------------------ Utilities --------------------------------------------
-
-local function fetch_inflection(infls, quals, frob, canonicalize_infl)
-	for i, infl in ipairs(infls) do
-		if frob then
-			infl = frob(infl)
-		end
-		if quals[i] then
-			infls[i] = {term = infl, q = {quals[i]}}
-		elseif canonicalize_infl then
-			infls[i] = {term = infl}
-		end
-	end
-	if #infls > 0 then
-		return infls
-	else
-		return nil
-	end
-end
-
-
-local function insert_inflection(data, infls, label, accel)
-	if infls and #infls > 0 then
-		if #infls == 1 and (infls[1] == "-" or infls[1].term == "-") then
-			if infls[1].q then
-				error(("Can't specify qualifiers with the value '-' for %s"):format(label))
-			end
-			table.insert(data.inflections, {label = "no " .. label})
-		else
-			infls.label = label
-			infls.accel = accel
-			table.insert(data.inflections, infls)
-		end
-	end
 end
 
 
@@ -141,8 +174,9 @@ local function get_noun_pos(is_proper)
 		{"gen", "genitive singular"},
 		{"pl", "nominative plural"},
 		{"genpl", "genitive plural"},
-		{"f", "feminine"},
-		{"m", "masculine"},
+		{"f", "female equivalent"},
+		{"m", "male equivalent"},
+		{"n", "neuter equivalent"},
 		{"dim", "diminutive"},
 		{"pej", "pejorative"},
 		{"aug", "augmentative"},
@@ -158,7 +192,6 @@ local function get_noun_pos(is_proper)
 	for _, spec in ipairs(noun_inflection_specs) do
 		local param, desc = unpack(spec)
 		params[param] = {list = true, disallow_holes = true}
-		params[param .. "\1q"] = {list = true, allow_holes = true}
 	end
 
 	return {
@@ -225,7 +258,7 @@ local function get_noun_pos(is_proper)
 			-- Process all inflections.
 			for _, spec in ipairs(noun_inflection_specs) do
 				local param, desc = unpack(spec)
-				local infls = fetch_inflection(args[param], args[param .. "q"])
+				local infls = parse_inflection(args[param])
 				insert_inflection(data, infls, desc)
 			end
 		end
@@ -255,7 +288,6 @@ local function get_verb_pos()
 	for _, spec in ipairs(verb_inflection_specs) do
 		local param, desc = unpack(spec)
 		params[param] = {list = true, disallow_holes = true}
-		params[param .. "\1q"] = {list = true, allow_holes = true}
 	end
 
 	return {
@@ -310,7 +342,7 @@ local function get_verb_pos()
 			-- Process all inflections.
 			for _, spec in ipairs(verb_inflection_specs) do
 				local param, desc = unpack(spec)
-				local infls = fetch_inflection(args[param], args[param .. "q"])
+				local infls = parse_inflection(args[param])
 				if infls then
 					if param == "pf" and not pf_allowed then
 						error("Aspectual-pair perfectives not allowed with perfective-only verb")
@@ -342,16 +374,16 @@ pos_functions["verbs"] = get_verb_pos()
 local function get_adj_adv_pos(pos)
 	local params = {
 		[1] = {list = true, disallow_holes = true},
-		["q"] = {list = true, allow_holes = true},
+		["dim"] = {list = true, disallow_holes = true},
 	}
 	if pos == "adjective" then
 		params["adv"] = {list = true, disallow_holes = true}
-		params["adv\1q"] = {list = true, allow_holes = true}
+		params["indecl"] = {type = "boolean"}
 	end
 	return {
 		params = params,
 		func = function(args, data)
-			local comps = fetch_inflection(args[1], args.q, nil, "canonicalize infl")
+			local comps = parse_inflection(args[1])
 			local comp_data = {
 				["pl"] = {peri_comp = "bardziej", sup = "naj"},
 				["zlw-mas"] = {peri_comp = "barżi", sup = "ná"},
@@ -386,9 +418,14 @@ local function get_adj_adv_pos(pos)
 				insert_inflection(data, sups, "superlative", {form = "superlative"})
 			end
 			if pos == "adjective" then
-				local infls = fetch_inflection(args.adv, args.advq)
+				if args.indecl then
+					table.insert(data.inflections, {label = glossary_link("indeclinable")})
+				end
+				local infls = parse_inflection(args.adv)
 				insert_inflection(data, infls, "derived adverb")
 			end
+			local infls = parse_inflection(args.dim)
+			insert_inflection(data, infls, "diminutive")
 		end,
 	}
 end
