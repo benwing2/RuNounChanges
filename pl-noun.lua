@@ -2020,22 +2020,37 @@ Issues for feminine-type nouns:
 * Type D4 (hard): in -y except for ansa/romansa/szansa in -e (note, no palatalization).
 2. What is the default gen_pl?
 * Type D1 (soft): various subtypes:
-  (1) in [-jly]a;
+  (1) in [-jly]a; those in -ja are preceded by a vowel;
   (2) in -ia where -i- just indicates palatalization after [cnsz];
-  (3) in -ia where -i- indicates palatalization of the preceding consonant + /j/, specifically after a labial [bfmpvw],
-	  a velar (k/g/ch), or [ln]; rarely in -cia (only [[Garcia]], pron [Garcija]), rarely in -czia (only [[glediczia]],
-	  [[welwiczia]]), rarely in -dżia (only [[feredżia]], [[lodżia]]); none in -[drts]ia;
-  (4) in -ia where -i- indicates /j/ following a hard consonant, specifically after [drt]; rarely in -cia: only
+  (3) in -ia where -i- indicates palatalization of the preceding consonant + /j/ and the dative is in -i, specifically
+	  after a labial [bfmpvw];
+  (4) in -ia where -i- indicates palatalization of the preceding consonant + /j/ and the dative is in -ii; specifically
+	  after a labial [bfmpvw], a velar (k/g/ch), or [ln]; rarely in -cia (only [[Garcia]], pron [Garcija]), rarely in
+	  -czia (only [[glediczia]], [[welwiczia]]), rarely in -dżia (only [[feredżia]], [[lodżia]]); none in -[drts]ia;
+  (5) in -ia where -i- indicates /j/ following a hard consonant, specifically after [drt]; rarely in -cia: only
       [[dacia]] (pron [daczja]), [[felicia]] (pron [felicja]), [[lancia]] (pron [lanczja]);
-  (5) in -ja where -j- indicates /j/ following a hard consonant, specifically after [csz];
-  (6) in -ua;
-  (7) in -ni.
-
-
-  [three possibilities: (a) null ending only
-* Type D2 (hardened soft): three possibilities: (a) null ending only; (b) -y only; (c) both. Type (a) seems most common,
-  particularly for those in -ca (hardly any of type (b) or (c)), but those in [cdrs]z/ż seem distributed among all
-  three types with no obvious patterns.
+  (6) in -ja where -j- indicates /j/ following a hard consonant, specifically after [csz];
+  (7) in -ua;
+  (8) in -ni.
+  There are three possibilities for gen_pl: (a) -i ending only ("neutral"); (b) null ending only ("characterized"); (c)
+  both. For the various subtypes above:
+  * Irrespective of what's written below, if the noun is reducible, it can only be of type (b) or (c) (almost always of
+    type (c)). Likewise, if the noun has an o/ó alternation in the gen pl, it can only be of type (b) or (c) (easiest
+	to assume type (c) here by default).
+  * Subtype (1) in -Vja is mostly type (c) (both endings). Subtype (1) in -la seems split among types (a) and (c),
+    where those in -Cla (C other than l) are mostly type (a).
+  * Subtype (2) seems split among types (a) and (c). Those in -Cna (C other than l or r) are mostly type (a). Those in
+    -Vna, -lna and especially -rna are mostly type (c). Those in -[csz]ia seem to favor type (c) with voc in -u.
+  * Subtype (3) seems exclusively type (a) except for [[ziemia]].
+  * Subtype (4) seems of type (c), but the null-ending variant in -ij is archaic as well as characterized/marked.
+  * Subtype (5) seems of type (c), but the null-ending variant in -yj is archaic as well as characterized/marked.
+  * Subtype (6) is like subtype (5).
+  * Subtype (7) has gen sg in -i or -y and is of type (a).
+  * Subtype (8) is always type (b). The acc is in -ę (like other feminine nouns) except those ending in -pani, where
+    the acc is in -ą.
+* Type D2 (hardened soft): three possibilities: (a) -y only ("neutral"); (b) null ending only ("characterized");
+  (c) both. Type (b) seems most common, particularly for those in -ca (hardly any of type (a) or (c)), but those
+  in [cdrs]z/ż seem distributed among all three types with no obvious patterns.
 * Type D3 (velar): in null ending, sometimes dereduced or with o -> ó.
 * Type D4 (hard): in null ending, sometimes dereduced or with o -> ó.
 3. How to handle "neutral" vs. "marked" gen_pl?
@@ -2057,7 +2072,7 @@ A3Ż			puszczalska	12660	-a			-kiej		-ie			-ich						in -[gk]a
 A4+o		królowa		111		-a			-ej			-e			-ych						voc in -o
 A4t+(rzecz)	rzeczpospolita 1	-pospolita -ypospolitej -ypospolite -ypospolitych rzecz<f>pospolita<+>
 A4Ż			chora		1559	-a			-ej			-e			-ych		
-D1			fobia		1861	-a			-i			-e			-i/j[arch]					none in -[cdrt]ia except Garcia; lots like anhedonia in -nia that could be a different decl; none in -sia or -zia; all in -ia except idea, Odya [pron Odja]
+D1			fobia		1861	-a			-i			-e			-i/j[arch]					all in -ia except idea, Odya [pron Odja]; none in -[cdrt]ia except Garcia; lots like anhedonia in -nia that could be a different decl; none in -sia or -zia
 D1/p3		egzekwie	4		-e			*			-e			-i/j[arch]					bakalie/luperkalie/ceremonie/egzekwie
 D1+!		Aniela		38		-la			-li			-le			-li/l[char]					voc in -u; all in -[eilouy]la, all proper names except ciotula/mamula/matula; all proper names take voc -o or -u
 D1A+-(-fchar) IKEA		1		-A			--i			--e			 --i						lowercase case endings with preceding hyphen
@@ -2065,17 +2080,17 @@ D1c			ciuchcia	8		-cia		-ci			-cie		-ci/ć[char]					no proper names
 D1c/p2		Degucie		4		-cie		*			-cie		-ci/ć[char]	
 D1c/p3		krocie		5		-cie		*			-cie		-ci/ć[char]	
 D1c+!		ciocia		63		-cia		-ci			-cie		-ci/ć[char]					voc in -u; ~50% proper names
-D1+(-fchar)	trufla		291		-a			-i			-e			-i							most in -la and -ea; also Nauzykaa and 10 proper names in -ia; all terms in -la are -Cla except koala, mądrala, ~20 in -ela, campanila, tequila, ~80 in -ola, aula, Depaula, szynszyla
+D1+(-fchar)	trufla		291		-a			-i			-e			-i							most in -la and -ea; also Nauzykaa and 10 proper names in -ia; all terms in -la are -Cla (including several in -lla) except koala, mądrala, ~20 in -ela, campanila, tequila, ~80 in -ola, aula, Depaula, szynszyla
 D1+(-fchar)/p2 grable	90		-a			*			-e			-i							also Jaglie/Kolonie/korepetycje
 D1+(-fchar)/p3 bambetle	116		-a			*			-e			-i							also Jaglie/Kolonie/komicje/korepetycje/Dionizje/afrodyzje
 D1+!(-fneut) Ela		30		-a			-i			-e			-							voc in -u; all in -[aeiou]la, all proper names except babula/żonula/czarnula; some proper names + żonula/czarnula take voc -o or -u
 D1+(-fneut)	ziemia		2		-mia		-mi			-mie		-m							only ziemia/Ziemia
-D1i+(-fchar) chełbia	806		-ia			-i			-ie			-i			
+D1i+(-fchar) chełbia	806		-ia			-i			-ie			-i							24 in -bia (only 6 common); 23 in -cia (all proper except bracia); 18 in -mia (only 4 common); 10 in -pia (4 common); 5 in -sia (all proper); 12 in -wia (3 common); 29 in -zia (only 2 common); all the rest in -nia
 D1i+(-fchar)/p2 grabie	8		-ie			-i			-ie			-i			
 D1i+(-fchar)/p3 drabie	18		-ie			-i			-ie			-i			
 D1in		gospodyni	177		-ni			-ni			-nie		-ń							acc in -ę; most end in -czyni, 6 in -ani (none in -pani), ksieni, 23 in -ini, 2 in -dyni
 D1in+ą		pani		10		-ni			-ni			-nie		-ń							acc in -ą; all end in -pani
-D1j			baja		194		-ja			-i			-je			-i/j[char]					~75% proper names
+D1j			baja		194		-ja			-i			-je			-i/j[char]					all in -Vja; ~75% proper names
 D1j+!		Maja		5		-ja			-i			-je			-i/j[char]					voc in -o or -u
 D1j+(-fchar) nadzieja	45		-ja			-i			-je			-i							~50% proper names
 D1j+(-fchar)/p3 gronostaje 5	-je			*			-je			-i							all except wierzeje can also be masc with gen_pl -jów
@@ -2271,7 +2286,7 @@ D1+(-fchar)/m1 bibliopola 2		-a			-i			-e			-e			-i							gen_pl not in -lów; b
 D1+(-fchar)/m2 papla	7		-a			-i			*			-e			-i							j not suppressed before -i; magnificencja/ekscelencja/eminencja/koala/ebola/papla/zgadula
 D1i+!/m1	dziadzia	5		-ia			-i			-iowie		-ie			-iów						Kościa/ojczunia/dziadzia/dziamdzia/dziumdzia
 D1i+(-fchar)/m1 Gołdynia 163		-ia		-i			-iowie		-ie			-iów		
-D1j/m1		Maja		111		-ja			-i			-jowie		-je			-jów						all proper names except raja
+D1j/m1		Maja		111		-ja			-i			-jowie		-je			-jów						all in -Vja; all proper names except raja
 D1j+(-fneut)/m1 zawedyja 6		-ja			-i			-je			-je			-jów		
 D1n+!/m2	niunia		1		-nia		-ni			*			-nie		-niów						voc in -u
 D1o+!/m1	Puzio		1		-o			-			-owie		-e			-ów		
@@ -5014,17 +5029,17 @@ local function make_table(alternant_multiword_spec)
 | {acc_s}
 | {acc_p}
 |-
-!style="background:#eff7ff"|vocative
-| {voc_s}
-| {voc_p}
+!style="background:#eff7ff"|instrumental
+| {ins_s}
+| {ins_p}
 |-
 !style="background:#eff7ff"|locative
 | {loc_s}
 | {loc_p}
 |-
-!style="background:#eff7ff"|instrumental
-| {ins_s}
-| {ins_p}
+!style="background:#eff7ff"|vocative
+| {voc_s}
+| {voc_p}
 ]=] .. template_postlude()
 
 	local function get_table_spec_one_number(number, numcode)
@@ -5044,14 +5059,14 @@ local function make_table(alternant_multiword_spec)
 !style="background:#eff7ff"|accusative
 | {acc_CODE}
 |-
-!style="background:#eff7ff"|vocative
-| {voc_CODE}
+!style="background:#eff7ff"|instrumental
+| {ins_CODE}
 |-
 !style="background:#eff7ff"|locative
 | {loc_CODE}
 |-
-!style="background:#eff7ff"|instrumental
-| {ins_CODE}
+!style="background:#eff7ff"|vocative
+| {voc_CODE}
 ]=]
 		return template_prelude("30") .. table_spec_one_number:gsub("NUMBER", number):gsub("CODE", numcode) ..
 			template_postlude()
@@ -5080,14 +5095,14 @@ local function make_table(alternant_multiword_spec)
 | {acc_CODE}
 | {clitic_acc_CODE}
 |-
-!style="background:#eff7ff"|vocative
-| colspan=2 | {voc_CODE}
+!style="background:#eff7ff"|instrumental
+| colspan=2 | {ins_CODE}
 |-
 !style="background:#eff7ff"|locative
 | colspan=2 | {loc_CODE}
 |-
-!style="background:#eff7ff"|instrumental
-| colspan=2 | {ins_CODE}
+!style="background:#eff7ff"|vocative
+| colspan=2 | {voc_CODE}
 ]=]
 		return template_prelude("40") .. table_spec_one_number_clitic:gsub("NUMBER", number):gsub("CODE", numcode) ..
 			template_postlude()
