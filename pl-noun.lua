@@ -93,6 +93,8 @@ local output_noun_slots = {
 	nom_p_depr = "deprecative|nom|p",
 	nom_p_linked = "nom|p",
 	gen_p = "gen|p",
+	gen_p_fneut = "-",
+	gen_p_fchar = "-",
 	dat_p = "dat|p",
 	acc_p = "acc|p",
 	ins_p = "ins|p",
@@ -2013,50 +2015,99 @@ louse		[[wesz]]	wszy		wszy		wszy		wszami
 --[=[
 Issues for feminine-type nouns:
 
-1. What is the default nom_pl for feminine nouns?
+1. What are the various types and subtypes?
+* Type D1 (soft): stem ends in a phonetically soft consonant, with the following subtypes:
+  (1a) in [-jly]a; those in -ja are preceded by a vowel;
+  (1b) in -ia where -i- just indicates palatalization after [cnsz];
+  (1c) in -ia where -i- indicates palatalization of the preceding consonant + /j/ and the dative is in -i, specifically
+	   after a labial [bfmpvw];
+  (1d) in -ia where -i- indicates palatalization of the preceding consonant + /j/ (or sometimes /i/) and the dative is
+	   in -ii; specifically after a labial [bfmpvw], a velar (k/g/ch), or [ln]; rarely in -cia (only [[Garcia]], pron
+	   [Garcija]), rarely in -czia (only [[glediczia]], [[welwiczia]]), rarely in -dżia (only [[feredżia]], [[lodżia]]);
+	   none in -[drts]ia;
+  (1e) in -ia where -i- indicates /j/ following a hard consonant, specifically after [drt]; rarely in -cia: only
+       [[dacia]] (pron [daczja]), [[felicia]] (pron [felicja]), [[lancia]] (pron [lanczja]);
+  (1f) in -ja where -j- indicates /j/ following a hard consonant, specifically after [csz];
+  (1g) in -ua;
+  (1h) in -ni.
+* Type D2 (hardened soft): stem ends in a "functionally soft" but phonetically hard consonant: c/ż/cz/dz/rz/sz.
+* Type D3 (velar): stem ends in k or g (not ch, which is phonetically velar but best treated as a hard consonant).
+* Type D4 (hard): stem ends in a hard consonant.
+
+2. How to distinguish the different types and subtypes?
+* Types D2, D3 and D4 are immediately distinguishable by the ending, as are types D1a, D1f, D1g and D1h. The remaining
+  subtypes all end in -ia, though.
+* Types D1b and D1c have dative in -i while types D1d and D1e have dative in -ii, indicating that the stem was
+  originally in /ij/.
+* Type D1b occurs only after [cnsz]; type D1c occurs only after a labial [bfmpvw]; type D1e occurs almost exclusively
+  after [drt] (and rarely after c). Occurrences of these consonant groups can be used to identify these types. Type D1d
+  occurs after velar k/g/ch, after l and rarely after cz and dż (all of which can be used to identify this type), but
+  also after a labial [bfmpvw] (which overlaps with type D1c), after n (which overlaps with type D1b) and rarely after c
+  (which overlaps with type D1b). This means that -[bfmpvw]ia can be either type D3 or D4; -nia can be either type D1b
+  or D1d; and -cia can be D1b or rarely D1d or D1e. We use the indicator <stemij> to indicate type D1d, and could
+  potentially use <stemyj> to indicate type D1e; but the fact that this latter indicator is rare and occurs only in
+  words with nonstandard pronunciations suggests maybe a different approach would be better.
+
+3. What is the default nom_pl for feminine nouns?
 * Type D1 (soft): in -e.
 * Type D2 (hardened soft): in -e except for [[berceuse]] (should be treated as hard-stem based on pronun).
 * Type D3 (velar): in -i.
 * Type D4 (hard): in -y except for ansa/romansa/szansa in -e (note, no palatalization).
-2. What is the default gen_pl?
-* Type D1 (soft): various subtypes:
-  (1) in [-jly]a; those in -ja are preceded by a vowel;
-  (2) in -ia where -i- just indicates palatalization after [cnsz];
-  (3) in -ia where -i- indicates palatalization of the preceding consonant + /j/ and the dative is in -i, specifically
-	  after a labial [bfmpvw];
-  (4) in -ia where -i- indicates palatalization of the preceding consonant + /j/ and the dative is in -ii; specifically
-	  after a labial [bfmpvw], a velar (k/g/ch), or [ln]; rarely in -cia (only [[Garcia]], pron [Garcija]), rarely in
-	  -czia (only [[glediczia]], [[welwiczia]]), rarely in -dżia (only [[feredżia]], [[lodżia]]); none in -[drts]ia;
-  (5) in -ia where -i- indicates /j/ following a hard consonant, specifically after [drt]; rarely in -cia: only
-      [[dacia]] (pron [daczja]), [[felicia]] (pron [felicja]), [[lancia]] (pron [lanczja]);
-  (6) in -ja where -j- indicates /j/ following a hard consonant, specifically after [csz];
-  (7) in -ua;
-  (8) in -ni.
-  There are three possibilities for gen_pl: (a) -i ending only ("neutral"); (b) null ending only ("characterized"); (c)
-  both. For the various subtypes above:
-  * Irrespective of what's written below, if the noun is reducible, it can only be of type (b) or (c) (almost always of
-    type (c)). Likewise, if the noun has an o/ó alternation in the gen pl, it can only be of type (b) or (c) (easiest
-	to assume type (c) here by default).
-  * Subtype (1) in -Vja is mostly type (c) (both endings). Subtype (1) in -la seems split among types (a) and (c),
-    where those in -Cla (C other than l) are mostly type (a).
-  * Subtype (2) seems split among types (a) and (c). Those in -Cna (C other than l or r) are mostly type (a). Those in
-    -Vna, -lna and especially -rna are mostly type (c). Those in -[csz]ia seem to favor type (c) with voc in -u.
-  * Subtype (3) seems exclusively type (a) except for [[ziemia]].
-  * Subtype (4) seems of type (c), but the null-ending variant in -ij is archaic as well as characterized/marked.
-  * Subtype (5) seems of type (c), but the null-ending variant in -yj is archaic as well as characterized/marked.
-  * Subtype (6) is like subtype (5).
-  * Subtype (7) has gen sg in -i or -y and is of type (a).
-  * Subtype (8) is always type (b). The acc is in -ę (like other feminine nouns) except those ending in -pani, where
+
+4. What is the default gen_pl?
+* For type D1 (soft), there are three possibilities for gen_pl: [a] -i ending only ("neutral"); [b] null ending only
+  ("characterized"); [c] both. For the various subtypes above:
+  * Irrespective of what's written below, if the noun is reducible, it can only be of type [b] or [c] (almost always of
+    type [c]). Likewise, if the noun has an o/ó alternation in the gen pl, it can only be of type [b] or [c] (easiest
+	to assume type [c] here by default).
+  * Subtype (1a) in -Vja is mostly type [c] (both endings). Subtype (1a) in -la seems split among types [a] and [c],
+    where those in -Cla (C other than l and r) are mostly type [a]. Those in -rla seem of type [c] if they can also
+	occur as gender m1 (i.e. they are surnames?); they represent the majority. The minority that can occur only feminine
+	are all of type [a]. Like for -rla, those in -lla are of type [c] if they can also occur as gender m1; otherwise
+	they are split among types [a] and [c].
+  * Subtype (1b) seems split among types [a] and [c]. Those in -Cnia (C other than l or r) are mostly type [a]. Those in
+    -Vnia, -lnia and especially -rnia are mostly type [c]. Those in -[csz]ia seem to favor type [c] with voc in -u.
+  * Subtype (1c) seems exclusively type [a] except for [[ziemia]].
+  * Subtype (1d) seems of type [c], but the null-ending variant in -ij is archaic as well as characterized/marked.
+  * Subtype (1e) seems of type [c], but the null-ending variant in -yj is archaic as well as characterized/marked.
+  * Subtype (1f) is like subtype (1e).
+  * Subtype (1g) has gen sg in -i or -y and is of type [a].
+  * Subtype (1h) is always type [b]. The acc is in -ę (like other feminine nouns) except those ending in -pani, where
     the acc is in -ą.
-* Type D2 (hardened soft): three possibilities: (a) -y only ("neutral"); (b) null ending only ("characterized");
-  (c) both. Type (b) seems most common, particularly for those in -ca (hardly any of type (a) or (c)), but those
+* Type D2 (hardened soft): three possibilities: [a] -y only ("neutral"); [b] null ending only ("characterized");
+  [c] both. Type [b] seems most common, particularly for those in -ca (hardly any of type [a] or [c]), but those
   in [cdrs]z/ż seem distributed among all three types with no obvious patterns.
 * Type D3 (velar): in null ending, sometimes dereduced or with o -> ó.
 * Type D4 (hard): in null ending, sometimes dereduced or with o -> ó.
-3. How to handle "neutral" vs. "marked" gen_pl?
-4. Do we need a different declension for non-native -ia nouns, and if so how do we detect them?
-5. How to handle foreign nouns? (a more general issue)
-6. How to handle archaic gen_pl in -yj for words in -Cj like [[gracja]], [[torsja]]?
+* IMO the best way to handle this is to internally distinguish slots gen_p_fneut and gen_p_fchar for the neutral and
+  characterized forms, but (probably) merge them upon output into a single slot. If both occur, add a footnote
+  indicating that the characterized form is "characterized" or "marked". This way, the user can override one or the
+  other without having to worry about adding the appropriate footnote. There should also be indicators <-fneut>,
+  <+fneut>, <-fchar> and <+fchar> to enable or disable the neutral and/or characterized form. By default:
+  * Types D3 and D4 should default to [b] (null ending).
+  * Types D2 in -ca should default to [b], but other endings should default to [c].
+  * For type D1:
+  ** Default to [c] if reducible or has o/ó alternation.
+  ** Subtypes (1a) and (1b) in -V[jln]a and -[lr][jln]a should default to [c], whose those in other -C[jln]a should
+     default to [a]. Subtype (1b) in [csz]ia should default to [c] with voc in -u.
+  ** Subtype (1c) should default to [a].
+  ** Subtypes (1d), (1e) and (1f) should default to [c], but the null ending is archaic.
+  ** Subtype (1g) should default to [a].
+  ** Subtype (1h) should default to [b].
+
+5. How to handle "neutral" vs. "marked/characterized" gen_pl?
+* See under 4. above.
+
+6. Do we need a different declension for non-native -ia nouns, and if so how do we detect them?
+* Detection is discussed under 2. above. I don't think we need a different declension; if so, it should be hard vs.
+  soft rather than native vs. non-native, but there are too many edge cases.
+
+7. How to handle foreign nouns? (a more general issue)
+* This refers to things like [[berceuse]] and [[Kayah]] with silent letters and [[carioca]] and [[loggia]] with
+  unexpected pronunciations that cause deformations in the declension. Needs more thought.
+
+8. How to handle archaic gen_pl in -yj for words in -Cj like [[gracja]], [[torsja]]?
+* This refers to how this is implemented internally. Needs more thought.
 ]=]
 
 --[=[
