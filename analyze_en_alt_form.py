@@ -12,6 +12,11 @@ parser.add_argument("--direcfile", help="Output from 'find_regex.py --all' on a 
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
+@dataclass
+class Pondian:
+  british_spelling: str
+  american_spelling: str
+
 for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
   def linemsg(txt):
     msg("Line %s: %s" % (lineno, txt))
@@ -33,12 +38,64 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
   if to_page == from_page:
     pagemsg("WARNING: Saw from-page '%s' same as to-page" % from_page)
     continue
+
+  def ise_to_ize(txt, omit_extra_e=False, with_y=False):
+    iy = "y" if with_y else "i"
+    txt = re.sub(r"%ss(e[sdr]?|e?ing|e?ation|e?ational|e?able|e?ability)\b" % iy, r"%sz\1" % iy, txt)
+    if omit_extra_e:
+      txt = re.sub(r"%sze(ing|ation|ational|able|ability)\b" % iy, r"%sz\1" % iy, txt)
+    return txt
+
   transformations = [
       (lambda x: x.lower(), "capitalization ignored", "alt case"),
       (lambda x: x.replace("-", ""), "hyphens removed", "alt sp"),
       (lambda x: x.replace("-", " "), "hyphens converted to spaces", "alt sp"),
       (lambda x: x.replace(" ", ""), "spaces removed", "alt sp"),
+      (lambda x: x.replace("'", ""), "apostrophes removed", "alt sp"),
+      (lambda x: x.replace(".", ""), "periods removed", "alt sp"),
+      (lambda x: x.replace(",", ""), "commas removed", "alt sp"),
+      (lambda x: x.replace("/", ""), "slashes removed", "alt sp"),
+      (lambda x: re.sub("[\u0300-\u036F]", "", unicodedata.normalize("NFD", x)), "accents removed", "alt sp"),
+      (lambda x: re.sub("([Gg])rey", r"\1ray", x), "grey -> gray", Pondian("grey-form", "gray-form")),
+      (lambda x: re.sub(r"\b([Tt])yre", r"\1ire", x), "tyre -> tire", Pondian("tyre-form", "tire-form")),
+      (lambda x: re.sub(r"\b([Aa])rse", r"\1ass", x), "arse -> ass", Pondian("arse-form", "ass-form")),
+      (lambda x: re.sub("([Pp])lough", r"\1low", x), "plough -> plow", Pondian("plough-form", "plow-form")),
+      (lambda x: re.sub("([Mm])ould", r"\1old", x), "mould -> mold", Pondian("mould-form", "mold-form")),
+      (lambda x: re.sub("(Def|def|Off|off|Lic|lic)ence", r"\1ense", x),
+        "defence/offence/licence -> defense/offense/license", Pondian("ence-form", "ense-form")),
+      (lambda x: re.sub(r"(col|[fs]av|lab|vap|od|succ|harb|arb|tum|rig|behavi|enam|endeav)our", r"\1or", x),
+        "common-word -our -> -or", Pondian("our-form", "or-form")),
+      (lambda x: re.sub(r"our(s|e[dr]s?|ing|(?:ful|al|ous|less)?(?:ly)?)\b", r"or\1", x),
+        "misc-word -our -> -or", Pondian("our-form", "or-form")),
+      (lambda x: re.sub(r"re\b", "er", x), "-re -> -er", Pondian("re-form", "er-form")),
+      (ise_to_ize, "-ise/-iser/-ises/-ised/-is(e)ing/-is(e)ation(al)/is(e)able/is(e)ability -> same with -iz-",
+        Pondian("ise-form", "ize-form")),
+      (lambda x: ise_to_ize(x, omit_extra_e-True),
+       "-ise/-iser/-ises/-ised/-is(e)ing/-is(e)ation(al)/is(e)able/is(e)ability -> same with -iz- and omit extra -e-",
+        Pondian("ise-form", "ize-form")),
+      (lambda x: ise_to_ize(x, with_y=True),
+       "-yse/-yser/-yses/-ysed/-ys(e)ing/-ys(e)ation(al)/ys(e)able/ys(e)ability -> same with -yz-",
+        Pondian("yse-form", "yze-form")),
+      (lambda x: ise_to_ize(x, with_y=True, omit_extra_e=True),
+       "-yse/-yser/-yses/-ysed/-ys(e)ing/-ys(e)ation(al)/ys(e)able/ys(e)ability -> same with -yz- and omit extra -e-",
+        Pondian("yse-form", "yze-form")),
+      (lambda x: re.sub(r"gue\b", "g", x), "-gue -> -g", Pondian("gue-form", "g-not-gue-form")),
+      (lambda x: x.replace("ae", "e").replace("oe", "e").replace("æ", "e").replace("œ", "e"),
+        "æ/œ/ae/oe -> e", Pondian("ae-oe-form", "e-not-ae-oe-form"))
 
+    txt = ible_eable_to_able(txt)
+    txt = ey_to_y(txt)
+    txt = ie_to_y(txt)
+    txt = y_to_i(txt)
+    txt = l_bar_to_l(txt)
+    txt = ph_to_f(txt)
+    txt = or_to_er(txt)
+    txt = ck_to_k(txt)
+    txt = q_to_k(txt)
+    txt = k_to_c(txt)
+    txt = gh_to_g(txt)
+    txt = ll_to_l(txt)
+    txt = ah_eh_to_a_e(txt)
   if to_page.replace("-", "") == from_page.replace("-", ""):
     pagemsg("Saw from-page '%s' same as to-page with hyphens removed" % from_page)
     continue
@@ -78,12 +135,6 @@ for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
     return re.sub(r"ey\b", "y", txt)
   def ah_eh_to_a_e(txt):
     return re.sub(r"([ae])h\b", r"\1", txt)
-  def ise_to_ize(txt, omit_extra_e=False, with_y=False):
-    iy = "y" if with_y else "i"
-    txt = re.sub(r"%ss(e[sdr]?|e?ing|e?ation|e?ational|e?able|e?ability)\b" % iy, r"%sz\1" % iy, txt)
-    if omit_extra_e:
-      txt = re.sub(r"%sze(ing|ation|ational|able|ability)\b" % iy, r"%sz\1" % iy, txt)
-    return txt
   def ible_eable_to_able(txt):
     return re.sub(r"e?[ai](ble|bility)\b", r"a\1", txt)
   def ae_oe_to_e(txt):
