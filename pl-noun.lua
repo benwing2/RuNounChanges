@@ -3982,10 +3982,6 @@ local function synthesize_adj_lemma(base)
 		stem = base.lemma
 	else
 		local gender, number
-		local function sub_ov(stem)
-			stem = stem:gsub("ov$", "ův")
-			return stem
-		end
 		while true do
 			if base.number == "pl" then
 				if base.gender == "m" then
@@ -4011,24 +4007,6 @@ local function synthesize_adj_lemma(base)
 						base.lemma = stem .. "ý"
 						break
 					end
-					stem = rmatch(base.lemma, "^(.*ov)i$") or rmatch(base.lemma, "^(.*in)i$")
-					if stem then
-						if base.animacy ~= "an" then
-							error(("Masculine plural-only possessive adjectival lemma '%s' ending in -i must be animate"):
-								format(base.lemma))
-						end
-						base.lemma = sub_ov(stem)
-						break
-					end
-					stem = rmatch(base.lemma, "^(.*ov)y$") or rmatch(base.lemma, "^(.*in)y$")
-					if stem then
-						if base.animacy == "an" then
-							error(("Masculine plural-only possessive adjectival lemma '%s' ending in -y must be inanimate"):
-								format(base.lemma))
-						end
-						base.lemma = sub_ov(stem)
-						break
-					end
 					if base.animacy == "an" then
 						error(("Animate masculine plural-only adjectival lemma '%s' should end in -í, -ovi or -ini"):
 							format(base.lemma))
@@ -4048,11 +4026,6 @@ local function synthesize_adj_lemma(base)
 					if stem then
 						break
 					end
-					stem = rmatch(base.lemma, "^(.*ov)y$") or rmatch(base.lemma, "^(.*in)y$") -- possessive adjective
-					if stem then
-						base.lemma = sub_ov(stem)
-						break
-					end
 					error(("Feminine plural-only adjectival lemma '%s' should end in -é, -í, -ovy or -iny"):format(base.lemma))
 				else
 					stem = rmatch(base.lemma, "^(.*)á$") -- hard adjective
@@ -4062,11 +4035,6 @@ local function synthesize_adj_lemma(base)
 					end
 					stem = rmatch(base.lemma, "^(.*)í$") -- soft adjective
 					if stem then
-						break
-					end
-					stem = rmatch(base.lemma, "^(.*ov)a$") or rmatch(base.lemma, "^(.*in)a$") -- possessive adjective
-					if stem then
-						base.lemma = sub_ov(stem)
 						break
 					end
 					error(("Neuter plural-only adjectival lemma '%s' should end in -á, -í, -ova or -ina"):format(base.lemma))
@@ -4088,11 +4056,6 @@ local function synthesize_adj_lemma(base)
 					if stem then
 						break
 					end
-					stem = rmatch(base.lemma, "^(.*ov)a$") or rmatch(base.lemma, "^(.*in)a$")
-					if stem then
-						base.lemma = sub_ov(stem)
-						break
-					end
 					error(("Feminine adjectival lemma '%s' should end in -á, -í, -ova or -ina"):format(base.lemma))
 				else
 					stem = rmatch(base.lemma, "^(.*)é$")
@@ -4104,11 +4067,6 @@ local function synthesize_adj_lemma(base)
 					if stem then
 						break
 					end
-					stem = rmatch(base.lemma, "^(.*ov)o$") or rmatch(base.lemma, "^(.*in)o$")
-					if stem then
-						base.lemma = sub_ov(stem)
-						break
-					end
 					error(("Neuter adjectival lemma '%s' should end in -é, -í, -ovo or -ino"):format(base.lemma))
 				end
 			end
@@ -4117,7 +4075,6 @@ local function synthesize_adj_lemma(base)
 	end
 
 	-- Now set the stem sets if not given.
-        -- Now set the stem sets if not given.
 	if not base.stem_sets then
 		base.stem_sets = {{reducible = false}}
 	end

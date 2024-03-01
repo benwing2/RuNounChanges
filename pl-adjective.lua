@@ -265,7 +265,7 @@ decls["normal"] = function(base)
 		)
 		-- Do the nominative masculine personal plural separately since it may have a different stem (with the second
 		-- palatalization and Lechitic softening applied).
-		add_normal_decl(base, com.soften_masc_pers_pl(stem), nil, nil, "")
+		add_normal_decl(base, com.soften_adj_masc_pers_pl(base.lemma), nil, nil, "")
 		return
 	end
 
@@ -303,7 +303,7 @@ decls["normal"] = function(base)
 		elseif stem:find("on$") then
 			add_normal_decl(base, rsub(stem, "on$", "en"), nil, nil, "i")
 		else
-			add_normal_decl(base, com.soften_masc_pers_pl(stem), nil, nil, "")
+			add_normal_decl(base, com.soften_adj_masc_pers_pl(base.lemma), nil, nil, "")
 		end
 		return
 	end

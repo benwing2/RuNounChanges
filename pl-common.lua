@@ -195,29 +195,100 @@ local function make_try(word)
 end
 
 
-function export.soften_masc_pers_pl(word)
+function export.soften_adj_masc_pers_pl(word)
 	local try = make_try(word)
 	return
-		try("ch", "si") or
-		try("h", "si") or
-		try("sł", "śli") or
-		try("zł", "źli") or
-		try("łł", "lli") or
-		try("ł", "li") or
-		try("r", "rzy") or
-		try("sn", "śni") or
-		try("zn", "źni") or
-		try("st", "ści") or
-		try("t", "ci") or
-		try("zd", "ździ") or
-		try("d", "dzi") or
-		try("sz", "si") or
-		try("([cdr]z)", "%2y") or
-		try("([fwmpbnsz])", "%2i") or
-		try("stk", "scy") or -- [[wszystek]] -> 'wszysci'
-		try("k", "cy") or
-		try("g", "dzy") or
-		word .. "y"
+		try("chy", "si") or
+		try("hy", "si") or
+		try("sły", "śli") or
+		try("zły", "źli") or
+		try("łły", "lli") or
+		try("ły", "li") or
+		try("ry", "rzy") or
+		try("sny", "śni") or
+		try("zny", "źni") or
+		try("ny", "ni") or
+		try("sty", "ści") or
+		try("ty", "ci") or
+		try("zdy", "ździ") or
+		try("dy", "dzi") or
+		try("szy", "si") or
+		try("([bfmpvw])y", "%2i") or
+		try("ki", "cy") or
+		try("gi", "dzy") or
+		word
+end
+
+
+--[=[
+Convert the nominative masculine personal plural of an adjective back to the nom_sg form. We have the following
+mappings, grouped by the masc pl:
+
+Nom sg				Masc pers pl	Counts (based on [[:Category:Polish adjectives]])
+--------------------------------------------------
+[bfmpvw]y,[bfmpvw]i	[bfmpvw]i		[bfmpvw]y: 2438; [bfmpvw]i: 39
+sty,ści				ści				sty: 184; ści: 1
+ty,ci				ci				ty: 261; ci: 13
+łły,lli				lli				łły: 0; lli: 0
+sły,śli				śli				sły: 24; śli: 2
+zły,źli				źli				zły: 16; źli: 1
+ły,li				li				ły: 225; li: 21
+ony,eny,eni			eni				ony: 242 [excluding -czerwony, -słony]; eny: 1 (jeny); eni: 2 (jeleni, syreni)
+sny,śni				śni				sny: 35; śni: 0
+zny,źni				źni				zny: 1118; źni: 2
+ny,ni				ni				ny: 2987; ni: 108
+chy,hy,szy,si		si				chy: 16; hy: 2; szy: 25; si: 25
+zdy,ździ			ździ			zdy: 1 (gorazdy); ździ: 1 (droździ)
+dy,dzi				dzi				dy: 18; dzi: 6 (gadzi, łabędzi, niedźwiedzi, owadzi, wielbłądzi)		
+zy,zi				zi				zy: 0; zi: 4 (kobuzi, kozi, papuzi, płazi)
+ki,cy				cy				ki: 1573; cy: 175
+czy					czy				czy: 268
+gi,dzy				dzy				gi: 47; dzy: 1 (cudzy)
+ry,rzy				rzy				ry; 38; rzy: 8
+
+Generally there are two possible source (nom_sg) forms, a "soft" one identical to the nominative masculine personal
+plural and a "hard" one that is different but more common. The only exceptions are -czy, which is soft-only, and -si,
+which has four possible source forms. To handle this, we default to generating hard nom_sg and require that the
+indicator <soft> be given to generate soft nom_sg, except for -si, where an indicator is required for all four
+possibilities to indicate which one is desired: <adj_chy>, <adj_hy>, <adj_szy> or <adj_si>.
+
+FIXME: There is no current way of requesting eni -> eny. If this ever comes up, we need another indicator (or possibly
+`decllemma` will work).
+]=]
+
+function export.unsoften_adj_masc_pers_pl(base, word)
+	local try = make_try(word)
+	if word:find("si$") then
+		return
+			base.adj_chy and try("si", "chy") or
+			base.adj_hy and try("si", "hy") or
+			base.adj_szy and try("si", "szy") or
+			base.adj_si and word or
+			-- Caller should have caught this earlier.
+			error(("Internal error: One of <adj_chy>, <adj_hy>, <adj_szy> or <adj_si> should have been specified " ..
+				"given nominative masculine personal plural '%s'"):format(word))
+	end
+	if base.soft then
+		return word
+	end
+	return
+		try("śli", "sły") or
+		try("źli", "zły") or
+		try("lli", "łły") or
+		try("li", "ły") or
+		try("rzy", "ry") or
+		try("eni", "ony") or
+		try("śni", "sny") or
+		try("źni", "zny") or
+		try("ni", "ny") or
+		try("ści", "sty") or
+		try("ci", "ty") or
+		try("ździ", "zdy") or
+		try("dzi", "dy") or
+		try("([bfmpvw])i", "%2y") or
+		try("cy", "ki") or
+		try("dzy", "gi") or
+		word
 end
 
 
@@ -246,7 +317,6 @@ function export.soften_dat_loc_sg(word)
 		try("([cdsr]z)", "%2y") or
 		try("([fwmpbnsz])", "%2ie") or
 		try("([fwmpbcnsz]i)", "%2") or
-		-- not -stk; lots of examples like [[stażystka]] with -stce
 		try("k", "ce") or
 		try("g", "dze") or
 		word .. "y"
