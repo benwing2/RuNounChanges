@@ -3984,62 +3984,38 @@ local function synthesize_adj_lemma(base)
 		local gender, number
 		while true do
 			if base.number == "pl" then
-				if base.gender == "m" then
-					stem = rmatch(base.lemma, "^(.*)í$")
-					if stem then
-						if base.soft then
-							-- nothing to do
-						else
-							if base.animacy ~= "an" then
-								error(("Masculine plural-only adjectival lemma '%s' ending in -í can only be animate unless '.soft' is specified"):
-									format(base.lemma))
-							end
-							base.lemma = undo_second_palatalization(base, stem, "is adjective") .. "ý"
-						end
+				if base.gender == "m" and base.animacy == "pr" then
+					if rmatch(base.lemma, "^(.*[iy])$") then
+						base.lemma = com.unsoften_adj_masc_pers_pl(base, base.lemma)
 						break
-					end
-					stem = rmatch(base.lemma, "^(.*)é$")
-					if stem then
-						if base.animacy == "an" then
-							error(("Masculine plural-only adjectival lemma '%s' ending in -é must be inanimate"):
-								format(base.lemma))
-						end
-						base.lemma = stem .. "ý"
-						break
-					end
-					if base.animacy == "an" then
-						error(("Animate masculine plural-only adjectival lemma '%s' should end in -í, -ovi or -ini"):
-							format(base.lemma))
-					elseif base.soft then
-						error(("Soft masculine plural-only adjectival lemma '%s' should end in -í"):format(base.lemma))
 					else
-						error(("Inanimate masculine plural-only adjectival lemma '%s' should end in -é, -ovy or -iny"):
-							format(base.lemma))
+						error(("Masculine personal plural-only adjectival lemma '%s' should end in -i or -y"):format(
+							base.lemma))
 					end
-				elseif base.gender == "f" then
-					stem = rmatch(base.lemma, "^(.*)é$") -- hard adjective
-					if stem then
-						base.lemma = stem .. "ý"
-						break
-					end
-					stem = rmatch(base.lemma, "^(.*)í$") -- soft adjective
-					if stem then
-						break
-					end
-					error(("Feminine plural-only adjectival lemma '%s' should end in -é, -í, -ovy or -iny"):format(base.lemma))
 				else
-					stem = rmatch(base.lemma, "^(.*)á$") -- hard adjective
-					if stem then
-						base.lemma = stem .. "ý"
-						break
+					stem = rmatch(base.lemma, "^(.*)e$") -- hard adjective
+					if not stem then
+						error(("Non-masculine-personal plural-only adjectival lemma '%s' should end in -e"):format(
+							base.lemma))
 					end
-					stem = rmatch(base.lemma, "^(.*)í$") -- soft adjective
-					if stem then
-						break
+					if stem:find("[lj]$") then
+						-- This will drop the j between vowel and i.
+						base.lemma = com.combine_stem_ending(base, "nom_s", stem, "i")
+					elseif stem:find("i$") then
+						-- -kie, -gie, -cie or other soft consonant + -ie
+						base.lemma = stem
+					elseif stem:find("en$") then
+						-- FIXME: There is no current way of requesting ene -> eny. Only known example of an adjective
+						-- in -eny is [[jeny]] (regional variant of [[inny]]). If this ever comes up, we need another
+						-- indicator (or possibly `decllemma` will work).
+						base.lemma = stem:gsub("en$", "ony$")
+					else
+						base.lemma = stem .. "y"
 					end
-					error(("Neuter plural-only adjectival lemma '%s' should end in -á, -í, -ova or -ina"):format(base.lemma))
+					break
 				end
 			else
+				-- FIXME
 				if base.gender == "m" then
 					stem = rmatch(base.lemma, "^(.*)[ýí]$") or rmatch(base.lemma, "^(.*)ův$") or rmatch(base.lemma, "^(.*)in$")
 					if stem then
