@@ -3974,6 +3974,113 @@ local function synthesize_singular_lemma(base)
 end
 
 
+-- For an adjectival lemma, synthesize the masc singular form. In the process, autodetect the gender.
+local function synthesize_adj_lemma(base)
+	local stem, ac
+	local gender, animacy
+
+	-- Convert a stem to the lemma form. `stem` is the stem as extracted from the non-lemma form by removing the
+	-- ending. `soft_no_i_class` is a Lua pattern character class matching the letters that are "soft" (require -i in
+	-- the lemma) but don't have an -i- after them in the stem. Otherwise, if the stem ends in -i, the lemma is assumed
+	-- soft (ends in -i), otherwise hard (ends in -y).
+	local function convert_to_lemma(stem, soft_no_i_class)
+		if stem:find(soft_no_i_class .. "$") then
+			-- This will drop the j between vowel and i.
+			return com.combine_stem_ending(base, "nom_s", stem, "i")
+		elseif stem:find("i$") then
+			-- -cia or other soft consonant + -ia
+			return stem
+		else
+			return stem .. "y"
+		end
+	end
+
+	while true do
+		if base.number == "pl" then
+		else -- singular
+			-- Masculine
+			stem = rmatch(base.lemma, "^(.*)[iy]$")
+			if stem then
+				gender = "m"
+				break
+			end
+			-- Feminine
+			stem = rmatch(base.lemma, "^(.*)a$")
+			if stem then
+				gender == "f"
+				base.lemma = convert_to_lemma(stem, "[jlgk]")
+				break
+			end
+			-- Neuter
+			stem = rmatch(base.lemma, "^(.*)e$")
+			if stem then
+				gender == "n"
+				base.lemma = convert_to_lemma(stem, "[jl]")
+				break
+			end
+			error("Don't recognize ending of singular adjectival lemma '" .. base.lemma .. "'")
+		end
+
+		-- Plural
+		stem = rmatch(base.lemma, "^(.*ц)і(́?)$")
+		if stem then
+			base.lemma = stem .. "и" .. ac .. "й"
+			number = "pl"
+			break
+		end
+		stem = rmatch(base.lemma, "^(.*" .. com.vowel .. AC .. "?)ї(́?)$")
+		if stem then
+			base.lemma = stem .. "ї" .. ac .. "й"
+			number = "pl"
+			break
+		end
+		stem = rmatch(base.lemma, "^(.*)і(́?)$")
+		if stem then
+			if base.soft then
+				base.lemma = stem .. "і" .. ac .. "й"
+			else
+				base.lemma = stem .. "и" .. ac .. "й"
+			end
+			number = "pl"
+			break
+		end
+		error("Don't recognize ending of adjectival lemma '" .. base.lemma .. "'")
+	end
+	if gender then
+		if base.gender and base.gender ~= gender then
+			error("Explicit gender '" .. base.gender .. "' disagrees with detected gender '" .. gender .. "'")
+		end
+		base.gender = gender
+	end
+	if number then
+		if base.number and base.number ~= number then
+			error("Explicit number '" .. base.number .. "' disagrees with detected number '" .. number .. "'")
+		end
+		base.number = number
+	end
+
+	-- Now set the stress pattern if not given.
+	if not base.stresses then
+		base.stresses = {{reducible = false, genpl_reversed = false}}
+	end
+	for _, stress in ipairs(base.stresses) do
+		if not stress.stress then
+			if ac == AC then
+				stress.stress = "b"
+			else
+				stress.stress = "a"
+			end
+		end
+		-- Set the stems.
+		stress.vowel_stem = stem
+		stress.nonvowel_stem = stem
+		stress.pl_vowel_stem = stem
+		stress.pl_nonvowel_stem = stem
+	end
+	base.decl = "adj"
+end
+
+
 -- For an adjectival lemma, synthesize the masc singular form.
 local function synthesize_adj_lemma(base)
 	local stem
@@ -3985,7 +4092,7 @@ local function synthesize_adj_lemma(base)
 		while true do
 			if base.number == "pl" then
 				if base.gender == "m" and base.animacy == "pr" then
-					if rmatch(base.lemma, "^(.*[iy])$") then
+					if base.lemma:find("[iy]$") then
 						base.lemma = com.unsoften_adj_masc_pers_pl(base, base.lemma)
 						break
 					else
@@ -3993,7 +4100,7 @@ local function synthesize_adj_lemma(base)
 							base.lemma))
 					end
 				else
-					stem = rmatch(base.lemma, "^(.*)e$") -- hard adjective
+					stem = rmatch(base.lemma, "^(.*)e$")
 					if not stem then
 						error(("Non-masculine-personal plural-only adjectival lemma '%s' should end in -e"):format(
 							base.lemma))
@@ -4015,35 +4122,38 @@ local function synthesize_adj_lemma(base)
 					break
 				end
 			else
-				-- FIXME
 				if base.gender == "m" then
-					stem = rmatch(base.lemma, "^(.*)[ýí]$") or rmatch(base.lemma, "^(.*)ův$") or rmatch(base.lemma, "^(.*)in$")
-					if stem then
-						break
+					if not base.lemma:find("[yi]$") then
+						error(("Masculine adjectival lemma '%s' should end in -y or -i"):format(base.lemma))
 					end
-					error(("Masculine adjectival lemma '%s' should end in -ý, -í, -ův or -in"):format(base.lemma))
 				elseif base.gender == "f" then
-					stem = rmatch(base.lemma, "^(.*)á$")
-					if stem then
-						base.lemma = stem .. "ý"
-						break
+					stem = rmatch(base.lemma, "^(.*)a$")
+					if not stem then
+						error(("Feminine adjectival lemma '%s' should end in -a"):format(base.lemma))
 					end
-					stem = rmatch(base.lemma, "^(.*)í$")
-					if stem then
-						break
+					if stem:find("[ljkg]$") then
+						-- This will drop the j between vowel and i.
+						base.lemma = com.combine_stem_ending(base, "nom_s", stem, "i")
+					elseif stem:find("i$") then
+						-- -cia or other soft consonant + -ia
+						base.lemma = stem
+					else
+						base.lemma = stem .. "y"
 					end
-					error(("Feminine adjectival lemma '%s' should end in -á, -í, -ova or -ina"):format(base.lemma))
 				else
-					stem = rmatch(base.lemma, "^(.*)é$")
-					if stem then
-						base.lemma = stem .. "ý"
-						break
+					stem = rmatch(base.lemma, "^(.*)e$")
+					if not stem then
+						error(("Neuter adjectival lemma '%s' should end in -e"):format(base.lemma))
 					end
-					stem = rmatch(base.lemma, "^(.*)í$")
-					if stem then
-						break
+					if stem:find("[lj]$") then
+						-- This will drop the j between vowel and i.
+						base.lemma = com.combine_stem_ending(base, "nom_s", stem, "i")
+					elseif stem:find("i$") then
+						-- -kie, -gie, -cie or other soft consonant + -ie
+						base.lemma = stem
+					else
+						base.lemma = stem .. "y"
 					end
-					error(("Neuter adjectival lemma '%s' should end in -é, -í, -ovo or -ino"):format(base.lemma))
 				end
 			end
 		end
