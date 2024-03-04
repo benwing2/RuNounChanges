@@ -47,6 +47,7 @@ def process_text_on_page(index, pagename, text):
 
   def reformat_template(t, from_params, totemp, to_params, text_to_incorporate=None):
     # If from-template params given, make sure they all match.
+    origt = str(t)
     seen_from_params = {}
     for param, value in from_params:
       if re.search("^%[0-9]+$", value): # %1, %2, ... for placeholder
@@ -75,6 +76,8 @@ def process_text_on_page(index, pagename, text):
     if to_params:
       if not add_params_to_template(t, to_params, seen_from_params, pagemsg):
         return False
+    if str(t) == origt:
+      return False
     if text_to_incorporate is not None:
       msg_template = "reformat {{%s%s}} into {{%s%s}}, incorporating following raw passage text into passage="
     else:
