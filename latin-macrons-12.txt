@@ -1,0 +1,21 @@
+###
+### vehō
+###
+# short in vē̆xī per Bennett, but possibly long vē̆xī per recent work, like Sanskrit ávākṣam
+v3 vehō vē̆x vect
+v3 advehō advē̆x advect
+v3 āvehō āvē̆x āvect
+v3 convehō convē̆x convect
+# circumvehor deponent
+v3 dēvehō dēvē̆x dēvect
+v3 ēvehō ēvē̆x ēvect
+v3 invehō invē̆x invect
+v3 pervehō pervē̆x pervect
+# praetervehor deponent
+# praevehor deponent
+v3 prōvehō prōvē̆x prōvect
+v3 revehō revē̆x revect
+v3 subvehō subvē̆x subvect
+# supervehor deponent
+v3 trānsvehō trānsvē̆x trānsvect
+v3 trāvehō trāvē̆x trāvect

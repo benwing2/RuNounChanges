@@ -1,0 +1,80 @@
+###
+### hī̆rtus
+### 
+comment: uncertain based on Bennett (long) vs. De Vaan (short); see comments at [[hirtus|hī̆rtus]]
+a1 hī̆rtus
+pn2 Hī̆rtius
+a1 hī̆rsūtus
+n1 hī̆rsūtia
+n5 hī̆rsūtiēs
+a1 hī̆rtellus
+a3 hī̆rtipēs hī̆rtiped
+###
+### lū̆ctor
+###
+comment: uncertain based on Bennett (long) vs. De Vaan, Wartburg, Buchi and Schweickard (short, with complications); see comments at [[luctor|lū̆ctor]]
+v1+ lū̆ctor
+n1 lū̆cta
+n3 lū̆ctāmen
+n3 lū̆ctātiō
+n3 lū̆ctātor
+v1+ adlū̆ctor
+v1+ allū̆ctor
+v1+ collū̆ctor
+n3 collū̆ctātiō
+v1+ conlū̆ctor
+n3 conlū̆ctātiō
+v1+ ēlū̆ctor
+a3 ēlū̆ctābilis
+a3 inēlū̆ctābilis
+v1+ oblū̆ctor
+v1+ relū̆ctor
+n3 relū̆ctātiō
+###
+### lū̆xus "dislocated"
+###
+comment: uncertain based on Bennett (long) vs. De Vaan (short); see comments [[luxus|lū̆xus]]
+a1 lū̆xus
+n4 lū̆xus
+v1+ lū̆xō
+n3 lū̆xātiō
+###
+### lū̆xuria "luxury"
+###
+comment: uncertain based on Bennett (long) vs. De Vaan (short); see comments [[luxus|lū̆xus]]
+n1 lū̆xuria
+n5 lū̆xuriēs
+v1+ lū̆xuriō
+a1 lū̆xuriōsus
+a3 lū̆xuriōsior
+###
+### alliciō "to entice"
+###
+comment: uncertain per Bennett and Buck, "probably short" per Allen; see comments at [[allicio|alliciō]]
+v3 alliciō allē̆x allect
+v3 adliciō adlē̆x adlect
+v3 illiciō illē̆x illect
+v3 inliciō inlē̆x inlect
+v3 pelliciō pellē̆x pellect
+###
+### nūbō
+###
+comment: uncertain based on Lewis and Bennett (long) vs. De Vaan, Ernout and Meillet, Wartburg and Bienvenu (short); see comments at [[nubo|nūbō]]
+v3 nūbō nūps nū̆pt
+v3 ēnūbō ēnūps ēnū̆pt
+v3 innūbō innūps innū̆pt
+v3 obnūbō obnūps obnū̆pt
+v3 trānsnūbō trānsnūps trānsnū̆pt
+a1 innū̆ptus
+n1 nū̆pta
+n1 nū̆ptia
+n1 nū̆ptiae
+a3 nū̆ptiālis
+v4 nū̆pturiō nū̆pturīv
+n4 nū̆ptus
+###
+### cōnū̆bium
+###
+comment: uncertain per Kennedy; see comments at [[conubium|cōnū̆bium]]
+n1 cōnū̆bium
+n1 connū̆bium
