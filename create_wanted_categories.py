@@ -44,6 +44,7 @@ def process_page(page, index):
   if not result:
     return
   if ("Category:Categories that are not defined in the category tree" in result or
+      "Category:Categories with incorrect name" in result or
       "The automatically-generated contents of this category has errors" in result):
     pagemsg("Won't create page, would lead to errors: <%s>" % result)
   else:
