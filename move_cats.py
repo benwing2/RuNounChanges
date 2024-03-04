@@ -254,8 +254,7 @@ def process_text_on_page(index, pagetitle, text):
       return [notes]
     notes_langs = {}
     uniq_notes = []
-    # Preserve ordering of notes but combine duplicate notes with previous notes,
-    # maintaining a count.
+    # Preserve ordering of notes but combine duplicate notes that are duplicate except for the lang.
     for note in notes:
       m = re.search("^(.*) for lang=(.*?)$", note)
       if m:
