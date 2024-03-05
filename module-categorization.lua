@@ -27,6 +27,10 @@ local keyword_to_module_type = {
 -- [[:Category:Pali inflection modules]].
 local module_type_generates_lang_specific_cat = {
 	["Inflection"] = true,
+	["Data"] = true,
+	["Testcase"] = true,
+	["Pronunciation testcase"] = true,
+	["Transliteration testcase"] = true,
 }
 
 -- If a module type is here, we will generate a lang-specific module-type category such as
@@ -35,6 +39,19 @@ local module_type_script_specific = {
 	["Transliteration"] = true,
 	["Entry name-generating"] = true,
 	["Sortkey-generating"] = true,
+}
+
+local module_type_patterns = {
+	{"/data%f[-/%z]", "Data"},
+	{"/testcases%f[-/%z]", function(typ)
+		if typ == "Pronunciation" then
+			return "Pronunciation testcase"
+		elseif type == "Transliteration" then
+			return "Transliteration testcase"
+		else
+			return "Testcase"
+		end
+	end},
 }
 
 -- return_raw set to true makes function return table of categories with
