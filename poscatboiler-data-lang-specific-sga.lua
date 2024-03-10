@@ -24,8 +24,8 @@ italicized in breadcrumbs and titles. The fields of the property object for a gi
   the stem class, and gender-specific variants of the stem class (with GENDER replaced by the possible genders) are
   handled along with a parent category subsuming all genders. 
 * `nom_sg`: The nominative singular ending. Use <...> to enclose literal Latin-script text (e.g. suffixes), which will
-  be italicized. Prefix with an ! to replace the entire text with the specified text; otherwise the ending will be
-  prefixed with "end in the nominative singular in ".
+  be italicized. Certian all-caps terms such as ASPIRATION and UNPALATALIZED will be linked to the appropriate section
+  of the Wikipedia entry on Old Irish grammar; see below.
 * `GENDER_nom_sg`: The nominative singular ending for the GENDER variant of this stem class. If not specified, the
   value of `nom_sg` is used.
 * `gen_sg`: The genitive singular ending. Conventions are the same as for `nom_sg`.
@@ -58,7 +58,7 @@ local noun_decls = {
 		nom_pl = "when masculine, same as the genitive singular; when neuter, the bare stem with LENITION of the following word and optionally an <-a> ending (used especially with an indefinite meaning)",
 		masculine_nom_pl = "same as the genitive singular",
 		neuter_nom_pl = "the bare stem with LENITION of the following word and optionally an <-a> ending (used especially with an indefinite meaning)",
-		addl = "These nouns derive from Proto-Celtic masculine {{m|cel-pro|-os}} (masculine) and {{m|cel-pro|-om}} " ..
+		addl = "These nouns derive from Proto-Celtic masculine {{m|cel-pro|*-os}} (masculine) and {{m|cel-pro|*-om}} " ..
 		"(neuter) endings.",
 	},
 	["GENDER <io>-stem"] = {
@@ -71,8 +71,8 @@ local noun_decls = {
 		nom_pl = "when masculine, same as the genitive singular; when neuter, <-e> (<-ae> after an UNPALATALIZED stem), with LENITION of the following word",
 		masculine_nom_pl = "same as the genitive singular",
 		neuter_nom_pl = "<-e> (<-ae> after an UNPALATALIZED stem), with LENITION of the following word",
-		addl = "These nouns derive from Proto-Celtic masculine {{m|cel-pro|-ios}} (masculine) and " ..
-		"{{m|cel-pro|-iom}} (neuter) endings. Originally the endings were the same as that of the <o>-stems, but " ..
+		addl = "These nouns derive from Proto-Celtic masculine {{m|cel-pro|*-ios}} (masculine) and " ..
+		"{{m|cel-pro|*-iom}} (neuter) endings. Originally the endings were the same as that of the <o>-stems, but " ..
 		"later sound changes caused the two classes to diverge significantly.",
 	},
 	["<ā>-stem"] = {
@@ -87,7 +87,7 @@ local noun_decls = {
 		nom_sg = "<-e> (<-ae> after an UNPALATALIZED stem), with LENITION of the following word",
 		gen_sg = "<-e> (<-ae> after an UNPALATALIZED stem), with ASPIRATION of the following word",
 		nom_pl = "<-i> (<-ai> after an UNPALATALIZED stem), with ASPIRATION of the following word",
-		addl = "These nouns derive from {{m+|cel-pro|-iā}} endings. Originally the endings were the same as that of " ..
+		addl = "These nouns derive from {{m+|cel-pro|*-iā}} endings. Originally the endings were the same as that of " ..
 		"the <ā>-stems, but later sound changes caused the two classes to diverge significantly.",
 	},
 	["<ī>-stem"] = {
@@ -104,7 +104,7 @@ local noun_decls = {
 	},
 	["GENDER <i>-stem"] = {
 		gender = "masculine, feminine or neuter",
-		possible_genders = {"masculine or feminine", "neuter"},
+		possible_genders = {"masculine or feminine", "neuter", "unknown gender"},
 		nom_sg = "the bare stem (always ending in a PALATALIZED consonant), with LENITION of the following word when feminine, NASALIZATION when neuter",
 		["masculine or feminine_nom_sg"] = "the bare stem (always ending in a PALATALIZED consonant), with LENITION of the following word when feminine",
 		neuter_nom_sg = "the bare stem (always ending in a PALATALIZED consonant), with NASALIZATION of the following word",
@@ -180,7 +180,7 @@ local noun_decls = {
 	},
 	["GENDER <n>-stem"] = {
 		gender = "masculine, feminine or neuter",
-		possible_genders = {"masculine or feminine", "neuter"},
+		possible_genders = {"masculine or feminine", "neuter", "unknown gender"},
 		nom_sg = "when masculine or feminine, either (a) the bare stem without final ''n'', or (b) <-u> or <-e> following the stem without final ''n'', along with ASPIRATION of the following word; when neuter, the bare stem (usually ending in <-(m)m>) without final ''n'', with NASALIZATION of the following word",
 		["masculine or feminine_nom_sg"] = "either (a) the bare stem without final ''n'', or (b) <-u> or <-e> following the stem without final ''n'', along with ASPIRATION of the following word",
 		neuter_nom_sg = "the bare stem (usually ending in <-(m)m>) without final ''n'', with NASALIZATION of the following word",
@@ -197,22 +197,25 @@ require("Module:category tree/poscatboiler/utilities").add_inflection_labels {
 	labels = labels,
 	pos = "noun",
 	stem_classes = noun_decls,
-	mark_spec_with_literal_text = function(spec)
+	mark_up_spec = function(spec, nolink)
 		-- mutations
 		spec = spec:gsub("LENITION", "{{w|Old Irish grammar#Lenition|lenition}}")
-		spec = spec:gsub("LENITED", "{{w|Old Irish grammar#Lenition|lenited}}")
 		spec = spec:gsub("UNLENITED", "{{w|Old Irish grammar#Lenition|unlenited}}")
+		spec = spec:gsub("LENITED", "{{w|Old Irish grammar#Lenition|lenited}}")
 		spec = spec:gsub("NASALIZATION", "{{w|Old Irish grammar#Nasalisation|nasalization}}")
 		spec = spec:gsub("ASPIRATION", "{{w|Old Irish grammar#Aspiration and gemination|aspiration/gemination}}")
 		-- palatalization
-		spec = spec:gsub("PALATALIZATION", "{{w|Old Irish grammar#Palatalisation|palatalization}}")
 		spec = spec:gsub("DEPALATALIZATION", "{{w|Old Irish grammar#Palatalisation|depalatalization}}")
-		spec = spec:gsub("PALATALIZED", "{{w|Old Irish grammar#Palatalisation|palatalized}}")
+		spec = spec:gsub("PALATALIZATION", "{{w|Old Irish grammar#Palatalisation|palatalization}}")
 		spec = spec:gsub("UNPALATALIZED", "{{w|Old Irish grammar#Palatalisation|unpalatalized}}")
+		spec = spec:gsub("PALATALIZED", "{{w|Old Irish grammar#Palatalisation|palatalized}}")
 		-- affection
 		spec = spec:gsub("LOWERING", "{{w|Old Irish grammar#Vowel affection|lowering}}")
 		spec = spec:gsub("RAISING", "{{w|Old Irish grammar#Vowel affection|raising}}")
 		spec = spec:gsub("U%-INSERTION", "{{w|Old Irish grammar#Vowel affection|u-insertion}}")
+		if nolink then
+			spec = require("Module:links").remove_links(spec)
+		end
 		return (spec:gsub("<(.-)>", "''%1''"))
 	end,
 	principal_parts = {
@@ -220,7 +223,7 @@ require("Module:category tree/poscatboiler/utilities").add_inflection_labels {
 		{"gen_sg", "genitive singular"},
 		{"nom_pl", "nominative plural"},
 	},
-	addl = "The stem classes are named from the perspective of [[Category:Proto-Celtic language|Proto-Celtic]] " ..
+	addl = "The stem classes are named from the perspective of [[:Category:Proto-Celtic language|Proto-Celtic]] " ..
 	"and may not still be visible in {{{langname}}} inflections.",
 }
 
