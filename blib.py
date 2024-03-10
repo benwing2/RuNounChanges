@@ -1103,7 +1103,7 @@ def parse_start_end(startprefix, endprefix):
 def args_has_non_default_pages(args):
   return not not (args.pages or args.pagefile or args.pages_from_find_regex or args.pages_from_previous_output
       or args.cats or args.refs or args.specials or args.contribs or args.prefix_namespace
-      or args.pages_and_refs or args.namespaces)
+      or args.pages_and_refs)
 
 # Process a run of pages, with the set of pages specified in various possible ways, e.g. from --pagefile, --cats,
 # --refs, or (if --stdin is given) from a Wiktionary dump or find_regex.py output read from stdin. PROCESS is called
@@ -1221,8 +1221,9 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
           if namespace.id == allowed_namespace:
             return False
         else:
-          if (namespace.canonical_prefix() == allowed_namespace + ":" or
-              namespace.custom_prefix() == allowed_namespace + ":"):
+          coloned_allowed_namespace = [allowed_namespace + ":", ":" + allowed_namespace + ":"]
+          if (namespace.canonical_prefix() in coloned_allowed_namespace or
+              namespace.custom_prefix() in coloned_allowed_namespace):
             return False
       return True
     return False
@@ -1419,6 +1420,12 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
         for index, page in prefix_pages(
             prefix, start, end, namespace, filter_redirects=True if args.prefix_redirects_only else None):
           process_pywikibot_page(index, page)
+
+  elif args_namespaces:
+    for namespace in args_namespaces:
+      for index, page in prefix_pages(
+          None, start, end, namespace, filter_redirects=True if args.prefix_redirects_only else None):
+        process_pywikibot_page(index, page)
 
   else:
     if not default_pages and not default_cats and not default_refs:
