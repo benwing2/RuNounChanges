@@ -1,5 +1,7 @@
 local export = {}
 
+local put_module = "Module:parse utilities"
+
 local rsplit = mw.text.split
 local rfind = mw.ustring.find
 
@@ -65,6 +67,16 @@ local module_type_patterns = {
 		end
 	end},
 }
+
+-- Split an argument on comma, but not comma followed by whitespace.
+local function split_on_comma(val)
+	if val:find(",%s") then
+		return require(put_module).split_on_comma(val)
+	else
+		return rsplit(val, ",")
+	end
+end
+
 
 local function get_lang_or_script(code)
 	return code == "-" and code or
@@ -183,7 +195,14 @@ function export.categorize(frame, return_raw, noerror)
 	-- Take the module type(s) from type= if given, or infer from the pagename.
 	local module_types
 	if args.type then
-		module_types = rsplit(args.type, ",")
+		module_types = {}
+		local module_type_specs = split_on_comma(args.type)
+		for _, spec in ipairs(module_type_specs) do
+			local modtype, sortkey = spec:match("^(.-):(.*)$")
+			modtype = modtype or spec
+			sortkey = sortkey and sortkey:gsub("_", " ") or nil
+			table.insert(module_types, {type = modtype, sort = sortkey})
+		end
 	else
 		local module_type_keyword = root_pagename:match("[-%a]+[- ]([^/]+)%f[/%z]")
 		if not module_type_keyword then
@@ -202,23 +221,25 @@ function export.categorize(frame, return_raw, noerror)
 					module_type_keyword, root_pagename))
 			end
 		end
-		module_types = {module_type}
+		module_types = {{type = module_type}}
 	end
 
 	-- Look for additional module type(s) inferred by pattern.
 	for _, pattern_spec in ipairs(module_type_patterns) do
 		local pattern, inferred_type = unpack(pattern_spec)
 		if rfind(pagename, pattern) then
-			local insertIfNot = require("Module:table").insertIfNot
+			local function insert_module_type(typ)
+				require("Module:table").insertIfNot(module_types, typ, {key = function(obj) return obj.type end})
+			end
 			if type(inferred_type) == "string" then
-				insertIfNot(module_types, inferred_type)
+				insert_module_type({type = inferred_type})
 			else
 				local addl_types = {}
 				for _, typ in ipairs(module_types) do
-					table.insert(addl_types, inferred_type(typ))
+					table.insert(addl_types, {type = inferred_type(typ.type), sort = typ.sort})
 				end
 				for _, typ in ipairs(addl_types) do
-					insertIfNot(module_types, typ)
+					insert_module_type(typ)
 				end
 			end
 		end
@@ -257,26 +278,14 @@ function export.categorize(frame, return_raw, noerror)
 		end
 	else
 		inferred_objs = infer_lang_and_script_codes(root_pagename)
-		local function insert_obj_if_not(obj)
-			local saw_obj = false
-			for _, existing_obj in ipairs(inferred_objs) do
-				if obj_code(obj) == obj_code(existing_obj) then
-					saw_obj = true
-					break
-				end
-			end
-			if not saw_obj then
-				table.insert(inferred_objs, obj)
-			end
-		end
 
 		for _, module_type in ipairs(module_types) do
-			local languages_extractor = languages_from_module_name[module_type]
+			local languages_extractor = languages_from_module_name[module_type.type]
 			if languages_extractor then
 				local langs = require(languages_extractor)(root_pagename)
 				if langs then
 					for _, obj in ipairs(langs) do
-						insert_obj_if_not(obj)
+						require("Module:table").insertIfNot(inferred_objs, obj, {key = obj_code})
 					end
 				end
 			end
@@ -298,17 +307,17 @@ function export.categorize(frame, return_raw, noerror)
 	else
 		for _, module_type in ipairs(module_types) do
 			for _, obj in ipairs(inferred_objs) do
-				local function insert_overall_module_type_cat(module_type, sortkey)
-					if module_type ~= "-" then
-						insert_cat(module_type .. " modules", sortkey)
+				local function insert_overall_module_type_cat(sortkey)
+					if module_type.type ~= "-" then
+						insert_cat(module_type.type .. " modules", module_type.sort or sortkey)
 					end
 				end
 
 				if obj == "-" then
-					insert_overall_module_type_cat(module_type)
+					insert_overall_module_type_cat()
 				else
-					if obj:hasType("script") then
-						insert_cat(module_type .. " modules by script", obj:getCanonicalName())
+					if obj:hasType("script") and module_type.type ~= "-" then
+						insert_cat(module_type.type .. " modules by script", obj:getCanonicalName())
 					end
 	
 					local function construct_lang_or_sc_cat(obj, suffix)
@@ -321,10 +330,11 @@ function export.categorize(frame, return_raw, noerror)
 						return prefix .. " " .. suffix
 					end
 
-					insert_cat(construct_lang_or_sc_cat(obj, "modules"), module_type)
-					insert_overall_module_type_cat(module_type, obj:getCanonicalName())
-					if module_type_generates_lang_specific_cat[module_type] then
-						insert_cat(construct_lang_or_sc_cat(obj, mw.getContentLanguage():lcfirst(module_type) .. " modules"))
+					insert_cat(construct_lang_or_sc_cat(obj, "modules"), module_type.type)
+					insert_overall_module_type_cat(obj:getCanonicalName())
+					if module_type_generates_lang_specific_cat[module_type.type] then
+						insert_cat(construct_lang_or_sc_cat(obj, mw.getContentLanguage():lcfirst(module_type.type) ..
+							" modules"))
 					end
 				end
 			end
