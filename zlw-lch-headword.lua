@@ -71,6 +71,7 @@ local langs_supported = {
 		cont_adv = false,
 		ant_adv = false,
 		has_dual = true,
+		head_is_1 = true,
 	},
 }
 
@@ -167,9 +168,9 @@ function export.show(frame)
 	end
 	local lang = require("Module:languages").getByCode(langcode)
 	local langname = lang:getCanonicalName()
+	local head_is_1 = langs_supported[langcode].head_is_1
 
 	local params = {
-		["head"] = {list = true},
 		["nolink"] = {type = "boolean"},
 		["nolinkhead"] = {type = "boolean", alias_of = "nolink"},
 		["suffix"] = {type = "boolean"},
@@ -178,6 +179,11 @@ function export.show(frame)
 		["abbr"] = {list = true},
 		["pagename"] = {}, -- for testing
 	}
+	if head_is_1 then
+		params[1] = {list = "head"}
+	else
+		params["head"] = {list = true}
+	end
 
 	if pos_functions[poscat] then
 		local posparams = pos_functions[poscat].params
@@ -194,7 +200,7 @@ function export.show(frame)
 
 	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
 
-	local user_specified_heads = args.head
+	local user_specified_heads = args[head_is_1 and 1 or "head"]
 	local heads = user_specified_heads
 	if args.nolink then
 		if #heads == 0 then
@@ -209,6 +215,7 @@ function export.show(frame)
 		pos_category = poscat,
 		categories = {},
 		heads = heads,
+		head_is_1 = head_is_1,
 		user_specified_heads = user_specified_heads,
 		no_redundant_head_cat = #user_specified_heads == 0,
 		genders = {},
@@ -279,7 +286,7 @@ local function get_noun_pos(is_proper)
 		params = function(langcode)
 			local params = {
 				["indecl"] = {type = "boolean"},
-				[1] = {list = "g"},
+				[langs_supported[langcode].head_is_1 and 2 or 1] = {list = "g"},
 			}
 			for _, spec in ipairs(get_noun_inflection_specs(langcode)) do
 				local param, desc = unpack(spec)
@@ -332,7 +339,7 @@ local function get_noun_pos(is_proper)
 			end
 			
 			-- Gather, validate and canonicalize genders
-			for _, gspec in ipairs(args[1]) do
+			for _, gspec in ipairs(args[data.head_is_1 and 2 or 1]) do
 				for _, g in ipairs(rsplit(gspec, ",")) do
 					if not allowed_genders[g] then
 						error("Unrecognized " .. data.langname .. " gender: " .. g)
@@ -375,7 +382,7 @@ local function get_verb_pos()
 	}
 	
 	local params = {
-		[1] = {default = "?"},
+		[langs_supported[langcode].head_is_1 and 2 or 1] = {default = "?"},
 		["def"] = {type = "boolean"},
 	}
 	for _, spec in ipairs(verb_inflection_specs) do
@@ -391,7 +398,7 @@ local function get_verb_pos()
 			}
 
 			-- Gather aspects
-			for _, a in ipairs(rsplit(args[1], ",")) do
+			for _, a in ipairs(rsplit(args[data.head_is_1 and 2 or 1], ",")) do
 				table.insert(data.genders, a)
 			end
 
@@ -473,7 +480,7 @@ local function get_adj_adv_pos(pos)
 	return {
 		params = function(langcode)
 			local params = {
-				[1] = {list = true, disallow_holes = true},
+				[langs_supported[langcode].head_is_1 and 2 or 1] = {list = true, disallow_holes = true},
 				["dim"] = {list = true, disallow_holes = true},
 				["sup"] = {list = true, disallow_holes = true},
 				["nodefsup"] = {type = "boolean"},
@@ -489,7 +496,7 @@ local function get_adj_adv_pos(pos)
 			return params
 		end,
 		func = function(args, data)
-			local comps = parse_inflection(args[1], data.pagename)
+			local comps = parse_inflection(args[data.head_is_1 and 2 or 1], data.pagename)
 			if comps then
 				lang_data = langs_supported[data.langcode]
 				if comps[1].term == "-" then
@@ -584,7 +591,7 @@ pos_functions["adverbs"] = get_adj_adv_pos("adverb")
 
 local function get_part_pos()
 	local params = {
-		[1] = {},
+		[langs_supported[langcode].head_is_1 and 2 or 1] = {},
 		["a"] = {list = true, disallow_holes = true},
 	}
 
@@ -648,7 +655,7 @@ local function get_part_pos()
 				end
 				return false
 			end
-			local ptype = args[1]
+			local ptype = args[data.head_is_1 and 2 or 1]
 			if ptype then
 				if not allowed_types[ptype] then
 					error("Unrecognized " .. data.langname .. " participle type: " .. ptype)
