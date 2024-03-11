@@ -2,9 +2,23 @@
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, argparse
+from dataclasses import dataclass
 
 import blib
 from blib import getparam, rmparam, set_template_name, msg, errandmsg, site, tname
+
+@dataclass
+class LabelData:
+  label: str
+  first_label_line: str
+  label_lines: list
+  last_label_line: str
+  topical_categories: list
+  sense_categories: list
+  pos_categories: list
+  regional_categories: list
+  plain_categories: list
+  aliases: list
 
 blib.getLanguageData()
 
@@ -32,12 +46,18 @@ def process_text_on_page(index, pagename, text):
 
   new_lines = []
   lines = text.split("\n")
+  saw_old_style_alias = False
+  labels_seen = []
+  indexed_labels = {}
+  first_label_line = None
+  label_lines = []
   label = False
   topical_categories = []
   sense_categories = []
   pos_categories = []
   regional_categories = []
   plain_categories = []
+  existing_aliases = []
 
   either_quote_string_re = '(".*?"|' + "'.*?')"
   true_or_either_quote_string_re = '(true|".*?"|' + "'.*?')"
@@ -46,47 +66,57 @@ def process_text_on_page(index, pagename, text):
     lineno = lineind + 1
     def linemsg(txt):
       pagemsg("Line %s: %s" % (lineno, txt))
-    if line.startswith("labels["):
+    if re.search(r"^labels *\[", line):
       if label:
-        errandpagemsg("WARNING: Saw nested labels on line %s, can't handle file" % lineno)
+        errandpagemsg("WARNING: Saw nested labels on line %s, can't handle file: %s" % (lineno, line))
         return
+      m = re.search(r"^labels *\[%s\] = %s$" % (either_quote_string_re, either_quote_string_re), line.rstrip())
+      if m:
+        # an alias
+        alias, canon = m.groups()
+        canon = canon[1:-1] # discard quotes
+        if canon not in indexed_labels:
+          linemsg("WARNING: Unable to locate canonical label '%s' for aliases: %s" % (canon, line))
+          label_lines.append(line)
+          continue
+        labels_seen[indexed_labels[canon]].aliases.append(alias)
+        continue
+      if label_lines:
+        labels_seen.append(label_lines)
+        label_lines = []
       topical_categories = []
       sense_categories = []
       pos_categories = []
       regional_categories = []
       plain_categories = []
-      m = re.search(r"^labels\[%s\] = \{$" % (either_quote_string_re), line.rstrip())
+      existing_aliases = []
+      m = re.search(r"^labels *\[%s\] = \{$" % (either_quote_string_re), line.rstrip())
       if not m:
         linemsg("WARNING: Unable to parse labels start line: %s" % line)
+        label_lines.append(line)
       else:
         label = m.group(1)[1:-1]
-      new_lines.append(line)
+        first_label_line = line
     elif line.strip() == "}":
-      label = False
-      if not new_lines[-1].strip().endswith("{"):
-        if not new_lines[-1].endswith(","):
-          # FIXME: This could break if there are quotes around the comment sign
-          m = re.search("^(.*?)(--.*)$", new_lines[-1])
-          if m:
-            pre_comment, comment = m.groups()
-            if pre_comment.strip() and not pre_comment.strip().endswith(","):
-              new_lines[-1] = "%s, %s" % (pre_comment.rstrip(), comment)
-          else:
-            new_lines[-1] += ","
-
-      def output_cats(cats, prefix):
-        if len(cats) == 0:
-          return
-        if len(cats) == 1:
-          new_lines.append("\t%s = %s," % (prefix, cats[0]))
+      if not label:
+        errandpagemsg("WARNING: Saw non-label object on line %s, can't handle file: %s" % (lineno, line))
+        return
+      if label_lines and not label_lines[-1].endswith(","):
+        # FIXME: This could break if there are quotes around the comment sign
+        m = re.search("^(.*?)(--.*)$", label_lines[-1])
+        if m:
+          pre_comment, comment = m.groups()
+          if pre_comment.strip() and not pre_comment.strip().endswith(","):
+            label_lines[-1] = "%s, %s" % (pre_comment.rstrip(), comment)
         else:
-          new_lines.append("\t%s = {%s}," % (prefix, ", ".join(cats)))
-      output_cats(topical_categories, "topical_categories")
-      output_cats(sense_categories, "sense_categories")
-      output_cats(pos_categories, "pos_categories")
-      output_cats(regional_categories, "regional_categories")
-      output_cats(plain_categories, "plain_categories")
-      new_lines.append(line)
+          label_lines[-1] += ","
+
+      labels_seen.append(LabelData(label, first_label_line, label_lines, line, topical_categories, sense_categories,
+                                   pos_categories, regional_categories, plain_categories, existing_aliases))
+      indexed_labels[label] = len(labels_seen) - 1
+      label = False
+      label_lines = []
+      first_label_line = None
     elif label:
       origline = line
       line = line.strip()
@@ -129,7 +159,7 @@ def process_text_on_page(index, pagename, text):
         if m:
           cats = extract_categories(m.group(1).strip())
           if cats is None:
-            new_lines.append(origline)
+            label_lines.append(origline)
           else:
             for cat in cats:
               if cat is True:
@@ -139,6 +169,8 @@ def process_text_on_page(index, pagename, text):
           return True
         return False
 
+      def process_aliases(cat):
+        return
       def process_topical(cat):
         if cat == label or cat == ucfirst(label):
           topical_categories.append("true")
@@ -166,20 +198,73 @@ def process_text_on_page(index, pagename, text):
           else:
             regional_categories.append('"%s"' % regcat)
           return True
-      if (not process_cats("topical_categories", topical_categories, process_topical)
+      if (not process_cats("aliases", existing_aliases, process_aliases)
+        and not process_cats("topical_categories", topical_categories, process_topical)
         and not process_cats("sense_categories", sense_categories, process_sense)
         and not process_cats("pos_categories", pos_categories, process_pos)
         and not process_cats("regional_categories", regional_categories, process_regional)
         and not process_cats("plain_categories", plain_categories, process_plain)
       ):
-        new_lines.append(origline)
+        label_lines.append(origline)
+
+    elif line.startswith("alias("):
+      m = re.search(r"""^alias\(%s, *{(.*?)}\)$""" % either_quote_string_re, line)
+      if not m:
+        linemsg("WARNING: Unable to parse alias line: %s" % line)
+        label_lines.append(line)
+        continue
+      canon, aliases = m.groups()
+      canon = canon[1:-1] # discard quotes
+      if canon not in indexed_labels:
+        linemsg("WARNING: Unable to locate canonical label '%s' for aliases: %s" % (canon, line))
+        label_lines.append(line)
+        continue
+      saw_old_style_alias = True
+      aliases = re.split(", *", aliases)
+      labels_seen[indexed_labels[canon]].aliases.extend(aliases)
+
+    elif line.startswith("local function alias("):
+      pass
+
+    elif line == "return labels":
+      label_lines.append('return require("Module:labels").finalize_data(labels)')
 
     else:
-      new_lines.append(line)
+      label_lines.append(line)
+
+  if label_lines:
+    labels_seen.append(label_lines)
+
+  for labelobj in labels_seen:
+    if isinstance(labelobj, LabelData):
+      new_lines.append(labelobj.first_label_line)
+      if labelobj.aliases:
+        new_lines.append("\taliases = {%s}," % ", ".join(labelobj.aliases))
+      new_lines.extend(labelobj.label_lines)
+      def output_cats(cats, prefix):
+        if len(cats) == 0:
+          return
+        if len(cats) == 1:
+          new_lines.append("\t%s = %s," % (prefix, cats[0]))
+        else:
+          new_lines.append("\t%s = {%s}," % (prefix, ", ".join(cats)))
+      output_cats(labelobj.topical_categories, "topical_categories")
+      output_cats(labelobj.sense_categories, "sense_categories")
+      output_cats(labelobj.pos_categories, "pos_categories")
+      output_cats(labelobj.regional_categories, "regional_categories")
+      output_cats(labelobj.plain_categories, "plain_categories")
+      new_lines.append(labelobj.last_label_line)
+    else:
+      new_lines.extend(labelobj)
 
   text = "\n".join(new_lines)
+  text = text.replace("\n\n\n", "\n\n")
+  text = re.sub("^    ", "\t", text, 0, re.M)
 
-  return text, "clean categories in label module"
+  notes = ["clean categories in label module"]
+  if saw_old_style_alias:
+    notes.append("move old-style alias specs to `aliases =`")
+  return text, notes
 
 parser = blib.create_argparser("Clean label modules", include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
