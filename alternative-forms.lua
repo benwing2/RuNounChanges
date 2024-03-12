@@ -5,8 +5,12 @@ local put_module = "Module:parse utilities"
 
 local rsplit = mw.text.split
 
+local function track(page)
+	require("Module:debug/track")("alter/" .. page)
+end
+
 -- See if the language's dialectal data module has a label corresponding to the dialect argument.
-function export.getLabel(dialect, dialect_data)
+function export.get_label(dialect, dialect_data)
 	local data = dialect_data[dialect] or ( dialect_data.labels and dialect_data.labels[dialect] )
 	local alias_of = ( dialect_data.aliases and dialect_data.aliases[dialect] )
 	if not data then
@@ -36,14 +40,10 @@ function export.make_dialects(raw, lang)
 	local dialects = {}
 
 	for _, dialect in ipairs(raw) do
-		table.insert(dialects, dialect_info and export.getLabel(dialect, dialect_info) or dialect)
+		table.insert(dialects, dialect_info and export.get_label(dialect, dialect_info) or dialect)
 	end
 
 	return dialects
-end
-
-local function track(page)
-	require("Module:debug/track")("alter/" .. page)
 end
 
 -- Per-param modifiers, which can be specified either as separate parameters (e.g. t2=, pos3=) or as inline modifiers
@@ -318,6 +318,34 @@ function export.display_alternative_forms(parent_args, pagename, show_dialect_ta
 
 	return table.concat(items)
 end
+
+function export.convert_labels_data_module(module_name, lang)
+	local submodule = mw.loadData(module_name)
+	local labels = {}
+	local aliases = {}
+	local m_labels = require("Module:labels")
+	for label, labdata in pairs(submodule) do
+		if type(labdata) == "string" then
+			aliases[label] = labdata
+		else
+			labels[label] = {
+				display = m_labels.get_displayed_label(label, labdata, lang)
+			}
+		end
+	end
+	return {
+		labels = labels,
+		aliases = aliases,
+	}
+end
+
+
+function export.convert_labels_data(langcode)
+	local lang = require("Module:languages").getByCode(langcode, true, "allow etym")
+	local labels_module_name = ("Module:labels/data/lang/%s"):format(langcode)
+	return export.convert_labels_data_module(labels_module_name, lang)
+end
+
 
 -- Template-callable function for displaying alternative forms.
 function export.create(frame)

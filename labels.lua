@@ -129,6 +129,71 @@ function export.get_submodules(lang)
 end
 
 --[==[
+Return the displayed form of a label `label`, given (a) the label data structure `labdata` from one of the data
+modules; (b) the language object `lang` of the language being processed, or nil for no language; (c) `deprecated`
+(true if the label is deprecated, otherwise the deprecation information is taken from `labdata`). Returns two values:
+the displayed label form and a boolean indicating whether the label is deprecated.
+
+'''NOTE: Under normal circumstances, do not use this.''' It is intended for internal use by
+[[Module:alternative forms]]. Instead, use `get_label_info`, which searches all the data modules for a given label
+and handles other complications.
+]==]
+function export.get_displayed_label(label, labdata, lang, deprecated)
+	local displayed_label
+	deprecated = deprecated or labdata.deprecated
+
+	if labdata.special_display then
+		local function add_language_name(str)
+			if str == "canonical_name" then
+				if lang then
+					return lang:getNonEtymologicalName()
+				else
+					return "<code><var>[language name]</var></code>"
+				end
+			else
+				return ""
+			end
+		end
+		
+		displayed_label = require("Module:string utilities").gsub(labdata.special_display, "<(.-)>", add_language_name)
+	else
+		--[=[
+			If labdata.glossary or labdata.Wikipedia are set to true, there is a glossary definition
+			with an anchor identical to the label, or a Wikipedia article with a title
+			identical to the label.
+				For example, the code
+					labels["formal"] = {
+						glossary = true,
+					}
+				indicates that there is a glossary entry for "formal".
+
+			Otherwise:
+			* labdata.glossary specifies the anchor in [[Appendix:Glossary]].
+			* labdata.Wiktionary specifies an arbitrary Wiktionary page or page + anchor (e.g. a separate Appendix entry).
+			* labdata.Wikipedia specifies an arbitrary Wikipedia article.
+		]=]
+		local display = labdata.display or label
+		if labdata.glossary then
+			local glossary_entry = type(labdata.glossary) == "string" and labdata.glossary or label
+			displayed_label = "[[Appendix:Glossary#" .. glossary_entry .. "|" .. display .. "]]"
+		elseif labdata.Wiktionary then
+			displayed_label = "[[" .. labdata.Wiktionary .. "|" .. display .. "]]"
+		elseif labdata.Wikipedia then
+			local Wikipedia_entry = type(labdata.Wikipedia) == "string" and labdata.Wikipedia or label
+			displayed_label = "[[w:" .. Wikipedia_entry .. "|" .. display .. "]]"
+		else
+			displayed_label = display
+		end
+	end
+
+	if deprecated then
+		displayed_label = '<span class="deprecated-label">' .. displayed_label .. '</span>'
+	end
+
+	return displayed_label, deprecated
+end
+
+--[==[
 Return information on a label. On input `data` is an object with the following fields:
 * `label`: The label to return information on.
 * `lang`: The language of the label. Must be specified unless `for_doc` is given.
@@ -178,9 +243,6 @@ function export.get_label_info(data)
 		ret.canonical = label
 		labdata = submodule[label] or {}
 	end
-	if labdata.deprecated then
-		deprecated = true
-	end
 
 	if labdata.track then
 		-- Track label (after converting aliases to canonical form). It is too expensive to track all labels.
@@ -188,59 +250,14 @@ function export.get_label_info(data)
 	end
 
 	local displayed_label
-
-	if labdata.special_display then
-		local function add_language_name(str)
-			if str == "canonical_name" then
-				if data.lang then
-					return data.lang:getNonEtymologicalName()
-				else
-					return "<code><var>[language name]</var></code>"
-				end
-			else
-				return ""
-			end
-		end
-		
-		displayed_label = require("Module:string utilities").gsub(labdata.special_display, "<(.-)>", add_language_name)
-	else
-		--[=[
-			If labdata.glossary or labdata.Wikipedia are set to true, there is a glossary definition
-			with an anchor identical to the label, or a Wikipedia article with a title
-			identical to the label.
-				For example, the code
-					labels["formal"] = {
-						glossary = true,
-					}
-				indicates that there is a glossary entry for "formal".
-
-			Otherwise:
-			* labdata.glossary specifies the anchor in [[Appendix:Glossary]].
-			* labdata.Wiktionary specifies an arbitrary Wiktionary page or page + anchor (e.g. a separate Appendix entry).
-			* labdata.Wikipedia specifies an arbitrary Wikipedia article.
-		]=]
-		local display = labdata.display or label
-		if labdata.glossary then
-			local glossary_entry = type(labdata.glossary) == "string" and labdata.glossary or label
-			displayed_label = "[[Appendix:Glossary#" .. glossary_entry .. "|" .. display .. "]]"
-		elseif labdata.Wiktionary then
-			displayed_label = "[[" .. labdata.Wiktionary .. "|" .. display .. "]]"
-		elseif labdata.Wikipedia then
-			local Wikipedia_entry = type(labdata.Wikipedia) == "string" and labdata.Wikipedia or label
-			displayed_label = "[[w:" .. Wikipedia_entry .. "|" .. display .. "]]"
-		else
-			displayed_label = display
-		end
-	end
-
+	displayed_label, deprecated = export.get_displayed_label(label, labdata, data.lang, deprecated)
 	ret.deprecated = deprecated
 	if deprecated then
-		displayed_label = '<span class="deprecated-label">' .. displayed_label .. '</span>'
 		if not data.nocat then
 			table.insert(ret.categories, "Entries with deprecated labels")
 		end
 	end
-	
+
 	local label_for_already_seen =
 		(labdata.topical_categories or labdata.regional_categories
 		or labdata.plain_categories or labdata.pos_categories
