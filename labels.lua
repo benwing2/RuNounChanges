@@ -106,6 +106,11 @@ local function fetch_categories(label, labdata, lang, term_mode, for_doc)
 	return categories
 end
 
+--[==[
+Return the list of all labels data modules for a label whose language is `lang`. The return value is a list of
+module names, with overriding modules earlier in the list (that is, if a label occurs in two modules in the list,
+the earlier-listed module takes precedence). If `lang` is nil, only return non-language-specific submodules.
+]==]
 function export.get_submodules(lang)
 	local submodules = {}
 
@@ -123,8 +128,8 @@ function export.get_submodules(lang)
 	return submodules
 end
 
---[=[
-Return information on a label. On input `data` is an object with the following fields;
+--[==[
+Return information on a label. On input `data` is an object with the following fields:
 * `label`: The label to return information on.
 * `lang`: The language of the label. Must be specified unless `for_doc` is given.
 * `term_mode`: If true, the label was invoked using {{tl|tlb}}; otherwise, {{tl|lb}}.
@@ -133,7 +138,7 @@ Return information on a label. On input `data` is an object with the following f
 * `nocat`: If true, don't add the label to any categories.
 * `already_seen`: An object used to track labels already seen, so they aren't displayed twice. Tracking is according
   to the display form of the label, so if two labels have the same display form, the second one won't be displayed
-  (but its categories will still be added). This must be specified even if this functionality isn't needed; use {}
+  (but its categories will still be added). This must be specified even if this functionality isn't needed; use { {}}
   in that case.
 
 The return value is an object with the following fields:
@@ -143,7 +148,7 @@ The return value is an object with the following fields:
 * `formatted_categories`: A string containing the formatted categories.
 * `deprecated`: True if the label is deprecated.
 * `data`: The data structure for the label, as fetched from the label modules.
-]=]
+]==]
 function export.get_label_info(data)
 	if not data.label then
 		error("`data` must now be an object containing the params")
@@ -260,7 +265,9 @@ function export.get_label_info(data)
 		for _, cat in ipairs(cats) do
 			table.insert(ret.categories, cat)
 		end
-		if #ret.categories == 0 or data.for_doc then
+		local ns = mw.title.getCurrentTitle().namespace
+		if #ret.categories == 0 or (ns ~= 0 and ns ~= 100 and ns ~= 118) or data.for_doc then
+			-- Only allow categories in the mainspace, appendix and reconstruction namespaces.
 			-- Don't try to format categories if we're doing this for documentation ({{label/doc}}), because there
 			-- will be HTML in the categories.
 			ret.formatted_categories = ""
@@ -280,17 +287,26 @@ function export.get_label_info(data)
 end
 	
 
+--[==[
+Format one or more labels for display and categorization. This provides the implementation of the {{tl|label}}/{{tl|lb}}
+and {{tl|term label}}/{{tl|tlb}} templates, and can also be called from a module. The return value is a string to be
+inserted into the generated page, including the display and categories. On input `data` is an object with the following
+fields:
+* `labels`: List of the labels to format.
+* `lang`: The language of the labels.
+* `term_mode`: If true, the label was invoked using {{tl|tlb}}; otherwise, {{tl|lb}}.
+* `nocat`: If true, don't add the label to any categories.
+* `sort`: Sort key for categorization.
+
+'''WARNING''': This destructively modifies the `data` structure.
+]==]
 function export.show_labels(data)
 	if not data.labels then
 		error("`data` must now be an object containing the params")
 	end
 	local labels = data.labels
 	if not labels[1] then
-		if mw.title.getCurrentTitle().nsText == "Template" then
-			labels = {"example"}
-		else
-			error("You must specify at least one label.")
-		end
+		error("You must specify at least one label.")
 	end
 	
 	-- Show the labels
@@ -331,12 +347,12 @@ function export.show_labels(data)
 		"</span><span class=\"ib-brac\">)</span></span>"
 end
 
--- Helper function for the data modules.
+--[==[Helper function for the data modules.]==]
 function export.alias(labels, key, aliases)
 	require(table_module).alias(labels, key, aliases)
 end
 
--- Used to finalize the data into the form that is actually returned.
+--[==[Used to finalize the data into the form that is actually returned.]==]
 function export.finalize_data(labels)
 	local shallowcopy = require(table_module).shallowcopy
 	local aliases = {}
