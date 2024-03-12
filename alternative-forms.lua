@@ -213,7 +213,7 @@ function export.display_alternative_forms(parent_args, pagename, show_dialect_ta
 				for param_mod, param_mod_spec in pairs(param_mods) do
 					local dest = param_mod_spec.item_dest or param_mod
 					local param_key = param_mod_spec.param_key or param_mod
-					local arg = args[param_key][termno]
+					local arg = args[param_key] and args[param_key][termno]
 					if arg then
 						if param_mod_spec.convert then
 							local function parse_err(msg, stack_frames_to_ignore)
@@ -325,31 +325,6 @@ function export.create(frame)
 	local title = mw.title.getCurrentTitle()
 	local PAGENAME = title.text
 	return export.display_alternative_forms(parent_args, title)
-end
-
-function export.categorize(frame)
-	local content = {}
-
-	local title = mw.title.getCurrentTitle()
-	local titletext = title.text
-	local namespace = title.nsText
-	local subpagename = title.subpageText
-
-	-- subpagename ~= titletext if it is a documentation page
-	if namespace == "Module" and subpagename == titletext then
-		local langCode = mw.ustring.match(titletext, "^([^:]+):")
-		local lang = m_languages.getByCode(langCode) or error('"' .. langCode .. '" is not a valid language code.')
-		content.canonicalName = lang:getCanonicalName()
-
-		local categories =
-[=[
-[[Category:<canonicalName> modules|dialects]]
-[[Category:Dialectal data modules|<canonicalName>]]
-]=]
-
-		categories = mw.ustring.gsub(categories, "<([^>]+)>", content)
-		return categories
-	end
 end
 
 return export
