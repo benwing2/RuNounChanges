@@ -3976,7 +3976,7 @@ end
 
 -- For an adjectival lemma, synthesize the masc singular form. In the process, autodetect the gender.
 local function synthesize_adj_lemma(base)
-	local stem, ac
+	local stem
 	local gender, animacy
 
 	-- Convert a stem to the lemma form. `stem` is the stem as extracted from the non-lemma form by removing the
@@ -3997,6 +3997,18 @@ local function synthesize_adj_lemma(base)
 
 	while true do
 		if base.number == "pl" then
+			if base.lemma:find("[iy]$") then
+				gender = "m"
+				animacy = "pr"
+				bas
+				if base.gender == "m" and base.animacy == "pr" then
+					if base.lemma:find("[iy]$") then
+						base.lemma = com.unsoften_adj_masc_pers_pl(base, base.lemma)
+						break
+					else
+						error(("Masculine personal plural-only adjectival lemma '%s' should end in -i or -y"):format(
+							base.lemma))
+					end
 		else -- singular
 			-- Masculine
 			stem = rmatch(base.lemma, "^(.*)[iy]$")
@@ -4074,8 +4086,6 @@ local function synthesize_adj_lemma(base)
 		-- Set the stems.
 		stress.vowel_stem = stem
 		stress.nonvowel_stem = stem
-		stress.pl_vowel_stem = stem
-		stress.pl_nonvowel_stem = stem
 	end
 	base.decl = "adj"
 end
