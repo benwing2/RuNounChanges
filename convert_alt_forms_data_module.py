@@ -232,7 +232,7 @@ def process_text_on_page(index, pagename, text):
           linemsg("WARNING: Alias '%s' isn't surrounded by quotes: %s" % (alias, line))
           must_continue = True
           break
-        stripped_aliases = alias[1:-1]
+        stripped_aliases.append(alias[1:-1])
       if must_continue:
         continue
       labels_seen[indexed_labels[canon]].aliases.extend(stripped_aliases)
