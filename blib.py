@@ -1105,6 +1105,42 @@ def args_has_non_default_pages(args):
       or args.cats or args.refs or args.specials or args.contribs or args.prefix_namespace
       or args.pages_and_refs)
 
+def do_handle_stdin_retval(args, retval, text, prev_comment, pagemsg, is_find_regex, edit):
+  new, this_comment, has_changed = handle_process_page_retval(retval, text, pagemsg, args.verbose, args.diff)
+  new = new or text
+  if has_changed:
+    assert edit, "Changed text without edit=True given"
+  if edit:
+    if has_changed:
+      # Join previous and this comment. Either may be None, a list of individual notes, an empty string (equivalent to
+      # None), or a non-empty string specifying a single comment.
+      if not prev_comment and not this_comment:
+        comment = None
+      elif not prev_comment:
+        comment = this_comment
+      elif not this_comment:
+        comment = prev_comment
+      else:
+        if type(prev_comment) is not list:
+          prev_comment = [prev_comment]
+        if type(this_comment) is not list:
+          this_comment = [this_comment]
+        comment = prev_comment + this_comment
+      if type(comment) is list:
+        comment = "; ".join(group_notes(comment))
+      pagemsg("Would save with comment = %s" % comment)
+    elif prev_comment:
+      if type(prev_comment) is list:
+        prev_comment = "; ".join(group_notes(prev_comment))
+      pagemsg("Skipped, no changes; previous comment = %s" % prev_comment)
+    elif is_find_regex:
+      pagemsg("Skipped, no changes")
+    if is_find_regex and not args.no_output:
+      final_newline = ""
+      if not new.endswith("\n"):
+        final_newline = "\n"
+      pagemsg("-------- begin text --------\n%s%s-------- end text --------" % (new, final_newline))
+
 # Process a run of pages, with the set of pages specified in various possible ways, e.g. from --pagefile, --cats,
 # --refs, or (if --stdin is given) from a Wiktionary dump or find_regex.py output read from stdin. PROCESS is called
 # to process the page, and has different calling conventions depending on the EDIT, STDIN and INCLUDE_COMMENT flags:
@@ -1165,42 +1201,6 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
   args_filter_pages_not = args.filter_pages_not
 
   seen = set() if args.track_seen else None
-
-  def do_handle_stdin_retval(retval, text, prev_comment, pagemsg, is_find_regex):
-    new, this_comment, has_changed = handle_process_page_retval(retval, text, pagemsg, args.verbose, args.diff)
-    new = new or text
-    if has_changed:
-      assert edit, "Changed text without edit=True given"
-    if edit:
-      if has_changed:
-        # Join previous and this comment. Either may be None, a list of individual notes, an empty string (equivalent to
-        # None), or a non-empty string specifying a single comment.
-        if not prev_comment and not this_comment:
-          comment = None
-        elif not prev_comment:
-          comment = this_comment
-        elif not this_comment:
-          comment = prev_comment
-        else:
-          if type(prev_comment) is not list:
-            prev_comment = [prev_comment]
-          if type(this_comment) is not list:
-            this_comment = [this_comment]
-          comment = prev_comment + this_comment
-        if type(comment) is list:
-          comment = "; ".join(group_notes(comment))
-        pagemsg("Would save with comment = %s" % comment)
-      elif prev_comment:
-        if type(prev_comment) is list:
-          prev_comment = "; ".join(group_notes(prev_comment))
-        pagemsg("Skipped, no changes; previous comment = %s" % prev_comment)
-      elif is_find_regex:
-        pagemsg("Skipped, no changes")
-      if is_find_regex and not args.no_output:
-        final_newline = ""
-        if not new.endswith("\n"):
-          final_newline = "\n"
-        pagemsg("-------- begin text --------\n%s%s-------- end text --------" % (new, final_newline))
 
   def page_should_be_filtered_out(pagetitle, errandpagemsg):
     if filter_pages or args_filter_pages or args_filter_pages_not:
@@ -1302,7 +1302,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
       # We are reading from Wiktionary but asked to output in find_regex format.
       retval = do_process_page(page, index)
       pagetext = safe_page_text(page, errandpagemsg)
-      do_handle_stdin_retval(retval, pagetext, None, pagemsg, is_find_regex=True)
+      do_handle_stdin_retval(args, retval, pagetext, None, pagemsg, is_find_regex=True, edit=edit)
     elif edit:
       do_edit(page, index, do_process_page, save=args.save, verbose=args.verbose,
           diff=args.diff)
@@ -1339,13 +1339,13 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
           msg("Page %s %s: %s" % (index, pagetitle, txt))
         if prev_comment:
           prev_comment = parse_grouped_notes(prev_comment)
-        do_handle_stdin_retval(retval, text, prev_comment, pagemsg, is_find_regex=True)
+        do_handle_stdin_retval(args, retval, text, prev_comment, pagemsg, is_find_regex=True, edit=edit)
     else:
       def do_process_stdin_dump_text_on_page(index, pagetitle, text):
         retval = do_process_stdin_text_on_page(index, pagetitle, text, None)
         def pagemsg(txt):
           msg("Page %s %s: %s" % (index, pagetitle, txt))
-        do_handle_stdin_retval(retval, text, None, pagemsg, is_find_regex=False)
+        do_handle_stdin_retval(args, retval, text, None, pagemsg, is_find_regex=False, edit=edit)
       parse_dump(sys.stdin, do_process_stdin_dump_text_on_page, start, end)
 
   elif args_has_non_default_pages(args):
