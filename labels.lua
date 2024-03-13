@@ -230,7 +230,22 @@ function export.get_label_info(data)
 		submodule = mw.loadData(submodule_to_check)
 		labdata = submodule[label]
 		if labdata then
-			break
+			-- Make sure either there's no lang restriction, or we're processing lang-independent, or our language
+			-- is among the listed languages. Otherwise, continue processing (which could conceivably pick up a
+			-- lang-appropriate version of the label in another label data module).
+			if not labdata.langs or not data.lang then
+				break
+			end
+			local lang_in_list = false
+			for _, langcode in ipairs(labdata.langs) do
+				if langcode == data.lang:getCode() then
+					lang_in_list = true
+					break
+				end
+			end
+			if lang_in_list then
+				break
+			end
 		end
 	end
 	labdata = labdata or {}
