@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, argparse
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import blib
 from blib import getparam, rmparam, set_template_name, msg, errandmsg, site, tname
@@ -10,18 +10,30 @@ from blib import getparam, rmparam, set_template_name, msg, errandmsg, site, tna
 blib.getLanguageData()
 
 @dataclass
-class MiscProperties:
-  Wikipedia: str
-  Wikipedia_comment: str
-  Wiktionary: str
-  Wiktionary_comment: str
-  display: str
-  display_comment: str
-  glossary: str
-  glossary_comment: str
+class StrProperties:
+  Wikipedia: str = None
+  Wikipedia_comment: str = None
+  Wiktionary: str = None
+  Wiktionary_comment: str = None
+  display: str = None
+  display_comment: str = None
+  special_display: str = None
+  special_display_comment: str = None
+  glossary: str = None
+  glossary_comment: str = None
 
-def make_empty_misc_properties():
-  return MiscProperties(None, None, None, None, None, None, None, None)
+@dataclass
+class BoolProperties:
+  track: bool = None
+  omit_preComma: bool = None
+  omit_postComma: bool = None
+
+@dataclass
+class CategorySpec:
+  # List of "categories"; also used for aliases. Actual categories are either the string "true" or a category with
+  # double quotes around the category; aliases do not include the double quotes.
+  cats: list = field(default_factory=list)
+  comment: str = ""
 
 @dataclass
 class LabelData:
@@ -29,13 +41,16 @@ class LabelData:
   first_label_line: str
   label_lines: list
   last_label_line: str
-  topical_categories: list
-  sense_categories: list
-  pos_categories: list
-  regional_categories: list
-  plain_categories: list
-  misc_properties: MiscProperties
-  aliases: list
+  topical_categories: CategorySpec
+  sense_categories: CategorySpec
+  pos_categories: CategorySpec
+  regional_categories: CategorySpec
+  plain_categories: CategorySpec
+  str_properties: StrProperties
+  bool_properties: BoolProperties
+  aliases: CategorySpec = field(default_factory=CategorySpec)
+  deprecated_aliases: CategorySpec = field(default_factory=CategorySpec)
+  langs: list = None
 
 @dataclass
 class ProcessForLabelObjectsRetval:
@@ -54,6 +69,15 @@ def lcfirst(txt):
     return txt
   return txt[0].lower() + txt[1:]
 
+def combine_comments(a, b):
+  if a is None and b is None:
+    return None
+  if a is None:
+    return b
+  if b is None:
+    return a
+  return "%s, %s" % (a, re.sub("^ *-- *", "", b))
+
 def process_text_on_page_for_label_objects(index, pagename, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagename, txt))
@@ -62,6 +86,7 @@ def process_text_on_page_for_label_objects(index, pagename, text):
 
   notes = []
 
+  langcode = None
   langname = None
   m = re.search("^Module:labels/data/lang/(.*)$", pagename)
   if not m:
@@ -80,13 +105,15 @@ def process_text_on_page_for_label_objects(index, pagename, text):
   first_label_line = None
   label_lines = []
   label = False
-  topical_categories = []
-  sense_categories = []
-  pos_categories = []
-  regional_categories = []
-  plain_categories = []
-  misc_properties = make_empty_misc_properties()
-  existing_aliases = []
+  topical_categories = CategorySpec()
+  sense_categories = CategorySpec()
+  pos_categories = CategorySpec()
+  regional_categories = CategorySpec()
+  plain_categories = CategorySpec()
+  str_properties = StrProperties()
+  bool_properties = BoolProperties()
+  aliases = CategorySpec()
+  deprecated_aliases = CategorySpec()
 
   either_quote_string_re = '(".*?"|' + "'.*?')"
   true_or_either_quote_string_re = '(true|".*?"|' + "'.*?')"
@@ -103,23 +130,25 @@ def process_text_on_page_for_label_objects(index, pagename, text):
       if m:
         # an alias
         alias, canon = m.groups()
+        alias = alias[1:-1] # discard quotes
         canon = canon[1:-1] # discard quotes
         if canon not in indexed_labels:
           linemsg("WARNING: Unable to locate canonical label '%s' for aliases: %s" % (canon, line))
           label_lines.append(line)
           continue
-        labels_seen[indexed_labels[canon]].aliases.append(alias)
+        labels_seen[indexed_labels[canon]].aliases.cats.append(alias)
         continue
       if label_lines:
         labels_seen.append(label_lines)
         label_lines = []
-      topical_categories = []
-      sense_categories = []
-      pos_categories = []
-      regional_categories = []
-      plain_categories = []
-      existing_aliases = []
-      misc_properties = make_empty_misc_properties()
+      topical_categories = CategorySpec()
+      sense_categories = CategorySpec()
+      pos_categories = CategorySpec()
+      regional_categories = CategorySpec()
+      plain_categories = CategorySpec()
+      aliases = CategorySpec()
+      str_properties = StrProperties()
+      bool_properties = BoolProperties()
       m = re.search(r"^labels *\[%s\] = \{$" % (either_quote_string_re), line.rstrip())
       if not m:
         linemsg("WARNING: Unable to parse labels start line: %s" % line)
@@ -142,8 +171,8 @@ def process_text_on_page_for_label_objects(index, pagename, text):
           label_lines[-1] += ","
 
       labels_seen.append(LabelData(label, first_label_line, label_lines, line, topical_categories, sense_categories,
-                                   pos_categories, regional_categories, plain_categories, misc_properties,
-                                   existing_aliases))
+                                   pos_categories, regional_categories, plain_categories, str_properties,
+                                   bool_properties, aliases, deprecated_aliases))
       indexed_labels[label] = len(labels_seen) - 1
       label = False
       label_lines = []
@@ -185,75 +214,98 @@ def process_text_on_page_for_label_objects(index, pagename, text):
         else:
           return [inside[1:-1]]
 
-      def process_cats(prefix, lst, process_one_cat):
-        m = re.search("^%s = (.*)$" % prefix, line)
+      def process_cats(prefix, spec, process_one_cat):
+        m = re.search("^%s *= *(.*?),?( *--.*)?$" % prefix, line)
         if m:
+          spec.comment = combine_comments(spec.comment, m.group(2))
           cats = extract_categories(m.group(1).strip())
           if cats is None:
             label_lines.append(origline)
           else:
             for cat in cats:
               if cat is True:
-                lst.append("true")
+                spec.cats.append("true")
               elif not process_one_cat(cat):
-                lst.append('"%s"' % cat)
+                spec.cats.append('"%s"' % cat)
           return True
         return False
 
       def process_aliases(cat):
-        return
+        aliases.cats.append(cat)
+        return True
+      def process_deprecated_aliases(cat):
+        deprecated_aliases.cats.append(cat)
+        return True
       def process_topical(cat):
         if cat == label or cat == ucfirst(label):
-          topical_categories.append("true")
+          topical_categories.cats.append("true")
           return True
       def process_sense(cat):
         if cat == label:
-          sense_categories.append("true")
+          sense_categories.cats.append("true")
           return True
       def process_pos(cat):
         if cat == label:
-          pos_categories.append("true")
+          pos_categories.cats.append("true")
           return True
       def process_regional(cat):
         if cat == label or cat == ucfirst(label):
-          regional_categories.append("true")
+          regional_categories.cats.append("true")
           return True
       def process_plain(cat):
         if cat == label or cat == ucfirst(label):
-          plain_categories.append("true")
+          plain_categories.cats.append("true")
           return True
         elif langname and cat.endswith(" " + langname):
           regcat = cat[:-(len(langname) + 1)] # +1 for preceding space
           if regcat == label or regcat == ucfirst(label):
-            regional_categories.append("true")
+            regional_categories.cats.append("true")
           else:
-            regional_categories.append('"%s"' % regcat)
+            regional_categories.cats.append('"%s"' % regcat)
           return True
-      if (not process_cats("aliases", existing_aliases, process_aliases)
+      if (not process_cats("aliases", aliases, process_aliases)
+          and not process_cats("deprecated_aliases", deprecated_aliases, process_deprecated_aliases)
           and not process_cats("topical_categories", topical_categories, process_topical)
           and not process_cats("sense_categories", sense_categories, process_sense)
           and not process_cats("pos_categories", pos_categories, process_pos)
           and not process_cats("regional_categories", regional_categories, process_regional)
           and not process_cats("plain_categories", plain_categories, process_plain)
       ):
-        def process_misc_property(propname):
+        def process_str_property(propname):
           m = re.search("^%s *= *%s,?( *--.*)?$" % (propname, true_or_either_quote_string_re), line)
           if m:
             propval = m.group(1)
-            if propval != "true":
-              propval = '"%s"' % propval[1:-1] # canonicalize quotes
+            if propval == "true":
+              propval = label
+            else:
+              propval = propval[1:-1] # remove existing quotes
+            propval = '"%s"' % propval # canonicalize quotes
             propval_comment = m.group(2)
-            if getattr(misc_properties, propname) is not None:
+            if getattr(str_properties, propname) is not None:
               pagemsg("WARNING: Saw %s = %s twice" % (propname, propval))
             else:
-              setattr(misc_properties, propname, propval)
-              setattr(misc_properties, propname + "_comment", propval_comment)
+              setattr(str_properties, propname, propval)
+              setattr(str_properties, propname + "_comment", propval_comment)
               return True
           return False
-        if (not process_misc_property("display")
-            and not process_misc_property("Wikipedia")
-            and not process_misc_property("glossary")
-            and not process_misc_property("Wiktionary")
+        def process_bool_property(propname):
+          m = re.search("^%s *= true,?$" % propname, line)
+          if m:
+            if getattr(bool_properties, propname) is not None:
+              pagemsg("WARNING: Saw %s = true twice" % propname)
+            else:
+              setattr(str_properties, propname, True)
+              return True
+          return False
+
+        if (not process_str_property("display")
+            and not process_str_property("special_display")
+            and not process_str_property("Wikipedia")
+            and not process_str_property("glossary")
+            and not process_str_property("Wiktionary")
+            and not process_bool_property("track")
+            and not process_bool_property("omit_preComma")
+            and not process_bool_property("omit_postComma")
         ):
           pagemsg("WARNING: Couldn't process label '%s' line: %s" % (label, line))
           label_lines.append(origline)
@@ -272,7 +324,9 @@ def process_text_on_page_for_label_objects(index, pagename, text):
         continue
       saw_old_style_alias = True
       aliases = re.split(", *", aliases)
-      labels_seen[indexed_labels[canon]].aliases.extend(aliases)
+      for alias in aliases:
+        alias = alias[1:-1] # discard quotes
+        labels_seen[indexed_labels[canon]].aliases.cats.append(alias)
 
     elif line.startswith("local function alias("):
       pass
@@ -288,14 +342,73 @@ def process_text_on_page_for_label_objects(index, pagename, text):
 
   return ProcessForLabelObjectsRetval(labels_seen, langcode, langname, saw_old_style_alias)
 
-def combine_comments(a, b):
-  if a is None and b is None:
-    return None
-  if a is None:
-    return b
-  if b is None:
-    return a
-  return "%s, %s" % (a, re.sub("^ *-- *", "", b))
+def output_labels(labels_seen):
+  new_lines = []
+  for labelobj in labels_seen:
+    if isinstance(labelobj, LabelData):
+      new_lines.append(labelobj.first_label_line)
+      if labelobj.aliases.cats:
+        new_lines.append("\taliases = {%s},%s" % (", ".join('"%s"' % alias for alias in labelobj.aliases.cats),
+                         labelobj.aliases.comment or ""))
+      if labelobj.langs:
+        new_lines.append("\tlangs = {%s}," % ", ".join('"%s"' % lang for lang in labelobj.langs))
+      def output_str_property(propname, default_to_true=False):
+        propval = getattr(labelobj.str_properties, propname)
+        propval_comment = getattr(labelobj.str_properties, propname + "_comment")
+        if propval is None and propval_comment is not None:
+          errandpagemsg("WARNING: Internal error: Saw %s=None but %s_comment=%s" % (
+            propname, propname, propval_comment))
+          return
+        if propval is not None:
+          if default_to_true and propval == '"%s"' % labelobj.label:
+            propval = "true"
+          new_lines.append("\t%s = %s,%s" % (propname, propval, propval_comment or ""))
+      def output_bool_property(propname):
+        propval = getattr(labelobj.bool_properties, propname)
+        if propval is not None:
+          new_lines.append("\t%s = true," % propname)
+      output_str_property("display")
+      output_str_property("special_display")
+      output_str_property("Wikipedia", default_to_true=True)
+      output_str_property("glossary", default_to_true=True)
+      output_str_property("Wiktionary")
+      output_bool_property("track")
+      output_bool_property("omit_preComma")
+      output_bool_property("omit_postComma")
+      new_lines.extend(labelobj.label_lines)
+      def output_cats(spec, prefix):
+        cats = spec.cats
+        if len(cats) == 0:
+          return
+        if len(cats) == 1:
+          new_lines.append("\t%s = %s,%s" % (prefix, cats[0], spec.comment or ""))
+        else:
+          new_lines.append("\t%s = {%s},%s" % (prefix, ", ".join(cats), spec.comment or ""))
+      output_cats(labelobj.topical_categories, "topical_categories")
+      output_cats(labelobj.sense_categories, "sense_categories")
+      output_cats(labelobj.pos_categories, "pos_categories")
+      output_cats(labelobj.regional_categories, "regional_categories")
+      output_cats(labelobj.plain_categories, "plain_categories")
+      new_lines.append(labelobj.last_label_line)
+    else:
+      new_lines.extend(labelobj)
+  return new_lines
+
+def extract_extra_lines_at_end(labels_seen):
+  # Extract off any literal lines at the end (including the call to finalize_labels()). Any additions need to go
+  # before these final lines.
+  earliest_extra_lines_at_end = len(labels_seen)
+  for i in range(len(labels_seen) - 1, -1, -1):
+    if not isinstance(labels_seen[i], LabelData):
+      earliest_extra_lines_at_end = i
+    else:
+      break
+  if earliest_extra_lines_at_end < len(labels_seen):
+    extra_lines_at_end = labels_seen[earliest_extra_lines_at_end:]
+    del labels_seen[earliest_extra_lines_at_end:]
+  else:
+    extra_lines_at_end = []
+  return extra_lines_at_end
 
 def process_text_on_page(index, pagename, text):
   def pagemsg(txt):
@@ -303,27 +416,15 @@ def process_text_on_page(index, pagename, text):
   def errandpagemsg(txt):
     errandmsg("Page %s %s: %s" % (index, pagename, txt))
 
-  new_lines = []
   retval = process_text_on_page_for_label_objects(index, pagename, text)
   if retval is None:
     return
 
-  # Extract off any literal lines at the end (including the call to finalize_labels()). Any additions need to go
-  # before these final lines.
-  earliest_extra_lines_at_end = len(retval.labels_seen)
-  for i in range(len(retval.labels_seen) - 1, -1, -1):
-    if not isinstance(retval.labels_seen[i], LabelData):
-      earliest_extra_lines_at_end = i
-    else:
-      break
-  if earliest_extra_lines_at_end < len(retval.labels_seen):
-    extra_lines_at_end = retval.labels_seen[earliest_extra_lines_at_end:]
-    del retval.labels_seen[earliest_extra_lines_at_end:]
-  else:
-    extra_lines_at_end = []
+  extra_lines_at_end = extract_extra_lines_at_end(retval.labels_seen)
 
   alt_data = None
   num_alt_labels = 0
+  num_new_alt_labels = 0
   labelobjs_by_label = {}
   for labelobj in retval.labels_seen:
     if isinstance(labelobj, LabelData):
@@ -354,6 +455,7 @@ def process_text_on_page(index, pagename, text):
                 "Saw capitalized {{alt}} label '%s' and corresponding lowercase {{lb}} label '%s', retaining latter" % (
                   labelobj.label, existing.label))
           if existing is None:
+            num_new_alt_labels += 1
             pagemsg("Didn't see {{alt}} label '%s', appending" % labelobj.label)
             if lines_before_label:
               retval.labels_seen.append(lines_before_label)
@@ -361,13 +463,14 @@ def process_text_on_page(index, pagename, text):
               retval.labels_seen.append([""])
             retval.labels_seen.append(labelobj)
           else:
-            if labelobj.aliases:
-              for alias in labelobj.aliases:
-                if alias not in existing.aliases:
-                  existing.aliases.append(alias)
+            if labelobj.aliases.cats:
+              for alias in labelobj.aliases.cats:
+                if alias not in existing.aliases.cats:
+                  existing.aliases.cats.append(alias)
+              existing.aliases.comment = combine_comments(existing.aliases.comment, labelobj.aliases.comment)
             def check_and_combine_fields(field):
-              existing_props = existing.misc_properties
-              labelobj_props = labelobj.misc_properties
+              existing_props = existing.str_properties
+              labelobj_props = labelobj.str_properties
               existing_comment = getattr(existing_props, field + "_comment")
               labelobj_comment = getattr(labelobj_props, field + "_comment")
               if getattr(labelobj_props, field):
@@ -401,41 +504,7 @@ def process_text_on_page(index, pagename, text):
 
   retval.labels_seen.extend(extra_lines_at_end)
 
-  for labelobj in retval.labels_seen:
-    if isinstance(labelobj, LabelData):
-      new_lines.append(labelobj.first_label_line)
-      if labelobj.aliases:
-        new_lines.append("\taliases = {%s}," % ", ".join(labelobj.aliases))
-      def output_misc_property(propname):
-        propval = getattr(labelobj.misc_properties, propname)
-        propval_comment = getattr(labelobj.misc_properties, propname + "_comment")
-        if propval is None and propval_comment is not None:
-          errandpagemsg("WARNING: Internal error: Saw %s=None but %s_comment=%s" % (
-            propname, propname, propval_comment))
-          return
-        if propval is not None:
-          new_lines.append("\t%s = %s,%s" % (propname, propval, propval_comment or ""))
-      output_misc_property("display")
-      output_misc_property("Wikipedia")
-      output_misc_property("glossary")
-      output_misc_property("Wiktionary")
-      new_lines.extend(labelobj.label_lines)
-      def output_cats(cats, prefix):
-        if len(cats) == 0:
-          return
-        if len(cats) == 1:
-          new_lines.append("\t%s = %s," % (prefix, cats[0]))
-        else:
-          new_lines.append("\t%s = {%s}," % (prefix, ", ".join(cats)))
-      output_cats(labelobj.topical_categories, "topical_categories")
-      output_cats(labelobj.sense_categories, "sense_categories")
-      output_cats(labelobj.pos_categories, "pos_categories")
-      output_cats(labelobj.regional_categories, "regional_categories")
-      output_cats(labelobj.plain_categories, "plain_categories")
-      new_lines.append(labelobj.last_label_line)
-    else:
-      new_lines.extend(labelobj)
-
+  new_lines = output_labels(retval.labels_seen)
   text = "\n".join(new_lines)
   text = text.replace("\n\n\n", "\n\n")
   text = re.sub("^    ", "\t", text, 0, re.M)
@@ -444,38 +513,39 @@ def process_text_on_page(index, pagename, text):
   if retval.saw_old_style_alias:
     notes.append("move old-style alias specs to `aliases =`")
   if num_alt_labels > 0:
-    notes.append("incorporate %s {{alt}} label(s) from [[Module:%s:dialects]] into label data module" % (
-      num_alt_labels, retval.langcode))
+    notes.append("incorporate %s {{alt}} label(s) (%s new) from [[Module:%s:dialects]] into label data module" % (
+      num_alt_labels, num_new_alt_labels, retval.langcode))
   return text, notes
 
-parser = blib.create_argparser("Clean label modules", include_pagefile=True, include_stdin=True)
-parser.add_argument("--alt-data-modules", help="{{alt}} data modules to merge")
-args = parser.parse_args()
-start, end = blib.parse_start_end(args.start, args.end)
+if __name__ == "__main__":
+  parser = blib.create_argparser("Clean label modules", include_pagefile=True, include_stdin=True)
+  parser.add_argument("--alt-data-modules", help="{{alt}} data modules to merge")
+  args = parser.parse_args()
+  start, end = blib.parse_start_end(args.start, args.end)
 
-alt_data_modules = {}
-if args.alt_data_modules:
-  for index, module_name, modtext, comments in blib.yield_text_from_find_regex(
-      open(args.alt_data_modules, "r", encoding="utf-8"), args.verbose):
-    def pagemsg(txt):
-      msg("Page %s %s: %s" % (index, module_name, txt))
-    def errandpagemsg(txt):
-      errandmsg("Page %s %s: %s" % (index, module_name, txt))
-    if comments:
-      pagemsg("Skipping comments: %s" % comments)
-    langname = None
-    m = re.search("^Module:(.*):Dialects$", module_name)
-    if m:
-      code = m.group(1)
-      if code not in blib.languages_byCode:
-        errandpagemsg("WARNING: Can't locate language %s, skipping entire file" % code)
+  alt_data_modules = {}
+  if args.alt_data_modules:
+    for index, module_name, modtext, comments in blib.yield_text_from_find_regex(
+        open(args.alt_data_modules, "r", encoding="utf-8"), args.verbose):
+      def pagemsg(txt):
+        msg("Page %s %s: %s" % (index, module_name, txt))
+      def errandpagemsg(txt):
+        errandmsg("Page %s %s: %s" % (index, module_name, txt))
+      if comments:
+        pagemsg("Skipping comments: %s" % comments)
+      langname = None
+      m = re.search("^Module:(.*):Dialects$", module_name)
+      if m:
+        code = m.group(1)
+        if code not in blib.languages_byCode:
+          errandpagemsg("WARNING: Can't locate language %s, skipping entire file" % code)
+          continue
+      else:
+        errandpagemsg("WARNING: Can't parse module file for language code, skipping entire file")
         continue
-    else:
-      errandpagemsg("WARNING: Can't parse module file for language code, skipping entire file")
-      continue
-    if code in alt_data_modules:
-      errandpagemsg("WARNING: Saw code '%s' twice, skipping second instance" % code)
-      continue
-    alt_data_modules[code] = process_text_on_page_for_label_objects(index, module_name, modtext)
+      if code in alt_data_modules:
+        errandpagemsg("WARNING: Saw code '%s' twice, skipping second instance" % code)
+        continue
+      alt_data_modules[code] = process_text_on_page_for_label_objects(index, module_name, modtext)
 
-blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)
+  blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)
