@@ -30,6 +30,7 @@ def process_text_on_page(index, pagename, text):
       in_translation_section = True
       opening_trans_line = line
       prev_lang = ""
+      prev_indented_lang = ""
       translation_lines = []
       new_lines.append(line)
     elif line.startswith("{{trans-bottom"):
@@ -37,20 +38,21 @@ def process_text_on_page(index, pagename, text):
         pagemsg("WARNING: Found {{trans-bottom}} not in a translation section")
       else:
         if not opening_trans_line.startswith("{{checktrans"):
-          translation_lines = [(normalize_lang(lang), lineind, line) for lang, lineind, line in translation_lines]
+          translation_lines = [(normalize_lang(lang), normalize_lang(indented_lang), lineind, line)
+                               for lang, indented_lang, lineind, line in translation_lines]
           new_translation_lines = sorted(translation_lines)
           if translation_lines != new_translation_lines:
             translation_lines = new_translation_lines
             notes.append("sort translation lines")
-        for lang, lineind, transline in translation_lines:
+        for lang, indented_lang, lineind, transline in translation_lines:
           new_lines.append(transline)
       new_lines.append(line)
       in_translation_section = False
     elif in_translation_section:
       if line.startswith("{{multitrans|"):
-        translation_lines.append(("", lineind, line))
+        translation_lines.append(("", "", lineind, line))
       elif line.startswith("}}") or line.startswith("<!-- close multitrans") or line.startswith("<!-- close {{multitrans"):
-        translation_lines.append(("\U0010FFFF", lineind, line))
+        translation_lines.append(("\U0010FFFF", "", lineind, line))
       else:
         newline = line.replace("\u00A0", " ")
         if newline != line:
@@ -106,7 +108,7 @@ def process_text_on_page(index, pagename, text):
               notes.append("replace non-canonical indented language %s with %s" % (indented_lang, new_indented_lang))
               indented_lang = new_indented_lang
             line = "* %s%s" % (indented_lang, rest)
-            translation_lines.append((indented_lang, lineind, line))
+            translation_lines.append((indented_lang, "", lineind, line))
             notes.append("unindent translation for %s under %s" % (indented_lang, prev_lang))
           else:
             if prev_lang in ["Indonesian", "Javanese", "Malay", "Sundanese"]:
@@ -123,16 +125,47 @@ def process_text_on_page(index, pagename, text):
                 line = "%s%s%s" % (init_star, indented_lang, rest)
               if indented_lang not in ["Carakan", "Jawi", "Rumi"]:
                 pagemsg("WARNING: Found unhandled indented language %s under %s: %s" % (indented_lang, prev_lang, line))
-            translation_lines.append((prev_lang, lineind, line))
+            if prev_lang in ["Chinese"]:
+              renamed_lang_map = {
+                "Min Bei": "Northern Min",
+                "Min Dong": "Eastern Min",
+                "Min Zhong": "Central Min",
+                "Puxian": "Puxian Min",
+              }
+              new_indented_lang = renamed_lang_map.get(indented_lang, indented_lang)
+              if new_indented_lang != indented_lang:
+                pagemsg("Replacing renamed Chinese variety %s with %s" % (indented_lang, new_indented_lang))
+                notes.append("replace renamed Chinese variety %s with %s" % (indented_lang, new_indented_lang))
+                indented_lang = new_indented_lang
+                line = "%s%s%s" % (init_star, indented_lang, rest)
+              if indented_lang == "Min Nan":
+                pagemsg("Replacing 'Min Nan' translation with Hokkien and changing code nan -> nan-hbl")
+                notes.append("replace 'Min Nan' translation with Hokkien and change code nan -> nan-hbl")
+                indented_lang = "Hokkien"
+                parsed = blib.parse_text(rest)
+                changed = False
+                for t in parsed.filter_templates():
+                  tn = tname(t)
+                  if tn in blib.translation_templates:
+                    langcode = getparam(t, "1").strip()
+                    if langcode == "nan":
+                      t.add("1", "nan-hbl")
+                      changed = True
+                if changed:
+                  rest = str(parsed)
+                line = "%s%s%s" % (init_star, indented_lang, rest)
+            prev_indented_lang = indented_lang
+            translation_lines.append((prev_lang, prev_indented_lang, lineind, line))
         else:
           m = re.search(r"^\* *(%s):(.*)$" % langname_regex, line)
           if not m:
             pagemsg("WARNING: Unrecognized line in translation section: %s" % line)
-            translation_lines.append((prev_lang, lineind, line))
+            translation_lines.append((prev_lang, prev_indented_lang, lineind, line))
           else:
             lang, rest = m.groups()
             prev_lang = lang
-            translation_lines.append((lang, lineind, line))
+            prev_indented_lang = ""
+            translation_lines.append((lang, "", lineind, line))
     else:
       new_lines.append(line)
 
@@ -147,7 +180,7 @@ def process_text_on_page(index, pagename, text):
     pagemsg("WARNING: Adding default changelog 'sort translation lines'")
   return text, notes
 
-parser = blib.create_argparser("Sort translations, unindent translations under Malayic and correct misc translation table issues",
+parser = blib.create_argparser("Sort translations, unindent translations under Malayic, rename Min Chinese varieties and correct misc translation table issues",
                                include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
