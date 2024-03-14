@@ -15,7 +15,7 @@ def process_page(page, index):
   parsed = blib.parse(page)
   for t in parsed.filter_templates():
     tn = tname(t)
-    if tn in ["t", "t+", "t-", "t+check", "t-check", "tt", "tt+"]:
+    if tn in blib.translation_templates:
       trans = blib.remove_links(getparam(t, "2"))
       if trans and trans not in seen_trans:
         seen_trans.append(trans)

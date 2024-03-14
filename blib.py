@@ -123,6 +123,10 @@ lemma_poses = [
 re_escaped_lemma_poses = [re.escape(k) for k in lemma_poses]
 pos_regex = "==(%s)==" % "|".join(re_escaped_lemma_poses)
 
+# Don't include t-simple here because it also has a langname= param that may need changing. (In any case, t-simple
+# has been deleted.)
+translation_templates = ["t", "t+", "tt", "tt+", "t-", "t+check", "tt+check", "t-check", "t-needed"]
+
 def remove_links(text):
   # eliminate [[FOO| in [[FOO|BAR]], and then remaining [[ and ]]
   text = re.sub(r"\[\[[^\[\]|]*\|", "", text)
@@ -2300,7 +2304,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
           else:
             doparam("1", ("separate", str(i * 2 + 2), "f%str" % i))
       # Look for {{t|LANG|<PAGENAME>|alt=<FOREIGNTEXT>}}
-      elif tn in ["t", "t+", "tt", "tt+", "t-", "t+check", "tt+check", "t-check"]:
+      elif tn in translation_templates:
         doparam_checking_alt("1", "2", "alt", "tr")
       # Look for {{suffix|LANG|<PAGENAME>|alt1=<FOREIGNTEXT>|<PAGENAME>|alt2=...}}
       # or  {{suffix|LANG|<FOREIGNTEXT>|<FOREIGNTEXT>|...}}
@@ -2535,7 +2539,7 @@ def process_one_page_links(index, pagetitle, text, langs, process_param,
 #for cattype in cattypes:
 #  if cattype in ["translation", "links"]:
 #    if cattype == "translation":
-#      templates = ["t", "t+", "t-", "t+check", "t-check"]
+#      templates = translation_templates
 #    else:
 #      templates = ["l", "m", "term", "link", "mention"]
 #    for template in templates:

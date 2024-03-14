@@ -6,7 +6,7 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site, tname
 
-trans_templates = ["t", "t+", "t-", "tt", "tt+", "t-check", "t+check", "t-needed", "t-simple"]
+trans_templates = blib.translation_templates + ["t-simple"]
 
 arabic_charset = "؀-ۿݐ-ݿࢠ-ࣿﭐ-﷽ﹰ-ﻼ"
 

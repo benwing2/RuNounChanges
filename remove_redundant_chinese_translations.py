@@ -8,7 +8,7 @@ from blib import getparam, rmparam, tname, pname, msg, site
 
 blib.getData()
 
-translation_templates = ["t", "t+", "tt", "tt+", "t-needed", "t-check", "t+check"]
+translation_templates = blib.translation_templates
 
 lects_to_remove_redundant_translations = {
   "cdo",

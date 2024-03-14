@@ -13,7 +13,7 @@ central_kurdish_lemmas = set()
 for i, art in blib.cat_articles("Central Kurdish lemmas"):
   central_kurdish_lemmas.add(str(art.title()))
 
-trans_templates = ["t", "t+", "t-", "tt", "tt+", "t-check", "t+check", "t-needed"]
+trans_templates = blib.translation_templates
 
 arabic_charset = "؀-ۿݐ-ݿࢠ-ࣿﭐ-﷽ﹰ-ﻼ"
 

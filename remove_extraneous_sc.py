@@ -8,7 +8,9 @@ from blib import getparam, rmparam, msg, site, tname, pname
 
 templates_with_sc = {
   "t": ["alt", "2"],
+  "tt": ["alt", "2"],
   "t+": ["alt", "2"],
+  "tt+": ["alt", "2"],
   "t-": ["alt", "2"],
   "t+check": ["alt", "2"],
   "t-check": ["alt", "2"],

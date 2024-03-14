@@ -248,8 +248,7 @@ def remove_translit(params, startFrom, upTo):
         # because there may be holes.
         for i in range(1, 11):
           doparam("tr" + str(i))
-      if (#tname in ["t", "t+", "t-", "t+check", "t-check", "l", "m",
-          #"link", "mention", "head", "ux"] and
+      if (#(tname in blib.translation_templates or tname in ["l", "m", "link", "mention", "head", "ux"]) and
           getp("1") in remove_tr_langs):
         if tname == "head" and not params.do_head:
           pagemsg("Not removing tr= from {{head|...}}: %s" % str(t))
