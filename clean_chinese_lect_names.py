@@ -33,7 +33,7 @@ def process_text_on_page(index, pagetitle, text):
     origt = str(t)
     def getp(param):
       return getparam(t, param)
-    if tn in ["lb", "lbl", "label", "tlb", "term-label"] and getp("1") == "zh":
+    if tn in blib.label_templates and getp("1") == "zh":
       for i in range(2, 30):
         label = getp(str(i))
         newlabel = lect_mappings.get(label, label)
@@ -44,7 +44,7 @@ def process_text_on_page(index, pagetitle, text):
         if newlabel != label:
           t.add(str(i), newlabel)
           notes.append("rename Chinese lect '%s' to '%s' in {{%s}}" % (label, newlabel, tn))
-    if tn in ["q", "qual", "qualifier", "i", "qf", "q-lite"]:
+    if tn in blib.qualifier_templates:
       for i in range(1, 30):
         qual = getp(str(i))
         newqual = lect_mappings.get(qual, qual)
