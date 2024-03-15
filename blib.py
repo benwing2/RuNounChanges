@@ -126,6 +126,8 @@ pos_regex = "==(%s)==" % "|".join(re_escaped_lemma_poses)
 # Don't include t-simple here because it also has a langname= param that may need changing. (In any case, t-simple
 # has been deleted.)
 translation_templates = ["t", "t+", "tt", "tt+", "t-", "t+check", "tt+check", "t-check", "t-needed"]
+label_templates = ["lb", "lbl", "label", "tlb", "term-label"]
+qualifier_templates = ["q", "qual", "qualifier", "i", "qf", "q-lite"]
 
 def remove_links(text):
   # eliminate [[FOO| in [[FOO|BAR]], and then remaining [[ and ]]
