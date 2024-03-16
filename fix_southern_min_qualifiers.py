@@ -215,7 +215,7 @@ def process_text_on_page(index, pagetitle, text):
                   linkpage = linkpage[1:]
                 if "/" in linkpage:
                   linkpage = re.sub("/.*", "", linkpage)
-                all_linkpages.append(linkpage)
+                all_linkpages.append((linkpage, linkgloss))
                 min_types = find_southern_min_types(index, pagetitle, zh_l_t, linkpage, linkgloss)
                 if type(min_types) is str:
                   min_warnings.append(min_types)
@@ -224,13 +224,15 @@ def process_text_on_page(index, pagetitle, text):
                   for min_type in min_types:
                     if min_type not in all_min_types:
                       all_min_types.append(min_type)
+              all_linkpage_txt = ",".join(
+                "[[%s]]:%s" % (page, gloss) if gloss else "[[%s]]" % page for page, gloss in all_linkpages)
               if not all_min_types:
                 pagemsg("WARNING: Couldn't locate any Southern Min types among link page(s) %s (reason(s): %s): %s" % (
-                  ",".join(all_linkpages), "; ".join(min_warnings), line))
+                  all_linkpage_txt, "; ".join(min_warnings), line))
               else:
                 if min_warnings:
                   pagemsg("WARNING (may be ignorable): Was able to locate Southern Min type(s) %s among link page(s) %s, but with some warnings (%s): %s" % (
-                    ", ".join(all_min_types), ",".join(all_linkpages), "; ".join(min_warnings), line))
+                    ", ".join(all_min_types), all_linkpage_txt, "; ".join(min_warnings), line))
                 qualifier_vals = blib.fetch_param_chain(q_t, "1")
                 frobbed_qualifier_vals = []
                 saw_min_nan = False
@@ -248,8 +250,7 @@ def process_text_on_page(index, pagetitle, text):
                   if saw_min_nan:
                     blib.set_param_chain(q_t, frobbed_qualifier_vals, "1")
                     note = ("qualifier '%s' with '%s' in Synonyms/Antonyms section by examining associated term(s) %s" %
-                            (saw_min_nan, "|".join(all_min_types),
-                             ",".join("[[%s]]" % term for term in all_linkpages)))
+                            (saw_min_nan, "|".join(all_min_types), all_linkpage_txt))
                     pagemsg("Replacing %s: %s" % (note, line))
                     notes.append("replace %s" % note)
                     line_part = str(parsed)
