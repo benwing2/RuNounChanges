@@ -701,7 +701,9 @@ def yield_articles(page, seen, startprefix=None, prune_cats_regex=None, recurse=
 
 def raw_cat_articles(page, seen, startprefix=None, prune_cats_regex=None, recurse=False):
   if isinstance(page, str):
-    page = pywikibot.Category(site, "Category:" + page)
+    if not page.startswith("Category:"):
+      page = "Category:" + page
+    page = pywikibot.Category(site, page)
   for article in yield_articles(page, seen, startprefix=startprefix, prune_cats_regex=prune_cats_regex, recurse=recurse):
     yield article
 
@@ -744,7 +746,9 @@ def cat_subcats(page, startprefix=None, endprefix=None, seen=None, prune_cats_re
   if seen is None:
     seen = set()
   if isinstance(page, str):
-    page = pywikibot.Category(site, "Category:" + page)
+    if not page.startswith("Category:"):
+      page = "Category:" + page
+    page = pywikibot.Category(site, page)
   pageiter = yield_subcats(page, seen, prune_cats_regex=prune_cats_regex, do_this_page=do_this_page, recurse=recurse)
   # Recursive support is built into page.subcategories() but it isn't smart enough to skip pages
   # already seen, which can lead to infinite loops, e.g. ku:All topics -> ku:List of topics -> ku:All topics.
@@ -1042,6 +1046,7 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--pages", help="List of pages to process, comma-separated.")
     parser.add_argument("--pages-from-find-regex", help="Read pages to process (and their indices) from previous find_regex.py output.")
     parser.add_argument("--pages-from-previous-output", help="Read pages to process (and their indices) from previous output of the form 'Page ### PAGENAME: '.")
+    parser.add_argument("--category-file", help="File listing categories to process.")
     parser.add_argument("--cats", help="List of categories to process, comma-separated.")
     parser.add_argument("--do-subcats", action="store_true",
       help="When processing categories, do subcategories instead of pages belong to the category.")
@@ -1108,7 +1113,7 @@ def parse_start_end(startprefix, endprefix):
 
 def args_has_non_default_pages(args):
   return not not (args.pages or args.pagefile or args.pages_from_find_regex or args.pages_from_previous_output
-      or args.cats or args.refs or args.specials or args.contribs or args.prefix_namespace
+      or args.cats or args.category_file or args.refs or args.specials or args.contribs or args.prefix_namespace
       or args.pages_and_refs)
 
 def do_handle_stdin_retval(args, retval, text, prev_comment, pagemsg, is_find_regex, edit):
@@ -1377,8 +1382,8 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
       for _, (index, pagetitle) in iter_items(index_pagetitle, start, end,
           get_name=lambda x:x[1], get_index=lambda x:x[0]):
         process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
-    if args.cats:
-      for cat in split_arg(args.cats):
+    if args.cats or args.category_file:
+      def do_cat(cat):
         if args.do_cat_and_subcats:
           for index, subcat in cat_subcats(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
               do_this_page=True, recurse=args.recursive):
@@ -1391,6 +1396,12 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
           for index, page in cat_articles(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
               recurse=args.recursive, track_seen=args.track_seen):
             process_pywikibot_page(index, page, no_check_seen=True)
+      if args.cats:
+        for cat in split_arg(args.cats):
+          do_cat(cat)
+      if args.category_file:
+        for _, cat in iter_items_from_file(args.category_file):
+          do_cat(cat)
     if args.refs:
       for ref in split_arg(args.refs):
         # We don't use ref_namespaces here because the user might not want it.
