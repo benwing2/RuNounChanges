@@ -13,22 +13,26 @@ local function format_list_items(list, args)
 		return term:find("<span")
 	end
 	for _, item in ipairs(args.content) do
-		if type(item) == "table" then
-			local link = term_already_linked(item.term.term) and item.term.term or m_links.full_link(item.term)
-			if item.q then
-				link = require("Module:qualifier").format_qualifier(item.q) .. " " .. link
+		if item == false then
+			-- omitted item; do nothing
+		else
+			if type(item) == "table" then
+				local link = term_already_linked(item.term.term) and item.term.term or m_links.full_link(item.term)
+				if item.q then
+					link = require("Module:qualifier").format_qualifier(item.q) .. " " .. link
+				end
+				if item.qq then
+					link = link .. " " .. require("Module:qualifier").format_qualifier(item.qq)
+				end
+				item = link
+			elseif args.lang and not term_already_linked(item) then
+				item = m_links.full_link {lang = args.lang, term = item, sc = args.sc} 
 			end
-			if item.qq then
-				link = link .. " " .. require("Module:qualifier").format_qualifier(item.qq)
-			end
-			item = link
-		elseif args.lang and not term_already_linked(item) then
-			item = m_links.full_link {lang = args.lang, term = item, sc = args.sc} 
+	
+			list = list:node(html("li")
+				:wikitext(item)
+			)
 		end
-
-		list = list:node(html("li")
-			:wikitext(item)
-		)
 	end
 
 	return list
@@ -56,8 +60,10 @@ function export.create_list(args)
 
 	if args.alphabetize then
 		local function keyfunc(item)
-			if type(item) == "table" then
-				item = item.term.term
+			if item == false then
+				item = "*" -- doesn't matter, will be omitted in format_list_items()
+			elseif type(item) == "table" then
+				item = item.term.alt or item.term.term
 			end
 			return item
 		end
@@ -162,6 +168,7 @@ function export.display_from(frame_args, parent_args, frame)
 		["collapse"] = {type = "boolean"},
 		["sort"] = {type = "boolean"},
 		["sc"] = {},
+		["omit"] = {list = true}, -- used when calling from [[Module:saurus]] so the page displaying the synonyms/antonyms doesn't occur in the list
 	}
 
 	if lang_param == "lang" then
@@ -183,25 +190,35 @@ function export.display_from(frame_args, parent_args, frame)
 	if args["collapse"] ~= nil then
 		collapse = args["collapse"]
 	end
-
+	
+	local langs = {
+		[langcode] = lang
+	}
 	local put
 	for i, item in ipairs(args[first_content_param]) do
 		-- Parse off an initial language code (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). Don't parse if there's a spac
 		-- after the colon (happens e.g. if the user uses {{desc|...}} inside of {{col}}, grrr ...).
-		local termlangcode, actual_term = item:match("^([A-Za-z._-]+):([^ ].*)$")
+		local termlangcode, actual_term = item:match("^([%w%-.]+):([^ ].*)$")
 		local termlang
 		-- Make sure that only real language codes are handled as language links, so as to not catch interwiki
 		-- or namespaces links.
-		if termlangcode and (
-			mw.loadData("Module:languages/code to canonical name")[termlangcode] or
-			mw.loadData("Module:etymology languages/code to canonical name")[termlangcode]
-		) then
-			-- -1 since i is one-based
-			termlang = m_languages.getByCode(termlangcode, first_content_param + i - 1, "allow etym")
-			item = actual_term
-		else
+		if termlangcode then
+			termlang = langs[termlangcode]
+			if termlang == nil then
+				termlang = m_languages.getByCode(termlangcode, nil, "allow etym")
+				if termlang then
+					langs[termlangcode] = termlang
+				else
+					-- Memoize false positives so that we don't try them again.
+					langs[termlangcode] = false
+				end
+			end
+		end
+		if not termlang then
 			termlang = lang
-			termlancode = nil
+			termlangcode = nil
+		else
+			item = actual_term
 		end
 		local termobj = {term = {lang = termlang, sc = sc}}
 
@@ -268,7 +285,19 @@ function export.display_from(frame_args, parent_args, frame)
 			termobj.qq = {termlang:getCanonicalName(), termobj.qq}
 		end
 
-		args[first_content_param][i] = termobj
+		local omitted = false
+		for _, omitted_item in ipairs(args.omit) do
+			if omitted_item == termobj.term.term then
+				omitted = true
+				break
+			end
+		end
+		if omitted then
+			-- signal create_list() to omit this item
+			args[first_content_param][i] = false
+		else
+			args[first_content_param][i] = termobj
+		end
 	end
 
 	local ret = export.create_list { column_count = iargs["columns"] or args[columns_param],
