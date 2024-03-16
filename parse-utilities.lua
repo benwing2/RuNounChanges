@@ -495,36 +495,54 @@ end
 
 
 --[==[
-Parse a term that may have a language code preceding it (e.g. {la:minūtia} or {grc:[[σκῶρ|σκατός]]}). Return
-two arguments, the term minus the language code and the language object corresponding to the language code.
-Etymology-only languages are allowed. This function also correctly handles Wikipedia prefixes (e.g. 'w:Abatemarco'
-or 'w:it:Colle Val d'Elsa' or 'lw:ru:Филарет') and Wikisource prefixes (e.g. 's:Twelve O'Clock' or
-'s:[[Walden/Chapter XVIII|Walden]]' or 's:fr:Perceval ou le conte du Graal' or 's:ro:[[Domnul Vucea|Mr. Vucea]]' or
-'ls:ko:이상적 부인' or 'ls:ko:[[조선 독립의 서#一. 槪論|조선 독립의 서]]') and converts them into two-part links,
+Parse a term that may have a language code (or possibly multiple comma-separated language codes, if `allow_multiple`
+is given) preceding it (e.g. {la:minūtia} or {grc:[[σκῶρ|σκατός]]} or {nan-hbl,hak:[[毋]][[知]]}). Return four
+arguments:
+# the term minus the language code;
+# the language object corresponding to the language code (possibly a family object if `allow_family` is given), or a
+  list of such objects if `allow_multiple` is given;
+# the link if the term is of the form {[[<var>link</var>|<var>display</var>]]} (it may be generated into that form with
+  Wikipedia and Wikisource prefixes) or of the form {{[[<var>link</var>]]}, otherwise the full term;
+# the display part if the term is of the form {[[<var>link</var>|<var>display</var>]]}, otherwise nil.
+Etymology-only languages are allowed. This function also correctly handles Wikipedia prefixes (e.g. {w:Abatemarco}
+or {w:it:Colle Val d'Elsa} or {lw:ru:Филарет}) and Wikisource prefixes (e.g. {s:Twelve O'Clock} or
+{s:[[Walden/Chapter XVIII|Walden]]} or {s:fr:Perceval ou le conte du Graal} or {s:ro:[[Domnul Vucea|Mr. Vucea]]} or
+{ls:ko:이상적 부인} or {ls:ko:[[조선 독립의 서#一. 槪論|조선 독립의 서]]}) and converts them into two-part links,
 with the display form not including the Wikipedia or Wikisource prefix unless it was explicitly specified using a
-two-part link as in 'lw:ru:[[Филарет (Дроздов)|Митрополи́т Филаре́т]]' or
-'ls:ko:[[조선 독립의 서#一. 槪論|조선 독립의 서]]'. The difference between 'w:' ("Wikipedia") and 'lw:' ("Wikipedia
+two-part link as in {lw:ru:[[Филарет (Дроздов)|Митрополи́т Филаре́т]]} or
+{ls:ko:[[조선 독립의 서#一. 槪論|조선 독립의 서]]}. The difference between {w:} ("Wikipedia") and {lw:} ("Wikipedia
 link") is that the latter requires a language code and returns the corresponding language object; same for the
-difference between 's:' ("Wikisource") and 'ls:' ("Wikisource link"). Returns four objects, `term`, `language_code`,
-`link` and `display`, where if a two-part link is given or needs to be generated (as is the case with Wikipedia and
-Wikisource prefixes), it is separated into link and display forms (otherwise `link` is the same as `term` and
-`display` is nil). (NOTE: Embedded links are not correctly handled currently. If an embedded link is detected, the
-whole term is returned as the link part, and the display part is nil. If you construct your own link from the link
-and display parts, you must check for this.)
+difference between {s:} ("Wikisource") and {ls:} ("Wikisource link").
+
+NOTE: Embedded links are not correctly handled currently. If an embedded link is detected, the whole term is returned
+as the link part (third argument), and the display part is nil. If you construct your own link from the link and
+display parts, you must check for this.
 
 `parse_err_or_paramname` is an optional function of one or two arguments to display an error, or a string naming a
 parameter to display in the error message. If omitted, a function is generated based off of `term`. (The second
 argument to the function is the number of stack frames to ignore when calling error(); if you declare your error
-function with only one argument, things will still work fine).
+function with only one argument, things will still work fine.)
 ]==]
-function export.parse_term_with_lang(term, parse_err_or_paramname, return_parts)
-	local parse_err = type(parse_err_or_paramname) == "function" and parse_err_or_paramname or
-		parse_err_or_paramname and export.make_parse_err(("%s=%s"):format(parse_err_or_paramname, term)) or
+function export.parse_term_with_lang(data_or_term, parse_err_or_paramname)
+	if type(data_or_term) == "string" then
+		data_or_term = {
+			term = data_or_term
+		}
+		if type(parse_err_or_paramname) == "function" then
+			data_or_term.parse_err = parse_err_or_paramname
+		else
+			data_or_term.paramname = parse_err_or_paramname
+		end
+	end
+	local term = data_or_term.term
+	local parse_err = data_or_term.parse_err or
+		data_or_term.paramname and export.make_parse_err(("%s=%s"):format(data_or_term.paramname, term)) or
 		export.make_parse_err(term)
 	-- Parse off an initial language code (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). First check for Wikipedia
 	-- prefixes ('w:Abatemarco' or 'w:it:Colle Val d'Elsa' or 'lw:zh:邹衡') and Wikisource prefixes
 	-- ('s:ro:[[Domnul Vucea|Mr. Vucea]]' or 'ls:ko:이상적 부인'). Wikipedia/Wikisource language codes follow a similar
-	-- format to Wiktionary language codes (see below).
+	-- format to Wiktionary language codes (see below). Here and below we don't parse if there's a space after the
+	-- colon (happens e.g. if the user uses {{desc|...}} inside of {{col}}, grrr ...).
 	local termlang, foreign_wiki, actual_term = term:match("^(l?[ws]):([a-z][a-z][a-z-]*):([^ ].*)$")
 	if not termlang then
 		termlang, actual_term = term:match("^([ws]):([^ ].*)$")
@@ -543,36 +561,96 @@ function export.parse_term_with_lang(term, parse_err_or_paramname, return_parts)
 		return ("[[%s|%s]]"):format(prefixed_link, display or link), lang, prefixed_link, display
 	end
 
-	-- Wiktionary language codes are in one of the following formats, where 'x' is a lowercase letter and 'X' an uppercase
-	-- letter:
+	-- Wiktionary language codes are in one of the following formats, where 'x' is a lowercase letter and 'X' an
+	-- uppercase letter:
 	-- xx
 	-- xxx
 	-- xxx-xxx
-	-- xxx-xxx-xxx
+	-- xxx-xxx-xxx (esp. for protolanguages)
 	-- xx-xxx (for etymology-only languages)
 	-- xx-xxx-xxx (maybe? for etymology-only languages)
 	-- xx-XX (for etymology-only languages, where XX is a country code, e.g. en-US)
 	-- xxx-XX (for etymology-only languages, where XX is a country code)
+	-- xx-xxx-XX (for etymology-only languages, where XX is a country code)
+	-- xxx-xxx-XX (for etymology-only langauges, where XX is a country code, e.g. nan-hbl-PH)
+	-- Things like xxx-x+ (e.g. cmn-pinyin, cmn-tongyong)
+	-- VL., LL., etc.
 	--
-	-- We check for these formats as well as nonstandard Latin etymology language codes (e.g. VL. or LL.). (There used to
-	-- be more nonstandard codes but they have all been eliminated.)
-	termlang, actual_term = term:match("^([a-z][a-z][a-z]?):([^ ].*)$")
-	if not termlang then
-		termlang, actual_term = term:match("^([a-z][a-z][a-z]?%-[A-Z][A-Z]):([^ ].*)$")
-	end
-	if not termlang then
-		termlang, actual_term = term:match("^([a-z][a-z][a-z]?%-[a-z][a-z][a-z]):([^ ].*)$")
-	end
-	if not termlang then
-		termlang, actual_term = term:match("^([a-z][a-z][a-z]?%-[a-z][a-z][a-z]%-[a-z][a-z][a-z]):([^ ].*)$")
-	end
-	if not termlang then
+	-- We check the for nonstandard Latin etymology language codes separately, and otherwise make only the following
+	-- assumptions:
+	-- (1) There are one to three hyphen-separated components.
+	-- (2) The last component can consist of two uppercase ASCII letters; otherwise, all components contain only
+	--     lowercase ASCII letters.
+	-- (3) Each component must have at least two letters.
+	-- (4) The first component must have two or three letters.
+	local function is_possible_lang_code(code)
 		-- Special hack for Latin variants, which can have nonstandard etym codes, e.g. VL., LL.
-		termlang, actual_term = term:match("^([A-Z]L%.):([^ ].*)$")
+		if code:find("^[A-Z]L%.$") then
+			return true
+		end
+		return code:find("^([a-z][a-z][a-z]?)$") or
+			code:find("^[a-z][a-z][a-z]?%-[A-Z][A-Z]$") or
+			code:find("^[a-z][a-z][a-z]?%-[a-z][a-z]+$") or
+			code:find("^[a-z][a-z][a-z]?%-[a-z][a-z]+%-[A-Z][A-Z]$") or
+			code:find("^[a-z][a-z][a-z]?%-[a-z][a-z]+%-[a-z][a-z]+$")
 	end
-	if termlang then
-		termlang = require("Module:languages").getByCode(termlang, parse_err, "allow etym")
-		term = actual_term
+
+	local function get_by_code(code, allow_bad)
+		local lang
+		if data_or_term.lang_cache then
+			lang = data_or_term.lang_cache[code]
+		end
+		if lang == nil then
+			lang = require("Module:languages").getByCode(code, not allow_bad and parse_err or nil, "allow etym",
+				data_or_term.allow_family)
+			if data_or_term.lang_cache then
+				data_or_term.lang_cache[code] = lang or false
+			end
+		end
+		return lang or nil
+	end
+
+	if data_or_term.allow_multiple then
+		local termlang_spec
+		termlang_spec, actual_term = term:match("^([a-zA-Z.,-]+):([^ ].*)$")
+		if termlang_spec then
+			termlang = rsplit(termlang_spec, ",")
+			local all_possible_code = true
+			for _, code in ipairs(termlang) do
+				if not is_possible_lang_code(code) then
+					all_possible_code = false
+					break
+				end
+			end
+			if all_possible_code then
+				local saw_nil = false
+				for i, code in ipairs(termlang) do
+					termlang[i] = get_by_code(code, data_or_term.allow_bad)
+					if not termlang[i] then
+						saw_nil = true
+					end
+				end
+				if saw_nil then
+					termlang = nil
+				else
+					term = actual_term
+				end
+			else
+				termlang = nil
+			end
+		end
+	else
+		termlang, actual_term = term:match("^([a-zA-Z.-]+):([^ ].*)$")
+		if termlang then
+			if is_possible_lang_code(termlang) then
+				termlang = get_by_code(termlang, data_or_term.allow_bad)
+				if termlang then
+					term = actual_term
+				end
+			else
+				termlang = nil
+			end
+		end
 	end
 	local link, display = parse_bracketed_term(term, parse_err)
 	return term, termlang, link, display
