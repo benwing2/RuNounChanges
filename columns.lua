@@ -4,7 +4,9 @@ local html = mw.html.create
 local m_links = require("Module:links")
 local m_languages = require("Module:languages")
 local m_table = require("Module:table")
+local parse_utilities_module = "Module:parse utilities"
 
+local rsplit = mw.text.split
 
 local function format_list_items(list, args)
 	local function term_already_linked(term)
@@ -17,14 +19,8 @@ local function format_list_items(list, args)
 			-- omitted item; do nothing
 		else
 			if type(item) == "table" then
-				local link = term_already_linked(item.term.term) and item.term.term or m_links.full_link(item.term)
-				if item.q then
-					link = require("Module:qualifier").format_qualifier(item.q) .. " " .. link
-				end
-				if item.qq then
-					link = link .. " " .. require("Module:qualifier").format_qualifier(item.qq)
-				end
-				item = link
+				item = term_already_linked(item.term) and item.term or
+					m_links.full_link(item, nil, nil, "show qualifiers")
 			elseif args.lang and not term_already_linked(item) then
 				item = m_links.full_link {lang = args.lang, term = item, sc = args.sc} 
 			end
@@ -63,7 +59,7 @@ function export.create_list(args)
 			if item == false then
 				item = "*" -- doesn't matter, will be omitted in format_list_items()
 			elseif type(item) == "table" then
-				item = item.term.alt or item.term.term
+				item = item.alt or item.term
 			end
 			return item
 		end
@@ -116,8 +112,74 @@ function export.create_table(...)
 end
 
 
-local param_mods = {"t", "alt", "tr", "ts", "pos", "lit", "id", "sc", "g", "q", "qq"}
-local param_mod_set = m_table.listToSet(param_mods)
+local param_mods = {
+	t = {
+		-- We need to store the <t:...> inline modifier into the "gloss" key of the parsed part, because that is what
+		-- [[Module:links]] expects.
+		item_dest = "gloss",
+	},
+	gloss = {},
+	tr = {},
+	ts = {},
+	g = {
+		-- We need to store the <g:...> inline modifier into the "genders" key of the parsed part, because that is what
+		-- [[Module:links]] expects.
+		item_dest = "genders",
+		convert = function(arg, parse_err)
+			return rsplit(arg, ",")
+		end,
+	},
+	id = {},
+	alt = {},
+	q = {},
+	qq = {},
+	lit = {},
+	pos = {},
+	sc = {
+		convert = function(arg, parse_err)
+			return require("Module:scripts").getByCode(arg, parse_err)
+		end,
+	}
+}
+
+local function parse_term_with_modifiers(paramname, val, lang, sc, lang_cache)
+	local function generate_obj(term, parse_err)
+		local obj = {}
+		if term:find(":") then
+			local actual_term, termlangs = require(parse_utilities_module).parse_term_with_lang {
+				term = term,
+				parse_err = parse_err,
+				paramname = paramname,
+				allow_multiple = true,
+				allow_bad = true,
+				lang_cache = lang_cache,
+			}
+			obj.term = actual_term
+			obj.termlangs = termlangs
+			obj.lang = termlangs and termlangs[1] or lang
+		else
+			obj.term = term
+			obj.lang = lang
+		end
+		obj.sc = sc
+		return obj
+	end
+
+	-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>, <br/> or
+	-- similar in it, caused by wrapping an argument in {{l|...}}, {{m|...}} or similar. Basically, all tags of
+	-- the sort we parse here should consist of a less-than sign, plus letters, plus a colon, e.g. <tr:...>, so if
+	-- we see a tag on the outer level that isn't in this format, we don't try to parse it. The restriction to the
+	-- outer level is to allow generated HTML inside of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
+	if val:find("<") and not val:find("^[^<]*<[a-z]*[^a-z:]") then
+		return require(parse_utilities_module).parse_inline_modifiers(val, {
+			paramname = paramname,
+			param_mods = param_mods,
+			generate_obj = generate_obj,
+		})
+	else
+		return generate_obj(val)
+	end
+end
 
 function export.display_from(frame_args, parent_args, frame)
 	local iparams = {
@@ -191,103 +253,30 @@ function export.display_from(frame_args, parent_args, frame)
 		collapse = args["collapse"]
 	end
 	
-	local langs = {
+	local lang_cache = {
 		[langcode] = lang
 	}
-	local put
 	for i, item in ipairs(args[first_content_param]) do
-		-- Parse off an initial language code (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). Don't parse if there's a spac
-		-- after the colon (happens e.g. if the user uses {{desc|...}} inside of {{col}}, grrr ...).
-		local termlangcode, actual_term = item:match("^([%w%-.]+):([^ ].*)$")
-		local termlang
-		-- Make sure that only real language codes are handled as language links, so as to not catch interwiki
-		-- or namespaces links.
-		if termlangcode then
-			termlang = langs[termlangcode]
-			if termlang == nil then
-				termlang = m_languages.getByCode(termlangcode, nil, "allow etym")
-				if termlang then
-					langs[termlangcode] = termlang
-				else
-					-- Memoize false positives so that we don't try them again.
-					langs[termlangcode] = false
-				end
-			end
-		end
-		if not termlang then
-			termlang = lang
-			termlangcode = nil
-		else
-			item = actual_term
-		end
-		local termobj = {term = {lang = termlang, sc = sc}}
-
-		-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>, <br/> or
-		-- similar in it, caused by wrapping an argument in {{l|...}}, {{af|...}} or similar. Basically, all tags of
-		-- the sort we parse here should consist of a less-than sign, plus letters, plus a colon, e.g. <tr:...>, so if
-		-- we see a tag on the outer level that isn't in this format, we don't try to parse it. The restriction to the
-		-- outer level is to allow generated HTML inside of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
-		if item:find("<") and not item:find("^[^<]*<[a-z]*[^a-z:]") then
-			if not put then
-				put = require("Module:parse utilities")
-			end
-			local run = put.parse_balanced_segment_run(item, "<", ">")
-			local orig_param = first_content_param + i - 1
-			local function parse_err(msg)
-				error(msg .. ": " .. orig_param .. "= " .. table.concat(run))
-			end
-			termobj.term.term = run[1]
-
-			for j = 2, #run - 1, 2 do
-				if run[j + 1] ~= "" then
-					parse_err("Extraneous text '" .. run[j + 1] .. "' after modifier")
-				end
-				local modtext = run[j]:match("^<(.*)>$")
-				if not modtext then
-					parse_err("Internal error: Modifier '" .. modtext .. "' isn't surrounded by angle brackets")
-				end
-				local prefix, arg = modtext:match("^([a-z]+):(.*)$")
-				if not prefix then
-					parse_err("Modifier " .. run[j] .. " lacks a prefix, should begin with one of '" ..
-						table.concat(param_mods, ":', '") .. ":'")
-				end
-				if param_mod_set[prefix] then
-					local obj_to_set
-					if prefix == "q" or prefix == "qq" then
-						obj_to_set = termobj
-					else
-						obj_to_set = termobj.term
-					end
-					if prefix == "t" then
-						prefix = "gloss"
-					elseif prefix == "g" then
-						prefix = "genders"
-						arg = mw.text.split(arg, ",")
-					elseif prefix == "sc" then
-						arg = require("Module:scripts").getByCode(arg, orig_param .. ":sc")
-					end
-					if obj_to_set[prefix] then
-						parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[j])
-					end
-					obj_to_set[prefix] = arg
-				else
-					parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. run[j])
-				end
-			end
-		else
-			termobj.term.term = item
-		end
+		local termobj = parse_term_with_modifiers(first_content_param + i - 1, item, lang, sc, lang_cache)
 		-- If a separate language code was given for the term, display the language name as a right qualifier.
 		-- Otherwise it may not be obvious that the term is in a separate language (e.g. if the main language is 'zh'
 		-- and the term language is a Chinese lect such as Min Nan). But don't do this for Translingual terms, which
 		-- are often added to the list of English and other-language terms.
-		if termlangcode and termlangcode ~= langcode and termlangcode ~= "mul" then
-			termobj.qq = {termlang:getCanonicalName(), termobj.qq}
+		if termobj.termlangs then
+			local qqs = {}
+			for _, termlang in ipairs(termobj.termlangs) do
+				local termlangcode = termlang:getCode()
+				if termlanglangcode ~= langcode and termlangcode ~= "mul" then
+					table.insert(qqs, termlang:getCanonicalName())
+				end
+				table.insert(qqs, termobj.qq)
+			end
+			termobj.qq = qqs
 		end
 
 		local omitted = false
 		for _, omitted_item in ipairs(args.omit) do
-			if omitted_item == termobj.term.term then
+			if omitted_item == termobj.term then
 				omitted = true
 				break
 			end
