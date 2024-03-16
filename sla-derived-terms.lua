@@ -32,7 +32,7 @@ local function rsub(term, foo, bar)
 end
 
 local function transliterate(lang, term)
-	return lang:transliterate(m_links.remove_links(term))
+	return (lang:transliterate(m_links.remove_links(term)))
 end
 
 local function default_paste_prefix_suffix(lang, prefix, prefix_tr, suffix, suffix_tr, aspect)
@@ -390,7 +390,7 @@ local function format_aspect_terms(lang, args, term_groups, include_default_aspe
 			local function handle_aspect_terms(terms, aspect)
 				local term_parts = {}
 				for _, term in ipairs(terms) do
-					sort_key = sort_key or lang:makeSortKey(lang:makeEntryName(term.term))
+					sort_key = sort_key or (lang:makeSortKey((lang:makeEntryName(term.term))))
 					local preq_text = term.q and require("Module:qualifier").format_qualifier(term.q) .. " " or ""
 					if not term.genders and this_include_default_aspect then
 						term.genders = {aspect}
