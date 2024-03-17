@@ -6,6 +6,22 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, errandmsg, site
 
+dialects_to_codes = {
+  "Hainanese": "nan-hnm",
+  "Philippine Hokkien": "nan-hbl-PH",
+  "Puxian Min": "cpx",
+  "Quanzhou Hokkien": "nan-qua",
+  "Singaporean Hokkien": "nan-hbl-SG",
+  "Taiwanese Hakka": "hak-TW",
+  "Taiwanese Hokkien": "nan-hbl-TW",
+  "Teochew": "nan-tws",
+  "Xiamen Hokkien": "nan-xia",
+  "Zhongshan Min": "zhx-zho",
+  "Zhangzhou Hokkien": "nan-zha",
+  "Hokkien": "nan-hbl",
+  "Leizhou Min": "nan-luh",
+}
+
 def get_params_from_zh_l(t):
   # This is an utter piece of shit. Ported from lines 53-74 of [[Module:zh/link]].
   def getp(param):
@@ -60,9 +76,10 @@ def find_southern_min_types(index, pagetitle, linkt, linkpage, linkgloss):
 
   def find_section_min_types(sectext):
     parsed = blib.parse_text(sectext)
-    hokkien = False
-    teochew = False
-    leizhou = False
+    lects_seen = [] # sets don't remember the order of addition
+    def add(lect):
+      if lect not in lects_seen:
+        lects_seen.append(lect)
     saw_zh_pron = False
     saw_zh_label = False
     for t in parsed.filter_templates():
@@ -71,30 +88,57 @@ def find_southern_min_types(index, pagetitle, linkt, linkpage, linkgloss):
         return getparam(t, param)
       if tn == "zh-pron":
         if getp("mn"):
-          hokkien = True
+          add("Hokkien")
         if getp("mn-t"):
-          teochew = True
+          add("Teochew")
         if getp("mn-l"):
-          leizhou = True
+          add("Leizhou")
         saw_zh_pron = True
 
       if tn in blib.label_templates and getp("1") == "zh":
         for i in range(2, 30):
           label = getp(str(i))
-          if "Hokkien" in label:
-            hokkien = True
-          if "Teochew" in label:
-            teochew = True
-          if "Leizhou" in label:
-            leizhou = True
+          if re.search("(Hainanese|Hainan Min)", label): # or Hainan Min Chinese
+            add("Hainanese")
+          elif re.search("(Philippine Hokkien|PH Hokkien|Ph Hokkien|^PH$|^PHH$)", label):
+            add("Philippine Hokkien")
+          elif re.search("(Puxian|Pu-Xian|Xinghua|Hinghwa)", label): # or Puxian Min or Pu-Xian Min
+            add("Puxian Min")
+          elif re.search("(Quanzhou|Chinchew|Choanchew)", label): # or Quanzhou dialect or Chinchew dialect or Choanchew dialect
+            add("Quanzhou Hokkien")
+          elif re.search("(Singaporean Hokkien|Singapore Hokkien)", label):
+            add("Singaporean Hokkien")
+          elif re.search("(Taiwanese Hakka|Taiwan Hakka)", label):
+            add("Taiwanese Hakka")
+          elif re.search("(Taiwanese Hokkien|Taiwan Hokkien)", label):
+            add("Taiwanese Hakka")
+          elif re.search("(Taiwan[a-z]* Hokkien .* Hakka|Taiwan[a-z]* Hakka .* Hokkien|Taiwan[a-z]* (Southern Min|Min Nan) .* Hakka|Taiwan[a-z]* Hakka .* (Southern Min|Min Nan))", label):
+            add("Taiwanese Hokkien")
+            add("Taiwanese Hakka")
+          elif "Teochew" in label:
+            add("Teochew")
+          elif re.search("(Xiamen|Amoy)", label): # or Xiamen dialect or Amoy dialect
+            add("Xiamen Hokkien")
+          elif "Zhongshan Min" in label:
+            add("Zhongshan Min")
+          elif re.search("(Zhangzhou|Changchew)", label): # or Zhangzhou dialect or Changchew dialect
+            add("Zhangzhou Hokkien")
+          elif label == "Hokkien":
+            add("Hokkien")
+          elif "Hokkien" in label:
+            add("Hokkien")
+            pagemsg("WARNING: Saw label '%s' with Hokkien in it, treating as Hokkien, needs review: %s" % (
+              label, str(t)))
+          elif "Leizhou" in label:
+            add("Leizhou Min")
         saw_zh_label = True
-    lects_seen = []
-    if hokkien:
-      lects_seen.append("Hokkien")
-    if teochew:
-      lects_seen.append("Teochew")
-    if leizhou:
-      lects_seen.append("Leizhou")
+    specific_hokkien = [x for x in lects_seen if "Hokkien" in x and x != "Hokkien"]
+    if specific_hokkien:
+      generic_hokkien = [x for x in lects_seen if x == "Hokkien"]
+      # remove generic Hokkien
+      if generic_hokkien:
+        pagemsg("Removing generic 'Hokkien' label because saw more specific %s" % (",".join(specific_hokkien)))
+        lects_seen = [x for x in lects_seen if x != "Hokkien"]
     return lects_seen, saw_zh_pron, saw_zh_label
 
   if "Etymology 1" in chinese_text or "Pronunciation 1" in chinese_text:
@@ -126,7 +170,7 @@ def find_southern_min_types(index, pagetitle, linkt, linkpage, linkgloss):
           if not southern_min_types:
             southern_min_types = section_min_types
             header_for_southern_min_types = secheader
-          elif southern_min_types != section_min_types:
+          elif set(southern_min_types) != set(section_min_types):
             return "Saw multiple Etymology/Pronunciation sections with different Southern Min Types for %s: section %s has %s while section %s has %s; skipping" % (
               linkmsg, header_for_southern_min_types, ",".join(southern_min_types), secheader, ",".join(section_min_types))
       if southern_min_types:
@@ -166,6 +210,42 @@ def process_text_on_page(index, pagetitle, text):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   notes = []
+
+  parsed = blib.parse_text(text)
+  for t in parsed.filter_templates():
+    tn = tname(t)
+    def getp(param):
+      return getparam(t, param)
+    if tn in ["col1", "col2", "col3", "col4", "col5", "col-auto"] and getp("1") == "zh":
+      terms = blib.fetch_param_chain(t, "2")
+      modified_terms = []
+      for term in terms:
+        m = re.search("^([a-z][a-z][a-zA-Z.,-]*):([^ ].*?)(<.*>)?$", term)
+        if m:
+          langcodes, actual_term, modifiers = m.groups()
+          modifiers = modifiers or ""
+          langcodes = langcodes.split(",")
+          modified_langcodes = []
+          for langcode in langcodes:
+            if langcode == "nan":
+              # FIXME: Extract gloss if present
+              lect_types = find_southern_min_types(index, pagetitle, t, actual_term, None)
+              if type(lect_types) is str:
+                pagemsg("WARNING: Unable to convert 'nan' to correct lang code (reason: %s)" % lect_types)
+                modified_langcodes.append("nan")
+              else:
+                lect_types = [dialects_to_codes[lect_type] for lect_type in lect_types]
+                modified_langcodes.extend(lect_types)
+                notes.append("in {{%s}}, modify 'nan' to '%s' by looking up term %s" % (
+                  tn, ",".join(lect_types), actual_term))
+            else:
+              modified_langcodes.append(langcode)
+          if langcodes != modified_langcodes:
+            term = "%s:%s%s" % (",".join(modified_langcodes), actual_term, modifiers)
+        modified_terms.append(term)
+      if terms != modified_terms:
+        blib.set_param_chain(t, modified_terms, "2")
+  text = str(parsed)
 
   lines = text.split("\n")
   new_lines = []
