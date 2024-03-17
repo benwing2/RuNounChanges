@@ -125,7 +125,7 @@ def process_text_on_page(index, pagename, text):
                 line = "%s%s%s" % (init_star, indented_lang, rest)
               if indented_lang not in ["Carakan", "Jawi", "Rumi"]:
                 pagemsg("WARNING: Found unhandled indented language %s under %s: %s" % (indented_lang, prev_lang, line))
-            if prev_lang in ["Chinese"]:
+            if args.rename_min and prev_lang in ["Chinese"]:
               renamed_lang_map = {
                 "Min Bei": "Northern Min",
                 "Min Dong": "Eastern Min",
@@ -182,6 +182,7 @@ def process_text_on_page(index, pagename, text):
 
 parser = blib.create_argparser("Sort translations, unindent translations under Malayic, rename Min Chinese varieties and correct misc translation table issues",
                                include_pagefile=True, include_stdin=True)
+parser.add_argument("--rename-min", action="store_true", help="Rename Min varieties.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
