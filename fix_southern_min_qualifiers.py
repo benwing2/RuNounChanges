@@ -6,6 +6,8 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, errandmsg, site
 
+blib.getData()
+
 lects_to_codes = {
   "Hainanese": "nan-hnm",
   "Jinjiang Hokkien": "nan-jin",
@@ -27,6 +29,7 @@ lects_to_codes = {
   "Xiamen and Zhangzhou Hokkien": ["nan-xia", "nan-zha"],
   "Quanzhou & Xiamen Hokkien": ["nan-qua", "nan-xia"],
   "Zhangzhou & Taiwanese Hokkien": ["nan-zha", "nan-hbl-TW"],
+  "Xiamen & Taiwanese Hokkien": ["nan-xia", "nan-hbl-TW"],
   "Xiamen and Taiwanese Hokkien": ["nan-xia", "nan-hbl-TW"],
   "Taiwanese Min Nan and Hakka": ["nan-hbl-TW", "hak-TW"],
   "Malaysia and Singapore Hokkien": ["nan-hbl-MY", "nan-hbl-SG"],
@@ -62,6 +65,7 @@ lects_to_codes = {
   "Northeastern Mandarin": "cmn-noe",
   "Taiwanese Mandarin": "cmn-TW",
   "Taiwan Mandarin": "cmn-TW",
+  "Huizhou": "czh",
   # occurring only once:
   "Waxiang": "wxa",
   "Taishanese": "zhx-tai",
@@ -138,6 +142,18 @@ lects_to_codes = {
   # "Chinese landscape garden":
   # "Australia":
   # "ACG":
+}
+
+# Hokkien varieties, not including nan-hbl itself.
+hokkien_varieties = {
+  "nan-jin",
+  "nan-qua",
+  "nan-xia",
+  "nan-zha",
+  "nan-hbl-MY",
+  "nan-hbl-PH",
+  "nan-hbl-SG",
+  "nan-hbl-TW",
 }
 
 lects_to_codes_from_label_module = {
@@ -319,7 +335,7 @@ def get_params_from_zh_l(t):
     gloss = gloss or arg2
   return text, tr, gloss
 
-def find_southern_min_types(index, pagetitle, linkt, linkpage, linkgloss):
+def find_southern_min_types(index, pagetitle, linkt, linkpage, linkgloss, all_types=False):
   def make_msg_txt(txt):
     return "Page %s %s: Link page %s%s in %s: %s" % (
         index, pagetitle, link_term(linkpage), linkgloss and " (glossed as '%s')" % linkgloss or "", str(linkt), txt)
@@ -363,7 +379,9 @@ def find_southern_min_types(index, pagetitle, linkt, linkpage, linkgloss):
       if tn in blib.label_templates and getp("1") == "zh":
         for i in range(2, 30):
           label = getp(str(i))
-          if re.search("(Hainanese|Hainan Min)", label): # or Hainan Min Chinese
+          if label in lects_to_codes:
+            add(label)
+          elif re.search("(Hainanese|Hainan Min)", label): # or Hainan Min Chinese
             add("Hainanese")
           elif re.search("(Philippine Hokkien|PH Hokkien|Ph Hokkien|^PH$|^PHH$)", label):
             add("Philippine Hokkien")
@@ -397,13 +415,31 @@ def find_southern_min_types(index, pagetitle, linkt, linkpage, linkgloss):
           elif "Leizhou" in label:
             add("Leizhou Min")
         saw_zh_label = True
-    specific_hokkien = [x for x in lects_seen if "Hokkien" in x and x != "Hokkien"]
-    if specific_hokkien:
-      generic_hokkien = [x for x in lects_seen if x == "Hokkien"]
-      # remove generic Hokkien
-      if generic_hokkien:
-        pagemsg("Removing generic 'Hokkien' label because saw more specific %s" % (",".join(specific_hokkien)))
-        lects_seen = [x for x in lects_seen if x != "Hokkien"]
+
+    # canonicalize lects
+    canon_lects_seen = []
+    for lect in lects_seen:
+      if lect not in lects_to_codes:
+        raise ValueError("Unrecognized lect type '%s' generated" % lect)
+      code = lects_to_codes[lect]
+      lang_obj = blib.languages_byCode[code] if code in blib.languages_byCode else blib.etym_languages_byCode[code]
+      canon_name = lang_obj["canonicalName"]
+      if canon_name not in canon_lects_seen:
+        canon_lects_seen.append(canon_name)
+    if canon_lects_seen != lects_seen:
+      pagemsg("Canonicalizing derived lect(s) %s to %s" % (",".join(lects_seen), ",".join(canon_lects_seen)))
+    if not all_types:
+      # Pare down to only nan-* types.
+      pared_lects_seen = []
+      for lect in lects_seen:
+        if lect not in lects_to_codes:
+          raise ValueError("Unrecognized lect type '%s' generated" % lect)
+        code = lects_to_codes[lect]
+        if code.startswith("nan-"):
+          pared_lects_seen.append(lect)
+      if pared_lects_seen != lects_seen:
+        pagemsg("Paring derived lect(s) %s to Southern-Min-only %s" % (",".join(lects_seen), ",".join(pared_lects_seen)))
+        lects_seen = pared_lects_seen
     return lects_seen, saw_zh_pron, saw_zh_label
 
   if "Etymology 1" in chinese_text or "Pronunciation 1" in chinese_text:
@@ -465,7 +501,7 @@ def find_southern_min_types(index, pagetitle, linkt, linkpage, linkgloss):
         pagemsg(
             "WARNING (may be ignorable): Couldn't identify any Southern Min lect from scraping page (%s), but saw %s, redirecting"
             % ("; ".join(saw_msgs), str(t)))
-        return find_southern_min_types(index, pagetitle, linkt, canon, linkgloss)
+        return find_southern_min_types(index, pagetitle, linkt, canon, linkgloss, all_types=all_types)
     return "Couldn't identify any Southern Min lect from scraping page %s (%s)" % (linkmsg, "; ".join(saw_msgs))
   return section_min_types
 
@@ -503,25 +539,37 @@ def process_text_on_page(index, pagetitle, text):
           linked_term = link_term(actual_term)
           langcodes = langcodes or ""
           modifiers = modifiers or ""
+          modified_langcodes = []
+          def add_code(code):
+            if code not in modified_langcodes:
+              modified_langcodes.append(code)
+          def append_nan_lang_codes(existing_code, lect_types):
+            new_lang_codes = lect_types_to_codes(lect_types)
+            nan_new_lang_codes = [x for x in new_lang_codes if x.startswith("nan-")]
+            if not nan_new_lang_codes:
+              pagemsg("WARNING: Unable to convert '%s' in {{%s}} to more specific lang code by looking up term %s because no matching lang codes found (found %s)" % (
+                existing_code, tn, linked_term, ",".join(new_lang_codes)))
+              modified_langcodes.extend("nan")
+            else:
+              msg_body = "'%s' to '%s' in {{%s}} by looking up term %s" % (
+                  existing_code, ",".join(nan_new_lang_codes), tn, linked_term)
+              for code in nan_new_lang_codes:
+                add_code(code)
+              pagemsg("Converting %s" % msg_body)
+              notes.append("convert %s" % msg_body)
           if langcodes:
             langcodes = langcodes.split(",")
-            modified_langcodes = []
             for langcode in langcodes:
-              if langcode == "nan" or langcode == "nan-hbl":
+              if langcode == "nan": # or langcode == "nan-hbl":
                 # FIXME: Extract gloss if present
                 lect_types = find_southern_min_types(index, pagetitle, t, actual_term, None)
                 if type(lect_types) is str:
                   pagemsg("WARNING: Unable to convert '%s' to correct lang code (reason: %s)" % (langcode, lect_types))
                   modified_langcodes.append(langcode)
                 else:
-                  new_lang_codes = lect_types_to_codes(lect_types)
-                  modified_langcodes.extend(new_lang_codes)
-                  notes.append("in {{%s}}, modify '%s' to '%s' by looking up term %s" % (
-                    tn, langcode, ",".join(new_lang_codes), linked_term))
+                  append_nan_lang_codes(langcode, lect_types)
               else:
                 modified_langcodes.append(langcode)
-          else:
-            modified_langcodes = []
           if modifiers:
             m = re.search("^(.*?)<qq:(.*)>(.*)$", modifiers)
             before_modified_langcodes = []
@@ -529,29 +577,17 @@ def process_text_on_page(index, pagetitle, text):
               before, qqs, after = m.groups()
               qq_parts = qqs.split(", ")
               new_qq_parts = []
-              def add_code(code):
-                if code not in modified_langcodes:
-                  modified_langcodes.append(code)
               for qq_part in qq_parts:
-                if qq_part in ["Min Nan", "Southern Min", "Coastal Min", "Min", "Hokkien"]:
+                if qq_part in ["Min Nan", "Southern Min",
+                               # "Coastal Min", "Min", "Hokkien",
+                               #"Taiwan", "Taiwanese", "Hong Kong", "Singapore", "Malaysia", "Philippines"
+                              ]:
                   if lect_types is None:
                     lect_types = find_southern_min_types(index, pagetitle, t, actual_term, None)
                     if type(lect_types) is str:
                       pagemsg("WARNING: Unable to convert '%s' to correct lang code (reason: %s)" % (qq_part, lect_types))
                   if type(lect_types) is list:
-                    if qq_part == "Hokkien":
-                      saw_hokkien_type = False
-                      for lect_type in lect_types:
-                        if "Hokkien" in lect_type:
-                          saw_hokkien_type = True
-                          break
-                      if not saw_hokkien_type:
-                        pagemsg("WARNING: Converting qualifier 'Hokkien' to '%s', which doesn't include any Hokkien types (term %s)"
-                                % (", ".join(lect_types), linked_term))
-                    new_lang_codes = lect_types_to_codes(lect_types)
-                    pagemsg("Converting qualifier '%s' to lang code(s) '%s' (term %s)" % (qq_part, ",".join(new_lang_codes), linked_term))
-                    for code in new_lang_codes:
-                      add_code(code)
+                    append_nan_lang_codes(qq_part, lect_types)
                   elif qq_part in ["Min Nan", "Southern Min"]:
                     pagemsg("WARNING: Unable to convert '%s' to something more specific, converting to code 'nan' (term %s)" %
                             (qq_part, linked_term))
@@ -560,12 +596,10 @@ def process_text_on_page(index, pagetitle, text):
                     pagemsg("WARNING: Unable to convert 'Hokkien' to something more specific, converting to code 'nan-hbl' (term %s)" %
                             linked_term)
                     add_code("nan-hbl")
-                  elif qq_part in ["Min", "Coastal Min"]:
-                    pagemsg("WARNING: Unable to convert 'Min' to something more specific, leaving as-is (term %s)" %
-                            linked_term)
-                    new_qq_parts.append(qq_part)
                   else:
-                    raise ValueError("Internal error: Unhandled qualifier part '%s'" % qq_part)
+                    pagemsg("WARNING: Unable to convert '%s' to something more specific, leaving as-is (term %s)" %
+                            (qq_part, linked_term))
+                    new_qq_parts.append(qq_part)
                 elif qq_part in lects_to_codes:
                   code = lects_to_codes[qq_part]
                   if type(code) is list:
@@ -603,6 +637,12 @@ def process_text_on_page(index, pagetitle, text):
           else:
             new_modifiers = modifiers
           if modified_langcodes:
+            if "nan-hbl" in modified_langcodes:
+              has_specific_hokkien_variety = any(x in hokkien_varieties for x in modified_langcodes)
+              if has_specific_hokkien_variety:
+                pagemsg("Removing generic Hokkien code nan-hbl from derived langcodes %s because saw more specific Hokkien variety" %
+                        ",".join(modified_langcodes))
+                modified_langcodes = [x for x in modified_langcodes if x != "nan-hbl"]
             if len(modified_langcodes) > 3:
               pagemsg("WARNING: Generating %s > 3 prefixed language codes %s (term %s)" % (
                 len(modified_langcodes), ",".join(modified_langcodes), linked_term))
