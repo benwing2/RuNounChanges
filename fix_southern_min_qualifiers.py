@@ -6,12 +6,15 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, errandmsg, site
 
-dialects_to_codes = {
+lects_to_codes = {
   "Hainanese": "nan-hnm",
+  "Jinjiang Hokkien": "nan-jin",
+  "Malaysia Hokkien": "nan-hbl-MY",
   "Philippine Hokkien": "nan-hbl-PH",
   "Puxian Min": "cpx",
   "Quanzhou Hokkien": "nan-qua",
   "Singaporean Hokkien": "nan-hbl-SG",
+  "Singapore Hokkien": "nan-hbl-SG",
   "Taiwanese Hakka": "hak-TW",
   "Taiwanese Hokkien": "nan-hbl-TW",
   "Teochew": "nan-tws",
@@ -20,7 +23,268 @@ dialects_to_codes = {
   "Zhangzhou Hokkien": "nan-zha",
   "Hokkien": "nan-hbl",
   "Leizhou Min": "nan-luh",
+  "Xiamen & Zhangzhou Hokkien": ["nan-xia", "nan-zha"],
+  "Xiamen and Zhangzhou Hokkien": ["nan-xia", "nan-zha"],
+  "Quanzhou & Xiamen Hokkien": ["nan-qua", "nan-xia"],
+  "Zhangzhou & Taiwanese Hokkien": ["nan-zha", "nan-hbl-TW"],
+  "Xiamen and Taiwanese Hokkien": ["nan-xia", "nan-hbl-TW"],
+  "Taiwanese Min Nan and Hakka": ["nan-hbl-TW", "hak-TW"],
+  "Malaysia and Singapore Hokkien": ["nan-hbl-MY", "nan-hbl-SG"],
+  # others
+  "Cantonese": "yue",
+  "Hong Kong Cantonese": "yue-HK",
+  "Hakka": "hak",
+  "Mandarin": "cmn",
+  "Guilin Mandarin": "cmn-gui",
+  "Xining": "cmn-xin",
+  "Northern Min": "mnp",
+  "Eastern Min": "cdo",
+  "Central Min": "czo",
+  "Jin": "cjy",
+  "Gan": "gan",
+  "Xiang": "hsn", # FIXME: convert to more specific?
+  "Wu": "wuu", # FIXME: convert to more specific?
+  "Sichuanese": "zhx-sic",
+  "Sichuan": "zhx-sic",
+  "Dungan": "dng",
+  "Wenzhounese": "wuu-wen",
+  "Wenzhou": "wuu-wen",
+  "Ningbo Wu": "wuu-ngb", # FIXME: Rename code
+  "Ningbo": "wuu-ngb", # FIXME: Rename code
+  "Shanghainese Wu": "wuu-sha",
+  "Shanghainese": "wuu-sha",
+  "Shanghai": "wuu-sha",
+  "Zhao'an Hakka": "hak-zha",
+  "Shao'an Hakka": "hah-zha", # FIXME: I assume this is a mistake for Zhao'an
+  "Yangzhou Mandarin": "cmn-yan",
+  "Beijing": "cmn-bei",
+  "Beijing Mandarin": "cmn-bei",
+  "Northeastern Mandarin": "cmn-noe",
+  "Taiwanese Mandarin": "cmn-TW",
+  "Taiwan Mandarin": "cmn-TW",
+  # occurring only once:
+  "Waxiang": "wxa",
+  "Taishanese": "zhx-tai",
+  "Suzhounese": "wuu-szh", # FIXME: Maybe rename code
+  "Loudi": "hsn-lou",
+  "Tianjin": "cmn-tia",
+  "Northern Wu": "wuu-nor",
+  "Lanyin Mandarin": "cmn-lan",
+  "Central Plains Mandarin": "cmn-cep",
+  # needed:
+  # "Xinzhou": "?",
+  # "Pingxiang Gan": "?",
+  # "Luoyang": "?",
+  # "Luoyang Mandarin": "?",
+  # "Southwestern Mandarin": "?",
+  # "Longyan Min": "?",
+  # "Liuzhou Mandarin": "?",
+  # "Liuzhou": "?",
+  # "Huizhou": "?",
+  # "Anxi Hokkien": "?",
+  # "Tainan Hokkien": "?",
+  # "Taichung & Tainan Hokkien": "?",
+  # "Muping": "?",
+  # "Muping Mandarin": "?",
+  # "Mandalay Taishanese": "?",
+  # "Harbin": "?",
+  # "Harbin Mandarin": "?",
+  # "Urumqi": "?",
+  # needed, occurring only once:
+  # "Yudu Hakka": "?",
+  # "Yongchun Hokkien": "?",
+  # "Yinchuan": "?",
+  # "Xi'an Mandarin": "?",
+  # "Xi'an": "?",
+  # "Wanrong": "?",
+  # "Taiyuan": "?",
+  # "Pinghua": "?",
+  # "Nanchang Gan": "?",
+  # "Jinhua Wu": "?",
+  # "Jilu Mandarin": "?",
+  # "Hsinchu & Taichung Hokkien": "?",
+  # "Guiyang": "?",
+  # skipped:
+  # "Classical Chinese": # ambiguous
+  # "Hong Kong": ambiguous,
+  # "Taiwan": # ambiguous
+  # "Singapore": # ambiguous
+  # "Malaysia": # ambiguous
+  # "Internet slang":
+  # "Classical": # ambiguous
+  # "Buddhist temple":
+  # "Buddhism":
+  # "TCM":
+  # "Thailand": # ambiguous?
+  # "Taiwanese": # ambiguous
+  # "Son of Heaven":
+  # "Northern Mandarin": # ambiguous?
+  # "Mainland": # ambiguous
+  # "Macau":
+  # "Internet":
+  # skipped, occurring only once:
+  # "Southeast Asia; dated or dialectal in Mainland China",
+  # "Sichuanese or Internet slang",
+  # "Qing Dynasty":
+  # "Philippines": # ambiguous
+  # "Northern China": # ambiguous
+  # "Korean calligraphy":
+  # "Japanese calligraphy":
+  # "Guangdong": # ambiguous?
+  # "Fuzhou": # ambiguous
+  # "Eastern Min; Southern Min": # ambiguous
+  # "Classical Chinese or in compounds":
+  # "Christianity":
+  # "Chinese landscape garden":
+  # "Australia":
+  # "ACG":
 }
+
+lects_to_codes_from_label_module = {
+  "Beijing": "cmn-bei",
+  "Peking": "cmn-bei",
+  "Pekingese": "cmn-bei",
+  "Beijing Mandarin": "cmn-bei",
+  "Cantonese": "yue",
+  "Central Min": "czo",
+  "Min Zhong": "czo",
+  "Central Plains Mandarin": "cmn-cep",
+  "Zhongyuan Mandarin": "cmn-cep",
+  "Dungan": "dng",
+  "Eastern Min": "cdo",
+  "Min Dong": "cdo",
+  "Gan": "gan",
+  "Guilin Mandarin": "cmn-gui",
+  "Hainanese": "nan-hnm",
+  "Hainan Min": "nan-hnm",
+  "Hainan Min Chinese": "nan-hnm",
+  "Hakka": "hak",
+  "Hangzhounese Wu": "wuu-hzh",
+  "Hangzhounese": "wuu-hzh",
+  "Hangzhou Wu": "wuu-hzh",
+  "Hangzhou dialect": "wuu-hzh",
+  "Hokkien": "nan-hbl",
+  "Hong Kong Cantonese": "yue-HK",
+  "HKC": "yue-HK",
+  "Jin": "cjy",
+  "Lanyin Mandarin": "cmn-lan",
+  "Lan-Yin Mandarin": "cmn-lan",
+  "Leizhou Min": "nan-luh",
+  "Mandarin": "cmn",
+  "Ningbonese Wu": "wuu-ngb",
+  "Ningbonese": "wuu-ngb",
+  "Ningbo Wu": "wuu-ngb",
+  "Ningbo dialect": "wuu-ngb",
+  "Ningbo": "wuu-ngb",
+  "Northeastern Mandarin": "cmn-noe",
+  "northeastern Mandarin": "cmn-noe",
+  "NE Mandarin": "cmn-noe",
+  "Northern Min": "mnp",
+  "Min Bei": "mnp",
+  "Northern Wu": "wuu-nor",
+  "Taihu": "wuu-nor",
+  "Taihu Wu": "wuu-nor",
+  "Penang Hokkien": "nan-pen",
+  "Philippine Hokkien": "nan-hbl-PH",
+  "PH Hokkien": "nan-hbl-PH",
+  "Ph Hokkien": "nan-hbl-PH",
+  "PH": "nan-hbl-PH",
+  "PHH": "nan-hbl-PH",
+  "Puxian Min": "cpx",
+  "Puxian": "cpx",
+  "Pu-Xian Min": "cpx",
+  "Pu-Xian": "cpx",
+  "Xinghua": "cpx",
+  "Hinghwa": "cpx",
+  "Quanzhou": "nan-qua",
+  "Quanzhou dialect": "nan-qua",
+  "Chinchew": "nan-qua",
+  "Chinchew dialect": "nan-qua",
+  "Choanchew": "nan-qua",
+  "Choanchew dialect": "nan-qua",
+  "Shanghainese Wu": "wuu-sha",
+  "Shanghainese": "wuu-sha",
+  "Shanghai dialect": "wuu-sha",
+  "Sichuanese": "zhx-sic",
+  "Sichuan": "zhx-sic",
+  "Singaporean Hokkien": "nan-hbl-SG",
+  "Singapore Hokkien": "nan-hbl-SG",
+  "Suzhounese Wu": "wuu-szh",
+  "Suzhounese": "wuu-szh",
+  "Suzhou Wu": "wuu-szh",
+  "Suzhounese dialect": "wuu-szh",
+  "Taishanese": "zhx-tai",
+  "Toishanese": "zhx-tai",
+  "Hoisanese": "zhx-tai",
+  "Taiwanese Hakka": "hak-TW",
+  "Taiwan Hakka": "hak-TW",
+  "Taiwanese Hokkien": "nan-hbl-TW",
+  "Taiwanese Southern Min": "nan-hbl-TW",
+  "Taiwanese Min Nan": "nan-hbl-TW",
+  "Taiwan Hokkien": "nan-hbl-TW",
+  "Taiwan Southern Min": "nan-hbl-TW",
+  "Taiwan Min Nan": "nan-hbl-TW",
+  "Taiwanese Hokkien and Hakka": ["nan-hbl-TW", "hak-TW"],
+  "Taiwanese Hokkien & Hakka": ["nan-hbl-TW", "hak-TW"],
+  "Taiwanese Hakka and Hokkien": ["nan-hbl-TW", "hak-TW"],
+  "Taiwanese Hakka & Hokkien": ["nan-hbl-TW", "hak-TW"],
+  "Taiwanese Southern Min and Hakka": ["nan-hbl-TW", "hak-TW"],
+  "Taiwanese Southern Min & Hakka": ["nan-hbl-TW", "hak-TW"],
+  "Taiwanese Hakka and Southern Min": ["nan-hbl-TW", "hak-TW"],
+  "Taiwanese Hakka & Southern Min": ["nan-hbl-TW", "hak-TW"],
+  "Taiwanese Min Nan and Hakka": ["nan-hbl-TW", "hak-TW"],
+  "Taiwanese Min Nan & Hakka": ["nan-hbl-TW", "hak-TW"],
+  "Taiwanese Hakka and Min Nan": ["nan-hbl-TW", "hak-TW"],
+  "Taiwanese Hakka & Min Nan": ["nan-hbl-TW", "hak-TW"],
+  "Taiwan Hokkien and Hakka": ["nan-hbl-TW", "hak-TW"],
+  "Taiwan Hokkien & Hakka": ["nan-hbl-TW", "hak-TW"],
+  "Taiwan Hakka and Hokkien": ["nan-hbl-TW", "hak-TW"],
+  "Taiwan Hakka & Hokkien": ["nan-hbl-TW", "hak-TW"],
+  "Taiwan Southern Min and Hakka": ["nan-hbl-TW", "hak-TW"],
+  "Taiwan Southern Min & Hakka": ["nan-hbl-TW", "hak-TW"],
+  "Taiwan Hakka and Southern Min": ["nan-hbl-TW", "hak-TW"],
+  "Taiwan Hakka & Southern Min": ["nan-hbl-TW", "hak-TW"],
+  "Taiwan Min Nan and Hakka": ["nan-hbl-TW", "hak-TW"],
+  "Taiwan Min Nan & Hakka": ["nan-hbl-TW", "hak-TW"],
+  "Taiwan Hakka and Min Nan": ["nan-hbl-TW", "hak-TW"],
+  "Taiwan Hakka & Min Nan": ["nan-hbl-TW", "hak-TW"],
+  "Taiwanese Mandarin": "cmn-TW",
+  "Taiwan Mandarin": "cmn-TW",
+  "Teochew": "nan-tws",
+  "Tianjin": "cmn-tia",
+  "Tianjin dialect": "cmn-tia",
+  "Tianjin Mandarin": "cmn-tia",
+  "Tianjinese": "cmn-tia",
+  "Waxiang": "wxa",
+  "Wenzhou Wu": "wuu-wen",
+  "Wenzhounese": "wuu-wen",
+  "Wenzhou": "wuu-wen",
+  "Oujiang": "wuu-wen",
+  "Wu": "wuu",
+  "Wuhan": "cmn-wuh",
+  "Hankou": "cmn-wuh",
+  "Hankow": "cmn-wuh",
+  "Wuhan dialect": "cmn-wuh",
+  "Xiamen": "nan-xia",
+  "Xiamen dialect": "nan-xia",
+  "Amoy": "nan-xia",
+  "Amoy dialect": "nan-xia",
+  "Xiang": "hsn",
+  "Zhongshan Min": "zhx-zho",
+  "Zhangzhou": "nan-zha",
+  "Zhangzhou dialect": "nan-zha",
+  "Changchew": "nan-zha",
+  "Changchew dialect": "nan-zha",
+}
+
+for lect, code in lects_to_codes_from_label_module.items():
+  if lect not in lects_to_codes:
+    lects_to_codes[lect] = code
+
+def link_term(term):
+  if "[" in term:
+    return term
+  return "[[%s]]" % term
 
 def get_params_from_zh_l(t):
   # This is an utter piece of shit. Ported from lines 53-74 of [[Module:zh/link]].
@@ -57,13 +321,14 @@ def get_params_from_zh_l(t):
 
 def find_southern_min_types(index, pagetitle, linkt, linkpage, linkgloss):
   def make_msg_txt(txt):
-    return "Page %s %s: Link page [[%s]]%s in %s: %s" % (
-        index, pagetitle, linkpage, linkgloss and " (glossed as '%s')" % linkgloss or "", str(linkt), txt)
+    return "Page %s %s: Link page %s%s in %s: %s" % (
+        index, pagetitle, link_term(linkpage), linkgloss and " (glossed as '%s')" % linkgloss or "", str(linkt), txt)
   def errandpagemsg(txt):
     errandmsg(make_msg_txt(txt))
   def pagemsg(txt):
     msg(make_msg_txt(txt))
-  page = pywikibot.Page(site, blib.remove_links(linkpage))
+  canon_pagename = re.sub("//.*", "", blib.remove_links(linkpage))
+  page = pywikibot.Page(site, canon_pagename)
   linkmsg = "synonym/antonym %s (template %s)" % (linkpage, str(linkt))
   if not blib.safe_page_exists(page, errandpagemsg):
     return "Found %s but page doesn't exist" % linkmsg
@@ -92,7 +357,7 @@ def find_southern_min_types(index, pagetitle, linkt, linkpage, linkgloss):
         if getp("mn-t"):
           add("Teochew")
         if getp("mn-l"):
-          add("Leizhou")
+          add("Leizhou Min")
         saw_zh_pron = True
 
       if tn in blib.label_templates and getp("1") == "zh":
@@ -217,31 +482,135 @@ def process_text_on_page(index, pagetitle, text):
     def getp(param):
       return getparam(t, param)
     if tn in ["col1", "col2", "col3", "col4", "col5", "col-auto"] and getp("1") == "zh":
+      def lect_types_to_codes(lect_types):
+        new_lang_codes = []
+        for lect_type in lect_types:
+          if lect_type not in lects_to_codes:
+            raise ValueError("Unrecognized lect type '%s' generated" % lect_type)
+          code = lects_to_codes[lect_type]
+          if type(code) is list:
+            new_lang_codes.extend(code)
+          else:
+            new_lang_codes.append(code)
+        return new_lang_codes
       terms = blib.fetch_param_chain(t, "2")
       modified_terms = []
+      lect_types = None
       for term in terms:
-        m = re.search("^([a-z][a-z][a-zA-Z.,-]*):([^ ].*?)(<.*>)?$", term)
+        m = re.search("^(?:([a-z][a-z][a-zA-Z.,-]*):)?([^ ].*?)(<.*>)?$", term)
         if m:
           langcodes, actual_term, modifiers = m.groups()
+          linked_term = link_term(actual_term)
+          langcodes = langcodes or ""
           modifiers = modifiers or ""
-          langcodes = langcodes.split(",")
-          modified_langcodes = []
-          for langcode in langcodes:
-            if langcode == "nan":
-              # FIXME: Extract gloss if present
-              lect_types = find_southern_min_types(index, pagetitle, t, actual_term, None)
-              if type(lect_types) is str:
-                pagemsg("WARNING: Unable to convert 'nan' to correct lang code (reason: %s)" % lect_types)
-                modified_langcodes.append("nan")
+          if langcodes:
+            langcodes = langcodes.split(",")
+            modified_langcodes = []
+            for langcode in langcodes:
+              if langcode == "nan" or langcode == "nan-hbl":
+                # FIXME: Extract gloss if present
+                lect_types = find_southern_min_types(index, pagetitle, t, actual_term, None)
+                if type(lect_types) is str:
+                  pagemsg("WARNING: Unable to convert '%s' to correct lang code (reason: %s)" % (langcode, lect_types))
+                  modified_langcodes.append(langcode)
+                else:
+                  new_lang_codes = lect_types_to_codes(lect_types)
+                  modified_langcodes.extend(new_lang_codes)
+                  notes.append("in {{%s}}, modify '%s' to '%s' by looking up term %s" % (
+                    tn, langcode, ",".join(new_lang_codes), linked_term))
               else:
-                lect_types = [dialects_to_codes[lect_type] for lect_type in lect_types]
-                modified_langcodes.extend(lect_types)
-                notes.append("in {{%s}}, modify 'nan' to '%s' by looking up term %s" % (
-                  tn, ",".join(lect_types), actual_term))
+                modified_langcodes.append(langcode)
+          else:
+            modified_langcodes = []
+          if modifiers:
+            m = re.search("^(.*?)<qq:(.*)>(.*)$", modifiers)
+            before_modified_langcodes = []
+            if m:
+              before, qqs, after = m.groups()
+              qq_parts = qqs.split(", ")
+              new_qq_parts = []
+              def add_code(code):
+                if code not in modified_langcodes:
+                  modified_langcodes.append(code)
+              for qq_part in qq_parts:
+                if qq_part in ["Min Nan", "Southern Min", "Coastal Min", "Min", "Hokkien"]:
+                  if lect_types is None:
+                    lect_types = find_southern_min_types(index, pagetitle, t, actual_term, None)
+                    if type(lect_types) is str:
+                      pagemsg("WARNING: Unable to convert '%s' to correct lang code (reason: %s)" % (qq_part, lect_types))
+                  if type(lect_types) is list:
+                    if qq_part == "Hokkien":
+                      saw_hokkien_type = False
+                      for lect_type in lect_types:
+                        if "Hokkien" in lect_type:
+                          saw_hokkien_type = True
+                          break
+                      if not saw_hokkien_type:
+                        pagemsg("WARNING: Converting qualifier 'Hokkien' to '%s', which doesn't include any Hokkien types (term %s)"
+                                % (", ".join(lect_types), linked_term))
+                    new_lang_codes = lect_types_to_codes(lect_types)
+                    pagemsg("Converting qualifier '%s' to lang code(s) '%s' (term %s)" % (qq_part, ",".join(new_lang_codes), linked_term))
+                    for code in new_lang_codes:
+                      add_code(code)
+                  elif qq_part in ["Min Nan", "Southern Min"]:
+                    pagemsg("WARNING: Unable to convert '%s' to something more specific, converting to code 'nan' (term %s)" %
+                            (qq_part, linked_term))
+                    add_code("nan")
+                  elif qq_part == "Hokkien":
+                    pagemsg("WARNING: Unable to convert 'Hokkien' to something more specific, converting to code 'nan-hbl' (term %s)" %
+                            linked_term)
+                    add_code("nan-hbl")
+                  elif qq_part in ["Min", "Coastal Min"]:
+                    pagemsg("WARNING: Unable to convert 'Min' to something more specific, leaving as-is (term %s)" %
+                            linked_term)
+                    new_qq_parts.append(qq_part)
+                  else:
+                    raise ValueError("Internal error: Unhandled qualifier part '%s'" % qq_part)
+                elif qq_part in lects_to_codes:
+                  code = lects_to_codes[qq_part]
+                  if type(code) is list:
+                    pagemsg("Converting qualifier '%s' to codes '%s' (term %s)" % (
+                      qq_part, ",".join(code), linked_term))
+                    for cd in code:
+                      add_code(cd)
+                  else:
+                    pagemsg("Converting qualifier '%s' to code '%s' (term %s)" % (qq_part, code, linked_term))
+                    add_code(code)
+                else:
+                  if re.search("^[A-Z]", qq_part):
+                    pagemsg("WARNING: Saw unhandled lect qualifier %s (term %s): <qq:%s>" % (qq_part, linked_term, qqs))
+                  new_qq_parts.append(qq_part)
+              if new_qq_parts:
+                new_modifiers = "%s<qq:%s>%s" % (before, ", ".join(new_qq_parts), after)
+              else:
+                new_modifiers = "%s%s" % (before, after)
+              if new_modifiers != modifiers:
+                new_text = []
+                if new_modifiers:
+                  new_text.append("new modifiers %s" % new_modifiers)
+                if modified_langcodes:
+                  new_text.append("new lang codes %s" % ",".join(modified_langcodes))
+                msg_body = "modifiers %s%s to %s (term %s)" % (
+                  modifiers,
+                  " and lang codes %s" % ",".join(before_modified_langcodes) if before_modified_langcodes else "",
+                  " and ".join(new_text),
+                  linked_term
+                )
+                pagemsg("Converting %s" % msg_body)
+                notes.append("converted %s" % msg_body)
             else:
-              modified_langcodes.append(langcode)
-          if langcodes != modified_langcodes:
-            term = "%s:%s%s" % (",".join(modified_langcodes), actual_term, modifiers)
+              new_modifiers = modifiers
+          else:
+            new_modifiers = modifiers
+          if modified_langcodes:
+            if len(modified_langcodes) > 3:
+              pagemsg("WARNING: Generating %s > 3 prefixed language codes %s (term %s)" % (
+                len(modified_langcodes), ",".join(modified_langcodes), linked_term))
+            modified_langcodes = "%s:" % ",".join(modified_langcodes)
+          else:
+            modified_langcodes = ""
+          if langcodes != modified_langcodes or modifiers != new_modifiers:
+            term = "%s%s%s" % (modified_langcodes, actual_term, new_modifiers)
         modified_terms.append(term)
       if terms != modified_terms:
         blib.set_param_chain(t, modified_terms, "2")
@@ -300,12 +669,12 @@ def process_text_on_page(index, pagetitle, text):
                 if type(min_types) is str:
                   min_warnings.append(min_types)
                 elif min_types:
-                  pagemsg("For link page [[%s]], found %s: %s" % (linkpage, ", ".join(min_types), line))
+                  pagemsg("For link page %s, found %s: %s" % (link_term(linkpage), ", ".join(min_types), line))
                   for min_type in min_types:
                     if min_type not in all_min_types:
                       all_min_types.append(min_type)
               all_linkpage_txt = ",".join(
-                "[[%s]]:%s" % (page, gloss) if gloss else "[[%s]]" % page for page, gloss in all_linkpages)
+                "%s:%s" % (link_term(page), gloss) if gloss else link_term(page) for page, gloss in all_linkpages)
               if not all_min_types:
                 pagemsg("WARNING: Couldn't locate any Southern Min types among link page(s) %s (reason(s): %s): %s" % (
                   all_linkpage_txt, "; ".join(min_warnings), line))
@@ -317,9 +686,9 @@ def process_text_on_page(index, pagetitle, text):
                 frobbed_qualifier_vals = []
                 saw_min_nan = False
                 for val in qualifier_vals:
-                  if val in ["Min Nan", "Southern Min"]:
+                  if val in ["Min Nan", "Southern Min", "Coastal Min"]:
                     if saw_min_nan:
-                      pagemsg("WARNING: Saw 'Min Nan' or 'Southern Min' multiple times in qualifier template %s, not changing: %s" %
+                      pagemsg("WARNING: Saw 'Min Nan/Southern Min/Coastal Min' multiple times in qualifier template %s, not changing: %s" %
                               (str(q_t), line))
                       break
                     saw_min_nan = val
