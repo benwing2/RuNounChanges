@@ -221,6 +221,7 @@ function export.get_label_info(data)
 
 	local ret = {categories = {}}
 	local label = data.label
+	local origlabel = label
 	local deprecated = false
 	local labdata
 	local submodule
@@ -260,8 +261,12 @@ function export.get_label_info(data)
 	end
 
 	if labdata.track then
-		-- Track label (after converting aliases to canonical form). It is too expensive to track all labels.
+		-- Track label (after converting aliases to canonical form; but also track original label (alias) if different
+		-- from canonical label). It is too expensive to track all labels.
 		track_label(label, langcode)
+		if label ~= origlabel then
+			track_label(origlabel, langcode)
+		end
 	end
 
 	local displayed_label
