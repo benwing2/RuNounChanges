@@ -2644,12 +2644,14 @@ def split_text_into_sections(pagetext, pagemsg):
   for j in range(2, len(sections), 2):
     m = re.search(r"\A==[ \t]*(.*?)[ \t]*==[ \t]*\n\Z", sections[j - 1])
     if not m:
-      pagemsg("WARNING: Internal error: Can't match section header: %s" % (sections[j - 1].rstrip("\n")))
+      if pagemsg:
+        pagemsg("WARNING: Internal error: Can't match section header: %s" % (sections[j - 1].rstrip("\n")))
     else:
       seclang = m.group(1)
       section_langs.append((j, seclang))
       if seclang in sections_by_lang:
-        pagemsg("WARNING: Found two %s sections, skipping second one" % seclang)
+        if pagemsg:
+          pagemsg("WARNING: Found two %s sections, skipping second one" % seclang)
       else:
         sections_by_lang[seclang] = j
   return sections, sections_by_lang, section_langs
@@ -2671,14 +2673,16 @@ def split_text_into_subsections(secbody, pagemsg):
   for j in range(2, len(subsections), 2):
     m = re.search(r"\A(==+)[ \t]*(.*?)[ \t]*(==+)[ \t]*\n\Z", subsections[j - 1])
     if not m:
-      pagemsg("WARNING: Internal error: Can't match subsection header: %s" % (subsections[j - 1].rstrip("\n")))
+      if pagemsg:
+        pagemsg("WARNING: Internal error: Can't match subsection header: %s" % (subsections[j - 1].rstrip("\n")))
     else:
       left_equals, header, right_equals = m.groups()
       left_equals = len(left_equals)
       right_equals = len(right_equals)
       if left_equals != right_equals:
-        pagemsg("WARNING: Found %s equalsigns on the left but %s equal signs on the right, assuming smaller one: %s"
-          % (left_equals, right_equals, subsections[j - 1].rstrip("\n")))
+        if pagemsg:
+          pagemsg("WARNING: Found %s equalsigns on the left but %s equal signs on the right, assuming smaller one: %s"
+            % (left_equals, right_equals, subsections[j - 1].rstrip("\n")))
         num_equals = min(left_equals, right_equals)
       else:
         num_equals = left_equals
