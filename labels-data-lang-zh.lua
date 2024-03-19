@@ -12,10 +12,10 @@ labels["American (1980&ndash;)"] = {
 	regional_categories = true,
 }
 
-labels["Beijing"] = {
-	aliases = {"Peking", "Pekingese", "Beijing Mandarin"},
+labels["Beijing Mandarin"] = {
+	aliases = {"Beijing", "Peking", "Pekingese"},
 	Wikipedia = "Beijing dialect",
-	plain_categories = "Beijing Mandarin",
+	plain_categories = true,
 }
 
 labels["Cantonese"] = {
@@ -24,7 +24,7 @@ labels["Cantonese"] = {
 }
 
 labels["dialectal Cantonese"] = {
-	display = "dialectal [[w:Cantonese|Cantonese]]",
+	Wikipedia = "Cantonese",
 	regional_categories = "Cantonese",
 }
 
@@ -35,19 +35,19 @@ labels["Central Min"] = {
 }
 
 labels["Central Plains Mandarin"] = {
-	aliases = {"Zhongyuan Mandarin"},
+	aliases = {"Central Plains", "Zhongyuan Mandarin"},
 	Wikipedia = true,
 	plain_categories = true,
 }
 
-labels["Changzhounese"] = {
-	aliases = {"Changzhou Wu", "Changzhounese Wu"},
+labels["Changzhounese Wu"] = {
+	aliases = {"Changzhou Wu", "Changzhou", "Changzhounese"},
 	Wikipedia = "Changzhou dialect",
 	plain_categories = true,
 }
 
 labels["Chuzhou Wu"] = {
-	aliases = {"Lishuinese", "Fujian Wu", "Lishui Wu"},
+	aliases = {"Chuzhou", "Lishuinese", "Fujian Wu", "Lishui Wu"},
 	Wikipedia = "Lishui dialect",
 	plain_categories = true,
 }
@@ -57,7 +57,22 @@ labels["Coastal Min"] = {
 	Wikipedia = true,
 }
 
+-- FIXME: Category added.
+labels["Dabu Hakka"] = {
+	aliases = {"Dabu"},
+	Wikipedia = "zh:大埔話",
+	plain_categories = true,
+}
+
+-- FIXME: Category added.
+labels["Danzhou Chinese"] = {
+	aliases = {"Danzhou"},
+	Wikipedia = "Danzhou dialect",
+	plain_categories = true,
+}
+
 labels["Datian Min"] = {
+	aliases = {"Datian"},
 	Wikipedia = true,
 	regional_categories = true,
 }
@@ -65,6 +80,12 @@ labels["Datian Min"] = {
 labels["Dungan"] = {
 	Wikipedia = "Dungan language",
 	regional_categories = true,
+}
+
+-- FIXME: Category added.
+labels["Early Modern Hakka"] = {
+	Wikipedia = "Hakka Chinese",
+	plain_categories = true,
 }
 
 labels["Eastern Min"] = {
@@ -75,7 +96,7 @@ labels["Eastern Min"] = {
 
 labels["dialectal Eastern Min"] = {
 	aliases = {"dialectal Min Dong"},
-	display = "dialectal [[w:Eastern Min|Eastern Min]]",
+	Wikipedia = "Eastern Min",
 	regional_categories = "Eastern Min",
 }
 
@@ -90,28 +111,50 @@ labels["Gan"] = {
 }
 
 labels["dialectal Gan"] = {
-	display = "dialectal [[w:Gan Chinese|Gan]]",
+	Wikipedia = "Gan Chinese",
 	regional_categories = "Gan",
 }
 
 labels["Guangxi Mandarin"] = {
-	display = "Guangxi [[w:Southwestern Mandarin|Mandarin]]",
+	Wikipedia = "Southwestern Mandarin",
 	plain_categories = true,
 }
 
 labels["dialectal Guangxi Mandarin"] = {
-	display = "dialectal Guangxi [[w:Southwestern Mandarin|Mandarin]]",
+	Wikipedia = "Southwestern Mandarin",
 	plain_categories = "Guangxi Mandarin",
 }
 
+-- FIXME: Category added.
+labels["Guangzhou Cantonese"] = {
+	aliases = {"Guangzhou"},
+	Wikipedia = "Cantonese",
+	plain_categories = true,
+}
+
+-- FIXME: Category added.
+labels["Guanzhong Mandarin"] = {
+	aliases = {"Guanzhong"},
+	Wikipedia = "Guanzhong dialect",
+	plain_categories = true,
+}
+
 labels["Guilin Mandarin"] = {
-	display = "Guilin [[w:Southwestern Mandarin|Mandarin]]",
+	aliases = {"Guilin"},
+	Wikipedia = "Southwestern Mandarin",
+	plain_categories = true,
+}
+
+-- FIXME: Category added.
+labels["Hailu Hakka"] = {
+	aliases = {"Hailu"},
+	Wikipedia = "Hailu dialect",
 	plain_categories = true,
 }
 
 labels["Hainanese"] = {
 	aliases = {"Hainan Min", "Hainan Min Chinese"},
-	Wikipedia = "Hainanese",
+	Wikipedia = true,
 	regional_categories = true,
 }
 
@@ -121,14 +164,35 @@ labels["Hakka"] = {
 }
 
 labels["dialectal Hakka"] = {
-	display = "dialectal [[w:Hakka Chinese|Hakka]]",
+	Wikipedia = "Hakka Chinese",
 	regional_categories = "Hakka",
 }
 
+-- FIXME: Category added.
+labels["Haklau Min"] = {
+	aliases = {"Hoklo Min", "Haklau", "Hoklo"},
+	Wikipedia = "Hoklo Min",
+	regional_categories = true,
+}
+
 labels["Hangzhounese Wu"] = {
-	aliases = {"Hangzhounese", "Hangzhou Wu"},
+	aliases = {"Hangzhou", "Hangzhounese", "Hangzhou Wu"},
 	display = "Hangzhounese",
 	Wikipedia = "Hangzhou dialect",
+	plain_categories = true,
+}
+
+-- FIXME: Category added.
+labels["Hengyang Xiang"] = {
+	aliases = {"Hengyang"},
+	Wikipedia = "Hengyang dialect",
+	plain_categories = true,
+}
+
+-- FIXME: Category added.
+labels["Hengzhou Xiang"] = {
+	aliases = {"Hengzhou"},
+	Wikipedia = "Hengyang dialect",
 	plain_categories = true,
 }
 
@@ -144,19 +208,28 @@ labels["Hong Kong Cantonese"] = {
 }
 
 labels["Hong Kong Hakka"] = {
-	display = "Hong Kong [[w:Hakka language|Hakka]]",
+	Wikipedia = "Hakka language",
+	plain_categories = true,
+}
+
+-- FIXME: Category added.
+labels["Huiyang Hakka"] = {
+	aliases = {"Huiyang"},
+	Wikipedia = "zh:惠阳话",
 	plain_categories = true,
 }
 
 labels["Huizhou"] = {
-	display = "[[w:Huizhou Chinese|Huizhou]]",
+	aliases = {"Huizhou"},
+	Wikipedia = "Huizhou Chinese",
 	regional_categories = true,
 }
 
-labels["Huzhounese"] = {
-	aliases = {"Huzhou Wu", "Huzhounese Wu"},
+-- FIXME: Category renamed from Huzhounese Chinese.
+labels["Huzhounese Wu"] = {
+	aliases = {"Huzhou", "Huzhou Wu", "Huzhounese"},
 	Wikipedia = "zh:湖州話",
-	regional_categories = true,
+	plain_categories = true,
 }
 
 labels["Inland Min"] = {
@@ -164,22 +237,25 @@ labels["Inland Min"] = {
 	Wikipedia = true,
 }
 
+-- FIXME: Category added.
 labels["Jianghuai Mandarin"] = {
-	aliases = {"Jiang-Huai Mandarin", "Lower Yangtze Mandarin", "Huai"},
+	aliases = {"Jianghuai", "Jiang-Huai", "Jiang-Huai Mandarin", "Lower Yangtze Mandarin", "Huai"},
 	Wikipedia = "Lower Yangtze Mandarin",
-	regional_categories = "Mandarin",
+	plain_categories = true,
 }
 
+-- FIXME: Category added.
 labels["Jiaoliao Mandarin"] = {
-	aliases = {"Jiao-Liao Mandarin"},
+	aliases = {"Jiaoliao", "Jiao-Liao", "Jiao-Liao Mandarin"},
 	Wikipedia = true,
-	regional_categories = "Mandarin",
+	plain_categories = true,
 }
 
+-- FIXME: Category added.
 labels["Jilu Mandarin"] = {
-	aliases = {"Ji-Lu Mandarin"},
+	aliases = {"Jilu", "Ji-Lu", "Ji-Lu Mandarin"},
 	Wikipedia = true,
-	regional_categories = "Mandarin",
+	plain_categories = true,
 }
 
 labels["Jin"] = {
@@ -188,8 +264,15 @@ labels["Jin"] = {
 }
 
 labels["dialectal Jin"] = {
-	display = "dialectal [[w:Jin Chinese|Jin]]",
+	Wikipedia = "Jin Chinese",
 	regional_categories = "Jin",
+}
+
+-- FIXME: Category added.
+labels["Jinjiang Hokkien"] = {
+	aliases = {"Jinjiang"},
+	Wikipedia = "Quanzhou dialect",
+	plain_categories = true,
 }
 
 labels["Korean Classical Chinese"] = {
@@ -198,23 +281,51 @@ labels["Korean Classical Chinese"] = {
 }
 
 labels["Lanyin Mandarin"] = {
-	aliases = {"Lan-Yin Mandarin"},
+	aliases = {"Lanyin", "Lan-Yin Mandarin"},
 	Wikipedia = true,
 	plain_categories = true,
 }
 
 labels["Leizhou Min"] = {
+	aliases = {"Leizhou"},
 	Wikipedia = true,
 	regional_categories = true,
 }
 
+-- FIXME: Category added.
 labels["Linshao Wu"] = {
 	aliases = {"Linshao", "Lin-Shao Wu", "Lin-Shao"},
 	Wikipedia = "Shaoxing dialect",
+	plain_categories = true,
 }
 
 labels["Liuzhou Mandarin"] = {
-	display = "Liuzhou [[w:Southwestern Mandarin|Mandarin]]",
+	Wikipedia = "Southwestern Mandarin",
+	plain_categories = true,
+}
+
+-- FIXME: Category added.
+labels["Loudi Xiang"] = {
+	aliases = {"Loudi"},
+	Wikipedia = "zh:娄底话",
+	plain_categories = true,
+}
+
+-- FIXME: Category added.
+labels["Malaysian Hokkien"] = {
+	Wikipedia = "Southern Peninsular Malaysian Hokkien",
+	plain_categories = true,
+}
+
+-- FIXME: Category added.
+labels["Malaysian Huiyang Hakka"] = {
+	Wikipedia = "zh:惠阳话",
+	plain_categories = true,
+}
+
+-- FIXME: Category added.
+labels["Malaysian Mandarin"] = {
+	Wikipedia = true,
 	plain_categories = true,
 }
 
@@ -224,8 +335,15 @@ labels["Mandarin"] = {
 }
 
 labels["dialectal Mandarin"] = {
-	display = "dialectal [[w:Mandarin Chinese|Mandarin]]",
+	Wikipedia = "Mandarin Chinese",
 	regional_categories = "Mandarin",
+}
+
+-- FIXME: Category added.
+labels["Meixian Hakka"] = {
+	aliases = {"Meixian", "Moiyan", "Moiyan Hakka", "Meizhou", "Meizhou Hakka"},
+	Wikipedia = "Meixian dialect",
+	plain_categories = true,
 }
 
 labels["Min"] = {
@@ -233,14 +351,26 @@ labels["Min"] = {
 	regional_categories = true,
 }
 
+-- FIXME: Category added.
+labels["Nanjing Mandarin"] = {
+	aliases = {"Nanjing"},
+	Wikipedia = "Nanjing dialect",
+	plain_categories = true,
+}
+
 labels["Nanning Pinghua"] = {
-	display = "Nanning [[w:Pinghua|Pinghua]]",
+	Wikipedia = "Pinghua",
+	plain_categories = true,
+}
+
+-- FIXME: Category added.
+labels["New Xiang"] = {
+	Wikipedia = true,
 	plain_categories = true,
 }
 
 labels["Ningbonese Wu"] = {
 	aliases = {"Ningbonese", "Ningbo Wu", "Ningbo"},
-	display = "Ningbonese",
 	Wikipedia = "Ningbo dialect",
 	plain_categories = true,
 }
@@ -269,15 +399,29 @@ labels["Northern Wu"] = {
 	plain_categories = true,
 }
 
-labels["Penang Hokkien"] = {
+-- FIXME: Category added.
+labels["Old Xiang"] = {
 	Wikipedia = true,
 	plain_categories = true,
 }
 
+labels["Penang Hokkien"] = {
+	aliases = {"Penang"},
+	Wikipedia = true,
+	plain_categories = true,
+}
+
+-- FIXME: Category renamed from Philippine Chinese.
 labels["Philippine Hokkien"] = {
 	aliases = {"PH Hokkien", "Ph Hokkien", "PH", "PHH"},
 	Wikipedia = true,
-	regional_categories = "Philippine",
+	plain_categories = true,
+}
+
+-- FIXME: Category added.
+labels["Philippine Mandarin"] = {
+	Wikipedia = "Mandarin Chinese in the Philippines",
+	plain_categories = true,
 }
 
 labels["Pinghua"] = {
@@ -291,10 +435,10 @@ labels["Puxian Min"] = {
 	regional_categories = true,
 }
 
-labels["Quanzhou"] = {
-	aliases = {"Quanzhou Hokkien", "Chinchew", "Choanchew"},
+labels["Quanzhou Hokkien"] = {
+	aliases = {"Quanzhou", "Chinchew", "Choanchew"},
 	Wikipedia = "Quanzhou dialect",
-	plain_categories = "Quanzhou Hokkien",
+	plain_categories = true,
 }
 
 labels["Shanghainese Wu"] = {
@@ -305,20 +449,20 @@ labels["Shanghainese Wu"] = {
 }
 
 labels["Shaoxing Wu"] = {
-	aliases = {"Shaoxingnese", "Shaoxingnese Wu", "Shaoxingese", "Shaoxingese Wu"},
+	aliases = {"Shaoxing", "Shaoxingnese", "Shaoxingnese Wu", "Shaoxingese", "Shaoxingese Wu"},
 	Wikipedia = "Shaoxing dialect",
 	plain_categories = true,
 }
 
 labels["Shehua"] = {
-	Wikipedia = "Shehua",
+	Wikipedia = true,
 	regional_categories = true,
 }
 
-labels["Shuangfeng"] = {
-	aliases = {"Shuangfeng Xiang"},
+labels["Shuangfeng Xiang"] = {
+	aliases = {"Shuangfeng"},
 	Wikipedia = "Shuangfeng dialect",
-	plain_categories = "Shuangfeng Xiang",
+	plain_categories = true,
 }
 
 labels["Sichuanese"] = {
@@ -329,13 +473,29 @@ labels["Sichuanese"] = {
 
 labels["Singaporean Hokkien"] = {
 	aliases = {"Singapore Hokkien"},
-	Wikipedia = "Singaporean Hokkien",
+	Wikipedia = true,
 	plain_categories = true,
 }
 
-labels["Siyi"] = {
-	aliases = {"Siyi Yue"},
-	Wikipedia = "Siyi Yue",
+-- FIXME: Category added.
+labels["Singaporean Mandarin"] = {
+	aliases = {"Singapore Mandarin"},
+	Wikipedia = true,
+	plain_categories = true,
+}
+
+-- FIXME: Category added.
+labels["Sixian Hakka"] = {
+	aliases = {"Sixian"},
+	Wikipedia = "Sixian dialect",
+	plain_categories = true,
+}
+
+-- FIXME: Category added.
+labels["Siyi Yue"] = {
+	aliases = {"Siyi"},
+	Wikipedia = true,
+	plain_categories = true,
 }
 
 labels["Southern Min"] = {
@@ -347,12 +507,12 @@ labels["Southern Min"] = {
 
 labels["dialectal Southern Min"] = {
 	aliases = {"dialectal Min Nan"},
-	display = "dialectal [[w:Southern Min|Southern Min]]",
+	Wikipedia = "Southern Min",
 	regional_categories = "Southern Min",
 }
 
 labels["Southern Wu"] = {
-	display = "Southern [[w:Wu Chinese|Wu]]",
+	Wikipedia = "Wu Chinese",
 	plain_categories = true,
 }
 
@@ -363,18 +523,18 @@ labels["Southwestern Mandarin"] = {
 }
 
 labels["Standard Written Chinese"] = {
-	aliases = {"SWC"},
+	aliases = {"SWC", "WVC", "Written vernacular Chinese", "Written Vernacular Chinese"},
 	Wikipedia = "Written vernacular Chinese",
 }
 
-labels["Sujiahu"] = {
-	aliases = {"Su-Jia-Hu Wu", "Sujiahu Wu", "Su-Jia-Hu"}, -- not Suzhou-Jiaxing-Huzhou
-	display = "[[w:Suzhou dialect|Su]][[w:zh:嘉興話|jia]][[w:Shanghainese|hu]]",
+labels["Sujiahu Wu"] = {
+	aliases = {"Su-Jia-Hu Wu", "Sujiahu", "Su-Jia-Hu"}, -- not Suzhou-Jiaxing-Huzhou
+	display = "[[w:Suzhou dialect|Su]][[w:zh:嘉興話|jia]][[w:Shanghainese|hu]] [[w:Wu Chinese|Wu]]",
 	plain_categories = "Northern Wu",
 }
 
 labels["Suzhounese Wu"] = {
-	aliases = {"Suzhounese", "Suzhou Wu"},
+	aliases = {"Suzhou", "Suzhounese", "Suzhou Wu"},
 	display = "Suzhounese",
 	Wikipedia = "Suzhou dialect",
 	plain_categories = true,
@@ -394,15 +554,8 @@ labels["Taiwanese Hakka"] = {
 
 labels["Taiwanese Hokkien"] = {
 	aliases = {"Taiwanese Southern Min", "Taiwanese Min Nan", "Taiwan Hokkien", "Taiwan Southern Min", "Taiwan Min Nan"},
-	Wikipedia = "Taiwanese Hokkien",
+	Wikipedia = true,
 	plain_categories = true,
-	track = true,
-}
-
-labels["Taiwanese Hokkien and Hakka"] = {
-	aliases = {"Taiwanese Hokkien & Hakka", "Taiwanese Hakka and Hokkien", "Taiwanese Hakka & Hokkien", "Taiwanese Southern Min and Hakka", "Taiwanese Southern Min & Hakka", "Taiwanese Hakka and Southern Min", "Taiwanese Hakka & Southern Min", "Taiwanese Min Nan and Hakka", "Taiwanese Min Nan & Hakka", "Taiwanese Hakka and Min Nan", "Taiwanese Hakka & Min Nan", "Taiwan Hokkien and Hakka", "Taiwan Hokkien & Hakka", "Taiwan Hakka and Hokkien", "Taiwan Hakka & Hokkien", "Taiwan Southern Min and Hakka", "Taiwan Southern Min & Hakka", "Taiwan Hakka and Southern Min", "Taiwan Hakka & Southern Min", "Taiwan Min Nan and Hakka", "Taiwan Min Nan & Hakka", "Taiwan Hakka and Min Nan", "Taiwan Hakka & Min Nan"},
-	display = "[[w:Taiwanese Hokkien|Taiwanese Hokkien]] and [[w:Taiwanese Hakka|Hakka]]",
-	plain_categories = {"Taiwanese Hokkien", "Taiwanese Hakka"},
 	track = true,
 }
 
@@ -418,10 +571,10 @@ labels["Teochew"] = {
 	track = true,
 }
 
-labels["Tianjin"] = {
-	aliases = {"Tianjin Mandarin", "Tianjinese", "Tianjinese Mandarin"},
+labels["Tianjin Mandarin"] = {
+	aliases = {"Tianjin", "Tianjinese", "Tianjinese Mandarin"},
 	Wikipedia = "Tianjin dialect",
-	plain_categories = "Tianjin Mandarin",
+	plain_categories = true,
 }
 
 labels["Vietnamese Classical Chinese"] = {
@@ -434,10 +587,11 @@ labels["Waxiang"] = {
 	regional_categories = true,
 }
 
-labels["Wenzhou Wu"] = {
-	aliases = {"Wenzhounese", "Wenzhounese Wu", "Wenzhou", "Oujiang"},
-	display = "[[w:Wenzhou dialect|Wenzhounese]]",
-	plain_categories = "Wenzhounese Wu",
+labels["Wenzhounese Wu"] = {
+	aliases = {"Wenzhounese", "Wenzhou Wu", "Wenzhou", "Oujiang"},
+	display = "Wenzhounese",
+	Wikipedia = "Wenzhou dialect",
+	plain_categories = true,
 }
 
 labels["Wu"] = {
@@ -446,14 +600,14 @@ labels["Wu"] = {
 }
 
 labels["dialectal Wu"] = {
-	display = "dialectal [[w:Wu Chinese|Wu]]",
+	Wikipedia = "Wu Chinese",
 	regional_categories = "Wu",
 }
 
-labels["Wuhan"] = {
-	aliases = {"Wuhan Mandarin", "Hankou", "Hankow"},
+labels["Wuhan Mandarin"] = {
+	aliases = {"Wuhan", "Hankou", "Hankow"},
 	Wikipedia = "Wuhan dialect",
-	plain_categories = "Wuhan Mandarin",
+	plain_categories = true,
 }
 
 labels["Wuzhou Wu"] = {
@@ -462,10 +616,10 @@ labels["Wuzhou Wu"] = {
 	plain_categories = true,
 }
 
-labels["Xiamen"] = {
-	aliases = {"Xiamen Hokkien", "Amoy"},
+labels["Xiamen Hokkien"] = {
+	aliases = {"Xiamen", "Amoy"},
 	Wikipedia = "Amoy dialect",
-	plain_categories = "Xiamen Hokkien",
+	plain_categories = true,
 }
 
 labels["Xiang"] = {
@@ -474,30 +628,54 @@ labels["Xiang"] = {
 }
 
 labels["dialectal Xiang"] = {
-	display = "dialectal [[w:Xiang Chinese|Xiang]]",
+	Wikipedia = "Xiang Chinese",
 	regional_categories = "Xiang",
 }
 
-labels["Xinjiang"] = {
-	aliases = {"Xinjiang Mandarin"},
-	display = "[[w:Xinjiang Mandarin|Xinjiang]]",
-	plain_categories = "Xinjiang Mandarin",
+-- FIXME: Category added.
+labels["Xining Mandarin"] = {
+	aliases = {"Xining"},
+	Wikipedia = "Lanyin Mandarin",
+	plain_categories = true,
 }
 
+labels["Xinjiang Mandarin"] = {
+	aliases = {"Xinjiang"},
+	Wikipedia = true,
+	plain_categories = true,
+}
+
+-- FIXME: Category added.
 labels["Xinqu Wu"] = {
-	aliases = {"Quzhou Wu", "Quzhounese", "Quzhounese Wu", "Shangrao Wu", "Shangraonese", "Shangraonese Wu", "Xinzhou Wu"},
+	aliases = {"Xinqu", "Quzhou Wu", "Quzhounese", "Quzhounese Wu", "Shangrao", "Shangrao Wu", "Shangraonese", "Shangraonese Wu", "Xinzhou Wu"},
 	Wikipedia = "Quzhou dialect",
+	plain_categories = true,
+}
+
+-- FIXME: Category added.
+labels["Yangzhou Mandarin"] = {
+	aliases = {"Yangzhou"},
+	Wikipedia = "Lower Yangtze Mandarin",
+	plain_categories = true,
+}
+
+-- FIXME: Category added.
+labels["Zhao'an Hakka"] = {
+	aliases = {"Zhao'an", "Zhangzhou Hakka"},
+	Wikipedia = "zh:詔安客語",
+	plain_categories = true,
 }
 
 labels["Zhongshan Min"] = {
+	aliases = {"Zhongshan"},
 	Wikipedia = true,
 	regional_categories = true,
 }
 
-labels["Zhangzhou"] = {
-	aliases = {"Zhangzhou Hokkien", "Changchew"},
+labels["Zhangzhou Hokkien"] = {
+	aliases = {"Zhangzhou", "Changchew"},
 	Wikipedia = "Zhangzhou dialect",
-	plain_categories = "Zhangzhou Hokkien",
+	plain_categories = true,
 }
 
 return require("Module:labels").finalize_data(labels)
