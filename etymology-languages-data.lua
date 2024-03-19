@@ -247,7 +247,7 @@ m["ncb-nan"] = {
 --                Chinese varieties                --
 -----------------------------------------------------
 
-------------- Dead varieties -------------
+------------- Old Chinese, Middle Chinese -------------
 
 m["och-ear"] = {
 	"Early Old Chinese",
@@ -273,6 +273,78 @@ m["ltc-lat"] = {
 	"ltc",
 }
 
+------------- Classical varieties -------------
+
+-- FIXME: Temporary.
+m["lzh-cmn"] = {
+	"Classical Mandarin",
+	nil,
+	"lzh",
+}
+
+-- FIXME: Temporary.
+m["lzh-cmn-TW"] = {
+	"Classical Taiwanese Mandarin",
+	nil,
+	"lzh-cmn",
+}
+
+-- FIXME: Temporary.
+m["lzh-tai"] = {
+	"Classical Taishanese",
+	nil,
+	"lzh",
+}
+
+-- FIXME: Temporary.
+m["lzh-yue"] = {
+	"Classical Cantonese",
+	nil,
+	"lzh",
+}
+
+------------- Written Vernacular varieties -------------
+
+-- FIXME: Temporary.
+m["cmn-wvc"] = {
+	"Written vernacular Mandarin",
+	783605,
+	"cmn",
+}
+
+-- FIXME: Temporary. FIXME: How does this differ from "Literary Cantonese"?
+m["yue-wvc"] = {
+	"Written vernacular Cantonese",
+	nil,
+	"yue",
+}
+
+-- FIXME: Temporary.
+m["zhx-tai-wvc"] = {
+	"Written vernacular Taishanese",
+	nil,
+	"zhx-tai",
+}
+
+------------- Mandarin varieties -------------
+
+-- FIXME: Temporary. NOTE: The Linguist List assigns the "w:Beijing dialect" (Wikidata 1147606) the code "cmn-bej" and the
+-- larger "w:Beijing Mandarin (division of Mandarin)" (Wikidata 2169652) dialect group the code "cmn-bei". We may need to
+-- split this at some point to account for this.
+m["cmn-bei"] = {
+	"Beijing Mandarin",
+	1147606,
+	"cmn",
+}
+
+-- FIXME: Temporary. NOTE: The Linguist List uses the code cmn-zho.
+m["cmn-cep"] = {
+	"Central Plains Mandarin",
+	3048775,
+	"cmn",
+	aliases = {"Zhongyuan Mandarin"},
+}
+
 m["cmn-ear"] = {
 	"Early Mandarin",
 	837169,
@@ -280,12 +352,31 @@ m["cmn-ear"] = {
 	ancestors = "ltc",
 }
 
-------------- Mandarin varieties -------------
+-- FIXME: Temporary.
+m["cmn-gua"] = {
+	"Guanzhong Mandarin",
+	3431648,
+	"cmn-cep",
+}
 
 -- FIXME: Temporary. Appears to be a subdialect of Guiliu Mandarin, which in turn is a subdialect of Southwestern Mandarin.
 m["cmn-gui"] = {
 	"Guilin Mandarin",
 	11111636,
+	"cmn",
+}
+
+-- FIXME: Temporary.
+m["cmn-lan"] = {
+	"Lanyin Mandarin",
+	662754,
+	"cmn",
+}
+
+-- FIXME: Temporary.
+m["cmn-MY"] = {
+	"Malaysian Mandarin",
+	13646143,
 	"cmn",
 }
 
@@ -296,11 +387,57 @@ m["cmn-nan"] = {
 	"cmn",
 }
 
+-- FIXME: Temporary.
+m["cmn-noe"] = {
+	"Northeastern Mandarin",
+	1064504,
+	"cmn",
+}
+
+-- FIXME: Temporary.
+m["cmn-PH"] = {
+	"Philippine Mandarin",
+	7185155,
+	"cmn",
+}
+
+-- FIXME: Temporary.
+m["cmn-SG"] = {
+	"Singaporean Mandarin",
+	1048980,
+	"cmn",
+}
+
+-- FIXME: Temporary. Appears to be a subdialect of Jilu Mandarin.
+m["cmn-tia"] = {
+	"Tianjin Mandarin",
+	7800220,
+	"cmn",
+}
+
+-- FIXME: Temporary. NOTE: Wikidata also has Q4380827 "Taiwanese Mandarin", defined as "rare dialect of Standard Chinese
+-- (Mandarin) used in Taiwan, which is strongly influenced by Taiwanese Hokkien; mostly used by elderlies" and having no
+-- English Wikipedia article (but see w:zh:臺灣國語).
+m["cmn-TW"] = {
+	"Taiwanese Mandarin",
+	262828,
+	"cmn",
+}
+
+-- FIXME: Temporary. Appears to be a subdialect of Wu-Tian Mandarin, in turn a subdialect of Southwestern Mandarin.
+-- Given the code cmn-xwu in the Linguist List.
+m["cmn-wuh"] = {
+	"Wuhan Mandarin",
+	11124731,
+	"cmn",
+	aliases = {"Wuhanese"},
+}
+
 -- FIXME: Temporary. Appears to be a subdialect of Lanyin Mandarin.
 m["cmn-xin"] = {
 	"Xining Mandarin",
 	nil,
-	"cmn",
+	"cmn-lan",
 }
 
 -- FIXME: Temporary. Appears to be a subdialect of Jianghuai (Lower Yangtze) Mandarin.
@@ -310,18 +447,51 @@ m["cmn-yan"] = {
 	"cmn",
 }
 
+------------- Cantonese varieties -------------
+
+-- FIXME: Temporary.
+m["yue-gua"] = {
+	"Guangzhou Cantonese",
+	nil,
+	"yue",
+}
+
+-- FIXME: Temporary. Given the codes yue-yue or yue-can in the Linguist List.
+m["yue-HK"] = {
+	"Hong Kong Cantonese",
+	5894342,
+	"yue",
+}
+
+-- FIXME: Temporary. FIXME: How does this differ from "Written vernacular Cantonese"?
+m["yue-lit"] = {
+	"Literary Cantonese",
+	2472605,
+	"yue",
+}
+
 ------------- Wu varieties -------------
 
+-- FIXME: Maybe rename code to wuu-han.
 m["wuu-hzh"] = {
 	"Hangzhounese",
 	5648144,
 	"wuu",
 }
 
+-- FIXME: Rename code to wuu-nin.
 m["wuu-ngb"] = {
 	"Ningbonese",
 	3972199,
 	"wuu",
+}
+
+-- FIXME: Temporary.
+m["wuu-nor"] = {
+	"Northern Wu",
+	7675988,
+	"wuu",
+	aliases = {"Taihu Wu"},
 }
 
 m["wuu-sha"] = {
@@ -330,6 +500,7 @@ m["wuu-sha"] = {
 	"wuu",
 }
 
+-- FIXME: Rename code to wuu-suz.
 m["wuu-szh"] = {
 	"Suzhounese",
 	831744,
@@ -379,10 +550,68 @@ m["hsn-old"] = {
 
 ------------- Hakka varieties -------------
 
+-- FIXME: Temporary.
+m["hak-dab"] = {
+	"Dabu Hakka",
+	19855566,
+	"hak-TW",
+}
+
+-- FIXME: Temporary.
+m["hak-eam"] = {
+	"Early Modern Hakka",
+	nil,
+	"hak",
+}
+
+-- FIXME: Temporary.
+m["hak-hai"] = {
+	"Hailu Hakka",
+	17038519,
+	"hak-TW",
+}
+
+-- FIXME: Temporary.
+m["hak-hui"] = {
+	"Huiyang Hakka",
+	16873881,
+	"hak",
+}
+
+-- FIXME: Temporary.
+m["hak-hui-MY"] = {
+	"Malaysian Huiyang Hakka",
+	nil,
+	"hak-hui",
+}
+
+-- FIXME: Temporary. Similar to and possibly the parent of Sixian Hakka in Taiwan.
+m["hak-mei"] = {
+	"Meixian Hakka",
+	839295,
+	"hak",
+	aliases = {"Moiyan Hakka", "Meizhou Hakka"},
+}
+
+-- FIXME: Temporary.
+m["hak-six"] = {
+	"Sixian Hakka",
+	9668261,
+	"hak-TW",
+}
+
+-- FIXME: Temporary.
 m["hak-TW"] = {
 	"Taiwanese Hakka",
 	2391532,
 	"hak",
+}
+
+-- FIXME: Temporary.
+m["hak-zha"] = {
+	"Zhao'an Hakka",
+	15926693,
+	"hak-TW",
 }
 
 ------------- Southern Min varieties -------------
@@ -399,6 +628,12 @@ m["nan-hlh"] = {
 m["nan-jin"] = {
 	"Jinjiang Hokkien",
 	nil,
+	"nan-qua",
+}
+
+m["nan-hbl-MY"] = {
+	"Malaysian Hokkien",
+	7570322,
 	"nan-qua",
 }
 
@@ -420,6 +655,7 @@ m["nan-qua"] = {
 	"nan-hbl",
 }
 
+-- FIXME: Temporary? Derived from both Quanzhou and Zhangzhou Hokkien.
 m["nan-hbl-SG"] = {
 	"Singaporean Hokkien",
 	3846528,
