@@ -220,7 +220,7 @@ labels["Huiyang Hakka"] = {
 }
 
 labels["Huizhou"] = {
-	aliases = {"Huizhou"},
+	aliases = {"Huizhou Chinese"},
 	Wikipedia = "Huizhou Chinese",
 	regional_categories = true,
 }
