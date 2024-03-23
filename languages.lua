@@ -1,3 +1,7 @@
+local insert = table.insert
+local remove = table.remove
+local ugsub = mw.ustring.gsub
+
 local export = {}
 
 --[=[
@@ -23,7 +27,7 @@ of Latin. However, Late Latin does *NOT* have Classical Latin as its parent beca
 Classical Latin; rather, it is a descendant. There is in fact a separate 'ancestors' field that is used to express the
 ancestor-descendant relationship, and Late Latin's ancestor is given as Classical Latin. It is also important to note
 that sometimes an etymology-only language is actually the conceptual ancestor of its parent language. This happens,
-for example, with "Old Italian" (code 'it-oit'), which is an etymology-only variant of full language "Italian" (code
+for example, with "Old Italian" (code 'roa-oit'), which is an etymology-only variant of full language "Italian" (code
 'it'), and with "Old Latin" (code 'itc-ola'), which is an etymology-only variant of Latin. In both cases, the full
 language has the etymology-only variant listed as an ancestor. This allows a Latin term to inherit from Old Latin
 using the {{tl|inh}} template (where in this template, "inheritance" refers to ancestral inheritance, i.e. inheritance
@@ -115,7 +119,28 @@ local function track(page)
 	return true
 end
 
+local function normalize_code(code)
+	return mw.loadData("Module:languages/data").aliases[code] or code
+end
+
 local checkObject = require("Module:utilities").check_object
+
+-- Remove directional formatting characters from the start and end of the text.
+local dir_char = "\226\128\170-\226\128\174\226\129\166-\226\129\169"
+local function remove_directional_chars(text)
+	return (ugsub(text, "^[" .. dir_char .. "]*(.*)%f[%z" .. dir_char .. "][" .. dir_char .. "]*$", "%1"))
+end
+
+-- Convert risky characters to HTML entities, which minimizes interference once returned (e.g. for "sms:a", "<!-- -->" etc.).
+local function escape_risky_characters(text)
+	local make_entities = require("Module:utilities").make_entities
+	-- Spacing characters in isolation generally need to be escaped in order to be properly processed by the MediaWiki software.
+	if not mw.ustring.match(text, "%S") then
+		return make_entities(text, text)
+	else
+		return make_entities(text, "!#%&*+/:;<=>?@[\\]_{|}")
+	end
+end
 
 local function make_language(code, data, useRequire)
 	local function conditionalRequire(modulename)
@@ -131,19 +156,19 @@ local function make_language(code, data, useRequire)
 		-- Clone so that we don't insert any extra patterns into the table in package.loaded. For some reason, using require seems to keep memory use down; probably because the table is always cloned.
 		local patterns = require("Module:table").shallowcopy(require("Module:languages/data/patterns"))
 		if keepCarets then
-			table.insert(patterns, "((\\+)%^)")
-			table.insert(patterns, "((%^))")
+			insert(patterns, "((\\+)%^)")
+			insert(patterns, "((%^))")
 		end
 		-- Ensure any whitespace at the beginning and end is temp substituted, to prevent it from being accidentally trimmed. We only want to trim any final spaces added during the substitution process (e.g. by a module), which means we only do this during the first round of temp substitutions.
 		if not noTrim then
-			table.insert(patterns, "^([\128-\191\244]*(%s+))")
-			table.insert(patterns, "((%s+)[\128-\191\244]*)$")
+			insert(patterns, "^([\128-\191\244]*(%s+))")
+			insert(patterns, "((%s+)[\128-\191\244]*)$")
 		end
 		-- Pre-substitution, of "[[" and "]]", which makes pattern matching more accurate.
 		text = text
 			:gsub("%f[%[]%[%[", "\1")
 			:gsub("%f[%]]%]%]", "\2")
-		local i, pe = #subbedChars, require("Module:utilities").pattern_escape
+		local i, pe = #subbedChars, require("Module:string/pattern escape")
 		for j, pattern in ipairs(patterns) do
 			-- Patterns ending in \0 stand are for things like "[[" or "]]"), so the inserted PUA are treated as breaks between terms by modules that scrape info from pages.
 			local term_divider
@@ -174,7 +199,7 @@ local function make_language(code, data, useRequire)
 	
 	-- Reinsert any formatting that was temporarily substituted.
 	local function undoTempSubstitutions(text, subbedChars)
-		local pe = require("Module:utilities").pattern_escape
+		local pe = require("Module:string/pattern escape")
 		for i = 1, #subbedChars do
 			local byte2 = math.floor(i / 4096) % 64 + 128
 			local byte3 = math.floor(i / 64) % 64 + 128
@@ -222,7 +247,7 @@ local function make_language(code, data, useRequire)
 	
 	-- Split the text into sections, based on the presence of temporarily substituted formatting characters, then iterate over each one to apply substitutions. This avoids putting PUA characters through language-specific modules, which may be unequipped for them.
 	local function iterateSectionSubstitutions(text, subbedChars, keepCarets, self, sc, substitution_data, function_name)
-		local pe = require("Module:utilities").pattern_escape
+		local pe = require("Module:string/pattern escape")
 		local fail, cats, sections = nil, {}
 		-- See [[Module:languages/data]].
 		if not text:match("\244") or conditionalRequire("Module:languages/data").contiguous_substitution[self:getCode()] then
@@ -255,7 +280,7 @@ local function make_language(code, data, useRequire)
 				text = sub and text:gsub(pe(section), pe(sub), 1) or text
 				if type(sub_cats) == "table" then
 					for _, cat in ipairs(sub_cats) do
-						table.insert(cats, cat)
+						insert(cats, cat)
 					end
 				end
 			end
@@ -404,7 +429,7 @@ The possible types are
 			self._wikimediaLanguageObjects = {}
 			local wikimedia_codes = self:getWikimediaLanguageCodes()
 			for _, wlangcode in ipairs(wikimedia_codes) do
-				table.insert(self._wikimediaLanguageObjects, m_wikimedia_languages.getByCode(wlangcode))
+				insert(self._wikimediaLanguageObjects, m_wikimedia_languages.getByCode(wlangcode))
 			end
 		end
 		return self._wikimediaLanguageObjects
@@ -463,7 +488,7 @@ The possible types are
 				self._scriptObjects = conditionalRequire("Module:scripts/data")
 			else
 				for _, sc in ipairs(self:getScriptCodes()) do
-					table.insert(self._scriptObjects, require("Module:scripts").getByCode(sc, nil, nil, useRequire))
+					insert(self._scriptObjects, require("Module:scripts").getByCode(sc, nil, nil, useRequire))
 				end
 			end
 		end
@@ -545,11 +570,17 @@ The possible types are
 			if type(family) == "table" then
 				family = family:getCode()
 			end
-			if not self:getFamilyCode() then
+			local self_family_code = self:getFamilyCode()
+			if not self_family_code then
 				return false
-			elseif self:getFamilyCode() == family or self:getFamily():inFamily(family) then
+			elseif self_family_code == family then
 				return true
-			else
+			end
+			local self_family = self:getFamily()
+			if self_family:inFamily(family) then
+				return true
+			-- If the family isn't a real family (e.g. creoles) check any ancestors.
+			elseif self_family:getFamilyCode() == "qfa-not" then
 				local ancestors = self:getAncestors()
 				for _, ancestor in ipairs(ancestors) do
 					if ancestor:inFamily(family) then
@@ -597,7 +628,7 @@ The possible types are
 			self._parentChain = {}
 			local parent = self:getParent()
 			while parent do
-				table.insert(self._parentChain, parent)
+				insert(self._parentChain, parent)
 				parent = parent:getParent()
 			end
 		end
@@ -654,7 +685,7 @@ The possible types are
 			local ancestors = require("Module:table").shallowcopy(self:getAncestorCodes())
 			if #ancestors > 0 then
 				for _, ancestor in ipairs(ancestors) do
-					table.insert(self._ancestorObjects, export.getByCode(ancestor, nil, true, nil, useRequire))
+					insert(self._ancestorObjects, export.getByCode(ancestor, nil, true, nil, useRequire))
 				end
 			else
 				local fam = self:getFamily()
@@ -674,42 +705,60 @@ The possible types are
 					fam = fam:getFamily()
 					protoLang = fam and fam:getProtoLanguage() or nil
 				end
-				table.insert(self._ancestorObjects, protoLang)
+				insert(self._ancestorObjects, protoLang)
 			end
 		end
 		return self._ancestorObjects
 	end
 	
-	function Language:getAncestorCodes()
-		if not self._ancestorCodes then
-			local function get_codes(lang)
-				return lang._rawData.ancestors or {}
+	do
+		-- Avoid a language being its own ancestor via class inheritance. We only need to check for this if the language has inherited an ancestor table from its parent, because we never want to drop ancestors that have been explicitly set in the data.
+		-- Recursively iterate over ancestors until we either find self or run out. If self is found, return true.
+		local function check_ancestor(self, lang)
+			local codes = lang:getAncestorCodes()
+			if not codes then
+				return nil
 			end
-			local codes = get_codes(self)
-			-- Avoid a language being its own ancestor via class inheritance. We only need to check for this if the language has inherited an ancestor table from its parent, because we never want to drop ancestors that have been explicitly set in the data.
-			-- Recursively iterate over ancestors until we find a loop/run out. If a loop is found that involves the language, drop that ancestor.
-			if #codes > 0 and #self._stack > 1 and not self._stack[#self._stack].ancestors then
-				local function check_ancestor(i, code, seen)
-					if seen[code] then
-						if code == self:getCode() then
-							table.remove(codes, i)
-						end
-					else
-						seen[code] = true
-						local ancestor = export.getByCode(code, nil, true, nil, useRequire)
-						for _, ancestorCode in ipairs(get_codes(ancestor)) do
-							check_ancestor(i, ancestorCode, seen)
-						end
-					end
+			for i = 1, #codes do
+				local code = codes[i]
+				if code == self:getCode() then
+					return true
 				end
-				for i, ancestorCode in ipairs(codes) do
-					local seen = {[self:getCode()] = true}
-					check_ancestor(i, ancestorCode, seen)
+				local anc = export.getByCode(code, nil, true, nil, useRequire)
+				if check_ancestor(self, anc) then
+					return true
 				end
 			end
-			self._ancestorCodes = codes
 		end
-		return self._ancestorCodes
+		
+		--[==[Returns a table of <code class="nf">Language</code> codes for all languages that this language is directly descended from. Generally this is only a single language, but creoles, pidgins and mixed languages can have multiple ancestors.]==]
+		function Language:getAncestorCodes()
+			if self._ancestorCodes then
+				return self._ancestorCodes
+			elseif not self._rawData.ancestors then
+				self._ancestorCodes = {}
+				return self._ancestorCodes
+			end
+			local codes = self._rawData.ancestors
+			self._ancestorCodes = codes
+			if (
+				#codes == 0 or
+				#self._stack == 1 or
+				self._stack[#self._stack].ancestors
+			) then
+				return codes
+			end
+			local i, code = 1
+			while i <= #codes do
+				code = codes[i]
+				if check_ancestor(self, self) then
+					remove(codes, i)
+				else
+					i = i + 1
+				end
+			end
+			return codes
+		end
 	end
 	
 	--[==[Given a list of language objects or codes, returns true if at least one of them is an ancestor. This includes any etymology-only children of that ancestor. If the language's ancestor(s) are etymology-only languages, it will also return true for those language parent(s) (e.g. if Vulgar Latin is the ancestor, it will also return true for its parent, Latin). However, a parent is excluded from this if the ancestor is also ancestral to that parent (e.g. if Classical Persian is the ancestor, Persian would return false, because Classical Persian is also ancestral to Persian).]==]
@@ -733,7 +782,7 @@ The possible types are
 					if ancestorParent:getCode() == self:getCode() or ancestorParent:hasAncestor(ancestor) then
 						break
 					else
-						table.insert(ancestorsParents, ancestorParent)
+						insert(ancestorsParents, ancestorParent)
 					end
 				end
 			end
@@ -743,17 +792,16 @@ The possible types are
 			end
 		end
 		
-		local parent_check = true
-		for _, otherlang in ipairs{...} do
+		local function do_iteration(otherlang, parent_check)
+			-- otherlang can't be self
+			if (type(otherlang) == "string" and otherlang or otherlang:getCode()) == self:getCode() then
+				return false
+			end
 			repeat
 				if iterateOverAncestorTree(
 					self,
 					function(ancestor)
-						if type(otherlang) == "string" then
-							return ancestor:getCode() == otherlang
-						else
-							return ancestor:getCode() == otherlang:getCode()
-						end
+						return ancestor:getCode() == (type(otherlang) == "string" and otherlang or otherlang:getCode())
 					end,
 					parent_check
 				) then
@@ -764,6 +812,14 @@ The possible types are
 				otherlang = otherlang:getParent()
 				parent_check = false
 			until not otherlang
+		end
+		
+		local parent_check = true
+		for _, otherlang in ipairs{...} do
+			local ret = do_iteration(otherlang, parent_check)
+			if ret then
+				return true
+			end
 		end
 		return false
 	end
@@ -776,7 +832,7 @@ The possible types are
 				local ancestors = step:getAncestors()
 				step = #ancestors == 1 and ancestors[1] or nil
 				if not step then break end
-				table.insert(self._ancestorChain, 1, step)
+				insert(self._ancestorChain, 1, step)
 			end
 		end
 		return self._ancestorChain
@@ -794,10 +850,6 @@ The possible types are
 				local lang = export.getByCode(code, nil, true, true, useRequire)
 				-- Test for a descendant. Earlier tests weed out most candidates, while the more intensive tests are only used sparingly.
 				if (
-					( -- Not an alias code.
-						(not lang._rawData.main_code) or
-						lang._rawData.main_code == code
-					) and
 					code ~= self:getCode() and -- Not self.
 					lang:inFamily(family) and -- In the same family.
 					(
@@ -807,11 +859,11 @@ The possible types are
 					)
 				) then
 					if format == "object" then
-						table.insert(descendants, lang)
+						insert(descendants, lang)
 					elseif format == "code" then
-						table.insert(descendants, code)
+						insert(descendants, code)
 					elseif format == "name" then
-						table.insert(descendants, lang:getCanonicalName())
+						insert(descendants, lang:getCanonicalName())
 					end
 				end
 			end
@@ -852,6 +904,64 @@ The possible types are
 		return false
 	end
 	
+	local function fetch_children(self, format)
+		local m_etym_data = require("Module:etymology languages/data")
+		local self_code = self:getCode()
+		local children = {}
+		for code, data in pairs(m_etym_data) do
+			local _data = data
+			repeat
+				parent = _data[5]
+				if parent == self_code then
+					if format == "object" then
+						insert(children, export.getByCode(code, nil, true, nil, useRequire))
+					elseif format == "code" then
+						insert(children, code)
+					elseif format == "name" then
+						insert(children, data[1])
+					end
+					break
+				end
+				_data = m_etym_data[parent]
+			until not _data
+		end
+		return children
+	end
+	
+	function Language:getChildren()
+		if not self._childObjects then
+			self._childObjects = fetch_children(self, "object")
+		end
+		return self._childObjects
+	end
+	
+	function Language:getChildrenCodes()
+		if not self._childCodes then
+			self._childCodes = fetch_children(self, "code")
+		end
+		return self._childCodes
+	end
+	
+	function Language:getChildrenNames()
+		if not self._childNames then
+			self._childNames = fetch_children(self, "name")
+		end
+		return self._childNames
+	end
+	
+	function Language:hasChild(...)
+		local lang = ...
+		if not lang then
+			return false
+		elseif type(lang) == "string" then
+			lang = export.getByCode(lang, nil, true, nil, useRequire)
+		end
+		if lang:hasParent(self) then
+			return true
+		end
+		return self:hasChild(select(2, ...))
+	end
+	
 	--[==[Returns the name of the main category of that language. Example: {{code|lua|"French language"}} for French, whose category is at [[:Category:French language]]. Unless optional argument <code>nocap</code> is given, the language name at the beginning of the returned value will be capitalized. This capitalization is correct for category names, but not if the language name is lowercase and the returned value of this function is used in the middle of a sentence.]==]
 	function Language:getCategoryName(nocap)
 		if not self._categoryName then
@@ -888,7 +998,7 @@ The possible types are
 			if (not sc) or sc == "None" then
 				local scripts = {}
 				for _, script in pairs(self._rawData.standardChars) do
-					table.insert(scripts, script)
+					insert(scripts, script)
 				end
 				return table.concat(scripts)
 			end
@@ -903,6 +1013,9 @@ The possible types are
 		if (not text) or text == "" then
 			return text, nil, {}
 		end
+		
+		-- Remove directional characters.
+		text = remove_directional_chars(text)
 		
 		-- Set `unsupported` as true if certain conditions are met.
 		local unsupported
@@ -937,7 +1050,7 @@ The possible types are
 		text = normalize(text, sc)
 		text, fail, cats = iterateSectionSubstitutions(text, nil, nil, self, sc, self._rawData.entry_name, "makeEntryName")
 		
-		text = mw.ustring.gsub(text, "^[¿¡]?([^%s%p]+)%s*[؟?!;՛՜ ՞ ՟？！︖︕।॥။၊་།]?$", "%1") or text
+	text = mw.ustring.match(text, "^[¿¡]?(.-[^%s%p].-)%s*[؟?!;՛՜ ՞ ՟？！︖︕।॥။၊་།]?$") or text
 		
 		
 		-- Escape unsupported characters so they can be used in titles. ` is used as a delimiter for this, so a raw use of it in an unsupported title is also escaped here to prevent interference; this is only done with unsupported titles, though, so inclusion won't in itself mean a title is treated as unsupported (which is why it's excluded from the earlier test).
@@ -976,8 +1089,8 @@ The possible types are
 		if text:find("<[^<>]+>") then
 			track("track HTML tag")
 		end
-		-- Remove soft hyphens, strip markers and HTML tags.
-		text = text:gsub("­", "")
+		-- Remove directional characters, soft hyphens, strip markers and HTML tags.
+		text = ugsub(text, "[\194\173" .. dir_char .. "]", "")
 		text = mw.text.unstrip(text)
 			:gsub("<[^<>]+>", "")
 		
@@ -985,7 +1098,7 @@ The possible types are
 		text = checkNoEntities(text)
 		
 		-- Remove initial hyphens and * unless the term only consists of spacing + punctuation characters.
-		text = mw.ustring.gsub(text, "^([􀀀-􏿽]*)[-־ـ᠊*]+([􀀀-􏿽]*)(.*[^%s%p].*)", "%1%2%3")
+		text = ugsub(text, "^([􀀀-􏿽]*)[-־ـ᠊*]+([􀀀-􏿽]*)(.*[^%s%p].*)", "%1%2%3")
 		
 		sc = checkScript(text, self, sc)
 		
@@ -1023,7 +1136,7 @@ The possible types are
 			:gsub("(.)[()]+", "%1")
 			:gsub("[()]+(.)", "%1")
 		
-		text = require("Module:string utilities").escape_risky_characters(text)
+		text = escape_risky_characters(text)
 		return text, fail, cats
 	end
 	
@@ -1064,7 +1177,7 @@ The possible types are
 				text = text:gsub("^(.-):(.*)", function(m1, m2)
 					local ret = {}
 					for subbedChar in m1:gmatch("\244[\128-\191]*") do
-						table.insert(ret, subbedChar)
+						insert(ret, subbedChar)
 					end
 					return table.concat(ret) .. m2
 				end)
@@ -1083,10 +1196,12 @@ The possible types are
 			return text, nil, {}
 		end
 		
+		text = remove_directional_chars(text)
+		
 		local fail, cats, subbedChars
 		text, fail, cats, subbedChars = processDisplayText(text, self, sc, nil, keepPrefixes)
 		
-		text = require("Module:string utilities").escape_risky_characters(text)
+		text = escape_risky_characters(text)
 		return undoTempSubstitutions(text, subbedChars), fail, cats
 	end
 	
@@ -1113,8 +1228,9 @@ The possible types are
 			return nil, true, {}
 		end
 		
-		-- Remove any strip markers.
+		-- Remove any strip markers and directional characters.
 		text = mw.text.unstrip(text)
+		text = remove_directional_chars(text)
 		
 		-- Get the display text with the keepCarets flag set.
 		local fail, cats, subbedChars
@@ -1126,8 +1242,8 @@ The possible types are
 		-- Incomplete transliterations return nil.
 		if text then
 			if sc:countCharacters(text) > 0 then
-				-- Remove any characters in (extended) Latin, which includes Latin characters also included in other scripts (as these are false positives). Anything remaining should only be script code "None" (e.g. numerals).
-				local check_text = mw.ustring.gsub(text, "[" .. require("Module:scripts").getByCode("Latnx"):getCharacters() .. "]", "")
+				-- Remove any characters in Latin, which includes Latin characters also included in other scripts (as these are false positives). Anything remaining should only be script code "None" (e.g. numerals).
+				local check_text = ugsub(text, "[" .. require("Module:scripts").getByCode("Latn"):getCharacters() .. "]", "")
 				if require("Module:scripts").findBestScriptWithoutLang(check_text) ~= "None" then
 					return nil, true, cats
 				end
@@ -1136,7 +1252,7 @@ The possible types are
 			return nil, true, cats
 		end
 		
-		text = require("Module:string utilities").escape_risky_characters(text)
+		text = escape_risky_characters(text)
 		text = undoTempSubstitutions(text, subbedChars)
 		
 		-- If the script does not use capitalization, then capitalize any letters of the transliteration which are immediately preceded by a caret (and remove the caret).
@@ -1183,7 +1299,7 @@ The possible types are
 			if self._rawData.entry_name.from then
 				entryNamePatterns = {}
 				for i, from in ipairs(self._rawData.entry_name.from) do
-					table.insert(entryNamePatterns, {from = from, to = self._rawData.entry_name.to[i] or ""})
+					insert(entryNamePatterns, {from = from, to = self._rawData.entry_name.to[i] or ""})
 				end
 			end
 		end
@@ -1193,22 +1309,16 @@ The possible types are
 		end
 		local types = {}
 		for type in pairs(self._type) do
-			table.insert(types, type)
+			insert(types, type)
 		end
 
-		-- Retrieve main code for aliases. This should only end up non-nil if dontCanonicalizeAliases is passed to
-		-- make_object().
-		local main_code = self._rawData.main_code
-		if main_code and main_code == self:getCode() then
-			main_code = nil
-		end
-
+		-- mainCode should only end up non-nil if dontCanonicalizeAliases is passed to make_object().
 		local ret = {
 			ancestors = self:getAncestorCodes(),
 			canonicalName = self:getCanonicalName(),
 			categoryName = self:getCategoryName("nocap"),
 			code = self:getCode(),
-			mainCode = main_code,
+			mainCode = self._main_code,
 			entryNamePatterns = entryNamePatterns,
 			entryNameRemoveDiacritics = entryNameRemoveDiacritics,
 			family = self:getFamilyCode(),
@@ -1273,91 +1383,6 @@ The possible types are
 	return Language
 end
 
-local function make_stack(code, data, parent, useRequire)
-	parent.__index = parent
-	
-	local lang = {_code = code}
-	
-	-- Full language.
-	if not parent._stack then
-		-- Create stack, accessed with rawData metamethod.
-		lang._stack = parent._rawData and {parent._rawData, data} or {data}
-		lang._rawData = setmetatable({}, {
-			__index = function(t, k)
-				-- Data that isn't inherited from the parent.
-				local function no_inherit(lang, t, k)
-					if (
-						k == 2 or -- wikidata item
-						k == "main_code" or
-						k == "aliases" or
-						k == "varieties" or
-						k == "otherNames"
-					) then
-						return lang._stack[#lang._stack][k], true
-					end
-				end
-				-- Data that is appended by each generation.
-				local function append_data(lang, t, k)
-					if k == "type" then
-						local parts = {}
-						for i = 1, #lang._stack do
-							table.insert(parts, lang._stack[i][k])
-						end
-						if type(parts[1]) == "string" then
-							return table.concat(parts, ", "), true
-						end
-						return nil, true
-					end
-				end
-				-- Otherwise, iterate down the stack, looking for a match.
-				local function inherit_data(lang, t, k)
-					local i = #lang._stack
-					while not lang._stack[i][k] and i > 1 do
-						i = i - 1
-					end
-					return lang._stack[i][k]
-				end
-				local ret, stop_now = no_inherit(lang, t, k)
-				if not stop_now then
-					ret, stop_now = append_data(lang, t, k)
-				end
-				if not stop_now then
-					ret = inherit_data(lang, t, k)
-				end
-				if (
-					k == 4 or
-					k == "ancestors" or
-					k == "wikimedia_codes"
-				) then
-					if type(ret) == "table" then
-						return ret
-					elseif type(ret) == "string" then
-						return mw.text.split(ret, "%s*,%s*")
-					end
-				else
-					return ret
-				end
-			end,
-			-- Retain immutability (as writing to rawData will break functionality).
-			__newindex = function()
-				error("not allowed to edit rawData")
-			end
-		})
-		-- Non-etymological code is the parent code.
-		lang._nonEtymologicalCode = parent._code or code
-	-- Etymology-only.
-	else
-		-- Copy over rawData and stack to the new object, and add new layer to stack.
-		lang._rawData = parent._rawData
-		lang._stack = parent._stack
-		table.insert(lang._stack, data)
-		-- Copy non-etymological code.
-		lang._nonEtymologicalCode = parent._nonEtymologicalCode
-	end
-	
-	return setmetatable(lang, parent)
-end
-
 function export.getDataModuleName(code)
 	if code:match("^%l%l$") then
 		return "languages/data/2"
@@ -1376,25 +1401,119 @@ function export.getExtraDataModuleName(code)
 	return dataModule and dataModule .. "/extra" or nil
 end
 
-function export.makeObject(code, data, useRequire, dontCanonicalizeAliases)
-	if not data then
-		return nil
-	end
-
-	if not dontCanonicalizeAliases then	
-		code = data.main_code or code
-	end
-
-	if data.type:find("family") and not data[5] then
-		return require("Module:families").makeObject(code, data, useRequire)
-	else
-		local parent
-		if data[5] then
-			parent = export.getByCode(data[5], nil, true, true, useRequire)
-		else
-			parent = make_language(code, data, useRequire)
+do
+	-- Data that isn't inherited from the parent.
+	local function no_inherit(lang, t, k)
+		if (
+			k == 2 or -- wikidata item
+			k == "aliases" or
+			k == "varieties" or
+			k == "otherNames"
+		) then
+			return lang._stack[#lang._stack][k], true
 		end
-		return make_stack(code, data, parent, useRequire)
+	end
+	
+	-- Data that is appended by each generation.
+	local function append_data(lang, t, k)
+		if k == "type" then
+			local parts = {}
+			for i = 1, #lang._stack do
+				insert(parts, lang._stack[i][k])
+			end
+			if type(parts[1]) == "string" then
+				return table.concat(parts, ", "), true
+			end
+			return nil, true
+		end
+	end
+	
+	local function inherit_data(lang, t, k)
+		local i = #lang._stack
+		while not lang._stack[i][k] and i > 1 do
+			i = i - 1
+		end
+		return lang._stack[i][k]
+	end
+	
+	local function make_stack(code, input_code, data, parent, useRequire)
+		parent.__index = parent
+		
+		local lang = {_code = input_code}
+		-- This can only happen if dontCanonicalizeAliases is passed to make_object().
+		if code ~= input_code then
+			lang._main_code = code
+		end
+		
+		-- Full language.
+		if not parent._stack then
+			-- Create stack, accessed with rawData metamethod.
+			lang._stack = parent._rawData and {parent._rawData, data} or {data}
+			lang._rawData = setmetatable({}, {
+				__index = function(t, k)
+					-- Otherwise, iterate down the stack, looking for a match.
+					local ret, stop_now = no_inherit(lang, t, k)
+					if not stop_now then
+						ret, stop_now = append_data(lang, t, k)
+					end
+					if not stop_now then
+						ret = inherit_data(lang, t, k)
+					end
+					if (
+						k == 4 or
+						k == "ancestors" or
+						k == "wikimedia_codes"
+					) then
+						if type(ret) == "table" then
+							return ret
+						elseif type(ret) == "string" then
+							return mw.text.split(ret, "%s*,%s*")
+						end
+					else
+						return ret
+					end
+				end,
+				-- Retain immutability (as writing to rawData will break functionality).
+				__newindex = function()
+					error("not allowed to edit rawData")
+				end
+			})
+			-- Non-etymological code is the parent code.
+			lang._nonEtymologicalCode = parent._code or code
+		-- Etymology-only.
+		else
+			-- Copy over rawData and stack to the new object, and add new layer to stack.
+			lang._rawData = parent._rawData
+			lang._stack = parent._stack
+			insert(lang._stack, data)
+			-- Copy non-etymological code.
+			lang._nonEtymologicalCode = parent._nonEtymologicalCode
+		end
+		
+		return setmetatable(lang, parent)
+	end
+	
+	function export.makeObject(code, data, useRequire, dontCanonicalizeAliases)
+		if not data then
+			return nil
+		end
+		
+		-- Convert any aliases.
+		local input_code = code
+		code = normalize_code(code)
+		input_code = dontCanonicalizeAliases and input_code or code
+	
+		if data.type:find("family") and not data[5] then
+			return require("Module:families").makeObject(code, data, useRequire)
+		else
+			local parent
+			if data[5] then
+				parent = export.getByCode(data[5], nil, true, true, useRequire)
+			else
+				parent = make_language(code, data, useRequire)
+			end
+			return make_stack(code, input_code, data, parent, useRequire)
+		end
 	end
 end
 
@@ -1427,16 +1546,19 @@ function export.getByCode(code, paramForError, allowEtymLang, allowFamily, useRe
 	-- in the hope that this reduces memory usage as we have to do this for every invocation of getByCode() for every
 	-- language code.
 	local codes_to_track = {
+		-- Codes duplicated been full and etymology-only languages
 		["bsg"] = true,
-		["inc-kha"] = true,
-		["pka"] = true,
-		["inc-mgd"] = true,
-		["inc-psc"] = true,
-		["pmh"] = true,
-		["psu"] = true,
-		["elu-prk"] = true,
 		["rdb"] = true,
 		["tgf"] = true,
+		-- Aliases actively being deprecated
+		["prv"] = true, -- oc-pro
+		-- Codes that will be converted to families
+		["nan"] = true,
+		-- Codes being renamed
+		["cmn-wadegile"] = true,
+		["wuu-ngb"] = true,
+		["wuu-hzh"] = true,
+		["wuu-szh"] = true,
 	}
 
 	local function track_bad_code(code)
@@ -1445,13 +1567,18 @@ function export.getByCode(code, paramForError, allowEtymLang, allowFamily, useRe
 		end
 		return true
 	end
-
+	
 	local modulename = export.getDataModuleName(code)
-	local data = modulename and
-		track_bad_code(code) and conditionalRequire("Module:" .. modulename)[code] or
-		(allowEtymLang and require("Module:etymology languages/track-bad-etym-code")(code) and conditionalRequire("Module:etymology languages/data")[code]) or
-		(allowFamily and conditionalRequire("Module:families/data")[code]) or
-		(allowEtymLang and allowFamily and require("Module:families/track-bad-etym-code")(code) and conditionalRequire("Module:families/data/etymology")[code])
+	
+	local function get_data(code)
+		return modulename and
+			track_bad_code(code) and conditionalRequire("Module:" .. modulename)[code] or
+			(allowEtymLang and require("Module:etymology languages/track-bad-etym-code")(code) and conditionalRequire("Module:etymology languages/data")[code]) or
+			(allowFamily and conditionalRequire("Module:families/data")[code]) or
+			(allowEtymLang and allowFamily and require("Module:families/track-bad-etym-code")(code) and conditionalRequire("Module:families/data/etymology")[code])
+	end
+	
+	local data = get_data(code) or get_data(normalize_code(code))
 	
 	local retval = code and data and export.makeObject(code, data, useRequire)
 	
@@ -1460,22 +1587,6 @@ function export.getByCode(code, paramForError, allowEtymLang, allowFamily, useRe
 	end
 	
 	return retval
-end
-
---[==[Like {{code|lua|getByCanonicalName()}}, except it also looks at the <code class="n">otherNames</code> listed in the non-etymology language data modules, and does not (currently) have options to look up etymology languages and families.]==]
-function export.getByName(name, errorIfInvalid)
-	local code = require("Module:languages/canonical names/serialized")
-		:match("%z" .. require("Module:utilities").pattern_escape(name) .. "\1(.-)%f[%z]")
-	
-	if not code then
-		if errorIfInvalid then
-			error("The language name \"" .. name .. "\" is not valid. See [[Wiktionary:List of languages]].")
-		else
-			return nil
-		end
-	end
-	
-	return export.getByCode(code)
 end
 
 --[==[Finds the language whose canonical name (the name used to represent that language on Wiktionary) or other name matches the one provided. If it exists, it returns a <code class="nf">Language</code> object representing the language. Otherwise, it returns {{code|lua|nil}}, unless <code class="n">paramForError</code> is given, in which case an error is generated. If <code class="n">allowEtymLang</code> is specified, etymology language codes are allowed and looked up along with normal language codes. If <code class="n">allowFamily</code> is specified, language family codes are allowed and looked up along with normal language codes.
@@ -1542,14 +1653,6 @@ function export.finalizeEtymologyData(data)
 		data[code][5] = data[code][3]
 		data[code][3] = data[code].family
 		data[code].family = nil
-		-- Assign any alias codes listed in alias_codes. The main_code field is used to make sure objects always use that to identify themselves, which means all aliases are fungible with their counterparts.
-		if entity.alias_codes then
-			entity.main_code = code
-			for _, alias in ipairs(entity.alias_codes) do
-				aliases[alias] = entity
-			end
-			entity.alias_codes = nil
-		end
 	end
 	for code, alias in pairs(aliases) do
 		data[code] = alias
