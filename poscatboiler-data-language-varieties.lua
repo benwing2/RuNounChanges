@@ -4,7 +4,7 @@ local raw_handlers = {}
 local m_languages = require("Module:languages")
 local m_table = require("Module:table")
 local parse_utilities_module = "Module:parse utilities"
-local labels_ancillary_module = "Module:labels/ancillary"
+local labels_utilities_module = "Module:labels/utilities"
 local rsplit = mw.text.split
 
 local function track(page)
@@ -200,7 +200,7 @@ local function scrape_category_for_auto_cat_args(cat)
 	if cat_page then
 		local contents = cat_page:getContent()
 		if contents then
-			for name, args, _, _ in require("Module:templateparser").findTemplates(contents) do
+			for name, args in require("Module:template parser").findTemplates(contents) do
 				if name == "auto cat" or name == "autocat" then
 					return args
 				end
@@ -484,7 +484,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		end
 	end
 
-	local additional
+	local additional = args.addl
 
 	local function append_addl(addl_text)
 		if not addl_text then
@@ -515,7 +515,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 				table.insert(etymcodes, make_code(code))
 			end
 		end
-		local addl_etym_codes = ("[[Module:etymology_languages/data|Etymology-only language]] code: %s"):format(
+		local addl_etym_codes = ("[[Module:etymology_languages/data|Etymology-only language]] code: %s."):format(
 			m_table.serialCommaJoin(etymcodes, {conj = "or"}))
 		append_addl(addl_etym_codes)
 	else
@@ -524,16 +524,17 @@ local function dialect_handler(category, raw_args, called_from_inside)
 
 	local regional_cat_labels, plain_cat_labels
 	local full_lang
+	local m_labels_utilities = require(labels_utilities_module)
 	if lang:hasType("language") then
 		full_lang = lang:getNonEtymological()
 		local regional_component = category:match("^(.-) " ..
 			require("Module:pattern utilities").pattern_escape(full_lang:getCanonicalName()) .. "$")
 		if regional_component then
-			regional_cat_labels = require(labels_ancillary_module).find_labels_for_category(regional_component,
+			regional_cat_labels = m_labels_utilities.find_labels_for_category(regional_component,
 				"regional", full_lang)
 		end
 	end
-	plain_cat_labels = require(labels_ancillary_module).find_labels_for_category(category, "plain", full_lang)
+	plain_cat_labels = m_labels_utilities.find_labels_for_category(category, "plain", full_lang, "check all langs")
 
 	local all_labels
 	if regional_cat_labels and plain_cat_labels then
@@ -546,10 +547,8 @@ local function dialect_handler(category, raw_args, called_from_inside)
 	end
 	local labels_msg
 	if all_labels then
-		append_addl(require(labels_ancillary_module).format_labels_categorizing(all_labels, full_lang))
+		append_addl(m_labels_utilities.format_labels_categorizing(all_labels, nil, full_lang))
 	end
-
-	append_addl(args.addl)
 
 	local lang_en = m_languages.getByCode("en", true)
 
