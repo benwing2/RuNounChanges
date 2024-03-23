@@ -57,14 +57,13 @@ labels["Coastal Min"] = {
 	Wikipedia = true,
 }
 
--- FIXME: Category added.
 labels["Dabu Hakka"] = {
 	aliases = {"Dabu"},
 	Wikipedia = "zh:大埔話",
 	plain_categories = true,
 }
 
--- FIXME: Category added.
+-- FIXME: Category missing.
 labels["Danzhou Chinese"] = {
 	aliases = {"Danzhou"},
 	Wikipedia = "Danzhou dialect",
@@ -82,7 +81,7 @@ labels["Dungan"] = {
 	regional_categories = true,
 }
 
--- FIXME: Category added.
+-- FIXME: Category missing.
 labels["Early Modern Hakka"] = {
 	Wikipedia = "Hakka Chinese",
 	plain_categories = true,
@@ -125,14 +124,12 @@ labels["dialectal Guangxi Mandarin"] = {
 	plain_categories = "Guangxi Mandarin",
 }
 
--- FIXME: Category added.
 labels["Guangzhou Cantonese"] = {
 	aliases = {"Guangzhou"},
 	Wikipedia = "Cantonese",
 	plain_categories = true,
 }
 
--- FIXME: Category added.
 labels["Guanzhong Mandarin"] = {
 	aliases = {"Guanzhong"},
 	Wikipedia = "Guanzhong dialect",
@@ -145,15 +142,16 @@ labels["Guilin Mandarin"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category added.
 labels["Hailu Hakka"] = {
 	aliases = {"Hailu"},
 	Wikipedia = "Hailu dialect",
 	plain_categories = true,
 }
 
+-- The following violates normal conventions, which would use "Hainanese Min' or 'Hainan Min'. But it matches the
+-- 'Hainanese' language and Wikipedia.
 labels["Hainanese"] = {
-	aliases = {"Hainan Min", "Hainan Min Chinese"},
+	aliases = {"Hainan Min", "Hainanese Min", "Hainan Min Chinese"},
 	Wikipedia = true,
 	regional_categories = true,
 }
@@ -168,7 +166,7 @@ labels["dialectal Hakka"] = {
 	regional_categories = "Hakka",
 }
 
--- FIXME: Category added.
+-- FIXME: Category missing.
 labels["Haklau Min"] = {
 	aliases = {"Hoklo Min", "Haklau", "Hoklo"},
 	Wikipedia = "Hoklo Min",
@@ -177,19 +175,20 @@ labels["Haklau Min"] = {
 
 labels["Hangzhounese Wu"] = {
 	aliases = {"Hangzhou", "Hangzhounese", "Hangzhou Wu"},
+	-- FIXME: Consider removing the following exception and letting it display as 'Hangzhounese Wu'.
 	display = "Hangzhounese",
 	Wikipedia = "Hangzhou dialect",
 	plain_categories = true,
 }
 
--- FIXME: Category added.
+-- FIXME: Category missing.
 labels["Hengyang Xiang"] = {
 	aliases = {"Hengyang"},
 	Wikipedia = "Hengyang dialect",
 	plain_categories = true,
 }
 
--- FIXME: Category added.
+-- FIXME: Category missing.
 labels["Hengzhou Xiang"] = {
 	aliases = {"Hengzhou"},
 	Wikipedia = "Hengyang dialect",
@@ -212,7 +211,6 @@ labels["Hong Kong Hakka"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category added.
 labels["Huiyang Hakka"] = {
 	aliases = {"Huiyang"},
 	Wikipedia = "zh:惠阳话",
@@ -225,7 +223,7 @@ labels["Huizhou"] = {
 	regional_categories = true,
 }
 
--- FIXME: Category renamed from Huzhounese Chinese.
+-- FIXME: Category missing.
 labels["Huzhounese Wu"] = {
 	aliases = {"Huzhou", "Huzhou Wu", "Huzhounese"},
 	Wikipedia = "zh:湖州話",
@@ -237,21 +235,18 @@ labels["Inland Min"] = {
 	Wikipedia = true,
 }
 
--- FIXME: Category added.
 labels["Jianghuai Mandarin"] = {
 	aliases = {"Jianghuai", "Jiang-Huai", "Jiang-Huai Mandarin", "Lower Yangtze Mandarin", "Huai"},
 	Wikipedia = "Lower Yangtze Mandarin",
 	plain_categories = true,
 }
 
--- FIXME: Category added.
 labels["Jiaoliao Mandarin"] = {
 	aliases = {"Jiaoliao", "Jiao-Liao", "Jiao-Liao Mandarin"},
 	Wikipedia = true,
 	plain_categories = true,
 }
 
--- FIXME: Category added.
 labels["Jilu Mandarin"] = {
 	aliases = {"Jilu", "Ji-Lu", "Ji-Lu Mandarin"},
 	Wikipedia = true,
@@ -268,7 +263,6 @@ labels["dialectal Jin"] = {
 	regional_categories = "Jin",
 }
 
--- FIXME: Category added.
 labels["Jinjiang Hokkien"] = {
 	aliases = {"Jinjiang"},
 	Wikipedia = "Quanzhou dialect",
@@ -292,7 +286,6 @@ labels["Leizhou Min"] = {
 	regional_categories = true,
 }
 
--- FIXME: Category added.
 labels["Linshao Wu"] = {
 	aliases = {"Linshao", "Lin-Shao Wu", "Lin-Shao"},
 	Wikipedia = "Shaoxing dialect",
@@ -304,27 +297,28 @@ labels["Liuzhou Mandarin"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category added.
 labels["Loudi Xiang"] = {
 	aliases = {"Loudi"},
 	Wikipedia = "zh:娄底话",
 	plain_categories = true,
 }
 
--- FIXME: Category added.
+-- FIXME: Category missing.
 labels["Malaysian Hokkien"] = {
+	aliases = {"Malaysia Hokkien"},
 	Wikipedia = "Southern Peninsular Malaysian Hokkien",
 	plain_categories = true,
 }
 
--- FIXME: Category added.
+-- FIXME: Category missing.
 labels["Malaysian Huiyang Hakka"] = {
+	aliases = {"Malaysia Huiyang Hakka"},
 	Wikipedia = "zh:惠阳话",
 	plain_categories = true,
 }
 
--- FIXME: Category added.
 labels["Malaysian Mandarin"] = {
+	aliases = {"Malaysia Mandarin"},
 	Wikipedia = true,
 	plain_categories = true,
 }
@@ -339,7 +333,6 @@ labels["dialectal Mandarin"] = {
 	regional_categories = "Mandarin",
 }
 
--- FIXME: Category added.
 labels["Meixian Hakka"] = {
 	aliases = {"Meixian", "Moiyan", "Moiyan Hakka", "Meizhou", "Meizhou Hakka"},
 	Wikipedia = "Meixian dialect",
@@ -351,7 +344,6 @@ labels["Min"] = {
 	regional_categories = true,
 }
 
--- FIXME: Category added.
 labels["Nanjing Mandarin"] = {
 	aliases = {"Nanjing"},
 	Wikipedia = "Nanjing dialect",
@@ -363,7 +355,7 @@ labels["Nanning Pinghua"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category added.
+-- FIXME: Category missing.
 labels["New Xiang"] = {
 	Wikipedia = true,
 	plain_categories = true,
@@ -399,7 +391,6 @@ labels["Northern Wu"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category added.
 labels["Old Xiang"] = {
 	Wikipedia = true,
 	plain_categories = true,
@@ -411,15 +402,15 @@ labels["Penang Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category renamed from Philippine Chinese.
 labels["Philippine Hokkien"] = {
-	aliases = {"PH Hokkien", "Ph Hokkien", "PH", "PHH"},
+	aliases = {"PH Hokkien", "Ph Hokkien", "PH", "PHH", "Philippines Hokkien"},
 	Wikipedia = true,
 	plain_categories = true,
 }
 
--- FIXME: Category added.
+-- FIXME: Category missing.
 labels["Philippine Mandarin"] = {
+	aliases = {"Philippines Hokkien"},
 	Wikipedia = "Mandarin Chinese in the Philippines",
 	plain_categories = true,
 }
@@ -443,8 +434,16 @@ labels["Quanzhou Hokkien"] = {
 
 labels["Shanghainese Wu"] = {
 	aliases = {"Shanghai Wu", "Shanghainese"},
+	-- FIXME: Consider removing the following exception and letting it display as 'Shanghainese Wu'.
 	display = "Shanghainese",
 	Wikipedia = "Shanghainese",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Shaojiang Min"] = {
+	aliases = {"Shaojiang"},
+	Wikipedia = "Shao–Jiang Min",
 	plain_categories = true,
 }
 
@@ -465,33 +464,41 @@ labels["Shuangfeng Xiang"] = {
 	plain_categories = true,
 }
 
+-- The following violates normal conventions, which would use "Sichuan Mandarin". But it matches the 'Sichuanese'
+-- language.
 labels["Sichuanese"] = {
 	aliases = {"Sichuan"},
 	Wikipedia = "Sichuanese dialect",
 	regional_categories = true,
 }
 
-labels["Singaporean Hokkien"] = {
-	aliases = {"Singapore Hokkien"},
-	Wikipedia = true,
+-- We use 'Singapore Hokkien' not 'Singaporean Hokkien' despite the Wikipedia article both to match all the other
+-- Singapore language varieties (which say 'Singapore' not 'Singaporean') and because the form with 'Singapore' seeems
+-- actually more common in Google Scholar.
+labels["Singapore Hokkien"] = {
+	aliases = {"Singaporean Hokkien"},
+	Wikipedia = "Singaporean Hokkien",
 	plain_categories = true,
 }
 
--- FIXME: Category added.
-labels["Singaporean Mandarin"] = {
-	aliases = {"Singapore Mandarin"},
-	Wikipedia = true,
+-- FIXME: Category missing.
+-- We use 'Singapore Mandarin' not 'Singaporean Mandarin' despite the Wikipedia article both to match all the other
+-- Singapore language varieties (which say 'Singapore' not 'Singaporean') and because the form with 'Singapore' seeems
+-- actually more common in Google Scholar.
+labels["Singapore Mandarin"] = {
+	aliases = {"Singaporean Mandarin"},
+	Wikipedia = "Singaporean Mandarin",
 	plain_categories = true,
 }
 
--- FIXME: Category added.
+-- FIXME: Category missing.
 labels["Sixian Hakka"] = {
 	aliases = {"Sixian"},
 	Wikipedia = "Sixian dialect",
 	plain_categories = true,
 }
 
--- FIXME: Category added.
+-- FIXME: Category missing.
 labels["Siyi Yue"] = {
 	aliases = {"Siyi"},
 	Wikipedia = true,
@@ -535,11 +542,15 @@ labels["Sujiahu Wu"] = {
 
 labels["Suzhounese Wu"] = {
 	aliases = {"Suzhou", "Suzhounese", "Suzhou Wu"},
+	-- FIXME: Consider removing the following exception and letting it display as 'Suzhounese Wu'.
 	display = "Suzhounese",
 	Wikipedia = "Suzhou dialect",
 	plain_categories = true,
 }
 
+-- The following violates normal conventions, which would use "Taishan Yue" or "Taishanese Yue". But it matches the
+-- current 'Taishanese' full language. If (as proposed by [[User:Wpi]]) we demote Taishanese to an etym-only variety
+-- of Siyi Yue, we should consider renaming to Taishan Yue or Taishanese Yue.
 labels["Taishanese"] = {
 	aliases = {"Toishanese", "Hoisanese"},
 	Wikipedia = true,
@@ -565,6 +576,8 @@ labels["Taiwanese Mandarin"] = {
 	plain_categories = true,
 }
 
+-- The following violates normal conventions, which would use "Teochew Southern Min" or possibly "Teichew Min". But it
+-- matches the 'Teochew' full language.
 labels["Teochew"] = {
 	Wikipedia = "Teochew dialect",
 	regional_categories = true,
@@ -589,6 +602,7 @@ labels["Waxiang"] = {
 
 labels["Wenzhounese Wu"] = {
 	aliases = {"Wenzhounese", "Wenzhou Wu", "Wenzhou", "Oujiang"},
+	-- FIXME: Consider removing the following exception and letting it display as 'Wenzhounese Wu'.
 	display = "Wenzhounese",
 	Wikipedia = "Wenzhou dialect",
 	plain_categories = true,
@@ -632,7 +646,7 @@ labels["dialectal Xiang"] = {
 	regional_categories = "Xiang",
 }
 
--- FIXME: Category added.
+-- FIXME: Category missing.
 labels["Xining Mandarin"] = {
 	aliases = {"Xining"},
 	Wikipedia = "Lanyin Mandarin",
@@ -645,29 +659,33 @@ labels["Xinjiang Mandarin"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category added.
+-- FIXME: Category missing.
 labels["Xinqu Wu"] = {
 	aliases = {"Xinqu", "Quzhou Wu", "Quzhounese", "Quzhounese Wu", "Shangrao", "Shangrao Wu", "Shangraonese", "Shangraonese Wu", "Xinzhou Wu"},
 	Wikipedia = "Quzhou dialect",
 	plain_categories = true,
 }
 
--- FIXME: Category added.
+-- FIXME: Category missing.
 labels["Yangzhou Mandarin"] = {
 	aliases = {"Yangzhou"},
 	Wikipedia = "Lower Yangtze Mandarin",
 	plain_categories = true,
 }
 
--- FIXME: Category added.
+-- FIXME: Category missing.
 labels["Zhao'an Hakka"] = {
-	aliases = {"Zhao'an", "Zhangzhou Hakka"},
 	Wikipedia = "zh:詔安客語",
 	plain_categories = true,
 }
 
+-- FIXME: Category missing.
+labels["Zhao'an Hokkien"] = {
+	Wikipedia = "zh:詔安縣#詔安閩南語",
+	plain_categories = true,
+}
+
 labels["Zhongshan Min"] = {
-	aliases = {"Zhongshan"},
 	Wikipedia = true,
 	regional_categories = true,
 }
