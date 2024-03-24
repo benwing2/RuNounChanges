@@ -1,8 +1,8 @@
 local labels = {}
 
 -- NOTE: The labels below are grouped by "lect group" (e.g. Mandarin, Wu, Yue) and then alphabetized within each
--- lect group. If you don't find a given lect group, look under the "Other groups" below; also keep in mind the
--- "Miscellaneous" at the bottom for labels that don't refer to a topolect.
+-- lect group. Hokkien is under "Min". If you don't find a given lect group, look under the "Other groups" below;
+-- also keep in mind the "Miscellaneous" at the bottom for labels that don't refer to a topolect.
 
 ------------------------------------------ Gan ------------------------------------------
 
@@ -14,6 +14,30 @@ labels["Gan"] = {
 labels["dialectal Gan"] = {
 	Wikipedia = "Gan Chinese",
 	regional_categories = "Gan",
+}
+
+-- FIXME: Category missing. A variety of Fuguang Gan.
+labels["Lichuan Gan"] = {
+	Wikipedia = "zh:撫廣片", -- link for Fuguang Gan
+	plain_categories = true,
+}
+
+-- FIXME: Category missing. A variety of Chang–Du Gan (where it is the principal dialect).
+labels["Nanchang Gan"] = {
+	Wikipedia = "Chang–Du Gan",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing. A variety of Yiliu Gan.
+labels["Pingxiang Gan"] = {
+	Wikipedia = "Yi–Liu Gan",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing. A variety of Fuguang Gan.
+labels["Taining Gan"] = {
+	Wikipedia = "zh:撫廣片", -- link for Fuguang Gan
+	plain_categories = true,
 }
 
 ------------------------------------------ Hakka ------------------------------------------
@@ -58,6 +82,13 @@ labels["Huiyang Hakka"] = {
 }
 
 -- FIXME: Category missing.
+--labels["Jiangxi Hakka"] = {
+--	-- Multiple dialects; possibly referring to Tonggu County dialect.
+--	Wikipedia = true,
+--	plain_categories = true,
+--}
+
+-- FIXME: Category missing.
 labels["Malaysian Huiyang Hakka"] = {
 	aliases = {"Malaysia Huiyang Hakka"},
 	Wikipedia = "zh:惠阳话",
@@ -70,15 +101,62 @@ labels["Meixian Hakka"] = {
 	plain_categories = true,
 }
 
+-- FIXME: Category missing.
+labels["Northern Sixian Hakka"] = {
+	aliases = {"Northern Sixian"},
+	Wikipedia = "Sixian dialect",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Raoping Hakka"] = {
+	-- No Raoping alias because Chaoshan Min is also spoken.
+	Wikipedia = true,
+	plain_categories = true,
+}
+
 labels["Sixian Hakka"] = {
 	aliases = {"Sixian"},
 	Wikipedia = "Sixian dialect",
 	plain_categories = true,
 }
 
+-- FIXME: Category missing.
+labels["Southern Sixian Hakka"] = {
+	aliases = {"Southern Sixian"},
+	Wikipedia = "Sixian dialect",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Shangyou Hakka"] = {
+	-- In southwestern Jiangxi.
+	aliases = {"Shangyou"},
+	Wikipedia = "Shangyou County",
+	plain_categories = true,
+}
+
 labels["Taiwanese Hakka"] = {
 	aliases = {"Taiwan Hakka"},
 	Wikipedia = true,
+	plain_categories = true,
+}
+
+-- Skipped: Wuluo Hakka; appears to originate in Pingtung County, Taiwan and be part of Southern Sixian Hakka, maybe
+-- related to the Wuluo River, but extremely obscure; can't find anything about the dialect in Google.
+
+-- FIXME: Category missing.
+labels["Yudu Hakka"] = {
+	aliases = {"Yudu"},
+	Wikipedia = "Yudu County",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Yunlin Hakka"] = {
+	-- A type of Taiwanese Hakka.
+	aliases = {"Yunlin"},
+	Wikipedia = "Yunlin County",
 	plain_categories = true,
 }
 
@@ -378,9 +456,82 @@ labels["Hokkien"] = {
 	regional_categories = true,
 }
 
+-- FIXME: Category missing.
+labels["Anxi Hokkien"] = {
+	-- A type of Quanzhou Hokkien.
+	aliases = {"Anxi"},
+	Wikipedia = "zh:安溪县#語言文化",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Changtai Hokkien"] = {
+	-- A type of Zhangzhou Hokkien.
+	aliases = {"Changtai"},
+	Wikipedia = "Changtai, Zhangzhou#Local Dialect",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Hsinchu Hokkien"] = {
+	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], mixed Quanzhou-Zhangzhou dialect
+	-- similar to Tong'an accent.
+	aliases = {"Hsinchu"},
+	Wikipedia = "zh:新竹市#語言",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Hui'an Hokkien"] = {
+	-- Mostly spoken in Hui'an in southern Fujian.
+	aliases = {"Hui'an"},
+	Wikipedia = "Hui'an dialect",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+-- FIXME: Same as Medan Hokkien?
+labels["Indonesian Hokkien"] = {
+	aliases = {"Indonesia Hokkien"},
+	Wikipedia = "Medan Hokkien",
+	plain_categories = true,
+}
+
 labels["Jinjiang Hokkien"] = {
 	aliases = {"Jinjiang"},
 	Wikipedia = "Quanzhou dialect",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Kaohsiung Hokkien"] = {
+	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], mixed Quanzhou-Zhangzhou dialect
+	-- similar to Amoy accent.
+	aliases = {"Kaohsiung"},
+	Wikipedia = "Kaohsiung#Languages",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Kinmen Hokkien"] = {
+	-- Taiwanese. Per [[w:Kinmen#Language]], mostly Quanzhou dialect (but in Wuchiu/Wuqiu Township, Puxian Min is
+	-- spoken).
+	aliases = {"Kinmen"},
+	Wikipedia = "Kinmen#Language",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Longyan Hokkien"] = {
+	aliases = {"Longyan"},
+	Wikipedia = "Longyan dialect",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Lukang Hokkien"] = {
+	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], based on Quanzhou accent.
+	Wikipedia = "Lukang",
 	plain_categories = true,
 }
 
@@ -390,9 +541,33 @@ labels["Malaysian Hokkien"] = {
 	plain_categories = true,
 }
 
+-- FIXME: Category missing.
+labels["Magong Hokkien"] = {
+	-- Taiwanese. Apparently a subdialect of Penghu Hokkien.
+	aliases = {"Magong"},
+	Wikipedia = "Magong",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Medan Hokkien"] = {
+	-- Spoken in Indonesia.
+	Wikipedia = "Medan dialect",
+	plain_categories = true,
+}
+
 labels["Penang Hokkien"] = {
+	-- Malaysian.
 	aliases = {"Penang"},
 	Wikipedia = true,
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Penghu Hokkien"] = {
+	-- Taiwanese. Per [[w:Penghu#Language]], mostly Tong'an dialect.
+	aliases = {"Penghu"},
+	Wikipedia = "Penghu#Language",
 	plain_categories = true,
 }
 
@@ -408,12 +583,43 @@ labels["Quanzhou Hokkien"] = {
 	plain_categories = true,
 }
 
+-- FIXME: Category missing.
+labels["Sanxia Hokkien"] = {
+	-- Taiwanese.
+	Wikipedia = "Sanxia District",
+	plain_categories = true,
+}
+
 -- We use 'Singapore Hokkien' not 'Singaporean Hokkien' despite the Wikipedia article both to match all the other
 -- Singapore language varieties (which say 'Singapore' not 'Singaporean') and because the form with 'Singapore' seeems
 -- actually more common in Google Scholar.
 labels["Singapore Hokkien"] = {
 	aliases = {"Singaporean Hokkien"},
 	Wikipedia = "Singaporean Hokkien",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Taichung Hokkien"] = {
+	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], mostly Zhangzhou dialect.
+	-- No alias for Taichung because there's also Taichung Mandarin ([[w:zh:台中腔]]).
+	Wikipedia = "Taichung",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Tainan Hokkien"] = {
+	-- Taiwanese. Per [[w:zh:臺灣話#方言差]], part of "臺南混合腔" = "Tainan mixed dialect".
+	aliases = {"Tainan"},
+	Wikipedia = "zh:臺南市#語言",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Taipei Hokkien"] = {
+	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], mixed Quanzhou-Zhangzhou dialect
+	-- similar to Tong'an accent.
+	Wikipedia = "Taipei",
 	plain_categories = true,
 }
 
@@ -424,14 +630,46 @@ labels["Taiwanese Hokkien"] = {
 	track = true,
 }
 
+-- FIXME: Category missing.
+labels["Tong'an Hokkien"] = {
+	-- Taiwanese. Per [[zh:同安区#語言]], one of four main dialects of Hokkien in the southern Fujian region,
+	-- along with Quanzhou, Zhangzhou and Xiamen.
+	aliases = {"Tong'an"},
+	Wikipedia = "zh:同安区#語言",
+	plain_categories = true,
+}
+
 labels["Xiamen Hokkien"] = {
 	aliases = {"Xiamen", "Amoy"},
 	Wikipedia = "Amoy dialect",
 	plain_categories = true,
 }
 
+-- FIXME: Category missing.
+labels["Yilan Hokkien"] = {
+	-- Taiwanese. Per [[w:zh:臺灣話]], relatively pure Zhangzhou Hokkien.
+	aliases = {"Yilan"},
+	Wikipedia = "zh:漳州话#與其他閩南語方言的比較",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Yongchun Hokkien"] = {
+	aliases = {"Yongchun"},
+	Wikipedia = "Yongchun dialect",
+	plain_categories = true,
+}
+
 labels["Zhao'an Hokkien"] = {
 	Wikipedia = "zh:詔安縣#詔安閩南語",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Zhangping Hokkien"] = {
+	-- A type of Zhangzhou Hokkien.
+	aliases = {"Zhangping"},
+	Wikipedia = "zh:漳平话",
 	plain_categories = true,
 }
 
