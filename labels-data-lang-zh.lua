@@ -16,26 +16,26 @@ labels["dialectal Gan"] = {
 	regional_categories = "Gan",
 }
 
--- FIXME: Category missing. A variety of Fuguang Gan.
 labels["Lichuan Gan"] = {
+	-- A variety of Fuguang Gan
 	Wikipedia = "zh:撫廣片", -- link for Fuguang Gan
 	plain_categories = true,
 }
 
--- FIXME: Category missing. A variety of Chang–Du Gan (where it is the principal dialect).
 labels["Nanchang Gan"] = {
+	-- A variety of Chang–Du Gan (where it is the principal dialect).
 	Wikipedia = "Chang–Du Gan",
 	plain_categories = true,
 }
 
--- FIXME: Category missing. A variety of Yiliu Gan.
 labels["Pingxiang Gan"] = {
+	-- A variety of Yiliu Gan.
 	Wikipedia = "Yi–Liu Gan",
 	plain_categories = true,
 }
 
--- FIXME: Category missing. A variety of Fuguang Gan.
 labels["Taining Gan"] = {
+	-- A variety of Fuguang Gan.
 	Wikipedia = "zh:撫廣片", -- link for Fuguang Gan
 	plain_categories = true,
 }
@@ -101,14 +101,12 @@ labels["Meixian Hakka"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Northern Sixian Hakka"] = {
 	aliases = {"Northern Sixian"},
 	Wikipedia = "Sixian dialect",
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Raoping Hakka"] = {
 	-- No Raoping alias because Chaoshan Min is also spoken.
 	Wikipedia = true,
@@ -121,14 +119,12 @@ labels["Sixian Hakka"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Southern Sixian Hakka"] = {
 	aliases = {"Southern Sixian"},
 	Wikipedia = "Sixian dialect",
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Shangyou Hakka"] = {
 	-- In southwestern Jiangxi.
 	aliases = {"Shangyou"},
@@ -145,14 +141,12 @@ labels["Taiwanese Hakka"] = {
 -- Skipped: Wuluo Hakka; appears to originate in Pingtung County, Taiwan and be part of Southern Sixian Hakka, maybe
 -- related to the Wuluo River, but extremely obscure; can't find anything about the dialect in Google.
 
--- FIXME: Category missing.
 labels["Yudu Hakka"] = {
 	aliases = {"Yudu"},
 	Wikipedia = "Yudu County",
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Yunlin Hakka"] = {
 	-- A type of Taiwanese Hakka.
 	aliases = {"Yunlin"},
@@ -162,6 +156,25 @@ labels["Yunlin Hakka"] = {
 
 labels["Zhao'an Hakka"] = {
 	Wikipedia = "zh:詔安客語",
+	plain_categories = true,
+}
+
+------------------------------------------ Jin ------------------------------------------
+
+labels["Jin"] = {
+	Wikipedia = "Jin Chinese",
+	regional_categories = true,
+}
+
+labels["dialectal Jin"] = {
+	Wikipedia = "Jin Chinese",
+	regional_categories = "Jin",
+}
+
+labels["Xinzhou Jin"] = {
+	-- no "Xinzhou" alias; Xinzhou Wu (different Xinzhou) also exists
+	-- In the Wutai subgroup
+	Wikipedia = "Xinzhou",
 	plain_categories = true,
 }
 
@@ -207,13 +220,9 @@ labels["Central Plains Mandarin"] = {
 }
 
 labels["Guangxi Mandarin"] = {
+	-- No Guangxi alias; seems unlikely to be correct
 	Wikipedia = "Southwestern Mandarin",
 	plain_categories = true,
-}
-
-labels["dialectal Guangxi Mandarin"] = {
-	Wikipedia = "Southwestern Mandarin",
-	plain_categories = "Guangxi Mandarin",
 }
 
 labels["Guanzhong Mandarin"] = {
@@ -223,10 +232,32 @@ labels["Guanzhong Mandarin"] = {
 }
 
 labels["Guilin Mandarin"] = {
-	aliases = {"Guilin"},
+	-- No Guilin alias; also Guilin Pinghua, Guilin Southern Min
+	-- A subvariety of Guiliu Mandarin, which is a variety of Southwestern Mandarin.
 	Wikipedia = "Southwestern Mandarin",
 	plain_categories = true,
 }
+
+labels["Guiyang Mandarin"] = {
+	-- A variety of Southwestern Mandarin
+	aliases = {"Guiyang"},
+	Wikipedia = "zh:貴陽話", -- Q15911623
+	plain_categories = true,
+}
+
+labels["Harbin Mandarin"] = {
+	-- A variety of Northeastern Mandarin
+	aliases = {"Harbin"},
+	Wikipedia = "Harbin dialect", -- Q1006919
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+--labels["Hui Mandarin"] = {
+--	-- Hui is an ethnic group; multiple dialects depending on the city in question.
+--	Wikipedia = "???",
+--	plain_categories = true,
+--}
 
 labels["Jianghuai Mandarin"] = {
 	aliases = {"Jianghuai", "Jiang-Huai", "Jiang-Huai Mandarin", "Lower Yangtze Mandarin", "Huai"},
@@ -252,8 +283,23 @@ labels["Lanyin Mandarin"] = {
 	plain_categories = true,
 }
 
+labels["Lanzhou Mandarin"] = {
+	-- A variety of Lanyin Mandarin.
+	aliases = {"Lanzhou"},
+	Wikipedia = "zh:兰州话", -- Q10893628
+	plain_categories = true,
+}
+
 labels["Liuzhou Mandarin"] = {
-	Wikipedia = "Southwestern Mandarin",
+	-- A subvariety of Guiliu Mandarin, which is a variety of Southwestern Mandarin.
+	Wikipedia = "zh:柳州话", -- Q7224853
+	plain_categories = true,
+}
+
+labels["Luoyang Mandarin"] = {
+	-- A variety of Central Plains Mandarin.
+	aliases = {"Luoyang"},
+	Wikipedia = "Luoyang dialect", -- Q3431347
 	plain_categories = true,
 }
 
@@ -263,9 +309,24 @@ labels["Malaysian Mandarin"] = {
 	plain_categories = true,
 }
 
+labels["Muping Mandarin"] = {
+	-- A subvariety of the Yantai dialect of Jiaoliao Mandarin.
+	aliases = {"Muping"}, -- there is also a Muping in Sichuan but it's not clear if it has a dialect
+	Wikipedia = "Muping, Yantai",
+	plain_categories = true,
+}
+
 labels["Nanjing Mandarin"] = {
 	aliases = {"Nanjing"},
 	Wikipedia = "Nanjing dialect",
+	plain_categories = true,
+}
+
+labels["Nantong Mandarin"] = {
+	-- A subvariety of Tongtai (Tairu) Mandarin, which is a variety of Jianghuai (Lower Yangtze) Mandarin.
+	-- On the English Wikipedia, 'Nantong dialect' redirects to [[w:Tong-Tai Mandarin]].
+	-- no Nantong alias; Nantong Wu also exists
+	Wikipedia = "zh:南通话", -- Q10909110
 	plain_categories = true,
 }
 
@@ -277,7 +338,7 @@ labels["Northeastern Mandarin"] = {
 
 -- FIXME: Category missing.
 labels["Philippine Mandarin"] = {
-	aliases = {"Philippines Hokkien"},
+	aliases = {"Philippines Mandarin"},
 	Wikipedia = "Mandarin Chinese in the Philippines",
 	plain_categories = true,
 }
@@ -317,14 +378,36 @@ labels["Tianjin Mandarin"] = {
 	plain_categories = true,
 }
 
+labels["Ürümqi Mandarin"] = {
+	-- A variety of Lanyin Mandarin.
+	aliases = {"Ürümqi", "Urumqi Mandarin", "Urumqi"},
+	Wikipedia = "zh:乌鲁木齐话", -- Q10878256
+	plain_categories = true,
+}
+
+labels["Wanrong Mandarin"] = {
+	-- A subvariety of Fenhe Mandarin, which is a variety of Central Plains Mandarin.
+	aliases = {"Wanrong"}, -- Wanrong County in Shanxi; there is a Wanrong Township (mountain indigenous township)
+						   -- in Hualien County, Taiwan, mostly inhabited by Taiwan Aborigines
+	Wikipedia = "zh:汾河片", -- Q10379509; article on Fenhe Mandarin
+	plain_categories = true,
+}
+
 labels["Wuhan Mandarin"] = {
 	aliases = {"Wuhan", "Hankou", "Hankow"},
 	Wikipedia = "Wuhan dialect",
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
+labels["Xi'an Mandarin"] = {
+	-- A subvariety of Guanzhong Mandarin, which is a variety of Central Plains Mandarin.
+	aliases = {"Xi'an"},
+	Wikipedia = "Xi'an dialect", -- Q123700130; currently a redirect to [[w:Guanzhong dialect]]
+	plain_categories = true,
+}
+
 labels["Xining Mandarin"] = {
+	-- A variety of Lanyin Mandarin.
 	aliases = {"Xining"},
 	Wikipedia = "Lanyin Mandarin",
 	plain_categories = true,
@@ -336,11 +419,34 @@ labels["Xinjiang Mandarin"] = {
 	plain_categories = true,
 }
 
+labels["Xuzhou Mandarin"] = {
+	-- A variety of Central Plains Mandarin.
+	aliases = {"Xuzhou"},
+	Wikipedia = "Xuzhou dialect", -- Q8045307
+	plain_categories = true,
+}
+
 labels["Yangzhou Mandarin"] = {
 	aliases = {"Yangzhou"},
 	Wikipedia = "Lower Yangtze Mandarin",
 	plain_categories = true,
 }
+
+labels["Yinchuan Mandarin"] = {
+	-- A variety of Lanyin Mandarin.
+	aliases = {"Yinchuan"},
+	Wikipedia = "Lanyin Mandarin", -- "Yinchuan Mandarin" has its own Wikidata item Q125021069 but has no links
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+--labels["Yunnan Mandarin"] = {
+--	-- Multiple dialects: Kunming dialect (Central Yunnan), Gejiu dialect (Southern Yunnan), Baoshan dialect
+--	(Western Yunnan).
+--	-- "Yunnan" as alias seems unlikely to be correct
+--	Wikipedia = "???",
+--	plain_categories = true,
+--}
 
 ------------------------------------------ Min ------------------------------------------
 
@@ -420,7 +526,7 @@ labels["Puxian Min"] = {
 labels["Shaojiang Min"] = {
 	aliases = {"Shaojiang"},
 	Wikipedia = "Shao–Jiang Min",
-	plain_categories = true,
+	regional_categories = true,
 }
 
 labels["Southern Min"] = {
@@ -436,14 +542,6 @@ labels["dialectal Southern Min"] = {
 	regional_categories = "Southern Min",
 }
 
--- The following violates normal conventions, which would use "Teochew Southern Min" or possibly "Teochew Min". But it
--- matches the 'Teochew' full language.
-labels["Teochew"] = {
-	Wikipedia = "Teochew dialect",
-	regional_categories = true,
-	track = true,
-}
-
 labels["Zhongshan Min"] = {
 	Wikipedia = true,
 	regional_categories = true,
@@ -456,7 +554,6 @@ labels["Hokkien"] = {
 	regional_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Anxi Hokkien"] = {
 	-- A type of Quanzhou Hokkien.
 	aliases = {"Anxi"},
@@ -464,7 +561,6 @@ labels["Anxi Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Changtai Hokkien"] = {
 	-- A type of Zhangzhou Hokkien.
 	aliases = {"Changtai"},
@@ -472,7 +568,6 @@ labels["Changtai Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Hsinchu Hokkien"] = {
 	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], mixed Quanzhou-Zhangzhou dialect
 	-- similar to Tong'an accent.
@@ -481,7 +576,6 @@ labels["Hsinchu Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Hui'an Hokkien"] = {
 	-- Mostly spoken in Hui'an in southern Fujian.
 	aliases = {"Hui'an"},
@@ -489,7 +583,6 @@ labels["Hui'an Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 -- FIXME: Same as Medan Hokkien?
 labels["Indonesian Hokkien"] = {
 	aliases = {"Indonesia Hokkien"},
@@ -503,7 +596,6 @@ labels["Jinjiang Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Kaohsiung Hokkien"] = {
 	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], mixed Quanzhou-Zhangzhou dialect
 	-- similar to Amoy accent.
@@ -512,7 +604,6 @@ labels["Kaohsiung Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Kinmen Hokkien"] = {
 	-- Taiwanese. Per [[w:Kinmen#Language]], mostly Quanzhou dialect (but in Wuchiu/Wuqiu Township, Puxian Min is
 	-- spoken).
@@ -521,14 +612,12 @@ labels["Kinmen Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Longyan Hokkien"] = {
 	aliases = {"Longyan"},
 	Wikipedia = "Longyan dialect",
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Lukang Hokkien"] = {
 	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], based on Quanzhou accent.
 	Wikipedia = "Lukang",
@@ -541,7 +630,6 @@ labels["Malaysian Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Magong Hokkien"] = {
 	-- Taiwanese. Apparently a subdialect of Penghu Hokkien.
 	aliases = {"Magong"},
@@ -549,7 +637,6 @@ labels["Magong Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Medan Hokkien"] = {
 	-- Spoken in Indonesia.
 	Wikipedia = "Medan dialect",
@@ -563,7 +650,6 @@ labels["Penang Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Penghu Hokkien"] = {
 	-- Taiwanese. Per [[w:Penghu#Language]], mostly Tong'an dialect.
 	aliases = {"Penghu"},
@@ -583,7 +669,6 @@ labels["Quanzhou Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Sanxia Hokkien"] = {
 	-- Taiwanese.
 	Wikipedia = "Sanxia District",
@@ -599,7 +684,6 @@ labels["Singapore Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Taichung Hokkien"] = {
 	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], mostly Zhangzhou dialect.
 	-- No alias for Taichung because there's also Taichung Mandarin ([[w:zh:台中腔]]).
@@ -607,7 +691,6 @@ labels["Taichung Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Tainan Hokkien"] = {
 	-- Taiwanese. Per [[w:zh:臺灣話#方言差]], part of "臺南混合腔" = "Tainan mixed dialect".
 	aliases = {"Tainan"},
@@ -615,7 +698,6 @@ labels["Tainan Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Taipei Hokkien"] = {
 	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], mixed Quanzhou-Zhangzhou dialect
 	-- similar to Tong'an accent.
@@ -630,7 +712,6 @@ labels["Taiwanese Hokkien"] = {
 	track = true,
 }
 
--- FIXME: Category missing.
 labels["Tong'an Hokkien"] = {
 	-- Taiwanese. Per [[zh:同安区#語言]], one of four main dialects of Hokkien in the southern Fujian region,
 	-- along with Quanzhou, Zhangzhou and Xiamen.
@@ -645,7 +726,6 @@ labels["Xiamen Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Yilan Hokkien"] = {
 	-- Taiwanese. Per [[w:zh:臺灣話]], relatively pure Zhangzhou Hokkien.
 	aliases = {"Yilan"},
@@ -653,7 +733,6 @@ labels["Yilan Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Yongchun Hokkien"] = {
 	aliases = {"Yongchun"},
 	Wikipedia = "Yongchun dialect",
@@ -665,7 +744,6 @@ labels["Zhao'an Hokkien"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Zhangping Hokkien"] = {
 	-- A type of Zhangzhou Hokkien.
 	aliases = {"Zhangping"},
@@ -676,6 +754,84 @@ labels["Zhangping Hokkien"] = {
 labels["Zhangzhou Hokkien"] = {
 	aliases = {"Zhangzhou", "Changchew"},
 	Wikipedia = "Zhangzhou dialect",
+	plain_categories = true,
+}
+
+---------------------- Teochew ----------------------
+
+-- The following violates normal conventions, which would use "Teochew Southern Min" or possibly "Teochew Min". But it
+-- matches the 'Teochew' full language.
+labels["Teochew"] = {
+	Wikipedia = "Chaoshan Min", -- not [[w:Teochew dialect]], which is a dialect of this language
+	regional_categories = true,
+	track = true,
+}
+
+labels["Chaozhou Teochew"] = {
+	aliases = {"Chaozhou"},
+	Wikipedia = "Teochew dialect",
+	plain_categories = true,
+}
+
+labels["Jieyang Teochew"] = {
+	aliases = {"Jieyang"},
+	Wikipedia = "Jieyang",
+	plain_categories = true,
+}
+
+labels["Pontianak Teochew"] = {
+	-- spoken in West Kalimantan, Indonesia
+	aliases = {"Pontianak"},
+	Wikipedia = "Pontianak", -- "Pontianak Teochew" has its own Wikidata entry Q106560423, but it has no links
+	plain_categories = true,
+}
+
+labels["Singapore Teochew"] = {
+	aliases = {"Singaporean Teochew"},
+	Wikipedia = "Teochew people#Teochew immigration to Singapore",
+	plain_categories = true,
+}
+
+labels["Thai Teochew"] = {
+	aliases = {"Thailand Teochew"},
+	Wikipedia = "Thai Chinese#Language",
+	plain_categories = true,
+}
+
+------------------------------------------ Pinghua ------------------------------------------
+
+labels["Pinghua"] = {
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Guilin Pinghua"] = {
+	-- A variety of Northern Pinghua.
+	Wikipedia = "zh:桂北平话", -- Q84302463; the Northern Pinghua redirect
+	plain_categories = true,
+}
+
+labels["Nanning Pinghua"] = {
+	-- A variety of Southern Pinghua.
+	Wikipedia = "zh:桂南平话", -- Q84302019; the Southern Pinghua redirect
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Northern Pinghua"] = {
+	-- Spoken in northern Guangxi, around the city of Guilin.
+	-- English Wikipedia article redirects to Pinghua; Chinese Wikipedia article similarly redirects but contains
+	-- more information on Northern Pinghua.
+	Wikipedia = "zh:桂北平话", -- Q84302463
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Southern Pinghua"] = {
+	-- Spoken in southern Guangxi, around the city of Nanning.
+	-- English Wikipedia article redirects to Pinghua; Chinese Wikipedia article similarly redirects but contains
+	-- more information on Southern Pinghua.
+	Wikipedia = "zh:桂南平话", -- Q84302019
 	plain_categories = true,
 }
 
@@ -703,6 +859,12 @@ labels["Chuzhou Wu"] = {
 	plain_categories = true,
 }
 
+labels["Danyang Wu"] = {
+	aliases = {"Danyang"},
+	Wikipedia = "Danyang, Jiangsu",
+	plain_categories = true,
+}
+
 labels["Hangzhounese Wu"] = {
 	aliases = {"Hangzhou", "Hangzhounese", "Hangzhou Wu"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Hangzhounese Wu'.
@@ -711,7 +873,6 @@ labels["Hangzhounese Wu"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Huzhounese Wu"] = {
 	aliases = {"Huzhou", "Huzhou Wu", "Huzhounese"},
 	Wikipedia = "zh:湖州話",
@@ -733,6 +894,12 @@ labels["Ningbonese Wu"] = {
 labels["Northern Wu"] = {
 	aliases = {"Taihu", "Taihu Wu"},
 	Wikipedia = true,
+	plain_categories = true,
+}
+
+labels["Shadi Wu"] = {
+	aliases = {"Shadi", "Chongming", "Chongming Wu", "Qihai", "Qihai Wu"},
+	Wikipedia = "Shadi dialect", -- Q6112340
 	plain_categories = true,
 }
 
@@ -783,12 +950,18 @@ labels["Wuzhou Wu"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Xinqu Wu"] = {
 	aliases = {"Xinqu", "Quzhou Wu", "Quzhounese", "Quzhounese Wu", "Shangrao", "Shangrao Wu", "Shangraonese", "Shangraonese Wu", "Xinzhou Wu"},
 	Wikipedia = "Quzhou dialect",
 	plain_categories = true,
 }
+
+-- labels["Zhejiang Wu"] = {
+-- 	-- several dialects of different subgroups
+-- 	aliases = {"Zhejiang"},
+-- 	Wikipedia = "Zhejiang",
+-- 	plain_categories = true,
+-- }
 
 ------------------------------------------ Xiang ------------------------------------------
 
@@ -800,6 +973,13 @@ labels["Xiang"] = {
 labels["dialectal Xiang"] = {
 	Wikipedia = "Xiang Chinese",
 	regional_categories = "Xiang",
+}
+
+-- FIXME: Category missing.
+labels["Changsha Xiang"] = {
+	aliases = {"Changsha"},
+	Wikipedia = "Changsha dialect", -- New Xiang
+	plain_categories = true,
 }
 
 -- FIXME: Category missing.
@@ -851,6 +1031,22 @@ labels["dialectal Cantonese"] = {
 	regional_categories = "Cantonese",
 }
 
+-- FIXME: Category missing.
+labels["Dongguan Cantonese"] = {
+	-- A subvariety of Guanbao Cantonese.
+	aliases = {"Dongguan"},
+	Wikipedia = "Dongguan",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+-- labels["Guangxi Cantonese"] = {
+--  -- Multiple Yue subgroups spoken in Guangxi
+-- 	-- Guangxi alias not correct as there are multiple languages spoken in Guangxi
+-- 	Wikipedia = "Guangxi",
+-- 	plain_categories = true,
+-- }
+
 labels["Guangzhou Cantonese"] = {
 	aliases = {"Guangzhou"},
 	Wikipedia = "Cantonese",
@@ -860,6 +1056,20 @@ labels["Guangzhou Cantonese"] = {
 labels["Hong Kong Cantonese"] = {
 	aliases = {"HKC"},
 	Wikipedia = true,
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Malaysian Cantonese"] = {
+	aliases = {"Malaysia Cantonese"},
+	Wikipedia = true,
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Singapore Cantonese"] = {
+	aliases = {"Singaporean Cantonese"},
+	Wikipedia = "Chinese Singaporeans#Cantonese",
 	plain_categories = true,
 }
 
@@ -877,6 +1087,26 @@ labels["Taishanese"] = {
 	aliases = {"Toishanese", "Hoisanese"},
 	Wikipedia = true,
 	regional_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["US 1 Cantonese"] = {
+	Wikipedia = "Chinese language and varieties in the United States",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Yangjiang Cantonese"] = {
+	aliases = {"Yangjiang"}, -- FIXME: Correct?
+	Wikipedia = "zh:陽江話",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Yulin Cantonese"] = {
+	aliases = {"Yulin"}, -- FIXME: Correct?
+	Wikipedia = "zh:玉林話",
+	plain_categories = true,
 }
 
 ------------------------------------------ Other groups ------------------------------------------
@@ -901,26 +1131,6 @@ labels["Gansu Dungan"] = {
 labels["Huizhou"] = {
 	aliases = {"Huizhou Chinese"},
 	Wikipedia = "Huizhou Chinese",
-	regional_categories = true,
-}
-
-labels["Jin"] = {
-	Wikipedia = "Jin Chinese",
-	regional_categories = true,
-}
-
-labels["dialectal Jin"] = {
-	Wikipedia = "Jin Chinese",
-	regional_categories = "Jin",
-}
-
-labels["Nanning Pinghua"] = {
-	Wikipedia = "Pinghua",
-	plain_categories = true,
-}
-
-labels["Pinghua"] = {
-	Wikipedia = true,
 	regional_categories = true,
 }
 
