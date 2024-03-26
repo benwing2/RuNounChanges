@@ -207,15 +207,48 @@ labels["dialectal Mandarin"] = {
 	regional_categories = "Mandarin",
 }
 
+labels["Beijingic Mandarin"] = {
+	-- A primary branch. "Beijingic" is the term used by Glottolog. Wikipedia calls this
+	-- [[w:Beijing Mandarin (division of Mandarin)]] as opposed to [[w:Beijing dialect]] for Beijing Mandarin itself,
+	-- but this is excessively ambiguous.
+	-- Dialects per Wikipedia: [[w:Beijing dialect]] (with [[w:Standard Chinese]] as a child),
+	-- [[w:Philippine Mandarin]], [[w:Malaysian Mandarin]], Chengde dialect (承德话), Chifeng dialect (赤峰话), Hailar
+	-- dialect (海拉尔话).
+	aliases = {"Beijingic"},
+	Wikidata = "Q2169652",
+	plain_categories = true,
+}
+
 labels["Beijing Mandarin"] = {
+	-- A variety of Beijingic Mandarin.
 	aliases = {"Beijing", "Peking", "Pekingese"},
 	Wikipedia = "Beijing dialect",
 	plain_categories = true,
 }
 
 labels["Central Plains Mandarin"] = {
+	-- A primary branch.
+	-- Dialects per Wikipedia: [[w:Dungan language]], [[w:Gangou dialect]], Kaifeng dialect (开封话),
+	-- [[w:Luoyang dialect]], Nanyang dialect (南阳话), Qufu dialect (曲埠话), Tianshui dialect (天水话),
+	-- [[w:Xi'an dialect]], [[w:Xuzhou dialect]], Yan'an dialect (延安话), Zhengzhou dialect (郑州话).
 	aliases = {"Central Plains", "Zhongyuan Mandarin"},
 	Wikipedia = true,
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Changchun Mandarin"] = {
+	-- A variety of Northeastern Mandarin.
+	aliases = {"Changchun"},
+	Wikidata = "Q17030513",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Dalian Mandarin"] = {
+	-- A variety of Jiaoliao Mandarin.
+	aliases = {"Dalian"},
+	Wikidata = "Q1375036",
 	plain_categories = true,
 }
 
@@ -239,16 +272,32 @@ labels["Guilin Mandarin"] = {
 }
 
 labels["Guiyang Mandarin"] = {
-	-- A variety of Southwestern Mandarin
+	-- A variety of Southwestern Mandarin.
 	aliases = {"Guiyang"},
-	Wikipedia = "zh:貴陽話", -- Q15911623
+	Wikidata = "Q15911623",
 	plain_categories = true,
 }
 
 labels["Harbin Mandarin"] = {
-	-- A variety of Northeastern Mandarin
+	-- A variety of Northeastern Mandarin.
 	aliases = {"Harbin"},
-	Wikipedia = "Harbin dialect", -- Q1006919
+	Wikidata = "Q1006919",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Gangou Mandarin"] = {
+	-- A variety of Central Plains Mandarin.
+	aliases = {"Gangou"},
+	Wikidata = "Q17050290",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Hefei Mandarin"] = {
+	-- A variety of Jianghuai Mandarin.
+	aliases = {"Hefei"},
+	Wikidata = "Q10916956",
 	plain_categories = true,
 }
 
@@ -260,24 +309,51 @@ labels["Harbin Mandarin"] = {
 --}
 
 labels["Jianghuai Mandarin"] = {
+	-- A primary branch.
+	-- Dialects per Wikipedia: [[w:Hefei dialect]], Hainan Junjiahua (军家话), [[w:Nanjing dialect]],
+	-- [[w:Nantong dialect]], Xiaogan dialect (孝感话), Yangzhou dialect (扬州话).
 	aliases = {"Jianghuai", "Jiang-Huai", "Jiang-Huai Mandarin", "Lower Yangtze Mandarin", "Huai"},
 	Wikipedia = "Lower Yangtze Mandarin",
 	plain_categories = true,
 }
 
 labels["Jiaoliao Mandarin"] = {
+	-- A primary branch.
+	-- Dialects per Wikipedia: [[w:Dalian dialect]], [[w:Qingdao dialect]], [[w:Weihai dialect]], Yantai dialect
+	-- (烟台话).
 	aliases = {"Jiaoliao", "Jiao-Liao", "Jiao-Liao Mandarin"},
 	Wikipedia = true,
 	plain_categories = true,
 }
 
 labels["Jilu Mandarin"] = {
+	-- A primary branch.
+	-- Dialects per Wikipedia: Baoding dialect (保定话), [[w:Jinan dialect]], Shijiazhuang dialect (石家庄话),
+	-- [[w:Tianjin dialect]].
 	aliases = {"Jilu", "Ji-Lu", "Ji-Lu Mandarin"},
 	Wikipedia = true,
 	plain_categories = true,
 }
 
+-- FIXME: Category missing.
+labels["Jinan Mandarin"] = {
+	-- A variety of Jilu Mandarin.
+	aliases = {"Jinan"},
+	Wikidata = "Q6202017",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Kunming Mandarin"] = {
+	-- A variety of Southwestern Mandarin.
+	aliases = {"Kunming"},
+	Wikidata = "Q3372400",
+	plain_categories = true,
+}
+
 labels["Lanyin Mandarin"] = {
+	-- A primary branch.
+	-- Dialects per Wikipedia: Lanzhou dialect (兰州话), Xining dialect (西宁话), Yinchuan dialect (银川话).
 	aliases = {"Lanyin", "Lan-Yin Mandarin"},
 	Wikipedia = true,
 	plain_categories = true,
@@ -286,20 +362,20 @@ labels["Lanyin Mandarin"] = {
 labels["Lanzhou Mandarin"] = {
 	-- A variety of Lanyin Mandarin.
 	aliases = {"Lanzhou"},
-	Wikipedia = "zh:兰州话", -- Q10893628
+	Wikidata = "Q10893628",
 	plain_categories = true,
 }
 
 labels["Liuzhou Mandarin"] = {
 	-- A subvariety of Guiliu Mandarin, which is a variety of Southwestern Mandarin.
-	Wikipedia = "zh:柳州话", -- Q7224853
+	Wikidata = "Q7224853",
 	plain_categories = true,
 }
 
 labels["Luoyang Mandarin"] = {
 	-- A variety of Central Plains Mandarin.
 	aliases = {"Luoyang"},
-	Wikipedia = "Luoyang dialect", -- Q3431347
+	Wikidata = "Q3431347",
 	plain_categories = true,
 }
 
@@ -326,13 +402,24 @@ labels["Nantong Mandarin"] = {
 	-- A subvariety of Tongtai (Tairu) Mandarin, which is a variety of Jianghuai (Lower Yangtze) Mandarin.
 	-- On the English Wikipedia, 'Nantong dialect' redirects to [[w:Tong-Tai Mandarin]].
 	-- no Nantong alias; Nantong Wu also exists
-	Wikipedia = "zh:南通话", -- Q10909110
+	Wikidata = "Q10909110",
 	plain_categories = true,
 }
 
 labels["Northeastern Mandarin"] = {
+	-- A primary branch.
+	-- Dialects per Wikipedia: [[w:Changchun dialect]], [[w:Harbin dialect]], Qiqihar dialect (齐齐哈尔话),
+	-- [[w:Shenyang dialect]].
 	aliases = {"northeastern Mandarin", "NE Mandarin"},
 	Wikipedia = true,
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Qingdao Mandarin"] = {
+	-- A variety of Jiaoliao Mandarin.
+	aliases = {"Qingdao"},
+	Wikidata = "Q7267815",
 	plain_categories = true,
 }
 
@@ -343,12 +430,12 @@ labels["Philippine Mandarin"] = {
 	plain_categories = true,
 }
 
--- The following violates normal conventions, which would use "Sichuan Mandarin". But it matches the 'Sichuanese'
--- language.
-labels["Sichuanese"] = {
-	aliases = {"Sichuan"},
-	Wikipedia = "Sichuanese dialect",
-	regional_categories = true,
+-- FIXME: Category missing.
+labels["Shenyang Mandarin"] = {
+	-- A variety of Northeastern Mandarin.
+	aliases = {"Shenyang"},
+	Wikidata = "Q7494349",
+	plain_categories = true,
 }
 
 -- We use 'Singapore Mandarin' not 'Singaporean Mandarin' despite the Wikipedia article both to match all the other
@@ -361,6 +448,10 @@ labels["Singapore Mandarin"] = {
 }
 
 labels["Southwestern Mandarin"] = {
+	-- A primary branch.
+	-- Dialects per Wikipedia: Changde dialect (常德话), [[w:Chengdu dialect]], [[w:Chongqing dialect]], Dali dialect
+	-- (大理话), Guiyang dialect (贵阳话), [[w:Kunming dialect]], Liuzhou dialect (柳州话), [[w:Wuhan dialect]],
+	-- [[w:Xichang dialect]], Yichang dialect (宜昌话), Hanzhong dialect (汉中话).
 	aliases = {"southwestern Mandarin", "Upper Yangtze Mandarin", "Southwest Mandarin"},
 	Wikipedia = true,
 	plain_categories = true,
@@ -381,7 +472,7 @@ labels["Tianjin Mandarin"] = {
 labels["Ürümqi Mandarin"] = {
 	-- A variety of Lanyin Mandarin.
 	aliases = {"Ürümqi", "Urumqi Mandarin", "Urumqi"},
-	Wikipedia = "zh:乌鲁木齐话", -- Q10878256
+	Wikidata = "Q10878256",
 	plain_categories = true,
 }
 
@@ -389,7 +480,15 @@ labels["Wanrong Mandarin"] = {
 	-- A subvariety of Fenhe Mandarin, which is a variety of Central Plains Mandarin.
 	aliases = {"Wanrong"}, -- Wanrong County in Shanxi; there is a Wanrong Township (mountain indigenous township)
 						   -- in Hualien County, Taiwan, mostly inhabited by Taiwan Aborigines
-	Wikipedia = "zh:汾河片", -- Q10379509; article on Fenhe Mandarin
+	Wikidata = "Q10379509", -- article on Fenhe Mandarin
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Weihai Mandarin"] = {
+	-- A variety of Jiaoliao Mandarin.
+	aliases = {"Weihai"},
+	Wikidata = "Q3025951",
 	plain_categories = true,
 }
 
@@ -402,7 +501,15 @@ labels["Wuhan Mandarin"] = {
 labels["Xi'an Mandarin"] = {
 	-- A subvariety of Guanzhong Mandarin, which is a variety of Central Plains Mandarin.
 	aliases = {"Xi'an"},
-	Wikipedia = "Xi'an dialect", -- Q123700130; currently a redirect to [[w:Guanzhong dialect]]
+	Wikidata = "Q123700130", -- currently a redirect to [[w:Guanzhong dialect]]
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Xichang Mandarin"] = {
+	-- A variety of Southwestern Mandarin.
+	aliases = {"Xichang"},
+	Wikidata = "Q17067030",
 	plain_categories = true,
 }
 
@@ -422,13 +529,14 @@ labels["Xinjiang Mandarin"] = {
 labels["Xuzhou Mandarin"] = {
 	-- A variety of Central Plains Mandarin.
 	aliases = {"Xuzhou"},
-	Wikipedia = "Xuzhou dialect", -- Q8045307
+	Wikidata = "Q8045307",
 	plain_categories = true,
 }
 
 labels["Yangzhou Mandarin"] = {
+	-- A variety of Jianghuai Mandarin.
 	aliases = {"Yangzhou"},
-	Wikipedia = "Lower Yangtze Mandarin",
+	Wikidata = "Q11076194",
 	plain_categories = true,
 }
 
@@ -440,13 +548,84 @@ labels["Yinchuan Mandarin"] = {
 }
 
 -- FIXME: Category missing.
---labels["Yunnan Mandarin"] = {
---	-- Multiple dialects: Kunming dialect (Central Yunnan), Gejiu dialect (Southern Yunnan), Baoshan dialect
---	(Western Yunnan).
---	-- "Yunnan" as alias seems unlikely to be correct
---	Wikipedia = "???",
---	plain_categories = true,
---}
+labels["Yunnan Mandarin"] = {
+	-- A variety of Southwestern Mandarin.
+	-- "Yunnan" as alias seems unlikely to be correct
+	Wikidata = "Q10881055",
+	plain_categories = true,
+}
+
+---------------------- Sichuanese ----------------------
+
+-- The following violates normal conventions, which would use "Sichuan Mandarin". But it matches the 'Sichuanese'
+-- language.
+labels["Sichuanese"] = {
+	-- A variety of Southwestern Mandarin.
+	aliases = {"Sichuan"},
+	Wikidata = "Q2278732",
+	regional_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Chengdu Sichuanese"] = {
+	-- A variety of Chengyu Sichuanese.
+	aliases = {"Chengdu", "Chengdu Mandarin"},
+	Wikidata = "Q11074683",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Chengyu Sichuanese"] = {
+	aliases = {"Chengdu", "Chengdu Mandarin", "Chengdu-Chongqing", "Chengdu-Chongqing Mandarin"},
+	Wikidata = "Q5091311",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Chongqing Sichuanese"] = {
+	-- A variety of Chengyu Sichuanese.
+	aliases = {"Chongqing", "Chongqing Mandarin"},
+	Wikidata = "Q15902531",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Leshan Sichuanese"] = {
+	-- A variety of Minjiang Sichuanese.
+	aliases = {"Leshan", "Leshan Mandarin"},
+	Wikidata = "Q6530337",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Minjiang Sichuanese"] = {
+	aliases = {"Minjiang", "Minjiang Mandarin"},
+	Wikidata = "Q6867767",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Renfu Sichuanese"] = {
+	-- Jianggong is used by zhwiki.
+	aliases = {"Renfu", "Renfu Mandarin", "Renshou-Fushun", "Renshou-Fushun Mandarin", "Renshou-Fushun Sichuanese", "Jianggong", "Jianggong Mandarin", "Jianggong Sichuanese"},
+	Wikidata = "Q10883781",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Yamian Sichuanese"] = {
+	aliases = {"Yamian", "Yamian Mandarin"},
+	Wikidata = "Q56243639",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Zigong Sichuanese"] = {
+	-- A variety of Renfu Sichuanese.
+	aliases = {"Zigong", "Zigong Mandarin"},
+	Wikidata = "Q8071810",
+	plain_categories = true,
+}
 
 ------------------------------------------ Min ------------------------------------------
 
@@ -807,13 +986,13 @@ labels["Pinghua"] = {
 
 labels["Guilin Pinghua"] = {
 	-- A variety of Northern Pinghua.
-	Wikipedia = "zh:桂北平话", -- Q84302463; the Northern Pinghua redirect
+	Wikidata = "Q84302463", -- the Northern Pinghua redirect
 	plain_categories = true,
 }
 
 labels["Nanning Pinghua"] = {
 	-- A variety of Southern Pinghua.
-	Wikipedia = "zh:桂南平话", -- Q84302019; the Southern Pinghua redirect
+	Wikidata = "Q84302019", -- the Southern Pinghua redirect
 	plain_categories = true,
 }
 
@@ -822,7 +1001,7 @@ labels["Northern Pinghua"] = {
 	-- Spoken in northern Guangxi, around the city of Guilin.
 	-- English Wikipedia article redirects to Pinghua; Chinese Wikipedia article similarly redirects but contains
 	-- more information on Northern Pinghua.
-	Wikipedia = "zh:桂北平话", -- Q84302463
+	Wikidata = "Q84302463",
 	plain_categories = true,
 }
 
@@ -831,7 +1010,7 @@ labels["Southern Pinghua"] = {
 	-- Spoken in southern Guangxi, around the city of Nanning.
 	-- English Wikipedia article redirects to Pinghua; Chinese Wikipedia article similarly redirects but contains
 	-- more information on Southern Pinghua.
-	Wikipedia = "zh:桂南平话", -- Q84302019
+	Wikidata = "Q84302019",
 	plain_categories = true,
 }
 
@@ -847,19 +1026,23 @@ labels["dialectal Wu"] = {
 	regional_categories = "Wu",
 }
 
+-- labels["Zhejiang Wu"] = {
+-- 	-- several dialects of different subgroups
+-- 	aliases = {"Zhejiang"},
+-- 	Wikipedia = "Zhejiang",
+-- 	plain_categories = true,
+-- }
+
+---------------------- Northern Wu ----------------------
+
 labels["Changzhounese Wu"] = {
 	aliases = {"Changzhou Wu", "Changzhou", "Changzhounese"},
 	Wikipedia = "Changzhou dialect",
 	plain_categories = true,
 }
 
-labels["Chuzhou Wu"] = {
-	aliases = {"Chuzhou", "Lishuinese", "Fujian Wu", "Lishui Wu"},
-	Wikipedia = "Lishui dialect",
-	plain_categories = true,
-}
-
 labels["Danyang Wu"] = {
+	-- A variety of Northern Wu.
 	aliases = {"Danyang"},
 	Wikipedia = "Danyang, Jiangsu",
 	plain_categories = true,
@@ -880,6 +1063,7 @@ labels["Huzhounese Wu"] = {
 }
 
 labels["Linshao Wu"] = {
+	-- The supervariety of Shaoxing Wu; a variety of Northern Wu.
 	aliases = {"Linshao", "Lin-Shao Wu", "Lin-Shao"},
 	Wikipedia = "Shaoxing dialect",
 	plain_categories = true,
@@ -899,7 +1083,7 @@ labels["Northern Wu"] = {
 
 labels["Shadi Wu"] = {
 	aliases = {"Shadi", "Chongming", "Chongming Wu", "Qihai", "Qihai Wu"},
-	Wikipedia = "Shadi dialect", -- Q6112340
+	Wikidata = "Q6112340",
 	plain_categories = true,
 }
 
@@ -917,11 +1101,6 @@ labels["Shaoxing Wu"] = {
 	plain_categories = true,
 }
 
-labels["Southern Wu"] = {
-	Wikipedia = "Wu Chinese",
-	plain_categories = true,
-}
-
 labels["Sujiahu Wu"] = {
 	aliases = {"Su-Jia-Hu Wu", "Sujiahu", "Su-Jia-Hu"}, -- not Suzhou-Jiaxing-Huzhou
 	display = "[[w:Suzhou dialect|Su]][[w:zh:嘉興話|jia]][[w:Shanghainese|hu]] [[w:Wu Chinese|Wu]]",
@@ -936,6 +1115,77 @@ labels["Suzhounese Wu"] = {
 	plain_categories = true,
 }
 
+---------------------- Southern Wu ----------------------
+
+labels["Wuzhou Wu"] = {
+	aliases = {"Wuzhou"},
+	Wikidata = "Q2779891",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Chuqu Wu"] = {
+	aliases = {"Chuqu"},
+	Wikidata = "Q5116499",
+	plain_categories = true,
+}
+
+labels["Lishui Wu"] = {
+	-- A variety of Chuqu Wu.
+	-- FIXME: Are Chuzhou Wu and Fujian Wu really aliases, or different dialects lumped into Lishui Wu?
+	-- (NOTE: Chuzhou was an ancient state established during the Sui Dynasty (589 AD), covering the city of Lishui
+	-- and [[w:Wuyi County, Zhejiang]]; see [[w:zh:处州]]. Lishui is in the southwestern corner of Zhejiang and borders
+	-- Fujian to the southwest, so it's possible there is a bit of Fujian that is Wu-speaking.)
+	aliases = {"Lishui", "Lishuinese", "Chuzhou Wu", "Chuzhou", "Fujian Wu"},
+	Wikipedia = "Lishui",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Jiangshan Wu"] = {
+	-- A variety of Chuqu Wu.
+	aliases = {"Jiangshan"},
+	Wikidata = "Q6112693",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Jinhua Wu"] = {
+	-- A variety of Wuzhou Wu.
+	aliases = {"Jinhua", "Jinhuanese", "Jinhuanese Wu"},
+	Wikidata = "Q13583347",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Qingtian Wu"] = {
+	-- A variety of Chuqu Wu.
+	aliases = {"Qingtian"},
+	Wikidata = "Q2074456",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Quzhou Wu"] = {
+	-- A variety of Chuqu Wu.
+	aliases = {"Quzhou", "Quzhounese", "Quzhounese Wu"},
+	Wikidata = "Q6112429",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Shangrao Wu"] = {
+	-- A variety of Chuqu Wu.
+	aliases = {"Shangrao", "Shangraonese", "Shangraonese Wu"},
+	Wikipedia = "Shangrao",
+	plain_categories = true,
+}
+
+labels["Southern Wu"] = {
+	Wikipedia = "Wu Chinese",
+	plain_categories = true,
+}
+
 labels["Wenzhounese Wu"] = {
 	aliases = {"Wenzhounese", "Wenzhou Wu", "Wenzhou", "Oujiang"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Wenzhounese Wu'.
@@ -943,25 +1193,6 @@ labels["Wenzhounese Wu"] = {
 	Wikipedia = "Wenzhou dialect",
 	plain_categories = true,
 }
-
-labels["Wuzhou Wu"] = {
-	aliases = {"Jinhua Wu", "Jinhuanese", "Jinhuanese Wu", "Wuzhou"},
-	Wikipedia = "Jinhua dialect",
-	plain_categories = true,
-}
-
-labels["Xinqu Wu"] = {
-	aliases = {"Xinqu", "Quzhou Wu", "Quzhounese", "Quzhounese Wu", "Shangrao", "Shangrao Wu", "Shangraonese", "Shangraonese Wu", "Xinzhou Wu"},
-	Wikipedia = "Quzhou dialect",
-	plain_categories = true,
-}
-
--- labels["Zhejiang Wu"] = {
--- 	-- several dialects of different subgroups
--- 	aliases = {"Zhejiang"},
--- 	Wikipedia = "Zhejiang",
--- 	plain_categories = true,
--- }
 
 ------------------------------------------ Xiang ------------------------------------------
 
@@ -1087,12 +1318,6 @@ labels["Taishanese"] = {
 	aliases = {"Toishanese", "Hoisanese"},
 	Wikipedia = true,
 	regional_categories = true,
-}
-
--- FIXME: Category missing.
-labels["US 1 Cantonese"] = {
-	Wikipedia = "Chinese language and varieties in the United States",
-	plain_categories = true,
 }
 
 -- FIXME: Category missing.
