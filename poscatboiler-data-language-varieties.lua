@@ -226,6 +226,33 @@ local dialect_parent_cats_to_scrape = m_table.listToSet {
 	"Ripuarian Franconian",
 }
 
+-- HACK! For languages in any of the given families, check the specified-language Wikipedia for appropriate
+-- Wikipedia articles for the language in question (esp. useful for obscure etymology-only languages that may not
+-- have English articles for them, like many Chinese lects).
+local families_to_wikipedia_languages = {
+	{"zhx", "zh"},
+	{"sem-arb", "ar"},
+}
+
+local function get_langs_to_extract_wikipedia_articles(lang)
+	local wikipedia_langs = {}
+	table.insert(wikipedia_langs, "en")
+	local article_lang = lang
+	while article_lang do
+		local wmcodes = article_lang:getWikimediaLanguageCodes()
+		for _, wmcode in ipairs(wmcodes) do
+			table.insert(wikipedia_langs, wmcode)
+		end
+		article_lang = article_lang:getParent()
+	end
+	for _, family_to_wp_lang in ipairs(families_to_wikipedia_languages) do
+		local family, wp_lang = unpack(family_to_wp_lang)
+		if lang:inFamily(family) then
+			table.insert(wikipedia_langs, wp_lang)
+		end
+	end
+	return wikipedia_langs
+end
 
 -- Handle dialect categories such as [[:Category:New Zealand English]], [[:Category:Late Middle English]],
 -- [[:Category:Arbëresh Albanian]], [[:Category:Provençal]] or arbitrarily-named categories like
@@ -395,6 +422,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		othercat = {}, -- comma-separated
 		country = {}, -- comma-separated
 		wp = {},
+		wikidata = {},
 		breadcrumb = {},
 		pagename = {}, -- for testing or demonstration
 	}
@@ -446,42 +474,68 @@ local function dialect_handler(category, raw_args, called_from_inside)
 	breadcrumb = args.breadcrumb or breadcrumb or pagename
 
 	local topright
-	if args.wp then
-		local topright_parts = {}
-		for _, article in ipairs(split_on_comma(args.wp)) do
-			local foreign_wiki
-			if article:find(":[^ ]") then
-				local actual_article
-				foreign_wiki, actual_article = article:match("^([a-z][a-z][a-z-]*):([^ ].*)$")
-				if actual_article then
-					article = actual_article
+	local topright_parts = {}
+	-- Insert Wikipedia article `article` for Wikimedia language `wmcode` into `topright_parts`, avoiding duplication.
+	local function insert_wikipedia_article(wmcode, article)
+		m_table.insertIfNot(topright_parts, ("{{wp%s%s}}"):format(
+			wmcode == "en" and "" or "|lang=" .. wmcode,
+			article == pagename and "" or "|" .. article
+		))
+	end
+		
+	if args.wp or args.wikidata then
+		if args.wp then
+			for _, article in ipairs(split_on_comma(args.wp)) do
+				local foreign_wiki
+				if article:find(":[^ ]") then
+					local actual_article
+					foreign_wiki, actual_article = article:match("^([a-z][a-z][a-z-]*):([^ ].*)$")
+					if actual_article then
+						article = actual_article
+					end
 				end
-			end
-			if article == "+" then
-				article = pagename
-			elseif article == "-" then
-				article = nil
-			else
-				article = require("Module:yesno")(article, article)
-				if article == true then
+				if article == "+" then
 					article = pagename
+				elseif article == "-" then
+					article = nil
+				else
+					article = require("Module:yesno")(article, article)
+					if article == true then
+						article = pagename
+					end
+				end
+				if article then
+					insert_wikipedia_article(foreign_wiki or "en", article)
 				end
 			end
-			if article then
-				table.insert(topright_parts, ("{{wp%s%s}}"):format(article == pagename and "" or "|" .. article,
-					foreign_wiki and "|lang=" .. foreign_wiki or ""))
+		end
+		if args.wikidata then
+			if not mw.wikibase then
+				error(("Unable to retrieve data from Wikidata ID's '%s'; `mw.wikibase` not defined"):format(args.wikidata))
+			end
+			local wikipedia_langs = get_langs_to_extract_wikipedia_articles(lang)
+			local ids = rsplit(args.wikidata, "%s*,%s*")
+			for _, wmcode in ipairs(wikipedia_langs) do
+				for _, id in ipairs(ids) do
+					local article = mw.wikibase.sitelink(id, wmcode .. "wiki")
+					if article then
+						insert_wikipedia_article(wmcode, article)
+					end
+				end
 			end
 		end
-		topright = table.concat(topright_parts)
 	elseif pagename == ucfirst(langname) then
-		local article = lang:getWikipediaArticle("no category fallback")
-		if article then
-			if article == pagename then
-				topright = "{{wp}}"
-			else
-				topright = ("{{wp|%s}}"):format(article)
+		local topright_parts = {}
+		local wikipedia_langs = get_langs_to_extract_wikipedia_articles(lang)
+		for _, wmcode in ipairs(wikipedia_langs) do
+			local article = lang:getWikipediaArticle("no category fallback", wmcode .. "wiki")
+			if article then
+				insert_wikipedia_article(wmcode, article)
 			end
 		end
+	end
+	if #topright_parts > 0 then
+		topright = table.concat(topright_parts)
 	end
 
 	local additional = args.addl
