@@ -155,7 +155,7 @@ function export.get_displayed_label(label, labdata, lang, deprecated)
 			end
 		end
 		
-		displayed_label = require("Module:string utilities").gsub(labdata.special_display, "<(.-)>", add_language_name)
+		displayed_label = labdata.special_display:gsub("<(.-)>", add_language_name)
 	else
 		--[=[
 			If labdata.glossary or labdata.Wikipedia are set to true, there is a glossary definition
@@ -207,8 +207,9 @@ Return information on a label. On input `data` is an object with the following f
   in that case.
 
 The return value is an object with the following fields:
-* `label`: The display form of the label.
+* `raw_label`: The original label that was passed in.
 * `canonical`: If the label is an alias, this contains the canonical name of the label.
+* `label`: The display form of the label.
 * `categories`: A list of the categories to add the label to.
 * `formatted_categories`: A string containing the formatted categories.
 * `deprecated`: True if the label is deprecated.
@@ -221,7 +222,8 @@ function export.get_label_info(data)
 
 	local ret = {categories = {}}
 	local label = data.label
-	local origlabel = label
+	local orig_label = label
+	ret.raw_label = label
 	local deprecated = false
 	local labdata
 	local submodule
@@ -264,8 +266,8 @@ function export.get_label_info(data)
 		-- Track label (after converting aliases to canonical form; but also track original label (alias) if different
 		-- from canonical label). It is too expensive to track all labels.
 		track_label(label, langcode)
-		if label ~= origlabel then
-			track_label(origlabel, langcode)
+		if label ~= orig_label then
+			track_label(orig_label, langcode)
 		end
 	end
 
@@ -363,21 +365,38 @@ function export.show_labels(data)
 		data.label = label
 		local ret = export.get_label_info(data)
 
-		local omit_comma = omit_preComma or ret.data.omit_preComma
+		ret.omit_comma = omit_preComma or ret.data.omit_preComma
 		omit_postComma = ret.data.omit_postComma
-		local omit_space = omit_preSpace or ret.data.omit_preSpace
+		ret.omit_space = omit_preSpace or ret.data.omit_preSpace
 		omit_postSpace = ret.data.omit_postSpace
-		
-		if ret.label == "" then
+		labels[i] = ret
+	end
+
+	if data.lang then
+		local lang_functions_module = export.lang_specific_data_modules_prefix .. data.lang:getCode() .. "/functions"
+		local title = mw.title.new(lang_functions_module)
+		if title and title.exists then
+			local m_lang_functions = require(lang_functions_module)
+			if m_lang_functions.postprocess_handlers then
+				for _, handler in ipairs(m_lang_functions.postprocess_handlers) do
+					handler(data)
+				end
+			end
+		end
+	end
+
+	for i, labelinfo in ipairs(labels) do
+		local label
+		if labelinfo.label == "" then
 			label = ""
 		else
-			label = (omit_comma and "" or '<span class="ib-comma">,</span>') ..
-					(omit_space and "" or "&#32;") ..
-					ret.label
+			label = (labelinfo.omit_comma and "" or '<span class="ib-comma">,</span>') ..
+					(labelinfo.omit_space and "" or "&#32;") ..
+					labelinfo.label
 		end
-		labels[i] = label .. ret.formatted_categories
+		labels[i] = label .. labelinfo.formatted_categories
 	end
-	
+
 	return
 		"<span class=\"" .. (data.term_mode and "usage-label-term" or "usage-label-sense") .. "\"><span class=\"ib-brac\">(</span><span class=\"ib-content\">" ..
 		table.concat(labels, "") ..
@@ -387,6 +406,47 @@ end
 --[==[Helper function for the data modules.]==]
 function export.alias(labels, key, aliases)
 	require(table_module).alias(labels, key, aliases)
+end
+
+--[==[
+Split the display form of a label. Returns two values: `link` and `display`. If the display form consists of a
+two-part link, `link` is the first part and `display` is the second part. If the display form consists of a
+single-part link, `link` and `display` are the same. Otherwise (the display form is not a link or contains an
+embedded link), `link` is the same as the passed-in `label` and `display` is nil.
+]==]
+function export.split_display_form(label)
+	if not label:find("%[%[") then
+		return label, nil
+	end
+	local link, display = label:match("^%[%[([^%[%]|]+)|([^%[%]|]+)%]%]$")
+	if link then
+		return link, display
+	end
+	local link = label:match("^%[%[([^%[%]|])+%]%]$")
+	if link then
+		return link, link
+	end
+	return label, nil
+end
+
+--[==[
+Combine the `link` and `display` parts of the display form of a label as returned by {split_display_form()}.
+If `display` is nil, `link` is returned directly. Otherwise, a one-part or two-part link is constructed
+depending on whether `link` and `display` are the same. (As a special case, if both consist of a blank string,
+the return value is a blank string rather than a malformed link.)
+]==]
+function export.combine_display_form_parts(link, display)
+	if not display then
+		return link
+	end
+	if link == display then
+		if link == "" then
+			return ""
+		else
+			return ("[[%s]]"):format(link)
+		end
+	end
+	return ("[[%s|%s]]"):format(link, display)
 end
 
 --[==[Used to finalize the data into the form that is actually returned.]==]
