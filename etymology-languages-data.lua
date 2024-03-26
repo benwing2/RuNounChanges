@@ -273,11 +273,32 @@ m["ltc-lat"] = {
 	"ltc",
 }
 
-------------- Classical varieties -------------
+------------- Classical/Literary varieties -------------
+
+-- FIXME: Temporary.
+m["lzh-cip"] = {
+	"Ci",
+	1091366,
+	"lzh",
+}
+
+-- FIXME: Temporary.
+m["lzh-yue"] = {
+	"Classical Cantonese",
+	nil,
+	"lzh",
+}
 
 -- FIXME: Temporary.
 m["lzh-cmn"] = {
 	"Classical Mandarin",
+	nil,
+	"lzh",
+}
+
+-- FIXME: Temporary.
+m["lzh-tai"] = {
+	"Classical Taishanese",
 	nil,
 	"lzh",
 }
@@ -289,16 +310,9 @@ m["lzh-cmn-TW"] = {
 	"lzh-cmn",
 }
 
--- FIXME: Temporary.
-m["lzh-tai"] = {
-	"Classical Taishanese",
-	nil,
-	"lzh",
-}
-
--- FIXME: Temporary.
-m["lzh-yue"] = {
-	"Classical Cantonese",
+-- FIXME: Temporary. FIXME: Do we need this? How does it differ from Old Chinese?
+m["lzh-pre"] = {
+	"Pre-Classical Chinese",
 	nil,
 	"lzh",
 }
@@ -366,6 +380,13 @@ m["cmn-gui"] = {
 	"cmn",
 }
 
+m["cmn-jhu"] = {
+	"Jianghuai Mandarin",
+	2128953,
+	"cmn",
+	aliases = {"Lower Yangtze Mandarin"},
+}
+
 -- FIXME: Temporary.
 m["cmn-lan"] = {
 	"Lanyin Mandarin",
@@ -380,11 +401,11 @@ m["cmn-MY"] = {
 	"cmn",
 }
 
--- FIXME: Temporary. Appears to be a subdialect of Jianghuai (Lower Yangtze) Mandarin.
+-- FIXME: Temporary.
 m["cmn-nan"] = {
 	"Nanjing Mandarin",
 	2681098,
-	"cmn",
+	"cmn-jhu",
 }
 
 -- FIXME: Temporary.
@@ -403,8 +424,15 @@ m["cmn-PH"] = {
 
 -- FIXME: Temporary.
 m["cmn-SG"] = {
-	"Singaporean Mandarin",
+	"Singapore Mandarin",
 	1048980,
+	"cmn",
+}
+
+-- FIXME: Temporary.
+m["cmn-sow"] = {
+	"Southwestern Mandarin",
+	2609239,
 	"cmn",
 }
 
@@ -429,7 +457,7 @@ m["cmn-TW"] = {
 m["cmn-wuh"] = {
 	"Wuhan Mandarin",
 	11124731,
-	"cmn",
+	"cmn-sow",
 	aliases = {"Wuhanese"},
 }
 
@@ -440,11 +468,11 @@ m["cmn-xin"] = {
 	"cmn-lan",
 }
 
--- FIXME: Temporary. Appears to be a subdialect of Jianghuai (Lower Yangtze) Mandarin.
+-- FIXME: Temporary.
 m["cmn-yan"] = {
 	"Yangzhou Mandarin",
 	nil,
-	"cmn",
+	"cmn-jhu",
 }
 
 ------------- Cantonese varieties -------------
@@ -472,15 +500,13 @@ m["yue-lit"] = {
 
 ------------- Wu varieties -------------
 
--- FIXME: Maybe rename code to wuu-han.
-m["wuu-hzh"] = {
+m["wuu-han"] = {
 	"Hangzhounese",
 	5648144,
 	"wuu",
 }
 
--- FIXME: Rename code to wuu-nin.
-m["wuu-ngb"] = {
+m["wuu-nin"] = {
 	"Ningbonese",
 	3972199,
 	"wuu",
@@ -494,17 +520,24 @@ m["wuu-nor"] = {
 	aliases = {"Taihu Wu"},
 }
 
+-- FIXME: Temporary? Subvariety of Taihu Wu. NOTE: "chm" stands for Chongming, the main dialect, to avoid a conflict
+-- with Shanghainese.
+m["wuu-chm"] = {
+	"Shadi Wu",
+	6112340,
+	"wuu-nor",
+}
+
 m["wuu-sha"] = {
 	"Shanghainese",
 	36718,
-	"wuu",
+	"wuu-nor",
 }
 
--- FIXME: Rename code to wuu-suz.
-m["wuu-szh"] = {
+m["wuu-suz"] = {
 	"Suzhounese",
 	831744,
-	"wuu",
+	"wuu-nor",
 }
 
 -- FIXME: Temporary. May be converted into a full language and/or split.
@@ -554,7 +587,7 @@ m["hsn-old"] = {
 m["hak-dab"] = {
 	"Dabu Hakka",
 	19855566,
-	"hak-TW",
+	"hak", -- formerly hak-TW but seems to be spoken primary in Dabu County in Guangdong
 }
 
 -- FIXME: Temporary.
@@ -568,7 +601,7 @@ m["hak-eam"] = {
 m["hak-hai"] = {
 	"Hailu Hakka",
 	17038519,
-	"hak-TW",
+	"hak", -- often considered a Taiwanese lect but also spoken in [[Shanwei]], [[Guangdong]]
 }
 
 -- FIXME: Temporary.
@@ -610,8 +643,9 @@ m["hak-TW"] = {
 -- FIXME: Temporary.
 m["hak-zha"] = {
 	"Zhao'an Hakka",
-	15926693,
-	"hak-TW",
+	6703311,
+	"hak",
+	aliases = {"Zhangzhou Hakka"},
 }
 
 ------------- Southern Min varieties -------------
@@ -657,7 +691,7 @@ m["nan-qua"] = {
 
 -- FIXME: Temporary? Derived from both Quanzhou and Zhangzhou Hokkien.
 m["nan-hbl-SG"] = {
-	"Singaporean Hokkien",
+	"Singapore Hokkien",
 	3846528,
 	"nan-hbl",
 }
@@ -717,8 +751,7 @@ m["cmn-tongyong"] = {
 	"cmn",
 }
 
--- FIXME: Rename to cmn-wadegiles
-m["cmn-wadegile"] = {
+m["cmn-wadegiles"] = {
 	"Wade–Giles",
 	208442,
 	"cmn",
