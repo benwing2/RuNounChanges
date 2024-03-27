@@ -32,6 +32,50 @@ local function ucfirst(txt)
 	return mw.getContentLanguage():ucfirst(txt)
 end
 
+-- HACK! For languages in any of the given families, check the specified-language Wikipedia for appropriate
+-- Wikipedia articles for the language in question (esp. useful for obscure etymology-only languages that may not
+-- have English articles for them, like many Chinese lects).
+local families_to_wikipedia_languages = {
+	{"zhx", "zh"},
+	{"sem-arb", "ar"},
+}
+
+--[==[
+Given language `lang`, fetch a list of Wikimedia languages to check when converting a Wikidata item to a Wikipedia
+article. English is always first, followed by the Wikimedia language code(s) of `lang` (which may or may not be the
+same as `lang`'s Wiktionary code), followed by the macrolanguage of `lang` for certain languages (currently, only
+languages in the Chinese and Arabic families). If `lang` is nil, only return English. Note that the same code may
+occur more than once in the list. This is exported because it's also used by
+[[Module:categor tree/poscatboiler/data/language varieties]].
+]==]
+function export.get_langs_to_extract_wikipedia_articles_from_wikidata(lang)
+	local wikipedia_langs = {}
+	table.insert(wikipedia_langs, "en")
+	if lang then
+		local article_lang = lang
+		while article_lang do
+			local wmcodes = article_lang:getWikimediaLanguageCodes()
+			for _, wmcode in ipairs(wmcodes) do
+				table.insert(wikipedia_langs, wmcode)
+			end
+			article_lang = article_lang:getParent()
+		end
+		for _, family_to_wp_lang in ipairs(families_to_wikipedia_languages) do
+			local family, wp_lang = unpack(family_to_wp_lang)
+			if lang:inFamily(family) then
+				table.insert(wikipedia_langs, wp_lang)
+			end
+		end
+	end
+	return wikipedia_langs
+end
+
+-- Fetch the categories to add to a page, given that the label `label` with language `lang` has been seen. `labdata` is
+-- the label data structure for `label`, fetched from the appropriate submodule. If `term_mode` is specified, the label
+-- was invoked using {{tl|tlb}}; otherwise, {{tl|lb}}. The return value is a list of the actual categories, unless
+-- `for_doc` is specified, in which case the categories returned are marked up for display on a documentation page.
+-- If `for_doc` is given, `lang` may be nil to format the categories in a language-independent fashion; otherwise, it
+-- must be specified.
 local function fetch_categories(label, labdata, lang, term_mode, for_doc)
 	local categories = {}
 
@@ -169,8 +213,14 @@ function export.get_displayed_label(label, labdata, lang, deprecated)
 
 			Otherwise:
 			* labdata.glossary specifies the anchor in [[Appendix:Glossary]].
-			* labdata.Wiktionary specifies an arbitrary Wiktionary page or page + anchor (e.g. a separate Appendix entry).
+			* labdata.Wiktionary specifies an arbitrary Wiktionary page or page + anchor (e.g. a separate Appendix
+			  entry).
 			* labdata.Wikipedia specifies an arbitrary Wikipedia article.
+			* labdata.Wikidata specifies an arbitrary Wikidata item to retrieve a Wikipedia article from. If the item
+			  is of the form `wmcode:id`, the Wikipedia article corresponding to `wmcode` is fetched if available.
+			  Otherwise, the English-language Wikipedia article is retrieved if available, falling back to the
+			  Wikimedia language(s) corresponding to `lang` and then (in certain cases) to the macrolanguage that
+			  `lang` is part of.
 		]=]
 		local display = labdata.display or label
 		if labdata.glossary then
@@ -181,6 +231,32 @@ function export.get_displayed_label(label, labdata, lang, deprecated)
 		elseif labdata.Wikipedia then
 			local Wikipedia_entry = type(labdata.Wikipedia) == "string" and labdata.Wikipedia or label
 			displayed_label = "[[w:" .. Wikipedia_entry .. "|" .. display .. "]]"
+		elseif labdata.Wikidata then
+			if not mw.wikibase then
+				error(("Unable to retrieve data from Wikidata ID '%s'; `mw.wikibase` not defined"):format(labdata.Wikidata))
+			end
+			local function make_displayed_label(wmcode, id)
+				local article = mw.wikibase.sitelink(id, wmcode .. "wiki")
+				if article then
+					local link = wmcode == "en" and "w:" .. article or "w:" .. wmcode .. ":" .. article
+					return ("[[%s|%s]]"):format(link, display)
+				else
+					return nil
+				end
+			end
+			local wmcode, id = labdata.Wikidata:match("^(.*):(.*)$")
+			if wmcode then
+				displayed_label = make_displayed_label(wmcode, id)
+			else
+				local langs_to_check = export.get_langs_to_extract_wikipedia_articles_from_wikidata(lang)
+				for _, wmcode in ipairs(langs_to_check) do
+					displayed_label = make_displayed_label(wmcode, labdata.Wikidata)
+					if displayed_label then
+						break
+					end
+				end
+			end
+			displayed_label = displayed_label or display
 		else
 			displayed_label = display
 		end
