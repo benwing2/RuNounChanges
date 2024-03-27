@@ -18,7 +18,7 @@ labels["dialectal Gan"] = {
 
 labels["Lichuan Gan"] = {
 	-- A variety of Fuguang Gan
-	Wikipedia = "zh:撫廣片", -- link for Fuguang Gan
+	Wikidata = "Q6794539", -- link for Fuguang Gan
 	plain_categories = true,
 }
 
@@ -36,7 +36,7 @@ labels["Pingxiang Gan"] = {
 
 labels["Taining Gan"] = {
 	-- A variety of Fuguang Gan.
-	Wikipedia = "zh:撫廣片", -- link for Fuguang Gan
+	Wikidata = "Q6794539", -- link for Fuguang Gan
 	plain_categories = true,
 }
 
@@ -54,7 +54,7 @@ labels["dialectal Hakka"] = {
 
 labels["Dabu Hakka"] = {
 	aliases = {"Dabu"},
-	Wikipedia = "zh:大埔話",
+	Wikidata = "Q19855566",
 	plain_categories = true,
 }
 
@@ -77,7 +77,7 @@ labels["Hong Kong Hakka"] = {
 
 labels["Huiyang Hakka"] = {
 	aliases = {"Huiyang"},
-	Wikipedia = "zh:惠阳话",
+	Wikidata = "Q16873881",
 	plain_categories = true,
 }
 
@@ -91,7 +91,7 @@ labels["Huiyang Hakka"] = {
 -- FIXME: Category missing.
 labels["Malaysian Huiyang Hakka"] = {
 	aliases = {"Malaysia Huiyang Hakka"},
-	Wikipedia = "zh:惠阳话",
+	Wikidata = "Q16873881", -- link for Huiyang Hakka
 	plain_categories = true,
 }
 
@@ -155,7 +155,7 @@ labels["Yunlin Hakka"] = {
 }
 
 labels["Zhao'an Hakka"] = {
-	Wikipedia = "zh:詔安客語",
+	Wikidata = "Q6703311",
 	plain_categories = true,
 }
 
@@ -207,6 +207,7 @@ labels["dialectal Mandarin"] = {
 	regional_categories = "Mandarin",
 }
 
+-- FIXME: Category missing.
 labels["Beijingic Mandarin"] = {
 	-- A primary branch. "Beijingic" is the term used by Glottolog. Wikipedia calls this
 	-- [[w:Beijing Mandarin (division of Mandarin)]] as opposed to [[w:Beijing dialect]] for Beijing Mandarin itself,
@@ -549,7 +550,7 @@ labels["Yinchuan Mandarin"] = {
 
 -- FIXME: Category missing.
 labels["Yunnan Mandarin"] = {
-	-- A variety of Southwestern Mandarin.
+	-- A (strange) variety of Southwestern Mandarin.
 	-- "Yunnan" as alias seems unlikely to be correct
 	Wikidata = "Q10881055",
 	plain_categories = true,
@@ -926,7 +927,7 @@ labels["Zhao'an Hokkien"] = {
 labels["Zhangping Hokkien"] = {
 	-- A type of Zhangzhou Hokkien.
 	aliases = {"Zhangping"},
-	Wikipedia = "zh:漳平话",
+	Wikidata = "Q15937822",
 	plain_categories = true,
 }
 
@@ -1058,7 +1059,7 @@ labels["Hangzhounese Wu"] = {
 
 labels["Huzhounese Wu"] = {
 	aliases = {"Huzhou", "Huzhou Wu", "Huzhounese"},
-	Wikipedia = "zh:湖州話",
+	Wikidata = "Q15901269",
 	plain_categories = true,
 }
 
@@ -1229,7 +1230,7 @@ labels["Hengzhou Xiang"] = {
 
 labels["Loudi Xiang"] = {
 	aliases = {"Loudi"},
-	Wikipedia = "zh:娄底话",
+	Wikidata = "Q10943823",
 	plain_categories = true,
 }
 
@@ -1264,7 +1265,7 @@ labels["dialectal Cantonese"] = {
 
 -- FIXME: Category missing.
 labels["Dongguan Cantonese"] = {
-	-- A subvariety of Guanbao Cantonese.
+	-- A subvariety of Guanbao Cantonese, in turn a variety of Yuehai Yue ("Cantonese").
 	aliases = {"Dongguan"},
 	Wikipedia = "Dongguan",
 	plain_categories = true,
@@ -1315,6 +1316,7 @@ labels["Siyi Yue"] = {
 -- current 'Taishanese' full language. If (as proposed by [[User:Wpi]]) we demote Taishanese to an etym-only variety
 -- of Siyi Yue, we should consider renaming to Taishan Yue or Taishanese Yue.
 labels["Taishanese"] = {
+	-- A variety of Siyi Yue.
 	aliases = {"Toishanese", "Hoisanese"},
 	Wikipedia = true,
 	regional_categories = true,
@@ -1322,15 +1324,17 @@ labels["Taishanese"] = {
 
 -- FIXME: Category missing.
 labels["Yangjiang Cantonese"] = {
-	aliases = {"Yangjiang"}, -- FIXME: Correct?
-	Wikipedia = "zh:陽江話",
+	-- A variety of Gaoyang Yue.
+	aliases = {"Yangjiang", "Yangjiang Yue"},
+	Wikidata = "Q65406156",
 	plain_categories = true,
 }
 
 -- FIXME: Category missing.
 labels["Yulin Cantonese"] = {
-	aliases = {"Yulin"}, -- FIXME: Correct?
-	Wikipedia = "zh:玉林話",
+	-- A variety of Goulou Yue.
+	aliases = {"Yulin", "Yulin Yue"},
+	Wikidata = "zh:Q15942798", -- [[w:Yulin dialect]] also exists but redirects to [[w:Goulou Yue]].
 	plain_categories = true,
 }
 
