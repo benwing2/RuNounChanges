@@ -201,15 +201,18 @@ function export.soften_adj_masc_pers_pl(word)
 		try("chy", "si") or
 		try("hy", "si") or
 		try("sły", "śli") or
+		try("([crs]z)ły", "%2li") or
 		try("zły", "źli") or
 		try("łły", "lli") or
 		try("ły", "li") or
 		try("ry", "rzy") or
 		try("sny", "śni") or
+		try("([crs]z)ny", "%2ni") or
 		try("zny", "źni") or
 		try("ny", "ni") or
 		try("sty", "ści") or
 		try("ty", "ci") or
+		try("([crs]z)dy", "%2dzi") or
 		try("zdy", "ździ") or
 		try("dy", "dzi") or
 		try("szy", "si") or
