@@ -4,11 +4,11 @@
 # Author: Benwing; bits and pieces taken from code written by CodeCat/Rua for MewBot
 
 import pywikibot, mwparserfromhell, re, string, sys, urllib, datetime, json, argparse, time
-from arabiclib import reorder_shadda
 from collections import defaultdict
 import xml.sax
 import difflib
 import traceback
+import unicodedata
 import multiprocessing as mp
 from json.decoder import JSONDecodeError
 
@@ -415,17 +415,29 @@ def sort_params(t):
   for name, value in named_params:
     t.add(name, value)
 
-def display(page):
-  errmsg(u'# [[{0}]]'.format(page.title()))
-
-def dump(page):
-  old = page.get(get_redirect=True)
-  msg(u'Contents of [[{0}]]:\n{1}\n----------'.format(page.title(), old))
-
 def changelog_to_string(comment):
   if type(comment) is list:
     comment = "; ".join(group_notes(comment))
   return comment
+
+def show_diff(existing_text, newtext):
+  oldlines = existing_text.splitlines(True)
+  newlines = newtext.splitlines(True)
+  diff = difflib.unified_diff(oldlines, newlines)
+  dangling_newline = False
+  for line in diff:
+    dangling_newline = not line.endswith('\n')
+    sys.stdout.write(line)
+    if dangling_newline:
+      sys.stdout.write("\n")
+  if dangling_newline:
+    sys.stdout.write("\\ No newline at end of file\n")
+  #pywikibot.showDiff(existing_text, new, context=3)
+
+def normalize_text_for_save(text):
+  # MediaWiki strips newlines from the end of the page and converts to NFC; we convert to NFC for comparison but we
+  # can't strip newlines because we might be dealing with a partial page when using --find-regex.
+  return unicodedata.normalize("NFC", text)
 
 def handle_process_page_retval(retval, existing_text, pagemsg, verbose, do_diff):
   has_changed = False
@@ -439,24 +451,13 @@ def handle_process_page_retval(retval, existing_text, pagemsg, verbose, do_diff)
   if new:
     new = str(new)
 
-    # Canonicalize shaddas when comparing pages so we don't do saves
-    # that only involve different shadda orders.
-    has_changed = reorder_shadda(existing_text) != reorder_shadda(new)
+    existing_text = normalize_text_for_save(existing_text)
+    new = normalize_text_for_save(new)
+    has_changed = existing_text != new
     if has_changed:
       if do_diff:
         pagemsg("Diff:")
-        oldlines = existing_text.splitlines(True)
-        newlines = new.splitlines(True)
-        diff = difflib.unified_diff(oldlines, newlines)
-        dangling_newline = False
-        for line in diff:
-          dangling_newline = not line.endswith('\n')
-          sys.stdout.write(line)
-          if dangling_newline:
-            sys.stdout.write("\n")
-        if dangling_newline:
-          sys.stdout.write("\\ No newline at end of file\n")
-        #pywikibot.showDiff(existing_text, new, context=3)
+        show_diff(existing_text, new)
       elif verbose:
         pagemsg("Replacing <%s> with <%s>" % (existing_text, new))
       assert comment, "Text has changed without a comment specified"
