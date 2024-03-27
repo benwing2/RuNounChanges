@@ -276,7 +276,7 @@ m["ltc-lat"] = {
 ------------- Classical/Literary varieties -------------
 
 -- FIXME: Temporary.
-m["lzh-cip"] = {
+m["lzh-cii"] = {
 	"Ci",
 	1091366,
 	"lzh",
@@ -308,6 +308,27 @@ m["lzh-cmn-TW"] = {
 	"Classical Taiwanese Mandarin",
 	nil,
 	"lzh-cmn",
+}
+
+-- FIXME: Temporary.
+m["lzh-VI"] = {
+	"Vietnamese Classical Chinese",
+	17034227,
+	"lzh",
+}
+
+-- FIXME: Temporary.
+m["lzh-KO"] = {
+	"Korean Classical Chinese",
+	10496257,
+	"lzh",
+}
+
+-- FIXME: Temporary.
+m["lzh-lit"] = {
+	"Literary Chinese",
+	nil,
+	"lzh",
 }
 
 -- FIXME: Temporary. FIXME: Do we need this? How does it differ from Old Chinese?
@@ -342,12 +363,19 @@ m["zhx-tai-wvc"] = {
 
 ------------- Mandarin varieties -------------
 
--- FIXME: Temporary. NOTE: The Linguist List assigns the "w:Beijing dialect" (Wikidata 1147606) the code "cmn-bej" and the
--- larger "w:Beijing Mandarin (division of Mandarin)" (Wikidata 2169652) dialect group the code "cmn-bei". We may need to
--- split this at some point to account for this.
+-- FIXME: Temporary. NOTE: The Linguist List assigns the "w:Beijing dialect" (Wikidata 1147606) the code "cmn-bej" and
+-- the larger "w:Beijing Mandarin (division of Mandarin)" dialect group (Wikidata 2169652; what we call "Beijingic
+-- Mandarin", after Glottolog) the code "cmn-bei".
 m["cmn-bei"] = {
 	"Beijing Mandarin",
 	1147606,
+	"cmn-bec",
+}
+
+-- FIXME: Temporary.
+m["cmn-bec"] = {
+	"Beijingic Mandarin",
+	2169652,
 	"cmn",
 }
 
