@@ -17,8 +17,6 @@ local PAGENAME = PAGENAME or title.text
 local export = {}
 
 local data = mw.loadData("Module:zh-usex/data")
-local variety_list = data.variety_list
-local variety_code_normalization = data.variety_code_normalization
 local punctuation = data.punctuation
 local ref_list = data.ref_list
 local pron_correction = data.pron_correction
@@ -53,18 +51,18 @@ end
 -- extracts the traditional chinese, simplified chinese, and transcription
 -- does not substitute {} for the transcription
 -- e.g. 繁[简]{Luó} -> (繁, 简, 繁{Luó})
-local function extract(segment, simp, variety_code, form_exists, generate_tr)
+local function extract(segment, simp, norm_code, form_exists, generate_tr)
 	if not segment then return nil end
 	local segment_derom = gsub(segment,"{[^{}]*}","")
 	segment_derom = segment_derom:gsub("[%^%.]","")
-	if variety_code == "nan-hbl" then
+	if norm_code == "nan-hbl" then
 		segment_derom = segment_derom:gsub("%%","")
 	end
 	local segment_trad = gsub(segment_derom,"%[.%]","")
 	local segment_simp = form_exists and gsub(gsub(segment_derom .. "終[终]", "([^%[%]]*).%[(.)%]", function(a, b) return ts_convert(simp)(a) .. b end), "终$", "")
 	local segment_rom = generate_tr and gsub(segment,"%[.%]","")
 	if generate_tr then
-		if variety_code == "cmn" then
+		if norm_code == "cmn" then
 			segment_rom = segment_rom:gsub("%.%.","-")
 		end
 		segment_rom = segment_rom:gsub("%."," ")
@@ -121,22 +119,13 @@ function export.show(frame)
 	local simp = args["simp"]
 	local phonetic = ""
 	local original_length = mw.ustring.len(gsub(example, "[^一-鿿㐀-䶿﨎﨏﨑﨓﨔﨟﨡﨣﨤﨧-﨩]", ""))
-	local variety = args[3] or frame.args["variety"] or (ref_list[reference] and ref_list[reference][1] or false) or "MSC"
-	local variety_data = variety_list[variety] or error("variety " .. variety .. " not recognized.")
-	local variety_code
-	if variety_data then
-		variety_code = variety_data[2]
-	end
+	local variety = args[3] or frame.args["variety"] or (ref_list[reference] and ref_list[reference][1] or false) or "cmn"
+	local variety_data = data.varieties_by_code[variety] or data.varieties_by_old_code[variety] or error("Variety " .. variety .. " not recognized.")
+	local _, std_code, norm_code, desc, tr_desc = unpack(variety_data)
+	norm_code = norm_code or std_code
+	variety = std_code
 
-	local lang_obj_wikt
-	if variety == "CL" or match(variety, "^CL%-") then
-		lang_obj_wikt = m_languages.getByCode("lzh", nil, true)
-	else
-		lang_obj_wikt = m_languages.getByCode(variety_code, true, true)
-	end
-
-	-- do this after fetching lang_obj_wikt
-	variety_code = variety_code_normalization[variety_code] or variety_code
+	local lang_obj_wikt = m_languages.getByCode(variety, 3, true)
 
 	if next(unrecognized_args) then
 		--[[Special:WhatLinksHere/Template:tracking/zh-usex/unrecognized arg]]
@@ -151,7 +140,7 @@ function export.show(frame)
 		require("Module:debug").track("zh-usex/parentheses")
 	end
 	
-	if (variety_code == "nan-hbl" or variety_code == "hak") and example:match("-") then
+	if (norm_code == "nan-hbl" or norm_code:find("^hak")) and example:match("-") then
 		require("Module:debug").track("zh-usex/hyphen")
 	end
 	
@@ -178,7 +167,7 @@ function export.show(frame)
 	
 	-- parsing: convert "-", "--", "---" to "-", "..", "--" respectively
 	-- further explanation will use the replacement result to refer to the commands
-	if variety_code == "cmn" then
+	if norm_code == "cmn" then
 		example = example:gsub("%-+",{["--"]="..",["---"]="--"})
 		if match(example,"%-[^%-%s]+\\") then
 			require("Module:debug").track("zh-usex/extra-pinyin")
@@ -193,15 +182,22 @@ function export.show(frame)
 	local form_exist
 	if simp then
 		if category ~= "quotations" then error("parameter simp cannot be true in [[Template:zh-x]] or [[Template:zh-co]].") end
-		if variety_code == "vi" or variety_code == "ko" or variety_code == "lzh" or variety == "C-HK" or variety == "M-TW" or variety == "TW" or variety == "CL-TW" or variety == "H-HL" or variety == "H-DB" or variety == "H-ZA" then error("parameter simp cannot be true for the input parameter 3=" .. variety) end
-		form_exist = (m_zh.ts_determ(gsub(example, "(.)%[%1%]", "")) == "simp" or (match(example, "%[[^%[%]]+%]") and not match(example, "(.)%[%1%]")))
+		if norm_code == "vi" or norm_code == "ko" or norm_code == "lzh" or variety == "yue-HK" or variety == "cmn-TW" or
+			variety == "nan-hbl-TW" or variety == "lzh-cmn-TW" or variety == "hak-hai" or variety == "hak-dab" or
+			variety == "hak-zha" then
+				error(("Parameter simp= cannot be specified for variety '%s'"):format(variety))
+			end
+		form_exist = m_zh.ts_determ(gsub(example, "(.)%[%1%]", "")) == "simp" or (
+			match(example, "%[[^%[%]]+%]") and not match(example, "(.)%[%1%]"))
 	else
-		form_exist = (m_zh.ts_determ(gsub(example, "(.)%[%1%]", "")) == "trad" or (match(example, "%[[^%[%]]+%]") and not match(example, "(.)%[%1%]"))) and variety_code ~= "vi" and variety_code ~= "ko"
+		form_exist = (m_zh.ts_determ(gsub(example, "(.)%[%1%]", "")) == "trad" or (
+			match(example, "%[[^%[%]]+%]") and not match(example, "(.)%[%1%]"))) and
+			norm_code ~= "vi" and norm_code ~= "ko"
 	end
 	
 	-- should we generate the transcription
 	local generate_tr
-	if variety_code == "cmn" or variety_code == "yue" or variety_code == "nan-hbl" or variety == "H" then
+	if norm_code == "cmn" or norm_code == "yue" or norm_code == "nan-hbl" or variety == "hak-six" then
 		if manual_tr then
 			require("Module:debug").track("zh-usex/manual-tr")
 			generate_tr = false
@@ -217,11 +213,11 @@ function export.show(frame)
 		local trad_word, simp_word, tr_word, ruby_word = "", "", "", "" -- if simp is true then trad_word and simp_word are swapped
 		
 		local segments -- split each "word" further according to the number of links
-		if variety_code == "cmn" then
+		if norm_code == "cmn" then
 			-- only the commands "-" and "--" increase the number of links
 			-- this "regex" allows us to record the number of hyphens in the commands
 			segments = split(word,"%f[%-]%-")
-		elseif variety_code == "nan-hbl" or variety == "H" then
+		elseif norm_code == "nan-hbl" or variety == "hak-six" then
 			segments = split(word,"~")
 		else -- there should only be one link per word
 			segments = {word}
@@ -240,7 +236,7 @@ function export.show(frame)
 			else
 				-- for Mandarin, the command "--" now leaves a single "-" at the beginning
 				local prepend = '' -- extract the prepended "-" in this case
-				if variety_code == "cmn" and segment:sub(1,1) == "-" then
+				if norm_code == "cmn" and segment:sub(1,1) == "-" then
 					prepend, segment = "-", segment:sub(2)
 				end
 				
@@ -278,8 +274,8 @@ function export.show(frame)
 					display = gsub(display,"</b>(%{[^%{%}]*%})","%1</b>")
 				end
 				
-				local target_trad, target_simp = extract(target, simp, variety_code, form_exist)
-				local display_trad, display_simp, display_tr = extract(display, simp, variety_code, form_exist, generate_tr)
+				local target_trad, target_simp = extract(target, simp, norm_code, form_exist)
+				local display_trad, display_simp, display_tr = extract(display, simp, norm_code, form_exist, generate_tr)
 				
 				local boldify_start, boldify_end = "", ""
 				if (target_trad or display_trad):gsub("</?b>","") == PAGENAME then
@@ -313,7 +309,7 @@ function export.show(frame)
 				tr_word = punctuation[word]
 			else
 				real_word = true
-				local hyphen = variety_code == "nan-hbl" or variety_code == "hak"
+				local hyphen = norm_code == "nan-hbl" or norm_code:find("^hak")
 				tr_word = gsub(tr_word, "(.){([^{}]*)}",function(a, b)
 						if hyphen and not mw.ustring.find(a, "[a-zA-Z]") then
 							return "-" .. b .. "-"
@@ -321,24 +317,24 @@ function export.show(frame)
 							return b
 						end
 					end)
-				for key,val in pairs(polysyllable_pron_correction[variety_code]) do
+				for key, val in pairs(polysyllable_pron_correction[norm_code]) do
 					tr_word = gsub(tr_word, key, val)
 				end
-				tr_word = gsub(tr_word, ".", pron_correction[variety_code])
-				if variety_code == "cmn" then
+				tr_word = gsub(tr_word, ".", pron_correction[norm_code])
+				if norm_code == "cmn" then
 					tr_word = gsub(tr_word, "[^%-%s]+", m_zh.py)
-				elseif variety_code == "yue" then
+				elseif norm_code == "yue" then
 					m_yue_pron = m_yue_pron or mw.loadData("Module:zh/data/yue-pron")
 					tr_word = gsub(tr_word, ".", m_yue_pron.jyutping)
 					tr_word = gsub(tr_word, "([a-z])([1-9])(-?)([1-9]?)", "%1%2%3%4 ")
 				elseif hyphen then
 					tr_word = gsub(tr_word, "[一-鿿㐀-䶿　-〿﨎﨏﨑﨓﨔﨟﨡﨣﨤﨧-﨩𠀀-𪛟𪜀-𮯯𰀀-𱍏]+", function(text)
-						local text_res = m_zh.check_pron(text, variety_code, 1)
+						local text_res = m_zh.check_pron(text, norm_code, 1)
 						if text_res then
 							return gsub(text_res, "/.+$", "")
 						else
 							text = gsub(text, ".", function(ch)
-								local ch_res = m_zh.check_pron(ch, variety_code, 1)
+								local ch_res = m_zh.check_pron(ch, norm_code, 1)
 								if ch_res then
 									return gsub(ch_res, "/.+$", "") .. "-"
 								else
@@ -384,12 +380,12 @@ function export.show(frame)
 
 	if display == "ruby" then
 		local tag = " <ruby><rb><big>" ..
-				tag_start .. variety_data[1] ..
+				tag_start .. desc ..
 					(form_exist
 						and (", " .. trad_link .. "↑ + " .. simp_link .. "↓")
 						or ", " .. trad_link .. " and " .. simp_link) .. tag_end ..
 
-				tag_start .. "''rom.'': " .. variety_data[3] .. tag_end ..
+				tag_start .. "''rom.'': " .. tr_desc .. tag_end ..
 					"</big></rb></ruby>"
 
 		return table.concat(ruby_words, "") .. tag .. "<dl><dd><i>" .. translation .. "</i></dd></dl>"
@@ -402,7 +398,9 @@ function export.show(frame)
 		if phonetic then
 			phonetic = gsub(phonetic, " </b>", "</b> ")
 			phonetic = gsub(phonetic, "  ", " ")
-			if variety_code == "yue" or variety_code == "zhx-tai" or variety_code == "nan-tws" or variety_code == "nan-hnm" or variety_code == "zhx-sic" or variety_code == "cjy" or variety_code == "hsn" or variety_code == "gan" or variety == "H-MX" then
+			if norm_code == "yue" or norm_code == "zhx-tai" or norm_code == "nan-tws" or norm_code == "nan-hnm" or
+				norm_code == "zhx-sic" or norm_code == "cjy" or norm_code == "hsn" or norm_code == "gan" or
+				variety == "hak-mei" then
 				phonetic = gsub(phonetic, "([a-zê]+)([1-9%-]+)", "%1<sup>%2</sup>") -- superscript tones
 			end
 			phonetic = gsub(phonetic, " ([,%.?!;:’”)])", "%1") -- remove excess spaces from punctiation
@@ -410,15 +408,17 @@ function export.show(frame)
 			phonetic = phonetic:gsub(" <br> ", "<br>")
 			if not manual_tr then
 				phonetic = gsub(phonetic, "%'([^%'])", "%1") -- allow bolding for manual translit
-				if variety_code == "nan-hbl" then
+				if norm_code == "nan-hbl" then
 					phonetic = gsub(phonetic, " +%-%-", "--")
 				end
 			end
 
 			-- capitalisation
 			if not manual_tr then
-				if variety_code == "yue" or variety_code == "zhx-tai" or variety_code == "cjy" or variety_code == "hsn" or variety_code == "cmn-wuh" or variety_code == "nan-tws" or variety_code == "wxa" or variety_code == "wuu" or variety == "H-MX" then
-					args.tr_nocap = '1'
+				if norm_code == "yue" or norm_code == "zhx-tai" or norm_code == "cjy" or norm_code == "hsn" or
+					norm_code == "cmn-wuh" or norm_code == "nan-tws" or norm_code == "wxa" or norm_code == "wuu" or
+					variety == "hak-mei" then
+					args.tr_nocap = true
 				end
 				if not args.tr_nocap and match(example, "[。？！]") then
 					phonetic = "^" .. gsub(phonetic, "([%.?!]) ", "%1 ^")
@@ -433,17 +433,17 @@ function export.show(frame)
 				phonetic = gsub(phonetic, "%^", "")
 			end
 
-			if variety_code == "wuu" then
+			if norm_code == "wuu" then
 				local wuu_pron = require("Module:wuu-pron")
 				if phonetic:find(":") then
 					phonetic = "''" .. wuu_pron.wugniu_format(phonetic:sub(4)) .. "''"
 				else
 					phonetic = "''" .. wuu_pron.wugniu_format(wuu_pron.wikt_to_wugniu(phonetic)) .. "''"
 				end
-			elseif variety_code == "cmn-wuh" or variety_code == "wxa" then
+			elseif norm_code == "cmn-wuh" or norm_code == "wxa" then
 				phonetic = "<span class=\"IPA\">[" .. phonetic .. "]</span>"
 
-			elseif variety_code == "cdo" then
+			elseif norm_code == "cdo" then
 				local cdo_pron = require("Module:cdo-pron")
 				phonetic = "<i>" .. phonetic .. "</i>" ..
 					(not match(phonetic, "-[^ ]+-[^ ]+-[^ ]+-")
@@ -482,12 +482,12 @@ function export.show(frame)
 	
 	-- indentation, font and identity tags
 	if
-		((variety_code == "cmn" and original_length > 7)
-			or (variety_code ~= "cmn" and original_length > 5)
+		((norm_code == "cmn" and original_length > 7)
+			or (norm_code ~= "cmn" and original_length > 5)
 			or reference
 			or collapsed
-			or (match(example, "[，。？！、：；　]") and variety_code == "wuu")
-			or (variety_code == "cdo" and original_length > 3)
+			or (match(example, "[，。？！、：；　]") and norm_code == "wuu")
+			or (norm_code == "cdo" and original_length > 3)
 			or (inline or "" ~= "")) then
 
 		trad_text = zh_format_start_trad .. trad_text .. zh_format_end
@@ -499,7 +499,7 @@ function export.show(frame)
 		if phonetic then
 			phonetic = "<dd>" .. collapse_start .. phonetic
 			translation = "<dd>" .. translation .. "</dd>"
-			tr_tag = tag_start .. variety_data[3] .. tag_end .. collapse_end .. "</dd>"
+			tr_tag = tag_start .. tr_desc .. tag_end .. collapse_end .. "</dd>"
 		else
 			translation = "<dd>" .. translation .. "</dd>"
 		end
@@ -509,13 +509,13 @@ function export.show(frame)
 		end
 		
 		if form_exist then
-			trad_tag = collapse_start .. tag_start .. variety_data[1] .. ", " .. trad_link .. tag_end .. collapse_end .. collapse_tag
+			trad_tag = collapse_start .. tag_start .. desc .. ", " .. trad_link .. tag_end .. collapse_end .. collapse_tag
 			simp_text = simplified_start .. collapse_start .. zh_format_start_simp .. simp_text .. zh_format_end
-			simp_tag = tag_start .. variety_data[1] .. ", " .. simp_link .. tag_end .. collapse_end
-		elseif variety_code == "vi" or variety_code == "ko" then
-			trad_tag = collapse_start .. tag_start .. variety_data[1] ..", " .. trad_link .. tag_end .. collapse_end .. collapse_tag
+			simp_tag = tag_start .. desc .. ", " .. simp_link .. tag_end .. collapse_end
+		elseif norm_code == "vi" or norm_code == "ko" then
+			trad_tag = collapse_start .. tag_start .. desc ..", " .. trad_link .. tag_end .. collapse_end .. collapse_tag
 		else
-			trad_tag = collapse_start .. tag_start .. variety_data[1] ..", " .. trad_link .. " and " .. simp_link .. tag_end .. collapse_end .. collapse_tag
+			trad_tag = collapse_start .. tag_start .. desc ..", " .. trad_link .. " and " .. simp_link .. tag_end .. collapse_end .. collapse_tag
 		end
 
 		if reference then
@@ -530,9 +530,9 @@ function export.show(frame)
 		trad_text = zh_format_start_trad .. trad_text .. zh_format_end
 		divider = "&nbsp; ―&nbsp; "
 
-		if variety ~= "MSC" then
-			ts_tag = tag_start .. variety_data[1] .. tag_end
-			tr_tag = tag_start .. variety_data[3] .. tag_end
+		if variety ~= "cmn" then
+			ts_tag = tag_start .. desc .. tag_end
+			tr_tag = tag_start .. tr_desc .. tag_end
 		end
 
 		if not phonetic then
