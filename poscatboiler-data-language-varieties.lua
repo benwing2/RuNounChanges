@@ -4,6 +4,7 @@ local raw_handlers = {}
 local m_languages = require("Module:languages")
 local m_table = require("Module:table")
 local parse_utilities_module = "Module:parse utilities"
+local labels_module = "Module:labels"
 local labels_utilities_module = "Module:labels/utilities"
 local rsplit = mw.text.split
 
@@ -12,10 +13,12 @@ local function track(page)
 	return require("Module:debug/track")("poscatboiler/language-varieties/" .. page)
 end
 
--- This dialectal variant categories such as [[:Category:American English]] and [[:Category:Provençal]]; temporal lect
--- categories such as [[:Category:Early Modern English]]; sociolect categories such as [[:Category:Polari]]; variant
--- umbrella categories of the form e.g. [[:Category:Varieties of English]]; and regional variant umbrella categories
--- of the form e.g. [[:Category:Regional French]].
+-- This module handles lect/variety categories of all sorts, e.g. regional lect categories such as
+-- [[:Category:American English]] and [[:Category:Provençal]]; temporal lect categories such as
+-- [[:Category:Early Modern English]]; sociolect categories such as [[:Category:Polari]]; and umbrella categories of the
+-- form e.g. [[:Category:Varieties of English]] and [[:Category:Regional French]].
+
+-- FIXME: Eliminate the word "dialect" here and in the {{auto cat}} parameter in favor of "lect" or "variety".
 
 
 -----------------------------------------------------------------------------
@@ -165,7 +168,7 @@ local function split_region_lang(pagename)
 	local canonical_name
 	local lang
 	local region
-	
+
 	-- Try the entire title as a language; if not, chop off a word on the left and repeat.
 	local words = mw.text.split(pagename, " ")
 	for i = 1, #words do
@@ -201,7 +204,7 @@ local function scrape_category_for_auto_cat_args(cat)
 		local contents = cat_page:getContent()
 		if contents then
 			for name, args in require("Module:template parser").findTemplates(contents) do
-				if name == "auto cat" or name == "autocat" then
+				if name == "auto cat" then
 					return args
 				end
 			end
@@ -225,34 +228,6 @@ local dialect_parent_cats_to_scrape = m_table.listToSet {
 	"North Sea Germanic",
 	"Ripuarian Franconian",
 }
-
--- HACK! For languages in any of the given families, check the specified-language Wikipedia for appropriate
--- Wikipedia articles for the language in question (esp. useful for obscure etymology-only languages that may not
--- have English articles for them, like many Chinese lects).
-local families_to_wikipedia_languages = {
-	{"zhx", "zh"},
-	{"sem-arb", "ar"},
-}
-
-local function get_langs_to_extract_wikipedia_articles(lang)
-	local wikipedia_langs = {}
-	table.insert(wikipedia_langs, "en")
-	local article_lang = lang
-	while article_lang do
-		local wmcodes = article_lang:getWikimediaLanguageCodes()
-		for _, wmcode in ipairs(wmcodes) do
-			table.insert(wikipedia_langs, wmcode)
-		end
-		article_lang = article_lang:getParent()
-	end
-	for _, family_to_wp_lang in ipairs(families_to_wikipedia_languages) do
-		local family, wp_lang = unpack(family_to_wp_lang)
-		if lang:inFamily(family) then
-			table.insert(wikipedia_langs, wp_lang)
-		end
-	end
-	return wikipedia_langs
-end
 
 -- Handle dialect categories such as [[:Category:New Zealand English]], [[:Category:Late Middle English]],
 -- [[:Category:Arbëresh Albanian]], [[:Category:Provençal]] or arbitrarily-named categories like
@@ -317,12 +292,8 @@ local function dialect_handler(category, raw_args, called_from_inside)
 			return "reconstructed"
 		end
 		if lang:getCode():find("^qsb%-") then
+			-- Substrate.
 			return "unattested"
-		end
-		if lang:hasType("family") then
-			-- FIXME: Correct? I think this can only happen with etymology-only languages with families as parents,
-			-- which are substrate or other extinct languages.
-			return "extinct"
 		end
 		if lang:hasType("full") then
 			-- If a full language, scrape the {{auto cat}} call and check for extinct=1.
@@ -482,7 +453,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 			article == pagename and "" or "|" .. article
 		))
 	end
-		
+
 	if args.wp or args.wikidata then
 		if args.wp then
 			for _, article in ipairs(split_on_comma(args.wp)) do
@@ -513,7 +484,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 			if not mw.wikibase then
 				error(("Unable to retrieve data from Wikidata ID's '%s'; `mw.wikibase` not defined"):format(args.wikidata))
 			end
-			local wikipedia_langs = get_langs_to_extract_wikipedia_articles(lang)
+			local wikipedia_langs = require(labels_module).get_langs_to_extract_wikipedia_articles_from_wikidata(lang)
 			local ids = rsplit(args.wikidata, "%s*,%s*")
 			for _, wmcode in ipairs(wikipedia_langs) do
 				for _, id in ipairs(ids) do
@@ -526,7 +497,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		end
 	elseif pagename == ucfirst(langname) then
 		local topright_parts = {}
-		local wikipedia_langs = get_langs_to_extract_wikipedia_articles(lang)
+		local wikipedia_langs = require(labels_module).get_langs_to_extract_wikipedia_articles_from_wikidata(lang)
 		for _, wmcode in ipairs(wikipedia_langs) do
 			local article = lang:getWikipediaArticle("no category fallback", wmcode .. "wiki")
 			if article then
@@ -611,7 +582,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		countries = split_on_comma(args.country)
 	end
 
-	local orig_regiondesc = regiondesc -- for country computation below	
+	local orig_regiondesc = regiondesc -- for country computation below
 	if regiondesc then
 		if regiondesc:find("<country>") then
 			if not countries then
