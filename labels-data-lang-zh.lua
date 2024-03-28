@@ -567,7 +567,6 @@ labels["Sichuanese"] = {
 	regional_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Chengdu Sichuanese"] = {
 	-- A variety of Chengyu Sichuanese.
 	aliases = {"Chengdu", "Chengdu Mandarin"},
@@ -582,7 +581,6 @@ labels["Chengyu Sichuanese"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
 labels["Chongqing Sichuanese"] = {
 	-- A variety of Chengyu Sichuanese.
 	aliases = {"Chongqing", "Chongqing Mandarin"},
@@ -646,24 +644,11 @@ labels["Coastal Min"] = {
 	Wikipedia = true,
 }
 
-labels["Datian Min"] = {
-	aliases = {"Datian"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
 -- The following violates normal conventions, which would use "Hainanese Min' or 'Hainan Min'. But it matches the
 -- 'Hainanese' language and Wikipedia.
 labels["Hainanese"] = {
 	aliases = {"Hainan Min", "Hainanese Min", "Hainan Min Chinese"},
 	Wikipedia = true,
-	regional_categories = true,
-}
-
--- FIXME: Category missing.
-labels["Haklau Min"] = {
-	aliases = {"Hoklo Min", "Haklau", "Hoklo"},
-	Wikipedia = "Hoklo Min",
 	regional_categories = true,
 }
 
@@ -674,12 +659,6 @@ labels["Inland Min"] = {
 
 labels["Leizhou Min"] = {
 	aliases = {"Leizhou"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Northern Min"] = {
-	aliases = {"Min Bei"},
 	Wikipedia = true,
 	regional_categories = true,
 }
@@ -695,19 +674,6 @@ labels["Shaojiang Min"] = {
 	aliases = {"Shaojiang"},
 	Wikipedia = "Shao–Jiang Min",
 	regional_categories = true,
-}
-
-labels["Southern Min"] = {
-	aliases = {"Min Nan"},
-	Wikipedia = true,
-	regional_categories = true,
-	track = true,
-}
-
-labels["dialectal Southern Min"] = {
-	aliases = {"dialectal Min Nan"},
-	Wikipedia = "Southern Min",
-	regional_categories = "Southern Min",
 }
 
 labels["Zhongshan Min"] = {
@@ -755,7 +721,7 @@ labels["Fuding Eastern Min"] = {
 
 -- FIXME: Category missing.
 labels["Funing Eastern Min"] = {
-	-- A primary branch; should possibly be called Northern Eastern Min?
+	-- A primary branch; should possibly be called North Eastern Min.
 	aliases = {"Funing"},
 	Wikidata = "Q18943896",
 	plain_categories = true,
@@ -787,7 +753,7 @@ labels["Gutian Eastern Min"] = {
 
 -- FIXME: Category missing.
 labels["Houguan Eastern Min"] = {
-	-- A primary branch; should possibly be called Southern Eastern Min?
+	-- A primary branch; should possibly be called South Eastern Min.
 	-- Other varieties of Houguan Eastern Min not given entries here because they have no associated Wikipedia
 	-- articles or Wikidata entries:
 	  -- Minhou Eastern Min
@@ -877,7 +843,105 @@ labels["Zhouning Eastern Min"] = {
 	plain_categories = true,
 }
 
----------------------- Hokkien ----------------------
+---------------------- Northern Min ----------------------
+
+labels["Northern Min"] = {
+	aliases = {"Min Bei"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Chong'an Northern Min"] = {
+	-- A subvariety of Xixi Northern Min.
+	aliases = {"Chong'an", "Wuyishan Northern Min", "Wuyishan"},
+	Wikidata = "Q19855654",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Dongxi Northern Min"] = {
+	-- A primary branch. Maybe should be called East Northern Min. Note here that Dongxi is 東溪 (dōngxī); here dōng
+	-- means "east", but the second xī does not mean "west" but more like "stream" or "creek".
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Xixi Northern Min"] = {
+	-- A primary branch. Maybe should be called West Northern Min. Note here that Xixi is 西溪 (xīxī); here the first
+	-- xī means "west", but the second xī does not mean "west" but more like "stream" or "creek".
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Jian'ou Northern Min"] = {
+	-- A subvariety of Dongxi Northern Min; the representative variety.
+	aliases = {"Jian'ou"},
+	Wikidata = "Q6191447",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Jianyang Northern Min"] = {
+	-- A subvariety of Xixi Northern Min; the representative variety.
+	aliases = {"Jianyang"},
+	Wikidata = "Q16930647",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Nanping Northern Min"] = {
+	-- A subvariety of Dongxi Northern Min.
+	aliases = {"Nanping"},
+	Wikidata = "Q68534", -- the entry for the city of Nanping; currently no article for the lect
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Songxi Northern Min"] = {
+	-- A subvariety of Dongxi Northern Min.
+	aliases = {"Songxi"},
+	Wikidata = "Q19855892",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Zhenghe Northern Min"] = {
+	-- A subvariety of Dongxi Northern Min.
+	aliases = {"Zhenghe"},
+	Wikidata = "Q19855758",
+	plain_categories = true,
+}
+
+---------------------- Southern Min ----------------------
+
+labels["Southern Min"] = {
+	aliases = {"Min Nan"},
+	Wikipedia = true,
+	regional_categories = true,
+	track = true,
+}
+
+labels["dialectal Southern Min"] = {
+	aliases = {"dialectal Min Nan"},
+	Wikipedia = "Southern Min",
+	regional_categories = "Southern Min",
+}
+
+labels["Datian Min"] = {
+	aliases = {"Datian"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Haklau Min"] = {
+	aliases = {"Hoklo Min", "Haklau", "Hoklo"},
+	Wikipedia = "Hoklo Min",
+	regional_categories = true,
+}
+
+---------------- Hokkien ----------------
 
 labels["Hokkien"] = {
 	Wikipedia = true,
@@ -1087,7 +1151,7 @@ labels["Zhangzhou Hokkien"] = {
 	plain_categories = true,
 }
 
----------------------- Teochew ----------------------
+---------------- Teochew ----------------
 
 -- The following violates normal conventions, which would use "Teochew Southern Min" or possibly "Teochew Min". But it
 -- matches the 'Teochew' full language.
@@ -1404,7 +1468,8 @@ labels["Shuangfeng Xiang"] = {
 ------------------------------------------ Yue ------------------------------------------
 
 labels["Cantonese"] = {
-	Wikipedia = true,
+	-- A variety of Yuehai Yue.
+	Wikidata = "Q9186",
 	regional_categories = true,
 }
 
@@ -1414,10 +1479,18 @@ labels["dialectal Cantonese"] = {
 }
 
 -- FIXME: Category missing.
-labels["Dongguan Cantonese"] = {
-	-- A subvariety of Guanbao Cantonese, in turn a variety of Yuehai Yue ("Cantonese").
-	aliases = {"Dongguan"},
-	Wikipedia = "Dongguan",
+labels["Dongguan Yue"] = {
+	-- A subvariety of Guanbao Yue, in turn a variety of Yuehai Yue (which includes Cantonese).
+	-- no alias for Dongguan, as Hakka is also spoken.
+	Wikidata = "Q97351966",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Guanbao Yue"] = {
+	-- A variety of Yuehai Yue (which includes Cantonese).
+	aliases = {"Guanbao"},
+	Wikidata = "Q13530474",
 	plain_categories = true,
 }
 
@@ -1430,26 +1503,109 @@ labels["Dongguan Cantonese"] = {
 -- }
 
 labels["Guangzhou Cantonese"] = {
+	-- A subvariety of Cantonese (in the narrow sense), a variety of Yuehai Yue. The prestige variety of Cantonese.
 	aliases = {"Guangzhou"},
-	Wikipedia = "Cantonese",
+	Wikidata = "Q9186", -- article for "Cantonese"
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Gaoyang Yue"] = {
+	-- A primary branch.
+	-- Per English Wikipedia, has the following lects:
+	  -- Gaozhou dialect
+	  -- Yangjiang dialect
+	aliases = {"Gaoyang"},
+	Wikidata = "Q2812583",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Goulou Yue"] = {
+	-- A primary branch.
+	-- Per English Wikipedia, has the following lects:
+	  -- Yulin dialect
+	    -- Bobai dialect
+	  -- Guangning dialect
+	  -- Huaiji dialect
+	  -- Fengkai dialect
+	  -- Deqing dialect
+	  -- Yunan dialect
+	  -- Shanglin dialect
+	  -- Binyang dialect
+	  -- Tengxian dialect
+	aliases = {"Goulou"},
+	Wikidata = "Q5588322",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Guixian Yue"] = {
+	-- A variety of Goulou Yue.
+	aliases = {"Guixian"},
+	Wikidata = "Q15926547",
 	plain_categories = true,
 }
 
 labels["Hong Kong Cantonese"] = {
+	-- A subvariety of Cantonese (in the narrow sense), a variety of Yuehai Yue.
 	aliases = {"HKC"},
-	Wikipedia = true,
+	Wikidata = "Q5894342",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Huizhou Yue"] = {
+	-- A variety of Wuhua Yue.
+	-- No Huizhou alias because of Huizhou Cantonese (a different lect).
+	Wikidata = "Q9484916",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Luoguang Yue"] = {
+	-- A primary branch.
+	-- Per English Wikipedia, has the following lects:
+	  -- Luoding dialect
+	  -- Zhaoqing dialect
+	  -- Sihui dialect
+	  -- Yangshan dialect
+	  -- Lianzhou dialect
+	  -- Lianshan dialect
+	  -- Qingyuan dialect
+	aliases = {"Luoguang"},
+	Wikidata = "Q6704497",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Macau Cantonese"] = {
+	-- A subvariety of Cantonese (in the narrow sense), a variety of Yuehai Yue.
+	aliases = {"Macao Cantonese", "Macanese Cantonese"},
+	Wikidata = "Q113659847",
 	plain_categories = true,
 }
 
 -- FIXME: Category missing.
 labels["Malaysian Cantonese"] = {
+	-- A subvariety of Cantonese (in the narrow sense), a variety of Yuehai Yue.
 	aliases = {"Malaysia Cantonese"},
-	Wikipedia = true,
+	Wikidata = "Q56272241",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Qinlian Yue"] = {
+	-- A primary branch.
+	-- Per English Wikipedia, has many lects, some mutually intelligible with standard Cantonese.
+	aliases = {"Qinlian"},
+	Wikidata = "Q7267753",
 	plain_categories = true,
 }
 
 -- FIXME: Category missing.
 labels["Singapore Cantonese"] = {
+	-- A subvariety of Cantonese (in the narrow sense), a variety of Yuehai Yue.
 	aliases = {"Singaporean Cantonese"},
 	Wikipedia = "Chinese Singaporeans#Cantonese",
 	plain_categories = true,
@@ -1457,8 +1613,16 @@ labels["Singapore Cantonese"] = {
 
 -- FIXME: Category missing.
 labels["Siyi Yue"] = {
+	-- A primary branch.
+	-- Per English Wikipedia, has the following lects:
+	  -- Taishanese
+	  -- Xinhui dialect
+	  -- Siqian dialect
+	  -- Guzhen dialect
+	  -- Enping dialect
+	  -- Kaiping dialect
 	aliases = {"Siyi"},
-	Wikipedia = true,
+	Wikidata = "Q2391679",
 	plain_categories = true,
 }
 
@@ -1467,23 +1631,74 @@ labels["Siyi Yue"] = {
 -- of Siyi Yue, we should consider renaming to Taishan Yue or Taishanese Yue.
 labels["Taishanese"] = {
 	-- A variety of Siyi Yue.
-	aliases = {"Toishanese", "Hoisanese"},
-	Wikipedia = true,
+	aliases = {"Toishanese", "Toisanese", "Hoisanese"},
+	Wikidata = "Q2208940",
 	regional_categories = true,
 }
 
 -- FIXME: Category missing.
-labels["Yangjiang Cantonese"] = {
+labels["Weitou Yue"] = {
+	-- A subvariety of Guanbao Yue, in turn a variety of Yuehai Yue (which includes Cantonese). Spoken by older
+	-- residents of Shenzhen. No "Shenzhen" alias because some older residents of Shenzhen speak a variety of Hakka.
+	aliases = {"Weitou", "Shenzhen Yue"},
+	Wikidata = "Q846599",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Wuhua Yue"] = {
+	-- A primary branch.
+	-- Per English Wikipedia, has the following lects:
+	  -- Wuchuan dialect
+	  -- Huazhou dialect
+	aliases = {"Wuhua"},
+	Wikidata = "Q8038858",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Xinhui Yue"] = {
+	-- A variety of Siyi Yue.
+	aliases = {"Xinhui"},
+	Wikidata = "Q97168096",
+	plain_categories = true,
+}
+
+labels["Yangjiang Yue"] = {
 	-- A variety of Gaoyang Yue.
-	aliases = {"Yangjiang", "Yangjiang Yue"},
+	-- no alias for Yangjiang as Yangjiang Hakka also exists.
 	Wikidata = "Q65406156",
 	plain_categories = true,
 }
 
 -- FIXME: Category missing.
-labels["Yulin Cantonese"] = {
+labels["Yongxun Yue"] = {
+	-- A primary branch.
+	-- Per English Wikipedia, has the following lects:
+	  -- Nanning dialect
+	  -- Yongning dialect
+	  -- Guiping dialect
+	  -- Chongzuo dialect
+	  -- Ningmin dialect
+	  -- Hengxian dialect
+	  -- Baise dialect
+	aliases = {"Yongxun"},
+	Wikidata = "Q8054950",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Yuehai Yue"] = {
+	-- A primary branch. Per English Wikipedia, has many dialects. (FILL IN)
+	aliases = {"Yuehai"},
+	Wikidata = "Q8060260",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Yulin Yue"] = {
 	-- A variety of Goulou Yue.
-	aliases = {"Yulin", "Yulin Yue"},
+	aliases = {"Yulin"},
 	Wikidata = "zh:Q15942798", -- [[w:Yulin dialect]] also exists but redirects to [[w:Goulou Yue]].
 	plain_categories = true,
 }
