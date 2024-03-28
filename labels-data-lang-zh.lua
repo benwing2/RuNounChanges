@@ -577,7 +577,7 @@ labels["Chengdu Sichuanese"] = {
 
 -- FIXME: Category missing.
 labels["Chengyu Sichuanese"] = {
-	aliases = {"Chengdu", "Chengdu Mandarin", "Chengdu-Chongqing", "Chengdu-Chongqing Mandarin"},
+	aliases = {"Chengyu", "Chengyu Mandarin", "Chengdu-Chongqing", "Chengdu-Chongqing Mandarin"},
 	Wikidata = "Q5091311",
 	plain_categories = true,
 }
@@ -652,18 +652,6 @@ labels["Datian Min"] = {
 	regional_categories = true,
 }
 
-labels["Eastern Min"] = {
-	aliases = {"Min Dong"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["dialectal Eastern Min"] = {
-	aliases = {"dialectal Min Dong"},
-	Wikipedia = "Eastern Min",
-	regional_categories = "Eastern Min",
-}
-
 -- The following violates normal conventions, which would use "Hainanese Min' or 'Hainan Min'. But it matches the
 -- 'Hainanese' language and Wikipedia.
 labels["Hainanese"] = {
@@ -725,6 +713,168 @@ labels["dialectal Southern Min"] = {
 labels["Zhongshan Min"] = {
 	Wikipedia = true,
 	regional_categories = true,
+}
+
+---------------------- Eastern Min ----------------------
+
+labels["Eastern Min"] = {
+	aliases = {"Min Dong"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["dialectal Eastern Min"] = {
+	aliases = {"dialectal Min Dong"},
+	Wikipedia = "Eastern Min",
+	regional_categories = "Eastern Min",
+}
+
+-- FIXME: Category missing.
+labels["Changle Eastern Min"] = {
+	-- A subvariety of Fuzhou Eastern Min, which is a subvariety of Houguan Eastern Min.
+	aliases = {"Changle"},
+	Wikidata = "Q19856351",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Fu'an Eastern Min"] = {
+	-- A subvariety of Funing Eastern Min; the representative variety.
+	aliases = {"Fu'an"},
+	Wikidata = "Q7216573",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Fuding Eastern Min"] = {
+	-- A subvariety of Funing Eastern Min.
+	aliases = {"Fuding", "Tongshan", "Tongshan Eastern Min"},
+	Wikidata = "Q19853248",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Funing Eastern Min"] = {
+	-- A primary branch; should possibly be called Northern Eastern Min?
+	aliases = {"Funing"},
+	Wikidata = "Q18943896",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Fuqing Eastern Min"] = {
+	-- A subvariety of Houguan Eastern Min.
+	aliases = {"Fuqing"},
+	Wikidata = "Q15895753",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Fuzhou Eastern Min"] = {
+	-- A subvariety of Houguan Eastern Min; the representative variety.
+	aliases = {"Fuzhou"},
+	Wikidata = "Q35571",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Gutian Eastern Min"] = {
+	-- A subvariety of Houguan Eastern Min.
+	aliases = {"Gutian"},
+	Wikidata = "Q18944085",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Houguan Eastern Min"] = {
+	-- A primary branch; should possibly be called Southern Eastern Min?
+	-- Other varieties of Houguan Eastern Min not given entries here because they have no associated Wikipedia
+	-- articles or Wikidata entries:
+	  -- Minhou Eastern Min
+	  -- Youxi Eastern Min
+	  -- Dai Yunshan Eastern Min
+	  -- Yongtai Eastern Min
+	  -- Pingnan Eastern Min
+	  -- Pingtan Eastern Min
+	  -- Luoyuan Eastern Min
+	aliases = {"Houguan"},
+	Wikidata = "Q18943758",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Lianjiang Eastern Min"] = {
+	-- A subvariety of Fuzhou Eastern Min, which is a subvariety of Houguan Eastern Min.
+	aliases = {"Lianjiang"},
+	Wikidata = "Q19856291",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Manjiang Eastern Min"] = {
+	-- A primary branch. Has some influences from Wu, but usually classified as Eastern Min.
+	-- Chinese Wikipedia distinguishes between "Manjiang" (蛮讲) and "Manhua" (蛮话) and claims they are two
+	-- distinct varieties, but I think this is based on confusion; for example, they both have the same ISO 639-6
+	-- code "maua", and the English Wikipedia specifically asserts that both 蛮讲 and 蛮话 are the same.
+	aliases = {"Manjiang", "Manhua Eastern Min", "Manhua", "Mango Eastern Min", "Mango"},
+	Wikidata = "Q3431721",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Matsu Eastern Min"] = {
+	-- A subvariety of Fuzhou Eastern Min, which is a subvariety of Houguan Eastern Min.
+	aliases = {"Matsu"},
+	Wikidata = "Q19599280",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Minqing Eastern Min"] = {
+	-- A subvariety of Houguan Eastern Min.
+	aliases = {"Minqing"},
+	Wikidata = "Q48897247",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Ningde Eastern Min"] = {
+	-- A subvariety of Funing Eastern Min.
+	aliases = {"Ningde"},
+	Wikidata = "Q18941249",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Shouning Eastern Min"] = {
+	-- A subvariety of Funing Eastern Min.
+	aliases = {"Shouning"},
+	Wikidata = "Q19852223",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Xiapu Eastern Min"] = {
+	-- A subvariety of Funing Eastern Min.
+	aliases = {"Xiapu"},
+	Wikidata = "Q15899756",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Zherong Eastern Min"] = {
+	-- A subvariety of Funing Eastern Min.
+	aliases = {"Zherong"},
+	Wikidata = "Q19852850",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Zhouning Eastern Min"] = {
+	-- A subvariety of Funing Eastern Min.
+	aliases = {"Zhouning", "Zhoudun", "Zhoudun Eastern Min"},
+	Wikidata = "Q19852132",
+	plain_categories = true,
 }
 
 ---------------------- Hokkien ----------------------
