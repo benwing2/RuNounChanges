@@ -486,12 +486,28 @@ local function dialect_handler(category, raw_args, called_from_inside)
 			end
 			local wikipedia_langs = require(labels_module).get_langs_to_extract_wikipedia_articles_from_wikidata(lang)
 			local ids = rsplit(args.wikidata, "%s*,%s*")
+			local ids_without_wmcodes = {}
+			local ids_with_wmcodes = {}
+			for _, id in ipairs(ids) do
+				if id:find(":") then
+					table.insert(ids_with_wmcodes, id)
+				else
+					table.insert(ids_without_wmcodes, id)
+				end
+			end
 			for _, wmcode in ipairs(wikipedia_langs) do
-				for _, id in ipairs(ids) do
+				for _, id in ipairs(ids_without_wmcodes) do
 					local article = mw.wikibase.sitelink(id, wmcode .. "wiki")
 					if article then
 						insert_wikipedia_article(wmcode, article)
 					end
+				end
+			end
+			for _, id in ipairs(ids_with_wmcodes) do
+				local wmcode, wikidata_id = id:match("^(.-):(.*)$")
+				local article = mw.wikibase.sitelink(wikidata_id, wmcode .. "wiki")
+				if article then
+					insert_wikipedia_article(wmcode, article)
 				end
 			end
 		end
