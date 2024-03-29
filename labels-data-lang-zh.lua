@@ -1248,12 +1248,12 @@ labels["Southern Pinghua"] = {
 ------------------------------------------ Wu ------------------------------------------
 
 labels["Wu"] = {
-	Wikipedia = "Wu Chinese",
+	Wikidata = "Q34290",
 	regional_categories = true,
 }
 
 labels["dialectal Wu"] = {
-	Wikipedia = "Wu Chinese",
+	Wikidata = "Q34290", -- article for Wu Chinese
 	regional_categories = "Wu",
 }
 
@@ -1266,131 +1266,559 @@ labels["dialectal Wu"] = {
 
 ---------------------- Northern Wu ----------------------
 
+-- FIXME: Category missing.
+labels["Anji Wu"] = {
+	-- A subvariety of Tiaoxi Wu, which is a variety of Northern Wu.
+	aliases = {"Anji"},
+	Wikidata = "Q111270089",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Changxing Wu"] = {
+	-- A subvariety of Tiaoxi Wu, which is a variety of Northern Wu.
+	aliases = {"Changxing"},
+	Wikidata = "Q11126990",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
 labels["Changzhounese Wu"] = {
+	-- A subvariety of Piling Wu, which is a subvariety of Northwestern Wu, which is a variety of Northern Wu.
 	aliases = {"Changzhou Wu", "Changzhou", "Changzhounese"},
-	Wikipedia = "Changzhou dialect",
+	Wikidata = "Q1021819",
 	plain_categories = true,
 }
 
 labels["Danyang Wu"] = {
-	-- A variety of Northern Wu.
+	-- Apparently a subvariety of Piling Wu, which is a subvariety of Northwestern Wu, which is a variety of Northern
+	-- Wu. It is a bit difficult pinning down what this variety belongs to beyond Northern Wu, but it is in the far
+	-- northwestern corner of the Wu area, next to Changzhounese Wu, so presumably in the same group.
 	aliases = {"Danyang"},
-	Wikipedia = "Danyang, Jiangsu",
+	Wikidata = "Q925293", -- article for Danyang, Jiangsu
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Deqing Wu"] = {
+	-- A subvariety of Tiaoxi Wu, which is a variety of Northern Wu.
+	aliases = {"Deqing"},
+	Wikidata = "Q109343820",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Fuyang Wu"] = {
+	-- A subvariety of Linshao Wu, which is a subvariety of Northern Zhejiang Wu, which is a variety of Northern Wu.
+	aliases = {"Fuyang"},
+	Wikipedia = "zh:富阳话", -- no Wikidata item yet
 	plain_categories = true,
 }
 
 labels["Hangzhounese Wu"] = {
+	-- A subvariety of Northwestern Wu, which is a variety of Northern Wu.
 	aliases = {"Hangzhou", "Hangzhounese", "Hangzhou Wu"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Hangzhounese Wu'.
 	display = "Hangzhounese",
-	Wikipedia = "Hangzhou dialect",
+	Wikidata = "Q5648144",
 	plain_categories = true,
 }
 
 labels["Huzhounese Wu"] = {
+	-- A subvariety of Tiaoxi Wu, which is a variety of Northern Wu.
 	aliases = {"Huzhou", "Huzhou Wu", "Huzhounese"},
 	Wikidata = "Q15901269",
 	plain_categories = true,
 }
 
+-- FIXME: Category missing.
+labels["Jiangyin Wu"] = {
+	-- A subvariety of Piling Wu, which is a subvariety of Northwestern Wu, which is a variety of Northern Wu; but
+	-- transitional to Sujiahu Wu.
+	aliases = {"Jiangyin"},
+	Wikidata = "Q6191803",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Jiaxing Wu"] = {
+	-- A subvariety of Sujiahu Wu, which is a variety of Northern Wu.
+	aliases = {"Jiaxing"},
+	Wikidata = "Q30130993",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Jinhui Wu"] = {
+	-- A subvariety of Sujiahu Wu, which is a variety of Northern Wu.
+	aliases = {"Jinhui", "Dangdai Wu", "Dangdai", "Dônđäc"},
+	Wikidata = "Q16259341",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Jintan Wu"] = {
+	-- A subvariety of Piling Wu, which is a subvariety of Northwestern Wu, which is a variety of Northern Wu.
+	aliases = {"Jintan"},
+	Wikidata = "Q15904190",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Jinxiang Wu"] = {
+	-- An isolated subvariety of Northern Zhejiang Wu, which is a variety of Northern Wu.
+	aliases = {"Jinxiang"},
+	Wikidata = "Q2427960",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Lao'an Wu"] = {
+	-- A subvariety of Piling Wu, which is a subvariety of Northwestern Wu, which is a variety of Northern Wu.
+	aliases = {"Lao'an", "Jingjiang Wu", "Jingjiang"},
+	Wikipedia = "zh:老岸话", -- no Wikidata item yet
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Lin'an Wu"] = {
+	-- A subvariety of Linshao Wu, which is a subvariety of Northern Zhejiang Wu, which is a variety of Northern Wu.
+	aliases = {"Lin'an"},
+	Wikidata = "Q1022464", -- article for Lin'an District (part of the prefecture-level city of Hangzhou)
+	plain_categories = true,
+}
+
 labels["Linshao Wu"] = {
-	-- The supervariety of Shaoxing Wu; a variety of Northern Wu.
+	-- A subvariety of Northern Zhejiang Wu, which is a variety of Northern Wu.
 	aliases = {"Linshao", "Lin-Shao Wu", "Lin-Shao"},
-	Wikipedia = "Shaoxing dialect",
+	Wikidata = "Q7489194", -- article for Shaoxing dialect, the representative variety
 	plain_categories = true,
 }
 
 labels["Ningbonese Wu"] = {
+	-- A subvariety of Yongjiang Wu, which is a subvariety of Northern Zhejiang Wu, which is a variety of Northern Wu.
 	aliases = {"Ningbonese", "Ningbo Wu", "Ningbo"},
-	Wikipedia = "Ningbo dialect",
+	Wikidata = "Q3972199",
 	plain_categories = true,
 }
 
 labels["Northern Wu"] = {
+	-- A primary branch.
 	aliases = {"Taihu", "Taihu Wu"},
-	Wikipedia = true,
+	Wikidata = "Q7675988",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Northern Zhejiang Wu"] = {
+	-- A variety of Northern Wu.
+	aliases = {"Northern Zhejiang"},
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Northwestern Wu"] = {
+	-- A variety of Northern Wu.
+	aliases = {"Northern Zhejiang"},
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Old Guangde Wu"] = {
+	-- A subvariety of Tiaoxi Wu, which is a variety of Northern Wu. Appears to be wrongly placed under Sujiahu Wu in
+	-- the infobox on the right side of the Chinese Wikipedia entry; but the text indicates it belongs to Tiaoxi Wu.
+	aliases = {"Old Guangde", "Southeast Guangde Wu", "Southeast Guangde"},
+	Wikidata = "Q7084146",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Old Langxi Wu"] = {
+	-- A subvariety of Piling Wu, which is a subvariety of Northwestern Wu, which is a variety of Northern Wu.
+	aliases = {"Old Langxi", "Lao Langxi Wu", "Lao Langxi"},
+	Wikidata = "Q15911930",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Piling Wu"] = {
+	-- A subvariety of Northwestern Wu, which is a variety of Northern Wu.
+	aliases = {"Piling"},
+	Wikidata = "Q1021819", -- article for Changzhou dialect
 	plain_categories = true,
 }
 
 labels["Shadi Wu"] = {
+	-- A subvariety of Sujiahu Wu, which is a variety of Northern Wu.
 	aliases = {"Shadi", "Chongming", "Chongming Wu", "Qihai", "Qihai Wu"},
 	Wikidata = "Q6112340",
 	plain_categories = true,
 }
 
+-- FIXME: Category missing.
 labels["Shanghainese Wu"] = {
+	-- A subvariety of Sujiahu Wu, which is a variety of Northern Wu.
 	aliases = {"Shanghai Wu", "Shanghainese"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Shanghainese Wu'.
 	display = "Shanghainese",
-	Wikipedia = "Shanghainese",
+	Wikidata = "Q36718",
 	plain_categories = true,
 }
 
+-- FIXME: Category missing.
+labels["Shangyu Wu"] = {
+	-- A subvariety of Linshao Wu, which is a subvariety of Northern Zhejiang Wu, which is a variety of Northern Wu.
+	aliases = {"Shangyu"},
+	Wikipedia = "zh:上虞話", -- no Wikidata item yet
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
 labels["Shaoxing Wu"] = {
+	-- A subvariety of Linshao Wu, which is a subvariety of Northern Zhejiang Wu, which is a variety of Northern Wu.
 	aliases = {"Shaoxing", "Shaoxingnese", "Shaoxingnese Wu", "Shaoxingese", "Shaoxingese Wu"},
-	Wikipedia = "Shaoxing dialect",
+	Wikidata = "Q7489194",
 	plain_categories = true,
 }
 
+-- FIXME: Category missing.
+labels["Shengzhou Wu"] = {
+	-- A subvariety of Linshao Wu, which is a subvariety of Northern Zhejiang Wu, which is a variety of Northern Wu.
+	aliases = {"Shengzhou"},
+	Wikidata = "Q11054430",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
 labels["Sujiahu Wu"] = {
-	aliases = {"Su-Jia-Hu Wu", "Sujiahu", "Su-Jia-Hu"}, -- not Suzhou-Jiaxing-Huzhou
-	display = "[[w:Suzhou dialect|Su]][[w:zh:嘉興話|jia]][[w:Shanghainese|hu]] [[w:Wu Chinese|Wu]]",
-	plain_categories = "Northern Wu",
+	-- A variety of Northern Wu.
+	aliases = {"Sujiahu", "Su-Jia-Hu Wu", "Su-Jia-Hu", "Suhujia Wu", "Suhujia", "Su-Hu-Jia Wu", "Su-Hu-Jia"}, -- not Suzhou-Jiaxing-Huzhou
+	Wikidata = "Q17036256",
+	-- display = "[[w:Suzhou dialect|Su]][[w:zh:嘉興話|jia]][[w:Shanghainese|hu]] [[w:Wu Chinese|Wu]]",
+	plain_categories = true,
 }
 
 labels["Suzhounese Wu"] = {
+	-- A subvariety of Sujiahu Wu, which is a variety of Northern Wu.
 	aliases = {"Suzhou", "Suzhounese", "Suzhou Wu"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Suzhounese Wu'.
 	display = "Suzhounese",
-	Wikipedia = "Suzhou dialect",
+	Wikidata = "Q831744",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Tiaoxi Wu"] = {
+	-- A variety of Northern Wu.
+	aliases = {"Tiaoxi"},
+	Wikidata = "Q11010462",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Tonglu Wu"] = {
+	-- A subvariety of Linshao Wu, which is a subvariety of Northern Zhejiang Wu, which is a variety of Northern Wu.
+	aliases = {"Tonglu"},
+	Wikidata = "Q18654008",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Urban Shanghainese Wu"] = {
+	-- A subvariety of Shanghainese Wu, which is a subvariety of Sujiahu Wu, which is a variety of Northern Wu.
+	aliases = {"Urban Shanghai Wu", "Urban Shanghainese", "Urban Shanghai"},
+	Wikipedia = "zh:上海话#松江方言区",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Wuxi Wu"] = {
+	-- A subvariety of Sujiahu Wu, which is a variety of Northern Wu.
+	aliases = {"Wuxi"},
+	Wikidata = "Q2325035",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Xiaoshan Wu"] = {
+	-- A subvariety of Linshao Wu, which is a subvariety of Northern Zhejiang Wu, which is a variety of Northern Wu.
+	aliases = {"Xiaoshan"},
+	Wikidata = "Q60993472",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Xinchang Wu"] = {
+	-- A subvariety of Linshao Wu, which is a subvariety of Northern Zhejiang Wu, which is a variety of Northern Wu.
+	aliases = {"Xinchang"},
+	Wikidata = "Q11082821",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Yixing Wu"] = {
+	-- A subvariety of Piling Wu, which is a subvariety of Northwestern Wu, which is a variety of Northern Wu.
+	aliases = {"Yixing"},
+	Wikipedia = "zh:宜興話", -- no Wikidata item yet
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Yongjiang Wu"] = {
+	-- A subvariety of Northern Zhejiang Wu, which is a variety of Northern Wu.
+	aliases = {"Yongjiang"},
+	Wikidata = "Q15503785",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Yuhang Wu"] = {
+	-- A subvariety of Tiaoxi Wu, which is a variety of Northern Wu.
+	aliases = {"Yuhang"},
+	Wikidata = "Q109414979",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Zhoushan Wu"] = {
+	-- A subvariety of Yongjiang Wu, which is a subvariety of Northern Zhejiang Wu, which is a variety of Northern Wu.
+	aliases = {"Zhoushan"},
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Zhuji Wu"] = {
+	-- A subvariety of Linshao Wu, which is a subvariety of Northern Zhejiang Wu, which is a variety of Northern Wu.
+	aliases = {"Zhuji"},
+	Wikidata = "Q18119187",
 	plain_categories = true,
 }
 
 ---------------------- Southern Wu ----------------------
 
-labels["Wuzhou Wu"] = {
-	aliases = {"Wuzhou"},
-	Wikidata = "Q2779891",
+-- FIXME: Category missing.
+labels["Baizhang Wu"] = {
+	-- A variety of Oujiang Wu.
+	aliases = {"Baizhang", "Xialu Wu", "Xialu"},
+	Wikipedia = "zh:百丈口话", -- no Wikidata item yet
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Beitai Wu"] = {
+	-- A variety of Taizhouic Wu.
+	aliases = {"Beitai"},
+	-- Undefined in Chinese Wikipedia
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Changbei Wu"] = {
+	-- A divergent subvariety of Taigao Wu, which is a variety of Xuanzhou Wu.
+	aliases = {"Changbei"},
+	Wikipedia = "zh:昌北话", -- no Wikidata item yet
 	plain_categories = true,
 }
 
 -- FIXME: Category missing.
 labels["Chuqu Wu"] = {
+	-- A primary branch.
 	aliases = {"Chuqu"},
 	Wikidata = "Q5116499",
 	plain_categories = true,
 }
 
-labels["Lishui Wu"] = {
+-- FIXME: Category missing.
+labels["Chuzhou Wu"] = {
 	-- A variety of Chuqu Wu.
-	-- FIXME: Are Chuzhou Wu and Fujian Wu really aliases, or different dialects lumped into Lishui Wu?
-	-- (NOTE: Chuzhou was an ancient state established during the Sui Dynasty (589 AD), covering the city of Lishui
-	-- and [[w:Wuyi County, Zhejiang]]; see [[w:zh:处州]]. Lishui is in the southwestern corner of Zhejiang and borders
-	-- Fujian to the southwest, so it's possible there is a bit of Fujian that is Wu-speaking.)
-	aliases = {"Lishui", "Lishuinese", "Chuzhou Wu", "Chuzhou", "Fujian Wu"},
-	Wikipedia = "Lishui",
+	aliases = {"Chuzhou"},
+	-- Undefined in Chinese Wikipedia
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Dongyang Wu"] = {
+	-- A subvariety of Yiyong Wu, which is a variety of Wuzhou Wu.
+	aliases = {"Dongyang"},
+	Wikidata = "Q109417928",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Duze Wu"] = {
+	-- A subvariety of Longqu Wu, which is a variety of Chuqu Wu.
+	aliases = {"Duze"},
+	Wikipedia = "zh:杜泽话", -- no Wikidata item yet
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Gaochun Wu"] = {
+	-- A subvariety of Taigao Wu, which is a variety of Xuanzhou Wu.
+	aliases = {"Gaochun"},
+	Wikidata = "Q17035529",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Hongqiao Wu"] = {
+	-- A variety of Oujiang Wu.
+	aliases = {"Hongqiao"},
+	Wikidata = "Q15933359",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Hou'an Wu"] = {
+	-- A subvariety of Shiling Wu, which is a variety of Xuanzhou Wu.
+	aliases = {"Hou'an"},
+	Wikidata = "Q10911034",
 	plain_categories = true,
 }
 
 -- FIXME: Category missing.
 labels["Jiangshan Wu"] = {
-	-- A variety of Chuqu Wu.
+	-- A subvariety of Shangshan Wu, which is a variety of Chuqu Wu.
 	aliases = {"Jiangshan"},
 	Wikidata = "Q6112693",
 	plain_categories = true,
 }
 
 -- FIXME: Category missing.
+labels["Jingxian Wu"] = {
+	-- A subvariety of Tongjing Wu, which is a variety of Xuanzhou Wu.
+	aliases = {"Jingxian"},
+	Wikidata = "Q11151690",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
 labels["Jinhua Wu"] = {
-	-- A variety of Wuzhou Wu.
+	-- A subvariety of Jinlan Wu, which is a variety of Wuzhou Wu.
 	aliases = {"Jinhua", "Jinhuanese", "Jinhuanese Wu"},
 	Wikidata = "Q13583347",
 	plain_categories = true,
 }
 
 -- FIXME: Category missing.
-labels["Qingtian Wu"] = {
+labels["Jinlan Wu"] = {
+	-- A variety of Wuzhou Wu.
+	aliases = {"Jinlan"},
+	-- Undefined in Chinese Wikipedia
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Jiuhua Wu"] = {
+	-- A subvariety of Longqu Wu, which is a variety of Chuqu Wu.
+	aliases = {"Jiuhua"},
+	Wikipedia = "zh:九华话", -- no Wikidata item yet
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Jujiang Wu"] = {
+	-- Possibly a variety of Oujiang Wu. Also has characteristics of Chuqu Wu.
+	aliases = {"Jujiang"},
+	Wikipedia = "zh:莒江话", -- no Wikidata item yet
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Lanxi Wu"] = {
+	-- A subvariety of Jinlan Wu, which is a variety of Wuzhou Wu.
+	aliases = {"Lanxi"},
+	Wikidata = "Q17059873",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Lishui Wu"] = {
+	-- A subvariety of Chuzhou Wu, which is a variety of Chuqu Wu.
+	-- FIXME: Is Fujian Wu really an alias, or a different dialect lumped into Lishui Wu? (NOTE: Chuzhou was an ancient
+	-- state established during the Sui Dynasty (589 AD), covering the city of Lishui and [[w:Wuyi County, Zhejiang]];
+	-- see [[w:zh:处州]]. Lishui is in the southwestern corner of Zhejiang and borders Fujian to the southwest, so it's
+	-- possible there is a bit of Fujian that is Wu-speaking.)
+	aliases = {"Lishui", "Lishuinese", "Fujian Wu"},
+	Wikidata = "Q58294", -- article on the prefecture-level city of Lishui in Zhejiang
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Longqu Wu"] = {
 	-- A variety of Chuqu Wu.
+	aliases = {"Longqu"},
+	Wikipedia = "zh:龙衢小片", -- no Wikidata item yet
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Longyou Wu"] = {
+	-- A subvariety of Longqu Wu, which is a variety of Chuqu Wu.
+	aliases = {"Longyou"},
+	Wikidata = "Q15908274",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Nanji Wu"] = {
+	-- A subvariety of Taigao Wu, which is a variety of Xuanzhou Wu.
+	aliases = {"Nanji"},
+	Wikidata = "Q10908223",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Nantai Wu"] = {
+	-- A variety of Taizhouic Wu.
+	aliases = {"Nantai"},
+	-- Undefined in Chinese Wikipedia
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Old Xuanzhou Wu"] = {
+	-- A subvariety of Tongjing Wu, which is a variety of Xuanzhou Wu.
+	aliases = {"Old Xuanzhou"},
+	Wikidata = "Q15914865",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Oujiang Wu"] = {
+	-- A primary branch.
+	aliases = {"Oujiang"},
+	Wikidata = "Q710218", -- article for Wenzhounese
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Pan'an Wu"] = {
+	-- A subvariety of Yiyong Wu, which is a variety of Wuzhou Wu.
+	aliases = {"Yiwu"},
+	Wikidata = "Q55695855",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Pucheng Ou Wu"] = {
+	-- A variety of Oujiang Wu.
+	aliases = {"Pucheng Ou"},
+	Wikipedia = "zh:蒲城瓯语", -- no Wikidata item yet
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Pucheng Wu"] = {
+	-- A subvariety of Chuzhou Wu, which is a variety of Chuqu Wu.
+	aliases = {"Pucheng"},
+	Wikipedia = "zh:浦城话", -- no Wikidata item yet
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Qingtian Wu"] = {
+	-- A subvariety of Chuzhou Wu, which is a variety of Chuqu Wu.
 	aliases = {"Qingtian"},
 	Wikidata = "Q2074456",
 	plain_categories = true,
@@ -1398,9 +1826,17 @@ labels["Qingtian Wu"] = {
 
 -- FIXME: Category missing.
 labels["Quzhou Wu"] = {
-	-- A variety of Chuqu Wu.
+	-- A subvariety of Longqu Wu, which is a variety of Chuqu Wu.
 	aliases = {"Quzhou", "Quzhounese", "Quzhounese Wu"},
 	Wikidata = "Q6112429",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Rui'an Wu"] = {
+	-- A variety of Oujiang Wu.
+	aliases = {"Rui'an"},
+	Wikidata = "Q4415352",
 	plain_categories = true,
 }
 
@@ -1408,20 +1844,207 @@ labels["Quzhou Wu"] = {
 labels["Shangrao Wu"] = {
 	-- A variety of Chuqu Wu.
 	aliases = {"Shangrao", "Shangraonese", "Shangraonese Wu"},
-	Wikipedia = "Shangrao",
+	Wikidata = "Q363479", -- Shangrao, a prefecture-level city in Jiangxi
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Shangshan Wu"] = {
+	-- A variety of Chuqu Wu.
+	aliases = {"Shangshan"},
+	-- Undefined in Chinese Wikipedia
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Shiling Wu"] = {
+	-- A variety of Xuanzhou Wu.
+	aliases = {"Shiling"},
+	Wikidata = "Q15923670",
 	plain_categories = true,
 }
 
 labels["Southern Wu"] = {
-	Wikipedia = "Wu Chinese",
+	Wikipedia = "Wu Chinese#Southern Wu",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Taigao Wu"] = {
+	-- A variety of Xuanzhou Wu.
+	aliases = {"Taigao"},
+	Wikipedia = "zh:宣州片#太高小片",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Taiping Wu"] = {
+	-- A subvariety of Taigao Wu, which is a variety of Xuanzhou Wu.
+	aliases = {"Taiping", "Old Taiping Wu", "Old Taiping"},
+	Wikidata = "Q10941478",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Taizhou Wu"] = {
+	-- A subvariety of Nantai Wu, which is a variety of Taizhouic Wu.
+	aliases = {"Taizhou"},
+	Wikidata = "Q3972406",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Taizhouic Wu"] = {
+	-- A primary branch. Called "Taizhou Wu" in Wikipedia whereas our "Taizhou Wu" is "Taizhou dialect"; but these names
+	-- are too ambiguous (cf. our "Beijingic Mandarin" vs. "Beijing Mandarin"). Per English Wikipedia, has the following
+	-- varieties:
+	  -- Taizhou dialect
+	  -- Linhai dialect
+	  -- Sanmen dialect
+	  -- Tiantai dialect
+	  -- Xianju dialect
+	  -- Huangyan dialect (黃巖話/黄岩话 [wɔ̤ɲjɛ̤̃wa̤])
+	  -- Jiaojiang dialect
+	  -- Wenling dialect
+	  -- Yuhuan dialect
+	  -- Yueqing dialect
+	  -- Ninghai dialect
+	aliases = {"Taizhouic"},
+	Wikidata = "Q7676678",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Tangxi Wu"] = {
+	-- A variety of Wuzhou Wu.
+	aliases = {"Tangxi"},
+	Wikidata = "Q11136233",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Tiantai Wu"] = {
+	-- A subvariety of Beitai Wu, which is a variety of Taizhouic Wu.
+	aliases = {"Tiantai"},
+	Wikidata = "Q85809509",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Tongjing Wu"] = {
+	-- A variety of Xuanzhou Wu.
+	aliases = {"Tongjing"},
+	Wikidata = "Q17028746",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Tongling Wu"] = {
+	-- A subvariety of Tongjing Wu, which is a variety of Xuanzhou Wu.
+	aliases = {"Tongling"},
+	Wikidata = "Q15909611",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Wencheng Wu"] = {
+	-- A variety of Oujiang Wu.
+	aliases = {"Wencheng"},
+	Wikidata = "Q7982335",
 	plain_categories = true,
 }
 
 labels["Wenzhounese Wu"] = {
+	-- A variety of Oujiang Wu.
 	aliases = {"Wenzhounese", "Wenzhou Wu", "Wenzhou", "Oujiang"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Wenzhounese Wu'.
 	display = "Wenzhounese",
-	Wikipedia = "Wenzhou dialect",
+	Wikidata = "Q710218",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Wuhu County Wu"] = {
+	-- A subvariety of Tongjing Wu, which is a variety of Xuanzhou Wu.
+	aliases = {"Wuhu County"},
+	Wikidata = "Q15911448",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Wuyi Wu"] = {
+	-- A subvariety of Yiyong Wu, which is a variety of Wuzhou Wu.
+	aliases = {"Yiwu"},
+	Wikidata = "Q11124837",
+	plain_categories = true,
+}
+
+labels["Wuzhou Wu"] = {
+	-- A primary branch. Per English Wikipedia, has the following varieties:
+	  -- Jinhua dialect
+	  -- Lanxi dialect
+	  -- Pujiang dialect
+	  -- Yiwu dialect
+	  -- Dongyang dialect
+	  -- Pan'an dialect
+	  -- Yongkang dialect
+	  -- Wuyi dialect
+	  -- Jiande dialect
+	aliases = {"Wuzhou"},
+	Wikidata = "Q2779891",
+	plain_categories = true,
+}
+
+labels["Xuanzhou Wu"] = {
+	-- A primary branch. Per English Wikipedia, has the following varieties:
+	  -- Xuancheng
+	  -- Tong–Jing
+		  -- Tongling dialect
+		  -- Jing County dialect
+		  -- Fanchang dialect
+		  -- etc.
+	  -- Shi–Ling
+		  -- Shitai dialect
+		  -- Lingyang (陵阳) dialect
+		  -- etc.
+	  -- Tai–Gao
+		  -- Taiping dialect
+		  -- Gaochun dialect
+		  -- etc.
+	aliases = {"Xuanzhou"},
+	Wikidata = "Q1939756",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Yiwu Wu"] = {
+	-- A subvariety of Yiyong Wu, which is a variety of Wuzhou Wu.
+	aliases = {"Yiwu"},
+	Wikidata = "Q15898526",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Yiyong Wu"] = {
+	-- A variety of Wuzhou Wu.
+	aliases = {"Yiyong"},
+	-- Undefined in Chinese Wikipedia
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Yongkang Wu"] = {
+	-- A subvariety of Yiyong Wu, which is a variety of Wuzhou Wu.
+	aliases = {"Yongkang"},
+	Wikidata = "Q11132026",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Yushan Wu"] = {
+	-- A subvariety of Shangshan Wu, which is a variety of Chuqu Wu.
+	aliases = {"Yushan"},
+	Wikidata = "Q17040715",
 	plain_categories = true,
 }
 
