@@ -41,12 +41,12 @@ local families_to_wikipedia_languages = {
 }
 
 --[==[
-Given language `lang`, fetch a list of Wikimedia languages to check when converting a Wikidata item to a Wikipedia
-article. English is always first, followed by the Wikimedia language code(s) of `lang` (which may or may not be the
-same as `lang`'s Wiktionary code), followed by the macrolanguage of `lang` for certain languages (currently, only
-languages in the Chinese and Arabic families). If `lang` is nil, only return English. Note that the same code may
-occur more than once in the list. This is exported because it's also used by
-[[Module:categor tree/poscatboiler/data/language varieties]].
+Given language `lang` (a full language, etymology-language or family), fetch a list of Wikimedia languages to check
+when converting a Wikidata item to a Wikipedia article. English is always first, followed by the Wikimedia language
+code(s) of `lang` if `lang` is a language (which may or may not be the same as `lang`'s Wiktionary code), followed
+by the macrolanguage of `lang` for certain languages and families (currently, only languages and families in the Chinese
+and Arabic families). If `lang` is nil, only return English. Note that the same code may occur more than once in the
+list. This is exported because it's also used by [[Module:categor tree/poscatboiler/data/language varieties]].
 ]==]
 function export.get_langs_to_extract_wikipedia_articles_from_wikidata(lang)
 	local wikipedia_langs = {}
@@ -54,9 +54,11 @@ function export.get_langs_to_extract_wikipedia_articles_from_wikidata(lang)
 	if lang then
 		local article_lang = lang
 		while article_lang do
-			local wmcodes = article_lang:getWikimediaLanguageCodes()
-			for _, wmcode in ipairs(wmcodes) do
-				table.insert(wikipedia_langs, wmcode)
+			if article_lang:hasType("language") then
+				local wmcodes = article_lang:getWikimediaLanguageCodes()
+				for _, wmcode in ipairs(wmcodes) do
+					table.insert(wikipedia_langs, wmcode)
+				end
 			end
 			article_lang = article_lang:getParent()
 		end
