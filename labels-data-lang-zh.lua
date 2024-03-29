@@ -7,48 +7,48 @@ local labels = {}
 ------------------------------------------ Gan ------------------------------------------
 
 labels["Gan"] = {
-	Wikipedia = "Gan Chinese",
+	Wikidata = "Q33475",
 	regional_categories = true,
 }
 
 labels["dialectal Gan"] = {
-	Wikipedia = "Gan Chinese",
+	Wikidata = "Q33475", -- article for Gan Chinese
 	regional_categories = "Gan",
 }
 
 labels["Lichuan Gan"] = {
 	-- A variety of Fuguang Gan
-	Wikidata = "Q6794539", -- link for Fuguang Gan
+	Wikidata = "Q6794539", -- article for Fuguang Gan
 	plain_categories = true,
 }
 
 labels["Nanchang Gan"] = {
-	-- A variety of Chang–Du Gan (where it is the principal dialect).
-	Wikipedia = "Chang–Du Gan",
+	-- A variety of Changdu Gan (where it is the principal dialect).
+	Wikidata = "Q3497239", -- article for Changdu Gan
 	plain_categories = true,
 }
 
 labels["Pingxiang Gan"] = {
 	-- A variety of Yiliu Gan.
-	Wikipedia = "Yi–Liu Gan",
+	Wikidata = "Q8053438", -- article for Yiliu Gan
 	plain_categories = true,
 }
 
 labels["Taining Gan"] = {
 	-- A variety of Fuguang Gan.
-	Wikidata = "Q6794539", -- link for Fuguang Gan
+	Wikidata = "Q6794539", -- article for Fuguang Gan
 	plain_categories = true,
 }
 
 ------------------------------------------ Hakka ------------------------------------------
 
 labels["Hakka"] = {
-	Wikipedia = "Hakka Chinese",
+	Wikidata = "Q33375",
 	regional_categories = true,
 }
 
 labels["dialectal Hakka"] = {
-	Wikipedia = "Hakka Chinese",
+	Wikidata = "Q33375", -- article for Hakka Chinese
 	regional_categories = "Hakka",
 }
 
@@ -60,18 +60,18 @@ labels["Dabu Hakka"] = {
 
 -- FIXME: Category missing.
 labels["Early Modern Hakka"] = {
-	Wikipedia = "Hakka Chinese",
+	Wikidata = "Q33375", -- article for Hakka Chinese
 	plain_categories = true,
 }
 
 labels["Hailu Hakka"] = {
 	aliases = {"Hailu"},
-	Wikipedia = "Hailu dialect",
+	Wikidata = "Q19855025", -- see also Q17038519 "Hailu Hakka" in Wikidata, which duplicates Q19855025 and redirects to it in Chinese Wikipedia
 	plain_categories = true,
 }
 
 labels["Hong Kong Hakka"] = {
-	Wikipedia = "Hakka language",
+	Wikidata = "Q2675834",
 	plain_categories = true,
 }
 
@@ -84,57 +84,56 @@ labels["Huiyang Hakka"] = {
 -- FIXME: Category missing.
 --labels["Jiangxi Hakka"] = {
 --	-- Multiple dialects; possibly referring to Tonggu County dialect.
---	Wikipedia = true,
 --	plain_categories = true,
 --}
 
 -- FIXME: Category missing.
 labels["Malaysian Huiyang Hakka"] = {
 	aliases = {"Malaysia Huiyang Hakka"},
-	Wikidata = "Q16873881", -- link for Huiyang Hakka
+	Wikidata = "Q16873881", -- article for Huiyang Hakka
 	plain_categories = true,
 }
 
 labels["Meixian Hakka"] = {
 	aliases = {"Meixian", "Moiyan", "Moiyan Hakka", "Meizhou", "Meizhou Hakka"},
-	Wikipedia = "Meixian dialect",
+	Wikidata = "Q839295",
 	plain_categories = true,
 }
 
 labels["Northern Sixian Hakka"] = {
 	aliases = {"Northern Sixian"},
-	Wikipedia = "Sixian dialect",
+	Wikidata = "Q9668261", -- article for Sixian Hakka
 	plain_categories = true,
 }
 
 labels["Raoping Hakka"] = {
 	-- No Raoping alias because Chaoshan Min is also spoken.
-	Wikipedia = true,
+	Wikidata = "Q19854038",
 	plain_categories = true,
 }
 
 labels["Sixian Hakka"] = {
 	aliases = {"Sixian"},
-	Wikipedia = "Sixian dialect",
+	Wikidata = "Q9668261",
 	plain_categories = true,
 }
 
 labels["Southern Sixian Hakka"] = {
 	aliases = {"Southern Sixian"},
-	Wikipedia = "Sixian dialect",
+	Wikidata = "Q9668261", -- article for Sixian Hakka; Q98095139 is "Southern Sixian dialect" but has no articles linked
 	plain_categories = true,
 }
 
 labels["Shangyou Hakka"] = {
 	-- In southwestern Jiangxi.
 	aliases = {"Shangyou"},
-	Wikipedia = "Shangyou County",
+	Wikidata = "Q1282613", -- article for Shangyou County
 	plain_categories = true,
 }
 
 labels["Taiwanese Hakka"] = {
 	aliases = {"Taiwan Hakka"},
-	Wikipedia = true,
+	Wikidata = "Q2391532",
 	plain_categories = true,
 }
 
@@ -143,14 +142,14 @@ labels["Taiwanese Hakka"] = {
 
 labels["Yudu Hakka"] = {
 	aliases = {"Yudu"},
-	Wikipedia = "Yudu County",
+	Wikidata = "Q1816748", -- article for Yudu County
 	plain_categories = true,
 }
 
 labels["Yunlin Hakka"] = {
 	-- A type of Taiwanese Hakka.
 	aliases = {"Yunlin"},
-	Wikipedia = "Yunlin County",
+	Wikidata = "Q153221", -- article for Yunlin County
 	plain_categories = true,
 }
 
@@ -162,48 +161,48 @@ labels["Zhao'an Hakka"] = {
 ------------------------------------------ Jin ------------------------------------------
 
 labels["Jin"] = {
-	Wikipedia = "Jin Chinese",
+	Wikidata = "Q56479",
 	regional_categories = true,
 }
 
 labels["dialectal Jin"] = {
-	Wikipedia = "Jin Chinese",
+	Wikidata = "Q56479", -- article for Jin Chinese
 	regional_categories = "Jin",
 }
 
 labels["Xinzhou Jin"] = {
 	-- no "Xinzhou" alias; Xinzhou Wu (different Xinzhou) also exists
 	-- In the Wutai subgroup
-	Wikipedia = "Xinzhou",
+	Wikidata = "Q73119", -- article for Xinzhou (city in Shanxi)
 	plain_categories = true,
 }
 
 ------------------------------------------ Literary Chinese ------------------------------------------
 
 labels["Korean Classical Chinese"] = {
-	Wikipedia = "Chinese-language literature of Korea",
+	Wikidata = "Q10496257",
 	plain_categories = true,
 }
 
 labels["Standard Written Chinese"] = {
 	aliases = {"SWC", "WVC", "Written vernacular Chinese", "Written Vernacular Chinese"},
-	Wikipedia = "Written vernacular Chinese",
+	Wikidata = "Q783605",
 }
 
 labels["Vietnamese Classical Chinese"] = {
-	Wikipedia = "Literary Chinese in Vietnam",
+	Wikidata = "Q17034227",
 	plain_categories = true,
 }
 
 ------------------------------------------ Mandarin ------------------------------------------
 
 labels["Mandarin"] = {
-	Wikipedia = "Mandarin Chinese",
+	Wikidata = "Q9192",
 	regional_categories = true,
 }
 
 labels["dialectal Mandarin"] = {
-	Wikipedia = "Mandarin Chinese",
+	Wikidata = "Q9192", -- article for Mandarin Chinese
 	regional_categories = "Mandarin",
 }
 
@@ -223,7 +222,7 @@ labels["Beijingic Mandarin"] = {
 labels["Beijing Mandarin"] = {
 	-- A variety of Beijingic Mandarin.
 	aliases = {"Beijing", "Peking", "Pekingese"},
-	Wikipedia = "Beijing dialect",
+	Wikidata = "Q1147606",
 	plain_categories = true,
 }
 
@@ -233,7 +232,7 @@ labels["Central Plains Mandarin"] = {
 	-- [[w:Luoyang dialect]], Nanyang dialect (南阳话), Qufu dialect (曲埠话), Tianshui dialect (天水话),
 	-- [[w:Xi'an dialect]], [[w:Xuzhou dialect]], Yan'an dialect (延安话), Zhengzhou dialect (郑州话).
 	aliases = {"Central Plains", "Zhongyuan Mandarin"},
-	Wikipedia = true,
+	Wikidata = "Q3048775",
 	plain_categories = true,
 }
 
@@ -253,22 +252,37 @@ labels["Dalian Mandarin"] = {
 	plain_categories = true,
 }
 
+-- FIXME: Category missing.
+labels["Gangou Mandarin"] = {
+	-- A variety of Central Plains Mandarin.
+	aliases = {"Gangou"},
+	Wikidata = "Q17050290",
+	plain_categories = true,
+}
+
 labels["Guangxi Mandarin"] = {
 	-- No Guangxi alias; seems unlikely to be correct
-	Wikipedia = "Southwestern Mandarin",
+	Wikidata = "Q2609239", -- article for Southwestern Mandarin
 	plain_categories = true,
 }
 
 labels["Guanzhong Mandarin"] = {
+	-- A variety of Central Plains Mandarin.
 	aliases = {"Guanzhong"},
-	Wikipedia = "Guanzhong dialect",
+	Wikidata = "Q3431648",
 	plain_categories = true,
 }
 
 labels["Guilin Mandarin"] = {
 	-- No Guilin alias; also Guilin Pinghua, Guilin Southern Min
 	-- A subvariety of Guiliu Mandarin, which is a variety of Southwestern Mandarin.
-	Wikipedia = "Southwestern Mandarin",
+	Wikidata = "Q11111636",
+	plain_categories = true,
+}
+
+labels["Guiliu Mandarin"] = {
+	-- A variety of Southwestern Mandarin.
+	Wikidata = "Q11111664",
 	plain_categories = true,
 }
 
@@ -283,14 +297,6 @@ labels["Harbin Mandarin"] = {
 	-- A variety of Northeastern Mandarin.
 	aliases = {"Harbin"},
 	Wikidata = "Q1006919",
-	plain_categories = true,
-}
-
--- FIXME: Category missing.
-labels["Gangou Mandarin"] = {
-	-- A variety of Central Plains Mandarin.
-	aliases = {"Gangou"},
-	Wikidata = "Q17050290",
 	plain_categories = true,
 }
 
@@ -314,7 +320,7 @@ labels["Jianghuai Mandarin"] = {
 	-- Dialects per Wikipedia: [[w:Hefei dialect]], Hainan Junjiahua (军家话), [[w:Nanjing dialect]],
 	-- [[w:Nantong dialect]], Xiaogan dialect (孝感话), Yangzhou dialect (扬州话).
 	aliases = {"Jianghuai", "Jiang-Huai", "Jiang-Huai Mandarin", "Lower Yangtze Mandarin", "Huai"},
-	Wikipedia = "Lower Yangtze Mandarin",
+	Wikidata = "Q2128953",
 	plain_categories = true,
 }
 
@@ -323,7 +329,7 @@ labels["Jiaoliao Mandarin"] = {
 	-- Dialects per Wikipedia: [[w:Dalian dialect]], [[w:Qingdao dialect]], [[w:Weihai dialect]], Yantai dialect
 	-- (烟台话).
 	aliases = {"Jiaoliao", "Jiao-Liao", "Jiao-Liao Mandarin"},
-	Wikipedia = true,
+	Wikidata = "Q2597550",
 	plain_categories = true,
 }
 
@@ -332,7 +338,7 @@ labels["Jilu Mandarin"] = {
 	-- Dialects per Wikipedia: Baoding dialect (保定话), [[w:Jinan dialect]], Shijiazhuang dialect (石家庄话),
 	-- [[w:Tianjin dialect]].
 	aliases = {"Jilu", "Ji-Lu", "Ji-Lu Mandarin"},
-	Wikipedia = true,
+	Wikidata = "Q516721",
 	plain_categories = true,
 }
 
@@ -356,7 +362,7 @@ labels["Lanyin Mandarin"] = {
 	-- A primary branch.
 	-- Dialects per Wikipedia: Lanzhou dialect (兰州话), Xining dialect (西宁话), Yinchuan dialect (银川话).
 	aliases = {"Lanyin", "Lan-Yin Mandarin"},
-	Wikipedia = true,
+	Wikidata = "Q662754",
 	plain_categories = true,
 }
 
@@ -382,20 +388,21 @@ labels["Luoyang Mandarin"] = {
 
 labels["Malaysian Mandarin"] = {
 	aliases = {"Malaysia Mandarin"},
-	Wikipedia = true,
+	Wikidata = "Q13646143",
 	plain_categories = true,
 }
 
 labels["Muping Mandarin"] = {
 	-- A subvariety of the Yantai dialect of Jiaoliao Mandarin.
 	aliases = {"Muping"}, -- there is also a Muping in Sichuan but it's not clear if it has a dialect
-	Wikipedia = "Muping, Yantai",
+	Wikidata = "Q281015", -- article for Muping District
 	plain_categories = true,
 }
 
 labels["Nanjing Mandarin"] = {
+	-- A variety of Jianghuai Mandarin.
 	aliases = {"Nanjing"},
-	Wikipedia = "Nanjing dialect",
+	Wikidata = "Q2681098",
 	plain_categories = true,
 }
 
@@ -412,7 +419,7 @@ labels["Northeastern Mandarin"] = {
 	-- Dialects per Wikipedia: [[w:Changchun dialect]], [[w:Harbin dialect]], Qiqihar dialect (齐齐哈尔话),
 	-- [[w:Shenyang dialect]].
 	aliases = {"northeastern Mandarin", "NE Mandarin"},
-	Wikipedia = true,
+	Wikidata = "Q1064504",
 	plain_categories = true,
 }
 
@@ -427,7 +434,7 @@ labels["Qingdao Mandarin"] = {
 -- FIXME: Category missing.
 labels["Philippine Mandarin"] = {
 	aliases = {"Philippines Mandarin"},
-	Wikipedia = "Mandarin Chinese in the Philippines",
+	Wikidata = "Q7185155",
 	plain_categories = true,
 }
 
@@ -444,7 +451,7 @@ labels["Shenyang Mandarin"] = {
 -- actually more common in Google Scholar.
 labels["Singapore Mandarin"] = {
 	aliases = {"Singaporean Mandarin"},
-	Wikipedia = "Singaporean Mandarin",
+	Wikidata = "Q1048980",
 	plain_categories = true,
 }
 
@@ -454,19 +461,27 @@ labels["Southwestern Mandarin"] = {
 	-- (大理话), Guiyang dialect (贵阳话), [[w:Kunming dialect]], Liuzhou dialect (柳州话), [[w:Wuhan dialect]],
 	-- [[w:Xichang dialect]], Yichang dialect (宜昌话), Hanzhong dialect (汉中话).
 	aliases = {"southwestern Mandarin", "Upper Yangtze Mandarin", "Southwest Mandarin"},
-	Wikipedia = true,
+	Wikidata = "Q2609239",
 	plain_categories = true,
 }
 
 labels["Taiwanese Mandarin"] = {
 	aliases = {"Taiwan Mandarin"},
-	Wikipedia = true,
+	Wikidata = "Q262828",
 	plain_categories = true,
 }
 
 labels["Tianjin Mandarin"] = {
 	aliases = {"Tianjin", "Tianjinese", "Tianjinese Mandarin"},
-	Wikipedia = "Tianjin dialect",
+	Wikidata = "Q7800220",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Tongtai Mandarin"] = {
+	-- A variety of Jianghuai Mandarin.
+	aliases = {"Tongtai", "Tairu Mandarin", "Tairu"},
+	Wikidata = "Q7820911",
 	plain_categories = true,
 }
 
@@ -495,7 +510,7 @@ labels["Weihai Mandarin"] = {
 
 labels["Wuhan Mandarin"] = {
 	aliases = {"Wuhan", "Hankou", "Hankow"},
-	Wikipedia = "Wuhan dialect",
+	Wikidata = "Q11124731",
 	plain_categories = true,
 }
 
@@ -517,13 +532,14 @@ labels["Xichang Mandarin"] = {
 labels["Xining Mandarin"] = {
 	-- A variety of Lanyin Mandarin.
 	aliases = {"Xining"},
-	Wikipedia = "Lanyin Mandarin",
+	Wikidata = "Q662754", -- article on Lanyin Mandarin
 	plain_categories = true,
 }
 
 labels["Xinjiang Mandarin"] = {
+	-- Depending on where in Xinjiang, either a variety of Lanyin Mandarin or Central Plains Mandarin.
 	aliases = {"Xinjiang"},
-	Wikipedia = true,
+	Wikidata = "Q93684068",
 	plain_categories = true,
 }
 
@@ -544,7 +560,7 @@ labels["Yangzhou Mandarin"] = {
 labels["Yinchuan Mandarin"] = {
 	-- A variety of Lanyin Mandarin.
 	aliases = {"Yinchuan"},
-	Wikipedia = "Lanyin Mandarin", -- "Yinchuan Mandarin" has its own Wikidata item Q125021069 but has no links
+	Wikidata = "Q662754", -- article on Lanyin Mandarin; "Yinchuan Mandarin" has its own Wikidata item Q125021069 but has no links
 	plain_categories = true,
 }
 
@@ -1479,33 +1495,36 @@ labels["dialectal Cantonese"] = {
 }
 
 -- FIXME: Category missing.
-labels["Dongguan Yue"] = {
-	-- A subvariety of Guanbao Yue, in turn a variety of Yuehai Yue (which includes Cantonese).
+labels["Bobai Yue"] = {
+	-- A subvariety of Yulin Yue, a variety of Goulou Yue.
+	aliases = {"Bobai"},
+	Wikidata = "Q4934549",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Dapeng Cantonese"] = {
+	-- A subvariety of Guanbao Cantonese, a variety of Yuehai Yue (the primary branch that includes standard Cantonese).
+	aliases = {"Dapeng Yue", "Dapeng"},
+	Wikidata = "Q1939845",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Dongguan Cantonese"] = {
+	-- A subvariety of Guanbao Cantonese, which is a variety of Yuehai Yue (the primary branch that includes standard
+	-- Cantonese).
+	aliases = {"Dongguan Yue"},
 	-- no alias for Dongguan, as Hakka is also spoken.
 	Wikidata = "Q97351966",
 	plain_categories = true,
 }
 
 -- FIXME: Category missing.
-labels["Guanbao Yue"] = {
-	-- A variety of Yuehai Yue (which includes Cantonese).
-	aliases = {"Guanbao"},
-	Wikidata = "Q13530474",
-	plain_categories = true,
-}
-
--- FIXME: Category missing.
--- labels["Guangxi Cantonese"] = {
---  -- Multiple Yue subgroups spoken in Guangxi
--- 	-- Guangxi alias not correct as there are multiple languages spoken in Guangxi
--- 	Wikipedia = "Guangxi",
--- 	plain_categories = true,
--- }
-
-labels["Guangzhou Cantonese"] = {
-	-- A subvariety of Cantonese (in the narrow sense), a variety of Yuehai Yue. The prestige variety of Cantonese.
-	aliases = {"Guangzhou"},
-	Wikidata = "Q9186", -- article for "Cantonese"
+labels["Fangcheng Yue"] = {
+	-- A variety of Qinlian Yue.
+	aliases = {"Fangcheng"},
+	Wikidata = "Q111949144",
 	plain_categories = true,
 }
 
@@ -1540,6 +1559,37 @@ labels["Goulou Yue"] = {
 }
 
 -- FIXME: Category missing.
+labels["Guanbao Cantonese"] = {
+	-- A variety of Yuehai Yue (the primary branch including standard Cantonese).
+	aliases = {"Guanbao Yue", "Guanbao"},
+	Wikidata = "Q13530474",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Guangfu Cantonese"] = {
+	-- A variety of Yuehai Yue (the primary branch including standard Cantonese). This variety includes standard
+	-- Guangzhou Cantonese as a subvariety.
+	aliases = {"Guangfu", "Guangfu Yue"},
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+-- labels["Guangxi Yue"] = {
+--  -- Multiple Yue subgroups spoken in Guangxi
+-- 	-- Guangxi alias not correct as there are multiple languages spoken in Guangxi
+-- 	Wikipedia = "Guangxi",
+-- 	plain_categories = true,
+-- }
+
+labels["Guangzhou Cantonese"] = {
+	-- A subvariety of Guangfu Cantonese, a variety of Yuehai Yue. The prestige variety of Cantonese.
+	aliases = {"Guangzhou"},
+	Wikidata = "Q9186", -- article for "Cantonese"
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
 labels["Guixian Yue"] = {
 	-- A variety of Goulou Yue.
 	aliases = {"Guixian"},
@@ -1559,6 +1609,15 @@ labels["Huizhou Yue"] = {
 	-- A variety of Wuhua Yue.
 	-- No Huizhou alias because of Huizhou Cantonese (a different lect).
 	Wikidata = "Q9484916",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Jiujiang Cantonese"] = {
+	-- A subvariety of Sanyi Cantonese, which is a variety of Yuehai Yue (the primary branch that includes standard
+	-- Cantonese).
+	aliases = {"Jiujiang Yue", "Jiujiang"},
+	Wikidata = "Q6203399",
 	plain_categories = true,
 }
 
@@ -1595,11 +1654,54 @@ labels["Malaysian Cantonese"] = {
 }
 
 -- FIXME: Category missing.
+labels["Nantou Cantonese"] = {
+	-- A subvariety of Guanbao Cantonese, which is a variety of Yuehai Yue (the primary branch that includes standard
+	-- Cantonese). Formerly spoken by residents of [[w:Nantou (historic town)]], a former walled city in Shenzhen.
+	aliases = {"Nantou Yue"}, -- no "Nantou" alias because Nantou is also a city in Taiwan
+	Wikidata = "Q110110348",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
 labels["Qinlian Yue"] = {
 	-- A primary branch.
-	-- Per English Wikipedia, has many lects, some mutually intelligible with standard Cantonese.
+	-- Per English Wikipedia, has the following lects:
+	  -- Plain Speech
+		  -- Beihai dialect
+		  -- Qinzhou dialect
+		  -- Fangcheng dialect
+		  -- Lingshan downtown dialect
+	  -- Transitional dialets
+		  -- Naamhong dialect
+		  -- Tanka dialect (not the same as Tanka Cantonese given above as a Yuehai Yue variety; per Wikipedia, Tanka
+		  --   Cantonese is the "absolute Tanka accent" spoken by the elderly, while young and middle aged people speak
+		  --   a Tanka dialect that is mixed with Beihai Plain Speech)
+		  -- Overseas-Chinese Plain Speech
+		  -- Saanhau dialect
+	  -- Lianzhou dialect
+	  -- Nga dialect
+	  -- Coastal dialects (possibly a Min Chinese variety?)
+	  -- Lingshan dialect
+	  -- Xiaojiang dialect
+	  -- Slanlap dialect
 	aliases = {"Qinlian"},
 	Wikidata = "Q7267753",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Sanyi Cantonese"] = {
+	-- A variety of Yuehai Yue (the primary branch including standard Cantonese).
+	aliases = {"Sanyi Yue", "Sanyi", "Nanpanshun Cantonese", "Nanpanshun Yue", "Nanpanshun"},
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Shiqi Cantonese"] = {
+	-- A subvariety of Xiangshan Cantonese, which is a variety of Yuehai Yue (the primary branch that includes standard
+	-- Cantonese).
+	aliases = {"Shiqi Yue", "Shiqi"},
+	Wikidata = "Q836038",
 	plain_categories = true,
 }
 
@@ -1637,10 +1739,21 @@ labels["Taishanese"] = {
 }
 
 -- FIXME: Category missing.
-labels["Weitou Yue"] = {
-	-- A subvariety of Guanbao Yue, in turn a variety of Yuehai Yue (which includes Cantonese). Spoken by older
-	-- residents of Shenzhen. No "Shenzhen" alias because some older residents of Shenzhen speak a variety of Hakka.
-	aliases = {"Weitou", "Shenzhen Yue"},
+labels["Tanka Cantonese"] = {
+	-- A subvariety of Guangfu Cantonese, a variety of Yuehai Yue (the primary branch that includes standard Cantonese).
+	-- Spoken by the [[w:Tanka people]], an ethnic group traditionally living on junks in coastal parts of southern
+	-- China.
+	aliases = {"Tanka Yue", "Tanka", "Danjia Cantonese", "Danjia Yue", "Danjia", "Shuishang Cantonese", "Shuishang Yue",
+		"Shuishang"},
+	Wikidata = "Q7211307",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Weitou Cantonese"] = {
+	-- A subvariety of Guanbao Cantonese, which is a variety of Yuehai Yue (the primary branch that includes standard
+	-- Cantonese). Spoken by older residents of Shenzhen.
+	aliases = {"Weitou Yue", "Weitou", "Bao'an Cantonese", "Bao'an Yue", "Bao'an"},
 	Wikidata = "Q846599",
 	plain_categories = true,
 }
@@ -1653,6 +1766,21 @@ labels["Wuhua Yue"] = {
 	  -- Huazhou dialect
 	aliases = {"Wuhua"},
 	Wikidata = "Q8038858",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Xiangshan Cantonese"] = {
+	-- A variety of Yuehai Yue (the primary branch including standard Cantonese).
+	aliases = {"Xiangshan Yue", "Xiangshan"},
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Xiguan Cantonese"] = {
+	-- A subvariety of Guangfu Cantonese (the variety of Yuehai Yue that includes standard Cantonese).
+	aliases = {"Xiguan Yue", "Xiguan"},
+	Wikidata = "Q8044409",
 	plain_categories = true,
 }
 
@@ -1689,7 +1817,25 @@ labels["Yongxun Yue"] = {
 
 -- FIXME: Category missing.
 labels["Yuehai Yue"] = {
-	-- A primary branch. Per English Wikipedia, has many dialects. (FILL IN)
+	-- A primary branch, which includes standard Cantonese. Per English Wikipedia, has the following lects:
+	  -- Guangfu dialects
+		  -- Guangzhou dialect
+		  -- Hong Kong dialect
+		  -- Macau dialect
+		  -- Xiguan dialect
+		  -- Wuzhou dialect
+		  -- Tanka dialect
+	  -- Sanyi / Nanpanshun dialects
+		  -- Nanhai dialect
+		  -- Jiujiang dialect
+		  -- Xiqiao dialect
+		  -- Shunde dialect
+	  -- Xiangshan dialect
+		  -- Shiqi dialect
+		  -- Sanjiao dialect
+	  -- Guanbao dialect
+		  -- Dongguan dialect
+		  -- Bao'an dialect (Waitau)
 	aliases = {"Yuehai"},
 	Wikidata = "Q8060260",
 	plain_categories = true,
