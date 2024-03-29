@@ -161,3 +161,4 @@ if __name__ == "__main__":
           return process_text_on_page(index, str(page.title()), page.text, newtext, comment, origcontents)
         blib.do_edit(pywikibot.Page(site, pagetitle), index, do_process_page,
             save=args.save, verbose=args.verbose, diff=args.diff)
+    blib.elapsed_time()
