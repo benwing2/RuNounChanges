@@ -337,7 +337,7 @@ labels["Beijingic Mandarin"] = {
 	-- Dialects per Wikipedia: [[w:Beijing dialect]] (with [[w:Standard Chinese]] as a child),
 	-- [[w:Philippine Mandarin]], [[w:Malaysian Mandarin]], Chengde dialect (承德话), Chifeng dialect (赤峰话), Hailar
 	-- dialect (海拉尔话).
-	region = "areas surrounding [[Beijing]] in northeastern [[China]], including [[Beijing]] as well as parts of [[Hebei]], [[Inner Mongolia]], [[Liaoning]] and [[Tianjin]] Provinces",
+	region = "areas surrounding [[Beijing]] in northeastern [[China]], including [[Beijing]] as well as parts of [[Hebei]] Province, [[Inner Mongolia]] Autonomous Region, [[Liaoning]] Province and [[Tianjin]] Municipality",
 	addl = "A primary branch of Mandarin.",
 	aliases = {"Beijingic"},
 	Wikidata = "Q2169652",
@@ -485,10 +485,11 @@ labels["Jilu Mandarin"] = {
 
 -- FIXME: Category missing.
 labels["Jinan Mandarin"] = {
-	-- A variety of Jilu Mandarin.
+	region = "[[Jinan]], the capital of [[Shandong]] Province in eastern [[China]]",
 	aliases = {"Jinan"},
 	Wikidata = "Q6202017",
 	plain_categories = true,
+	parent = "Jilu Mandarin",
 }
 
 -- FIXME: Category missing.
@@ -510,10 +511,11 @@ labels["Lanyin Mandarin"] = {
 }
 
 labels["Lanzhou Mandarin"] = {
-	-- A variety of Lanyin Mandarin.
+	region = "[[Lanzhou]], the capital of [[Gansu]] Province in central [[China]]",
 	aliases = {"Lanzhou"},
 	Wikidata = "Q10893628",
 	plain_categories = true,
+	parent = "Lanyin Mandarin",
 }
 
 labels["Liuzhou Mandarin"] = {
@@ -536,6 +538,7 @@ labels["Malaysian Mandarin"] = {
 }
 
 labels["Muping Mandarin"] = {
+	region = "[[Muping]] District in the prefecture-level city of [[Yantai]] in northeastern [[Shandong]] Province, in northeastern [[China]]",
 	aliases = {"Muping"}, -- there is also a Muping in Sichuan but it's not clear if it has a dialect
 	Wikidata = "Q281015", -- article for Muping District
 	plain_categories = true,
@@ -570,10 +573,11 @@ labels["Northeastern Mandarin"] = {
 
 -- FIXME: Category missing.
 labels["Qingdao Mandarin"] = {
-	-- A variety of Jiaoliao Mandarin.
+	region = "[[Qingdao]] and nearby towns, in [[Shandong]] Province in coastal eastern [[China]]",
 	aliases = {"Qingdao"},
 	Wikidata = "Q7267815",
 	plain_categories = true,
+	parent = "Jiaoliao Mandarin",
 }
 
 -- FIXME: Category missing.
@@ -620,9 +624,11 @@ labels["Taiwanese Mandarin"] = {
 }
 
 labels["Tianjin Mandarin"] = {
+	region = "[[Tianjin]] in coastal eastern [[China]] as well as [[Sabah]] in [[Malaysia]]",
 	aliases = {"Tianjin", "Tianjinese", "Tianjinese Mandarin"},
 	Wikidata = "Q7800220",
 	plain_categories = true,
+	parent = "Jilu Mandarin",
 }
 
 -- FIXME: Category missing.
@@ -634,10 +640,11 @@ labels["Tongtai Mandarin"] = {
 }
 
 labels["Ürümqi Mandarin"] = {
-	-- A variety of Lanyin Mandarin.
+	region = "[[Ürümqi]], the capital of [[Xinjiang]] Autonomous Region in far northwestern [[China]]",
 	aliases = {"Ürümqi", "Urumqi Mandarin", "Urumqi"},
 	Wikidata = "Q10878256",
 	plain_categories = true,
+	parent = "Lanyin Mandarin",
 }
 
 labels["Wanrong Mandarin"] = {
@@ -650,6 +657,7 @@ labels["Wanrong Mandarin"] = {
 
 -- FIXME: Category missing.
 labels["Weihai Mandarin"] = {
+	region = "[[Weihai]] and environs, in eastern [[Shandong]] Province in coastal eastern [[China]]",
 	aliases = {"Weihai"},
 	Wikidata = "Q3025951",
 	plain_categories = true,
@@ -680,14 +688,16 @@ labels["Xichang Mandarin"] = {
 }
 
 labels["Xining Mandarin"] = {
-	-- A variety of Lanyin Mandarin.
+	region = "[[Xining]], the capital of [[Qinghai]] Province in northwestern [[China]]",
 	aliases = {"Xining"},
 	Wikidata = "Q662754", -- article on Lanyin Mandarin
 	plain_categories = true,
+	parent = "Lanyin Mandarin",
 }
 
 labels["Xinjiang Mandarin"] = {
 	-- Depending on where in Xinjiang, either a variety of Lanyin Mandarin or Central Plains Mandarin.
+	region = "[[Xinjiang]] Autonomous Region; in the north, including varieties of {{catlink|Lanyin Mandarin}} and in the south, including varieties of {{catlink|Central Plains Mandarin}}",
 	aliases = {"Xinjiang"},
 	Wikidata = "Q93684068",
 	plain_categories = true,
@@ -708,10 +718,10 @@ labels["Yangzhou Mandarin"] = {
 }
 
 labels["Yinchuan Mandarin"] = {
-	-- A variety of Lanyin Mandarin.
 	aliases = {"Yinchuan"},
 	Wikidata = "Q662754", -- article on Lanyin Mandarin; "Yinchuan Mandarin" has its own Wikidata item Q125021069 but has no links
 	plain_categories = true,
+	parent = "Lanyin Mandarin",
 }
 
 -- FIXME: Category missing.
