@@ -28,10 +28,16 @@ If `cat_type` is {"plain"} and `check_all_langs` is specified, the code will che
 plan categories matching `cat`. In that case, the relevant language is returned in the return value structure (see
 below).
 
-The return value is a table whose keys are labels and whose values are objects with keys `module` (the
-name of the module from which the label was fetched), `aliases` (a list of any aliases for the label, not including
-the label itself) and `lang` (the language needed to generate the category using the label; this will always be the
-passed-in `lang` unless `check_all_langs` is specified, in which case it may be a different language).
+The return value is a table whose keys are concatenations of labels and language codes (separated by a colon), and
+whose values are objects with the following keys:
+* `module` (the name of the module from which the label was fetched);
+* `labdata` (the raw label data structure from this module);
+* `canonical` (the canonical form of the label);
+* `aliases` (a list of any aliases for the label, not including the label itself);
+* `lang` (the language needed to generate the category using the label; this will always be the passed-in `lang` unless
+  `check_all_langs` is specified, in which case it may be a different language).
+
+The table can be directly passed to `format_labels_categorizing`.
 ]==]
 function export.find_labels_for_category(cat, cat_type, lang, check_all_langs)
 	local function ucfirst(txt)
@@ -147,7 +153,7 @@ function export.find_labels_for_category(cat, cat_type, lang, check_all_langs)
 					if not cat_labels_found[canonical_with_lang] then
 						cat_labels_found[canonical_with_lang] = {
 							module = submodule_to_check, canonical = canonical,
-							aliases = {}, lang = lang
+							aliases = {}, lang = lang, labdata = labdata
 						}
 					end
 					if canonical ~= label then
@@ -193,7 +199,9 @@ end
 --[==[
 Format the labels that categorize into some category for display in the text for that category. `lang` is the
 language of the category, or {nil}. `labels` are the labels that categorize when invoked using {{tl|lb}}, while
-`tlb_labels` are the labels that categorize when invoked using {{tl|tlb}}. Returns {nil} if there are no labels.
+`tlb_labels` are the labels that categorize when invoked using {{tl|tlb}}. Both of these parameters are tables whose
+keys are concatenations of labels and language codes and whose values are objects as returned by
+`find_labels_for_category`. Returns {nil} if there are no labels.
 ]==]
 function export.format_labels_categorizing(labels, tlb_labels, lang)
 	local function make_code(txt)
