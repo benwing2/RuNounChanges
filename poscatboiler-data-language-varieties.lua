@@ -4,6 +4,7 @@ local raw_handlers = {}
 local m_languages = require("Module:languages")
 local m_table = require("Module:table")
 local parse_utilities_module = "Module:parse utilities"
+local pattern_utilities_module = "Module:pattern utilities"
 local labels_module = "Module:labels"
 local labels_utilities_module = "Module:labels/utilities"
 local rsplit = mw.text.split
@@ -11,6 +12,10 @@ local rsplit = mw.text.split
 local function track(page)
 	-- [[Special:WhatLinksHere/Template:tracking/poscatboiler/languages/PAGE]]
 	return require("Module:debug/track")("poscatboiler/language-varieties/" .. page)
+end
+
+local function pattern_escape(pattern)
+	return require(pattern_utilities_module).pattern_escape(pattern)
 end
 
 -- This module handles lect/variety categories of all sorts, e.g. regional lect categories such as
@@ -143,7 +148,7 @@ local function infer_region_from_lang(lang, pagename)
 	while lang_to_check do
 		local suffix = lang_to_check:getCanonicalName()
 		while true do
-			region = pagename:match("^(.*) " .. require("Module:pattern utilities").pattern_escape(suffix) .. "$")
+			region = pagename:match("^(.*) " .. pattern_escape(suffix) .. "$")
 			if region then
 				return region
 			end
@@ -254,14 +259,14 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		end
 	end
 
-	-- Return the default parent cat for the given language and category. If the language and category are the same, we're
-	-- dealing with the overall cat for an etymology-only language, so use the category of the parent language; otherwise
-	-- we're dealing with a subcategory of a regular or etymology-only language (e.g. [[:Category:Issime Walser]], a
-	-- subcategory of [[:Category:Walser German]]), so use the language's category itself. If the resulting language is an
-	-- etymology-only language or a family, the parent category is that language or family's category, which for
-	-- etymology-only languages is named the same as the etymology-only language, and for families is named "FAMILY
-	-- languages"; otherwise, use "Regional LANG" as the category unless `noreg` is given, in which case we use
-	-- "Varieties of LANG".
+	-- Return the default parent cat for the given language and category. If the language and category are the same,
+	-- we're dealing with the overall cat for an etymology-only language, so use the category of the parent language;
+	-- otherwise we're dealing with a subcategory of a regular or etymology-only language (e.g.
+	-- [[:Category:Issime Walser]], a subcategory of [[:Category:Walser German]]), so use the language's category
+	-- itself. If the resulting language is an etymology-only language or a family, the parent category is that
+	-- language or family's category, which for etymology-only languages is named the same as the etymology-only
+	-- language, and for families is named "FAMILY languages"; otherwise, use "Regional LANG" as the category unless
+	-- `noreg` is given, in which case we use "Varieties of LANG".
 	local function get_default_parent_cat(lang, pagename, noreg)
 		if lang:getCode():find("^qsb%-") then
 			-- substrate
@@ -332,14 +337,14 @@ local function dialect_handler(category, raw_args, called_from_inside)
 			return nil
 		end
 
-		-- If called from inside we won't have any params available. See comment above about this. We scrape the category
-		-- page's call to {{auto cat}} to get the appropriate params, and if that fails, we currently fall back to defaults
-		-- based on the name of the category. Since the call from inside is only to get the parent category and breadcrumb,
-		-- these defaults actually work in most cases but not all; e.g. in the chain [[:Category:Regional Yoruba]] ->
-		-- [[:Category:Central Yoruba]] -> [[:Category:Ekiti Yoruba]] -> [[:Category:Akurẹ Yoruba]], if we are forced to use
-		-- default values, we will produce the right parent for [[:Category:Central Yoruba]] but not for
-		-- [[:Category:Ekiti Yoruba]], where the default parent would be [[:Category:Regional Yoruba]] instead of the correct
-		-- [[:Category:Central Yoruba]].
+		-- If called from inside we won't have any params available. See comment above about this. We scrape the
+		-- category page's call to {{auto cat}} to get the appropriate params, and if that fails, we currently fall back
+		-- to defaults based on the name of the category. Since the call from inside is only to get the parent category
+		-- and breadcrumb, these defaults actually work in most cases but not all; e.g. in the chain
+		-- [[:Category:Regional Yoruba]] -> [[:Category:Central Yoruba]] -> [[:Category:Ekiti Yoruba]] ->
+		-- [[:Category:Akurẹ Yoruba]], if we are forced to use default values, we will produce the right parent for
+		-- [[:Category:Central Yoruba]] but not for [[:Category:Ekiti Yoruba]], where the default parent would be
+		-- [[:Category:Regional Yoruba]] instead of the correct [[:Category:Central Yoruba]].
 		local lang, breadcrumb = split_region_lang(category)
 		if lang or dialect_parent_cats_to_scrape[category] then
 			raw_args = scrape_category_for_auto_cat_args(category)
@@ -377,6 +382,8 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		return nil
 	end
 
+	-------------------- 1. Process parameters. -------------------
+
 	local params = {
 		[1] = {},
 		dialect = {type = "boolean"},
@@ -405,6 +412,11 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		error(("Unrecognized value '%s' for type=; should be one of %s"):format(
 			args.type, table.concat(allowed_type_values, ", ")))
 	end
+
+	-------------------- 2. Determine the breadcrumb. -------------------
+
+	-- Also initialize regiondesc from the category name, overriding it with 1= if given.
+
 	local lang, breadcrumb, regiondesc, langname
 	local region
 	local pagename = args.pagename or category
@@ -419,10 +431,10 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		lang = m_languages.getByCode(args.lang, "lang", "allow etym")
 		langname = lang:getCanonicalName()
 		if pagename == ucfirst(langname) then
-			-- breadcrumb and regiondesc should stay nil; breadcrumb will get pagename as a default, and the lack of regiondesc
-			-- will cause an error to be thrown unless the user gave it explicitly or specified def=
+			-- breadcrumb and regiondesc should stay nil; breadcrumb will get pagename as a default, and the lack of
+			-- regiondesc will cause an error to be thrown unless the user gave it explicitly or specified def=.
 		else
-			breadcrumb = pagename:match("^(.*) " .. require("Module:pattern utilities").pattern_escape(langname) .. "$")
+			breadcrumb = pagename:match("^(.*) " .. pattern_escape(langname) .. "$")
 			if not breadcrumb then
 				-- Try to infer the region from the parent. See comment at function.
 				breadcrumb = infer_region_from_lang(lang, pagename)
@@ -438,92 +450,13 @@ local function dialect_handler(category, raw_args, called_from_inside)
 			format(pagename, langname))
 	end
 	-- If no breadcrumb, this often happens when the langname and pagename are the same (happens only with etym-only
-	-- languages), and the parent category is set below to the non-etym parent, so the breadcrumb should show the language
-	-- name (or equivalently, the pagename). If the langname and pagename are different, we should fall back to the
-	-- pagename. E.g. for Singlish, lang=en is specified and we can't infer a breadcrumb because the dialect name doesn't
-	-- end in "English"; in this case we want the breadcrumb to show "Singlish".
+	-- languages), and the parent category is set below to the non-etym parent, so the breadcrumb should show the
+	-- language name (or equivalently, the pagename). If the langname and pagename are different, we should fall back to
+	-- the pagename. E.g. for Singlish, lang=en is specified and we can't infer a breadcrumb because the dialect name
+	-- doesn't end in "English"; in this case we want the breadcrumb to show "Singlish".
 	breadcrumb = args.breadcrumb or breadcrumb or pagename
 
-	local topright
-	local topright_parts = {}
-	-- Insert Wikipedia article `article` for Wikimedia language `wmcode` into `topright_parts`, avoiding duplication.
-	local function insert_wikipedia_article(wmcode, article)
-		m_table.insertIfNot(topright_parts, ("{{wp%s%s}}"):format(
-			wmcode == "en" and "" or "|lang=" .. wmcode,
-			article == pagename and "" or "|" .. article
-		))
-	end
-
-	if args.wp or args.wikidata then
-		if args.wp then
-			for _, article in ipairs(split_on_comma(args.wp)) do
-				local foreign_wiki
-				if article:find(":[^ ]") then
-					local actual_article
-					foreign_wiki, actual_article = article:match("^([a-z][a-z][a-z-]*):([^ ].*)$")
-					if actual_article then
-						article = actual_article
-					end
-				end
-				if article == "+" then
-					article = pagename
-				elseif article == "-" then
-					article = nil
-				else
-					article = require("Module:yesno")(article, article)
-					if article == true then
-						article = pagename
-					end
-				end
-				if article then
-					insert_wikipedia_article(foreign_wiki or "en", article)
-				end
-			end
-		end
-		if args.wikidata then
-			if not mw.wikibase then
-				error(("Unable to retrieve data from Wikidata ID's '%s'; `mw.wikibase` not defined"):format(args.wikidata))
-			end
-			local wikipedia_langs = require(labels_module).get_langs_to_extract_wikipedia_articles_from_wikidata(lang)
-			local ids = rsplit(args.wikidata, "%s*,%s*")
-			local ids_without_wmcodes = {}
-			local ids_with_wmcodes = {}
-			for _, id in ipairs(ids) do
-				if id:find(":") then
-					table.insert(ids_with_wmcodes, id)
-				else
-					table.insert(ids_without_wmcodes, id)
-				end
-			end
-			for _, wmcode in ipairs(wikipedia_langs) do
-				for _, id in ipairs(ids_without_wmcodes) do
-					local article = mw.wikibase.sitelink(id, wmcode .. "wiki")
-					if article then
-						insert_wikipedia_article(wmcode, article)
-					end
-				end
-			end
-			for _, id in ipairs(ids_with_wmcodes) do
-				local wmcode, wikidata_id = id:match("^(.-):(.*)$")
-				local article = mw.wikibase.sitelink(wikidata_id, wmcode .. "wiki")
-				if article then
-					insert_wikipedia_article(wmcode, article)
-				end
-			end
-		end
-	elseif pagename == ucfirst(langname) then
-		local topright_parts = {}
-		local wikipedia_langs = require(labels_module).get_langs_to_extract_wikipedia_articles_from_wikidata(lang)
-		for _, wmcode in ipairs(wikipedia_langs) do
-			local article = lang:getWikipediaArticle("no category fallback", wmcode .. "wiki")
-			if article then
-				insert_wikipedia_article(wmcode, article)
-			end
-		end
-	end
-	if #topright_parts > 0 then
-		topright = table.concat(topright_parts)
-	end
+	-------------------- 3. Initialize `additional` with user-specified additional text. -------------------
 
 	local additional = args.addl
 
@@ -537,6 +470,8 @@ local function dialect_handler(category, raw_args, called_from_inside)
 			additional = addl_text
 		end
 	end
+
+	-------------------- 4. Augment `additional` with information about etymology-only codes. -------------------
 
 	local parents = {}
 	local langname_for_desc
@@ -563,13 +498,16 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		langname_for_desc = langname
 	end
 
+	-------------------- 5. Determine labels categorizing into this category. -------------------
+
+	-- In the process we also add text to `additional` about these labels.
+
 	local regional_cat_labels, plain_cat_labels
 	local full_lang
 	local m_labels_utilities = require(labels_utilities_module)
 	if lang:hasType("language") then
 		full_lang = lang:getNonEtymological()
-		local regional_component = category:match("^(.-) " ..
-			require("Module:pattern utilities").pattern_escape(full_lang:getCanonicalName()) .. "$")
+		local regional_component = category:match("^(.-) " .. pattern_escape(full_lang:getCanonicalName()) .. "$")
 		if regional_component then
 			regional_cat_labels = m_labels_utilities.find_labels_for_category(regional_component,
 				"regional", full_lang)
@@ -586,10 +524,11 @@ local function dialect_handler(category, raw_args, called_from_inside)
 	else
 		all_labels = regional_cat_labels or plain_cat_labels
 	end
-	local labels_msg
 	if all_labels then
 		append_addl(m_labels_utilities.format_labels_categorizing(all_labels, nil, full_lang))
 	end
+
+	-------------------- 6. Compute `description`. -------------------
 
 	local lang_en = m_languages.getByCode("en", true)
 
@@ -614,7 +553,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 				table.insert(linked_countries, country)
 			end
 			linked_countries = m_table.serialCommaJoin(linked_countries)
-			regiondesc = regiondesc:gsub("<country>", require("Module:pattern utilities").replacement_escape(linked_countries))
+			regiondesc = regiondesc:gsub("<country>", require(pattern_utilities_module).replacement_escape(linked_countries))
 		elseif not args.nolink and not regiondesc:find("[<=]") then
 			-- even if nolink not given, don't try to link if HTML or = sign found in regiondesc, otherwise we're likely to get
 			-- an error
@@ -626,6 +565,8 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		("Terms or senses in %s as %s%s %s."):format(
 			langname_for_desc, args.verb or "spoken",
 			args.prep == "-" and "" or " " .. (args.prep or "in"), regiondesc)
+
+	-------------------- 7. Determine parent categories. -------------------
 
 	default_parent = args.cat or get_default_parent_cat(lang, pagename, args.noreg)
 	table.insert(parents, default_parent)
@@ -674,6 +615,130 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		prefix_addl("This language variety is [[constructed language|constructed]].")
 		table.insert(parents, "Category:Constructed languages")
 	end
+
+	-------------------- 8. Compute the Wikipedia articles that go into `topright`. -------------------
+
+	local topright_parts = {}
+	-- Insert Wikipedia article `article` for Wikimedia language `wmcode` into `topright_parts`, avoiding duplication.
+	local function insert_wikipedia_article(wmcode, article)
+		m_table.insertIfNot(topright_parts, ("{{wp%s%s}}"):format(
+			wmcode == "en" and "" or "|lang=" .. wmcode,
+			article == pagename and "" or "|" .. article
+		))
+	end
+
+	local function insert_wikipedia_articles_for_wikipedia_specs(specs, default)
+		for _, article in ipairs(specs) do
+			local foreign_wiki
+			if article == true then
+				article = default
+			else
+				if article:find(":[^ ]") then
+					local actual_article
+					foreign_wiki, actual_article = article:match("^([a-z][a-z][a-z-]*):([^ ].*)$")
+					if actual_article then
+						article = actual_article
+					end
+				end
+				if article == "+" then
+					article = default
+				elseif article == "-" then
+					article = nil
+				else
+					article = require("Module:yesno")(article, article)
+					if article == true then
+						article = default
+					end
+				end
+			end
+			if article then
+				insert_wikipedia_article(foreign_wiki or "en", article)
+			end
+		end
+	end
+
+	local function insert_wikipedia_articles_for_wikidata_specs(specs, lang)
+		if not mw.wikibase then
+			error(("Unable to retrieve data from Wikidata ID's '%s'; `mw.wikibase` not defined"):format(args.wikidata))
+		end
+		local wikipedia_langs = require(labels_module).get_langs_to_extract_wikipedia_articles_from_wikidata(lang)
+		local ids_without_wmcodes = {}
+		local ids_with_wmcodes = {}
+		for _, id in ipairs(specs) do
+			if id:find(":") then
+				table.insert(ids_with_wmcodes, id)
+			else
+				table.insert(ids_without_wmcodes, id)
+			end
+		end
+		for _, wmcode in ipairs(wikipedia_langs) do
+			for _, id in ipairs(ids_without_wmcodes) do
+				local article = mw.wikibase.sitelink(id, wmcode .. "wiki")
+				if article then
+					insert_wikipedia_article(wmcode, article)
+				end
+			end
+		end
+		for _, id in ipairs(ids_with_wmcodes) do
+			local wmcode, wikidata_id = id:match("^(.-):(.*)$")
+			local article = mw.wikibase.sitelink(wikidata_id, wmcode .. "wiki")
+			if article then
+				insert_wikipedia_article(wmcode, article)
+			end
+		end
+	end
+
+	if args.wp or args.wikidata then
+		if args.wp then
+			insert_wikipedia_articles_for_wikipedia_specs(split_on_comma(args.wp), pagename)
+		end
+		if args.wikidata then
+			insert_wikipedia_articles_for_wikidata_specs(rsplit(args.wikidata, "%s*,%s*"), lang)
+		end
+	elseif pagename == ucfirst(langname) then
+		local topright_parts = {}
+		local wikipedia_langs = require(labels_module).get_langs_to_extract_wikipedia_articles_from_wikidata(lang)
+		for _, wmcode in ipairs(wikipedia_langs) do
+			local article = lang:getWikipediaArticle("no category fallback", wmcode .. "wiki")
+			if article then
+				insert_wikipedia_article(wmcode, article)
+			end
+		end
+	end
+	if #topright_parts == 0 and all_labels then
+		local m_labels = require(labels_module)
+		local lang_specific_pattern = "^" .. pattern_escape(m_labels.lang_specific_data_modules_prefix)
+		for stage = 1, 2 do
+			for k, v in pairs(all_labels) do
+				local label_matches_lang = v.lang:getCode() == lang:getCode()
+				if stage == 1 and label_matches_lang or stage == 2 and not label_matches_lang then
+					if v.module:find(lang_specific_pattern) then
+						local wp_specs = v.labdata.Wikipedia
+						if wp_specs then
+							if type(wp_specs) ~= "table" then
+								wp_specs = {wp_specs}
+							end
+							insert_wikipedia_articles_for_wikipedia_specs(wp_specs, v.canonical)
+						end
+						local wikidata_specs = v.labdata.Wikidata
+						if wikidata_specs then
+							if type(wikidata_specs) ~= "table" then
+								wikidata_specs = {wikidata_specs}
+							end
+							insert_wikipedia_articles_for_wikidata_specs(wikidata_specs, v.lang)
+						end
+					end
+				end
+			end
+		end
+	end
+
+	local topright
+	if #topright_parts > 0 then
+		topright = table.concat(topright_parts)
+	end
+
+	-------------------- 9. Return the combined structure of all information. -------------------
 
 	track("dialect")
 	return {
