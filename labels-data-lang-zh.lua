@@ -16,27 +16,103 @@ labels["dialectal Gan"] = {
 	regional_categories = "Gan",
 }
 
+-- FIXME: Category missing.
+labels["Changdu Gan"] = {
+	-- A primary branch. Principal dialect: Nanchang.
+	aliases = {"Changdu"},
+	Wikidata = {"Q3497239", "Q6789768"}, -- the first ID is for English, the second for Chinese; they need to be merged
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Datong Gan"] = {
+	-- A primary branch. Principal dialect: Daye.
+	aliases = {"Datong"},
+	Wikidata = {"Q5207168", "Q6830838"}, -- the first ID is for English, the second for Chinese; they need to be merged
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Dongsui Gan"] = {
+	-- A primary branch. Principal dialect: Dongkou.
+	aliases = {"Dongsui"},
+	Wikidata = "Q6762652",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Fuguang Gan"] = {
+	-- A primary branch. Principal dialect: Fuzhou (撫州) in Jiangsi.
+	aliases = {"Fuguang"},
+	Wikidata = "Q6794539",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Huaiyue Gan"] = {
+	-- A primary branch. Principal dialect: Huaining.
+	aliases = {"Huaiyue"},
+	Wikidata = "Q6797985",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Jicha Gan"] = {
+	-- A primary branch. Principal dialect: Ji'an.
+	aliases = {"Jicha"},
+	Wikidata = "Q6844561",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Leizi Gan"] = {
+	-- A primary branch. Principal dialect: Leiyang.
+	aliases = {"Leizi"},
+	Wikidata = "Q7212943",
+	plain_categories = true,
+}
+
 labels["Lichuan Gan"] = {
-	-- A variety of Fuguang Gan
+	-- A variety of Fuguang Gan.
+	aliases = {"Lichuan"}, -- FIXME: Correct?
 	Wikidata = "Q6794539", -- article for Fuguang Gan
 	plain_categories = true,
 }
 
 labels["Nanchang Gan"] = {
 	-- A variety of Changdu Gan (where it is the principal dialect).
-	Wikidata = "Q3497239", -- article for Changdu Gan
+	aliases = {"Nanchang"}, -- FIXME: Correct?
+	Wikidata = "Q3497239", -- article for Changdu Gan in English, Nanchang Gan in Chinese
 	plain_categories = true,
 }
 
 labels["Pingxiang Gan"] = {
 	-- A variety of Yiliu Gan.
+	aliases = {"Pingxiang"}, -- FIXME: Correct?
 	Wikidata = "Q8053438", -- article for Yiliu Gan
 	plain_categories = true,
 }
 
 labels["Taining Gan"] = {
 	-- A variety of Fuguang Gan.
+	aliases = {"Taining"}, -- FIXME: Correct?
 	Wikidata = "Q6794539", -- article for Fuguang Gan
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Yiliu Gan"] = {
+	-- A primary branch. Principal dialect: Yichun.
+	aliases = {"Yiliu"},
+	Wikidata = {"Q8053438", "Q6820035"}, -- the first ID is for English, the second for Chinese; they need to be merged
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Yingyi Gan"] = {
+	-- A primary branch. Principal dialect: Yingtan.
+	aliases = {"Yingyi"},
+	Wikidata = {"Q3443012", "Q6654505"}, -- the first ID is for English, the second for Chinese; they need to be merged
 	plain_categories = true,
 }
 
@@ -645,55 +721,55 @@ labels["Zigong Sichuanese"] = {
 ------------------------------------------ Min ------------------------------------------
 
 labels["Min"] = {
-	Wikipedia = "Min Chinese",
+	Wikidata = "Q56504",
 	regional_categories = true,
 }
 
 labels["Central Min"] = {
 	aliases = {"Min Zhong"},
-	Wikipedia = true,
+	Wikidata = "Q56435",
 	regional_categories = true,
 }
 
 labels["Coastal Min"] = {
 	aliases = {"coastal Min"},
-	Wikipedia = true,
+	Wikidata = "Q20667215",
 }
 
 -- The following violates normal conventions, which would use "Hainanese Min' or 'Hainan Min'. But it matches the
 -- 'Hainanese' language and Wikipedia.
 labels["Hainanese"] = {
 	aliases = {"Hainan Min", "Hainanese Min", "Hainan Min Chinese"},
-	Wikipedia = true,
+	Wikidata = "Q934541",
 	regional_categories = true,
 }
 
 labels["Inland Min"] = {
 	aliases = {"inland Min"},
-	Wikipedia = true,
+	Wikidata = "Q20667237",
 }
 
 labels["Leizhou Min"] = {
 	aliases = {"Leizhou"},
-	Wikipedia = true,
+	Wikidata = "Q1988433",
 	regional_categories = true,
 }
 
 labels["Puxian Min"] = {
 	aliases = {"Puxian", "Pu-Xian Min", "Pu-Xian", "Xinghua", "Hinghwa"},
-	Wikipedia = "Pu-Xian Min",
+	Wikidata = "Q56583",
 	regional_categories = true,
 }
 
 -- FIXME: Category missing.
 labels["Shaojiang Min"] = {
 	aliases = {"Shaojiang"},
-	Wikipedia = "Shao–Jiang Min",
+	Wikidata = "Q3431451",
 	regional_categories = true,
 }
 
 labels["Zhongshan Min"] = {
-	Wikipedia = true,
+	Wikidata = "Q8070958",
 	regional_categories = true,
 }
 
@@ -701,13 +777,13 @@ labels["Zhongshan Min"] = {
 
 labels["Eastern Min"] = {
 	aliases = {"Min Dong"},
-	Wikipedia = true,
+	Wikidata = "Q36455",
 	regional_categories = true,
 }
 
 labels["dialectal Eastern Min"] = {
 	aliases = {"dialectal Min Dong"},
-	Wikipedia = "Eastern Min",
+	Wikidata = "Q36455", -- article for Eastern Min
 	regional_categories = "Eastern Min",
 }
 
@@ -863,7 +939,7 @@ labels["Zhouning Eastern Min"] = {
 
 labels["Northern Min"] = {
 	aliases = {"Min Bei"},
-	Wikipedia = true,
+	Wikidata = "Q36457",
 	regional_categories = true,
 }
 
@@ -879,6 +955,7 @@ labels["Chong'an Northern Min"] = {
 labels["Dongxi Northern Min"] = {
 	-- A primary branch. Maybe should be called East Northern Min. Note here that Dongxi is 東溪 (dōngxī); here dōng
 	-- means "east", but the second xī does not mean "west" but more like "stream" or "creek".
+	-- No Wikidata link or Wikipedia entry for this
 	plain_categories = true,
 }
 
@@ -886,6 +963,7 @@ labels["Dongxi Northern Min"] = {
 labels["Xixi Northern Min"] = {
 	-- A primary branch. Maybe should be called West Northern Min. Note here that Xixi is 西溪 (xīxī); here the first
 	-- xī means "west", but the second xī does not mean "west" but more like "stream" or "creek".
+	-- No Wikidata link or Wikipedia entry for this
 	plain_categories = true,
 }
 
@@ -933,34 +1011,34 @@ labels["Zhenghe Northern Min"] = {
 
 labels["Southern Min"] = {
 	aliases = {"Min Nan"},
-	Wikipedia = true,
+	Wikidata = "Q36495",
 	regional_categories = true,
 	track = true,
 }
 
 labels["dialectal Southern Min"] = {
 	aliases = {"dialectal Min Nan"},
-	Wikipedia = "Southern Min",
+	Wikidata = "Q36495", -- article for Eastern Min
 	regional_categories = "Southern Min",
 }
 
 labels["Datian Min"] = {
 	aliases = {"Datian"},
-	Wikipedia = true,
+	Wikidata = "Q19855572",
 	regional_categories = true,
 }
 
 -- FIXME: Category missing.
 labels["Haklau Min"] = {
 	aliases = {"Hoklo Min", "Haklau", "Hoklo"},
-	Wikipedia = "Hoklo Min",
+	Wikidata = "Q120755728",
 	regional_categories = true,
 }
 
 ---------------- Hokkien ----------------
 
 labels["Hokkien"] = {
-	Wikipedia = true,
+	Wikidata = "Q1624231",
 	regional_categories = true,
 }
 
@@ -989,20 +1067,20 @@ labels["Hsinchu Hokkien"] = {
 labels["Hui'an Hokkien"] = {
 	-- Mostly spoken in Hui'an in southern Fujian.
 	aliases = {"Hui'an"},
-	Wikipedia = "Hui'an dialect",
+	Wikidata = "Q16241797",
 	plain_categories = true,
 }
 
 -- FIXME: Same as Medan Hokkien?
 labels["Indonesian Hokkien"] = {
 	aliases = {"Indonesia Hokkien"},
-	Wikipedia = "Medan Hokkien",
+	Wikidata = "Q6805114", -- article for Medan Hokkien
 	plain_categories = true,
 }
 
 labels["Jinjiang Hokkien"] = {
 	aliases = {"Jinjiang"},
-	Wikipedia = "Quanzhou dialect",
+	Wikidata = "Q2251677", -- article for Quanzhou Hokkien
 	plain_categories = true,
 }
 
@@ -1024,39 +1102,39 @@ labels["Kinmen Hokkien"] = {
 
 labels["Longyan Hokkien"] = {
 	aliases = {"Longyan"},
-	Wikipedia = "Longyan dialect",
+	Wikidata = "Q6674568",
 	plain_categories = true,
 }
 
 labels["Lukang Hokkien"] = {
 	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], based on Quanzhou accent.
-	Wikipedia = "Lukang",
+	Wikidata = "Q701693", -- article on Lukang Township
 	plain_categories = true,
 }
 
 labels["Malaysian Hokkien"] = {
 	aliases = {"Malaysia Hokkien"},
-	Wikipedia = "Southern Peninsular Malaysian Hokkien",
+	Wikidata = "Q7570322", -- article on Southern Peninsular Malaysian Hokkien
 	plain_categories = true,
 }
 
 labels["Magong Hokkien"] = {
 	-- Taiwanese. Apparently a subdialect of Penghu Hokkien.
 	aliases = {"Magong"},
-	Wikipedia = "Magong",
+	Wikidata = "Q701428", -- article on Magong city in Penghu County
 	plain_categories = true,
 }
 
 labels["Medan Hokkien"] = {
 	-- Spoken in Indonesia.
-	Wikipedia = "Medan dialect",
+	Wikidata = "Q6805114",
 	plain_categories = true,
 }
 
 labels["Penang Hokkien"] = {
 	-- Malaysian.
 	aliases = {"Penang"},
-	Wikipedia = true,
+	Wikidata = "Q11120689",
 	plain_categories = true,
 }
 
@@ -1069,19 +1147,19 @@ labels["Penghu Hokkien"] = {
 
 labels["Philippine Hokkien"] = {
 	aliases = {"PH Hokkien", "Ph Hokkien", "PH", "PHH", "Philippines Hokkien"},
-	Wikipedia = true,
+	Wikidata = "Q3236692",
 	plain_categories = true,
 }
 
 labels["Quanzhou Hokkien"] = {
 	aliases = {"Quanzhou", "Chinchew", "Choanchew"},
-	Wikipedia = "Quanzhou dialect",
+	Wikidata = "Q2251677",
 	plain_categories = true,
 }
 
 labels["Sanxia Hokkien"] = {
 	-- Taiwanese.
-	Wikipedia = "Sanxia District",
+	Wikidata = "Q570349", -- article on Sanxia District (in New Taipei City)
 	plain_categories = true,
 }
 
@@ -1090,14 +1168,14 @@ labels["Sanxia Hokkien"] = {
 -- actually more common in Google Scholar.
 labels["Singapore Hokkien"] = {
 	aliases = {"Singaporean Hokkien"},
-	Wikipedia = "Singaporean Hokkien",
+	Wikidata = "Q3846528",
 	plain_categories = true,
 }
 
 labels["Taichung Hokkien"] = {
 	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], mostly Zhangzhou dialect.
 	-- No alias for Taichung because there's also Taichung Mandarin ([[w:zh:台中腔]]).
-	Wikipedia = "Taichung",
+	Wikidata = "Q245023", -- article on Taichung
 	plain_categories = true,
 }
 
@@ -1111,13 +1189,13 @@ labels["Tainan Hokkien"] = {
 labels["Taipei Hokkien"] = {
 	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], mixed Quanzhou-Zhangzhou dialect
 	-- similar to Tong'an accent.
-	Wikipedia = "Taipei",
+	Wikidata = "Q1867", -- article on Taipei
 	plain_categories = true,
 }
 
 labels["Taiwanese Hokkien"] = {
 	aliases = {"Taiwanese Southern Min", "Taiwanese Min Nan", "Taiwan Hokkien", "Taiwan Southern Min", "Taiwan Min Nan"},
-	Wikipedia = true,
+	Wikidata = "Q36778",
 	plain_categories = true,
 	track = true,
 }
@@ -1132,7 +1210,7 @@ labels["Tong'an Hokkien"] = {
 
 labels["Xiamen Hokkien"] = {
 	aliases = {"Xiamen", "Amoy"},
-	Wikipedia = "Amoy dialect",
+	Wikidata = "Q2705752",
 	plain_categories = true,
 }
 
@@ -1145,7 +1223,7 @@ labels["Yilan Hokkien"] = {
 
 labels["Yongchun Hokkien"] = {
 	aliases = {"Yongchun"},
-	Wikipedia = "Yongchun dialect",
+	Wikidata = "Q65118728",
 	plain_categories = true,
 }
 
@@ -1163,7 +1241,7 @@ labels["Zhangping Hokkien"] = {
 
 labels["Zhangzhou Hokkien"] = {
 	aliases = {"Zhangzhou", "Changchew"},
-	Wikipedia = "Zhangzhou dialect",
+	Wikidata = "Q8070492",
 	plain_categories = true,
 }
 
@@ -1172,27 +1250,27 @@ labels["Zhangzhou Hokkien"] = {
 -- The following violates normal conventions, which would use "Teochew Southern Min" or possibly "Teochew Min". But it
 -- matches the 'Teochew' full language.
 labels["Teochew"] = {
-	Wikipedia = "Chaoshan Min", -- not [[w:Teochew dialect]], which is a dialect of this language
+	Wikidata = "Q24841591", -- article for [[w:Chaoshan Min]]; not [[w:Teochew dialect]], which is a dialect of this language
 	regional_categories = true,
 	track = true,
 }
 
 labels["Chaozhou Teochew"] = {
 	aliases = {"Chaozhou"},
-	Wikipedia = "Teochew dialect",
+	Wikidata = "Q36759",
 	plain_categories = true,
 }
 
 labels["Jieyang Teochew"] = {
 	aliases = {"Jieyang"},
-	Wikipedia = "Jieyang",
+	Wikidata = "Q26323", -- article for Jieyang in Guangdong, China
 	plain_categories = true,
 }
 
 labels["Pontianak Teochew"] = {
 	-- spoken in West Kalimantan, Indonesia
 	aliases = {"Pontianak"},
-	Wikipedia = "Pontianak", -- "Pontianak Teochew" has its own Wikidata entry Q106560423, but it has no links
+	Wikidata = "Q14168", -- article for Pontianak; "Pontianak Teochew" has its own Wikidata entry Q106560423, but it has no links
 	plain_categories = true,
 }
 
@@ -1211,19 +1289,20 @@ labels["Thai Teochew"] = {
 ------------------------------------------ Pinghua ------------------------------------------
 
 labels["Pinghua"] = {
-	Wikipedia = true,
+	aliases = {"Ping"},
+	Wikidata = "Q2735715",
 	regional_categories = true,
 }
 
 labels["Guilin Pinghua"] = {
 	-- A variety of Northern Pinghua.
-	Wikidata = "Q84302463", -- the Northern Pinghua redirect
+	Wikidata = "Q84302463", -- article for Northern Pinghua; redirects in both English and Chinese to Pinghua article
 	plain_categories = true,
 }
 
 labels["Nanning Pinghua"] = {
 	-- A variety of Southern Pinghua.
-	Wikidata = "Q84302019", -- the Southern Pinghua redirect
+	Wikidata = "Q84302019", -- article for Southern Pinghua; redirects in both English and Chinese to Pinghua article
 	plain_categories = true,
 }
 
@@ -1286,7 +1365,7 @@ labels["Changxing Wu"] = {
 labels["Changzhounese Wu"] = {
 	-- A subvariety of Piling Wu, which is a variety of Northern Wu.
 	aliases = {"Changzhou Wu", "Changzhou", "Changzhounese"},
-	-- FIXME: Consider removing the following exception and letting it display as 'Hangzhounese Wu'.
+	-- FIXME: Consider removing the following exception and letting it display as 'Changzhounese Wu'.
 	display = "Changzhounese",
 	Wikidata = "Q1021819",
 	plain_categories = true,
@@ -1328,7 +1407,7 @@ labels["Hangzhounese Wu"] = {
 labels["Huzhounese Wu"] = {
 	-- A subvariety of Tiaoxi Wu, which is a variety of Northern Wu.
 	aliases = {"Huzhou", "Huzhou Wu", "Huzhounese"},
-	-- FIXME: Consider removing the following exception and letting it display as 'Hangzhounese Wu'.
+	-- FIXME: Consider removing the following exception and letting it display as 'Huzhounese Wu'.
 	display = "Huzhounese",
 	Wikidata = "Q15901269",
 	plain_categories = true,
@@ -1401,7 +1480,7 @@ labels["Linshao Wu"] = {
 labels["Ningbonese Wu"] = {
 	-- A subvariety of Yongjiang Wu, which is a variety of Northern Wu.
 	aliases = {"Ningbonese", "Ningbo Wu", "Ningbo"},
-	-- FIXME: Consider removing the following exception and letting it display as 'Hangzhounese Wu'.
+	-- FIXME: Consider removing the following exception and letting it display as 'Ningbonese Wu'.
 	display = "Ningbonese",
 	Wikidata = "Q3972199",
 	plain_categories = true,
@@ -1411,22 +1490,6 @@ labels["Northern Wu"] = {
 	-- A primary branch.
 	aliases = {"Taihu", "Taihu Wu"},
 	Wikidata = "Q7675988",
-	plain_categories = true,
-}
-
--- FIXME: Category missing.
--- why is this a thing??
-labels["Northern Zhejiang Wu"] = {
-	-- A variety of Northern Wu.
-	aliases = {"Northern Zhejiang"},
-	plain_categories = true,
-}
-
--- FIXME: Category missing.
--- this too why was this added ??
-labels["Northwestern Wu"] = {
-	-- A variety of Northern Wu.
-	aliases = {"Northern Zhejiang"}, -- if Piling is under "Northwestern" then. why is it Northern ZHEJIANG?
 	plain_categories = true,
 }
 
@@ -1612,7 +1675,7 @@ labels["Baizhang Wu"] = {
 
 -- FIXME: Category missing.
 labels["Beitai Wu"] = {
-	-- A variety of Taizhouic Wu.
+	-- A variety of Taizhou Wu.
 	aliases = {"Beitai"},
 	-- Undefined in Chinese Wikipedia
 	plain_categories = true,
@@ -1744,8 +1807,19 @@ labels["Lishui Wu"] = {
 	-- FIXME: Chuzhou Wu and Fujian Wu are not really aliases, but it's just more convenient ngl
 	-- NOTE: Chuzhou was a historical administrative division that includes modern day Lishui & Wuyi,
 	-- and is a proposed top-level division of Wu. Pucheng, Fujian is majority Wu-speaking.
-	aliases = {"Lishui", "Lishuinese", "Fujian Wu"},
+	aliases = {"Lishui", "Lishuinese"},
 	Wikidata = "Q58294", -- article on the prefecture-level city of Lishui in Zhejiang
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Pucheng Wu"] = {
+	-- A subvariety of Chuzhou Wu, which is a variety of Chuqu Wu.
+	-- FIXME: Chuzhou Wu and Fujian Wu are not really aliases, but it's just more convenient ngl
+	-- NOTE: Chuzhou was a historical administrative division that includes modern day Lishui & Wuyi,
+	-- and is a proposed top-level division of Wu. Pucheng, Fujian is majority Wu-speaking.
+	aliases = {"Fujian Wu"}, -- not "Pucheng" because per Wikipedia, Northern Min (Shibei dialect) is also spoken
+	Wikidata = "Q1338032", -- article on Pucheng County, Fujian
 	plain_categories = true,
 }
 
@@ -1775,7 +1849,7 @@ labels["Nanji Wu"] = {
 
 -- FIXME: Category missing.
 labels["Nantai Wu"] = {
-	-- A variety of Taizhouic Wu.
+	-- A variety of Taizhou Wu.
 	aliases = {"Nantai"},
 	-- Undefined in Chinese Wikipedia
 	plain_categories = true,
@@ -1891,18 +1965,18 @@ labels["Taiping Wu"] = {
 }
 
 -- FIXME: Category missing.
-labels["Taizhou Wu"] = {
-	-- A subvariety of Nantai Wu, which is a variety of Taizhouic Wu.
-	aliases = {"Taizhou"},
+labels["Urban Taizhou Wu"] = {
+	-- A subvariety of Nantai Wu, which is a variety of Taizhou Wu.
+	aliases = {"Urban Taizhou"},
 	Wikidata = "Q3972406",
 	plain_categories = true,
 }
 
 -- FIXME: Category missing.
-labels["Taizhouic Wu"] = {
-	-- A primary branch. Called "Taizhou Wu" in Wikipedia whereas our "Taizhou Wu" is "Taizhou dialect"; but these names
-	-- are too ambiguous (cf. our "Beijingic Mandarin" vs. "Beijing Mandarin"). Per English Wikipedia, has the following
-	-- varieties:
+labels["Taizhou Wu"] = {
+	-- A primary branch. Called "Taizhou Wu" in Wikipedia, distinct from "Taizhou dialect"; but these names are too
+	-- ambiguous. We have provisionally adopted "Taizhou Wu" for the larger group and "Urban Taizhou Wu" for the dialect
+	-- of the urban area of Taizhou city. Per English Wikipedia, has the following varieties:
 	  -- Taizhou dialect
 	  -- Linhai dialect
 	  -- Sanmen dialect
@@ -1914,7 +1988,7 @@ labels["Taizhouic Wu"] = {
 	  -- Yuhuan dialect
 	  -- Yueqing dialect
 	  -- Ninghai dialect
-	aliases = {"Taizhouic"},
+	aliases = {"Taizhou"},
 	Wikidata = "Q7676678",
 	plain_categories = true,
 }
@@ -1929,7 +2003,7 @@ labels["Tangxi Wu"] = {
 
 -- FIXME: Category missing.
 labels["Tiantai Wu"] = {
-	-- A subvariety of Beitai Wu, which is a variety of Taizhouic Wu.
+	-- A subvariety of Beitai Wu, which is a variety of Taizhou Wu.
 	aliases = {"Tiantai"},
 	Wikidata = "Q85809509",
 	plain_categories = true,
@@ -2056,33 +2130,33 @@ labels["Yushan Wu"] = {
 ------------------------------------------ Xiang ------------------------------------------
 
 labels["Xiang"] = {
-	Wikipedia = "Xiang Chinese",
+	Wikidata = "Q13220",
 	regional_categories = true,
 }
 
 labels["dialectal Xiang"] = {
-	Wikipedia = "Xiang Chinese",
+	Wikidata = "Q13220", -- article on Xiang Chinese
 	regional_categories = "Xiang",
 }
 
 -- FIXME: Category missing.
 labels["Changsha Xiang"] = {
 	aliases = {"Changsha"},
-	Wikipedia = "Changsha dialect", -- New Xiang
+	Wikidata = "Q3044809",
 	plain_categories = true,
 }
 
 -- FIXME: Category missing.
 labels["Hengyang Xiang"] = {
 	aliases = {"Hengyang"},
-	Wikipedia = "Hengyang dialect",
+	Wikidata = "Q20689035",
 	plain_categories = true,
 }
 
 -- FIXME: Category missing.
 labels["Hengzhou Xiang"] = {
 	aliases = {"Hengzhou"},
-	Wikipedia = "Hengyang dialect",
+	Wikidata = "Q20689035", -- article on Hengyang Xiang
 	plain_categories = true,
 }
 
@@ -2094,18 +2168,18 @@ labels["Loudi Xiang"] = {
 
 -- FIXME: Category missing.
 labels["New Xiang"] = {
-	Wikipedia = true,
+	Wikidata = "Q7012696",
 	plain_categories = true,
 }
 
 labels["Old Xiang"] = {
-	Wikipedia = true,
+	Wikidata = "Q7085453",
 	plain_categories = true,
 }
 
 labels["Shuangfeng Xiang"] = {
 	aliases = {"Shuangfeng"},
-	Wikipedia = "Shuangfeng dialect",
+	Wikidata = "Q10911980",
 	plain_categories = true,
 }
 
@@ -2118,7 +2192,7 @@ labels["Cantonese"] = {
 }
 
 labels["dialectal Cantonese"] = {
-	Wikipedia = "Cantonese",
+	Wikidata = "Q9186", -- article on Cantonese
 	regional_categories = "Cantonese",
 }
 
@@ -2482,12 +2556,12 @@ labels["Yulin Yue"] = {
 -- FIXME: Category missing.
 labels["Danzhou Chinese"] = {
 	aliases = {"Danzhou"},
-	Wikipedia = "Danzhou dialect",
+	Wikidata = "Q2578935",
 	plain_categories = true,
 }
 
 labels["Dungan"] = {
-	Wikipedia = "Dungan language",
+	Wikidata = "Q33050",
 	regional_categories = true,
 }
 
@@ -2498,17 +2572,18 @@ labels["Gansu Dungan"] = {
 
 labels["Huizhou"] = {
 	aliases = {"Huizhou Chinese"},
-	Wikipedia = "Huizhou Chinese",
+	Wikidata = "Q56546",
 	regional_categories = true,
 }
 
 labels["Shehua"] = {
-	Wikipedia = true,
+	aliases = {"She Chinese", "She"},
+	Wikidata = "Q24841605",
 	regional_categories = true,
 }
 
 labels["Waxiang"] = {
-	Wikipedia = "Waxiang Chinese",
+	Wikidata = "Q2252191",
 	regional_categories = true,
 }
 
@@ -2516,13 +2591,13 @@ labels["Waxiang"] = {
 
 labels["American (&ndash;1980)"] = {
 	aliases = {"America 1", "United States 1", "USA 1", "US 1"},
-	Wikipedia = "History of Chinese Americans",
+	Wikidata = "Q1516704", -- article on History of Chinese Americans
 	regional_categories = true,
 }
 
 labels["American (1980&ndash;)"] = {
 	aliases = {"America 2", "United States 2", "USA 2", "US 2"},
-	Wikipedia = "History of Chinese Americans",
+	Wikidata = "Q1516704", -- article on History of Chinese Americans
 	regional_categories = true,
 }
 
