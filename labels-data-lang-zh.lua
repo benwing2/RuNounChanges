@@ -19,6 +19,8 @@ labels["dialectal Gan"] = {
 -- FIXME: Category missing.
 labels["Changdu Gan"] = {
 	-- A primary branch. Principal dialect: Nanchang.
+	region = "northwestern [[Jiangxi]] Province and northeastern [[Hunan]] Province, in south-central [[China]]",
+	addl = "A primary branch of Gan.",
 	aliases = {"Changdu"},
 	Wikidata = {"Q3497239", "Q6789768"}, -- the first ID is for English, the second for Chinese; they need to be merged
 	plain_categories = true,
@@ -27,6 +29,8 @@ labels["Changdu Gan"] = {
 -- FIXME: Category missing.
 labels["Datong Gan"] = {
 	-- A primary branch. Principal dialect: Daye.
+	region = "southeastern [[Hubei]] Province and eastern [[Hunan]] Province, in south-central [[China]]",
+	addl = "A primary branch of Gan.",
 	aliases = {"Datong"},
 	Wikidata = {"Q5207168", "Q6830838"}, -- the first ID is for English, the second for Chinese; they need to be merged
 	plain_categories = true,
@@ -35,6 +39,8 @@ labels["Datong Gan"] = {
 -- FIXME: Category missing.
 labels["Dongsui Gan"] = {
 	-- A primary branch. Principal dialect: Dongkou.
+	region = "southwestern [[Hunan]] Province, in south-central [[China]]",
+	addl = "A primary branch of Gan.",
 	aliases = {"Dongsui"},
 	Wikidata = "Q6762652",
 	plain_categories = true,
@@ -43,6 +49,8 @@ labels["Dongsui Gan"] = {
 -- FIXME: Category missing.
 labels["Fuguang Gan"] = {
 	-- A primary branch. Principal dialect: Fuzhou (撫州) in Jiangsi.
+	region = "central and eastern [[Jiangxi]] Province and southwestern [[Fujian]] Province, in south-central [[China]]",
+	addl = "A primary branch of Gan.",
 	aliases = {"Fuguang"},
 	Wikidata = "Q6794539",
 	plain_categories = true,
@@ -51,6 +59,8 @@ labels["Fuguang Gan"] = {
 -- FIXME: Category missing.
 labels["Huaiyue Gan"] = {
 	-- A primary branch. Principal dialect: Huaining.
+	region = "southwestern [[Anhui]] Province, in south-central [[China]]",
+	addl = "A primary branch of Gan.",
 	aliases = {"Huaiyue"},
 	Wikidata = "Q6797985",
 	plain_categories = true,
@@ -59,6 +69,8 @@ labels["Huaiyue Gan"] = {
 -- FIXME: Category missing.
 labels["Jicha Gan"] = {
 	-- A primary branch. Principal dialect: Ji'an.
+	region = "central and southern [[Jiangxi]] Province and eastern [[Hunan]] Province, in south-central [[China]]",
+	addl = "A primary branch of Gan.",
 	aliases = {"Jicha"},
 	Wikidata = "Q6844561",
 	plain_categories = true,
@@ -67,6 +79,8 @@ labels["Jicha Gan"] = {
 -- FIXME: Category missing.
 labels["Leizi Gan"] = {
 	-- A primary branch. Principal dialect: Leiyang.
+	region = "eastern [[Hunan]] Province, in south-central [[China]]",
+	addl = "A primary branch of Gan.",
 	aliases = {"Leizi"},
 	Wikidata = "Q7212943",
 	plain_categories = true,
@@ -74,35 +88,45 @@ labels["Leizi Gan"] = {
 
 labels["Lichuan Gan"] = {
 	-- A variety of Fuguang Gan.
+	region = "[[Lichuan]] County, under the jurisdiction of the [[prefecture-level city]] of [[Fuzhou]] ({{m|cmn|撫州}}) in northeastern [[Jiangxi]] Province (not to be confused with the Fuzhou city in [[Fujian]] Province)",
 	aliases = {"Lichuan"}, -- FIXME: Correct?
 	Wikidata = "Q6794539", -- article for Fuguang Gan
 	plain_categories = true,
+	parent = "Fuguang Gan",
 }
 
 labels["Nanchang Gan"] = {
 	-- A variety of Changdu Gan (where it is the principal dialect).
+	region = "[[Nanchang]], capital of [[Jiangxi]] Province in south-central [[China]]",
 	aliases = {"Nanchang"}, -- FIXME: Correct?
 	Wikidata = "Q3497239", -- article for Changdu Gan in English, Nanchang Gan in Chinese
 	plain_categories = true,
+	parent = "Changdu Gan",
 }
 
 labels["Pingxiang Gan"] = {
 	-- A variety of Yiliu Gan.
+	region = "[[Pingxiang]], a [[prefecture-level city]] in [[Jiangxi]] Province in south-central [[China]]",
 	aliases = {"Pingxiang"}, -- FIXME: Correct?
 	Wikidata = "Q8053438", -- article for Yiliu Gan
 	plain_categories = true,
+	parent = "Yiliu Gan",
 }
 
 labels["Taining Gan"] = {
 	-- A variety of Fuguang Gan.
+	region = "{{w|Taining County}}, under the jurisdiction of the [[prefecture-level city]] of [[Sanming]] in northwastern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Taining"}, -- FIXME: Correct?
 	Wikidata = "Q6794539", -- article for Fuguang Gan
 	plain_categories = true,
+	parent = "Fuguang Gan",
 }
 
 -- FIXME: Category missing.
 labels["Yiliu Gan"] = {
 	-- A primary branch. Principal dialect: Yichun.
+	region = "central and western [[Jiangxi]] Province and eastern [[Hunan]] Province, in south-central [[China]]",
+	addl = "A primary branch of Gan.",
 	aliases = {"Yiliu"},
 	Wikidata = {"Q8053438", "Q6820035"}, -- the first ID is for English, the second for Chinese; they need to be merged
 	plain_categories = true,
@@ -111,6 +135,8 @@ labels["Yiliu Gan"] = {
 -- FIXME: Category missing.
 labels["Yingyi Gan"] = {
 	-- A primary branch. Principal dialect: Yingtan.
+	region = "northeastern [[Jiangxi]] Province, in south-central [[China]]",
+	addl = "A primary branch of Gan.",
 	aliases = {"Yingyi"},
 	Wikidata = {"Q3443012", "Q6654505"}, -- the first ID is for English, the second for Chinese; they need to be merged
 	plain_categories = true,
@@ -129,6 +155,7 @@ labels["dialectal Hakka"] = {
 }
 
 labels["Dabu Hakka"] = {
+	region = "{{w|Dabu County}} in eastern [[Guangdong]] Province in southern [[China]], and in [[Taiwan]]",
 	aliases = {"Dabu"},
 	Wikidata = "Q19855566",
 	plain_categories = true,
@@ -136,11 +163,16 @@ labels["Dabu Hakka"] = {
 
 -- FIXME: Category missing.
 labels["Early Modern Hakka"] = {
+	noreg = true,
+	nolink = true,
+	extinct = true,
+	region = "the 19th century, especially in Bible translations",
 	Wikidata = "Q33375", -- article for Hakka Chinese
 	plain_categories = true,
 }
 
 labels["Hailu Hakka"] = {
+	region = "[[Shanwei]] in [[Guangdong]] Province in southern [[China]], as well as in [[Taiwan]] and [[West Kalimantan]], [[Indonesia]]",
 	aliases = {"Hailu"},
 	Wikidata = "Q19855025", -- see also Q17038519 "Hailu Hakka" in Wikidata, which duplicates Q19855025 and redirects to it in Chinese Wikipedia
 	plain_categories = true,
@@ -152,6 +184,7 @@ labels["Hong Kong Hakka"] = {
 }
 
 labels["Huiyang Hakka"] = {
+	region = "[[Huizhou]], [[Dongguan]] and [[Shenzhen]], in east-central [[Guangdong]] Province in southern [[China]], with Danshui Subdistrict ({{m|cmn|淡水街道}}) in {{w|Huiyang District}}, [[Huizhou]] as its representative dialect",
 	aliases = {"Huiyang"},
 	Wikidata = "Q16873881",
 	plain_categories = true,
@@ -165,49 +198,58 @@ labels["Huiyang Hakka"] = {
 
 -- FIXME: Category missing.
 labels["Malaysian Huiyang Hakka"] = {
+	region = "[[Malaysia]], originating in {{w|Huiyang District}}, [[Huizhou]] in east-central [[Guangdong]] Province in southern [[China]]",
 	aliases = {"Malaysia Huiyang Hakka"},
 	Wikidata = "Q16873881", -- article for Huiyang Hakka
 	plain_categories = true,
 }
 
 labels["Meixian Hakka"] = {
+	region = "[[Meixian]] District (similar to a county and surrounding the urban core of [[Meizhou]]), located in northeastern [[Guangdong]] Province; additionally, in numerous overseas countries",
+	addl = "Meixian Hakka is the prestige dialect of Hakka.",
 	aliases = {"Meixian", "Moiyan", "Moiyan Hakka", "Meizhou", "Meizhou Hakka"},
 	Wikidata = "Q839295",
 	plain_categories = true,
 }
 
 labels["Northern Sixian Hakka"] = {
+	region = "[[Taoyuan]] and [[Miaoli]] in the north of [[Taiwan]]",
 	aliases = {"Northern Sixian"},
 	Wikidata = "Q9668261", -- article for Sixian Hakka
 	plain_categories = true,
 }
 
 labels["Raoping Hakka"] = {
+	region = "{{w|Raoping County}} in [[Guangdong]] as well as [[Taoyuan]], [[Hsinchu]], [[Miaoli]] and [[Taichung]] in [[Taiwan]]",
 	-- No Raoping alias because Chaoshan Min is also spoken.
 	Wikidata = "Q19854038",
 	plain_categories = true,
 }
 
 labels["Sixian Hakka"] = {
+	region = "several parts of [[Taiwan]], especially [[Taoyuan]] and [[Miaoli]] in the north, as well as the [[Liudui]] Region in [[Kaohsiung]] and [[Pingtung]] in the south",
 	aliases = {"Sixian"},
 	Wikidata = "Q9668261",
 	plain_categories = true,
 }
 
 labels["Southern Sixian Hakka"] = {
+	region = "the [[Liudui]] Region in [[Kaohsiung]] and [[Pingtung]] in the south of [[Taiwan]]",
 	aliases = {"Southern Sixian"},
-	Wikidata = "Q9668261", -- article for Sixian Hakka; Q98095139 is "Southern Sixian dialect" but has no articles linked
+	Wikidata = {"Q98095139", "Q9668261"}, -- second is article for Sixian Hakka; Q98095139 is "Southern Sixian dialect" but has no articles linked
 	plain_categories = true,
 }
 
 labels["Shangyou Hakka"] = {
-	-- In southwestern Jiangxi.
+	region = "{{w|Shangyou County}} in southwestern [[Jiangxi]] Province, in southeast [[China]]",
 	aliases = {"Shangyou"},
 	Wikidata = "Q1282613", -- article for Shangyou County
 	plain_categories = true,
 }
 
 labels["Taiwanese Hakka"] = {
+	region = "Taiwan",
+	parent = {"+", "C:Taiwanese Chinese"},
 	aliases = {"Taiwan Hakka"},
 	Wikidata = "Q2391532",
 	plain_categories = true,
@@ -217,6 +259,7 @@ labels["Taiwanese Hakka"] = {
 -- related to the Wuluo River, but extremely obscure; can't find anything about the dialect in Google.
 
 labels["Yudu Hakka"] = {
+	region = "{{w|Yudu County}} in the south of [[Jiangxi]] Province, in southeast [[China]]",
 	aliases = {"Yudu"},
 	Wikidata = "Q1816748", -- article for Yudu County
 	plain_categories = true,
@@ -224,12 +267,16 @@ labels["Yudu Hakka"] = {
 
 labels["Yunlin Hakka"] = {
 	-- A type of Taiwanese Hakka.
+	region = "[[Yunlin]] County in western [[Taiwan]]",
+	parent = "Taiwanese Hakka",
 	aliases = {"Yunlin"},
 	Wikidata = "Q153221", -- article for Yunlin County
 	plain_categories = true,
 }
 
 labels["Zhao'an Hakka"] = {
+	verb = "spoken originally",
+	region = "{{w|Zhao'an County}} in the [[prefecture-level city]] of [[Zhangzhou]] in southernmost [[Fujian]] Province in southeast [[China]]; now also in [[Yunlin]] County and the city of [[Taoyuan]], in [[Taiwan]]",
 	Wikidata = "Q6703311",
 	plain_categories = true,
 }
@@ -290,6 +337,8 @@ labels["Beijingic Mandarin"] = {
 	-- Dialects per Wikipedia: [[w:Beijing dialect]] (with [[w:Standard Chinese]] as a child),
 	-- [[w:Philippine Mandarin]], [[w:Malaysian Mandarin]], Chengde dialect (承德话), Chifeng dialect (赤峰话), Hailar
 	-- dialect (海拉尔话).
+	region = "areas surrounding [[Beijing]] in northeastern [[China]], including [[Beijing]] as well as parts of [[Hebei]], [[Inner Mongolia]], [[Liaoning]] and [[Tianjin]] Provinces",
+	addl = "A primary branch of Mandarin.",
 	aliases = {"Beijingic"},
 	Wikidata = "Q2169652",
 	plain_categories = true,
@@ -297,9 +346,11 @@ labels["Beijingic Mandarin"] = {
 
 labels["Beijing Mandarin"] = {
 	-- A variety of Beijingic Mandarin.
+	region = "urban [[Beijing]]",
 	aliases = {"Beijing", "Peking", "Pekingese"},
 	Wikidata = "Q1147606",
 	plain_categories = true,
+	parent = "Beijingic Mandarin",
 }
 
 labels["Central Plains Mandarin"] = {
@@ -307,6 +358,8 @@ labels["Central Plains Mandarin"] = {
 	-- Dialects per Wikipedia: [[w:Dungan language]], [[w:Gangou dialect]], Kaifeng dialect (开封话),
 	-- [[w:Luoyang dialect]], Nanyang dialect (南阳话), Qufu dialect (曲埠话), Tianshui dialect (天水话),
 	-- [[w:Xi'an dialect]], [[w:Xuzhou dialect]], Yan'an dialect (延安话), Zhengzhou dialect (郑州话).
+	region = "central [[China]], specifically in [[Henan]] Province, the central parts of [[Shaanxi]] Province in the [[Yellow River]] valley and eastern [[Gansu]] Province, as well as in southern [[Xinjiang]] Autonomous Region in far western [[China]], due to recent migration",
+	addl = "A primary branch of Mandarin.",
 	aliases = {"Central Plains", "Zhongyuan Mandarin"},
 	Wikidata = "Q3048775",
 	plain_categories = true,
@@ -315,17 +368,21 @@ labels["Central Plains Mandarin"] = {
 -- FIXME: Category missing.
 labels["Changchun Mandarin"] = {
 	-- A variety of Northeastern Mandarin.
+	region = "[[Changchun]], the capital of [[Jilin]] Province in northeastern [[China]]",
 	aliases = {"Changchun"},
 	Wikidata = "Q17030513",
 	plain_categories = true,
+	parent = "Northeastern Mandarin",
 }
 
 -- FIXME: Category missing.
 labels["Dalian Mandarin"] = {
-	-- A variety of Jiaoliao Mandarin.
+	prep = "on",
+	region = "the [[Liaodong]] Peninsula in coastal eastern [[China]] in the city of [[Dalian]], as well as in parts of [[Dandong]] and [[Yikou]]",
 	aliases = {"Dalian"},
 	Wikidata = "Q1375036",
 	plain_categories = true,
+	parent = "Jiaoliao Mandarin",
 }
 
 -- FIXME: Category missing.
@@ -340,6 +397,7 @@ labels["Guangxi Mandarin"] = {
 	-- No Guangxi alias; seems unlikely to be correct
 	Wikidata = "Q2609239", -- article for Southwestern Mandarin
 	plain_categories = true,
+	parent = "Southwestern Mandarin",
 }
 
 labels["Guanzhong Mandarin"] = {
@@ -351,29 +409,30 @@ labels["Guanzhong Mandarin"] = {
 
 labels["Guilin Mandarin"] = {
 	-- No Guilin alias; also Guilin Pinghua, Guilin Southern Min
-	-- A subvariety of Guiliu Mandarin, which is a variety of Southwestern Mandarin.
 	Wikidata = "Q11111636",
 	plain_categories = true,
+	parent = "Guiliu Mandarin", -- a variety of Southwestern Mandarin
 }
 
 labels["Guiliu Mandarin"] = {
-	-- A variety of Southwestern Mandarin.
 	Wikidata = "Q11111664",
 	plain_categories = true,
+	parent = "Southwestern Mandarin",
 }
 
 labels["Guiyang Mandarin"] = {
-	-- A variety of Southwestern Mandarin.
 	aliases = {"Guiyang"},
 	Wikidata = "Q15911623",
 	plain_categories = true,
+	parent = "Southwestern Mandarin",
 }
 
 labels["Harbin Mandarin"] = {
-	-- A variety of Northeastern Mandarin.
+	region = "[[Harbin]], the capital of [[Heilongjiang]] Province in northeastern [[China]]",
 	aliases = {"Harbin"},
 	Wikidata = "Q1006919",
 	plain_categories = true,
+	parent = "Northeastern Mandarin",
 }
 
 -- FIXME: Category missing.
@@ -395,6 +454,8 @@ labels["Jianghuai Mandarin"] = {
 	-- A primary branch.
 	-- Dialects per Wikipedia: [[w:Hefei dialect]], Hainan Junjiahua (军家话), [[w:Nanjing dialect]],
 	-- [[w:Nantong dialect]], Xiaogan dialect (孝感话), Yangzhou dialect (扬州话).
+	region = "parts of [[Jiangsu]] and [[Anhui]] Provinces on the north bank of the [[Yangtze]] in east-central [[China]], as well as some areas on the south bank, such as [[Nanjing]] in [[Jiangsu]] Province and [[Jiujiang]] in [[Jiangxi]] Province",
+	addl = "A primary branch of Mandarin.",
 	aliases = {"Jianghuai", "Jiang-Huai", "Jiang-Huai Mandarin", "Lower Yangtze Mandarin", "Huai"},
 	Wikidata = "Q2128953",
 	plain_categories = true,
@@ -402,8 +463,10 @@ labels["Jianghuai Mandarin"] = {
 
 labels["Jiaoliao Mandarin"] = {
 	-- A primary branch.
-	-- Dialects per Wikipedia: [[w:Dalian dialect]], [[w:Qingdao dialect]], [[w:Weihai dialect]], Yantai dialect
-	-- (烟台话).
+	-- Dialects per Wikipedia: [[w:Dalian dialect]], Dandong dialect, [[w:Qingdao dialect]], Rizhao dialect,
+	-- Weifang dialect, [[w:Weihai dialect]], Yantai dialect (烟台话).
+	region = "coastal eastern [[China]], specifically: on the {{w|Jiaodong Peninsula}} (from [[Yantai]] to [[Qingdao]]); in {{w|Ganyu District}} in northeastern [[Jiangsu]] Province; on the [[Liaodong]] Peninsula (from [[Dalian]] to [[Dandong]]); and in parts of [[Heilongjiang]] Province, due to migration",
+	addl = "A primary branch of Mandarin.",
 	aliases = {"Jiaoliao", "Jiao-Liao", "Jiao-Liao Mandarin"},
 	Wikidata = "Q2597550",
 	plain_categories = true,
@@ -413,6 +476,8 @@ labels["Jilu Mandarin"] = {
 	-- A primary branch.
 	-- Dialects per Wikipedia: Baoding dialect (保定话), [[w:Jinan dialect]], Shijiazhuang dialect (石家庄话),
 	-- [[w:Tianjin dialect]].
+	region = "coastal eastern [[China]], specifically: [[Hebei]] Province; the western part of [[Shandong]] Province; and parts of [[Heilongjiang]], due to migration",
+	addl = "A primary branch of Mandarin.",
 	aliases = {"Jilu", "Ji-Lu", "Ji-Lu Mandarin"},
 	Wikidata = "Q516721",
 	plain_categories = true,
@@ -428,15 +493,17 @@ labels["Jinan Mandarin"] = {
 
 -- FIXME: Category missing.
 labels["Kunming Mandarin"] = {
-	-- A variety of Southwestern Mandarin.
 	aliases = {"Kunming"},
 	Wikidata = "Q3372400",
 	plain_categories = true,
+	parent = "Southwestern Mandarin",
 }
 
 labels["Lanyin Mandarin"] = {
 	-- A primary branch.
 	-- Dialects per Wikipedia: Lanzhou dialect (兰州话), Xining dialect (西宁话), Yinchuan dialect (银川话).
+	region = "[[Lanzhou]] and elsewhere in [[Gansu]] Province; [[Yinchuan]] and generally in the northern part of [[Ningxia]] Autonomous Region; and more recently in northern [[Xinjiang]] Autonomous Region",
+	addl = "A primary branch of Mandarin.",
 	aliases = {"Lanyin", "Lan-Yin Mandarin"},
 	Wikidata = "Q662754",
 	plain_categories = true,
@@ -450,9 +517,9 @@ labels["Lanzhou Mandarin"] = {
 }
 
 labels["Liuzhou Mandarin"] = {
-	-- A subvariety of Guiliu Mandarin, which is a variety of Southwestern Mandarin.
 	Wikidata = "Q7224853",
 	plain_categories = true,
+	parent = "Guiliu Mandarin", -- a variety of Southwestern Mandarin
 }
 
 labels["Luoyang Mandarin"] = {
@@ -469,10 +536,10 @@ labels["Malaysian Mandarin"] = {
 }
 
 labels["Muping Mandarin"] = {
-	-- A subvariety of the Yantai dialect of Jiaoliao Mandarin.
 	aliases = {"Muping"}, -- there is also a Muping in Sichuan but it's not clear if it has a dialect
 	Wikidata = "Q281015", -- article for Muping District
 	plain_categories = true,
+	parent = "Jiaoliao Mandarin", -- actually belongs to the Yantai dialect of Jiaoliao Mandarin
 }
 
 labels["Nanjing Mandarin"] = {
@@ -494,6 +561,8 @@ labels["Northeastern Mandarin"] = {
 	-- A primary branch.
 	-- Dialects per Wikipedia: [[w:Changchun dialect]], [[w:Harbin dialect]], Qiqihar dialect (齐齐哈尔话),
 	-- [[w:Shenyang dialect]].
+	region = "{{w|Northeast China}}, including the provinces of [[Liaoning]], [[Jilin]] and [[Heilongjiang]] but excluding the [[Liaodong]] Peninsula",
+	addl = "A primary branch of Mandarin.",
 	aliases = {"northeastern Mandarin", "NE Mandarin"},
 	Wikidata = "Q1064504",
 	plain_categories = true,
@@ -516,10 +585,11 @@ labels["Philippine Mandarin"] = {
 
 -- FIXME: Category missing.
 labels["Shenyang Mandarin"] = {
-	-- A variety of Northeastern Mandarin.
+	region = "[[Shenyang]], the capital of [[Liaoning]] Province in northeastern [[China]]",
 	aliases = {"Shenyang"},
 	Wikidata = "Q7494349",
 	plain_categories = true,
+	parent = "Northeastern Mandarin",
 }
 
 -- We use 'Singapore Mandarin' not 'Singaporean Mandarin' despite the Wikipedia article both to match all the other
@@ -536,6 +606,8 @@ labels["Southwestern Mandarin"] = {
 	-- Dialects per Wikipedia: Changde dialect (常德话), [[w:Chengdu dialect]], [[w:Chongqing dialect]], Dali dialect
 	-- (大理话), Guiyang dialect (贵阳话), [[w:Kunming dialect]], Liuzhou dialect (柳州话), [[w:Wuhan dialect]],
 	-- [[w:Xichang dialect]], Yichang dialect (宜昌话), Hanzhong dialect (汉中话).
+	region = "the provinces of [[Hubei]], [[Sichuan]], [[Guizhou]], [[Yunnan]], and the Mandarin-speaking areas of [[Hunan]], [[Guangxi]] Autonomous Region and southern [[Shaanxi]]",
+	addl = "A primary branch of Mandarin.",
 	aliases = {"southwestern Mandarin", "Upper Yangtze Mandarin", "Southwest Mandarin"},
 	Wikidata = "Q2609239",
 	plain_categories = true,
@@ -578,16 +650,17 @@ labels["Wanrong Mandarin"] = {
 
 -- FIXME: Category missing.
 labels["Weihai Mandarin"] = {
-	-- A variety of Jiaoliao Mandarin.
 	aliases = {"Weihai"},
 	Wikidata = "Q3025951",
 	plain_categories = true,
+	parent = "Jiaoliao Mandarin",
 }
 
 labels["Wuhan Mandarin"] = {
 	aliases = {"Wuhan", "Hankou", "Hankow"},
 	Wikidata = "Q11124731",
 	plain_categories = true,
+	parent = "Southwestern Mandarin", -- actually belongs to the Wutian variety of Southwestern Mandarin
 }
 
 labels["Xi'an Mandarin"] = {
@@ -603,6 +676,7 @@ labels["Xichang Mandarin"] = {
 	aliases = {"Xichang"},
 	Wikidata = "Q17067030",
 	plain_categories = true,
+	parent = "Southwestern Mandarin",
 }
 
 labels["Xining Mandarin"] = {
@@ -646,6 +720,7 @@ labels["Yunnan Mandarin"] = {
 	-- "Yunnan" as alias seems unlikely to be correct
 	Wikidata = "Q10881055",
 	plain_categories = true,
+	parent = "Southwestern Mandarin",
 }
 
 ---------------------- Sichuanese ----------------------
