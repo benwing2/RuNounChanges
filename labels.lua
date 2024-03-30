@@ -218,11 +218,12 @@ function export.get_displayed_label(label, labdata, lang, deprecated)
 			* labdata.Wiktionary specifies an arbitrary Wiktionary page or page + anchor (e.g. a separate Appendix
 			  entry).
 			* labdata.Wikipedia specifies an arbitrary Wikipedia article.
-			* labdata.Wikidata specifies an arbitrary Wikidata item to retrieve a Wikipedia article from. If the item
-			  is of the form `wmcode:id`, the Wikipedia article corresponding to `wmcode` is fetched if available.
-			  Otherwise, the English-language Wikipedia article is retrieved if available, falling back to the
-			  Wikimedia language(s) corresponding to `lang` and then (in certain cases) to the macrolanguage that
-			  `lang` is part of.
+			* labdata.Wikidata specifies an arbitrary Wikidata item to retrieve a Wikipedia article from, or a list
+			  of such items (in this case, we select the first one, but other modules using this info might use all
+			  of them). If the item is of the form `wmcode:id`, the Wikipedia article corresponding to `wmcode` is
+			  fetched if available. Otherwise, the English-language Wikipedia article is retrieved if available,
+			  falling back to the Wikimedia language(s) corresponding to `lang` and then (in certain cases) to the
+			  macrolanguage that `lang` is part of.
 		]=]
 		local display = labdata.display or label
 		if labdata.glossary then
@@ -235,7 +236,7 @@ function export.get_displayed_label(label, labdata, lang, deprecated)
 			displayed_label = "[[w:" .. Wikipedia_entry .. "|" .. display .. "]]"
 		elseif labdata.Wikidata then
 			if not mw.wikibase then
-				error(("Unable to retrieve data from Wikidata ID '%s'; `mw.wikibase` not defined"):format(labdata.Wikidata))
+				error(("Unable to retrieve data from Wikidata ID for label '%s'; `mw.wikibase` not defined"):format(label))
 			end
 			local function make_displayed_label(wmcode, id)
 				local article = mw.wikibase.sitelink(id, wmcode .. "wiki")
@@ -246,13 +247,17 @@ function export.get_displayed_label(label, labdata, lang, deprecated)
 					return nil
 				end
 			end
-			local wmcode, id = labdata.Wikidata:match("^(.*):(.*)$")
+			local wikidata = labdata.Wikidata
+			if type(wikidata) == "table" then
+				wikidata = wikidata[1]
+			end
+			local wmcode, id = wikidata:match("^(.*):(.*)$")
 			if wmcode then
 				displayed_label = make_displayed_label(wmcode, id)
 			else
 				local langs_to_check = export.get_langs_to_extract_wikipedia_articles_from_wikidata(lang)
 				for _, wmcode in ipairs(langs_to_check) do
-					displayed_label = make_displayed_label(wmcode, labdata.Wikidata)
+					displayed_label = make_displayed_label(wmcode, wikidata)
 					if displayed_label then
 						break
 					end
