@@ -367,7 +367,6 @@ labels["Central Plains Mandarin"] = {
 
 -- FIXME: Category missing.
 labels["Changchun Mandarin"] = {
-	-- A variety of Northeastern Mandarin.
 	region = "[[Changchun]], the capital of [[Jilin]] Province in northeastern [[China]]",
 	aliases = {"Changchun"},
 	Wikidata = "Q17030513",
@@ -386,11 +385,21 @@ labels["Dalian Mandarin"] = {
 }
 
 -- FIXME: Category missing.
+labels["Fenhe Mandarin"] = {
+	region = "[[Linfen]] and [[Yuncheng]] in the lower reaches of the {{w|Fen River}} in [[Shanxi]] Province, as well as in [[Hancheng]] in [[Shaanxi]] Province",
+	aliases = {"Fenhe"},
+	Wikidata = "Q10379509",
+	plain_categories = true,
+	parent = "Central Plains Mandarin",
+}
+
+-- FIXME: Category missing.
 labels["Gangou Mandarin"] = {
-	-- A variety of Central Plains Mandarin.
+	region = "{{w|Minhe Hui and Tu Autonomous County}} in far eastern [[Qinghai]] Province; strongly influenced by the {{catlink|Monguor languages}} (Mongolic) and [[Amdo Tibetan]]",
 	aliases = {"Gangou"},
 	Wikidata = "Q17050290",
 	plain_categories = true,
+	parent = "Central Plains Mandarin",
 }
 
 labels["Guangxi Mandarin"] = {
@@ -401,26 +410,30 @@ labels["Guangxi Mandarin"] = {
 }
 
 labels["Guanzhong Mandarin"] = {
-	-- A variety of Central Plains Mandarin.
+	region = "the {{w|Guanzhong}} region of central [[Shaanxi]] Province, including the capital city [[Xi'an]]",
 	aliases = {"Guanzhong"},
 	Wikidata = "Q3431648",
 	plain_categories = true,
+	parent = "Central Plains Mandarin",
 }
 
 labels["Guilin Mandarin"] = {
 	-- No Guilin alias; also Guilin Pinghua, Guilin Southern Min
+	region = "[[Guilin]] in [[Guangxi]] Autonomous Region in southern [[China]]",
 	Wikidata = "Q11111636",
 	plain_categories = true,
 	parent = "Guiliu Mandarin", -- a variety of Southwestern Mandarin
 }
 
 labels["Guiliu Mandarin"] = {
+	region = "northern [[Guangxi]] Autonomous Region in southern [[China]], especially in the cities of [[Guilin]] and [[Liuzhou]]",
 	Wikidata = "Q11111664",
 	plain_categories = true,
 	parent = "Southwestern Mandarin",
 }
 
 labels["Guiyang Mandarin"] = {
+	region = "[[Guiyang]], the capital of [[Guizhou]] Province in southwestern [[China]]",
 	aliases = {"Guiyang"},
 	Wikidata = "Q15911623",
 	plain_categories = true,
@@ -437,10 +450,11 @@ labels["Harbin Mandarin"] = {
 
 -- FIXME: Category missing.
 labels["Hefei Mandarin"] = {
-	-- A variety of Jianghuai Mandarin.
+	region = "[[Hefei]], the capital of [[Anhui]] Province in central [[China]]",
 	aliases = {"Hefei"},
 	Wikidata = "Q10916956",
 	plain_categories = true,
+	parent = "Jianghuai Mandarin",
 }
 
 -- FIXME: Category missing.
@@ -494,6 +508,7 @@ labels["Jinan Mandarin"] = {
 
 -- FIXME: Category missing.
 labels["Kunming Mandarin"] = {
+	region = "[[Kunming]], the capital of [[Yunnan]] Province in southwestern [[China]]",
 	aliases = {"Kunming"},
 	Wikidata = "Q3372400",
 	plain_categories = true,
@@ -519,19 +534,23 @@ labels["Lanzhou Mandarin"] = {
 }
 
 labels["Liuzhou Mandarin"] = {
+	region = "[[Liuzhou]] in north-central [[Guangxi]] Autonomous Region in southern [[China]]",
 	Wikidata = "Q7224853",
 	plain_categories = true,
 	parent = "Guiliu Mandarin", -- a variety of Southwestern Mandarin
 }
 
 labels["Luoyang Mandarin"] = {
-	-- A variety of Central Plains Mandarin.
+	region = "[[Luoyang]] and nearby parts of [[Henan]] Province, in central-eastern [[China]]",
 	aliases = {"Luoyang"},
 	Wikidata = "Q3431347",
 	plain_categories = true,
+	parent = "Central Plains Mandarin",
 }
 
 labels["Malaysian Mandarin"] = {
+	prep = "by",
+	region = "ethnic Chinese in [[Malaysia]]",
 	aliases = {"Malaysia Mandarin"},
 	Wikidata = "Q13646143",
 	plain_categories = true,
@@ -540,24 +559,27 @@ labels["Malaysian Mandarin"] = {
 labels["Muping Mandarin"] = {
 	region = "[[Muping]] District in the prefecture-level city of [[Yantai]] in northeastern [[Shandong]] Province, in northeastern [[China]]",
 	aliases = {"Muping"}, -- there is also a Muping in Sichuan but it's not clear if it has a dialect
-	Wikidata = "Q281015", -- article for Muping District
+	Wikidata = {"Q281015", "Q15914589"} -- articles for Muping District and for Denglian Mandarin (which includes Yantai and Muping varieties)
 	plain_categories = true,
-	parent = "Jiaoliao Mandarin", -- actually belongs to the Yantai dialect of Jiaoliao Mandarin
+	parent = "Jiaoliao Mandarin",
 }
 
 labels["Nanjing Mandarin"] = {
-	-- A variety of Jianghuai Mandarin.
+	region = "[[Nanjing]], capital of [[Jiangsu]] Province in eastern [[China]]",
 	aliases = {"Nanjing"},
 	Wikidata = "Q2681098",
 	plain_categories = true,
+	parent = "Jianghuai Mandarin",
 }
 
 labels["Nantong Mandarin"] = {
 	-- A subvariety of Tongtai (Tairu) Mandarin, which is a variety of Jianghuai (Lower Yangtze) Mandarin.
 	-- On the English Wikipedia, 'Nantong dialect' redirects to [[w:Tong-Tai Mandarin]].
 	-- no Nantong alias; Nantong Wu also exists
+	region = "[[Nantong]] in southeastern [[Jiangsu]] Province in eastern [[China]]",
 	Wikidata = "Q10909110",
 	plain_categories = true,
+	parent = "Tongtai Mandarin",
 }
 
 labels["Northeastern Mandarin"] = {
@@ -572,19 +594,21 @@ labels["Northeastern Mandarin"] = {
 }
 
 -- FIXME: Category missing.
+labels["Philippine Mandarin"] = {
+	prep = "by",
+	region = "{{w|Chinese Filipino}}s in the [[Philippines]]",
+	aliases = {"Philippines Mandarin"},
+	Wikidata = "Q7185155",
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
 labels["Qingdao Mandarin"] = {
 	region = "[[Qingdao]] and nearby towns, in [[Shandong]] Province in coastal eastern [[China]]",
 	aliases = {"Qingdao"},
 	Wikidata = "Q7267815",
 	plain_categories = true,
 	parent = "Jiaoliao Mandarin",
-}
-
--- FIXME: Category missing.
-labels["Philippine Mandarin"] = {
-	aliases = {"Philippines Mandarin"},
-	Wikidata = "Q7185155",
-	plain_categories = true,
 }
 
 -- FIXME: Category missing.
@@ -600,6 +624,8 @@ labels["Shenyang Mandarin"] = {
 -- Singapore language varieties (which say 'Singapore' not 'Singaporean') and because the form with 'Singapore' seeems
 -- actually more common in Google Scholar.
 labels["Singapore Mandarin"] = {
+	prep = "by",
+	region = "{{w|Chinese Singaporeans}}s in [[Singapore]]",
 	aliases = {"Singaporean Mandarin"},
 	Wikidata = "Q1048980",
 	plain_categories = true,
@@ -618,6 +644,7 @@ labels["Southwestern Mandarin"] = {
 }
 
 labels["Taiwanese Mandarin"] = {
+	region = "[[Taiwan]]",
 	aliases = {"Taiwan Mandarin"},
 	Wikidata = "Q262828",
 	plain_categories = true,
@@ -633,10 +660,11 @@ labels["Tianjin Mandarin"] = {
 
 -- FIXME: Category missing.
 labels["Tongtai Mandarin"] = {
-	-- A variety of Jianghuai Mandarin.
+	region = "east-central [[Jiangsu]] Province in [[Nantong]] and [[Taizhou]]",
 	aliases = {"Tongtai", "Tairu Mandarin", "Tairu"},
 	Wikidata = "Q7820911",
 	plain_categories = true,
+	parent = "Jianghuai Mandarin",
 }
 
 labels["Ürümqi Mandarin"] = {
@@ -648,11 +676,12 @@ labels["Ürümqi Mandarin"] = {
 }
 
 labels["Wanrong Mandarin"] = {
-	-- A subvariety of Fenhe Mandarin, which is a variety of Central Plains Mandarin.
+	region = "[[Wanrong]] County in southern [[Shanxi]] Province in central [[China]]",
 	aliases = {"Wanrong"}, -- Wanrong County in Shanxi; there is a Wanrong Township (mountain indigenous township)
 						   -- in Hualien County, Taiwan, mostly inhabited by Taiwan Aborigines
 	Wikidata = "Q10379509", -- article on Fenhe Mandarin
 	plain_categories = true,
+	parent = "Fenhe Mandarin", -- a variety of Central Plains Mandarin
 }
 
 -- FIXME: Category missing.
@@ -665,6 +694,7 @@ labels["Weihai Mandarin"] = {
 }
 
 labels["Wuhan Mandarin"] = {
+	region = "[[Wuhan]], the capital of [[Hubei]] Province in central [[China]]",
 	aliases = {"Wuhan", "Hankou", "Hankow"},
 	Wikidata = "Q11124731",
 	plain_categories = true,
@@ -672,15 +702,16 @@ labels["Wuhan Mandarin"] = {
 }
 
 labels["Xi'an Mandarin"] = {
-	-- A subvariety of Guanzhong Mandarin, which is a variety of Central Plains Mandarin.
+	region = "[[Xi'an]], the capital of [[Shaanxi]] Province in central [[China]]",
 	aliases = {"Xi'an"},
 	Wikidata = "Q123700130", -- currently a redirect to [[w:Guanzhong dialect]]
 	plain_categories = true,
+	parent = "Guanzhong Mandarin", -- a variety of Central Plains Mandarin
 }
 
 -- FIXME: Category missing.
 labels["Xichang Mandarin"] = {
-	-- A variety of Southwestern Mandarin.
+	region = "[[Xichang]], in far southern [[Sichuan]] Province in southwestern [[China]]",
 	aliases = {"Xichang"},
 	Wikidata = "Q17067030",
 	plain_categories = true,
@@ -704,29 +735,32 @@ labels["Xinjiang Mandarin"] = {
 }
 
 labels["Xuzhou Mandarin"] = {
-	-- A variety of Central Plains Mandarin.
+	region = "[[Xuzhou]] in northwestern [[Jiangsu]] Province in eastern [[China]]",
 	aliases = {"Xuzhou"},
 	Wikidata = "Q8045307",
 	plain_categories = true,
+	parent = "Central Plains Mandarin",
 }
 
 labels["Yangzhou Mandarin"] = {
-	-- A variety of Jianghuai Mandarin.
+	region = "[[Yangzhou]] in central [[Jiangsu]] Province in eastern [[China]]",
 	aliases = {"Yangzhou"},
 	Wikidata = "Q11076194",
 	plain_categories = true,
+	parent = "Jianghuai Mandarin",
 }
 
 labels["Yinchuan Mandarin"] = {
+	region = "[[Yinchuan]], capital of [[Ningxia]] Hui Autonomous Region in north-central [[China]]",
 	aliases = {"Yinchuan"},
-	Wikidata = "Q662754", -- article on Lanyin Mandarin; "Yinchuan Mandarin" has its own Wikidata item Q125021069 but has no links
+	Wikidata = {"Q125021069", "Q662754"}, -- second is article on Lanyin Mandarin; "Yinchuan Mandarin" has its own Wikidata item Q125021069 but has no links
 	plain_categories = true,
 	parent = "Lanyin Mandarin",
 }
 
 -- FIXME: Category missing.
 labels["Yunnan Mandarin"] = {
-	-- A (strange) variety of Southwestern Mandarin.
+	region = "[[Yunnan]] Province in southwestern [[China]]",
 	-- "Yunnan" as alias seems unlikely to be correct
 	Wikidata = "Q10881055",
 	plain_categories = true,
@@ -738,43 +772,52 @@ labels["Yunnan Mandarin"] = {
 -- The following violates normal conventions, which would use "Sichuan Mandarin". But it matches the 'Sichuanese'
 -- language.
 labels["Sichuanese"] = {
-	-- A variety of Southwestern Mandarin.
+	def = "[[Sichuanese]], a variety of {{catlink|Southwestern Mandarin]] spoken in [[Sichuan]] Province and [[Chongqing]] (a {{w|direct-administered municipality), as well as the adjacent regions of neighboring provinces, such as [[Hubei]], [[Guizhou]], [[Yunnan]], [[Hunan]] and [[Shaanxi]]",
 	aliases = {"Sichuan"},
 	Wikidata = "Q2278732",
 	regional_categories = true,
+	parent = "Southwestern Mandarin",
 }
 
 labels["Chengdu Sichuanese"] = {
 	-- A variety of Chengyu Sichuanese.
+	region = "[[Chengdu]], the capital of [[Sichuan]] Province in southwestern [[China]]",
 	aliases = {"Chengdu", "Chengdu Mandarin"},
 	Wikidata = "Q11074683",
 	plain_categories = true,
+	parent = "Chengyu Sichuanese",
 }
 
 -- FIXME: Category missing.
 labels["Chengyu Sichuanese"] = {
+	region = "northern and eastern [[Sichuan]] Province, the northeastern part of the {{w|Chengdu Plain}}, several cities or counties in southwestern [[Sichuan]] ([[Panzhihua]], {{w|Dechang}}, {{w|Yanyuan}}, {{w|Huili}} and {{w|Ningnan}}), southern [[Shaanxi]] Province and western [[Hubei]] Province",
+	addl = "It is a primary branch of Sichuanese and is named after the principal cities of [[Chengdu]] and [[Chongqing]] (based on the former {{w|Yu Prefecture}}).",
 	aliases = {"Chengyu", "Chengyu Mandarin", "Chengdu-Chongqing", "Chengdu-Chongqing Mandarin"},
 	Wikidata = "Q5091311",
 	plain_categories = true,
 }
 
 labels["Chongqing Sichuanese"] = {
-	-- A variety of Chengyu Sichuanese.
+	region = "[[Chonqing]], a {{w|direct-administered municipality}} in western [[China]]",
 	aliases = {"Chongqing", "Chongqing Mandarin"},
 	Wikidata = "Q15902531",
 	plain_categories = true,
+	parent = "Chengyu Sichuanese",
 }
 
 -- FIXME: Category missing.
 labels["Leshan Sichuanese"] = {
-	-- A variety of Minjiang Sichuanese.
+	region = "[[Leshan]] in [[Sichuan]] Province, in southwestern [[China]]",
 	aliases = {"Leshan", "Leshan Mandarin"},
 	Wikidata = "Q6530337",
 	plain_categories = true,
+	parent = "Minjiang Sichuanese",
 }
 
 -- FIXME: Category missing.
 labels["Minjiang Sichuanese"] = {
+	region = "the [[Min]] River in [[Sichuan]] Province or along the [[Yangtze]] in the southern and western parts of the {{w|Sichuan Basin}}, in southwestern [[China]]",
+	addl = "It is a primary branch of Sichuanese.",
 	aliases = {"Minjiang", "Minjiang Mandarin"},
 	Wikidata = "Q6867767",
 	plain_categories = true,
@@ -782,6 +825,8 @@ labels["Minjiang Sichuanese"] = {
 
 -- FIXME: Category missing.
 labels["Renfu Sichuanese"] = {
+	region = "the lower reaches of the {{w|Tuo River|Tuo}} and [[Min]] Rivers in the {{w|Sichuan Basin}} in central-southern [[Sichuan]] Province",
+	addl = "It is a primary branch of Sichuanese and is named after {{w|Renshou County}} and {{w|Fushun County, Sichuan|Fushun County}}.",
 	-- Jianggong is used by zhwiki.
 	aliases = {"Renfu", "Renfu Mandarin", "Renshou-Fushun", "Renshou-Fushun Mandarin", "Renshou-Fushun Sichuanese", "Jianggong", "Jianggong Mandarin", "Jianggong Sichuanese"},
 	Wikidata = "Q10883781",
@@ -790,6 +835,8 @@ labels["Renfu Sichuanese"] = {
 
 -- FIXME: Category missing.
 labels["Yamian Sichuanese"] = {
+	region = "an area surrounding and to the southwest of [[Ya'an]] in central [[Sichuan]] Province in southwestern [[China]]",
+	addl = "It is a primary branch of Sichuanese and named after the city of [[Ya'an]] and {{w|Shimian County}} to the southwest.",
 	aliases = {"Yamian", "Yamian Mandarin"},
 	Wikidata = "Q56243639",
 	plain_categories = true,
@@ -797,10 +844,11 @@ labels["Yamian Sichuanese"] = {
 
 -- FIXME: Category missing.
 labels["Zigong Sichuanese"] = {
-	-- A variety of Renfu Sichuanese.
+	region = "[[Zigong]] in southeastern [[Sichuan]] Province in southwestern [[China]]",
 	aliases = {"Zigong", "Zigong Mandarin"},
 	Wikidata = "Q8071810",
 	plain_categories = true,
+	parent = "Renfu Sichuanese",
 }
 
 ------------------------------------------ Min ------------------------------------------
@@ -1432,51 +1480,59 @@ labels["dialectal Wu"] = {
 
 -- FIXME: Category missing.
 labels["Anji Wu"] = {
-	-- A subvariety of Tiaoxi Wu, which is a variety of Northern Wu.
+	region = "{{w|Anji County}} in northwestern [[Zhejiang]] Province in eastern [[China]]",
 	aliases = {"Anji"},
 	Wikidata = "Q111270089",
 	plain_categories = true,
+	parent = "Tiaoxi Wu",
 }
 
 -- FIXME: Category missing.
 labels["Changxing Wu"] = {
-	-- A subvariety of Tiaoxi Wu, which is a variety of Northern Wu.
+	region = "[[Changxing]] County in northwestern [[Zhejiang]] Province in eastern [[China]]",
 	aliases = {"Changxing"},
 	Wikidata = "Q11126990",
 	plain_categories = true,
+	parent = "Tiaoxi Wu",
 }
 
 -- FIXME: Category missing.
 labels["Changzhounese Wu"] = {
-	-- A subvariety of Piling Wu, which is a variety of Northern Wu.
+	region = "the city of [[Changzhou]] in southern [[Jiangsu]] Province in eastern [[China]], along with surrounding areas",
 	aliases = {"Changzhou Wu", "Changzhou", "Changzhounese"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Changzhounese Wu'.
 	display = "Changzhounese",
 	Wikidata = "Q1021819",
 	plain_categories = true,
+	parent = "Piling Wu",
 }
 
 labels["Danyang Wu"] = {
-	-- Apparently a subvariety of Piling Wu, which is a variety of Northern Wu.
+	region = "the [[county-level city]] of {{w|Danyang}} in southern [[Jiangsu]] Province in eastern [[China]]",
+	addl = "It is on the border between Wu Chinese (to the south) and Mandarin Chinese (to the north).",
 	aliases = {"Danyang"},
 	Wikidata = "Q925293", -- article for Danyang, Jiangsu
 	plain_categories = true,
+	parent = "Piling Wu",
 }
 
 -- FIXME: Category missing.
 labels["Deqing Wu"] = {
-	-- A subvariety of Tiaoxi Wu, which is a variety of Northern Wu.
+	region = "[[Deqing]] County in northwestern [[Zhejiang]] Province in eastern [[China]]",
 	aliases = {"Deqing"},
 	Wikidata = "Q109343820",
 	plain_categories = true,
+	parent = "Tiaoxi Wu",
 }
 
 -- FIXME: Category missing.
 labels["Fuyang Wu"] = {
-	-- A subvariety of Linshao Wu, which is a variety of Northern Wu.
+	region = "parts of {{w|Fuyang District}} in the city of [[Hangzhou]], the capital of [[Zhejiang]] Province, in eastern [[China]]; located in the northwest part of the province",
+	addl = "The dialect geography in Fuyang District is complex, with multiple dialects from distinct groupings spoken in close proximity and several dialect islands.",
 	aliases = {"Fuyang"},
 	Wikipedia = "zh:富阳话", -- no Wikidata item yet
 	plain_categories = true,
+	parent = "Linshao Wu",
 }
 
 labels["Hangzhounese Wu"] = {
@@ -1487,48 +1543,53 @@ labels["Hangzhounese Wu"] = {
 	display = "Hangzhounese",
 	Wikidata = "Q5648144",
 	plain_categories = true,
+	parent = "Northern Wu",
 }
 
 labels["Huzhounese Wu"] = {
-	-- A subvariety of Tiaoxi Wu, which is a variety of Northern Wu.
+	region = "the urban ({{w|Wuxing District}}) and suburban ({{w|Nanxun District}}) parts of [[Huzhou]] in northwestern [[Zhejiang]] Province in eastern [[China]]",
 	aliases = {"Huzhou", "Huzhou Wu", "Huzhounese"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Huzhounese Wu'.
 	display = "Huzhounese",
 	Wikidata = "Q15901269",
 	plain_categories = true,
+	parent = "Tiaoxi Wu",
 }
 
 -- FIXME: Category missing.
 labels["Jiangyin Wu"] = {
-	-- A subvariety of Piling Wu, which is a variety of Northern Wu; but
-	-- transitional to Sujiahu Wu.
+	region = "the [[county-level city]] of [[Jiangyin]] in southeast [[Jiangsu]] Province in eastern [[China]]",
 	aliases = {"Jiangyin"},
 	Wikidata = "Q6191803",
 	plain_categories = true,
+	parent = "Piling Wu", -- but transitional to Sujiahu Wu
 }
 
 -- FIXME: Category missing.
 labels["Jiaxing Wu"] = {
-	-- A subvariety of Sujiahu Wu, which is a variety of Northern Wu.
+	region = "the urban {{w|Xiuzhou District|Xiuzhou}} and {{Nanhu District}}s of the [[prefecture-level city]] of [[Jiaxing]] in far northern [[Zhejiang]] Province in eastern [[China]]",
 	aliases = {"Jiaxing"},
 	Wikidata = "Q30130993",
 	plain_categories = true,
+	parent = "Sujiahu Wu",
 }
 
 -- FIXME: Category missing.
 labels["Jinhui Wu"] = {
-	-- A subvariety of Sujiahu Wu, which is a variety of Northern Wu.
+	region = "the town of {{w|lang=zh|金汇镇|Jinhui}} in the suburban [[Fengxian]] District of [[Shanghai]], in eastern [[China]]",
 	aliases = {"Jinhui", "Dangdai Wu", "Dangdai", "Dônđäc"},
 	Wikidata = "Q16259341",
 	plain_categories = true,
+	parent = "Sujiahu Wu",
 }
 
 -- FIXME: Category missing.
 labels["Jintan Wu"] = {
-	-- A subvariety of Piling Wu, which is a variety of Northern Wu.
+	region = "{{w|Jintan District}} of the [[prefecture-level city]] of [[Changzhou]] in southern [[Jiangsu]] Province in eastern [[China]]",
 	aliases = {"Jintan"},
 	Wikidata = "Q15904190",
 	plain_categories = true,
+	parent = "Piling Wu",
 }
 
 -- FIXME: Category missing.
@@ -1537,42 +1598,47 @@ labels["Jinxiang Wu"] = {
 	aliases = {"Jinxiang"},
 	Wikidata = "Q2427960",
 	plain_categories = true,
+	parent = "Northern Wu",
 }
 
 -- FIXME: Category missing.
 labels["Jingjiang Wu"] = {
-	-- A subvariety of Piling Wu, which is a variety of Northern Wu.
+	region = "the [[county-level city]] of [[Jingjiang]] in southeast [[Jiangsu]] Province in eastern [[China]]",
 	aliases = {"Lao'an", "Jingjiang", "Lao'an"},
 	Wikipedia = "zh:老岸话", -- no Wikidata item yet
 	plain_categories = true,
+	parent = "Piling Wu",
 }
 
 -- FIXME: Category missing.
 labels["Lin'an Wu"] = {
-	-- A subvariety of Linshao Wu, which is a variety of Northern Wu.
+	region = "{{w|Lin'an District}}, an urban district of the [[prefecture-level city]] of [[Hangzhou]], the capital of [[Zhejiang]] Province, in eastern [[China]]; located in the northwest part of the province"
 	aliases = {"Lin'an"},
 	Wikidata = "Q1022464", -- article for Lin'an District (part of the prefecture-level city of Hangzhou)
 	plain_categories = true,
+	parent = "Linshao Wu",
 }
 
 labels["Linshao Wu"] = {
-	-- A variety of Northern Wu.
+	region = "much of north-central [[Zhejiang]] Province in eastern [[China]], including especially the central part of the city of [[Shaoxing]] as well as some parts (but not the central part) of [[Hangzhou]]",
 	aliases = {"Linshao", "Lin-Shao Wu", "Lin-Shao"},
 	Wikidata = "Q7489194", -- article for Shaoxing dialect, the representative variety
 	plain_categories = true,
+	parent = "Northern Wu",
 }
 
 labels["Ningbonese Wu"] = {
-	-- A subvariety of Yongjiang Wu, which is a variety of Northern Wu.
 	aliases = {"Ningbonese", "Ningbo Wu", "Ningbo"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Ningbonese Wu'.
 	display = "Ningbonese",
 	Wikidata = "Q3972199",
 	plain_categories = true,
+	parent = "Yongjiang Wu",
 }
 
 labels["Northern Wu"] = {
-	-- A primary branch.
+	region = "the city of [[Shanghai]] as well as southern [[Jiangsu]] Province, northern [[Zhejiang]] Province and southeastern [[Anhui]] Province",
+	addl = "It is a primary branch of {{w|Wu Chinese}}. Notable cities where Northern Wu is spoken include [[Shanghai]], [[Suzhou]], [[Hangzhou]], [[Shaoxing]], [[Ningbo]], [[Zhoushan]], [[Wuxi]] and [[Changzhou]].",
 	aliases = {"Taihu", "Taihu Wu"},
 	Wikidata = "Q7675988",
 	plain_categories = true,
@@ -1580,172 +1646,190 @@ labels["Northern Wu"] = {
 
 -- FIXME: Category missing.
 labels["Old Guangde Wu"] = {
-	-- A subvariety of Tiaoxi Wu, which is a variety of Northern Wu.
+	region = "southeastern {{w|Guangde}}, a [[county-level city]] in the southeastern portion of [[Anhui]] Province, bordering northwestern [[Zhejiang]] Province in eastern [[China]]",
+	addl = "It is an exclave of {{catlink|Northern Wu}}, surrounded by New Guangde (a {{catlink|Jianghuai Mandarin}} variety) and {{catlink|Xuanzhou Wu}}.",
 	aliases = {"Old Guangde", "Southeast Guangde Wu", "Southeast Guangde"},
 	Wikidata = "Q7084146",
 	plain_categories = true,
+	parent = "Tiaoxi Wu",
 }
 
 -- FIXME: Category missing.
 labels["Old Langxi Wu"] = {
-	-- A subvariety of Piling Wu, which is a variety of Northern Wu.
+	region = "parts of northern and northwestern {{w|Langxi County}} and northwen {{w|Guangde}}, in southeastern [[Anhui]] Province, in eastern [[China]]",
 	aliases = {"Old Langxi", "Lao Langxi Wu", "Lao Langxi"},
 	Wikidata = "Q15911930",
 	plain_categories = true,
+	parent = "Piling Wu",
 }
 
 -- FIXME: Category missing.
 labels["Piling Wu"] = {
-	-- A variety of Northern Wu.
+	region = "much of southern [[Jiangsu]] Province (including especially the city of [[Changzhou]]) as well as a few parts of southeastern [[Anhui]] Province, in eastern [[China]]",
 	aliases = {"Piling"},
 	Wikidata = "Q1021819", -- article for Changzhou dialect
 	plain_categories = true,
+	parent = "Northern Wu",
 }
 
 labels["Shadi Wu"] = {
-	-- A subvariety of Sujiahu Wu, which is a variety of Northern Wu.
+	region = "[[Chongming]] Island, [[Haimen]] District of the city of [[Nantong]], and the city of {{w|Qidong, Jiangsu|Qidong}} in southeastern [[Jiangsu]] Province in eastern [[China]], as well as in some areas of the city of {{w|Zhangjiagang}}",
 	aliases = {"Shadi", "Chongming", "Chongming Wu", "Qihai", "Qihai Wu"},
 	Wikidata = "Q6112340",
 	plain_categories = true,
+	parent = "Sujiahu Wu",
 }
 
 -- FIXME: Category missing.
 labels["Shanghainese Wu"] = {
-	-- A subvariety of Sujiahu Wu, which is a variety of Northern Wu.
+	region = "the central districts and surrounding areas of [[Shanghai]] in eastern [[China]]",
 	aliases = {"Shanghai Wu", "Shanghainese"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Shanghainese Wu'.
 	display = "Shanghainese",
 	Wikidata = "Q36718",
 	plain_categories = true,
+	parent = "Sujiahu Wu",
 }
 
 -- FIXME: Category missing.
 labels["Shangyu Wu"] = {
-	-- A subvariety of Linshao Wu, which is a variety of Northern Wu.
+	region = "{{w|Shangyu District}} in northeastern [[Zhejiang]] Province, in eastern [[China]]",
 	aliases = {"Shangyu"},
 	Wikipedia = "zh:上虞話", -- no Wikidata item yet
 	plain_categories = true,
+	parent = "Linshao Wu",
 }
 
 -- FIXME: Category missing.
 labels["Shaoxing Wu"] = {
-	-- A subvariety of Linshao Wu, which is a variety of Northern Wu.
+	region = "the central {{w|Yuecheng District}} of the [[prefecture-level city]] of [[Shaoxing]] in northeastern [[Zhejiang]] Province, in eastern [[China]]",
 	aliases = {"Shaoxing", "Shaoxingnese", "Shaoxingnese Wu", "Shaoxingese", "Shaoxingese Wu"},
 	Wikidata = "Q7489194",
 	plain_categories = true,
+	parent = "Linshao Wu",
 }
 
 -- FIXME: Category missing.
 labels["Shengzhou Wu"] = {
-	-- A subvariety of Linshao Wu, which is a variety of Northern Wu.
+	region = "{{w|Shengzhou}}, a [[county-level city]] in eastern [[Zhejiang]] Province, in eastern [[China]]",
 	aliases = {"Shengzhou"},
 	Wikidata = "Q11054430",
 	plain_categories = true,
+	parent = "Linshao Wu",
 }
 
 -- FIXME: Category missing.
 labels["Sujiahu Wu"] = {
-	-- A variety of Northern Wu.
+	region = "the city of [[Shanghai]] as well as adjacent areas to the north (in southern [[Jiangsu]] Province) and the south (in northern [[Zhejiang]] Province)",
+	addl = "It is named after the cities of [[Suzhou]]  (''Su''), [[Jiaxing]] (''Jia'') and [[Shanghai]] (''Hu'', the abbreviation of Shanghai, based on an old name for {{w|Suzhou Creek}}, which passes through the center of Shanghai). It also encompasses the varieties spoken in [[Wuxi]], [[Changshu]] and [[Nantong]]. Although it is a common grouping, it may be areal in nature and not a proper [[clade]].",
 	aliases = {"Sujiahu", "Su-Jia-Hu Wu", "Su-Jia-Hu", "Suhujia Wu", "Suhujia", "Su-Hu-Jia Wu", "Su-Hu-Jia"}, -- not Suzhou-Jiaxing-Huzhou
 	Wikidata = "Q17036256",
 	-- display = "[[w:Suzhou dialect|Su]][[w:zh:嘉興話|jia]][[w:Shanghainese|hu]] [[w:Wu Chinese|Wu]]",
 	plain_categories = true,
+	parent = "Northern Wu",
 }
 
 labels["Suzhounese Wu"] = {
-	-- A subvariety of Sujiahu Wu, which is a variety of Northern Wu.
 	aliases = {"Suzhou", "Suzhounese", "Suzhou Wu"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Suzhounese Wu'.
 	display = "Suzhounese",
 	Wikidata = "Q831744",
 	plain_categories = true,
+	parent = "Sujiahu Wu",
 }
 
 -- FIXME: Category missing.
 labels["Tiaoxi Wu"] = {
-	-- A variety of Northern Wu.
+	region = "nearly all of the [[prefecture-level city]] of [[Huzhou]] in northwestern [[Zhejiang]] Province in eastern [[China]], as well as parts of [[Jiaxing]] and [[Hangzhou]] (in [[Zhejiang]] Province) and [[Suzhou]] (in [[Jiangsu]] Province)",
 	aliases = {"Tiaoxi"},
-	Wikidata = "Q11010462",
+	Wikidata = "Q110104620",
 	plain_categories = true,
+	parent = "Northern Wu",
 }
 
 -- FIXME: Category missing.
 labels["Tonglu Wu"] = {
-	-- A subvariety of Linshao Wu, which is a variety of Northern Wu.
+	region = "{{w|Tonglu County}} in northwestern [[Zhejiang]] Province, in eastern [[China]]",
 	aliases = {"Tonglu"},
 	Wikidata = "Q18654008",
 	plain_categories = true,
+	parent = "Linshao Wu",
 }
 
 -- FIXME: Category missing.
 labels["Urban Shanghainese Wu"] = {
-	-- A subvariety of Shanghainese Wu, which is a subvariety of Sujiahu Wu, which is a variety of Northern Wu.
 	aliases = {"Urban Shanghai Wu", "Urban Shanghainese", "Urban Shanghai"},
 	Wikipedia = "Shanghainese#Classification",
 	plain_categories = true,
+	parent = "Shanghainese Wu",
 }
 
 -- FIXME: Category missing.
 labels["Wuxi Wu"] = {
-	-- A subvariety of Sujiahu Wu, which is a variety of Northern Wu.
 	aliases = {"Wuxi"},
 	Wikidata = "Q2325035",
 	plain_categories = true,
+	parent = "Sujiahu Wu",
 }
 
 -- FIXME: Category missing.
 labels["Xiaoshan Wu"] = {
-	-- A subvariety of Linshao Wu, which is a variety of Northern Wu.
+	region = "{{w|Xiaoshan District}}, an urban district of [[Hangzhou]] in northwestern [[Zhejiang]] Province, and in the village of Jiangdong in {{w|Qiantang District}} of [[Hangzhou]]",
 	aliases = {"Xiaoshan"},
 	Wikidata = "Q60993472",
 	plain_categories = true,
+	parent = "Linshao Wu",
 }
 
 -- FIXME: Category missing.
 labels["Xinchang Wu"] = {
-	-- A subvariety of Linshao Wu, which is a variety of Northern Wu.
+	region = "{{w|Xinchang County}} in east-central [[Zhejiang]] Province, in eastern [[China]]",
 	aliases = {"Xinchang"},
 	Wikidata = "Q11082821",
 	plain_categories = true,
+	parent = "Linshao Wu",
 }
 
 -- FIXME: Category missing.
 labels["Yixing Wu"] = {
-	-- A subvariety of Piling Wu, which is a variety of Northern Wu.
+	region = "the [[county-level city]] of {{w|Yixing}} in southern [[Jiangsu]] Province in eastern [[China]]",
 	aliases = {"Yixing"},
 	Wikipedia = "zh:宜興話", -- no Wikidata item yet
 	plain_categories = true,
+	parent = "Piling Wu",
 }
 
 -- FIXME: Category missing.
 labels["Yongjiang Wu"] = {
-	-- A variety of Northern Wu.
 	aliases = {"Yongjiang"},
 	Wikidata = "Q15503785",
 	plain_categories = true,
+	parent = "Northern Wu",
 }
 
 -- FIXME: Category missing.
 labels["Yuhang Wu"] = {
-	-- A subvariety of Tiaoxi Wu, which is a variety of Northern Wu.
+	region = "{{w|Yuhang District}} of the city of [[Hangzhou]], the capital of [[Zhejiang]] Province in eastern [[China]]",
 	aliases = {"Yuhang"},
 	Wikidata = "Q109414979",
 	plain_categories = true,
+	parent = "Tiaoxi Wu",
 }
 
 -- FIXME: Category missing.
 labels["Zhoushan Wu"] = {
-	-- A subvariety of Yongjiang Wu, which is a variety of Northern Wu.
 	aliases = {"Zhoushan"},
 	plain_categories = true,
+	parent = "Yongjiang Wu",
 }
 
 -- FIXME: Category missing.
 labels["Zhuji Wu"] = {
-	-- A subvariety of Linshao Wu, which is a variety of Northern Wu.
+	region = "{{w|Zhuji}}, a [[county-level city]] in north-central [[Zhejiang]] Province, in eastern [[China]]",
 	aliases = {"Zhuji"},
 	Wikidata = "Q18119187",
 	plain_categories = true,
+	parent = "Linshao Wu",
 }
 
 ---------------------- Southern Wu ----------------------
