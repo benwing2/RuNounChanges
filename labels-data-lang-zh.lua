@@ -1537,18 +1537,20 @@ labels["Fuyang Wu"] = {
 
 -- FIXME: Category missing.
 labels["Haining Wu"] = {
-	-- A subvariety of Suhujia Wu, which is a variety of Northern Wu.
+	region = "{{w|Haining}}, a [[county-level city]] in northern [[Zhejiang]] Province in eastern [[China]]",
 	aliases = {"Xiashi", "Xiashi Wu", "Haining"},
 	Wikidata = "Q286266", -- article for Haining city
 	plain_categories = true,
+	parent = "Sujiahu Wu",
 }
 
 -- FIXME: Category missing.
 labels["Haiyan Wu"] = {
-	-- A subvariety of Suhujia Wu, which is a variety of Northern Wu.
+	region = "{{w|Haiyang County, Zhejiang|Haiyang County}} in northern [[Zhejiang]] Province in eastern [[China]]",
 	aliases = {"Haiyan"},
 	Wikidata = "Q1334198", -- article for Haiyan prefecture
 	plain_categories = true,
+	parent = "Sujiahu Wu",
 }
 
 labels["Hangzhounese Wu"] = {
@@ -1736,10 +1738,11 @@ labels["Shengzhou Wu"] = {
 
 -- FIXME: Category missing.
 labels["Songjiang Wu"] = {
-	-- A subvariety of Shanghainese (Shanghai Wu), which is a variety of Sujiahu Wu, which is a variety of Northern Wu.
+	region = "[[Songjiang]] District, a suburban district of [[Shanghai]], in eastern [[China]]",
 	aliases = {"Songjiang"},
 	Wikidata = "Q662380", -- article for Songjiang district
 	plain_categories = true,
+	parent = "Shanghainese Wu",
 }
 
 -- FIXME: Category missing.
@@ -1754,6 +1757,7 @@ labels["Sujiahu Wu"] = {
 }
 
 labels["Suzhounese Wu"] = {
+	region = "the city of [[Suzhou]] and adjacent parts of southeastern [[Jiangsu]] Province and parts of [[Shanghai]], in eastern [[China]]",
 	aliases = {"Suzhou", "Suzhounese", "Suzhou Wu"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Suzhounese Wu'.
 	display = "Suzhounese",
@@ -1782,14 +1786,17 @@ labels["Tonglu Wu"] = {
 
 -- FIXME: Category missing.
 labels["Tongxiang Wu"] = {
-	-- A subvariety of Tiaoxi Wu, which is a variety of Northern Wu.
+	region = "{{w|Tongxiang}}, a [[county-level city]] in northern [[Zhejiang]] Province, bordering [[Jiangsu]] Province to the north, in eastern [[China]]",
 	aliases = {"Tongxiang", "Tongxiang dialect"},
 	Wikidata = "Q1204548", -- article for Tongxiang prefecture
 	plain_categories = true,
+	parent = "Tiaoxi Wu",
 }
 
 -- FIXME: Category missing.
 labels["Urban Shanghainese Wu"] = {
+	region = "the city center of [[Shanghai]] in eastern [[China]]; generally on the west bank of the [[Huangpu]] River",
+	addl = "Urban Shanghainese is changing rapidly and can be further subdivided into Old, Middle, New and Newest periods.",
 	aliases = {"Urban Shanghai Wu", "Urban Shanghainese", "Urban Shanghai"},
 	Wikipedia = "Shanghainese#Classification",
 	plain_categories = true,
@@ -1798,6 +1805,7 @@ labels["Urban Shanghainese Wu"] = {
 
 -- FIXME: Category missing.
 labels["Wuxi Wu"] = {
+	region = "the city of [[Wuxi]] in southern [[Jiangsu]] Province in eastern [[China]]",
 	aliases = {"Wuxi"},
 	Wikidata = "Q2325035",
 	plain_categories = true,
@@ -1806,7 +1814,7 @@ labels["Wuxi Wu"] = {
 
 -- FIXME: Category missing.
 labels["Xiaoshan Wu"] = {
-	region = "{{w|Xiaoshan District}}, an urban district of [[Hangzhou]] in northwestern [[Zhejiang]] Province, and in the village of Jiangdong in {{w|Qiantang District}} of [[Hangzhou]]",
+	region = "{{w|Xiaoshan District}}, an urban district of [[Hangzhou]] in northwestern [[Zhejiang]] Province in eastern [[China]], and in the village of Jiangdong in {{w|Qiantang District}} of [[Hangzhou]]",
 	aliases = {"Xiaoshan"},
 	Wikidata = "Q60993472",
 	plain_categories = true,
