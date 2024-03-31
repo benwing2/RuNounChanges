@@ -1535,6 +1535,22 @@ labels["Fuyang Wu"] = {
 	parent = "Linshao Wu",
 }
 
+-- FIXME: Category missing.
+labels["Haining Wu"] = {
+	-- A subvariety of Suhujia Wu, which is a variety of Northern Wu.
+	aliases = {"Xiashi", "Xiashi Wu", "Haining"},
+	Wikidata = "Q286266", -- article for Haining city
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
+labels["Haiyan Wu"] = {
+	-- A subvariety of Suhujia Wu, which is a variety of Northern Wu.
+	aliases = {"Haiyan"},
+	Wikidata = "Q1334198", -- article for Haiyan prefecture
+	plain_categories = true,
+}
+
 labels["Hangzhounese Wu"] = {
 	-- An isolate variety of Northern Wu with heavy Northern Mandarinic (ie. not
 	-- Huai) influence from the Southern Song Dyansty
@@ -1719,6 +1735,14 @@ labels["Shengzhou Wu"] = {
 }
 
 -- FIXME: Category missing.
+labels["Songjiang Wu"] = {
+	-- A subvariety of Shanghainese (Shanghai Wu), which is a variety of Sujiahu Wu, which is a variety of Northern Wu.
+	aliases = {"Songjiang"},
+	Wikidata = "Q662380", -- article for Songjiang district
+	plain_categories = true,
+}
+
+-- FIXME: Category missing.
 labels["Sujiahu Wu"] = {
 	region = "the city of [[Shanghai]] as well as adjacent areas to the north (in southern [[Jiangsu]] Province) and the south (in northern [[Zhejiang]] Province)",
 	addl = "It is named after the cities of [[Suzhou]]  (''Su''), [[Jiaxing]] (''Jia'') and [[Shanghai]] (''Hu'', the abbreviation of Shanghai, based on an old name for {{w|Suzhou Creek}}, which passes through the center of Shanghai). It also encompasses the varieties spoken in [[Wuxi]], [[Changshu]] and [[Nantong]]. Although it is a common grouping, it may be areal in nature and not a proper [[clade]].",
@@ -1754,6 +1778,14 @@ labels["Tonglu Wu"] = {
 	Wikidata = "Q18654008",
 	plain_categories = true,
 	parent = "Linshao Wu",
+}
+
+-- FIXME: Category missing.
+labels["Tongxiang Wu"] = {
+	-- A subvariety of Tiaoxi Wu, which is a variety of Northern Wu.
+	aliases = {"Tongxiang", "Tongxiang dialect"},
+	Wikidata = "Q1204548", -- article for Tongxiang prefecture
+	plain_categories = true,
 }
 
 -- FIXME: Category missing.
