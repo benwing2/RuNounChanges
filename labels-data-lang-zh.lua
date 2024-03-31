@@ -1876,18 +1876,18 @@ labels["Zhuji Wu"] = {
 
 -- FIXME: Category missing.
 labels["Baizhang Wu"] = {
-	-- A variety of Oujiang Wu.
 	aliases = {"Baizhang", "Xialu Wu", "Xialu"},
 	Wikipedia = "zh:百丈口话", -- no Wikidata item yet
 	plain_categories = true,
+	parent = "Oujiang Wu",
 }
 
 -- FIXME: Category missing.
 labels["Beitai Wu"] = {
-	-- A variety of Taizhou Wu.
 	aliases = {"Beitai"},
 	-- Undefined in Chinese Wikipedia
 	plain_categories = true,
+	parent = "Taizhou Wu",
 }
 
 -- FIXME: Category missing.
@@ -1940,10 +1940,10 @@ labels["Gaochun Wu"] = {
 
 -- FIXME: Category missing.
 labels["Hongqiao Wu"] = {
-	-- A variety of Oujiang Wu.
 	aliases = {"Hongqiao"},
 	Wikidata = "Q15933359",
 	plain_categories = true,
+	parent = "Oujiang Wu",
 }
 
 -- FIXME: Category missing.
@@ -1996,10 +1996,10 @@ labels["Jiuhua Wu"] = {
 
 -- FIXME: Category missing.
 labels["Jujiang Wu"] = {
-	-- Possibly a variety of Oujiang Wu. Also has characteristics of Chuqu Wu.
 	aliases = {"Jujiang"},
 	Wikipedia = "zh:莒江话", -- no Wikidata item yet
 	plain_categories = true,
+	parent = "Oujiang Wu", -- possibly? also has characteristics of Chuqu Wu
 }
 
 -- FIXME: Category missing.
@@ -2013,7 +2013,6 @@ labels["Lanxi Wu"] = {
 -- FIXME: Category missing.
 labels["Lishui Wu"] = {
 	-- A subvariety of Chuzhou Wu, which is a variety of Chuqu Wu.
-	-- FIXME: Chuzhou Wu and Fujian Wu are not really aliases, but it's just more convenient ngl
 	-- NOTE: Chuzhou was a historical administrative division that includes modern day Lishui & Wuyi,
 	-- and is a proposed top-level division of Wu. Pucheng, Fujian is majority Wu-speaking.
 	aliases = {"Lishui", "Lishuinese"},
@@ -2024,10 +2023,7 @@ labels["Lishui Wu"] = {
 -- FIXME: Category missing.
 labels["Pucheng Wu"] = {
 	-- A subvariety of Chuzhou Wu, which is a variety of Chuqu Wu.
-	-- FIXME: Chuzhou Wu and Fujian Wu are not really aliases, but it's just more convenient ngl
-	-- NOTE: Chuzhou was a historical administrative division that includes modern day Lishui & Wuyi,
-	-- and is a proposed top-level division of Wu. Pucheng, Fujian is majority Wu-speaking.
-	aliases = {"Fujian Wu"}, -- not "Pucheng" because per Wikipedia, Northern Min (Shibei dialect) is also spoken
+	-- no "Pucheng" alias because per Wikipedia, Northern Min (Shibei dialect) is also spoken
 	Wikidata = "Q1338032", -- article on Pucheng County, Fujian
 	plain_categories = true,
 }
@@ -2058,10 +2054,10 @@ labels["Nanji Wu"] = {
 
 -- FIXME: Category missing.
 labels["Nantai Wu"] = {
-	-- A variety of Taizhou Wu.
 	aliases = {"Nantai"},
 	-- Undefined in Chinese Wikipedia
 	plain_categories = true,
+	parent = "Taizhou Wu",
 }
 
 -- FIXME: Category missing.
@@ -2090,10 +2086,10 @@ labels["Pan'an Wu"] = {
 
 -- FIXME: Category missing.
 labels["Pucheng Ou Wu"] = {
-	-- A variety of Oujiang Wu.
 	aliases = {"Pucheng Ou"},
 	Wikipedia = "zh:蒲城瓯语", -- no Wikidata item yet
 	plain_categories = true,
+	parent = "Oujiang Wu",
 }
 
 -- FIXME: Category missing.
@@ -2122,10 +2118,10 @@ labels["Quzhou Wu"] = {
 
 -- FIXME: Category missing.
 labels["Rui'an Wu"] = {
-	-- A variety of Oujiang Wu.
 	aliases = {"Rui'an"},
 	Wikidata = "Q4415352",
 	plain_categories = true,
+	parent = "Oujiang Wu",
 }
 
 -- FIXME: Category missing.
@@ -2173,13 +2169,16 @@ labels["Taiping Wu"] = {
 	plain_categories = true,
 }
 
--- FIXME: Category missing.
-labels["Urban Taizhou Wu"] = {
-	-- A subvariety of Nantai Wu, which is a variety of Taizhou Wu.
-	aliases = {"Urban Taizhou"},
-	Wikidata = "Q3972406",
-	plain_categories = true,
-}
+
+-- Per [[User:ND381]], there is not a single Urban Taizhou Wu lect. Who knows, then, what Wikidata item Q3972406
+-- ([[w:Taizhou dialect]]) corresponds to, if anything.
+-- -- FIXME: Category missing.
+--labels["Urban Taizhou Wu"] = {
+--	-- A subvariety of Nantai Wu, which is a variety of Taizhou Wu.
+--	aliases = {"Urban Taizhou"},
+--	Wikidata = "Q3972406",
+--	plain_categories = true,
+--}
 
 -- FIXME: Category missing.
 labels["Taizhou Wu"] = {
@@ -2236,19 +2235,19 @@ labels["Tongling Wu"] = {
 
 -- FIXME: Category missing.
 labels["Wencheng Wu"] = {
-	-- A variety of Oujiang Wu.
 	aliases = {"Wencheng"},
 	Wikidata = "Q7982335",
 	plain_categories = true,
+	parent = "Oujiang Wu",
 }
 
 labels["Wenzhounese Wu"] = {
-	-- A variety of Oujiang Wu.
 	aliases = {"Wenzhounese", "Wenzhou Wu", "Wenzhou", "Oujiang"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Wenzhounese Wu'.
 	display = "Wenzhounese",
 	Wikidata = "Q710218",
 	plain_categories = true,
+	parent = "Oujiang Wu",
 }
 
 -- FIXME: Category missing.
