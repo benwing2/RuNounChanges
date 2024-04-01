@@ -125,7 +125,27 @@ local function ine(arg)
 end
 
 
-local function infer_region_from_lang(lang, pagename)
+-- Get the full language to use e.g. in the settings.
+local function get_returnable_lang(lang)
+	if lang:hasType("family") then
+		return nil
+	else
+		return lang:getNonEtymological()
+	end
+end
+
+
+-- Get the full language code to return in the settings.
+local function get_returnable_lang_code(lang)
+	if lang:hasType("family") then
+		return "und"
+	else
+		return lang:getNonEtymologicalCode()
+	end
+end
+
+
+local function infer_region_from_lang(pagename, lang)
 	-- Try to figure out the region (used as the default breadcrumb and region description) from the language. If the
 	-- language name is an etymology-only language, try to derive a region based on a parent etymology-only or full
 	-- language. For example, if the pagename is '[[:Category:British English]]', the language is 'en-GB' (British English)
@@ -196,19 +216,56 @@ local function split_region_lang(pagename)
 
 	if not region and lang then
 		-- The pagename is the same as a language name. Try to infer the region from the parent. See comment at function.
-		region = infer_region_from_lang(lang, pagename)
+		region = infer_region_from_lang(pagename, lang)
 	end
 
 	return lang, region
 end
 
 
+-- Return the default parent cat for the given language and category. If the language and category are the same, we're
+-- dealing with the overall cat for an etymology-only language, so use the category of the parent language; otherwise
+-- we're dealing with a subcategory of a regular or etymology-only language (e.g. [[:Category:Issime Walser]], a
+-- subcategory of [[:Category:Walser German]]), so use the language's category itself. If the resulting language is an
+-- etymology-only language or a family, the parent category is that language or family's category, which for
+-- etymology-only languages is named the same as the etymology-only language, and for families is named
+-- "FAMILY languages"; otherwise, use "Regional LANG" as the category unless `noreg` is given, in which case we use
+-- "Varieties of LANG".
+local function get_default_parent_cat_from_category(category, lang, noreg)
+	if lang:getCode():find("^qsb%-") then
+		-- substrate
+		return "Substrate languages"
+	end
+	local lang_for_cat
+	if ucfirst(lang:getCanonicalName()) == category then
+		lang_for_cat = lang:getParent()
+		if not lang_for_cat then
+			error(("Category '%s' has a name the same as a full language; you probably need to explicitly specify a different language using |lang="):format(category))
+		end
+	else
+		lang_for_cat = lang
+	end
+	if lang_for_cat:hasType("etymology-only") or lang_for_cat:hasType("family") then
+		return lang_for_cat:getCategoryName()
+	elseif noreg then
+		return "Varieties of " .. lang_for_cat:getCanonicalName()
+	else
+		return "Regional " .. lang_for_cat:getCanonicalName()
+	end
+end
+
+
+-- Given a category (without the "Category:" prefix), look up the page defining the category, find the call to
+-- {{auto cat}} (if any), and return a table of its arguments. If the category page doesn't exist or doesn't have
+-- an {{auto cat}} invocation, return nil.
 local function scrape_category_for_auto_cat_args(cat)
 	local cat_page = mw.title.new("Category:" .. cat)
 	if cat_page then
 		local contents = cat_page:getContent()
 		if contents then
 			for name, args in require("Module:template parser").findTemplates(contents) do
+				-- The template parser automatically handles redirects and canonicalizes them, so uses of {{autocat}}
+				-- will also be found.
 				if name == "auto cat" then
 					return args
 				end
@@ -216,6 +273,180 @@ local function scrape_category_for_auto_cat_args(cat)
 		end
 	end
 	return nil
+end
+
+
+-- Find the labels that categorize into `category`. Only categories specified using the `regional_categories` and
+-- `plain_categories` fields will be returned. `lang` is the language object to use when looking up categories specified
+-- using the `regional_categories` field, which append the language onto the specified category prefix. If `lang` is a
+-- family or is omitted, no categories specified using `regional_categories` will be returned. Lang-specific modules for
+-- all languages will be checked for matching labels that specify `category` as their category using `plain_categories`;
+-- this helps e.g. with varieties of Chinese, whose labels are found in [[Module:labels/data/lang/zh]]. The return value
+-- is a table in the same format as returned by `find_labels_for_category` in [[Module:labels/utilities]].
+local function find_labels_for_category(category, lang)
+	local regional_cat_labels, plain_cat_labels
+	local full_lang
+	local m_labels_utilities = require(labels_utilities_module)
+	if lang and lang:hasType("language") then
+		full_lang = lang:getNonEtymological()
+		local regional_component = category:match("^(.-) " .. pattern_escape(full_lang:getCanonicalName()) .. "$")
+		if regional_component then
+			regional_cat_labels = m_labels_utilities.find_labels_for_category(regional_component,
+				"regional", full_lang)
+		end
+	end
+	plain_cat_labels = m_labels_utilities.find_labels_for_category(category, "plain", full_lang, "check all langs")
+
+	local all_labels
+	if regional_cat_labels and plain_cat_labels then
+		all_labels = regional_cat_labels
+		for k, v in pairs(plain_cat_labels) do
+			all_labels[k] = v
+		end
+	else
+		all_labels = regional_cat_labels or plain_cat_labels
+	end
+
+	return all_labels
+end
+
+
+-- Find the labels for category `category` and language object `lang`. Then filter them down to those that are specified
+-- using a lang-specific module and sort them for use in checking properties such as parent and description. We filter
+-- down to only lang-specific labels because those specified in a general module (especially
+-- [[Module:labels/data/regional]]) won't be able to have proper descriptions and especially parents, which tend to be
+-- language-specific. The sort order prioritizes labels that match the category exactly (either through the canonical
+-- version or any alias); this is followed by labels that are a prefix of the category (again, either through the
+-- canonical version or any alias), so that labels whose categories are specified using `regional_categories` are
+-- prioritized. Any other labels are sorted last, so that e.g. if both the label "Alberta" and "Canada" (with alias
+-- "Canadian") for lang=en categorize into [[:Category:Canadian English]], we prefer the label "Canada". For cases where
+-- e.g. both labels match the category as prefixes, ties are broken by prioritizing the labels found in the
+-- lang-specific module whose language matches `lang`.
+--
+-- Returns two items. The first is a table of all labels categorizing into `category` (subject to the provisos described
+-- in `find_labels_for_category()`), in the same format as returned by `find_labels_for_category` in
+-- [[Module:labels/utilities]]. (Specifically, the values are objects containing all relevant information on a given
+-- label, and the keys are less important.) The second is a list of label objects after filtering and sorting, in the
+-- same format as the values in the `all_labels` table. The first return value will be nil if no labels could be found
+-- categorizing into `category`, and the second return value will be nil if no labels remain after filtering.
+local function get_sorted_labels(category, lang)
+	local all_labels = find_labels_for_category(category, lang)
+	if not all_labels then
+		return nil
+	end
+
+	local m_labels = require(labels_module)
+	local lang_specific_pattern = "^" .. pattern_escape(m_labels.lang_specific_data_modules_prefix)
+	local sorted_labels = {}
+	for _, labelobj in pairs(all_labels) do
+		if labelobj.module:find(lang_specific_pattern) then
+			table.insert(sorted_labels, labelobj)
+		end
+	end
+
+	local function sort_labelobj(a, b)
+		local function matches_exactly(labelobj)
+			if labelobj.canonical == category then
+				return true
+			end
+			for _, alias in ipairs(labelobj.aliases) do
+				if alias == category then
+					return true
+				end
+			end
+			return false
+		end
+
+		local function matches_as_prefix(labelobj)
+			if category:find("^" .. pattern_escape(labelobj.canonical) .. " ") then
+				return true
+			end
+			for _, alias in ipairs(labelobj.aliases) do
+				if category:find("^" .. pattern_escape(alias) .. " ") then
+					return true
+				end
+			end
+			return false
+		end
+
+		local a_matches_lang = lang and a.lang:getNonEtymologicalCode() == lang:getNonEtymologicalCode()
+
+		local a_matches_exactly = matches_exactly(a)
+		local b_matches_exactly = matches_exactly(b)
+		if a_matches_exactly and not b_matches_exactly then
+			return true
+		elseif b_matches_exactly and not a_matches_exactly then
+			return false
+		elseif a_matches_exactly and b_matches_exactly then
+			return a_matches_lang
+		end
+
+		local a_matches_as_prefix = matches_as_prefix(a)
+		local b_matches_as_prefix = matches_as_prefix(b)
+		if a_matches_as_prefix and not b_matches_as_prefix then
+			return true
+		elseif b_matches_as_prefix and not a_matches_as_prefix then
+			return false
+		elseif a_matches_as_prefix and b_matches_as_prefix then
+			return a_matches_lang
+		end
+
+		return a_matches_lang
+	end
+
+	table.sort(sorted_labels, sort_labelobj)
+	if #sorted_labels > 0 then
+		return all_labels, sorted_labels
+	else
+		return all_labels, nil
+	end
+end
+
+
+-- Find the categories (only of type `regional_categories` and `plain_categories`) that label `label` categorizes into.
+-- Return value is nil if the label couldn't be located at all, otherwise a list of categories (which may be empty).
+local function get_categories_for_label(label, lang)
+	local m_labels = require(labels_module)
+	local labret = m_labels.get_label_info { label = label, lang = lang }
+	if not labret then
+		return nil
+	end
+	local categories = m_labels.fetch_categories(labret.canonical or label, labret.data, lang, nil, nil,
+		{["plain_categories"] = true})
+	local reg_cats = m_labels.fetch_categories(labret.canonical or label, labret.data, lang, nil, nil,
+		{["regional_categories"] = true})
+	if #reg_cats > 0 then
+		for _, cat in ipairs(reg_cats) do
+			table.insert(categories, cat)
+		end
+	end
+	return categories
+end
+
+
+local function get_default_parent_cat_from_sorted_labels(sorted_labels, category)
+	for _, labobj in ipairs(sorted_labels) do
+		local parent = labobj.labdata.parent
+		if parent then
+			if parent == true then
+				-- use default parent
+				return nil, labobj
+			end
+			local cats = get_categories_for_label(parent, labobj.lang)
+			if not cats then
+				error(("Label '%s' for category '%s' (defined in module [[%s]]) specified parent label '%s' but that parent label couldn't be located"):format(
+					labobj.canonical, category, labobj.module, parent))
+			end
+			if #cats > 0 then
+				return cats[1], labobj
+			end
+			-- FIXME: If the parent doesn't specify any categories, should we try the next parent or fall back
+			-- to the parent determined through get_default_parent_cat_from_category() (which is what we currently
+			-- do)?
+			return nil, labobj
+		end
+	end
+	return nil, nil
 end
 
 
@@ -250,48 +481,8 @@ local dialect_parent_cats_to_scrape = m_table.listToSet {
 -- [[:Category:Old Iranian]]) and for etymology-only substrate languages (e.g. [[:Category:The BMAC substrate]]).
 -- There is some special "family" code for the former.
 local function dialect_handler(category, raw_args, called_from_inside)
-	-- Get the full language to return in the settings.
-	local function get_returnable_lang(lang)
-		if lang:hasType("family") then
-			return "und"
-		else
-			return lang:getNonEtymologicalCode()
-		end
-	end
-
-	-- Return the default parent cat for the given language and category. If the language and category are the same,
-	-- we're dealing with the overall cat for an etymology-only language, so use the category of the parent language;
-	-- otherwise we're dealing with a subcategory of a regular or etymology-only language (e.g.
-	-- [[:Category:Issime Walser]], a subcategory of [[:Category:Walser German]]), so use the language's category
-	-- itself. If the resulting language is an etymology-only language or a family, the parent category is that
-	-- language or family's category, which for etymology-only languages is named the same as the etymology-only
-	-- language, and for families is named "FAMILY languages"; otherwise, use "Regional LANG" as the category unless
-	-- `noreg` is given, in which case we use "Varieties of LANG".
-	local function get_default_parent_cat(lang, pagename, noreg)
-		if lang:getCode():find("^qsb%-") then
-			-- substrate
-			return "Substrate languages"
-		end
-		local lang_for_cat
-		if ucfirst(lang:getCanonicalName()) == pagename then
-			lang_for_cat = lang:getParent()
-			if not lang_for_cat then
-				error(("Category '%s' has a name the same as a full language; you probably need to explicitly specify a different language using |lang="):format(pagename))
-			end
-		else
-			lang_for_cat = lang
-		end
-		if lang_for_cat:hasType("etymology-only") or lang_for_cat:hasType("family") then
-			return lang_for_cat:getCategoryName()
-		elseif noreg then
-			return "Varieties of " .. lang_for_cat:getCanonicalName()
-		else
-			return "Regional " .. lang_for_cat:getCanonicalName()
-		end
-	end
-
 	-- Try to figure out if this variety is extinct or reconstructed, if type= not given.
-	local function determine_lect_type(lang, default_parent)
+	local function determine_lect_type(lang, default_parent_cat)
 		if category:find("^Proto%-") or lang:getCanonicalName():find("^Proto%-") or lang:hasType("reconstructed") then
 			-- Is it reconstructed?
 			return "reconstructed"
@@ -314,8 +505,8 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		-- suffix. In that case, if we're dealing with an etymology-only language, check the parent language. Finally,
 		-- fall back to returning "extant" if all else fails.
 		local parent_type
-		if default_parent then
-			_, parent_type = dialect_handler(default_parent, nil, true)
+		if default_parent_cat then
+			_, parent_type = dialect_handler(default_parent_cat, nil, true)
 		end
 		if parent_type then
 			return parent_type
@@ -362,16 +553,26 @@ local function dialect_handler(category, raw_args, called_from_inside)
 				-- If we can't parse the scraped {{auto cat}} spec, return default values. This helps e.g. in converting
 				-- from the old {{dialectboiler}} template and generally when adding new varieties.
 				track("dialect")
-				local default_parent = get_default_parent_cat(lang, category)
+				local default_parent_cat
+				local all_labels, sorted_labels = get_sorted_labels(category, lang)
+				if sorted_labels then
+					default_parent_cat = get_default_parent_cat_from_sorted_labels(sorted_labels, category)
+				end
+				if not default_parent_cat then
+					default_parent_cat = get_default_parent_cat_from_category(category, lang)
+				end
+				-- NOTE: When called from inside, the description doesn't matter; nor do any parents other than the
+				-- first. This is because called_from_inside is only set when computing the breadcrumb trail, which
+				-- only needs the language, first parent and breadcrumb.
 				return {
 					-- FIXME, allow etymological codes here
-					lang = get_returnable_lang(lang),
+					lang = get_returnable_lang_code(lang),
 					description = "Foo",
-					parents = {default_parent},
+					parents = {default_parent_cat},
 					breadcrumb = breadcrumb or lang:getCanonicalName(),
 					umbrella = false,
 					can_be_empty = true,
-				}, determine_lect_type(lang, default_parent)
+				}, determine_lect_type(lang, default_parent_cat)
 			end
 		else
 			return nil
@@ -413,52 +614,111 @@ local function dialect_handler(category, raw_args, called_from_inside)
 			args.type, table.concat(allowed_type_values, ", ")))
 	end
 
-	-------------------- 2. Determine the breadcrumb. -------------------
+	-------------------- 2. Initialize breadcrumb and regiondesc from category. -------------------
 
-	-- Also initialize regiondesc from the category name, overriding it with 1= if given.
+	-- They may be overridden later.
 
 	local lang, breadcrumb, regiondesc, langname
 	local region
-	local pagename = args.pagename or category
+	category = args.pagename or category
 	if not args.lang then
-		lang, breadcrumb = split_region_lang(pagename)
+		lang, breadcrumb = split_region_lang(category)
 		if not lang then
-			error(("lang= not given and unable to parse language from category '%s'"):format(pagename))
+			error(("lang= not given and unable to parse language from category '%s'"):format(category))
 		end
 		langname = lang:getCanonicalName()
 		regiondesc = breadcrumb
 	else
 		lang = m_languages.getByCode(args.lang, "lang", "allow etym")
 		langname = lang:getCanonicalName()
-		if pagename == ucfirst(langname) then
-			-- breadcrumb and regiondesc should stay nil; breadcrumb will get pagename as a default, and the lack of
+		if category == ucfirst(category) then
+			-- breadcrumb and regiondesc should stay nil; breadcrumb will get `category` as a default, and the lack of
 			-- regiondesc will cause an error to be thrown unless the user gave it explicitly or specified def=.
 		else
-			breadcrumb = pagename:match("^(.*) " .. pattern_escape(langname) .. "$")
+			breadcrumb = category:match("^(.*) " .. pattern_escape(langname) .. "$")
 			if not breadcrumb then
 				-- Try to infer the region from the parent. See comment at function.
-				breadcrumb = infer_region_from_lang(lang, pagename)
+				breadcrumb = infer_region_from_lang(category, lang)
 			end
 			regiondesc = breadcrumb
 		end
 	end
+
+	-------------------- 3. Determine labels categorizing into this category. -------------------
+
+	local all_labels, sorted_labels = get_sorted_labels(category, lang)
+
+	-------------------- 4. Determine parent categories and initialize additional properties. -------------------
+
+	-- The first label with a parent is used to fetch additional properties, such as region= and addl=.
+
+	local parents = {}
+
+	local default_parent_cat = args.cat
+	local label_with_parent
+
+	local function getprop(prop)
+		return args[prop] or label_with_parent and label_with_parent.labdata[prop]
+	end
+
+	if not default_parent_cat and sorted_labels then
+		default_parent_cat, label_with_parent = get_default_parent_cat_from_sorted_labels(sorted_labels, category)
+	end
+	if not default_parent_cat then
+		default_parent_cat = get_default_parent_cat_from_category(category, lang, getprop("noreg"))
+	end
+
+	table.insert(parents, default_parent_cat)
+
+	local othercat = getprop("othercat")
+	if othercat and type(othercat) == "string" then
+		othercat = split_on_comma(othercat)
+	end
+	if othercat then
+		for _, cat in ipairs(othercat) do
+			if not cat:find("^Category:") then
+				cat = "Category:" .. cat
+			end
+			table.insert(parents, cat)
+		end
+	end
+
+	local countries = getprop("country")
+	if countries and type(countries) == "string" then
+		countries = split_on_comma(countries)
+	end
+
+	-- If no breadcrumb, this often happens when the langname and category are the same (happens only with etym-only
+	-- languages), and the parent category is set below to the non-etym parent, so the breadcrumb should show the
+	-- language name (or equivalently, the category). If the langname and category are different, we should fall back to
+	-- the category. E.g. for Singlish, lang=en is specified and we can't infer a breadcrumb because the dialect name
+	-- doesn't end in "English"; in this case we want the breadcrumb to show "Singlish".
+	breadcrumb = getprop("breadcrumb") or breadcrumb or category
+
 	if args[1] then
 		regiondesc = args[1]
-	elseif not regiondesc and not args.def and not args.fulldef then
-		-- We need regiondesc for the description unless def= or fulldef= is given, which overrides the part that needs it.
-		error(("1= (region) not given and unable to infer region from category '%s' given language name '%s'"):
-			format(pagename, langname))
+	else
+		local regionprop = getprop("region")
+		if regionprop then
+			regiondesc = regionprop
+		end
 	end
-	-- If no breadcrumb, this often happens when the langname and pagename are the same (happens only with etym-only
-	-- languages), and the parent category is set below to the non-etym parent, so the breadcrumb should show the
-	-- language name (or equivalently, the pagename). If the langname and pagename are different, we should fall back to
-	-- the pagename. E.g. for Singlish, lang=en is specified and we can't infer a breadcrumb because the dialect name
-	-- doesn't end in "English"; in this case we want the breadcrumb to show "Singlish".
-	breadcrumb = args.breadcrumb or breadcrumb or pagename
 
-	-------------------- 3. Initialize `additional` with user-specified additional text. -------------------
+	countries = countries or {regiondesc}
+	for _, country in ipairs(countries) do
+		if not country:find("[<=]") then
+			country = require("Module:links").remove_links(country)
+			local cat = "Category:Languages of " .. country
+			local cat_page = mw.title.new(cat)
+			if cat_page and cat_page.exists then
+				table.insert(parents, cat)
+			end
+		end
+	end
 
-	local additional = args.addl
+	-------------------- 5. Initialize `additional` with user-specified text and info about labels. -------------------
+
+	local additional = getprop("addl")
 
 	local function append_addl(addl_text)
 		if not addl_text then
@@ -471,15 +731,20 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		end
 	end
 
-	-------------------- 4. Augment `additional` with information about etymology-only codes. -------------------
+	if all_labels then
+		local m_labels_utilities = require(labels_utilities_module)
+		append_addl(m_labels_utilities.format_labels_categorizing(all_labels, nil,
+			get_returnable_lang(lang)))
+	end
 
-	local parents = {}
+	-------------------- 6. Augment `additional` with information about etymology-only codes. -------------------
+
 	local langname_for_desc
 	local etymcodes = {}
 	local function make_code(code)
 		return ("<code>%s</code>"):format(code)
 	end
-	if lang:hasType("etymology-only") and ucfirst(langname) == pagename then
+	if lang:hasType("etymology-only") and ucfirst(langname) == category then
 		langname_for_desc = lang:getParentName()
 		local langcode = lang:getCode()
 		table.insert(etymcodes, make_code(langcode))
@@ -498,102 +763,11 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		langname_for_desc = langname
 	end
 
-	-------------------- 5. Determine labels categorizing into this category. -------------------
+	-------------------- 7. Try to figure out if this variety is extinct or reconstructed. -------------------
 
-	-- In the process we also add text to `additional` about these labels.
-
-	local regional_cat_labels, plain_cat_labels
-	local full_lang
-	local m_labels_utilities = require(labels_utilities_module)
-	if lang:hasType("language") then
-		full_lang = lang:getNonEtymological()
-		local regional_component = category:match("^(.-) " .. pattern_escape(full_lang:getCanonicalName()) .. "$")
-		if regional_component then
-			regional_cat_labels = m_labels_utilities.find_labels_for_category(regional_component,
-				"regional", full_lang)
-		end
-	end
-	plain_cat_labels = m_labels_utilities.find_labels_for_category(category, "plain", full_lang, "check all langs")
-
-	local all_labels
-	if regional_cat_labels and plain_cat_labels then
-		all_labels = regional_cat_labels
-		for k, v in pairs(plain_cat_labels) do
-			all_labels[k] = v
-		end
-	else
-		all_labels = regional_cat_labels or plain_cat_labels
-	end
-	if all_labels then
-		append_addl(m_labels_utilities.format_labels_categorizing(all_labels, nil, full_lang))
-	end
-
-	-------------------- 6. Compute `description`. -------------------
-
-	local lang_en = m_languages.getByCode("en", true)
-
-	local countries
-	if args.country then
-		countries = split_on_comma(args.country)
-	end
-
-	local orig_regiondesc = regiondesc -- for country computation below
-	if regiondesc then
-		if regiondesc:find("<country>") then
-			if not countries then
-				error(("Can't specify <country> in region description '%s' when country= not given"):format(regiondesc))
-			end
-			-- Link the countries individually before calling serialCommaJoin(), which inserts HTML.
-			local linked_countries = {}
-			for _, country in ipairs(countries) do
-				-- don't try to link if HTML or = sign found in country
-				if not country:find("[<=]") then
-					country = require("Module:links").full_link { lang = lang_en, term = country }
-				end
-				table.insert(linked_countries, country)
-			end
-			linked_countries = m_table.serialCommaJoin(linked_countries)
-			regiondesc = regiondesc:gsub("<country>", require(pattern_utilities_module).replacement_escape(linked_countries))
-		elseif not args.nolink and not regiondesc:find("[<=]") then
-			-- even if nolink not given, don't try to link if HTML or = sign found in regiondesc, otherwise we're likely to get
-			-- an error
-			regiondesc = require("Module:links").full_link { lang = lang_en, term = regiondesc }
-		end
-	end
-
-	local description = args.fulldef and args.fulldef .. "." or args.def and ("Terms or senses in %s."):format(args.def) or
-		("Terms or senses in %s as %s%s %s."):format(
-			langname_for_desc, args.verb or "spoken",
-			args.prep == "-" and "" or " " .. (args.prep or "in"), regiondesc)
-
-	-------------------- 7. Determine parent categories. -------------------
-
-	default_parent = args.cat or get_default_parent_cat(lang, pagename, args.noreg)
-	table.insert(parents, default_parent)
-	if args.othercat then
-		for _, cat in ipairs(split_on_comma(args.othercat)) do
-			if not cat:find("^Category:") then
-				cat = "Category:" .. cat
-			end
-			table.insert(parents, cat)
-		end
-	end
-	local countries = countries or {orig_regiondesc}
-	for _, country in ipairs(countries) do
-		if not country:find("[<=]") then
-			country = require("Module:links").remove_links(country)
-			local cat = "Category:Languages of " .. country
-			local cat_page = mw.title.new(cat)
-			if cat_page and cat_page.exists then
-				table.insert(parents, cat)
-			end
-		end
-	end
-
-	-- Try to figure out if this variety is extinct or reconstructed, if type= not given.
-	local lect_type = args.type
+	local lect_type = getprop("type")
 	if not lect_type then
-		lect_type = determine_lect_type(lang, default_parent)
+		lect_type = determine_lect_type(lang, default_parent_cat)
 	end
 	local function prefix_addl(addl_text)
 		if additional then
@@ -616,14 +790,69 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		table.insert(parents, "Category:Constructed languages")
 	end
 
-	-------------------- 8. Compute the Wikipedia articles that go into `topright`. -------------------
+	-------------------- 8. Compute `description`. -------------------
+
+	local description
+
+	local fulldef = getprop("fulldef")
+	if fulldef then
+		description = fulldef .. "."
+	end
+
+	if not description then
+		local def = getprop("def")
+		if def then
+			description = ("Terms or senses in %s."):format(def)
+		end
+	end
+
+	if not description then
+		if not regiondesc then
+			-- We need regiondesc for the description unless def= or fulldef= is given, which overrides the part that needs it.
+			error(("1= (region) not given and unable to infer region from category '%s' given language name '%s'"):
+				format(category, langname))
+		end
+
+		local lang_en = m_languages.getByCode("en", true)
+
+		local linked_regiondesc = regiondesc
+		if linked_regiondesc then
+			if linked_regiondesc:find("<country>") then
+				if not countries then
+					error(("Can't specify <country> in region description '%s' when country= not given"):format(linked_regiondesc))
+				end
+				-- Link the countries individually before calling serialCommaJoin(), which inserts HTML.
+				local linked_countries = {}
+				for _, country in ipairs(countries) do
+					-- don't try to link if HTML or = sign found in country
+					if not country:find("[<=]") then
+						country = require("Module:links").full_link { lang = lang_en, term = country }
+					end
+					table.insert(linked_countries, country)
+				end
+				linked_countries = m_table.serialCommaJoin(linked_countries)
+				linked_regiondesc = linked_regiondesc:gsub("<country>", require(pattern_utilities_module).replacement_escape(linked_countries))
+			elseif not getprop("nolink") and not linked_regiondesc:find("[<=]") then
+				-- Even if nolink not given, don't try to link if HTML or = sign found in linked_regiondesc, otherwise we're
+				-- likely to get an error.
+				linked_regiondesc = require("Module:links").full_link { lang = lang_en, term = linked_regiondesc }
+			end
+		end
+		local verb = getprop("verb") or "spoken"
+		local prep = getprop("prep")
+
+		description = ("Terms or senses in %s as %s%s %s."):format(
+			langname_for_desc, verb, prep == "-" and "" or " " .. (prep or "in"), linked_regiondesc)
+	end
+
+	-------------------- 9. Compute the Wikipedia articles that go into `topright`. -------------------
 
 	local topright_parts = {}
 	-- Insert Wikipedia article `article` for Wikimedia language `wmcode` into `topright_parts`, avoiding duplication.
 	local function insert_wikipedia_article(wmcode, article)
 		m_table.insertIfNot(topright_parts, ("{{wp%s%s}}"):format(
 			wmcode == "en" and "" or "|lang=" .. wmcode,
-			article == pagename and "" or "|" .. article
+			article == category and "" or "|" .. article
 		))
 	end
 
@@ -690,7 +919,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 
 	if args.wp or args.wikidata then
 		if args.wp then
-			insert_wikipedia_articles_for_wikipedia_specs(split_on_comma(args.wp), pagename)
+			insert_wikipedia_articles_for_wikipedia_specs(split_on_comma(args.wp), category)
 		end
 		if args.wikidata then
 			insert_wikipedia_articles_for_wikidata_specs(rsplit(args.wikidata, "%s*,%s*"), lang)
@@ -705,30 +934,21 @@ local function dialect_handler(category, raw_args, called_from_inside)
 			end
 		end
 	end
-	if #topright_parts == 0 and all_labels then
-		local m_labels = require(labels_module)
-		local lang_specific_pattern = "^" .. pattern_escape(m_labels.lang_specific_data_modules_prefix)
-		for stage = 1, 2 do
-			for k, v in pairs(all_labels) do
-				local label_matches_lang = v.lang:getCode() == lang:getCode()
-				if stage == 1 and label_matches_lang or stage == 2 and not label_matches_lang then
-					if v.module:find(lang_specific_pattern) then
-						local wp_specs = v.labdata.Wikipedia
-						if wp_specs then
-							if type(wp_specs) ~= "table" then
-								wp_specs = {wp_specs}
-							end
-							insert_wikipedia_articles_for_wikipedia_specs(wp_specs, v.canonical)
-						end
-						local wikidata_specs = v.labdata.Wikidata
-						if wikidata_specs then
-							if type(wikidata_specs) ~= "table" then
-								wikidata_specs = {wikidata_specs}
-							end
-							insert_wikipedia_articles_for_wikidata_specs(wikidata_specs, v.lang)
-						end
-					end
+	if #topright_parts == 0 and sorted_labels then
+		for _, labobj in pairs(all_labels) do
+			local wp_specs = labobj.labdata.Wikipedia
+			if wp_specs then
+				if type(wp_specs) ~= "table" then
+					wp_specs = {wp_specs}
 				end
+				insert_wikipedia_articles_for_wikipedia_specs(wp_specs, labobj.canonical)
+			end
+			local wikidata_specs = labobj.labdata.Wikidata
+			if wikidata_specs then
+				if type(wikidata_specs) ~= "table" then
+					wikidata_specs = {wikidata_specs}
+				end
+				insert_wikipedia_articles_for_wikidata_specs(wikidata_specs, labobj.lang)
 			end
 		end
 	end
@@ -738,12 +958,12 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		topright = table.concat(topright_parts)
 	end
 
-	-------------------- 9. Return the combined structure of all information. -------------------
+	-------------------- 10. Return the combined structure of all information. -------------------
 
 	track("dialect")
 	return {
 		-- FIXME, allow etymological codes here
-		lang = get_returnable_lang(lang),
+		lang = get_returnable_lang_code(lang),
 		topright = topright,
 		description = description,
 		additional = additional,
