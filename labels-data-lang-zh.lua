@@ -9,6 +9,7 @@ local labels = {}
 labels["Gan"] = {
 	Wikidata = "Q33475",
 	regional_categories = true,
+	parent = true,
 }
 
 labels["dialectal Gan"] = {
@@ -24,6 +25,7 @@ labels["Changdu Gan"] = {
 	aliases = {"Changdu"},
 	Wikidata = {"Q3497239", "Q6789768"}, -- the first ID is for English, the second for Chinese; they need to be merged
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -34,6 +36,7 @@ labels["Datong Gan"] = {
 	aliases = {"Datong"},
 	Wikidata = {"Q5207168", "Q6830838"}, -- the first ID is for English, the second for Chinese; they need to be merged
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -44,6 +47,7 @@ labels["Dongsui Gan"] = {
 	aliases = {"Dongsui"},
 	Wikidata = "Q6762652",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -54,6 +58,7 @@ labels["Fuguang Gan"] = {
 	aliases = {"Fuguang"},
 	Wikidata = "Q6794539",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -64,6 +69,7 @@ labels["Huaiyue Gan"] = {
 	aliases = {"Huaiyue"},
 	Wikidata = "Q6797985",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -74,6 +80,7 @@ labels["Jicha Gan"] = {
 	aliases = {"Jicha"},
 	Wikidata = "Q6844561",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -84,10 +91,10 @@ labels["Leizi Gan"] = {
 	aliases = {"Leizi"},
 	Wikidata = "Q7212943",
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Lichuan Gan"] = {
-	-- A variety of Fuguang Gan.
 	region = "[[Lichuan]] County, under the jurisdiction of the [[prefecture-level city]] of [[Fuzhou]] ({{m|cmn|撫州}}) in northeastern [[Jiangxi]] Province (not to be confused with the Fuzhou city in [[Fujian]] Province)",
 	aliases = {"Lichuan"}, -- FIXME: Correct?
 	Wikidata = "Q6794539", -- article for Fuguang Gan
@@ -96,7 +103,7 @@ labels["Lichuan Gan"] = {
 }
 
 labels["Nanchang Gan"] = {
-	-- A variety of Changdu Gan (where it is the principal dialect).
+	-- This is thA variety of Changdu Gan (where it is the principal dialect).
 	region = "[[Nanchang]], capital of [[Jiangxi]] Province in south-central [[China]]",
 	aliases = {"Nanchang"}, -- FIXME: Correct?
 	Wikidata = "Q3497239", -- article for Changdu Gan in English, Nanchang Gan in Chinese
@@ -105,7 +112,6 @@ labels["Nanchang Gan"] = {
 }
 
 labels["Pingxiang Gan"] = {
-	-- A variety of Yiliu Gan.
 	region = "[[Pingxiang]], a [[prefecture-level city]] in [[Jiangxi]] Province in south-central [[China]]",
 	aliases = {"Pingxiang"}, -- FIXME: Correct?
 	Wikidata = "Q8053438", -- article for Yiliu Gan
@@ -114,7 +120,6 @@ labels["Pingxiang Gan"] = {
 }
 
 labels["Taining Gan"] = {
-	-- A variety of Fuguang Gan.
 	region = "{{w|Taining County}}, under the jurisdiction of the [[prefecture-level city]] of [[Sanming]] in northwastern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Taining"}, -- FIXME: Correct?
 	Wikidata = "Q6794539", -- article for Fuguang Gan
@@ -130,6 +135,7 @@ labels["Yiliu Gan"] = {
 	aliases = {"Yiliu"},
 	Wikidata = {"Q8053438", "Q6820035"}, -- the first ID is for English, the second for Chinese; they need to be merged
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -140,6 +146,7 @@ labels["Yingyi Gan"] = {
 	aliases = {"Yingyi"},
 	Wikidata = {"Q3443012", "Q6654505"}, -- the first ID is for English, the second for Chinese; they need to be merged
 	plain_categories = true,
+	parent = true,
 }
 
 ------------------------------------------ Hakka ------------------------------------------
@@ -147,6 +154,7 @@ labels["Yingyi Gan"] = {
 labels["Hakka"] = {
 	Wikidata = "Q33375",
 	regional_categories = true,
+	parent = true,
 }
 
 labels["dialectal Hakka"] = {
@@ -159,6 +167,7 @@ labels["Dabu Hakka"] = {
 	aliases = {"Dabu"},
 	Wikidata = "Q19855566",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -169,6 +178,7 @@ labels["Early Modern Hakka"] = {
 	region = "the 19th century, especially in Bible translations",
 	Wikidata = "Q33375", -- article for Hakka Chinese
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Hailu Hakka"] = {
@@ -176,11 +186,13 @@ labels["Hailu Hakka"] = {
 	aliases = {"Hailu"},
 	Wikidata = "Q19855025", -- see also Q17038519 "Hailu Hakka" in Wikidata, which duplicates Q19855025 and redirects to it in Chinese Wikipedia
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Hong Kong Hakka"] = {
 	Wikidata = "Q2675834",
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Huiyang Hakka"] = {
@@ -188,6 +200,7 @@ labels["Huiyang Hakka"] = {
 	aliases = {"Huiyang"},
 	Wikidata = "Q16873881",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -202,6 +215,7 @@ labels["Malaysian Huiyang Hakka"] = {
 	aliases = {"Malaysia Huiyang Hakka"},
 	Wikidata = "Q16873881", -- article for Huiyang Hakka
 	plain_categories = true,
+	parent = "Huiyang Hakka",
 }
 
 labels["Meixian Hakka"] = {
@@ -210,6 +224,7 @@ labels["Meixian Hakka"] = {
 	aliases = {"Meixian", "Moiyan", "Moiyan Hakka", "Meizhou", "Meizhou Hakka"},
 	Wikidata = "Q839295",
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Northern Sixian Hakka"] = {
@@ -217,6 +232,7 @@ labels["Northern Sixian Hakka"] = {
 	aliases = {"Northern Sixian"},
 	Wikidata = "Q9668261", -- article for Sixian Hakka
 	plain_categories = true,
+	parent = "Sixian Hakka",
 }
 
 labels["Raoping Hakka"] = {
@@ -224,6 +240,7 @@ labels["Raoping Hakka"] = {
 	-- No Raoping alias because Chaoshan Min is also spoken.
 	Wikidata = "Q19854038",
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Sixian Hakka"] = {
@@ -231,13 +248,14 @@ labels["Sixian Hakka"] = {
 	aliases = {"Sixian"},
 	Wikidata = "Q9668261",
 	plain_categories = true,
+	parent = "Taiwanese Hakka",
 }
 
 labels["Southern Sixian Hakka"] = {
 	region = "the [[Liudui]] Region in [[Kaohsiung]] and [[Pingtung]] in the south of [[Taiwan]]",
 	aliases = {"Southern Sixian"},
 	Wikidata = {"Q98095139", "Q9668261"}, -- second is article for Sixian Hakka; Q98095139 is "Southern Sixian dialect" but has no articles linked
-	plain_categories = true,
+	parent = "Sixian Hakka",
 }
 
 labels["Shangyou Hakka"] = {
@@ -245,6 +263,7 @@ labels["Shangyou Hakka"] = {
 	aliases = {"Shangyou"},
 	Wikidata = "Q1282613", -- article for Shangyou County
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Taiwanese Hakka"] = {
@@ -253,6 +272,7 @@ labels["Taiwanese Hakka"] = {
 	aliases = {"Taiwan Hakka"},
 	Wikidata = "Q2391532",
 	plain_categories = true,
+	parent = true,
 }
 
 -- Skipped: Wuluo Hakka; appears to originate in Pingtung County, Taiwan and be part of Southern Sixian Hakka, maybe
@@ -263,15 +283,16 @@ labels["Yudu Hakka"] = {
 	aliases = {"Yudu"},
 	Wikidata = "Q1816748", -- article for Yudu County
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Yunlin Hakka"] = {
-	-- A type of Taiwanese Hakka.
 	region = "[[Yunlin]] County in western [[Taiwan]]",
 	parent = "Taiwanese Hakka",
 	aliases = {"Yunlin"},
 	Wikidata = "Q153221", -- article for Yunlin County
 	plain_categories = true,
+	parent = "Taiwanese Hakka",
 }
 
 labels["Zhao'an Hakka"] = {
@@ -279,6 +300,7 @@ labels["Zhao'an Hakka"] = {
 	region = "{{w|Zhao'an County}} in the [[prefecture-level city]] of [[Zhangzhou]] in southernmost [[Fujian]] Province in southeast [[China]]; now also in [[Yunlin]] County and the city of [[Taoyuan]], in [[Taiwan]]",
 	Wikidata = "Q6703311",
 	plain_categories = true,
+	parent = true,
 }
 
 ------------------------------------------ Jin ------------------------------------------
@@ -286,6 +308,7 @@ labels["Zhao'an Hakka"] = {
 labels["Jin"] = {
 	Wikidata = "Q56479",
 	regional_categories = true,
+	parent = true,
 }
 
 labels["dialectal Jin"] = {
@@ -295,9 +318,9 @@ labels["dialectal Jin"] = {
 
 labels["Xinzhou Jin"] = {
 	-- no "Xinzhou" alias; Xinzhou Wu (different Xinzhou) also exists
-	-- In the Wutai subgroup
 	Wikidata = "Q73119", -- article for Xinzhou (city in Shanxi)
 	plain_categories = true,
+	parent = true, -- actually in the Wutai subgroup; FIXME: add parent label
 }
 
 ------------------------------------------ Literary Chinese ------------------------------------------
@@ -342,10 +365,10 @@ labels["Beijingic Mandarin"] = {
 	aliases = {"Beijingic"},
 	Wikidata = "Q2169652",
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Beijing Mandarin"] = {
-	-- A variety of Beijingic Mandarin.
 	region = "urban [[Beijing]]",
 	aliases = {"Beijing", "Peking", "Pekingese"},
 	Wikidata = "Q1147606",
@@ -363,6 +386,7 @@ labels["Central Plains Mandarin"] = {
 	aliases = {"Central Plains", "Zhongyuan Mandarin"},
 	Wikidata = "Q3048775",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -473,6 +497,7 @@ labels["Jianghuai Mandarin"] = {
 	aliases = {"Jianghuai", "Jiang-Huai", "Jiang-Huai Mandarin", "Lower Yangtze Mandarin", "Huai"},
 	Wikidata = "Q2128953",
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Jiaoliao Mandarin"] = {
@@ -484,6 +509,7 @@ labels["Jiaoliao Mandarin"] = {
 	aliases = {"Jiaoliao", "Jiao-Liao", "Jiao-Liao Mandarin"},
 	Wikidata = "Q2597550",
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Jilu Mandarin"] = {
@@ -495,6 +521,7 @@ labels["Jilu Mandarin"] = {
 	aliases = {"Jilu", "Ji-Lu", "Ji-Lu Mandarin"},
 	Wikidata = "Q516721",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -523,6 +550,7 @@ labels["Lanyin Mandarin"] = {
 	aliases = {"Lanyin", "Lan-Yin Mandarin"},
 	Wikidata = "Q662754",
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Lanzhou Mandarin"] = {
@@ -559,7 +587,7 @@ labels["Malaysian Mandarin"] = {
 labels["Muping Mandarin"] = {
 	region = "[[Muping]] District in the prefecture-level city of [[Yantai]] in northeastern [[Shandong]] Province, in northeastern [[China]]",
 	aliases = {"Muping"}, -- there is also a Muping in Sichuan but it's not clear if it has a dialect
-	Wikidata = {"Q281015", "Q15914589"} -- articles for Muping District and for Denglian Mandarin (which includes Yantai and Muping varieties)
+	Wikidata = {"Q281015", "Q15914589"}, -- articles for Muping District and for Denglian Mandarin (which includes Yantai and Muping varieties)
 	plain_categories = true,
 	parent = "Jiaoliao Mandarin",
 }
@@ -591,6 +619,7 @@ labels["Northeastern Mandarin"] = {
 	aliases = {"northeastern Mandarin", "NE Mandarin"},
 	Wikidata = "Q1064504",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -641,6 +670,7 @@ labels["Southwestern Mandarin"] = {
 	aliases = {"southwestern Mandarin", "Upper Yangtze Mandarin", "Southwest Mandarin"},
 	Wikidata = "Q2609239",
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Taiwanese Mandarin"] = {
@@ -780,7 +810,6 @@ labels["Sichuanese"] = {
 }
 
 labels["Chengdu Sichuanese"] = {
-	-- A variety of Chengyu Sichuanese.
 	region = "[[Chengdu]], the capital of [[Sichuan]] Province in southwestern [[China]]",
 	aliases = {"Chengdu", "Chengdu Mandarin"},
 	Wikidata = "Q11074683",
@@ -795,6 +824,7 @@ labels["Chengyu Sichuanese"] = {
 	aliases = {"Chengyu", "Chengyu Mandarin", "Chengdu-Chongqing", "Chengdu-Chongqing Mandarin"},
 	Wikidata = "Q5091311",
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Chongqing Sichuanese"] = {
@@ -821,6 +851,7 @@ labels["Minjiang Sichuanese"] = {
 	aliases = {"Minjiang", "Minjiang Mandarin"},
 	Wikidata = "Q6867767",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -831,6 +862,7 @@ labels["Renfu Sichuanese"] = {
 	aliases = {"Renfu", "Renfu Mandarin", "Renshou-Fushun", "Renshou-Fushun Mandarin", "Renshou-Fushun Sichuanese", "Jianggong", "Jianggong Mandarin", "Jianggong Sichuanese"},
 	Wikidata = "Q10883781",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -840,6 +872,7 @@ labels["Yamian Sichuanese"] = {
 	aliases = {"Yamian", "Yamian Mandarin"},
 	Wikidata = "Q56243639",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -950,6 +983,7 @@ labels["Funing Eastern Min"] = {
 	aliases = {"Funing"},
 	Wikidata = "Q18943896",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -991,6 +1025,7 @@ labels["Houguan Eastern Min"] = {
 	aliases = {"Houguan"},
 	Wikidata = "Q18943758",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -1010,6 +1045,7 @@ labels["Manjiang Eastern Min"] = {
 	aliases = {"Manjiang", "Manhua Eastern Min", "Manhua", "Mango Eastern Min", "Mango"},
 	Wikidata = "Q3431721",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -1090,6 +1126,7 @@ labels["Dongxi Northern Min"] = {
 	-- means "east", but the second xī does not mean "west" but more like "stream" or "creek".
 	-- No Wikidata link or Wikipedia entry for this
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -1098,6 +1135,7 @@ labels["Xixi Northern Min"] = {
 	-- xī means "west", but the second xī does not mean "west" but more like "stream" or "creek".
 	-- No Wikidata link or Wikipedia entry for this
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -1428,15 +1466,15 @@ labels["Pinghua"] = {
 }
 
 labels["Guilin Pinghua"] = {
-	-- A variety of Northern Pinghua.
 	Wikidata = "Q84302463", -- article for Northern Pinghua; redirects in both English and Chinese to Pinghua article
 	plain_categories = true,
+	parent = "Northern Pinghua",
 }
 
 labels["Nanning Pinghua"] = {
-	-- A variety of Southern Pinghua.
 	Wikidata = "Q84302019", -- article for Southern Pinghua; redirects in both English and Chinese to Pinghua article
 	plain_categories = true,
+	parent = "Southern Pinghua",
 }
 
 -- FIXME: Category missing.
@@ -1446,6 +1484,7 @@ labels["Northern Pinghua"] = {
 	-- more information on Northern Pinghua.
 	Wikidata = "Q84302463",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -1455,6 +1494,7 @@ labels["Southern Pinghua"] = {
 	-- more information on Southern Pinghua.
 	Wikidata = "Q84302019",
 	plain_categories = true,
+	parent = true,
 }
 
 ------------------------------------------ Wu ------------------------------------------
@@ -1554,8 +1594,8 @@ labels["Haiyan Wu"] = {
 }
 
 labels["Hangzhounese Wu"] = {
-	-- An isolate variety of Northern Wu with heavy Northern Mandarinic (ie. not
-	-- Huai) influence from the Southern Song Dyansty
+	region = "the city of [[Hangzhou]] in northwestern [[Zhejiang]] Province in eastern [[China]], and its immediate suburbs",
+	addl = "It is an isolated variety of Northern Wu with heavy influence from Northern Mandarin lects due to migration during the {{w|Southern Song dynasty}}, but without significant influence from the nearby {{catlink|Jianghuai Mandarin}} lects.",
 	aliases = {"Hangzhou", "Hangzhounese", "Hangzhou Wu"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Hangzhounese Wu'.
 	display = "Hangzhounese",
@@ -1612,7 +1652,8 @@ labels["Jintan Wu"] = {
 
 -- FIXME: Category missing.
 labels["Jinxiang Wu"] = {
-	-- An isolated variety of Northern Wu from Zhejiang.
+	region = "[[Cangnan]] County in far southern [[Zhejiang]] Province in eastern [[China]]",
+	addl = "It is an exclave of Northern Wu surrounded by {{cat|Southern Min}} varieties.",
 	aliases = {"Jinxiang"},
 	Wikidata = "Q2427960",
 	plain_categories = true,
@@ -1630,7 +1671,7 @@ labels["Jingjiang Wu"] = {
 
 -- FIXME: Category missing.
 labels["Lin'an Wu"] = {
-	region = "{{w|Lin'an District}}, an urban district of the [[prefecture-level city]] of [[Hangzhou]], the capital of [[Zhejiang]] Province, in eastern [[China]]; located in the northwest part of the province"
+	region = "{{w|Lin'an District}}, an urban district of the [[prefecture-level city]] of [[Hangzhou]], the capital of [[Zhejiang]] Province, in eastern [[China]]; located in the northwest part of the province",
 	aliases = {"Lin'an"},
 	Wikidata = "Q1022464", -- article for Lin'an District (part of the prefecture-level city of Hangzhou)
 	plain_categories = true,
@@ -1646,6 +1687,7 @@ labels["Linshao Wu"] = {
 }
 
 labels["Ningbonese Wu"] = {
+	region = "the [[prefecture-level city|prefecture-level cities]] of [[Ningbo]] and [[Zhoushan]] in northeastern [[Zhejiang]] Province in eastern [[China]]",
 	aliases = {"Ningbonese", "Ningbo Wu", "Ningbo"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Ningbonese Wu'.
 	display = "Ningbonese",
@@ -1660,6 +1702,7 @@ labels["Northern Wu"] = {
 	aliases = {"Taihu", "Taihu Wu"},
 	Wikidata = "Q7675988",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -1841,6 +1884,7 @@ labels["Yixing Wu"] = {
 
 -- FIXME: Category missing.
 labels["Yongjiang Wu"] = {
+	region = "most areas of the [[prefecture-level city]] of [[Ningbo]] as well as the entire [[Zhoushan]] archipelago, in northeastern [[Zhejiang]] Province in eastern [[China]]",
 	aliases = {"Yongjiang"},
 	Wikidata = "Q15503785",
 	plain_categories = true,
@@ -1858,7 +1902,9 @@ labels["Yuhang Wu"] = {
 
 -- FIXME: Category missing.
 labels["Zhoushan Wu"] = {
+	region = "the [[Zhoushan]] archipelago in northeastern [[Zhejiang]] Province in eastern [[China]]",
 	aliases = {"Zhoushan"},
+	Wikidata = "Q58324", -- article on the prefecture-level city of Zhoushan
 	plain_categories = true,
 	parent = "Yongjiang Wu",
 }
@@ -1892,10 +1938,11 @@ labels["Beitai Wu"] = {
 
 -- FIXME: Category missing.
 labels["Changbei Wu"] = {
-	-- A divergent subvariety of Taigao Wu, which is a variety of Xuanzhou Wu.
+	-- A divergent subvariety of Taigao Wu.
 	aliases = {"Changbei"},
 	Wikipedia = "zh:昌北话", -- no Wikidata item yet
 	plain_categories = true,
+	parent = "Taigao Wu", -- a variety of Xuanzhou Wu
 }
 
 -- FIXME: Category missing.
@@ -1904,38 +1951,39 @@ labels["Chuqu Wu"] = {
 	aliases = {"Chuqu"},
 	Wikidata = "Q5116499",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
 labels["Chuzhou Wu"] = {
-	-- A variety of Chuqu Wu.
 	aliases = {"Chuzhou"},
 	-- Undefined in Chinese Wikipedia
 	plain_categories = true,
+	parent = "Chuqu Wu",
 }
 
 -- FIXME: Category missing.
 labels["Dongyang Wu"] = {
-	-- A subvariety of Yiyong Wu, which is a variety of Wuzhou Wu.
 	aliases = {"Dongyang"},
 	Wikidata = "Q109417928",
 	plain_categories = true,
+	parent = "Yiyong Wu", -- a variety of Wuzhou Wu
 }
 
 -- FIXME: Category missing.
 labels["Duze Wu"] = {
-	-- A subvariety of Longqu Wu, which is a variety of Chuqu Wu.
 	aliases = {"Duze"},
 	Wikipedia = "zh:杜泽话", -- no Wikidata item yet
 	plain_categories = true,
+	parent = "Longqu Wu", -- a variety of Chuqu Wu
 }
 
 -- FIXME: Category missing.
 labels["Gaochun Wu"] = {
-	-- A subvariety of Taigao Wu, which is a variety of Xuanzhou Wu.
 	aliases = {"Gaochun"},
 	Wikidata = "Q17035529",
 	plain_categories = true,
+	parent = "Taigao Wu", -- a variety of Xuanzhou Wu
 }
 
 -- FIXME: Category missing.
@@ -1948,50 +1996,50 @@ labels["Hongqiao Wu"] = {
 
 -- FIXME: Category missing.
 labels["Hou'an Wu"] = {
-	-- A subvariety of Shiling Wu, which is a variety of Xuanzhou Wu.
 	aliases = {"Hou'an"},
 	Wikidata = "Q10911034",
 	plain_categories = true,
+	parent = "Shiling Wu", -- a variety of Xuanzhou Wu
 }
 
 -- FIXME: Category missing.
 labels["Jiangshan Wu"] = {
-	-- A subvariety of Shangshan Wu, which is a variety of Chuqu Wu.
 	aliases = {"Jiangshan"},
 	Wikidata = "Q6112693",
 	plain_categories = true,
+	parent = "Shangshan Wu", -- a variety of Chuqu Wu
 }
 
 -- FIXME: Category missing.
 labels["Jingxian Wu"] = {
-	-- A subvariety of Tongjing Wu, which is a variety of Xuanzhou Wu.
 	aliases = {"Jingxian"},
 	Wikidata = "Q11151690",
 	plain_categories = true,
+	parent = "Tongjing Wu", -- a variety of Xuanzhou Wu
 }
 
 -- FIXME: Category missing.
 labels["Jinhua Wu"] = {
-	-- A subvariety of Jinlan Wu, which is a variety of Wuzhou Wu.
 	aliases = {"Jinhua", "Jinhuanese", "Jinhuanese Wu"},
 	Wikidata = "Q13583347",
 	plain_categories = true,
+	parent = "Jinlan Wu", -- a variety of Wuzhou Wu
 }
 
 -- FIXME: Category missing.
 labels["Jinlan Wu"] = {
-	-- A variety of Wuzhou Wu.
 	aliases = {"Jinlan"},
 	-- Undefined in Chinese Wikipedia
 	plain_categories = true,
+	parent = "Wuzhou Wu",
 }
 
 -- FIXME: Category missing.
 labels["Jiuhua Wu"] = {
-	-- A subvariety of Longqu Wu, which is a variety of Chuqu Wu.
 	aliases = {"Jiuhua"},
 	Wikipedia = "zh:九华话", -- no Wikidata item yet
 	plain_categories = true,
+	parent = "Longqu Wu", -- a variety of Chuqu Wu
 }
 
 -- FIXME: Category missing.
@@ -2004,52 +2052,52 @@ labels["Jujiang Wu"] = {
 
 -- FIXME: Category missing.
 labels["Lanxi Wu"] = {
-	-- A subvariety of Jinlan Wu, which is a variety of Wuzhou Wu.
 	aliases = {"Lanxi"},
 	Wikidata = "Q17059873",
 	plain_categories = true,
+	parent = "Jinlan Wu", -- a variety of Wuzhou Wu
 }
 
 -- FIXME: Category missing.
 labels["Lishui Wu"] = {
-	-- A subvariety of Chuzhou Wu, which is a variety of Chuqu Wu.
 	-- NOTE: Chuzhou was a historical administrative division that includes modern day Lishui & Wuyi,
 	-- and is a proposed top-level division of Wu. Pucheng, Fujian is majority Wu-speaking.
 	aliases = {"Lishui", "Lishuinese"},
 	Wikidata = "Q58294", -- article on the prefecture-level city of Lishui in Zhejiang
 	plain_categories = true,
+	parent = "Chuzhou Wu", -- a variety of Chuqu Wu
 }
 
 -- FIXME: Category missing.
 labels["Pucheng Wu"] = {
-	-- A subvariety of Chuzhou Wu, which is a variety of Chuqu Wu.
 	-- no "Pucheng" alias because per Wikipedia, Northern Min (Shibei dialect) is also spoken
 	Wikidata = "Q1338032", -- article on Pucheng County, Fujian
 	plain_categories = true,
+	parent = "Chuzhou Wu", -- a variety of Chuqu Wu
 }
 
 -- FIXME: Category missing.
 labels["Longqu Wu"] = {
-	-- A variety of Chuqu Wu.
 	aliases = {"Longqu"},
 	Wikipedia = "zh:龙衢小片", -- no Wikidata item yet
 	plain_categories = true,
+	parent = "Chuqu Wu",
 }
 
 -- FIXME: Category missing.
 labels["Longyou Wu"] = {
-	-- A subvariety of Longqu Wu, which is a variety of Chuqu Wu.
 	aliases = {"Longyou"},
 	Wikidata = "Q15908274",
 	plain_categories = true,
+	parent = "Longqu Wu", -- a variety of Chuqu Wu
 }
 
 -- FIXME: Category missing.
 labels["Nanji Wu"] = {
-	-- A subvariety of Taigao Wu, which is a variety of Xuanzhou Wu.
 	aliases = {"Nanji"},
 	Wikidata = "Q10908223",
 	plain_categories = true,
+	parent = "Taigao Wu", -- a variety of Xuanzhou Wu
 }
 
 -- FIXME: Category missing.
@@ -2062,10 +2110,10 @@ labels["Nantai Wu"] = {
 
 -- FIXME: Category missing.
 labels["Old Xuanzhou Wu"] = {
-	-- A subvariety of Tongjing Wu, which is a variety of Xuanzhou Wu.
 	aliases = {"Old Xuanzhou"},
 	Wikidata = "Q15914865",
 	plain_categories = true,
+	parent = "Tongjing Wu", -- a variety of Xuanzhou Wu
 }
 
 -- FIXME: Category missing.
@@ -2074,14 +2122,15 @@ labels["Oujiang Wu"] = {
 	aliases = {"Oujiang"},
 	Wikidata = "Q710218", -- article for Wenzhounese
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
 labels["Pan'an Wu"] = {
-	-- A subvariety of Yiyong Wu, which is a variety of Wuzhou Wu.
 	aliases = {"Yiwu"},
 	Wikidata = "Q55695855",
 	plain_categories = true,
+	parent = "Yiyong Wu", -- a variety of Wuzhou Wu
 }
 
 -- FIXME: Category missing.
@@ -2094,26 +2143,26 @@ labels["Pucheng Ou Wu"] = {
 
 -- FIXME: Category missing.
 labels["Pucheng Wu"] = {
-	-- A subvariety of Chuzhou Wu, which is a variety of Chuqu Wu.
 	aliases = {"Pucheng"},
 	Wikipedia = "zh:浦城话", -- no Wikidata item yet
 	plain_categories = true,
+	parent = "Chuzhou Wu", -- a variety of Chuqu Wu
 }
 
 -- FIXME: Category missing.
 labels["Qingtian Wu"] = {
-	-- A subvariety of Chuzhou Wu, which is a variety of Chuqu Wu.
 	aliases = {"Qingtian"},
 	Wikidata = "Q2074456",
 	plain_categories = true,
+	parent = "Chuzhou Wu", -- a variety of Chuqu Wu
 }
 
 -- FIXME: Category missing.
 labels["Quzhou Wu"] = {
-	-- A subvariety of Longqu Wu, which is a variety of Chuqu Wu.
 	aliases = {"Quzhou", "Quzhounese", "Quzhounese Wu"},
 	Wikidata = "Q6112429",
 	plain_categories = true,
+	parent = "Longqu Wu", -- a variety of Chuqu Wu
 }
 
 -- FIXME: Category missing.
@@ -2126,26 +2175,26 @@ labels["Rui'an Wu"] = {
 
 -- FIXME: Category missing.
 labels["Shangrao Wu"] = {
-	-- A variety of Chuqu Wu.
 	aliases = {"Shangrao", "Shangraonese", "Shangraonese Wu"},
 	Wikidata = "Q363479", -- Shangrao, a prefecture-level city in Jiangxi
 	plain_categories = true,
+	parent = "Chuqu Wu",
 }
 
 -- FIXME: Category missing.
 labels["Shangshan Wu"] = {
-	-- A variety of Chuqu Wu.
 	aliases = {"Shangshan"},
 	-- Undefined in Chinese Wikipedia
 	plain_categories = true,
+	parent = "Chuqu Wu",
 }
 
 -- FIXME: Category missing.
 labels["Shiling Wu"] = {
-	-- A variety of Xuanzhou Wu.
 	aliases = {"Shiling"},
 	Wikidata = "Q15923670",
 	plain_categories = true,
+	parent = "Xuanzhou Wu",
 }
 
 labels["Southern Wu"] = {
@@ -2155,18 +2204,18 @@ labels["Southern Wu"] = {
 
 -- FIXME: Category missing.
 labels["Taigao Wu"] = {
-	-- A variety of Xuanzhou Wu.
 	aliases = {"Taigao"},
 	Wikipedia = "zh:宣州片#太高小片",
 	plain_categories = true,
+	parent = "Xuanzhou Wu",
 }
 
 -- FIXME: Category missing.
 labels["Taiping Wu"] = {
-	-- A subvariety of Taigao Wu, which is a variety of Xuanzhou Wu.
 	aliases = {"Taiping", "Old Taiping Wu", "Old Taiping"},
 	Wikidata = "Q10941478",
 	plain_categories = true,
+	parent = "Taigao Wu", -- a variety of Xuanzhou Wu
 }
 
 
@@ -2174,10 +2223,10 @@ labels["Taiping Wu"] = {
 -- ([[w:Taizhou dialect]]) corresponds to, if anything.
 -- -- FIXME: Category missing.
 --labels["Urban Taizhou Wu"] = {
---	-- A subvariety of Nantai Wu, which is a variety of Taizhou Wu.
 --	aliases = {"Urban Taizhou"},
 --	Wikidata = "Q3972406",
 --	plain_categories = true,
+--	parent = "Nantai Wu", -- a variety of Taizhou Wu
 --}
 
 -- FIXME: Category missing.
@@ -2199,38 +2248,39 @@ labels["Taizhou Wu"] = {
 	aliases = {"Taizhou"},
 	Wikidata = "Q7676678",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
 labels["Tangxi Wu"] = {
-	-- A variety of Wuzhou Wu.
 	aliases = {"Tangxi"},
 	Wikidata = "Q11136233",
 	plain_categories = true,
+	parent = "Wuzhou Wu",
 }
 
 -- FIXME: Category missing.
 labels["Tiantai Wu"] = {
-	-- A subvariety of Beitai Wu, which is a variety of Taizhou Wu.
 	aliases = {"Tiantai"},
 	Wikidata = "Q85809509",
 	plain_categories = true,
+	parent = "Beitai Wu", -- a variety of Taizhou Wu
 }
 
 -- FIXME: Category missing.
 labels["Tongjing Wu"] = {
-	-- A variety of Xuanzhou Wu.
 	aliases = {"Tongjing"},
 	Wikidata = "Q17028746",
 	plain_categories = true,
+	parent = "Xuanzhou Wu",
 }
 
 -- FIXME: Category missing.
 labels["Tongling Wu"] = {
-	-- A subvariety of Tongjing Wu, which is a variety of Xuanzhou Wu.
 	aliases = {"Tongling"},
 	Wikidata = "Q15909611",
 	plain_categories = true,
+	parent = "Tongjing Wu", -- a variety of Xuanzhou Wu
 }
 
 -- FIXME: Category missing.
@@ -2252,18 +2302,18 @@ labels["Wenzhounese Wu"] = {
 
 -- FIXME: Category missing.
 labels["Wuhu County Wu"] = {
-	-- A subvariety of Tongjing Wu, which is a variety of Xuanzhou Wu.
 	aliases = {"Wuhu County"},
 	Wikidata = "Q15911448",
 	plain_categories = true,
+	parent = "Tongjing Wu", -- a variety of Xuanzhou Wu
 }
 
 -- FIXME: Category missing.
 labels["Wuyi Wu"] = {
-	-- A subvariety of Yiyong Wu, which is a variety of Wuzhou Wu.
 	aliases = {"Yiwu"},
 	Wikidata = "Q11124837",
 	plain_categories = true,
+	parent = "Yiyong Wu", -- a variety of Wuzhou Wu
 }
 
 labels["Wuzhou Wu"] = {
@@ -2280,6 +2330,7 @@ labels["Wuzhou Wu"] = {
 	aliases = {"Wuzhou"},
 	Wikidata = "Q2779891",
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Xuanzhou Wu"] = {
@@ -2301,38 +2352,39 @@ labels["Xuanzhou Wu"] = {
 	aliases = {"Xuanzhou"},
 	Wikidata = "Q1939756",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
 labels["Yiwu Wu"] = {
-	-- A subvariety of Yiyong Wu, which is a variety of Wuzhou Wu.
 	aliases = {"Yiwu"},
 	Wikidata = "Q15898526",
 	plain_categories = true,
+	parent = "Yiyong Wu", -- a variety of Wuzhou Wu
 }
 
 -- FIXME: Category missing.
 labels["Yiyong Wu"] = {
-	-- A variety of Wuzhou Wu.
 	aliases = {"Yiyong"},
 	-- Undefined in Chinese Wikipedia
 	plain_categories = true,
+	parent = "Wuzhou Wu",
 }
 
 -- FIXME: Category missing.
 labels["Yongkang Wu"] = {
-	-- A subvariety of Yiyong Wu, which is a variety of Wuzhou Wu.
 	aliases = {"Yongkang"},
 	Wikidata = "Q11132026",
 	plain_categories = true,
+	parent = "Yiyong Wu", -- a variety of Wuzhou Wu
 }
 
 -- FIXME: Category missing.
 labels["Yushan Wu"] = {
-	-- A subvariety of Shangshan Wu, which is a variety of Chuqu Wu.
 	aliases = {"Yushan"},
 	Wikidata = "Q17040715",
 	plain_categories = true,
+	parent = "Shangshan Wu", -- a variety of Chuqu Wu
 }
 
 ------------------------------------------ Xiang ------------------------------------------
@@ -2447,6 +2499,7 @@ labels["Gaoyang Yue"] = {
 	aliases = {"Gaoyang"},
 	Wikidata = "Q2812583",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -2466,6 +2519,7 @@ labels["Goulou Yue"] = {
 	aliases = {"Goulou"},
 	Wikidata = "Q5588322",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -2545,6 +2599,7 @@ labels["Luoguang Yue"] = {
 	aliases = {"Luoguang"},
 	Wikidata = "Q6704497",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -2597,6 +2652,7 @@ labels["Qinlian Yue"] = {
 	aliases = {"Qinlian"},
 	Wikidata = "Q7267753",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -2636,6 +2692,7 @@ labels["Siyi Yue"] = {
 	aliases = {"Siyi"},
 	Wikidata = "Q2391679",
 	plain_categories = true,
+	parent = true,
 }
 
 -- The following violates normal conventions, which would use "Taishan Yue" or "Taishanese Yue". But it matches the
@@ -2677,6 +2734,7 @@ labels["Wuhua Yue"] = {
 	aliases = {"Wuhua"},
 	Wikidata = "Q8038858",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -2711,7 +2769,7 @@ labels["Yangjiang Yue"] = {
 
 -- FIXME: Category missing.
 labels["Yongxun Yue"] = {
-	-- A primary branch.
+	-- A primary branch, or possibly a subvariety of Yuehai Yue (Cantonese proper).
 	-- Per English Wikipedia, has the following lects:
 	  -- Nanning dialect
 	  -- Yongning dialect
@@ -2723,6 +2781,7 @@ labels["Yongxun Yue"] = {
 	aliases = {"Yongxun"},
 	Wikidata = "Q8054950",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
@@ -2749,6 +2808,7 @@ labels["Yuehai Yue"] = {
 	aliases = {"Yuehai"},
 	Wikidata = "Q8060260",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Category missing.
