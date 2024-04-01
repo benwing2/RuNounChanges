@@ -401,7 +401,7 @@ labels["Changchun Mandarin"] = {
 -- FIXME: Category missing.
 labels["Dalian Mandarin"] = {
 	prep = "on",
-	region = "the [[Liaodong]] Peninsula in coastal eastern [[China]] in the city of [[Dalian]], as well as in parts of [[Dandong]] and [[Yikou]]",
+	region = "the [[Liaodong]] Peninsula in coastal eastern [[China]] in the city of [[Dalian]], as well as in parts of [[Dandong]] and {{w|Yikou}}",
 	aliases = {"Dalian"},
 	Wikidata = "Q1375036",
 	plain_categories = true,
@@ -1922,18 +1922,12 @@ labels["Zhuji Wu"] = {
 
 -- FIXME: Category missing.
 labels["Baizhang Wu"] = {
+	region = "{{w|lang=zh|百丈镇_(泰顺县)|Baizhang Township}} in [[Taishun]] County in southern [[Zhejiang]] Province, in eastern [[China]]",
+	addl = "It is a [[dialect island]] surrounded by {{catlink|Jujiang Wu}} speakers and is increasingly endangered, with less than 1,000 speakers remaining.",
 	aliases = {"Baizhang", "Xialu Wu", "Xialu"},
 	Wikipedia = "zh:百丈口话", -- no Wikidata item yet
 	plain_categories = true,
 	parent = "Oujiang Wu",
-}
-
--- FIXME: Category missing.
-labels["Beitai Wu"] = {
-	aliases = {"Beitai"},
-	-- Undefined in Chinese Wikipedia
-	plain_categories = true,
-	parent = "Taizhou Wu",
 }
 
 -- FIXME: Category missing.
@@ -1947,7 +1941,8 @@ labels["Changbei Wu"] = {
 
 -- FIXME: Category missing.
 labels["Chuqu Wu"] = {
-	-- A primary branch.
+	region = "the [[prefecture-level city|prefecture-level cities]] of [[Quzhou]] and [[Lishui]] in southwestern [[Zhejiang]] Province in eastern [[China]]; some parts of southern [[Wenzhou]] in southern Zhejiang; [[Shangrao]] and [[Yushan]] Counties in northeastern {{w|Jiangxi}} Province, bordering [[Zhejiang]]; and the northern part of the [[prefecture-level city|prefecture-level cities]] of [[Ningde]] and [[Nanping]] in northern [[Fujian]] Province, bordering [[Zhejiang]]",
+	addl = "It is a primary branch of Wu Chinese and is named after the component lects {{catlink|Quzhou Wu}} (spoken in [[Quzhou]]) and {{catlink|Chuzhou Wu}} (spoken in [[Lishui]]).",
 	aliases = {"Chuqu"},
 	Wikidata = "Q5116499",
 	plain_categories = true,
@@ -1956,6 +1951,7 @@ labels["Chuqu Wu"] = {
 
 -- FIXME: Category missing.
 labels["Chuzhou Wu"] = {
+	region = "a region approximately coinciding with (but slightly larger than) the historical {{m|zh|處州|tr=Chǔzhōu}} Prefecture (see {{w|lang=zh|處州}}), consisting of the modern-day [[prefecture-level city]] of [[Lishui]] in southwestern [[Zhejiang]] Province and {{w|Wuyi County}} to the north, as well as {{w|Pucheng County, Fujian|Pucheng County}} in far northern [[Fujian]] Province",
 	aliases = {"Chuzhou"},
 	-- Undefined in Chinese Wikipedia
 	plain_categories = true,
@@ -2020,18 +2016,11 @@ labels["Jingxian Wu"] = {
 
 -- FIXME: Category missing.
 labels["Jinhua Wu"] = {
+	region = "[[Jinhua]] (especially the eastern {{w|Wucheng District|Wucheng}} and {{w|Jindong District|Jindong}} Districts), in central [[Zhejiang]] Province in eastern [[China]]",
 	aliases = {"Jinhua", "Jinhuanese", "Jinhuanese Wu"},
 	Wikidata = "Q13583347",
 	plain_categories = true,
-	parent = "Jinlan Wu", -- a variety of Wuzhou Wu
-}
-
--- FIXME: Category missing.
-labels["Jinlan Wu"] = {
-	aliases = {"Jinlan"},
-	-- Undefined in Chinese Wikipedia
-	plain_categories = true,
-	parent = "Wuzhou Wu",
+	parent = "Wuzhou Wu", -- per zhwiki, in the intermediate Jinlan Wu subgroup
 }
 
 -- FIXME: Category missing.
@@ -2055,7 +2044,7 @@ labels["Lanxi Wu"] = {
 	aliases = {"Lanxi"},
 	Wikidata = "Q17059873",
 	plain_categories = true,
-	parent = "Jinlan Wu", -- a variety of Wuzhou Wu
+	parent = "Wuzhou Wu", -- per zhwiki, in the intermediate Jinlan Wu subgroup
 }
 
 -- FIXME: Category missing.
@@ -2159,8 +2148,10 @@ labels["Qingtian Wu"] = {
 
 -- FIXME: Category missing.
 labels["Quzhou Wu"] = {
+	region = "[[Quzhou]] in southwestern [[Zhejiang]] Province in eastern [[China]]",
 	aliases = {"Quzhou", "Quzhounese", "Quzhounese Wu"},
 	Wikidata = "Q6112429",
+	Wikipedia = "zh:处衢片", -- no Wikidata item for this and not connected to Q6112429
 	plain_categories = true,
 	parent = "Longqu Wu", -- a variety of Chuqu Wu
 }
@@ -2261,10 +2252,11 @@ labels["Tangxi Wu"] = {
 
 -- FIXME: Category missing.
 labels["Tiantai Wu"] = {
+	region = "{{w|Tiantai County}} in eastern [[Zhejiang]] in eastern [[China]]",
 	aliases = {"Tiantai"},
 	Wikidata = "Q85809509",
 	plain_categories = true,
-	parent = "Beitai Wu", -- a variety of Taizhou Wu
+	parent = "Taizhou Wu", -- per zhwiki, in the intermediate Beitai Wu subgroup
 }
 
 -- FIXME: Category missing.
@@ -2292,7 +2284,7 @@ labels["Wencheng Wu"] = {
 }
 
 labels["Wenzhounese Wu"] = {
-	aliases = {"Wenzhounese", "Wenzhou Wu", "Wenzhou", "Oujiang"},
+	aliases = {"Wenzhounese", "Wenzhou Wu", "Wenzhou"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Wenzhounese Wu'.
 	display = "Wenzhounese",
 	Wikidata = "Q710218",
