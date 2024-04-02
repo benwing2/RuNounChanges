@@ -369,7 +369,17 @@ local function get_sorted_labels(category, lang)
 			return false
 		end
 
-		local a_matches_lang = lang and a.lang:getNonEtymologicalCode() == lang:getNonEtymologicalCode()
+		local function tiebreak()
+			local a_matches_lang = lang and a.lang:getNonEtymologicalCode() == lang:getNonEtymologicalCode()
+			local b_matches_lang = lang and b.lang:getNonEtymologicalCode() == lang:getNonEtymologicalCode()
+			if a_matches_lang and not b_matches_lang then
+				return true
+			elseif b_matches_lang and not a_matches_lang then
+				return false
+			else
+				return a.canonical < b.canonical
+			end
+		end
 
 		local a_matches_exactly = matches_exactly(a)
 		local b_matches_exactly = matches_exactly(b)
@@ -378,7 +388,7 @@ local function get_sorted_labels(category, lang)
 		elseif b_matches_exactly and not a_matches_exactly then
 			return false
 		elseif a_matches_exactly and b_matches_exactly then
-			return a_matches_lang
+			return tiebreak()	
 		end
 
 		local a_matches_as_prefix = matches_as_prefix(a)
@@ -387,11 +397,9 @@ local function get_sorted_labels(category, lang)
 			return true
 		elseif b_matches_as_prefix and not a_matches_as_prefix then
 			return false
-		elseif a_matches_as_prefix and b_matches_as_prefix then
-			return a_matches_lang
+		else
+			return tiebreak()
 		end
-
-		return a_matches_lang
 	end
 
 	table.sort(sorted_labels, sort_labelobj)
@@ -465,6 +473,8 @@ local dialect_parent_cats_to_scrape = m_table.listToSet {
 	"Ripuarian Franconian",
 }
 
+local memoizing_dialect_handler
+
 -- Handle dialect categories such as [[:Category:New Zealand English]], [[:Category:Late Middle English]],
 -- [[:Category:Arbëresh Albanian]], [[:Category:Provençal]] or arbitrarily-named categories like
 -- [[:Category:Issime Walser]]. We currently require that dialect=1 is specified to the call to {{auto cat}} to avoid
@@ -506,7 +516,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		-- fall back to returning "extant" if all else fails.
 		local parent_type
 		if default_parent_cat then
-			_, parent_type = dialect_handler(default_parent_cat, nil, true)
+			_, parent_type = memoizing_dialect_handler(default_parent_cat, nil, true)
 		end
 		if parent_type then
 			return parent_type
@@ -631,7 +641,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 	else
 		lang = m_languages.getByCode(args.lang, "lang", "allow etym")
 		langname = lang:getCanonicalName()
-		if category == ucfirst(category) then
+		if category == ucfirst(langname) then
 			-- breadcrumb and regiondesc should stay nil; breadcrumb will get `category` as a default, and the lack of
 			-- regiondesc will cause an error to be thrown unless the user gave it explicitly or specified def=.
 		else
@@ -817,6 +827,11 @@ local function dialect_handler(category, raw_args, called_from_inside)
 
 		local linked_regiondesc = regiondesc
 		if linked_regiondesc then
+			-- Don't try to link if HTML, = sign, template call or embedded link found in text. Embedded links will
+			-- automatically be converted to English links by JavaScript.
+			local function linkable(text)
+				return not text:find("[<={}%[%]]")
+			end
 			if linked_regiondesc:find("<country>") then
 				if not countries then
 					error(("Can't specify <country> in region description '%s' when country= not given"):format(linked_regiondesc))
@@ -824,15 +839,14 @@ local function dialect_handler(category, raw_args, called_from_inside)
 				-- Link the countries individually before calling serialCommaJoin(), which inserts HTML.
 				local linked_countries = {}
 				for _, country in ipairs(countries) do
-					-- don't try to link if HTML or = sign found in country
-					if not country:find("[<=]") then
+					if linkable(country) then
 						country = require("Module:links").full_link { lang = lang_en, term = country }
 					end
 					table.insert(linked_countries, country)
 				end
 				linked_countries = m_table.serialCommaJoin(linked_countries)
 				linked_regiondesc = linked_regiondesc:gsub("<country>", require(pattern_utilities_module).replacement_escape(linked_countries))
-			elseif not getprop("nolink") and not linked_regiondesc:find("[<=]") then
+			elseif not getprop("nolink") and linkable(linked_regiondesc) then
 				-- Even if nolink not given, don't try to link if HTML or = sign found in linked_regiondesc, otherwise we're
 				-- likely to get an error.
 				linked_regiondesc = require("Module:links").full_link { lang = lang_en, term = linked_regiondesc }
@@ -975,9 +989,21 @@ local function dialect_handler(category, raw_args, called_from_inside)
 end
 
 
+local memoized_responses = {}
+
+memoizing_dialect_handler = function(category, raw_args, called_from_inside)
+	local retval = memoized_responses[category]
+	if not retval then
+		retval = {dialect_handler(category, raw_args, called_from_inside)}
+		memoized_responses[category] = retval
+	end
+	local obj, lect_type = retval[1], retval[2]
+	return obj, lect_type
+end
+
 -- Actual handler for dialect categories. See dialect_handler() above.
 table.insert(raw_handlers, function(data)
-	local settings, _ = dialect_handler(data.category, data.args, data.called_from_inside)
+	local settings, _ = memoizing_dialect_handler(data.category, data.args, data.called_from_inside)
 	return settings, not not settings
 end)
 
