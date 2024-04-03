@@ -145,26 +145,101 @@ local function get_returnable_lang_code(lang)
 end
 
 
+local memoizing_dialect_handler
+
+
+local function category_to_lang_name(category)
+	local getByCanonicalName = require("Module:languages").getByCanonicalName
+	local lang
+	lang = getByCanonicalName(category, nil, "allow etym", "allow family")
+	if not lang then
+		-- Some languages have lowercase-initial names e.g. 'the BMAC substrate', but the category begins with an
+		-- uppercase letter.
+		lang = getByCanonicalName(lcfirst(category), nil, "allow etym", "allow family")
+	end
+	return lang
+end
+
+
+-- Given a category (without the "Category:" prefix), look up the page defining the category, find the call to
+-- {{auto cat}} (if any), and return a table of its arguments. If the category page doesn't exist or doesn't have
+-- an {{auto cat}} invocation, return nil.
+local function scrape_category_for_auto_cat_args(cat)
+	local cat_page = mw.title.new("Category:" .. cat)
+	if cat_page then
+		local contents = cat_page:getContent()
+		if contents then
+			for name, args in require("Module:template parser").findTemplates(contents) do
+				-- The template parser automatically handles redirects and canonicalizes them, so uses of {{autocat}}
+				-- will also be found.
+				if name == "auto cat" then
+					return args
+				end
+			end
+		end
+	end
+	return nil
+end
+
+
+-- Try to figure out if this variety is extinct or reconstructed, if type= not given.
+local function determine_lect_type(category, lang, default_parent_cat)
+	if category:find("^Proto%-") or lang:getCanonicalName():find("^Proto%-") or lang:hasType("reconstructed") then
+		-- Is it reconstructed?
+		return "reconstructed"
+	end
+	if lang:getCode():find("^qsb%-") then
+		-- Substrate.
+		return "unattested"
+	end
+	if lang:hasType("full") then
+		-- If a full language, scrape the {{auto cat}} call and check for extinct=1.
+		local parent_args = scrape_category_for_auto_cat_args(lang:getCategoryName())
+		if parent_args and ine(parent_args.extinct) and require("Module:yesno")(parent_args.extinct, false) then
+			return "extinct"
+		end
+	end
+	-- Otherwise, call the dialect handler recursively for the parent category. This is correct e.g. for
+	-- things like subvarieties of Classical Persian, where the lang itself (Persian) isn't extinct but the
+	-- parent category refers to an extinct variety. If the dialect handler fails to return a type, it's because
+	-- the parent category doesn't exist or isn't defined using {{auto cat}}, and doesn't have a language as a
+	-- suffix. In that case, if we're dealing with an etymology-only language, check the parent language. Finally,
+	-- fall back to returning "extant" if all else fails.
+	local parent_type
+	if default_parent_cat then
+		_, parent_type = memoizing_dialect_handler(default_parent_cat, nil, true)
+	end
+	if parent_type then
+		return parent_type
+	end
+	local parent_lang = lang:getParent()
+	if parent_lang then
+		return determine_lect_type(category, parent_lang, nil)
+	end
+	return "extant"
+end
+
+
+-- Try to figure out the region (used as the default breadcrumb and region description) from the language. If the
+-- language name is an etymology-only language, try to derive a region based on a parent etymology-only or full
+-- language. For example, if the pagename is '[[:Category:British English]]', the language is 'en-GB' (British English)
+-- and the same as the pagename, but we'd like to return a region 'British'. This is also called in cases where the
+-- language is explicitly given but we need to infer the region from the parent language; e.g.
+-- [[:Category:Lucerne Alemmanic German]] is a type of High Alemannic German but we want to infer 'Lucerne' based on
+-- the parent 'Alemannic German'. If this doesn't work and the language name has a space in it, we try using
+-- progressively smaller suffixes of the language. For example, for [[:Category:Walser German]]', the language is
+-- 'wae' (Walser German), but the parent is 'Highest Alemannic German', whose parent is 'Alemannic German' (a full
+-- language), and just "German" is nowhere in the parent-child relationships but found as a suffix in the parent
+-- language. Another such case is with [[:Category:Ionic Greek]], whose parent is 'Ancient Greek'.
 local function infer_region_from_lang(pagename, lang)
-	-- Try to figure out the region (used as the default breadcrumb and region description) from the language. If the
-	-- language name is an etymology-only language, try to derive a region based on a parent etymology-only or full
-	-- language. For example, if the pagename is '[[:Category:British English]]', the language is 'en-GB' (British English)
-	-- and the same as the pagename, but we'd like to return a region 'British'. This is also called in cases where the
-	-- language is explicitly given but we need to infer the region from the parent language; e.g.
-	-- [[:Category:Lucerne Alemmanic German]] is a type of High Alemannic German but we want to infer 'Lucerne' based on
-	-- the parent 'Alemannic German'. If this doesn't work and the language name has a space in it, we try using
-	-- progressively smaller suffixes of the language. For example, for [[:Category:Walser German]]', the language is
-	-- 'wae' (Walser German), but the parent is 'Highest Alemannic German', whose parent is 'Alemannic German' (a full
-	-- language), and just "German" is nowhere in the parent-child relationships but found as a suffix in the parent
-	-- language. Another such case is with [[:Category:Ionic Greek]], whose parent is 'Ancient Greek'.
 	local langname = lang:getCanonicalName()
 	local lang_to_check = lang
 	if ucfirst(langname) == pagename then
 		lang_to_check = lang_to_check:getParent()
 	end
-	-- First check against the language name and progressively smaller suffixes; then repeat for any parents (of etymology
-	-- languages). If the language name is the same as the page name, we need to start with the parent; otherwise we will
-	-- always match against a suffix, but that's not what we want.
+	-- First check against the language name and progressively smaller suffixes; then repeat for any parents (of
+	-- etymology languages). If the language name is the same as the page name, we need to start with the parent;
+	-- otherwise we will always match against a suffix, but that's not what we want.
 	while lang_to_check do
 		local suffix = lang_to_check:getCanonicalName()
 		while true do
@@ -189,21 +264,13 @@ end
 -- check the maximally long language because of cases like 'English' vs 'Middle English' and 'Chinese Pidgin English';
 -- [[:Category:Late Middle English]] should split as 'Late' and 'Middle English', not as 'Late Middle' and 'English'.
 local function split_region_lang(pagename)
-	local getByCanonicalName = require("Module:languages").getByCanonicalName
-	local canonical_name
 	local lang
 	local region
 
 	-- Try the entire title as a language; if not, chop off a word on the left and repeat.
 	local words = mw.text.split(pagename, " ")
 	for i = 1, #words do
-		canonical_name = table.concat(words, " ", i, #words)
-		lang = getByCanonicalName(canonical_name, nil, "allow etym", "allow family")
-		if not lang then
-			-- Some languages have lowercase-initial names e.g. 'the BMAC substrate', but the category begins with an
-			-- uppercase letter.
-			lang = getByCanonicalName(lcfirst(canonical_name), nil, "allow etym", "allow family")
-		end
+		lang = category_to_lang_name(table.concat(words, " ", i, #words))
 		if lang then
 			if i == 1 then
 				region = nil
@@ -215,7 +282,8 @@ local function split_region_lang(pagename)
 	end
 
 	if not region and lang then
-		-- The pagename is the same as a language name. Try to infer the region from the parent. See comment at function.
+		-- The pagename is the same as a language name. Try to infer the region from the parent. See comment at
+		-- function.
 		region = infer_region_from_lang(pagename, lang)
 	end
 
@@ -252,27 +320,6 @@ local function get_default_parent_cat_from_category(category, lang, noreg)
 	else
 		return "Regional " .. lang_for_cat:getCanonicalName()
 	end
-end
-
-
--- Given a category (without the "Category:" prefix), look up the page defining the category, find the call to
--- {{auto cat}} (if any), and return a table of its arguments. If the category page doesn't exist or doesn't have
--- an {{auto cat}} invocation, return nil.
-local function scrape_category_for_auto_cat_args(cat)
-	local cat_page = mw.title.new("Category:" .. cat)
-	if cat_page then
-		local contents = cat_page:getContent()
-		if contents then
-			for name, args in require("Module:template parser").findTemplates(contents) do
-				-- The template parser automatically handles redirects and canonicalizes them, so uses of {{autocat}}
-				-- will also be found.
-				if name == "auto cat" then
-					return args
-				end
-			end
-		end
-	end
-	return nil
 end
 
 
@@ -388,7 +435,7 @@ local function get_sorted_labels(category, lang)
 		elseif b_matches_exactly and not a_matches_exactly then
 			return false
 		elseif a_matches_exactly and b_matches_exactly then
-			return tiebreak()	
+			return tiebreak()
 		end
 
 		local a_matches_as_prefix = matches_as_prefix(a)
@@ -473,8 +520,6 @@ local dialect_parent_cats_to_scrape = m_table.listToSet {
 	"Ripuarian Franconian",
 }
 
-local memoizing_dialect_handler
-
 -- Handle dialect categories such as [[:Category:New Zealand English]], [[:Category:Late Middle English]],
 -- [[:Category:Arbëresh Albanian]], [[:Category:Provençal]] or arbitrarily-named categories like
 -- [[:Category:Issime Walser]]. We currently require that dialect=1 is specified to the call to {{auto cat}} to avoid
@@ -491,43 +536,6 @@ local memoizing_dialect_handler
 -- [[:Category:Old Iranian]]) and for etymology-only substrate languages (e.g. [[:Category:The BMAC substrate]]).
 -- There is some special "family" code for the former.
 local function dialect_handler(category, raw_args, called_from_inside)
-	-- Try to figure out if this variety is extinct or reconstructed, if type= not given.
-	local function determine_lect_type(lang, default_parent_cat)
-		if category:find("^Proto%-") or lang:getCanonicalName():find("^Proto%-") or lang:hasType("reconstructed") then
-			-- Is it reconstructed?
-			return "reconstructed"
-		end
-		if lang:getCode():find("^qsb%-") then
-			-- Substrate.
-			return "unattested"
-		end
-		if lang:hasType("full") then
-			-- If a full language, scrape the {{auto cat}} call and check for extinct=1.
-			local parent_args = scrape_category_for_auto_cat_args(lang:getCategoryName())
-			if parent_args and ine(parent_args.extinct) and require("Module:yesno")(parent_args.extinct, false) then
-				return "extinct"
-			end
-		end
-		-- Otherwise, call the dialect handler recursively for the parent category. This is correct e.g. for
-		-- things like subvarieties of Classical Persian, where the lang itself (Persian) isn't extinct but the
-		-- parent category refers to an extinct variety. If the dialect handler fails to return a type, it's because
-		-- the parent category doesn't exist or isn't defined using {{auto cat}}, and doesn't have a language as a
-		-- suffix. In that case, if we're dealing with an etymology-only language, check the parent language. Finally,
-		-- fall back to returning "extant" if all else fails.
-		local parent_type
-		if default_parent_cat then
-			_, parent_type = memoizing_dialect_handler(default_parent_cat, nil, true)
-		end
-		if parent_type then
-			return parent_type
-		end
-		local parent_lang = lang:getParent()
-		if parent_lang then
-			return determine_lect_type(parent_lang, nil)
-		end
-		return "extant"
-	end
-
 	if called_from_inside then
 		-- Avoid infinite loops from wrongly processing non-lect categories. We have a check around line 344 below
 		-- for categories whose {{auto cat}} doesn't say dialect=1, but we still need the following in case of
@@ -582,7 +590,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 					breadcrumb = breadcrumb or lang:getCanonicalName(),
 					umbrella = false,
 					can_be_empty = true,
-				}, determine_lect_type(lang, default_parent_cat)
+				}, determine_lect_type(category, lang, default_parent_cat)
 			end
 		else
 			return nil
@@ -664,21 +672,21 @@ local function dialect_handler(category, raw_args, called_from_inside)
 
 	local parents = {}
 
-	local default_parent_cat = args.cat
+	local first_parent_cat = args.cat
 	local label_with_parent
 
 	local function getprop(prop)
 		return args[prop] or label_with_parent and label_with_parent.labdata[prop]
 	end
 
-	if not default_parent_cat and sorted_labels then
-		default_parent_cat, label_with_parent = get_default_parent_cat_from_sorted_labels(sorted_labels, category)
+	if not first_parent_cat and sorted_labels then
+		first_parent_cat, label_with_parent = get_default_parent_cat_from_sorted_labels(sorted_labels, category)
 	end
-	if not default_parent_cat then
-		default_parent_cat = get_default_parent_cat_from_category(category, lang, getprop("noreg"))
+	if not first_parent_cat then
+		first_parent_cat = get_default_parent_cat_from_category(category, lang, getprop("noreg"))
 	end
 
-	table.insert(parents, default_parent_cat)
+	table.insert(parents, first_parent_cat)
 
 	local othercat = getprop("othercat")
 	if othercat and type(othercat) == "string" then
@@ -726,7 +734,32 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		end
 	end
 
-	-------------------- 5. Initialize `additional` with user-specified text and info about labels. -------------------
+	-------------------- 5. Refine the language to an etymology-only child if possible. -------------------
+	
+	-- Now that we've determined the parent, we look up the parent hierarchy until we find a category naming an
+	-- etymology-only language. If we find one and it's a child of the language we've determined, use it.
+
+	local ancestral_cat = first_parent_cat
+
+	local refined_lang
+	while true do
+		refined_lang = category_to_lang_name(ancestral_cat)
+		if refined_lang then
+			break
+		end
+		local settings, _ = memoizing_dialect_handler(ancestral_cat, nil, true)
+		if not settings then
+			break
+		end
+		ancestral_cat = settings.parents[1]
+	end
+
+	if refined_lang and refined_lang:hasParent(lang) then
+		lang = refined_lang
+		langname = lang:getCanonicalName()
+	end
+
+	-------------------- 6. Initialize `additional` with user-specified text and info about labels. -------------------
 
 	local additional = getprop("addl")
 
@@ -747,7 +780,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 			get_returnable_lang(lang)))
 	end
 
-	-------------------- 6. Augment `additional` with information about etymology-only codes. -------------------
+	-------------------- 7. Augment `additional` with information about etymology-only codes. -------------------
 
 	local langname_for_desc
 	local etymcodes = {}
@@ -773,11 +806,11 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		langname_for_desc = langname
 	end
 
-	-------------------- 7. Try to figure out if this variety is extinct or reconstructed. -------------------
+	-------------------- 8. Try to figure out if this variety is extinct or reconstructed. -------------------
 
 	local lect_type = getprop("type")
 	if not lect_type then
-		lect_type = determine_lect_type(lang, default_parent_cat)
+		lect_type = determine_lect_type(category, lang, first_parent_cat)
 	end
 	local function prefix_addl(addl_text)
 		if additional then
@@ -800,7 +833,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		table.insert(parents, "Category:Constructed languages")
 	end
 
-	-------------------- 8. Compute `description`. -------------------
+	-------------------- 9. Compute `description`. -------------------
 
 	local description
 
@@ -859,7 +892,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 			langname_for_desc, verb, prep == "-" and "" or " " .. (prep or "in"), linked_regiondesc)
 	end
 
-	-------------------- 9. Compute the Wikipedia articles that go into `topright`. -------------------
+	-------------------- 10. Compute the Wikipedia articles that go into `topright`. -------------------
 
 	local topright_parts = {}
 	-- Insert Wikipedia article `article` for Wikimedia language `wmcode` into `topright_parts`, avoiding duplication.
@@ -972,7 +1005,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		topright = table.concat(topright_parts)
 	end
 
-	-------------------- 10. Return the combined structure of all information. -------------------
+	-------------------- 11. Return the combined structure of all information. -------------------
 
 	track("dialect")
 	return {
