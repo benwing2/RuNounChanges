@@ -2,6 +2,7 @@ local export = {}
 local m_links = require("Module:links")
 local m_languages = require("Module:languages")
 local put_module = "Module:parse utilities"
+local labels_module = "Module:labels"
 
 local rsplit = mw.text.split
 
@@ -26,8 +27,9 @@ function export.get_label(dialect, dialect_data)
 			local target = data.link
 			dialect = target and '[[w:'.. target .. '|' .. display .. ']]' or display
 		end
+		return dialect
 	end
-	return dialect
+	return nil
 end
 
 function export.make_dialects(raw, lang)
@@ -40,7 +42,13 @@ function export.make_dialects(raw, lang)
 	local dialects = {}
 
 	for _, dialect in ipairs(raw) do
-		table.insert(dialects, dialect_info and export.get_label(dialect, dialect_info) or dialect)
+		local display = dialect_info and export.get_label(dialect, dialect_info)
+		if not display then
+			-- Pass in nocat to avoid extra work, since we won't use the categories.
+			local labinfo = require(labels_module).get_label_info { label = dialect, lang = lang, nocat = true }
+			display = labinfo.label
+		end
+		table.insert(dialects, display)
 	end
 
 	return dialects
@@ -323,7 +331,7 @@ function export.convert_labels_data_module(module_name, lang)
 	local submodule = mw.loadData(module_name)
 	local labels = {}
 	local aliases = {}
-	local m_labels = require("Module:labels")
+	local m_labels = require(labels_module)
 	for label, labdata in pairs(submodule) do
 		if type(labdata) == "string" then
 			aliases[label] = labdata
