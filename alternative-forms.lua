@@ -10,48 +10,113 @@ local function track(page)
 	require("Module:debug/track")("alter/" .. page)
 end
 
--- See if the language's dialectal data module has a label corresponding to the dialect argument.
-function export.get_label(dialect, dialect_data)
-	local data = dialect_data[dialect] or ( dialect_data.labels and dialect_data.labels[dialect] )
-	local alias_of = ( dialect_data.aliases and dialect_data.aliases[dialect] )
+--[==[
+See if the language's dialectal data module in `dialect_data` has a tag corresponding to the `tag` argument.
+Return the display form of the tag if so; otherwise, return {nil}.
+]==]
+function export.get_tag(tag, dialect_data)
+	local data = dialect_data[tag] or ( dialect_data.labels and dialect_data.labels[tag] )
+	local alias_of = ( dialect_data.aliases and dialect_data.aliases[tag] )
 	if not data then
 		if alias_of then
 			data = dialect_data[alias_of] or ( dialect_data.labels and dialect_data.labels[alias_of] )
 		end
 	end
 	if data then
-		local display = data.display or dialect
+		local display = data.display or tag
 		if data.appendix then
-			dialect = '[[Appendix:' .. data.appendix .. '|' .. display .. ']]'
+			tag = '[[Appendix:' .. data.appendix .. '|' .. display .. ']]'
 		else
 			local target = data.link
-			dialect = target and '[[w:'.. target .. '|' .. display .. ']]' or display
+			tag = target and '[[w:'.. target .. '|' .. display .. ']]' or display
 		end
-		return dialect
+		return tag
 	end
 	return nil
 end
 
-function export.make_dialects(raw, lang)
+--[==[
+Return a list of objects corresponding to the raw label tags in `raw_tags`, where "label tags" are the tags after two
+vertical bars in {{tl|alt}}. Each object is of the format returned by `get_label_info` in [[Module:labels]], except that
+if a tag was fetched from the dialect data modules (which will be going away) instead of from the label data modules,
+the object will currently contain only a `label` field containing the display form.
+]==]
+function export.get_tag_info(raw_tags, lang)
 	local dialect_page = 'Module:'.. lang:getCode() ..':Dialects'
 	local dialect_info
-	if raw[1] then
+	if raw_tags[1] then
 		dialect_info = mw.title.new(dialect_page).exists and mw.loadData(dialect_page) or false
 	end
 
-	local dialects = {}
+	local tags = {}
 
-	for _, dialect in ipairs(raw) do
-		local display = dialect_info and export.get_label(dialect, dialect_info)
-		if not display then
+	for _, tag in ipairs(raw_tags) do
+		local display = dialect_info and export.get_tag(tag, dialect_info)
+		if display then
+			display = {
+				label = display
+			}
+		else
 			-- Pass in nocat to avoid extra work, since we won't use the categories.
-			local labinfo = require(labels_module).get_label_info { label = dialect, lang = lang, nocat = true }
-			display = labinfo.label
+			display = require(labels_module).get_label_info { label = tag, lang = lang, nocat = true }
 		end
-		table.insert(dialects, display)
+		table.insert(tags, display)
 	end
 
-	return dialects
+	return tags
+end
+
+--[==[
+Concatenate the tag objects specified in `tags` (the return value of `get_tag_info`). The tags are normally separated
+by comma + space, but the `omit_preComma`, `omit_postComma`, `omit_preSpace` and `omit_postSpace` flags in the label
+data are respected, just as {{tl|lb}} does. The resulting string is tagged with CSS class {ib-content} (as with
+qualifiers), and the commas are tagged with CSS class {ib-comma} (again, as with qualifiers). `open` and `close` are
+optional open and close brackets (in the general sense; e.g. they may be parentheses, square brackets, etc.) to prepend
+and append, respectively, to the concatenated result. If specified, the brackets will be tagged with CSS class
+{ib-brac} (as with qualifiers). If `no_outer_cs_class` is passed in, don't surround the concatenated result with a span
+specifying the {ib-content} CSS class (commas separating labels will still be tagged with {ib-comma}); this allows the
+caller to pass the result to {format_qualifier()} in [[Module:qualifier]].
+
+'''WARNING''': This destructively modifies the `tags` list.
+]==]
+function export.concatenate_tags(tags, open, close, no_outer_css_class)
+	local omit_preComma = false
+	local omit_postComma = true
+	local omit_preSpace = false
+	local omit_postSpace = true
+	
+	for i, tag in ipairs(tags) do
+		omit_preComma = omit_postComma
+		omit_postComma = false
+		omit_preSpace = omit_postSpace
+		omit_postSpace = false
+
+		local to_insert = tag.label
+		local labdata = tag.data
+		if labdata then
+			omit_preComma = omit_preComma or labdata.omit_preComma
+			omit_postComma = labdata.omit_postComma
+			omit_preSpace = omit_preSpace or labdata.omit_preSpace
+			omit_postSpace = labdata.omit_postSpace
+		end
+
+		if to_insert ~= "" then
+			to_insert =
+				(omit_preComma and "" or '<span class="ib-comma">,</span>') ..
+				(omit_preSpace and "" or "&#32;") ..
+				to_insert
+		end
+		tags[i] = to_insert
+	end
+	
+	local ret = table.concat(tags, "")
+	if not no_outer_css_class then
+		ret = "<span class=\"ib-content\">" .. ret .. "</span>"
+	end
+	if open then
+		ret = "<span class=\"ib-brac\">" .. open .. "</span>" .. ret .. "<span class=\"ib-brac\">" .. close .. "</span>"
+	end
+	return ret
 end
 
 -- Per-param modifiers, which can be specified either as separate parameters (e.g. t2=, pos3=) or as inline modifiers
@@ -117,12 +182,14 @@ local function get_valid_prefixes()
 	return valid_prefixes
 end
 
--- Main function for displaying alternative forms. Extracted out from the template-callable function so this can be
--- called by other modules (in particular, [[Module:descendants tree]]). `show_dialect_tags_after_terms` (used by
--- [[Module:descendants tree]]) causes dialect tags to be placed in brackets after each term rather than at the end
--- using an em-dash. `allow_self_link` causes terms the same as the pagename to be shown normally; otherwise they are
--- displayed unlinked.
-function export.display_alternative_forms(parent_args, pagename, show_dialect_tags_after_terms, allow_self_link)
+--[==[
+Main function for displaying alternative forms. Extracted out from the template-callable function so this can be
+called by other modules (in particular, [[Module:descendants tree]]). `show_tags_after_terms` (used by
+[[Module:descendants tree]]) causes tags to be placed in brackets after each term rather than at the end using an
+em-dash. `allow_self_link` causes terms the same as the pagename to be shown normally; otherwise they are displayed
+unlinked.
+]==]
+function export.display_alternative_forms(parent_args, pagename, show_tags_after_terms, allow_self_link)
 	local list_with_holes = { list = true, allow_holes = true }
 	local params = {
 		[1] = { required = true, default = "und" },
@@ -151,7 +218,7 @@ function export.display_alternative_forms(parent_args, pagename, show_dialect_ta
 	local lang = m_languages.getByCode(args[1], 1)
 	local sc = args["sc"] and require("Module:scripts").getByCode(args["sc"], "sc") or nil
 
-	local rawDialects = {}
+	local raw_tags = {}
 	local items = {}
 
 	-- Find the maximum index among any of the list parameters.
@@ -174,9 +241,9 @@ function export.display_alternative_forms(parent_args, pagename, show_dialect_ta
 	local termno = 0
 	for i = 1, maxmaxindex do
 		-- If the previous term parameter was empty and we're not on the first term parameter,
-		-- this term parameter and any others contain dialect or other labels.
+		-- this term parameter and any others contain tags (dialect or other labels).
 		if i > 1 and not prev then
-			rawDialects = {unpack(args[2], i, maxmaxindex)}
+			raw_tags = {unpack(args[2], i, maxmaxindex)}
 			break
 		end
 
@@ -283,8 +350,8 @@ function export.display_alternative_forms(parent_args, pagename, show_dialect_ta
 		end
 	end
 
-	-- The template must have either items or dialect labels.
-	if items[1] == nil and rawDialects[1] == nil then error("No terms found!") end
+	-- The template must have either items or tags.
+	if items[1] == nil and raw_tags[1] == nil then error("No terms found!") end
 
 	-- If any term had an embedded comma, override all joiners to be semicolons.
 	if use_semicolon then
@@ -295,38 +362,40 @@ function export.display_alternative_forms(parent_args, pagename, show_dialect_ta
 		end
 	end
 
-	local dialects = export.make_dialects(rawDialects, lang)
+	local tags = export.get_tag_info(raw_tags, lang)
 
-	-- Format all the items, including joiners, pre-qualifiers, post-qualifiers and (if `show_dialect_tags_after_terms`
-	-- is given) dialect tags.
+	-- Format all the items, including joiners, pre-qualifiers, post-qualifiers and (if `show_tags_after_terms` is
+	-- given) tags.
 	for i, item in ipairs(items) do
 		items[i] = item.joiner .. m_links.full_link(item, nil, allow_self_link, "show qualifiers")
 		-- Temporarily turn this off till we can fix it correctly.
-		if false then -- show_dialect_tags_after_terms and #dialects > 0 then
-			items[i] = items[i] .. " " .. require("Module:qualifier").format_qualifier(dialects, "[", "]")
+		if false then -- show_tags_after_terms and #tags > 0 then
+			items[i] = items[i] .. " " .. export.concatenate_tags(tags, "[", "]")
 		end
 	end
 
 	-- Construct the final output.
-	if not show_dialect_tags_after_terms then
-		-- If there are dialect or similar tags, construct them now and append to final output.
-		if #dialects > 0 then
-			local dialect_label
+	if not show_tags_after_terms then
+		-- If there are tags, construct them now and append to final output.
+		if #tags > 0 then
+			local tag_label
 			if lang:hasTranslit() then
-				dialect_label = " &mdash; ''" .. table.concat(dialects, ", ") .. "''"
+				tag_label = " &mdash; " .. export.concatenate_tags(tags)
 			else
-				dialect_label = " (''" .. table.concat(dialects, ", ") .. "'')"
+				tag_label = " " .. export.concatenate_tags(tags, "(", ")")
 			end
 
-			-- Fixes the problem of '' being added to '' at the end of last dialect parameter
-			dialect_label = mw.ustring.gsub(dialect_label, "''''", "")
-			table.insert(items, dialect_label)
+			table.insert(items, tag_label)
 		end
 	end
 
 	return table.concat(items)
 end
 
+--[==[
+Interface function to load the label data module named `module_name` and convert label data for language object `lang`
+to the format needed in dialect data modules. This is temporary, as the dialect data modules will be going away.
+]==]
 function export.convert_labels_data_module(module_name, lang)
 	local submodule = mw.loadData(module_name)
 	local labels = {}
@@ -348,6 +417,10 @@ function export.convert_labels_data_module(module_name, lang)
 end
 
 
+--[==[
+Interface function to convert label data for language code `langcode` to the format needed in dialect data modules.
+This is temporary, as the dialect data modules will be going away.
+]==]
 function export.convert_labels_data(langcode)
 	local lang = require("Module:languages").getByCode(langcode, true, "allow etym")
 	local labels_module_name = ("Module:labels/data/lang/%s"):format(langcode)
@@ -355,7 +428,9 @@ function export.convert_labels_data(langcode)
 end
 
 
--- Template-callable function for displaying alternative forms.
+--[==[
+Template-callable function for displaying alternative forms.
+]==]
 function export.create(frame)
 	local parent_args = frame:getParent().args
 	local title = mw.title.getCurrentTitle()
