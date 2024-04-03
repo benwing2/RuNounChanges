@@ -1054,6 +1054,8 @@ labels["Fuzhou Eastern Min"] = {
 	  -- Pingnan Eastern Min
 	  -- Pingtan Eastern Min
 	  -- Luoyuan Eastern Min
+	region = "the [[prefecture-level city]] of [[Fuzhou]] and environs, in eastern [[Fujian]] Province in southeast [[China]]; also the offshore [[Matsu]] Islands (belonging to [[Taiwan]]), and overseas in [[Thailand]], [[Singapore]], [[Malaysia]] and [[Indonesia]]",
+	addl = "Here, ''Fuzhou'' is used in the broad sense, corresponding to the Wikipedia article on {{w|Fuzhou dialect}} and sometimes given the technical name of ''Houguan Eastern Min''. The prestige form, spoken in central urban Fuzhou, can be found under {{catlink|Urban Fuzhou Eastern Min}}.",
 	aliases = {"Fuzhou", "Houguan Eastern Min", "Houguan"},
 	-- Of the following two, the first one is for [[w:Fuzhou dialect]], which describes the broad sense of the
 	-- "Fuzhou dialect", which is the same as Houguan; the second one is for [[w:zh:侯官片]] = "Houguan subgroup".
@@ -1065,6 +1067,7 @@ labels["Fuzhou Eastern Min"] = {
 
 -- FIXME: Category missing.
 labels["Gutian Eastern Min"] = {
+	region = "{{w|Gutian County}} in northeastern [[Fujian]] Province in southeast [[China]]; also found overseas in the city of {{w|Sibu}} and the town of {{w|Sitiawan}} in [[Malaysia]]",
 	aliases = {"Gutian"},
 	Wikidata = "Q18944085",
 	plain_categories = true,
@@ -1073,6 +1076,7 @@ labels["Gutian Eastern Min"] = {
 
 -- FIXME: Category missing.
 labels["Lianjiang Eastern Min"] = {
+	region = "{{w|Lianjiang County}} in northeastern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Lianjiang"},
 	Wikidata = "Q19856291",
 	plain_categories = true,
@@ -1085,6 +1089,8 @@ labels["Manjiang Eastern Min"] = {
 	-- Chinese Wikipedia distinguishes between "Manjiang" (蛮讲) and "Manhua" (蛮话) and claims they are two
 	-- distinct varieties, but I think this is based on confusion; for example, they both have the same ISO 639-6
 	-- code "maua", and the English Wikipedia specifically asserts that both 蛮讲 and 蛮话 are the same.
+	region = "parts of far southeastern [[Zhejiang]] Province bordering [[Fujian]] Province; specifically, {{w|Taishun County}} and {{w|Cangnan County}} (part of the [[prefecture-level city]] of [[Wenzhou]]) and parts of {{w|Qingyuan County, Zhejiang|Qingyuan County}} (part of the [[prefecture-level city]] of [[Lishui]])",
+	addl = "The Manjiang varieties show significant influence from {{catlink|Wu Chinese}}, to the extent that some researchers have classified them as Wu. They also have significant subtratal influences, perhaps from a formerly spoken [[Austronesian]] or [[Kra-Dai]] language.",
 	aliases = {"Manjiang", "Manhua Eastern Min", "Manhua", "Mango Eastern Min", "Mango"},
 	Wikidata = "Q3431721",
 	plain_categories = true,
@@ -1093,6 +1099,8 @@ labels["Manjiang Eastern Min"] = {
 
 -- FIXME: Category missing.
 labels["Matsu Eastern Min"] = {
+	region = "the [[Matsu]] Islands, under the jurisdiction of [[Taiwan]] but offshore from {{w|Lianjiang County}} in northeastern [[Fujian]] Province in southeast [[China]]",
+	addl = "The Matsu variety is close to the {{catlink|Lianjiang Eastern Min}} variety.",
 	aliases = {"Matsu"},
 	Wikidata = "Q19599280",
 	plain_categories = true,
@@ -1101,6 +1109,7 @@ labels["Matsu Eastern Min"] = {
 
 -- FIXME: Category missing.
 labels["Minqing Eastern Min"] = {
+	region = "{{w|Minqing County}} in eastern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Minqing"},
 	Wikidata = "Q48897247",
 	plain_categories = true,
@@ -1109,6 +1118,7 @@ labels["Minqing Eastern Min"] = {
 
 -- FIXME: Category missing.
 labels["Ningde Eastern Min"] = {
+	region = "urban areas of the [[prefecture-level city]] of [[Ningde]] in northeastern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Ningde"},
 	Wikidata = "Q18941249",
 	plain_categories = true,
@@ -1117,6 +1127,7 @@ labels["Ningde Eastern Min"] = {
 
 -- FIXME: Category missing.
 labels["Shouning Eastern Min"] = {
+	region = "{{w|Shouning County}} in northeastern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Shouning"},
 	Wikidata = "Q19852223",
 	plain_categories = true,
@@ -1126,6 +1137,7 @@ labels["Shouning Eastern Min"] = {
 -- FIXME: Category missing.
 labels["Urban Fuzhou Eastern Min"] = {
 	-- The representative variety of Fuzhou (Houguan) Eastern Min.
+	region = "urban areas of the [[prefecture-level city]] of [[Fuzhou]] in eastern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Urban Fuzhou"},
 	Wikidata = "Q35571",
 	plain_categories = true,
@@ -1134,6 +1146,7 @@ labels["Urban Fuzhou Eastern Min"] = {
 
 -- FIXME: Category missing.
 labels["Xiapu Eastern Min"] = {
+	region = "[[Xiapu]] County in coastal northeastern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Xiapu"},
 	Wikidata = "Q15899756",
 	plain_categories = true,
@@ -1142,6 +1155,7 @@ labels["Xiapu Eastern Min"] = {
 
 -- FIXME: Category missing.
 labels["Zherong Eastern Min"] = {
+	region = "{{w|Zherong County}} in northeastern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Zherong"},
 	Wikidata = "Q19852850",
 	plain_categories = true,
@@ -1150,6 +1164,7 @@ labels["Zherong Eastern Min"] = {
 
 -- FIXME: Category missing.
 labels["Zhouning Eastern Min"] = {
+	region = "{{w|Zhouning County}} in northeastern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Zhouning", "Zhoudun", "Zhoudun Eastern Min"},
 	Wikidata = "Q19852132",
 	plain_categories = true,
